@@ -1,5 +1,49 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # Locating ordinals in the constructible hierarchy
+<!--zh-->
+# 在可构造层级中定位序数
+<!--ja-->
+# 構成可能階層の中で順序数を位置付ける
+<!--/-->
+
+```agda
+open import Base.Prelude
+open import Base.Classical using ( LEM )
+```
+
+<!--en-->
+The chapter works inside a fixed universe level ℓ, and everything that follows speaks about sets, membership, and stages of L at that level. We assume excluded middle at level ℓ-suc ℓ. Its sole mathematical use is ordinal trichotomy: for two ordinals, one of membership in either direction or equality is returned. Every later conclusion inherits this classicality through the two comparison lemmas built in the next section.
+<!--zh-->
+本章在一个固定的宇宙层级 ℓ 内工作，以下关于集合、隶属与 L 的层的全部论述都在这一层级上。我们假设层级 ℓ-suc ℓ 上的排中律。它在数学上的唯一用途是序数三歧：对两个序数，返回两个方向的隶属关系之一或相等这一情形。后文的所有结论都经下一节建立的两次比较引理继承这种经典性。
+<!--ja-->
+本章は固定された宇宙レベル ℓ の内部で働き、集合・所属・L の段階に関するすべての議論はこのレベルで行われる。レベル ℓ-suc ℓ における排中律を仮定する。その数学的な用途は順序数の三分法だけである。二つの順序数に対し、いずれかの向きの所属または等号という場合を一つ返す。以降の結論はすべて、次節で組み立てる二つの比較補題を通じてこの古典性を受け継ぐ。
+<!--/-->
+
+```agda
+module L.Ordinal.Stages {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+```
+
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax using ( Formula; var; _∈̇_; _∧̇_; ∀̇∈ )
+open import FOL.LevyHierarchy using ( Δ₀; δ-∈; δ-∧; δ-∀∈ )
+open import FOL.Manipulation.ConstantMapping using ( mapFo )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-induction; ∈-irrefl )
+open import V.Model {ℓ} using ( ∈sucV-elim; ∈sucV-inl; self∈sucV )
+open import L.Definability {ℓ} using ( module DefOf )
+open import L.Constructible {ℓ}
+  using ( IsOrd; isTransV; Lset; Lset-layer; layer-trans
+        ; 𝒟ₒ; 𝒟ₒ-intro; 𝒟ₒ-inv; Lset-mono; Lset-in; Lset-out )
+open import L.Ordinal {ℓ} using ( mem-ord; suc-ord )
+open import L.Ordinal.Linear {ℓ} lem using ( ord-tri )
+open import L.Rank {ℓ} using ( rank; rank-upper; rank-ord; rank-fix )
+```
+
+<!--en-->
 
 An ordinal's position in the constructible hierarchy is controlled by membership: it appears by its successor stage and cannot appear before its own rank. This chapter proves both directions and gives a bounded formula for recognizing ordinals inside a stage.
 
@@ -11,7 +55,6 @@ The other direction says an ordinal cannot appear late: every member of `α` is 
 
 With both halves the ordinals of a stage are carved out of it by a single formula, "is an ordinal", which is Δ₀ because transitivity can be said with bounded quantifiers alone. So `α` is a definable subset of `Lset α`, and the definable-power-set clause for the successor stage then applies.
 <!--zh-->
-# 在可构造层级中定位序数
 
 序数在可构造层级中的位置由隶属关系控制：它会在自身的后继层出现，却不会早于自身的秩出现。本章证明两个方向，并给出在层内部识别序数的有界公式。
 
@@ -23,7 +66,6 @@ With both halves the ordinals of a stage are carved out of it by a single formul
 
 两半齐备，一层中的序数便由单一公式「是序数」从中选出，该公式是 Δ₀ 的，因为传递性只用有界量词就能表述。于是 `α` 是 `Lset α` 的可定义子集，后继层的可定义幂集子句随即可以应用。
 <!--ja-->
-# 構成可能階層の中で順序数を位置付ける
 
 順序数が構成可能階層に現れる位置は所属によって制御される。順序数は自身の後者段階までに現れ、自身の階数より前には現れない。本章では両方向を示し、段階の内部で順序数を認識する有界論理式を与える。
 
@@ -36,22 +78,7 @@ With both halves the ordinals of a stage are carved out of it by a single formul
 両者の揃うところ、段階の順序数は単一の論理式「順序数であること」で切り出せる。この式は Δ₀ である。推移性は有界量化だけで表せるからである。よって `α` は `Lset α` の定義可能部分集合であり、後者段階を与える定義可能冪集合の節を直ちに適用できる。
 <!--/-->
 
-<!--en-->
-The chapter works inside a fixed universe level ℓ, and everything that follows speaks about sets, membership, and stages of L at that level. We assume excluded middle at level ℓ-suc ℓ. Its sole mathematical use is ordinal trichotomy: for two ordinals, one of membership in either direction or equality is returned. Every later conclusion inherits this classicality through the two comparison lemmas built in the next section.
-<!--zh-->
-本章在一个固定的宇宙层级 ℓ 内工作，以下关于集合、隶属与 L 的层的全部论述都在这一层级上。我们假设层级 ℓ-suc ℓ 上的排中律。它在数学上的唯一用途是序数三歧：对两个序数，返回两个方向的隶属关系之一或相等这一情形。后文的所有结论都经下一节建立的两次比较引理继承这种经典性。
-<!--ja-->
-本章は固定された宇宙レベル ℓ の内部で働き、集合・所属・L の段階に関するすべての議論はこのレベルで行われる。レベル ℓ-suc ℓ における排中律を仮定する。その数学的な用途は順序数の三分法だけである。二つの順序数に対し、いずれかの向きの所属または等号という場合を一つ返す。以降の結論はすべて、次節で組み立てる二つの比較補題を通じてこの古典性を受け継ぐ。
-<!--/-->
 
-```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-open import Base.Prelude
-open import Base.Classical using ( LEM )
-
-module L.Ordinal.Stages {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-```
 
 <!--en-->
 Two kinds of vocabulary meet here. From the ambient hierarchy V come the basic moves: membership ∈ˢ on the set S, the von Neumann successor `sucV`, induction and irreflexivity along membership. From the constructible side come the stages `Lset α` themselves, the definable-subset layer `𝒟ₒ`, and the two directions `Lset-in` and `Lset-out` relating membership in a stage to membership in its definable power set. The chapter's statement lives entirely in this intersection: it asks where an ordinal sits among the `Lset α`.
@@ -61,15 +88,6 @@ Two kinds of vocabulary meet here. From the ambient hierarchy V come the basic m
 ここで二種類の語彙が出会う。周囲の階層 V からは基本の操作が来る。集合 S 上の所属 ∈ˢ、フォン・ノイマンの後者 `sucV`、所属に沿った帰納法と所属の非反射性である。構成可能な側からは、段階 `Lset α` 自身、定義可能部分集合の層 `𝒟ₒ`、そして段階への所属とその定義可能冪集合への所属を結ぶ二方向 `Lset-in` と `Lset-out` が来る。本章の主張は完全にこの交わりの中にある。すなわち、順序数が `Lset α` の間のどこに位置するかを問うのである。
 <!--/-->
 
-```agda
-
-open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using ( Formula; var; _∈̇_; _∧̇_; ∀̇∈ )
-open import FOL.LevyHierarchy using ( Δ₀; δ-∈; δ-∧; δ-∀∈ )
-open import FOL.Manipulation.ConstantMapping using ( mapFo )
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-induction; ∈-irrefl )
-```
-
 <!--en-->
 Ordinals enter as the predicate `IsOrd`: a set is an ordinal exactly when it is transitive and all of its members are transitive. This is the von Neumann reading, where the ordinal α is the set of all smaller ordinals, so asking whether an ordinal has appeared at a stage is literally a membership question. Also from earlier chapters come `mem-ord` and `suc-ord`, the closure facts that a member of an ordinal is an ordinal and that the successor of an ordinal is an ordinal; they keep every stage index in the argument an honest ordinal.
 <!--zh-->
@@ -78,14 +96,6 @@ Ordinals enter as the predicate `IsOrd`: a set is an ordinal exactly when it is 
 順序数は述語 `IsOrd` として登場する。集合が順序数であるのは、それが伝播的であり、かつそのすべての要素が伝播的であるとき、そのときに限る。これはフォン・ノイマンの読み方で、順序数 α はより小さい順序数全体の集合なので、順序数がある段階に現れたかを問うことは文字どおり所属の問題である。さらに前の章からは `mem-ord` と `suc-ord` という閉包の事実、すなわち順序数の要素は順序数であり順序数の後者は順序数であることが来る。これにより議論中の各段階の添字が必ず真の順序数であることが保たれる。
 <!--/-->
 
-```agda
-open import V.Model {ℓ} using ( ∈sucV-elim; ∈sucV-inl; self∈sucV )
-open import L.Definability {ℓ} using ( module DefOf )
-open import L.Constructible {ℓ}
-  using ( IsOrd; isTransV; Lset; Lset-layer; layer-trans
-        ; 𝒟ₒ; 𝒟ₒ-intro; 𝒟ₒ-inv; Lset-mono; Lset-in; Lset-out )
-```
-
 <!--en-->
 The decision procedure behind everything is `ord-tri`: given two ordinals, each certified to be one, it returns which of the three cases holds, a ∈ b, a = b, or b ∈ a. It uses the stated excluded-middle assumption. The comparison returns a sum of three cases; impossible branches land in the empty type. Separately, propositional truncation ∣_∣₁ records that the earlier stage witnessing a stage decomposition merely exists.
 <!--zh-->
@@ -93,12 +103,6 @@ The decision procedure behind everything is `ord-tri`: given two ordinals, each 
 <!--ja-->
 すべての背後にある判定の手続きが `ord-tri` である。それぞれ順序数であると証明された二つの順序数を与えると、三つの場合のうちどれが成り立つか、すなわち a ∈ b、a = b、b ∈ a のいずれかを答える。これは上述の排中律の仮定である。三分法は三つの場合を直和として返し、不可能な枝は空型に入る。一方、命題的切り捨て ∣_∣₁ は、段階の分解を与える先行段階が単に存在することを記録する。
 <!--/-->
-
-```agda
-open import L.Ordinal {ℓ} using ( mem-ord; suc-ord )
-open import L.Ordinal.Linear {ℓ} lem using ( ord-tri )
-open import L.Rank {ℓ} using ( rank; rank-upper; rank-ord; rank-fix )
-```
 
 <!--en-->
 The rank construction supplies three properties. For a set x, `rank x` is an ordinal collecting how deep x sits in the cumulative hierarchy; `rank-ord` certifies it is an ordinal, `rank-fix` identifies the rank of an ordinal with the ordinal itself, and `rank-upper` bounds the rank of a set from bounds on the ranks of its members. These are the facts needed for the harder direction.
@@ -169,7 +173,6 @@ The remaining case is b ∈ a, which inclusion rules out: b ∈ a and a ⊆ b wo
 <!--/-->
 
 ```agda
-
   wit-case : (a b : S) → ((y : S) → ⟨ y ∈ˢ a ⟩ → ⟨ y ∈ˢ b ⟩)
            → ⟨ b ∈ˢ a ⟩ → ⟨ a ∈ˢ sucV b ⟩
   wit-case a b a⊆b b∈a = ⊥₀-rec (∈-irrefl b (a⊆b b b∈a))
@@ -424,7 +427,6 @@ What remains is to lift rank x ∈ sucV β into rank x ∈ α. Both rank x and �
 <!--/-->
 
 ```agda
-
       rankx∈α : ⟨ rank x ∈ˢ α ⟩
       rankx∈α = ∈sucV-elim {A = β} {x = rank x} (snd (rank x ∈ˢ α))
         (⊆→∈suc (rank x) β (rank-ord x) ordβ rankx⊆β)
@@ -545,7 +547,6 @@ Fix the ordinal α with its certificate. The stage A = `Lset α` is a layer, and
 <!--ja-->
 順序数 α とその証明を固定する。段階 A = `Lset α` は層であり、`layer-trans` がそれを集合としての A の伝播性へ引き上げる。Δ₀ 論理式が A の内部の充足と周囲の宇宙の間で絶対的であるための前提は、これが唯一である。L.Definability の章の定義可能性の機構は A に対して開かれているので、以下の `defSet φ` は常に φ が A から定義する部分集合を意味する。
 <!--/-->
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
@@ -757,7 +758,6 @@ The two inclusions close, and `defSet-φ-ord` states the conclusion: the subset 
 ```
 </div>
 </details>
-
 
 <!--en-->
 ## An ordinal appears at its successor

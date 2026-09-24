@@ -1,29 +1,13 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # Turning a definable injection into an internal code
 <!--zh-->
 # 把可定义单射化为内部编码
 <!--ja-->
 # 定義可能な単射を内部コードにする
-<!--/-->
-
-<!--en-->
-A rule described outside `L` is not yet an object over which `L` can quantify. To compare cardinalities internally, we need a constructible set of ordered pairs recording the rule's values. The central question is therefore how definability and pointwise uniqueness let Replacement collect that graph.
-<!--zh-->
-在 `L` 外部描述一条取值规则，并不等于已经有了一个可供 `L` 量化的对象。要在模型内部比较基数，需要一个由有序对组成的可构造集合来记录这些取值。因此，本章的中心问题是：可定义性与逐点唯一性怎样使替换定理能够收集这张函数图。
-<!--ja-->
-`L` の外側で値を定める規則を記述しても、それだけでは `L` が量化できる対象にはならない。モデルの内部で基数を比較するには、その値を順序対として記録する構成可能集合が必要である。そこで本章では、定義可能性と各点での一意性から、置換によってそのグラフを集める方法を考える。
-<!--/-->
-
-```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-```
-
-<!--en-->
-The sole classical parameter is excluded middle at level `ℓ-suc ℓ`. The elementary steps in this chapter, such as proving uniqueness, transporting membership, and eliminating a propositional truncation into a proposition, are constructive. The parameter matters when the general Replacement theorem collects the graph as an element of `L`; no form of choice is used.
-<!--zh-->
-唯一的经典参数是层级 `ℓ-suc ℓ` 上的排中律。本章中的初等步骤，例如证明唯一性、运输成员关系，以及把命题截断消去到命题中，都是构造性的。这个参数在一般替换定理把函数图收集成 `L` 的元素时起作用；全程不使用任何形式的选择公理。
-<!--ja-->
-唯一の古典的パラメータは、水準 `ℓ-suc ℓ` における排中律である。本章の初等的な段階、たとえば一意性の証明、所属の輸送、命題的切り詰めを命題へ消去する操作は構成的である。このパラメータが必要になるのは、一般の置換定理によって関数グラフを `L` の要素として集めるときである。選択公理はどの形でも用いない。
 <!--/-->
 
 ```agda
@@ -43,14 +27,6 @@ Fix a universe level `ℓ` and this instance of excluded middle. The mathematica
 module L.DefinableInjection {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
-<!--en-->
-Three kinds of object must be kept distinct. A formula belongs to the first-order language whose constants are elements of the constructible carrier; satisfaction interprets it in the structure on `L`; and `pr` is the ambient Kuratowski code for an ordered pair of underlying sets. Later the defining formula will be read with the value first and the input second, while an entry of the collected graph is `pr(input,value)`.
-<!--zh-->
-这里须区分三类对象。公式属于一阶语言，其常元是可构造论域的元素；满足关系在 `L` 上的结构中解释该公式；`pr` 则是在外围层级中编码底层集合有序对的柯拉托夫斯基对。稍后读取定义公式时，值在前、输入在后；收集所得函数图的条目则是 `pr(输入,值)`。
-<!--ja-->
-ここでは三種類の対象を区別する必要がある。論理式は、構成可能な台の要素を定数とする一階言語に属する。充足関係は、その論理式を `L` 上の構造で解釈する。そして `pr` は、基礎集合の順序対を周囲の階層で表すクラトフスキー符号である。後で定義の論理式を読むときは値が先、入力が後であるが、集められた関数グラフの項目は `pr(入力,値)` となる。
-<!--/-->
-
 ```agda
 open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax
@@ -58,17 +34,6 @@ open import FOL.Syntax
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Coding {ℓ} using ( pr )
-```
-
-<!--en-->
-The proof passes through three mathematical forms. A recursion consists of a domain, a value formula, and a proof that the satisfying-value fiber at each domain point is contractible. Its graph construction uses Replacement to collect ordered pairs and proves single-valuedness and the exact domain. Finally, `injAt` expresses the remaining injectivity condition: two entries with the same output have equal inputs.
-<!--zh-->
-证明依次经过三种数学形式。递归由定义域、取值公式，以及定义域每一点的满足值纤维可缩这一证明组成。函数图构造用替换收集有序对，并证明单值性与恰当定义域。最后，`injAt` 表达尚缺的单射条件：两个条目若有相同输出，其输入便相等。
-<!--ja-->
-証明は三つの数学的な形を順に通る。再帰は、定義域、値を定める論理式、そして定義域の各点で充足する値のファイバーが可縮であることの証明からなる。そのグラフ構成は置換によって順序対を集め、一価性と正確な定義域を証明する。最後に `injAt` が、残る単射性の条件、すなわち同じ出力をもつ二つの項目の入力が等しいことを表す。
-<!--/-->
-
-```agda
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
 open import L.Recursion {ℓ} lem using ( Recursion )
 open import L.Recursion.Graph {ℓ} lem
@@ -78,7 +43,42 @@ open import L.Coding.Model {ℓ}
         ; valuesInAt; valuesInAt-in; valuesInAt-out )
 open import L.Coding.Injection {ℓ} lem
   using ( injAt; injAt-in; injAt-out )
+open import L.Cardinal {ℓ} lem using ( InjCode; InjL; IsCardinalL )
 ```
+
+<!--en-->
+A rule described outside `L` is not yet an object over which `L` can quantify. To compare cardinalities internally, we need a constructible set of ordered pairs recording the rule's values. The central question is therefore how definability and pointwise uniqueness let Replacement collect that graph.
+<!--zh-->
+在 `L` 外部描述一条取值规则，并不等于已经有了一个可供 `L` 量化的对象。要在模型内部比较基数，需要一个由有序对组成的可构造集合来记录这些取值。因此，本章的中心问题是：可定义性与逐点唯一性怎样使替换定理能够收集这张函数图。
+<!--ja-->
+`L` の外側で値を定める規則を記述しても、それだけでは `L` が量化できる対象にはならない。モデルの内部で基数を比較するには、その値を順序対として記録する構成可能集合が必要である。そこで本章では、定義可能性と各点での一意性から、置換によってそのグラフを集める方法を考える。
+<!--/-->
+
+<!--en-->
+The sole classical parameter is excluded middle at level `ℓ-suc ℓ`. The elementary steps in this chapter, such as proving uniqueness, transporting membership, and eliminating a propositional truncation into a proposition, are constructive. The parameter matters when the general Replacement theorem collects the graph as an element of `L`; no form of choice is used.
+<!--zh-->
+唯一的经典参数是层级 `ℓ-suc ℓ` 上的排中律。本章中的初等步骤，例如证明唯一性、运输成员关系，以及把命题截断消去到命题中，都是构造性的。这个参数在一般替换定理把函数图收集成 `L` 的元素时起作用；全程不使用任何形式的选择公理。
+<!--ja-->
+唯一の古典的パラメータは、水準 `ℓ-suc ℓ` における排中律である。本章の初等的な段階、たとえば一意性の証明、所属の輸送、命題的切り詰めを命題へ消去する操作は構成的である。このパラメータが必要になるのは、一般の置換定理によって関数グラフを `L` の要素として集めるときである。選択公理はどの形でも用いない。
+<!--/-->
+
+
+
+<!--en-->
+Three kinds of object must be kept distinct. A formula belongs to the first-order language whose constants are elements of the constructible carrier; satisfaction interprets it in the structure on `L`; and `pr` is the ambient Kuratowski code for an ordered pair of underlying sets. Later the defining formula will be read with the value first and the input second, while an entry of the collected graph is `pr(input,value)`.
+<!--zh-->
+这里须区分三类对象。公式属于一阶语言，其常元是可构造论域的元素；满足关系在 `L` 上的结构中解释该公式；`pr` 则是在外围层级中编码底层集合有序对的柯拉托夫斯基对。稍后读取定义公式时，值在前、输入在后；收集所得函数图的条目则是 `pr(输入,值)`。
+<!--ja-->
+ここでは三種類の対象を区別する必要がある。論理式は、構成可能な台の要素を定数とする一階言語に属する。充足関係は、その論理式を `L` 上の構造で解釈する。そして `pr` は、基礎集合の順序対を周囲の階層で表すクラトフスキー符号である。後で定義の論理式を読むときは値が先、入力が後であるが、集められた関数グラフの項目は `pr(入力,値)` となる。
+<!--/-->
+
+<!--en-->
+The proof passes through three mathematical forms. A recursion consists of a domain, a value formula, and a proof that the satisfying-value fiber at each domain point is contractible. Its graph construction uses Replacement to collect ordered pairs and proves single-valuedness and the exact domain. Finally, `injAt` expresses the remaining injectivity condition: two entries with the same output have equal inputs.
+<!--zh-->
+证明依次经过三种数学形式。递归由定义域、取值公式，以及定义域每一点的满足值纤维可缩这一证明组成。函数图构造用替换收集有序对，并证明单值性与恰当定义域。最后，`injAt` 表达尚缺的单射条件：两个条目若有相同输出，其输入便相等。
+<!--ja-->
+証明は三つの数学的な形を順に通る。再帰は、定義域、値を定める論理式、そして定義域の各点で充足する値のファイバーが可縮であることの証明からなる。そのグラフ構成は置換によって順序対を集め、一価性と正確な定義域を証明する。最後に `injAt` が、残る単射性の条件、すなわち同じ出力をもつ二つの項目の入力が等しいことを表す。
+<!--/-->
 
 <!--en-->
 For sets `a` and `b`, `InjCode F a b` has exactly four components. The graph `F` is single-valued, has domain exactly `a`, is injective, and every value appearing in it belongs to `b`. The four conditions have matching object-language formulas, including the previously developed `valuesInAt` formula for the range condition. `InjL a b` propositionally truncates the existence of such an `F` and its code.
@@ -89,7 +89,6 @@ For sets `a` and `b`, `InjCode F a b` has exactly four components. The graph `F`
 <!--/-->
 
 ```agda
-open import L.Cardinal {ℓ} lem using ( InjCode; InjL; IsCardinalL )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( _∈_ )
 open hPropStructure 𝒮ʟ using ( S )
 open hPropStructure 𝒮ᵥ using ( _∈ˢ_ )
@@ -120,7 +119,6 @@ injCodeAt f A B = svAt f ∧̇ domAt f A ∧̇ injAt f
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-
 module InjCodeAt {n : ℕ} (f A B : Fin n) (γ : S ^ n) where
 ```
 </summary>
@@ -156,7 +154,6 @@ module InjCodeAt {n : ℕ} (f A B : Fin n) (γ : S ^ n) where
 </div>
 </details>
 
-
 <!--en-->
 Existentially binding the graph slot yields the formula for `InjL`: the remaining two slots name the domain and codomain. Its semantic existential is already propositionally truncated, exactly as `InjL` is. Mapping the preceding `read` and `fill` functions under that truncation gives both directions without choosing a graph.
 <!--zh-->
@@ -173,7 +170,6 @@ injLAt A B = ∃̇ (injCodeAt zero (suc A) (suc B))
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-
 module InjLAt {n : ℕ} (A B : Fin n) (γ : S ^ n) where
 ```
 </summary>
@@ -194,7 +190,6 @@ module InjLAt {n : ℕ} (A B : Fin n) (γ : S ^ n) where
 </div>
 </details>
 
-
 <!--en-->
 Internal cardinality is the assertion that no member of a candidate receives an injection from the candidate. The formula below says exactly this: after binding a possible smaller member, membership in the candidate implies the negation of the `injLAt` formula. Its reading converts only the formula for the injection; the outer universal quantifier, implication, and negation compute to the function type already used by `IsCardinalL`.
 <!--zh-->
@@ -212,7 +207,6 @@ cardinalAt K = ∀̇ ((var zero ∈̇ var (suc K))
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-
 module CardinalAt {n : ℕ} (K : Fin n) (γ : S ^ n) where
 ```
 </summary>
@@ -233,7 +227,6 @@ module CardinalAt {n : ℕ} (K : Fin n) (γ : S ^ n) where
 ```
 </div>
 </details>
-
 
 <!--en-->
 Two type-theoretic facts govern the proof. When the second component of a dependent pair is proposition-valued, `Σ≡Prop` lifts a path between first components to a path between the pairs. A propositional truncation retains only inhabitedness. The graph reader `pair-out` may eliminate a truncated origin because its target fiber is a proposition, while the final step uses `∣_∣₁` to hide the particular graph and code. Neither operation selects a global family of witnesses.
@@ -331,7 +324,6 @@ The first construction assumes only definability and functionality. From `M` it 
 最初の構成が仮定するのは、定義可能性と関数性だけである。`M` から `L` の要素である完全な関数グラフを作り、その順序対の項目を正確に入れ、読み取る方法を得る。単射性は次の段階まで保留する。同じグラフ構成は、最小証人の表のように、目的上単射である必要のない定義可能な写像にも適用できるからである。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -403,7 +395,6 @@ The fourth condition for the eventual code is containment in the codomain. Given
 </div>
 </details>
 
-
 <!--en-->
 ## From external injectivity to a coded injection
 <!--zh-->
@@ -420,7 +411,6 @@ To turn this graph into an injection code, add the genuinely new hypothesis of i
 このグラフを単射の符号にするには、実質的に新しい仮定として単射性を加える必要がある。`dom` への所属の証明を伴う二つの入力について、選ばれた値の基礎集合が等しければ、入力の基礎集合も等しいと仮定する。`fn` の型は所属の証明に依存しているので、その引数は明示されたままである。証明無関係性は異なる所属の証明の間の整合性を保証するが、仮定自体は二つの入力で実際に与えられた証拠について述べられる。その結論は `injAt` の等号の条項が要求する強さと正確に一致する。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -433,8 +423,6 @@ module Inj (M : DefinableMap)
 </summary>
 <div class="submodule-fold-content">
 
-
-
 <!--en-->
 Opening `Graph M` makes the already constructed `F` and its proved properties available in the injective case. This keeps two mathematically useful conclusions at hand. One may retain the particular graph `F` together with its code when a later construction must name or combine graphs. One may instead use `injL`, which remembers only that some coded injection exists. The distinction is between concrete data and its propositional existence.
 <!--zh-->
@@ -444,7 +432,6 @@ Opening `Graph M` makes the already constructed `F` and its proved properties av
 <!--/-->
 
 ```agda
-
   open Graph M public
 ```
 
@@ -473,7 +460,6 @@ The tuple `sv , dm , ij , ran` fills the four fields of `InjCode F dom cod` in o
 <!--/-->
 
 ```agda
-
   code : InjCode F dom cod
   code = sv , dm , ij , ran
 ```

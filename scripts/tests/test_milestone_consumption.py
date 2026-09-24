@@ -1,4 +1,4 @@
-"""Tests for the final-tree Milestones consumption gate."""
+"""Tests for the final-tree Origin consumption gate."""
 
 import importlib.util
 import sys
@@ -27,7 +27,7 @@ class MilestoneConsumptionTests(unittest.TestCase):
     def test_transitive_modules_are_consumed(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            write(root, "Milestones", "open import A")
+            write(root, "Origin", "open import A")
             write(root, "A", "open import B")
             write(root, "B", "b : Set\nb = Set")
             self.assertEqual(CHECK.check(root), [])
@@ -35,7 +35,7 @@ class MilestoneConsumptionTests(unittest.TestCase):
     def test_definition_in_unreachable_module_is_reported(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            write(root, "Milestones", "open import A")
+            write(root, "Origin", "open import A")
             write(root, "A", "a : Set\na = Set")
             write(root, "Orphan", "orphan : Set\norphan = Set")
             problems = CHECK.check(root)

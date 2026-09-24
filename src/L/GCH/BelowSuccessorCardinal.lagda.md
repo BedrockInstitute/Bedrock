@@ -1,33 +1,31 @@
-<!--en-->
-# Ordinals below a successor cardinal inject into its base
-
-A successor cardinal is the first cardinal strictly beyond its base. Suppose `δ` is the successor cardinal of `κ` inside `L`. This chapter proves that every ordinal `α ∈ δ` admits an internal injection into `κ`. The proof combines well-founded induction with ordinal trichotomy. Excluded middle has two precise roles: it supplies the trichotomy of ordinals, and in the case `κ ∈ α` it turns the failure of cardinality into the mere existence of a smaller target.
-<!--zh-->
-# 后继基数以下的序数单射到其基数
-
-后继基数是严格超过其基数的第一个基数。假设 `δ` 是 `L` 内 `κ` 的后继基数，本章证明每个序数 `α ∈ δ` 都有到 `κ` 的内部单射。证明把良基归纳与序数三分法结合起来。排中律有两项明确作用：给出序数三分法；并在 `κ ∈ α` 的情形，把「`α` 不是基数」转化为「仅仅存在一个更小的目标」。
-<!--ja-->
-# 後続基数より小さい順序数をその基数へ単射する
-
-後続基数は、もとの基数を真に上回る最初の基数である。`δ` が `L` の中で `κ` の後続基数であると仮定する。本章では、任意の順序数 `α ∈ δ` から `κ` への内部単射があることを証明する。証明は整礎帰納法と順序数の三分法を組み合わせる。排中律には二つの明確な役割がある。順序数の三分法を与えることと、`κ ∈ α` の場合に、`α` が基数でないことを、より小さい行き先が単に存在するという形へ変えることである。
-<!--/-->
-
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
-
-open import Base.Prelude
-open import Base.Classical using ( LEM )
-
-module L.GCH.BelowSuccessorCardinal {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
 <!--en-->
-Fix one universe level and an instance of excluded middle at the level of the propositions used by the hierarchy. The classical hypothesis is explicit and precisely leveled. It is used first through ordinal trichotomy and later to decide the formula presenting `Ex`; the remaining ingredients are structural facts about `V`, `L`, ordinals and internal injections.
+# Ordinals below a successor cardinal inject into its base
 <!--zh-->
-固定一个宇宙层级，并假设在层级所用的命题层上成立排中律。这个经典假设是显式的，其层级也有精确规定。证明先通过序数三分法使用它，随后又用它判定呈现 `Ex` 的公式；其余材料都是关于 `V`、`L`、序数和内部单射的结构性事实。
+# 后继基数以下的序数单射到其基数
 <!--ja-->
-宇宙レベルを一つ固定し、階層で使われる命題のレベルにおける排中律を仮定する。この古典的仮定は明示され、そのレベルも正確に定められている。証明では、まず順序数の三分法を通して使い、後に `Ex` を表す論理式を判定するためにもう一度使う。残りの材料は `V`、`L`、順序数、内部単射についての構造的事実である。
+# 後続基数より小さい順序数をその基数へ単射する
 <!--/-->
+
+```agda
+open import Base.Prelude
+open import Base.Classical using ( LEM )
+```
+
+<!--en-->
+Fix a universe level `ℓ`{.Agda} and assume `lem : LEM (ℓ-suc ℓ)`{.Agda}. This hypothesis supplies a decision for each proposition at that level; it remains an explicit parameter of the constructions below.
+<!--zh-->
+固定宇宙层级 `ℓ`{.Agda}，并假设 `lem : LEM (ℓ-suc ℓ)`{.Agda}。这个假设为相应层级的每个命题提供判定，并始终作为下文构造的显式参数。
+<!--ja-->
+宇宙レベル `ℓ`{.Agda} を固定し、`lem : LEM (ℓ-suc ℓ)`{.Agda} を仮定する。この仮定は該当するレベルの各命題に判定を与え、以下の構成の明示的なパラメータとして保たれる。
+<!--/-->
+
+```agda
+module L.GCH.BelowSuccessorCardinal {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+```
 
 ```agda
 open import FOL.ZFStructure using ( module hPropStructure )
@@ -37,7 +35,29 @@ open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; regularityV; ∈-irrefl )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; IsOrd; isL )
 open import L.Ordinal {ℓ} using ( mem-ord )
 open import L.Ordinal.Linear {ℓ} lem using ( Tri; ord-tri )
+open import L.Cardinal {ℓ} lem using ( InjL; SuccCardL; IsCardinalL )
+open import L.DefinableInjection {ℓ} lem using ( injLAt; module InjLAt )
+open import L.InjectionComposition {ℓ} lem using ( inclusion-coded; injl-trans )
 ```
+
+<!--en-->
+
+A successor cardinal is the first cardinal strictly beyond its base. Suppose `δ` is the successor cardinal of `κ` inside `L`. This chapter proves that every ordinal `α ∈ δ` admits an internal injection into `κ`. The proof combines well-founded induction with ordinal trichotomy. Excluded middle has two precise roles: it supplies the trichotomy of ordinals, and in the case `κ ∈ α` it turns the failure of cardinality into the mere existence of a smaller target.
+<!--zh-->
+
+后继基数是严格超过其基数的第一个基数。假设 `δ` 是 `L` 内 `κ` 的后继基数，本章证明每个序数 `α ∈ δ` 都有到 `κ` 的内部单射。证明把良基归纳与序数三分法结合起来。排中律有两项明确作用：给出序数三分法；并在 `κ ∈ α` 的情形，把「`α` 不是基数」转化为「仅仅存在一个更小的目标」。
+<!--ja-->
+
+後続基数は、もとの基数を真に上回る最初の基数である。`δ` が `L` の中で `κ` の後続基数であると仮定する。本章では、任意の順序数 `α ∈ δ` から `κ` への内部単射があることを証明する。証明は整礎帰納法と順序数の三分法を組み合わせる。排中律には二つの明確な役割がある。順序数の三分法を与えることと、`κ ∈ α` の場合に、`α` が基数でないことを、より小さい行き先が単に存在するという形へ変えることである。
+<!--/-->
+
+<!--en-->
+Fix one universe level and an instance of excluded middle at the level of the propositions used by the hierarchy. The classical hypothesis is explicit and precisely leveled. It is used first through ordinal trichotomy and later to decide the formula presenting `Ex`; the remaining ingredients are structural facts about `V`, `L`, ordinals and internal injections.
+<!--zh-->
+固定一个宇宙层级，并假设在层级所用的命题层上成立排中律。这个经典假设是显式的，其层级也有精确规定。证明先通过序数三分法使用它，随后又用它判定呈现 `Ex` 的公式；其余材料都是关于 `V`、`L`、序数和内部单射的结构性事实。
+<!--ja-->
+宇宙レベルを一つ固定し、階層で使われる命題のレベルにおける排中律を仮定する。この古典的仮定は明示され、そのレベルも正確に定められている。証明では、まず順序数の三分法を通して使い、後に `Ex` を表す論理式を判定するためにもう一度使う。残りの材料は `V`、`L`、順序数、内部単射についての構造的事実である。
+<!--/-->
 
 <!--en-->
 The argument moves between two structures. The ambient hierarchy supplies well-founded membership and its irreflexivity. The constructible universe supplies the ordinal and cardinal predicates. Ordinal trichotomy compares the current ordinal with `κ`, while inclusion coding and transitivity compose the resulting internal injections.
@@ -46,12 +66,6 @@ The argument moves between two structures. The ambient hierarchy supplies well-f
 <!--ja-->
 議論は二つの構造の間を行き来する。周囲の階層は整礎的な所属関係とその非反射性を与え、構成可能宇宙は順序数と基数の述語を与える。順序数の三分法が現在の順序数と `κ` を比較し、包含の符号化と単射の推移性が内部単射を構成して合成する。
 <!--/-->
-
-```agda
-open import L.Cardinal {ℓ} lem using ( InjL; SuccCardL; IsCardinalL )
-open import L.DefinableInjection {ℓ} lem using ( injLAt; module InjLAt )
-open import L.InjectionComposition {ℓ} lem using ( inclusion-coded; injl-trans )
-```
 
 <!--en-->
 The exceptional branch produces only a truncated witness. Accordingly, the proof uses sums and the empty type to analyze a decision, propositional truncation to state mere existence, and well-founded induction to descend through membership. These logical forms match the conclusion `InjL`, which is itself propositionally truncated.
@@ -133,7 +147,6 @@ Because `κ ∈ δ` and `δ` is an ordinal, `κ` is itself an ordinal. The induc
 <!--/-->
 
 ```agda
-
   ordκ : IsOrd (fst κ)
   ordκ = mem-ord {A = fst δ} ordδ (fst κ) κ∈δ
 
@@ -231,7 +244,6 @@ A witness of the untruncated content of `Ex` consists of `γ ∈ a` and an inter
 <!--/-->
 
 ```agda
-
     from-γ : Σ[ γ ∈ SL.S ] (⟨ fst γ ∈ˢ a ⟩ × InjL α' γ) → InjL α' κ
     from-γ (γ , γ∈a , α↪γ) =
       injl-trans α' γ κ α↪γ
@@ -260,7 +272,6 @@ The first trichotomy branch has `a ∈ κ`. Because an ordinal is transitive, ev
 <!--/-->
 
 ```agda
-
     go : Tri a (fst κ) → InjL α' κ
     go (inl a∈κ)       =
       inclusion-coded α' κ (λ z z∈a → ordκ .fst z∈a a∈κ)

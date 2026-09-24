@@ -1,27 +1,13 @@
-<!--en-->
-# The least-witness map inside a constructible stage
-
-Suppose that, for each input `x ∈ X`, we know only under propositional truncation that some `w ∈ Lset γ` satisfies `P(w,x)`. Such pointwise existence does not yet give a graph inside `L`, because one formula must determine a unique value. This chapter uses the canonical strict well order of the fixed stage to choose its least satisfying candidate, expresses that choice by a formula, and collects the graph as a set of `L`. The minimum is relative to this stage and this order, and `P` itself may have many witnesses.
-<!--zh-->
-# 可构造层内的最小见证映射
-
-设对每个输入 `x ∈ X`，我们只在命题截断下知道存在某个 `w ∈ Lset γ` 满足 `P(w,x)`。这种逐点存在还不能给出 `L` 内的函数图，因为必须有同一条公式确定唯一取值。本章利用固定层的典范严格良序，选取其中最小的满足候选，再以公式表达这一选取，并把图收集为 `L` 的集合。这里的最小元只相对于这个层与这条序，而 `P` 本身可以有许多见证。
-<!--ja-->
-# 構成可能な段階における最小の証人の写像
-
-各入力 `x ∈ X` について、`P(w,x)` を満たす `w ∈ Lset γ` があることを、命題的切り詰めのもとでだけ知っているとする。この各点での存在だけでは、`L` の内部にグラフはまだ得られない。一つの論理式が値を一意に定める必要があるからである。この章では、固定された段階の正準な狭義整列順序を使って条件を満たす最小の候補を選び、その選択を論理式で表し、グラフを `L` の集合として集める。最小性はこの段階とこの順序に相対的であり、`P` 自体は多数の証人をもってかまわない。
-<!--/-->
-
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
 ```
 
 <!--en-->
-Classical logic enters through the fixed excluded-middle hypothesis, which already underlies the canonical stage order. At the actual least-element search, it has a precise role: during well-founded descent it decides whether a smaller satisfying stage member merely exists. Propositional truncation is eliminated only into the total type of least witnesses, after that type has been proved to be a proposition; this gives no general way to extract arbitrary witnesses.
+# The least-witness map inside a constructible stage
 <!--zh-->
-经典逻辑经由固定的排中律假设进入，而层上的典范序本身已经依赖这一假设。在实际搜索最小元时，它承担一个明确职责：沿良基序下降的每一步，判定是否仅仅存在一个更小且满足谓词的层成员。命题截断只在「最小见证的总类型」已经证明为命题之后消去到该类型；这并不提供从任意命题截断中抽取见证的一般方法。
+# 可构造层内的最小见证映射
 <!--ja-->
-古典論理は、固定した排中律の仮定を通して入る。段階上の正準な順序も、すでにこの仮定に依存している。実際の最小要素の探索での役割は明確である。整礎的に降下する各段階で、条件を満たすより小さい段階の要素が単に存在するかを判定する。命題的切り詰めを除去する先は、最小の証人からなる全体型が命題であると示した後の、その型だけである。任意の切り詰めから証人を取り出す一般的方法が得られるわけではない。
+# 構成可能な段階における最小の証人の写像
 <!--/-->
 
 ```agda
@@ -41,14 +27,6 @@ Fix a universe level `ℓ` and excluded middle for propositions at level `ℓ-su
 module L.GCH.LeastWitnessMap {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
-<!--en-->
-The desired graph must be expressed in the first-order language of sets. Besides saying that `P(w,x)` holds, its formula must say that `w` lies in the chosen stage and that no smaller member of that stage also satisfies `P`. A bounded universal quantifier expresses the latter condition, while renaming lets the original two-variable formula keep its meaning after the smaller candidate is inserted into the environment.
-<!--zh-->
-所需的图必须用集合论的一阶对象语言表达。除了断言 `P(w,x)` 成立，其公式还须断言 `w` 位于选定层中，并且该层中没有更小的成员也满足 `P`。后一个条件由有界全称量词表达；把更小候选插入环境后，改名使原二元公式仍保持原义。
-<!--ja-->
-求めるグラフは、集合論の一階対象言語で表さなければならない。`P(w,x)` が成り立つことに加えて、`w` が選んだ段階に属し、その段階には `P` を満たすより小さい要素がないことも論理式で述べる必要がある。後者は有界の全称量化子で表し、より小さい候補を環境へ挿入した後も、名前替えによってもとの二変数論理式の意味を保つ。
-<!--/-->
-
 ```agda
 open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax using ( Formula; var; con; _∈̇_; _∧̇_; ¬̇_; ∀̇∈ )
@@ -56,7 +34,46 @@ open import FOL.Manipulation.Renaming using ( renameFo; module Sat )
 import FOL.Semantics
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Coding {ℓ} using ( pr )
+open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset; Lset→isL )
+open import L.Axioms.Basic {ℓ} using ( LsetS )
+open import L.Choice.StageOrders {ℓ} lem using ( orderAt; relOf ) renaming ( Mem to MemOf )
+open import L.Choice.InternalWellOrder {ℓ} lem using ( relL; relL-fill; relL-rep )
+open import L.WellOrder.Base {ℓₚ = ℓ-suc ℓ}
+  using ( SWO; leastOfFormula; lt; eq; gt ) renaming ( Tri to Tri∙ )
+open import L.DefinableInjection {ℓ} lem using ( DefinableMap; module Graph )
+open import L.GCH.CardinalSquareLaw {ℓ} lem using ( isL-ord )
+open import L.InjectionComposition {ℓ} lem using ( appC; appC-adequate )
 ```
+
+<!--en-->
+
+Suppose that, for each input `x ∈ X`, we know only under propositional truncation that some `w ∈ Lset γ` satisfies `P(w,x)`. Such pointwise existence does not yet give a graph inside `L`, because one formula must determine a unique value. This chapter uses the canonical strict well order of the fixed stage to choose its least satisfying candidate, expresses that choice by a formula, and collects the graph as a set of `L`. The minimum is relative to this stage and this order, and `P` itself may have many witnesses.
+<!--zh-->
+
+设对每个输入 `x ∈ X`，我们只在命题截断下知道存在某个 `w ∈ Lset γ` 满足 `P(w,x)`。这种逐点存在还不能给出 `L` 内的函数图，因为必须有同一条公式确定唯一取值。本章利用固定层的典范严格良序，选取其中最小的满足候选，再以公式表达这一选取，并把图收集为 `L` 的集合。这里的最小元只相对于这个层与这条序，而 `P` 本身可以有许多见证。
+<!--ja-->
+
+各入力 `x ∈ X` について、`P(w,x)` を満たす `w ∈ Lset γ` があることを、命題的切り詰めのもとでだけ知っているとする。この各点での存在だけでは、`L` の内部にグラフはまだ得られない。一つの論理式が値を一意に定める必要があるからである。この章では、固定された段階の正準な狭義整列順序を使って条件を満たす最小の候補を選び、その選択を論理式で表し、グラフを `L` の集合として集める。最小性はこの段階とこの順序に相対的であり、`P` 自体は多数の証人をもってかまわない。
+<!--/-->
+
+<!--en-->
+Classical logic enters through the fixed excluded-middle hypothesis, which already underlies the canonical stage order. At the actual least-element search, it has a precise role: during well-founded descent it decides whether a smaller satisfying stage member merely exists. Propositional truncation is eliminated only into the total type of least witnesses, after that type has been proved to be a proposition; this gives no general way to extract arbitrary witnesses.
+<!--zh-->
+经典逻辑经由固定的排中律假设进入，而层上的典范序本身已经依赖这一假设。在实际搜索最小元时，它承担一个明确职责：沿良基序下降的每一步，判定是否仅仅存在一个更小且满足谓词的层成员。命题截断只在「最小见证的总类型」已经证明为命题之后消去到该类型；这并不提供从任意命题截断中抽取见证的一般方法。
+<!--ja-->
+古典論理は、固定した排中律の仮定を通して入る。段階上の正準な順序も、すでにこの仮定に依存している。実際の最小要素の探索での役割は明確である。整礎的に降下する各段階で、条件を満たすより小さい段階の要素が単に存在するかを判定する。命題的切り詰めを除去する先は、最小の証人からなる全体型が命題であると示した後の、その型だけである。任意の切り詰めから証人を取り出す一般的方法が得られるわけではない。
+<!--/-->
+
+
+
+<!--en-->
+The desired graph must be expressed in the first-order language of sets. Besides saying that `P(w,x)` holds, its formula must say that `w` lies in the chosen stage and that no smaller member of that stage also satisfies `P`. A bounded universal quantifier expresses the latter condition, while renaming lets the original two-variable formula keep its meaning after the smaller candidate is inserted into the environment.
+<!--zh-->
+所需的图必须用集合论的一阶对象语言表达。除了断言 `P(w,x)` 成立，其公式还须断言 `w` 位于选定层中，并且该层中没有更小的成员也满足 `P`。后一个条件由有界全称量词表达；把更小候选插入环境后，改名使原二元公式仍保持原义。
+<!--ja-->
+求めるグラフは、集合論の一階対象言語で表さなければならない。`P(w,x)` が成り立つことに加えて、`w` が選んだ段階に属し、その段階には `P` を満たすより小さい要素がないことも論理式で述べる必要がある。後者は有界の全称量化子で表し、より小さい候補を環境へ挿入した後も、名前替えによってもとの二変数論理式の意味を保つ。
+<!--/-->
 
 <!--en-->
 Two views of the stage order are needed. The host-level strict well order supports least-element search, while a constructible set `Rγ` of coded ordered pairs lets the same comparison appear inside the object-language graph formula. The representation lemmas pass between these views; they do not identify them by definition.
@@ -66,14 +83,6 @@ Two views of the stage order are needed. The host-level strict well order suppor
 ここでは段階順序を二通りに読む必要がある。ホスト側の狭義整列順序は最小要素の探索を支え、符号化された順序対からなる構成可能集合 `Rγ` は、同じ比較を対象言語のグラフ論理式に現する。表示補題は二つの読みの間を移るが、両者を定義によって同一視するものではない。
 <!--/-->
 
-```agda
-open import V.Coding {ℓ} using ( pr )
-open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset; Lset→isL )
-open import L.Axioms.Basic {ℓ} using ( LsetS )
-open import L.Choice.StageOrders {ℓ} lem using ( orderAt; relOf ) renaming ( Mem to MemOf )
-open import L.Choice.InternalWellOrder {ℓ} lem using ( relL; relL-fill; relL-rep )
-```
-
 <!--en-->
 The strict well order supplies both a least-element operation and trichotomy. The former selects a value from a merely inhabited family of candidates; the latter proves that any two candidates satisfying the complete leastness specification coincide. Once that specification is expressed by a formula, replacement collects the resulting input-value pairs into a set of `L`.
 <!--zh-->
@@ -81,14 +90,6 @@ The strict well order supplies both a least-element operation and trichotomy. Th
 <!--ja-->
 狭義整列順序は、最小要素を得る操作と三分性の両方を与える。前者は単に非空な候補族から値を選び、後者は完全な最小性の仕様を満たす二つの候補が一致することを示す。その仕様を論理式で表した後、置換によって得られた入力と値の対を `L` の集合として集める。
 <!--/-->
-
-```agda
-open import L.WellOrder.Base {ℓₚ = ℓ-suc ℓ}
-  using ( SWO; leastOfFormula; lt; eq; gt ) renaming ( Tri to Tri∙ )
-open import L.DefinableInjection {ℓ} lem using ( DefinableMap; module Graph )
-open import L.GCH.CardinalSquareLaw {ℓ} lem using ( isL-ord )
-open import L.InjectionComposition {ℓ} lem using ( appC; appC-adequate )
-```
 
 <!--en-->
 Propositional truncation deliberately hides which initial candidate exists. The proof may eliminate that truncation only after changing the target to the total type of least elements and proving that this target is itself a proposition. Equality of constructible sets likewise ignores their proof components, so equality of the underlying sets is enough throughout the argument.
@@ -111,7 +112,6 @@ The carrier `S` packages an ambient set together with a proof that it is constru
 <!--/-->
 
 ```agda
-
 open hPropStructure 𝒮ʟ using ( S )
 ```
 
@@ -185,7 +185,6 @@ The least-witness module receives four pieces of data. The ordinal index `γ` wi
 最小の証人のモジュールは、四つのデータを受け取る。順序数性をもつ順序数の指数 `γ` が段階を決め、集合 `X` が入力を制約し、二項の論理式 `P` が述語であり、`X` の各入力に対して、段階から来るある候補がそこで述語を充足すると、単に、仮定される。候補は段階 `Lset γ` の全体から取られ、入力は `X` に制約される。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -195,8 +194,6 @@ module Least (γ : V ℓ) (oγ : IsOrd γ) (X : S) (P : Formula S 2)
 ```
 </summary>
 <div class="submodule-fold-content">
-
-
 
 <!--en-->
 The ambient stage `Lset γ` is packaged as an element `Lγ` of the constructible carrier. This package can occur as a constant in the graph formula, so the formula can bound its search to exactly the fixed candidate stage.
@@ -351,7 +348,6 @@ Selection is performed after fixing an input `x` and evidence `m : x ∈ X`. The
 選択は、入力 `x` と証拠 `m : x ∈ X` を固定してから各点で行う。この証拠によって各点の存在仮定 `have` を使えるが、候補が `X` に属することも、`X` に順序が入ることも意味しない。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -359,8 +355,6 @@ Selection is performed after fixing an input `x` and evidence `m : x ∈ X`. The
 ```
 </summary>
 <div class="submodule-fold-content">
-
-
 
 <!--en-->
 For the fixed input, the hypothesis is mapped into the type of good stage members. This changes only the representation of each possible witness: the resulting nonemptiness remains propositionally truncated, so no particular starting member has yet been chosen.
@@ -456,7 +450,6 @@ The membership component carried by the selected stage member also proves `e ∈
 ```
 </div>
 </details>
-
 
 <!--en-->
 For an input `x` equipped with `m : x ∈ X`, the function `fn` returns this selected candidate. Its domain evidence is explicit because the existence hypothesis is available only on `X`.
@@ -752,8 +745,7 @@ Once a formula defines one value for every input in `X`, replacement can collect
 <!--/-->
 
 ```agda
-  private
-    module Gr = Graph Dmap using ( F; F-in; pair-out )
+  private module Gr = Graph Dmap using ( F; F-in; pair-out )
 ```
 
 <!--en-->

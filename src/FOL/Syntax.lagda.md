@@ -1,20 +1,30 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+module FOL.Syntax where
+```
+
 <!--en-->
 # The object language
-
-Set theory talks about sets, but to prove theorems about set theory itself, its statements must first become mathematical objects in their own right: expressions put together by explicit rules rather than informal convention. This chapter defines that object language by fixing the available constant names, the variable positions that may be referred to, and the rules for forming terms and formulas. The central decision concerns scope. The length of an expression's free-variable context is part of its type, so a reference beyond that context is impossible to write, not merely forbidden.
 <!--zh-->
 # 对象语言
-
-集合论谈论集合，而要证明关于集合论本身的定理，它的语句必须先成为独立的数学对象，即按明确规则构造的表达式，而不是只靠约定形成的记号。本章定义这个对象语言，确定有哪些常元名、可以指涉哪些变量位置，以及词项与公式的形成规则。全章的中心决定关乎作用域：表达式的自由变量语境长度属于其自身类型，超出该语境的引用根本无法写出，而不只是不被允许。
 <!--ja-->
 # 対象言語
-
-集合論は集合について語る。しかし集合論そのものについて定理を証明するには、その文が、明示的な規則で組み立てられる式として、それ自体の数学的対象でなければならない。この章ではその対象言語を定義し、利用できる定数名、参照できる変数位置、そして項と論理式の形成規則を定める。本章の中心となる決定は作用域をめぐるものである。式の自由変数文脈の長さはその式自身の型の一部であり、その文脈を超える参照は、禁じられているというより、そもそも書けない。
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
+open import Base.Prelude
 ```
+
+<!--en-->
+
+Set theory talks about sets, but to prove theorems about set theory itself, its statements must first become mathematical objects in their own right: expressions put together by explicit rules rather than informal convention. This chapter defines that object language by fixing the available constant names, the variable positions that may be referred to, and the rules for forming terms and formulas. The central decision concerns scope. The length of an expression's free-variable context is part of its type, so a reference beyond that context is impossible to write, not merely forbidden.
+<!--zh-->
+
+集合论谈论集合，而要证明关于集合论本身的定理，它的语句必须先成为独立的数学对象，即按明确规则构造的表达式，而不是只靠约定形成的记号。本章定义这个对象语言，确定有哪些常元名、可以指涉哪些变量位置，以及词项与公式的形成规则。全章的中心决定关乎作用域：表达式的自由变量语境长度属于其自身类型，超出该语境的引用根本无法写出，而不只是不被允许。
+<!--ja-->
+
+集合論は集合について語る。しかし集合論そのものについて定理を証明するには、その文が、明示的な規則で組み立てられる式として、それ自体の数学的対象でなければならない。この章ではその対象言語を定義し、利用できる定数名、参照できる変数位置、そして項と論理式の形成規則を定める。本章の中心となる決定は作用域をめぐるものである。式の自由変数文脈の長さはその式自身の型の一部であり、その文脈を超える参照は、禁じられているというより、そもそも書けない。
+<!--/-->
 
 <!--en-->
 Each formula is written against a finite context of free variables, and the length of that context, a natural number `n`, belongs to the formula's type. A variable is an element of `Fin n`{.Agda}, the type of positions `0` through `n - 1`. The point becomes visible when a quantifier is formed: its body has one more available variable position than the quantified formula itself, so the index grows from `n` to `suc n`. A term therefore cannot mention a variable outside its context, because no such position exists.
@@ -24,11 +34,6 @@ Each formula is written against a finite context of free variables, and the leng
 各論理式は有限の自由変数文脈の上に書かれ、その長さにあたる自然数 `n` は論理式自身の型の一部である。変数は `Fin n`{.Agda} の元、つまり位置 `0` から `n - 1` までである。量化子を形成すると、この設計がそのまま現れる。量化子の本体には、量化して得られる論理式より利用できる変数位置が一つ多いため、添字は `n` から `suc n` へ進む。したがって項は文脈の外の変数に言及できない。そのような位置は存在しないからである。
 <!--/-->
 
-```agda
-
-module FOL.Syntax where
-```
-
 <!--en-->
 Variables determine what a formula may refer to; constants determine what it may name. Besides the context length `n`, a formula is formulated over an arbitrary type `K` of constant symbols, the **constant domain**. The type `K` is chosen once for the whole language, so the names available within a formula never change. These two choices are independent: `K` determines which parameters may be named, while `n` determines how many variable positions may be used. Enlarging one leaves the other unchanged.
 <!--zh-->
@@ -36,11 +41,6 @@ Variables determine what a formula may refer to; constants determine what it may
 <!--ja-->
 変数は論理式が何を参照できるかを決め、定数は何を名指せるかを決める。文脈の長さ `n` のほかに、論理式は任意の定数記号の型 `K`、すなわち**定数域**の上で述べられる。`K` は言語全体に対して一度だけ選ばれるため、一つの論理式の中で使える名前が変わることはない。この二つの選択は独立である。`K` は名指せるパラメータを、`n` は使える変数位置の個数を定め、一方を広げても他方は変わらない。
 <!--/-->
-
-```agda
-
-open import Base.Prelude
-```
 
 <!--en-->
 ## Terms and formulas
@@ -137,7 +137,6 @@ That the connectives are constructors rather than abbreviations is a deliberate 
 <!--/-->
 
 ```agda
-
 data Formula {ℓ} (K : Type ℓ) (n : ℕ) : Type ℓ where
   _∈̇_ _≐_     : Term K n → Term K n → Formula K n
   _∧̇_ _∨̇_ _⇒̇_ : Formula K n → Formula K n → Formula K n
@@ -172,7 +171,6 @@ Negation is not a constructor but a defined symbol: `¬̇ φ` is, by definition,
 <!--/-->
 
 ```agda
-
 ¬̇_ : ∀ {ℓ} {K : Type ℓ} {n} → Formula K n → Formula K n
 ¬̇ φ = φ ⇒̇ ⊥̇
 ```
@@ -186,7 +184,6 @@ Truth is defined in the same style: `⊤̇` is `⊥̇ ⇒̇ ⊥̇`, the implicat
 <!--/-->
 
 ```agda
-
 ⊤̇ : ∀ {ℓ} {K : Type ℓ} {n} → Formula K n
 ⊤̇ = ⊥̇ ⇒̇ ⊥̇
 ```

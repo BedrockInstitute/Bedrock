@@ -1,21 +1,13 @@
-<!--en-->
-Internal reasoning about syntax begins with a set of formula keys inside `L`. This chapter compares such a candidate domain with the external formula grammar in two directions: every member merely decodes to a formula key, and every genuine formula key belongs to the domain. These claims concern code membership, not the truth or satisfaction of the encoded formulas.
-<!--zh-->
-关于语法的内部论证从 `L` 中的一组公式键开始。本章从两个方向比较候选码域与外部公式文法：域中每个成员都纯粹地可解码为某条公式的键，而每条真实公式的键都属于该域。这些结论只涉及码的隶属，不涉及被编码公式的真值或满足关系。
-<!--ja-->
-構文についての内部的な議論は、`L` の中の論理式キーの集合から始まる。本章は、候補となる符号領域と外部の論理式文法を二方向に比較する。領域の各要素は、ある論理式のキーへ単に復号でき、すべての真正な論理式キーは領域に属する。これらは符号の所属についての主張であり、符号化された論理式の真理や充足についての主張ではない。
-<!--/-->
-
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
 ```
 
 <!--en-->
-The argument uses excluded middle together with propositional truncation. Truncation records that a decoding witness exists without choosing one, and it may be eliminated only when the target is again a proposition.
+# Soundness and completeness of the closed code domain
 <!--zh-->
-以下论证同时使用排中律与命题截断。命题截断只记录解码见证的存在，而不从中选定一个见证；只有当目标仍是命题时，才能消去这层截断。
+# 封闭码定义域的可靠性与完备性
 <!--ja-->
-以下の議論では、排中律と命題的切り詰めを併用する。命題的切り詰めは、復号の証人を選び出すことなく、その存在だけを記録する。この切り詰めを除去できるのは、行き先も命題である場合に限られる。
+# 閉じた符号の定義域の健全性と完全性
 <!--/-->
 
 ```agda
@@ -35,6 +27,62 @@ Assume `lem : LEM (ℓ-suc ℓ)`. Every construction in the chapter is relative 
 module L.Coding.CodeDomainAdequacy {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax using
+  ( Formula; Term; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇_; ∀̇_; ∃̇∈; ∀̇∈ )
+import FOL.Absoluteness
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Coding {ℓ} using ( pr; pr-inj; #-inj′; #mono )
+open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
+open import L.Coding.Environment {ℓ} using ( env )
+open import L.Coding.EnvironmentSet {ℓ} lem using ( envSet )
+open import L.Axioms.Numerals {ℓ} using ( numeralL-fst; sucʟ; sucʟ-fst )
+open import L.Coding.Model {ℓ} using ( appAt; appAt-adequate )
+open import L.Coding.Expressions {ℓ} using ( sucAtL )
+open import L.Coding.Model {ℓ} using ( container )
+import L.Coding.Expressions {ℓ} as CodingExpressions
+open import L.Coding.Quantification {ℓ} using
+  ( i0; i1; i2; i3; i4; i5; i6; i7; i8; sh
+  ; pr-out; pr-in; down; fstS; sndS; suc-out; suc-in
+  ; sndEx; sndAll; bothEx
+  ; sndEx-out; sndAll-in; bothEx-out; bothAll-in
+  ; fillSnd; fillBoth; useSnd; useBoth
+  ; f0; f1; f2; f3; f4; f5; f6; f7; f8; f9
+  ; bigOr-in; bigOr-out )
+open import L.Coding.EnvironmentTower {ℓ} lem using ( module Tower; nn )
+open import L.Coding.CodeDomain {ℓ} using
+  ( isTm; keyUp; keyExpr; atomKeyExpr; bndKeyExpr
+  ; unKey; binKey; atomKey; bndKey
+  ; Tags; shN; module Shape; shapeAt; module Close; closeAt; codesAt )
+open import L.Coding.CodeAlphabet {ℓ} using ( module Alphabet )
+open import L.Coding.Expressions {ℓ} using ( tagAtL-adequate )
+open import L.Coding.Closure {ℓ} using ( closedAt; binSameClosed-in; unSuccClosed-in; binSuccClosed-in )
+open import L.Coding.CodeShape {ℓ} using
+  ( shapedAt; shaped-in; ShapeWit; BinWit; bothTm; fstTm; noneB; isTmAt )
+open import L.Coding.CodeSet {ℓ} lem using
+  ( AllCodes; AllCodes-out; key∈AllCodes; keyS; codeS; witnessAt-out )
+open import L.Ordinal {ℓ} using ( ∈#-elim )
+```
+
+<!--en-->
+Internal reasoning about syntax begins with a set of formula keys inside `L`. This chapter compares such a candidate domain with the external formula grammar in two directions: every member merely decodes to a formula key, and every genuine formula key belongs to the domain. These claims concern code membership, not the truth or satisfaction of the encoded formulas.
+<!--zh-->
+关于语法的内部论证从 `L` 中的一组公式键开始。本章从两个方向比较候选码域与外部公式文法：域中每个成员都纯粹地可解码为某条公式的键，而每条真实公式的键都属于该域。这些结论只涉及码的隶属，不涉及被编码公式的真值或满足关系。
+<!--ja-->
+構文についての内部的な議論は、`L` の中の論理式キーの集合から始まる。本章は、候補となる符号領域と外部の論理式文法を二方向に比較する。領域の各要素は、ある論理式のキーへ単に復号でき、すべての真正な論理式キーは領域に属する。これらは符号の所属についての主張であり、符号化された論理式の真理や充足についての主張ではない。
+<!--/-->
+
+<!--en-->
+The argument uses excluded middle together with propositional truncation. Truncation records that a decoding witness exists without choosing one, and it may be eliminated only when the target is again a proposition.
+<!--zh-->
+以下论证同时使用排中律与命题截断。命题截断只记录解码见证的存在，而不从中选定一个见证；只有当目标仍是命题时，才能消去这层截断。
+<!--ja-->
+以下の議論では、排中律と命題的切り詰めを併用する。命題的切り詰めは、復号の証人を選び出すことなく、その存在だけを記録する。この切り詰めを除去できるのは、行き先も命題である場合に限られる。
+<!--/-->
+
+
+
 <!--en-->
 The chapter speaks about the full first-order language of set theory: formulas with the two bounded quantifiers as well as the unbounded ones, and terms built from variables and constants. These are the objects whose codes the domain must gather and describe.
 <!--zh-->
@@ -43,14 +91,6 @@ The chapter speaks about the full first-order language of set theory: formulas w
 本章は集合論の完全な一階言語を扱う。論理式には非有界の量化子に加えて二つの有界量化子があり、項は変数と定数から作られる。領域が集めて記述すべき対象は、これらである。
 <!--/-->
 
-```agda
-open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using
-  ( Formula; Term; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇_; ∀̇_; ∃̇∈; ∀̇∈ )
-import FOL.Absoluteness
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-```
-
 <!--en-->
 Formula keys are nested ordered pairs, so injectivity of pairing recovers their arity, tag, and payload from an equality of keys. Natural-number arities are represented by von Neumann numerals, and constructible environment sets provide internal representatives for finite parameter vectors.
 <!--zh-->
@@ -58,14 +98,6 @@ Formula keys are nested ordered pairs, so injectivity of pairing recovers their 
 <!--ja-->
 論理式キーは入れ子の順序対なので、対符号化の単射性により、キーの等しさからアリティ、タグ、ペイロードを復元できる。自然数のアリティはフォン・ノイマン数項で表され、構成可能な環境集合が有限パラメータベクトルの内部表現を与える。
 <!--/-->
-
-```agda
-open import V.Coding {ℓ} using ( pr; pr-inj; #-inj′; #mono )
-open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
-open import L.Coding.Environment {ℓ} using ( env )
-open import L.Coding.EnvironmentSet {ℓ} lem using ( envSet )
-open import L.Axioms.Numerals {ℓ} using ( numeralL-fst; sucʟ; sucʟ-fst )
-```
 
 <!--en-->
 The object language can express that a structurally assembled key belongs to a candidate domain. Ordered-pair expressions build the nested key, and their adequacy theorem identifies satisfaction of the resulting formula with membership of the corresponding host-level pair code.
@@ -76,10 +108,6 @@ The object language can express that a structurally assembled key belongs to a c
 <!--/-->
 
 ```agda
-open import L.Coding.Model {ℓ} using ( appAt; appAt-adequate )
-open import L.Coding.Expressions {ℓ} using ( sucAtL )
-open import L.Coding.Model {ℓ} using ( container )
-import L.Coding.Expressions {ℓ} as CodingExpressions
 module E = CodingExpressions.PairExpression
 ```
 
@@ -91,14 +119,6 @@ Quantifier codes change arity. The body of either kind of quantifier is a key at
 量化子の符号ではアリティが変わる。どちらの量化子でも本体は後続アリティのキーであり、有界量化子はさらに現在のアリティで正当な項をもつ。対、後続、拡張環境についての意味論的補題が、束縛子の下で起こるこれらの変化を正確に表す。
 <!--/-->
 
-```agda
-open import L.Coding.Quantification {ℓ} using
-  ( i0; i1; i2; i3; i4; i5; i6; i7; i8; sh
-  ; pr-out; pr-in; down; fstS; sndS; suc-out; suc-in
-  ; sndEx; sndAll; bothEx
-  ; sndEx-out; sndAll-in; bothEx-out; bothAll-in
-```
-
 <!--en-->
 Existential payload descriptions are propositionally truncated, sometimes through two nested witnesses. Their inward and outward readings preserve that truncation. The ten constructor tags are represented by the numerals zero through nine, and a separate environment tower records the arity at which each code is read.
 <!--zh-->
@@ -107,14 +127,6 @@ Existential payload descriptions are propositionally truncated, sometimes throug
 存在的なペイロードの記述は命題的に切り詰められ、ときには二重の証人を含む。その内向きと外向きの読みは、この切り詰めを保つ。十個の構成子タグは零から九までの数項で表され、別の環境塔が各符号を読むアリティを記録する。
 <!--/-->
 
-```agda
-  ; fillSnd; fillBoth; useSnd; useBoth
-  ; f0; f1; f2; f3; f4; f5; f6; f7; f8; f9
-  ; bigOr-in; bigOr-out )
-open import L.Coding.EnvironmentTower {ℓ} lem using ( module Tower; nn )
-open import L.Coding.CodeDomain {ℓ} using
-```
-
 <!--en-->
 The description `codesAt` has two complementary halves. `shapeAt` reads an existing domain member as one of the ten constructor shapes and, for composite codes, requires its immediate subkeys to remain in the domain. `closeAt` goes in the generating direction: legal terms and existing subkeys produce the corresponding new key.
 <!--zh-->
@@ -122,13 +134,6 @@ The description `codesAt` has two complementary halves. `shapeAt` reads an exist
 <!--ja-->
 記述 `codesAt` には、相補的な二つの部分がある。`shapeAt` は領域の既存要素を十種類の構成子形のいずれかとして読み、複合符号では直下の部分キーも領域に残ることを要求する。`closeAt` は生成する向きの主張であり、正当な項と既存の部分キーから対応する新しいキーが得られる。
 <!--/-->
-
-```agda
-  ( isTm; keyUp; keyExpr; atomKeyExpr; bndKeyExpr
-  ; unKey; binKey; atomKey; bndKey
-  ; Tags; shN; module Shape; shapeAt; module Close; closeAt; codesAt )
-open import L.Coding.CodeAlphabet {ℓ} using ( module Alphabet )
-```
 
 <!--en-->
 A constructor tag is an element of `Fin 10`; its natural-number value selects one of the ten payload predicates and is automatically less than ten. Environments are finite vectors, while the codes stored in the hierarchy are nested set-theoretic pairs.
@@ -149,8 +154,6 @@ Decoding branches over disjoint constructor cases and often returns only a propo
 <!--ja-->
 復号は互いに排他的な構成子の場合に分かれ、多くの場合、命題的に切り詰められた証人だけを返す。対の等しさは成分ごとに移され、不可能なタグは空型へ至る。これらの操作から、単に存在する論理式を大域的に選ぶ復号写像は得られない。
 <!--/-->
-
-
 
 <!--en-->
 The cumulative hierarchy supplies set-valued ordered-pair codes, von Neumann numerals, and the successor operation on arities. Membership has a small fibre presentation, and equality of hierarchy sets is a proposition; these facts justify the truncated decompositions and their elimination into membership or equality claims.
@@ -177,7 +180,6 @@ The carrier of the constructible structure is fixed as `S`, so every environment
 <!--/-->
 
 ```agda
-
 open hPropStructure 𝒮ʟ using ( S )
 ```
 
@@ -223,7 +225,6 @@ The first three payload predicates cover atomic formulas, binary connectives, an
 <!--ja-->
 最初の三種類のペイロード述語は、原子論理式、二項結合子、偽を扱う。原子のペイロードは二つの正当な項符号へ単に分解され、二項のペイロードは候補領域にすでに属する同じアリティの二つの部分キーへ単に分解される。偽のペイロードは直接の等式 `r = # 0` であり、存在証人をもたない。
 <!--/-->
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
@@ -313,7 +314,6 @@ A key at arity `ar` is, merely, a tag from the ten together with a payload of th
 </div>
 </details>
 
-
 <!--en-->
 Fix an environment containing a proposed term code `t`, an arity set `ar`, a working set `Wv`, and two entries known to be the numerals zero and one. Under these tag equations, the object-language predicate `isTm` can be compared exactly with the ambient predicate `IsTmV Wv t ar`.
 <!--zh-->
@@ -321,7 +321,6 @@ Fix an environment containing a proposed term code `t`, an arity set `ar`, a wor
 <!--ja-->
 候補となる項符号 `t`、アリティ集合 `ar`、作業集合 `Wv`、そしてそれぞれ数項零と一であることが分かっている二つの要素を含む環境を固定する。これらのタグ等式のもとで、対象言語の述語 `isTm` と外部の述語 `IsTmV Wv t ar` を正確に比較できる。
 <!--/-->
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
@@ -399,7 +398,6 @@ The variable branch fills the witness `i` under the existential at the numeral-o
 </div>
 </details>
 
-
 <!--en-->
 The predicate `keyUp C ar r` expresses one precise membership statement: the pair `(suc ar,r)` belongs to `C`. Its bounded existential presentation chooses an actual member of `C` and then exposes enough of that member to verify both its pair shape and the successor equation.
 <!--zh-->
@@ -407,7 +405,6 @@ The predicate `keyUp C ar r` expresses one precise membership statement: the pai
 <!--ja-->
 述語 `keyUp C ar r` は、一つの正確な所属、すなわち対 `(suc ar,r)` が `C` に属することを表す。その有界存在による表現は、`C` の実際の要素を選び、その要素を順に明らかにして、対の形と後続の等式の両方を確かめる。
 <!--/-->
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
@@ -487,7 +484,6 @@ Concretely, `ar'` represents `suc ar`, `c'` represents the member `(suc ar,r)` o
 </div>
 </details>
 
-
 <!--en-->
 Fix a candidate domain `C`, an arity value `A`, a tag value `N`, and a payload `a`. The unary key assembled from these data is the nested pair `(A,(N,a))`.
 <!--zh-->
@@ -495,7 +491,6 @@ Fix a candidate domain `C`, an arity value `A`, a tag value `N`, and a payload `
 <!--ja-->
 候補領域 `C`、アリティ値 `A`、タグ値 `N`、ペイロード `a` を固定する。これらから組み立てる単項キーは、入れ子の対 `(A,(N,a))` である。
 <!--/-->
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
@@ -521,7 +516,6 @@ The outward reading of `unKey` states precisely that the nested key `(A,(N,a))` 
 <!--/-->
 
 ```agda
-
   unKey-out : ⟨ δ ⊨ unKey C ar N a ⟩ → ⟨ pr A (pr Nv (fst (lookup a δ))) ∈ Cv ⟩
   unKey-out = E.member-out (keyExpr ar N (E.slot a)) (var C) δ
 ```
@@ -541,7 +535,6 @@ Adequacy works in the reverse direction as well: membership `(A,(N,a)) ∈ C` yi
 </div>
 </details>
 
-
 <!--en-->
 For a binary constructor, fix two payload components `a` and `b`. Their ordered pair `P=(a,b)` becomes the payload of the key `(A,(N,P))`; the arity and tag occupy the same outer positions as in the unary case.
 <!--zh-->
@@ -549,7 +542,6 @@ For a binary constructor, fix two payload components `a` and `b`. Their ordered 
 <!--ja-->
 二項構成子について、二つのペイロード成分 `a` と `b` を固定する。その順序対 `P=(a,b)` がキー `(A,(N,P))` のペイロードとなり、アリティとタグは単項の場合と同じ外側の位置を占める。
 <!--/-->
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
@@ -606,7 +598,6 @@ The inward reading is its reverse, and the two together identify the formula sta
 </div>
 </details>
 
-
 <!--en-->
 An atomic key has two term codes as its payload. Each term code carries its own term tag and argument, and the pair of these two term codes is placed beneath the atomic constructor tag and the common arity.
 <!--zh-->
@@ -614,7 +605,6 @@ An atomic key has two term codes as its payload. Each term code carries its own 
 <!--ja-->
 原子キーのペイロードは二つの項符号である。各項符号はそれぞれの項タグと引数をもち、その二つの項符号の対が、原子構成子のタグと共通のアリティの下に置かれる。
 <!--/-->
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
@@ -672,7 +662,6 @@ The inward reading is its reverse, closing the atomic case in both directions li
 </div>
 </details>
 
-
 <!--en-->
 A bounded-quantifier key carries two different components in its payload: a term code for the bound and a subformula code for the body. The common outer data are again the current arity `A` and the bounded-quantifier tag `N`.
 <!--zh-->
@@ -680,7 +669,6 @@ A bounded-quantifier key carries two different components in its payload: a term
 <!--ja-->
 有界量化子のキーのペイロードには、異なる二つの成分がある。境界を表す項符号と、本体を表す部分論理式の符号である。共通する外側のデータは、やはり現在のアリティ `A` と有界量化子タグ `N` である。
 <!--/-->
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
@@ -738,7 +726,6 @@ Conversely, membership of `(A,(N,(T,Av)))` in `C` yields satisfaction of `bndKey
 </div>
 </details>
 
-
 <!--en-->
 Now fix a candidate code domain `C`, a working set `W`, and ten environment entries certified to be the numerals zero through nine. For each tag, the object-language payload description can then be compared with its ambient predicate `AtomP`, `BinP`, `ConP`, `QuP`, or `BqP`.
 <!--zh-->
@@ -746,7 +733,6 @@ Now fix a candidate code domain `C`, a working set `W`, and ten environment entr
 <!--ja-->
 ここで、候補となる符号領域 `C`、作業集合 `W`、そして零から九までの数項であることが証明された十個の環境要素を固定する。すると各タグについて、対象言語のペイロード記述を、対応する外部の述語 `AtomP`、`BinP`、`ConP`、`QuP`、`BqP` と比較できる。
 <!--/-->
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
@@ -1142,7 +1128,6 @@ Label nine completes the list; beyond ten there is nothing to read, since no leg
 </div>
 </details>
 
-
 <!--en-->
 The ten-way reader interprets a tagged payload in a seven-entry extension of the ambient environment. It reads the code set and constant alphabet from the ambient entries, while `N` selects ten ambient positions whose values are identified with the numerals zero through nine by the tag hypothesis.
 <!--zh-->
@@ -1150,7 +1135,6 @@ The ten-way reader interprets a tagged payload in a seven-entry extension of the
 <!--ja-->
 十通りの読みは、周囲の環境を七項目だけ拡張した環境でタグ付きペイロードを解釈する。符号集合と定数アルファベットは周囲の項目から読み、`N` は周囲の環境にある十個の位置を選ぶ。タグの仮定は、それらの値をそれぞれ数項 0 から 9 までと同定する。
 <!--/-->
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
@@ -1192,7 +1176,6 @@ The tag reader converts satisfaction of the `j`-th tag atom into a key. The trun
 <!--/-->
 
 ```agda
-
   at-out : (j : Fin 10) → ⟨ δ ⊨ Sh.at j ⟩ → Key A P
   at-out j h = map₁
     (λ { (r , s , (e , hp)) → j , fst r
@@ -1253,7 +1236,6 @@ The ten-way outward reader consumes the disjunction and quotes the tag reader at
 <!--/-->
 
 ```agda
-
   ten-out : ⟨ δ ⊨ Sh.ten ⟩ → Key A P
   ten-out h = rec₁ squash₁ (λ { (j , hj) → at-out j hj }) (bigOr-out δ 9 Sh.at h)
 ```
@@ -1274,7 +1256,6 @@ The inward reader enters the disjunction at the witnessed tag, with the payload 
 </div>
 </details>
 
-
 <!--en-->
 The shape reader fixes three ambient sets: the candidate code set `C`, the constant alphabet `w`, and the tower `E` of arity-family pairs. Their underlying iterative sets are used respectively for code membership, legal constant terms, and witnesses `(ar,F)` belonging to the tower.
 <!--zh-->
@@ -1282,7 +1263,6 @@ The shape reader fixes three ambient sets: the candidate code set `C`, the const
 <!--ja-->
 形の読みは三つの周囲の集合を固定する。候補となる符号集合 `C`、定数アルファベット `w`、そしてアリティと族の対からなる塔 `E` である。それぞれの基礎にある反復集合は、符号の所属、定数項の合法性、塔に属する証人 `(ar,F)` に用いられる。
 <!--/-->
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
@@ -1434,7 +1414,6 @@ Applying the assumed shape assignment to `c` and its membership supplies precise
 </div>
 </details>
 
-
 <!--en-->
 The closure clauses are interpreted after a tower member has been decomposed as `q ≡ pr ar F`. In the resulting four-entry extension, `A` is the fixed arity `ar`; the code set and constant alphabet remain available from the ambient environment, and the tag equations remain valid after the shift.
 <!--zh-->
@@ -1442,7 +1421,6 @@ The closure clauses are interpreted after a tower member has been decomposed as 
 <!--ja-->
 塔の要素を `q ≡ pr ar F` と分解した後で、各閉性の節を解釈する。得られる四項目の拡張では、`A` は固定されたアリティ `ar` である。符号集合と定数アルファベットは周囲の環境から引き続き参照でき、タグ等式もシフト後に保たれる。
 <!--/-->
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
@@ -1811,7 +1789,6 @@ Introduce the quantified subkey data and the bounding term, then apply the assum
 </div>
 </details>
 
-
 <!--en-->
 ## Soundness: decoding every member
 <!--zh-->
@@ -1828,14 +1805,6 @@ To prove soundness, we now connect three descriptions already available: numeric
 健全性を証明するため、ここまでに得た三つの記述を結ぶ。数値タグは十種類の構成子を識別し、形と閉包の論理式は集合内部の符号を記述し、`AllCodes` はそれらの符号を外部の論理式文法へ結び戻す。関係する性質は命題なので、代表を選ばずに切り詰められた証人を除去できる。
 <!--/-->
 
-```agda
-open import L.Coding.Expressions {ℓ} using ( tagAtL-adequate )
-open import L.Coding.Closure {ℓ} using ( closedAt; binSameClosed-in; unSuccClosed-in; binSuccClosed-in )
-open import L.Coding.CodeShape {ℓ} using
-  ( shapedAt; shaped-in; ShapeWit; BinWit; bothTm; fstTm; noneB; isTmAt )
-open import L.Coding.CodeSet {ℓ} lem using
-```
-
 <!--en-->
 The canonical code set provides both directions of this comparison: a member can be read as a formula key, and every formula has a canonical key. The remaining imports supply the witnesses for recorded arities and the fact that conjunctions of propositions are again propositions.
 <!--zh-->
@@ -1844,10 +1813,6 @@ The canonical code set provides both directions of this comparison: a member can
 標準的な符号集合は、この比較の両方向を与える。その要素は論理式キーとして読め、どの論理式にも標準的なキーがある。残りの導入からは、記録されたアリティの証人と、二つの命題の連言も命題であるという事実を得る。
 <!--/-->
 
-```agda
-  ( AllCodes; AllCodes-out; key∈AllCodes; keyS; codeS; witnessAt-out )
-```
-
 <!--en-->
 Fix a working set `Wv`, whose elements may occur as constants, and a candidate code domain `Cv`. The following argument is parametric in these two sets; no assumption yet identifies `Cv` with the canonical domain `AllCodes`.
 <!--zh-->
@@ -1855,7 +1820,6 @@ Fix a working set `Wv`, whose elements may occur as constants, and a candidate c
 <!--ja-->
 定数として現れうる要素をもつ作業集合 `Wv` と、候補となる符号領域 `Cv` を固定する。以下の議論はこの二つの集合をパラメータとし、この時点では `Cv` が標準的な領域 `AllCodes` であるとは仮定しない。
 <!--/-->
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
@@ -1944,7 +1908,6 @@ Applying this elimination to `key` completes the alignment: the tag and payload 
 </div>
 </details>
 
-
 <!--en-->
 The first recovery lemma converts a term-code statement into a satisfaction of the shape chapter's term predicate. It is stated for arbitrary slots and proved by eliminating the truncated `IsTmV` into the proposition-valued satisfaction.
 <!--zh-->
@@ -1997,7 +1960,6 @@ We can now state soundness for a candidate domain `C`. Assume that the constant 
 <!--ja-->
 これで候補領域 `C` の健全性を述べられる。定数字母表が集合 `W` であり、十個のタグ枠に正しい数項が入り、環境集合に記録された各アリティが自然数の数項であり、`C` が形の記述を満たすと仮定する。これらの仮定から、`C` の各要素を論理式キーとして復元する。
 <!--/-->
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
@@ -2332,7 +2294,6 @@ Tag zero denotes membership. Its payload contains two legal term codes, so the b
 <!--/-->
 
 ```agda
-
       fill : (k : Fin 10) (c' arS rS : S) → PayN (toℕ k) (fst arS) (fst rS)
            → fst c' ≡ pr (fst arS) (pr (# (toℕ k)) (fst rS))
            → ∥ ShapeWit (sh 2 w) (δ' c) c' ∥₁
@@ -2523,7 +2484,6 @@ The required shape data is precisely the result of applying `shape-out` to the a
 </div>
 </details>
 
-
 <!--en-->
 ## Completeness: encoding every formula
 <!--zh-->
@@ -2541,7 +2501,6 @@ Two arithmetic facts about finite indices enter here: converting a natural numbe
 <!--/-->
 
 ```agda
-open import L.Ordinal {ℓ} using ( ∈#-elim )
 open import Cubical.Data.FinData.Properties using ( fromℕ'; toFromId' )
 ```
 
@@ -2552,7 +2511,6 @@ For completeness, assume a code-domain slot `C`, an alphabet slot `w`, and an ar
 <!--ja-->
 完全性を示すため、符号領域のスロット `C`、アルファベットのスロット `w`、アリティ塔のスロット `E` を固定し、十個のタグが正しく解釈されると仮定する。さらに、すべての正準な塔の要素が `E` に属し、上向きの閉包条項が成り立つと仮定する。目標は、アルファベット上のすべての論理式のキーが `C` に属することである。
 <!--/-->
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
@@ -2752,7 +2710,6 @@ The bounded existential repeats the same two arguments at its own tag, completin
 </div>
 </details>
 
-
 <!--en-->
 ## The canonical closed code domain
 <!--zh-->
@@ -2768,7 +2725,6 @@ It remains to show that the canonical domain really satisfies the description. T
 <!--ja-->
 最後に、正準な符号領域が実際にこの記述を満たすことを示す。符号スロットには `AllCodes W` を、アリティのスロットには `W` 上の環境塔を表させ、等式 `qC` と `qE` でそれぞれの同一視を記録する。
 <!--/-->
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
@@ -2993,7 +2949,6 @@ Variables decode through the numeral elimination: a member of the arity numeral 
 <!--/-->
 
 ```agda
-
     varDec : (n : ℕ) (A : V ℓ) → A ≡ # n → TmDec {n} f1 A
     varDec n A qa x x∈ = map₁
       (λ { (j , (p , ex)) → var (fromℕ' n j p) , cong (pr (# 1)) (cong #_ (toFromId' n j p) ∙ sym ex) })
@@ -3007,7 +2962,6 @@ Fix one entry `q` of the environment tower and an equation identifying its recor
 <!--ja-->
 環境塔の一つの項目 `q` を固定し、そこに記録されたアリティが `# n` と等しいと仮定する。局所文脈 `δ4` は、閉包論理式が要求する四つの値、すなわちアリティ表、アリティの数項、その項目と表を結ぶ容器、そして項目自身を与える。
 <!--/-->
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
@@ -3383,7 +3337,6 @@ The last four clauses treat bounded universal and existential quantification. Ea
 </div>
 </details>
 
-
 <!--en-->
 It remains to establish the closure clauses at every entry `q` of the environment tower. The tower theorem expresses `q`, under propositional truncation, as the canonical entry `(# n, envSet W n)` for some `n`. Its first-component equation identifies the recorded arity with `# n`, so the eighteen clauses assembled in `At.all` apply at that entry.
 <!--zh-->
@@ -3393,7 +3346,6 @@ It remains to establish the closure clauses at every entry `q` of the environmen
 <!--/-->
 
 ```agda
-
     close : ⟨ γ ⊨ closeAt C w E N ⟩
     close q q∈ = bothAll-in i0 (Close.all C w N) (q ∷ γ) (λ ar F s s∈ ar∈ F∈ e →
       rec₁ (snd ((F ∷ ar ∷ s ∷ q ∷ γ) ⊨ Close.all C w N))
@@ -3410,13 +3362,11 @@ The canonical domain `AllCodes W` now satisfies both halves of `codesAt`: `shape
 <!--/-->
 
 ```agda
-
   holds : ⟨ γ ⊨ codesAt C w E N ⟩
   holds = shape , close
 ```
 </div>
 </details>
-
 
 <!--en-->
 ## Recap

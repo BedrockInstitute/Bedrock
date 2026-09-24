@@ -13,20 +13,20 @@ to Agda, so a master typechecks directly. Code is **English-only** inside ` ```a
 Nothing here is generated: the woven mono-lingual copies and the rendered site live under
 `_build/` (git-ignored).
 
-## `Milestones.lagda.md` and the reading catalog
+## `Origin.lagda.md` and the reading catalog
 
-`Milestones.lagda.md` is the Agda and HTML build root. Its import closure reaches every
-other module, so `agda src/Milestones.lagda.md` typechecks the whole development. The
+`Origin.lagda.md` is the Agda and HTML build root. Its import closure reaches every
+other module, so `agda src/Origin.lagda.md` typechecks the whole development. The
 machine-readable reading catalog lives in [`dev/reading-catalog.json`](../dev/reading-catalog.json):
 it stores the reading order, translated chapter labels, stages, descriptions and routes.
 The site renders the reading guide from that data, while the sidebar's module tree remains
 the derived **structure catalog**. When you add a module, add it to the reading catalog after
 its prerequisites and before its substantive consumers; `scripts/gate/check-reading-order.py`
-checks exact coverage and prerequisite order. Milestones is the explicitly labelled preview.
+checks exact coverage and prerequisite order. Origin is the explicitly labelled preview.
 
 ## Current modules
 
-`Milestones.lagda.md` is the trophy case and reads first in the catalog: the
+`Origin.lagda.md` is the trophy case and reads first in the catalog: the
 storefront, before the foundations stage. It displays the implications `SetChoice→LEM` and
 `LEM→ΩResizing`, followed by `V⊨ZF`, `V⊨ZFC`, `L⊨ZFC` and
 `L⊨GCH`, each imported from its proving chapter. **Both `L` trophies are

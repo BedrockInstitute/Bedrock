@@ -1,21 +1,13 @@
-<!--en-->
-The problem of this chapter is to recognize, by a bounded formula, the collection of subsets of a constructible carrier that are first-order definable over that carrier with parameters from it. This collection is the definable power set `𝒟ₒ`, not the full internal power set. Its internal description is correct only when the numeral tags, code domain, and satisfaction table have their intended meanings.
-<!--zh-->
-本章要解决的问题是：怎样用有界公式识别一个可构造载体的所有一阶可定义子集，其中允许使用该载体中的参数。这个集合是可定义幂集 `𝒟ₒ`，不是完整的内部幂集。只有当数码标签、码域与满足关系表都具有预期含义时，内部描述才是正确的。
-<!--ja-->
-この章の課題は、構成可能な台の要素をパラメータとして許した一階定義可能部分集合の集まりを、有界論理式で認識することである。この集まりは定義可能冪集合 `𝒟ₒ` であり、完全な内部冪集合ではない。内部の記述が正しくなるには、数項のタグ、符号領域、充足関係表がそれぞれ意図した意味をもつ必要がある。
-<!--/-->
-
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
 ```
 
 <!--en-->
-The construction uses excluded middle as the book's single explicit classical hypothesis. Propositional truncation will nevertheless remain visible throughout: an existence proof may establish that a formula or table value exists without selecting one globally.
+# A Δ₀ description of the definable power set
 <!--zh-->
-这个构造把排中律作为全书唯一的显式经典假设。即便如此，命题截断仍会贯穿本章：存在性证明可以表明某个公式或表值存在，却不从中作出全局选择。
+# 可定义幂集的 Δ₀ 描述
 <!--ja-->
-この構成では、排中律を本書で唯一の明示的な古典的仮定として用いる。それでも命題的切り詰めは全体に残る。存在証明は、ある論理式や表の値が存在することを示しても、それを大域的に選び出さない。
+# 定義可能冪集合の Δ₀ 記述
 <!--/-->
 
 ```agda
@@ -35,6 +27,49 @@ Fix a universe level `ℓ` and an instance `lem : LEM (ℓ-suc ℓ)`. Every resu
 module L.GCH.DefinablePowerSetDescription {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax using ( Formula; var; _∈̇_; _∧̇_; _⇒̇_; ∃̇∈; ∀̇∈ )
+open import FOL.LevyHierarchy using ( Δ₀; checkΔ₀ )
+open import FOL.Manipulation.ConstantMapping using ( mapFo )
+import FOL.Absoluteness
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV )
+open import V.Coding {ℓ} using ( pr )
+open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans; 𝒟ₒ; 𝒟ₒ-intro; 𝒟ₒ-inv )
+open import L.Definability {ℓ} using ( module DefOf )
+open import L.Coding.Model {ℓ} using ( prAtL; container )
+open import L.Coding.SatisfactionBridge {ℓ} lem using ( asConst; defSet-Sat )
+open import L.Coding.DefinablePowerSet {ℓ} lem using ( envOne )
+open import L.Coding.CodeSet {ℓ} lem using ( keyS; key∈AllCodes )
+open import L.Coding.UniformSatisfaction {ℓ} lem using ( module Table; val-at )
+open import L.Coding.Satisfaction {ℓ} lem using ( Sat )
+open import L.Coding.Quantification {ℓ} using
+  ( sh; i0; i1; i3; i6; f0; f1; down
+  ; sndEx; sndAll; sndEx-out; sndAll-in; fillSnd; useSnd
+  ; pr-out; pr-in; sndS )
+open import L.Coding.CodeDomain {ℓ} using ( Tags )
+open import L.Coding.CodeAlphabet {ℓ} using ( module Alphabet )
+open import L.GCH.SatisfactionDescription {ℓ} lem using ( satAt; module SatRead; module Match )
+```
+
+<!--en-->
+The problem of this chapter is to recognize, by a bounded formula, the collection of subsets of a constructible carrier that are first-order definable over that carrier with parameters from it. This collection is the definable power set `𝒟ₒ`, not the full internal power set. Its internal description is correct only when the numeral tags, code domain, and satisfaction table have their intended meanings.
+<!--zh-->
+本章要解决的问题是：怎样用有界公式识别一个可构造载体的所有一阶可定义子集，其中允许使用该载体中的参数。这个集合是可定义幂集 `𝒟ₒ`，不是完整的内部幂集。只有当数码标签、码域与满足关系表都具有预期含义时，内部描述才是正确的。
+<!--ja-->
+この章の課題は、構成可能な台の要素をパラメータとして許した一階定義可能部分集合の集まりを、有界論理式で認識することである。この集まりは定義可能冪集合 `𝒟ₒ` であり、完全な内部冪集合ではない。内部の記述が正しくなるには、数項のタグ、符号領域、充足関係表がそれぞれ意図した意味をもつ必要がある。
+<!--/-->
+
+<!--en-->
+The construction uses excluded middle as the book's single explicit classical hypothesis. Propositional truncation will nevertheless remain visible throughout: an existence proof may establish that a formula or table value exists without selecting one globally.
+<!--zh-->
+这个构造把排中律作为全书唯一的显式经典假设。即便如此，命题截断仍会贯穿本章：存在性证明可以表明某个公式或表值存在，却不从中作出全局选择。
+<!--ja-->
+この構成では、排中律を本書で唯一の明示的な古典的仮定として用いる。それでも命題的切り詰めは全体に残る。存在証明は、ある論理式や表の値が存在することを示しても、それを大域的に選び出さない。
+<!--/-->
+
+
+
 <!--en-->
 The object-language description is deliberately bounded. It is assembled from membership atoms, conjunction, implication, and bounded existential and universal quantifiers; `checkΔ₀` will later verify this syntactic shape. Constant mapping is needed when an externally given formula is compared with its interpretation in the coded satisfaction construction.
 <!--zh-->
@@ -42,14 +77,6 @@ The object-language description is deliberately bounded. It is assembled from me
 <!--ja-->
 対象言語での記述は、意図的に有界に保つ。所属原子式、連言、含意、有界存在量化子、有界全称量化子だけから組み立て、後で `checkΔ₀` がこの構文上の形を検査する。外から与えた論理式を、符号化された充足構成での解釈と比較する際には、定数の写像も用いる。
 <!--/-->
-
-```agda
-open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using ( Formula; var; _∈̇_; _∧̇_; _⇒̇_; ∃̇∈; ∀̇∈ )
-open import FOL.LevyHierarchy using ( Δ₀; checkΔ₀ )
-open import FOL.Manipulation.ConstantMapping using ( mapFo )
-import FOL.Absoluteness
-```
 
 <!--en-->
 The intended output is `𝒟ₒ W`: the set of subsets of `W` definable in the restricted structure over `W`, with parameters from `W`. Extensionality will identify a candidate output with this set once both membership directions have been proved, while ordered-pair codes represent environments, formula keys, and table entries.
@@ -59,14 +86,6 @@ The intended output is `𝒟ₒ W`: the set of subsets of `W` definable in the r
 意図する出力は `𝒟ₒ W`、すなわち `W` 上の制限構造で `W` の要素をパラメータとして定義できる部分集合の集まりである。二つの所属方向を証明すれば、外延性によって候補の出力をこの集合と同一視できる。順序対の符号は、環境、論理式の鍵、表の項目を表す。
 <!--/-->
 
-```agda
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV )
-open import V.Coding {ℓ} using ( pr )
-open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans; 𝒟ₒ; 𝒟ₒ-intro; 𝒟ₒ-inv )
-open import L.Definability {ℓ} using ( module DefOf )
-open import L.Coding.Model {ℓ} using ( prAtL; container )
-```
-
 <!--en-->
 For a formula `ψ`, the satisfaction construction records which one-entry environments satisfy `ψ`. The bridge theorem identifies the resulting slice of `W` with the subset defined by `ψ`. The genuine code set contains the key built from `ψ`, and functionality of the genuine satisfaction table fixes the value at that key. These facts become available only after `satAt` has certified the proposed code set and table; they do not make decoding unique or select a defining formula for a subset.
 <!--zh-->
@@ -74,14 +93,6 @@ For a formula `ψ`, the satisfaction construction records which one-entry enviro
 <!--ja-->
 論理式 `ψ` に対し、充足構成はどの一項環境が `ψ` を満たすかを記録する。橋渡し定理は、そこから `W` の中で切り出される部分を、`ψ` が定義する部分集合と同一視する。実際の符号集合は `ψ` から作られる鍵を含み、実際の充足関係表の関数性がその鍵での値を定める。これらを使えるのは、候補の符号集合と表を `satAt` が保証した後だけである。復号が一意になるわけでも、部分集合の定義論理式が選ばれるわけでもない。
 <!--/-->
-
-```agda
-open import L.Coding.SatisfactionBridge {ℓ} lem using ( asConst; defSet-Sat )
-open import L.Coding.DefinablePowerSet {ℓ} lem using ( envOne )
-open import L.Coding.CodeSet {ℓ} lem using ( keyS; key∈AllCodes )
-open import L.Coding.UniformSatisfaction {ℓ} lem using ( module Table; val-at )
-open import L.Coding.Satisfaction {ℓ} lem using ( Sat )
-```
 
 <!--en-->
 Every quantifier in the description must remain bounded by a set already present in the environment. The auxiliary quantifiers below express the two components of an ordered-pair code within those bounds, and their two directions let us pass between object-language satisfaction and the corresponding semantic witnesses.
@@ -91,14 +102,6 @@ Every quantifier in the description must remain bounded by a set already present
 記述に現れる量化子はすべて、環境にすでにある集合によって有界でなければならない。以下の補助量化子は、その範囲内で順序対の符号の二成分を表す。二方向の補題によって、対象言語での充足と対応する意味論的な証人との間を行き来できる。
 <!--/-->
 
-```agda
-open import L.Coding.Quantification {ℓ} using
-  ( sh; i0; i1; i3; i6; f0; f1; down
-  ; sndEx; sndAll; sndEx-out; sndAll-in; fillSnd; useSnd
-  ; pr-out; pr-in; sndS )
-open import L.Coding.CodeDomain {ℓ} using ( Tags )
-```
-
 <!--en-->
 The ten distinguished slots are interpreted as the numerals zero through nine by `Tags`. In particular, the clauses below use the tags zero and one to recognize a one-entry environment and a key of arity one. The separate predicate `satAt` supplies the stronger semantic fact that the proposed code domain and table implement the alphabet and recursive satisfaction construction over the carrier.
 <!--zh-->
@@ -107,11 +110,6 @@ The ten distinguished slots are interpreted as the numerals zero through nine by
 `Tags` は、指定された十個の枠を数項 0 から 9 と解釈する。特に以下の節では、タグ 0 で一項環境を、タグ 1 でアリティ 1 の鍵を認識する。別の述語 `satAt` はさらに強く、候補のコード領域と表が、その台上のアルファベットと再帰的な充足構成を実現していることを保証する。
 <!--/-->
 
-```agda
-open import L.Coding.CodeAlphabet {ℓ} using ( module Alphabet )
-open import L.GCH.SatisfactionDescription {ℓ} lem using ( satAt; module SatRead; module Match )
-```
-
 <!--en-->
 An environment is represented by a finite vector of constructible sets. Products combine the two membership conditions that define a slice, and their propositionhood ensures that truncated witnesses may be eliminated into these conditions without introducing a choice.
 <!--zh-->
@@ -119,8 +117,6 @@ An environment is represented by a finite vector of constructible sets. Products
 <!--ja-->
 環境は構成可能集合からなる有限ベクトルで表す。積は切り出し関係を定める二つの所属条件を組み合わせる。それらが命題であるため、選択を導入することなく、切り詰められた証人をその条件へ消去できる。
 <!--/-->
-
-
 
 <!--en-->
 The proofs repeatedly turn pointwise equivalences of membership into equalities of sets. Membership is proposition-valued, so a merely existing code, formula, or presentation can be eliminated while proving either membership direction; `∈-asFiber` then recovers a presentation index when an ambient member must be read as an element of a carrier.
@@ -240,8 +236,6 @@ The formula `defAt` conjoins the membership and covering clauses. By itself it o
 <!--/-->
 
 ```agda
-
-
 opaque
   defAt : ∀ {m} → Fin m → Fin m → Fin m → Fin m → (Fin 10 → Fin m) → Formula S m
   defAt v w T C N = memAt v w T C N ∧̇ allAt v w T C N
@@ -308,7 +302,6 @@ The first semantic calculation concerns `singleOf`. Fix the coded set `E` and va
 <!--ja-->
 最初の意味論的な計算では `singleOf` を扱う。符号化された集合 `E` と値 `Z` を固定し、指定されたタグが実際に 0 を表すと仮定する。この仮定の下で、二つの有界な節が集合の等式 `E = envOne Z` と同値であることを示す。
 <!--/-->
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
@@ -417,7 +410,6 @@ The named member is the presentation, inside the coded set, of the pair of the z
 </div>
 </details>
 
-
 <!--en-->
 The cut relation between a set `X`, a carrier `Wv`, and a value `Y` is a pair of pointwise directions: every member of `X` lies in `Wv` with its singleton environment in `Y`, and every member of `Wv` whose singleton environment lies in `Y` belongs to `X`. The quantification is over constructible sets, so the relation is stated on the constructible carrier.
 <!--zh-->
@@ -439,7 +431,6 @@ To compare the object-language clause with the mathematical cut relation, fix th
 <!--ja-->
 対象言語の節を数学的な切り出し関係と比較するため、`x`、`w`、`y`、タグ 0 の枠を固定する。それぞれの解釈を `X`、`Wv`、`Y` と名付ける。タグの等式があるからこそ、`singleOf` は正準な一項環境を表せる。
 <!--/-->
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
@@ -523,7 +514,6 @@ Conversely, the two pointwise directions in `Cuts X Wv Y` fill the two conjuncts
 </div>
 </details>
 
-
 <!--en-->
 ## Reading the bounded subset clauses
 <!--zh-->
@@ -539,7 +529,6 @@ The full reading module names the four sets: the proposed value, the carrier, th
 <!--ja-->
 完全な読みのモジュールは、四つの集合、すなわち提案された値・台・表・コードの定義域に名前を与える。
 <!--/-->
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
@@ -626,7 +615,6 @@ Filling the membership clause is the converse construction: it takes the functio
 <!--/-->
 
 ```agda
-
   mem-in : ((x : S) → ⟨ fst x ∈ Vv ⟩
             → ∥ Σ[ c ∈ S ] Σ[ p ∈ S ] Σ[ y ∈ S ]
                 (⟨ fst c ∈ Cv ⟩ × ((fst c ≡ pr (# 1) (fst p)) × (⟨ pr (fst c) (fst y) ∈ Tv ⟩ × Cuts (fst x) Wv (fst y)))) ∥₁)
@@ -789,7 +777,6 @@ The coverage clause contains the same two nested existential choices: a value of
 </div>
 </details>
 
-
 <!--en-->
 ## Correctness of the bounded description
 <!--zh-->
@@ -806,7 +793,6 @@ We can now compare the bounded description with the actual definability operatio
 ここから、有界な記述を実際の定義可能性の演算と比較する。この比較には `defAt` の充足だけでは足りない。数を表すタグが意図した値をもち、作業集合の枠が `W` を表し、さらに `satAt` が符号集合と充足関係表に本来の充足意味論を保証していなければならない。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -819,7 +805,6 @@ module DefRead {m : ℕ} (v w T C E : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m)
 ```agda
   open Alphabet W
   open Match W
-  private
 ```
 
 <!--en-->
@@ -831,9 +816,10 @@ Two earlier readers supply the needed bridge. `SatRead` identifies the advertise
 <!--/-->
 
 ```agda
-    module SR = SatRead T w C E N γ W qw tg hs
-    module RD = Read v w T C N γ tg
-    module DA = DefOf (fst W)
+  private module SR = SatRead T w C E N γ W qw tg hs
+  private module RD = Read v w T C N γ tg
+  private module DA = DefOf (fst W)
+  private
     Vv = fst (lookup v γ)
     Wv = fst (lookup w γ)
 ```
@@ -1025,7 +1011,6 @@ For the forward inclusion, the membership clause supplies, under propositional t
 <!--/-->
 
 ```agda
-
     fwd : (x : V ℓ) → ⟨ x ∈ Vv ⟩ → ⟨ x ∈ 𝒟ₒ (fst W) ⟩
     fwd x hx = rec₁ (snd (x ∈ 𝒟ₒ (fst W)))
       (λ { (c , p , y , (c∈ , (ec , (e∈ , cuts)))) → rec₁ (snd (x ∈ 𝒟ₒ (fst W)))
@@ -1199,7 +1184,6 @@ The satisfaction table supplies the value attached to the decoded formula key, w
 ```
 </div>
 </details>
-
 
 <!--en-->
 The exported soundness direction exposes the exact interface used later: once the working-set slot denotes `W`, `Tags` fixes the numeral slots, and `satAt` validates the code and satisfaction data, `defAt` implies equality with `𝒟ₒ (fst W)`. Thus the bounded formula receives its intended meaning only in this calibrated background.

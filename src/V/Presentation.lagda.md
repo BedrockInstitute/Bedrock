@@ -1,16 +1,18 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # Small presentations of sets
-
-Membership in a set of the cumulative hierarchy is index-based, but only in a weakened sense: the statement `x ∈ a` records that some index merely exists, and it lives one universe above the index types themselves. Doing set theory inside the hierarchy therefore asks for a way to pass between indices and membership proofs, and for a supply of indices that is small, concrete and unique. This chapter records the elementary lemmas that provide both. Every set comes with a canonical small presentation, an index type and an embedding whose image is the set, and the lemmas move back and forth between an index and a proof of membership, record the injectivity of the embedding, and restate canonical membership in the small relation. Later constructions rely on this package: reasoning about the elements of a set becomes reasoning about its indices.
 <!--zh-->
 # 集合的小呈现
-
-累积层级中集合的隶属以索引为基础，却只是弱化的形式：陈述 `x ∈ a` 只记录某个索引单纯存在，而且它住在比索引类型本身高一层的宇宙。因此，要在层级内部做集合论，就需要在索引与隶属证明之间往返的方法，也需要一份小而具体、且唯一的索引供给。本章记录提供这两者的基本引理。每个集合都带有典范的小呈现：一个索引类型和一张嵌入，其像正是该集合；这些引理在索引与隶属证明之间往返，记录嵌入的单射性，并把典范隶属改写成小关系的形式。后续构造依赖这套工具：讨论一个集合的元素，由此成为讨论它的索引。
 <!--ja-->
 # 集合の小さな提示
-
-累積階層の集合への所属はインデックスを基礎とするが、弱められた形にすぎない。主張 `x ∈ a` はあるインデックスが単に存在することを記録するだけで、しかもインデックス型そのものより一つ上の宇宙に住む。したがって階層の中で集合論を行うには、インデックスと所属証明の間を行き来する方法と、小さく、具体的で、一意なインデックスの供給が必要になる。本章はその両方を与える初等的な補題を記録する。すべての集合は正準的な小さな提示、すなわちその像がその集合であるインデックス型と埋め込みを伴い、補題はインデックスと所属証明の間を行き来し、埋め込みの単射性を記録し、正準的な所属を小関係の形で言い直す。後の構成はこの一式に依拠する。集合の要素について論じることは、そのインデックスについて論じることになるのである。
 <!--/-->
+
+```agda
+open import Base.Prelude
+```
 
 <!--en-->
 The primitive notion of set is here already a notion of presentation. The constructor `sett`{.Agda} builds, from a small index type and a family into `V`{.Agda}, the set of values that family takes; membership `y ∈ sett X ix` holds merely when some index `i : X` satisfies `ix i ≡ y`; and the path constructor identifies two presentations with the same members. A presentation is thus built into every set, and the following lemmas make it usable in membership arguments. The universe parameter `ℓ` fixes how large the index types are allowed to be, and everything below is relative to that fixed level.
@@ -21,14 +23,26 @@ The primitive notion of set is here already a notion of presentation. The constr
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-open import Base.Prelude
-
 module V.Presentation {ℓ : Level} where
-
-open import FOL.ZFStructure using ( module hPropStructure )
 ```
+
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+```
+
+<!--en-->
+
+Membership in a set of the cumulative hierarchy is index-based, but only in a weakened sense: the statement `x ∈ a` records that some index merely exists, and it lives one universe above the index types themselves. Doing set theory inside the hierarchy therefore asks for a way to pass between indices and membership proofs, and for a supply of indices that is small, concrete and unique. This chapter records the elementary lemmas that provide both. Every set comes with a canonical small presentation, an index type and an embedding whose image is the set, and the lemmas move back and forth between an index and a proof of membership, record the injectivity of the embedding, and restate canonical membership in the small relation. Later constructions rely on this package: reasoning about the elements of a set becomes reasoning about its indices.
+<!--zh-->
+
+累积层级中集合的隶属以索引为基础，却只是弱化的形式：陈述 `x ∈ a` 只记录某个索引单纯存在，而且它住在比索引类型本身高一层的宇宙。因此，要在层级内部做集合论，就需要在索引与隶属证明之间往返的方法，也需要一份小而具体、且唯一的索引供给。本章记录提供这两者的基本引理。每个集合都带有典范的小呈现：一个索引类型和一张嵌入，其像正是该集合；这些引理在索引与隶属证明之间往返，记录嵌入的单射性，并把典范隶属改写成小关系的形式。后续构造依赖这套工具：讨论一个集合的元素，由此成为讨论它的索引。
+<!--ja-->
+
+累積階層の集合への所属はインデックスを基礎とするが、弱められた形にすぎない。主張 `x ∈ a` はあるインデックスが単に存在することを記録するだけで、しかもインデックス型そのものより一つ上の宇宙に住む。したがって階層の中で集合論を行うには、インデックスと所属証明の間を行き来する方法と、小さく、具体的で、一意なインデックスの供給が必要になる。本章はその両方を与える初等的な補題を記録する。すべての集合は正準的な小さな提示、すなわちその像がその集合であるインデックス型と埋め込みを伴い、補題はインデックスと所属証明の間を行き来し、埋め込みの単射性を記録し、正準的な所属を小関係の形で言い直す。後の構成はこの一式に依拠する。集合の要素について論じることは、そのインデックスについて論じることになるのである。
+<!--/-->
+
+
 
 <!--en-->
 The same membership fact appears in two forms, and the lemmas below move between them. In the structure `𝒮ᵥ`{.Agda}, membership is read as the proposition `x ∈ˢ y`; a proof of it is a truncated existence statement, so no index comes with it. Alongside this, the small membership `a ∈ₛ b` is an equivalent proposition at level `ℓ` rather than `ℓ-suc ℓ`: its underlying type asks for an index of `b` together with a proof that the named element agrees with `a` under bisimulation. For each set `a` there is a chosen presentation: a small type `⟪ a ⟫` of indices, an embedding `⟪ a ⟫↪` into the hierarchy whose embedding property is recorded by `isEmb⟪ a ⟫↪`, and a proof `∈ₛ⟪ a ⟫↪ _` of small membership for each of its own indices. The presentation is canonical in a strong sense: a set cannot carry two different presentations of this kind. The lemmas below combine exactly these ingredients.
@@ -39,8 +53,6 @@ The same membership fact appears in two forms, and the lemmas below move between
 <!--/-->
 
 ```agda
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-
 open import Cubical.Functions.Embedding using ( isEmbedding→Inj )
 open import Cubical.HITs.CumulativeHierarchy.Properties
   using ( _∈ₛ_; ∈∈ₛ; ⟪_⟫; ⟪_⟫↪; isEmb⟪_⟫↪; ∈ₛ⟪_⟫↪_; ∈-asFiber )
@@ -57,7 +69,6 @@ The first two lemmas convert between indices and membership proofs. The hinge is
 <!--/-->
 
 ```agda
-
 member : (a : S) (m : ⟪ a ⟫) → ⟨ ⟪ a ⟫↪ m ∈ˢ a ⟩
 member a m = ∈∈ₛ {a = ⟪ a ⟫↪ m} {b = a} .snd (∈ₛ⟪ a ⟫↪ m)
 

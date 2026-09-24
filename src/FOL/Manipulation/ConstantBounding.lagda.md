@@ -1,5 +1,27 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+module FOL.Manipulation.ConstantBounding where
+```
+
 <!--en-->
 # Constant bounding
+<!--zh-->
+# 常元有界性
+<!--ja-->
+# 定数の有界性
+<!--/-->
+
+```agda
+open import Base.Prelude
+open import FOL.Syntax
+  using ( Term; con; var; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇
+        ; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
+open import FOL.LevyHierarchy
+  using ( Δ₀; δ-∈; δ-≐; δ-∧; δ-∨; δ-⇒; δ-⊥; δ-∀∈; δ-∃∈ )
+open import FOL.Manipulation.ConstantMapping using ( mapTm; mapFo )
+```
+
+<!--en-->
 
 A formula is bounded by a predicate when every constant occurrence satisfies that predicate. These structural certificates support weakening along predicate implication and allow a partially defined constant map to relabel exactly the formulas on which it is defined.
 
@@ -7,7 +29,6 @@ This chapter is that certificate. `BoundedFo P φ` records, occurrence by occurr
 
 The companion is monotonicity. A certificate for a narrower predicate is one for a wider predicate, which is how certificates written against different stages are brought to a common stage before being used together.
 <!--zh-->
-# 常元有界性
 
 当公式中每次出现的常元都满足一个谓词时，称该公式受此谓词约束。这些结构化证书可随谓词的蕴含而放宽，并使部分定义的常元映射恰好能对其定义域内的公式作常元改名。
 
@@ -15,7 +36,6 @@ The companion is monotonicity. A certificate for a narrower predicate is one for
 
 配套的是单调性。窄谓词的证书同时就是宽谓词的证书；这正是把针对不同层写下的证书转到公共层、以便一并使用的办法。
 <!--ja-->
-# 定数の有界性
 
 論理式に現れる定数がすべて与えられた述語を満たすとき、その論理式はその述語で有界である。この構造的な証明書は述語の含意に沿って弱められ、部分的に定義された定数写像を、その定義域に収まる論理式へ適用できるようにする。
 
@@ -32,17 +52,6 @@ Why should a formula come with a certificate about its constants? Consider a map
 なぜ論理式は定数についての証明書を伴うべきなのであろうか。部分的にしか定義されていない定数上の写像を考えてみてほしい。定数 `c` が述語 `P` を満たすときに限り、その写像は `c` を新しい定数へ送る。このような写像は任意の論理式に適用できるとは限らない。式が定義域の外の定数を含むかもしれないからである。しかし、式の中の各定数の出現について「この出現は定義域に収まる」という証明が揃っていれば、写像は式が必要とするすべての場所で作用できる。本章が答える問いは、この出現ごとの証拠はどのような形をすべきか、そしてそれから何が得られるか、ということである。
 <!--/-->
 
-```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-open import Base.Prelude
-
-module FOL.Manipulation.ConstantBounding where
-
-open import FOL.Syntax
-  using ( Term; con; var; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇
-```
-
 <!--en-->
 The answer is a definition that follows the shape of the syntax itself. A term is either a constant, which must come with a proof of `P`, or a variable, which mentions no constant and so imposes no condition; a formula is built from these, and its certificate is assembled from the certificates of its parts. Because the certificate mirrors the constructor structure of `Term K n` and `Formula K n`, matching against it delivers exactly the domain proof at each constant occurrence. Two later uses shape the design: the monotonicity section transports certificates along an implication of predicates, and the relabelling section feeds them to the partial map; the Δ₀ constructors are imported so the relabelled formula can keep its Lévy-hierarchy witness, and the unit type supplies the trivial certificate carried by anything with no constants.
 <!--zh-->
@@ -50,13 +59,6 @@ The answer is a definition that follows the shape of the syntax itself. A term i
 <!--ja-->
 その答えが、構文の形そのものに沿った定義である。項は定数であるなら `P` の証明を伴わねばならず、変数なら定数を含まないので条件を課さない。論理式はこれらから組み立てられ、その証明書も各部分の証明書から組み上がる。証明書は `Term K n` と `Formula K n` の構成子構造を写しているので、それに対する照合は各定数の出現箇所で定義域の証明をちょうど届けてくれる。設計を形づくるのは二つの後の用途である。単調性の節は述語の含意に沿って証明書を移し、改名の節は証明書を部分写像に渡す。Δ₀ の構成子は、改名後の論理式が Lévy 階層の証拠を保てるように読み込まれ、`⊤*` は定数を含まないものが持つ自明な証明書を供給する。
 <!--/-->
-
-```agda
-        ; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
-open import FOL.LevyHierarchy
-  using ( Δ₀; δ-∈; δ-≐; δ-∧; δ-∨; δ-⇒; δ-⊥; δ-∀∈; δ-∃∈ )
-open import FOL.Manipulation.ConstantMapping using ( mapTm; mapFo )
-```
 
 <!--en-->
 ## The certificate
@@ -142,7 +144,6 @@ Certificates are only useful if they can be moved between predicates. Think of a
 証明書は、述語の間で移せてこそ有用である。述語を許される定数の制限と考えれば、各点的含意 `P⊆Q` に沿って `P` を `Q` へ広げても証明書は無効にならない。`P` が受け入れる出現は `Q` も受け入れるからである。単一の定数に対してはこれは一度の適用にすぎず、`P⊆Q c` が証明 `P c` を `Q c` へ変える。`BoundedTm-mono` はこれを項全体へ再帰で拡張する。定数の場合はその一度の適用を行い、変数の場合は素通りする。`⊤*` は述語にかかわらず要素を持つからである。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -153,7 +154,6 @@ module _ {ℓk ℓp ℓq} {K : Type ℓk} {P : K → Type ℓp} {Q : K → Type 
 <div class="submodule-fold-content">
 
 ```agda
-
   BoundedTm-mono : ∀ {n} (t : Term K n) → BoundedTm P t → BoundedTm Q t
   BoundedTm-mono (con c) p = P⊆Q c p
   BoundedTm-mono (var i) _ = tt*
@@ -168,7 +168,6 @@ The same argument lifts to formulas through their certificates' products. For ou
 <!--/-->
 
 ```agda
-
   BoundedFo-mono : ∀ {n} (φ : Formula K n) → BoundedFo P φ → BoundedFo Q φ
   BoundedFo-mono (t ∈̇ u)  (ht , hu) = BoundedTm-mono t ht , BoundedTm-mono u hu
   BoundedFo-mono (t ≐ u)  (ht , hu) = BoundedTm-mono t ht , BoundedTm-mono u hu
@@ -206,7 +205,6 @@ The quantifier cases finish the induction. Under `∃̇` or `∀̇` the body is 
 </div>
 </details>
 
-
 <!--en-->
 ## Relabelling, partially
 
@@ -235,7 +233,6 @@ Now the certificate meets its consumer. A partial constant map is given by a dom
 いま証明書がその利用者に出会う。部分的な定数写像は、源の定数集合 `K` 上の定義域述語 `P` と、`P` の上でのみ定義された割り当て `down` で与えられる。論理式全体を改名するには、さらに先の定数集合 `K'` と、`K` と `K'` の双方が写し込まれる世界 `W` が必要である。このデータへの数学的な条件は可換な三角形である。`p : P c` を満たす各源の定数 `c` は、`down` を経て先の写像に渡った先が、`c` が源の写像で到達する世界の要素と一致しなければならない。この三角形が与えられれば、そこから誘導される改名は、元の式とともに `W` で読んだとき一致すると検証できる。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -254,8 +251,6 @@ module Relabel
 </summary>
 <div class="submodule-fold-content">
 
-
-
 <!--en-->
 The triangle appears here as the parameter `down-correct`: for every `c` and `p : P c`, the path `up (down c p) ≡ proj c`. This is the only correctness obligation on the data; everything else about the relabelling will follow from it occurrence by occurrence. Note that `down` needs the proof `p` as an argument: the certificate is what makes the partial map applicable, supplying its domain condition exactly where the formula mentions a constant.
 <!--zh-->
@@ -263,8 +258,6 @@ The triangle appears here as the parameter `down-correct`: for every `c` and `p 
 <!--ja-->
 この三角形はここではパラメータ `down-correct` として現れる。すべての `c` と `p : P c` に対するパス `up (down c p) ≡ proj c` である。これがデータへの唯一の正しさの義務であり、改名に関するそれ以外のことはすべて、出現ごとにここから従う。`down` が証明 `p` を引数として要求する点に注意してほしい。部分写像を適用可能にするのは証明書であり、式が定数に触れるその箇所で定義域の条件を供給するのである。
 <!--/-->
-
-
 
 <!--en-->
 Relabelling a term now just threads the certificate through. `liftTm` takes `t` together with `h : BoundedTm P t`; matching `h` at the constant node hands over precisely the proof `p : P c` that `down c` requires, so the node becomes `con (down c p)`. At a variable, `h` is trivial and the node passes through. The partial map has become total, but only on terms that present their domain proofs.
@@ -275,7 +268,6 @@ Relabelling a term now just threads the certificate through. `liftTm` takes `t` 
 <!--/-->
 
 ```agda
-
   liftTm : ∀ {n} (t : Term K n) → BoundedTm P t → Term K' n
   liftTm (con c) p = con (down c p)
   liftTm (var i) _ = var i
@@ -435,7 +427,6 @@ The bounded quantifier witnesses finish the recursion: each wraps one transferre
 ```
 </div>
 </details>
-
 
 <!--en-->
 ## Recap

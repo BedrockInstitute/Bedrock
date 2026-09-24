@@ -1,3 +1,7 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # Choice by a transversal
 <!--zh-->
@@ -5,6 +9,42 @@
 <!--ja-->
 # 横断集合による選択
 <!--/-->
+
+```agda
+open import Base.Prelude
+open import Base.Classical using ( LEM )
+```
+
+<!--en-->
+Fix a universe level `ℓ`{.Agda} and assume `lem : LEM (ℓ-suc ℓ)`{.Agda}. This hypothesis supplies a decision for each proposition at that level; it remains an explicit parameter of the constructions below.
+<!--zh-->
+固定宇宙层级 `ℓ`{.Agda}，并假设 `lem : LEM (ℓ-suc ℓ)`{.Agda}。这个假设为相应层级的每个命题提供判定，并始终作为下文构造的显式参数。
+<!--ja-->
+宇宙レベル `ℓ`{.Agda} を固定し、`lem : LEM (ℓ-suc ℓ)`{.Agda} を仮定する。この仮定は該当するレベルの各命題に判定を与え、以下の構成の明示的なパラメータとして保たれる。
+<!--/-->
+
+```agda
+module L.Choice.Transversal {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+```
+
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax using ( Formula; var; con; _∈̇_; _∧̇_; ¬̇_; ∃̇_ )
+import FOL.Semantics
+import FOL.ZFModel
+import FOL.Absoluteness
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Coding {ℓ} using ( pr )
+open import L.Constructible {ℓ}
+  using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset; Lset→isL )
+open import L.Axioms.Basic {ℓ} using ( LsetS )
+open import L.Choice.FirstIntersectionStage {ℓ} lem using ( bound-below₂ )
+open import L.Choice.StageOrders {ℓ} lem using ( Mem; relOf )
+open import L.Choice.InternalWellOrder {ℓ} lem using ( module Bound )
+open import L.Coding.Model {ℓ} using ( appC; appC-adequate )
+open import L.WellOrder.Base {ℓ-suc ℓ}
+  using ( SWO; IsLeast; isPropLeastOf; leastOfFormula )
+```
 
 <!--en-->
 This chapter proves the axiom of choice for `𝒮ʟ` by separating the least member
@@ -57,29 +97,6 @@ transport along the intersection's specification.
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-open import Base.Prelude
-open import Base.Classical using ( LEM )
-
-module L.Choice.Transversal {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-
-open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using ( Formula; var; con; _∈̇_; _∧̇_; ¬̇_; ∃̇_ )
-import FOL.Semantics
-import FOL.ZFModel
-import FOL.Absoluteness
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-open import V.Coding {ℓ} using ( pr )
-open import L.Constructible {ℓ}
-  using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset; Lset→isL )
-open import L.Axioms.Basic {ℓ} using ( LsetS )
-open import L.Choice.FirstIntersectionStage {ℓ} lem using ( bound-below₂ )
-open import L.Choice.StageOrders {ℓ} lem using ( Mem; relOf )
-open import L.Choice.InternalWellOrder {ℓ} lem using ( module Bound )
-open import L.Coding.Model {ℓ} using ( appC; appC-adequate )
-open import L.WellOrder.Base {ℓ-suc ℓ}
-  using ( SWO; IsLeast; isPropLeastOf; leastOfFormula )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 
 open hPropStructure 𝒮ʟ
@@ -209,7 +226,6 @@ by trichotomy alone. The generic uniqueness theorem
 随后进行分离与计数。`transversalSet`{.Agda} 是模型中的分离，依照该描述施于 `β`{.Agda} 处的塔。`Cut`{.Agda} 固定族中的一个成员：交的收缩中心就是相应极小元；由 `pick-in`{.Agda}，它属于横截集，而极小性本身保证它属于该成员。唯一性在这里使用两两不交：交中的另一点满足描述，因而是族中某个成员的极小元，同时又属于当前成员；两个成员因此相交并相等，所以该点也是当前成员的极小元。极小元由三歧唯一，泛型定理 `isPropLeastOf`{.Agda} 完成最后这步比较。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -224,8 +240,7 @@ module Trans (zf : isZFModel) (a : S)
 
 ```agda
   open ModelL.isZFModel zf using ( separate; separate-spec; _∩_; ∩-spec )
-  private
-    module B = Bound (fst a) (snd a)
+  private module B = Bound (fst a) (snd a)
 
   β : V ℓ
   β = B.boundOrd
@@ -341,7 +356,6 @@ module Trans (zf : isZFModel) (a : S)
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-
   module Cut (x : S) (x∈a : ⟨ x ∈ˢ a ⟩) where
 ```
 </summary>
@@ -399,14 +413,12 @@ module Trans (zf : isZFModel) (a : S)
 </div>
 </details>
 ```agda
-
   transversal : (x : S) → ⟨ x ∈ˢ a ⟩
               → isContr (Σ[ z ∈ S ] ⟨ z ∈ˢ (transversalSet ∩ x) ⟩)
   transversal = Cut.meetsOnce
 ```
 </div>
 </details>
-
 
 <!--en-->
 ## The theorem

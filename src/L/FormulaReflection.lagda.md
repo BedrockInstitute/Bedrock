@@ -1,13 +1,59 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # Reflection for an arbitrary formula
+<!--zh-->
+# 任意公式的反射
+<!--ja-->
+# 任意の論理式に対する反映
+<!--/-->
+
+```agda
+open import Base.Prelude
+open import Base.Classical using ( LEM )
+```
+
+<!--en-->
+Fix a universe level `ℓ`{.Agda} and assume `lem : LEM (ℓ-suc ℓ)`{.Agda}. This hypothesis supplies a decision for each proposition at that level; it remains an explicit parameter of the constructions below.
+<!--zh-->
+固定宇宙层级 `ℓ`{.Agda}，并假设 `lem : LEM (ℓ-suc ℓ)`{.Agda}。这个假设为相应层级的每个命题提供判定，并始终作为下文构造的显式参数。
+<!--ja-->
+宇宙レベル `ℓ`{.Agda} を固定し、`lem : LEM (ℓ-suc ℓ)`{.Agda} を仮定する。この仮定は該当するレベルの各命題に判定を与え、以下の構成の明示的なパラメータとして保たれる。
+<!--/-->
+
+```agda
+module L.FormulaReflection {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+```
+
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax
+  using ( Term; con; var; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊥̇
+        ; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
+open import FOL.Manipulation.ConstantBounding using ( BoundedTm; BoundedFo )
+open import FOL.Manipulation.Relativization using ( relativize; module Correct )
+import FOL.Semantics
+import FOL.Absoluteness
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import L.Constructible {ℓ}
+  using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset; Lset-layer; layer-trans )
+open import L.Ordinal {ℓ} using ( ∅-ord; bound2 )
+open import L.Axioms.Basic {ℓ} using ( LsetS )
+open import L.Axioms.Separation {ℓ} lem
+  using ( Below′; liftFoTo; mkBoundedFo )
+open import L.ExistentialReflection {ℓ} lem
+  using ( Below; LsetEnv; pickStage; ClosedFor; module Ladder; module Single )
+```
+
+<!--en-->
 
 Reflection for a whole formula must answer the existential subformulas that appear throughout its syntax. A joint closure condition and ordinal ladder are built recursively over the formula, yielding a stage in which the formula has the same truth value as in the full constructible universe.
 <!--zh-->
-# 任意公式的反射
 
 对整条公式的反射，必须为其语法中各处出现的存在子公式给出答案。本章沿公式递归构造联合封闭条件与序数梯，得到一层，使该公式在其中与整个可构造宇宙中具有相同真值。
 <!--ja-->
-# 任意の論理式に対する反映
 
 論理式全体の反映では、その構文に現れるすべての存在部分論理式へ答える必要がある。論理式に沿って共同の閉性条件と順序数の梯子を再帰的に作り、その論理式が構成可能宇宙全体と同じ真理値を持つ段階を得る。
 <!--/-->
@@ -31,36 +77,9 @@ previous chapter's argument applies to each without being run again.
 没有哪个针对单一矩阵的极限能同时覆盖全部矩阵，因为闭包不为更大的层所继承：把层扩大，就有更多环境需要它处理。因此这架梯要联合构造：每一级的步进沿公式的结构进行，把其中每个矩阵的单矩阵步进合并起来，连同包含常元的那一层。于是极限对每个矩阵都给出回答，上一章的论证施于其中每一个即可，无须重做。
 <!--/-->
 
-```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-open import Base.Prelude
-open import Base.Classical using ( LEM )
-
-module L.FormulaReflection {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-
-open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax
-  using ( Term; con; var; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊥̇
-        ; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
-```
-
 lint-agda: keep (⊤̇ names the defining formula behind `LsetS`)
 
 ```agda
-open import FOL.Manipulation.ConstantBounding using ( BoundedTm; BoundedFo )
-open import FOL.Manipulation.Relativization using ( relativize; module Correct )
-import FOL.Semantics
-import FOL.Absoluteness
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-open import L.Constructible {ℓ}
-  using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset; Lset-layer; layer-trans )
-open import L.Ordinal {ℓ} using ( ∅-ord; bound2 )
-open import L.Axioms.Basic {ℓ} using ( LsetS )
-open import L.Axioms.Separation {ℓ} lem
-  using ( Below′; liftFoTo; mkBoundedFo )
-open import L.ExistentialReflection {ℓ} lem
-  using ( Below; LsetEnv; pickStage; ClosedFor; module Ladder; module Single )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( ∅ )
 
@@ -288,7 +307,6 @@ hypothesis in the form the induction wants.
 有两条读法从该步进白得，因为它们本就被造了进去。那个额外的序数落在第一级里，因而落在极限之下。而在每一级上，整棵隶属树都对下一级成立，这正是归纳所要的、作答假设的那个形式。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -299,7 +317,6 @@ module Mk {n : ℕ} (φ₀ : Formula S n) (κ : V ℓ) (oκ : IsOrd κ)
 <div class="submodule-fold-content">
 
 ```agda
-
   private
     jstep : (σ : V ℓ) (oσ : IsOrd σ)
           → Box σ (λ τ → ⟨ κ ∈ τ ⟩ × Answers φ₀ σ oσ τ)
@@ -546,7 +563,6 @@ already states.
 </div>
 </details>
 ```agda
-
 opaque
   mkReflect : ∀ {n} (φ : Formula S n) (δ : V ℓ) → IsOrd δ
             → Σ[ β ∈ V ℓ ] Σ[ oβ ∈ IsOrd β ]

@@ -1,13 +1,53 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # Existential reflection into a constructible stage
+<!--zh-->
+# 存在公式到可构造层的反射
+<!--ja-->
+# 存在論理式の構成可能段階への反映
+<!--/-->
+
+```agda
+open import Base.Prelude
+open import Base.Classical using ( LEM )
+```
+
+<!--en-->
+Fix a universe level `ℓ`{.Agda} and assume `lem : LEM (ℓ-suc ℓ)`{.Agda}. This hypothesis supplies a decision for each proposition at that level; it remains an explicit parameter of the constructions below.
+<!--zh-->
+固定宇宙层级 `ℓ`{.Agda}，并假设 `lem : LEM (ℓ-suc ℓ)`{.Agda}。这个假设为相应层级的每个命题提供判定，并始终作为下文构造的显式参数。
+<!--ja-->
+宇宙レベル `ℓ`{.Agda} を固定し、`lem : LEM (ℓ-suc ℓ)`{.Agda} を仮定する。この仮定は該当するレベルの各命題に判定を与え、以下の構成の明示的なパラメータとして保たれる。
+<!--/-->
+
+```agda
+module L.ExistentialReflection {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+```
+
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax using ( Formula; ∃̇_ )
+import FOL.Semantics
+import FOL.Absoluteness
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Model {ℓ} using ( union-family-in; union-family-out )
+open import L.Constructible {ℓ}
+  using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset; Lset-mono; Lset-in; Lset-out
+        ; Lset→isL )
+open import L.Ordinal {ℓ} using ( ∅-ord; boundingOrd; bound2; setUnion-ord )
+open import L.Stage {ℓ} lem using ( LeastOrd; leastOrd )
+```
+
+<!--en-->
 
 For one existential formula and parameters from a constructible stage, this chapter builds a larger ordinal stage that contains witnesses whenever the ambient constructible universe does. Iterating the witness-selection step and taking an ordinal limit makes the stage closed under answers to that formula.
 <!--zh-->
-# 存在公式到可构造层的反射
 
 对一条存在公式以及来自某个可构造层的参数，本章构造一个更大的序数层：只要环境可构造宇宙中存在见证，该层也包含见证。迭代见证选择步骤并取序数极限，可使这一层包含该公式对其中参数所需的见证。
 <!--ja-->
-# 存在論理式の構成可能段階への反映
 
 一つの存在論理式と構成可能段階から取ったパラメータに対し、周囲の構成可能宇宙に証人があればそれを含む、より大きな順序数段階を構成する。証人を選ぶ操作を反復して順序数極限を取ると、その論理式への解答について閉じた段階が得られる。
 <!--/-->
@@ -39,25 +79,8 @@ layers have to be merged into one.
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-open import Base.Prelude
 open import Cubical.Data.Nat using ( +-comm )
-open import Base.Classical using ( LEM )
 
-module L.ExistentialReflection {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-
-open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using ( Formula; ∃̇_ )
-import FOL.Semantics
-import FOL.Absoluteness
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-open import V.Model {ℓ} using ( union-family-in; union-family-out )
-open import L.Constructible {ℓ}
-  using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset; Lset-mono; Lset-in; Lset-out
-        ; Lset→isL )
-open import L.Ordinal {ℓ} using ( ∅-ord; boundingOrd; bound2; setUnion-ord )
-open import L.Stage {ℓ} lem using ( LeastOrd; leastOrd )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; sett; _∈_ )
 open import Cubical.HITs.CumulativeHierarchy.Properties
   using ( ∈∈ₛ; ∈-asFiber; ⟪_⟫; ⟪_⟫↪; ∈ₛ⟪_⟫↪_ )
@@ -269,7 +292,6 @@ ClosedFor β {k} ψ = (ρ : S ^ k) → Below β ρ → ⟨ SatEx ψ ρ ⟩ → �
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-
 module Ladder (G : ℕ → V ℓ) (G-ord : (n : ℕ) → IsOrd (G n))
               (G-up : (n : ℕ) → ⟨ G n ∈ G (suc n) ⟩) where
 ```
@@ -277,7 +299,6 @@ module Ladder (G : ℕ → V ℓ) (G-ord : (n : ℕ) → IsOrd (G n))
 <div class="submodule-fold-content">
 
 ```agda
-
   reach : (n d : ℕ) → ⟨ G n ∈ G (suc (d + n)) ⟩
   reach n zero    = G-up n
   reach n (suc d) =
@@ -375,7 +396,6 @@ monotonicity, and the equation transported back.
 有了它，极限对该矩阵闭合。把环境定位到某一级：它是那一级之层的某个索引元组的像，至多相差一个等式，而读取引理把它连同元组一并给出。它的作答层落在下一级上，故落在作答层里的东西便落在那一级的层里，因而落在极限之下；再用两次单调性，把那个等式移回去。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -388,7 +408,6 @@ monotonicity, and the equation transported back.
 <div class="submodule-fold-content">
 
 ```agda
-
     closure : ClosedFor top ψ
     closure ρ below sat = rec₁ squash₁ atRung (localize ρ below)
       where
@@ -440,7 +459,6 @@ syntax and the meta-level requires no further work.
 </div>
 </details>
 
-
 <!--en-->
 ## The step for a single matrix
 
@@ -471,7 +489,6 @@ the step is closed inside the seal and the caller sees only its conclusion.
 步进被封印。展开来，它是由排中律所造的界再造出的界，而闭包论证反复在诸级上匹配；透明的定义会把那整座塔推进每一次转换检查。三条性质各开封一次，其中最后一条是唯一用到传递性之处，故从回答经上界进入步进的这条链封在印内，调用方只见其结论。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -481,7 +498,6 @@ module Single {k : ℕ} (ψ : Formula S (suc k)) where
 <div class="submodule-fold-content">
 
 ```agda
-
   Fbnd : (σ : V ℓ) (oσ : IsOrd σ)
        → Σ[ β ∈ V ℓ ] (IsOrd β × ((ms : ⟪ Lset σ ⟫ ^ k)
                                  → ⟨ pickStage ψ (LsetEnv σ oσ ms) ∈ β ⟩))
@@ -509,7 +525,6 @@ module Single {k : ℕ} (ψ : Formula S (suc k)) where
 ```
 </div>
 </details>
-
 
 <!--en-->
 ## Recap

@@ -1,13 +1,57 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # Recovering formulas from codes
+<!--zh-->
+# 从码恢复公式
+<!--ja-->
+# コードから論理式を復元する
+<!--/-->
+
+```agda
+open import Base.Prelude
+```
+
+<!--en-->
+Fix a universe level `ℓ`{.Agda}. Keeping the level as a parameter lets the constructions be instantiated at each required size without identifying distinct universes.
+<!--zh-->
+固定宇宙层级 `ℓ`{.Agda}。保留这个层级参数，使构造可以在所需的各个大小处实例化，而不必把不同的宇宙视为同一个。
+<!--ja-->
+宇宙レベル `ℓ`{.Agda} を固定する。このレベルをパラメータとして保つことで、異なる宇宙を同一視せずに、必要な大きさで構成を具体化できる。
+<!--/-->
+
+```agda
+module L.Coding.FormulaRecovery {ℓ : Level} where
+```
+
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax
+  using ( Term; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
+open import FOL.Manipulation.ConstantMapping using ( mapTm; mapFo )
+import FOL.Absoluteness
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-induction )
+open import V.Coding {ℓ} using ( pr; pr-inj; module VCode )
+open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
+open import L.Rank {ℓ} using ( rank )
+open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
+open import L.Coding.Model {ℓ} using ( prʟ; prʟ-fst )
+open import L.Coding.Closure {ℓ} using ( closedAt )
+open import L.Coding.Descent {ℓ} using ( payload≺; leftPart; rightPart )
+open import L.Coding.CodeShape {ℓ}
+  using ( shapedAt; isTmAt-decode; Onto; BinWit; UnWit; bothTm; zeroPay
+        ; module Peel )
+```
+
+<!--en-->
 
 A collection of well-shaped keys closed under subcodes should contain genuine formula codes. Given a key with a specified natural-number arity, this chapter proves that it codes a formula whose constants come from the chosen carrier. The proof uses induction on the rank of the code and returns the mere existence of the recovered formula.
 <!--zh-->
-# 从码恢复公式
 
 形状正确且对子码封闭的键集合应当包含真正的公式码。给定一个元数为指定自然数的键，本章证明它编码了一条常元取自指定载体的公式。证明对码的秩作归纳，所得结论是所恢复公式的仅仅存在性。
 <!--ja-->
-# コードから論理式を復元する
 
 正しい形を持ち部分コードについて閉じたキーの集合には、実際の論理式のコードが含まれるはずである。本章では、自然数のアリティを指定したキーが、選んだ台に定数を持つ論理式を符号化することを示す。コードのランクについて帰納法を行い、その論理式の単なる存在を得る。
 <!--/-->
@@ -54,30 +98,7 @@ what changes inside a shape is a tag and a constructor.
 一步是 `peel`{.Agda}，一次下降是上一章，而十个情形收拢为六个，因为十个标签之间只有六种形状，而一种形状之内变动的只是一个标签与一个构造子。
 <!--/-->
 
-
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-open import Base.Prelude
-
-module L.Coding.FormulaRecovery {ℓ : Level} where
-
-open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax
-  using ( Term; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
-open import FOL.Manipulation.ConstantMapping using ( mapTm; mapFo )
-import FOL.Absoluteness
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-induction )
-open import V.Coding {ℓ} using ( pr; pr-inj; module VCode )
-open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
-open import L.Rank {ℓ} using ( rank )
-open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
-open import L.Coding.Model {ℓ} using ( prʟ; prʟ-fst )
-open import L.Coding.Closure {ℓ} using ( closedAt )
-open import L.Coding.Descent {ℓ} using ( payload≺; leftPart; rightPart )
-open import L.Coding.CodeShape {ℓ}
-  using ( shapedAt; isTmAt-decode; Onto; BinWit; UnWit; bothTm; zeroPay
-        ; module Peel )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( module InfinitySet )
@@ -88,7 +109,6 @@ open hPropStructure 𝒮ʟ
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
 open AbsL renaming ( _⊨ᵐ_ to _⊨_ )
 ```
-
 
 <!--en-->
 ## Keys and the decoding statement
@@ -113,7 +133,6 @@ and its image code together exactly as a formula over the model does.
 码是对该公式在层级中的像取的，那正是 `mapFo`{.Agda} 在那里做的事。它不是构造的一步：常元改名按定义与每个构造子交换，故字母表之上的一条公式连同它的像，其编码与模型之上的公式完全一样。
 <!--/-->
 
-
 ```agda
 keyOf : ℕ → S → S
 keyOf n x = prʟ (numeralL n) x
@@ -124,7 +143,6 @@ keyOf-fst n x = prʟ-fst (numeralL n) x ∙ cong₂ pr (numeralL-fst n) refl
 Coded : {K : Type ℓ} (f : K → V ℓ) → ℕ → S → Type (ℓ-suc ℓ)
 Coded {K} f n x = ∥ Σ[ φ ∈ Formula K n ] (VCode.⌜ mapFo f φ ⌝ ≡ fst x) ∥₁
 ```
-
 
 <!--en-->
 ## Induction on the rank of a code
@@ -147,8 +165,6 @@ they look at them by handing the hypothesis straight to the term decode.
 <!--zh-->
 字母表的两个参数出于同样的理由骑在归纳之外。六个框架里只有两个去看它们，即载荷里放着词项的那两个，而它们看的方式，是把那条假设径直递给词项解码。
 <!--/-->
-
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">

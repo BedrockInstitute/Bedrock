@@ -1,27 +1,13 @@
-<!--en-->
-# Well-orders on all stages
-
-For each ordinal `γ`, this chapter constructs in the ambient type theory a strict well-order on the members of `Lset γ`. The construction has two nested parts. A set is first assigned the ordinal over which it is first definable; sets born at different ordinals are ordered by those ordinals, while sets born together are ordered by their least names over the common earlier stage. Membership induction then supplies these stage orders simultaneously. The result is a host-level order at each stage, not yet an internal relation of set theory and not a single well-order of all of `L`.
-<!--zh-->
-# 各层上的良序
-
-对每个序数 `γ`，本章在宿主类型论中构造 `Lset γ` 的成员上的严格良序。构造分为相互嵌套的两层。先为每个集合指定它最初成为可定义子集时所依据的序数；诞生序数不同的集合按诞生序数排序，同生的集合则按共同前层之上的最小名字排序。随后借隶属归纳同时得到各层的序。所得结果是每一层处的宿主层良序，还不是集合论内部的关系，也不是整个 `L` 上的单一良序。
-<!--ja-->
-# 各段階上の整列順序
-
-各順序数 `γ` に対して、この章では周囲の型理論において `Lset γ` の要素上の狭義整列順序を構成する。構成は二重になっている。まず各集合に、それが初めて定義可能な部分集合として現れるときの基礎となる順序数を割り当てる。誕生順序数が異なる集合はその順序数で比較し、同時に生まれた集合は共通の直前段階上の最小の名前で比較する。次に所属帰納法によって、各段階の順序を同時に得る。得られるのは各段階における周囲の型理論の整列順序であり、集合論内部の関係でも、`L` 全体の単一の整列順序でもない。
-<!--/-->
-
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
 ```
 
 <!--en-->
-The classical assumption is used at the point where a merely inhabited family of names is turned into its determined least member. For every index, `stepAt` is uniformly obtained from this least-name construction.
+# Well-orders on all stages
 <!--zh-->
-经典假设用于把仅仅非空的名字族变成其确定的最小成员。对每个指数，`stepAt` 都统一地由这个最小名字构造得到。
+# 各层上的良序
 <!--ja-->
-古典的仮定は、単に非空である名前の族を、その確定した最小要素へ変える箇所で用いられる。どの添字に対しても、`stepAt` はこの最小名の構成から一様に得られる。
+# 各段階上の整列順序
 <!--/-->
 
 ```agda
@@ -41,6 +27,44 @@ All constructions are carried out at a fixed universe level under the single hyp
 module L.Choice.StageOrders {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-irrefl; ∈-induction; ∈-induction-compute )
+open import V.Model {ℓ} using ( self∈sucV )
+open import L.Constructible {ℓ}
+  using ( IsOrd; isL; Lset; Lset→isL )
+open import L.Ordinal {ℓ} using ( mem-ord )
+open import L.Ordinal.Linear {ℓ} lem using ( ord-tri )
+open import L.Stage {ℓ} lem using ( stage; stage-ord; stage-mem; stage-earliest )
+open import L.Axioms.Basic {ℓ} using ( Lset-suc )
+open import L.Choice.FirstIntersectionStage {ℓ} lem using ( IsPredOf; predOf; carveAt )
+open import L.Choice.FiniteStageOrders {ℓ} lem using ( Tri-map )
+open import L.Choice.CanonicalNames {ℓ} lem using ( module Naming )
+open import L.WellOrder.Base {ℓ-suc ℓ}
+  using ( Tri; lt; eq; gt; SWO; IsLeast; isPropLeastOf )
+```
+
+<!--en-->
+
+For each ordinal `γ`, this chapter constructs in the ambient type theory a strict well-order on the members of `Lset γ`. The construction has two nested parts. A set is first assigned the ordinal over which it is first definable; sets born at different ordinals are ordered by those ordinals, while sets born together are ordered by their least names over the common earlier stage. Membership induction then supplies these stage orders simultaneously. The result is a host-level order at each stage, not yet an internal relation of set theory and not a single well-order of all of `L`.
+<!--zh-->
+
+对每个序数 `γ`，本章在宿主类型论中构造 `Lset γ` 的成员上的严格良序。构造分为相互嵌套的两层。先为每个集合指定它最初成为可定义子集时所依据的序数；诞生序数不同的集合按诞生序数排序，同生的集合则按共同前层之上的最小名字排序。随后借隶属归纳同时得到各层的序。所得结果是每一层处的宿主层良序，还不是集合论内部的关系，也不是整个 `L` 上的单一良序。
+<!--ja-->
+
+各順序数 `γ` に対して、この章では周囲の型理論において `Lset γ` の要素上の狭義整列順序を構成する。構成は二重になっている。まず各集合に、それが初めて定義可能な部分集合として現れるときの基礎となる順序数を割り当てる。誕生順序数が異なる集合はその順序数で比較し、同時に生まれた集合は共通の直前段階上の最小の名前で比較する。次に所属帰納法によって、各段階の順序を同時に得る。得られるのは各段階における周囲の型理論の整列順序であり、集合論内部の関係でも、`L` 全体の単一の整列順序でもない。
+<!--/-->
+
+<!--en-->
+The classical assumption is used at the point where a merely inhabited family of names is turned into its determined least member. For every index, `stepAt` is uniformly obtained from this least-name construction.
+<!--zh-->
+经典假设用于把仅仅非空的名字族变成其确定的最小成员。对每个指数，`stepAt` 都统一地由这个最小名字构造得到。
+<!--ja-->
+古典的仮定は、単に非空である名前の族を、その確定した最小要素へ変える箇所で用いられる。どの添字に対しても、`stepAt` はこの最小名の構成から一様に得られる。
+<!--/-->
+
+
+
 <!--en-->
 The objects ordered here are members of the cumulative hierarchy as seen by the ambient type theory. Their membership proofs travel with them, but those proofs are propositions, so they do not create extra copies of an element. This distinction will matter when the same order is later described and represented inside `L`.
 <!--zh-->
@@ -48,14 +72,6 @@ The objects ordered here are members of the cumulative hierarchy as seen by the 
 <!--ja-->
 ここで順序づける対象は、周囲の型理論から見た累積階層の要素である。所属の証明も要素とともに運ばれるが、それらは命題なので、同じ要素の余分な複製を生じさせない。この区別は、のちに同じ順序を `L` の内部で記述し表現するときに重要になる。
 <!--/-->
-
-```agda
-open import FOL.ZFStructure using ( module hPropStructure )
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-irrefl; ∈-induction; ∈-induction-compute )
-open import V.Model {ℓ} using ( self∈sucV )
-open import L.Constructible {ℓ}
-  using ( IsOrd; isL; Lset; Lset→isL )
-```
 
 <!--en-->
 To locate a set's birth, begin with the earliest ordinal stage containing it. That stage is a successor, so it has a predecessor; this predecessor is the stage over which the set first appears as a definable subset. Ordinal trichotomy will later show that this birth lies strictly below every ordinal stage containing the set.
@@ -65,14 +81,6 @@ To locate a set's birth, begin with the earliest ordinal stage containing it. Th
 集合の誕生順序数を定めるには、まずそれを含む最も早い順序数段階を取る。その段階は後続段階なので先行者をもち、この先行者が、集合が初めて定義可能な部分集合として現れるときの基礎段階である。のちに順序数の三分性を用いて、この誕生順序数が集合を含むどの順序数段階よりも真に下にあることを示す。
 <!--/-->
 
-```agda
-open import L.Ordinal {ℓ} using ( mem-ord )
-open import L.Ordinal.Linear {ℓ} lem using ( ord-tri )
-open import L.Stage {ℓ} lem using ( stage; stage-ord; stage-mem; stage-earliest )
-open import L.Axioms.Basic {ℓ} using ( Lset-suc )
-open import L.Choice.FirstIntersectionStage {ℓ} lem using ( IsPredOf; predOf; carveAt )
-```
-
 <!--en-->
 Once a stage is well-ordered, its formulas and parameter lists form well-ordered names for the next stage. A successor-stage member may have many such names, so the construction selects the least one and compares members through these selected representatives. The relevant uniqueness belongs to the least representative, not to names in general.
 <!--zh-->
@@ -80,13 +88,6 @@ Once a stage is well-ordered, its formulas and parameter lists form well-ordered
 <!--ja-->
 ある段階が整列順序づけられると、その論理式とパラメータ列は次の段階の整列順序づけられた名前をなす。後続段階の一つの要素が多くの名前をもつこともあるので、構成はその最小のものを選び、選ばれた代表を通して要素を比較する。ここで一意なのは最小代表であり、名前一般ではない。
 <!--/-->
-
-```agda
-open import L.Choice.FiniteStageOrders {ℓ} lem using ( Tri-map )
-open import L.Choice.CanonicalNames {ℓ} lem using ( module Naming )
-open import L.WellOrder.Base {ℓ-suc ℓ}
-  using ( Tri; lt; eq; gt; SWO; IsLeast; isPropLeastOf )
-```
 
 <!--en-->
 Several changes of representation occur in this construction: from a presented index to the set it denotes, from a set to a member paired with its membership proof, and from a member to its least name. Each change is injective, so equality and strict comparison can be transported without identifying distinct elements.
@@ -321,7 +322,6 @@ Fix a strict well-order `w` on a type `A`. The next construction uses only the r
 型 `A` 上の狭義整列順序 `w` を固定する。次の構成はこの構造に含まれる関係と法則だけを使うので、名前の順序、段階要素の順序、およびそれらの表現の変更に同じように適用できる。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -349,7 +349,6 @@ Writing `relOf w a b` for the strict comparison contained in `w` lets later stat
 </div>
 </details>
 
-
 <!--en-->
 Let `f : B → C` be injective and suppose `C` is strictly well-ordered. Comparing `u` and `v` in `B` by comparing `f u` and `f v` should then inherit a strict well-order. Injectivity is essential only for reflecting the equality case back from `C` to `B`.
 <!--zh-->
@@ -357,7 +356,6 @@ Let `f : B → C` be injective and suppose `C` is strictly well-ordered. Compari
 <!--ja-->
 `f : B → C` が単射であり、`C` が狭義整列順序づけられているとする。`B` の `u` と `v` を `f u` と `f v` の比較によって比べれば、その関係は狭義整列順序を受け継ぐはずである。単射性が本質的に必要なのは、`C` における等しい場合を `B` へ反映するときである。
 <!--/-->
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
@@ -383,7 +381,6 @@ The pulled-back relation declares `u` smaller than `v` exactly when the image `f
 <!--/-->
 
 ```agda
-
   private
     _<ᵇ_ : B → B → Type (ℓ-suc ℓ)
     u <ᵇ v = f u <ᶜ f v
@@ -445,7 +442,6 @@ Transitivity follows by composing comparisons of the three images in `C`, and th
 ```
 </div>
 </details>
-
 
 <!--en-->
 Every index in the small presentation `⟪ A ⟫` denotes an actual member of `A`. Pairing its image with this membership evidence gives a map from presentation indices into `Mem A`, the form on which stage orders are constructed.
@@ -517,7 +513,6 @@ Fix an index `δ` and a strict well-order on the small members of `Lset δ`. The
 添字 `δ` と `Lset δ` の小さな要素上の狭義整列順序を固定する。これで、この段階上の名前を比較できる。名前のパラメータ部分が、まさに与えられた順序によって比較されるからである。これが、どの添字でも用いられる一様な局所構成を与える。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -527,8 +522,7 @@ module _ (δ : S) (w : SWO ⟪ Lset δ ⟫) where
 <div class="submodule-fold-content">
 
 ```agda
-  private
-    module NM = Naming (Lset δ) w
+  private module NM = Naming (Lset δ) w
 ```
 
 <!--en-->
@@ -747,7 +741,6 @@ The reading lemma says the converse: if the step order holds between two members
 <!--/-->
 
 ```agda
-
     stepAt-read : (a b : New δ) (t₁ t₂ : NM.Name)
                 → IsLeastName t₁ (fst a) → IsLeastName t₂ (fst b)
                 → relOf stepAt a b → NM._≺ₙ_ t₁ t₂
@@ -756,7 +749,6 @@ The reading lemma says the converse: if the step order holds between two members
 ```
 </div>
 </details>
-
 
 <!--en-->
 ## The family
@@ -816,7 +808,6 @@ Fix an ordinal `γ`. To construct its stage order, assume recursively that every
 <!--ja-->
 順序数 `γ` を固定する。この段階の順序を構成するため、各順序数 `δ ∈ γ` について `Mem (Lset δ)` 上の狭義整列順序がすでに得られていると再帰的に仮定する。モジュール `Family` は、まさにこれらの小さい段階の順序から `Lset γ` の要素上の順序を構成する。
 <!--/-->
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
@@ -1233,7 +1224,6 @@ The outer descent is membership induction on the birth ordinal. Its motive says 
 <!--/-->
 
 ```agda
-
     accByBirth : (δ : S) (i : ⟨ δ ∈ˢ γ ⟩)
                → (b : Member) → bornAt b ≡ (δ , i) → Acc _≺_ b
     accByBirth = ∈-induction {P = Motive} outer
@@ -1282,7 +1272,6 @@ Every member is therefore accessible for the main relation. The conclusion uses 
 <!--/-->
 
 ```agda
-
     ≺-wf : WellFounded _≺_
     ≺-wf a = accByBirth (bornAt a .fst) (bornAt a .snd) a refl
 ```
@@ -1317,7 +1306,6 @@ Transitivity and the two-level well-foundedness argument complete the order laws
 ```
 </div>
 </details>
-
 
 <!--en-->
 The function `famStep` packages this recursive step: at `γ`, it takes the orders already constructed at every member ordinal `δ ∈ γ` and returns the strict well-order of `Mem (Lset γ)` proved above. The same construction applies uniformly to every ordinal; it has no separate zero, successor, or limit clause.

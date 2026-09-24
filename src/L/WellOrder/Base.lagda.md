@@ -1,28 +1,18 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # Strict well-orders and least-element search
-
-Suppose a property of natural numbers is known to hold of at least one number. Then it holds of a least number: among the witnesses there is a smallest one. For a general strict well-order, this chapter uses a descent from a known witness. If some strictly smaller element is still a witness, move down to it and repeat. If not, the current element is least. Well-foundedness of the order guarantees this descent cannot continue forever, so the process stops at a least witness.
-
-This chapter turns that argument into a theorem for any strict well-order, not just the natural numbers. Two pieces of order data carry the proof. First, a comparison of two elements has three possible outcomes, strictly below, equal, or strictly above, and representing these outcomes as explicit data lets a proof reason by cases on them; this is what shows a least witness, once found, is unique, since two least witnesses cannot be strictly below each other. Second, well-foundedness is presented as an accessibility certificate for every element, and it is these certificates, handed down step by step, that let the descent be carried out inside type theory. One genuinely classical ingredient remains in this proof: at each step the search decides whether some smaller witness still exists, and that mere-existence question is settled by excluded middle at the level where it is asked. Everything else, including the uniqueness of the result, is constructive.
-
-The chapter first defines comparison data, then states the order laws together, then proves that being least is a proposition and that least witnesses exist. It closes by assembling the strict order on the natural numbers into an instance, so the search applies there concretely.
 <!--zh-->
 # 严格良序与最小元搜索
-
-设自然数的一个性质至少对一个数成立。那么它对一个最小的数成立：见证之中必有最小者。对于一般的严格良序，本章采用从已知见证出发的下降论证：若仍有严格更小的元素满足该性质，就移到那里重复；若没有，当前元素即为最小。序的良基性保证这样的下降不可能永远继续，因此过程会停在某个最小见证处。
-
-本章把这个论证推广成对任意严格良序成立的定理，而不只对自然数。两块序数据承担证明。其一，两个元素的比较有三种结果：严格小于、相等、严格大于；把这三种结果表示为显式数据，证明便可按情形推理，这正说明极小见证一旦找到便唯一，因为两个极小见证不可能彼此严格更小。其二，良基性表述为每个元素的可及性证书，正是这些证书逐层下传，使下降得以在类型论中执行。本章的这个证明还使用一个经典成分：每一步都判定是否仍存在更小的见证，这个单纯存在性问题由所问层级上的排中律判定。其余部分，包括结果的唯一性，都是构造性的。
-
-本章先定义比较数据，再把序定律一并陈述，然后证明「是极小元」是命题且极小见证存在，最后把自然数上的严格序组装成实例，使搜索在那里具体可用。
 <!--ja-->
 # 狭義整列順序と最小要素の探索
-
-自然数のある性質が少なくとも一つの数で成り立つとする。すると、その性質は最小の数で成り立つ。証人のうちには最小のものがあるからである。一般の狭義整列順序に対して、本章は既知の証人からの降下を用いる。まだ真に小さい要素が性質を満たすならそこへ移って繰り返し、満たさなければ現在の要素が最小である。順序の整礎性がこの降下は永遠に続かないことを保証し、探索は最小証人で止まる。
-
-本章は、この議論を自然数だけでなく任意の狭義整列順序に対する定理にする。証明を支えるのは二つの順序のデータである。第一に、二つの要素の比較には真に小さい・等しい・真に大きいという三つの結果があり、これらを明示的なデータとして表せば証明は場合分けで推論できる。これが最小証人の一意性を示すもので、二つの最小証人は互いに真に小さいことはあり得ない。第二に、整礎性は各要素への到達可能性の証明書として表され、この証明書を一歩ごとに受け渡すことで、降下を型理論の中で実行できる。本章のこの証明には古典的な成分が一つある。各段階で、より小さい証人がまだ存在するかどうかを判定し、この単なる存在の問いを、それが問われるレベルでの排中律によって決着する。結果の一意性を含め、それ以外はすべて構成的である。
-
-本章はまず比較データを定義し、次に順序の法則をまとめて述べ、さらに「最小であること」が命題であることと最小証人の存在を示し、最後に自然数上の狭義順序を実例として組み立てて、探索がそこで具体的に使えるようにする。
 <!--/-->
+
+```agda
+open import Base.Prelude
+```
 
 <!--en-->
 The carrier of the order and the order relation itself need not sit at the same universe level: a relation may be valued at a fixed level `ℓₚ` while its carrier lives at any level. This separation is a matter of generality, not of the mathematics of the search; the least-element argument below never compares levels.
@@ -39,15 +29,39 @@ Two mathematical notions then do the work. Well-foundedness is phrased through t
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
+module L.WellOrder.Base {ℓₚ : Level} where
+```
 
-open import Base.Prelude
+```agda
 open import Base.Classical using ( LEM )
 open import FOL.ZFStructure using ( ZFStructure )
 import FOL.Semantics as Semantics
-
-module L.WellOrder.Base {ℓₚ : Level} where
 ```
+
+<!--en-->
+
+Suppose a property of natural numbers is known to hold of at least one number. Then it holds of a least number: among the witnesses there is a smallest one. For a general strict well-order, this chapter uses a descent from a known witness. If some strictly smaller element is still a witness, move down to it and repeat. If not, the current element is least. Well-foundedness of the order guarantees this descent cannot continue forever, so the process stops at a least witness.
+
+This chapter turns that argument into a theorem for any strict well-order, not just the natural numbers. Two pieces of order data carry the proof. First, a comparison of two elements has three possible outcomes, strictly below, equal, or strictly above, and representing these outcomes as explicit data lets a proof reason by cases on them; this is what shows a least witness, once found, is unique, since two least witnesses cannot be strictly below each other. Second, well-foundedness is presented as an accessibility certificate for every element, and it is these certificates, handed down step by step, that let the descent be carried out inside type theory. One genuinely classical ingredient remains in this proof: at each step the search decides whether some smaller witness still exists, and that mere-existence question is settled by excluded middle at the level where it is asked. Everything else, including the uniqueness of the result, is constructive.
+
+The chapter first defines comparison data, then states the order laws together, then proves that being least is a proposition and that least witnesses exist. It closes by assembling the strict order on the natural numbers into an instance, so the search applies there concretely.
+<!--zh-->
+
+设自然数的一个性质至少对一个数成立。那么它对一个最小的数成立：见证之中必有最小者。对于一般的严格良序，本章采用从已知见证出发的下降论证：若仍有严格更小的元素满足该性质，就移到那里重复；若没有，当前元素即为最小。序的良基性保证这样的下降不可能永远继续，因此过程会停在某个最小见证处。
+
+本章把这个论证推广成对任意严格良序成立的定理，而不只对自然数。两块序数据承担证明。其一，两个元素的比较有三种结果：严格小于、相等、严格大于；把这三种结果表示为显式数据，证明便可按情形推理，这正说明极小见证一旦找到便唯一，因为两个极小见证不可能彼此严格更小。其二，良基性表述为每个元素的可及性证书，正是这些证书逐层下传，使下降得以在类型论中执行。本章的这个证明还使用一个经典成分：每一步都判定是否仍存在更小的见证，这个单纯存在性问题由所问层级上的排中律判定。其余部分，包括结果的唯一性，都是构造性的。
+
+本章先定义比较数据，再把序定律一并陈述，然后证明「是极小元」是命题且极小见证存在，最后把自然数上的严格序组装成实例，使搜索在那里具体可用。
+<!--ja-->
+
+自然数のある性質が少なくとも一つの数で成り立つとする。すると、その性質は最小の数で成り立つ。証人のうちには最小のものがあるからである。一般の狭義整列順序に対して、本章は既知の証人からの降下を用いる。まだ真に小さい要素が性質を満たすならそこへ移って繰り返し、満たさなければ現在の要素が最小である。順序の整礎性がこの降下は永遠に続かないことを保証し、探索は最小証人で止まる。
+
+本章は、この議論を自然数だけでなく任意の狭義整列順序に対する定理にする。証明を支えるのは二つの順序のデータである。第一に、二つの要素の比較には真に小さい・等しい・真に大きいという三つの結果があり、これらを明示的なデータとして表せば証明は場合分けで推論できる。これが最小証人の一意性を示すもので、二つの最小証人は互いに真に小さいことはあり得ない。第二に、整礎性は各要素への到達可能性の証明書として表され、この証明書を一歩ごとに受け渡すことで、降下を型理論の中で実行できる。本章のこの証明には古典的な成分が一つある。各段階で、より小さい証人がまだ存在するかどうかを判定し、この単なる存在の問いを、それが問われるレベルでの排中律によって決着する。結果の一意性を含め、それ以外はすべて構成的である。
+
+本章はまず比較データを定義し、次に順序の法則をまとめて述べ、さらに「最小であること」が命題であることと最小証人の存在を示し、最後に自然数上の狭義順序を実例として組み立てて、探索がそこで具体的に使えるようにする。
+<!--/-->
+
+
 
 <!--en-->
 The search must also live with incomplete information. The hypothesis says only that the set of witnesses is merely inhabited, an inhabitant of `∥_∥₁`{.Agda}, and at each descent step the question whether some strictly smaller witness remains is again a mere existence statement. Neither assumption hands over a chosen witness, and neither needs to: propositional truncation may be eliminated because the goal, being a least element, is a proposition, and that propositionhood is proved in this chapter. Excluded middle enters precisely to turn each such existence question into a two-way decision, a proof or a refutation.
@@ -58,7 +72,6 @@ The search must also live with incomplete information. The hypothesis says only 
 <!--/-->
 
 ```agda
-
 open import Cubical.Induction.WellFounded using ( Acc; acc; WellFounded )
 open import Cubical.Data.Nat.Order using ( _<_; <-trans; ¬m<m; <-wellfounded; _≟_ )
 import Cubical.Data.Nat.Order as NatOrder
@@ -166,7 +179,6 @@ The definition takes `P` as a family of `hProp`{.Agda}: each fiber is packaged w
 <!--ja-->
 定義では `P` を `hProp`{.Agda} 値の族として取る。各ファイバーは「それが命題である」という証明書とともに梱包されている。`⟨ P a ⟩`{.Agda} が基礎型を射影するので、`IsLeast P a`{.Agda} は、`a` が `P` を満たすことの証人と、他の各証人 `b` をその証明書 `⟨ P b ⟩`{.Agda} とともに `b <∙ a`{.Agda} の反証へ送る関数との対である。最小性の条件が要求されるのは実際に述語を満たす要素についてだけであり、部分集合の外の要素はどこにあってもよいことに注意してほしい。
 <!--/-->
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
@@ -293,7 +305,6 @@ The theorem `hostLeastOf` is the unrestricted host-level utility: its predicate 
 </div>
 </details>
 
-
 <!--en-->
 The unrestricted operation is exported only through the `HostLeast` namespace. This makes a call site state that it is performing host-level search. Formula-facing code should instead call `leastOfFormula`, whose input contains the object formula and its checked semantic reading.
 <!--zh-->
@@ -301,7 +312,6 @@ The unrestricted operation is exported only through the `HostLeast` namespace. T
 <!--ja-->
 制限のない演算は `HostLeast` 名前空間を通してのみ公開する。これにより、呼び出し側はホスト層の探索を行っていることを明示する。モデルに面するコードは代わりに、対象論理式と検査済みの意味論的読みを入力に含む `leastOfFormula` を使うべきである。
 <!--/-->
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
@@ -316,7 +326,6 @@ module HostLeast {ℓc : Level} {A : Type ℓc} (w : SWO {ℓc} A) where
 ```
 </div>
 </details>
-
 
 <!--en-->
 ## The natural numbers, well-ordered

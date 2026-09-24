@@ -1,20 +1,96 @@
-<!--en-->
-# Locating the hull and its collapse inside L
-
-The condensation argument needs more than an external hull: the hull itself and every value of its collapse must belong to L. This chapter proves these membership facts by coding the collapse and expressing the hull as an ω-iteration.
-<!--zh-->
-# 在 L 中定位 Skolem 壳及其塌缩
-
-凝聚论证需要的不只是外部的 Skolem 壳：壳本身与其塌缩的每个值都必须属于 L。本章通过编码塌缩、把壳写成 ω 迭代来证明这些成员关系。
-<!--ja-->
-# 包とその崩壊を L の内部に置く
-
-凝縮の議論には、外の包だけでは足りない。包そのものと、崩壊の各値が `L` に属する必要がある。本章は、崩壊を符号化し、包を ω 反復として表すことで、これらの所属の事実を証明する。
-<!--/-->
-
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
 ```
+
+<!--en-->
+# Locating the hull and its collapse inside L
+<!--zh-->
+# 在 L 中定位 Skolem 壳及其塌缩
+<!--ja-->
+# 包とその崩壊を L の内部に置く
+<!--/-->
+
+```agda
+open import Base.Prelude
+open import Base.Classical using ( LEM )
+```
+
+<!--en-->
+Fix a universe level `ℓ`{.Agda} and assume `lem : LEM (ℓ-suc ℓ)`{.Agda}. This hypothesis supplies a decision for each proposition at that level; it remains an explicit parameter of the constructions below.
+<!--zh-->
+固定宇宙层级 `ℓ`{.Agda}，并假设 `lem : LEM (ℓ-suc ℓ)`{.Agda}。这个假设为相应层级的每个命题提供判定，并始终作为下文构造的显式参数。
+<!--ja-->
+宇宙レベル `ℓ`{.Agda} を固定し、`lem : LEM (ℓ-suc ℓ)`{.Agda} を仮定する。この仮定は該当するレベルの各命題に判定を与え、以下の構成の明示的なパラメータとして保たれる。
+<!--/-->
+
+```agda
+module L.GCH.ConstructibleHull {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+```
+
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax
+  using ( Formula; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ∃̇_; ∀̇_; ∀̇∈; ⊥̇ )
+open import FOL.Manipulation.ConstantMapping using ( mapFo; mapFo-comp )
+open import FOL.Manipulation.Relabelling using ( ⊨-map )
+open import FOL.Manipulation.Renaming using ( renameFo; module Sat )
+import FOL.Absoluteness
+import FOL.Semantics
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-induction; extensionalV )
+open import V.Presentation {ℓ} using ( member; fiber )
+open import V.Coding {ℓ} using ( pr; module VCode )
+open import V.Collapse {ℓ} using ( module Collapse )
+open import L.Constructible {ℓ}
+  using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset; Lset-out; Lset→isL; 𝒟ₒ; 𝒟ₒ∋⊆
+        ; Lset-layer; layer-trans )
+open import L.Ordinal {ℓ} using ( mem-ord; #∈ω )
+open import L.Axioms.Basic {ℓ} using ( LsetS; ∅ʟ; extensionalL )
+open import L.Axioms.Full {ℓ} lem using ( hasSeparationL )
+open import L.Axioms.Infinity {ℓ} lem using ( ωʟ; ω-specL )
+open import L.Axioms.Numerals {ℓ} using ( numeralL-fst )
+open import L.Recursion {ℓ} lem using ( Recursion; module Of; mereFunct )
+open import L.Recursion.Graph {ℓ} lem using () renaming ( module Graph to RecursionGraph )
+open import L.Definability {ℓ} using ( module DefOf )
+open import L.Coding.Model {ℓ} using ( prAtL; prAtL-adequate; envOverAt; envOverAt-transport )
+open import L.Coding.Expressions {ℓ} using ( numL; sucAtL; sucAtL-adequate; consAtL; consAtL-adequate )
+open import L.Coding.Environment {ℓ} using ( env; cons )
+open import L.Coding.EnvironmentSet {ℓ} lem using ( envS; Ix; envOver; module Recover )
+open import L.Coding.SatisfactionBridge {ℓ} lem using ( graph; envFor; envFor-graph )
+open import L.Coding.CodeSet {ℓ} lem using ( AllCodes; keyS; key∈AllCodes )
+open import L.Coding.CodeConstructibility {ℓ} using ( cupʟ; cupʟ-inl; cupʟ-inr )
+open import L.Coding.UniformSatisfaction {ℓ} lem using ( val-sat )
+open import L.Choice.CanonicalNames {ℓ} lem using ( limitCode; numeral∈limit; pr∈limit )
+open import L.Choice.NameComparison {ℓ} lem using ( freeCode-in; freeCode-out )
+open import L.Choice.InternalWellOrder {ℓ} lem using ( relL; relL-fill; relL-rep )
+open import L.Choice.StageOrders {ℓ} lem using ( orderAt; relOf )
+open import L.WellOrder.Base {ℓ-suc ℓ}
+  using ( SWO; IsLeast; leastOfFormula; isPropLeastOf )
+  renaming ( Tri to Tri∙; lt to tri-lt; eq to tri-eq; gt to tri-gt )
+open import L.GCH.CardinalSquareLaw {ℓ} lem using ( module Relation; isL-ord )
+open import L.GCH.OrderType {ℓ} lem
+  using ( Holds; Complete; Src; ValueIs; Correct
+        ; completeAt; complete-in; complete-out
+        ; valueAt; value-in; value-out
+        ; correctAt; correct-in; correct-out )
+open import L.GCH.OmegaRecursion {ℓ} lem using ( module Iterate )
+open import L.GCH.SkolemHull {ℓ} lem using ( module HullStage; module Frame )
+open import L.InjectionComposition {ℓ} lem using ( appC; appC-adequate )
+open import L.GCH.AdequateStages {ℓ} lem using ( Superadequate )
+open import L.Coding.SatisfactionGraphSet {ℓ} lem using ( module SatGraph )
+open import L.GCH.CondensationTransfer {ℓ} lem using ( module Condense )
+open import V.Model {ℓ} using ( pair-spec )
+```
+
+<!--en-->
+
+The condensation argument needs more than an external hull: the hull itself and every value of its collapse must belong to L. This chapter proves these membership facts by coding the collapse and expressing the hull as an ω-iteration.
+<!--zh-->
+
+凝聚论证需要的不只是外部的 Skolem 壳：壳本身与其塌缩的每个值都必须属于 L。本章通过编码塌缩、把壳写成 ω 迭代来证明这些成员关系。
+<!--ja-->
+
+凝縮の議論には、外の包だけでは足りない。包そのものと、崩壊の各値が `L` に属する必要がある。本章は、崩壊を符号化し、包を ω 反復として表すことで、これらの所属の事実を証明する。
+<!--/-->
 
 <!--en-->
 The chapter runs under classical logic: an excluded-middle instance at the successor of the model's own level. This is the same hypothesis the choice construction carries, and it is the only classical assumption made here.
@@ -25,12 +101,10 @@ The chapter runs under classical logic: an excluded-middle instance at the succe
 <!--/-->
 
 ```agda
-open import Base.Prelude
 open import Cubical.Relation.Nullary using ( decRec )
 open import Cubical.HITs.PropositionalTruncation using ( rec2 )
 open import Cubical.Foundations.Prelude using ( J )
 open import Cubical.Foundations.HLevels using ( isPropΠ2 )
-open import Base.Classical using ( LEM )
 ```
 
 <!--en-->
@@ -41,10 +115,6 @@ The module is parameterized by that hypothesis, so every statement below is rela
 モジュールはこの仮定をパラメータとする。したがって以下の主張はすべてそれに相対的であり、漠然とした排中律の原理に訴えるものではない。
 <!--/-->
 
-```agda
-module L.GCH.ConstructibleHull {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-```
-
 <!--en-->
 The chapter speaks the first-order language of set theory: formulas are built over the carrier of the constructible structure, their constants name elements of `L`, and constants can be relabeled along any map, with satisfaction invariant under such relabeling. This is the vocabulary in which the collapse and the hull will be described.
 <!--zh-->
@@ -52,14 +122,6 @@ The chapter speaks the first-order language of set theory: formulas are built ov
 <!--ja-->
 本章は集合論の一階言語で語る。論理式は構成可能な構造の台の上で組み立てられ、その定数は `L` の要素を名指す。定数は任意の対応に沿って改名でき、充足は改名で変わる。これが、崩壊と包を記述するための語彙である。
 <!--/-->
-
-```agda
-open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax
-  using ( Formula; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ∃̇_; ∀̇_; ∀̇∈; ⊥̇ )
-open import FOL.Manipulation.ConstantMapping using ( mapFo; mapFo-comp )
-open import FOL.Manipulation.Relabelling using ( ⊨-map )
-```
 
 <!--en-->
 Formula readings move between environments by renaming, and renaming is harmless for satisfaction. The ambient hierarchy contributes the background facts: induction along membership, extensionality of sets, and the presentation of an element as an index together with its membership proof.
@@ -69,14 +131,6 @@ Formula readings move between environments by renaming, and renaming is harmless
 論理式の読みは、改名によって環境の間を移動する。改名は充足にとって無害である。周囲の階層は、所属に沿う帰納、集合の外延性、そして「要素＝添字とその所属の証明」という提示の仕方という、背景の事実を供給する。
 <!--/-->
 
-```agda
-open import FOL.Manipulation.Renaming using ( renameFo; module Sat )
-import FOL.Absoluteness
-import FOL.Semantics
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-induction; extensionalV )
-open import V.Presentation {ℓ} using ( member; fiber )
-```
-
 <!--en-->
 The argument begins where every set of `L` lives: in the tower of stages indexed by ordinals. The collapse of a set is computed from its members alone, and constructibility travels along membership; what must be shown is that this local computation never leaves `L`. Since a hull is not transitive, the argument cannot invoke global facts about the collapse; it re-derives, stage by stage, that the values stay inside.
 <!--zh-->
@@ -84,14 +138,6 @@ The argument begins where every set of `L` lives: in the tower of stages indexed
 <!--ja-->
 議論は、`L` のすべての集合の住む場所からはじまる。順序数で添字づけられた段階の塔である。集合の崩壊はその要素だけから計算され、構成可能性は所属に沿って伝わる。示すべきは、この局所的な計算が `L` の外に出ないことである。包は推移的ではないので、議論は崩壊についての大域的な事実を使えず、段階ごとに、値が内側にとどまることを改めて導く。
 <!--/-->
-
-```agda
-open import V.Coding {ℓ} using ( pr; module VCode )
-open import V.Collapse {ℓ} using ( module Collapse )
-open import L.Constructible {ℓ}
-  using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset; Lset-out; Lset→isL; 𝒟ₒ; 𝒟ₒ∋⊆
-        ; Lset-layer; layer-trans )
-```
 
 <!--en-->
 The constructible set `ωʟ` represents the ambient `ω`, and its specification identifies its members with the internal numerals. Separation will carve the bounded slices and one-step closures used later. In both operations the result is an element of `L` again, which is what keeps the whole construction inside the universe it describes.
@@ -101,14 +147,6 @@ The constructible set `ωʟ` represents the ambient `ω`, and its specification 
 構成可能集合 `ωʟ` は周囲の `ω` を表し、その仕様は要素を内部の数項と同定する。後では分出によって有界な切片と一段階の閉包を切り出す。どちらの演算も、結果が再び `L` の要素である。それが、構成全体を、その記述対象の宇宙の内側に保つのである。
 <!--/-->
 
-```agda
-open import L.Ordinal {ℓ} using ( mem-ord; #∈ω )
-open import L.Axioms.Basic {ℓ} using ( LsetS; ∅ʟ; extensionalL )
-open import L.Axioms.Full {ℓ} lem using ( hasSeparationL )
-open import L.Axioms.Infinity {ℓ} lem using ( ωʟ; ω-specL )
-open import L.Axioms.Numerals {ℓ} using ( numeralL-fst )
-```
-
 <!--en-->
 Replacement assembles values into tables: a recursion whose graph is definable becomes an element of `L`, and it suffices that a unique value merely exists at each argument. Definability interprets the constants of formulas, and the model-side coding of pairs and numerals provides the entries and their names.
 <!--zh-->
@@ -116,14 +154,6 @@ Replacement assembles values into tables: a recursion whose graph is definable b
 <!--ja-->
 置換が値を表へ集める。グラフが定義可能な再帰は `L` の要素となり、各入力で一意な値が「単に存在する」だけで十分である。定義可能性が論理式の定数を解釈し、モデル側の対と数項の符号化が、項目とその名前を供給する。
 <!--/-->
-
-```agda
-open import L.Recursion {ℓ} lem using ( Recursion; module Of; mereFunct )
-open import L.Recursion.Graph {ℓ} lem using () renaming ( module Graph to RecursionGraph )
-open import L.Definability {ℓ} using ( module DefOf )
-open import L.Coding.Model {ℓ} using ( prAtL; prAtL-adequate; envOverAt; envOverAt-transport )
-open import L.Coding.Expressions {ℓ} using ( numL; sucAtL; sucAtL-adequate; consAtL; consAtL-adequate )
-```
 
 <!--en-->
 Environments code parameter vectors as single sets, from which the vectors are recovered; the satisfaction bridge reads internal satisfaction externally; the code set gathers all codes into one element of `L`; and constructible unions combine the pieces that the construction collects along the way.
@@ -133,14 +163,6 @@ Environments code parameter vectors as single sets, from which the vectors are r
 環境はパラメータのベクトルを一つの集合として符号化し、ベクトルはそこから復元される。充足の橋は内部の充足を外側で読み、符号の集合がすべての符号を `L` の一つの要素に集め、構成可能な合併が、構成が途中で集めた部分を結合する。
 <!--/-->
 
-```agda
-open import L.Coding.Environment {ℓ} using ( env; cons )
-open import L.Coding.EnvironmentSet {ℓ} lem using ( envS; Ix; envOver; module Recover )
-open import L.Coding.SatisfactionBridge {ℓ} lem using ( graph; envFor; envFor-graph )
-open import L.Coding.CodeSet {ℓ} lem using ( AllCodes; keyS; key∈AllCodes )
-open import L.Coding.CodeConstructibility {ℓ} using ( cupʟ; cupʟ-inl; cupʟ-inr )
-```
-
 <!--en-->
 The uniform satisfaction table assigns to every code its satisfaction set, read externally; the canonical-names construction places numerals and the codes of parameter-free formulas, which may still have free-variable slots, in `Lset ω`; the internal well-order of a stage compares its members, first by birth stage and then by name.
 <!--zh-->
@@ -148,14 +170,6 @@ The uniform satisfaction table assigns to every code its satisfaction set, read 
 <!--ja-->
 一様な充足の表は、すべての符号にその充足集合を割り当て、外側で読める。正準名の構成は、数項と、定数を持たない論理式のコードを `Lset ω` に置く。そのような論理式にも自由変数の枠は残りえる。段階の内部の整列順序は要素を、まず誕生の段階、つぎに名前で比較する。
 <!--/-->
-
-```agda
-open import L.Coding.UniformSatisfaction {ℓ} lem using ( val-sat )
-open import L.Choice.CanonicalNames {ℓ} lem using ( limitCode; numeral∈limit; pr∈limit )
-open import L.Choice.NameComparison {ℓ} lem using ( freeCode-in; freeCode-out )
-open import L.Choice.InternalWellOrder {ℓ} lem using ( relL; relL-fill; relL-rep )
-open import L.Choice.StageOrders {ℓ} lem using ( orderAt; relOf )
-```
 
 <!--en-->
 Least-element search over a strict well-order returns, from an inhabited family, the least element; relations themselves become sets of pairs with two readings, and the order-type chapter states the three predicates describing a collapse table.
@@ -165,14 +179,6 @@ Least-element search over a strict well-order returns, from an inhabited family,
 狭義の整列順序の上の最小元の探索は、住民のある族から最小元を返す。関係そのものも、二つの読みをもつ対の集合になり、順序型の章が、崩壊の表を記述する三つの述語を述べる。
 <!--/-->
 
-```agda
-open import L.WellOrder.Base {ℓ-suc ℓ}
-  using ( SWO; IsLeast; leastOfFormula; isPropLeastOf )
-  renaming ( Tri to Tri∙; lt to tri-lt; eq to tri-eq; gt to tri-gt )
-open import L.GCH.CardinalSquareLaw {ℓ} lem using ( module Relation; isL-ord )
-open import L.GCH.OrderType {ℓ} lem
-```
-
 <!--en-->
 Correctness, completeness at an argument, and the value clause are each a formula with its two satisfaction readings; internal ω-recursion iterates a definable two-place step along the model's own `ω`. The hull's members are named by codes of arbitrary nesting depth, so no single separation can produce the hull; it is reached by iterating a definable one-step closure along `ω`, and this is why the closure must be built ω times.
 <!--zh-->
@@ -181,14 +187,6 @@ Correctness, completeness at an argument, and the value clause are each a formul
 正しさ、入力での完備さ、値の条項は、それぞれ二つの充足の読みをもつ論理式である。内部 ω 再帰は、モデル自身の `ω` に沿って、定義可能な二項のステップを反復する。包の要素は、任意の入れ子の深さの符号に名指されるので、一度の分離で包を作ることはできない。`ω` に沿って、定義可能な一段階の閉包を反復することではじめて届く。閉包を ω 回作らねばならない理由はこれである。
 <!--/-->
 
-```agda
-  using ( Holds; Complete; Src; ValueIs; Correct
-        ; completeAt; complete-in; complete-out
-        ; valueAt; value-in; value-out
-        ; correctAt; correct-in; correct-out )
-open import L.GCH.OmegaRecursion {ℓ} lem using ( module Iterate )
-```
-
 <!--en-->
 The proof has two connected parts. First, a local collapse table shows that each collapse value of a constructible carrier is constructible. Second, the Skolem hull is realized as the union of its finite closure stages, making the carrier itself constructible and allowing the first argument to apply to it.
 <!--zh-->
@@ -196,14 +194,6 @@ The proof has two connected parts. First, a local collapse table shows that each
 <!--ja-->
 証明は結びついた二つの部分からなる。まず局所的な崩壊表により、構成可能な台の各崩壊値が構成可能であることを示す。次に Skolem 包を有限閉包段階の合併として実現し、台自身の構成可能性を得て、第一の議論を適用する。
 <!--/-->
-
-```agda
-open import L.GCH.SkolemHull {ℓ} lem using ( module HullStage; module Frame )
-open import L.InjectionComposition {ℓ} lem using ( appC; appC-adequate )
-open import L.GCH.AdequateStages {ℓ} lem using ( Superadequate )
-open import L.Coding.SatisfactionGraphSet {ℓ} lem using ( module SatGraph )
-open import L.GCH.CondensationTransfer {ℓ} lem using ( module Condense )
-```
 
 <!--en-->
 A nested hull code has a finite depth, computed by taking maxima over the depths of its parameter codes. This depth bounds the closure stage at which its value appears.
@@ -240,7 +230,6 @@ The von Neumann successor and numerals organize the finite closure stages inside
 <!--/-->
 
 ```agda
-open import V.Model {ℓ} using ( pair-spec )
 open InfinitySet {ℓ} using ( ω; sucV; #_ )
 ```
 
@@ -341,7 +330,6 @@ An element of the carrier is determined by its underlying set, because construct
 <!--/-->
 
 ```agda
-
   S≡ : {x y : CS.S} → fst x ≡ fst y → x ≡ y
   S≡ = Σ≡Prop (λ v → snd (isL v))
 ```
@@ -418,7 +406,6 @@ The collapse argument uses only the constructibility of `M` and the predecessors
 崩壊の議論が使うのは `M` の構成可能性と、その内部に残る先行者だけであり、推移性は仮定しない。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -426,8 +413,6 @@ module PiIn (Mʟ : CS.S) where
 ```
 </summary>
 <div class="submodule-fold-content">
-
-
 
 <!--en-->
 Let `M` be the underlying set of the chosen constructible carrier. Its accompanying certificate ensures that every member later lifted from `M` is constructible.
@@ -510,9 +495,8 @@ The membership relation of `M` is expressed using three free-variable slots, rea
 ```agda
                  , ∈∈ₛ {a = ⟪ x ⟫↪ (p .fst)} {b = M} .snd (p .snd)
                  , q )
-  private
-    module Membership = Relation Mʟ Mʟ
-      ((var i1 ∈̇ con Mʟ) ∧̇ ((var i0 ∈̇ con Mʟ) ∧̇ (var i1 ∈̇ var i0)))
+  private module Membership = Relation Mʟ Mʟ
+            ((var i1 ∈̇ con Mʟ) ∧̇ ((var i0 ∈̇ con Mʟ) ∧̇ (var i1 ∈̇ var i0)))
 ```
 
 <!--en-->
@@ -524,8 +508,8 @@ The host-side reading of the relation is exactly the three memberships, conjoine
 <!--/-->
 
 ```agda
-      (λ y x → (fst y ∈ˢ M) ⊓ ((fst x ∈ˢ M) ⊓ (fst y ∈ˢ fst x)))
-      (λ y x z h → h) (λ y x z h → h)
+            (λ y x → (fst y ∈ˢ M) ⊓ ((fst x ∈ˢ M) ⊓ (fst y ∈ˢ fst x)))
+            (λ y x z h → h) (λ y x z h → h)
 ```
 
 <!--en-->
@@ -653,7 +637,6 @@ The induction runs along membership in the ambient hierarchy, exactly as the col
 <!--/-->
 
 ```agda
-
   value-val′ : (F : CS.S) → Correct F R → (x : S) → Pv F x
   value-val′ F hc = ∈-induction {P = Pv F} go
     where
@@ -733,7 +716,6 @@ Backward: a member `w` of the collapse decomposes, by the outward reading alread
 <!--/-->
 
 ```agda
-
       bwd : (w : S) → ⟨ w ∈ˢ C.π x ⟩ → ⟨ w ∈ˢ fst v ⟩
       bwd w w∈ = rec₁ (snd (w ∈ˢ fst v)) read (π-mem-out x w w∈)
         where
@@ -822,8 +804,6 @@ The proof eliminates the truncated existence into the equality of two h-sets, wh
 ```
 </summary>
 <div class="submodule-fold-content">
-
-
 
 <!--en-->
 The cutting formula is the single atomic formula: the free slot is a member of the constant `K`. Everything the slice contains is what satisfies it.
@@ -932,7 +912,6 @@ Fix an ordinal stage `δ'` and assume goodness for every `q` that lies both in `
 順序数段階 `δ'` を固定し、`M` と `Lset δ'` の両方に属する各 `q` が「良い」と仮定する。これら先行する崩壊値を組み合わせて、次の入力での値を作る。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -941,8 +920,6 @@ Fix an ordinal stage `δ'` and assume goodness for every `q` that lies both in `
 ```
 </summary>
 <div class="submodule-fold-content">
-
-
 
 <!--en-->
 The slice is cut at the stage `Lset δ'`: the members of the carrier that the stage already contains. Because the stage is a set of `L`, the slice is an element of `L` by separation, and it is exactly the domain the induction hypothesis speaks about.
@@ -1241,7 +1218,6 @@ The argument is carried as a carrier element, so that it can serve as an environ
 <!--/-->
 
 ```agda
-
       qS : CS.S
       qS = up q mq
 ```
@@ -1545,7 +1521,6 @@ The statement of `πX-isL` is about members: each member of the collapse image i
 </div>
 </details>
 
-
 <!--en-->
 ## The Skolem hull as an ω-iteration
 <!--zh-->
@@ -1562,7 +1537,6 @@ This says exactly that the collapse image is contained in `L`; it is a statement
 崩壊像の各要素は台のどこかの要素の崩壊であり、だから構成可能である。これは、崩壊像が `L` に含まれると言っているだけである。像そのものが `L` の要素であるとは主張していない。前半が終わり、後半は新しいパラメータで始まる。要素の後者で閉じた段階 `lam` と、その要素がすべて段階の中にある始点 `X` である。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -1573,8 +1547,6 @@ module Telescope (lam : S) (ordλ : IsOrd lam)
 ```
 </summary>
 <div class="submodule-fold-content">
-
-
 
 <!--en-->
 The empty set lies in the stage as well, and the hull machinery is opened on these data: the hull carrier `M`, the fact that the hull is contained in the stage, and that every member of the start is a member of the hull.
@@ -1688,7 +1660,6 @@ The iteration module takes the constructibility of the start together with the p
 <!--ja-->
 反復のモジュールは、始点の構成可能性と、まとめられたステップを受け取る。どちらも必要である。内部の再帰は `L` の要素からはじまり、ステップが論理式とその条項を供給するからである。
 <!--/-->
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
@@ -2056,7 +2027,6 @@ The hull as an element of `L` is the union of the iterates, and its membership d
 <!--/-->
 
 ```agda
-
     hullL-spec : fst hullL ≡ Hull
     hullL-spec = extensionalV {a = fst hullL} {b = Hull} (λ z → ⇔toPath (fwd z) (bwd z))
       where
@@ -2135,8 +2105,6 @@ The step is built inside the stage, and its constants name objects of the stage:
 ```
 </summary>
 <div class="submodule-fold-content">
-
-
 
 <!--en-->
 An ordinal of the hierarchy is constructible, which anchors the stage inside `L`.
@@ -2419,7 +2387,6 @@ The readings are stated at a variable environment, for a fixed arity `k` whose n
 <!--/-->
 
 ```agda
-
     module KeyIn {n : ℕ} (s a : Fin n) (γ : CS.S ^ n) (k : ℕ)
                  (qa : fst (lookup a γ) ≡ # k) where
 ```
@@ -2494,7 +2461,6 @@ The elimination recovers the two data: the code-set membership of `s`, and the t
 <!--/-->
 
 ```agda
-
         keyIn-out : ⟨ γ ⊨ keyIn s a ⟩
                   → ⟨ fst (lookup s γ) ∈ˢ fst C₀ ⟩
                   × ∥ Σ[ c ∈ V ℓ ] (fst (lookup s γ) ≡ pr (# (suc k)) c) ∥₁
@@ -2905,7 +2871,6 @@ To bind the table, extended environment, and numeral while retaining six ambient
 <!--/-->
 
 ```agda
-
     private
       ρ₉ : Fin 7 → Fin 9
       ρ₉ zero = i0
@@ -3052,7 +3017,6 @@ The outward reading eliminates the three nested existentials in order, each into
 <!--/-->
 
 ```agda
-
       leastWitness-out : (Z e s z p q : CS.S)
                        → ⟨ (Z ∷ e ∷ s ∷ z ∷ p ∷ q ∷ []) ⊨ leastWitnessFo ⟩
                        → LeastWitness Z e s z
@@ -3101,7 +3065,6 @@ The numeral slot carries a member of the internal `ω`, and `decode-num` decodes
 <!--/-->
 
 ```agda
-
     private
       decode-num : (q : CS.S) → ⟨ fst q ∈ˢ fst ωʟ ⟩ → ∥ Σ[ n ∈ ℕ ] (fst q ≡ # n) ∥₁
       decode-num q h = map₁ (λ { (n , e) → lower n , (e ∙ numeralL-fst (lower n)) })
@@ -3242,12 +3205,9 @@ For comparing two witnesses, we retain seven of the eight body clauses: the nume
 <!--/-->
 
 ```agda
-
-    private
-      module WitnessBody (z T e' e s k Z : CS.S)
-        (hb : ⟨ Env T e' e s k z Z ⊨ bodyFo ⟩) where
-        module Rd = BodyRd T e' e s k z Z
-          using ( b-num; b-env; b-cons; b-tab; b-mem; b-stage; b-min )
+    private module WitnessBody (z T e' e s k Z : CS.S) (hb : ⟨ Env T e' e s k z Z ⊨ bodyFo ⟩) where
+      module Rd = BodyRd T e' e s k z Z
+        using ( b-num; b-env; b-cons; b-tab; b-mem; b-stage; b-min )
 ```
 
 <!--en-->
@@ -3259,11 +3219,11 @@ Two retained clauses immediately give that the extended environment lies in the 
 <!--/-->
 
 ```agda
-        h6 = Rd.b-mem hb
-        h7 = Rd.b-stage hb
-        module AtNum (n : ℕ) (qk : fst k ≡ # n) where
-          module R = Recover Z n (Env T e' e s k z Z) i2 i4 i6 qk refl (Rd.b-env hb)
-            using ( g; recovers )
+      h6 = Rd.b-mem hb
+      h7 = Rd.b-stage hb
+      module AtNum (n : ℕ) (qk : fst k ≡ # n) where
+        module R = Recover Z n (Env T e' e s k z Z) i2 i4 i6 qk refl (Rd.b-env hb)
+          using ( g; recovers )
 ```
 
 <!--en-->
@@ -3275,10 +3235,10 @@ The recovered indices name their ambient values through the presentation of `Z`,
 <!--/-->
 
 ```agda
-          g′ : Fin n → V ℓ
-          g′ i = ⟪ fst Z ⟫↪ (R.g i)
-          hE : fst e ≡ env g′
-          hE = R.recovers
+        g′ : Fin n → V ℓ
+        g′ i = ⟪ fst Z ⟫↪ (R.g i)
+        hE : fst e ≡ env g′
+        hE = R.recovers
 ```
 
 <!--en-->
@@ -3290,11 +3250,7 @@ To prove uniqueness, take two body witnesses with the same `Z`, parameter enviro
 <!--/-->
 
 ```agda
-      module WitnessUnique (Z e s z T e' k : CS.S)
-        (hb : ⟨ Env T e' e s k z Z ⊨ bodyFo ⟩)
-        (z' T₂ e'₂ k₂ : CS.S)
-        (hb₂ : ⟨ Env T₂ e'₂ e s k₂ z' Z ⊨ bodyFo ⟩)
-        (n : ℕ) (qk : fst k ≡ # n) where
+    private module WitnessUnique (Z e s z T e' k : CS.S) (hb : ⟨ Env T e' e s k z Z ⊨ bodyFo ⟩) (z' T₂ e'₂ k₂ : CS.S) (hb₂ : ⟨ Env T₂ e'₂ e s k₂ z' Z ⊨ bodyFo ⟩) (n : ℕ) (qk : fst k ≡ # n) where
 ```
 
 <!--en-->
@@ -3306,11 +3262,11 @@ The stage clauses turn `z` and `z'` into elements of `Lset lam`. They can theref
 <!--/-->
 
 ```agda
-        module A₁ = WitnessBody z T e' e s k Z hb
-        module A₂ = WitnessBody z' T₂ e'₂ e s k₂ Z hb₂
-        module N = A₁.AtNum n qk
-        zS : SL
-        zS = fst z , A₁.h7
+      module A₁ = WitnessBody z T e' e s k Z hb
+      module A₂ = WitnessBody z' T₂ e'₂ e s k₂ Z hb₂
+      module N = A₁.AtNum n qk
+      zS : SL
+      zS = fst z , A₁.h7
 ```
 
 <!--en-->
@@ -3322,11 +3278,11 @@ The second element is packaged likewise. The extension equations say that each b
 <!--/-->
 
 ```agda
-        z'S : SL
-        z'S = fst z' , A₂.h7
-        e'≡ : fst e' ≡ env (cons (fst z) N.g′)
-        e'≡ = A₁.Rd.b-cons N.g′ N.hE hb
-        e'₂≡ : fst e'₂ ≡ env (cons (fst z') N.g′)
+      z'S : SL
+      z'S = fst z' , A₂.h7
+      e'≡ : fst e' ≡ env (cons (fst z) N.g′)
+      e'≡ = A₁.Rd.b-cons N.g′ N.hE hb
+      e'₂≡ : fst e'₂ ≡ env (cons (fst z') N.g′)
 ```
 
 <!--en-->
@@ -3338,11 +3294,11 @@ The two table slots are then shown to agree. Both bodies assert that the pair of
 <!--/-->
 
 ```agda
-        e'₂≡ = A₂.Rd.b-cons N.g′ N.hE hb₂
-        T≡ : fst T ≡ fst T₂
-        T≡ =
-          let p = SM.pairs-out s T (A₁.Rd.b-tab hb)
-              q = SM.pairs-out s T₂ (A₂.Rd.b-tab hb₂)
+      e'₂≡ = A₂.Rd.b-cons N.g′ N.hE hb₂
+      T≡ : fst T ≡ fst T₂
+      T≡ =
+        let p = SM.pairs-out s T (A₁.Rd.b-tab hb)
+            q = SM.pairs-out s T₂ (A₂.Rd.b-tab hb₂)
 ```
 
 <!--en-->
@@ -3354,11 +3310,11 @@ The table equality is assembled from the outward readings of the two table claus
 <!--/-->
 
 ```agda
-          in snd p ∙ cong (λ m → fst (SM.valOf s m))
-            (snd (fst s ∈ fst (AllCodes A)) (fst p) (fst q)) ∙ sym (snd q)
-        not-below : (a b : CS.S) (ha : ⟨ fst a ∈ fst A ⟩) (hb' : ⟨ fst b ∈ fst A ⟩)
-                    (Ta e'a ka : CS.S) (hba : ⟨ Env Ta e'a e s ka a Z ⊨ bodyFo ⟩)
-                    (e'b : CS.S) → fst e'b ≡ env (cons (fst b) N.g′) → ⟨ fst e'b ∈ fst Ta ⟩
+        in snd p ∙ cong (λ m → fst (SM.valOf s m))
+          (snd (fst s ∈ fst (AllCodes A)) (fst p) (fst q)) ∙ sym (snd q)
+      not-below : (a b : CS.S) (ha : ⟨ fst a ∈ fst A ⟩) (hb' : ⟨ fst b ∈ fst A ⟩)
+                  (Ta e'a ka : CS.S) (hba : ⟨ Env Ta e'a e s ka a Z ⊨ bodyFo ⟩)
+                  (e'b : CS.S) → fst e'b ≡ env (cons (fst b) N.g′) → ⟨ fst e'b ∈ fst Ta ⟩
 ```
 
 <!--en-->
@@ -3370,11 +3326,11 @@ If a constructible candidate lies below one witness and its extended environment
 <!--/-->
 
 ```agda
-                  → relOf wL (fst b , hb') (fst a , ha) → ⊥₀
-        not-below a b ha hb' Ta e'a ka hba e'b qe hm b<a =
-          BodyRd.b-min Ta e'a e s ka a Z N.g′ N.hE hba b hb' e'b qe hm
-            (relL-fill lam λ-isL ordλ (fst b , hb') (fst a , ha) b<a)
-        result : fst z ≡ fst z'
+                → relOf wL (fst b , hb') (fst a , ha) → ⊥₀
+      not-below a b ha hb' Ta e'a ka hba e'b qe hm b<a =
+        BodyRd.b-min Ta e'a e s ka a Z N.g′ N.hE hba b hb' e'b qe hm
+          (relL-fill lam λ-isL ordλ (fst b , hb') (fst a , ha) b<a)
+      result : fst z ≡ fst z'
 ```
 
 <!--en-->
@@ -3386,11 +3342,11 @@ The result follows by the trichotomy of the internal well-order on the two packa
 <!--/-->
 
 ```agda
-        result = go (SWO.tri∙ wL zS z'S)
-          where
-          go : Tri∙ (relOf wL zS z'S) (zS ≡ z'S) (relOf wL z'S zS) → fst z ≡ fst z'
-          go (tri-lt h) = ⊥₀-rec (not-below z' z A₂.h7 A₁.h7 T₂ e'₂ k₂ hb₂ e' e'≡
-                        (subst (λ t → ⟨ fst e' ∈ t ⟩) T≡ A₁.h6) h)
+      result = go (SWO.tri∙ wL zS z'S)
+        where
+        go : Tri∙ (relOf wL zS z'S) (zS ≡ z'S) (relOf wL z'S zS) → fst z ≡ fst z'
+        go (tri-lt h) = ⊥₀-rec (not-below z' z A₂.h7 A₁.h7 T₂ e'₂ k₂ hb₂ e' e'≡
+                      (subst (λ t → ⟨ fst e' ∈ t ⟩) T≡ A₁.h6) h)
 ```
 
 <!--en-->
@@ -3402,9 +3358,9 @@ If the two packaged witnesses are equal, their underlying sets are equal. The re
 <!--/-->
 
 ```agda
-          go (tri-eq q) = cong fst q
-          go (tri-gt h) = ⊥₀-rec (not-below z z' A₁.h7 A₂.h7 T e' k hb e'₂ e'₂≡
-                        (subst (λ t → ⟨ fst e'₂ ∈ t ⟩) (sym T≡) A₂.h6) h)
+        go (tri-eq q) = cong fst q
+        go (tri-gt h) = ⊥₀-rec (not-below z z' A₁.h7 A₂.h7 T e' k hb e'₂ e'₂≡
+                      (subst (λ t → ⟨ fst e'₂ ∈ t ⟩) (sym T≡) A₂.h6) h)
 ```
 
 <!--en-->
@@ -3480,7 +3436,6 @@ Lookups in `vecOf f` recover `f` entry by entry. Now fix a set `Z`, an arity `k`
 <!--/-->
 
 ```agda
-
     lookup-vecOf : {k : ℕ} (f : Fin k → SL) (i : Fin k) → lookup i (vecOf f) ≡ f i
     lookup-vecOf {suc k} f zero = refl
     lookup-vecOf {suc k} f (suc i) = lookup-vecOf (λ j → f (suc j)) i
@@ -3497,7 +3452,6 @@ The predicate to be minimized says of an element `a` that the extended environme
 <!--/-->
 
 ```agda
-
       P : SL → hProp (ℓ-suc ℓ)
       P a = (a ∷ vs) ⊨₀ χ
 ```
@@ -3793,7 +3747,6 @@ The eight clauses together show that `witFo` holds at `(aS, Z)`: `a` is the leas
 <!--/-->
 
 ```agda
-
       least : ⟨ (aS ∷ Z ∷ []) ⊨ witFo ⟩
       least = witFo-in aS Z T (ext a) e sS (nn k)
         (BodyRd.b-fill T (ext a) e sS (nn k) aS Z g′ refl c1 c2 c3 c4 c5 c6 c7 c8)
@@ -3810,7 +3763,6 @@ A body witness provides eight facts: the arity numeral, key shape, recovered par
 <!--/-->
 
 ```agda
-
       module Rd = BodyRd T e' e s k w Z
         using ( b-num; b-key; b-env; b-cons; b-tab; b-mem; b-stage; b-min )
 ```
@@ -4353,7 +4305,6 @@ The graph formula `ΦFo` quantifies over a fresh set `w` and states both implica
 <!--/-->
 
 ```agda
-
       ΦFo : Formula CS.S 2
       ΦFo = ∀̇ ( ((var i0 ∈̇ var i1) ⇒̇ bodyF) ∧̇ (bodyF ⇒̇ (var i0 ∈̇ var i1)) )
 ```
@@ -4542,7 +4493,6 @@ Since `Φ Z` is constructible and constructibility is transitive, every member `
 </div>
 </details>
 
-
 <!--en-->
 ## Supplying the constructibility premise for condensation
 <!--zh-->
@@ -4559,7 +4509,6 @@ This supplies the carrier element needed in the preceding decoding and completes
 これにより先の解読に必要な台の要素が得られ、定義可能な一段階の閉包の構成が完成する。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -4572,8 +4521,6 @@ module Discharge (lam : S) (ordλ : IsOrd lam)
 </summary>
 <div class="submodule-fold-content">
 
-
-
 <!--en-->
 Assume that the hull `M` is itself constructible. This turns `M` into a constructible carrier, so the preceding collapse argument applies without requiring the hull to be transitive.
 <!--zh-->
@@ -4581,8 +4528,6 @@ Assume that the hull `M` is itself constructible. This turns `M` into a construc
 <!--ja-->
 包 `M` 自身が構成可能であると仮定する。これにより `M` を構成可能な台として扱えるので、包が推移的であると仮定せずに、先の崩壊の議論を適用できる。
 <!--/-->
-
-
 
 <!--en-->
 Regarded as a constructible carrier, `M` has a collapse image `πX`. Every member of this image is the collapse value of some member of `M`, and the constructible-carrier theorem proves that such values belong to `L`.
@@ -4628,8 +4573,6 @@ module Condense′ (lam : S) (ordλ : IsOrd lam)
 </summary>
 <div class="submodule-fold-content">
 
-
-
 <!--en-->
 We also assume that `∅ ∈ λ`, that the hull frame generated by `X` is elementary, that `λ` is superadequate, and that `X` itself is constructible. The last assumption supplies the base of the internal finite iteration; elementarity and superadequacy supply the hypotheses needed for condensation.
 <!--zh-->
@@ -4637,8 +4580,6 @@ We also assume that `∅ ∈ λ`, that the hull frame generated by `X` is elemen
 <!--ja-->
 さらに、`∅ ∈ λ`、`X` から生成される包の枠組みの初等性、`λ` が強化された十分な段階であること、および `X` 自身の構成可能性を仮定する。最後の仮定は内部の有限反復の始点を与え、初等性と強化された十分性は凝縮の議論に必要な仮定を与える。
 <!--/-->
-
-
 
 <!--en-->
 The construction has three connected parts. Codes name the initial elements and the values selected by later searches, using the empty set when a search has no witness; one definable operation `Φ` performs a closure step; and finite iteration of `Φ`, followed by union, builds a constructible set that will be identified with the Skolem hull.
@@ -4649,7 +4590,6 @@ The construction has three connected parts. Codes name the initial elements and 
 <!--/-->
 
 ```agda
-
   module T = Telescope lam ordλ succλ X X⊆L ∅∈λ using ( Code; val; Reads; module StepPack )
   module TB = Telescope.Build lam ordλ succλ X X⊆L ∅∈λ using ( pack; Φ )
   module HI = Telescope.HullIter lam ordλ succλ X X⊆L ∅∈λ X-isL TB.pack
@@ -4682,7 +4622,6 @@ The underlying set of `hullL` is exactly `M`. Hence the external characterizatio
 <!--/-->
 
 ```agda
-
   hullL-spec : fst hullL ≡ HS.M
   hullL-spec = HI.hullL-spec
 ```

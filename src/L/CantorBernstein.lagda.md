@@ -1,33 +1,57 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # Cantor–Schröder–Bernstein inside L
+<!--zh-->
+# L 内部的 Cantor–Schröder–Bernstein 定理
+<!--ja-->
+# L の内部における Cantor–Schröder–Bernstein の定理
+<!--/-->
+
+```agda
+open import Base.Prelude
+open import Base.Classical using ( LEM; lowerLEM )
+```
+
+<!--en-->
+Fix a universe level `ℓ`{.Agda} and assume `lem : LEM (ℓ-suc ℓ)`{.Agda}. This hypothesis supplies a decision for each proposition at that level; it remains an explicit parameter of the constructions below.
+<!--zh-->
+固定宇宙层级 `ℓ`{.Agda}，并假设 `lem : LEM (ℓ-suc ℓ)`{.Agda}。这个假设为相应层级的每个命题提供判定，并始终作为下文构造的显式参数。
+<!--ja-->
+宇宙レベル `ℓ`{.Agda} を固定し、`lem : LEM (ℓ-suc ℓ)`{.Agda} を仮定する。この仮定は該当するレベルの各命題に判定を与え、以下の構成の明示的なパラメータとして保たれる。
+<!--/-->
+
+```agda
+module L.CantorBernstein {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+```
+
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import V.CantorBernstein {ℓ} (lowerLEM lem)
+  using ( small-set; module MutualInj )
+open import L.Constructible {ℓ} using ( 𝒮ʟ )
+open import L.Cardinal {ℓ} lem using ( InjCode; InjL )
+open import L.Coding.Injection {ℓ} lem using ( module Small )
+```
+
+<!--en-->
 
 Suppose two constructible sets admit coded injections in both directions. Their member types then admit a bijection, merely as an existence statement. This is the internal form of the Cantor–Schröder–Bernstein theorem used here: the hypotheses are expressed in the language of `L`, while the resulting bijection compares the ordinary types presenting the two sets.
 
 The argument passes through two levels. A set of `L` carries an underlying set in the ambient cumulative hierarchy. Its members form an ordinary type, written `⟪ fst a ⟫`; coded injections belong to the object theory, whereas functions between these member types belong to the metatheory.
 <!--zh-->
-# L 内部的 Cantor–Schröder–Bernstein 定理
 
 设两个可构造集合之间存在双向的编码单射，那么它们的成员类型之间仅仅存在一个双射。这是本章采用的 Cantor–Schröder–Bernstein 定理的内部形式：假设用 `L` 的语言表述，所得双射则比较这两个集合对应的普通类型。
 
 论证在两个层面之间进行。`L` 的集合带有外围累积层级中的底层集合，其成员组成普通类型 `⟪ fst a ⟫`。编码单射属于对象理论，而这些成员类型之间的函数属于元理论。
 <!--ja-->
-# L の内部における Cantor–Schröder–Bernstein の定理
 
 二つの構成可能集合の間に、両方向の符号化された単射があるとする。このとき、それらの要素型の間には全単射が単に存在する。これが本章で用いる Cantor–Schröder–Bernstein の定理の内部版である。仮定は `L` の言語で述べられ、得られる全単射は二つの集合を提示する通常の型を比較する。
 
 議論は二つの層にまたがる。`L` の集合は周囲の累積階層に基礎となる集合をもち、その要素は通常の型 `⟪ fst a ⟫` をなす。符号化された単射は対象理論に属し、これらの要素型の間の関数はメタ理論に属する。
 <!--/-->
-
-```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-open import Base.Prelude
-open import Base.Classical using ( LEM; lowerLEM )
-
-module L.CantorBernstein {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-
-open import FOL.ZFStructure using ( module hPropStructure )
-```
 
 <!--en-->
 To apply the type-level theorem, each member type must be an h-set. The cumulative hierarchy already supplies this property: paths between two members carry no additional higher information. Thus `setPL` provides exactly the h-set certificate required for every presentation.
@@ -36,14 +60,6 @@ To apply the type-level theorem, each member type must be an h-set. The cumulati
 <!--ja-->
 型の定理を適用するには、各要素型がh-集合でなければならない。累積階層はすでにこの性質を備えており、二つの要素の間のパスにはそれ以上の高次情報がない。したがって `setPL` は、各提示に必要なh-集合の証明を与える。
 <!--/-->
-
-```agda
-open import V.CantorBernstein {ℓ} (lowerLEM lem)
-  using ( small-set; module MutualInj )
-open import L.Constructible {ℓ} using ( 𝒮ʟ )
-open import L.Cardinal {ℓ} lem using ( InjCode; InjL )
-open import L.Coding.Injection {ℓ} lem using ( module Small )
-```
 
 <!--en-->
 An injection code consists of a constructible graph together with three satisfaction facts and one value-range condition. They say that the graph is single-valued, has the prescribed domain, is injective, and sends every input into the prescribed codomain. These conditions contain precisely the information needed to recover a metatheoretic injection.

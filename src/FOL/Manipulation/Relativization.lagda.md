@@ -1,13 +1,33 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+module FOL.Manipulation.Relativization where
+```
+
 <!--en-->
 # Relativization
+<!--zh-->
+# 相对化
+<!--ja-->
+# 相対化
+<!--/-->
+
+```agda
+open import Base.Prelude
+open import FOL.ZFStructure using ( ZFStructure )
+open import FOL.Syntax using
+  ( con; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
+open import FOL.LevyHierarchy using
+  ( Δ₀; δ-∈; δ-≐; δ-∧; δ-∨; δ-⇒; δ-⊥; δ-∀∈; δ-∃∈ )
+import FOL.Semantics
+```
+
+<!--en-->
 
 Relativization replaces each unbounded quantifier by one bounded by a chosen constant. The transformed formula is Δ₀, and its ordinary satisfaction agrees with a semantics in which the original formula's unbounded quantifiers range only over members of the chosen set. The chapter builds three pieces in order: the rewriting operator itself, a witness that its output lies in the Δ₀ class of the Lévy hierarchy (see the chapter on that hierarchy for the definition of bounded formulas), and the correctness theorem identifying the meaning of the rewrite with bounded quantification over the chosen set. The setting is deliberately general: formulas may have constants from any type `K`, and the semantics may take values in the proposition universe `hProp ℓ` through a structure `𝒮`, so the theorem applies wherever a genuine ZF-like structure is later supplied.
 <!--zh-->
-# 相对化
 
 相对化把每个无界量词替换为受选定常元约束的量词。变换后的公式是 Δ₀，并且其通常满足关系与一种语义相符；在该语义中，原公式的无界量词只在选定集合的成员上取值。本章依次构造三件东西：改写算子本身、说明其输出落在 Lévy 层级中 Δ₀ 类的见证 (有界公式的定义见该层级一章)，以及把改写结果的含义同选定集合上的有界量化相认同的正确性定理。论述保持一般性：公式可以带有任意类型 `K` 的常元，语义也可以通过结构 `𝒮` 取值于命题宇宙 `hProp ℓ`。
 <!--ja-->
-# 相対化
 
 相対化は、各非有界量化子を選んだ定数で有界化する。変換後の論理式は Δ₀ であり、その通常の充足関係は、元の論理式の非有界量化子を選んだ集合の要素だけにわたらせる意味論と一致する。本章は三つの要素をこの順に構築する。すなわち、書き換え演算子そのもの、その出力が Lévy 階層の Δ₀ クラスに属することの証拠 (有界論理式の定義は階層の章を参照)、そして書き換えの意味を選んだ集合の上の有界量化と同一視する正当性定理である。議論は一般的に保たれている。論理式は任意の型 `K` の定数を持つことができ、意味論も構造 `𝒮` を通じて命題宇宙 `hProp ℓ` に値をとれる。
 <!--/-->
@@ -20,15 +40,6 @@ The setting: formulas may mention constants from an arbitrary type `K`, and sati
 舞台を整える。論理式は任意の型 `K` の定数を含むことができ、充足関係は構造 `𝒮` を通じて命題宇宙 `hProp ℓ` に値をとれる。非有界量化子を含む論理式、たとえば `∃̇ (x ∈̇ y)` を考えてほしい。これは宇宙全体の中に `y` に属する要素があるかと問う。定数 `c` が与えられると、相対化はこの量化子に境界 `con c` を補って書き換える。結果は `∃̇∈ (con c) (x ∈̇ y)` であり、`y` に属する要素のうち、定数 `c` の指すものに属するものがあるかだけを問う。論理式の他の部分はまったく変わらない。この書き換えは純粋に構文的なものである。書き換え後の論理式が依然として本来の意図を表すかどうかは別の意味論的な問題であり、正当性の節で扱う。
 <!--/-->
 
-```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-module FOL.Manipulation.Relativization where
-
-open import Base.Prelude
-open import FOL.ZFStructure using ( ZFStructure )
-```
-
 <!--en-->
 Rewriting one unbounded quantifier at one spot is easy; the task here is to do it uniformly at every depth of every formula, and to keep the bookkeeping afterward. The chapter's three pieces answer three questions. First, the operator `relativize c` performs the replacement itself, leaving already bounded quantifiers and their bounds untouched. Second, a witness `Δ₀-relativize` certifies that the output lies in the Δ₀ class of the Lévy hierarchy, that is, every quantifier occurring in it is bounded (the definition of bounded formulas is given in the chapter on that hierarchy). Third, the theorem `relativize-correct` connects the two readings: under any interpretation of the constants, the ordinary satisfaction of the rewritten formula agrees with a reading of the original one in which its unbounded quantifiers range only over the set named by `c`.
 <!--zh-->
@@ -36,14 +47,6 @@ Rewriting one unbounded quantifier at one spot is easy; the task here is to do i
 <!--ja-->
 一箇所で一つの非有界量化子を書き換えるのは容易である。ここでの課題は、すべての論理式の任意の深さでこれを統一的に行い、後の管理も保つことである。本章の三つの要素は三つの問いに答える。第一に、演算子 `relativize c` が置き換えそのものを行い、既に有界な量化子とその境界には触れない。第二に、証拠 `Δ₀-relativize` は出力が Lévy 階層の Δ₀ クラスに属すること、すなわちそこに現れる量化子がすべて有界であることを保証する (有界論理式の定義は階層の章にある)。第三に、定理 `relativize-correct` が二つの読みを結ぶ。定数の任意の解釈のもとで、書き換え後の論理式の通常の充足は、元の論理式の非有界量化子を `c` の指す集合だけにわたらせる読みと一致する。
 <!--/-->
-
-```agda
-open import FOL.Syntax using
-  ( con; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
-open import FOL.LevyHierarchy using
-  ( Δ₀; δ-∈; δ-≐; δ-∧; δ-∨; δ-⇒; δ-⊥; δ-∀∈; δ-∃∈ )
-import FOL.Semantics
-```
 
 <!--en-->
 ## The operator
@@ -177,7 +180,6 @@ To compare the two readings, fix a proposition-valued ZF structure `𝒮` with d
 二つの読みを比較するために、台 `S` をもつ命題値の ZF 構造 `𝒮`、各定数記号に台の要素を割り当てる解釈 `ι`、そして注目の定数 `c` を固定する。標準の意味論 `γ ⊨ _` と項の評価 `⟦_⟧` は、与えられた `ι` に対して `FOL.Semantics` から得られる。この節はこれらのデータに伴う関係 `γ ⊨ᴬ _` を加える。これは元の論理式を標準の意味論どおりに解釈するが、非有界量化子だけを一つの台の要素 `A`、すなわち選んだ定数の表示 `ι c` に制限する。原子式、結合子、偽、有界量化子では伴う関係は標準の意味論と一致するはずであり、異なるのは無界量化が `A` の内部での量化に置き換わる箇所だけである。議論は `𝒮` の命題値関係を直接用いる。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -188,7 +190,6 @@ module Correct {ℓ} (𝒮 : ZFStructure ℓ)
 <div class="submodule-fold-content">
 
 ```agda
-
   open ZFStructure 𝒮
   open module Sem = FOL.Semantics 𝒮 using ( module At; _^_ )
 ```
@@ -312,7 +313,6 @@ All ten cases are handled, and the recursion is on φ, so the proof is complete 
 ```
 </div>
 </details>
-
 
 <!--en-->
 ## Recap

@@ -179,7 +179,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          test -f _build/2.8.0/agda/src/Milestones.agdai
+          test -f _build/2.8.0/agda/src/Origin.agdai
           test -f _build/html/.bedrock-checked
           test -s _build/bedrock-agda-types.jsonl
           test -s _build/types.json

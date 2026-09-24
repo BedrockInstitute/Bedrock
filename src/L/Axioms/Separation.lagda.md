@@ -1,37 +1,13 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # Separation and replacement, bounded
 <!--zh-->
 # 有界分离与替换
 <!--ja-->
 # 有界な分出公理と置換公理
-<!--/-->
-
-<!--en-->
-Bounded separation asks for more than a host-level subtype of a constructible
-set `a`. It asks for an element of the constructible model whose members are
-exactly those `x ∈ a` satisfying a given Δ₀ formula. Bounded replacement asks
-for the corresponding set of values of a functional Δ₀ relation. The proof of
-both statements will move the relevant data into one ordinal stage, form a
-definable subset there, and compare that stage calculation with satisfaction
-in the whole constructible model.
-<!--zh-->
-有界分离所求的不只是可构造集 `a` 的一个宿主层子类型，而是可构造模型中的一个元素，其成员恰为 `a` 中满足给定 Δ₀ 公式的 `x`。有界替换所求的则是函数性 Δ₀ 关系的取值所成之集。两项证明都会先把有关数据放入同一个序数层，在层内形成可定义子集，再把这项层内计算与整个可构造模型中的满足关系比较。
-<!--ja-->
-有界な分出公理が求めるのは、構成可能集合 `a` のホスト側の部分型だけではない。`a` に属し、与えられた Δ₀ 論理式を満たす `x` だけを要素とする、構成可能モデルの要素を求める。有界な置換公理は、関数的な Δ₀ 関係の値からなる集合を求める。どちらの証明でも、関係するデータを一つの順序数段階へ入れ、その段階で定義可能部分集合を作り、この段階内の計算を構成可能モデル全体での充足関係と比較する。
-<!--/-->
-
-```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-```
-
-<!--en-->
-Two kinds of logic must remain separate from the outset. Formulas and their
-quantifiers belong to the object language interpreted by the model. The
-statement that a truth value is decidable belongs to the host theory. We assume excluded middle at the successor universe level; it enters through the operation that assigns a constructible set its least containing stage. This assumption is neither an axiom asserted inside `L` nor a choice principle.
-<!--zh-->
-从一开始就须区分两层逻辑。公式及其量词属于由模型解释的对象语言；真值可判定这一陈述则属于宿主理论。我们假设后继宇宙层级上的排中律；这项假设经由「为可构造集指派包含它的最早层」这一运算进入证明。它既不是 `L` 内部断言的公理，也不是选择原则。
-<!--ja-->
-初めから二つの論理の層を区別する必要がある。論理式とその量化子は、モデルが解釈する対象言語に属する。真理値が決定可能であるという主張はホスト理論に属する。後続宇宙レベルの排中律を仮定する。この仮定は、構成可能集合を含む最小の層を割り当てる操作を通して証明に入る。これは `L` の内部で主張される公理でも、選択原理でもない。
 <!--/-->
 
 ```agda
@@ -55,6 +31,55 @@ values are assigned canonical least stage indices.
 module L.Axioms.Separation {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
+```agda
+open import FOL.ZFStructure using ( Transitive; module hPropStructure )
+open import FOL.Syntax
+  using ( Term; con; var; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇
+        ; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
+open import FOL.LevyHierarchy using ( Δ₀; δ-∈; δ-∧; δ-∃∈ )
+open import FOL.Manipulation.ConstantBounding
+  using ( BoundedTm; BoundedFo; BoundedTm-mono; BoundedFo-mono; module Relabel )
+open import FOL.Manipulation.ConstantMapping using ( mapFo )
+open import FOL.Manipulation.Relabelling using ( ⊨-map )
+import FOL.Semantics
+import FOL.Absoluteness
+import FOL.ZFModel
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import L.Definability {ℓ} using ( module DefOf )
+open import L.Constructible {ℓ}
+  using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset; Lset-layer; layer-trans; Lset-mono
+        ; 𝒟ₒ; 𝒟ₒ-intro; Lset→isL )
+open import L.Ordinal {ℓ} using ( ∅-ord; boundingOrd; bound2 )
+open import L.Stage {ℓ} lem using ( stage; stage-ord; stage-mem )
+open import L.Axioms.Basic {ℓ} using ( LsetS; 𝒟ₒ→isL; uniqueL )
+```
+
+<!--en-->
+Bounded separation asks for more than a host-level subtype of a constructible
+set `a`. It asks for an element of the constructible model whose members are
+exactly those `x ∈ a` satisfying a given Δ₀ formula. Bounded replacement asks
+for the corresponding set of values of a functional Δ₀ relation. The proof of
+both statements will move the relevant data into one ordinal stage, form a
+definable subset there, and compare that stage calculation with satisfaction
+in the whole constructible model.
+<!--zh-->
+有界分离所求的不只是可构造集 `a` 的一个宿主层子类型，而是可构造模型中的一个元素，其成员恰为 `a` 中满足给定 Δ₀ 公式的 `x`。有界替换所求的则是函数性 Δ₀ 关系的取值所成之集。两项证明都会先把有关数据放入同一个序数层，在层内形成可定义子集，再把这项层内计算与整个可构造模型中的满足关系比较。
+<!--ja-->
+有界な分出公理が求めるのは、構成可能集合 `a` のホスト側の部分型だけではない。`a` に属し、与えられた Δ₀ 論理式を満たす `x` だけを要素とする、構成可能モデルの要素を求める。有界な置換公理は、関数的な Δ₀ 関係の値からなる集合を求める。どちらの証明でも、関係するデータを一つの順序数段階へ入れ、その段階で定義可能部分集合を作り、この段階内の計算を構成可能モデル全体での充足関係と比較する。
+<!--/-->
+
+<!--en-->
+Two kinds of logic must remain separate from the outset. Formulas and their
+quantifiers belong to the object language interpreted by the model. The
+statement that a truth value is decidable belongs to the host theory. We assume excluded middle at the successor universe level; it enters through the operation that assigns a constructible set its least containing stage. This assumption is neither an axiom asserted inside `L` nor a choice principle.
+<!--zh-->
+从一开始就须区分两层逻辑。公式及其量词属于由模型解释的对象语言；真值可判定这一陈述则属于宿主理论。我们假设后继宇宙层级上的排中律；这项假设经由「为可构造集指派包含它的最早层」这一运算进入证明。它既不是 `L` 内部断言的公理，也不是选择原则。
+<!--ja-->
+初めから二つの論理の層を区別する必要がある。論理式とその量化子は、モデルが解釈する対象言語に属する。真理値が決定可能であるという主張はホスト理論に属する。後続宇宙レベルの排中律を仮定する。この仮定は、構成可能集合を含む最小の層を割り当てる操作を通して証明に入る。これは `L` の内部で主張される公理でも、選択原理でもない。
+<!--/-->
+
+
+
 <!--en-->
 The object language makes the first notion of boundedness precise. A formula
 `φ : Formula S n` may contain constants from the model carrier `S` and has `n`
@@ -67,15 +92,6 @@ closure facts make the separation and image formulas Δ₀.
 <!--ja-->
 対象言語によって、第一の有界性が正確に定まる。論理式 `φ : Formula S n` はモデルの台 `S` の要素を定数として含むことができ、`n` 個の自由変数の位置をもつ。証明 `Δ₀ φ` は、`φ` に現れるすべての量化子が項によって有界であることを表す。所属の原子論理式は Δ₀ であり、連言と有界存在量化はこの性質を保つ。この三つの閉性によって、分出の論理式と像の論理式も Δ₀ になる。
 <!--/-->
-
-```agda
-
-open import FOL.ZFStructure using ( Transitive; module hPropStructure )
-open import FOL.Syntax
-  using ( Term; con; var; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇
-        ; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
-open import FOL.LevyHierarchy using ( Δ₀; δ-∈; δ-∧; δ-∃∈ )
-```
 
 <!--en-->
 A different notion of boundedness controls constants. `BoundedTm P t` and
@@ -90,14 +106,6 @@ after that syntactic change.
 <!--ja-->
 もう一つの有界性は定数を制約する。`BoundedTm P t` と `BoundedFo P φ` は、項または論理式に現れるすべての定数がホスト側の述語 `P` を満たすことを表す。論理式の量化子が有界かどうかについては何も述べないので、`mkBoundedFo` は Δ₀ でない論理式にも適用できる。この証明を使うと、改名によって各定数を選んだ段階の添字に置き換えられ、写像に関する補題によって、その構文上の変更の前後で充足関係を比較できる。
 <!--/-->
-
-```agda
-open import FOL.Manipulation.ConstantBounding
-  using ( BoundedTm; BoundedFo; BoundedTm-mono; BoundedFo-mono; module Relabel )
-open import FOL.Manipulation.ConstantMapping using ( mapFo )
-open import FOL.Manipulation.Relabelling using ( ⊨-map )
-import FOL.Semantics
-```
 
 <!--en-->
 Why move constants into one stage? A stage `Lset σ` has a small presentation,
@@ -114,14 +122,6 @@ same members as the original formula specifies in `L`.
 なぜ定数を一つの段階へ移すのであろうか。段階 `Lset σ` には小さな提示があるため、その部分集合を定義する論理式は、この提示の添字を定数として使う。これに対して元の論理式は、`S` の任意の要素を定数として使う。改名した後では、`DefOf (Lset σ)` が、その論理式で選ばれる部分集合を周囲の累積階層の中で作り、構成可能性に関する結果がそれをモデルの要素として組み立てる。残る課題は、この段階で定義した部分集合の要素が、元の論理式が `L` で指定する要素と正確に一致することを証明することである。
 <!--/-->
 
-```agda
-import FOL.Absoluteness
-import FOL.ZFModel
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-open import L.Definability {ℓ} using ( module DefOf )
-open import L.Constructible {ℓ}
-```
-
 <!--en-->
 The hierarchy supplies two scales of ordinal bounds. `bound2` puts two stage
 indices inside a common ordinal, while `boundingOrd` does the same for a family
@@ -137,14 +137,6 @@ membership specification.
 階層に関する道具は、二つの規模の順序数上界を与える。`bound2` は二つの段階の添字を一つの共通の順序数の中へ置き、`boundingOrd` は小さな型で添字づけられた族について同じことを行う。その後、段階の単調性によって所属を共通上界まで持ち上げる。操作 `stage` は、各構成可能集合に、それを含む最小の段階の添字を割り当てる。この構成では、この最小段階の操作だけが `lem` を使う。もう一方の端では、`uniqueL` がモデルの集合外延性を使い、各点での所属の仕様から一意性を証明する。
 <!--/-->
 
-```agda
-  using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset; Lset-layer; layer-trans; Lset-mono
-        ; 𝒟ₒ; 𝒟ₒ-intro; Lset→isL )
-open import L.Ordinal {ℓ} using ( ∅-ord; boundingOrd; bound2 )
-open import L.Stage {ℓ} lem using ( stage; stage-ord; stage-mem )
-open import L.Axioms.Basic {ℓ} using ( LsetS; 𝒟ₒ→isL; uniqueL )
-```
-
 <!--en-->
 Several kinds of equality have different roles here. `⇔toPath` applies
 proposition extensionality to turn two implications into a path between
@@ -159,8 +151,6 @@ proposition.
 <!--ja-->
 ここで使ういくつかの等しさは、役割が異なる。`⇔toPath` は命題外延性を使い、二方向の含意を命題値の真理値の間のパスへ変える。構成可能性の証明が命題をなすため、`Σ≡Prop` は基礎にある集合の等しさをモデル要素の等しさへ持ち上げる。集合外延性は、これとは別に `uniqueL` を通して使われる。最後に、命題的切り詰めは、選ばれた証人を保持せずに証人の存在だけを記録する。その除去子は、行き先が再び命題である場合にだけ使う。
 <!--/-->
-
-
 
 <!--en-->
 Small presentations connect model membership with the small index types needed
@@ -308,7 +298,6 @@ host-level or object-theoretic choice axiom.
 置換公理で新たに生じる問題は、可能な値をすべて含む一つの段階を見つけることである。`FunctionalImage` は任意のホスト側の関係 `R` を扱い、各 `x ∈ˢ a` についてファイバー `Σ[ y ∈ S ] ⟨ R x y ⟩` が可縮であると仮定する。したがって、このファイバーには指定された中心があり、ほかのすべての関係する対はその中心に等しくなる。この仮定は、各始域の要素について存在と一意性をデータとして与える。中心を射影することは通常の依存関数の適用であり、ホスト側の選択公理も対象理論の選択公理も使わない。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -318,8 +307,6 @@ module FunctionalImage (a : S) (R : S → S → hProp (ℓ-suc ℓ))
 ```
 </summary>
 <div class="submodule-fold-content">
-
-
 
 <!--en-->
 The type `Mem` packages a source element together with evidence that it belongs
@@ -560,7 +547,6 @@ does not assert that different source members have different values.
 </div>
 </details>
 
-
 <!--en-->
 ## At a fixed stage
 <!--zh-->
@@ -581,7 +567,6 @@ satisfaction in the constructible model.
 <!--ja-->
 固定した段階での議論は、順序数の添字 `σ` とその証明 `oσ` から始まる。構成 `DefC = DefOf (Lset σ)` は、`Lset σ` の要素をその標準的な小さい表示を通して扱う。そして、表示の添字を定数とする論理式と、各一変数論理式が切り出す部分集合 `defSet` を与える。残る課題は、この段階に基づく定義を構成可能モデルでの充足と正確に比較することである。
 <!--/-->
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
@@ -870,7 +855,6 @@ allows an arbitrary satisfying model element to be represented there.
 <!--/-->
 
 ```agda
-
     imageIn : (φ : Formula S 1) (h : BoundedFo Below φ) (dφ : Δ₀ φ)
               (m : ⟪ Lset σ ⟫) (xL : ⟨ isL (⟪ Lset σ ⟫↪ m) ⟩)
             → ⟨ ((⟪ Lset σ ⟫↪ m , xL) ∷ []) ⊨ φ ⟩
@@ -1131,7 +1115,6 @@ under the stage within which the subset is being carved.
 </div>
 </details>
 
-
 <!--en-->
 ## Finding the stage
 <!--zh-->
@@ -1166,7 +1149,6 @@ pointwise at each constant. The term itself is unchanged; only the proof of boun
 <!--/-->
 
 ```agda
-
 liftTmTo : {σ β : V ℓ} → ⟨ σ ∈ β ⟩ → ∀ {n} (t : Term S n)
          → BoundedTm (Below′ σ) t → BoundedTm (Below′ β) t
 liftTmTo {σ} {β} σ∈β t h =
@@ -1186,7 +1168,6 @@ two lifting lemmas, a boundedness proof obtained at one stage can be transported
 <!--/-->
 
 ```agda
-
 liftFoTo : {σ β : V ℓ} → ⟨ σ ∈ β ⟩ → ∀ {n} (φ : Formula S n)
          → BoundedFo (Below′ σ) φ → BoundedFo (Below′ β) φ
 liftFoTo {σ} {β} σ∈β φ h =
@@ -1205,7 +1186,6 @@ ordinality of that index and the membership of the constant in its layer. A vari
 <!--/-->
 
 ```agda
-
 mkBoundedTm : ∀ {n} (t : Term S n) → Σ[ σ ∈ V ℓ ] (IsOrd σ × BoundedTm (Below′ σ) t)
 mkBoundedTm (con c) = stage (fst c) (c .snd)
                     , (stage-ord (fst c) (c .snd) , stage-mem (fst c) (c .snd))

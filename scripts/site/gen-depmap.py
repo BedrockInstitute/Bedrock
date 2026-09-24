@@ -4,7 +4,7 @@
 The page is derived, never hand-maintained: nodes and edges
 come from the `import` lines of the masters under src/, while the reading order,
 descriptions and learning stages come from `dev/reading-catalog.json`. Lanes
-mirror the sidebar's namespace grouping, and the default layout follows
+group chapters by module namespace, and the default layout follows
 dependency depth vertically. The generated fragment is embedded into each
 language's index and also written separately for testing.
 The former depmap.html route redirects to the dependency-map tab.
@@ -37,54 +37,66 @@ SLOTS = [
 
 UI = {
     "en": {
-        "title": "Dependency map", "back": "← Bedrock",
+        "title": "Dependency graph", "back": "← Bedrock",
+        "options": "Options & guide", "details": "Chapter details", "search": "Find a chapter",
+        "fullscreen": "Expand graph", "exitfullscreen": "Exit full screen",
+        "zoomin": "Zoom in", "zoomout": "Zoom out", "pan": "Pan graph",
+        "left": "Left", "right": "Right", "up": "Up", "down": "Down",
         "sub": ("Dependencies between {n} chapters flow from top to bottom. "
                 "A → B means B imports A. Every layout shows the same prerequisite "
                 "partial order. Topics with no dependency path may be interleaved. "
                 "Hover to trace prerequisites; click to pin."),
         "layout": "Layout:", "compact": "Compact", "teaching": "Learning stages", "namespace": "Namespaces",
         "edgemode": "Edges:", "skeleton": "skeleton (transitive reduction)",
-        "alledges": "all direct imports", "lmk": "include Milestones' references",
+        "alledges": "all direct imports", "lmk": "include Origin's references",
         "hint": "Select a chapter to trace its prerequisites",
         "hubnote": ("The widely used Base.Prelude imports are omitted from the "
                     "drawing but retained in chapter details."),
         "reading": "example route position", "imports": "direct imports", "consumers": "direct consumers",
         "legend": "Color key", "fit": "Fit whole graph", "readable": "Readable size",
-        "scrollhint": "Scroll the graph in both directions, or fit the whole graph for an overview.",
+        "scrollhint": "Drag or swipe to pan; pinch to zoom. Trackpad scrolling pans, Ctrl + wheel zooms. Arrow keys pan; + / − zoom; 0 fits the graph. Escape exits full screen.",
         "none": "None",
         "noscript": "The dependency map requires JavaScript. You can still use the",
         "catalog": "reading routes",
         "footer": ("The skeleton preserves reachability, not every direct use of a definition. "
                    "An omitted edge is not permission to delete an import. Learning stages do not "
                    "make every chapter a serial step: finish the listed prerequisites before a "
-                   "converging chapter. Milestones is the "
+                   "converging chapter. Origin is the "
                    "opening preview and appears at the bottom here as the endpoint."),
     },
     "zh": {
-        "title": "依赖地图", "back": "← Bedrock",
+        "title": "依赖图", "back": "← Bedrock",
+        "options": "选项与说明", "details": "章节详情", "search": "查找章节",
+        "fullscreen": "展开全屏", "exitfullscreen": "退出全屏",
+        "zoomin": "放大", "zoomout": "缩小", "pan": "移动图面",
+        "left": "向左", "right": "向右", "up": "向上", "down": "向下",
         "sub": ("{n} 个章节的依赖从上向下展开。A → B 表示 B 导入 A。各布局展示同一份先修偏序；没有依赖路径的主题可以穿插学习。悬停追踪先修关系，点击固定。"),
         "layout": "布局：", "compact": "紧凑总览", "teaching": "学习阶段", "namespace": "命名空间",
         "edgemode": "边：", "skeleton": "骨架 (传递约简)", "alledges": "全部直接边",
-        "lmk": "包含 Milestones 的引用边", "hint": "选择章节以追踪先修关系",
+        "lmk": "包含原点的引用边", "hint": "选择章节以追踪先修关系",
         "hubnote": "图中省略广泛使用的 Base.Prelude 导入边，章节详情仍保留它们。",
         "reading": "示例路线序号", "imports": "直接导入", "consumers": "直接消费者",
         "legend": "颜色图例", "fit": "适合全图", "readable": "可读字号",
-        "scrollhint": "可向两个方向滚动图；也可切换为全图概览。", "none": "无",
+        "scrollhint": "拖动或滑动平移，双指捏合缩放。触摸板滚动平移，Ctrl + 滚轮缩放。方向键平移，+ / − 缩放，0 适合全图，Escape 退出全屏。", "none": "无",
         "noscript": "依赖图需要 JavaScript。仍可改读同页的", "catalog": "阅读路线",
-        "footer": ("骨架保留可达关系，并不展示每一次直接使用；省略一条边不表示可以删除对应导入。学习阶段不要求把所有章节依次通读；进入汇合章节前，应完成图中所列先修。里程碑是开篇预览，在此作为终点置于底部。"),
+        "footer": ("骨架保留可达关系，并不展示每一次直接使用；省略一条边不表示可以删除对应导入。学习阶段不要求把所有章节依次通读；进入汇合章节前，应完成图中所列先修。原点连接开篇与收尾，在此作为终点置于底部。"),
     },
     "ja": {
-        "title": "依存マップ", "back": "← Bedrock",
+        "title": "依存グラフ", "back": "← Bedrock",
+        "options": "設定と使い方", "details": "章の詳細", "search": "章を探す",
+        "fullscreen": "全画面に拡大", "exitfullscreen": "全画面を閉じる",
+        "zoomin": "拡大", "zoomout": "縮小", "pan": "グラフを移動",
+        "left": "左へ", "right": "右へ", "up": "上へ", "down": "下へ",
         "sub": "{n} 章の依存関係を上から下へ表示。A → B は B が A を import することを表します。どの配置も同じ前提関係の半順序を示し、依存経路のない主題は交互に学べます。",
         "layout": "配置：", "compact": "コンパクト", "teaching": "学習段階", "namespace": "名前空間",
         "edgemode": "辺：", "skeleton": "骨格 (推移簡約)", "alledges": "直接 import 全体",
-        "lmk": "Milestones の参照を含める", "hint": "章を選択して前提を確認",
+        "lmk": "Origin の参照を含める", "hint": "章を選択して前提を確認",
         "hubnote": "広く使われる Base.Prelude の辺は図から省略し、章の詳細には残します。",
         "reading": "例示ルート順", "imports": "直接 import", "consumers": "直接の利用者",
         "legend": "色の凡例", "fit": "全体を表示", "readable": "読みやすい大きさ",
-        "scrollhint": "図は縦横にスクロールできます。全体表示に切り替えると概観できます。", "none": "なし",
-        "noscript": "依存マップには JavaScript が必要です。同じページの", "catalog": "学習ルート",
-        "footer": "骨格は到達関係を保ちます。省略された辺の import が不要とは限りません。学習段階は全章を直列に並べるものではありません。合流する章へ進む前に、表示された前提を終えてください。冒頭の予告 Milestones は、この図では終点として下部に置きます。",
+        "scrollhint": "ドラッグやスワイプで移動し、ピンチで拡大縮小。トラックパッドはスクロールで移動、Ctrl + ホイールで拡大縮小。矢印キーで移動、+ / − で拡大縮小、0 で全体表示、Escape で全画面を終了。", "none": "なし",
+        "noscript": "依存グラフには JavaScript が必要です。同じページの", "catalog": "学習ルート",
+        "footer": "骨格は到達関係を保ちます。省略された辺の import が不要とは限りません。学習段階は全章を直列に並べるものではありません。合流する章へ進む前に、表示された前提を終えてください。冒頭の予告 Origin は、この図では終点として下部に置きます。",
     },
 }
 
@@ -183,9 +195,9 @@ def layouts(nodes, edges, order, depth, lanes, stages, membership):
                 positions[n] = {"x": 14 + rank * 142, "y": y + offset + i * 66}
         y += height
     namespace = {"width": namespace_width + 4, "height": y, "positions": positions, "bands": bands}
-    # Milestones is read as a preview but depends on the final results.
-    stage_order = [s for s in stages if s["key"] != membership.get("Milestones")]
-    stage_order += [s for s in stages if s["key"] == membership.get("Milestones")]
+    # Origin is read as a preview but depends on the final results.
+    stage_order = [s for s in stages if s["key"] != membership.get("Origin")]
+    stage_order += [s for s in stages if s["key"] == membership.get("Origin")]
     teaching = {"width": 0, "height": 0, "positions": {}, "bands": []}
     for stage in stage_order:
         group = [n for n in nodes if membership[n] == stage["key"]]
@@ -275,12 +287,15 @@ def render_fragment(data, lang, ui):
     fragment = TEMPLATE
     for key in ("layout", "compact", "teaching", "namespace", "edgemode",
                 "skeleton", "alledges", "lmk", "hint", "hubnote", "footer",
-                "legend", "fit", "scrollhint", "noscript", "catalog"):
+                "legend", "fit", "scrollhint", "noscript", "catalog", "readable",
+                "options", "details", "search", "fullscreen", "zoomin", "zoomout",
+                "pan", "left", "right", "up", "down"):
         fragment = fragment.replace("__" + key.upper() + "__", htmllib.escape(ui[key]))
     fragment = fragment.replace("__TITLE__", htmllib.escape(ui["title"]))
     fragment = fragment.replace("__SUB__", htmllib.escape(ui["sub"].format(n=len(data["nodes"]))))
     strings = {key: ui[key] for key in
-               ("reading", "imports", "consumers", "hint", "hubnote", "fit", "readable", "none")}
+               ("reading", "imports", "consumers", "hint", "hubnote", "fit", "readable", "none",
+                "fullscreen", "exitfullscreen")}
     fragment = fragment.replace("__DATA__", json.dumps(data, ensure_ascii=False).replace("</", "<\\/"))
     fragment = fragment.replace("__STR__", json.dumps(strings, ensure_ascii=False).replace("</", "<\\/"))
     return fragment
@@ -344,7 +359,7 @@ def main(argv):
         descs = {module: node["description"][lang] for module, node in nodes_by_id.items()}
         nodes = [{
             "id": m, "lane": lane_of(m), "col": col[m],
-            "ord": ordnum.get(m, 0), "desc": descs.get(m, ""),
+            "ord": ordnum.get(m, 0), "desc": descs.get(m, ""), "title": nodes_by_id[m]["title"][lang],
             # carried through, never recomputed: reading_routes.py owns the address
             "page": nodes_by_id[m]["page"], "anchor": nodes_by_id[m]["anchor"],
         } for m in sorted(internal, key=lambda m: (ordnum.get(m, 999), m))]
@@ -366,7 +381,7 @@ def main(argv):
             "lanes": [{"key": ln, "light": slot[ln][0], "dark": slot[ln][1]}
                       for ln in lanes],
             "hubs": HUBS,
-            "landmark": "Milestones",
+            "landmark": "Origin",
         }
         fragment = render_fragment(data, lang, ui)
         lang_dir = os.path.join(out, lang)

@@ -1,28 +1,19 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # Ordinals are linearly ordered by membership
-
-Of any two ordinals, one belongs to the other or the two are equal. This chapter isolates the classical step needed for that comparison and explains why it requires an explicit hypothesis.
-
-Everything about ordinals up to now has been closure: zero is one, successors are, unions are, bounds exist. Closure statements build; they never have to *decide* anything. Trichotomy decides. Given two ordinals with no relation assumed between them, it returns one of the three comparison cases, and this chapter obtains that decision from its explicit excluded-middle parameter. So the chapter takes the excluded middle as a module parameter, using the level-indexed packaging fixed in the foundations, and modules that use `ord-tri` receive that parameter explicitly.
-
-Two ingredients from the ambient hierarchy make the proof shorter than the textbook version. Regularity gives a well-founded induction, used twice over, once in each argument. Extensionality means that mutual inclusion *is* equality, so the equal case needs no separate work. Excluded middle decides the two inclusions and the membership propositions used to turn a failed inclusion into a truncated counterexample.
 <!--zh-->
 # 序数由隶属关系线性排序
-
-任两个序数，或一者属于另一者，或二者相等。本章把这种比较所需的经典步骤单独列出，并说明为何需要显式假设。
-
-迄今关于序数的一切都是闭包：零是序数，后继是，并也是，上界存在。闭包陈述关乎建造；它们从不需要**判定**任何东西。三歧要判定。给定两个彼此之间不假设任何关系的序数，它要回答三种互斥情形中的哪一种成立，本章从显式的排中律参数取得这一判定。所以本章把排中律取作模块参数，采用基础层定下的逐层级打包形式，使用 `ord-tri` 的模块都显式接收这个参数。
-
-来自环境层级的两样材料使证明比教科书版本更短。正则公理给出良基归纳，而且要用两次，两个自变量各一次。外延性意味着互相包含**就是**相等，故相等那一情形无须另行处理。排中律既判定两个方向的包含，也判定把包含失败转成截断反例时所需的成员关系命题。
 <!--ja-->
 # 順序数は所属によって線形に順序付けられる
-
-任意の二つの順序数は、一方が他方に属するか、両者が等しいかのどちらかである。本章では、この比較に必要な古典的段階を切り分け、なぜ明示的な仮定が必要かを説明する。
-
-これまでの順序数に関する命題はすべて閉包性であった。零は順序数であり、後続も和も順序数であり、上限も存在する。閉包の主張は構築に関わるもので、何かを**判定**する必要はない。三分性は判定を要求する。互いに何の関係も仮定されていない二つの順序数を与えられ、三つの場合のどれが成り立つかを答えなければならず、本章では、この判定を明示的な排中律のパラメータから得る。そこで本章は排中律をモジュールパラメータとして取り、基礎の段階で固定されたレベルごとのパッケージングを用いる。`ord-tri` を使うモジュールは、このパラメータを明示的に受け取る。
-
-周囲の階層からの二つの材料が、証明を教科書の版より短くする。正則性公理は整礎帰納を与え、二つの引数に対して一度ずつ、計二回使われる。外延性により、相互包含**は**等号そのものなので、等しい場合を別途扱う必要はない。排中律は二方向の包含を判定し、さらに包含の失敗を切り詰められた反例へ変える際に必要な所属命題も判定する。
 <!--/-->
+
+```agda
+open import Base.Prelude
+open import Base.Classical using ( LEM )
+```
 
 <!--en-->
 The chapter runs under a single classical hypothesis, stated once as a module parameter: an instance of `LEM (ℓ-suc ℓ)`. Recall its shape from the foundations: for each proposition `P : hProp (ℓ-suc ℓ)`, it returns either a proof of `⟨ P ⟩` or a refutation, a map from `⟨ P ⟩` into the empty type. This level matches `⊆ᵇ-prop A B : hProp (ℓ-suc ℓ)` and the membership propositions decided inside the counterexample argument. Keeping the assumption as an explicit module parameter records the classical input at each use of this module.
@@ -33,13 +24,44 @@ The chapter runs under a single classical hypothesis, stated once as a module pa
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-open import Base.Prelude
-open import Cubical.HITs.PropositionalTruncation using ( isPropPropTrunc )
-open import Base.Classical using ( LEM )
-
 module L.Ordinal.Linear {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+```
+
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+import FOL.Semantics
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV; regularityV )
+open import L.Constructible {ℓ} using ( IsOrd )
+open import L.Ordinal {ℓ} using ( mem-ord )
+```
+
+<!--en-->
+
+Of any two ordinals, one belongs to the other or the two are equal. This chapter isolates the classical step needed for that comparison and explains why it requires an explicit hypothesis.
+
+Everything about ordinals up to now has been closure: zero is one, successors are, unions are, bounds exist. Closure statements build; they never have to *decide* anything. Trichotomy decides. Given two ordinals with no relation assumed between them, it returns one of the three comparison cases, and this chapter obtains that decision from its explicit excluded-middle parameter. So the chapter takes the excluded middle as a module parameter, using the level-indexed packaging fixed in the foundations, and modules that use `ord-tri` receive that parameter explicitly.
+
+Two ingredients from the ambient hierarchy make the proof shorter than the textbook version. Regularity gives a well-founded induction, used twice over, once in each argument. Extensionality means that mutual inclusion *is* equality, so the equal case needs no separate work. Excluded middle decides the two inclusions and the membership propositions used to turn a failed inclusion into a truncated counterexample.
+<!--zh-->
+
+任两个序数，或一者属于另一者，或二者相等。本章把这种比较所需的经典步骤单独列出，并说明为何需要显式假设。
+
+迄今关于序数的一切都是闭包：零是序数，后继是，并也是，上界存在。闭包陈述关乎建造；它们从不需要**判定**任何东西。三歧要判定。给定两个彼此之间不假设任何关系的序数，它要回答三种互斥情形中的哪一种成立，本章从显式的排中律参数取得这一判定。所以本章把排中律取作模块参数，采用基础层定下的逐层级打包形式，使用 `ord-tri` 的模块都显式接收这个参数。
+
+来自环境层级的两样材料使证明比教科书版本更短。正则公理给出良基归纳，而且要用两次，两个自变量各一次。外延性意味着互相包含**就是**相等，故相等那一情形无须另行处理。排中律既判定两个方向的包含，也判定把包含失败转成截断反例时所需的成员关系命题。
+<!--ja-->
+
+任意の二つの順序数は、一方が他方に属するか、両者が等しいかのどちらかである。本章では、この比較に必要な古典的段階を切り分け、なぜ明示的な仮定が必要かを説明する。
+
+これまでの順序数に関する命題はすべて閉包性であった。零は順序数であり、後続も和も順序数であり、上限も存在する。閉包の主張は構築に関わるもので、何かを**判定**する必要はない。三分性は判定を要求する。互いに何の関係も仮定されていない二つの順序数を与えられ、三つの場合のどれが成り立つかを答えなければならず、本章では、この判定を明示的な排中律のパラメータから得る。そこで本章は排中律をモジュールパラメータとして取り、基礎の段階で固定されたレベルごとのパッケージングを用いる。`ord-tri` を使うモジュールは、このパラメータを明示的に受け取る。
+
+周囲の階層からの二つの材料が、証明を教科書の版より短くする。正則性公理は整礎帰納を与え、二つの引数に対して一度ずつ、計二回使われる。外延性により、相互包含**は**等号そのものなので、等しい場合を別途扱う必要はない。排中律は二方向の包含を判定し、さらに包含の失敗を切り詰められた反例へ変える際に必要な所属命題も判定する。
+<!--/-->
+
+
+
+```agda
+open import Cubical.HITs.PropositionalTruncation using ( isPropPropTrunc )
 ```
 
 <!--en-->
@@ -49,15 +71,6 @@ The proof works directly in the ambient hierarchy V rather than through the obje
 <!--ja-->
 証明は対象言語を経由せず、周囲の階層 V の中で直接行われる。台と構造の所属 `∈ˢ` は `𝒮ᵥ` の上にパッケージされた ZF 構造から来るので、`⟨ x ∈ˢ A ⟩` は `hProp` 真理値の基礎命題である。V の二つの原理が数学的な重みを担う。`extensionalV` は所属関係の双条件の族を等号のパスへ変え、`regularityV` は所属関係を整礎にしてその上の帰納を可能にする。L 側のもう一つの輸入 `mem-ord` は再帰呼び出しのたびに効く。順序数の任意の要素がそれ自身順序数であることを示すもので、これが帰納仮説を下の層で使えるようにする理由である。
 <!--/-->
-
-```agda
-
-open import FOL.ZFStructure using ( module hPropStructure )
-import FOL.Semantics
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV; regularityV )
-open import L.Constructible {ℓ} using ( IsOrd )
-open import L.Ordinal {ℓ} using ( mem-ord )
-```
 
 <!--en-->
 The decision procedure returns which of three cases holds, so the return type is built from a three-way sum: membership on the left, equality in the middle, membership on the right. Also needed is the conversion from an iff to a path, which the extensionality argument will apply to each point of the carrier. The empty type plays the role of refutation throughout: to refute a proposition is to map it into something with no inhabitants.
@@ -80,7 +93,6 @@ Two final conventions are opened for the whole file. The direct operations on `h
 <!--/-->
 
 ```agda
-
 open hPropStructure 𝒮ᵥ
 ```
 
@@ -319,7 +331,6 @@ With the two converters in hand, the four verdict combinations sort into the thr
 <!--/-->
 
 ```agda
-
       decide : Dec (A ⊆ᵇ B) → Dec (B ⊆ᵇ A) → Tri A B
       decide (yes A⊆B) (yes B⊆A) = inr (inl (ext-⊆ᵇ A⊆B B⊆A))
       decide (yes A⊆B) (no ¬B⊆A) =

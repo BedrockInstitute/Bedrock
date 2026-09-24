@@ -7,6 +7,7 @@ import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'site'))
 from i18n_markers import LANGS, parse
+from chapter_structure import opening_errors
 
 HEADING = re.compile(r'^(#{1,6})\s+(.+)$', re.M)
 FENCE = re.compile(r'^```[^\n]*\n.*?^```\s*$', re.M | re.S)
@@ -41,6 +42,10 @@ def outline_errors(text):
                     for next_kind, next_payload in segments[index + 1:]:
                         if next_kind == 'shared' and not '\n'.join(next_payload).strip():
                             continue
+                        if next_kind == 'shared' and match[1] == '#':
+                            shared = '\n'.join(next_payload).strip()
+                            if re.fullmatch(r'```agda\n(?:open )?import\s+.*\n```', shared, re.S):
+                                continue
                         if next_kind != 'group' or not all(key in next_payload for key in LANGS):
                             break
                         rest = '\n'.join(next_payload[lang]).strip()
@@ -56,8 +61,13 @@ def main():
     args = parser.parse_args()
     files = args.files or sorted(Path('src').rglob('*.lagda.md'))
     failures, count = 0, 0
+    source_root = Path('src').resolve()
+    internal = {str(p.resolve().relative_to(source_root))[:-9].replace('/', '.')
+                for p in Path('src').rglob('*.lagda.md')}
     for path in files:
         errors, headings = outline_errors(path.read_text())
+        module = str(path.resolve().relative_to(source_root))[:-9].replace('/', '.')
+        errors.extend(opening_errors(path.read_text(), module, internal))
         count += headings
         if headings == 0:
             errors.append('missing chapter title')

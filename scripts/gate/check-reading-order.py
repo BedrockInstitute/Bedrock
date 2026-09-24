@@ -10,7 +10,7 @@ import re
 
 FENCE = re.compile(r"^```agda\s*\n(.*?)^```\s*$", re.M | re.S)
 IMPORT = re.compile(r"^\s*(?:open\s+)?import\s+([\w.]+)", re.M)
-PREVIEWS = frozenset({"Milestones"})
+PREVIEWS = frozenset({"Origin"})
 CATALOG = Path(__file__).resolve().parents[2] / "dev" / "reading-catalog.json"
 
 
@@ -55,7 +55,7 @@ def main():
         print(f"check-reading-order: {error}")
     if errors:
         return 1
-    print(f"check-reading-order: clean ({len(sources)} chapters; Milestones preview)")
+    print(f"check-reading-order: clean ({len(sources)} chapters; Origin preview)")
     return 0
 
 

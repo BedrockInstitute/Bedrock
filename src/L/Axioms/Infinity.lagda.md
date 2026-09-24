@@ -1,16 +1,19 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # The axiom of infinity in L
-
-Inside `L`, the constructively defined chain `numeralL`{.Agda} provides one internal numeral for each natural number. A chain of separate sets is not yet an infinite set: the axiom of infinity asks for one constructible set whose members are exactly the numerals. This chapter exhibits that set and, in the same stroke, identifies the classical dependency used to place the candidate set in the constructible hierarchy: knowing at which stage of the constructible hierarchy an ordinal such as ω appears is a comparison of ordinals, the imported stage theorem receives the module parameter `lem` because its proof uses that comparison.
 <!--zh-->
 # L 中的无穷公理
-
-`L` 内构造性定义的数码链 `numeralL`{.Agda} 为每个自然数给出一个内部数码。但一条由各自分离的集合组成的链还不是无穷集合：无穷公理要求一个可构造集合，其成员恰为诸数码。本章给出这个集合，并顺带指出把候选集合放进可构造层级时所用的经典依赖：所导入的层定理依赖序数比较，因此以模块参数 `lem` 为参数。
 <!--ja-->
 # L における無限公理
-
-`L` の内部で構成的に定義された数項列 `numeralL`{.Agda} は、各自然数に一つの内部数項を与える。しかし、互いに別々の集合からなる数項列は、まだ無限集合ではない。無限公理が求めるのは、要素が数項ちょうどである一つの構成可能集合である。この章ではその集合を示し、あわせて候補の集合を構成可能階層へ置くために用いる古典的依存関係を明らかにする。ω のような順序数が構成可能階層のどの段階に現れるかを知ることは順序数の比較であり、インポートされた段階定理はその比較を用いるため、モジュールパラメータ `lem` を受け取る。
 <!--/-->
+
+```agda
+open import Base.Prelude
+open import Base.Classical using ( LEM )
+```
 
 <!--en-->
 The module takes a single assumption, `lem : LEM (ℓ-suc ℓ)`, a decision procedure for propositions at one level above the working level ℓ. Everything the chapter needs is either constructive or derived from this one parameter, so the later proofs can be read with a precise account of which steps are classical.
@@ -21,13 +24,31 @@ The module takes a single assumption, `lem : LEM (ℓ-suc ℓ)`, a decision proc
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-open import Base.Prelude
-open import Base.Classical using ( LEM )
-
 module L.Axioms.Infinity {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
+
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+import FOL.ZFModel
+open import L.Constructible {ℓ} using ( 𝒮ʟ; isL )
+open import L.Ordinal {ℓ} using ( suc-ord; ω-ord )
+open import L.Ordinal.Stages {ℓ} lem using ( ord∈Lset-suc )
+open import L.Axioms.Basic {ℓ} using ( uniqueL )
+open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
+```
+
+<!--en-->
+
+Inside `L`, the constructively defined chain `numeralL`{.Agda} provides one internal numeral for each natural number. A chain of separate sets is not yet an infinite set: the axiom of infinity asks for one constructible set whose members are exactly the numerals. This chapter exhibits that set and, in the same stroke, identifies the classical dependency used to place the candidate set in the constructible hierarchy: knowing at which stage of the constructible hierarchy an ordinal such as ω appears is a comparison of ordinals, the imported stage theorem receives the module parameter `lem` because its proof uses that comparison.
+<!--zh-->
+
+`L` 内构造性定义的数码链 `numeralL`{.Agda} 为每个自然数给出一个内部数码。但一条由各自分离的集合组成的链还不是无穷集合：无穷公理要求一个可构造集合，其成员恰为诸数码。本章给出这个集合，并顺带指出把候选集合放进可构造层级时所用的经典依赖：所导入的层定理依赖序数比较，因此以模块参数 `lem` 为参数。
+<!--ja-->
+
+`L` の内部で構成的に定義された数項列 `numeralL`{.Agda} は、各自然数に一つの内部数項を与える。しかし、互いに別々の集合からなる数項列は、まだ無限集合ではない。無限公理が求めるのは、要素が数項ちょうどである一つの構成可能集合である。この章ではその集合を示し、あわせて候補の集合を構成可能階層へ置くために用いる古典的依存関係を明らかにする。ω のような順序数が構成可能階層のどの段階に現れるかを知ることは順序数の比較であり、インポートされた段階定理はその比較を用いるため、モジュールパラメータ `lem` を受け取る。
+<!--/-->
+
+
 
 <!--en-->
 The ambient hierarchy supplies `ω` and its successor `sucV`, while `numeralL-fst` relates each internal numeral to the corresponding member of `ω`. The stage theorem `ord∈Lset-suc`, instantiated with `lem`, places an ordinal at its successor stage. This is the sole point at which the proof below invokes a result parameterized by excluded middle.
@@ -37,15 +58,6 @@ The ambient hierarchy supplies `ω` and its successor `sucV`, while `numeralL-fs
 周囲の集合階層は `ω` と後者 `sucV` を与え、`numeralL-fst` は各内部数項を `ω` の対応する要素に結びつける。`lem` で具体化した段階定理 `ord∈Lset-suc` は、順序数をその後者段階に置く。以下の証明が排中律をパラメータとする結果を用いるのはこの箇所である。
 <!--/-->
 
-```agda
-
-open import FOL.ZFStructure using ( module hPropStructure )
-import FOL.ZFModel
-open import L.Constructible {ℓ} using ( 𝒮ʟ; isL )
-open import L.Ordinal {ℓ} using ( suc-ord; ω-ord )
-open import L.Ordinal.Stages {ℓ} lem using ( ord∈Lset-suc )
-```
-
 <!--en-->
 Propositional truncation expresses mere existence: `∣_∣₁`{.Agda} places a given witness inside that truncation. The operation `⇔toPath`{.Agda} converts two implications between truth values into a path between those truth values, which is the form required by the set specification.
 <!--zh-->
@@ -53,11 +65,6 @@ Propositional truncation expresses mere existence: `∣_∣₁`{.Agda} places a 
 <!--ja-->
 命題的切り詰めは単なる存在を表し、`∣_∣₁`{.Agda} は与えられた証人をその切り詰めに入れる。`⇔toPath`{.Agda} は真理値間の二つの含意を真理値間のパスに変換し、集合の仕様が要求する形を与える。
 <!--/-->
-
-```agda
-open import L.Axioms.Basic {ℓ} using ( uniqueL )
-open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
-```
 
 <!--en-->
 Truth values here are `hProp` packages, and their indexed disjunction `∃[ x ] P x`{.Agda} expresses mere existence over a carrier. For the constructible structure `𝒮ʟ`, `∈ˢ`{.Agda} denotes membership and `≈ˢ`{.Agda} denotes structural equality, whose underlying equality is equality of the ambient sets.
@@ -84,7 +91,6 @@ Finally `SetOf`{.Agda} names the type of realizers of a class: a constructible s
 <!--/-->
 
 ```agda
-
 module ModelL = FOL.ZFModel 𝒮ʟ
 open ModelL using ( SetOf )
 ```

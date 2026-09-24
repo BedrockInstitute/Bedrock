@@ -1,5 +1,41 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # The numeral chain
+<!--zh-->
+# 数码链
+<!--ja-->
+# 数項列
+<!--/-->
+
+```agda
+open import Base.Prelude
+```
+
+<!--en-->
+Fix a universe level `ℓ`{.Agda}. Keeping the level as a parameter lets the constructions be instantiated at each required size without identifying distinct universes.
+<!--zh-->
+固定宇宙层级 `ℓ`{.Agda}。保留这个层级参数，使构造可以在所需的各个大小处实例化，而不必把不同的宇宙视为同一个。
+<!--ja-->
+宇宙レベル `ℓ`{.Agda} を固定する。このレベルをパラメータとして保つことで、異なる宇宙を同一視せずに、必要な大きさで構成を具体化できる。
+<!--/-->
+
+```agda
+module L.Axioms.Numerals {ℓ : Level} where
+```
+
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+import FOL.ZFModel
+open import V.Model {ℓ} using ( pair-singleton; module NumPin )
+open import L.Constructible {ℓ} using ( 𝒮ʟ )
+open import L.Axioms.Basic {ℓ}
+  using ( hasPairL; hasUnionL; module PairOf; module UnionOf; isL-directed; ∅ʟ )
+```
+
+<!--en-->
 
 This chapter constructs the natural-number chain inside `L` from the model's empty-set, pairing, and union operations, and proves that it projects to the ambient von Neumann numerals.
 
@@ -9,7 +45,6 @@ The argument for each projection equation has a fixed shape. The centre of a con
 
 The whole chapter is constructive: no excluded middle, no resizing, and no choice beyond what the contractibility of the realizer types already provides. What it does not do is collect the numerals into a set; that collection is the content of the infinity axiom itself.
 <!--zh-->
-# 数码链
 
 本章从模型自身的空集、配对与并运算出发，在 `L` 内构造自然数链，并证明它投影到周遭集合层级中的冯·诺伊曼数码。
 
@@ -19,7 +54,6 @@ The whole chapter is constructive: no excluded middle, no resizing, and no choic
 
 全章都是构造性的：不用排中律，不用 resize，也不需要实现者类型的可缩性之外的选择。本章不做的是把诸数码收集成一个集合；那一步收集正是无穷公理本身的内容。
 <!--ja-->
-# 数項列
 
 本章ではモデル自身の空集合、対、和集合の演算から `L` 内部の自然数列を構成し、それが周囲のフォン・ノイマン数項へ射影されることを証明する。
 
@@ -38,15 +72,6 @@ The key notion is unique realization. For pairing, the specification is `λ x �
 鍵となる概念は一意な実現である。対の仕様は `λ x → (x ≈ˢ a) ⊔ (x ≈ˢ b)` であり、`hasPairL a b` は、それを実現する構成可能集合の型 `SetOf` が可縮であることを証明する。すなわち、標準的な実現者である中心と、中心から他のすべての実現者へのパスがあるのである。和集合も同様に `hasUnionL` によって仕様が与えられ証明される。可縮性の証明は明示的なデータであって、単なる存在主張ではない。中心と収縮の両方を含み、以下で選ばれるのはこの中心である。これが本章で用いる唯一の形の選択であり、それは可縮性そのものによって供給される。
 <!--/-->
 
-```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-open import Base.Prelude
-module L.Axioms.Numerals {ℓ : Level} where
-
-open import FOL.ZFStructure using ( module hPropStructure )
-```
-
 <!--en-->
 Two sides meet in the projection equations. On the model side stand `hasPairL` and `hasUnionL` with their realizing constructions `PairOf` and `UnionOf`, and the internal empty set `∅ʟ`. On the ambient side stand the hierarchy's unordered pair `⁅ _, _ ⁆` and union `⋃_`, its successor `sucV`, and its numerals `#_`. The input that binds the two sides is `isL-directed`, which supplies, merely, a common ordinal stage containing the underlying sets of two constructible sets; the bounded pair construction needs exactly such a stage to build its realizer. The two internal operations must first be defined before they can be compared.
 <!--zh-->
@@ -54,14 +79,6 @@ Two sides meet in the projection equations. On the model side stand `hasPairL` a
 <!--ja-->
 射影方程式は両側を出会わせる。モデルの側には、`hasPairL` と `hasUnionL` とその実現の構成 `PairOf` と `UnionOf`、そして内部の空集合 `∅ʟ` がある。周囲の側には、階層の非順序対 `⁅ _, _ ⁆` と和集合 `⋃_`、後者 `sucV`、数項 `#_` がある。両側を結ぶ入力は `isL-directed` である。これは、二つの構成可能集合の基底の集合を含む共通の順序数段階を、単に存在するものとして供給する。有界な対の構成が実現者を作るには、まさにそのような段階が必要である。二つの内部の演算は、まず定義されて初めて比較できる。
 <!--/-->
-
-```agda
-import FOL.ZFModel
-open import V.Model {ℓ} using ( pair-singleton; module NumPin )
-open import L.Constructible {ℓ} using ( 𝒮ʟ )
-open import L.Axioms.Basic {ℓ}
-  using ( hasPairL; hasUnionL; module PairOf; module UnionOf; isL-directed; ∅ʟ )
-```
 
 <!--en-->
 A projection equation is an equality between sets of the ambient hierarchy, for example `fst (pairʟ a b) ≡ ⁅ fst a , fst b ⁆`. This particular equality type is a proposition because the hierarchy's carrier is an h-set, which is what `setIsSet` certifies. That propositionhood is what permits eliminating the truncated stage data into it; no propositionhood is claimed about arbitrary equality types.
@@ -72,7 +89,6 @@ A projection equation is an equality between sets of the ambient hierarchy, for 
 <!--/-->
 
 ```agda
-
 open import Cubical.HITs.CumulativeHierarchy.Base using ( setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( ⁅_,_⁆; ⋃_; module InfinitySet )
@@ -141,7 +157,6 @@ The internal successor composes the two: `sucʟ a = unionʟ (pairʟ a (pairʟ a 
 <!--/-->
 
 ```agda
-
   sucʟ : S → S
   sucʟ a = unionʟ (pairʟ a (pairʟ a a))
 ```

@@ -23,6 +23,18 @@ def metadata(chapters=("A", "B")):
 
 
 class ValidationTests(unittest.TestCase):
+    def test_human_review_is_explicit_for_every_chapter(self):
+        data, catalog = routes._load_catalog()
+        self.assertTrue(all(type(item['human_reviewed']) is bool for item in catalog.values()))
+        for invalid in (None, 'true', 1):
+            with self.subTest(invalid=invalid), tempfile.TemporaryDirectory() as directory:
+                changed = routes.json.loads(routes.json.dumps(data))
+                changed['chapters'][0]['human_reviewed'] = invalid
+                path = Path(directory) / 'catalog.json'
+                path.write_text(routes.json.dumps(changed))
+                with self.assertRaisesRegex(ValueError, 'boolean human_reviewed'):
+                    routes._load_catalog(path)
+
     def test_metadata_routes_ids_and_members_have_stable_types(self):
         bad_values = [
             (None, "metadata must be an object"),
@@ -38,7 +50,7 @@ class ValidationTests(unittest.TestCase):
         ]
         for value, message in bad_values:
             with self.subTest(message=message), self.assertRaisesRegex(ValueError, message):
-                routes.validate_metadata(value, {"Milestones", "A"})
+                routes.validate_metadata(value, {"Origin", "A"})
 
     def test_route_titles_and_descriptions_require_japanese(self):
         for field in ("title", "description"):
@@ -49,32 +61,32 @@ class ValidationTests(unittest.TestCase):
 
     def test_unknown_graph_nodes_are_rejected(self):
         with self.assertRaisesRegex(ValueError, "unknown graph node: Ghost"):
-            routes.validate_metadata(metadata(), {"Milestones", "A", "B"},
-                                     {"Milestones": [], "A": [], "B": [], "Ghost": []})
+            routes.validate_metadata(metadata(), {"Origin", "A", "B"},
+                                     {"Origin": [], "A": [], "B": [], "Ghost": []})
 
     def test_overlap_is_valid_but_repetition_within_one_route_is_not(self):
         value = metadata(); value["routes"].append({"id": "second",
             "title": {"en": "Second", "zh": "第二", "ja": "第二"},
             "description": {"en": "Shared", "zh": "共享", "ja": "共有"}, "chapters": ["B"]})
-        routes.validate_metadata(value, {"Milestones", "A", "B"})
+        routes.validate_metadata(value, {"Origin", "A", "B"})
         value["routes"][1]["chapters"] = ["B", "B"]
         with self.assertRaisesRegex(ValueError, "repeats chapter: B"):
-            routes.validate_metadata(value, {"Milestones", "A", "B"})
+            routes.validate_metadata(value, {"Origin", "A", "B"})
 
     def test_bad_id_language_unknown_and_uncovered_are_rejected(self):
         value = metadata(("A", "Ghost")); value["routes"].append({"id": "route",
             "title": {"en": "Again"}, "description": {"en": "Again", "zh": "再来"},
             "chapters": []})
         with self.assertRaises(ValueError) as caught:
-            routes.validate_metadata(value, {"Milestones", "A", "B"})
+            routes.validate_metadata(value, {"Origin", "A", "B"})
         for expected in ("duplicate route id", "unknown chapter: Ghost",
                          "not covered by a route: B", "title.en and title.zh"):
             self.assertIn(expected, str(caught.exception))
 
     def test_cycles_are_rejected(self):
         with self.assertRaisesRegex(ValueError, "prerequisite cycle"):
-            routes.validate_metadata(metadata(), {"Milestones", "A", "B"},
-                                     {"Milestones": [], "A": ["B"], "B": ["A"]})
+            routes.validate_metadata(metadata(), {"Origin", "A", "B"},
+                                     {"Origin": [], "A": ["B"], "B": ["A"]})
 
 
 class BuildTests(unittest.TestCase):
@@ -114,7 +126,7 @@ class BuildTests(unittest.TestCase):
 
     def test_catalog_text_order_and_fenced_direct_imports_are_authoritative(self):
         catalog = {"version": 1, "routes": metadata()["routes"], "chapters": [
-            {"id": "Milestones", "title": {"en": "Endpoint", "zh": "终点", "ja": "終点"},
+            {"id": "Origin", "title": {"en": "Endpoint", "zh": "终点", "ja": "終点"},
              "stage": {"en": "Preview", "zh": "预览", "ja": "プレビュー"},
              "description": {"en": "Endpoint.", "zh": "终点。", "ja": "終点。"}},
             {"id": "A", "title": {"en": "First", "zh": "第一", "ja": "最初"},
@@ -124,10 +136,12 @@ class BuildTests(unittest.TestCase):
              "stage": {"en": "Lessons", "zh": "课程", "ja": "授業"},
              "description": {"en": "Second.", "zh": "第二。", "ja": "次。"}},
         ]}
+        for entry in catalog['chapters']:
+            entry['human_reviewed'] = entry['id'] == 'A'
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             (root / "reading-catalog.json").write_text(routes.json.dumps(catalog), encoding="utf-8")
-            (root / "Milestones.lagda.md").write_text("```agda\nimport B\n```")
+            (root / "Origin.lagda.md").write_text("```agda\nimport B\n```")
             (root / "A.lagda.md").write_text(
                 "<!--en-->\n# First chapter\n<!--zh-->\n# 第一章\n<!--ja-->\n# 最初の章\n<!--/-->\n"
                 "import Ghost\n```agda\nmodule A where\n```")
@@ -135,14 +149,16 @@ class BuildTests(unittest.TestCase):
             data = routes.build_reading_data(root, root / "reading-catalog.json")
         nodes = {node["id"]: node for node in data["nodes"]}
         self.assertEqual(nodes["A"]["title"]["en"], "First chapter")
+        self.assertTrue(nodes["A"]["human_reviewed"])
+        self.assertFalse(nodes["B"]["human_reviewed"])
         self.assertEqual(nodes["A"]["title"]["ja"], "最初の章")
         self.assertEqual(nodes["A"]["description"]["en"], "First.")
         self.assertEqual(nodes["B"]["stage"]["zh"], "课程")
         self.assertEqual(nodes["B"]["prerequisites"], ["A"])
         self.assertEqual(nodes["B"]["order"], 3)
-        self.assertEqual(nodes["Milestones"]["prerequisites"], [])
-        self.assertEqual(nodes["Milestones"]["routes"], [])
-        self.assertTrue(nodes["Milestones"]["preview"])
+        self.assertEqual(nodes["Origin"]["prerequisites"], [])
+        self.assertEqual(nodes["Origin"]["routes"], [])
+        self.assertTrue(nodes["Origin"]["preview"])
 
 
 if __name__ == "__main__":

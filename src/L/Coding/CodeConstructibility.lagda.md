@@ -1,3 +1,7 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # Constructible codes and subformula trees
 <!--zh-->
@@ -5,6 +9,38 @@
 <!--ja-->
 # 構成可能なコードと部分式の木
 <!--/-->
+
+```agda
+open import Base.Prelude
+```
+
+<!--en-->
+Fix a universe level `ℓ`{.Agda}. Keeping the level as a parameter lets the constructions be instantiated at each required size without identifying distinct universes.
+<!--zh-->
+固定宇宙层级 `ℓ`{.Agda}。保留这个层级参数，使构造可以在所需的各个大小处实例化，而不必把不同的宇宙视为同一个。
+<!--ja-->
+宇宙レベル `ℓ`{.Agda} を固定する。このレベルをパラメータとして保つことで、異なる宇宙を同一視せずに、必要な大きさで構成を具体化できる。
+<!--/-->
+
+```agda
+module L.Coding.CodeConstructibility {ℓ : Level} where
+```
+
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax
+  using ( Term; con; var; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇
+        ; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
+open import FOL.Manipulation.ConstantMapping using ( mapTm; mapFo )
+open import V.Coding {ℓ} using ( pr; pr-inj; module VCode )
+open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; IsOrd; Lset )
+open import L.Coding.Model {ℓ} using ( prʟ; prʟ-fst )
+open import L.Coding.Expressions {ℓ} using ( numL )
+open import L.Axioms.Numerals {ℓ} using ( pairʟ; pairʟ-fst; unionʟ; unionʟ-fst )
+open import L.Coding.Environment {ℓ} using ( env )
+open import L.Axioms.Basic {ℓ} using ( finSet; module FinOf )
+open import V.Model {ℓ} using ( pair-singleton; pair-spec; union-spec )
+```
 
 <!--en-->
 This chapter proves that term codes, formula codes, and finite environment graphs belong to `L`, then builds a constructible tree that gathers data over every subformula and characterizes its members.
@@ -40,29 +76,9 @@ the definable powerset construction.
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-open import Base.Prelude
-
-module L.Coding.CodeConstructibility {ℓ : Level} where
-
-open import FOL.ZFStructure using ( module hPropStructure )
-
-open import FOL.Syntax
-  using ( Term; con; var; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇
-        ; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
-open import FOL.Manipulation.ConstantMapping using ( mapTm; mapFo )
-open import V.Coding {ℓ} using ( pr; pr-inj; module VCode )
-open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; IsOrd; Lset )
-open import L.Coding.Model {ℓ} using ( prʟ; prʟ-fst )
-open import L.Coding.Expressions {ℓ} using ( numL )
-open import L.Axioms.Numerals {ℓ} using ( pairʟ; pairʟ-fst; unionʟ; unionʟ-fst )
-open import L.Coding.Environment {ℓ} using ( env )
-open import L.Axioms.Basic {ℓ} using ( finSet; module FinOf )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( ⁅_⁆s; ⁅_,_⁆; ⋃_; _∪_; module InfinitySet )
-open import V.Model {ℓ} using ( pair-singleton; pair-spec; union-spec )
 open InfinitySet using ( #_; sucV )
 
 open hPropStructure 𝒮ʟ using ( S )
@@ -134,7 +150,6 @@ Then the formulas: ten clauses with no real content. Each constructor's code is 
 然后是诸公式：十条子句，没有实质内容。每个构造子的码都是「子码之对」「单个子码」或「数码」三者之一的标签，而前面三个基础结果覆盖这三种形状。归纳沿无参公式而非它的嵌入进行，这一步不增加任何论证，因为嵌入是一次常元改名，按定义与每个构造子交换。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -144,7 +159,6 @@ module _ {K : Type ℓ} (f : K → V ℓ) (h : (k : K) → ⟨ isL (f k) ⟩) wh
 <div class="submodule-fold-content">
 
 ```agda
-
   codeTmL : ∀ {n} (t : Term K n) → ⟨ isL VCode.⌜ mapTm f t ⌝ᵗ ⟩
   codeTmL (con c) = tagL 0 (h c)
   codeTmL (var i) = tagL 1 (numL _)
@@ -163,7 +177,6 @@ module _ {K : Type ℓ} (f : K → V ℓ) (h : (k : K) → ⟨ isL (f k) ⟩) wh
 ```
 </div>
 </details>
-
 
 <!--en-->
 ## Constructibility of environment graphs
@@ -328,7 +341,6 @@ direction needs, one for each shape a clause of the recursion produces.
 `Of`{.Agda} 说出这种集合的成员是什么：它是被收集之物之一，收集于某条子公式处，而那条子公式自己的集合包含于它所出自的那个集合之内。`tree-inv`{.Agda} 证明这一点，而 `Parts`{.Agda} 给出另一方向所需的诸隶属关系，递归的每条子句所产生的每种形状各一条。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -338,7 +350,6 @@ module _ {ℓ' : Level} {K : Type ℓ'} where
 <div class="submodule-fold-content">
 
 ```agda
-
   tree : (∀ {m} → Formula K m → S) → ∀ {n} → Formula K n → S
   tree f φ@(t ∈̇ u)  = sglʟ (f φ)
   tree f φ@(t ≐ u)  = sglʟ (f φ)
@@ -357,63 +368,61 @@ module _ {ℓ' : Level} {K : Type ℓ'} where
                    ((x ≡ fst (f χ))
                     × ((z : V ℓ) → ⟨ z ∈ fst (tree g χ) ⟩
                        → ⟨ z ∈ fst (tree g φ) ⟩))) ∥₁
-
-  private
 ```
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-    module _ (f g : ∀ {m} → Formula K m → S) where
+  private module _ (f g : ∀ {m} → Formula K m → S) where
 ```
 </summary>
 <div class="submodule-fold-content">
 
 ```agda
-      one : ∀ {n} (φ : Formula K n) (x : V ℓ)
-          → ⟨ x ∈ fst (sglʟ (f φ)) ⟩ → Of f g φ x
-      one {n} φ x h = ∣ n , φ , sglʟ-out (f φ) x h , (λ _ hz → hz) ∣₁
+    one : ∀ {n} (φ : Formula K n) (x : V ℓ)
+        → ⟨ x ∈ fst (sglʟ (f φ)) ⟩ → Of f g φ x
+    one {n} φ x h = ∣ n , φ , sglʟ-out (f φ) x h , (λ _ hz → hz) ∣₁
 
-      wider : ∀ {n m} (φ : Formula K n) (χ : Formula K m) {x : V ℓ}
-            → ((z : V ℓ) → ⟨ z ∈ fst (tree g χ) ⟩ → ⟨ z ∈ fst (tree g φ) ⟩)
-            → Of f g χ x → Of f g φ x
-      wider _ _ s = map₁
-        (λ { (m , ψ , e , t) → m , ψ , e , (λ z hz → s z (t z hz)) })
+    wider : ∀ {n m} (φ : Formula K n) (χ : Formula K m) {x : V ℓ}
+          → ((z : V ℓ) → ⟨ z ∈ fst (tree g χ) ⟩ → ⟨ z ∈ fst (tree g φ) ⟩)
+          → Of f g χ x → Of f g φ x
+    wider _ _ s = map₁
+      (λ { (m , ψ , e , t) → m , ψ , e , (λ z hz → s z (t z hz)) })
 
-      un : ∀ {n m} (φ : Formula K n) (a : Formula K m)
-         → ((z : V ℓ) → ⟨ z ∈ fst (cupʟ (sglʟ (g φ)) (tree g a)) ⟩
-            → ⟨ z ∈ fst (tree g φ) ⟩)
-         → ((x : V ℓ) → ⟨ x ∈ fst (tree f a) ⟩ → Of f g a x)
-         → (x : V ℓ) → ⟨ x ∈ fst (cupʟ (sglʟ (f φ)) (tree f a)) ⟩ → Of f g φ x
-      un φ a into ra x h = rec₁ squash₁
-        (λ { (inl e) → one φ x e
-           ; (inr e) → wider φ a
-               (λ z hz → into z (cupʟ-inr (sglʟ (g φ)) (tree g a) z hz))
-               (ra x e) })
-        (cupʟ-out (sglʟ (f φ)) (tree f a) x h)
+    un : ∀ {n m} (φ : Formula K n) (a : Formula K m)
+       → ((z : V ℓ) → ⟨ z ∈ fst (cupʟ (sglʟ (g φ)) (tree g a)) ⟩
+          → ⟨ z ∈ fst (tree g φ) ⟩)
+       → ((x : V ℓ) → ⟨ x ∈ fst (tree f a) ⟩ → Of f g a x)
+       → (x : V ℓ) → ⟨ x ∈ fst (cupʟ (sglʟ (f φ)) (tree f a)) ⟩ → Of f g φ x
+    un φ a into ra x h = rec₁ squash₁
+      (λ { (inl e) → one φ x e
+         ; (inr e) → wider φ a
+             (λ z hz → into z (cupʟ-inr (sglʟ (g φ)) (tree g a) z hz))
+             (ra x e) })
+      (cupʟ-out (sglʟ (f φ)) (tree f a) x h)
 
-      bin : ∀ {n m} (φ : Formula K n) (a b : Formula K m)
-          → ((z : V ℓ)
-             → ⟨ z ∈ fst (cupʟ (sglʟ (g φ)) (cupʟ (tree g a) (tree g b))) ⟩
-             → ⟨ z ∈ fst (tree g φ) ⟩)
-          → ((x : V ℓ) → ⟨ x ∈ fst (tree f a) ⟩ → Of f g a x)
-          → ((x : V ℓ) → ⟨ x ∈ fst (tree f b) ⟩ → Of f g b x)
-          → (x : V ℓ)
-          → ⟨ x ∈ fst (cupʟ (sglʟ (f φ)) (cupʟ (tree f a) (tree f b))) ⟩
-          → Of f g φ x
-      bin φ a b into ra rb x h = rec₁ squash₁
-        (λ { (inl e) → one φ x e
-           ; (inr e) → rec₁ squash₁
-               (λ { (inl ea) → wider φ a (λ z hz → into z
-                      (cupʟ-inr (sglʟ (g φ)) (cupʟ (tree g a) (tree g b)) z
-                        (cupʟ-inl (tree g a) (tree g b) z hz)))
-                      (ra x ea)
-                  ; (inr eb) → wider φ b (λ z hz → into z
-                      (cupʟ-inr (sglʟ (g φ)) (cupʟ (tree g a) (tree g b)) z
-                        (cupʟ-inr (tree g a) (tree g b) z hz)))
-                      (rb x eb) })
-               (cupʟ-out (tree f a) (tree f b) x e) })
-        (cupʟ-out (sglʟ (f φ)) (cupʟ (tree f a) (tree f b)) x h)
+    bin : ∀ {n m} (φ : Formula K n) (a b : Formula K m)
+        → ((z : V ℓ)
+           → ⟨ z ∈ fst (cupʟ (sglʟ (g φ)) (cupʟ (tree g a) (tree g b))) ⟩
+           → ⟨ z ∈ fst (tree g φ) ⟩)
+        → ((x : V ℓ) → ⟨ x ∈ fst (tree f a) ⟩ → Of f g a x)
+        → ((x : V ℓ) → ⟨ x ∈ fst (tree f b) ⟩ → Of f g b x)
+        → (x : V ℓ)
+        → ⟨ x ∈ fst (cupʟ (sglʟ (f φ)) (cupʟ (tree f a) (tree f b))) ⟩
+        → Of f g φ x
+    bin φ a b into ra rb x h = rec₁ squash₁
+      (λ { (inl e) → one φ x e
+         ; (inr e) → rec₁ squash₁
+             (λ { (inl ea) → wider φ a (λ z hz → into z
+                    (cupʟ-inr (sglʟ (g φ)) (cupʟ (tree g a) (tree g b)) z
+                      (cupʟ-inl (tree g a) (tree g b) z hz)))
+                    (ra x ea)
+                ; (inr eb) → wider φ b (λ z hz → into z
+                    (cupʟ-inr (sglʟ (g φ)) (cupʟ (tree g a) (tree g b)) z
+                      (cupʟ-inr (tree g a) (tree g b) z hz)))
+                    (rb x eb) })
+             (cupʟ-out (tree f a) (tree f b) x e) })
+      (cupʟ-out (sglʟ (f φ)) (cupʟ (tree f a) (tree f b)) x h)
 ```
 </div>
 </details>
@@ -421,7 +430,6 @@ module _ {ℓ' : Level} {K : Type ℓ'} where
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-
   module Parts (f : ∀ {m} → Formula K m → S) where
 ```
 </summary>
@@ -460,7 +468,6 @@ module _ {ℓ' : Level} {K : Type ℓ'} where
 </div>
 </details>
 ```agda
-
   tree-inv : (f g : ∀ {m} → Formula K m → S)
            → ∀ {n} (φ : Formula K n) (x : V ℓ)
            → ⟨ x ∈ fst (tree f φ) ⟩ → Of f g φ x
@@ -480,7 +487,6 @@ module _ {ℓ' : Level} {K : Type ℓ'} where
 ```
 </div>
 </details>
-
 
 <!--en-->
 ## The subformula closure
@@ -512,7 +518,6 @@ Constructibility is not a second proof. The recursion above runs on the model's 
 可构造性无须另证：上面的递归在模型自身的集合上进行，证书随之一并给出。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -522,7 +527,6 @@ module _ {K : Type ℓ} (f : K → V ℓ) (h : (k : K) → ⟨ isL (f k) ⟩) wh
 <div class="submodule-fold-content">
 
 ```agda
-
   key : ∀ {n} → Formula K n → V ℓ
   key {n} φ = pr (# n) VCode.⌜ mapFo f φ ⌝
 
@@ -655,7 +659,6 @@ the successor, and a constructor with no subformula demands nothing.
 
 在标签之下，一个键是元数与码之对，这两层都由配对的单射性确定。由此得出：保持元数的构造子在所读出的元数处要求其诸分量，抬升元数的在后继处要求分量，而没有子公式的构造子则不要求任何分量。
 <!--/-->
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">

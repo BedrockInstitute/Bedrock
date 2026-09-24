@@ -6,6 +6,42 @@
  */
 (function () {
   "use strict";
+  /* One text-only pass for page code, inline prose and all dynamic hover/modal
+     content. Do not replace markup, source text, links or Agda range offsets. */
+  function decorateDottedOperators(scope) {
+    var excluded = ".dotted-operator, script, style, textarea, input, select, " +
+      "svg, math, .math, .katex, [contenteditable]";
+    function decorateText(node) {
+      if (!/[⇒¬]\u0307/u.test(node.data) || !node.parentElement ||
+          node.parentElement.closest(excluded)) return;
+      var text = node.data, pattern = /[⇒¬]\u0307(?!\p{M})/gu, match, offset = 0;
+      var fragment = document.createDocumentFragment();
+      while ((match = pattern.exec(text))) {
+        fragment.appendChild(document.createTextNode(text.slice(offset, match.index)));
+        var span = document.createElement("span");
+        span.className = "dotted-operator";
+        span.textContent = match[0];
+        fragment.appendChild(span);
+        offset = pattern.lastIndex;
+      }
+      if (!offset) return;
+      fragment.appendChild(document.createTextNode(text.slice(offset)));
+      node.replaceWith(fragment);
+    }
+    if (scope.nodeType === Node.TEXT_NODE) { decorateText(scope); return; }
+    if (scope.nodeType !== Node.ELEMENT_NODE || scope.closest(excluded)) return;
+    var walker = document.createTreeWalker(scope, NodeFilter.SHOW_TEXT);
+    var texts = [], current;
+    while ((current = walker.nextNode())) texts.push(current);
+    texts.forEach(decorateText);
+  }
+  decorateDottedOperators(document.body);
+  new MutationObserver(function (records) {
+    records.forEach(function (record) {
+      if (record.type === "characterData") decorateDottedOperators(record.target);
+      else record.addedNodes.forEach(decorateDottedOperators);
+    });
+  }).observe(document.body, {childList: true, subtree: true, characterData: true});
   var cfg = window.bedrock || { baseUrl: "", lang: "en", module: "" };
   var compactPointer = window.matchMedia("(hover: none), (pointer: coarse)");
   var isDefinitionModalDocument =
@@ -21,9 +57,9 @@
      opens its hover first, and only the hover's explicit action opens a modal. */
   function definitionHoverTarget(target) {
     var candidate = target && target.closest && target.closest(
-      "a[data-type], .type-node[data-expression-type], .expr-node, .Agda a[href]"
+      "[data-hover-help], [data-hover-html], [data-hover-template], a[data-type], .type-node[data-expression-type], .expr-node, .Agda a[href]"
     );
-    return candidate && !candidate.classList.contains("type-definition-link")
+    return candidate && !candidate.matches(".type-definition-link, .syntax-doc-link")
       ? candidate : null;
   }
   function isDefinitionPopupAction(link) {
@@ -41,6 +77,7 @@
   /* ---- theme (light / dark / system) -------------------------------------- */
   var root = document.documentElement;
   function applyTheme(t) {
+    if (window.bedrockAppearance) { window.bedrockAppearance.apply(); return; }
     root.classList.remove("theme-light", "theme-dark");
     if (t === "light") root.classList.add("theme-light");
     else if (t === "dark") root.classList.add("theme-dark");
@@ -57,7 +94,7 @@
   document.addEventListener("DOMContentLoaded", function () {
     try { localStorage.setItem("bedrock-lang", cfg.lang); } catch (e) {}
     var btn = document.getElementById("theme-toggle");
-    if (btn) btn.addEventListener("click", function () {
+    if (btn && !window.bedrockAppearance) btn.addEventListener("click", function () {
       var next = isDarkTheme() ? "light" : "dark";
       try { localStorage.setItem("bedrock-theme", next); } catch (_) {}
       applyTheme(next);
@@ -83,16 +120,36 @@
     document.querySelectorAll("details.submodule-fold").forEach(function (details) {
       var heading = details.querySelector(":scope > summary.submodule-fold-heading");
       var content = details.querySelector(":scope > .submodule-fold-content");
+      enhanceDisclosure(details, heading, content, 260, "submodule-closing");
+    });
+  }
+
+  /* Shared by source submodules and the dynamically loaded learning route. */
+  function enhanceDisclosure(details, heading, content, duration, closingClass) {
       if (!heading || !content) return;
       var expanded = details.open;
       var animation = null;
+      closingClass = closingClass || "disclosure-closing";
+      details.dataset.foldExpanded = String(expanded);
+      details.addEventListener("toggle", function () {
+        if (!animation) {
+          expanded = details.open;
+          details.dataset.foldExpanded = String(expanded);
+        }
+      });
       heading.addEventListener("click", function (event) {
-        if (event.target.closest("a")) {
+        if (event.target.closest("a, button, input, select, textarea")) {
           event.stopPropagation();
           return;
         }
         if (!content.animate || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          if (animation) {
+            animation.cancel(); animation = null;
+            content.style.height = ""; content.style.overflow = "";
+            details.classList.remove(closingClass);
+          }
           expanded = !details.open;
+          details.dataset.foldExpanded = String(expanded);
           return;
         }
         event.preventDefault();
@@ -100,15 +157,16 @@
         var startOpacity = details.open ? parseFloat(getComputedStyle(content).opacity) : 0;
         if (animation) animation.cancel();
         expanded = !expanded;
+        details.dataset.foldExpanded = String(expanded);
         details.open = true;
         content.style.height = startHeight + "px";
         content.style.overflow = "hidden";
-        details.classList.toggle("submodule-closing", !expanded);
+        details.classList.toggle(closingClass, !expanded);
         var endHeight = expanded ? content.scrollHeight : 0;
         var motion = content.animate([
           { height: startHeight + "px", opacity: startOpacity },
           { height: endHeight + "px", opacity: expanded ? 1 : 0 }
-        ], { duration: 260, easing: "cubic-bezier(.2,.75,.25,1)", fill: "forwards" });
+        ], { duration: duration, easing: "cubic-bezier(.2,.75,.25,1)", fill: "forwards" });
         animation = motion;
         motion.onfinish = function () {
           if (animation !== motion) return;
@@ -117,11 +175,11 @@
           animation = null;
           content.style.height = "";
           content.style.overflow = "";
-          details.classList.remove("submodule-closing");
+          details.classList.remove(closingClass);
         };
       });
-    });
   }
+  window.bedrockEnhanceDisclosure = enhanceDisclosure;
 
   /* Page-edge controls are shared by chapters, the reading guide and library pages. */
   function initPageScroll() {
@@ -979,11 +1037,12 @@
       zh: "按住色块左右滑动以切换AST节点",
       ja: "色付き範囲を長押しして左右にスワイプするとASTノードを切り替えられます"
     }[cfg.lang] || "Hold a highlighted range and swipe sideways to switch AST nodes";
-    function definitionAction(href, name) {
+    function definitionAction(href, name, isModule) {
       var link = document.createElement("a");
       link.className = "type-definition-link";
       link.href = href;
       if (name) link.setAttribute("data-name", name);
+      if (isModule) link.setAttribute("data-module-target", "true");
       link.setAttribute("aria-label", definitionCopy);
       link.title = definitionCopy;
       link.innerHTML = definitionActionIcon;
@@ -1011,6 +1070,7 @@
     }
     function hoverIdentity(name) {
       return name && name.getAttribute && (
+        name.getAttribute("data-hover-help") || name.getAttribute("data-hover-template") || name.getAttribute("data-hover-html") ||
         name.getAttribute("data-expression-type") || name.getAttribute("data-type")
       );
     }
@@ -1049,6 +1109,8 @@
         entry.popup.remove();
         if (entry.activeName) entry.activeName.classList.remove("name-active");
         if (entry.activeNode) entry.activeNode.classList.remove("type-active");
+        entry.anchor.classList.remove("info-active");
+        entry.anchor.setAttribute("aria-expanded", "false");
       });
       if (removedRangeScope) setRangeScope(fallbackRangeScope());
     }
@@ -1073,8 +1135,7 @@
           || (candidate.popup.matches && candidate.popup.matches(":hover"));
       });
     }
-    function laterHideName(entry) {
-      if (!entry) return;
+    function scheduleNameClose(entry) {
       window.clearTimeout(entry.closeTimer);
       entry.closeTimer = scheduleHoverClose(function () {
         if (nameBranchHovered(entry)) {
@@ -1084,6 +1145,15 @@
         var index = namePopups.indexOf(entry);
         if (index >= 0) removeNamePopupsFrom(index);
       });
+    }
+    function laterHideName(entry) {
+      /* Entering a descendant cancels every ancestor timer. Leaving it must
+         re-arm the whole branch, even when the pointer never re-enters a parent. */
+      while (entry) {
+        scheduleNameClose(entry);
+        entry = entry.parent;
+      }
+      if (!popup.hidden) laterHide();
     }
     function positionNameEntry(entry) {
       if (!entry.popup.isConnected || !entry.anchor.isConnected) return;
@@ -1136,24 +1206,37 @@
       }
       var serial = ++nameRequest;
       var expressionType = name.getAttribute("data-expression-type");
+      var templateId = name.getAttribute("data-hover-template");
+      var template = templateId && document.getElementById(templateId);
+      var infoHTML = name.getAttribute("data-hover-html") || (template && template.innerHTML);
+      var helpKey = name.getAttribute("data-hover-help");
       var rawSpec = expressionType || name.getAttribute("data-type");
       var spec = rawSpec ? rawSpec.split("#") : null;
-      (spec ? fetchTypes(spec[0]) : Promise.resolve({})).then(function (types) {
+      (helpKey ? fetchTypes("$syntax") : spec ? fetchTypes(spec[0]) : Promise.resolve({})).then(function (types) {
         var expression = expressionType && spec && types.$expressions
           && types.$expressions[spec[1]];
-        var html = expressionType ? expression && expression.type
-          : spec && types[spec[1]];
-        var hasDefinition = name.hasAttribute("href");
+        var html = infoHTML || (helpKey && types[helpKey]) || (expressionType ? expression && expression.type
+          : spec && types[spec[1]]);
+        var hasDefinition = name.hasAttribute("href") && !infoHTML && !helpKey;
+        var hasChapterModal = name.hasAttribute("href") && name.getAttribute("data-hover-navigate") === "modal";
         if (serial !== nameRequest || !name.isConnected
             || (parent && namePopups.indexOf(parent) < 0)
-            || (!compactPointer.matches && name.matches && !name.matches(":hover"))
+            || (!compactPointer.matches && name.matches && !name.matches(":hover") && document.activeElement !== name)
             || (!html && !(compactPointer.matches && hasDefinition))) return;
         removeNamePopupsFrom(parentIndex + 1);
         var namePopup = document.createElement("div");
         namePopup.className = "hover-popup name-hover-popup Agda";
+        if (infoHTML || helpKey) {
+          namePopup.classList.add("info-hover-popup");
+          if ((template && template.hasAttribute("data-boilerplate-module")) || name.classList.contains("universe-notation"))
+            namePopup.classList.add("boilerplate-hover-popup");
+          name.classList.add("info-active");
+          name.setAttribute("aria-expanded", "true");
+        }
         namePopup.setAttribute("role", "dialog");
         namePopup.dataset.hoverDepth = String(parentIndex + 1);
         if (hasDefinition) namePopup.classList.add("has-definition-link");
+        if (hasChapterModal) namePopup.classList.add("has-definition-link");
         var nameValue = document.createElement("div");
         nameValue.className = "type-value Agda";
         if (html) nameValue.innerHTML = html;
@@ -1161,9 +1244,17 @@
         markTerminalHoverStops(nameValue, identity);
         if (isUniverseTypeText(nameValue.textContent))
           namePopup.classList.add("hover-terminal");
+        if (name.classList.contains("universe-notation")) {
+          var sourceLabel = document.createElement("div");
+          sourceLabel.className = "source-hover-label";
+          sourceLabel.textContent = {en: "Universe level · Original Agda", zh: "宇宙层级 · 原始 Agda", ja: "宇宙レベル · 元の Agda"}[cfg.lang] || "Universe level · Original Agda";
+          namePopup.appendChild(sourceLabel);
+        }
         namePopup.appendChild(nameValue);
         if (hasDefinition) namePopup.appendChild(definitionAction(name.href,
-          name.getAttribute("data-name") || name.textContent.trim()));
+          name.getAttribute("data-name") || name.textContent.trim(), name.classList.contains("Module")));
+        if (hasChapterModal) namePopup.appendChild(definitionAction(name.href,
+          name.getAttribute("data-name") || name.textContent.trim(), true));
         document.body.appendChild(namePopup);
         /* A leaf identifier and a structural type node are different targets.
            Reuse the source-code name highlight for the former; otherwise the
@@ -1277,7 +1368,8 @@
       /* Expression spans are emitted only inside Agda blocks, and only for
          applications. Inline/display Agda and a bare block identifier therefore
          keep the original name-type popup. */
-      return expressionAncestors(target).length > 0;
+      return !(target.closest && target.closest("[data-hover-help], [data-hover-html], [data-hover-template]"))
+        && expressionAncestors(target).length > 0;
     }
     function clearHighlight(scope) {
       leafActiveName = null;
@@ -1568,7 +1660,11 @@
     }
     function laterHide() {
       cancelHide();
-      hideTimer = scheduleHoverClose(hide);
+      hideTimer = scheduleHoverClose(function () {
+        if ((anchor && anchor.matches(":hover")) || popup.matches(":hover")
+            || (namePopups.length && nameBranchHovered(namePopups[0]))) return;
+        hide();
+      });
     }
     function activeSourceRangeContains(target) {
       if (!target) return false;
@@ -1600,6 +1696,7 @@
 
     document.addEventListener("mouseover", function (event) {
       if (compactPointer.matches) return;
+      if (event.target.closest && event.target.closest("[data-hover-help], [data-hover-html], [data-hover-template]")) return;
       activateTypeNode(event.target);
       if (!usesInspector(event.target)) return;
       var target = event.target.closest && event.target.closest(".expr-node, a[data-type]");
@@ -1629,6 +1726,10 @@
     });
     document.addEventListener("click", function (event) {
       if (compactPointer.matches) {
+        var info = event.target.closest && event.target.closest("[data-hover-help], [data-hover-html], [data-hover-template]");
+        if (info) {
+          event.preventDefault(); event.stopPropagation(); showName(info); return;
+        }
         /* Touch browsers normally activate on pointerdown. Keep click as a
            fallback for keyboard and synthetic activation. */
         var compactBlock = event.target.closest && event.target.closest("pre.Agda");
@@ -1687,7 +1788,7 @@
       }
       if (insideHoverPopup
           && !(target && target.matches(
-            "a[data-type], .type-node[data-expression-type]"
+            "[data-hover-help], [data-hover-html], [data-hover-template], a[href], a[data-type], .type-node[data-expression-type]"
           ))) return;
       if (!target) {
         pinned = false; hide(); hideName();
@@ -1695,7 +1796,7 @@
       }
       if (usesInspector(event.target)) {
         return;
-      } else if (target.matches("a[href], .type-node[data-expression-type]")) {
+      } else if (target.matches("[data-hover-help], [data-hover-html], [data-hover-template], a[href], .type-node[data-expression-type]")) {
         clearLevelGesture();
         pinned = false;
         /* Keep the popup containing this target visible.  The child hover is
@@ -1805,7 +1906,7 @@
     document.addEventListener("mouseover", function (event) {
       if (compactPointer.matches) return;
       var name = event.target.closest && event.target.closest(
-        "a[data-type], .type-node[data-expression-type]"
+        "[data-hover-help], [data-hover-html], [data-hover-template], a[data-type], .type-node[data-expression-type]"
       );
       if (!name || usesInspector(event.target)
           || (event.relatedTarget && name.contains(event.relatedTarget))) return;
@@ -1820,13 +1921,28 @@
     document.addEventListener("mouseout", function (event) {
       if (compactPointer.matches) return;
       var name = event.target.closest && event.target.closest(
-        "a[data-type], .type-node[data-expression-type]"
+        "[data-hover-help], [data-hover-html], [data-hover-template], a[data-type], .type-node[data-expression-type]"
       );
       if (name && !usesInspector(event.target)
           && (!event.relatedTarget || (!name.contains(event.relatedTarget)
               && !namePopupContains(event.relatedTarget)))) {
         var child = namePopups.find(function (entry) { return entry.anchor === name; });
         laterHideName(child);
+      }
+    });
+    document.addEventListener("focusin", function (event) {
+      var info = event.target.closest && event.target.closest("[data-hover-help], [data-hover-html], [data-hover-template]");
+      if (info) showName(info);
+    });
+    document.addEventListener("focusout", function (event) {
+      var entry = namePopups.find(function (item) { return item.anchor === event.target; });
+      if (entry) laterHideName(entry);
+    });
+    document.addEventListener("keydown", function (event) {
+      if ((event.key === "Enter" || event.key === " ") && event.target.matches("[data-hover-help], [data-hover-html], [data-hover-template]")) {
+        if (!compactPointer.matches && event.key === "Enter"
+            && event.target.matches('a[href][data-hover-navigate="modal"]')) return;
+        event.preventDefault(); showName(event.target);
       }
     });
     (modalReadingScroller() || window).addEventListener("scroll", function () {
@@ -1900,17 +2016,17 @@
     var copy = ({
       en: { title: "Definition", loading: "Loading definition…",
         missing: "The target definition could not be loaded from this page.", close: "Close",
-        back: "Back", forward: "Forward" },
+        back: "Back", forward: "Forward", jump: "Go to this location" },
       zh: { title: "定义", loading: "正在载入定义…",
         missing: "无法从该页面载入目标定义。", close: "关闭",
-        back: "后退", forward: "前进" },
+        back: "后退", forward: "前进", jump: "跳转进入" },
       ja: { title: "定義", loading: "定義を読み込んでいます…",
         missing: "このページから対象の定義を読み込めませんでした。", close: "閉じる",
-        back: "戻る", forward: "進む" }
+        back: "戻る", forward: "進む", jump: "この位置へ移動" }
     })[cfg.lang] || {
       title: "Definition", loading: "Loading definition…",
       missing: "The target definition could not be loaded from this page.", close: "Close",
-      back: "Back", forward: "Forward"
+      back: "Back", forward: "Forward", jump: "Go to this location"
     };
 
     function targetFor(link) {
@@ -1919,7 +2035,8 @@
       if (!raw) return null;
       var url;
       try { url = new URL(raw, document.baseURI); } catch (_) { return null; }
-      if (!url.hash || url.origin !== location.origin) return null;
+      if (url.origin !== location.origin) return null;
+      if (!url.hash && !link.matches(".Module, [data-module-target]")) return null;
       url.searchParams.delete("bedrock-modal");
       url.searchParams.delete("bedrock-modal-scroll");
       var spec = link.getAttribute("data-type");
@@ -1949,7 +2066,7 @@
       modal.setAttribute("aria-labelledby", titleId);
       var header = document.createElement("header");
       header.className = "definition-modal-header";
-      var title = document.createElement("a");
+      var title = document.createElement("div");
       title.className = "definition-modal-title";
       title.id = titleId;
       title.textContent = copy.title;
@@ -1972,20 +2089,26 @@
       closeButton.type = "button";
       closeButton.setAttribute("aria-label", copy.close);
       closeButton.textContent = "×";
+      var jump = document.createElement("a");
+      jump.className = "definition-modal-jump";
+      jump.setAttribute("aria-label", copy.jump);
+      jump.title = copy.jump;
+      jump.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true">' +
+        '<path d="M13 4h7v16h-7M3 12h12M10 7l5 5-5 5"/></svg>';
       var body = document.createElement("div");
       body.className = "definition-modal-body";
-      body.setAttribute("aria-live", "polite");
       historyActions.appendChild(back);
       historyActions.appendChild(forward);
       header.appendChild(historyActions);
       header.appendChild(title);
+      header.appendChild(jump);
       header.appendChild(closeButton);
       modal.appendChild(header);
       modal.appendChild(body);
       backdrop.appendChild(modal);
       document.body.appendChild(backdrop);
       view = { backdrop: backdrop, modal: modal, opener: opener, title: title,
-        body: body, back: back, forward: forward, frame: null,
+        body: body, back: back, forward: forward, jump: jump, frame: null,
         frameSizeObserver: null };
       document.body.classList.add("definition-modal-open");
       closeButton.addEventListener("click", close);
@@ -2013,41 +2136,97 @@
       var entry = history[historyIndex];
       var request = ++loadRequest;
       view.title.textContent = entry.label;
-      view.title.href = entry.target.url.href;
+      // Use the history entry's definition anchor, never the iframe's scroll
+      // position or its fragment-free internal loading URL.
+      view.jump.href = entry.target.url.href;
       view.back.disabled = historyIndex === 0;
       view.forward.disabled = historyIndex === history.length - 1;
-      view.body.textContent = copy.loading;
+      view.body.setAttribute("aria-busy", "true");
+      var loading = document.createElement("div");
+      loading.className = "definition-modal-loading";
+      loading.setAttribute("role", "status");
+      var indicator = document.createElement("span");
+      indicator.className = "definition-modal-loading-indicator";
+      indicator.setAttribute("aria-hidden", "true");
+      var loadingText = document.createElement("span");
+      loadingText.textContent = copy.loading;
+      loading.append(indicator, loadingText);
       var frame = document.createElement("iframe");
       frame.className = "definition-modal-frame";
       frame.title = entry.label;
+      frame.style.colorScheme = isDarkTheme() ? "dark" : "light";
+      frame.setAttribute("aria-hidden", "true");
+      frame.setAttribute("inert", "");
+      var revealed = false, failed = false;
+      function isCurrentFrame() {
+        return view && request === loadRequest && view.frame === frame;
+      }
+      function showMissing() {
+        if (!isCurrentFrame()) return;
+        failed = true;
+        view.body.setAttribute("aria-busy", "false");
+        loading.classList.add("is-error");
+        loadingText.textContent = copy.missing;
+        indicator.remove();
+        view.body.replaceChildren(loading);
+      }
+      function revealFrame() {
+        if (revealed || failed || !isCurrentFrame()) return;
+        revealed = true;
+        frame.classList.add("is-ready");
+        frame.removeAttribute("aria-hidden");
+        frame.removeAttribute("inert");
+        view.body.setAttribute("aria-busy", "false");
+        loading.remove();
+      }
       var frameUrl = new URL(entry.target.url.href);
       frameUrl.searchParams.set("bedrock-modal", "1");
       /* A frame URL with a fragment starts a second, native anchor scroll which
          can race the code-block alignment, especially in mobile WebKit. */
       frameUrl.hash = "";
       frame.addEventListener("load", function () {
-        if (!view || request !== loadRequest || view.frame !== frame) return;
+        if (!isCurrentFrame()) return;
         var frameDocument, loadedUrl;
         try {
           frameDocument = frame.contentDocument;
           loadedUrl = new URL(frame.contentWindow.location.href);
-        } catch (_) { return; }
+        } catch (_) { showMissing(); return; }
         if (definitionPageKey(loadedUrl) !== definitionPageKey(entry.target.url)) {
-          view.body.textContent = copy.missing;
+          showMissing();
           return;
         }
         var id;
         try { id = decodeURIComponent(entry.target.url.hash.slice(1)); }
         catch (_) { id = entry.target.url.hash.slice(1); }
-        var target = frameDocument && frameDocument.getElementById(id);
+        var target = frameDocument && (id ? frameDocument.getElementById(id)
+          : frameDocument.querySelector("article h1, h1, pre.Agda"));
         if (!target) {
-          view.body.textContent = copy.missing;
+          showMissing();
           return;
         }
-        var targetBlock = target.closest("pre.Agda") || target;
+        /* Match the reader's current theme before exposing the new document.
+           Opacity keeps layout measurable without painting the iframe's blank canvas. */
+        frameDocument.documentElement.classList.remove("theme-light", "theme-dark");
+        frameDocument.documentElement.classList.add(isDarkTheme() ? "theme-dark" : "theme-light");
+        if (window.bedrockAppearance) window.bedrockAppearance.syncFrame(frame);
+        var chapterConfig = frame.contentWindow.bedrock || {};
+        var chapterHeading = frameDocument.querySelector("article h1, h1");
+        var chapterText = chapterConfig.title || (chapterHeading ? chapterHeading.textContent.trim() : entry.target.module);
+        var moduleName = chapterConfig.chapter || entry.target.module;
+        var definitionName = entry.label.indexOf(moduleName + ".") === 0
+          ? entry.label.slice(moduleName.length + 1) : entry.label;
+        var titleName = document.createElement("code");
+        titleName.className = "Agda";
+        var titleToken = document.createElement("span");
+        titleToken.className = target.getAttribute("class") || "";
+        titleToken.textContent = definitionName;
+        titleName.appendChild(titleToken);
+        view.title.replaceChildren(document.createTextNode(chapterText + " "), titleName);
+        frame.title = chapterText + " " + definitionName;
+        var targetBlock = target.closest("pre.Agda, h1") || target;
         var scroller = sizeModalReadingScroller(frameDocument, view.body);
         if (!scroller) {
-          view.body.textContent = copy.missing;
+          showMissing();
           return;
         }
         var alignmentRun = 0;
@@ -2066,6 +2245,7 @@
               frame.contentWindow.requestAnimationFrame(function () {
                 settle(remaining - 1);
               });
+            else revealFrame();
           }
           settle(8);
         }
@@ -2080,7 +2260,9 @@
           frame.contentWindow.addEventListener(type, stopAlignment,
             { capture: true, passive: type !== "keydown", once: true });
         });
-        requestAlignment();
+        /* Allow iframe styles and the explicit scroller size to take effect
+           before aligning and replacing the loading surface. */
+        frame.contentWindow.requestAnimationFrame(requestAlignment);
         if (frameDocument.fonts && frameDocument.fonts.ready) {
           frameDocument.fonts.ready.then(function () {
             frame.contentWindow.requestAnimationFrame(requestAlignment);
@@ -2106,10 +2288,10 @@
         }
         frame.contentWindow.addEventListener("resize", requestAlignment, { passive: true });
       });
+      frame.addEventListener("error", showMissing);
       view.frame = frame;
       frame.src = frameUrl.href;
-      view.body.textContent = "";
-      view.body.appendChild(frame);
+      view.body.replaceChildren(loading, frame);
     }
     function qualifiedLabel(target, name) {
       return name === target.module || name.indexOf(target.module + ".") === 0
@@ -2134,8 +2316,13 @@
       if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
       var clickedLink = event.target.closest && event.target.closest("a[href]");
       if (!clickedLink) return;
+      if (clickedLink.matches("[data-hover-help], [data-hover-html], [data-hover-template]")) {
+        if (compactPointer.matches || clickedLink.dataset.hoverNavigate !== "modal") {
+          event.preventDefault(); return;
+        }
+      }
       var definitionLink = clickedLink.matches(
-        ".Agda a[href], .type-definition-link[href]"
+        '.Agda a[href], .type-definition-link[href], [data-hover-navigate="modal"]'
       ) ? clickedLink : null;
       var target = targetFor(definitionLink);
       if (!target) {
@@ -2224,13 +2411,13 @@
     }
     function occurrenceLink(target) {
       var link = target.closest && target.closest(
-        "pre.Agda a[href], span.Agda a[href], .type-value a[href]"
+        ".Agda a[href]"
       );
       return link && !link.hasAttribute("data-hover-stop") ? link : null;
     }
     function set(key, on) {
       document.querySelectorAll(
-        "pre.Agda a[href], span.Agda a[href], .type-value a[href]"
+        ".Agda a[href]"
       ).forEach(function (link) {
           if (occurrenceKey(link) === key) link.classList.toggle("occ", on);
         });
@@ -2248,51 +2435,95 @@
     });
   }
 
-  /* ---- search (fetch search.json once, simple fuzzy) ---------------------- */
-  function fuzzy(q, s) {
-    q = q.toLowerCase(); s = s.toLowerCase();
-    if (s.indexOf(q) >= 0) return 100 - (s.length - q.length) * 0.1;
-    var i = 0, score = 0;
-    for (var j = 0; j < s.length && i < q.length; j++)
-      if (s[j] === q[i]) { i++; score += 1; }
-    return i === q.length ? score : -1;
-  }
+  /* Search chapters as well as Agda names; share one retryable index request. */
   function initSearch() {
-    var box = document.getElementById("search-box");
-    var out = document.getElementById("search-results");
+    const box = document.getElementById('search-box'), out = document.getElementById('search-results');
     if (!box || !out) return;
-    var data = null, sel = -1, shown = [];
-    function load() {
-      if (data) return Promise.resolve(data);
-      return fetch(cfg.baseUrl + "/" + cfg.lang + "/search.json")
-        .then(function (r) { return r.json(); })
-        .then(function (d) { data = d; return d; }).catch(function () { return []; });
+    const words = {
+      en: { loading: 'Searching…', empty: 'No matching content.', error: 'Search could not load. Tap here to retry.', chapter: 'Chapter', definition: 'Definition' },
+      zh: { loading: '正在搜索…', empty: '没有匹配的内容。', error: '搜索暂时无法载入，点击重试。', chapter: '章节', definition: '定义' },
+      ja: { loading: '検索中…', empty: '一致する内容はありません。', error: '検索を読み込めません。クリックして再試行。', chapter: '章', definition: '定義' }
+    }[cfg.lang] || { loading: 'Searching…', empty: 'No results.', error: 'Retry search', chapter: 'Chapter', definition: 'Definition' };
+    let selected = -1, shown = [], revision = 0, worker = null, jobId = 0;
+    const jobs = new Map();
+    box.setAttribute('role', 'combobox'); box.setAttribute('aria-autocomplete', 'list');
+    box.setAttribute('aria-controls', out.id); box.setAttribute('aria-expanded', 'false');
+    const status = document.createElement('div'); status.className = 'sr-only'; status.setAttribute('role', 'status');
+    box.parentNode.append(status);
+    function close() { revision++; out.hidden = true; box.setAttribute('aria-expanded', 'false'); box.removeAttribute('aria-activedescendant'); }
+    function open() { out.hidden = false; box.setAttribute('aria-expanded', 'true'); }
+    function message(text, retry = false) {
+      shown = []; selected = -1; box.removeAttribute('aria-activedescendant');
+      out.replaceChildren(); const item = document.createElement(retry ? 'button' : 'p');
+      item.className = 'search-message'; item.textContent = text;
+      if (retry) { item.type = 'button'; item.addEventListener('click', run); }
+      out.append(item); status.textContent = text; open();
     }
-    function render(q) {
-      if (!q) { out.hidden = true; return; }
-      shown = data.map(function (e) { return { e: e, s: fuzzy(q, e.name) }; })
-        .filter(function (x) { return x.s >= 0; })
-        .sort(function (a, b) { return b.s - a.s; }).slice(0, 25).map(function (x) { return x.e; });
-      out.innerHTML = shown.map(function (e, i) {
-        return '<a class="res' + (i === sel ? ' sel' : '') + '" href="' + e.href + '">' +
-          '<span class="nm">' + esc(e.name) + '</span> ' +
-          '<span class="mod">' + esc(e.module) + '</span>' +
-          (e.type ? '<br><span class="ty">' + esc(e.type) + '</span>' : '') + '</a>';
-      }).join("");
-      out.hidden = shown.length === 0;
+    function load(query) {
+      if (!worker) {
+        const script = [...document.scripts].find(item => /\/bedrock\.js(?:\?|$)/.test(item.src));
+        const version = script ? new URL(script.src).search : '';
+        worker = new Worker(cfg.baseUrl + '/static/search-worker.js' + version);
+        worker.onmessage = event => {
+          const job = jobs.get(event.data.id); if (!job) return;
+          jobs.delete(event.data.id);
+          if (event.data.error) job.reject(new Error('Search unavailable')); else job.resolve(event.data.results);
+        };
+        worker.onerror = () => {
+          worker.terminate(); worker = null;
+          jobs.forEach(job => job.reject(new Error('Search unavailable'))); jobs.clear();
+        };
+      }
+      return new Promise((resolve, reject) => {
+        const id = ++jobId; jobs.set(id, { resolve, reject });
+        worker.postMessage({ id, query, lang: cfg.lang, url: new URL(cfg.baseUrl + '/search-content.json', location.href).href });
+      });
     }
-    function esc(s) { var d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
-    box.addEventListener("input", function () { sel = -1; load().then(function () { render(box.value.trim()); }); });
-    box.addEventListener("keydown", function (e) {
-      if (out.hidden) return;
-      if (e.key === "ArrowDown") { sel = Math.min(sel + 1, shown.length - 1); render(box.value.trim()); e.preventDefault(); }
-      else if (e.key === "ArrowUp") { sel = Math.max(sel - 1, 0); render(box.value.trim()); e.preventDefault(); }
-      else if (e.key === "Enter" && sel >= 0) { location.href = shown[sel].href; }
-      else if (e.key === "Escape") { out.hidden = true; }
+    function select(index) {
+      selected = index;
+      [...out.querySelectorAll('.res')].forEach((item, i) => {
+        item.classList.toggle('sel', i === selected); item.setAttribute('aria-selected', String(i === selected));
+      });
+      const active = out.querySelector('.sel');
+      if (active) { box.setAttribute('aria-activedescendant', active.id); active.scrollIntoView({ block: 'nearest' }); }
+      else box.removeAttribute('aria-activedescendant');
+    }
+    async function run() {
+      const request = ++revision, q = box.value.trim().slice(0, 200); selected = -1;
+      if (!q) { close(); return; }
+      message(words.loading);
+      let matches;
+      try { matches = await load(q); } catch (_) { if (request === revision) message(words.error, true); return; }
+      if (request !== revision) return;
+      shown = matches.map(entry => ({ ...entry,
+        href: cfg.baseUrl + '/' + (entry.lang === '*' ? cfg.lang : entry.lang) + '/' + entry.href }));
+      if (!shown.length) { message(words.empty); return; }
+      out.replaceChildren(...shown.map((entry, i) => {
+        const a = document.createElement('a'); a.className = 'res'; a.href = entry.href;
+        a.id = 'search-result-' + i; a.setAttribute('role', 'option'); a.setAttribute('aria-selected', 'false');
+        const name = document.createElement('span'); name.className = 'nm'; name.textContent = entry.name;
+        const mod = document.createElement('span'); mod.className = 'mod';
+        mod.textContent = (entry.lang === '*' ? 'Agda' : {en: 'English', zh: '中文', ja: '日本語'}[entry.lang]) + ' · ' + entry.module;
+        a.append(name, mod);
+        if (entry.type) { const type = document.createElement('span'); type.className = 'ty'; type.textContent = entry.type; a.append(type); }
+        return a;
+      }));
+      box.removeAttribute('aria-activedescendant'); status.textContent = shown.length + ' ' + words.chapter + ' / ' + words.definition;
+      open();
+    }
+    box.addEventListener('input', event => { if (!event.isComposing) run(); });
+    box.addEventListener('compositionend', run);
+    box.addEventListener('focus', () => { if (box.value.trim()) run(); });
+    box.addEventListener('keydown', event => {
+      if (event.isComposing) return;
+      if (event.key === 'Escape') { close(); event.preventDefault(); return; }
+      if (out.hidden || !shown.length) return;
+      if (event.key === 'ArrowDown') { select(Math.min(selected + 1, shown.length - 1)); event.preventDefault(); }
+      else if (event.key === 'ArrowUp') { select(Math.max(selected - 1, 0)); event.preventDefault(); }
+      else if (event.key === 'Enter') { event.preventDefault(); location.href = shown[Math.max(selected, 0)].href; }
     });
-    document.addEventListener("click", function (e) {
-      if (!out.contains(e.target) && e.target !== box) out.hidden = true;
-    });
+    document.addEventListener('click', event => { if (!out.contains(event.target) && event.target !== box) close(); });
+    box.parentNode.addEventListener('focusout', event => { if (!box.parentNode.contains(event.relatedTarget)) close(); });
   }
 })();
 

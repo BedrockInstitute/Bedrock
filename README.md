@@ -27,7 +27,7 @@ The first, self-contained target was a full mechanization of
 > theorem internal to the host.
 
 **It is proved.** `L⊨GCH` and `L⊨ZFC` are both stated in
-[src/Milestones.lagda.md](src/Milestones.lagda.md), each on `LEM (ℓ-suc ℓ)` and
+[src/Origin.lagda.md](src/Origin.lagda.md), each on `LEM (ℓ-suc ℓ)` and
 nothing else: internal cardinals, internal injections, the model's own power set.
 The proof term is `L⊨GCH` in `src/L/GCH/Theorem.lagda.md`.
 

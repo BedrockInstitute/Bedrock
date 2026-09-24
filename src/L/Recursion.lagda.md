@@ -1,25 +1,59 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # Internalizing recursive definitions in L
+<!--zh-->
+# L 中递归定义的内部化
+<!--ja-->
+# L における再帰的定義の内部化
+<!--/-->
+
+```agda
+open import Base.Prelude
+open import Base.Classical using ( LEM )
+```
+
+<!--en-->
+Fix a universe level `ℓ`{.Agda} and assume `lem : LEM (ℓ-suc ℓ)`{.Agda}. This hypothesis supplies a decision for each proposition at that level; it remains an explicit parameter of the constructions below.
+<!--zh-->
+固定宇宙层级 `ℓ`{.Agda}，并假设 `lem : LEM (ℓ-suc ℓ)`{.Agda}。这个假设为相应层级的每个命题提供判定，并始终作为下文构造的显式参数。
+<!--ja-->
+宇宙レベル `ℓ`{.Agda} を固定し、`lem : LEM (ℓ-suc ℓ)`{.Agda} を仮定する。この仮定は該当するレベルの各命題に判定を与え、以下の構成の明示的なパラメータとして保たれる。
+<!--/-->
+
+```agda
+module L.Recursion {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+```
+
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax using ( Formula )
+import FOL.Absoluteness
+import FOL.ZFModel
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import L.Constructible {ℓ}
+  using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset-mono )
+open import L.Ordinal {ℓ} using ( boundingOrd )
+open import L.Stage {ℓ} lem using ( stage; stage-ord; stage-mem )
+open import L.Axioms.Basic {ℓ} using ( LsetS )
+open import L.Axioms.Full {ℓ} lem using ( hasReplacementL )
+```
+
+<!--en-->
 
 A recursive definition may first be given in the metatheory, while its values are later needed as a set of `L`. The replacement theorem supplies this passage. Given a domain in `L` and an object-language formula that has exactly one value at every point of the domain, it forms the set of all those values. The graph formula retains the dependence on the index; the set obtained by replacement is the value range, so equal values arising at different indices occur only once.
 <!--zh-->
-# L 中递归定义的内部化
 
 递归定义可以先在元理论中给出，而它的取值随后需要组成 `L` 中的集合。替换定理实现这一转换。给定 `L` 中的定义域，以及一条在定义域每一点恰有一个取值的对象语言公式，替换便形成所有这些取值构成的集合。图公式保留取值对索引的依赖；替换所得集合只是值域，因此不同索引产生的相同取值只出现一次。
 <!--ja-->
-# L における再帰的定義の内部化
 
 再帰的定義をまずメタ理論で与え、その値を後に `L` の集合として必要とすることがある。この移行を与えるのが置換定理である。`L` の定義域と、その各点で値をただ一つもつ対象言語の論理式から、置換はすべての値からなる集合を作る。添字への依存はグラフの論理式が保持する。置換で得られる集合は値域なので、異なる添字から同じ値が生じても一度だけ現れる。
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-open import Base.Prelude
 open import Cubical.Foundations.Prelude using ( isPropIsContr )
-open import Base.Classical using ( LEM )
-
-module L.Recursion {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
 <!--en-->
@@ -30,14 +64,6 @@ The relation defining the values is written as an object-language formula with t
 値を定める関係は、二つの自由変数をもつ対象言語の論理式で書き、値、添字の順に読む。その充足関係は構成可能構造で解釈される。これにより、置換は `L` の内部の関係を扱いながら、一意性の証明はメタ理論で利用できる。
 <!--/-->
 
-```agda
-open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using ( Formula )
-import FOL.Absoluteness
-import FOL.ZFModel
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-```
-
 <!--en-->
 The construction also uses the stage structure of `L`. Every constructible set appears at some stage, and the stages containing a family indexed by a type in `Type ℓ` can be bounded by one ordinal. This produces a single set containing the whole family when a convenient domain bound is needed.
 <!--zh-->
@@ -46,13 +72,6 @@ The construction also uses the stage structure of `L`. Every constructible set a
 構成には `L` の段階構造も用いる。各構成可能集合はある段階に現れ、`Type ℓ` の型で添字づけられた族の各段階は一つの順序数で抑えられる。共通の定義域の上界が必要なとき、これにより族全体を含む一つの集合が得られる。
 <!--/-->
 
-```agda
-open import L.Constructible {ℓ}
-  using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset-mono )
-open import L.Ordinal {ℓ} using ( boundingOrd )
-open import L.Stage {ℓ} lem using ( stage; stage-ord; stage-mem )
-```
-
 <!--en-->
 Replacement in `L` applies to an arbitrary formula of the required arity. At this point no additional proof that the formula is Δ₀, or that all of its constants lie in a chosen stage, is required from the caller; those issues were handled in the proof of the general replacement theorem. Paths between dependent pairs with propositional second components will express the uniqueness of values.
 <!--zh-->
@@ -60,11 +79,6 @@ Replacement in `L` applies to an arbitrary formula of the required arity. At thi
 <!--ja-->
 `L` の置換は、必要な項数をもつ任意の論理式に適用できる。ここでそれを用いる側は、論理式が Δ₀ であることや、すべての定数が選んだ段階に属することを別に証明する必要はない。それらは一般の置換定理の証明で処理されている。第二成分が命題である依存対の間のパスを用いて、値の一意性を表す。
 <!--/-->
-
-```agda
-open import L.Axioms.Basic {ℓ} using ( LsetS )
-open import L.Axioms.Full {ℓ} lem using ( hasReplacementL )
-```
 
 <!--en-->
 For a predicate on the constructible carrier, `SetOf` is the type of a set together with a membership specification realizing that predicate. This is the form in which replacement returns the value range. Propositional truncation records an originating index without choosing one.
@@ -75,7 +89,6 @@ For a predicate on the constructible carrier, `SetOf` is the type of a set toget
 <!--/-->
 
 ```agda
-
 open hPropStructure 𝒮ʟ
 
 module ModelL = FOL.ZFModel 𝒮ʟ
@@ -187,7 +200,6 @@ For a recursion `R`, let `Image y` mean that some index `x` belongs to the domai
 再帰 `R` に対して、`Image y` を、定義域に属する添字 `x` が存在してグラフが `x` と `y` を関係づけること、とする。この存在は命題的に切り詰められるので、`y` が値として現れることだけを記録する。置換はこの述語を集合として実現し、添字と値の対の集合を作るわけではない。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -268,7 +280,6 @@ Functionality also determines a metatheoretic value at every member of the domai
 ```
 </div>
 </details>
-
 
 <!--en-->
 ## From unique existence to functionality
@@ -386,7 +397,6 @@ Applying the preceding conversion to a `Definition` produces its value range as 
 先の変換を `Definition` に適用すると、その値域が `L` の集合として得られる。関数はメタ理論上の記述のままであるが、グラフの論理式と置換により、指定した定義域上のすべての値が内部集合をなすことが証明される。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -397,8 +407,7 @@ module Image (D : Definition) where
 
 ```agda
   open Definition D public
-  private
-    module R = Of (asRecursion D)
+  private module R = Of (asRecursion D)
 ```
 
 <!--en-->
@@ -415,7 +424,6 @@ The module exposes this range under the name `table`. No separate membership lem
 ```
 </div>
 </details>
-
 
 <!--en-->
 ## Scope of the construction

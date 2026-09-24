@@ -65,14 +65,18 @@ def ancestors(graph, module):
 
 
 def prerequisite_occurrences(text, entry, language, module):
-    """Bare uses require a prerequisite; explicit cross-chapter links are lookups."""
+    """Bare uses require prior introduction; explicit references are lookups.
+
+    A lookup may point forward within the same chapter, not just to another
+    chapter. Its label and unique introduction are still validated by check().
+    """
     protected = build_protected(text)
     for reference in TERM_MARK_RE.finditer(text):
         # Attributes and concept IDs are metadata, not additional uses of the label.
         protected[reference.end(1):reference.end()] = [True] * (reference.end() - reference.end(1))
         other_concept = reference.group(3) != entry['id']
-        cross_chapter_lookup = reference.group(2) == 'ref' and module != entry['introduced_in']
-        if other_concept or cross_chapter_lookup:
+        explicit_lookup = reference.group(2) == 'ref'
+        if other_concept or explicit_lookup:
             protected[reference.start():reference.end()] = [True] * len(reference[0])
     return [match for match in term_pattern(entry, language).finditer(text)
             if not protected[match.start()]]

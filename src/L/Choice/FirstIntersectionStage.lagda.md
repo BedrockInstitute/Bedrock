@@ -1,3 +1,7 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # The first stage meeting a set
 <!--zh-->
@@ -5,6 +9,11 @@
 <!--ja-->
 # 集合と交わる最初の段階
 <!--/-->
+
+```agda
+open import Base.Prelude
+open import Base.Classical using ( LEM )
+```
 
 <!--en-->
 This chapter provides two ingredients of the internal choice construction. The
@@ -36,12 +45,21 @@ name comparison has a common arena.
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-open import Base.Prelude
-open import Base.Classical using ( LEM )
-
 module L.Choice.FirstIntersectionStage {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+```
+
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-irrefl )
+open import V.Model {ℓ} using ( ∈sucV-elim; self∈sucV )
+open import L.Constructible {ℓ}
+  using ( IsOrd; isPropIsOrd; isL; Lset; Lset-layer; Lset-out
+        ; Lset-mono; layer-trans )
+open import L.Ordinal {ℓ} using ( mem-ord; suc-ord; bound2; ω-ord )
+open import L.Ordinal.Stages {ℓ} lem using ( suc∈or≡ )
+open import L.Stage {ℓ} lem
+  using ( isLeastOrd; stage; stage-ord; stage-mem )
+open import L.Axioms.Basic {ℓ} using ( Lset-suc )
 ```
 
 <!--en-->
@@ -53,13 +71,6 @@ setting.
 <!--ja-->
 本章は一つの仮定のもとで進む。モデルのレベルの後続での排中律の実例であり、以下の主張はすべてその設定の中でなされる。
 <!--/-->
-
-```agda
-
-open import FOL.ZFStructure using ( module hPropStructure )
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-irrefl )
-open import V.Model {ℓ} using ( ∈sucV-elim; self∈sucV )
-```
 
 <!--en-->
 The question of the chapter is one about first appearances. A constructible set
@@ -73,12 +84,6 @@ member of a successor is a member of the ordinal or the ordinal itself.
 本章の問いは、はじめての出現についてのものである。構成可能な集合は、いつか塔に入る。塔の住む周囲の階層は反射しない所属をもち、だからどの順序数も自分自身を含まず、後者の性質も分かっている。順序数は自分の後者の中に坐り、後者の要素はその順序数の要素か、その順序数自身のどちらかである。
 <!--/-->
 
-```agda
-open import L.Constructible {ℓ}
-  using ( IsOrd; isPropIsOrd; isL; Lset; Lset-layer; Lset-out
-        ; Lset-mono; layer-trans )
-```
-
 <!--en-->
 The constructible side answers with its tower `Lset`{.Agda}, indexed by
 ordinals, which are sets of the hierarchy, never by universe levels of the
@@ -90,14 +95,6 @@ members across layers.
 <!--ja-->
 構成可能の側は、塔 `Lset`{.Agda} で答える。塔は順序数で添字づけられ、順序数は階層の集合であり、ホストの宇宙レベルではない。順序数性 `IsOrd`{.Agda} はそれ自体命題であり、塔には層の関係、外向きの分解、単調性があり、推移性が層の間で要素を運ぶ。
 <!--/-->
-
-```agda
-open import L.Ordinal {ℓ} using ( mem-ord; suc-ord; bound2; ω-ord )
-open import L.Ordinal.Stages {ℓ} lem using ( suc∈or≡ )
-open import L.Stage {ℓ} lem
-  using ( isLeastOrd; stage; stage-ord; stage-mem )
-open import L.Axioms.Basic {ℓ} using ( Lset-suc )
-```
 
 <!--en-->
 The argument turns on comparisons and on stages. Comparing an ordinal below a
@@ -113,8 +110,6 @@ enters the tower at all.
 <!--ja-->
 議論を支えるのは、比較と段階である。段階の下の順序数を段階そのものと比べることが、その段階がある後者を行き過ぎていないかの判定である。順序数の要素も後者もまた順序数である。各構成可能集合はその最初の順序数を携え、順序数性と所属とともに渡され、極小性は反駁として述べられる。二つの順序数には共通の上界がある。そして後者の恒等式は、次の段階がちょうど前の段階の定義可能な部分集合であると言う。何ものかが塔に入るのは、まさにこの一歩によってである。
 <!--/-->
-
-
 
 <!--en-->
 The argument is written in three propositional moves: a split into cases, a
@@ -153,7 +148,6 @@ The hierarchy's infinity construction supplies both the von Neumann successor `s
 <!--/-->
 
 ```agda
-
 open hPropStructure 𝒮ᵥ
 ```
 
@@ -229,7 +223,6 @@ needs, and the equation is what pins `δ` to `σ`.
 <!--/-->
 
 ```agda
-
 private
   cycle₂ : (a b : S) → IsOrd a → ⟨ a ∈ˢ b ⟩ → ⟨ b ∈ˢ a ⟩ → ⊥₀
   cycle₂ a b orda a∈b b∈a = ∈-irrefl a (orda .fst a∈b b∈a)
@@ -247,7 +240,6 @@ containing each other.
 <!--/-->
 
 ```agda
-
   mem-branch : (δ δ' : S) → IsOrd δ → ⟨ δ' ∈ˢ sucV δ ⟩ → ⟨ δ ∈ˢ δ' ⟩ → δ ≡ δ'
   mem-branch δ δ' ordδ δ'∈sδ δ∈δ' =
     ∈sucV-elim {A = δ} {x = δ'} (setIsSet δ δ') δ'∈sδ
@@ -267,7 +259,6 @@ elimination returns exactly that.
 <!--/-->
 
 ```agda
-
 ord-suc-inj : (δ δ' : S) → IsOrd δ → sucV δ ≡ sucV δ' → δ ≡ δ'
 ord-suc-inj δ δ' ordδ e =
   ∈sucV-elim {A = δ'} {x = δ} (setIsSet δ δ') δ∈sδ'
@@ -306,7 +297,6 @@ reverse.
 <!--/-->
 
 ```agda
-
 isPropPredOf : (σ : S) → isProp (Σ[ δ ∈ S ] IsPredOf σ δ)
 isPropPredOf σ (δ , (ordδ , e)) (δ' , (ordδ' , e')) =
   Σ≡Prop (λ d → isProp× (isPropIsOrd d) (setIsSet (sucV d) σ))
@@ -325,17 +315,13 @@ proposition-valued target is always legitimate.
 したがって、同じ順序数のどの二つの直前の段階も等しくなる。第一成分は単射性により一致し、残りのデータは命題なので、直前の段階の型全体が命題になる。これこそ、単に存在するだけの直前の段階を確定したものとして使える理由である。切り詰めを命題値の対象へほどくのは、つねに正当である。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-
 module _ (P : S → hProp (ℓ-suc ℓ)) where
 ```
 </summary>
 <div class="submodule-fold-content">
-
-
 
 <!--en-->
 The least-stage argument is now run once for every property of ordinals at
@@ -347,7 +333,6 @@ once: the property is a parameter, and nothing below ever reads into it.
 <!--/-->
 
 ```agda
-
   Carved : S → Type (ℓ-suc ℓ)
   Carved σ = Σ[ δ ∈ S ] (⟨ δ ∈ˢ σ ⟩ × ⟨ P (sucV δ) ⟩)
 ```
@@ -364,7 +349,6 @@ least stage cannot be far above `δ`, for the property already holds at
 <!--/-->
 
 ```agda
-
   private
     below-case : (σ δ : S) → isLeastOrd P σ → IsOrd δ → ⟨ P (sucV δ) ⟩
                → ⟨ sucV δ ∈ˢ σ ⟩ → sucV δ ≡ σ
@@ -385,7 +369,6 @@ below 分支处理「后继仍严格低于最小层」的情形。极小性以�
 <!--/-->
 
 ```agda
-
     same-case : (σ δ : S) → sucV δ ≡ σ → sucV δ ≡ σ
     same-case σ δ e = e
 ```
@@ -400,7 +383,6 @@ the least stage is what the case was handed.
 <!--/-->
 
 ```agda
-
     atCarve : (σ : S) → IsOrd σ → isLeastOrd P σ
             → Carved σ → Σ[ δ ∈ S ] IsPredOf σ δ
     atCarve σ ordσ least (δ , (δ∈σ , m)) = δ , (ordδ , suc≡σ)
@@ -446,7 +428,6 @@ Given `δ ∈ σ`, `suc∈or≡` leaves exactly two possibilities for its succes
 <!--/-->
 
 ```agda
-
   predOf : (σ : S) → IsOrd σ → isLeastOrd P σ → ∥ Carved σ ∥₁
          → Σ[ δ ∈ S ] IsPredOf σ δ
   predOf σ ordσ least = rec₁ (isPropPredOf σ) (atCarve σ ordσ least)
@@ -464,7 +445,6 @@ truncation hands over, the answer is the same definite predecessor.
 <!--/-->
 
 ```agda
-
   carveAt : (σ z : S) → ⟨ z ∈ˢ Lset σ ⟩
           → ((δ : S) → ⟨ z ∈ˢ Lset (sucV δ) ⟩ → ⟨ P (sucV δ) ⟩)
           → ∥ Carved σ ∥₁
@@ -491,7 +471,6 @@ successor identity.
 ```
 </div>
 </details>
-
 
 <!--en-->
 The tower decomposes the membership of `z` truncatedly: some stage `δ` below
@@ -565,7 +544,6 @@ membership from the set into the level that holds the set.
 <!--/-->
 
 ```agda
-
 stage-below₂ : (a : S) (p : ⟨ isL a ⟩) (x y : S) → ⟨ y ∈ˢ x ⟩ → ⟨ x ∈ˢ a ⟩
              → ⟨ y ∈ˢ Lset (stage a p) ⟩
 stage-below₂ a p x y y∈x x∈a =
@@ -582,7 +560,6 @@ Transitivity applied twice reaches two levels down: a member of a member of
 <!--/-->
 
 ```agda
-
 stageBound : (a : S) (p : ⟨ isL a ⟩)
            → Σ[ β ∈ S ] (IsOrd β × ⟨ ω ∈ˢ β ⟩ × ⟨ stage a p ∈ˢ β ⟩)
 stageBound a p = bound2 ω (stage a p) ω-ord (stage-ord a p)
@@ -599,7 +576,6 @@ ordinality certified.
 <!--/-->
 
 ```agda
-
 bound-below₂ : (a : S) (p : ⟨ isL a ⟩) (x y : S) → ⟨ y ∈ˢ x ⟩ → ⟨ x ∈ˢ a ⟩
              → ⟨ y ∈ˢ Lset (stageBound a p .fst) ⟩
 bound-below₂ a p x y y∈x x∈a =

@@ -1,26 +1,17 @@
-<!--en-->
-The later condensation argument must transport the assertion that a set is the constructible stage at a given ordinal. Since elementarity transports formulas rather than the external operation `Lset`, this chapter builds a bounded object-language formula that recognizes the same stage relation, using a third set as a common bound for all auxiliary witnesses.
-<!--zh-->
-后续的凝聚论证需要搬运「某集合是给定序数处的可构造层」这一断言。初等性搬运的是公式，而不是外围定义的运算 `Lset`，所以本章构造一条有界的对象语言公式来识别同一个层关系，并以第三个集合作为全部辅助见证的公共界。
-<!--ja-->
-後の凝縮の議論では、ある集合が与えられた順序数における構成可能段階である、という主張を移す必要がある。初等性が移すのは論理式であって、外部で定義された演算 `Lset` ではない。そこで本章は、同じ段階関係を認識する有界な対象言語の論理式を作り、第三の集合をすべての補助的な証人に共通する上界として用いる。
-<!--/-->
-
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
 ```
 
 <!--en-->
-The construction is classical only through one fixed instance of excluded middle. Bounded existential formulas are nevertheless read as propositionally truncated existence, so classical background does not turn the hidden tables into chosen global data.
+# A Δ₀ description of the constructible hierarchy
 <!--zh-->
-这一构造的经典性只来自一个固定的排中律实例。不过，有界存在公式仍被读作命题截断的存在，因此经典背景并不会把隐藏的诸表变成全局选定的数据。
+# 可构造层级的 Δ₀ 描述
 <!--ja-->
-この構成で用いる古典性は、固定された一つの排中律の実例だけに由来する。それでも有界存在の論理式は命題的に切り詰められた存在として読まれるため、古典的な背景から、隠れた表を大域的に選んだデータが得られるわけではない。
+# 構成可能階層の Δ₀ 記述
 <!--/-->
 
 ```agda
 open import Base.Prelude
-open import Cubical.Data.FinData using ( weakenFin )
 open import Base.Classical using ( LEM )
 ```
 
@@ -36,6 +27,62 @@ Fix a universe level `ℓ` and excluded middle for propositions at level `ℓ-su
 module L.GCH.HierarchyDescription {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax using ( Formula; var; _∈̇_; _∧̇_; ⊤̇; ⊥̇; ∃̇∈; ∀̇∈ )
+open import FOL.LevyHierarchy using ( Δ₀; checkΔ₀; δ-∧; δ-∃∈ )
+open import FOL.Manipulation.ConstantOccurrences using ( countFo )
+open import FOL.Manipulation.ConstantMapping using ( embed )
+open import FOL.Manipulation.Relabelling using ( embed-⊨; mapΔ₀ )
+import FOL.Absoluteness
+import FOL.Semantics
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-induction; extensionalV )
+open import V.Coding {ℓ} using ( pr )
+open import L.Constructible {ℓ} using
+  ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset; Lset-in; Lset-out; Lset-mono; 𝒟ₒ )
+open import L.Ordinal {ℓ} using ( mem-ord; suc-ord; #∈ω )
+open import L.Axioms.Basic {ℓ} using ( LsetS; Lset-suc )
+open import L.Axioms.Numerals {ℓ} using ( numeralL-fst )
+open import L.Coding.Expressions {ℓ} using ( sucAtL )
+open import L.Coding.NumeralBound {ℓ} lem using ( module Bound )
+open import L.Coding.CodeSet {ℓ} lem using ( AllCodes )
+open import L.Coding.Model {ℓ} using ( container )
+open import L.Coding.Quantification {ℓ} using
+  ( sh; i0; i1; i2; i3; i8; f0; f1; f2; f3; f4; f5; f6; f7; f8; f9
+  ; down; suc-out; suc-in; sndEx; sndAll; bothAll
+  ; sndEx-out; sndAll-in; bothAll-in; fillSnd; useSnd; useBoth; sndS )
+open import L.Coding.CodeDomain {ℓ} using ( Tags; shN )
+open import L.Coding.EnvironmentTower {ℓ} lem using ( nn; module Tower )
+open import L.Hierarchy {ℓ} lem using ( hierL-spec; IsHier; hier-out; hier-in; Values; Entries )
+open import L.GCH.SkolemHull {ℓ} lem using ( module Cnt; erase-Δ₀; isOrd-at-p; Δ₀-isOrd-at-p; _⊨ₚ_ )
+open import L.Coding.SatisfactionGraphSet {ℓ} lem using ( module SatGraph )
+open import L.GCH.SatisfactionDescription {ℓ} lem using ( satAt; sat-complete )
+open import L.GCH.DefinablePowerSetDescription {ℓ} lem using ( defAt; def-sound; def-complete )
+open import L.GCH.AdequateStages {ℓ} lem using ( Adequate; module Adequate; module At; Lset∈suc )
+```
+
+<!--en-->
+The later condensation argument must transport the assertion that a set is the constructible stage at a given ordinal. Since elementarity transports formulas rather than the external operation `Lset`, this chapter builds a bounded object-language formula that recognizes the same stage relation, using a third set as a common bound for all auxiliary witnesses.
+<!--zh-->
+后续的凝聚论证需要搬运「某集合是给定序数处的可构造层」这一断言。初等性搬运的是公式，而不是外围定义的运算 `Lset`，所以本章构造一条有界的对象语言公式来识别同一个层关系，并以第三个集合作为全部辅助见证的公共界。
+<!--ja-->
+後の凝縮の議論では、ある集合が与えられた順序数における構成可能段階である、という主張を移す必要がある。初等性が移すのは論理式であって、外部で定義された演算 `Lset` ではない。そこで本章は、同じ段階関係を認識する有界な対象言語の論理式を作り、第三の集合をすべての補助的な証人に共通する上界として用いる。
+<!--/-->
+
+<!--en-->
+The construction is classical only through one fixed instance of excluded middle. Bounded existential formulas are nevertheless read as propositionally truncated existence, so classical background does not turn the hidden tables into chosen global data.
+<!--zh-->
+这一构造的经典性只来自一个固定的排中律实例。不过，有界存在公式仍被读作命题截断的存在，因此经典背景并不会把隐藏的诸表变成全局选定的数据。
+<!--ja-->
+この構成で用いる古典性は、固定された一つの排中律の実例だけに由来する。それでも有界存在の論理式は命題的に切り詰められた存在として読まれるため、古典的な背景から、隠れた表を大域的に選んだデータが得られるわけではない。
+<!--/-->
+
+```agda
+open import Cubical.Data.FinData using ( weakenFin )
+```
+
+
+
 <!--en-->
 The object language needs only membership, conjunction, truth, falsity, and bounded quantifiers. These constructors admit structural Δ₀ witnesses. Later, proving that no constants occur allows the constant domain to be changed to the empty alphabet, making the final three-variable formula parameter-free without removing its free variables.
 <!--zh-->
@@ -43,14 +90,6 @@ The object language needs only membership, conjunction, truth, falsity, and boun
 <!--ja-->
 ここで対象言語に必要なのは、所属、連言、真、偽、有界量化子だけである。これらの構成子には構造に沿った Δ₀ の証人がある。後で定数が現れないことを示せば、定数域を空のアルファベットへ変えられる。こうして自由変数を残したまま、最終的な三変数の論理式をパラメータなしにする。
 <!--/-->
-
-```agda
-open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using ( Formula; var; _∈̇_; _∧̇_; ⊤̇; ⊥̇; ∃̇∈; ∀̇∈ )
-open import FOL.LevyHierarchy using ( Δ₀; checkΔ₀; δ-∧; δ-∃∈ )
-open import FOL.Manipulation.ConstantOccurrences using ( countFo )
-open import FOL.Manipulation.ConstantMapping using ( embed )
-```
 
 <!--en-->
 A bounded formula can be read both inside the constructible carrier and in the ambient cumulative hierarchy. Δ₀ absoluteness identifies those readings. Membership induction will validate table rows from lower rows, while extensionality will turn the two resulting membership implications into equality of stages.
@@ -60,14 +99,6 @@ A bounded formula can be read both inside the constructible carrier and in the a
 同じ有界論理式は、構成可能な台の内部でも、周囲の累積階層でも読める。Δ₀ 絶対性がこの二つの読みを同定する。所属帰納法は、より下の行から現在の表の行を検証し、外延性は、そこから得られる二つの所属の含意を段階の等しさへ変える。
 <!--/-->
 
-```agda
-open import FOL.Manipulation.Relabelling using ( embed-⊨; mapΔ₀ )
-import FOL.Absoluteness
-import FOL.Semantics
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-induction; extensionalV )
-open import V.Coding {ℓ} using ( pr )
-```
-
 <!--en-->
 The stage `Lset b` is assembled from the definable power sets of earlier stages: its members come from some `𝒟ₒ (Lset c)` with `c ∈ b`, and each such contribution lies in `Lset b`. The inward and outward membership rules express these two directions; ordinal facts ensure that the indices used later really are stage indices.
 <!--zh-->
@@ -75,14 +106,6 @@ The stage `Lset b` is assembled from the definable power sets of earlier stages:
 <!--ja-->
 段階 `Lset b` は、それ以前の段階の定義可能冪集合から組み立てられる。その各要素は、ある `c ∈ b` に対する `𝒟ₒ (Lset c)` から来ており、そのような寄与はすべて `Lset b` に属する。所属についての内向きと外向きの規則がこの二方向を表し、順序数の事実が、後で使う添字が実際に段階の添字であることを保証する。
 <!--/-->
-
-```agda
-open import L.Constructible {ℓ} using
-  ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset; Lset-in; Lset-out; Lset-mono; 𝒟ₒ )
-open import L.Ordinal {ℓ} using ( mem-ord; suc-ord; #∈ω )
-open import L.Axioms.Basic {ℓ} using ( LsetS; Lset-suc )
-open import L.Axioms.Numerals {ℓ} using ( numeralL-fst )
-```
 
 <!--en-->
 Recognizing one definable power set internally requires formula codes, a satisfaction table, and an environment tower. Ordered-pair encodings then join each stage index to its recorded value. These auxiliary sets will all be bounded by the same witness set `z`, keeping the complete description within Δ₀.
@@ -92,14 +115,6 @@ Recognizing one definable power set internally requires formula codes, a satisfa
 一つの定義可能冪集合を内部で認識するには、論理式の符号、充足関係表、環境の塔が必要である。順序対の符号化は、各段階の添字をその記録された値と結びつける。これらの補助集合はすべて同じ証人集合 `z` で有界化されるため、記述全体が Δ₀ にとどまる。
 <!--/-->
 
-```agda
-open import L.Coding.Expressions {ℓ} using ( sucAtL )
-open import L.Coding.NumeralBound {ℓ} lem using ( module Bound )
-open import L.Coding.CodeSet {ℓ} lem using ( AllCodes )
-open import L.Coding.Model {ℓ} using ( container )
-open import L.Coding.Quantification {ℓ} using
-```
-
 <!--en-->
 The components of a set-coded pair cannot be projected by an unbounded operation inside the object language. Instead, bounded component formulas range through a small container and read or fill the pair there. Ten named slots hold the numeral tags used by the coding descriptions, and shifting those names keeps them aligned when new witnesses extend the environment.
 <!--zh-->
@@ -107,14 +122,6 @@ The components of a set-coded pair cannot be projected by an unbounded operation
 <!--ja-->
 対象言語の内部では、集合として符号化された順序対の成分を非有界な演算で射影することはできない。代わりに、有界な成分論理式が小さな容器の中を動き、そこで対を読んだり埋めたりする。十個の名前付きスロットには符号化の記述で使う数項タグが入り、新しい証人で環境を拡張するときには、その名前をずらして位置を保つ。
 <!--/-->
-
-```agda
-  ( sh; i0; i1; i2; i3; i8; f0; f1; f2; f3; f4; f5; f6; f7; f8; f9
-  ; down; suc-out; suc-in; sndEx; sndAll; bothAll
-  ; sndEx-out; sndAll-in; bothAll-in; fillSnd; useSnd; useBoth; sndS )
-open import L.Coding.CodeDomain {ℓ} using ( Tags; shN )
-open import L.Coding.EnvironmentTower {ℓ} lem using ( nn; module Tower )
-```
 
 <!--en-->
 Three semantic specifications meet here. A hierarchy table records pairs `(c,Lset c)` below a bound; the satisfaction description recognizes the genuine code, environment, and satisfaction data over a stage; and the definable-power-set description recognizes the set `𝒟ₒ (Lset c)`. Soundness will recover only the table properties `Values` and `Entries`, whereas completeness begins with the exact specification `IsHier`.
@@ -124,14 +131,6 @@ Three semantic specifications meet here. A hierarchy table records pairs `(c,Lse
 ここでは三つの意味論的な仕様が合流する。階層表は上界より下の対 `(c,Lset c)` を記録し、充足の記述は一つの段階上の真正な符号、環境、充足関係のデータを認識し、定義可能冪集合の記述は集合 `𝒟ₒ (Lset c)` を認識する。健全性が復元する表の性質は `Values` と `Entries` だけであり、完全性は正確な仕様 `IsHier` から始まる。
 <!--/-->
 
-```agda
-open import L.Hierarchy {ℓ} lem using ( hierL-spec; IsHier; hier-out; hier-in; Values; Entries )
-open import L.GCH.SkolemHull {ℓ} lem using ( module Cnt; erase-Δ₀; isOrd-at-p; Δ₀-isOrd-at-p; _⊨ₚ_ )
-open import L.Coding.SatisfactionGraphSet {ℓ} lem using ( module SatGraph )
-open import L.GCH.SatisfactionDescription {ℓ} lem using ( satAt; sat-complete )
-open import L.GCH.DefinablePowerSetDescription {ℓ} lem using ( defAt; def-sound; def-complete )
-```
-
 <!--en-->
 Completeness needs one common stage containing every auxiliary witness. If `γ` is adequate and `c ∈ γ`, then `Lset γ` contains the hierarchy table, code set, satisfaction table, and environment tower required at `c`; successor closure also places the next stage there, while `ω ∈ γ` supplies all ten finite numeral tags.
 <!--zh-->
@@ -140,10 +139,6 @@ Completeness needs one common stage containing every auxiliary witness. If `γ` 
 完全性には、すべての補助的な証人を含む一つの共通段階が必要である。`γ` が十分で `c ∈ γ` なら、`Lset γ` は `c` で必要な階層表、符号集合、充足関係表、環境の塔を含む。後続に関する閉性は次の段階もそこへ入れ、`ω ∈ γ` は十個の有限な数項タグをすべて与える。
 <!--/-->
 
-```agda
-open import L.GCH.AdequateStages {ℓ} lem using ( Adequate; module Adequate; module At; Lset∈suc )
-```
-
 <!--en-->
 An environment is a finite vector of constructible sets. Introducing a bounded witness places it at the front and shifts every older slot by one; finite indices make those shifts explicit. This bookkeeping is what lets the same stage, table, and bound names survive through several nested quantifiers.
 <!--zh-->
@@ -151,8 +146,6 @@ An environment is a finite vector of constructible sets. Introducing a bounded w
 <!--ja-->
 環境は構成可能集合からなる有限ベクトルである。有界な証人を導入すると、それは先頭に置かれ、以前の各スロットは一つずつ後ろへずれる。有限添字がこのずれを明示する。この管理によって、同じ段階、表、上界の名前を、入れ子になった複数の量化子の中でも保つことができる。
 <!--/-->
-
-
 
 <!--en-->
 Existential satisfaction retains only propositional truncation: it records that suitable data exist and forgets which data were used. Every later elimination therefore targets a proposition. In particular, membership is proposition-valued and equality of cumulative-hierarchy sets is a proposition, so the two conclusions needed in the proof are legitimate targets.
@@ -288,7 +281,6 @@ The clause `hierAt a p f z N` joins an approximation below `p` to one final step
 <!--/-->
 
 ```agda
-
 hierAt : ∀ {m} → Fin m → Fin m → Fin m → Fin m → (Fin 10 → Fin m) → Formula S m
 hierAt a p f z N = approxAt f p z N ∧̇ stepAt a p f z N
 ```
@@ -337,7 +329,6 @@ To use the ten tags in later descriptions, their object-language pinning must ag
 後の記述で十個のタグを使うには、対象言語での固定条件が意味論的な記録 `Tags γ N` と一致しなければならない。次の二つの補題が両方向を示す。一方は `pins` から数項の等式を読み、もう一方はその等式から `pins` を再構成する。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -345,8 +336,6 @@ module PinsRead {m : ℕ} (N : Fin 10 → Fin m) (γ : S ^ m) where
 ```
 </summary>
 <div class="submodule-fold-content">
-
-
 
 <!--en-->
 Reading the tag clause first shows that the first slot is empty: it has no members.
@@ -499,7 +488,6 @@ Each successor clause is reconstructed by applying the inward successor reader a
 </div>
 </details>
 
-
 <!--en-->
 Fix an environment `δ` whose ten named slots have the required numeral values. Let `Wv` be the underlying set at `w` and `Zv` the underlying set at `z`. The first is the stage over which definability is interpreted, and the second is the common bound in which the four witnesses must lie.
 <!--zh-->
@@ -507,7 +495,6 @@ Fix an environment `δ` whose ten named slots have the required numeral values. 
 <!--ja-->
 十個の名前付きスロットが必要な数項の値をもつ環境 `δ` を固定する。`w` にある底集合を `Wv`、`z` にある底集合を `Zv` とする。前者は定義可能性を解釈する段階であり、後者は四つの証人を含まなければならない共通の上界である。
 <!--/-->
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
@@ -533,7 +520,6 @@ The four witnesses are bound successively as `T`, `C`, `E`, and `d`. Since each 
 <!--/-->
 
 ```agda
-
   δ4 : (T C E d : S) → S ^ (4 + k)
   δ4 T C E d = d ∷ E ∷ C ∷ T ∷ δ
 ```
@@ -602,7 +588,6 @@ For the inward reading, `sat-complete` first proves that the genuine satisfactio
 </div>
 </details>
 
-
 <!--en-->
 The predicate `Supply` says that, for an ordinal `c`, all four witnesses needed by `defIn` already lie inside the common bound: the satisfaction graph, code set, and environment tower of the stage `Lset c`, together with the next stage `Lset (sucV c)`.
 <!--zh-->
@@ -638,7 +623,6 @@ Now fix one proposed hierarchy step in an environment `γ`. Write `Vv` for the p
 <!--ja-->
 環境 `γ` における一つの候補となる階層の段階を固定する。候補の結果を `Vv`、それ以前の添字の集合を `Bv`、候補表の底集合を `Fv` と書く。問うのは、`Fv` の関係する行が正しく、かつ存在すると分かったとき、二つの有界な包含から `Vv = Lset Bv` が強制されるかどうかである。
 <!--/-->
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
@@ -959,7 +943,6 @@ The supply at `c` bounds the genuine satisfaction table, code set, environment t
 </div>
 </details>
 
-
 <!--en-->
 The approximation reader is parameterized by the table, the bound, the witness bound, the tag map and the environment. The three underlying sets are named once.
 <!--zh-->
@@ -967,7 +950,6 @@ The approximation reader is parameterized by the table, the bound, the witness b
 <!--ja-->
 近似の読み手は、表・界・証人の界・タグの対応・環境をパラメータとする。三つの基礎の集合が一度だけ名づけられる。
 <!--/-->
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
@@ -993,7 +975,6 @@ The step body is the step clause at the four shifted slots.
 <!--/-->
 
 ```agda
-
     stepBody : Formula S (4 + m)
     stepBody = stepAt i0 i1 (sh 4 f) (sh 4 z) (shN 4 N)
 ```
@@ -1023,7 +1004,6 @@ Coverage says that for each `c ∈ Bv` there merely exists a table member that p
 <!--/-->
 
 ```agda
-
     entryOf : (c : S) → ⟨ fst c ∈ Bv ⟩ → ∥ Σ[ w ∈ S ] ⟨ pr (fst c) (fst w) ∈ Fv ⟩ ∥₁
     entryOf c c∈ = rec₁ squash₁
       (λ { (q , (q∈ , h)) → map₁ (λ { (w , s , (e , _)) → w , subst (λ u → ⟨ u ∈ Fv ⟩) e q∈ })
@@ -1040,7 +1020,6 @@ The induction step validates an arbitrary recorded pair `(c,w)` with `c ∈ Bv`.
 <!--/-->
 
 ```agda
-
     step : (c : V ℓ) → ((y : V ℓ) → ⟨ y ∈ c ⟩ → P y) → P c
     step c IH c∈ w rec =
       StepRead.step-out i0 i1 (sh 4 f) (sh 4 z) (shN 4 N) env tg
@@ -1241,7 +1220,6 @@ Below the current argument `c`, completeness comes from `hier-in`: transitivity 
 </div>
 </details>
 
-
 <!--en-->
 The hierarchy reading has four distinguished slots: the proposed stage `a`, its stage index `p`, the approximation table `f`, and the common witness bound `z`. The tag map interprets the ten numeral positions used by the coding formulas, and the environment supplies carrier elements for all these slots.
 <!--zh-->
@@ -1249,7 +1227,6 @@ The hierarchy reading has four distinguished slots: the proposed stage `a`, its 
 <!--ja-->
 階層の読みには四つの特別な枠がある。候補の段階 `a`、その段階の添字 `p`、近似表 `f`、そして共通の証人の界 `z` である。タグの写像は符号化の論理式が使う十個の数項の位置を解釈し、環境はこれらすべての枠に台の要素を与える。
 <!--/-->
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
@@ -1275,7 +1252,6 @@ The soundness theorem for the hierarchy formula says: if the formula holds and t
 <!--/-->
 
 ```agda
-
   hier-sound : ⟨ γ ⊨ hierAt a p f z N ⟩ → IsOrd Pv → Av ≡ Lset Pv
   hier-sound (ha , hs) op = StepRead.step-out a p f z N γ tg hs (ve .fst) (ve .snd)
     where
@@ -1314,7 +1290,6 @@ The proof composes the inward approximation from the hierarchy specification wit
 </div>
 </details>
 
-
 <!--en-->
 ## Reading approximations and the completed hierarchy
 <!--zh-->
@@ -1331,7 +1306,6 @@ The inner module seals the formula that will ultimately express the constructibl
 内部のモジュールは、対象言語の中で構成可能階層を最終的に表す論理式を封印する。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -1339,8 +1313,6 @@ module Inner where
 ```
 </summary>
 <div class="submodule-fold-content">
-
-
 
 <!--en-->
 The fourteen-slot environment begins with the ten numeral tags. Repeated `weakenFin` embeds each of their indices into `Fin 14` without changing its numerical position, so `N14` occupies slots zero through nine. This agrees with the concrete environment used later, whose first ten entries are the von Neumann numerals.
@@ -1633,7 +1605,6 @@ Semantically, one wrapped layer is a propositionally truncated bounded witness. 
 </div>
 </details>
 
-
 <!--en-->
 ## A parameter-free formula for constructible levels
 <!--zh-->
@@ -1748,20 +1719,18 @@ The soundness argument now works inside the fourteen-slot reading of the hidden 
 健全性の議論はここから、隠された論理式を十四のスロットで読む形に移る。目的は、有界な補助証人を捨てつつ、その数学的帰結、すなわちスロット `a` の値がスロット `p` を添字とする構成可能な段階であることを残すことである。
 <!--/-->
 
-```agda
-private
-```
+
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-  module Sound where
+private module Sound where
 ```
 </summary>
 <div class="submodule-fold-content">
 
 ```agda
-    open Inner
+  open Inner
 ```
 
 <!--en-->
@@ -1773,11 +1742,11 @@ The finish lemma separates the two conjuncts of `inner`. The pins reader turns t
 <!--/-->
 
 ```agda
-    finish : (γ : S ^ 14) → ⟨ γ ⊨ inner ⟩ → IsOrd (fst (lookup pp γ))
-           → fst (lookup aa γ) ≡ Lset (fst (lookup pp γ))
-    finish γ h op = HierRead.hier-sound aa pp ff zz N14 γ tg (inner-out γ h .snd) op
-      where
-      tg : Tags γ N14
+  finish : (γ : S ^ 14) → ⟨ γ ⊨ inner ⟩ → IsOrd (fst (lookup pp γ))
+         → fst (lookup aa γ) ≡ Lset (fst (lookup pp γ))
+  finish γ h op = HierRead.hier-sound aa pp ff zz N14 γ tg (inner-out γ h .snd) op
+    where
+    tg : Tags γ N14
 ```
 
 <!--en-->
@@ -1789,7 +1758,7 @@ The pinned numerals are read outward by the pins reader, which derives the ten n
 <!--/-->
 
 ```agda
-      tg = PinsRead.pins-out N14 γ (inner-out γ h .fst)
+    tg = PinsRead.pins-out N14 γ (inner-out γ h .fst)
 ```
 
 <!--en-->
@@ -1801,11 +1770,11 @@ The internal soundness lemma begins with three elements `a`, `p`, and `z` of the
 <!--/-->
 
 ```agda
-    sound-L : (a p z : S) → ⟨ (a ∷ p ∷ z ∷ []) ⊨ embed levelFo ⟩ → fst a ≡ Lset (fst p)
-    sound-L a p z (ho , hφ) =
-      go (subst (λ ψ → ⟨ (a ∷ p ∷ z ∷ []) ⊨ ψ ⟩) (Cnt.erase-inv three count-three) hφ)
-      where
-      ordp : IsOrd (fst p)
+  sound-L : (a p z : S) → ⟨ (a ∷ p ∷ z ∷ []) ⊨ embed levelFo ⟩ → fst a ≡ Lset (fst p)
+  sound-L a p z (ho , hφ) =
+    go (subst (λ ψ → ⟨ (a ∷ p ∷ z ∷ []) ⊨ ψ ⟩) (Cnt.erase-inv three count-three) hφ)
+    where
+    ordp : IsOrd (fst p)
 ```
 
 <!--en-->
@@ -1817,7 +1786,7 @@ The ordinality conjunct produces the ordinality certificate of `p` through the o
 <!--/-->
 
 ```agda
-      ordp = ord-out a p z ho
+    ordp = ord-out a p z ho
 ```
 
 <!--en-->
@@ -1829,8 +1798,8 @@ The equality to be retained is made into the proposition `G`. Sets in the cumula
 <!--/-->
 
 ```agda
-      G : hProp (ℓ-suc ℓ)
-      G = (fst a ≡ Lset (fst p)) , setIsSet (fst a) (Lset (fst p))
+    G : hProp (ℓ-suc ℓ)
+    G = (fst a ≡ Lset (fst p)) , setIsSet (fst a) (Lset (fst p))
 ```
 
 <!--en-->
@@ -1842,11 +1811,11 @@ Soundness unwraps the eleven bounded existentials one at a time, consuming the t
 <!--/-->
 
 ```agda
-      go : ⟨ (a ∷ p ∷ z ∷ []) ⊨ three ⟩ → ⟨ G ⟩
-      go =
-        unwrap s4 (a ∷ p ∷ z ∷ []) {G} λ F mF →
-        unwrap s5 (F ∷ a ∷ p ∷ z ∷ []) {G} λ x9 m9 →
-        unwrap s6 (x9 ∷ F ∷ a ∷ p ∷ z ∷ []) {G} λ x8 m8 →
+    go : ⟨ (a ∷ p ∷ z ∷ []) ⊨ three ⟩ → ⟨ G ⟩
+    go =
+      unwrap s4 (a ∷ p ∷ z ∷ []) {G} λ F mF →
+      unwrap s5 (F ∷ a ∷ p ∷ z ∷ []) {G} λ x9 m9 →
+      unwrap s6 (x9 ∷ F ∷ a ∷ p ∷ z ∷ []) {G} λ x8 m8 →
 ```
 
 <!--en-->
@@ -1858,11 +1827,11 @@ The next five eliminations recover the numeral witnesses `x7` through `x3`. At e
 <!--/-->
 
 ```agda
-        unwrap s7 (x8 ∷ x9 ∷ F ∷ a ∷ p ∷ z ∷ []) {G} λ x7 m7 →
-        unwrap s8 (x7 ∷ x8 ∷ x9 ∷ F ∷ a ∷ p ∷ z ∷ []) {G} λ x6 m6 →
-        unwrap s9 (x6 ∷ x7 ∷ x8 ∷ x9 ∷ F ∷ a ∷ p ∷ z ∷ []) {G} λ x5 m5 →
-        unwrap s10 (x5 ∷ x6 ∷ x7 ∷ x8 ∷ x9 ∷ F ∷ a ∷ p ∷ z ∷ []) {G} λ x4 m4 →
-        unwrap s11 (x4 ∷ x5 ∷ x6 ∷ x7 ∷ x8 ∷ x9 ∷ F ∷ a ∷ p ∷ z ∷ []) {G} λ x3 m3 →
+      unwrap s7 (x8 ∷ x9 ∷ F ∷ a ∷ p ∷ z ∷ []) {G} λ x7 m7 →
+      unwrap s8 (x7 ∷ x8 ∷ x9 ∷ F ∷ a ∷ p ∷ z ∷ []) {G} λ x6 m6 →
+      unwrap s9 (x6 ∷ x7 ∷ x8 ∷ x9 ∷ F ∷ a ∷ p ∷ z ∷ []) {G} λ x5 m5 →
+      unwrap s10 (x5 ∷ x6 ∷ x7 ∷ x8 ∷ x9 ∷ F ∷ a ∷ p ∷ z ∷ []) {G} λ x4 m4 →
+      unwrap s11 (x4 ∷ x5 ∷ x6 ∷ x7 ∷ x8 ∷ x9 ∷ F ∷ a ∷ p ∷ z ∷ []) {G} λ x3 m3 →
 ```
 
 <!--en-->
@@ -1874,15 +1843,14 @@ The innermost witness completes the unwrapping: the fourteen-slot environment is
 <!--/-->
 
 ```agda
-        unwrap s12 (x3 ∷ x4 ∷ x5 ∷ x6 ∷ x7 ∷ x8 ∷ x9 ∷ F ∷ a ∷ p ∷ z ∷ []) {G} λ x2 m2 →
-        unwrap s13 (x2 ∷ x3 ∷ x4 ∷ x5 ∷ x6 ∷ x7 ∷ x8 ∷ x9 ∷ F ∷ a ∷ p ∷ z ∷ []) {G} λ x1 m1 →
-        unwrap inner (x1 ∷ x2 ∷ x3 ∷ x4 ∷ x5 ∷ x6 ∷ x7 ∷ x8 ∷ x9 ∷ F ∷ a ∷ p ∷ z ∷ []) {G}
-          λ x0 m0 hm →
-            finish (x0 ∷ x1 ∷ x2 ∷ x3 ∷ x4 ∷ x5 ∷ x6 ∷ x7 ∷ x8 ∷ x9 ∷ F ∷ a ∷ p ∷ z ∷ []) hm ordp
+      unwrap s12 (x3 ∷ x4 ∷ x5 ∷ x6 ∷ x7 ∷ x8 ∷ x9 ∷ F ∷ a ∷ p ∷ z ∷ []) {G} λ x2 m2 →
+      unwrap s13 (x2 ∷ x3 ∷ x4 ∷ x5 ∷ x6 ∷ x7 ∷ x8 ∷ x9 ∷ F ∷ a ∷ p ∷ z ∷ []) {G} λ x1 m1 →
+      unwrap inner (x1 ∷ x2 ∷ x3 ∷ x4 ∷ x5 ∷ x6 ∷ x7 ∷ x8 ∷ x9 ∷ F ∷ a ∷ p ∷ z ∷ []) {G}
+        λ x0 m0 hm →
+          finish (x0 ∷ x1 ∷ x2 ∷ x3 ∷ x4 ∷ x5 ∷ x6 ∷ x7 ∷ x8 ∷ x9 ∷ F ∷ a ∷ p ∷ z ∷ []) hm ordp
 ```
 </div>
 </details>
-
 
 <!--en-->
 For ambient sets `a`, `p`, and `z` known to be constructible, their constructibility proofs present them as elements of the constructible carrier. Reading Δ₀ absoluteness backwards transfers ambient satisfaction of `levelFo` to satisfaction by those presentations, where the internal soundness argument applies. Projecting back gives `a = Lset p`. Thus constructibility of all three inputs is an explicit hypothesis, not a consequence of the formula.
@@ -1908,21 +1876,19 @@ For completeness, fix `lam` with adequacy data and an ordinal `p ∈ lam`. The o
 完全性のため、妥当性のデータをもつ `lam` と順序数 `p ∈ lam` を固定する。順序数性のフィールドにより `lam` は段階の添字となり、対応する段階は `Lset lam` である。残るフィールドは後者閉包、`ω` の所属、および `lam` の下で必要となる符号化の証人を与える。これらを用いて、特定の境界 `Lset lam` が段階 `Lset p` の記述に必要なすべての証人を含むことを示す。
 <!--/-->
 
-```agda
-private
-```
+
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-  module Complete (lam : V ℓ) (ad : Adequate lam) (p : V ℓ) (op : IsOrd p) (p∈λ : ⟨ p ∈ lam ⟩) where
+private module Complete (lam : V ℓ) (ad : Adequate lam) (p : V ℓ) (op : IsOrd p) (p∈λ : ⟨ p ∈ lam ⟩) where
 ```
 </summary>
 <div class="submodule-fold-content">
 
 ```agda
-    open Inner
-    open Adequate lam ad using ( ord; succ; ω∈; wit )
+  open Inner
+  open Adequate lam ad using ( ord; succ; ω∈; wit )
 ```
 
 <!--en-->
@@ -1934,9 +1900,9 @@ Transitivity of the adequate stage `lam` is extracted from its ordinality: two n
 <!--/-->
 
 ```agda
-    private
-      tr : (x y : V ℓ) → ⟨ x ∈ lam ⟩ → ⟨ y ∈ x ⟩ → ⟨ y ∈ lam ⟩
-      tr x y x∈ y∈ = ord .fst {x = x} {y = y} y∈ x∈
+  private
+    tr : (x y : V ℓ) → ⟨ x ∈ lam ⟩ → ⟨ y ∈ x ⟩ → ⟨ y ∈ lam ⟩
+    tr x y x∈ y∈ = ord .fst {x = x} {y = y} y∈ x∈
 ```
 
 <!--en-->
@@ -1948,8 +1914,8 @@ The empty set belongs to the adequate stage, by transitivity applied to the chai
 <!--/-->
 
 ```agda
-      ∅∈λ : ⟨ ∅ ∈ lam ⟩
-      ∅∈λ = tr ω ∅ ω∈ (#∈ω zero)
+    ∅∈λ : ⟨ ∅ ∈ lam ⟩
+    ∅∈λ = tr ω ∅ ω∈ (#∈ω zero)
 ```
 
 <!--en-->
@@ -1961,7 +1927,7 @@ The numeral-bound argument specializes to the constructible hierarchy at `lam`. 
 <!--/-->
 
 ```agda
-      module B = Bound lam ord succ ∅∈λ using ( num∈λ )
+    module B = Bound lam ord succ ∅∈λ using ( num∈λ )
 ```
 
 <!--en-->
@@ -1973,8 +1939,8 @@ Set `K = Lset lam`. This is the common bounding set represented by the third fre
 <!--/-->
 
 ```agda
-      K : V ℓ
-      K = Lset lam
+    K : V ℓ
+    K = Lset lam
 ```
 
 <!--en-->
@@ -1986,8 +1952,8 @@ If `c ∈ lam`, successor closure gives `sucV c ∈ lam`. The standard successor
 <!--/-->
 
 ```agda
-      Lset∈K : (c : V ℓ) → ⟨ c ∈ lam ⟩ → ⟨ Lset c ∈ K ⟩
-      Lset∈K c c∈ = Lset-mono {α = lam} {β = sucV c} (succ c c∈) (Lset∈suc c)
+    Lset∈K : (c : V ℓ) → ⟨ c ∈ lam ⟩ → ⟨ Lset c ∈ K ⟩
+    Lset∈K c c∈ = Lset-mono {α = lam} {β = sucV c} (succ c c∈) (Lset∈suc c)
 ```
 
 <!--en-->
@@ -1999,8 +1965,8 @@ The numeral-bound theorem first places the underlying set of the model numeral i
 <!--/-->
 
 ```agda
-      num∈K : (k : ℕ) → ⟨ # k ∈ K ⟩
-      num∈K k = subst (λ u → ⟨ u ∈ K ⟩) (numeralL-fst k) (B.num∈λ k)
+    num∈K : (k : ℕ) → ⟨ # k ∈ K ⟩
+    num∈K k = subst (λ u → ⟨ u ∈ K ⟩) (numeralL-fst k) (B.num∈λ k)
 ```
 
 <!--en-->
@@ -2012,11 +1978,11 @@ Four sets are named: the level `Lset p`, the ordinal `p`, the stage `Lset lam`, 
 <!--/-->
 
 ```agda
-    aS pS zS F : S
-    aS = LsetS p op
-    pS = p , At.cL p op
-    zS = LsetS lam ord
-    F = At.hier p op
+  aS pS zS F : S
+  aS = LsetS p op
+  pS = p , At.cL p op
+  zS = LsetS lam ord
+  F = At.hier p op
 ```
 
 <!--en-->
@@ -2028,10 +1994,9 @@ The environment `E` now records the complete fourteen-slot assignment. From fron
 <!--/-->
 
 ```agda
-
-    E : S ^ 14
-    E = nn 0 ∷ nn 1 ∷ nn 2 ∷ nn 3 ∷ nn 4 ∷ nn 5 ∷ nn 6 ∷ nn 7 ∷ nn 8 ∷ nn 9
-      ∷ F ∷ aS ∷ pS ∷ zS ∷ []
+  E : S ^ 14
+  E = nn 0 ∷ nn 1 ∷ nn 2 ∷ nn 3 ∷ nn 4 ∷ nn 5 ∷ nn 6 ∷ nn 7 ∷ nn 8 ∷ nn 9
+    ∷ F ∷ aS ∷ pS ∷ zS ∷ []
 ```
 
 <!--en-->
@@ -2043,11 +2008,11 @@ The tag hypothesis identifies each of the first four tag slots with its own nume
 <!--/-->
 
 ```agda
-    tg : Tags E N14
-    tg zero = refl
-    tg (suc zero) = refl
-    tg (suc (suc zero)) = refl
-    tg (suc (suc (suc zero))) = refl
+  tg : Tags E N14
+  tg zero = refl
+  tg (suc zero) = refl
+  tg (suc (suc zero)) = refl
+  tg (suc (suc (suc zero))) = refl
 ```
 
 <!--en-->
@@ -2059,11 +2024,11 @@ The next five cases verify the tag slots at indices four through eight. Each loo
 <!--/-->
 
 ```agda
-    tg (suc (suc (suc (suc zero)))) = refl
-    tg (suc (suc (suc (suc (suc zero))))) = refl
-    tg (suc (suc (suc (suc (suc (suc zero)))))) = refl
-    tg (suc (suc (suc (suc (suc (suc (suc zero))))))) = refl
-    tg (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))) = refl
+  tg (suc (suc (suc (suc zero)))) = refl
+  tg (suc (suc (suc (suc (suc zero))))) = refl
+  tg (suc (suc (suc (suc (suc (suc zero)))))) = refl
+  tg (suc (suc (suc (suc (suc (suc (suc zero))))))) = refl
+  tg (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))) = refl
 ```
 
 <!--en-->
@@ -2075,7 +2040,7 @@ The final case verifies the tenth tag slot, at index nine, as the numeral `9`. A
 <!--/-->
 
 ```agda
-    tg (suc (suc (suc (suc (suc (suc (suc (suc (suc zero))))))))) = refl
+  tg (suc (suc (suc (suc (suc (suc (suc (suc (suc zero))))))))) = refl
 ```
 
 <!--en-->
@@ -2087,11 +2052,11 @@ For each member `c` of the ordinal `p`, the supply lemma places four objects in 
 <!--/-->
 
 ```agda
-    sup : (c : V ℓ) (oc : IsOrd c) → ⟨ c ∈ p ⟩ → Supply K c oc
-    sup c oc c∈ = w .snd .snd .fst , ( w .snd .fst , ( w .snd .snd .snd , Lset∈K (sucV c) (succ c c∈λ) ))
-      where
-      c∈λ : ⟨ c ∈ lam ⟩
-      c∈λ = tr p c p∈λ c∈
+  sup : (c : V ℓ) (oc : IsOrd c) → ⟨ c ∈ p ⟩ → Supply K c oc
+  sup c oc c∈ = w .snd .snd .fst , ( w .snd .fst , ( w .snd .snd .snd , Lset∈K (sucV c) (succ c c∈λ) ))
+    where
+    c∈λ : ⟨ c ∈ lam ⟩
+    c∈λ = tr p c p∈λ c∈
 ```
 
 <!--en-->
@@ -2103,7 +2068,7 @@ The witness for each `c` is read from the adequacy data, closing the supply for 
 <!--/-->
 
 ```agda
-      w = wit c c∈λ oc
+    w = wit c c∈λ oc
 ```
 
 <!--en-->
@@ -2115,9 +2080,9 @@ The inner formula now holds at `E`. The pins writer supplies its numeral conjunc
 <!--/-->
 
 ```agda
-    hm : ⟨ E ⊨ inner ⟩
-    hm = inner-in E (PinsRead.pins-in N14 E tg)
-           (HierRead.hier-complete aa pp ff zz N14 E tg op refl (hierL-spec p (At.cL p op) op) sup)
+  hm : ⟨ E ⊨ inner ⟩
+  hm = inner-in E (PinsRead.pins-in N14 E tg)
+         (HierRead.hier-complete aa pp ff zz N14 E tg op refl (hierL-spec p (At.cL p op) op) sup)
 ```
 
 <!--en-->
@@ -2129,8 +2094,8 @@ The adequacy witness at `p` places the underlying set of the genuine hierarchy t
 <!--/-->
 
 ```agda
-    FK : ⟨ fst F ∈ K ⟩
-    FK = wit p p∈λ op .fst
+  FK : ⟨ fst F ∈ K ⟩
+  FK = wit p p∈λ op .fst
 ```
 
 <!--en-->
@@ -2142,11 +2107,11 @@ It remains to hide the table and numeral data behind the eleven bounded existent
 <!--/-->
 
 ```agda
-    h3 : ⟨ (aS ∷ pS ∷ zS ∷ []) ⊨ three ⟩
-    h3 =
-      wrap-in s4 (aS ∷ pS ∷ zS ∷ []) F FK (
-      wrap-in s5 (F ∷ aS ∷ pS ∷ zS ∷ []) (nn 9) (num∈K 9) (
-      wrap-in s6 (nn 9 ∷ F ∷ aS ∷ pS ∷ zS ∷ []) (nn 8) (num∈K 8) (
+  h3 : ⟨ (aS ∷ pS ∷ zS ∷ []) ⊨ three ⟩
+  h3 =
+    wrap-in s4 (aS ∷ pS ∷ zS ∷ []) F FK (
+    wrap-in s5 (F ∷ aS ∷ pS ∷ zS ∷ []) (nn 9) (num∈K 9) (
+    wrap-in s6 (nn 9 ∷ F ∷ aS ∷ pS ∷ zS ∷ []) (nn 8) (num∈K 8) (
 ```
 
 <!--en-->
@@ -2158,11 +2123,11 @@ The same introduction rule inserts the numerals `7` through `3`. Their membershi
 <!--/-->
 
 ```agda
-      wrap-in s7 (nn 8 ∷ nn 9 ∷ F ∷ aS ∷ pS ∷ zS ∷ []) (nn 7) (num∈K 7) (
-      wrap-in s8 (nn 7 ∷ nn 8 ∷ nn 9 ∷ F ∷ aS ∷ pS ∷ zS ∷ []) (nn 6) (num∈K 6) (
-      wrap-in s9 (nn 6 ∷ nn 7 ∷ nn 8 ∷ nn 9 ∷ F ∷ aS ∷ pS ∷ zS ∷ []) (nn 5) (num∈K 5) (
-      wrap-in s10 (nn 5 ∷ nn 6 ∷ nn 7 ∷ nn 8 ∷ nn 9 ∷ F ∷ aS ∷ pS ∷ zS ∷ []) (nn 4) (num∈K 4) (
-      wrap-in s11 (nn 4 ∷ nn 5 ∷ nn 6 ∷ nn 7 ∷ nn 8 ∷ nn 9 ∷ F ∷ aS ∷ pS ∷ zS ∷ []) (nn 3) (num∈K 3) (
+    wrap-in s7 (nn 8 ∷ nn 9 ∷ F ∷ aS ∷ pS ∷ zS ∷ []) (nn 7) (num∈K 7) (
+    wrap-in s8 (nn 7 ∷ nn 8 ∷ nn 9 ∷ F ∷ aS ∷ pS ∷ zS ∷ []) (nn 6) (num∈K 6) (
+    wrap-in s9 (nn 6 ∷ nn 7 ∷ nn 8 ∷ nn 9 ∷ F ∷ aS ∷ pS ∷ zS ∷ []) (nn 5) (num∈K 5) (
+    wrap-in s10 (nn 5 ∷ nn 6 ∷ nn 7 ∷ nn 8 ∷ nn 9 ∷ F ∷ aS ∷ pS ∷ zS ∷ []) (nn 4) (num∈K 4) (
+    wrap-in s11 (nn 4 ∷ nn 5 ∷ nn 6 ∷ nn 7 ∷ nn 8 ∷ nn 9 ∷ F ∷ aS ∷ pS ∷ zS ∷ []) (nn 3) (num∈K 3) (
 ```
 
 <!--en-->
@@ -2174,10 +2139,10 @@ Finally the numerals `2`, `1`, and `0` are inserted. After the last introduction
 <!--/-->
 
 ```agda
-      wrap-in s12 (nn 3 ∷ nn 4 ∷ nn 5 ∷ nn 6 ∷ nn 7 ∷ nn 8 ∷ nn 9 ∷ F ∷ aS ∷ pS ∷ zS ∷ []) (nn 2) (num∈K 2) (
-      wrap-in s13 (nn 2 ∷ nn 3 ∷ nn 4 ∷ nn 5 ∷ nn 6 ∷ nn 7 ∷ nn 8 ∷ nn 9 ∷ F ∷ aS ∷ pS ∷ zS ∷ []) (nn 1) (num∈K 1) (
-      wrap-in inner (nn 1 ∷ nn 2 ∷ nn 3 ∷ nn 4 ∷ nn 5 ∷ nn 6 ∷ nn 7 ∷ nn 8 ∷ nn 9 ∷ F ∷ aS ∷ pS ∷ zS ∷ []) (nn 0) (num∈K 0)
-        hm))))))))))
+    wrap-in s12 (nn 3 ∷ nn 4 ∷ nn 5 ∷ nn 6 ∷ nn 7 ∷ nn 8 ∷ nn 9 ∷ F ∷ aS ∷ pS ∷ zS ∷ []) (nn 2) (num∈K 2) (
+    wrap-in s13 (nn 2 ∷ nn 3 ∷ nn 4 ∷ nn 5 ∷ nn 6 ∷ nn 7 ∷ nn 8 ∷ nn 9 ∷ F ∷ aS ∷ pS ∷ zS ∷ []) (nn 1) (num∈K 1) (
+    wrap-in inner (nn 1 ∷ nn 2 ∷ nn 3 ∷ nn 4 ∷ nn 5 ∷ nn 6 ∷ nn 7 ∷ nn 8 ∷ nn 9 ∷ F ∷ aS ∷ pS ∷ zS ∷ []) (nn 0) (num∈K 0)
+      hm))))))))))
 ```
 
 <!--en-->
@@ -2189,8 +2154,8 @@ The erasure inverse says that embedding `erased` into the constructible constant
 <!--/-->
 
 ```agda
-    hφ : ⟨ (aS ∷ pS ∷ zS ∷ []) ⊨ embed erased ⟩
-    hφ = subst (λ ψ → ⟨ (aS ∷ pS ∷ zS ∷ []) ⊨ ψ ⟩) (sym (Cnt.erase-inv three count-three)) h3
+  hφ : ⟨ (aS ∷ pS ∷ zS ∷ []) ⊨ embed erased ⟩
+  hφ = subst (λ ψ → ⟨ (aS ∷ pS ∷ zS ∷ []) ⊨ ψ ⟩) (sym (Cnt.erase-inv three count-three)) h3
 ```
 
 <!--en-->
@@ -2202,12 +2167,11 @@ Completeness is assembled from the two conjuncts: the ordinality atom holds by `
 <!--/-->
 
 ```agda
-    complete : ⟨ (Lset p ∷ p ∷ Lset lam ∷ []) ⊨ₚ levelFo ⟩
-    complete = subst ⟨_⟩ (read Δ₀-levelFo (aS ∷ pS ∷ zS ∷ [])) (ord-in aS pS zS op , hφ)
+  complete : ⟨ (Lset p ∷ p ∷ Lset lam ∷ []) ⊨ₚ levelFo ⟩
+  complete = subst ⟨_⟩ (read Δ₀-levelFo (aS ∷ pS ∷ zS ∷ [])) (ord-in aS pS zS op , hφ)
 ```
 </div>
 </details>
-
 
 <!--en-->
 The completeness theorem states the precise existence direction available here. If `γ` is adequate and contains the ordinal `p`, then the triple `(Lset p,p,Lset γ)` satisfies `levelFo`. Later, `CondensationTransfer` places unbounded existential quantifiers around this Δ₀ core, carries all three coordinates through elementarity, and uses soundness to recognize the transported first coordinate as the corresponding constructible stage. The theorem makes no claim that an arbitrary third coordinate works or is uniquely determined.

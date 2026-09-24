@@ -32,6 +32,7 @@ UNLINKED_BOUND_RE = re.compile(
 )
 IMPRECISE_RE = re.compile(r"_[\w.']+_\d+|(?<![\w'])_\d+\b|\?\d+")
 KIND_PRIORITY = {"name": 1, "binding": 2, "application": 3}
+DUMMY_TYPE_RE = re.compile(r'__DUMMY_(?:TYPE|SORT|TERM|LEVEL|DOM)__|dummy(?:Type|Sort|Term|Level):')
 
 
 def module_name(path: Path, source_root: Path) -> str:
@@ -203,6 +204,10 @@ def normalize(source_root: Path, html_dir: Path, trace_path: Path,
         if not path_records:
             result[module] = []
             continue
+        # Older compiler caches may contain module telescope placeholders.
+        # These are not unresolved term types: module applications have no
+        # ordinary expression type. Keep valid argument/binder records.
+        path_records = [record for record in path_records if not DUMMY_TYPE_RE.search(record['type'])]
         compact.extend(path_records)
         by_range: dict[tuple[int, int], dict] = {}
         for record in path_records:

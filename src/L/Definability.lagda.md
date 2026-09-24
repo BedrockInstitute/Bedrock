@@ -1,22 +1,18 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # Definable subsets of a set
-
-For a set `A`, the operator `Def A`{.Agda} collects exactly the subsets of `A` defined by a first-order formula over the restricted structure on `A`, with finitely many parameters from `A`. Its membership theorem exposes the formula, environment, and satisfaction relation used by later constructibility arguments.
-
-Two design points carry the chapter. The formulas take `A`'s small member type `⟪ A ⟫` as their constant domain, so "parameters from `A`" is enforced by the type. And satisfaction is the **inner** semantics, on the restricted structure `𝒮ᵥ ↾ (∈ A)`: quantifiers range over members of `A` only, which is what "definable *in* `(A, ∈)`" means in the textbook, and which lets the essential smallness of the previous chapters apply here: every formula evaluates small, so `Def A` is a set, with no resizing needed at all.
 <!--zh-->
 # 集合的可定义子集
-
-对集合 `A`，算子 `Def A`{.Agda} 恰好收集由 `A` 上限制结构中的一阶公式，并使用 `A` 中有限多个参数所定义的 `A` 的子集。其隶属定理给出后续可构造性论证所需的公式、环境与满足关系。
-
-本章依赖两个设计点。公式以 `A` 的小成员类型 `⟪ A ⟫` 为常元域，因此类型本身保证参数来自 `A`。满足采用限制结构 `𝒮ᵥ ↾ (∈ A)` 上的**内层**语义，量词的范围只包括 `A` 的成员。这正是教科书中「在 `(A, ∈)` **中**可定义」的含义，也使前几章的本质小性在此适用：任何公式的求值都是小类型，因此 `Def A` 是集合，降层无需额外代价。
 <!--ja-->
 # 集合の定義可能な部分集合
-
-集合 `A` に対して、演算子 `Def A`{.Agda} は、`A` 上の制限構造における一階論理式と `A` の有限個のパラメータで定義される `A` の部分集合をちょうど集める。その所属定理は、後の構成可能性の議論で使う論理式、環境、充足関係を取り出す。
-
-本章を支える設計上の要点が二つある。第一に、論理式は `A` の小さな要素型 `⟪ A ⟫` を定数域として取るので、「`A` からのパラメータ」が型そのものによって強制される。第二に、充足は制限構造 `𝒮ᵥ ↾ (∈ A)` 上の**内側**の意味論で読まれ、量化子の範囲は `A` の要素だけに限られる。これが教科書で「`(A, ∈)` **の中で**定義可能」と言う意味であり、前の章々の本質的小ささがここで効く。すべての論理式の評価は小さな型になるので、`Def A` は集合であり、レベルの引き下げは一切不要である。
 <!--/-->
+
+```agda
+open import Base.Prelude
+```
 
 <!--en-->
 The question of this chapter: for a set `A`, which subsets of `A` can be singled out by a first-order formula interpreted inside `(A, ∈)`? The answer will be collected into a single operator `Def A`{.Agda}, itself a set of the ambient hierarchy. Everything takes place at one fixed universe level ℓ, so that `Def A` is small enough to exist as a set at the same level as `A`.
@@ -27,14 +23,41 @@ The question of this chapter: for a set `A`, which subsets of `A` can be singled
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-open import Base.Prelude
-open import Cubical.Data.Sigma using ( Σ-cong-equiv-snd )
-
 module L.Definability {ℓ : Level} where
+```
 
+```agda
 open import FOL.ZFStructure using ( ZFStructure; Transitive )
+open import FOL.Syntax using ( Formula; var; con; _∈̇_; ⊤̇ )
+open import FOL.LevyHierarchy using ( Δ₀ )
+open import FOL.Manipulation.ConstantMapping using ( mapFo )
+open import FOL.Manipulation.Relabelling using ( mapΔ₀; ⊨-map )
+import FOL.Absoluteness
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Smallness {ℓ} using ( module InnerSmall )
+```
+
+<!--en-->
+
+For a set `A`, the operator `Def A`{.Agda} collects exactly the subsets of `A` defined by a first-order formula over the restricted structure on `A`, with finitely many parameters from `A`. Its membership theorem exposes the formula, environment, and satisfaction relation used by later constructibility arguments.
+
+Two design points carry the chapter. The formulas take `A`'s small member type `⟪ A ⟫` as their constant domain, so "parameters from `A`" is enforced by the type. And satisfaction is the **inner** semantics, on the restricted structure `𝒮ᵥ ↾ (∈ A)`: quantifiers range over members of `A` only, which is what "definable *in* `(A, ∈)`" means in the textbook, and which lets the essential smallness of the previous chapters apply here: every formula evaluates small, so `Def A` is a set, with no resizing needed at all.
+<!--zh-->
+
+对集合 `A`，算子 `Def A`{.Agda} 恰好收集由 `A` 上限制结构中的一阶公式，并使用 `A` 中有限多个参数所定义的 `A` 的子集。其隶属定理给出后续可构造性论证所需的公式、环境与满足关系。
+
+本章依赖两个设计点。公式以 `A` 的小成员类型 `⟪ A ⟫` 为常元域，因此类型本身保证参数来自 `A`。满足采用限制结构 `𝒮ᵥ ↾ (∈ A)` 上的**内层**语义，量词的范围只包括 `A` 的成员。这正是教科书中「在 `(A, ∈)` **中**可定义」的含义，也使前几章的本质小性在此适用：任何公式的求值都是小类型，因此 `Def A` 是集合，降层无需额外代价。
+<!--ja-->
+
+集合 `A` に対して、演算子 `Def A`{.Agda} は、`A` 上の制限構造における一階論理式と `A` の有限個のパラメータで定義される `A` の部分集合をちょうど集める。その所属定理は、後の構成可能性の議論で使う論理式、環境、充足関係を取り出す。
+
+本章を支える設計上の要点が二つある。第一に、論理式は `A` の小さな要素型 `⟪ A ⟫` を定数域として取るので、「`A` からのパラメータ」が型そのものによって強制される。第二に、充足は制限構造 `𝒮ᵥ ↾ (∈ A)` 上の**内側**の意味論で読まれ、量化子の範囲は `A` の要素だけに限られる。これが教科書で「`(A, ∈)` **の中で**定義可能」と言う意味であり、前の章々の本質的小ささがここで効く。すべての論理式の評価は小さな型になるので、`Def A` は集合であり、レベルの引き下げは一切不要である。
+<!--/-->
+
+
+
+```agda
+open import Cubical.Data.Sigma using ( Σ-cong-equiv-snd )
 ```
 
 <!--en-->
@@ -45,14 +68,6 @@ The formulas come from an inductive object language: `Formula K n` has constants
 論理式は帰納的な対象言語から来る。`Formula K n` は、定数が型 `K` で添字づけられ、自由変数の `n` 個のスロットを持ち、原子論理式は構造の所属と等号の関係から組み立てられる。`K = ⟪ A ⟫`、つまり `A` の小さな要素型を選べば、「`A` からのパラメータ」は構成そのものによって成り立つ。すべての定数は `A` の要素を名指すからである。有界断片 `Δ₀` は、充足の内側と外側の読みを比べる際に後で効く。定数の対応付けと改名は、論理式を定数域の間で移し、その移動に沿って充足を輸送する操作である。
 <!--/-->
 
-```agda
-open import FOL.Syntax using ( Formula; var; con; _∈̇_; ⊤̇ )
-open import FOL.LevyHierarchy using ( Δ₀ )
-open import FOL.Manipulation.ConstantMapping using ( mapFo )
-open import FOL.Manipulation.Relabelling using ( mapΔ₀; ⊨-map )
-import FOL.Absoluteness
-```
-
 <!--en-->
 "Definable *in* `(A, ∈)`" means quantifiers may only range over members of `A`. So satisfaction must be taken in the structure restricted to the class `x ↦ x ∈ˢ A`, not in the ambient hierarchy. The chapter works over the ambient structure `𝒮ᵥ` carried by the level-ℓ hierarchy, with carrier `S` and membership `∈ₛ`; the restriction to `A` and the smallness of the restricted world come from the smallness chapter: given a class, a small type with an equivalence to the restricted carrier, and a constant interpretation, it rebuilds the restricted structure and proves every formula evaluates to a small proposition there. The restriction class here is simply membership in `A`.
 <!--zh-->
@@ -62,9 +77,6 @@ import FOL.Absoluteness
 <!--/-->
 
 ```agda
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-open import V.Smallness {ℓ} using ( module InnerSmall )
-
 open import Cubical.Foundations.Equiv
   using ( invEquiv; compEquiv; propBiimpl→Equiv )
 open import Cubical.Functions.Embedding using ( isEmbedding→Inj )
@@ -120,7 +132,6 @@ The class `M` assigns to each set `x` the proposition `x ∈ˢ A`, so the restri
 クラス `M` は各集合 `x` に命題 `x ∈ˢ A` を割り当てるので、制限された台 `Σ[ x ∈ S ] (x ∈ᶜ M)` は要素ごとに、`A` の要素と「それが要素である証拠」の対である。同値 `e` はこの台が本質的に小さいことを示す。第一因子は `presentation A` の逆で、索引写像のファイバーに「だけ」落ちている `A` の要素を `⟪ A ⟫` の添字と同一視する。第二因子は各 `v` について、小さい方の所属 `v ∈ₛ A` と大きい方の所属 `v ∈ˢ A` を両方向に変換する。これらは命題なので、点ごとの変換は正当である。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -130,7 +141,6 @@ module DefOf (A : S) where
 <div class="submodule-fold-content">
 
 ```agda
-
   M : S → hProp (ℓ-suc ℓ)
   M x = x ∈ˢ A
 
@@ -164,7 +174,6 @@ Opening `InnerSmall` at this data rebuilds the world: the structure `𝒮M` rest
 <!--/-->
 
 ```agda
-
   open InnerSmall M ⟪ A ⟫ e {K = ⟪ A ⟫} ι public
 ```
 
@@ -355,7 +364,6 @@ The dual containment `Def∋⊆A` says every element of `Def A` is a subset of `
 <!--/-->
 
 ```agda
-
   Def∋⊆A : (x : S) → ⟨ x ∈ˢ Def ⟩ → (y : S) → ⟨ y ∈ˢ x ⟩ → ⟨ y ∈ˢ A ⟩
   Def∋⊆A x = rec₁ (isPropΠ λ y → isPropΠ λ _ → snd (y ∈ˢ A))
     (λ { (φ , q) y y∈x → defSet⊆A φ y (subst (λ s → ⟨ y ∈ˢ s ⟩) (sym q) y∈x) })
@@ -383,7 +391,6 @@ The submodule takes transitivity of `A` as an explicit hypothesis. The atomic fo
 この議論は `A` の推移性を明示的な仮定として取る。原子論理式 `atom mₐ` は `var zero ∈̇ con mₐ` で、自由変数のスロットが一つと、要素 `mₐ` を名指す単一の定数からなる。`⟪ A ⟫` を定数域として使うという設計判断がここでも効く。`A` のすべての要素が定数として使え、`ι` がそれを制限された台へ復号するからである。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -393,7 +400,6 @@ The submodule takes transitivity of `A` as an explicit hypothesis. The atomic fo
 <div class="submodule-fold-content">
 
 ```agda
-
     atom : ⟪ A ⟫ → Formula ⟪ A ⟫ 1
     atom mₐ = var zero ∈̇ con mₐ
 
@@ -551,7 +557,6 @@ The proof concatenates three paths. First, `defSet-mem` reads membership in the 
 
 </div>
 </details>
-
 
 <!--en-->
 ## Recap

@@ -1,34 +1,17 @@
-<!--en-->
-# The counting tools for infinite constructible stages
-
-Counting the stage `Lset δ` of an infinite ordinal `δ` inside `L` rests on two ingredients: a base injection `Lω ↪ ω`, and a way of lifting injections through finite environments. This chapter supplies both, and everything here is proved for exactly the constructs named in the text.
-<!--zh-->
-# 计数无穷可构造层的工具
-
-在 `L` 内部计数无穷序数 `δ` 的层 `Lset δ`，依赖两件材料：基础单射 `Lω ↪ ω`，以及把单射逐项提升到有限环境的手段。本章给出这两者；本章所证的一切，都恰针对文中点名的构造。
-<!--ja-->
-# 無限な構成可能段階を数える道具
-
-無限順序数 `δ` の段階 `Lset δ` を `L` の内部で数えるには、二つの材料が要る。基底の単射 `Lω ↪ ω` と、単射を有限環境へ持ち上げる方法である。この章はその両方を供給する。ここで証明されることは、すべて本文で名指しされた構成についてのものである。
-<!--/-->
-
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
 ```
 
 <!--en-->
-The chapter works under excluded middle at the fixed universe level. This hypothesis is inherited by the constructions used throughout; its clearest local roles are to search a finite-stage tally for a name and to compare a collapse value with `ω` by ordinal trichotomy.
+# The counting tools for infinite constructible stages
 <!--zh-->
-本章在固定宇宙层级的排中律下工作。全章调用的构造都继承这一假设；它在本章中最清楚的两项作用，是在有穷层的点名册中搜索一个名称，以及用序数三歧比较塌缩值与 `ω`。
+# 计数无穷可构造层的工具
 <!--ja-->
-本章では、固定した宇宙レベルにおける排中律を仮定する。この仮定は章全体で用いる構成に受け継がれる。本章内でとくに明瞭な役割は、有限段階の一覧から名前を探索することと、順序数の三分律によって崩壊値を `ω` と比較することである。
+# 無限な構成可能段階を数える道具
 <!--/-->
 
 ```agda
 open import Base.Prelude
-open import Cubical.HITs.PropositionalTruncation using ( rec2 )
-open import Cubical.Foundations.HLevels using ( isPropΠ2; isPropΠ3 )
-open import Cubical.Data.FinData using ( inj-toℕ )
 open import Base.Classical using ( LEM )
 ```
 
@@ -44,14 +27,6 @@ All constructions therefore share the single hypothesis `lem : LEM (ℓ-suc ℓ)
 module L.GCH.StageCountingTools {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
-<!--en-->
-The internal graphs used below must be described by formulas that `L` itself can interpret. Equality, membership, conjunction, implication, and bounded and unbounded quantifiers provide the language for saying that a relation is a total single-valued injection and for defining its action on finite environments.
-<!--zh-->
-下文使用的内部图必须由 `L` 自身能够解释的公式描述。相等、隶属、合取、蕴涵以及有界和无界量词，共同提供了表达「一个关系是全域单值单射」并定义它在有限环境上作用的语言。
-<!--ja-->
-以下で使う内部グラフは、`L` 自身が解釈できる論理式で記述する必要がある。等号、所属、連言、含意、有界量化子と非有界量化子によって、関係が全域的で一価な単射であることと、その有限環境への作用を表す。
-<!--/-->
-
 ```agda
 open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax
@@ -59,7 +34,79 @@ open import FOL.Syntax
 import FOL.Absoluteness
 import FOL.Semantics
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Presentation {ℓ} using ( member; fiber; ↪-inj )
+open import V.Model {ℓ} using ( ∈sucV-inl; self∈sucV )
+open import V.Coding {ℓ} using ( pr; pr-inj; #-inj′; #mono )
+open import L.Constructible {ℓ}
+  using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset; Lset-mono; Lset→isL )
+open import L.Ordinal {ℓ} using ( ∈#-elim; mem-ord; ω-ord; numeral-ord; #∈ω )
+open import L.Ordinal.Linear {ℓ} lem using ( ord-tri )
+open import L.Ordinal.Stages {ℓ} lem using ( suc∈or≡ )
+open import L.Axioms.Basic {ℓ} using ( LsetS )
+open import L.Axioms.Infinity {ℓ} lem using ( ωʟ )
+open import L.Coding.Model {ℓ} using ( prʟ; prʟ-fst; svAt; svAt-in; svAt-out; domAt; domAt-in; domAt-out; domAt-intro; appAt; appAt-adequate; envOverAt; envOverAt-transport )
+open import L.Coding.Expressions {ℓ} using ( numL )
+open import L.Coding.Injection {ℓ} lem
+  using ( injAt; injAt-in; injAt-out; module Small )
+open import L.Coding.Environment {ℓ} using ( env; lookup-spec )
+open import L.Coding.EnvironmentSet {ℓ} lem
+  using ( Ix; envS; envSet-in; envSet-out; envOver; module Recover )
+open import L.Choice.NameComparison {ℓ} lem using ( domAt-numeral; domAt-fill )
+open import L.Choice.StageOrders {ℓ} lem
+  using ( carry; memOf; orderAt; orderAt-step; relOf
+        ; birth-mem; module Family )
+  renaming ( Mem to MemOf )
+open import L.Choice.OrderTable {ℓ} lem using ( Related; IsRel; ixRel-rep; ixRel-fill )
+open import L.Choice.InternalWellOrder {ℓ} lem using ( relL; relL-spec )
+open import L.WellOrder.Base {ℓₚ = ℓ-suc ℓ}
+  using ( SWO; lt; eq; gt ) renaming ( Tri to TriW )
+open import L.Recursion {ℓ} lem using ( Recursion; module Of; mereFunct )
+open import L.Cardinal {ℓ} lem using ( InjCode; InjL )
+open import L.InjectionComposition {ℓ} lem using ( inclusion-coded; injl-trans )
+open import L.DefinableInjection {ℓ} lem using ( DefinableMap; module Inj )
+open import L.GCH.CardinalSquareLaw {ℓ} lem using ( isL-ord )
+open import L.GCH.FiniteSequenceCoding {ℓ} lem using ( seqL; seqL-in; seqL-out )
+open import L.Ordinal.SquareLaw {ℓ} lem using ( module FiniteBase )
+open import L.InjectionComposition {ℓ} lem using ( appC; appC-adequate; ω-limit; finite-excl-ω )
+open import L.Choice.FiniteStageOrders {ℓ} lem
+  using ( Tally; StageOrder; stageOrder; finiteStage )  -- lint-agda: keep (StageOrder used as the projection qualifier)
+open import L.GCH.OrderType {ℓ} lem using ( Holds; module Code )
 ```
+
+<!--en-->
+
+Counting the stage `Lset δ` of an infinite ordinal `δ` inside `L` rests on two ingredients: a base injection `Lω ↪ ω`, and a way of lifting injections through finite environments. This chapter supplies both, and everything here is proved for exactly the constructs named in the text.
+<!--zh-->
+
+在 `L` 内部计数无穷序数 `δ` 的层 `Lset δ`，依赖两件材料：基础单射 `Lω ↪ ω`，以及把单射逐项提升到有限环境的手段。本章给出这两者；本章所证的一切，都恰针对文中点名的构造。
+<!--ja-->
+
+無限順序数 `δ` の段階 `Lset δ` を `L` の内部で数えるには、二つの材料が要る。基底の単射 `Lω ↪ ω` と、単射を有限環境へ持ち上げる方法である。この章はその両方を供給する。ここで証明されることは、すべて本文で名指しされた構成についてのものである。
+<!--/-->
+
+<!--en-->
+The chapter works under excluded middle at the fixed universe level. This hypothesis is inherited by the constructions used throughout; its clearest local roles are to search a finite-stage tally for a name and to compare a collapse value with `ω` by ordinal trichotomy.
+<!--zh-->
+本章在固定宇宙层级的排中律下工作。全章调用的构造都继承这一假设；它在本章中最清楚的两项作用，是在有穷层的点名册中搜索一个名称，以及用序数三歧比较塌缩值与 `ω`。
+<!--ja-->
+本章では、固定した宇宙レベルにおける排中律を仮定する。この仮定は章全体で用いる構成に受け継がれる。本章内でとくに明瞭な役割は、有限段階の一覧から名前を探索することと、順序数の三分律によって崩壊値を `ω` と比較することである。
+<!--/-->
+
+```agda
+open import Cubical.HITs.PropositionalTruncation using ( rec2 )
+open import Cubical.Foundations.HLevels using ( isPropΠ2; isPropΠ3 )
+open import Cubical.Data.FinData using ( inj-toℕ )
+```
+
+
+
+<!--en-->
+The internal graphs used below must be described by formulas that `L` itself can interpret. Equality, membership, conjunction, implication, and bounded and unbounded quantifiers provide the language for saying that a relation is a total single-valued injection and for defining its action on finite environments.
+<!--zh-->
+下文使用的内部图必须由 `L` 自身能够解释的公式描述。相等、隶属、合取、蕴涵以及有界和无界量词，共同提供了表达「一个关系是全域单值单射」并定义它在有限环境上作用的语言。
+<!--ja-->
+以下で使う内部グラフは、`L` 自身が解釈できる論理式で記述する必要がある。等号、所属、連言、含意、有界量化子と非有界量化子によって、関係が全域的で一価な単射であることと、その有限環境への作用を表す。
+<!--/-->
 
 <!--en-->
 There are two levels of data throughout the argument. A set in the cumulative hierarchy has a small presentation whose indices name its members, while an element of `L` also carries a proof of constructibility. Moving between these levels lets an internal graph act as an ordinary function on presentation indices.
@@ -69,14 +116,6 @@ There are two levels of data throughout the argument. A set in the cumulative hi
 議論では一貫して二つの水準のデータを扱う。累積階層の集合には、その要素を名指す小さな提示があり、`L` の要素には構成可能性の証明も添えられている。この二つの水準を行き来することで、内部グラフを提示のインデックス上の通常の関数として働かせられる。
 <!--/-->
 
-```agda
-open import V.Presentation {ℓ} using ( member; fiber; ↪-inj )
-open import V.Model {ℓ} using ( ∈sucV-inl; self∈sucV )
-open import V.Coding {ℓ} using ( pr; pr-inj; #-inj′; #mono )
-open import L.Constructible {ℓ}
-  using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset; Lset-mono; Lset→isL )
-```
-
 <!--en-->
 Ordinal structure enters twice. Numerals identify the finite domains of environments, while the order on constructible stages later gives a canonical well order of `Lset ω`. Trichotomy will then decide how each value of its ordinal collapse sits relative to `ω`.
 <!--zh-->
@@ -84,14 +123,6 @@ Ordinal structure enters twice. Numerals identify the finite domains of environm
 <!--ja-->
 順序数の構造は二度使われる。数項は環境の有限な定義域を識別し、構成可能段階の順序は後で `Lset ω` の標準的な整列順序を与える。その後、三岐性によって順序数崩壊の各値が `ω` に対してどこに位置するかを判定する。
 <!--/-->
-
-```agda
-open import L.Ordinal {ℓ} using ( ∈#-elim; mem-ord; ω-ord; numeral-ord; #∈ω )
-open import L.Ordinal.Linear {ℓ} lem using ( ord-tri )
-open import L.Ordinal.Stages {ℓ} lem using ( suc∈or≡ )
-open import L.Axioms.Basic {ℓ} using ( LsetS )
-open import L.Axioms.Infinity {ℓ} lem using ( ωʟ )
-```
 
 <!--en-->
 A coded injection is represented by a set of ordered pairs. Its four obligations say that the graph is single-valued, has exactly the stated domain, is injective on inputs, and takes values in the stated target. The first part of the chapter starts from such an actual coded graph.
@@ -101,14 +132,6 @@ A coded injection is represented by a set of ordered pairs. Its four obligations
 符号化された単射は順序対の集合で表される。その四つの条件は、グラフが一価であること、定義域が指定された集合とちょうど一致すること、入力について単射であること、値が指定された目標に属すことである。章の前半では、このように実際に与えられた符号化グラフから出発する。
 <!--/-->
 
-```agda
-open import L.Coding.Model {ℓ} using ( prʟ; prʟ-fst; svAt; svAt-in; svAt-out; domAt; domAt-in; domAt-out; domAt-intro; appAt; appAt-adequate; envOverAt; envOverAt-transport )
-open import L.Coding.Expressions {ℓ} using ( numL )
-open import L.Coding.Injection {ℓ} lem
-  using ( injAt; injAt-in; injAt-out; module Small )
-open import L.Coding.Environment {ℓ} using ( env; lookup-spec )
-```
-
 <!--en-->
 For each natural number `n`, the set of environments over `A` of length `n` has a concrete presentation. The union `seqL A` ranges over every finite length. Thus an entrywise map that preserves length is exactly the operation needed to map all finite sequences over `A` into those over `B`.
 <!--zh-->
@@ -116,14 +139,6 @@ For each natural number `n`, the set of environments over `A` of length `n` has 
 <!--ja-->
 各自然数 `n` について、`A` に値を取る長さ `n` の環境には具体的な提示がある。集合 `seqL A` はすべての有限な長さをまとめたものである。したがって、成分ごとに作用して長さを保つ写像こそ、`A` 上のすべての有限列を `B` 上の有限列へ送るために必要な操作である。
 <!--/-->
-
-```agda
-open import L.Coding.EnvironmentSet {ℓ} lem
-  using ( Ix; envS; envSet-in; envSet-out; envOver; module Recover )
-open import L.Choice.NameComparison {ℓ} lem using ( domAt-numeral; domAt-fill )
-open import L.Choice.StageOrders {ℓ} lem
-  using ( carry; memOf; orderAt; orderAt-step; relOf
-```
 
 <!--en-->
 The second part orders the members of `Lset ω` first by birth stage and then, when birth stages agree, by the local step order. This distinction matters: a predecessor may have the same birth stage as its successor, although every predecessor still lies in the successor of that common stage.
@@ -133,14 +148,6 @@ The second part orders the members of `Lset ω` first by birth stage and then, w
 後半では、`Lset ω` の要素をまず誕生段階で並べ、誕生段階が等しいときにはその段階の局所的な順序で並べる。この区別は欠かせない。前者が後者の前者であっても誕生段階が同じ場合があるが、それでも各前者はその共通段階の後続段階に属する。
 <!--/-->
 
-```agda
-        ; birth-mem; module Family )
-  renaming ( Mem to MemOf )
-open import L.Choice.OrderTable {ℓ} lem using ( Related; IsRel; ixRel-rep; ixRel-fill )
-open import L.Choice.InternalWellOrder {ℓ} lem using ( relL; relL-spec )
-open import L.WellOrder.Base {ℓₚ = ℓ-suc ℓ}
-```
-
 <!--en-->
 Collapsing this well order assigns an ordinal to each member of `Lset ω`. The task is then to prove that every collapse value belongs to `ω`. The proof will bound one predecessor segment at a time by a finite constructible stage and rule out an injection of `ω` into that stage.
 <!--zh-->
@@ -148,14 +155,6 @@ Collapsing this well order assigns an ordinal to each member of `Lset ω`. The t
 <!--ja-->
 この整列順序を崩壊させると、`Lset ω` の各要素に順序数が割り当てられる。次の課題は、すべての崩壊値が `ω` に属すことを示すことである。証明では前者切片を一つずつ有限な構成可能段階で抑え、`ω` からその段階への単射を排除する。
 <!--/-->
-
-```agda
-  using ( SWO; lt; eq; gt ) renaming ( Tri to TriW )
-open import L.Recursion {ℓ} lem using ( Recursion; module Of; mereFunct )
-open import L.Cardinal {ℓ} lem using ( InjCode; InjL )
-open import L.InjectionComposition {ℓ} lem using ( inclusion-coded; injl-trans )
-open import L.DefinableInjection {ℓ} lem using ( DefinableMap; module Inj )
-```
 
 <!--en-->
 Finite-sequence coding and the collapse argument meet in later cardinal calculations. The former transports an already given coded injection coordinatewise; the latter provides the base result `Lset ω ↪ ω`. Neither statement asserts a bijection or counts arbitrary infinite sequences.
@@ -166,11 +165,7 @@ Finite-sequence coding and the collapse argument meet in later cardinal calculat
 <!--/-->
 
 ```agda
-open import L.GCH.CardinalSquareLaw {ℓ} lem using ( isL-ord )
-open import L.GCH.FiniteSequenceCoding {ℓ} lem using ( seqL; seqL-in; seqL-out )
-open import L.Ordinal.SquareLaw {ℓ} lem using ( module FiniteBase )
 open FiniteBase using ( fromFin; fromFin-inj )
-open import L.InjectionComposition {ℓ} lem using ( appC; appC-adequate; ω-limit; finite-excl-ω )
 ```
 
 <!--en-->
@@ -180,12 +175,6 @@ A finite stage comes with a finite tally that lists all its members. Repetitions
 <!--ja-->
 有限段階には、その全要素を列挙する有限な名簿がある。重複していてもよいので、この名簿は全単射ではなく、全射的に名前を与えるものである。それで十分である。排中律を使った有界探索により、与えられた各要素の名前を一つ見つけられる。
 <!--/-->
-
-```agda
-open import L.Choice.FiniteStageOrders {ℓ} lem
-  using ( Tally; StageOrder; stageOrder; finiteStage )  -- lint-agda: keep (StageOrder used as the projection qualifier)
-open import L.GCH.OrderType {ℓ} lem using ( Holds; module Code )
-```
 
 <!--en-->
 The chosen tally index places each member of a finite stage in a finite ordinal presentation. Composing a hypothetical injection from `ω` with this naming map, and then duplicating the result on the diagonal, contradicts the finite square exclusion theorem.
@@ -209,8 +198,6 @@ Several later equalities concern dependent pairs whose second components are pro
 <!--ja-->
 後で現れるいくつかの等しさは、第二成分が証明である依存対についてのものである。その成分は命題なので、底の集合の等しさから包装された要素の等しさが決まる。これにより、`L` の要素、その提示、グラフの符号の間を円滑に行き来できる。
 <!--/-->
-
-
 
 <!--en-->
 Numerals have a second role besides marking environment lengths. Membership in `ω` says merely that an ambient set is equal to some numeral, while the proof keeps no globally chosen natural-number representative. Later eliminations respect this propositional character.
@@ -446,7 +433,6 @@ The lifting module is stated for a constructible graph `E` with four data: singl
 持ち上げのモジュールは、構成可能なグラフ `E` に対して四つのデータとともに述べられる。一価性、`A` の上の全域性、`A` の上の単射性、そして `B` の中の値である。これらはちょうど、`A` から `B` への符号化された単射の四つの条項である。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -460,8 +446,6 @@ module SeqMap (A B E : S)
 </summary>
 <div class="submodule-fold-content">
 
-
-
 <!--en-->
 The final range clause says only that every value occurring in `E` belongs to `B`. It does not require every member of `B` to occur, so the data describe an injection rather than a surjection or a bijection.
 <!--zh-->
@@ -469,8 +453,6 @@ The final range clause says only that every value occurring in `E` belongs to `B
 <!--ja-->
 最後の値域条件が述べるのは、`E` に現れるすべての値が `B` に属すことだけである。`B` の各要素が像になることは要求しないので、このデータが表すのは単射であり、全射や全単射ではない。
 <!--/-->
-
-
 
 <!--en-->
 The extraction machinery reads the internal graph as an actual function between the presentations of `A` and `B`: single-valuedness makes the fiber of each value a proposition, so the value can be recovered without any choice principle.
@@ -616,7 +598,6 @@ The host reading `Wit y s` says merely that some object `n` is the domain of `s`
 <!--/-->
 
 ```agda
-
   Wit : (y s : S) → Type (ℓ-suc ℓ)
   Wit y s = ∥ Σ[ n ∈ S ]
       ( ⟨ (n ∷ y ∷ s ∷ []) ⊨ domAt i2 i0 ⟩
@@ -633,7 +614,6 @@ The entry formula expresses exactly the three equations hidden in `Ent`: two exi
 <!--/-->
 
 ```agda
-
   opaque
     private
       entFo : Formula S 5
@@ -665,7 +645,6 @@ To read an entry from the formula, the proof eliminates the two nested existenti
 <!--/-->
 
 ```agda
-
     private
       entOut : (y s n b i : S) → ⟨ (i ∷ b ∷ n ∷ y ∷ s ∷ []) ⊨ entFo ⟩ → Ent y s i
       entOut y s n b i = rec₁ squash₁ (λ { (u , hv) →
@@ -797,7 +776,6 @@ Fix a sequence `g` of length `N` over `A`, a carrier element `s`, and an equatio
 `A` 上の長さ `N` の列 `g`、台の要素 `s`、および `s` の底の集合を `g` の環境グラフと同一視する等式を固定する。この具体的な表示から成分ごとの像を構成し、同じグラフ論理式を満たす任意の出力が同じ底の集合をもつことを示せる。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -805,8 +783,6 @@ Fix a sequence `g` of length `N` over `A`, a carrier element `s`, and an equatio
 ```
 </summary>
 <div class="submodule-fold-content">
-
-
 
 <!--en-->
 The intended output is the environment graph of the coordinatewise image `fg g`. At index `j`, its value is `f (g j)`, so the source and target sequences have the same finite length and corresponding entries are related by the input graph `E`.
@@ -872,7 +848,6 @@ The fact `envOver B (fg g)` is initially stated in the shorter environment conta
 <!--/-->
 
 ```agda
-
       he : ⟨ (B ∷ nn N ∷ y₀ ∷ s ∷ []) ⊨ envOverAt i2 i1 i0 ⟩
       he = envOverAt-transport (B ∷ nn N ∷ y₀ ∷ []) (B ∷ nn N ∷ y₀ ∷ s ∷ [])
              i2 i1 i0 i2 i1 i0 refl refl refl (envOver B (fg g))
@@ -1035,7 +1010,6 @@ The reading lemma states what the step clause provides: two elements and three m
 <!--/-->
 
 ```agda
-
           read : Σ[ u ∈ S ] Σ[ v ∈ S ]
                    ( ⟨ pr (# (toℕ j)) (fst u) ∈ fst s ⟩
                    × ⟨ pr (# (toℕ j)) (fst v) ∈ fst y ⟩
@@ -1112,7 +1086,6 @@ Function extensionality turns `pt` into equality of the two index functions. App
 ```
 </div>
 </details>
-
 
 <!--en-->
 Membership in the sequence set is stated as a type so that the argument can carry it alongside each element.
@@ -1251,7 +1224,6 @@ These facts define a map from `seqL A` to `seqL B`: `fo` gives its graph, `fn` g
 <!--/-->
 
 ```agda
-
   D : DefinableMap
   D = record
     { dom = seqL A ; cod = seqL B ; fn = fn ; into = into ; graph = fo
@@ -1351,7 +1323,6 @@ The injectivity just proved upgrades the definable map to an internal coded inje
 ```
 </div>
 </details>
-
 
 <!--en-->
 The exported theorem starts from an actual code `E` witnessing an injection from `A` to `B`: it is single-valued, has domain `A`, is injective, and has range contained in `B`. Passing these four components to `SeqMap` yields the propositionally truncated existence of a coded injection from `seqL A` to `seqL B`. The result concerns finite sequences of arbitrary length, not infinite sequences.
@@ -1490,7 +1461,6 @@ To prove the reading laws for `injFo`, fix the target `b`, the two relevant slot
 `injFo` の読み出し則を示すため、目標 `b`、関係する二つの位置 `f` と `B`、および割当て `γ` を固定する。局所名 `F` と `A` は、それぞれの位置にある台の要素を表す。これにより、後の議論では変数参照の処理を数学的な主張から切り離し、結論を直接 `InjCode F A b` と述べられる。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -1515,7 +1485,6 @@ The reading lemma turns satisfaction of the injection formula into the four clau
 <!--/-->
 
 ```agda
-
   read : ⟨ γ ⊨ injFo b f B ⟩ → InjCode F A b
   read (sv , dm , ij , ran) =
       svAt-in zero (F ∷ A ∷ []) (λ x y y' p q → svAt-out f γ sv x y y' p q)
@@ -1570,7 +1539,6 @@ For totality, a truncated graph witness is eliminated only into the proposition 
 ```
 </div>
 </details>
-
 
 <!--en-->
 ## Reducing the infinite-stage count to `L_ω`
@@ -1637,21 +1605,19 @@ The exclusion argument works with finite stages of the form `Lset (# n)`, and be
 排除の議論は、`Lset (# n)` の形の有限段階を扱い、そのような有限段階の名簿を取ることから始まる。すなわちその要素の、索引づけられた列挙である。
 <!--/-->
 
-```agda
-private
-```
+
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-  module FinNo (n : ℕ) where
+private module FinNo (n : ℕ) where
 ```
 </summary>
 <div class="submodule-fold-content">
 
 ```agda
-    t : Tally (finiteStage n)
-    t = StageOrder.tally (stageOrder n)
+  t : Tally (finiteStage n)
+  t = StageOrder.tally (stageOrder n)
 ```
 
 <!--en-->
@@ -1663,7 +1629,7 @@ The tally supplies its size, its member at each index, and the covering fact tha
 <!--/-->
 
 ```agda
-    open Tally t using ( size; item; onto )
+  open Tally t using ( size; item; onto )
 ```
 
 <!--en-->
@@ -1675,10 +1641,10 @@ The search lemma names a member: for each member `x` of the finite stage it runs
 <!--/-->
 
 ```agda
-    named : (x : V ℓ) → ⟨ x ∈ˢ finiteStage n ⟩ → Σ[ i ∈ Fin size ] (item i ≡ x)
-    named x hx = decRec (λ q → q) (λ nq → ⊥₀-rec (rec₁ isProp⊥ nq (onto x hx)))
-      (DecΣ size (λ i → item i ≡ x)
-        (λ i → FOL.Semantics.decideEquality 𝒮ᵥ lem (item i) x))
+  named : (x : V ℓ) → ⟨ x ∈ˢ finiteStage n ⟩ → Σ[ i ∈ Fin size ] (item i ≡ x)
+  named x hx = decRec (λ q → q) (λ nq → ⊥₀-rec (rec₁ isProp⊥ nq (onto x hx)))
+    (DecΣ size (λ i → item i ≡ x)
+      (λ i → FOL.Semantics.decideEquality 𝒮ᵥ lem (item i) x))
 ```
 
 <!--en-->
@@ -1690,11 +1656,11 @@ Suppose that `f` injected the presentation of `ω` into a finite stage. Each val
 <!--/-->
 
 ```agda
-    noinj : (f : ⟪ ω ⟫ → ⟪ Lset (# n) ⟫)
-          → ((x y : ⟪ ω ⟫) → f x ≡ f y → x ≡ y) → ⊥₀
-    noinj f finj = finite-excl-ω (# size) (numeral-ord size) (#∈ω size)
-      (λ x → q x , q x) (λ x y e → finj x y (qq x y (cong fst e)))
-      where
+  noinj : (f : ⟪ ω ⟫ → ⟪ Lset (# n) ⟫)
+        → ((x y : ⟪ ω ⟫) → f x ≡ f y → x ≡ y) → ⊥₀
+  noinj f finj = finite-excl-ω (# size) (numeral-ord size) (#∈ω size)
+    (λ x → q x , q x) (λ x y e → finj x y (qq x y (cong fst e)))
+    where
 ```
 
 <!--en-->
@@ -1706,11 +1672,11 @@ The auxiliary map reads each value of `f` as an ambient element, certifies that 
 <!--/-->
 
 ```agda
-      vl : ⟪ ω ⟫ → V ℓ
-      vl x = ⟪ Lset (# n) ⟫↪ (f x)
-      mm : (x : ⟪ ω ⟫) → ⟨ vl x ∈ˢ finiteStage n ⟩
-      mm x = member (Lset (# n)) (f x)
-      q : ⟪ ω ⟫ → ⟪ # size ⟫
+    vl : ⟪ ω ⟫ → V ℓ
+    vl x = ⟪ Lset (# n) ⟫↪ (f x)
+    mm : (x : ⟪ ω ⟫) → ⟨ vl x ∈ˢ finiteStage n ⟩
+    mm x = member (Lset (# n)) (f x)
+    q : ⟪ ω ⟫ → ⟪ # size ⟫
 ```
 
 <!--en-->
@@ -1722,11 +1688,11 @@ The map `q` converts the chosen tally index into the corresponding element of th
 <!--/-->
 
 ```agda
-      q x = fromFin size (toℕ (named (vl x) (mm x) .fst) , toℕ<n (named (vl x) (mm x) .fst))
-      qq : (x y : ⟪ ω ⟫) → q x ≡ q y → f x ≡ f y
-      qq x y e = ↪-inj {a = Lset (# n)}
-        (sym (named (vl x) (mm x) .snd)
-          ∙ cong item (inj-toℕ (cong fst (fromFin-inj size _ _ e)))
+    q x = fromFin size (toℕ (named (vl x) (mm x) .fst) , toℕ<n (named (vl x) (mm x) .fst))
+    qq : (x y : ⟪ ω ⟫) → q x ≡ q y → f x ≡ f y
+    qq x y e = ↪-inj {a = Lset (# n)}
+      (sym (named (vl x) (mm x) .snd)
+        ∙ cong item (inj-toℕ (cong fst (fromFin-inj size _ _ e)))
 ```
 
 <!--en-->
@@ -1738,11 +1704,10 @@ The chain of identifications is closed by the named entry of the second point, c
 <!--/-->
 
 ```agda
-          ∙ named (vl y) (mm y) .snd)
+        ∙ named (vl y) (mm y) .snd)
 ```
 </div>
 </details>
-
 
 <!--en-->
 For an arbitrary index `w`, `NoInto w` is the proposition that no host-level injection exists from the presentation of `ω` into the presentation of `Lset w`. The next lemma will establish this proposition under the additional hypothesis that `w` belongs to `ω`.
@@ -1753,6 +1718,7 @@ For an arbitrary index `w`, `NoInto w` is the proposition that no host-level inj
 <!--/-->
 
 ```agda
+private
   NoInto : V ℓ → Type ℓ
   NoInto w = (f : ⟪ ω ⟫ → ⟪ Lset w ⟫)
            → ((x y : ⟪ ω ⟫) → f x ≡ f y → x ≡ y) → ⊥₀
@@ -1961,7 +1927,6 @@ Transitivity of the internal relation is likewise transported through the host o
 <!--/-->
 
 ```agda
-
 transω : {a b c : OT.Dom} → a OT.≺ b → b OT.≺ c → a OT.≺ c
 transω {a} {b} {c} k k' =
   <→≺ a c (SWO.trans∙ Wω a b c (≺→< a b k) (≺→< b c k'))
@@ -2019,8 +1984,7 @@ The birth-stage family is instantiated at the internal `ω`: every presented mem
 <!--/-->
 
 ```agda
-private
-  module F = Family ω (λ δ _ → orderAt δ) ω-ord using ( _≺_; bornAt )
+private module F = Family ω (λ δ _ → orderAt δ) ω-ord using ( _≺_; bornAt )
 ```
 
 <!--en-->
@@ -2032,6 +1996,7 @@ The unfolded reading of the family relation is proved: at `ω`, the abstractly s
 <!--/-->
 
 ```agda
+private
   unfoldω : (a b : MemOf (Lset ω))
           → relOf (orderAt ω ω-ord) a b ≡ F._≺_ a b
   unfoldω a b = cong (λ z → relOf (z ω-ord) a b) (orderAt-step ω)
@@ -2305,7 +2270,6 @@ Ordinal trichotomy compares `C.col p` with `ω`. If the collapse is already a me
 <!--/-->
 
 ```agda
-
   go : ⟨ C.col p ∈ˢ ω ⟩ ⊎ ((C.col p ≡ ω) ⊎ ⟨ ω ∈ˢ C.col p ⟩) → ⟨ C.col p ∈ˢ ω ⟩
   go (inl k) = k
   go (inr (inl e)) =

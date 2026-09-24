@@ -1,25 +1,32 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # Recognizing well-formed constructor keys
-
-A code is well formed when it has one of the term or formula constructor shapes and its payloads occupy the expected frames. This chapter defines the ten-way shape predicate, proves its flat witness characterization in both directions, and recovers or constructs term codes and immediate subcodes.
 <!--zh-->
 # 良构构造子键的识别
-
-一个码若具有某种词项或公式构造子的形状，且其载荷位于预期框架中，就是良构的。本章定义十路形状谓词，双向证明其平铺见证的刻画，并恢复或构造词项码与直接子码。
 <!--ja-->
 # 整形式な構成子キーの認識
-
-符号が整形式であるとは、項または論理式のいずれかの構成子の形を持ち、そのペイロードが所定の枠に収まることである。十通りの形の述語を定義し、その平坦な証人による特徴付けを双方向で示し、項の符号と直下の部分符号を復元または構成する。
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
 open import Base.Prelude
-open import Cubical.Data.Sum using () renaming ( map to sumMap )
+```
 
+<!--en-->
+Fix a universe level `ℓ`{.Agda}. Keeping the level as a parameter lets the constructions be instantiated at each required size without identifying distinct universes.
+<!--zh-->
+固定宇宙层级 `ℓ`{.Agda}。保留这个层级参数，使构造可以在所需的各个大小处实例化，而不必把不同的宇宙视为同一个。
+<!--ja-->
+宇宙レベル `ℓ`{.Agda} を固定する。このレベルをパラメータとして保つことで、異なる宇宙を同一視せずに、必要な大きさで構成を具体化できる。
+<!--/-->
+
+```agda
 module L.Coding.CodeShape {ℓ : Level} where
+```
 
+```agda
 open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax
   using ( Term; Formula; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊤̇; ⊥̇
@@ -28,8 +35,6 @@ open import FOL.Manipulation.ConstantMapping using ( mapTm; mapFo )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Coding {ℓ} using ( pr; #mono; module VCode )
-open import Cubical.HITs.CumulativeHierarchy.Constructions using ( module InfinitySet )
-open InfinitySet using ( #_; sucV )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
 open import L.Coding.Expressions {ℓ} using ( tagAtL; tagAtL-adequate; arityTagAtL; arityTagAtL-adequate; arityTagPairAtL; arityTagPairAtL-adequate; numL )
 open import L.Coding.Closure {ℓ} using ( closedAt; binShapeAt; unShapeAt; bothSameAt; oneSameAt; oneSuccAt; succSndAt; binSameClosed-out; unSameClosed-out; unSuccClosed-out; binSuccClosed-out )
@@ -37,6 +42,24 @@ open import L.Coding.CodeConstructibility {ℓ} using ( closure-inv; key; codeL;
 open import L.Coding.SubformulaClosure {ℓ} using ( clo )
 open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
 open import L.Ordinal {ℓ} using ( ∈#-elim )
+```
+
+<!--en-->
+
+A code is well formed when it has one of the term or formula constructor shapes and its payloads occupy the expected frames. This chapter defines the ten-way shape predicate, proves its flat witness characterization in both directions, and recovers or constructs term codes and immediate subcodes.
+<!--zh-->
+
+一个码若具有某种词项或公式构造子的形状，且其载荷位于预期框架中，就是良构的。本章定义十路形状谓词，双向证明其平铺见证的刻画，并恢复或构造词项码与直接子码。
+<!--ja-->
+
+符号が整形式であるとは、項または論理式のいずれかの構成子の形を持ち、そのペイロードが所定の枠に収まることである。十通りの形の述語を定義し、その平坦な証人による特徴付けを双方向で示し、項の符号と直下の部分符号を復元または構成する。
+<!--/-->
+
+```agda
+open import Cubical.Data.Sum using () renaming ( map to sumMap )
+
+open import Cubical.HITs.CumulativeHierarchy.Constructions using ( module InfinitySet )
+open InfinitySet using ( #_; sucV )
 open import Cubical.Data.FinData.Properties using ( fromℕ'; toFromId'; toℕ<n )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
 
@@ -63,7 +86,6 @@ is the same division the closedness predicate makes, and for the same reason.
 単項構成子と二項構成子では、キーに格納する部分符号の数が異なる。二つの枠はタグ、アリティ、項または論理式の部分符号を所定の位置に配置する。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -82,7 +104,6 @@ module _ {n : ℕ} where
 ```
 </div>
 </details>
-
 
 <!--en-->
 ## Term codes
@@ -152,7 +173,6 @@ a term look at the second, and they are the only four that could.
 于是「成形」相对的是两位，而非一位：那个集合，以及它的诸词项从中点名常元的那个载体。只有那四条提到词项的关系去看第二位，而它们也是仅有的四条能去看的。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -185,7 +205,6 @@ module _ {n : ℕ} where
 ```
 </div>
 </details>
-
 
 <!--en-->
 ## What a member is, read flat
@@ -382,7 +401,6 @@ whole disjunction.
 两个析取支由两条点了名的引理去读，那条读式就是它们的分情形，这里并无选择余地。写成一个函数的两条子句时，每支各带一个截断，而它们所在的析取自己也带一个，本章十分钟内没跑完；把每支的读法各给一个写出来的类型之后，两秒不到就查完。这条规矩是归约器的，不是数学的：类型被写出来的分支对着那个类型求解，类型靠推断的分支对着整个析取求解。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -392,7 +410,6 @@ module _ {K : Type ℓ} (f : K → V ℓ) where
 <div class="submodule-fold-content">
 
 ```agda
-
   TmWit : ℕ → V ℓ → Type (ℓ-suc ℓ)
   TmWit n x = Σ[ t ∈ Term K n ] (VCode.⌜ mapTm f t ⌝ᵗ ≡ x)
 
@@ -431,7 +448,6 @@ module _ {K : Type ℓ} (f : K → V ℓ) where
 </div>
 </details>
 
-
 <!--en-->
 ## Terms, encoded
 
@@ -456,7 +472,6 @@ numerals distinct.
 逆に、任意の項の符号は項の形の述語を満たす。項の二つの構成子を調べ、対応するタグとペイロードの証人を直接与える。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -466,7 +481,6 @@ module _ {K : Type ℓ} (f : K → V ℓ) (h : (k : K) → ⟨ isL (f k) ⟩) wh
 <div class="submodule-fold-content">
 
 ```agda
-
   isTmAt-in : ∀ {m} (t N A : Fin m) (γ : S ^ m) (n : ℕ)
             → fst (lookup N γ) ≡ # n
             → ((c : K) → ⟨ f c ∈ fst (lookup A γ) ⟩)
@@ -489,7 +503,6 @@ module _ {K : Type ℓ} (f : K → V ℓ) (h : (k : K) → ⟨ isL (f k) ⟩) wh
 ```
 </div>
 </details>
-
 
 <!--en-->
 ## One layer off
@@ -515,7 +528,6 @@ were written against the same reading of an arity-tagged pair.
 <!--zh-->
 形状所给出的那条等式，正是封闭性所需要的那一条，二者逐字相同，故中间无需任何东西即可衔接。这不是巧合：两者都是对「带元数标签的对」按同一条读法写下的。
 <!--/-->
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
@@ -592,7 +604,6 @@ module Peel {m : ℕ} (C A : Fin m) (γ : S ^ m)
 </div>
 </details>
 
-
 <!--en-->
 ## The closure is shaped
 
@@ -638,7 +649,6 @@ model's own coding it must first establish a correspondence between the two codi
 
 另一方面，第一半变得更容易了。一个词项所需的见证是「它的码是**某个**词项的码」，而在字母表之上，一个词项的码本来就是这个：编码式就是恒等，旁边配一个 `refl`{.Agda}。若在模型自己的编码上，则它还得先在两套编码之间建立对应。
 <!--/-->
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">

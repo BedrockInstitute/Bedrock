@@ -1,17 +1,39 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+module FOL.Manipulation.ParameterAbstraction where
+```
+
 <!--en-->
 # Parameter abstraction
+<!--zh-->
+# 参数抽象
+<!--ja-->
+# パラメータ抽象
+<!--/-->
+
+```agda
+open import Base.Prelude
+open import FOL.ZFStructure using ( ZFStructure )
+open import FOL.Syntax using
+  ( Term; con; var
+  ; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
+import FOL.Semantics
+open import FOL.Manipulation.ConstantOccurrences using
+  ( countTm; countFo; constantsTm; constantsFo; padRight; padLeft
+  ; lookup-padRight; lookup-padLeft; lookup-map )
+```
+
+<!--en-->
 
 A formula with constants can be converted into a parameter-free formula by replacing each constant occurrence with a fresh variable and recording the constants in a vector. Supplying that vector through the environment preserves satisfaction, which makes formulas with parameters available to later coding arguments.
 
 This chapter builds the replacement itself. The occurrence count from FOL.Manipulation.ConstantOccurrences fixes how many new variables are needed, and a placement decides which variable slot each occurrence receives. The substitution runs in a single structural pass, and the adequacy theorem at the end identifies satisfaction before and after, which is what later coding of formulas will rely on.
 <!--zh-->
-# 参数抽象
 
 带常元的公式可通过将每次常元出现替换为新变量，并把这些常元记录在向量中，转成无参公式。通过环境供给该向量会保持满足关系，从而使带参数公式可用于后续符号化论证。
 
 本章构造这个替换本身。FOL.Manipulation.ConstantOccurrences 中的出现计数决定了需要多少个新变量，而安置决定每次出现获得哪个变量位。替换只做一次结构遍历；章末的充分性定理识别替换前后的满足关系，这正是后续对公式符号化时所依赖的事实。
 <!--ja-->
-# パラメータ抽象
 
 定数を含む論理式は、定数の各出現を新しい変数で置き換え、その定数をベクトルに記録することで、パラメータを持たない論理式へ変換できる。そのベクトルを環境から与えても充足関係は保存されるため、パラメータ付き論理式を後の符号化に利用できる。
 
@@ -33,13 +55,7 @@ The replacement works occurrence by occurrence, not constant by constant. If the
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-module FOL.Manipulation.ParameterAbstraction where
-
-open import Base.Prelude
 open import Cubical.Data.Vec using ( _++_ )
-open import FOL.ZFStructure using ( ZFStructure )
 ```
 
 <!--en-->
@@ -56,14 +72,6 @@ The whole construction is one structural pass over the formula. Its adequacy the
 構成全体は論理式の上の一度の構造的な走査である。章の末尾で証明される妥当性の定理は、定数解釈の下での元の論理式の充足と、拡張された環境の下での抽象化の充足を同一視する。後の符号化の議論が依拠するのはまさにこの同一視である。
 <!--/-->
 
-```agda
-open import FOL.Syntax using
-  ( Term; con; var
-  ; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
-import FOL.Semantics
-open import FOL.Manipulation.ConstantOccurrences using
-```
-
 <!--en-->
 Since every constant occurrence becomes a variable, the translated formula contains no constants at all: it lives over an alphabet with no inhabitants. The code uses the empty type `⊥*` as that alphabet. No interpretation of it is ever demanded, because there is nothing to interpret; the type only has to exist so the translated syntax has a well-formed carrier.
 <!--zh-->
@@ -71,11 +79,6 @@ Since every constant occurrence becomes a variable, the translated formula conta
 <!--ja-->
 定数の出現はすべて変数になるため、翻訳後の論理式には定数がまったく含まれない。つまり、元をひとつも持たないアルファベットの上にある。コードでは空の型 `⊥*` がこのアルファベットの役を担う。解釈すべきものがないので、この解釈が実際に要求されることはなく、型が存在して翻訳後の構文に well-formed な台を与えるだけで十分である。
 <!--/-->
-
-```agda
-  ( countTm; countFo; constantsTm; constantsFo; padRight; padLeft
-  ; lookup-padRight; lookup-padLeft; lookup-map )
-```
 
 <!--en-->
 ## The abstraction
@@ -231,7 +234,6 @@ Adequacy is the statement that the abstraction does not change meaning. It compa
 妥当性とは、抽象化が意味を変えないという主張である。同じ論理式の二つの評価を比較する。一方は `K` 上の元の構文で、定数は写像 `ι : K → S` によって解釈される。他方は空のアルファベット上の翻訳後の構文で、連結された環境 `γ ++ σ` の中で評価される。`γ` は元の自由変数の値を、`σ` は記録された定数の解釈を保持する。ここで `S` は命題値の構造 `𝒮` の台であり、`S ^ n` は長さ `n` の環境の型である。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -241,7 +243,6 @@ module _ {ℓ} (𝒮 : ZFStructure ℓ) where
 <div class="submodule-fold-content">
 
 ```agda
-
   open ZFStructure 𝒮
 
   private module Sem = FOL.Semantics 𝒮
@@ -256,18 +257,15 @@ The comparison rests on a single hypothesis connecting the two sides: for every 
 この比較は、両側をつなぐただ一つの仮定に依存する。各出現について、配置の指名した変数がそこに記録された定数の解釈を保持する、すなわち `lookup (θ j) (γ ++ σ) ≡ ι (lookup j (constantsFo φ))` というものである。この後のすべては、この仮定を保ちながら構文に対する構造的帰納法である。翻訳後の構文は空のアルファベットの上にあるため、その読み方 `_⊨₀_` と `⟦_⟧₀` には本物の定数解釈は要らない。ただし意味論のモジュールはこのデータを要求するため、空の型の消去が空虚にそれを供給する。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-
   module _ {ℓz ℓc} {K : Type ℓc} (ι : K → S) where
 ```
 </summary>
 <div class="submodule-fold-content">
 
 ```agda
-
     open Sem.At K ι using ( _⊨_; ⟦_⟧ )
     open Sem.At (⊥* {ℓz}) ⊥*-rec using ()
       renaming ( _⊨_ to _⊨₀_ ; ⟦_⟧ to ⟦_⟧₀ )
@@ -595,7 +593,6 @@ For definable subsets of one variable, the corollary fixes the environment to `x
 
 </div>
 </details>
-
 
 <!--en-->
 ## Recap

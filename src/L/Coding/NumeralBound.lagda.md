@@ -1,16 +1,19 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # Numerals in a successor-closed ordinal stage
-
-Finite ordinals supply the numerals used in formula codes. This chapter shows that every numeral belongs to a stage indexed by an ordinal that contains zero and is closed under successors. The argument first treats any monotone stage family containing each ordinal at its successor stage, then applies it to the constructible hierarchy.
 <!--zh-->
 # 对后继封闭的序数层中的数码
-
-有限序数提供公式码所用的数码。本章证明，当层的序数指标包含零且对后继封闭时，每个数码都属于该层。我们先处理任意单调且在后继层包含原序数的层族，再将结论应用于可构造层级。
 <!--ja-->
 # 後者演算について閉じた順序数段階の数項
-
-有限順序数は論理式コードに用いる数項を与える。本章では、段階の順序数添字が零を含み、後者演算について閉じていれば、すべての数項がその段階に属することを示す。まず各順序数をその後者の段階に含む単調な段階族を扱い、その結果を構成可能階層に適用する。
 <!--/-->
+
+```agda
+open import Base.Prelude
+open import Base.Classical using ( LEM )
+```
 
 <!--en-->
 The chapter fixes a universe level ℓ and takes excluded middle at level ℓ-suc ℓ as an explicit parameter `lem`. The elementary induction putting numerals inside an ordinal will not use it; the assumption is carried here because one ingredient of the constructible specialization, the theorem that an ordinal appears at the stage indexed by its successor, comes from the classical ordinal-stage development.
@@ -21,13 +24,30 @@ The chapter fixes a universe level ℓ and takes excluded middle at level ℓ-su
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-open import Base.Prelude
-open import Base.Classical using ( LEM )
-
 module L.Coding.NumeralBound {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
+
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import L.Constructible {ℓ} using ( IsOrd; Lset; Lset-mono )
+open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
+open import L.Ordinal {ℓ} using ( numeral-ord )
+open import L.Ordinal.Stages {ℓ} lem using ( ord∈Lset-suc )
+```
+
+<!--en-->
+
+Finite ordinals supply the numerals used in formula codes. This chapter shows that every numeral belongs to a stage indexed by an ordinal that contains zero and is closed under successors. The argument first treats any monotone stage family containing each ordinal at its successor stage, then applies it to the constructible hierarchy.
+<!--zh-->
+
+有限序数提供公式码所用的数码。本章证明，当层的序数指标包含零且对后继封闭时，每个数码都属于该层。我们先处理任意单调且在后继层包含原序数的层族，再将结论应用于可构造层级。
+<!--ja-->
+
+有限順序数は論理式コードに用いる数項を与える。本章では、段階の順序数添字が零を含み、後者演算について閉じていれば、すべての数項がその段階に属することを示す。まず各順序数をその後者の段階に含む単調な段階族を扱い、その結果を構成可能階層に適用する。
+<!--/-->
+
+
 
 <!--en-->
 Two presentations of a numeral must be kept apart. The ambient numeral `# k` is the finite von Neumann ordinal in `V ℓ`; the model numeral `numeralL k` is an element of `L` whose underlying set is `# k`. The first part proves the bound for the ambient ordinal. Only after that does the projection equation `numeralL-fst` transfer the result to the model presentation.
@@ -36,15 +56,6 @@ Two presentations of a numeral must be kept apart. The ambient numeral `# k` is 
 <!--ja-->
 数項の二つの表現を区別する。周囲の数項 `# k` は `V ℓ` の有限 von Neumann 順序数であり、模型の数項 `numeralL k` は底集合が `# k` である `L` の要素である。まず周囲の順序数について上界を証明し、その後で射影等式 `numeralL-fst` により模型での表現へ結果を移す。
 <!--/-->
-
-```agda
-
-open import FOL.ZFStructure using ( module hPropStructure )
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-open import L.Constructible {ℓ} using ( IsOrd; Lset; Lset-mono )
-open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
-open import L.Ordinal {ℓ} using ( numeral-ord )
-```
 
 <!--en-->
 The ambient numerals live in the cumulative hierarchy itself: `∅` is its empty set, `# k` is the finite von Neumann ordinal with k members, and `sucV` is the successor step a ↦ a ∪ {a}. Note that `# (suc k)` is definitionally `sucV (# k)`, so closing λ under `sucV` automatically covers every numeral after zero. The truth values here are propositions at level ℓ-suc ℓ, packaged directly in `hProp`, so each membership claim is a proposition.
@@ -55,8 +66,6 @@ The ambient numerals live in the cumulative hierarchy itself: `∅` is its empty
 <!--/-->
 
 ```agda
-open import L.Ordinal.Stages {ℓ} lem using ( ord∈Lset-suc )
-
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( ∅; module InfinitySet )
 open InfinitySet using ( #_; sucV )
@@ -96,7 +105,6 @@ The section works over the fixed carrier S with membership `⟨_∈ˢ_⟩`, an a
 本節は、所属 `⟨_∈ˢ_⟩` を備えた固定された台 S、その上の任意の写像 T、および T に関する二つの仮定に対して述べられる。第一の `T-mono` は、段階添字の所属 β ∈ α と x ∈ T β とから x ∈ T α を導く。第二の `T-ord` が錨である。順序数 δ は、その自身の後者を添字とする段階 T (sucV δ) に属する。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -111,8 +119,6 @@ module BoundOver
 </summary>
 <div class="submodule-fold-content">
 
-
-
 <!--en-->
 The remaining parameters describe the index λ: it is a set, certified to be an ordinal, containing ∅, and closed under `sucV`. The certification `ordλ` records that λ itself is a legitimate ordinal stage index; the two closure facts are the only ones the induction will consume.
 <!--zh-->
@@ -120,8 +126,6 @@ The remaining parameters describe the index λ: it is a set, certified to be an 
 <!--ja-->
 残りのパラメータは添字 λ を記述する。λ は集合であり、順序数であることの証明を持ち、∅ を含み、`sucV` について閉じている。証明 `ordλ` は λ 自身が正当な順序数段階の添字であることを記録する。帰納法が消費するのは二つの閉包の事実だけである。
 <!--/-->
-
-
 
 <!--en-->
 Every ambient numeral lands in λ, and the proof uses only the two closure facts just assumed. This is the purely inductive half of the argument: no excluded middle, no property of T, and not even the ordinal certificate of λ enter it.
@@ -169,7 +173,6 @@ Two steps compose. First, T-ord at δ = # k, together with `numeral-ord k` certi
 </div>
 </details>
 
-
 <!--en-->
 ## Numerals in the constructible hierarchy
 
@@ -192,7 +195,6 @@ Instantiating the abstraction only requires naming the witnesses. The family T b
 抽象の実体化は、証人を指名するだけで済む。段階族 T には `Lset` を与え、`Lset-mono` が順序数添字の所属に沿う単調性を供給し、`ord∈Lset-suc` が「各順序数は `Lset (sucV α)` に属する」という錨を供給する。定理 `ord∈Lset-suc` がこの特殊化に必要な古典的仮定を担う。数項についての帰納そのものは、先に示した初等的な閉包の議論のままである。λ に関する仮定はそのまま渡されるので、`BoundOver` の内部で T λ について証明されたことはすべて `Lset lam` についても使える。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -204,7 +206,6 @@ module Bound (lam : S) (ordλ : IsOrd lam)
 <div class="submodule-fold-content">
 
 ```agda
-
   open BoundOver Lset Lset-mono ord∈Lset-suc lam ordλ succλ ∅∈λ public
 ```
 

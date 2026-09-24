@@ -1,27 +1,13 @@
-<!--en-->
-# Adequate stages for the GCH argument
-
-The internal descriptions used by condensation require four witness sets to be present together. This chapter defines when an ordinal index is adequate, constructs such an index `γ` above any given ordinal, and then constructs an index `λ` whose members are locally covered by smaller adequate indices. The corresponding constructible stages are `Lset γ` and `Lset λ`. Here adequate is a term of this book for a four-part closure condition tailored to the GCH argument, not the classical notion of an admissible ordinal.
-<!--zh-->
-# GCH 论证所需的充分层
-
-凝聚所用的内部描述要求四个见证集合同时出现。本章定义序数指标何时充分，在任意给定序数之上构造这样的指标 `γ`，再构造指标 `λ`，使它的每个成员都在某个更小的充分指标中得到局部覆盖。相应的可构造层分别是 `Lset γ` 与 `Lset λ`。充分层是本书为 GCH 论证所需四项闭合条件所定的术语，并非通常所谓容许序数。
-<!--ja-->
-# GCH の議論に必要な十分な段階
-
-凝縮で用いる内部記述には、四つの証人集合が同時に存在する必要がある。この章では、順序数添字が十分であるための条件を定め、任意の順序数より上にその条件を満たす添字 `γ` を構成する。さらに、各要素がより小さい十分な添字によって局所的に覆われる添字 `λ` を構成する。対応する構成可能段階は `Lset γ` と `Lset λ` である。十分な段階は、GCH の議論に合わせた四項目の閉包条件を表す本書固有の用語であり、通常の admissible 順序数ではない。
-<!--/-->
-
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
 ```
 
 <!--en-->
-All constructions in this chapter are relative to one explicit instance of excluded middle. It enters through the construction of birth stages and of the coded witnesses; it does not supply a choice function. In particular, the existence obtained later from membership in a union remains propositionally truncated.
+# Adequate stages for the GCH argument
 <!--zh-->
-本章的全部构造都相对于一个显式的排中律实例。它通过诞生层和编码见证的构造进入论证，却不提供选择函数。特别地，后文从属于并集所得的存在性仍带有命题截断。
+# GCH 论证所需的充分层
 <!--ja-->
-この章のすべての構成は、一つの明示的な排中律の実例に相対している。この仮定は誕生段階と符号化された証人の構成を通して議論に入るが、選択関数を与えるものではない。とくに、後で合併への所属から得る存在は、命題的切り詰めの中にとどまる。
+# GCH の議論に必要な十分な段階
 <!--/-->
 
 ```agda
@@ -41,6 +27,45 @@ Fix a universe level `ℓ` and excluded middle for propositions at level `ℓ-su
 module L.GCH.AdequateStages {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax using ( ⊤̇ )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Model {ℓ} using ( union-family-in; union-family-out )
+open import L.Constructible {ℓ} using
+  ( 𝒮ʟ; isL; IsOrd; isPropIsOrd; Lset; Lset-mono; Lset→isL; 𝒟ₒ-intro )
+open import L.Ordinal {ℓ} using ( boundingOrd; bound2; setUnion-ord; mem-ord; suc-ord; ω-ord )
+open import L.Ordinal.Stages {ℓ} lem using ( ord∈Lset-suc )
+open import L.Stage {ℓ} lem using ( stage; stage-ord; stage-mem )
+open import L.Hierarchy {ℓ} lem using ( hierL )
+open import L.Axioms.Basic {ℓ} using ( LsetS; Lset-suc )
+open import L.Coding.CodeSet {ℓ} lem using ( AllCodes )
+open import L.Definability {ℓ} using ( module DefOf )
+open import L.Coding.EnvironmentTower {ℓ} lem using ( module Tower )
+open import L.Coding.SatisfactionGraphSet {ℓ} lem using ( module SatGraph )
+```
+
+<!--en-->
+
+The internal descriptions used by condensation require four witness sets to be present together. This chapter defines when an ordinal index is adequate, constructs such an index `γ` above any given ordinal, and then constructs an index `λ` whose members are locally covered by smaller adequate indices. The corresponding constructible stages are `Lset γ` and `Lset λ`. Here adequate is a term of this book for a four-part closure condition tailored to the GCH argument, not the classical notion of an admissible ordinal.
+<!--zh-->
+
+凝聚所用的内部描述要求四个见证集合同时出现。本章定义序数指标何时充分，在任意给定序数之上构造这样的指标 `γ`，再构造指标 `λ`，使它的每个成员都在某个更小的充分指标中得到局部覆盖。相应的可构造层分别是 `Lset γ` 与 `Lset λ`。充分层是本书为 GCH 论证所需四项闭合条件所定的术语，并非通常所谓容许序数。
+<!--ja-->
+
+凝縮で用いる内部記述には、四つの証人集合が同時に存在する必要がある。この章では、順序数添字が十分であるための条件を定め、任意の順序数より上にその条件を満たす添字 `γ` を構成する。さらに、各要素がより小さい十分な添字によって局所的に覆われる添字 `λ` を構成する。対応する構成可能段階は `Lset γ` と `Lset λ` である。十分な段階は、GCH の議論に合わせた四項目の閉包条件を表す本書固有の用語であり、通常の admissible 順序数ではない。
+<!--/-->
+
+<!--en-->
+All constructions in this chapter are relative to one explicit instance of excluded middle. It enters through the construction of birth stages and of the coded witnesses; it does not supply a choice function. In particular, the existence obtained later from membership in a union remains propositionally truncated.
+<!--zh-->
+本章的全部构造都相对于一个显式的排中律实例。它通过诞生层和编码见证的构造进入论证，却不提供选择函数。特别地，后文从属于并集所得的存在性仍带有命题截断。
+<!--ja-->
+この章のすべての構成は、一つの明示的な排中律の実例に相対している。この仮定は誕生段階と符号化された証人の構成を通して議論に入るが、選択関数を与えるものではない。とくに、後で合併への所属から得る存在は、命題的切り詰めの中にとどまる。
+<!--/-->
+
+
+
 <!--en-->
 The construction takes place in the ambient cumulative hierarchy `V ℓ`. Its objects `c`, `γ`, and later `λ` are ordinal indices, whereas `Lset c`, `Lset γ`, and `Lset λ` are the constructible stages indexed by them. Unions are formed among the ordinal indices in the ambient hierarchy; the truth formula will be used only at the end to show that a whole constructible stage is an element of its successor stage.
 <!--zh-->
@@ -48,14 +73,6 @@ The construction takes place in the ambient cumulative hierarchy `V ℓ`. Its ob
 <!--ja-->
 この構成は周囲の累積階層 `V ℓ` の中で行われる。ここで `c`、`γ`、そして後の `λ` は順序数の添字であり、`Lset c`、`Lset γ`、`Lset λ` がそれぞれにより添字づけられた構成可能段階である。合併は周囲の階層にある順序数添字の間で作られる。恒真論理式を使うのは最後だけで、構成可能段階全体がその後続段階の要素になることを示す。
 <!--/-->
-
-```agda
-open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using ( ⊤̇ )
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-open import V.Model {ℓ} using ( union-family-in; union-family-out )
-open import L.Constructible {ℓ} using
-```
 
 <!--en-->
 To place a constructible witness in a later stage, first take its birth-stage index, then bound that ordinal index, and finally use monotonicity of `Lset`. Separate ordinal facts ensure that members of an ordinal, their successors, and the common bounds used along the way are still ordinals. Thus the bounding argument acts on indices, while its conclusion places witness sets inside a stage.
@@ -65,14 +82,6 @@ To place a constructible witness in a later stage, first take its birth-stage in
 構成可能な証人を後の段階に入れるには、まずその誕生段階の添字を取り、その順序数添字を上から抑え、最後に `Lset` の単調性を使う。別の順序数に関する事実により、順序数の要素、その後続、そして途中で使う共通上界も順序数であることが保証される。したがって上界の議論が扱うのは添字であり、その結論によって証人集合が一つの段階に入る。
 <!--/-->
 
-```agda
-  ( 𝒮ʟ; isL; IsOrd; isPropIsOrd; Lset; Lset-mono; Lset→isL; 𝒟ₒ-intro )
-open import L.Ordinal {ℓ} using ( boundingOrd; bound2; setUnion-ord; mem-ord; suc-ord; ω-ord )
-open import L.Ordinal.Stages {ℓ} lem using ( ord∈Lset-suc )
-open import L.Stage {ℓ} lem using ( stage; stage-ord; stage-mem )
-open import L.Hierarchy {ℓ} lem using ( hierL )
-```
-
 <!--en-->
 For a fixed ordinal index `c`, the later hierarchy description needs four constructible sets associated with `Lset c`: the internal hierarchy table, the set of all formula codes, the graph of uniform satisfaction, and the environment tower. Adequacy places all four together in one later constructible stage, where a single bounded description can range over them.
 <!--zh-->
@@ -80,14 +89,6 @@ For a fixed ordinal index `c`, the later hierarchy description needs four constr
 <!--ja-->
 固定した順序数添字 `c` に対し、後の階層記述には `Lset c` に結びつく四つの構成可能集合、すなわち内部の階層表、すべての論理式符号の集合、一様な充足関係のグラフ、環境の塔が必要である。妥当性はこの四つを一つの後の構成可能段階にまとめて入れ、一つの有界な記述がそこでそれらを量化できるようにする。
 <!--/-->
-
-```agda
-open import L.Axioms.Basic {ℓ} using ( LsetS; Lset-suc )
-open import L.Coding.CodeSet {ℓ} lem using ( AllCodes )
-open import L.Definability {ℓ} using ( module DefOf )
-open import L.Coding.EnvironmentTower {ℓ} lem using ( module Tower )
-open import L.Coding.SatisfactionGraphSet {ℓ} lem using ( module SatGraph )
-```
 
 <!--en-->
 Membership assertions and the witness conditions built from them are propositions. This matters when an element of a union yields only propositionally truncated information about which member of the family contains it: such information may be eliminated into a proposition, without choosing and retaining a particular index.
@@ -126,7 +127,6 @@ We read ambient membership `x ∈ y` through its proposition of witnesses `⟨ x
 <!--/-->
 
 ```agda
-
 open hPropStructure 𝒮ᵥ
 ```
 
@@ -158,7 +158,6 @@ The witness module fixes an ordinal `c` with the proof that it is an ordinal.
 証人のモジュールは、順序数 `c` と、それが順序数であることの証明を固定する。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -166,8 +165,6 @@ module At (c : V ℓ) (oc : IsOrd c) where
 ```
 </summary>
 <div class="submodule-fold-content">
-
-
 
 <!--en-->
 The constructible stage `Lset c` is packaged as the carrier `A`. The hierarchy table, formula-code set, satisfaction graph and environment tower are then constructed from this carrier as four separate witnesses.
@@ -249,7 +246,6 @@ The environment tower is the fourth witness: it collects the environments of eve
 </div>
 </details>
 
-
 <!--en-->
 For an ordinal stage index `c`, the witness predicate requires the four underlying sets just constructed to belong to one common container `K`. It quantifies over the proof `oc : IsOrd c`, so the predicate does not retain a preferred proof of ordinality. Later `K` will be `Lset γ`, where `γ` is a larger ordinal index.
 <!--zh-->
@@ -330,7 +326,6 @@ The four fields are named for the arguments ahead: ordinalness, successor closur
 四つの欄が、これからの議論のために名付けられる。順序数性・後続の閉性・無限順序数の所属・そして証人の節である。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -347,7 +342,6 @@ module Adequate (γ : V ℓ) (ad : Adequate γ) where
 ```
 </div>
 </details>
-
 
 <!--en-->
 ## Constructing an adequate stage above any ordinal
@@ -405,7 +399,6 @@ Starting from an ordinal index `α`, one bounding step will construct a larger o
 順序数添字 `α` から出発し、一回の上界構成で、より大きな順序数添字 `β` を作る。この一回で、`α` の要素から生じるすべての要請、すなわちそれらの後続と、四つの証人集合の誕生段階の添字を満たす。しかし、`β` に新たに加わった要素について同じ要請をまだ満たしていないので、この時点で `β` が十分であるとは主張しない。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -413,8 +406,6 @@ module Bound1 (α : V ℓ) (oα : IsOrd α) where
 ```
 </summary>
 <div class="submodule-fold-content">
-
-
 
 <!--en-->
 Every packaged constructible set `s : CS.S` has a birth-stage index `stage (fst s) (snd s)`. The auxiliary expression records this operation in the context of a presented member of `α`; the resulting index depends on the witness set `s`, while the surrounding arguments keep track of the member for which that witness was built.
@@ -752,7 +743,6 @@ A membership proof `c ∈ α` has an actual presentation fibre: it yields an ind
 <!--/-->
 
 ```agda
-
   wit : (c : V ℓ) → ⟨ c ∈ α ⟩ → Witnesses (Lset β) c
   wit c c∈ = subst (Witnesses (Lset β)) (fib .snd) (witAt (fib .fst))
     where
@@ -762,7 +752,6 @@ A membership proof `c ∈ α` has an actual presentation fibre: it yields an ind
 </div>
 </details>
 
-
 <!--en-->
 The union construction begins with an arbitrary natural-number-indexed family `ch` of ordinals. No monotonicity assumption is needed for the union itself; the two later applications will separately prove that each entry belongs to its successor.
 <!--zh-->
@@ -771,7 +760,6 @@ The union construction begins with an arbitrary natural-number-indexed family `c
 合併の構成は、自然数で添字づけられた任意の順序数族 `ch` から始まる。合併そのものには単調性を仮定せず、後の二つの適用で各項が次の項に属することを別に証明する。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -779,8 +767,6 @@ module Union (ch : ℕ → V ℓ) (och : (n : ℕ) → IsOrd (ch n)) where
 ```
 </summary>
 <div class="submodule-fold-content">
-
-
 
 <!--en-->
 The cumulative-hierarchy union expects a small index type at the ambient universe level. Replacing `ℕ` by `Lift ℕ` changes only its universe placement: `F (lift n)` is still the ordinal `ch n`.
@@ -851,7 +837,6 @@ The outward reading recovers, under truncation, a chain entry containing any giv
 </div>
 </details>
 
-
 <!--en-->
 One bounding step settles only the obligations generated by the preceding ordinal. To settle every obligation generated along the construction, start above `p` and `ω`, repeat `Bound1` through a natural-number sequence, and take the union of the resulting ordinal indices.
 <!--zh-->
@@ -860,7 +845,6 @@ One bounding step settles only the obligations generated by the preceding ordina
 一回の上界構成が満たすのは、直前の順序数から生じた要請だけである。構成の途中で生じるすべての要請を満たすため、`p` と `ω` を厳密に含む点から始め、自然数列に沿って `Bound1` を繰り返し、得られた順序数添字の合併を取る。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -868,8 +852,6 @@ module Above (p : V ℓ) (op : IsOrd p) where
 ```
 </summary>
 <div class="submodule-fold-content">
-
-
 
 <!--en-->
 The initial bound is an ordinal that strictly contains both the starting ordinal `p` and the ordinal `ω`. This immediately supplies the two memberships that must survive into the final union.
@@ -1048,7 +1030,6 @@ The ordinal index `γ` now satisfies all four clauses of `Adequate`: ordinality,
 </div>
 </details>
 
-
 <!--en-->
 The theorem returns an explicit ordinal index `γ`, together with `p ∈ γ` and `Adequate γ`. The outer dependent pair is not truncated, so later arguments may name this `γ`; the construction proves neither that it is least nor that it is obtained by a standard ordinal operation such as `p + ω`.
 <!--zh-->
@@ -1093,7 +1074,6 @@ To build such a strengthened adequate stage above an ordinal `α`, we iterate `a
 順序数 `α` より上にこの強化された十分な段階を作るため、`adequate-above` をもう一度反復する。今度は自然数列の各項がすでに十分な順序数添字なので、その項自身を後で局所的な十分な証人として使える。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -1101,8 +1081,6 @@ module Super (α : V ℓ) (oα : IsOrd α) where
 ```
 </summary>
 <div class="submodule-fold-content">
-
-
 
 <!--en-->
 The zeroth entry is the explicit ordinal index returned by `adequate-above α oα`. It is adequate and strictly contains the starting ordinal `α`; these facts are stored with the entry for later use.
@@ -1300,7 +1278,6 @@ For `d ∈ λ`, the outward map gives only the propositionally truncated existen
 ```
 </div>
 </details>
-
 
 <!--en-->
 The exported theorem returns an explicit ordinal index `λ` above `α`, together with proofs of `Adequate λ` and `Superadequate λ`. Although `λ` itself is available as data, the local adequate indices promised for its members remain under propositional truncation; no least local index or global family of choices is produced.

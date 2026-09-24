@@ -58,7 +58,7 @@ Write titles, introductions and detailed explanations in `en`, `zh` and `ja`.
 Each language must retain the mathematical substance of the whole passage;
 adding a short Japanese summary to a long bilingual group would hide the rest
 of that passage in the Japanese book. The chapter-framework gate checks matching
-heading levels and an opening paragraph before code. The glossary gate also
+heading levels and an opening paragraph after chapter boilerplate. The glossary gate also
 checks opt-in terms within each explicitly translated group.
 
 Interleave a complete trilingual explanation before each group of one to five
@@ -92,17 +92,47 @@ CJK prose (zh and ja) follows the repository's house style enforced by
 CJK characters. Japanese prose consistently uses plain style (である体). It does not use polite
 です・ます forms. Agda code blocks are English-only. See the gate commands in `Makefile`.
 
-Standalone construction, lemma, theorem and corollary labels name the corresponding Agda declaration and
+Standalone definition, construction, lemma, theorem and corollary labels name the corresponding Agda declaration and
 contain no period: `**Lemma** (`name`{.Agda}) Text`, with `引理` or `補題` in the
 parallel routes. Fact labels use the same form with `Fact`, `事实` or `事実`, and
 construction labels use `Construction`, `构造` or `構成`. Corollary labels use
 `Corollary`, `推论` or `系`.
-Proof labels use `**Proof** Text`, `**证明** 正文` or `**証明** 本文`. An outermost
-construction, fact, lemma, theorem or corollary developed through prose and code ends its proof
-with a standalone `∎` after the final proof code block. Explanatory prose may follow the mark and
-is then outside the proof. A construction or lemma nested inside that proof, such as one inside
-its disclosure or foldable submodule, has no separate `∎`; the enclosing
-proof's mark follows the closing block.
+Proof labels use `**Proof** Text`, `**证明** 正文` or `**証明** 本文`.
+Every definition, construction, fact, lemma, theorem and corollary encloses at
+least one Agda code block and ends with its own standalone `∎`, immediately
+after its final code block. Only blank lines may separate the code and mark.
+A Proof continues its statement and shares that ending, but must itself contain
+code after the Proof label; a standalone Proof has the same code and ending rule.
+Explanatory prose after the mark is outside the statement. All three language
+routes are checked. Folded submodules and numbered labels have no exemption.
+Put each nested statement's mark inside its own fold, before closing the fold.
+
+Do not stack parallel statement labels and share one mark. Group related names
+under one Construction label, with space-separated, individually styled names
+and one bullet per name in the same order:
+
+````markdown
+**Construction** (`first`{.Agda} `second`{.Agda})
+
+- `first`{.Agda} The first construction.
+- `second`{.Agda} The second construction.
+
+```agda
+first = value₁
+second = value₂
+```
+
+∎
+````
+
+The renderer places the mark outside the final code block at its lower right,
+with a small leftward inset for the block and extra space below the ending.
+The mark has its own width on mobile, outside the code's horizontal scroll area.
+`Origin` retains numbered Theorem 0–4 labels (定理0–4 in Chinese and Japanese)
+as the sole result-registry exception to named labels. Each statement is followed
+by its visible public re-export code and its own `∎`; these imports expose the
+already-proved results, rather than supplying new local proofs. The chapter
+opening and statement/QED rules still apply.
 
 ## Foldable submodules
 
@@ -111,8 +141,13 @@ default. Its `summary.submodule-fold-heading` contains exactly one Agda fence
 holding the complete `module … where` declaration, alone but on as many lines as
 its arguments require. The declaration itself remains visible when the
 reader folds the module. Put all subsequent prose, figures and Agda code in
+the body. For a private submodule, write `private module` on the same line in
+the summary. The whole-library code lint enforces this for module aliases too,
+even across literate fences. Keep the privacy of sibling declarations when
+splitting an existing private block. Rendered body code aligns exactly as in
+a public submodule. Use
 `div.submodule-fold-content`, and close that container immediately after the
-submodule's last Agda code block. Put any closing `∎` outside the fold.
+submodule's last Agda code block and its closing `∎`, when it ends a statement.
 Leave a blank line before the opening `<details>` when it follows an Agda fence;
 otherwise Markdown treats it as inline text rather than a fold.
 An inner submodule uses the same fold inside its parent's content, but folds
@@ -128,10 +163,17 @@ keyboard activation. Do not add another toggle, hidden state or persisted state.
 whole-tree coverage and two-level nesting limit. A long signature is indivisible,
 so the literary fence-size check exempts a fold heading.
 
-Short ancillary interface explanations may still use `details.prose-disclosure`,
-as in the Prelude's compiler options. Their localized titles begin with
-`Optional:`, `选读：` or `発展：`. See [renderer recipes](RENDERER-RECIPES.md)
-for the canonical markup and first uses of reusable styles.
+Language setup belongs in boilerplate hover information, not an optional prose
+fold. A chapter title has a dashed underline and a code mark, distinct from the
+glossary's dotted underline. Direct prerequisite titles use the same treatment
+for their actual import statements. This includes necessary pre-module imports.
+For a parameterized module, the title's popup contains only OPTIONS; the full
+module telescope and its preceding trilingual introduction remain ordinary body
+content beneath the chapter title. Syntax help is
+translated in `scripts/site/agda_help.py` and links to the versioned Agda manual.
+On touch devices, a tap opens a persistent hover; definition navigation still
+requires the hover's explicit modal action. All nested popups share the existing
+code-hover implementation. See [renderer recipes](RENDERER-RECIPES.md).
 
 ## Inline Agda references in prose
 
@@ -148,11 +190,18 @@ Agda notation carries `{.Agda}`; this includes bound variables, complete express
 keywords and module names. Ordinary mathematical notation belongs in inline LaTeX
 instead of an unmarked code span.
 
+Write each expression once, without per-token help markup. Inline and single-line
+code automatically annotate syntax such as `:`, `=` and `→`, and names exported
+by `Base.Prelude`, including occurrences in Prelude's own exposition. Infix
+spellings such as `x ≡ y` resolve to `_≡_`; mixfix parts are paired with their
+corresponding definition, including compiler-declared syntax. Existing explicit
+links take precedence. Quoted text, comments and ambiguous matches stay untouched.
+
 When the reader-facing label differs from the declaration name, use
 `[V](V.Hierarchy.html#𝒮ᵥ){.Agda}`. The link and type hover resolve to `𝒮ᵥ`, while
 the prose displays `V`. The target must be an internal Agda declaration.
 
-In every chapter, including `Milestones`, an unboxed Agda link may label only
+In every chapter, including `Origin`, an unboxed Agda link may label only
 one defined name. Put an application, type annotation, path or equation in one
 complete `` `...`{.Agda} `` span, including its operators and arguments. Write
 bound variables such as `` `x`{.Agda} `` as inline code too; the renderer does
@@ -170,6 +219,11 @@ Every technical concept named for textbook readers is registered with
 automatically only when the glossary entry sets `matching = "auto"`; ambiguous entries use
 `[rendering]{.term-ref #stable-id}`. The stable identifier and localized hover recap live in
 `dev/glossary.toml`. Do not duplicate that metadata in chapter-local HTML or JavaScript.
+An explicit `term-ref` may also point forward to an introduction later in the same
+chapter, as with the record-type link in the discussion of `Lift`. Prefer that direct
+lookup to an opaque paraphrase or an unlinked promise of an explanation below.
+The term gate still validates the audited label and unique trilingual introduction;
+bare occurrences must still follow their introduction or its prerequisite chapter.
 
 ## Centered single-line code
 
@@ -232,6 +286,12 @@ Every textbook figure uses `book-diagram`, a stable `fig-*` id, and a direct
 and hypotheses before the figure; use the caption for a short, recognizable
 takeaway. Do not introduce the next topic in a caption. Separate successive
 figures with substantive prose, without adding formulaic transition paragraphs.
+Never place an Agda code block immediately after a figure. Place the code directly
+after the prose that explains it, before the associated illustration, or reorganize
+the surrounding paragraphs so the next code block has its own preceding explanation.
+Do not insert filler just to separate a figure from code. This rule applies in all
+three reading routes, including folded submodules; comments and layout wrappers
+do not count as intervening content. `check-diagrams.py` enforces it library-wide.
 
 Keep the `figure` element itself unframed. When an enclosing frame is needed, put
 `diagram-framed` on one direct child `div` containing the diagram's formulas, spaces

@@ -1,32 +1,17 @@
-<!--en-->
-# Coding finite sequences below an infinite ordinal
-
-Finite parameter lists must be counted by sets that exist inside `L`. This chapter first collects all finite sequences over a constructible set as one constructible set. For an infinite ordinal `α`, it then folds each sequence through an internal injection from `α × α` to `α`, attaches the length as a final tag, and proves an internal injection from the sequence set into `α`. The result is an upper bound only: it neither covers every element of `α` nor defines a decoder on all of `α`.
-<!--zh-->
-# 在无穷序数以下编码有限序列
-
-有限参数表必须由 `L` 内部存在的集合来计数。本章先把一个可构造集合上的全部有限序列收集成一个可构造集合。随后对无穷序数 `α`，借助从 `α × α` 到 `α` 的内部编码单射逐项折叠序列，再以长度作最终标签，并证明从序列集到 `α` 的内部单射。这个结论只给出上界：它既不覆盖 `α` 的每个元素，也不定义 `α` 全域上的解码器。
-<!--ja-->
-# 無限順序数の下で有限列をコード化する
-
-有限なパラメータ列を数えるには、その列を集める集合が `L` の内部に存在しなければならない。本章ではまず、構成可能集合上のすべての有限列を一つの構成可能集合に集める。次に無限順序数 `α` に対し、`α × α` から `α` への内部の符号化された単射を用いて列を項ごとに畳み込み、最後に長さをタグとして付け、列の集合から `α` への内部単射を示す。この結論は上界だけを与える。`α` のすべての要素を覆うことも、`α` 全体で定義された復号写像を与えることもない。
-<!--/-->
-
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
 ```
 
 <!--en-->
-The construction is classical only through an explicit excluded-middle hypothesis. In particular, propositionally truncated witnesses remain truncated unless uniqueness makes their witness type a proposition; no choice principle is used to select arbitrary sequence representations or injection graphs.
+# Coding finite sequences below an infinite ordinal
 <!--zh-->
-这项构造的经典性只来自一条显式的排中律假设。尤其是，命题截断的见证始终保持截断，除非唯一性使见证类型本身成为命题；证明不借助选择公理来任意选取序列表示或单射图。
+# 在无穷序数以下编码有限序列
 <!--ja-->
-この構成で用いる古典性は、明示された排中律の仮定だけから来る。とくに、命題的に切り詰められた証人は、一意性によって証人型そのものが命題になる場合を除いて、切り詰められたままである。列の表現や単射のグラフを任意に選ぶための選択原理は用いない。
+# 無限順序数の下で有限列をコード化する
 <!--/-->
 
 ```agda
 open import Base.Prelude
-open import Cubical.HITs.PropositionalTruncation using ( rec2 )
 open import Base.Classical using ( LEM )
 ```
 
@@ -42,6 +27,59 @@ Fix a universe level `ℓ` and excluded middle at level `ℓ-suc ℓ`. Every con
 module L.GCH.FiniteSequenceCoding {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax using ( Formula; var; con; _≐_; _∧̇_; ∃̇_; ∀̇∈; ∃̇∈ )
+import FOL.Absoluteness
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; regularityV )
+open import V.Presentation {ℓ} using ( member; fiber; ↪-inj )
+open import V.Coding {ℓ} using ( pr; pr-inj; #-inj′; #mono )
+open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans; IsOrd )
+open import L.Ordinal {ℓ} using ( #∈ω; ∈#-elim )
+open import L.Axioms.Basic {ℓ} using ( extensionalL )
+open import L.Axioms.Infinity {ℓ} lem using ( ωʟ )
+open import L.Axioms.Full {ℓ} lem using ( hasSeparationL )
+open import L.Coding.Model {ℓ} using ( prAtL; prAtL-adequate; prʟ; prʟ-fst; svAt; svAt-out; domAt; domAt-in; domAt-out; domAt-intro; appAt; appAt-adequate; envOverAt; envOver-sv; envOver-dom; envOverAt-transport )
+open import L.Coding.Expressions {ℓ} using ( numL; sucAtL; sucAtL-adequate )
+open import L.Coding.Injection {ℓ} lem using ( injAt; module Extract )
+open import L.Coding.Environment {ℓ} using ( lookup-spec )
+open import L.Coding.EnvironmentSet {ℓ} lem
+  using ( Ix; envS; envOver; envSet; envSet-in; envSet-out; module Recover )
+open import L.Recursion {ℓ} lem using ( Recursion; module Of; mereFunct; smallDom )
+open import L.Cardinal {ℓ} lem using ( InjL; IsCardinalL )
+open import L.InjectionComposition {ℓ} lem using ( injl-trans )
+open import L.GCH.CardinalRepresentative {ℓ} lem using ( cardOf )
+open import L.DefinableInjection {ℓ} lem using ( DefinableMap; module Inj )
+open import L.GCH.CardinalSquareLaw {ℓ} lem
+  using ( prodL; prodL-in; Goal; module Step; prod-inj; no-fin; ω⊆ )
+open import L.InjectionComposition {ℓ} lem using ( appC; appC-adequate )
+```
+
+<!--en-->
+
+Finite parameter lists must be counted by sets that exist inside `L`. This chapter first collects all finite sequences over a constructible set as one constructible set. For an infinite ordinal `α`, it then folds each sequence through an internal injection from `α × α` to `α`, attaches the length as a final tag, and proves an internal injection from the sequence set into `α`. The result is an upper bound only: it neither covers every element of `α` nor defines a decoder on all of `α`.
+<!--zh-->
+
+有限参数表必须由 `L` 内部存在的集合来计数。本章先把一个可构造集合上的全部有限序列收集成一个可构造集合。随后对无穷序数 `α`，借助从 `α × α` 到 `α` 的内部编码单射逐项折叠序列，再以长度作最终标签，并证明从序列集到 `α` 的内部单射。这个结论只给出上界：它既不覆盖 `α` 的每个元素，也不定义 `α` 全域上的解码器。
+<!--ja-->
+
+有限なパラメータ列を数えるには、その列を集める集合が `L` の内部に存在しなければならない。本章ではまず、構成可能集合上のすべての有限列を一つの構成可能集合に集める。次に無限順序数 `α` に対し、`α × α` から `α` への内部の符号化された単射を用いて列を項ごとに畳み込み、最後に長さをタグとして付け、列の集合から `α` への内部単射を示す。この結論は上界だけを与える。`α` のすべての要素を覆うことも、`α` 全体で定義された復号写像を与えることもない。
+<!--/-->
+
+<!--en-->
+The construction is classical only through an explicit excluded-middle hypothesis. In particular, propositionally truncated witnesses remain truncated unless uniqueness makes their witness type a proposition; no choice principle is used to select arbitrary sequence representations or injection graphs.
+<!--zh-->
+这项构造的经典性只来自一条显式的排中律假设。尤其是，命题截断的见证始终保持截断，除非唯一性使见证类型本身成为命题；证明不借助选择公理来任意选取序列表示或单射图。
+<!--ja-->
+この構成で用いる古典性は、明示された排中律の仮定だけから来る。とくに、命題的に切り詰められた証人は、一意性によって証人型そのものが命題になる場合を除いて、切り詰められたままである。列の表現や単射のグラフを任意に選ぶための選択原理は用いない。
+<!--/-->
+
+```agda
+open import Cubical.HITs.PropositionalTruncation using ( rec2 )
+```
+
+
+
 <!--en-->
 Two descriptions of the same objects will be used throughout. At the object-language level, equality, conjunction, and bounded or unbounded quantification describe sequence graphs and recursive traces inside `L`. At the host level, presentations turn membership in a set into small indices, while regularity later supports the well-founded argument behind the square law.
 <!--zh-->
@@ -49,14 +87,6 @@ Two descriptions of the same objects will be used throughout. At the object-lang
 <!--ja-->
 以下では、同じ対象について二つの記述を行き来する。対象言語の水準では、等号、連言、有界および非有界の量化によって、`L` の内部の列のグラフと再帰の軌跡を記述する。ホストの水準では、提示によって集合の要素を小さな添字として扱い、正則性は後で平方律を支える整礎的な議論に用いられる。
 <!--/-->
-
-```agda
-open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using ( Formula; var; con; _≐_; _∧̇_; ∃̇_; ∀̇∈; ∃̇∈ )
-import FOL.Absoluteness
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; regularityV )
-open import V.Presentation {ℓ} using ( member; fiber; ↪-inj )
-```
 
 <!--en-->
 The coding relies on two rigid families of set codes. Ordered-pair injectivity recovers both coordinates from an equality of pair codes, and von Neumann numerals faithfully record natural numbers and their order inside `ω`. Transitivity of constructibility keeps every member of a constructible ordinal inside `L`, so these ambient codes can be used as elements of the constructible model.
@@ -66,14 +96,6 @@ The coding relies on two rigid families of set codes. Ordered-pair injectivity r
 符号化は、二つの剛直な集合符号の族に依存する。順序対の符号の単射性により、対の符号の等しさから二つの座標を復元でき、フォン・ノイマン数項は自然数とその順序を `ω` の内部で忠実に記録する。構成可能性の推移性により、構成可能な順序数の各要素も `L` にとどまるので、これらの周囲の符号を構成可能モデルの要素として使える。
 <!--/-->
 
-```agda
-open import V.Coding {ℓ} using ( pr; pr-inj; #-inj′; #mono )
-open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans; IsOrd )
-open import L.Ordinal {ℓ} using ( #∈ω; ∈#-elim )
-open import L.Axioms.Basic {ℓ} using ( extensionalL )
-open import L.Axioms.Infinity {ℓ} lem using ( ωʟ )
-```
-
 <!--en-->
 The set-theoretic graphs used here must be visible to first-order reasoning in `L`. Separation forms the exact subcollections, while adequacy for pairs, graph application, domains, and environments identifies each object-language clause with its intended relation between underlying sets. This bridge will later turn a host recursive fold into an internal definable graph.
 <!--zh-->
@@ -81,14 +103,6 @@ The set-theoretic graphs used here must be visible to first-order reasoning in `
 <!--ja-->
 ここで用いる集合論的グラフは、`L` の内部の一階推論から読めなければならない。分出によって正確な部分集合を作り、対、グラフの適用、定義域、環境についての妥当性が、各対象言語の節を底集合間の意図された関係と同一視する。この橋によって、後でホスト側の再帰的な畳み込みを内部の定義可能なグラフへ移せる。
 <!--/-->
-
-```agda
-open import L.Axioms.Full {ℓ} lem using ( hasSeparationL )
-open import L.Coding.Model {ℓ} using ( prAtL; prAtL-adequate; prʟ; prʟ-fst; svAt; svAt-out; domAt; domAt-in; domAt-out; domAt-intro; appAt; appAt-adequate; envOverAt; envOver-sv; envOver-dom; envOverAt-transport )
-open import L.Coding.Expressions {ℓ} using ( numL; sucAtL; sucAtL-adequate )
-open import L.Coding.Injection {ℓ} lem using ( injAt; module Extract )
-open import L.Coding.Environment {ℓ} using ( lookup-spec )
-```
 
 <!--en-->
 A finite sequence is represented by an environment graph with a numeral as its exact domain. For each fixed length, the environment-set construction collects precisely those graphs and reads a member back only under propositional truncation. The recursion machinery will nevertheless produce an actual value once the graph formula has a unique output, and coded-injection composition will carry the resulting bounds between constructible sets.
@@ -98,14 +112,6 @@ A finite sequence is represented by an environment graph with a numeral as its e
 有限列は、数項をちょうど定義域とする環境のグラフとして表す。各固定長について、環境集合の構成はそのようなグラフだけを集め、要素から表現を読み戻す向きは命題的に切り詰められている。それでも、グラフの論理式の出力が一意なら、再帰の仕組みは実際の値を与える。さらに、符号化された単射の合成によって、得られた上界を構成可能集合の間で移せる。
 <!--/-->
 
-```agda
-open import L.Coding.EnvironmentSet {ℓ} lem
-  using ( Ix; envS; envOver; envSet; envSet-in; envSet-out; module Recover )
-open import L.Recursion {ℓ} lem using ( Recursion; module Of; mereFunct; smallDom )
-open import L.Cardinal {ℓ} lem using ( InjL; IsCardinalL )
-open import L.InjectionComposition {ℓ} lem using ( injl-trans )
-```
-
 <!--en-->
 The final counting argument need not assume that the given infinite ordinal is already a cardinal. It first passes to a cardinal representative, uses the square law there to compress pairs, and composes back into the original ordinal. The present chapter then turns that pair compression into a definable injection for finite sequences.
 <!--zh-->
@@ -113,14 +119,6 @@ The final counting argument need not assume that the given infinite ordinal is a
 <!--ja-->
 最後の数え上げでは、与えられた無限順序数がすでに基数であると仮定する必要はない。まず基数代表へ移り、そこで平方律を用いて対を圧縮し、もとの順序数へ合成して戻す。本章は、その対の圧縮から有限列の定義可能な単射を構成する。
 <!--/-->
-
-```agda
-open import L.GCH.CardinalRepresentative {ℓ} lem using ( cardOf )
-open import L.DefinableInjection {ℓ} lem using ( DefinableMap; module Inj )
-open import L.GCH.CardinalSquareLaw {ℓ} lem
-  using ( prodL; prodL-in; Goal; module Step; prod-inj; no-fin; ω⊆ )
-open import L.InjectionComposition {ℓ} lem using ( appC; appC-adequate )
-```
 
 <!--en-->
 Lengths live as natural numbers, positions as elements of `Fin n`, and internal domain markers as numerals. Moving between these three views requires order facts such as `toℕ i < n` and the inverse conversion from a number below `n` to a finite index. Equality of dependent pairs is controlled by their data component because the accompanying membership proofs are propositions.
@@ -131,7 +129,6 @@ Lengths live as natural numbers, positions as elements of `Fin n`, and internal 
 <!--/-->
 
 ```agda
-
 open import Cubical.Data.Nat.Order
   using ( _<_; ≤-refl; ≤-suc; suc-≤-suc; pred-≤-pred; ¬-<-zero; <-split; zero-≤ )
 open import Cubical.Data.FinData.Properties using ( toℕ<n; fromℕ'; toFromId' )
@@ -172,8 +169,6 @@ Propositional truncation records that a representation exists while deliberately
 <!--ja-->
 命題的切り詰めは、ある表現が存在することを記録しつつ、どの表現が与えられたかを意図的に忘れる。その除去則を使うのは、集合の所属や等しさのように、目標自身が命題である場合だけである。この制限により、長さ、割り当て、内部グラフを暗黙に選ぶことなく、存在と単射性を証明できる。
 <!--/-->
-
-
 
 <!--en-->
 At the ambient level, membership is proposition-valued. This matters whenever a truncated witness is eliminated into a membership claim: no data are selected, and only the truth of membership survives.
@@ -462,7 +457,6 @@ The coding module fixes the data of the pairing function. Its parameters are an 
 符号化のモジュールは、対の関数のデータを固定する。引数は、順序数 `α`、`α` が `ω` に属さないこと、すなわちこの章が使う形での無限性の仮定、そして構成可能なグラフ `F` と、一価性・積の上の全域性・単射性という三つの節である。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -477,8 +471,6 @@ module Code (α : S) (oα : IsOrd (fst α)) (α∉ω : ⟨ fst α ∈ˢ ω ⟩ �
 </summary>
 <div class="submodule-fold-content">
 
-
-
 <!--en-->
 The last hypothesis is the range condition in meta-level form: every value recorded by the graph belongs to `α`. Together the four clauses say that `F` is an internal coded injection from the product `α × α` into `α`.
 <!--zh-->
@@ -486,8 +478,6 @@ The last hypothesis is the range condition in meta-level form: every value recor
 <!--ja-->
 最後の仮定は、メタレベルの形での値域の条件である。グラフに記録されたすべての値は `α` に属する。四つの節合わせて、`F` が積 `α × α` から `α` への内部の符号化された単射であることを言う。
 <!--/-->
-
-
 
 <!--en-->
 The carrier of inputs and values is the type of constructible sets together with membership in `α`: an entry of the product must lie in `α`, and so must every value.
@@ -623,7 +613,6 @@ Evaluation does not lose contact with the internal graph. The theorem `app-graph
 <!--/-->
 
 ```agda
-
     app-graph : (a u : M)
               → ⟨ pr (pr (fst (fst a)) (fst (fst u))) (fst (fst (app a u))) ∈ fst F ⟩
     app-graph a u = subst (λ w → ⟨ pr w (fst (fst (app a u))) ∈ fst F ⟩)
@@ -640,7 +629,6 @@ If two applications have equal outputs, injectivity of `F` first identifies thei
 <!--/-->
 
 ```agda
-
     app-inj : (a u a' u' : M) → fst (fst (app a u)) ≡ fst (fst (app a' u'))
             → (fst (fst a) ≡ fst (fst a')) × (fst (fst u) ≡ fst (fst u'))
     app-inj a u a' u' e = pr-inj
@@ -786,7 +774,6 @@ The length tag now proves its purpose. If two codes are equal, injectivity of th
 <!--/-->
 
 ```agda
-
   code-inj : (n : ℕ) (g : Fin n → ⟪ fst α ⟫) (n' : ℕ) (g' : Fin n' → ⟪ fst α ⟫)
            → fst (fst (code n g)) ≡ fst (fst (code n' g'))
            → fst (envS α g) ≡ fst (envS α g')
@@ -938,7 +925,6 @@ Nested quantifiers shift the de Bruijn positions of every previously available v
 <!--/-->
 
 ```agda
-
   private
     i0 : ∀ {k} → Fin (suc k)
     i0 = zero
@@ -1075,7 +1061,6 @@ The body keeps two auxiliary parameters explicit before stating the trace condit
 <!--/-->
 
 ```agda
-
       body : Formula S 7
       body =
           (var i1 ≐ con α)
@@ -1108,7 +1093,6 @@ The full graph formula binds the numeral by the bounded quantifier over `ωʟ` a
 <!--/-->
 
 ```agda
-
     fo : Formula S 2
     fo = ∃̇∈ (con ωʟ) (∃̇ (∃̇ (∃̇ (∃̇ body))))
 ```
@@ -1278,7 +1262,6 @@ The converse direction begins with one propositionally truncated `StepAt` witnes
 <!--/-->
 
 ```agda
-
     private
       stepIn : (y s n m C i : S) → StepAt s C i
              → ⟨ (i ∷ e7 y s n m C α (nn zero)) ⊨ stepFo ⟩
@@ -1459,7 +1442,6 @@ It remains to test the semantic formula on a genuine finite sequence. Fix a leng
 次に、この意味論的論理式を実際の有限列に適用する。長さ `N`、割り当て `g : Fin N → α`、構成可能集合 `s`、そして `s` の底集合を環境グラフ `envS α g` と同一視する等式を固定する。以下では、この表現された列について論理式の出力が存在し一意であることを示す。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -1467,8 +1449,6 @@ It remains to test the semantic formula on a genuine finite sequence. Fix a leng
 ```
 </summary>
 <div class="submodule-fold-content">
-
-
 
 <!--en-->
 For the standard environment graph, three objects suffice to invoke the generic environment formulas: the base set `α`, the length numeral `N`, and `envS α g`. Their de Bruijn order in `δ` places the graph at slot two, the numeral at slot one, and the base at slot zero.
@@ -1783,7 +1763,6 @@ Existence alone does not yet make `fo` a function graph. The theorem `only` prov
 <!--/-->
 
 ```agda
-
     only : (y : S) → Wit y s → fst y ≡ fst (fst (code N g))
     only y = rec₁ (setIsSet (fst y) (fst (fst (code N g))))
       (λ { (n , m , C' , (n∈ω , em , hd , hE , h0 , hS , hF)) →
@@ -1976,7 +1955,6 @@ The terminal clause also says that `F` maps the pair formed from `fst n` and `fs
 </div>
 </details>
 
-
 <!--en-->
 The predicate `Mem s` is simply membership of `s` in `seqL α`. Thus every later construction is restricted to sets that are finite `α`-valued environment graphs, rather than arbitrary elements of the ambient universe.
 <!--zh-->
@@ -2128,7 +2106,6 @@ To prove injectivity, suppose two sequence members have equal `fn` values. Their
 <!--/-->
 
 ```agda
-
   inj : (s : S) (m : Mem s) (s' : S) (m' : Mem s')
       → fst (fn s m) ≡ fst (fn s' m') → fst s ≡ fst s'
   inj s m s' m' e = rec2 (setIsSet (fst s) (fst s'))
@@ -2165,7 +2142,6 @@ The definable map and the preceding injectivity proof determine an internal inje
 ```
 </div>
 </details>
-
 
 <!--en-->
 ## Finite sequences inject into an infinite ordinal

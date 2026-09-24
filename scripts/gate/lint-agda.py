@@ -26,6 +26,8 @@ Report-only checks (prose is lint-prose.py's business; STYLE-agda.md is the law)
                     the representation-level projection `P .snd`
   H [trailing-blank] an Agda code fence ends on its last code line, with no
                     blank or whitespace-only line before the closing fence
+  I [private-module] private and its first module declaration share one line,
+                    including aliases and declarations separated by prose
 
 Exemptions:
   - The designated hub modules (BARE_OPEN_HUBS: curated re-export preludes,
@@ -349,6 +351,14 @@ def lint_file(path):
         suffix = "s" if count != 1 else ""
         findings.append((lineno, "trailing-blank",
                          f"remove {count} trailing blank line{suffix} from the Agda fence"))
+
+    # Check the masked concatenated Agda stream, not only one Markdown fence.
+    for index, (_, line) in enumerate(mlines):
+        if line.strip() != 'private':
+            continue
+        following = next((item for item in mlines[index + 1:] if item[1].strip()), None)
+        if following and re.match(r'\s*module\b', following[1]):
+            report(index, 'private-module', 'write `private module` on one line; preserve the privacy of sibling declarations')
 
     # A. OPTIONS header
     opts = [(ln, p) for ln, p in pragmas if p.split()[:1] == ["OPTIONS"]]

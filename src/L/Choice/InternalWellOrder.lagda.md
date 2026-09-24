@@ -1,27 +1,13 @@
-<!--en-->
-# The internal stage-order relation
-
-At each constructible stage, `orderAt`{.Agda} already gives a host-level strict well-order of its members. The task here is to make the underlying comparison available to formulas interpreted in `L`: for each ordinal stage, we obtain a relation set whose ordered-pair members correspond in both directions to `relOf (orderAt α oα)`{.Agda}. This constructs no new well-order and proves no object-language formula saying that the relation is a well-order.
-<!--zh-->
-# 内部层序关系
-
-在每个可构造层，`orderAt`{.Agda} 已经给出其成员上的宿主层严格良序。本章的任务是让解释于 `L` 中的公式也能使用其底层比较：对每个序数层，得到一个关系集，使其中的有序对成员与 `relOf (orderAt α oα)`{.Agda} 逐对双向对应。这里既不构造新的良序，也不证明断言该关系为良序的对象语言公式。
-<!--ja-->
-# 内部の段階順序関係
-
-各構成可能段階では、`orderAt`{.Agda} がその要素上のホスト側の狭義整列順序をすでに与えている。この章の課題は、その基礎となる比較を `L` で解釈される論理式からも使えるようにすることである。各順序数段階について、順序対の所属が `relOf (orderAt α oα)`{.Agda} と対ごとに両方向で対応する関係集合を得る。ここで新しい整列順序を構成することも、この関係が整列順序であると述べる対象言語の論理式を証明することもない。
-<!--/-->
-
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
 ```
 
 <!--en-->
-The distinction between the two levels will guide the chapter. The well-order is a mathematical structure in the host theory, whereas its representative inside `L` must be a set that the first-order language can mention.
+# The internal stage-order relation
 <!--zh-->
-本章始终区分两个层面。良序是宿主理论中的数学结构，而它在 `L` 内的表示必须是第一阶语言能够指称的集合。
+# 内部层序关系
 <!--ja-->
-この章では二つの水準を一貫して区別する。整列順序はホスト理論の数学的構造であるが、`L` の内部でそれを表すものは、一階言語から指すことのできる集合でなければならない。
+# 内部の段階順序関係
 <!--/-->
 
 ```agda
@@ -41,6 +27,59 @@ The construction is carried out at an arbitrary universe level and assumes exclu
 module L.Choice.InternalWellOrder {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax using ( Formula; var; con; _∈̇_; _≐_; _∧̇_; ∃̇_ )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Coding {ℓ} using ( pr )
+open import L.Constructible {ℓ}
+  using ( 𝒮ʟ; isL; isL-trans; Lset; Lset→isL; IsOrd; 𝒟ₒ )
+open import L.Ordinal {ℓ} using ( suc-ord )
+open import L.Ordinal.Stages {ℓ} lem using ( ord∈Lset-suc )
+open import L.Axioms.Basic {ℓ} using ( LsetS; ∅ʟ; Lset-suc )
+open import L.Choice.FirstIntersectionStage {ℓ} lem using ( stageBound )
+open import L.Choice.StageOrders {ℓ} lem
+  using ( Mem; New; relOf; carry; orderAt; Under
+        ; stepAt-fill; stepAt-read; IsLeastName; leastNameOf )
+open import L.Choice.CanonicalNames {ℓ} lem using ( module Naming )
+open import L.Choice.NameComparison {ℓ} lem using ( StepAt )
+open import L.Choice.OrderTable {ℓ} lem using ( IsRel; ixRel-fill; ixRel-rep )
+open import L.Choice.StageOrderAdequacy {ℓ} lem
+  using ( CodesAt; CodesAt-in; CodesAt-out; stepOrder; module Ordered
+        ; towerS; towerS-fst; powS; powS-fst; sh2; sh3; StpOut; StpIn )
+open import L.Choice.NameComparisonAdequacy {ℓ} lem using ( module At )
+open import L.Choice.EarliestDisagreement {ℓ} lem
+  using ( codeOrder; codeOrder-fill; codeOrder-rep )
+open import L.Coding.HierarchySequence {ℓ} lem using ( LsetGraphAt )
+open import L.Coding.DefinablePowerSet {ℓ} lem using ( DefAt; DefAt-stage )
+open import L.Coding.Model {ℓ} using ( appAt; appAt-adequate )
+open import L.Coding.CodeSet {ℓ} lem using ( AllCodes )
+open import L.Hierarchy {ℓ} lem using ( Lset-only; Lset-defines )
+open import L.WellOrder.Base {ℓ-suc ℓ} using ( SWO )
+import FOL.Absoluteness
+```
+
+<!--en-->
+
+At each constructible stage, `orderAt`{.Agda} already gives a host-level strict well-order of its members. The task here is to make the underlying comparison available to formulas interpreted in `L`: for each ordinal stage, we obtain a relation set whose ordered-pair members correspond in both directions to `relOf (orderAt α oα)`{.Agda}. This constructs no new well-order and proves no object-language formula saying that the relation is a well-order.
+<!--zh-->
+
+在每个可构造层，`orderAt`{.Agda} 已经给出其成员上的宿主层严格良序。本章的任务是让解释于 `L` 中的公式也能使用其底层比较：对每个序数层，得到一个关系集，使其中的有序对成员与 `relOf (orderAt α oα)`{.Agda} 逐对双向对应。这里既不构造新的良序，也不证明断言该关系为良序的对象语言公式。
+<!--ja-->
+
+各構成可能段階では、`orderAt`{.Agda} がその要素上のホスト側の狭義整列順序をすでに与えている。この章の課題は、その基礎となる比較を `L` で解釈される論理式からも使えるようにすることである。各順序数段階について、順序対の所属が `relOf (orderAt α oα)`{.Agda} と対ごとに両方向で対応する関係集合を得る。ここで新しい整列順序を構成することも、この関係が整列順序であると述べる対象言語の論理式を証明することもない。
+<!--/-->
+
+<!--en-->
+The distinction between the two levels will guide the chapter. The well-order is a mathematical structure in the host theory, whereas its representative inside `L` must be a set that the first-order language can mention.
+<!--zh-->
+本章始终区分两个层面。良序是宿主理论中的数学结构，而它在 `L` 内的表示必须是第一阶语言能够指称的集合。
+<!--ja-->
+この章では二つの水準を一貫して区別する。整列順序はホスト理論の数学的構造であるが、`L` の内部でそれを表すものは、一階言語から指すことのできる集合でなければならない。
+<!--/-->
+
+
+
 <!--en-->
 To describe one comparison step internally, it suffices to combine variables and constants with membership, equality, conjunction, and existential quantification. The six existential binders introduced below are repeated uses of this one logical constructor.
 <!--zh-->
@@ -48,14 +87,6 @@ To describe one comparison step internally, it suffices to combine variables and
 <!--ja-->
 一回の比較ステップを内部で記述するには、変数と定数を、所属・等号・連言・存在量化で結べば十分である。以下の六つの存在束縛は、同じ論理構成子を繰り返し用いたものである。
 <!--/-->
-
-```agda
-open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using ( Formula; var; con; _∈̇_; _≐_; _∧̇_; ∃̇_ )
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-open import V.Coding {ℓ} using ( pr )
-open import L.Constructible {ℓ}
-```
 
 <!--en-->
 The relation will be indexed by an ordinal stage. Its witnesses must therefore be recognized as constructible sets, and successor-stage membership must be related to definability over the preceding stage.
@@ -65,14 +96,6 @@ The relation will be indexed by an ordinal stage. Its witnesses must therefore b
 この関係は順序数段階を添字とする。そのため、証人は構成可能集合として同定され、後続段階への所属は直前の段階上での定義可能性と結び付けられなければならない。
 <!--/-->
 
-```agda
-  using ( 𝒮ʟ; isL; isL-trans; Lset; Lset→isL; IsOrd; 𝒟ₒ )
-open import L.Ordinal {ℓ} using ( suc-ord )
-open import L.Ordinal.Stages {ℓ} lem using ( ord∈Lset-suc )
-open import L.Axioms.Basic {ℓ} using ( LsetS; ∅ʟ; Lset-suc )
-open import L.Choice.FirstIntersectionStage {ℓ} lem using ( stageBound )
-```
-
 <!--en-->
 The semantic target has two distinct levels. `orderAt δ od`{.Agda} is the host-level strict well-order on the members of `Lset δ`{.Agda}. For the equal-birth step used in its recursive description, `Under δ (stepOrder δ od) u v`{.Agda} records that `u` and `v` belong to `Lset (sucV δ)`{.Agda} and that the resulting members are related by `stepOrder δ od`{.Agda}. Least names over `Lset δ`{.Agda} connect this host-level step to the formula constructed below.
 <!--zh-->
@@ -80,14 +103,6 @@ The semantic target has two distinct levels. `orderAt δ od`{.Agda} is the host-
 <!--ja-->
 意味論的な目標には二つの水準がある。`orderAt δ od`{.Agda} は、`Lset δ`{.Agda} の要素上のホスト側の狭義整列順序である。その再帰的記述で用いる同じ誕生段階のステップについて、`Under δ (stepOrder δ od) u v`{.Agda} は、`u` と `v` が `Lset (sucV δ)`{.Agda} に属することと、そこから得られる二要素が `stepOrder δ od`{.Agda} で関係づけられることを記録する。`Lset δ`{.Agda} 上の最小名が、このホスト側のステップを以下で構成する論理式へ結び付ける。
 <!--/-->
-
-```agda
-open import L.Choice.StageOrders {ℓ} lem
-  using ( Mem; New; relOf; carry; orderAt; Under
-        ; stepAt-fill; stepAt-read; IsLeastName; leastNameOf )
-open import L.Choice.CanonicalNames {ℓ} lem using ( module Naming )
-open import L.Choice.NameComparison {ℓ} lem using ( StepAt )
-```
 
 <!--en-->
 The recursive order table already knows how to turn an adequate step description into a relation set. What remains is to give one concrete formula and prove its two semantic directions, so that the table no longer depends on an abstract step parameter.
@@ -97,14 +112,6 @@ The recursive order table already knows how to turn an adequate step description
 再帰的な順序表には、妥当なステップ記述から関係集合を作る仕組みがすでにある。残る仕事は、具体的な論理式を一つ与えてその意味論的な二方向を証明し、抽象的なステップ引数への順序表の依存を取り除くことである。
 <!--/-->
 
-```agda
-open import L.Choice.OrderTable {ℓ} lem using ( IsRel; ixRel-fill; ixRel-rep )
-open import L.Choice.StageOrderAdequacy {ℓ} lem
-  using ( CodesAt; CodesAt-in; CodesAt-out; stepOrder; module Ordered
-        ; towerS; towerS-fst; powS; powS-fst; sh2; sh3; StpOut; StpIn )
-open import L.Choice.NameComparisonAdequacy {ℓ} lem using ( module At )
-```
-
 <!--en-->
 That formula must recognize four moving objects: the stage tower, its definable subsets, the table value at the stage, and the codes over the tower. These recognition clauses let an arbitrary satisfying assignment be converted back into the intended mathematical data.
 <!--zh-->
@@ -113,14 +120,6 @@ That formula must recognize four moving objects: the stage tower, its definable 
 この論理式は、段階の塔、その定義可能部分集合、段階における表の値、塔上のコードという四つの変動する対象を同定しなければならない。これらの同定条件により、任意の充足する割り当てを意図した数学的データへ戻せる。
 <!--/-->
 
-```agda
-open import L.Choice.EarliestDisagreement {ℓ} lem
-  using ( codeOrder; codeOrder-fill; codeOrder-rep )
-open import L.Coding.HierarchySequence {ℓ} lem using ( LsetGraphAt )
-open import L.Coding.DefinablePowerSet {ℓ} lem using ( DefAt; DefAt-stage )
-open import L.Coding.Model {ℓ} using ( appAt; appAt-adequate )
-```
-
 <!--en-->
 Two further witnesses are fixed constants: the comparison relation on codes and the code set for the empty alphabet. Together with the moving relation value from the table, they supply the auxiliary relations and domains used when least names are compared.
 <!--zh-->
@@ -128,12 +127,6 @@ Two further witnesses are fixed constants: the comparison relation on codes and 
 <!--ja-->
 さらに二つの証人は固定された定数である。コード上の比較関係と、空のアルファベットに対するコード集合である。これらは順序表から得る変動する関係値とともに、最小名を比較するための補助関係と領域を与える。
 <!--/-->
-
-```agda
-open import L.Coding.CodeSet {ℓ} lem using ( AllCodes )
-open import L.Hierarchy {ℓ} lem using ( Lset-only; Lset-defines )
-open import L.WellOrder.Base {ℓ-suc ℓ} using ( SWO )
-```
 
 <!--en-->
 Satisfaction is interpreted in the propositional structure of constructible sets. Consequently, each existential clause yields a propositionally truncated dependent pair: a witness may support the proof while remaining unavailable as chosen data outside the proposition.
@@ -144,7 +137,6 @@ Satisfaction is interpreted in the propositional structure of constructible sets
 <!--/-->
 
 ```agda
-import FOL.Absoluteness
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
 ```
 
@@ -309,7 +301,6 @@ The reading module fixes the four slots, the environment, and the ordinalness of
 読みのモジュールは、四つの枠・環境・そして解読された段階の順序数性を固定する。ホストの順序がその順序数性を必要とするからである。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -334,7 +325,6 @@ The host order is carried onto the presentation of the stage: the strict order o
 <!--/-->
 
 ```agda
-
     ordW : SWO ⟪ Lset δ ⟫
     ordW = carry (Lset δ) (orderAt δ od)
 ```
@@ -389,7 +379,6 @@ The innermost payload contains the equation fixing `c0` and the step satisfactio
 <!--/-->
 
 ```agda
-
     Six : (tw pw rl cs ro c0 : S) → Type (ℓ-suc ℓ)
     Six tw pw rl cs ro c0 =
         ⟨ (c0 ∷ ro ∷ cs ∷ rl ∷ pw ∷ tw ∷ γ) ⊨ (var zero ≐ con (AllCodes ∅ʟ)) ⟩
@@ -499,7 +488,6 @@ Only five of the six bound elements enter `StepAt`{.Agda}; `pw` serves the two s
 六つの束縛要素のうち `StepAt`{.Agda} に入るのは五つだけであり、`pw` はその外側にある二つの所属条件で使われる。そこで `Slots`{.Agda} は、塔と符号集合を意図した対象と同一視し、`rl` が対ごとの表現性 `IsRel δ rl`{.Agda} をもつと仮定し、`ro` と `c0` を必要な二つの定数に固定する。これらは、先に証明した名前比較の妥当性定理が必要とする条件そのものである。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -513,8 +501,6 @@ Only five of the six bound elements enter `StepAt`{.Agda}; `pw` serves the two s
 </summary>
 <div class="submodule-fold-content">
 
-
-
 <!--en-->
 Inside the alignment, the naming adequacy is instantiated at the stage, and its local step comparison is opened with the code order and the relation value, both directions of whose representation are supplied.
 <!--zh-->
@@ -524,10 +510,9 @@ Inside the alignment, the naming adequacy is instantiated at the stage, and its 
 <!--/-->
 
 ```agda
-    private
-      module A6 = At (Lset δ) (snd (LsetS δ od)) ordW
-      module L6 = A6.Least codeOrder rl codeOrder-rep codeOrder-fill
-                    (ixRel-rep δ od rl hrel) (ixRel-fill δ od rl hrel)
+    private module A6 = At (Lset δ) (snd (LsetS δ od)) ordW
+    private module L6 = A6.Least codeOrder rl codeOrder-rep codeOrder-fill
+                          (ixRel-rep δ od rl hrel) (ixRel-fill δ od rl hrel)
 ```
 
 <!--en-->
@@ -539,9 +524,9 @@ With those certifications, the name-comparison theorem is instantiated in the fu
 <!--/-->
 
 ```agda
-      module St = L6.Step iOrd iRel iTow iCod iNil (sh6 u) (sh6 v)
-        (c0 ∷ ro ∷ cs ∷ rl ∷ pw ∷ tw ∷ γ)
-        qro refl (Σ≡Prop (λ x → snd (isL x)) qtw) qcs qc0
+    private module St = L6.Step iOrd iRel iTow iCod iNil (sh6 u) (sh6 v)
+              (c0 ∷ ro ∷ cs ∷ rl ∷ pw ∷ tw ∷ γ)
+              qro refl (Σ≡Prop (λ x → snd (isL x)) qtw) qcs qc0
 ```
 
 <!--en-->
@@ -669,7 +654,6 @@ Conversely, reading the innermost satisfaction yields, under propositional trunc
 ```
 </div>
 </details>
-
 
 <!--en-->
 ## Unpacking
@@ -879,7 +863,6 @@ For the converse direction, fix one actual table value `rl`, evidence that the t
 逆向きの議論では、実際の表の値 `rl` と、それが表の `δ` に記録され、必要な段階関係を表すことの証拠を固定する。さらに、`Under` 比較が含む二つの後続段階への所属も固定する。外向きの場合と異なり、この構成では具体的な局所表の値が手元にあるため、それを `Stp` の三番目の存在証人として使える。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -892,8 +875,6 @@ For the converse direction, fix one actual table value `rl`, evidence that the t
 </summary>
 <div class="submodule-fold-content">
 
-
-
 <!--en-->
 The packing argument uses the six witnesses in the order prescribed by `Stp`{.Agda}: `towerS δ od`{.Agda}, `powS δ od`{.Agda}, the supplied table value `rl`, `AllCodes (LsetS δ od)`{.Agda}, `codeOrder`{.Agda}, and `AllCodes ∅ʟ`{.Agda}. In particular, the fourth witness is the code set over the current stage `Lset δ`{.Agda}; only the two objects being compared belong to its successor stage.
 <!--zh-->
@@ -903,9 +884,8 @@ The packing argument uses the six witnesses in the order prescribed by `Stp`{.Ag
 <!--/-->
 
 ```agda
-    private
-      module K = Slots (towerS δ od) (powS δ od) rl (AllCodes (LsetS δ od))
-                   codeOrder (AllCodes ∅ʟ) (towerS-fst δ od) hrel refl refl refl
+    private module K = Slots (towerS δ od) (powS δ od) rl (AllCodes (LsetS δ od))
+                         codeOrder (AllCodes ∅ʟ) (towerS-fst δ od) hrel refl refl refl
 ```
 
 <!--en-->
@@ -917,6 +897,7 @@ The first comparison candidate is presented by its membership in the successor s
 <!--/-->
 
 ```agda
+    private
       a : New δ
       a = fst (lookup u γ) , hx
 ```
@@ -998,7 +979,6 @@ To fill the two membership conjuncts of `Stp`, the direction needed here is from
 <!--/-->
 
 ```agda
-
       inPow : (x : V ℓ) → ⟨ x ∈ Lset (sucV δ) ⟩ → ⟨ x ∈ fst (powS δ od) ⟩
       inPow x h = subst (λ z → ⟨ x ∈ z ⟩) (sym (powS-fst δ od))
         (subst (λ z → ⟨ x ∈ z ⟩) (Lset-suc δ) h)
@@ -1029,7 +1009,6 @@ For the fourth witness, the inward reading of `CodesAt`{.Agda} proves that `AllC
 <!--/-->
 
 ```agda
-
       hcs : ⟨ (AllCodes (LsetS δ od) ∷ rl ∷ powS δ od ∷ towerS δ od ∷ γ)
              ⊨ CodesAt zero (sh3 zero) ⟩
       hcs = CodesAt-in (LsetS δ od) zero (sh3 zero)
@@ -1046,7 +1025,6 @@ Assume the host-side `stepOrder` comparison. The two least names already chosen 
 <!--/-->
 
 ```agda
-
       hstep : relOf (stepOrder δ od) a b
             → StepHolds (towerS δ od) (powS δ od) rl (AllCodes (LsetS δ od))
                 codeOrder (AllCodes ∅ʟ)
@@ -1127,7 +1105,6 @@ The final wrappers insert the empty-alphabet code set, its identifying equality,
 ```
 </div>
 </details>
-
 
 <!--en-->
 ## The two readings
@@ -1211,7 +1188,6 @@ The inward reading consumes a specific table value with its membership and relat
 </div>
 </details>
 
-
 <!--en-->
 The outward reading of the step formula is exported as the first adequacy direction: satisfaction implies a truncated step comparison.
 <!--zh-->
@@ -1273,7 +1249,6 @@ For a constructible set `a`, `stageBound`{.Agda} chooses an ordinal above both `
 <!--ja-->
 構成可能集合 `a` に対し、`stageBound`{.Agda} は `ω` と `a` が最初に現れる段階の両方より上にある順序数を選ぶ。したがって `Lset boundOrd`{.Agda} は、`a` の要素と、さらにそれらの要素を含むのに十分高く、後の横断集合の議論に必要な局所的な論域となる。選ばれた上界はこの目的には十分であるが、`a` に対する最小の上界または一意に定まる上界だとは主張しない。
 <!--/-->
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
@@ -1370,7 +1345,6 @@ Conversely, membership of the encoded pair in `orderL` recovers the host-side co
 ```
 </div>
 </details>
-
 
 <!--en-->
 ## Recap

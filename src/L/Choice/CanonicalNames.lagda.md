@@ -1,28 +1,19 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # Canonical names for successor-stage members
-
-A member of a successor stage is determined by a formula and finitely many parameters from the preceding stage. This chapter packages that data as a name, proves that every member has one, and orders all names so that a least representative can be chosen.
-
-A member of a successor stage is a definable subset of the stage below, and the earlier chapters said what that means twice over: once in `L.Definability`, as a formula with parameters drawn from that stage, and once in `FOL.Manipulation.ParameterAbstraction`, after the parameters leave the syntax, as a **parameter-free formula together with a vector of parameters**. The second form is the one that can be compared. Its formula is a finite piece of syntax, so its code is a hereditarily finite set and has already appeared at the limit stage `Lset ω`, which `L.Choice.FiniteStageOrders` well-orders; its parameters are members of the stage below, which the surrounding construction has well-ordered by the time it calls this one. A **name** is that pair, with the arity between them, and this chapter builds it, shows every member of the successor stage has one, and well-orders the names.
-
-The order is a three-key lexicographic comparison, written out. Nothing here is an instance of a general order on dependent sums, and that is deliberate: such a thing would have to carry a family of orders indexed by the first key and prove its four laws in that generality, which is a larger theorem than the one wanted, for a single use. The three keys are named, and each is compared by an order that already exists.
 <!--zh-->
 # 后继层成员的典范名字
-
-后继层的成员由一条公式及前一层中的有限多个参数确定。本章把这些数据封装成名字，证明每个成员都有名字，再良序化所有名字，以便选出最小代表。
-
-后继层的成员就是下面那一层的可定义子集，而前面的章节已经把这句话说了两遍：一遍在 `L.Definability` 中，说成带参数的公式，参数取自那一层；另一遍在 `FOL.Manipulation.ParameterAbstraction` 中，在参数离开语法之后，说成**一条无参公式配上一个参数向量**。可比较的是后一种形式。它的公式是一段有穷的语法，故它的码是遗传有穷集，早已现身于极限层 `Lset ω`，而 `L.Choice.FiniteStageOrders` 恰把那里良序化；它的参数是下面那一层的成员，而在外围构造调用本章时，那一层已被良序化。**名字**就是这样一对，中间夹着元数；本章造出它，证明后继层的每个成员都有一个，并把诸名字良序化。
-
-那个序是一次写开了的三键字典序比较。此处没有任何东西是「依值和上的一般序」的实例，而这是有意为之：那样一件东西得携带一族以第一个键为索引的序，并在那种一般性下证出它的四条定律，而这比所要的定理更大，却只用一次。三个键各有其名，而每个键都由一个已然存在的序来比较。
 <!--ja-->
 # 後者段階の要素の正準な名前
-
-後続段階の要素は、一つの論理式と直前の段階から取った有限個のパラメータによって定まる。本章ではそのデータを名前としてまとめ、すべての要素が名前をもつことを示し、最小の代表を選べるよう名前全体を整列する。
-
-後続段階の要素とは、その下の段階の定義可能部分集合のことであり、前の章たちはこのことを二通りに述べてきた。一つは `L.Definability` で、その段階から取ったパラメータ付きの論理式としてであり、もう一つは `FOL.Manipulation.ParameterAbstraction` で、パラメータを構文から取り除いた後の「パラメータなし論理式とパラメータ列の組」としてである。比較できるのは後者の形である。その論理式は有限な構文片なので、そのコードは遺伝的有限集合であり、極限段階 `Lset ω` に既に現れている。`L.Choice.FiniteStageOrders` はまさにそこを整列する。パラメータは下の段階の要素であり、この章が呼ばれる時点で、外側の構成によって既に整列されている。**名前**とは、その間にアリティを挟んだこの組であり、本章はそれを構成し、後続段階の各要素が名前をもつことを示し、名前全体を整列する。
-
-この順序は、三つの鍵による辞書式比較をそのまま書き下したものである。ここに「依存和上の一般的な順序」のインスタンスは何もなく、それは意図的なことである。そのような一般論は、第一の鍵で索引された順序の族を運び、四つの法則をその一般性のもとで証明せねばならず、一度しか使わない用途には大きすぎる定理になる。三つの鍵にはそれぞれ名前がついており、各鍵は既に存在する順序によって比較される。
 <!--/-->
+
+```agda
+open import Base.Prelude
+open import Base.Classical using ( LEM )
+```
 
 <!--en-->
 The explicit classical input is `lem : LEM (ℓ-suc ℓ)`. It supplies the finite-stage limit order used for formula codes and the least-element search used at the end. Keeping it as a module parameter records the common strength required by both constructions; the intervening coding, abstraction, lexicographic laws, and accessibility arguments add no further axiom.
@@ -33,15 +24,62 @@ The explicit classical input is `lem : LEM (ℓ-suc ℓ)`. It supplies the finit
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
+module L.Choice.CanonicalNames {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+```
 
-open import Base.Prelude
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax using
+  ( Term; con; var
+  ; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
+import FOL.Semantics
+open import FOL.Manipulation.ConstantMapping using ( mapTm; embed )
+open import FOL.Manipulation.Relabelling using ( embed-⊨ )
+open import FOL.Manipulation.ConstantOccurrences using ( countFo; constantsFo )
+open import FOL.Manipulation.ParameterAbstraction using ( absFo; ⊨-abs₁ )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Coding {ℓ} using ( pr; module VCode )
+open import V.Model {ℓ} using ( self∈sucV )
+open import L.Constructible {ℓ}
+  using ( Lset; Lset-mono; 𝒟ₒ; 𝒟ₒ-inv )
+open import L.Definability {ℓ} using ( module DefOf )
+open import L.Ordinal {ℓ} using ( numeral-ord; #∈ω )
+open import L.Ordinal.Stages {ℓ} lem using ( ord∈Lset-suc )
+open import L.Axioms.Basic {ℓ} using ( pr∈Lset-suc )
+open import L.Choice.FiniteStageOrders {ℓ} lem using ( Limit; inSome; limitOrder; Tri-map )
+open import L.WellOrder.Base {ℓ-suc ℓ}
+  using ( Tri; lt; eq; gt; SWO; IsLeast; leastOfFormula )
+```
+
+<!--en-->
+
+A member of a successor stage is determined by a formula and finitely many parameters from the preceding stage. This chapter packages that data as a name, proves that every member has one, and orders all names so that a least representative can be chosen.
+
+A member of a successor stage is a definable subset of the stage below, and the earlier chapters said what that means twice over: once in `L.Definability`, as a formula with parameters drawn from that stage, and once in `FOL.Manipulation.ParameterAbstraction`, after the parameters leave the syntax, as a **parameter-free formula together with a vector of parameters**. The second form is the one that can be compared. Its formula is a finite piece of syntax, so its code is a hereditarily finite set and has already appeared at the limit stage `Lset ω`, which `L.Choice.FiniteStageOrders` well-orders; its parameters are members of the stage below, which the surrounding construction has well-ordered by the time it calls this one. A **name** is that pair, with the arity between them, and this chapter builds it, shows every member of the successor stage has one, and well-orders the names.
+
+The order is a three-key lexicographic comparison, written out. Nothing here is an instance of a general order on dependent sums, and that is deliberate: such a thing would have to carry a family of orders indexed by the first key and prove its four laws in that generality, which is a larger theorem than the one wanted, for a single use. The three keys are named, and each is compared by an order that already exists.
+<!--zh-->
+
+后继层的成员由一条公式及前一层中的有限多个参数确定。本章把这些数据封装成名字，证明每个成员都有名字，再良序化所有名字，以便选出最小代表。
+
+后继层的成员就是下面那一层的可定义子集，而前面的章节已经把这句话说了两遍：一遍在 `L.Definability` 中，说成带参数的公式，参数取自那一层；另一遍在 `FOL.Manipulation.ParameterAbstraction` 中，在参数离开语法之后，说成**一条无参公式配上一个参数向量**。可比较的是后一种形式。它的公式是一段有穷的语法，故它的码是遗传有穷集，早已现身于极限层 `Lset ω`，而 `L.Choice.FiniteStageOrders` 恰把那里良序化；它的参数是下面那一层的成员，而在外围构造调用本章时，那一层已被良序化。**名字**就是这样一对，中间夹着元数；本章造出它，证明后继层的每个成员都有一个，并把诸名字良序化。
+
+那个序是一次写开了的三键字典序比较。此处没有任何东西是「依值和上的一般序」的实例，而这是有意为之：那样一件东西得携带一族以第一个键为索引的序，并在那种一般性下证出它的四条定律，而这比所要的定理更大，却只用一次。三个键各有其名，而每个键都由一个已然存在的序来比较。
+<!--ja-->
+
+後続段階の要素は、一つの論理式と直前の段階から取った有限個のパラメータによって定まる。本章ではそのデータを名前としてまとめ、すべての要素が名前をもつことを示し、最小の代表を選べるよう名前全体を整列する。
+
+後続段階の要素とは、その下の段階の定義可能部分集合のことであり、前の章たちはこのことを二通りに述べてきた。一つは `L.Definability` で、その段階から取ったパラメータ付きの論理式としてであり、もう一つは `FOL.Manipulation.ParameterAbstraction` で、パラメータを構文から取り除いた後の「パラメータなし論理式とパラメータ列の組」としてである。比較できるのは後者の形である。その論理式は有限な構文片なので、そのコードは遺伝的有限集合であり、極限段階 `Lset ω` に既に現れている。`L.Choice.FiniteStageOrders` はまさにそこを整列する。パラメータは下の段階の要素であり、この章が呼ばれる時点で、外側の構成によって既に整列されている。**名前**とは、その間にアリティを挟んだこの組であり、本章はそれを構成し、後続段階の各要素が名前をもつことを示し、名前全体を整列する。
+
+この順序は、三つの鍵による辞書式比較をそのまま書き下したものである。ここに「依存和上の一般的な順序」のインスタンスは何もなく、それは意図的なことである。そのような一般論は、第一の鍵で索引された順序の族を運び、四つの法則をその一般性のもとで証明せねばならず、一度しか使わない用途には大きすぎる定理になる。三つの鍵にはそれぞれ名前がついており、各鍵は既に存在する順序によって比較される。
+<!--/-->
+
+
+
+```agda
 open import Cubical.Data.Sigma using ( ΣPathP )
 open import Cubical.Foundations.Prelude using ( toPathP )
 open import Cubical.Data.Nat using ( +-comm )
-open import Base.Classical using ( LEM )
-
-module L.Choice.CanonicalNames {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
 <!--en-->
@@ -52,15 +90,6 @@ The vocabulary a name is written in comes from the first-order language of set t
 名前を書き表す語彙は、集合論の一階述語論理の言語から来る。ここでの論理式は、定数記号の領域と固定個数の自由変数スロットをともに持ち、構成子は所属、等号、論理結合子、偽、そして両種の量化子を覆う。有界形式も並べて挙げられている。この構文は既に存在しており、本章が要するのは、定数領域が空であるという特別な形の論理式に名前を付け、比較することだけである。
 <!--/-->
 
-```agda
-
-open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using
-  ( Term; con; var
-  ; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
-import FOL.Semantics
-```
-
 <!--en-->
 Several existing operations on formulas do the real work of turning a definition with constants into a name. The coding of terms and formulas as sets supplies the code that will become the first key; the relabelling lemma says that reading a formula under an embedding of constant domains preserves satisfaction; occurrence counting and parameter abstraction together replace constants by fresh variables and a parameter vector. On the side of the universe, the structure `𝒮ᵥ` interprets the language inside `V`, and the pair construction `pr` is what packages code fragments as sets.
 <!--zh-->
@@ -68,14 +97,6 @@ Several existing operations on formulas do the real work of turning a definition
 <!--ja-->
 定数付きの定義を名前へ変える実質的な作業は、論理式に対する既存のいくつかの操作が担う。項と論理式を集合へ符号化する操作は、第一の鍵となるコードを供給する。定数の改名の補題は、定数領域の埋め込みを通して論理式を読んでも充足関係が保たれることを述べる。出現の数え上げとパラメータの抽象は、定数を新しい変数とパラメータ列に置き換える。宇宙の側では、構造 `𝒮ᵥ` が `V` の中でこの言語を解釈し、対の構成 `pr` がコードの断片を集合として包む。
 <!--/-->
-
-```agda
-open import FOL.Manipulation.ConstantMapping using ( mapTm; embed )
-open import FOL.Manipulation.Relabelling using ( embed-⊨ )
-open import FOL.Manipulation.ConstantOccurrences using ( countFo; constantsFo )
-open import FOL.Manipulation.ParameterAbstraction using ( absFo; ⊨-abs₁ )
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-```
 
 <!--en-->
 The constructible side contributes the objects being named. `Lset` is a stage of the constructible hierarchy inside `V`, and `𝒟ₒ` is the definable-powerset operator: it takes a set and returns the set of its subsets definable by a one-variable formula with constants from it. Crucially, `𝒟ₒ` hands back only a truncated witness that such a formula exists, so completeness of naming will inherit that truncation rather than a chosen formula. The module `DefOf` carries the inner satisfaction relation and its smallness facts, which denotation is built from.
@@ -85,14 +106,6 @@ The constructible side contributes the objects being named. `Lset` is a stage of
 構成可能な側は、名前を付けられる対象を供給する。`Lset` は `V` の中の構成可能階層の一つの段階であり、`𝒟ₒ` は定義可能冪集合の演算子である。これは集合を一つ取り、その部分集合のうち、それを定数域とする一変数の論理式で定義できるもの全体を返す。決定的なのは、`𝒟ₒ` が手渡すのはそのような論理式が存在することの截断された証拠だけだという点で、したがって名前付けの完全性は、選ばれた論理式ではなくこの截断を引き継ぐことになる。モジュール `DefOf` は内側の充足関係とその小ささの事実を運び、指示対象はこれらから組み立てられる。
 <!--/-->
 
-```agda
-open import V.Coding {ℓ} using ( pr; module VCode )
-open import V.Model {ℓ} using ( self∈sucV )
-open import L.Constructible {ℓ}
-  using ( Lset; Lset-mono; 𝒟ₒ; 𝒟ₒ-inv )
-open import L.Definability {ℓ} using ( module DefOf )
-```
-
 <!--en-->
 The first key needs a home where an order already reaches it. The numerals of the language, the von Neumann naturals, are ordinals inside `L`, and each numeral sits in the successor of its own stage; pairs of stage members appear two stages later. The limit stage `Lset ω` collects what appears by some finite stage, and `Limit` is a member of it together with a certificate of that membership. On this stage `limitOrder` well-orders everything, and `Tri-map` transports trichotomy verdicts along an equivalence, a tool the last key's trichotomy will reuse.
 <!--zh-->
@@ -100,14 +113,6 @@ The first key needs a home where an order already reaches it. The numerals of th
 <!--ja-->
 第一の鍵には、既に順序が届く居場所が必要である。この言語の数項、すなわち von Neumann 自然数は `L` の中の順序数であり、各数項はその一段上の段階に属する。段階の要素どうしの対は、さらに二段先に現れる。極限段階 `Lset ω` は、何らかの有限段階までに現れたものを集め、`Limit` はその要素に所属の証明書を添えたものである。この段階の上で `limitOrder` がすべてを整列し、`Tri-map` は同値に沿って三分の判定を輸送する。この道具は第三の鍵の三分で再利用される。
 <!--/-->
-
-```agda
-open import L.Ordinal {ℓ} using ( numeral-ord; #∈ω )
-open import L.Ordinal.Stages {ℓ} lem using ( ord∈Lset-suc )
-open import L.Axioms.Basic {ℓ} using ( pr∈Lset-suc )
-open import L.Choice.FiniteStageOrders {ℓ} lem using ( Limit; inSome; limitOrder; Tri-map )
-open import L.WellOrder.Base {ℓ-suc ℓ}
-```
 
 <!--en-->
 The abstract notion of order is a strict well-order packaged as a record: a strict comparison, trichotomy, irreflexivity, transitivity, and well-foundedness. Its formula-facing least-element search `leastOfFormula` consumes such a record together with a formula package. These four laws are exactly what the names will be shown to satisfy. The equality arguments must also respect dependent types, because a name's formula and parameter vector have the arity as an index. Paths in dependent pairs and substitution along arity paths keep these data aligned; equivalences move between presentations, while the injectivity of an embedding recovers equality of the original indices.
@@ -118,7 +123,6 @@ The abstract notion of order is a strict well-order packaged as a record: a stri
 <!--/-->
 
 ```agda
-  using ( Tri; lt; eq; gt; SWO; IsLeast; leastOfFormula )
 open import Cubical.Foundations.Transport using ( constSubstCommSlice )
 open import Cubical.Functions.Embedding using ( isEmbedding→Inj )
 ```
@@ -462,7 +466,6 @@ The left-inverse property is stated and proved one level at a time. For a term, 
 <!--/-->
 
 ```agda
-
   eraseTm-embed : ∀ {n} (t : Term (⊥* {ℓ}) (suc n))
                 → eraseTm (mapTm ⊥*-rec t) ≡ t
   eraseTm-embed (con c) = ⊥*-rec c
@@ -512,7 +515,6 @@ Injectivity is now one sentence. Suppose two parameter-free formulas at the same
 <!--/-->
 
 ```agda
-
 code-inj : ∀ {n} (χ ψ : Formula (⊥* {ℓ}) (suc n))
          → VCode.⌜ embed χ ⌝ ≡ VCode.⌜ embed ψ ⌝ → χ ≡ ψ
 code-inj χ ψ e = sym (eraseFo-embed χ)
@@ -548,7 +550,6 @@ The module takes the stage `A` and, crucially, a strict well-order of its member
 モジュールは、段階 `A` と、決定的に重要なことにその要素の上の狭義整列順序とをパラメータとして取る。第三の鍵がパラメータをその順序で比較するのであり、任意の段階の上に順序を作るのはこの章の仕事ではないからである。型 `Name` は依存的な三つ組である。自然数 `k`、`suc k` 個の自由変数スロットをもつパラメータなし論理式、そして `A` の台の `k` 個の要素の列。列の長さはアリティに強制されるので、名前が公式と誤った個数のパラメータを組にすることはない。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -574,7 +575,6 @@ The projections name the three keys' sources: `arity` returns the number, `formu
 <!--/-->
 
 ```agda
-
   arity : Name → ℕ
   arity a = a .fst
 
@@ -616,8 +616,8 @@ A subset of `A` carved by a predicate is presented directly: `subsetOf` takes a 
 <!--/-->
 
 ```agda
+  private module SemM = FOL.Semantics DA.𝒮M
   private
-    module SemM = FOL.Semantics DA.𝒮M
     open SemM using ( _^_ )
 
     subsetOf : (⟪ A ⟫ → hProp ℓ) → S
@@ -633,7 +633,6 @@ Two presentation details matter before the denotation itself. The auxiliary `⟪
 <!--/-->
 
 ```agda
-
     ⟪⟫↪-inj : {m' m : ⟪ A ⟫} → ⟪ A ⟫↪ m' ≡ ⟪ A ⟫↪ m → m' ≡ m
     ⟪⟫↪-inj {m'} {m} = isEmbedding→Inj isEmb⟪ A ⟫↪ m' m
 
@@ -776,7 +775,6 @@ Two constant interpretations of a parameter-free formula both have type `⊥* �
 <!--/-->
 
 ```agda
-
     sameReading : (λ (b : ⊥* {ℓ}) → DA.ι (⊥*-rec b)) ≡ ⊥*-rec
     sameReading = funExt (λ b → ⊥*-rec b)
 
@@ -810,7 +808,6 @@ With the two readings identified as propositions, `satAt-abs` lifts the identifi
 <!--/-->
 
 ```agda
-
     satAt-abs : (φ : Formula ⟪ A ⟫ 1) (m : ⟪ A ⟫)
               → satAt (nameOf φ) m ≡ DA.smallSat φ m
     satAt-abs φ m = ⇔toPath fwd bwd
@@ -1169,7 +1166,6 @@ The right lemma is the mirror image: moving the *other* vector along its own len
 <!--/-->
 
 ```agda
-
     ≺ᵥ-subst-right : {i j k : ℕ} (e : i ≡ j) (p : Vec ⟪ A ⟫ k) (q : Vec ⟪ A ⟫ i)
                    → (p ≺ᵥ subst (Vec ⟪ A ⟫) e q) ≡ (p ≺ᵥ q)
     ≺ᵥ-subst-right e p q = sym (constSubstCommSlice
@@ -1513,7 +1509,6 @@ The middle layer fixes a code and descends through arities. Its telescope is sho
 <!--/-->
 
 ```agda
-
     accAtArity : (c : Limit)
                → ((b : Name) → codeOf b ≺ c → Acc _≺ₙ_ b)
                → (k : ℕ) → Acc _<_ k
@@ -1546,7 +1541,6 @@ The outer layer descends through codes and needs no equation for the arity at al
 <!--/-->
 
 ```agda
-
     accAtCode : (c : Limit) → Acc _≺_ c → (a : Name) → codeOf a ≡ c → Acc _≺ₙ_ a
     accAtCode c (acc rc) a qc =
       accAtArity c ihC (arity a) (<-wellfounded (arity a)) a qc refl
@@ -1624,7 +1618,6 @@ The least-element search is applied only to the denotation predicate needed by t
 ```
 </div>
 </details>
-
 
 <!--en-->
 ## Recap

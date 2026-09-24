@@ -1,17 +1,49 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # Rank descent through coded pairs
+<!--zh-->
+# 沿编码对作秩下降
+<!--ja-->
+# 符号化された対に沿う階数降下
+<!--/-->
+
+```agda
+open import Base.Prelude
+```
+
+<!--en-->
+Fix a universe level `ℓ`{.Agda}. Keeping the level as a parameter lets the constructions be instantiated at each required size without identifying distinct universes.
+<!--zh-->
+固定宇宙层级 `ℓ`{.Agda}。保留这个层级参数，使构造可以在所需的各个大小处实例化，而不必把不同的宇宙视为同一个。
+<!--ja-->
+宇宙レベル `ℓ`{.Agda} を固定する。このレベルをパラメータとして保つことで、異なる宇宙を同一視せずに、必要な大きさで構成を具体化できる。
+<!--/-->
+
+```agda
+module L.Coding.Descent {ℓ : Level} where
+```
+
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Coding {ℓ} using ( pr )
+open import L.Rank {ℓ} using ( rank; rank-mono; rank-ord )
+```
+
+<!--en-->
 
 A later well-founded recursion will proceed over codes and, at each step, process an immediate component of the code it is given. For the recursion to be well-founded it needs a measure that strictly decreases from the code to that component. Membership will not supply one. The Kuratowski pair is defined as `pr a b = ⁅ ⁅ a ⁆s , ⁅ a , b ⁆ ⁆`{.Agda}: a component such as `b` is reached only through the intermediate unordered pair `⁅ a , b ⁆`{.Agda}, and that intermediate set is not itself a code. An induction on membership therefore cannot carry a hypothesis about codes across them.
 
 Rank can. Rank increases strictly along membership, and its values are ordinals, whose membership is transitive; so a finite membership chain collapses into a single comparison of ordinals, and the recursion can instead be justified by induction on rank. This chapter assembles exactly those comparisons: one step for each side of an ordered pair, and their composition into the four-step descent from each side of a paired payload to the outer tagged code.
 <!--zh-->
-# 沿编码对作秩下降
 
 后续将对编码作良基递归，并在每一步处理所给码的一个直接部件。递归要良基，就需要一个从码到该部件严格下降的度量。成员关系给不出这个度量。Kuratowski 对定义为 `pr a b = ⁅ ⁅ a ⁆s , ⁅ a , b ⁆ ⁆`{.Agda}：像 `b` 这样的部件必须经过中间的无序对 `⁅ a , b ⁆`{.Agda} 才能到达，而这个中间集合本身并不是码。故沿成员关系进行的归纳无法把关于码的假设搬过它们。
 
 秩可以。秩沿成员关系严格增长，且取值于序数，而序数的成员关系是传递的；于是有限的成员链收缩为一次序数比较，递归便可改为按**秩**作良基归纳。本章组装的正是这些比较：有序对每一侧各一步，再把它们复合成从成对载荷的每一侧到外层带标签码的四步下降。
 <!--ja-->
-# 符号化された対に沿う階数降下
 
 後では符号に対して整礎再帰を行い、各段階で与えられた符号の直下の成分を処理する。再帰が整礎であるためには、符号からその成分へと狭義に減少する尺度が必要である。所属関係はそれを与えてくれない。Kuratowski 対は `pr a b = ⁅ ⁅ a ⁆s , ⁅ a , b ⁆ ⁆`{.Agda} と定義されるので、`b` のような成分に届くには、中間の非順序対 `⁅ a , b ⁆`{.Agda} を経なければならず、この中間集合そのものは符号ではない。したがって所属に関する帰納は、符号についての仮定をそれらの間へ運ぶことができない。
 
@@ -26,16 +58,6 @@ The mathematical setting is the cumulative hierarchy: its carrier `S`, its propo
 数学的な舞台は累積階層である。その台 `S`、命題値をとる所属 `∈ˢ`、そして集合論的演算をひとまとめにした構造 `𝒮ᵥ` である。降下を証明する前に一つ、準備をはっきりさせておく。整礎再帰には狭義の尺度が必要で、後で使う尺度は von Neumann の階数である。これはランクの章で定義され研究されている。そこでは `rank-mono` が階数が所属に沿って狭義に増加することを、`rank-ord` がすべての階数が順序数であることを記録している。
 <!--/-->
 
-```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-open import Base.Prelude
-
-module L.Coding.Descent {ℓ : Level} where
-
-open import FOL.ZFStructure using ( module hPropStructure )
-```
-
 <!--en-->
 The concrete problem can be seen from the shape of the code. A component of `pr a b` is not a member of `pr a b` directly: it is wrapped inside the unordered pair `⁅ a , b ⁆`{.Agda}, which in turn is one of the two members of the outer unordered pair. Membership gives a chain of steps rather than one edge, and the links of the chain are sets that carry no code structure at all. What replaces the chain is a strict inequality between ordinals, obtained by translating each membership edge through the rank and then composing.
 <!--zh-->
@@ -43,12 +65,6 @@ The concrete problem can be seen from the shape of the code. A component of `pr 
 <!--ja-->
 具体的な難しさは符号の形から読み取れる。`pr a b` の成分は `pr a b` の直接の要素ではない。それは非順序対 `⁅ a , b ⁆`{.Agda} の中に包まれ、後者はさらに外側の非順序対の 2 つの要素の一つである。所属が与えるのは 1 本の辺ではなく複数段階の連鎖であり、連鎖の環となる集合はまったく符号の構造を持たないものである。この連鎖の代わりとなるのが、各所属の辺を階数を通して翻訳し、それを合成して得られる順序数どうしの狹義の不等式である。
 <!--/-->
-
-```agda
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-open import V.Coding {ℓ} using ( pr )
-open import L.Rank {ℓ} using ( rank; rank-mono; rank-ord )
-```
 
 <!--en-->
 The comparison uses three ingredients from the hierarchy: the unordered pair `⁅ u , v ⁆`{.Agda}, the pairing axiom `pairing-ax`, which classifies membership in an unordered pair propositionally, and `∈∈ₛ`, which converts membership in the underlying set sense into the structural membership `∈ˢ` and back. The sum type `_⊎_` will carry the explicit choice between the two components: `inl` for the left, `inr` for the right. Keeping the choice explicit rather than merely exists matters here, because the descent proof must pick out which component of the pair is being descended into.
@@ -146,7 +162,6 @@ Both lemmas under the tag compose at the ordinal `rank (pr c (pr a b))`, using t
 <!--/-->
 
 ```agda
-
 leftPart : (c a b : S) → ⟨ rank a ∈ˢ rank (pr c (pr a b)) ⟩
 leftPart c a b = rank-ord (pr c (pr a b)) .fst
   (pair-component≺ a b a (inl refl)) (payload≺ c (pr a b))

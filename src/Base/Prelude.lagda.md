@@ -1,94 +1,69 @@
-<!--en-->
-# Prelude
-
-When studying set theory, we talk about sets and their elements, relations between sets, and functions from one set to another. A definition tells us what an object is, a theorem states a property it has, and a proof explains why that property holds. In this book, set theory is the **[object theory]{.term-intro #object-theory}** and cubical type theory is the **[metatheory]{.term-intro #metatheory}**: within cubical type theory, we construct models of set theory, interpret its sentences, and prove that these models satisfy the relevant axioms and theorems.
-
-We write and check these constructions and proofs with the Agda proof assistant. Agda provides the formal language and its checking mechanisms, cubical type theory supplies the mathematical foundation for this formalisation, and the Cubical library collects definitions and theorems developed on that foundation. We call this Cubical Agda environment, which supports the formalisation of the object theory, the **[host]{.term-intro #host-environment}**. Thus, later references to a *type in the host*, a *function in the host*, or a *host-level construction* concern the metatheory rather than objects inside a model of set theory.
-
-To read these developments, we first need to become acquainted with the basic vocabulary of the host.
-
-This chapter begins with the basic notions of that language. We will meet them one at a time, considering both what they mean and how they are used in mathematical statements and proofs. There is no need to remember every symbol at once. As the same notions recur in later chapters, their uses will become more familiar; when needed, this chapter provides a place to return to their meanings.
-
-## Traceable vocabulary
-
-To make such references easier, we first explain where these basic notions come from and how to find their definitions.
-
-In later chapters, you will see statements containing `import`{.Agda} near the beginning. They specify which names the chapter imports from which modules, identifying the concepts and results used in the arguments that follow. When a name is unfamiliar, these statements tell you where it comes from; clicking the name takes you to its definition.
-
-The basic vocabulary collected in this chapter is an exception to this convention. These notions occur so frequently throughout the book that we gather them in `Base.Prelude`{.Agda}, which later chapters import as a whole without listing each name again. Here we list the selected definitions from the Cubical library and explain the meanings and uses needed to read this book, without developing each construction and proof inside the library. For further study, you can follow the name links to the original definitions or consult the Cubical library's documentation and learning materials on cubical type theory.
-
-Before introducing this vocabulary, we explain two short lines of code:
-
-<ul><li>The first line specifies the options Agda uses to check this chapter.
-<details class="prose-disclosure"><summary>Optional: option details</summary>
-<ul><li><code>--cubical</code> enables language support for cubical type theory.</li><li><code>--safe</code> enables safe mode, which prohibits declaring unproved axioms and bypassing checks such as termination checking. Theorems that need additional assumptions can still be stated, but those assumptions must appear explicitly as parameters or premises.</li><li><code>--guardedness</code> enables checking associated with corecursive definitions. Such definitions can describe objects whose content continues to unfold, such as infinite sequences; the check constrains recursion so that the required content can be produced progressively. On a first reading, it is enough to know that this is an Agda setting for checking such definitions; its technical details can wait.</li></ul>
-</details></li><li>The second line gives the module corresponding to this chapter its name.
-Here <code>Base.Prelude</code> is the basic vocabulary module mentioned above. Later chapters use this name to import the vocabulary collected here, and the content following <code>where</code> forms the body of the module.</li></ul>
-<!--zh-->
-# 基础词汇
-
-学习集合论时，我们谈论集合及其元素，也谈论集合之间的关系和函数。定义告诉我们所讨论的对象是什么，定理陈述这些对象具有怎样的性质，证明则说明这些性质为何成立。本书以集合论为**[对象理论]{.term-intro #object-theory}**，以立方类型论为**[元理论]{.term-intro #metatheory}**：我们在立方类型论中构造集合论的模型，解释集合论的语句，并证明这些模型满足相应的公理与定理。
-
-这些构造和证明使用 Agda 证明助手书写并检查。Agda 提供形式语言和检查机制，立方类型论为这套形式化提供数学基础，Cubical 库则汇集了在此基础上建立的定义与定理。本书把承载对象理论形式化的这套 Cubical Agda 环境简称为**[宿主]{.term-intro #host-environment}**。因此，后文所说的「宿主中的类型」「宿主中的函数」或「宿主层的构造」，都属于元理论一侧，而不是集合论模型内部的对象。
-
-要读懂这些内容，我们先要熟悉宿主中的基础词汇。
-
-本章就从这套语言的基础概念开始。我们将逐个认识它们，既了解其含义，也看看它们如何用于数学陈述与证明。不必急于一次记住所有符号；随着这些概念在后续章节中反复出现，它们的用法会逐渐变得熟悉。需要时，也可以回到本章，重新查阅某个概念的含义。
-
-## 词汇可溯源
-
-为了便于这样的查阅，我们先说明这些基础概念从何而来，以及如何找到它们的定义。
-
-阅读后续章节时，你会在章首看到一些包含 `import`{.Agda} 的语句。它们标明本章从哪些模块引入了哪些名称，相当于说明接下来的论证会用到哪些已有概念和结果。遇到不熟悉的名称时，可以先从这些语句确认它的来源，再点击名称查看具体定义。
-
-本章集中引入的基础词汇是这项约定的一个例外。它们在全书中使用得十分频繁，因此统一收集在 `Base.Prelude`{.Agda} 中，供后续章节整体引入，不再逐个列出。我们会在这里列出所选用的 Cubical 库定义，并说明阅读本书所需的含义与用法，但不逐一展开库内部的构造和证明。希望进一步了解时，可以沿名称链接查阅原始定义，也可以结合 Cubical 库的文档及立方类型论的学习资料继续阅读。
-
-在正式引入这些词汇之前，还有两行简短的代码需要说明：
-
-<ul><li>第一行指定 Agda 检查本章时使用的选项。
-
-<details class="prose-disclosure"><summary>选读：选项说明</summary>
-<ul><li><code>--cubical</code> 启用立方类型论的语言支持。</li><li><code>--safe</code> 启用安全模式，禁止直接宣告未经证明的公理，以及绕过终止性检查等做法；需要额外假设的定理仍可以书写，但这些假设必须明确出现在其参数或前提中。</li><li><code>--guardedness</code> 启用与余递归定义有关的检查。这类定义可以描述不断产生后续内容的对象，例如无限序列；检查的作用是约束递归的方式，使所需的内容能够逐步产生。初读本章时，只需知道这是 Agda 检查此类定义的一项设置，暂时不必掌握其中的技术细节。</li></ul>
-</details></li><li>第二行为本章对应的模块命名。这里的 <code>Base.Prelude</code> 就是前面提到的基础词汇模块。后续章节通过这个名称引入本章汇集的词汇，而 <code>where</code> 之后的内容构成模块的正文。</li></ul>
-<!--ja-->
-# 基礎語彙
-
-集合論を学ぶとき、私たちは集合とその要素、集合の間の関係や関数について考える。定義は扱う対象が何であるかを示し、定理はその対象がどのような性質を持つかを述べ、証明はその性質がなぜ成り立つかを明らかにする。本書では、集合論を**[対象理論]{.term-intro #object-theory}**、立方型理論を**[メタ理論]{.term-intro #metatheory}**とする。つまり、立方型理論の中で集合論のモデルを構成し、集合論の文を解釈して、そのモデルが所定の公理や定理を満たすことを証明する。
-
-これらの構成と証明は、証明支援系 Agda を用いて記述し、検査する。Agda は形式言語とその検査機構を提供し、立方型理論はこの形式化の数学的基礎を与え、Cubical ライブラリはその基礎の上で築かれた定義や定理を集めている。本書では、対象理論の形式化を支えるこの Cubical Agda の環境を**[ホスト]{.term-intro #host-environment}**と呼ぶ。したがって、後に現れる「ホストの型」「ホストの関数」「ホストレベルの構成」はいずれもメタ理論の側に属し、集合論のモデル内部の対象ではない。
-
-これらを読み解くために、まずはホストの基礎語彙に慣れていこう。
-
-本章は、この言語の基礎概念から始める。一つずつ取り上げ、その意味と、数学の主張や証明での使い方を見ていく。すべての記号を一度に覚える必要はない。後の章で同じ概念に繰り返し出会ううちに、その使い方にも慣れていくであろう。必要なときには本章に戻り、概念の意味を確かめることもできる。
-
-## 語彙の出所をたどる
-
-そのような参照をしやすくするために、まず、これらの基礎概念がどこから来るのか、そして定義をどう探せばよいのかを説明する。
-
-後の章では、冒頭に `import`{.Agda} を含む文が現れる。これは、どのモジュールからどの名前を導入するかを示し、その後の議論で使う既存の概念や結果を明らかにする。見慣れない名前があれば、まずこれらの文で出所を確かめ、名前をクリックして具体的な定義を参照できる。
-
-本章にまとめる基礎語彙は、この約束の例外である。全書を通じて頻繁に使うため、`Base.Prelude`{.Agda} にまとめ、後の章では個々の名前を列挙せずに一括して導入する。ここでは Cubical ライブラリから選んだ定義を列挙し、本書を読むために必要な意味と使い方を説明するが、ライブラリ内部の構成や証明を一つずつ展開することはしない。さらに学びたい場合は、名前のリンクから元の定義を参照したり、Cubical ライブラリの文書や立方型理論の学習資料を読んだりできる。
-
-これらの語彙を導入する前に、二行の短いコードを説明する。
-
-<ul><li>一行目は、Agda が本章を検査する際のオプションを指定する。
-
-<details class="prose-disclosure"><summary>発展：オプションの説明</summary>
-<ul><li><code>--cubical</code> は立方型理論の言語機能を有効にする。</li><li><code>--safe</code> は安全モードを有効にし、未証明の公理の宣言や停止性検査の回避などを禁止する。追加の仮定を必要とする定理も記述できるが、その仮定はパラメータや前提として明示する必要がある。</li><li><code>--guardedness</code> は余再帰的定義に関する検査を有効にする。この種の定義は、無限列のように次々と内容を生成する対象を記述できる。検査は再帰の仕方を制約し、必要な内容を順次生成できるようにする。初読では、そのような定義を検査するための Agda の設定だと理解すれば十分で、技術的な詳細を今すぐ学ぶ必要はない。</li></ul>
-</details></li><li>二行目は、本章に対応するモジュールに名前を付ける。ここでの <code>Base.Prelude</code> は、先ほど述べた基礎語彙のモジュールである。後の章では、この名前を使って本章にまとめた語彙を導入する。<code>where</code> の後に続く内容がモジュールの本体である。</li></ul>
-<!--/-->
-
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
 module Base.Prelude where
 ```
 
 <!--en-->
-With the two lines now identified, and the module body located after `where`{.Agda}, we can begin to explore the notions one at a time.
+# Prelude
 <!--zh-->
-至此，两行代码的作用和模块正文的位置都已明确，下面开始逐个认识这些概念。
+# 基础词汇
 <!--ja-->
-これで二行の役割と、`where`{.Agda} の後にあるモジュール本体が分かった。ここから概念を一つずつ見ていこう。
+# 基礎語彙
+<!--/-->
+
+<!--en-->
+
+In this book, set theory is the **[object theory]{.term-intro #object-theory}** and cubical type theory is the **[metatheory]{.term-intro #metatheory}**: we construct models of set theory, interpret their sentences and prove their properties within cubical type theory. Agda checks the constructions and proofs, while the Cubical library supplies their basic vocabulary. We call this working environment the **[host]{.term-intro #host-environment}**. A host type or function therefore belongs to the metatheory, not to the objects inside a set-theoretic model.
+
+This chapter introduces that vocabulary through its mathematical meaning and use. There is no need to memorize every symbol: later chapters import these notions together from `Base.Prelude`{.Agda}, and you can return here whenever a definition needs refreshing.
+
+## Reading guide
+
+Read the prose first, then the code immediately below it: the code makes the preceding explanation precise. A ∎ closes a definition, construction or proof. Submodules can be folded to keep the larger argument in view.
+
+Use the [interactive contents](index.html#reading-explorer) to choose a route, or the [dependency graph](index.html#dependency-map) to inspect prerequisites. The learning route at the top of each chapter lists its direct prerequisites and possible continuations. Dashed chapter titles reveal the formal setup or `import`{.Agda} statements without interrupting the prose; parameterized module declarations stay in the body.
+
+Hover over a marked name or expression to inspect its type, and continue through names inside the popup. On a phone, tap to open this information and hold a highlighted node while sliding sideways to select a smaller or larger expression. To inspect a definition, click its name on desktop or use the popup's window button on mobile. The definition window supports back and forward; its enter button, or another click on the same definition inside it, takes you to the actual page.
+
+Keywords and syntax symbols offer short explanations with links to the Agda manual. Terms link back to their introductions. The basic vocabulary first leads here, where its meaning is explained; the visible Cubical imports then lead to the library's original definitions when you want to look deeper.
+<!--zh-->
+
+本书以集合论为**[对象理论]{.term-intro #object-theory}**，以立方类型论为**[元理论]{.term-intro #metatheory}**：在立方类型论中构造集合论的模型，解释其语句，并证明其性质。Agda 检查这些构造与证明，Cubical 库提供所需的基础词汇；我们把这套工作环境简称为**[宿主]{.term-intro #host-environment}**。因此，「宿主中的类型或函数」属于元理论，而不是集合论模型内部的对象。
+
+本章从数学含义和实际用法两方面介绍这些词汇。不必一次记住所有符号：后续章节会从 `Base.Prelude`{.Agda} 统一引入它们，遇到不熟悉的概念时，再回到这里查阅即可。
+
+## 阅读指南
+
+阅读时，先看文字，再看紧随其后的代码：代码是前文解释的精确表达。∎ 标记一项定义、构造或证明的结束；子模块可以折叠，方便把握整体论证。
+
+可以在[交互式目录](index.html#reading-explorer)中选择阅读路线，也可以用[依赖图](index.html#dependency-map)查看先修关系。每章顶部的学习路线列出直接先修和可选后续章节。带虚线的章节标题可以显示形式化设置或 `import`{.Agda} 语句，不打断正文；带参数的模块声明则保留在正文中。
+
+悬停在带标记的名称或表达式上可以查看类型，也可以继续查看弹窗中的名称。手机上轻触即可打开这些信息，按住色块左右滑动可选择更小或更大的表达式。查看定义时，桌面端点击名称，手机端使用提示窗里的窗口按钮。定义窗口支持前进和后退；点击其跳转按钮，或在窗内再次点击当前定义，才会进入实际页面。
+
+关键字和语法符号附有简短解释与 Agda 官方文档链接，术语则可以追溯到首次引入的位置。基础词汇先指向本章的讲解；想进一步了解库内部的定义时，再沿可见的 Cubical 导入代码进入原文。
+<!--ja-->
+
+本書では集合論を**[対象理論]{.term-intro #object-theory}**、立方型理論を**[メタ理論]{.term-intro #metatheory}**とする。立方型理論の中で集合論のモデルを構成し、その文を解釈して性質を証明する。Agda が構成と証明を検査し、Cubical ライブラリが基礎語彙を提供する。この環境を**[ホスト]{.term-intro #host-environment}**と呼ぶ。したがって、ホストの型や関数はメタ理論に属し、集合論のモデル内部の対象とは異なる。
+
+本章では、その語彙を数学的な意味と使い方から紹介する。記号を一度に覚える必要はない。後の章では `Base.Prelude`{.Agda} からまとめて導入するので、必要なときにここへ戻り、意味を確かめればよい。
+
+## 読書案内
+
+まず文章を読み、直後のコードでその精確な表現を確かめる。∎ は定義、構成、証明の終わりを示す。部分モジュールを折り畳むと、議論の全体を見渡しやすい。
+
+[対話型目次](index.html#reading-explorer)で学習ルートを選び、[依存グラフ](index.html#dependency-map)で前提関係を確認できる。各章の冒頭には直接の前提と次に進める章がある。破線の付いた章題から形式化の設定や `import`{.Agda} 文を確認でき、パラメータ付きモジュールの宣言は本文に残る。
+
+印のある名前や式にポインタを重ねると型が現れ、その中の名前も続けて調べられる。携帯端末ではタップして情報を開き、色の付いた節点を押さえたまま左右に動かすと、より小さい式や大きい式を選べる。定義を見るには、デスクトップでは名前をクリックし、携帯端末ではポップアップのウィンドウボタンを使う。定義ウィンドウには前後移動があり、移動ボタン、または本文中の同じ定義の再クリックで実際のページへ進む。
+
+キーワードと構文記号には短い説明と Agda 公式文書へのリンクがあり、用語からは最初の導入箇所へ戻れる。基礎語彙はまず本章の説明へ導く。ライブラリ内部の定義をさらに調べたいときは、表示された Cubical の import コードから原文へ進める。
+<!--/-->
+
+<!--en-->
+We now explore the mathematical notions collected in this module one at a time.
+<!--zh-->
+下面逐个认识本模块汇集的数学概念。
+<!--ja-->
+ここから本モジュールに集めた数学的な概念を一つずつ見ていこう。
 <!--/-->
 
 <!--en-->
@@ -147,6 +122,69 @@ The level and the type are implicit arguments, so callers normally supply only t
 
 ```agda
 id x = x
+```
+
+<!--en-->
+### Moving between levels
+<!--zh-->
+### 层级之间的搬移
+<!--ja-->
+### レベル間の移動
+<!--/-->
+
+<!--en-->
+The Agda type universes used here are not cumulative. An element of `Type ℓ`{.Agda} does not automatically become an element of `Type (ℓ-suc ℓ)`{.Agda}; moving a type between levels requires the explicit operation `Lift`{.Agda}.
+
+`Lift ℓ A`{.Agda} is a [record type]{.term-ref #record-type} that wraps an element of the original type `A`{.Agda}. Given `a : A`{.Agda}, the function `lift`{.Agda} produces `lift a : Lift ℓ A`{.Agda}. Conversely, given `b : Lift ℓ A`{.Agda}, `lower b`{.Agda} retrieves the stored element of `A`{.Agda}.
+
+The functions `lift`{.Agda} and `lower`{.Agda} are mutually inverse between `A`{.Agda} and `Lift ℓ A`{.Agda}. Two equations state the two directions separately:
+
+<div class="single-line-code"><code>`lower (lift a) ≡ a`{.Agda}</code></div>
+
+<div class="single-line-code"><code>`lift (lower b) ≡ b`{.Agda}</code></div>
+
+The first says that packaging an element and immediately retrieving it returns the original element. The second says that retrieving an element from a lifted record and packaging it again returns the original record. Thus `Lift`{.Agda} changes the universe in which a type is presented and the representation of its elements, without adding or losing mathematical information.
+
+More precisely, if `A`{.Agda} lives in `Type ℓ₁`{.Agda}, then `Lift ℓ₂ A`{.Agda} lives in `Type (ℓ-max ℓ₁ ℓ₂)`{.Agda}. If either universe level is already above the other, `ℓ-max`{.Agda} keeps it; otherwise it gives a common universe level large enough for both. Hence `Lift`{.Agda} does not raise a type by a fixed number of levels. It places the type in a universe large enough for the levels at hand.
+
+A type can always be copied upward in this way, but <span class="prose-annotation-target">there is in general no way to move one down</span><aside class="prose-annotation-note">Propositions (types satisfying `isProp`{.Agda}) are the exception: the <a href="Base.Classical.html">Classical Boundary</a> chapter will show that excluded middle provides exactly the downward direction for them.</aside>.
+<!--zh-->
+我们使用的 Agda 类型宇宙不是累积的。`Type ℓ`{.Agda} 的元素并不自动成为 `Type (ℓ-suc ℓ)`{.Agda} 的元素；在层级之间搬移类型需要显式运算 `Lift`{.Agda}。
+
+`Lift ℓ A`{.Agda} 是一个[记录类型]{.term-ref #record-type}，把原类型 `A`{.Agda} 的一个元素包装起来。给定 `a : A`{.Agda}，函数 `lift`{.Agda} 产生 `lift a : Lift ℓ A`{.Agda}；反过来，给定 `b : Lift ℓ A`{.Agda}，`lower b`{.Agda} 取出其中保存的 `A`{.Agda} 的元素。
+
+`lift`{.Agda} 与 `lower`{.Agda} 在 `A`{.Agda} 和 `Lift ℓ A`{.Agda} 之间互为逆函数。这由两条等式分别表达：
+
+<div class="single-line-code"><code>`lower (lift a) ≡ a`{.Agda}</code></div>
+
+<div class="single-line-code"><code>`lift (lower b) ≡ b`{.Agda}</code></div>
+
+第一条等式说，一个元素被装入 `Lift`{.Agda} 后立即取出，仍是原来的元素。第二条等式说，从 `Lift`{.Agda} 中取出元素再重新装入，仍得到原来的记录。因此，`Lift`{.Agda} 改变的是类型所在的宇宙以及元素的表示方式，不会增添或丢失数学信息。
+
+具体来说，若 `A`{.Agda} 位于 `Type ℓ₁`{.Agda}，那么 `Lift ℓ₂ A`{.Agda} 位于 `Type (ℓ-max ℓ₁ ℓ₂)`{.Agda}。如果两个宇宙层级中已经有一个较高，`ℓ-max`{.Agda} 就保留那个层级；否则，它给出足以同时容纳二者的公共宇宙层级。因此，`Lift`{.Agda} 并不是把类型固定抬高若干层，而是把它放入当前所需的足够大的宇宙。
+
+类型总能以这种方式向上复制，但<span class="prose-annotation-target">一般不能向下搬移</span><aside class="prose-annotation-note">命题 (满足 `isProp`{.Agda} 的类型) 是一个例外；<a href="Base.Classical.html">经典边界</a>一章将说明，排中律恰好为命题提供向下搬移的方向。</aside>。
+<!--ja-->
+ここで使う Agda の型宇宙は累積的ではない。`Type ℓ`{.Agda} の要素が自動的に `Type (ℓ-suc ℓ)`{.Agda} の要素になるわけではない。レベル間で型を移すには、明示的な演算 `Lift`{.Agda} が必要である。
+
+`Lift ℓ A`{.Agda} は元の型 `A`{.Agda} の元を一つ包む[レコード型]{.term-ref #record-type}である。`a : A`{.Agda} を与えると、関数 `lift`{.Agda} は `lift a : Lift ℓ A`{.Agda} を作る。逆に `b : Lift ℓ A`{.Agda} があれば、`lower b`{.Agda} が保存された `A`{.Agda} の元を取り出す。
+
+`lift`{.Agda} と `lower`{.Agda} は `A`{.Agda} と `Lift ℓ A`{.Agda} の間で互いに逆である。その二つの向きを別々の等式が表す。
+
+<div class="single-line-code"><code>`lower (lift a) ≡ a`{.Agda}</code></div>
+
+<div class="single-line-code"><code>`lift (lower b) ≡ b`{.Agda}</code></div>
+
+第一の等式は、元を包んですぐ取り出せば元の要素に戻ることを述べる。第二の等式は、持ち上げられたレコードから元を取り出して包み直せば、元のレコードに戻ることを述べる。したがって `Lift`{.Agda} は型を提示する宇宙と元の表現を変えるが、数学的な情報を加えたり失ったりしない。
+
+より正確には、`A`{.Agda} が `Type ℓ₁`{.Agda} に住むなら、`Lift ℓ₂ A`{.Agda} は `Type (ℓ-max ℓ₁ ℓ₂)`{.Agda} に住む。一方の宇宙レベルがすでに他方より高ければ、`ℓ-max`{.Agda} はそのレベルを保つ。そうでなければ、両方を収めるのに十分な共通の宇宙レベルを与える。したがって `Lift`{.Agda} は型を決まった段数だけ持ち上げるのではなく、現在の二つのレベルにとって十分大きな宇宙へ型を置く。
+
+型は常にこの方法で上へコピーできるが、<span class="prose-annotation-target">一般には下へ動かせない</span><aside class="prose-annotation-note">命題 (`isProp`{.Agda} を満たす型) は例外である。<a href="Base.Classical.html">古典的境界</a>の章で、排中律が命題に対する下向きの方向をちょうど与えることを見る。</aside>。
+<!--/-->
+
+```agda
+open import Cubical.Foundations.Prelude public
+  using ( Lift; lift; lower )
 ```
 
 <!--en-->
@@ -231,7 +269,7 @@ The second component may itself be a proof of a property of the first. This book
 
 When `B`{.Agda} does not depend on `x`{.Agda}, every second component lies in the same type, and the dependent pair specialises to an ordinary product:
 
-<div class="single-line-code"><code>`A × B  :=  Σ (_ : A) B`{.Agda}</code></div>
+<div class="single-line-code"><code>`A × B = Σ (_ : A) B`{.Agda}</code></div>
 
 An ordinary product places two independent elements together; a Σ type places a particular `a`{.Agda} together with data belonging to the corresponding type `B a`{.Agda}. Dependent pairs are built with `_,_`{.Agda}, `fst`{.Agda} extracts the first component, and `snd`{.Agda} extracts the second.
 
@@ -250,7 +288,7 @@ An ordinary product places two independent elements together; a Σ type places a
 
 当 `B`{.Agda} 不依赖 `x`{.Agda} 时，所有第二分量都属于同一个类型，依值对便特化为普通的积：
 
-<div class="single-line-code"><code>`A × B  :=  Σ (_ : A) B`{.Agda}</code></div>
+<div class="single-line-code"><code>`A × B = Σ (_ : A) B`{.Agda}</code></div>
 
 普通的积把两个彼此独立的元素放在一起；Σ 类型则把某个 `a`{.Agda} 与属于相应类型 `B a`{.Agda} 的数据放在一起。依值对用 `_,_`{.Agda} 构造，用 `fst`{.Agda} 取出第一分量，用 `snd`{.Agda} 取出第二分量。
 
@@ -269,11 +307,16 @@ An ordinary product places two independent elements together; a Σ type places a
 
 `B`{.Agda} が `x`{.Agda} に依存しない場合、すべての第二成分は同じ型に属し、依存対は通常の積に特化する。
 
-<div class="single-line-code"><code>`A × B  :=  Σ (_ : A) B`{.Agda}</code></div>
+<div class="single-line-code"><code>`A × B = Σ (_ : A) B`{.Agda}</code></div>
 
 通常の積は互いに独立した二つの元を一緒にするが、Σ 型は、ある `a`{.Agda} と、対応する型 `B a`{.Agda} に属するデータを一緒にする。依存対は `_,_`{.Agda} で作り、`fst`{.Agda} で第一成分を、`snd`{.Agda} で第二成分を取り出す。
 
 <!--/-->
+
+```agda
+open import Cubical.Data.Sigma public
+  using ( Σ; Σ-syntax; _×_; _,_; fst; snd )
+```
 
 <figure class="book-diagram type-comparison" id="fig-pi-sigma" aria-describedby="fig-pi-sigma-caption">
 <div class="type-comparison-panels">
@@ -313,11 +356,6 @@ A Π type handles "for every `x`{.Agda}, give data depending on `x`{.Agda}"; a �
 <!--/-->
 </figcaption>
 </figure>
-
-```agda
-open import Cubical.Data.Sigma public
-  using ( Σ; Σ-syntax; _×_; _,_; fst; snd )
-```
 
 <!--en-->
 ### [Sum types]{.term-intro #sum-type}
@@ -378,11 +416,11 @@ open import Cubical.Data.Sum public
 ```
 
 <!--en-->
-### Record types
+### [Record types]{.term-intro #record-type}
 <!--zh-->
-### 记录类型
+### [记录类型]{.term-intro #record-type}
 <!--ja-->
-### レコード型
+### [レコード型]{.term-intro #record-type}
 <!--/-->
 
 <!--en-->
@@ -429,68 +467,6 @@ Agda では、キーワード `record`{.Agda} がレコード型の宣言を開�
 これは入れ子の Σ 型の値 `(a , (b , c))`{.Agda} と同じデータを表すが、入れ子を表面に出さない。フィールド名は対応する成分を直接取り出す[射影]{.term-intro #projection}として働く。そのため、成分が何段目にあるかを覚えたり、`fst`{.Agda} と `snd`{.Agda} を何度も組み合わせたりする必要がない。レコード型は入れ子になった Σ 型の依存構造を保ちながら、名前付きフィールドと構成子によって大きなデータのまとまりを明瞭な平面インターフェースとして提示する。宣言、構成、射影の詳細は [Agda のレコード型の文書](https://agda.readthedocs.io/en/v2.8.0/language/record-types.html)を参照してほしい。
 <!--/-->
 
-<!--en-->
-## Moving between universe levels
-<!--zh-->
-## 宇宙层级之间的搬移
-<!--ja-->
-## 宇宙レベル間の移動
-<!--/-->
-
-<!--en-->
-The Agda type universes used here are not cumulative. An element of `Type ℓ`{.Agda} does not automatically become an element of `Type (ℓ-suc ℓ)`{.Agda}; moving a type between levels requires the explicit operation `Lift`{.Agda}.
-
-`Lift ℓ A`{.Agda} is itself a record type. It has one field, `lower : A`{.Agda}, which stores an element of the original type `A`{.Agda}; its constructor is `lift`{.Agda}. Given `a : A`{.Agda}, the constructor produces `lift a : Lift ℓ A`{.Agda}. Conversely, given `b : Lift ℓ A`{.Agda}, the field projection `lower b`{.Agda} retrieves the stored element of `A`{.Agda}.
-
-The functions `lift`{.Agda} and `lower`{.Agda} are mutually inverse between `A`{.Agda} and `Lift ℓ A`{.Agda}. Two equations state the two directions separately:
-
-<div class="single-line-code"><code>`lower (lift a) ≡ a`{.Agda}</code></div>
-
-<div class="single-line-code"><code>`lift (lower b) ≡ b`{.Agda}</code></div>
-
-The first says that packaging an element and immediately retrieving it returns the original element. The second says that retrieving an element from a lifted record and packaging it again returns the original record. Thus `Lift`{.Agda} changes the universe in which a type is presented and the representation of its elements, without adding or losing mathematical information.
-
-More precisely, if `A`{.Agda} lives in `Type ℓ₁`{.Agda}, then `Lift ℓ₂ A`{.Agda} lives in `Type (ℓ-max ℓ₁ ℓ₂)`{.Agda}. If either universe level is already above the other, `ℓ-max`{.Agda} keeps it; otherwise it gives a common universe level large enough for both. Hence `Lift`{.Agda} does not raise a type by a fixed number of levels. It places the type in a universe large enough for the levels at hand.
-
-A type can always be copied upward in this way, but <span class="prose-annotation-target">there is in general no way to move one down</span><aside class="prose-annotation-note">Propositions (types satisfying `isProp`{.Agda}) are the exception: the <a href="Base.Classical.html">Classical Boundary</a> chapter will show that excluded middle provides exactly the downward direction for them.</aside>.
-<!--zh-->
-我们使用的 Agda 类型宇宙不是累积的。`Type ℓ`{.Agda} 的元素并不自动成为 `Type (ℓ-suc ℓ)`{.Agda} 的元素；在层级之间搬移类型需要显式运算 `Lift`{.Agda}。
-
-`Lift ℓ A`{.Agda} 本身是一个记录类型。它只有一个字段 `lower : A`{.Agda}，用来保存原类型 `A`{.Agda} 的元素；它的构造子是 `lift`{.Agda}。给定 `a : A`{.Agda}，构造子产生 `lift a : Lift ℓ A`{.Agda}；反过来，给定 `b : Lift ℓ A`{.Agda}，字段投影 `lower b`{.Agda} 取出其中保存的 `A`{.Agda} 的元素。
-
-`lift`{.Agda} 与 `lower`{.Agda} 在 `A`{.Agda} 和 `Lift ℓ A`{.Agda} 之间互为逆函数。这由两条等式分别表达：
-
-<div class="single-line-code"><code>`lower (lift a) ≡ a`{.Agda}</code></div>
-
-<div class="single-line-code"><code>`lift (lower b) ≡ b`{.Agda}</code></div>
-
-第一条等式说，一个元素被装入 `Lift`{.Agda} 后立即取出，仍是原来的元素。第二条等式说，从 `Lift`{.Agda} 中取出元素再重新装入，仍得到原来的记录。因此，`Lift`{.Agda} 改变的是类型所在的宇宙以及元素的表示方式，不会增添或丢失数学信息。
-
-具体来说，若 `A`{.Agda} 位于 `Type ℓ₁`{.Agda}，那么 `Lift ℓ₂ A`{.Agda} 位于 `Type (ℓ-max ℓ₁ ℓ₂)`{.Agda}。如果两个宇宙层级中已经有一个较高，`ℓ-max`{.Agda} 就保留那个层级；否则，它给出足以同时容纳二者的公共宇宙层级。因此，`Lift`{.Agda} 并不是把类型固定抬高若干层，而是把它放入当前所需的足够大的宇宙。
-
-类型总能以这种方式向上复制，但<span class="prose-annotation-target">一般不能向下搬移</span><aside class="prose-annotation-note">命题 (满足 `isProp`{.Agda} 的类型) 是一个例外；<a href="Base.Classical.html">经典边界</a>一章将说明，排中律恰好为命题提供向下搬移的方向。</aside>。
-<!--ja-->
-ここで使う Agda の型宇宙は累積的ではない。`Type ℓ`{.Agda} の要素が自動的に `Type (ℓ-suc ℓ)`{.Agda} の要素になるわけではない。レベル間で型を移すには、明示的な演算 `Lift`{.Agda} が必要である。
-
-`Lift ℓ A`{.Agda} はそれ自身がレコード型である。フィールドは元の型 `A`{.Agda} の元を保存する `lower : A`{.Agda} 一つだけで、構成子は `lift`{.Agda} である。`a : A`{.Agda} を与えると、構成子は `lift a : Lift ℓ A`{.Agda} を作る。逆に `b : Lift ℓ A`{.Agda} があれば、フィールド射影 `lower b`{.Agda} が保存された `A`{.Agda} の元を取り出す。
-
-`lift`{.Agda} と `lower`{.Agda} は `A`{.Agda} と `Lift ℓ A`{.Agda} の間で互いに逆である。その二つの向きを別々の等式が表す。
-
-<div class="single-line-code"><code>`lower (lift a) ≡ a`{.Agda}</code></div>
-
-<div class="single-line-code"><code>`lift (lower b) ≡ b`{.Agda}</code></div>
-
-第一の等式は、元を包んですぐ取り出せば元の要素に戻ることを述べる。第二の等式は、持ち上げられたレコードから元を取り出して包み直せば、元のレコードに戻ることを述べる。したがって `Lift`{.Agda} は型を提示する宇宙と元の表現を変えるが、数学的な情報を加えたり失ったりしない。
-
-より正確には、`A`{.Agda} が `Type ℓ₁`{.Agda} に住むなら、`Lift ℓ₂ A`{.Agda} は `Type (ℓ-max ℓ₁ ℓ₂)`{.Agda} に住む。一方の宇宙レベルがすでに他方より高ければ、`ℓ-max`{.Agda} はそのレベルを保つ。そうでなければ、両方を収めるのに十分な共通の宇宙レベルを与える。したがって `Lift`{.Agda} は型を決まった段数だけ持ち上げるのではなく、現在の二つのレベルにとって十分大きな宇宙へ型を置く。
-
-型は常にこの方法で上へコピーできるが、<span class="prose-annotation-target">一般には下へ動かせない</span><aside class="prose-annotation-note">命題 (`isProp`{.Agda} を満たす型) は例外である。<a href="Base.Classical.html">古典的境界</a>の章で、排中律が命題に対する下向きの方向をちょうど与えることを見る。</aside>。
-<!--/-->
-
-```agda
-open import Cubical.Foundations.Prelude public
-  using ( Lift; lift; lower )
-```
 
 <!--en-->
 ## Equality and [paths]{.term-intro #path}
@@ -931,7 +907,6 @@ $$h : \prod_{x:A}\bigl(f(x)\equiv g(x)\bigr)$$
 <span class="path-label" style="left:50%;top:20%">$\operatorname{funExt}\,h$</span>
 </div>
 
-
 $$\operatorname{funExt}\,h : f\equiv g$$
 
 </div>
@@ -1128,6 +1103,11 @@ A chosen centre, equality of elements, equality of paths: these conditions becom
 **`isProp→isSet`{.Agda}：すべての命題は h-集合である。** `A`{.Agda} が `isProp`{.Agda} を満たせば、`isSet`{.Agda} も満たす。これはホモトピーレベルを上向きに移す操作と見なせる。`A`{.Agda} を変えず、「任意の二要素が等しい」という強い条件から「任意の二つの等しさのパスが等しい」という弱い条件を導く。この点は `Lift`{.Agda} による宇宙レベルの移動と似ている。どちらも同じ数学的対象を、より高いレベルの要件のもとで扱えるようにするからである。ただし、作用する軸は異なる。
 <!--/-->
 
+```agda
+open import Cubical.Foundations.Prelude public
+  using ( isProp; isSet; isContr; isProp→isSet )
+```
+
 <figure class="book-diagram type-comparison structural-figure" id="fig-universe-homotopy" aria-describedby="fig-universe-homotopy-caption">
 <div class="diagram-panel type-comparison-panel level-scene">
 <!--en-->
@@ -1198,11 +1178,6 @@ $$\operatorname{isSet}(A)$$
 </figcaption>
 </figure>
 
-```agda
-open import Cubical.Foundations.Prelude public
-  using ( isProp; isSet; isContr; isProp→isSet )
-```
-
 <!--en-->
 The two axes in the figure are independent: lifting a type to another universe preserves its homotopy level. The function `isOfHLevelLift`{.Agda} transfers the corresponding certificate to `Lift A`{.Agda}. Its first argument specifies the homotopy level: `0`{.Agda} for contractibility, `1`{.Agda} for propositionhood and `2`{.Agda} for being an h-set. Thus, given `h : isProp A`{.Agda}, the term `isOfHLevelLift 1 h`{.Agda} proves `isProp (Lift A)`{.Agda}; given `h : isSet A`{.Agda}, the term `isOfHLevelLift 2 h`{.Agda} proves `isSet (Lift A)`{.Agda}. This number specifies an equality property, not the target universe of `Lift`{.Agda}.
 <!--zh-->
@@ -1242,7 +1217,6 @@ For a fixed `b : B`{.Agda}, the **[fibre]{.term-intro #fiber}** of `f`{.Agda} ov
 
 An element of the fibre has two components. The first is a candidate preimage `a : A`{.Agda}; the second is a path `f a ≡ b`{.Agda} witnessing that this candidate really maps to `b`{.Agda}. An empty fibre means that `b`{.Agda} has no preimage. Elements of a fibre that cannot be identified by a path represent substantively different ways to return from `b`{.Agda} to `A`{.Agda}.
 
-The animation assumes that every fibre is contractible: there is a centre and a family of paths connecting each dependent pair in the fibre to that centre.
 <!--zh-->
 对固定的 `b : B`{.Agda}，`f`{.Agda} 在 `b`{.Agda} 上的**[纤维]{.term-intro #fiber}**是下面这个依值对类型：
 
@@ -1250,7 +1224,6 @@ The animation assumes that every fibre is contractible: there is a centre and a 
 
 纤维的一个元素由两部分组成：第一分量是一个候选原像 `a : A`{.Agda}，第二分量是一条路径 `f a ≡ b`{.Agda}，证明这个 `a`{.Agda} 的确映到 `b`{.Agda}。纤维为空，表示 `b`{.Agda} 没有原像；纤维中若有彼此不能通过路径等同的元素，则表示从 `b`{.Agda} 返回 `A`{.Agda} 时存在实质不同的选择。
 
-下面的动画假设每束纤维可缩：存在一个中心，以及一族将纤维中每个依值对连接到中心的路径。
 <!--ja-->
 固定した `b : B`{.Agda} 上の `f`{.Agda} の**[ファイバー]{.term-intro #fiber}**は、次の依存対型である。
 
@@ -1258,6 +1231,17 @@ The animation assumes that every fibre is contractible: there is a centre and a 
 
 ファイバーの要素は二つの成分を持つ。第一成分は原像の候補 `a : A`{.Agda}、第二成分はその候補が実際に `b`{.Agda} へ写ることを示すパス `f a ≡ b`{.Agda} である。ファイバーが空なら `b`{.Agda} に原像はない。ファイバーにパスで同一視できない要素があれば、`b`{.Agda} から `A`{.Agda} へ戻る方法に本質的な違いが残っている。
 
+<!--/-->
+
+```agda
+open import Cubical.Foundations.Equiv public using ( _≃_ )
+```
+
+<!--en-->
+The animation assumes that every fibre is contractible: there is a centre and a family of paths connecting each dependent pair in the fibre to that centre.
+<!--zh-->
+下面的动画假设每束纤维可缩：存在一个中心，以及一族将纤维中每个依值对连接到中心的路径。
+<!--ja-->
 以下のアニメーションでは各ファイバーの可縮性を仮定する。すなわち、中心と、ファイバーの各依存対をその中心へ結ぶパスの族が存在する。
 <!--/-->
 
@@ -1385,10 +1369,6 @@ Click the pulsing fibres to contract; click again to expand. The paths in each t
 <!--/-->
 </figcaption>
 </figure>
-
-```agda
-open import Cubical.Foundations.Equiv public using ( _≃_ )
-```
 
 <!--en-->
 This notion should be distinguished from an [isomorphism]{.term-intro #type-isomorphism}, which explicitly presents maps $f:A→B$ and $g:B→A$ and the two [round-trip laws]{.term-intro #round-trip-law}: paths $g(f(a))≡a$ for every $a:A$ and $f(g(b))≡b$ for every $b:B$. The constructor uses the order `iso f g s r`{.Agda}, where `s : (b : B) → f (g b) ≡ b`{.Agda} and `r : (a : A) → g (f a) ≡ a`{.Agda}. The two notions are related as follows: `iso`{.Agda} packages those data as `Iso A B`{.Agda}, and `isoToEquiv`{.Agda} converts the result into `A ≃ B`{.Agda}. Explicit maps make isomorphisms convenient for constructing examples, while the cubical library uses equivalences as the common interface for transporting type structure.
@@ -2415,14 +2395,11 @@ For the length-three vector below, the labels $0,1,2$ abbreviate the `Fin 3`{.Ag
 <div class="diagram-framed">
 <div class="diagram-indexed">
 
-
 $$v=a\mathbin{∷}b\mathbin{∷}c\mathbin{∷}[]:\operatorname{Vec}(A,3)$$
 
 <div class="vector-slots"><span>$a$</span><span>$b$</span><span>$c$</span></div>
 
-
 $$i\mapsto\operatorname{lookup}\,i\,v$$
-
 
 <div class="path-stage diagram-compact-stage" style="aspect-ratio:420/310">
 <svg viewBox="0 0 420 310" aria-hidden="true" focusable="false">

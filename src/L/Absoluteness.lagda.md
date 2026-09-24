@@ -1,28 +1,18 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # From ambient formulas to formulas over L
-
-Suppose the coding chapters have handed us a formula about the hierarchy, and we want to say the same thing inside `L`. Two adjustments stand in the way. The formula's constants currently have type `V ℓ`; to read the formula in `L`, each constant must become an element of the restricted carrier, that is, a set together with evidence that it is constructible. And the satisfaction of the original formula was computed in the ambient structure, not in the restricted one. This chapter removes both, and it does so one formula at a time: what is transferred is a particular `φ`, together with the data recording that its constants obey the chosen bound and that its shape is Δ₀.
-
-The removal rests on two facts, each proved in its own chapter. First, the relabelling machinery can replace the constants of a formula of any complexity, provided each constant comes with evidence that it satisfies a chosen bound; here the bound is constructibility rather than membership in a stage, and the evidence is a constructibility proof. Second, Δ₀ absoluteness says that a bounded formula means the same inside a transitive class as outside it. That property is established formula by formula, by induction on the inductive witness certifying the formula is Δ₀; there is no blanket absoluteness for arbitrary formulas, and none should be expected, since unbounded quantifiers already change their truth value when the domain shrinks.
-
-Putting the two together gives the transfer theorem: a Δ₀ formula whose constants are all constructible can be read in the object language of `L`, and the two readings agree. The agreement is a path of truth values assembled from four steps, and the proof spends no induction of its own; the inductions were already spent, once in each source chapter, on the data this chapter receives.
 <!--zh-->
 # 外围公式到 L 上公式
-
-设编码诸章交给我们一条关于层级的公式，而我们要在 `L` 内部说出同样的话。这里有两处需要调整。公式的常元当前的类型是 `V ℓ`；要在 `L` 中读出这条公式，每个常元都必须换成限制载体中的元素，即一个集合连同它可构造的证据。而且原公式的满足是在外围结构中算出的，不是在限制结构中。本章消去这两处，并且逐条公式地进行：被搬运的是特定的 `φ`，连同记录其常元守界、形状为 Δ₀ 的数据。
-
-消去依赖两个事实，各自都在自己的章中证得。其一，改名机制可以替换任意复杂度公式的常元，只要每个常元带着满足某个界的证据；此处取的界是可构造性而非「落在某层内」，证据就是可构造性的证明。其二，Δ₀ 绝对性说：有界公式在传递类之内与之外含义相同。这条性质是逐条公式证得的，归纳沿「该公式是 Δ₀」的归纳见证进行；对任意公式并不存在笼统的绝对性，也不该指望有，因为无界量词在论域缩小时本就会改值。
-
-两者合起来便是搬运定理：常元全部可构造的 Δ₀ 公式可以在 `L` 的对象语言中读出，且两种读法一致。一致是一条真值路径，由四步组装而成，而证明自身不花费任何归纳。归纳早已在两个来源的章中各花一次，花在本章收到的数据上。
 <!--ja-->
 # 周囲の論理式から L 上の論理式へ
-
-符号化の諸章が階層についての論理式を渡してくれたとき、同じことを `L` の内部で言いたくなるであろう。ここには二つの調整が必要である。論理式の定数は現在 `V ℓ` という型に属するが、`L` の中でこの論理式を読むには、各定数を制限された台の要素、すなわち集合と、それが構成可能であることの証拠の組に置き換えなければならない。さらに、元の論理式の充足は制限された構造ではなく周囲の構造で計算されていた。本章はこの二つを取り除く。しかも一度に一つの論理式ずつである。移送されるのは特定の `φ` と、その定数が選ばれた境界を守ること、そしてその形が Δ₀ であることを記録するデータである。
-
-取り除きは二つの事実に依存する。それぞれ別の章で証明済みのものである。第一に、改名の機構は、任意の複雑さの論理式について、各定数が選んだ界を満たす証拠を伴う限り、定数を置き換えられる。ここで界として取るのは「ある段階に属する」ではなく「構成可能である」であり、証拠とは構成可能性の証明である。第二に、Δ₀ 絶対性は、有界論理式が推移的クラスの内側でも外側でも同じ意味を持つ、という主張である。この性質は一つ一つの論理式について、その式が Δ₀ であることを証明する帰納的な証拠の上の帰納法で確立される。任意の論理式に対する包括的な絶対性はなく、またあってはならない。非有界の量化子は、定義域が縮めば真偽を変えるからである。
-
-この二つを合わせると移送定理が得られる。定数がすべて構成可能である Δ₀ 論理式は `L` の対象言語の中で読むことができ、二つの読み方は一致する。一致は真理値のパスであり、四段階で組み立てられ、証明自身は帰納を一切使わない。帰納はすでに、それぞれの元の章で、この章が受け取るデータのために使い果たされている。
 <!--/-->
+
+```agda
+open import Base.Prelude
+```
 
 <!--en-->
 The whole chapter takes place at a single universe level `ℓ`. Both structures that interpret the language have equality and membership valued in `hProp (ℓ-suc ℓ)`, so a satisfaction statement is a proposition, and two such statements can be compared by a path. The ambient world is the cumulative hierarchy `V` at this level; the inner world is `L`, obtained from it by restricting to the constructible sets.
@@ -33,14 +23,45 @@ The whole chapter takes place at a single universe level `ℓ`. Both structures 
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-open import Base.Prelude
-
 module L.Absoluteness {ℓ : Level} where
-
-open import FOL.ZFStructure using ( module hPropStructure )
 ```
+
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax using ( Formula )
+open import FOL.LevyHierarchy using ( Δ₀ )
+open import FOL.Manipulation.ConstantBounding using ( BoundedFo; module Relabel )
+open import FOL.Manipulation.Relabelling using ( ⊨-map )
+import FOL.Absoluteness
+import FOL.Semantics
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
+```
+
+<!--en-->
+
+Suppose the coding chapters have handed us a formula about the hierarchy, and we want to say the same thing inside `L`. Two adjustments stand in the way. The formula's constants currently have type `V ℓ`; to read the formula in `L`, each constant must become an element of the restricted carrier, that is, a set together with evidence that it is constructible. And the satisfaction of the original formula was computed in the ambient structure, not in the restricted one. This chapter removes both, and it does so one formula at a time: what is transferred is a particular `φ`, together with the data recording that its constants obey the chosen bound and that its shape is Δ₀.
+
+The removal rests on two facts, each proved in its own chapter. First, the relabelling machinery can replace the constants of a formula of any complexity, provided each constant comes with evidence that it satisfies a chosen bound; here the bound is constructibility rather than membership in a stage, and the evidence is a constructibility proof. Second, Δ₀ absoluteness says that a bounded formula means the same inside a transitive class as outside it. That property is established formula by formula, by induction on the inductive witness certifying the formula is Δ₀; there is no blanket absoluteness for arbitrary formulas, and none should be expected, since unbounded quantifiers already change their truth value when the domain shrinks.
+
+Putting the two together gives the transfer theorem: a Δ₀ formula whose constants are all constructible can be read in the object language of `L`, and the two readings agree. The agreement is a path of truth values assembled from four steps, and the proof spends no induction of its own; the inductions were already spent, once in each source chapter, on the data this chapter receives.
+<!--zh-->
+
+设编码诸章交给我们一条关于层级的公式，而我们要在 `L` 内部说出同样的话。这里有两处需要调整。公式的常元当前的类型是 `V ℓ`；要在 `L` 中读出这条公式，每个常元都必须换成限制载体中的元素，即一个集合连同它可构造的证据。而且原公式的满足是在外围结构中算出的，不是在限制结构中。本章消去这两处，并且逐条公式地进行：被搬运的是特定的 `φ`，连同记录其常元守界、形状为 Δ₀ 的数据。
+
+消去依赖两个事实，各自都在自己的章中证得。其一，改名机制可以替换任意复杂度公式的常元，只要每个常元带着满足某个界的证据；此处取的界是可构造性而非「落在某层内」，证据就是可构造性的证明。其二，Δ₀ 绝对性说：有界公式在传递类之内与之外含义相同。这条性质是逐条公式证得的，归纳沿「该公式是 Δ₀」的归纳见证进行；对任意公式并不存在笼统的绝对性，也不该指望有，因为无界量词在论域缩小时本就会改值。
+
+两者合起来便是搬运定理：常元全部可构造的 Δ₀ 公式可以在 `L` 的对象语言中读出，且两种读法一致。一致是一条真值路径，由四步组装而成，而证明自身不花费任何归纳。归纳早已在两个来源的章中各花一次，花在本章收到的数据上。
+<!--ja-->
+
+符号化の諸章が階層についての論理式を渡してくれたとき、同じことを `L` の内部で言いたくなるであろう。ここには二つの調整が必要である。論理式の定数は現在 `V ℓ` という型に属するが、`L` の中でこの論理式を読むには、各定数を制限された台の要素、すなわち集合と、それが構成可能であることの証拠の組に置き換えなければならない。さらに、元の論理式の充足は制限された構造ではなく周囲の構造で計算されていた。本章はこの二つを取り除く。しかも一度に一つの論理式ずつである。移送されるのは特定の `φ` と、その定数が選ばれた境界を守ること、そしてその形が Δ₀ であることを記録するデータである。
+
+取り除きは二つの事実に依存する。それぞれ別の章で証明済みのものである。第一に、改名の機構は、任意の複雑さの論理式について、各定数が選んだ界を満たす証拠を伴う限り、定数を置き換えられる。ここで界として取るのは「ある段階に属する」ではなく「構成可能である」であり、証拠とは構成可能性の証明である。第二に、Δ₀ 絶対性は、有界論理式が推移的クラスの内側でも外側でも同じ意味を持つ、という主張である。この性質は一つ一つの論理式について、その式が Δ₀ であることを証明する帰納的な証拠の上の帰納法で確立される。任意の論理式に対する包括的な絶対性はなく、またあってはならない。非有界の量化子は、定義域が縮めば真偽を変えるからである。
+
+この二つを合わせると移送定理が得られる。定数がすべて構成可能である Δ₀ 論理式は `L` の対象言語の中で読むことができ、二つの読み方は一致する。一致は真理値のパスであり、四段階で組み立てられ、証明自身は帰納を一切使わない。帰納はすでに、それぞれの元の章で、この章が受け取るデータのために使い果たされている。
+<!--/-->
+
+
 
 <!--en-->
 The formula `φ` has constants in a type chosen by the surrounding interpretation, and a proof `h : BoundedFo InL φ` says that each of those constants is constructible. Relabelling sends such a constant to the pair consisting of the ambient set and its constructibility proof, and it does so for formulas of any complexity: unbounded quantifiers move along untouched. The theorem `⊨-map` compares satisfaction before and after this change of constant type, while Δ₀ absoluteness compares the outer and restricted structures, and it asks, in addition, that the formula carry its own Δ₀ witness.
@@ -49,14 +70,6 @@ The formula `φ` has constants in a type chosen by the surrounding interpretatio
 <!--ja-->
 論理式 `φ` の定数は周囲の解釈が選ぶ型に属し、証拠 `h : BoundedFo InL φ` は各定数が構成可能であることを述べる。改名はその定数を、周囲の集合と構成可能性の証明からなる対へ送る。しかもこの置き換えは、任意の複雑さの論理式に使える。非有界の量化子はそのまま連れて行かれる。定理 `⊨-map` は定数の型を変える前後の充足を比較し、Δ₀ 絶対性は外側の構造と制限した構造を比較する。ただしそれは、論理式がみずからの Δ₀ の証拠を伴っていることをさらに要求する。
 <!--/-->
-
-```agda
-open import FOL.Syntax using ( Formula )
-open import FOL.LevyHierarchy using ( Δ₀ )
-open import FOL.Manipulation.ConstantBounding using ( BoundedFo; module Relabel )
-open import FOL.Manipulation.Relabelling using ( ⊨-map )
-import FOL.Absoluteness
-```
 
 <!--en-->
 The two worlds are now named. The ambient structure is `𝒮ᵥ`, the ZF-like structure on the hierarchy `V ℓ`: paths as equality, and the hierarchy's native membership. The inner structure is `𝒮ʟ`, the restriction of `𝒮ᵥ` to the class `isL` of constructible sets. This chapter has already chosen `isL` as the bound its constants must satisfy; the absoluteness instance then asks one more thing of the same class, namely that it be transitive, which `isL-trans` records.
@@ -67,9 +80,6 @@ The two worlds are now named. The ambient structure is `𝒮ᵥ`, the ZF-like st
 <!--/-->
 
 ```agda
-import FOL.Semantics
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V )
 ```
 
@@ -82,7 +92,6 @@ Both satisfaction relations take values in the same type `hProp (ℓ-suc ℓ)`. 
 <!--/-->
 
 ```agda
-
 open hPropStructure 𝒮ʟ using ( S )
 
 module SemV = FOL.Semantics 𝒮ᵥ
@@ -99,7 +108,6 @@ The absoluteness theorem is instantiated once, over the class `isL` that the bou
 <!--/-->
 
 ```agda
-
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
 open AbsL using ( abs₀ ) renaming ( _⊨ᵐ_ to _⊨_ )
 ```
@@ -146,7 +154,6 @@ The partial constant map is fixed point by point. A source constant is read in t
 <!--/-->
 
 ```agda
-
 module ToL = Relabel {K = V ℓ} {K' = S} {W = V ℓ}
   id fst InL (λ c p → c , p) (λ c p → refl)
 ```
@@ -160,7 +167,6 @@ At this instantiation, `liftFo` applies to a formula of any complexity whose con
 <!--/-->
 
 ```agda
-
 open ToL public using ( liftFo; Δ₀-liftFo )
 ```
 

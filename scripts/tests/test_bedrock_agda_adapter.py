@@ -60,6 +60,12 @@ class BedrockAgdaAdapterTests(unittest.TestCase):
             self.patch,
         )
 
+    def test_overlay_rejects_dummy_types_structurally_before_queueing(self):
+        source = (TOOL / 'src/Bedrock/Agda/TypeTrace.hs').read_text()
+        self.assertIn('foldTerm isDummy type_', source)
+        self.assertIn('isDummy Dummy{} = Any True', source)
+        self.assertLess(source.index('foldTerm isDummy type_'), source.index('closure <- buildClosure'))
+
     def test_adapter_hunk_headers_match_their_bodies(self):
         lines = self.patch.splitlines()
         header = re.compile(

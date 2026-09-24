@@ -1,13 +1,29 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+module FOL.LevyHierarchy where
+```
+
 <!--en-->
 # The Lévy hierarchy
+<!--zh-->
+# Lévy 层级
+<!--ja-->
+# Lévy 階層
+<!--/-->
+
+```agda
+open import Base.Prelude
+open import FOL.Syntax using
+  ( Term; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
+```
+
+<!--en-->
 
 A first-order formula can quantify in two ways: boundedly, as in "for all $x$ in $t$", or unboundedly, over the whole universe. The Lévy hierarchy measures a formula's syntactic complexity by its unbounded quantifiers: **Δ₀** formulas use only bounded quantifiers, Σ₁ formulas prefix a block of unbounded existentials to a Δ₀ core, and Π₁ formulas prefix a block of unbounded universals. Membership in these classes matters because later chapters prove Δ₀-absoluteness and run definability arguments over the constructible universe by structural induction on quantifier shape. Rather than inspect formulas over and over, this chapter turns the classification itself into data: a **witness** is an inductive datum indexed by a formula, available for any constant domain `K`, so a formula can carry proof of its own complexity class alongside its syntax. The chapter builds the Δ₀ witness, a Boolean checker that recognizes bounded formulas, and the extension to every finite level Σₙ/Πₙ.
 <!--zh-->
-# Lévy 层级
 
 一阶公式有两种量化方式：有界的，如「对所有 $x$ 属于 $t$」；以及在整个宇宙上取量的无界量化。Lévy 层级按无界量词衡量公式的语法复杂度：**Δ₀** 公式只用有界量词，Σ₁ 公式在 Δ₀ 核心之前加一段无界存在量词，Π₁ 公式则加一段无界全称量词。这些类的归属之所以重要，是因为后面的章节要证明 Δ₀ 绝对性，并在可构造宇宙上按量词形状做结构归纳的可定义性论证。与其反复去检查公式，本章干脆把分类本身做成数据：**见证**是以公式为下标的归纳数据，对任意常元域 `K` 都可用，于是一个公式可以在语法之外同时携带其复杂度类的证明。本章构造 Δ₀ 见证、一个识别有界公式的布尔检查器，以及推广到每个有限层级 Σₙ/Πₙ 的分类。
 <!--ja-->
-# Lévy 階層
 
 一階論理式には二つの量化の仕方がある。「$t$ に属するすべての $x$ について」という有界な量化と、宇宙全体にわたる非有界な量化である。Lévy 階層は、論理式の構文的な複雑さを非有界量化子で測る。**Δ₀** 論理式は有界量化子しか使わず、Σ₁ 論理式は Δ₀ の核の前に非有界な存在量化子の列を、Π₁ 論理式は非有界な全称量化子の列を前置する。これらのクラスへの所属が重要なのは、後の章で Δ₀ 絶対性を証明し、構成可能宇宙上で量化子の形に関する構造的帰納による定義可能性の議論を進めるからである。論理式をそのたびに調べる代わりに、本章では分類そのものをデータにする。**証拠**とは論理式で添字付けられた帰納的なデータであり、任意の定数域 `K` に対して使えるので、論理式は自分の構文とともに複雑さのクラスの証明を帯同できる。本章は Δ₀ の証拠、有界論理式を認識するブール判定器、そしてすべての有限レベル Σₙ/Πₙ への拡張を構成する。
 <!--/-->
@@ -21,11 +37,6 @@ The chapter relies on one bridge between computation and proof. The type `Bool` 
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-module FOL.LevyHierarchy where
-
-open import Base.Prelude
 open import Cubical.Data.Bool using ( _and_; Bool→Type )
 ```
 
@@ -36,11 +47,6 @@ The formulas being classified come from the object language of `FOL.Syntax`: ter
 <!--ja-->
 分類の対象となる論理式は、`FOL.Syntax` の対象言語に由来する。項、原子関係 `_∈̇_` と `_≐_`、結合子、そして二組の異なる量化子の形式である。有界量化子 `∀̇∈` と `∃̇∈` は界限を言語内の項として名指しするが、`∀̇_` と `∃̇_` は界限なしに量化する。二種の量化子が構文上区別されていることこそ、この分類全体を可能にする前提である。以下で定義される各族はいずれも `Formula K n` で添字付けられるため、ここでのLévy 階層は意味論的な値ではなく構文そのもの上の述語である。
 <!--/-->
-
-```agda
-open import FOL.Syntax using
-  ( Term; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
-```
 
 <!--en-->
 ## The Δ₀ witness
@@ -176,7 +182,6 @@ The function `checkΔ₀` is where the Boolean decision becomes evidence. It tak
 <!--/-->
 
 ```agda
-
 checkΔ₀ : ∀ {ℓc} {K : Type ℓc} {n} (φ : Formula K n) → Bool→Type (bounded φ) → Δ₀ φ
 checkΔ₀ (t ∈̇ u) h = δ-∈
 checkΔ₀ (t ≐ u) h = δ-≐
@@ -296,7 +301,6 @@ mutual
 <!--/-->
 
 ```agda
-
   data Πₙ {ℓc} {K : Type ℓc} : ℕ → ∀ {n} → Formula K n → Type ℓc where
     π-Δ₀ : ∀ {k n} {φ : Formula K n} → Δ₀ φ → Πₙ k φ
     π-Σ  : ∀ {k n} {φ : Formula K n} → Σₙ k φ → Πₙ (suc k) φ

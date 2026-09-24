@@ -1,17 +1,37 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+module FOL.Absoluteness where
+```
+
 <!--en-->
 # Absoluteness
+<!--zh-->
+# 绝对性
+<!--ja-->
+# 絶対性
+<!--/-->
+
+```agda
+open import Base.Prelude
+open import FOL.ZFStructure using ( ZFStructure; Transitive; _↾_ )
+open import FOL.Syntax using ( Term; con; var; Formula; ∀̇∈; ∃̇∈ )
+open import FOL.LevyHierarchy using
+  ( Δ₀; δ-∈; δ-≐; δ-∧; δ-∨; δ-⇒; δ-⊥; δ-∀∈; δ-∃∈
+  ; Σ₁; σ-Δ₀; σ-∃; Π₁; π-Δ₀; π-∀ )
+import FOL.Semantics
+```
+
+<!--en-->
 
 A formula is absolute when interpreting it in a transitive substructure gives the same truth value as interpreting it in the ambient structure. Here the substructure has carrier `𝒮 ↾ M`, whose elements are pairs consisting of an ambient element and evidence that it belongs to the class `M`; the ambient interpretation uses the same syntax after projecting those pairs with `fst`. Transitivity supplies the key step: if a bound belongs to `M`, then every member of that bound belongs to `M` as well.
 
 The chapter proves by induction that every Δ₀ formula has equal inner and outer truth values. Atomic formulas follow from agreement of term evaluation, connectives preserve the induction hypotheses, and transitivity is needed exactly when a bounded quantifier must turn an ambient member into an element of the substructure. The final results extend this equality to one-way laws: Σ₁ truth passes upward from the substructure, while Π₁ truth passes downward from the ambient structure.
 <!--zh-->
-# 绝对性
 
 若一条公式在传递子结构中的解释与在外围结构中的解释具有相同真值，就称它是绝对的。这里子结构的载体是 `𝒮 ↾ M`，其元素由一个外围元素及其属于类 `M` 的证据组成；外围解释则在用 `fst` 投影这些序对后使用同一套语法。传递性提供关键一步：若某个界属于 `M`，那么该界的每个成员也属于 `M`。
 
 本章通过归纳证明每条 Δ₀ 公式的内外真值相等。原子公式归结为词项求值的一致，联结词保持归纳假设，而有界量词必须把外围成员变成子结构元素时才需要传递性。最后再把这一等式推广为两个单向规律：Σ₁ 真值从子结构向上传递到外围结构，Π₁ 真值则从外围结构向下传递到子结构。
 <!--ja-->
-# 絶対性
 
 推移的部分構造で論理式を解釈した真理値が、周囲の構造で解釈した真理値と等しいとき、その論理式は絶対的である。ここで部分構造の台 `𝒮 ↾ M` の元は、周囲の元と、それがクラス `M` に属する証拠との対である。周囲での解釈には、それらの対を `fst` で射影したうえで同じ構文を使う。推移性が与える要点は、ある範囲が `M` に属すれば、その範囲の各要素も `M` に属するということである。
 
@@ -26,15 +46,6 @@ Structures here are proposition-valued: a `ZFStructure`{.Agda} has a carrier who
 ここでの構造は命題値である。`ZFStructure`{.Agda} の台の等号と所属は `hProp ℓ` に値を取るので、充足の主張は基礎型をもつ命題になり、二つの充足の主張はパスとしての等しさで比較できる。数学的内容を担う概念がさらに二つある。第一は `Transitive`{.Agda} で、閉性の条件 `y ∈ᵗ x → x ∈ᶜ M → y ∈ᶜ M`、すなわち `M` の要素の要素も `M` に属することを述べる。第二は `_↾_`{.Agda} で、構造をクラスへ制限し、「要素と、それがクラスに属する証拠」の対を新しい台とする。変わるのは何を要素とみなすかだけで、関係は第一射影に沿って引き継がれる。
 <!--/-->
 
-```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-module FOL.Absoluteness where
-
-open import Base.Prelude
-open import FOL.ZFStructure using ( ZFStructure; Transitive; _↾_ )
-```
-
 <!--en-->
 On the syntactic side, formulas have constants `con` and variables `var` and the two bounded quantifiers `∀̇∈` and `∃̇∈`, whose range is the members of a term's value. The Lévy hierarchy enters through its inductive characterizations: `Δ₀`{.Agda} is the inductive class of formulas built from atomic membership and equality by the propositional connectives and the bounded quantifiers, with constructors named `δ-`. `Σ₁`{.Agda} and `Π₁`{.Agda} are built on top: either a Δ₀ formula, or an unbounded existential (respectively universal) whose matrix is again Σ₁ (respectively Π₁), witnessed by `σ-∃`{.Agda} and `π-∀`{.Agda}. These witnesses are exactly the induction data the absoluteness proof will consume.
 <!--zh-->
@@ -43,14 +54,6 @@ On the syntactic side, formulas have constants `con` and variables `var` and the
 構文の側では、論理式には定数 `con` と変数 `var`、そして項の値の要素を範囲とする二つの有界量化子 `∀̇∈` と `∃̇∈` が現れる。Lévy 階層は帰納的特徴づけを通して登場する。`Δ₀`{.Agda} は、原始的な所属と等号から出発し、命題結合子と有界量化子で作られる論理式の帰納的な類であり、その構成子には `δ-` 系の名前が付いている。`Σ₁`{.Agda} と `Π₁`{.Agda} はその上に築かれる。Δ₀ 論理式であるか、無制限の存在 (それぞれ全称) 量化子を持ち母式が再び Σ₁ (それぞれ Π₁) であるかで、`σ-∃`{.Agda} と `π-∀`{.Agda} が証拠となる。これらの証拠こそ、絶対性の証明が消費する帰納のデータである。
 <!--/-->
 
-```agda
-open import FOL.Syntax using ( Term; con; var; Formula; ∀̇∈; ∃̇∈ )
-open import FOL.LevyHierarchy using
-  ( Δ₀; δ-∈; δ-≐; δ-∧; δ-∨; δ-⇒; δ-⊥; δ-∀∈; δ-∃∈
-  ; Σ₁; σ-Δ₀; σ-∃; Π₁; π-Δ₀; π-∀ )
-import FOL.Semantics
-```
-
 <!--en-->
 The semantics is generic, so the chapter will use it twice over the same syntax, once for each world. Three pieces of notation serve the proofs to come: `map`{.Agda} applies the first projection to a whole environment, `⇔toPath`{.Agda} turns two implications into a path of truth values, and the truncation machinery appears as `PT`{.Agda} because satisfaction of an unbounded existential is a merely-inhabited type, so transferring witnesses between the two worlds happens under truncation.
 <!--zh-->
@@ -58,8 +61,6 @@ The semantics is generic, so the chapter will use it twice over the same syntax,
 <!--ja-->
 意味論は汎用的なので、本章では同じ構文の上で世界ごとに二回使うことになる。これからの証明のために三つの記法がある。`map`{.Agda} は環境全体に第一射影を適用し、`⇔toPath`{.Agda} は二つの含意を真理値のパスに合成する。切断の機構が `PT`{.Agda} として現れるのは、無制限の存在量化子の充足が単に inhabited な型だからである。したがって証拠の二世界間の移動は切断の下で行われる。
 <!--/-->
-
-
 
 <!--en-->
 ## The setting: one syntax, two semantics
@@ -83,7 +84,6 @@ The section works under three fixed parameters: a structure `𝒮`, a class `M` 
 この節は三つの固定パラメータのもとで進む。構造 `𝒮`、その台上で `hProp ℓ` に値を取るクラス `M`、そして推移性の証明 `trans` である。台 `S` と真理値の関係 `_∈ˢ_`、`_≈ˢ_` は `𝒮` に属し、`hProp` 上の直接の演算 `⊓`、`⊔`、`⇒` が結合子を解釈する。現時点で `M` について使うのはそれがクラスであることだけである。推移性が現れるのは定理の証明であり、それを述べる定義ではない。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -95,7 +95,6 @@ module Single {ℓ} (𝒮 : ZFStructure ℓ)
 <div class="submodule-fold-content">
 
 ```agda
-
   open ZFStructure 𝒮
 ```
 
@@ -108,7 +107,6 @@ The carrier of the inner world is the Σ-type `SM`: a pair of an element of `S` 
 <!--/-->
 
 ```agda
-
   SM : Type ℓ
   SM = Σ[ x ∈ S ] (x ∈ᶜ M)
 
@@ -181,7 +179,6 @@ The second lemma lifts this to terms: evaluating a term in the inner world and p
 <!--/-->
 
 ```agda
-
     ⟦⟧-fst : ∀ {n} (t : Term SM n) (δ : SM ^ n)
            → fst (⟦ t ⟧ᵐ δ) ≡ ⟦ t ⟧ᵛ (map fst δ)
     ⟦⟧-fst (con m) δ = refl
@@ -375,7 +372,6 @@ The downward law is its mirror. The Δ₀ case transports along `sym (abs₀ d �
 ```
 </div>
 </details>
-
 
 <!--en-->
 ## Recap

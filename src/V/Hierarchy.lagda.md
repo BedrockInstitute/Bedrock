@@ -1,32 +1,51 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # The cumulative hierarchy
+<!--zh-->
+# 累积层级
+<!--ja-->
+# 累積階層
+<!--/-->
+
+```agda
+open import Base.Prelude
+```
+
+<!--en-->
+Fix a universe level `ℓ`{.Agda}. Keeping the level as a parameter lets the constructions be instantiated at each required size without identifying distinct universes.
+<!--zh-->
+固定宇宙层级 `ℓ`{.Agda}。保留这个层级参数，使构造可以在所需的各个大小处实例化，而不必把不同的宇宙视为同一个。
+<!--ja-->
+宇宙レベル `ℓ`{.Agda} を固定する。このレベルをパラメータとして保つことで、異なる宇宙を同一視せずに、必要な大きさで構成を具体化できる。
+<!--/-->
+
+```agda
+module V.Hierarchy {ℓ : Level} where
+```
+
+```agda
+open import FOL.ZFStructure using ( ZFStructure; module hPropStructure )
+```
+
+<!--en-->
 
 Every model of the language of set theory needs a carrier of "sets" together with an equality and a membership, both valued in propositions. This chapter builds that carrier. It is the cumulative hierarchy `V`{.Agda}, a higher inductive type built on the oldest idea in set theory, that a set is nothing over and above its members. The type takes the idea literally. Every set is presented by a family of sets indexed by a small type, one member for each index, and to be a member of it is just to have an index of that family that hits the element. Two presentations with the same members present the same set, so extensionality is not an axiom this model has to demand but the way the type is constructed.
 
 On this carrier the chapter then builds the structure `𝒮ᵥ`{.Agda} and proves the first set-theoretic properties, from extensionality to a recursion principle along membership. The hierarchy natively supplies what a structure asks for: equality between sets is the path type, proposition-valued because the hierarchy is an h-set, and membership is the hierarchy's own `∈`, already valued in `hProp`{.Agda}. One universe level `ℓ` is fixed once, and every construction in the chapter is stated at that level.
 <!--zh-->
-# 累积层级
 
 集合论语言的每个模型都需要一个由「集合」组成的载体，连同取值于命题的等词与成员关系。本章构造这个载体。它就是累积层级 `V`{.Agda}，一个高阶归纳类型，体现的是集合论最古老的观念：集合不外乎其成员的汇集。这个类型把观念不折不扣地体现了出来。每个集合都由一个以小类型为索引的集合族呈现，每个索引对应一个成员；属于它，无非是拥有该族中一个命中此元素的索引。成员相同的两种呈现给出的是同一个集合，因此外延性不是这个模型有待要求的公理，而是类型构造的方式本身。
 
 本章在这个载体上建立结构 `𝒮ᵥ`{.Agda}，并证明最早的一批集合论性质，从外延性直到沿成员关系的递归原理。层级原生地供给了结构所要求的一切：集合之间的等词就是路径类型，因层级是 h-集合而为命题值；成员关系取层级自身的 `∈`，本就取值于 `hProp`{.Agda}。本章固定一个宇宙层级 `ℓ`，全章所有构造都在该层级上陈述。
 <!--ja-->
-# 累積階層
 
 集合論の言語のモデルにはどれも、「集合」からなる台と、命題に値を持つ等号と所属関係が要る。本章はその台を構成する。累積階層 `V`{.Agda} は高階帰納型であり、土台にあるのは集合論最古の考え、すなわち集合とはその要素の集まりにほかならないというものである。この型はこの考えをそのまま形にする。すべての集合は、小さな型をインデックスとする集合の族によって表示され、各インデックスが一つの要素に対応する。ある集合の要素であるとは、その族のどれかのインデックスがその要素に命中することにほかならない。同じ要素を持つ二つの表示は同じ集合を表示する。したがって外延性は、このモデルが要求すべき公理ではなく、型の構成のされ方そのものなのである。
 
 本章はこの台の上に構造 `𝒮ᵥ`{.Agda} を組み立て、外延性から所属関係に沿う再帰原理まで、集合論の最初の性質を証明する。構造の求めるものは、階層が本来の形で供給する。集合の間の等号はパス型であり、階層が h-集合であるため命題値になる。所属関係は階層本来の `∈` で、はじめから `hProp`{.Agda} に値を取る。本章は宇宙レベル `ℓ` を一度だけ固定し、全章の構成をこのレベルで述べる。
 <!--/-->
-
-```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-open import Base.Prelude
-
-module V.Hierarchy {ℓ : Level} where
-
-open import FOL.ZFStructure using ( ZFStructure; module hPropStructure )
-```
 
 <!--en-->
 Two ideas carry the hardest proof of the chapter. The first is propositional truncation. The statement "some index does the job" is kept as a mere existence, with no chosen witness, and a truncated statement may be eliminated only into propositions. The second is accessibility, the inductive data `Acc` that accompanies a well-founded relation: an element is accessible when every step down, from the element to one of its members, lands at an element that is itself accessible. The two fit because membership in the hierarchy is itself truncated. The proof of well-foundedness must turn a merely existing index into an accessibility proof; accessibility is a proposition, and only into propositions may a truncated statement be eliminated.
@@ -37,7 +56,6 @@ Two ideas carry the hardest proof of the chapter. The first is propositional tru
 <!--/-->
 
 ```agda
-
 import Cubical.Induction.WellFounded as WellFoundedInduction
 open import Cubical.Induction.WellFounded using ( Acc; acc; WellFounded; isPropAcc; wf→x≮x )
 open import Cubical.HITs.CumulativeHierarchy.Base

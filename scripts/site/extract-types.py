@@ -36,12 +36,12 @@ RENAMED_RE = re.compile(
 )
 
 def reachable_modules(html_dir):
-    """Follow generated module links from Milestones, ignoring stale build files."""
+    """Follow generated module links from Origin, ignoring stale build files."""
     files = glob.glob(os.path.join(html_dir, "*.md")) + glob.glob(os.path.join(html_dir, "*.html"))
     available = {os.path.basename(path).rsplit(".", 1)[0]: path for path in files}
-    if "Milestones" not in available:
+    if "Origin" not in available:
         return sorted(available)
-    seen, pending = set(), ["Milestones"]
+    seen, pending = set(), ["Origin"]
     link = re.compile(r'href="([^"#]+)\.html(?:#[^"]*)?"')
     while pending:
         module = pending.pop()

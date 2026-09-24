@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="zh"><meta charset="utf-8">
+<base href="/zh/Base.Choice.html">
+<link rel="stylesheet" href="/static/bedrock.css?regression=details-v1">
+<link rel="stylesheet" href="/static/reading-routes.css?regression=details-v1">
+<script>
+window.bedrock = {baseUrl:'', lang:'zh', module:'Base.Choice'};
+const nativeMedia = window.matchMedia.bind(window);
+const testPointer = {matches:true, addEventListener(){}};
+let forceReducedMotion = false;
+window.matchMedia = q => q === '(hover: none), (pointer: coarse)'
+  ? testPointer : q === '(prefers-reduced-motion: reduce)' && forceReducedMotion
+    ? {matches:true} : nativeMedia(q);
+</script>
+<script src="/static/bedrock.js?regression=details-v1" defer></script>
+<body><h2 id="test-status">RUNNING boilerplate / modal / simulated touch regression</h2>
+<pre id="report"></pre><main id="fixture"></main>
+<script>
+const delay = ms => new Promise(r=>setTimeout(r,ms));
+const results=[];
+function check(ok,name,detail) {
+  results.push({ok:Boolean(ok),name,detail});
+  document.querySelector('#report').textContent=JSON.stringify(results,null,2);
+  fetch('/results',{method:'POST',body:JSON.stringify(results)});
+  if (!ok) throw new Error(name+': '+JSON.stringify(detail));
+}
+async function until(fn) {
+  for(let i=0;i<150;i++){const value=fn();if(value)return value;await delay(100)}
+  throw new Error('Timeout '+fn.toString());
+}
+const tap = node => {
+  node.dispatchEvent(new PointerEvent('pointerdown',{bubbles:true,pointerType:'touch'}));
+  node.click();
+};
+const popups = () => [...document.querySelectorAll('.name-hover-popup')];
+function checkLoading(theme) {
+  const body=document.querySelector('.definition-modal-body');
+  const loader=body.querySelector('.definition-modal-loading');
+  const frame=body.querySelector('iframe');
+  check(loader?.getAttribute('role')==='status' && body.getAttribute('aria-busy')==='true',theme+' announces loading');
+  check(getComputedStyle(loader).backgroundColor===getComputedStyle(body).backgroundColor,theme+' loading canvas matches modal background');
+  check(frame.hasAttribute('inert') && getComputedStyle(frame).opacity==='0',theme+' pending iframe cannot paint or take focus');
+  check(frame.style.colorScheme===theme,theme+' iframe initial color scheme matches reader');
+}
+document.addEventListener('DOMContentLoaded',async()=>{
+try {
+  await delay(50);
+  const source=await fetch('/zh/Base.Choice.html').then(r=>r.text());
+  const doc=new DOMParser().parseFromString(source,'text/html');
+  for(const module of ['Base.Impredicativity','Base.Classical','Base.Choice']) {
+    const page=module==='Base.Choice' ? doc : new DOMParser().parseFromString(await fetch('/zh/'+module+'.html').then(r=>r.text()),'text/html');
+    const declarations=[...page.querySelectorAll('.submodule-fold-heading pre.Agda')];
+    check(declarations.length>0 && declarations.every(pre=>/^private module\b/.test(pre.textContent.trim()) && !/private\s*\n/.test(pre.textContent)),module+' uses inline private module fold headers');
+  }
+  const fixture=document.querySelector('#fixture');
+  fixture.append(doc.querySelector('article h1, h1').cloneNode(true));
+  doc.querySelectorAll('template[data-boilerplate-module]').forEach(t=>fixture.append(t.cloneNode(true)));
+  const title=fixture.querySelector('.boilerplate-hover');
+  check(title && title.tagName==='BUTTON','chapter title exposes boilerplate');
+  tap(title);
+  let popup=await until(()=>popups()[0]);
+  check(popup.classList.contains('boilerplate-hover-popup'),'source template has distinct boilerplate shell');
+  const themeBefore=document.documentElement.className;
+  const reference=document.createElement('pre');reference.className='Agda';
+  reference.style.display='none';fixture.append(reference);
+  for (const theme of ['theme-light','theme-dark']) {
+    document.documentElement.className=theme;
+    const surface=getComputedStyle(popup), code=getComputedStyle(reference);
+    check(surface.backgroundColor===code.backgroundColor && surface.borderTopColor===code.borderTopColor,
+      theme+' boilerplate shell uses article code surface');
+    check(surface.borderLeftWidth==='3px' && surface.boxShadow!=='none',theme+' source edge and floating shadow');
+  }
+  document.documentElement.className=themeBefore;reference.remove();
+  check(popup.textContent.includes('OPTIONS') && popup.textContent.includes('module Base.Choice where'), 'real title code');
+  check(!popup.textContent.includes('import Base.Prelude'),'imports not duplicated in title');
+  await delay(700);
+  check(popups().length===1,'mobile hover persists beyond desktop delay');
+  tap(popup.querySelector('[data-hover-help]'));
+  await until(()=>popups().length===2);
+  check(!popups()[1].classList.contains('boilerplate-hover-popup'),'nested syntax help retains ordinary shell');
+  check(popups()[1].textContent.includes('了解更多'),'nested keyword help has localized documentation');
+  check(popups()[1].querySelector('.syntax-doc-link').href.startsWith('https://agda.readthedocs.io/en/v2.8.0/'),'versioned official link');
+  check(popups()[1].getBoundingClientRect().top >= popup.querySelector('[data-hover-help]').getBoundingClientRect().bottom - 1,'nested help opens downward');
+  document.querySelector('#test-status').dispatchEvent(new PointerEvent('pointerdown',{bubbles:true,pointerType:'touch'}));
+  check(popups().length===0,'outside touch closes chain');
+  const route=document.createElement('div');
+  route.id='reading-explorer'; route.dataset.lang='zh'; route.dataset.current='Base.Choice';
+  route.dataset.source='/zh/reading-routes.json'; fixture.append(route);
+  const routes=document.createElement('script');routes.src='/static/reading-routes.js?regression=details-v1';document.body.append(routes);
+  await until(()=>route.querySelector('.compact-done'));
+  let compact=route.querySelector('.reading-compact');
+  const completedBefore=route.querySelector('.compact-done').getAttribute('aria-pressed');
+  route.querySelector('.compact-done').click();
+  check(!route.querySelector('.reading-compact').open,'completion button does not expand the route');
+  check(route.querySelector('.compact-done').getAttribute('aria-pressed')!==completedBefore,'completion control updates progress');
+  route.querySelector('.compact-done').click();
+  compact=route.querySelector('.reading-compact');
+  const summary=compact.querySelector('summary'), content=compact.querySelector('.compact-content');
+  summary.click();
+  const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(!reduced) check(content.getAnimations().some(a=>a.effect.getTiming().duration===160),'learning route uses a short 160ms animation');
+  await delay(250);
+  check(compact.open && !content.style.height,'route expansion restores natural height');
+  check([...compact.querySelectorAll('.compact-label')].every(label=>getComputedStyle(label).marginTop==='0px' && parseFloat(getComputedStyle(label).marginBottom)>=8),'route group labels preserve bottom spacing despite the explorer heading reset');
+  summary.click();await delay(250);
+  check(!compact.open,'route collapse finishes');
+  summary.click();summary.click();summary.click();await delay(250);
+  check(compact.open && !content.style.height,'rapid route toggles finish in the requested state');
+  const headingRect=compact.querySelector('.compact-summary-title').getBoundingClientRect();
+  const doneRect=compact.querySelector('.compact-done').getBoundingClientRect();
+  check(Math.abs((headingRect.top+headingRect.bottom-doneRect.top-doneRect.bottom)/2)<2,'completion and route title share one row');
+  check(summary.getBoundingClientRect().right-doneRect.right<2,'completion button aligns at the far right');
+  forceReducedMotion=true;summary.click();
+  check(!compact.open && content.getAnimations().length===0,'reduced-motion route collapses without animation');
+  summary.click();forceReducedMotion=false;
+  const prereq=await until(()=>route.querySelector('[data-hover-template*="Base.Prelude"]'));
+  prereq.closest('details').open=true;
+  tap(prereq);
+  popup=await until(()=>popups()[0]);
+  check(popup.textContent.includes('open import Base.Prelude'),'prerequisite exposes actual import');
+  check(!document.querySelector('.definition-modal'),'first tap does not open modal');
+  const chapterAction=popup.querySelector('.type-definition-link');
+  check(chapterAction?.href===prereq.href && chapterAction.hasAttribute('data-module-target'),'prerequisite hover has a chapter modal action');
+  check(chapterAction.querySelector('svg rect'),'chapter action uses the shared modal-window icon');
+  tap(chapterAction);
+  await until(()=>document.querySelector('.definition-modal-frame.is-ready'));
+  check(document.querySelector('.definition-modal-title').textContent.includes('基础词汇'),'touch chapter action opens the prerequisite in a modal');
+  document.querySelector('.definition-modal-close').click();
+  const preludeSource=await fetch('/zh/Base.Prelude.html').then(r=>r.text());
+  const preludeDoc=new DOMParser().parseFromString(preludeSource,'text/html');
+  const equation=[...preludeDoc.querySelectorAll('.single-line-code')].find(el=>el.textContent.includes('A × B = Σ'));
+  check(!!equation,'Prelude uses the requested equals notation');
+  const inlineSample=equation.cloneNode(true);fixture.append(inlineSample);
+  check(inlineSample.querySelector('[data-hover-help="="]') && inlineSample.querySelector('[data-hover-help=":"]'),'single-line code automatically carries syntax help');
+  check(inlineSample.querySelector('[data-hover-help="_"]')?.classList.contains('syntax-symbol'),'standalone underscore shares symbolic color and help');
+  const inlineTimes=[...inlineSample.querySelectorAll('a[href]')].find(a=>a.textContent==='×');
+  check(inlineTimes?.getAttribute('href').startsWith('Base.Prelude.html#'),'inline infix links to Prelude introduction');
+  document.body.dispatchEvent(new PointerEvent('pointerdown',{bubbles:true,pointerType:'touch'}));
+  tap(inlineSample.querySelector('[data-hover-help="="]'));
+  const inlineHelp=await until(()=>popups().find(p=>p.querySelector('.syntax-doc-link')));
+  check(!inlineHelp.textContent.includes('记录表达式') && inlineHelp.querySelector('.syntax-doc-link').href.includes('agda.readthedocs.io'),'inline equals uses the shared updated official-documentation help');
+  await delay(500);
+  check(inlineHelp.isConnected && !document.querySelector('.definition-modal'),'touch syntax hover persists without opening a modal');
+  document.body.dispatchEvent(new PointerEvent('pointerdown',{bubbles:true,pointerType:'touch'}));
+  tap(inlineTimes);
+  const inlineType=await until(()=>popups().find(p=>p.querySelector('.type-definition-link')));
+  check(!document.querySelector('.definition-modal'),'touch inline definition opens hover before modal');
+  inlineType.querySelector('.type-definition-link').click();
+  await until(()=>document.querySelector('.definition-modal-frame.is-ready'));
+  check(document.querySelector('.definition-modal-frame').contentDocument.querySelector('.single-line-code [data-hover-help="="]'),'modal mirrors automatic inline help');
+  document.querySelector('.definition-modal-close').click();
+  const colorProbe=document.createElement('div');
+  colorProbe.innerHTML='<pre class="Agda"><a class="Primitive">Type</a><a class="Function">f</a></pre><div class="hover-popup"><div class="type-value Agda"><a class="Primitive" data-hover-stop="universe-former">Type</a><span>x</span></div></div>';
+  const formalSymbol=preludeDoc.querySelector('pre.Agda [data-hover-help="→"]');
+  check(formalSymbol?.classList.contains('syntax-symbol') && inlineSample.querySelector('[data-hover-help="="]').classList.contains('syntax-symbol'),'formal and single-line symbols carry the shared syntax category');
+  colorProbe.querySelector('pre').append(formalSymbol.cloneNode(true));
+  const hoverSignature=await fetch('/zh/types/Base.Prelude.json').then(r=>r.json());
+  const signature=Object.values(hoverSignature).find(value=>typeof value==='string' && value.includes('syntax-symbol'));
+  check(!!signature,'hover type payloads carry the same syntax category');
+  const hoverColor=document.createElement('div');hoverColor.className='type-value Agda';hoverColor.innerHTML=signature;colorProbe.append(hoverColor);
+  const wordProbe=document.createElement('a');wordProbe.className='Keyword';wordProbe.textContent='where';colorProbe.querySelector('pre').append(wordProbe);
+  const plainHelp=['{','}',';'].map(key=>{
+    const source=preludeDoc.querySelector('pre.Agda [data-hover-help="'+key+'"]');
+    check(source && !source.classList.contains('syntax-symbol'),key+' has help without symbolic color');
+    const clone=source.cloneNode(true);colorProbe.querySelector('pre').append(clone);return clone;
+  });
+  fixture.append(colorProbe);
+  for(const theme of ['theme-light','theme-dark']) {
+    document.documentElement.className=theme;
+    const source=colorProbe.querySelectorAll('pre a'), popup=colorProbe.querySelector('.type-value');
+    check(getComputedStyle(source[0]).color===getComputedStyle(source[1]).color,theme+' formal Type retains identifier color');
+    check(getComputedStyle(popup.querySelector('a')).color===getComputedStyle(popup.querySelector('span')).color,theme+' stopped hover Type uses ordinary text color');
+    const symbolColor=getComputedStyle(colorProbe.querySelector('pre .syntax-symbol')).color;
+    check(symbolColor===getComputedStyle(inlineSample.querySelector('.syntax-symbol')).color && symbolColor===getComputedStyle(hoverColor.querySelector('.syntax-symbol')).color,theme+' formal inline and hover symbols share one color');
+    check(symbolColor!==getComputedStyle(wordProbe).color && symbolColor!==getComputedStyle(popup.querySelector('span')).color,theme+' symbolic syntax differs from words and ordinary text');
+    check(plainHelp.every(node=>getComputedStyle(node).color===getComputedStyle(popup.querySelector('span')).color),theme+' braces and semicolon retain ordinary text color');
+  }
+  for(const node of [inlineSample.querySelector('[data-hover-help="_"]'),...plainHelp]) {
+    document.body.dispatchEvent(new PointerEvent('pointerdown',{bubbles:true,pointerType:'touch'}));
+    tap(node);
+    const key=node.getAttribute('data-hover-help');
+    const helpPopup=await until(()=>popups().find(p=>p.querySelector('.syntax-help strong')?.textContent===key));
+    check(!!helpPopup.querySelector('.syntax-doc-link'),key+' opens its localized help and official documentation link');
+  }
+  colorProbe.remove();inlineSample.remove();document.documentElement.className=themeBefore;
+  document.body.dispatchEvent(new PointerEvent('pointerdown',{bubbles:true,pointerType:'touch'}));
+  testPointer.matches=false;
+  prereq.click();
+  await until(()=>document.querySelector('.definition-modal-frame.is-ready'));
+  check(document.querySelector('.definition-modal-title').textContent.includes('基础词汇'),'desktop prerequisite click opens the same modal');
+  document.querySelector('.definition-modal-close').click();
+  const enter=new KeyboardEvent('keydown',{key:'Enter',bubbles:true,cancelable:true});
+  prereq.dispatchEvent(enter);
+  check(!enter.defaultPrevented,'desktop prerequisite Enter can dispatch its modal-opening click');
+  testPointer.matches=true;
+  tap(prereq);popup=await until(()=>popups()[0]);
+  tap(popup.querySelector('a.Module[href]'));
+  const modulePopup=await until(()=>popups()[1]);
+  check(!modulePopup.classList.contains('boilerplate-hover-popup'),'nested name hint retains ordinary shell');
+  check(!document.querySelector('.definition-modal'),'module name tap opens a child hover, not modal');
+  const moduleAction=modulePopup.querySelector('.type-definition-link');
+  check(moduleAction,'untyped module link has explicit modal action');
+  document.documentElement.className='theme-dark';
+  moduleAction.click();
+  checkLoading('dark');
+  await until(()=>document.querySelector('.definition-modal-title')?.textContent.includes('基础词汇'));
+  await until(()=>document.querySelector('.definition-modal-frame.is-ready'));
+  check(!document.querySelector('.definition-modal-loading') && document.querySelector('.definition-modal-frame').contentDocument.documentElement.classList.contains('theme-dark'),'dark page revealed only after theme and alignment');
+  check(document.querySelector('.definition-modal-frame'),'boilerplate module link opens full-page modal');
+  document.querySelector('.definition-modal-close').click();
+  // Definitions imported for a parameterized module are prerequisites too.
+  const stage=await fetch('/zh/L.Stage.html').then(r=>r.text());
+  const stageDoc=new DOMParser().parseFromString(stage,'text/html');
+  check(stageDoc.getElementById('boilerplate-import-L.Stage-Base.Prelude') && stageDoc.getElementById('boilerplate-import-L.Stage-Base.Classical'),'pre-module imports have hover payloads');
+  const stageHeader=stageDoc.getElementById('boilerplate-header-L.Stage').content.textContent;
+  check(stageHeader.includes('OPTIONS') && !stageHeader.includes('module'),'parameterized title contains only OPTIONS');
+  check([...stageDoc.querySelectorAll('pre.Agda')].some(pre=>pre.textContent.includes('module L.Stage {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where')),'parameterized declaration remains visible body code');
+  const current=doc.querySelector('a[id][class="Function"][href$="#'+
+    ([...doc.querySelectorAll('a[id][class="Function"]')].find(a=>a.textContent==='SetChoice→LEM')?.id)+'"]')
+    || [...doc.querySelectorAll('a[id]')].find(a=>a.textContent==='SetChoice→LEM');
+  check(current,'definition anchor located');
+  const open=document.createElement('a');open.className='type-definition-link';
+  open.href='/zh/Base.Choice.html#'+current.id;open.dataset.name='SetChoice→LEM';fixture.append(open);
+  document.documentElement.className='theme-light';open.click();checkLoading('light');
+  const frame=await until(()=>document.querySelector('.definition-modal-frame'));
+  await until(()=>frame.contentDocument?.getElementById(current.id));
+  const frameDoc=frame.contentDocument;
+  await until(()=>document.querySelector('.definition-modal-title code'));
+  await until(()=>frame.classList.contains('is-ready'));
+  check(!frame.hasAttribute('inert') && !frame.hasAttribute('aria-hidden') && document.querySelector('.definition-modal-body').getAttribute('aria-busy')==='false','ready iframe becomes interactive');
+  check(frameDoc.documentElement.classList.contains('theme-light'),'explicit light parent overrides dark system preference in frame');
+  const modalTitle=document.querySelector('.definition-modal-title');
+  check(modalTitle.tagName==='DIV' && !modalTitle.querySelector('a') && !modalTitle.hasAttribute('href'),'modal title has no navigation link');
+  check(modalTitle.textContent==='选择原理 SetChoice→LEM','localized chapter plus code name',modalTitle.textContent);
+  check(modalTitle.querySelector('code.Agda').textContent==='SetChoice→LEM','definition name retains code styling');
+  const jump=document.querySelector('.definition-modal-jump');
+  check(jump.nextElementSibling?.classList.contains('definition-modal-close') && jump.getAttribute('aria-label')==='跳转进入','enter-page action sits immediately left of Close');
+  check(new URL(jump.href).hash==='#'+current.id && !jump.href.includes('bedrock-modal'),'enter-page action preserves the original definition anchor');
+  await delay(900);
+  const block=frameDoc.getElementById(current.id).closest('pre.Agda');
+  const bar=frameDoc.getElementById('section-sticky');
+  const error=block.getBoundingClientRect().top-bar.getBoundingClientRect().bottom;
+  // Safari rounds the scroll offset and fractional sticky-header geometry independently.
+  check(Math.abs(error)<2,'modal definition block alignment',error);
+  check(frameDoc.querySelectorAll('table').length>=3,'modal mirrors full article tables');
+  check(frameDoc.querySelector('.chapter-review.is-reviewed')?.getAttribute('aria-label')==='已人工校阅','modal mirrors chapter review status');
+  check(frameDoc.querySelectorAll('.statement-ending > pre.Agda + .statement-qed').length>10,'modal mirrors statement endings including folded helpers');
+  const nextDefinition=[...frameDoc.querySelectorAll('pre.Agda a.Function[id][href]')].find(a=>a.textContent==='SetChoice');
+  // Observe the asynchronous iframe message at the DOM mutation, not via a
+  // polling timer that background tabs may throttle beyond the loading phase.
+  await new Promise((resolve,reject)=>{
+    const observer=new MutationObserver(()=>{
+      if(document.querySelector('.definition-modal-frame')===frame)return;
+      observer.disconnect();
+      try {checkLoading('light');resolve();} catch(error) {reject(error);}
+    });
+    observer.observe(document.querySelector('.definition-modal-body'),{childList:true});
+    nextDefinition.click();
+  });
+  await until(()=>document.querySelector('.definition-modal-frame.is-ready'));
+  check(document.querySelector('.definition-modal-title').textContent==='选择原理 SetChoice','modal navigation reveals the new target');
+  check(new URL(jump.href).hash==='#'+nextDefinition.id,'enter-page action follows modal forward navigation');
+  const historyButtons=document.querySelectorAll('.definition-modal-history-button');
+  historyButtons[0].click();checkLoading('light');
+  await until(()=>document.querySelector('.definition-modal-frame.is-ready'));
+  check(document.querySelector('.definition-modal-title').textContent==='选择原理 SetChoice→LEM','back navigation reloads and reveals the prior target');
+  check(new URL(jump.href).hash==='#'+current.id,'enter-page action follows modal Back to the original anchor');
+  historyButtons[1].click();checkLoading('light');
+  await until(()=>document.querySelector('.definition-modal-frame.is-ready'));
+  check(document.querySelector('.definition-modal-title').textContent==='选择原理 SetChoice','forward navigation reloads and reveals the next target');
+  const jumpSink=document.createElement('iframe');jumpSink.name='modal-jump-sink';jumpSink.hidden=true;document.body.append(jumpSink);
+  jump.target=jumpSink.name;
+  document.querySelector('.definition-modal-frame').contentDocument.getElementById('main-content').scrollTop=0;
+  jump.click();
+  await until(()=>jumpSink.contentDocument?.getElementById(nextDefinition.id));
+  check(jumpSink.contentWindow.location.hash==='#'+nextDefinition.id && !jumpSink.contentWindow.location.search.includes('bedrock-modal'),'enter-page action really navigates to the target despite manual modal scrolling');
+  jumpSink.remove();
+  document.querySelector('.definition-modal-close').click();
+  check(!document.querySelector('.definition-modal'),'modal closes');
+  open.href='/zh/Base.Choice.html#missing-regression-target';open.click();
+  await until(()=>document.querySelector('.definition-modal-loading.is-error'));
+  check(!document.querySelector('.definition-modal-loading-indicator') && document.querySelector('.definition-modal-body').getAttribute('aria-busy')==='false','failed load stops animation and busy state');
+  document.querySelector('.definition-modal-close').click();
+  open.href='/zh/Base.Choice.html#'+current.id;open.click();
+  document.querySelector('.definition-modal-close').click();
+  await delay(800);
+  check(!document.querySelector('.definition-modal'),'closing while loading cannot resurrect modal');
+  document.documentElement.className=themeBefore;
+  const narrow=document.createElement('iframe');
+  narrow.style.cssText='width:390px;height:760px;border:0;display:block';
+  narrow.src='/zh/L.Stage.html';fixture.append(narrow);
+  await until(()=>narrow.contentDocument?.querySelector('h1 .boilerplate-hover'));
+  await until(()=>narrow.contentDocument.querySelector('#reading-explorer details'));
+  const narrowDoc=narrow.contentDocument;
+  narrowDoc.querySelector('#reading-explorer details').open=true;
+  await narrowDoc.fonts.ready;
+  check(narrowDoc.documentElement.scrollWidth<=narrow.contentWindow.innerWidth+1,'390px chapter and expanded prerequisites fit viewport');
+  narrowDoc.querySelector('h1 .boilerplate-hover').focus();
+  const narrowPopup=await until(()=>narrowDoc.querySelector('.name-hover-popup'));
+  const bounds=narrowPopup.getBoundingClientRect();
+  check(bounds.left>=0 && bounds.right<=narrow.contentWindow.innerWidth+1,'390px boilerplate popup stays within viewport',bounds.width);
+  check(narrowPopup.textContent.includes('OPTIONS') && !narrowPopup.textContent.includes('module'),'390px parameterized title still shows only OPTIONS');
+  check(narrowDoc.querySelector('.chapter-review.is-unreviewed')?.getAttribute('aria-label')==='未人工校阅','later chapter displays the unreviewed warning');
+  narrow.src='/zh/Base.Choice.html';
+  await until(()=>narrow.contentDocument?.querySelector('.statement-ending'));
+  await narrow.contentDocument.fonts.ready;
+  const mobileDoc=narrow.contentDocument;
+  check(mobileDoc.documentElement.scrollWidth<=narrow.contentWindow.innerWidth+1,'390px nested private module headers stay within the page');
+  const inlineProbe=mobileDoc.createElement('p');
+  inlineProbe.style.width='8rem';
+  inlineProbe.innerHTML='<span class="Agda inline-code">Type ℓ → Type ℓ → Type ℓ → Type ℓ</span>';
+  mobileDoc.querySelector('article').append(inlineProbe);
+  const inlineCode=inlineProbe.firstElementChild;
+  const inlineStyle=narrow.contentWindow.getComputedStyle(inlineCode);
+  check(inlineCode.getClientRects().length>1 && (inlineStyle.boxDecorationBreak==='clone' || inlineStyle.webkitBoxDecorationBreak==='clone'),'wrapped inline Agda code retains complete box decoration on every line');
+  const inlineBounds=inlineProbe.getBoundingClientRect();
+  check([...inlineCode.getClientRects()].every(rect=>rect.left>=inlineBounds.left-1 && rect.right<=inlineBounds.right+1),'inline code fragments stay within their prose column');
+  inlineProbe.remove();
+  const overflowPadding=[...mobileDoc.querySelectorAll('article pre.Agda > .agda-code-content')].filter(content=>content.scrollWidth>content.clientWidth).map(content=>{
+    const pre=content.parentElement;
+    const range=mobileDoc.createRange();range.selectNodeContents(content);
+    const savedScroll=content.scrollLeft;content.scrollLeft=content.scrollWidth;
+    const rect=pre.getBoundingClientRect(), style=narrow.contentWindow.getComputedStyle(pre);
+    const right=Math.max(...[...range.getClientRects()].map(r=>r.right));
+    const result={wrapped:!!content,submodule:!!pre.closest('.submodule-fold'),heading:!!pre.closest('.submodule-fold-heading'),padding:parseFloat(style.paddingRight),trailing:rect.left+pre.clientLeft+pre.clientWidth-right};
+    content.scrollLeft=savedScroll;return result;
+  });
+  check(overflowPadding.some(item=>item.submodule && !item.heading) && overflowPadding.every(item=>item.wrapped && item.padding>=16 && item.trailing>=item.padding-1),'scrolled Agda code including submodule bodies retains real right padding',overflowPadding);
+  const ending=mobileDoc.querySelector('.statement-ending');
+  const codeRect=ending.querySelector('pre').getBoundingClientRect();
+  const qedRect=ending.querySelector('.statement-qed').getBoundingClientRect();
+  check(qedRect.left>=codeRect.right && qedRect.right<=narrow.contentWindow.innerWidth,'390px QED sits outside code without overflowing');
+  check(Math.abs(qedRect.bottom-codeRect.bottom)<1,'QED aligns with the final code block bottom edge');
+  const ordinary=[...mobileDoc.querySelectorAll('article > pre.Agda')][0].getBoundingClientRect();
+  check(Math.abs(ordinary.left-codeRect.left)<1 && Math.abs(ordinary.right-codeRect.right)<1,'ordinary and QED code blocks share both horizontal edges');
+  const folds=[...mobileDoc.querySelectorAll('.submodule-fold')];
+  check(folds.every(fold=>{
+    const blocks=[...fold.querySelectorAll('pre.Agda')].filter(pre=>pre.closest('.submodule-fold')===fold && !pre.closest('.submodule-fold-heading'));
+    const reference=blocks[0].getBoundingClientRect();
+    return blocks.every(pre=>{const rect=pre.getBoundingClientRect();return Math.abs(rect.left-reference.left)<1 && Math.abs(rect.right-reference.right)<1});
+  }),'each submodule aligns its own body code edges');
+  check(folds.every(fold=>{
+    const header=fold.querySelector(':scope > .submodule-fold-heading'), pre=header.querySelector('pre.Agda');
+    const style=narrow.contentWindow.getComputedStyle(pre), headingStyle=narrow.contentWindow.getComputedStyle(header);
+    return !pre.querySelector('.agda-code-content') && parseFloat(style.paddingRight)<4
+      && style.borderWidth==='0px' && parseFloat(headingStyle.marginLeft)===0 && parseFloat(headingStyle.marginRight)===0;
+  }),'fold declarations retain their original compact style without body-code gutters');
+  check(folds.every(fold=>parseFloat(narrow.contentWindow.getComputedStyle(fold).borderLeftWidth)>0 && fold.querySelector('pre.Agda').getBoundingClientRect().left>codeRect.left),'submodules preserve their frame and indentation relative to outer code');
+  check(ending.querySelector('.statement-qed').textContent==='∎' && parseFloat(narrow.contentWindow.getComputedStyle(ending.querySelector('.statement-qed')).fontSize)>0,'QED retains its original Unicode glyph');
+  check(parseFloat(narrow.contentWindow.getComputedStyle(ending).marginBottom)>=32,'statement ending adds a clear bottom gap');
+  const badge=mobileDoc.querySelector('.chapter-review').getBoundingClientRect();
+  const chapterHeading=mobileDoc.querySelector('h1').getBoundingClientRect();
+  check(badge.left>=chapterHeading.right && badge.right<=narrow.contentWindow.innerWidth,'390px review icon occupies the title row right edge');
+  await until(()=>mobileDoc.querySelector('.compact-done'));
+  const mobileSummary=mobileDoc.querySelector('.compact-summary');
+  const mobileTitle=mobileSummary.querySelector('.compact-summary-title').getBoundingClientRect();
+  const mobileDone=mobileSummary.querySelector('.compact-done').getBoundingClientRect();
+  check(mobileDone.left>=mobileTitle.right && mobileDone.right<=narrow.contentWindow.innerWidth,'390px completion control fits beside route title');
+  testPointer.matches=false;
+  function hovered(node,value) {
+    if (!node.originalMatches) node.originalMatches=node.matches.bind(node);
+    node.matches=selector=>selector===':hover' ? value : node.originalMatches(selector);
+  }
+  hovered(title,true);title.dispatchEvent(new MouseEvent('mouseover',{bubbles:true}));
+  const desktopRoot=await until(()=>popups()[0]);
+  hovered(title,false);hovered(desktopRoot,true);
+  desktopRoot.dispatchEvent(new MouseEvent('mouseenter'));
+  const keyword=desktopRoot.querySelector('[data-hover-help]');
+  hovered(keyword,true);keyword.dispatchEvent(new MouseEvent('mouseover',{bubbles:true}));
+  const desktopChild=await until(()=>popups()[1]);
+  hovered(keyword,false);hovered(desktopRoot,false);hovered(desktopChild,true);
+  desktopRoot.dispatchEvent(new MouseEvent('mouseleave'));
+  desktopChild.dispatchEvent(new MouseEvent('mouseenter'));
+  await delay(450);
+  check(popups().length===2,'desktop ancestor survives while nested popup is hovered');
+  hovered(desktopChild,false);desktopChild.dispatchEvent(new MouseEvent('mouseleave'));
+  await delay(100);
+  check(popups().length===2,'desktop chain retains its exit delay');
+  hovered(desktopChild,true);desktopChild.dispatchEvent(new MouseEvent('mouseenter'));
+  await delay(400);
+  check(popups().length===2,'brief exit and re-entry cancel the entire close chain');
+  hovered(desktopChild,false);desktopChild.dispatchEvent(new MouseEvent('mouseleave'));
+  await until(()=>popups().length===0);
+  check(!title.classList.contains('info-active'),'leaving nested hover closes ancestors and clears the source cue');
+  document.querySelector('#test-status').textContent='PASS '+results.length+'/'+results.length+' browser boilerplate and modal checks';
+} catch(error) {
+  document.querySelector('#test-status').textContent='FAIL '+error.message;
+  fetch('/results',{method:'POST',body:'ERROR '+error.stack});
+}
+});
+</script></body></html>

@@ -1,27 +1,50 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # The generalized continuum hypothesis inside L
-
-Inside `L`, the generalized continuum hypothesis compares two sets attached to every infinite internal cardinal `κ`: its power set and its internal successor cardinal. In this development, having the same size is expressed by internal coded injections in both directions. The statement below formulates this comparison using the power set supplied by the model itself.
 <!--zh-->
 # L 内部的广义连续统假设
-
-在 `L` 内部，广义连续统假设比较与每个无穷内部基数 `κ` 相联系的两个集合：它的幂集与内部后继基数。本书用两个方向的内部编码单射表示二者大小相同。下面的陈述采用模型自身给出的幂集来表述这一比较。
 <!--ja-->
 # L の内部における一般連続体仮説
-
-`L` の内部における一般連続体仮説は、各無限な内部基数 `κ` に付随する二つの集合、すなわちその冪集合と内部の後続基数を比較する。本書では、大きさが等しいことを両方向の内部的に符号化された単射で表す。以下では、モデル自身が与える冪集合を用いてこの比較を定式化する。
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
 open import Base.Prelude
 open import Base.Classical using ( LEM )
-
-module L.GCH {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-
-open import FOL.ZFStructure using ( module hPropStructure )
 ```
+
+<!--en-->
+Fix a universe level `ℓ`{.Agda} and assume `lem : LEM (ℓ-suc ℓ)`{.Agda}. This hypothesis supplies a decision for each proposition at that level; it remains an explicit parameter of the constructions below.
+<!--zh-->
+固定宇宙层级 `ℓ`{.Agda}，并假设 `lem : LEM (ℓ-suc ℓ)`{.Agda}。这个假设为相应层级的每个命题提供判定，并始终作为下文构造的显式参数。
+<!--ja-->
+宇宙レベル `ℓ`{.Agda} を固定し、`lem : LEM (ℓ-suc ℓ)`{.Agda} を仮定する。この仮定は該当するレベルの各命題に判定を与え、以下の構成の明示的なパラメータとして保たれる。
+<!--/-->
+
+```agda
+module L.GCH {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+```
+
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+import FOL.ZFModel
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import L.Constructible {ℓ} using ( 𝒮ʟ; IsOrd )
+open import L.Cardinal {ℓ} lem using ( IsCardinalL; InjL; SuccCardL )
+```
+
+<!--en-->
+
+Inside `L`, the generalized continuum hypothesis compares two sets attached to every infinite internal cardinal `κ`: its power set and its internal successor cardinal. In this development, having the same size is expressed by internal coded injections in both directions. The statement below formulates this comparison using the power set supplied by the model itself.
+<!--zh-->
+
+在 `L` 内部，广义连续统假设比较与每个无穷内部基数 `κ` 相联系的两个集合：它的幂集与内部后继基数。本书用两个方向的内部编码单射表示二者大小相同。下面的陈述采用模型自身给出的幂集来表述这一比较。
+<!--ja-->
+
+`L` の内部における一般連続体仮説は、各無限な内部基数 `κ` に付随する二つの集合、すなわちその冪集合と内部の後続基数を比較する。本書では、大きさが等しいことを両方向の内部的に符号化された単射で表す。以下では、モデル自身が与える冪集合を用いてこの比較を定式化する。
+<!--/-->
 
 <!--en-->
 The notions of internal cardinal, successor cardinal, and coded injection are all formed relative to the chosen instance of excluded middle. Thus the statement belongs to the same classical context as the cardinal theory developed earlier, with no additional classical assumption.
@@ -32,10 +55,6 @@ The notions of internal cardinal, successor cardinal, and coded injection are al
 <!--/-->
 
 ```agda
-import FOL.ZFModel
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-open import L.Constructible {ℓ} using ( 𝒮ʟ; IsOrd )
-open import L.Cardinal {ℓ} lem using ( IsCardinalL; InjL; SuccCardL )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( _∈_ )
 ```
 
@@ -62,7 +81,6 @@ ZF モデルはそれ自身の冪集合演算を備える。モデルの証明 `
 <!--/-->
 
 ```agda
-
 open hPropStructure 𝒮ᵥ using ( _∈ˢ_ )
 open hPropStructure 𝒮ʟ using ( S )
 

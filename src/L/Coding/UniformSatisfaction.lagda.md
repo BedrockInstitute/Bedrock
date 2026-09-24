@@ -1,3 +1,7 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # Uniform satisfaction over all codes
 <!--zh-->
@@ -5,6 +9,51 @@
 <!--ja-->
 # 全コード上の一様な充足関係
 <!--/-->
+
+```agda
+open import Base.Prelude
+open import Base.Classical using ( LEM )
+```
+
+<!--en-->
+Fix a universe level `ℓ`{.Agda} and assume `lem : LEM (ℓ-suc ℓ)`{.Agda}. This hypothesis supplies a decision for each proposition at that level; it remains an explicit parameter of the constructions below.
+<!--zh-->
+固定宇宙层级 `ℓ`{.Agda}，并假设 `lem : LEM (ℓ-suc ℓ)`{.Agda}。这个假设为相应层级的每个命题提供判定，并始终作为下文构造的显式参数。
+<!--ja-->
+宇宙レベル `ℓ`{.Agda} を固定し、`lem : LEM (ℓ-suc ℓ)`{.Agda} を仮定する。この仮定は該当するレベルの各命題に判定を与え、以下の構成の明示的なパラメータとして保たれる。
+<!--/-->
+
+```agda
+module L.Coding.UniformSatisfaction {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+```
+
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax using ( Formula )
+open import FOL.Manipulation.ConstantMapping using ( mapFo; mapFo-comp )
+open import FOL.Manipulation.Relabelling using ( ⊨-map )
+import FOL.Absoluteness
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Coding {ℓ} using ( pr )
+open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
+open import L.Definability {ℓ} using ( module DefOf )
+open import L.Coding.Model {ℓ} using ( domAt; domAt-intro; domAt-out )
+open import L.Coding.Satisfaction {ℓ} lem using ( Sat )
+open import L.Coding.SatisfactionBridge {ℓ} lem
+  using ( intoL; asConst; Sat-spec ) renaming ( graph to envGraph )
+open import L.Coding.SatisfactionTable {ℓ} lem
+  using ( keyʟ; slot; satTable; total; inSlot; entry-in )
+open import L.Coding.SlotClosure {ℓ} lem using ( slotClosed )
+open import L.Coding.EnvironmentTower {ℓ} lem using ( towerAt; module Tower; module TowerHolds )
+open import L.Coding.Quantification {ℓ} using ( f0; f1; f2; f3; f4; f5; f6; f7; f8; f9 )
+open import L.Coding.CodeDomain {ℓ} using ( Tags )
+open import L.Coding.PinnedRecursion {ℓ} lem using ( module SatSoundC; module SlotHolds ) renaming ( keyBridge to keyBridge' )
+open import L.Coding.SatisfactionGraph {ℓ} lem using
+  ( satGraph; graph-in; graph-out; Bi; Ti; Ci; Ei; NN; ev; numν; numTags )
+open import L.Coding.CodeSet {ℓ} lem
+  using ( keyS; AllCodes; AllCodes-out; key∈AllCodes )
+open import L.Recursion {ℓ} lem using ( Recursion; mereFunct; module Of )
+```
 
 <!--en-->
 Recursion on `AllCodes A` produces one satisfaction assignment whose value at every formula key agrees with the explicit satisfaction table for that formula. This makes satisfaction available uniformly across formulas and arities.
@@ -41,38 +90,6 @@ exports the uniform satisfaction table consumed by powerset and Choice.
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-open import Base.Prelude
-open import Base.Classical using ( LEM )
-
-module L.Coding.UniformSatisfaction {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-
-open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using ( Formula )
-open import FOL.Manipulation.ConstantMapping using ( mapFo; mapFo-comp )
-open import FOL.Manipulation.Relabelling using ( ⊨-map )
-import FOL.Absoluteness
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-open import V.Coding {ℓ} using ( pr )
-open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
-open import L.Definability {ℓ} using ( module DefOf )
-open import L.Coding.Model {ℓ} using ( domAt; domAt-intro; domAt-out )
-open import L.Coding.Satisfaction {ℓ} lem using ( Sat )
-open import L.Coding.SatisfactionBridge {ℓ} lem
-  using ( intoL; asConst; Sat-spec ) renaming ( graph to envGraph )
-open import L.Coding.SatisfactionTable {ℓ} lem
-  using ( keyʟ; slot; satTable; total; inSlot; entry-in )
-open import L.Coding.SlotClosure {ℓ} lem using ( slotClosed )
-open import L.Coding.EnvironmentTower {ℓ} lem using ( towerAt; module Tower; module TowerHolds )
-open import L.Coding.Quantification {ℓ} using ( f0; f1; f2; f3; f4; f5; f6; f7; f8; f9 )
-open import L.Coding.CodeDomain {ℓ} using ( Tags )
-open import L.Coding.PinnedRecursion {ℓ} lem using ( module SatSoundC; module SlotHolds ) renaming ( keyBridge to keyBridge' )
-open import L.Coding.SatisfactionGraph {ℓ} lem using
-  ( satGraph; graph-in; graph-out; Bi; Ti; Ci; Ei; NN; ev; numν; numTags )
-open import L.Coding.CodeSet {ℓ} lem
-  using ( keyS; AllCodes; AllCodes-out; key∈AllCodes )
-open import L.Recursion {ℓ} lem using ( Recursion; mereFunct; module Of )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( _∈_; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Properties using ( ⟪_⟫ )
 
@@ -117,7 +134,6 @@ would need unfolding, and no step unfolds it.
 因此，这个名字在构造处被封装为不透明定义。封装后，它是 `L` 的一个元素，类型可以提到它而不必展开；同时得到使用者需要的两项事实：它属于定义域，并且是构造它时所用公式的键。后续结论都先对变元成员陈述，再通过等式应用到这个键，因此不会展开这个不透明的名字。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -139,7 +155,6 @@ module _ (A : S) where
 ```
 </div>
 </details>
-
 
 <!--en-->
 ## Relating external and internal formula keys
@@ -189,7 +204,6 @@ in a slot can use it without supplying a second carrier it does not have.
 这座桥只取字母表，别无其他。供诸环境落在其上的那个集合在它里面从未出现，故它比下面那场递归少一个参数；而后面某一章若需要两套编码在「握在一位上的载体」处相符，便可以直接用它，无须供上一个它并不拥有的第二载体。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -209,7 +223,6 @@ module _ (A : S) where
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-
 module _ (B : S) where
 ```
 </summary>
@@ -237,7 +250,6 @@ module _ (B : S) where
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-
 module _ (A B : S) where
 ```
 </summary>
@@ -434,7 +446,6 @@ what the type mentions there does not unfold.
 </div>
 </details>
 
-
 <!--en-->
 And against satisfaction, which is the reason to have the goal. The bridge
 chapter proved that a member of the meta-level value is an environment satisfying
@@ -455,7 +466,6 @@ that same stage.
 
 两个载体在此处合一，而且必须如此：常元皆为载体成员的公式，内层世界可以解读；点名了 `L` 的任意元素的公式则不然，而桥那一章对此已有说明。故下面两条定理陈述在同一个载体上，而这本来也是使用者所需要的实例化：某层处的诸码，在同一层之上被满足。
 <!--/-->
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
@@ -481,7 +491,6 @@ module _ (A : S) where
 ```
 </div>
 </details>
-
 
 <!--en-->
 ## Recap

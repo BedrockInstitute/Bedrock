@@ -76,8 +76,15 @@ as part of `make check` and the pre-commit hook `[L0.3]`.
   revocation in PLAN §3 as a repeal of this line.
 - Telescope order: levels first, then assumption parameters, then subject
   parameters (`module L.Choice.Transversal {ℓ : Level} (lem : LEM (ℓ-suc ℓ))`).
-- Imports needed by the telescope go **before** the module header; everything else
-  after it.
+- Imports needed by the telescope go **before** the module declaration, after
+  the title-only trilingual group. Preserve module parameters and their interfaces.
+  These imports are direct prerequisites too. All other project imports form one
+  contiguous Agda fence after the title (unparameterized modules), or after the
+  parameterized declaration. No Cubical imports belong in that block. Cubical
+  imports remain in the body, interleaved with their mathematical explanation.
+  `Origin` is the explicit result-registry exception: its public project
+  re-exports follow each theorem's trilingual statement and remain visible.
+  It still uses the standard OPTIONS/module/title opening.
 - **Just-in-time introduction** (owner ruling, 2026-07-17): every definition lives in
   the chapter where it is first motivated, never earlier. The hubs in particular are
   **pure re-export surfaces** and define nothing of their own (so `_^_` belongs to
@@ -141,7 +148,7 @@ as part of `make check` and the pre-commit hook `[L0.3]`.
   the **structure catalog** is the namespace tree, derived
   automatically and never hand-maintained. Namespace membership is decided by
   subject; reading order follows mathematical prerequisites and coherent learning
-  units. An explicit preview such as Milestones may precede its proof chapters,
+  units. An explicit preview such as Origin may precede its proof chapters,
   but the instructional sequence must not silently rely on unread chapters.
 
 ## 3. Naming
@@ -262,6 +269,15 @@ symbol / reading / layer / defining chapter / input sequence.
 
 ## 6. Layout and proof organization
 
+Write `private module` on one line, for both submodule bodies and module aliases.
+Do not put `private` in a separate fence above a folded declaration. When splitting
+a private block with several members, make each leading module individually
+private and retain a private block around the other members. Multiline alias
+arguments must remain indented past the `module` token after `private`; use a
+single-line `private module … where` header to allow ordinary body indentation.
+The `private-module` lint check applies to the whole library's concatenated Agda
+code stream, including declarations separated by literary text.
+
 - Type signatures aligned on `:`. Put constructor glosses in the prose before
   the code fence; no comments belong inside an Agda fence.
 - End every Agda code fence immediately after its final code line. Keep the
@@ -305,15 +321,33 @@ skippable:
 
 ## 8. The literate chapter template (provisional)
 
-Every master follows this shape (prose in `<!--en--> / <!--zh-->` markers per
+Every master follows this shape (prose in `<!--en--> / <!--zh--> / <!--ja-->` markers per
 STYLE-i18n; code fences are language-neutral and English-only):
 
-1. `# Title`, then an opening block: what this chapter proves, why the reader
-   should care, and where it sits in the part's arc (one to three paragraphs).
+1. For an unparameterized module, a first Agda fence contains exactly OPTIONS and
+   `module ModuleName where`. Then comes a title-only `en`/`zh`/`ja` group and
+   one fence containing all project imports. For a parameterized module, the first
+   fence contains only OPTIONS; the title is followed by necessary telescope
+   imports, complete trilingual parameter exposition, the complete module
+   declaration in its own fence, and the remaining project imports in one fence.
+   Then comes the opening exposition: what this chapter
+   proves, why the reader should care, and where it sits in the part's arc.
+   `check-chapter-framework.py` enforces this layout through the shared
+   `chapter_structure.py` parser. Header/import fences are boilerplate, exempt
+   from the short-fence and preceding-exposition requirements. Body fences are not.
+   On the site, the title exposes OPTIONS and an unparameterized declaration.
+   Parameter exposition and parameterized declarations remain ordinary body content;
+   direct-prerequisite titles expose actual compiler-highlighted imports,
+   including necessary pre-module imports. The plain Markdown keeps the code.
+   In `Origin`, only the header is hidden: theorem re-export blocks are body
+   code, each preceded by its statement and followed by its own `∎`.
 2. **Prose leads, code follows** (owner ruling, 2026-07-17, reversing the same-day
    code-first ruling): each code block is immediately preceded by the passage that
    explains it, one passage per block (one import statement per block in a hub).
-   Follow-up remarks may trail a block, but a block never appears unannounced.
+   Follow-up remarks may trail a block. Except for the opening boilerplate just
+   described, a block never appears unannounced. Parameter declarations require
+   their preceding exposition, but an indivisible telescope is exempt from the
+   five-line fence limit.
 3. `##` sections in the order: motivation and informal picture, definitions,
    statements, proof development, recap. Small chapters may merge sections; the
    recap (what was established, what it feeds) is never skipped.

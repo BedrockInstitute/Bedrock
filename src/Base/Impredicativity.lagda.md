@@ -1,30 +1,36 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+module Base.Impredicativity where
+```
+
 <!--en-->
 # Impredicativity
+<!--zh-->
+# 非直谓性
+<!--ja-->
+# 非可述性
+<!--/-->
+
+```agda
+open import Base.Prelude
+```
+
+<!--en-->
 
 A predicative foundation does not allow quantification within a definition over a totality that already contains the object being defined. Cubical Agda has such a foundation, whereas the set theory formalized in this book contains impredicative constructions. This chapter therefore states the extra conditions needed for those constructions as explicit assumptions, without changing the foundation of the host.
 
 A predicative foundation can accommodate impredicative assumptions just as intuitionistic logic can explicitly assume classical principles. The converse does not hold: once the stronger principles are built into the foundation, later results no longer reveal which of them they actually require. We therefore retain Cubical Agda's predicative foundation and name every impredicative condition at the point where it is used.
 <!--zh-->
-# 非直谓性
 
 直谓主义数学基础不允许在一个定义中量化某个已经包含待定义对象的总体。Cubical Agda 建立在这样的基础之上，而本书所要形式化的集合论包含非直谓的构造。为了在直谓式的宿主中准确说明这些构造需要什么，本章专门提出一组接口：它们不改变宿主本身，而是把开展非直谓数学所需的额外条件明确列为假设。
 
 直谓主义数学基础可以容纳这样的非直谓假设，正如直觉主义逻辑可以明确加入经典逻辑原理；反过来却不成立，因为一旦基础本身预先采用了更强的原则，就无法再分辨后续结果究竟依赖哪些额外假设。因此，本书保留 Cubical Agda 的直谓式基础，并在需要非直谓性时，通过本章的接口逐项说明所用的条件。
 <!--ja-->
-# 非可述性
 
 直謂的な基礎では、一つの定義の中で、定義される対象をすでに含む全体にわたって量化することを認めない。Cubical Agda はこのような基礎の上にあるが、本書で形式化する集合論には非可述的な構成が含まれる。そこで本章では、ホストの基礎そのものを変えずに、それらの構成に必要な追加条件を明示的な仮定として述べる。
 
 直謂的な基礎が非可述的な仮定を受け入れられることは、直観主義論理が古典論理の原理を明示的に仮定できることに似ている。逆は成り立たない。強い原理を初めから基礎に組み込めば、後の結果がそのどれに依存するかを区別できなくなるからである。本書は Cubical Agda の直謂的な基礎を保ち、非可述性が必要な箇所で条件を一つずつ明記する。
 <!--/-->
-
-```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-module Base.Impredicativity where
-
-open import Base.Prelude
-```
 
 <!--en-->
 The issue appears in the universe levels. All propositions whose [underlying types]{.term-ref #underlying-type} lie in `Type ℓ`{.Agda} form `hProp ℓ`{.Agda}, but this proposition universe as a whole belongs to `Type (ℓ-suc ℓ)`{.Agda}. A proposition obtained by quantifying over all of `hProp ℓ`{.Agda} need not fit at level `ℓ`{.Agda}.
@@ -73,6 +79,8 @@ hasSize : ∀ {ℓ₁} (ℓ₂ : Level) → hProp ℓ₁ → Type (ℓ-max ℓ�
 hasSize ℓ₂ P = Σ[ Q ∈ hProp ℓ₂ ] (⟨ P ⟩ ≃ ⟨ Q ⟩)
 ```
 
+∎
+
 <!--en-->
 Neither level has to be larger than the other. In the applications below `ℓ₁`{.Agda} is usually the model's truth-value level and `ℓ₂`{.Agda} its indexing level, but the definition itself allows any two levels. The name "propositional resizing" refers to replacing a proposition by a type-equivalent representative at the chosen target level, rather than changing the universe annotation of the original proposition.
 <!--zh-->
@@ -94,6 +102,8 @@ Resizing : ∀ ℓ₁ ℓ₂ → Type (ℓ-max (ℓ-suc ℓ₁) (ℓ-suc ℓ₂)
 Resizing ℓ₁ ℓ₂ = (P : hProp ℓ₁) → hasSize ℓ₂ P
 ```
 
+∎
+
 <!--en-->
 ## [Ω-resizing]{.term-intro #proposition-universe-resizing}
 
@@ -112,6 +122,8 @@ Resizing ℓ₁ ℓ₂ = (P : hProp ℓ₁) → hasSize ℓ₂ P
 ΩResizing : ∀ ℓ₁ ℓ₂ → Type (ℓ-max (ℓ-suc ℓ₁) (ℓ-suc ℓ₂))
 ΩResizing ℓ₁ ℓ₂ = Σ[ Ω ∈ Type ℓ₂ ] (hProp ℓ₁ ≃ Ω)
 ```
+
+∎
 
 <figure class="book-diagram type-comparison resizing-comparison" id="fig-resizing-comparison" aria-describedby="fig-resizing-comparison-caption">
 <section class="diagram-panel resizing-case">
@@ -285,7 +297,7 @@ To turn the whole-universe equivalence into a representative for each propositio
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module CodedTruth {ℓ₁ ℓ₂} (Ω : Type ℓ₂) (e : hProp ℓ₁ ≃ Ω) where
+private module CodedTruth {ℓ₁ ℓ₂} (Ω : Type ℓ₂) (e : hProp ℓ₁ ≃ Ω) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -315,6 +327,8 @@ Name the forward map of `e`{.Agda} by `c`{.Agda}. Then `c P`{.Agda} is the code 
   codedTruth : hProp ℓ₁ → hProp ℓ₂
   codedTruth P = (c ⊤ ≡ c P) , isOfHLevelRespectEquiv 2 e isSetHProp _ _
 ```
+
+∎
 
 <!--en-->
 The band in `Ω`{.Agda} depicts paths with endpoints `c(⊤)`{.Agda} and `c(P)`{.Agda}. Click it to unfold the path family into the second type space, with whole paths represented as points. The illustrated `q`{.Agda} and `r`{.Agda} presuppose that `P`{.Agda} has a proof; the equivalence with `⟨ P ⟩`{.Agda} holds without this assumption.
@@ -474,6 +488,8 @@ It remains to construct the two maps.
     from : ⟨ codedTruth P ⟩ → ⟨ P ⟩
     from q = subst ⟨_⟩ (invEq (congEquiv e) q) tt*
 ```
+
+∎
 
 </div>
 </details>

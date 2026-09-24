@@ -1,34 +1,18 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # Coding formulas over the constructible model
-
-An element of the constructible model `L` is not a bare set: it is an ambient set of the hierarchy `V ℓ` together with a proof that the set is constructible. So when a first-order formula is evaluated in `L`, its quantifiers range over such pairs, while the set-coded facts one actually wants, membership of a Kuratowski pair in a graph, say, are facts about the underlying sets. This chapter builds the bridge between the two readings.
-
-The bridge has two directions. Projecting an entry outward directly discards its constructibility certificate, while transferring a bounded reader uses the absoluteness guaranteed by transitivity of `L`. Reading inward requires a witness inside the model: from a proof that a pair belongs to a constructible graph, transitivity supplies the constructibility certificate that makes the pair an element of `L`.
-
-On top of the pair reader the chapter assembles the vocabulary of functions-as-graphs, and it is worth seeing that the clauses are logically independent. Graph application only asserts that a given ordered pair belongs to a graph. Single-valuedness says that an argument determines at most one value; it says nothing about which arguments have values. The exact-domain clause and the range restriction each constrain one further aspect. And none of these forbids a candidate graph from carrying extra elements that are not pairs at all, since these three conditions speak only about pair-shaped members; a fourth clause, that every member is a pair of an index and a value, excludes that junk. Together they form `envOverAt`, a predicate on one candidate graph relative to a domain `d` and a range `B`; it says when a given set is an environment over `d` into `B`, and does not construct the set of all environments.
-
-The second half turns to coding. Ordered pairs and numerals can be built inside `L`, and each projects to its ambient counterpart. Since every code is a tag paired with a payload, each internal code projects to the ambient code of the formula whose constants have been projected; this compatibility is what lets the ambient readers of the earlier sections analyze codes built inside the model. A closing observation is that the whole environment description depends on its assignment only through three projected sets, so it transfers unchanged to any other assignment presenting the same graph, domain, and range; and when a code is known to be a pair, transitivity of `L` packages its two components into one constructible set.
 <!--zh-->
 # 可构造模型上的公式符号化
-
-可构造模型 `L` 的元素不是裸集合：它是一个层级 `V ℓ` 中的集合，连同「该集合可构造」的证明。于是在 `L` 中求值一条一阶公式时，量词遍历的是这样的对，而人们真正想要的集合编码事实，比如某个 Kuratowski 对属于某个图，却是关于底层集合的事实。本章就在这两种读法之间架桥。
-
-桥有两个方向。把模型元素向外投影时，可直接舍去其可构造性证书；转移有界读式时，则使用由 `L` 的传递性保证的绝对性。向内读需要在模型中给出见证：由一个对属于可构造图的证明，传递性为该对提供可构造性证书，使它成为 `L` 的元素。
-
-在对读式之上，本章逐步建立「函数即图」的数学描述，值得注意这些条款在逻辑上各自独立。图取值只断言某个给定的有序对属于该图。单值性说一个自变量至多决定一个取值，却不涉及哪些自变量有取值。恰当定义域与取值限制各自再约束一个侧面。而且以上三条条件都不禁止候选图携带并非有序对的额外成员，因为它们只谈及对形状的成员；第四条，即每个成员都是「指标与取值」的对，把这些冗余排除在外。合在一起便是 `envOverAt`：一个相对于定义域 `d` 与值域 `B`、施于单个候选图的谓词；它刻画一个给定的集合何时是 `d` 之上取值于 `B` 的环境，并不构造全体环境的集合。
-
-后半章转向编码。有序对与数码都能在 `L` 内部造出，且各自投影到其周遭对应物。由于每个码都是「标签配载荷」，每个内部码都投影为「常元被投影后的公式」的周遭码；正是这一相容性，使层级一侧的读式能够分析造在模型内部的码。末尾还有两个观察：整个环境描述对赋值的依赖只通过三个投影后的集合，故可原样迁移到呈现同样图、定义域与值域的任何其他赋值；而当已知一个码是对时，`L` 的传递性把它的两个分量收进一个可构造集合。
 <!--ja-->
 # 構成可能モデル上の論理式の符号化
-
-構成可能モデル `L` の要素は裸の集合ではない。それは階層 `V ℓ` の集合に、「その集合が構成可能である」という証明を添えたものである。したがって `L` の中で一階の論理式を評価するとき、量化子はこのような対を渡る。一方、本当に欲しい集合の符号化の事実、たとえばある Kuratowski 対があるグラフに属することは、底にある集合についての事実である。本章はこの二つの読みの間に橋を架ける。
-
-橋には二つの方向がある。模型要素を外へ射影するときは構成可能性の証明を直接忘れられるが、有界な読み式の移送には `L` の推移性が保証する絶対性を使う。内向きには模型内部の証人が必要である。対が構成可能なグラフに属するという証明から、推移性がその対の構成可能性の証明を与え、`L` の要素にする。
-
-対の読み式の上に、本章は「関数をグラフとして」という語彙を積み上げる。ここで、これらの条項が論理的に独立していることを見ておく価値がある。グラフの適用は、与えられた順序対がグラフに属すると主張するだけである。一価性は、一つの引数が多くとも一つの値を決めると言うだけで、どの引数が値を持つかには何も言わない。ちょうどの定義域と値域の制限は、それぞれさらなる側面を制約する。しかもこれら三つの条件はどれも、対の形をした要素についてしか語らないため、対でない余計な要素を候補のグラフが持つのを禁じない。第四の条項、すべての要素が添字と値の対であること、がその余計なものを排除する。合わせたものが `envOverAt` である。これは定義域 `d` と値域 `B` に対する、一つの候補グラフについての述語であり、ある集合がいつ `d` の上、`B` への環境であるかを言うものであって、環境の全体の集合を構成するものではない。
-
-後半は符号化に向かう。順序対と数項は `L` の内部で作ることができ、それぞれ周囲の対応物へ射影される。すべての符号はタグとペイロードの対なので、内部の符号はどれも、定数を射影した論理式の周囲の符号へ射影される。この相容性こそ、階層側の読み式が、模型の内部で作られた符号を分析できる理由である。最後に二つの観察を添える。環境の記述全体が割り当てに依存するのは三つの射影された集合を通してだけであり、同じグラフ、定義域、値域を提示するどんな割り当てにもそのまま移る。また、ある符号が対であると分かれば、`L` の推移性がその二つの成分を一つの構成可能集合にまとめる。
 <!--/-->
+
+```agda
+open import Base.Prelude
+```
 
 <!--en-->
 The two worlds sit at one universe level `ℓ`. An assignment for the inner language is a vector of elements of the carrier `S`, each an ambient set with its constructibility certificate; an ambient fact, by contrast, is stated about the underlying sets obtained by projecting every entry with `fst`. Every adequacy statement of this chapter takes the form of an identification between a satisfaction judgment at such a paired assignment and a fact about the projected one, and the projections must be handled once, correctly, before any set theory can happen.
@@ -39,14 +23,58 @@ The two worlds sit at one universe level `ℓ`. An assignment for the inner lang
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-open import Base.Prelude
-
 module L.Coding.Model {ℓ : Level} where
-
-open import FOL.ZFStructure using ( module hPropStructure )
 ```
+
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax
+  using ( Term; Formula; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇
+        ; ∀̇_; ∀̇∈; ∃̇_; ∃̇∈ )
+open import FOL.Manipulation.ConstantMapping using ( mapTm; mapFo )
+import FOL.Absoluteness
+import FOL.Coding
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Coding {ℓ} using ( pr; pr-inj; #-inj′; module VCode )
+open import V.Model {ℓ} using ( pair-singleton )
+open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
+open import L.Absoluteness {ℓ} using ( liftFo; transferFo )
+open import L.Coding.PairFormulas {ℓ}
+  using ( prAt; Δ₀-prAt; prAt-adequate; ∈pair-introL; ∈pair-introR )
+open import L.Axioms.Numerals {ℓ}
+  using ( numeralL; numeralL-fst; pairʟ; pairʟ-fst )
+```
+
+<!--en-->
+
+An element of the constructible model `L` is not a bare set: it is an ambient set of the hierarchy `V ℓ` together with a proof that the set is constructible. So when a first-order formula is evaluated in `L`, its quantifiers range over such pairs, while the set-coded facts one actually wants, membership of a Kuratowski pair in a graph, say, are facts about the underlying sets. This chapter builds the bridge between the two readings.
+
+The bridge has two directions. Projecting an entry outward directly discards its constructibility certificate, while transferring a bounded reader uses the absoluteness guaranteed by transitivity of `L`. Reading inward requires a witness inside the model: from a proof that a pair belongs to a constructible graph, transitivity supplies the constructibility certificate that makes the pair an element of `L`.
+
+On top of the pair reader the chapter assembles the vocabulary of functions-as-graphs, and it is worth seeing that the clauses are logically independent. Graph application only asserts that a given ordered pair belongs to a graph. Single-valuedness says that an argument determines at most one value; it says nothing about which arguments have values. The exact-domain clause and the range restriction each constrain one further aspect. And none of these forbids a candidate graph from carrying extra elements that are not pairs at all, since these three conditions speak only about pair-shaped members; a fourth clause, that every member is a pair of an index and a value, excludes that junk. Together they form `envOverAt`, a predicate on one candidate graph relative to a domain `d` and a range `B`; it says when a given set is an environment over `d` into `B`, and does not construct the set of all environments.
+
+The second half turns to coding. Ordered pairs and numerals can be built inside `L`, and each projects to its ambient counterpart. Since every code is a tag paired with a payload, each internal code projects to the ambient code of the formula whose constants have been projected; this compatibility is what lets the ambient readers of the earlier sections analyze codes built inside the model. A closing observation is that the whole environment description depends on its assignment only through three projected sets, so it transfers unchanged to any other assignment presenting the same graph, domain, and range; and when a code is known to be a pair, transitivity of `L` packages its two components into one constructible set.
+<!--zh-->
+
+可构造模型 `L` 的元素不是裸集合：它是一个层级 `V ℓ` 中的集合，连同「该集合可构造」的证明。于是在 `L` 中求值一条一阶公式时，量词遍历的是这样的对，而人们真正想要的集合编码事实，比如某个 Kuratowski 对属于某个图，却是关于底层集合的事实。本章就在这两种读法之间架桥。
+
+桥有两个方向。把模型元素向外投影时，可直接舍去其可构造性证书；转移有界读式时，则使用由 `L` 的传递性保证的绝对性。向内读需要在模型中给出见证：由一个对属于可构造图的证明，传递性为该对提供可构造性证书，使它成为 `L` 的元素。
+
+在对读式之上，本章逐步建立「函数即图」的数学描述，值得注意这些条款在逻辑上各自独立。图取值只断言某个给定的有序对属于该图。单值性说一个自变量至多决定一个取值，却不涉及哪些自变量有取值。恰当定义域与取值限制各自再约束一个侧面。而且以上三条条件都不禁止候选图携带并非有序对的额外成员，因为它们只谈及对形状的成员；第四条，即每个成员都是「指标与取值」的对，把这些冗余排除在外。合在一起便是 `envOverAt`：一个相对于定义域 `d` 与值域 `B`、施于单个候选图的谓词；它刻画一个给定的集合何时是 `d` 之上取值于 `B` 的环境，并不构造全体环境的集合。
+
+后半章转向编码。有序对与数码都能在 `L` 内部造出，且各自投影到其周遭对应物。由于每个码都是「标签配载荷」，每个内部码都投影为「常元被投影后的公式」的周遭码；正是这一相容性，使层级一侧的读式能够分析造在模型内部的码。末尾还有两个观察：整个环境描述对赋值的依赖只通过三个投影后的集合，故可原样迁移到呈现同样图、定义域与值域的任何其他赋值；而当已知一个码是对时，`L` 的传递性把它的两个分量收进一个可构造集合。
+<!--ja-->
+
+構成可能モデル `L` の要素は裸の集合ではない。それは階層 `V ℓ` の集合に、「その集合が構成可能である」という証明を添えたものである。したがって `L` の中で一階の論理式を評価するとき、量化子はこのような対を渡る。一方、本当に欲しい集合の符号化の事実、たとえばある Kuratowski 対があるグラフに属することは、底にある集合についての事実である。本章はこの二つの読みの間に橋を架ける。
+
+橋には二つの方向がある。模型要素を外へ射影するときは構成可能性の証明を直接忘れられるが、有界な読み式の移送には `L` の推移性が保証する絶対性を使う。内向きには模型内部の証人が必要である。対が構成可能なグラフに属するという証明から、推移性がその対の構成可能性の証明を与え、`L` の要素にする。
+
+対の読み式の上に、本章は「関数をグラフとして」という語彙を積み上げる。ここで、これらの条項が論理的に独立していることを見ておく価値がある。グラフの適用は、与えられた順序対がグラフに属すると主張するだけである。一価性は、一つの引数が多くとも一つの値を決めると言うだけで、どの引数が値を持つかには何も言わない。ちょうどの定義域と値域の制限は、それぞれさらなる側面を制約する。しかもこれら三つの条件はどれも、対の形をした要素についてしか語らないため、対でない余計な要素を候補のグラフが持つのを禁じない。第四の条項、すべての要素が添字と値の対であること、がその余計なものを排除する。合わせたものが `envOverAt` である。これは定義域 `d` と値域 `B` に対する、一つの候補グラフについての述語であり、ある集合がいつ `d` の上、`B` への環境であるかを言うものであって、環境の全体の集合を構成するものではない。
+
+後半は符号化に向かう。順序対と数項は `L` の内部で作ることができ、それぞれ周囲の対応物へ射影される。すべての符号はタグとペイロードの対なので、内部の符号はどれも、定数を射影した論理式の周囲の符号へ射影される。この相容性こそ、階層側の読み式が、模型の内部で作られた符号を分析できる理由である。最後に二つの観察を添える。環境の記述全体が割り当てに依存するのは三つの射影された集合を通してだけであり、同じグラフ、定義域、値域を提示するどんな割り当てにもそのまま移る。また、ある符号が対であると分かれば、`L` の推移性がその二つの成分を一つの構成可能集合にまとめる。
+<!--/-->
+
+
 
 <!--en-->
 Adequacy statements compare truth values, so the ambient facts are packaged as propositions. In particular, equality of two sets in the hierarchy is a proposition because the hierarchy is an h-set. Paths and congruence then align these packaged equalities with the projected lookups, while the substantive set-theoretic inputs, absoluteness, pairing, and numeral facts, enter in their own lemmas.
@@ -56,14 +84,6 @@ Adequacy statements compare truth values, so the ambient facts are packaged as p
 妥当性の主張は真理値を比較するので、周囲の事実は命題としてまとめられる。特に階層の二集合の等しさは、階層が h-集合であるため命題である。パスと合同性がこの等しさを射影された参照とそろえ、絶対性、対、数項に関する集合論的内容はそれぞれの補題から入る。
 <!--/-->
 
-```agda
-open import FOL.Syntax
-  using ( Term; Formula; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇
-        ; ∀̇_; ∀̇∈; ∃̇_; ∃̇∈ )
-open import FOL.Manipulation.ConstantMapping using ( mapTm; mapFo )
-import FOL.Absoluteness
-```
-
 <!--en-->
 Transitivity of `L` enters in two related ways. It underlies the Δ₀ absoluteness used to transfer bounded readers, and it constructs model witnesses from members of constructible sets. A direct projection needs no new witness, but the formula transfer that justifies the outward reading still rests on this transitivity theorem.
 <!--zh-->
@@ -71,14 +91,6 @@ Transitivity of `L` enters in two related ways. It underlies the Δ₀ absoluten
 <!--ja-->
 `L` の推移性は二つの関連した仕方で使われる。有界な読み式を移す Δ₀ 絶対性の基礎となり、また構成可能集合の要素から模型内の証人を作る。直接の射影に新しい証人は要らないが、論理式を外向きに読む移送定理はこの推移性に依存する。
 <!--/-->
-
-```agda
-import FOL.Coding
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-open import V.Coding {ℓ} using ( pr; pr-inj; #-inj′; module VCode )
-open import V.Model {ℓ} using ( pair-singleton )
-open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
-```
 
 <!--en-->
 The outward direction for bounded formulas is supplied by absoluteness: a Δ₀ formula about the hierarchy, whose constants name constructible sets, has the same meaning when read in `L`, and the two readings agree by a path. The pair reader is of exactly this kind, so its satisfaction in the model is identified with an equation between projected sets. The inward direction has no general shortcut; it is supplied per entry by an explicit construction of a witness, and the pair case is the one this chapter needs.
@@ -88,14 +100,6 @@ The outward direction for bounded formulas is supplied by absoluteness: a Δ₀ 
 有界論理式の外向きの方向は絶対性が担う。階層についての Δ₀ 論理式で、定数が構成可能な集合を名指すものは、`L` の中で読んでも意味が変わらず、二つの読みは一つの経路として一致する。対の読み式はまさにこの種の式なので、模型の中での充足は射影された集合の間の等式と同一視される。内向きの方向に一般的な近道はなく、項目ごとに証明を明示的に構成するしかない。本章が必要とするのは対の場合である。
 <!--/-->
 
-```agda
-open import L.Absoluteness {ℓ} using ( liftFo; transferFo )
-open import L.Coding.PairFormulas {ℓ}
-  using ( prAt; Δ₀-prAt; prAt-adequate; ∈pair-introL; ∈pair-introR )
-open import L.Axioms.Numerals {ℓ}
-  using ( numeralL; numeralL-fst; pairʟ; pairʟ-fst )
-```
-
 <!--en-->
 Some existence statements in the chapter are deliberately weak. When a graph member is said to exist, the claim is merely that some entry exists, not a chosen one: such statements live in propositional truncation and can be eliminated only into proposition-valued targets. Keeping truncated existence distinct from an explicit witness matters in both directions of every adequacy proof, since satisfaction of an existential formula always has the truncated shape.
 <!--zh-->
@@ -103,8 +107,6 @@ Some existence statements in the chapter are deliberately weak. When a graph mem
 <!--ja-->
 本章の存在主張の一部は、意図的に弱く作られている。グラフに項目が存在すると言うとき、主張するのはある項目が単に存在することであって、どれかを選び出すことではない。このような主張は命題的截断の中に住み、命題値の対象へしか消去できない。截断された存在と明示的な証人を区別しておくことは、すべての妥当性の証明の両方向で重要である。存在の公式の充足は常に截断された形を持つからである。
 <!--/-->
-
-
 
 <!--en-->
 Truth values are propositions at level `ℓ-suc ℓ`: a formula does not evaluate to a boolean but to an `hProp`, packaging an underlying type with the proof that it is a proposition. The carrier `S` of the inner structure is thereby fixed as well: its elements are exactly the pairs of an ambient set and a constructibility certificate. Throughout what follows, `γ ⊨ φ` means satisfaction in the constructible model, and `⟦ t ⟧ γ` is an element of `S`, a set with its certificate.
@@ -130,7 +132,6 @@ One more structural fact shapes the statements: every reader of this chapter is 
 <!--/-->
 
 ```agda
-
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
 open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ ; ⟦_⟧ᵐ to ⟦_⟧ )
 ```
@@ -204,7 +205,6 @@ The adequacy statement equates, by a single path, satisfaction of the reader in 
 <!--/-->
 
 ```agda
-
 prAtL-adequate : ∀ {n} (q u v : Fin n) (γ : S ^ n)
   → (γ ⊨ prAtL q u v)
   ≡ PairIs (fst (lookup q γ)) (pr (fst (lookup u γ)) (fst (lookup v γ)))
@@ -427,11 +427,9 @@ The two directions are stated for a fixed graph slot `f` and a fixed environment
 二つの方向は、固定されたグラフのスロット `f` と固定された環境 `γ` に対して述べられるので、局所的な述語が外部の意味を一度記録する。`Holds x y` は、`x` と `y` の射影された対がグラフの底にある集合に属することを言い、これは `appAt-adequate` を一度適用して得られる形そのものである。続く二つの妥当性の実例は、どちらの含意を読んでいるのかを固定する。`at` は値 `y` を持つ対のためのもので、`at'` は `y'` を持つ対のためのものである。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-
 module _ {n : ℕ} (f : Fin n) (γ : S ^ n) where
 ```
 </summary>
@@ -511,7 +509,6 @@ The introduction direction `svAt-in` mirrors the extraction, with the transports
 </div>
 </details>
 
-
 <!--en-->
 ## The domain
 
@@ -574,11 +571,9 @@ The direction lemmas are stated for a fixed graph slot `f`, a fixed candidate `d
 方向の補題は、固定されたグラフのスロット `f`、候補 `d`、環境 `γ` に対して述べられる。補助の `step` は、量化された本体の妥当性のパスを一度固定する。模型の要素 `x` において、「値を持つ」公式の充足は、射影された `x` と `y` の対がグラフに属するような `y` の切り詰められた存在へのパスである。以下の輸送はすべてこの一本のパスを通る。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-
 module _ {n : ℕ} (f d : Fin n) (γ : S ^ n) where
 ```
 </summary>
@@ -617,7 +612,6 @@ The extraction `domAt-in` runs the other way, and keeps the truncation. Domain m
 <!--/-->
 
 ```agda
-
   domAt-in : ⟨ γ ⊨ domAt f d ⟩ → (x : S) → ⟨ fst x ∈ fst (lookup d γ) ⟩
            → ∥ (Σ[ y ∈ S ] ⟨ pr (fst x) (fst y) ∈ fst (lookup f γ) ⟩) ∥₁
   domAt-in h x m = subst ⟨_⟩ (step x) (h x .snd m)
@@ -655,7 +649,6 @@ The assembly is exactly the shape of the conjunction of implications under the u
 ```
 </div>
 </details>
-
 
 <!--en-->
 ## The pair, inside the model
@@ -762,7 +755,6 @@ With the two injectivities in hand, the generic coding scheme instantiates at th
 <!--/-->
 
 ```agda
-
 module LCode = FOL.Coding {ℓ-suc ℓ} 𝒮ʟ prʟ prʟ-inj numeralL numeralL-inj
 
 tagBridge : (k : ℕ) (x : S) → fst (LCode.mkTag k x) ≡ VCode.mkTag k (fst x)
@@ -949,7 +941,6 @@ The reverse direction takes the per-member statement as a hypothesis. For every 
 <!--/-->
 
 ```agda
-
 pairsIn-in : ∀ {n} (e d B : Fin n) (γ : S ^ n)
            → ((s : S) → ⟨ fst s ∈ fst (lookup e γ) ⟩
               → ∥ (Σ[ u ∈ S ] (Σ[ v ∈ S ]
@@ -992,13 +983,10 @@ envOverAt e d B =
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-
 module _ {n : ℕ} (e d B : Fin n) (γ : S ^ n) (h : ⟨ γ ⊨ envOverAt e d B ⟩) where
 ```
 </summary>
 <div class="submodule-fold-content">
-
-
 
 <!--en-->
 Each projection is just the corresponding component of the nested pair that the satisfaction of a fourfold conjunction is. The first is single-valuedness of e, the second the domain clause relating e and d, the third the value restriction toward B, and the fourth the pairs clause itself. With these in hand, an argument that needs only one aspect of environment-hood can take it without rebuilding the conjunction, and an argument that constructs an environment can be checked conjunct by conjunct.
@@ -1031,7 +1019,6 @@ The four projections also expose why the definition is modular: uniqueness, doma
 ```
 </div>
 </details>
-
 
 <!--en-->
 Every reader built so far inspects only the underlying sets that the assignment places at its indices: a satisfaction claim about a graph, a domain, or a value set is always stated after projecting the looked-up entries by `fst`. It follows that the description of an environment depends extensionally on just three sets, the projected graph, the projected domain, and the projected value set, and on nothing else about the assignment. So if two assignments, possibly of different arities, place the same three sets at the indices the description consults, the description holds at one exactly when it holds at the other.

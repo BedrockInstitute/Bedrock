@@ -1,16 +1,18 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # The cumulative hierarchy models ZF and ZFC
-
-This chapter realizes each axiom of ZF inside the cumulative hierarchy at one fixed universe level `ℓ`. For each axiom asserting the existence of a set, the task is to exhibit that set together with a proof that its membership relation is, as a path of truth values, exactly the required description. The assumptions involved are worth separating at the outset. The stock constructions, namely the empty set, pairing, and union, cost nothing beyond the hierarchy's own set former, and the same is true of replacement, which is read directly off the membership rule of that former. Full separation needs propositional resizing, so that each satisfaction proposition gets a representative one universe down. Power set needs Ω-resizing for propositions, `ΩResizing`{.Agda}. `ΩResizing`{.Agda} presents the higher proposition universe by a low-level type and implies resizing, and the assembled ZF theorem `V⊨ZF`{.Agda} assumes exactly `ΩResizing (ℓ-suc ℓ) ℓ`{.Agda}. The classical convenience theorem `V⊨ZF-fromLEM`{.Agda} derives that package from `LEM (ℓ-suc ℓ)`{.Agda}. For its ZFC part, the theorem `V⊨ZFC`{.Agda} separately assumes choice for set-valued families at `ℓ-suc ℓ`{.Agda}; by Diaconescu's theorem it implies the excluded middle used to obtain the ZF resizing input, and, lowered one universe, it supplies the choice-set axiom. The chapter builds up to these theorems by converting, one axiom at a time, the constructions the hierarchy already provides into the exact shape the axioms demand.
 <!--zh-->
 # 累积层级是 ZF 与 ZFC 的模型
-
-本章在固定的一个宇宙层级 `ℓ` 上，于累积层级内部逐条实现 ZF 的公理。对于要求集合存在的公理，任务是构造这样的集合，并证明其成员关系作为真值的路径恰是该公理所要求的描述。所涉假设值得先分开陈述。层级中已有的构造，即空集、配对与并，只花层级自身集合构造子的代价；替换同样如此，它直接从该构造子的成员规则读出。全分离需要命题换级，使每个满足命题获得低一层宇宙的代表。幂集需要一个命题的命题宇宙换级，即 `ΩResizing`{.Agda}。`ΩResizing`{.Agda} 用低层类型呈现高层命题宇宙，并蕴含命题换级；装配出的 ZF 定理 `V⊨ZF`{.Agda} 恰假设 `ΩResizing (ℓ-suc ℓ) ℓ`{.Agda}。经典便利推论 `V⊨ZF-fromLEM`{.Agda} 则从 `LEM (ℓ-suc ℓ)`{.Agda} 导出该换级包。ZFC 部分另以 `ℓ-suc ℓ`{.Agda} 层的集合值族的选择为假设；由 Diaconescu 定理，它蕴含用于得到 ZF 换级输入的排中律，而降低一层宇宙后又供给选择集公理。本章的工作就是把层级已有的构造逐一转换成公理所要求的精确形状，直至得出这些定理。
 <!--ja-->
 # 累積階層は ZF と ZFC のモデル
-
-本章は、固定した一つの宇宙レベル `ℓ` の上で、累積階層の内側に ZF の各公理を実現する。集合の存在を要求する各公理については、その集合を構成し、所属関係が真理値のパスとして要求された記述にちょうど等しいことを証明する。関係する仮定は初めに区別しておく価値がある。基本的な構成、すなわち空集合、対、和集合は、階層自身の集合構成子の代償しか要らず、置換も同様で、その構成子の所属規則から直接読み取れる。完全な分出には命題リサイズが必要で、各充足命題に一段低い宇宙の代表を与える。冪集合には命題の命題宇宙リサイズ `ΩResizing`{.Agda} が必要である。`ΩResizing`{.Agda} は上位の命題宇宙を低いレベルの型で提示し、命題リサイズを含意する。組み立てられた ZF の定理 `V⊨ZF`{.Agda} はちょうど `ΩResizing (ℓ-suc ℓ) ℓ`{.Agda} を仮定する。古典的な便利のための帰結 `V⊨ZF-fromLEM`{.Agda} は `LEM (ℓ-suc ℓ)`{.Agda} からそのリサイズの束を導く。ZFC の部分では、定理 `V⊨ZFC`{.Agda} がレベル `ℓ-suc ℓ`{.Agda} の集合値族に対する選択を別に仮定する。ディアコネスクの定理により、これは ZF のリサイズ入力を得るための排中律を含意し、一段下げれば選択集合の公理を供給する。本章は、階層がすでに持つ構成を公理の要求する正確な形へ一公理ずつ変換し、これらの定理へ至る。
 <!--/-->
+
+```agda
+open import Base.Prelude
+```
 
 <!--en-->
 The universe accounting is exact and should be read once. The carrier of the model is the hierarchy `S` at level `ℓ`, itself an inhabitant of `Type (ℓ-suc ℓ)`. The truth values serving as the model's equality and membership live in `hProp (ℓ-suc ℓ)`. The assumption `ΩResizing (ℓ-suc ℓ) ℓ` supplies the two forms of size control used below: resizing at that truth level, and a small carrier into which every proposition in `hProp ℓ` can be encoded and recovered. The choice lemma consumes choice for set-valued families at level `ℓ`; the primary ZF theorem assumes `ΩResizing (ℓ-suc ℓ) ℓ`, its classical corollary assumes `LEM (ℓ-suc ℓ)`, and the ZFC theorem assumes `SetChoice (ℓ-suc ℓ)`. So no single uniform level governs every assumption; each principle is taken exactly where its statement makes sense.
@@ -21,15 +23,34 @@ The universe accounting is exact and should be read once. The carrier of the mod
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-open import Base.Prelude
-
 module V.Model {ℓ : Level} where
+```
 
+```agda
 open import Base.Impredicativity
   using ( Resizing; ΩResizing; ΩResizing→Resizing )
+open import Base.Classical using ( LEM; LEM→ΩResizing )
+open import Base.Choice using ( SetChoice; SetChoice→LEM; lowerSetChoice )
+open import FOL.ZFStructure using ( ZFStructure )
+open import FOL.Syntax using ( Formula )
+import FOL.Semantics
+import FOL.ZFModel
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV; regularityV )
+open import V.Smallness {ℓ} using ( separateFromSmall )
 ```
+
+<!--en-->
+
+This chapter realizes each axiom of ZF inside the cumulative hierarchy at one fixed universe level `ℓ`. For each axiom asserting the existence of a set, the task is to exhibit that set together with a proof that its membership relation is, as a path of truth values, exactly the required description. The assumptions involved are worth separating at the outset. The stock constructions, namely the empty set, pairing, and union, cost nothing beyond the hierarchy's own set former, and the same is true of replacement, which is read directly off the membership rule of that former. Full separation needs propositional resizing, so that each satisfaction proposition gets a representative one universe down. Power set needs Ω-resizing for propositions, `ΩResizing`{.Agda}. `ΩResizing`{.Agda} presents the higher proposition universe by a low-level type and implies resizing, and the assembled ZF theorem `V⊨ZF`{.Agda} assumes exactly `ΩResizing (ℓ-suc ℓ) ℓ`{.Agda}. The classical convenience theorem `V⊨ZF-fromLEM`{.Agda} derives that package from `LEM (ℓ-suc ℓ)`{.Agda}. For its ZFC part, the theorem `V⊨ZFC`{.Agda} separately assumes choice for set-valued families at `ℓ-suc ℓ`{.Agda}; by Diaconescu's theorem it implies the excluded middle used to obtain the ZF resizing input, and, lowered one universe, it supplies the choice-set axiom. The chapter builds up to these theorems by converting, one axiom at a time, the constructions the hierarchy already provides into the exact shape the axioms demand.
+<!--zh-->
+
+本章在固定的一个宇宙层级 `ℓ` 上，于累积层级内部逐条实现 ZF 的公理。对于要求集合存在的公理，任务是构造这样的集合，并证明其成员关系作为真值的路径恰是该公理所要求的描述。所涉假设值得先分开陈述。层级中已有的构造，即空集、配对与并，只花层级自身集合构造子的代价；替换同样如此，它直接从该构造子的成员规则读出。全分离需要命题换级，使每个满足命题获得低一层宇宙的代表。幂集需要一个命题的命题宇宙换级，即 `ΩResizing`{.Agda}。`ΩResizing`{.Agda} 用低层类型呈现高层命题宇宙，并蕴含命题换级；装配出的 ZF 定理 `V⊨ZF`{.Agda} 恰假设 `ΩResizing (ℓ-suc ℓ) ℓ`{.Agda}。经典便利推论 `V⊨ZF-fromLEM`{.Agda} 则从 `LEM (ℓ-suc ℓ)`{.Agda} 导出该换级包。ZFC 部分另以 `ℓ-suc ℓ`{.Agda} 层的集合值族的选择为假设；由 Diaconescu 定理，它蕴含用于得到 ZF 换级输入的排中律，而降低一层宇宙后又供给选择集公理。本章的工作就是把层级已有的构造逐一转换成公理所要求的精确形状，直至得出这些定理。
+<!--ja-->
+
+本章は、固定した一つの宇宙レベル `ℓ` の上で、累積階層の内側に ZF の各公理を実現する。集合の存在を要求する各公理については、その集合を構成し、所属関係が真理値のパスとして要求された記述にちょうど等しいことを証明する。関係する仮定は初めに区別しておく価値がある。基本的な構成、すなわち空集合、対、和集合は、階層自身の集合構成子の代償しか要らず、置換も同様で、その構成子の所属規則から直接読み取れる。完全な分出には命題リサイズが必要で、各充足命題に一段低い宇宙の代表を与える。冪集合には命題の命題宇宙リサイズ `ΩResizing`{.Agda} が必要である。`ΩResizing`{.Agda} は上位の命題宇宙を低いレベルの型で提示し、命題リサイズを含意する。組み立てられた ZF の定理 `V⊨ZF`{.Agda} はちょうど `ΩResizing (ℓ-suc ℓ) ℓ`{.Agda} を仮定する。古典的な便利のための帰結 `V⊨ZF-fromLEM`{.Agda} は `LEM (ℓ-suc ℓ)`{.Agda} からそのリサイズの束を導く。ZFC の部分では、定理 `V⊨ZFC`{.Agda} がレベル `ℓ-suc ℓ`{.Agda} の集合値族に対する選択を別に仮定する。ディアコネスクの定理により、これは ZF のリサイズ入力を得るための排中律を含意し、一段下げれば選択集合の公理を供給する。本章は、階層がすでに持つ構成を公理の要求する正確な形へ一公理ずつ変換し、これらの定理へ至る。
+<!--/-->
+
+
 
 <!--en-->
 Formally, what does it mean for the hierarchy to satisfy an axiom? The first-order logic chapters supply the vocabulary. A structure is a carrier that is an h-set, whose equality and membership take truth values, not booleans of a fixed two-element type. A formula is an element of the object language's syntax, and the axiom schemas quantify over its free-variable slots. Satisfaction is a relation that reads a formula at an environment of carrier elements and returns a truth value. The ZF axioms are re-derived one by one in exactly these terms below.
@@ -39,14 +60,6 @@ Formally, what does it mean for the hierarchy to satisfy an axiom? The first-ord
 「階層が公理を満たす」とは形式的にはどういう意味であろうか。一階論理の諸章が語彙を供給する。構造とは h-集合である台のことであり、その等号と所属は、固定された二元型のブール値ではなく真理値を取る。論理式は対象言語の構文の要素であり、公理のスキーマはその自由変数の枠を量化する。充足は、台の要素からなる環境のもとで論理式を読み、真理値を返す関係である。以下では ZF の公理を、まさにこの言葉で一つずつ導き直す。
 <!--/-->
 
-```agda
-open import Base.Classical using ( LEM; LEM→ΩResizing )
-open import Base.Choice using ( SetChoice; SetChoice→LEM; lowerSetChoice )
-open import FOL.ZFStructure using ( ZFStructure )
-open import FOL.Syntax using ( Formula )
-import FOL.Semantics
-```
-
 <!--en-->
 The hierarchy contributes the structure `𝒮ᵥ`{.Agda}: its equality is the path type of the higher inductive type `V ℓ`{.Agda}, and its membership is the hierarchy's native `∈`. Extensionality and regularity for this structure were proved in the chapter on the hierarchy itself and are quoted here rather than reproved. One further tool is carried over from the smallness chapter: the adapter that builds a set from a predicate each of whose values is small. It becomes full separation as soon as resizing supplies the smallness. Throughout, a bi-implication of propositions is converted into the path between their truth values by the standard rewriting `⇔toPath`{.Agda}; almost every specification below ends with that step.
 <!--zh-->
@@ -54,12 +67,6 @@ The hierarchy contributes the structure `𝒮ᵥ`{.Agda}: its equality is the pa
 <!--ja-->
 階層が提供するのは構造 `𝒮ᵥ`{.Agda} である。その等号は高次帰納型 `V ℓ`{.Agda} のパス型であり、所属は階層本来の `∈` である。この構造の外延性と正則性は階層そのものの章で証明済みで、ここでは再証明せずに引用する。さらに小ささの章から一つの道具を持ち越する。各値が小さい述語から集合を作る適合装置で、リサイズが小ささを供給しだい完全な分出になる。全体を通じて、命題の間の双条件は標準の書き換え `⇔toPath`{.Agda} で真理値の間のパスに変えられる。以下の仕様のほとんどすべてがこの一手で終わる。
 <!--/-->
-
-```agda
-import FOL.ZFModel
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV; regularityV )
-open import V.Smallness {ℓ} using ( separateFromSmall )
-```
 
 <!--en-->
 Three general cubical facts shape the proofs to come. An embedding into a type whose equality types are propositions is injective, which matters whenever a recovered index must be shown to be the only possible one. A path between dependent pairs whose second components are propositions is fixed by the paths between first projections. And membership statements about image sets are typically truncated existentials: they are introduced by `∣_∣₁`{.Agda} and eliminated with `rec₁`{.Agda} into proposition-valued targets, while contradictions are handled by the empty type.
@@ -129,7 +136,6 @@ The target of all these conversions is the record `isZFModel`{.Agda}, whose fiel
 <!--/-->
 
 ```agda
-
 module Model = FOL.ZFModel 𝒮ᵥ
 open Model using ( SetOf; _⊆ˢ_; setOf-unique; isZFModel; isZFCModel )
 
@@ -287,14 +293,11 @@ private
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-
 module _ (a : S) (φ : Formula S 2)
          (fc : (x : S) → ⟨ x ∈ˢ a ⟩ → isContr (Σ[ y ∈ S ] ⟨ (y ∷ x ∷ []) ⊨ φ ⟩)) where
 ```
 </summary>
 <div class="submodule-fold-content">
-
-
 
 <!--en-->
 The image is then a direct assembly: `replaceImage` is `sett` over the index type `⟪ a ⟫`, sending each index `m` to the center value that `fc` provides for the member `⟪ a ⟫↪ m`. Its specification says that membership in `replaceImage` equals the truth value obtained by disjoining `(x ∈ a) ⊓ φ(y, x)` over all `x`, which is the replacement schema in semantic form: `y` belongs to the image exactly when it arises as the value of `φ` at some member of `a`. As elsewhere in the chapter, `⇔toPath` converts the two implications into the path of truth values the specification asks for.
@@ -305,7 +308,6 @@ The image is then a direct assembly: `replaceImage` is `sett` over the index typ
 <!--/-->
 
 ```agda
-
   replaceImage : S
   replaceImage = sett ⟪ a ⟫ (λ m → fc (⟪ a ⟫↪ m) (memb a m) .fst .fst)
 
@@ -360,7 +362,6 @@ The recovered index still has to become membership in the image, and this is the
 ```
 </div>
 </details>
-
 
 <!--en-->
 ## The numeral chain and ω
@@ -565,7 +566,6 @@ The zero equation is the easier one. If `z` were a member of the chain's zeroth 
 第 0 の方程式のほうが簡単である。もし `z` が列の第 0 段階の元なら、`q zero` に沿って輸送すればライブラリの空集合の元になる。`∈∈ₛ` による交換を経て、`∅-empty` が小さな所属の形でそれを反駁し、結果は空の型の要素である。主張されない点にも注意してほしい。モデルの数項そのものの空性を証明するのではなく、そこへの所属が矛盾を導くことだけを示す。固定方程式が要求するのはまさにそれである。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -645,7 +645,6 @@ The second case handles the right disjunct, and this is where the fact that a su
 </div>
 </details>
 
-
 <!--en-->
 ## Assumptions for the remaining axioms
 
@@ -680,7 +679,6 @@ The power-set construction now extracts what it needs directly from `ωr`{.Agda}
 冪集合の構成は、必要なデータを `ωr`{.Agda} から直接取り出す。それが与える低いレベルの型を `Ω`、上位の命題宇宙から `Ω` への[型同値]{.term-ref #type-equivalence}を `e` と書く。`e` の順写像は上位の命題を `Ω` の要素へ符号化する。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -690,7 +688,6 @@ module Power (ωr : ΩResizing (ℓ-suc ℓ) ℓ) where
 <div class="submodule-fold-content">
 
 ```agda
-
   private
     Ω : Type ℓ
     Ω = ωr .fst
@@ -788,7 +785,6 @@ The power set operation is itself a `sett`: the index type is the function type 
 <!--/-->
 
 ```agda
-
   𝒫V : S → S
   𝒫V a = sett (⟪ a ⟫ → Ω) (F a)
 
@@ -903,7 +899,6 @@ The specification `power-spec` composes two equalities of truth values. The firs
 </div>
 </details>
 
-
 <!--en-->
 ## Establishing V ⊨ ZF
 
@@ -925,7 +920,6 @@ The assembly takes `ΩResizing (ℓ-suc ℓ) ℓ` as its single parameter. The p
 <!--ja-->
 組み立ては `ΩResizing (ℓ-suc ℓ) ℓ` を単一のパラメータとして受け取る。冪集合の構成はその低いレベルの型と型同値を直接使い、分出は `ΩResizing→Resizing` から導かれる命題リサイズを使う。完全な分出は直接に述べられる。集合 `a` と自由変数の枠を一つ持つ論理式 `φ` が与えられたとき、各 `y` について真理値 `y ∈ˢ s` が「`y ∈ˢ a`」と「一点環境 `y ∷ []` での `φ` の充足」の連言にパスとして等しい集合 `s` を作る。これはモデルの record が要求する分出の仕様の形そのものである。
 <!--/-->
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
@@ -1012,7 +1006,6 @@ The last field is strong infinity, realized by `ω` with its specification: ever
 </div>
 </details>
 
-
 <!--en-->
 The theorem `V⊨ZF` states that the cumulative hierarchy `V ℓ` satisfies ZF under the single hypothesis `ΩResizing (ℓ-suc ℓ) ℓ`. Both schema fields are functions that accept every formula, so separation and replacement hold for all formulas at once, through the deep embedding of the object language in the first-order logic chapters. The separate convenience theorem `V⊨ZF-fromLEM` takes `LEM (ℓ-suc ℓ)` and derives the Ω-resizing assumption from it. What is proved is a model construction under the stated hypothesis, not an unconditional consistency claim.
 <!--zh-->
@@ -1085,7 +1078,6 @@ The second fact turns a uniqueness argument into contractibility data. For a cla
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-
 module ChoiceLemma (zf : isZFModel) (ac : SetChoice ℓ) where
 ```
 </summary>
@@ -1104,7 +1096,6 @@ The lemma `choice` states the classical choice-set situation. Its hypotheses: `i
 <!--/-->
 
 ```agda
-
   choice : (a : S)
          → ((x : S) → ⟨ x ∈ˢ a ⟩ → ∥ Σ[ y ∈ S ] ⟨ y ∈ˢ x ⟩ ∥₁)
          → ((x y : S) → ⟨ x ∈ˢ a ⟩ → ⟨ y ∈ˢ a ⟩
@@ -1264,7 +1255,6 @@ The conjunction `zcx` is produced by transporting `pf` along the path `∩-spec 
 ```
 </div>
 </details>
-
 
 <!--en-->
 ## V ⊨ ZFC, on choice alone

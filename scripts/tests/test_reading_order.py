@@ -28,18 +28,18 @@ class ReadingOrderTests(unittest.TestCase):
         catalog = {"version": 1, "routes": [{"id": "route",
                     "title": {"en": "Route", "zh": "路线", "ja": "ルート"},
                     "description": {"en": "Route", "zh": "路线", "ja": "ルート"},
-                    "chapters": [n for n in order if n != "Milestones"]}],
+                    "chapters": [n for n in order if n != "Origin"]}],
                    "chapters": chapters}
         with tempfile.NamedTemporaryFile(mode="w", suffix=".json", encoding="utf-8") as fh:
             json.dump(catalog, fh); fh.flush()
             return checker.defects(sources, fh.name)
 
     def test_preview_is_not_an_instructional_prerequisite(self):
-        sources = {"Milestones": chapter("B"), "A": chapter(), "B": chapter("A")}
-        self.assertEqual(self.check(sources, ["Milestones", "A", "B"]), [])
-        sources["A"] = chapter("Milestones")
+        sources = {"Origin": chapter("B"), "A": chapter(), "B": chapter("A")}
+        self.assertEqual(self.check(sources, ["Origin", "A", "B"]), [])
+        sources["A"] = chapter("Origin")
         self.assertTrue(any("depends on preview" in e
-                            for e in self.check(sources, ["Milestones", "A", "B"])))
+                            for e in self.check(sources, ["Origin", "A", "B"])))
 
     def test_backward_dependency_is_rejected(self):
         sources = {"A": chapter(), "B": chapter("A", "Cubical.Data.Nat")}

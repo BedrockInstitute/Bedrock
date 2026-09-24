@@ -117,6 +117,7 @@ var document = {
 };
 var link = {
   href: "Base.Prelude.html#43", textContent: "mapDec", isConnected: true,
+  classList: {contains: function () { return false; }},
   getAttribute: function () { return null; },
   hasAttribute: function (key) { return key === "href"; }
 };
@@ -601,7 +602,7 @@ console.log(JSON.stringify(
         self.assertIn('ja: "モーダルで定義を開く"', javascript)
         self.assertIn('var definitionActionIcon =', javascript)
         self.assertEqual(javascript.count('innerHTML = definitionActionIcon;'), 2)
-        self.assertIn('function definitionAction(href, name)', javascript)
+        self.assertIn('function definitionAction(href, name, isModule)', javascript)
         self.assertIn('if (name) link.setAttribute("data-name", name);', javascript)
         self.assertIn('definitionLink.setAttribute("data-name", option.source);', javascript)
         self.assertIn('definitionLink.removeAttribute("data-name");', javascript)
@@ -770,9 +771,9 @@ console.log(JSON.stringify(
         self.assertEqual(renderer.render_type("Setω", {}), "Typeω")
         self.assertEqual(renderer.render_type("Set (ℓ-suc ℓ)", {}),
                          "Type (ℓ-suc ℓ)")
-        self.assertEqual(renderer.render_type("LevelUniv → Prop → SSet₁", {}),
+        self.assertEqual(re.sub(r'<[^>]+>', '', renderer.render_type("LevelUniv → Prop → SSet₁", {})),
                          "LevelUniv → Prop → SSet₁")
-        self.assertEqual(renderer.render_type("TypeWithStr → isProp", {}),
+        self.assertEqual(re.sub(r'<[^>]+>', '', renderer.render_type("TypeWithStr → isProp", {})),
                          "TypeWithStr → isProp")
 
     def test_primitive_sorts_do_not_receive_hover_payloads(self):
@@ -980,7 +981,7 @@ console.log(JSON.stringify(
         self.assertIn('.type-node[data-expression-type]', javascript)
         self.assertIn('types.$expressions[spec[1]]', javascript)
         self.assertIn('nodeOwnsOpenHover(typeNode)', javascript)
-        self.assertIn('span.Agda a[href], .type-value a[href]', javascript)
+        self.assertIn('".Agda a[href]"', javascript)
         self.assertIn('activeName.classList.add("name-active")', javascript)
         self.assertIn('.Agda a.name-active {', stylesheet)
         self.assertIn('@media (hover: hover) and (pointer: fine) {\n'
@@ -1003,7 +1004,7 @@ console.log(JSON.stringify(
             'padding-bottom: calc(3rem + var(--definition-modal-anchor-room, 0px));',
             stylesheet,
         )
-        self.assertIn('var targetBlock = target.closest("pre.Agda") || target;',
+        self.assertIn('var targetBlock = target.closest("pre.Agda, h1") || target;',
                       javascript)
         self.assertIn(
             'function alignModalDefinition(frameDocument, targetBlock)',
@@ -1185,13 +1186,13 @@ console.log(JSON.stringify({moved: alignModalDefinition(frameDocument, targetBlo
     def test_mobile_definition_click_requires_the_hover_action(self):
         javascript = (ROOT / "site/static/bedrock.js").read_text()
         self.assertIn(
-            '"a[data-type], .type-node[data-expression-type], .expr-node, '
+            '"[data-hover-help], [data-hover-html], [data-hover-template], a[data-type], .type-node[data-expression-type], .expr-node, '
             '.Agda a[href]"',
             javascript,
         )
         self.assertIn(
-            'return candidate && !candidate.classList.contains('
-            '"type-definition-link")',
+            'return candidate && !candidate.matches('
+            '".type-definition-link, .syntax-doc-link")',
             javascript,
         )
         self.assertIn(
@@ -1200,7 +1201,7 @@ console.log(JSON.stringify({moved: alignModalDefinition(frameDocument, targetBlo
             javascript,
         )
         self.assertIn(
-            'target.matches("a[href], .type-node[data-expression-type]")',
+            'target.matches("[data-hover-help], [data-hover-html], [data-hover-template], a[href], .type-node[data-expression-type]")',
             javascript,
         )
 
@@ -1275,6 +1276,30 @@ console.log(JSON.stringify({moved: alignModalDefinition(frameDocument, targetBlo
         applications = [node for node in data["Demo"] if node["kind"] == "application"]
         self.assertEqual(len(applications), 1)
         self.assertEqual(applications[0]["source"], "h (g x)")
+
+    def test_module_dummy_codomain_does_not_become_a_hover_node(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            src, html_dir = root / 'src', root / 'html'
+            src.mkdir()
+            html_dir.mkdir()
+            source = '```agda\nmodule Demo where\nvalue Ω e = f Ω\n  where open CodedTruth Ω e\n```\n'
+            path = src / 'Demo.lagda.md'
+            path.write_text(source)
+            (html_dir / 'Demo.md').write_text('')
+            trace = root / 'trace.jsonl'
+            diagnostic = '"dummyType: __DUMMY_TYPE__, called at src/full/Agda/TypeChecking/Rules/Application.hs:923:52"'
+            records = []
+            for text, type_ in [('CodedTruth Ω', 'Equiv → ' + diagnostic),
+                                ('CodedTruth Ω e', diagnostic), ('f Ω', 'A')]:
+                start = source.index(text) + 1
+                records.append({'version': 1, 'run': 'one', 'kind': 'application',
+                                'path': str(path.resolve()), 'sourceHash': extractor.source_hash(path),
+                                'start': start, 'end': start + len(text), 'type': type_})
+            trace.write_text(''.join(json.dumps(record) + '\n' for record in records))
+            data, compact = extractor.normalize(src.resolve(), html_dir.resolve(), trace)
+        self.assertEqual([node['source'] for node in data['Demo']], ['f Ω'])
+        self.assertEqual([record['type'] for record in compact], ['A'])
 
     def test_trace_normalization_maps_bindings_and_applications(self):
         with tempfile.TemporaryDirectory() as directory:

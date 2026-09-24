@@ -1,17 +1,36 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+module FOL.Manipulation.Renaming where
+```
+
 <!--en-->
 # Variable renaming
+<!--zh-->
+# 变量改名
+<!--ja-->
+# 変数の改名
+<!--/-->
+
+```agda
+open import Base.Prelude
+open import FOL.ZFStructure using ( ZFStructure )
+open import FOL.Syntax using
+  ( Term; con; var
+  ; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
+import FOL.Semantics
+```
+
+<!--en-->
 
 A map between finite variable contexts acts on terms and formulas by renaming free variables while leaving constants fixed. The accompanying agreement relation on environments gives one semantic theorem that covers weakening, exchange, and contraction.
 
 The syntax chapter pointed out an absence: no substitution, no weakening. The quantifier clauses take bodies in an extended context directly, so the classical apparatus for moving variables around is unnecessary. What little variable motion the book does need is covered by one device: **renaming**, a map `ρ : Fin n → Fin m` pushed through a formula, with a single correctness theorem that handles weakening, exchange, and contraction in one stroke.
 <!--zh-->
-# 变量改名
 
 有限变量语境之间的映射通过改名自由变量作用于词项与公式，同时保持常元不变。环境上的相符关系给出一条语义定理，统一涵盖弱化、交换与收缩。
 
 语法章提过一处缺席：没有替换，也没有弱化。量词子句直接取扩展语境中的公式体，因此经典的整套变量替换机制并无必要。本书确实需要的那一点变量调整，由一个操作完成：**改名**，即沿公式推送一个映射 `ρ : Fin n → Fin m`，并配一条正确性定理，弱化、交换、收缩都由此得出。
 <!--ja-->
-# 変数の改名
 
 有限な変数文脈の間の写像は、定数を固定したまま自由変数を改名して項と論理式へ作用する。環境の一致関係を用いる一つの意味論的定理が、弱化、交換、縮約をまとめて扱う。
 
@@ -26,15 +45,6 @@ Suppose a formula has its free variables indexed by `n` slots, and we want to vi
 公式の自由変数が `n` 個のスロットで索引づけられているとき、それを `m` 個のスロットの文脈で捉えたい場面を考える。写像 `ρ : Fin n → Fin m` が各変数の行き先を決め、改名とはこの写像を公式のすべての自由変数に作用させることである。難所は量詞である。量詞の本体はスロットを一つ余分に持つ文脈で生きるので、`ρ` を束縛変数を乱さないように各束縛子の下で拡張する必要がある。
 <!--/-->
 
-```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-module FOL.Manipulation.Renaming where
-
-open import Base.Prelude
-open import FOL.ZFStructure using ( ZFStructure )
-```
-
 <!--en-->
 One correctness theorem then measures renaming: under a suitable relation between the old and new environments, the renamed formula denotes the same proposition as the original. Since the proposition is computed in an arbitrary proposition-valued set-theoretic structure, the theorem has exactly the generality of satisfaction itself, and the usual structural rules of sequent practice, weakening, exchange, and contraction, all fall out as particular choices of `ρ`.
 <!--zh-->
@@ -42,13 +52,6 @@ One correctness theorem then measures renaming: under a suitable relation betwee
 <!--ja-->
 そして改名は一つの正しさの定理で測られる。旧環境と新環境の間の適切な関係のもとで、改名された公式は元の公式と同じ命題を表す。命題は任意の命題値をとる任意の集合論的構造の上で計算されるので、定理は充足関係そのものとまったく同じ一般性を持ち、シーケント計算で慣用される構造規則、すなわち弱化、交換、縮約は、すべて `ρ` の特定の選択として得られる。
 <!--/-->
-
-```agda
-open import FOL.Syntax using
-  ( Term; con; var
-  ; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
-import FOL.Semantics
-```
 
 <!--en-->
 ## The syntactic layer
@@ -87,7 +90,6 @@ With the lifting in hand, renaming extends to terms and then to formulas by stru
 <!--/-->
 
 ```agda
-
 renameTm : ∀ {ℓc} {K : Type ℓc} {n m} → (Fin n → Fin m) → Term K n → Term K m
 renameTm ρ (con k) = con k
 ```
@@ -160,7 +162,6 @@ Syntax alone cannot say whether a renaming preserves meaning; we need to compare
 構文だけでは改名が意味を保つかを言えず、環境を比較する必要がある。環境は構造の台の要素からなるベクトルで、長さは文脈と一致する。大きい文脈には `γ : S ^ m`、小さい文脈には `δ : S ^ n` である。問いはこう変わる。`ρ` の視点から、`γ` と `δ` はいつ同じ割り当てとみなせるのか。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -171,7 +172,6 @@ module Sat {ℓ} (𝒮 : ZFStructure ℓ)
 <div class="submodule-fold-content">
 
 ```agda
-
   open ZFStructure 𝒮
 
   private module Sem = FOL.Semantics 𝒮
@@ -225,7 +225,6 @@ Everything now rests on the two theorems. For terms: evaluating `renameTm ρ t` 
 <!--/-->
 
 ```agda
-
   ⟦⟧-rename : ∀ {n m} (ρ : Fin n → Fin m) (t : Term K n)
 ```
 
@@ -309,7 +308,6 @@ The bounded existential `∃̇∈ t φ` closes the induction in the mirror image
 ```
 </div>
 </details>
-
 
 <!--en-->
 ## Recap

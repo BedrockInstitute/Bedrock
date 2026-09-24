@@ -1,22 +1,19 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # Syntax as sets
-
-A model can quantify only over elements of its carrier, whereas terms and formulas initially live in the surrounding type theory. To make syntax available inside the model, this chapter assigns each term and formula an element of the carrier. A code is a tagged pair: the numeric tag identifies the outer constructor, and the payload contains the codes of its immediate parts. Set constants can appear directly as payloads because they already belong to the carrier.
-
-The construction assumes an injective pairing operation and an injective map from natural numbers. These hypotheses make both components recoverable from a tagged pair. The chapter first proves that term codes are injective, then defines formula codes for all ten constructors. It also gives the constant and membership cases of relational coding through `CodesT`{.Agda} and `Codes`{.Agda}. Finally, a tag-indexed description of constructor shapes supports the proof that equal codes determine equal formulas of the same arity.
 <!--zh-->
 # 作为集合的语法
-
-模型只能对其载体中的元素量化，而词项与公式起初存在于外部的类型论中。为了让模型内部能够使用语法，本章给每个词项和公式指派一个载体元素。一个码是带标签的对：数字标签识别最外层构造子，载荷保存各直接组成部分的码。集合常元已经属于载体，因此可以直接充当载荷。
-
-构造假设有一个单射配对运算和一个从自然数出发的单射；这两个条件保证带标签对的两部分都能恢复。本章先证明词项编码为单射，再为公式的十个构造子定义编码。它还通过 `CodesT`{.Agda} 与 `Codes`{.Agda} 给出关系式编码的常元与隶属情形。最后，由标签索引的构造子形状描述支撑如下证明：同一元数的公式若码相等，则公式相等。
 <!--ja-->
 # 集合としての構文
-
-モデルが量化できるのは台の元だけであるが、項と論理式は初め、外側の型理論にある。構文をモデルの内部で利用できるように、本章では各項と論理式に台の元を割り当てる。符号はタグ付きの対であり、数のタグが最外側の構成子を識別し、ペイロードが直下の部分の符号を保持する。集合定数はすでに台に属するので、そのままペイロードにできる。
-
-構成では、単射な対の操作と自然数からの単射を仮定する。この二つの仮定により、タグ付き対の両成分を復元できる。まず項の符号化が単射であることを証明し、次に論理式の十個の構成子すべてに符号を定める。また `CodesT`{.Agda} と `Codes`{.Agda} によって、関係としての符号化のうち定数と所属の場合を与える。最後に、タグで添字付けた構成子形状の記述を用いて、同じアリティの論理式は符号が等しければ等しいことを証明する。
 <!--/-->
+
+```agda
+open import Base.Prelude
+open import FOL.ZFStructure using ( ZFStructure )
+```
 
 <!--en-->
 To encode syntax as sets, two operations on the carrier would suffice on their own, but injectivity is what makes decoding possible: if two pieces of syntax received the same set, the coding could not be inverted. This chapter therefore works over a structure `𝒮`{.Agda} of type `ZFStructure`{.Agda}, whose equality and membership take values in `hProp ℓ`, and takes the encoding data as explicit module parameters. Every definition below is stated for an arbitrary structure with such data; the cumulative hierarchy will supply an instance in a later chapter.
@@ -27,14 +24,42 @@ To encode syntax as sets, two operations on the carrier would suffice on their o
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
+module FOL.Coding {ℓ} (𝒮 : ZFStructure ℓ)
+  (pr       : ZFStructure.S 𝒮 → ZFStructure.S 𝒮 → ZFStructure.S 𝒮)
+  (pr-inj   : ∀ {a b c d} → pr a b ≡ pr c d → (a ≡ c) × (b ≡ d))
+  (encℕ     : ℕ → ZFStructure.S 𝒮)
+  (encℕ-inj : ∀ {j k} → encℕ j ≡ encℕ k → j ≡ k)
+  where
+```
 
-open import Base.Prelude
+```agda
+open import FOL.Syntax
+  using ( Term; con; var; Formula
+        ; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
+```
+
+<!--en-->
+
+A model can quantify only over elements of its carrier, whereas terms and formulas initially live in the surrounding type theory. To make syntax available inside the model, this chapter assigns each term and formula an element of the carrier. A code is a tagged pair: the numeric tag identifies the outer constructor, and the payload contains the codes of its immediate parts. Set constants can appear directly as payloads because they already belong to the carrier.
+
+The construction assumes an injective pairing operation and an injective map from natural numbers. These hypotheses make both components recoverable from a tagged pair. The chapter first proves that term codes are injective, then defines formula codes for all ten constructors. It also gives the constant and membership cases of relational coding through `CodesT`{.Agda} and `Codes`{.Agda}. Finally, a tag-indexed description of constructor shapes supports the proof that equal codes determine equal formulas of the same arity.
+<!--zh-->
+
+模型只能对其载体中的元素量化，而词项与公式起初存在于外部的类型论中。为了让模型内部能够使用语法，本章给每个词项和公式指派一个载体元素。一个码是带标签的对：数字标签识别最外层构造子，载荷保存各直接组成部分的码。集合常元已经属于载体，因此可以直接充当载荷。
+
+构造假设有一个单射配对运算和一个从自然数出发的单射；这两个条件保证带标签对的两部分都能恢复。本章先证明词项编码为单射，再为公式的十个构造子定义编码。它还通过 `CodesT`{.Agda} 与 `Codes`{.Agda} 给出关系式编码的常元与隶属情形。最后，由标签索引的构造子形状描述支撑如下证明：同一元数的公式若码相等，则公式相等。
+<!--ja-->
+
+モデルが量化できるのは台の元だけであるが、項と論理式は初め、外側の型理論にある。構文をモデルの内部で利用できるように、本章では各項と論理式に台の元を割り当てる。符号はタグ付きの対であり、数のタグが最外側の構成子を識別し、ペイロードが直下の部分の符号を保持する。集合定数はすでに台に属するので、そのままペイロードにできる。
+
+構成では、単射な対の操作と自然数からの単射を仮定する。この二つの仮定により、タグ付き対の両成分を復元できる。まず項の符号化が単射であることを証明し、次に論理式の十個の構成子すべてに符号を定める。また `CodesT`{.Agda} と `Codes`{.Agda} によって、関係としての符号化のうち定数と所属の場合を与える。最後に、タグで添字付けた構成子形状の記述を用いて、同じアリティの論理式は符号が等しければ等しいことを証明する。
+<!--/-->
+
+
+
+```agda
 open import Cubical.Data.Nat using ( znots; snotz )
 open import Cubical.Data.FinData using ( inj-toℕ )
-open import FOL.ZFStructure using ( ZFStructure )
-
-module FOL.Coding {ℓ} (𝒮 : ZFStructure ℓ)
 ```
 
 <!--en-->
@@ -45,14 +70,6 @@ The two pieces of data are an injective pairing and an injective numeral map. `p
 2 つのデータとは、単射な対の操作と単射な数の写像である。`pr` は台 `S` の 2 つの元をその対に写し、`pr-inj` はこの対がまた分解できることを述べる。つまり等式 `pr a b ≡ pr c d` から `a ≡ c` と `b ≡ d` という 2 つの道の組が得られる。`encℕ` は各自然数を `S` の元へ送り、`encℕ-inj` は異なる数が異なる元に写ることを述べる。タグ付き対の構成が消費するのはまさにこれらの仮定で、本章は `𝒮`{.Agda} のそれ以外の性質をまったく使わない。
 <!--/-->
 
-```agda
-  (pr       : ZFStructure.S 𝒮 → ZFStructure.S 𝒮 → ZFStructure.S 𝒮)
-  (pr-inj   : ∀ {a b c d} → pr a b ≡ pr c d → (a ≡ c) × (b ≡ d))
-  (encℕ     : ℕ → ZFStructure.S 𝒮)
-  (encℕ-inj : ∀ {j k} → encℕ j ≡ encℕ k → j ≡ k)
-  where
-```
-
 <!--en-->
 The objects being coded come from the syntax layer: the inductive types `Term`{.Agda} and `Formula`{.Agda}, built from two term constructors (`con` for a set constant, `var` for a variable) and ten formula constructors, from the atoms `_∈̇_` and `_≐_` through the connectives and the bounded and unbounded quantifiers. From the structure itself, only the carrier `S` is used, since coding attaches no set-theoretic operation to syntax. The empty type appears only as the codomain of impossible equations, in proofs that certain codes cannot coincide.
 <!--zh-->
@@ -62,11 +79,7 @@ The objects being coded come from the syntax layer: the inductive types `Term`{.
 <!--/-->
 
 ```agda
-
 open ZFStructure 𝒮 using ( S )
-open import FOL.Syntax
-  using ( Term; con; var; Formula
-        ; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
 ```
 
 <!--en-->
@@ -76,9 +89,6 @@ Two small arithmetic facts support the injectivity proofs. First, structurally d
 <!--ja-->
 単射性の証明を支えるのは、2 つの小さな算術的事実である。第一に、構造的に異なる数は決して等しくない。補題 `znots` と `snotz` がそれぞれ `0 ≡ suc k` と `suc j ≡ 0` を反駁し、異なるタグを持つ 2 つの論理式が同じ符号を共有すると仮定したときに生じる衝突は、まさにこの形をしている。第二に、`Fin n` の変数の添字は `toℕ` で自然数に変換され、`inj-toℕ` はこの変換が単射であることを記録する。したがって添字による変数の符号化で情報は失われない。
 <!--/-->
-
-```agda
-```
 
 <!--en-->
 ## Tagged pairs
@@ -422,7 +432,6 @@ The direction that computes witnesses is easy: `matches φ` builds an inhabitant
 <!--/-->
 
 ```agda
-
 matches : ∀ {n} (φ : Formula S n) → Match (tagOf φ) φ
 matches (t ∈̇ u)  = t , (u , refl)
 matches (t ≐ u)  = t , (u , refl)

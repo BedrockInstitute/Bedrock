@@ -1,5 +1,21 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+module FOL.ZFStructure where
+```
+
 <!--en-->
 # Structures
+<!--zh-->
+# 结构
+<!--ja-->
+# 構造
+<!--/-->
+
+```agda
+open import Base.Prelude
+```
+
+<!--en-->
 
 A first-order language about sets has two primitive predicates: equality and membership. To interpret it, we must choose what its variables range over and what those two predicates mean there. A `ZFStructure`{.Agda} packages exactly this data: a carrier of "sets", together with proposition-valued interpretations of equality and membership. The record demands that the carrier be an h-set and nothing more; no ZF axiom is built in.
 
@@ -7,7 +23,6 @@ Because both relations take values in `hProp`{.Agda}, each atomic statement has 
 
 Three membership notations must be kept apart throughout: the host-level class membership `∈ᶜ`{.Agda}, which tests whether a carrier element satisfies a predicate `M`; the proposition-valued structure membership `∈ˢ`{.Agda}; and the object-language membership symbol `∈̇`{.Agda} introduced in "The object language", which is only given meaning once a structure interprets it.
 <!--zh-->
-# 结构
 
 关于集合的一阶语言有两个初始谓词：等词与隶属。要解释它，就必须选定变量的取值范围，以及这两个谓词在那里分别指什么。`ZFStructure`{.Agda} 正是打包这些数据：一个由「集合」组成的载体，加上等词与隶属的命题值解释。这个 record 只要求载体是 h-集合，别无其他；其中不内置任何 ZF 公理。
 
@@ -15,7 +30,6 @@ Three membership notations must be kept apart throughout: the host-level class m
 
 全章要区分三种隶属记号：宿主层的类隶属 `∈ᶜ`{.Agda}，检验载体元素是否满足谓词 `M`；取命题值的结构隶属 `∈ˢ`{.Agda}；以及「对象语言」一章语法中的隶属符号 `∈̇`{.Agda}，只有在结构给出解释之后它才有意义。
 <!--ja-->
-# 構造
 
 集合についての一階言語には、等号と所属という二つの原始述語がある。これを解釈するには、変数が何を渡り歩くかを定め、その二つの述語がそこで何を意味するかを指定しなければならない。`ZFStructure`{.Agda} はまさにこのデータをまとめる。すなわち「集合」からなる台と、等号と所属の命題値の解釈である。レコードが要求するのは台が h-集合であることだけで、ZF の公理は組み込まれていない。
 
@@ -33,11 +47,6 @@ Membership appears on three distinct levels, and the notation keeps them apart. 
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-module FOL.ZFStructure where
-
-open import Base.Prelude
 open import Cubical.Foundations.HLevels using ( isSetΣSndProp )
 ```
 
@@ -49,9 +58,6 @@ The relations of a structure are propositions, so their underlying types may be 
 構造の関係は命題なので、その基礎型を証明によって満たせる。クラスを満たす台の要素を集めると、依存対の型が得られる。台 `S` が h-集合でも、そのような対の型が h-集合になるとは限らない。これを保証するのは、固定した各要素での所属の証拠が命題であることで、異なる二組の証拠が本来等しいはずの対を引き裂くことはない。
 <!--/-->
 
-```agda
-```
-
 <!--en-->
 Restricting a structure to a class therefore rests on a general principle about dependent pairs. A pair consists of a first projection together with a second component whose type depends on the first. When that second component is proposition-valued, the pair carries no information beyond its first projection up to equality: if `fst a ≡ fst b`, then already `a ≡ b`. The chapter closes with a lemma, `↾-reflects`{.Agda}, recording this direction for the restricted carrier.
 <!--zh-->
@@ -59,9 +65,6 @@ Restricting a structure to a class therefore rests on a general principle about 
 <!--ja-->
 したがって、構造をクラスへ制限することは、依存対に関する一般的な原理に依拠する。対は第一射影と、その型が第一射影に依存する第二成分からなる。第二成分が命題値であれば、等しさに関して対が第一射影を超える情報を持つことはない。つまり `fst a ≡ fst b` なら、すでに `a ≡ b` である。本章は最後に補題 `↾-reflects`{.Agda} で、制限された台についてのこの向きを記録する。
 <!--/-->
-
-```agda
-```
 
 <!--en-->
 ## The record
@@ -146,7 +149,6 @@ Every structural membership proposition has an underlying type. The notation `x 
 `x ∈ᵗ y` は基礎型 `⟨ x ∈ˢ y ⟩`{.Agda} と定義され、`Type ℓ` に属する。これは新しい関係ではなく、既存の所属命題を Type として読むものである。引数の向きはこれまでの記法と一致し、`x ∈ᵗ y` は「x は y の要素である」と読む。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -171,12 +173,10 @@ So `y ∈ᵗ x` states that y is a member of x, as a proposition of the proposit
 <!--/-->
 
 ```agda
-
   infix 20 _∈ᵗ_
 ```
 </div>
 </details>
-
 
 <!--en-->
 ## Transitive classes

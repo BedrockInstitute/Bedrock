@@ -1,22 +1,19 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # Ordinal indices, the Gödel pair order, and finite indices
-
-This chapter supplies three concrete orders and conversions used by later counting arguments: the membership well-order on an ordinal's index, the Gödel order on pairs of indices, and the correspondence between members of a finite ordinal and `Fin`.
-
-The first construction compares two indices of an ordinal by membership of the ordinal elements they name; ordinal trichotomy and regularity turn that comparison into a strict well-order on the index type. The second grades a pair of indices by the maximum of its coordinates under that order and orders pairs sharing a maximum coordinate lexicographically; trichotomy, irreflexivity and transitivity are proved directly, and well-foundedness comes from nesting the descent inside two levels of the lexicographic product. The third reads each member of the infinite ordinal ω as a numeral and converts indices of the finite ordinal # n to and from `Fin n`. It then reduces a precise obstruction to the finite pigeonhole principle: a type that contains injective images of finite types of every size cannot itself inject into the square of a fixed finite type.
 <!--zh-->
 # 序数指标、Gödel 对序与有穷指标
-
-本章为后续计数论证提供三项具体工具：序数指标上的隶属良序、指标对上的 Gödel 序，以及有穷序数成员与 `Fin` 之间的对应。
-
-第一个构造通过指标所指名的序数元素之间的隶属关系来比较两个指标；序数的三歧性与正则公理把这个比较变成指标类型上的严格良序。第二个构造用该序下坐标的最大值为指标对分级，并对共享最大坐标的对按字典序排列；三歧性、非自反性与传递性直接证明，而良基性则通过把下降嵌入两层字典序乘积得到。第三个构造把无穷序数 ω 的每个成员读作数码，并在有穷序数 # n 的指标与 `Fin n` 之间作双向转换。随后它把一个准确的不可能性归约为有穷鸽笼原理：若一个类型容纳任意大小的有穷类型的单射像，它就不能单射到某个固定有穷类型的平方中。
 <!--ja-->
 # 順序数の添字、Gödel 対順序、有限添字
-
-本章では後の計数に使う三つの具体的な道具を与える。順序数の添字上の所属整列順序、添字の対上の Gödel 順序、有限順序数の要素と `Fin` の対応である。
-
-第一の構成は、添字が指す順序数要素どうしの所属によって二つの添字を比較し、順序数の三分性と正則性によってその比較を添字型上の狭義整列順序にする。第二の構成は、その順序での座標の最大値によって添字の対を階級づけし、最大値を共有する対は辞書式に並べる。三分性・非反射性・推移性は直接に証明され、整礎性は降下を辞書式積の二段階に入れ子にすることで得られる。第三の構成は、無限順序数 ω の各要素を数項として読み、有限順序数 # n の添字と `Fin n` の間を双方向に変換する。次に、正確な不可能性を有限鳩の巣原理へ帰着する。任意の大きさの有限型の単射像を含む型は、ある固定された有限型の平方へ単射できない。
 <!--/-->
+
+```agda
+open import Base.Prelude
+open import Base.Classical using ( LEM )
+```
 
 <!--en-->
 The chapter works at a fixed universe level ℓ, and it takes one classical assumption as a module parameter: a decision of every proposition at level ℓ-suc ℓ. The comparisons established later need this, because ordinal trichotomy and least-element search each settle a mere-existence question by excluded middle. Keeping the assumption as an explicit parameter records exactly which classical input each construction consumes.
@@ -27,14 +24,44 @@ The chapter works at a fixed universe level ℓ, and it takes one classical assu
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
+module L.Ordinal.SquareLaw {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+```
 
-open import Base.Prelude
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; regularityV; ∈-irrefl )
+open import V.Model {ℓ} using ( ω-specV; numeralV; numeralV≡# )
+open import V.Presentation {ℓ} using ( member; fiber; ↪-inj )
+open import L.Constructible {ℓ} using ( IsOrd )
+open import L.Ordinal {ℓ} using ( mem-ord; ∈#-elim )
+open import V.Coding {ℓ} using ( #-inj′; #mono )
+open import L.Ordinal.Linear {ℓ} lem using ( ord-tri )
+open import L.WellOrder.Base {ℓₚ = ℓ-suc ℓ}
+  using ( SWO; Tri; lt; eq; gt; natOrder; module HostLeast; module SWO )
+```
+
+<!--en-->
+
+This chapter supplies three concrete orders and conversions used by later counting arguments: the membership well-order on an ordinal's index, the Gödel order on pairs of indices, and the correspondence between members of a finite ordinal and `Fin`.
+
+The first construction compares two indices of an ordinal by membership of the ordinal elements they name; ordinal trichotomy and regularity turn that comparison into a strict well-order on the index type. The second grades a pair of indices by the maximum of its coordinates under that order and orders pairs sharing a maximum coordinate lexicographically; trichotomy, irreflexivity and transitivity are proved directly, and well-foundedness comes from nesting the descent inside two levels of the lexicographic product. The third reads each member of the infinite ordinal ω as a numeral and converts indices of the finite ordinal # n to and from `Fin n`. It then reduces a precise obstruction to the finite pigeonhole principle: a type that contains injective images of finite types of every size cannot itself inject into the square of a fixed finite type.
+<!--zh-->
+
+本章为后续计数论证提供三项具体工具：序数指标上的隶属良序、指标对上的 Gödel 序，以及有穷序数成员与 `Fin` 之间的对应。
+
+第一个构造通过指标所指名的序数元素之间的隶属关系来比较两个指标；序数的三歧性与正则公理把这个比较变成指标类型上的严格良序。第二个构造用该序下坐标的最大值为指标对分级，并对共享最大坐标的对按字典序排列；三歧性、非自反性与传递性直接证明，而良基性则通过把下降嵌入两层字典序乘积得到。第三个构造把无穷序数 ω 的每个成员读作数码，并在有穷序数 # n 的指标与 `Fin n` 之间作双向转换。随后它把一个准确的不可能性归约为有穷鸽笼原理：若一个类型容纳任意大小的有穷类型的单射像，它就不能单射到某个固定有穷类型的平方中。
+<!--ja-->
+
+本章では後の計数に使う三つの具体的な道具を与える。順序数の添字上の所属整列順序、添字の対上の Gödel 順序、有限順序数の要素と `Fin` の対応である。
+
+第一の構成は、添字が指す順序数要素どうしの所属によって二つの添字を比較し、順序数の三分性と正則性によってその比較を添字型上の狭義整列順序にする。第二の構成は、その順序での座標の最大値によって添字の対を階級づけし、最大値を共有する対は辞書式に並べる。三分性・非反射性・推移性は直接に証明され、整礎性は降下を辞書式積の二段階に入れ子にすることで得られる。第三の構成は、無限順序数 ω の各要素を数項として読み、有限順序数 # n の添字と `Fin n` の間を双方向に変換する。次に、正確な不可能性を有限鳩の巣原理へ帰着する。任意の大きさの有限型の単射像を含む型は、ある固定された有限型の平方へ単射できない。
+<!--/-->
+
+
+
+```agda
 open import Cubical.Data.Sigma using ( ΣPathP )
 open import Cubical.Data.Nat using ( _·_ )
-open import Base.Classical using ( LEM )
-
-module L.Ordinal.SquareLaw {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
 <!--en-->
@@ -45,15 +72,6 @@ The mathematical setting is the cumulative hierarchy V, whose sets form a type S
 数学的な舞台は累積階層 V である。そこでは集合が型 S をなし、所属は「ある添字の存在」という切り詰められた言明として表される。各集合 a には選ばれた小さな提示が伴う。添字型 ⟪ a ⟫ と埋め込み ⟪ a ⟫↪ であり、その像こそが a である。したがって a の要素について論じることは添字について論じることになり、埋め込みの単射性が同じ要素を指す添字を同一視する。以下の構成は、IsOrd α の証明書をもつ任意の順序数 α を扱う。これは von Neumann の意味で、推移的であり、その要素もすべて推移的である集合のことである。
 <!--/-->
 
-```agda
-
-open import FOL.ZFStructure using ( module hPropStructure )
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; regularityV; ∈-irrefl )
-open import V.Model {ℓ} using ( ω-specV; numeralV; numeralV≡# )
-open import V.Presentation {ℓ} using ( member; fiber; ↪-inj )
-open import L.Constructible {ℓ} using ( IsOrd )
-```
-
 <!--en-->
 A strict well-order combines four properties of one relation: any two points are trichotomically comparable, no point lies strictly below itself, strict comparison is transitive, and every descending chain is well founded. Natural numbers provide the model example. The explicitly host-level operation `HostLeast.leastOf` uses this structure and excluded middle to select a least witness from a merely inhabited proposition-valued family; later, ordinal trichotomy supplies the same three-way comparison for members of an ordinal.
 <!--zh-->
@@ -62,14 +80,6 @@ A strict well-order combines four properties of one relation: any two points are
 狭義整列順序は、一つの関係について四つの性質をまとめる。任意の二点が三分法で比較でき、どの点も自分自身より真に小さくなく、狭義比較が推移的で、すべての降下が整礎である。自然数がその基本例である。明示的にホスト側の演算である `HostLeast.leastOf` はこの構造と排中律を使い、単に要素が存在する命題値族から最小の証人を選ぶ。後では、順序数の三分法が順序数の要素に同じ三方向の比較を与える。
 <!--/-->
 
-```agda
-open import L.Ordinal {ℓ} using ( mem-ord; ∈#-elim )
-open import V.Coding {ℓ} using ( #-inj′; #mono )
-open import L.Ordinal.Linear {ℓ} lem using ( ord-tri )
-open import L.WellOrder.Base {ℓₚ = ℓ-suc ℓ}
-  using ( SWO; Tri; lt; eq; gt; natOrder; module HostLeast; module SWO )
-```
-
 <!--en-->
 The logical vocabulary matches the shape of the statements to be proved. Refutations are functions into the empty type; membership proofs are inhabitants of truncated propositions; a three-way comparison is a sum of its cases, rendered by inl and inr. Paths between pairs and between records are handled by the standard lemmas Σ≡Prop and ΣPathP, which build a path into a dependent pair from paths of the components when the relevant component types are propositions.
 <!--zh-->
@@ -77,8 +87,6 @@ The logical vocabulary matches the shape of the statements to be proved. Refutat
 <!--ja-->
 論理の語彙は、証明すべき言明の形に合わせて選ばれている。反証は空型への関数であり、所属の証明は切り詰められた命題の住人であり、三路の比較はその場合の直和で、inl と inr で印づけられる。対やレコードの間のパスは標準補題 Σ≡Prop と ΣPathP で扱う。関係する成分の型が命題であるとき、成分のパスから依存対へのパスを組み立てるものである。
 <!--/-->
-
-
 
 <!--en-->
 The finite counting part needs arithmetic and the standard finite types. Multiplication _·_ on natural numbers sizes the square of a finite type, and the library equivalence factorEquiv identifies `Fin n × Fin n` with `Fin (n · n)`. The functions `equivFun` and `invEq` move between these presentations, and `retEq` identifies an input with its return along the two maps. The pigeonhole theorem supplies the impossibility that anchors the chapter's last argument: no injection from `Fin (suc n)` to `Fin n` exists. Order on the natural numbers comes with the fact that ≤ is a proposition, which makes comparisons into `Fin` respect the proof-irrelevance of their bound.
@@ -170,8 +178,6 @@ The product is set up generically. The first factor carries a strict well-order 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-
-
 module _ {ℓx ℓy : Level} {X : Type ℓx} {Y : Type ℓy} (u : SWO X)
          (_<ᵥ_ : Y → Y → Type (ℓ-suc ℓ)) (wfv : WellFounded _<ᵥ_) where
 ```
@@ -179,9 +185,7 @@ module _ {ℓx ℓy : Level} {X : Type ℓx} {Y : Type ℓy} (u : SWO X)
 <div class="submodule-fold-content">
 
 ```agda
-
-  private
-    module U = SWO u
+  private module U = SWO u
 ```
 
 <!--en-->
@@ -193,7 +197,6 @@ The product order _≺×_ has two ways to compare (a , x) below (b , y). Either 
 <!--/-->
 
 ```agda
-
   _≺×_ : X × Y → X × Y → Type (ℓ-suc ℓ)
   (a , x) ≺× (b , y) =
     (a U.<∙ b) ⊎ (((a U.<∙ b) → ⊥₀) × ((b U.<∙ a) → ⊥₀) × (x <ᵥ y))
@@ -237,7 +240,6 @@ The tie case is where connex earns its place: the second summand asserts both st
 </div>
 </details>
 
-
 <!--en-->
 ## The membership order on an ordinal's index
 
@@ -266,7 +268,6 @@ The relation ≺₁ on indices is defined by membership of the named elements: m
 添字上の関係 ≺₁ は、指名された要素どうしの所属によって定義される。m ≺₁ n が成り立つのは、構造の所属命題において ⟪ α ⟫↪ m が ⟪ α ⟫↪ n の要素であるとき、そのときに限る。この節の残りはすべてこの定義を読む。最初の支えとなる事実は、指名された各要素もまた順序数であることである。α が推移的で添字 m が α の要素を指すので、所属の証明 member α m に証明書 mem-ord を適用すれば、指名された要素の IsOrd が得られる。この証明書 ord-inord はこの後さらに三回使われる。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -276,7 +277,6 @@ module _ (α : S) (oα : IsOrd α) where
 <div class="submodule-fold-content">
 
 ```agda
-
   _≺₁_ : ⟪ α ⟫ → ⟪ α ⟫ → Type (ℓ-suc ℓ)
   m ≺₁ n = ⟪ α ⟫↪ m ∈ᵗ ⟪ α ⟫↪ n
 
@@ -293,7 +293,6 @@ Trichotomy on indices comes from trichotomy of the named elements. The classical
 <!--/-->
 
 ```agda
-
   tri₁ : (m n : ⟪ α ⟫) → Tri (m ≺₁ n) (m ≡ n) (n ≺₁ m)
   tri₁ m n = go (ord-tri (⟪ α ⟫↪ m) (ord-inord m) (⟪ α ⟫↪ n) (ord-inord n))
     where
@@ -345,7 +344,6 @@ Well-foundedness of ≺₁ is now one step away: regularity on the ambient hiera
 <!--/-->
 
 ```agda
-
   wf₁ : WellFounded _≺₁_
   wf₁ m = acc₁ m (regularityV (⟪ α ⟫↪ m))
 
@@ -455,7 +453,6 @@ The type Pair collects the square of the index: an element is a pair (a , b) of 
 <!--/-->
 
 ```agda
-
   Pair : Type ℓ
   Pair = ⟪ α ⟫ × ⟪ α ⟫
 
@@ -640,7 +637,6 @@ To borrow the well-foundedness of the lexicographic product, each pair is re-exp
 <!--/-->
 
 ```agda
-
   f : Pair → ⟪ α ⟫ × (⟪ α ⟫ × ⟪ α ⟫)
   f (a , b) = maxOrd a b , (a , b)
 
@@ -677,7 +673,6 @@ wf³ は prodWF の二度目の適用にすぎず、`_≺³_` は追加の作業
 <!--/-->
 
 ```agda
-
   wf³ : WellFounded _≺³_
   wf³ = prodWF ordSWO _≺²_ wf²
 
@@ -735,7 +730,6 @@ go の計算規則は到達可能性のデータを展開する。`acc r` から
 </div>
 </details>
 
-
 <!--en-->
 ## Moving between finite ordinals and `Fin`
 
@@ -758,7 +752,6 @@ The search proposition `P` packages, for each index `m` of `# n` and each natura
 探索の命題 P は、`# n` の各添字 m と各自然数 k に対して、`k < n` と「m が数項 `# k` を表す」という主張の連言をまとめたものである。その命題性は二つの事実から組み立てられる。順序 `k < n` が命題であることと、表された要素の等式が集合の中に住んでおり、その等式型も命題であることである。この連言を `hProp` に包むことが、後で排中律を適用できる根拠になる。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -768,7 +761,6 @@ module FiniteBase where
 <div class="submodule-fold-content">
 
 ```agda
-
   P : (n : ℕ) (m : ⟪ # n ⟫) → ℕ → hProp (ℓ-suc ℓ)
   P n m k = ((k < n) × (⟪ # n ⟫↪ m ≡ # k))
           , isProp× isProp≤ (isSetS (⟪ # n ⟫↪ m) (# k))
@@ -801,7 +793,6 @@ For an index of the finite ordinal `# n` there is a concrete inhabitant to start
 <!--/-->
 
 ```agda
-
   toFin : (n : ℕ) → ⟪ # n ⟫ → FB.Fin n
   toFin n m = k , k<n
     where
@@ -854,7 +845,6 @@ The reverse direction starts from `#mono`, which witnesses that `# k` is a membe
 <!--/-->
 
 ```agda
-
   fromFin : (n : ℕ) → FB.Fin n → ⟪ # n ⟫
   fromFin n (k , k<n) = fiber (# n) (#mono k n k<n) .fst
 
@@ -907,7 +897,6 @@ The pigeonhole statement is the finite core of the later contradiction: no funct
 <!--/-->
 
 ```agda
-
   no-inj-Fin : (n : ℕ) → (f : FB.Fin (suc n) → FB.Fin n)
              → ((x y : FB.Fin (suc n)) → f x ≡ f y → x ≡ y) → ⊥₀
   no-inj-Fin n f finj = i#j (finj i j feq)
@@ -939,11 +928,9 @@ The final block abstracts away from omega. It is parameterized by a family `E : 
 最後のブロックは ω から抽象化する。これは族 `E : ℕ → Type ℓ` でパラメータ化され、単射な符号器 `toFinE : E n → Fin n` と単射な復号器 `fromFinE : Fin n → E n` を伴う。何が仮定され、何が仮定されないかに注意してほしい。各方向はそれぞれ自身の単射性の証明を伴うが、両者が互いに逆であることは要求されず、`E n` と `Fin n` の間の同値も主張されない。議論に入るのはこの二つの単射性だけである。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-
   module AbstractChase (E : ℕ → Type ℓ)
                        (toFinE : (n : ℕ) → E n → FB.Fin n)
                        (toFinE-inj : (n : ℕ) (m₁ m₂ : E n) → toFinE n m₁ ≡ toFinE n m₂ → m₁ ≡ m₂)
@@ -952,8 +939,6 @@ The final block abstracts away from omega. It is parameterized by a family `E : 
 ```
 </summary>
 <div class="submodule-fold-content">
-
-
 
 <!--en-->
 Inside this setup, the inner module `NoInj` fixes a type `A` that receives an injection `into m` from every `E m`, itself injective at each level. Its theorem `no-inj` says that no injection `A → E n × E n` can exist for any `n`: the reduction is immediate, because the displayed proof simply hands the constructed finite function `g` to `no-inj-Fin (n · n)` together with its injectivity. All the work lies in defining `g` and proving `g-inj`.
@@ -964,7 +949,6 @@ Inside this setup, the inner module `NoInj` fixes a type `A` that receives an in
 <!--/-->
 
 ```agda
-
     module NoInj (A : Type ℓ) (into : (m : ℕ) → E m → A)
                  (into-inj : (m : ℕ) (i₁ i₂ : E m) → into m i₁ ≡ into m i₂ → i₁ ≡ i₂) where
 

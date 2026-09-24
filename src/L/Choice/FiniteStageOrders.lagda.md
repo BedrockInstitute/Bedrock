@@ -1,5 +1,46 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # Well-orders on finite stages
+<!--zh-->
+# 有限层上的良序
+<!--ja-->
+# 有限段階上の整列順序
+<!--/-->
+
+```agda
+open import Base.Prelude
+open import Base.Classical using ( LEM )
+```
+
+<!--en-->
+The setting is the constructible universe built over the ambient cumulative hierarchy $V$. Excluded middle enters here as an explicit hypothesis: the module is parameterized by a decision `lem` for every proposition at level `ℓ-suc ℓ`. This one level is all the chapter asks for, and every construction below is allowed to call this single fixed decision; nothing is claimed for propositions at other levels beyond what the displayed theorems actually prove.
+<!--zh-->
+讨论的舞台是建立在累积层级 $V$ 之上的可构造宇宙。排中律在这里作为显式假设出现：整个模块由一个参数 `lem` 给出，它对层级 `ℓ-suc ℓ` 上的每个命题作出判定。本章需要的正是这一个层级，下文的所有构造都可以使用这一固定判定；对于其他层级上的命题，除已证明的定理所述内容外，不作任何论断。
+<!--ja-->
+舞台となるのは、周囲の累積階層 $V$ の上に構成される構成可能宇宙である。排中律はここで明示的な仮定として現れる。モジュールは、階層 `ℓ-suc ℓ` のすべての命題に対する判定を与えるパラメータ `lem` を受け取る。本章が必要とするのはこの一つの階層だけで、以下の構成はどれもこの固定された判定を用いる。表示されている定理が実際に証明する範囲を超えて、他の階層の命題については何も主張しない。
+<!--/-->
+
+```agda
+module L.Choice.FiniteStageOrders {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+```
+
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+import FOL.Semantics
+open import FOL.Syntax using ( var; _∈̇_ )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV )
+open import L.Constructible {ℓ} using ( IsOrd; Lset; Lset-out; 𝒟ₒ; 𝒟ₒ∋⊆ )
+open import L.Ordinal {ℓ} using ( numeral-ord )
+open import L.Axioms.Basic {ℓ}
+  using ( finSet; finSet-in; finSet-out; Lset-suc; module FinOf )
+open import L.WellOrder.Base {ℓ-suc ℓ}
+  using ( Tri; lt; eq; gt; SWO; IsLeast; leastOfFormula; natOrder )
+```
+
+<!--en-->
 
 This chapter proves that every numeral-indexed stage is finite and equips it with the earliest-disagreement well-order, then combines stage number and local order to well-order the limit stage.
 
@@ -13,7 +54,6 @@ Finiteness propagates up the tower because the definable subsets of a finite set
 
 The limit-stage construction does not require a compatibility theorem for the finite-stage orders. It uses the first stage at which an element appears as the primary key. Two members of the limit that first appear at different finite stages are compared by those stage numbers alone; two that first appear at the same stage are compared by that stage's own order. No compatibility between the finite-stage orders is needed, and none is asserted.
 <!--zh-->
-# 有限层上的良序
 
 本章证明每个以数码为索引的层都是有穷的，并以最先分歧赋予其良序；随后结合层号与局部序来良序化极限层。
 
@@ -27,7 +67,6 @@ The limit-stage construction does not require a compatibility theorem for the fi
 
 极限层的构造无须假设或证明各有穷层序之间相容。它先比较元素首次出现的层号；层号相同，才使用该层自己的序。因此，不同层的元素由层号比较，同一层首次出现的元素由局部序比较。
 <!--ja-->
-# 有限段階上の整列順序
 
 本章では、数項で添字づけられた各段階が有限であることを証明し、最初の相違による整列順序を与える。さらに段階番号と局所順序を組み合わせて極限段階を整列順序づける。
 
@@ -42,22 +81,7 @@ The limit-stage construction does not require a compatibility theorem for the fi
 極限段階の構成には、有限段階の順序どうしの整合性を仮定したり証明したりする必要がない。まず要素が初めて現れる段階番号を比較し、番号が等しいときだけ、その段階自身の順序を用いる。したがって異なる段階の要素は段階番号で、同じ段階に初めて現れる要素は局所順序で比較される。
 <!--/-->
 
-<!--en-->
-The setting is the constructible universe built over the ambient cumulative hierarchy $V$. Excluded middle enters here as an explicit hypothesis: the module is parameterized by a decision `lem` for every proposition at level `ℓ-suc ℓ`. This one level is all the chapter asks for, and every construction below is allowed to call this single fixed decision; nothing is claimed for propositions at other levels beyond what the displayed theorems actually prove.
-<!--zh-->
-讨论的舞台是建立在累积层级 $V$ 之上的可构造宇宙。排中律在这里作为显式假设出现：整个模块由一个参数 `lem` 给出，它对层级 `ℓ-suc ℓ` 上的每个命题作出判定。本章需要的正是这一个层级，下文的所有构造都可以使用这一固定判定；对于其他层级上的命题，除已证明的定理所述内容外，不作任何论断。
-<!--ja-->
-舞台となるのは、周囲の累積階層 $V$ の上に構成される構成可能宇宙である。排中律はここで明示的な仮定として現れる。モジュールは、階層 `ℓ-suc ℓ` のすべての命題に対する判定を与えるパラメータ `lem` を受け取る。本章が必要とするのはこの一つの階層だけで、以下の構成はどれもこの固定された判定を用いる。表示されている定理が実際に証明する範囲を超えて、他の階層の命題については何も主張しない。
-<!--/-->
 
-```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-open import Base.Prelude
-open import Base.Classical using ( LEM )
-
-module L.Choice.FiniteStageOrders {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-```
 
 <!--en-->
 The names used throughout are those of the constructible hierarchy: a stage `Lset α` of the tower, the operator `𝒟ₒ` producing the definable subsets of a stage, and the fact `numeral-ord` that the numeral `# n` is an ordinal. In particular each finite stage `Lset (# n)` is a genuine stage, which is what lets the recursion of later sections climb the numerals. Also imported is `Lset-suc` and the `FinOf` machinery, which ties a stage to the finite sets inside it.
@@ -66,17 +90,6 @@ The names used throughout are those of the constructible hierarchy: a stage `Lse
 <!--ja-->
 以下で使う名前は構成可能階層のものである。塔の段階 `Lset α`、段階の定義可能部分集合を生み出す演算子 `𝒟ₒ`、そして数項 `# n` が順序数であるという事実 `numeral-ord` である。したがって各有限段階 `Lset (# n)` は正真正銘の段階であり、これが後の節の帰納が数項を登れる理由である。ここではさらに `Lset-suc` と `FinOf` の仕組みも取り込み、段階とその内部の有限集合とを結びつける。
 <!--/-->
-
-```agda
-
-open import FOL.ZFStructure using ( module hPropStructure )
-import FOL.Semantics
-open import FOL.Syntax using ( var; _∈̇_ )
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV )
-open import L.Constructible {ℓ} using ( IsOrd; Lset; Lset-out; 𝒟ₒ; 𝒟ₒ∋⊆ )
-open import L.Ordinal {ℓ} using ( numeral-ord )
-open import L.Axioms.Basic {ℓ}
-```
 
 <!--en-->
 Comparison needs a base order with trichotomy. The order `natOrder` on natural numbers is a strict, strongly well-founded linear order packaged as `SWO`, with a three-case comparison `Tri` split into `lt`, `eq`, `gt`. The search routines of later sections are written against this interface, so they work for any `SWO`, and the natural number instance is the one that orders the numerals.
@@ -87,9 +100,6 @@ Comparison needs a base order with trichotomy. The order `natOrder` on natural n
 <!--/-->
 
 ```agda
-  using ( finSet; finSet-in; finSet-out; Lset-suc; module FinOf )
-open import L.WellOrder.Base {ℓ-suc ℓ}
-  using ( Tri; lt; eq; gt; SWO; IsLeast; leastOfFormula; natOrder )
 module SemV = FOL.Semantics 𝒮ᵥ
 
 open import Cubical.Data.Bool using ( false≢true )
@@ -363,7 +373,6 @@ Coverage is the content of `mask-onto`, and it is deliberately untruncated: give
 <!--/-->
 
 ```agda
-
 mask-onto : (n : ℕ) (v : Vec Bool n) → Σ[ j ∈ Fin (maskCount n) ] (maskAt n j ≡ v)
 mask-onto zero    []          = zero , refl
 mask-onto (suc n) (false ∷ v) =
@@ -575,7 +584,6 @@ The final clause performs the prepend bookkeeping: the position found in the tai
 <!--/-->
 
 ```agda
-
 marks : {ℓ' : Level} {X : Type ℓ'} (n : ℕ) → (Fin n → X) → (X → Bool) → Vec Bool n
 marks zero    f d = []
 marks (suc n) f d = d (f zero) ∷ marks n (λ i → f (suc i)) d
@@ -678,7 +686,6 @@ A member of `Lset σ` lives in the stage as a set, but `finSet` needs a name in 
 `Lset σ` の要素は集合としてその段階にあるが、`finSet` には小さな要素型 `⟪ Lset σ ⟫` の名前が必要である。埋め込み `⟪ Lset σ ⟫↪` はその名前を集合として読む。所属は切り詰められたファイバーとして提示されるが、この埋め込みのファイバーは命題なので、`∈-asFiber` は切り詰めを消去し、明示的な名前と、それが `item i` に等しいというパスを返せる。`index i` と `index-eq i` は、このファイバー要素の二つの射影である。重複を許す有限な数え上げの任意のファイバーから添字を選ぶこととは異なり、そちらのファイバーは命題とは限らない。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -704,7 +711,6 @@ The second component of the same fiber is the path `index-eq i`, recording that 
 <!--/-->
 
 ```agda
-
   index-eq : (i : Fin size) → ⟪ Lset σ ⟫↪ (index i) ≡ item i
   index-eq i = ∈-asFiber {a = item i} {b = Lset σ} (inside i) .snd
 
@@ -930,7 +936,6 @@ The witness index is the one that `mask-onto` produces for the verdict mask `mas
 </div>
 </details>
 
-
 <!--en-->
 ## Smallest elements, and well-foundedness
 
@@ -953,7 +958,6 @@ Fix a strict relation `≺` on `A` with trichotomy, irreflexivity and transitivi
 `A` 上の狭義関係 `≺` が三岐性・非反射性・推移性を満たすとする。整礎性は仮定せず、有限な被覆族から導く。述語 `P` に対し、`Least P m` は `m` が `P` を満たすことと、より小さい充足者がすべて矛盾を導くことを記録する。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -966,7 +970,6 @@ module Search {A : Type (ℓ-suc ℓ)} (_≺_ : A → A → Type (ℓ-suc ℓ))
 <div class="submodule-fold-content">
 
 ```agda
-
   Least : (P : A → hProp (ℓ-suc ℓ)) → A → Type (ℓ-suc ℓ)
 ```
 
@@ -996,7 +999,6 @@ The scan's output type `Found P n f` is a disjunction of two explicit alternativ
 <!--/-->
 
 ```agda
-
   scan : (P : A → hProp (ℓ-suc ℓ))
        → ((a : A) → Dec ⟨ P a ⟩)
        → (n : ℕ) (f : Fin n → A) → Found P n f
@@ -1126,11 +1128,9 @@ The sub-module `Over` adds the one premise that turns a finite family into a tal
 副モジュール `Over` は、有限族を数え上げへと変えるための唯一の前提を追加する。`cov` は `A` のすべての要素が族によって単に命中されると言うもので、重複を許す截断的被覆である。この前提のもとで `least` は走査の答えを型全体への最小要素へと引き上げる。入力は「ある要素が `P` を満たす」という截断された証人だけであるが、出力は明示的なデータ、すなわち要素と `Least P m` の組である。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-
   module Over (n : ℕ) (f : Fin n → A)
               (cov : (a : A) → ∥ Σ[ i ∈ Fin n ] (f i ≡ a) ∥₁) where
 ```
@@ -1138,7 +1138,6 @@ The sub-module `Over` adds the one premise that turns a finite family into a tal
 <div class="submodule-fold-content">
 
 ```agda
-
     least : (P : A → hProp (ℓ-suc ℓ)) → ((a : A) → Dec ⟨ P a ⟩)
           → ∥ Σ[ a ∈ A ] ⟨ P a ⟩ ∥₁ → Σ[ m ∈ A ] Least P m
     least P decP h = decide (scan P decP n f)
@@ -1259,7 +1258,6 @@ In the negative branch, `b` would be a non-accessible element strictly below the
 </div>
 </details>
 
-
 <!--en-->
 ## The earliest disagreement
 
@@ -1331,7 +1329,6 @@ The module collects the three premises the earliest-disagreement order will inhe
 このモジュールは、最初の相違の順序が受け継ぐ三つの前提を集める。`baseTri` と `baseTrans` は、`A` の要素に制限した `R` が三岐かつ推移的であると言い、`baseLeast` は `A` の上の最小要素原理である。`A` の要素のある性質が単に非空であることから、その性質を満たし、より小さい `A` の要素がどれも満たさない要素を返す。結論の形に注意してほしい。呼び出し側が実際の最小要素を必要とするので、截断ではなく明示的なデータである。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -1346,8 +1343,6 @@ module Difference (R : S → S → hProp (ℓ-suc ℓ)) (A : S)
 </summary>
 <div class="submodule-fold-content">
 
-
-
 <!--en-->
 The statement of transitivity takes the two hypotheses exactly as `precedes` produces them: truncated witnesses for `x ≺ y` and for `y ≺ z`, and returns a truncated witness for `x ≺ z`. The proof therefore begins by eliminating the first truncation, then the second, both into a target that is again a truncation and hence a proposition.
 <!--zh-->
@@ -1357,7 +1352,6 @@ The statement of transitivity takes the two hypotheses exactly as `precedes` pro
 <!--/-->
 
 ```agda
-
   precedes-trans : (x y z : S) → ⟨ precedes R A x y ⟩ → ⟨ precedes R A y z ⟩
                  → ⟨ precedes R A x z ⟩
   precedes-trans x y z hxy hyz =
@@ -1680,7 +1674,6 @@ The mirrored branch assumes instead that `m` does not belong to `x`, and produce
 </div>
 </details>
 
-
 <!--en-->
 ## The finite stages
 
@@ -1767,7 +1760,6 @@ The base case's emptiness is recorded separately as `zero-empty`: no set is a me
 <!--/-->
 
 ```agda
-
 zero-empty : (x : S) → ⟨ x ∈ˢ finiteStage zero ⟩ → ⊥₀
 zero-empty x h = rec₁ isProp⊥ step (Lset-out (# zero) x h)
   where
@@ -1831,11 +1823,9 @@ Inside `Ordered`, the first task is trichotomy about points. `triPoint` applies 
 `Ordered` の内部での最初の課題は、点についての三分法である。`triPoint` は集合についての三分法 `tri` を `Tri-map` に渡す。中央の選言肢は結論がパスなので変換が要り、`Σ≡Prop` がまさにそれを供給する。第二成分は命題の証明であるから、根底の集合の間のパスは点の間のパスへ延長できる。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-
 module Ordered (n : ℕ) (r : StageOrder n) where
 ```
 </summary>
@@ -1952,7 +1942,6 @@ Only the glue remains visible: `Q` reads the set-level predicate at the underlyi
 </div>
 </details>
 
-
 <!--en-->
 The recursion starts with the empty tally and vacuous order laws at stage zero. At a successor, the previous tally is lifted across the definable power set. Earliest disagreement supplies trichotomy from the two subset hypotheses and supplies transitivity directly from the preceding stage's order; the successor-stage identity is used only where membership must be moved between the stage and that definable power set.
 <!--zh-->
@@ -2034,7 +2023,6 @@ The identification `step` is the path `Lset-suc (# n)`, stating that the stage a
 <!--/-->
 
 ```agda
-
   step : finiteStage (suc n) ≡ 𝒟ₒ (finiteStage n)
   step = Lset-suc (# n)
 
@@ -2068,7 +2056,6 @@ The auxiliary `members` extracts the inclusion hypothesis that `precedes-tri` as
 <!--/-->
 
 ```agda
-
   members : (x : S) → ⟨ x ∈ˢ finiteStage (suc n) ⟩
           → (w : S) → ⟨ w ∈ˢ x ⟩ → ⟨ w ∈ˢ finiteStage n ⟩
   members x x∈ = 𝒟ₒ∋⊆ (finiteStage n) x (subst (λ v → ⟨ x ∈ˢ v ⟩) step x∈)

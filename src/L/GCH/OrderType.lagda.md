@@ -1,32 +1,17 @@
-<!--en-->
-# Constructing order types inside `L`
-
-A well-founded relation coded in `L` can be collapsed after its members are presented by a small type. Transitivity then makes every individual collapse value an ordinal and hence an element of `L`. This chapter collects those values into the exact range `otL` and separately collects the graph `colTable`; it does not package an ordinality theorem for `otL`. Only after trichotomy is added does the graph become a coded injection from the original domain into that range.
-<!--zh-->
-# 在 `L` 内部构造序型
-
-把 `L` 中编码的关系成员表示为小类型后，便可对良基关系作塌缩。传递性进一步保证每个塌缩值都是序数，因而属于 `L`。本章把这些值收集成精确值域 `otL`，并另行收集图 `colTable`；本章没有封装 `otL` 的序数性定理。只有再加入三歧性之后，这张图才成为从原定义域到该值域的编码单射。
-<!--ja-->
-# `L` の内部で順序型を構成する
-
-`L` で符号化された関係の要素を小さな型で表示すれば、整礎関係を崩壊できる。さらに推移性があれば、個々の崩壊値は順序数となり、したがって `L` の要素になる。本章はそれらの値を正確な値域 `otL` に集め、グラフ `colTable` を別に集めるが、`otL` の順序数性を定理としてまとめてはいない。三分法を追加して初めて、このグラフは元の領域からその値域への符号化された単射になる。
-<!--/-->
-
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
 ```
 
 <!--en-->
-The classical assumption is explicit because one later existence proof must decide whether a candidate point precedes the point currently being treated. Well-founded recursion itself does not require this decision; excluded middle enters when a single replacement function is defined by the relation case and its complement.
+# Constructing order types inside `L`
 <!--zh-->
-经典假设在此显式给出，因为后文的一项存在性证明必须判定候选点是否在当前点之前。良基递归本身不需要这项判定；排中律进入之处，是按关系成立与否定义一项统一的替换函数时。
+# 在 `L` 内部构造序型
 <!--ja-->
-古典的仮定を明示するのは、後の存在証明で、候補となる点が現在扱う点に先行するかどうかを判定する必要があるからである。整礎再帰そのものはこの判定を必要としない。排中律が使われるのは、関係が成り立つ場合と成り立たない場合に分けて一つの置換関数を定める箇所である。
+# `L` の内部で順序型を構成する
 <!--/-->
 
 ```agda
 open import Base.Prelude
-open import Cubical.Foundations.HLevels using ( isSetΣSndProp )
 open import Base.Classical using ( LEM )
 ```
 
@@ -42,14 +27,6 @@ Fix a universe level `ℓ` and an instance of excluded middle at the level neede
 module L.GCH.OrderType {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
-<!--en-->
-The collapse will be recognized by formulas of the first-order language of sets. Ordered-pair membership and equality provide the atomic tests, while conjunction, disjunction, implication, negation, and the unbounded quantifiers express the table conditions. Apparent restrictions such as“for every predecessor”are written by placing the relation atom in an implication, rather than by using a bounded-quantifier constructor.
-<!--zh-->
-塌缩将由集合论一阶语言中的公式识别。有序对的隶属与相等提供原子检验，合取、析取、蕴含、否定及无界量词则表达表的各项条件。「对每个前驱」这类看似受限的量化，通过把关系原子放在蕴含前件中表达，而不是使用有界量词构造子。
-<!--ja-->
-崩壊は集合論の一階言語の論理式によって特徴づけられる。順序対の所属と等号が原子的な判定を与え、連言、選言、含意、否定、および非有界量化子が表の条件を表す。「すべての先行者について」のような制限は、関係の原子論理式を含意の前件に置いて表し、有界量化子の構成子は使わない。
-<!--/-->
-
 ```agda
 open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax
@@ -57,7 +34,56 @@ open import FOL.Syntax
 import FOL.Absoluteness
 import FOL.Semantics
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV; ∈-irrefl )
+open import V.Presentation {ℓ} using ( member; fiber; ↪-inj )
+open import V.Coding {ℓ} using ( pr; pr-inj )
+open import L.Constructible {ℓ}
+  using ( 𝒮ʟ; isL; isL-trans; Lset→isL )
+open import L.Ordinal {ℓ} using ( suc-ord )
+open import L.Ordinal.Stages {ℓ} lem using ( ord∈Lset-suc )
+open import L.Recursion {ℓ} lem using ( Recursion; module Of; mereFunct )
+open import L.Recursion.Graph {ℓ} lem
+  using () renaming ( module Graph to RecursionGraph )
+open import L.Coding.Model {ℓ} using ( appAt; appAt-adequate; appC; appC-adequate; prʟ; prʟ-fst; svAt; domAt )
+open import L.Coding.Expressions {ℓ} using ( module PairExpression )
+open import L.Coding.Injection {ℓ} lem using ( injAt; injAt-in )
+open import L.Cardinal {ℓ} lem using ( InjCode; InjL )
+open import L.DefinableInjection {ℓ} lem using ( DefinableMap ) renaming ( module Inj to DefinableInj )
+open import L.Mostowski {ℓ} using ( module Mostowski )
+open import L.Recursion.Graph {ℓ} lem public using ( module PairFo )
 ```
+
+<!--en-->
+
+A well-founded relation coded in `L` can be collapsed after its members are presented by a small type. Transitivity then makes every individual collapse value an ordinal and hence an element of `L`. This chapter collects those values into the exact range `otL` and separately collects the graph `colTable`; it does not package an ordinality theorem for `otL`. Only after trichotomy is added does the graph become a coded injection from the original domain into that range.
+<!--zh-->
+
+把 `L` 中编码的关系成员表示为小类型后，便可对良基关系作塌缩。传递性进一步保证每个塌缩值都是序数，因而属于 `L`。本章把这些值收集成精确值域 `otL`，并另行收集图 `colTable`；本章没有封装 `otL` 的序数性定理。只有再加入三歧性之后，这张图才成为从原定义域到该值域的编码单射。
+<!--ja-->
+
+`L` で符号化された関係の要素を小さな型で表示すれば、整礎関係を崩壊できる。さらに推移性があれば、個々の崩壊値は順序数となり、したがって `L` の要素になる。本章はそれらの値を正確な値域 `otL` に集め、グラフ `colTable` を別に集めるが、`otL` の順序数性を定理としてまとめてはいない。三分法を追加して初めて、このグラフは元の領域からその値域への符号化された単射になる。
+<!--/-->
+
+<!--en-->
+The classical assumption is explicit because one later existence proof must decide whether a candidate point precedes the point currently being treated. Well-founded recursion itself does not require this decision; excluded middle enters when a single replacement function is defined by the relation case and its complement.
+<!--zh-->
+经典假设在此显式给出，因为后文的一项存在性证明必须判定候选点是否在当前点之前。良基递归本身不需要这项判定；排中律进入之处，是按关系成立与否定义一项统一的替换函数时。
+<!--ja-->
+古典的仮定を明示するのは、後の存在証明で、候補となる点が現在扱う点に先行するかどうかを判定する必要があるからである。整礎再帰そのものはこの判定を必要としない。排中律が使われるのは、関係が成り立つ場合と成り立たない場合に分けて一つの置換関数を定める箇所である。
+<!--/-->
+
+```agda
+open import Cubical.Foundations.HLevels using ( isSetΣSndProp )
+```
+
+
+
+<!--en-->
+The collapse will be recognized by formulas of the first-order language of sets. Ordered-pair membership and equality provide the atomic tests, while conjunction, disjunction, implication, negation, and the unbounded quantifiers express the table conditions. Apparent restrictions such as“for every predecessor”are written by placing the relation atom in an implication, rather than by using a bounded-quantifier constructor.
+<!--zh-->
+塌缩将由集合论一阶语言中的公式识别。有序对的隶属与相等提供原子检验，合取、析取、蕴含、否定及无界量词则表达表的各项条件。「对每个前驱」这类看似受限的量化，通过把关系原子放在蕴含前件中表达，而不是使用有界量词构造子。
+<!--ja-->
+崩壊は集合論の一階言語の論理式によって特徴づけられる。順序対の所属と等号が原子的な判定を与え、連言、選言、含意、否定、および非有界量化子が表の条件を表す。「すべての先行者について」のような制限は、関係の原子論理式を含意の前件に置いて表し、有界量化子の構成子は使わない。
+<!--/-->
 
 <!--en-->
 Two representations must agree throughout the construction. Members of `D` are handled through a small presentation so that well-founded recursion is available, whereas graph entries remain sets encoded as ordered pairs in the cumulative hierarchy. Injectivity of the presentation and of ordered-pair coding lets later proofs return from these representations to the original members and coordinates.
@@ -67,14 +93,6 @@ Two representations must agree throughout the construction. Members of `D` are h
 構成の全体を通して、二つの表示を対応させる必要がある。整礎再帰を使うために `D` の要素は小さな表示を通して扱い、グラフの項目は累積階層の中で順序対として符号化された集合のまま扱う。表示と順序対符号化の単射性により、後の証明でこれらの表示から元の要素と二つの座標へ戻れる。
 <!--/-->
 
-```agda
-open import V.Presentation {ℓ} using ( member; fiber; ↪-inj )
-open import V.Coding {ℓ} using ( pr; pr-inj )
-open import L.Constructible {ℓ}
-  using ( 𝒮ʟ; isL; isL-trans; Lset→isL )
-open import L.Ordinal {ℓ} using ( suc-ord )
-```
-
 <!--en-->
 The proof has to connect a recursively defined value with a formula that `L` can satisfy internally. Well-founded recursion produces the collapse, recursion graphs collect its values and pairs into sets, and the coding formulas interpret those pairs as applications. The stage theorem then places each ordinal collapse value inside `L`.
 <!--zh-->
@@ -82,14 +100,6 @@ The proof has to connect a recursively defined value with a formula that `L` can
 <!--ja-->
 証明では、再帰的に定めた値を、`L` の内部で充足できる論理式へ結び付ける必要がある。整礎再帰が崩壊を作り、再帰グラフがその値と順序対を集合へ集め、符号化の論理式がそれらの対を適用として解釈する。最後に段階についての定理が、各順序数である崩壊値を `L` の中に置く。
 <!--/-->
-
-```agda
-open import L.Ordinal.Stages {ℓ} lem using ( ord∈Lset-suc )
-open import L.Recursion {ℓ} lem using ( Recursion; module Of; mereFunct )
-open import L.Recursion.Graph {ℓ} lem
-  using () renaming ( module Graph to RecursionGraph )
-open import L.Coding.Model {ℓ} using ( appAt; appAt-adequate; appC; appC-adequate; prʟ; prʟ-fst; svAt; domAt )
-```
 
 <!--en-->
 There are two distinct goals for the collected graph. First it must represent the collapse as a total single-valued relation on `D`; only later, under trichotomy, may it satisfy the extra input-uniqueness clause of an internal injection. The ordered-pair formulas express the graph, and the injection code packages the four clauses only after each has been proved.
@@ -99,14 +109,6 @@ There are two distinct goals for the collected graph. First it must represent th
 集められたグラフには、二段階の目標がある。まず崩壊を `D` 上の全域的な一価関係として表さなければならない。その後、三分法のもとで初めて、内部単射に必要な入力の一意性も満たせる。順序対の論理式がグラフを表し、単射の四条件はそれぞれ証明された後に初めて単射符号へまとめられる。
 <!--/-->
 
-```agda
-open import L.Coding.Expressions {ℓ} using ( module PairExpression )
-open import L.Coding.Injection {ℓ} lem using ( injAt; injAt-in )
-open import L.Cardinal {ℓ} lem using ( InjCode; InjL )
-open import L.DefinableInjection {ℓ} lem using ( DefinableMap ) renaming ( module Inj to DefinableInj )
-open import L.Mostowski {ℓ} using ( module Mostowski )
-```
-
 <!--en-->
 The later uniqueness argument repeatedly compares constructible sets by their members. Extensionality turns pointwise equivalence of membership into equality of the underlying sets, and proposition-valued evidence makes equality of the paired constructible objects proof-irrelevant. This is also what permits truncated case analyses to end in equalities without extracting permanent choices.
 <!--zh-->
@@ -114,8 +116,6 @@ The later uniqueness argument repeatedly compares constructible sets by their me
 <!--ja-->
 後の一意性証明では、構成可能な集合をその要素によって繰り返し比較する。外延性は所属の点ごとの同値を基礎集合の等しさに変え、命題値の証拠によって、対として作られた構成可能な対象の等しさは証明の取り方に依存しない。そのため、切り詰められた場合分けから恒久的な選択を取り出さずに、等しさを結論できる。
 <!--/-->
-
-
 
 <!--en-->
 The cumulative hierarchy supplies both the ambient sets and a small presentation of each set's members. Thus an element of `D` can be viewed either as an ambient set or as a small index, and membership transports the necessary constructibility evidence between the two views. The successor operation on hierarchy sets will later locate an ordinal collapse value at the stage following that ordinal.
@@ -204,7 +204,6 @@ Fix a constructible set `D` and a constructible code `R` for ordered pairs. The 
 構成可能集合 `D` と、順序対を符号化する構成可能集合 `R` を固定する。仮定 `Rsub` が述べるのは、`R` に実際に現れる各順序対の二つの端点が `D` に属することだけである。崩壊を作る段階で整礎性と推移性を加え、さらに後で単射性を証明するときに三分法を加える。この章では関係の外延性を仮定しない。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -214,8 +213,6 @@ module Collapse (D R : S)
 ```
 </summary>
 <div class="submodule-fold-content">
-
-
 
 <!--en-->
 Membership in `D` is stated as a one-place predicate on the carrier.
@@ -395,7 +392,6 @@ Well-foundedness of `_≺_` supplies the recursion and induction by which `col` 
 関係 `_≺_` の整礎性は、`col` を定義する再帰と帰納を与える。推移性の役割は別である。先行者の列が上端の点より下にとどまることを保証し、各崩壊値が推移的で順序数になることを証明するために使われる。この二つの仮定だけでは、崩壊の単射性も、関係が整列順序であることも得られない。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -404,8 +400,6 @@ Well-foundedness of `_≺_` supplies the recursion and induction by which `col` 
 ```
 </summary>
 <div class="submodule-fold-content">
-
-
 
 <!--en-->
 The Mostowski construction now defines `col p` as the set of values `col r` for predecessors `r ≺ p`. Its computation rule `col-eq` identifies the recursive value with this explicit predecessor image. The membership lemmas give `col r ∈ col p` from a specified predecessor and, conversely, only a propositionally truncated predecessor from an arbitrary member; `col-ord` proves each individual `col p` is an ordinal.
@@ -452,7 +446,6 @@ Each collapse value is packaged with its constructibility proof into a construct
 
 </div>
 </details>
-
 
 <!--en-->
 ## The formulas
@@ -540,7 +533,6 @@ To read the formula as host-level completeness, fix a predecessor `y` and a proo
 <!--/-->
 
 ```agda
-
   complete-out : ∀ {n} (f : Fin n) (R : S) (x : Fin n) (γ : S ^ n)
                → ⟨ γ ⊨ completeAt f R x ⟩
                → Complete (lookup f γ) R (lookup x γ)
@@ -835,7 +827,6 @@ The next formula fixes the relation `R` but leaves the witnessing table existent
 次の論理式では関係 `R` を固定するが、証人となる表は存在量化されたままである。この区別により、定義域全体を覆う一つの表を構成する前でも、ある正しい表を使って値を局所的に認識できる。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -843,8 +834,6 @@ module ColFo (R : S) where
 ```
 </summary>
 <div class="submodule-fold-content">
-
-
 
 <!--en-->
 At an environment `(z ∷ p ∷ [])`, the formula says that there merely exists a set `F` which is correct for `R` and contains the entry `(p,z)`. The table is bound existentially, so this is a local characterization of the value at `p`; it does not yet assert that one fixed table works simultaneously over the whole domain.
@@ -871,7 +860,6 @@ Reading `colFo` outward preserves the propositional truncation around its table 
 <!--/-->
 
 ```agda
-
     colFo-out : (z p : S) → ⟨ (z ∷ p ∷ []) ⊨ colFo ⟩
               → ∥ Σ[ F ∈ S ] (Correct F R × Holds F p z) ∥₁
     colFo-out z p = map₁ (λ { (F , (hc , ha)) → F
@@ -921,7 +909,6 @@ Adequacy of `appAt`, used in the reverse direction, turns `Holds F p z` into sat
 </div>
 </details>
 
-
 <!--en-->
 A pointwise value formula such as `colFo` must later be used to define a set of ordered pairs. The generic `PairFo` construction makes that passage: it recognizes a pair `(p,z)` precisely when `z` satisfies the chosen formula at `p`. This lets the local collapse formula serve as the value relation for the recursion constructed below.
 <!--zh-->
@@ -929,10 +916,6 @@ A pointwise value formula such as `colFo` must later be used to define a set of 
 <!--ja-->
 後では、`colFo` のような各点での値の論理式から、順序対の集合を定める必要がある。一般的な構成 `PairFo` は、`z` が `p` で与えられた論理式を満たすとき、かつそのときに限って順序対 `(p,z)` を認識する。これにより、局所的な崩壊の論理式を、以下で構成する再帰の値関係として使える。
 <!--/-->
-
-```agda
-open import L.Recursion.Graph {ℓ} lem public using ( module PairFo )
-```
 
 <!--en-->
 ## Uniqueness, existence, and the tables
@@ -950,7 +933,6 @@ The internal construction starts with a coded domain `D` and a coded relation `R
 内部の構成は、符号化された定義域 `D` と関係 `R` から始まる。最初の付帯条件は、`R` に属する各順序対の両成分が `D` に属することだけである。整礎性と推移性はこのモジュールの境界では仮定されず、崩壊の議論を始めるときに別々に与えられる。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -960,8 +942,6 @@ module Internal (D R : S)
 ```
 </summary>
 <div class="submodule-fold-content">
-
-
 
 <!--en-->
 The domain representation and its coded relation now provide the common setting for two formula constructions. `CF` is the local collapse-value formula for `R`, and `PF` recognizes the ordered pair formed from an argument and a value satisfying that formula. Neither construction at this point asserts existence or uniqueness of collapse values.
@@ -1012,7 +992,6 @@ The module now assumes that the small relation is well-founded and transitive. W
 ここで小さな関係が整礎かつ推移的であると仮定する。整礎性は `col` の再帰的定義と一意性証明の帰納を支え、推移性は得られる崩壊値が順序数であることを示すために使われる。二つの仮定の役割は異なり、先の `R` の端点条件からはどちらも従わない。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -1021,8 +1000,6 @@ The module now assumes that the small relation is well-founded and transitive. W
 ```
 </summary>
 <div class="submodule-fold-content">
-
-
 
 <!--en-->
 With these two hypotheses, the Mostowski recursion assigns to each `a` the set `col a` of collapse values of its predecessors. Its introduction and elimination lemmas characterize membership in that set, and `col-ord` proves that each individual `col a` is an ordinal. This statement concerns the pointwise collapse values, not yet the set `otL` collected later.
@@ -1484,7 +1461,6 @@ The local recursion ranges over every `q ∈ D`. If `q R up a`, its unique value
 <!--/-->
 
 ```agda
-
         module T = Of (record { dom = D ; graph = ψ ; funct = fc }) using ( table; table-in; table-out )
 ```
 
@@ -2059,7 +2035,6 @@ Membership of the encoded pair of `x` and `v` in `colTable` therefore yields unt
 </div>
 </details>
 
-
 <!--en-->
 ## The graph as a coded injection
 <!--zh-->
@@ -2076,7 +2051,6 @@ To study when the collapse graph codes an injection, fix `D`, `R`, and the endpo
 崩壊グラフがいつ単射を符号化するかを調べるため、`D`、`R`、および端点条件 `Rsub` を固定する。この条件が述べるのは、`R` に記録された各辺の両端点が `D` に属することだけである。整礎性、推移性、三分法は別々の仮定として残る。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -2086,8 +2060,6 @@ module Code (D R : S)
 ```
 </summary>
 <div class="submodule-fold-content">
-
-
 
 <!--en-->
 The small presentation `Dom`, its coded relation `_≺_`, and the conversions between members of `D` and their indices are the same ones used above. The coding argument will build on that collapse construction rather than introduce a second relation.
@@ -2109,7 +2081,6 @@ The hypotheses play different roles. Well-foundedness defines `col` by recursion
 仮定の役割はそれぞれ異なる。整礎性は再帰によって `col` を定義し、推移性は各崩壊値が順序数であり、したがって構成可能であることを示す。局所表の組み立てでは、この章の古典的な引数 `lem` も使う。これらを合わせて正確な値域 `otL` とグラフ `colTable` を構成し、一価性、正確な定義域、すべてのグラフ値が `otL` に属することを得る。三分法は次のモジュールで初めて加えられ、単射性の証明に使われる。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -2118,8 +2089,6 @@ The hypotheses play different roles. Well-foundedness defines `col` by recursion
 ```
 </summary>
 <div class="submodule-fold-content">
-
-
 
 <!--en-->
 With these two hypotheses fixed, the preceding graph construction supplies `col`, `otL`, and `colTable` together with their membership characterizations. At this stage equal inputs have equal recorded values, but equality of recorded values has not yet been shown to recover equal inputs.

@@ -1,31 +1,63 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # Satisfaction by recursion on formulas
+<!--zh-->
+# 沿公式递归构造满足关系
+<!--ja-->
+# 論理式上の再帰による充足関係
+<!--/-->
+
+```agda
+open import Base.Prelude
+open import Base.Classical using ( LEM )
+```
+
+<!--en-->
+Fix a universe level `ℓ`{.Agda} and assume `lem : LEM (ℓ-suc ℓ)`{.Agda}. This hypothesis supplies a decision for each proposition at that level; it remains an explicit parameter of the constructions below.
+<!--zh-->
+固定宇宙层级 `ℓ`{.Agda}，并假设 `lem : LEM (ℓ-suc ℓ)`{.Agda}。这个假设为相应层级的每个命题提供判定，并始终作为下文构造的显式参数。
+<!--ja-->
+宇宙レベル `ℓ`{.Agda} を固定し、`lem : LEM (ℓ-suc ℓ)`{.Agda} を仮定する。この仮定は該当するレベルの各命題に判定を与え、以下の構成の明示的なパラメータとして保たれる。
+<!--/-->
+
+```agda
+module L.Coding.Satisfaction {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+```
+
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax
+  using ( Term; con; var; Formula
+        ; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
+import FOL.Absoluteness
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Coding {ℓ} using ( pr )
+open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
+open import L.Axioms.Full {ℓ} lem using ( hasSeparationL )
+open import L.Coding.Model {ℓ} using ( appAt; appAt-adequate )
+open import L.Coding.Expressions {ℓ} using ( consAtL; numL )
+open import L.Coding.EnvironmentSet {ℓ} lem using ( envSet )
+```
+
+<!--en-->
 
 Given a set `B` in `L` and a formula, we construct the set of environments over `B` that satisfy that formula. The construction proceeds by recursion on the formula: for a compound formula the set is determined by the sets of its immediate subformulas, while the atoms and falsity are handled directly. In every case the set is obtained by separation, from the set of all length-`n` environments over `B`, of those whose entries meet a describing condition. The membership equations of the resulting sets describe the ten formula constructors.
 
 The recursion being on a meta-language formula shapes every step. Agda can inspect the formula, so each step may name the sets produced at the subformulas as constants of the describing condition, and the object language never has to quantify over a code. The atoms are correspondingly short: a meta-language term is visibly a variable or a constant, so reading its value has one case rather than the two that a coded clause must distinguish.
 <!--zh-->
-# 沿公式递归构造满足关系
 
 给定 `L` 中的集合 `B` 和一条公式，我们构造 `B` 上满足该公式的环境所组成的集合。构造沿公式递归进行：复合公式的集合由其直接子公式的集合确定，而原子与假则被直接处理。无论哪种情形，集合都由分离得到：从「`B` 上长度 `n` 的全部环境」这个集合中，保留条目满足描述条件的那些。所得集合的隶属等式逐一描述十个公式构造子。
 
 递归沿元语言的公式进行，这一点决定了每个步骤的形状。Agda 可以检查这条公式，因此每一步都能把子公式处已产出的集合作为描述条件的常元点名，而对象语言始终不必对码作量化；于是每一步都只是一次分离。原子情形也相应简短：元语言的词项一眼可辨是变元还是常元，读取其取值只需一种情形，而非码化子句必须区分的两种。
 <!--ja-->
-# 論理式上の再帰による充足関係
 
 `L` の集合 `B` と論理式を与え、その論理式を充足する `B` 上の環境の集合を構成する。構成は論理式の上の再帰として進む。複合の論理式の集合は直接の部分式の集合によって定まり、原子と偽はそれぞれ直接に扱われる。いずれの場合も、集合は分出によって得られる。すなわち、「`B` 上の長さ `n` のすべての環境」という集合から、記述の条件を満たすものを残すのである。得られる集合の所属の等式は十の論理式構成子を記述する。
 
 再帰がメタ言語の論理式の上にあることが、すべての段階の形を決める。Agda は論理式を検査できるので、各段階は部分式で作られた集合を記述の条件の定数として名指せる。対象言語が符号を量化する必要は一度も生じない。したがって各段階は一度の分出であり、原子の場合が短いのも同じ理由からである。メタ言語の項は変数か定数かが目に見えているため、値の読み取りは場合を一つしか持たない。符号化された節が区別しなければならない二場合と比べてのことである。
 <!--/-->
-
-```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-open import Base.Prelude
-open import Base.Classical using ( LEM )
-
-module L.Coding.Satisfaction {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-```
 
 <!--en-->
 The construction is carried out under excluded middle at the successor of the model level. Its formulas belong to the language of set theory, with equality, membership, the three binary connectives, falsity, and bounded and unbounded quantifiers.
@@ -35,15 +67,6 @@ The construction is carried out under excluded middle at the successor of the mo
 構成は、モデルのレベルの後続での排中律を仮定する。扱うのは集合論の言語の論理式で、相等、所属、三つの二項結合子、偽、有界および非有界の量化子を含む。
 <!--/-->
 
-```agda
-
-open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax
-  using ( Term; con; var; Formula
-        ; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
-import FOL.Absoluteness
-```
-
 <!--en-->
 Satisfaction will be read in the constructible substructure of the cumulative hierarchy. Formula absoluteness supplies that restricted reading, while ordered pairs encode the graphs used as environments.
 <!--zh-->
@@ -52,13 +75,6 @@ Satisfaction will be read in the constructible substructure of the cumulative hi
 充足は、累積階層の構成可能部分構造で読み取る。論理式の絶対性がその制限された読み方を与え、順序対が環境として用いるグラフを符号化する。
 <!--/-->
 
-```agda
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-open import V.Coding {ℓ} using ( pr )
-open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
-open import L.Axioms.Full {ℓ} lem using ( hasSeparationL )
-```
-
 <!--en-->
 For each formula, separation cuts its satisfaction set out of the set of coded environments. The formulas `appAt`{.Agda} and `consAtL`{.Agda} describe lookup in an environment graph and extension by one value; `envSet`{.Agda} supplies all environments of the required length.
 <!--zh-->
@@ -66,12 +82,6 @@ For each formula, separation cuts its satisfaction set out of the set of coded e
 <!--ja-->
 各論理式について、分出によって符号化環境の集合から充足集合を切り出す。`appAt`{.Agda} と `consAtL`{.Agda} は、環境グラフでの参照と一つの値による拡張を記述し、`envSet`{.Agda} は必要な長さのすべての環境を与える。
 <!--/-->
-
-```agda
-open import L.Coding.Model {ℓ} using ( appAt; appAt-adequate )
-open import L.Coding.Expressions {ℓ} using ( consAtL; numL )
-open import L.Coding.EnvironmentSet {ℓ} lem using ( envSet )
-```
 
 <!--en-->
 Existential clauses produce propositionally truncated witnesses. Finite indices are converted to natural numbers and then represented by von Neumann numerals inside the hierarchy.
@@ -108,7 +118,6 @@ The notation `_⊨_`{.Agda} below is satisfaction in the restricted constructibl
 <!--/-->
 
 ```agda
-
 open hPropStructure 𝒮ʟ
 
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
@@ -144,7 +153,6 @@ The internal numerals pair the ambient von Neumann numerals with their construct
 <!--/-->
 
 ```agda
-
 tmIs : ∀ {n m} → Term S n → Fin m → Fin m → Formula S m
 ```
 
@@ -182,7 +190,6 @@ For a constant, no environment is consulted: the value slot is simply identified
 <!--/-->
 
 ```agda
-
 tmIs-var-in : ∀ {n m} (i : Fin n) (γ : S ^ m) (v e : Fin m)
             → ⟨ pr (# (toℕ i)) (fst (lookup v γ)) ∈ fst (lookup e γ) ⟩
             → ⟨ γ ⊨ tmIs {n} (var i) v e ⟩
@@ -211,7 +218,6 @@ The witness is the numeral itself; its defining equation is definitional, and th
 <!--/-->
 
 ```agda
-
 tmIs-var-out : ∀ {n m} (i : Fin n) (γ : S ^ m) (v e : Fin m)
              → ⟨ γ ⊨ tmIs {n} (var i) v e ⟩
              → ⟨ pr (# (toℕ i)) (fst (lookup v γ)) ∈ fst (lookup e γ) ⟩
@@ -282,7 +288,6 @@ Separation is recorded once, in its opaque wrapper: from a set and a one-variabl
 <!--/-->
 
 ```agda
-
     sep-mem : (a : S) (φ : Formula S 1) (x : S)
             → (x ∈ˢ sep a φ) ≡ ((x ∈ˢ a) ⊓ ((x ∷ []) ⊨ φ))
     sep-mem a φ = hasSeparationL a φ .fst .snd
@@ -296,11 +301,9 @@ The membership specification is the whole content of separation: membership in t
 所属の仕様が分出の内容のすべてである。部分集合への所属は、周囲の集合への所属と条件の充足を合わせたものである。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-
 module _ (B : S) where
 ```
 </summary>
@@ -319,7 +322,6 @@ Fix a base set `B`. Every formula will determine a unary condition on a coded en
 <!--/-->
 
 ```agda
-
   Sat : ∀ {n} → Formula S n → S
   Sat {n} φ = sep (envSet B n) (cond φ)
 ```
@@ -333,7 +335,6 @@ The set of satisfying environments is the separation, from the full environment 
 <!--/-->
 
 ```agda
-
   Sat-mem : ∀ {n} (φ : Formula S n) (x : S)
           → (x ∈ˢ Sat φ) ≡ ((x ∈ˢ envSet B n) ⊓ ((x ∷ []) ⊨ cond φ))
   Sat-mem {n} φ = sep-mem (envSet B n) (cond φ)
@@ -348,7 +349,6 @@ Its membership equation records exactly the two requirements: the environment ha
 <!--/-->
 
 ```agda
-
   cond (t ∈̇ u) =
     (∃̇ (∃̇ ( tmIs t (suc zero) (suc (suc zero))
           ∧̇ ( tmIs u zero (suc (suc zero))
@@ -520,7 +520,6 @@ For the two atoms, the condition is an existence statement, and its unpacked sha
 <!--/-->
 
 ```agda
-
   cond∈-in : ∀ {n} (t u : Term S n) (z : S)
            → ∥ CondAtom t u (λ v w → ⟨ fst v ∈ fst w ⟩) z ∥₁
            → ⟨ (z ∷ []) ⊨ cond (t ∈̇ u) ⟩
@@ -536,7 +535,6 @@ The inward mapping for membership repackages the truncated triple as the nested 
 <!--/-->
 
 ```agda
-
   cond∈-out : ∀ {n} (t u : Term S n) (z : S)
             → ⟨ (z ∷ []) ⊨ cond (t ∈̇ u) ⟩
             → ∥ CondAtom t u (λ v w → ⟨ fst v ∈ fst w ⟩) z ∥₁
@@ -553,7 +551,6 @@ The outward mapping flattens the nested witnesses back into the triple, the whol
 <!--/-->
 
 ```agda
-
   cond≐-in : ∀ {n} (t u : Term S n) (z : S)
            → ∥ CondAtom t u (λ v w → fst v ≡ fst w) z ∥₁
            → ⟨ (z ∷ []) ⊨ cond (t ≐ u) ⟩
@@ -569,7 +566,6 @@ The equality atom carries the relation `fst v ≡ fst w`, equality of underlying
 <!--/-->
 
 ```agda
-
   cond≐-out : ∀ {n} (t u : Term S n) (z : S)
             → ⟨ (z ∷ []) ⊨ cond (t ≐ u) ⟩
             → ∥ CondAtom t u (λ v w → fst v ≡ fst w) z ∥₁
@@ -586,7 +582,6 @@ Its outward mapping is likewise the membership one with the relation exchanged.
 <!--/-->
 
 ```agda
-
   CondQuant : ∀ {n} → Formula S (suc n) → S → Type (ℓ-suc ℓ)
   CondQuant a z = Σ[ x ∈ S ] (⟨ fst x ∈ fst B ⟩
     × (Σ[ e' ∈ S ] (⟨ (e' ∷ x ∷ z ∷ []) ⊨ consAtL zero (suc zero) (suc (suc zero)) ⟩
@@ -602,7 +597,6 @@ For the unbounded existential, the unpacked condition is the Σ-type `CondQuant`
 <!--/-->
 
 ```agda
-
   cond∃-in : ∀ {n} (a : Formula S (suc n)) (z : S)
            → ∥ CondQuant a z ∥₁ → ⟨ (z ∷ []) ⊨ cond (∃̇ a) ⟩
   cond∃-in a z = map₁ (λ { (x , (x∈ , (e' , r))) → x , (x∈ , ∣ e' , r ∣₁) })
@@ -617,7 +611,6 @@ Inward folds the extension data into the single truncated witness that the exist
 <!--/-->
 
 ```agda
-
   cond∃-out : ∀ {n} (a : Formula S (suc n)) (z : S)
             → ⟨ (z ∷ []) ⊨ cond (∃̇ a) ⟩ → ∥ CondQuant a z ∥₁
   cond∃-out a z = rec₁ squash₁
@@ -633,7 +626,6 @@ Outward unfolds the two nested truncated witnesses in turn; both goals are trunc
 <!--/-->
 
 ```agda
-
   cond∀-in : ∀ {n} (a : Formula S (suc n)) (z : S)
            → ((x e' : S) → ⟨ fst x ∈ fst B ⟩
               → ⟨ (e' ∷ x ∷ z ∷ []) ⊨ consAtL zero (suc zero) (suc (suc zero)) ⟩
@@ -662,7 +654,6 @@ For the unbounded universal, the unpacked condition is a function assigning to e
 <!--/-->
 
 ```agda
-
   cond∀-out : ∀ {n} (a : Formula S (suc n)) (z : S)
             → ⟨ (z ∷ []) ⊨ cond (∀̇ a) ⟩
             → ((x e' : S) → ⟨ fst x ∈ fst B ⟩
@@ -691,7 +682,6 @@ No truncation appears, because satisfaction of a universal is verified by supply
 <!--/-->
 
 ```agda
-
   CondBnd : ∀ {n} → Formula S (suc n) → S → S → Type (ℓ-suc ℓ)
   CondBnd a z w = Σ[ x ∈ S ] ((⟨ fst x ∈ fst B ⟩ × ⟨ fst x ∈ fst w ⟩)
     × (Σ[ e' ∈ S ]
@@ -708,7 +698,6 @@ The bounded quantifiers add one layer. The condition quantifies, in order, the v
 <!--/-->
 
 ```agda
-
   cond∃∈-in : ∀ {n} (t : Term S n) (a : Formula S (suc n)) (z : S)
             → ∥ (Σ[ w ∈ S ] (⟨ (w ∷ z ∷ []) ⊨ tmIs t zero (suc zero) ⟩
                              × ∥ CondBnd a z w ∥₁)) ∥₁
@@ -739,7 +728,6 @@ The first `map₁` eliminates the outer truncation over `w`, and the nested `map
 <!--/-->
 
 ```agda
-
   cond∃∈-out : ∀ {n} (t : Term S n) (a : Formula S (suc n)) (z : S)
              → ⟨ (z ∷ []) ⊨ cond (∃̇∈ t a) ⟩
              → ∥ (Σ[ w ∈ S ] (⟨ (w ∷ z ∷ []) ⊨ tmIs t zero (suc zero) ⟩
@@ -771,7 +759,6 @@ Its proof unfolds the two layers in turn, the whole journey remaining inside tru
 <!--/-->
 
 ```agda
-
   cond∀∈-in : ∀ {n} (t : Term S n) (a : Formula S (suc n)) (z : S)
             → ((w : S) → ⟨ (w ∷ z ∷ []) ⊨ tmIs t zero (suc zero) ⟩
                → (x e' : S) → ⟨ fst x ∈ fst B ⟩ → ⟨ fst x ∈ fst w ⟩
@@ -802,7 +789,6 @@ The bounded universal's condition is a function over the three quantified layers
 <!--/-->
 
 ```agda
-
   cond∀∈-out : ∀ {n} (t : Term S n) (a : Formula S (suc n)) (z : S)
              → ⟨ (z ∷ []) ⊨ cond (∀̇∈ t a) ⟩
              → ((w : S) → ⟨ (w ∷ z ∷ []) ⊨ tmIs t zero (suc zero) ⟩
@@ -825,7 +811,6 @@ The result ranges over the same bound value, base member, and certified one-entr
 ```
 </div>
 </details>
-
 
 <!--en-->
 The outward mapping is the same function, read back through the three quantifiers. No truncation appears in either direction, since a universal is verified by supplying its verifier, and here the verifier is supplied layer by layer, for the value, for the member, and for the extension.

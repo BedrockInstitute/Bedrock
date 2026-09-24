@@ -3,7 +3,7 @@ from pathlib import Path
 import sys
 import unittest
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'site'))
-from diagram_style import check_text, path_endpoints
+from diagram_style import check_text, path_endpoints, check_stylesheet
 
 VALID = '''<figure class="book-diagram" id="fig-example" aria-describedby="fig-example-caption">
 <div class="diagram-panel">
@@ -26,6 +26,17 @@ A path between two elements.
 
 
 class DiagramStyleTests(unittest.TestCase):
+    def test_diagram_relations_cannot_borrow_navigation_link_colour(self):
+        for selector in ('.hlevel-link', '.book-diagram .relation', '.new-comparison-arrow'):
+            self.assertTrue(check_stylesheet(selector + ' { color: var(--link-color); }',
+                                            {'new-comparison-arrow'}))
+        self.assertTrue(check_stylesheet('.book-diagram { --diagram-relation-color: var(--link-color); }'))
+        self.assertEqual(check_stylesheet('.book-diagram .diagram-implication { color: var(--diagram-relation-color); }'), [])
+
+    def test_actual_links_in_figures_keep_their_link_colour(self):
+        for selector in ('.book-diagram a', '.book-diagram a:hover', '.book-diagram .term-ref'):
+            self.assertEqual(check_stylesheet(selector + ' { color: var(--link-color); }'), [])
+
     def test_shared_figure_passes(self):
         self.assertEqual(check_text(VALID), [])
 
@@ -79,6 +90,31 @@ class DiagramStyleTests(unittest.TestCase):
 
     def test_code_examples_are_not_live_figures(self):
         self.assertEqual(check_text('```html\n<figure>Example</figure>\n```'), [])
+
+    def test_figure_cannot_be_followed_by_agda(self):
+        for code in ('```agda\nx = y\n```', '~~~agda\nx = y\n~~~',
+                     '````agda\nx = y\n````', '```{.agda}\nx = y\n```'):
+            with self.subTest(code=code):
+                errors = check_text(VALID + '\n\n' + code)
+                self.assertEqual(sum('immediately follow a figure' in e for e in errors), 3)
+
+    def test_comments_and_fold_wrappers_do_not_separate_figure_from_code(self):
+        for gap in ('<!-- hidden -->', '</div>\n</details>\n<div>',
+                    '<details open>\n<summary>\n', '::: {.wrapper}\n'):
+            self.assertTrue(check_text(VALID + '\n' + gap + '\n```agda\nx = y\n```'))
+
+    def test_figure_code_spacing_is_checked_in_each_language(self):
+        gap = '\n<!--en-->\nExplanation.\n<!--zh-->\n\n<!--ja-->\n説明。\n<!--/-->\n'
+        errors = check_text(VALID + gap + '```agda\nx = y\n```')
+        self.assertEqual(len(errors), 1)
+        self.assertIn(': zh: Agda code', errors[0])
+        self.assertTrue(errors[0].startswith(str((VALID + gap).count('\n') + 1) + ':'))
+
+    def test_explanatory_prose_or_code_before_figure_passes(self):
+        code = '\n```agda\nx = y\n```\n'
+        self.assertEqual(check_text(VALID + '\nExplanation of the code.\n' + code), [])
+        self.assertEqual(check_text(code + VALID), [])
+        self.assertEqual(check_text('```html\n</figure>\n```\n' + code), [])
 
     def test_line_guide_uses_the_shared_role(self):
         self.assertEqual(check_text(VALID.replace(

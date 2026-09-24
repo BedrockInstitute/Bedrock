@@ -1,25 +1,57 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # Choosing a cardinal representative for an ordinal
-
-Counting inside `L` is expressed in terms of cardinals, while a construction often produces an arbitrary ordinal. For an ordinal `α` of `L`, this chapter finds an internal cardinal `μ` contained in `α`, together with internal injections in both directions. Thus `μ` represents the cardinality of `α` inside the model. The representative is obtained by searching the successor of `α` for the least ordinal into which `α` internally injects.
 <!--zh-->
 # 为序数选取基数代表
-
-`L` 内部的计数以基数表述，而具体构造往往只产生任意序数。对 `L` 中的序数 `α`，本章找出包含于 `α` 的内部基数 `μ`，并给出两个方向的内部单射。因此，`μ` 在模型内部代表 `α` 的基数。构造在 `α` 的后继中搜索，选取 `α` 能够内部单射到的最小序数。
 <!--ja-->
 # 順序数の基数代表を選ぶ
-
-`L` の内部での計数は基数によって述べるが、具体的な構成が与えるのは任意の順序数であることが少なくない。`L` の順序数 `α` に対し、本章では `α` に含まれる内部基数 `μ` と、両方向の内部単射を構成する。したがって `μ` はモデルの内部で `α` の濃度を代表する。この代表は、`α` の後続の中から、`α` が内部単射する最小の順序数を探して得られる。
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
 open import Base.Prelude
 open import Base.Classical using ( LEM )
+```
 
+<!--en-->
+Fix a universe level `ℓ`{.Agda} and assume `lem : LEM (ℓ-suc ℓ)`{.Agda}. This hypothesis supplies a decision for each proposition at that level; it remains an explicit parameter of the constructions below.
+<!--zh-->
+固定宇宙层级 `ℓ`{.Agda}，并假设 `lem : LEM (ℓ-suc ℓ)`{.Agda}。这个假设为相应层级的每个命题提供判定，并始终作为下文构造的显式参数。
+<!--ja-->
+宇宙レベル `ℓ`{.Agda} を固定し、`lem : LEM (ℓ-suc ℓ)`{.Agda} を仮定する。この仮定は該当するレベルの各命題に判定を与え、以下の構成の明示的なパラメータとして保たれる。
+<!--/-->
+
+```agda
 module L.GCH.CardinalRepresentative {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
+
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+import FOL.Semantics
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Presentation {ℓ} using ( member; fiber )
+open import L.Constructible {ℓ} using ( 𝒮ʟ; IsOrd; isL; isL-trans )
+open import L.Ordinal {ℓ} using ( mem-ord; suc-ord )
+open import L.Ordinal.Linear {ℓ} lem using ( Tri; ord-tri )
+open import L.Cardinal {ℓ} lem using ( InjL; IsCardinalL; module LeastCardInjL )
+open import L.WellOrder.Base {ℓₚ = ℓ-suc ℓ}
+  using ( IsLeast; leastOfFormula; module SWO )
+open import L.DefinableInjection {ℓ} lem using ( injLAt; module InjLAt )
+open import L.InjectionComposition {ℓ} lem using ( inclusion-coded; injl-trans )
+```
+
+<!--en-->
+
+Counting inside `L` is expressed in terms of cardinals, while a construction often produces an arbitrary ordinal. For an ordinal `α` of `L`, this chapter finds an internal cardinal `μ` contained in `α`, together with internal injections in both directions. Thus `μ` represents the cardinality of `α` inside the model. The representative is obtained by searching the successor of `α` for the least ordinal into which `α` internally injects.
+<!--zh-->
+
+`L` 内部的计数以基数表述，而具体构造往往只产生任意序数。对 `L` 中的序数 `α`，本章找出包含于 `α` 的内部基数 `μ`，并给出两个方向的内部单射。因此，`μ` 在模型内部代表 `α` 的基数。构造在 `α` 的后继中搜索，选取 `α` 能够内部单射到的最小序数。
+<!--ja-->
+
+`L` の内部での計数は基数によって述べるが、具体的な構成が与えるのは任意の順序数であることが少なくない。`L` の順序数 `α` に対し、本章では `α` に含まれる内部基数 `μ` と、両方向の内部単射を構成する。したがって `μ` はモデルの内部で `α` の濃度を代表する。この代表は、`α` の後続の中から、`α` が内部単射する最小の順序数を探して得られる。
+<!--/-->
 
 <!--en-->
 Fix excluded middle at level `ℓ-suc ℓ`. It is used by the well-order search and by ordinal trichotomy. All injections in the conclusion remain internal to `L`: their graphs are constructible sets rather than external functions.
@@ -29,15 +61,6 @@ Fix excluded middle at level `ℓ-suc ℓ`. It is used by the well-order search 
 レベル `ℓ-suc ℓ` における排中律を仮定する。この仮定は整列順序上の探索と順序数の三分法で使われる。結論の単射はすべて `L` の内部にあり、そのグラフは外部関数ではなく構成可能集合である。
 <!--/-->
 
-```agda
-open import FOL.ZFStructure using ( module hPropStructure )
-import FOL.Semantics
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-open import V.Presentation {ℓ} using ( member; fiber )
-open import L.Constructible {ℓ} using ( 𝒮ʟ; IsOrd; isL; isL-trans )
-open import L.Ordinal {ℓ} using ( mem-ord; suc-ord )
-```
-
 <!--en-->
 Two structures are present. The ambient hierarchy supplies membership and the small presentations used for search. The constructible structure supplies the ordinal, cardinal and internal-injection predicates. Constructibility descends along membership, allowing a member found in the ambient hierarchy to be returned to the carrier of `L`.
 <!--zh-->
@@ -45,15 +68,6 @@ Two structures are present. The ambient hierarchy supplies membership and the sm
 <!--ja-->
 ここでは二つの構造を使う。周囲の階層は所属関係と探索に用いる小さな表示を与え、構成可能構造は順序数、基数、内部単射の述語を与える。構成可能性は所属に沿って下方へ伝わるので、周囲の階層で見つけた要素を `L` の論域へ戻せる。
 <!--/-->
-
-```agda
-open import L.Ordinal.Linear {ℓ} lem using ( Tri; ord-tri )
-open import L.Cardinal {ℓ} lem using ( InjL; IsCardinalL; module LeastCardInjL )
-open import L.WellOrder.Base {ℓₚ = ℓ-suc ℓ}
-  using ( IsLeast; leastOfFormula; module SWO )
-open import L.DefinableInjection {ℓ} lem using ( injLAt; module InjLAt )
-open import L.InjectionComposition {ℓ} lem using ( inclusion-coded; injl-trans )
-```
 
 <!--en-->
 The search rests on the well-order of the indices presenting an ordinal. Its order agrees with membership between the represented elements. Inclusion coding turns containment into an internal injection, and transitivity composes successive internal injections.
@@ -77,9 +91,6 @@ The candidate set is the successor `sucV α`. Propositional truncation expresses
 <!--ja-->
 候補集合は後続 `sucV α` である。命題的切り詰めは、外部で代表を選ぶことなく適切な代表の存在を表す。和型と空型は後の三分法の議論で使われる。
 <!--/-->
-
-```agda
-```
 
 <!--en-->
 Write `SV.S` for ambient sets and `SL.S` for constructible sets. An element of `SL.S` pairs an ambient set with its constructibility certificate. Membership comparisons occur on first components, whereas `InjL` and `IsCardinalL` concern the complete constructible elements.
@@ -214,7 +225,6 @@ The index naming `α` is good: its represented member equals `α`, and the ident
 <!--/-->
 
 ```agda
-
   least : Σ[ b ∈ ⟪ T ⟫ ] IsLeast LC.w Good b
   least = leastOfFormula LC.w definedGood lem nonempty
 
@@ -231,7 +241,6 @@ Apply the formula-facing least-element search to the well-order `w` and `defined
 <!--/-->
 
 ```agda
-
   μ : SL.S
   μ = upL m
 
@@ -248,7 +257,6 @@ Lift the chosen index `m` to the constructible carrier and call the result `μ`.
 <!--/-->
 
 ```agda
-
   oμ : IsOrd (fst μ)
   oμ = mem-ord {A = T} oT (fst μ) μ∈T
 ```
@@ -378,7 +386,6 @@ The inclusion `μ ⊆ α` codes an internal injection `μ ↪ α`. Together with
 <!--/-->
 
 ```agda
-
   μ↪α : InjL μ α
   μ↪α = inclusion-coded μ α μ⊆α
 ```

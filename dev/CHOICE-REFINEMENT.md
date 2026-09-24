@@ -74,7 +74,7 @@ No chapter-local CSS, JavaScript, scroll containers or decorative nesting is add
 ## Initial prose-pass validation
 
 - `make -o _build/bin/bedrock-agda check AGDA_DIR=/Users/alsg/.agda`: exit 0;
-  complete Milestones typecheck, source gates, 222 Python tests and Agda lint tests.
+  complete Origin typecheck, source gates, 222 Python tests and Agda lint tests.
   The existing pinned compiler was used without rebuilding it.
 - Compared the initial refined concatenated Agda fences against `HEAD`: all 90 lines are
   identical. That version also typechecked through the Agda HTML backend.
@@ -114,5 +114,5 @@ errors or figure/page overflow in the three 390px routes and the 1260px Chinese
 route; the temporary viewport override was reset.
 
 After adopting the equivalence, the complete `make check` gate passed again
-(exit 0), including the Milestones closure, all source gates, 222 Python tests
+(exit 0), including the Origin closure, all source gates, 222 Python tests
 and Agda lint tests. No theorem gained a hypothesis or changed its conclusion.

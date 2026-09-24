@@ -33,7 +33,8 @@ each branch independently. The panel sizes to its visible contents, scrolls
 internally only when necessary, and closes on an outside click or document scroll.
 For a heading with children, only its title text navigates; the remaining row
 toggles its branch. A heading without children remains a full-row link.
-The sidebar starts with Reading guide folded and Current route open below Modules.
+The sidebar starts with Interactive contents folded and Current route open.
+Namespace browsing belongs to the dependency graph; there is no separate module tree.
 Current route lists its catalog chapters and highlights the present chapter. The
 guide's route selection is remembered, with a containing route used when the
 reader opens a chapter outside that selection.
@@ -42,17 +43,24 @@ reader opens a chapter outside that selection.
 
 | Recipe ID | Use and canonical source form | First use | Implementation / checks |
 | --- | --- | --- | --- |
-| `prose.parallel` | Three language blocks, followed by shared Agda fences; matching chapter/subsection structure | [Prelude](../src/Base/Prelude.lagda.md), opening and "Traceable vocabulary" | `i18n_markers.py`, chapter-framework and literary-exposition gates |
+| `prose.parallel` | Three language blocks, followed by shared Agda fences; matching chapter/subsection structure | [Prelude](../src/Base/Prelude.lagda.md), opening and "Reading guide" | `i18n_markers.py`, chapter-framework and literary-exposition gates |
 | `prose.term` | First introduction `[term]{.term-intro #id}`; explicit later reference `[term]{.term-ref #id}` | [Prelude](../src/Base/Prelude.lagda.md), `object-theory` in the opening | `glossary.toml`, glossary renderer and gate; never duplicate term metadata locally |
 | `code.reference` | Inline `` `name`{.Agda} `` links to a checked Agda name | [Prelude](../src/Base/Prelude.lagda.md), `Type ℓ` under "Universe levels" | `render-site.py` resolves references; formal code remains in Agda fences |
-| `code.reference-alias` | `[label](Module.html#declaration){.Agda}` displays a short label while linking and hovering over the named declaration | [Milestones](../src/Milestones.lagda.md), `V` linked to `𝒮ᵥ` | `render-site.py` resolves the symbolic target to its Agda position and rejects unknown declarations |
+| `code.reference-alias` | `[label](Module.html#declaration){.Agda}` displays a short label while linking and hovering over the named declaration | [Origin](../src/Origin.lagda.md), `V` linked to `𝒮ᵥ` | `render-site.py` resolves the symbolic target to its Agda position and rejects unknown declarations |
 | `code.display` | One centered `<div>` containing one `<code>` for reader-facing notation; see the template below | [Prelude](../src/Base/Prelude.lagda.md), `Type ℓ : Type (ℓ-suc ℓ)` | `bedrock.css`, `bedrock.js`, one-line rule in `lint-prose.py` |
 | `code.display-note` | `code.display` with localized `data-note="..."` explaining the notation | [Prelude](../src/Base/Prelude.lagda.md), the same universe-level expression | Desktop margin note; narrow-screen tap/focus note; keep the annotation in its language block |
 | `prose.margin-note` | `span.prose-annotation-target` followed by `aside.prose-annotation-note` | [Prelude](../src/Base/Prelude.lagda.md), why types cannot generally be moved downward after `Lift` | `bedrock.css` and `bedrock.js`; use for a brief attached qualification |
-| `prose.disclosure` | `details.prose-disclosure` with a localized `summary` | [Prelude](../src/Base/Prelude.lagda.md), compiler-option explanation | Ancillary interface detail only; localized prefix checked by `lint-prose.py` |
+| `code.boilerplate` | `.boilerplate-hover` linked to a generated template; `.boilerplate-hover-popup` shell | Chapter title and learning-route direct prerequisites | Dashed underline plus code mark; actual compiler-highlighted setup; code-block background/border, subtle blue left edge and floating shadow distinguish revealed source from type hints; shared recursive code hover and mobile modal action |
+| `code.syntax-help` | `.syntax-hover` on compiler-classified keywords | OPTIONS, module declarations, imports and body code | Amber active background distinct from definition highlighting; trilingual explanation and versioned official documentation link |
 | `code.submodule-fold` | Default-open `details.submodule-fold` whose complete Agda module declaration occupies the clickable `summary`; see template below | [Impredicativity](../src/Base/Impredicativity.lagda.md), `CodedTruth` | Animated folding, rendered code without module-scope indentation, and at most one nested child fold; whole-tree coverage, declaration, scope and depth checked by `lint-prose.py` |
-| `prose.statement` | `**Definition** (`name`{.Agda}) Text`; also Construction, Fact, Lemma, Theorem, Corollary with localized labels | [Impredicativity](../src/Base/Impredicativity.lagda.md), `hasSize` | `lint-prose.py`; the label and declaration form one sentence, without a period after the label |
-| `prose.proof` | `**Proof** Text`, alternating explanation and code, with standalone `∎` after the complete outer proof | [Impredicativity](../src/Base/Impredicativity.lagda.md), `ΩResizing→Resizing`; further examples in [Classical](../src/Base/Classical.lagda.md), `isPropLEM` and `lowerLEM` | `lint-prose.py`; helpers within a foldable submodule do not each need a QED |
+| `prose.statement` | `**Definition** (`name`{.Agda}) Text`; also Construction, Fact, Lemma, Theorem, Corollary with localized labels | [Impredicativity](../src/Base/Impredicativity.lagda.md), `hasSize` | `.prose-statement`; every statement encloses Agda code and its own immediate `∎`, including in folds; checked in all three languages |
+| `prose.proof` | `**Proof** Text`, alternating explanation and code, with standalone `∎` directly after the final code block | [Impredicativity](../src/Base/Impredicativity.lagda.md), `ΩResizing→Resizing` | `.prose-proof`; continues one statement or starts a standalone proof; must enclose code after its label |
+| `prose.statement-ending` | Final Agda fence followed by standalone `∎` | [Choice](../src/Base/Choice.lagda.md), `SetChoice` and nested helpers | `.statement-ending` grid and `.statement-qed`; outside-right mark, slight leftward code inset and enlarged bottom gap, shared by main pages and modal mirrors |
+
+Related parallel declarations use one Construction header containing individually
+styled Agda names separated by spaces, followed by a bullet per name. Never stack
+statement labels above one shared code block and QED. See `STYLE-i18n.md` for the
+canonical example. Agda token streams and anchor identities remain unchanged.
 
 ### Prose comparison tables
 
@@ -98,8 +106,11 @@ Example の最初の構成を説明する。
 
 The declaration occupies the summary's only code line and remains visible when
 collapsed. The content starts directly below it and ends after the last code fence
-in that submodule; a closing proof mark follows `</details>`. The block has a light
-inset and background, with less padding on mobile. The website animates both
+in that submodule and its QED; a closing proof mark stays inside the fold. The block has a light
+background and an indented frame, with less padding on mobile. Body-code edges align
+within each submodule's own column, not across nesting levels. The declaration keeps
+its original compact summary style, without the body's code outdent or QED gutter.
+The website animates both
 directions and retains native keyboard semantics.
 
 ## Figures
@@ -107,7 +118,10 @@ directions and retains native keyboard semantics.
 All figure recipes compose `book-diagram`, a stable `fig-*` ID, `aria-describedby`,
 and a direct trilingual `figcaption`. Place the explanation and hypotheses before
 the figure and use the caption for its takeaway. Figures have no outer decorative
-frame by default and no internal scrolling. Use `figure.frame` when the components
+frame by default and no internal scrolling. Never follow a figure immediately with
+an Agda code block: put the code after its explanation, or reorganize the surrounding
+prose. The diagram gate checks each language, including folded submodules and
+invisible intervening wrappers/comments. Use `figure.frame` when the components
 need an explicit overall boundary; the caption always stays outside that boundary.
 The first common shell is `fig-pi-sigma` in Prelude.
 
@@ -136,6 +150,13 @@ The first common shell is `fig-pi-sigma` in Prelude.
 Appearance is centralized in `site/static/bedrock.css`; animation is in
 `site/static/bedrock.js`. Shared SVG roles and allowed geometry are enforced by
 `scripts/site/diagram_style.py`, called by the renderer and `check-diagrams.py`.
+Logical implication connectors use `diagram-implication` and the neutral
+`--diagram-relation-color` token. The older `hlevel-link` class is a layout
+alias for the same role, not a hyperlink. Never use `--link-color` for diagram
+relations, paths, arrows or decorative geometry: it denotes actual navigation.
+The diagram gate checks shared CSS, including classes found in chapter figures,
+and rejects that misuse. Actual `a` elements and Agda/terminology links inside
+figures retain their own link colours; do not recolour all figure descendants.
 Diagram spacing follows one responsive scale: the figure shell owns its outer rhythm,
 `diagram-framed` owns the inset inside an overall frame, `diagram-panel` owns each
 parallel panel's inset, `diagram-space` owns the closest inset around mathematical

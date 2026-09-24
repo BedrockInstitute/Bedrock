@@ -1,13 +1,35 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+module FOL.Manipulation.Relabelling where
+```
+
 <!--en-->
 # Constant relabelling
+<!--zh-->
+# 常元改名
+<!--ja-->
+# 定数の改名
+<!--/-->
+
+```agda
+open import Base.Prelude
+open import FOL.ZFStructure using ( ZFStructure )
+open import FOL.Syntax using
+  ( Term; con; var; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
+open import FOL.Manipulation.ConstantMapping using ( mapTm; mapFo; embed )
+open import FOL.LevyHierarchy using
+  ( Δ₀; δ-∈; δ-≐; δ-∧; δ-∨; δ-⇒; δ-⊥; δ-∀∈; δ-∃∈
+  ; Σₙ; σ-Δ₀; σ-Π; σ-∃; Πₙ; π-Δ₀; π-Σ; π-∀ )
+import FOL.Semantics
+```
+
+<!--en-->
 
 A first-order formula carries constant symbols from some domain `K`, but the symbols themselves are inert: only the interpretation function decides what they denote. This chapter studies what happens when a function `f : K → K'` renames every constant symbol, an action written `mapFo f`. Two questions are answered. First, does the meaning survive the renaming, in the precise sense that satisfaction under `ι` after renaming coincides with satisfaction under the composite interpretation `ι ∘ f` before renaming? Second, does the syntactic classification of a formula in the Lévy hierarchy survive, so that the Δ₀ witness, and more generally the Σₙ/Πₙ witness, can be transported along `f`? Both answers are yes, and both proofs are structural, mirroring the constructors of the syntax.
 <!--zh-->
-# 常元改名
 
 一阶公式携带着来自某个常元域 `K` 的常元符号，但符号本身是惰性的：决定它们所指的只有解释函数。本章研究当一个函数 `f : K → K'` 改写每个常元符号时会发生什么，这一作用记作 `mapFo f`。这里回答两个问题。其一，含义是否在改名后幸存，精确地说：改名后在 `ι` 下的满足，是否等同于改名前在复合解释 `ι ∘ f` 下的满足？其二，公式在 Lévy 层级中的语法分类是否幸存，即 Δ₀ 见证以及更一般的 Σₙ/Πₙ 见证能否沿 `f` 搬运？两个答案都是肯定的，而且两个证明都是结构性的，与语法的构造子一一对应。
 <!--ja-->
-# 定数の改名
 
 一階の論理式はある定数域 `K` からの定数記号を運ぶが、記号そのものは不活性である。記号が何を指すかを決めるのは解釈関数だけである。この章では、関数 `f : K → K'` がすべての定数記号を改名するとき何が起こるかを調べる。この作用は `mapFo f` と書かれる。ここで答える問いは二つである。第一に、改名後の `ι` の下での充足が、改名前の合成解釈 `ι ∘ f` の下での充足と一致するという精密な意味で、意味は改名を生き延びるのか。第二に、Lévy 階層における論理式の構文的分類は生き延びるのか、すなわち Δ₀ の証人、より一般に Σₙ/Πₙ の証人は `f` に沿って運べるのか。答えはいずれも「はい」であり、両方の証明は構文の構成子に対応する構成的なものである。
 <!--/-->
@@ -20,15 +42,6 @@ Take a formula over a constant domain `K` and rename its constants along a funct
 定数域 `K` 上の論理式を取り、その定数を関数 `f : K → K'` に沿って改名してむ。論理式が何を述べるかは、どの解釈がそれを読むかで決まる。目標の解釈 `ι : K' → S` を改名後の論理式に適用するか、合成 `ι ∘ f` を元の論理式に適用するかである。本章の意味論的な半分は、この二つの読み方が常に一致するかを問い、構文論的な半分は、Lévy 階層における論理式の分類が改名を生き延びるかを問う。いずれも構文の構成子に対応する構造帰納法で示される。
 <!--/-->
 
-```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-module FOL.Manipulation.Relabelling where
-
-open import Base.Prelude
-open import FOL.ZFStructure using ( ZFStructure )
-```
-
 <!--en-->
 The action under study is written `mapTm f` on terms and `mapFo f` on formulas: a function `f : K → K'` relabels each constant `con k` to `con (f k)` and leaves every variable untouched. Because it acts on constants only, every connective and every quantifier, bounded or unbounded, keeps its exact position, which is the reason the Lévy classification should survive. The classification itself is given by inductive witnesses: an inhabitant of `Δ₀ φ` is explicit data certifying that every quantifier in `φ` is bounded, one constructor per permitted shape, and `Σₙ k φ` and `Πₙ k φ` record the alternating unbounded blocks.
 <!--zh-->
@@ -37,14 +50,6 @@ The action under study is written `mapTm f` on terms and `mapFo f` on formulas: 
 問題の作用は、項には `mapTm f`、論理式には `mapFo f` と書かれる。関数 `f : K → K'` は各定数 `con k` を `con (f k)` へ改名し、変数はそのまま残す。定数にだけ作用するため、すべての結合子とすべての量化子 (有界かどうかにかかわらず) は元の位置を保ち、これが Lévy 分類が生き延びるはずだと期待できる理由である。分類そのものは帰納的な証人で与えられる。`Δ₀ φ` の元は `φ` のすべての量化子が有界であることを証明する明示的なデータであり、許容される形ごとに一つの構成子を持ち、`Σₙ k φ` と `Πₙ k φ` は交互に現れる非有界の列を記録する。
 <!--/-->
 
-```agda
-open import FOL.Syntax using
-  ( Term; con; var; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
-open import FOL.Manipulation.ConstantMapping using ( mapTm; mapFo; embed )
-open import FOL.LevyHierarchy using
-  ( Δ₀; δ-∈; δ-≐; δ-∧; δ-∨; δ-⇒; δ-⊥; δ-∀∈; δ-∃∈
-```
-
 <!--en-->
 On the semantic side, a structure `𝒮` with carrier `S` reads a formula over `K` through an interpretation `ι : K → S`, yielding a satisfaction relation `_⊨_` and term evaluation `⟦_⟧`. The two readings to be compared therefore share the same syntax but differ in interpretation, and the proofs below keep them apart by carrying both side by side.
 <!--zh-->
@@ -52,11 +57,6 @@ On the semantic side, a structure `𝒮` with carrier `S` reads a formula over `
 <!--ja-->
 意味論の側では、台 `S` を持つ構造 `𝒮` が解釈 `ι : K → S` を通して `K` 上の論理式を読み、充足関係 `_⊨_` と項の評価 `⟦_⟧` を与える。したがって比較すべき二つの読み方は同じ構文を共有し、解釈だけが異なる。以下の証明では、両者を並行して扱いながら区別を保つ。
 <!--/-->
-
-```agda
-  ; Σₙ; σ-Δ₀; σ-Π; σ-∃; Πₙ; π-Δ₀; π-Σ; π-∀ )
-import FOL.Semantics
-```
 
 <!--en-->
 ## Meaning level
@@ -80,7 +80,6 @@ Fix a proposition-valued ZF structure `𝒮` with domain `S`, a relabelling `f :
 台 `S` をもつ命題値の ZF 構造 `𝒮`、改名 `f : K → K'`、そして対象域の解釈 `ι : K' → S` を固定する。合成 `ι ∘ f` は源の域の正当な解釈でもあるので、同じ論理式に二つの読み方が得られる。改名後の論理式を `ι` の下で読むか、元の論理式を `ι ∘ f` の下で読むかである。可換の問題とは、この二つの読み方が等しい命題を与えるかを問うことである。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -90,7 +89,6 @@ module _ {ℓ} (𝒮 : ZFStructure ℓ) where
 <div class="submodule-fold-content">
 
 ```agda
-
   open ZFStructure 𝒮
   open FOL.Semantics 𝒮 using ( module At; _^_ )
 ```
@@ -98,13 +96,10 @@ module _ {ℓ} (𝒮 : ZFStructure ℓ) where
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-
   module _ {ℓc ℓd} {K : Type ℓc} {K' : Type ℓd} (f : K → K') (ι : K' → S) where
 ```
 </summary>
 <div class="submodule-fold-content">
-
-
 
 <!--en-->
 The atomic case already shows why the two readings must agree. Consider the formula `t ∈̇ u`: the first reading evaluates it as `⟦ mapTm f t ⟧ γ ∈ˢ ⟦ mapTm f u ⟧ γ`, the second as `⟦ t ⟧∘ γ ∈ˢ ⟦ u ⟧∘ γ`. The term lemma `⟦⟧-map` gives `⟦ mapTm f t ⟧ γ ≡ ⟦ t ⟧∘ γ` for every term, and both of its cases hold by `refl`: a relabelled constant `con (f k)` evaluates to `ι (f k)`, which is exactly what the composite reading computes, and a variable ignores constants altogether.
@@ -115,7 +110,6 @@ The atomic case already shows why the two readings must agree. Consider the form
 <!--/-->
 
 ```agda
-
     open At K' ι using ( _⊨_; ⟦_⟧ )
     open At K (λ k → ι (f k)) using () renaming ( _⊨_ to _⊨∘_ ; ⟦_⟧ to ⟦_⟧∘ )
 
@@ -186,7 +180,6 @@ A bounded quantifier has one further component: `⟦⟧-map` identifies the inte
 </div>
 </details>
 
-
 <!--en-->
 The commutation lemma already contains the parameter-free case, and the corollary below merely reads it off. A parameter-free formula is one whose constant domain is the empty type `⊥*`; there are no constant symbols to interpret, so it can be embedded into formulas over any domain `K` by `embed`, and the two readings of its meaning must agree whatever `K` and `ι` are.
 <!--zh-->
@@ -203,7 +196,6 @@ The inner module fixes an arbitrary target domain `K` and interpretation `ι : K
 内側のモジュールは任意の対象域 `K` と解釈 `ι : K → S` を固定し、充足関係を二度開く。一度は通常どおり `K` 上の論理式に対して、もう一度は名前 `_⊨∅_` で空の定数域上の論理式に対してである。後者の解釈は関数 `λ b → ι (⊥*-rec b)` である。これが正当なのは、`⊥*-rec` が空型の消去子だからである。`⊥*` の元があれば任意の型 (`S` を含む) の元を作れるので、この解釈が実際に値を必要とすることは決してない。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -213,7 +205,6 @@ The inner module fixes an arbitrary target domain `K` and interpretation `ι : K
 <div class="submodule-fold-content">
 
 ```agda
-
     open At K ι using ( _⊨_ )
     open At (⊥* {ℓe}) (λ b → ι (⊥*-rec b)) using () renaming ( _⊨_ to _⊨∅_ )
 
@@ -237,7 +228,6 @@ The corollary `embed-⊨` is then a direct instance of `⊨-map`, with `f` taken
 
 </div>
 </details>
-
 
 <!--en-->
 ## Levy witness level

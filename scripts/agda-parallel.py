@@ -304,7 +304,7 @@ def main() -> int:
     parser.add_argument("--agda", type=Path, required=True)
     parser.add_argument("--project-root", type=Path, default=Path.cwd())
     parser.add_argument("--src", type=Path, default=Path("src"))
-    parser.add_argument("--root", default="Milestones")
+    parser.add_argument("--root", default="Origin")
     parser.add_argument("--jobs", type=int, default=2)
     parser.add_argument("--trace-out", type=Path)
     parser.add_argument("--html-dir", type=Path)

@@ -1,28 +1,19 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # The index of the least constructible stage
-
-Every constructible set x belongs to `Lset α` for at least one ordinal α. This chapter turns that mere existence into a canonical bound: the least ordinal whose stage contains x. The construction first solves a more general problem. For any hProp-valued property P of ordinals, a well-founded descent finds its least witness, while ordinal trichotomy proves that the resulting witness is unique.
-
-The descent begins at any ordinal satisfying P. At α it asks whether some smaller ordinal β ∈ α also satisfies P. A positive answer invokes the induction result at β; a negative answer proves α minimal. Membership induction makes this definition well founded. Both the assertion of a smaller witness and the initial witness are propositionally truncated, but `LeastOrd P` is itself a proposition, so each truncation may be eliminated into that complete package.
-
-Specializing P σ to x ∈ Lset σ gives `stage x hx`. Its accompanying theorems state that this index is an ordinal, that its stage contains x, and that no smaller ordinal stage contains x. The proof uses excluded middle only to decide the existence of a smaller witness and to compare two candidate ordinals.
 <!--zh-->
 # 最小可构造层的索引
-
-每个可构造集合 x 至少属于一个序数 α 所索引的 `Lset α`。本章把这种仅仅存在化为一个典范界：包含 x 的最小层之序数索引。证明先解决更一般的问题。对序数上的任意 hProp 值性质 P，良基下降找出其最小见证，序数三歧则证明所得见证唯一。
-
-下降从任意满足 P 的序数开始。在 α 处，询问是否有更小的 β ∈ α 也满足 P；肯定答案调用 β 处的归纳结果，否定答案则证明 α 最小。成员关系归纳使这一定义保持良基。「存在更小见证」的断言与初始见证都经过命题截断，但 `LeastOrd P` 本身是命题，因此每处截断都可以消去到这个完整包。
-
-把 P σ 特化为 x ∈ Lset σ，便得到 `stage x hx`。配套定理说明该索引是序数、其层包含 x，且没有更小的序数层包含 x。证明使用排中律的地方只有判定更小见证是否存在，以及比较两个候选序数。
 <!--ja-->
 # 最小の構成可能段階の添字
-
-各構成可能集合 x は、少なくとも一つの順序数 α に対する `Lset α` に属する。本章は、この単なる存在から標準的な上界、すなわち x を含む最小段階の順序数添字を得る。まず、より一般的な問題を解く。順序数上の任意の hProp 値の性質 P について、整礎的な降下が最小の証人を見つけ、順序数の三分法がその一意性を示す。
-
-降下は P を満たす任意の順序数から始まる。α において、より小さい β ∈ α も P を満たすかを問う。肯定なら β における帰納法の結果を使い、否定なら α の最小性が得られる。所属に関する帰納法により、この定義は整礎的である。「より小さい証人が存在する」という主張と最初の証人はいずれも命題的に切り捨てられているが、`LeastOrd P` 自身が命題なので、それぞれの切り捨てをこの完全なパッケージへ消去できる。
-
-P σ を x ∈ Lset σ に特殊化すると `stage x hx` が得られる。付随する定理は、この添字が順序数で、その段階が x を含み、より小さい順序数の段階は x を含まないことを述べる。排中律を使うのは、より小さい証人の存在を判定するときと、二つの候補順序数を比較するときだけである。
 <!--/-->
+
+```agda
+open import Base.Prelude
+open import Base.Classical using ( LEM )
+```
 
 <!--en-->
 Work at a fixed universe level ℓ and assume excluded middle at level ℓ-suc ℓ. The assumption will be used in two mathematically distinct ways: `ord-tri` compares ordinal candidates, while the descent decides the hProp asserting that a smaller candidate exists.
@@ -33,13 +24,40 @@ Work at a fixed universe level ℓ and assume excluded middle at level ℓ-suc �
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-open import Base.Prelude
-open import Base.Classical using ( LEM )
-
 module L.Stage {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
+
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-induction )
+open import L.Constructible {ℓ} using ( IsOrd; isPropIsOrd; Lset; isL )
+open import L.Ordinal.Linear {ℓ} lem using ( ord-tri )
+```
+
+<!--en-->
+
+Every constructible set x belongs to `Lset α` for at least one ordinal α. This chapter turns that mere existence into a canonical bound: the least ordinal whose stage contains x. The construction first solves a more general problem. For any hProp-valued property P of ordinals, a well-founded descent finds its least witness, while ordinal trichotomy proves that the resulting witness is unique.
+
+The descent begins at any ordinal satisfying P. At α it asks whether some smaller ordinal β ∈ α also satisfies P. A positive answer invokes the induction result at β; a negative answer proves α minimal. Membership induction makes this definition well founded. Both the assertion of a smaller witness and the initial witness are propositionally truncated, but `LeastOrd P` is itself a proposition, so each truncation may be eliminated into that complete package.
+
+Specializing P σ to x ∈ Lset σ gives `stage x hx`. Its accompanying theorems state that this index is an ordinal, that its stage contains x, and that no smaller ordinal stage contains x. The proof uses excluded middle only to decide the existence of a smaller witness and to compare two candidate ordinals.
+<!--zh-->
+
+每个可构造集合 x 至少属于一个序数 α 所索引的 `Lset α`。本章把这种仅仅存在化为一个典范界：包含 x 的最小层之序数索引。证明先解决更一般的问题。对序数上的任意 hProp 值性质 P，良基下降找出其最小见证，序数三歧则证明所得见证唯一。
+
+下降从任意满足 P 的序数开始。在 α 处，询问是否有更小的 β ∈ α 也满足 P；肯定答案调用 β 处的归纳结果，否定答案则证明 α 最小。成员关系归纳使这一定义保持良基。「存在更小见证」的断言与初始见证都经过命题截断，但 `LeastOrd P` 本身是命题，因此每处截断都可以消去到这个完整包。
+
+把 P σ 特化为 x ∈ Lset σ，便得到 `stage x hx`。配套定理说明该索引是序数、其层包含 x，且没有更小的序数层包含 x。证明使用排中律的地方只有判定更小见证是否存在，以及比较两个候选序数。
+<!--ja-->
+
+各構成可能集合 x は、少なくとも一つの順序数 α に対する `Lset α` に属する。本章は、この単なる存在から標準的な上界、すなわち x を含む最小段階の順序数添字を得る。まず、より一般的な問題を解く。順序数上の任意の hProp 値の性質 P について、整礎的な降下が最小の証人を見つけ、順序数の三分法がその一意性を示す。
+
+降下は P を満たす任意の順序数から始まる。α において、より小さい β ∈ α も P を満たすかを問う。肯定なら β における帰納法の結果を使い、否定なら α の最小性が得られる。所属に関する帰納法により、この定義は整礎的である。「より小さい証人が存在する」という主張と最初の証人はいずれも命題的に切り捨てられているが、`LeastOrd P` 自身が命題なので、それぞれの切り捨てをこの完全なパッケージへ消去できる。
+
+P σ を x ∈ Lset σ に特殊化すると `stage x hx` が得られる。付随する定理は、この添字が順序数で、その段階が x を含み、より小さい順序数の段階は x を含まないことを述べる。排中律を使うのは、より小さい証人の存在を判定するときと、二つの候補順序数を比較するときだけである。
+<!--/-->
+
+
 
 <!--en-->
 Membership supplies both the strict order on ordinals and its well-founded induction principle. Constructibility supplies the predicate IsOrd, the stage family Lset and the assertion isL x that x occurs in some ordinal-indexed stage. Thus the same membership relation controls descent among candidate indices and, after specialization, membership of x in a stage.
@@ -49,14 +67,6 @@ Membership supplies both the strict order on ordinals and its well-founded induc
 所属関係は、順序数上の狭義順序と、その整礎帰納の原理の両方を与える。構成可能性からは、述語 IsOrd、段階族 Lset、そして x がある順序数添字の段階に現れるという主張 isL x を得る。したがって同じ所属関係が候補添字の間の降下を制御し、特殊化後には x の段階への所属を表す。
 <!--/-->
 
-```agda
-
-open import FOL.ZFStructure using ( module hPropStructure )
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-induction )
-open import L.Constructible {ℓ} using ( IsOrd; isPropIsOrd; Lset; isL )
-open import L.Ordinal.Linear {ℓ} lem using ( ord-tri )
-```
-
 <!--en-->
 The assertion that a smaller witness exists is represented by a propositionally truncated existential. It records existence without exposing a chosen β. The eliminator `rec₁` can use such evidence only when the target is a proposition; the uniqueness proof below supplies exactly this fact for `LeastOrd P`. Products and dependent function spaces preserve propositionhood, which will also show that the evidence attached to a fixed ordinal index is unique.
 <!--zh-->
@@ -64,8 +74,6 @@ The assertion that a smaller witness exists is represented by a propositionally 
 <!--ja-->
 「より小さい証人が存在する」という主張は、命題的に切り捨てられた存在で表す。これは存在だけを記録し、選ばれた β を取り出さない。消去子 `rec₁` がこの証拠を使えるのは対象が命題の場合だけであり、下の一意性の証明が `LeastOrd P` についてまさにそれを示す。積と依存関数型は命題性を保つので、固定した順序数添字に付随する証拠も一意になる。
 <!--/-->
-
-
 
 <!--en-->
 A property P is a map into Ω, the type of hProps. Hence `⟨ P α ⟩` is its underlying proposition at α, and `snd (P α)` proves that any two of its witnesses agree. This propositionhood is needed when equality of ordinal indices is lifted to equality of complete least-witness packages.
@@ -76,7 +84,6 @@ A property P is a map into Ω, the type of hProps. Hence `⟨ P α ⟩` is its u
 <!--/-->
 
 ```agda
-
 open hPropStructure 𝒮ᵥ
 ```
 
@@ -108,7 +115,6 @@ Leastness is stated as a refutation: `isLeastOrd α` is the assertion, for every
 最小性は反駁として述べられる。`isLeastOrd α` とは、任意の集合 γ について、γ が P を満たす順序数でかつ γ ∈ α であるような状況は起こりえない、という主張である。ここで背理的な形の最小性が適切なのは、順序数の厳密な順序が所属を通して読み取られるからである。返すべき「より小さい順序数」の値はなく、導出すべきは不可能な状況だけである。パッケージ全体 `LeastOrd` は、順序数、その順序数性、そこでの P の証明、そしてこの最小性の条項をひとまとめにする。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -118,7 +124,6 @@ module _ (P : S → hProp (ℓ-suc ℓ)) where
 <div class="submodule-fold-content">
 
 ```agda
-
   isLeastOrd : S → Type (ℓ-suc ℓ)
   isLeastOrd α = (γ : S) → IsOrd γ → ⟨ P γ ⟩ → ⟨ γ ∈ˢ α ⟩ → ⊥₀
 
@@ -135,7 +140,6 @@ To prove two such packages equal, compare their ordinal indices first. Trichotom
 <!--/-->
 
 ```agda
-
   isPropLeastOrd : isProp LeastOrd
   isPropLeastOrd (α , ordα , pα , leastα) (α' , ordα' , pα' , leastα') =
     Σ≡Prop propRest α≡α'
@@ -260,7 +264,6 @@ The negative branch's minimality clause is where the refutation earns its keep: 
 </div>
 </details>
 
-
 <!--en-->
 ## The stage-index function
 
@@ -307,7 +310,6 @@ The package `theEarliest x p` contains the least index together with its three p
 <!--/-->
 
 ```agda
-
 opaque
   unfolding stage
   stage-ord : (x : S) (p : ⟨ isL x ⟩) → IsOrd (stage x p)

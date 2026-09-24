@@ -1,3 +1,7 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # Satisfaction and the recursion value
 <!--zh-->
@@ -6,38 +10,8 @@
 # 充足関係と再帰の値
 <!--/-->
 
-<!--en-->
-The recursive construction `Sat` assigns to each formula a set of coded
-environments, but its recursion equations acquire their intended meaning only
-after those codes are compared with genuine assignments in the structure on
-the members of `B`. The decisive choice is to use that restricted structure's
-inner semantics. Its quantified variables already range over `B`, while a
-bounded quantifier imposes the separate requirement of membership in the value
-of its bounding term.
-<!--zh-->
-递归构造 `Sat` 为每条公式指定一个编码环境集，但只有把这些编码同 `B` 的成员结构中的真正赋值比较以后，那些递归方程才取得预期含义。这里的关键选择是采用该限制结构的内层语义：其中的量化变元已经遍历 `B`，而有界量词还另行要求变元属于界项的取值。
-<!--ja-->
-再帰的構成 `Sat` は各論理式に符号化された環境の集合を割り当てるが、その再帰方程式が意図した意味をもつためには、それらの符号を `B` の要素からなる構造の実際の割当てと比較しなければならない。ここで重要なのは、この制限構造の内側の意味論を使うことである。量化変数はすでに `B` 上を動き、有界量化子はさらに、限界項の値への所属という別の条件を課す。
-<!--/-->
-
-```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-```
-
-<!--en-->
-The sole explicit hypothesis is excluded middle at level `ℓ-suc ℓ`. The
-formula induction below does not split on propositions itself; the hypothesis
-enters through the already constructed environment sets and satisfaction sets,
-whose separation operations are parameterized by `lem`.
-<!--zh-->
-唯一显式的假设是层级 `ℓ-suc ℓ` 上的排中律。下文的公式归纳本身不对命题作分类讨论；这条假设经由已经构造好的环境集与满足集进入，而这些集合所用的分离运算以 `lem` 为参数。
-<!--ja-->
-明示的な仮定は、レベル `ℓ-suc ℓ` における排中律だけである。以下の論理式に関する帰納法そのものは命題について場合分けをしない。この仮定は、すでに構成された環境集合と充足集合を通して入る。それらの分出は `lem` をパラメータとしているからである。
-<!--/-->
-
 ```agda
 open import Base.Prelude
-open import Cubical.Foundations.Prelude using ( funExt⁻ )
 open import Base.Classical using ( LEM )
 ```
 
@@ -58,6 +32,61 @@ descriptions interpret them in that restricted structure.
 module L.Coding.SatisfactionBridge {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax
+  using ( Term; con; var; Formula
+        ; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
+open import FOL.Manipulation.ConstantMapping using ( mapTm; mapFo; mapFo-comp )
+open import FOL.Manipulation.Relabelling using ( ⊨-map )
+import FOL.Absoluteness
+import FOL.Semantics
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Coding {ℓ} using ( pr )
+open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
+open import L.Definability {ℓ} using ( module DefOf )
+open import L.Coding.Environment {ℓ} using ( env; cons; lookup-spec )
+open import L.Coding.Expressions {ℓ} using ( consAtL; consAtL-adequate )
+open import L.Coding.EnvironmentSet {ℓ} lem
+  using ( Ix; envS; envSet; envSet-in; envSet-out )
+open import L.Coding.Satisfaction {ℓ} lem
+  using ( tmIs; tmIs-var-in; tmIs-var-out; cond; Sat; Sat-mem
+        ; cond∈-in; cond∈-out; cond≐-in; cond≐-out
+        ; cond∃-in; cond∃-out; cond∀-in; cond∀-out
+        ; cond∃∈-in; cond∃∈-out; cond∀∈-in; cond∀∈-out )
+```
+
+<!--en-->
+The recursive construction `Sat` assigns to each formula a set of coded
+environments, but its recursion equations acquire their intended meaning only
+after those codes are compared with genuine assignments in the structure on
+the members of `B`. The decisive choice is to use that restricted structure's
+inner semantics. Its quantified variables already range over `B`, while a
+bounded quantifier imposes the separate requirement of membership in the value
+of its bounding term.
+<!--zh-->
+递归构造 `Sat` 为每条公式指定一个编码环境集，但只有把这些编码同 `B` 的成员结构中的真正赋值比较以后，那些递归方程才取得预期含义。这里的关键选择是采用该限制结构的内层语义：其中的量化变元已经遍历 `B`，而有界量词还另行要求变元属于界项的取值。
+<!--ja-->
+再帰的構成 `Sat` は各論理式に符号化された環境の集合を割り当てるが、その再帰方程式が意図した意味をもつためには、それらの符号を `B` の要素からなる構造の実際の割当てと比較しなければならない。ここで重要なのは、この制限構造の内側の意味論を使うことである。量化変数はすでに `B` 上を動き、有界量化子はさらに、限界項の値への所属という別の条件を課す。
+<!--/-->
+
+<!--en-->
+The sole explicit hypothesis is excluded middle at level `ℓ-suc ℓ`. The
+formula induction below does not split on propositions itself; the hypothesis
+enters through the already constructed environment sets and satisfaction sets,
+whose separation operations are parameterized by `lem`.
+<!--zh-->
+唯一显式的假设是层级 `ℓ-suc ℓ` 上的排中律。下文的公式归纳本身不对命题作分类讨论；这条假设经由已经构造好的环境集与满足集进入，而这些集合所用的分离运算以 `lem` 为参数。
+<!--ja-->
+明示的な仮定は、レベル `ℓ-suc ℓ` における排中律だけである。以下の論理式に関する帰納法そのものは命題について場合分けをしない。この仮定は、すでに構成された環境集合と充足集合を通して入る。それらの分出は `lem` をパラメータとしているからである。
+<!--/-->
+
+```agda
+open import Cubical.Foundations.Prelude using ( funExt⁻ )
+```
+
+
+
 <!--en-->
 The proof follows the syntax of formulas. There are two atomic constructors,
 three propositional connectives, falsity, two unbounded quantifiers, and two
@@ -71,14 +100,6 @@ placed in the ambient constant alphabet without changing its syntactic shape.
 <!--ja-->
 証明は論理式の構文に沿って進む。論理式には二つの原子構成子、三つの命題結合子、偽、二つの非有界量化子、そして項で限界づけられた二つの有界量化子がある。したがって意味論の比較には十の場合がある。項と論理式の定数アルファベットは、それぞれ `mapTm` と `mapFo` によって取り替えられ、`mapFo-comp` は二度続けた取り替えが合成写像による取り替えと一致することを述べる。こうして `B` の要素を定数とする論理式を、その構文を変えずに周囲の定数アルファベットへ移せる。
 <!--/-->
-
-```agda
-open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax
-  using ( Term; con; var; Formula
-        ; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
-open import FOL.Manipulation.ConstantMapping using ( mapTm; mapFo; mapFo-comp )
-```
 
 <!--en-->
 Relabelling is semantically exact. If constants are changed along a map `f`,
@@ -94,14 +115,6 @@ which coded environments are built.
 定数の改名は意味論的に正確である。写像 `f` に沿って定数を取り替えたとき、解釈 `ι` のもとで `mapFo f φ` を評価した真理値は、合成された解釈 `ι ∘ f` のもとで `φ` を評価した真理値と一致する。これが `⊨-map` である。本章では、小さな要素添字、制限構造の要素、構成可能集合の間を移るときに、この等式を用いる。周囲の階層とその順序対演算は、符号化された環境を作る集合を供給する。
 <!--/-->
 
-```agda
-open import FOL.Manipulation.Relabelling using ( ⊨-map )
-import FOL.Absoluteness
-import FOL.Semantics
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-open import V.Coding {ℓ} using ( pr )
-```
-
 <!--en-->
 Three earlier constructions supply the mathematical data used by the bridge.
 For a set `B`, `DefOf` gives the structure restricted to membership in `B` and
@@ -116,14 +129,6 @@ does not assert that `B` itself is transitive.
 <!--ja-->
 先行する三つの構成が、この橋で使う数学的データを供給する。集合 `B` に対して、`DefOf` は `B` への所属に制限した構造と、その構造で定義可能な部分集合を与える。環境の符号化は有限の割当てを値のグラフで表し、一つの値を先頭に加えることで拡張を表す。最後に、環境集合の構成は、固定されたアリティをもつそのようなグラフをすべて集める。ここで使う推移性はクラス `L` の推移性である。構成可能集合の要素を再び構成可能とみなすために用いられ、`B` 自身が推移的であることは主張しない。
 <!--/-->
-
-```agda
-open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
-open import L.Definability {ℓ} using ( module DefOf )
-open import L.Coding.Environment {ℓ} using ( env; cons; lookup-spec )
-open import L.Coding.Expressions {ℓ} using ( consAtL; consAtL-adequate )
-open import L.Coding.EnvironmentSet {ℓ} lem
-```
 
 <!--en-->
 The coded and semantic sides already have complementary interfaces. An index
@@ -141,14 +146,6 @@ statements describe `cond`; the additional requirement of belonging to
 符号化された側と意味論の側には、すでに相補的なインターフェースがある。添字族は正準なグラフ `envS` を与え、`envSet-in` と `envSet-out` は正準なグラフと `envSet` の任意の要素を結ぶ。集合 `Sat B φ` はさらに、再帰的条件 `cond B φ` を充足するグラフを `envSet B n` から分出して得られる。論理式 `tmIs` は項の値の関係を表し、その変数の場合を読む補題を伴う。原子論理式と非有界量化子に関する読み出しは、対応する節を両方向に翻訳する。これらの主張が説明するのは `cond` であり、`envSet` に属するという追加条件は `Sat-mem` の別の成分として残る。
 <!--/-->
 
-```agda
-  using ( Ix; envS; envSet; envSet-in; envSet-out )
-open import L.Coding.Satisfaction {ℓ} lem
-  using ( tmIs; tmIs-var-in; tmIs-var-out; cond; Sat; Sat-mem
-        ; cond∈-in; cond∈-out; cond≐-in; cond≐-out
-        ; cond∃-in; cond∃-out; cond∀-in; cond∀-out
-```
-
 <!--en-->
 The remaining readers treat the two bounded quantifiers. Together with the
 preceding interfaces, they expose every non-propositional clause of `cond` in
@@ -161,10 +158,6 @@ restricted structure and the bound occurring in its inner semantics.
 <!--ja-->
 残る読み出しは二つの有界量化子を扱う。先のインターフェースと合わせると、`cond` の命題結合子以外の各節を両方向に展開できる。有界な節では二つの制限を区別する。新しい値は台 `B` に属さなければならず、同時に限界項の値にも属さなければならない。後の帰納法では、これらを制限構造の論域と、内側の意味論に現れる限界とにそれぞれ対応させる。
 <!--/-->
-
-```agda
-        ; cond∃∈-in; cond∃∈-out; cond∀∈-in; cond∀∈-out )
-```
 
 <!--en-->
 The proof compares proposition-valued statements by paths. `⇔toPath` turns two
@@ -179,8 +172,6 @@ target is again a proposition, so no chosen witness is extracted.
 <!--ja-->
 証明は命題値の主張をパスによって比較する。`⇔toPath` は命題の間の二方向の含意をそのようなパスへ変え、その後は合同性によって比較を論理構成子の内部へ運べる。所属の原子の場合には、二つの候補となる項の値をそれぞれ意味論的な値と同定した後、`subst2` が二つの等式に沿って所属関係を輸送する。存在の節と環境の回復には命題的切り詰めを用いる。切り詰めは目標が再び命題である場合にだけ除去されるので、選ばれた証人が取り出されることはない。
 <!--/-->
-
-
 
 <!--en-->
 A hierarchy set comes with a small presentation of its members. For a proof
@@ -279,7 +270,6 @@ structure.
 <!--ja-->
 ここで `B : S` を固定する。その基礎となる階層の集合に `DefOf` を適用すると、制限された論域 `DB.SM` が得られる。その要素は、集合と、それが `B` に属することの証明との対である。構造 `DB.𝒮M` は、この論域の上で所属と等号を解釈する。そこで定数の恒等解釈を用いて通常の一階意味論を開くと、`_⊨ᴮ_` と `⟦_⟧ᴮ` が得られる。これらは `DB.defSet` の定義に使われる内側の充足と項の評価そのものなので、橋の意味論的な終点と定義可能部分集合は同じ制限構造を共有する。
 <!--/-->
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
@@ -736,7 +726,6 @@ impose the identical impossible condition.
 <!--/-->
 
 ```agda
-
   step⊥ : ∀ {n} → Adequate {n} ⊥̇
   step⊥ δ z q = Sat-cond ⊥̇ δ z q
 ```
@@ -1474,7 +1463,6 @@ auxiliary data.
 <!--/-->
 
 ```agda
-
     tab-graph : ∀ {n} (g : Ix B n) → graph (tab g) ≡ fst (envS B g)
     tab-graph g = cong env (tab-values g)
 ```
@@ -1639,7 +1627,6 @@ interpreted by `DB.ι`.
 <!--/-->
 
 ```agda
-
   defSet-Sat : (ψ : Formula ⟪ fst B ⟫ 1) (m : ⟪ fst B ⟫)
              → (⟪ fst B ⟫↪ m ∈ DB.defSet ψ)
              ≡ (envS B (λ _ → m) ∈ˢ Sat B (mapFo asConst ψ))
@@ -1673,7 +1660,6 @@ constructions read the recursive satisfaction value.
 ```
 </div>
 </details>
-
 
 <!--en-->
 ## Recap

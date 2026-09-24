@@ -1,5 +1,38 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # Collapsing a transitive well-founded relation
+<!--zh-->
+# 传递良基关系的塌缩
+<!--ja-->
+# 推移的な整礎関係の崩壊
+<!--/-->
+
+```agda
+open import Base.Prelude
+```
+
+<!--en-->
+The collapse lands in the set-level carrier of the cumulative hierarchy, so its output is made of genuine sets rather than of points of `A`. That carrier, written `SV.S` below, is a type whose equality types are propositions, and its membership `_∈ˢ_` packages each membership statement as an `hProp`: an underlying type `⟨ b ∈ˢ a ⟩` together with a proof that this type is a proposition. Working against this fixed vocabulary, the chapter's theorems can state membership and transitivity with the hierarchy's own relation rather than with a new one.
+<!--zh-->
+塌缩落在累积层级的集合层载体中，因此其输出由真正的集合构成，而非 `A` 的点。该载体在下文记作 `SV.S`；它是 h-集合，也就是任意两元素之间的相等类型都是命题。其成员关系 `_∈ˢ_` 把每条隶属陈述打包成一个 `hProp`：底层类型 `⟨ b ∈ˢ a ⟩` 连同该类型为命题的证明。因此，隶属与传递性都可以直接用层级自身的关系陈述。
+<!--ja-->
+崩壊は累積階層の集合レベルの台に着地する。したがって出力は `A` の点ではなく集合である。この台を以下では `SV.S` と書く。これは h-集合、すなわち任意の二要素の間の等式型が命題となる型である。所属関係 `_∈ˢ_` は各所属の主張を `hProp`、つまり根底の型 `⟨ b ∈ˢ a ⟩` とその型が命題である証明の対として与える。したがって所属と推移性は階層本来の関係で直接述べられる。
+<!--/-->
+
+```agda
+module L.Mostowski {ℓ : Level} where
+```
+
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import L.Constructible {ℓ} using ( IsOrd; isTransV; isPropIsTransV )
+```
+
+<!--en-->
 
 How much set-theoretic structure does a relation carry on its own? Fix a small type `A` with a well-founded, transitive relation `_≺_` valued in `Type ℓ`. Mostowski's answer: the relation alone determines a function `col : A → SV.S` by recursion, with
 
@@ -11,7 +44,6 @@ A finite example shows the mechanism. Take three points `s`, `r`, `p` with `s �
 
 Three features of the setting shape everything that follows. First, `A` and each fiber `x ≺ y` live in `Type ℓ`, so for each `p` the predecessor cone is the small type `Σ[ r ∈ A ] (r ≺ p)`; the `sett`{.Agda} constructor of the hierarchy `V`{.Agda} turns precisely such a small family into a set of `SV.S`. Second, membership in a `sett`-set is by construction a propositional truncation: `⟨ b ∈ˢ a ⟩` says that some index of the family merely hits `b`, not that a chosen index is available. The chapter therefore proves membership in one direction from given data (`r ≺ p` yields `col r ∈ˢ col p`) and, in the other direction, only a merely existing predecessor with an equation of collapse values. Third, the targets of the later eliminations are propositions, such as an equality of sets or `isTransV x`, so eliminating the truncation into them is legitimate. No extensionality hypothesis on `_≺_` appears, so two points with identical predecessor cones are not distinguished: the collapse is canonical, but not claimed to be injective. The construction uses only well-founded recursion and transport; no classical principle is assumed anywhere in this module.
 <!--zh-->
-# 传递良基关系的塌缩
 
 一个关系自身能携带多少集合论结构？取带良基传递关系 `_≺_` 的小类型 `A`，该关系取值于 `Type ℓ`。Mostowski 的回答是：仅凭这个关系，就能用递归确定一个函数 `col : A → SV.S`，满足
 
@@ -23,7 +55,6 @@ Three features of the setting shape everything that follows. First, `A` and each
 
 设定的三个特征决定其后的一切。其一，`A` 与每个纤维 `x ≺ y` 都在 `Type ℓ` 中，故对每个 `p`，前驱锥是小类型 `Σ[ r ∈ A ] (r ≺ p)`；层级 `V`{.Agda} 的 `sett`{.Agda} 构造子恰好把这样的小族变成 `SV.S` 中的集合。其二，`sett` 集合中的隶属按构造就是命题截断：`⟨ b ∈ˢ a ⟩` 说的是纯粹存在该族的某个索引，使族在该处的值等于 `b`，而非选定的索引可得。因此本章在一个方向上从给出的数据证明隶属 (`r ≺ p` 给出 `col r ∈ˢ col p`)，在另一方向上只得到纯粹存在的前驱加一条塌缩值等式。其三，之后消去的目标都是命题，如集合间的等式或 `isTransV x`，故向它们消去截断是合法的。这里没有对 `_≺_` 的外延性假设，前驱锥相同的两点不被区分：塌缩是典范的，但并不声称单射。整个构造只用良基递归与传输；这里没有假设任何经典原理。
 <!--ja-->
-# 推移的な整礎関係の崩壊
 
 関係だけでどれほどの集合論的構造が得られるのか。`Type ℓ` 値の推移的な整礎関係 `_≺_` を持つ小さな型 `A` を固定する。Mostowski の答えは、関係だけから再帰によって関数 `col : A → SV.S` が定まり、
 
@@ -36,23 +67,7 @@ Three features of the setting shape everything that follows. First, `A` and each
 設定の三つの特徴がその後のすべてを形作る。第一に、`A` と各繊維 `x ≺ y` は `Type ℓ` にあるので、各 `p` の前者の錐は小さな型 `Σ[ r ∈ A ] (r ≺ p)` である。階層 `V`{.Agda} の `sett`{.Agda} 構成子はまさにこのような小さな族を `SV.S` の集合に変える。第二に、`sett` 集合への所属は構成上命題的切り詰めである。`⟨ b ∈ˢ a ⟩` はあるインデックスで族の値が `b` に等しいことが単に存在すると述べるのであって、選ばれたインデックスが得られるとは言わない。したがって本章では、一方向には与えられたデータから所属を証明し (`r ≺ p` が `col r ∈ˢ col p` を与える)、他方向には崩壊値の等式を伴う、単に存在する前者しか得られない。第三に、後の消去の目標は集合の等式や `isTransV x` といった命題なので、そこへの切り詰めの消去は正当である。`_≺_` に対する外延性の仮定は現れず、同じ前者の錐を持つ二点は区別されない。崩壊は正準であるが、単射であるとは主張しない。構成は整礎再帰と輸送だけを用い、ここでは古典的な原理を何も仮定しない。
 <!--/-->
 
-<!--en-->
-The collapse lands in the set-level carrier of the cumulative hierarchy, so its output is made of genuine sets rather than of points of `A`. That carrier, written `SV.S` below, is a type whose equality types are propositions, and its membership `_∈ˢ_` packages each membership statement as an `hProp`: an underlying type `⟨ b ∈ˢ a ⟩` together with a proof that this type is a proposition. Working against this fixed vocabulary, the chapter's theorems can state membership and transitivity with the hierarchy's own relation rather than with a new one.
-<!--zh-->
-塌缩落在累积层级的集合层载体中，因此其输出由真正的集合构成，而非 `A` 的点。该载体在下文记作 `SV.S`；它是 h-集合，也就是任意两元素之间的相等类型都是命题。其成员关系 `_∈ˢ_` 把每条隶属陈述打包成一个 `hProp`：底层类型 `⟨ b ∈ˢ a ⟩` 连同该类型为命题的证明。因此，隶属与传递性都可以直接用层级自身的关系陈述。
-<!--ja-->
-崩壊は累積階層の集合レベルの台に着地する。したがって出力は `A` の点ではなく集合である。この台を以下では `SV.S` と書く。これは h-集合、すなわち任意の二要素の間の等式型が命題となる型である。所属関係 `_∈ˢ_` は各所属の主張を `hProp`、つまり根底の型 `⟨ b ∈ˢ a ⟩` とその型が命題である証明の対として与える。したがって所属と推移性は階層本来の関係で直接述べられる。
-<!--/-->
 
-```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-open import Base.Prelude
-
-module L.Mostowski {ℓ : Level} where
-
-open import FOL.ZFStructure using ( module hPropStructure )
-```
 
 <!--en-->
 Two ingredients drive the construction. The first is the image operation `sett`{.Agda} of the hierarchy: from a small index type `X` and a family `X → V ℓ` it forms the set of that family's values, with membership holding merely when some index hits the target. The second is the well-foundedness certificate `WellFounded _≺_`, the assertion that every element of `A` is accessible along `≺`; its induction principle builds recursively defined functions, and its companion computation law records what such a function does at each point. Propositional truncation enters through `∥ _ ∥₁` with introduction `∣ _ ∣₁`, because membership in an image is truncated by design. The ordinal target `IsOrd`, transitivity `isTransV`, and its propositionhood proof `isPropIsTransV` come from the development of `L` and appear only at the end, where the final theorem needs them.
@@ -63,9 +78,6 @@ Two ingredients drive the construction. The first is the image operation `sett`{
 <!--/-->
 
 ```agda
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-open import L.Constructible {ℓ} using ( IsOrd; isTransV; isPropIsTransV )
-
 open import Cubical.HITs.CumulativeHierarchy.Base using ( sett )
 open import Cubical.Induction.WellFounded using ( WellFounded; module WFI )
 ```
@@ -79,7 +91,6 @@ The hierarchy structure has equality and membership valued in `hProp` at level `
 <!--/-->
 
 ```agda
-
 module SV = hPropStructure 𝒮ᵥ
 open SV using ( _∈ˢ_ )
 ```
@@ -100,7 +111,6 @@ Well-foundedness is what licenses the recursion. The induction principle obtaine
 再帰を可能にするのは整礎性である。`wf` から得られる帰納原理によれば、`A` 上の族 `P` を定義するには、各 `p` で全ての前者 `r ≺ p` における `P` の値から `P p` を構成すれば十分である。推移性の証拠 `≺-trans` は `col` の定義には使われず、得られた集合の推移性を後で証明するときに使われる。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -112,7 +122,6 @@ module Mostowski (A : Type ℓ) (_≺_ : A → A → Type ℓ)
 <div class="submodule-fold-content">
 
 ```agda
-
   module W = WFI wf using ( induction; induction-compute )
 
   colStep : (p : A) → (∀ r → r ≺ p → SV.S) → SV.S

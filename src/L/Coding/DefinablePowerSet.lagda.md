@@ -1,3 +1,7 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # A formula for the definable power set
 <!--zh-->
@@ -5,6 +9,55 @@
 <!--ja-->
 # 定義可能な冪集合を表す論理式
 <!--/-->
+
+```agda
+open import Base.Prelude
+open import Base.Classical using ( LEM )
+```
+
+<!--en-->
+Fix a universe level `ℓ`{.Agda} and assume `lem : LEM (ℓ-suc ℓ)`{.Agda}. This hypothesis supplies a decision for each proposition at that level; it remains an explicit parameter of the constructions below.
+<!--zh-->
+固定宇宙层级 `ℓ`{.Agda}，并假设 `lem : LEM (ℓ-suc ℓ)`{.Agda}。这个假设为相应层级的每个命题提供判定，并始终作为下文构造的显式参数。
+<!--ja-->
+宇宙レベル `ℓ`{.Agda} を固定し、`lem : LEM (ℓ-suc ℓ)`{.Agda} を仮定する。この仮定は該当するレベルの各命題に判定を与え、以下の構成の明示的なパラメータとして保たれる。
+<!--/-->
+
+```agda
+module L.Coding.DefinablePowerSet {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+```
+
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax using ( Formula; var; _∈̇_; _∧̇_; ∃̇_ )
+open import FOL.Manipulation.ConstantMapping using ( mapFo )
+import FOL.Absoluteness
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV )
+open import V.Coding {ℓ} using ( pr )
+open import L.Constructible {ℓ}
+  using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset; 𝒟ₒ; 𝒟ₒ-intro; 𝒟ₒ-inv )
+open import L.Definability {ℓ} using ( module DefOf )
+open import L.Axioms.Basic {ℓ} using ( 𝒟ₒ→isL; LsetS )
+open import L.Coding.Model {ℓ} using ( domAt-out )
+open import L.Coding.Expressions {ℓ} using ( extAt; extAt-out; extAt-in; extAt-in-both; tagAtL; tagAtL-adequate )
+open import L.Coding.Environment {ℓ} using ( env )
+open import L.Coding.FormulaRecovery {ℓ} using ( keyOf; keyOf-fst )
+open import L.Coding.CodeSet {ℓ} lem
+  using ( keyArityAtL; keyArityAtL-in; keyArityAtL-out; hasWitnessAt
+        ; codeS; keyS; witnessAt-in; witnessAt-out )
+open import L.Coding.SatisfactionGraph {ℓ} lem
+  using ( satGraphAt; GraphWitAt; graphAt-in; graphAt-out
+        ; Bi; Ti; Ci; Ei; NN; ev; numν )
+open import L.Coding.EnvironmentTower {ℓ} lem using ( module Tower )
+open import L.Coding.Quantification {ℓ} using ( f0; f1; f2; f3; f4; f5; f6; f7; f8; f9 )
+open import L.Coding.PinnedRecursion {ℓ} lem using ( module SatSoundC; module SlotHolds )
+open import L.Coding.SatisfactionTable {ℓ} lem
+  using ( keyʟ; slot; satTable; entry-in )
+open import L.Coding.SlotClosure {ℓ} lem using ( slotClosed )
+open import L.Coding.Satisfaction {ℓ} lem using ( Sat )
+open import L.Coding.SatisfactionBridge {ℓ} lem using ( asConst; defSet-Sat )
+open import L.Coding.UniformSatisfaction {ℓ} lem using ( keyBridge; fr; frTags; frTow; frDom )
+```
 
 <!--en-->
 This chapter combines formula codes with uniform satisfaction to define a first-order predicate for membership in a carrier’s definable power set, and proves that the predicate selects exactly the subsets defined by one-variable formulas.
@@ -46,42 +99,6 @@ and a lemma's worth of difference.
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-open import Base.Prelude
-open import Base.Classical using ( LEM )
-
-module L.Coding.DefinablePowerSet {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-
-open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using ( Formula; var; _∈̇_; _∧̇_; ∃̇_ )
-open import FOL.Manipulation.ConstantMapping using ( mapFo )
-import FOL.Absoluteness
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV )
-open import V.Coding {ℓ} using ( pr )
-open import L.Constructible {ℓ}
-  using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset; 𝒟ₒ; 𝒟ₒ-intro; 𝒟ₒ-inv )
-open import L.Definability {ℓ} using ( module DefOf )
-open import L.Axioms.Basic {ℓ} using ( 𝒟ₒ→isL; LsetS )
-open import L.Coding.Model {ℓ} using ( domAt-out )
-open import L.Coding.Expressions {ℓ} using ( extAt; extAt-out; extAt-in; extAt-in-both; tagAtL; tagAtL-adequate )
-open import L.Coding.Environment {ℓ} using ( env )
-open import L.Coding.FormulaRecovery {ℓ} using ( keyOf; keyOf-fst )
-open import L.Coding.CodeSet {ℓ} lem
-  using ( keyArityAtL; keyArityAtL-in; keyArityAtL-out; hasWitnessAt
-        ; codeS; keyS; witnessAt-in; witnessAt-out )
-open import L.Coding.SatisfactionGraph {ℓ} lem
-  using ( satGraphAt; GraphWitAt; graphAt-in; graphAt-out
-        ; Bi; Ti; Ci; Ei; NN; ev; numν )
-open import L.Coding.EnvironmentTower {ℓ} lem using ( module Tower )
-open import L.Coding.Quantification {ℓ} using ( f0; f1; f2; f3; f4; f5; f6; f7; f8; f9 )
-open import L.Coding.PinnedRecursion {ℓ} lem using ( module SatSoundC; module SlotHolds )
-open import L.Coding.SatisfactionTable {ℓ} lem
-  using ( keyʟ; slot; satTable; entry-in )
-open import L.Coding.SlotClosure {ℓ} lem using ( slotClosed )
-open import L.Coding.Satisfaction {ℓ} lem using ( Sat )
-open import L.Coding.SatisfactionBridge {ℓ} lem using ( asConst; defSet-Sat )
-open import L.Coding.UniformSatisfaction {ℓ} lem using ( keyBridge; fr; frTags; frTow; frDom )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Properties
   using ( ⟪_⟫; ∈-asFiber )
@@ -148,7 +165,6 @@ envOneAt e y = extAt e (tagAtL zero 0 (suc y))
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-
 module _ {n : ℕ} (e y : Fin n) (γ : S ^ n) where
 ```
 </summary>
@@ -206,7 +222,6 @@ module _ {n : ℕ} (e y : Fin n) (γ : S ^ n) where
 </div>
 </details>
 
-
 <!--en-->
 ## Recognizing the subset defined by a code
 <!--zh-->
@@ -256,7 +271,6 @@ DefinesAt x w v = extAt x ( (var zero ∈̇ var (suc w))
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-
 module _ {n : ℕ} (x w v : Fin n) (γ : S ^ n) where
 ```
 </summary>
@@ -316,7 +330,6 @@ module _ {n : ℕ} (x w v : Fin n) (γ : S ^ n) where
 </div>
 </details>
 
-
 <!--en-->
 ## Recognizing codes over a variable carrier
 <!--zh-->
@@ -357,7 +370,6 @@ isCodeAt c w = keyArityAtL c 1 ∧̇ hasWitnessAt w c
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-
 module _ (A : S) where
 ```
 </summary>
@@ -386,7 +398,6 @@ module _ (A : S) where
 ```
 </div>
 </details>
-
 
 <!--en-->
 ## Satisfaction over a variable carrier
@@ -422,7 +433,6 @@ instead of seconds.
 
 两者都以等式给出码与取值，而不是点名键；这正是诸取值定理写作时遵循的规则：一旦点名一个键，它的构造就会被并入一个满足关系，同一条陈述的验证时间于是从几秒变成几分钟。
 <!--/-->
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
@@ -485,7 +495,6 @@ module _ (B : S) where
 ```
 </div>
 </details>
-
 
 <!--en-->
 ## The definable-power-set description
@@ -583,7 +592,6 @@ anywhere below.
 此处的一切都陈述在**变元**载体上，只经过一条等式，而正是这一点把层挡在证明之外。在某一层处的实例化只是调用方提供的一条等式，而 `Lset`{.Agda} 与序数在下文任何地方都不出现。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -593,9 +601,9 @@ module _ (A : S) where
 <div class="submodule-fold-content">
 
 ```agda
-  private
-    module DA = DefOf (fst A)
+  private module DA = DefOf (fst A)
 
+  private
     toS : Formula ⟪ fst A ⟫ 1 → Formula S 1
     toS ψ = mapFo (asConst A) ψ
 
@@ -779,7 +787,6 @@ altogether.
 ```
 </div>
 </details>
-
 
 <!--en-->
 ## Definable power sets at constructible stages

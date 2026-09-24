@@ -1,16 +1,63 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # The constructible hierarchy inside L
+<!--zh-->
+# L 内部的可构造层级
+<!--ja-->
+# L の内部における構成可能階層
+<!--/-->
+
+```agda
+open import Base.Prelude
+open import Base.Classical using ( LEM )
+```
+
+<!--en-->
+Fix a universe level `ℓ`{.Agda} and assume `lem : LEM (ℓ-suc ℓ)`{.Agda}. This hypothesis supplies a decision for each proposition at that level; it remains an explicit parameter of the constructions below.
+<!--zh-->
+固定宇宙层级 `ℓ`{.Agda}，并假设 `lem : LEM (ℓ-suc ℓ)`{.Agda}。这个假设为相应层级的每个命题提供判定，并始终作为下文构造的显式参数。
+<!--ja-->
+宇宙レベル `ℓ`{.Agda} を固定し、`lem : LEM (ℓ-suc ℓ)`{.Agda} を仮定する。この仮定は該当するレベルの各命題に判定を与え、以下の構成の明示的なパラメータとして保たれる。
+<!--/-->
+
+```agda
+module L.Hierarchy {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+```
+
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax using ( Formula )
+import FOL.Absoluteness
+import FOL.ZFModel
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-induction; extensionalV )
+open import V.Coding {ℓ} using ( pr; pr-inj )
+open import L.Constructible {ℓ}
+  using ( 𝒮ʟ; isL; isL-trans; 𝒟ₒ; Lset; Lset-in; Lset-out; IsOrd )
+open import L.Ordinal {ℓ} using ( mem-ord )
+open import L.Axioms.Basic {ℓ} using ( LsetS; isL-𝒟ₒ )
+open import L.Axioms.Full {ℓ} lem using ( hasReplacementL )
+open import L.Recursion {ℓ} lem using ( mereFunct )
+open import L.Coding.Model {ℓ} using ( prʟ; prʟ-fst; domAt-intro )
+open import L.Coding.HierarchySequence {ℓ} lem
+  using ( StepAt; StepOf; PowOK; StepAt-in; StepAt-out; StepAt-back
+        ; ApproxAt; ApproxAt-dom; ApproxAt-value; ApproxAt-step; ApproxAt-in
+        ; LsetGraphAt; LsetGraph-in; LsetGraph-out; GraphOf
+        ; PairGraphAt; PairOf; PairGraph-in; PairGraph-out )
+```
+
+<!--en-->
 
 A first-order graph inside `L` records the external constructible hierarchy up
 to a chosen ordinal. Tables are compared with the external tower, shown
 functional and exact, then collected into a constructible set whose members are
 precisely the earlier stages.
 <!--zh-->
-# L 内部的可构造层级
 
 `L` 内的一阶图记录外部的可构造层级，直至给定序数。表中的值与外部层级逐一对照，被证明具有函数性且精确；随后这些对被收集成一个可构造集合，其成员恰是此前各层。
 <!--ja-->
-# L の内部における構成可能階層
 
 `L` 内の一階のグラフは、指定した順序数までの外部の構成可能階層を記録する。表の値を外部の塔と照らして関数的かつ正確であると示し、そののち、これらの対を、それより前の段階をちょうど要素とする構成可能集合へ集める。
 <!--/-->
@@ -31,15 +78,6 @@ step with the tower serves both elimination and introduction.
 本章は内部の階層を構成する。階層の順序数 `α` に対し、`hierL`{.Agda} の `α` での値は `L` の要素であり、その要素は「`α` の下の順序数 `β` と塔の値 `Lset β`」の順序対ちょうどである。一つのパターンが章全体で繰り返される。**表**とは順序対の集合であり、集合 `B` の下で記録する値がすべてメタレベルの塔のそこでの値であるとき、`B` の上で**正しい**と言い、その下のすべての入力で値を記録しているとき**完備**と言う。正しくて完備な表こそ、グラフのステップ条件が読むものであり、そこから書き下せるものでもある。だからステップと塔を結ぶ補題の組が、消去と導入の両方に仕える。
 <!--/-->
 
-```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-open import Base.Prelude
-open import Base.Classical using ( LEM )
-
-module L.Hierarchy {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-```
-
 <!--en-->
 The chapter runs at one excluded-middle instance, taken at the successor of the
 model's own level; every construction below is stated inside this module and
@@ -49,13 +87,6 @@ carries that hypothesis only where an axiom chapter passed it on.
 <!--ja-->
 本章は、モデル自身のレベルの後続で排中律の実例を一つ取り、そのもとで進む。以下の構成はすべてこのモジュールの内部で述べられ、公理の章が渡す場所でだけこの仮定を帯ぶ。
 <!--/-->
-
-```agda
-open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using ( Formula )
-import FOL.Absoluteness
-import FOL.ZFModel
-```
 
 <!--en-->
 Two structures are in play. The ambient hierarchy contributes its structure
@@ -69,11 +100,6 @@ constructible, so every carrier element `x` has an underlying set `fst x`.
 ここでは二つの構造が現れる。周囲の階層はその構造 `𝒮ᵥ`{.Agda} を与え、本章はその所属の帰納と外延性を用いる。構成可能な構造 `𝒮ʟ`{.Agda} は台 `S` を与える。その要素は、階層の集合に「それが構成可能である」証明を添えたものであり、だから各台の要素 `x` には基礎の集合 `fst x` がある。
 <!--/-->
 
-```agda
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-induction; extensionalV )
-open import V.Coding {ℓ} using ( pr; pr-inj )
-```
-
 <!--en-->
 From the hierarchy come three tools used throughout: induction along
 membership, extensionality of sets, and the ordered pair `pr`{.Agda} with the
@@ -84,11 +110,6 @@ hierarchy, which is where the recorded entries of a table live too.
 <!--ja-->
 階層は、章を通して使う三つの道具を与える。所属に沿う帰納、集合の外延性、そして順序対 `pr`{.Agda} と、その成分を取り戻す単射性である。この対は階層のレベルにあり、表の記録された項目も同じレベルにある。
 <!--/-->
-
-```agda
-open import L.Constructible {ℓ}
-  using ( 𝒮ʟ; isL; isL-trans; 𝒟ₒ; Lset; Lset-in; Lset-out; IsOrd )
-```
 
 <!--en-->
 From the constructible side come the tower `Lset`{.Agda}, which sends an
@@ -103,13 +124,6 @@ size indices of types.
 <!--ja-->
 構成可能の側からは、塔 `Lset`{.Agda} が来る。これは階層の順序数を、そこでの構成可能段階へ送る。ほかに、定義可能冪集合 `𝒟ₒ`{.Agda}、二つの所属の読み `Lset-in`{.Agda} と `Lset-out`{.Agda}、順序数性 `IsOrd`{.Agda}、そして「構成可能性が所属に沿って伝わる」事実である。塔の添字は順序数、すなわち階層の集合であり、型の大きさの添字である宇宙レベルでは決してない。
 <!--/-->
-
-```agda
-open import L.Ordinal {ℓ} using ( mem-ord )
-open import L.Axioms.Basic {ℓ} using ( LsetS; isL-𝒟ₒ )
-open import L.Axioms.Full {ℓ} lem using ( hasReplacementL )
-open import L.Recursion {ℓ} lem using ( mereFunct )
-```
 
 <!--en-->
 Three further facts carry the chapter: a member of an ordinal is an ordinal;
@@ -133,10 +147,6 @@ The model contributes its own ordered pair `prʟ`{.Agda}, with the reading
 モデルは自分自身の順序対 `prʟ`{.Agda} と、その第一射影を同定する読み `prʟ-fst`{.Agda}、そして定義域の条項 `domAt-intro`{.Agda} を与える。
 <!--/-->
 
-```agda
-open import L.Coding.Model {ℓ} using ( prʟ; prʟ-fst; domAt-intro )
-```
-
 <!--en-->
 The preceding coding chapter contributes the vocabulary this chapter
 assembles: the step condition with its witness and three readings, the
@@ -148,16 +158,6 @@ its two readings, and the pair graph.
 一つ前の符号化の章は、本章が組み立てる語彙を供給する。証人と三つの読みをもつステップ条件、定義域・値・ステップの条項をもつ近似、二つの読みをもつ塔のグラフ、そして順序対のグラフである。
 <!--/-->
 
-```agda
-open import L.Coding.HierarchySequence {ℓ} lem
-  using ( StepAt; StepOf; PowOK; StepAt-in; StepAt-out; StepAt-back
-        ; ApproxAt; ApproxAt-dom; ApproxAt-value; ApproxAt-step; ApproxAt-in
-        ; LsetGraphAt; LsetGraph-in; LsetGraph-out; GraphOf
-        ; PairGraphAt; PairOf; PairGraph-in; PairGraph-out )
-```
-
-
-
 <!--en-->
 The propositional machinery is the usual one: truncated existence, its
 injection and elimination, the fact that a pair with a propositional second
@@ -168,10 +168,6 @@ pointwise equivalence of memberships into a path of sets.
 <!--ja-->
 命題の機構はいつものものである。切り詰められた存在、その注入と消去、第二成分が命題である対が第一成分の等しさで等しくなること、そして所属の各点での同値を集合のパスへ変える操作である。
 <!--/-->
-
-
-
-
 
 <!--en-->
 The hierarchy itself appears as a type: its elements are the sets the chapter
@@ -186,8 +182,6 @@ and its h-setness makes equality of two tabulated sets a proposition.
 ```agda
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 ```
-
-
 
 <!--en-->
 Inside the constructible structure, `S` is the carrier and `⊨`{.Agda} the
@@ -207,8 +201,6 @@ module ModelL = FOL.ZFModel 𝒮ʟ
 open ModelL using ( SetOf )
 ```
 
-
-
 <!--en-->
 Satisfaction is finally read at the constructible structure: the notation
 `γ ⊨ φ`{.Agda} throughout the chapter judges object-language formulas at
@@ -223,8 +215,6 @@ environments of carrier elements, with constants drawn from `L`.
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
 open AbsL renaming ( _⊨ᵐ_ to _⊨_ )
 ```
-
-
 
 <!--en-->
 One private helper shifts variable slots by two: when a step is read in an
@@ -242,8 +232,6 @@ private
   sh2 : ∀ {n} → Fin n → Fin (suc (suc n))
   sh2 i = suc (suc i)
 ```
-
-
 
 <!--en-->
 ## What a table records
@@ -341,7 +329,6 @@ a step witness, and `above` turns a step witness into a member of the tower.
 
 この節は、前章のステップ条件と塔を結ぶ。入力 `b` でのステップは、`b` の下の入力 `c` とそこで記録された値 `w` にわたって、`w` の定義可能冪集合の要素を集める。塔が `b` で集める要素は同じもので、記録された `w` を `Lset c` に置き換えたものである。三つの private な事実が比較の準備をする。`ok` は横条件 `PowOK`{.Agda} を清算し、`below` は塔の分解をステップの証人に変え、`above` はステップの証人を塔の要素に変える。
 <!--/-->
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
@@ -679,7 +666,6 @@ decomposition into a witness, which only has to exist.
 </div>
 </details>
 
-
 <!--en-->
 Conversely, a witness places `z` into the tower by `above`, and the
 transportation runs the other way along `q`.
@@ -723,7 +709,6 @@ being proved of it is a membership.
 <!--ja-->
 帰納のステップは、記録された値に対する `step-Lset`{.Agda} である。入力の下での正しさは、そのまま逐語的に帰納の仮定である。入力の下での完備さを使うのが、近似の値の条項を費やす場所である。この入力より下の入力は近似の定義域の下にもある。定義域は順序数であり、順序数は推移的だからである。だから近似はそこで値を持ち、帰納の仮定がそれを塔の値と同一視する。その値は「単に」取り出されるだけで十分である。それについて証明するのは一つの所属だからである。
 <!--/-->
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
@@ -866,7 +851,6 @@ elimination targets the proposition that the canonical entry is recorded.
 </div>
 </details>
 
-
 <!--en-->
 The merely-given recorded value is identified with the tower by the induction
 hypothesis, so after the transport the canonical entry is recorded, which is
@@ -909,7 +893,6 @@ carrying the whole tower description inside it.
 <!--ja-->
 この読みが変数の枠の上に立つのは飾りではない。実例化はそれぞれ異なる具体的な環境に住み、一方で述べた主張を他方へ運ぶには、全体の塔の記述を内側に抱えた充足を通さねばならない。
 <!--/-->
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
@@ -1011,7 +994,6 @@ that the canonical entry is recorded, so the missing witness is never needed.
 </div>
 </details>
 
-
 <!--en-->
 The merely-given recorded value is identified with the tower by the induction
 once more, and after the transport the canonical entry is exactly what is
@@ -1064,7 +1046,6 @@ value is the tower.
 <!--ja-->
 主張は、表 `h`、入力の順序数性、入力の上での表の三条件、そして記録された値が塔であるという主張を受け取る。
 <!--/-->
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
@@ -1226,7 +1207,6 @@ transitivity in the chapter.
 </div>
 </details>
 
-
 <!--en-->
 Assembling the two conjuncts, the table itself is an approximation: its domain
 clause is the equivalence just proved, its step clause the one before. This is
@@ -1369,7 +1349,6 @@ questions one asks of a construction: what is it, and why does it qualify.
 `HierOf B` は、実現する集合をその仕様とともに集める。この対こそ、帰納がそれぞれの順序数で作るものであり、その二つの成分は、構成に対して誰もが問う二つの問いに答える。それは何か。なぜそれが資格をもつのか。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -1377,8 +1356,6 @@ module _ (B : V ℓ) (oB : IsOrd B) (h : S) (sp : IsHier B h) where
 ```
 </summary>
 <div class="submodule-fold-content">
-
-
 
 <!--en-->
 The two readings are stated for a variable realizing set with its
@@ -1488,7 +1465,6 @@ argument, and the entry equals the model's pair by its defining reading.
 ```
 </div>
 </details>
-
 
 <!--en-->
 Ordinality of `c` comes from that of `B`, and with it the tower's value at `c`
@@ -1627,7 +1603,6 @@ delivers the hierarchy at `c`, constructible set and specification together.
 `c` の順序数性は `α` の順序数性から来る。それがあれば、帰納の仮定は `c` での階層を、構成可能集合と仕様とともに渡す。
 <!--/-->
 
-
 <!--en-->
 (holds) Every canonical entry satisfies the pair graph: the fiber over `c` is
 exhibited, with the bound tower value, the equation identifying the entry with
@@ -1647,9 +1622,6 @@ merely-existence the graph statement asserts.
         (value c c∈) (prʟ-fst c (value c c∈)) (below c c∈ (entry c c∈))
 ```
 
-
-
-
 <!--en-->
 (only) Every other inhabitant of the graph at `c` equals the canonical entry.
 The graph unfolds to a tower value `z` with the tower graph satisfied at `(z,
@@ -1668,8 +1640,6 @@ the two entries, and the equation is the composition of these paths.
         (PairGraph-out zero (suc zero) (k ∷ c ∷ []) φ qφ h)
 ```
 
-
-
 <!--en-->
 The pair witness splits into the tower value `z` and the equation `q`
 identifying `k` with the pair of `c` and `z`. The carrier elements are equal
@@ -1686,8 +1656,6 @@ once their underlying sets are, which is what `Σ≡Prop` reduces the goal to.
         read (z , (q , hg)) = Σ≡Prop (λ t → snd (isL t))
           ( q
 ```
-
-
 
 <!--en-->
 The tower graph at `(z, c)` determines the tower value: `z` is the tower at
@@ -1715,7 +1683,6 @@ is the canonical entry read through its own defining equation.
 三つのパスを合成すれば、`k` は「`c` と塔の `c` での値」の対であり、それは自分の定義の読みを通して読んだ正準な項目である。
 <!--/-->
 
-
 <!--en-->
 (fc) Functionality at `c` is the contractible fiber that replacement asks for:
 the canonical entry inhabits the graph, and every inhabitant equals it.
@@ -1732,8 +1699,6 @@ contractible fiber.
          → isContr (Σ[ k ∈ S ] ⟨ (k ∷ c ∷ []) ⊨ φ ⟩)
       fc c c∈ = mereFunct φ c ∣ entry c c∈ , (holds c c∈ , only c c∈) ∣₁
 ```
-
-
 
 <!--en-->
 Replacement now collects the entries: over the arguments in `α`, the pairs of
@@ -1908,7 +1873,6 @@ directions at every constructible ordinal.
 内部の階層は、`graph-table`{.Agda} と `Lset-only`{.Agda} によって作られた。それぞれの順序数で、帰納の仮定が下の表を渡し、二つの補題がそれを成立したグラフと一意な値に変える。最後の主張は、今度は逆に走る。仕様 `hierL-spec`{.Agda} が入力の上での表の条件を渡し、`Lset-defines`{.Agda} がそれを `graph-table`{.Agda} に渡す。塔のグラフは記録された値で成立し、隣にある `Lset-only`{.Agda} は、満たすものがほかにないと言う。こうして内部のグラフとメタレベルの塔は、構成可能な順序数ごとに両方向で一致する。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -1978,7 +1942,6 @@ inputs are exactly what `graph-table`{.Agda} consumes.
 ```
 </div>
 </details>
-
 
 <!--en-->
 The internal hierarchy at the argument exists because the argument is a

@@ -1,3 +1,7 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # The set of fixed-length environments
 <!--zh-->
@@ -5,6 +9,44 @@
 <!--ja-->
 # 固定長環境の集合
 <!--/-->
+
+```agda
+open import Base.Prelude
+open import Base.Classical using ( LEM )
+```
+
+<!--en-->
+Fix a universe level `ℓ`{.Agda} and assume `lem : LEM (ℓ-suc ℓ)`{.Agda}. This hypothesis supplies a decision for each proposition at that level; it remains an explicit parameter of the constructions below.
+<!--zh-->
+固定宇宙层级 `ℓ`{.Agda}，并假设 `lem : LEM (ℓ-suc ℓ)`{.Agda}。这个假设为相应层级的每个命题提供判定，并始终作为下文构造的显式参数。
+<!--ja-->
+宇宙レベル `ℓ`{.Agda} を固定し、`lem : LEM (ℓ-suc ℓ)`{.Agda} を仮定する。この仮定は該当するレベルの各命題に判定を与え、以下の構成の明示的なパラメータとして保たれる。
+<!--/-->
+
+```agda
+module L.Coding.EnvironmentSet {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+```
+
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax using ( Formula; var; con; _≐_; _∧̇_; ∃̇_ )
+import FOL.Absoluteness
+import FOL.ZFModel
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV )
+open import V.Coding {ℓ} using ( pr; #-inj′ )
+open import L.Constructible {ℓ}
+  using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset; Lset-mono )
+open import L.Ordinal {ℓ} using ( boundingOrd; ∈#-elim )
+open import V.Coding {ℓ} using ( #mono; pr-inj )
+open import L.Stage {ℓ} lem using ( stage; stage-ord; stage-mem )
+open import L.Axioms.Basic {ℓ} using ( LsetS )
+open import L.Axioms.Full {ℓ} lem using ( hasSeparationL )
+open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
+open import L.Coding.Environment {ℓ} using ( env )
+open import L.Coding.CodeConstructibility {ℓ} using ( envL )
+open import L.Coding.Model {ℓ} using ( envOverAt; svAt; domAt; valuesInAt; pairsInAt; inDomAt; prʟ; prʟ-fst; svAt-in; svAt-out; inDomAt-adequate; appAt-adequate; domAt-in; valuesInAt-out; envOver-sv; envOver-dom; envOver-values; envOver-pairs; pairsIn-in; pairsIn-out )
+open import L.Coding.Expressions {ℓ} using ( numL )
+```
 
 <!--en-->
 For a constructible set `B` and a natural number `n`, this chapter constructs an element `envSet n` of `L` whose members are exactly the length-`n` environments with values in `B`.
@@ -31,32 +73,8 @@ Nothing here needs replacement, and nothing here needs recursion.
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-open import Base.Prelude
 open import Cubical.Data.FinData using ( inj-toℕ )
-open import Base.Classical using ( LEM )
 
-module L.Coding.EnvironmentSet {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-
-open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using ( Formula; var; con; _≐_; _∧̇_; ∃̇_ )
-import FOL.Absoluteness
-import FOL.ZFModel
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV )
-open import V.Coding {ℓ} using ( pr; #-inj′ )
-open import L.Constructible {ℓ}
-  using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset; Lset-mono )
-open import L.Ordinal {ℓ} using ( boundingOrd; ∈#-elim )
-open import V.Coding {ℓ} using ( #mono; pr-inj )
-open import L.Stage {ℓ} lem using ( stage; stage-ord; stage-mem )
-open import L.Axioms.Basic {ℓ} using ( LsetS )
-open import L.Axioms.Full {ℓ} lem using ( hasSeparationL )
-open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
-open import L.Coding.Environment {ℓ} using ( env )
-open import L.Coding.CodeConstructibility {ℓ} using ( envL )
-open import L.Coding.Model {ℓ} using ( envOverAt; svAt; domAt; valuesInAt; pairsInAt; inDomAt; prʟ; prʟ-fst; svAt-in; svAt-out; inDomAt-adequate; appAt-adequate; domAt-in; valuesInAt-out; envOver-sv; envOver-dom; envOver-values; envOver-pairs; pairsIn-in; pairsIn-out )
-open import L.Coding.Expressions {ℓ} using ( numL )
 open import Cubical.Data.FinData.Properties using ( toℕ<n; fromℕ'; toFromId' )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Properties
@@ -135,7 +153,6 @@ too and the stage lemma above closes it.
 <!--zh-->
 落在 `L` 的某集合之上的环境是由「数码与成员」之对组成的有穷集；而 `L` 之元素的成员仍是 `L` 的元素，故这些对也是，于是前一条层引理恰好适用于此。
 <!--/-->
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
@@ -258,7 +275,6 @@ the indices below `n` are exactly the numerals below `n`.
 四个合取项，而每一条都只是把那条描述对着「环境究竟是什么」读一遍。单值性与那两条包含关系直接由成员规格得出，而后者是 `refl`{.Agda}；只有定义域那一条需要算术，因为「定义域是数码 `n`」说的正是「`n` 以下的诸序号恰是 `n` 以下的诸数码」。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -341,7 +357,6 @@ the indices below `n` are exactly the numerals below `n`.
 </div>
 </details>
 
-
 <!--en-->
 ## Recovering an environment from a member
 <!--zh-->
@@ -381,7 +396,6 @@ unwanted elements could enter.
 
 外延性补全证明：一个方向来自诸条目，另一个来自「由诸对构成」那一条，而若缺了那一条，不需要的元素就会混进来。
 <!--/-->
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
@@ -460,7 +474,6 @@ unwanted elements could enter.
 </div>
 </details>
 ```agda
-
   envSet-in : {n : ℕ} (g : Ix n) → ⟨ envS g ∈ˢ envSet n ⟩
   envSet-in {n} g = subst ⟨_⟩ (sym (envSet-mem n (envS g)))
     (sf n .snd .snd g , envSetIn g)
@@ -478,7 +491,6 @@ unwanted elements could enter.
 ```
 </div>
 </details>
-
 
 <!--en-->
 ## Recap

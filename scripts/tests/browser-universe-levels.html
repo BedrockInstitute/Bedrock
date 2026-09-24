@@ -1,0 +1,101 @@
+<!doctype html><html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Universe level regression</title>
+<base href="/zh/Base.Choice.html">
+<link rel="stylesheet" href="/static/bedrock.css"><link rel="stylesheet" href="/static/appearance.css">
+<script>
+window.bedrock={baseUrl:'',lang:'zh',module:'Base.Choice'};
+const nativeMedia=window.matchMedia.bind(window);
+window.matchMedia=q=>q==='(hover: none), (pointer: coarse)'?{matches:true,addEventListener(){}}:nativeMedia(q);
+const savedAppearance=Object.fromEntries(['bedrock-theme','bedrock-code-palettes'].map(key=>[key,localStorage.getItem(key)]));
+</script>
+<script src="/static/appearance.js"></script><script defer src="/static/universe-levels.js"></script><script defer src="/static/bedrock.js"></script>
+</head><body><div id="site-header"><button id="theme-toggle">Theme</button></div>
+<h1 id="test-status">RUNNING universe levels</h1><main id="main-content"><article id="fixture"></article></main><pre id="report"></pre>
+<script>
+const checks=[], delay=ms=>new Promise(r=>setTimeout(r,ms));
+function check(name,ok){checks.push({name,ok:!!ok});document.querySelector('#report').textContent=JSON.stringify(checks,null,2);if(!ok)throw Error(name);}
+async function until(test){const start=Date.now();while(!test()){if(Date.now()-start>20000)throw Error('Timed out');await delay(60);}return test();}
+document.addEventListener('DOMContentLoaded',async()=>{
+ try {
+  bedrockAppearance.setMode('light');bedrockAppearance.setPalette('light','default');
+  const fixture=document.querySelector('#fixture'), source=await fetch('/zh/Base.Impredicativity').then(r=>r.text());
+  const convention=document.createElement('p');convention.innerHTML="ℓ ℓ' ℓ′ ℓ″ ℓ₁ ℓ₂′ ℓ12 ℓ² ℓ-max fooℓ <a href='#level'>ℓ₃</a>";
+  fixture.appendChild(convention);const conventionText=convention.textContent;bedrockUniverseLevels.scan(convention);
+  check('prose and prime / numeric level variants are marked',convention.querySelectorAll('.universe-parameter').length===9);
+  check('conventional marking preserves source and links',convention.textContent===conventionText&&convention.querySelector('a').getAttribute('href')==='#level');
+  bedrockUniverseLevels.scan(convention);check('level marking is idempotent',!convention.querySelector('.universe-parameter .universe-parameter'));
+  await document.fonts.load('16px "Bedrock Universe Levels"','ℓ₁′');
+  check('self-hosted Noto level font loads',document.fonts.check('16px "Bedrock Universe Levels"','ℓ₁′'));
+  check('level font is not enlarged',getComputedStyle(convention.querySelector('.universe-parameter')).fontSize===getComputedStyle(convention).fontSize);
+  const dynamic=document.createElement('span');fixture.appendChild(dynamic);await delay(30);dynamic.textContent='ℓ₄′';await delay(30);
+  check('text-only dynamic updates get the shared level style',dynamic.querySelector('.universe-parameter')?.textContent==='ℓ₄′');
+  const typed=document.createElement('code');typed.className='Agda';typed.innerHTML='<a data-universe-level="true">α</a> <a data-type="Fixture#2">β</a>';
+  fixture.appendChild(typed);bedrockUniverseLevels.scan(typed);
+  check('non-ℓ names use compiler Level metadata',typed.querySelectorAll('.universe-parameter').length===1&&typed.querySelector('.universe-parameter').textContent==='α');
+  const signature=document.createElement('span');signature.className='type-value Agda';signature.innerHTML='(i : <a href="Agda.Primitive.html#1">Level</a>) → Type i';
+  fixture.appendChild(signature);bedrockUniverseLevels.scan(signature);
+  check('explicit Level binder styles its plain-text occurrences',signature.querySelectorAll('.universe-parameter').length===2);
+  const original=new DOMParser().parseFromString(source,'text/html');
+  const moduleOpen=[...original.querySelectorAll('pre.Agda')].find(pre=>pre.textContent.includes('where open CodedTruth Ω e'));
+  check('module application has no dummy hover node',moduleOpen&&![...moduleOpen.querySelectorAll('.expr-node')].some(node=>node.textContent.startsWith('CodedTruth Ω')));
+  check('module argument types remain hoverable',moduleOpen&&[...moduleOpen.querySelectorAll('a[data-type]')].some(node=>node.textContent==='Ω')&&[...moduleOpen.querySelectorAll('a[data-type]')].some(node=>node.textContent==='e'));
+  // Real compiler links: no fake operation identities in the positive cases.
+  const prelude=await fetch('/zh/Base.Prelude').then(r=>r.text());
+  const pdoc=new DOMParser().parseFromString(prelude,'text/html');
+  const links={};
+  for(const name of ['ℓ-max','ℓ-suc','ℓ-zero']){
+    links[name]=[...pdoc.querySelectorAll('a[href]')].find(a=>a.textContent===name).cloneNode(true);
+    links[name].removeAttribute('id');
+  }
+  const markup=text=>text.replace(/ℓ-(?:max|suc|zero)/g,name=>links[name].outerHTML);
+  const cases=[['(ℓ-max ℓ-zero (ℓ-suc ℓ))','0 ⊔ ℓ⁺'],['(ℓ-suc (ℓ-max ℓ₁ ℓ₂))','(ℓ₁ ⊔ ℓ₂)⁺'],['ℓ-suc (ℓ-suc ℓ)','ℓ⁺⁺'],['ℓ-max (ℓ-suc ℓ-zero) (ℓ-max ℓ₁ ℓ₂)','0⁺ ⊔ ℓ₁ ⊔ ℓ₂'],['Type (ℓ-suc ℓ)','ℓ⁺']];
+  for(const [text,expected]of cases){
+    const code=document.createElement('code');code.className='Agda';code.innerHTML=markup(text);fixture.appendChild(code);
+    const before=code.textContent;bedrockUniverseLevels.scan(code);
+    check(text+' mathematical notation',code.querySelector('.universe-notation')?.dataset.levelMath===expected);
+    check(text+' source text preserved',code.textContent===before);
+    check(text+' one combined badge',code.querySelectorAll('.universe-notation').length===1);
+  }
+  const negative=['0 ⊔ ℓ⁺','ℓ-max ℓ','ℓ-suc','ℓ-maximal ℓ','using (ℓ-zero; ℓ-suc; ℓ-max)','using (\nℓ-zero\n)','"ℓ-suc ℓ"'];
+  for(const text of negative){const code=document.createElement('code');code.className='Agda';code.innerHTML=markup(text);fixture.appendChild(code);bedrockUniverseLevels.scan(code);check(text+' not misinterpreted',!code.querySelector('.universe-notation'));}
+  const shadow=document.createElement('code');shadow.className='Agda';shadow.innerHTML='<a class="Function" href="Other.html#1">ℓ-suc</a> ℓ';fixture.appendChild(shadow);bedrockUniverseLevels.scan(shadow);check('same-spelled local function untouched',!shadow.querySelector('.universe-notation'));
+  const real=original.querySelector('pre.Agda:has(a[data-name="ℓ-max"])').cloneNode(true);fixture.appendChild(real);
+  const before=real.textContent,ids=[...real.querySelectorAll('[id]')].map(n=>n.id);bedrockUniverseLevels.scan(real);
+  check('real nested compiler AST renders',!!real.querySelector('.universe-notation'));
+  check('real source text unchanged',real.textContent===before);
+  check('all original anchors remain exactly once',ids.every(id=>real.querySelectorAll('[id="'+id+'"]').length===1));
+  const count=real.querySelectorAll('.universe-notation').length;bedrockUniverseLevels.scan(real);check('decoration is idempotent',real.querySelectorAll('.universe-notation').length===count);
+  const badge=fixture.querySelector('.universe-notation');badge.focus();
+  const popup=await until(()=>document.querySelector('.boilerplate-hover-popup'));
+  check('source popup uses existing boilerplate shell',popup.textContent.includes('(ℓ-max ℓ-zero (ℓ-suc ℓ))'));
+  check('source is not rendered recursively into itself',!popup.querySelector('.universe-notation'));
+  await delay(60);check('raw source also shares the level parameter style',!!popup.querySelector('[data-universe-raw] .universe-parameter'));
+  check('raw code retains semantic tokens and definition links',!!popup.querySelector('a.Primitive[href][data-type]'));
+  const nested=popup.querySelector('a[data-type]');
+  nested.dispatchEvent(new PointerEvent('pointerdown',{bubbles:true,pointerType:'touch'}));nested.click();
+  await until(()=>document.querySelectorAll('.name-hover-popup').length>=2);
+  check('hover over source hover works',document.querySelectorAll('.name-hover-popup').length>=2);
+  await delay(700);check('mobile source and nested hover persist',document.querySelectorAll('.name-hover-popup').length>=2);
+  const oldColor=getComputedStyle(popup.querySelector('a.Primitive')).color;bedrockAppearance.setMode('dark');bedrockAppearance.setPalette('dark','catppuccin');
+  check('open raw popup follows palette live',getComputedStyle(popup.querySelector('a.Primitive')).color!==oldColor);
+  document.querySelector('.name-hover-popup .type-definition-link').click();
+  await until(()=>document.querySelector('.definition-modal-frame.is-ready'));
+  check('source definition opens shared modal',!!document.querySelector('.definition-modal-frame.is-ready'));
+  document.querySelector('.definition-modal-close').click();
+  for(const module of ['Base.Prelude','Base.Impredicativity','Base.Classical','Base.Choice']){
+    const html=await fetch('/zh/'+module).then(r=>r.text()), page=new DOMParser().parseFromString(html,'text/html');
+    const chapter=page.querySelector('article');chapter.style.position='absolute';chapter.style.left='-10000px';document.body.appendChild(chapter);
+    const text=chapter.textContent, sourceIds=[...chapter.querySelectorAll('[id]')].map(n=>n.id), ranges=chapter.querySelectorAll('.expr-node').length;
+    bedrockUniverseLevels.scan(chapter);
+    check(module+' decorations present',chapter.querySelectorAll('.universe-notation').length>0);
+    check(module+' entire original text retained',chapter.textContent===text);
+    check(module+' all anchor identities preserved',JSON.stringify([...chapter.querySelectorAll('[id]')].map(n=>n.id))===JSON.stringify(sourceIds));
+    check(module+' compiler node count preserved',chapter.querySelectorAll('.expr-node').length===ranges);
+    const selection=document.createRange();selection.selectNodeContents(chapter);check(module+' copy range retains Agda source',selection.toString()===text);
+    chapter.remove();
+  }
+  document.querySelector('#test-status').textContent='PASS '+checks.length+'/'+checks.length;
+ }catch(error){document.querySelector('#test-status').textContent='FAIL '+error.message;console.error(error);}
+ finally{Object.entries(savedAppearance).forEach(([key,value])=>value===null?localStorage.removeItem(key):localStorage.setItem(key,value));}
+});
+</script></body></html>

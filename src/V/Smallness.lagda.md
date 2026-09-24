@@ -1,22 +1,18 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # Small truth values in the cumulative hierarchy
-
-Work over the cumulative hierarchy `V ℓ` produces many statements of the form `x ∈ˢ a` or `a ≈ˢ b`: propositions packaged as elements of `hProp (ℓ-suc ℓ)`, one universe above the level `ℓ` at which the sets themselves are indexed. Such upper-universe propositions are inconvenient: constructions that expect data at level `ℓ`, among them the library's separation set, cannot accept them. A proposition `P : hProp (ℓ-suc ℓ)` is therefore called **small** when it is equivalent, as a type of proofs, to some proposition `Q : hProp ℓ` in the lower universe. Smallness is not a reduction of `P` itself; it is a certificate that another, lower proposition says exactly the same thing.
-
-This chapter lowers large truth values to small ones in stages. The atomic membership and equality relations of `V`{.Agda} are small outright, because each set comes with a small index type presenting its members. Smallness then propagates through every connective and through bounded quantifiers, whose range is exactly such an index type. For unbounded quantifiers, this chapter proves preservation when the range itself is essentially small, that is, equivalent to a type at level `ℓ`. The two payoffs are separation for Δ₀ formulas with no propositional resizing, and smallness of every formula's truth value inside a restricted structure whose carrier is essentially small.
 <!--zh-->
 # 累积层级中的小真值
-
-在累积层级 `V ℓ` 上工作会不断产生形如 `x ∈ˢ a` 或 `a ≈ˢ b` 的陈述：它们是打包成 `hProp (ℓ-suc ℓ)` 元素的命题，比集合自身所在的层级 `ℓ` 高一个宇宙。这样的上宇宙命题不便使用：期望 `ℓ` 层数据的构造，例如库中的分离集合，无法接受它们。于是，若命题 `P : hProp (ℓ-suc ℓ)` 作为证明的类型等价于某个低宇宙命题 `Q : hProp ℓ`，就称它是**小的**。`hasSize ℓ P` 不是把 `P` 本身化简，而是一份证书：另一个更低的命题说的恰是同一件事。
-
-本章分阶段把大真值降到小真值。`V`{.Agda} 的原子隶属关系与相等关系直接是小，因为每个集合都配有呈现其成员的小索引类型。这种见证随后经一切联结词传播，也经有界量词传播，因为后者的量化范围恰是这种索引类型。对无界量词，本章证明了量化范围本身本质小，即等价于层级 `ℓ` 的某个类型时，仍能得到这种见证。两项成果是：无需命题换级的 Δ₀ 分离，以及载体本质小的限制结构上全体公式真值的 `hasSize` 见证。
 <!--ja-->
 # 累積階層における小さな真理値
-
-累積階層 `V ℓ` の上で作業をすると、`x ∈ˢ a` や `a ≈ˢ b` のような主張が次々に現れる。これらは `hProp (ℓ-suc ℓ)` の要素としてまとめられた命題であり、集合そのものの添字レベル `ℓ` より一つ上の宇宙に住む。上の宇宙の命題はそのままでは不便である。レベル `ℓ` のデータを要求する構成、たとえばライブラリの分出集合は、それを受け付けられない。そこで、命題 `P : hProp (ℓ-suc ℓ)` の証明の型がある低い宇宙の命題 `Q : hProp ℓ` と同値であるとき、`P` は**小さい**と呼ぶ。小ささは `P` を単純化するのではなく、別の低い命題がまったく同じことを述べているという証明書である。
-
-本章は、大きな真理値を段階的に小さな真理値へ下げる。`V`{.Agda} の原子的な所属と等号はそのまま小さく、これは各集合が要素を提示する小さな添字の型をもつからである。小ささはすべての結合子を通して保存され、有界量化子も同様である。その量化の範囲はまさにその添字の型だからである。非有界量化子については、範囲そのものが本質的に小さい、つまりレベル `ℓ` の型と同値である場合に小ささが保たれることを本章で示す。成果は二つある。命題リサイズなしの Δ₀ 分出と、台が本質的に小さい制限構造の上でのすべての論理式の評価の小ささである。
 <!--/-->
+
+```agda
+open import Base.Prelude
+```
 
 <!--en-->
 Everything in this chapter takes place at one fixed universe level `ℓ`, fixed once and for all by the module parameter. The ambient object is the cumulative hierarchy `V ℓ` from the chapter V.Hierarchy, whose sets are images of `Type ℓ`-indexed families. The one definition that organizes everything is `hasSize`{.Agda}: for `P : hProp (ℓ-suc ℓ)`, an inhabitant of `hasSize ℓ P` is a pair consisting of a lower-universe proposition `Q : hProp ℓ` and an equivalence of underlying types `⟨ P ⟩ ≃ ⟨ Q ⟩`. The chapter's task is to manufacture such pairs. Its setting is the `ZFStructure`{.Agda} record, which packages a carrier with truth-valued equality and membership relations; the restriction `_↾_`{.Agda} of such a record to a class is used in the final section.
@@ -27,16 +23,43 @@ Everything in this chapter takes place at one fixed universe level `ℓ`, fixed 
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
+module V.Smallness {ℓ : Level} where
+```
 
-open import Base.Prelude
+```agda
+open import Base.Impredicativity using ( hasSize )
+open import FOL.ZFStructure using ( ZFStructure; _↾_ )
+open import FOL.Syntax
+  using ( Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
+open import FOL.LevyHierarchy
+  using ( Δ₀; δ-∈; δ-≐; δ-∧; δ-∨; δ-⇒; δ-⊥; δ-∀∈; δ-∃∈ )
+import FOL.Semantics
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+```
+
+<!--en-->
+
+Work over the cumulative hierarchy `V ℓ` produces many statements of the form `x ∈ˢ a` or `a ≈ˢ b`: propositions packaged as elements of `hProp (ℓ-suc ℓ)`, one universe above the level `ℓ` at which the sets themselves are indexed. Such upper-universe propositions are inconvenient: constructions that expect data at level `ℓ`, among them the library's separation set, cannot accept them. A proposition `P : hProp (ℓ-suc ℓ)` is therefore called **small** when it is equivalent, as a type of proofs, to some proposition `Q : hProp ℓ` in the lower universe. Smallness is not a reduction of `P` itself; it is a certificate that another, lower proposition says exactly the same thing.
+
+This chapter lowers large truth values to small ones in stages. The atomic membership and equality relations of `V`{.Agda} are small outright, because each set comes with a small index type presenting its members. Smallness then propagates through every connective and through bounded quantifiers, whose range is exactly such an index type. For unbounded quantifiers, this chapter proves preservation when the range itself is essentially small, that is, equivalent to a type at level `ℓ`. The two payoffs are separation for Δ₀ formulas with no propositional resizing, and smallness of every formula's truth value inside a restricted structure whose carrier is essentially small.
+<!--zh-->
+
+在累积层级 `V ℓ` 上工作会不断产生形如 `x ∈ˢ a` 或 `a ≈ˢ b` 的陈述：它们是打包成 `hProp (ℓ-suc ℓ)` 元素的命题，比集合自身所在的层级 `ℓ` 高一个宇宙。这样的上宇宙命题不便使用：期望 `ℓ` 层数据的构造，例如库中的分离集合，无法接受它们。于是，若命题 `P : hProp (ℓ-suc ℓ)` 作为证明的类型等价于某个低宇宙命题 `Q : hProp ℓ`，就称它是**小的**。`hasSize ℓ P` 不是把 `P` 本身化简，而是一份证书：另一个更低的命题说的恰是同一件事。
+
+本章分阶段把大真值降到小真值。`V`{.Agda} 的原子隶属关系与相等关系直接是小，因为每个集合都配有呈现其成员的小索引类型。这种见证随后经一切联结词传播，也经有界量词传播，因为后者的量化范围恰是这种索引类型。对无界量词，本章证明了量化范围本身本质小，即等价于层级 `ℓ` 的某个类型时，仍能得到这种见证。两项成果是：无需命题换级的 Δ₀ 分离，以及载体本质小的限制结构上全体公式真值的 `hasSize` 见证。
+<!--ja-->
+
+累積階層 `V ℓ` の上で作業をすると、`x ∈ˢ a` や `a ≈ˢ b` のような主張が次々に現れる。これらは `hProp (ℓ-suc ℓ)` の要素としてまとめられた命題であり、集合そのものの添字レベル `ℓ` より一つ上の宇宙に住む。上の宇宙の命題はそのままでは不便である。レベル `ℓ` のデータを要求する構成、たとえばライブラリの分出集合は、それを受け付けられない。そこで、命題 `P : hProp (ℓ-suc ℓ)` の証明の型がある低い宇宙の命題 `Q : hProp ℓ` と同値であるとき、`P` は**小さい**と呼ぶ。小ささは `P` を単純化するのではなく、別の低い命題がまったく同じことを述べているという証明書である。
+
+本章は、大きな真理値を段階的に小さな真理値へ下げる。`V`{.Agda} の原子的な所属と等号はそのまま小さく、これは各集合が要素を提示する小さな添字の型をもつからである。小ささはすべての結合子を通して保存され、有界量化子も同様である。その量化の範囲はまさにその添字の型だからである。非有界量化子については、範囲そのものが本質的に小さい、つまりレベル `ℓ` の型と同値である場合に小ささが保たれることを本章で示す。成果は二つある。命題リサイズなしの Δ₀ 分出と、台が本質的に小さい制限構造の上でのすべての論理式の評価の小ささである。
+<!--/-->
+
+
+
+```agda
 open import Cubical.HITs.PropositionalTruncation using ( propTrunc≃ )
 open import Cubical.Data.Sigma using ( Σ-cong-equiv )
 open import Cubical.Data.Sum using ( ⊎-equiv )
-
-module V.Smallness {ℓ : Level} where
-
-open import Base.Impredicativity using ( hasSize )
 ```
 
 <!--en-->
@@ -47,14 +70,6 @@ The statements to be lowered live in a formal first-order language. Its relation
 下げるべき主張は、一階の形式言語の中にある。関係記号は所属と等号の `_∈̇_` と `_≐_`、結合子は論理式を組み合わせ、さらに有界量化子 `∀̇∈` と `∃̇∈`、非有界量化子 `∀̇` と `∃̇_` がある。`Δ₀`{.Agda} のフラグメントは Lévy 階層による論理式の分類である。`Δ₀` は論理式上の述語ではなく、その論理式が原子から結合子と有界量化子だけで作られていることの帰納的な証人である。決定的なのは、非有界量化に対応する構成子が存在しないことである。`∀̇` や `∃̇_` を含む論理式はそもそも Δ₀ の証人をもてず、本章の Δ₀ 定理はまさにこの不在に依拠する。
 <!--/-->
 
-```agda
-open import FOL.ZFStructure using ( ZFStructure; _↾_ )
-open import FOL.Syntax
-  using ( Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
-open import FOL.LevyHierarchy
-  using ( Δ₀; δ-∈; δ-≐; δ-∧; δ-∨; δ-⇒; δ-⊥; δ-∀∈; δ-∃∈ )
-```
-
 <!--en-->
 A formula's meaning is given by the semantics module, instantiated here at the structure `𝒮ᵥ`{.Agda} from V.Hierarchy: the cumulative hierarchy equipped as a structure whose relations take values in `hProp (ℓ-suc ℓ)`. So the truth values this chapter studies are exactly propositions one universe up, the kind `hasSize` speaks about. The proofs must build equivalences between these propositions and lower-level representatives. Beyond applying the forward and inverse maps, we use `invEquiv` to reverse an equivalence and `equivΠ` to extend equivalences to function types. For propositions, `propBiimpl→Equiv` builds an equivalence from their propositionhood certificates and implications in both directions. Since both sides of the equivalences below are propositions, this last constructor carries most of the weight.
 <!--zh-->
@@ -64,9 +79,6 @@ A formula's meaning is given by the semantics module, instantiated here at the s
 <!--/-->
 
 ```agda
-import FOL.Semantics
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-
 open import Cubical.Foundations.Equiv
   using ( invEquiv; equivΠ; propBiimpl→Equiv )
 ```
@@ -78,8 +90,6 @@ Closing smallness under the connectives needs proposition operations at the lowe
 <!--ja-->
 結合子による保存を示すには、低いレベル `ℓ`、すなわち圧縮の到達点となる宇宙の命題演算が必要である。これらは限定名 `Logic`{.Agda} のもとに置かれるので、`⊓`{.Agda} などは明らかに `hProp ℓ` 上で働き、以下の無修飾の演算は `hProp (ℓ-suc ℓ)` 上で働く。残りの部品は個々の同値の構成に役立つ。`Σ-cong-equiv` は成分ごとの同値から対の型の間の同値を作り、`⊎-equiv` は直和を扱い、`_` は単一元であり、命題的切り詰めのモジュール `PT`{.Agda} は、証人を選ばずに関数に沿って「存在するだけ」の主張を運ぶ map を与える。
 <!--/-->
-
-
 
 <!--en-->
 The hierarchy itself supplies the atomic data. Each set `a` comes with a monic presentation: a small index type `⟪ a ⟫` with an embedding `⟪ a ⟫↪` into `V ℓ`. Membership in a set therefore has a small twin `_∈ₛ_`, defined as the type of pairs `(m : ⟪ b ⟫, ⟪ b ⟫↪ m ∼ a)`, which lives in `hProp ℓ`; the conversion `∈∈ₛ` links the two memberships in both directions, and `identityPrinciple`{.Agda} identifies bisimilarity `∼` with actual paths. The operation `∈-asFiber` turns an (untruncated) membership into an actual fiber of the embedding. `SeparationSet`{.Agda} is the library's separation construction, which only accepts predicates already valued in the lower universe. The unqualified connectives `⊓ ⊔ ⇒ ¬ ⊤ ⊥` and quantifiers `∀[ x ] P x` and `∃[ x ] P x` act directly on `hProp (ℓ-suc ℓ)`.
@@ -335,7 +345,6 @@ The existential bounded quantifier states: some member `x` of `a` has `B x`. Its
 <!--/-->
 
 ```agda
-
 small-∃∈ : (a : S) {B : S → hProp (ℓ-suc ℓ)}
          → (∀ x → hasSize ℓ (B x))
          → hasSize ℓ (∃[ x ∶ S ] (x ∈ˢ a) ⊓ B x)
@@ -493,14 +502,12 @@ open SemanticsV using ( _^_ )
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-
 module Δ₀Small {ℓc} {K : Type ℓc} (ι : K → S) where
 ```
 </summary>
 <div class="submodule-fold-content">
 
 ```agda
-
   open SemanticsV.At K ι
 
   Δ₀-small : ∀ {n} {φ : Formula K n} → Δ₀ φ → (γ : S ^ n) → hasSize ℓ (γ ⊨ φ)
@@ -553,7 +560,6 @@ The existential bounded case mirrors the universal one exactly, with `small-∃�
 ```
 </div>
 </details>
-
 
 <!--en-->
 ## Δ₀ separation without resizing
@@ -625,7 +631,6 @@ The existential version follows the same plan with truncations in place of funct
 <!--/-->
 
 ```agda
-
 small-∃ : {A : Type (ℓ-suc ℓ)} {X : Type ℓ} (e : X ≃ A) {B : A → hProp (ℓ-suc ℓ)}
         → (∀ a → hasSize ℓ (B a))
         → hasSize ℓ (∃[ a ∶ A ] B a)
@@ -649,7 +654,6 @@ The module's parameters assemble the small world. `M` is a class on the carrier 
 モジュールの引数が小さな世界を組み立てる。`M` は台 `S` 上のクラスで、真クラスであってもかまわない。大きさの制限は一切ない。仮定は、小さな型 `X : Type ℓ` と、`X` から制限された台 `Σ[ x ∈ S ] (x ∈ᶜ M)` への同値との組であり、これが世界が本質的に小さいということの正確な意味である。負担はこの同値が存在することにあり、`M` が何らかの内部的な意味で有界であることにはない。定数は `ι : K → Σ[ x ∈ S ] (x ∈ᶜ M)` によって制限された台の中で解釈され、したがって各定数は、第二成分が「第一成分が `M` に属する」ことの証拠であるような対を指す。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -662,7 +666,6 @@ module InnerSmall (M : S → hProp (ℓ-suc ℓ))
 <div class="submodule-fold-content">
 
 ```agda
-
   SM : Type (ℓ-suc ℓ)
 ```
 
@@ -693,7 +696,6 @@ The theorem's statement is deliberately parallel to `Δ₀-small`: for every for
 <!--/-->
 
 ```agda
-
   ⊨ᵐ-small : ∀ {n} (φ : Formula K n) (δ : SM ^ n) → hasSize ℓ (δ ⊨ᵐ φ)
   ⊨ᵐ-small (t ∈̇ u)  δ = small-∈ (fst (⟦ t ⟧ᵐ δ)) (fst (⟦ u ⟧ᵐ δ))
   ⊨ᵐ-small (t ≐ u)  δ = small-≡ (fst (⟦ t ⟧ᵐ δ)) (fst (⟦ u ⟧ᵐ δ))
@@ -763,7 +765,6 @@ The existential bounded case is the dual composition: the truth value pairs boun
 ```
 </div>
 </details>
-
 
 <!--en-->
 ## Recap

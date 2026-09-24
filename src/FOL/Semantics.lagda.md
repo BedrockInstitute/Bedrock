@@ -1,26 +1,49 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # Semantics
-
-The object language consists of symbols and rules for combining them, and so far none of the symbols denotes anything. What must be supplied before `∈̇` or `_≐_` can be read? A structure decides what the variables range over and what the two atomic predicates mean there; an interpretation gives each constant symbol its carrier element; an environment gives each available variable position its current value. Once these data are fixed, structural recursion assigns to every term a carrier element and to every formula a proposition. The whole chapter turns on one distinction, that between a symbol and its denotation: the sign `∈̇` belongs to the syntax, what it comes to mean is the relation `∈ˢ`{.Agda} of the structure, and the two live on different layers.
 <!--zh-->
 # 语义
-
-对象语言由符号与组合规则构成，而这些符号至今没有任何指称。要让 `∈̇` 或 `_≐_` 成为可读的东西，需要供给什么？结构决定变量在什么范围内取值、两条原子谓词在那里指什么；解释为每个常元符号指定其载体元素；环境为每个可用的变量位置指定当前取值。这些数据一经固定，结构递归便为每个词项指定一个载体元素，为每条公式指定一个命题。全章系于一个区分，即符号与指称之分：记号 `∈̇` 属于语法，它最终意味的是结构的关系 `∈ˢ`{.Agda}，二者居于不同的层。
 <!--ja-->
 # 意味論
-
-対象言語は記号とその組み合わせの規則からなり、現時点で記号は何も表示しない。`∈̇` や `_≐_` を読めるようにするには、何を供給しなければならないのであろうか。構造は、変数が何の上を動くかと、二つの原始的な述語がそこで何を意味するかを決める。解釈は各定数記号に台の要素を割り当て、環境は利用できる各変数位置に現在の値を与える。これらのデータが固定されると、構造的再帰によってすべての項に台の要素が、すべての論理式に命題が割り当てられる。本章を貫くのは、記号とその表示という一つの区別である。記号 `∈̇` は構文に属し、それが意味するようになるのは構造の関係 `∈ˢ`{.Agda} であり、両者は異なる層に住んでいる。
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-open import Base.Prelude
-open import Base.Classical using ( LEM )
 open import FOL.ZFStructure using ( ZFStructure )
+```
 
+<!--en-->
+Fix a structure `𝒮 : ZFStructure ℓ`{.Agda}. Its carrier and its equality and membership relations give the interpretation in which the constructions below take place.
+<!--zh-->
+固定结构 `𝒮 : ZFStructure ℓ`{.Agda}。下文的构造以其载体、等词与隶属关系为解释。
+<!--ja-->
+構造 `𝒮 : ZFStructure ℓ`{.Agda} を固定する。以下の構成は、その台と等号・所属関係による解釈のもとで行う。
+<!--/-->
+
+```agda
 module FOL.Semantics {ℓ} (𝒮 : ZFStructure ℓ) where
 ```
+
+```agda
+open import Base.Prelude
+open import Base.Classical using ( LEM )
+open import FOL.Syntax using
+  ( Term; con; var
+  ; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
+```
+
+<!--en-->
+
+The object language consists of symbols and rules for combining them, and so far none of the symbols denotes anything. What must be supplied before `∈̇` or `_≐_` can be read? A structure decides what the variables range over and what the two atomic predicates mean there; an interpretation gives each constant symbol its carrier element; an environment gives each available variable position its current value. Once these data are fixed, structural recursion assigns to every term a carrier element and to every formula a proposition. The whole chapter turns on one distinction, that between a symbol and its denotation: the sign `∈̇` belongs to the syntax, what it comes to mean is the relation `∈ˢ`{.Agda} of the structure, and the two live on different layers.
+<!--zh-->
+
+对象语言由符号与组合规则构成，而这些符号至今没有任何指称。要让 `∈̇` 或 `_≐_` 成为可读的东西，需要供给什么？结构决定变量在什么范围内取值、两条原子谓词在那里指什么；解释为每个常元符号指定其载体元素；环境为每个可用的变量位置指定当前取值。这些数据一经固定，结构递归便为每个词项指定一个载体元素，为每条公式指定一个命题。全章系于一个区分，即符号与指称之分：记号 `∈̇` 属于语法，它最终意味的是结构的关系 `∈ˢ`{.Agda}，二者居于不同的层。
+<!--ja-->
+
+対象言語は記号とその組み合わせの規則からなり、現時点で記号は何も表示しない。`∈̇` や `_≐_` を読めるようにするには、何を供給しなければならないのであろうか。構造は、変数が何の上を動くかと、二つの原始的な述語がそこで何を意味するかを決める。解釈は各定数記号に台の要素を割り当て、環境は利用できる各変数位置に現在の値を与える。これらのデータが固定されると、構造的再帰によってすべての項に台の要素が、すべての論理式に命題が割り当てられる。本章を貫くのは、記号とその表示という一つの区別である。記号 `∈̇` は構文に属し、それが意味するようになるのは構造の関係 `∈ˢ`{.Agda} であり、両者は異なる層に住んでいる。
+<!--/-->
 
 <!--en-->
 Fix a structure `𝒮 : ZFStructure ℓ`{.Agda}, the model-theoretic data of the preceding chapter: a carrier `S` that is an h-set, together with an equality `≈ˢ` and a membership `∈ˢ`, each sending two carrier elements to a proposition in `hProp ℓ`{.Agda}. The interpretation of every formula will land in this same proposition universe, so a claim about sets becomes, quite literally, a proposition with proofs as its inhabitants. Nothing beyond these fields is used. The record `ZFStructure` itself contains no set-theoretic axioms, and defining the semantics requires none.
@@ -31,11 +54,6 @@ Fix a structure `𝒮 : ZFStructure ℓ`{.Agda}, the model-theoretic data of the
 <!--/-->
 
 ```agda
-
-open import FOL.Syntax using
-  ( Term; con; var
-  ; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
-
 open ZFStructure 𝒮
 ```
 
@@ -104,7 +122,6 @@ Fix a constant domain `K` and an interpretation `ι : K → S`. At this fixed in
 定数域 `K` と解釈 `ι : K → S` を固定する。この解釈のもとで、項の評価は項と環境を `S` の要素へ送り、充足関係は論理式と環境を命題へ送る。充足関係は論理式の構造に沿って再帰的に定まる。原子式は構造の二つの関係を、結合子は「基礎語彙」の命題演算を、偽は空命題を用い、量化子は台の上を動く。有界量化子では、限界の表示が、量化される要素の満たすべき所属条件を定める。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -112,8 +129,6 @@ module At {ℓc} (K : Type ℓc) (ι : K → S) where
 ```
 </summary>
 <div class="submodule-fold-content">
-
-
 
 <!--en-->
 Two definitions carry the section, and their types say what they are. Evaluation `⟦_⟧`{.Agda} maps a term and an environment to a carrier element. Satisfaction `_⊨_`{.Agda} maps an environment and a formula to a proposition in `hProp ℓ`{.Agda}, that is, to a type any two of whose elements are equal; the inhabitants of such a type are its proofs. Satisfaction is therefore not a bare verdict but a proposition, and the definition computes, for each formula and environment, exactly which proposition is meant. The arity `n` appears in both types, so only an environment of matching length can be applied to a formula: the earlier discipline between formula and environment is now enforced by the types themselves.
@@ -172,7 +187,6 @@ The bounded forms add one ingredient: membership in the denotation of the bound.
 ```
 </div>
 </details>
-
 
 <!--en-->
 ## Predicates presented by formulas

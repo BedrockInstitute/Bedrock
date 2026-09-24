@@ -1,28 +1,18 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # Ordinal closure and finite ordinals
-
-Ordinals are transitive sets whose members are transitive. This chapter proves closure under zero, successor, and unions, constructs ordinal bounds for small families, and identifies membership among the finite numerals and `ω`.
-
-The chapter develops these closure and bounding tools before turning to finite ordinals. Zero is an ordinal; successors of ordinals are ordinals; a union of ordinals is an ordinal; and, as the chapter's main result, every small family of ordinals lies below a single ordinal. That last statement turns "each member of a small family has *some* ordinal bound" into "the whole family shares *one* ordinal bound", a form used later in separation, power set, recursion, reflection, and GCH constructions.
-
-This chapter does not give comparison of ordinals. Ordinals are indeed linearly ordered, but that fact is not constructive and it is not needed here: the axioms ask only for a common bound, so the book constructs a common bound directly. None of the closure or bounding proofs in this chapter assumes classical logic.
 <!--zh-->
 # 序数的封闭性与有限序数
-
-序数是其成员也都传递的传递集。本章证明序数对零、后继与并封闭，为小族构造序数上界，并刻画有限数码之间及其与 `ω` 的隶属关系。
-
-本章先建立这些封闭与取界工具，再转向有限序数。零是序数；序数的后继是序数；序数之并是序数；以及本章的主要结果：任一小族序数都落在单一序数之下。最后这条把「小族的每个成员**各有**序数上界」变成「整个小族共用**同一**序数上界」；后面的分离、幂集、递归、反射与 GCH 构造都会使用这种形式。
-
-本章没有给出序数的比较。序数确实构成线序，但该事实不是构造性的，而且此处也不需要它：这些公理只要求公共上界，因此本书在这里直接构造公共上界。本章的封闭与取界证明都不假设经典逻辑。
 <!--ja-->
 # 順序数の閉性と有限順序数
-
-順序数は、その要素も推移的である推移的集合である。本章では零、後続、和集合に関する閉性を示し、小さな族の順序数上界を構成し、有限数項の間および `ω` との所属関係を特徴付ける。
-
-本章では、これらの閉性と上界構成を整えた後、有限順序数を扱う。零は順序数であり、順序数の後続は順序数であり、順序数の和集合は順序数であり、そして本章の主結果として、小さな順序数の族は必ず単一の順序数の下に収まる。最後の命題は、「小さな族の各要素が**それぞれ**順序数上界を持つ」ことを「族全体が**同一の**順序数上界を共有する」ことへ変える。この形は後の分離、冪集合、再帰、反映、GCH の構成で使われる。
-
-本章は順序数の比較を与えない。順序数が実際に線形に整列していることは事実であるが、その事実は構成的ではなく、ここでは必要でもない。公理が求めるのは共通の上界だけなので、本書は共通の上界を直接構成する。本章の閉性と上界の証明には古典論理の仮定は現れない。
 <!--/-->
+
+```agda
+open import Base.Prelude
+```
 
 <!--en-->
 The ordinal predicate is defined in the constructible-universe chapter as `IsOrd A = isTransV A × ((x : S) → ⟨ x ∈ˢ A ⟩ → isTransV x)`: a pair of a transitivity proof and a proof that every member of `A` is itself transitive. Both components are propositions, and `isPropIsOrd` certifies this, so `IsOrd` is a genuine truth value rather than structure-bearing data. The module fixes an ambient universe level `ℓ` and works with the carrier `S` of the cumulative hierarchy over it.
@@ -33,14 +23,42 @@ The ordinal predicate is defined in the constructible-universe chapter as `IsOrd
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-open import Base.Prelude
-
 module L.Ordinal {ℓ : Level} where
-
-open import FOL.ZFStructure using ( module hPropStructure )
 ```
+
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Model {ℓ} using ( union-family-in; union-family-out; ∈sucV-elim; ∈sucV-inl; self∈sucV )
+open import V.Coding {ℓ} using ( #-inj′ )
+open import L.Constructible {ℓ}
+  using ( isTransV; isPropIsTransV; ∅-trans; setUnion-trans; IsOrd; isPropIsOrd )
+```
+
+<!--en-->
+
+Ordinals are transitive sets whose members are transitive. This chapter proves closure under zero, successor, and unions, constructs ordinal bounds for small families, and identifies membership among the finite numerals and `ω`.
+
+The chapter develops these closure and bounding tools before turning to finite ordinals. Zero is an ordinal; successors of ordinals are ordinals; a union of ordinals is an ordinal; and, as the chapter's main result, every small family of ordinals lies below a single ordinal. That last statement turns "each member of a small family has *some* ordinal bound" into "the whole family shares *one* ordinal bound", a form used later in separation, power set, recursion, reflection, and GCH constructions.
+
+This chapter does not give comparison of ordinals. Ordinals are indeed linearly ordered, but that fact is not constructive and it is not needed here: the axioms ask only for a common bound, so the book constructs a common bound directly. None of the closure or bounding proofs in this chapter assumes classical logic.
+<!--zh-->
+
+序数是其成员也都传递的传递集。本章证明序数对零、后继与并封闭，为小族构造序数上界，并刻画有限数码之间及其与 `ω` 的隶属关系。
+
+本章先建立这些封闭与取界工具，再转向有限序数。零是序数；序数的后继是序数；序数之并是序数；以及本章的主要结果：任一小族序数都落在单一序数之下。最后这条把「小族的每个成员**各有**序数上界」变成「整个小族共用**同一**序数上界」；后面的分离、幂集、递归、反射与 GCH 构造都会使用这种形式。
+
+本章没有给出序数的比较。序数确实构成线序，但该事实不是构造性的，而且此处也不需要它：这些公理只要求公共上界，因此本书在这里直接构造公共上界。本章的封闭与取界证明都不假设经典逻辑。
+<!--ja-->
+
+順序数は、その要素も推移的である推移的集合である。本章では零、後続、和集合に関する閉性を示し、小さな族の順序数上界を構成し、有限数項の間および `ω` との所属関係を特徴付ける。
+
+本章では、これらの閉性と上界構成を整えた後、有限順序数を扱う。零は順序数であり、順序数の後続は順序数であり、順序数の和集合は順序数であり、そして本章の主結果として、小さな順序数の族は必ず単一の順序数の下に収まる。最後の命題は、「小さな族の各要素が**それぞれ**順序数上界を持つ」ことを「族全体が**同一の**順序数上界を共有する」ことへ変える。この形は後の分離、冪集合、再帰、反映、GCH の構成で使われる。
+
+本章は順序数の比較を与えない。順序数が実際に線形に整列していることは事実であるが、その事実は構成的ではなく、ここでは必要でもない。公理が求めるのは共通の上界だけなので、本書は共通の上界を直接構成する。本章の閉性と上界の証明には古典論理の仮定は現れない。
+<!--/-->
+
+
 
 <!--en-->
 Two families of tools meet here. From the side of the ambient hierarchy `V` come the successor `sucV`, its membership eliminator, and the union of a small family. From the side of the constructible universe `L` come the transitivity lemma for the empty set and for small unions, and the predicate `IsOrd` itself. Everything in this chapter is proved about the underlying sets; nothing yet refers to constructibility, so no excluded-middle assumption appears in any statement below.
@@ -49,14 +67,6 @@ Two families of tools meet here. From the side of the ambient hierarchy `V` come
 <!--ja-->
 ここで二組の道具が出会う。周囲の階層 `V` の側からは、後続 `sucV`、その所属の消去子、そして小さな族の和集合が来る。構成可能宇宙 `L` の側からは、空集合と小さな和集合に対する推移性の補題、および述語 `IsOrd` そのものが来る。本章の結果はすべて基礎となる集合についてであり、まだ構成可能性には触れないため、以下のどの主張にも排中律の仮定は現れない。
 <!--/-->
-
-```agda
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-open import V.Model {ℓ} using ( union-family-in; union-family-out; ∈sucV-elim; ∈sucV-inl; self∈sucV )
-open import V.Coding {ℓ} using ( #-inj′ )
-open import L.Constructible {ℓ}
-  using ( isTransV; isPropIsTransV; ∅-trans; setUnion-trans; IsOrd; isPropIsOrd )
-```
 
 <!--en-->
 A recurring pattern in the proofs is elimination of a truncated witness. Membership in a union is only *merely* witnessed by some index and member, so a fact about all union members is extracted with `rec₁` into a proposition-valued target. This is why each closure lemma names its target proposition, such as `isPropIsTransV z`, before consuming the truncation: elimination of `∥ A ∥₁` is permitted exactly into such propositions.
@@ -67,7 +77,6 @@ A recurring pattern in the proofs is elimination of a truncated witness. Members
 <!--/-->
 
 ```agda
-
 open import Cubical.Data.Nat.Order using ( _<_; ≤-suc; isProp≤ )
 ```
 
@@ -96,7 +105,6 @@ One last convention: the direct `hProp` operations are available throughout, so 
 <!--/-->
 
 ```agda
-
 open hPropStructure 𝒮ᵥ
 ```
 
@@ -406,7 +414,6 @@ Inside the cumulative hierarchy library, `ω` is presented as the set whose memb
 <!--/-->
 
 ```agda
-
 #∈ω : (k : ℕ) → ⟨ (# k) ∈ˢ ω ⟩
 #∈ω k = ∈∈ₛ {a = # k} {b = ω} .snd (#-in-ω k)
 ```
@@ -420,7 +427,6 @@ The next statement is downward closure for numerals, phrased directly as members
 <!--/-->
 
 ```agda
-
 numeral-mem : (k : ℕ) (y : S) → ⟨ y ∈ˢ (# k) ⟩ → ⟨ y ∈ˢ ω ⟩
 numeral-mem zero y y∈ =
   ⊥₀-rec (∅-empty y (∈∈ₛ {a = y} {b = ∅} .fst y∈))
@@ -454,7 +460,6 @@ Assembling the halves gives `ω-ord : IsOrd ω`. Its first component, `trans-ω`
 <!--/-->
 
 ```agda
-
 ω-ord : IsOrd ω
 ω-ord = trans-ω , (λ x x∈ω → ω-mem-ord x x∈ω .fst)
   where

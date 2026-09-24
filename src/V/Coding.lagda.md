@@ -1,22 +1,18 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # Coding inside the cumulative hierarchy
-
-The generic coding construction of FOL.Coding needs exactly two injective operations on some carrier: an injective pairing, and an injective map from natural numbers. To code syntax over the cumulative hierarchy, both must be found among sets, and the hierarchy supplies them. For the naturals, its own von Neumann numerals serve. A smaller numeral belongs to a larger one, since each numeral sits inside its successor, and no set belongs to itself; so distinct indices, compared by the trichotomy on natural numbers, give distinct sets. For pairing, the Kuratowski encoding serves: the pair of `a`{.Agda} and `b`{.Agda} is the set whose members are the singleton `⁅ a ⁆s`{.Agda} and the unordered pair `⁅ a , b ⁆`{.Agda}, so the first component is recoverable as the common element and the second as the one that may differ.
-
-Both arguments face one constraint from the type theory. Small membership in a hierarchy set is propositionally truncated, so a case analysis on it may eliminate only into propositions. Equality in `V`{.Agda} is propositional because `V`{.Agda} is an h-set, and the path propositions built from such equalities are exactly the targets the reasoning below needs. Working at that level of discipline, every step stays proposition-valued and no witness is ever extracted from a truncation.
 <!--zh-->
 # 累积层级内的符号化
-
-FOL.Coding 中的通用编码构造只需要载体上的两个单射操作：单射的配对，以及从自然数出发的单射映射。要为累积层级上的语法编码，二者都必须在集合中找到，而层级本身提供了它们。自然数方面，层级自身的 von Neumann 数码即可胜任。较小的数码属于较大的，因为每个数码都在自己的后继之内，而没有集合属于自身；于是经自然数三歧性比较的相异序号给出相异的集合。配对方面，Kuratowski 编码即可胜任：`a`{.Agda} 与 `b`{.Agda} 的对，是以单点集 `⁅ a ⁆s`{.Agda} 与无序对 `⁅ a , b ⁆`{.Agda} 为成员的那个集合。于是第一分量可作为公共元素还原，第二分量则作为另一个 (可能相等的) 元素还原。
-
-两个论证都受类型论的一条约束。层级集合中的小隶属是命题截断的，所以对它的分情形只能消去到命题。由于 `V`{.Agda} 是 h-集合，`V`{.Agda} 中的等式是命题性的，而由这些等式构成的路径命题恰好是下文推理所需的目标。在这一消去限制下，每一步都取值于命题，从不从截断中提取任何见证。
 <!--ja-->
 # 累積階層の内部での符号化
-
-FOL.Coding の一般的な符号化構成が要求するのは、台の上の 2 つの単射操作、すなわち単射な対の操作と自然数からの単射写像だけである。累積階層の上の構文を符号化するには、この 2 つを集合のうちに見つけなければならず、階層自身がそれを供給する。自然数には von Neumann 数項がそのまま使える。各数項は自分の後続の内にあるので、小さい数項は大きい数項に属し、どの集合も自分自身には属しない。したがって、自然数の三分律で比較した異なる添字は異なる集合に写る。対には Kuratowski 符号化が使える。`a`{.Agda} と `b`{.Agda} の対とは、一元集合 `⁅ a ⁆s`{.Agda} と非順序対 `⁅ a , b ⁆`{.Agda} を元として持つ集合であり、第 1 成分は共通の元として、第 2 成分は (一致しうる) もう一方の元として復元できる。
-
-どちらの議論にも、型理論からの 1 つの制約が関わる。階層の集合における小さい所属は命題の切り詰めを持つので、それに関する場合分けは命題へしか消去できない。`V`{.Agda} は h-集合なので `V`{.Agda} の等式は命題的であり、その等式から作られるパス命題が、以下の推論がまさに必要とするターゲットである。この規律のもとでは、すべてのステップが命題に値を取り、切り詰めから証拠を取り出すことは一度もない。
 <!--/-->
+
+```agda
+open import Base.Prelude
+```
 
 <!--en-->
 The chapter is stated at a fixed universe level `ℓ`{.Agda}: the hierarchy's own structure `𝒮ᵥ`{.Agda} is the carrier that the codes will live over, and its membership relation is the one being analyzed. The eventual coding instance uses truth values in `hProp (ℓ-suc ℓ)`, one level up.
@@ -27,14 +23,34 @@ The chapter is stated at a fixed universe level `ℓ`{.Agda}: the hierarchy's ow
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-open import Base.Prelude
-
 module V.Coding {ℓ : Level} where
-
-open import FOL.ZFStructure using ( module hPropStructure )
 ```
+
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+import FOL.Coding
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-irrefl )
+open import V.Model {ℓ} using ( self∈sucV; ∈sucV-inl )
+```
+
+<!--en-->
+
+The generic coding construction of FOL.Coding needs exactly two injective operations on some carrier: an injective pairing, and an injective map from natural numbers. To code syntax over the cumulative hierarchy, both must be found among sets, and the hierarchy supplies them. For the naturals, its own von Neumann numerals serve. A smaller numeral belongs to a larger one, since each numeral sits inside its successor, and no set belongs to itself; so distinct indices, compared by the trichotomy on natural numbers, give distinct sets. For pairing, the Kuratowski encoding serves: the pair of `a`{.Agda} and `b`{.Agda} is the set whose members are the singleton `⁅ a ⁆s`{.Agda} and the unordered pair `⁅ a , b ⁆`{.Agda}, so the first component is recoverable as the common element and the second as the one that may differ.
+
+Both arguments face one constraint from the type theory. Small membership in a hierarchy set is propositionally truncated, so a case analysis on it may eliminate only into propositions. Equality in `V`{.Agda} is propositional because `V`{.Agda} is an h-set, and the path propositions built from such equalities are exactly the targets the reasoning below needs. Working at that level of discipline, every step stays proposition-valued and no witness is ever extracted from a truncation.
+<!--zh-->
+
+FOL.Coding 中的通用编码构造只需要载体上的两个单射操作：单射的配对，以及从自然数出发的单射映射。要为累积层级上的语法编码，二者都必须在集合中找到，而层级本身提供了它们。自然数方面，层级自身的 von Neumann 数码即可胜任。较小的数码属于较大的，因为每个数码都在自己的后继之内，而没有集合属于自身；于是经自然数三歧性比较的相异序号给出相异的集合。配对方面，Kuratowski 编码即可胜任：`a`{.Agda} 与 `b`{.Agda} 的对，是以单点集 `⁅ a ⁆s`{.Agda} 与无序对 `⁅ a , b ⁆`{.Agda} 为成员的那个集合。于是第一分量可作为公共元素还原，第二分量则作为另一个 (可能相等的) 元素还原。
+
+两个论证都受类型论的一条约束。层级集合中的小隶属是命题截断的，所以对它的分情形只能消去到命题。由于 `V`{.Agda} 是 h-集合，`V`{.Agda} 中的等式是命题性的，而由这些等式构成的路径命题恰好是下文推理所需的目标。在这一消去限制下，每一步都取值于命题，从不从截断中提取任何见证。
+<!--ja-->
+
+FOL.Coding の一般的な符号化構成が要求するのは、台の上の 2 つの単射操作、すなわち単射な対の操作と自然数からの単射写像だけである。累積階層の上の構文を符号化するには、この 2 つを集合のうちに見つけなければならず、階層自身がそれを供給する。自然数には von Neumann 数項がそのまま使える。各数項は自分の後続の内にあるので、小さい数項は大きい数項に属し、どの集合も自分自身には属しない。したがって、自然数の三分律で比較した異なる添字は異なる集合に写る。対には Kuratowski 符号化が使える。`a`{.Agda} と `b`{.Agda} の対とは、一元集合 `⁅ a ⁆s`{.Agda} と非順序対 `⁅ a , b ⁆`{.Agda} を元として持つ集合であり、第 1 成分は共通の元として、第 2 成分は (一致しうる) もう一方の元として復元できる。
+
+どちらの議論にも、型理論からの 1 つの制約が関わる。階層の集合における小さい所属は命題の切り詰めを持つので、それに関する場合分けは命題へしか消去できない。`V`{.Agda} は h-集合なので `V`{.Agda} の等式は命題的であり、その等式から作られるパス命題が、以下の推論がまさに必要とするターゲットである。この規律のもとでは、すべてのステップが命題に値を取り、切り詰めから証拠を取り出すことは一度もない。
+<!--/-->
+
+
 
 <!--en-->
 The numeral argument rests on two membership facts about successors in the hierarchy: a set always belongs to its own successor, and a member of a set belongs to that set's successor. Applied to the numerals, the first says `# n ∈ # (suc n)`{.Agda}, and the second says a member of `# n`{.Agda} survives into `# (suc n)`{.Agda}. The order on natural numbers then decides which numeral is smaller, with the trichotomy `m ≟ n`{.Agda} supplying the three cases the injectivity proof will separate.
@@ -45,10 +61,6 @@ The numeral argument rests on two membership facts about successors in the hiera
 <!--/-->
 
 ```agda
-import FOL.Coding
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-irrefl )
-open import V.Model {ℓ} using ( self∈sucV; ∈sucV-inl )
-
 open import Cubical.Data.Nat.Order using ( _<_; <-split; ¬-<-zero; _≟_; lt; eq; gt )
 ```
 
@@ -219,7 +231,6 @@ For unordered pairs, the classification has the shape of a truncated disjunction
 <!--/-->
 
 ```agda
-
   self∈singl : (a : S) → ⟨ a ∈ₛ ⁅ a ⁆s ⟩
   self∈singl a = singl∈ refl
 
@@ -256,7 +267,6 @@ A singleton that happens to equal an unordered pair forces both components down 
 <!--/-->
 
 ```agda
-
   singl≡pair : {a c d : S} → ⁅ a ⁆s ≡ ⁅ c , d ⁆ → (c ≡ a) × (d ≡ a)
   singl≡pair {a} {c} {d} q =
       ∈singl (subst (λ s → ⟨ c ∈ₛ s ⟩) (sym q) (inl∈⁅,⁆ {a = c} {b = d} refl))
@@ -314,7 +324,6 @@ Second component. Two truncated records are gathered. `H₂` comes from membersh
 <!--/-->
 
 ```agda
-
   H₂ : ∥ (⁅ a , b ⁆ ≡ ⁅ c ⁆s) ⊎ (⁅ a , b ⁆ ≡ ⁅ c , d ⁆) ∥₁
   H₂ = mem⁅,⁆ (subst (λ s → ⟨ ⁅ a , b ⁆ ∈ₛ s ⟩) p (inr∈⁅,⁆ {a = ⁅ a ⁆s} refl))
 

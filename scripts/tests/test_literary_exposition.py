@@ -39,6 +39,8 @@ class LiteraryExpositionTests(unittest.TestCase):
         '<div class="submodule-fold-content">\n'
         '```agda\n  value = result\n```\n</div>\n</details>\n')
   self.assertEqual(rules(text), [])
+  private=text.replace('module Helper where', 'private module Helper where')
+  self.assertEqual(rules(private), [])
  def test_shared_figure_markup_is_neutral_but_visible_text_is_checked(self):
   svg='<figure id="example"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="4"/></svg></figure>\n'
   self.assertNotIn('shared-prose',rules(svg+group()+'```agda\na\n```\n'))

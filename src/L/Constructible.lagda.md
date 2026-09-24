@@ -1,22 +1,18 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # The constructible hierarchy and universe
-
-The constructible hierarchy starts from the empty set and repeatedly applies definable power set, taking unions at limit points. The resulting stages are transitive, and the tower is monotone along membership of its indices; the sets that appear in some stage form the class `L`{.Agda}, together with the set-theoretic structure obtained by restricting the ambient one to it.
-
-One design choice does most of the work. The tower is indexed not by a separate type of ordinals but by **sets themselves**, through the recursion on membership that regularity licensed: `Lset α = ⋃ { Def (Lset β) ∣ β ∈ α }`. This single equation covers zero, successors, and limits at once, and on von Neumann ordinals it is exactly Gödel's tower; the definition itself accepts arbitrary sets as indices, and the requirement that the index be an ordinal is imposed later, only where the class `L` is defined. Alongside the tower runs an inductive predicate `isLayer`{.Agda}, "being a stage", whose constructors are the tower's closure principles; the two views cooperate throughout.
 <!--zh-->
 # 可构造层级与可构造宇宙
-
-可构造层级从空集开始，反复施加可定义幂集，并在极限点处取并。所得层都是传递集，而塔沿指标之间的隶属关系保持单调；出现在某一层中的集合构成类 `L`{.Agda}，连同把环境结构限制到其上所得的集合论结构。
-
-一个设计选择承担了大部分工作。塔的索引不是另立的序数类型，而是**集合自身**，凭借正则公理所授权的沿成员关系的递归：`Lset α = ⋃ { Def (Lset β) ∣ β ∈ α }`。这一条方程同时覆盖零、后继与极限，而在冯·诺伊曼序数上它恰是哥德尔的塔；定义本身接受任意集合作为索引，索引须为序数的要求留到定义类 `L` 时才施加。与之并行的是归纳谓词 `isLayer`{.Agda}，「是一个层」，其构造子就是塔的闭包原则；两个视角在全章配合使用。
 <!--ja-->
 # 構成可能階層と構成可能宇宙
-
-構成可能階層は空集合から始まり、定義可能冪集合を繰り返し施し、極限点では和集合を取る。できあがる各段階は推移的で、塔は添字の所属に沿って単調である。いくつかの段階に現れる集合の全体がクラス `L`{.Agda} を与え、周囲の構造をそこへ制限した集合論的構造が伴う。
-
-この章の仕事の大部分は、ひとつの設計判断が担う。塔の添字には独立した順序数の型ではなく**集合そのもの**を使い、正則性公理が許す所属に沿った再帰で進める。つまり `Lset α = ⋃ { Def (Lset β) ∣ β ∈ α }` である。このただ一本の等式が零・後者・極限を同時にカバーし、フォン・ノイマン順序数の上ではまさにゲーデルの塔になる。定義そのものは任意の集合を添字として受け入れ、添字が順序数であるという要求は、クラス `L` を定義する場所で初めて課される。これと並行して帰納的述語 `isLayer`{.Agda}、すなわち「段階であること」が走る。その構成子こそ塔の閉包原理であり、二つの見方は章全体で協調する。
 <!--/-->
+
+```agda
+open import Base.Prelude
+```
 
 <!--en-->
 The chapter works at a fixed universe level `ℓ` inside the cumulative hierarchy V. Its carrier `S` consists of sets with extensional, well-founded membership. The associated structure reads equality and membership as proposition-valued relations, so expressions such as `⟨ x ∈ˢ A ⟩` denote ordinary types of membership proofs. This is the ambient setting for the constructions below.
@@ -27,14 +23,35 @@ The chapter works at a fixed universe level `ℓ` inside the cumulative hierarch
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-open import Base.Prelude
-
 module L.Constructible {ℓ : Level} where
-
-open import FOL.ZFStructure using ( ZFStructure; _↾_; module hPropStructure; Transitive )
 ```
+
+```agda
+open import FOL.ZFStructure using ( ZFStructure; _↾_; module hPropStructure; Transitive )
+open import FOL.Syntax using ( Formula )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-induction; ∈-induction-compute )
+open import V.Model {ℓ} using ( union-family-in; union-family-out )
+open import L.Definability {ℓ} using ( module DefOf )
+```
+
+<!--en-->
+
+The constructible hierarchy starts from the empty set and repeatedly applies definable power set, taking unions at limit points. The resulting stages are transitive, and the tower is monotone along membership of its indices; the sets that appear in some stage form the class `L`{.Agda}, together with the set-theoretic structure obtained by restricting the ambient one to it.
+
+One design choice does most of the work. The tower is indexed not by a separate type of ordinals but by **sets themselves**, through the recursion on membership that regularity licensed: `Lset α = ⋃ { Def (Lset β) ∣ β ∈ α }`. This single equation covers zero, successors, and limits at once, and on von Neumann ordinals it is exactly Gödel's tower; the definition itself accepts arbitrary sets as indices, and the requirement that the index be an ordinal is imposed later, only where the class `L` is defined. Alongside the tower runs an inductive predicate `isLayer`{.Agda}, "being a stage", whose constructors are the tower's closure principles; the two views cooperate throughout.
+<!--zh-->
+
+可构造层级从空集开始，反复施加可定义幂集，并在极限点处取并。所得层都是传递集，而塔沿指标之间的隶属关系保持单调；出现在某一层中的集合构成类 `L`{.Agda}，连同把环境结构限制到其上所得的集合论结构。
+
+一个设计选择承担了大部分工作。塔的索引不是另立的序数类型，而是**集合自身**，凭借正则公理所授权的沿成员关系的递归：`Lset α = ⋃ { Def (Lset β) ∣ β ∈ α }`。这一条方程同时覆盖零、后继与极限，而在冯·诺伊曼序数上它恰是哥德尔的塔；定义本身接受任意集合作为索引，索引须为序数的要求留到定义类 `L` 时才施加。与之并行的是归纳谓词 `isLayer`{.Agda}，「是一个层」，其构造子就是塔的闭包原则；两个视角在全章配合使用。
+<!--ja-->
+
+構成可能階層は空集合から始まり、定義可能冪集合を繰り返し施し、極限点では和集合を取る。できあがる各段階は推移的で、塔は添字の所属に沿って単調である。いくつかの段階に現れる集合の全体がクラス `L`{.Agda} を与え、周囲の構造をそこへ制限した集合論的構造が伴う。
+
+この章の仕事の大部分は、ひとつの設計判断が担う。塔の添字には独立した順序数の型ではなく**集合そのもの**を使い、正則性公理が許す所属に沿った再帰で進める。つまり `Lset α = ⋃ { Def (Lset β) ∣ β ∈ α }` である。このただ一本の等式が零・後者・極限を同時にカバーし、フォン・ノイマン順序数の上ではまさにゲーデルの塔になる。定義そのものは任意の集合を添字として受け入れ、添字が順序数であるという要求は、クラス `L` を定義する場所で初めて課される。これと並行して帰納的述語 `isLayer`{.Agda}、すなわち「段階であること」が走る。その構成子こそ塔の閉包原理であり、二つの見方は章全体で協調する。
+<!--/-->
+
+
 
 <!--en-->
 Three mathematical ingredients drive the construction. First, well-founded recursion on membership: the hierarchy chapter's principle `∈-induction` lets a function on sets be defined by recursion along `∈ˢ`, which is what the tower itself will be. Second, unions of indexed families, with the two model lemmas that read membership in such a union in each direction. Third, the definability chapter's operator `Def A`, which collects the subsets of `A` definable in the inner world `(A, ∈)` with parameters from `A`; applied stage by stage, it is what pushes the hierarchy upward. The syntax of first-order formulas, in particular the type `Formula`, is carried over from the syntax chapter for exactly this operator.
@@ -43,13 +60,6 @@ Three mathematical ingredients drive the construction. First, well-founded recur
 <!--ja-->
 構成を進める数学的な材料は三つある。第一に、所属に沿った整礎再帰である。階層の章の原理 `∈-induction` は、`∈ˢ` に沿った再帰で集合上の関数を定義することを可能にし、塔そのものがまさにこれで定義される。第二に、添字族の和集合と、その和への所属を両方向に読む二つのモデル補題である。第三に、定義可能性の章の演算子 `Def A` であり、内側の世界 `(A, ∈)` で `A` のパラメータによって定義される `A` の部分集合を集めるもので、これを段階ごとに施すことが階層を上へ伸ばす原動力になる。一階述語論理式の構文、とりわけ型 `Formula` は、まさにこの演算子のために構文の章から引き継がれる。
 <!--/-->
-
-```agda
-open import FOL.Syntax using ( Formula )
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-induction; ∈-induction-compute )
-open import V.Model {ℓ} using ( union-family-in; union-family-out )
-open import L.Definability {ℓ} using ( module DefOf )
-```
 
 <!--en-->
 A set of the hierarchy is presented by a small family, and this chapter reads its members through that presentation: for a set `α`, `⟪ α ⟫` is the small index type of its members, `⟪ α ⟫↪` embeds an index back into a set, and `∈ₛ⟪ α ⟫↪ m` certifies that the member named by `m` belongs to `α`. The bridge `∈∈ₛ` connects the hierarchy's native membership `∈` with the structural membership `∈ˢ` in both directions, and `sett X f` forms the set whose members are the values of `f` over `X`. Alongside these, propositional truncation `∥ _ ∥₁` with its introduction `∣ _ ∣₁` gives mere existence: an inhabitant of a truncated statement asserts that a witness exists, without naming one.
@@ -571,7 +581,6 @@ Monotonicity is now a two-line corollary of the characterization rather than a s
 <!--/-->
 
 ```agda
-
 Lset-mono : {α β : S} → ⟨ β ∈ˢ α ⟩ → {x : S} → ⟨ x ∈ˢ Lset β ⟩ → ⟨ x ∈ˢ Lset α ⟩
 Lset-mono {α} {β} β∈α {x} x∈Lβ = Lset-in α β x β∈α (Lset⊆𝒟ₒ β x x∈Lβ)
 ```

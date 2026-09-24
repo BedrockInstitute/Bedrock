@@ -1,26 +1,59 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # Agreement of environment sets
+<!--zh-->
+# 环境集的一致性
+<!--ja-->
+# 環境の集合の一致
+<!--/-->
+
+```agda
+open import Base.Prelude
+open import Base.Classical using ( LEM )
+```
+
+<!--en-->
+Fix a universe level `ℓ`{.Agda} and assume `lem : LEM (ℓ-suc ℓ)`{.Agda}. This hypothesis supplies a decision for each proposition at that level; it remains an explicit parameter of the constructions below.
+<!--zh-->
+固定宇宙层级 `ℓ`{.Agda}，并假设 `lem : LEM (ℓ-suc ℓ)`{.Agda}。这个假设为相应层级的每个命题提供判定，并始终作为下文构造的显式参数。
+<!--ja-->
+宇宙レベル `ℓ`{.Agda} を固定し、`lem : LEM (ℓ-suc ℓ)`{.Agda} を仮定する。この仮定は該当するレベルの各命題に判定を与え、以下の構成の明示的なパラメータとして保たれる。
+<!--/-->
+
+```agda
+module L.Coding.EnvironmentAgreement {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+```
+
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+import FOL.Absoluteness
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
+open import L.Coding.Model {ℓ} using ( envOverAt; envOverAt-transport )
+open import L.Coding.Expressions {ℓ} using ( envSetAt; extAt-out; extAt-in; extAt-in-both; numL )
+open import L.Coding.EnvironmentSet {ℓ} lem
+  using ( envSet; envSet-in; envSet-out; envS; envOver; module Recover )
+```
+
+<!--en-->
 
 The satisfaction clauses need, inside `L`, a single set containing exactly the environments of a given length over a given base set. Earlier chapters supplied two separate pieces: `envSetAt`, the formula characterizing such a set by its members, and `envSet B m`, the set constructed in the previous chapter. A set satisfies the description exactly when each of its members is, as a set, the graph of a length-`m` environment over the base. This chapter proves that the description and the constructed set agree, and the agreement has two readings. A set that a satisfaction judgment has placed at the description's set slot has precisely the members of the constructed set; and the constructed set itself satisfies the description, so a clause that binds its own base and length may fill its slots with the constructed data and quote the description.
 
 Both readings rest on one object, the environment recovered from a member. The four internal clauses, single-valuedness, a numeral domain, values in the base, and pairs made of numerals and base members, say of a set that it is such a graph; from them the previous chapter recovered the assigning function and identified the set with the canonical graph of that function. Here every step reduces to running that recovery in one direction or the other, and to the transport lemma that carries a satisfaction of the environment clause between environments whose named slots agree.
 <!--zh-->
-# 环境集的一致性
 
 满足关系的诸子句需要在 `L` 内部有一个集合，恰好收齐给定基集合上给定长度的全部环境。较早的章节分别给出了两项材料：按成员刻画这种集合的公式 `envSetAt`，以及上一章构造的集合 `envSet B m`。一个集合满足该描述，当且仅当其成员作为集合恰是基上长度 `m` 环境的图。本章证明这条描述与已构造的集合彼此一致，而一致有两个读法。凡被某个满足判断放到描述之集合槽位上的集合，其成员恰为已构造集合的成员；已构造的集合自身也满足该描述，于是绑定自己的基与长度的子句可以先把已构造的数据填入槽位，再引用这条描述。
 
 两种读法都落在同一个对象上：从成员恢复出的环境。四条内部子句，单值性、以数码为定义域、取值落在基中、以及由数码与基中成员组成的对，说明一个集合正是这样的图；上一章由此恢复了那个赋值函数，并把该集合与其典范图等同起来。本章的每一步都归结为沿某个方向运行这一恢复，再加上一条搬运引理：当两个环境中被点名的槽位一致时，它把环境子句的满足关系从一个环境搬到另一个环境。
 <!--ja-->
-# 環境の集合の一致
 
 充足関係の節には、`L` の内部で、ある基礎集合の上の与えられた長さの環境をちょうどすべて集めた一つの集合が必要である。これまでの章は二つの材料を別々に与えた。要素によってそのような集合を特徴づける論理式 `envSetAt` と、前章で構成した集合 `envSet B m` である。ある集合がこの記述を満たすのは、その各要素が集合として、基礎の上の長さ `m` の環境のグラフであるとき、かつそのときである。本章は、記述と構成済みの集合が一致することを証明する。一致には二つの読み方がある。充足の判断によって記述の集合スロットに置かれた集合は、構成済みの集合とちょうど同じ要素を持ち、また構成済みの集合それ自体が記述を満たすので、自分の基礎と長さを束縛する節は、構成済みのデータでスロットを埋めてから記述を引用できる。
 
 どちらの読み方も、要素から復元された環境という一つの対象の上で行われる。単値性、数項による定義域、基礎への所属、そして数項と基礎の要素からなる対、という四つの内部の節が、ある集合がこのようなグラフであることを述べる。前の章はそこから割り当ての関数を復元し、その集合を関数の正準なグラフと同一視した。本章の各段階は、この復元をいずれかの方向に走らせることと、名指されたスロットの一致する環境の間で環境の節の充足を運ぶ輸送の補題とに帰着する。
 <!--/-->
-
-```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-```
 
 <!--en-->
 The book’s standing options remain in force. This chapter’s only nonconstructive input appears explicitly as the parameter `lem` below.
@@ -30,12 +63,6 @@ The book’s standing options remain in force. This chapter’s only nonconstruc
 本書の常設のオプションは引き続き有効である。本章で唯一用いる非構成的な入力は、下のパラメータ `lem` として明示される。
 <!--/-->
 
-```agda
-
-open import Base.Prelude
-open import Base.Classical using ( LEM )
-```
-
 <!--en-->
 The basic vocabulary arrives as a whole, as the Prelude arranged. Excluded middle enters as data rather than as an option, and the chapter receives it as a parameter.
 <!--zh-->
@@ -43,11 +70,6 @@ The basic vocabulary arrives as a whole, as the Prelude arranged. Excluded middl
 <!--ja-->
 基礎語彙は「基礎語彙」の章の配置どおり全体として導入される。排中律はオプションとしてではなくデータとして現れ、本章はこれをパラメータとして受け取る。
 <!--/-->
-
-```agda
-
-module L.Coding.EnvironmentAgreement {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-```
 
 <!--en-->
 The module parameter is an instance of excluded middle at level `ℓ-suc ℓ`, the level at which the satisfaction statements of the two structures live. It is forwarded to the chapter whose constructed set this chapter quotes.
@@ -57,14 +79,6 @@ The module parameter is an instance of excluded middle at level `ℓ-suc ℓ`, t
 モジュールパラメータはレベル `ℓ-suc ℓ` の排中律の実例で、二つの構造の充足の主張の住むレベルに一致する。これは、この章が引用する環境の集合を構成した章へそのまま渡される。
 <!--/-->
 
-```agda
-
-open import FOL.ZFStructure using ( module hPropStructure )
-import FOL.Absoluteness
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
-```
-
 <!--en-->
 Two structures interpret the language, and the chapter moves between them. The ambient structure `𝒮ᵥ` is the hierarchy itself; the inner structure `𝒮ʟ` restricts it to the constructible sets, the class named by `isL`. The class is transitive, recorded by `isL-trans`, and the absoluteness machinery is imported to work over exactly this pair.
 <!--zh-->
@@ -73,11 +87,6 @@ Two structures interpret the language, and the chapter moves between them. The a
 言語を解釈する構造は二つであり、本章はその間を行き来する。周囲の構造 `𝒮ᵥ` は階層そのものであり、内側の構造 `𝒮ʟ` はそれを構成可能な集合のクラス `isL` に制限したものである。このクラスは推移的であり、`isL-trans` がそれを記録する。絶対性の機構は、まさにこの組の上で働くために導入される。
 <!--/-->
 
-```agda
-open import L.Coding.Model {ℓ} using ( envOverAt; envOverAt-transport )
-open import L.Coding.Expressions {ℓ} using ( envSetAt; extAt-out; extAt-in; extAt-in-both; numL )
-```
-
 <!--en-->
 Two formulas and their readers do the chapter's work. The environment clause `envOverAt` says that the candidate graph is single-valued, has exactly the set in the named domain slot as its domain, takes values in the named base set, and contains only pairs drawn from those two sets; the transport lemma moves a satisfaction of this clause between environments whose named slots agree. The extensional description `envSetAt` says of a set that its members are exactly the environments, in the form of two universally quantified implications, and the three readers unpack those implications in either direction.
 <!--zh-->
@@ -85,11 +94,6 @@ Two formulas and their readers do the chapter's work. The environment clause `en
 <!--ja-->
 二つの論理式とその読み方が本章の仕事を担う。環境の節 `envOverAt` は、候補のグラフが単値であり、その定義域が指定された定義域スロットの集合とちょうど一致し、値が指定された基礎集合に属し、その二つの集合の要素からなる対だけを含むことを述べ、輸送の補題は、名指されたスロットの一致する環境の間でこの節の充足を運ぶ。外延的な記述 `envSetAt` は、二つの全称含意の形で、ある集合の要素がちょうどそれらの環境であることを述べ、三つの読み方がこれらの含意をどちらの向きにもほどく。
 <!--/-->
-
-```agda
-open import L.Coding.EnvironmentSet {ℓ} lem
-  using ( envSet; envSet-in; envSet-out; envS; envOver; module Recover )
-```
 
 <!--en-->
 From the previous chapter come the constructed set `envSet`, its two membership lemmas, the canonical graph element `envS`, the environment clause `envOver` satisfied at its own canonical environment, and the recovery module that reads an environment off the four clauses and identifies the set with that environment's graph.
@@ -100,7 +104,6 @@ From the previous chapter come the constructed set `envSet`, its two membership 
 <!--/-->
 
 ```agda
-
 open import Cubical.HITs.CumulativeHierarchy.Base using ( _∈_ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( module InfinitySet )
 open InfinitySet using ( #_ )
@@ -115,7 +118,6 @@ Decoding membership in an environment set into a representing environment return
 <!--/-->
 
 ```agda
-
 open hPropStructure 𝒮ʟ
 ```
 
@@ -128,7 +130,6 @@ Opening the inner structure fixes the satisfaction notation used throughout: mem
 <!--/-->
 
 ```agda
-
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
 open AbsL renaming ( _⊨ᵐ_ to _⊨_ )
 ```
@@ -177,19 +178,15 @@ The length slot is filled by a numeral, and the numeral must itself be an elemen
 長さのスロットは数項で埋められ、その数項自身も `L` の要素でなければならない。補助定義 `nn` がこれを作る。周囲のフォン・ノイマン数項 `# j` に、その構成可能性の証明を対にしたものである。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-
 module Ambient (B : S) {k : ℕ} (γ : S ^ k) (Ei di bi : Fin k) (m : ℕ)
   (qd : fst (lookup di γ) ≡ # m) (qb : fst (lookup bi γ) ≡ fst B)
   (hE : ⟨ γ ⊨ envSetAt Ei di bi ⟩) where
 ```
 </summary>
 <div class="submodule-fold-content">
-
-
 
 <!--en-->
 The module gathers the data of one instance of the question. `B` is the base set, `γ` an environment of length `k`, and three of its slots are named: `Ei` holds the candidate set, `di` holds the numeral of the length, `bi` holds the base. The equations `qd` and `qb` say that these two slots really are filled by the numeral of `m` and by `B`, and `hE` says that `γ` satisfies the description with the set slot at `Ei`. Under these data, the set at `Ei` and `envSet B m` are shown to have the same members.
@@ -200,7 +197,6 @@ The module gathers the data of one instance of the question. `B` is the base set
 <!--/-->
 
 ```agda
-
   into : (z : S) → ⟨ fst z ∈ fst (lookup Ei γ) ⟩
        → ⟨ fst z ∈ fst (envSet B m) ⟩
 ```
@@ -242,7 +238,6 @@ The recovery needs the four clauses to hold at `z`, and the description supplies
 <!--/-->
 
 ```agda
-
   outof : (z : S) → ⟨ fst z ∈ fst (envSet B m) ⟩
         → ⟨ fst z ∈ fst (lookup Ei γ) ⟩
 ```
@@ -290,7 +285,6 @@ The recovered environment satisfies the environment clause at its own canonical 
 </div>
 </details>
 
-
 <!--en-->
 The environment handed to the transport comes from the membership characterization of the constructed set, applied at the member `z` with which this direction began.
 <!--zh-->
@@ -321,7 +315,6 @@ The module assumes no satisfaction hypothesis. Its three equations say that the 
 モジュールは充足に関する前提を一切仮定しない。三つの等式が、集合のスロットに構成済みの集合そのものが、長さのスロットに `m` の数項が、基礎のスロットに `B` が収まっていることを述べる。これだけから、`γ` での記述の全体が証明される。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -333,8 +326,6 @@ module AmbientHolds (B : S) {k : ℕ} (γ : S ^ k) (Ei di bi : Fin k) (m : ℕ)
 </summary>
 <div class="submodule-fold-content">
 
-
-
 <!--en-->
 The three equations are the whole hypothesis. Naming the set slot with the constructed set, the length slot with the numeral, and the base slot with the base is exactly what a clause does when it fills the three slots with constructed data, so the module proves the description in precisely the form such a clause consumes.
 <!--zh-->
@@ -344,7 +335,6 @@ The three equations are the whole hypothesis. Naming the set slot with the const
 <!--/-->
 
 ```agda
-
   holds : ⟨ γ ⊨ envSetAt Ei di bi ⟩
   holds = extAt-in-both Ei (envOverAt zero (suc di) (suc bi)) γ fwd bwd
 ```
@@ -410,7 +400,6 @@ The environment handed to the transport comes from the membership characterizati
 <!--/-->
 
 ```agda
-
     bwd : (z : S) → ⟨ (z ∷ γ) ⊨ envOverAt zero (suc di) (suc bi) ⟩
         → ⟨ fst z ∈ fst (lookup Ei γ) ⟩
 ```
@@ -431,7 +420,6 @@ The backward implication is the reading direction: whatever satisfies the per-me
 ```
 </div>
 </details>
-
 
 <!--en-->
 The clause at `z` is the recovery's input: the recovered environment's canonical graph agrees with `z` as a set, and the constructed set contains that graph. The first transport reads the recovered graph as `z`, so the membership lands in `envSet B m`; the second runs backward along `qE` and turns membership in `envSet B m` into membership in the set at `Ei`.

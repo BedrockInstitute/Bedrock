@@ -1,29 +1,13 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # Cardinals and coded injections inside L
 <!--zh-->
 # L 内部的基数与编码单射
 <!--ja-->
 # L の内部における基数と符号化された単射
-<!--/-->
-
-<!--en-->
-Cardinality in `L` requires two related kinds of comparison. The host can compare the small types that present sets by actual functions, while a statement made inside `L` must be witnessed by a graph that is itself constructible. This chapter develops both notions and keeps their logical strength visible: concrete functions and graph codes carry data, whereas the cardinal comparisons used later retain only existence.
-<!--zh-->
-讨论 `L` 内部的基数，需要区分两种相互关联的比较。宿主可以用实际函数比较集合的小呈现类型；在 `L` 内部作出的陈述，则必须由本身可构造的图来见证。本章同时发展这两种概念，并明确保留它们的逻辑强度：具体函数与图码携带数据，后文所用的基数比较则只保留存在性。
-<!--ja-->
-`L` の内部で基数を論じるには、互いに関係する二種類の比較を区別する必要がある。ホストでは集合を提示する小さな型を実際の関数で比較できるが、`L` の内部で述べる主張は、それ自身が構成可能なグラフによって証されなければならない。本章では両方の概念を展開し、それぞれの論理的な強さを明確に保つ。具体的な関数とグラフの符号はデータを持ち、後で使う基数の比較は存在だけを保持する。
-<!--/-->
-
-```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-```
-
-<!--en-->
-The argument is carried out in the host language described in the prelude. Its one classical resource is excluded middle for propositions in `Type (ℓ-suc ℓ)`. This is a level-bounded assumption, not an unrestricted excluded-middle or choice principle. The definitions of injections and graph codes do not themselves select witnesses; classical reasoning becomes relevant to the ordinal well-order and to the least-element arguments that use it later.
-<!--zh-->
-论证在基础词汇章所介绍的宿主语言中进行。它唯一的经典资源，是对 `Type (ℓ-suc ℓ)` 中命题的排中律。这是一条受宇宙层级限制的假设，并非不受限制的排中律或选择原理。单射与图码的定义本身并不选取见证；经典推理在构造序数良序，以及后文利用该良序寻找最小元时才发挥作用。
-<!--ja-->
-議論は基礎語彙の章で説明したホスト言語の中で行う。用いる古典的な原理は、`Type (ℓ-suc ℓ)` にある命題に対する排中律だけである。これは宇宙レベルで制限された仮定であり、無制限の排中律や選択原理ではない。単射やグラフの符号の定義自体は証人を選ばない。古典的な推論が働くのは、順序数の整列順序を構成するときと、後でその順序から最小元を得るときである。
 <!--/-->
 
 ```agda
@@ -43,6 +27,42 @@ The universe level and this instance of excluded middle are therefore displayed 
 module L.Cardinal {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+import FOL.Absoluteness
+import FOL.ZFModel
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Model {ℓ} using ( self∈sucV )
+open import V.Presentation {ℓ} using ( member; fiber )
+open import V.Coding {ℓ} using ( pr )
+open import L.Constructible {ℓ}
+  using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset→isL )
+open import L.Ordinal {ℓ} using ( suc-ord )
+open import L.Ordinal.Stages {ℓ} lem using ( ord∈Lset-suc )
+open import L.Ordinal.SquareLaw {ℓ} lem using ( ordSWO )
+open import L.WellOrder.Base {ℓₚ = ℓ-suc ℓ} using ( SWO; module SWO )
+open import L.Coding.Model {ℓ} using ( svAt; domAt )
+open import L.Coding.Injection {ℓ} lem using ( injAt )
+```
+
+<!--en-->
+Cardinality in `L` requires two related kinds of comparison. The host can compare the small types that present sets by actual functions, while a statement made inside `L` must be witnessed by a graph that is itself constructible. This chapter develops both notions and keeps their logical strength visible: concrete functions and graph codes carry data, whereas the cardinal comparisons used later retain only existence.
+<!--zh-->
+讨论 `L` 内部的基数，需要区分两种相互关联的比较。宿主可以用实际函数比较集合的小呈现类型；在 `L` 内部作出的陈述，则必须由本身可构造的图来见证。本章同时发展这两种概念，并明确保留它们的逻辑强度：具体函数与图码携带数据，后文所用的基数比较则只保留存在性。
+<!--ja-->
+`L` の内部で基数を論じるには、互いに関係する二種類の比較を区別する必要がある。ホストでは集合を提示する小さな型を実際の関数で比較できるが、`L` の内部で述べる主張は、それ自身が構成可能なグラフによって証されなければならない。本章では両方の概念を展開し、それぞれの論理的な強さを明確に保つ。具体的な関数とグラフの符号はデータを持ち、後で使う基数の比較は存在だけを保持する。
+<!--/-->
+
+<!--en-->
+The argument is carried out in the host language described in the prelude. Its one classical resource is excluded middle for propositions in `Type (ℓ-suc ℓ)`. This is a level-bounded assumption, not an unrestricted excluded-middle or choice principle. The definitions of injections and graph codes do not themselves select witnesses; classical reasoning becomes relevant to the ordinal well-order and to the least-element arguments that use it later.
+<!--zh-->
+论证在基础词汇章所介绍的宿主语言中进行。它唯一的经典资源，是对 `Type (ℓ-suc ℓ)` 中命题的排中律。这是一条受宇宙层级限制的假设，并非不受限制的排中律或选择原理。单射与图码的定义本身并不选取见证；经典推理在构造序数良序，以及后文利用该良序寻找最小元时才发挥作用。
+<!--ja-->
+議論は基礎語彙の章で説明したホスト言語の中で行う。用いる古典的な原理は、`Type (ℓ-suc ℓ)` にある命題に対する排中律だけである。これは宇宙レベルで制限された仮定であり、無制限の排中律や選択原理ではない。単射やグラフの符号の定義自体は証人を選ばない。古典的な推論が働くのは、順序数の整列順序を構成するときと、後でその順序から最小元を得るときである。
+<!--/-->
+
+
+
 <!--en-->
 Two mathematical settings will remain in view. The cumulative hierarchy supplies ambient sets and proposition-valued membership. The constructible model will supply the sets that belong to `L` and the relations interpreted over them. The elementary fact `a ∈ sucV a`, saying that every set belongs to its set-theoretic successor `a ∪ {a}`, will later provide a distinguished point in a bounded search.
 <!--zh-->
@@ -50,14 +70,6 @@ Two mathematical settings will remain in view. The cumulative hierarchy supplies
 <!--ja-->
 以下では二つの数学的な場を同時に扱う。累積階層は周囲の集合と命題値の所属を与え、構成可能モデルは `L` に属する集合と、その上で解釈される関係を与える。基本的な事実 `a ∈ sucV a` は、すべての集合が集合論的後続 `a ∪ {a}` に属すことを表し、後で有界な探索のための特定の点を与える。
 <!--/-->
-
-```agda
-open import FOL.ZFStructure using ( module hPropStructure )
-import FOL.Absoluteness
-import FOL.ZFModel
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-open import V.Model {ℓ} using ( self∈sucV )
-```
 
 <!--en-->
 An ambient set also has a canonical small presentation. Its indices name all of its members, `member` turns an index into membership, and `fiber` recovers an index from membership. Ordered pairs let a set represent a relation. On the constructible side, an element of the model pairs an ambient set with a certificate that it belongs to `L`; transitivity of `L` then carries constructibility from a set to each of its members. These facts will connect small presentations with constructible graph codes.
@@ -67,14 +79,6 @@ An ambient set also has a canonical small presentation. Its indices name all of 
 周囲の各集合には標準的な小さな提示もある。そのインデックスは集合のすべての要素を名指し、`member` はインデックスを所属証明へ変え、`fiber` は所属からインデックスを復元する。順序対を使えば、集合で関係を表せる。構成可能な側では、モデルの要素は周囲の集合と、それが `L` に属すことの証明を組にしたものである。さらに `L` の推移性により、集合の構成可能性はその各要素へ受け継がれる。これらの事実が、小さな提示と構成可能なグラフの符号を結び付ける。
 <!--/-->
 
-```agda
-open import V.Presentation {ℓ} using ( member; fiber )
-open import V.Coding {ℓ} using ( pr )
-open import L.Constructible {ℓ}
-  using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset→isL )
-open import L.Ordinal {ℓ} using ( suc-ord )
-```
-
 <!--en-->
 The bounded search will use the strict well-order induced by ordinal membership on a presentation. Its trichotomy ultimately uses `lem`, while its well-foundedness comes from regularity of ambient membership. The other ingredients describe graphs inside the object language: single-valuedness, exact domain, and injectivity. Keeping these order-theoretic and logical ingredients distinct will matter when a concrete graph code is later hidden by propositional truncation.
 <!--zh-->
@@ -82,14 +86,6 @@ The bounded search will use the strict well-order induced by ordinal membership 
 <!--ja-->
 有界な探索には、順序数の所属が提示上に誘導する狭義の整列順序を使う。その三分性は最終的に `lem` を用い、整礎性は周囲の所属の正則性から得られる。ほかの材料は、一価性、正確な定義域、単射性というグラフの性質を対象言語で記述する。後で具体的なグラフの符号を命題的切り詰めによって隠すとき、順序に関する材料と論理式に関する材料を区別することが重要になる。
 <!--/-->
-
-```agda
-open import L.Ordinal.Stages {ℓ} lem using ( ord∈Lset-suc )
-open import L.Ordinal.SquareLaw {ℓ} lem using ( ordSWO )
-open import L.WellOrder.Base {ℓₚ = ℓ-suc ℓ} using ( SWO; module SWO )
-open import L.Coding.Model {ℓ} using ( svAt; domAt )
-open import L.Coding.Injection {ℓ} lem using ( injAt )
-```
 
 <!--en-->
 For a set `a`, write `⟪ a ⟫` for the small type indexing its members and `⟪ a ⟫↪` for the map sending an index to the member it names. The set-theoretic successor `sucV a` contains every member of `a` and also `a` itself. Thus `⟪ sucV a ⟫` is a small search space containing indices for all smaller ordinals when `a` is an ordinal, together with an index naming `a`.
@@ -100,7 +96,6 @@ For a set `a`, write `⟪ a ⟫` for the small type indexing its members and `�
 <!--/-->
 
 ```agda
-
 open import Cubical.HITs.CumulativeHierarchy.Base using ( _∈_ )
 open import Cubical.HITs.CumulativeHierarchy.Properties using ( ⟪_⟫; ⟪_⟫↪ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
@@ -115,8 +110,6 @@ Existence inside this development is often deliberately weakened by propositiona
 <!--ja-->
 本書では、存在を命題的切り詰めによって意図的に弱めることがよくある。`∥ X ∥₁` の要素は `X` に要素があることを主張するが、具体的な要素は明らかにしない。反証を表す空型のような命題へは消去できるが、任意のデータへは消去できない。この規則により、後で `InjCode` に含まれる具体的なグラフの情報と、`InjL` が述べる単なる存在が厳密に区別される。
 <!--/-->
-
-
 
 <!--en-->
 The notation now records which setting a statement belongs to. For the ambient
@@ -192,7 +185,6 @@ Now fix a constructible set `α` whose underlying set is an ordinal. To look lat
 ここで、底にある集合が順序数である構成可能集合 `α` を固定する。後で必要な大きさの順序数を探すには、`sucV (fst α)` の標準的な提示の中で探索すれば十分である。この集合は `α` のすべての要素と `α` 自身を含むので、探索空間は小さな型であると同時に自然な始点を持つ。ここでの定義が作るのは、この順序付けられた探索空間である。候補の述語を与えて最小元を選ぶのは後の議論である。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -200,8 +192,6 @@ module LeastCardInjL (α : S) (oα : IsOrd (fst α)) where
 ```
 </summary>
 <div class="submodule-fold-content">
-
-
 
 <!--en-->
 The first obligation is to show that this set-theoretic successor itself belongs to `L`. From `oα`, two applications of ordinal successor show that `sucV (sucV (fst α))` is an ordinal. The theorem that an ordinal belongs to the next constructible stage places `sucV (fst α)` in that named stage, and membership in a stage yields its constructibility. Thus the proof identifies a specific stage containing the successor; it does not appeal to a general closure of constructibility under `sucV`.
@@ -270,7 +260,6 @@ The search space has a distinguished index naming `fst α`. The proof `self∈su
 <!--/-->
 
 ```agda
-
   self : ⟪ sucV (fst α) ⟫
   self = fiber (sucV (fst α)) (self∈sucV (fst α)) .fst
 ```
@@ -289,7 +278,6 @@ The companion equation states exactly what `self` names: its image under the pre
 ```
 </div>
 </details>
-
 
 <!--en-->
 ## Internal injections and successor cardinals

@@ -135,8 +135,13 @@ class IntroductionGateTests(unittest.TestCase):
         text = '[host]{.term-ref #host-environment} and host'
         self.assertEqual(len(gate.prerequisite_occurrences(text, entry(), 'en', 'Other')), 1)
 
-    def test_lookup_cannot_hide_use_before_same_chapter_introduction(self):
-        text = '[host]{.term-ref #host-environment}'
+    def test_explicit_lookup_can_point_forward_within_same_chapter(self):
+        for language, label in (('en', 'host'), ('zh', '宿主'), ('ja', 'ホスト')):
+            text = '[' + label + ']{.term-ref #host-environment}'
+            self.assertEqual(gate.prerequisite_occurrences(text, entry(), language, 'Base.Prelude'), [])
+
+    def test_forward_lookup_does_not_exempt_bare_same_chapter_uses(self):
+        text = '[host]{.term-ref #host-environment} and host'
         self.assertEqual(len(gate.prerequisite_occurrences(text, entry(), 'en', 'Base.Prelude')), 1)
 
     MASTER = """<!--en-->

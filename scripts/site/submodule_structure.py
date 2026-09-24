@@ -10,8 +10,17 @@ import re
 
 
 FENCE_RE = re.compile(r'(?ms)^```agda\n(?P<code>.*?)^```[ \t]*$')
-MODULE_START_RE = re.compile(r'^\s*module\s+')
+MODULE_START_RE = re.compile(r'^[ \t]*(?:private[ \t]+)?module\s+')
 WHERE_RE = re.compile(r'\bwhere\s*$')
+
+
+def module_header_line(code):
+    """Locate a declaration; private must share the module's first line."""
+    lines = list(re.finditer(r'(?m)^[ \t]*\S[^\n]*$', code))
+    if not lines:
+        return None
+    first = lines[0]
+    return first if MODULE_START_RE.match(first[0]) else None
 
 
 @dataclass

@@ -1,25 +1,55 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # An internal graph of uniform satisfaction
-
-Let `W` be a constructible set, used both as the alphabet from which formula constants are drawn and as the range of values allowed in environments. The uniform satisfaction construction assigns to every code in `AllCodes W` the set of environments satisfying the coded formula. This chapter proves that the assignment itself has a graph inside `L`: a set whose members are precisely the ordered pairs of a formula code and its satisfaction set. The mathematical step is an instance of replacement. The uniform graph formula has a unique value over every code, so its image over the set `AllCodes W` can be collected as a set.
 <!--zh-->
 # 统一满足关系的内部图
-
-设 `W` 是一个可构造集合，它既充当公式常元取值的字母表，也充当环境中各项的取值范围。统一满足关系构造为 `AllCodes W` 中的每个公式码指派一个集合，即满足该码所编码公式的所有环境。本章证明，这一指派本身在 `L` 内具有图：存在一个集合，其成员恰好是公式码与相应满足关系集组成的有序对。数学上的关键是替换公理。统一的图公式在每个公式码上都有唯一取值，因此它在集合 `AllCodes W` 上的像可以收集成集合。
 <!--ja-->
 # 一様な充足関係の内部グラフ
-
-`W` を構成可能集合とし、論理式の定数が値を取るアルファベットと、環境の各成分が値を取る範囲の両方に用いる。一様な充足関係の構成は、`AllCodes W` の各論理式符号に、その論理式を満たす環境の集合を割り当てる。本章では、この割り当て自身が `L` の内部にグラフを持つことを証明する。その要素は、論理式符号と対応する充足集合の順序対である。数学的な要点は置換公理である。一様なグラフ論理式は各符号の上で一意な値を持つので、集合 `AllCodes W` 上の像を一つの集合に集められる。
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
 open import Base.Prelude
 open import Base.Classical using ( LEM )
+```
 
+<!--en-->
+Fix a universe level `ℓ`{.Agda} and assume `lem : LEM (ℓ-suc ℓ)`{.Agda}. This hypothesis supplies a decision for each proposition at that level; it remains an explicit parameter of the constructions below.
+<!--zh-->
+固定宇宙层级 `ℓ`{.Agda}，并假设 `lem : LEM (ℓ-suc ℓ)`{.Agda}。这个假设为相应层级的每个命题提供判定，并始终作为下文构造的显式参数。
+<!--ja-->
+宇宙レベル `ℓ`{.Agda} を固定し、`lem : LEM (ℓ-suc ℓ)`{.Agda} を仮定する。この仮定は該当するレベルの各命題に判定を与え、以下の構成の明示的なパラメータとして保たれる。
+<!--/-->
+
+```agda
 module L.Coding.SatisfactionGraphSet {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
+
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+import FOL.Absoluteness
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Coding {ℓ} using ( pr )
+open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
+open import L.Coding.CodeSet {ℓ} lem using ( AllCodes )
+open import FOL.Syntax using ( Formula )
+open import L.Coding.UniformSatisfaction {ℓ} lem using ( module Table )
+open import L.Recursion {ℓ} lem using ( Recursion )
+open import L.Recursion.Graph {ℓ} lem using () renaming ( module Graph to MapGraph )
+```
+
+<!--en-->
+
+Let `W` be a constructible set, used both as the alphabet from which formula constants are drawn and as the range of values allowed in environments. The uniform satisfaction construction assigns to every code in `AllCodes W` the set of environments satisfying the coded formula. This chapter proves that the assignment itself has a graph inside `L`: a set whose members are precisely the ordered pairs of a formula code and its satisfaction set. The mathematical step is an instance of replacement. The uniform graph formula has a unique value over every code, so its image over the set `AllCodes W` can be collected as a set.
+<!--zh-->
+
+设 `W` 是一个可构造集合，它既充当公式常元取值的字母表，也充当环境中各项的取值范围。统一满足关系构造为 `AllCodes W` 中的每个公式码指派一个集合，即满足该码所编码公式的所有环境。本章证明，这一指派本身在 `L` 内具有图：存在一个集合，其成员恰好是公式码与相应满足关系集组成的有序对。数学上的关键是替换公理。统一的图公式在每个公式码上都有唯一取值，因此它在集合 `AllCodes W` 上的像可以收集成集合。
+<!--ja-->
+
+`W` を構成可能集合とし、論理式の定数が値を取るアルファベットと、環境の各成分が値を取る範囲の両方に用いる。一様な充足関係の構成は、`AllCodes W` の各論理式符号に、その論理式を満たす環境の集合を割り当てる。本章では、この割り当て自身が `L` の内部にグラフを持つことを証明する。その要素は、論理式符号と対応する充足集合の順序対である。数学的な要点は置換公理である。一様なグラフ論理式は各符号の上で一意な値を持つので、集合 `AllCodes W` 上の像を一つの集合に集められる。
+<!--/-->
 
 <!--en-->
 Fix such a constructible set `W` and excluded middle at the proposition level required by the coding construction. Ordered pairs are formed in the ambient hierarchy, while the domain, the values and the graph all belong to the constructible carrier `S`.
@@ -29,14 +59,6 @@ Fix such a constructible set `W` and excluded middle at the proposition level re
 このような構成可能集合 `W` を固定し、符号化に必要な命題のレベルで排中律を仮定する。順序対は周囲の階層で構成されるが、定義域、値、グラフはいずれも構成可能な論域 `S` に属する。
 <!--/-->
 
-```agda
-open import FOL.ZFStructure using ( module hPropStructure )
-import FOL.Absoluteness
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-open import V.Coding {ℓ} using ( pr )
-open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
-```
-
 <!--en-->
 The domain `AllCodes W` is the constructible set of well-formed formula codes over the alphabet at `W`. Formula syntax supplies the type of the graph formula; dependent-pair extensionality will later prove uniqueness of a solution together with its satisfaction certificate.
 <!--zh-->
@@ -44,12 +66,6 @@ The domain `AllCodes W` is the constructible set of well-formed formula codes ov
 <!--ja-->
 定義域 `AllCodes W` は、`W` のアルファベット上の整形式な論理式符号からなる構成可能集合である。論理式の構文がグラフ論理式の型を与え、依存対の外延性が後に、解とその充足証明からなる依存対の一意性を示す。
 <!--/-->
-
-```agda
-open import L.Coding.CodeSet {ℓ} lem using ( AllCodes )
-
-open import FOL.Syntax using ( Formula )
-```
 
 <!--en-->
 Membership in the cumulative hierarchy is truncated existence, so the final description of an arbitrary graph member is truncated as well. The carrier `S` is that of the constructible structure `𝒮ʟ`; each of its elements consists of an ambient set together with a certificate of constructibility.
@@ -74,7 +90,6 @@ The satisfaction relation used here is the inner semantics of the restricted str
 <!--/-->
 
 ```agda
-
 module AbsSF = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _^_; _⊨ᵐ_ )
 open AbsSF using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
 ```
@@ -87,22 +102,13 @@ For the fixed `W`, both parameters of the uniform construction are instantiated 
 固定した `W` に対し、一様な構成の二つのパラメータをこの同じ集合で具体化する。したがって、符号のアルファベットと環境の値域はいずれも `W` である。`Table.graph W W` は `AllCodes W` のすべての要素に一様に適用される二項論理式であり、値の関係を記述する。`Table.val W W x mx` は、特定の符号 `x` におけるその一意な値である。
 <!--/-->
 
-```agda
-open import L.Coding.UniformSatisfaction {ℓ} lem using ( module Table )
-open import L.Recursion {ℓ} lem using ( Recursion )
-open import L.Recursion.Graph {ℓ} lem using () renaming ( module Graph to MapGraph )
-```
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-
 module SatGraph (W : S) where
 ```
 </summary>
 <div class="submodule-fold-content">
-
-
 
 <!--en-->
 For a code `x` with membership certificate `mx`, write this unique value as `valOf x mx`. The equation `valOf≡` identifies it definitionally with `Table.val W W x mx`. The notation isolates the mathematical function whose graph is to be collected: a domain member is sent to its satisfaction set.
@@ -130,7 +136,6 @@ Let `gr` be the single binary formula `Table.graph W W`. Its first free position
 <!--/-->
 
 ```agda
-
   private
     opaque
       unfolding valOf
@@ -147,7 +152,6 @@ Two facts make `gr` functional. Existence says that `gr` holds of the table valu
 <!--/-->
 
 ```agda
-
       defines' : (x : S) (mx : ⟨ fst x ∈ fst (AllCodes W) ⟩) → ⟨ (valOf x mx ∷ x ∷ []) ⊨ gr ⟩
       defines' x mx = Table.funct W W x mx .fst .snd
 
@@ -164,7 +168,6 @@ For each code, the type of solutions to `gr` is contractible. Its centre is the 
 <!--/-->
 
 ```agda
-
     M : Recursion
     M = record
       { dom = AllCodes W ; graph = gr
@@ -181,7 +184,6 @@ Replacement now applies to the functional relation `gr` over the constructible s
 <!--/-->
 
 ```agda
-
     module G = MapGraph M using ( F; F-in; pair-out )
 
   opaque
@@ -198,7 +200,6 @@ Every code in `AllCodes W` contributes its graph pair. Concretely, `pairs-in` pr
 <!--/-->
 
 ```agda
-
     pairs-in : (x : S) (mx : ⟨ fst x ∈ fst (AllCodes W) ⟩) → ⟨ pr (fst x) (fst (valOf x mx)) ∈ fst pairs ⟩
     pairs-in = G.F-in
 ```
@@ -212,7 +213,6 @@ Conversely, suppose an ordered pair `pr (fst x) (fst y)` belongs to `pairs`. The
 <!--/-->
 
 ```agda
-
     pairs-out : (x y : S) → ⟨ pr (fst x) (fst y) ∈ fst pairs ⟩
               → Σ[ mx ∈ ⟨ fst x ∈ fst (AllCodes W) ⟩ ] (fst y ≡ fst (valOf x mx))
     pairs-out = G.pair-out
@@ -233,7 +233,6 @@ An arbitrary member of `pairs` need not arrive already displayed as an ordered p
 ```
 </div>
 </details>
-
 
 <!--en-->
 The set `pairs` is therefore the internal graph of uniform satisfaction for formulas whose constants and environments range over `W`. Existence and uniqueness of the uniform value make the relation functional; replacement turns that relation into a set of `L`; and the three membership theorems characterize the set both for displayed pairs and for arbitrary members.

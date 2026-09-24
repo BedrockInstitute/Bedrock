@@ -1,25 +1,31 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+module Base.Choice where
+```
+
 <!--en-->
 # Choice
-
-Knowing that each type in a family has an element is different from having one function that chooses an element of every type. Propositional truncation makes the distinction precise: `∥ B x ∥₁`{.Agda} asserts existence at an individual index, while `∥ ((x : X) → B x) ∥₁`{.Agda} asserts the existence of a whole choice function. We formulate this principle for a family of h-sets indexed by an h-set, lower its universe level, and prove that it implies excluded middle. In the last step, equality of two quotient classes encodes a proposition, and choice supplies Boolean representatives to compare. Every additional principle remains an explicit hypothesis.
 <!--zh-->
 # 选择原理
-
-知道一族类型中的每个类型都有元素，与拥有一个同时为它们选取元素的函数，是不同的两件事。命题截断把区别表达得很准确：`∥ B x ∥₁`{.Agda} 断言某个指标处有元素，`∥ ((x : X) → B x) ∥₁`{.Agda} 则断言整个选择函数存在。本章先陈述以 h-集合为指标、取值也为 h-集合的选择原理，再将它降低一个宇宙层级，最后证明它蕴含排中律。最后一步把命题编码为两个商类的相等，由选择给出可供比较的布尔代表元。所用的额外原理始终是显式假设。
 <!--ja-->
 # 選択原理
-
-型の族の各型に要素があることと、すべての型から要素を選ぶ一つの関数をもつことは異なる。命題的切り詰めはこの違いを正確に表す。`∥ B x ∥₁`{.Agda} は個々の添字における存在を述べ、`∥ ((x : X) → B x) ∥₁`{.Agda} は選択関数全体の存在を述べる。本章では、h-集合で添字付けられた h-集合値の族について選択原理を定式化し、宇宙レベルを一段下げた後、それが排中律を含意することを証明する。最後の証明では命題を二つの商類の等しさに符号化し、選択によって比較できるブール代表元を得る。追加の原理はすべて明示的な仮定とする。
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-module Base.Choice where
-
 open import Base.Prelude
 open import Base.Classical using ( LEM )
 ```
+
+<!--en-->
+
+Knowing that each type in a family has an element is different from having one function that chooses an element of every type. Propositional truncation makes the distinction precise: `∥ B x ∥₁`{.Agda} asserts existence at an individual index, while `∥ ((x : X) → B x) ∥₁`{.Agda} asserts the existence of a whole choice function. We formulate this principle for a family of h-sets indexed by an h-set, lower its universe level, and prove that it implies excluded middle. In the last step, equality of two quotient classes encodes a proposition, and choice supplies Boolean representatives to compare. Every additional principle remains an explicit hypothesis.
+<!--zh-->
+
+知道一族类型中的每个类型都有元素，与拥有一个同时为它们选取元素的函数，是不同的两件事。命题截断把区别表达得很准确：`∥ B x ∥₁`{.Agda} 断言某个指标处有元素，`∥ ((x : X) → B x) ∥₁`{.Agda} 则断言整个选择函数存在。本章先陈述以 h-集合为指标、取值也为 h-集合的选择原理，再将它降低一个宇宙层级，最后证明它蕴含排中律。最后一步把命题编码为两个商类的相等，由选择给出可供比较的布尔代表元。所用的额外原理始终是显式假设。
+<!--ja-->
+
+型の族の各型に要素があることと、すべての型から要素を選ぶ一つの関数をもつことは異なる。命題的切り詰めはこの違いを正確に表す。`∥ B x ∥₁`{.Agda} は個々の添字における存在を述べ、`∥ ((x : X) → B x) ∥₁`{.Agda} は選択関数全体の存在を述べる。本章では、h-集合で添字付けられた h-集合値の族について選択原理を定式化し、宇宙レベルを一段下げた後、それが排中律を含意することを証明する。最後の証明では命題を二つの商類の等しさに符号化し、選択によって比較できるブール代表元を得る。追加の原理はすべて明示的な仮定とする。
+<!--/-->
 
 <!--en-->
 ## The principle
@@ -65,6 +71,8 @@ SetChoice ℓ = (X : Type ℓ) → isSet X → (B : X → Type ℓ)
             → ((x : X) → isSet (B x))
             → ((x : X) → ∥ B x ∥₁) → ∥ ((x : X) → B x) ∥₁
 ```
+
+∎
 
 <!--en-->
 The truncation moves outside the dependent function type; it does not disappear. A hypothesis `sc : SetChoice ℓ`{.Agda} therefore gives the [mere existence]{.term-ref #mere-existence} of a choice function. To use that existence with `rec₁`{.Agda}, we must have a proposition as our goal. Quantification over `Type ℓ`{.Agda} puts the whole principle in `Type (ℓ-suc ℓ)`{.Agda}.
@@ -169,7 +177,7 @@ To build the intermediate space, we use a [set quotient]{.term-intro #set-quotie
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module Diaconescu {ℓ} (P : hProp ℓ) where
+private module Diaconescu {ℓ} (P : hProp ℓ) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -207,6 +215,8 @@ module Diaconescu {ℓ} (P : hProp ℓ) where
   Glued = Bool / _~_
 ```
 
+∎
+
 <!--en-->
 **Lemma** (`~-prop`{.Agda}) For the quotient just constructed, `isEquivRel→effectiveIso`{.Agda} requires a proposition-valued equivalence relation. The checks use only the definition of `_~_`{.Agda}. Each diagonal entry is the proposition `⊤*`{.Agda}; each off-diagonal entry is the proposition packaged in `P`{.Agda}.
 <!--zh-->
@@ -223,6 +233,8 @@ module Diaconescu {ℓ} (P : hProp ℓ) where
   ~-prop false true  = ⟨ P ⟩isProp
 ```
 
+∎
+
 <!--en-->
 **Lemma** (`~-refl`{.Agda}) The diagonal entries have the inhabitant `tt*`{.Agda}, which proves reflexivity.
 <!--zh-->
@@ -232,11 +244,12 @@ module Diaconescu {ℓ} (P : hProp ℓ) where
 <!--/-->
 
 ```agda
-
   ~-refl : (a : Bool) → a ~ a
   ~-refl true  = tt*
   ~-refl false = tt*
 ```
+
+∎
 
 <!--en-->
 **Lemma** (`~-sym`{.Agda}) Swapping the inputs leaves the entry type unchanged. On the diagonal we return `tt*`{.Agda}; off the diagonal we reuse the given proof of `P`{.Agda}.
@@ -253,6 +266,8 @@ module Diaconescu {ℓ} (P : hProp ℓ) where
   ~-sym true  false p = p
   ~-sym false true  p = p
 ```
+
+∎
 
 <!--en-->
 **Lemma** (`~-trans`{.Agda}) For transitivity, first compare the endpoints `a`{.Agda} and `c`{.Agda}. If they agree, `tt*`{.Agda} proves `a ~ c`{.Agda}.
@@ -283,6 +298,8 @@ If the endpoints differ, the middle boolean equals one of them, so one of the tw
   ~-trans false false true  _ p = p
 ```
 
+∎
+
 <!--en-->
 **Lemma** (`~-equivRel`{.Agda}) The three laws form the equivalence-relation record required by `isEquivRel→effectiveIso`{.Agda}.
 <!--zh-->
@@ -292,7 +309,6 @@ If the endpoints differ, the middle boolean equals one of them, so one of the tw
 <!--/-->
 
 ```agda
-
   ~-equivRel : BinaryRelation.isEquivRel _~_
   ~-equivRel = BinaryRelation.equivRel ~-refl ~-sym ~-trans
 ```
@@ -387,6 +403,8 @@ On the left, the inverse of $e$ supplies a path. On the right, $e$ would turn an
   Pick x = Σ[ b ∈ Bool ] ([ b ] ≡ x)
 ```
 
+∎
+
 <!--en-->
 **Lemma** (`pickIsSet`{.Agda}) The family `Pick`{.Agda} is set-valued. Its first component is `Bool`{.Agda}, an h-set; for each boolean, its second component is a path in the h-set `Glued`{.Agda}, hence a proposition. An h-set paired with a proposition-valued family is again an h-set.
 <!--zh-->
@@ -401,6 +419,8 @@ On the left, the inverse of $e$ supplies a path. On the right, $e$ would turn an
   pickIsSet : (x : Glued) → isSet (Pick x)
   pickIsSet x = isSetΣSndProp isSetBool (λ b → squash/ [ b ] x)
 ```
+
+∎
 
 <!--en-->
 **Lemma** (`pickable`{.Agda}) Every quotient point merely has a representative, as `[]surjective`{.Agda} states.
@@ -437,37 +457,44 @@ Why not simply choose `true`{.Agda} at `[ true ]`{.Agda} and `false`{.Agda} at `
 
 Temporarily suppose such a function `g`{.Agda} is given. We will construct a decision of `P`{.Agda} from it, then justify eliminating the truncation into that decision.
 
-**Construction** (`b₀`{.Agda}) Take the boolean selected by `g`{.Agda} at `[ true ]`{.Agda}.
-
-**Construction** (`b₁`{.Agda}) Take the boolean selected by `g`{.Agda} at `[ false ]`{.Agda}.
 <!--zh-->
 为什么不直接在 `[ true ]`{.Agda} 处选 `true`{.Agda}，在 `[ false ]`{.Agda} 处选 `false`{.Agda}？这两个商类可能相等，而商上的函数必须尊重这种相等。分别在两个具名代表元处作出选取，还不能构成 `Glued`{.Agda} 上的函数。
 
 暂设这样的函数 `g`{.Agda} 已经给出。我们先由它构造 `P`{.Agda} 的判定，随后说明为什么可以把截断消去到这一判定中。
 
-**构造** (`b₀`{.Agda}) 取 `g`{.Agda} 在 `[ true ]`{.Agda} 处选出的布尔值。
-
-**构造** (`b₁`{.Agda}) 取 `g`{.Agda} 在 `[ false ]`{.Agda} 处选出的布尔值。
 <!--ja-->
 `[ true ]`{.Agda} で `true`{.Agda} を、`[ false ]`{.Agda} で `false`{.Agda} を選ぶだけではなぜ足りないのか。この二つの商類は等しいかもしれず、商上の関数はその等しさを保たなければならない。二つの代表元で別々に選んでも、`Glued`{.Agda} 上の関数を定めたことにはならない。
 
 いったん、そのような関数 `g`{.Agda} が与えられたとする。そこから `P`{.Agda} の判定を構成し、後でその判定へ切り詰めを消去できることを示す。
 
-**構成** (`b₀`{.Agda}) `[ true ]`{.Agda} で `g`{.Agda} が選ぶブール値を取る。
-
-**構成** (`b₁`{.Agda}) `[ false ]`{.Agda} で `g`{.Agda} が選ぶブール値を取る。
 <!--/-->
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-  module _ (g : (x : Glued) → Pick x) where
+  private module _ (g : (x : Glued) → Pick x) where
 ```
 </summary>
 <div class="submodule-fold-content">
 
-```agda
+<!--en-->
+**Construction** (`b₀`{.Agda} `b₁`{.Agda})
 
+- `b₀`{.Agda} is the boolean selected by `g`{.Agda} at `[ true ]`{.Agda}.
+- `b₁`{.Agda} is the boolean selected by `g`{.Agda} at `[ false ]`{.Agda}.
+<!--zh-->
+**构造** (`b₀`{.Agda} `b₁`{.Agda})
+
+- `b₀`{.Agda} 是 `g`{.Agda} 在 `[ true ]`{.Agda} 处选出的布尔值。
+- `b₁`{.Agda} 是 `g`{.Agda} 在 `[ false ]`{.Agda} 处选出的布尔值。
+<!--ja-->
+**構成** (`b₀`{.Agda} `b₁`{.Agda})
+
+- `b₀`{.Agda} は `[ true ]`{.Agda} で `g`{.Agda} が選ぶブール値である。
+- `b₁`{.Agda} は `[ false ]`{.Agda} で `g`{.Agda} が選ぶブール値である。
+<!--/-->
+
+```agda
     b₀ : Bool
     b₀ = g [ true ] .fst
 
@@ -478,18 +505,35 @@ Temporarily suppose such a function `g`{.Agda} is given. We will construct a dec
 ∎
 
 <!--en-->
-**Lemma** (`agree→P`{.Agda}) If `q : b₀ ≡ b₁`{.Agda}, the certificates stored in `g`{.Agda} connect this agreement back to the quotient. Write $s_0$ and $s_1$ in the diagram for `g [ true ] .snd`{.Agda} and `g [ false ] .snd`{.Agda}. The first certificate points from `[ b₀ ]`{.Agda} to `[ true ]`{.Agda}, so the composite must use `sym`{.Agda} there.
+**Construction** (`agree→P`{.Agda} `P→agree`{.Agda})
 
-**Lemma** (`P→agree`{.Agda}) Conversely, a proof `p : ⟨ P ⟩`{.Agda} gives the path `invEq quotientPath≃P p`{.Agda}, written $e^{-1}(p)$ in the diagram. The ordinary function `λ x → g x .fst`{.Agda} sends that path to `b₀ ≡ b₁`{.Agda}. Taking the first component makes the codomain the fixed type `Bool`{.Agda}, so `cong`{.Agda} suffices.
+- `agree→P`{.Agda} If `q : b₀ ≡ b₁`{.Agda}, the certificates stored in `g`{.Agda} connect this agreement back to the quotient. Write $s_0$ and $s_1$ in the diagram for `g [ true ] .snd`{.Agda} and `g [ false ] .snd`{.Agda}. The first certificate points from `[ b₀ ]`{.Agda} to `[ true ]`{.Agda}, so the composite must use `sym`{.Agda} there.
+- `P→agree`{.Agda} Conversely, a proof `p : ⟨ P ⟩`{.Agda} gives the path `invEq quotientPath≃P p`{.Agda}, written $e^{-1}(p)$ in the diagram. The ordinary function `λ x → g x .fst`{.Agda} sends that path to `b₀ ≡ b₁`{.Agda}. Taking the first component makes the codomain the fixed type `Bool`{.Agda}, so `cong`{.Agda} suffices.
 <!--zh-->
-**引理** (`agree→P`{.Agda}) 若有 `q : b₀ ≡ b₁`{.Agda}，`g`{.Agda} 中保存的证书就把这条相等接回商中。图中以 $s_0$、$s_1$ 分别简记 `g [ true ] .snd`{.Agda} 与 `g [ false ] .snd`{.Agda}。第一份证书从 `[ b₀ ]`{.Agda} 到 `[ true ]`{.Agda}，因此复合时要先用 `sym`{.Agda} 反向。
+**构造** (`agree→P`{.Agda} `P→agree`{.Agda})
 
-**引理** (`P→agree`{.Agda}) 反过来，证明 `p : ⟨ P ⟩`{.Agda} 经逆映射给出路径 `invEq quotientPath≃P p`{.Agda}，图中写作 $e^{-1}(p)$。普通函数 `λ x → g x .fst`{.Agda} 把它送到 `b₀ ≡ b₁`{.Agda}。取第一分量后，值域是固定的 `Bool`{.Agda}，因此只需使用 `cong`{.Agda}。
+- `agree→P`{.Agda} 若有 `q : b₀ ≡ b₁`{.Agda}，`g`{.Agda} 中保存的证书就把这条相等接回商中。图中以 $s_0$、$s_1$ 分别简记 `g [ true ] .snd`{.Agda} 与 `g [ false ] .snd`{.Agda}。第一份证书从 `[ b₀ ]`{.Agda} 到 `[ true ]`{.Agda}，因此复合时要先用 `sym`{.Agda} 反向。
+- `P→agree`{.Agda} 反过来，证明 `p : ⟨ P ⟩`{.Agda} 经逆映射给出路径 `invEq quotientPath≃P p`{.Agda}，图中写作 $e^{-1}(p)$。普通函数 `λ x → g x .fst`{.Agda} 把它送到 `b₀ ≡ b₁`{.Agda}。取第一分量后，值域是固定的 `Bool`{.Agda}，因此只需使用 `cong`{.Agda}。
 <!--ja-->
-**補題** (`agree→P`{.Agda}) `q : b₀ ≡ b₁`{.Agda} があれば、`g`{.Agda} に含まれる証明によって、この一致を商のパスへ結び付けられる。図では `g [ true ] .snd`{.Agda} と `g [ false ] .snd`{.Agda} をそれぞれ $s_0$、$s_1$ と略記する。最初の証明は `[ b₀ ]`{.Agda} から `[ true ]`{.Agda} へ向かうため、合成には `sym`{.Agda} で逆にしたものを使う。
+**構成** (`agree→P`{.Agda} `P→agree`{.Agda})
 
-**補題** (`P→agree`{.Agda}) 逆に `p : ⟨ P ⟩`{.Agda} からは、逆写像によってパス `invEq quotientPath≃P p`{.Agda} が得られる。図ではこれを $e^{-1}(p)$ と書く。通常の関数 `λ x → g x .fst`{.Agda} はこのパスを `b₀ ≡ b₁`{.Agda} へ送る。第一成分を取れば終域は固定された型 `Bool`{.Agda} なので、`cong`{.Agda} で十分である。
+- `agree→P`{.Agda} `q : b₀ ≡ b₁`{.Agda} があれば、`g`{.Agda} に含まれる証明によって、この一致を商のパスへ結び付けられる。図では `g [ true ] .snd`{.Agda} と `g [ false ] .snd`{.Agda} をそれぞれ $s_0$、$s_1$ と略記する。最初の証明は `[ b₀ ]`{.Agda} から `[ true ]`{.Agda} へ向かうため、合成には `sym`{.Agda} で逆にしたものを使う。
+- `P→agree`{.Agda} 逆に `p : ⟨ P ⟩`{.Agda} からは、逆写像によってパス `invEq quotientPath≃P p`{.Agda} が得られる。図ではこれを $e^{-1}(p)$ と書く。通常の関数 `λ x → g x .fst`{.Agda} はこのパスを `b₀ ≡ b₁`{.Agda} へ送る。第一成分を取れば終域は固定された型 `Bool`{.Agda} なので、`cong`{.Agda} で十分である。
 <!--/-->
+
+```agda
+    agree→P : b₀ ≡ b₁ → ⟨ P ⟩
+    agree→P q = equivFun quotientPath≃P
+      (sym (g [ true ] .snd) ∙ cong [_] q ∙ g [ false ] .snd)
+
+    P→agree : ⟨ P ⟩ → b₀ ≡ b₁
+    P→agree p = cong (λ x → g x .fst) (invEq quotientPath≃P p)
+```
+
+∎
+
+</div>
+</details>
 
 <figure class="book-diagram type-comparison path-figure" id="fig-choice-agreement" aria-describedby="fig-choice-agreement-caption">
 <div class="diagram-framed">
@@ -559,56 +603,41 @@ On the left, $e$ sends the composite path to a proof of `P`{.Agda}. On the right
 </figcaption>
 </figure>
 
-```agda
-
-    agree→P : b₀ ≡ b₁ → ⟨ P ⟩
-    agree→P q = equivFun quotientPath≃P
-      (sym (g [ true ] .snd) ∙ cong [_] q ∙ g [ false ] .snd)
-
-    P→agree : ⟨ P ⟩ → b₀ ≡ b₁
-    P→agree p = cong (λ x → g x .fst) (invEq quotientPath≃P p)
-```
-
-∎
-
 <!--en-->
-**Construction** (`decide`{.Agda}) We now decide equality of the booleans, using `_≟_`{.Agda}. The two directions just proved convert its outcomes as follows:
+**Construction** (`decide`{.Agda}) Given `g : (x : Glued) → Pick x`{.Agda}, we now decide equality of the selected booleans, using `_≟_`{.Agda}. The two private auxiliary maps just proved convert its outcomes as follows:
 
 | Boolean comparison | Decision of `P`{.Agda} |
 | --- | --- |
-| `yes q`{.Agda} | `yes (agree→P q)`{.Agda} |
-| `no ne`{.Agda} | `no (λ p → ne (P→agree p))`{.Agda} |
+| `yes q`{.Agda} | `yes (agree→P g q)`{.Agda} |
+| `no ne`{.Agda} | `no (λ p → ne (P→agree g p))`{.Agda} |
 
 In the second row, a proof of `P`{.Agda} would force the very equality that `ne`{.Agda} refutes. This is the negative map supplied to `mapDec`{.Agda}.
 <!--zh-->
-**构造** (`decide`{.Agda}) 现在用 `_≟_`{.Agda} 判定两个布尔值是否相等。刚证明的两个方向把比较结果转换如下：
+**构造** (`decide`{.Agda}) 给定 `g : (x : Glued) → Pick x`{.Agda}，现在用 `_≟_`{.Agda} 判定选出的两个布尔值是否相等。刚证明的两个私有辅助映射把比较结果转换如下：
 
 | 布尔值的比较 | 对 `P`{.Agda} 的判定 |
 | --- | --- |
-| `yes q`{.Agda} | `yes (agree→P q)`{.Agda} |
-| `no ne`{.Agda} | `no (λ p → ne (P→agree p))`{.Agda} |
+| `yes q`{.Agda} | `yes (agree→P g q)`{.Agda} |
+| `no ne`{.Agda} | `no (λ p → ne (P→agree g p))`{.Agda} |
 
 第二行中，`P`{.Agda} 的证明会迫使两个布尔值相等，而这正是 `ne`{.Agda} 所反驳的。因此得到传给 `mapDec`{.Agda} 的否定方向。
 <!--ja-->
-**構成** (`decide`{.Agda}) ここで `_≟_`{.Agda} を使って二つのブール値の等しさを判定する。証明した二方向によって、結果を次のように変換できる。
+**構成** (`decide`{.Agda}) `g : (x : Glued) → Pick x`{.Agda} が与えられたとき、`_≟_`{.Agda} を使って選ばれた二つのブール値の等しさを判定する。証明した二つの非公開の補助写像によって、結果を次のように変換できる。
 
 | ブール値の比較 | `P`{.Agda} の判定 |
 | --- | --- |
-| `yes q`{.Agda} | `yes (agree→P q)`{.Agda} |
-| `no ne`{.Agda} | `no (λ p → ne (P→agree p))`{.Agda} |
+| `yes q`{.Agda} | `yes (agree→P g q)`{.Agda} |
+| `no ne`{.Agda} | `no (λ p → ne (P→agree g p))`{.Agda} |
 
 第二行では、`P`{.Agda} の証明があれば、`ne`{.Agda} が否定する等しさが従ってしまう。これが `mapDec`{.Agda} に渡す否定側の写像である。
 <!--/-->
 
 ```agda
-    decide : Dec ⟨ P ⟩
-    decide = mapDec agree→P (λ ne p → ne (P→agree p)) (b₀ ≟ b₁)
-      where
-        open import Cubical.Data.Bool using ( _≟_ )
+  decide : ((x : Glued) → Pick x) → Dec ⟨ P ⟩
+  decide g = mapDec (agree→P g) (λ ne p → ne (P→agree g p)) (b₀ g ≟ b₁ g)
+    where
+      open import Cubical.Data.Bool using ( _≟_ )
 ```
-
-</div>
-</details>
 
 ∎
 
@@ -625,10 +654,11 @@ In the second row, a proof of `P`{.Agda} would force the very equality that `ne`
   decideIsProp = isPropDec ⟨ P ⟩isProp
 ```
 
+∎
+
 </div>
 </details>
 
-∎
 
 <!--en-->
 The same factorization through truncation that appeared in the Prelude now closes the proof. In the diagram, $G$ abbreviates the type `(x : Glued) → Pick x`{.Agda}. The map `decide`{.Agda} is defined on actual functions, while `rec₁ decideIsProp decide`{.Agda} accepts their mere existence.

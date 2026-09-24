@@ -351,6 +351,16 @@ s = "ghost"
 
 check("no ghost usage", rules(run(ghost)), [(7, "unused-import")])
 
+for declaration in ('module Helper where', 'module Alias = Other'):
+    bad_private = f'```agda\n{OPTS}\nmodule Test where\nprivate\n```\n\nLiterary text.\n\n```agda\n  {declaration}\n```\n'
+    check('private module shares a line across fences: ' + declaration,
+          rules(run(bad_private)), [(4, 'private-module')])
+    good_private = f'```agda\n{OPTS}\nmodule Test where\nprivate {declaration}\n```\n'
+    check('inline private module: ' + declaration, rules(run(good_private)), [])
+
+private_values = f'```agda\n{OPTS}\nmodule Test where\nprivate\n  f : Set₁\n  f = Set\n```\n'
+check('ordinary private value block is still allowed', rules(run(private_values)), [])
+
 print()
 if FAILS:
     print(f"{FAILS} test(s) failed")

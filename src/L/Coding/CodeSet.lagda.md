@@ -1,25 +1,33 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # The set of all formula codes
-
-Using the closed code domain, this chapter separates one constructible set containing exactly the formula codes, across all arities, that carry the required shape and closure witnesses. Its membership theorems move between a code, its arity numeral, and the decoded formula.
 <!--zh-->
 # 全体公式码之集
-
-本章利用封闭码定义域分离出一个可构造集合，其中恰好包含所有元数上携带所需形状与封闭见证的公式码。其隶属定理给出码、元数数码与解码公式三者之间的相互转换。
 <!--ja-->
 # すべての論理式の符号からなる集合
-
-閉じた符号の定義域を用いて、必要な形と閉性の証人を持つすべてのアリティの論理式の符号をちょうど含む、一つの構成可能集合を分出する。所属定理は、符号、アリティの数項、復号された論理式を相互に結ぶ。
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
 open import Base.Prelude
 open import Base.Classical using ( LEM )
+```
 
+<!--en-->
+Fix a universe level `ℓ`{.Agda} and assume `lem : LEM (ℓ-suc ℓ)`{.Agda}. This hypothesis supplies a decision for each proposition at that level; it remains an explicit parameter of the constructions below.
+<!--zh-->
+固定宇宙层级 `ℓ`{.Agda}，并假设 `lem : LEM (ℓ-suc ℓ)`{.Agda}。这个假设为相应层级的每个命题提供判定，并始终作为下文构造的显式参数。
+<!--ja-->
+宇宙レベル `ℓ`{.Agda} を固定し、`lem : LEM (ℓ-suc ℓ)`{.Agda} を仮定する。この仮定は該当するレベルの各命題に判定を与え、以下の構成の明示的なパラメータとして保たれる。
+<!--/-->
+
+```agda
 module L.Coding.CodeSet {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+```
 
+```agda
 open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax using ( Formula; var; con; _∈̇_; _≐_; _∧̇_; ∃̇_ )
 open import FOL.Manipulation.ConstantMapping using ( mapFo )
@@ -39,7 +47,20 @@ open import L.Coding.CodeConstructibility {ℓ} using ( key; keyL; codeL; key∈
 open import L.Coding.SubformulaClosure {ℓ} using ( clo; closureClosed )
 open import L.Coding.CodeShape {ℓ} using ( shapedAt; closureShaped )
 open import L.Coding.FormulaRecovery {ℓ} using ( keyOf-fst; module Decode )
+```
 
+<!--en-->
+
+Using the closed code domain, this chapter separates one constructible set containing exactly the formula codes, across all arities, that carry the required shape and closure witnesses. Its membership theorems move between a code, its arity numeral, and the decoded formula.
+<!--zh-->
+
+本章利用封闭码定义域分离出一个可构造集合，其中恰好包含所有元数上携带所需形状与封闭见证的公式码。其隶属定理给出码、元数数码与解码公式三者之间的相互转换。
+<!--ja-->
+
+閉じた符号の定義域を用いて、必要な形と閉性の証人を持つすべてのアリティの論理式の符号をちょうど含む、一つの構成可能集合を分出する。所属定理は、符号、アリティの数項、復号された論理式を相互に結ぶ。
+<!--/-->
+
+```agda
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
 open import Cubical.HITs.CumulativeHierarchy.Properties
   using ( ⟪_⟫; ⟪_⟫↪; ∈∈ₛ; ∈ₛ⟪_⟫↪_; ∈-asFiber )
@@ -247,7 +268,6 @@ outside, since none of them needs to know what the set was cut out of.
 这个集合在构造处被封印。若不封印，此后每个提到它的类型都会把分离定义的展开带入转换检查，而这里导出的事实已经足够所有使用方使用。封印内部只保留读取分离结果所需的引理；由这些方向复合得到的等式放在封印外部，因为它们不依赖该集合从哪个超集中分离出来。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -441,7 +461,6 @@ not contain it.
 ```
 </div>
 </details>
-
 
 <!--en-->
 ## Recap

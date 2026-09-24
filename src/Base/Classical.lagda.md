@@ -1,22 +1,32 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+module Base.Classical where
+```
+
 <!--en-->
 # The classical boundary
-
-This book develops classical set theory inside constructive Cubical type theory. Keeping the ambient foundation constructive makes the boundary of classical reasoning visible: definitions and proofs that do not need excluded middle remain constructive, while a theorem that does need it receives it as an explicit parameter. If classical logic were built into the ambient theory from the outset, the statements themselves would no longer reveal that distinction.
 <!--zh-->
 # 经典逻辑的边界
-
-本书以构造主义的 Cubical 类型论为基础，在其中发展经典集合论。保留构造主义的基础，可以清楚划出经典推理的边界：不需要排中律的定义和证明仍然是构造主义的；真正需要排中律的定理，则把它作为显式参数。如果一开始就在基础理论中预设经典逻辑，定理的陈述本身就无法再显示这种区别。
 <!--ja-->
 # 古典論理との境界
-
-本書は、構成的な Cubical 型理論を基礎として、その中で古典集合論を展開する。基礎を構成的なまま保つことで、古典的推論との境界が明確になる。排中律を必要としない定義と証明は構成的なまま残り、排中律を本当に必要とする定理だけが、それを明示的な引数として受け取る。初めから基礎理論に古典論理を組み込めば、定理の主張そのものからこの違いを読み取れなくなる。
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-module Base.Classical where
+open import Base.Prelude
+open import Base.Impredicativity
+  using ( Resizing; ΩResizing; ΩResizing→Resizing )
 ```
+
+<!--en-->
+
+This book develops classical set theory inside constructive Cubical type theory. Keeping the ambient foundation constructive makes the boundary of classical reasoning visible: definitions and proofs that do not need excluded middle remain constructive, while a theorem that does need it receives it as an explicit parameter. If classical logic were built into the ambient theory from the outset, the statements themselves would no longer reveal that distinction.
+<!--zh-->
+
+本书以构造主义的 Cubical 类型论为基础，在其中发展经典集合论。保留构造主义的基础，可以清楚划出经典推理的边界：不需要排中律的定义和证明仍然是构造主义的；真正需要排中律的定理，则把它作为显式参数。如果一开始就在基础理论中预设经典逻辑，定理的陈述本身就无法再显示这种区别。
+<!--ja-->
+
+本書は、構成的な Cubical 型理論を基礎として、その中で古典集合論を展開する。基礎を構成的なまま保つことで、古典的推論との境界が明確になる。排中律を必要としない定義と証明は構成的なまま残り、排中律を本当に必要とする定理だけが、それを明示的な引数として受け取る。初めから基礎理論に古典論理を組み込めば、定理の主張そのものからこの違いを読み取れなくなる。
+<!--/-->
 
 <!--en-->
 Besides marking the point at which the development becomes classical, excluded middle resolves the two smallness questions left open in the preceding chapter:
@@ -34,13 +44,6 @@ Besides marking the point at which the development becomes classical, excluded m
 - 命題リサイズ：`P : hProp ℓ₁`{.Agda} が与えられたとき、指定したレベル `ℓ₂`{.Agda} に、基礎型が `P`{.Agda} の基礎型と同値な命題を見つけられるか。
 - 命題宇宙リサイズ：型 `hProp ℓ₁`{.Agda} 全体を `Type ℓ₂`{.Agda} の一つの型で提示できるか。
 <!--/-->
-
-```agda
-
-open import Base.Prelude
-open import Base.Impredicativity
-  using ( Resizing; ΩResizing; ΩResizing→Resizing )
-```
 
 <!--en-->
 ## Excluded middle
@@ -63,10 +66,11 @@ Excluded middle supplies a decision for every proposition. Since propositions in
 <!--/-->
 
 ```agda
-
 LEM : ∀ ℓ → Type (ℓ-suc ℓ)
 LEM ℓ = (P : hProp ℓ) → Dec ⟨ P ⟩
 ```
+
+∎
 
 <!--en-->
 **Fact** (`isPropLEM`{.Agda}) At every level `ℓ`{.Agda}, excluded middle `LEM ℓ`{.Agda} is itself a proposition.
@@ -120,11 +124,18 @@ The two panels below show how to turn that decision into `Dec ⟨ P ⟩`{.Agda}.
 下図の二つの分岐は、この判定を `Dec ⟨ P ⟩`{.Agda} へ戻す方法を示す。肯定の分岐では `lower`{.Agda} を用い、否定の分岐では `P`{.Agda} の証明を仮定してその持ち上げた像を反駁する。関数 `mapDec`{.Agda} が二つの変換をまとめる。
 <!--/-->
 
+```agda
+lowerLEM {ℓ} lem P =
+  mapDec lower (λ np p → np (lift p))
+    (lem (Lift ⟨ P ⟩ , isOfHLevelLift 1 ⟨ P ⟩isProp))
+```
+
+∎
+
 <figure class="book-diagram type-comparison path-figure" id="fig-lower-lem" aria-describedby="fig-lower-lem-caption">
 <div class="diagram-framed">
 <div class="type-comparison-panels">
 <section class="type-comparison-panel">
-
 
 $$\operatorname{yes}\,x$$
 
@@ -146,10 +157,8 @@ $$\operatorname{yes}\,x$$
 
 $$\operatorname{yes}\,(\operatorname{lower}\,x)$$
 
-
 </section>
 <section class="type-comparison-panel">
-
 
 $$\operatorname{no}\,\mathit{np}$$
 
@@ -171,7 +180,6 @@ $$\operatorname{no}\,\mathit{np}$$
 
 $$\mathit{np}\,(\operatorname{lift}\,p):\bot_0$$
 
-
 </section>
 </div>
 </div>
@@ -185,14 +193,6 @@ A positive decision sends its proof downward by `lower`{.Agda}. A negative decis
 <!--/-->
 </figcaption>
 </figure>
-
-```agda
-lowerLEM {ℓ} lem P =
-  mapDec lower (λ np p → np (lift p))
-    (lem (Lift ⟨ P ⟩ , isOfHLevelLift 1 ⟨ P ⟩isProp))
-```
-
-∎
 
 <!--en-->
 ## Ω-resizing from excluded middle
@@ -223,12 +223,20 @@ The labels are codes, not themselves propositions in `hProp ℓ₁`{.Agda}. Sinc
 <!--/-->
 
 <!--en-->
-The construction has two stages. First we define encoding from an explicit decision `Dec ⟨ P ⟩`{.Agda}, then decoding, and finally the two round-trip laws. These four auxiliary results remain private and use no excluded middle. The public theorem then invokes excluded middle to supply a decision for every `P`{.Agda} and assembles the four results into the equivalence.
+The construction has two stages. First we define encoding from an explicit decision `Dec ⟨ P ⟩`{.Agda}, then decoding, and finally the two round-trip laws. We collect these four auxiliary results in the private module `BooleanCodes`{.Agda}; none uses excluded middle. The public theorem then invokes excluded middle to supply a decision for every `P`{.Agda} and assembles the four results into the equivalence.
 <!--zh-->
-构造分为两步。第一步先根据显式判定 `Dec ⟨ P ⟩`{.Agda} 定义编码，再定义解码，最后证明两条往返律。这四项辅助结果保持私有，并且都不使用排中律。第二步的公开定理才调用排中律，为每个 `P`{.Agda} 统一给出判定，并把这四项结果组装成所需的等价。
+构造分为两步。第一步先根据显式判定 `Dec ⟨ P ⟩`{.Agda} 定义编码，再定义解码，最后证明两条往返律。我们把这四项辅助结果放在私有子模块 `BooleanCodes`{.Agda} 中，它们都不使用排中律。第二步的公开定理才调用排中律，为每个 `P`{.Agda} 统一给出判定，并把这四项结果组装成所需的等价。
 <!--ja-->
-構成は二段階に分かれる。第一段階では、まず明示的な判定 `Dec ⟨ P ⟩`{.Agda} から符号化を定義し、次に復号を定義し、最後に二つの往復則を証明する。この四つの補助結果は非公開のままであり、いずれも排中律を使わない。第二段階の公開定理で初めて排中律を呼び出し、各 `P`{.Agda} に判定を一様に与え、この四つの結果を求める同値へ組み立てる。
+構成は二段階に分かれる。第一段階では、まず明示的な判定 `Dec ⟨ P ⟩`{.Agda} から符号化を定義し、次に復号を定義し、最後に二つの往復則を証明する。この四つの補助結果を非公開の部分モジュール `BooleanCodes`{.Agda} にまとめる。いずれも排中律を使わない。第二段階の公開定理で初めて排中律を呼び出し、各 `P`{.Agda} に判定を一様に与え、この四つの結果を求める同値へ組み立てる。
 <!--/-->
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
+```agda
+private module BooleanCodes where
+```
+</summary>
+<div class="submodule-fold-content">
 
 <!--en-->
 **Lemma** (`encodeB`{.Agda}) There is an encoding operation that takes a proposition `P`{.Agda} together with its decision and returns a code in `Lift {ℓ-zero} {ℓ₂} Bool`{.Agda}.
@@ -239,8 +247,6 @@ The construction has two stages. First we define encoding from an explicit decis
 <!--/-->
 
 ```agda
-
-private
   encodeB : ∀ {ℓ₁ ℓ₂} (P : hProp ℓ₁) → Dec ⟨ P ⟩ → Lift {ℓ-zero} {ℓ₂} Bool
 ```
 
@@ -345,6 +351,9 @@ private
 
 ∎
 
+</div>
+</details>
+
 <!--en-->
 The two round-trip laws show that encoding and decoding become mutually inverse once a decision is supplied uniformly for every proposition. The resulting classifier will therefore be a genuine type equivalence, not merely a surjective labelling of propositions by two truth values.
 <!--zh-->
@@ -370,6 +379,8 @@ The candidate witness is the pair `(Lift Bool , ...)`{.Agda}. Its first componen
 <!--/-->
 
 ```agda
+open BooleanCodes using ( encodeB; decodeB; secB; retrB )
+
 LEM→ΩResizing : ∀ {ℓ₁ ℓ₂} → LEM ℓ₁ → ΩResizing ℓ₁ ℓ₂
 ```
 
@@ -380,6 +391,15 @@ LEM→ΩResizing : ∀ {ℓ₁ ℓ₂} → LEM ℓ₁ → ΩResizing ℓ₁ ℓ�
 <!--ja-->
 **証明** 第一成分として `Lift Bool`{.Agda} を選ぶ。第二成分には `isoToEquiv`{.Agda} を用い、次の同型を型同値へ変換する。同型の順写像は `P`{.Agda} を `encodeB P (lem P)`{.Agda} へ送り、逆写像は `decodeB`{.Agda} である。二つの往復則には、`lem`{.Agda} が与える判定で具体化した `retrB`{.Agda} と `secB`{.Agda} を用いる。この二つの成分が `ΩResizing ℓ₁ ℓ₂`{.Agda} に必要な証拠を構成する。
 <!--/-->
+
+```agda
+LEM→ΩResizing lem = Lift Bool , isoToEquiv (iso
+  (λ P → encodeB P (lem P)) decodeB
+  (λ b → retrB {ℓ₁ = _} b (lem (decodeB b)))
+  (λ P → secB {ℓ₂ = _} P (lem P)))
+```
+
+∎
 
 <!--en-->
 The two round-trip laws close the two triangles below. Fix `lem : LEM ℓ₁`{.Agda}, abbreviate the code type `Lift {ℓ-zero} {ℓ₂} Bool`{.Agda} by $B$, and write $E(P) := \operatorname{encodeB}\,P\,(\operatorname{lem}\,P)$ and $D := \operatorname{decodeB}$. Each round trip returns a point connected to its starting point by the indicated path.
@@ -442,15 +462,6 @@ Encoding and decoding are inverse up to paths. Excluded middle supplies the deci
 <!--/-->
 </figcaption>
 </figure>
-
-```agda
-LEM→ΩResizing lem = Lift Bool , isoToEquiv (iso
-  (λ P → encodeB P (lem P)) decodeB
-  (λ b → retrB {ℓ₁ = _} b (lem (decodeB b)))
-  (λ P → secB {ℓ₂ = _} P (lem P)))
-```
-
-∎
 
 <!--en-->
 **Corollary** (`LEM→Resizing`{.Agda}) For arbitrary levels `ℓ₁`{.Agda} and `ℓ₂`{.Agda}, excluded middle at the source level `ℓ₁`{.Agda} implies propositional resizing from `ℓ₁`{.Agda} to `ℓ₂`{.Agda}.

@@ -1,0 +1,58 @@
+<!doctype html><html lang="en"><meta charset="utf-8">
+<title>Dotted operators and link colours</title>
+<link rel="stylesheet" href="/site/static/bedrock.css">
+<style>
+body{padding:2rem}table{width:auto}td,th{padding:1rem}.large{font-size:64px}
+.sample{font-family:var(--mono)}.compare-original{font-family:var(--mono)}
+</style>
+<script defer src="/site/static/bedrock.js"></script>
+<h1 id="test-status">RUNNING</h1>
+<button id="theme-toggle">Theme</button>
+<table><tr><th>Original JuliaMono</th><th>Two-cluster font correction</th></tr>
+<tr class="large"><td class="compare-original" contenteditable="false">⇒̇ ¬̇</td><td class="sample">⇒̇ ¬̇</td></tr>
+<tr><td class="compare-original" contenteditable="false">φ ⇒̇ ¬̇ ψ</td><td class="sample">φ ⇒̇ ¬̇ ψ</td></tr></table>
+<article>
+<p id="inline"><code class="Agda">φ ⇒̇ ¬̇ ψ ∧̇ ∨̇ ∈̇ ∀̇ ⇒ ¬ _⇒̇_ ¬̇_</code></p>
+<pre class="Agda" id="code"><a class="Function" href="#definition" data-name="_⇒̇_">_⇒̇_</a> <a class="Module" href="#module">FOL.Syntax</a> : Type</pre>
+<p><a id="internal" href="#inline">Internal navigation</a> · <a id="external" href="https://github.com/BedrockInstitute/Bedrock">External navigation</a></p>
+<div id="dynamic"></div><pre id="report"></pre>
+</article>
+<script>
+window.addEventListener('load', async()=>{
+  const checks=[], check=(name,ok)=>{checks.push({name,ok:!!ok});if(!ok)throw Error(name);};
+  const settle=()=>new Promise(r=>setTimeout(r,30));
+  try{
+    await document.fonts.ready;
+    check('dedicated font loaded',document.fonts.check('16px "Bedrock Dotted Operators"','⇒̇ ¬̇'));
+    const code=document.querySelector('#inline');
+    check('source text unchanged',code.textContent==='φ ⇒̇ ¬̇ ψ ∧̇ ∨̇ ∈̇ ∀̇ ⇒ ¬ _⇒̇_ ¬̇_');
+    check('only exact two clusters styled',code.querySelectorAll('.dotted-operator').length===4&&[...document.querySelectorAll('.dotted-operator')].every(e=>['⇒̇','¬̇'].includes(e.textContent)));
+    check('one wrapper per cluster',!document.querySelector('.dotted-operator .dotted-operator'));
+    const link=document.querySelector('#code a');
+    check('definition target unchanged',link.getAttribute('href')==='#definition'&&link.dataset.name==='_⇒̇_'&&link.textContent==='_⇒̇_');
+    const target=document.querySelector('#dynamic');
+    target.innerHTML='<div class="type-value Agda">(φ ⇒̇ ¬̇ ψ)</div>';await settle();
+    check('dynamic hover content decorated',target.querySelectorAll('.dotted-operator').length===2);
+    target.firstChild.textContent='¬̇ φ';await settle();
+    check('replaced content decorated',target.querySelectorAll('.dotted-operator').length===1);
+    target.firstChild.lastChild.data=' φ ⇒̇ ψ';await settle();
+    check('text node updates decorated',target.querySelectorAll('.dotted-operator').length===2);
+    const family=getComputedStyle(document.querySelector('.dotted-operator')).fontFamily;
+    check('special font scoped to wrappers',family.includes('Bedrock Dotted Operators')&&!getComputedStyle(code).fontFamily.includes('Bedrock Dotted Operators'));
+    const prior=document.documentElement.className;
+    function luminance(rgb){const v=rgb.match(/[\d.]+/g).slice(0,3).map(x=>{x=Number(x)/255;return x<=.04045?x/12.92:((x+.055)/1.055)**2.4;});return v[0]*.2126+v[1]*.7152+v[2]*.0722;}
+    for(const theme of ['light','dark']){
+      document.documentElement.className='theme-'+theme;
+      const internal=getComputedStyle(document.querySelector('#internal')).color;
+      const external=getComputedStyle(document.querySelector('#external')).color;
+      check(theme+' ordinary links share rose',internal===external&&internal===(theme==='light'?'rgb(165, 50, 104)':'rgb(237, 159, 189)'));
+      check(theme+' code colours remain distinct',internal!==getComputedStyle(link).color&&internal!==getComputedStyle(document.querySelector('.Module')).color);
+      const l=luminance(internal),b=luminance(getComputedStyle(document.body).backgroundColor);
+      check(theme+' link text contrast >= 4.5', (Math.max(l,b)+.05)/(Math.min(l,b)+.05)>=4.5);
+    }
+    document.documentElement.className=prior;
+    document.querySelector('#test-status').textContent='PASS '+checks.length+'/'+checks.length;
+  }catch(error){document.querySelector('#test-status').textContent='FAIL '+error.message;}
+  document.querySelector('#report').textContent=JSON.stringify(checks,null,2);
+});
+</script></html>

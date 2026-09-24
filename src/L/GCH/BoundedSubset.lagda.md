@@ -1,27 +1,13 @@
-<!--en-->
-# Bounded subsets appear at controlled stages
-
-The bounded-subset theorem starts with an internal cardinal `κ` whose underlying set is an ordinal and does not belong to `ω`, together with an arbitrary constructible set `y` whose ambient members all lie in `κ`. Under propositional truncation, it gives a constructible ordinal `β` such that `y ∈ Lset β` and a coded injection `β ↪ κ` exists. It assumes no formula defining `y`, selects no least stage, and makes no uniform choice of `β` as `y` varies.
-<!--zh-->
-# 有界子集落在受控层
-
-有界子集定理从如下数据出发：内部基数 `κ` 的底层集合是序数且不属于 `ω`，任意可构造集合 `y` 的每个外围成员都属于 `κ`。定理在命题截断下给出可构造序数 `β`，使 `y ∈ Lset β`，并存在编码单射 `β ↪ κ`。这里不假设 `y` 由某个公式定义，不选取最小层，也不随 `y` 统一选取 `β`。
-<!--ja-->
-# 有界部分集合が制御された段階に現れる
-
-有界部分集合定理では、台となる集合が順序数であり `ω` に属さない内部基数 `κ` と、周囲の各要素が `κ` に属する任意の構成可能集合 `y` を考える。命題的切り詰めのもとで、`y ∈ Lset β` を満たし、符号化された単射 `β ↪ κ` が存在するような構成可能順序数 `β` が得られる。`y` を定義する論理式は仮定せず、最小の段階も選ばず、`y` ごとに `β` を一様に選ぶこともない。
-<!--/-->
-
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
 ```
 
 <!--en-->
-The proof is classical only through the displayed instance of excluded middle. This hypothesis supports the earlier constructions of stages, hulls, and coded maps used here; it does not turn the final truncated existence into a chosen family of witnesses.
+# Bounded subsets appear at controlled stages
 <!--zh-->
-本证明的经典性只来自这里显式给出的排中律实例。该假设支撑本章所用的层、壳与编码映射等先前构造；它不会把最终的截断存在变成一族已选定的见证。
+# 有界子集落在受控层
 <!--ja-->
-この証明で用いる古典性は、ここで明示された排中律の実例だけである。この仮定は、本章で利用する段階、包、符号化された写像の先行する構成を支えるが、最後の切り詰められた存在を、選択された証人の族へ変えるものではない。
+# 有界部分集合が制御された段階に現れる
 <!--/-->
 
 ```agda
@@ -41,6 +27,51 @@ Fix a universe level `ℓ` and excluded middle at level `ℓ-suc ℓ`. Every con
 module L.GCH.BoundedSubset {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV; regularityV )
+open import L.Constructible {ℓ}
+  using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset; Lset-mono; Lset-layer; layer-trans )
+open import L.Ordinal {ℓ} using ( #∈ω )
+open import L.Ordinal.Stages {ℓ} lem using ( ord∈Lset→∈ )
+open import L.Axioms.Basic {ℓ} using ( LsetS )
+open import L.Axioms.Numerals {ℓ} using ( pairʟ )
+open import L.Stage {ℓ} lem using ( stage; stage-ord; stage-mem )
+open import L.Cardinal {ℓ} lem using ( InjL; IsCardinalL )
+open import L.GCH.Assembly {ℓ} lem using ( InternalBoundedSubset )
+open import L.InjectionComposition {ℓ} lem using ( inclusion-coded; injl-trans )
+open import L.GCH.SkolemHull {ℓ} lem
+  using ( module UnionKit; module HullStage; module HullElemDown )
+open import L.GCH.CardinalSquareLaw {ℓ} lem using ( prodL; ω⊆; Goal; module Step )
+open import L.GCH.AdequateStages {ℓ} lem using ( superadequate-above; Superadequate )
+open import L.GCH.StageCountingTools {ℓ} lem using ( move )
+open import L.GCH.StageInjection {ℓ} lem using ( stage-counted; module Site )
+open import L.GCH.OmegaRecursion {ℓ} lem using ( pairʟ-in )
+open import L.GCH.HullCounting {ℓ} lem
+  using ( ord⊆Lset; module Union2; tag-union; module Point; module Count )
+```
+
+<!--en-->
+
+The bounded-subset theorem starts with an internal cardinal `κ` whose underlying set is an ordinal and does not belong to `ω`, together with an arbitrary constructible set `y` whose ambient members all lie in `κ`. Under propositional truncation, it gives a constructible ordinal `β` such that `y ∈ Lset β` and a coded injection `β ↪ κ` exists. It assumes no formula defining `y`, selects no least stage, and makes no uniform choice of `β` as `y` varies.
+<!--zh-->
+
+有界子集定理从如下数据出发：内部基数 `κ` 的底层集合是序数且不属于 `ω`，任意可构造集合 `y` 的每个外围成员都属于 `κ`。定理在命题截断下给出可构造序数 `β`，使 `y ∈ Lset β`，并存在编码单射 `β ↪ κ`。这里不假设 `y` 由某个公式定义，不选取最小层，也不随 `y` 统一选取 `β`。
+<!--ja-->
+
+有界部分集合定理では、台となる集合が順序数であり `ω` に属さない内部基数 `κ` と、周囲の各要素が `κ` に属する任意の構成可能集合 `y` を考える。命題的切り詰めのもとで、`y ∈ Lset β` を満たし、符号化された単射 `β ↪ κ` が存在するような構成可能順序数 `β` が得られる。`y` を定義する論理式は仮定せず、最小の段階も選ばず、`y` ごとに `β` を一様に選ぶこともない。
+<!--/-->
+
+<!--en-->
+The proof is classical only through the displayed instance of excluded middle. This hypothesis supports the earlier constructions of stages, hulls, and coded maps used here; it does not turn the final truncated existence into a chosen family of witnesses.
+<!--zh-->
+本证明的经典性只来自这里显式给出的排中律实例。该假设支撑本章所用的层、壳与编码映射等先前构造；它不会把最终的截断存在变成一族已选定的见证。
+<!--ja-->
+この証明で用いる古典性は、ここで明示された排中律の実例だけである。この仮定は、本章で利用する段階、包、符号化された写像の先行する構成を支えるが、最後の切り詰められた存在を、選択された証人の族へ変えるものではない。
+<!--/-->
+
+
+
 <!--en-->
 Two levels of objects must be kept separate throughout the argument. Symbols such as `κ`, `α₀`, `lam`, and later `β` denote sets in the ambient cumulative hierarchy, some proved to be ordinals; `Lset κ`, `Lset α₀`, `Lset lam`, and `Lset β` denote the corresponding constructible stages. Membership in a stage index and membership in its indexed stage are different assertions.
 <!--zh-->
@@ -48,14 +79,6 @@ Two levels of objects must be kept separate throughout the argument. Symbols suc
 <!--ja-->
 議論を通して、二つの種類の対象を区別しなければならない。`κ`、`α₀`、`lam`、そして後の `β` は周囲の累積階層の集合を表し、そのうちいくつかは順序数であることが示される。一方、`Lset κ`、`Lset α₀`、`Lset lam`、`Lset β` は、それぞれに対応する構成可能段階である。段階の添字に属することと、その添字が定める段階に属することは別の主張である。
 <!--/-->
-
-```agda
-open import FOL.ZFStructure using ( module hPropStructure )
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV; regularityV )
-open import L.Constructible {ℓ}
-  using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset; Lset-mono; Lset-layer; layer-trans )
-open import L.Ordinal {ℓ} using ( #∈ω )
-```
 
 <!--en-->
 The first task is to place both `κ` and `y` in one sufficiently high constructible stage. Since `y` is already supplied as a constructible set, an occurrence stage can be obtained directly; no formula defining `y`, and no finite list of defining parameters, enters this construction.
@@ -65,14 +88,6 @@ The first task is to place both `κ` and `y` in one sufficiently high constructi
 最初の課題は、`κ` と `y` を一つの十分高い構成可能段階へ入れることである。`y` はすでに構成可能な集合として与えられているので、それが現れる段階を直接得られる。`y` を定義する論理式も、有限個の定義パラメータの列も、この構成には入らない。
 <!--/-->
 
-```agda
-open import L.Ordinal.Stages {ℓ} lem using ( ord∈Lset→∈ )
-open import L.Axioms.Basic {ℓ} using ( LsetS )
-open import L.Axioms.Numerals {ℓ} using ( pairʟ )
-open import L.Stage {ℓ} lem using ( stage; stage-ord; stage-mem )
-open import L.Cardinal {ℓ} lem using ( InjL; IsCardinalL )
-```
-
 <!--en-->
 The central strategy is to enlarge `Lset κ` by the single point `y`, generate an elementary Skolem hull from that transitive starting set, and apply condensation. Counting the starting set by `κ` will count the whole hull by `κ`; condensation will then convert the collapsed hull into a stage `Lset β`.
 <!--zh-->
@@ -80,14 +95,6 @@ The central strategy is to enlarge `Lset κ` by the single point `y`, generate a
 <!--ja-->
 中心となる方針は、`Lset κ` に一点 `y` を加え、この推移的な出発集合から初等 Skolem 包を生成し、凝縮を適用することである。出発集合を `κ` で数えれば、包全体も `κ` で数えられる。その後、凝縮によって崩壊した包がある段階 `Lset β` と同一視される。
 <!--/-->
-
-```agda
-open import L.GCH.Assembly {ℓ} lem using ( InternalBoundedSubset )
-open import L.InjectionComposition {ℓ} lem using ( inclusion-coded; injl-trans )
-open import L.GCH.SkolemHull {ℓ} lem
-  using ( module UnionKit; module HullStage; module HullElemDown )
-open import L.GCH.CardinalSquareLaw {ℓ} lem using ( prodL; ω⊆; Goal; module Step )
-```
 
 <!--en-->
 This plan needs two different kinds of control. A sufficiently closed ordinal `lam` provides the ambient stage in which the hull and condensation argument can be carried out. Coded injections control size: first `X ↪ κ`, then `M ↪ κ`, and finally `β ↪ κ`.
@@ -97,14 +104,6 @@ This plan needs two different kinds of control. A sufficiently closed ordinal `l
 この方針には、二種類の制御が必要である。十分な閉性をもつ順序数 `lam` は、包と凝縮の議論を行う周囲の段階を与える。符号化された単射は大きさを制御し、まず `X ↪ κ`、次に `M ↪ κ`、最後に `β ↪ κ` を与える。
 <!--/-->
 
-```agda
-open import L.GCH.AdequateStages {ℓ} lem using ( superadequate-above; Superadequate )
-open import L.GCH.StageCountingTools {ℓ} lem using ( move )
-open import L.GCH.StageInjection {ℓ} lem using ( stage-counted; module Site )
-open import L.GCH.OmegaRecursion {ℓ} lem using ( pairʟ-in )
-open import L.GCH.HullCounting {ℓ} lem
-```
-
 <!--en-->
 The size estimate begins with two elementary pieces. The stage `Lset κ` can be coded into `κ`, and a singleton can also be coded into `κ`. Finite tags keep their images disjoint, while the square law for the infinite internal cardinal `κ` absorbs the resulting product back into `κ`.
 <!--zh-->
@@ -112,10 +111,6 @@ The size estimate begins with two elementary pieces. The stage `Lset κ` can be 
 <!--ja-->
 大きさの評価は、二つの基本的な部分から始まる。段階 `Lset κ` は `κ` へ符号化でき、単元集合も `κ` へ符号化できる。有限のタグが二つの像を区別し、無限の内部基数 `κ` に対する平方法則が、得られた積を再び `κ` へ収める。
 <!--/-->
-
-```agda
-  using ( ord⊆Lset; module Union2; tag-union; module Point; module Count )
-```
 
 <!--en-->
 Several equalities below are proved by comparing membership in both directions. The alternatives arising from union membership are propositionally truncated, but each target membership statement is a proposition, so those alternatives may be used locally without selecting a lasting branch.
@@ -151,8 +146,6 @@ Whenever an injection is asserted through `InjL`, its graph exists only under pr
 <!--ja-->
 `InjL` によって単射を主張する場合、そのグラフが存在するのは命題的切り詰めの内側だけである。証明は命題の内部でそのような存在を合成できるが、切り詰めの外で計算データとして使える特定の単射を得ることはない。
 <!--/-->
-
-
 
 <!--en-->
 The subset premise is deliberately stated with ambient membership. Thus an arbitrary ambient set `z` may be tested for membership in `y` and then in `κ`; `z` is not required to arrive together with its own proof of constructibility.
@@ -194,7 +187,6 @@ Fix a constructible set `κ` whose underlying set is an ordinal, an internal car
 台となる集合が順序数であり、内部の基数であり、`ω` の要素ではない構成可能集合 `κ` を固定する。さらに任意の構成可能集合 `y` を固定し、`y` の周囲の各要素が `κ` に属すると点ごとに仮定する。仮定はこれですべてである。とくに、`y` が論理式や有限個のパラメータで定義されるとは仮定しない。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -204,8 +196,6 @@ module At (κ : S) (oκ : IsOrd (fst κ)) (cκ : IsCardinalL κ)
 ```
 </summary>
 <div class="submodule-fold-content">
-
-
 
 <!--en-->
 The assumptions that `κ` is an ordinal and `κ ∉ ω` imply `ω ⊆ κ`. Since every finite von Neumann numeral `# k` belongs to `ω`, it follows that `# k ∈ κ` for every `k`. These elements will serve as the finite tags in the union coding.
@@ -696,7 +686,6 @@ The local witness now packages the constructible ordinal `β`, its ordinality, t
 ```
 </div>
 </details>
-
 
 <!--en-->
 Finally, `∣_∣₁` places the entire local witness under propositional truncation. The final theorem therefore retains only that some constructible ordinal `β` satisfies `y ∈ Lset β` and admits a coded injection `β ↪ κ`. It provides neither a least nor a canonical `β`, and it makes no uniform choice of witnesses as `y` varies.

@@ -1,5 +1,41 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # Formulas for singletons and pairs
+<!--zh-->
+# 单点集与有序对的公式
+<!--ja-->
+# 単集合と対を表す論理式
+<!--/-->
+
+```agda
+open import Base.Prelude
+```
+
+<!--en-->
+Fix a universe level `ℓ`{.Agda}. Keeping the level as a parameter lets the constructions be instantiated at each required size without identifying distinct universes.
+<!--zh-->
+固定宇宙层级 `ℓ`{.Agda}。保留这个层级参数，使构造可以在所需的各个大小处实例化，而不必把不同的宇宙视为同一个。
+<!--ja-->
+宇宙レベル `ℓ`{.Agda} を固定する。このレベルをパラメータとして保つことで、異なる宇宙を同一視せずに、必要な大きさで構成を具体化できる。
+<!--/-->
+
+```agda
+module L.Coding.PairFormulas {ℓ : Level} where
+```
+
+```agda
+open import FOL.Syntax
+  using ( var; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; ∀̇∈; ∃̇∈ )
+open import FOL.LevyHierarchy using ( Δ₀; checkΔ₀ )
+import FOL.Semantics
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV )
+open import V.Coding {ℓ} using ( pr )
+```
+
+<!--en-->
 
 The goal of this chapter is to let the object language recognize that one assigned set is the Kuratowski ordered pair of two others, and, along the way, to recognize singletons and unordered pairs, of which the Kuratowski pair is built. A first-order formula can speak only of membership and equality, so recognition must be extensional: a set is recognized as `pr U W` by saying, through membership alone, exactly which members it has. Three bounded formulas are constructed: `sglAt`{.Agda} says "this set is the singleton of that one", `pairAt`{.Agda} says "this is the unordered pair of those two", and `prAt`{.Agda} combines these into "this is the Kuratowski pair of those two".
 
@@ -7,7 +43,6 @@ The adequacy theorem at the end is an exact identification. For any environment,
 
 Because the quantifiers of each formula are bounded by an assigned set and its free-variable positions are de Bruijn indices given as arguments, the same formula works at any depth of nesting. Every clause is an atom or a bounded quantifier, so each reader is Δ₀ in the Lévy hierarchy.
 <!--zh-->
-# 单点集与有序对的公式
 
 本章的目标是让对象语言识别出某个被指派的集合恰是另外两个集合的 Kuratowski 有序对，顺带识别出 Kuratowski 对由之构成的单点集与无序对。一阶公式只能谈论隶属与相等，故识别必须是外延的：识别 `pr U W`，就是仅凭隶属说出它恰有哪些成员。本章构造三条有界公式：`sglAt`{.Agda} 说「这个集合是那个集合的单点集」，`pairAt`{.Agda} 说「这是那两个集合的无序对」，`prAt`{.Agda} 把这些组合成「这是那两个集合的 Kuratowski 对」。
 
@@ -15,7 +50,6 @@ Because the quantifiers of each formula are bounded by an assigned set and its f
 
 由于每条公式的量词都以某个被指派的集合为界，其自由变元位置取作参数给出的 de Bruijn 下标，同一条公式在任何嵌套深度都能使用。每条子句都是原子或有界量词，故每条读式都是 Lévy 层级中的 Δ₀。
 <!--ja-->
-# 単集合と対を表す論理式
 
 この章の目標は、対象言語に、割り当てられたある集合が他の二つの集合の Kuratowski 順序対であると認識させること、そして道すがら、Kuratowski 対を構成する単集合と非順序対も認識させることである。一階の論理式が語れるのは所属と等号だけなので、認識は外延的でなければならない。`pr U W` を認識するとは、所属だけを通して、どの要素をちょうど持つのかを言うことである。本章では有界な論理式を三つ構成する。`sglAt`{.Agda} は「この集合はあれの単集合である」、`pairAt`{.Agda} は「これはあの二つの非順序対である」、`prAt`{.Agda} はこれらを組み合わせて「これはあの二つの Kuratowski 対である」と読み取る式である。
 
@@ -33,14 +67,7 @@ The external target has a specific membership shape: `pr U W = ⁅ ⁅ U ⁆s , 
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-open import Base.Prelude
 open import Cubical.Data.Sum using () renaming ( map to sumMap )
-
-module L.Coding.PairFormulas {ℓ : Level} where
-
-open import FOL.Syntax
 ```
 
 <!--en-->
@@ -57,14 +84,6 @@ The target of recognition is the Kuratowski coding `pr`, defined by `pr U W = �
 認識の対象は Kuratowski 符号化 `pr` で、`pr U W = ⁅ ⁅ U ⁆s , ⁅ U , W ⁆ ⁆` と定義される。順序対は、`U` の単集合と `U` と `W` の対という二つの集合の非順序対として提示されるのである。したがって認識の問題は、有界論理式で、ある集合が `U` の単集合である要素をひとつ、`U` と `W` の非順序対である要素をひとつ持ち、それ以外の要素を持たない、と言うことに帰着する。単集合と非順序対への所属にはそれぞれ分類があり、外延性が完全な所属の条件を集合の間の等号に変換する。
 <!--/-->
 
-```agda
-  using ( var; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; ∀̇∈; ∃̇∈ )
-open import FOL.LevyHierarchy using ( Δ₀; checkΔ₀ )
-import FOL.Semantics
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV )
-open import V.Coding {ℓ} using ( pr )
-```
-
 <!--en-->
 Singleton and unordered-pair membership are supplied in two equivalent forms: hierarchy membership `⟨ y ∈ b ⟩` and the small classified membership used by their constructions. The equivalence `∈∈ₛ` passes between them. For a singleton, the classification yields the path `y ≡ u`; for an unordered pair, it yields the truncated alternative `∥ (y ≡ u) ⊎ (y ≡ v) ∥₁`. Once these membership descriptions are proved in both directions, `⇔toPath` turns each equivalence of membership propositions into the path required by extensionality.
 <!--zh-->
@@ -72,9 +91,6 @@ Singleton and unordered-pair membership are supplied in two equivalent forms: hi
 <!--ja-->
 単集合と非順序対の所属には、階層での所属 `⟨ y ∈ b ⟩` と、それぞれの構成が用いる小さな所属の分類という同値な二つの形がある。`∈∈ₛ` が両者を結ぶ。単集合の分類はパス `y ≡ u` を与え、非順序対の分類は切り詰められた選択肢 `∥ (y ≡ u) ⊎ (y ≡ v) ∥₁` を与える。各所属の記述を両方向に証明すれば、`⇔toPath` が所属命題の同値を外延性に必要なパスへ変える。
 <!--/-->
-
-```agda
-```
 
 <!--en-->
 The semantics takes its truth values in `hProp` at level `ℓ-suc ℓ`. A formula does not evaluate to a bare boolean: its value is a proposition, and satisfaction of a formula under an environment is itself a proposition rather than a decision. Conjunction and disjunction act directly on these `hProp` truth values when reading compound formulas. This propositional setting matters for the goal: it allows satisfaction of a bounded formula to be identified, path-for-path, with an external condition such as equality of a set with its coded pair.
@@ -220,7 +236,6 @@ The backward direction `sub₂` starts from membership in the singleton and must
 ```agda
   sub₂ y hy = subst (λ z → ⟨ z ∈ x ⟩) (sym (∈sgl-elim hy)) hu
 
-
 pair-char : (x u v : V ℓ) → ⟨ u ∈ x ⟩ → ⟨ v ∈ x ⟩
           → ((y : V ℓ) → ⟨ y ∈ x ⟩ → ∥ (y ≡ u) ⊎ (y ≡ v) ∥₁)
           → x ≡ ⁅ u , v ⁆
@@ -315,7 +330,6 @@ The converse data also exists: the constructions themselves carry their own pack
 <!--/-->
 
 ```agda
-
   sglOf⁅⁆ : (U : V ℓ) → SglOf U ⁅ U ⁆s
   sglOf⁅⁆ U = ∈sgl-intro refl , (λ z z∈ → ∈sgl-elim z∈)
 
@@ -372,7 +386,6 @@ The universal clause needs no elimination at all: for each member `y` of `Q`, th
   (rec₁ (⟨ ⁅ U , W ⁆ ∈ Q ⟩isProp)
     (λ { (w , hw , h) → subst (λ z → ⟨ z ∈ Q ⟩) (pairOf→≡ h) hw }) h₂)
   (λ y hy → map₁ (sumMap sglOf→≡ pairOf→≡) (h₃ y hy))
-
 
 prChar-bwd : (Q U W : V ℓ) → Q ≡ pr U W
 ```
@@ -460,7 +473,6 @@ The unordered-pair reader `pairAt k i j` adds the second component and weakens t
 <!--/-->
 
 ```agda
-
 pairAt : ∀ {n} → Fin n → Fin n → Fin n → Formula (V ℓ) n
 pairAt k i j = (var i ∈̇ var k) ∧̇ ((var j ∈̇ var k)
             ∧̇ (∀̇∈ (var k) ((var zero ≐ var (suc i)) ∨̇ (var zero ≐ var (suc j)))))

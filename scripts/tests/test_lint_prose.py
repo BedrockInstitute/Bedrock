@@ -25,7 +25,7 @@ class InlineAgdaTests(unittest.TestCase):
 
     def test_milestones_has_no_exemption(self):
         text = '[LEM x](Base.Classical.html#123){.Agda}\n'
-        self.assertTrue(lint_prose.analyze(text, 'src/Milestones.lagda.md')[2])
+        self.assertTrue(lint_prose.analyze(text, 'src/Origin.lagda.md')[2])
 
     def test_plain_variables_are_caught_in_refined_chapters(self):
         text = ('If f x ≡ g x, then f ≡ g.\n'
@@ -84,30 +84,41 @@ class TheoremLabelTests(unittest.TestCase):
         ])
         self.assertEqual(len(self.violations(invalid)), 4)
 
-    def test_numbered_milestone_heading_is_outside_named_statement_rule(self):
-        self.assertEqual(self.violations("**Theorem 1.** Text."), [])
+    def test_numbered_statement_cannot_bypass_the_rule(self):
+        self.assertTrue(self.violations("**Theorem 1.** Text."))
+        self.assertTrue(lint_prose.qed_violations("**Theorem 1.** Text."))
+
+    def test_numbered_registry_labels_are_scoped_and_still_require_code_and_qed(self):
+        text = '**Theorem 0** Text.\n\n```agda\nopen import Base.Choice public using ( SetChoice→LEM )\n```\n\n∎\n'
+        self.assertEqual(lint_prose.theorem_label_violations(text, 'src/Origin.lagda.md'), [])
+        self.assertTrue(lint_prose.theorem_label_violations(text, 'src/Base/Choice.lagda.md'))
+        self.assertEqual(lint_prose.qed_violations(text), [])
+        self.assertTrue(lint_prose.qed_violations(text.replace('∎', '')))
+        self.assertTrue(lint_prose.theorem_label_violations(text.replace('Theorem', 'Lemma'), 'src/Origin.lagda.md'))
 
     def test_labels_inside_agda_fences_are_ignored(self):
         self.assertEqual(self.violations("```agda\n**Lemma.**\n```"), [])
 
 
 class QedTests(unittest.TestCase):
-    def test_submodule_fold_scopes_helpers_and_requires_outer_qed(self):
+    def test_each_fold_statement_closes_before_leaving_its_scope(self):
         text = '''**Theorem** (`result`{.Agda}) Text.
 ```agda
 result = helper
 ```
+∎
 <details open class="submodule-fold"><summary class="submodule-fold-heading">Helper</summary>
 <div class="submodule-fold-content">
 **Lemma** (`helper`{.Agda}) Text.
 ```agda
 helper = proof
 ```
+∎
 </div>
 </details>
 '''
-        self.assertEqual(lint_prose.qed_violations(text + '∎\n'), [])
-        self.assertEqual(len(lint_prose.qed_violations(text)), 1)
+        self.assertEqual(lint_prose.qed_violations(text), [])
+        self.assertTrue(lint_prose.qed_violations(text.replace('∎\n</div>', '</div>') + '∎\n'))
 
     def test_margin_note_does_not_make_following_statement_nested(self):
         text = '''**Theorem** (`result`{.Agda}) Text.
@@ -124,7 +135,8 @@ next = proof
         self.assertEqual(len(lint_prose.qed_violations(text)), 1)
 
     def test_top_level_construction_and_lemma_end_after_final_code_block(self):
-        text = """**Construction** (`make`{.Agda}) Text.
+        text = """<!--en-->
+**Construction** (`make`{.Agda}) Text.
 <!--zh-->
 **构造** (`make`{.Agda}) 正文。
 <!--ja-->
@@ -151,7 +163,7 @@ law = proof
 """
         self.assertEqual(lint_prose.qed_violations(text), [])
 
-    def test_only_outer_theorem_needs_qed_when_helpers_are_nested(self):
+    def test_outer_qed_cannot_replace_nested_statement_endings(self):
         text = """## Result
 **Theorem** (`result`{.Agda}) Text.
 ```agda
@@ -170,7 +182,7 @@ helper = proof
 
 ∎
 """
-        self.assertEqual(lint_prose.qed_violations(text), [])
+        self.assertTrue(lint_prose.qed_violations(text))
 
     def test_missing_outer_qed_is_rejected_despite_nested_statements(self):
         text = """## Result
@@ -186,7 +198,7 @@ helper = proof
 </details>
 """
         violations = lint_prose.qed_violations(text)
-        self.assertEqual(len(violations), 1)
+        self.assertEqual(len(violations), 2)
 
     def test_missing_qed_is_rejected(self):
         text = """**Lemma** (`law`{.Agda}) Text.
@@ -233,40 +245,40 @@ result = helper
 """
         self.assertEqual(lint_prose.qed_violations(text), [])
 
+    def test_definitions_and_standalone_proofs_need_code_and_qed(self):
+        for label in ('Definition', '定义', '定義', 'Proof', '证明', '証明'):
+            prefix = f'**{label}** (`x`{{.Agda}}) Text.\n'
+            self.assertTrue(lint_prose.qed_violations(prefix))
+            self.assertTrue(lint_prose.qed_violations(prefix + '∎\n'))
+            self.assertTrue(lint_prose.qed_violations(prefix + '```agda\n\n```\n∎\n'))
+            self.assertEqual(lint_prose.qed_violations(prefix + '```agda\nx = y\n```\n∎\n'), [])
 
-class DisclosureSummaryTests(unittest.TestCase):
-    def test_prose_disclosure_summaries_with_attributes_use_localized_markers(self):
-        for lang, prefix in [('en', 'Optional:'), ('zh', '选读：'), ('ja', '発展：')]:
-            title = '<summary class="prose-disclosure-title" id="test-title">'
-            self.assertEqual(self.violations(f'<!--{lang}-->\n{title}{prefix} Details</summary>\n<!--/-->'), [])
-            self.assertEqual(len(self.violations(f'<!--{lang}-->\n{title}Details</summary>\n<!--/-->')), 1)
-            self.assertEqual(len(self.violations(f'{title}{prefix} Details</summary>')), 1)
+    def test_mark_must_follow_agda_not_prose_or_another_language(self):
+        prefix = '**Definition** (`x`{.Agda}) Text.\n```agda\nx = y\n```\n'
+        self.assertTrue(lint_prose.qed_violations(prefix + 'More prose.\n∎\n'))
+        self.assertTrue(lint_prose.qed_violations(prefix.replace('```agda', '```text') + '∎\n'))
+        self.assertTrue(lint_prose.qed_violations(prefix + '∎\n∎\n'))
 
-    def violations(self, text):
-        return lint_prose.disclosure_summary_violations(text)
+    def test_parallel_statements_cannot_share_a_mark(self):
+        text = '**Construction** (`x`{.Agda}) First.\n\n**Construction** (`y`{.Agda}) Second.\n```agda\nx = y\n```\n∎\n'
+        self.assertTrue(lint_prose.qed_violations(text))
 
-    def test_localized_optional_markers_are_accepted(self):
-        text = """<!--en-->
-<details><summary>Optional: details</summary></details>
-<!--zh-->
-<details><summary>选读：说明</summary></details>
-<!--ja-->
-<details><summary>発展：説明</summary></details>
-<!--/-->
-"""
-        self.assertEqual(self.violations(text), [])
+    def test_proof_requires_code_after_its_label(self):
+        text = '**Lemma** (`x`{.Agda}) Text.\n```agda\nx = y\n```\n**Proof** Words only.\n∎\n'
+        self.assertTrue(lint_prose.qed_violations(text))
 
-    def test_missing_or_wrong_language_marker_is_rejected(self):
-        text = """<!--en-->
-<summary>Details</summary>
-<!--zh-->
-<summary>Optional: 说明</summary>
-<!--/-->
-"""
-        self.assertEqual(len(self.violations(text)), 2)
+    def test_all_translated_routes_are_checked(self):
+        text = '<!--en-->\n**Definition** (`x`{.Agda}) Text.\n<!--zh-->\n**定义** (`x`{.Agda}) 正文。\n**定义** (`y`{.Agda}) 多余。\n<!--ja-->\n**定義** (`x`{.Agda}) 本文。\n<!--/-->\n```agda\nx = y\n```\n∎\n'
+        self.assertTrue(lint_prose.qed_violations(text))
 
-    def test_summary_outside_language_group_is_rejected(self):
-        self.assertEqual(len(self.violations("<summary>Optional: details</summary>")), 1)
+    def test_grouped_construction_has_named_bullets(self):
+        prefix = '**Construction** (`x`{.Agda} `y`{.Agda})\n\n'
+        bullets = '- `x`{.Agda} First.\n- `y`{.Agda} Second.\n'
+        self.assertEqual(lint_prose.theorem_label_violations(prefix + bullets), [])
+        self.assertTrue(lint_prose.theorem_label_violations(prefix))
+        self.assertTrue(lint_prose.theorem_label_violations((prefix + bullets).replace('Construction', 'Lemma')))
+        self.assertTrue(lint_prose.theorem_label_violations(prefix + bullets.replace('- `y`', '- `z`')))
+
 
 
 class SubmoduleFoldTests(unittest.TestCase):
@@ -296,6 +308,15 @@ result = Helper.value
 
     def test_valid_fold_and_scope(self):
         self.assertEqual(lint_prose.submodule_fold_violations(self.VALID), [])
+
+    def test_private_module_modifier_stays_with_its_declaration(self):
+        text = ('```agda\nmodule Example where\n```\n\n' + self.VALID
+                .replace('module Helper where', 'private module Helper where'))
+        self.assertEqual(lint_prose.submodule_fold_violations(text, check_all=True), [])
+        self.assertTrue(lint_prose.submodule_fold_violations(
+            text.replace('  value = result', 'value = result'), check_all=True))
+        self.assertTrue(lint_prose.submodule_fold_violations(
+            text.replace('private module', 'private\n  module'), check_all=True))
 
     def test_multiline_declaration_is_allowed_but_body_code_is_not(self):
         text = self.VALID.replace('module Helper where\n', 'module Helper\n  where\n')

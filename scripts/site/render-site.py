@@ -2,7 +2,7 @@
 """Render the multilingual, hyperlinked Bedrock site from the masters.
 
 Inputs (produced by the Makefile before this runs):
-  _build/html/<Module>.md   from `agda --html --html-highlight=code` on src/Milestones
+  _build/html/<Module>.md   from `agda --html --html-highlight=code` on src/Origin
   _build/types.json         from scripts/site/extract-types.py
   _build/expression-types.json from scripts/site/extract-expression-types.py
   site/template.html        the page shell
@@ -33,8 +33,13 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from i18n_markers import weave_for_site, group_languages  # noqa: E402
+from statement_structure import LABEL_RE, PROOF_LABELS
+from submodule_structure import module_header_line
 from diagram_style import check_sources as check_diagrams  # noqa: E402
 from reading_routes import GUIDE_PANEL, build_reading_data, own_page, twin_of  # noqa: E402
+from agda_help import HELP, annotate_inline_code, annotate_keywords, help_html, inline_syntax_ranges
+from boilerplate import mirror_boilerplate
+from search_index import passages
 from term_registry import (TERM_MARK_RE, load_entries, reader_terms, schema_errors,
                            localized_forms, localized_abbreviation)  # noqa: E402
 
@@ -45,10 +50,10 @@ UI = {
            "menu": "Menu", "close": "Close",
            "untranslated": "This page is not yet translated; showing English.",
            "modules": "Modules", "source": "Source", "overview": "Overview",
-           "depmap": "Dependency map", "routes": "Reading routes",
+           "depmap": "Dependency graph", "routes": "Reading routes",
            "current_route": "Current route",
-           "guide": "Reading guide", "catalog": "Chapter catalog",
-           "landmark": "Milestones", "terms": "Glossary",
+           "guide": "Interactive contents", "catalog": "Chapter catalog",
+           "landmark": "Origin", "terms": "Glossary",
            "prev": "Previous chapter", "next": "Next chapter",
            "license": "content licensed CC BY-NC-SA 4.0",
            "markdown": "Markdown", "agents": "llms.txt",
@@ -62,10 +67,10 @@ UI = {
            "menu": "菜单", "close": "关闭",
            "untranslated": "本页尚未翻译，此处显示英文。",
            "modules": "模块", "source": "源码", "overview": "概览",
-           "depmap": "依赖地图", "routes": "阅读路线",
+           "depmap": "依赖图", "routes": "阅读路线",
            "current_route": "当前路线",
-           "guide": "阅读指南", "catalog": "章节目录",
-           "landmark": "里程碑", "terms": "术语表",
+           "guide": "交互式目录", "catalog": "章节目录",
+           "landmark": "原点", "terms": "术语表",
            "prev": "上一章", "next": "下一章",
            "license": "内容以 CC BY-NC-SA 4.0 许可",
            "markdown": "Markdown", "agents": "llms.txt",
@@ -79,10 +84,10 @@ UI = {
            "menu": "メニュー", "close": "閉じる",
            "untranslated": "このページは未翻訳です。英語を表示しています。",
            "modules": "モジュール", "source": "ソース", "overview": "概要",
-           "depmap": "依存マップ", "routes": "学習ルート",
+           "depmap": "依存グラフ", "routes": "学習ルート",
            "current_route": "現在のルート",
-           "guide": "読書案内", "catalog": "章の目次",
-           "landmark": "マイルストーン", "terms": "用語集",
+           "guide": "対話型目次", "catalog": "章の目次",
+           "landmark": "原点", "terms": "用語集",
            "prev": "前の章", "next": "次の章",
            "license": "コンテンツは CC BY-NC-SA 4.0 ライセンス",
            "markdown": "Markdown", "agents": "llms.txt",
@@ -96,13 +101,14 @@ UI = {
 SOURCE_URL = "https://github.com/BedrockInstitute/Bedrock"
 SOURCE_TREE = SOURCE_URL + "/blob/main/src"   # a chapter's master, for a reader who wants the source
 SITE_URL = "https://bedrock.institute"        # canonical deployment (.github/workflows/ci.yml)
-LANDING = "Milestones"  # preview chapter also supplies the generated reading-guide index
+LANDING = "Origin"  # preview chapter also supplies the generated reading-guide index
 CHAPTER_TITLES = {}
 # module -> {"description": {lang: str}, "stage": {lang: str}, "order": int,
 #            "prerequisites": [module], "routes": [route id]}. Filled from the reading
 # catalog, and read by the per-page description, the JSON-LD graph, the Markdown mirror
 # and llms.txt, so all four say the same thing about a chapter.
 CHAPTER_META = {}
+SEARCH_PASSAGES = []
 
 
 def chapter_title(module, lang):
@@ -210,10 +216,13 @@ def dedent_submodule_code(body):
             heading = None
         elif token.startswith('<pre'):
             if heading is not None:
-                declaration = next((line for line in plain_code(token).splitlines()
-                                    if line.strip()), '')
+                code = plain_code(token)
+                module_line = module_header_line(code)
+                declaration = module_line[0] if module_line else ''
                 heading['indent'] = len(declaration) - len(declaration.lstrip(' '))
-                strip = heading['indent']
+                # Keep private's relative indentation in the declaration itself.
+                strip = min((len(line) - len(line.lstrip(' '))
+                             for line in code.splitlines() if line.strip()), default=0)
             else:
                 enclosing = next((item for item in reversed(details)
                                   if item['fold'] and item['indent'] is not None), None)
@@ -271,7 +280,7 @@ def ref_link(href, aspect, label, extra_class=""):
     dt = f' data-type="{mod}#{pos}"' if mod and pos.isdigit() else ""
     cls = (extra_class + (" " + aspect if aspect else "")).strip()
     cls = f' class="{cls}"' if cls else ""
-    return f'<a{cls} href="{href}"{dt}>{label}</a>'
+    return f'<a href="{href}"{cls}{dt}>{label}</a>'
 NUL = "\x00"
 
 
@@ -446,8 +455,82 @@ def md_to_html(text):
         para = [line]; i += 1
         while i < n and lines[i].strip() and not _is_block_start(lines[i]):
             para.append(lines[i]); i += 1
-        out.append("<p>" + _inline(" ".join(s.strip() for s in para)) + "</p>")
+        label = LABEL_RE.match(line)
+        role = ('proof' if label[1] in PROOF_LABELS else 'statement') if label else None
+        attrs = f' class="prose-{role}"' if role else ''
+        out.append("<p" + attrs + ">" + _inline(" ".join(s.strip() for s in para)) + "</p>")
     return "\n".join(out), toc
+
+
+def render_statement_endings(body, lang):
+    """Keep the QED outside the final pre, never across a fold boundary.
+
+    Code anchors, hover descendants and horizontal scrolling remain untouched.
+    The layout wrapper reserves a separate column for the mark on narrow screens.
+    """
+    label = {'en': 'End of statement', 'zh': '陈述结束', 'ja': '記述の終わり'}[lang]
+    def ending(match):
+        identifier = re.search(r'\bid="[^"]*"', match[2] or '')
+        anchor = (' ' + identifier[0]) if identifier else ''
+        return ('<div class="statement-ending">' + match[1]
+                + '<span class="statement-qed"' + anchor
+                + ' role="img" aria-label="' + label + '">∎</span></div>')
+    return re.sub(
+        r'(<pre class="Agda">(?:(?!<pre\b).)*?</pre>)\s*<p(\s+[^>]*)?>\s*∎\s*</p>',
+        ending,
+        body, flags=re.DOTALL)
+
+
+def render_code_scroll_content(body):
+    """Scroll code inside a padded frame, preserving tokens and anchors.
+
+    Fold declarations retain their original compact summary presentation.
+    """
+    opening = '<pre class="Agda">'
+    wrapper = '<span class="agda-code-content">'
+
+    in_declaration = False
+
+    def wrap(match):
+        nonlocal in_declaration
+        block = match.group(0)
+        if block.startswith('<summary'):
+            in_declaration = bool(re.search(r'\bclass="[^"]*\bsubmodule-fold-heading\b', block))
+            return block
+        if block.startswith('</summary'):
+            in_declaration = False
+            return block
+        inner = block[len(opening):-len('</pre>')]
+        if in_declaration:
+            if inner.startswith(wrapper) and inner.endswith('</span>'):
+                return opening + inner[len(wrapper):-len('</span>')] + '</pre>'
+            return block
+        if inner.startswith(wrapper):
+            return block
+        return opening + wrapper + inner + '</span></pre>'
+
+    return re.sub(r'<summary\b[^>]*>|</summary\s*>|' + PRE_RE.pattern,
+                  wrap, body, flags=re.DOTALL)
+
+
+def render_review_status(body, module, lang):
+    """Human editorial review is catalog metadata, not inferred from CI success."""
+    reviewed = CHAPTER_META.get(module, {}).get('human_reviewed', False)
+    label = {
+        'en': ('Human-reviewed', 'Not yet human-reviewed'),
+        'zh': ('已人工校阅', '未人工校阅'),
+        'ja': ('人手による校閲済み', '人手による校閲は未実施'),
+    }[lang][0 if reviewed else 1]
+    icon = ('<path d="M12 3 20 6v6c0 5-8 9-8 9s-8-4-8-9V6Z"/>'
+            '<path d="m8 12 3 3 5-6"/>' if reviewed else
+            '<path d="m12 3 10 18H2Z"/><path d="M12 9v5m0 3v.1"/>')
+    badge = (f'<span class="chapter-review {"is-reviewed" if reviewed else "is-unreviewed"}" '
+             f'role="img" tabindex="0" aria-label="{label}" data-label="{label}">'
+             '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">'
+             + icon + '</svg></span>')
+    return re.sub(r'<h1\b[^>]*>.*?</h1>',
+                  lambda match: '<div class="chapter-heading-row">' + match[0]
+                  + badge + '</div>', body, count=1, flags=re.S)
 
 
 def restore_toc_labels(toc, store):
@@ -810,6 +893,10 @@ def render_type(term, internal_q, name_pattern=None, pos_aspect=None,
         s = s.replace(f"{NUL}V{i}{NUL}", level_name)
     for i, link in enumerate(links):
         s = s.replace(f"{NUL}L{i}{NUL}", link)
+    # Hover signatures use the same lexical syntax pass as prose code, while
+    # preserving the compiler-derived definition links already inserted above.
+    prefix, suffix = '<span class="Agda">', '</span>'
+    s = annotate_inline_code(prefix + s + suffix)[len(prefix):-len(suffix)]
     return decorate_type_nodes(s)
 
 
@@ -860,52 +947,7 @@ def toc_html(toc, lang):
 
 
 def modules_nav(current, mods, lang, reading_data):
-    """The 'Modules' sidebar section: the structural catalog. A namespace tree is
-    derived from the module list (never hand-maintained): children of every
-    level, leaves and subgroups alike, ordered by first appearance in the
-    reading order; leaf labels use localized chapter titles. Namespace groups are
-    disclosure sections, collapsed by default, with the current page's
-    ancestor chain opened."""
-    root = []          # entries: ("leaf", module) | ("group", name, children)
-
-    def insert(children, parts, mod):
-        if len(parts) == 1:
-            children.append(("leaf", mod))
-            return
-        for entry in children:
-            if entry[0] == "group" and entry[1] == parts[0]:
-                insert(entry[2], parts[1:], mod)
-                return
-        group = ("group", parts[0], [])
-        children.append(group)
-        insert(group[2], parts[1:], mod)
-
-    # Milestones is the reading-guide preview and has its own guide entry. Keep
-    # it out of the structural module list so the sidebar does not duplicate it.
-    for m in mods:
-        if m == LANDING:
-            continue
-        insert(root, m.split("."), m)
-
-    def render(children, prefix):
-        out = []
-        for entry in children:
-            if entry[0] == "leaf":
-                m = entry[1]
-                cur = ' class="modleaf cur"' if m == current else ' class="modleaf"'
-                label = htmllib.escape(chapter_title(m, lang))
-                active = ' aria-current="page"' if m == current else ""
-                out.append(f'<li{cur}><a href="{chapter_href(m)}" title="{m}"{active}>'
-                           f'{label}</a></li>')
-            else:
-                name = entry[1]
-                path = f"{prefix}{name}."
-                is_open = " open" if current.startswith(path) else ""
-                out.append(f'<li class="modgrp"><details{is_open}>'
-                           f'<summary class="modgroup">{name}</summary>'
-                           f'<ul>{"".join(render(entry[2], path))}</ul>'
-                           f'</details></li>')
-        return out
+    """Contents and the current route; the graph owns namespace browsing."""
 
     guide = "".join(
         f'<li><a href="index.html#{target}">{UI[lang][key]}</a></li>'
@@ -923,9 +965,6 @@ def modules_nav(current, mods, lang, reading_data):
     route_links = "".join(route_link(module) for module in route["chapters"])
     return (f'<details class="navsec reading-guide"><summary class="nav-title">'
             f'{UI[lang]["guide"]}</summary><ul class="guide-nav">{guide}</ul></details>'
-            f'<details class="navsec"><summary class="nav-title">'
-            f'{UI[lang]["modules"]}</summary>'
-            f'<ul class="modnav">{"".join(render(root, ""))}</ul></details>'
             f'<details class="navsec current-route" open data-current="{current}" '
             f'data-lang="{lang}"><summary class="nav-title">'
             f'{UI[lang]["current_route"]}<span class="current-route-name">{route_title}</span>'
@@ -933,19 +972,53 @@ def modules_nav(current, mods, lang, reading_data):
             f'{route_links}</ul></details>')
 
 
+def chapter_navigation(body, module, modules, lang):
+    """Identical, compact top/bottom navigation for chapters and Origin."""
+    if module not in modules:
+        return body
+    index = modules.index(module)
+    links = []
+    for direction, offset, path in (('prev', -1, 'm14 5-7 7 7 7'),
+                                     ('next', 1, 'm10 5 7 7-7 7')):
+        target = index + offset
+        if not 0 <= target < len(modules):
+            continue
+        title = chapter_title(modules[target], lang)
+        label = htmllib.escape(f'{UI[lang][direction]}: {title}', quote=True)
+        icon = (f'<svg class="chapnav-icon" viewBox="0 0 24 24" aria-hidden="true" '
+                f'focusable="false" fill="none" stroke="currentColor" stroke-width="1.7" '
+                f'stroke-linecap="round" stroke-linejoin="round"><path d="{path}"/></svg>')
+        text = f'<span class="chapnav-title">{htmllib.escape(title)}</span>'
+        content = icon + text if direction == 'prev' else text + icon
+        links.append(f'<a class="chapnav-{direction}" rel="{direction}" '
+                     f'aria-label="{label}" href="{chapter_href(modules[target])}">{content}</a>')
+    if not links:
+        return body
+    label = {'en': 'Chapter navigation', 'zh': '章节导航', 'ja': '章のナビゲーション'}[lang]
+    nav = f'<nav class="chapnav" aria-label="{label}">{"".join(links)}</nav>'
+    end = body.find('</h1>')
+    split = end + len('</h1>') if end >= 0 else 0
+    return body[:split] + nav.replace('class="chapnav"', 'class="chapnav chapnav-top"', 1) + body[split:] + nav
+
+
 def learning_home(body, mount, lang, terms):
     labels = {
-        "en": ("Explore the book", "Reading routes", "Dependency map", "Milestones", "Glossary"),
-        "zh": ("浏览本书", "阅读路线", "依赖图", "里程碑", "术语表"),
-        "ja": ("本書を読む", "学習ルート", "依存マップ", "マイルストーン", "用語集"),
+        "en": ("Explore the book", "Reading routes", "Dependency graph", "Origin", "Glossary"),
+        "zh": ("浏览本书", "阅读路线", "依赖图", "原点", "术语表"),
+        "ja": ("本書を読む", "学習ルート", "依存グラフ", "原点", "用語集"),
     }[lang]
-    heading_match = re.search(r"<h1\b[^>]*>.*?</h1>", body, re.DOTALL)
+    heading_pattern = r'<div class="chapter-heading-row">.*?</div>|<h1\b[^>]*>.*?</h1>'
+    heading_match = re.search(heading_pattern, body, re.DOTALL)
     heading = heading_match.group(0) if heading_match else ""
-    if heading:
-        heading = re.sub(r"(<h1\b[^>]*>).*?(</h1>)",
-                         rf"\1{htmllib.escape(UI[lang]['guide'])}\2",
-                         heading, count=1, flags=re.DOTALL)
-    milestone_body = re.sub(r"<h1\b[^>]*>.*?</h1>", "", body, count=1, flags=re.DOTALL)
+    # The guide is a shell, not a replacement for the embedded chapter.
+    # Preserve the chapter's hover trigger, source anchors and review badge.
+    milestone_heading = (re.sub(r'<(/?)h1\b', r'<\1h2', heading)
+                         if heading else f'<h2>{labels[3]}</h2>')
+    guide_heading = f'<h1 id="reading-guide-title">{htmllib.escape(UI[lang]["guide"])}</h1>'
+    milestone_body = re.sub(heading_pattern, "", body, count=1, flags=re.DOTALL)
+    # Keep the embedded chapter's sections beneath its h2 without changing ids.
+    milestone_body = re.sub(r'<(/?)h([2-5])\b',
+                            lambda m: f'<{m[1]}h{int(m[2]) + 1}', milestone_body)
     intro_text = {
         "en": "Begin with the main theorems, then choose a reading route or inspect their prerequisites.",
         "zh": "先看本书要证明的主要定理，再选择阅读路线或查看它们的先修关系。",
@@ -981,11 +1054,11 @@ def learning_home(body, mount, lang, terms):
             f'<span class="term-index" aria-hidden="true">{index}</span>'
             f'<dt><a href="{href}">{label}</a></dt><dd>{recap}</dd></div>')
     glossary = ''.join(glossary_rows)
-    return (f'<header class="book-intro">{heading}</header>'
+    return (f'<header class="book-intro">{guide_heading}</header>'
             f'<p class="book-intro-lead">{intro_text}</p>'
             f'<nav class="book-tabs" aria-label="{labels[0]}">{tabs}</nav>'
             f'<div class="book-panels"><section id="{GUIDE_PANEL}" '
-            f'class="book-panel guide-landmark"><h2>{labels[3]}</h2>'
+            f'class="book-panel guide-landmark">{milestone_heading}'
             f'{milestone_body}</section>'
             f'{mount}'
             f'<section id="dependency-map" class="book-panel">'
@@ -1085,8 +1158,14 @@ def prelude_reexport_index(content):
 
 def type_reference_attribute(module, position, types_global):
     """Source and hover surfaces advertise only an available type payload."""
-    return (f' data-type="{module}#{position}"'
-            if types_global.get(module, {}).get(position) else "")
+    payload = types_global.get(module, {}).get(position)
+    if not payload:
+        return ""
+    # This is a compiler type judgement, not a naming convention (i, j, α and
+    # ℓ may all be levels). LevelUniv is the *sort of Level*, not a level value.
+    plain = htmllib.unescape(re.sub(r'<[^>]+>', '', payload)).strip()
+    level = bool(re.fullmatch(r'\(?\s*(?:(?:Agda\.Primitive|Cubical\.Core\.Primitives)\.)?Level\s*\)?', plain))
+    return f' data-type="{module}#{position}"' + (' data-universe-level="true"' if level else '')
 
 
 def resolve_type_hover_links(type_html, types_global):
@@ -1094,7 +1173,42 @@ def resolve_type_hover_links(type_html, types_global):
     # provisional references only after all local and traced types are present.
     return re.sub(r' data-type="([^"#]+)#([^"#]+)"',
                   lambda match: type_reference_attribute(
-                      match.group(1), match.group(2), types_global), type_html)
+                      match.group(1), match.group(2), types_global),
+                  re.sub(r' data-universe-level="[^"]*"', '', type_html))
+
+
+def compiler_reference_scope(content):
+    """Only unambiguous definition targets actually resolved by Agda in this module."""
+    candidates = {}
+    for attrs, label in A_TAG_RE.findall(content):
+        href, aspect = HREF_RE.search(attrs), CLASS_RE.search(attrs)
+        if not href or not aspect or not _BARE_REFERENCE_ASPECTS.intersection(aspect[1].split()):
+            continue
+        if '.html#' not in href[1]:
+            continue
+        candidates.setdefault(htmllib.unescape(label), set()).add((href[1], aspect[1]))
+    return {name: next(iter(values)) for name, values in candidates.items() if len(values) == 1}
+
+
+def add_instantiated_type_aliases(internal_q, types_raw, scopes):
+    """Agda prints instance-qualified names absent from declaration anchors.
+
+    Resolve V.Model.Model.isZFModel through V.Model's compiler-resolved links,
+    before qualifiers are abbreviated. Never guess from a global short name.
+    """
+    for definitions in types_raw.values():
+        for term in definitions.values():
+            for match in re.finditer(r"(?:[A-Za-z][\w']*\.)+[^\s(){}:;,]+", term):
+                name = match[0]
+                if name in internal_q:
+                    continue
+                parts = name.split('.')
+                owner = next(('.'.join(parts[:i]) for i in range(len(parts) - 1, 0, -1)
+                              if '.'.join(parts[:i]) in scopes), None)
+                target = scopes.get(owner, {}).get(parts[-1])
+                if target:
+                    module, _, position = target[0].rpartition('.html#')
+                    internal_q[name] = (module, position)
 
 
 def rewrite_links(body, rendered, types_global, canonical_names=None,
@@ -1108,6 +1222,7 @@ def rewrite_links(body, rendered, types_global, canonical_names=None,
         idpart, mod, anchor, rest = m.group(1) or "", m.group(2), m.group(3) or "", m.group(4)
         if "://" in mod:
             return m.group(0)
+        rest = re.sub(r' data-(?:type|universe-level)="[^"]*"', '', rest)
         original_href = f"{mod}.html{anchor}"
         bridge = ((prelude_reexports or {}).get("by_href", {}).get(original_href)
                   if current_module != PRELUDE_MODULE else None)
@@ -1434,7 +1549,7 @@ def annotate_unlinked_bound_types(block, module, module_types):
                 or not re.search(r'\bclass="[^"]*\bBound\b', opening)
                 or position not in module_types):
             return token
-        return (opening + f' data-type="{module}#{position}"'
+        return (opening + type_reference_attribute(module, position, {module: module_types})
                 + token[opening_end:])
     return TOKEN_RE.sub(annotate, block)
 
@@ -1450,8 +1565,12 @@ def write_type_sidecar(module, langs, out_dir, types_global, name2pos,
         for node in expression_types.get(module, [])
         if node.get("kind") not in ("definition", "binding", "variable", "binder")
     }
-    sidecar = json.dumps(sidecar_data, ensure_ascii=False)
     for lang in langs:
+        localized = {key: annotate_keywords(value, lang) if isinstance(value, str) else value
+                     for key, value in sidecar_data.items()}
+        localized['$expressions'] = {key: dict(value, type=annotate_keywords(value['type'], lang))
+                                      for key, value in sidecar_data['$expressions'].items()}
+        sidecar = json.dumps(localized, ensure_ascii=False)
         tdir = os.path.join(out_dir, lang, "types")
         os.makedirs(tdir, exist_ok=True)
         with open(os.path.join(tdir, module + ".json"), "w", encoding="utf-8") as output:
@@ -1523,6 +1642,11 @@ def render_module(module, html_dir, langs, internal, rendered, modnav_list,
                 cls = CLASS_RE.search(attrs)
                 local_refs.setdefault(htmllib.unescape(txt),
                                       (href.group(1), cls.group(1) if cls else ""))
+        if is_landing:
+            # Origin summarizes the whole book rather than one imported scope.
+            # Only unique real declarations enter its special prose vocabulary.
+            for name, target in prelude_reexports.get('origin_vocabulary', {}).items():
+                local_refs.setdefault(name, target)
         application_nodes = [node for node in expression_types.get(module, [])
                              if node.get("kind") not in ("definition", "binding", "variable", "binder")]
         code_blocks = [annotate_expression_nodes(blk, application_nodes)
@@ -1536,7 +1660,7 @@ def render_module(module, html_dir, langs, internal, rendered, modnav_list,
             # a library page is bare highlighted code: wrap it and resolve its links
             code = rewrite_links('<pre class="Agda">' + raw + '</pre>', rendered,
                                  types_global, canonical_names, module)
-            return code, [], None
+            return annotate_keywords(code, lang), [], None
         woven = weave_for_site(text, lang)
         mirror = woven
         store = {}
@@ -1584,13 +1708,23 @@ def render_module(module, html_dir, langs, internal, rendered, modnav_list,
         toc = restore_toc_labels(toc, store)
         for j, blk in enumerate(code_blocks):
             body = body.replace(f"{NUL}CODE{j}{NUL}", blk)
+        body = annotate_inline_code(body, inline_reference_resolver(
+            local_refs, module, prelude_reexports))
         body = rewrite_links(body, rendered, types_global, canonical_names, module,
                              prelude_reexports if module in internal else None)
         body = dedent_submodule_code(body)
-        return auto_link_terms(body, lang, module, terms), toc, mirror
+        body = render_statement_endings(body, lang)
+        body = annotate_keywords(body, lang)
+        if module in internal:
+            body = mirror_boilerplate(body, module, internal)
+        body = auto_link_terms(body, lang, module, terms)
+        return render_code_scroll_content(body), toc, mirror
 
     for lang in langs:
         body, toc, mirror = page_body(lang)
+        SEARCH_PASSAGES.extend(passages(body, module, chapter_title(module, lang), lang, out_name))
+        if not is_external:
+            body = chapter_navigation(body, module, modnav_list, lang)
         chapter_body = body
 
         if not is_external:
@@ -1601,9 +1735,9 @@ def render_module(module, html_dir, langs, internal, rendered, modnav_list,
             }
             if not is_landing:
                 fallback = {
-                    "en": "Read this chapter directly, or use the reading guide and dependency map to choose another route.",
-                    "zh": "可以直接阅读本章，也可以通过阅读指南和依赖地图选择其他路线。",
-                    "ja": "この章を読むか、読書案内と依存マップで別のルートを選べます。",
+                    "en": "Read this chapter directly, or use the interactive contents and dependency graph to choose another route.",
+                    "zh": "可以直接阅读本章，也可以通过交互式目录和依赖图选择其他路线。",
+                    "ja": "この章を読むか、対話型目次と依存グラフで別のルートを選べます。",
                 }
             route_current = "" if is_landing else module
             mount = (f'<section id="reading-explorer" data-current="{route_current}" '
@@ -1613,7 +1747,7 @@ def render_module(module, html_dir, langs, internal, rendered, modnav_list,
                      f'<a href="index.html#reading-explorer">{UI[lang]["guide"]}</a>'
                      f' · <a href="index.html#dependency-map">{UI[lang]["depmap"]}</a></section>')
             if is_landing:
-                body = learning_home(body, mount, lang, terms)
+                body = learning_home(render_review_status(body, module, lang), mount, lang, terms)
                 heading_end = chapter_body.find('</h1>')
                 if heading_end >= 0:
                     split = heading_end + len('</h1>')
@@ -1628,29 +1762,15 @@ def render_module(module, html_dir, langs, internal, rendered, modnav_list,
                 else:
                     body = mount + body
 
-        # previous/next links along the reading order (the reading catalog)
-        if not is_external and not is_landing and module in modnav_list:
-            i = modnav_list.index(module)
-            parts = []
-            if i > 0:
-                parts.append(f'<a class="chapnav-prev" href="{chapter_href(modnav_list[i - 1])}">'
-                             f'&larr; {UI[lang]["prev"]} · {htmllib.escape(chapter_title(modnav_list[i - 1], lang))}</a>')
-            if i + 1 < len(modnav_list):
-                parts.append(f'<a class="chapnav-next" href="{chapter_href(modnav_list[i + 1])}">'
-                             f'{UI[lang]["next"]} · {htmllib.escape(chapter_title(modnav_list[i + 1], lang))} &rarr;</a>')
-            links = "".join(parts)
-            label = {"en": "Chapter navigation", "zh": "章节导航", "ja": "章のナビゲーション"}[lang]
-            top_nav = f'<nav class="chapnav chapnav-top" aria-label="{label}">{links}</nav>'
-            heading_end = body.find('</h1>')
-            split = heading_end + len('</h1>') if heading_end >= 0 else 0
-            body = body[:split] + top_nav + body[split:]
-            body += f'<nav class="chapnav" aria-label="{label}">{links}</nav>'
+        if not is_external and not is_landing:
+            body = render_review_status(body, module, lang)
+            chapter_body = render_review_status(chapter_body, module, lang)
 
         banner = ""
         if langs_present and lang not in langs_present:
             banner = f'<div class="banner">{UI[lang]["untranslated"]}</div>'
 
-        title = UI[lang]["overview"] if is_landing else chapter_title(module, lang)
+        title = UI[lang]["guide"] if is_landing else chapter_title(module, lang)
         has_mirror = mirror is not None
 
         def shell(page_name, page_title, page_body_html, page_toc, body_class, module_slot):
@@ -1724,15 +1844,114 @@ def linked_inline_ref(href, aspect, label, defined):
             + ref_link(href, aspect, label) + '</span>')
 
 
+def syntax_notations(content):
+    """Read notation parts from compiler-classified syntax declarations."""
+    declarations = []
+    for line in content.splitlines():
+        if not re.search(r'class="Keyword">syntax</a>', line):
+            continue
+        target = re.search(r'href="([^"]+)"[^>]*>([^<]+)</a>', line)
+        if not target:
+            continue
+        rhs = re.split(r'<a\b[^>]*class="Symbol">=</a>', line)[-1]
+        parts = [htmllib.unescape(text) for aspect, text in
+                 re.findall(r'<a\b[^>]*class="([^"]+)"[^>]*>([^<]+)</a>', rhs)
+                 if _BARE_REFERENCE_ASPECTS.intersection(aspect.split())]
+        if parts:
+            declarations.append((htmllib.unescape(target[1]), parts))
+    return declarations
+
+
+def inline_reference_resolver(local_refs, current_module, prelude_reexports=None):
+    """Use real Prelude exports and compiler links, including mixfix spellings."""
+    prelude = prelude_reexports or {}
+    references = dict(prelude.get('inline', {}))
+    if 'inline' not in prelude:
+        for name, (module, position, aspect, _) in prelude.get('by_name', {}).items():
+            references.setdefault(name, (f'{module}.html#{position}', aspect))
+    for name, (href, aspect) in local_refs.items():
+        if name in references:
+            # Prelude is the vocabulary authority, including renamed imports.
+            # A real chapter-local declaration may shadow it, a borrowed token
+            # (or a coincidentally named local binder) may not.
+            if current_module == PRELUDE_MODULE or not href.startswith(current_module + '.html#'):
+                continue
+        if not _BARE_REFERENCE_ASPECTS.intersection(aspect.split()):
+            continue
+        bridge = prelude.get('by_href', {}).get(href)
+        references[name] = ((f'{bridge[0]}.html#{bridge[1]}', bridge[2])
+                            if bridge else (href, aspect))
+    aliases, openings = {}, {}
+    for name in references:
+        parts = [part for part in name.split('_') if part]
+        if len(parts) == 1 and parts[0] == name:
+            continue
+        if len(parts) == 1:
+            aliases.setdefault(parts[0], set()).add(references[name])
+        elif parts:
+            openings.setdefault(parts[0], []).append((name, parts))
+    for name, parts in prelude.get('syntax', []):
+        if name in references and parts:
+            openings.setdefault(parts[0], []).append((name, parts))
+
+    cached_tokens, matched = None, {}
+
+    def match_parts(tokens):
+        """Pair actual mixfix parts, respecting nesting and alternative endings."""
+        stack, matches = [], {}
+        for index, (_, _, token, syntax) in enumerate(tokens):
+            if stack:
+                candidates, positions = stack[-1]
+                narrowed = [(name, parts) for name, parts in candidates
+                            if len(parts) > len(positions) and parts[len(positions)] == token]
+                if narrowed:
+                    positions = positions + [index]
+                    complete = [(name, parts) for name, parts in narrowed if len(parts) == len(positions)]
+                    if complete:
+                        options = {references[name] for name, _ in complete}
+                        if len(options) == 1:
+                            for position in positions:
+                                matches[position] = next(iter(options))
+                        stack.pop()
+                    else:
+                        stack[-1] = (narrowed, positions)
+                    continue
+            if token in openings:
+                stack.append((openings[token], [index]))
+            elif syntax and token in ('=', ';'):
+                stack.clear()
+        return matches
+
+    def resolve(token, tokens, index):
+        nonlocal cached_tokens, matched
+        if tokens is not cached_tokens:
+            cached_tokens, matched = tokens, match_parts(tokens)
+        info = matched.get(index) or references.get(token)
+        if info is None and token.startswith(PRELUDE_MODULE + '.'):
+            info = references.get(token[len(PRELUDE_MODULE) + 1:])
+        if info is None:
+            unique = set(aliases.get(token, ()))
+            if len(unique) == 1:
+                info = unique.pop()
+        return ref_link(info[0], info[1], htmllib.escape(token)) if info else None
+    return resolve
+
+
 def inline_ref(name, internal, name2pos, local_refs, current_module="",
                prelude_reexports=None):
     """Render Agda prose, linking declarations but not temporary variables."""
     href_aspect = local_refs.get(name)
     label = htmllib.escape(name)
+    if any(inline_syntax_ranges(name)) and name in HELP:
+        return annotate_inline_code(f'<code class="Agda inline-ref">{label}</code>')
     if href_aspect and not _BARE_REFERENCE_ASPECTS.intersection(href_aspect[1].split()):
         return f'<code class="Agda inline-ref">{label}</code>'
+    exported = (prelude_reexports or {}).get('inline', {}).get(name)
+    if exported and (current_module == PRELUDE_MODULE or not href_aspect
+                     or not href_aspect[0].startswith(current_module + '.html#')):
+        return linked_inline_ref(*exported, label, True)
     bridge = None
-    if current_module != PRELUDE_MODULE:
+    if prelude_reexports:
         if href_aspect:
             bridge = (prelude_reexports or {}).get("by_href", {}).get(href_aspect[0])
         else:
@@ -1763,32 +1982,8 @@ def inline_ref(name, internal, name2pos, local_refs, current_module="",
         aspect = href_aspect[1]
         defined = bool(_BARE_REFERENCE_ASPECTS.intersection(aspect.split()))
         return linked_inline_ref(href_aspect[0], aspect, label, defined)
-    # not a single known identifier: render as an expression, token by token,
-    # reusing the module's own links (keywords, brackets, and bound variables
-    # stay plain; identifiers get their code aspect and hyperlink)
-    parts, linked = [], 0
-    for tok in re.split(r"([\s(){};]+)", name):
-        info = local_refs.get(tok)
-        token_bridge = None
-        if current_module != PRELUDE_MODULE and tok.strip():
-            if info:
-                token_bridge = (prelude_reexports or {}).get("by_href", {}).get(info[0])
-            else:
-                token_bridge = (prelude_reexports or {}).get("by_name", {}).get(tok)
-        if token_bridge:
-            mod, pos, bridge_aspect, _ = token_bridge
-            parts.append(ref_link(f"{mod}.html#{pos}",
-                                  info[1] if info else bridge_aspect,
-                                  htmllib.escape(tok)))
-            linked += 1
-        elif tok.strip() and info and _BARE_REFERENCE_ASPECTS.intersection(info[1].split()):
-            parts.append(ref_link(info[0], info[1], htmllib.escape(tok)))
-            linked += 1
-        else:
-            parts.append(htmllib.escape(tok))
-    if linked:
-        return '<span class="Agda inline-ref inline-code">' + "".join(parts) + "</span>"
-    return f'<code class="Agda inline-ref">{label}</code>'
+    return annotate_inline_code(f'<code class="Agda inline-ref">{label}</code>',
+                                inline_reference_resolver(local_refs, current_module, prelude_reexports))
 
 
 # ---- agent-readable layer ----------------------------------------------------
@@ -1938,7 +2133,7 @@ AGENT_GUIDE_HEAD = """# Bedrock
 
 Bedrock is a machine-checked development, in Cubical Agda, of the set theory behind
 contemporary questions about the universe of sets. Two results are proved and both are
-stated in the chapter `Milestones`: `L⊨ZFC` and `L⊨GCH`, the constructible universe
+stated in the chapter `Origin`: `L⊨ZFC` and `L⊨GCH`, the constructible universe
 as a model of ZFC and as a model in which the generalized continuum hypothesis holds.
 Each rests on one hypothesis, excluded middle at `LEM (ℓ-suc ℓ)`, and on nothing else.
 The long-term aim is forcing, set-theoretic geology, the definability of ground models
@@ -1960,7 +2155,7 @@ order is a dependency order: a chapter's prerequisites are the modules it import
 - Every chapter is at `/<lang>/<Module>.html`, with `<lang>` one of `en`, `zh`, `ja`.
   The three editions share filenames, so swapping the language segment of any URL
   reaches the same chapter in another language. The one exception is the preview
-  chapter `Milestones`, which has no page of its own: the reading guide embeds its
+  chapter `Origin`, which has no page of its own: the reading guide embeds its
   whole body, so it is read at `/<lang>/index.html#milestones`. The chapter list below
   gives every chapter's address, and `/<lang>/reading-routes.json` gives it as data.
 - **Every chapter page has a plain-Markdown twin at the same path with a `.md`
@@ -2145,9 +2340,13 @@ def write_agent_files(out_dir, langs, base, modnav_list):
 def write_search(out_dir, lang, modules, name2pos, pos_aspect, types_by_module):
     entries = []
     for m in modules:
+        entries.append({"name": chapter_title(m, lang), "module": m,
+                        "kind": "chapter", "type": chapter_field(m, "description", lang),
+                        "href": chapter_href(m)})
         for name, pos in name2pos.get(m, {}).items():
             t = types_by_module.get(m, {}).get(pos, "")
             entries.append({"name": name, "module": m, "anchor": pos,
+                            "chapter": chapter_title(m, lang), "kind": "definition",
                             "aspect": pos_aspect.get(m, {}).get(pos, ""),
                             "type": re.sub(r"<[^>]+>", "", t),
                             "href": chapter_href(m, f"#{pos}")})
@@ -2260,6 +2459,8 @@ def main(argv):
         os.path.basename(p).rsplit(".", 1)[0]
         for p in glob.glob(os.path.join(html_dir, "*.md"))
         + glob.glob(os.path.join(html_dir, "*.html"))))
+    if LANDING in rendered:
+        rendered = sorted(referenced_module_closure({LANDING}, html_dir, set(rendered)))
     rendered_set = set(rendered)
     if not rendered:
         sys.stderr.write(f"no highlighted output in {html_dir}; run `agda --html` first\n")
@@ -2269,12 +2470,14 @@ def main(argv):
     order = {node["id"]: node["order"] for node in reading_data["nodes"]}
     modnav_list = sorted(internal, key=lambda m: (order.get(m, len(order) + 1), m))
     CHAPTER_TITLES.clear()
+    SEARCH_PASSAGES.clear()
     CHAPTER_TITLES.update({node["id"]: node["title"] for node in reading_data["nodes"]})
     CHAPTER_META.clear()
     CHAPTER_META.update({
         node["id"]: {"description": node["description"], "stage": node["stage"],
                      "order": node["order"], "prerequisites": node["prerequisites"],
                      "routes": node["routes"], "page": node["page"],
+                     "human_reviewed": node["human_reviewed"],
                      "anchor": node["anchor"]}
         for node in reading_data["nodes"]})
     glossary_entries = load_entries()
@@ -2299,13 +2502,20 @@ def main(argv):
         "%%ROUTEJSVER%%", _ver("reading-routes.js"))
     tpl = tpl.replace("%%ASKCSSVER%%", _ver("ask-ai.css")).replace(
         "%%ASKJSVER%%", _ver("ask-ai.js"))
+    tpl = tpl.replace("%%APPEARANCECSSVER%%", _ver("appearance.css")).replace(
+        "%%APPEARANCEJSVER%%", _ver("appearance.js"))
+    tpl = tpl.replace("%%LEVELJSVER%%", _ver("universe-levels.js"))
 
     # first pass: index every definition (names, positions, aspects) across ALL rendered modules
     name2pos, pos_aspect, local_types = {}, {}, {}
+    notations = []
+    compiler_scopes = {}
     prelude_reexports = {"by_href": {}, "by_name": {}}
     for m in rendered:
         path, literate = source_file(html_dir, m)
         content = open(path, encoding="utf-8").read()
+        compiler_scopes[m] = compiler_reference_scope(content)
+        notations.extend(syntax_notations(content))
         if literate:
             if m == PRELUDE_MODULE:
                 prelude_reexports = prelude_reexport_index(content)
@@ -2316,6 +2526,32 @@ def main(argv):
             index_definitions(content, m, name2pos, pos_aspect)   # whole .html is code
             local_types[m] = local_signature_types(content, m)
     internal_q = {f"{m}.{n}": (m, p) for m in name2pos for n, p in name2pos[m].items()}
+    add_instantiated_type_aliases(internal_q, types_raw, compiler_scopes)
+    vocabulary = {}
+    for m in internal:
+        for name, position in name2pos.get(m, {}).items():
+            aspect = pos_aspect.get(m, {}).get(position, '')
+            if _BARE_REFERENCE_ASPECTS.intersection(aspect.split()):
+                vocabulary.setdefault(name, set()).add((f'{m}.html#{position}', aspect))
+    prelude_reexports['origin_vocabulary'] = {
+        name: next(iter(targets)) for name, targets in vocabulary.items() if len(targets) == 1}
+    # Actual exported vocabulary includes locally defined and renamed names.
+    # Exclude pre-renaming spellings that are not in Prelude's public scope.
+    exported = types_raw.get(PRELUDE_MODULE, {})
+    prelude_reexports['inline'] = {
+        name: (f'{PRELUDE_MODULE}.html#{position}', aspect)
+        for name, (_, position, aspect, _) in prelude_reexports['by_name'].items()
+        if name in exported
+    }
+    for name, position in name2pos.get(PRELUDE_MODULE, {}).items():
+        if name in exported:
+            prelude_reexports['inline'][name] = (
+                f'{PRELUDE_MODULE}.html#{position}', pos_aspect[PRELUDE_MODULE].get(position, ''))
+    prelude_reexports['syntax'] = []
+    for href, parts in notations:
+        bridge = prelude_reexports['by_href'].get(href)
+        if bridge and bridge[3] in prelude_reexports['inline']:
+            prelude_reexports['syntax'].append((bridge[3], parts))
     add_prelude_qualified_names(internal_q, prelude_reexports)
     types_by_module = build_types(rendered, name2pos, types_raw, internal_q,
                                   pos_aspect, prelude_reexports)
@@ -2324,6 +2560,8 @@ def main(argv):
     name_pattern = qualified_name_pattern(internal_q)
     canonical_names = {module: names_by_position(module, name2pos)
                        for module in rendered}
+    for name, (href, _) in prelude_reexports['inline'].items():
+        canonical_names.setdefault(PRELUDE_MODULE, {})[href.rsplit('#', 1)[1]] = name
     highlighted_local_types = []
     for module, declarations in local_types.items():
         for position, declaration in declarations.items():
@@ -2393,7 +2631,7 @@ def main(argv):
         modules_to_render = rendered
 
     # second pass: render every reachable module (externals get the "left Bedrock" banner;
-    # the Milestones preview also supplies the generated reading-guide index)
+    # the Origin preview also supplies the generated reading-guide index)
     for m in modules_to_render:
         render_module(m, html_dir, langs, internal, rendered_set, modnav_list,
                       name2pos, canonical_names, types_by_module, expression_types,
@@ -2404,6 +2642,12 @@ def main(argv):
     # the cache-busted URL in the rebuilt page always names the served asset.
     if os.path.isdir(static_dir):
         shutil.copytree(static_dir, os.path.join(out_dir, "static"), dirs_exist_ok=True)
+
+    for lang in langs:
+        directory = os.path.join(out_dir, lang, 'types')
+        os.makedirs(directory, exist_ok=True)
+        with open(os.path.join(directory, '$syntax.json'), 'w', encoding='utf-8') as output:
+            json.dump({key: help_html(key, lang) for key in HELP}, output, ensure_ascii=False)
 
     if selected_modules:
         print(f"rendered {len(selected_modules)} selected module(s) and "
@@ -2419,8 +2663,40 @@ def main(argv):
         write_terms(out_dir, lang, terms)
         with open(os.path.join(out_dir, lang, "reading-routes.json"), "w", encoding="utf-8") as route_file:
             json.dump(reading_data, route_file, ensure_ascii=False)
+        # Keep old inbound chapter URLs usable after the source/module rename.
+        legacy = ('<!DOCTYPE html><html lang="' + lang + '"><meta charset="utf-8">'
+                  '<meta http-equiv="refresh" content="0;url=index.html#milestones">'
+                  '<link rel="canonical" href="index.html#milestones">'
+                  '<title>' + UI[lang]['landmark'] + '</title>'
+                  '<a href="index.html#milestones">' + UI[lang]['landmark'] + '</a>'
+                  '<script>location.replace("index.html#milestones")</script></html>')
+        with open(os.path.join(out_dir, lang, 'Milestones.html'), 'w', encoding='utf-8') as output:
+            output.write(legacy)
     write_root(out_dir, langs, base)
     write_agent_files(out_dir, langs, base, modnav_list)
+    # One cross-language index; shared Agda code is indexed once, not once per edition.
+    search_entries, seen = [], set()
+    for lang in langs:
+        for module in rendered:
+            search_entries.append({'name': chapter_title(module, lang), 'module': module,
+                'lang': lang, 'kind': 'chapter', 'text': chapter_field(module, 'description', lang),
+                'href': chapter_href(module)})
+        for term in terms:
+            search_entries.append({'name': ' · '.join(localized_forms(term, lang)),
+                'module': term['introduced_in'], 'lang': lang, 'kind': 'term',
+                'text': term[f'recap_{lang}'],
+                'href': chapter_href(term['introduced_in'], '#term-' + term['id'])})
+    for module in rendered:
+        for name, position in name2pos.get(module, {}).items():
+            search_entries.append({'name': name, 'module': module, 'lang': '*',
+                'kind': 'definition', 'text': plain_code(types_by_module.get(module, {}).get(position, '')),
+                'href': chapter_href(module, '#' + position)})
+    for entry in SEARCH_PASSAGES:
+        key = (entry['lang'], entry['href'], entry['kind'], entry['text'])
+        if key not in seen:
+            seen.add(key); search_entries.append(entry)
+    with open(os.path.join(out_dir, 'search-content.json'), 'w', encoding='utf-8') as output:
+        json.dump(search_entries, output, ensure_ascii=False, separators=(',', ':'))
 
     print(f"rendered {len(rendered)} module(s) ({len(internal)} internal) "
           f"x {len(langs)} language(s) -> {out_dir}", file=sys.stderr)

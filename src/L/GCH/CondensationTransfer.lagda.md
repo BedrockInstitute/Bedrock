@@ -1,29 +1,13 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # Transferring structure through condensation
 <!--zh-->
 # 通过凝聚搬运结构
 <!--ja-->
 # 凝縮を通して構造を移す
-<!--/-->
-
-<!--en-->
-This chapter asks what becomes of an elementary Skolem hull after its Mostowski collapse. Under the stated hypotheses at an ordinal index `lam`, the collapse image is identified with `Lset β` for some ordinal `β`. No comparison between `β` and `lam`, no least such index, and no cardinal estimate is part of this conclusion. The proof begins by giving the constructible-stage relation a bounded first-order description that can be read before and after the collapse.
-<!--zh-->
-本章研究初等 Skolem 壳经过 Mostowski 塌缩后会变成什么。在序数索引 `lam` 处给定所需假设后，塌缩像将被认同为某个序数 `β` 所索引的 `Lset β`。这个结论不比较 `β` 与 `lam`，不选取最小的此类索引，也不给出基数估计。证明首先用一条有界一阶公式描述可构造层关系，使这项关系能在塌缩前后读取。
-<!--ja-->
-本章では、初等的な Skolem 包が Mostowski 崩壊の後にどのような集合になるかを調べる。順序数の添字 `lam` において必要な仮定を与えると、崩壊像はある順序数 `β` が添字づける `Lset β` と同一視される。この結論は `β` と `lam` を比較せず、そのような添字の最小のものを選ばず、基数評価も与えない。証明はまず、構成可能段階の関係を有界な一階論理式で記述し、崩壊の前後で読めるようにする。
-<!--/-->
-
-```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-```
-
-<!--en-->
-The theorem is parameterized by excluded middle at `ℓ-suc ℓ`. That single classical hypothesis is passed to the preceding results about ordinal stages, hulls, hierarchy descriptions, and adequate stages. The present argument introduces no choice principle: existential satisfaction and the local stage witnesses supplied by superadequacy remain propositionally truncated, so they may be used only when the target is again a proposition.
-<!--zh-->
-定理以 `ℓ-suc ℓ` 层级上的排中律为参数。这一条经典假设被传给前文关于序数层、Skolem 壳、层级描述与充分层的结果。本章的论证不引入选择原理：存在公式的满足以及超充分性给出的局部层见证都保持为命题截断，因此只能在目标仍是命题时使用。
-<!--ja-->
-定理は `ℓ-suc ℓ` における排中律をパラメータとする。この一つの古典的仮定は、順序数段階、Skolem 包、階層の記述、十分な段階について先に得られた結果へ渡される。ここでの議論は選択原理を導入しない。存在論理式の充足と、強化された十分さが与える局所的な段階の証人は命題的切り詰めのままなので、行き先が再び命題である場合にだけ使われる。
 <!--/-->
 
 ```agda
@@ -43,6 +27,42 @@ Fix the universe level and this classical parameter. All sets below belong to th
 module L.GCH.CondensationTransfer {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax using ( Formula; var; con; _∈̇_; _≐_; _∧̇_; ∃̇_ )
+open import FOL.Manipulation.ConstantMapping using ( mapFo; embed )
+import FOL.Semantics
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import L.Constructible {ℓ} using
+  ( IsOrd; isL; Lset; Lset-out; Lset-mono; Lset→isL; 𝒟ₒ )
+open import L.Ordinal {ℓ} using ( mem-ord; suc-ord )
+open import L.Ordinal.Stages {ℓ} lem using ( ord∈Lset-suc; ord∈Lset→∈ )
+open import L.Axioms.Basic {ℓ} using ( Lset-suc )
+open import L.GCH.SkolemHull {ℓ} lem using
+  ( module HullStage; Δ₀-isOrdAt; module Amb
+  ; module Frame; _⊨ₚ_; embed-map; isOrd-at-p )
+open import L.GCH.HierarchyDescription {ℓ} lem using ( levelFo; Δ₀-levelFo; level-sound; level-complete )
+open import L.GCH.AdequateStages {ℓ} lem using ( Superadequate; Adequate; Lset∈suc )
+```
+
+<!--en-->
+This chapter asks what becomes of an elementary Skolem hull after its Mostowski collapse. Under the stated hypotheses at an ordinal index `lam`, the collapse image is identified with `Lset β` for some ordinal `β`. No comparison between `β` and `lam`, no least such index, and no cardinal estimate is part of this conclusion. The proof begins by giving the constructible-stage relation a bounded first-order description that can be read before and after the collapse.
+<!--zh-->
+本章研究初等 Skolem 壳经过 Mostowski 塌缩后会变成什么。在序数索引 `lam` 处给定所需假设后，塌缩像将被认同为某个序数 `β` 所索引的 `Lset β`。这个结论不比较 `β` 与 `lam`，不选取最小的此类索引，也不给出基数估计。证明首先用一条有界一阶公式描述可构造层关系，使这项关系能在塌缩前后读取。
+<!--ja-->
+本章では、初等的な Skolem 包が Mostowski 崩壊の後にどのような集合になるかを調べる。順序数の添字 `lam` において必要な仮定を与えると、崩壊像はある順序数 `β` が添字づける `Lset β` と同一視される。この結論は `β` と `lam` を比較せず、そのような添字の最小のものを選ばず、基数評価も与えない。証明はまず、構成可能段階の関係を有界な一階論理式で記述し、崩壊の前後で読めるようにする。
+<!--/-->
+
+<!--en-->
+The theorem is parameterized by excluded middle at `ℓ-suc ℓ`. That single classical hypothesis is passed to the preceding results about ordinal stages, hulls, hierarchy descriptions, and adequate stages. The present argument introduces no choice principle: existential satisfaction and the local stage witnesses supplied by superadequacy remain propositionally truncated, so they may be used only when the target is again a proposition.
+<!--zh-->
+定理以 `ℓ-suc ℓ` 层级上的排中律为参数。这一条经典假设被传给前文关于序数层、Skolem 壳、层级描述与充分层的结果。本章的论证不引入选择原理：存在公式的满足以及超充分性给出的局部层见证都保持为命题截断，因此只能在目标仍是命题时使用。
+<!--ja-->
+定理は `ℓ-suc ℓ` における排中律をパラメータとする。この一つの古典的仮定は、順序数段階、Skolem 包、階層の記述、十分な段階について先に得られた結果へ渡される。ここでの議論は選択原理を導入しない。存在論理式の充足と、強化された十分さが与える局所的な段階の証人は命題的切り詰めのままなので、行き先が再び命題である場合にだけ使われる。
+<!--/-->
+
+
+
 <!--en-->
 The object language needs only membership, equality, conjunction, and unbounded existence for the two queries built below. Its constant alphabet changes as a formula moves between the ambient hierarchy, the stage, and the hull. The operation `mapFo` relabels existing constants, while `embed` regards a constant-free formula as a formula over a new constant alphabet. Neither operation changes the variable positions or logical structure of the formula.
 <!--zh-->
@@ -50,14 +70,6 @@ The object language needs only membership, equality, conjunction, and unbounded 
 <!--ja-->
 以下で作る二つの問い合わせに必要なのは、対象言語の所属、等号、連言、非有界な存在量化だけである。論理式を周囲の階層、段階、Skolem 包の間で移すとき、その定数のアルファベットは変わる。`mapFo` は既存の定数を付け替え、`embed` は定数を含まない論理式を新しい定数アルファベット上の論理式とみなす。どちらも変数の位置や論理構造を変えない。
 <!--/-->
-
-```agda
-open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using ( Formula; var; con; _∈̇_; _≐_; _∧̇_; ∃̇_ )
-open import FOL.Manipulation.ConstantMapping using ( mapFo; embed )
-import FOL.Semantics
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-```
 
 <!--en-->
 The constructible hierarchy requires a persistent distinction between an ordinal index `d` and the stage `Lset d` that it indexes. A member of `Lset lam` is constructible when `lam` is ordinal. Conversely, if an ordinal `d` is a member of `Lset lam`, rank comparison places `d` in `lam`. The downward description `Lset-out` says only that a member of a stage merely comes from `𝒟ₒ (Lset c)` for some `c` in its index; it retains no chosen birth stage. Monotonicity then transports membership from `Lset β` to `Lset α` when the strict index relation `β ∈ α` is available.
@@ -67,14 +79,6 @@ The constructible hierarchy requires a persistent distinction between an ordinal
 構成可能階層では、順序数の添字 `d` と、それが添字づける段階 `Lset d` を常に区別しなければならない。`lam` が順序数なら、`Lset lam` の要素は構成可能である。逆に、順序数 `d` が `Lset lam` に属するなら、階数の比較によって `d ∈ lam` が得られる。下向きの特徴づけ `Lset-out` が述べるのは、段階の要素が、ある `c ∈ lam` に対する `𝒟ₒ (Lset c)` から単に来るということだけであり、誕生段階を一つ選んで保持するわけではない。さらに、厳密な添字関係 `β ∈ α` があれば、単調性によって `Lset β` の要素を `Lset α` へ移せる。
 <!--/-->
 
-```agda
-open import L.Constructible {ℓ} using
-  ( IsOrd; isL; Lset; Lset-out; Lset-mono; Lset→isL; 𝒟ₒ )
-open import L.Ordinal {ℓ} using ( mem-ord; suc-ord )
-open import L.Ordinal.Stages {ℓ} lem using ( ord∈Lset-suc; ord∈Lset→∈ )
-open import L.Axioms.Basic {ℓ} using ( Lset-suc )
-```
-
 <!--en-->
 The central formula is `levelFo(a,p,z)`. Its Δ₀ certificate allows bounded absoluteness and transport through the collapse. Soundness says that, when `a`, `p`, and `z` are constructible, satisfaction implies `a ≡ Lset p`; the auxiliary bound `z` need not be uniquely determined. Completeness supplies satisfaction at the particular triple `(Lset p,p,Lset γ)` when `γ` is adequate, `p` is ordinal, and `p ∈ γ`. The surrounding theory provides the hull transfer and the local adequate indices required to construct such triples.
 <!--zh-->
@@ -83,14 +87,6 @@ The central formula is `levelFo(a,p,z)`. Its Δ₀ certificate allows bounded ab
 中心となる論理式は `levelFo(a,p,z)` である。その Δ₀ の証拠により、有界絶対性を使い、崩壊に沿って移送できる。健全性は、`a`、`p`、`z` が構成可能であるとき、充足から `a ≡ Lset p` が従うことを述べる。補助的な上界 `z` は一意である必要がない。完全性は、`γ` が十分で、`p` が順序数であり、`p ∈ γ` であるとき、特定の三つ組 `(Lset p,p,Lset γ)` が論理式を満たすことを与える。周囲の理論は、Skolem 包上の移送と、そのような三つ組を作るための局所的な十分な添字を供給する。
 <!--/-->
 
-```agda
-open import L.GCH.SkolemHull {ℓ} lem using
-  ( module HullStage; Δ₀-isOrdAt; module Amb
-  ; module Frame; _⊨ₚ_; embed-map; isOrd-at-p )
-open import L.GCH.HierarchyDescription {ℓ} lem using ( levelFo; Δ₀-levelFo; level-sound; level-complete )
-open import L.GCH.AdequateStages {ℓ} lem using ( Superadequate; Adequate; Lset∈suc )
-```
-
 <!--en-->
 Finite vectors record the environments in which formulas are evaluated, while products combine the membership and equality facts used in the proof. Several existences in this chapter are propositionally truncated. The constructor `∣_∣₁` places an explicit local witness under truncation; `rec₁` and `map₁` may then use it only to produce another proposition. In particular, the local adequate indices supplied by superadequacy never become a globally chosen family.
 <!--zh-->
@@ -98,8 +94,6 @@ Finite vectors record the environments in which formulas are evaluated, while pr
 <!--ja-->
 有限ベクトルは論理式を評価する環境を記録し、積は証明で必要となる所属と等しさの事実を組み合わせる。この章に現れるいくつかの存在は、命題的切り詰めのもとにある。構成子 `∣_∣₁` は明示的な局所証人を切り詰めの中へ入れ、`rec₁` と `map₁` はそれを別の命題を得るためにだけ使う。とくに、強化された十分さが与える局所的な十分な添字が、大域的に選ばれた族になることはない。
 <!--/-->
-
-
 
 <!--en-->
 The set-theoretic successor `sucV d` is the next ordinal index when `d` is ordinal, and it is also the index used by the successor-stage equation `Lset (sucV d) ≡ 𝒟ₒ (Lset d)`. These are related facts, but the successor index and the stage at that index remain different sets. The empty set appears separately because the hull construction requires a fallback member already present in the ambient index.
@@ -179,7 +173,6 @@ Fix an ordinal `lam` and the ambient constructible stage `Lset lam` that contain
 順序数 `lam` と、Skolem 包を含む周囲の構成可能段階 `Lset lam` を固定する。この添字は集合論的後続について閉じ、生成集合 `X` の各要素はこの段階に属する。また `∅ ∈ lam` は、Skolem 包の構成に必要な既定の要素を与える。この最初の仮定群の最後は完全な初等性である。パラメータが包から取られるなら、非有界量化子を含む論理式も含め、すべての論理式は包と周囲の段階で同じ真理値をもつ。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -196,8 +189,6 @@ module Condense (lam : S) (ordλ : IsOrd lam)
 </summary>
 <div class="submodule-fold-content">
 
-
-
 <!--en-->
 Two further hypotheses provide local stages and constructible collapse values. `Superadequate lam` says that every `d ∈ lam` is merely contained in some adequate ordinal index `γ` with `γ ∈ lam`; propositional truncation retains neither a selected `γ` nor a least one. The hypothesis `pixL` is pointwise: each member of the collapse image is constructible. It does not yet say that the collapse image itself is a constructible set, much less identify that image with a particular stage.
 <!--zh-->
@@ -205,8 +196,6 @@ Two further hypotheses provide local stages and constructible collapse values. `
 <!--ja-->
 さらに二つの仮定が、局所的な段階と構成可能な崩壊値を与える。`Superadequate lam` は、各 `d ∈ lam` が、`γ ∈ lam` を満たすある十分な順序数添字 `γ` に単に含まれることを述べる。命題的切り詰めは、特定の `γ` も最小のものも保持しない。仮定 `pixL` は各点についての主張である。崩壊像の各要素が構成可能であると言うだけで、崩壊像そのものが構成可能な集合であることも、それを特定の段階と同一視することも、まだ述べていない。
 <!--/-->
-
-
 
 <!--en-->
 Three structures are now used together: the ambient structure on `Lset lam`, the structure whose carrier consists of hull members, and the transitive collapse image. A hull element carries both an underlying set and its proof of membership in `M`. Bounded formulas can be read between the first two structures and can be transported in either direction through the collapse; individual membership facts can also be pushed through the collapse. These Δ₀ interfaces will be used only after the unbounded existential queries have been handled by full elementarity.
@@ -233,7 +222,6 @@ The inclusion `Hull⊆L` is the basic bridge from a hull member to the ambient s
 <!--/-->
 
 ```agda
-
   open HS.H using ( Hull⊆L )
 ```
 
@@ -575,7 +563,6 @@ rank principle for arbitrary sets.
 <!--/-->
 
 ```agda
-
     d∈λ : ⟨ d ∈ˢ lam ⟩
     d∈λ = ord∈Lset→∈ lam ordλ d od d∈Lλ
 ```
@@ -734,7 +721,6 @@ identification.
 <!--/-->
 
 ```agda
-
         ea : fst a ≡ Lset d
         ea = level-sound (fst a) (fst d') (fst z)
                (isLλ (fst a) (Hull⊆L (fst a) (snd a)))
@@ -824,7 +810,6 @@ With the outer witness `z` already fixed, the next truncation hides the middle c
 <!--/-->
 
 ```agda
-
       takeZ : Σ[ z ∈ A.SM ]
                 ⟨ (z ∷ []) Mse.⊨ ∃̇ (∃̇ (embed levelFo ∧̇ (var (suc zero) ≐ con dM))) ⟩
             → Witness d
@@ -1027,7 +1012,6 @@ The first auxiliary fact applies the assumed successor closure of `lam` to `c �
 <!--/-->
 
 ```agda
-
       p∈λ : ⟨ p ∈ˢ lam ⟩
       p∈λ = succλ c c∈λ
 ```
@@ -1083,7 +1067,6 @@ Completeness at the adequate `γ` constructs an ambient answer to `findP` using 
 <!--/-->
 
 ```agda
-
         hullSat : ⟨ [] Mse.⊨ findP yM ⟩
         hullSat = subst ⟨_⟩ (sym (elem 0 (findP yM) []))
           (stageP y p γ op adγ p∈γ yM refl y∈Lp
@@ -1185,7 +1168,6 @@ The returned level value `fst u` is identified with `Lset p′` by `u≡`. Trans
 <!--/-->
 
 ```agda
-
           y∈Lp′ : ⟨ y ∈ˢ Lset p′ ⟩
           y∈Lp′ = subst (λ v → ⟨ y ∈ˢ v ⟩) u≡ y∈u
 ```
@@ -1242,7 +1224,6 @@ The two remaining existential layers obey the same restriction. After `z` is fix
 <!--/-->
 
 ```agda
-
         takeZ : Σ[ z ∈ A.SM ]
                   ⟨ (z ∷ []) Mse.⊨ ∃̇ (∃̇ (embed levelFo ∧̇ (con yM ∈̇ var zero))) ⟩
               → Goal

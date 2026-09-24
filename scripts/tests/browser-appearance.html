@@ -1,0 +1,88 @@
+<!doctype html><meta charset="utf-8"><title>Appearance regression</title>
+<style>body{font:14px system-ui}iframe{width:1100px;height:820px;max-width:100%;border:1px solid #aaa}pre{white-space:pre-wrap}</style>
+<h1 id="test-status">RUNNING appearance regression</h1>
+<iframe id="frame"></iframe><pre id="report"></pre>
+<script>
+(async () => {
+  const frame = document.querySelector('#frame'), checks = [], delay = ms => new Promise(r => setTimeout(r, ms));
+  const saved = Object.fromEntries(['bedrock-theme','bedrock-code-palettes'].map(key => [key,localStorage.getItem(key)]));
+  function check(name, ok) { checks.push({name,ok:!!ok}); document.querySelector('#report').textContent=JSON.stringify(checks,null,2); if(!ok)throw Error(name); }
+  async function until(test) { const start=Date.now();while(!test()){if(Date.now()-start>30000)throw Error('Timed out');await delay(80);} }
+  async function load() { frame.src='/zh/Base.Choice?appearance-test='+Date.now();await until(()=>frame.contentWindow?.bedrockAppearance&&frame.contentDocument?.querySelector('#appearance-panel')); }
+  try {
+    localStorage.setItem('bedrock-theme','light');localStorage.setItem('bedrock-code-palettes','not JSON');
+    await load();
+    let doc=frame.contentDocument, win=frame.contentWindow, api=win.bedrockAppearance;
+    const css=e=>win.getComputedStyle(e);
+    check('invalid preferences fall back to default',doc.documentElement.dataset.codePalette==='default');
+    const trigger=doc.querySelector('#theme-toggle'),panel=doc.querySelector('#appearance-panel');
+    trigger.click();check('top-right opens settings without switching mode',!panel.hidden&&doc.documentElement.classList.contains('theme-light'));
+    check('no new sidebar controls',!doc.querySelector('#toc select[id^="code-palette"]'));
+    check('three explicit mode controls',panel.querySelectorAll('[data-appearance-mode]').length===3);
+    check('five choices in each mode',[...panel.querySelectorAll('select')].every(e=>e.options.length===5));
+    panel.dispatchEvent(new win.KeyboardEvent('keydown',{key:'Escape',bubbles:true}));
+    check('Escape closes and returns focus',panel.hidden&&doc.activeElement===trigger);
+    trigger.click();doc.querySelector('article').dispatchEvent(new win.PointerEvent('pointerdown',{bubbles:true}));
+    check('outside pointer closes',panel.hidden);
+    const probe=doc.createElement('div');probe.id='appearance-probe';
+    const tokens='<a class="Function">f</a> <a class="Primitive">Type</a> <span class="Keyword">where</span> <span class="syntax-symbol">→</span> <span class="InductiveConstructor">true</span> <span class="Module">M</span> <span class="Symbol">;</span>';
+    probe.innerHTML='<pre class="Agda">'+tokens+'</pre><p><a class="inline-ref">f</a><code class="Agda">'+tokens+'</code></p><div class="single-line-code"><code class="Agda">'+tokens+'</code></div><div class="hover-popup"><div class="type-value Agda">'+tokens+'<a class="Primitive" data-hover-stop="universe-former">Type</a></div></div><div class="boilerplate-hover-popup hover-popup"><div class="Agda">'+tokens+'</div></div>';
+    doc.querySelector('article').appendChild(probe);
+    let backgrounds={};
+    for(const mode of ['light','dark']) {
+      api.setMode(mode);api.setPalette(mode,'default');
+      const original=css(doc.body).backgroundColor, navigation=css(doc.querySelector('.chapnav a')).color;
+      const defaultIdentifier=css(probe.querySelector('.Function')).color;
+      for(const palette of ['default','github','solarized','catppuccin','gruvbox']) {
+        api.setPalette(mode,palette);const prefix=mode+'/'+palette;
+        check(prefix+' UI stays independent',css(doc.body).backgroundColor===original&&css(doc.querySelector('.chapnav a')).color===navigation);
+        for(const name of ['Function','Keyword','syntax-symbol','InductiveConstructor','Module']) {
+          const values=[...probe.querySelectorAll('.'+name)].map(e=>css(e).color);
+          check(prefix+' '+name+' shared across every code surface',new Set(values).size===1);
+        }
+        check(prefix+' prose definition uses same palette',css(probe.querySelector('a.inline-ref')).color===css(probe.querySelector('.Function')).color);
+        check(prefix+' code Type stays a definition',css(probe.querySelector('pre .Primitive')).color===css(probe.querySelector('.Function')).color);
+        check(prefix+' stopped hover Type stays neutral',css(probe.querySelector('[data-hover-stop]')).color===css(probe.querySelector('.type-value .Symbol')).color);
+        check(prefix+' symbol differs from keyword and definition',![css(probe.querySelector('.Function')).color,css(probe.querySelector('.Keyword')).color].includes(css(probe.querySelector('.syntax-symbol')).color));
+        const background=css(probe.querySelector('pre')).backgroundColor;
+        backgrounds[prefix]=background;
+        if(palette==='default')check(prefix+' default syntax retained',defaultIdentifier===(mode==='light'?'rgb(0, 84, 244)':'rgb(125, 207, 255)'));
+      }
+    }
+    check('all eight added code surfaces are distinct',new Set(Object.entries(backgrounds).filter(([key])=>!key.endsWith('/default')).map(([,value])=>value)).size===8);
+    api.setPalette('light','solarized');api.setPalette('dark','catppuccin');api.setMode('light');
+    check('independent light preference',doc.documentElement.dataset.codePalette==='solarized');
+    api.setMode('dark');check('independent dark preference',doc.documentElement.dataset.codePalette==='catppuccin');
+    api.setPalette('dark','__proto__');check('unknown palette rejected',doc.documentElement.dataset.codePalette==='default');api.setPalette('dark','catppuccin');
+    probe.remove();
+    const target=doc.querySelector('pre.Agda a.Function[href][data-type]');check('real definition available',target);
+    target.dispatchEvent(new win.MouseEvent('click',{bubbles:true,cancelable:true}));
+    await until(()=>doc.querySelector('.definition-modal-frame.is-ready'));
+    const mirror=doc.querySelector('.definition-modal-frame');
+    check('modal starts with current palette',mirror.contentDocument.documentElement.dataset.codePalette==='catppuccin');
+    api.setPalette('dark','gruvbox');check('existing modal changes live',mirror.contentDocument.documentElement.dataset.codePalette==='gruvbox');
+    api.setMode('light');check('existing modal changes mode and palette',mirror.contentDocument.documentElement.dataset.codePalette==='solarized'&&mirror.contentDocument.documentElement.classList.contains('theme-light'));
+    doc.querySelector('.definition-modal-close').click();
+    for(const width of [320,375,390,768,1100]) {
+      frame.style.width=width+'px';await delay(120);trigger.click();
+      const rect=panel.getBoundingClientRect();
+      check(width+' settings fit viewport',!panel.hidden&&rect.left>=0&&rect.right<=win.innerWidth&&panel.scrollWidth<=panel.clientWidth+1);
+      check(width+' page has no horizontal overflow',doc.documentElement.scrollWidth<=win.innerWidth+1);
+      check(width+' appearance stays in top-right row',Math.abs(trigger.getBoundingClientRect().top-doc.querySelector('#nav-toggle').getBoundingClientRect().top)<2&&trigger.getBoundingClientRect().right>win.innerWidth-24);
+      panel.querySelector('.appearance-close').click();
+    }
+    api.setMode('system');check('system mode follows media query',api.effectiveMode()===(win.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'));
+    // Reset the frame first so the load wait cannot accidentally accept its old document.
+    frame.src='about:blank';await until(()=>!frame.contentWindow.bedrockAppearance);await load();
+    doc=frame.contentDocument;win=frame.contentWindow;api=win.bedrockAppearance;
+    check('mode persisted after navigation',doc.querySelector('[data-appearance-mode="system"]').getAttribute('aria-pressed')==='true');
+    check('both palettes persisted after navigation',doc.querySelector('#code-palette-light').value==='solarized'&&doc.querySelector('#code-palette-dark').value==='gruvbox');
+    localStorage.setItem('bedrock-code-palettes',JSON.stringify({light:'github',dark:'github'}));
+    await until(()=>doc.documentElement.dataset.codePalette==='github');check('other tabs receive storage changes',true);
+    frame.style.width='390px';
+    document.querySelector('#test-status').textContent='PASS '+checks.length+'/'+checks.length;
+  } finally {
+    Object.entries(saved).forEach(([key,value])=>value===null?localStorage.removeItem(key):localStorage.setItem(key,value));
+  }
+})().catch(error=>{document.querySelector('#test-status').textContent='FAIL '+error.message;console.error(error);});
+</script>

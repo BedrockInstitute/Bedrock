@@ -1,22 +1,18 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # Von Neumann rank
-
-The rank of a set is the union, over its members, of the successors of their ranks; in symbols, the computation theorem `rank-compute` identifies `rank x` with `rankStep x (λ y _ → rank y)`. Four facts about it are proved in this chapter: `rank-mono` says that rank strictly increases along membership, `rank-ord` says that rank is always an ordinal, `rank-upper` gives a conditional inclusion of a rank into an ordinal, and `rank-fix` says that rank fixes ordinals.
-
-Nothing here needs an external type of ordinals: rank takes values in the hierarchy itself, and the recursion runs on well-founded membership, which regularity directly guarantees. Thus every theorem in this chapter is proved without an excluded-middle parameter.
 <!--zh-->
 # Von Neumann 秩
-
-集合的秩是其所有成员之秩的后继的并；用记号说，计算定理 `rank-compute` 把 `rank x` 等同于 `rankStep x (λ y _ → rank y)`。本章证明秩的四条性质：`rank-mono` 说秩沿隶属关系严格增长，`rank-ord` 说秩总是序数，`rank-upper` 给出秩包含于某序数的有条件结论，`rank-fix` 说秩固定每个序数。
-
-此处不需要任何外部的序数类型：秩取值于层级自身，而递归依据正则公理所保证的成员关系良基性进行。因此本章每条定理都不需要排中律参数。
 <!--ja-->
 # von Neumann ランク
-
-集合のランクは、その各要素のランクの後続を要素にわたって合わせた和集合である。記号で言えば、計算定理 `rank-compute` が `rank x` を `rankStep x (λ y _ → rank y)` と同一視する。本章で証明するのは四つの事実である。`rank-mono` はランクが所属に沿って狭義単調に増加すること、`rank-ord` はランクが常に順序数であること、`rank-upper` はランクがある順序数に含まれるという条件付きの結論を与えること、そして `rank-fix` はランクが順序数を固定することを言う。
-
-ここでは外部の順序数の型は何も要らない。ランクは階層自身の中に値を取り、再帰は整礎な所属関係の上を走る。これは正則性公理が直接保証するものである。したがって本章の各定理には排中律のパラメータがない。
 <!--/-->
+
+```agda
+open import Base.Prelude
+```
 
 <!--en-->
 Rank is defined inside the cumulative hierarchy `V ℓ`, with carrier `S`. A membership statement `x ∈ˢ y` is proposition-valued, and regularity makes this membership relation well-founded. The induction principle `∈-induction` can therefore define a value in `S` from values already defined for every member.
@@ -27,14 +23,36 @@ Rank is defined inside the cumulative hierarchy `V ℓ`, with carrier `S`. A mem
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-open import Base.Prelude
-
 module L.Rank {ℓ : Level} where
-
-open import FOL.ZFStructure using ( module hPropStructure )
 ```
+
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import V.Hierarchy {ℓ}
+  using ( 𝒮ᵥ; extensionalV; ∈-induction; ∈-induction-compute )
+open import V.Model {ℓ} using ( union-family-in; union-family-out; ∈sucV-elim; self∈sucV )
+open import L.Constructible {ℓ} using ( IsOrd )
+open import L.Ordinal {ℓ} using ( suc-ord; setUnion-ord; mem-ord )
+```
+
+<!--en-->
+
+The rank of a set is the union, over its members, of the successors of their ranks; in symbols, the computation theorem `rank-compute` identifies `rank x` with `rankStep x (λ y _ → rank y)`. Four facts about it are proved in this chapter: `rank-mono` says that rank strictly increases along membership, `rank-ord` says that rank is always an ordinal, `rank-upper` gives a conditional inclusion of a rank into an ordinal, and `rank-fix` says that rank fixes ordinals.
+
+Nothing here needs an external type of ordinals: rank takes values in the hierarchy itself, and the recursion runs on well-founded membership, which regularity directly guarantees. Thus every theorem in this chapter is proved without an excluded-middle parameter.
+<!--zh-->
+
+集合的秩是其所有成员之秩的后继的并；用记号说，计算定理 `rank-compute` 把 `rank x` 等同于 `rankStep x (λ y _ → rank y)`。本章证明秩的四条性质：`rank-mono` 说秩沿隶属关系严格增长，`rank-ord` 说秩总是序数，`rank-upper` 给出秩包含于某序数的有条件结论，`rank-fix` 说秩固定每个序数。
+
+此处不需要任何外部的序数类型：秩取值于层级自身，而递归依据正则公理所保证的成员关系良基性进行。因此本章每条定理都不需要排中律参数。
+<!--ja-->
+
+集合のランクは、その各要素のランクの後続を要素にわたって合わせた和集合である。記号で言えば、計算定理 `rank-compute` が `rank x` を `rankStep x (λ y _ → rank y)` と同一視する。本章で証明するのは四つの事実である。`rank-mono` はランクが所属に沿って狭義単調に増加すること、`rank-ord` はランクが常に順序数であること、`rank-upper` はランクがある順序数に含まれるという条件付きの結論を与えること、そして `rank-fix` はランクが順序数を固定することを言う。
+
+ここでは外部の順序数の型は何も要らない。ランクは階層自身の中に値を取り、再帰は整礎な所属関係の上を走る。これは正則性公理が直接保証するものである。したがって本章の各定理には排中律のパラメータがない。
+<!--/-->
+
+
 
 <!--en-->
 For rank, the value at a set must collect the successor ranks of all its members. The operations `sucV` and small indexed union express this construction. Once the recursive member ranks are known to be ordinals, `suc-ord` and `setUnion-ord` show that the collected value is again an ordinal; `mem-ord` later supplies ordinality for members of an ordinal.
@@ -43,14 +61,6 @@ For rank, the value at a set must collect the successor ranks of all its members
 <!--ja-->
 ランクでは、集合の各要素のランクの後続を集める必要がある。この構成を表すのが `sucV` と小さな添字付き和である。再帰的に得た各要素のランクが順序数なら、`suc-ord` と `setUnion-ord` により集めた値も順序数になる。順序数自身を扱う際には、`mem-ord` がその要素の順序数性を与える。
 <!--/-->
-
-```agda
-open import V.Hierarchy {ℓ}
-  using ( 𝒮ᵥ; extensionalV; ∈-induction; ∈-induction-compute )
-open import V.Model {ℓ} using ( union-family-in; union-family-out; ∈sucV-elim; self∈sucV )
-open import L.Constructible {ℓ} using ( IsOrd )
-open import L.Ordinal {ℓ} using ( suc-ord; setUnion-ord; mem-ord )
-```
 
 <!--en-->
 The indexing is genuinely small. Each set `x` has a small member type `⟪ x ⟫` and an embedding `⟪ x ⟫↪` into `S`; `∈ₛ⟪ x ⟫↪ m` proves that the represented set belongs to `x`. Conversely, a given membership proof can be converted by `∈-asFiber` into an index together with a path identifying its represented set with the member. These two directions connect recursion over membership with the small family used by the union.
@@ -121,7 +131,6 @@ The rank itself is the membership induction applied to this step: `∈-induction
 <!--/-->
 
 ```agda
-
 opaque
   rank : S → S
   rank = ∈-induction rankStep

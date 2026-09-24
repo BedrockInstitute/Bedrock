@@ -11,6 +11,8 @@ HERE=pathlib.Path(__file__).resolve(); ROOT=HERE.parents[2]
 sys.path.insert(0,str(ROOT/'scripts/site'))
 from i18n_markers import LANGS, _is_english_narrative, _markdown_blocks, marker
 from reading_routes import strip_metadata
+from chapter_structure import boilerplate_ranges, chapter_parts, parameterized
+from submodule_structure import module_header_line
 
 FENCE_OPEN=re.compile(r'^```agda(?:\s.*)?$')
 FENCE_CLOSE=re.compile(r'^```\s*$')
@@ -46,6 +48,22 @@ def _shared_prose(lines:list[str])->list[tuple[bool,str]]:
 def analyze_text(text:str,name:str='<memory>')->dict:
     # Route JSON is neutral only when it matches the repository's validated marker.
     clean=strip_metadata(text)
+    boilerplate_lines = set()
+    parameter_lines = set()
+    if name != '<memory>':
+        path = pathlib.Path(name).resolve()
+        module = str(path.relative_to(ROOT/'src'))[:-9].replace('/', '.') if path.is_relative_to(ROOT/'src') else name
+        internal = {str(p.relative_to(ROOT/'src'))[:-9].replace('/', '.') for p in (ROOT/'src').rglob('*.lagda.md')}
+        try:
+            for start, end in boilerplate_ranges(clean, module, internal):
+                boilerplate_lines.update(range(clean.count('\n', 0, start) + 1,
+                                               clean.count('\n', 0, end) + 1))
+            _, declaration, _, _ = chapter_parts(clean, module, internal)
+            if parameterized(declaration, module):
+                parameter_lines.update(range(clean.count('\n', 0, declaration.start) + 1,
+                                             clean.count('\n', 0, declaration.end) + 1))
+        except StopIteration:
+            pass  # The chapter-framework gate reports malformed openings.
     errors=[]; fences=[]; groups=[]; shared=[]
     cur_group=None; group_start=None; cur_lang=None; shared_buf=[]; in_fence=False; fence_lines=[]; fence_start=0
     last_narrative=None; in_block_comment=False; in_fold_heading=False
@@ -68,15 +86,19 @@ def analyze_text(text:str,name:str='<memory>')->dict:
         if in_fence:
             if FENCE_CLOSE.match(line):
                 nonempty=sum(bool(x.strip()) for x in fence_lines)
-                if not in_fold_heading and not 1<=nonempty<=5:
+                boilerplate = all(not line.strip() or fence_start + i + 1 in boilerplate_lines
+                                  for i, line in enumerate(fence_lines))
+                parameter_declaration = all(not line.strip() or fence_start + i + 1 in parameter_lines
+                                            for i, line in enumerate(fence_lines))
+                if not boilerplate and not parameter_declaration and not in_fold_heading and not 1<=nonempty<=5:
                     errors.append({'line':fence_start,'rule':'fence-size','message':f'Agda fence has {nonempty} nonempty lines; expected 1..5'})
-                if last_narrative is None: errors.append({'line':fence_start,'rule':'preceding-exposition','message':'Agda fence has no preceding complete en/zh/ja narrative group'})
+                if not boilerplate and last_narrative is None: errors.append({'line':fence_start,'rule':'preceding-exposition','message':'Agda fence has no preceding complete en/zh/ja narrative group'})
                 fences.append({'line':fence_start,'total_lines':len(fence_lines),'nonempty_lines':nonempty,'preceding_exposition_chars':last_narrative})
                 # A fold heading is only a scope declaration. The exposition
                 # introducing it also introduces the first code block inside.
                 nonblank = [line for line in fence_lines if line.strip()]
                 keep_exposition = (in_fold_heading and bool(nonblank) and
-                    re.match(r'\s*module\s+\S+', nonblank[0]) and
+                    module_header_line('\n'.join(nonblank)) is not None and
                     re.search(r'\bwhere\s*$', nonblank[-1]))
                 in_fence=False; fence_lines=[]; in_block_comment=False
                 if not keep_exposition: last_narrative=None

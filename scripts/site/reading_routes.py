@@ -3,7 +3,7 @@
 The machine-readable catalog in ``dev/reading-catalog.json`` stores the
 authoritative reading order, translated chapter labels, stages and routes.
 Routes may overlap and do not claim independence. Direct prerequisites come
-only from Agda fenced imports. ``Milestones`` is a preview and therefore has
+only from Agda fenced imports. ``Origin`` is a preview and therefore has
 no readiness prerequisites.
 
 This module is also where a chapter's address is decided, once. Every node carries
@@ -28,7 +28,7 @@ FENCE = re.compile(r"^```agda\s*\n(.*?)^```\s*$", re.M | re.S)
 IMPORT = re.compile(r"^\s*(?:open\s+)?import\s+([\w.]+)", re.M)
 MARKER = re.compile(r"<!--\s*bedrock-routes\s*(\{.*?\})\s*-->", re.S)
 HEADING = re.compile(r"^##\s+(.+?)\s*$", re.M)
-PREVIEWS = frozenset({"Milestones"})
+PREVIEWS = frozenset({"Origin"})
 GUIDE_PAGE = "index.html"     # the reading guide, which embeds every preview chapter
 GUIDE_PANEL = "milestones"    # the guide panel that shows them, and its element id
 
@@ -117,12 +117,15 @@ def _load_catalog(path=CATALOG_PATH):
         module = entry["id"]
         if module in catalog:
             raise ValueError(f"duplicate catalog chapter: {module}")
+        if type(entry.get("human_reviewed")) is not bool:
+            raise ValueError(f"catalog chapter {module} requires boolean human_reviewed")
         for field in ("title", "stage", "description"):
             value = entry.get(field)
             if not isinstance(value, dict) or any(not isinstance(value.get(lang), str)
                                                   or not value[lang].strip() for lang in LANGS):
                 raise ValueError(f"catalog chapter {module} requires translated {field}")
         catalog[module] = {field: dict(entry[field]) for field in ("title", "stage", "description")}
+        catalog[module]["human_reviewed"] = entry["human_reviewed"]
     return data, catalog
 
 
@@ -230,6 +233,7 @@ def build_reading_data(src="src", catalog_path=CATALOG_PATH):
                 titles[lang] = plain_title(heading.group(1))
         nodes.append({"id": module, "title": titles, "description": catalog[module]["description"], "order": position,
                       "stage": catalog[module]["stage"],
+                      "human_reviewed": catalog[module]["human_reviewed"],
                       "prerequisites": [] if preview else graph[module],
                       "routes": memberships[module], "preview": preview,
                       "page": GUIDE_PAGE if preview else own_page(module),

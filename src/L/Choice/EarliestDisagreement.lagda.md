@@ -1,27 +1,13 @@
-<!--en-->
-# An internal family of earliest-disagreement relations
-
-At each finite stage, `before n` compares two sets at their earliest disagreement. This chapter represents that relation by a set `relAt n` inside `L`, assembles these sets into a numeral-indexed family, and expresses lookup in that family by the object-language formula `BeforeAt`. Instantiating `Described` with this formula yields `codeOrder`, which later supplies the comparison of codes used in name comparison. The chapter itself neither compares names nor proves that comparison well-founded.
-<!--zh-->
-# 最早分歧关系的内部族
-
-在每个有穷层，`before n` 按两个集合的最早分歧来比较它们。本章在 `L` 内用集合 `relAt n` 表示这条关系，再把这些集合组成以数码为索引的族，并用对象语言公式 `BeforeAt` 表达对该族的查找。以此公式实例化 `Described` 后得到 `codeOrder`，它将在后续名字比较中供应码的比较关系。本章本身既不比较名字，也不证明名字比较的良基性。
-<!--ja-->
-# 最初の相違の関係からなる内部の族
-
-各有限段階で、`before n` は二つの集合を最初に相違する要素によって比較する。本章では、この関係を `L` 内の集合 `relAt n` で表し、それらを数項で添字づけられた族にまとめ、その族での参照を対象言語の論理式 `BeforeAt` で表す。この論理式によって `Described` を具体化すると `codeOrder` が得られ、後の名前比較でコードの比較関係として使われる。本章自身は名前を比較せず、その比較の整礎性も証明しない。
-<!--/-->
-
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
 ```
 
 <!--en-->
-The construction uses excluded middle only through the explicit hypothesis that will be attached to the module. Thus the classical assumption remains visible in every result exported from this development.
+# An internal family of earliest-disagreement relations
 <!--zh-->
-本构造只通过稍后附在模块上的显式假设使用排中律。因此，这一经典假设在本章导出的每项结果中都保持可见。
+# 最早分歧关系的内部族
 <!--ja-->
-この構成で排中律を使うのは、直後にモジュールへ与える明示的な仮定を通してだけである。したがって、この章から公開される各結果には古典的仮定が明示されたままになる。
+# 最初の相違の関係からなる内部の族
 <!--/-->
 
 ```agda
@@ -41,6 +27,55 @@ Fix a universe level `ℓ` and assume `LEM (ℓ-suc ℓ)`. All sets, formulas, a
 module L.Choice.EarliestDisagreement {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax using
+  ( Formula; var; con; _∈̇_; _≐_; _∧̇_; ¬̇_; ∃̇_; ∀̇∈; ∃̇∈ )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Coding {ℓ} using ( pr; pr-inj; #mono; #-inj′ )
+open import L.Constructible {ℓ}
+  using ( 𝒮ʟ; isL; isL-trans; Lset; Lset→isL; IsOrd; Lset-mono )
+open import L.Ordinal {ℓ} using
+  ( numeral-ord; #∈ω; ∈#-elim; #∈#-elim; mem-ord; boundingOrd )
+open import L.Stage {ℓ} lem using ( stage; stage-ord; stage-mem )
+open import L.Axioms.Basic {ℓ}
+  using ( extensionalL; LsetS; ∅ʟ; finSet; finSet-in; finSet-out; module FinOf )
+open import L.Axioms.Full {ℓ} lem using ( hasSeparationL; hasReplacementL )
+open import L.Recursion {ℓ} lem using ( smallDom; mereFunct )
+open import L.Axioms.Infinity {ℓ} lem using ( ωʟ )
+open import L.Choice.FiniteStageOrders {ℓ} lem
+  using ( before; precedes; Agrees; Witness; finiteStage )
+open import L.Choice.LimitStageOrder {ℓ} lem
+  using ( PrecedesAt; module Precedes; module Described )
+open import L.Coding.HierarchySequence {ℓ} lem using ( LsetGraphAt; module RecShape )
+open import L.Hierarchy {ℓ} lem using ( Lset-only; Lset-defines )
+open import L.Coding.Model {ℓ} using ( prAtL; prAtL-adequate; prʟ; prʟ-fst; appAt; appAt-adequate; appC; appC-adequate; domAt-intro )
+open import L.Coding.Expressions {ℓ} using ( numL; extAt; extAt-out; extAt-in; extAt-in-both )
+import FOL.Absoluteness
+import FOL.ZFModel
+```
+
+<!--en-->
+
+At each finite stage, `before n` compares two sets at their earliest disagreement. This chapter represents that relation by a set `relAt n` inside `L`, assembles these sets into a numeral-indexed family, and expresses lookup in that family by the object-language formula `BeforeAt`. Instantiating `Described` with this formula yields `codeOrder`, which later supplies the comparison of codes used in name comparison. The chapter itself neither compares names nor proves that comparison well-founded.
+<!--zh-->
+
+在每个有穷层，`before n` 按两个集合的最早分歧来比较它们。本章在 `L` 内用集合 `relAt n` 表示这条关系，再把这些集合组成以数码为索引的族，并用对象语言公式 `BeforeAt` 表达对该族的查找。以此公式实例化 `Described` 后得到 `codeOrder`，它将在后续名字比较中供应码的比较关系。本章本身既不比较名字，也不证明名字比较的良基性。
+<!--ja-->
+
+各有限段階で、`before n` は二つの集合を最初に相違する要素によって比較する。本章では、この関係を `L` 内の集合 `relAt n` で表し、それらを数項で添字づけられた族にまとめ、その族での参照を対象言語の論理式 `BeforeAt` で表す。この論理式によって `Described` を具体化すると `codeOrder` が得られ、後の名前比較でコードの比較関係として使われる。本章自身は名前を比較せず、その比較の整礎性も証明しない。
+<!--/-->
+
+<!--en-->
+The construction uses excluded middle only through the explicit hypothesis that will be attached to the module. Thus the classical assumption remains visible in every result exported from this development.
+<!--zh-->
+本构造只通过稍后附在模块上的显式假设使用排中律。因此，这一经典假设在本章导出的每项结果中都保持可见。
+<!--ja-->
+この構成で排中律を使うのは、直後にモジュールへ与える明示的な仮定を通してだけである。したがって、この章から公開される各結果には古典的仮定が明示されたままになる。
+<!--/-->
+
+
+
 <!--en-->
 We shall describe relations by first-order formulas over the cumulative hierarchy. Ordered pairs serve as relation entries, and their injectivity will later let us recover the two compared sets from a coded entry.
 <!--zh-->
@@ -48,14 +83,6 @@ We shall describe relations by first-order formulas over the cumulative hierarch
 <!--ja-->
 累積階層上の一階論理式によって関係を記述する。関係の要素には順序対を用い、後にはその単射性によって、符号化された要素から比較される二集合を復元する。
 <!--/-->
-
-```agda
-open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using
-  ( Formula; var; con; _∈̇_; _≐_; _∧̇_; ¬̇_; ∃̇_; ∀̇∈; ∃̇∈ )
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-open import V.Coding {ℓ} using ( pr; pr-inj; #mono; #-inj′ )
-```
 
 <!--en-->
 The finite stage at `n` is `Lset (# n)`, where `# n` is the von Neumann numeral inside the hierarchy. Its ordinal and constructibility proofs let us treat both the stage and each of its members as objects of the model of `L`.
@@ -65,14 +92,6 @@ The finite stage at `n` is `Lset (# n)`, where `# n` is the von Neumann numeral 
 第 `n` 有限段階は `Lset (# n)` であり、`# n` は階層内のフォン・ノイマン数項である。その順序数性と構成可能性により、この段階とその各要素を `L` のモデルの対象として扱える。
 <!--/-->
 
-```agda
-open import L.Constructible {ℓ}
-  using ( 𝒮ʟ; isL; isL-trans; Lset; Lset→isL; IsOrd; Lset-mono )
-open import L.Ordinal {ℓ} using
-  ( numeral-ord; #∈ω; ∈#-elim; #∈#-elim; mem-ord; boundingOrd )
-open import L.Stage {ℓ} lem using ( stage; stage-ord; stage-mem )
-```
-
 <!--en-->
 Two set-forming operations play different roles. Separation cuts each single-stage relation out of a bound, while replacement will later collect the relations along the internal `ω`. Finite approximations themselves will instead be built by `finSet` and `finSetL`.
 <!--zh-->
@@ -80,14 +99,6 @@ Two set-forming operations play different roles. Separation cuts each single-sta
 <!--ja-->
 二つの集合構成は異なる役割を担う。分出は一つの段階の関係を上界から切り出し、置換は後で内部の `ω` に沿ってそれらの関係を集める。有限近似そのものは `finSet` と `finSetL` によって構成する。
 <!--/-->
-
-```agda
-open import L.Axioms.Basic {ℓ}
-  using ( extensionalL; LsetS; ∅ʟ; finSet; finSet-in; finSet-out; module FinOf )
-open import L.Axioms.Full {ℓ} lem using ( hasSeparationL; hasReplacementL )
-open import L.Recursion {ℓ} lem using ( smallDom; mereFunct )
-open import L.Axioms.Infinity {ℓ} lem using ( ωʟ )
-```
 
 <!--en-->
 The mathematical recurrence is already fixed: `before zero` is empty, and `before (suc n)` compares members of the next finite stage by their earliest disagreement over `finiteStage n`, using `before n` for earlier points. `PrecedesAt` expresses that successor step in the object language, while `RecShape` will organize its finite approximations.
@@ -97,14 +108,6 @@ The mathematical recurrence is already fixed: `before zero` is empty, and `befor
 数学的な再帰はすでに定まっている。`before zero` は空であり、`before (suc n)` は `before n` で先行する点を順序づけ、`finiteStage n` 上の最初の相違によって次の有限段階の要素を比較する。`PrecedesAt` はこの後続段階を対象言語で表し、`RecShape` はその有限近似を組織する。
 <!--/-->
 
-```agda
-open import L.Choice.FiniteStageOrders {ℓ} lem
-  using ( before; precedes; Agrees; Witness; finiteStage )
-open import L.Choice.LimitStageOrder {ℓ} lem
-  using ( PrecedesAt; module Precedes; module Described )
-open import L.Coding.HierarchySequence {ℓ} lem using ( LsetGraphAt; module RecShape )
-```
-
 <!--en-->
 Object-language application and extensionality let a formula say that a set is the value of a relation-valued table. They will be used first to describe one recursive step and later to read the completed family at a numeral.
 <!--zh-->
@@ -112,12 +115,6 @@ Object-language application and extensionality let a formula say that a set is t
 <!--ja-->
 対象言語の適用と外延性によって、ある集合が関係値を並べた表の値であることを論理式で述べられる。まず一回の再帰段階を記述するために使い、後には完成した族を数項の位置で読み取るために使う。
 <!--/-->
-
-```agda
-open import L.Hierarchy {ℓ} lem using ( Lset-only; Lset-defines )
-open import L.Coding.Model {ℓ} using ( prAtL; prAtL-adequate; prʟ; prʟ-fst; appAt; appAt-adequate; appC; appC-adequate; domAt-intro )
-open import L.Coding.Expressions {ℓ} using ( numL; extAt; extAt-out; extAt-in; extAt-in-both )
-```
 
 <!--en-->
 The proofs repeatedly transport equalities of sets and ordered pairs. They also require induction over the strict order on natural numbers, which will establish uniqueness of every value recorded by an approximation.
@@ -128,8 +125,6 @@ The proofs repeatedly transport equalities of sets and ordered pairs. They also 
 <!--/-->
 
 ```agda
-import FOL.Absoluteness
-import FOL.ZFModel
 open import Cubical.Data.Nat.Order using
 ```
 
@@ -185,7 +180,6 @@ From now on formulas are interpreted in the proposition-valued structure carried
 <!--/-->
 
 ```agda
-
 open hPropStructure 𝒮ʟ
 ```
 
@@ -422,7 +416,6 @@ The product of the two presentations indexes every pair of stage members. Applyi
 <!--/-->
 
 ```agda
-
   d : Σ[ D ∈ S ] ((p : ⟪ finiteStage n ⟫ × ⟪ finiteStage n ⟫)
                   → ⟨ prʟ (ixL (fst p)) (ixL (snd p)) ∈ˢ D ⟩)
   d = smallDom (⟪ finiteStage n ⟫ × ⟪ finiteStage n ⟫)
@@ -671,7 +664,6 @@ Membership in `relAt k` determines such components only under propositional trun
 <!--/-->
 
 ```agda
-
 relAt-out : (k : ℕ) (zv : V ℓ) → ⟨ zv ∈ fst (relAt k) ⟩ → ∥ RelOf k zv ∥₁
 relAt-in  : (k : ℕ) (zv : V ℓ) → RelOf k zv → ⟨ zv ∈ fst (relAt k) ⟩
 ```
@@ -804,7 +796,6 @@ The converse transport writes a proof of `Rel n` back into the supplied relation
 <!--/-->
 
 ```agda
-
     Rfill : (s t : S) → ⟨ Rel n (fst s) (fst t) ⟩
           → ⟨ pr (fst s) (fst t) ∈ fst (lookup s3 (y ∷ x ∷ a ∷ r ∷ zS ∷ [])) ⟩
     Rfill s t p = subst (λ w → ⟨ pr (fst s) (fst t) ∈ w ⟩) (sym qr) p
@@ -862,7 +853,6 @@ The adequacy of the pair formula identifies the packaged member with `pr (fst x)
 <!--/-->
 
 ```agda
-
     qpair : fst zS ≡ pr (fst x) (fst y)
     qpair = subst ⟨_⟩ (prAtL-adequate s4 s1 zero (y ∷ x ∷ a ∷ r ∷ zS ∷ [])) hpr
 ```
@@ -876,7 +866,6 @@ For `k = 0`, a `RelOf` witness already contains an impossible proof of `before z
 <!--/-->
 
 ```agda
-
 relAt-in zero zv (x , (y , (x∈ , (y∈ , (qq , hb))))) = ⊥*-rec hb
 relAt-in (suc n) zv (x , (y , (x∈ , (y∈ , (qq , hb))))) =
   subst (λ t → ⟨ t ∈ fst (relAt (suc n)) ⟩) (prS-fst x y ∙ sym qq)
@@ -953,7 +942,6 @@ The converted host comparison now satisfies the hypotheses of `PrecedesAt-in`. I
 <!--/-->
 
 ```agda
-
   hprec : ⟨ (y ∷ x ∷ stageS n ∷ relAt n ∷ prS x y ∷ [])
           ⊨ PrecedesAt s3 s2 s1 zero ⟩
   hprec = P.PrecedesAt-in
@@ -970,7 +958,6 @@ The pair-recognition formula is satisfied because the candidate member was built
 <!--/-->
 
 ```agda
-
   hpr : ⟨ (y ∷ x ∷ stageS n ∷ relAt n ∷ prS x y ∷ []) ⊨ prAtL s4 s1 zero ⟩
   hpr = subst ⟨_⟩
     (sym (prAtL-adequate s4 s1 zero
@@ -1016,7 +1003,6 @@ The useful outward interface starts with a known pair `pr u v`, where both endpo
 <!--/-->
 
 ```agda
-
 relAt-rep : (n : ℕ) (u v : V ℓ)
           → ⟨ u ∈ finiteStage n ⟩ → ⟨ v ∈ finiteStage n ⟩
           → ⟨ pr u v ∈ fst (relAt n) ⟩ → ⟨ before n u v ⟩
@@ -1163,11 +1149,9 @@ The semantic correspondence is now proved for arbitrary variables `z,b,f` and an
 ここから、任意の変数 `z,b,f` と任意の環境について意味論的な対応を示す。`lookup b γ` の台となる集合が順序数であるという仮定は、階層グラフが記述する段階を対応する `Lset` の値と同定するために使われる。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-
 module _ {n : ℕ} (z b f : Fin n) (γ : S ^ n)
          (ob : IsOrd (fst (lookup b γ))) where
 ```
@@ -1498,7 +1482,6 @@ The bounded negation in the formula is interpreted in a lifted universe. Lowerin
 <!--/-->
 
 ```agda
-
     atC : AtC → ∥ StepOf b f γ (fst (lookup z γ)) ∥₁
     atC (c , (c∈ , (hmax , hr))) = rec₁ squash₁ (atR c c∈ cmax) hr
       where
@@ -1515,7 +1498,6 @@ These nested interpretations provide the reading direction of the step body. For
 <!--/-->
 
 ```agda
-
   opaque
    unfolding RelBodyAt
 ```
@@ -1689,7 +1671,6 @@ With that interpretation fixed, `PrecedesAt-in` converts the semantic earliest-d
 </div>
 </details>
 
-
 <!--en-->
 The body classifies a single candidate ordered pair. A relation value must collect exactly all such candidates, so the next construction takes the extensional closure of this one-step condition over an entire set.
 <!--zh-->
@@ -1727,7 +1708,6 @@ The reading lemmas for this extensional description are valid whenever `fst (loo
 <!--ja-->
 `fst (lookup b γ)` が順序数であれば、この外延的記述の読みが成り立つ。本体の論理式は、ステップの証人に現れる二つの構成可能段階を同定するためにこの仮定を使う。
 <!--/-->
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
@@ -1807,7 +1787,6 @@ For the first inclusion, each truncated step is mapped through `RelBody-in` and 
 </div>
 </details>
 
-
 <!--en-->
 This extensional step now instantiates the general recursion-shape construction. The resulting `ApproxAt` describes an initial-segment table whose domain and step clauses agree with `RelStepAt`, while `RelGraphAt` describes a value at the current index supported by such an approximation below it. The table becomes finite when that index is later identified with a numeral.
 <!--zh-->
@@ -1817,7 +1796,6 @@ This extensional step now instantiates the general recursion-shape construction.
 <!--/-->
 
 ```agda
-
 module A = RecShape RelStepAt
 open A using ( ApproxAt; ApproxAt-value; ApproxAt-step
              ; ApproxAt-in; GraphOf; PairOf )
@@ -1902,7 +1880,6 @@ Fix a candidate relation denoted by `v`, an index denoted by `b`, and a table de
 <!--ja-->
 `v` が指す候補関係、`b` が指す添字、`f` が指す表を固定する。等式 `qb` は添字を数項 `# k` と同定し、`vals` と `ents` は表が `k` より下で正しく完全であることを主張する。これらの仮定のもとで、添字における意味論的ステップを `relAt k` への所属と正確に比較できる。
 <!--/-->
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
@@ -2075,7 +2052,6 @@ To obtain the recursive comparison, `precedes-map` replaces the base relation `R
 <!--/-->
 
 ```agda
-
         below : ⟨ before k (fst xx) (fst yy) ⟩
         below = subst (λ j → ⟨ before j (fst xx) (fst yy) ⟩) (sym ksuc)
           (precedes-map (Rel m) (before m) (finiteStage m) (fst xx) (fst yy)
@@ -2364,7 +2340,6 @@ The second membership direction starts with an explicit `StepOf` witness. The ma
 </div>
 </details>
 
-
 <!--en-->
 ## Every value an approximation records
 <!--zh-->
@@ -2443,7 +2418,6 @@ Fix an approximation whose bound is `# k`. The induction motive `Val m` says tha
 <!--ja-->
 上界が `# k` である近似を固定する。帰納の動機 `Val m` は、`m < k` なら、キー `# m` に記録されたすべての構成可能な値 `w` の台集合が `relAt m` に等しいと述べる。
 <!--/-->
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
@@ -2547,7 +2521,6 @@ Once correctness has been proved at every bounded index, `entryOf` immediately y
 </div>
 </details>
 
-
 <!--en-->
 The graph formula hides, under propositional truncation, an approximation up to `k` together with a final step. The lemma `rel-only` eliminates that truncation into an equality of sets, which is a proposition, and asserts that the value stored in `v` must be `relAt k`.
 <!--zh-->
@@ -2555,7 +2528,6 @@ The graph formula hides, under propositional truncation, an approximation up to 
 <!--ja-->
 グラフ論理式は、`k` までの近似と最後のステップを命題的切り詰めのもとに隠している。補題 `rel-only` は、その切り詰めを命題である集合の等式へ除去し、`v` に保存された値が `relAt k` でなければならないことを述べる。
 <!--/-->
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
@@ -2602,7 +2574,6 @@ The other input to `step-rel` is completeness of that same approximation below `
 ```
 </div>
 </details>
-
 
 <!--en-->
 ## The approximation, exhibited
@@ -2711,7 +2682,6 @@ The projection equation exposes the underlying set of `approxSet k` as exactly t
 <!--/-->
 
 ```agda
-
   approxSet-fst : (k : ℕ) → fst (approxSet k) ≡ finSet k (λ i → fst (famOf k i))
   approxSet-fst k = refl
 ```
@@ -2757,7 +2727,6 @@ Conversely, membership in `approxSet k` yields only a propositionally truncated 
 <!--/-->
 
 ```agda
-
 approx-mem-out : (k : ℕ) (y : V ℓ) → ⟨ y ∈ fst (approxSet k) ⟩
                → ∥ Σ[ j ∈ ℕ ] ((j < k) × (y ≡ pr (# j) (fst (relAt j)))) ∥₁
 approx-mem-out k y h = map₁ named
@@ -2830,7 +2799,6 @@ Fix an environment in which `f` denotes `approxSet k` and `a` denotes the numera
 <!--ja-->
 `f` が `approxSet k` を、`a` が数項 `# k` を表す環境を固定する。残る課題は、この具体的な有限表が抽象的な近似の論理式を満たすことの確認である。
 <!--/-->
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
@@ -3042,7 +3010,6 @@ The concrete finite table now satisfies `ApproxAt`: `onDom` proves that its doma
 ```
 </div>
 </details>
-
 
 <!--en-->
 Consequently, `relAt k` satisfies the recursion graph at the numeral `# k`, provided the environment components denoting the index and candidate value are identified with `# k` and `relAt k`. The finite witness for the existential approximation is `approxSet k`.
@@ -3462,7 +3429,6 @@ Fix an environment and a natural number `m`. The equation for `b` says that its 
 環境と自然数 `m` を固定する。`b` についての等式は、その値が数項 `# m` であることを述べ、二つの所属の仮定は `x` と `y` が指す値を `finiteStage m` に置く。これらの仮定によって三つの変数が一つの有限段階での比較に結びつき、妥当性定理はこの制限された文脈でのみ述べられる。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -3625,7 +3591,6 @@ The second application fact comes from `relAt-fill`: the two stage-membership hy
 </div>
 </details>
 
-
 <!--en-->
 ## The frame, discharged
 <!--zh-->
@@ -3643,8 +3608,7 @@ The two adequacy directions make `BeforeAt` an admissible input to the earlier `
 <!--/-->
 
 ```agda
-private
-  module CodeOrder = Described BeforeAt BeforeAt-in BeforeAt-out
+private module CodeOrder = Described BeforeAt BeforeAt-in BeforeAt-out
 ```
 
 <!--en-->

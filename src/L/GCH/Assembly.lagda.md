@@ -1,21 +1,13 @@
-<!--en-->
-This chapter completes the stated form of GCH inside `L`. For each infinite internal ordinal cardinal `κ`, it proves, under an outer propositional truncation, that there is a successor cardinal `δ` together with the two coded injections `𝒫κ ↪ δ` and `δ ↪ 𝒫κ`. The proof may work with witnesses inside a truncated branch, but it exports neither a chosen `δ` nor either injection graph.
-<!--zh-->
-本章完成 `L` 内部所采用的 GCH 陈述。对每个无穷内部序数基数 `κ`，它在最外层的命题截断下证明：存在一个后继基数 `δ`，并有两条编码单射 `𝒫κ ↪ δ` 与 `δ ↪ 𝒫κ`。证明可以在截断的局部分支内使用见证，但最终既不选定一个 `δ`，也不交出任何一张单射图。
-<!--ja-->
-本章では、`L` の内部で採用する形の GCH を完成させる。無限な内部順序数基数 `κ` ごとに、外側の命題的切り詰めのもとで、後続基数 `δ` と二つの符号化された単射 `𝒫κ ↪ δ` および `δ ↪ 𝒫κ` が存在することを示す。証明では切り詰められた枝の内部で証人を使えるが、特定の `δ` も、どちらの単射のグラフも外へ取り出さない。
-<!--/-->
-
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
 ```
 
 <!--en-->
-The only classical principle used in the assembly is excluded middle. It will turn a merely inhabited family of candidates into its unique least member, once the candidates have been placed in a small well-order.
+# Assembling GCH from four internal bounds
 <!--zh-->
-装配过程使用的唯一经典原则是排中律。一旦把候选者放进一个小良序中，排中律便可把仅仅非空的候选族化为其唯一最小元。
+# 从四条内部界装配 GCH
 <!--ja-->
-組み立てで用いる古典的原理は排中律だけである。候補を小さな整列順序の中に置いた後、単に要素をもつ候補族から一意な最小元を得るために使う。
+# 四つの内部上界から GCH を組み立てる
 <!--/-->
 
 ```agda
@@ -35,14 +27,6 @@ We fix this hypothesis at the single universe level required by the proof. Thus 
 module L.GCH.Assembly {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
-<!--en-->
-Two set-theoretic viewpoints meet here. The ambient cumulative hierarchy supplies membership and small presentations, while the constructible subuniverse supplies the predicate `isL` and the stages `Lset α`; the ZF model structure later interprets the internal power set.
-<!--zh-->
-这里汇合了两个集合论视角。外围累积层级提供隶属与小呈现，可构造子宇宙提供谓词 `isL` 和各层 `Lset α`；随后由 ZF 模型结构解释内部幂集。
-<!--ja-->
-ここでは、集合論に関する二つの見方を結び付ける。周囲の累積階層は所属と小さな提示を与え、構成可能な部分宇宙は述語 `isL` と各段階 `Lset α` を与える。内部の冪集合は、後で ZF モデルの構造によって解釈される。
-<!--/-->
-
 ```agda
 open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax using ( var; _∈̇_; _∧̇_ )
@@ -51,7 +35,46 @@ import FOL.ZFModel
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Presentation {ℓ} using ( member; fiber )
 open import L.Constructible {ℓ}
+  using ( 𝒮ʟ; IsOrd; Lset; Lset-mono; isL; isL-trans )
+open import L.Ordinal {ℓ} using ( mem-ord; suc-ord; ω-ord )
+open import L.Ordinal.Linear {ℓ} lem using ( Tri; ord-tri )
+open import L.Ordinal.SquareLaw {ℓ} lem using ( ordSWO )
+open import L.WellOrder.Base {ℓₚ = ℓ-suc ℓ}
+  using ( SWO; IsLeast; leastOfFormula; module SWO )
+open import L.Axioms.Basic {ℓ} using ( isL-Lset )
+open import L.Cardinal {ℓ} lem
+  using ( InjL; SuccCardL; IsCardinalL; module LeastCardInjL )
+open import L.CardinalAbove {ℓ} lem using ( CardAboveL )
+open import L.DefinableInjection {ℓ} lem using ( cardinalAt; module CardinalAt )
+open import L.GCH {ℓ} lem using ( GCHStatement )
+open import L.InjectionComposition {ℓ} lem using ( inclusion-coded; injl-trans )
 ```
+
+<!--en-->
+This chapter completes the stated form of GCH inside `L`. For each infinite internal ordinal cardinal `κ`, it proves, under an outer propositional truncation, that there is a successor cardinal `δ` together with the two coded injections `𝒫κ ↪ δ` and `δ ↪ 𝒫κ`. The proof may work with witnesses inside a truncated branch, but it exports neither a chosen `δ` nor either injection graph.
+<!--zh-->
+本章完成 `L` 内部所采用的 GCH 陈述。对每个无穷内部序数基数 `κ`，它在最外层的命题截断下证明：存在一个后继基数 `δ`，并有两条编码单射 `𝒫κ ↪ δ` 与 `δ ↪ 𝒫κ`。证明可以在截断的局部分支内使用见证，但最终既不选定一个 `δ`，也不交出任何一张单射图。
+<!--ja-->
+本章では、`L` の内部で採用する形の GCH を完成させる。無限な内部順序数基数 `κ` ごとに、外側の命題的切り詰めのもとで、後続基数 `δ` と二つの符号化された単射 `𝒫κ ↪ δ` および `δ ↪ 𝒫κ` が存在することを示す。証明では切り詰められた枝の内部で証人を使えるが、特定の `δ` も、どちらの単射のグラフも外へ取り出さない。
+<!--/-->
+
+<!--en-->
+The only classical principle used in the assembly is excluded middle. It will turn a merely inhabited family of candidates into its unique least member, once the candidates have been placed in a small well-order.
+<!--zh-->
+装配过程使用的唯一经典原则是排中律。一旦把候选者放进一个小良序中，排中律便可把仅仅非空的候选族化为其唯一最小元。
+<!--ja-->
+組み立てで用いる古典的原理は排中律だけである。候補を小さな整列順序の中に置いた後、単に要素をもつ候補族から一意な最小元を得るために使う。
+<!--/-->
+
+
+
+<!--en-->
+Two set-theoretic viewpoints meet here. The ambient cumulative hierarchy supplies membership and small presentations, while the constructible subuniverse supplies the predicate `isL` and the stages `Lset α`; the ZF model structure later interprets the internal power set.
+<!--zh-->
+这里汇合了两个集合论视角。外围累积层级提供隶属与小呈现，可构造子宇宙提供谓词 `isL` 和各层 `Lset α`；随后由 ZF 模型结构解释内部幂集。
+<!--ja-->
+ここでは、集合論に関する二つの見方を結び付ける。周囲の累積階層は所属と小さな提示を与え、構成可能な部分宇宙は述語 `isL` と各段階 `Lset α` を与える。内部の冪集合は、後で ZF モデルの構造によって解釈される。
+<!--/-->
 
 <!--en-->
 The minimization argument uses three facts about ordinals: membership in an ordinal is transitive, any two ordinals satisfy trichotomy, and the membership order on the small presentation of an ordinal is a well-order. These facts let a least candidate found in a bounded search control every competing cardinal.
@@ -61,14 +84,6 @@ The minimization argument uses three facts about ordinals: membership in an ordi
 最小化の議論では、順序数について三つの事実を使う。順序数の所属は推移的であり、任意の二つの順序数には三岐性が成り立ち、順序数の小さな提示上の所属順序は整列順序である。これにより、有界な探索で得た最小候補が、任意の競合する基数を制御できる。
 <!--/-->
 
-```agda
-  using ( 𝒮ʟ; IsOrd; Lset; Lset-mono; isL; isL-trans )
-open import L.Ordinal {ℓ} using ( mem-ord; suc-ord; ω-ord )
-open import L.Ordinal.Linear {ℓ} lem using ( Tri; ord-tri )
-open import L.Ordinal.SquareLaw {ℓ} lem using ( ordSWO )
-open import L.WellOrder.Base {ℓₚ = ℓ-suc ℓ}
-```
-
 <!--en-->
 Internal size comparisons are expressed by `InjL`, the propositional truncation of a constructible graph coding an injection. From these comparisons, `IsCardinalL` defines internal cardinals and `SuccCardL` specifies the least internal ordinal cardinal strictly above a given one; `CardAboveL` supplies only some larger cardinal, still under truncation.
 <!--zh-->
@@ -77,15 +92,6 @@ Internal size comparisons are expressed by `InjL`, the propositional truncation 
 内部の大きさの比較は `InjL` で表す。これは、単射を符号化する構成可能なグラフが存在するという命題的切り詰めである。`IsCardinalL` はこの比較から内部の基数を定義し、`SuccCardL` は与えられた基数より真に大きい最小の内部順序数基数を指定する。一方、`CardAboveL` が与えるのは、切り詰めの内側にある何らかのより大きい基数だけである。
 <!--/-->
 
-```agda
-  using ( SWO; IsLeast; leastOfFormula; module SWO )
-open import L.Axioms.Basic {ℓ} using ( isL-Lset )
-open import L.Cardinal {ℓ} lem
-  using ( InjL; SuccCardL; IsCardinalL; module LeastCardInjL )
-open import L.CardinalAbove {ℓ} lem using ( CardAboveL )
-open import L.DefinableInjection {ℓ} lem using ( cardinalAt; module CardinalAt )
-```
-
 <!--en-->
 The final GCH statement asks for a successor cardinal together with coded injections in both directions between it and the model's power set. To construct the forward comparison, inclusions will first be coded as injections and then composed with the injection that counts a constructible stage.
 <!--zh-->
@@ -93,11 +99,6 @@ The final GCH statement asks for a successor cardinal together with coded inject
 <!--ja-->
 最終的な GCH の主張は、後続基数が単に存在し、それとモデルの冪集合との間に両方向の符号化された単射があることを要求する。冪集合から出る向きの比較を構成するため、まず包含を単射として符号化し、次に構成可能な段階を数える単射と合成する。
 <!--/-->
-
-```agda
-open import L.GCH {ℓ} lem using ( GCHStatement )
-open import L.InjectionComposition {ℓ} lem using ( inclusion-coded; injl-trans )
-```
 
 <!--en-->
 The bounded search is made small by using the presentation of the ordinal `sucV (fst θ)`. Its indices represent the members of `sucV (fst θ)`, hence ordinals no larger than `θ`; `ω` is used separately to express that the cardinal under study is not finite. When two constructible pairs have equal underlying sets, propositionhood of constructibility lifts that equality to the pairs themselves.
@@ -122,8 +123,6 @@ Trichotomy will be analyzed through three coproduct branches. Impossible branche
 三岐性は、直和の三つの分岐に分けて調べる。不可能な分岐は空型に帰着し、命題的切り詰めは選ばれた証人を外へ出さずに存在だけを記録する。したがって、以下での消去先は、所属や別の切り詰められた存在命題のような命題に限られる。
 <!--/-->
 
-
-
 <!--en-->
 Membership written `_∈ˢ_` is ambient membership in the cumulative hierarchy. This is the relation needed for pointwise containments, including the claim that every ambient member of a constructible subset of `κ` also belongs to `κ`.
 <!--zh-->
@@ -133,7 +132,6 @@ Membership written `_∈ˢ_` is ambient membership in the cumulative hierarchy. 
 <!--/-->
 
 ```agda
-
 open hPropStructure 𝒮ᵥ using ( _∈ˢ_ )
 ```
 
@@ -272,7 +270,6 @@ The reduction module fixes an ordinal internal cardinal `θ` strictly above `κ`
 約簡のモジュールは、`κ` より真に大きい順序数の内部基数 `θ` を固定し、`θ` の後続が決める小さな探索空間の中で、`κ` より上の最小の基数が存在することを示す。これがこの章の中心である。まず明示的な上界を固定し、その中で最小化するのである。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -282,8 +279,6 @@ module Reduce (κ : SL.S) (oκ : IsOrd (fst κ))
 ```
 </summary>
 <div class="submodule-fold-content">
-
-
 
 <!--en-->
 The earlier cardinal machinery supplies a map `up` from indices in the small presentation of the ordinal `sucV (fst θ)` to constructible sets. It also supplies an index `self` that presents `θ` itself and an equation `self-eq` identifying the underlying set of `up self` with `θ`. Thus the known cardinal `θ` occurs among the candidates of the bounded search.
@@ -349,7 +344,6 @@ Internal cardinality is a proposition. Indeed, `IsCardinalL x` says, for every c
 <!--/-->
 
 ```agda
-
   isPropIsCardinalL : (x : SL.S) → isProp (IsCardinalL x)
   isPropIsCardinalL x =
     isPropΠ (λ _ → isPropΠ (λ _ → isPropΠ (λ _ → isProp⊥)))
@@ -577,7 +571,6 @@ The membership of `c` below `δ` is then converted into the strict order of the 
 </div>
 </details>
 
-
 <!--en-->
 `CardAboveL` supplies only the propositionally truncated existence of some ordinal internal cardinal `θ` with `κ ∈ θ`; it supplies no leastness and does not select `θ`. The proof maps each local witness through `Reduce`, where minimization occurs inside the presentation of `sucV (fst θ)`. The resulting successor cardinal therefore remains under propositional truncation.
 <!--zh-->
@@ -587,7 +580,6 @@ The membership of `c` below `δ` is then converted into the strict order of the 
 <!--/-->
 
 ```agda
-
 succCardExists : SuccCardExists
 succCardExists κ oκ cκ κ∉ω = map₁ build (CardAboveL κ oκ cκ κ∉ω)
   where
@@ -886,7 +878,6 @@ The stage at `δ` is presented as an element of `L` by pairing the stage set wit
 <!--/-->
 
 ```agda
-
   Lδ : SL.S
   Lδ = Lset (fst δ) , stage-is-L δ ordδ
 ```

@@ -29,12 +29,12 @@ class DependencyMapTests(unittest.TestCase):
         self.assertEqual(membership, {'A': '0'})
 
     def test_layouts_preserve_all_nodes_and_downward_edges(self):
-        nodes = {'A', 'B', 'C', 'Milestones'}
-        edges = [('A', 'B'), ('A', 'C'), ('B', 'Milestones'), ('C', 'Milestones')]
-        order = {'Milestones': 1, 'A': 2, 'B': 3, 'C': 4}
-        depth = {'A': 0, 'B': 1, 'C': 1, 'Milestones': 2}
+        nodes = {'A', 'B', 'C', 'Origin'}
+        edges = [('A', 'B'), ('A', 'C'), ('B', 'Origin'), ('C', 'Origin')]
+        order = {'Origin': 1, 'A': 2, 'B': 3, 'C': 4}
+        depth = {'A': 0, 'B': 1, 'C': 1, 'Origin': 2}
         stages = [{'key': '0', 'label': 'Preview'}, {'key': '1', 'label': 'Proof'}]
-        membership = {'Milestones': '0', 'A': '1', 'B': '1', 'C': '1'}
+        membership = {'Origin': '0', 'A': '1', 'B': '1', 'C': '1'}
         diagrams = depmap.layouts(nodes, edges, order, depth, list(sorted(nodes)), stages, membership)
         for name, diagram in diagrams.items():
             positions = diagram['positions']

@@ -57,7 +57,7 @@
       project: [
         "Bedrock is a machine-checked development of set theory in Cubical Agda. Two results"
         + " are proved: the constructible universe L is a model of ZFC, and GCH holds in it."
-        + " They are the definitions `L⊨ZFC` and `L⊨GCH` in the chapter Milestones, each"
+        + " They are the definitions `L⊨ZFC` and `L⊨GCH` in the chapter Origin, each"
         + " resting on one hypothesis, excluded middle at `LEM (ℓ-suc ℓ)`, and on nothing"
         + " else. Every file typechecks under Agda 2.8.0 with the cubical 0.9 library and the"
         + " `--safe` flag, so nothing in the development is postulated. The long-term aim is"
@@ -138,7 +138,7 @@
       position: function (order, total) { return "第 " + order + " 章，全书共 " + total + " 章"; },
       project: [
         "Bedrock 是用 Cubical Agda 完成的机器验证集合论。目前已经证明两项结果：可构造宇宙 L 是 ZFC 的模型，"
-        + "并且 GCH 在其中成立。它们就是 Milestones 一章里的定义 `L⊨ZFC` 与 `L⊨GCH`，"
+        + "并且 GCH 在其中成立。它们就是 Origin 一章里的定义 `L⊨ZFC` 与 `L⊨GCH`，"
         + "各自只依赖一条假设，即 `LEM (ℓ-suc ℓ)` 这一层的排中律，除此之外别无假设。"
         + "全部文件都在 Agda 2.8.0 与 cubical 0.9 库下带 `--safe` 通过类型检查，因此开发中没有任何公设。"
         + "长期目标是力迫法、集合论地质学，以及基模型的可定义性。",
@@ -211,7 +211,7 @@
       project: [
         "Bedrock は Cubical Agda による機械検証された集合論です。二つの結果が証明されています。"
         + "構成可能宇宙 L が ZFC のモデルであること、そしてその中で GCH が成り立つことです。"
-        + "それが Milestones の章にある定義 `L⊨ZFC` と `L⊨GCH` で、いずれも "
+        + "それが Origin の章にある定義 `L⊨ZFC` と `L⊨GCH` で、いずれも "
         + "`LEM (ℓ-suc ℓ)` の排中律という一つの仮定のみに依拠し、他には何も仮定しません。"
         + "すべてのファイルは Agda 2.8.0 と cubical 0.9 ライブラリのもとで `--safe` 付きに型検査を通るので、"
         + "この開発には postulate がありません。長期的な目標は強制法、集合論的地質学、"

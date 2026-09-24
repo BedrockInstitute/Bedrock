@@ -1,3 +1,7 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # Quantifying over coded pairs and finite formula families
 <!--zh-->
@@ -5,6 +9,41 @@
 <!--ja-->
 # 符号化された順序対の成分と有限論理式族を量化する
 <!--/-->
+
+```agda
+open import Base.Prelude
+```
+
+<!--en-->
+Fix a universe level `ℓ`{.Agda}. Keeping the level as a parameter lets the constructions be instantiated at each required size without identifying distinct universes.
+<!--zh-->
+固定宇宙层级 `ℓ`{.Agda}。保留这个层级参数，使构造可以在所需的各个大小处实例化，而不必把不同的宇宙视为同一个。
+<!--ja-->
+宇宙レベル `ℓ`{.Agda} を固定する。このレベルをパラメータとして保つことで、異なる宇宙を同一視せずに、必要な大きさで構成を具体化できる。
+<!--/-->
+
+```agda
+module L.Coding.Quantification {ℓ : Level} where
+```
+
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax using
+  ( Formula; var; _∧̇_; _∨̇_; _⇒̇_; ∃̇∈; ∀̇∈ )
+open import FOL.LevyHierarchy using
+  ( Δ₀; δ-∧; δ-⇒; δ-∀∈; δ-∃∈ )
+import FOL.Absoluteness
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Coding {ℓ} using ( pr )
+open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
+open import L.Absoluteness {ℓ} using ( Δ₀-liftFo )
+open import L.Coding.PairFormulas {ℓ} using ( Δ₀-prAt; ∈pair-introL; ∈pair-introR )
+open import L.Coding.Environment {ℓ} using ( Δ₀-sucAt )
+open import L.Coding.Model {ℓ} using ( prAtL; prAtL-adequate )
+open import L.Coding.Expressions {ℓ} using ( sucAtL; sucAtL-adequate )
+open import L.Coding.Model {ℓ} using ( container )
+import L.Coding.Expressions {ℓ} as CodingExpressions
+```
 
 <!--en-->
 This chapter supplies the shared finite-slot machinery used by coded formulas.
@@ -30,28 +69,6 @@ required by bounded syntax.
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-open import Base.Prelude
-
-module L.Coding.Quantification {ℓ : Level} where
-
-open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using
-  ( Formula; var; _∧̇_; _∨̇_; _⇒̇_; ∃̇∈; ∀̇∈ )
-open import FOL.LevyHierarchy using
-  ( Δ₀; δ-∧; δ-⇒; δ-∀∈; δ-∃∈ )
-import FOL.Absoluteness
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-open import V.Coding {ℓ} using ( pr )
-open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
-open import L.Absoluteness {ℓ} using ( Δ₀-liftFo )
-open import L.Coding.PairFormulas {ℓ} using ( Δ₀-prAt; ∈pair-introL; ∈pair-introR )
-open import L.Coding.Environment {ℓ} using ( Δ₀-sucAt )
-open import L.Coding.Model {ℓ} using ( prAtL; prAtL-adequate )
-open import L.Coding.Expressions {ℓ} using ( sucAtL; sucAtL-adequate )
-open import L.Coding.Model {ℓ} using ( container )
-import L.Coding.Expressions {ℓ} as CodingExpressions
 module E = CodingExpressions.PairExpression
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
@@ -117,7 +134,6 @@ sndS x u v e = down (down x ⁅ u , v ⁆ (subst (λ z → ⟨ ⁅ u , v ⁆ ∈
 ```
 
 ```agda
-
 sh : ∀ {m} (k : ℕ) → Fin m → Fin (k + m)
 sh zero i = i
 sh (suc k) i = suc (sh k i)
@@ -197,7 +213,6 @@ bigAnd (suc n) φ = φ zero ∧̇ bigAnd n (λ k → φ (suc k))
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-
 module _ {m : ℕ} (γ : S ^ m) where
 ```
 </summary>
@@ -230,7 +245,6 @@ module _ {m : ℕ} (γ : S ^ m) where
 ```
 </div>
 </details>
-
 
 <!--en-->
 ## Bounded atoms and successor semantics
@@ -332,7 +346,6 @@ bothAll x body =
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-
 module _ {m : ℕ} (x u : Fin m) (body : Formula S (2 + m)) (γ : S ^ m) where
 ```
 </summary>
@@ -392,7 +405,6 @@ Out: the witness's second component is pinned by pair injectivity.
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-
 module _ {m : ℕ} (x : Fin m) (body : Formula S (3 + m)) (γ : S ^ m) where
 ```
 </summary>
@@ -429,7 +441,6 @@ module _ {m : ℕ} (x : Fin m) (body : Formula S (3 + m)) (γ : S ^ m) where
 </div>
 </details>
 
-
 <!--en-->
 ## Supplying the container witnesses
 <!--zh-->
@@ -450,7 +461,6 @@ callers to reason only about its components.
 
 Supplying the junk: a pair at a slot, with its components as
 elements, fills any of the four.
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
@@ -487,7 +497,6 @@ module _ {m : ℕ} (x : Fin m) (γ : S ^ m) (u v : S)
 ```
 </div>
 </details>
-
 
 <!--en-->
 ## Recap

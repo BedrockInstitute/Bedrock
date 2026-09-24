@@ -1,3 +1,7 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # Formulas for name comparison
 <!--zh-->
@@ -5,6 +9,58 @@
 <!--ja-->
 # 名前の比較を表す論理式
 <!--/-->
+
+```agda
+open import Base.Prelude
+open import Base.Classical using ( LEM )
+```
+
+<!--en-->
+Fix a universe level `ℓ` and a law of excluded middle at the required higher level. This is the classical interface carried by the chapter. The formula constructors below only assemble syntax, but the natural-number object, satisfaction graph, limit-stage code order, and canonical-name theory that they use were constructed under the same hypothesis. The module therefore records these semantic dependencies without performing another choice. `LeastNameAt` expresses minimality; `CanonicalNames.leastName` remains the construction that selects a least name.
+<!--zh-->
+现在固定宇宙层级 `ℓ`，并在所需的更高层级上假设排中律。这是本章沿用的经典逻辑接口。下面的公式构造器只组合语法，但它们使用的自然数对象、满足关系图、极限层码序和典范名字理论都在同一假设下构造。因此，本模块如实记录这些语义依赖，而不再次作选择。`LeastNameAt` 表达最小性；实际选出最小名字的构造仍是 `CanonicalNames.leastName`。
+<!--ja-->
+宇宙レベル `ℓ` と、必要な一段高いレベルでの排中律を固定する。これは本章が引き継ぐ古典論理のインターフェースである。以下の論理式構成子は構文を組み立てるだけであるが、そこで用いる自然数対象、充足関係グラフ、極限段階の符号順序、正準名の理論は、いずれも同じ仮定のもとで構成されている。したがって、このモジュールはこれらの意味論的依存関係を記録するが、改めて選択を行うことはない。`LeastNameAt` は最小性を表し、最小名を選ぶ構成は引き続き `CanonicalNames.leastName` である。
+<!--/-->
+
+```agda
+module L.Choice.NameComparison {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+```
+
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax using
+  ( Formula; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
+import FOL.Absoluteness
+open import FOL.Manipulation.ConstantMapping using ( mapFo; mapFo-comp; embed )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Coding {ℓ} using ( pr; pr-inj; #mono; #-inj′; module VCode )
+open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans; Lset )
+open import L.Ordinal {ℓ} using ( ∈#-elim; #∈#-elim )
+open import L.Axioms.Basic {ℓ} using ( ∅ʟ; extensionalL )
+open import L.Axioms.Infinity {ℓ} lem using ( ωʟ )
+open import L.Coding.Environment {ℓ} using ( env; lookup-spec )
+open import L.Coding.Model {ℓ} using ( prAtL; prAtL-adequate; appAt; appAt-adequate; domAt; domAt-in; domAt-out; domAt-intro; envOverAt )
+open import L.Coding.Expressions {ℓ} using ( extAt; extAt-in-both; numL; sucAtL; sucAtL-adequate; consAtL )
+open import L.Coding.Satisfaction {ℓ} lem using ( Sat )
+open import L.Coding.SatisfactionTable {ℓ} lem
+  using ( slot; satTable; total; inSlot; entry-in )
+open import L.Coding.SlotClosure {ℓ} lem using ( slotClosed )
+open import L.Coding.SatisfactionBridge {ℓ} lem using ( asConst )
+open import L.Coding.CodeSet {ℓ} lem
+  using ( keyS; AllCodes; AllCodes-out; key∈AllCodes )
+open import L.Coding.UniformSatisfaction {ℓ} lem using ( keyBridge )
+open import L.Coding.SatisfactionGraph {ℓ} lem using
+  ( satGraphAt; GraphWitAt; graphAt-in; graphAt-out
+  ; Bi; Ti; Ci; Ei; NN; ev; numν; numTags )
+open import L.Coding.EnvironmentTower {ℓ} lem using ( towerAt; module Tower; module TowerHolds )
+open import L.Coding.Quantification {ℓ} using ( f0; f1; f2; f3; f4; f5; f6; f7; f8; f9 )
+open import L.Coding.CodeDomain {ℓ} using ( Tags )
+open import L.Coding.PinnedRecursion {ℓ} lem using ( module SatSoundC; module SlotHolds )
+open import L.Choice.CanonicalNames {ℓ} lem using ( module Naming; limitCode )
+open import L.Choice.FiniteStageOrders {ℓ} lem using ( Limit; limitOrder )
+open import L.WellOrder.Base {ℓ-suc ℓ} using ( SWO )
+```
 
 <!--en-->
 A definable subset can have many names. At the meta-level, a name consists of an arity `k`, a parameter-free formula with `suc k` variable slots, and a vector of `k` parameters from the carrier. Its denotation is then derived from these three pieces: the extra variable ranges over the candidate member, and the remaining variables receive the parameter vector. The denotation is therefore not a fourth component of the name.
@@ -26,10 +82,6 @@ Names are compared lexicographically: first by the formula code under the limit-
 名前は辞書式に比較される。まず極限段階の順序で論理式の符号を比較し、次にアリティを比較し、最後に台上の与えられた順序でパラメータベクトルを比較する。論理式 `≺At` はこの三つの場合を表す。`LeastNameAt` は、同じ指示対象をもち、現在の名前より小さい名前がないことを述べるだけである。最小名を実際に選ぶのは、先に構成された `CanonicalNames.leastName` である。`StepAt` は二つの最小名を局所的に量化して比較する。本章で証明する妥当性は、ちょうど `≺At` とメタ言語の関係 `_≺ₙ_` との対応までである。`NameAt`、`LeastNameAt`、`StepAt` の完全な妥当性は後続の展開で証明される。
 <!--/-->
 
-```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-```
-
 <!--en-->
 The underlying language supplies universe levels, finite indices, vectors, and proposition-valued statements. Classical reasoning enters through one explicit hypothesis, `LEM (ℓ-suc ℓ)`, whose level is large enough for the satisfaction constructions and well-orders used below. Keeping that hypothesis visible will let us distinguish descriptions that merely state a property from earlier constructions that actually choose a witness.
 <!--zh-->
@@ -38,22 +90,7 @@ The underlying language supplies universe levels, finite indices, vectors, and p
 基礎となる言語は、宇宙レベル、有限添字、ベクトル、命題値の主張を与える。古典的推論は、明示された一つの仮定 `LEM (ℓ-suc ℓ)` を通して入る。そのレベルは、以下で使う充足関係の構成と整列順序を扱うのに十分である。この仮定を明示しておくことで、性質を述べるだけの記述と、証人を実際に選ぶ先行の構成とを区別できる。
 <!--/-->
 
-```agda
-open import Base.Prelude
-open import Base.Classical using ( LEM )
-```
 
-<!--en-->
-Fix a universe level `ℓ` and a law of excluded middle at the required higher level. This is the classical interface carried by the chapter. The formula constructors below only assemble syntax, but the natural-number object, satisfaction graph, limit-stage code order, and canonical-name theory that they use were constructed under the same hypothesis. The module therefore records these semantic dependencies without performing another choice. `LeastNameAt` expresses minimality; `CanonicalNames.leastName` remains the construction that selects a least name.
-<!--zh-->
-现在固定宇宙层级 `ℓ`，并在所需的更高层级上假设排中律。这是本章沿用的经典逻辑接口。下面的公式构造器只组合语法，但它们使用的自然数对象、满足关系图、极限层码序和典范名字理论都在同一假设下构造。因此，本模块如实记录这些语义依赖，而不再次作选择。`LeastNameAt` 表达最小性；实际选出最小名字的构造仍是 `CanonicalNames.leastName`。
-<!--ja-->
-宇宙レベル `ℓ` と、必要な一段高いレベルでの排中律を固定する。これは本章が引き継ぐ古典論理のインターフェースである。以下の論理式構成子は構文を組み立てるだけであるが、そこで用いる自然数対象、充足関係グラフ、極限段階の符号順序、正準名の理論は、いずれも同じ仮定のもとで構成されている。したがって、このモジュールはこれらの意味論的依存関係を記録するが、改めて選択を行うことはない。`LeastNameAt` は最小性を表し、最小名を選ぶ構成は引き続き `CanonicalNames.leastName` である。
-<!--/-->
-
-```agda
-module L.Choice.NameComparison {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-```
 
 <!--en-->
 The object language can speak about membership and equality, combine propositions, and quantify both over the whole carrier and over a set. Its semantics is read in a proposition-valued structure. Constant mappings connect three presentations needed later: genuinely parameter-free formulas, formulas over the empty alphabet, and the same syntax interpreted over a constructible carrier. Because these mappings preserve the formula, they will allow the code of a parameter-free skeleton to be recognized internally.
@@ -63,14 +100,6 @@ The object language can speak about membership and equality, combine proposition
 対象言語は所属と等号を述べ、命題を組み合わせ、台全体または一つの集合の上で量化できる。その意味論は命題値の構造で読み取られる。定数の写像は、後で必要となる三つの表示を結び付ける。すなわち、本当にパラメータをもたない論理式、空のアルファベット上の論理式、構成可能な台上で解釈された同じ構文である。これらの写像は論理式の構造を保つので、無パラメータ骨格の符号を内部で認識できるようになる。
 <!--/-->
 
-```agda
-open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using
-  ( Formula; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
-import FOL.Absoluteness
-open import FOL.Manipulation.ConstantMapping using ( mapFo; mapFo-comp; embed )
-```
-
 <!--en-->
 Formula codes, ordered pairs, and numerals are themselves sets in the cumulative hierarchy. The constructible substructure supplies the carrier in which the formulas are read, while transitivity lets membership in a constructible code set provide the constructibility facts needed for its components. Injectivity of pair and numeral coding later recovers arities and skeleton codes from equal keys. The stages `Lset` provide the setting for the limit-stage code order.
 <!--zh-->
@@ -78,14 +107,6 @@ Formula codes, ordered pairs, and numerals are themselves sets in the cumulative
 <!--ja-->
 論理式の符号、順序対、数項は、それ自身が累積階層の集合である。構成可能部分構造は論理式を読む台を与え、推移性は構成可能な符号集合への所属から、その成分に必要な構成可能性を与える。対の符号化と数項の符号化の単射性によって、後に等しいキーからアリティと骨格符号を復元できる。各 `Lset` 段階は極限段階の符号順序の舞台となる。
 <!--/-->
-
-```agda
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-open import V.Coding {ℓ} using ( pr; pr-inj; #mono; #-inj′; module VCode )
-open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans; Lset )
-open import L.Ordinal {ℓ} using ( ∈#-elim; #∈#-elim )
-open import L.Axioms.Basic {ℓ} using ( ∅ʟ; extensionalL )
-```
 
 <!--en-->
 An arity is represented by a numeral in the internal natural-number set, and a parameter vector is represented by the graph of a finite environment. The object-language formulas can inspect ordered pairs, applications, and domains, extend an environment by a candidate element, and define a subset extensionally. For a formula over a carrier, `Sat` is the set of environments satisfying that formula. This set-valued reading is the semantic value later recovered from the satisfaction graph.
@@ -95,14 +116,6 @@ An arity is represented by a numeral in the internal natural-number set, and a p
 アリティは内部の自然数集合に属する数項で表し、パラメータベクトルは有限環境のグラフで表す。対象言語の論理式は、順序対、適用、定義域を調べ、候補となる要素を環境に追加し、外延的に部分集合を定義できる。ある台上の論理式に対して、`Sat` はその論理式を満たす環境全体の集合である。後で充足関係グラフから復元する意味論的な値は、この集合である。
 <!--/-->
 
-```agda
-open import L.Axioms.Infinity {ℓ} lem using ( ωʟ )
-open import L.Coding.Environment {ℓ} using ( env; lookup-spec )
-open import L.Coding.Model {ℓ} using ( prAtL; prAtL-adequate; appAt; appAt-adequate; domAt; domAt-in; domAt-out; domAt-intro; envOverAt )
-open import L.Coding.Expressions {ℓ} using ( extAt; extAt-in-both; numL; sucAtL; sucAtL-adequate; consAtL )
-open import L.Coding.Satisfaction {ℓ} lem using ( Sat )
-```
-
 <!--en-->
 Satisfaction has already been organized into a table whose entries pair each subformula key with its recursively determined set of satisfying environments. Slot closure and totality ensure that every genuine key needed in the recursion receives an entry, and the satisfaction bridge identifies its constants with elements of the chosen carrier. The present chapter can therefore read a stored value at a key without running the satisfaction recursion again.
 <!--zh-->
@@ -110,14 +123,6 @@ Satisfaction has already been organized into a table whose entries pair each sub
 <!--ja-->
 充足関係はすでに表として構成されており、各項目は部分式のキーと、再帰的に定まる充足環境の集合を対にしている。スロットの閉性と全性により、再帰で必要となるすべての正しいキーに項目が与えられ、充足関係の橋渡しが論理式の定数を選ばれた台の要素として同定する。したがって本章では、充足関係の再帰を再実行せずに、キーに保存された集合値を読み取れる。
 <!--/-->
-
-```agda
-open import L.Coding.SatisfactionTable {ℓ} lem
-  using ( slot; satTable; total; inSlot; entry-in )
-open import L.Coding.SlotClosure {ℓ} lem using ( slotClosed )
-open import L.Coding.SatisfactionBridge {ℓ} lem using ( asConst )
-open import L.Coding.CodeSet {ℓ} lem
-```
 
 <!--en-->
 For each carrier, `AllCodes` collects exactly the genuine formula keys over that carrier, and its two directions connect membership with an underlying formula. The uniform bridge then supports the relational formula `satGraphAt B x y`: when `x` is a genuine key over the carrier in slot `B`, `y` is the corresponding set of satisfying environments. `GraphWitAt` and the two graph readings expose this set-valued relation without starting a fresh recursion.
@@ -127,14 +132,6 @@ For each carrier, `AllCodes` collects exactly the genuine formula keys over that
 各台について、`AllCodes` はその台上の正しい論理式キーをちょうど集め、その二方向の読みは所属と元の論理式を結び付ける。統一充足関係の橋渡しは、関係を表す論理式 `satGraphAt B x y` を支える。`x` がスロット `B` の台上の正しいキーであるとき、`y` は対応する充足環境の集合である。`GraphWitAt` と二つのグラフの読みは、この集合値の関係を新しい再帰なしに示す。
 <!--/-->
 
-```agda
-  using ( keyS; AllCodes; AllCodes-out; key∈AllCodes )
-open import L.Coding.UniformSatisfaction {ℓ} lem using ( keyBridge )
-open import L.Coding.SatisfactionGraph {ℓ} lem using
-  ( satGraphAt; GraphWitAt; graphAt-in; graphAt-out
-  ; Bi; Ti; Ci; Ei; NN; ev; numν; numTags )
-```
-
 <!--en-->
 The environment tower and the tagged recursion data justify the satisfaction-graph reading at every syntactic constructor. Against this internal machinery, the canonical-name theory supplies the meta-level standard used for comparison. A meta-level `Name` stores an arity, a parameter-free formula, and a parameter vector; `limitCode` derives the first comparison key from the formula, while the denotation is separately derived by satisfaction. This distinction is what the later slot formula must preserve.
 <!--zh-->
@@ -143,14 +140,6 @@ The environment tower and the tagged recursion data justify the satisfaction-gra
 環境の塔とタグ付き再帰データは、充足関係グラフの読みが各構文要素について成り立つことを保証する。この内部の仕組みに対し、正準名の理論は名前比較の基準となるメタ言語の対象を与える。メタ言語の `Name` が保存するのは、アリティ、無パラメータ論理式、パラメータベクトルである。`limitCode` は論理式から第一の比較キーを導き、指示対象は充足関係から別に導かれる。後のスロット論理式も、この区別を保たなければならない。
 <!--/-->
 
-```agda
-open import L.Coding.EnvironmentTower {ℓ} lem using ( towerAt; module Tower; module TowerHolds )
-open import L.Coding.Quantification {ℓ} using ( f0; f1; f2; f3; f4; f5; f6; f7; f8; f9 )
-open import L.Coding.CodeDomain {ℓ} using ( Tags )
-open import L.Coding.PinnedRecursion {ℓ} lem using ( module SatSoundC; module SlotHolds )
-open import L.Choice.CanonicalNames {ℓ} lem using ( module Naming; limitCode )
-```
-
 <!--en-->
 The code of a name is a member of the limit stage and is compared by `limitOrder`. The third key comes from an arbitrary strict well-order on the carrier. Canonical naming has already combined these with natural-number arity into `_≺ₙ_`, proved that relation well-founded, and used it in `leastName`. Here the two non-numerical orders appear through relation slots with representation laws, so the chapter describes their comparison rather than reconstructing either order.
 <!--zh-->
@@ -158,11 +147,6 @@ The code of a name is a member of the limit stage and is compared by `limitOrder
 <!--ja-->
 名前の符号は極限段階の要素であり、`limitOrder` によって比較される。第三のキーは、台上に与えられた任意の狭義整列順序から来る。正準名の理論は、これらと自然数のアリティをすでに `_≺ₙ_` にまとめ、その関係の整礎性を証明し、`leastName` で用いている。本章では二つの非数値的な順序を、表示法則を伴う関係スロットによって受け取る。したがって、どちらの順序も再構成せず、それらによる比較を記述する。
 <!--/-->
-
-```agda
-open import L.Choice.FiniteStageOrders {ℓ} lem using ( Limit; limitOrder )
-open import L.WellOrder.Base {ℓ-suc ℓ} using ( SWO )
-```
 
 <!--en-->
 Natural-number order supplies the second comparison key: for numeral arities, membership of one numeral in another expresses strict inequality. Finite indices locate entries of parameter vectors and the earliest position at which two vectors differ. The adequacy argument later proves, by induction on their common length, that this first-difference description agrees with the recursive vector order used in `_≺ₙ_`.
@@ -185,8 +169,6 @@ The proof data follow the lexicographic shape. Dependent pairs carry a position 
 <!--ja-->
 証明データは辞書式順序の形に従う。依存対は位置とその証拠を運び、直和は符号、アリティ、パラメータの三つの場合を分ける。先行するキーの等しさにより、依存する論理式とベクトルを共通のアリティへ輸送してから、次のキーを比較できる。空の型は、定数をもたない論理式に必要な定数解釈を一意に与える。
 <!--/-->
-
-
 
 <!--en-->
 Existential and disjunctive satisfaction is propositionally truncated: it preserves that a witness exists while forgetting which witness was supplied. Consequently, outward readings such as those for formula codes and name comparison return truncated existence, and elimination is used only into propositions. This is propositional truncation; propositional resizing does not occur here. The cumulative hierarchy supplies set-valued membership and the extensional equality principles needed after such readings.
@@ -233,7 +215,6 @@ proposition when a proof uses it.
 <!--/-->
 
 ```agda
-
 open hPropStructure 𝒮ʟ
 ```
 
@@ -472,7 +453,6 @@ parameter-free formula.
 <!--/-->
 
 ```agda
-
 freeCode-in : (k : ℕ) (χ : Formula (⊥* {ℓ}) k)
             → ⟨ pr (# k) (fst (limitCode χ)) ∈ fst (AllCodes ∅ʟ) ⟩
 freeCode-in k χ =
@@ -495,7 +475,6 @@ desired `k`-ary parameter-free payload without ever removing the truncation.
 <!--/-->
 
 ```agda
-
 freeCode-out : (k : ℕ) (c : V ℓ) → ⟨ pr (# k) c ∈ fst (AllCodes ∅ʟ) ⟩
              → ∥ Σ[ χ ∈ Formula (⊥* {ℓ}) k ] (c ≡ fst (limitCode χ)) ∥₁
 freeCode-out k c h = map₁ read (AllCodes-out ∅ʟ (pr (# k) c , cL) h)
@@ -613,18 +592,14 @@ is chosen.
 最初の一対の読みは、任意の環境 `γ` に対して成り立つ。外側から与えられる等式 `qa` は、アリティ位置の値を数項 `# k` と同定する。これは意味論的な読みの仮定であり、`FreeAt` の内部にある別の節ではない。骨格位置と符号集合位置はまだ任意なので、これらの補題は特定の符号集合を選ぶ前に、二つの束縛子の論理的内容だけを取り出している。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-
 module _ {n : ℕ} (C₀ s a : Fin n) (γ : S ^ n) (k : ℕ)
          (qa : fst (lookup a γ) ≡ # k) where
 ```
 </summary>
 <div class="submodule-fold-content">
-
-
 
 <!--en-->
 For the forward construction, suppose the intended key
@@ -809,7 +784,6 @@ propositional-truncation boundary.
 </div>
 </details>
 
-
 <!--en-->
 The next readings specialize the two previously arbitrary slots. The equality
 `q₀` identifies the set at `C₀` with `AllCodes ∅ʟ`, whose elements are keys for
@@ -823,7 +797,6 @@ parameter-free formulas of arity `suc k`.
 続く二つの読みでは、それまで任意だった二つの位置を具体化する。等式 `q₀` は `C₀` 位置の集合を `AllCodes ∅ʟ` と同定する。その要素は空のアルファベット上の論理式のキーである。また `qa` は、アリティ値を再び `# k` と同定する。これらの仮定のもとで、`FreeAt-in` と `FreeAt-out` が特徴付けた所属を、アリティ `suc k` の無パラメータ論理式についての具体的な主張へ変換できる。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -833,8 +806,6 @@ module _ {n : ℕ} (C₀ s a : Fin n) (γ : S ^ n) (k : ℕ)
 ```
 </summary>
 <div class="submodule-fold-content">
-
-
 
 <!--en-->
 Starting from a satisfaction of `FreeAt`, `FreeAt-out` yields membership of the
@@ -917,7 +888,6 @@ finite parameter environment records the number `k`.
 ```
 </div>
 </details>
-
 
 <!--en-->
 ## How long a sequence is
@@ -1114,7 +1084,6 @@ fill `domAt e d`.
 これで、二つの集合レベルの包含を対象言語の定義域の論理式と対応させられる。環境 `γ`、族 `g : Fin k → V ℓ`、そしてスロット `e` の台集合を `env g` と同定する等式 `qe` を固定し、スロット `d` は定義域の候補として残す。各 `cg i` は `g i` が構成可能モデルの元であることを証明する。これは逆向きの包含が存在の証人を作るときに、まさに必要となる条件である。この文脈で、次の二つの補題が `domAt e d` を読み出し、また充填する。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -1124,8 +1093,6 @@ module _ {n : ℕ} (e d : Fin n) (γ : S ^ n)
 ```
 </summary>
 <div class="submodule-fold-content">
-
-
 
 <!--en-->
 Suppose `γ` satisfies `domAt e d`. To prove that the underlying set in slot
@@ -1207,7 +1174,6 @@ as reading it, in the opposite direction.
 <!--/-->
 
 ```agda
-
   domAt-fill : fst (lookup d γ) ≡ # k → ⟨ γ ⊨ domAt e d ⟩
   domAt-fill qd = domAt-intro e d γ step
     where
@@ -1255,7 +1221,6 @@ directions complete `domAt-fill` without choosing a value from the finite graph.
 </div>
 </details>
 
-
 <!--en-->
 ## What the satisfaction graph assigns
 <!--zh-->
@@ -1275,7 +1240,6 @@ constants indexed by the members of the underlying set `fst Bs`.
 <!--ja-->
 次に、充足関係グラフが実際の論理式の鍵で何を割り当てるかを調べる。周囲の環境 `γ` を固定し、スロット `B` から台を、`x` と `y` から鍵と値の候補を受け取る。略記 `Bs = lookup B γ` により、以下の証明はこの三つのスロットについて一様に述べられる。ここで扱う論理式の定数は、台集合 `fst Bs` の要素によって添字づけられる。
 <!--/-->
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
@@ -1379,7 +1343,6 @@ witness to `graphAt-in`.
 <!--/-->
 
 ```agda
-
   graphAt-value : ∀ {m} (ψ : Formula ⟪ fst Bs ⟫ m)
                 → fst (lookup x γ) ≡ fst (keyS Bs ψ)
                 → fst (lookup y γ) ≡ fst (Sat Bs (mapFo (asConst Bs) ψ))
@@ -1533,7 +1496,6 @@ the graph is the satisfaction set of the translated formula.
 </div>
 </details>
 
-
 <!--en-->
 ## A name, described at slots
 <!--zh-->
@@ -1638,7 +1600,6 @@ the dependencies of each later condition on the earlier choices.
 <!--ja-->
 `DenoteOf z` は、`DenoteBody` の四層の存在量化に対応するメタ言語の中身である。拡張環境 `c`、その定義域の候補 `k`、論理式の鍵、グラフの値 `v` と、それらを結ぶすべての条件を記録する。これらを一つの依存対にまとめることで、対象言語の論理式を組み立てるのに必要な証人を明示しながら、後の条件が先に選んだ値に依存することも保たれる。
 <!--/-->
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
@@ -1760,7 +1721,6 @@ propositional truncation.
 </div>
 </details>
 
-
 <!--en-->
 `NameAt-in` takes five inputs. The first three establish the fixed conjuncts:
 the skeleton is parameter-free at the stated arity, the arity lies in the
@@ -1775,11 +1735,9 @@ explicit `DenoteOf z` into `z ∈ d`.
 `NameAt-in` は五つの入力を取る。最初の三つは固定された連言を示す。すなわち、骨格が指定されたアリティで無パラメータであること、アリティがモデルの自然数の集合に属すること、パラメータのグラフが台の上の環境であることである。残る二つは、表示を特徴づけるための点ごとの二方向を与える。一方は `z ∈ d` から `z ∈ B` と明示的な `DenoteOf z` を返し、他方は `z ∈ B` と明示的な `DenoteOf z` から `z ∈ d` を導く。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-
 module _ {n : ℕ} (B C C₀ s a e d : Fin n) (γ : S ^ n) where
 ```
 </summary>
@@ -1838,7 +1796,6 @@ whole name formula.
 ```
 </div>
 </details>
-
 
 <!--en-->
 ## The order, with no recursion of its own
@@ -1984,7 +1941,6 @@ shifted past five binders.
 <!--ja-->
 `LexAt` の読みを繰り返し使える形で証明するため、一致を述べる存在量化子の下にある本体を取り出して名前を付ける。先行する位置 `j` で、`Body` は同じ値 `x` が二つの適用をともに満たすこと、すなわち二つの環境グラフがともに `j` で値 `x` をもつことを要求する。拡張された割り当てには `x`、`j`、`v`、`u`、`i` の五項が新しく並ぶので、周囲の環境スロットへの参照は五つの束縛子を越えて移される。
 <!--/-->
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
@@ -2195,7 +2151,6 @@ same conjunction, with `unpack` supplying its bounded-universal component.
 <!--/-->
 
 ```agda
-
   LexAt-in : Differs → ⟨ γ ⊨ LexAt P a e₁ e₂ ⟩
   LexAt-in (i , (u , (v , (hi , (h₁ , (h₂ , (hp , hj)))))))
     = ∣ i , (hi , ∣ u , ∣ v
@@ -2239,7 +2194,6 @@ chosen outside those local scopes.
 <!--/-->
 
 ```agda
-
   LexAt-out : ⟨ γ ⊨ LexAt P a e₁ e₂ ⟩ → ∥ Differs ∥₁
   LexAt-out = rec₁ squash₁ atIndex
     where
@@ -2345,7 +2299,6 @@ index or values.
 </div>
 </details>
 
-
 <!--en-->
 ## Reading the comparison, and one step of the family
 <!--zh-->
@@ -2368,7 +2321,6 @@ truncation.
 <!--ja-->
 メタレベルの中身 `Below` は、三つの比較の鍵を `≺At` と同じ優先順位で並べる。外側の直和は、骨格の符号からなる順序対 `(s₁,s₂)` がスロット `R` の関係に属すか、または符号が等しく、後の鍵が比較を決めることを表す。この直和の要素は、どの枝に入るかを明示してその証拠を運ぶが、任意のスロットの値について枝を判定できると主張する定義ではない。この区別が必要なのは、対象言語の選言が命題的切り詰めによって解釈されるからである。
 <!--/-->
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
@@ -2544,7 +2496,6 @@ truncation.
 </div>
 </details>
 
-
 <!--en-->
 To describe the comparison of two least names, the body of the step needs six
 fresh slots. The first three indices are fixed here: `s6a`, `a6a`, and `e6a`
@@ -2667,7 +2618,6 @@ positions; the mathematical conditions on the witnesses will be supplied by
 <!--/-->
 
 ```agda
-
 ∃₆ : ∀ {n} → Formula S (suc (suc (suc (suc (suc (suc n)))))) → Formula S n
 ∃₆ φ = ∃̇ (∃̇ (∃̇ (∃̇ (∃̇ (∃̇ φ)))))
 ```
@@ -2685,7 +2635,6 @@ witnesses, the satisfaction environment lists them in reverse order as
 <!--ja-->
 本体 `φ` と環境 `γ` に対して、`Six` は六つの存在量化子を導入するための、切り詰められていないデータを記録する。それは六つの証人 `s₁,k₁,p₁,s₂,k₂,p₂` と、`φ` の充足関係である。`k` と `p` という文字は、後にそれぞれアリティの数項とパラメータ環境として使われることを先取りしている。この一般的な定義の段階では、いずれも台 `S` の要素にすぎない。束縛子は新しい証人を順に環境の先頭へ加えるため、充足関係の環境では順序が反転し、元の `γ` の前に `p₂,k₂,s₂,p₁,k₁,s₁` と並ぶ。
 <!--/-->
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
@@ -2717,7 +2666,6 @@ of `Six`.
 <!--/-->
 
 ```agda
-
   ∃₆-in : Six → ⟨ γ ⊨ ∃₆ φ ⟩
   ∃₆-in (s₁ , (k₁ , (p₁ , (s₂ , (k₂ , (p₂ , h)))))) =
     ∣ s₁ , ∣ k₁ , ∣ p₁ , ∣ s₂ , ∣ k₂ , ∣ p₂ , h ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁
@@ -2764,7 +2712,6 @@ six truncations.
 ```
 </div>
 </details>
-
 
 <!--en-->
 The concrete body places three conditions on the two triples selected by the
@@ -2841,7 +2788,6 @@ six-binder step formula.
 スロットと環境を固定すると、`StepOf` は一般的な型 `Six` を `StepBody` に特殊化する。したがってその要素は、台の六つの明示的な要素と、それらが逆順に拡張された環境で二つの最小の名前の条件および名前の比較を満たすことの証明を含む。この切り詰められていない中身に名前を付けることで、`StepAt` が表す命題との違いも明確になる。続く導入の読みは `StepOf` を直接使えるが、外向きの読みが返せるのは `∥ StepOf ∥₁` だけである。これが六つの束縛子をもつステップの論理式における証人の境界である。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -2893,7 +2839,6 @@ quantification.
 </div>
 </details>
 
-
 <!--en-->
 ## Against the names the meta-language built
 <!--zh-->
@@ -2915,7 +2860,6 @@ equipped with such an order on its carrier.
 論理式を意図したメタレベルの関係と比較するため、構成可能集合 `A` と、その台 `⟪ A ⟫` 上の狭義整列順序 `w` を固定する。`A` 上の名前の各パラメータはこの台から取られるので、`w` がパラメータ列の比較に必要な順序を正確に与える。以下の妥当性はこれらのデータに相対的であり、その台にこのような順序を備えた任意の構成可能集合に適用できる。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -2925,8 +2869,7 @@ module Adequacy (A : V ℓ) (pA : ⟨ isL A ⟩) (w : SWO ⟪ A ⟫) where
 <div class="submodule-fold-content">
 
 ```agda
-  private
-    module NM = Naming A w
+  private module NM = Naming A w
 ```
 
 <!--en-->
@@ -3150,7 +3093,6 @@ constructed here.
 最後に、モデル内の二つの関係集合がそれぞれ何を表すべきかを定める。符号について、`Rrep` は `u` と `v` の順序対が `Rs` に属すことを `u ≺ˡ v` として読み、`Rfill` はこの比較からその所属を証明する。パラメータについても、`Prep` と `Pfill` が、二つの `ix` 像からなる順序対の `Ps` への所属と `u ≺ₚ v` の間の両方向を与える。これら四つの表示則は仮定である。この仮定の下で、対応する表示をもつ任意の二つの構成可能な関係集合について三つの鍵の論理式は妥当になる。どちらの関係もここでは構成しない。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -3163,8 +3105,6 @@ constructed here.
 ```
 </summary>
 <div class="submodule-fold-content">
-
-
 
 <!--en-->
 To apply the four representation laws to a particular parameter comparison,
@@ -3179,8 +3119,6 @@ between the explicit first difference `Lex` and the graph-based record
 <!--ja-->
 四つの表示則を具体的なパラメータ比較に適用するため、二つの名前と、そのデータを対象言語で読むスロットを固定する。この局所的な議論を支える同一視は五つある。パラメータ関係を定めるもの、第一のアリティを定めるもの、二つのアリティを等しくするもの、そして二つのパラメータ環境をそれぞれ定めるものである。これらの仮定のもとで、明示的な最初の相違 `Lex` とグラフによる記録 `Differs` を双方向に翻訳する。
 <!--/-->
-
-
 
 <!--en-->
 The first four identifications establish the common frame. The slot `P` holds
@@ -3916,7 +3854,6 @@ supplies the first branch of the naming comparison.
 <!--/-->
 
 ```agda
-
       order-out : ⟨ γ ⊨ ≺At R P s₁ a₁ e₁ s₂ a₂ e₂ ⟩ → ∥ t₁ ≺ₙ t₂ ∥₁
       order-out h = rec₁ squash₁ read (≺At-out R P s₁ a₁ e₁ s₂ a₂ e₂ γ h)
         where

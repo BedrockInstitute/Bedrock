@@ -20,13 +20,15 @@ import Data.Bits (xor)
 import qualified Data.ByteString as BS
 import qualified Data.ByteString.Lazy.Char8 as LBS
 import qualified Data.Map.Strict as Map
+import Data.Monoid (Any(..))
 import Data.Word (Word32, Word64)
 import Numeric (showHex)
 import System.Environment (lookupEnv)
 import System.IO
 import System.IO.Unsafe (unsafePerformIO)
 
-import Agda.Syntax.Internal (Type)
+import Agda.Syntax.Internal (Type, Term(Dummy))
+import Agda.Syntax.Internal.Generic (foldTerm)
 import Agda.Syntax.Position
 import Agda.TypeChecking.Monad (TCM, Closure, buildClosure, enterClosure)
 import Agda.TypeChecking.Pretty (prettyTCM)
@@ -99,6 +101,11 @@ recordType kind value type_ = case rangeToIntervalWithFile $ continuous $ getRan
       sink <- liftIO getTraceSink
       case sink of
         TraceDisabled -> pure ()
+        -- Module applications check their telescope with a dummy result type.
+        -- Neither a complete nor a partial module application is a term with
+        -- that type. Do not queue its placeholder (including one under a Pi),
+        -- or reserve the key against a later genuine type judgement.
+        TraceSink _ _ | getAny (foldTerm isDummy type_) -> pure ()
         TraceSink _ _ -> do
           let path = filePath (rangeFilePath source)
           hash <- liftIO $ sourceHash path
@@ -108,6 +115,10 @@ recordType kind value type_ = case rangeToIntervalWithFile $ continuous $ getRan
           if written || queued then pure () else do
             closure <- buildClosure type_
             liftIO $ modifyMVar_ pendingTypes $ pure . Map.insert key (PendingType key hash closure)
+
+isDummy :: Term -> Any
+isDummy Dummy{} = Any True
+isDummy _       = Any False
 
 traceCheckedType :: HasRange a => String -> a -> Type -> TCM b -> TCM b
 traceCheckedType = recordCheckedType

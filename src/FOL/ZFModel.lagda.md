@@ -1,28 +1,18 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # Models of ZF and ZFC
-
-A bare structure becomes a model of set theory by supplying witnesses for the ZF axioms. This chapter develops that road in stages: it says what it means for a set to realize a class, proves realizers unique from an explicit extensionality argument, introduces a description operator that reads a set back off its unique existence, and assembles the axioms into a record. It closes by extending a ZF model to ZFC with the axiom of choice.
-
-Nothing in a bare structure yet deserves the name set theory. Its membership relation need not admit an empty set, need not pair two elements, and need not gather the subsets of anything. What a universe of sets must provide is exactly what the **axioms of ZF** say, and this chapter states them. A **model of ZF** is a structure whose fields supply the axioms, so "`𝒮` satisfies ZF" means precisely that such a witness exists at `𝒮`.
-
-The setting is fixed once here: equality and membership in `𝒮` take values in `hProp ℓ`, so every such assertion is a proposition, and the module runs entirely at one universe level `ℓ` with its axioms living in `Type (ℓ-suc ℓ)`.
 <!--zh-->
 # ZF 与 ZFC 的模型
-
-一个裸结构通过为 ZF 公理提供见证而成为集合论模型。本章分几步走完这条路：先说明集合何时实现一个类，再由显式的外延性论证证明实现者的唯一性，引入一个从唯一存在读出集合的摹状词算子，然后把公理汇成一个 record。最后加入选择公理，把 ZF 模型扩展为 ZFC 模型。
-
-裸结构中还没有任何东西配得上「集合论」之名。它的成员关系未必容纳空集，未必能配对两个元素，也未必能聚出子集。一个集合宇宙必须提供什么，正是 **ZF 公理**所陈述的内容，本章把它们一一写出。**ZF 模型**是其字段供给这些公理的结构，因此「`𝒮` 满足 ZF」恰是说：这样的见证在 `𝒮` 处存在。
-
-设定在此一次确定：`𝒮` 的等词与成员关系取值于 `hProp ℓ`，所以每条这样的断言都是命题；整个模块在同一个宇宙层级 `ℓ` 上运行，而它的公理住在 `Type (ℓ-suc ℓ)` 中。
 <!--ja-->
 # ZF と ZFC のモデル
-
-公理を持たない構造は、ZF の各公理の証拠を与えることで集合論のモデルになる。本章ではこの道を段階を追って進める。まず集合がいつクラスを実現するかを定め、明示的な外延性の議論から実現者の一意性を証明し、一意存在から集合を読み出す確定記述の演算子を導入し、公理を record にまとめる。最後に選択公理を加えて、ZF モデルを ZFC モデルへ拡張する。
-
-裸の構造には、集合論の名に値するものはまだ何もない。その所属関係が空集合を許すとは限らず、二つの要素を対にできるとも、何かの部分集合を集められるとも限らない。集合の宇宙が何を提供しなければならないかは、まさに **ZF 公理**の述べる通りであり、本章はそれを書き下ろす。**ZF モデル**とは、そのフィールドが公理を供給する構造であり、「`𝒮` が ZF を満たす」とは、そのような証拠が `𝒮` で存在することを意味するにすぎない。
-
-設定はここで一度だけ確定する。`𝒮` の等号と所属は `hProp ℓ` に値を取るので、その主張はすべて命題である。モジュール全体が同じ宇宙レベル `ℓ` で動作し、公理は `Type (ℓ-suc ℓ)` に住む。
 <!--/-->
+
+```agda
+open import FOL.ZFStructure using ( ZFStructure; module hPropStructure )
+```
 
 <!--en-->
 The module signature says what kind of thing will be studied: `𝒮` is a `ZFStructure` whose truth values are propositions, that is, a structure over `hProp ℓ`. Two consequences follow immediately. First, the structure's equality `≈ˢ` and membership `∈ˢ` return propositions with underlying types, so membership claims in this chapter are things one can inhabit with proofs. Second, the parameter `{ℓ}` is a universe level, and it stays fixed throughout: the carrier `S` lives in `Type ℓ`, while statements quantifying over all subsets of `S`, such as the axioms themselves, will land in `Type (ℓ-suc ℓ)`.
@@ -33,13 +23,37 @@ The module signature says what kind of thing will be studied: `𝒮` is a `ZFStr
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-open import Base.Prelude
-open import FOL.ZFStructure using ( ZFStructure; module hPropStructure )
-
 module FOL.ZFModel {ℓ} (𝒮 : ZFStructure ℓ) where
 ```
+
+```agda
+open import Base.Prelude
+open import FOL.Syntax using ( Formula; var; con; _∈̇_ )
+open import FOL.Semantics 𝒮 using ( module At )
+```
+
+<!--en-->
+
+A bare structure becomes a model of set theory by supplying witnesses for the ZF axioms. This chapter develops that road in stages: it says what it means for a set to realize a class, proves realizers unique from an explicit extensionality argument, introduces a description operator that reads a set back off its unique existence, and assembles the axioms into a record. It closes by extending a ZF model to ZFC with the axiom of choice.
+
+Nothing in a bare structure yet deserves the name set theory. Its membership relation need not admit an empty set, need not pair two elements, and need not gather the subsets of anything. What a universe of sets must provide is exactly what the **axioms of ZF** say, and this chapter states them. A **model of ZF** is a structure whose fields supply the axioms, so "`𝒮` satisfies ZF" means precisely that such a witness exists at `𝒮`.
+
+The setting is fixed once here: equality and membership in `𝒮` take values in `hProp ℓ`, so every such assertion is a proposition, and the module runs entirely at one universe level `ℓ` with its axioms living in `Type (ℓ-suc ℓ)`.
+<!--zh-->
+
+一个裸结构通过为 ZF 公理提供见证而成为集合论模型。本章分几步走完这条路：先说明集合何时实现一个类，再由显式的外延性论证证明实现者的唯一性，引入一个从唯一存在读出集合的摹状词算子，然后把公理汇成一个 record。最后加入选择公理，把 ZF 模型扩展为 ZFC 模型。
+
+裸结构中还没有任何东西配得上「集合论」之名。它的成员关系未必容纳空集，未必能配对两个元素，也未必能聚出子集。一个集合宇宙必须提供什么，正是 **ZF 公理**所陈述的内容，本章把它们一一写出。**ZF 模型**是其字段供给这些公理的结构，因此「`𝒮` 满足 ZF」恰是说：这样的见证在 `𝒮` 处存在。
+
+设定在此一次确定：`𝒮` 的等词与成员关系取值于 `hProp ℓ`，所以每条这样的断言都是命题；整个模块在同一个宇宙层级 `ℓ` 上运行，而它的公理住在 `Type (ℓ-suc ℓ)` 中。
+<!--ja-->
+
+公理を持たない構造は、ZF の各公理の証拠を与えることで集合論のモデルになる。本章ではこの道を段階を追って進める。まず集合がいつクラスを実現するかを定め、明示的な外延性の議論から実現者の一意性を証明し、一意存在から集合を読み出す確定記述の演算子を導入し、公理を record にまとめる。最後に選択公理を加えて、ZF モデルを ZFC モデルへ拡張する。
+
+裸の構造には、集合論の名に値するものはまだ何もない。その所属関係が空集合を許すとは限らず、二つの要素を対にできるとも、何かの部分集合を集められるとも限らない。集合の宇宙が何を提供しなければならないかは、まさに **ZF 公理**の述べる通りであり、本章はそれを書き下ろす。**ZF モデル**とは、そのフィールドが公理を供給する構造であり、「`𝒮` が ZF を満たす」とは、そのような証拠が `𝒮` で存在することを意味するにすぎない。
+
+設定はここで一度だけ確定する。`𝒮` の等号と所属は `hProp ℓ` に値を取るので、その主張はすべて命題である。モジュール全体が同じ宇宙レベル `ℓ` で動作し、公理は `Type (ℓ-suc ℓ)` に住む。
+<!--/-->
 
 <!--en-->
 The axioms assert facts directly in `hProp`{.Agda}. Their constant interpretation is the canonical one from the semantics chapter: the constant domain is the carrier itself and the interpretation is `id`{.Agda}, so a constant appearing in a formula simply *is* the set it names.
@@ -58,8 +72,6 @@ The working vocabulary for the axioms is assembled here. The syntax chapter supp
 <!--/-->
 
 ```agda
-open import FOL.Syntax using ( Formula; var; con; _∈̇_ )
-open import FOL.Semantics 𝒮 using ( module At )
 open import Cubical.Induction.WellFounded using ( WellFounded )
 ```
 
@@ -72,7 +84,6 @@ Two openings put the structure and satisfaction names into scope; the direct `hP
 <!--/-->
 
 ```agda
-
 open hPropStructure 𝒮
 
 open At S id using ( _⊨_ )
@@ -181,7 +192,6 @@ The extracted set would be useless without a way to read back what its members a
 <!--/-->
 
 ```agda
-
 ℩-spec : {Q : S → hProp ℓ} (c : isContr (SetOf Q)) → IsSetOf Q (℩ c)
 ℩-spec c = c .fst .snd
 ```
@@ -222,7 +232,6 @@ The notation `a ⊆ˢ b` will be used inside the power-set axiom and in later ar
 <!--/-->
 
 ```agda
-
 infix 20 _⊆ˢ_
 ```
 
@@ -363,7 +372,6 @@ Separation becomes an operation in the formula itself: `separate a φ` applies `
 <!--/-->
 
 ```agda
-
   separate : (a : S) → Formula S 1 → S
   separate a φ = ℩ (hasSeparation a φ)
 

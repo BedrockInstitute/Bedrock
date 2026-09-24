@@ -1,17 +1,34 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+module FOL.Manipulation.ConstantOccurrences where
+```
+
 <!--en-->
 # Constants by occurrence
+<!--zh-->
+# 逐次出现地处理常元
+<!--ja-->
+# 出現ごとに扱う定数
+<!--/-->
+
+```agda
+open import Base.Prelude
+open import FOL.Syntax using
+  ( Term; con; var; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
+open import FOL.Manipulation.ConstantMapping using ( mapTm; mapFo )
+```
+
+<!--en-->
 
 Parameter abstraction needs a finite list of a formula's constants without assuming decidable equality on the constant domain. This chapter therefore counts and enumerates constant occurrences, preserving repetitions, and develops the index arithmetic that places their replacement variables after the existing free variables.
 
 A formula's constants form an ordered list of occurrences. This chapter counts and enumerates them, supplies the index arithmetic used by abstraction, and handles the boundary case in which the list is empty.
 <!--zh-->
-# 逐次出现地处理常元
 
 参数抽象需要公式常元的有限列表，但不能假设常元域上的相等可判定。因此本章逐次出现地计数并枚举常元，保留重复项，再建立把替代变量放在已有自由变量之后所需的指标算术。
 
 公式的常元组成一列有序的出现。本章计数并枚举这些出现，给出抽象所需的序号算术，并处理该列为空的边界情形。
 <!--ja-->
-# 出現ごとに扱う定数
 
 パラメータ抽象には論理式の定数の有限リストが必要であるが、定数域の等号が判定可能とは仮定できない。そこで本章では重複を残したまま定数の出現を数えて列挙し、その置換変数を既存の自由変数の後ろへ配置する添字計算を整える。
 
@@ -27,15 +44,8 @@ Parameter abstraction rewrites a formula that mentions constants as a parameter-
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-module FOL.Manipulation.ConstantOccurrences where
-
-open import Base.Prelude
 open import Cubical.Data.Nat using ( snotz )
 open import Cubical.Data.Vec using ( _++_ )
-open import FOL.Syntax using
-  ( Term; con; var; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
 ```
 
 <!--en-->
@@ -45,10 +55,6 @@ Concretely, a formula's constants are read off as an ordered list of occurrences
 <!--ja-->
 具体的には、論理式の定数は出現の順序付きリストとして読み出される。定数は項のどこに現れても、またどの量化子の下に現れても、リストの次の位置を占める。したがって数え上げと列挙は並んで進む。数は出現がいくつあるかを記録する自然数であり、列挙はちょうどその長さのベクトルで、論理式が定数に言及した順にそれらを保持する。重複は解消されずにそのまま残るので、定数同士の比較は一切行われない。章の最後は、出現リストが空である境界の場合である。そこでは論理式が空の定数アルファベットの上で表せることが示される。
 <!--/-->
-
-```agda
-open import FOL.Manipulation.ConstantMapping using ( mapTm; mapFo )
-```
 
 <!--en-->
 ## Counting by occurrence
@@ -268,7 +274,6 @@ The second law covers a parameter with natural index `j : Fin b` into the second
 <!--/-->
 
 ```agda
-
 lookup-padLeft : ∀ {ℓa} {A : Type ℓa} a {b} (p : Vec A a) (q : Vec A b) (j : Fin b)
                → lookup (padLeft a j) (p ++ q) ≡ lookup j q
 lookup-padLeft zero    []      q j = refl
@@ -315,7 +320,6 @@ The boundary question of the occurrence interface is: what does a count of zero 
 出現というインターフェースの境界の問いは、数が零であることは構文に対して何を強制するのか、というものである。この節は、任意の定数型 `K` に対してこの問いに答える。入力は論理式 `φ` と、その出現数が零である証明である。答えが `K` がどの型であるかに依存してはならず、とりわけ `K` 上の判定可能な等号を用いてはならないので、議論は一度だけ展開され、レベル `ℓ` のすべてのそのような `K` に対して一様に成り立つ。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -323,8 +327,6 @@ module ZeroOccurrences {ℓ : Level} (K : Type ℓ) where
 ```
 </summary>
 <div class="submodule-fold-content">
-
-
 
 <!--en-->
 The section formalises the boundary case. Its input is a formula `φ` together with a proof `p : countFo φ ≡ 0`; from `p` the construction first extracts, for each subterm and subformula, a proof that its own count is zero, and on that basis rebuilds the same syntax over the empty constant alphabet. The map `eraseTm`{.Agda} and `erase`{.Agda} go from `K` to `⊥*`{.Agda}, and the maps `eraseTm-inv`{.Agda} and `erase-inv`{.Agda} show that relabelling along `⊥*-rec`{.Agda}, the eliminator that reads a constant out of the empty type, returns the original term or formula as a path. Together they say that over `K`, the formulas with no constant occurrences are exactly the images of parameter-free formulas, without any decidability assumption on `K`.
@@ -410,7 +412,6 @@ The round trip is what makes the construction more than a translation: mapping b
 <!--/-->
 
 ```agda
-
   eraseTm-inv : {n : ℕ} (t : Term K n) (p : countTm t ≡ 0)
               → mapTm ⊥*-rec (eraseTm t p) ≡ t
   eraseTm-inv (con a) p = ⊥₀-rec (snotz p)
@@ -482,7 +483,6 @@ The bounded quantifiers close the induction, mixing a term and a formula just as
 ```
 </div>
 </details>
-
 
 <!--en-->
 ## Recap

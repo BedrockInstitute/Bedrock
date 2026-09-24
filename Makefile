@@ -6,7 +6,7 @@
 #   make typecheck-cold-parallel  build cold interfaces with AGDA_JOBS workers
 #   make typecheck-ci  use the cache, or parallelize a cold CI check
 #   make lint        run source and reading-order gates over the whole tree
-#   make milestone-lint  verify every source definition reaches Milestones
+#   make milestone-lint  verify every source definition reaches Origin
 #   make test        run the gate unit tests
 #   make hooks       install scripts/git-hooks into .git/hooks
 #   make html        one Agda traversal producing interfaces, HTML and type data
@@ -38,11 +38,11 @@ export AGDA_DIR
 # at most, so one run gets 8 GB. Override per run: GHCRTS="-M12g" make typecheck.
 export GHCRTS ?= -A64m -I0 -M8g
 
-AGDA_ROOT  := src/Milestones.lagda.md
+AGDA_ROOT  := src/Origin.lagda.md
 SITE_IFACES := _build/2.8.0/agda/src
 TYPECHECK_ROOT := _build/typecheck
 TYPECHECK_LIB := $(TYPECHECK_ROOT)/bedrock.agda-lib
-TYPECHECK_STAMP := $(TYPECHECK_ROOT)/_build/2.8.0/agda/src/Milestones.agdai
+TYPECHECK_STAMP := $(TYPECHECK_ROOT)/_build/2.8.0/agda/src/Origin.agdai
 HTML_DIR   := _build/html
 AGDA_TRACE := _build/bedrock-agda-types.jsonl
 AGDA_STAMP := $(HTML_DIR)/.bedrock-checked
@@ -107,7 +107,7 @@ typecheck-stage: $(TYPECHECK_LIB) $(TYPECHECK_SOURCES)
 typecheck: $(BEDROCK_AGDA) typecheck-stage
 ifeq ($(LOCAL_PARALLEL),1)
 	$(PY) $(AGDA_PARALLEL) --project-root $(TYPECHECK_ROOT) \
-		--agda $(abspath $(AGDA)) --root Milestones --jobs $(AGDA_JOBS) \
+		--agda $(abspath $(AGDA)) --root Origin --jobs $(AGDA_JOBS) \
 		--incremental --interface-root $(TYPECHECK_ROOT)/_build/2.8.0/agda/src
 else
 	cd $(TYPECHECK_ROOT) && $(abspath $(AGDA)) $(AGDA_ROOT)
@@ -131,7 +131,7 @@ typecheck-cold-parallel: $(BEDROCK_AGDA) typecheck-stage $(AGDA_PARALLEL)
 	@echo "Cold parallel Agda typecheck ($(AGDA_JOBS) workers; cubical interfaces retained)"
 	/usr/bin/time -p -o $(abspath $(TYPECHECK_PARALLEL_TIME)) \
 		$(PYTHON) $(AGDA_PARALLEL) --project-root $(TYPECHECK_ROOT) \
-		--agda $(abspath $(AGDA)) --root Milestones --jobs $(AGDA_JOBS)
+		--agda $(abspath $(AGDA)) --root Origin --jobs $(AGDA_JOBS)
 	@cat $(TYPECHECK_PARALLEL_TIME)
 
 # CI restores this target's isolated interface tree. Preserve the cheap normal
@@ -153,7 +153,7 @@ $(AGDA_STAMP): $(BEDROCK_AGDA) bedrock.agda-lib $(AGDA_SOURCES)
 	fi
 ifeq ($(LOCAL_PARALLEL),1)
 	$(PY) $(AGDA_PARALLEL) --project-root . --agda $(abspath $(AGDA)) \
-		--root Milestones --jobs $(AGDA_JOBS) --incremental \
+		--root Origin --jobs $(AGDA_JOBS) --incremental \
 		--interface-root $(SITE_IFACES) --trace-out $(AGDA_TRACE) --html-dir $(HTML_DIR)
 else
 	BEDROCK_AGDA_TYPES="$(abspath $(AGDA_TRACE))" \
@@ -253,7 +253,7 @@ html-cold-parallel: $(BEDROCK_AGDA) bedrock.agda-lib $(AGDA_SOURCES) $(AGDA_PARA
 	@echo "Cold parallel Agda + HTML + type-trace build ($(AGDA_JOBS) workers)"
 	/usr/bin/time -p -o $(abspath $(HTML_PARALLEL_TIME)) \
 		$(PYTHON) $(AGDA_PARALLEL) --project-root . \
-		--agda $(abspath $(AGDA)) --root Milestones --jobs $(AGDA_JOBS) \
+		--agda $(abspath $(AGDA)) --root Origin --jobs $(AGDA_JOBS) \
 		--trace-out $(AGDA_TRACE) --html-dir $(HTML_DIR)
 	@cat $(HTML_PARALLEL_TIME)
 	@touch $(AGDA_STAMP)

@@ -1,27 +1,13 @@
-<!--en-->
-# An ordinal L-cardinal above every L-cardinal
-
-Given an infinite cardinal of `L`, this chapter constructs a strictly larger cardinal, represented by an ordinal of `L`. The construction builds one explicit candidate above the given cardinal; it does not select the least such candidate, which is the task of the later assembly.
-<!--zh-->
-# 任意 L 基数之上的序数 L 基数
-
-给定 `L` 中的一个无限基数，本章构造一个严格更大的基数，并由 `L` 中的序数表示。该构造只给出给定基数之上的一个显式候选；并不选取最小候选，那是后续装配工作的任务。
-<!--ja-->
-# 任意の L 基数より大きい順序数 L 基数
-
-`L` の無限基数が与えられたとき、この章は真に大きい基数を構成し、それを `L` の順序数で表す。構成は、与えられた基数より上の一つの明示的な候補を作るだけで、最小の候補を選ぶのは後の組み立ての仕事である。
-<!--/-->
-
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
 ```
 
 <!--en-->
-The base library is opened, and excluded middle is received at the raised level and also lowered to the inner level, where a Bool-valued relation will be decided by it.
+# An ordinal L-cardinal above every L-cardinal
 <!--zh-->
-打开基础库，并在抬升层级取得排中律，再把它降到内层。后文有一条布尔值关系需要由它判定。
+# 任意 L 基数之上的序数 L 基数
 <!--ja-->
-基礎ライブラリを開き、上げられたレベルで排中律を受け取り、さらに内側のレベルへ降ろす。後で、ブール値の関係をこれで判定するためである。
+# 任意の L 基数より大きい順序数 L 基数
 <!--/-->
 
 ```agda
@@ -41,6 +27,42 @@ The argument is parameterized by excluded middle one universe level above the se
 module L.CardinalAbove {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-irrefl; regularityV )
+open import V.Presentation {ℓ} using ( member; fiber; ↪-inj )
+open import V.Model {ℓ} using ( self∈sucV )
+open import L.Constructible {ℓ}
+  using ( 𝒮ʟ; IsOrd; Lset→isL; isTransV; isPropIsTransV )
+open import L.Ordinal {ℓ} using ( mem-ord; suc-ord; boundingOrd )
+open import L.Ordinal.Stages {ℓ} lem using ( ord∈Lset-suc )
+open import L.Ordinal.Linear {ℓ} lem using ( Tri; ord-tri )
+open import L.Cardinal {ℓ} lem using ( IsCardinalL; _↪_ )
+open import L.CantorBernstein {ℓ} lem using ( readL )
+open import L.Mostowski {ℓ} using ( module Mostowski )
+```
+
+<!--en-->
+
+Given an infinite cardinal of `L`, this chapter constructs a strictly larger cardinal, represented by an ordinal of `L`. The construction builds one explicit candidate above the given cardinal; it does not select the least such candidate, which is the task of the later assembly.
+<!--zh-->
+
+给定 `L` 中的一个无限基数，本章构造一个严格更大的基数，并由 `L` 中的序数表示。该构造只给出给定基数之上的一个显式候选；并不选取最小候选，那是后续装配工作的任务。
+<!--ja-->
+
+`L` の無限基数が与えられたとき、この章は真に大きい基数を構成し、それを `L` の順序数で表す。構成は、与えられた基数より上の一つの明示的な候補を作るだけで、最小の候補を選ぶのは後の組み立ての仕事である。
+<!--/-->
+
+<!--en-->
+The base library is opened, and excluded middle is received at the raised level and also lowered to the inner level, where a Bool-valued relation will be decided by it.
+<!--zh-->
+打开基础库，并在抬升层级取得排中律，再把它降到内层。后文有一条布尔值关系需要由它判定。
+<!--ja-->
+基礎ライブラリを開き、上げられたレベルで排中律を受け取り、さらに内側のレベルへ降ろす。後で、ブール値の関係をこれで判定するためである。
+<!--/-->
+
+
+
 <!--en-->
 Two properties of the ambient cumulative hierarchy drive the later contradictions. Membership is well-founded, and no set is a member of itself. A presentation supplies indices for a set's members, while `self∈sucV` places a set in its ordinal successor.
 <!--zh-->
@@ -48,14 +70,6 @@ Two properties of the ambient cumulative hierarchy drive the later contradiction
 <!--ja-->
 周囲の累積階層における二つの性質が、後の背理法を支える。所属は整礎的であり、どの集合も自分自身には属しない。提示は集合の要素に添字を与え、`self∈sucV` は集合をその順序数としての後続に入れる。
 <!--/-->
-
-```agda
-open import FOL.ZFStructure using ( module hPropStructure )
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-irrefl; regularityV )
-open import V.Presentation {ℓ} using ( member; fiber; ↪-inj )
-open import V.Model {ℓ} using ( self∈sucV )
-open import L.Constructible {ℓ}
-```
 
 <!--en-->
 The constructible side supplies its carrier, transitive constructibility, the ordinal predicate, the stage reading of constructible sets, ordinal facts, and the internal cardinality predicate with its injections.
@@ -65,14 +79,6 @@ The constructible side supplies its carrier, transitive constructibility, the or
 構成可能な側は、その台、推移的な構成可能性、順序数の述語、構成可能な集合の段階の読み、順序数の事実、そして内部の基数性の述語とその単射を供給する。
 <!--/-->
 
-```agda
-  using ( 𝒮ʟ; IsOrd; Lset→isL; isTransV; isPropIsTransV )
-open import L.Ordinal {ℓ} using ( mem-ord; suc-ord; boundingOrd )
-open import L.Ordinal.Stages {ℓ} lem using ( ord∈Lset-suc )
-open import L.Ordinal.Linear {ℓ} lem using ( Tri; ord-tri )
-open import L.Cardinal {ℓ} lem using ( IsCardinalL; _↪_ )
-```
-
 <!--en-->
 Two bridges will connect the construction. The reading lemma turns a coded injection inside `L` into an actual injection between presentations, and the Mostowski development collapses a transitive well-founded relation to sets. These bridges let an ambient Hartogs argument yield an internal cardinal statement.
 <!--zh-->
@@ -80,11 +86,6 @@ Two bridges will connect the construction. The reading lemma turns a coded injec
 <!--ja-->
 二つの橋渡しが構成を結ぶ。読み取り補題は `L` 内部の符号化された単射を提示の間の実際の単射に変え、Mostowski 崩壊は推移的で整礎的な関係を集合へ移す。これらにより、周囲での Hartogs の議論から内部の基数に関する主張が得られる。
 <!--/-->
-
-```agda
-open import L.CantorBernstein {ℓ} lem using ( readL )
-open import L.Mostowski {ℓ} using ( module Mostowski )
-```
 
 <!--en-->
 The hierarchy contributes membership bridges, presentations, embedding machinery, the separation construction with its axiom, and the union operation.
@@ -139,8 +140,6 @@ The empty type refutes impossible cases, and truncated existence is the form in 
 空の型は不可能な場合を反証し、切り詰められた存在が、この章の主な結果の述べ方である。
 <!--/-->
 
-
-
 <!--en-->
 The ambient and constructible structures are opened as modules, since both are used throughout.
 <!--zh-->
@@ -150,7 +149,6 @@ The ambient and constructible structures are opened as modules, since both are u
 <!--/-->
 
 ```agda
-
 module SV = hPropStructure 𝒮ᵥ
 module SL = hPropStructure 𝒮ʟ
 ```
@@ -321,7 +319,6 @@ Fix a set `a` and an ordinal bound `β`. This is an ambient Hartogs construction
 集合 `a` と順序数の上界 `β` を固定する。これは `V ℓ` における周囲の Hartogs 構成であり、内部モデル `L` の分出公理図式を使うものではない。提示から `a` の提示への単射をもつ要素を `β` から分出する。得られた集合は、独立に順序数だと示されるまでは周囲の議論にとどまり、その後で初めて、すべての順序数が構成可能であるという定理によって `L` に入る。後の適用では `a` も順序数であるが、このモジュールの内部で必要なのは上界の順序数性だけである。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -329,8 +326,6 @@ module Sep (a : SV.S) (β : SV.S) (oβ : IsOrd β) where
 ```
 </summary>
 <div class="submodule-fold-content">
-
-
 
 <!--en-->
 The separating predicate asks whether a set embeds into `a`, and is stated as a truncated existence. Since it lives in `hProp ℓ` by construction, it can be handed to separation directly, with no resizing step in between.
@@ -505,7 +500,6 @@ Trichotomy leaves only `θ ∈ β`. That case gives the result directly. If `θ 
 </div>
 </details>
 
-
 <!--en-->
 ## Reducing to an ambient bound
 <!--zh-->
@@ -679,7 +673,6 @@ Hartogs 构造在任意环境集合 `a` 上组织成一个模块。它不要求 
 Hartogs の構成は、任意の周囲の集合 `a` を引数とするモジュールにまとめられる。`a` 自身が順序数であると仮定せずに、`a` へ単射できない順序数を作る。`a` の順序数性が必要になるのは、後で非単射性を厳密な比較 `a ∈ γ` へ変えるときだけである。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -687,8 +680,6 @@ module Hartogs (a : SV.S) where
 ```
 </summary>
 <div class="submodule-fold-content">
-
-
 
 <!--en-->
 A relation on the presentation of `a` is a Boolean-valued function of two arguments.
@@ -739,7 +730,6 @@ Each well-founded Boolean relation is given its own collapse module.
 整礎的なブールの関係のそれぞれに、固有の崩壊のモジュールが用意される。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -747,8 +737,6 @@ Each well-founded Boolean relation is given its own collapse module.
 ```
 </summary>
 <div class="submodule-fold-content">
-
-
 
 <!--en-->
 Fix one such relation `w`. Its first component is the Boolean relation `R`; the remaining components certify transitivity and well-foundedness. The collapse argument keeps these roles separate because the relation determines membership, while the proofs justify recursion and ordinal transitivity.
@@ -814,7 +802,6 @@ The lifted relation now meets the two hypotheses of the Mostowski construction: 
 <!--/-->
 
 ```agda
-
     open Mostowski ⟪ a ⟫ _≺_ ≺-wf ≺-trans public
       using ( col; col-eq; col-in; col-out; col-ord )
 ```
@@ -893,7 +880,6 @@ The truncated decomposition names an index `r` whose collapse is `y` and proves 
 ```
 </div>
 </details>
-
 
 <!--en-->
 The Hartogs candidate `μ` is the union of the successors of all collapse images arising from `WFR`. Including each successor, rather than only the image itself, ensures that every `Col.ot w` is a strict member of the common bound. This construction bounds all such images without claiming that any of them is a uniquely determined order type.
@@ -982,7 +968,6 @@ Assume for contradiction an injection `f : ⟪ μ ⟫ ↪ ⟪ a ⟫`. The next c
 矛盾を導くため、単射 `f : ⟪ μ ⟫ ↪ ⟪ a ⟫` があると仮定する。以下では、`μ` の提示された要素間の所属をこの単射の像へ移し、すでに族 `WFR` に含まれる関係を作る。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -990,8 +975,6 @@ Assume for contradiction an injection `f : ⟪ μ ⟫ ↪ ⟪ a ⟫`. The next c
 ```
 </summary>
 <div class="submodule-fold-content">
-
-
 
 <!--en-->
 The underlying function of the embedding is named once for the subsequent constructions.
@@ -1570,7 +1553,6 @@ By construction of the bound, `ot` is a member of `μ`. Applying the inclusion `
 </div>
 </details>
 
-
 <!--en-->
 The local contradiction was proved under an arbitrary injection `f : ⟪ μ ⟫ ↪ ⟪ a ⟫`. The theorem `noInj` now exposes that conclusion at the boundary of the Hartogs module: every proposed injection supplies the pullback relation above and therefore leads to `⊥*`.
 <!--zh-->
@@ -1585,7 +1567,6 @@ The local contradiction was proved under an arbitrary injection `f : ⟪ μ ⟫ 
 ```
 </div>
 </details>
-
 
 <!--en-->
 ## The larger L-cardinal

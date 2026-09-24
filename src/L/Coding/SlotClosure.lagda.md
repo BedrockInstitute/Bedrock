@@ -1,3 +1,7 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # Closing a code slot under its seven constructors
 <!--zh-->
@@ -5,6 +9,38 @@
 <!--ja-->
 # コードスロットを七つの構成子について閉じる
 <!--/-->
+
+```agda
+open import Base.Prelude
+open import Base.Classical using ( LEM )
+```
+
+<!--en-->
+Fix a universe level `ℓ`{.Agda} and assume `lem : LEM (ℓ-suc ℓ)`{.Agda}. This hypothesis supplies a decision for each proposition at that level; it remains an explicit parameter of the constructions below.
+<!--zh-->
+固定宇宙层级 `ℓ`{.Agda}，并假设 `lem : LEM (ℓ-suc ℓ)`{.Agda}。这个假设为相应层级的每个命题提供判定，并始终作为下文构造的显式参数。
+<!--ja-->
+宇宙レベル `ℓ`{.Agda} を固定し、`lem : LEM (ℓ-suc ℓ)`{.Agda} を仮定する。この仮定は該当するレベルの各命題に判定を与え、以下の構成の明示的なパラメータとして保たれる。
+<!--/-->
+
+```agda
+module L.Coding.SlotClosure {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+```
+
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax
+  using ( Term; Formula; _∧̇_; _∨̇_; _⇒̇_; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
+import FOL.Absoluteness
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Coding {ℓ} using ( pr; pr-inj )
+open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
+open import L.Coding.Model {ℓ} using ( module LCode; prʟ; prʟ-fst )
+open import L.Coding.Closure {ℓ} using ( closedAt; binSameClosed-in; unSameClosed-in; unSuccClosed-in; binSuccClosed-in; binShapeAt; unShapeAt; bothSameAt; oneSameAt; oneSuccAt; succSndAt )
+open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
+open import L.Coding.SatisfactionTable {ℓ} lem
+  using ( keyʟ; keyʟ-shape; slot; satTable; slot-inv; module Parts )
+```
 
 <!--en-->
 Inside `L`, every formula is coded as an element of the carrier, and every formula has a key: the ordered pair of its arity numeral first and its code second. A slot at a bound collects the keys of a formula together with the keys of all its subformulas, so the slot is a tree of keys, and the bound is only an interface parameter of the lemmas about it. This chapter proves that the slot is closed: whenever the key of a compound formula lies in the slot, the keys of its immediate subformulas lie there as well, and this for the seven constructors that carry subformulas.
@@ -36,15 +72,6 @@ Three mathematical objects organize the chapter. The key `keyʟ χ`{.Agda} of a 
 本章は三つの数学的対象を軸に進む。アリティ `j` の論理式 `χ` の鍵 `keyʟ χ`{.Agda} は、数項 `j` と `χ` のコードの順序対であり、コードそのものは符号化のモジュールのエンコーディング `LCode.⌜ χ ⌝`{.Agda} である。スロット `slot B φ`{.Agda} は、そのような鍵の集合、すなわち `φ` とその部分論理式の木全体の鍵の集合である。そして `closedAt`{.Agda} は、スロットが七つの構成子、合取・選言・含意・二つの量化子・二つの有界量化子について閉じているという主張である。
 <!--/-->
 
-```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-open import Base.Prelude
-open import Base.Classical using ( LEM )
-
-module L.Coding.SlotClosure {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-```
-
 <!--en-->
 Formulas are those of the object language, and their satisfaction is read in the constructible structure: the satisfaction symbol below always means satisfaction there. The ambient hierarchy supplies the underlying elements of which keys and slots are made.
 <!--zh-->
@@ -52,15 +79,6 @@ Formulas are those of the object language, and their satisfaction is read in the
 <!--ja-->
 論理式は対象言語の論理式であり、その充足は構成可能な構造の中で読まれる。以下の充足の記号は、つねにそこの充足を意味する。周囲の階層は、鍵とスロットを作る底の要素を供給する。
 <!--/-->
-
-```agda
-
-open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax
-  using ( Term; Formula; _∧̇_; _∨̇_; _⇒̇_; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
-import FOL.Absoluteness
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-```
 
 <!--en-->
 Ordered pairs code the keys, with recoverable components, so a key can be taken apart into its arity component and its code component. The constructible structure carries the codes; the coding module defines the encoding `⌜_⌝`{.Agda} of formulas and the pair operation on codes; and the closure module states the seven closure clauses and their introduction forms, shape by shape.
@@ -70,13 +88,6 @@ Ordered pairs code the keys, with recoverable components, so a key can be taken 
 順序対は鍵を符号化し、成分は復元できるので、一つの鍵はアリティの成分とコードの成分に分解できる。構成可能な構造がコードを担い、符号化のモジュールは論理式のエンコーディング `⌜_⌝`{.Agda} とコード上の対の演算を定義する。そして閉包のモジュールは、七つの閉包の場合とその導入の形を、形ごとに述べる。
 <!--/-->
 
-```agda
-open import V.Coding {ℓ} using ( pr; pr-inj )
-open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
-open import L.Coding.Model {ℓ} using ( module LCode; prʟ; prʟ-fst )
-open import L.Coding.Closure {ℓ} using ( closedAt; binSameClosed-in; unSameClosed-in; unSuccClosed-in; binSuccClosed-in; binShapeAt; unShapeAt; bothSameAt; oneSameAt; oneSuccAt; succSndAt )
-```
-
 <!--en-->
 The satisfaction table chapter is the source of the three central objects. It defines the key `keyʟ`{.Agda} of a formula, the shape lemma `keyʟ-shape`{.Agda} that decomposes a formula by its constructor tag, the slot `slot`{.Agda} attached to a formula at a bound, the inversion `slot-inv`{.Agda} that returns a slot member to the formula it is a key of, and the parts lemmas `Parts`{.Agda} on the key tree.
 <!--zh-->
@@ -84,12 +95,6 @@ The satisfaction table chapter is the source of the three central objects. It de
 <!--ja-->
 充足表の章は、三つの中心の対象の出所である。そこでは、論理式の鍵 `keyʟ`{.Agda}、構成子の標識で論理式を分解する形状の補題 `keyʟ-shape`{.Agda}、論理式と上界に付けられたスロット `slot`{.Agda}、スロットの要素をその鍵である論理式へ戻す `slot-inv`{.Agda}、そして鍵の木についての部品の補題 `Parts`{.Agda} が定義される。
 <!--/-->
-
-```agda
-open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
-open import L.Coding.SatisfactionTable {ℓ} lem
-  using ( keyʟ; keyʟ-shape; slot; satTable; slot-inv; module Parts )
-```
 
 <!--en-->
 A slot member can be inverted only under propositional truncation, so every clause eliminates that truncation into a proposition. The binary same-arity case has a conjunction of two membership propositions; each unary or bounded case has one membership proposition.
@@ -100,7 +105,6 @@ A slot member can be inverted only under propositional truncation, so every clau
 <!--/-->
 
 ```agda
-
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( module InfinitySet )
@@ -127,7 +131,6 @@ The carrier of the constructible structure is the type on which every code, key,
 <!--/-->
 
 ```agda
-
 open hPropStructure 𝒮ʟ
 ```
 
@@ -140,7 +143,6 @@ Here `S ^ n`{.Agda} denotes a length-`n` environment vector. The relation rename
 <!--/-->
 
 ```agda
-
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
 open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
 ```
@@ -158,7 +160,6 @@ The key tree is governed by the parts lemmas. `Parts.self`{.Agda} says that a fo
 
 鍵の木は部品の補題に支配される。`Parts.self`{.Agda} は、論理式自身の鍵が自分のスロットにあることを言い、`Parts.left`{.Agda}、`Parts.right`{.Agda}、`Parts.only`{.Agda} は、複合論理式のスロットが直接の部分のスロットの鍵を含むことを言う。これは構成子の木に沿った部分木の包含であり、部品の補題と逆にたどる操作によって与えられ、上界の順序や下方の閉じ方から来るものではない。上界 `B` は、これらの補題のインターフェースの引数として渡されるだけである。したがって閉包の場合に必要なのは、読まれた対を部分の鍵として認めることである。以下の二つの補題がちょうどそれを行う。
 <!--/-->
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
@@ -183,7 +184,6 @@ The key computation, stated for a formula `χ` of arity `j`: any pair whose firs
 <!--/-->
 
 ```agda
-
   key≡ : ∀ {j} (χ : Formula S j) (ar p : V ℓ) → # j ≡ ar
        → p ≡ fst LCode.⌜ χ ⌝ → pr ar p ≡ fst (keyʟ χ)
 ```
@@ -212,7 +212,6 @@ The raised form states the same for a formula `χ` of arity `suc j`: the key's f
 <!--/-->
 
 ```agda
-
   keyS≡ : ∀ {j} (χ : Formula S (suc j)) (ar p : V ℓ) → # j ≡ ar
         → p ≡ fst LCode.⌜ χ ⌝ → pr (sucV ar) p ≡ fst (keyʟ χ)
 ```
@@ -246,7 +245,6 @@ The clauses are organized by the shape of the closure each constructor demands. 
 場合の構成は、構成子ごとに要求される閉包の形に従う。証明される本体は四つで、形ごとに一つである。アリティを保つ二項の構成子、アリティを保つ一項の構成子、アリティを上げる一項の構成子、そして項とアリティが一段上がった論理式の対を取る二項の構成子である。同じ本体の中で二つの場合が違うのは、構成子の標識と、どの部分を手渡すかだけであり、どちらも引数である。それぞれの場合は四つの動きで進む。スロットの要素を論理式へ逆にたどり、標識でその構成子を読み、部分の鍵をその論理式自身のスロットへ戻し、全体のスロットへ持ち上げる。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -270,7 +268,6 @@ The recursion whose closure is being proved is indexed by the slot of the fixed 
 <!--/-->
 
 ```agda
-
       Ci : Fin (suc (suc (suc k)))
       Ci = suc (suc zero)
 ```
@@ -284,7 +281,6 @@ The position `Ci` is the index of the slot inside this environment, and every cl
 <!--/-->
 
 ```agda
-
     binSame : (k' : ℕ) (op : ∀ {m} → Formula S m → Formula S m → Formula S m)
             → (∀ {m} (ψ : Formula S m) → LCode.Match k' ψ
                → Σ[ a' ∈ Formula S m ] (Σ[ b' ∈ Formula S m ] (ψ ≡ op a' b')))
@@ -408,7 +404,6 @@ The elimination is fed by the inversion, which is where the inclusion came from.
 <!--/-->
 
 ```agda
-
     andC : ⟨ δ ⊨ binShapeAt Ci 2 (bothSameAt Ci) ⟩
     andC = binSame 2 _∧̇_ (λ _ m → m) (λ _ _ → refl)
              (λ a' b' → Parts.left B keyʟ (a' ∧̇ b') a' b')
@@ -424,7 +419,6 @@ Conjunction is the first instance: the slot of `a' ∧̇ b'` contains the slots'
 <!--/-->
 
 ```agda
-
     orC : ⟨ δ ⊨ binShapeAt Ci 3 (bothSameAt Ci) ⟩
     orC = binSame 3 _∨̇_ (λ _ m → m) (λ _ _ → refl)
             (λ a' b' → Parts.left B keyʟ (a' ∨̇ b') a' b')
@@ -440,7 +434,6 @@ Disjunction is the second instance with the same shape, its own tag and its own 
 <!--/-->
 
 ```agda
-
     impC : ⟨ δ ⊨ binShapeAt Ci 4 (bothSameAt Ci) ⟩
     impC = binSame 4 _⇒̇_ (λ _ m → m) (λ _ _ → refl)
              (λ a' b' → Parts.left B keyʟ (a' ⇒̇ b') a' b')
@@ -456,7 +449,6 @@ Implication is the third: the slot of `a' ⇒̇ b'` contains the slots' keys of 
 <!--/-->
 
 ```agda
-
     unSame : (k' : ℕ) (op : ∀ {m} → Formula S m → Formula S m)
            → (∀ {m} (ψ : Formula S m) → LCode.Match k' ψ
               → Σ[ a' ∈ Formula S m ] (ψ ≡ op a'))
@@ -534,7 +526,6 @@ The fourth move assembles the case at once: the key of `a'` lies in its own slot
 <!--/-->
 
 ```agda
-
     unSucc : (k' : ℕ) (op : ∀ {m} → Formula S (suc m) → Formula S m)
            → (∀ {m} (ψ : Formula S m) → LCode.Match k' ψ
               → Σ[ a' ∈ Formula S (suc m) ] (ψ ≡ op a'))
@@ -612,7 +603,6 @@ The rewriting goes through `keyS≡`{.Agda}: it applies `sucV` to `# m ≡ fst a
 <!--/-->
 
 ```agda
-
     binSucc : (k' : ℕ)
             → (op : ∀ {m} → Term S m → Formula S (suc m) → Formula S m)
             → (∀ {m} (ψ : Formula S m) → LCode.Match k' ψ
@@ -706,7 +696,6 @@ The two quantifiers instantiate the third body. Each supplies its tag, its decom
 <!--/-->
 
 ```agda
-
     exC : ⟨ δ ⊨ unShapeAt Ci 6 (oneSuccAt Ci) ⟩
     exC = unSucc 6 ∃̇_ (λ _ m → m) (λ _ → refl)
             (λ a' → Parts.only B keyʟ (∃̇ a') a')
@@ -721,7 +710,6 @@ The universal quantifier is the second instance of the same body, with tag seven
 <!--/-->
 
 ```agda
-
     allC : ⟨ δ ⊨ unShapeAt Ci 7 (oneSuccAt Ci) ⟩
     allC = unSucc 7 ∀̇_ (λ _ m → m) (λ _ → refl)
              (λ a' → Parts.only B keyʟ (∀̇ a') a')
@@ -736,7 +724,6 @@ The two bounded quantifiers instantiate the fourth body with tags eight and nine
 <!--/-->
 
 ```agda
-
     allInC : ⟨ δ ⊨ binShapeAt Ci 8 (succSndAt Ci) ⟩
     allInC = binSucc 8 ∀̇∈ (λ _ m → m) (λ _ _ → refl)
                (λ t a' → Parts.only B keyʟ (∀̇∈ t a') a')
@@ -751,7 +738,6 @@ The existential bounded quantifier is the last of the seven clauses.
 <!--/-->
 
 ```agda
-
     exInC : ⟨ δ ⊨ binShapeAt Ci 9 (succSndAt Ci) ⟩
     exInC = binSucc 9 ∃̇∈ (λ _ m → m) (λ _ _ → refl)
               (λ t a' → Parts.only B keyʟ (∃̇∈ t a') a')
@@ -766,7 +752,6 @@ The seven clauses assemble into the closure statement `closedAt`: the slot of `�
 <!--/-->
 
 ```agda
-
     slotClosed : ⟨ δ ⊨ closedAt Ci ⟩
     slotClosed = andC , (orC , (impC
                , (exC , (allC , (allInC , exInC)))))

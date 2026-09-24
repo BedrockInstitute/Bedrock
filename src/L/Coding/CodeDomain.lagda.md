@@ -1,27 +1,13 @@
-<!--en-->
-# Describing the closed domain of formula codes
-
-Agda already provides an inductive type of formulas and an external operation that assigns sets as their codes. To reason about syntax inside set theory, however, the model needs a formula in its own language that describes a candidate set of formula keys. This chapter constructs that bounded description: its shape half reads the immediate structure of keys already in the candidate domain, and its closure half generates compound keys from legal constituents.
-<!--zh-->
-# 描述封闭的公式码定义域
-
-Agda 已经给出公式的归纳类型，以及在外部把集合指定为公式码的运算。然而，要在集合论内部推理句法，模型还需要用自身语言中的公式描述一个候选公式键集合。本章构造这份有界描述：形状半边读取候选域中已有键的直接结构，闭包半边则由合法组成部分生成复合键。
-<!--ja-->
-# 閉じた論理式符号の定義域を記述する
-
-Agda にはすでに論理式の帰納型と、集合をその符号として外部で割り当てる演算がある。しかし集合論の内部で構文を扱うには、論理式キーの候補集合をモデル自身の言語で記述する論理式が必要である。本章では、その有界な記述を構成する。形の半分は候補領域にすでにあるキーの直下の構造を読み、閉性の半分は正当な構成要素から複合キーを生成する。
-<!--/-->
-
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
 ```
 
 <!--en-->
-The description will be constructive. It records only bounded membership, pairing, tags, and the immediate constituents of a formula key, so its definition requires no instance of excluded middle.
+# Describing the closed domain of formula codes
 <!--zh-->
-这份描述是构造性的。它只记录有界隶属、配对、标签与公式键的直接组成部分，因此其定义不需要排中律实例。
+# 描述封闭的公式码定义域
 <!--ja-->
-この記述は構成的である。記録するのは有界な所属、対、タグ、および論理式キーの直下の構成要素だけなので、排中律の仮定は必要ない。
+# 閉じた論理式符号の定義域を記述する
 <!--/-->
 
 ```agda
@@ -40,6 +26,45 @@ Fix a universe level. The main parameters introduced below are a candidate code 
 module L.Coding.CodeDomain {ℓ : Level} where
 ```
 
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax using
+  ( Formula; var; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇∈; ∀̇∈ )
+open import FOL.LevyHierarchy using
+  ( checkΔ₀; Δ₀ )
+import FOL.Absoluteness
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
+open import L.Coding.Model {ℓ} using ( prAtL; appAt )
+open import L.Coding.Expressions {ℓ} using ( sucAtL )
+import L.Coding.Expressions {ℓ} as CodingExpressions
+open import L.Coding.Quantification {ℓ} using
+  ( i0; i1; i2; i3; i4; i5; i6; i7; i8; sh
+  ; f0; f1; f2; f3; f4; f5; f6; f7; f8; f9
+  ; sndEx; sndAll; bothEx; bothAll; bigOr )
+```
+
+<!--en-->
+
+Agda already provides an inductive type of formulas and an external operation that assigns sets as their codes. To reason about syntax inside set theory, however, the model needs a formula in its own language that describes a candidate set of formula keys. This chapter constructs that bounded description: its shape half reads the immediate structure of keys already in the candidate domain, and its closure half generates compound keys from legal constituents.
+<!--zh-->
+
+Agda 已经给出公式的归纳类型，以及在外部把集合指定为公式码的运算。然而，要在集合论内部推理句法，模型还需要用自身语言中的公式描述一个候选公式键集合。本章构造这份有界描述：形状半边读取候选域中已有键的直接结构，闭包半边则由合法组成部分生成复合键。
+<!--ja-->
+
+Agda にはすでに論理式の帰納型と、集合をその符号として外部で割り当てる演算がある。しかし集合論の内部で構文を扱うには、論理式キーの候補集合をモデル自身の言語で記述する論理式が必要である。本章では、その有界な記述を構成する。形の半分は候補領域にすでにあるキーの直下の構造を読み、閉性の半分は正当な構成要素から複合キーを生成する。
+<!--/-->
+
+<!--en-->
+The description will be constructive. It records only bounded membership, pairing, tags, and the immediate constituents of a formula key, so its definition requires no instance of excluded middle.
+<!--zh-->
+这份描述是构造性的。它只记录有界隶属、配对、标签与公式键的直接组成部分，因此其定义不需要排中律实例。
+<!--ja-->
+この記述は構成的である。記録するのは有界な所属、対、タグ、および論理式キーの直下の構成要素だけなので、排中律の仮定は必要ない。
+<!--/-->
+
+
+
 <!--en-->
 The target is an object-language formula built from membership, equality, connectives, and bounded quantifiers. Its quantifiers will range only over sets already named in the description or over small containers used to unpack pairs. This is the syntactic reason the final formula can be certified as `Δ₀`.
 <!--zh-->
@@ -48,14 +73,6 @@ The target is an object-language formula built from membership, equality, connec
 目標は、所属、等号、結合子、有界量化子からなる対象言語の論理式である。量化子は、記述の中ですでに名付けられた集合か、対を分解するための小さな容器だけを動く。この統語上の制限により、最後の論理式を `Δ₀` と認定できる。
 <!--/-->
 
-```agda
-open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using
-  ( Formula; var; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇∈; ∀̇∈ )
-open import FOL.LevyHierarchy using
-  ( checkΔ₀; Δ₀ )
-```
-
 <!--en-->
 All formulas are interpreted over the constructible carrier. Ordered-pair and graph-application predicates let that internal language inspect keys of the form `(arity, tagged payload)` without assuming that set-coded pairs have primitive projections.
 <!--zh-->
@@ -63,14 +80,6 @@ All formulas are interpreted over the constructible carrier. Ordered-pair and gr
 <!--ja-->
 すべての論理式は構成可能な台の上で解釈される。順序対の述語と符号化されたグラフの適用述語により、集合で符号化した対に原始的な射影を仮定せず、内部言語から「アリティとタグ付きペイロードの対」というキーを調べられる。
 <!--/-->
-
-```agda
-import FOL.Absoluteness
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
-open import L.Coding.Model {ℓ} using ( prAtL; appAt )
-open import L.Coding.Expressions {ℓ} using ( sucAtL )
-```
 
 <!--en-->
 Nested bounded quantifiers introduce temporary witnesses at the front of an environment. Named finite slots and their shifts keep `C`, `w`, the arity, and all ten tags referring to the same values while those witnesses are unpacked.
@@ -81,11 +90,7 @@ Nested bounded quantifiers introduce temporary witnesses at the front of an envi
 <!--/-->
 
 ```agda
-import L.Coding.Expressions {ℓ} as CodingExpressions
 module E = CodingExpressions.PairExpression
-open import L.Coding.Quantification {ℓ} using
-  ( i0; i1; i2; i3; i4; i5; i6; i7; i8; sh
-  ; f0; f1; f2; f3; f4; f5; f6; f7; f8; f9
 ```
 
 <!--en-->
@@ -95,10 +100,6 @@ Pair readers expose both components while keeping every witness bounded. A finit
 <!--ja-->
 対の読みは、すべての証人を有界に保ったまま二つの成分を取り出す。その後、有限選言が十通りの最外側の構成子を一つの形の検査にまとめ、対応する有界全称の読みがすべての正当な入力について閉性を表す。
 <!--/-->
-
-```agda
-  ; sndEx; sndAll; bothEx; bothAll; bigOr )
-```
 
 <!--en-->
 Finite indices and set-theoretic numerals have different roles here. The map `N` names ten positions in the surrounding environment, while `toℕ` identifies which numeral from zero through nine belongs at each tag position. Shifting preserves those references when bounded witnesses extend the environment. The arity stored in an entry of `E` is not certified as a numeral at this point; that identification comes later from the environment-tower hypotheses.
@@ -316,7 +317,6 @@ We can now ask the inward question for a member of the candidate domain: which e
 ここで、候補領域の要素を内向きに読む問いを立てられる。そのペイロードが許された構成子形の一つであることを、どのような証拠が示すのであろうか。構成子タグは十個あるが、必要なペイロード条件は五種類だけである。二つの原子関係、三つの二項結合子、二つの非有界量化子、二つの有界量化子が、それぞれ同じ構成要素の形を共有するからである。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -341,7 +341,6 @@ The five payload shapes are written out. Atomic payloads demand two legal terms;
 <!--/-->
 
 ```agda
-
   atomPay binPay conPay quPay bqPay : Formula S (9 + m)
   atomPay = bothEx i0 (isTm i1 i8 (sh 12 w) (sh 12 (N f0)) (sh 12 (N f1)) ∧̇ isTm i0 i8 (sh 12 w) (sh 12 (N f0)) (sh 12 (N f1)))
   binPay  = bothEx i0 (appAt (sh 12 C) i8 i1 ∧̇ appAt (sh 12 C) i8 i0)
@@ -447,7 +446,6 @@ The ten shape clauses are collected into one finite disjunction. Thus a single f
 </div>
 </details>
 
-
 <!--en-->
 The shape half starts from each existing member `c` of the candidate domain. It chooses an entry `(ar, F)` from `E`, decomposes `c` as `(ar, p)`, and requires `p` to match one of the ten tagged payload shapes. Composite shapes already require their immediate formula subkeys to lie in `C`. Semantically, these bounded existential witnesses are propositionally truncated, so this condition supplies no chosen decomposition and asserts no uniqueness of decoding.
 <!--zh-->
@@ -469,7 +467,6 @@ The second half turns to the outward question. Fix an entry of `E` and use its f
 <!--ja-->
 後半では、外向きの問いへ移る。`E` の項目を一つ固定し、その第一成分を共通のアリティとして使う。閉性の各節は、項がそのアリティで正当であり、直下の論理式キーが必要な現在または後続のアリティですでに `C` に属するとき、どの複合キーが `C` に入らなければならないかを述べる。
 <!--/-->
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
@@ -588,7 +585,6 @@ The conjunction continues with the last two atomic clauses, completing all four 
 </div>
 </details>
 
-
 <!--en-->
 The closure half applies all eighteen generation clauses at every entry of the set named by `E`. Once an entry is unpacked, its first component supplies the common arity for the constructors. This formula does not certify that the entries form the canonical environment tower or even that every recorded arity is a numeral; later hypotheses provide those facts. At any valid tower entry, the direction remains from legal constituents to the corresponding compound key, rather than from an arbitrary member of `C` back to its parts.
 <!--zh-->
@@ -598,7 +594,6 @@ The closure half applies all eighteen generation clauses at every entry of the s
 <!--/-->
 
 ```agda
-
 closeAt : ∀ {m} → Fin m → Fin m → Fin m → (Fin 10 → Fin m) → Formula S m
 closeAt C w E N = ∀̇∈ (var E) (bothAll i0 (Close.all C w N))
 ```

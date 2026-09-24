@@ -439,6 +439,21 @@ notes = "Book-local name for the second component of a dependent pair in its pro
 
 [[term]]
 category = "Type theory"
+id = "record-type"
+audience = "reader"
+en = "record type"
+zh = "记录类型"
+ja = "レコード型"
+introduced_in = "Base.Prelude"
+matching = "auto"
+forms_en = ["record types"]
+recap_en = "A type that groups values into named fields; the type of a later field may depend on earlier fields."
+recap_zh = "用具名字段组合数据的类型；后面字段的类型可以依赖前面的字段。"
+recap_ja = "名前付きフィールドで値をまとめる型。後のフィールドの型は先のフィールドに依存してよい。"
+notes = "Owner request 2026-09-24: reader-facing automatic term. Retains the book's established English, Chinese and Japanese names. Definition and dependency of fields: Agda 2.8.0 official documentation, https://agda.readthedocs.io/en/v2.8.0/language/record-types.html ."
+
+[[term]]
+category = "Type theory"
 id = "record-field"
 audience = "reader"
 en = "field"

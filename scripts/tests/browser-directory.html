@@ -1,0 +1,102 @@
+<!doctype html><meta charset="utf-8"><title>Directory regression</title>
+<style>body{font:14px system-ui}iframe{width:1100px;height:820px;border:1px solid #aaa;max-width:100%}pre{white-space:pre-wrap}</style>
+<h1 id="test-status">RUNNING directory, gestures, search and Origin</h1>
+<iframe id="frame" src="/zh/index#dependency-map"></iframe><pre id="report"></pre>
+<script>
+(async () => {
+  const frame = document.querySelector('#frame'), checks = [], delay = ms => new Promise(r => setTimeout(r, ms));
+  function check(name, ok) { checks.push({name,ok:!!ok}); document.querySelector('#report').textContent = JSON.stringify(checks,null,2); if(!ok)throw Error(name); }
+  async function until(test, timeout=20000) { const start=Date.now(); while(!test()){if(Date.now()-start>timeout)throw Error('Timed out');await delay(80);} }
+  await until(()=>frame.contentDocument?.querySelector('[data-depmap-scroll] svg'));
+  const doc=frame.contentDocument, win=frame.contentWindow, root=doc.querySelector('[data-depmap-root]'), canvas=root.querySelector('[data-depmap-scroll]');
+  const button=selector=>root.querySelector(selector), view=()=>canvas.querySelector('svg').getAttribute('viewBox').split(' ').map(Number);
+  check('interactive contents title',doc.querySelector('h1').textContent==='交互式目录');
+  check('module tree removed, current route retained',!doc.querySelector('.modnav')&&doc.querySelector('.current-route'));
+  check('graph title matches tab',doc.querySelector('#tab-dependency-map').textContent===root.querySelector('h2').textContent);
+  check('namespace default with every chapter',button('[data-depmap-layout]').value==='namespace'&&canvas.querySelectorAll('.depmap-node').length===120);
+  check('secondary controls folded',!root.querySelector('.depmap-options').open);
+  button('[data-depmap-zoom]').click(); let before=view();
+  button('[data-depmap-in]').click(); check('zoom button changes camera',view()[2]<before[2]);
+  before=view();canvas.dispatchEvent(new win.WheelEvent('wheel',{deltaX:80,deltaY:60,bubbles:true,cancelable:true}));
+  check('trackpad pans both axes',view()[0]>before[0]&&view()[1]>before[1]);
+  let rect=canvas.getBoundingClientRect();before=view();
+  canvas.dispatchEvent(new win.WheelEvent('wheel',{deltaY:-20,ctrlKey:true,clientX:rect.x+180,clientY:rect.y+160,bubbles:true,cancelable:true}));
+  check('trackpad pinch zooms',view()[2]<before[2]);
+  function pointer(type,id,x,y,target=canvas){target.dispatchEvent(new win.PointerEvent(type,{pointerId:id,pointerType:'touch',button:0,clientX:rect.x+x,clientY:rect.y+y,bubbles:true,cancelable:true}));}
+  before=view();pointer('pointerdown',51,100,150);pointer('pointerdown',52,200,150);pointer('pointermove',52,260,150);
+  check('two-finger touch pinch zooms',view()[2]<before[2]);pointer('pointerup',51,100,150);pointer('pointerup',52,260,150);
+  before=view();pointer('pointerdown',53,160,160);pointer('pointermove',53,200,210);pointer('pointerup',53,200,210);
+  check('touch swipe pans',view()[0]<before[0]&&view()[1]<before[1]);
+  function gesture(type,scale){const e=new win.Event(type,{bubbles:true,cancelable:true});Object.defineProperties(e,{scale:{value:scale},clientX:{value:rect.x+160},clientY:{value:rect.y+160}});canvas.dispatchEvent(e);}
+  before=view();gesture('gesturestart',1);gesture('gesturechange',1.4);gesture('gestureend',1.4);check('Safari gesture path zooms',view()[2]<before[2]);
+  canvas.dispatchEvent(new win.KeyboardEvent('keydown',{key:'0',bubbles:true}));before=view();canvas.dispatchEvent(new win.KeyboardEvent('keydown',{key:'ArrowRight',bubbles:true}));check('keyboard alternative pans',view()[0]>before[0]);
+  for(const layout of ['compact','teaching','namespace']){button('[data-depmap-layout]').value=layout;button('[data-depmap-layout]').dispatchEvent(new win.Event('change'));check(layout+' retains all nodes',canvas.querySelectorAll('.depmap-node').length===120);}
+  const radio=root.querySelector('input[value=all]');radio.checked=true;radio.dispatchEvent(new win.Event('change'));const all=canvas.querySelectorAll('.depmap-edge').length;
+  const landmark=button('[data-depmap-landmark]');check('all edges reveals Origin switch',!landmark.closest('label').hidden);landmark.checked=false;landmark.dispatchEvent(new win.Event('change'));check('Origin reference filtering works',canvas.querySelectorAll('.depmap-edge').length<all);
+  const find=button('[data-depmap-search]');find.value='基础词汇';find.dispatchEvent(new win.Event('input'));check('localized graph search selects chapter',canvas.querySelector('[data-id="Base.Prelude"]').getAttribute('aria-pressed')==='true');
+  check('chapter card links to real page',root.querySelector('[data-depmap-name]').getAttribute('href')==='Base.Prelude.html');
+  button('[data-depmap-fullscreen]').click();await delay(120);check('graph alone occupies viewport',doc.querySelector('dialog[open]').getBoundingClientRect().width===win.innerWidth);
+  check('fullscreen isolates background',doc.querySelector('dialog[open]').contains(root));button('[data-depmap-fullscreen]').click();await delay(120);check('fullscreen exits and preserves selection',!doc.querySelector('dialog[open]')&&canvas.querySelector('[data-id="Base.Prelude"]').getAttribute('aria-pressed')==='true');
+  frame.style.width='390px';await delay(180);check('390px no page overflow',doc.documentElement.scrollWidth<=win.innerWidth+1);
+  button('[data-depmap-fullscreen]').click();await delay(100);check('390px full-screen graph remains usable',canvas.clientHeight>=180&&doc.querySelector('dialog[open]').scrollWidth<=win.innerWidth+1);button('[data-depmap-fullscreen]').click();
+  doc.querySelector('#tab-milestones').click();await delay(80);
+  check('Origin has Preface then Milestones', [...doc.querySelectorAll('#milestones h3')].map(e=>e.textContent).join('|')==='前言|里程碑');
+  for(const name of ['SetChoice','LEM','ΩResizing'])check(name+' is linked in Origin prose',[...doc.querySelectorAll('#milestones .inline-ref[data-type]')].some(e=>e.textContent===name));
+  for(const model of ['isZFModel','isZFCModel']){
+    const payload=await (await fetch('/zh/types/V.Model.json')).json();check(model+' has recursive hover target',Object.values(payload).some(x=>typeof x==='string'&&new RegExp('data-type="FOL.ZFModel#[0-9]+"[^>]*[^<]*>'+model+'</a>').test(x)));
+  }
+  const search=doc.querySelector('#search-box'), results=doc.querySelector('#search-results');
+  for(const [query,language] of [['基础词汇','中文'],['Reading guide','English'],['読書案内','日本語'],['transport','Agda']]){
+    search.value=query;search.dispatchEvent(new win.Event('input'));await until(()=>results.querySelector('.res'));
+    check('search '+query+' from Chinese page',results.textContent.includes(language));
+    check('search result has actual destination',results.querySelector('a').getAttribute('href').includes('/'));
+  }
+  search.value='zzzzzz无此结果zzzzzz';search.dispatchEvent(new win.Event('input'));await until(()=>results.textContent.includes('没有匹配'));check('empty search is explicit',!results.hidden);
+  // The sidebar and the article menu split navigation from disclosure alike.
+  for (const language of ['en', 'zh', 'ja']) {
+    frame.src='/'+language+'/Base.Prelude';
+    await until(()=>frame.contentDocument?.documentElement.lang===language && frame.contentDocument?.querySelector('#section-menu'));
+    const d=frame.contentDocument, w=frame.contentWindow;
+    await d.fonts.ready;
+    const recordLink=d.querySelector('article .term-ref[data-term="record-type"]'), recordIntro=d.querySelector('#term-record-type');
+    check(language+' explicit record-type lookup precedes and links to its introduction',
+      recordLink && recordIntro && recordLink.getAttribute('href').endsWith('#term-record-type') &&
+      !!(recordLink.compareDocumentPosition(recordIntro)&w.Node.DOCUMENT_POSITION_FOLLOWING));
+    for (const width of [1100,375]) {
+      frame.style.width=width+'px'; d.body.classList.remove('nav-collapsed');
+      d.body.classList.add('nav-open'); await delay(250);
+      const branch=d.querySelector('#toc .toc-branch'), summary=branch.querySelector('summary'), title=summary.querySelector('a');
+      // Do not scroll the article via scrollIntoView: its scrollspy may open
+      // ancestors during the measurement. Move only the sidebar scroller.
+      const sidebar=d.querySelector('#toc');
+      sidebar.scrollTop+=summary.getBoundingClientRect().top-sidebar.getBoundingClientRect().top-100;
+      await delay(250);
+      const label=language+' '+width+'px ', r=summary.getBoundingClientRect(), a=title.getBoundingClientRect();
+      check(label+'title only occupies its text width',a.width<r.width-40 && w.getComputedStyle(title).paddingLeft==='0px');
+      const hit=d.elementFromPoint((a.right+r.right)/2,r.y+r.height/2);
+      check(label+'right whitespace belongs to disclosure, not link',hit===summary);
+      const old=branch.open, hash=w.location.hash;hit.click();
+      check(label+'whitespace toggles without navigation',branch.open!==old && w.location.hash===hash);
+      branch.open=false;title.click();await delay(120);
+      check(label+'title navigates to its heading',w.location.hash===title.getAttribute('href'));
+      d.body.classList.add('nav-open');
+      for(const theme of ['light','dark']) {
+        d.documentElement.classList.toggle('theme-dark',theme==='dark');
+        d.documentElement.classList.toggle('theme-light',theme==='light');
+        title.setAttribute('aria-current','location');
+        const inner=w.getComputedStyle(title), outer=w.getComputedStyle(summary);
+        check(label+theme+' active row has just one background',inner.backgroundColor==='rgba(0, 0, 0, 0)' && inner.boxShadow==='none' && outer.backgroundColor!=='rgba(0, 0, 0, 0)');
+      }
+      if(width===375)check(label+'disclosure has touch height',r.height>=44);
+      d.body.classList.remove('nav-open');
+      d.querySelector('.section-trigger').click();await delay(50);
+      const row=d.querySelector('.section-menu-row.has-children'), link=row.querySelector('a'), toggle=row.querySelector('button');
+      check(label+'article menu also reserves whitespace for disclosure',link.getBoundingClientRect().width<row.getBoundingClientRect().width-40 && toggle.getBoundingClientRect().width>=38);
+      d.querySelector('.section-trigger').click();
+    }
+    const arrows=[...d.querySelectorAll('#fig-hlevel-distinction .hlevel-link')];
+    check(language+' diagram implications do not inherit navigation pink',arrows.length===2 && arrows.every(e=>w.getComputedStyle(e).color!==w.getComputedStyle(d.querySelector('#toc a[aria-current]')).color));
+  }
+  document.querySelector('#test-status').textContent='PASS '+checks.length+'/'+checks.length;
+})().catch(error=>{document.querySelector('#test-status').textContent='FAIL '+error.message;console.error(error);});
+</script>

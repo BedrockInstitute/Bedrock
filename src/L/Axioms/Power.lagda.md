@@ -1,53 +1,13 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # The power set in L
 <!--zh-->
 # L 中的幂集
 <!--ja-->
 # L における冪集合
-<!--/-->
-
-<!--en-->
-For a constructible set `a`, what should its power set inside `L` contain? The
-quantifiers of the model range over its carrier `S`, so the required members are
-the constructible model elements `x` that satisfy the internal inclusion
-`x ⊆ˢ a`. The ambient hierarchy can form the power set of the underlying
-set `A = fst a`, but its membership condition ranges over all of `V ℓ` and
-imposes no constructibility requirement. That ambient set can therefore supply
-indices, but it cannot simply be returned as the power set in `L`.
-
-The proof follows three mathematical steps. It uses the ambient power set to
-obtain a small presentation of all candidates, retains the indices that present
-constructible candidates and bounds their stages by one ordinal `β`, then uses
-Separation inside `Lset β` to collect exactly the internally included model
-elements. The host-level construction provides the bound; the final set itself
-is produced inside the constructible model.
-<!--zh-->
-对可构造集 `a`，`L` 内的幂集究竟应当收集什么？模型的量词遍历其载体 `S`，所以所求幂集的成员是满足内部包含 `x ⊆ˢ a` 的可构造模型元素 `x`。外围层级能对底层集 `A = fst a` 构造幂集，但其成员条件遍历整个`V ℓ`，不附加可构造性要求。因此，这个外围幂集可以提供索引，却不能直接作为`L` 内的幂集返回。
-
-证明分三步进行。先由外围幂集取得全部候选者的小表现，再保留其中呈现可构造候选者的索引，并用同一个序数 `β` 界住它们的诸层；最后在 `Lset β` 中作分离，恰好收集内部包含于`a` 的模型元素。宿主层的构造负责给出上界；最终的集合本身则在可构造模型中形成。
-<!--ja-->
-構成可能集合 `a` の `L` 内部での冪集合は、何を集めるべきであろうか。モデルの量化子はその台`S` 上を動くので、必要な要素は、内部の包含 `x ⊆ˢ a` を満たす構成可能なモデル要素`x` である。周囲の階層は基底の集合 `A = fst a` の冪集合を作れるが、その所属条件は `V ℓ` 全体にわたり、構成可能性を要求しない。したがって、その周囲の冪集合は添字を供給できるが、`L` の冪集合としてそのまま返すことはできない。
-
-証明は三段階で進む。まず周囲の冪集合からすべての候補の小さな表示を得る。次に、構成可能な候補を表示する添字を残し、それらの段階を一つの順序数 `β` で抑える。最後に `Lset β` の内部で分出を行い、`a` に内部的に含まれるモデル要素だけを集める。ホスト側の構成が上界を与え、最終的な集合そのものは構成可能モデル内で作られる。
-<!--/-->
-
-```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-```
-
-<!--en-->
-The construction needs two kinds of smallness. Propositional resizing replaces
-a proposition at the model's truth-value level by an equivalent proposition at
-the small index level. The impredicativity package also provides a small
-classifier for small propositions, from which the ambient hierarchy can form a
-power set. Both are derived from excluded middle. They solve different size
-problems and should not be confused: resizing will make constructibility fit
-inside a small index type, whereas the classifier builds the ambient power set
-that supplies the indices.
-<!--zh-->
-构造需要两种宇宙大小控制。命题换级把模型真值层级上的命题换成小索引层级上的等价命题；非直谓性包还为小命题提供一个命题宇宙换级，使外围层级能够构成幂集。两者都由排中律推出，却解决不同的大小问题：命题换级使可构造性能够进入小索引类型，分类器则构造提供这些索引的外围幂集。
-<!--ja-->
-構成には二種類の小ささが必要である。命題リサイズは、モデルの真理値のレベルにある命題を、小さな添字のレベルにある同値な命題へ置き換える。非可述性のパッケージはさらに、小さな命題のための小さな分類子を与え、周囲の階層で冪集合を作れるようにする。どちらも排中律から導かれるが、解決する大きさの問題は異なる。命題リサイズは構成可能性を小さな添字型に収め、分類子はその添字を供給する周囲の冪集合を構成する。
 <!--/-->
 
 ```agda
@@ -75,6 +35,63 @@ introduced.
 module L.Axioms.Power {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax using ( Formula; var; con; _∈̇_; ∀̇∈ )
+import FOL.Absoluteness
+import FOL.ZFModel
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Model {ℓ} using ( module Power )
+open import L.Constructible {ℓ}
+  using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset; Lset-mono )
+open import L.Ordinal {ℓ} using ( boundingOrd )
+open import L.Stage {ℓ} lem using ( stage; stage-ord; stage-mem )
+open import L.Axioms.Basic {ℓ} using ( LsetS )
+open import L.Axioms.Full {ℓ} lem using ( hasSeparationL )
+```
+
+<!--en-->
+For a constructible set `a`, what should its power set inside `L` contain? The
+quantifiers of the model range over its carrier `S`, so the required members are
+the constructible model elements `x` that satisfy the internal inclusion
+`x ⊆ˢ a`. The ambient hierarchy can form the power set of the underlying
+set `A = fst a`, but its membership condition ranges over all of `V ℓ` and
+imposes no constructibility requirement. That ambient set can therefore supply
+indices, but it cannot simply be returned as the power set in `L`.
+
+The proof follows three mathematical steps. It uses the ambient power set to
+obtain a small presentation of all candidates, retains the indices that present
+constructible candidates and bounds their stages by one ordinal `β`, then uses
+Separation inside `Lset β` to collect exactly the internally included model
+elements. The host-level construction provides the bound; the final set itself
+is produced inside the constructible model.
+<!--zh-->
+对可构造集 `a`，`L` 内的幂集究竟应当收集什么？模型的量词遍历其载体 `S`，所以所求幂集的成员是满足内部包含 `x ⊆ˢ a` 的可构造模型元素 `x`。外围层级能对底层集 `A = fst a` 构造幂集，但其成员条件遍历整个`V ℓ`，不附加可构造性要求。因此，这个外围幂集可以提供索引，却不能直接作为`L` 内的幂集返回。
+
+证明分三步进行。先由外围幂集取得全部候选者的小表现，再保留其中呈现可构造候选者的索引，并用同一个序数 `β` 界住它们的诸层；最后在 `Lset β` 中作分离，恰好收集内部包含于`a` 的模型元素。宿主层的构造负责给出上界；最终的集合本身则在可构造模型中形成。
+<!--ja-->
+構成可能集合 `a` の `L` 内部での冪集合は、何を集めるべきであろうか。モデルの量化子はその台`S` 上を動くので、必要な要素は、内部の包含 `x ⊆ˢ a` を満たす構成可能なモデル要素`x` である。周囲の階層は基底の集合 `A = fst a` の冪集合を作れるが、その所属条件は `V ℓ` 全体にわたり、構成可能性を要求しない。したがって、その周囲の冪集合は添字を供給できるが、`L` の冪集合としてそのまま返すことはできない。
+
+証明は三段階で進む。まず周囲の冪集合からすべての候補の小さな表示を得る。次に、構成可能な候補を表示する添字を残し、それらの段階を一つの順序数 `β` で抑える。最後に `Lset β` の内部で分出を行い、`a` に内部的に含まれるモデル要素だけを集める。ホスト側の構成が上界を与え、最終的な集合そのものは構成可能モデル内で作られる。
+<!--/-->
+
+<!--en-->
+The construction needs two kinds of smallness. Propositional resizing replaces
+a proposition at the model's truth-value level by an equivalent proposition at
+the small index level. The impredicativity package also provides a small
+classifier for small propositions, from which the ambient hierarchy can form a
+power set. Both are derived from excluded middle. They solve different size
+problems and should not be confused: resizing will make constructibility fit
+inside a small index type, whereas the classifier builds the ambient power set
+that supplies the indices.
+<!--zh-->
+构造需要两种宇宙大小控制。命题换级把模型真值层级上的命题换成小索引层级上的等价命题；非直谓性包还为小命题提供一个命题宇宙换级，使外围层级能够构成幂集。两者都由排中律推出，却解决不同的大小问题：命题换级使可构造性能够进入小索引类型，分类器则构造提供这些索引的外围幂集。
+<!--ja-->
+構成には二種類の小ささが必要である。命題リサイズは、モデルの真理値のレベルにある命題を、小さな添字のレベルにある同値な命題へ置き換える。非可述性のパッケージはさらに、小さな命題のための小さな分類子を与え、周囲の階層で冪集合を作れるようにする。どちらも排中律から導かれるが、解決する大きさの問題は異なる。命題リサイズは構成可能性を小さな添字型に収め、分類子はその添字を供給する周囲の冪集合を構成する。
+<!--/-->
+
+
+
 <!--en-->
 Three levels of discourse meet in the proof. Host types organize indices and
 proofs. The ambient structure `𝒮ᵥ` has all sets of the cumulative hierarchy as
@@ -88,14 +105,6 @@ where the object-theoretic power-set axiom must be established.
 <!--ja-->
 証明では三つの水準を区別する。ホスト型は添字と証明を組織する。周囲の構造 `𝒮ᵥ` の要素は累積階層のすべての集合である。制限された構造 `𝒮ʟ` の要素は、周囲の集合とその構成可能性の証拠との対である。論理式の言語は、`𝒮ʟ` の内部で包含を表すための有界全称量化子を備えている。したがって周囲の構造は部分集合の候補を列挙でき、対象理論の冪集合公理は制限された構造の中で証明される。
 <!--/-->
-
-```agda
-open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using ( Formula; var; con; _∈̇_; ∀̇∈ )
-import FOL.Absoluteness
-import FOL.ZFModel
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-```
 
 <!--en-->
 The ambient hierarchy provides a set `𝒫V A` containing every ambient subset of
@@ -112,14 +121,6 @@ uses only its ordinality and membership facts.
 周囲の階層は、`A` の周囲でのすべての部分集合を含む集合 `𝒫V A` と、その所属の仕様を与える。構成可能階層は段階 `Lset α` とその厳密な単調性を与える。すなわち `α ∈ β` なら、前の段階への所属を後の段階へ持ち上げられる。各構成可能な候補には、段階の関数が、その候補を含む段階の正準な順序数添字を与える。上界補題は、この小さな順序数添字の族を一つの順序数の真に下へ収める。段階の関数は最小性も証明するが、本章で使うのは順序数性と段階への所属だけである。
 <!--/-->
 
-```agda
-open import V.Model {ℓ} using ( module Power )
-open import L.Constructible {ℓ}
-  using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset; Lset-mono )
-open import L.Ordinal {ℓ} using ( boundingOrd )
-open import L.Stage {ℓ} lem using ( stage; stage-ord; stage-mem )
-```
-
 <!--en-->
 Once the ordinal bound `β` is available, `LsetS β oβ` is a model element
 known to contain every internal subset under consideration. The remaining
@@ -135,11 +136,6 @@ same `lem`, even in this bounded instance.
 <!--ja-->
 順序数の上界 `β` が得られると、`LsetS β oβ` は、考えている内部部分集合をすべて含むと分かっているモデル要素になる。したがって、残る数学的操作は、包含を表す一変数論理式による分出である。一般定理 `hasSeparationL` は任意の論理式を受け取る。反映する段階を見つけ、その段階で論理式を有界な相対化に置き換え、有界な分出を適用する。ここでの論理式はすでに Δ₀ であるが、この呼び出しは実際にこの一般的な経路を通る。そのため、この有界な場合にも、論理式の反映とパラメータの段階の構成は、同じ `lem` の実際の使用である。
 <!--/-->
-
-```agda
-open import L.Axioms.Basic {ℓ} using ( LsetS )
-open import L.Axioms.Full {ℓ} lem using ( hasSeparationL )
-```
 
 <!--en-->
 Every hierarchy set has a small presentation: a type `⟪P⟫` of indices and an
@@ -176,7 +172,6 @@ Thus the smallness argument concerns the index type, not the model carrier.
 <!--/-->
 
 ```agda
-
 open hPropStructure 𝒮ʟ
 ```
 
@@ -301,7 +296,6 @@ the model.
 `a : S` を固定する。その第一射影 `A` は、構成可能性の証拠を忘れて、同じ集合を周囲の階層で見たものである。集合 `P = Pow.𝒫V A` は、周囲での完全な冪集合の仕様を満たす。`P` への所属に必要なのは周囲の意味で `A` に含まれることだけであり、構成可能性の仮定はない。したがって、構成可能でない周囲の部分集合があれば、それも `P` に属する。また、この構成から `P` 自身の構成可能性は得られない。証明が使うのは小さな表示 `⟪P⟫` だけであり、後でその添字を構成可能性によって選び出す。`P` はモデルで最終的に返される冪集合ではない。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -332,7 +326,6 @@ removes the propositional truncation nor selects an ordinal stage.
 <!--/-->
 
 ```agda
-
     rsz : (v : V ℓ) → Σ[ Q ∈ hProp ℓ ] (⟨ isL v ⟩ ≃ ⟨ Q ⟩)
     rsz v = LEM→Resizing lem (isL v)
 ```
@@ -523,7 +516,6 @@ is one of the stages bounded by `β`. Combining `stage-mem`, `b.snd.snd i`, and
 ```
 </div>
 </details>
-
 
 <!--en-->
 ## The field

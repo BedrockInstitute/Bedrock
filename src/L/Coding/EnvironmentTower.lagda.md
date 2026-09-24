@@ -1,21 +1,13 @@
-<!--en-->
-This chapter builds the environment tower inside `L`. For each natural number `n`, the tower records the coded ordered pair `(# n, envSet W n)`, where `envSet W n` is the set of all length-`n` environments taking values in `W`. The construction first produces the actual set and then gives a bounded first-order description through which later chapters can read its coded entries.
-<!--zh-->
-本章在 `L` 内构造环境塔。对每个自然数 `n`，该塔记录码化有序对 `(# n, envSet W n)`，其中 `envSet W n` 是全体取值于 `W` 的 `n` 元环境之集。我们先构造这个实际集合，再给出一份有界一阶描述，供后续章节读取其中的码化条目。
-<!--ja-->
-本章では、`L` の内部に環境の塔を構成する。各自然数 `n` に対して、塔は符号化された順序対 `(# n, envSet W n)` を記録する。ここで `envSet W n` は、`W` に値を取る長さ `n` のすべての環境からなる集合である。まず実際の集合を構成し、次に、後の章がその符号化された項目を読み取るための有界な一階記述を与える。
-<!--/-->
-
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
 ```
 
 <!--en-->
-The construction is carried out in cubical type theory and uses excluded middle at the stated universe level. This classical hypothesis enters through the constructions of fixed-length environment sets, common bounds, separation, and the internal natural numbers.
+# The environment tower
 <!--zh-->
-这一构造在立方类型论中进行，并使用所标宇宙层级上的排中律。该经典假设经由定长环境集、公共界、分离以及内部自然数集的构造进入本章。
+# 环境塔
 <!--ja-->
-この構成は立方型理論の中で行われ、明記された宇宙レベルでの排中律を用いる。この古典的仮定は、固定長の環境集合、共通の上界、分出、および内部自然数集合の構成を通して本章に入る。
+# 環境の塔
 <!--/-->
 
 ```agda
@@ -35,6 +27,53 @@ Fix a universe level `ℓ` and an instance `lem : LEM (ℓ-suc ℓ)`. Every cons
 module L.Coding.EnvironmentTower {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax using
+  ( Formula; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; ⊥̇; ∃̇_; ∃̇∈; ∀̇∈ )
+open import FOL.LevyHierarchy using ( checkΔ₀; Δ₀ )
+import FOL.Absoluteness
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-induction; extensionalV )
+open import V.Coding {ℓ} using ( pr; pr-inj )
+open import V.Model {ℓ} using ( self∈sucV )
+open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
+open import L.Coding.Environment {ℓ} using ( env; cons )
+open import L.Coding.Model {ℓ} using ( prAtL; prʟ; prʟ-fst; container )
+open import L.Coding.Expressions {ℓ} using
+  ( envSetAt; sucAtL; consAtL; consAtL-adequate; numL )
+open import L.Coding.Quantification {ℓ} using
+  ( i0; i1; i2; i3; sh; pr-out; pr-in; down; suc-out; suc-in
+  ; i4; i5
+  ; sndEx; bothEx; bothAll
+  ; sndEx-out; bothEx-out; bothAll-in
+  ; fillSnd; fillBoth; useBoth )
+open import L.Coding.EnvironmentSet {ℓ} lem using ( envSet; envSet-in; envSet-out; envS; Ix )
+open import L.Coding.EnvironmentAgreement {ℓ} lem using ( module Ambient; module AmbientHolds )
+open import L.Recursion {ℓ} lem using ( smallDom )
+open import L.Axioms.Basic {ℓ} using ( extensionalL )
+open import L.Axioms.Full {ℓ} lem using ( hasSeparationL )
+open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
+open import L.Axioms.Infinity {ℓ} lem using ( ωʟ; ω-specL )
+```
+
+<!--en-->
+This chapter builds the environment tower inside `L`. For each natural number `n`, the tower records the coded ordered pair `(# n, envSet W n)`, where `envSet W n` is the set of all length-`n` environments taking values in `W`. The construction first produces the actual set and then gives a bounded first-order description through which later chapters can read its coded entries.
+<!--zh-->
+本章在 `L` 内构造环境塔。对每个自然数 `n`，该塔记录码化有序对 `(# n, envSet W n)`，其中 `envSet W n` 是全体取值于 `W` 的 `n` 元环境之集。我们先构造这个实际集合，再给出一份有界一阶描述，供后续章节读取其中的码化条目。
+<!--ja-->
+本章では、`L` の内部に環境の塔を構成する。各自然数 `n` に対して、塔は符号化された順序対 `(# n, envSet W n)` を記録する。ここで `envSet W n` は、`W` に値を取る長さ `n` のすべての環境からなる集合である。まず実際の集合を構成し、次に、後の章がその符号化された項目を読み取るための有界な一階記述を与える。
+<!--/-->
+
+<!--en-->
+The construction is carried out in cubical type theory and uses excluded middle at the stated universe level. This classical hypothesis enters through the constructions of fixed-length environment sets, common bounds, separation, and the internal natural numbers.
+<!--zh-->
+这一构造在立方类型论中进行，并使用所标宇宙层级上的排中律。该经典假设经由定长环境集、公共界、分离以及内部自然数集的构造进入本章。
+<!--ja-->
+この構成は立方型理論の中で行われ、明記された宇宙レベルでの排中律を用いる。この古典的仮定は、固定長の環境集合、共通の上界、分出、および内部自然数集合の構成を通して本章に入る。
+<!--/-->
+
+
+
 <!--en-->
 Two descriptions of the tower will coexist. The first is an external construction of a set in `L`; the second is a formula in the object language of set theory. Membership, equality, conjunction, disjunction, and bounded quantification form that formula, while the Lévy-hierarchy checker will certify that it is Δ₀.
 <!--zh-->
@@ -42,14 +81,6 @@ Two descriptions of the tower will coexist. The first is an external constructio
 <!--ja-->
 本章では、環境の塔について二つの記述を併用する。一つは `L` の集合を外側から構成する記述であり、もう一つは集合論の対象言語における論理式である。後者は所属、等号、連言、選言、有界量化から組み立てられ、Lévy 階層の検査器によって Δ₀ であることが認証される。
 <!--/-->
-
-```agda
-open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using
-  ( Formula; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; ⊥̇; ∃̇_; ∃̇∈; ∀̇∈ )
-open import FOL.LevyHierarchy using ( checkΔ₀; Δ₀ )
-import FOL.Absoluteness
-```
 
 <!--en-->
 The proof later reads a tower entry downward to a predecessor. Membership induction in the cumulative hierarchy justifies this descent, and extensionality identifies environment sets once their members agree. Injectivity of the coded ordered pair then recovers the numeral and environment-set components separately.
@@ -59,14 +90,6 @@ The proof later reads a tower entry downward to a predecessor. Membership induct
 後の証明では、塔の項目を先行項目へ向かって下向きに読む。累積階層の所属帰納がこの降下の整礎性を保証し、外延性が、同じ要素をもつ環境集合を同定する。さらに符号化順序対の単射性によって、数項成分と環境集合成分を別々に復元できる。
 <!--/-->
 
-```agda
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-induction; extensionalV )
-open import V.Coding {ℓ} using ( pr; pr-inj )
-open import V.Model {ℓ} using ( self∈sucV )
-open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
-open import L.Coding.Environment {ℓ} using ( env; cons )
-```
-
 <!--en-->
 The bridge between the two descriptions consists of formulas recognizing coded pairs, von Neumann successors, environment sets, and cons extensions. Containers keep the component quantifiers bounded, and adequacy lemmas identify satisfaction of these formulas with the corresponding constructions in the cumulative hierarchy.
 <!--zh-->
@@ -74,14 +97,6 @@ The bridge between the two descriptions consists of formulas recognizing coded p
 <!--ja-->
 二つの記述を結ぶのは、符号化順序対、フォン・ノイマン後続、環境集合、cons 拡張を認識する論理式である。容器によって成分をめぐる量化を有界に保ち、妥当性の補題によって、これらの論理式の充足を累積階層の対応する構成と結ぶ。
 <!--/-->
-
-```agda
-open import L.Coding.Model {ℓ} using ( prAtL; prʟ; prʟ-fst; container )
-open import L.Coding.Expressions {ℓ} using
-  ( envSetAt; sucAtL; consAtL; consAtL-adequate; numL )
-open import L.Coding.Quantification {ℓ} using
-  ( i0; i1; i2; i3; sh; pr-out; pr-in; down; suc-out; suc-in
-```
 
 <!--en-->
 Reading and constructing a coded pair repeatedly requires access to both components. The two-component quantifiers provide this access inside bounded formulas, and their introduction and elimination lemmas preserve the propositional nature of satisfaction. The family `envSet W n` supplies the semantic sets to which those components will be compared.
@@ -91,14 +106,6 @@ Reading and constructing a coded pair repeatedly requires access to both compone
 符号化順序対を読んだり構成したりするには、その二成分へ繰り返しアクセスする必要がある。二成分の量化は有界論理式の内部でこのアクセスを与え、その導入・除去補題は充足が命題であることを保つ。族 `envSet W n` は、それらの成分と比較する意味論的な集合を与える。
 <!--/-->
 
-```agda
-  ; i4; i5
-  ; sndEx; bothEx; bothAll
-  ; sndEx-out; bothEx-out; bothAll-in
-  ; fillSnd; fillBoth; useBoth )
-open import L.Coding.EnvironmentSet {ℓ} lem using ( envSet; envSet-in; envSet-out; envS; Ix )
-```
-
 <!--en-->
 An environment-set formula determines a set only extensionally. Its agreement theorem compares that description with the constructed `envSet W n`. A common bound and full separation will then collect all arities into one constructible set, while constructible numerals provide its first components.
 <!--zh-->
@@ -106,14 +113,6 @@ An environment-set formula determines a set only extensionally. Its agreement th
 <!--ja-->
 環境集合の論理式が集合を定めるのは外延的にだけである。その一致定理が、この記述を構成済みの `envSet W n` と比較する。続いて、共通の上界と完全な分出がすべてのアリティを一つの構成可能集合へ集め、構成可能な数項が各項目の第一成分を与える。
 <!--/-->
-
-```agda
-open import L.Coding.EnvironmentAgreement {ℓ} lem using ( module Ambient; module AmbientHolds )
-open import L.Recursion {ℓ} lem using ( smallDom )
-open import L.Axioms.Basic {ℓ} using ( extensionalL )
-open import L.Axioms.Full {ℓ} lem using ( hasSeparationL )
-open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
-```
 
 <!--en-->
 The internal set `ωʟ` connects an object-language arity with an external natural number. Reading one of its members yields, under propositional truncation, a natural number and an identification with the corresponding constructible numeral. It therefore establishes that some arity exists without choosing one globally for every member.
@@ -123,10 +122,6 @@ The internal set `ωʟ` connects an object-language arity with an external natur
 内部集合 `ωʟ` は、対象言語のアリティを外側の自然数と結ぶ。その要素を読むと、命題的切り詰めのもとで、自然数と対応する構成可能な数項との同一視が得られる。したがって、何らかのアリティが存在することは分かるが、各要素に対するアリティを大域的に選ぶことはできない。
 <!--/-->
 
-```agda
-open import L.Axioms.Infinity {ℓ} lem using ( ωʟ; ω-specL )
-```
-
 <!--en-->
 Finite vectors represent the environments in which formulas are interpreted, while dependent pairs and coproducts express the witnesses and case distinctions returned by their semantics. Natural-number addition accounts for the extra slots introduced by bounded pair readers.
 <!--zh-->
@@ -134,8 +129,6 @@ Finite vectors represent the environments in which formulas are interpreted, whi
 <!--ja-->
 有限ベクトルは論理式を解釈する環境を表し、依存対と直和は、その意味論が返す証人と場合分けを表す。自然数の加法は、有界な順序対の読み取りによって追加されるスロットを数える。
 <!--/-->
-
-
 
 <!--en-->
 Many semantic witnesses in this chapter live under propositional truncation. Such a witness may be used when the target is itself a proposition, as happens for membership, satisfaction, and equality between hierarchy sets, but it cannot be projected into a globally chosen arity or environment. Propositional extensionality and the empty type support the corresponding equality and impossibility arguments.
@@ -213,11 +206,9 @@ The tower module fixes the carrier `W` whose members are the values environments
 塔のモジュールは、環境が値を取る台 `W` を固定する。その第 `n` 項目は、構成可能な数項 `n` と、長さ `n` のすべての環境の集合との、符号化された順序対である。第一成分が長さを記録し、第二成分がちょうどその長さのすべての環境を集める。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-
 module Tower (W : S) where
 ```
 </summary>
@@ -267,7 +258,6 @@ The tower is carved by separation out of the container and kept opaque, so later
 <!--/-->
 
 ```agda
-
   opaque
     tower : S
     tower = hasSeparationL (dom .fst) towerFo .fst .fst
@@ -449,7 +439,6 @@ The numeral identification aligns the recorded arity with the constructible nume
 <!--/-->
 
 ```agda
-
           byK : Σ[ k ∈ Lift {ℓ-zero} {ℓ-suc ℓ} ℕ ] (fst n ≡ fst (numeralL (lower k))) → Goal
           byK (k , qn) = ∣ lower k , xq ∙ cong₂ pr (qn ∙ numeralL-fst (lower k)) Eq ∣₁
             where
@@ -472,7 +461,6 @@ The agreement module supplies both directions of membership between the describe
 ```
 </div>
 </details>
-
 
 <!--en-->
 ## A bounded specification of the tower
@@ -611,11 +599,9 @@ The facts module fixes the carrier `W` and collects the concrete recursion facts
 事実のモジュールは台 `W` を固定し、長さゼロと後続の長さの環境についての実際の再帰の事実を集める。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-
 module EnvFacts (W : S) where
 ```
 </summary>
@@ -706,7 +692,6 @@ Filling the zero-length environment set uses the empty set: it is transported in
 <!--/-->
 
 ```agda
-
   envSet0-in : (z : V ℓ) → ((y : V ℓ) → ⟨ y ∈ z ⟩ → ⊥₀) → ⟨ z ∈ fst (envSet W 0) ⟩
   envSet0-in z k = subst (λ u → ⟨ u ∈ fst (envSet W 0) ⟩) (sym (noMembers→env0 z k)) (envSet-in W g0)
 ```
@@ -816,7 +801,6 @@ The membership proof is consumed by the outward reading of the environment set, 
 </div>
 </details>
 
-
 <!--en-->
 ## Reading the successor construction
 <!--zh-->
@@ -832,7 +816,6 @@ cons 像读取器以候选后继集 `F'`、候选基集 `F`、字母表槽 `w` �
 <!--ja-->
 cons の像の読み手は、候補の後続の集合 `F'`、候補の基底の集合 `F`、アルファベットの枠 `w`、そして環境をパラメータとし、アルファベットの枠を作業集合と揃える等式を伴う。
 <!--/-->
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
@@ -1068,7 +1051,6 @@ The outward reading of the base environment set merely supplies the tail index `
 <!--/-->
 
 ```agda
-
     h2 : (e : S) → ⟨ fst e ∈ fst (lookup F γ) ⟩ → (x : S) → ⟨ fst x ∈ fst (lookup w γ) ⟩
        → ⟨ (x ∷ e ∷ γ) ⊨ ∃̇∈ (var (sh 2 F')) (consAtL i0 i1 i2) ⟩
     h2 e he x hx = map₁
@@ -1106,7 +1088,6 @@ The base-set outward reading supplies the truncated index `g` whose environment 
 </div>
 </details>
 
-
 <!--en-->
 Numerals are presented as constructible elements: the finite ordinal together with its constructibility certificate.
 <!--zh-->
@@ -1135,7 +1116,6 @@ The single-empty-set module is parameterized by the candidate set slot and the e
 <!--ja-->
 一つの空集合のモジュールは、候補の集合の枠と環境をパラメータとする。
 <!--/-->
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
@@ -1257,7 +1237,6 @@ The empty environment is the coded graph of the function from the empty type, wh
 </div>
 </details>
 
-
 <!--en-->
 The tower reader fixes a candidate tower slot `E`, a parameter-set slot `w`, a zero-numeral slot `N0`, and an interpreting environment. Its hypotheses identify `w` with the working set `W`, identify `N0` with `# 0`, and assert satisfaction of `towerAt E w N0`. The two readings below are relative to exactly these identifications.
 <!--zh-->
@@ -1265,7 +1244,6 @@ The tower reader fixes a candidate tower slot `E`, a parameter-set slot `w`, a z
 <!--ja-->
 環境の塔の読み手は、候補の塔のスロット `E`、パラメータ集合のスロット `w`、ゼロの数項のスロット `N0`、および解釈環境を固定する。その仮定は、`w` を作業集合 `W` と同定し、`N0` を `# 0` と同定し、`towerAt E w N0` の充足を与える。以下の二つの読みは、ちょうどこれらの同一視に相対的である。
 <!--/-->
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
@@ -1340,7 +1318,6 @@ The step of the membership induction splits on the downward-decomposition clause
 <!--/-->
 
 ```agda
-
     step : (nv : V ℓ) → ((y : V ℓ) → ⟨ y ∈ nv ⟩ → P y) → P nv
     step nv IH n F qn p∈ = rec₁ squash₁ cases
       (useBoth i0 (pS ∷ γ) n F refl (towerDown E w N0) (hdown pS p∈))
@@ -1515,7 +1492,6 @@ To invoke upward closure, the standard entry at `k` is first presented as the ca
 </div>
 </details>
 
-
 <!--en-->
 The tower-holding module assumes that the candidate tower has been identified with the real tower by an equation of underlying sets, in addition to the carrier and numeral equations. All conclusions are relative to these identifications.
 <!--zh-->
@@ -1524,11 +1500,9 @@ The tower-holding module assumes that the candidate tower has been identified wi
 塔を保持するモジュールは、候補の塔が、基礎の集合の等式によって実際の塔と同一視されていると仮定する。台と数項の等式に加えてである。すべての結論は、これらの同定に相対的である。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-
 module TowerHolds {m : ℕ} (E w N0 : Fin m) (γ : S ^ m) (W : S)
   (qw : fst (lookup w γ) ≡ fst W) (qE : fst (lookup E γ) ≡ fst (Tower.tower W))
   (qN0 : fst (lookup N0 γ) ≡ # 0) where
@@ -1550,7 +1524,6 @@ Every standard entry belongs to the candidate tower, by transporting the real to
 <!--/-->
 
 ```agda
-
     entry∈ : (k : ℕ) → ⟨ pr (# k) (fst (envSet W k)) ∈ Ev ⟩
     entry∈ k = subst (λ u → ⟨ pr (# k) (fst (envSet W k)) ∈ u ⟩) (sym qE) (Tower.tower-in′ W k)
 ```
@@ -1733,7 +1706,6 @@ Eliminating the truncated result of `read` into the satisfaction proposition com
 ```
 </div>
 </details>
-
 
 <!--en-->
 ## Recap

@@ -24,11 +24,11 @@ Rules (apply to Markdown prose, `*.md` / `*.lagda.md`; the verbatim LICENSE is e
  9. Standalone theorem-style labels use a bold label followed by a space, never a
      period. Fact, lemma, theorem and corollary labels must immediately name an Agda declaration:
      `**Fact** (`name`{.Agda}) Text` (likewise in Chinese and Japanese).         [report only]
- 10. An outermost construction, fact, lemma, theorem or corollary developed through prose and code
-     ends its proof with a standalone `∎` after its final code block. Explanatory prose
-     may follow outside the proof. Nested statements inside a disclosure belong to
-     that proof and need no separate mark.                                       [report only]
- 11. Ancillary disclosure summaries begin with the localized marker; foldable
+ 10. Every definition, construction, fact, lemma, theorem, corollary or proof
+     encloses Agda code and ends with standalone ∎ directly after its final block.
+     Folded helpers obey the same rule. Parallel names use one Construction
+     header and a bullet per name, never several labels sharing one QED.       [report only]
+ 11. Foldable
      submodules use a single-line Agda declaration as their summary and close
      after the submodule's last code block.                                      [report only]
  12. Japanese prose uses plain style (である体), not polite です・ます forms.      [report only]
@@ -66,7 +66,9 @@ from pathlib import Path   # cutover step 7: _masters_for_cjk() needs it
 ROOT = Path(__file__).resolve().parent.parent.parent
 SRC = ROOT / "src"
 sys.path.insert(0, str(ROOT / "scripts" / "site"))
-from submodule_structure import submodules
+from submodule_structure import submodules, module_header_line
+from statement_structure import (STATEMENT_LABELS, PROOF_LABELS, LABEL_RE,
+                                 NAMES_RE, statement_issues, named_group_issues)
 _BARE_VARIABLE_LEGACY_PATH = ROOT / "dev" / "inline-agda-legacy.json"
 
 # Verbatim third-party text (licenses, etc.) is never linted, whatever its extension.
@@ -315,17 +317,15 @@ def single_line_code_violations(text):
     return out
 
 
-_STATEMENT_LABELS = {"Construction", "Fact", "Lemma", "Theorem", "Corollary",
-                     "构造", "事实", "引理", "定理", "推论",
-                     "構成", "事実", "補題", "系"}
-_PROOF_LABELS = {"Proof", "证明", "証明", "Definition", "定义", "定義"}
-_THEOREM_LABEL_RE = re.compile(
-    r"^\s*\*\*(Construction|Fact|Lemma|Theorem|Corollary|Proof|Definition|构造|事实|引理|定理|推论|证明|定义|構成|事実|補題|系|証明|定義)(?:[.。])?\*\*")
+_STATEMENT_LABELS = STATEMENT_LABELS
+_PROOF_LABELS = PROOF_LABELS
+_THEOREM_LABEL_RE = LABEL_RE
 
 
-def theorem_label_violations(text):
+def theorem_label_violations(text, path=None):
     """Enforce the reader-facing lemma/theorem/proof label convention."""
     out = []
+    result_registry = path is not None and Path(path).resolve() == ROOT / 'src/Origin.lagda.md'
     fenced = False
     offset = 0
     for line in text.split("\n"):
@@ -341,94 +341,30 @@ def theorem_label_violations(text):
             label_start = line.index("**", match.start())
             rest = line[label_start:]
             if label in _STATEMENT_LABELS:
-                valid = re.match(
-                    rf"\*\*{re.escape(label)}\*\* \(`[^`\n]+`\{{\.Agda\}}\) ",
-                    rest)
+                prefix = f"**{label}**"
+                valid = rest.startswith(prefix) and NAMES_RE.match(rest[len(prefix):])
+                if result_registry and label in ('Theorem', '定理'):
+                    valid = valid or re.match(r'\*\*' + label + r'\s*[0-4]\*\* ', rest)
                 message = ("named statement label must have no period and must use "
                            f"**{label}** (`name`{{.Agda}}) Text")
             else:
                 valid = rest.startswith(f"**{label}** ")
-                message = ("proof/definition label must have no period and must use "
+                message = ("proof label must have no period and must use "
                            f"**{label}** Text")
             if not valid:
                 out.append(Violation(offset + label_start, message, False))
         offset += len(line) + 1
+    out.extend(Violation(position, message, False)
+               for position, message in named_group_issues(text))
     return out
-
-
-_QED_START_RE = re.compile(r"^\*\*(Construction|Fact|Lemma|Theorem|Corollary)\*\* ")
-_QED_HEADING_RE = re.compile(r"^#{1,2}\s")
-
-
-def _qed_structure(text):
-    """Return English statement labels and section boundaries with disclosure depth."""
-    labels = []
-    headings = [0]
-    containers = []
-    fenced = False
-    offset = 0
-    for line in text.splitlines(keepends=True):
-        stripped = line.strip()
-        if stripped.startswith(("```", "~~~")):
-            fenced = not fenced
-        elif not fenced:
-            if _QED_HEADING_RE.match(line):
-                headings.append(offset)
-            label = _QED_START_RE.match(line)
-            if label:
-                labels.append((offset, sum(scoped for _, scoped in containers)))
-            for tag in re.finditer(r"<(\/)?(details|aside)\b([^>]*)>", line):
-                closing, name, attrs = tag.groups()
-                if closing:
-                    if containers and containers[-1][0] == name:
-                        containers.pop()
-                else:
-                    containers.append((name, name == "details"))
-        offset += len(line)
-    headings.append(len(text))
-    return labels, sorted(set(headings))
 
 
 def qed_violations(text):
-    """Require one ∎ for each outermost theorem-style proof.
-
-    English labels identify each trilingual statement once; the parallel Chinese and
-    Japanese labels lie in the same i18n block and therefore need no duplicate mark.
-    Within a section, labels at the shallowest disclosure depth are
-    the outer proofs; nested labels are explanatory proof steps.
-    """
-    out = []
-    labels, headings = _qed_structure(text)
-    for section_start, section_end in zip(headings, headings[1:]):
-        section_labels = [(position, depth) for position, depth in labels
-                          if section_start <= position < section_end]
-        if not section_labels:
-            continue
-        outer_depth = min(depth for _, depth in section_labels)
-        outer = [position for position, depth in section_labels if depth == outer_depth]
-        for index, start in enumerate(outer):
-            end = outer[index + 1] if index + 1 < len(outer) else section_end
-            segment = text[start:end]
-            fences = list(re.finditer(r"(?m)^```\s*$", segment))
-            if not fences:
-                continue
-            tail = segment[fences[-1].end():]
-            tail = re.sub(r"(?m)^\s*<!--(?:en|zh|ja|/)-->\s*$", "", tail)
-            if not re.match(r"\s*(?:</(?:details|aside|div)>\s*)*∎(?:[ \t]*(?:\n|$))", tail):
-                out.append(Violation(
-                    start,
-                    "outermost construction/lemma/theorem/corollary must end with standalone "
-                    "`∎` after its complete proof",
-                    False,
-                ))
-    return out
+    """Validate every language and every fold; definitions have no exemption."""
+    return [Violation(position, message, False)
+            for position, message in statement_issues(text)]
 
 
-_DISCLOSURE_SUMMARY_PREFIX = {
-    "en": "Optional:",
-    "zh": "选读：",
-    "ja": "発展：",
-}
 
 
 _INLINE_AGDA_ATOM = re.compile(
@@ -443,7 +379,7 @@ def inline_agda_violations(text):
 
     A link-only rendering is reserved for one declaration name. Code spans may
     contain full expressions; an operator outside their boundary means the
-    expression has been split. Milestones follows exactly the same rule.
+    expression has been split. Origin follows exactly the same rule.
     """
     out = []
     fenced = False
@@ -543,44 +479,6 @@ def bare_variable_violations(text):
     return out
 
 
-def disclosure_summary_violations(text):
-    """Require localized titles for the remaining prose disclosures."""
-    out = []
-    language = None
-    fenced = False
-    offset = 0
-    for line in text.splitlines(keepends=True):
-        stripped = line.strip()
-        if stripped.startswith(("```", "~~~")):
-            fenced = not fenced
-            offset += len(line)
-            continue
-        if not fenced:
-            marker = MARKER_RE.match(line)
-            if marker:
-                code = marker.group(1)
-                language = None if code == "/" else code
-            else:
-                for match in re.finditer(
-                        r'<summary\b[^>]*>(.*?)</summary>',
-                        line):
-                    if language not in _DISCLOSURE_SUMMARY_PREFIX:
-                        out.append(Violation(
-                            offset + match.start(),
-                            "prose disclosure summary must be inside an explicit language group",
-                            False,
-                        ))
-                        continue
-                    prefix = _DISCLOSURE_SUMMARY_PREFIX[language]
-                    if not match.group(1).lstrip().startswith(prefix):
-                        out.append(Violation(
-                            offset + match.start(1),
-                            f"prose disclosure summary must begin with {prefix!r} ({language})",
-                            False,
-                        ))
-        offset += len(line)
-    return out
-
 
 _SUBMODULE_FOLD_START_RE = re.compile(
     r'(?m)^<details\b(?=[^>]*\bclass="[^"]*\bsubmodule-fold\b)[^>]*>')
@@ -618,9 +516,9 @@ def submodule_fold_violations(text, check_all=False):
             out.append(Violation(start.start(),
                 'submodule fold must be expanded by default', False))
         declaration = header.group('declaration')
-        first = re.search(r'(?m)^[ \t]*\S.*$', declaration)
+        first = module_header_line(declaration)
         nonempty = [line for line in declaration.splitlines() if line.strip()]
-        if (first is None or not re.match(r'[ \t]*module\s+\S+', first.group())
+        if (first is None or not re.match(r'[ \t]*(?:private[ \t]+)?module\s+\S+', first.group())
                 or not re.search(r'\bwhere\s*$', nonempty[-1])):
             out.append(Violation(header.start('declaration'),
                 'submodule heading must contain the complete declaration and no body code', False))
@@ -661,9 +559,9 @@ def submodule_fold_violations(text, check_all=False):
                               for child in children)]
         last_end = max([fence.end() for fence in direct] +
                        [child[1] for child in children], default=body_start)
-        if last_end == body_start or text[last_end:body_end].strip():
+        if last_end == body_start or text[last_end:body_end].strip() not in ('', '∎'):
             out.append(Violation(body_start,
-                'submodule fold must end immediately after its last Agda code block', False))
+                'submodule fold must end after its last Agda code block and optional ∎', False))
         for fence in direct:
             for line in fence.group('code').splitlines():
                 if line.strip() and len(line) - len(line.lstrip(' \t')) <= indent:
@@ -896,12 +794,9 @@ def analyze(text, path=None):
     manual.extend(single_line_code_violations(text))
 
     # Rule 9: theorem-style labels have one named, punctuation-free form.
-    manual.extend(theorem_label_violations(text))
+    manual.extend(theorem_label_violations(text, path))
     # Rule 10: completed constructions and lemmas visibly close after their code.
     manual.extend(qed_violations(text))
-    # Rule 11: prose disclosures have localized titles; foldable submodules
-    # use a one-line Agda declaration as their heading instead.
-    manual.extend(disclosure_summary_violations(text))
     # Rule 12: Japanese prose consistently uses plain style.
     manual.extend(japanese_polite_violations(text, prot))
     # Rule 13: a standalone declaration may be a bare link; expressions are boxed.

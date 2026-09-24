@@ -1,20 +1,77 @@
-<!--en-->
-# The square law for infinite L-cardinals
-
-For an infinite cardinal `κ` of `L`, the set of ordered pairs of members of `κ` injects into `κ` itself, by an internal coded injection. This chapter builds that injection. The route runs through the Gödel order on pairs: the order is written as a formula of the first-order object language, read off at the ordinal `κ` as the external Gödel order, and collapsed to an order type that the counting lemmas compare with `κ`. The chapter works at a fixed universe level `ℓ`, under excluded middle at the next level, the one classical assumption on which the ordinal comparisons below depend.
-<!--zh-->
-# L 中无穷基数的平方律
-
-对 `L` 中的无穷基数 `κ`，其成员的有序对所成之集可经 `L` 内部的编码单射注入 `κ` 自身。本章构造这个单射。路线经由对上的 Gödel 序：把这条序写成第一阶对象语言的公式，在序数 `κ` 处读作外部的 Gödel 序，再塌缩到序型，由计数引理与 `κ` 比较。本章在固定的宇宙层级 `ℓ` 上工作，使用高一层的排中律，即下文所有序数比较所依赖的唯一经典假设。
-<!--ja-->
-# L の無限基数における平方律
-
-`L` の無限基数 `κ` に対し、その要素の順序対からなる集合は、`L` の内部での符号化された単射によって `κ` 自身へ注入される。本章はこの単射を構成する。道筋は対の上の Gödel 順序を経由する。順序を一階の対象言語の論理式として書き下し、順序数 `κ` のところで外部の Gödel 順序として読み、崩壊によって順序型へ落とし、計数の補題によって `κ` と比較する。本章は固定された宇宙レベル `ℓ` の上で、一つ上のレベルの排中律、すなわち以下の順序数の比較が依存する唯一の古典的仮定のもとで進む。
-<!--/-->
-
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
 ```
+
+<!--en-->
+# The square law for infinite L-cardinals
+<!--zh-->
+# L 中无穷基数的平方律
+<!--ja-->
+# L の無限基数における平方律
+<!--/-->
+
+```agda
+open import Base.Prelude
+open import Base.Classical using ( LEM )
+```
+
+<!--en-->
+Fix a universe level `ℓ`{.Agda} and assume `lem : LEM (ℓ-suc ℓ)`{.Agda}. This hypothesis supplies a decision for each proposition at that level; it remains an explicit parameter of the constructions below.
+<!--zh-->
+固定宇宙层级 `ℓ`{.Agda}，并假设 `lem : LEM (ℓ-suc ℓ)`{.Agda}。这个假设为相应层级的每个命题提供判定，并始终作为下文构造的显式参数。
+<!--ja-->
+宇宙レベル `ℓ`{.Agda} を固定し、`lem : LEM (ℓ-suc ℓ)`{.Agda} を仮定する。この仮定は該当するレベルの各命題に判定を与え、以下の構成の明示的なパラメータとして保たれる。
+<!--/-->
+
+```agda
+module L.GCH.CardinalSquareLaw {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+```
+
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax
+  using ( Formula; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; ¬̇_; ∃̇_ )
+import FOL.Absoluteness
+import FOL.Semantics
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; regularityV; ∈-irrefl )
+open import L.Choice.FirstIntersectionStage {ℓ} lem using ( ord-suc-inj )
+open import V.Model {ℓ} using ( ∈sucV-elim; ∈sucV-inl; self∈sucV )
+open import V.Presentation {ℓ} using ( member; fiber; ↪-inj )
+open import V.Coding {ℓ} using ( pr; pr-inj )
+open import L.Constructible {ℓ}
+  using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset→isL )
+open import L.Ordinal {ℓ} using ( mem-ord; suc-ord; ω-ord; #∈ω; ω-mem-ord )
+open import L.Ordinal.Stages {ℓ} lem using ( ord∈Lset-suc )
+open import L.Ordinal.Linear {ℓ} lem using ( ord-tri )
+import L.Ordinal.SquareLaw {ℓ} lem as SQ
+open import L.WellOrder.Base {ℓₚ = ℓ-suc ℓ}
+  using ( lt; eq; gt ) renaming ( Tri to TriW )
+open import L.Axioms.Basic {ℓ} using ( ∅ʟ )
+open import L.Axioms.Infinity {ℓ} lem using ( ωʟ )
+open import L.Axioms.Numerals {ℓ} using ( sucʟ; sucʟ-fst )
+open import L.Coding.Model {ℓ} using ( prAtL; prAtL-adequate; prʟ; prʟ-fst; svAt; svAt-out; domAt )
+open import L.Coding.Expressions {ℓ} using ( sucAtL; sucAtL-adequate )
+open import L.Coding.Injection {ℓ} lem using ( injAt; module Extract; module Small )
+open import L.Cardinal {ℓ} lem using ( InjCode; InjL; IsCardinalL; _↪_ )
+open import L.InjectionComposition {ℓ} lem using ( inclusion-coded; injl-trans )
+open import L.GCH.CardinalRepresentative {ℓ} lem using ( cardOf )
+open import L.DefinableInjection {ℓ} lem using ( DefinableMap; module Inj )
+open import L.GCH.OrderType {ℓ} lem using ( Holds; module Code )
+open import L.InjectionComposition {ℓ} lem
+  using ( appC; appC-adequate; ω-limit; finite-excl-ω )
+open import L.InjectionComposition {ℓ} lem public using ( module Relation )
+```
+
+<!--en-->
+
+For an infinite cardinal `κ` of `L`, the set of ordered pairs of members of `κ` injects into `κ` itself, by an internal coded injection. This chapter builds that injection. The route runs through the Gödel order on pairs: the order is written as a formula of the first-order object language, read off at the ordinal `κ` as the external Gödel order, and collapsed to an order type that the counting lemmas compare with `κ`. The chapter works at a fixed universe level `ℓ`, under excluded middle at the next level, the one classical assumption on which the ordinal comparisons below depend.
+<!--zh-->
+
+对 `L` 中的无穷基数 `κ`，其成员的有序对所成之集可经 `L` 内部的编码单射注入 `κ` 自身。本章构造这个单射。路线经由对上的 Gödel 序：把这条序写成第一阶对象语言的公式，在序数 `κ` 处读作外部的 Gödel 序，再塌缩到序型，由计数引理与 `κ` 比较。本章在固定的宇宙层级 `ℓ` 上工作，使用高一层的排中律，即下文所有序数比较所依赖的唯一经典假设。
+<!--ja-->
+
+`L` の無限基数 `κ` に対し、その要素の順序対からなる集合は、`L` の内部での符号化された単射によって `κ` 自身へ注入される。本章はこの単射を構成する。道筋は対の上の Gödel 順序を経由する。順序を一階の対象言語の論理式として書き下し、順序数 `κ` のところで外部の Gödel 順序として読み、崩壊によって順序型へ落とし、計数の補題によって `κ` と比較する。本章は固定された宇宙レベル `ℓ` の上で、一つ上のレベルの排中律、すなわち以下の順序数の比較が依存する唯一の古典的仮定のもとで進む。
+<!--/-->
 
 <!--en-->
 The construction is not constructive throughout, and the reason lies in the mathematics rather than in the formalism. To order the pairs of an ordinal one must decide, for two ordinals `a` and `b`, whether `a` belongs to `b`; and every classical decision of this chapter is an instance of that single question. The module therefore receives excluded middle at level `ℓ-suc ℓ` as explicit data, the level of the membership propositions being decided.
@@ -25,9 +82,7 @@ The construction is not constructive throughout, and the reason lies in the math
 <!--/-->
 
 ```agda
-open import Base.Prelude
 open import Cubical.Foundations.HLevels using ( isSetΣSndProp )
-open import Base.Classical using ( LEM )
 ```
 
 <!--en-->
@@ -38,10 +93,6 @@ The module parameter fixes that instance once, and every classical step of the c
 モジュールパラメータはその実例を一度だけ固定し、本章の古典的な段階はどれも正確にこれを消費する。
 <!--/-->
 
-```agda
-module L.GCH.CardinalSquareLaw {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-```
-
 <!--en-->
 The order to be internalized is written in the first-order object language: formulas built from membership and equality atoms by the connectives, negation and the unbounded existential, interpreted over the ambient hierarchy. Two facts of the hierarchy stand beside it, and both are used to end arguments: membership is well-founded, so ordinals admit induction along `∈`, and no set belongs to itself, so impossible comparisons can be refuted outright.
 <!--zh-->
@@ -49,15 +100,6 @@ The order to be internalized is written in the first-order object language: form
 <!--ja-->
 内在化される順序は、一階の対象言語で書かれる。所属と等しさ (等号) の原子式から、結合子、否定、非有界の存在量化子によって作られる論理式であり、周囲の階層の上で解釈される。階層の二つの事実がその傍らにあり、どちらも議論を閉じるために使われる。所属は整礎であり、順序数は `∈` に沿った帰納を許し、またどの集合も自分自身に属さないため、あり得ない比較はそのまま反証できる。
 <!--/-->
-
-```agda
-open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax
-  using ( Formula; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; ¬̇_; ∃̇_ )
-import FOL.Absoluteness
-import FOL.Semantics
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; regularityV; ∈-irrefl )
-```
 
 <!--en-->
 Reading the coordinates of a coded pair, and counting with them, rests on three facts. The successor operation on ordinals is injective, so equal successors have equal predecessors. Every member of an ordinal is named by an index of its small presentation, the naming is injective, and a member of a constructible set is itself constructible. And the ordered pair `pr` is injective in both coordinates, so a coded pair determines its two entries.
@@ -67,14 +109,6 @@ Reading the coordinates of a coded pair, and counting with them, rests on three 
 符号化された対の座標を読み、それで計数するには、三つの事実が要る。順序数の後続演算は単射であり、等しい後続は等しい先行者をもつ。順序数の各要素は小さな提示の添字によって名指され、その名指しは単射で、構成可能な集合の要素はそれ自身構成可能である。そして順序対 `pr` は両座標で単射であり、符号化された対はその二つの成分を確定する。
 <!--/-->
 
-```agda
-open import L.Choice.FirstIntersectionStage {ℓ} lem using ( ord-suc-inj )
-open import V.Model {ℓ} using ( ∈sucV-elim; ∈sucV-inl; self∈sucV )
-open import V.Presentation {ℓ} using ( member; fiber; ↪-inj )
-open import V.Coding {ℓ} using ( pr; pr-inj )
-open import L.Constructible {ℓ}
-```
-
 <!--en-->
 On the constructible side, the inner structure `𝒮ʟ` restricts the hierarchy to the transitive class of constructible sets. The ordinal facts used throughout are closure facts: members of ordinals are ordinals, successors of ordinals are ordinals, the members of `ω` are ordinals, and any two ordinals are comparable by trichotomy. Beside them stands the external Gödel order on pairs, the order this chapter internalizes.
 <!--zh-->
@@ -82,14 +116,6 @@ On the constructible side, the inner structure `𝒮ʟ` restricts the hierarchy 
 <!--ja-->
 構成可能な側では、内側の構造 `𝒮ʟ` が階層を構成可能な集合という推移的クラスに制限する。全体を通して使う順序数の事実は閉性の事実である。順序数の要素は順序数であり、順序数の後続は順序数であり、`ω` の要素は順序数であり、任意の二つの順序数は三分法によって比較できる。その傍らには、対の上の外部の Gödel 順序、すなわち本章が内在化する順序がある。
 <!--/-->
-
-```agda
-  using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset→isL )
-open import L.Ordinal {ℓ} using ( mem-ord; suc-ord; ω-ord; #∈ω; ω-mem-ord )
-open import L.Ordinal.Stages {ℓ} lem using ( ord∈Lset-suc )
-open import L.Ordinal.Linear {ℓ} lem using ( ord-tri )
-import L.Ordinal.SquareLaw {ℓ} lem as SQ
-```
 
 <!--en-->
 The comparison of two ordinals is packaged as three-case data rather than as a truth value, because the proofs below must inspect which case occurred: strictly below, equal, or strictly above. The empty set and `ω` are available as elements of `L`, and the internal successor numerals come with the identification of their underlying sets, which lets a numeral slot be read as an ambient natural number.
@@ -99,14 +125,6 @@ The comparison of two ordinals is packaged as three-case data rather than as a t
 二つの順序数の比較は、真理値ではなく三つの場合のデータとしてまとめられる。下の証明は、どの場合が起こったかを検査しなければならないからである。狭義に下、等しい、狭義に上。空集合と `ω` は `L` の要素として使え、内部の後続数詞はその基底集合の同一視を伴い、数項のスロットを周囲の自然数として読めるようにする。
 <!--/-->
 
-```agda
-open import L.WellOrder.Base {ℓₚ = ℓ-suc ℓ}
-  using ( lt; eq; gt ) renaming ( Tri to TriW )
-open import L.Axioms.Basic {ℓ} using ( ∅ʟ )
-open import L.Axioms.Infinity {ℓ} lem using ( ωʟ )
-open import L.Axioms.Numerals {ℓ} using ( sucʟ; sucʟ-fst )
-```
-
 <!--en-->
 Inside `L`, ordered pairs and graph conditions are expressed by first-order formulas with inner and ambient readings. Pairing adequacy identifies the coded pair with the ambient ordered pair of its two entries, while the graph readings express single-valuedness, domain, injectivity, and containment of values in the codomain. Together these conditions describe an internal coded injection.
 <!--zh-->
@@ -114,14 +132,6 @@ Inside `L`, ordered pairs and graph conditions are expressed by first-order form
 <!--ja-->
 `L` の内部では、順序対とグラフの条件を、内側と外側の二つの読みをもつ一階論理式で表す。対の妥当性は符号化された対を二つの成分からなる周囲の順序対と同一視し、グラフの読みは単値性、定義域、単射性、値が終域に属することを表す。これらの条件が内部の符号化された単射を記述する。
 <!--/-->
-
-```agda
-open import L.Coding.Model {ℓ} using ( prAtL; prAtL-adequate; prʟ; prʟ-fst; svAt; svAt-out; domAt )
-open import L.Coding.Expressions {ℓ} using ( sucAtL; sucAtL-adequate )
-open import L.Coding.Injection {ℓ} lem using ( injAt; module Extract; module Small )
-open import L.Cardinal {ℓ} lem using ( InjCode; InjL; IsCardinalL; _↪_ )
-open import L.InjectionComposition {ℓ} lem using ( inclusion-coded; injl-trans )
-```
 
 <!--en-->
 Three mathematical transitions drive the construction. An ordinal is replaced by an internal cardinal representative contained in it and internally equipotent to it. A definable injective function yields a coded injection. Finally, a well-founded transitive relation is collapsed to an ordinal order type, while trichotomy makes the collapse map injective.
@@ -131,14 +141,6 @@ Three mathematical transitions drive the construction. An ordinal is replaced by
 構成は三つの数学的な移行によって進む。まず順序数を、その中に含まれ、内部でそれと同じ濃度をもつ内部基数の代表に替える。次に、定義可能な単射関数から符号化された単射を得る。最後に、整礎で推移的な関係を順序数としての順序型へ崩壊し、三分法によって崩壊写像の単射性を示す。
 <!--/-->
 
-```agda
-open import L.GCH.CardinalRepresentative {ℓ} lem using ( cardOf )
-open import L.DefinableInjection {ℓ} lem using ( DefinableMap; module Inj )
-open import L.GCH.OrderType {ℓ} lem using ( Holds; module Code )
-open import L.InjectionComposition {ℓ} lem
-  using ( appC; appC-adequate; ω-limit; finite-excl-ω )
-```
-
 <!--en-->
 A comparison of two coded pairs carries six dependent witnesses: four coordinates and their two maxima. Products retain the simultaneous equations and order conditions, while disjoint sums retain the alternative comparison cases. Since the proof components are propositions, they do not create additional choices in the resulting order data.
 <!--zh-->
@@ -146,8 +148,6 @@ A comparison of two coded pairs carries six dependent witnesses: four coordinate
 <!--ja-->
 二つの符号化された対の比較は、四つの座標と二つの最大値という六つの依存する証人を伴う。積は同時に成り立つ等式と順序条件を保ち、非交和は比較の場合分けを保つ。証明の成分は命題なので、得られる順序データに余分な選択を生じさせない。
 <!--/-->
-
-
 
 <!--en-->
 The coordinates of a coded pair are members of the underlying set of `κ`, read through the small presentation of that set. Beside the presentation stand the ambient membership, the empty set with its emptiness proof, and `ω` with the successor operation, the notions in which the two coordinates are compared and counted.
@@ -187,7 +187,6 @@ Two carriers are named and kept apart. The ambient carrier carries the hierarchy
 <!--/-->
 
 ```agda
-
 open hPropStructure 𝒮ᵥ using ( _∈ˢ_ )
 module SV = hPropStructure 𝒮ᵥ using ()
 module SL = hPropStructure 𝒮ʟ using (S; _∈ˢ_)
@@ -249,9 +248,7 @@ Thus an ordinal `x` can be regarded as the element `ordL x ox` of the constructi
 ```agda
 ordL : (x : V ℓ) → IsOrd x → S
 ordL x ox = x , isL-ord x ox
-open import L.InjectionComposition {ℓ} lem public using ( module Relation )
-private
-  module Product (K : S) = Relation K K
+private module Product (K : S) = Relation K K
 ```
 
 <!--en-->
@@ -263,9 +260,9 @@ The describing condition of the product says that both coordinates are members o
 <!--/-->
 
 ```agda
-    ((var (suc zero) ∈̇ con K) ∧̇ (var zero ∈̇ con K))
-    (λ x y → (fst x ∈ˢ fst K) ⊓ (fst y ∈ˢ fst K))
-    (λ x y e h → h) (λ x y e h → h)
+          ((var (suc zero) ∈̇ con K) ∧̇ (var zero ∈̇ con K))
+          (λ x y → (fst x ∈ˢ fst K) ⊓ (fst y ∈ˢ fst K))
+          (λ x y e h → h) (λ x y e h → h)
 ```
 
 <!--en-->
@@ -432,7 +429,6 @@ The maximum is expressible as a bounded formula: `m` equals `b` when `a` belongs
 <!--/-->
 
 ```agda
-
 maxAt : ∀ {k} → Fin k → Fin k → Fin k → Formula S k
 maxAt m a b = ((var a ∈̇ var b) ∧̇ (var m ≐ var b))
             ∨̇ ((¬̇ (var a ∈̇ var b)) ∧̇ (var m ≐ var a))
@@ -463,7 +459,6 @@ Putting the pieces together, `Lt p q` says that `p` and `q` are coded pairs, of 
 <!--/-->
 
 ```agda
-
 Lt : V ℓ → V ℓ → Type (ℓ-suc ℓ)
 Lt p q = ∥ Σ[ a ∈ S ] Σ[ b ∈ S ] Σ[ c ∈ S ] Σ[ d ∈ S ] Σ[ m ∈ S ] Σ[ n ∈ S ]
            ( (p ≡ pr (fst a) (fst b)) × (q ≡ pr (fst c) (fst d))
@@ -557,7 +552,6 @@ Adequacy is checked against a concrete six-entry context. The context extends th
 <!--/-->
 
 ```agda
-
   private
     env : ∀ {k} → S ^ k → S → S → S → S → S → S
         → S ^ (suc (suc (suc (suc (suc (suc k))))))
@@ -683,9 +677,8 @@ The two maximum data are mapped back, this time lifted into the object level's g
 ```agda
                         ; (inr (n , e)) → inr ((λ k → lift (n k)) , e) }) hN
             , hO )))) ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ })
-private
-  module Godel (P : S) = Relation P P
-    ((var (suc zero) ∈̇ con P) ∧̇ ((var zero ∈̇ con P) ∧̇ ltAt (suc zero) zero))
+private module Godel (P : S) = Relation P P
+          ((var (suc zero) ∈̇ con P) ∧̇ ((var zero ∈̇ con P) ∧̇ ltAt (suc zero) zero))
 ```
 
 <!--en-->
@@ -697,9 +690,9 @@ The host reading adds membership in `P` on both sides, conjoined with the order 
 <!--/-->
 
 ```agda
-    (λ p q → (fst p ∈ˢ fst P) ⊓ ((fst q ∈ˢ fst P) ⊓ (Lt (fst p) (fst q) , squash₁)))
-    (λ p q e h → h .fst , h .snd .fst , lt-out (suc zero) zero (q ∷ p ∷ e ∷ []) (h .snd .snd))
-    (λ p q e h → h .fst , h .snd .fst , lt-in (suc zero) zero (q ∷ p ∷ e ∷ []) (h .snd .snd))
+          (λ p q → (fst p ∈ˢ fst P) ⊓ ((fst q ∈ˢ fst P) ⊓ (Lt (fst p) (fst q) , squash₁)))
+          (λ p q e h → h .fst , h .snd .fst , lt-out (suc zero) zero (q ∷ p ∷ e ∷ []) (h .snd .snd))
+          (λ p q e h → h .fst , h .snd .fst , lt-in (suc zero) zero (q ∷ p ∷ e ∷ []) (h .snd .snd))
 ```
 
 <!--en-->
@@ -759,7 +752,6 @@ The order module then fixes an ordinal `κ`, the case at which the square law is
 順序のモジュールはついで、平方律が述べられる場合である順序数 `κ` を固定する。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -767,8 +759,6 @@ module Order (κ : S) (oκ : IsOrd (fst κ)) where
 ```
 </summary>
 <div class="submodule-fold-content">
-
-
 
 <!--en-->
 `K` is the underlying set of the ordinal `κ`; the carrier on which the square law unfolds is precisely this set of ordinals below `κ`.
@@ -1128,7 +1118,6 @@ In the equality case, a putative `p ≺ₚ q` transports to `q ≺ₚ q` and vio
 <!--/-->
 
 ```agda
-
     go : TriW (p ≺ₚ q) (p ≡ q) (q ≺ₚ p) → p ≺ₚ q
     go (lt k) = k
     go (eq e) = refuted (λ k → SQ.irr≺ K oκ q (subst (λ w → w ≺ₚ q) e k))
@@ -1207,7 +1196,6 @@ The segment lemmas now read off the order. If a pair `r` is below a pair `p`, th
 <!--/-->
 
 ```agda
-
   fst∈suc : (r p : Pair) → r ≺ₚ p
           → ⟨ ↑ (fst r) ∈ˢ sucV (↑ (maxOrd (fst p) (snd p))) ⟩
   fst∈suc (a , b) (c , d) (inl h) =
@@ -1264,8 +1252,6 @@ module Coll (κ : S) (oκ : IsOrd (fst κ)) where
 ```
 </summary>
 <div class="submodule-fold-content">
-
-
 
 <!--en-->
 These bounds control every predecessor segment of the Gödel order. Together with well-foundedness and transitivity, they place the relation on `prodL κ` in the setting where it can be collapsed to its ordinal order type.
@@ -1413,7 +1399,6 @@ Transitivity transfers the same way: two internal steps are read outward, compos
 <!--/-->
 
 ```agda
-
   ≺-trans : {a b c : OT.Dom} → a OT.≺ b → b OT.≺ c → a OT.≺ c
   ≺-trans {a} {b} {c} k k' =
     ≺-bwd a c (SQ.trans≺ K oκ (φ a) (φ b) (φ c) (≺-fwd a b k) (≺-fwd b c k'))
@@ -1465,7 +1450,6 @@ Well-foundedness and transitivity construct the collapse and its order type.
 ```
 </div>
 </details>
-
 
 <!--en-->
 ## Three counting facts
@@ -1612,7 +1596,6 @@ For the product construction, fix a graph `F` that is single-valued on `a`, has 
 積上の写像を構成するため、`a` 上で単値であり、定義域が `a`、単射的で、値が `b` に入るグラフ `F` を固定する。これらが符号化された単射 `a ↪ b` の四条件である。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -1626,8 +1609,6 @@ module ProdMap (a b F : S)
 </summary>
 <div class="submodule-fold-content">
 
-
-
 <!--en-->
 The map `h` evaluates the coded injection after the inclusion `ω ↪ a`. For the product construction, fix a graph `F` that is single-valued on `a`, has domain `a`, is injective, and takes its values in `b`; these are the four conditions of a coded injection `a ↪ b`.
 <!--zh-->
@@ -1635,8 +1616,6 @@ The map `h` evaluates the coded injection after the inclusion `ω ↪ a`. For th
 <!--ja-->
 写像 `h` は包含 `ω ↪ a` の後で符号化された単射を評価する。積上の写像を構成するため、`a` 上で単値であり、定義域が `a`、単射的で、値が `b` に入るグラフ `F` を固定する。これらが符号化された単射 `a ↪ b` の四条件である。
 <!--/-->
-
-
 
 <!--en-->
 The extraction module reads the actual function out of the graph: `toFun` computes the value at each domain element, `toFun-graph` certifies that the pair belongs to the graph, and `toFun-inj` transfers the graph's injectivity to the function.
@@ -1675,7 +1654,6 @@ The components of a product member are unique, and `isPropComp` proves it. The f
 <!--/-->
 
 ```agda
-
   isPropComp : (p : S) → isProp (Comp p)
   isPropComp p (x , y , _ , _ , e) (x' , y' , _ , _ , e') =
     Σ≡Prop inner (Σ≡Prop (λ v → snd (isL v)) (pr-inj (sym e ∙ e') .fst))
@@ -1736,7 +1714,6 @@ The graph lemma certifies that the computed value is paired with its input insid
 <!--/-->
 
 ```agda
-
     val-graph : (x : S) (mx : ⟨ fst x ∈ˢ fst a ⟩)
               → ⟨ pr (fst x) (fst (val x mx)) ∈ fst F ⟩
     val-graph x mx = E.toFun-graph (x , mx)
@@ -1811,7 +1788,6 @@ The chain type assembles what the graph formula must witness: `p` is the pair of
 <!--/-->
 
 ```agda
-
   Chain : S → S → S → S → S → S → Type (ℓ-suc ℓ)
   Chain q p x y x' y' =
       (fst p ≡ pr (fst x) (fst y)) × (fst q ≡ pr (fst x') (fst y'))
@@ -2184,13 +2160,11 @@ The definable map and its injectivity assemble into the internal injection: `pro
 <!--/-->
 
 ```agda
-
   injL : InjL (prodL a) (prodL b)
   injL = Inj.injL M inj
 ```
 </div>
 </details>
-
 
 <!--en-->
 Because `InjL` is propositionally truncated, a coded injection `a ↪ b` may be lifted without choosing its graph globally.
@@ -2222,7 +2196,6 @@ To absorb the extra top element of an infinite ordinal, it remains to inject its
 無限順序数に加わる頂点を吸収するには、その後続をもとの順序数へ単射すれば十分である。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -2230,8 +2203,6 @@ module Shift (mL : S) (om : IsOrd (fst mL)) (m∉ω : ⟨ fst mL ∈ˢ ω ⟩ �
 ```
 </summary>
 <div class="submodule-fold-content">
-
-
 
 <!--en-->
 Write `m` for the underlying ordinal of `mL`. Membership and finiteness decisions concern this set, while `mL` retains the evidence that it is an element of `L`.
@@ -2425,7 +2396,6 @@ The witness type for the graph formula is declared: either `x` is finite and `y`
 <!--/-->
 
 ```agda
-
     Wit : (y x : S) → Type (ℓ-suc ℓ)
     Wit y x = ∥ (⟨ fst x ∈ˢ ω ⟩ × (fst y ≡ sucV (fst x)))
               ⊎ ( ((⟨ fst x ∈ˢ ω ⟩ → ⊥₀) × ⟨ fst x ∈ˢ m ⟩ × (fst y ≡ fst x))
@@ -2755,7 +2725,6 @@ For each constructible infinite ordinal `a` that is an internal cardinal, the in
 <!--/-->
 
 ```agda
-
 Goal : V ℓ → Type (ℓ-suc ℓ)
 Goal a = (la : ⟨ isL a ⟩) → IsOrd a → IsCardinalL (a , la)
        → (⟨ a ∈ˢ ω ⟩ → ⊥₀) → InjL (prodL (a , la)) (a , la)
@@ -2769,7 +2738,6 @@ The induction step receives the set `a`, the induction hypothesis for every memb
 帰納の段階は、集合 `a`、`a` の各要素に対する帰納仮定、そして四つの仮定を受け取る。構成可能性、順序数性、内部の基数性、無限性である。基数性の仮定は、`κ` がみずからの要素へ内部的に単射することを排除するもので、崩壊の計数が用いる形そのものである。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -2779,8 +2747,6 @@ module Step (a : V ℓ) (ih : (a' : V ℓ) → ⟨ a' ∈ˢ a ⟩ → Goal a')
 ```
 </summary>
 <div class="submodule-fold-content">
-
-
 
 <!--en-->
 Write `κ` for the constructible set whose underlying ordinal is `a`. This keeps the ambient ordinal data and the proof that it belongs to `L` together whenever an internal construction is formed.
@@ -2992,7 +2958,6 @@ Segments are unique: two predecessors of `p` with equal collapse values are equa
 <!--/-->
 
 ```agda
-
   isPropSeg : (p : OT.Dom) (b : V ℓ) → isProp (Seg p b)
   isPropSeg p b (r , _ , e) (r' , _ , e') =
     Σ≡Prop (λ r → isProp× (OT.isProp≺ r p) (setIsSet _ _)) (I.col-inj r r' (e ∙ sym e'))
@@ -3038,7 +3003,6 @@ The second coordinate of every `r ≺ p` obeys the same bound. We therefore use 
 <!--/-->
 
 ```agda
-
     seg-snd : (p r : OT.Dom) → r OT.≺ p → ⟨ ↑ (φ r .snd) ∈ˢ sucV (mV p) ⟩
     seg-snd p r k = snd∈suc (φ r) (φ p) (≺-fwd r p k)
   gfin : OT.Dom → V ℓ
@@ -3084,7 +3048,6 @@ Applying the second projection to the same code equality likewise identifies the
 <!--/-->
 
 ```agda
-
     h-snd : (p r r' : OT.Dom) (k : r OT.≺ p) (k' : r' OT.≺ p)
           → h p r k ≡ h p r' k'
           → fiber (gfin p) (seg-snd p r k) .fst
@@ -3238,8 +3201,6 @@ Trichotomy now proves `C.col p ∈ ω`. Equality `C.col p = ω` would give the f
 </summary>
 <div class="submodule-fold-content">
 
-
-
 <!--en-->
 Assume that, for every `r ≺ p`, both coordinates represented by `φ r` belong to the carrier of `g`. These two bounds ensure that the pair represented by `r` belongs to the internal product `prodL g`, the codomain of the inverse collapse.
 <!--zh-->
@@ -3247,8 +3208,6 @@ Assume that, for every `r ≺ p`, both coordinates represented by `φ r` belong 
 <!--ja-->
 各 `r ≺ p` について、`φ r` が表す二つの座標がとも `g` の台に属すると仮定する。この二つの上界により、`r` が表す対は内部の積 `prodL g` に属する。この積が逆崩壊の終域になる。
 <!--/-->
-
-
 
 <!--en-->
 Every member `x` of the collapse value determines its segment: the truncated membership is eliminated, since segments are unique, and yields a predecessor `r` whose collapse value is the underlying set of `x`.
@@ -3353,7 +3312,6 @@ The carrier `g` is the successor of the maximum, and is an ordinal because the m
 <!--/-->
 
 ```agda
-
       g : V ℓ
       g = sucV (mV p)
       og : IsOrd g
@@ -3386,7 +3344,6 @@ For every `r ≺ p`, the bounds `seg-fst` and `seg-snd` place both coordinates o
 <!--/-->
 
 ```agda
-
       module IV = Inv p gL (seg-fst p) (seg-snd p) using (injL)
 ```
 
@@ -3415,7 +3372,6 @@ If the cardinal were contained in the collapse value, composing that inclusion w
 <!--/-->
 
 ```agda
-
       go' : ⟨ C.col p ∈ˢ a ⟩ ⊎ ((C.col p ≡ a) ⊎ ⟨ a ∈ˢ C.col p ⟩) → ⟨ C.col p ∈ˢ a ⟩
       go' (inl h)       = h
       go' (inr (inl e)) = ⊥₀-rec (absurd (λ z z∈a → subst (λ w → ⟨ z ∈ˢ w ⟩) (sym e) z∈a))
@@ -3440,7 +3396,6 @@ The product first injects into the collapse order type `C.otL`. Every member `z`
 ```
 </div>
 </details>
-
 
 <!--en-->
 Membership well-founded induction now proves the square law. Given an ordinal `κ` that is an internal cardinal and satisfies `ω ∈ κ`, the induction step constructed above yields an internal injection `prodL κ ↪ κ` once the required proof that `κ` is not finite is supplied.

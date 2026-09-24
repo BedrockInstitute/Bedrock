@@ -27,6 +27,14 @@ file. With tracing enabled, records are formatted after complete declarations,
 when local metavariables have been solved. Variable occurrences continue to use
 Agda's own HTML links to their binding sites.
 
+Module applications such as `where open CodedTruth Ω e` have a parameter
+telescope, not a term result type. Agda checks that telescope with an internal
+dummy codomain. The overlay rejects types containing an internal `Dummy` node
+before enqueueing them, including partially applied telescopes. Ordinary
+argument and binder types are retained. The expression normalizer also removes
+these diagnostics from traces produced by older compiler builds; it must never
+turn a diagnostic call stack into a reader-facing hover node.
+
 ## Version identity
 
 The patched compiler is versioned with this repository. Its exact identity is

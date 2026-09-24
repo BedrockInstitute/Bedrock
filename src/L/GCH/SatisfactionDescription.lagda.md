@@ -1,27 +1,13 @@
-<!--en-->
-# A Δ₀ description of the satisfaction table
-
-The external semantic recursion has already produced the uniform satisfaction table. The question is now how a formula interpreted in `L` can recognize a candidate set as that same graph. We will package the environment tower, formula code domain, the table's two domain conditions, and its ten recursive constructor clauses into a bounded description that later formulas can quantify over.
-<!--zh-->
-# 满足关系表的 Δ₀ 描述
-
-外部语义递归已经构造出统一满足关系表。现在的问题是，在 `L` 中解释的公式如何把一个候选集合识别为同一张图。我们将把环境塔、公式码域、表的两条定义域条件与十条递归构造子子句封装成一条有界描述，供后续公式量化。
-<!--ja-->
-# 充足関係表の Δ₀ 記述
-
-外部の意味論的再帰は、すでに一様な充足関係表を構成している。ここでの問いは、`L` で解釈される論理式が、候補の集合をその同じグラフとしてどのように認識できるかである。環境の塔、論理式の符号領域、表の二つの領域条件、および十個の再帰的な構成子の節を、後の論理式が量化できる一つの有界な記述にまとめる。
-<!--/-->
-
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
 ```
 
 <!--en-->
-The construction remains relative to excluded middle at level `ℓ-suc ℓ`. This hypothesis supports the coding and satisfaction machinery used below; it is carried explicitly rather than turned into an additional property of the candidate table.
+# A Δ₀ description of the satisfaction table
 <!--zh-->
-这一构造仍以层级 `ℓ-suc ℓ` 上的排中律为条件。该假设支撑下文使用的编码与满足关系构造，但不会变成候选表的一项额外性质，而是始终显式携带。
+# 满足关系表的 Δ₀ 描述
 <!--ja-->
-この構成は引き続き、レベル `ℓ-suc ℓ` における排中律を仮定する。この仮定は以下の符号化と充足関係の構成を支えるが、候補の表に新たな性質を付け加えるものではなく、明示的な仮定として保たれる。
+# 充足関係表の Δ₀ 記述
 <!--/-->
 
 ```agda
@@ -41,6 +27,53 @@ Fix a universe level `ℓ` and this single classical hypothesis. Every object us
 module L.GCH.SatisfactionDescription {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax using
+  ( Formula; _∧̇_ )
+open import FOL.LevyHierarchy using ( Δ₀; δ-∧ )
+import FOL.Absoluteness
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Coding {ℓ} using ( pr; pr-inj )
+open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
+open import L.Coding.EnvironmentSet {ℓ} lem using ( envSet )
+open import L.Coding.CodeSet {ℓ} lem using ( AllCodes; AllCodes-out; key∈AllCodes; keyS )
+open import L.Coding.UniformSatisfaction {ℓ} lem using ( module Table; val-at )
+open import L.Coding.PinnedRecursion {ℓ} lem using ( module Match ) public
+open import L.Coding.PinnedRecursion {ℓ} lem using ( module SatSoundC; module SatHoldsC )
+open import L.Coding.Quantification {ℓ} using ( f0; down )
+open import L.Coding.CodeAlphabet {ℓ} using ( module Alphabet )
+open import L.Coding.CodeDomain {ℓ} using ( Tags; codesAt; Δ₀-codesAt )
+open import L.Coding.CodeDomainAdequacy {ℓ} lem
+  using ( module CodesSound; module CodesComplete; module CodesHolds )
+open import L.Coding.EnvironmentTower {ℓ} lem
+  using ( towerAt; Δ₀-towerAt; module Tower; module TowerRead; module TowerHolds )
+open import L.Coding.SatisfactionClauses {ℓ} using ( tableAt; Δ₀-tableAt )
+open import L.Coding.SatisfactionClauseSemantics {ℓ} lem using ( module Frame; module Bridge )
+open import L.Coding.SatisfactionGraphSet {ℓ} lem using ( module SatGraph )
+```
+
+<!--en-->
+
+The external semantic recursion has already produced the uniform satisfaction table. The question is now how a formula interpreted in `L` can recognize a candidate set as that same graph. We will package the environment tower, formula code domain, the table's two domain conditions, and its ten recursive constructor clauses into a bounded description that later formulas can quantify over.
+<!--zh-->
+
+外部语义递归已经构造出统一满足关系表。现在的问题是，在 `L` 中解释的公式如何把一个候选集合识别为同一张图。我们将把环境塔、公式码域、表的两条定义域条件与十条递归构造子子句封装成一条有界描述，供后续公式量化。
+<!--ja-->
+
+外部の意味論的再帰は、すでに一様な充足関係表を構成している。ここでの問いは、`L` で解釈される論理式が、候補の集合をその同じグラフとしてどのように認識できるかである。環境の塔、論理式の符号領域、表の二つの領域条件、および十個の再帰的な構成子の節を、後の論理式が量化できる一つの有界な記述にまとめる。
+<!--/-->
+
+<!--en-->
+The construction remains relative to excluded middle at level `ℓ-suc ℓ`. This hypothesis supports the coding and satisfaction machinery used below; it is carried explicitly rather than turned into an additional property of the candidate table.
+<!--zh-->
+这一构造仍以层级 `ℓ-suc ℓ` 上的排中律为条件。该假设支撑下文使用的编码与满足关系构造，但不会变成候选表的一项额外性质，而是始终显式携带。
+<!--ja-->
+この構成は引き続き、レベル `ℓ-suc ℓ` における排中律を仮定する。この仮定は以下の符号化と充足関係の構成を支えるが、候補の表に新たな性質を付け加えるものではなく、明示的な仮定として保たれる。
+<!--/-->
+
+
+
 <!--en-->
 The final description is built by conjoining three formulas. Its syntactic goal is a `Δ₀` certificate: every quantifier in the description remains bounded. This boundedness is the precise condition that later allows satisfaction in `L` to be compared with satisfaction in the ambient hierarchy.
 <!--zh-->
@@ -48,14 +81,6 @@ The final description is built by conjoining three formulas. Its syntactic goal 
 <!--ja-->
 最終的な記述は三つの論理式の連言として作られる。統語上の目標は `Δ₀` の証拠、すなわち記述中のすべての量化子が有界であることである。この有界性によって、後で `L` の内部の充足関係と周囲の階層における充足関係を比較できる。
 <!--/-->
-
-```agda
-open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using
-  ( Formula; _∧̇_ )
-open import FOL.LevyHierarchy using ( Δ₀; δ-∧ )
-import FOL.Absoluteness
-```
 
 <!--en-->
 Three kinds of encoded data must agree. Formula keys belong to the canonical set `AllCodes W`; an arity `k` points to the environment set `envSet W k`; and ordered pairs package keys with their semantic values. Membership in `AllCodes W` reveals a formula key only under propositional truncation, a boundary that every later decoding step preserves.
@@ -65,14 +90,6 @@ Three kinds of encoded data must agree. Formula keys belong to the canonical set
 三種類の符号化データが互いに整合しなければならない。論理式の鍵は正準集合 `AllCodes W` に属し、アリティ `k` は環境集合 `envSet W k` を指し、順序対は鍵とその意味論的な値をまとめる。`AllCodes W` の要素が論理式の鍵であることは命題的切り詰めのもとでしか得られず、後の復号もこの境界を保つ。
 <!--/-->
 
-```agda
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-open import V.Coding {ℓ} using ( pr; pr-inj )
-open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
-open import L.Coding.EnvironmentSet {ℓ} lem using ( envSet )
-open import L.Coding.CodeSet {ℓ} lem using ( AllCodes; AllCodes-out; key∈AllCodes; keyS )
-```
-
 <!--en-->
 For each genuine formula key, the semantic recursion produces a satisfaction set `SatW ψ`, while the functional table records the corresponding value. The bounded description does not rerun that recursion internally. It lists ten local constructor clauses, and a structural argument shows that any candidate obeying them is pinned to the externally defined value at every genuine key.
 <!--zh-->
@@ -80,14 +97,6 @@ For each genuine formula key, the semantic recursion produces a satisfaction set
 <!--ja-->
 各々の実際の論理式の鍵について、意味論的再帰は充足集合 `SatW ψ` を作り、関数的な表は対応する値を記録する。有界な記述は、その再帰を内部でもう一度実行するのではない。十個の局所的な構成子の節を並べ、構造的な議論によって、それらに従う候補の表が各々の実際の鍵で外部に定義された値へ固定されることを示す。
 <!--/-->
-
-```agda
-open import L.Coding.UniformSatisfaction {ℓ} lem using ( module Table; val-at )
-open import L.Coding.PinnedRecursion {ℓ} lem using ( module Match ) public
-open import L.Coding.PinnedRecursion {ℓ} lem using ( module SatSoundC; module SatHoldsC )
-open import L.Coding.Quantification {ℓ} using ( f0; down )
-open import L.Coding.CodeAlphabet {ℓ} using ( module Alphabet )
-```
 
 <!--en-->
 The constructor clauses can be read only after their domain is controlled. The candidate code domain must contain all genuine formula keys and admit only such keys, while the environment tower relates each natural-number arity to the environments of that length. These two descriptions supply the induction with exactly the subformula keys and environments it needs.
@@ -97,14 +106,6 @@ The constructor clauses can be read only after their domain is controlled. The c
 構成子の節を読むには、まずその定義域を制御する必要がある。候補のコード領域は、実際の論理式の鍵をすべて含み、しかもそのような鍵だけを許さなければならない。環境の塔は各自然数アリティを、その長さの環境と結び付ける。この二つの記述が、帰納に必要な部分論理式の鍵と環境をちょうど供給する。
 <!--/-->
 
-```agda
-open import L.Coding.CodeDomain {ℓ} using ( Tags; codesAt; Δ₀-codesAt )
-open import L.Coding.CodeDomainAdequacy {ℓ} lem
-  using ( module CodesSound; module CodesComplete; module CodesHolds )
-open import L.Coding.EnvironmentTower {ℓ} lem
-  using ( towerAt; Δ₀-towerAt; module Tower; module TowerRead; module TowerHolds )
-```
-
 <!--en-->
 The remaining object is the graph of the uniform table. Its entries are encoded pairs of a formula key and a satisfaction set. The ten bounded clauses describe how the second component depends on the constructor encoded by the first, and the real graph will provide the completeness witness for those clauses.
 <!--zh-->
@@ -113,12 +114,6 @@ The remaining object is the graph of the uniform table. Its entries are encoded 
 残る対象は、一様な充足関係表のグラフである。その項目は、論理式の鍵と充足集合からなる符号化された対である。十個の有界な節は、第二成分が第一成分に符号化された構成子からどのように決まるかを記述し、実際のグラフがそれらの節の完全性の証人になる。
 <!--/-->
 
-```agda
-open import L.Coding.SatisfactionClauses {ℓ} using ( tableAt; Δ₀-tableAt )
-open import L.Coding.SatisfactionClauseSemantics {ℓ} lem using ( module Frame; module Bridge )
-open import L.Coding.SatisfactionGraphSet {ℓ} lem using ( module SatGraph )
-```
-
 <!--en-->
 An interpreting environment is a finite vector of constructible sets, and its indices identify the table, working set, code domain, tower, and numeral tags. Dependent pairs express the witnesses returned by the readers. Whenever such a witness is propositionally truncated, it may be used only to prove another proposition, never as globally chosen data.
 <!--zh-->
@@ -126,8 +121,6 @@ An interpreting environment is a finite vector of constructible sets, and its in
 <!--ja-->
 解釈環境は構成可能集合の有限ベクトルであり、その添字が表、作業集合、コード領域、塔、数項タグを指定する。依存対は各読みが返す証人を表す。その証人が命題的切り詰めのもとにある場合、別の命題を証明するためにだけ使うことができ、大域的に選ばれたデータにはできない。
 <!--/-->
-
-
 
 <!--en-->
 Natural-number arities are represented inside the cumulative hierarchy by the numerals `# k`. Thus an environment-tower entry is encoded as the pair of `# k` with `envSet W k`. Equality is always asserted between the underlying hierarchy sets, which is the level at which the coding theorems operate.
@@ -183,7 +176,6 @@ For soundness, fix candidate sets `T`, `C`, and `E`, a working set `W`, ten nume
 <!--ja-->
 健全性のために、候補集合 `T`、`C`、`E`、作業集合 `W`、十個の数項タグ、そしてそれらを読む環境を固定する。塔、コード領域、表の記述が成り立つことを個別に仮定し、作業集合のスロットだけを `W` と整合させる。三つの記述の仮定のどれも、残りの二つからは従わない。
 <!--/-->
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
@@ -434,7 +426,6 @@ The candidate value is pinned to the recursive satisfaction set, and the value l
 </div>
 </details>
 
-
 <!--en-->
 ## Completeness and the two readings
 <!--zh-->
@@ -450,7 +441,6 @@ Completeness starts from concrete semantic objects rather than an arbitrary cand
 <!--ja-->
 完全性は任意の候補ではなく、具体的な意味論的対象から始める。環境の四つのスロットは、それぞれ `W`、実際のグラフ `SatGraph.pairs W`、正準なコード集合 `AllCodes W`、実際の塔 `Tower.tower W` と整合し、十個のタグも固定される。これらの整合は仮定であり、有界な節から得られる結論ではない。
 <!--/-->
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
@@ -559,7 +549,6 @@ The inputs to `SatHoldsC.holds` have distinct jobs. The real tower supplies the 
 </div>
 </details>
 
-
 <!--en-->
 The sealed formula `satAt` packages three independent descriptions: `towerAt`, `codesAt`, and `tableAt`. The tower component is passed the tag slot `N f0`, which `Tags` identifies with the numeral zero; the code-domain and table components receive the whole ten-slot family `N`. This conjunction by itself adds no equality with the canonical tower, code set, or satisfaction graph.
 <!--zh-->
@@ -638,7 +627,6 @@ Conversely, proofs of those three descriptions combine to establish `satAt`. The
 `SatRead` は、`satAt` を満たす候補に対する健全性側の接続口である。作業集合のスロットが `W` と同定され、`Tags` が数項のスロットを整合させた後にのみ適用でき、上で証明した六つの正確な外向きと内向きの規則を公開する。それぞれの結論の形はそのまま保たれる。この接続口は、それらを候補集合と正準集合との一括した等しさに置き換えず、選ばれた復号結果や証人も取り出さない。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -649,9 +637,8 @@ module SatRead {m : ℕ} (T w C E : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) (
 <div class="submodule-fold-content">
 
 ```agda
-  private
-    module SS = SatSound T w C E N γ W qw tg
-      (satAt-out T w C E N γ h .fst) (satAt-out T w C E N γ h .snd .fst) (satAt-out T w C E N γ h .snd .snd)
+  private module SS = SatSound T w C E N γ W qw tg
+            (satAt-out T w C E N γ h .fst) (satAt-out T w C E N γ h .snd .fst) (satAt-out T w C E N γ h .snd .snd)
 ```
 
 <!--en-->
@@ -667,7 +654,6 @@ For codes, the two directions compare membership with `AllCodes W`. For tower en
 ```
 </div>
 </details>
-
 
 <!--en-->
 The converse theorem assumes that the four slots already present the intended objects: `W`, its satisfaction graph, its complete code set, and its environment tower. It also assumes the ten correct numeral tags. These alignments are input data for completeness and are not recovered from `satAt`.

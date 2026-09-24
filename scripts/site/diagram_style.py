@@ -2,6 +2,7 @@
 from html.parser import HTMLParser
 from pathlib import Path
 import re
+from statement_structure import route_lines
 
 FIGURE = re.compile(r'<figure\b.*?</figure>', re.S)
 SHAPES = {'path', 'circle', 'rect', 'line', 'polyline', 'polygon', 'ellipse'}
@@ -96,8 +97,43 @@ def path_endpoints(data):
     return result
 
 
+def check_figure_code_adjacency(source):
+    """Check each reading route, retaining source lines in diagnostics.
+
+    Invisible comments and layout/fold wrappers do not separate a figure from
+    code. Fenced examples are opaque: HTML examples are not live figures, and
+    Agda fences are represented by one sentinel before scanning adjacency.
+    """
+    errors = []
+    fences = re.compile(r'^ {0,3}(`{3,}|~{3,})([^\n]*)\n.*?^ {0,3}\1[ \t]*(?=\n|$)',
+                        re.M | re.S)
+    transparent = r'(?:\s|<!--.*?-->|</?(?:div|details|summary|section)\b[^>]*>|^:{3,}[^\n]*$)*'
+    adjacent = re.compile(r'</figure>' + transparent + r'\x01', re.M | re.S)
+    for language in ('en', 'zh', 'ja'):
+        pieces, end = [], 0
+        for offset, line in route_lines(source, language):
+            pieces.append(re.sub(r'[^\n]', ' ', source[end:offset]))
+            pieces.append(line)
+            end = offset + len(line)
+        route = ''.join(pieces)
+
+        def mask_fence(match):
+            info = match[2].strip()
+            agda = info == 'agda' or bool(re.match(r'^\{\.agda(?:\s|\})', info))
+            return ('\x01' if agda else '\x02') + re.sub(r'[^\n]', ' ', match[0][1:])
+
+        route = fences.sub(mask_fence, route)
+        # A commented-out figure must not introduce an adjacency requirement.
+        route = re.sub(r'<!--.*?-->', lambda m: re.sub(r'[^\n]', ' ', m[0]), route, flags=re.S)
+        for match in adjacent.finditer(route):
+            line = route.count('\n', 0, match.end() - 1) + 1
+            errors.append(f'{line}: {language}: Agda code must not immediately follow a figure; '
+                          'place it after its explanation or reorganize the surrounding prose')
+    return errors
+
+
 def check_text(source):
-    errors, seen = [], set()
+    errors, seen = check_figure_code_adjacency(source), set()
     # Code examples are not figures. Preserve line offsets for useful diagnostics.
     source = re.sub(r'^(`{3,}|~{3,})[^\n]*\n.*?^\1\s*$',
                     lambda m: '\n' * m[0].count('\n'), source, flags=re.M | re.S)
@@ -184,5 +220,38 @@ def check_text(source):
     return errors
 
 
+def check_stylesheet(css, figure_classes=()):
+    """Diagram relations must not borrow the site's navigational link colour.
+
+    Explicit anchors and Agda/term links are legitimate links inside a figure;
+    their colours remain independent. Also inspect classes used by actual
+    figures, so a new layout name cannot accidentally escape the rule.
+    """
+    errors = []
+    css = re.sub(r'/\*.*?\*/', '', css, flags=re.S)
+    classes = set(figure_classes)
+    for selector, declarations in re.findall(r'([^{}]+)\{([^{}]*)\}', css):
+        if not re.search(r'var\(\s*--link-color\b', declarations):
+            continue
+        for branch in selector.split(','):
+            used = set(re.findall(r'\.([\w-]+)', branch))
+            diagram = bool(used & classes or any(name == 'book-diagram' or
+                          name.startswith(('diagram-', 'hlevel-')) for name in used))
+            explicit_link = (re.search(r'(?<![\w-])a(?=[\s.#:\[>+~]|$)', branch.strip())
+                             or used & {'Agda', 'term-ref', 'inline-ref'})
+            if diagram and not explicit_link:
+                errors.append(f'{branch.strip()}: non-link diagram content must not use --link-color; use a diagram role token')
+    return errors
+
+
 def check_sources(paths):
-    return [f'{path}:{error}' for path in paths for error in check_text(Path(path).read_text())]
+    errors, classes = [], set()
+    for path in paths:
+        source = Path(path).read_text()
+        errors.extend(f'{path}:{error}' for error in check_text(source))
+        for fragment in FIGURE.findall(source):
+            for node in Tree(fragment).root.descendants():
+                classes.update(node.classes)
+    for path in sorted((Path(__file__).resolve().parents[2] / 'site/static').glob('*.css')):
+        errors.extend(f'{path}:{error}' for error in check_stylesheet(path.read_text(), classes))
+    return errors

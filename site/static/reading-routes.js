@@ -25,7 +25,7 @@
       prerequisites: "Direct prerequisites", noPrerequisites: "No direct prerequisites",
       onward: "Possible next chapters", noOnward: "No direct continuation is listed yet.",
       allRoutes: "Explore all routes", loadError: "The interactive routes could not be loaded. The catalog and chapter links remain available.",
-      recommended: "Reading guide", depmap: "Dependency map",
+      recommended: "Interactive contents", depmap: "Dependency graph",
       of: "of", routes: "Routes", needs: "Needs", module: "Module",
       allComplete: "All non-preview chapters are marked complete.", saved: "chapters complete"
     },
@@ -47,7 +47,7 @@
       prerequisites: "直接の前提", noPrerequisites: "直接の前提はありません",
       onward: "次に進める章", noOnward: "直接続く章はありません。",
       allRoutes: "全ルートを見る", loadError: "ルートを読み込めませんでした。目次と章へのリンクは使えます。",
-      recommended: "読書案内", depmap: "依存マップ",
+      recommended: "対話型目次", depmap: "依存グラフ",
       of: "/", routes: "ルート", needs: "必要", module: "モジュール",
       allComplete: "展望を除く全章を完了しました。", saved: "章を完了"
     },
@@ -69,7 +69,7 @@
       prerequisites: "直接先修", noPrerequisites: "没有直接先修",
       onward: "可选后续章节", noOnward: "目前没有列出直接后续。",
       allRoutes: "查看全部路线", loadError: "交互路线暂时无法载入，原目录与章节链接仍可使用。",
-      recommended: "阅读指南", depmap: "依赖地图",
+      recommended: "交互式目录", depmap: "依赖图",
       of: "/", routes: "路线", needs: "需补", module: "模块",
       allComplete: "所有非预览章节均已标记完成。", saved: "章已完成"
     }
@@ -385,33 +385,39 @@
 
   function renderCompact(node, nodes, routes, prerequisites, missing, ready) {
     if (!node) return;
-    const wasOpen = host.querySelector(".reading-compact")?.open || false;
+    const previous = host.querySelector(".reading-compact");
+    const wasOpen = previous?.dataset.foldExpanded !== undefined
+      ? previous.dataset.foldExpanded === "true" : previous?.open || false;
     const wrap = el("details", "reading-compact");
     wrap.open = wasOpen;
-    const summary = el("summary", "compact-summary", copy.compactIntro);
-    const top = el("div", "compact-top");
+    const summary = el("summary", "compact-summary");
+    summary.append(el("span", "compact-summary-title", copy.compactIntro));
 
-    const doneControl = button(completed.has(node.id) ? copy.compactDone : copy.mark, "compact-done", () => {
+    const doneControl = button(completed.has(node.id) ? copy.compactDone : copy.mark, "compact-done", event => {
+      event.preventDefault(); event.stopPropagation();
       completed.has(node.id) ? completed.delete(node.id) : completed.add(node.id);
       save(); renderCompact(node, nodes, routes, prerequisites, missing, ready);
       requestAnimationFrame(() => host.querySelector(".compact-done")?.focus({ preventScroll: true }));
     });
     doneControl.setAttribute("aria-pressed", String(completed.has(node.id)));
-    if (!node.preview) top.append(doneControl);
+    if (!node.preview) summary.append(doneControl);
     const details = el("div", "compact-details");
     const prereq = prerequisites(node);
     details.append(compactList(copy.prerequisites, prereq,
-      item => completed.has(item.id) ? "is-complete" : "is-pending"));
+      item => completed.has(item.id) ? "is-complete" : "is-pending", node.id));
     const successors = [...nodes.values()].filter(item => (item.prerequisites || []).includes(node.id)).slice(0, 5);
     details.append(compactList(copy.onward, successors,
       item => ready(item) ? "is-available" : "is-pending"));
     const all = el("a", "compact-all", copy.allRoutes);
     all.href = "index.html#reading-explorer";
-    wrap.append(summary, top, details, all, el("p", "compact-storage", copy.intro));
+    const content = el("div", "compact-content");
+    content.append(details, all, el("p", "compact-storage", copy.intro));
+    wrap.append(summary, content);
     host.replaceChildren(wrap);
+    window.bedrockEnhanceDisclosure?.(wrap, summary, content, 160);
   }
 
-  function compactList(label, items, stateFor) {
+  function compactList(label, items, stateFor, importingModule) {
     const group = el("div", "compact-group");
     group.append(el("h3", "compact-label", label));
     if (!items.length) {
@@ -423,6 +429,16 @@
       const li = el("li", stateFor(item));
       const link = el("a", "", local(item.title));
       link.href = chapterHref(item.id);
+      const payload = importingModule && document.getElementById(
+        "boilerplate-import-" + importingModule + "-" + item.id);
+      if (payload) {
+        link.classList.add("boilerplate-hover");
+        link.dataset.hoverTemplate = payload.id;
+        link.dataset.hoverNavigate = "modal";
+        link.dataset.moduleTarget = "true";
+        link.dataset.name = item.id;
+        link.setAttribute("aria-haspopup", "dialog");
+      }
       li.append(link);
       list.append(li);
     }

@@ -1,13 +1,29 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+module FOL.Manipulation.ConstantMapping where
+```
+
 <!--en-->
 # Mapping constants
+<!--zh-->
+# 映射常元
+<!--ja-->
+# 定数の写像
+<!--/-->
+
+```agda
+open import Base.Prelude
+open import FOL.Syntax using
+  ( Term; con; var; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
+```
+
+<!--en-->
 
 A function between constant domains acts on first-order syntax by replacing every constant symbol and leaving every variable untouched. This chapter defines that action on terms and formulas, proves that it respects composition, and specializes the formula map to carry parameter-free formulas, whose constant domain is the empty type, into formulas over any constant domain.
 <!--zh-->
-# 映射常元
 
 常元域之间的函数作用于一阶语法的方式是：替换每个常元符号，而保持每个变量不变。本章在词项与公式上定义这个作用，证明它与复合相容，并把公式映射特殊化：以空类型为常元域的无参公式可由此进入任意常元域上的公式。
 <!--ja-->
-# 定数の写像
 
 定数域の間の関数は、各定数記号を置き換え、変数をそのままにすることで一階の構文に作用する。本章では項と論理式に対するこの作用を定義して合成との両立を証明し、さらに論理式の写像を特殊化して、定数域が空型である無パラメータ論理式を任意の定数域上の論理式へ移す。
 <!--/-->
@@ -20,16 +36,6 @@ A formula such as `var 0 ∈̇ con k` names two things in two different ways: `v
 `var 0 ∈̇ con k` という論理式は、二つの対象を二つの仕方で指している。`var 0` は自由変数を経由し、`con k` は定数域、つまりある型 `K` を経由して指すのである。ここで関数 `f : K → K'` が与えられたとき、改名後の論理式はどんな形になるべきであろうか。自然な答えは、動くのは定数だけ、というものである。`con k` は `con (f k)` になり、変数・所属関係・論理式全体の形はそのまま保たれる。本章ではまず項の上で、次に論理式の上でこの改名を定義する。使うのは構文の章の型 `Term` と `Formula` とそのすべての構成子、すなわち原子関係 `_∈̇_` と `_≐_`、論理結合子、そして束縛形式 `∀̇∈` と `∃̇∈` を含む量化子である。
 <!--/-->
 
-```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-module FOL.Manipulation.ConstantMapping where
-
-open import Base.Prelude
-open import FOL.Syntax using
-  ( Term; con; var; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
-```
-
 <!--en-->
 One special choice of domain will deserve its own attention: the empty type `⊥*`. A formula whose constant domain is `⊥*` contains no constants at all, and the end of this chapter studies how such formulas map into formulas over any `K`. Until then, everything takes place for an arbitrary function between constant domains.
 <!--zh-->
@@ -37,9 +43,6 @@ One special choice of domain will deserve its own attention: the empty type `⊥
 <!--ja-->
 特別な定数域が一つ、後で独自に扱うことになる。空型 `⊥*` である。定数域が `⊥*` である論理式には定数がまったく現れず、本章の末尾では、そのような論理式が任意の `K` 上の論理式へどう写るかを扱う。それまでの議論は、定数域の間の任意の関数に対して行われる。
 <!--/-->
-
-```agda
-```
 
 <!--en-->
 ## Syntax level
@@ -149,7 +152,6 @@ For formulas the same square is stated by `mapFo-comp`: the two routes around th
 <!--/-->
 
 ```agda
-
 mapFo-comp : ∀ {ℓ ℓ' ℓ''} {K : Type ℓ} {K' : Type ℓ'} {K'' : Type ℓ''} {n}
              (f : K → K') (g : K' → K'') (φ : Formula K n)
            → mapFo g (mapFo f φ) ≡ mapFo (λ k → g (f k)) φ

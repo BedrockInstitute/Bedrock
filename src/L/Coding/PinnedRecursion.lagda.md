@@ -1,27 +1,13 @@
-<!--en-->
-# Pinning recursion on a subcode-closed domain
-
-Fix an index set of hierarchy codes that is closed under the immediate formula subcodes demanded by each recognized constructor shape. Assume also that the carrier slot, tag slots, and environment tower have their canonical meanings and that the table satisfies the complete table specification. The first half of this chapter then proves a local uniqueness statement: whenever a known formula key belongs to the index set and a table entry is supplied at that key, the entry's underlying set is the recursively defined satisfaction set. Independently of closure, the second half builds the table clauses from explicit carrier, tag, tower, value-agreement, decoding, totality, and domain hypotheses. Neither direction produces a globally chosen satisfaction function.
-<!--zh-->
-# 在对子码封闭的定义域上钉扎递归
-
-固定一个由层级码组成的索引集，并要求它对每个已识别构造子形状所需的直接公式子码封闭；另假设载体槽、各标签槽与环境塔具有典范含义，且表满足完整的表规格。本章前半部分由此证明一条局部唯一性结论：只要一条已知公式的键属于该索引集，且该键处给定一个表项，该表项的底层集合就等于递归定义的满足关系集合。后半部分不使用封闭性，而从显式给定的载体、标签、环境塔、取值相符性、解码、全定义性与定义域假设构造表子句。两个方向都不会产生一个全局选定的满足关系函数。
-<!--ja-->
-# 部分符号で閉じた領域上で再帰を固定する
-
-階層の符号からなる添字集合を固定し、認識された各構成子の形が要求する直下の論理式部分符号について閉じていると仮定する。さらに、台のスロット、タグの各スロット、環境の塔が標準的な意味をもち、表が完全な表仕様を満たすと仮定する。すると本章の前半は局所的な一意性を示す。既知の論理式のキーがその添字集合に属し、そのキーで表項目が与えられていれば、その項目の基礎集合は再帰的に定義された充足関係集合に等しくなる。後半は閉性を用いず、台、タグ、環境の塔、値の一致、復号、全域性、領域について明示された仮定から表の各節を組み立てる。どちらの向きも、大域的に選ばれた充足関係関数を与えるものではない。
-<!--/-->
-
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
 ```
 
 <!--en-->
-The argument is carried out relative to an explicit instance of excluded middle. Classical logic supports the imported constructions of satisfaction sets, environment sets, and tables, but it does not remove propositional truncation: a decoded formula or a child table value may still be known only to exist.
+# Pinning recursion on a subcode-closed domain
 <!--zh-->
-论证相对于一个显式给定的排中律实例进行。经典逻辑支撑所引入的满足关系集合、环境集与表的构造，但不会消除命题截断：解码所得的公式或子公式处的表值仍可能只被知道存在。
+# 在对子码封闭的定义域上钉扎递归
 <!--ja-->
-議論は、明示的に与えた排中律の実例に相対して進む。古典論理は、導入済みの充足関係集合、環境集合、表の構成を支えるが、命題的切り詰めを取り除くわけではない。復号された論理式や子論理式の表の値は、存在だけが分かる場合がある。
+# 部分符号で閉じた領域上で再帰を固定する
 <!--/-->
 
 ```agda
@@ -41,6 +27,59 @@ The module fixes the universe level and names the classical hypothesis: every th
 module L.Coding.PinnedRecursion {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax using
+  ( Formula; Term; var; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇∈; ∀̇∈; ∃̇_; ∀̇_ )
+import FOL.Absoluteness
+open import FOL.Manipulation.ConstantMapping using ( mapFo; mapFo-comp )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Coding {ℓ} using ( pr; pr-inj; #-inj′; module VCode )
+open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
+open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
+open import L.Coding.Model {ℓ} using ( module LCode; prʟ-fst; codeBridge )
+open import L.Coding.Expressions {ℓ} using ( consAtL )
+open import L.Coding.Closure {ℓ} using ( closedAt; binShapeAt; unShapeAt; bothSameAt; oneSuccAt; succSndAt; binSameClosed-out; unSuccClosed-out; binSuccClosed-out )
+open import L.Coding.EnvironmentSet {ℓ} lem using ( envSet )
+open import L.Coding.CodeConstructibility {ℓ} using ( sglʟ; cupʟ; tree; tree-inv )
+open import L.Coding.CodeSet {ℓ} lem using ( AllCodes; AllCodes-out; keyS; codeS )
+open import L.Coding.Satisfaction {ℓ} lem using
+  ( Sat )
+open import L.Coding.SatisfactionBridge {ℓ} lem using ( asConst )
+open import L.Coding.SatisfactionTable {ℓ} lem using
+  ( keyʟ; slot; satTable; entry-out; inSlot; ent-slot ) renaming ( total to slotTotal )
+open import L.Coding.Quantification {ℓ} using
+  ( f0; f1; f2; f3; f4; f5; f6; f7; f8; f9; sh; i0; i1; i2; i3; i4; i7; i8
+  ; fstS; sndS; bigAnd-in; bigAnd-out )
+open import L.Coding.EnvironmentTower {ℓ} lem using ( nn; towerAt; module TowerRead )
+open import L.Coding.CodeDomain {ℓ} using ( Tags )
+open import L.Coding.CodeAlphabet {ℓ} using ( module Alphabet )
+open import L.Coding.SatisfactionClauses {ℓ} using ( tmIs; tableAt; module Clause; module Rel )
+open import L.Coding.SatisfactionClauseSemantics {ℓ} lem using
+  ( extB-out; extB-in; ExtFact; ext-unique; module Frame; module RelRead; module Bridge )
+```
+
+<!--en-->
+
+Fix an index set of hierarchy codes that is closed under the immediate formula subcodes demanded by each recognized constructor shape. Assume also that the carrier slot, tag slots, and environment tower have their canonical meanings and that the table satisfies the complete table specification. The first half of this chapter then proves a local uniqueness statement: whenever a known formula key belongs to the index set and a table entry is supplied at that key, the entry's underlying set is the recursively defined satisfaction set. Independently of closure, the second half builds the table clauses from explicit carrier, tag, tower, value-agreement, decoding, totality, and domain hypotheses. Neither direction produces a globally chosen satisfaction function.
+<!--zh-->
+
+固定一个由层级码组成的索引集，并要求它对每个已识别构造子形状所需的直接公式子码封闭；另假设载体槽、各标签槽与环境塔具有典范含义，且表满足完整的表规格。本章前半部分由此证明一条局部唯一性结论：只要一条已知公式的键属于该索引集，且该键处给定一个表项，该表项的底层集合就等于递归定义的满足关系集合。后半部分不使用封闭性，而从显式给定的载体、标签、环境塔、取值相符性、解码、全定义性与定义域假设构造表子句。两个方向都不会产生一个全局选定的满足关系函数。
+<!--ja-->
+
+階層の符号からなる添字集合を固定し、認識された各構成子の形が要求する直下の論理式部分符号について閉じていると仮定する。さらに、台のスロット、タグの各スロット、環境の塔が標準的な意味をもち、表が完全な表仕様を満たすと仮定する。すると本章の前半は局所的な一意性を示す。既知の論理式のキーがその添字集合に属し、そのキーで表項目が与えられていれば、その項目の基礎集合は再帰的に定義された充足関係集合に等しくなる。後半は閉性を用いず、台、タグ、環境の塔、値の一致、復号、全域性、領域について明示された仮定から表の各節を組み立てる。どちらの向きも、大域的に選ばれた充足関係関数を与えるものではない。
+<!--/-->
+
+<!--en-->
+The argument is carried out relative to an explicit instance of excluded middle. Classical logic supports the imported constructions of satisfaction sets, environment sets, and tables, but it does not remove propositional truncation: a decoded formula or a child table value may still be known only to exist.
+<!--zh-->
+论证相对于一个显式给定的排中律实例进行。经典逻辑支撑所引入的满足关系集合、环境集与表的构造，但不会消除命题截断：解码所得的公式或子公式处的表值仍可能只被知道存在。
+<!--ja-->
+議論は、明示的に与えた排中律の実例に相対して進む。古典論理は、導入済みの充足関係集合、環境集合、表の構成を支えるが、命題的切り詰めを取り除くわけではない。復号された論理式や子論理式の表の値は、存在だけが分かる場合がある。
+<!--/-->
+
+
+
 <!--en-->
 Structural recursion follows the ten constructors of the formula grammar: membership and equality atoms, conjunction, disjunction, implication, falsity, the two unbounded quantifiers, `∀[]-syntax`, and `∃[]-syntax`. Constant relabelling lets the same syntactic tree be read first over the member alphabet of a carrier and then over the constructible carrier, without changing its constructor structure.
 <!--zh-->
@@ -48,14 +87,6 @@ Structural recursion follows the ten constructors of the formula grammar: member
 <!--ja-->
 構造再帰は論理式文法の十個の構成子、すなわち所属と等号の原子論理式、連言、選言、含意、偽、二つの非有界量化子、`∀[]-syntax`、`∃[]-syntax` に沿って進む。定数の付け替えにより、同じ構文木をまず台の要素からなるアルファベット上で読み、次に構成可能な台の上で読むことができ、構成子の形は変わらない。
 <!--/-->
-
-```agda
-open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using
-  ( Formula; Term; var; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇∈; ∀̇∈; ∃̇_; ∀̇_ )
-import FOL.Absoluteness
-open import FOL.Manipulation.ConstantMapping using ( mapFo; mapFo-comp )
-```
 
 <!--en-->
 A formula key combines its arity with its syntax code by set-theoretic pairing. There are two versions of this construction: one directly in the cumulative hierarchy and one internally in `L`, carrying constructibility proofs. Pair projection, numeral projection, and code projection will show that their underlying hierarchy sets agree.
@@ -65,14 +96,6 @@ A formula key combines its arity with its syntax code by set-theoretic pairing. 
 論理式キーは、アリティと構文符号を集合論的な順序対で組み合わせたものである。この構成には、累積階層で直接行うものと、構成可能性の証明を伴って `L` の内部で行うものがある。対、数項、論理式符号についての射影定理により、両者の基礎にある階層集合が一致することを示す。
 <!--/-->
 
-```agda
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-open import V.Coding {ℓ} using ( pr; pr-inj; #-inj′; module VCode )
-open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
-open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
-open import L.Coding.Model {ℓ} using ( module LCode; prʟ-fst; codeBridge )
-```
-
 <!--en-->
 The closure condition follows exactly the recursive dependencies of formula satisfaction. A binary connective requires both same-arity formula children, an unbounded quantifier requires its successor-arity body, and `∀[]-syntax` or `∃[]-syntax` requires only its successor-arity formula body. The term code carried by either of the last two constructors is evaluated inside the clause and is not required to belong to the closed domain.
 <!--zh-->
@@ -80,14 +103,6 @@ The closure condition follows exactly the recursive dependencies of formula sati
 <!--ja-->
 閉性条件は、論理式の充足関係がもつ再帰的依存関係に正確に従う。二項結合子では同じアリティの二つの子論理式が、非有界量化子では後続アリティの本体が必要である。`∀[]-syntax` と `∃[]-syntax` では、後続アリティの論理式本体だけが必要である。後二者がもつ項の符号は節の内部で評価され、閉じた領域への所属を要求されない。
 <!--/-->
-
-```agda
-open import L.Coding.Expressions {ℓ} using ( consAtL )
-open import L.Coding.Closure {ℓ} using ( closedAt; binShapeAt; unShapeAt; bothSameAt; oneSuccAt; succSndAt; binSameClosed-out; unSuccClosed-out; binSuccClosed-out )
-open import L.Coding.EnvironmentSet {ℓ} lem using ( envSet )
-open import L.Coding.CodeConstructibility {ℓ} using ( sglʟ; cupʟ; tree; tree-inv )
-open import L.Coding.CodeSet {ℓ} lem using ( AllCodes; AllCodes-out; keyS; codeS )
-```
 
 <!--en-->
 For a formula `ψ`, `Sat` gives the canonical recursively defined set of satisfying environments. A satisfaction table instead stores coded key-value pairs. The theorem will compare a supplied value in such a pair with `Sat ψ`; table totality supplies child values only under propositional truncation, so the proof may use them to establish an equality but never turns them into a reusable choice function.
@@ -97,14 +112,6 @@ For a formula `ψ`, `Sat` gives the canonical recursively defined set of satisfy
 論理式 `ψ` に対し、`Sat` は再帰的に定義された、充足する環境の標準的な集合を与える。一方、充足関係の表は符号化されたキーと値の対を格納する。定理は、そこに与えられた値を `Sat ψ` と比較する。表の全域性が子論理式の値を与えるのは命題的切り詰めのもとだけなので、その値を等式の証明には使えても、再利用可能な選択関数にはできない。
 <!--/-->
 
-```agda
-open import L.Coding.Satisfaction {ℓ} lem using
-  ( Sat )
-open import L.Coding.SatisfactionBridge {ℓ} lem using ( asConst )
-open import L.Coding.SatisfactionTable {ℓ} lem using
-  ( keyʟ; slot; satTable; entry-out; inSlot; ent-slot ) renaming ( total to slotTotal )
-```
-
 <!--en-->
 Tags zero through nine select the ten constructor clauses. The environment tower records, for each natural arity `n`, the pair consisting of the numeral `# n` and the encoded set of length-`n` environments. These two coordinate systems let a clause recognize both the syntactic constructor and the arity at which its satisfaction set is being characterized.
 <!--zh-->
@@ -112,14 +119,6 @@ Tags zero through nine select the ten constructor clauses. The environment tower
 <!--ja-->
 零から九までのタグが十個の構成子の節を選ぶ。環境塔は各自然数アリティ `n` に対し、数項 `# n` と長さ `n` の符号化された環境集合との対を記録する。この二種類の座標により、節は構文上の構成子と、その充足関係集合を特徴づけるアリティの両方を認識できる。
 <!--/-->
-
-```agda
-open import L.Coding.Quantification {ℓ} using
-  ( f0; f1; f2; f3; f4; f5; f6; f7; f8; f9; sh; i0; i1; i2; i3; i4; i7; i8
-  ; fstS; sndS; bigAnd-in; bigAnd-out )
-open import L.Coding.EnvironmentTower {ℓ} lem using ( nn; towerAt; module TowerRead )
-open import L.Coding.CodeDomain {ℓ} using ( Tags )
-```
 
 <!--en-->
 The table specification has three mathematical parts: every domain key has some value, every table entry is a key-value pair whose key lies in the domain, and each of the ten constructors satisfies its semantic clause. The clause semantics turns the last part into extension facts. When a candidate value and the canonical recursive value have the same extension over the environment set, extensionality identifies their underlying hierarchy sets.
@@ -129,13 +128,6 @@ The table specification has three mathematical parts: every domain key has some 
 表の仕様には三つの数学的な部分がある。領域の各キーには何らかの値があり、各表項目は領域に属するキーと値の対であり、十個の構成子はそれぞれの意味論的な節を満たす。節の意味論は最後の部分を外延に関する事実として読む。候補の値と標準的な再帰値が環境集合上で同じ外延をもてば、外延性により両者の基礎となる階層集合が同一視される。
 <!--/-->
 
-```agda
-open import L.Coding.CodeAlphabet {ℓ} using ( module Alphabet )
-open import L.Coding.SatisfactionClauses {ℓ} using ( tmIs; tableAt; module Clause; module Rel )
-open import L.Coding.SatisfactionClauseSemantics {ℓ} lem using
-  ( extB-out; extB-in; ExtFact; ext-unique; module Frame; module RelRead; module Bridge )
-```
-
 <!--en-->
 Clause environments are finite vectors, and extending a frame shifts every older coordinate. Lookup and transport keep those coordinates aligned. Witnesses hidden by propositional truncation are eliminated only into proposition-valued targets: equality of underlying hierarchy sets in the pinning proof, and satisfaction of a fixed object-language clause in the filling proof. These eliminations do not expose reusable values, decodings, or frame data.
 <!--zh-->
@@ -143,8 +135,6 @@ Clause environments are finite vectors, and extending a frame shifts every older
 <!--ja-->
 節の環境は有限ベクトルであり、枠を拡張すると以前の座標はすべてずれる。参照と移送によって、それらの座標を対応させ続ける。命題的切り詰めの内側に隠れた証人を消去する先は命題値の目標に限られる。固定の証明では基礎となる階層集合の等式へ、節を埋める証明では固定された対象言語の節の充足へ消去する。これらの消去から、再利用可能な値、復号結果、枠のデータが取り出されることはない。
 <!--/-->
-
-
 
 <!--en-->
 Propositional truncation preserves that a witness exists while forgetting which witness it was. Its eliminator therefore requires a proposition-valued target. Membership in the hierarchy is proposition-valued, and the hierarchy `V` is an h-set, so an equality between two of its sets is also a proposition and is a legitimate target for the eliminations used below.
@@ -168,8 +158,6 @@ A constructor tag is stored as an element of `Fin 10`, while syntax codes use an
 <!--ja-->
 構成子タグは `Fin 10` の要素として格納されるが、構文符号では通常の自然数の数項を使う。写像 `toℕ` は上界の証明を忘れ、符号化された対に現れる数項の自然数を取り出す。元の上界により、現れうるタグは零から九までに限られる。
 <!--/-->
-
-
 
 <!--en-->
 Write `S` for the carrier of the first-order structure on `L`. An element of `S` consists of an underlying hierarchy set together with proof that it is constructible. Most conclusions in this chapter compare only the first projections, because equality of the represented sets is the mathematical content needed by satisfaction.
@@ -212,7 +200,6 @@ The two routes to a formula key are compared first. The external route embeds th
 まず、論理式のキーへの二つの経路を比較する。外側の経路は、アルファベットの記号を階層へ埋め込み、周囲の数項と対にする。内側の経路は、定数を構成可能な集合として付け替え、論理式を `L` の内部で符号化し、内部の数項と対にする。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -246,7 +233,6 @@ The proof aligns the syntax-code component first: relabelling the constants and 
 </div>
 </details>
 
-
 <!--en-->
 The matching module is stated for one carrier `W`: its alphabet supplies the term and formula syntax whose shapes are matched.
 <!--zh-->
@@ -254,7 +240,6 @@ The matching module is stated for one carrier `W`: its alphabet supplies the ter
 <!--ja-->
 一致のモジュールは、一つの台 `W` に対して述べられる。そのアルファベットが、形を照合する項と論理式の構文を供給する。
 <!--/-->
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
@@ -338,7 +323,6 @@ The tag reader `matchAt` does not decode an arbitrary set. It starts from an alr
 <!--/-->
 
 ```agda
-
   matchAt : ∀ {n} (ψ : Formula Ab n) (k : ℕ) (r : V ℓ) → cd ψ ≡ pr (# k) r → MatchN k ψ r
   matchAt (t ∈̇ u) k r e = at (t ∈̇ u) 0 k _ refl (t , u , (refl , refl)) r e
   matchAt (t ≐ u) k r e = at (t ≐ u) 1 k _ refl (t , u , (refl , refl)) r e
@@ -406,7 +390,6 @@ Injectivity of pairing equates the two arity numerals and the two payloads; nume
 </div>
 </details>
 
-
 <!--en-->
 ## Uniqueness on a subcode-closed domain
 <!--zh-->
@@ -422,7 +405,6 @@ The soundness argument is local to an arbitrary code domain `C`. Besides a propo
 <!--ja-->
 健全性の議論は、任意に与えた符号領域 `C` に局所化されている。候補となる表 `T` に加え、格納された台が `W` であること、十個のタグ位置が正しい数項をもつこと、環境の位置が正しい塔であること、`C` が必要な直下の論理式部分符号について閉じていること、そして `T` がまとめられた表の仕様を満たすことを仮定する。これらの仮定は、すべての論理式キーが `C` に属するとは述べない。
 <!--/-->
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
@@ -517,7 +499,6 @@ The case module packages the data of one induction step: a formula, its tag, its
 場合のモジュールは、一つの帰納の一歩のデータをまとめる。論理式、そのタグ、そのペイロードの集合、コードとペイロードの等式、コードの定義域の中でのキーの所属、候補の表の項目、そして項目の所属である。塔の読みが、論理式のアリティのための正準な塔の項目を供給する。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -563,7 +544,6 @@ Applying the selected clause to this concrete frame yields satisfaction of the t
 ```
 </div>
 </details>
-
 
 <!--en-->
 If a child formula key belongs to `Cv`, table totality gives only the propositional truncation of a pair consisting of a value `ya` and an entry at that key. Thus `sub` proves mere existence, not a selected value. Each recursive case eliminates this witness directly into equality of hierarchy sets, where the h-set structure makes the target a proposition.
@@ -908,7 +888,6 @@ An atomic formula has no formula children, so its case needs no closure implicat
 <!--/-->
 
 ```agda
-
     atomCase : ∀ {n} (opA : ∀ {j} → Term Ab j → Term Ab j → Formula Ab j) (k : Fin 10)
                (t u : Term Ab n) (code : cd (opA t u) ≡ pr (# (toℕ k)) (pr (ct t) (ct u)))
                (rel : Formula S (18 + m))
@@ -989,7 +968,6 @@ For the membership atom, satisfaction at the displayed environment is definition
 <!--/-->
 
 ```agda
-
     memAgree : ∀ {j} (env : S ^ j) (z v x : S)
              → (⟨ (x ∷ v ∷ z ∷ env) ⊨ var i1 ∈̇ var i0 ⟩ → ⟨ fst v ∈ fst x ⟩) × (⟨ fst v ∈ fst x ⟩ → ⟨ (x ∷ v ∷ z ∷ env) ⊨ var i1 ∈̇ var i0 ⟩)
     memAgree env z v x = (λ h → h) , (λ h → h)
@@ -1034,7 +1012,6 @@ The next form of the binary closure lemma fixes the two child formulas before th
 <!--/-->
 
 ```agda
-
     clBin : (n k : ℕ) (a b : Formula Ab n)
           → ⟨ γ ⊨ binShapeAt C k (bothSameAt C) ⟩
           → (ψ : Formula Ab n) → cd ψ ≡ pr (# k) (pr (cd a) (cd b))
@@ -1051,7 +1028,6 @@ For an unbounded quantifier, closure follows the sole formula component of the c
 <!--/-->
 
 ```agda
-
     clQu : (n k : ℕ) (a : Formula Ab (suc n)) (ψ : Formula Ab n)
          → ⟨ γ ⊨ unShapeAt C k (oneSuccAt C) ⟩ → cd ψ ≡ pr (# k) (cd a)
          → ⟨ fst (keyS W ψ) ∈ Cv ⟩ → ⟨ fst (keyS W a) ∈ Cv ⟩
@@ -1068,7 +1044,6 @@ For a bounded quantifier, the payload contains a term code first and a body-form
 <!--/-->
 
 ```agda
-
     clBq : (n k : ℕ) (t : Term Ab n) (a : Formula Ab (suc n)) (ψ : Formula Ab n)
          → ⟨ γ ⊨ binShapeAt C k (succSndAt C) ⟩ → cd ψ ≡ pr (# k) (pr (ct t) (cd a))
          → ⟨ fst (keyS W ψ) ∈ Cv ⟩ → ⟨ fst (keyS W a) ∈ Cv ⟩
@@ -1101,7 +1076,6 @@ The pinned predicate is proved by structural recursion on the formula. The membe
 <!--/-->
 
 ```agda
-
   pinned : ∀ {n} (ψ : Formula Ab n) → Pinned ψ
   pinned (t ∈̇ u) = atomCase _∈̇_ f0 t u refl (var i1 ∈̇ var i0) refl
     (λ env wi ti ui N0i N1i qw' qt qu q0 q1 →
@@ -1173,7 +1147,6 @@ The bounded existential branch invokes the bounded case with the existential `�
 </div>
 </details>
 
-
 <!--en-->
 ## Filling all satisfaction clauses
 <!--zh-->
@@ -1189,7 +1162,6 @@ We now prove the converse direction. Rather than extracting recursive values fro
 <!--ja-->
 ここから逆向きの接続を証明する。節から再帰的な値を取り出すのではなく、表に表示された値がすでに再帰的に定めた充足集合と一致すると仮定し、その一致を使って各節を検証する。作業集合 `W` は、この向きで一貫して使うアルファベット、充足の橋、構成子符号の照合を定める。
 <!--/-->
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
@@ -1213,7 +1185,6 @@ Fix the table, carrier, code-domain, and environment-tower slots in one environm
 一つの環境の中で、表、台、論理式符号の領域、環境の塔の各スロットを固定し、十個の数項タグと塔の仕様を与える。中心となる仮定 `val≡` は条件付きである。既知の論理式の鍵と、その鍵にある与えられた表の要素に対して、その要素の基礎の値を論理式の再帰的な充足集合と同定する。すべての鍵が表されるとは主張せず、表の要素を選ぶこともしない。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -1233,8 +1204,6 @@ Fix the table, carrier, code-domain, and environment-tower slots in one environm
 </summary>
 <div class="submodule-fold-content">
 
-
-
 <!--en-->
 Three further assumptions provide existence only under propositional truncation. A domain member presented as an arity-code pair merely decodes to a formula of that stated arity; totality merely supplies some table value at each domain key; and every table member merely decomposes into a key-value pair whose key belongs to the domain. None of these assumptions defines a reusable decoder or value-selection function.
 <!--zh-->
@@ -1242,8 +1211,6 @@ Three further assumptions provide existence only under propositional truncation.
 <!--ja-->
 さらに三つの仮定は、命題的切り詰めの下でのみ存在を与える。領域の要素がアリティ符号とペイロードの対として提示されると、指定されたそのアリティの論理式へ単に復号できるだけである。全域性は各領域の鍵にある何らかの表の値を単に与え、表の各要素も、鍵が領域に属す鍵と値の対へ単に分解される。これらの仮定はいずれも、再利用できる復号関数や値の選択関数を定めない。
 <!--/-->
-
-
 
 <!--en-->
 The final assumption finishes the domain condition by requiring every represented table element to be merely a pair `(c,yc)` with `c` in the stated code domain. Thus totality controls entries from keys to values, while this condition controls table members back to domain keys. The abbreviations `Tv` and `Cv` name only the underlying table and domain sets used in these local statements.
@@ -1380,7 +1347,6 @@ Fixing a tag and one coherent twelve-object frame isolates a single constructor-
 <!--/-->
 
 ```agda
-
       module Fill (k : Fin 10) (A : Args k) where
         open Args A
 ```
@@ -1490,7 +1456,6 @@ For a quantified body, the child key has successor arity. The additional equatio
 <!--/-->
 
 ```agda
-
         subValS : (n : ℕ) (a : Formula Ab (suc n)) (c₁ ya e₁ ar' : S) → fst ar ≡ # n
                 → ⟨ fst e₁ ∈ Tv ⟩ → fst e₁ ≡ pr (fst c₁) (fst ya) → fst c₁ ≡ pr (fst ar') (cd a) → fst ar' ≡ sucV (fst ar)
                 → fst ya ≡ fst (SatW a)
@@ -1758,7 +1723,6 @@ The payload equation is again a pair equation, now separating the codes of the t
 <!--/-->
 
 ```agda
-
           go : (n : ℕ) (t u : Term Ab n) (ψ : Formula Ab n) → fst ar ≡ # n → fst F ≡ fst (envSet W n)
              → fst p ≡ cd ψ → ψ ≡ opA t u → fst r ≡ pr (ct t) (ct u) → ⟨ frame ⊨ R.atomRel rel ⟩
           go n t u ψ qa qF qp qψ qr = RR.atom-in rel (λ t' u' s' er →
@@ -1946,7 +1910,6 @@ The three parts now fit the definition of `tableAt`: `total` gives a merely exis
 </div>
 </details>
 
-
 <!--en-->
 ## Specializing to one formula's slot
 <!--zh-->
@@ -1962,7 +1925,6 @@ Fixing `W` determines two linked viewpoints. `Alphabet W` supplies formulas whos
 <!--ja-->
 `W` を固定すると、結び付いた二つの見方が定まる。`Alphabet W` は、定数が `W` の要素を名指す論理式とその符号を与え、`Bridge W` はそれらの定数を構成可能な台で解釈し、再帰的な充足と対象言語の節を比較する。以下の特殊化では、一つの論理式が生成するスロットにこの二つの見方を同時に用いる。
 <!--/-->
-
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
@@ -2060,7 +2022,6 @@ The bounded universal and existential cases also contribute only the formula bod
 `SlotHolds` は、表、台、符号領域、環境の塔の位置をそれぞれ `T`、`w`、`C`、`E` とし、さらに十個のタグ位置 `N` をもつ環境で働く。台、タグ、塔についての事実を仮定して基礎となる論理式 `ψ0` を固定し、等式 `qT` と `qC` は、`T` と `C` に格納された底集合だけを、`ψ0` が生成する正準な表とスロットに同定する。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -2073,8 +2034,6 @@ The bounded universal and existential cases also contribute only the formula bod
 </summary>
 <div class="submodule-fold-content">
 
-
-
 <!--en-->
 Only two underlying sets are abbreviated: `Tv` is the relation stored at the table position `T`, and `Cv` is the set stored at the code-domain position `C`. The following four constructions establish exactly the value-agreement, decoding, totality, and on-domain assumptions needed for these two sets.
 <!--zh-->
@@ -2084,7 +2043,6 @@ Only two underlying sets are abbreviated: `Tv` is the relation stored at the tab
 <!--/-->
 
 ```agda
-
     private
       Tv = fst (lookup T γ)
       Cv = fst (lookup C γ)
@@ -2210,7 +2168,6 @@ Consequently, the slot and satisfaction table generated by `ψ0`, as identified 
 
 </div>
 </details>
-
 
 <!--en-->
 ## Recap

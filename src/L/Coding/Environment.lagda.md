@@ -1,28 +1,18 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # Finite environments as set-coded graphs
-
-A satisfaction clause of the first-order language speaks about the value of a variable, but it can only quantify over sets. So before satisfaction can be computed inside set theory, a variable assignment itself must become a set. This chapter performs that encoding: a finite assignment, a function from variable indices to sets of `V ℓ`, is represented by its graph, the set of ordered pairs of the numeral for an index with the value there.
-
-The encoding is designed so that lookup inside the graph is exact. Because the key side consists of numerals, and numerals are injective, a pair sitting at the key for `i` in the graph has as its second component exactly the value at `i`, and nothing else. That functionality statement is the main lemma here.
-
-The second concern is extension. When satisfaction descends under a quantifier, the new value is placed at index zero and every old index moves up by one; on the key side this is precisely the von Neumann successor. The chapter therefore builds bounded formulas that say, in membership alone, that one index is the successor of another, that one pair is obtained from another by shifting its key, and finally that a whole set is the graph of the extended assignment. Each of these is proved as an adequacy statement: satisfaction of the formula is a path of truth values to the corresponding external fact about sets, and the graphs involved are compared by extensionality, member by member, never by selecting witnesses out of the truncated membership data.
 <!--zh-->
 # 作为集合编码图的有穷环境
-
-一阶语言的满足子句谈论变元的取值，却只能对集合作量化。因此，要使满足关系能在集合论内部被计算，变元赋值本身必须先成为一个集合。本章完成这一编码：一个有穷赋值，即从变元序号到 `V ℓ` 中集合的函数，由它的图表示，也就是「序号的数码与该处取值」之对的集合。
-
-这一编码的设计目标是图中的查值精确。由于键的一侧由数码构成，而数码是单射的，坐在键 `i` 处的那个对的第二分量恰为 `i` 处的值，别无他物。这条函数性命题是本章的主引理。
-
-第二个关注点是扩张。当满足关系下降到量词之下时，新值被放在索引零处，每个旧索引上移一位；在键的一侧，这恰是 von Neumann 后继。故本章构造若干有界公式，仅凭隶属说出：一个索引是另一个的后继；一个对是把另一个的键移位后得到的；以及最终，一个集合是扩张后赋值的图。每一条都以充分性命题的形式证明：公式的满足是一条真值路径，通向关于集合的相应外部事实，而所涉的图都靠外延性逐成员比较，从不从截断的隶属数据中挑选见证。
 <!--ja-->
 # 集合で符号化した有限環境
-
-一階言語の充足の各節は変数の値について語るが、量化できるのは集合の上だけである。したがって充足関係を集合論の内部で計算するには、変数割当てそのものが先に集合にならなければならない。本章はこの符号化を行う。すなわち、変数の添字から `V ℓ` の集合への関数という有限な割当てを、そのグラフ、つまり「添字の数項とそこでの値」の対の集合として表す。
-
-この符号化の設計目標は、グラフの中での参照を正確にすることである。鍵の側が数項からなり、数項が単射であるため、鍵 `i` の位置に座る対の第二成分は `i` での値にちょうど等しく、それ以外の何ものでもない。この関数性の主張が本章の主補題である。
-
-第二の関心事は拡張である。充足が量化子の内側へ降りるとき、新しい値は添字 0 に置かれ、すべての旧添字は一つ上へ動く。鍵の側では、これはまさに von Neumann 後者である。そこで本章は、所属だけを用いて、一方の添字が他方の後者であること、ある対が他の対の鍵をずらして得られること、そして最後に、ある集合が拡張後の割当てのグラフであることを述べる有界論理式を組み立てる。それぞれは妥当性の主張として証明される。論理式の充足は真理値のパスであり、集合についての対応する外側の事実へ通じており、そこで扱われるグラフは外延性によって一要素ずつ比較され、切り捨てられた所属データから証人を選び出すことは決してない。
 <!--/-->
+
+```agda
+open import Base.Prelude
+```
 
 <!--en-->
 Everything in this chapter takes place at one fixed universe level `ℓ`: the sets being manipulated are elements of `V ℓ`, and the formulas of the language quantify over those sets. Keeping the level as an explicit parameter means the whole construction can be instantiated wherever a hierarchy at that level is available.
@@ -33,15 +23,49 @@ Everything in this chapter takes place at one fixed universe level `ℓ`: the se
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
+module L.Coding.Environment {ℓ : Level} where
+```
 
-open import Base.Prelude
+```agda
+open import FOL.Syntax using ( var; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; ∀̇∈; ∃̇∈; ⊥̇ )
+open import FOL.LevyHierarchy using ( checkΔ₀; Δ₀; δ-∈; δ-≐; δ-∧; δ-∨; δ-∀∈ )
+import FOL.Semantics
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV )
+open import V.Model {ℓ} using ( self∈sucV; ∈sucV-inl; ∈sucV-elim )
+open import V.Coding {ℓ} using ( pr; pr-inj; #-inj′ )
+open import L.Coding.PairFormulas {ℓ}
+  using ( prAt; prAt-adequate; prChar-fwd; prChar-bwd
+        ; ∈pair-introL; ∈pair-introR )
+```
+
+<!--en-->
+
+A satisfaction clause of the first-order language speaks about the value of a variable, but it can only quantify over sets. So before satisfaction can be computed inside set theory, a variable assignment itself must become a set. This chapter performs that encoding: a finite assignment, a function from variable indices to sets of `V ℓ`, is represented by its graph, the set of ordered pairs of the numeral for an index with the value there.
+
+The encoding is designed so that lookup inside the graph is exact. Because the key side consists of numerals, and numerals are injective, a pair sitting at the key for `i` in the graph has as its second component exactly the value at `i`, and nothing else. That functionality statement is the main lemma here.
+
+The second concern is extension. When satisfaction descends under a quantifier, the new value is placed at index zero and every old index moves up by one; on the key side this is precisely the von Neumann successor. The chapter therefore builds bounded formulas that say, in membership alone, that one index is the successor of another, that one pair is obtained from another by shifting its key, and finally that a whole set is the graph of the extended assignment. Each of these is proved as an adequacy statement: satisfaction of the formula is a path of truth values to the corresponding external fact about sets, and the graphs involved are compared by extensionality, member by member, never by selecting witnesses out of the truncated membership data.
+<!--zh-->
+
+一阶语言的满足子句谈论变元的取值，却只能对集合作量化。因此，要使满足关系能在集合论内部被计算，变元赋值本身必须先成为一个集合。本章完成这一编码：一个有穷赋值，即从变元序号到 `V ℓ` 中集合的函数，由它的图表示，也就是「序号的数码与该处取值」之对的集合。
+
+这一编码的设计目标是图中的查值精确。由于键的一侧由数码构成，而数码是单射的，坐在键 `i` 处的那个对的第二分量恰为 `i` 处的值，别无他物。这条函数性命题是本章的主引理。
+
+第二个关注点是扩张。当满足关系下降到量词之下时，新值被放在索引零处，每个旧索引上移一位；在键的一侧，这恰是 von Neumann 后继。故本章构造若干有界公式，仅凭隶属说出：一个索引是另一个的后继；一个对是把另一个的键移位后得到的；以及最终，一个集合是扩张后赋值的图。每一条都以充分性命题的形式证明：公式的满足是一条真值路径，通向关于集合的相应外部事实，而所涉的图都靠外延性逐成员比较，从不从截断的隶属数据中挑选见证。
+<!--ja-->
+
+一階言語の充足の各節は変数の値について語るが、量化できるのは集合の上だけである。したがって充足関係を集合論の内部で計算するには、変数割当てそのものが先に集合にならなければならない。本章はこの符号化を行う。すなわち、変数の添字から `V ℓ` の集合への関数という有限な割当てを、そのグラフ、つまり「添字の数項とそこでの値」の対の集合として表す。
+
+この符号化の設計目標は、グラフの中での参照を正確にすることである。鍵の側が数項からなり、数項が単射であるため、鍵 `i` の位置に座る対の第二成分は `i` での値にちょうど等しく、それ以外の何ものでもない。この関数性の主張が本章の主補題である。
+
+第二の関心事は拡張である。充足が量化子の内側へ降りるとき、新しい値は添字 0 に置かれ、すべての旧添字は一つ上へ動く。鍵の側では、これはまさに von Neumann 後者である。そこで本章は、所属だけを用いて、一方の添字が他方の後者であること、ある対が他の対の鍵をずらして得られること、そして最後に、ある集合が拡張後の割当てのグラフであることを述べる有界論理式を組み立てる。それぞれは妥当性の主張として証明される。論理式の充足は真理値のパスであり、集合についての対応する外側の事実へ通じており、そこで扱われるグラフは外延性によって一要素ずつ比較され、切り捨てられた所属データから証人を選び出すことは決してない。
+<!--/-->
+
+
+
+```agda
 open import Cubical.Data.Sum using () renaming ( map to sumMap )
 open import Cubical.Data.FinData using ( inj-toℕ )
-
-module L.Coding.Environment {ℓ : Level} where
-
-open import FOL.Syntax using ( var; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; ∀̇∈; ∃̇∈; ⊥̇ )
 ```
 
 <!--en-->
@@ -52,14 +76,6 @@ The chapter works inside the bounded fragment of the first-order language: a Δ�
 本章は一階言語の有界な断片の中で作業する。Δ₀ 論理式とは、すべての量化子が環境の変数によって有界化されている論理式であり、その充足は提示された界定集合への所属のみに依存する。符号化の数学的な仕事を担うのは、ホスト側の二つの事実である。Kuratowski 対 `pr` が単射であること、すなわち対がその成分を決めること。そして数項 `# n` が単射であること、すなわち数項がその添字を決めることである。この二つの単射性が合わさって、割当てのグラフに関数のグラフとしての振る舞いを与える。
 <!--/-->
 
-```agda
-open import FOL.LevyHierarchy using ( checkΔ₀; Δ₀; δ-∈; δ-≐; δ-∧; δ-∨; δ-∀∈ )
-import FOL.Semantics
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV )
-open import V.Model {ℓ} using ( self∈sucV; ∈sucV-inl; ∈sucV-elim )
-open import V.Coding {ℓ} using ( pr; pr-inj; #-inj′ )
-```
-
 <!--en-->
 The bounded reader `prAt`, proved adequate in the chapter on pair formulas, says of a set at a given variable slot that it is the Kuratowski pair of the sets at two other slots. Its adequacy lemma and the two introduction rules placing a component inside a pair are reused here directly, since a shifted entry is still a Kuratowski pair, only with a moved key. The binary sum type serves on the host side wherever a formula produces a disjunction: a value is one thing or another, recorded as a choice of side without claiming uniqueness of the witness.
 <!--zh-->
@@ -68,12 +84,6 @@ The bounded reader `prAt`, proved adequate in the chapter on pair formulas, says
 有界な読み取り `prAt` は対の論理式の章で妥当であることが証明されており、指定された変数スロットの集合が、他の二つのスロットの集合の Kuratowski 対であることを述べる。ここでは、その妥当性補題と、成分を対の内側に置く二つの導入規則をそのまま再利用する。ずらされた項目もまた Kuratowski 対であり、鍵が動いただけだからである。ホスト側で二元の直和型が使われるのは、論理式が選言を生む場所に対応する。値がこれかあれかであることを、どちらの側かの選択として記録し、証人の一意性を主張しない。
 <!--/-->
 
-```agda
-open import L.Coding.PairFormulas {ℓ}
-  using ( prAt; prAt-adequate; prChar-fwd; prChar-bwd
-        ; ∈pair-introL; ∈pair-introR )
-```
-
 <!--en-->
 Membership in a set of the hierarchy is a proposition, so a proof that some entry of the graph is related to a given pair is always a *merely exists*: it records that a witness exists without providing it as ordinary data. Eliminating such a truncation is legitimate only into a proposition-valued target, and no chosen witness can be recovered from it globally. Whenever two propositions are identified in this chapter, the identification is built by `⇔toPath`, which turns an if-and-only-if into a path between truth values; that is the shape every adequacy lemma here takes.
 <!--zh-->
@@ -81,9 +91,6 @@ Membership in a set of the hierarchy is a proposition, so a proof that some entr
 <!--ja-->
 階層の集合への所属は命題であるため、「グラフのある項目が与えられた対と関係する」という証明は常に「単に存在する」という形をとる。証人が存在することは記録されるが、通常のデータとして与えられるわけではない。この切り捨てを消除できるのは命題値の対象へのみであり、そこから全体として選ばれた証人を取り戻すことはできない。本章で二つの命題が同一視されるときは、常に `⇔toPath` によって行われる。これは同値を真理値の間のパスに変えるもので、ここにある各妥当性補題はみなこの形をしている。
 <!--/-->
-
-```agda
-```
 
 <!--en-->
 The ambient universe is the cubical cumulative hierarchy. A set is introduced as `sett A f`, an index type together with a family of elements, and its membership relation is truncated like any other membership in this setting. The principle `extensionality` says that two sets with the same members are equal as paths. This is the tool by which encoded graphs will be compared: to show that one candidate graph equals another, one proves, for each element, that membership in the first is a path of truth values away from membership in the second.
@@ -693,7 +700,6 @@ The backward direction closes the adequacy theorem. Its input is the truncated e
 <!--/-->
 
 ```agda
-
   bwd : Tgt → ⟨ γ ⊨ shiftPairAt p' p ⟩
   bwd = rec₁ (⟨ γ ⊨ shiftPairAt p' p ⟩isProp)
     (λ { (i , v , eP , eP') → build i v eP eP' })
@@ -797,7 +803,6 @@ The satisfaction of the two readers, once unfolded, takes the shape of two metal
 <!--/-->
 
 ```agda
-
   EmptySgl : V ℓ → Type (ℓ-suc ℓ)
   EmptySgl w = ∥ Σ[ z ∈ V ℓ ] (⟨ z ∈ w ⟩ × Empty' z) ∥₁
             × ((z : V ℓ) → ⟨ z ∈ w ⟩ → Empty' z)
@@ -833,7 +838,6 @@ The forward conversion turns the truncated existence of an empty member into the
 <!--/-->
 
 ```agda
-
   empty-member : (w : V ℓ) → ∥ Σ[ z ∈ V ℓ ] (⟨ z ∈ w ⟩ × Empty' z) ∥₁ → ⟨ ∅ ∈ w ⟩
   empty-member w = rec₁ (⟨ ∅ ∈ w ⟩isProp)
     (λ { (z , hz , ez) → subst (λ u → ⟨ u ∈ w ⟩) (empty'→∅ z ez) hz })
@@ -851,7 +855,6 @@ The pair case follows the same plan. `EmptyPair→PairOf∅` reuses the empty-me
 <!--/-->
 
 ```agda
-
   EmptyPair→PairOf∅ : (W w : V ℓ) → EmptyPair W w → PairOf∅ W w
   EmptyPair→PairOf∅ W w (h₁ , hW , hall) = empty-member w h₁ , hW
     , (λ z hz → map₁ (sumMap (empty'→∅ z) (λ e → e)) (hall z hz))
@@ -1266,7 +1269,6 @@ With both inclusions established, the forward direction of the adequacy lemma is
 <!--/-->
 
 ```agda
-
   fwd : ⟨ γ ⊨ consAt e' m e ⟩ → E' ≡ env G'
   fwd (h₁ , h₂ , h₃) = extensionalV
     (λ y → ⇔toPath (classify h₃ y) (covered h₁ h₂ y))

@@ -1,29 +1,13 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # The satisfaction graph formula
 <!--zh-->
 # 满足关系图公式
 <!--ja-->
 # 充足関係のグラフを表す論理式
-<!--/-->
-
-<!--en-->
-The recursive construction `Sat` assigns a set of satisfying environments to each formula, but that metatheoretic assignment cannot simply be named inside a first-order definition over `L`. The task of this chapter is to give a binary object-language formula that can later serve as the relation for such queries. Its witnesses will describe enough local data to satisfy the recursion equations around the queried key, without assuming in advance that a canonical or single-valued table has already been obtained.
-<!--zh-->
-递归构造 `Sat` 为每条公式指定一个由满足环境组成的集合，但这项元理论赋值不能直接在 `L` 上的一阶定义中被点名。本章的任务是给出一条对象语言二元公式，使它随后能够充当这类查询所用的关系。公式的见证将描述足以在查询键周围满足递归方程的局部数据，而不预先假设已经得到一张典范或单值的表。
-<!--ja-->
-再帰的構成 `Sat` は各論理式に、それを満たす環境の集合を割り当てる。しかし、このメタ理論上の割当てを `L` 上の一階定義の内部でそのまま名指すことはできない。本章の課題は、後でそのような問い合わせの関係として使える対象言語の二項論理式を与えることである。論理式の証人は、問い合わせるキーの周囲で再帰方程式を満たすのに十分な局所データを記述するが、正準な表や一価な表がすでに得られているとは仮定しない。
-<!--/-->
-
-```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-```
-
-<!--en-->
-Excluded middle is available at the required universe level because the environment-tower interface used below carries that assumption. The formula assembled in this chapter does not itself decide propositions by cases; its quantifiers and connectives receive their meaning from the established first-order semantics.
-<!--zh-->
-下文使用的环境塔接口携带相应宇宙层级上的排中律假设，所以本章也取得这一假设。不过，本章组装公式时并不按命题作排中分类；公式中的量词与联结词都由已经建立的一阶语义解释。
-<!--ja-->
-以下で用いる環境の塔のインターフェースが、必要な宇宙レベルでの排中律を仮定するため、本章もその仮定を受け取る。ただし、ここで組み立てる論理式が命題を排中律で場合分けするわけではない。量化子と結合子の意味は、すでに構成された一階意味論から得られる。
 <!--/-->
 
 ```agda
@@ -43,6 +27,40 @@ Fix a universe level and this one classical parameter. The relation to be define
 module L.Coding.SatisfactionGraph {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax using ( Formula; var; con; _≐_; _∧̇_; ∃̇_ )
+import FOL.Absoluteness
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Coding {ℓ} using ( pr )
+open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
+open import L.Coding.Model {ℓ} using ( domAt; appAt; appAt-adequate )
+open import L.Coding.Closure {ℓ} using ( closedAt )
+open import L.Coding.Quantification {ℓ} using
+  ( f0; f1; f2; f3; f4; f5; f6; f7; f8; f9; i0; i1; i2; i3; i4; i5; i6; i7; i8; i9; i10; i11; i12; i13; sh )
+open import L.Coding.EnvironmentTower {ℓ} lem using ( nn; towerAt )
+open import L.Coding.CodeDomain {ℓ} using ( Tags )
+open import L.Coding.SatisfactionClauses {ℓ} using ( tableAt )
+```
+
+<!--en-->
+The recursive construction `Sat` assigns a set of satisfying environments to each formula, but that metatheoretic assignment cannot simply be named inside a first-order definition over `L`. The task of this chapter is to give a binary object-language formula that can later serve as the relation for such queries. Its witnesses will describe enough local data to satisfy the recursion equations around the queried key, without assuming in advance that a canonical or single-valued table has already been obtained.
+<!--zh-->
+递归构造 `Sat` 为每条公式指定一个由满足环境组成的集合，但这项元理论赋值不能直接在 `L` 上的一阶定义中被点名。本章的任务是给出一条对象语言二元公式，使它随后能够充当这类查询所用的关系。公式的见证将描述足以在查询键周围满足递归方程的局部数据，而不预先假设已经得到一张典范或单值的表。
+<!--ja-->
+再帰的構成 `Sat` は各論理式に、それを満たす環境の集合を割り当てる。しかし、このメタ理論上の割当てを `L` 上の一階定義の内部でそのまま名指すことはできない。本章の課題は、後でそのような問い合わせの関係として使える対象言語の二項論理式を与えることである。論理式の証人は、問い合わせるキーの周囲で再帰方程式を満たすのに十分な局所データを記述するが、正準な表や一価な表がすでに得られているとは仮定しない。
+<!--/-->
+
+<!--en-->
+Excluded middle is available at the required universe level because the environment-tower interface used below carries that assumption. The formula assembled in this chapter does not itself decide propositions by cases; its quantifiers and connectives receive their meaning from the established first-order semantics.
+<!--zh-->
+下文使用的环境塔接口携带相应宇宙层级上的排中律假设，所以本章也取得这一假设。不过，本章组装公式时并不按命题作排中分类；公式中的量词与联结词都由已经建立的一阶语义解释。
+<!--ja-->
+以下で用いる環境の塔のインターフェースが、必要な宇宙レベルでの排中律を仮定するため、本章もその仮定を受け取る。ただし、ここで組み立てる論理式が命題を排中律で場合分けするわけではない。量化子と結合子の意味は、すでに構成された一階意味論から得られる。
+<!--/-->
+
+
+
 <!--en-->
 The formula language provides variables, constants, equality, conjunction, and existential quantification. Constants allow fixed constructible sets, such as the standard numerals used for tags, to occur directly in a formula, while `pr` encodes the ordered pairs used as graph entries. The ambient hierarchy supplies the semantics in which these formulas will be read.
 <!--zh-->
@@ -50,14 +68,6 @@ The formula language provides variables, constants, equality, conjunction, and e
 <!--ja-->
 論理式の言語には、変数、定数、等号、連言、存在量化がある。定数を使えば、タグに用いる標準の数項のような固定された構成可能集合を論理式に直接入れられる。また、`pr` はグラフ要素となる順序対を符号化する。これらの論理式を読む意味論は周囲の階層から得られる。
 <!--/-->
-
-```agda
-open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using ( Formula; var; con; _≐_; _∧̇_; ∃̇_ )
-import FOL.Absoluteness
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-open import V.Coding {ℓ} using ( pr )
-```
 
 <!--en-->
 Three descriptions organize the candidate data. `appAt` reads an encoded pair as a graph entry, `domAt T C` says that the key domain of the table `T` is exactly `C`, and `closedAt C` requires the keys in `C` to contain the direct subformula keys needed by compound formulas. The domain in `domAt` is the table's domain of keys; it is distinct from the environment sets that later occur as table values.
@@ -67,14 +77,6 @@ Three descriptions organize the candidate data. `appAt` reads an encoded pair as
 候補データは三つの記述によって組織される。`appAt` は符号化された対をグラフ要素として読み、`domAt T C` は表 `T` のキー領域がちょうど `C` であることを述べ、`closedAt C` は `C` 内の複合論理式キーが必要とする直下の部分式キーも `C` に属することを要求する。`domAt` が述べるのは表のキー領域であり、後に表の値として現れる環境集合とは異なる。
 <!--/-->
 
-```agda
-open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
-open import L.Coding.Model {ℓ} using ( domAt; appAt; appAt-adequate )
-open import L.Coding.Closure {ℓ} using ( closedAt )
-open import L.Coding.Quantification {ℓ} using
-  ( f0; f1; f2; f3; f4; f5; f6; f7; f8; f9; i0; i1; i2; i3; i4; i5; i6; i7; i8; i9; i10; i11; i12; i13; sh )
-```
-
 <!--en-->
 The remaining descriptions prepare the local recursion equations. `towerAt` supplies candidate rows of encoded environments, `Tags` calibrates the ten constructor-tag slots, and `tableAt` combines propositional totality on the candidate key set, restriction of table entries to that set, and ten local extensional equations. These ingredients still describe only a candidate relation. `PinnedRecursion` proves the conditional uniqueness needed at a genuine formula key, while `SatisfactionBridge` independently interprets membership in the external value `Sat` as satisfaction in the restricted structure. `UniformSatisfaction` then combines existence with pinned uniqueness on `AllCodes B` to obtain a uniform table.
 <!--zh-->
@@ -83,12 +85,6 @@ The remaining descriptions prepare the local recursion equations. `towerAt` supp
 残る記述は、局所的な再帰方程式を準備する。`towerAt` は符号化環境の候補となる各行を与え、`Tags` は十個の構成子タグのスロットを校正する。`tableAt` は、候補キー集合上の命題的に切り詰められた全域性、表項目のキーをその集合に限る条件、十個の局所的な外延方程式をまとめる。これらの材料が記述するのは、まだ候補関係だけである。`PinnedRecursion` は真正な論理式キーで必要となる条件付き一意性を証明し、`SatisfactionBridge` は独立に、外部の値 `Sat` への所属を制限構造での充足として解釈する。その後、`UniformSatisfaction` が `AllCodes B` 上で存在と固定された一意性を組み合わせ、一様な表を得る。
 <!--/-->
 
-```agda
-open import L.Coding.EnvironmentTower {ℓ} lem using ( nn; towerAt )
-open import L.Coding.CodeDomain {ℓ} using ( Tags )
-open import L.Coding.SatisfactionClauses {ℓ} using ( tableAt )
-```
-
 <!--en-->
 An interpretation environment for a formula with `n` free positions is a vector of `n` carrier elements. `lookup` reads the element assigned to a position, while cons extends an environment at its innermost end. This fixed convention will let fourteen auxiliary witnesses be placed in front of an arbitrary outer environment without losing the original query positions.
 <!--zh-->
@@ -96,8 +92,6 @@ An interpretation environment for a formula with `n` free positions is a vector 
 <!--ja-->
 自由な位置を `n` 個もつ論理式の解釈環境は、`n` 個の台の要素からなるベクトルである。`lookup` はある位置に割り当てられた要素を読み、cons は環境の最も内側に新しい要素を加える。この規約により、任意の外側の環境の前に十四個の補助的な証人を置いても、元の問い合わせ位置を保てる。
 <!--/-->
-
-
 
 <!--en-->
 Object-language existence is interpreted by propositional truncation. Thus a proof of an existential formula records that a witness exists while forgetting which witness was used. This is essential for the satisfaction graph: the public reading may establish that suitable tags, a tower, a key set, and a table exist, but it does not expose data from which a caller could choose one candidate table globally.
@@ -388,7 +382,6 @@ The auxiliary family `satGraphOn` now assembles the complete frame. Its paramete
 <!--/-->
 
 ```agda
-
 private
   satGraphOn : ∀ {n} → Formula S (14 + n)
              → Fin n → Fin n → Formula S n
@@ -455,7 +448,6 @@ To compare satisfaction of `satGraphOn` with the flat record, fix the pin, its r
 `satGraphOn` の充足と平坦な記録を比較するため、pin、その参照 `W`、二つの問い合わせ位置、外側の環境を固定する。台の等式を除けば、記録の各欄はすでに枠組みの連言項の中に定まった解釈をもっている。したがって、追加で必要な仮定は pin の読み `rd` だけである。内向きの含意では等式 `fst b ≡ fst W` を `pin` の充足へ移し、外向きの含意では `pin` の充足をその等式として読み戻す。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -464,8 +456,6 @@ To compare satisfaction of `satGraphOn` with the flat record, fix the pin, its r
 ```
 </summary>
 <div class="submodule-fold-content">
-
-
 
 <!--en-->
 The inward reading turns a truncated witness record into satisfaction of the
@@ -700,7 +690,6 @@ The case at index nine exhausts `Fin 10` and makes `ν'`{.Agda} a total function
 ```
 </div>
 </details>
-
 
 <!--en-->
 ## The carrier supplied by a variable

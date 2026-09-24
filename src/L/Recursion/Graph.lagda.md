@@ -1,27 +1,55 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # Graphs of recursive definitions
-
-A recursion in `L` gives a unique value at every point of an internal domain. A set-theoretic function is represented by its graph, the set of ordered pairs `pr(x , y)` with input first and output second. This chapter turns the value relation of a recursion into such a set `F`, then proves that `F` is functional and has exactly the original domain.
 <!--zh-->
 # 递归定义的图
-
-`L` 中的递归在内部定义域的每一点给出唯一取值。集合论函数由其图表示，即输入在前、输出在后的有序对 `pr(x , y)` 所成的集合。本章把递归的取值关系转换成这样的集合 `F`，再证明 `F` 具有函数性，并且定义域恰为原来的定义域。
 <!--ja-->
 # 再帰的定義のグラフ
-
-`L` の再帰は、内部の定義域の各点で一意な値を与える。集合論の関数は、そのグラフ、すなわち入力を先、出力を後に置く順序対 `pr(x , y)` の集合で表される。本章は再帰の値の関係をそのような集合 `F` に変え、`F` が関数的で、もとの定義域をちょうどもつことを証明する。
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
 open import Base.Prelude
 open import Base.Classical using ( LEM )
-
-module L.Recursion.Graph {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-
-open import FOL.ZFStructure using ( module hPropStructure )
 ```
+
+<!--en-->
+Fix a universe level `ℓ`{.Agda} and assume `lem : LEM (ℓ-suc ℓ)`{.Agda}. This hypothesis supplies a decision for each proposition at that level; it remains an explicit parameter of the constructions below.
+<!--zh-->
+固定宇宙层级 `ℓ`{.Agda}，并假设 `lem : LEM (ℓ-suc ℓ)`{.Agda}。这个假设为相应层级的每个命题提供判定，并始终作为下文构造的显式参数。
+<!--ja-->
+宇宙レベル `ℓ`{.Agda} を固定し、`lem : LEM (ℓ-suc ℓ)`{.Agda} を仮定する。この仮定は該当するレベルの各命題に判定を与え、以下の構成の明示的なパラメータとして保たれる。
+<!--/-->
+
+```agda
+module L.Recursion.Graph {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+```
+
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax using ( Formula; _∧̇_; ∃̇_ )
+open import FOL.Manipulation.Renaming using ( renameFo; module Sat )
+import FOL.Absoluteness
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Coding {ℓ} using ( pr; pr-inj )
+open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
+open import L.Recursion {ℓ} lem using ( Recursion; module Of )
+open import L.Coding.Model {ℓ}
+  using ( prAtL; prAtL-adequate; prʟ; prʟ-fst; svAt; svAt-in; domAt; domAt-intro )
+```
+
+<!--en-->
+
+A recursion in `L` gives a unique value at every point of an internal domain. A set-theoretic function is represented by its graph, the set of ordered pairs `pr(x , y)` with input first and output second. This chapter turns the value relation of a recursion into such a set `F`, then proves that `F` is functional and has exactly the original domain.
+<!--zh-->
+
+`L` 中的递归在内部定义域的每一点给出唯一取值。集合论函数由其图表示，即输入在前、输出在后的有序对 `pr(x , y)` 所成的集合。本章把递归的取值关系转换成这样的集合 `F`，再证明 `F` 具有函数性，并且定义域恰为原来的定义域。
+<!--ja-->
+
+`L` の再帰は、内部の定義域の各点で一意な値を与える。集合論の関数は、そのグラフ、すなわち入力を先、出力を後に置く順序対 `pr(x , y)` の集合で表される。本章は再帰の値の関係をそのような集合 `F` に変え、`F` が関数的で、もとの定義域をちょうどもつことを証明する。
+<!--/-->
 
 <!--en-->
 The graph must itself be described in the object language. The available syntax forms conjunctions and existential statements, while renaming places an existing two-variable value relation beneath a new quantifier. The ambient operation `pr` supplies ordered-pair codes, and its injectivity later recovers both coordinates from an equality of codes.
@@ -31,14 +59,6 @@ The graph must itself be described in the object language. The available syntax 
 グラフ自体を対象言語で記述する必要がある。利用する構文は連言と存在文を作り、改名によって既存の二変数の値関係を新しい量化子の下に置く。周囲の演算 `pr` が順序対の符号を与え、その単射性により、後で符号の等式から両方の座標を復元できる。
 <!--/-->
 
-```agda
-open import FOL.Syntax using ( Formula; _∧̇_; ∃̇_ )
-open import FOL.Manipulation.Renaming using ( renameFo; module Sat )
-import FOL.Absoluteness
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-open import V.Coding {ℓ} using ( pr; pr-inj )
-```
-
 <!--en-->
 The constructible pairing operation produces an element of `L` whose underlying set is the ambient ordered-pair code. The general recursion theorem can then apply replacement to a formula describing those pairs. Equality of constructible elements is reduced to equality of their underlying sets because constructibility proofs are propositions.
 <!--zh-->
@@ -46,13 +66,6 @@ The constructible pairing operation produces an element of `L` whose underlying 
 <!--ja-->
 構成可能な順序対の演算は、その基礎集合が周囲の順序対の符号である `L` の要素を作る。そこで一般の再帰定理を、これらの順序対を記述する論理式に適用できる。構成可能性の証明は命題なので、構成可能な要素の等式は基礎集合の等式に帰着する。
 <!--/-->
-
-```agda
-open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
-open import L.Recursion {ℓ} lem using ( Recursion; module Of )
-open import L.Coding.Model {ℓ}
-  using ( prAtL; prAtL-adequate; prʟ; prʟ-fst; svAt; svAt-in; domAt; domAt-intro )
-```
 
 <!--en-->
 Several propositions below are obtained from truncated existence statements. They may be eliminated only into propositional goals. Membership and equality in the cumulative hierarchy have precisely this property, which allows witnesses to be used without making a global choice.
@@ -89,8 +102,6 @@ module PairFo (φ : Formula S 2) where
 ```
 </summary>
 <div class="submodule-fold-content">
-
-
 
 <!--en-->
 ## A formula for ordered pairs
@@ -211,8 +222,6 @@ module Graph (R₀ : Recursion) where
 ```
 </summary>
 <div class="submodule-fold-content">
-
-
 
 <!--en-->
 ## Domain and values

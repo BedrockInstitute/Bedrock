@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="zh"><meta charset="utf-8"><title>Agda scroll padding regression</title>
+<h1 id="status">RUNNING code padding checks</h1><pre id="report"></pre>
+<script>
+(async () => {
+  const results=[];
+  for (const module of ['Base.Choice','Base.Impredicativity']) for (const width of [390,900]) {
+    const frame=document.createElement('iframe');
+    frame.style.cssText=`width:${width}px;height:600px;border:0;display:block`;
+    const loaded=new Promise(resolve=>frame.onload=resolve);
+    frame.src='/zh/'+module+'.html?padding-regression=2';
+    document.body.append(frame);await loaded;await frame.contentDocument.fonts.ready;
+    const doc=frame.contentDocument, win=frame.contentWindow;
+    for(const fold of doc.querySelectorAll('.submodule-fold')) fold.open=true;
+    for(const pre of doc.querySelectorAll('article pre.Agda')) {
+      if(pre.closest('.submodule-fold-heading')) continue;
+      const content=pre.querySelector(':scope > .agda-code-content');
+      if(!content) throw new Error('Missing body-code scroll viewport');
+      if(content.scrollWidth<=content.clientWidth) continue;
+      const style=win.getComputedStyle(pre), box=pre.getBoundingClientRect();
+      const padding=parseFloat(style.paddingRight);
+      let fixed=true;
+      for(const offset of [0,(content.scrollWidth-content.clientWidth)/2,content.scrollWidth]) {
+        content.scrollLeft=offset;
+        const viewport=content.getBoundingClientRect();
+        fixed &&= viewport.left-box.left-pre.clientLeft>=parseFloat(style.paddingLeft)-1
+          && box.right-parseFloat(style.borderRightWidth)-viewport.right>=padding-1;
+      }
+      // The universe lens retains clipped source for copying and compiler
+      // offsets. Range geometry includes those invisible original glyphs;
+      // measure visible tokens plus generated notation instead.
+      const walker=doc.createTreeWalker(content,win.NodeFilter.SHOW_TEXT),rights=[];
+      let textNode;
+      while((textNode=walker.nextNode())){
+        if(textNode.parentElement.closest('.universe-source'))continue;
+        const range=doc.createRange();range.selectNodeContents(textNode);
+        rights.push(...[...range.getClientRects()].map(rect=>rect.right));
+      }
+      rights.push(...[...content.querySelectorAll('.universe-notation')].map(node=>node.getBoundingClientRect().right));
+      const right=Math.max(...rights);
+      const gap=pre.getBoundingClientRect().left+pre.clientLeft+pre.clientWidth-right;
+      results.push({module,width,kind:pre.closest('.statement-ending')?'QED':'ordinary',
+        depth:[...doc.querySelectorAll('.submodule-fold')].filter(fold=>fold.contains(pre)).length,
+        code:pre.textContent.trim().slice(0,100),padding,gap,fixed,ok:fixed && padding>=16 && gap>=padding-1});
+    }
+  }
+  const covered=results.some(r=>r.depth===1) && results.some(r=>r.depth===2)
+    && ['QED','ordinary'].every(kind=>results.some(r=>r.depth>0 && r.kind===kind))
+    && [390,900].every(width=>results.some(r=>r.width===width && r.code.startsWith('codedTruthIso P =')));
+  const pass=covered && results.every(r=>r.ok);
+  document.querySelector('#status').textContent=`${pass?'PASS':'FAIL'} ${results.filter(r=>r.ok).length}/${results.length} scroll-end checks; nested coverage=${covered}`;
+  document.querySelector('#report').textContent=JSON.stringify(results,null,2);
+  fetch('/results',{method:'POST',body:JSON.stringify({paddingRegression:true,pass,covered,results})});
+})().catch(error=>document.querySelector('#status').textContent='FAIL '+error.stack);
+</script></html>

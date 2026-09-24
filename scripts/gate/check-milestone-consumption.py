@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Check that every source definition is transitively consumed by Milestones.
+"""Check that every source definition is transitively consumed by Origin.
 
 The check deliberately works on Agda's source-module graph rather than on prose
 or generated HTML.  A source definition is consumed when its owning module is in
-the transitive local-import closure of ``src/Milestones.lagda.md``.  External
+the transitive local-import closure of ``src/Origin.lagda.md``.  External
 Cubical modules are leaves of this graph and are not part of the source set.
 
 This is a push/CI gate.  It is intentionally not part of ``make lint`` or the
@@ -100,7 +100,7 @@ def definitions(src: Path, modules: dict[str, Path]) -> list[Definition]:
     return found
 
 
-def check(src: Path, root: str = "Milestones") -> list[str]:
+def check(src: Path, root: str = "Origin") -> list[str]:
     modules = source_modules(src)
     problems: list[str] = []
     if root not in modules:
@@ -132,7 +132,7 @@ def check(src: Path, root: str = "Milestones") -> list[str]:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--src", type=Path, default=Path("src"))
-    parser.add_argument("--root", default="Milestones")
+    parser.add_argument("--root", default="Origin")
     args = parser.parse_args(argv)
     problems = check(args.src, args.root)
     if problems:

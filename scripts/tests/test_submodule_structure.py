@@ -15,6 +15,15 @@ SPEC.loader.exec_module(structure)
 
 
 class SubmoduleStructureTests(unittest.TestCase):
+    def test_private_header_identifies_the_actual_module_line(self):
+        code = 'private module BooleanCodes where\n'
+        line = structure.module_header_line(code)
+        self.assertEqual(line[0], 'private module BooleanCodes where')
+        self.assertEqual(line.start(), 0)
+        self.assertIsNone(structure.module_header_line('private\n  module Broken where'))
+        self.assertIsNone(structure.module_header_line('private\nmodule Broken where'))
+        self.assertIsNone(structure.module_header_line('private\n  value = result'))
+
     def test_aliases_multifence_headers_and_nesting(self):
         source = '''```agda
 module Example where

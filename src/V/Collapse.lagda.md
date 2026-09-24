@@ -1,16 +1,18 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # The Mostowski collapse
-
-Every set of the ambient cumulative hierarchy comes with a canonical presentation: an index type together with an indexing map that names its elements. This chapter asks the converse question. Suppose we single out a set `X` and look only at the elements of the hierarchy that belong to `X`, with the membership relation inherited from the hierarchy. When is this restricted structure, in effect, just another set? The Mostowski collapse answers: membership recursion defines a collapsing map `π`, the range of `π` on `X` is a transitive set, and if `X` satisfies structure extensionality then `π` is injective on `X`, giving an [isomorphism of structures]{.term-intro #structure-isomorphism} between the carrier and its collapsed range.
 <!--zh-->
 # Mostowski 塌缩
-
-环境累积层级中的每个集合都带有典范呈现：一个索引类型连同指称其元素的索引映射。本章讨论相反的问题。设我们取定一个集合 `X`，只考察层级中属于 `X` 的元素，并沿用层级自身的隶属关系。这个受限结构在什么意义上本身就是一个集合？Mostowski 塌缩给出了回答：沿隶属关系的递归定义塌缩映射 `π`，`π` 在 `X` 上的像是一个传递集；若 `X` 满足结构外延性，则 `π` 在 `X` 上单射，从而给出载体与其塌缩像之间的[结构同构]{.term-intro #structure-isomorphism}。
 <!--ja-->
 # Mostowski 崩壊
-
-周囲の累積階層の各集合は、インデックス型とその要素を指すインデックス写像からなる正準な提示を伴う。本章は逆の問題を扱う。集合 `X` を固定し、階層のうち `X` に属する要素だけを、階層自身の所属関係とともに考える。この制限された構造は、どのような意味でそれ自身ひとつの集合なのであろうか。Mostowski 崩壊が答える。所属関係上の再帰で崩壊写像 `π` を定義すると、`X` 上の `π` の像は推移的集合になり、`X` が構造外延性を満たすなら `π` は `X` 上で単射となり、台とその崩壊像の間の[構造の同型]{.term-intro #structure-isomorphism}が得られる。
 <!--/-->
+
+```agda
+open import Base.Prelude hiding ( iso )
+```
 
 <!--en-->
 Three mathematical representations shape the proof. First, membership is proposition-valued: the chapter works in a ZF structure `𝒮ᵥ` whose membership predicates take values in propositions, so a membership statement `⟨ z ∈ˢ x ⟩` names an underlying proposition rather than a bare truth value. Second, a set of the hierarchy is used through its small presentation: an index type together with an indexing function `⟪ x ⟫↪` naming the members of `x`, so that building a new set means presenting it with indices. Third, statements about members are often merely true: the propositional truncation `∥_∥₁` turns a statement of the form `some index witnesses this` into the claim that such a witness merely exists, without choosing one. The levels are worth stating exactly. The carrier type `S` of the hierarchy lives in `Type (ℓ-suc ℓ)`, while every presentation index type such as `⟪ x ⟫` is small, in `Type ℓ`; index types and the carrier therefore do not share a universe level.
@@ -21,15 +23,27 @@ Three mathematical representations shape the proof. First, membership is proposi
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-open import Base.Prelude hiding ( iso )
-
 module V.Collapse {ℓ : Level} where
+```
 
+```agda
 open import FOL.ZFStructure using ( module hPropStructure; Transitive )
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV; ∈-induction; ∈-induction-compute )
+open import V.Presentation {ℓ} using ( member; fiber )
 ```
+
+<!--en-->
+
+Every set of the ambient cumulative hierarchy comes with a canonical presentation: an index type together with an indexing map that names its elements. This chapter asks the converse question. Suppose we single out a set `X` and look only at the elements of the hierarchy that belong to `X`, with the membership relation inherited from the hierarchy. When is this restricted structure, in effect, just another set? The Mostowski collapse answers: membership recursion defines a collapsing map `π`, the range of `π` on `X` is a transitive set, and if `X` satisfies structure extensionality then `π` is injective on `X`, giving an [isomorphism of structures]{.term-intro #structure-isomorphism} between the carrier and its collapsed range.
+<!--zh-->
+
+环境累积层级中的每个集合都带有典范呈现：一个索引类型连同指称其元素的索引映射。本章讨论相反的问题。设我们取定一个集合 `X`，只考察层级中属于 `X` 的元素，并沿用层级自身的隶属关系。这个受限结构在什么意义上本身就是一个集合？Mostowski 塌缩给出了回答：沿隶属关系的递归定义塌缩映射 `π`，`π` 在 `X` 上的像是一个传递集；若 `X` 满足结构外延性，则 `π` 在 `X` 上单射，从而给出载体与其塌缩像之间的[结构同构]{.term-intro #structure-isomorphism}。
+<!--ja-->
+
+周囲の累積階層の各集合は、インデックス型とその要素を指すインデックス写像からなる正準な提示を伴う。本章は逆の問題を扱う。集合 `X` を固定し、階層のうち `X` に属する要素だけを、階層自身の所属関係とともに考える。この制限された構造は、どのような意味でそれ自身ひとつの集合なのであろうか。Mostowski 崩壊が答える。所属関係上の再帰で崩壊写像 `π` を定義すると、`X` 上の `π` の像は推移的集合になり、`X` が構造外延性を満たすなら `π` は `X` 上で単射となり、台とその崩壊像の間の[構造の同型]{.term-intro #structure-isomorphism}が得られる。
+<!--/-->
+
+
 
 <!--en-->
 The three representations interlock. A presentation `sett I f` produces a set whose membership is truncated: a member is given by an index, but membership statements only record that such an index merely exists. This is why later lemmas about `π`'s members conclude with truncated pairs, and why eliminating such a truncation is legitimate there: the target of the elimination, being the proposition underlying a membership statement `⟨ _ ⟩`, is again a proposition, so no chosen witness escapes into data. The equivalence `∈∈ₛ` connects the two memberships in play, native membership of the embedding and membership in the small relation, and is used in both directions to convert membership certificates between their two forms.
@@ -40,7 +54,6 @@ The three representations interlock. A presentation `sett I f` produces a set wh
 <!--/-->
 
 ```agda
-open import V.Presentation {ℓ} using ( member; fiber )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( sett )
 ```
 
@@ -126,7 +139,6 @@ Everything from here through the transitivity of the range works for an arbitrar
 ここから像の推移性までは、任意の `X : S` に対して成り立つ。外延性の節に入るまで、台についての仮定は一切不要である。これは重要である。Mostowski 崩壊の古典的な定式化では整礎性と外延性を最初から仮定することが多いのであるが、ここでは整礎性は周囲の階層からただで得られ、外延性は単射性を証明する場面でのみ使われる。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -134,8 +146,6 @@ module Collapse (X : S) where
 ```
 </summary>
 <div class="submodule-fold-content">
-
-
 
 <!--en-->
 ## The recursive collapse
@@ -445,18 +455,15 @@ The extensionality-dependent material now lives in a module taking `Xext : isExt
 外延性に依存する材料は、`Xext : isExt X` を引数とするモジュールの中に置かれ、仮定が明示され、他の場所で黙って使えることはない。その内部では、帰納の述語 `P` が台を基準にした単射性の主張そのものである。`X` に属する `x` に対し、同じ崩壊値を持つ `X` の任意の `y` がパスによって `x` と等しい、というものである。これが、所属帰納が `x` のすべての要素に対して同時に確立すべき性質である。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-
   module InjExt (Xext : isExt X) where
 ```
 </summary>
 <div class="submodule-fold-content">
 
 ```agda
-
     P : S → Type (ℓ-suc ℓ)
     P x = (y : S) → x ∈ᵗ X → y ∈ᵗ X → π x ≡ π y → x ≡ y
 ```
@@ -621,7 +628,6 @@ The local lemma `iso` packages the two implications: from `⟨ y ∈ˢ x ⟩` to
 </div>
 </details>
 
-
 <!--en-->
 The recursion equation `π x ≡ step x (λ y _ → π y)` is not merely a property of the particular function constructed by `∈-induction`: it characterizes the collapse up to path. Any function `f` satisfying the same recursion equation, with `f` itself in the recursive calls, agrees with `π` everywhere. This uniqueness is what makes the collapse a well-defined object rather than one among possibly many outputs of a construction.
 <!--zh-->
@@ -779,7 +785,6 @@ With both directions established, the biconditional for each `x` is converted in
 ```
 </div>
 </details>
-
 
 <!--en-->
 The fixed-point statement applies in particular when `Y` is the carrier `X` itself: a transitive carrier is fixed pointwise by the collapse, so on such a carrier the collapsing map is the identity.

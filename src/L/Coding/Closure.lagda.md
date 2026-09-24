@@ -1,13 +1,53 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # Subcode-closed domains
+<!--zh-->
+# 对子码封闭的定义域
+<!--ja-->
+# 部分符号に閉じた定義域
+<!--/-->
+
+```agda
+open import Base.Prelude
+```
+
+<!--en-->
+Fix a universe level `ℓ`{.Agda}. Keeping the level as a parameter lets the constructions be instantiated at each required size without identifying distinct universes.
+<!--zh-->
+固定宇宙层级 `ℓ`{.Agda}。保留这个层级参数，使构造可以在所需的各个大小处实例化，而不必把不同的宇宙视为同一个。
+<!--ja-->
+宇宙レベル `ℓ`{.Agda} を固定する。このレベルをパラメータとして保つことで、異なる宇宙を同一視せずに、必要な大きさで構成を具体化できる。
+<!--/-->
+
+```agda
+module L.Coding.Closure {ℓ : Level} where
+```
+
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax
+  using ( Formula; var; _∧̇_; _⇒̇_; ∀̇_; ∀̇∈; ∃̇_ )
+import FOL.Absoluteness
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Coding {ℓ} using ( pr )
+open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
+open import L.Axioms.Numerals {ℓ} using ( sucʟ; sucʟ-fst )
+open import L.Coding.Model {ℓ} using ( appAt; appAt-adequate )
+open import L.Coding.Expressions {ℓ}
+  using ( arityTagAtL; arityTagAtL-adequate; arityTagPairAtL; arityTagPairAtL-adequate
+        ; sucAtL; sucAtL-adequate )
+```
+
+<!--en-->
 
 A domain of formula codes is closed under immediate subformula codes when every constructor key it contains brings along the formula subcodes that its constructor demands; the atomic constructors and bottom carry no such obligations, since their term and numeral components are not demands of `closedAt`. This chapter explains why such a demand is needed and what it says. The subcode clauses of `L.Coding.Expressions` constrain a table only where the codes they consult actually carry entries, so a table satisfying all ten of them can be almost empty; what pins a value is a property of the index set itself, and the closure predicate `closedAt` states exactly that property as a single object-language formula. The chapter builds the predicate from two quantifier frames, one for binary and one for unary constructors, instantiates three payload relations to obtain its seven clauses, and proves both directions between satisfaction of those clauses and meta-level closure data: eliminations that read a satisfied clause into the subcodes it demands, and introductions that assemble satisfaction from such membership data. Once available, `closedAt` supports structural induction over codes stored inside `L`.
 <!--zh-->
-# 对子码封闭的定义域
 
 若一个公式码定义域中每个构造子键都带有其构造子所要求的公式子码，就称它对直接子公式码封闭；两个原子构造子与底不承担这类义务，因为它们的词项分量与数码分量不是 `closedAt` 的义务。本章解释为什么需要这项要求、以及它说了什么。`L.Coding.Expressions` 中的诸子码子句只在它所查询的码确实带有条目之处约束一张表，因此满足全部十条子句的表可以几乎为空；真正确定取值的是索引集自身的一个性质，而封闭谓词 `closedAt` 恰把这个性质表述为一条对象语言公式。本章用两个量化框架 (二元构造子一个、一元构造子一个) 构造该谓词，实例化三条载荷关系得到其七条子句，并证明这些子句的满足与元层面封闭数据之间的两个方向：把已满足的子句读回其所要求子码的消去，以及从这类隶属数据拼装满足的引入。此后，`closedAt` 便可支持对 `L` 内存储的码作结构归纳。
 <!--ja-->
-# 部分符号に閉じた定義域
 
 論理式の符号の定義域は、そこに含まれる各構成子のキーが、その構成子の要求する部分論理式符号を伴うとき、直下の部分論理式符号に閉じている。2 つの原子構成子と底はこのような義務を負わない。それらの項や数項の成分は `closedAt` の義務ではないからである。本章は、この要求がなぜ必要か、そして何を述べているかを説明する。`L.Coding.Expressions` の部分符号の節は、参照する符号が実際にエントリを持つ場所でしか表を拘束しないため、十個の節すべてを満たす表がほとんど空でありえる。値を定めるのは索引集合自身の性質であり、閉性述語 `closedAt` はまさにその性質を一つの対象言語の論理式として述べる。本章は、2 項構成子用と 1 項構成子用の 2 つの量化フレームからこの述語を組み立て、3 つのペイロード関係を具体化して七つの節を得て、それらの節の充足とメタレベルの閉性データとの両方向を証明する。充足された節をその要求する部分符号へと読み出す除去と、そのような所属データから充足を組み立てる導入である。これが揃えば、`closedAt` は `L` 内に保存された符号についての構造帰納法を支える。
 <!--/-->
@@ -20,12 +60,6 @@ The chapter begins with a defect in what the coding clauses already say. In `L.C
 本章は、既存の符号化の節が持つ欠陥から始まる。`L.Coding.Expressions` では、各複合構成子に、ある符号での表のエントリをその直接の部分符号でのエントリと結びつける節が付いていた。この種の節は、参照する符号が実際にエントリを持つ場所でしか拘束力を持たないため、ほとんど空の表でも十個の節すべてを満たせる。索引集合をただ一つの**複合**符号とし、そこに任意の値のエントリを一つ置けば、部分符号のエントリを探す節はすべて空洞に成立する。部分符号がエントリを持たないからである。節だけでは値は定まらない。値を定めるのは索引集合自身への要求、すなわちその各メンバーの直接の部分論理式符号を含むという要求である。この要求を対象言語の論理式として述べたものが、本章で構成する閉性述語 `closedAt` である。
 <!--/-->
 
-```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-open import Base.Prelude
-```
-
 <!--en-->
 The counterexample also shows what would go wrong without repair. The entry sits at a compound code, and closure is precisely the property the empty subcodes cannot fake: if the index set contains a compound code, it must contain the subcodes that code decodes into. Compound matters here. Put the single entry at the code of the bottom formula `⊥̇` instead, and the clause for `⊥̇` pins the value outright, because that clause makes no subcode lookup at all. That small failure is the shape of the whole argument in miniature.
 <!--zh-->
@@ -33,11 +67,6 @@ The counterexample also shows what would go wrong without repair. The entry sits
 <!--ja-->
 この反例は、修復しなければ何が誤るかも示す。エントリは複合符号に置かれており、閉性こそが空の部分符号では偽れない性質である。索引集合がある複合符号を含めば、その符号が解読される部分符号も含まねばならない。「複合」であることがここで要になる。その一つのエントリを底の論理式 `⊥̇` の符号に置き換えると、`⊥̇` の節は部分符号の参照をまったく行わないため、値が即座に確定する。この小さな失敗が、議論全体の縮図である。
 <!--/-->
-
-```agda
-
-module L.Coding.Closure {ℓ : Level} where
-```
 
 <!--en-->
 The repair is a quantifier pattern, and it needs the same two frames as the clauses, minus the table. What remains is the shape reader and the implication: for every key of that shape in the set, such and such keys are in the set too. A key is an arity paired with a code, so a subkey is built either from the same arity, or from its successor for the four constructors that bind a variable. The bounded universal ranges over members of the set, the further universals range over the decoded parts, and the implication guards the demand behind the shape check.
@@ -47,13 +76,6 @@ The repair is a quantifier pattern, and it needs the same two frames as the clau
 修復は量化のパターンであり、それを述べるのに必要なのは、節と同じ 2 つのフレームから表を取り除いたものである。残るのは形状の読み手と含意である。その形状の鍵が集合にあるならば、かような鍵もまた集合にある、と。鍵はアリティと符号の対なので、部分鍵は同じアリティから、あるいは変数を束縛する 4 つの構成子についてはその後者から作られる。有界全称は集合のメンバーを走り、さらに全称は解読された各部分を走り、含意が要求を形状の検査の後ろに置く。
 <!--/-->
 
-```agda
-
-open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax
-  using ( Formula; var; _∧̇_; _⇒̇_; ∀̇_; ∀̇∈; ∃̇_ )
-```
-
 <!--en-->
 The demands split into two shapes. The three binary connectives each contribute two formula children at the same arity; the two unbounded quantifiers contribute one child at the successor arity, and the two bounded quantifiers follow only their second, formula component at that same higher level, because their first component is a term. That gives seven constructors with an obligation. The two atoms and bottom add none: their term and numeral components are not obligations of `closedAt`, and bottom is pinned by its own clause as in the counterexample.
 <!--zh-->
@@ -61,14 +83,6 @@ The demands split into two shapes. The three binary connectives each contribute 
 <!--ja-->
 要求は 2 つの形に分かれる。3 つの二項結合子はそれぞれ同じアリティの論理式の子を 2 つ要求し、2 つの非有界量詞は後続アリティで 1 つの子を要求し、2 つの有界量詞はその同じ高いアリティで**第 2** 成分 (論理式) だけを追う。第一成分は項だからである。これで義務を持つ構成子は 7 つである。2 つの原子式と底は何も加えない。それらの項や数項の成分は `closedAt` の義務ではなく、底は反例で見たとおり自身の節が直接確定させる。
 <!--/-->
-
-```agda
-import FOL.Absoluteness
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-open import V.Coding {ℓ} using ( pr )
-open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
-open import L.Axioms.Numerals {ℓ} using ( sucʟ; sucʟ-fst )
-```
 
 <!--en-->
 A relation to state in a frame is a parameter, and the seven concrete clauses arise by instantiating that parameter. Three instantiations cover the classification above: a same-arity demand for both components, a same-arity demand for one component, and a successor-arity demand in which the higher arity is supplied existentially. Each is a plain object-language formula over the extended environment that the frame itself opens.
@@ -78,8 +92,6 @@ A relation to state in a frame is a parameter, and the seven concrete clauses ar
 フレームの中で述べられる関係はパラメータであり、七つの具体的な節はそのパラメータの具体化として得られる。上の分類は 3 つの具体化で尽くされる。両成分に対する同アリティの要求、一成分に対する同アリティの要求、そしてより高いアリティを存在量化で与える後続アリティの要求である。いずれも、フレーム自身が開く拡張環境の上の素朴な対象言語の論理式である。
 <!--/-->
 
-
-
 <!--en-->
 The existentially supplied successor is the one place where mere existence appears. Inside the arity-raising relations, the bound variable is witnessed to be the successor of the frame's arity, and that witness is packaged only truncated: the proposition records existence without retaining a chosen witness as data. Later the readers of these clauses discharge the truncation, which is legitimate because the membership claims they feed are propositions.
 <!--zh-->
@@ -87,8 +99,6 @@ The existentially supplied successor is the one place where mere existence appea
 <!--ja-->
 存在量化で与えられる後続こそ、命題的切り詰められた存在が現れる唯一の場所である。アリティを上げる関係の内部では、束縛変数がフレームのアリティの後続であることが証人され、その証人は切り詰めのかたちでだけ残る。残るのは後続が存在することであり、選ばれた証人をデータとして保持しない。後ほど、これらの節の読み手が切り詰めを解消する。入力となる所属の主張が命題であるため、その解消は正当である。
 <!--/-->
-
-
 
 <!--en-->
 Everything is stated at the level of sets and membership. A code stored in `L` is read as an element of the cumulative hierarchy; the subcode demand is literally a list of membership statements, a pair `pr` pairing an arity with a payload being a member of the domain set. This is what makes the predicate transportable: satisfaction of an object-language formula about membership, nothing more.
@@ -113,7 +123,6 @@ The formulas are evaluated over the carrier `S` of `L`, in an environment `γ : 
 <!--/-->
 
 ```agda
-
 open hPropStructure 𝒮ʟ using ( S )
 ```
 
@@ -126,7 +135,6 @@ Inside an extended environment, each frame names its own slots by de Bruijn indi
 <!--/-->
 
 ```agda
-
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
 open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
 ```
@@ -138,14 +146,6 @@ Four object-language readers supply the building blocks, each with an adequacy p
 <!--ja-->
 4 つの対象言語の読み手が構成要素を供給し、それぞれに、その充足を読み取り先のメタレベルの主張と同一視する妥当性証明が付く。一つは環境スロットに保存された集合への所属を読み、二つはある符号がアリティとその 1 つまたは 2 つのペイロード成分のタグ付きの対であることを確認し、一つは保存されたアリティの後続をペイロードとして持つことを表す。形状・所属・後続がすべて対象言語の内部で読めるようになれば、閉性の要求全体が一つの論理式に収まる。本章の残りは、この論理式が何を言うか、そしてどう充足するかを展開する。
 <!--/-->
-
-```agda
-
-open import L.Coding.Model {ℓ} using ( appAt; appAt-adequate )
-open import L.Coding.Expressions {ℓ}
-  using ( arityTagAtL; arityTagAtL-adequate; arityTagPairAtL; arityTagPairAtL-adequate
-        ; sucAtL; sucAtL-adequate )
-```
 
 <!--en-->
 ## A domain that is closed under subcodes
@@ -169,7 +169,6 @@ The closure demand to be formalized is a quantified statement about decoded keys
 形式化すべき閉性の要求は、解読されたキーについての量化された主張である。インデックス `C` を固定し、そこに保存された集合を `Cset` とする。これは次のように読める。`Cset` の各符号 `c` について、`c` が構成子の数 `k` をタグに持つアリティ `ar` として解読され、ペイロード成分を伴うならば、関係 `rel` がこれらのデータについて成り立つ、と。ペイロード成分の個数は構成子の形で決まる。1 項構成子の解読されたキーは符号・アリティ・一つの成分という 3 つの証人を示し、2 項構成子のキーは第 2 成分を加えた 4 つを示す。そこで、3 つの値を量化するフレームと 4 つの値を量化するフレームの 2 つが要る。
 <!--/-->
 
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -177,8 +176,6 @@ module _ {n : ℕ} where
 ```
 </summary>
 <div class="submodule-fold-content">
-
-
 
 <!--en-->
 Both frames live at an ambient free-variable count `n`: they quantify inside an environment of length `n` and extend it by the slots they bind themselves, four for the binary frame and three for the unary one. An ambient variable must survive this extension unchanged, so a shift like `sh4` sends each of the `n` indices past the freshly bound slots. Inside the quantified body it then names the same value it named outside.
@@ -203,7 +200,6 @@ Inside the extended environment the frame's own values must be addressable, and 
 <!--/-->
 
 ```agda
-
     c4 n4 a4 b4 : Fin (4 + n)
     c4 = suc (suc (suc zero))
     n4 = suc (suc zero)
@@ -220,7 +216,6 @@ The unary frame binds one slot fewer, so its shift moves ambient variables past 
 <!--/-->
 
 ```agda
-
     sh3 : Fin n → Fin (3 + n)
     sh3 i = suc (suc (suc i))
 ```
@@ -234,7 +229,6 @@ Its three bound slots follow the same inside-out order: the single payload compo
 <!--/-->
 
 ```agda
-
     c3 n3 a3 : Fin (3 + n)
     c3 = suc (suc zero)
     n3 = suc zero
@@ -250,7 +244,6 @@ Its three bound slots follow the same inside-out order: the single payload compo
 <!--/-->
 
 ```agda
-
   binShapeAt : Fin n → ℕ → Formula S (4 + n) → Formula S n
   binShapeAt C k rel =
     ∀̇∈ (var C) (∀̇ (∀̇ (∀̇ ( arityTagPairAtL c4 n4 k a4 b4 ⇒̇ rel))))
@@ -265,7 +258,6 @@ Its three bound slots follow the same inside-out order: the single payload compo
 <!--/-->
 
 ```agda
-
   unShapeAt : Fin n → ℕ → Formula S (3 + n) → Formula S n
   unShapeAt C k rel =
     ∀̇∈ (var C) (∀̇ (∀̇ ( arityTagAtL c3 n3 k a3 ⇒̇ rel)))
@@ -280,7 +272,6 @@ Its three bound slots follow the same inside-out order: the single payload compo
 <!--/-->
 
 ```agda
-
   binShape-out : (C : Fin n) (k : ℕ) (rel : Formula S (4 + n)) (γ : S ^ n)
     → ⟨ γ ⊨ binShapeAt C k rel ⟩
     → (c ar a b : S)
@@ -324,7 +315,6 @@ The proof is short because the frame was designed for this reading. The hypothes
 <!--/-->
 
 ```agda
-
   unShape-out : (C : Fin n) (k : ℕ) (rel : Formula S (3 + n)) (γ : S ^ n)
     → ⟨ γ ⊨ unShapeAt C k rel ⟩
     → (c ar a : S)
@@ -546,7 +536,6 @@ The fourth reading covers the bounded quantifiers. Its hypotheses copy the binar
 <!--/-->
 
 ```agda
-
   binSuccClosed-out : (C : Fin n) (k : ℕ) (γ : S ^ n)
     → ⟨ γ ⊨ binShapeAt C k (succSndAt C) ⟩
     → (c ar a b : S)
@@ -852,7 +841,6 @@ The final introduction `binSuccClosed-in` covers the bounded quantifiers. Its hy
 <!--/-->
 
 ```agda
-
   binSuccClosed-in : (C : Fin n) (k : ℕ) (γ : S ^ n)
     → ((c ar a b : S)
        → ⟨ fst c ∈ fst (lookup C γ) ⟩
@@ -892,7 +880,6 @@ The binary successor case uses the same witness and the same two adequacy facts,
 ```
 </div>
 </details>
-
 
 <!--en-->
 ## Recap
