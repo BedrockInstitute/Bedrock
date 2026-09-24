@@ -116,6 +116,33 @@ document.querySelector('#run').onclick=async()=>{
   check(!!d.querySelector('.definition-modal')&&!md.querySelector('.code-fullscreen'),'Escape exits only the code surface, not its containing modal');
   d.querySelector('.definition-modal-close').click();
   check(!d.querySelector('.definition-modal'),'normal modal close remains functional');
+  const theorem=d.querySelector('pre.Agda a[id][data-name="ΩResizing→Resizing"]');
+  check(!!theorem,'reported ΩResizing→Resizing definition is included');
+  const theoremBlock=theorem.closest('pre');
+  const visibleToken=pre=>[...pre.querySelectorAll('.expr-node a[data-type]')].find(a=>a.getClientRects().length&&!a.closest('.universe-source'));
+  const ordinaryBlock=[...d.querySelectorAll('pre.Agda')].find(pre=>!pre.closest('.statement-ending, summary')&&visibleToken(pre));
+  check(ordinaryBlock&&theoremBlock.closest('.statement-ending'),'font comparison covers both ordinary and QED frames');
+  for(const [label,codeBlock] of [['ordinary',ordinaryBlock],['QED theorem',theoremBlock]]) {
+    const token=visibleToken(codeBlock);
+    token.scrollIntoView({block:'center'});
+    const tokenRect=token.getBoundingClientRect();
+    token.dispatchEvent(new w.PointerEvent('pointerdown',{bubbles:true,pointerType:'touch'}));
+    touch(w,token,'touchstart',tokenRect.x+2,tokenRect.y+2);
+    touch(w,token,'touchend',tokenRect.x+2,tokenRect.y+2);token.click();
+    await until(()=>!d.querySelector('.code-fullscreen-toggle').hidden);
+    const before=w.getComputedStyle(codeBlock).fontSize;
+    const range=d.createRange();range.selectNodeContents(token);
+    const glyph=range.getBoundingClientRect();
+    d.querySelector('.code-fullscreen-toggle').click();await pause(100);
+    // Moving the original DOM resets live Range boundaries to its old parent.
+    range.selectNodeContents(token);
+    const style=w.getComputedStyle(codeBlock), rotated=range.getBoundingClientRect();
+    check(style.fontSize===before,label+' fullscreen preserves declared code size ('+before+' → '+style.fontSize+', '+token.textContent+', '+d.URL+')');
+    check(style.getPropertyValue('-webkit-text-size-adjust')==='100%'||style.getPropertyValue('text-size-adjust')==='100%',label+' disables automatic text inflation without disabling zoom');
+    check(Math.abs(rotated.width-glyph.height)<1&&Math.abs(rotated.height-glyph.width)<1,label+' fullscreen preserves actual rotated glyph dimensions');
+    check(style.fontSize===w.getComputedStyle(ordinaryBlock).fontSize,label+' uses the same font size as ordinary code');
+    d.querySelector('.code-fullscreen-close').click();
+  }
   w.scrollTo(0,0);await pause(260);
   let searchStart=w.performance.now();w.scrollTo(0,400);
   await until(()=>d.body.classList.contains('mobile-search-hidden'));

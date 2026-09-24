@@ -18,6 +18,8 @@
       if(!content) throw new Error('Missing body-code scroll viewport');
       if(content.scrollWidth<=content.clientWidth) continue;
       const style=win.getComputedStyle(pre), box=pre.getBoundingClientRect();
+      const horizontalOnly=win.getComputedStyle(content).overflowY==='hidden'
+        && style.maxHeight==='none';
       const padding=parseFloat(style.paddingRight);
       let fixed=true;
       for(const offset of [0,(content.scrollWidth-content.clientWidth)/2,content.scrollWidth]) {
@@ -41,7 +43,7 @@
       const gap=pre.getBoundingClientRect().left+pre.clientLeft+pre.clientWidth-right;
       results.push({module,width,kind:pre.closest('.statement-ending')?'QED':'ordinary',
         depth:[...doc.querySelectorAll('.submodule-fold')].filter(fold=>fold.contains(pre)).length,
-        code:pre.textContent.trim().slice(0,100),padding,gap,fixed,ok:fixed && padding>=16 && gap>=padding-1});
+        code:pre.textContent.trim().slice(0,100),padding,gap,fixed,horizontalOnly,ok:horizontalOnly && fixed && padding>=16 && gap>=padding-1});
     }
   }
   const covered=results.some(r=>r.depth===1) && results.some(r=>r.depth===2)

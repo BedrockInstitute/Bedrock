@@ -247,6 +247,9 @@ try {
   check(frameDoc.querySelectorAll('table').length>=3,'modal mirrors full article tables');
   check(frameDoc.querySelector('.chapter-review.is-reviewed')?.getAttribute('aria-label')==='已人工校阅','modal mirrors chapter review status');
   check(frameDoc.querySelectorAll('.statement-ending > pre.Agda + .statement-qed').length>10,'modal mirrors statement endings including folded helpers');
+  const modalEnding=frameDoc.querySelector('.statement-ending > pre.Agda');
+  const modalCodeStyle=frame.contentWindow.getComputedStyle(modalEnding);
+  check(modalCodeStyle.paddingBottom===modalCodeStyle.paddingTop,'modal QED code reserves no extra bottom line');
   const nextDefinition=[...frameDoc.querySelectorAll('pre.Agda a.Function[id][href]')].find(a=>a.textContent==='SetChoice');
   // Observe the asynchronous iframe message at the DOM mutation, not via a
   // polling timer that background tabs may throttle beyond the loading phase.
