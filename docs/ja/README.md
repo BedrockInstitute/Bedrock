@@ -82,11 +82,13 @@ make check
 
 ## ウェブサイトの基盤
 
-任意の `outcrop-agda` コンパイラー計装、ビルド、型情報の出力、並列スケジューラーも Outcrop が提供する。Bedrock は [ライブラリの固定](../../dev/agda-libraries.json)、入口モジュール、数学上の検査、リソースとデプロイの設定を保持する。[ツールチェインの説明](../../dev/AGDA-ENVIRONMENT.md)を参照。通常の Markdown 描画に Agda の導入は不要である。
+任意の `outcrop-agda` コンパイラー計装、ビルド、型情報の出力、並列スケジューラーも Outcrop が提供する。Bedrock は [ライブラリの固定](../../site/agda-libraries.json)、入口モジュール、数学上の検査、リソースとデプロイの設定を保持する。[ツールチェインの説明](../../site/AGDA-ENVIRONMENT.md)を参照。通常の Markdown 描画に Agda の導入は不要である。
 
 サイトは [Outcrop](https://github.com/BedrockInstitute/Outcrop) を使用し、`outcrop/` サブモジュールでその版を固定する。**Outcrop Core** は Markdown と任意のコンパイラー意味情報を描画する。**Outcrop Site** は学習ルート、依存グラフ、多言語検索、型情報と定義モーダル、外観設定、Ask AI、再利用可能な検査規則を含む教材サイト全体を提供する。Bedrock は [site/project.json](../../site/project.json) を通じて本文、目次、用語、ブランド、数学上の方針を与える。
 
 サブモジュールの初期化後、`make venv` がローカルのパッケージを導入する。既存の仮想環境では `.venv/bin/python -m pip install -e ./outcrop` も利用できる。`make site` で構築し、`make serve` でプレビューする。[インスタンスの説明](../../site/README.md) と [Outcrop の構成](../../outcrop/docs/ARCHITECTURE.md) を参照。他の教材も、Bedrock の数学やサイト実装を複製せずに同じ基盤を利用できる。
+
+[site/](../../site/README.md) は継続的に保守する構成、執筆規則、用語、読書用メタデータ、ブランド素材を保持する。[dev/](../../dev/README.md) は研究の作業資料と一時的な開発資料のみを保持し、関連する作業の終了後に整理する。
 
 ## 貢献
 
@@ -96,8 +98,8 @@ AI エージェントは [AGENTS.md](../../AGENTS.md) の唯一の規則集を�
 
 Bedrock は複数ライセンスを採用しており、ファイルごとの条項は [`REUSE.toml`](../../REUSE.toml) に宣言され、`reuse lint` が検証する。要するに、
 
-- **[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)**：数学・文章・ブランドマーク (`src/`、`docs/`、`README`、`site/static/assets/`)。
-- **[AGPL-3.0-only](https://www.gnu.org/licenses/agpl-3.0.html)**：その他すべてのプロジェクト自身のコードと構成 (取り込んだ [1lab](https://1lab.dev) フロントエンドを含む)。
+- **[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)**：数学・文章・執筆仕様とメタデータ・ブランド素材。具体的な範囲は `REUSE.toml` に記す。
+- **[AGPL-3.0-only](https://www.gnu.org/licenses/agpl-3.0.html)**：プロジェクト自身のソフトウェアと、このライセンスが適用される構成。Outcrop は第三者のクレジットを別途管理する。
 - **[OFL-1.1](https://openfontlicense.org)**：Outcrop が提供する自己ホストのウェブフォント (`outcrop/src/outcrop/site/resources/static/fonts/`)。
 
 完全なライセンス本文は [`LICENSES/`](../../LICENSES/) にある。第三者のクレジットと AGPL 第 13 条の対応ソース表明は [NOTICE](../../NOTICE) を参照。

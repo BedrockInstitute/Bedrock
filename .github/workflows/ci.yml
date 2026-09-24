@@ -44,7 +44,7 @@ jobs:
         uses: actions/cache@v6
         with:
           path: _build/dependencies
-          key: cubical-source-v2-${{ runner.os }}-${{ hashFiles('dev/agda-libraries.json') }}
+          key: cubical-source-v2-${{ runner.os }}-${{ hashFiles('site/agda-libraries.json') }}
 
       - name: Validate restored Bedrock toolchain
         if: steps.outcrop_agda.outputs.cache-hit == 'true'
@@ -80,7 +80,7 @@ jobs:
             ~/.cabal/packages
             ${{ steps.setup_haskell.outputs['cabal-store'] }}
           key: >-
-            bedrock-cabal-v1-${{ runner.os }}-${{ steps.setup_haskell.outputs['ghc-version'] }}-${{ steps.setup_haskell.outputs['cabal-version'] }}-${{ hashFiles('outcrop/src/outcrop/adapters/agda/resources/manifest.json', 'dev/agda-libraries.json') }}
+            bedrock-cabal-v1-${{ runner.os }}-${{ steps.setup_haskell.outputs['ghc-version'] }}-${{ steps.setup_haskell.outputs['cabal-version'] }}-${{ hashFiles('outcrop/src/outcrop/adapters/agda/resources/manifest.json', 'site/agda-libraries.json') }}
           restore-keys: |
             bedrock-cabal-v1-${{ runner.os }}-${{ steps.setup_haskell.outputs['ghc-version'] }}-${{ steps.setup_haskell.outputs['cabal-version'] }}-
 
@@ -100,9 +100,9 @@ jobs:
         uses: actions/cache@v6
         with:
           path: _build/typecheck/_build/2.8.0/agda/src
-          key: bedrock-ifaces-v2-${{ runner.os }}-${{ hashFiles('outcrop/src/outcrop/adapters/agda/**', 'dev/agda-libraries.json', 'bedrock.agda-lib') }}-${{ hashFiles('src/**/*.lagda.md') }}
+          key: bedrock-ifaces-v2-${{ runner.os }}-${{ hashFiles('outcrop/src/outcrop/adapters/agda/**', 'site/agda-libraries.json', 'bedrock.agda-lib') }}-${{ hashFiles('src/**/*.lagda.md') }}
           restore-keys: |
-            bedrock-ifaces-v2-${{ runner.os }}-${{ hashFiles('outcrop/src/outcrop/adapters/agda/**', 'dev/agda-libraries.json', 'bedrock.agda-lib') }}-
+            bedrock-ifaces-v2-${{ runner.os }}-${{ hashFiles('outcrop/src/outcrop/adapters/agda/**', 'site/agda-libraries.json', 'bedrock.agda-lib') }}-
 
       - name: Typecheck
         shell: bash
@@ -158,7 +158,7 @@ jobs:
         uses: actions/cache/restore@v6
         with:
           path: _build/dependencies
-          key: cubical-source-v2-${{ runner.os }}-${{ hashFiles('dev/agda-libraries.json') }}
+          key: cubical-source-v2-${{ runner.os }}-${{ hashFiles('site/agda-libraries.json') }}
           fail-on-cache-miss: true
 
       - name: Configure Bedrock toolchain
@@ -183,9 +183,9 @@ jobs:
             _build/outcrop-agda-types.jsonl
             _build/types.json
             _build/expression-types.json
-          key: bedrock-site-v3-${{ runner.os }}-${{ hashFiles('outcrop/src/outcrop/adapters/agda/**', 'dev/agda-libraries.json', 'bedrock.agda-lib', 'Makefile', 'outcrop/src/outcrop/core/source_syntax.py', 'scripts/site/extract-types.py', 'scripts/site/extract-expression-types.py', 'outcrop/src/outcrop/adapters/*.py') }}-${{ hashFiles('src/**/*.lagda.md') }}
+          key: bedrock-site-v3-${{ runner.os }}-${{ hashFiles('outcrop/src/outcrop/adapters/agda/**', 'site/agda-libraries.json', 'bedrock.agda-lib', 'Makefile', 'outcrop/src/outcrop/core/source_syntax.py', 'scripts/site/extract-types.py', 'scripts/site/extract-expression-types.py', 'outcrop/src/outcrop/adapters/*.py') }}-${{ hashFiles('src/**/*.lagda.md') }}
           restore-keys: |
-            bedrock-site-v3-${{ runner.os }}-${{ hashFiles('outcrop/src/outcrop/adapters/agda/**', 'dev/agda-libraries.json', 'bedrock.agda-lib', 'Makefile', 'outcrop/src/outcrop/core/source_syntax.py', 'scripts/site/extract-types.py', 'scripts/site/extract-expression-types.py', 'outcrop/src/outcrop/adapters/*.py') }}-
+            bedrock-site-v3-${{ runner.os }}-${{ hashFiles('outcrop/src/outcrop/adapters/agda/**', 'site/agda-libraries.json', 'bedrock.agda-lib', 'Makefile', 'outcrop/src/outcrop/core/source_syntax.py', 'scripts/site/extract-types.py', 'scripts/site/extract-expression-types.py', 'outcrop/src/outcrop/adapters/*.py') }}-
 
       - name: Validate restored site backend
         if: steps.site_backend.outputs.cache-hit == 'true'

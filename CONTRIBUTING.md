@@ -17,14 +17,21 @@ backstop, and CI re-runs `make check` on every push.
 
 If a rule is missing or the agent cannot answer, do not guess. Ask the repository owner.
 
+Permanent configuration and authoring specifications belong in [site/](site/README.md).
+Use [dev/](dev/README.md) for working research and temporary development material;
+promote lasting decisions and remove completed one-off records. Keep directory READMEs
+and consuming paths in sync whenever files move.
+
 ## License and contribution terms
 
 Bedrock is multi-licensed (see the [README](README.md#license), [`REUSE.toml`](REUSE.toml), and
 [`LICENSES/`](LICENSES/)). Contributions are accepted under the license of the area you touch
 (inbound = outbound):
 
-- **Content** (the mathematics and prose under `src/` and `docs/`, and the README): CC BY-NC-SA 4.0.
-- **Code and configuration** (everything else, the default): AGPL-3.0-only.
+- **Content and designated editorial material**: CC BY-NC-SA 4.0, including the
+  mathematics, prose, brand assets and the files explicitly listed in `REUSE.toml`.
+- **Code and other configuration**: AGPL-3.0-only by default. Moving an existing file
+  does not change its license; consult `REUSE.toml` for the exact per-file assignment.
 
 By opening a pull request you agree to license your contribution under those terms. Note the AGPL
 expectation up front: some employers restrict contributing to AGPL-licensed code, so check whether

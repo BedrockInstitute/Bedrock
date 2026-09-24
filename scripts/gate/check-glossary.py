@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Glossary checker for Bedrock: flags off-glossary renderings in multilingual prose.
 
-The canonical glossary data is dev/glossary.toml (read here via tomllib); the prose that
-explains the checks and how to maintain entries is dev/GLOSSARY.md. Each entry gives a term's
+The canonical glossary data is site/glossary.toml (read here via tomllib); the prose that
+explains the checks and how to maintain entries is site/GLOSSARY.md. Each entry gives a term's
 canonical English, Chinese and Japanese renderings plus an optional `avoid` list of known wrong
 renderings. This script scans the trilingual docs and reports any avoided rendering, pointing
 at the canonical one.
@@ -35,8 +35,8 @@ if sys.version_info < (3, 11):
     sys.exit("check-glossary.py needs Python 3.11+ (tomllib); run `make venv` and use .venv/bin/python")
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-GLOSSARY = "dev/glossary.toml"      # canonical term data (this checker's input)
-GLOSSARY_DOC = "dev/GLOSSARY.md"    # human prose explaining the glossary (excluded from scans)
+GLOSSARY = "site/glossary.toml"      # canonical term data (this checker's input)
+GLOSSARY_DOC = "site/GLOSSARY.md"    # human prose explaining the glossary (excluded from scans)
 
 
 from outcrop.core.glossary_lint import (
@@ -164,7 +164,7 @@ def main(argv):
 
     if total:
         print(f"\n{total} glossary violation(s). Fix the rendering or, if it is a genuine "
-              f"exception, add <!-- glossary-ignore --> on the line. See dev/GLOSSARY.md.",
+              f"exception, add <!-- glossary-ignore --> on the line. See site/GLOSSARY.md.",
               file=sys.stderr)
         return 1
     return 0

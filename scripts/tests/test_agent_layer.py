@@ -8,7 +8,7 @@ ROOT = Path(__file__).resolve().parents[2]
 
 class BedrockCatalogTests(unittest.TestCase):
     def test_the_catalog_gives_a_preview_chapter_the_guide_panel(self):
-        data = reading_routes.build_reading_data(ROOT / "src", ROOT / "dev/reading-catalog.json",
+        data = reading_routes.build_reading_data(ROOT / "src", ROOT / "site/reading-catalog.json",
                                                extension='.lagda.md', previews={'Origin'})
         node = next(n for n in data["nodes"] if n["id"] == "Origin")
         self.assertTrue(node["preview"])
@@ -17,7 +17,7 @@ class BedrockCatalogTests(unittest.TestCase):
 
 
     def test_the_catalog_gives_every_other_chapter_its_own_page(self):
-        data = reading_routes.build_reading_data(ROOT / "src", ROOT / "dev/reading-catalog.json",
+        data = reading_routes.build_reading_data(ROOT / "src", ROOT / "site/reading-catalog.json",
                                                extension='.lagda.md', previews={'Origin'})
         for node in data["nodes"]:
             if node["preview"]:

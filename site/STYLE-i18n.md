@@ -212,18 +212,18 @@ complete `` `...`{.Agda} `` span, including its operators and arguments. Write
 bound variables such as `` `x`{.Agda} `` as inline code too; the renderer does
 not link temporary variables to unrelated same-named code tokens. The lint gate checks this
 structurally in every chapter. Existing bare-variable lines outside the refined
-opening chapters are recorded by exact line hash in `dev/inline-agda-legacy.json`:
+opening chapters are recorded by exact line hash in `site/inline-agda-legacy.json`:
 new lines and edited lines must pass, and the inventory should shrink as those
 chapters are revised.
 
 ## Reader-facing terminology
 
 Every technical concept named for textbook readers is registered with
-`audience = "reader"` in `dev/glossary.toml`. Its first formal introduction uses
+`audience = "reader"` in `site/glossary.toml`. Its first formal introduction uses
 `[rendering]{.term-intro #stable-id}` in each language. Later occurrences are linked
 automatically only when the glossary entry sets `matching = "auto"`; ambiguous entries use
 `[rendering]{.term-ref #stable-id}`. The stable identifier and localized hover recap live in
-`dev/glossary.toml`. Do not duplicate that metadata in chapter-local HTML or JavaScript.
+`site/glossary.toml`. Do not duplicate that metadata in chapter-local HTML or JavaScript.
 An explicit `term-ref` may also point forward to an introduction later in the same
 chapter, as with the record-type link in the discussion of `Lift`. Prefer that direct
 lookup to an opaque paraphrase or an unlinked promise of an explanation below.

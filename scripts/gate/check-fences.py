@@ -29,7 +29,7 @@ what keeps this quiet on real prose; raise it rather than weaken the shape test
 if a false positive appears.
 
 WHAT IT CANNOT DO. It cannot tell a lost fence from a deliberate code SAMPLE in
-prose. `dev/STYLE-i18n.md` requires English inside ` ```agda ` fences, and a
+prose. `site/STYLE-i18n.md` requires English inside ` ```agda ` fences, and a
 sample belongs in a fence of another language or in backticks. So a hit is a
 defect or a style violation, and either way it wants a human.
 

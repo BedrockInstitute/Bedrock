@@ -18,26 +18,31 @@ Outcrop Core is the reusable document engine; Outcrop Site is the complete
 interactive textbook framework. Bedrock's content and branding are one instance,
 not implicit defaults for either layer.
 
+`site/` owns durable instance configuration, authoring specifications and editorial
+metadata, including the policies used by non-website proof/prose checks. `dev/`
+is a working area for research and active investigations, not a permanent config
+store. Promote lasting decisions into `site/` or the source book, then remove
+completed one-off scripts and reports. Preserve referenced research evidence.
+
 Read the relevant specifications before changing an area:
 
 | Area | Source of truth |
 | --- | --- |
-| Mathematical modules and dependencies | Actual definitions and imports under `src/`; `dev/TEACHING.md` for the parallel teaching architecture |
-| Agda conventions and notation | `dev/STYLE-agda.md`, `src/README.md` |
-| Trilingual literary exposition | `dev/STYLE-i18n.md` |
-| Terminology and reader introductions | `dev/glossary.toml`, `dev/GLOSSARY.md` |
-| Chapter order, routes, titles and review status | `dev/reading-catalog.json` |
+| Mathematical modules and dependencies | Actual definitions and imports under `src/`; `site/TEACHING.md` for the parallel teaching architecture |
+| Agda conventions and notation | `site/STYLE-agda.md`, `src/README.md` |
+| Trilingual literary exposition | `site/STYLE-i18n.md` |
+| Terminology and reader introductions | `site/glossary.toml`, `site/GLOSSARY.md` |
+| Chapter order, routes, titles and review status | `site/reading-catalog.json` |
 | Markdown contract and reusable markup | `outcrop/docs/RENDERER-MARKDOWN.md`, `outcrop/docs/RENDERER-RECIPES.md` |
-| Website architecture and regression evidence | `outcrop/docs/ARCHITECTURE.md`, `dev/SITE-ARCHITECTURE.md`, `site/README.md` |
+| Website architecture and verification | `outcrop/docs/ARCHITECTURE.md`, `site/ARCHITECTURE.md`, `site/README.md` |
 | Site instance configuration | `site/project.json`, `outcrop/docs/SITE-CONFIG.md` |
-| Compiler instrumentation and environment | `outcrop/docs/AGDA.md`, `dev/AGDA-ENVIRONMENT.md`, `dev/agda-libraries.json` |
+| Compiler instrumentation and environment | `outcrop/docs/AGDA.md`, `site/AGDA-ENVIRONMENT.md`, `site/agda-libraries.json` |
 | Checks, caches and deployment | `Makefile`, `.github/workflows/ci.yml`, `.github/workflows/README.md` |
 | Licensing | `REUSE.toml`, `NOTICE`, `LICENSES/` |
 
 Developer documentation is English. Reader-facing exposition and interface copy
 are English, Chinese and Japanese. Do not infer present progress from dated
-counts in READMEs or reports. `dev/REFACTOR.md` records a closed proof-size run;
-old POD goal codes, missing archived process files and past authoring schedules
+counts in READMEs or reports. Old POD goal codes, archived process files and past authoring schedules
 are not a requirement to restart those processes.
 
 ## Scope and collaboration

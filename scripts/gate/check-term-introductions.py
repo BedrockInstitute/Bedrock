@@ -6,10 +6,13 @@ import sys
 from pathlib import Path
 
 from outcrop.core.term_registry import load_entries, reader_terms
-from outcrop.site.reading_routes import build_reading_data
-
 from outcrop.core.term_lint import check_terms
 from outcrop.core.term_lint import markers as text_markers
+from outcrop.site.reading_routes import build_reading_data
+from outcrop.site import SiteConfig
+
+ROOT = Path(__file__).resolve().parents[2]
+CONFIG = SiteConfig.load(ROOT / 'site/project.json', root=ROOT)
 
 def module_name(path, src="src"):
     return os.path.relpath(path, src)[:-len(".lagda.md")].replace(os.sep, ".")
@@ -17,11 +20,12 @@ def module_name(path, src="src"):
 def markers(path):
     return text_markers(Path(path).read_text(encoding='utf-8'))
 
-def check(src="src", glossary="dev/glossary.toml"):
+def check(src="src", glossary=None):
+    glossary = glossary or CONFIG.path(CONFIG.glossary)
     sources = {module_name(str(path), src): path.read_text(encoding='utf-8')
                for path in sorted(Path(src).rglob('*.lagda.md'))}
     try:
-        reading = build_reading_data(src, Path(__file__).resolve().parents[2] / 'dev/reading-catalog.json',
+        reading = build_reading_data(src, CONFIG.path(CONFIG.catalog),
                                     extension='.lagda.md', previews={'Origin'})
     except (OSError, ValueError):
         # The project route gate owns corpus coverage; the scoped legacy entry
@@ -38,7 +42,7 @@ def main(argv):
         print("\n".join(errors))
         print(f"\n{len(errors)} term-introduction violation(s).", file=sys.stderr)
         return 1
-    print(f"term introductions: clean ({len(reader_terms(load_entries('dev/glossary.toml')))} reader terms)")
+    print(f"term introductions: clean ({len(reader_terms(load_entries(CONFIG.path(CONFIG.glossary))))} reader terms)")
     return 0
 
 

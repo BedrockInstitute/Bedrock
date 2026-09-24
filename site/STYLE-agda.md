@@ -1,22 +1,16 @@
 # STYLE-agda: Agda code and literate-chapter style
 
 Binding style rules for every master under `src/`. This is a developer doc (English
-only). It inherits the source project's finalized code-style spec
-(`../fol-reification/docs/governance/STYLE.md`, finalized 2026-06-12 and proven over
-70k lines) and adapts it to Bedrock's textbook mission; where the two differ, this
-document wins. Process context (goal codes, phases) lives in
-[screen.toml](pod/screen.toml); the i18n marker grammar lives in [STYLE-i18n.md](STYLE-i18n.md).
+only). The current project instructions live in [AGENTS.md](../AGENTS.md);
+the i18n marker grammar lives in [STYLE-i18n.md](STYLE-i18n.md).
 
-Rules marked **(provisional)** are expected to harden after real porting experience
-(archived D11, in `archive/dev/DECISIONS-archived.md`; DD11 in `dev/pod/rulings.toml` is a
-DIFFERENT rule, code and prose craft. Tension T1's register is at
-`dev/memos/process-tensions.md`). Changing any rule is legislation: open an
-`[L0.x]` item, do not
-improvise silently.
+Rules marked **(provisional)** require review against real usage. Change a rule
+explicitly and update its checks and documentation together; do not treat a
+retired task ledger or goal code as current project policy.
 
 The mechanical subset of these rules (the OPTIONS header, the import discipline of
 §2, and the forbidden constructs of §1) is machine-enforced by `scripts/gate/lint-agda.py`
-as part of `make check` and the pre-commit hook `[L0.3]`.
+as part of `make check` and the pre-commit hook.
 
 ## 0. Meta-principles
 
@@ -40,17 +34,12 @@ as part of `make check` and the pre-commit hook `[L0.3]`.
 
 - Every module's first line is exactly
   `{-# OPTIONS --cubical --safe --guardedness #-}`. No other flag may be added
-  without an `[L0.x]` ruling. Library-wide flags live in `bedrock.agda-lib`.
+  without explicit review. Library-wide flags live in `bedrock.agda-lib`.
 - **No `postulate`, no holes, no `{-# TERMINATING #-}`, ever.** Nothing is a
-  sanctioned form of "not proven yet". The Frontier record (PLAN §5, archived
-  at `dev/memos/working-mechanisms.md`) was the sanctioned debt form while the
-  book was built root-first; its last field was discharged and the record
-  deleted. Named module hypotheses remain useful for generic lemmas, but the
+  sanctioned form of "not proven yet". Named module hypotheses remain useful for generic lemmas, but the
   completed `L⊨ZFC` and `L⊨GCH` each take only `LEM (ℓ-suc ℓ)`. Refactoring
   must not add an unresolved hypothesis to either theorem.
-- **Classical principles are module parameters, never axioms** (archived D2;
-  the live ruling is DD9 in PLAN §3, and DD2 there is the endpoint). The
-  canonical packaging (validated by the L0.2 spike):
+- **Classical principles are module parameters, never axioms**. The canonical packaging:
 
   ```agda
   LEM : ∀ ℓ → Type (ℓ-suc ℓ)
@@ -65,15 +54,11 @@ as part of `make check` and the pre-commit hook `[L0.3]`.
 
 ## 2. Modules and files
 
-- One chapter = one master `.lagda.md`; module name = file path; namespaces = the
-  book parts fixed by archived D5, whose live statement is PLAN §4 (the
-  archived part layout is at `dev/memos/target-skeleton-d5.md`; DD5 in PLAN §3
-  is a DIFFERENT rule, the two quantitative constraints).
+- One chapter = one master `.lagda.md`; module name = file path. Namespaces follow
+  mathematical subjects; [TEACHING.md](TEACHING.md) defines the reading contract.
 - Module names: full English words, PascalCase (`Constructible`, `WellOrder`).
   **Never** iteration numbers, primes, or provenance flavor (`Foo2`, `FooFinal`,
-  `isL'`); archived D7, in `archive/dev/DECISIONS-archived.md`. **This naming
-  rule is LIVE. DD7 is a different code and it is revoked**, so do not read the
-  revocation in PLAN §3 as a repeal of this line.
+  `isL'`).
 - Telescope order: levels first, then assumption parameters, then subject
   parameters (`module L.Choice.Transversal {ℓ : Level} (lem : LEM (ℓ-suc ℓ))`).
 - Imports needed by the telescope go **before** the module declaration, after
@@ -141,10 +126,10 @@ as part of `make check` and the pre-commit hook `[L0.3]`.
   wholesale (its own `public` re-exports stay curated with `using` lists). A
   genuine exception the linter cannot see (an instance-only import) is
   marked `-- lint-agda: keep`.
-- Every module appears in `dev/reading-catalog.json` in reading order (enforced by the
+- Every module appears in `site/reading-catalog.json` in reading order (enforced by the
   `check-reading-order.py` gate; no master may be absent from the catalog). Its
   reading position introduces its concepts before their substantive use. **The book keeps two
-  catalogs**: the **reading catalog** is the machine-readable `dev/reading-catalog.json`;
+  catalogs**: the **reading catalog** is the machine-readable `site/reading-catalog.json`;
   the **structure catalog** is the namespace tree, derived
   automatically and never hand-maintained. Namespace membership is decided by
   subject; reading order follows mathematical prerequisites and coherent learning
@@ -169,8 +154,8 @@ High-frequency concept too long for signatures?
   → only entries in the registered abbreviation list.
 ```
 
-**Three naming rules that the decision tree does not decide.** They are DD11's
-naming half, and this file is their canonical home. A name says what the thing
+**Three naming rules that the decision tree does not decide.** This file is
+their canonical home. A name says what the thing
 IS, never how it was built. An implicit argument that no reader can infer is
 dissolved into an explicit one. A name with zero or one consumer is inlined at
 its use site rather than named.
@@ -178,7 +163,7 @@ its use site rather than named.
 Registered suffixes for theorem names: `-rep` (combinator families), `-spec`
 (specifications), `-inj` (injectivity), `-ax` (axiom instances, library tradition),
 `-map` (functoriality). Registered abbreviations: `Rep` (representation), `Ord`
-(ordinal, `[L0.5]`: the predicate `IsOrd` and the closure lemmas `∅-ord`, `suc-ord`,
+(ordinal: the predicate `IsOrd` and the closure lemmas `∅-ord`, `suc-ord`,
 `setUnion-ord`, `boundingOrd`; "ordinal" is too long for a suffix that appears on every
 stage lemma, and the short form is the tradition), library names (`Fin`, `Vec`, `ℕ`),
 and the affixes `inj`/`comm`/`assoc`. Anything else needs registration here first. Forbidden: pinyin, ASCII two-character operators (`=>`,
@@ -195,8 +180,7 @@ may accompany `x` when the two appear **as a pair within eyeshot**, in the same
 telescope or the same `where`/`let` block (an updated value derived from `x`, the
 level pair `ℓ ℓ'`). A prime never crosses the definition boundary; a primed name
 with no unprimed partner in sight is a naming failure even locally. Ported source
-names like `isL'` are renamed on entry (archived D7, and it is still live here;
-DD7 is a different code and it is revoked).
+names like `isL'` are renamed on entry.
 
 Record fields: **operation fields are symbols** (`_∈ˢ_`, `_≈ˢ_`),
 **property/axiom fields are words**; property-shaped fields are bare
@@ -314,10 +298,9 @@ skippable:
   formula; explicit spelling cuts 74min to 66s`). Narration never explains these;
   the note records the measured engineering reason. Keep it outside Agda fences
   as required by `AGENTS.md`.
-- When a module exceeds the per-module budgets (PLAN §7 rule 6, archived at
-  `dev/memos/build-constraints.md`; roughly 120 s cold or its heap cap),
-  triage against the source playbook (`../fol-reification/docs/WORKLOG.md` §5,
-  cases 1 to 20) before merging.
+- Investigate substantial time or memory regressions before merging. Preserve
+  the resource guard and comparable cache conditions in
+  [AGDA-ENVIRONMENT.md](AGDA-ENVIRONMENT.md); record the measured cause and fix.
 
 ## 8. The literate chapter template (provisional)
 
@@ -359,12 +342,12 @@ STYLE-i18n; code fences are language-neutral and English-only):
    violate rule X") stay out of the text, exactly as such comments stay out of code.
 4. Inline code references use `` `name`{.Agda} ``; section headings are stable
    anchors for cross-references.
-5. New symbols follow §5; new terms enter `dev/glossary.toml` in the same change.
-6. Authoring order per archived D6, whose live statement is `AGENTS.md`
-   Boundaries: English first, then Chinese, cross-checked; the
+5. New symbols follow §5; new terms enter `site/glossary.toml` in the same change.
+6. Authoring order: English first, then Chinese, cross-checked; the
    Japanese block may be added later without touching code.
 
 ## 9. Commits
 
-Commits touching planned work carry the goal code in brackets (`[L1.4] port
-ZF.Structure ...`), per PLAN §6.0. `make check` before every commit, as always.
+Use descriptive commit messages and run `make check` before committing.
+Retired task codes are not required. Respect the repository hooks and current
+authorization to commit or push.

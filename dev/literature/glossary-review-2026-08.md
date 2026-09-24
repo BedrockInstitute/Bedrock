@@ -3,7 +3,7 @@
 # Glossary review: the 119 pre-protocol entries
 
 Deliverable of [L3.32-T41], `tier: codex (default)`. Review of every entry in
-`dev/glossary.toml` that predates the terminology-dossier protocol, to the
+`site/glossary.toml` that predates the terminology-dossier protocol, to the
 standard of `dev/literature/terms-2026-08.md` ([L3.32-T38]). Written
 incrementally, block by block: set theory first, then type theory, then logic
 and philosophy plus other. The fourteen terms settled by the 2026-08-05
@@ -271,7 +271,7 @@ hierarchy, the V hierarchy) is the standard Chinese rendering (Bohrium keyword
 pages：「这种被称为累积层级的构造」in the 遗传有限集 entry and「累积层级 (V)」in
 the 超限递归 entry); Japanese 累積階層 is the standard compound (累積的階層).
 **CONFIRMED.** Note the entry says the zh rendering is already in use in
-dev/reading-catalog.json, consistent with the hierarchy entries.
+site/reading-catalog.json, consistent with the hierarchy entries.
 
 #### condensation
 
@@ -449,7 +449,7 @@ the sense, which is the best available guard.
 
 Historical terminology review only. On 2026-09-23, `SetChoice` was narrowed to
 choice for set-valued families; the current trilingual names and scope are in
-`dev/glossary.toml` under `set-valued-choice`.
+`site/glossary.toml` under `set-valued-choice`.
 
 zh 集合层选择 / ja 集合レベルの選択. SetChoice: truncation commutes with
 products over an h-set of indices. No Chinese or Japanese literature for this

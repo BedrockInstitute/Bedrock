@@ -82,11 +82,13 @@ make check
 
 ## 网站框架
 
-可选的 `outcrop-agda` 编译器插桩、构建、类型数据导出与并行调度也由 Outcrop 提供。Bedrock 只保留 [库依赖锁定](../../dev/agda-libraries.json)、入口模块、数学检查与本项目的资源及部署配置；见 [工具链说明](../../dev/AGDA-ENVIRONMENT.md)。普通 Markdown 渲染不需要安装 Agda。
+可选的 `outcrop-agda` 编译器插桩、构建、类型数据导出与并行调度也由 Outcrop 提供。Bedrock 只保留 [库依赖锁定](../../site/agda-libraries.json)、入口模块、数学检查与本项目的资源及部署配置；见 [工具链说明](../../site/AGDA-ENVIRONMENT.md)。普通 Markdown 渲染不需要安装 Agda。
 
 网站采用 [Outcrop](https://github.com/BedrockInstitute/Outcrop)，由 `outcrop/` 子模块固定版本。**Outcrop Core** 渲染 Markdown 与可选的编译器语义数据；**Outcrop Site** 提供完整交互式教材，包括学习路线、依赖图、多语搜索、类型提示与定义弹窗、外观设置、Ask AI 和可复用检查规则。Bedrock 通过 [site/project.json](../../site/project.json) 提供正文、目录、术语、品牌和数学政策。
 
 初始化子模块后，`make venv` 会安装本地框架包；已有虚拟环境也可运行 `.venv/bin/python -m pip install -e ./outcrop`。随后用 `make site` 构建、`make serve` 预览。详见 [实例说明](../../site/README.md) 与 [Outcrop 架构](../../outcrop/docs/ARCHITECTURE.md)。其他教材可以复用同一框架，无须复制 Bedrock 的数学内容或网站实现。
+
+[site/](../../site/README.md) 保存长期维护的配置、编写规范、术语、阅读元数据与品牌资产。[dev/](../../dev/README.md) 仅保存研究工作材料和临时开发内容，并在相关任务结束后清理。
 
 ## 贡献
 
@@ -96,8 +98,8 @@ AI agent 以 [AGENTS.md](../../AGENTS.md) 的唯一规则集为准，人类贡�
 
 Bedrock 采用多重许可；逐文件的条款在 [`REUSE.toml`](../../REUSE.toml) 中声明，并由 `reuse lint` 验证。简而言之：
 
-- **[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)**：数学、文稿与品牌标识 (`src/`、`docs/`、`README`、`site/static/assets/`)。
-- **[AGPL-3.0-only](https://www.gnu.org/licenses/agpl-3.0.html)**：其余所有第一方代码与配置，含内嵌的 [1lab](https://1lab.dev) 前端。
+- **[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)**：数学、文稿、编写规范与元数据、品牌资产，具体范围见 `REUSE.toml`。
+- **[AGPL-3.0-only](https://www.gnu.org/licenses/agpl-3.0.html)**：第一方软件及适用此许可的配置。Outcrop 单独维护其第三方署名。
 - **[OFL-1.1](https://openfontlicense.org)**：Outcrop 提供的自托管网页字体 (`outcrop/src/outcrop/site/resources/static/fonts/`)。
 
 完整许可文本见 [`LICENSES/`](../../LICENSES/)；第三方署名与 AGPL 第 13 条对应源代码声明见 [NOTICE](../../NOTICE)。

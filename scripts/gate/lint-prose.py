@@ -64,7 +64,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent.parent
 SRC = ROOT / "src"
 
-_BARE_VARIABLE_LEGACY_PATH = ROOT / "dev" / "inline-agda-legacy.json"
+from outcrop.site import SiteConfig
+_SITE_CONFIG = SiteConfig.load(ROOT / 'site/project.json', root=ROOT)
+_BARE_VARIABLE_LEGACY_PATH = _SITE_CONFIG.path(_SITE_CONFIG.values['variable_legacy'])
 
 from outcrop.core.prose_lint import EXCLUDE_BASENAMES, ProsePolicy
 from outcrop.core.prose_lint import analyze as analyze_prose, theorem_label_violations as label_violations

@@ -7,7 +7,7 @@ the mathematics and the choices with which those mechanisms are invoked.
 | Choice | Authority |
 | --- | --- |
 | Compiler source, adapter, Happy and tested host versions | `outcrop/src/outcrop/adapters/agda/resources/manifest.json` |
-| Cubical dependency version and archive checksum | `dev/agda-libraries.json` |
+| Cubical dependency version and archive checksum | `site/agda-libraries.json` |
 | Library name, source root, dependencies and project flags | `bedrock.agda-lib` |
 | Entry module, explicit compiler flags and resource budget | `Makefile` |
 | Proof obligations | Actual Agda sources and project gates |

@@ -21,7 +21,7 @@ SPDX-License-Identifier = "AGPL-3.0-only"
 # is CC, scripts are AGPL, and agent-generated documents are CC. Both trees are prose about
 # mathematics and about how the work is run, not software, and AGPL is a software licence.
 # The principle also removes a conflict rather than patching it: an agent document is CC from
-# birth, so no later move can relicense it, and the archive rule below needs no exception.
+# birth, so no later move can relicense it.
 # `scripts/**` deliberately stays AGPL under the default: that split is the point.
 [[annotations]]
 path = ["src/**", "docs/**", "README.md", "site/static/assets/**", "agents/**", "dev/**"]
@@ -30,7 +30,21 @@ SPDX-FileCopyrightText = "2026 Bedrock Institute"
 SPDX-License-Identifier = "CC-BY-NC-SA-4.0"
 
 
-# ---- Root copies of the license texts (duplicated so GitHub's detector lists all three;
+# Preserve CC licenses when durable editorial material moves out of dev/.
+[[annotations]]
+path = ["site/ARCHITECTURE.md", "site/STYLE-agda.md", "site/STYLE-i18n.md", "site/GLOSSARY.md", "site/TEACHING.md", "site/reading-catalog.json", "site/glossary.toml", "site/agda-libraries.json", "site/host-lem-inventory.json", "site/inline-agda-legacy.json"]
+precedence = "override"
+SPDX-FileCopyrightText = "2026 Bedrock Institute"
+SPDX-License-Identifier = "CC-BY-NC-SA-4.0"
+
+# Preserve the license of the environment guide moved from tools/README.md.
+[[annotations]]
+path = "site/AGDA-ENVIRONMENT.md"
+precedence = "override"
+SPDX-FileCopyrightText = "2026 Bedrock Institute"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+# ---- Root copies of the license texts (duplicated so GitHub's detector lists both;
 #      it does not read LICENSES/). Mark each as the license it contains. ------------
 [[annotations]]
 path = "LICENSE-AGPL"

@@ -31,7 +31,7 @@ Do not fetch an unpinned framework branch during deployment.
 
 The optional compiler producer also comes from Outcrop; it is not a Bedrock-owned
 fork. Its source/build resources participate in cache keys, while the Cubical
-version is explicitly selected by `dev/agda-libraries.json`. Do not switch Python
+version is explicitly selected by `site/agda-libraries.json`. Do not switch Python
 interpreters after installing Outcrop: that leaves later gates unable to import
 the package. A repository integration test pins this ordering in all four jobs.
 

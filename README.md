@@ -118,7 +118,7 @@ make check
 
 `make bootstrap` builds Outcrop's optional Agda toolchain and installs the pinned
 cubical library under `_build`; it does not modify the user's global Agda
-configuration. See [Agda environment](dev/AGDA-ENVIRONMENT.md)
+configuration. See [Agda environment](site/AGDA-ENVIRONMENT.md)
 for versioning, deployment, verification, and upgrade instructions.
 
 The build keeps formal-check and website measurements distinct. Use
@@ -143,6 +143,10 @@ routes, dependency graph, multilingual search, hover/modal, appearance, Ask AI
 and reusable lint. Bedrock supplies its content, catalog, terminology, brand and
 mathematical policies through [site/project.json](site/project.json).
 
+[site/](site/README.md) holds durable configuration, authoring rules, terminology,
+reading metadata and brand assets. [dev/](dev/README.md) holds working research
+and temporary development material, which is cleaned up when its task ends.
+
 Initialize submodules before installing dependencies. `make venv` installs the
 local package; an existing environment can use
 `.venv/bin/python -m pip install -e ./outcrop`. Then `make site` builds the textbook
@@ -160,8 +164,8 @@ AI agents work from [AGENTS.md](AGENTS.md), the one rule set. Human contributors
 Bedrock is multi-licensed; per-file terms are declared in [`REUSE.toml`](REUSE.toml) and
 verified by `reuse lint`. In short:
 
-- **[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)**: the maths, prose, and brand assets (`src/`, `docs/`, `README`, `site/static/assets/`).
-- **[AGPL-3.0-only](https://www.gnu.org/licenses/agpl-3.0.html)**: all other first-party code and config, including the vendored [1lab](https://1lab.dev) front-end.
+- **[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)**: the maths, prose, editorial specifications/metadata and brand assets, as listed in `REUSE.toml`.
+- **[AGPL-3.0-only](https://www.gnu.org/licenses/agpl-3.0.html)**: first-party software and the configuration covered by that license. Outcrop maintains its own third-party notices.
 - **[OFL-1.1](https://openfontlicense.org)**: the self-hosted web fonts supplied by Outcrop (`outcrop/src/outcrop/site/resources/static/fonts/`).
 
 Full texts are in [`LICENSES/`](LICENSES/); [NOTICE](NOTICE) has the third-party attributions

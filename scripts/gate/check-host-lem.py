@@ -11,7 +11,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[2]
-INVENTORY = ROOT / "dev" / "host-lem-inventory.json"
+INVENTORY = ROOT / "site" / "host-lem-inventory.json"
 SOURCE_ROOTS = (ROOT / "src" / "FOL", ROOT / "src" / "L", ROOT / "src" / "V")
 CLASSIFICATIONS = {
     "resizing-bridge",

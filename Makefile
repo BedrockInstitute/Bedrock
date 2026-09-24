@@ -55,7 +55,7 @@ AGDA_PARALLEL := -m outcrop agda-check --options="--cubical --safe --guardedness
 AGDA_DRIVER := outcrop/src/outcrop/adapters/agda/parallel.py
 AGDA_BACKEND_INPUTS := $(AGDA_DRIVER) outcrop/src/outcrop/core/source_syntax.py
 AGDA_ENV_STAMP := $(AGDA_DIR)/.bedrock-library-lock.json
-AGDA_ENV_INPUTS := dev/agda-libraries.json \
+AGDA_ENV_INPUTS := site/agda-libraries.json \
 	outcrop/src/outcrop/adapters/agda/libraries.py \
 	outcrop/src/outcrop/adapters/agda/archive.py
 SITE_OUT   := _build/site
@@ -77,9 +77,9 @@ bootstrap: venv toolchain
 toolchain: $(OUTCROP_AGDA) $(AGDA_ENV_STAMP)
 
 $(AGDA_ENV_STAMP): $(AGDA_ENV_INPUTS)
-	$(PY) -m outcrop agda-libraries --lock dev/agda-libraries.json \
+	$(PY) -m outcrop agda-libraries --lock site/agda-libraries.json \
 		--build-dir _build/dependencies --agda-dir $(AGDA_DIR)
-	@cp dev/agda-libraries.json $(AGDA_ENV_STAMP)
+	@cp site/agda-libraries.json $(AGDA_ENV_STAMP)
 
 # The gate every document names. Local checks run independent gates alongside
 # the Agda check; CI keeps its existing ordering.

@@ -1,7 +1,8 @@
 # docs
 
 **User-facing** documentation: the mathematics and the project itself, written for readers
-rather than contributors. This is the one place **trilingual** content lives. This file is an
+rather than contributors. The literate chapters under `src/` also contain trilingual
+content. This file is an
 English developer-facing folder guide; the rule set is [AGENTS.md](../AGENTS.md).
 
 ## Layout
@@ -24,7 +25,9 @@ the README condenses.
   across `en/`, `zh/` and `ja/`.
 - **Author in English first**, then translate the Chinese and Japanese from the English, then
   **cross-check the two translations against each other**. `check-glossary.py` enforces the
-  confirmed renderings from [dev/glossary.toml](../dev/glossary.toml).
+  confirmed renderings from [site/glossary.toml](../site/glossary.toml).
 - `lint-prose.py` machine-checks the CJK conventions: full-width punctuation, `「」` quotes, no
   em dash, and spacing.
-- Developer specs do **not** go here. They live in [dev/](../dev/) and are English only.
+- Durable authoring specifications and instance configuration live in
+  [site/](../site/README.md), in English. [dev/](../dev/README.md) holds temporary
+  development and research work, not permanent configuration.

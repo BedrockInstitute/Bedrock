@@ -1,7 +1,7 @@
 # Bedrock translation glossary -- canonical, machine-checked term data.
 #
 # This TOML file is the single source of truth for the trilingual glossary; the prose
-# explanation (what the checks do, how to maintain entries) lives in dev/GLOSSARY.md.
+# explanation (what the checks do, how to maintain entries) lives in site/GLOSSARY.md.
 # scripts/gate/check-glossary.py reads this file via tomllib (Python 3.11+) and enforces it as
 # part of `make check` and the pre-commit hook.
 #
@@ -192,7 +192,7 @@ en = "cumulative hierarchy"
 zh = "累积层级"
 ja = "累積階層"
 presence = true
-notes = "V; the zh rendering is already in use in dev/reading-catalog.json"
+notes = "V; the zh rendering is already in use in site/reading-catalog.json"
 
 [[term]]
 category = "Set theory"

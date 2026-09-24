@@ -6,8 +6,12 @@ import json
 from pathlib import Path
 
 
+from outcrop.site import SiteConfig
+
 PREVIEWS = frozenset({"Origin"})
-CATALOG = Path(__file__).resolve().parents[2] / "dev" / "reading-catalog.json"
+ROOT = Path(__file__).resolve().parents[2]
+CONFIG = SiteConfig.load(ROOT / 'site/project.json', root=ROOT)
+CATALOG = CONFIG.path(CONFIG.catalog)
 
 
 

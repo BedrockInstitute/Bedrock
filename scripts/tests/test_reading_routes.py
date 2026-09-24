@@ -13,7 +13,7 @@ route_cli = importlib.util.module_from_spec(spec); spec.loader.exec_module(route
 
 class BedrockRoutesTests(unittest.TestCase):
     def test_actual_catalog_review_status_is_explicit(self):
-        _, catalog = routes._load_catalog(ROOT / 'dev/reading-catalog.json')
+        _, catalog = routes._load_catalog(ROOT / 'site/reading-catalog.json')
         self.assertTrue(all(type(item['human_reviewed']) is bool for item in catalog.values()))
 
     def test_cli_reports_validation_errors(self):

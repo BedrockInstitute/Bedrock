@@ -8,7 +8,7 @@ the proofs and their prose. This is an English developer-facing folder guide; th
 
 Each module is **one `.lagda.md` file**. The Agda code appears once; prose for every language
 lives in the same file, wrapped in `<!--en--> / <!--zh--> / <!--ja--> / <!--/-->` markers
-(grammar: [dev/STYLE-i18n.md](../dev/STYLE-i18n.md)). The markers are HTML comments, invisible
+(grammar: [site/STYLE-i18n.md](../site/STYLE-i18n.md)). The markers are HTML comments, invisible
 to Agda, so a master typechecks directly. Code is **English-only** inside ` ```agda ` fences.
 Nothing here is generated: the woven mono-lingual copies and the rendered site live under
 `_build/` (git-ignored).
@@ -17,10 +17,10 @@ Nothing here is generated: the woven mono-lingual copies and the rendered site l
 
 `Origin.lagda.md` is the Agda and HTML build root. Its import closure reaches every
 other module, so `agda src/Origin.lagda.md` typechecks the whole development. The
-machine-readable reading catalog lives in [`dev/reading-catalog.json`](../dev/reading-catalog.json):
+machine-readable reading catalog lives in [`site/reading-catalog.json`](../site/reading-catalog.json):
 it stores the reading order, translated chapter labels, stages, descriptions and routes.
-The site renders the reading guide from that data, while the sidebar's module tree remains
-the derived **structure catalog**. When you add a module, add it to the reading catalog after
+The site renders the interactive contents from that data and derives the
+namespace dependency graph from actual imports. When you add a module, add it to the reading catalog after
 its prerequisites and before its substantive consumers; `scripts/gate/check-reading-order.py`
 checks exact coverage and prerequisite order. Origin is the explicitly labelled preview.
 
@@ -36,13 +36,13 @@ hypothesis either takes is `LEM (ℓ-suc ℓ)`.
 
 The namespace tree is the structure catalog, derived and never hand-maintained. **The reading
 order is not the namespace order** (the two-catalog doctrine in
-[dev/STYLE-agda.md](../dev/STYLE-agda.md)). Retired chapters left the tree entirely on
+[site/STYLE-agda.md](../site/STYLE-agda.md)). Retired chapters left the tree entirely on
 2026-09-06: the archive now lives outside the repository, at `~/Agentic/Archive/Bedrock-archive`,
 mirroring the paths the files had here.
 
 ## Symbol master table
 
-Required by [dev/STYLE-agda.md](../dev/STYLE-agda.md) §5: one row per symbol introduced
+Required by [site/STYLE-agda.md](../site/STYLE-agda.md) §5: one row per symbol introduced
 so far. Layers are the marking system of STYLE-agda §4 (① host, ③ structure fields,
 ④ object syntax).
 

@@ -8,9 +8,20 @@ ROOT = Path(__file__).resolve().parents[2]
 
 
 class OutcropIntegrationTests(unittest.TestCase):
+    def test_durable_configuration_lives_in_site_not_dev(self):
+        config = json.loads((ROOT / 'site/project.json').read_text())
+        for key in ('catalog', 'glossary', 'variable_legacy'):
+            self.assertTrue(config[key].startswith('site/'), key)
+            self.assertTrue((ROOT / config[key]).is_file())
+        self.assertFalse(list((ROOT / 'dev').glob('*.json')))
+        self.assertFalse(list((ROOT / 'dev').glob('*.toml')))
+        for name in ('STYLE-agda.md', 'STYLE-i18n.md', 'TEACHING.md',
+                     'GLOSSARY.md', 'AGDA-ENVIRONMENT.md', 'ARCHITECTURE.md'):
+            self.assertTrue((ROOT / 'site' / name).is_file(), name)
+
     def test_bedrock_library_policy_stays_explicit(self):
         from outcrop.adapters.agda.libraries import read_lock
-        libraries = read_lock(ROOT / 'dev/agda-libraries.json')
+        libraries = read_lock(ROOT / 'site/agda-libraries.json')
         self.assertEqual([(item['name'], item['version']) for item in libraries], [('cubical', '0.9')])
         config = json.loads((ROOT / 'site/project.json').read_text())
         self.assertEqual(config['landing_module'], 'Origin')
@@ -36,14 +47,14 @@ class OutcropIntegrationTests(unittest.TestCase):
 
     def test_library_policy_invalidates_the_complete_semantic_backend(self):
         make = (ROOT / 'Makefile').read_text()
-        self.assertIn('AGDA_ENV_INPUTS := dev/agda-libraries.json', make)
+        self.assertIn('AGDA_ENV_INPUTS := site/agda-libraries.json', make)
         self.assertIn('$(AGDA_ENV_STAMP): $(AGDA_ENV_INPUTS)', make)
         self.assertIn('$(AGDA_STAMP): $(OUTCROP_AGDA) $(AGDA_ENV_STAMP)', make)
         self.assertIn('[ $(AGDA_ENV_STAMP) -nt $(AGDA_TRACE) ]', make)
         workflow = (ROOT / '.github/workflows/ci.yml').read_text()
         for line in workflow.splitlines():
             if 'hashFiles(' in line and 'bedrock.agda-lib' in line:
-                self.assertIn('dev/agda-libraries.json', line)
+                self.assertIn('site/agda-libraries.json', line)
 
 
 if __name__ == '__main__':

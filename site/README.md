@@ -1,7 +1,9 @@
 # Bedrock website instance
 
-This directory contains Bedrock's website configuration and brand assets, not the
-reusable renderer or browser implementation. The framework is
+This directory owns Bedrock's durable book/site configuration, authoring
+specifications, editorial metadata and brand assets, not reusable implementation.
+It is not limited to static assets. Temporary development work belongs in
+`dev/` and must be cleaned up when finished. The framework is
 [Outcrop](https://github.com/BedrockInstitute/Outcrop), pinned as the `outcrop/`
 Git submodule. Follow [AGENTS.md](../AGENTS.md) and the current write scope.
 
@@ -10,7 +12,7 @@ Git submodule. Follow [AGENTS.md](../AGENTS.md) and the current write scope.
 | Bedrock owns | Outcrop owns |
 | --- | --- |
 | `site/project.json`, `site/static/assets/` | Outcrop Core: Markdown, multilingual structure, optional compiler semantics and pure lint engines |
-| `src/`, `dev/reading-catalog.json`, `dev/glossary.toml` | Outcrop Site: complete page shell, routes, graph, search, appearance, hover/modal, notes, diagrams, Ask AI and publication |
+| `src/`, `site/reading-catalog.json`, `site/glossary.toml` | Outcrop Site: complete page shell, routes, graph, search, appearance, hover/modal, notes, diagrams, Ask AI and publication |
 | Library lock, entry/options, resource/cache policy, mathematical gates and deployment | Optional Agda toolchain/trace producer, weaving, metrics, templates, browser resources and generic site lint |
 
 The public API is `from outcrop.core import MarkdownDocument, CodeContext` and
@@ -25,6 +27,21 @@ Framework references:
 - [Markdown input and optional compiler evidence](../outcrop/docs/RENDERER-MARKDOWN.md)
 - [Reusable authoring recipes](../outcrop/docs/RENDERER-RECIPES.md)
 - [Configuration, CLI and independent project](../outcrop/docs/SITE-CONFIG.md)
+
+## Persistent instance files
+
+| Files | Purpose |
+| --- | --- |
+| `project.json`, `static/assets/` | Website identity, framework inputs and branding |
+| `reading-catalog.json`, `TEACHING.md` | Chapters, routes, review status and teaching architecture |
+| `glossary.toml`, `GLOSSARY.md` | Canonical terminology and its maintenance contract |
+| `STYLE-agda.md`, `STYLE-i18n.md` | Formal-code and trilingual authoring rules |
+| `agda-libraries.json`, `AGDA-ENVIRONMENT.md` | Dependency lock and compiler/build policy |
+| `host-lem-inventory.json`, `inline-agda-legacy.json` | Proof classification and narrowly scoped lint allowances |
+| `ARCHITECTURE.md` | Instance boundaries, gate mapping and verification requirements |
+
+The proof and prose gates consume these same files even when no website is built.
+Directory ownership does not make configuration dependent on running a renderer.
 
 ## Install and build
 
@@ -84,7 +101,7 @@ of its containing column without an external QED gutter or left outdent. Folded
 submodules retain their own indented columns and compact declaration headers.
 See the shared recipes rather than adding chapter-specific layout fixes.
 
-## Acceptance and historical evidence
+## Verification
 
 `make check` includes reusable and instance lint plus both test suites, but does
 not browser-test the website. `make milestone-lint` remains the additional Origin
@@ -99,12 +116,10 @@ example and browser fixture live under `outcrop/examples/renderer/` and
 `outcrop/tests/`; its fixture builder is
 `outcrop/scripts/build-renderer-fixtures.py`.
 
-[The Bedrock architecture record](../dev/SITE-ARCHITECTURE.md) retains the previous
-refactor's exact parity, Chrome and incomplete Safari evidence. Those dated runs
-are historical results, not acceptance of the Outcrop extraction or subsequent
-QED, mobile code-reading, search and hover changes. New UI acceptance must be
-recorded separately. Narrow desktop Chrome and synthetic touch events do not
-establish real iPhone Safari behavior.
+[The Bedrock architecture guide](ARCHITECTURE.md) defines the gate
+mapping and browser acceptance matrix. Record fresh results with each change;
+past runs do not certify new code. Narrow desktop Chrome and synthetic touch
+events do not establish real iPhone Safari behavior.
 
 Bedrock brand/content licensing remains in [REUSE.toml](../REUSE.toml) and
 [NOTICE](../NOTICE); Outcrop maintains its own inherited software, font and vendor
