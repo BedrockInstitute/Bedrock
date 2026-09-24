@@ -88,7 +88,7 @@ actual corpus, glossary/catalog policy, proof gates, library lock, resource/cach
 choices and deployment workflow. No mathematical source changes are involved.
 
 The producer is optional Core integration, not a third product layer. Ordinary
-Markdown builds still need no Agda toolchain. `tools/README.md` documents the
+Markdown builds still need no Agda toolchain. `dev/AGDA-ENVIRONMENT.md` documents the
 consumer commands; `outcrop/docs/AGDA.md` documents reusable installation and
 evidence contracts. Compiler identities are installation-path independent.
 Library locks and shared import syntax now invalidate the appropriate backend

@@ -30,7 +30,7 @@ Read the relevant specifications before changing an area:
 | Markdown contract and reusable markup | `outcrop/docs/RENDERER-MARKDOWN.md`, `outcrop/docs/RENDERER-RECIPES.md` |
 | Website architecture and regression evidence | `outcrop/docs/ARCHITECTURE.md`, `dev/SITE-ARCHITECTURE.md`, `site/README.md` |
 | Site instance configuration | `site/project.json`, `outcrop/docs/SITE-CONFIG.md` |
-| Compiler instrumentation and environment | `outcrop/docs/AGDA.md`, `tools/README.md`, `dev/agda-libraries.json` |
+| Compiler instrumentation and environment | `outcrop/docs/AGDA.md`, `dev/AGDA-ENVIRONMENT.md`, `dev/agda-libraries.json` |
 | Checks, caches and deployment | `Makefile`, `.github/workflows/ci.yml`, `.github/workflows/README.md` |
 | Licensing | `REUSE.toml`, `NOTICE`, `LICENSES/` |
 

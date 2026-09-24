@@ -118,7 +118,7 @@ make check
 
 `make bootstrap` builds Outcrop's optional Agda toolchain and installs the pinned
 cubical library under `_build`; it does not modify the user's global Agda
-configuration. See [tools/README.md](tools/README.md)
+configuration. See [Agda environment](dev/AGDA-ENVIRONMENT.md)
 for versioning, deployment, verification, and upgrade instructions.
 
 The build keeps formal-check and website measurements distinct. Use

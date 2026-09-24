@@ -82,7 +82,7 @@ make check
 
 ## 网站框架
 
-可选的 `outcrop-agda` 编译器插桩、构建、类型数据导出与并行调度也由 Outcrop 提供。Bedrock 只保留 [库依赖锁定](../../dev/agda-libraries.json)、入口模块、数学检查与本项目的资源及部署配置；见 [工具链说明](../../tools/README.md)。普通 Markdown 渲染不需要安装 Agda。
+可选的 `outcrop-agda` 编译器插桩、构建、类型数据导出与并行调度也由 Outcrop 提供。Bedrock 只保留 [库依赖锁定](../../dev/agda-libraries.json)、入口模块、数学检查与本项目的资源及部署配置；见 [工具链说明](../../dev/AGDA-ENVIRONMENT.md)。普通 Markdown 渲染不需要安装 Agda。
 
 网站采用 [Outcrop](https://github.com/BedrockInstitute/Outcrop)，由 `outcrop/` 子模块固定版本。**Outcrop Core** 渲染 Markdown 与可选的编译器语义数据；**Outcrop Site** 提供完整交互式教材，包括学习路线、依赖图、多语搜索、类型提示与定义弹窗、外观设置、Ask AI 和可复用检查规则。Bedrock 通过 [site/project.json](../../site/project.json) 提供正文、目录、术语、品牌和数学政策。
 
