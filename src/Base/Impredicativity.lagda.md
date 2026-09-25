@@ -284,11 +284,17 @@ Resizing each proposition and resizing the whole proposition universe ask for di
 </figure>
 
 <!--en-->
-To turn the whole-universe equivalence into a representative for each proposition, the module `CodedTruth`{.Agda} fixes `Ω`{.Agda} and `e : hProp ℓ₁ ≃ Ω`{.Agda}.
+Next we prove that Ω-resizing implies propositional resizing. Suppose we are given `Ω : Type ℓ₂`{.Agda} and an equivalence `e : hProp ℓ₁ ≃ Ω`{.Agda}. This equivalence gives each proposition a code in `Ω`{.Agda}; we still need to turn that code into a proposition at level `ℓ₂`{.Agda} and prove it equivalent to the original.
+
+In an ordinary mathematical proof, we might fix `Ω`{.Agda} and `e`{.Agda} for the argument and carry out several constructions under these shared assumptions. Agda expresses the same arrangement with the parameterized submodule `CodedTruth`{.Agda}: its declaration lists the common data, which its definitions can use without repeating the parameters. When the main theorem receives a particular `(Ω , e)`{.Agda}, it uses those constructions. `private`{.Agda} only makes the module an internal proof aid; it adds no mathematical assumption.
 <!--zh-->
-要从整个命题宇宙的等价得到逐个命题的代表，先在模块 `CodedTruth`{.Agda} 中固定 `Ω`{.Agda} 和 `e : hProp ℓ₁ ≃ Ω`{.Agda}。
+接下来证明：命题宇宙换级蕴含命题换级。假设给定 `Ω : Type ℓ₂`{.Agda} 和等价 `e : hProp ℓ₁ ≃ Ω`{.Agda}。等价使每个命题都有 `Ω`{.Agda} 中的编码；我们还需要从这个编码构造 `ℓ₂`{.Agda} 层的命题，并证明它与原命题等价。
+
+通常的数学证明会先说「以下固定 `Ω`{.Agda} 和 `e`{.Agda}」，再在这两个共同前提下完成一系列构造。Agda 用带参数的子模块 `CodedTruth`{.Agda} 表达同样的安排：模块声明列出共同前提，里面的定义都可以直接使用它们，不必反复写出参数。证明最后收到具体的 `(Ω , e)`{.Agda} 时，再取用这一组构造。`private`{.Agda} 只表示这个模块是本章内部的辅助工具，并未增加数学假设。
 <!--ja-->
-命題の宇宙全体の同値から各命題の代表を得るため、まずモジュール `CodedTruth`{.Agda} で `Ω`{.Agda} と `e : hProp ℓ₁ ≃ Ω`{.Agda} を固定する。
+次に、命題宇宙リサイズから命題リサイズが従うことを証明する。`Ω : Type ℓ₂`{.Agda} と同値 `e : hProp ℓ₁ ≃ Ω`{.Agda} が与えられたとする。この同値によって各命題は `Ω`{.Agda} に符号をもつが、その符号からレベル `ℓ₂`{.Agda} の命題を構成し、元の命題との同値を示す必要がある。
+
+通常の数学の証明なら、「以下、`Ω`{.Agda} と `e`{.Agda} を固定する」と述べ、この共通の仮定のもとでいくつかの構成を行う。Agda では、引数を持つ部分モジュール `CodedTruth`{.Agda} が同じ役割を果たす。モジュール宣言に共通のデータを並べておけば、内部の定義は毎回引数を書き直さずにそれらを使える。最後に主定理へ具体的な `(Ω , e)`{.Agda} が与えられたとき、これらの構成を呼び出す。`private`{.Agda} はこのモジュールを本章内の補助的な道具に限るだけで、新しい数学的仮定を加えない。
 <!--/-->
 
 <details open class="submodule-fold">

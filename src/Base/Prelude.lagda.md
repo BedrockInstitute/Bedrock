@@ -19,13 +19,13 @@ This chapter introduces that vocabulary through its mathematical meaning and use
 
 ## Reading guide
 
-Read the prose first, then the code immediately below it: the code makes the preceding explanation precise. The code automatically displays ∎ at the end of a definition with a type signature and defining equations; helpers inside a `where`{.Agda} clause belong to the enclosing definition. Submodules can be folded to keep the larger argument in view.
+Read the prose first; the code immediately below gives it a precise form. A definition with a type signature and defining equations automatically displays ∎ at its end.
 
-Use the [interactive contents](index.html#reading-explorer) to choose a route, or the [dependency graph](index.html#dependency-map) to inspect prerequisites. The learning route at the top of each chapter lists its direct prerequisites and possible continuations. Dashed chapter titles reveal the formal setup or `import`{.Agda} statements without interrupting the prose; parameterized module declarations stay in the body.
+Choose a route in the [interactive contents](index.html#reading-explorer), or use the [dependency graph](index.html#dependency-map) to see how chapters depend on one another. Each chapter's learning route lists its direct prerequisites and optional next chapters.
 
-Hover over a marked name or expression to inspect its type, and continue through names inside the popup. On a phone, tap to open this information and hold a highlighted node while sliding sideways to select a smaller or larger expression. To inspect a definition, click its name on desktop or use the popup's window button on mobile. The definition window supports back and forward; its enter button, or another click on the same definition inside it, takes you to the actual page.
+Hover over a marked name or expression to see its type; names in the popup can be explored in the same way.
 
-Keywords and syntax symbols offer short explanations with links to the Agda manual. Terms link back to their introductions. The basic vocabulary first leads here, where its meaning is explained; the visible Cubical imports then lead to the library's original definitions when you want to look deeper.
+Keywords and syntax symbols offer brief explanations and links to the official Agda manual, while terms lead back to where they are first introduced. Basic vocabulary leads first to its explanation in this chapter; to explore a library definition further, follow the visible Cubical imports to its source.
 <!--zh-->
 
 本书以集合论为**[对象理论]{.term-intro #object-theory}**，以立方类型论为**[元理论]{.term-intro #metatheory}**：在立方类型论中构造集合论的模型，解释其语句，并证明其性质。Agda 检查这些构造与证明，Cubical 库提供所需的基础词汇；我们把这套工作环境简称为**[宿主]{.term-intro #host-environment}**。因此，「宿主中的类型或函数」属于元理论，而不是集合论模型内部的对象。
@@ -34,13 +34,13 @@ Keywords and syntax symbols offer short explanations with links to the Agda manu
 
 ## 阅读指南
 
-阅读时，先看文字，再看紧随其后的代码：代码是前文解释的精确表达。代码会在带类型声明和定义等式的定义末尾自动显示 ∎；`where`{.Agda} 中的辅助定义归属于外层定义。子模块可以折叠，方便把握整体论证。
+先读文字，再看紧随其后的代码；代码给出前文的精确表达。带有类型声明和定义等式的定义，在结束处会自动显示 ∎。
 
-可以在[交互式目录](index.html#reading-explorer)中选择阅读路线，也可以用[依赖图](index.html#dependency-map)查看先修关系。每章顶部的学习路线列出直接先修和可选后续章节。带虚线的章节标题可以显示形式化设置或 `import`{.Agda} 语句，不打断正文；带参数的模块声明则保留在正文中。
+可以在[交互式目录](index.html#reading-explorer)中选择阅读路线，也可以用[依赖图](index.html#dependency-map)查看章节间的先修关系。每章顶部的学习路线列出直接先修和可选后续章节。
 
-悬停在带标记的名称或表达式上可以查看类型，也可以继续查看弹窗中的名称。手机上轻触即可打开这些信息，按住色块左右滑动可选择更小或更大的表达式。查看定义时，桌面端点击名称，手机端使用提示窗里的窗口按钮。定义窗口支持前进和后退；点击其跳转按钮，或在窗内再次点击当前定义，才会进入实际页面。
+悬停在带标记的名称或表达式上，可以查看类型；弹窗里的名称也可以继续悬停查看。
 
-关键字和语法符号附有简短解释与 Agda 官方文档链接，术语则可以追溯到首次引入的位置。基础词汇先指向本章的讲解；想进一步了解库内部的定义时，再沿可见的 Cubical 导入代码进入原文。
+关键字和语法符号附有简短解释及 Agda 官方文档链接，术语则链接到首次引入的位置。基础词汇先指向本章的讲解；若想进一步了解库中的定义，可以沿可见的 Cubical 导入代码进入原文。
 <!--ja-->
 
 本書では集合論を**[対象理論]{.term-intro #object-theory}**、立方型理論を**[メタ理論]{.term-intro #metatheory}**とする。立方型理論の中で集合論のモデルを構成し、その文を解釈して性質を証明する。Agda が構成と証明を検査し、Cubical ライブラリが基礎語彙を提供する。この環境を**[ホスト]{.term-intro #host-environment}**と呼ぶ。したがって、ホストの型や関数はメタ理論に属し、集合論のモデル内部の対象とは異なる。
@@ -49,21 +49,21 @@ Keywords and syntax symbols offer short explanations with links to the Agda manu
 
 ## 読書案内
 
-まず文章を読み、直後のコードでその精確な表現を確かめる。型宣言と定義等式を持つ定義の末尾には、コードが自動的に ∎ を表示する。`where`{.Agda} 内の補助定義は外側の定義に属する。部分モジュールを折り畳むと、議論の全体を見渡しやすい。
+まず文章を読み、直後のコードでその正確な形を確かめる。型宣言と定義等式を持つ定義には、終わりに ∎ が自動的に表示される。
 
-[対話型目次](index.html#reading-explorer)で学習ルートを選び、[依存グラフ](index.html#dependency-map)で前提関係を確認できる。各章の冒頭には直接の前提と次に進める章がある。破線の付いた章題から形式化の設定や `import`{.Agda} 文を確認でき、パラメータ付きモジュールの宣言は本文に残る。
+[対話型目次](index.html#reading-explorer)で学習ルートを選ぶことも、[依存グラフ](index.html#dependency-map)で章どうしの前提関係を確かめることもできる。各章の冒頭にある学習ルートには、直接の前提となる章と次に読む候補の章が並ぶ。
 
-印のある名前や式にポインタを重ねると型が現れ、その中の名前も続けて調べられる。携帯端末ではタップして情報を開き、色の付いた節点を押さえたまま左右に動かすと、より小さい式や大きい式を選べる。定義を見るには、デスクトップでは名前をクリックし、携帯端末ではポップアップのウィンドウボタンを使う。定義ウィンドウには前後移動があり、移動ボタン、または本文中の同じ定義の再クリックで実際のページへ進む。
+印のある名前や式にポインタを重ねると型を確認でき、ポップアップ内の名前も同じように調べられる。
 
-キーワードと構文記号には短い説明と Agda 公式文書へのリンクがあり、用語からは最初の導入箇所へ戻れる。基礎語彙はまず本章の説明へ導く。ライブラリ内部の定義をさらに調べたいときは、表示された Cubical の import コードから原文へ進める。
+キーワードと構文記号には短い説明と Agda 公式文書へのリンクがあり、用語からは最初の導入箇所へ戻れる。基礎語彙はまず本章の説明へ導く。ライブラリの定義をさらに調べたいときは、表示されている Cubical の `open import`{.Agda} 文をたどって原文へ進める。
 <!--/-->
 
 <!--en-->
-We now explore the mathematical notions collected in this module one at a time.
+With these pointers in hand, we turn to the mathematical notions collected in this module.
 <!--zh-->
-下面逐个认识本模块汇集的数学概念。
+有了这些线索，下面就从本模块汇集的数学概念读起。
 <!--ja-->
-ここから本モジュールに集めた数学的な概念を一つずつ見ていこう。
+これを手掛かりに、本モジュールに集めた数学的な概念を見ていく。
 <!--/-->
 
 <!--en-->

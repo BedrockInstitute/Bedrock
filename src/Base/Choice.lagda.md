@@ -18,13 +18,13 @@ open import Base.Classical using ( LEM )
 
 <!--en-->
 
-Knowing that each type in a family has an element is different from having one function that chooses an element of every type. Propositional truncation makes the distinction precise: `∥ B x ∥₁`{.Agda} asserts existence at an individual index, while `∥ ((x : X) → B x) ∥₁`{.Agda} asserts the existence of a whole choice function. We formulate this principle for a family of h-sets indexed by an h-set, lower its universe level, and prove that it implies excluded middle. In the last step, equality of two quotient classes encodes a proposition, and choice supplies Boolean representatives to compare. Every additional principle remains an explicit hypothesis.
+Knowing that each type in a family has an element is different from having one function that chooses an element of every type. Propositional truncation makes the distinction precise: `∥ B x ∥₁`{.Agda} asserts existence at an individual index, while `∥ ((x : X) → B x) ∥₁`{.Agda} asserts the existence of a whole choice function. We formulate this principle for h-set-indexed families of h-sets, show that choice at one universe level higher implies choice at the current level, and prove that choice implies excluded middle.
 <!--zh-->
 
-知道一族类型中的每个类型都有元素，与拥有一个同时为它们选取元素的函数，是不同的两件事。命题截断把区别表达得很准确：`∥ B x ∥₁`{.Agda} 断言某个指标处有元素，`∥ ((x : X) → B x) ∥₁`{.Agda} 则断言整个选择函数存在。本章先陈述以 h-集合为指标、取值也为 h-集合的选择原理，再将它降低一个宇宙层级，最后证明它蕴含排中律。最后一步把命题编码为两个商类的相等，由选择给出可供比较的布尔代表元。所用的额外原理始终是显式假设。
+知道一族类型中的每个类型都有元素，与拥有一个同时为它们选取元素的函数，是不同的两件事。命题截断把区别表达得很准确：`∥ B x ∥₁`{.Agda} 断言某个指标处有元素，`∥ ((x : X) → B x) ∥₁`{.Agda} 则断言整个选择函数存在。本章先陈述以 h-集合为指标、取值也为 h-集合的选择原理，再证明高一宇宙层级的选择原理蕴含当前层级的选择原理，最后证明选择原理蕴含排中律。
 <!--ja-->
 
-型の族の各型に要素があることと、すべての型から要素を選ぶ一つの関数をもつことは異なる。命題的切り詰めはこの違いを正確に表す。`∥ B x ∥₁`{.Agda} は個々の添字における存在を述べ、`∥ ((x : X) → B x) ∥₁`{.Agda} は選択関数全体の存在を述べる。本章では、h-集合で添字付けられた h-集合値の族について選択原理を定式化し、宇宙レベルを一段下げた後、それが排中律を含意することを証明する。最後の証明では命題を二つの商類の等しさに符号化し、選択によって比較できるブール代表元を得る。追加の原理はすべて明示的な仮定とする。
+型の族の各型に要素があることと、すべての型から要素を選ぶ一つの関数をもつことは異なる。命題的切り詰めはこの違いを正確に表す。`∥ B x ∥₁`{.Agda} は個々の添字における存在を述べ、`∥ ((x : X) → B x) ∥₁`{.Agda} は選択関数全体の存在を述べる。本章では、h-集合で添字付けられた h-集合値の族について選択原理を定式化し、一つ上の宇宙レベルでの選択原理が現在のレベルでの選択原理を含意することを示し、選択原理が排中律を含意することを証明する。
 <!--/-->
 
 <!--en-->
@@ -77,8 +77,27 @@ SetChoice ℓ = (X : Type ℓ) → isSet X → (B : X → Type ℓ)
 The truncation moves outside the dependent function type; it does not disappear. A hypothesis `sc : SetChoice ℓ`{.Agda} therefore gives the [mere existence]{.term-ref #mere-existence} of a choice function. To use that existence with `rec₁`{.Agda}, we must have a proposition as our goal. Quantification over `Type ℓ`{.Agda} puts the whole principle in `Type (ℓ-suc ℓ)`{.Agda}.
 
 **Lemma** (`lowerSetChoice`{.Agda}) Choice one universe level higher implies choice at the level below.
+<!--zh-->
+截断移到了依值函数类型之外，但并没有消失。因此，假设 `sc : SetChoice ℓ`{.Agda} 给出的是选择函数的[仅仅存在]{.term-ref #mere-existence}。若要用 `rec₁`{.Agda} 利用这一存在，目标就必须是命题。由于量化了 `Type ℓ`{.Agda}，整条原理位于 `Type (ℓ-suc ℓ)`{.Agda}。
 
-**Proof** Lift both the indices and the family before applying `sc`{.Agda}. Each part has a direct counterpart:
+**引理** (`lowerSetChoice`{.Agda}) 高一个宇宙层级的选择蕴含原层级的选择。
+<!--ja-->
+切り詰めは依存関数型の外へ移るが、消えるわけではない。したがって仮定 `sc : SetChoice ℓ`{.Agda} が与えるのは、選択関数の[単なる存在]{.term-ref #mere-existence}である。この存在を `rec₁`{.Agda} で使うには、目標が命題でなければならない。`Type ℓ`{.Agda} 全体を量化するので、原理自体は `Type (ℓ-suc ℓ)`{.Agda} に住む。
+
+**補題** (`lowerSetChoice`{.Agda}) 一つ上の宇宙レベルの選択は、一つ下のレベルの選択を含意する。
+<!--/-->
+
+```agda
+lowerSetChoice : ∀ {ℓ} → SetChoice (ℓ-suc ℓ) → SetChoice ℓ
+```
+
+<!--en-->
+
+**Proof** The parameter `inh`{.Agda} (from *inhabited*) supplies `∥ B x ∥₁`{.Agda} for each `x`{.Agda}. In the outer `map₁`{.Agda}, a choice function `f`{.Agda} for the lifted family is converted back at each `x`{.Agda} as follows; both functions remain under truncation.
+
+<div class="single-line-code" data-note="Lift the input, evaluate f, then lower the output."><code>lower (f (lift x)) : B x</code></div>
+
+To obtain `f`{.Agda}, lift both the indices and the family before applying `sc`{.Agda}. Each part has a direct counterpart:
 
 | At level `ℓ`{.Agda} | At level `ℓ-suc ℓ`{.Agda} |
 | --- | --- |
@@ -87,13 +106,13 @@ The truncation moves outside the dependent function type; it does not disappear.
 | `setB x`{.Agda} | `isOfHLevelLift 2 (setB (lower x̂))`{.Agda} |
 | `inh x`{.Agda} | `map₁ lift (inh (lower x̂))`{.Agda} |
 
-The proof `isOfHLevelLift 2 setX`{.Agda} preserves the h-set condition on indices; the row for `setB`{.Agda} preserves it on each value. The lifted choice function can then be lowered pointwise.
+The proof `isOfHLevelLift 2 setX`{.Agda} preserves the h-set condition on indices; the row for `setB`{.Agda} preserves it on each value.
 <!--zh-->
-截断移到了依值函数类型之外，但并没有消失。因此，假设 `sc : SetChoice ℓ`{.Agda} 给出的是选择函数的[仅仅存在]{.term-ref #mere-existence}。若要用 `rec₁`{.Agda} 利用这一存在，目标就必须是命题。由于量化了 `Type ℓ`{.Agda}，整条原理位于 `Type (ℓ-suc ℓ)`{.Agda}。
+**证明** 参数 `inh`{.Agda} 取自 inhabited (有元素)，它为每个 `x`{.Agda} 提供 `∥ B x ∥₁`{.Agda}。外层的 `map₁`{.Agda} 把抬升后的选择函数 `f`{.Agda} 逐点变回原族上的函数；在 `x`{.Agda} 处取以下值，两个选择函数始终都留在截断之内。
 
-**引理** (`lowerSetChoice`{.Agda}) 高一个宇宙层级的选择蕴含原层级的选择。
+<div class="single-line-code" data-note="先抬升输入，求 f 的值，再降低输出。"><code>lower (f (lift x)) : B x</code></div>
 
-**证明** 应用 `sc`{.Agda} 之前，把指标和族一起抬升。各部分有直接的对应：
+为了得到 `f`{.Agda}，应用 `sc`{.Agda} 之前，把指标和族一起抬升。各部分有直接的对应：
 
 | 层级 `ℓ`{.Agda} | 层级 `ℓ-suc ℓ`{.Agda} |
 | --- | --- |
@@ -102,13 +121,13 @@ The proof `isOfHLevelLift 2 setX`{.Agda} preserves the h-set condition on indice
 | `setB x`{.Agda} | `isOfHLevelLift 2 (setB (lower x̂))`{.Agda} |
 | `inh x`{.Agda} | `map₁ lift (inh (lower x̂))`{.Agda} |
 
-证明 `isOfHLevelLift 2 setX`{.Agda} 保留指标的 h-集合性；`setB`{.Agda} 一行则保留每个取值的 h-集合性。得到抬升后的选择函数，再逐点降回即可。
+证明 `isOfHLevelLift 2 setX`{.Agda} 保留指标的 h-集合性；`setB`{.Agda} 一行则保留每个取值的 h-集合性。
 <!--ja-->
-切り詰めは依存関数型の外へ移るが、消えるわけではない。したがって仮定 `sc : SetChoice ℓ`{.Agda} が与えるのは、選択関数の[単なる存在]{.term-ref #mere-existence}である。この存在を `rec₁`{.Agda} で使うには、目標が命題でなければならない。`Type ℓ`{.Agda} 全体を量化するので、原理自体は `Type (ℓ-suc ℓ)`{.Agda} に住む。
+**証明** 引数 `inh`{.Agda} は inhabited (要素をもつ) に由来し、各 `x`{.Agda} に対して `∥ B x ∥₁`{.Agda} を与える。外側の `map₁`{.Agda} は持ち上げた族の選択関数 `f`{.Agda} を各点で元の族の関数に変換する。`x`{.Agda} での値は次のとおりであり、どちらの関数も切り詰めの内部に留まる。
 
-**補題** (`lowerSetChoice`{.Agda}) 一つ上の宇宙レベルの選択は、一つ下のレベルの選択を含意する。
+<div class="single-line-code" data-note="入力を持ち上げ、f を適用し、出力を降ろす。"><code>lower (f (lift x)) : B x</code></div>
 
-**証明** `sc`{.Agda} を適用する前に、添字と族をともに持ち上げる。各部分は次のように対応する。
+`f`{.Agda} を得るため、`sc`{.Agda} を適用する前に添字と族をともに持ち上げる。各部分は次のように対応する。
 
 | レベル `ℓ`{.Agda} | レベル `ℓ-suc ℓ`{.Agda} |
 | --- | --- |
@@ -117,25 +136,7 @@ The proof `isOfHLevelLift 2 setX`{.Agda} preserves the h-set condition on indice
 | `setB x`{.Agda} | `isOfHLevelLift 2 (setB (lower x̂))`{.Agda} |
 | `inh x`{.Agda} | `map₁ lift (inh (lower x̂))`{.Agda} |
 
-`isOfHLevelLift 2 setX`{.Agda} が添字の h-集合性を保ち、`setB`{.Agda} の行が各値の h-集合性を保つ。得られた選択関数を各点で降ろせばよい。
-<!--/-->
-
-```agda
-lowerSetChoice : ∀ {ℓ} → SetChoice (ℓ-suc ℓ) → SetChoice ℓ
-```
-
-<!--en-->
-The function used in the outer `map₁`{.Agda} has the following value at `x`{.Agda}. Both the lifted function and the lowered one remain under truncation.
-
-<div class="single-line-code" data-note="Lift the input, evaluate f, then lower the output."><code>lower (f (lift x)) : B x</code></div>
-<!--zh-->
-外层 `map₁`{.Agda} 所用的函数在 `x`{.Agda} 处取以下值。抬升后的函数与降回的函数始终都留在截断之内。
-
-<div class="single-line-code" data-note="先抬升输入，求 f 的值，再降低输出。"><code>lower (f (lift x)) : B x</code></div>
-<!--ja-->
-外側の `map₁`{.Agda} に渡す関数は、`x`{.Agda} で次の値を取る。持ち上げた関数も降ろした関数も、切り詰めの内部に留まる。
-
-<div class="single-line-code" data-note="入力を持ち上げ、f を適用し、出力を降ろす。"><code>lower (f (lift x)) : B x</code></div>
+`isOfHLevelLift 2 setX`{.Agda} が添字の h-集合性を保ち、`setB`{.Agda} の行が各値の h-集合性を保つ。
 <!--/-->
 
 ```agda
@@ -643,11 +644,11 @@ In the second row, a proof of `P`{.Agda} would force the very equality that `ne`
 
 
 <!--en-->
-The same factorization through truncation that appeared in the Prelude now closes the proof. In the figure, $G$ abbreviates the type `(x : Glued) → Pick x`{.Agda}. The map `decide`{.Agda} is defined on actual functions, while `rec₁ decideIsProp decide`{.Agda} accepts their mere existence.
+The [factorization through truncation shown in the Prelude](Base.Prelude.html#fig-truncation-rec) has a concrete instance here. In the figure, $G$ abbreviates the type `(x : Glued) → Pick x`{.Agda}. The map `decide`{.Agda} is defined on actual functions, while `rec₁ decideIsProp decide`{.Agda} accepts their mere existence.
 <!--zh-->
-《基础词汇》中经由截断的分解，在这里完成证明。图中的 $G$ 简记类型 `(x : Glued) → Pick x`{.Agda}。`decide`{.Agda} 以实际函数为输入，`rec₁ decideIsProp decide`{.Agda} 则可以接收它们的仅仅存在。
+[《基础词汇》中经由截断的分解](Base.Prelude.html#fig-truncation-rec)，在这里有了一个具体实例。图中的 $G$ 简记类型 `(x : Glued) → Pick x`{.Agda}。`decide`{.Agda} 以实际函数为输入，`rec₁ decideIsProp decide`{.Agda} 则可以接收它们的仅仅存在。
 <!--ja-->
-「基礎語彙」で見た、切り詰めを経由する分解がここで証明を完成させる。図中の $G$ は型 `(x : Glued) → Pick x`{.Agda} の略記である。`decide`{.Agda} は実際の関数を受け取り、`rec₁ decideIsProp decide`{.Agda} はその単なる存在を受け取る。
+[「基礎語彙」で見た、切り詰めを経由する分解](Base.Prelude.html#fig-truncation-rec)の具体例がここに現れる。図中の $G$ は型 `(x : Glued) → Pick x`{.Agda} の略記である。`decide`{.Agda} は実際の関数を受け取り、`rec₁ decideIsProp decide`{.Agda} はその単なる存在を受け取る。
 <!--/-->
 
 <figure class="book-diagram type-comparison" id="fig-choice-truncation" aria-describedby="fig-choice-truncation-caption">
@@ -708,13 +709,13 @@ SetChoice→LEM sc P = rec₁ decideIsProp decide (merePicker sc)
 <!--en-->
 ## Recap
 
-This chapter formulated `SetChoice ℓ`{.Agda} for h-set indices and h-set-valued families: pointwise mere existence of elements implies the mere existence of one choice function. `lowerSetChoice`{.Agda} transfers the principle from `ℓ-suc ℓ`{.Agda} to `ℓ`{.Agda}. To prove `SetChoice→LEM`{.Agda}, we encoded a proposition `P`{.Agda} in the equality of two quotient points. Choice provided Boolean representatives whose comparison decides `P`{.Agda}; because `Dec ⟨ P ⟩`{.Agda} is a proposition, `rec₁`{.Agda} eliminates the truncation. Thus `SetChoice ℓ`{.Agda} implies `LEM ℓ`{.Agda}.
+This chapter formulated `SetChoice ℓ`{.Agda} for h-set indices and h-set-valued families: pointwise mere existence of elements implies the mere existence of one choice function. `lowerSetChoice`{.Agda} shows that `SetChoice (ℓ-suc ℓ)`{.Agda} implies `SetChoice ℓ`{.Agda}. To prove `SetChoice→LEM`{.Agda}, we encoded a proposition `P`{.Agda} in the equality of two quotient points. Choice provided Boolean representatives whose comparison decides `P`{.Agda}; because `Dec ⟨ P ⟩`{.Agda} is a proposition, `rec₁`{.Agda} eliminates the truncation. Thus `SetChoice ℓ`{.Agda} implies `LEM ℓ`{.Agda}.
 <!--zh-->
 ## 小结
 
-本章针对 h-集合指标与 h-集合值族陈述了 `SetChoice ℓ`{.Agda}：从逐点的仅仅存在，得到整个选择函数的仅仅存在。`lowerSetChoice`{.Agda} 把这条原理从 `ℓ-suc ℓ`{.Agda} 降至 `ℓ`{.Agda}。为证明 `SetChoice→LEM`{.Agda}，我们把命题 `P`{.Agda} 编码为两个商点的相等；选择给出布尔代表元，比较它们便可判定 `P`{.Agda}。由于 `Dec ⟨ P ⟩`{.Agda} 是命题，`rec₁`{.Agda} 允许消去截断。因此，`SetChoice ℓ`{.Agda} 蕴含 `LEM ℓ`{.Agda}。
+本章针对 h-集合指标与 h-集合值族陈述了 `SetChoice ℓ`{.Agda}：从逐点的仅仅存在，得到整个选择函数的仅仅存在。`lowerSetChoice`{.Agda} 证明 `SetChoice (ℓ-suc ℓ)`{.Agda} 蕴含 `SetChoice ℓ`{.Agda}。为证明 `SetChoice→LEM`{.Agda}，我们把命题 `P`{.Agda} 编码为两个商点的相等；选择给出布尔代表元，比较它们便可判定 `P`{.Agda}。由于 `Dec ⟨ P ⟩`{.Agda} 是命题，`rec₁`{.Agda} 允许消去截断。因此，`SetChoice ℓ`{.Agda} 蕴含 `LEM ℓ`{.Agda}。
 <!--ja-->
 ## まとめ
 
-本章では、h-集合を添字とする h-集合値の族について `SetChoice ℓ`{.Agda} を定式化した。各添字で要素が単に存在することから、一つの選択関数が単に存在することが従う。`lowerSetChoice`{.Agda} は、この原理を `ℓ-suc ℓ`{.Agda} から `ℓ`{.Agda} へ下ろす。`SetChoice→LEM`{.Agda} の証明では、命題 `P`{.Agda} を二つの商点の等しさに符号化し、選択で得たブール代表元を比較して `P`{.Agda} を判定する。`Dec ⟨ P ⟩`{.Agda} は命題なので、`rec₁`{.Agda} により切り詰めを消去できる。したがって `SetChoice ℓ`{.Agda} から `LEM ℓ`{.Agda} が従う。
+本章では、h-集合を添字とする h-集合値の族について `SetChoice ℓ`{.Agda} を定式化した。各添字で要素が単に存在することから、一つの選択関数が単に存在することが従う。`lowerSetChoice`{.Agda} は、`SetChoice (ℓ-suc ℓ)`{.Agda} が `SetChoice ℓ`{.Agda} を含意することを示す。`SetChoice→LEM`{.Agda} の証明では、命題 `P`{.Agda} を二つの商点の等しさに符号化し、選択で得たブール代表元を比較して `P`{.Agda} を判定する。`Dec ⟨ P ⟩`{.Agda} は命題なので、`rec₁`{.Agda} により切り詰めを消去できる。したがって `SetChoice ℓ`{.Agda} から `LEM ℓ`{.Agda} が従う。
 <!--/-->

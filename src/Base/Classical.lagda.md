@@ -372,8 +372,6 @@ The candidate witness is the pair `(Lift Bool , ...)`{.Agda}. Its first componen
 <!--/-->
 
 ```agda
-open BooleanCodes using ( encodeB; decodeB; secB; retrB )
-
 LEM→ΩResizing : ∀ {ℓ₁ ℓ₂} → LEM ℓ₁ → ΩResizing ℓ₁ ℓ₂
 ```
 
@@ -390,6 +388,7 @@ LEM→ΩResizing lem = Lift Bool , isoToEquiv (iso
   (λ P → encodeB P (lem P)) decodeB
   (λ b → retrB {ℓ₁ = _} b (lem (decodeB b)))
   (λ P → secB {ℓ₂ = _} P (lem P)))
+  where open BooleanCodes
 ```
 
 
@@ -463,10 +462,6 @@ Encoding and decoding are inverse up to paths. Excluded middle supplies the deci
 **系** (`LEM→Resizing`{.Agda}) 任意のレベル `ℓ₁`{.Agda} と `ℓ₂`{.Agda} に対して、始域レベル `ℓ₁`{.Agda} での排中律は、`ℓ₁`{.Agda} から `ℓ₂`{.Agda} への命題リサイズを導く。
 <!--/-->
 
-```agda
-LEM→Resizing : ∀ {ℓ₁ ℓ₂} → LEM ℓ₁ → Resizing ℓ₁ ℓ₂
-```
-
 <!--en-->
 **Proof** Apply `LEM→ΩResizing`{.Agda}, then convert the resulting proposition-universe resizing with the general theorem `ΩResizing→Resizing`{.Agda}.
 <!--zh-->
@@ -476,6 +471,7 @@ LEM→Resizing : ∀ {ℓ₁ ℓ₂} → LEM ℓ₁ → Resizing ℓ₁ ℓ₂
 <!--/-->
 
 ```agda
+LEM→Resizing : ∀ {ℓ₁ ℓ₂} → LEM ℓ₁ → Resizing ℓ₁ ℓ₂
 LEM→Resizing lem = ΩResizing→Resizing (LEM→ΩResizing lem)
 ```
 

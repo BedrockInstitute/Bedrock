@@ -111,12 +111,19 @@ checks, shows it beside the full name in the website glossary, and includes it i
 glossary search and `terms.json`. State the abbreviation alongside the full name at
 its first introduction, so the reader learns the relationship before seeing the short form.
 
-Use `matching = "auto"` only when every occurrence of the canonical rendering has the same
-technical meaning. The renderer links those later occurrences automatically, preferring longer
+Use `matching = "auto"` only when the canonical rendering has the same technical meaning
+outside any explicitly audited exclusions. The renderer links those later occurrences automatically, preferring longer
 forms. Use `matching = "explicit"` for short or ambiguous forms such as Chinese 层. Such an
 occurrence must use an explicit term-reference marker. Optional `forms_en`, `forms_zh` and
 `forms_ja` arrays list audited inflected or alternate surface forms. Use the structured
 `abbreviations` field for a short name instead of repeating it in `forms_*`.
+For an otherwise automatic term that appears inside an unrelated fixed phrase,
+list that whole phrase in `auto_exclude_en`, `auto_exclude_zh` or
+`auto_exclude_ja`. The renderer and prerequisite lint then skip only the term
+form inside that phrase; other occurrences on the same line still link. Audit
+the phrase rather than imposing CJK word boundaries, which would also hide
+legitimate mathematical compounds. For example, Japanese `台` remains the
+carrier term in `台の要素` but not in `土台` or `舞台`.
 
 How often a term occurs is not a criterion (owner ruling, 2026-09-12). A page carrying many
 term links is acceptable and useful: the link marks the word as a registered term rather than

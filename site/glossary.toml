@@ -1081,10 +1081,11 @@ avoid = ["ja:担体", "ja:キャリア"]
 introduced_in = "Base.Prelude"
 matching = "auto"
 forms_en = ["carriers"]
+auto_exclude_ja = ["土台", "舞台"]
 recap_en = "The underlying type of objects on which the relations and operations of a structure are defined."
 recap_zh = "承载一个结构的对象，并供该结构的关系与运算在其上定义的底层类型。"
 recap_ja = "構造の対象を担い、その関係や演算が定義される基礎の型。"
-notes = "Of a structure; ja 台 as in 台集合. Automatic matching of the single Japanese character 台 can also mark unrelated compounds. Owner ruling 2026-09-12 unified the Japanese rendering on 台: 24 occurrences of 担体 and one of キャリア were converted the same day, and the avoid list keeps them out."
+notes = "Of a structure; ja 台 abbreviates the attested 台集合 (carrier set), not the sole established full translation. Primary evidence: https://www.jstage.jst.go.jp/article/jssst/25/2/25_2_2_14/_pdf and https://mizar-jp.org/journal/MMA-WiP/j2020.2.1 . The unrelated compounds 土台 and 舞台 are excluded from automatic term matching. Owner ruling 2026-09-12 unified the Japanese rendering on 台: 24 occurrences of 担体 and one of キャリア were converted the same day, and the avoid list keeps them out."
 
 [[term]]
 category = "Logic and philosophy"
