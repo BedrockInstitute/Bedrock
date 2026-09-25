@@ -58,12 +58,22 @@
     await until(()=>frame.contentDocument?.documentElement.lang===language && frame.contentDocument?.querySelector('#section-menu'));
     const d=frame.contentDocument, w=frame.contentWindow;
     await d.fonts.ready;
+    frame.style.maxWidth='none';
+    for(const width of [1280,1440,1512,1728]) {
+      frame.style.width=width+'px';await delay(120);
+      const sidebar=d.querySelector('#toc'), article=d.querySelector('article');
+      const side=sidebar.getBoundingClientRect(), body=article.getBoundingClientRect();
+      check(language+' '+width+' real chapter keeps an adaptive sidebar',w.getComputedStyle(sidebar).position==='sticky'&&side.width>=160&&side.width<=320);
+      check(language+' '+width+' long contents fit beside centered prose',sidebar.scrollWidth<=sidebar.clientWidth+1&&side.right<body.left&&Math.abs((body.left+body.right)/2-width/2)<1&&d.documentElement.scrollWidth<=width);
+    }
+    frame.style.maxWidth='';
     const recordLink=d.querySelector('article .term-ref[data-term="record-type"]'), recordIntro=d.querySelector('#term-record-type');
     check(language+' explicit record-type lookup precedes and links to its introduction',
       recordLink && recordIntro && recordLink.getAttribute('href').endsWith('#term-record-type') &&
       !!(recordLink.compareDocumentPosition(recordIntro)&w.Node.DOCUMENT_POSITION_FOLLOWING));
     for (const width of [1100,375]) {
-      frame.style.width=width+'px'; d.body.classList.remove('nav-collapsed');
+      frame.style.width=width+'px'; await delay(120);
+      d.body.classList.remove('nav-collapsed');
       d.body.classList.add('nav-open'); await delay(250);
       const branch=d.querySelector('#toc .toc-branch'), summary=branch.querySelector('summary'), title=summary.querySelector('a');
       // Do not scroll the article via scrollIntoView: its scrollspy may open

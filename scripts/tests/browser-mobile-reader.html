@@ -191,6 +191,10 @@ document.querySelector('#run').onclick=async()=>{
   w.scrollTo(0,0);await pause(260);
   const search=d.querySelector('.search-form'),languages=d.querySelector('#lang-switch');
   const searchToggle=d.querySelector('#search-toggle'),languageToggle=d.querySelector('#language-toggle');
+  const compactButtons=[searchToggle,languageToggle,d.querySelector('#theme-toggle')].map(button=>button.getBoundingClientRect());
+  check(compactButtons.every(rect=>rect.width>=44&&rect.height>=44),'all three compact controls retain 44px touch targets');
+  check(compactButtons.slice(1).every((rect,i)=>Math.abs(rect.left-compactButtons[i].right-4)<.1),'compact control gaps are four pixels');
+  check(Math.abs(d.documentElement.clientWidth-compactButtons[2].right-4)<.1,'compact controls sit at the right gutter');
   check(search.inert&&languages.inert,'mobile language and search panels start closed');
   searchToggle.click();
   check(!search.inert&&searchToggle.getAttribute('aria-expanded')==='true'&&d.activeElement.id==='search-box','search button opens and focuses search');
