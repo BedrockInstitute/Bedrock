@@ -17,6 +17,7 @@ import os
 from pathlib import Path
 import re
 import subprocess
+from outcrop.adapters.python_inputs import dependency_files
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -96,14 +97,49 @@ def extractor_identity() -> str | None:
 
 
 def render_identity() -> str | None:
-    inputs = [Path(__file__), ROOT / 'scripts/site/render-site.py',
-              *(path for path in (ROOT / 'site').rglob('*') if path.is_file()
-                and path.suffix in {'.json', '.toml', '.svg', '.png', '.css', '.js'}),
-              *(path for directory in ('core', 'site')
-                for path in (ROOT / 'outcrop/src/outcrop' / directory).rglob('*')
-                if path.is_file() and '__pycache__' not in path.parts
-                and (path.suffix == '.py' or 'resources' in path.parts))]
-    return combined_digest(inputs)
+    from outcrop.site.site_config import SiteConfig
+    package = ROOT / 'outcrop/src/outcrop'
+    config_path = ROOT / 'site/project.json'
+    config = SiteConfig.load(config_path, root=ROOT)
+    inputs = [*dependency_files(package, [ROOT / 'scripts/site/render-site.py']),
+              ROOT / 'outcrop/pyproject.toml', config_path,
+              *(config.path(value) for value in
+                (config.catalog, config.glossary, config.favicon, config.logo) if value),
+              *(path for path in (package / 'site/resources').rglob('*') if path.is_file())]
+    return combined_digest(list(set(inputs)))
+
+
+def key_digest(value) -> str:
+    return hashlib.sha256(json.dumps(value, sort_keys=True).encode()).hexdigest()
+
+
+def validate_artifact(backend, paths, current):
+    if (backend is None or backend.get('sources') != current
+            or not backend.get('producer')
+            or backend.get('extractor') != extractor_identity()
+            or not all(highlighted_path(module).is_file() for module in paths)
+            or not all(path.is_file() for path in TYPES)):
+        raise RuntimeError('site backend artifact is missing or does not match source/extractor')
+
+
+def archive_keys(args):
+    """Use the same content identities locally and in Actions, not broad globs.
+
+    Archive prefixes only choose a candidate. Restored files still pass the
+    normal producer/source/extractor checks before any work can be skipped.
+    """
+    paths = source_paths()
+    current = source_inventory(paths)
+    keys = {'source': key_digest({module: item['source'] for module, item in current.items()})}
+    if args.cache_keys == 'backend':
+        keys.update(backend=backend_identity(), extractor=extractor_identity())
+    else:
+        backend = read_state(BACKEND_STATE)
+        validate_artifact(backend, paths, current)
+        keys['render'] = key_digest(render_build_key(current, backend, args.langs.split(','), args.base_url))
+    if any(value is None for value in keys.values()):
+        raise RuntimeError('cannot fingerprint missing cache inputs')
+    return keys
 
 
 def read_state(path: Path) -> dict | None:
@@ -204,11 +240,7 @@ def build(args) -> None:
     current = source_inventory(paths)
     backend = read_state(BACKEND_STATE)
     if args.render_only:
-        if (backend is None or backend.get('sources') != current
-                or not backend.get('producer')
-                or not all(highlighted_path(module).is_file() for module in paths)
-                or not all(path.is_file() for path in TYPES)):
-            raise RuntimeError('site backend artifact is missing or does not match source')
+        validate_artifact(backend, paths, current)
     else:
         backend = prepare_backend(args, paths, current, backend)
     if args.backend_only:
@@ -225,7 +257,7 @@ def build(args) -> None:
         print('site cache: pages, search and assets are current', flush=True)
         return
 
-    code_key = hashlib.sha256(json.dumps(build_key, sort_keys=True).encode()).hexdigest()
+    code_key = key_digest(build_key)
     command = render_command(args) + ['--code-cache', str(CACHE / 'code-context.json.gz'),
                                       '--code-cache-key', code_key]
     site_changed = {module for module, source in source_hashes.items()
@@ -251,7 +283,10 @@ def prepare_backend(args, paths: dict[str, Path], current: dict[str, dict],
     producer = backend_identity()
     extractor = extractor_identity()
     adopted = False
-    if backend is None and producer is not None and adopt_backend(paths):
+    # Local adoption supports a manual `make html` build predating receipts.
+    # CI archive fallback must never certify evidence by restored timestamps.
+    allow_adoption = os.environ.get('CI', '').lower() not in {'1', 'true'}
+    if backend is None and producer is not None and allow_adoption and adopt_backend(paths):
         types_fresh = (all(path.is_file() for path in TYPES)
                        and all(input_.stat().st_mtime_ns <= min(path.stat().st_mtime_ns
                                                                 for path in TYPES)
@@ -292,6 +327,11 @@ def prepare_backend(args, paths: dict[str, Path], current: dict[str, dict],
                 if current[module]['blocks'] != backend['sources'].get(module, {}).get('blocks'):
                     interface = INTERFACES / (module.replace('.', '/') + '.agdai')
                     interface.unlink(missing_ok=True)
+            # Checkout/compiler-wrapper timestamps are not content identities.
+            # Only a validated compatible producer may refresh the trace before
+            # entering Make's timestamp-based lower-level HTML target.
+            if TRACE.is_file():
+                TRACE.touch()
         else:
             # An incompatible compiler or library must not reuse old trace records.
             TRACE.unlink(missing_ok=True)
@@ -327,9 +367,13 @@ def prepare_backend(args, paths: dict[str, Path], current: dict[str, dict],
         # compilation. The raw target cannot re-enter Make's timestamp check.
         backend['extractor'] = None
         write_state(BACKEND_STATE, backend)
+        print('site cache: refreshing semantic products (rebuilt, missing or changed extractor)', flush=True)
         run(make_command(args, '_types'))
         backend['extractor'] = extractor
         write_state(BACKEND_STATE, backend)
+
+    if not (rebuilt or missing_types or extractor_changed or refreshed):
+        print('site cache: compiler evidence and semantic products are current', flush=True)
 
     return backend
 
@@ -351,6 +395,8 @@ def main(argv=None) -> int:
     parser.add_argument('--interface-root', type=Path, default=BUILD / '2.8.0/agda/src')
     parser.add_argument('--cold', action='store_true', help='explicitly rebuild the entire backend')
     parser.add_argument('--force-render', action='store_true', help='force rendering existing evidence without cache checks')
+    parser.add_argument('--cache-keys', choices=('backend', 'render'),
+                        help='print content fingerprints for Actions; do not build or change caches')
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument('--backend-only', action='store_true')
     mode.add_argument('--render-only', action='store_true')
@@ -364,7 +410,11 @@ def main(argv=None) -> int:
     INTERFACES, AGDA_HOME = args.interface_root.resolve(), args.agda_dir.resolve()
     if not INTERFACES.is_relative_to(BUILD) or INTERFACES == BUILD:
         parser.error('--interface-root must be a dedicated cache beneath _build')
-    build(args)
+    if args.cache_keys:
+        for name, value in archive_keys(args).items():
+            print(f'{name}={value}')
+    else:
+        build(args)
     return 0
 
 

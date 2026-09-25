@@ -35,9 +35,14 @@
     "Base.Prelude"
   ],
   "descriptions": {
-    "en": "A machine-checked development of set theory in Cubical Agda. The constructible universe L is proved to model ZFC and to satisfy GCH.",
-    "zh": "用 Cubical Agda 完成的机器验证集合论。已经证明可构造宇宙 L 是 ZFC 的模型并满足 GCH。",
-    "ja": "Cubical Agda による機械検証された集合論。構成可能宇宙 L が ZFC のモデルであり GCH を満たすことを証明済みです。"
+    "en": "A trilingual textbook of machine-checked set theory in Cubical Agda. Proving ZFC and GCH in the constructible universe L, assuming excluded middle.",
+    "zh": "以 Cubical Agda 形式化构建集合论的三语交互式教科书。在排中律假设下，证明可构造宇宙 L 满足 ZFC 与 GCH。",
+    "ja": "Cubical Agda で集合論を形式化する三言語の対話型教科書。排中律の仮定のもとで、構成可能宇宙 L が ZFC と GCH を満たすことを証明する。"
+  },
+  "taglines": {
+    "en": "Laying the groundwork for the metaphysics of 𝑉.",
+    "zh": "为 𝑉 的形而上学奠基。",
+    "ja": "𝑉 の形而上学のために基礎を築く。"
   },
   "topics": [
     "Set theory",
@@ -51,15 +56,15 @@
     "url": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
   },
   "agent": {
-    "guide": "# Bedrock\n\n> {blurb}\n\nBedrock is a machine-checked development, in Cubical Agda, of the set theory behind\ncontemporary questions about the universe of sets. Two results are proved and both are\nstated in the chapter `Origin`: `L⊨ZFC` and `L⊨GCH`, the constructible universe\nas a model of ZFC and as a model in which the generalized continuum hypothesis holds.\nEach rests on one hypothesis, excluded middle at `LEM (ℓ-suc ℓ)`, and on nothing else.\nThe long-term aim is forcing, set-theoretic geology, the definability of ground models\nand the mantle.\n\nThe project is host-language maximalist: every set-theoretic notion is rebuilt in\ntype-theory-native idiom rather than transcribed from the textbook ZF axioms, and the\ndeeply embedded first-order `Formula` is used only where syntax is itself the object of\nstudy. Every file typechecks under Agda 2.8.0 with the cubical 0.9 library and the\n`--safe` flag, so nothing here is postulated.\n\nThis site is the development published as a trilingual mathematics textbook. One chapter\nis one Agda module. The displayed Agda is the formal content; the prose around it is the\nexposition, written in English, Chinese and Japanese from a single master. The reading\norder is a dependency order: a chapter's prerequisites are the modules it imports.\n\n## How to read this site\n\n- Every chapter is at `/<lang>/<Module>.html`, with `<lang>` one of `en`, `zh`, `ja`.\n  The three editions share filenames, so swapping the language segment of any URL\n  reaches the same chapter in another language. The one exception is the preview\n  chapter `Origin`, which has no page of its own: the reading guide embeds its\n  whole body, so it is read at `/<lang>/index.html#milestones`. The chapter list below\n  gives every chapter's address, and `/<lang>/reading-routes.json` gives it as data.\n- **Every chapter page has a plain-Markdown twin at the same path with a `.md`\n  extension.** It carries the same prose and the same Agda in fenced blocks, with the\n  chapter's stage, prerequisites and source in YAML front matter, and it is a fraction\n  of the size of the HTML. Prefer it. Each HTML page advertises its own mirror with\n  `<link rel=\"alternate\" type=\"text/markdown\">`.\n- Pages are static HTML and need no JavaScript: the prose and the Agda are both in the\n  initial response.\n- Anchors are stable and are the way to cite a passage. `#sec-0` is a chapter's title\n  and `#sec-1`, `#sec-2`, ... its headings in document order. `#p-1`, `#p-2`, ... name\n  its prose blocks, paragraphs and list items alike, in document order, so `#p-7` is\n  the seventh block of prose on the page whatever section it falls in. Inside a\n  displayed Agda block every\n  token carries the character offset Agda's highlighter assigned it, as `#1234`, and\n  every definition additionally carries its own Agda identifier as a named anchor, so\n  `/<lang>/V.Model.html#V⊨ZF` opens the page at that definition.\n- `/<lang>/index.html` is the reading guide: routes, the dependency map, the milestone\n  theorems and the glossary.\n\n## Machine-readable endpoints\n\nEvery one of these is static JSON, served with `Access-Control-Allow-Origin: *`.\n\n",
+    "guide": "# Bedrock\n\n> {blurb}\n\nBedrock is a machine-checked development, in Cubical Agda, of the set theory behind\ncontemporary questions about the universe of sets. Two results are proved and both are\nre-exported by the chapter `Origin`: `L⊨ZFC` and `L⊨GCH`, the constructible universe\nas a model of ZFC and as a model in which the generalized continuum hypothesis holds.\nBesides their universe parameter, each requires only excluded middle at `LEM (ℓ-suc ℓ)`.\nThe long-term aim is forcing, set-theoretic geology, the definability of ground models\nand the mantle.\n\nThe project is host-language maximalist: every set-theoretic notion is rebuilt in\ntype-theory-native idiom rather than transcribed from the textbook ZF axioms, and the\ndeeply embedded first-order `Formula` is used only where syntax is itself the object of\nstudy. Every file typechecks under Agda 2.8.0 with the cubical 0.9 library and the\n`--safe` flag, so nothing here is postulated.\n\nThis site is the development published as a trilingual mathematics textbook. One chapter\nis one Agda module. The displayed Agda is the formal content; the prose around it is the\nexposition, written in English, Chinese and Japanese from a single master. The reading\norder is a dependency order: a chapter's prerequisites are the modules it imports.\n",
     "translations": {
       "en": {
         "docTitle": "Explain a passage of the Bedrock textbook",
         "intro": "I am reading the Bedrock online textbook and I want you to explain the passage I selected. Read the sources listed below before you answer.",
         "hProject": "What Bedrock is",
-        "fLibrary": "This page is a module of the Cubical standard library, rendered inside Bedrock for reference. It is not a chapter of the book.",
+        "fLibrary": "This page is an external library module, rendered inside Bedrock for reference. It is not a chapter of the book.",
         "project": [
-          "Bedrock is a machine-checked development of set theory in Cubical Agda. Two results are proved: the constructible universe L is a model of ZFC, and GCH holds in it. They are the definitions `L⊨ZFC` and `L⊨GCH` in the chapter Origin, each resting on one hypothesis, excluded middle at `LEM (ℓ-suc ℓ)`, and on nothing else. Every file typechecks under Agda 2.8.0 with the cubical 0.9 library and the `--safe` flag, so nothing in the development is postulated. The long-term aim is forcing, set-theoretic geology, and the definability of ground models.",
+          "Bedrock is a machine-checked development of set theory in Cubical Agda. Two results are proved: the constructible universe L is a model of ZFC, and GCH holds in it. They are the definitions `L⊨ZFC` and `L⊨GCH` re-exported by the chapter Origin. Besides their universe parameter, each requires only excluded middle at `LEM (ℓ-suc ℓ)`. Every file typechecks under Agda 2.8.0 with the cubical 0.9 library and the `--safe` flag, so nothing in the development is postulated. The long-term aim is forcing, set-theoretic geology, and the definability of ground models.",
           "The project is host-language maximalist: every set-theoretic notion is rebuilt in type-theory-native idiom rather than transcribed from the textbook ZF axioms, and the deeply embedded first-order `Formula` is used only where syntax is itself the object of study. This matters when you read a definition here, because it will often not look like the one in a set theory textbook.",
           "The site is that development published as a trilingual textbook, in English, Chinese and Japanese. One chapter is one Agda module. The displayed Agda is the formal content and the prose around it is the exposition; the reading order is a dependency order, so a chapter's prerequisites are the modules it imports."
         ],
@@ -73,9 +78,9 @@
         "docTitle": "请解释 Bedrock 教科书中的一段内容",
         "intro": "我正在阅读 Bedrock 在线教科书，想请你解释我选中的这段内容。回答之前请先读下面列出的资料。",
         "hProject": "关于 Bedrock 这个项目",
-        "fLibrary": "本页是 Cubical 标准库的一个模块，在 Bedrock 中渲染以供查阅，并不是本书的章节。",
+        "fLibrary": "本页是外部库的一个模块，在 Bedrock 中渲染以供查阅，并不是本书的章节。",
         "project": [
-          "Bedrock 是用 Cubical Agda 完成的机器验证集合论。目前已经证明两项结果：可构造宇宙 L 是 ZFC 的模型，并且 GCH 在其中成立。它们就是 Origin 一章里的定义 `L⊨ZFC` 与 `L⊨GCH`，各自只依赖一条假设，即 `LEM (ℓ-suc ℓ)` 这一层的排中律，除此之外别无假设。全部文件都在 Agda 2.8.0 与 cubical 0.9 库下带 `--safe` 通过类型检查，因此开发中没有任何公设。长期目标是力迫法、集合论地质学，以及基模型的可定义性。",
+          "Bedrock 是用 Cubical Agda 完成的机器验证集合论。目前已经证明两项结果：可构造宇宙 L 是 ZFC 的模型，并且 GCH 在其中成立。它们是由原点一章重新导出的定义 `L⊨ZFC` 与 `L⊨GCH`；除宇宙参数外，二者都仅需 `LEM (ℓ-suc ℓ)` 这一层的排中律假设。全部文件都在 Agda 2.8.0 与 cubical 0.9 库下带 `--safe` 通过类型检查，因此开发中没有任何公设。长期目标是力迫法、集合论地质学，以及基模型的可定义性。",
           "本项目采取宿主语言最大化的路线：每个集合论概念都以类型论原生的方式重建，而不是照抄教科书的 ZF 公理；深嵌入的一阶 `Formula` 只在语法本身成为研究对象时才使用。读这里的定义时这一点很关键，因为它往往与集合论教科书里的写法并不相同。",
           "本站是该开发成果出版成的三语教科书，语言为英文、中文与日文。一章即一个 Agda 模块。展示的 Agda 是形式内容，围绕它的散文是讲解；阅读顺序就是依赖顺序，一章的先修就是它导入的模块。"
         ],
@@ -89,9 +94,9 @@
         "docTitle": "Bedrock 教科書の一節を説明してください",
         "intro": "Bedrock のオンライン教科書を読んでいます。選択した一節を説明してください。答える前に、下に挙げた資料を読んでください。",
         "hProject": "Bedrock とは",
-        "fLibrary": "このページは Cubical 標準ライブラリのモジュールで、参照用に Bedrock 内へ描画したものです。本書の章ではありません。",
+        "fLibrary": "このページは外部ライブラリのモジュールで、参照用に Bedrock 内へ描画したものです。本書の章ではありません。",
         "project": [
-          "Bedrock は Cubical Agda による機械検証された集合論です。二つの結果が証明されています。構成可能宇宙 L が ZFC のモデルであること、そしてその中で GCH が成り立つことです。それが Origin の章にある定義 `L⊨ZFC` と `L⊨GCH` で、いずれも `LEM (ℓ-suc ℓ)` の排中律という一つの仮定のみに依拠し、他には何も仮定しません。すべてのファイルは Agda 2.8.0 と cubical 0.9 ライブラリのもとで `--safe` 付きに型検査を通るので、この開発には postulate がありません。長期的な目標は強制法、集合論的地質学、そして基礎モデルの定義可能性です。",
+          "Bedrock は Cubical Agda による機械検証された集合論です。二つの結果が証明されています。構成可能宇宙 L が ZFC のモデルであること、そしてその中で GCH が成り立つことです。それらは原点の章から再エクスポートされる定義 `L⊨ZFC` と `L⊨GCH` で、宇宙パラメータのほかに必要なのは `LEM (ℓ-suc ℓ)` の排中律のみです。すべてのファイルは Agda 2.8.0 と cubical 0.9 ライブラリのもとで `--safe` 付きに型検査を通るので、この開発には postulate がありません。長期的な目標は強制法、集合論的地質学、そして基礎モデルの定義可能性です。",
           "この企画はホスト言語最大主義を採ります。集合論の概念はすべて型理論に固有の語法で作り直され、教科書の ZF 公理を書き写したものではありません。深く埋め込まれた一階の `Formula` は、構文そのものが研究対象になる場面でのみ使われます。ここでの定義を読むときこの点が重要です。集合論の教科書に載っている形とは違って見えることが多いからです。",
           "本サイトはその開発成果を英語、中国語、日本語の三言語の教科書として公開したものです。一つの章が一つの Agda モジュールです。表示された Agda が形式的な内容で、その周りの文章が解説です。読書順は依存順であり、章の前提はその章が import するモジュールです。"
         ],
@@ -119,7 +124,7 @@
   "source_links": [
     {
       "url": "https://github.com/BedrockInstitute/Bedrock/blob/main/README.md",
-      "description": "the project README, with the current measured size and build figures."
+      "description": "the project overview, build instructions and repository structure."
     },
     {
       "url": "https://github.com/BedrockInstitute/Bedrock/blob/main/docs/en/CHARTER.md",

@@ -40,6 +40,14 @@
   frame.style.width='390px';await delay(180);check('390px no page overflow',doc.documentElement.scrollWidth<=win.innerWidth+1);
   button('[data-depmap-fullscreen]').click();await delay(100);check('390px full-screen graph remains usable',canvas.clientHeight>=180&&doc.querySelector('dialog[open]').scrollWidth<=win.innerWidth+1);button('[data-depmap-fullscreen]').click();
   doc.querySelector('#tab-milestones').click();await delay(80);
+  check('Origin uses site brand for heading and document title',doc.querySelector('h1').textContent==='Bedrock' && doc.title==='Bedrock');
+  check('Origin tagline is plain text, not a definition',doc.querySelector('.book-tagline').textContent==='为 𝑉 的形而上学奠基。' && !doc.querySelector('.book-tagline a'));
+  check('homepage lead replaces guide instructions',!doc.querySelector('[data-home-intro]').hidden && doc.querySelector('[data-guide-intro]').hidden);
+  for (const panel of ['reading-explorer','dependency-map','term-glossary']) {
+    doc.querySelector('#tab-'+panel).click();
+    check(panel+' uses interactive contents title',doc.querySelector('h1').textContent==='交互式目录' && doc.title==='交互式目录 · Bedrock' && doc.querySelector('[data-home-intro]').hidden);
+  }
+  doc.querySelector('#tab-milestones').click();
   check('Origin has Preface then Milestones', [...doc.querySelectorAll('#milestones h3')].map(e=>e.textContent).join('|')==='前言|里程碑');
   for(const name of ['SetChoice','LEM','ΩResizing'])check(name+' is linked in Origin prose',[...doc.querySelectorAll('#milestones .inline-ref[data-type]')].some(e=>e.textContent===name));
   for(const model of ['isZFModel','isZFCModel']){
@@ -61,6 +69,11 @@
     frame.style.maxWidth='none';
     for(const width of [1280,1440,1512,1728]) {
       frame.style.width=width+'px';await delay(120);
+      // This page was loaded in the preceding narrow iframe. Explicitly open
+      // the sidebar before measuring it; responsive/remembered collapse is valid.
+      if(d.body.classList.contains('nav-collapsed')) {
+        d.querySelector('#nav-toggle').click();await delay(250);
+      }
       const sidebar=d.querySelector('#toc'), article=d.querySelector('article');
       const side=sidebar.getBoundingClientRect(), body=article.getBoundingClientRect();
       check(language+' '+width+' real chapter keeps an adaptive sidebar',w.getComputedStyle(sidebar).position==='sticky'&&side.width>=160&&side.width<=320);

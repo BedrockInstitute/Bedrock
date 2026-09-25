@@ -50,7 +50,26 @@ class OutcropIntegrationTests(unittest.TestCase):
             self.assertIn('_build/cache/code-context.json.gz', job)
             self.assertIn('_build/cache/render-*.json', job)
             self.assertNotIn('_build/cache/site-backend.json', job.split('      - name: Cache ', 1)[1].split('      - name: Render ', 1)[0])
-            self.assertIn("hashFiles('src/**/*.lagda.md')", job)
+            self.assertIn('--cache-keys render', job)
+            self.assertIn('steps.cache_keys.outputs.source', job)
+            self.assertIn('steps.cache_keys.outputs.render', job)
+            cache_step = job.split('      - name: Cache ', 1)[1].split('      - name: Render ', 1)[0]
+            self.assertNotIn('hashFiles(', cache_step)
+        self.assertIn('--cache-keys backend', backend)
+        self.assertIn('steps.cache_keys.outputs.backend', backend)
+        self.assertIn('steps.cache_keys.outputs.extractor', backend)
+        self.assertIn('bedrock-site-v4-${{ runner.os }}-', backend)
+        self.assertNotIn('touch _build/outcrop-agda-types.jsonl', backend)
+
+    def test_host_caches_keep_separate_names_and_compute_keys_after_artifact(self):
+        workflow = (ROOT / '.github/workflows/ci.yml').read_text()
+        for job, host in [('pages', 'Pages'), ('cloudflare', 'Cloudflare')]:
+            body = workflow.split(f'  {job}:\n', 1)[1].split('\n  cloudflare:', 1)[0]
+            self.assertLess(body.index('name: Download site backend'), body.index(f'name: Fingerprint {host} render'))
+            self.assertIn(f'bedrock-{job}-v2-', body)
+            self.assertIn(f'bedrock-{job}-v1-', body)
+            fingerprint = body.split(f'name: Fingerprint {host} render', 1)[1].split('      - name:', 1)[0]
+            self.assertEqual('--base-url' in fingerprint, job == 'pages')
 
     def test_build_consumes_shared_producers_not_private_copies(self):
         make = (ROOT / 'Makefile').read_text()

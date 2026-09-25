@@ -1,5 +1,6 @@
 """The local site cache may reuse highlighted code only with identical code."""
 import importlib.util
+import hashlib
 from contextlib import ExitStack
 import json
 import os
@@ -17,6 +18,37 @@ spec.loader.exec_module(cache)
 
 
 class SiteCacheTests(unittest.TestCase):
+    def test_fingerprints_follow_real_stage_dependencies(self):
+        # Perturb input bytes in memory, never edit the checked-out project.
+        baseline = (cache.backend_identity(), cache.extractor_identity(), cache.render_identity())
+        self.assertTrue(all(baseline))
+        cases = {
+            'Makefile': (False, False, False),
+            'scripts/site/site-cache.py': (False, False, False),
+            'site/README.md': (False, False, False),
+            'site/inline-latex-approvals.json': (False, False, False),
+            'site/host-lem-inventory.json': (False, False, False),
+            'outcrop/src/outcrop/site/site_lint.py': (False, False, False),
+            'outcrop/src/outcrop/core/prose_lint.py': (False, False, False),
+            'outcrop/src/outcrop/adapters/source_stage.py': (False, False, False),
+            'outcrop/src/outcrop/adapters/extract_types.py': (False, True, False),
+            'site/agda-libraries.json': (True, False, False),
+            'outcrop/src/outcrop/adapters/agda/parallel.py': (True, False, False),
+            'outcrop/src/outcrop/site/page_renderer.py': (False, False, True),
+            'outcrop/src/outcrop/core/diagram_style.py': (False, False, True),
+            'outcrop/src/outcrop/site/resources/static/outcrop.css': (False, False, True),
+            'site/reading-catalog.json': (False, False, True),
+            'site/glossary.toml': (False, False, True),
+            'site/static/assets/favicon.svg': (False, False, True),
+        }
+        for relative, expected in cases.items():
+            changed = cache.ROOT / relative
+            def modified_digest(path):
+                return hashlib.sha256(path.read_bytes() + (b'changed' if path == changed else b'')).hexdigest()
+            with self.subTest(path=relative), patch.object(cache, 'digest', side_effect=modified_digest):
+                actual = (cache.backend_identity(), cache.extractor_identity(), cache.render_identity())
+                self.assertEqual(tuple(a != b for a, b in zip(actual, baseline)), expected)
+
     def test_render_key_uses_content_not_artifact_timestamps(self):
         with tempfile.TemporaryDirectory() as folder:
             files = (Path(folder) / 'types.json', Path(folder) / 'expressions.json')
@@ -184,6 +216,89 @@ class CacheWorkflowTests(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, 'does not match source'):
             cache.build(self.args)
         self.run.assert_not_called()
+
+    def test_render_only_rejects_failed_or_stale_extraction(self):
+        self.args.render_only = True
+        for extractor in (None, 'old-extractor'):
+            with self.subTest(extractor=extractor):
+                cache.write_state(cache.BACKEND_STATE, {**self.backend, 'extractor': extractor})
+                with self.assertRaisesRegex(RuntimeError, 'source/extractor'):
+                    cache.build(self.args)
+        self.run.assert_not_called()
+
+    def test_archive_keys_match_local_identities_without_mutation(self):
+        self.args.cache_keys = 'backend'
+        first = cache.archive_keys(self.args)
+        self.assertEqual(first['backend'], 'compiler')
+        self.assertEqual(first['extractor'], 'extractor')
+        self.args.cache_keys = 'render'
+        render = cache.archive_keys(self.args)
+        self.assertEqual(render['render'], cache.key_digest(cache.render_build_key(
+            cache.source_inventory(cache.source_paths()), self.backend, ['en', 'zh', 'ja'], '')))
+        self.edit_prose()
+        self.args.cache_keys = 'backend'
+        second = cache.archive_keys(self.args)
+        self.assertNotEqual(first['source'], second['source'])
+        self.assertEqual(first['backend'], second['backend'])
+        self.assertEqual(first['extractor'], second['extractor'])
+        self.assertEqual(cache.read_state(cache.BACKEND_STATE), self.backend)
+        self.run.assert_not_called()
+
+    def test_legacy_backend_receipt_reuses_evidence_despite_checkout_timestamps(self):
+        self.args.backend_only = True
+        os.utime(self.source, (2000000000, 2000000000))
+        cache.build(self.args)
+        self.run.assert_not_called()
+
+    def test_incompatible_fallback_discards_interfaces_and_trace_before_compiling(self):
+        self.args.backend_only = True
+        cache.INTERFACES.mkdir()
+        interface = cache.INTERFACES / 'Sample.agdai'
+        interface.write_text('incompatible')
+        cache.write_state(cache.BACKEND_STATE, {**self.backend, 'producer': 'old-compiler'})
+        def inspect(command):
+            if command[1] == 'html':
+                self.assertFalse(interface.exists())
+                self.assertFalse(cache.TRACE.exists())
+            self.produce(command)
+        self.run.side_effect = inspect
+        cache.build(self.args)
+        self.assertEqual([call.args[0][1] for call in self.run.call_args_list], ['html', '_types'])
+
+    def test_ci_fallback_without_receipt_cannot_be_adopted_by_timestamps(self):
+        self.args.backend_only = True
+        cache.BACKEND_STATE.unlink()
+        with patch.dict(os.environ, CI='true'), patch.object(cache, 'adopt_backend',
+                side_effect=AssertionError('CI must validate recorded content identities')):
+            cache.build(self.args)
+        self.assertEqual([call.args[0][1] for call in self.run.call_args_list], ['html', '_types'])
+
+    def test_compatible_fallback_keeps_unchanged_interfaces_and_refreshes_trace(self):
+        self.args.backend_only = True
+        cache.INTERFACES.mkdir()
+        changed = cache.INTERFACES / 'Sample.agdai'
+        unchanged = cache.INTERFACES / 'Untouched.agdai'
+        changed.write_text('old code'); unchanged.write_text('compatible')
+        os.utime(cache.TRACE, (1, 1))
+        self.source.write_text(self.source.read_text().replace('x = 1', 'x = 2'))
+        def inspect(command):
+            if command[1] == 'html':
+                self.assertFalse(changed.exists())
+                self.assertEqual(unchanged.read_text(), 'compatible')
+                self.assertEqual(cache.TRACE.read_text(), 'trace')
+                self.assertGreater(cache.TRACE.stat().st_mtime, 1)
+            self.produce(command)
+        self.run.side_effect = inspect
+        cache.build(self.args)
+
+    def test_renderer_change_only_renders_and_keeps_backend_bytes(self):
+        self.warm()
+        before = [path.read_bytes() for path in (*cache.TYPES, cache.TRACE, cache.BACKEND_STATE)]
+        with patch.object(cache, 'render_identity', return_value='renderer-2'):
+            cache.build(self.args)
+        self.assertEqual([call.args[0][1] for call in self.run.call_args_list], ['scripts/site/render-site.py'])
+        self.assertNotIn('--incremental', self.run.call_args.args[0])
+        self.assertEqual(before, [path.read_bytes() for path in (*cache.TYPES, cache.TRACE, cache.BACKEND_STATE)])
 
     def test_custom_paths_cross_make_boundary(self):
         command = cache.make_command(self.args, '_types')

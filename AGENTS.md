@@ -101,7 +101,10 @@ make serve
   backend data; it is insufficient after a change that invalidates that data.
   `make site-backend` prepares the same content-aware backend without rendering.
   CI consumes that artifact with `make site-render RENDER_INCREMENTAL=1`; keep
-  its cache identities, artifact contract and host-specific output separation.
+  the shared content-fingerprint validation, artifact contract and host-specific
+  output separation. A restored archive is only a candidate, never proof that
+  compiler evidence is compatible. Do not hash unrelated Make/docs/lint inputs
+  into semantic compatibility keys or trust a broad restore without validation.
   `make` defaults to help. Raw `_types`/`types-local-*` stages require a prepared
   backend; use `make types` when compiler freshness must also be checked.
 - `make serve SITE_OUT=... PORT=...` previews that output. The default output is

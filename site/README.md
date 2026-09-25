@@ -89,7 +89,13 @@ instance's Make overrides.
 retains the render-cache optimization used by CI. There is no `CI`-specific
 implementation of `site`. An explicit forced render invalidates only its own
 output's cached receipt so different manual options cannot create a false hit.
-The cache layout, identities and backend-to-deployment artifact remain unchanged.
+Local and Actions keys share content fingerprints, with separate producer,
+extractor and render identities. Unrelated Make, document and lint edits do not
+invalidate website evidence. Compatible legacy archives can be restored as
+candidates, but the driver always validates their identities before reuse.
+The cache paths and backend-to-deployment artifact remain unchanged; the
+[workflow guide](../.github/workflows/README.md#content-identities-and-archive-restoration)
+documents key versions, fallback rules and the one-time render identity transition.
 See `make help` and [the target reference](AGDA-ENVIRONMENT.md#build-entry-points).
 
 On a fresh machine, install GHC/Cabal, `make`, `patch` and Python 3.11+ first.
@@ -123,6 +129,21 @@ and human-review status. Never set review badges merely because a test passes.
 The preface uses mathematical `V` in the broad foundational sense, without an
 Agda link or code styling. The milestones' formal model `V` retains its semantic
 links and definition inspection.
+
+The default homepage and the Origin tab are headed `Bedrock`; the other three
+tabs retain their localized interactive-contents heading. The trilingual slogan
+lives in `site/project.json` under `taglines`, above the homepage description,
+not in the preface. Its `𝑉` is plain mathematical text, not the linked formal
+model. Existing `#milestones` links remain valid and `#origin` is an alias.
+
+Outcrop generates SEO metadata, absolute language alternates, Markdown mirror
+metadata and the shared AI endpoint inventory. Bedrock's `agent.guide` supplies
+only project-specific context. Full trilingual/internal/external search uses
+`search-content.json`; the per-language `search.json` is a legacy identifier index.
+The homepage mirror retains the Origin chapter with `homepage_title` and `tagline`
+front matter. Ask AI and llms.txt share endpoint descriptions; no extra service or
+index submission is involved. See the Outcrop configuration contract for citation
+stability, optional semantic payloads and hosting-header limitations.
 
 On compact screens, explicit language and search icon buttons reveal their
 controls; scrolling never toggles the search field. A code-block touch commits

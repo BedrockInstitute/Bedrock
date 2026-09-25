@@ -187,6 +187,10 @@ jobs:
           touch _build/outcrop-agda/bin/outcrop-agda
           make toolchain PY=python3 PYTHON=python3
 
+      - name: Fingerprint site backend
+        id: cache_keys
+        run: python3 scripts/site/site-cache.py --cache-keys backend >> "$GITHUB_OUTPUT"
+
       - name: Cache combined site backend
         id: site_backend
         uses: actions/cache@v6
@@ -198,9 +202,12 @@ jobs:
             _build/types.json
             _build/expression-types.json
             _build/cache/site-backend.json
-          key: bedrock-site-v4-${{ runner.os }}-${{ hashFiles('outcrop/src/outcrop/adapters/agda/**', 'site/agda-libraries.json', 'bedrock.agda-lib', 'Makefile', 'outcrop/src/outcrop/core/source_syntax.py', 'scripts/site/site-cache.py', 'scripts/site/extract-types.py', 'scripts/site/extract-expression-types.py', 'outcrop/src/outcrop/adapters/*.py') }}-${{ hashFiles('src/**/*.lagda.md') }}
+          key: bedrock-site-v5-${{ runner.os }}-${{ steps.cache_keys.outputs.backend }}-${{ steps.cache_keys.outputs.extractor }}-${{ steps.cache_keys.outputs.source }}
           restore-keys: |
-            bedrock-site-v4-${{ runner.os }}-${{ hashFiles('outcrop/src/outcrop/adapters/agda/**', 'site/agda-libraries.json', 'bedrock.agda-lib', 'Makefile', 'outcrop/src/outcrop/core/source_syntax.py', 'scripts/site/site-cache.py', 'scripts/site/extract-types.py', 'scripts/site/extract-expression-types.py', 'outcrop/src/outcrop/adapters/*.py') }}-
+            bedrock-site-v5-${{ runner.os }}-${{ steps.cache_keys.outputs.backend }}-${{ steps.cache_keys.outputs.extractor }}-
+            bedrock-site-v5-${{ runner.os }}-${{ steps.cache_keys.outputs.backend }}-
+            bedrock-site-v5-${{ runner.os }}-
+            bedrock-site-v4-${{ runner.os }}-
 
       - name: Validate restored site backend
         if: steps.site_backend.outputs.cache-hit == 'true'
@@ -214,18 +221,9 @@ jobs:
           test -s _build/expression-types.json
           test -s _build/cache/site-backend.json
 
-      # On a partial restore, the wrapper timestamp was refreshed above only to
-      # keep Make from rebuilding the cached compiler. The restored trace is
-      # compatible because restore-keys include the complete backend/toolchain
-      # fingerprint; refresh it so Agda can reuse the restored interface tree.
-      - name: Prepare incremental site cache
-        if: steps.site_backend.outputs.cache-hit != 'true'
-        shell: bash
-        run: |
-          if [[ -s _build/outcrop-agda-types.jsonl ]]; then
-            touch _build/outcrop-agda-types.jsonl
-          fi
-
+      # Even an exact archive hit is only a candidate. The driver checks the
+      # recorded producer/source/extractor identities; broad or legacy fallback
+      # cannot authorize reusing incompatible compiler interfaces or traces.
       - name: Refresh shared site backend
         shell: bash
         run: |
@@ -278,6 +276,10 @@ jobs:
           name: site-backend
           path: _build
 
+      - name: Fingerprint Pages render
+        id: cache_keys
+        run: python3 scripts/site/site-cache.py --cache-keys render --base-url "/${GITHUB_REPOSITORY#*/}" >> "$GITHUB_OUTPUT"
+
       - name: Cache Pages render
         uses: actions/cache@v6
         with:
@@ -285,9 +287,11 @@ jobs:
             _build/site
             _build/cache/render-*.json
             _build/cache/code-context.json.gz
-          key: bedrock-pages-v1-${{ runner.os }}-${{ hashFiles('outcrop/src/outcrop/adapters/**', 'outcrop/src/outcrop/core/**', 'outcrop/src/outcrop/site/**', 'site/**', 'scripts/site/**', 'Makefile') }}-${{ hashFiles('src/**/*.lagda.md') }}
+          key: bedrock-pages-v2-${{ runner.os }}-${{ steps.cache_keys.outputs.render }}-${{ steps.cache_keys.outputs.source }}
           restore-keys: |
-            bedrock-pages-v1-${{ runner.os }}-${{ hashFiles('outcrop/src/outcrop/adapters/**', 'outcrop/src/outcrop/core/**', 'outcrop/src/outcrop/site/**', 'site/**', 'scripts/site/**', 'Makefile') }}-
+            bedrock-pages-v2-${{ runner.os }}-${{ steps.cache_keys.outputs.render }}-
+            bedrock-pages-v2-${{ runner.os }}-
+            bedrock-pages-v1-${{ runner.os }}-
 
       - name: Render Pages site
         shell: bash
@@ -339,6 +343,10 @@ jobs:
           name: site-backend
           path: _build
 
+      - name: Fingerprint Cloudflare render
+        id: cache_keys
+        run: python3 scripts/site/site-cache.py --cache-keys render >> "$GITHUB_OUTPUT"
+
       - name: Cache Cloudflare render
         uses: actions/cache@v6
         with:
@@ -346,9 +354,11 @@ jobs:
             _build/site
             _build/cache/render-*.json
             _build/cache/code-context.json.gz
-          key: bedrock-cloudflare-v1-${{ runner.os }}-${{ hashFiles('outcrop/src/outcrop/adapters/**', 'outcrop/src/outcrop/core/**', 'outcrop/src/outcrop/site/**', 'site/**', 'scripts/site/**', 'Makefile') }}-${{ hashFiles('src/**/*.lagda.md') }}
+          key: bedrock-cloudflare-v2-${{ runner.os }}-${{ steps.cache_keys.outputs.render }}-${{ steps.cache_keys.outputs.source }}
           restore-keys: |
-            bedrock-cloudflare-v1-${{ runner.os }}-${{ hashFiles('outcrop/src/outcrop/adapters/**', 'outcrop/src/outcrop/core/**', 'outcrop/src/outcrop/site/**', 'site/**', 'scripts/site/**', 'Makefile') }}-
+            bedrock-cloudflare-v2-${{ runner.os }}-${{ steps.cache_keys.outputs.render }}-
+            bedrock-cloudflare-v2-${{ runner.os }}-
+            bedrock-cloudflare-v1-${{ runner.os }}-
 
       - name: Render Cloudflare site
         shell: bash

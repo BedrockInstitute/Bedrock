@@ -89,15 +89,58 @@ Code or backend changes still run the combined Agda traversal. The host-neutral
 HTML/type-data artifact also carries the inventory for deployment jobs.
 The backend job invokes `make site-backend PY=python3 LOCAL_PARALLEL=1`;
 deployment jobs invoke `make site-render PY=python3 RENDER_INCREMENTAL=1`
-with their existing base URLs. These are wrappers around the same cache driver,
-not a change to keys, restore prefixes, cache paths, artifact contents or scope
-classification. Plain `make site-render` is deliberately a forced local render.
+with their existing base URLs. These are wrappers around the same cache driver.
+Plain `make site-render` is deliberately a forced local render.
+
+### Content identities and archive restoration
+
+`site-cache.py --cache-keys backend|render` prints the same content identities
+used by the local driver as `name=value` output for Actions. Compute backend keys
+after installing the toolchain/registry, and render keys after downloading the
+validated backend artifact. The command is read-only and never starts Agda.
+
+| Layer | Identity and invalidation |
+| --- | --- |
+| Compiler and pure-check interfaces | Existing toolchain/library/source keys and isolated paths, unchanged |
+| Site backend (`bedrock-site-v5`) | Producer identity, extractor identity, then source inventory |
+| Producer compatibility | Installed compiler identity, compiler integration sources/resources, source grammar, library lock and project library descriptor; not the whole Makefile or cache orchestration script |
+| Extractor compatibility | The two extraction implementations and their Bedrock invocation adapters; changes rerun extraction without recompiling compatible evidence |
+| Pages/Cloudflare render (`v2`, separate prefixes) | Render build key plus source inventory; key covers producer/code/type products, actual renderer Python dependencies, packaged resources, configured catalog/glossary/icons, project config, language and base URL |
+
+Renderer Python inputs are found through a conservative static import closure,
+including package initializers and deferred imports. A dynamically imported
+package falls back to its complete Python source set. Unused lint modules,
+reference Markdown, unrelated policy registries and Make orchestration are not
+renderer dependencies. Figure checks invoked by rendering remain dependencies.
+Changing compiler invocation semantics or the cache protocol requires updating
+its producer inputs/schema; never silently reinterpret an existing receipt.
+
+Restoration tries the closest compatible prefix first, then a same-layer/OS
+fallback, including the prior backend `v4` and host render `v1` archives. This
+allows existing evidence to survive the key migration. A recovered archive is
+only a candidate: the driver always validates producer, source and extractor
+identities, even on an exact Actions hit. Incompatible producer evidence loses
+its traced interfaces and trace before recompilation. A failed extractor leaves
+an uncertified receipt; render-only jobs reject it. Trace timestamps are refreshed
+only inside the driver after compatibility is established, not blindly by CI.
+CI never adopts an archive without a valid content receipt using timestamps;
+the timestamp-based adoption path is only for local manual pre-receipt builds.
+
+GitHub caches are immutable. A fallback restore is saved under the new complete
+key after success; a primary-key hit is not saved again. The explicit output
+fingerprints allow this without including an unrelated commit SHA or build-script
+hash in every key. See [GitHub's cache reference](https://docs.github.com/en/actions/reference/workflows-and-actions/dependency-caching).
+Logs distinguish archive restoration from actual compiler, extraction and render
+reuse. Do not infer a fully warm build solely from an Actions cache step succeeding.
 
 The `pages` and `cloudflare` jobs consume that artifact independently and may run in
 parallel. Each has a separate rendered-site cache keyed by source and renderer inputs.
 On a prose-only change, a restored site updates the affected chapters, the overview,
 and global search, while reusing the compiler-derived code context. A cold cache or
-code/renderer change triggers a complete render. Each job checks its own links and
+code/renderer change triggers a complete render, without forcing a compatible
+Agda backend to rebuild. The transition to the narrower render identity can
+require one full render of restored backend data; it does not require a cold
+Agda check. Each job checks its own links and
 deploys its own output.
 Neither job depends on the other, so a rendering, link-check, deployment or concurrency
 failure in one host does not prevent the other. GitHub Pages is the mirror; Cloudflare

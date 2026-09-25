@@ -25,31 +25,31 @@ Origin joins the beginning of the book to its end: first a reason for the journe
 <!--en-->
 ## Preface
 
-*Laying the groundwork for the metaphysics of 𝑉.* Bedrock develops machine-checked set theory in Cubical Agda, as groundwork for questions about the universe of sets. Its first completed goal is that the constructible universe satisfies ZFC and GCH. The chapters build the language, models and proofs needed to reach these results; the milestones below give a view of the destination before the journey begins.
+Bedrock develops machine-checked set theory in Cubical Agda, as groundwork for questions about the universe of sets. Its first completed goal is that the constructible universe satisfies ZFC and GCH. The chapters build the language, models and proofs needed to reach these results; the milestones below give a view of the destination before the journey begins.
 
 The guiding choice is to express mathematics in the host language wherever possible, using a deeply embedded first-order language when formulas themselves are the objects of study. Cubical type theory also lets us construct the cumulative hierarchy as a higher inductive type. This is a choice of mathematical foundation, not a claim that the metatheory is weaker than the theories it studies.
 
-Beyond this first goal lie questions about forcing, inner models and the structure of 𝑉. They motivate the project, but are not results claimed by this book. The purpose is to provide verified groundwork for those questions, not to settle them by philosophical declaration. This preface draws on the project's [README](https://github.com/BedrockInstitute/Bedrock#readme).
+Beyond this first goal lie questions about forcing, inner models and the structure of 𝑉. They motivate the project, but are not results claimed by this book. The purpose is to provide verified groundwork for those questions.
 
 ## Milestones
 <!--zh-->
 ## 前言
 
-*为 𝑉 的形而上学奠基。* Bedrock 在 Cubical Agda 中发展经过机器检验的集合论，为关于集合宇宙的探问提供基础。首个已经完成的目标是：可构造宇宙满足 ZFC 与 GCH。全书逐步建立抵达这些成果所需的语言、模型与证明；下面的里程碑则让我们在出发前先看见终点。
+Bedrock 在 Cubical Agda 中形式化构建集合论，并以机器检验其证明，为关于集合宇宙的探问提供基础。首个已经完成的目标是：可构造宇宙满足 ZFC 与 GCH。全书逐步建立抵达这些成果所需的语言、模型与证明；下面的里程碑则让我们在出发前先看见终点。
 
 这项工作的基本选择，是尽可能用宿主语言表达数学，只在公式本身成为研究对象时使用深嵌入的一阶语言。立方类型论还允许我们把累积层级构造为高阶归纳类型。这是一种数学基础的选择，并不声称元理论比所研究的理论更弱。
 
-越过首个目标，还有关于力迫、内模型和 𝑉 的结构的问题。它们是项目的动力，而不是本书已经宣告的成果。我们的目的，是为这些探问提供经过验证的根基，而非用哲学宣言代替答案。本节节选改写自项目的 [README](https://github.com/BedrockInstitute/Bedrock/blob/main/docs/zh/README.md)。
+越过首个目标，还有关于力迫、内模型和 𝑉 的结构的问题。它们是项目的动力，而不是本书已经宣告的成果。我们的目的，是为这些探问提供经过验证的根基。
 
 ## 里程碑
 <!--ja-->
 ## 前書き
 
-*𝑉 の形而上学のために基礎を築く。* Bedrock は Cubical Agda で機械検証された集合論を展開し、集合宇宙についての問いに土台を与える。最初に達成した目標は、構成可能宇宙が ZFC と GCH を満たすことである。本書はそのための言語、モデル、証明を順に構築する。以下のマイルストーンは、出発前に到達点を見渡すためのものである。
+Bedrock は Cubical Agda で機械検証された集合論を展開し、集合宇宙についての問いに土台を与える。最初に達成した目標は、構成可能宇宙が ZFC と GCH を満たすことである。本書はそのための言語、モデル、証明を順に構築する。以下のマイルストーンは、出発前に到達点を見渡すためのものである。
 
 基本方針は、できる限りホスト言語で数学を表現し、式自体が研究対象となる場合に深く埋め込まれた一階言語を使うことである。また、立方型理論では累積階層を高階帰納型として構成できる。これは数学的基礎の選択であり、メタ理論が研究対象の理論より弱いという主張ではない。
 
-最初の目標の先には、強制、内部モデル、𝑉 の構造についての問いがある。それらはプロジェクトの動機であって、本書ですでに得られた成果ではない。目指すのは、哲学的な宣言で答えを決めることではなく、検証された土台を築くことである。本節はプロジェクトの [README](https://github.com/BedrockInstitute/Bedrock/blob/main/docs/ja/README.md) から抜粋し、書き直したものである。
+最初の目標の先には、強制、内部モデル、𝑉 の構造についての問いがある。それらはプロジェクトの動機であって、本書ですでに得られた成果ではない。目指すのは、これらの問いに検証された土台を与えることである。
 
 ## マイルストーン
 <!--/-->

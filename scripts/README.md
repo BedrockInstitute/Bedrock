@@ -97,6 +97,9 @@ Prefer their Make entry points `site-backend` and
 `site-render RENDER_INCREMENTAL=1`. `types` prepares the backend before extracting;
 the cache driver calls `_types` to extract without a second compiler freshness
 decision. Failed extraction leaves a retryable, uncertified receipt.
+`site-cache.py --cache-keys backend|render` emits Actions keys from those same
+identities without running a build. Renderer dependencies use Outcrop's static
+Python input collector; actual resources and instance inputs remain explicit.
 `make site-render` is sufficient only when existing compiler data remains valid.
 Deployment is a separate authorized operation; see the
 [workflow guide](../.github/workflows/README.md).
@@ -142,5 +145,5 @@ CI uses the shared `outcrop.adapters.ci_scope` classifier with Bedrock's
 `site/ci-docs.json` policy. It retains lint, tests and closure checks for documents
 while skipping Agda and deployment when the complete diff is documentation-only.
 `test_ci_scope.py` checks the instance boundary and workflow wiring; the reusable
-Git/event/submodule cases are tested in Outcrop. Hook scopes and cache policy
-remain unchanged; see the [workflow guide](../.github/workflows/README.md).
+Git/event/submodule cases are tested in Outcrop. Hook scopes are unchanged; cache
+identity and fallback rules are in the [workflow guide](../.github/workflows/README.md).
