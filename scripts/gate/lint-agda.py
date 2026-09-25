@@ -87,8 +87,9 @@ def main(argv):
     # bought a whole-tree scan.
     check = "--check" in argv
     staged = "--staged" in argv
+    spdx_only = "--spdx-only" in argv
     unknown = [a for a in argv
-               if a.startswith("-") and a not in ("--check", "--staged")]
+               if a.startswith("-") and a not in ("--check", "--staged", "--spdx-only")]
     if unknown:
         sys.stderr.write(f"unknown option: {unknown[0]}\n")
         return 2
@@ -115,6 +116,8 @@ def main(argv):
     # linters disagreed for so long without anyone noticing.
     files = [f for f in files
              if not f.startswith("archive/") and not f.startswith("agents/")]
+    if spdx_only:
+        files = []
     total = 0
     for path in files:
         for lineno, rule, msg in lint_file(path):
@@ -127,7 +130,7 @@ def main(argv):
     # The in-file SPDX ban. It fires at `make check` over Bedrock-owned files
     # and at the pre-commit hook over the staged files. A bare FILE list runs
     # the lint alone, because a caller that names a master asks for a lint.
-    if check or staged:
+    if check or staged or spdx_only:
         spdx = check_spdx(staged_files() if staged else None)
         for msg in spdx:
             print(msg)

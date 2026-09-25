@@ -33,6 +33,21 @@ package. Independent tests/examples are under `outcrop/tests/` and
 `make check` exercises the reusable
 `site-lint-gate`. The ordinary and supplemental gates have different scopes:
 
+The aggregate runs `site-lint-gate` once for all source chapters, then only
+`docs-prose-gate`, `glossary-extras-gate`, `spdx-gate` and `host-lem-gate`.
+The diagnostic commands below remain available and keep their staged/file hook
+contracts, but are not all rerun inside `lint`. Coverage is preserved as follows:
+
+| Scope | Aggregate owner |
+| --- | --- |
+| Chapter prose, Agda, fences, figures, outlines/openings, markers, terms, routes | Shared site lint, with the same configured policies and exceptions |
+| Both actual-import and configured prerequisite ordering | Shared site lint validates both graphs, deduplicating identical diagnostics |
+| Non-source Markdown prose | `lint-prose.py --docs-only`; no duplicate shared-CJK chapter scan |
+| Non-source glossary use, translated-document presence, inline route metadata | `check-glossary.py --extras-only`; metadata still checked inside chapters |
+| SPDX header policy across owned files | `lint-agda.py --spdx-only`, with the original repository boundary |
+| Host classical assumptions | Unchanged Bedrock host-LEM gate |
+| Origin closure and supplemental literary audit | Remain separate, not silently removed or promoted |
+
 | Existing gate | Shared implementation | Instance policy / invocation |
 | --- | --- | --- |
 | `typecheck` | Agda adapter/build workflow, not Markdown lint | Bedrock entry `src/Origin.lagda.md`, Cubical/version/safety and memory budget remain in Makefile |

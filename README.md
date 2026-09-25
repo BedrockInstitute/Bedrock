@@ -124,6 +124,9 @@ make check
 cubical library under `_build`; it does not modify the user's global Agda
 configuration. See [Agda environment](site/AGDA-ENVIRONMENT.md)
 for versioning, deployment, verification, and upgrade instructions.
+Run `make help` (also the default `make`) for public, diagnostic and internal
+targets. Setup is explicit; `make -j bootstrap` still installs Python before
+starting toolchain setup.
 
 The build keeps formal-check and website measurements distinct. Use
 `make typecheck-cold` for the timed single-process pure Agda baseline, or

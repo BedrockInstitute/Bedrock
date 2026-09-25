@@ -43,10 +43,10 @@ class OutcropIntegrationTests(unittest.TestCase):
         backend = workflow.split('  site-backend:\n', 1)[1].split('  pages:\n', 1)[0]
         pages = workflow.split('  pages:\n', 1)[1].split('  cloudflare:\n', 1)[0]
         cloudflare = workflow.split('  cloudflare:\n', 1)[1]
-        self.assertIn('site-cache.py --backend-only', backend)
+        self.assertIn('make site-backend PY=python3 LOCAL_PARALLEL=1', backend)
         self.assertIn('_build/cache/site-backend.json', backend)
         for job in (pages, cloudflare):
-            self.assertIn('site-cache.py --render-only', job)
+            self.assertIn('make site-render PY=python3 RENDER_INCREMENTAL=1', job)
             self.assertIn('_build/cache/code-context.json.gz', job)
             self.assertIn('_build/cache/render-*.json', job)
             self.assertNotIn('_build/cache/site-backend.json', job.split('      - name: Cache ', 1)[1].split('      - name: Render ', 1)[0])

@@ -8,6 +8,8 @@ import importlib.util
 import os
 import tempfile
 import unittest
+from pathlib import Path
+from unittest.mock import patch
 
 SCRIPTS = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 
@@ -43,6 +45,19 @@ def msgs(violations):
 
 
 class FileCheckTests(unittest.TestCase):
+    def test_extras_only_preserves_route_metadata_and_doc_presence(self):
+        master = str(Path(__file__).resolve().parents[2] / 'src/Base/Prelude.lagda.md')
+        with patch.object(cg, 'target_files', return_value=[master]), \
+                patch.object(cg, 'check_file') as text, \
+                patch.object(cg, 'master_presence_violations') as master_presence, \
+                patch.object(cg, 'route_metadata_violations', return_value=['bad route translation']) as metadata, \
+                patch.object(cg, 'build_presence', return_value=['required']), \
+                patch.object(cg, 'discover_presence_targets', return_value=[(master, 'zh', master)]), \
+                patch.object(cg, 'presence_violations', return_value=[]) as docs:
+            self.assertEqual(cg.main(['--extras-only']), 1)
+            text.assert_not_called(); master_presence.assert_not_called()
+            metadata.assert_called_once(); docs.assert_called_once()
+
     def test_zh_doc_flags_avoided_term(self):
         with tempfile.TemporaryDirectory() as tmp:
             p = write(tmp, "docs/zh/CHARTER.md", "# Bedrock 宪章\n")

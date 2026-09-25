@@ -87,6 +87,11 @@ Agda fences of each chapter. If only prose changed, it reuses the compiler-produ
 code blocks and updates the surrounding text without running Agda or extracting types.
 Code or backend changes still run the combined Agda traversal. The host-neutral
 HTML/type-data artifact also carries the inventory for deployment jobs.
+The backend job invokes `make site-backend PY=python3 LOCAL_PARALLEL=1`;
+deployment jobs invoke `make site-render PY=python3 RENDER_INCREMENTAL=1`
+with their existing base URLs. These are wrappers around the same cache driver,
+not a change to keys, restore prefixes, cache paths, artifact contents or scope
+classification. Plain `make site-render` is deliberately a forced local render.
 
 The `pages` and `cloudflare` jobs consume that artifact independently and may run in
 parallel. Each has a separate rendered-site cache keyed by source and renderer inputs.

@@ -84,6 +84,13 @@ caches the Pages and Cloudflare renders. `make clean` removes the local cache.
 from existing backend data and does not replace compiler regeneration when code
 or trace contracts change. `LANGS`, `BASE_URL` and `SITE_OUT` remain the
 instance's Make overrides.
+`make site-backend` prepares only the reusable backend artifact.
+`make site-render RENDER_INCREMENTAL=1` consumes that validated artifact and
+retains the render-cache optimization used by CI. There is no `CI`-specific
+implementation of `site`. An explicit forced render invalidates only its own
+output's cached receipt so different manual options cannot create a false hit.
+The cache layout, identities and backend-to-deployment artifact remain unchanged.
+See `make help` and [the target reference](AGDA-ENVIRONMENT.md#build-entry-points).
 
 On a fresh machine, install GHC/Cabal, `make`, `patch` and Python 3.11+ first.
 `make bootstrap` includes `make venv` and installs the local compiler/libraries;

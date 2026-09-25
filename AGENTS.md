@@ -99,6 +99,11 @@ make serve
 - `make site` produces compiler highlighting and semantic data, then the full
   trilingual site. `make site-render SITE_OUT=...` only rerenders from existing
   backend data; it is insufficient after a change that invalidates that data.
+  `make site-backend` prepares the same content-aware backend without rendering.
+  CI consumes that artifact with `make site-render RENDER_INCREMENTAL=1`; keep
+  its cache identities, artifact contract and host-specific output separation.
+  `make` defaults to help. Raw `_types`/`types-local-*` stages require a prepared
+  backend; use `make types` when compiler freshness must also be checked.
 - `make serve SITE_OUT=... PORT=...` previews that output. The default output is
   `_build/site`; use the actual directory for every subsequent check.
 - Run `.venv/bin/python -m outcrop check-links <output>` after a full site

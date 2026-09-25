@@ -113,12 +113,15 @@ def target_files(explicit, staged):
 
 def main(argv):
     staged = False
+    extras_only = False
     paths = []
     for a in argv:
         if a == "--check":
             pass
         elif a == "--staged":
             staged = True
+        elif a == "--extras-only":
+            extras_only = True
         elif a.startswith("-"):
             sys.stderr.write(f"unknown option: {a}\n")
             return 2
@@ -137,12 +140,13 @@ def main(argv):
     for path in target_files(paths, staged):
         if not os.path.isfile(path):
             continue
-        violations = check_file(path, checks)
+        master = Path(path).resolve().is_relative_to(Path('src').resolve()) and path.endswith('.lagda.md')
+        violations = [] if extras_only and master else check_file(path, checks)
         for ln, _idx, msg in sorted(violations):
             print(f"{path}:{ln}: {msg}")
             total += 1
         if path.endswith(".lagda.md"):
-            for _, message in master_presence_violations(path, _read(path), presence_terms):
+            for _, message in ([] if extras_only and master else master_presence_violations(path, _read(path), presence_terms)):
                 print(f"{path}: {message}")
                 total += 1
             for message in route_metadata_violations(_read(path), checks):

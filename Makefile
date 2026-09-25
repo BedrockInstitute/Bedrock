@@ -8,18 +8,19 @@
 #   make lint        run source and reading-order gates over the whole tree
 #   make milestone-lint  verify every source definition reaches Origin
 #   make test        run the gate unit tests
-#   make hooks       install scripts/git-hooks into .git/hooks
+#   make hooks       install scripts/git-hooks into the resolved Git hooks path
 #   make html        one Agda traversal producing interfaces, HTML and type data
 #   make html-cold   benchmark that single-process combined traversal
 #   make html-cold-parallel  parallel check/trace, then run the HTML backend
 #   make site        render the HTML site into _build/site
 #   make site-cold   rebuild the cold Agda/HTML cache, then render the site
-#   make site-ci     use the cache, or parallelize a cold CI site build
-#   make site-backend-ci  build the shared HTML/type-data deployment artifact
+#   make site-backend  prepare cached HTML/type-data without rendering
 #   make serve       serve _build/site locally
 #   make deploy      push _build/site to Cloudflare Pages (owner only)
 # Local builds use parallel checks by default; LOCAL_PARALLEL=0 restores the
 # serial path, LOCAL_JOBS caps independent gates, and AGDA_JOBS defaults to 2.
+
+.DEFAULT_GOAL := help
 
 OUTCROP_AGDA := _build/outcrop-agda/bin/outcrop-agda
 AGDA         := $(OUTCROP_AGDA)
@@ -35,7 +36,7 @@ AGDA_DIR  ?= $(abspath _build/agda-home)
 export AGDA_DIR
 
 # GHC heap guard. The machine budget is 16 GB for Agda in total, two processes
-# at most, so one run gets 8 GB. Override per run: GHCRTS="-M12g" make typecheck.
+# at most, so one run gets 8 GB. Raising either budget needs explicit approval.
 export GHCRTS ?= -A64m -I0 -M8g
 
 AGDA_ROOT  := src/Origin.lagda.md
@@ -64,15 +65,40 @@ BASE_URL   :=
 PORT       := 8000
 CF_PROJECT := bedrock
 AGDA_SOURCES := $(shell find src -type f -name '*.lagda.md' | sort)
-TYPECHECK_SOURCES := $(patsubst src/%,$(TYPECHECK_ROOT)/src/%,$(AGDA_SOURCES))
-LINT_GATES := lint-prose-gate lint-agda-gate host-lem-gate glossary-gate \
+DIAGNOSTIC_GATES := lint-prose-gate lint-agda-gate host-lem-gate glossary-gate \
 	term-gate fences-gate diagrams-gate reading-order-gate routes-gate \
 	chapters-gate i18n-gate site-lint-gate
+LINT_GATES := site-lint-gate docs-prose-gate glossary-extras-gate spdx-gate host-lem-gate
+# Extraction has at most one Agda loader; the expression normalizer is Python.
+# Do not start two compiler workflows against the same cache concurrently.
+EXTRACT_JOBS = $(if $(filter 1,$(LOCAL_PARALLEL)),$(if $(filter 1,$(LOCAL_JOBS)),1,2),1)
+RENDER_INCREMENTAL ?= 0
+SITE_CACHE = $(PY) scripts/site/site-cache.py --site-out "$(SITE_OUT)" --langs "$(LANGS)" \
+	--base-url "$(BASE_URL)" --py "$(PY)" --make "$(MAKE)" \
+	--agda-jobs "$(AGDA_JOBS)" --local-parallel "$(LOCAL_PARALLEL)" \
+	--html-dir "$(HTML_DIR)" --trace "$(AGDA_TRACE)" --agda-dir "$(AGDA_DIR)" \
+	--interface-root "$(SITE_IFACES)"
 
-.PHONY: bootstrap toolchain check outcrop-agda typecheck-stage typecheck typecheck-cold typecheck-cold-parallel typecheck-ci lint milestone-lint test hooks venv gen html html-cold html-cold-parallel types types-refresh types-local-identifiers types-local-expressions site-render site site-cold site-ci site-backend-ci serve deploy clean distclean $(LINT_GATES)
+.PHONY: help bootstrap toolchain check outcrop-agda typecheck-stage typecheck typecheck-cold typecheck-cold-parallel typecheck-ci lint milestone-lint test hooks venv gen html html-cold html-cold-parallel types _types types-local-identifiers types-local-expressions site-render site site-cold site-backend serve deploy clean distclean $(LINT_GATES) $(DIAGNOSTIC_GATES)
+
+help:
+	@printf '%s\n' \
+	  'Setup:       bootstrap venv toolchain outcrop-agda hooks' \
+	  'Checks:      check lint test milestone-lint typecheck typecheck-ci' \
+	  'Website:     site site-backend site-render serve deploy' \
+	  'Cold builds: typecheck-cold typecheck-cold-parallel html-cold html-cold-parallel site-cold' \
+	  'Other:       html types gen clean distclean' \
+	  'Diagnostic:  $(DIAGNOSTIC_GATES)' \
+	  'Internal:    typecheck-stage _types types-local-identifiers types-local-expressions' \
+	  'Lint extras: docs-prose-gate glossary-extras-gate spdx-gate' \
+	  'Options: PY PYTHON LOCAL_PARALLEL LOCAL_JOBS AGDA_JOBS SITE_OUT LANGS BASE_URL PORT' \
+	  'site-render forces rendering; RENDER_INCREMENTAL=1 reuses the CI artifact/render cache.' \
+	  'Run one compiler workflow at a time; clean/distclean remove generated outputs.'
 
 # One command for a fresh clone after GHC/Cabal, patch, make and Python exist.
-bootstrap: venv toolchain
+bootstrap:
+	$(MAKE) venv
+	$(MAKE) toolchain
 
 toolchain: $(OUTCROP_AGDA) $(AGDA_ENV_STAMP)
 
@@ -103,15 +129,12 @@ $(OUTCROP_AGDA): $(OUTCROP_AGDA_INPUTS)
 # Keep pure-check interfaces in an isolated project root. A pure check therefore
 # cannot make a later HTML traversal skip the elaboration events needed by the
 # expression trace, and a site build cannot warm a benchmark accidentally.
-$(TYPECHECK_ROOT)/src/%.lagda.md: src/%.lagda.md
-	@mkdir -p $(@D)
-	@cp -p $< $@
-
 $(TYPECHECK_LIB): bedrock.agda-lib
 	@mkdir -p $(@D)
 	@cp -p $< $@
 
-typecheck-stage: $(TYPECHECK_LIB) $(TYPECHECK_SOURCES)
+typecheck-stage: $(TYPECHECK_LIB)
+	$(PY) -m outcrop agda-stage --source src --destination $(TYPECHECK_ROOT)/src
 
 # The ordinary proof gate uses only Agda's type checker. Its private interface
 # tree makes repeat runs incremental without enabling HTML or type tracing.
@@ -216,6 +239,17 @@ i18n-gate:
 site-lint-gate:
 	$(PY) -m outcrop lint --config site/project.json --project-root .
 
+# The shared gate owns src/. Retain only the adapters' additional scopes here;
+# focused/staged diagnostic commands above and Git hooks remain unchanged.
+docs-prose-gate:
+	$(PY) scripts/gate/lint-prose.py --check --docs-only
+
+glossary-extras-gate:
+	$(PY) scripts/gate/check-glossary.py --check --extras-only
+
+spdx-gate:
+	$(PY) scripts/gate/lint-agda.py --spdx-only
+
 ifeq ($(LOCAL_PARALLEL),1)
 lint:
 	$(MAKE) -j$(LOCAL_JOBS) $(LINT_GATES)
@@ -229,12 +263,14 @@ milestone-lint:
 
 test:
 	$(PY) -m unittest discover -s scripts/tests -p "test_*.py" -t scripts/tests -v
-	$(PY) -m unittest discover -s outcrop/tests -p "test_*.py" -v
+	$(MAKE) -C outcrop test PY="$(if $(findstring /,$(PY)),$(abspath $(PY)),$(PY))"
 
 hooks:
-	install -m 755 scripts/git-hooks/pre-commit .git/hooks/pre-commit
-	install -m 755 scripts/git-hooks/pre-push .git/hooks/pre-push
-	@echo "pre-commit and pre-push hooks installed; bypass a commit with --no-verify"
+	@set -e; hook_dir="$$(git rev-parse --git-path hooks)"; \
+		mkdir -p "$$hook_dir"; \
+		install -m 755 scripts/git-hooks/pre-commit "$$hook_dir/pre-commit"; \
+		install -m 755 scripts/git-hooks/pre-push "$$hook_dir/pre-push"
+	@echo "pre-commit and pre-push hooks installed"
 
 venv:
 	$(PYTHON) -m venv $(VENV)
@@ -277,72 +313,37 @@ html-cold-parallel: $(OUTCROP_AGDA) $(AGDA_ENV_STAMP) bedrock.agda-lib $(AGDA_SO
 	@cat $(HTML_PARALLEL_TIME)
 	@touch $(AGDA_STAMP)
 
-types-local-identifiers: html
+# Raw extraction consumes an already prepared backend. Only types/html own
+# compiler freshness; the content-cache driver deliberately calls _types.
+types-local-identifiers:
 	$(PY) scripts/site/extract-types.py --agda $(abspath $(AGDA)) \
 		--html-dir $(HTML_DIR) --out _build/types.json
 
-types-local-expressions: html
+types-local-expressions:
 	$(PY) scripts/site/extract-expression-types.py --html-dir $(HTML_DIR) \
 		--trace $(AGDA_TRACE) --out _build/expression-types.json
 
 types: html
-ifeq ($(LOCAL_PARALLEL),1)
-	$(MAKE) -j2 types-local-identifiers types-local-expressions
-else
-	$(PY) scripts/site/extract-types.py --agda $(abspath $(AGDA)) \
-		--html-dir $(HTML_DIR) --out _build/types.json
-	$(PY) scripts/site/extract-expression-types.py --html-dir $(HTML_DIR) \
-		--trace $(AGDA_TRACE) --out _build/expression-types.json
-endif
+	$(MAKE) _types
 
-types-refresh: html
-ifeq ($(LOCAL_PARALLEL),1)
-	$(MAKE) -j2 types-local-identifiers types-local-expressions
-else
-	$(PY) scripts/site/extract-types.py --agda $(abspath $(AGDA)) \
-		--html-dir $(HTML_DIR) --out _build/types.json
-	$(PY) scripts/site/extract-expression-types.py --html-dir $(HTML_DIR) \
-		--trace $(AGDA_TRACE) --out _build/expression-types.json
-endif
+_types:
+	$(MAKE) -j$(EXTRACT_JOBS) types-local-identifiers types-local-expressions
 
 # Host-specific jobs can render from an unpacked HTML/type-data artifact without
 # Agda or its interfaces. The ordinary site target first produces that backend.
 site-render:
-	$(PY) scripts/site/render-site.py --html-dir $(HTML_DIR) --out $(SITE_OUT) \
-		--langs $(LANGS) --base-url "$(BASE_URL)"
+	$(SITE_CACHE) --render-only $(if $(filter 1,$(RENDER_INCREMENTAL)),,--force-render)
 
 # Local builds compare source content and reuse compiler evidence across prose
 # edits. CI invokes this cache driver in separate backend and render jobs.
-ifeq ($(filter true 1,$(CI)),)
 site:
-	$(PY) scripts/site/site-cache.py --site-out "$(SITE_OUT)" --langs "$(LANGS)" \
-		--base-url "$(BASE_URL)" --py "$(PY)" \
-		--agda-jobs "$(AGDA_JOBS)" --local-parallel "$(LOCAL_PARALLEL)"
-else
-site: types
-	$(MAKE) site-render PY="$(PY)" LANGS="$(LANGS)" BASE_URL="$(BASE_URL)" \
-		SITE_OUT="$(SITE_OUT)"
-endif
+	$(SITE_CACHE)
 
-site-cold: html-cold-parallel
-	$(MAKE) site PY="$(PY)" LANGS="$(LANGS)" BASE_URL="$(BASE_URL)"
+site-cold:
+	$(SITE_CACHE) --cold
 
-site-ci: $(OUTCROP_AGDA) $(AGDA_ENV_STAMP)
-	@if [ -f $(AGDA_STAMP) ]; then \
-		$(MAKE) site PY="$(PY)" LANGS="$(LANGS)" BASE_URL="$(BASE_URL)"; \
-	else \
-		$(MAKE) site-cold PY="$(PY)" PYTHON="$(PYTHON)" AGDA_JOBS="$(AGDA_JOBS)" \
-			LANGS="$(LANGS)" BASE_URL="$(BASE_URL)"; \
-	fi
-
-site-backend-ci: $(OUTCROP_AGDA) $(AGDA_ENV_STAMP)
-	@if [ -f $(AGDA_STAMP) ]; then \
-		$(MAKE) types PY="$(PY)"; \
-	else \
-		$(MAKE) html-cold-parallel PY="$(PY)" PYTHON="$(PYTHON)" \
-			AGDA_JOBS="$(AGDA_JOBS)"; \
-		$(MAKE) types PY="$(PY)"; \
-	fi
+site-backend:
+	$(SITE_CACHE) --backend-only
 
 serve:
 	$(PY) -m http.server $(PORT) --directory $(SITE_OUT)
@@ -358,6 +359,6 @@ clean:
 		_build/cache/render-*.json _build/cache/site-*.json
 
 distclean: clean
-	rm -rf _build/outcrop-agda _build/outcrop-agda/bin/outcrop-agda \
+	rm -rf _build/outcrop-agda \
 		_build/dependencies _build/agda-home $(TYPECHECK_ROOT) _build/2.8.0 \
 		$(BENCHMARK_DIR)

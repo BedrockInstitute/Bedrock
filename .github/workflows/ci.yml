@@ -230,7 +230,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python3 scripts/site/site-cache.py --backend-only --py python3 --local-parallel 1
+          make site-backend PY=python3 LOCAL_PARALLEL=1
 
       # This artifact contains host-neutral highlighted HTML, normalized type
       # data and the source inventory. Each peer job renders its own URL layout.
@@ -293,7 +293,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python3 scripts/site/site-cache.py --render-only --py python3 --base-url "/${GITHUB_REPOSITORY#*/}"
+          make site-render PY=python3 RENDER_INCREMENTAL=1 BASE_URL="/${GITHUB_REPOSITORY#*/}"
 
       - name: Link check
         shell: bash
@@ -354,7 +354,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python3 scripts/site/site-cache.py --render-only --py python3
+          make site-render PY=python3 RENDER_INCREMENTAL=1
 
       - name: Link check
         shell: bash

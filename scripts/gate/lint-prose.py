@@ -163,6 +163,7 @@ def target_files(explicit, staged):
 def main(argv):
     mode = "check"
     staged = False
+    docs_only = False
     paths = []
     for a in argv:
         if a == "--check":
@@ -171,6 +172,8 @@ def main(argv):
             mode = "fix"
         elif a == "--staged":
             staged = True
+        elif a == "--docs-only":
+            docs_only = True
         elif a.startswith("-"):
             sys.stderr.write(f"unknown option: {a}\n")
             return 2
@@ -178,6 +181,8 @@ def main(argv):
             paths.append(a)
 
     files = target_files(paths, staged)
+    if docs_only:
+        files = [path for path in files if not Path(path).resolve().is_relative_to(SRC)]
     total_fixable = 0
     total_manual = 0
     fixed_files = []
@@ -230,7 +235,7 @@ def main(argv):
         # C-8, the shared-CJK check. It reads every master under src/ and not the
         # file list, so a caller that NAMES files gets the lint alone. `make check`
         # and the pre-commit hook both name none, which is why this fires at both.
-        if not paths:
+        if not paths and not docs_only:
             cjk = check_shared_cjk()
             for msg in cjk:
                 print(msg, file=sys.stderr)

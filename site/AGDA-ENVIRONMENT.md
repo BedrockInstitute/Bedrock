@@ -54,11 +54,57 @@ worker and a final official HTML pass over completed interfaces. `make site`
 extracts name/expression types and renders all editions. No second elaboration
 is needed merely to write HTML from compatible interfaces.
 
-`typecheck-ci` and `site-backend-ci` choose cached or cold paths explicitly. Keep
+`typecheck-ci` chooses cached or cold proof checks explicitly. `site-backend`
+uses the same content-aware backend cache locally and in CI. Keep
 `GHCRTS="-A64m -I0 -M8g"` and at most two Agda processes on this machine. Local
 parallel checks may run independent prose/unit gates alongside the proof gate.
 Do not compare full CI duration, dependency installation or compiler compilation
 against the pure single-process baseline.
+
+## Build entry points
+
+`make` defaults to `help`, not an installation. Public setup commands are
+`bootstrap`, `venv`, `toolchain`, `outcrop-agda` and `hooks`. Bootstrap sequences
+Python installation before toolchain setup even with `make -j`.
+
+| Command | Cache and execution contract |
+| --- | --- |
+| `check` | Pure typecheck, shared textbook lint plus instance extras, both unit suites |
+| `lint`, `test`, `milestone-lint` | Independent source gates, unit tests and Origin reachability respectively |
+| `typecheck` | Synchronize the isolated source mirror, including deletions/renames, then check incrementally |
+| `typecheck-ci` | Select warm or cold parallel proof path |
+| `typecheck-cold`, `typecheck-cold-parallel` | Serial baseline versus parallel operational timing; keep separate |
+| `html` | Timestamp-managed low-level compiler highlighting/trace producer |
+| `html-cold`, `html-cold-parallel` | Explicit serial/parallel compiler-evidence benchmarks |
+| `types` | Prepare `html`, then extract both semantic products once |
+| `site` | Content-aware backend plus rendering, identical entry locally and in CI |
+| `site-backend` | Same content-aware backend preparation, no rendering |
+| `site-render` | Force a complete render of existing evidence, without invoking Agda |
+| `site-render RENDER_INCREMENTAL=1` | Validate the backend artifact and reuse unchanged render output; CI uses this mode |
+| `site-cold` | One explicit parallel cold backend build, semantic extraction and rendering |
+| `gen` | Produce per-language source copies, not required by the website build |
+| `serve`, `deploy` | Preview existing output; build and explicitly deploy, respectively |
+| `clean`, `distclean` | Remove generated website/cache files; additionally remove toolchain, dependencies and interfaces |
+
+`types-refresh`, `site-ci` and `site-backend-ci` are removed. Use `types`, `site`
+and `site-backend`. Diagnostic `*-gate` targets remain available for focused
+checks; `typecheck-stage`, `_types` and `types-local-*` are internal stages.
+The raw extraction stages require prepared compiler evidence and never invoke
+`html`: the content-cache owner, not downstream timestamps, decides freshness.
+
+`LOCAL_JOBS` controls independent lint/check tasks. `AGDA_JOBS` controls Agda
+module workers, normally two; serial benchmarks remain serial. Extraction uses
+up to two tasks (one Agda name loader plus one Python trace normalizer), or one
+with `LOCAL_PARALLEL=0` or `LOCAL_JOBS=1`. Run only one compiler workflow at a time
+against a given cache; independently launched Make processes do not share a
+machine-wide Agda resource semaphore.
+
+Normal overrides are `PY`, `PYTHON`, `LOCAL_PARALLEL`, `LOCAL_JOBS`, `AGDA_JOBS`,
+`SITE_OUT`, `LANGS`, `BASE_URL`, `PORT`, and `CF_PROJECT`. Advanced backend path
+overrides `HTML_DIR`, `AGDA_TRACE`, `AGDA_DIR` and `SITE_IFACES` cross the
+Make/Python boundary explicitly. `SITE_IFACES` must name a dedicated cache below
+`_build`. Compiler installation and normalized type-file locations remain fixed
+instance internals, not alternative toolchain selectors.
 
 ## CI and deployment
 

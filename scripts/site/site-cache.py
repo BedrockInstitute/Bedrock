@@ -13,6 +13,7 @@ import argparse
 import hashlib
 import html
 import json
+import os
 from pathlib import Path
 import re
 import subprocess
@@ -25,6 +26,8 @@ STAMP = HTML / '.bedrock-checked'
 TRACE = BUILD / 'outcrop-agda-types.jsonl'
 TYPES = (BUILD / 'types.json', BUILD / 'expression-types.json')
 CACHE = BUILD / 'cache'
+INTERFACES = BUILD / '2.8.0/agda/src'
+AGDA_HOME = BUILD / 'agda-home'
 BACKEND_STATE = CACHE / 'site-backend.json'
 FENCE = re.compile(r'^```agda[^\n]*\n(.*?)^```[ \t]*$', re.M | re.S)
 PRE = re.compile(r'<pre class="Agda">(.*?)</pre>', re.S)
@@ -40,7 +43,8 @@ def combined_digest(paths: list[Path]) -> str | None:
     for path in sorted(paths):
         if not path.is_file():
             return None
-        result.update(str(path.relative_to(ROOT)).encode() + b'\0')
+        name = path.relative_to(ROOT) if path.is_relative_to(ROOT) else path
+        result.update(str(name).encode() + b'\0')
         result.update(bytes.fromhex(digest(path)))
     return result.hexdigest()
 
@@ -64,7 +68,7 @@ def backend_inputs() -> list[Path]:
     agda_adapter = ROOT / 'outcrop/src/outcrop/adapters/agda'
     return [
         BUILD / 'outcrop-agda/install/outcrop-agda.json',
-        BUILD / 'agda-home/.bedrock-library-lock.json',
+        AGDA_HOME / '.bedrock-library-lock.json',
         ROOT / 'bedrock.agda-lib',
         ROOT / 'outcrop/src/outcrop/core/source_syntax.py',
         ROOT / 'site/agda-libraries.json',
@@ -157,6 +161,13 @@ def run(command: list[str]) -> None:
     subprocess.run(command, cwd=ROOT, check=True)
 
 
+def make_command(args, target):
+    """Pass supported paths explicitly across the Python/Make boundary."""
+    return [args.make, target, f'PY={args.py}', f'AGDA_JOBS={args.agda_jobs}',
+            f'LOCAL_PARALLEL={args.local_parallel}', f'HTML_DIR={HTML}',
+            f'AGDA_TRACE={TRACE}', f'AGDA_DIR={AGDA_HOME}', f'SITE_IFACES={INTERFACES}']
+
+
 def site_state_path(out: Path) -> Path:
     name = hashlib.sha256(str(out.resolve()).encode()).hexdigest()[:16]
     return CACHE / f'render-{name}.json'
@@ -176,7 +187,19 @@ def render_build_key(current: dict[str, dict], backend: dict, langs: list[str],
             'langs': langs, 'base_url': base_url}
 
 
+def render_command(args):
+    return [args.py, 'scripts/site/render-site.py', '--html-dir', str(HTML),
+            '--out', str(args.site_out), '--langs', args.langs, '--base-url', args.base_url]
+
+
 def build(args) -> None:
+    if getattr(args, 'force_render', False):
+        # Preserve the diagnostic site-render contract: no compiler or backend
+        # state is required. Invalidate only this output's render receipt, so a
+        # manual render with different options cannot become a false cache hit.
+        site_state_path(Path(args.site_out)).unlink(missing_ok=True)
+        run(render_command(args))
+        return
     paths = source_paths()
     current = source_inventory(paths)
     backend = read_state(BACKEND_STATE)
@@ -203,10 +226,8 @@ def build(args) -> None:
         return
 
     code_key = hashlib.sha256(json.dumps(build_key, sort_keys=True).encode()).hexdigest()
-    command = [args.py, 'scripts/site/render-site.py', '--html-dir', str(HTML),
-               '--out', str(out), '--langs', args.langs, '--base-url', args.base_url,
-               '--code-cache', str(CACHE / 'code-context.json.gz'),
-               '--code-cache-key', code_key]
+    command = render_command(args) + ['--code-cache', str(CACHE / 'code-context.json.gz'),
+                                      '--code-cache-key', code_key]
     site_changed = {module for module, source in source_hashes.items()
                     if source != (site_state or {}).get('sources', {}).get(module)}
     incremental = (output_valid and site_state is not None
@@ -244,7 +265,7 @@ def prepare_backend(args, paths: dict[str, Path], current: dict[str, dict],
 
     changed = {module for module in current
                if backend is None or current[module]['source'] != backend['sources'].get(module, {}).get('source')}
-    code_changed = (backend is None or producer != backend.get('producer')
+    code_changed = (getattr(args, 'cold', False) or backend is None or producer != backend.get('producer')
                     or set(current) != set(backend.get('sources', {}))
                     or any(current[module]['blocks'] != backend['sources'].get(module, {}).get('blocks')
                            for module in current))
@@ -269,19 +290,19 @@ def prepare_backend(args, paths: dict[str, Path], current: dict[str, dict],
         if backend is not None and producer == backend.get('producer'):
             for module in current:
                 if current[module]['blocks'] != backend['sources'].get(module, {}).get('blocks'):
-                    interface = BUILD / '2.8.0/agda/src' / (module.replace('.', '/') + '.agdai')
+                    interface = INTERFACES / (module.replace('.', '/') + '.agdai')
                     interface.unlink(missing_ok=True)
         else:
             # An incompatible compiler or library must not reuse old trace records.
             TRACE.unlink(missing_ok=True)
             import shutil
-            shutil.rmtree(BUILD / '2.8.0/agda/src', ignore_errors=True)
+            shutil.rmtree(INTERFACES, ignore_errors=True)
         STAMP.unlink(missing_ok=True)
-        run([args.make, 'html', f'PY={args.py}', f'AGDA_JOBS={args.agda_jobs}',
-             f'LOCAL_PARALLEL={args.local_parallel}'])
+        target = 'html-cold-parallel' if getattr(args, 'cold', False) else 'html'
+        run(make_command(args, target))
         producer = backend_identity()
         backend = {'schema': 1, 'producer': producer, 'sources': current,
-                   'extractor': extractor,
+                   'extractor': None,
                    'compile_stamp': STAMP.stat().st_mtime_ns,
                    'stamp': STAMP.stat().st_mtime_ns}
         rebuilt = True
@@ -302,20 +323,19 @@ def prepare_backend(args, paths: dict[str, Path], current: dict[str, dict],
     missing_types = any(not path.is_file() for path in TYPES)
     extractor_changed = backend.get('extractor') != extractor
     if rebuilt or missing_types or extractor_changed:
-        previous_stamp = STAMP.stat().st_mtime_ns
-        run([args.make, 'types', f'PY={args.py}', f'AGDA_JOBS={args.agda_jobs}',
-             f'LOCAL_PARALLEL={args.local_parallel}'])
-        if STAMP.stat().st_mtime_ns != previous_stamp:
-            backend['compile_stamp'] = STAMP.stat().st_mtime_ns
-            backend['stamp'] = STAMP.stat().st_mtime_ns
-            rebuilt = True
+        # A failed extractor must not certify leftover files from an older
+        # compilation. The raw target cannot re-enter Make's timestamp check.
+        backend['extractor'] = None
+        write_state(BACKEND_STATE, backend)
+        run(make_command(args, '_types'))
         backend['extractor'] = extractor
         write_state(BACKEND_STATE, backend)
 
     return backend
 
 
-def main() -> int:
+def main(argv=None) -> int:
+    global HTML, STAMP, TRACE, INTERFACES, AGDA_HOME
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--site-out', default='_build/site')
     parser.add_argument('--langs', default='en,zh,ja')
@@ -324,10 +344,26 @@ def main() -> int:
     parser.add_argument('--make', default='make')
     parser.add_argument('--agda-jobs', default='2')
     parser.add_argument('--local-parallel', default='1')
+    parser.add_argument('--html-dir', type=Path, default=BUILD / 'html')
+    parser.add_argument('--trace', type=Path, default=BUILD / 'outcrop-agda-types.jsonl')
+    parser.add_argument('--agda-dir', type=Path,
+                        default=Path(os.environ.get('AGDA_DIR', BUILD / 'agda-home')))
+    parser.add_argument('--interface-root', type=Path, default=BUILD / '2.8.0/agda/src')
+    parser.add_argument('--cold', action='store_true', help='explicitly rebuild the entire backend')
+    parser.add_argument('--force-render', action='store_true', help='force rendering existing evidence without cache checks')
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument('--backend-only', action='store_true')
     mode.add_argument('--render-only', action='store_true')
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
+    if args.cold and args.render_only:
+        parser.error('--cold cannot be combined with --render-only')
+    if args.force_render and not args.render_only:
+        parser.error('--force-render requires --render-only')
+    HTML, TRACE = args.html_dir.resolve(), args.trace.resolve()
+    STAMP = HTML / '.bedrock-checked'
+    INTERFACES, AGDA_HOME = args.interface_root.resolve(), args.agda_dir.resolve()
+    if not INTERFACES.is_relative_to(BUILD) or INTERFACES == BUILD:
+        parser.error('--interface-root must be a dedicated cache beneath _build')
     build(args)
     return 0
 

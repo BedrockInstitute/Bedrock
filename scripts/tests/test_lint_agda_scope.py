@@ -13,6 +13,13 @@ HEADER = '-- SPDX-License' + '-Identifier: BSD-3-Clause\n'
 
 
 class SpdxScopeTests(unittest.TestCase):
+    def test_spdx_only_keeps_header_gate_without_rechecking_source_rules(self):
+        with patch.object(gate, 'lint_file') as lint, \
+                patch.object(gate, 'check_spdx', return_value=['invalid header']) as spdx:
+            self.assertEqual(gate.main(['--spdx-only']), 1)
+            lint.assert_not_called()
+            spdx.assert_called_once_with(None)
+
     def setUp(self):
         self.temporary = tempfile.TemporaryDirectory()
         self.addCleanup(self.temporary.cleanup)

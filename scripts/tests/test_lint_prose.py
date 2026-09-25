@@ -15,6 +15,17 @@ from outcrop.core.math_lint import inline_math
 
 
 class BedrockProsePolicyTests(unittest.TestCase):
+    def test_docs_only_preserves_non_source_checks_without_rechecking_masters(self):
+        root = Path(__file__).resolve().parents[2]
+        doc, master = root / 'README.md', root / 'src/Base/Prelude.lagda.md'
+        with patch.object(lint_prose, 'target_files', return_value=[str(doc), str(master)]), \
+                patch.object(lint_prose, 'analyze', return_value=('', [], [])) as analyze, \
+                patch.object(lint_prose, 'check_shared_cjk') as shared:
+            self.assertEqual(lint_prose.main(['--check', '--docs-only']), 0)
+            self.assertEqual(analyze.call_count, 1)
+            self.assertEqual(analyze.call_args.args[1], str(doc))
+            shared.assert_not_called()
+
     def test_opening_chapters_math_uses_figure_convention_or_explicit_approval(self):
         root = Path(__file__).resolve().parents[2]
         figure_count = approved_count = 0

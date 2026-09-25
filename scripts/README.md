@@ -29,9 +29,14 @@ registry and resource limits:
 | Command | Scope |
 | --- | --- |
 | `make check` | Pure Agda typechecking, `make lint` and both unit-test suites; no website build or browser acceptance |
-| `make lint` | Source/prose, assumptions, glossary, terminology, fences, figures, reading order/routes, chapter structure, language markers and Outcrop site lint |
+| `make lint` | Shared textbook rules once, plus document prose, glossary extras, SPDX and host-assumption checks |
 | `make milestone-lint` | Verify that the Origin import closure consumes the source development; also a push/CI gate |
 | `make test` | Bedrock `scripts/tests/test_*.py` and reusable `outcrop/tests/test_*.py` |
+
+`make help` lists public commands separately from diagnostic and internal
+targets. Standalone `*-gate` commands and staged hook scopes remain supported;
+the aggregate avoids repeating their shared chapter rules. The exact coverage
+mapping is in [the architecture guide](../site/ARCHITECTURE.md#gate-mapping).
 
 The gate adapters are grouped by responsibility:
 
@@ -66,10 +71,10 @@ labels; see the [Markdown contract](../outcrop/docs/RENDERER-MARKDOWN.md).
 
 | Script | Responsibility / usual caller |
 | --- | --- |
-| `site/site-cache.py` | Local `make site` content cache: reuse certified code on prose edits, refresh affected pages and search, rebuild Agda on code changes |
+| `site/site-cache.py` | Local/CI `site`, `site-backend`, `site-render` cache orchestration; reuse certified code on prose edits and refresh pages/search |
 | `site/render-site.py` | Render the configured instance; `make site-render` |
-| `site/extract-types.py` | Identifier type data; `make types-local-identifiers` |
-| `site/extract-expression-types.py` | Compiler expression/definition evidence; `make types-local-expressions` |
+| `site/extract-types.py` | Identifier type data; internal `types-local-identifiers`, after backend preparation |
+| `site/extract-expression-types.py` | Compiler expression/definition evidence; internal `types-local-expressions`, after backend preparation |
 | `site/weave-i18n.py` | Language-marker check and single-language source copies; `make gen` |
 | `site/reading_routes.py` | Route validation (`--check`) or JSON inventory |
 | `site/gen-depmap.py` | Standalone graph publishing adapter; normal site builds already publish the graph |
@@ -88,6 +93,10 @@ make serve SITE_OUT=_build/site PORT=8000
 
 `site/site-cache.py --backend-only` and `--render-only` let GitHub Actions
 reuse the same content cache across its backend artifact and deployment jobs.
+Prefer their Make entry points `site-backend` and
+`site-render RENDER_INCREMENTAL=1`. `types` prepares the backend before extracting;
+the cache driver calls `_types` to extract without a second compiler freshness
+decision. Failed extraction leaves a retryable, uncertified receipt.
 `make site-render` is sufficient only when existing compiler data remains valid.
 Deployment is a separate authorized operation; see the
 [workflow guide](../.github/workflows/README.md).
@@ -122,7 +131,8 @@ affected interactions and Outcrop's independent example for reusable behavior.
 
 ## Git hooks
 
-`make hooks` installs the tracked hooks into `.git/hooks/`. Pre-commit runs
+`make hooks` installs tracked hooks into `git rev-parse --git-path hooks`, also
+working in linked worktrees and respecting a configured hooks path. Pre-commit runs
 staged prose lint, whole-source language-marker checks, staged Agda/SPDX lint,
 glossary, fence and chapter checks. Pre-push runs the Origin consumption gate.
 Neither hook replaces `make check` or browser verification. Do not bypass gates
@@ -132,5 +142,5 @@ CI uses the shared `outcrop.adapters.ci_scope` classifier with Bedrock's
 `site/ci-docs.json` policy. It retains lint, tests and closure checks for documents
 while skipping Agda and deployment when the complete diff is documentation-only.
 `test_ci_scope.py` checks the instance boundary and workflow wiring; the reusable
-Git/event/submodule cases are tested in Outcrop. Local Make targets and hooks
+Git/event/submodule cases are tested in Outcrop. Hook scopes and cache policy
 remain unchanged; see the [workflow guide](../.github/workflows/README.md).
