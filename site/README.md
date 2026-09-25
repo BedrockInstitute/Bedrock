@@ -73,10 +73,17 @@ fresh clone and update them to the revision recorded by the consuming commit;
 do not silently track an unpinned framework branch.
 
 `make site` builds highlighted Agda and semantic data, then renders all editions
-into `_build/site`. `make site-render SITE_OUT=...` only renders existing backend
-data and is appropriate for a renderer-only change. It does not replace compiler
-regeneration when source or trace contracts change. `LANGS`, `BASE_URL` and
-`SITE_OUT` remain the instance's Make overrides.
+into `_build/site`. Local runs keep content-aware state under `_build/cache`:
+an unchanged build returns immediately, and a prose-only chapter edit reuses its
+unchanged highlighted code and types, refreshes that chapter and the guide, and
+rebuilds the global search index. Changed Agda code, code-fence partitioning,
+compiler inputs, or missing cache artifacts trigger the complete backend path.
+GitHub Actions uses the same content checks in its backend job and separately
+caches the Pages and Cloudflare renders. `make clean` removes the local cache.
+`make site-render SITE_OUT=...` deliberately rerenders
+from existing backend data and does not replace compiler regeneration when code
+or trace contracts change. `LANGS`, `BASE_URL` and `SITE_OUT` remain the
+instance's Make overrides.
 
 On a fresh machine, install GHC/Cabal, `make`, `patch` and Python 3.11+ first.
 `make bootstrap` includes `make venv` and installs the local compiler/libraries;

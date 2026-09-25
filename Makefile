@@ -311,9 +311,18 @@ site-render:
 	$(PY) scripts/site/render-site.py --html-dir $(HTML_DIR) --out $(SITE_OUT) \
 		--langs $(LANGS) --base-url "$(BASE_URL)"
 
+# Local builds compare source content and reuse compiler evidence across prose
+# edits. CI invokes this cache driver in separate backend and render jobs.
+ifeq ($(filter true 1,$(CI)),)
+site:
+	$(PY) scripts/site/site-cache.py --site-out "$(SITE_OUT)" --langs "$(LANGS)" \
+		--base-url "$(BASE_URL)" --py "$(PY)" \
+		--agda-jobs "$(AGDA_JOBS)" --local-parallel "$(LOCAL_PARALLEL)"
+else
 site: types
 	$(MAKE) site-render PY="$(PY)" LANGS="$(LANGS)" BASE_URL="$(BASE_URL)" \
 		SITE_OUT="$(SITE_OUT)"
+endif
 
 site-cold: html-cold-parallel
 	$(MAKE) site PY="$(PY)" LANGS="$(LANGS)" BASE_URL="$(BASE_URL)"
@@ -344,7 +353,9 @@ deploy: site
 clean:
 	rm -rf $(HTML_DIR) $(SITE_OUT) _build/woven _build/types.json \
 		_build/expression-types.json $(AGDA_TRACE) $(AGDA_TRACE).parts \
-		_build/expression-probe
+		_build/expression-probe _build/cache/site-backend.json \
+		_build/cache/code-context.json.gz \
+		_build/cache/render-*.json _build/cache/site-*.json
 
 distclean: clean
 	rm -rf _build/outcrop-agda _build/outcrop-agda/bin/outcrop-agda \

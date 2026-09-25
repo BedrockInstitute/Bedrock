@@ -66,6 +66,7 @@ labels; see the [Markdown contract](../outcrop/docs/RENDERER-MARKDOWN.md).
 
 | Script | Responsibility / usual caller |
 | --- | --- |
+| `site/site-cache.py` | Local `make site` content cache: reuse certified code on prose edits, refresh affected pages and search, rebuild Agda on code changes |
 | `site/render-site.py` | Render the configured instance; `make site-render` |
 | `site/extract-types.py` | Identifier type data; `make types-local-identifiers` |
 | `site/extract-expression-types.py` | Compiler expression/definition evidence; `make types-local-expressions` |
@@ -85,6 +86,8 @@ make site
 make serve SITE_OUT=_build/site PORT=8000
 ```
 
+`site/site-cache.py --backend-only` and `--render-only` let GitHub Actions
+reuse the same content cache across its backend artifact and deployment jobs.
 `make site-render` is sufficient only when existing compiler data remains valid.
 Deployment is a separate authorized operation; see the
 [workflow guide](../.github/workflows/README.md).

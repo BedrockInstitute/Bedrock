@@ -81,16 +81,19 @@ source edits. Cache, Python, artifact and deployment actions use their Node 24 r
 
 After `typecheck` succeeds, `site-backend` restores the exact patched-Agda and cubical
 caches that job created, including cubical's pinned source archive. It does not install
-GHC, redownload cubical or compile Agda again. Its combined backend cache uses the same
-two-part key, including the backend scripts and Makefile in its stable fingerprint, so
-an exact hit can validate and directly upload the complete HTML/type-data artifact.
-After source changes, a partial hit reuses compatible interfaces, HTML and the trace as
-an incremental starting point. A single combined Agda traversal produces project
-interfaces, highlighted HTML and expression-type data, which are cached together and
-uploaded as one short-lived, host-neutral artifact.
+GHC or redownload cubical. The combined backend cache stores interfaces, highlighted
+HTML, expression types and a source/code inventory. A partial restore compares the
+Agda fences of each chapter. If only prose changed, it reuses the compiler-produced
+code blocks and updates the surrounding text without running Agda or extracting types.
+Code or backend changes still run the combined Agda traversal. The host-neutral
+HTML/type-data artifact also carries the inventory for deployment jobs.
 
 The `pages` and `cloudflare` jobs consume that artifact independently and may run in
-parallel. Each renders its own base URL, checks its own links and deploys its own output.
+parallel. Each has a separate rendered-site cache keyed by source and renderer inputs.
+On a prose-only change, a restored site updates the affected chapters, the overview,
+and global search, while reusing the compiler-derived code context. A cold cache or
+code/renderer change triggers a complete render. Each job checks its own links and
+deploys its own output.
 Neither job depends on the other, so a rendering, link-check, deployment or concurrency
 failure in one host does not prevent the other. GitHub Pages is the mirror; Cloudflare
 Pages at [bedrock.institute](https://bedrock.institute) is the canonical deployment.

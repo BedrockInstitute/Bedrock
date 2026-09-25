@@ -197,9 +197,10 @@ jobs:
             _build/outcrop-agda-types.jsonl
             _build/types.json
             _build/expression-types.json
-          key: bedrock-site-v3-${{ runner.os }}-${{ hashFiles('outcrop/src/outcrop/adapters/agda/**', 'site/agda-libraries.json', 'bedrock.agda-lib', 'Makefile', 'outcrop/src/outcrop/core/source_syntax.py', 'scripts/site/extract-types.py', 'scripts/site/extract-expression-types.py', 'outcrop/src/outcrop/adapters/*.py') }}-${{ hashFiles('src/**/*.lagda.md') }}
+            _build/cache/site-backend.json
+          key: bedrock-site-v4-${{ runner.os }}-${{ hashFiles('outcrop/src/outcrop/adapters/agda/**', 'site/agda-libraries.json', 'bedrock.agda-lib', 'Makefile', 'outcrop/src/outcrop/core/source_syntax.py', 'scripts/site/site-cache.py', 'scripts/site/extract-types.py', 'scripts/site/extract-expression-types.py', 'outcrop/src/outcrop/adapters/*.py') }}-${{ hashFiles('src/**/*.lagda.md') }}
           restore-keys: |
-            bedrock-site-v3-${{ runner.os }}-${{ hashFiles('outcrop/src/outcrop/adapters/agda/**', 'site/agda-libraries.json', 'bedrock.agda-lib', 'Makefile', 'outcrop/src/outcrop/core/source_syntax.py', 'scripts/site/extract-types.py', 'scripts/site/extract-expression-types.py', 'outcrop/src/outcrop/adapters/*.py') }}-
+            bedrock-site-v4-${{ runner.os }}-${{ hashFiles('outcrop/src/outcrop/adapters/agda/**', 'site/agda-libraries.json', 'bedrock.agda-lib', 'Makefile', 'outcrop/src/outcrop/core/source_syntax.py', 'scripts/site/site-cache.py', 'scripts/site/extract-types.py', 'scripts/site/extract-expression-types.py', 'outcrop/src/outcrop/adapters/*.py') }}-
 
       - name: Validate restored site backend
         if: steps.site_backend.outputs.cache-hit == 'true'
@@ -211,6 +212,7 @@ jobs:
           test -s _build/outcrop-agda-types.jsonl
           test -s _build/types.json
           test -s _build/expression-types.json
+          test -s _build/cache/site-backend.json
 
       # On a partial restore, the wrapper timestamp was refreshed above only to
       # keep Make from rebuilding the cached compiler. The restored trace is
@@ -224,15 +226,14 @@ jobs:
             touch _build/outcrop-agda-types.jsonl
           fi
 
-      - name: Build shared site backend
-        if: steps.site_backend.outputs.cache-hit != 'true'
+      - name: Refresh shared site backend
         shell: bash
         run: |
           set -euo pipefail
-          make site-backend-ci PY=python3 PYTHON=python3
+          python3 scripts/site/site-cache.py --backend-only --py python3 --local-parallel 1
 
-      # This artifact contains only host-neutral highlighted HTML and normalized
-      # type data. Each peer job renders, checks and deploys its own URL layout.
+      # This artifact contains host-neutral highlighted HTML, normalized type
+      # data and the source inventory. Each peer job renders its own URL layout.
       - name: Upload site backend
         uses: actions/upload-artifact@v7
         with:
@@ -241,6 +242,7 @@ jobs:
             _build/html
             _build/types.json
             _build/expression-types.json
+            _build/cache/site-backend.json
           include-hidden-files: true
           retention-days: 1
 
@@ -276,11 +278,22 @@ jobs:
           name: site-backend
           path: _build
 
+      - name: Cache Pages render
+        uses: actions/cache@v6
+        with:
+          path: |
+            _build/site
+            _build/cache/render-*.json
+            _build/cache/code-context.json.gz
+          key: bedrock-pages-v1-${{ runner.os }}-${{ hashFiles('outcrop/src/outcrop/adapters/**', 'outcrop/src/outcrop/core/**', 'outcrop/src/outcrop/site/**', 'site/**', 'scripts/site/**', 'Makefile') }}-${{ hashFiles('src/**/*.lagda.md') }}
+          restore-keys: |
+            bedrock-pages-v1-${{ runner.os }}-${{ hashFiles('outcrop/src/outcrop/adapters/**', 'outcrop/src/outcrop/core/**', 'outcrop/src/outcrop/site/**', 'site/**', 'scripts/site/**', 'Makefile') }}-
+
       - name: Render Pages site
         shell: bash
         run: |
           set -euo pipefail
-          make site-render BASE_URL=/${GITHUB_REPOSITORY#*/} PY=python3
+          python3 scripts/site/site-cache.py --render-only --py python3 --base-url "/${GITHUB_REPOSITORY#*/}"
 
       - name: Link check
         shell: bash
@@ -326,11 +339,22 @@ jobs:
           name: site-backend
           path: _build
 
+      - name: Cache Cloudflare render
+        uses: actions/cache@v6
+        with:
+          path: |
+            _build/site
+            _build/cache/render-*.json
+            _build/cache/code-context.json.gz
+          key: bedrock-cloudflare-v1-${{ runner.os }}-${{ hashFiles('outcrop/src/outcrop/adapters/**', 'outcrop/src/outcrop/core/**', 'outcrop/src/outcrop/site/**', 'site/**', 'scripts/site/**', 'Makefile') }}-${{ hashFiles('src/**/*.lagda.md') }}
+          restore-keys: |
+            bedrock-cloudflare-v1-${{ runner.os }}-${{ hashFiles('outcrop/src/outcrop/adapters/**', 'outcrop/src/outcrop/core/**', 'outcrop/src/outcrop/site/**', 'site/**', 'scripts/site/**', 'Makefile') }}-
+
       - name: Render Cloudflare site
         shell: bash
         run: |
           set -euo pipefail
-          make site-render BASE_URL= PY=python3
+          python3 scripts/site/site-cache.py --render-only --py python3
 
       - name: Link check
         shell: bash

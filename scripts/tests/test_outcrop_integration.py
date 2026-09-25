@@ -38,6 +38,20 @@ class OutcropIntegrationTests(unittest.TestCase):
             self.assertNotIn('uses: actions/setup-python@', job[install:])
             self.assertIn('submodules: recursive', job)
 
+    def test_ci_site_jobs_use_content_cache(self):
+        workflow = (ROOT / '.github/workflows/ci.yml').read_text()
+        backend = workflow.split('  site-backend:\n', 1)[1].split('  pages:\n', 1)[0]
+        pages = workflow.split('  pages:\n', 1)[1].split('  cloudflare:\n', 1)[0]
+        cloudflare = workflow.split('  cloudflare:\n', 1)[1]
+        self.assertIn('site-cache.py --backend-only', backend)
+        self.assertIn('_build/cache/site-backend.json', backend)
+        for job in (pages, cloudflare):
+            self.assertIn('site-cache.py --render-only', job)
+            self.assertIn('_build/cache/code-context.json.gz', job)
+            self.assertIn('_build/cache/render-*.json', job)
+            self.assertNotIn('_build/cache/site-backend.json', job.split('      - name: Cache ', 1)[1].split('      - name: Render ', 1)[0])
+            self.assertIn("hashFiles('src/**/*.lagda.md')", job)
+
     def test_build_consumes_shared_producers_not_private_copies(self):
         make = (ROOT / 'Makefile').read_text()
         for command in ('agda-build', 'agda-libraries', 'agda-check'):
