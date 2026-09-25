@@ -100,15 +100,14 @@ construction labels use `Construction`, `构造` or `構成`. Corollary labels u
 `Corollary`, `推论` or `系`.
 Proof labels use `**Proof** Text`, `**证明** 正文` or `**証明** 本文`.
 Every definition, construction, fact, lemma, theorem and corollary encloses at
-least one Agda code block and ends with its own standalone `∎`, immediately
-after its final code block. Only blank lines may separate the code and mark.
-A Proof continues its statement and shares that ending, but must itself contain
-code after the Proof label; a standalone Proof has the same code and ending rule.
-Explanatory prose after the mark is outside the statement. All three language
-routes are checked. Folded submodules and numbered labels have no exemption.
-Put each nested statement's mark inside its own fold, before closing the fold.
+least one Agda code block. A Proof continues its statement, but must itself
+contain code after the Proof label; a standalone Proof has the same code rule.
+The next statement, heading or enclosing fold boundary ends that prose scope.
+All three language routes are checked, including folded submodules and numbered
+labels. Do not write standalone `∎` in Markdown. QED decoration is generated
+from Agda definition semantics, independently of these prose scopes.
 
-Do not stack parallel statement labels and share one mark. Group related names
+Do not stack empty parallel statement labels. Group related names
 under one Construction label, with space-separated, individually styled names
 and one bullet per name in the same order:
 
@@ -123,21 +122,23 @@ first = value₁
 second = value₂
 ```
 
-∎
 ````
 
-Outcrop places the exact rectangular mark semi-transparently inside the final
-code frame at its lower right, with bottom padding that keeps source text clear.
-This visual change does not change the standalone source mark or any statement
-lint rule. Ordinary code and statement-ending code both span their containing
+Outcrop places the exact rectangular mark at the lower right of each definition's
+final code line, including intermediate lines of a code block. A definition has
+an explicit type signature followed by equation clauses; its where body belongs
+to that definition, and where-local helpers receive no independent mark. Submodule
+definitions are included. The mark has opacity 0.25 and reserves no line or
+padding, even over code. Prose Proof paragraphs keep their tight code spacing,
+without depending on a mark or special frame. All code blocks span their containing
 column without a left outdent or external QED gutter. Each folded submodule keeps
 its own indented width and compact declaration header; it is not aligned forcibly
 with code outside its fold. Horizontal scrolling preserves both frame gutters.
 `Origin` retains numbered Theorem 0–4 labels (定理0–4 in Chinese and Japanese)
 as the sole result-registry exception to named labels. Each statement is followed
-by its visible public re-export code and its own `∎`; these imports expose the
+by its visible public re-export code; these imports expose the
 already-proved results, rather than supplying new local proofs. The chapter
-opening and statement/QED rules still apply.
+opening and statement/code rules still apply. Imports do not receive automatic QED.
 
 ## Foldable submodules
 
@@ -152,7 +153,7 @@ even across literate fences. Keep the privacy of sibling declarations when
 splitting an existing private block. Rendered body code aligns exactly as in
 a public submodule. Use
 `div.submodule-fold-content`, and close that container immediately after the
-submodule's last Agda code block and its closing `∎`, when it ends a statement.
+submodule's last Agda code block, without an authored end mark.
 Leave a blank line before the opening `<details>` when it follows an Agda fence;
 otherwise Markdown treats it as inline text rather than a fold.
 An inner submodule uses the same fold inside its parent's content, but folds

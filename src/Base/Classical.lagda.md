@@ -70,7 +70,6 @@ LEM : ∀ ℓ → Type (ℓ-suc ℓ)
 LEM ℓ = (P : hProp ℓ) → Dec ⟨ P ⟩
 ```
 
-∎
 
 <!--en-->
 **Fact** (`isPropLEM`{.Agda}) At every level `ℓ`{.Agda}, excluded middle `LEM ℓ`{.Agda} is itself a proposition.
@@ -96,7 +95,6 @@ isPropLEM : ∀ {ℓ} → isProp (LEM ℓ)
 isPropLEM {ℓ} = isPropΠ λ P → isPropDec ⟨ P ⟩isProp
 ```
 
-∎
 
 <!--en-->
 **Lemma** (`lowerLEM`{.Agda}) Excluded middle at a successor level implies excluded middle at the level immediately below. Repeating the lemma descends through further successor levels.
@@ -130,7 +128,6 @@ lowerLEM {ℓ} lem P =
     (lem (Lift ⟨ P ⟩ , isOfHLevelLift 1 ⟨ P ⟩isProp))
 ```
 
-∎
 
 <figure class="book-diagram type-comparison path-figure" id="fig-lower-lem" aria-describedby="fig-lower-lem-caption">
 <div class="diagram-framed">
@@ -263,7 +260,6 @@ private module BooleanCodes where
   encodeB P (no _)  = lift false
 ```
 
-∎
 
 <!--en-->
 **Lemma** (`decodeB`{.Agda}) There is a decoding operation that takes a code in `Lift {ℓ-zero} {ℓ₂} Bool`{.Agda} and returns a proposition in `hProp ℓ₁`{.Agda}.
@@ -290,7 +286,6 @@ private module BooleanCodes where
   decodeB (lift false) = ⊥
 ```
 
-∎
 
 <!--en-->
 **Lemma** (`secB`{.Agda}) For every proposition `P`{.Agda} and decision `d`{.Agda}, encoding with `encodeB`{.Agda} and then decoding with `decodeB`{.Agda} recovers `P`{.Agda} in `hProp`{.Agda}: `decodeB (encodeB P d) ≡ P`{.Agda}.
@@ -318,7 +313,6 @@ private module BooleanCodes where
   secB {ℓ₁} {ℓ₂} P (no np) = ⇔toPath (λ ()) (λ p → ⊥₀-rec (np p))
 ```
 
-∎
 
 <!--en-->
 **Lemma** (`retrB`{.Agda}) For every code `b`{.Agda} and decision `d`{.Agda} of the proposition it decodes to, decoding with `decodeB`{.Agda} and then encoding with `encodeB`{.Agda} recovers `b`{.Agda}: `encodeB (decodeB b) d ≡ b`{.Agda}.
@@ -349,7 +343,6 @@ private module BooleanCodes where
   retrB {ℓ₁} {ℓ₂} (lift false) (no _)  = refl
 ```
 
-∎
 
 </div>
 </details>
@@ -399,7 +392,6 @@ LEM→ΩResizing lem = Lift Bool , isoToEquiv (iso
   (λ P → secB {ℓ₂ = _} P (lem P)))
 ```
 
-∎
 
 <!--en-->
 The two round-trip laws close the two triangles in the figure below. Fix `lem : LEM ℓ₁`{.Agda}, abbreviate the code type `Lift {ℓ-zero} {ℓ₂} Bool`{.Agda} by $B$, and write $E(P) := \operatorname{encodeB}\,P\,(\operatorname{lem}\,P)$ and $D := \operatorname{decodeB}$. Each round trip returns a point connected to its starting point by the indicated path.
@@ -487,7 +479,6 @@ LEM→Resizing : ∀ {ℓ₁ ℓ₂} → LEM ℓ₁ → Resizing ℓ₁ ℓ₂
 LEM→Resizing lem = ΩResizing→Resizing (LEM→ΩResizing lem)
 ```
 
-∎
 
 <!--en-->
 ## Recap

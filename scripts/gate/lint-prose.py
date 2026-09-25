@@ -25,9 +25,9 @@ Rules (apply to Markdown prose, `*.md` / `*.lagda.md`; the verbatim LICENSE is e
      period. Fact, lemma, theorem and corollary labels must immediately name an Agda declaration:
      `**Fact** (`name`{.Agda}) Text` (likewise in Chinese and Japanese).         [report only]
  10. Every definition, construction, fact, lemma, theorem, corollary or proof
-     encloses Agda code and ends with standalone ∎ directly after its final block.
+     encloses Agda code; semantic definition endings require no prose end mark.
      Folded helpers obey the same rule. Parallel names use one Construction
-     header and a bullet per name, never several labels sharing one QED.       [report only]
+     header and a bullet per name, never several empty parallel labels.       [report only]
  11. Foldable
      submodules use a single-line Agda declaration as their summary and close
      after the submodule's last code block.                                      [report only]

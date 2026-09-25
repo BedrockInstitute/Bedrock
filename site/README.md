@@ -114,9 +114,12 @@ with its supported suffixes denotes a universe-level parameter. Outcrop defaults
 this policy to false. Primitive shortening still needs semantic evidence; the
 convention does not authorize guessed AST nodes or change the original code.
 
-Statements retain the same Markdown and lint rules. Visually, the exact `∎` is a
-semi-transparent overlay inside the final code frame, reserving no extra line or
-bottom padding and keeping a fixed opacity of 0.25, even over code; code occupies the full width
+Statements and proofs retain their labels and code requirements, but Markdown
+contains no standalone QED marks. Compiler-certified signature/equation
+definitions receive the exact `∎` at their final code line, including definitions
+in submodules but excluding where-local helpers. The semi-transparent overlay
+reserves no line or padding and has fixed opacity 0.25, even over code. Proof
+prose stays close to its associated code through ordinary structural CSS; code occupies the full width
 of its containing column without an external QED gutter or left outdent.
 Code frames grow vertically and scroll only horizontally. Folded
 submodules retain their own indented columns and compact declaration headers.

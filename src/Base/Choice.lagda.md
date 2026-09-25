@@ -72,7 +72,6 @@ SetChoice ℓ = (X : Type ℓ) → isSet X → (B : X → Type ℓ)
             → ((x : X) → ∥ B x ∥₁) → ∥ ((x : X) → B x) ∥₁
 ```
 
-∎
 
 <!--en-->
 The truncation moves outside the dependent function type; it does not disappear. A hypothesis `sc : SetChoice ℓ`{.Agda} therefore gives the [mere existence]{.term-ref #mere-existence} of a choice function. To use that existence with `rec₁`{.Agda}, we must have a proposition as our goal. Quantification over `Type ℓ`{.Agda} puts the whole principle in `Type (ℓ-suc ℓ)`{.Agda}.
@@ -147,7 +146,6 @@ lowerSetChoice sc X setX B setB inh = map₁ (λ f x → lower (f (lift x)))
              (λ x → map₁ lift (inh (lower x))))
 ```
 
-∎
 
 <!--en-->
 ## Diaconescu's theorem
@@ -197,7 +195,6 @@ private module Diaconescu {ℓ} (P : hProp ℓ) where
   _     ~ _     = ⟨ P ⟩
 ```
 
-∎
 
 <!--en-->
 **Construction** (`Glued`{.Agda}) Take the quotient by this relation. We want to characterize paths between its distinguished points `[ true ]`{.Agda} and `[ false ]`{.Agda} by proofs of `P`{.Agda}. The library's isomorphism theorem applies once we verify that `_~_`{.Agda} is a proposition-valued equivalence relation.
@@ -215,7 +212,6 @@ private module Diaconescu {ℓ} (P : hProp ℓ) where
   Glued = Bool / _~_
 ```
 
-∎
 
 <!--en-->
 **Lemma** (`~-prop`{.Agda}) For the quotient just constructed, `isEquivRel→effectiveIso`{.Agda} requires a proposition-valued equivalence relation. The checks use only the definition of `_~_`{.Agda}. Each diagonal entry is the proposition `⊤*`{.Agda}; each off-diagonal entry is the proposition packaged in `P`{.Agda}.
@@ -233,7 +229,6 @@ private module Diaconescu {ℓ} (P : hProp ℓ) where
   ~-prop false true  = ⟨ P ⟩isProp
 ```
 
-∎
 
 <!--en-->
 **Lemma** (`~-refl`{.Agda}) The diagonal entries have the inhabitant `tt*`{.Agda}, which proves reflexivity.
@@ -249,7 +244,6 @@ private module Diaconescu {ℓ} (P : hProp ℓ) where
   ~-refl false = tt*
 ```
 
-∎
 
 <!--en-->
 **Lemma** (`~-sym`{.Agda}) Swapping the inputs leaves the entry type unchanged. On the diagonal we return `tt*`{.Agda}; off the diagonal we reuse the given proof of `P`{.Agda}.
@@ -267,7 +261,6 @@ private module Diaconescu {ℓ} (P : hProp ℓ) where
   ~-sym false true  p = p
 ```
 
-∎
 
 <!--en-->
 **Lemma** (`~-trans`{.Agda}) For transitivity, first compare the endpoints `a`{.Agda} and `c`{.Agda}. If they agree, `tt*`{.Agda} proves `a ~ c`{.Agda}.
@@ -298,7 +291,6 @@ If the endpoints differ, the middle boolean equals one of them, so one of the tw
   ~-trans false false true  _ p = p
 ```
 
-∎
 
 <!--en-->
 **Lemma** (`~-equivRel`{.Agda}) The three laws form the equivalence-relation record required by `isEquivRel→effectiveIso`{.Agda}.
@@ -313,7 +305,6 @@ If the endpoints differ, the middle boolean equals one of them, so one of the tw
   ~-equivRel = BinaryRelation.equivRel ~-refl ~-sym ~-trans
 ```
 
-∎
 
 <!--en-->
 **Lemma** (`quotientPath≃P`{.Agda}) The verified laws let us apply `isEquivRel→effectiveIso`{.Agda}. It identifies the path type between `[ true ]`{.Agda} and `[ false ]`{.Agda} with `true ~ false`{.Agda}, which is defined to be `⟨ P ⟩`{.Agda}. The library also supplies the two round-trip laws; `isoToEquiv`{.Agda} gives the following type equivalence.
@@ -329,7 +320,6 @@ If the endpoints differ, the middle boolean equals one of them, so one of the tw
     (isEquivRel→effectiveIso ~-prop ~-equivRel true false)
 ```
 
-∎
 
 <!--en-->
 In the figure, write $e$ for `quotientPath≃P`{.Agda}: its forward map sends a path to a proof of `P`{.Agda}, and its inverse sends a proof to a path. The following panels show the consequences of a proof or a refutation of `P`{.Agda}, without presuming that either has already been obtained.
@@ -403,7 +393,6 @@ On the left, the inverse of $e$ supplies a path. On the right, $e$ would turn an
   Pick x = Σ[ b ∈ Bool ] ([ b ] ≡ x)
 ```
 
-∎
 
 <!--en-->
 **Lemma** (`pickIsSet`{.Agda}) The family `Pick`{.Agda} is set-valued. Its first component is `Bool`{.Agda}, an h-set; for each boolean, its second component is a path in the h-set `Glued`{.Agda}, hence a proposition. An h-set paired with a proposition-valued family is again an h-set.
@@ -420,7 +409,6 @@ On the left, the inverse of $e$ supplies a path. On the right, $e$ would turn an
   pickIsSet x = isSetΣSndProp isSetBool (λ b → squash/ [ b ] x)
 ```
 
-∎
 
 <!--en-->
 **Lemma** (`pickable`{.Agda}) Every quotient point merely has a representative, as `[]surjective`{.Agda} states.
@@ -435,7 +423,6 @@ On the left, the inverse of $e$ supplies a path. On the right, $e$ would turn an
   pickable = []surjective
 ```
 
-∎
 
 <!--en-->
 **Lemma** (`merePicker`{.Agda}) Apply `sc`{.Agda} with index type `Glued`{.Agda}, its h-set certificate `squash/`{.Agda}, the family `Pick`{.Agda}, and its pointwise h-set certificate `pickIsSet`{.Agda}. This is the only application of choice within the argument for `P`{.Agda}. It yields the mere existence of a function that chooses a representative at every quotient point.
@@ -450,7 +437,6 @@ On the left, the inverse of $e$ supplies a path. On the right, $e$ would turn an
   merePicker sc = sc Glued squash/ Pick pickIsSet pickable
 ```
 
-∎
 
 <!--en-->
 Why not simply choose `true`{.Agda} at `[ true ]`{.Agda} and `false`{.Agda} at `[ false ]`{.Agda}? These classes may be equal, and a function on the quotient must respect that equality. Choosing on the two named representatives separately does not establish a function on `Glued`{.Agda}.
@@ -502,7 +488,6 @@ Temporarily suppose such a function `g`{.Agda} is given. We will construct a dec
     b₁ = g [ false ] .fst
 ```
 
-∎
 
 <!--en-->
 **Construction** (`agree→P`{.Agda} `P→agree`{.Agda})
@@ -530,7 +515,6 @@ Temporarily suppose such a function `g`{.Agda} is given. We will construct a dec
     P→agree p = cong (λ x → g x .fst) (invEq quotientPath≃P p)
 ```
 
-∎
 
 </div>
 </details>
@@ -639,7 +623,6 @@ In the second row, a proof of `P`{.Agda} would force the very equality that `ne`
       open import Cubical.Data.Bool using ( _≟_ )
 ```
 
-∎
 
 <!--en-->
 **Lemma** (`decideIsProp`{.Agda}) Finally, we must use only the mere existence of `g`{.Agda}. This is possible because `Dec ⟨ P ⟩`{.Agda} is a proposition. Two positive answers agree by the propositionhood of `P`{.Agda}; two negative answers agree because negation is a proposition; a positive and a negative answer contradict each other. This is exactly `isPropDec`{.Agda}.
@@ -654,7 +637,6 @@ In the second row, a proof of `P`{.Agda} would force the very equality that `ne`
   decideIsProp = isPropDec ⟨ P ⟩isProp
 ```
 
-∎
 
 </div>
 </details>
@@ -722,7 +704,6 @@ SetChoice→LEM sc P = rec₁ decideIsProp decide (merePicker sc)
   where open Diaconescu P
 ```
 
-∎
 
 <!--en-->
 ## Recap

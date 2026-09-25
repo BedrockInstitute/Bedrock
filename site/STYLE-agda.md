@@ -12,6 +12,14 @@ The mechanical subset of these rules (the OPTIONS header, the import discipline 
 §2, and the forbidden constructs of §1) is machine-enforced by `scripts/gate/lint-agda.py`
 as part of `make check` and the pre-commit hook.
 
+The SPDX-header gate applies only to Bedrock-owned files, including new untracked
+files and hidden configuration. Both full and staged scans exclude independent
+Git checkouts/submodules/worktrees, symlinks, and these directory boundaries at
+any depth: `.git`, `.worktrees`, `_build`, `build`, `dist`, `.venv`, `__pycache__`, `.wrangler`,
+`node_modules`, `dependencies`, `vendor`, `third_party`, `third-party`, `LICENSES`.
+Traversal is pruned at those boundaries, not merely filtered after reading.
+Third-party license headers must remain intact; Outcrop owns its separate checks.
+
 ## 0. Meta-principles
 
 1. **Notation aligns with set-theoretic LaTeX tradition.** If it can look like the
@@ -323,7 +331,8 @@ STYLE-i18n; code fences are language-neutral and English-only):
    direct-prerequisite titles expose actual compiler-highlighted imports,
    including necessary pre-module imports. The plain Markdown keeps the code.
    In `Origin`, only the header is hidden: theorem re-export blocks are body
-   code, each preceded by its statement and followed by its own `∎`.
+   code, each preceded by its statement. Do not add Markdown QED marks;
+   equation-definition endings are derived from compiler semantics.
 2. **Prose leads, code follows** (owner ruling, 2026-07-17, reversing the same-day
    code-first ruling): each code block is immediately preceded by the passage that
    explains it, one passage per block (one import statement per block in a hub).

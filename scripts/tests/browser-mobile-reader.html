@@ -26,6 +26,9 @@ document.querySelector('#tap').onclick=()=>{
 };
 const pause=ms=>new Promise(r=>setTimeout(r,ms));
 async function until(fn){for(let i=0;i<200;i++){const value=fn();if(value)return value;await pause(50)}throw Error('Timeout '+fn.toString())}
+// DOMContentLoaded can precede the reader's module initialization, especially
+// in a freshly loaded modal. Wait for the actual interaction owners as well.
+const readerReady=w=>w.__mobileProbe?.ready&&w.document.querySelector('.code-fullscreen-toggle')&&w.document.querySelector('.type-inspector');
 document.querySelector('#run').onclick=async()=>{
  const results=[],output=document.querySelector('#checks');
  function check(ok,name){results.push({ok:!!ok,name});output.textContent=JSON.stringify(results,null,2);if(!ok)throw Error(name)}
@@ -33,7 +36,7 @@ document.querySelector('#run').onclick=async()=>{
  const touch=(w,node,type,x,y)=>{const e=new w.Event(type,{bubbles:true,cancelable:true});e.touches=type==='touchend'?[]:[{clientX:x,clientY:y}];node.dispatchEvent(e)};
  try{
   await load('/zh/index.html#milestones');
-  await until(()=>frame.contentWindow.__mobileProbe?.ready);
+  await until(()=>readerReady(frame.contentWindow));
   let w=frame.contentWindow,d=w.document;
   const v=d.querySelector('#milestones a[data-type="V.Hierarchy#9153"]');
   tap(w,v);
@@ -46,7 +49,7 @@ document.querySelector('#run').onclick=async()=>{
   check(preface.length===2&&preface.every(p=>!p.querySelector('a[data-type]')),'broad preface V is ordinary prose, not the formal model');
   await pause(650);check(!!d.querySelector('.name-hover-popup'),'mobile hover persists without a timeout');
   await load('/zh/Base.Choice.html');
-  await until(()=>frame.contentWindow.__mobileProbe?.ready);
+  await until(()=>readerReady(frame.contentWindow));
   w=frame.contentWindow;d=w.document;
   for(const expression of ['g [ true ] .snd','g [ false ] .snd','λ x → g x .fst']) {
     const inline=[...d.querySelectorAll('li code.Agda')].find(code=>code.textContent===expression);
@@ -58,7 +61,7 @@ document.querySelector('#run').onclick=async()=>{
     tap(w,d.body);
   }
   await load('/zh/Base.Impredicativity.html');
-  await until(()=>frame.contentWindow.__mobileProbe?.ready);
+  await until(()=>readerReady(frame.contentWindow));
   w=frame.contentWindow;d=w.document;
   const leaf=d.querySelector('pre.Agda .expr-node a[data-type]'),block=leaf.closest('pre'),originalParent=block.parentElement;
   leaf.scrollIntoView({block:'center'});
@@ -111,6 +114,10 @@ document.querySelector('#run').onclick=async()=>{
   check(popup.querySelector('.type-value').textContent.trim().length>0,'rotated code uses the normal semantic hover');
   const pbox=popup.getBoundingClientRect(),lbox=first.getBoundingClientRect();
   check(pbox.right<=lbox.left+2,'rotated hover opens below its anchor in logical coordinates');
+  // The spacer test and popup placement above queue native scroll events.
+  // Finish that artificial scroll before starting a new hold: a real scroll
+  // deliberately cancels an uncommitted hold in the production reader.
+  await new Promise(resolve=>w.requestAnimationFrame(()=>w.requestAnimationFrame(resolve)));
   // Physical vertical motion is logical horizontal motion in the rotated plane.
   rect=first.getBoundingClientRect();
   touch(w,first,'touchstart',rect.x+2,rect.y+2);await pause(350);
@@ -133,7 +140,7 @@ document.querySelector('#run').onclick=async()=>{
   check(!d.querySelector('.code-fullscreen')&&block.parentElement===originalParent,'modal action exits fullscreen and restores the same original block');
   check(!d.querySelector('article').inert,'fullscreen cleanup restores body interactivity');
   const mirror=d.querySelector('.definition-modal-frame'),mw=mirror.contentWindow,md=mw.document;
-  await until(()=>mw.__mobileProbe?.ready);
+  await until(()=>readerReady(mw));
   const mirrorLeaf=[...md.querySelectorAll('pre.Agda .expr-node a[data-type]')].filter(n=>n.getClientRects().length).at(-1);
   mirrorLeaf.scrollIntoView({block:'center'});tap(mw,mirrorLeaf);
   await until(()=>!md.querySelector('.code-fullscreen-toggle').hidden);
@@ -156,10 +163,10 @@ document.querySelector('#run').onclick=async()=>{
   check(!d.querySelector('.definition-modal'),'normal modal close remains functional');
   const theorem=d.querySelector('pre.Agda a[id][data-name="ΩResizing→Resizing"]');
   check(!!theorem,'reported ΩResizing→Resizing definition is included');
-  const theoremBlock=theorem.closest('pre');
+  const theoremBlock=d.querySelector('.agda-definition-end[aria-label$="ΩResizing→Resizing"]').closest('pre');
   const visibleToken=pre=>[...pre.querySelectorAll('.expr-node a[data-type]')].find(a=>a.getClientRects().length&&!a.closest('.universe-source'));
-  const ordinaryBlock=[...d.querySelectorAll('pre.Agda')].find(pre=>!pre.closest('.statement-ending, summary')&&visibleToken(pre));
-  check(ordinaryBlock&&theoremBlock.closest('.statement-ending'),'font comparison covers both ordinary and QED frames');
+  const ordinaryBlock=[...d.querySelectorAll('pre.Agda')].find(pre=>!pre.closest('summary')&&!pre.querySelector('.agda-definition-end')&&visibleToken(pre));
+  check(ordinaryBlock&&theoremBlock.querySelector('.agda-definition-end'),'font comparison covers both ordinary and QED frames');
   for(const [label,codeBlock] of [['ordinary',ordinaryBlock],['QED theorem',theoremBlock]]) {
     const token=visibleToken(codeBlock);
     token.scrollIntoView({block:'center'});

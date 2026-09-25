@@ -48,11 +48,14 @@ Usage:
   with no FILE, scans src/**/*.lagda.md. `--staged` scans the staged masters
   only, which is what the pre-commit hook wants. Exit 1 on any violation.
 
-`--check` also runs check_spdx() over the whole tree, and `--staged` runs it
-over the staged files. DD22 bans an in-file SPDX header.
+`--check` also checks SPDX headers in Bedrock-owned files (including untracked
+files); `--staged` restricts that same boundary to staged files. Independent
+repositories, generated directories and vendored dependencies are excluded.
 """
 
 import glob
+from itertools import islice
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -121,7 +124,7 @@ def main(argv):
         print(f"lint-agda: {total} violation(s)")
     rc = 1 if total else 0
 
-    # DD22, the in-file SPDX ban. It fires at `make check` over the whole tree
+    # The in-file SPDX ban. It fires at `make check` over Bedrock-owned files
     # and at the pre-commit hook over the staged files. A bare FILE list runs
     # the lint alone, because a caller that names a master asks for a lint.
     if check or staged:
@@ -141,29 +144,61 @@ def main(argv):
 # keeps the check alive**: archiving check-tree.py without this move would have
 # retired a live check in silence, which is the failure clause W4 exists for.
 # ---------------------------------------------------------------------------
-def check_spdx(paths=None) -> list[str]:
-    """DD22: licensing has ONE source of truth, REUSE.toml, so no file carries an
-    in-file SPDX header.
+# Directory boundaries, at any depth. These are not file suffix filters or a
+# blanket hidden-file/.gitignore exemption: new first-party files still count.
+SPDX_EXCLUDED_DIRS = frozenset({
+    '.git', '.worktrees', '_build', 'build', 'dist', '.venv', '__pycache__', '.wrangler',
+    'node_modules', 'dependencies', 'vendor', 'third_party', 'third-party',
+    'LICENSES',
+})
 
-    `paths` scopes the scan. `None` means the whole tree, which is the `--check`
-    and conjunct 6 caliber. The pre-commit hook passes the STAGED files instead,
-    because a whole-tree scan costs 5.48 s over 6,230 files (measured 2026-08-18)
-    and a hook must stay cheap. A header enters the tree inside a file that
-    somebody edits, so the staged scope catches it at the commit that adds it.
+
+def spdx_directory_owned(path):
+    """Do not cross a generated/vendor directory, symlink or Git checkout."""
+    return (path.name not in SPDX_EXCLUDED_DIRS and not path.is_symlink()
+            and not (path / '.git').exists())
+
+
+def spdx_owned_files(paths=None):
+    """The same ownership boundary for whole-tree and staged/explicit scans."""
+    root = ROOT.absolute()
+    if paths is None:
+        def walk():
+            for directory, children, files in os.walk(root, followlinks=False):
+                directory = Path(directory)
+                children[:] = sorted(name for name in children
+                                     if spdx_directory_owned(directory / name))
+                yield from (directory / name for name in sorted(files))
+        paths = walk()
+    for path in paths:
+        path = Path(os.path.abspath(root / path))
+        try:
+            relative = path.relative_to(root)
+        except ValueError:
+            continue
+        if path.is_symlink() or not path.is_file() or path.name == 'REUSE.toml':
+            continue
+        if all(spdx_directory_owned(root / parent)
+               for parent in relative.parents if parent != Path('.')):
+            yield path
+
+
+def check_spdx(paths=None) -> list[str]:
+    """Bedrock-owned files use REUSE.toml, not inline SPDX license headers.
+
+    Third-party headers belong to their owners and must not be removed to pass
+    this rule. None scans owned files on disk; explicit paths (including staged
+    files) use exactly the same exclusions. Neither mode follows symlinks.
     """
     bad = []
-    for p in (ROOT.rglob("*") if paths is None else paths):
-        if not p.is_file() or p.name == "REUSE.toml":
-            continue
-        parts = p.relative_to(ROOT).parts
-        if parts and parts[0] in {".git", "_build", ".venv", "node_modules", "LICENSES"}:
-            continue
+    for p in spdx_owned_files(paths):
         try:
             # An SPDX header is a HEADER: it sits in the file's opening comment block. Scanning
             # the whole file made this check false-positive on its own source, which carries the
             # string as a literal. Bounding it to the head both matches the rule as written and
             # kills the self-match.
-            head = "\n".join(p.read_text(encoding="utf-8", errors="ignore").split("\n")[:30])
+            with p.open(encoding="utf-8", errors="ignore") as source:
+                head = ''.join(islice(source, 30))
         except OSError:
             continue
         if "SPDX-License" + "-Identifier" in head:

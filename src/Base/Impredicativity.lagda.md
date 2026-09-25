@@ -79,7 +79,6 @@ hasSize : ∀ {ℓ₁} (ℓ₂ : Level) → hProp ℓ₁ → Type (ℓ-max ℓ�
 hasSize ℓ₂ P = Σ[ Q ∈ hProp ℓ₂ ] (⟨ P ⟩ ≃ ⟨ Q ⟩)
 ```
 
-∎
 
 <!--en-->
 Neither level has to be larger than the other. In the applications below `ℓ₁`{.Agda} is usually the model's truth-value level and `ℓ₂`{.Agda} its indexing level, but the definition itself allows any two levels. The name "propositional resizing" refers to replacing a proposition by a type-equivalent representative at the chosen target level, rather than changing the universe annotation of the original proposition.
@@ -102,7 +101,6 @@ Resizing : ∀ ℓ₁ ℓ₂ → Type (ℓ-max (ℓ-suc ℓ₁) (ℓ-suc ℓ₂)
 Resizing ℓ₁ ℓ₂ = (P : hProp ℓ₁) → hasSize ℓ₂ P
 ```
 
-∎
 
 <!--en-->
 ## [Ω-resizing]{.term-intro #proposition-universe-resizing}
@@ -123,7 +121,6 @@ Resizing ℓ₁ ℓ₂ = (P : hProp ℓ₁) → hasSize ℓ₂ P
 ΩResizing ℓ₁ ℓ₂ = Σ[ Ω ∈ Type ℓ₂ ] (hProp ℓ₁ ≃ Ω)
 ```
 
-∎
 
 <figure class="book-diagram type-comparison resizing-comparison" id="fig-resizing-comparison" aria-describedby="fig-resizing-comparison-caption">
 <section class="diagram-panel resizing-case">
@@ -328,7 +325,6 @@ Name the forward map of `e`{.Agda} by `c`{.Agda}. Then `c P`{.Agda} is the code 
   codedTruth P = (c ⊤ ≡ c P) , isOfHLevelRespectEquiv 2 e isSetHProp _ _
 ```
 
-∎
 
 <!--en-->
 The band in `Ω`{.Agda} depicts paths with endpoints `c(⊤)`{.Agda} and `c(P)`{.Agda}. Click it to unfold the path family into the second type space, with whole paths represented as points. The illustrated `q`{.Agda} and `r`{.Agda} presuppose that `P`{.Agda} has a proof; the equivalence with `⟨ P ⟩`{.Agda} holds without this assumption.
@@ -489,7 +485,6 @@ It remains to construct the two maps.
     from q = subst ⟨_⟩ (invEq (congEquiv e) q) tt*
 ```
 
-∎
 
 </div>
 </details>
@@ -514,7 +509,6 @@ It remains to construct the two maps.
   where open CodedTruth Ω e
 ```
 
-∎
 
 <!--en-->
 ## Recap

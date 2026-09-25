@@ -166,11 +166,11 @@ The established conventions include:
 - Language groups stay outside shared Agda fences. Preserve matched trilingual
   chapter/section structure. Japanese uses plain style; follow the repository's
   punctuation rules and do not use em dashes in authored prose.
-- Statements require code and an immediate standalone rectangular `∎` after
-  their last code block, also inside folds. A proof continuing its statement
-  shares that ending and must contain code; standalone proofs require their own.
+- Statements require code, also inside folds. Proofs require code after their
+  label. Do not author standalone `∎` in Markdown: the compiler supplies function
+  definition boundaries independently of prose labels and fence boundaries.
   Related parallel definitions use one named Construction and ordered bullets,
-  not several statement labels sharing one mark.
+  not several empty parallel statement labels.
 - Use complete `{.Agda}` expressions for inline and single-line Agda, not manually
   annotated individual tokens. Only a single defined name may be an unboxed link.
 - LaTeX belongs in standalone display blocks or figures. Figure-explanation
@@ -289,10 +289,12 @@ interaction rather than applying a new design indiscriminately.
   universe notation and selective dotted-operator fonts without changing copied
   code. Share palettes across every code surface. Code spans the full containing
   column without an outdent or external QED gutter. The exact rectangular `∎`
-  is an absolute, noninteractive overlay inside the final frame at fixed opacity
-  `.25`, even over code. Reserve no row, height or extra padding for it; do not
-  restore overlap detection or dynamic opacity. Source syntax and statement lint
-  are unchanged. Agda frames grow vertically to their full content and scroll
+  is an absolute, noninteractive overlay at each compiler-certified definition's
+  final line, at fixed opacity `.25`, even over code. Definitions need an explicit
+  type signature and equation clauses; include submodule definitions but exclude
+  where-local definitions. Reserve no row, height or extra padding. Preserve the
+  tight prose-proof/code spacing without a special QED frame. Agda frames grow
+  vertically to their full content and scroll
   only horizontally; the page, modal or fullscreen reading plane may scroll
   vertically. Keep submodules independently indented, declaration headers
   compact, and right-end scroll padding intact without clipping code or inline

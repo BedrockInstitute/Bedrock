@@ -41,7 +41,7 @@
       rights.push(...[...content.querySelectorAll('.universe-notation')].map(node=>node.getBoundingClientRect().right));
       const right=Math.max(...rights);
       const gap=pre.getBoundingClientRect().left+pre.clientLeft+pre.clientWidth-right;
-      results.push({module,width,kind:pre.closest('.statement-ending')?'QED':'ordinary',
+      results.push({module,width,kind:pre.querySelector('.agda-definition-end')?'QED':'ordinary',
         depth:[...doc.querySelectorAll('.submodule-fold')].filter(fold=>fold.contains(pre)).length,
         code:pre.textContent.trim().slice(0,100),padding,gap,fixed,horizontalOnly,ok:horizontalOnly && fixed && padding>=16 && gap>=padding-1});
     }

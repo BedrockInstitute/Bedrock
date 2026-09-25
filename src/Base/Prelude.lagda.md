@@ -19,7 +19,7 @@ This chapter introduces that vocabulary through its mathematical meaning and use
 
 ## Reading guide
 
-Read the prose first, then the code immediately below it: the code makes the preceding explanation precise. A ∎ closes a definition, construction or proof. Submodules can be folded to keep the larger argument in view.
+Read the prose first, then the code immediately below it: the code makes the preceding explanation precise. The code automatically displays ∎ at the end of a definition with a type signature and defining equations; helpers inside a `where`{.Agda} clause belong to the enclosing definition. Submodules can be folded to keep the larger argument in view.
 
 Use the [interactive contents](index.html#reading-explorer) to choose a route, or the [dependency graph](index.html#dependency-map) to inspect prerequisites. The learning route at the top of each chapter lists its direct prerequisites and possible continuations. Dashed chapter titles reveal the formal setup or `import`{.Agda} statements without interrupting the prose; parameterized module declarations stay in the body.
 
@@ -34,7 +34,7 @@ Keywords and syntax symbols offer short explanations with links to the Agda manu
 
 ## 阅读指南
 
-阅读时，先看文字，再看紧随其后的代码：代码是前文解释的精确表达。∎ 标记一项定义、构造或证明的结束；子模块可以折叠，方便把握整体论证。
+阅读时，先看文字，再看紧随其后的代码：代码是前文解释的精确表达。代码会在带类型声明和定义等式的定义末尾自动显示 ∎；`where`{.Agda} 中的辅助定义归属于外层定义。子模块可以折叠，方便把握整体论证。
 
 可以在[交互式目录](index.html#reading-explorer)中选择阅读路线，也可以用[依赖图](index.html#dependency-map)查看先修关系。每章顶部的学习路线列出直接先修和可选后续章节。带虚线的章节标题可以显示形式化设置或 `import`{.Agda} 语句，不打断正文；带参数的模块声明则保留在正文中。
 
@@ -49,7 +49,7 @@ Keywords and syntax symbols offer short explanations with links to the Agda manu
 
 ## 読書案内
 
-まず文章を読み、直後のコードでその精確な表現を確かめる。∎ は定義、構成、証明の終わりを示す。部分モジュールを折り畳むと、議論の全体を見渡しやすい。
+まず文章を読み、直後のコードでその精確な表現を確かめる。型宣言と定義等式を持つ定義の末尾には、コードが自動的に ∎ を表示する。`where`{.Agda} 内の補助定義は外側の定義に属する。部分モジュールを折り畳むと、議論の全体を見渡しやすい。
 
 [対話型目次](index.html#reading-explorer)で学習ルートを選び、[依存グラフ](index.html#dependency-map)で前提関係を確認できる。各章の冒頭には直接の前提と次に進める章がある。破線の付いた章題から形式化の設定や `import`{.Agda} 文を確認でき、パラメータ付きモジュールの宣言は本文に残る。
 

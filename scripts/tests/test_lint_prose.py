@@ -61,10 +61,10 @@ class BedrockProsePolicyTests(unittest.TestCase):
         self.assertTrue(lint_prose.new_bare_variable_violations(changed, chapter))
 
 
-    def test_numbered_registry_labels_are_scoped_and_still_require_code_and_qed(self):
-        text = '**Theorem 0** Text.\n\n```agda\nopen import Base.Choice public using ( SetChoice→LEM )\n```\n\n∎\n'
+    def test_numbered_registry_labels_are_scoped_and_still_require_code(self):
+        text = '**Theorem 0** Text.\n\n```agda\nopen import Base.Choice public using ( SetChoice→LEM )\n```\n\n'
         self.assertEqual(lint_prose.theorem_label_violations(text, 'src/Origin.lagda.md'), [])
         self.assertTrue(lint_prose.theorem_label_violations(text, 'src/Base/Choice.lagda.md'))
-        self.assertEqual(prose_rules.qed_violations(text), [])
-        self.assertTrue(prose_rules.qed_violations(text.replace('∎', '')))
+        self.assertEqual(prose_rules.statement_violations(text), [])
+        self.assertTrue(prose_rules.statement_violations(text.replace('```agda', '```text')))
         self.assertTrue(lint_prose.theorem_label_violations(text.replace('Theorem', 'Lemma'), 'src/Origin.lagda.md'))

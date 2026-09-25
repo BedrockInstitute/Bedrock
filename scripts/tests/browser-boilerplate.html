@@ -246,8 +246,8 @@ try {
   check(Math.abs(error)<2,'modal definition block alignment',error);
   check(frameDoc.querySelectorAll('table').length>=3,'modal mirrors full article tables');
   check(frameDoc.querySelector('.chapter-review.is-reviewed')?.getAttribute('aria-label')==='已人工校阅','modal mirrors chapter review status');
-  check(frameDoc.querySelectorAll('.statement-ending > pre.Agda + .statement-qed').length>10,'modal mirrors statement endings including folded helpers');
-  const modalEnding=frameDoc.querySelector('.statement-ending > pre.Agda');
+  check(frameDoc.querySelectorAll('pre.Agda > .agda-definition-end').length>10,'modal mirrors statement endings including folded helpers');
+  const modalEnding=frameDoc.querySelector('pre.Agda:has(> .agda-definition-end)');
   const modalCodeStyle=frame.contentWindow.getComputedStyle(modalEnding);
   check(modalCodeStyle.paddingBottom===modalCodeStyle.paddingTop,'modal QED code reserves no extra bottom line');
   const nextDefinition=[...frameDoc.querySelectorAll('pre.Agda a.Function[id][href]')].find(a=>a.textContent==='SetChoice');
@@ -307,7 +307,7 @@ try {
   check(narrowPopup.textContent.includes('OPTIONS') && !narrowPopup.textContent.includes('module'),'390px parameterized title still shows only OPTIONS');
   check(narrowDoc.querySelector('.chapter-review.is-unreviewed')?.getAttribute('aria-label')==='未人工校阅','later chapter displays the unreviewed warning');
   narrow.src='/zh/Base.Choice.html';
-  await until(()=>narrow.contentDocument?.querySelector('.statement-ending'));
+  await until(()=>narrow.contentDocument?.querySelector('article > pre.Agda:has(> .agda-definition-end)'));
   await narrow.contentDocument.fonts.ready;
   const mobileDoc=narrow.contentDocument;
   check(mobileDoc.documentElement.scrollWidth<=narrow.contentWindow.innerWidth+1,'390px nested private module headers stay within the page');
@@ -331,11 +331,11 @@ try {
     content.scrollLeft=savedScroll;return result;
   });
   check(overflowPadding.some(item=>item.submodule && !item.heading) && overflowPadding.every(item=>item.wrapped && item.padding>=16 && item.trailing>=item.padding-1),'scrolled Agda code including submodule bodies retains real right padding',overflowPadding);
-  const ending=mobileDoc.querySelector('.statement-ending');
-  const codeRect=ending.querySelector('pre').getBoundingClientRect();
-  const qedRect=ending.querySelector('.statement-qed').getBoundingClientRect();
+  const ending=mobileDoc.querySelector('article > pre.Agda:has(> .agda-definition-end)');
+  const codeRect=ending.getBoundingClientRect();
+  const qedRect=ending.querySelector('.agda-definition-end').getBoundingClientRect();
   check(qedRect.left>codeRect.left && qedRect.right<codeRect.right && qedRect.bottom<codeRect.bottom,'390px QED floats inside its code frame');
-  const qedStyle=narrow.contentWindow.getComputedStyle(ending.querySelector('.statement-qed'));
+  const qedStyle=narrow.contentWindow.getComputedStyle(ending.querySelector('.agda-definition-end'),'::after');
   check(parseFloat(qedStyle.opacity)>0 && parseFloat(qedStyle.opacity)<.6 && qedStyle.pointerEvents==='none','QED is translucent non-interactive frame decoration');
   const ordinary=[...mobileDoc.querySelectorAll('article > pre.Agda')][0].getBoundingClientRect();
   check(Math.abs(ordinary.left-codeRect.left)<1 && Math.abs(ordinary.right-codeRect.right)<1,'ordinary and QED code blocks share both horizontal edges');
@@ -352,8 +352,8 @@ try {
       && style.borderWidth==='0px' && parseFloat(headingStyle.marginLeft)===0 && parseFloat(headingStyle.marginRight)===0;
   }),'fold declarations retain their original compact style without body-code gutters');
   check(folds.every(fold=>parseFloat(narrow.contentWindow.getComputedStyle(fold).borderLeftWidth)>0 && fold.querySelector('pre.Agda').getBoundingClientRect().left>codeRect.left),'submodules preserve their frame and indentation relative to outer code');
-  check(ending.querySelector('.statement-qed').textContent==='∎' && parseFloat(narrow.contentWindow.getComputedStyle(ending.querySelector('.statement-qed')).fontSize)>0,'QED retains its original Unicode glyph');
-  check(parseFloat(narrow.contentWindow.getComputedStyle(ending).marginBottom)>=32,'statement ending adds a clear bottom gap');
+  check(narrow.contentWindow.getComputedStyle(ending.querySelector('.agda-definition-end'),'::after').content==='"∎"' && parseFloat(narrow.contentWindow.getComputedStyle(ending.querySelector('.agda-definition-end'),'::after').fontSize)>0,'QED retains its original Unicode glyph');
+  check(narrow.contentWindow.getComputedStyle(ending).marginBottom===narrow.contentWindow.getComputedStyle(mobileDoc.querySelector('article > pre.Agda:not(:has(.agda-definition-end))')).marginBottom,'semantic endings use ordinary frame spacing');
   const badge=mobileDoc.querySelector('.chapter-review').getBoundingClientRect();
   const chapterHeading=mobileDoc.querySelector('h1').getBoundingClientRect();
   check(badge.left>=chapterHeading.right && badge.right<=narrow.contentWindow.innerWidth,'390px review icon occupies the title row right edge');

@@ -67,7 +67,6 @@ open import Base.Choice public using ( SetChoice→LEM )
 open import Base.Classical public using ( LEM→ΩResizing )
 ```
 
-∎
 
 <!--en-->
 **Theorem 1** Assuming `ΩResizing`{.Agda}, the [HIT]{.term-ref #higher-inductive-type} cumulative hierarchy [V](V.Hierarchy.html#𝒮ᵥ){.Agda} is a model of [ZF](FOL.ZFModel.html#isZFModel).
@@ -81,7 +80,6 @@ open import Base.Classical public using ( LEM→ΩResizing )
 open import V.Model public using ( V⊨ZF )
 ```
 
-∎
 
 <!--en-->
 **Theorem 2** Assuming `SetChoice`{.Agda}, the [HIT]{.term-ref #higher-inductive-type} cumulative hierarchy [V](V.Hierarchy.html#𝒮ᵥ){.Agda} is a model of [ZFC](FOL.ZFModel.html#isZFCModel).
@@ -95,7 +93,6 @@ open import V.Model public using ( V⊨ZF )
 open import V.Model public using ( V⊨ZFC )
 ```
 
-∎
 
 <!--en-->
 **Theorem 3** Assuming `LEM`{.Agda}, the constructible universe [L](L.Constructible.html#𝒮ʟ){.Agda} is a model of [ZFC](FOL.ZFModel.html#isZFCModel).
@@ -109,7 +106,6 @@ open import V.Model public using ( V⊨ZFC )
 open import L.Model public using ( L⊨ZFC )
 ```
 
-∎
 
 <!--en-->
 **Theorem 4** Assuming `LEM`{.Agda}, the constructible universe [L](L.Constructible.html#𝒮ʟ){.Agda} satisfies the [generalized continuum hypothesis](L.GCH.html#GCHStatement) internally.
@@ -122,5 +118,3 @@ open import L.Model public using ( L⊨ZFC )
 ```agda
 open import L.GCH.Theorem public using ( L⊨GCH )
 ```
-
-∎
