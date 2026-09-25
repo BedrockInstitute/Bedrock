@@ -42,6 +42,10 @@ As of 2026-09-22: **25,931 nonblank Agda code lines · 203.17 s fresh project ty
 
 As of 2026-09-24, the source dependency graph has 120 chapters, 1,511 unique direct imports, 227 transitively reduced edges and a longest chain of 31 modules, before website hub/preview filtering.
 
+These are dated measurements, not a benchmark or verification result for the
+current checkout. Use `make typecheck-cold` and the source metrics command in the
+[scripts guide](scripts/README.md) when a fresh measurement is needed.
+
 ## Direction
 
 Beyond that first stone, the long-term aim is to push mechanized set theory past
@@ -131,8 +135,9 @@ project-interface caches.
 
 `make check` (typechecking, source/textbook lint and both test suites) and the site build run on Python 3.11+; developer tooling (the `reuse` linter) is
 pinned in [requirements-dev.txt](requirements-dev.txt) and installed into a local virtual
-environment by `make venv` (run once per clone). Every push is typechecked against these versions
-by [GitHub Actions](.github/workflows/ci.yml).
+environment by `make venv` (run once per clone). [GitHub Actions](.github/workflows/ci.yml)
+runs lint and tests on every push. Confirmed documentation-only changes skip Agda
+and website deployment; other changes and manual runs retain the full checks.
 
 ## Website framework
 
@@ -146,6 +151,11 @@ mathematical policies through [site/project.json](site/project.json).
 [site/](site/README.md) holds durable configuration, authoring rules, terminology,
 reading metadata and brand assets. [dev/](dev/README.md) holds working research
 and temporary development material, which is cleaned up when its task ends.
+[src/](src/README.md) contains the trilingual proof/exposition masters;
+[docs/](docs/README.md) contains reader-facing project documents.
+[scripts/](scripts/README.md) indexes Bedrock's gates, command adapters, hooks
+and browser fixtures. CI and deployment are documented in
+[.github/workflows/](.github/workflows/README.md).
 
 Initialize submodules before installing dependencies. `make venv` installs the
 local package; an existing environment can use
@@ -153,6 +163,12 @@ local package; an existing environment can use
 and `make serve` previews it. See [the instance guide](site/README.md) and
 [Outcrop's architecture](outcrop/docs/ARCHITECTURE.md). Another textbook can use
 the same framework without copying Bedrock's mathematics or website code.
+
+`make check` does not build or browser-test the website. After website changes,
+validate the fresh output with `outcrop check-links` and `outcrop check-search`
+through the installed Python environment, then run affected browser scenarios.
+`make milestone-lint` additionally checks the Origin closure. Shared changes are
+committed and published in Outcrop before Bedrock records their submodule revision.
 
 ## Contributing
 

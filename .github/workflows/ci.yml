@@ -5,20 +5,23 @@ on:
   pull_request:
   workflow_dispatch:
 
-# Start with the proof gate alone. A main-branch backend build starts only after
-# that job has completed successfully, and the two independent site jobs then
-# fan out from one shared HTML/type-data artifact.
+# Keep the required typecheck job alive even on documentation-only changes.
+# Its lightweight gates always run; compiler/backend/deployment work is scoped
+# by an explicit documentation allowlist. Manual runs always select full CI.
 permissions:
   contents: read
 
 jobs:
   typecheck:
     runs-on: ubuntu-latest
+    outputs:
+      full: ${{ steps.scope.outputs.full }}
     steps:
       - name: Checkout
         uses: actions/checkout@v5
         with:
           submodules: recursive
+          fetch-depth: 0
 
       - name: Set up Python 3.11
         uses: actions/setup-python@v7
@@ -28,11 +31,16 @@ jobs:
       - name: Install Outcrop
         run: python3 -m pip install ./outcrop
 
+      - name: Classify changes
+        id: scope
+        run: python3 -m outcrop.adapters.ci_scope --project-root . --policy site/ci-docs.json
+
       # This is the only job that builds and saves the patched Agda toolchain.
       # site-backend starts after the post-job cache save and restores the exact
       # same key, so a cold workflow compiles Agda only once. Restore this first
       # so a cache hit can skip Haskell setup altogether.
       - name: Cache outcrop-agda
+        if: steps.scope.outputs.full == 'true'
         id: outcrop_agda
         uses: actions/cache@v6
         with:
@@ -41,13 +49,14 @@ jobs:
           key: outcrop-agda-${{ runner.os }}-${{ hashFiles('outcrop/src/outcrop/adapters/agda/resources/**', 'outcrop/src/outcrop/adapters/agda/build.py', 'outcrop/src/outcrop/adapters/agda/archive.py') }}
 
       - name: Cache cubical dependency
+        if: steps.scope.outputs.full == 'true'
         uses: actions/cache@v6
         with:
           path: _build/dependencies
           key: cubical-source-v2-${{ runner.os }}-${{ hashFiles('site/agda-libraries.json') }}
 
       - name: Validate restored Bedrock toolchain
-        if: steps.outcrop_agda.outputs.cache-hit == 'true'
+        if: steps.scope.outputs.full == 'true' && steps.outcrop_agda.outputs.cache-hit == 'true'
         shell: bash
         run: |
           set -euo pipefail
@@ -59,7 +68,7 @@ jobs:
           touch _build/outcrop-agda/bin/outcrop-agda
 
       - name: Set up pinned Haskell toolchain
-        if: steps.outcrop_agda.outputs.cache-hit != 'true'
+        if: steps.scope.outputs.full == 'true' && steps.outcrop_agda.outputs.cache-hit != 'true'
         id: setup_haskell
         uses: haskell-actions/setup@v2
         with:
@@ -72,7 +81,7 @@ jobs:
       # compiled store so that rebuilding the patched compiler avoids fetching
       # and recompiling unchanged dependencies.
       - name: Cache Cabal dependencies
-        if: steps.outcrop_agda.outputs.cache-hit != 'true'
+        if: steps.scope.outputs.full == 'true' && steps.outcrop_agda.outputs.cache-hit != 'true'
         id: cabal
         uses: actions/cache@v6
         with:
@@ -86,17 +95,20 @@ jobs:
 
       - name: Update Cabal package index
         if: >-
+          steps.scope.outputs.full == 'true' &&
           steps.outcrop_agda.outputs.cache-hit != 'true' &&
           steps.cabal.outputs.cache-hit != 'true'
         shell: bash
         run: cabal update
 
       - name: Set up Bedrock toolchain
+        if: steps.scope.outputs.full == 'true'
         shell: bash
         run: make toolchain PYTHON=python3 PY=python3
 
       # Pure-check interfaces remain isolated from the HTML/type-trace cache.
       - name: Cache tree interfaces
+        if: steps.scope.outputs.full == 'true'
         uses: actions/cache@v6
         with:
           path: _build/typecheck/_build/2.8.0/agda/src
@@ -105,6 +117,7 @@ jobs:
             bedrock-ifaces-v2-${{ runner.os }}-${{ hashFiles('outcrop/src/outcrop/adapters/agda/**', 'site/agda-libraries.json', 'bedrock.agda-lib') }}-
 
       - name: Typecheck
+        if: steps.scope.outputs.full == 'true'
         shell: bash
         run: |
           set -euo pipefail
@@ -127,6 +140,7 @@ jobs:
     needs: typecheck
     if: >-
       success() &&
+      needs.typecheck.outputs.full == 'true' &&
       (github.event_name == 'workflow_dispatch' ||
        (github.event_name == 'push' && github.ref == 'refs/heads/main'))
     runs-on: ubuntu-latest

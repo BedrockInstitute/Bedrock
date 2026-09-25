@@ -40,6 +40,7 @@ Framework references:
 | `host-lem-inventory.json`, `inline-agda-legacy.json` | Proof classification and narrowly scoped lint allowances |
 | `inline-latex-approvals.json` | Explicit occurrence approvals and temporary allowances ending at human review; no automatic legacy exemptions |
 | `ARCHITECTURE.md` | Instance boundaries, gate mapping and verification requirements |
+| `ci-docs.json` | Conservative CI documentation-only allowlist; unknown changes retain full checks |
 
 The proof and prose gates consume these same files even when no website is built.
 Directory ownership does not make configuration dependent on running a renderer.
@@ -60,7 +61,7 @@ From the Bedrock repository root:
 
 ```sh
 git submodule update --init --recursive
-make venv
+make bootstrap
 make site
 make serve
 ```
@@ -77,7 +78,12 @@ data and is appropriate for a renderer-only change. It does not replace compiler
 regeneration when source or trace contracts change. `LANGS`, `BASE_URL` and
 `SITE_OUT` remain the instance's Make overrides.
 
-The thin commands in `scripts/site/` supply Bedrock-specific paths and policies.
+On a fresh machine, install GHC/Cabal, `make`, `patch` and Python 3.11+ first.
+`make bootstrap` includes `make venv` and installs the local compiler/libraries;
+the separate `make venv` is useful when only updating Python dependencies.
+
+The thin commands in `scripts/site/` supply Bedrock-specific paths and policies;
+the [scripts index](../scripts/README.md) maps them to gates and browser fixtures.
 The common tools are package commands:
 
 ```sh
@@ -127,7 +133,7 @@ See the shared recipes rather than adding chapter-specific layout fixes.
 
 ## Verification
 
-`make check` includes reusable and instance lint plus both test suites, but does
+`make check` includes pure Agda typechecking, reusable and instance lint, and both test suites, but does
 not browser-test the website. `make milestone-lint` remains the additional Origin
 closure gate. A website change also needs fresh rendering, link/search validation
 and actual browser interaction against that output.
@@ -144,6 +150,12 @@ example and browser fixture live under `outcrop/examples/renderer/` and
 mapping and browser acceptance matrix. Record fresh results with each change;
 past runs do not certify new code. Narrow desktop Chrome and synthetic touch
 events do not establish real iPhone Safari behavior.
+
+CI keeps lint, tests and the Origin closure check on every push/PR. Confirmed
+documentation-only changes skip Agda and deployment; source, configuration,
+assets, workflow or unknown changes take the full path. Manual dispatch always
+runs fully. This does not change local Make targets; see the
+[workflow guide](../.github/workflows/README.md) for comparison and cache rules.
 
 Bedrock brand/content licensing remains in [REUSE.toml](../REUSE.toml) and
 [NOTICE](../NOTICE); Outcrop maintains its own inherited software, font and vendor

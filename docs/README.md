@@ -21,7 +21,8 @@ the README condenses.
 
 ## Rules
 
-- All content here is **trilingual**. Add a page in every language, and keep the same filename
+- Reader-facing content is **trilingual**; this English directory guide is not
+  a translated reader page. Add a reader page in every language, and keep the same filename
   across `en/`, `zh/` and `ja/`.
 - **Author in English first**, then translate the Chinese and Japanese from the English, then
   **cross-check the two translations against each other**. `check-glossary.py` enforces the
@@ -31,3 +32,17 @@ the README condenses.
 - Durable authoring specifications and instance configuration live in
   [site/](../site/README.md), in English. [dev/](../dev/README.md) holds temporary
   development and research work, not permanent configuration.
+
+## Maintenance checks
+
+Keep the three project READMEs synchronized for status badges, installation,
+directory ownership and framework instructions. Dates on measurements describe
+historical snapshots, not fresh acceptance. Resolve relative links from each
+translation's own directory. The source book's chapter titles and review badges
+come from `site/reading-catalog.json`, not these README files.
+
+Run `make lint` after documentation changes. The
+[scripts index](../scripts/README.md) explains individual checks; this gate does
+not test external URLs or certify website rendering. Developer and CI guides
+live in [site/](../site/README.md) and
+[.github/workflows/](../.github/workflows/README.md), not in the reader translations.

@@ -5,7 +5,7 @@
 [English](../../README.md) · **中文** · [日本語](../ja/README.md)
 
 [![CI](https://github.com/BedrockInstitute/Bedrock/actions/workflows/ci.yml/badge.svg)](https://github.com/BedrockInstitute/Bedrock/actions/workflows/ci.yml)
-![Status: early](https://img.shields.io/badge/status-early-orange)
+![Status: first goal proved](https://img.shields.io/badge/first%20goal-L%20%E2%8A%A8%20GCH%20proved-brightgreen)
 [![Agda](https://img.shields.io/badge/Agda-2.8.0-blue)](https://github.com/agda/agda)
 [![cubical](https://img.shields.io/badge/cubical-0.9-blue)](https://github.com/agda/cubical)
 [![Content: CC BY-NC-SA 4.0](https://img.shields.io/badge/content-CC%20BY--NC--SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
@@ -29,6 +29,8 @@
 截至 2026-09-22：**25,931 行非空 Agda 代码 · 清空项目缓存后的类型检查 203.17 秒 (保留 Cubical 缓存) · 峰值内存 1.57 GiB。**
 
 截至 2026-09-24，源码依赖图包含 120 个章节、1,511 条不重复的直接导入边和 227 条传递约简边，最长链含 31 个模块；这些计数未应用网站的枢纽与预览过滤。
+
+这些是注明日期的测量记录，不代表当前版本的性能或验收结果。需要重新测量时，请使用 `make typecheck-cold` 和 [脚本说明](../../scripts/README.md) 中的源码统计命令。
 
 ## 方向
 
@@ -70,15 +72,17 @@ Cubical 类型论是当代类型论的前沿，是当下正被书写的数学基
 | [cubical](https://github.com/agda/cubical) | 0.9 |
 | [Python](https://www.python.org) | 3.11+ |
 
-`make check` (类型检查、源码与教材检查，以及两套测试) 与站点构建需要 Python 3.11+。开发工具 (`reuse` 检查器) 的版本固定在 [requirements-dev.txt](../../requirements-dev.txt) 中，由 `make venv` 安装到本地虚拟环境。每次推送都会经 [GitHub Actions](../../.github/workflows/ci.yml) 针对上述版本进行类型检查。
+`make check` (类型检查、源码与教材检查，以及两套测试) 与站点构建需要 Python 3.11+。开发工具 (`reuse` 检查器) 的版本固定在 [requirements-dev.txt](../../requirements-dev.txt) 中，由 `make venv` 安装到本地虚拟环境。[GitHub Actions](../../.github/workflows/ci.yml) 在每次推送时运行 lint 与测试。确认仅修改说明文档时，跳过 Agda 检查和网站部署；其他改动及手动运行仍保留完整检查。
 
-首次克隆后，先初始化固定版本的子模块，再安装工具链：
+首次克隆后，请先安装 GHC/Cabal、`make`、`patch` 和 Python 3.11+，再初始化固定版本的子模块并安装工具链：
 
 ```sh
 git submodule update --init --recursive
 make bootstrap
 make check
 ```
+
+`make bootstrap` 在 `_build/` 中构建本地编译器并安装固定版本的 Cubical，不修改用户的全局 Agda 配置。纯类型检查与网站语义数据使用独立缓存。`make typecheck-cold` 是保留 Cubical 缓存的单进程基线；`make typecheck-cold-parallel AGDA_JOBS=2` 衡量并行检查，`make html-cold` 衡量包含高亮和类型数据的编译过程。不要混用这些计时结果。
 
 ## 网站框架
 
@@ -89,6 +93,10 @@ make check
 初始化子模块后，`make venv` 会安装本地框架包；已有虚拟环境也可运行 `.venv/bin/python -m pip install -e ./outcrop`。随后用 `make site` 构建、`make serve` 预览。详见 [实例说明](../../site/README.md) 与 [Outcrop 架构](../../outcrop/docs/ARCHITECTURE.md)。其他教材可以复用同一框架，无须复制 Bedrock 的数学内容或网站实现。
 
 [site/](../../site/README.md) 保存长期维护的配置、编写规范、术语、阅读元数据与品牌资产。[dev/](../../dev/README.md) 仅保存研究工作材料和临时开发内容，并在相关任务结束后清理。
+
+[src/](../../src/README.md) 保存三语证明与文学主文件，[docs/](../README.md) 保存面向读者的项目文档。[scripts/](../../scripts/README.md) 列出 Bedrock 的检查、命令适配器、Git 钩子和浏览器测试。CI 与部署说明位于 [.github/workflows/](../../.github/workflows/README.md)。
+
+`make check` 不构建网站，也不进行浏览器验收。网站改动后，需要通过已安装的 Python 环境运行 `outcrop check-links` 和 `outcrop check-search` 检查新输出，再测试受影响的浏览器交互。`make milestone-lint` 另行检查 Origin 闭包。共享改动先在 Outcrop 提交并发布，再由 Bedrock 记录新的子模块版本。
 
 ## 贡献
 

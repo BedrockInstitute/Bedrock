@@ -8,6 +8,10 @@ Long-lived book/site configuration and authoring contracts live under
 architecture, toolchain policy and lint inventories. Shared implementation and
 renderer contracts belong to Outcrop.
 
+Reusable commands and tests belong in [scripts/](../scripts/README.md) or
+Outcrop, not in permanent copies of one-off scripts here. This directory is not
+a build input or a record that a past test still certifies the current revision.
+
 ## Active editorial review
 
 [INLINE-LATEX-REVIEW.md](INLINE-LATEX-REVIEW.md) lists existing inline LaTeX for
@@ -23,6 +27,15 @@ are displayed separately and end when `human_reviewed` becomes true, not when
 chapter text changes. Regenerating this report changes neither approvals nor
 review flags. Once review is complete, delete this temporary
 inventory and its README references, retaining the durable policy and decisions.
+
+## Research evidence
+
+`literature/` contains source digests, bibliography and investigations cited by
+the book's editorial work. Start with [BIBLIOGRAPHY.md](literature/BIBLIOGRAPHY.md)
+and [primary-sources.md](literature/primary-sources.md). These are research notes,
+not additional authoring rules or proof certificates. Check their citations and
+current consumers before promoting or removing material; the directory's
+temporary role does not make referenced evidence disposable.
 
 ## Lifecycle
 

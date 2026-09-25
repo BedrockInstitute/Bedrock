@@ -5,7 +5,7 @@
 [English](../../README.md) · [中文](../zh/README.md) · **日本語**
 
 [![CI](https://github.com/BedrockInstitute/Bedrock/actions/workflows/ci.yml/badge.svg)](https://github.com/BedrockInstitute/Bedrock/actions/workflows/ci.yml)
-![Status: early](https://img.shields.io/badge/status-early-orange)
+![Status: first goal proved](https://img.shields.io/badge/first%20goal-L%20%E2%8A%A8%20GCH%20proved-brightgreen)
 [![Agda](https://img.shields.io/badge/Agda-2.8.0-blue)](https://github.com/agda/agda)
 [![cubical](https://img.shields.io/badge/cubical-0.9-blue)](https://github.com/agda/cubical)
 [![Content: CC BY-NC-SA 4.0](https://img.shields.io/badge/content-CC%20BY--NC--SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
@@ -29,6 +29,8 @@
 2026-09-22 現在：**空行を除く Agda コード 25,931 行 · プロジェクトキャッシュ削除後の型検査 203.17 秒 (Cubical キャッシュ保持) · 最大 RSS 1.57 GiB。**
 
 2026-09-24 現在、ソースの依存グラフは 120 章、重複を除く直接 import 1,511 辺、推移簡約 227 辺からなり、最長の鎖は 31 モジュールである。これらはサイトのハブとプレビューのフィルターを適用する前の値である。
+
+これらは日付付きの測定記録であり、現在の版の性能や検証結果を示すものではない。新しい測定には `make typecheck-cold` と [スクリプトの説明](../../scripts/README.md) にあるソース集計コマンドを使う。
 
 ## 方向
 
@@ -70,15 +72,17 @@ Cubical 型理論は現代型理論の最前線であり、いままさに書か
 | [cubical](https://github.com/agda/cubical) | 0.9 |
 | [Python](https://www.python.org) | 3.11+ |
 
-`make check` (型検査、ソースと教材の検査、および両方のテスト群) とサイトのビルドは Python 3.11+ を必要とする。開発用ツール (`reuse` リンター) は [requirements-dev.txt](../../requirements-dev.txt) に固定され、`make venv` でローカルの仮想環境に導入される。プッシュのたびに、[GitHub Actions](../../.github/workflows/ci.yml) によって上記のバージョンに対して型検査される。
+`make check` (型検査、ソースと教材の検査、および両方のテスト群) とサイトのビルドは Python 3.11+ を必要とする。開発用ツール (`reuse` リンター) は [requirements-dev.txt](../../requirements-dev.txt) に固定され、`make venv` でローカルの仮想環境に導入される。[GitHub Actions](../../.github/workflows/ci.yml) はプッシュのたびに lint とテストを実行する。説明文書のみの変更と確認できた場合は Agda の検査とサイトのデプロイを省略し、それ以外の変更と手動実行では完全な検査を維持する。
 
-初回のクローン後は、固定されたサブモジュールを初期化してからツールチェインを導入する：
+初回のクローン後は、GHC/Cabal、`make`、`patch`、Python 3.11+ を用意し、固定されたサブモジュールを初期化してからツールチェインを導入する：
 
 ```sh
 git submodule update --init --recursive
 make bootstrap
 make check
 ```
+
+`make bootstrap` は `_build/` 内でローカルのコンパイラーを構築し、固定版の Cubical を導入する。ユーザーのグローバル Agda 設定は変更しない。純粋な型検査とサイトの意味情報には独立したキャッシュを使う。`make typecheck-cold` は Cubical キャッシュを保持した単一プロセスの基準測定、`make typecheck-cold-parallel AGDA_JOBS=2` は並列検査、`make html-cold` はハイライトと型情報を含むコンパイルの測定である。これらの所要時間を混同しない。
 
 ## ウェブサイトの基盤
 
@@ -89,6 +93,10 @@ make check
 サブモジュールの初期化後、`make venv` がローカルのパッケージを導入する。既存の仮想環境では `.venv/bin/python -m pip install -e ./outcrop` も利用できる。`make site` で構築し、`make serve` でプレビューする。[インスタンスの説明](../../site/README.md) と [Outcrop の構成](../../outcrop/docs/ARCHITECTURE.md) を参照。他の教材も、Bedrock の数学やサイト実装を複製せずに同じ基盤を利用できる。
 
 [site/](../../site/README.md) は継続的に保守する構成、執筆規則、用語、読書用メタデータ、ブランド素材を保持する。[dev/](../../dev/README.md) は研究の作業資料と一時的な開発資料のみを保持し、関連する作業の終了後に整理する。
+
+[src/](../../src/README.md) は三言語の証明と解説のマスターを、[docs/](../README.md) は読者向けのプロジェクト文書を保持する。[scripts/](../../scripts/README.md) は Bedrock の検査、コマンドアダプター、Git フック、ブラウザーテストを案内する。CI とデプロイの説明は [.github/workflows/](../../.github/workflows/README.md) にある。
+
+`make check` はサイトの構築やブラウザーでの検証を行わない。サイト変更後は、導入済みの Python 環境から `outcrop check-links` と `outcrop check-search` で新しい出力を検査し、影響するブラウザー操作を確認する。`make milestone-lint` は Origin の閉包を別途検査する。共有部分の変更は Outcrop で先にコミットして公開し、その後 Bedrock が新しいサブモジュール版を記録する。
 
 ## 貢献
 

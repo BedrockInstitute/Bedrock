@@ -8,9 +8,11 @@ documented one level down instead.
 
 ## Workflow
 
-`ci.yml` runs the proof gate on every push and pull request. On a push to `main`, or a
-manual dispatch, the same workflow subsequently builds and deploys the multilingual
-site. Its job graph is:
+`ci.yml` starts on every push and pull request, without workflow-level path
+filters. The existing `typecheck` job always runs lint, both unit-test suites and
+the Origin closure gate. Agda work is conditional on the changed-file scope.
+For non-documentation pushes to `main`, or any manual dispatch, it subsequently
+builds and deploys the multilingual site. Its full job graph is:
 
 ```text
 typecheck -> site-backend -> pages
@@ -18,9 +20,42 @@ typecheck -> site-backend -> pages
 ```
 
 The graph gives the proof gate first use of the runner and makes its result independent
-of the website. `typecheck` performs the pure Agda check, all source and prose gates, the
-unit tests, and `make milestone-lint`. Pure-check interfaces remain isolated from HTML
-and expression-type products.
+of the website. Pure-check interfaces remain isolated from HTML and expression-type products.
+
+## Documentation-only shortcut
+
+`site/ci-docs.json` is an explicit allowlist of reference documents, including
+READMEs, authoring guides and Markdown under `docs/` and `dev/`. Literate
+`.lagda.md` files are never documentation-only. Unknown paths, code, assets,
+machine-readable configuration, CI policy and workflow changes select the full
+pipeline. Do not expand the allowlist to cover inputs consumed by the website.
+
+| Change / event | Always-run checks | Agda and website |
+| --- | --- | --- |
+| Only allowlisted documents | Lint, both test suites, Origin closure | Skip compiler/dependency caches and setup, typechecking, backend, rendering and deployment |
+| Any other path, including mixed documentation/code changes | Same checks | Typecheck; build/deploy on `main` pushes |
+| Manual dispatch | Same checks | Full pipeline, preserving the existing manual deployment behavior |
+| Missing baseline/history or invalid policy | Same checks | Conservatively use the full pipeline |
+
+The shared `outcrop.adapters.ci_scope` helper compares the whole push's `before`
+revision to the checked-out event revision, or the PR base's merge base to that
+revision. Initial pushes with no usable baseline run fully. Classification uses
+the complete NUL-delimited Git diff, not an API's truncated changed-file list;
+renames check both old and new paths. Checkout fetches full history for this job.
+
+An Outcrop gitlink change is inspected between its old and new commits using
+Outcrop's own `.github/docs-only.json`. Documentation-only framework updates can
+therefore skip Bedrock's expensive work too. An added/removed submodule, unavailable
+commit, policy change or any framework implementation change selects full CI.
+The helper never fetches a branch or replaces the pinned framework revision.
+
+The job summary records the decision. Keep `typecheck` present even for documents:
+[skipping a whole required workflow can leave its check pending](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax).
+Lightweight gates still fail normally; the shortcut is not an unconditional green
+check. Local `make check` remains full and unchanged. The first push introducing
+this optimization runs fully because it changes implementation and workflows.
+
+## Caches and deployment
 
 Every job checks out submodules recursively, selects Python 3.11 first, and then installs the pinned local Outcrop
 package with `python3 -m pip install ./outcrop`. Outcrop Core and Outcrop Site are
@@ -70,6 +105,19 @@ fonts and vendor assets are packaged under `outcrop/src/outcrop/site/resources/`
 modules publish together under one content digest. The backend cache fingerprint
 includes Outcrop's compiler-data adapters. These workflow steps do not replace
 actual browser acceptance of a changed interface.
+
+## Local checks and changes across repositories
+
+The [scripts index](../../scripts/README.md) documents the local gates and hooks.
+`make check` does not include a site build or browser tests; `make milestone-lint`
+is a separate local target. Link checks in deployment likewise do not replace
+search-target validation or browser acceptance of an interaction change.
+
+Outcrop is a separate repository. Publish its commit before pushing a Bedrock
+commit that references the new submodule revision, so recursive CI checkout can
+resolve it. Do not substitute a framework branch for the recorded commit. A
+successful local check or push does not by itself mean either deployment job
+has completed; inspect the workflow and each host's result separately.
 
 ## Secrets
 
