@@ -173,6 +173,19 @@ The established conventions include:
   not several statement labels sharing one mark.
 - Use complete `{.Agda}` expressions for inline and single-line Agda, not manually
   annotated individual tokens. Only a single defined name may be an unboxed link.
+- LaTeX belongs in standalone display blocks or figures. Figure-explanation
+  paragraphs may also use inline LaTeX when their prose contains the localized
+  fixed wording `图中的` / `in the figure` / `図中の`; the allowance applies only
+  to that paragraph, not neighboring paragraphs or a whole section. Do not use
+  this wording for unrelated prose to bypass lint. Other inline LaTeX requires
+  explicit human approval recorded in `site/inline-latex-approvals.json` against
+  its exact source-context fingerprint. Do not automatically approve old usage.
+  The first four chapters remain strict. Explicit `temporary` records for later
+  chapters apply only while the catalog's `human_reviewed` flag is false. Text
+  edits and bulk replacements remain allowed; changing the flag to true ends
+  the allowance. Resolve the inline LaTeX or obtain explicit approvals before
+  marking the chapter reviewed, then remove its temporary record. Never unset
+  review status merely to bypass lint.
 - Centralize terminology in the glossary and research changes before adopting
   them. Explicit `term-ref` links may point forward; unmarked terminology must
   still respect its introduction and prerequisites. Do not invent parallel

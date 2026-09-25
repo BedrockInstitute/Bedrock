@@ -8,6 +8,22 @@ Long-lived book/site configuration and authoring contracts live under
 architecture, toolchain policy and lint inventories. Shared implementation and
 renderer contracts belong to Outcrop.
 
+## Active editorial review
+
+[INLINE-LATEX-REVIEW.md](INLINE-LATEX-REVIEW.md) lists existing inline LaTeX for
+human decisions grouped by source paragraph; all formulas in a paragraph share
+one review ID, while translations and separate list items remain separate.
+No formula is implicitly approved. Figure-reference paragraphs conforming to
+the fixed-wording rule are mechanically allowed and labeled separately.
+Regenerate it with
+`.venv/bin/python -m outcrop lint --config site/project.json --project-root . --inline-math-inventory markdown`.
+Approved decisions belong in `site/inline-latex-approvals.json`; rejected cases
+are revised in the source book. Explicit temporary allowances for later chapters
+are displayed separately and end when `human_reviewed` becomes true, not when
+chapter text changes. Regenerating this report changes neither approvals nor
+review flags. Once review is complete, delete this temporary
+inventory and its README references, retaining the durable policy and decisions.
+
 ## Lifecycle
 
 - Give new working material a clear purpose and current status.

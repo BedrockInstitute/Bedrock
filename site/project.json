@@ -104,10 +104,12 @@
     }
   },
   "policies": {
+    "inline_math_review": true,
     "formal_setup": true,
     "trilingual": true,
     "level_name_convention": true
   },
+  "inline_math_approvals": "site/inline-latex-approvals.json",
   "visible_import_chapters": [
     "Origin"
   ],

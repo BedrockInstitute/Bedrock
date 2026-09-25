@@ -1371,11 +1371,11 @@ Click the pulsing fibres to contract; click again to expand. The paths in each t
 </figure>
 
 <!--en-->
-This notion should be distinguished from an [isomorphism]{.term-intro #type-isomorphism}, which explicitly presents maps $f:A→B$ and $g:B→A$ and the two [round-trip laws]{.term-intro #round-trip-law}: paths $g(f(a))≡a$ for every $a:A$ and $f(g(b))≡b$ for every $b:B$. The constructor uses the order `iso f g s r`{.Agda}, where `s : (b : B) → f (g b) ≡ b`{.Agda} and `r : (a : A) → g (f a) ≡ a`{.Agda}. The two notions are related as follows: `iso`{.Agda} packages those data as `Iso A B`{.Agda}, and `isoToEquiv`{.Agda} converts the result into `A ≃ B`{.Agda}. Explicit maps make isomorphisms convenient for constructing examples, while the cubical library uses equivalences as the common interface for transporting type structure.
+This notion should be distinguished from an [isomorphism]{.term-intro #type-isomorphism}, which explicitly presents maps `f : A → B`{.Agda} and `g : B → A`{.Agda} and the two [round-trip laws]{.term-intro #round-trip-law}: paths `g (f a) ≡ a`{.Agda} for every `a : A`{.Agda} and `f (g b) ≡ b`{.Agda} for every `b : B`{.Agda}. The constructor uses the order `iso f g s r`{.Agda}, where `s : (b : B) → f (g b) ≡ b`{.Agda} and `r : (a : A) → g (f a) ≡ a`{.Agda}. The two notions are related as follows: `iso`{.Agda} packages those data as `Iso A B`{.Agda}, and `isoToEquiv`{.Agda} converts the result into `A ≃ B`{.Agda}. Explicit maps make isomorphisms convenient for constructing examples, while the cubical library uses equivalences as the common interface for transporting type structure.
 <!--zh-->
-这里的[类型等价]{.term-ref #type-equivalence}需要与[同构]{.term-intro #type-isomorphism}区分：同构显式给出映射 $f:A→B$、$g:B→A$ 和两条[往返律]{.term-intro #round-trip-law}：对每个 $a:A$ 有路径 $g(f(a))≡a$，对每个 $b:B$ 有路径 $f(g(b))≡b$。构造子的参数顺序是 `iso f g s r`{.Agda}，其中 `s : (b : B) → f (g b) ≡ b`{.Agda}，`r : (a : A) → g (f a) ≡ a`{.Agda}。二者的联系在于：`iso`{.Agda} 把这些数据打包成 `Iso A B`{.Agda}，`isoToEquiv`{.Agda} 再把所得同构转换为 `A ≃ B`{.Agda}。显式列出映射使同构便于构造具体例子，立方库则以[类型等价]{.term-ref #type-equivalence}作为搬运类型结构的统一接口。
+这里的[类型等价]{.term-ref #type-equivalence}需要与[同构]{.term-intro #type-isomorphism}区分：同构显式给出映射 `f : A → B`{.Agda}、`g : B → A`{.Agda} 和两条[往返律]{.term-intro #round-trip-law}：对每个 `a : A`{.Agda} 有路径 `g (f a) ≡ a`{.Agda}，对每个 `b : B`{.Agda} 有路径 `f (g b) ≡ b`{.Agda}。构造子的参数顺序是 `iso f g s r`{.Agda}，其中 `s : (b : B) → f (g b) ≡ b`{.Agda}，`r : (a : A) → g (f a) ≡ a`{.Agda}。二者的联系在于：`iso`{.Agda} 把这些数据打包成 `Iso A B`{.Agda}，`isoToEquiv`{.Agda} 再把所得同构转换为 `A ≃ B`{.Agda}。显式列出映射使同构便于构造具体例子，立方库则以[类型等价]{.term-ref #type-equivalence}作为搬运类型结构的统一接口。
 <!--ja-->
-この[型同値]{.term-ref #type-equivalence}は[同型]{.term-intro #type-isomorphism}と区別する必要がある。同型は写像 $f:A→B$、$g:B→A$ と二つの[往復則]{.term-intro #round-trip-law}を明示的に与える。すなわち、各 $a:A$ に対するパス $g(f(a))≡a$ と、各 $b:B$ に対するパス $f(g(b))≡b$ である。構成子の引数は `iso f g s r`{.Agda} の順であり、`s : (b : B) → f (g b) ≡ b`{.Agda}、`r : (a : A) → g (f a) ≡ a`{.Agda} である。両者の関係は次のとおりである。`iso`{.Agda} はこれらのデータを `Iso A B`{.Agda} にまとめ、`isoToEquiv`{.Agda} は得られた同型を `A ≃ B`{.Agda} へ変換する。写像を明示する同型は具体例の構成に便利であり、Cubical ライブラリは型の構造を運ぶ共通のインターフェースとして型同値を用いる。
+この[型同値]{.term-ref #type-equivalence}は[同型]{.term-intro #type-isomorphism}と区別する必要がある。同型は写像 `f : A → B`{.Agda}、`g : B → A`{.Agda} と二つの[往復則]{.term-intro #round-trip-law}を明示的に与える。すなわち、各 `a : A`{.Agda} に対するパス `g (f a) ≡ a`{.Agda} と、各 `b : B`{.Agda} に対するパス `f (g b) ≡ b`{.Agda} である。構成子の引数は `iso f g s r`{.Agda} の順であり、`s : (b : B) → f (g b) ≡ b`{.Agda}、`r : (a : A) → g (f a) ≡ a`{.Agda} である。両者の関係は次のとおりである。`iso`{.Agda} はこれらのデータを `Iso A B`{.Agda} にまとめ、`isoToEquiv`{.Agda} は得られた同型を `A ≃ B`{.Agda} へ変換する。写像を明示する同型は具体例の構成に便利であり、Cubical ライブラリは型の構造を運ぶ共通のインターフェースとして型同値を用いる。
 <!--/-->
 
 ```agda
@@ -2384,11 +2384,11 @@ a, & i=\mathsf{zero},\\
 <!--/-->
 
 <!--en-->
-For the length-three vector below, the labels $0,1,2$ abbreviate the `Fin 3`{.Agda} constructors `zero`{.Agda}, `suc zero`{.Agda}, and `suc (suc zero)`{.Agda}.
+For the length-three vector in the figure below, the labels $0,1,2$ abbreviate the `Fin 3`{.Agda} constructors `zero`{.Agda}, `suc zero`{.Agda}, and `suc (suc zero)`{.Agda}.
 <!--zh-->
 下面取一个长度为三的向量；图中的 $0,1,2$ 分别简写 `Fin 3`{.Agda} 的构造子 `zero`{.Agda}、`suc zero`{.Agda}、`suc (suc zero)`{.Agda}。
 <!--ja-->
-下図では長さ三のベクトルを取る。図の $0,1,2$ は `Fin 3`{.Agda} の構成子 `zero`{.Agda}、`suc zero`{.Agda}、`suc (suc zero)`{.Agda} の略記である。
+下図では長さ三のベクトルを取る。図中の $0,1,2$ は `Fin 3`{.Agda} の構成子 `zero`{.Agda}、`suc zero`{.Agda}、`suc (suc zero)`{.Agda} の略記である。
 <!--/-->
 
 <figure class="book-diagram type-comparison path-figure" id="fig-fin-vector-lookup" aria-describedby="fig-fin-vector-lookup-caption">

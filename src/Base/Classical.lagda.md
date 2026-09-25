@@ -402,11 +402,11 @@ LEM→ΩResizing lem = Lift Bool , isoToEquiv (iso
 ∎
 
 <!--en-->
-The two round-trip laws close the two triangles below. Fix `lem : LEM ℓ₁`{.Agda}, abbreviate the code type `Lift {ℓ-zero} {ℓ₂} Bool`{.Agda} by $B$, and write $E(P) := \operatorname{encodeB}\,P\,(\operatorname{lem}\,P)$ and $D := \operatorname{decodeB}$. Each round trip returns a point connected to its starting point by the indicated path.
+The two round-trip laws close the two triangles in the figure below. Fix `lem : LEM ℓ₁`{.Agda}, abbreviate the code type `Lift {ℓ-zero} {ℓ₂} Bool`{.Agda} by $B$, and write $E(P) := \operatorname{encodeB}\,P\,(\operatorname{lem}\,P)$ and $D := \operatorname{decodeB}$. Each round trip returns a point connected to its starting point by the indicated path.
 <!--zh-->
-下面两个三角形分别由两条往返律闭合。固定 `lem : LEM ℓ₁`{.Agda}，把编码类型 `Lift {ℓ-zero} {ℓ₂} Bool`{.Agda} 简写为 $B$，并记 $E(P) := \operatorname{encodeB}\,P\,(\operatorname{lem}\,P)$、$D := \operatorname{decodeB}$。每次往返所得的点，都由标出的路径与出发点相连。
+下图中的两个三角形分别由两条往返律闭合。固定 `lem : LEM ℓ₁`{.Agda}，把编码类型 `Lift {ℓ-zero} {ℓ₂} Bool`{.Agda} 简写为 $B$，并记 $E(P) := \operatorname{encodeB}\,P\,(\operatorname{lem}\,P)$、$D := \operatorname{decodeB}$。每次往返所得的点，都由标出的路径与出发点相连。
 <!--ja-->
-下の二つの三角形は、それぞれ二つの往復則によって閉じる。`lem : LEM ℓ₁`{.Agda} を固定し、符号の型 `Lift {ℓ-zero} {ℓ₂} Bool`{.Agda} を $B$ と略記し、$E(P) := \operatorname{encodeB}\,P\,(\operatorname{lem}\,P)$、$D := \operatorname{decodeB}$ と書く。各往復で得られる点は、示したパスによって出発点と結ばれる。
+図中の二つの三角形は、それぞれ二つの往復則によって閉じる。`lem : LEM ℓ₁`{.Agda} を固定し、符号の型 `Lift {ℓ-zero} {ℓ₂} Bool`{.Agda} を $B$ と略記し、$E(P) := \operatorname{encodeB}\,P\,(\operatorname{lem}\,P)$、$D := \operatorname{decodeB}$ と書く。各往復で得られる点は、示したパスによって出発点と結ばれる。
 <!--/-->
 
 <figure class="book-diagram type-comparison path-figure" id="fig-classical-roundtrips" aria-describedby="fig-classical-roundtrips-caption">

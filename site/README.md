@@ -38,10 +38,21 @@ Framework references:
 | `STYLE-agda.md`, `STYLE-i18n.md` | Formal-code and trilingual authoring rules |
 | `agda-libraries.json`, `AGDA-ENVIRONMENT.md` | Dependency lock and compiler/build policy |
 | `host-lem-inventory.json`, `inline-agda-legacy.json` | Proof classification and narrowly scoped lint allowances |
+| `inline-latex-approvals.json` | Explicit occurrence approvals and temporary allowances ending at human review; no automatic legacy exemptions |
 | `ARCHITECTURE.md` | Instance boundaries, gate mapping and verification requirements |
 
 The proof and prose gates consume these same files even when no website is built.
 Directory ownership does not make configuration dependent on running a renderer.
+
+Inline LaTeX is otherwise restricted to standalone displays, figures and
+figure-explanation paragraphs using `图中的` / `in the figure` / `図中の`.
+This mechanical allowance is local to the paragraph, not a human approval. The
+active inventory is [dev/INLINE-LATEX-REVIEW.md](../dev/INLINE-LATEX-REVIEW.md);
+unreviewed occurrences fail lint unless an explicit temporary allowance is active
+while the chapter's catalog flag is `human_reviewed: false`. Text edits and bulk
+replacements are allowed; changing that flag to true ends the allowance. The
+first four chapters remain strict. See [STYLE-i18n.md](STYLE-i18n.md)
+for the authoring rule and the Outcrop configuration contract for review keys.
 
 ## Install and build
 
@@ -89,6 +100,14 @@ vocabulary forwarding point. `Origin` is the configured overview embedded at
 within that page. Its numbered results and visible public re-exports are explicit
 instance exceptions. The chapter catalog owns translated titles, routes, order
 and human-review status. Never set review badges merely because a test passes.
+The preface uses mathematical `V` in the broad foundational sense, without an
+Agda link or code styling. The milestones' formal model `V` retains its semantic
+links and definition inspection.
+
+On compact screens, explicit language and search icon buttons reveal their
+controls; scrolling never toggles the search field. A code-block touch commits
+AST highlighting and its help only on a completed tap or stationary hold, not
+at touch-down when the gesture might become native scrolling.
 
 `policies.level_name_convention: true` records the book-wide convention that `ℓ`
 with its supported suffixes denotes a universe-level parameter. Outcrop defaults

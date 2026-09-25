@@ -1,5 +1,5 @@
 /* Test-only instrumentation, injected by the local regression server. */
-window.__mobileProbe = {started: performance.now(), fetches: [], hover: [], events: [], long: [], errors: [], search: []};
+window.__mobileProbe = {started: performance.now(), fetches: [], hover: [], events: [], long: [], errors: []};
 const probe = window.__mobileProbe;
 const originalMedia = window.matchMedia.bind(window);
 window.matchMedia = q => q === '(hover: none), (pointer: coarse)'
@@ -25,17 +25,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const style = document.createElement('style');
   style.textContent = '.has-definition-link{padding-right:2.5rem}.type-definition-link:not([hidden]){display:grid;position:absolute;right:.25rem;top:0;bottom:0;align-items:center;padding:.4rem}.type-definition-link svg{width:1.25rem;height:1.25rem;fill:none;stroke:currentColor}';
   document.head.appendChild(style);
-  let searchHidden = document.body.classList.contains('mobile-search-hidden');
   new MutationObserver(records => {
     for (const record of records) {
       for (const node of record.addedNodes) if (node.nodeType === 1 && node.matches('.name-hover-popup'))
         probe.hover.push({phase: 'shell', ms: Math.round(performance.now() - probe.last)});
       if (record.attributeName === 'aria-busy' && record.target.matches('.name-hover-popup') && !record.target.hasAttribute('aria-busy'))
         probe.hover.push({phase: 'ready', ms: Math.round(performance.now() - probe.last)});
-      const hidden = document.body.classList.contains('mobile-search-hidden');
-      if (record.target === document.body && hidden !== searchHidden) {
-        searchHidden = hidden; probe.search.push({hidden, at: performance.now()});
-      }
     }
   }).observe(document.body, {childList: true, subtree: true, attributes: true, attributeFilter: ['aria-busy','class']});
 });

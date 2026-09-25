@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en"><meta charset="utf-8"><title>Mobile reader acceptance</title>
-<style>body{font:15px/1.6 system-ui;margin:1rem}iframe{width:390px;height:844px;border:1px solid #888}pre{white-space:pre-wrap}button{padding:.6rem;margin:.3rem}</style>
+<style>body{font:15px/1.6 system-ui;margin:1rem 420px 1rem 1rem}iframe{position:fixed;top:1rem;right:1rem;width:390px;height:844px;border:1px solid #888}pre{white-space:pre-wrap}button{padding:.6rem;margin:.3rem}</style>
 <h1>Mobile reader acceptance</h1>
 <p>390px, simulated coarse pointer. This is not evidence from an iPhone.</p>
 <button id="origin">Load Origin, cold hover data</button>
@@ -41,14 +41,52 @@ document.querySelector('#run').onclick=async()=>{
   tap(w,d.body);await pause(700);
   check(!d.querySelector('.name-hover-popup'),'outside touch cancels a pending type request');
   tap(w,v);await until(()=>d.querySelector('.name-hover-popup:not([aria-busy])'));
-  check(d.querySelector('.name-hover-popup').textContent.includes('ZFStructure'),'Origin Preface V resolves the real type');
+  check(d.querySelector('.name-hover-popup').textContent.includes('ZFStructure'),'Origin milestone V still resolves the real type');
+  const preface=[...d.querySelectorAll('#milestones p')].filter(p=>/形而上学|越过首个目标/.test(p.textContent));
+  check(preface.length===2&&preface.every(p=>!p.querySelector('a[data-type]')),'broad preface V is ordinary prose, not the formal model');
   await pause(650);check(!!d.querySelector('.name-hover-popup'),'mobile hover persists without a timeout');
+  await load('/zh/Base.Choice.html');
+  await until(()=>frame.contentWindow.__mobileProbe?.ready);
+  w=frame.contentWindow;d=w.document;
+  for(const expression of ['g [ true ] .snd','g [ false ] .snd','λ x → g x .fst']) {
+    const inline=[...d.querySelectorAll('li code.Agda')].find(code=>code.textContent===expression);
+    check(!!inline,'projection expression retains its inline code frame: '+expression);
+    const field=[...inline.querySelectorAll('a[data-type]')].find(a=>a.textContent===expression.split('.').at(-1));
+    check(!!field&&field.textContent!==expression,'only the field token links to its definition: '+expression);
+    tap(w,field);await until(()=>d.querySelector('.name-hover-popup:not([aria-busy])'));
+    check(!d.querySelector('.definition-modal'),'projection field tap opens hover, not a modal');
+    tap(w,d.body);
+  }
   await load('/zh/Base.Impredicativity.html');
   await until(()=>frame.contentWindow.__mobileProbe?.ready);
   w=frame.contentWindow;d=w.document;
   const leaf=d.querySelector('pre.Agda .expr-node a[data-type]'),block=leaf.closest('pre'),originalParent=block.parentElement;
   leaf.scrollIntoView({block:'center'});
   let rect=leaf.getBoundingClientRect();
+  leaf.dispatchEvent(new w.PointerEvent('pointerdown',{bubbles:true,pointerType:'touch'}));
+  touch(w,leaf,'touchstart',rect.x+2,rect.y+2);
+  const hintInactive=()=>!d.querySelector('.ast-swipe-hint')||d.querySelector('.ast-swipe-hint').hidden;
+  check(!block.classList.contains('ast-ranges-visible')&&hintInactive(),'touch-down alone never activates code');
+  touch(w,leaf,'touchmove',rect.x+2,rect.y+60);
+  touch(w,leaf,'touchend',rect.x+2,rect.y+60);await pause(350);
+  check(!block.classList.contains('ast-ranges-visible')&&hintInactive()&&d.querySelector('.type-inspector').hidden,'scroll beginning on code leaves ranges, help and hover inactive');
+  touch(w,leaf,'touchstart',rect.x+2,rect.y+2);
+  touch(w,leaf,'touchcancel',rect.x+2,rect.y+2);await pause(350);
+  check(!block.classList.contains('ast-ranges-visible'),'canceled touch never activates ranges');
+  touch(w,leaf,'touchstart',rect.x+2,rect.y+2);
+  const pinch=new w.Event('touchstart',{bubbles:true});pinch.touches=[{clientX:rect.x,clientY:rect.y},{clientX:rect.x+40,clientY:rect.y}];leaf.dispatchEvent(pinch);
+  await pause(350);touch(w,leaf,'touchend',rect.x+2,rect.y+2);
+  check(!block.classList.contains('ast-ranges-visible'),'multi-touch cancels a pending hold');
+  const keyword=block.querySelector('[data-hover-help]');
+  if(keyword){
+    const point=keyword.getBoundingClientRect();
+    keyword.dispatchEvent(new w.PointerEvent('pointerdown',{bubbles:true,pointerType:'touch'}));
+    touch(w,keyword,'touchstart',point.x+2,point.y+2);touch(w,keyword,'touchmove',point.x+2,point.y+50);touch(w,keyword,'touchend',point.x+2,point.y+50);
+    check(!block.classList.contains('ast-ranges-visible')&&!d.querySelector('.name-hover-popup'),'scroll starting on syntax help does not activate it');
+    tap(w,keyword);
+    check(block.classList.contains('ast-ranges-visible')&&!!d.querySelector('.name-hover-popup'),'confirmed syntax tap still activates the shared code surface');
+    tap(w,d.body);
+  }
   leaf.dispatchEvent(new w.PointerEvent('pointerdown',{bubbles:true,pointerType:'touch'}));
   touch(w,leaf,'touchstart',rect.x+2,rect.y+2);touch(w,leaf,'touchend',rect.x+2,rect.y+2);leaf.click();
   await until(()=>!d.querySelector('.type-inspector').hidden);
@@ -144,18 +182,28 @@ document.querySelector('#run').onclick=async()=>{
     d.querySelector('.code-fullscreen-close').click();
   }
   w.scrollTo(0,0);await pause(260);
-  let searchStart=w.performance.now();w.scrollTo(0,400);
-  await until(()=>d.body.classList.contains('mobile-search-hidden'));
-  check(w.__mobileProbe.search.at(-1).at-searchStart>=90,'search hide waits through short scroll noise');
-  await pause(300);
-  searchStart=w.performance.now();w.scrollTo(0,100);
-  await until(()=>!d.body.classList.contains('mobile-search-hidden'));
-  check(w.__mobileProbe.search.at(-1).at-searchStart>=90,'search reveal also has hysteresis');
+  const search=d.querySelector('.search-form'),languages=d.querySelector('#lang-switch');
+  const searchToggle=d.querySelector('#search-toggle'),languageToggle=d.querySelector('#language-toggle');
+  check(search.inert&&languages.inert,'mobile language and search panels start closed');
+  searchToggle.click();
+  check(!search.inert&&searchToggle.getAttribute('aria-expanded')==='true'&&d.activeElement.id==='search-box','search button opens and focuses search');
+  w.scrollTo(0,400);await pause(300);w.scrollTo(0,100);await pause(300);
+  check(!search.inert&&searchToggle.getAttribute('aria-expanded')==='true','scroll in either direction never toggles search');
+  languageToggle.click();
+  check(search.inert&&!languages.inert&&languageToggle.getAttribute('aria-expanded')==='true','language button opens options and closes search');
+  check(languages.querySelectorAll('a').length===2&&languages.querySelector('.cur'),'all three editions remain available');
+  d.dispatchEvent(new w.KeyboardEvent('keydown',{key:'Escape',bubbles:true}));
+  check(languages.inert&&d.activeElement===languageToggle,'Escape closes language options and restores focus');
+  searchToggle.click();d.querySelector('article').click();
+  check(search.inert,'outside click closes search');
   check(w.getComputedStyle(d.querySelector('.search-form')).transitionDuration!=='0s','mobile search has a short visual transition');
   check(w.__mobileProbe.errors.length===0,'mobile interactions have no unhandled errors');
   output.textContent='PASS '+results.length+'\n'+JSON.stringify(results,null,2);
  }catch(error){output.textContent+='\nFAIL '+error.stack}
 };
 setInterval(()=>{const w=frame.contentWindow;if(w?.__mobileProbe)report.textContent=JSON.stringify({page,...w.__mobileProbe,popups:[...w.document.querySelectorAll('.name-hover-popup')].map(p=>p.textContent.slice(0,100))},null,2);},250);
-load(page).then(()=>document.querySelector('#run').disabled=false);
+load(page).then(()=>{
+ const run=document.querySelector('#run');run.disabled=false;
+ if(new URLSearchParams(location.search).get('run')==='1')run.click();
+});
 </script></html>

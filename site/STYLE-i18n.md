@@ -192,8 +192,8 @@ The renderer renders `` `_+_`{.Agda} `` highlighted and hyperlinked to its
 definition. A temporary variable such as `` `x`{.Agda} `` has the same code styling
 but no link. Every inline code span that uses
 Agda notation carries `{.Agda}`; this includes bound variables, complete expressions,
-keywords and module names. Ordinary mathematical notation belongs in inline LaTeX
-instead of an unmarked code span.
+keywords and module names. Ordinary mathematical notation uses standalone display
+math or a figure; inline LaTeX follows the Math policy below, not an unmarked code span.
 
 Write each expression once, without per-token help markup. Inline and single-line
 code automatically annotate syntax such as `:`, `=` and `→`, and names exported
@@ -258,16 +258,63 @@ it solely with the act of assigning a definition. A path `p : x ≡ y` is an
 inhabitant of an equality type, whereas judgmental equality is a judgment of the
 type system. Introduce this convention in Base.Prelude, Equality and paths.
 
-Use bare Unicode for single symbols where possible. Reserve LaTeX for real expressions:
-`$...$` inline and `$$...$$` (kept blank-line-separated) for display. Math is rendered at
-reading time by KaTeX; both GitHub and the standard Agda toolchain also pass it through.
+Use bare Unicode for single symbols where possible. LaTeX is allowed in figures
+and standalone `$$...$$` display blocks, kept blank-line-separated. A display
+block may wrap across source lines; putting display delimiters inside a prose
+sentence does not exempt it. Math is rendered at reading time by KaTeX.
 Choose inline code or LaTeX by the notation used, not by whether the passage is
 mathematical. Expressions following Agda conventions, such as `x ≡ y`,
 `p : x ≡ y`, `refl`, and references to Agda variables, keep inline code styling.
-The book's Agda-style defining `=` also keeps that styling. Use inline LaTeX for
-ordinary mathematical notation being contrasted with Agda, such as `$x = y$`,
-`$\mathrel{:=}$`, or a lambda expression written with a dot rather than Agda's
-arrow. Do not convert a mixed passage wholesale to either format.
+The book's Agda-style defining `=` also keeps that styling. Do not convert a mixed
+passage wholesale to either format.
+
+### Figure-reference paragraphs
+
+A paragraph explaining notation in a figure may use inline LaTeX without
+per-occurrence approval when its prose contains the localized fixed wording:
+
+| Language | Required wording | Example |
+| --- | --- | --- |
+| Chinese | `图中的` | `图中的 $e$ 表示这个映射。` |
+| English | `in the figure` | `In the figure, $e$ denotes this map.` |
+| Japanese | `図中の` | `図中の $e$ はこの写像を表す。` |
+
+English matching ignores case and permits whitespace/soft wraps between words.
+Near-synonyms such as `图中`, `in the diagram`, and `図の` do not qualify. Use the
+wording naturally, only for an actual figure explanation; do not add it to
+unrelated prose to bypass lint. Agda expressions still use `{.Agda}` spans.
+
+The allowance covers only that paragraph (one list item when applicable), never
+the next paragraph, another language variant, a heading's section or the entire
+chapter. The phrase must occur in prose, not code, a comment, an HTML attribute,
+a link destination or LaTeX itself. Lint checks this mechanical convention, not
+whether each formula actually appears in the referenced figure; authors retain
+that responsibility. The inventory labels this allowance separately from human
+approval. The first-four-chapter migration changes wording only, not formulas.
+
+### Explicit approvals and temporary migration allowances
+
+Other inline `$...$` outside figures requires prior, explicit human approval, including
+ordinary notation contrasted with Agda. Report its exact expression and context
+before adding it. Record approved occurrences in `site/inline-latex-approvals.json`
+with chapter, fingerprint, reviewer and reason; neither existing usage nor an
+agent's judgment counts as approval. Source-context changes require renewed review.
+The shared lint and Bedrock prose gate enforce the same rule. Generate the review
+inventory with `outcrop lint --inline-math-inventory markdown` and the project's
+explicit configuration. Pending occurrences are errors except for the following
+explicitly authorized migration policy.
+
+The first four chapters (`Base.Prelude`, `Base.Impredicativity`, `Base.Classical`,
+`Base.Choice`) stay strict. Existing inline LaTeX in later chapters may be
+temporarily allowed only by an explicit `temporary` record in the same registry,
+with `until: "human_reviewed"`. The authoritative state is `human_reviewed` in
+`site/reading-catalog.json`. While false, source edits and bulk replacements do
+not end the allowance. Setting it to true disables the temporary allowance and
+makes remaining nonconforming, unapproved inline LaTeX fail lint. Resolve those uses or obtain
+explicit per-occurrence human approval before marking the chapter reviewed;
+unrelated lint rules stay active. Do not change a chapter back to unreviewed merely
+to bypass this gate. Remove the temporary record after migration. This deferral
+does not certify the formulas as reviewed; the audit inventory labels it separately.
 
 In diagrams, arrowheads are reserved for functions and their action on elements.
 Do not use them merely to connect related objects. Use equivalence notation for

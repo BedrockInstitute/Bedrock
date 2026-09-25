@@ -36,6 +36,9 @@ Rules (apply to Markdown prose, `*.md` / `*.lagda.md`; the verbatim LICENSE is e
      annotations and equations use one complete inline-code span.             [report only]
  14. In every chapter, standalone symbolic variables in prose use inline Agda
      markup. Exact pre-existing lines are tracked as a shrinking legacy list. [report only]
+ 15. Inline LaTeX outside figures requires an explicit human approval tied to
+     its exact context. Explicit temporary chapter allowances end when the
+     catalog marks human_reviewed true. Standalone display math is allowed.  [report only]
 
 "Chinese context" = the punctuation is adjacent to (or, for quotes/parens, wraps) a
 CJK ideograph or CJK punctuation, looking past whitespace, markdown emphasis markers,
@@ -72,6 +75,8 @@ from outcrop.core.prose_lint import EXCLUDE_BASENAMES, ProsePolicy
 from outcrop.core.prose_lint import analyze as analyze_prose, theorem_label_violations as label_violations
 from outcrop.core.prose_lint import new_bare_variable_violations as bare_variable_policy_violations
 from outcrop.core.i18n_markers import shared_cjk_errors
+from outcrop.site.math_review import load_math_review
+_MATH_APPROVALS, _MATH_TEMPORARY = load_math_review(_SITE_CONFIG)
 def load_bare_variable_legacy():
     """Exact old prose lines, never chapter-level exclusions."""
     with _BARE_VARIABLE_LEGACY_PATH.open(encoding="utf-8") as source:
@@ -103,6 +108,9 @@ def analyze(text, path=None):
     policy = ProsePolicy(chapter=chapter or '', numbered_theorems=tuple(range(5)) if chapter == 'Origin.lagda.md' else (),
                          require_submodules=chapter is not None, variables=chapter is not None,
                          inline_code=path is None or chapter is not None,
+                         inline_math_review=chapter is not None and _SITE_CONFIG.policies.get('inline_math_review', True),
+                         math_approvals=_MATH_APPROVALS,
+                         math_temporary=_MATH_TEMPORARY,
                          variable_legacy=_BARE_VARIABLE_LEGACY)
     return analyze_prose(text, policy=policy)
 

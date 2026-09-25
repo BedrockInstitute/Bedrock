@@ -332,11 +332,11 @@ If the endpoints differ, the middle boolean equals one of them, so one of the tw
 ∎
 
 <!--en-->
-In the diagrams, write $e$ for `quotientPath≃P`{.Agda}: its forward map sends a path to a proof of `P`{.Agda}, and its inverse sends a proof to a path. The following panels show the consequences of a proof or a refutation of `P`{.Agda}, without presuming that either has already been obtained.
+In the figure, write $e$ for `quotientPath≃P`{.Agda}: its forward map sends a path to a proof of `P`{.Agda}, and its inverse sends a proof to a path. The following panels show the consequences of a proof or a refutation of `P`{.Agda}, without presuming that either has already been obtained.
 <!--zh-->
-图中以 $e$ 简记 `quotientPath≃P`{.Agda}：正向映射把路径变为 `P`{.Agda} 的证明，逆向映射把证明变为路径。下面分别展示有 `P`{.Agda} 的证明或反驳时的情形，并不预先断定我们已经取得了其中一种。
+图中的 $e$ 简记 `quotientPath≃P`{.Agda}：正向映射把路径变为 `P`{.Agda} 的证明，逆向映射把证明变为路径。下面分别展示有 `P`{.Agda} 的证明或反驳时的情形，并不预先断定我们已经取得了其中一种。
 <!--ja-->
-図では `quotientPath≃P`{.Agda} を $e$ と略記する。順方向の写像はパスを `P`{.Agda} の証明へ、逆方向の写像は証明をパスへ送る。以下は `P`{.Agda} の証明または反証があるときの帰結を示すもので、どちらかがすでに得られているとは仮定しない。
+図中の $e$ は `quotientPath≃P`{.Agda} の略記である。順方向の写像はパスを `P`{.Agda} の証明へ、逆方向の写像は証明をパスへ送る。以下は `P`{.Agda} の証明または反証があるときの帰結を示すもので、どちらかがすでに得られているとは仮定しない。
 <!--/-->
 
 <figure class="book-diagram type-comparison path-figure" id="fig-choice-gluing" aria-describedby="fig-choice-gluing-caption">
@@ -507,18 +507,18 @@ Temporarily suppose such a function `g`{.Agda} is given. We will construct a dec
 <!--en-->
 **Construction** (`agree→P`{.Agda} `P→agree`{.Agda})
 
-- `agree→P`{.Agda} If `q : b₀ ≡ b₁`{.Agda}, the certificates stored in `g`{.Agda} connect this agreement back to the quotient. Write $s_0$ and $s_1$ in the diagram for `g [ true ] .snd`{.Agda} and `g [ false ] .snd`{.Agda}. The first certificate points from `[ b₀ ]`{.Agda} to `[ true ]`{.Agda}, so the composite must use `sym`{.Agda} there.
-- `P→agree`{.Agda} Conversely, a proof `p : ⟨ P ⟩`{.Agda} gives the path `invEq quotientPath≃P p`{.Agda}, written $e^{-1}(p)$ in the diagram. The ordinary function `λ x → g x .fst`{.Agda} sends that path to `b₀ ≡ b₁`{.Agda}. Taking the first component makes the codomain the fixed type `Bool`{.Agda}, so `cong`{.Agda} suffices.
+- `agree→P`{.Agda} If `q : b₀ ≡ b₁`{.Agda}, the certificates stored in `g`{.Agda} connect this agreement back to the quotient. Write $s_0$ and $s_1$ in the figure for `g [ true ] .snd`{.Agda} and `g [ false ] .snd`{.Agda}. The first certificate points from `[ b₀ ]`{.Agda} to `[ true ]`{.Agda}, so the composite must use `sym`{.Agda} there.
+- `P→agree`{.Agda} Conversely, a proof `p : ⟨ P ⟩`{.Agda} gives the path `invEq quotientPath≃P p`{.Agda}, written $e^{-1}(p)$ in the figure. The ordinary function `λ x → g x .fst`{.Agda} sends that path to `b₀ ≡ b₁`{.Agda}. Taking the first component makes the codomain the fixed type `Bool`{.Agda}, so `cong`{.Agda} suffices.
 <!--zh-->
 **构造** (`agree→P`{.Agda} `P→agree`{.Agda})
 
-- `agree→P`{.Agda} 若有 `q : b₀ ≡ b₁`{.Agda}，`g`{.Agda} 中保存的证书就把这条相等接回商中。图中以 $s_0$、$s_1$ 分别简记 `g [ true ] .snd`{.Agda} 与 `g [ false ] .snd`{.Agda}。第一份证书从 `[ b₀ ]`{.Agda} 到 `[ true ]`{.Agda}，因此复合时要先用 `sym`{.Agda} 反向。
-- `P→agree`{.Agda} 反过来，证明 `p : ⟨ P ⟩`{.Agda} 经逆映射给出路径 `invEq quotientPath≃P p`{.Agda}，图中写作 $e^{-1}(p)$。普通函数 `λ x → g x .fst`{.Agda} 把它送到 `b₀ ≡ b₁`{.Agda}。取第一分量后，值域是固定的 `Bool`{.Agda}，因此只需使用 `cong`{.Agda}。
+- `agree→P`{.Agda} 若有 `q : b₀ ≡ b₁`{.Agda}，`g`{.Agda} 中保存的证书就把这条相等接回商中。图中的 $s_0$、$s_1$ 分别简记 `g [ true ] .snd`{.Agda} 与 `g [ false ] .snd`{.Agda}。第一份证书从 `[ b₀ ]`{.Agda} 到 `[ true ]`{.Agda}，因此复合时要先用 `sym`{.Agda} 反向。
+- `P→agree`{.Agda} 反过来，证明 `p : ⟨ P ⟩`{.Agda} 经逆映射给出路径 `invEq quotientPath≃P p`{.Agda}，即图中的 $e^{-1}(p)$。普通函数 `λ x → g x .fst`{.Agda} 把它送到 `b₀ ≡ b₁`{.Agda}。取第一分量后，值域是固定的 `Bool`{.Agda}，因此只需使用 `cong`{.Agda}。
 <!--ja-->
 **構成** (`agree→P`{.Agda} `P→agree`{.Agda})
 
-- `agree→P`{.Agda} `q : b₀ ≡ b₁`{.Agda} があれば、`g`{.Agda} に含まれる証明によって、この一致を商のパスへ結び付けられる。図では `g [ true ] .snd`{.Agda} と `g [ false ] .snd`{.Agda} をそれぞれ $s_0$、$s_1$ と略記する。最初の証明は `[ b₀ ]`{.Agda} から `[ true ]`{.Agda} へ向かうため、合成には `sym`{.Agda} で逆にしたものを使う。
-- `P→agree`{.Agda} 逆に `p : ⟨ P ⟩`{.Agda} からは、逆写像によってパス `invEq quotientPath≃P p`{.Agda} が得られる。図ではこれを $e^{-1}(p)$ と書く。通常の関数 `λ x → g x .fst`{.Agda} はこのパスを `b₀ ≡ b₁`{.Agda} へ送る。第一成分を取れば終域は固定された型 `Bool`{.Agda} なので、`cong`{.Agda} で十分である。
+- `agree→P`{.Agda} `q : b₀ ≡ b₁`{.Agda} があれば、`g`{.Agda} に含まれる証明によって、この一致を商のパスへ結び付けられる。図中の $s_0$、$s_1$ は、それぞれ `g [ true ] .snd`{.Agda} と `g [ false ] .snd`{.Agda} の略記である。最初の証明は `[ b₀ ]`{.Agda} から `[ true ]`{.Agda} へ向かうため、合成には `sym`{.Agda} で逆にしたものを使う。
+- `P→agree`{.Agda} 逆に `p : ⟨ P ⟩`{.Agda} からは、逆写像によってパス `invEq quotientPath≃P p`{.Agda} が得られる。図中の $e^{-1}(p)$ はこのパスを表す。通常の関数 `λ x → g x .fst`{.Agda} はこのパスを `b₀ ≡ b₁`{.Agda} へ送る。第一成分を取れば終域は固定された型 `Bool`{.Agda} なので、`cong`{.Agda} で十分である。
 <!--/-->
 
 ```agda
@@ -661,11 +661,11 @@ In the second row, a proof of `P`{.Agda} would force the very equality that `ne`
 
 
 <!--en-->
-The same factorization through truncation that appeared in the Prelude now closes the proof. In the diagram, $G$ abbreviates the type `(x : Glued) → Pick x`{.Agda}. The map `decide`{.Agda} is defined on actual functions, while `rec₁ decideIsProp decide`{.Agda} accepts their mere existence.
+The same factorization through truncation that appeared in the Prelude now closes the proof. In the figure, $G$ abbreviates the type `(x : Glued) → Pick x`{.Agda}. The map `decide`{.Agda} is defined on actual functions, while `rec₁ decideIsProp decide`{.Agda} accepts their mere existence.
 <!--zh-->
-《基础词汇》中经由截断的分解，在这里完成证明。图中 $G$ 简记类型 `(x : Glued) → Pick x`{.Agda}。`decide`{.Agda} 以实际函数为输入，`rec₁ decideIsProp decide`{.Agda} 则可以接收它们的仅仅存在。
+《基础词汇》中经由截断的分解，在这里完成证明。图中的 $G$ 简记类型 `(x : Glued) → Pick x`{.Agda}。`decide`{.Agda} 以实际函数为输入，`rec₁ decideIsProp decide`{.Agda} 则可以接收它们的仅仅存在。
 <!--ja-->
-「基礎語彙」で見た、切り詰めを経由する分解がここで証明を完成させる。図の $G$ は型 `(x : Glued) → Pick x`{.Agda} の略記である。`decide`{.Agda} は実際の関数を受け取り、`rec₁ decideIsProp decide`{.Agda} はその単なる存在を受け取る。
+「基礎語彙」で見た、切り詰めを経由する分解がここで証明を完成させる。図中の $G$ は型 `(x : Glued) → Pick x`{.Agda} の略記である。`decide`{.Agda} は実際の関数を受け取り、`rec₁ decideIsProp decide`{.Agda} はその単なる存在を受け取る。
 <!--/-->
 
 <figure class="book-diagram type-comparison" id="fig-choice-truncation" aria-describedby="fig-choice-truncation-caption">
