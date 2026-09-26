@@ -47,6 +47,11 @@ document.querySelector('#run').onclick=async()=>{
   check(d.querySelector('.name-hover-popup').textContent.includes('ZFStructure'),'Origin milestone V still resolves the real type');
   const preface=[...d.querySelectorAll('article p')].filter(p=>/形而上学|越过首个目标/.test(p.textContent));
   check(preface.length===2&&preface.every(p=>!p.querySelector('a[data-type]')),'broad preface V is ordinary prose, not the formal model');
+  const originParagraph=[...d.querySelectorAll('#milestones p')].find(p=>p.textContent.startsWith('Bedrock 在'));
+  check(originParagraph&&w.getComputedStyle(originParagraph).textWrap==='wrap'&&
+    w.getComputedStyle(originParagraph).lineBreak==='normal'&&
+    !originParagraph.classList.contains('punctuation-tracking'),
+    'narrow Origin prose keeps native wrapping without paragraph-wide tracking');
   await pause(650);check(!!d.querySelector('.name-hover-popup'),'mobile hover persists without a timeout');
   await load('/zh/Base.Choice.html');
   await until(()=>readerReady(frame.contentWindow));
