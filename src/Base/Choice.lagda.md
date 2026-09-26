@@ -214,11 +214,11 @@ How can choosing representatives decide an arbitrary proposition? The preceding 
 <!--/-->
 
 <!--en-->
-As in an ordinary proof, we first fix an arbitrary proposition `P : hProp ℓ`{.Agda} and carry out the construction under that shared assumption. The parameterized submodule `Diaconescu`{.Agda} expresses this in Agda: `{ℓ}`{.Agda} is its implicit universe-level parameter, and its definitions can use `P`{.Agda} without repeating it. The theorem will later instantiate the module at the proposition to be decided. `private`{.Agda} only keeps these auxiliary constructions local; it adds no assumption.
+The private submodule `Diaconescu`{.Agda} fixes an arbitrary `P : hProp ℓ`{.Agda} and develops the quotient and auxiliary constructions for it. The final theorem uses them to turn choice into a decision of `P`{.Agda}.
 <!--zh-->
-如同通常的数学证明，我们先固定任意命题 `P : hProp ℓ`{.Agda}，在这个共同前提下展开构造。Agda 用带参数的子模块 `Diaconescu`{.Agda} 表达这一步：`{ℓ}`{.Agda} 是隐式的宇宙层级参数，模块内的定义可以直接使用 `P`{.Agda}，无须反复写出。最后的定理会把模块应用于待判定的命题。`private`{.Agda} 只把这些辅助构造限于本章内部，并未增加假设。
+私有子模块 `Diaconescu`{.Agda} 先固定任意 `P : hProp ℓ`{.Agda}，构造相应的商及辅助结果。最后的定理利用这些结果，把选择转化为对 `P`{.Agda} 的判定。
 <!--ja-->
-通常の数学の証明と同じく、まず任意の命題 `P : hProp ℓ`{.Agda} を固定し、その共通の仮定のもとで構成を進める。Agda では引数を持つ部分モジュール `Diaconescu`{.Agda} がこの役割を果たす。`{ℓ}`{.Agda} は暗黙の宇宙レベル引数であり、内部の定義は `P`{.Agda} を繰り返し書かずに使える。最後の定理では、判定したい命題にこのモジュールを適用する。`private`{.Agda} は補助的な構成を本章内に限るだけで、仮定を増やさない。
+非公開の部分モジュール `Diaconescu`{.Agda} で任意の `P : hProp ℓ`{.Agda} を固定し、対応する商と補助結果を構成する。最後の定理はそれらを用いて、選択から `P`{.Agda} の判定を得る。
 <!--/-->
 
 <details open class="submodule-fold">
