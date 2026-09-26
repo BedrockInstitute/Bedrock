@@ -159,7 +159,7 @@ Records b f γ c w = ⟨ fst c ∈ fst (lookup b γ) ⟩
                   × ⟨ pr (fst c) (fst w) ∈ fst (lookup f γ) ⟩
 
 StepOf : ∀ {n} → Fin n → Fin n → S ^ n → S → Type (ℓ-suc ℓ)
-StepOf b f γ z = Σ[ c ∈ S ] Σ[ w ∈ S ]
+StepOf b f γ z = Σ[ c ∶ S ] Σ[ w ∶ S ]
                    (Records b f γ c w × ⟨ fst z ∈ 𝒟ₒ (fst w) ⟩)
 
 PowOK : ∀ {n} → Fin n → Fin n → S ^ n → Type (ℓ-suc ℓ)
@@ -242,16 +242,16 @@ Perf: `env` spelled out at both ends; via an abbreviation, 15 s per conversion.
     unfold ok z = rec₁ squash₁ viaArg
       where
       viaPow : (c w : S)
-             → Σ[ d ∈ S ] ⟨ (d ∷ w ∷ c ∷ z ∷ γ) ⊨ StepBody b f ⟩
+             → Σ[ d ∶ S ] ⟨ (d ∷ w ∷ c ∷ z ∷ γ) ⊨ StepBody b f ⟩
              → ∥ StepOf b f γ z ∥₁
       viaPow c w (d , hd) = ∣ readBody ok z c w d hd ∣₁
 
       viaVal : (c : S)
-             → Σ[ w ∈ S ] ⟨ (w ∷ c ∷ z ∷ γ) ⊨ ∃̇ (StepBody b f) ⟩
+             → Σ[ w ∶ S ] ⟨ (w ∷ c ∷ z ∷ γ) ⊨ ∃̇ (StepBody b f) ⟩
              → ∥ StepOf b f γ z ∥₁
       viaVal c (w , hw) = rec₁ squash₁ (viaPow c w) hw
 
-      viaArg : Σ[ c ∈ S ] ⟨ (c ∷ z ∷ γ) ⊨ ∃̇ (∃̇ (StepBody b f)) ⟩
+      viaArg : Σ[ c ∶ S ] ⟨ (c ∷ z ∷ γ) ⊨ ∃̇ (∃̇ (StepBody b f)) ⟩
              → ∥ StepOf b f γ z ∥₁
       viaArg (c , hc) = rec₁ squash₁ (viaVal c) hc
 
@@ -386,7 +386,7 @@ module RecShape (Step : ∀ {n} → Fin n → Fin n → Fin n → Formula S n) w
 
     ApproxAt-value : ⟨ γ ⊨ ApproxAt f a ⟩ → (c : S)
                    → ⟨ fst c ∈ fst (lookup a γ) ⟩
-                   → ∥ (Σ[ z ∈ S ] ⟨ pr (fst c) (fst z) ∈ fst (lookup f γ) ⟩) ∥₁
+                   → ∥ (Σ[ z ∶ S ] ⟨ pr (fst c) (fst z) ∈ fst (lookup f γ) ⟩) ∥₁
     ApproxAt-value h = domAt-in f a γ (h .fst)
 
     ApproxAt-step : ⟨ γ ⊨ ApproxAt f a ⟩ → (c z : S)
@@ -415,7 +415,7 @@ module RecShape (Step : ∀ {n} → Fin n → Fin n → Fin n → Formula S n) w
 
 ```agda
     GraphOf : Type (ℓ-suc ℓ)
-    GraphOf = Σ[ f ∈ S ] ( ⟨ (f ∷ γ) ⊨ ApproxAt zero (suc b) ⟩
+    GraphOf = Σ[ f ∶ S ] ( ⟨ (f ∷ γ) ⊨ ApproxAt zero (suc b) ⟩
                          × ⟨ (f ∷ γ) ⊨ Step (suc w) (suc b) zero ⟩ )
 
     Graph-in : (f : S) → ⟨ (f ∷ γ) ⊨ ApproxAt zero (suc b) ⟩
@@ -443,7 +443,7 @@ module RecShape (Step : ∀ {n} → Fin n → Fin n → Fin n → Formula S n) w
 
 ```agda
     PairOf : Type (ℓ-suc ℓ)
-    PairOf = Σ[ z ∈ S ] ( (fst (lookup e γ) ≡ pr (fst (lookup c γ)) (fst z))
+    PairOf = Σ[ z ∶ S ] ( (fst (lookup e γ) ≡ pr (fst (lookup c γ)) (fst z))
                         × ⟨ (z ∷ γ) ⊨ GraphAt zero (suc c) ⟩ )
 
     PairGraph-in : (z : S) → fst (lookup e γ) ≡ pr (fst (lookup c γ)) (fst z)

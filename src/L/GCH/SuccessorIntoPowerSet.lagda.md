@@ -327,7 +327,7 @@ The totality clause says that every member of `𝒫 κ` has some value under `F`
 
 ```agda
     valF : (x : SL.S) → ⟨ fst x ∈ fst (𝒫 κ) ⟩
-         → ∥ Σ[ y ∈ SL.S ] Holds F x y ∥₁
+         → ∥ Σ[ y ∶ SL.S ] Holds F x y ∥₁
     valF = domAt-in zero (suc zero) γF (code .snd .fst)
 ```
 
@@ -354,7 +354,7 @@ The diagonal predicate says, merely, that some member `A` of the power set has i
 
 ```agda
     Diagonal : SL.S → Type (ℓ-suc ℓ)
-    Diagonal ξ = ∥ Σ[ A ∈ SL.S ] ( ⟨ fst A ∈ fst (𝒫 κ) ⟩ × Holds F A ξ
+    Diagonal ξ = ∥ Σ[ A ∶ SL.S ] ( ⟨ fst A ∈ fst (𝒫 κ) ⟩ × Holds F A ξ
                                  × (⟨ fst ξ ∈ fst A ⟩ → ⊥₀) ) ∥₁
 ```
 
@@ -465,7 +465,7 @@ To derive the contradiction, suppose the graph assigns the diagonal set `D₀` s
 <!--/-->
 
 ```agda
-    absurd : Σ[ ξ ∈ SL.S ] Holds F D₀ ξ → ⊥₀
+    absurd : Σ[ ξ ∶ SL.S ] Holds F D₀ ξ → ⊥₀
     absurd (ξ , h₀) = out inside
       where
 ```
@@ -514,7 +514,7 @@ The two halves refute any internal coded injection from the power set into `κ`:
   no-inj : InjL (𝒫 κ) κ → ⊥₀
   no-inj = rec₁ isProp⊥ step
     where
-    step : Σ[ F ∈ SL.S ] InjCode F (𝒫 κ) κ → ⊥₀
+    step : Σ[ F ∶ SL.S ] InjCode F (𝒫 κ) κ → ⊥₀
     step (F , code) = rec₁ isProp⊥ D.absurd (D.valF D.D₀ D.D₀∈𝒫κ)
 ```
 
@@ -644,7 +644,7 @@ Totality gives a propositionally truncated value witness for every `x ∈ P`. It
 <!--/-->
 
 ```agda
-  valG : (x : SL.S) → ⟨ fst x ∈ fst P ⟩ → ∥ Σ[ y ∈ SL.S ] Holds G x y ∥₁
+  valG : (x : SL.S) → ⟨ fst x ∈ fst P ⟩ → ∥ Σ[ y ∶ SL.S ] Holds G x y ∥₁
   valG = domAt-in zero (suc zero) γG (code .snd .fst)
 ```
 
@@ -670,7 +670,7 @@ For a fixed input `x`, any two graph values of `G` must coincide by single-value
 <!--/-->
 
 ```agda
-  isPropVal : (x : SL.S) → isProp (Σ[ y ∈ SL.S ] Holds G x y)
+  isPropVal : (x : SL.S) → isProp (Σ[ y ∶ SL.S ] Holds G x y)
   isPropVal x (y , h) (y' , h') =
     Σ≡Prop (λ w → snd (pr (fst x) (fst w) ∈ fst G)) (S≡ (svG x y y' h h'))
 ```
@@ -684,7 +684,7 @@ The domain clause initially supplies a value of `G` only under propositional tru
 <!--/-->
 
 ```agda
-  val : (x : SL.S) → ⟨ fst x ∈ fst P ⟩ → Σ[ y ∈ SL.S ] Holds G x y
+  val : (x : SL.S) → ⟨ fst x ∈ fst P ⟩ → Σ[ y ∶ SL.S ] Holds G x y
   val x m = rec₁ (isPropVal x) (λ z → z) (valG x m)
 ```
 
@@ -698,7 +698,7 @@ Define `a` to precede `b` when they both belong to `P` and there merely exist gr
 
 ```agda
   Read : SL.S → SL.S → Type (ℓ-suc ℓ)
-  Read a b = ∥ Σ[ x ∈ SL.S ] Σ[ y ∈ SL.S ]
+  Read a b = ∥ Σ[ x ∶ SL.S ] Σ[ y ∶ SL.S ]
                ( ⟨ fst a ∈ fst P ⟩ × ⟨ fst b ∈ fst P ⟩
                × Holds G a x × Holds G b y × ⟨ fst x ∈ fst y ⟩ ) ∥₁
 ```
@@ -1168,7 +1168,7 @@ It remains to show that the image itself is transitive. Given `y∈x` and `x∈o
     tr {x} {y} y∈x x∈ot =
       rec₁ (snd (y ∈ˢ fst C.otL)) outer (C.otL-out x x∈ot)
       where
-      outer : Σ[ b ∈ OT.Dom ] (C.col b ≡ x) → ⟨ y ∈ˢ fst C.otL ⟩
+      outer : Σ[ b ∶ OT.Dom ] (C.col b ≡ x) → ⟨ y ∈ˢ fst C.otL ⟩
 ```
 
 <!--en-->
@@ -1183,7 +1183,7 @@ After replacing `x` by `col b`, the collapse equation for membership in `col b` 
       outer (b , e) = rec₁ (snd (y ∈ˢ fst C.otL)) inner
         (C.col-out b y (subst (λ w → ⟨ y ∈ˢ w ⟩) (sym e) y∈x))
         where
-        inner : Σ[ r ∈ OT.Dom ] ((r OT.≺ b) × (C.col r ≡ y))
+        inner : Σ[ r ∶ OT.Dom ] ((r OT.≺ b) × (C.col r ≡ y))
               → ⟨ y ∈ˢ fst C.otL ⟩
 ```
 
@@ -1210,7 +1210,7 @@ For a hierarchy element `w`, the fibre `Fib w` consists of an index `b` together
 
 ```agda
   Fib : V ℓ → Type (ℓ-suc ℓ)
-  Fib w = Σ[ b ∈ OT.Dom ] (C.col b ≡ w)
+  Fib w = Σ[ b ∶ OT.Dom ] (C.col b ≡ w)
 ```
 
 <!--en-->

@@ -230,10 +230,10 @@ A membership certificate for the limit stage is hard to use directly, because it
 ```agda
 private
   AtStage : S → Type (ℓ-suc ℓ)
-  AtStage x = Σ[ k ∈ ℕ ] ⟨ x ∈ˢ Lset (# k) ⟩
+  AtStage x = Σ[ k ∶ ℕ ] ⟨ x ∈ˢ Lset (# k) ⟩
 
   raiseTo : (x : S) (d k : ℕ) → ⟨ x ∈ˢ Lset (# k) ⟩ → ⟨ x ∈ˢ Lset (# (d + k)) ⟩
-  raiseTo x zero    k h = h
+  raiseTo x 0    k h = h
 ```
 
 <!--en-->
@@ -563,7 +563,7 @@ module Naming (A : S) (w : SWO ⟪ A ⟫) where
   open DA using ( _⊨ᵐ_ )
 
   Name : Type ℓ
-  Name = Σ[ k ∈ ℕ ] (Formula (⊥* {ℓ}) (suc k) × Vec ⟪ A ⟫ k)
+  Name = Σ[ k ∶ ℕ ] (Formula (⊥* {ℓ}) (suc k) × Vec ⟪ A ⟫ k)
 ```
 
 <!--en-->
@@ -621,7 +621,7 @@ A subset of `A` carved by a predicate is presented directly: `subsetOf` takes a 
     open SemM using ( _^_ )
 
     subsetOf : (⟪ A ⟫ → hProp ℓ) → S
-    subsetOf P = sett (Σ[ m ∈ ⟪ A ⟫ ] ⟨ P m ⟩) (λ p → ⟪ A ⟫↪ (p .fst))
+    subsetOf P = sett (Σ[ m ∶ ⟪ A ⟫ ] ⟨ P m ⟩) (λ p → ⟪ A ⟫↪ (p .fst))
 ```
 
 <!--en-->
@@ -864,22 +864,22 @@ The equality `denote-defSet` is the predicate agreement `satAt-abs` made into an
   denote-defSet φ = cong subsetOf (funExt (satAt-abs φ))
 
   names-complete : (x : S) → ⟨ x ∈ˢ 𝒟ₒ A ⟩
-                 → ∥ Σ[ a ∈ Name ] (denote a ≡ x) ∥₁
+                 → ∥ Σ[ a ∶ Name ] (denote a ≡ x) ∥₁
   names-complete x h = map₁ named (𝒟ₒ-inv A x h)
 ```
 
 <!--en-->
-Inside the truncation, the step from the inverted data to the desired pair is ordinary: the formula `φ` is named by `nameOf φ`, and the required equality is `denote-defSet φ ∙ q`, the path from the name's denotation to `defSet φ` followed by the given path to `x`. Since the target `∥ Σ[ a ∈ Name ] (denote a ≡ x) ∥₁` is a proposition, `map₁` may work under the truncation, mapping the merely supplied formula to a merely supplied name without ever inspecting which one it is.
+Inside the truncation, the step from the inverted data to the desired pair is ordinary: the formula `φ` is named by `nameOf φ`, and the required equality is `denote-defSet φ ∙ q`, the path from the name's denotation to `defSet φ` followed by the given path to `x`. Since the target `∥ Σ[ a ∶ Name ] (denote a ≡ x) ∥₁` is a proposition, `map₁` may work under the truncation, mapping the merely supplied formula to a merely supplied name without ever inspecting which one it is.
 <!--zh-->
-在截断之内，从反演数据到目标对的步骤是平凡的：公式 `φ` 由 `nameOf φ` 命名，所需的等式是 `denote-defSet φ ∙ q`，即从名字的指称到 `defSet φ` 的路径再接上给定的到 `x` 的路径。由于目标 `∥ Σ[ a ∈ Name ] (denote a ≡ x) ∥₁` 是命题，`map₁` 可以在截断之下工作，把仅仅给出的公式映为仅仅给出的名字，而无须检视它究竟是哪一条。
+在截断之内，从反演数据到目标对的步骤是平凡的：公式 `φ` 由 `nameOf φ` 命名，所需的等式是 `denote-defSet φ ∙ q`，即从名字的指称到 `defSet φ` 的路径再接上给定的到 `x` 的路径。由于目标 `∥ Σ[ a ∶ Name ] (denote a ≡ x) ∥₁` 是命题，`map₁` 可以在截断之下工作，把仅仅给出的公式映为仅仅给出的名字，而无须检视它究竟是哪一条。
 <!--ja-->
-切断の内側では、反転されたデータから求める対への段階は普通のものである。論理式 `φ` は `nameOf φ` によって名付けられ、必要な等式は `denote-defSet φ ∙ q`、つまり名前の指示対象から `defSet φ` への経路に、与えられた `x` への経路を続けたものである。目標の `∥ Σ[ a ∈ Name ] (denote a ≡ x) ∥₁` は命題なので、`map₁` は切断の下で働き、ただ与えられた論理式をただ与えられた名前へ写す。それがどの論理式かを検査することは一切ない。
+切断の内側では、反転されたデータから求める対への段階は普通のものである。論理式 `φ` は `nameOf φ` によって名付けられ、必要な等式は `denote-defSet φ ∙ q`、つまり名前の指示対象から `defSet φ` への経路に、与えられた `x` への経路を続けたものである。目標の `∥ Σ[ a ∶ Name ] (denote a ≡ x) ∥₁` は命題なので、`map₁` は切断の下で働き、ただ与えられた論理式をただ与えられた名前へ写す。それがどの論理式かを検査することは一切ない。
 <!--/-->
 
 ```agda
     where
-    named : Σ[ φ ∈ Formula ⟪ A ⟫ 1 ] (DA.defSet φ ≡ x)
-          → Σ[ a ∈ Name ] (denote a ≡ x)
+    named : Σ[ φ ∶ Formula ⟪ A ⟫ 1 ] (DA.defSet φ ≡ x)
+          → Σ[ a ∶ Name ] (denote a ≡ x)
     named (φ , q) = nameOf φ , (denote-defSet φ ∙ q)
 ```
 
@@ -1129,7 +1129,7 @@ The main theorem is induction on the length. The empty vector's accessibility is
 <!--/-->
 
 ```agda
-  ≺ᵥ-wf zero    []      = acc (λ { [] h → ⊥*-rec h })
+  ≺ᵥ-wf 0    []      = acc (λ { [] h → ⊥*-rec h })
   ≺ᵥ-wf (suc k) (x ∷ p) = consAcc k (≺ᵥ-wf k) x p (≺ᵥ-wf k p)
 ```
 
@@ -1612,8 +1612,8 @@ The least-element search is applied only to the denotation predicate needed by t
   definedDenotes x = FOL.Semantics.presented 1 (var zero ≐ con x)
     (λ a → denote a ∷ []) (λ a → refl)
 
-  leastName : (x : S) → ∥ Σ[ a ∈ Name ] ⟨ Denotes x a ⟩ ∥₁
-            → Σ[ a ∈ Name ] IsLeast nameOrder (Denotes x) a
+  leastName : (x : S) → ∥ Σ[ a ∶ Name ] ⟨ Denotes x a ⟩ ∥₁
+            → Σ[ a ∶ Name ] IsLeast nameOrder (Denotes x) a
   leastName x = leastOfFormula nameOrder (definedDenotes x) lem
 ```
 </div>

@@ -287,15 +287,15 @@ ReplImage a φ z = ∃[ x ∶ S ] (x ∈ˢ a) ⊓ ((x ∷ z ∷ []) ⊨ φ)
 <!--en-->
 The extra problem in replacement is to find one stage containing every possible
 value. `FunctionalImage` treats an arbitrary host-level relation `R` and assumes
-that for each `x ∈ˢ a` the fibre `Σ[ y ∈ S ] ⟨ R x y ⟩` is contractible. Thus
+that for each `x ∈ˢ a` the fibre `Σ[ y ∶ S ] ⟨ R x y ⟩` is contractible. Thus
 the fibre contains a specified centre and every other related pair is equal to
 it. This hypothesis supplies existence and uniqueness as data at each source;
 projecting its centres is ordinary dependent-function application and uses no
 host-level or object-theoretic choice axiom.
 <!--zh-->
-替换多出的困难，是找到一个容纳所有可能取值的层。`FunctionalImage` 处理任意宿主层关系 `R`，并假设对每个 `x ∈ˢ a`，纤维 `Σ[ y ∈ S ] ⟨ R x y ⟩` 都可缩。因此，该纤维带有一个指定中心，任何其他相关对都与中心相等。这项假设在每个源处以数据形式给出存在性与唯一性；从这些中心作投影只是依值函数应用，不使用宿主层或对象理论的选择公理。
+替换多出的困难，是找到一个容纳所有可能取值的层。`FunctionalImage` 处理任意宿主层关系 `R`，并假设对每个 `x ∈ˢ a`，纤维 `Σ[ y ∶ S ] ⟨ R x y ⟩` 都可缩。因此，该纤维带有一个指定中心，任何其他相关对都与中心相等。这项假设在每个源处以数据形式给出存在性与唯一性；从这些中心作投影只是依值函数应用，不使用宿主层或对象理论的选择公理。
 <!--ja-->
-置換公理で新たに生じる問題は、可能な値をすべて含む一つの段階を見つけることである。`FunctionalImage` は任意のホスト側の関係 `R` を扱い、各 `x ∈ˢ a` についてファイバー `Σ[ y ∈ S ] ⟨ R x y ⟩` が可縮であると仮定する。したがって、このファイバーには指定された中心があり、ほかのすべての関係する対はその中心に等しくなる。この仮定は、各始域の要素について存在と一意性をデータとして与える。中心を射影することは通常の依存関数の適用であり、ホスト側の選択公理も対象理論の選択公理も使わない。
+置換公理で新たに生じる問題は、可能な値をすべて含む一つの段階を見つけることである。`FunctionalImage` は任意のホスト側の関係 `R` を扱い、各 `x ∈ˢ a` についてファイバー `Σ[ y ∶ S ] ⟨ R x y ⟩` が可縮であると仮定する。したがって、このファイバーには指定された中心があり、ほかのすべての関係する対はその中心に等しくなる。この仮定は、各始域の要素について存在と一意性をデータとして与える。中心を射影することは通常の依存関数の適用であり、ホスト側の選択公理も対象理論の選択公理も使わない。
 <!--/-->
 
 <details open class="submodule-fold">
@@ -303,7 +303,7 @@ host-level or object-theoretic choice axiom.
 ```agda
 module FunctionalImage (a : S) (R : S → S → hProp (ℓ-suc ℓ))
                        (fc : (x : S) → ⟨ x ∈ˢ a ⟩
-                           → isContr (Σ[ y ∈ S ] ⟨ R x y ⟩)) where
+                           → isContr (Σ[ y ∶ S ] ⟨ R x y ⟩)) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -324,7 +324,7 @@ needed for the bound.
 
 ```agda
   Mem : Type (ℓ-suc ℓ)
-  Mem = Σ[ x ∈ S ] ⟨ x ∈ˢ a ⟩
+  Mem = Σ[ x ∶ S ] ⟨ x ∈ˢ a ⟩
 ```
 
 <!--en-->
@@ -1186,7 +1186,7 @@ ordinality of that index and the membership of the constant in its layer. A vari
 <!--/-->
 
 ```agda
-mkBoundedTm : ∀ {n} (t : Term S n) → Σ[ σ ∈ V ℓ ] (IsOrd σ × BoundedTm (Below′ σ) t)
+mkBoundedTm : ∀ {n} (t : Term S n) → Σ[ σ ∶ V ℓ ] (IsOrd σ × BoundedTm (Below′ σ) t)
 mkBoundedTm (con c) = stage (fst c) (c .snd)
                     , (stage-ord (fst c) (c .snd) , stage-mem (fst c) (c .snd))
 mkBoundedTm (var i) = ∅ , (∅-ord , _)
@@ -1209,7 +1209,7 @@ private
   mkBounded : ∀ {ℓc ℓd} {C : V ℓ → Type ℓc} {D : V ℓ → Type ℓd}
             → (liftC : {σ β : V ℓ} → ⟨ σ ∈ β ⟩ → C σ → C β)
             → (liftD : {σ β : V ℓ} → ⟨ σ ∈ β ⟩ → D σ → D β)
-            → (r₁ : Σ[ σ ∈ V ℓ ] (IsOrd σ × C σ))
+            → (r₁ : Σ[ σ ∶ V ℓ ] (IsOrd σ × C σ))
 ```
 
 <!--en-->
@@ -1225,8 +1225,8 @@ index. No property of the certificates is used beyond their liftable shape.
 <!--/-->
 
 ```agda
-            → (r₂ : Σ[ σ ∈ V ℓ ] (IsOrd σ × D σ))
-            → Σ[ σ ∈ V ℓ ] (IsOrd σ × (C σ × D σ))
+            → (r₂ : Σ[ σ ∶ V ℓ ] (IsOrd σ × D σ))
+            → Σ[ σ ∶ V ℓ ] (IsOrd σ × (C σ × D σ))
   mkBounded liftC liftD r₁ r₂ = b .fst , (b .snd .fst ,
       ( liftC (b .snd .snd .fst) (r₁ .snd .snd)
       , liftD (b .snd .snd .snd) (r₂ .snd .snd) ))
@@ -1259,7 +1259,7 @@ the boundedness proofs are transported to the common index.
 <!--/-->
 
 ```agda
-mkBoundedFo : ∀ {n} (φ : Formula S n) → Σ[ σ ∈ V ℓ ] (IsOrd σ × BoundedFo (Below′ σ) φ)
+mkBoundedFo : ∀ {n} (φ : Formula S n) → Σ[ σ ∶ V ℓ ] (IsOrd σ × BoundedFo (Below′ σ) φ)
 mkBoundedFo (t ∈̇ u) = mkBounded (λ σ∈β → liftTmTo σ∈β t) (λ σ∈β → liftTmTo σ∈β u) (mkBoundedTm t) (mkBoundedTm u)
 mkBoundedFo (t ≐ u) = mkBounded (λ σ∈β → liftTmTo σ∈β t) (λ σ∈β → liftTmTo σ∈β u) (mkBoundedTm t) (mkBoundedTm u)
 mkBoundedFo (φ ∧̇ ψ) = mkBounded (λ σ∈β → liftFoTo σ∈β φ) (λ σ∈β → liftFoTo σ∈β ψ) (mkBoundedFo φ) (mkBoundedFo ψ)
@@ -1381,7 +1381,7 @@ predicate has a contractible realization by a model element. The proof transport
 
 ```agda
 replaceΔ₀ : (a : S) (φ : Formula S 2) → Δ₀ φ
-          → ((x : S) → ⟨ x ∈ˢ a ⟩ → isContr (Σ[ y ∈ S ] ⟨ (x ∷ y ∷ []) ⊨ φ ⟩))
+          → ((x : S) → ⟨ x ∈ˢ a ⟩ → isContr (Σ[ y ∶ S ] ⟨ (x ∷ y ∷ []) ⊨ φ ⟩))
           → isContr (SetOf (ReplImage a φ))
 replaceΔ₀ a φ dφ fc =
   subst (λ Q → isContr (SetOf Q)) (sym Q≡)

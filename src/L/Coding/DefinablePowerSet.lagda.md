@@ -292,7 +292,7 @@ module _ {n : ℕ} (x w v : Fin n) (γ : S ^ n) where
               → ⟨ envOne (fst z) ∈ fst (lookup v γ) ⟩
     readInner z = rec₁ (snd (envOne (fst z) ∈ fst (lookup v γ))) step
       where
-      step : Σ[ E ∈ S ] ⟨ (E ∷ z ∷ γ)
+      step : Σ[ E ∶ S ] ⟨ (E ∷ z ∷ γ)
                ⊨ (envOneAt zero (suc zero) ∧̇ (var zero ∈̇ var (suc (suc v)))) ⟩
            → ⟨ envOne (fst z) ∈ fst (lookup v γ) ⟩
       step (E , (hE , E∈)) = subst (λ u → ⟨ u ∈ fst (lookup v γ) ⟩)
@@ -386,13 +386,13 @@ module _ (A : S) where
   codeAt-out : ∀ {n} (c w : Fin n) (γ : S ^ n)
              → fst (lookup w γ) ≡ fst A
              → ⟨ γ ⊨ isCodeAt c w ⟩
-             → ∥ (Σ[ ψ ∈ Formula ⟪ fst A ⟫ 1 ]
+             → ∥ (Σ[ ψ ∶ Formula ⟪ fst A ⟫ 1 ]
                    (fst (lookup c γ) ≡ fst (keyS A ψ))) ∥₁
   codeAt-out c w γ qw (hk , hw) =
     rec₁ squash₁ step (keyArityAtL-out c 1 γ hk)
     where
-    step : Σ[ z ∈ S ] (fst (lookup c γ) ≡ pr (# 1) (fst z))
-         → ∥ (Σ[ ψ ∈ Formula ⟪ fst A ⟫ 1 ]
+    step : Σ[ z ∶ S ] (fst (lookup c γ) ≡ pr (# 1) (fst z))
+         → ∥ (Σ[ ψ ∶ Formula ⟪ fst A ⟫ 1 ]
                (fst (lookup c γ) ≡ fst (keyS A ψ))) ∥₁
     step (z , qz) = witnessAt-out A w c γ qw hw 1 z qz
 ```
@@ -659,15 +659,15 @@ module _ (A : S) where
 
   read : ∀ {n} (w : Fin n) (γ : S ^ n) → fst (lookup w γ) ≡ fst A
        → (z c v : S) → ⟨ (v ∷ c ∷ z ∷ γ) ⊨ DefBody w ⟩
-       → ∥ (Σ[ ψ ∈ Formula ⟪ fst A ⟫ 1 ] (DA.defSet ψ ≡ fst z)) ∥₁
+       → ∥ (Σ[ ψ ∶ Formula ⟪ fst A ⟫ 1 ] (DA.defSet ψ ≡ fst z)) ∥₁
   read {n} w γ qw z c v (hcode , (hgraph , hdef)) =
     rec₁ squash₁ step (codeAt-out A (suc zero) (sh3 w) δ qw hcode)
     where
     δ : S ^ (suc (suc (suc n)))
     δ = v ∷ c ∷ z ∷ γ
 
-    step : Σ[ ψ ∈ Formula ⟪ fst A ⟫ 1 ] (fst c ≡ fst (keyS A ψ))
-         → ∥ (Σ[ ψ ∈ Formula ⟪ fst A ⟫ 1 ] (DA.defSet ψ ≡ fst z)) ∥₁
+    step : Σ[ ψ ∶ Formula ⟪ fst A ⟫ 1 ] (fst c ≡ fst (keyS A ψ))
+         → ∥ (Σ[ ψ ∶ Formula ⟪ fst A ⟫ 1 ] (DA.defSet ψ ≡ fst z)) ∥₁
     step (ψ , qc) = ∣ ψ , extensionalV (λ y → ⇔toPath (into y) (back y)) ∣₁
       where
       qv : fst v ≡ fst (Sat A (toS ψ))
@@ -723,26 +723,26 @@ altogether.
   private
     describe : ∀ {n} (w : Fin n) (γ : S ^ n) → fst (lookup w γ) ≡ fst A
              → (z : S) → ⟨ (z ∷ γ) ⊨ ∃̇ (∃̇ (DefBody w)) ⟩
-             → ∥ (Σ[ ψ ∈ Formula ⟪ fst A ⟫ 1 ] (DA.defSet ψ ≡ fst z)) ∥₁
+             → ∥ (Σ[ ψ ∶ Formula ⟪ fst A ⟫ 1 ] (DA.defSet ψ ≡ fst z)) ∥₁
     describe w γ qw z = rec₁ squash₁ viaCode
       where
       Target : Type (ℓ-suc ℓ)
-      Target = ∥ (Σ[ ψ ∈ Formula ⟪ fst A ⟫ 1 ] (DA.defSet ψ ≡ fst z)) ∥₁
+      Target = ∥ (Σ[ ψ ∶ Formula ⟪ fst A ⟫ 1 ] (DA.defSet ψ ≡ fst z)) ∥₁
 
       viaValue : (c : S)
-               → Σ[ v ∈ S ] ⟨ (v ∷ c ∷ z ∷ γ) ⊨ DefBody w ⟩ → Target
+               → Σ[ v ∶ S ] ⟨ (v ∷ c ∷ z ∷ γ) ⊨ DefBody w ⟩ → Target
       viaValue c (v , hv) = read w γ qw z c v hv
 
-      viaCode : Σ[ c ∈ S ] ⟨ (c ∷ z ∷ γ) ⊨ ∃̇ (DefBody w) ⟩ → Target
+      viaCode : Σ[ c ∶ S ] ⟨ (c ∷ z ∷ γ) ⊨ ∃̇ (DefBody w) ⟩ → Target
       viaCode (c , hc) = rec₁ squash₁ (viaValue c) hc
 
     assemble : ∀ {n} (w : Fin n) (γ : S ^ n) → fst (lookup w γ) ≡ fst A
              → (z : S)
-             → ∥ (Σ[ ψ ∈ Formula ⟪ fst A ⟫ 1 ] (DA.defSet ψ ≡ fst z)) ∥₁
+             → ∥ (Σ[ ψ ∶ Formula ⟪ fst A ⟫ 1 ] (DA.defSet ψ ≡ fst z)) ∥₁
              → ⟨ (z ∷ γ) ⊨ ∃̇ (∃̇ (DefBody w)) ⟩
     assemble w γ qw z = rec₁ (snd ((z ∷ γ) ⊨ ∃̇ (∃̇ (DefBody w)))) step
       where
-      step : Σ[ ψ ∈ Formula ⟪ fst A ⟫ 1 ] (DA.defSet ψ ≡ fst z)
+      step : Σ[ ψ ∶ Formula ⟪ fst A ⟫ 1 ] (DA.defSet ψ ≡ fst z)
            → ⟨ (z ∷ γ) ⊨ ∃̇ (∃̇ (DefBody w)) ⟩
       step (ψ , qψ) = ∣ keyS A ψ , ∣ Sat A (toS ψ) , fill w γ qw z ψ qψ ∣₁ ∣₁
 

@@ -249,7 +249,7 @@ The result returns the bound `β` as explicit data, together with its ordinal ce
 
 ```agda
 boundingOrd : (X : Type ℓ) (f : X → S) → ((x : X) → IsOrd (f x))
-            → Σ[ β ∈ S ] (IsOrd β × ((x : X) → ⟨ f x ∈ˢ β ⟩))
+            → Σ[ β ∶ S ] (IsOrd β × ((x : X) → ⟨ f x ∈ˢ β ⟩))
 boundingOrd X f hf = β , (ordβ , memβ)
   where
   g : X → S
@@ -302,7 +302,7 @@ The result packages three pieces of data: the bound β, a proof that β is an or
 
 ```agda
 bound2 : (σ₁ σ₂ : S) → IsOrd σ₁ → IsOrd σ₂
-       → Σ[ β ∈ S ] (IsOrd β × ⟨ σ₁ ∈ˢ β ⟩ × ⟨ σ₂ ∈ˢ β ⟩)
+       → Σ[ β ∶ S ] (IsOrd β × ⟨ σ₁ ∈ˢ β ⟩ × ⟨ σ₂ ∈ˢ β ⟩)
 bound2 σ₁ σ₂ o₁ o₂ =
   fst r , (r .snd .fst , r .snd .snd (lift true) , r .snd .snd (lift false))
   where
@@ -401,7 +401,7 @@ The definition `# zero = ∅` and `# suc n = sucV (# n)` makes the induction one
 
 ```agda
 numeral-ord : (n : ℕ) → IsOrd (# n)
-numeral-ord zero    = ∅-ord
+numeral-ord 0    = ∅-ord
 numeral-ord (suc n) = suc-ord (numeral-ord n)
 ```
 
@@ -428,7 +428,7 @@ The next statement is downward closure for numerals, phrased directly as members
 
 ```agda
 numeral-mem : (k : ℕ) (y : S) → ⟨ y ∈ˢ (# k) ⟩ → ⟨ y ∈ˢ ω ⟩
-numeral-mem zero y y∈ =
+numeral-mem 0 y y∈ =
   ⊥₀-rec (∅-empty y (∈∈ₛ {a = y} {b = ∅} .fst y∈))
 numeral-mem (suc k) y y∈ = ∈sucV-elim (snd (y ∈ˢ ω)) y∈
   (λ y∈#k → numeral-mem k y y∈#k)
@@ -505,10 +505,10 @@ The elimination lemma states that a member `z` of `# n` merely comes from a smal
 
 ```agda
 ∈#-elim : (n : ℕ) (z : S) → ⟨ z ∈ˢ (# n) ⟩
-        → ∥ Σ[ m ∈ ℕ ] ((m < n) × (z ≡ # m)) ∥₁
-∈#-elim zero    z h = ⊥₀-rec (∅-empty z (∈∈ₛ {a = z} {b = ∅} .fst h))
+        → ∥ Σ[ m ∶ ℕ ] ((m < n) × (z ≡ # m)) ∥₁
+∈#-elim 0    z h = ⊥₀-rec (∅-empty z (∈∈ₛ {a = z} {b = ∅} .fst h))
 ∈#-elim (suc n) z h = ∈sucV-elim {A = # n} {x = z}
-  {P = ∥ Σ[ m ∈ ℕ ] ((m < suc n) × (z ≡ # m)) ∥₁} squash₁ h
+  {P = ∥ Σ[ m ∶ ℕ ] ((m < suc n) × (z ≡ # m)) ∥₁} squash₁ h
 ```
 
 <!--en-->

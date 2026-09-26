@@ -134,7 +134,7 @@ lowerLEM {ℓ} lem P =
 <div class="type-comparison-panels">
 <section class="type-comparison-panel">
 
-$$\operatorname{yes}\,x$$
+$$\operatorname{yes}\,\hat x$$
 
 <div class="path-stage diagram-compact-stage" style="aspect-ratio:360/260">
 <svg viewBox="0 0 360 260" aria-hidden="true" focusable="false">
@@ -146,13 +146,13 @@ $$\operatorname{yes}\,x$$
 <circle class="diagram-point" cx="180" cy="220" r="4"/>
 </svg>
 <span class="path-label" style="left:50%;top:12.6923%">$\operatorname{Lift}\langle P\rangle$</span>
-<span class="path-label" style="left:60.5556%;top:26.9231%">$x$</span>
+<span class="path-label" style="left:60.5556%;top:26.9231%">$\hat x$</span>
 <span class="path-label" style="left:65.8333%;top:50%">$\operatorname{lower}$</span>
 <span class="path-label" style="left:16.6667%;top:71.9231%">$\langle P\rangle$</span>
-<span class="path-label" style="left:67.2222%;top:84.6154%">$\operatorname{lower}\,x$</span>
+<span class="path-label" style="left:67.2222%;top:84.6154%">$\operatorname{lower}\,\hat x$</span>
 </div>
 
-$$\operatorname{yes}\,(\operatorname{lower}\,x)$$
+$$\operatorname{yes}\,(\operatorname{lower}\,\hat x)$$
 
 </section>
 <section class="type-comparison-panel">
@@ -315,25 +315,25 @@ private module BooleanCodes where
 
 
 <!--en-->
-**Lemma** (`retrB`{.Agda}) For every code `b`{.Agda} and decision `d`{.Agda} of the proposition it decodes to, decoding with `decodeB`{.Agda} and then encoding with `encodeB`{.Agda} recovers `b`{.Agda}: `encodeB (decodeB b) d ≡ b`{.Agda}.
+**Lemma** (`retrB`{.Agda}) For every code `b̂`{.Agda} and decision `d`{.Agda} of the proposition it decodes to, decoding with `decodeB`{.Agda} and then encoding with `encodeB`{.Agda} recovers `b̂`{.Agda}: `encodeB (decodeB b̂) d ≡ b̂`{.Agda}.
 <!--zh-->
-**引理** (`retrB`{.Agda}) 对任意编码 `b`{.Agda} 及其解码所得命题的判定 `d`{.Agda}，先用 `decodeB`{.Agda} 解码，再用 `encodeB`{.Agda} 编码，会恢复 `b`{.Agda}：`encodeB (decodeB b) d ≡ b`{.Agda}。
+**引理** (`retrB`{.Agda}) 对任意编码 `b̂`{.Agda} 及其解码所得命题的判定 `d`{.Agda}，先用 `decodeB`{.Agda} 解码，再用 `encodeB`{.Agda} 编码，会恢复 `b̂`{.Agda}：`encodeB (decodeB b̂) d ≡ b̂`{.Agda}。
 <!--ja-->
-**補題** (`retrB`{.Agda}) 任意の符号 `b`{.Agda} と、その復号で得た命題の判定 `d`{.Agda} に対して、`decodeB`{.Agda} で復号してから `encodeB`{.Agda} で符号化すると `b`{.Agda} が復元される。すなわち `encodeB (decodeB b) d ≡ b`{.Agda} である。
+**補題** (`retrB`{.Agda}) 任意の符号 `b̂`{.Agda} と、その復号で得た命題の判定 `d`{.Agda} に対して、`decodeB`{.Agda} で復号してから `encodeB`{.Agda} で符号化すると `b̂`{.Agda} が復元される。すなわち `encodeB (decodeB b̂) d ≡ b̂`{.Agda} である。
 <!--/-->
 
 ```agda
-  retrB : ∀ {ℓ₁ ℓ₂} (b : Lift {ℓ-zero} {ℓ₂} Bool)
-          (d : Dec ⟨ decodeB {ℓ₁} {ℓ₂} b ⟩)
-        → encodeB {ℓ₁} {ℓ₂} (decodeB {ℓ₁} {ℓ₂} b) d ≡ b
+  retrB : ∀ {ℓ₁ ℓ₂} (b̂ : Lift {ℓ-zero} {ℓ₂} Bool)
+          (d : Dec ⟨ decodeB {ℓ₁} {ℓ₂} b̂ ⟩)
+        → encodeB {ℓ₁} {ℓ₂} (decodeB {ℓ₁} {ℓ₂} b̂) d ≡ b̂
 ```
 
 <!--en-->
-**Proof** Split on `b`{.Agda} and then on `d`{.Agda}, giving four cases. If `b = lift true`{.Agda}, decoding returns `⊤`{.Agda}. A proof selects `lift true`{.Agda} again, so the equality is `refl`{.Agda}; a refutation is impossible because applying it to `tt*`{.Agda} produces an element of `⊥₀`{.Agda}. If `b = lift false`{.Agda}, decoding returns `⊥`{.Agda}. A proof is impossible by the empty pattern `()`{.Agda}; a refutation selects `lift false`{.Agda} again, so the equality is `refl`{.Agda}. Thus encoding after decoding recovers the original code in every possible case.
+**Proof** Split on `b̂`{.Agda} and then on `d`{.Agda}, giving four cases. If `b̂ = lift true`{.Agda}, decoding returns `⊤`{.Agda}. A proof selects `lift true`{.Agda} again, so the equality is `refl`{.Agda}; a refutation is impossible because applying it to `tt*`{.Agda} produces an element of `⊥₀`{.Agda}. If `b̂ = lift false`{.Agda}, decoding returns `⊥`{.Agda}. A proof is impossible by the empty pattern `()`{.Agda}; a refutation selects `lift false`{.Agda} again, so the equality is `refl`{.Agda}. Thus encoding after decoding recovers the original code in every possible case.
 <!--zh-->
-**证明** 先对 `b`{.Agda} 分情形，再对 `d`{.Agda} 分情形，共有四种组合。若 `b = lift true`{.Agda}，解码得到 `⊤`{.Agda}。证明会再次选出 `lift true`{.Agda}，所以等式由 `refl`{.Agda} 成立；反驳则不可能存在，因为把它用于 `tt*`{.Agda} 就会得到 `⊥₀`{.Agda} 的元素。若 `b = lift false`{.Agda}，解码得到 `⊥`{.Agda}。证明因空模式 `()`{.Agda} 而不可能；反驳会再次选出 `lift false`{.Agda}，所以等式也由 `refl`{.Agda} 成立。因此在所有可能的情形下，先解码再编码都会恢复原编码。
+**证明** 先对 `b̂`{.Agda} 分情形，再对 `d`{.Agda} 分情形，共有四种组合。若 `b̂ = lift true`{.Agda}，解码得到 `⊤`{.Agda}。证明会再次选出 `lift true`{.Agda}，所以等式由 `refl`{.Agda} 成立；反驳则不可能存在，因为把它用于 `tt*`{.Agda} 就会得到 `⊥₀`{.Agda} 的元素。若 `b̂ = lift false`{.Agda}，解码得到 `⊥`{.Agda}。证明因空模式 `()`{.Agda} 而不可能；反驳会再次选出 `lift false`{.Agda}，所以等式也由 `refl`{.Agda} 成立。因此在所有可能的情形下，先解码再编码都会恢复原编码。
 <!--ja-->
-**証明** まず `b`{.Agda} について場合分けし、次に `d`{.Agda} について場合分けするので、組合せは四つである。`b = lift true`{.Agda} なら、復号は `⊤`{.Agda} を返す。証明は再び `lift true`{.Agda} を選ぶため、等式は `refl`{.Agda} で成り立つ。反証は `tt*`{.Agda} に適用すると `⊥₀`{.Agda} の元を生じるため不可能である。`b = lift false`{.Agda} なら、復号は `⊥`{.Agda} を返す。証明は空パターン `()`{.Agda} によって不可能であり、反証は再び `lift false`{.Agda} を選ぶため、等式は `refl`{.Agda} で成り立つ。したがって、可能なすべての場合に復号してから符号化すると元の符号が復元される。
+**証明** まず `b̂`{.Agda} について場合分けし、次に `d`{.Agda} について場合分けするので、組合せは四つである。`b̂ = lift true`{.Agda} なら、復号は `⊤`{.Agda} を返す。証明は再び `lift true`{.Agda} を選ぶため、等式は `refl`{.Agda} で成り立つ。反証は `tt*`{.Agda} に適用すると `⊥₀`{.Agda} の元を生じるため不可能である。`b̂ = lift false`{.Agda} なら、復号は `⊥`{.Agda} を返す。証明は空パターン `()`{.Agda} によって不可能であり、反証は再び `lift false`{.Agda} を選ぶため、等式は `refl`{.Agda} で成り立つ。したがって、可能なすべての場合に復号してから符号化すると元の符号が復元される。
 <!--/-->
 
 ```agda

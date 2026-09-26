@@ -382,7 +382,7 @@ The key step exposes what x ∈ Lset α means: by `Lset-out`, x merely belongs t
        → IsOrd α → (x : S) → ⟨ x ∈ˢ Lset α ⟩ → ⟨ rank x ∈ˢ α ⟩
   step α IH ordα x x∈Lα = rec₁ (snd (rank x ∈ˢ α)) fromStage (Lset-out α x x∈Lα)
     where
-    fromStage : Σ[ β ∈ S ] (⟨ β ∈ˢ α ⟩ × ⟨ x ∈ˢ 𝒟ₒ (Lset β) ⟩) → ⟨ rank x ∈ˢ α ⟩
+    fromStage : Σ[ β ∶ S ] (⟨ β ∈ˢ α ⟩ × ⟨ x ∈ˢ 𝒟ₒ (Lset β) ⟩) → ⟨ rank x ∈ˢ α ⟩
 ```
 
 <!--en-->

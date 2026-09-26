@@ -42,7 +42,9 @@ class BedrockProsePolicyTests(unittest.TestCase):
                     else:
                         self.assertIn(item.fingerprint, lint_prose._MATH_APPROVALS.get(chapter, ()))
                         approved_count += 1
-        self.assertEqual((figure_count, approved_count), (27, 9))
+        # The trilingual Fin-figure legend moved into the Fin introduction,
+        # removing one figure-reference math paragraph per edition.
+        self.assertEqual((figure_count, approved_count), (24, 9))
 
     def test_inline_math_deferrals_end_on_human_review_not_content_edits(self):
         root = Path(__file__).resolve().parents[2]
@@ -62,14 +64,15 @@ class BedrockProsePolicyTests(unittest.TestCase):
         self.assertTrue(any('inline LaTeX' in hit.message for hit in lint_prose.analyze(text, root / 'src/Base/Prelude.lagda.md')[2]))
 
     def test_legacy_inventory_matches_exact_old_line_only(self):
+        import hashlib
+
         chapter = 'V/CantorBernstein.lagda.md'
-        original = (Path(__file__).resolve().parents[2] / 'src' / chapter).read_text()
-        line = next(line for line in original.splitlines()
-                    if 'the statement that x lies in the image of g' in line)
-        self.assertEqual(lint_prose.new_bare_variable_violations(line, chapter), [])
-        self.assertTrue(lint_prose.new_bare_variable_violations(line + '\n' + line, chapter))
-        changed = line.replace('the statement that x', 'the mathematical statement that x')
-        self.assertTrue(lint_prose.new_bare_variable_violations(changed, chapter))
+        line = 'The statement says x lies in the image of g.'
+        legacy = {chapter: {hashlib.sha256(line.encode()).hexdigest()}}
+        self.assertEqual(lint_prose.new_bare_variable_violations(line, chapter, legacy), [])
+        self.assertTrue(lint_prose.new_bare_variable_violations(line + '\n' + line, chapter, legacy))
+        changed = line.replace('says x', 'asserts x')
+        self.assertTrue(lint_prose.new_bare_variable_violations(changed, chapter, legacy))
 
 
     def test_numbered_registry_labels_are_scoped_and_still_require_code(self):

@@ -613,7 +613,7 @@ The extraction `domAt-in` runs the other way, and keeps the truncation. Domain m
 
 ```agda
   domAt-in : ⟨ γ ⊨ domAt f d ⟩ → (x : S) → ⟨ fst x ∈ fst (lookup d γ) ⟩
-           → ∥ (Σ[ y ∈ S ] ⟨ pr (fst x) (fst y) ∈ fst (lookup f γ) ⟩) ∥₁
+           → ∥ (Σ[ y ∶ S ] ⟨ pr (fst x) (fst y) ∈ fst (lookup f γ) ⟩) ∥₁
   domAt-in h x m = subst ⟨_⟩ (step x) (h x .snd m)
 
   domAt-intro : ((x : S)
@@ -909,7 +909,7 @@ The extraction from the pairs clause keeps the shape of satisfaction: the conclu
 <!--/-->
 
 ```agda
-            → ∥ (Σ[ u ∈ S ] (Σ[ v ∈ S ]
+            → ∥ (Σ[ u ∶ S ] (Σ[ v ∶ S ]
                   (⟨ fst u ∈ fst (lookup d γ) ⟩
                    × (⟨ fst v ∈ fst (lookup B γ) ⟩
                       × (fst s ≡ pr (fst u) (fst v)))))) ∥₁
@@ -943,7 +943,7 @@ The reverse direction takes the per-member statement as a hypothesis. For every 
 ```agda
 pairsIn-in : ∀ {n} (e d B : Fin n) (γ : S ^ n)
            → ((s : S) → ⟨ fst s ∈ fst (lookup e γ) ⟩
-              → ∥ (Σ[ u ∈ S ] (Σ[ v ∈ S ]
+              → ∥ (Σ[ u ∶ S ] (Σ[ v ∶ S ]
                     (⟨ fst u ∈ fst (lookup d γ) ⟩
                      × (⟨ fst v ∈ fst (lookup B γ) ⟩
 ```
@@ -1187,7 +1187,7 @@ The type packages one element `s` of the model with three ambient membership fac
 
 ```agda
 Container : (x u v : S) → Type (ℓ-suc ℓ)
-Container x u v = Σ[ s ∈ S ] (⟨ fst s ∈ fst x ⟩ × (⟨ fst u ∈ fst s ⟩ × ⟨ fst v ∈ fst s ⟩))
+Container x u v = Σ[ s ∶ S ] (⟨ fst s ∈ fst x ⟩ × (⟨ fst u ∈ fst s ⟩ × ⟨ fst v ∈ fst s ⟩))
 
 opaque
   container : (x u v : S) → fst x ≡ pr (fst u) (fst v) → Container x u v

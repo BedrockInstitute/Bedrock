@@ -158,7 +158,7 @@ The statement is a conditional: if inclusion `A ⊆ᵇ B` is refutable, then a t
 
 ```agda
 ¬⊆ᵇ→witness : (A B : S) → (A ⊆ᵇ B → ⊥₀)
-            → ∥ Σ[ a ∈ S ] (⟨ a ∈ˢ A ⟩ × (⟨ a ∈ˢ B ⟩ → ⊥₀)) ∥₁
+            → ∥ Σ[ a ∶ S ] (⟨ a ∈ˢ A ⟩ × (⟨ a ∈ˢ B ⟩ → ⊥₀)) ∥₁
 ¬⊆ᵇ→witness A B ¬sub = decide (lem Witness)
   where
   Witness : hProp (ℓ-suc ℓ)
@@ -173,7 +173,7 @@ Suppose `Witness` is refutable. Then the refutation of inclusion can itself be r
 <!--/-->
 
 ```agda
-  Witness = ∥ Σ[ a ∈ S ] (⟨ a ∈ˢ A ⟩ × (⟨ a ∈ˢ B ⟩ → ⊥₀)) ∥₁
+  Witness = ∥ Σ[ a ∶ S ] (⟨ a ∈ˢ A ⟩ × (⟨ a ∈ˢ B ⟩ → ⊥₀)) ∥₁
           , isPropPropTrunc
   decide : Dec ⟨ Witness ⟩ → ⟨ Witness ⟩
   decide (yes wit) = wit
@@ -282,7 +282,7 @@ The first failure case supposes `B ⊆ᵇ A` fails, so a member `b` of `B` outsi
 <!--/-->
 
 ```agda
-      fromB : Σ[ b ∈ S ] (⟨ b ∈ˢ B ⟩ × (⟨ b ∈ˢ A ⟩ → ⊥₀)) → ⟨ A ∈ˢ B ⟩
+      fromB : Σ[ b ∶ S ] (⟨ b ∈ˢ B ⟩ × (⟨ b ∈ˢ A ⟩ → ⊥₀)) → ⟨ A ∈ˢ B ⟩
       fromB (b , (b∈B , ¬b∈A)) = at (IHB b b∈B (mem-ord {A = B} ordB b b∈B))
         where
         at : Tri A b → ⟨ A ∈ˢ B ⟩
@@ -301,7 +301,7 @@ The other two outcomes of comparing `A` with `b` are handled in turn. If `A ≡ 
         at (inr (inl A≡b)) = subst (λ w → ⟨ w ∈ˢ B ⟩) (sym A≡b) b∈B
         at (inr (inr b∈A)) = ⊥₀-rec (¬b∈A b∈A)
 
-      fromA : Σ[ a ∈ S ] (⟨ a ∈ˢ A ⟩ × (⟨ a ∈ˢ B ⟩ → ⊥₀)) → ⟨ B ∈ˢ A ⟩
+      fromA : Σ[ a ∶ S ] (⟨ a ∈ˢ A ⟩ × (⟨ a ∈ˢ B ⟩ → ⊥₀)) → ⟨ B ∈ˢ A ⟩
       fromA (a , (a∈A , ¬a∈B)) =
         at (IHA a a∈A (mem-ord {A = A} ordA a a∈A) B ordB)
 ```

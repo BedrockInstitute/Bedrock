@@ -108,7 +108,7 @@ The carrier of the inner world is the Σ-type `SM`: a pair of an element of `S` 
 
 ```agda
   SM : Type ℓ
-  SM = Σ[ x ∈ S ] (x ∈ᶜ M)
+  SM = Σ[ x ∶ S ] (x ∈ᶜ M)
 
   𝒮M : ZFStructure ℓ
   𝒮M = 𝒮 ↾ M

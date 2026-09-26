@@ -32,14 +32,17 @@ class SiteCacheTests(unittest.TestCase):
             'outcrop/src/outcrop/core/prose_lint.py': (False, False, False),
             'outcrop/src/outcrop/adapters/source_stage.py': (False, False, False),
             'outcrop/src/outcrop/adapters/extract_types.py': (False, True, False),
+            'outcrop/src/outcrop/core/agda_type_quality.py': (False, True, True),
             'site/agda-libraries.json': (True, False, False),
             'outcrop/src/outcrop/adapters/agda/parallel.py': (True, False, False),
             'outcrop/src/outcrop/site/page_renderer.py': (False, False, True),
+            'outcrop/src/outcrop/site/external_links.py': (False, False, True),
             'outcrop/src/outcrop/core/diagram_style.py': (False, False, True),
             'outcrop/src/outcrop/site/resources/static/outcrop.css': (False, False, True),
             'site/reading-catalog.json': (False, False, True),
             'site/glossary.toml': (False, False, True),
             'site/static/assets/favicon.svg': (False, False, True),
+            'site/static/bedrock-diagrams.css': (False, False, True),
         }
         for relative, expected in cases.items():
             changed = cache.ROOT / relative

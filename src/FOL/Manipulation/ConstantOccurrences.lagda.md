@@ -98,7 +98,7 @@ A small example fixes the convention. In `∀̇∈ (con a) ((con a) ∈̇ (var f
 
 ```agda
 countTm : ∀ {ℓc} {K : Type ℓc} {n} → Term K n → ℕ
-countTm (con c) = suc zero
+countTm (con c) = 1
 countTm (var i) = zero
 
 countFo : ∀ {ℓc} {K : Type ℓc} {n} → Formula K n → ℕ
@@ -226,7 +226,7 @@ padRight b zero    = zero
 padRight b (suc i) = suc (padRight b i)
 
 padLeft : ∀ a {b} → Fin b → Fin (a + b)
-padLeft zero    j = j
+padLeft 0    j = j
 ```
 
 <!--en-->
@@ -276,7 +276,7 @@ The second law covers a parameter with natural index `j : Fin b` into the second
 ```agda
 lookup-padLeft : ∀ {ℓa} {A : Type ℓa} a {b} (p : Vec A a) (q : Vec A b) (j : Fin b)
                → lookup (padLeft a j) (p ++ q) ≡ lookup j q
-lookup-padLeft zero    []      q j = refl
+lookup-padLeft 0    []      q j = refl
 lookup-padLeft (suc a) (x ∷ p) q j = lookup-padLeft a p q j
 
 lookup-map : ∀ {ℓa ℓb} {A : Type ℓa} {B : Type ℓb} {n}
@@ -346,11 +346,11 @@ The first ingredient is arithmetical: a sum is zero only when both summands are.
 
 ```agda
   plus-zero-l : {a b : ℕ} → a + b ≡ 0 → a ≡ 0
-  plus-zero-l {zero} {b} p = refl
+  plus-zero-l {0} {b} p = refl
   plus-zero-l {suc a} {b} p = ⊥₀-rec (snotz p)
 
   plus-zero-r : {a b : ℕ} → a + b ≡ 0 → b ≡ 0
-  plus-zero-r {zero} {b} p = p
+  plus-zero-r {0} {b} p = p
 ```
 
 <!--en-->

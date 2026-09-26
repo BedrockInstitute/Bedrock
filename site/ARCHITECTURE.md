@@ -15,7 +15,7 @@ The [instance guide](README.md) describes local installation and operation.
 | Outcrop Site | `outcrop.site.SiteConfig`, `build_site`, catalog/page/publication/route/graph owners | Validated instance state; identical complete website features for each project |
 | Packaged browser resources | `outcrop/src/outcrop/site/resources/` | Templates, `outcrop.js`, `outcrop.css`, feature modules, fonts and vendor files |
 | Asset publication | `outcrop.site.assets.AssetBundle` | Captured byte snapshot; one immutable runtime generation |
-| Bedrock instance | `site/project.json`, `site/static/assets/`, `src/`, catalog/glossary, Makefile and gate adapters | Brand, content, mathematical policies, compiler/cache workflow and deployment |
+| Bedrock instance | `site/project.json`, `site/static/`, `src/`, catalog/glossary, Makefile and gate adapters | Brand, figure-specific CSS, content, mathematical policies, compiler/cache workflow and deployment |
 
 Core returns usable HTML, outline and Markdown. PageRenderer consumes one explicit
 CodeContext; Publication adds metadata rather than reinterpreting source Markdown.
@@ -91,7 +91,7 @@ completed migration scripts are not part of the build or test workflow.
 | --- | --- | --- |
 | Code surfaces | one target identity, real compiler ranges, leaves, syntax, recursive help, stop rules | unit contracts; boilerplate/universe browser fixtures; direct interactions |
 | Hover | ancestor delays, downward positioning, persistent touch, smaller/larger nodes, cleanup | lifecycle contracts; sequential browser fixtures |
-| Definitions | full page, target history, redirect identity, block alignment, loading cancellation, theme, normal links | modal contracts; browser regression and manual navigation |
+| Definitions and prose links | full page, target history, redirect identity, code/prose alignment, Prelude import section alignment, loading cancellation, theme, native navigation exceptions | modal contracts; browser regression and manual navigation |
 | Navigation | sidebar/sticky tree hit regions, drawer focus, routes, completion, tabs, languages | directory fixture and direct keyboard/click tests |
 | Content | terms, notes, QED, folds, gutters, source text, Unicode fonts, diagrams | existing renderer gates; padding/fonts fixtures; direct animations |
 | Search | cross-language prose/terms/sections/all Agda and Cubical, worker, empty/error states | index checker; direct multilingual/code search |

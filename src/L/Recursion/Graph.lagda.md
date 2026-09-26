@@ -193,7 +193,7 @@ Reading `pairFo` outward yields a propositionally truncated value `z`, together 
       gr z e p = cong ⟨_⟩ (Ren.⊨-rename ρ φ (z ∷ e ∷ p ∷ []) (z ∷ p ∷ []) (ag z e p))
 
     pair-out : (e p : S) → ⟨ (e ∷ p ∷ []) ⊨ pairFo ⟩
-             → ∥ Σ[ z ∈ S ] ((fst e ≡ pr (fst p) (fst z)) × ⟨ (z ∷ p ∷ []) ⊨ φ ⟩) ∥₁
+             → ∥ Σ[ z ∶ S ] ((fst e ≡ pr (fst p) (fst z)) × ⟨ (z ∷ p ∷ []) ⊨ φ ⟩) ∥₁
     pair-out e p = map₁ (λ { (z , (q , h)) →
 ```
 
@@ -363,7 +363,7 @@ Replacement applied to this recursion forms the value range of its ordered-pair 
 
 ```agda
   F-out : (p : V ℓ) → ⟨ p ∈ fst F ⟩
-        → ∥ Σ[ x ∈ S ] Σ[ m ∈ Mem x ] (p ≡ pr (fst x) (fst (fn x m))) ∥₁
+        → ∥ Σ[ x ∶ S ] Σ[ m ∶ Mem x ] (p ≡ pr (fst x) (fst (fn x m))) ∥₁
   F-out p h = rec₁ squash₁ step (T.table-out pS h)
     where
     pS : S
@@ -380,8 +380,8 @@ The inward membership direction is immediate from the replacement specification.
 ```agda
     pS = p , isL-trans {x = fst F} {y = p} h (snd F)
 
-    step : Σ[ x ∈ S ] (Mem x × ⟨ (pS ∷ x ∷ []) ⊨ Fo.fo ⟩)
-         → ∥ Σ[ x ∈ S ] Σ[ m ∈ Mem x ] (p ≡ pr (fst x) (fst (fn x m))) ∥₁
+    step : Σ[ x ∶ S ] (Mem x × ⟨ (pS ∷ x ∷ []) ⊨ Fo.fo ⟩)
+         → ∥ Σ[ x ∶ S ] Σ[ m ∶ Mem x ] (p ≡ pr (fst x) (fst (fn x m))) ∥₁
     step (x , (m , g)) = map₁
       (λ { (z , (e , gz)) →
 ```
@@ -398,7 +398,7 @@ For the outward direction, begin with an ambient set `p ∈ fst F`. Downward clo
         x , m , (e ∙ cong (λ w → pr (fst x) (fst w)) (only x m z gz)) })
       (Fo.out pS x g)
   Fib : S → S → Type (ℓ-suc ℓ)
-  Fib x y = Σ[ m ∈ Mem x ] (fst y ≡ fst (fn x m))
+  Fib x y = Σ[ m ∶ Mem x ] (fst y ≡ fst (fn x m))
 
   isPropFib : (x y : S) → isProp (Fib x y)
 ```
@@ -417,7 +417,7 @@ The semantic outward lemma then opens a second truncation and supplies a value `
   pair-out : (x y : S) → ⟨ pr (fst x) (fst y) ∈ fst F ⟩ → Fib x y
   pair-out x y h = rec₁ (isPropFib x y) step (F-out (pr (fst x) (fst y)) h)
     where
-    step : Σ[ x' ∈ S ] Σ[ m' ∈ Mem x' ] (pr (fst x) (fst y) ≡ pr (fst x') (fst (fn x' m')))
+    step : Σ[ x' ∶ S ] Σ[ m' ∶ Mem x' ] (pr (fst x) (fst y) ≡ pr (fst x') (fst (fn x' m')))
 ```
 
 <!--en-->

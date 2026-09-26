@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><title>Header shell without reader JavaScript</title>
+<style>body{font:15px/1.6 system-ui;margin:1rem 420px 1rem 1rem}iframe{position:fixed;top:1rem;right:1rem;width:390px;height:844px;border:1px solid #888}pre{white-space:pre-wrap}</style>
+<h1>Header shell without reader JavaScript</h1>
+<p>The 390px child disallows scripts, simulating a delayed reader runtime. Its responsive header must already have the compact controls.</p>
+<pre id="result">Loading…</pre>
+<iframe title="Reader without scripts" sandbox="allow-same-origin" src="/zh/Base.Choice.html"></iframe>
+<script>
+const frame=document.querySelector('iframe');
+frame.addEventListener('load',()=>{
+  const d=frame.contentDocument,w=frame.contentWindow;
+  const search=d.querySelector('#search-toggle'),language=d.querySelector('#language-toggle');
+  const rects=[search,language,d.querySelector('#theme-toggle')].map(node=>node.getBoundingClientRect());
+  const result={
+    width:d.documentElement.clientWidth,
+    scriptsBlocked:!d.querySelector('#topbar.header-controls-ready'),
+    buttonsVisible:rects.every(rect=>rect.width>=44&&rect.height>=44),
+    rightAligned:Math.abs(d.documentElement.clientWidth-rects[2].right-4)<1,
+    searchHidden:w.getComputedStyle(d.querySelector('.search-form')).visibility==='hidden',
+    languageHidden:w.getComputedStyle(d.querySelector('#lang-switch')).visibility==='hidden',
+    figureCaptionCentered:w.getComputedStyle(d.querySelector('.book-diagram > figcaption')).textAlign==='center',
+    tableCaptionCentered:w.getComputedStyle(d.querySelector('.prose-table > figcaption')).textAlign==='center',
+    tableCaptionBelow:!!d.querySelector('.prose-table > .prose-table-scroll + figcaption'),
+  };
+  document.querySelector('#result').textContent=(Object.values(result).every(Boolean)?'PASS':'FAIL')+'\n'+JSON.stringify(result,null,2);
+});
+</script></html>

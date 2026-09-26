@@ -224,12 +224,12 @@ applications of two readers rather than ten copies of the same unnesting.
 
 ```agda
 BinWit : ∀ {n} → ℕ → Formula S (4 + n) → S ^ n → S → Type (ℓ-suc ℓ)
-BinWit k rel γ c = Σ[ N ∈ S ] (Σ[ a ∈ S ] (Σ[ b ∈ S ]
+BinWit k rel γ c = Σ[ N ∶ S ] (Σ[ a ∶ S ] (Σ[ b ∶ S ]
   ((fst c ≡ pr (fst N) (pr (# k) (pr (fst a) (fst b))))
    × ⟨ (b ∷ a ∷ N ∷ c ∷ γ) ⊨ rel ⟩)))
 
 UnWit : ∀ {n} → ℕ → Formula S (3 + n) → S ^ n → S → Type (ℓ-suc ℓ)
-UnWit k rel γ c = Σ[ N ∈ S ] (Σ[ a ∈ S ]
+UnWit k rel γ c = Σ[ N ∶ S ] (Σ[ a ∶ S ]
   ((fst c ≡ pr (fst N) (pr (# k) (fst a))) × ⟨ (a ∷ N ∷ c ∷ γ) ⊨ rel ⟩))
 
 binForm-out : ∀ {n} (k : ℕ) (rel : Formula S (4 + n)) (γ : S ^ n) (c : S)
@@ -411,10 +411,10 @@ module _ {K : Type ℓ} (f : K → V ℓ) where
 
 ```agda
   TmWit : ℕ → V ℓ → Type (ℓ-suc ℓ)
-  TmWit n x = Σ[ t ∈ Term K n ] (VCode.⌜ mapTm f t ⌝ᵗ ≡ x)
+  TmWit n x = Σ[ t ∶ Term K n ] (VCode.⌜ mapTm f t ⌝ᵗ ≡ x)
 
   Onto : ∀ {m} → Fin m → S ^ m → Type (ℓ-suc ℓ)
-  Onto A γ = (y : V ℓ) → ⟨ y ∈ fst (lookup A γ) ⟩ → ∥ Σ[ c ∈ K ] (f c ≡ y) ∥₁
+  Onto A γ = (y : V ℓ) → ⟨ y ∈ fst (lookup A γ) ⟩ → ∥ Σ[ c ∶ K ] (f c ≡ y) ∥₁
 
   tmCon : ∀ {m} (t N A : Fin m) (γ : S ^ m) (n : ℕ) → Onto A γ
         → ⟨ γ ⊨ ∃̇ (tagAtL (suc t) 0 zero ∧̇ (var zero ∈̇ var (suc A))) ⟩
@@ -544,18 +544,18 @@ module Peel {m : ℕ} (C A : Fin m) (γ : S ^ m)
     D = fst (lookup C γ)
 
   BinSame BinSucc : ℕ → S → Type (ℓ-suc ℓ)
-  BinSame k c = Σ[ N ∈ S ] (Σ[ a ∈ S ] (Σ[ b ∈ S ]
+  BinSame k c = Σ[ N ∶ S ] (Σ[ a ∶ S ] (Σ[ b ∶ S ]
     ((fst c ≡ pr (fst N) (pr (# k) (pr (fst a) (fst b))))
      × (⟨ pr (fst N) (fst a) ∈ D ⟩ × ⟨ pr (fst N) (fst b) ∈ D ⟩))))
-  BinSucc k c = Σ[ N ∈ S ] (Σ[ a ∈ S ] (Σ[ b ∈ S ]
+  BinSucc k c = Σ[ N ∶ S ] (Σ[ a ∶ S ] (Σ[ b ∶ S ]
     ((fst c ≡ pr (fst N) (pr (# k) (pr (fst a) (fst b))))
      × (⟨ (a ∷ N ∷ c ∷ γ) ⊨ isTmAt zero (suc zero) (suc (suc (suc A))) ⟩
         × ⟨ pr (sucV (fst N)) (fst b) ∈ D ⟩))))
 
   UnSame UnSucc : ℕ → S → Type (ℓ-suc ℓ)
-  UnSame k c = Σ[ N ∈ S ] (Σ[ a ∈ S ]
+  UnSame k c = Σ[ N ∶ S ] (Σ[ a ∶ S ]
     ((fst c ≡ pr (fst N) (pr (# k) (fst a))) × ⟨ pr (fst N) (fst a) ∈ D ⟩))
-  UnSucc k c = Σ[ N ∈ S ] (Σ[ a ∈ S ]
+  UnSucc k c = Σ[ N ∶ S ] (Σ[ a ∶ S ]
     ((fst c ≡ pr (fst N) (pr (# k) (fst a))) × ⟨ pr (sucV (fst N)) (fst a) ∈ D ⟩))
 
   PeelWit : S → Type (ℓ-suc ℓ)

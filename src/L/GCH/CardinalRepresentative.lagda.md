@@ -117,7 +117,7 @@ Given an ordinal `α`, the theorem merely asserts the existence of `μ` with fiv
 ```agda
 cardOf :
     (α : SL.S) → IsOrd (fst α)
-  → ∥ Σ[ μ ∈ SL.S ]
+  → ∥ Σ[ μ ∶ SL.S ]
        ( IsOrd (fst μ) × IsCardinalL μ
 ```
 
@@ -212,7 +212,7 @@ Call an index `b` good when there is an internal coded injection from `α` to th
   selfGood : ⟨ Good LC.self ⟩
   selfGood = inclusion-coded α α (λ z z∈α → z∈α)
 
-  nonempty : ∥ Σ[ b ∈ ⟪ T ⟫ ] ⟨ Good b ⟩ ∥₁
+  nonempty : ∥ Σ[ b ∶ ⟪ T ⟫ ] ⟨ Good b ⟩ ∥₁
   nonempty = ∣ LC.self , selfGood ∣₁
 ```
 
@@ -225,7 +225,7 @@ The index naming `α` is good: its represented member equals `α`, and the ident
 <!--/-->
 
 ```agda
-  least : Σ[ b ∈ ⟪ T ⟫ ] IsLeast LC.w Good b
+  least : Σ[ b ∶ ⟪ T ⟫ ] IsLeast LC.w Good b
   least = leastOfFormula LC.w definedGood lem nonempty
 
   m : ⟪ T ⟫

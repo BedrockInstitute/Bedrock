@@ -143,7 +143,7 @@ Below-mono σ∈τ {ρ = p ∷ ρ} (h , hs) =
   Lset-mono σ∈τ h , Below-mono σ∈τ hs
 
 indexEnv : (σ : V ℓ) (oσ : IsOrd σ) {k : ℕ} (ρ : S ^ k) → Below σ ρ
-         → Σ[ ms ∈ ⟪ Lset σ ⟫ ^ k ] (LsetEnv σ oσ ms ≡ ρ)
+         → Σ[ ms ∶ ⟪ Lset σ ⟫ ^ k ] (LsetEnv σ oσ ms ≡ ρ)
 indexEnv σ oσ []      _        = [] , refl
 indexEnv σ oσ (p ∷ ρ) (h , hs) = (m ∷ fst rest) , cong₂ _∷_ eltEq (snd rest)
   where
@@ -196,7 +196,7 @@ Wit : {k : ℕ} (ψ : Formula S (suc k)) (ρ : S ^ k) → V ℓ → hProp (ℓ-s
 Wit ψ ρ σ = ∃[ q ∶ S ] ((fst q ∈ Lset σ) ⊓ Sat ψ ρ q)
 
 witnessed : {k : ℕ} (ψ : Formula S (suc k)) (ρ : S ^ k) → ⟨ SatEx ψ ρ ⟩
-          → ∥ (Σ[ α ∈ V ℓ ] (IsOrd α × ⟨ Wit ψ ρ α ⟩)) ∥₁
+          → ∥ (Σ[ α ∶ V ℓ ] (IsOrd α × ⟨ Wit ψ ρ α ⟩)) ∥₁
 witnessed ψ ρ = rec₁ squash₁
   (λ { (q , satq) → map₁
       (λ { (α , (oα , q∈Lα)) → α , (oα , ∣ q , (q∈Lα , satq) ∣₁) })
@@ -300,7 +300,7 @@ module Ladder (G : ℕ → V ℓ) (G-ord : (n : ℕ) → IsOrd (G n))
 
 ```agda
   reach : (n d : ℕ) → ⟨ G n ∈ G (suc (d + n)) ⟩
-  reach n zero    = G-up n
+  reach n 0    = G-up n
   reach n (suc d) =
     G-ord (suc (suc (d + n))) .fst {x = G (suc (d + n))} {y = G n}
       (reach n d) (G-up (suc (d + n)))
@@ -337,26 +337,26 @@ tuple merges all of them, and monotonicity carries the earlier entries up.
 <!--/-->
 
 ```agda
-  δ∈top→fin : (δ : V ℓ) → ⟨ δ ∈ top ⟩ → ∥ (Σ[ N ∈ ℕ ] ⟨ δ ∈ G N ⟩) ∥₁
+  δ∈top→fin : (δ : V ℓ) → ⟨ δ ∈ top ⟩ → ∥ (Σ[ N ∶ ℕ ] ⟨ δ ∈ G N ⟩) ∥₁
   δ∈top→fin δ δ∈ = map₁ (λ { (i , h) → lower i , h })
     (union-family-out (Lift {ℓ-zero} {ℓ} ℕ) fam δ δ∈)
 
-  localize₁ : (e : V ℓ) → ⟨ e ∈ Lset top ⟩ → ∥ (Σ[ N ∈ ℕ ] ⟨ e ∈ Lset (G N) ⟩) ∥₁
+  localize₁ : (e : V ℓ) → ⟨ e ∈ Lset top ⟩ → ∥ (Σ[ N ∶ ℕ ] ⟨ e ∈ Lset (G N) ⟩) ∥₁
   localize₁ e e∈ = rec₁ squash₁
     (λ { (δ , (δ∈top , e∈𝒟ₒδ)) → map₁
         (λ { (N , δ∈GN) → N , Lset-in (G N) δ e δ∈GN e∈𝒟ₒδ })
         (δ∈top→fin δ δ∈top) })
     (Lset-out top e e∈)
 
-  localize : {j : ℕ} (ρ : S ^ j) → Below top ρ → ∥ (Σ[ N ∈ ℕ ] Below (G N) ρ) ∥₁
+  localize : {j : ℕ} (ρ : S ^ j) → Below top ρ → ∥ (Σ[ N ∶ ℕ ] Below (G N) ρ) ∥₁
   localize []      _        = ∣ zero , tt* ∣₁
   localize (p ∷ ρ) (h , hs) = rec₁ squash₁
     (λ { (N , h') → map₁ (merge N h') (localize ρ hs) })
     (localize₁ (fst p) h)
     where
     merge : (N : ℕ) → ⟨ fst p ∈ Lset (G N) ⟩
-          → Σ[ M ∈ ℕ ] Below (G M) ρ
-          → Σ[ M ∈ ℕ ] Below (G M) (p ∷ ρ)
+          → Σ[ M ∶ ℕ ] Below (G M) ρ
+          → Σ[ M ∶ ℕ ] Below (G M) (p ∷ ρ)
     merge N h' (M , hs') = suc (M + N)
       , ( Lset-mono (reach N M) h'
         , Below-mono (subst (λ n → ⟨ G M ∈ G (suc n) ⟩) (+-comm N M)
@@ -411,7 +411,7 @@ monotonicity, and the equation transported back.
     closure : ClosedFor top ψ
     closure ρ below sat = rec₁ squash₁ atRung (localize ρ below)
       where
-      atRung : Σ[ N ∈ ℕ ] Below (G N) ρ → ⟨ Wit ψ ρ top ⟩
+      atRung : Σ[ N ∶ ℕ ] Below (G N) ρ → ⟨ Wit ψ ρ top ⟩
       atRung (N , belowN) = map₁ found (pickWitness ψ ρₘ satₘ)
         where
         idx = indexEnv (G N) (G-ord N) ρ belowN
@@ -421,8 +421,8 @@ monotonicity, and the equation transported back.
         e = idx .snd
         satₘ : ⟨ SatEx ψ ρₘ ⟩
         satₘ = subst (λ r → ⟨ SatEx ψ r ⟩) (sym e) sat
-        found : Σ[ q ∈ S ] (⟨ fst q ∈ Lset (pickStage ψ ρₘ) ⟩ × ⟨ Sat ψ ρₘ q ⟩)
-              → Σ[ q ∈ S ] (⟨ fst q ∈ Lset top ⟩ × ⟨ Sat ψ ρ q ⟩)
+        found : Σ[ q ∶ S ] (⟨ fst q ∈ Lset (pickStage ψ ρₘ) ⟩ × ⟨ Sat ψ ρₘ q ⟩)
+              → Σ[ q ∶ S ] (⟨ fst q ∈ Lset top ⟩ × ⟨ Sat ψ ρ q ⟩)
         found (q , (fq∈pick , satq)) = q
           , ( land q (pickStage ψ ρₘ) (G (suc N))
                 fq∈pick (answers N (idx .fst)) (G∈top (suc N))
@@ -499,7 +499,7 @@ module Single {k : ℕ} (ψ : Formula S (suc k)) where
 
 ```agda
   Fbnd : (σ : V ℓ) (oσ : IsOrd σ)
-       → Σ[ β ∈ V ℓ ] (IsOrd β × ((ms : ⟪ Lset σ ⟫ ^ k)
+       → Σ[ β ∶ V ℓ ] (IsOrd β × ((ms : ⟪ Lset σ ⟫ ^ k)
                                  → ⟨ pickStage ψ (LsetEnv σ oσ ms) ∈ β ⟩))
   Fbnd σ oσ = boundingOrd (⟪ Lset σ ⟫ ^ k)
                 (λ ms → pickStage ψ (LsetEnv σ oσ ms))

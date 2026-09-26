@@ -190,7 +190,7 @@ The least-witness module receives four pieces of data. The ordinal index `γ` wi
 ```agda
 module Least (γ : V ℓ) (oγ : IsOrd γ) (X : S) (P : Formula S 2)
   (have : (x : S) → ⟨ fst x ∈ fst X ⟩
-        → ∥ Σ[ w ∈ S ] (⟨ fst w ∈ Lset γ ⟩ × ⟨ (w ∷ x ∷ []) ⊨ P ⟩) ∥₁) where
+        → ∥ Σ[ w ∶ S ] (⟨ fst w ∈ Lset γ ⟩ × ⟨ (w ∷ x ∷ []) ⊨ P ⟩) ∥₁) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -366,7 +366,7 @@ For the fixed input, the hypothesis is mapped into the type of good stage member
 
 ```agda
     private
-      nonempty : ∥ Σ[ c ∈ Mγ ] ⟨ Good x c ⟩ ∥₁
+      nonempty : ∥ Σ[ c ∶ Mγ ] ⟨ Good x c ⟩ ∥₁
       nonempty = map₁ (λ { (w , hw , hp) → (fst w , hw) , toMem x w hw hp }) (have x m)
 ```
 
@@ -784,7 +784,7 @@ Conversely, an entry `(x,w) ∈ T` yields evidence `x ∈ X` and equality of the
 
 ```agda
   T-out : (x w : S) → ⟨ pr (fst x) (fst w) ∈ fst T ⟩
-        → Σ[ m ∈ Mem x ] (fst w ≡ fst (fn x m))
+        → Σ[ m ∶ Mem x ] (fst w ≡ fst (fn x m))
   T-out = Gr.pair-out
 ```
 </div>

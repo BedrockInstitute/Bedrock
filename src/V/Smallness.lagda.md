@@ -429,7 +429,7 @@ The statement deserves a close reading. The result is a dependent pair: a set `s
 ```agda
 separateFromSmall : (a : S) (P : S → hProp (ℓ-suc ℓ))
                   → (∀ y → hasSize ℓ (P y))
-                  → Σ[ s ∈ S ] (∀ y → (y ∈ˢ s) ≡ ((y ∈ˢ a) ⊓ P y))
+                  → Σ[ s ∶ S ] (∀ y → (y ∈ˢ s) ≡ ((y ∈ˢ a) ⊓ P y))
 separateFromSmall a P sm = Sep.SEPAREE , λ y → ⇔toPath (fwd y) (bwd y)
   where
 ```
@@ -588,7 +588,7 @@ open Δ₀Small id
 open SemanticsV.At S id using ( _⊨_ )
 
 separateΔ₀ : (a : S) (φ : Formula S 1) → Δ₀ φ
-           → Σ[ s ∈ S ] (∀ y → (y ∈ˢ s) ≡ ((y ∈ˢ a) ⊓ ((y ∷ []) ⊨ φ)))
+           → Σ[ s ∶ S ] (∀ y → (y ∈ˢ s) ≡ ((y ∈ˢ a) ⊓ ((y ∷ []) ⊨ φ)))
 separateΔ₀ a φ c = separateFromSmall a (λ y → (y ∷ []) ⊨ φ) (λ y → Δ₀-small c (y ∷ []))
 ```
 
@@ -639,28 +639,28 @@ small-∃ {X = X} e sm = (∃[ m ∶ X ] sm (equivFun e m) .fst)
 ```
 
 <!--en-->
-The consequence: over an essentially small restricted structure, **every** formula evaluates small, no Δ₀ witness required. Fix a class `M` on the structure and suppose its restricted carrier is essentially small, in the precise form of an equivalence `e : X ≃ (Σ[ x ∈ S ] (x ∈ᶜ M))` with `X : Type ℓ`. Inside the structure `𝒮ᵥ ↾ M`, the quantifiers range over that restricted carrier, so the two lemmas of the last block apply to every quantifier, bounded or not, and the atoms reduce to `V`'s atomic smallness through the first projection. Boundedness is a syntactic restriction on a formula, whereas essential smallness is a property of the quantifier range. Once that hypothesis is available, the structural induction covers unbounded as well as bounded quantifiers. This smallness of inner satisfaction is what lets a definability step, such as the one the constructible hierarchy takes at each stage, operate with predicates at the lower universe.
+The consequence: over an essentially small restricted structure, **every** formula evaluates small, no Δ₀ witness required. Fix a class `M` on the structure and suppose its restricted carrier is essentially small, in the precise form of an equivalence `e : X ≃ (Σ[ x ∶ S ] (x ∈ᶜ M))` with `X : Type ℓ`. Inside the structure `𝒮ᵥ ↾ M`, the quantifiers range over that restricted carrier, so the two lemmas of the last block apply to every quantifier, bounded or not, and the atoms reduce to `V`'s atomic smallness through the first projection. Boundedness is a syntactic restriction on a formula, whereas essential smallness is a property of the quantifier range. Once that hypothesis is available, the structural induction covers unbounded as well as bounded quantifiers. This smallness of inner satisfaction is what lets a definability step, such as the one the constructible hierarchy takes at each stage, operate with predicates at the lower universe.
 <!--zh-->
-后果是：在本质小的限制结构上，**任何**公式求值都有目标层级中的等价代表，无需 Δ₀ 见证。固定结构上的类 `M`，并设其限制载体本质小，精确形式是等价 `e : X ≃ (Σ[ x ∈ S ] (x ∈ᶜ M))`，其中 `X : Type ℓ`。在结构 `𝒮ᵥ ↾ M` 内，量词在该限制载体上量化，于是上一块代码的两条引理对每个量词都适用，无论有界与否；原子则经第一投影归结为 `V` 的原子命题的 `hasSize` 见证。有界性是公式的句法限制，而本质小是量化范围的性质。有了后一项假设，结构归纳便同时覆盖无界与有界量词。内部满足的这一`hasSize` 见证，正是让可定义性步骤 (例如可构造层级在每层所做的那一步) 能以低宇宙的谓词运作的原因。
+后果是：在本质小的限制结构上，**任何**公式求值都有目标层级中的等价代表，无需 Δ₀ 见证。固定结构上的类 `M`，并设其限制载体本质小，精确形式是等价 `e : X ≃ (Σ[ x ∶ S ] (x ∈ᶜ M))`，其中 `X : Type ℓ`。在结构 `𝒮ᵥ ↾ M` 内，量词在该限制载体上量化，于是上一块代码的两条引理对每个量词都适用，无论有界与否；原子则经第一投影归结为 `V` 的原子命题的 `hasSize` 见证。有界性是公式的句法限制，而本质小是量化范围的性质。有了后一项假设，结构归纳便同时覆盖无界与有界量词。内部满足的这一`hasSize` 见证，正是让可定义性步骤 (例如可构造层级在每层所做的那一步) 能以低宇宙的谓词运作的原因。
 <!--ja-->
-帰結は次のとおりである。本質的に小さな制限された構造の上では、Δ₀ の証人がなくても、**すべての**論理式の評価が小さくなる。構造の上のクラス `M` を固定し、その制限された台が本質的に小さい、すなわち `X : Type ℓ` を用いた同値 `e : X ≃ (Σ[ x ∈ S ] (x ∈ᶜ M))` の形で仮定する。構造 `𝒮ᵥ ↾ M` の中では、量化子はその制限された台の上で量化するので、前のコード塊の二つの補題は、有界かどうかにかかわらず、すべての量化子に適用できる。原子は第一射影を通して `V` の原子的な小ささに帰着する。有界性は論理式に対する構文上の制限であり、本質的な小ささは量化範囲の性質である。後者の仮定があれば、構造帰納法は非有界量化子と有界量化子の両方を扱える。この内部充足の小ささこそ、可定義性の段階、たとえば構成可能階層が各段階で踏む那段階が、低い宇宙の述語で動けるようにするものである。
+帰結は次のとおりである。本質的に小さな制限された構造の上では、Δ₀ の証人がなくても、**すべての**論理式の評価が小さくなる。構造の上のクラス `M` を固定し、その制限された台が本質的に小さい、すなわち `X : Type ℓ` を用いた同値 `e : X ≃ (Σ[ x ∶ S ] (x ∈ᶜ M))` の形で仮定する。構造 `𝒮ᵥ ↾ M` の中では、量化子はその制限された台の上で量化するので、前のコード塊の二つの補題は、有界かどうかにかかわらず、すべての量化子に適用できる。原子は第一射影を通して `V` の原子的な小ささに帰着する。有界性は論理式に対する構文上の制限であり、本質的な小ささは量化範囲の性質である。後者の仮定があれば、構造帰納法は非有界量化子と有界量化子の両方を扱える。この内部充足の小ささこそ、可定義性の段階、たとえば構成可能階層が各段階で踏む那段階が、低い宇宙の述語で動けるようにするものである。
 <!--/-->
 
 <!--en-->
-The module's parameters assemble the small world. `M` is a class on the carrier `S`, possibly proper: nothing restricts its size. The hypothesis is the pair of a small type `X : Type ℓ` and an equivalence from `X` onto the restricted carrier `Σ[ x ∈ S ] (x ∈ᶜ M)`; this is the exact sense in which the world is essentially small, and note that the burden rests on the equivalence existing, not on `M` being in any way bounded internally. The constants are interpreted in the restricted carrier by `ι : K → Σ[ x ∈ S ] (x ∈ᶜ M)`, so every constant denotes a pair whose second component is evidence that its first component lies in `M`.
+The module's parameters assemble the small world. `M` is a class on the carrier `S`, possibly proper: nothing restricts its size. The hypothesis is the pair of a small type `X : Type ℓ` and an equivalence from `X` onto the restricted carrier `Σ[ x ∶ S ] (x ∈ᶜ M)`; this is the exact sense in which the world is essentially small, and note that the burden rests on the equivalence existing, not on `M` being in any way bounded internally. The constants are interpreted in the restricted carrier by `ι : K → Σ[ x ∶ S ] (x ∈ᶜ M)`, so every constant denotes a pair whose second component is evidence that its first component lies in `M`.
 <!--zh-->
-模块的参数装配出这个小世界。`M` 是载体 `S` 上的一个类，可以是真类：没有任何大小限制。假设是一对数据：小类型 `X : Type ℓ`，以及从 `X` 到限制载体 `Σ[ x ∈ S ] (x ∈ᶜ M)` 的等价；这正是「世界本质小」的精确含义。注意负担在于该等价存在，而不在于 `M` 在任何内部意义上有界。常元经 `ι : K → Σ[ x ∈ S ] (x ∈ᶜ M)` 在限制载体中解释，因此每个常元指称一个对子，其第二分量是「第一分量属于 `M`」的证据。
+模块的参数装配出这个小世界。`M` 是载体 `S` 上的一个类，可以是真类：没有任何大小限制。假设是一对数据：小类型 `X : Type ℓ`，以及从 `X` 到限制载体 `Σ[ x ∶ S ] (x ∈ᶜ M)` 的等价；这正是「世界本质小」的精确含义。注意负担在于该等价存在，而不在于 `M` 在任何内部意义上有界。常元经 `ι : K → Σ[ x ∶ S ] (x ∈ᶜ M)` 在限制载体中解释，因此每个常元指称一个对子，其第二分量是「第一分量属于 `M`」的证据。
 <!--ja-->
-モジュールの引数が小さな世界を組み立てる。`M` は台 `S` 上のクラスで、真クラスであってもかまわない。大きさの制限は一切ない。仮定は、小さな型 `X : Type ℓ` と、`X` から制限された台 `Σ[ x ∈ S ] (x ∈ᶜ M)` への同値との組であり、これが世界が本質的に小さいということの正確な意味である。負担はこの同値が存在することにあり、`M` が何らかの内部的な意味で有界であることにはない。定数は `ι : K → Σ[ x ∈ S ] (x ∈ᶜ M)` によって制限された台の中で解釈され、したがって各定数は、第二成分が「第一成分が `M` に属する」ことの証拠であるような対を指す。
+モジュールの引数が小さな世界を組み立てる。`M` は台 `S` 上のクラスで、真クラスであってもかまわない。大きさの制限は一切ない。仮定は、小さな型 `X : Type ℓ` と、`X` から制限された台 `Σ[ x ∶ S ] (x ∈ᶜ M)` への同値との組であり、これが世界が本質的に小さいということの正確な意味である。負担はこの同値が存在することにあり、`M` が何らかの内部的な意味で有界であることにはない。定数は `ι : K → Σ[ x ∶ S ] (x ∈ᶜ M)` によって制限された台の中で解釈され、したがって各定数は、第二成分が「第一成分が `M` に属する」ことの証拠であるような対を指す。
 <!--/-->
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
 module InnerSmall (M : S → hProp (ℓ-suc ℓ))
-                  (X : Type ℓ) (e : X ≃ (Σ[ x ∈ S ] (x ∈ᶜ M)))
+                  (X : Type ℓ) (e : X ≃ (Σ[ x ∶ S ] (x ∈ᶜ M)))
                   {ℓc} {K : Type ℓc}
-                  (ι : K → Σ[ x ∈ S ] (x ∈ᶜ M)) where
+                  (ι : K → Σ[ x ∶ S ] (x ∈ᶜ M)) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -678,7 +678,7 @@ Two abbreviations fix notation. `SM` names the restricted carrier itself, and `�
 <!--/-->
 
 ```agda
-  SM = Σ[ x ∈ S ] (x ∈ᶜ M)
+  SM = Σ[ x ∶ S ] (x ∈ᶜ M)
 
   𝒮M : ZFStructure (ℓ-suc ℓ)
   𝒮M = 𝒮ᵥ ↾ M

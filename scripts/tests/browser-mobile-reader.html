@@ -45,7 +45,7 @@ document.querySelector('#run').onclick=async()=>{
   check(!d.querySelector('.name-hover-popup'),'outside touch cancels a pending type request');
   tap(w,v);await until(()=>d.querySelector('.name-hover-popup:not([aria-busy])'));
   check(d.querySelector('.name-hover-popup').textContent.includes('ZFStructure'),'Origin milestone V still resolves the real type');
-  const preface=[...d.querySelectorAll('#milestones p')].filter(p=>/形而上学|越过首个目标/.test(p.textContent));
+  const preface=[...d.querySelectorAll('article p')].filter(p=>/形而上学|越过首个目标/.test(p.textContent));
   check(preface.length===2&&preface.every(p=>!p.querySelector('a[data-type]')),'broad preface V is ordinary prose, not the formal model');
   await pause(650);check(!!d.querySelector('.name-hover-popup'),'mobile hover persists without a timeout');
   await load('/zh/Base.Choice.html');

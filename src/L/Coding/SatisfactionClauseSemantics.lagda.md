@@ -484,7 +484,7 @@ The introduction proof receives the components exposed by the two universal pair
 
 ```agda
 TmIsV : V ℓ → V ℓ → V ℓ → Type (ℓ-suc ℓ)
-TmIsV t z v = ∥ (t ≡ pr (# 0) v) ⊎ (Σ[ i ∈ V ℓ ] ((t ≡ pr (# 1) i) × ⟨ pr i v ∈ z ⟩)) ∥₁
+TmIsV t z v = ∥ (t ≡ pr (# 0) v) ⊎ (Σ[ i ∶ V ℓ ] ((t ≡ pr (# 1) i) × ⟨ pr i v ∈ z ⟩)) ∥₁
 ```
 
 <!--en-->
@@ -546,7 +546,7 @@ The inner bounded existential ranges over entries `q` of the graph `z`, not over
 
 ```agda
     Inner : (i s : S) → Type (ℓ-suc ℓ)
-    Inner i s = ∥ Σ[ q ∈ S ] (⟨ fst q ∈ Z ⟩ × ⟨ (q ∷ i ∷ s ∷ δ) ⊨ prAtL i0 i1 (sh 3 v) ⟩) ∥₁
+    Inner i s = ∥ Σ[ q ∶ S ] (⟨ fst q ∈ Z ⟩ × ⟨ (q ∷ i ∷ s ∷ δ) ⊨ prAtL i0 i1 (sh 3 v) ⟩) ∥₁
 ```
 
 <!--en-->
@@ -559,7 +559,7 @@ The inner bounded existential ranges over entries `q` of the graph `z`, not over
 
 ```agda
     Outer : Type (ℓ-suc ℓ)
-    Outer = ∥ Σ[ i ∈ S ] Σ[ s ∈ S ] ((Tv ≡ pr N1v (fst i)) × ⟨ (i ∷ s ∷ δ) ⊨ inner ⟩) ∥₁
+    Outer = ∥ Σ[ i ∶ S ] Σ[ s ∶ S ] ((Tv ≡ pr N1v (fst i)) × ⟨ (i ∷ s ∷ δ) ⊨ inner ⟩) ∥₁
 ```
 
 <!--en-->
@@ -627,7 +627,7 @@ For the converse, `build` turns either concrete code shape back into satisfactio
 
 ```agda
   private
-    build : (Tv ≡ pr (# 0) Vv) ⊎ (Σ[ i ∈ V ℓ ] ((Tv ≡ pr (# 1) i) × ⟨ pr i Vv ∈ Z ⟩))
+    build : (Tv ≡ pr (# 0) Vv) ⊎ (Σ[ i ∶ V ℓ ] ((Tv ≡ pr (# 1) i) × ⟨ pr i Vv ∈ Z ⟩))
           → ⟨ δ ⊨ tmIs t z v N0 N1 ⟩
     build (inl e) = ∣ inl (pr-in t N0 v δ (e ∙ cong (λ a → pr a Vv) (sym q0))) ∣₁
     build (inr (i , (e , hp))) = ∣ inr (fillSnd t δ (lookup N1 δ) iS e' inner hq N1 refl) ∣₁
@@ -914,7 +914,7 @@ Totality is read outward as truncated existence: for each member of the code dom
 <!--/-->
 
 ```agda
-  total-out : ⟨ γ ⊨ Cl.total ⟩ → (c : S) → ⟨ fst c ∈ Cv ⟩ → ∥ Σ[ yc ∈ S ] ⟨ pr (fst c) (fst yc) ∈ Tv ⟩ ∥₁
+  total-out : ⟨ γ ⊨ Cl.total ⟩ → (c : S) → ⟨ fst c ∈ Cv ⟩ → ∥ Σ[ yc ∶ S ] ⟨ pr (fst c) (fst yc) ∈ Tv ⟩ ∥₁
   total-out h c c∈ = rec₁ squash₁
     (λ { (e , (e∈ , hs)) → map₁
       (λ { (yc , s , (ee , _)) → yc , subst (λ u → ⟨ u ∈ Tv ⟩) ee e∈ })
@@ -942,7 +942,7 @@ Conversely, assume that every `c` in `C` has, propositionally truncated, a value
 <!--/-->
 
 ```agda
-  total-in : ((c : S) → ⟨ fst c ∈ Cv ⟩ → ∥ Σ[ yc ∈ S ] ⟨ pr (fst c) (fst yc) ∈ Tv ⟩ ∥₁) → ⟨ γ ⊨ Cl.total ⟩
+  total-in : ((c : S) → ⟨ fst c ∈ Cv ⟩ → ∥ Σ[ yc ∶ S ] ⟨ pr (fst c) (fst yc) ∈ Tv ⟩ ∥₁) → ⟨ γ ⊨ Cl.total ⟩
   total-in g c c∈ = map₁
     (λ { (yc , m) → down (lookup T γ) (pr (fst c) (fst yc)) m
        , ( m , fillSnd i0 (down (lookup T γ) (pr (fst c) (fst yc)) m ∷ c ∷ γ) c yc refl ⊤̇ (λ b → b) i1 refl ) })
@@ -959,7 +959,7 @@ The on-domain condition starts with an arbitrary element `e` of `T`, rather than
 
 ```agda
   onC-out : ⟨ γ ⊨ Cl.onC ⟩ → (e : S) → ⟨ fst e ∈ Tv ⟩
-          → ∥ Σ[ c ∈ S ] Σ[ yc ∈ S ] ((fst e ≡ pr (fst c) (fst yc)) × ⟨ fst c ∈ Cv ⟩) ∥₁
+          → ∥ Σ[ c ∶ S ] Σ[ yc ∶ S ] ((fst e ≡ pr (fst c) (fst yc)) × ⟨ fst c ∈ Cv ⟩) ∥₁
   onC-out h e e∈ = map₁ (λ { (c , yc , s , (ee , c∈)) → c , yc , (ee , c∈) })
     (bothEx-out i0 (var i1 ∈̇ var (sh 4 C)) (e ∷ γ) (h e e∈))
 ```
@@ -973,7 +973,7 @@ The converse asks for precisely that truncated decomposition of every member of 
 <!--/-->
 
 ```agda
-  onC-in : ((e : S) → ⟨ fst e ∈ Tv ⟩ → ∥ Σ[ c ∈ S ] Σ[ yc ∈ S ] ((fst e ≡ pr (fst c) (fst yc)) × ⟨ fst c ∈ Cv ⟩) ∥₁)
+  onC-in : ((e : S) → ⟨ fst e ∈ Tv ⟩ → ∥ Σ[ c ∶ S ] Σ[ yc ∶ S ] ((fst e ≡ pr (fst c) (fst yc)) × ⟨ fst c ∈ Cv ⟩) ∥₁)
          → ⟨ γ ⊨ Cl.onC ⟩
   onC-in g e e∈ = rec₁ (snd ((e ∷ γ) ⊨ bothEx i0 (var i1 ∈̇ var (sh 4 C))))
     (λ { (c , yc , (ee , c∈)) → fillBoth i0 (e ∷ γ) c yc ee (var i1 ∈̇ var (sh 4 C)) c∈ })
@@ -1055,7 +1055,7 @@ For a binary connective, the payload `r` must decompose as the two child codes `
           → (a b c₁ ya c₂ yb : S) → Rv ≡ pr (fst a) (fst b)
           → ⟨ pr (fst c₁) (fst ya) ∈ Tv ⟩ → fst c₁ ≡ pr A (fst a)
           → ⟨ pr (fst c₂) (fst yb) ∈ Tv ⟩ → fst c₂ ≡ pr A (fst b)
-          → ∥ Σ[ s ∈ S ] Σ[ s₁ ∈ S ] Σ[ e₁ ∈ S ] Σ[ s₂ ∈ S ] Σ[ e₂ ∈ S ]
+          → ∥ Σ[ s ∶ S ] Σ[ s₁ ∶ S ] Σ[ e₁ ∶ S ] Σ[ s₂ ∶ S ] Σ[ e₂ ∶ S ]
 ```
 
 <!--en-->
@@ -1176,7 +1176,7 @@ For an unbounded quantifier, the payload `r` is the child formula code. A matchi
 ```agda
   qu-out : (q : ∀ {j} → Term S j → Formula S (suc j) → Formula S j) → ⟨ δ ⊨ R.quRel q ⟩
          → (c₁ ya ar' : S) → ⟨ pr (fst c₁) (fst ya) ∈ Tv ⟩ → fst c₁ ≡ pr (fst ar') Rv → fst ar' ≡ sucV A
-         → ∥ Σ[ s ∈ S ] Σ[ s' ∈ S ] Σ[ e' ∈ S ] Ext (ar' ∷ s' ∷ ya ∷ c₁ ∷ s ∷ e' ∷ δ) (R.quBody q) ∥₁
+         → ∥ Σ[ s ∶ S ] Σ[ s' ∶ S ] Σ[ e' ∶ S ] Ext (ar' ∷ s' ∷ ya ∷ c₁ ∷ s ∷ e' ∷ δ) (R.quBody q) ∥₁
   qu-out q h c₁ ya ar' mem e es =
     ∣ container e'S c₁ ya refl .fst , container c₁ ar' r e .fst , e'S
 ```
@@ -1237,7 +1237,7 @@ The bounded-quantifier payload has two syntactic components: the bound term code
          → (c : ∀ {j} → Formula S j → Formula S j → Formula S j) → ⟨ δ ⊨ R.bqRel q c ⟩
          → (t a c₁ ya ar' : S) → Rv ≡ pr (fst t) (fst a)
          → ⟨ pr (fst c₁) (fst ya) ∈ Tv ⟩ → fst c₁ ≡ pr (fst ar') (fst a) → fst ar' ≡ sucV A
-         → ∥ Σ[ s ∈ S ] Σ[ s₁ ∈ S ] Σ[ s' ∈ S ] Σ[ e' ∈ S ]
+         → ∥ Σ[ s ∶ S ] Σ[ s₁ ∶ S ] Σ[ s' ∶ S ] Σ[ e' ∶ S ]
 ```
 
 <!--en-->
@@ -1339,7 +1339,7 @@ For an atomic formula, `t` and `u` are the two term codes stored in the payload,
 ```agda
   atom-out : (rel : Formula S (18 + m)) → ⟨ δ ⊨ R.atomRel rel ⟩
            → (t u : S) → Rv ≡ pr (fst t) (fst u)
-           → ∥ Σ[ s ∈ S ] Ext (u ∷ t ∷ s ∷ δ) (R.atomBody rel) ∥₁
+           → ∥ Σ[ s ∶ S ] Ext (u ∷ t ∷ s ∷ δ) (R.atomBody rel) ∥₁
   atom-out rel h t u er = ∣ container r t u er .fst , useBoth i3 δ t u er (extB i3 i11 (R.atomBody rel)) h ∣₁
 ```
 

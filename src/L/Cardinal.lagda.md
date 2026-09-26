@@ -174,7 +174,7 @@ We first define an injection entirely at the host level. An element of `X ↪ Y`
 
 ```agda
 _↪_ : Type ℓ → Type ℓ → Type ℓ
-X ↪ Y = Σ[ f ∈ (X → Y) ] ((x y : X) → f x ≡ f y → x ≡ y)
+X ↪ Y = Σ[ f ∶ (X → Y) ] ((x y : X) → f x ≡ f y → x ≡ y)
 ```
 
 <!--en-->
@@ -325,7 +325,7 @@ The fourth condition is stated directly in the host. For any `x,y : S`, if the o
 
 ```agda
 InjL : S → S → Type (ℓ-suc ℓ)
-InjL a b = ∥ Σ[ F ∈ S ] InjCode F a b ∥₁
+InjL a b = ∥ Σ[ F ∶ S ] InjCode F a b ∥₁
 ```
 
 <!--en-->
@@ -350,7 +350,7 @@ elimination of the propositional truncation is legitimate.
 IsCardinalL : S → Type (ℓ-suc ℓ)
 IsCardinalL κ =
   (δ : S) → ⟨ fst δ ∈ fst κ ⟩
-          → (∥ Σ[ F ∈ S ] InjCode F κ δ ∥₁ → ⊥₀)
+          → (∥ Σ[ F ∶ S ] InjCode F κ δ ∥₁ → ⊥₀)
 ```
 
 <!--en-->
@@ -372,15 +372,15 @@ SuccCardL δ κ =
 <!--en-->
 The final field expresses minimality among all internal ordinal cardinals above `κ`. Given any `c : S` whose underlying set is an ordinal, which satisfies `IsCardinalL c`, and which contains `κ`, it returns the internal inclusion `δ ⊆ˢ c`. The first field has already established that `δ` is an ordinal, so inclusion is the non-strict ordinal comparison: `δ` lies at or below every such `c`. Inclusion rather than membership is essential here, since the conclusion must also hold when `c` is `δ` itself. Both the quantifier over `S` and `_⊆ˢ_` belong to the constructible carrier, so this is minimality among the candidates visible in `L`. The field assumes only `κ ∈ c`; hypotheses saying that `κ` is itself an ordinal and an internal cardinal are supplied at the theorems that use this predicate.
 
-No injection graph is constructed by this field. `InjCode F a b` retains a particular constructible code `F` together with its four injection conditions, whereas `InjL a b` is the propositional truncation `∥ Σ[ F ∈ S ] InjCode F a b ∥₁`. Thus the hypothesis `IsCardinalL c`, when combined with the ordinal hypothesis on `c`, says that `c` cannot merely admit such a coded injection into any smaller ordinal belonging to it. `SuccCardL δ κ` is itself an untruncated property of the fixed pair `δ, κ`: it neither proves that a suitable `δ` exists nor chooses one. Later, `succCardExists` proves the propositionally truncated existence of such a `δ` when `κ` is an ordinal internal cardinal and is not finite, using only the module's assumption `LEM (ℓ-suc ℓ)`. The set-theoretic successor `sucV` does not occur in this definition.
+No injection graph is constructed by this field. `InjCode F a b` retains a particular constructible code `F` together with its four injection conditions, whereas `InjL a b` is the propositional truncation `∥ Σ[ F ∶ S ] InjCode F a b ∥₁`. Thus the hypothesis `IsCardinalL c`, when combined with the ordinal hypothesis on `c`, says that `c` cannot merely admit such a coded injection into any smaller ordinal belonging to it. `SuccCardL δ κ` is itself an untruncated property of the fixed pair `δ, κ`: it neither proves that a suitable `δ` exists nor chooses one. Later, `succCardExists` proves the propositionally truncated existence of such a `δ` when `κ` is an ordinal internal cardinal and is not finite, using only the module's assumption `LEM (ℓ-suc ℓ)`. The set-theoretic successor `sucV` does not occur in this definition.
 <!--zh-->
 最后一个字段表达 `κ` 之上所有内部序数基数中的最小性。给定任意 `c : S`，若其底层集合是序数，满足 `IsCardinalL c`，且包含 `κ`，该字段就给出内部包含 `δ ⊆ˢ c`。第一个字段已经说明 `δ` 是序数，因此包含关系在此就是序数的非严格比较：`δ` 不大于每个这样的 `c`。结论使用包含而非成员关系，因为它还必须适用于 `c` 就是 `δ` 的情形。对 `S` 的量化与 `_⊆ˢ_` 都作用于可构造载体，所以这是 `L` 中可见候选者之间的最小性。该字段对 `κ` 只假设 `κ ∈ c`；断言 `κ` 本身是序数和内部基数的假设，由使用这个谓词的各定理提供。
 
-这个字段不构造任何单射图。`InjCode F a b` 保留一个特定的可构造码 `F` 及其四项单射条件，而 `InjL a b` 是 `∥ Σ[ F ∈ S ] InjCode F a b ∥₁` 的命题截断。因此，把假设 `IsCardinalL c` 与 `c` 的序数性合在一起，它说的是：不存在从 `c` 到其任一较小序数成员的 `InjL` 单射。`SuccCardL δ κ` 本身是固定之对 `δ, κ` 的未截断性质：它既不证明合适的 `δ` 存在，也不选定一个 `δ`。后文的 `succCardExists` 在 `κ` 是序数内部基数且不是有限序数时，证明这种 `δ` 的命题截断存在性；所用的经典假设仍只是模块参数 `LEM (ℓ-suc ℓ)`。集合论后继 `sucV` 并未出现在这个定义中。
+这个字段不构造任何单射图。`InjCode F a b` 保留一个特定的可构造码 `F` 及其四项单射条件，而 `InjL a b` 是 `∥ Σ[ F ∶ S ] InjCode F a b ∥₁` 的命题截断。因此，把假设 `IsCardinalL c` 与 `c` 的序数性合在一起，它说的是：不存在从 `c` 到其任一较小序数成员的 `InjL` 单射。`SuccCardL δ κ` 本身是固定之对 `δ, κ` 的未截断性质：它既不证明合适的 `δ` 存在，也不选定一个 `δ`。后文的 `succCardExists` 在 `κ` 是序数内部基数且不是有限序数时，证明这种 `δ` 的命题截断存在性；所用的经典假设仍只是模块参数 `LEM (ℓ-suc ℓ)`。集合论后继 `sucV` 并未出现在这个定义中。
 <!--ja-->
 最後のフィールドは、`κ` より大きい内部順序数基数全体の中での最小性を表す。基礎集合が順序数で、`IsCardinalL c` を満たし、`κ` を含む任意の `c : S` を与えると、このフィールドは内部の包含 `δ ⊆ˢ c` を返す。第一のフィールドによって `δ` も順序数であることが分かっているので、ここで包含は順序数の非狭義の比較である。すなわち、`δ` はそのようなすべての `c` 以下である。結論が所属ではなく包含になっているのは、`c` が `δ` 自身である場合も扱う必要があるからである。`S` 上の量化と `_⊆ˢ_` はどちらも構成可能な台に対するものなので、これは `L` に見える候補の中での最小性である。このフィールドが `κ` について仮定するのは `κ ∈ c` だけである。`κ` 自身の順序数性と内部基数性は、この述語を用いる各定理で仮定される。
 
-このフィールドは単射のグラフを構成しない。`InjCode F a b` は特定の構成可能な符号 `F` と単射の四条件を保持するが、`InjL a b` は `∥ Σ[ F ∈ S ] InjCode F a b ∥₁` という命題的切り詰めである。したがって、`IsCardinalL c` と `c` の順序数性を合わせた仮定は、`c` からその要素であるより小さな順序数への `InjL` 単射が存在しないことを述べる。`SuccCardL δ κ` 自体は、固定された対 `δ, κ` に関する切り詰められていない性質である。適切な `δ` の存在を証明せず、特定の `δ` も選ばない。後の `succCardExists` は、`κ` が順序数である内部基数であり、有限順序数ではないとき、そのような `δ` の存在を命題的切り詰めの下で証明する。そこで用いる古典的仮定は、このモジュールのパラメータ `LEM (ℓ-suc ℓ)` だけである。集合論的後続 `sucV` はこの定義に現れない。
+このフィールドは単射のグラフを構成しない。`InjCode F a b` は特定の構成可能な符号 `F` と単射の四条件を保持するが、`InjL a b` は `∥ Σ[ F ∶ S ] InjCode F a b ∥₁` という命題的切り詰めである。したがって、`IsCardinalL c` と `c` の順序数性を合わせた仮定は、`c` からその要素であるより小さな順序数への `InjL` 単射が存在しないことを述べる。`SuccCardL δ κ` 自体は、固定された対 `δ, κ` に関する切り詰められていない性質である。適切な `δ` の存在を証明せず、特定の `δ` も選ばない。後の `succCardExists` は、`κ` が順序数である内部基数であり、有限順序数ではないとき、そのような `δ` の存在を命題的切り詰めの下で証明する。そこで用いる古典的仮定は、このモジュールのパラメータ `LEM (ℓ-suc ℓ)` だけである。集合論的後続 `sucV` はこの定義に現れない。
 <!--/-->
 
 ```agda

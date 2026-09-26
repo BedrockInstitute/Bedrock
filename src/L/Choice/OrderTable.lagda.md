@@ -394,7 +394,7 @@ The outer ordinal certificate is explicit, while each endpoint exists only under
 <!--/-->
 
 ```agda
-    atOrd : Σ[ o ∈ IsOrd α ] ⟨ ∃[ a' ∶ Mem (Lset α) ] (∃[ b' ∶ Mem (Lset α) ] ((pr (fst a) (fst b) ≡ pr (fst a') (fst b'))
+    atOrd : Σ[ o ∶ IsOrd α ] ⟨ ∃[ a' ∶ Mem (Lset α) ] (∃[ b' ∶ Mem (Lset α) ] ((pr (fst a) (fst b) ≡ pr (fst a') (fst b'))
                  , setIsSet _ (pr (fst a') (fst b'))) ⊓ Ordering α o a' b') ⟩
           → ⟨ Ordering α oα a b ⟩
     atOrd (o , h₁) = rec₁ squash₁
@@ -596,7 +596,7 @@ The second condition is totality below the bound. Every `c ∈ B` has some recor
 ```agda
 Entries : S → V ℓ → Type (ℓ-suc ℓ)
 Entries h B = (c : S) → ⟨ fst c ∈ B ⟩
-            → ∥ (Σ[ r ∈ S ] ⟨ pr (fst c) (fst r) ∈ fst h ⟩) ∥₁
+            → ∥ (Σ[ r ∶ S ] ⟨ pr (fst c) (fst r) ∈ fst h ⟩) ∥₁
 ```
 
 <!--en-->
@@ -1094,7 +1094,7 @@ The recursive datum at `α` contains two model sets: a table representing all co
 
 ```agda
   Bundle : V ℓ → Type (ℓ-suc (ℓ-suc ℓ))
-  Bundle α = Σ[ h ∈ S ] Σ[ r ∈ S ] (IsTable α h × IsRel α r)
+  Bundle α = Σ[ h ∶ S ] Σ[ r ∶ S ] (IsTable α h × IsRel α r)
 ```
 
 <!--en-->
@@ -1203,7 +1203,7 @@ The outer recorded witness first provides an index `d` in `B` and a further trun
 <!--/-->
 
 ```agda
-        outer : Σ[ d ∈ S ] ( ⟨ fst d ∈ B ⟩
+        outer : Σ[ d ∶ S ] ( ⟨ fst d ∈ B ⟩
                   × ⟨ ∃[ t ∶ S ] ((pr (fst c) (fst r) ≡ pr (fst d) (fst t))
                         , setIsSet _ (pr (fst d) (fst t))) ⊓ Realizes (fst d) t ⟩ )
               → ⟨ fst c ∈ B ⟩ × IsRel (fst c) r
@@ -1249,7 +1249,7 @@ Before the relation at an ordinal `α` can be obtained by separation, all possib
 
 ```agda
   bound : (α : V ℓ) (oα : IsOrd α)
-        → Σ[ D ∈ S ] ((z : S) → ⟨ Related α (fst z) ⟩ → ⟨ fst z ∈ fst D ⟩)
+        → Σ[ D ∶ S ] ((z : S) → ⟨ Related α (fst z) ⟩ → ⟨ fst z ∈ fst D ⟩)
   bound α oα = d .fst , confine
     where
     ixL : ⟪ Lset α ⟫ → S
@@ -1276,7 +1276,7 @@ Pairs of presentation indices form a small indexing type. Applying the common-do
 <!--/-->
 
 ```agda
-    d : Σ[ D ∈ S ] ((p : ⟪ Lset α ⟫ × ⟪ Lset α ⟫)
+    d : Σ[ D ∶ S ] ((p : ⟪ Lset α ⟫ × ⟪ Lset α ⟫)
                     → ⟨ prʟ (ixL (fst p)) (ixL (snd p)) ∈ˢ D ⟩)
     d = smallDom (⟪ Lset α ⟫ × ⟪ Lset α ⟫) (λ p → prʟ (ixL (fst p)) (ixL (snd p)))
 ```
@@ -1567,7 +1567,7 @@ For each `c ∈ α`, existence and uniqueness now describe a single point of the
 
 ```agda
         fc : (c : S) → ⟨ c ∈ˢ A ⟩
-           → isContr (Σ[ k ∈ S ] ⟨ (k ∷ c ∷ []) ⊨ φ ⟩)
+           → isContr (Σ[ k ∶ S ] ⟨ (k ∷ c ∷ []) ⊨ φ ⟩)
         fc c c∈ = mereFunct φ c ∣ entry c c∈ , (holds c c∈ , only c c∈) ∣₁
 ```
 

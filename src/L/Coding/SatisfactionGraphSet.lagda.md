@@ -214,7 +214,7 @@ Conversely, suppose an ordered pair `pr (fst x) (fst y)` belongs to `pairs`. The
 
 ```agda
     pairs-out : (x y : S) → ⟨ pr (fst x) (fst y) ∈ fst pairs ⟩
-              → Σ[ mx ∈ ⟨ fst x ∈ fst (AllCodes W) ⟩ ] (fst y ≡ fst (valOf x mx))
+              → Σ[ mx ∶ ⟨ fst x ∈ fst (AllCodes W) ⟩ ] (fst y ≡ fst (valOf x mx))
     pairs-out = G.pair-out
 ```
 
@@ -228,7 +228,7 @@ An arbitrary member of `pairs` need not arrive already displayed as an ordered p
 
 ```agda
     pairs-shape : (e : S) → ⟨ fst e ∈ fst pairs ⟩
-                → ∥ Σ[ x ∈ S ] Σ[ mx ∈ ⟨ fst x ∈ fst (AllCodes W) ⟩ ] (fst e ≡ pr (fst x) (fst (valOf x mx))) ∥₁
+                → ∥ Σ[ x ∶ S ] Σ[ mx ∶ ⟨ fst x ∈ fst (AllCodes W) ⟩ ] (fst e ≡ pr (fst x) (fst (valOf x mx))) ∥₁
     pairs-shape e h = MapGraph.F-out M (fst e) h
 ```
 </div>

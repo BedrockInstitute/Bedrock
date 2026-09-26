@@ -936,7 +936,7 @@ selecting or retaining an index.
     denoteMem : (t : Name) (y : V ℓ) → ⟨ y ∈ denote t ⟩ → ⟨ y ∈ A ⟩
     denoteMem t y = rec₁ (snd (y ∈ A)) step
       where
-      step : Σ[ p ∈ Σ[ mm ∈ ⟪ A ⟫ ] ⟨ NM.satAt t mm ⟩ ] (⟪ A ⟫↪ (p .fst) ≡ y)
+      step : Σ[ p ∶ Σ[ mm ∶ ⟪ A ⟫ ] ⟨ NM.satAt t mm ⟩ ] (⟪ A ⟫↪ (p .fst) ≡ y)
 ```
 
 <!--en-->
@@ -1584,7 +1584,7 @@ involved.
         where
         hA : ⟨ fst z ∈ A ⟩
         hA = denoteMem t (fst z) hz
-        fib : Σ[ mm ∈ ⟪ A ⟫ ] (⟪ A ⟫↪ mm ≡ fst z)
+        fib : Σ[ mm ∶ ⟪ A ⟫ ] (⟪ A ⟫↪ mm ≡ fst z)
         fib = ∈-asFiber {a = fst z} {b = A} hA
 ```
 
@@ -1622,7 +1622,7 @@ not only to an element already presented in the small carrier type.
 <!--/-->
 
 ```agda
-        fib : Σ[ mm ∈ ⟪ A ⟫ ] (⟪ A ⟫↪ mm ≡ fst z)
+        fib : Σ[ mm ∶ ⟪ A ⟫ ] (⟪ A ⟫↪ mm ≡ fst z)
         fib = ∈-asFiber {a = fst z} {b = A}
           (subst (λ u → ⟨ fst z ∈ u ⟩) (cong fst qB) hz)
 ```
@@ -1757,7 +1757,7 @@ propositionally truncated type.
 <!--/-->
 
 ```agda
-    NameAt-read : ⟨ γ ⊨ NameAt B C C₀ s a e d ⟩ → ∥ Σ[ t ∈ Name ] Data t ∥₁
+    NameAt-read : ⟨ γ ⊨ NameAt B C C₀ s a e d ⟩ → ∥ Σ[ t ∶ Name ] Data t ∥₁
     NameAt-read (hf , (ha , (he , hd))) =
       rec₁ squash₁ atArity ha
       where
@@ -1777,9 +1777,9 @@ its data: `qs` is the first equation and `qa` is the second.
 <!--/-->
 
 ```agda
-             → Σ[ χ ∈ Formula (⊥* {ℓ}) (suc k) ]
+             → Σ[ χ ∶ Formula (⊥* {ℓ}) (suc k) ]
                  (fst (lookup s γ) ≡ fst (limitCode χ))
-             → Σ[ t ∈ Name ] Data t
+             → Σ[ t ∶ Name ] Data t
       atCode k qa (χ , qs) = t , (qs , (qa , (qe , qd)))
         where
 ```
@@ -1943,8 +1943,8 @@ merely a name satisfying all four data equations, exactly the codomain of
 <!--/-->
 
 ```agda
-      atArity : Σ[ lk ∈ Lift {ℓ-zero} {ℓ} ℕ ] (# (lower lk) ≡ fst (lookup a γ))
-              → ∥ Σ[ t ∈ Name ] Data t ∥₁
+      atArity : Σ[ lk ∶ Lift {ℓ-zero} {ℓ} ℕ ] (# (lower lk) ≡ fst (lookup a γ))
+              → ∥ Σ[ t ∶ Name ] Data t ∥₁
       atArity (lk , qk) = map₁ (atCode (lower lk) (sym qk))
         (codeFree-out C₀ s a γ (lower lk) q₀ (sym qk) hf)
 ```
@@ -2233,7 +2233,7 @@ impossibility.
           (Named.NameAt-read (sh3 B) (sh3 C) (sh3 C₀) (suc (suc zero))
              (suc zero) zero (sh3 d) (e' ∷ a' ∷ s' ∷ γ) qB qC q₀ hn))
           where
-          step : Σ[ t' ∈ Name ] Named.Data (sh3 B) (sh3 C) (sh3 C₀)
+          step : Σ[ t' ∶ Name ] Named.Data (sh3 B) (sh3 C) (sh3 C₀)
 ```
 
 <!--en-->
@@ -2279,22 +2279,22 @@ minimality clause.
 <!--en-->
 Conversely, satisfaction of `LeastNameAt` splits into naming evidence `hn`
 and the universal clause `hu`. Reading `hn` gives
-`∥ Σ[ t ∈ Name ] N.Data t ∥₁`. The map shown here keeps that outer
+`∥ Σ[ t ∶ Name ] N.Data t ∥₁`. The map shown here keeps that outer
 propositional truncation and, for each recovered `t` and `dt`, adds a proof of
 `IsMin t`. Consequently `LeastAt-read` proves only the propositionally
 truncated existence of a least name.
 <!--zh-->
-反过来，`LeastNameAt` 的满足分成命名证据 `hn` 与全称子句 `hu`。读取 `hn`得到 `∥ Σ[ t ∈ Name ] N.Data t ∥₁`。这里的映射保留外层命题截断，并为每个恢复出的 `t` 与 `dt` 补上 `IsMin t` 的证明。因此，`LeastAt-read` 只证明最小名字的命题截断存在。
+反过来，`LeastNameAt` 的满足分成命名证据 `hn` 与全称子句 `hu`。读取 `hn`得到 `∥ Σ[ t ∶ Name ] N.Data t ∥₁`。这里的映射保留外层命题截断，并为每个恢复出的 `t` 与 `dt` 补上 `IsMin t` 的证明。因此，`LeastAt-read` 只证明最小名字的命题截断存在。
 <!--ja-->
-逆に、`LeastNameAt` の充足は命名の証拠 `hn` と全称節 `hu` に分かれる。`hn` を読むと `∥ Σ[ t ∈ Name ] N.Data t ∥₁` が得られる。ここでの写像は外側の命題的切り詰めを保ち、回復した各 `t` と `dt` に `IsMin t` の証明を加える。したがって `LeastAt-read` が証明するのは、最小名の命題的に切り詰められた存在だけである。
+逆に、`LeastNameAt` の充足は命名の証拠 `hn` と全称節 `hu` に分かれる。`hn` を読むと `∥ Σ[ t ∶ Name ] N.Data t ∥₁` が得られる。ここでの写像は外側の命題的切り詰めを保ち、回復した各 `t` と `dt` に `IsMin t` の証明を加える。したがって `LeastAt-read` が証明するのは、最小名の命題的に切り詰められた存在だけである。
 <!--/-->
 
 ```agda
       LeastAt-read : ⟨ γ ⊨ LeastNameAt R P B C C₀ s a e d ⟩
-                   → ∥ Σ[ t ∈ Name ] Least t ∥₁
+                   → ∥ Σ[ t ∶ Name ] Least t ∥₁
       LeastAt-read (hn , hu) = map₁ step (N.NameAt-read hn)
         where
-        step : Σ[ t ∈ Name ] N.Data t → Σ[ t ∈ Name ] Least t
+        step : Σ[ t ∶ Name ] N.Data t → Σ[ t ∶ Name ] Least t
 ```
 
 <!--en-->
@@ -2551,21 +2551,21 @@ comparison, so it introduces the six existential witnesses directly.
 
 <!--en-->
 The converse theorem states the exact witness boundary. From satisfaction of
-`StepAt`, it returns only `∥ Σ[ t₁ ∈ Name ] Σ[ t₂ ∈ Name ] (LeastOf x t₁ × (LeastOf y t₂ × (t₁ ≺ₙ t₂))) ∥₁`.
+`StepAt`, it returns only `∥ Σ[ t₁ ∶ Name ] Σ[ t₂ ∶ Name ] (LeastOf x t₁ × (LeastOf y t₂ × (t₁ ≺ₙ t₂))) ∥₁`.
 The outer dependent sum ranges `t₁` over all names, and for each such `t₁` the
 inner sum ranges `t₂` over all names. Their payload says precisely that `t₁` is
 least for the value in slot `x`, `t₂` is least for the value in slot `y`, and
 `t₁ ≺ₙ t₂`. The first `rec₁` opens the truncated six-witness payload supplied
 by `StepAt-out`, with this still-truncated conclusion as its target.
 <!--zh-->
-反向定理精确标明见证的边界。从 `StepAt` 的满足关系出发，它只返回 `∥ Σ[ t₁ ∈ Name ] Σ[ t₂ ∈ Name ] (LeastOf x t₁ × (LeastOf y t₂ × (t₁ ≺ₙ t₂))) ∥₁`。外层依值和让 `t₁` 遍历全部名字；对每个这样的 `t₁`，内层依值和再让 `t₂` 遍历全部名字。其载荷精确断言：`t₁` 是槽 `x` 中取值的最小名字，`t₂` 是槽 `y` 中取值的最小名字，并且 `t₁ ≺ₙ t₂`。第一个 `rec₁` 打开 `StepAt-out` 给出的六见证之命题截断，而消去目标仍是这条带有命题截断的结论。
+反向定理精确标明见证的边界。从 `StepAt` 的满足关系出发，它只返回 `∥ Σ[ t₁ ∶ Name ] Σ[ t₂ ∶ Name ] (LeastOf x t₁ × (LeastOf y t₂ × (t₁ ≺ₙ t₂))) ∥₁`。外层依值和让 `t₁` 遍历全部名字；对每个这样的 `t₁`，内层依值和再让 `t₂` 遍历全部名字。其载荷精确断言：`t₁` 是槽 `x` 中取值的最小名字，`t₂` 是槽 `y` 中取值的最小名字，并且 `t₁ ≺ₙ t₂`。第一个 `rec₁` 打开 `StepAt-out` 给出的六见证之命题截断，而消去目标仍是这条带有命题截断的结论。
 <!--ja-->
-逆向きの定理は、証人を取り出せる境界を正確に示す。`StepAt` の充足から返されるのは、`∥ Σ[ t₁ ∈ Name ] Σ[ t₂ ∈ Name ] (LeastOf x t₁ × (LeastOf y t₂ × (t₁ ≺ₙ t₂))) ∥₁` だけである。外側の依存和では `t₁` がすべての名前を動き、その各 `t₁` に対して内側の依存和では `t₂` がすべての名前を動く。中身が正確に述べるのは、`t₁` がスロット `x` の値に対する最小名であり、`t₂` がスロット `y` の値に対する最小名であり、さらに `t₁ ≺ₙ t₂` であることである。最初の `rec₁` は `StepAt-out` が与える六証人の命題的切り詰めを開くが、除去先はこの切り詰められた結論のままである。
+逆向きの定理は、証人を取り出せる境界を正確に示す。`StepAt` の充足から返されるのは、`∥ Σ[ t₁ ∶ Name ] Σ[ t₂ ∶ Name ] (LeastOf x t₁ × (LeastOf y t₂ × (t₁ ≺ₙ t₂))) ∥₁` だけである。外側の依存和では `t₁` がすべての名前を動き、その各 `t₁` に対して内側の依存和では `t₂` がすべての名前を動く。中身が正確に述べるのは、`t₁` がスロット `x` の値に対する最小名であり、`t₂` がスロット `y` の値に対する最小名であり、さらに `t₁ ≺ₙ t₂` であることである。最初の `rec₁` は `StepAt-out` が与える六証人の命題的切り詰めを開くが、除去先はこの切り詰められた結論のままである。
 <!--/-->
 
 ```agda
       StepAt-read : ⟨ γ ⊨ StepAt R P B C C₀ x y ⟩
-                  → ∥ Σ[ t₁ ∈ Name ] Σ[ t₂ ∈ Name ]
+                  → ∥ Σ[ t₁ ∶ Name ] Σ[ t₂ ∶ Name ]
                       (LeastOf x t₁ × (LeastOf y t₂ × (t₁ ≺ₙ t₂))) ∥₁
       StepAt-read h = rec₁ squash₁ atSix (StepAt-out R P B C C₀ x y γ h)
         where
@@ -2585,7 +2585,7 @@ eliminated while the final pair of names remains hidden by one truncation.
 
 ```agda
         Goal : Type (ℓ-suc ℓ)
-        Goal = ∥ Σ[ t₁ ∈ Name ] Σ[ t₂ ∈ Name ]
+        Goal = ∥ Σ[ t₁ ∶ Name ] Σ[ t₂ ∶ Name ]
                  (LeastOf x t₁ × (LeastOf y t₂ × (t₁ ≺ₙ t₂))) ∥₁
 ```
 
@@ -2651,7 +2651,7 @@ Thus this continuation has enough information both to recover the two
                    → Min.Least (sh6 R) (sh6 P) (sh6 B) (sh6 C) (sh6 C₀)
                        s6a a6a e6a (sh6 x)
                (p₂ ∷ k₂ ∷ s₂ ∷ p₁ ∷ k₁ ∷ s₁ ∷ γ) qR qP qB qC q₀ t₁
-                   → Σ[ t₂ ∈ Name ] Min.Least (sh6 R) (sh6 P) (sh6 B) (sh6 C)
+                   → Σ[ t₂ ∶ Name ] Min.Least (sh6 R) (sh6 P) (sh6 B) (sh6 C)
 ```
 
 <!--en-->
@@ -2711,7 +2711,7 @@ while constructing the final truncated existence statement.
 <!--/-->
 
 ```agda
-          atFirst : Σ[ t₁ ∈ Name ] Min.Least (sh6 R) (sh6 P) (sh6 B) (sh6 C)
+          atFirst : Σ[ t₁ ∶ Name ] Min.Least (sh6 R) (sh6 P) (sh6 B) (sh6 C)
                       (sh6 C₀) s6a a6a e6a (sh6 x)
                (p₂ ∷ k₂ ∷ s₂ ∷ p₁ ∷ k₁ ∷ s₁ ∷ γ) qR qP qB qC q₀ t₁
                   → Goal

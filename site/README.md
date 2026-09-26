@@ -11,7 +11,7 @@ Git submodule. Follow [AGENTS.md](../AGENTS.md) and the current write scope.
 
 | Bedrock owns | Outcrop owns |
 | --- | --- |
-| `site/project.json`, `site/static/assets/` | Outcrop Core: Markdown, multilingual structure, optional compiler semantics and pure lint engines |
+| `site/project.json`, `site/static/` | Outcrop Core: Markdown, multilingual structure, optional compiler semantics and pure lint engines |
 | `src/`, `site/reading-catalog.json`, `site/glossary.toml` | Outcrop Site: complete page shell, routes, graph, search, appearance, hover/modal, notes, diagrams, Ask AI and publication |
 | Library lock, entry/options, resource/cache policy, mathematical gates and deployment | Optional Agda toolchain/trace producer, weaving, metrics, templates, browser resources and generic site lint |
 
@@ -32,7 +32,7 @@ Framework references:
 
 | Files | Purpose |
 | --- | --- |
-| `project.json`, `static/assets/` | Website identity, framework inputs and branding |
+| `project.json`, `static/assets/`, `static/bedrock-diagrams.css` | Website identity, framework inputs, branding and the Base.Choice-specific figure layout |
 | `reading-catalog.json`, `TEACHING.md` | Chapters, routes, review status and teaching architecture |
 | `glossary.toml`, `GLOSSARY.md` | Canonical terminology and its maintenance contract |
 | `STYLE-agda.md`, `STYLE-i18n.md` | Formal-code and trilingual authoring rules |

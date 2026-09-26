@@ -476,7 +476,7 @@ desired `k`-ary parameter-free payload without ever removing the truncation.
 
 ```agda
 freeCode-out : (k : ℕ) (c : V ℓ) → ⟨ pr (# k) c ∈ fst (AllCodes ∅ʟ) ⟩
-             → ∥ Σ[ χ ∈ Formula (⊥* {ℓ}) k ] (c ≡ fst (limitCode χ)) ∥₁
+             → ∥ Σ[ χ ∶ Formula (⊥* {ℓ}) k ] (c ≡ fst (limitCode χ)) ∥₁
 freeCode-out k c h = map₁ read (AllCodes-out ∅ʟ (pr (# k) c , cL) h)
   where
   cL : ⟨ isL (pr (# k) c) ⟩
@@ -515,8 +515,8 @@ transport and the code equality used in the returned dependent pair.
 <!--/-->
 
 ```agda
-  read : Σ[ n ∈ ℕ ] Σ[ ψ ∈ Fo∅ n ] (pr (# k) c ≡ fst (keyS ∅ʟ ψ))
-       → Σ[ χ ∈ Formula (⊥* {ℓ}) k ] (c ≡ fst (limitCode χ))
+  read : Σ[ n ∶ ℕ ] Σ[ ψ ∶ Fo∅ n ] (pr (# k) c ≡ fst (keyS ∅ʟ ψ))
+       → Σ[ χ ∶ Formula (⊥* {ℓ}) k ] (c ≡ fst (limitCode χ))
   read (n , (ψ , q)) = mapFo ε ψ' , (pr-inj q .snd ∙ step)
     where
     e : n ≡ k
@@ -718,7 +718,7 @@ branch its representative may be used to prove the proposition `Target`.
 
 ```agda
     atKey : (z : S) → fst z ≡ sucV (fst (lookup a γ))
-          → Σ[ y ∈ S ] ( ⟨ (y ∷ z ∷ γ) ⊨ prAtL zero (suc zero) (sh2 s) ⟩
+          → Σ[ y ∶ S ] ( ⟨ (y ∷ z ∷ γ) ⊨ prAtL zero (suc zero) (sh2 s) ⟩
                        × ⟨ fst y ∈ fst (lookup C₀ γ) ⟩ )
           → Target
     atKey z qz (y , (hp , hy)) =
@@ -757,7 +757,7 @@ eliminated into `Target`.
 <!--/-->
 
 ```agda
-    atNum : Σ[ z ∈ S ] ( ⟨ (z ∷ γ) ⊨ sucAtL (suc a) zero ⟩
+    atNum : Σ[ z ∶ S ] ( ⟨ (z ∷ γ) ⊨ sucAtL (suc a) zero ⟩
                        × ⟨ (z ∷ γ) ⊨ ∃̇ ( prAtL zero (suc zero) (sh2 s)
                                        ∧̇ (var zero ∈̇ var (sh2 C₀)) ) ⟩ )
           → Target
@@ -822,7 +822,7 @@ outward semantic reading of the one membership atom.
 
 ```agda
   codeFree-out : ⟨ γ ⊨ FreeAt C₀ s a ⟩
-               → ∥ Σ[ χ ∈ Formula (⊥* {ℓ}) (suc k) ]
+               → ∥ Σ[ χ ∶ Formula (⊥* {ℓ}) (suc k) ]
                      (fst (lookup s γ) ≡ fst (limitCode χ)) ∥₁
   codeFree-out h = freeCode-out (suc k) (fst (lookup s γ))
     (subst (λ u → ⟨ pr (# (suc k)) (fst (lookup s γ)) ∈ u ⟩) q₀
@@ -913,7 +913,7 @@ possible index without choosing one.
 ```agda
 private
   memberOf : (k : ℕ) (g : Fin k → V ℓ) (x y : V ℓ) → ⟨ pr x y ∈ env g ⟩
-           → ∥ Σ[ i ∈ Fin k ] ((x ≡ # (toℕ i)) × (y ≡ g i)) ∥₁
+           → ∥ Σ[ i ∶ Fin k ] ((x ≡ # (toℕ i)) × (y ≡ g i)) ∥₁
   memberOf k g x y = map₁
     (λ { (li , e) → lower li
 ```
@@ -970,7 +970,7 @@ index from the graph membership and prove that its numeral belongs to `# k`.
            → ⟨ ∃[ y ∶ S ] pr x (fst y) ∈ env g ⟩ → ⟨ x ∈ # k ⟩
   dom-into k g x = rec₁ (snd (x ∈ # k)) atEntry
     where
-    atIndex : (u : V ℓ) → Σ[ i ∈ Fin k ] ((x ≡ # (toℕ i)) × (u ≡ g i))
+    atIndex : (u : V ℓ) → Σ[ i ∶ Fin k ] ((x ≡ # (toℕ i)) × (u ≡ g i))
 ```
 
 <!--en-->
@@ -990,7 +990,7 @@ the remaining truncated index information.
             → ⟨ x ∈ # k ⟩
     atIndex u (i , (qx , _)) = subst (λ v → ⟨ v ∈ # k ⟩) (sym qx)
       (#mono (toℕ i) k (toℕ<n i))
-    atEntry : Σ[ y ∈ S ] ⟨ pr x (fst y) ∈ env g ⟩ → ⟨ x ∈ # k ⟩
+    atEntry : Σ[ y ∶ S ] ⟨ pr x (fst y) ∈ env g ⟩ → ⟨ x ∈ # k ⟩
     atEntry (y , p) = rec₁ (snd (x ∈ # k)) (atIndex (fst y))
 ```
 
@@ -1028,7 +1028,7 @@ element of the model.
            → (x : V ℓ) → ⟨ x ∈ # k ⟩ → ⟨ ∃[ y ∶ S ] pr x (fst y) ∈ env g ⟩
   dom-from k g cg x h = map₁ atNumeral (∈#-elim k x h)
     where
-    atNumeral : Σ[ m ∈ ℕ ] ((m < k) × (x ≡ # m))
+    atNumeral : Σ[ m ∶ ℕ ] ((m < k) × (x ≡ # m))
 ```
 
 <!--en-->
@@ -1045,7 +1045,7 @@ required membership of `pr x (g i)` in the graph.
 <!--/-->
 
 ```agda
-              → Σ[ y ∈ S ] ⟨ pr x (fst y) ∈ env g ⟩
+              → Σ[ y ∶ S ] ⟨ pr x (fst y) ∈ env g ⟩
     atNumeral (m , (p , qx)) = (g i , cg i)
       , subst (λ u → ⟨ pr u (g i) ∈ env g ⟩) (sym qi) (entryOf k g i)
       where
@@ -1152,7 +1152,7 @@ witness is used only to prove membership, so no value is selected from it.
 <!--/-->
 
 ```agda
-      put : Σ[ y ∈ S ] ⟨ pr (fst x) (fst y) ∈ env g ⟩ → ⟨ fst x ∈ fst (lookup d γ) ⟩
+      put : Σ[ y ∶ S ] ⟨ pr (fst x) (fst y) ∈ env g ⟩ → ⟨ fst x ∈ fst (lookup d γ) ⟩
       put (y , p) = domAt-out e d γ h x y
         (subst (λ u → ⟨ pr (fst x) (fst y) ∈ u ⟩) (sym qe) p)
     pt : (x : S) → (fst x ∈ fst (lookup d γ)) ≡ (fst x ∈ # k)
@@ -1611,7 +1611,7 @@ module _ {n : ℕ} (B C s e : Fin n) (γ : S ^ n) where
 
 ```agda
   DenoteOf : (z : S) → Type (ℓ-suc ℓ)
-  DenoteOf z = Σ[ c ∈ S ] Σ[ k ∈ S ] Σ[ key ∈ S ] Σ[ v ∈ S ]
+  DenoteOf z = Σ[ c ∶ S ] Σ[ k ∶ S ] Σ[ key ∶ S ] Σ[ v ∶ S ]
     ( ⟨ (c ∷ z ∷ γ) ⊨ consAtL zero (suc zero) (sh2 e) ⟩
     × ( ⟨ (k ∷ c ∷ z ∷ γ) ⊨ domAt (suc zero) zero ⟩
 ```
@@ -2013,7 +2013,7 @@ graphs and the injectivity of the carrier embedding.
 ```agda
   Agrees : (i : S) → Type (ℓ-suc ℓ)
   Agrees i = (j : S) → ⟨ fst j ∈ fst i ⟩
-           → ∥ Σ[ x ∈ S ] ( ⟨ pr (fst j) (fst x) ∈ fst (lookup e₁ γ) ⟩
+           → ∥ Σ[ x ∶ S ] ( ⟨ pr (fst j) (fst x) ∈ fst (lookup e₁ γ) ⟩
                           × ⟨ pr (fst j) (fst x) ∈ fst (lookup e₂ γ) ⟩ ) ∥₁
 ```
 
@@ -2032,7 +2032,7 @@ these fields are exactly the data needed for a lexicographic first difference.
 
 ```agda
   Differs : Type (ℓ-suc ℓ)
-  Differs = Σ[ i ∈ S ] Σ[ u ∈ S ] Σ[ v ∈ S ]
+  Differs = Σ[ i ∶ S ] Σ[ u ∶ S ] Σ[ v ∶ S ]
     ( ⟨ fst i ∈ fst (lookup a γ) ⟩
     × ( ⟨ pr (fst i) (fst u) ∈ fst (lookup e₁ γ) ⟩
       × ( ⟨ pr (fst i) (fst v) ∈ fst (lookup e₂ γ) ⟩
@@ -2254,7 +2254,7 @@ the witness is used to prove a proposition and is not exposed by the result.
 
 ```agda
     atSecond : (i u : S) → ⟨ fst i ∈ fst (lookup a γ) ⟩
-             → Σ[ v ∈ S ] Inner i u v → ∥ Differs ∥₁
+             → Σ[ v ∶ S ] Inner i u v → ∥ Differs ∥₁
     atSecond i u hi (v , h) = ∣ atValue i u v hi h ∣₁
 ```
 
@@ -2272,7 +2272,7 @@ ever requiring a globally available `v`.
 
 ```agda
     atFirst : (i : S) → ⟨ fst i ∈ fst (lookup a γ) ⟩
-            → Σ[ u ∈ S ] ∥ Σ[ v ∈ S ] Inner i u v ∥₁ → ∥ Differs ∥₁
+            → Σ[ u ∶ S ] ∥ Σ[ v ∶ S ] Inner i u v ∥₁ → ∥ Differs ∥₁
     atFirst i hi (u , h) = rec₁ squash₁ (atSecond i u hi) h
 ```
 
@@ -2291,8 +2291,8 @@ index or values.
 <!--/-->
 
 ```agda
-    atIndex : Σ[ i ∈ S ] ( ⟨ fst i ∈ fst (lookup a γ) ⟩
-                         × ∥ Σ[ u ∈ S ] ∥ Σ[ v ∈ S ] Inner i u v ∥₁ ∥₁ )
+    atIndex : Σ[ i ∶ S ] ( ⟨ fst i ∈ fst (lookup a γ) ⟩
+                         × ∥ Σ[ u ∶ S ] ∥ Σ[ v ∶ S ] Inner i u v ∥₁ ∥₁ )
             → ∥ Differs ∥₁
     atIndex (i , (hi , h)) = rec₁ squash₁ (atFirst i hi) h
 ```
@@ -2647,7 +2647,7 @@ module _ {n : ℕ} (φ : Formula S (suc (suc (suc (suc (suc (suc n))))))) (γ : 
 
 ```agda
   Six : Type (ℓ-suc ℓ)
-  Six = Σ[ s₁ ∈ S ] Σ[ k₁ ∈ S ] Σ[ p₁ ∈ S ] Σ[ s₂ ∈ S ] Σ[ k₂ ∈ S ] Σ[ p₂ ∈ S ]
+  Six = Σ[ s₁ ∶ S ] Σ[ k₁ ∶ S ] Σ[ p₁ ∶ S ] Σ[ s₂ ∶ S ] Σ[ k₂ ∶ S ] Σ[ p₂ ∶ S ]
           ⟨ (p₂ ∷ k₂ ∷ s₂ ∷ p₁ ∷ k₁ ∷ s₁ ∷ γ) ⊨ φ ⟩
 ```
 
@@ -2905,7 +2905,7 @@ entry equality directly and needs no common graph value as an intermediary.
 
 ```agda
   Lex : ∀ {k} → Vec ⟪ A ⟫ k → Vec ⟪ A ⟫ k → Type (ℓ-suc ℓ)
-  Lex {k} p q = Σ[ i ∈ Fin k ]
+  Lex {k} p q = Σ[ i ∶ Fin k ]
     ( (lookup i p ≺ₚ lookup i q)
     × ((j : Fin k) → toℕ j < toℕ i → lookup j p ≡ lookup j q) )
 ```
@@ -3373,8 +3373,8 @@ equality of the two presentations of that key transports it to `fst j`.
 <!--/-->
 
 ```agda
-          step : Σ[ m ∈ ℕ ] ((m < toℕ i) × (fst j ≡ # m))
-               → Σ[ x ∈ S ] ( ⟨ pr (fst j) (fst x) ∈ fst (lookup e₁ γ) ⟩
+          step : Σ[ m ∶ ℕ ] ((m < toℕ i) × (fst j ≡ # m))
+               → Σ[ x ∶ S ] ( ⟨ pr (fst j) (fst x) ∈ fst (lookup e₁ γ) ⟩
                             × ⟨ pr (fst j) (fst x) ∈ fst (lookup e₂ γ) ⟩ )
           step (m , (hm , qj)) = ixL (pr₁ jx)
             , ( subst (λ z → ⟨ pr z (ix (pr₁ jx)) ∈ fst (lookup e₁ γ) ⟩)
@@ -3477,7 +3477,7 @@ every smaller one.
 
 ```agda
         where
-        atIndex : Σ[ m ∈ ℕ ] ((m < arity t₁) × (fst i ≡ # m))
+        atIndex : Σ[ m ∶ ℕ ] ((m < arity t₁) × (fst i ≡ # m))
                 → Lex (params t₁) (subst (Vec ⟪ A ⟫) qk (params t₂))
         atIndex (m , (hm , qi)) = ι , (below , agrees)
           where
@@ -3563,7 +3563,7 @@ all the data needed for the equality, while none of that witness data escapes.
               (ag (numAt (toℕ j))
                 (subst (λ z → ⟨ # (toℕ j) ∈ z ⟩) (sym qι) (#mono (toℕ j) (toℕ ι) hj))))
             where
-            same : Σ[ x ∈ S ] ( ⟨ pr (# (toℕ j)) (fst x) ∈ fst (lookup e₁ γ) ⟩
+            same : Σ[ x ∶ S ] ( ⟨ pr (# (toℕ j)) (fst x) ∈ fst (lookup e₁ γ) ⟩
                               × ⟨ pr (# (toℕ j)) (fst x) ∈ fst (lookup e₂ γ) ⟩ )
 ```
 

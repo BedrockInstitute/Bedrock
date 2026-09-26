@@ -54,10 +54,6 @@ The notions of internal cardinal, successor cardinal, and coded injection are al
 内部基数、後続基数、符号化された単射はいずれも、ここで選んだ排中律の実例に相対して定義される。したがって、この主張は先に展開した基数論と同じ古典的な前提のもとにあり、それ以外の古典的仮定を加えない。
 <!--/-->
 
-```agda
-open import Cubical.HITs.CumulativeHierarchy.Base using ( _∈_ )
-```
-
 <!--en-->
 The quantifier ranges over the carrier of the constructible structure. Such an element consists of an ambient set together with a proof of constructibility. Membership in `ω` is read through the ambient membership relation; its negation supplies the condition that the cardinal is infinite.
 <!--zh-->
@@ -113,7 +109,7 @@ The conclusion says, merely, that an internal successor cardinal `δ` of `κ` ex
 <!--/-->
 
 ```agda
-  → ∥ Σ[ δ ∈ S ]
+  → ∥ Σ[ δ ∶ S ]
        ( SuccCardL δ κ
        × InjL (𝒫 κ) δ
        × InjL δ (𝒫 κ) ) ∥₁

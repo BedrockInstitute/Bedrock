@@ -354,7 +354,7 @@ With the packages in place, the metalevel characterization can be stated. `prCha
   pairOf-subst {U} {W} e = subst (PairOf U W) (sym e) (pairOf⁅⁆ U W)
 
 prChar-fwd : (Q U W : V ℓ)
-  → ∥ Σ[ w ∈ V ℓ ] (⟨ w ∈ Q ⟩ × SglOf U w) ∥₁
+  → ∥ Σ[ w ∶ V ℓ ] (⟨ w ∈ Q ⟩ × SglOf U w) ∥₁
 ```
 
 <!--en-->
@@ -366,7 +366,7 @@ The first two hypotheses each provide, merely, a member of `Q` together with a p
 <!--/-->
 
 ```agda
-  → ∥ Σ[ w ∈ V ℓ ] (⟨ w ∈ Q ⟩ × PairOf U W w) ∥₁
+  → ∥ Σ[ w ∶ V ℓ ] (⟨ w ∈ Q ⟩ × PairOf U W w) ∥₁
   → ((y : V ℓ) → ⟨ y ∈ Q ⟩ → ∥ SglOf U y ⊎ PairOf U W y ∥₁)
   → Q ≡ pr U W
 prChar-fwd Q U W h₁ h₂ h₃ = pair-char Q ⁅ U ⁆s ⁅ U , W ⁆
@@ -399,8 +399,8 @@ Given a path `Q ≡ pr U W`, the three hypotheses are produced in order. The hel
 <!--/-->
 
 ```agda
-  → (∥ Σ[ w ∈ V ℓ ] (⟨ w ∈ Q ⟩ × SglOf U w) ∥₁)
-  × ((∥ Σ[ w ∈ V ℓ ] (⟨ w ∈ Q ⟩ × PairOf U W w) ∥₁)
+  → (∥ Σ[ w ∶ V ℓ ] (⟨ w ∈ Q ⟩ × SglOf U w) ∥₁)
+  × ((∥ Σ[ w ∶ V ℓ ] (⟨ w ∈ Q ⟩ × PairOf U W w) ∥₁)
   × ((y : V ℓ) → ⟨ y ∈ Q ⟩ → ∥ SglOf U y ⊎ PairOf U W y ∥₁))
 prChar-bwd Q U W e = h₁ , h₂ , h₃
   where
@@ -417,9 +417,9 @@ The first existential is witnessed by `⁅ U ⁆s` itself: it belongs to `pr U W
 ```agda
   inQ : {z : V ℓ} → ⟨ z ∈ pr U W ⟩ → ⟨ z ∈ Q ⟩
   inQ {z} h = subst (λ w → ⟨ z ∈ w ⟩) (sym e) h
-  h₁ : ∥ Σ[ w ∈ V ℓ ] (⟨ w ∈ Q ⟩ × SglOf U w) ∥₁
+  h₁ : ∥ Σ[ w ∶ V ℓ ] (⟨ w ∈ Q ⟩ × SglOf U w) ∥₁
   h₁ = ∣ ⁅ U ⁆s , (inQ (∈pair-introL refl) , sglOf⁅⁆ U) ∣₁
-  h₂ : ∥ Σ[ w ∈ V ℓ ] (⟨ w ∈ Q ⟩ × PairOf U W w) ∥₁
+  h₂ : ∥ Σ[ w ∶ V ℓ ] (⟨ w ∈ Q ⟩ × PairOf U W w) ∥₁
 ```
 
 <!--en-->

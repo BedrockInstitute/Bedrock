@@ -141,7 +141,7 @@ keyOf-fst : (n : ℕ) (x : S) → fst (keyOf n x) ≡ pr (# n) (fst x)
 keyOf-fst n x = prʟ-fst (numeralL n) x ∙ cong₂ pr (numeralL-fst n) refl
 
 Coded : {K : Type ℓ} (f : K → V ℓ) → ℕ → S → Type (ℓ-suc ℓ)
-Coded {K} f n x = ∥ Σ[ φ ∈ Formula K n ] (VCode.⌜ mapFo f φ ⌝ ≡ fst x) ∥₁
+Coded {K} f n x = ∥ Σ[ φ ∶ Formula K n ] (VCode.⌜ mapFo f φ ⌝ ≡ fst x) ∥₁
 ```
 
 <!--en-->

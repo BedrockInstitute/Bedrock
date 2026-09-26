@@ -1,0 +1,38 @@
+/* Figure-specific layout for the lowering-choice diagram in Base.Choice.
+   Licensing is declared by the repository's REUSE.toml. */
+.choice-lift-flow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(3rem, 4.5rem) minmax(0, 1fr);
+  grid-template-areas:
+    "legend legend legend"
+    "input choice output"
+    "up . down"
+    "source . target";
+  align-items: center; gap: .55rem var(--diagram-gap); text-align: center;
+}
+.choice-lift-legend { grid-area: legend; color: var(--fg-alt); font-size: .88em; }
+.choice-lift-source { grid-area: source; }
+.choice-lift-up { grid-area: up; }
+.choice-lift-input { grid-area: input; }
+.choice-lift-choice { grid-area: choice; }
+.choice-lift-output { grid-area: output; }
+.choice-lift-down { grid-area: down; }
+.choice-lift-target { grid-area: target; }
+.choice-lift-flow .diagram-space { display: grid; place-items: center; }
+.choice-lift-flow .math.display, .choice-lift-flow .katex-display { margin: 0; }
+.choice-lift-flow .diagram-space .math.display { font-size: clamp(.82rem, 1.9vw, .96rem); }
+.choice-lift-step { display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: .05rem; min-width: 0; color: var(--diagram-relation-color);
+  font-size: .85em; line-height: 1.2; }
+.choice-lift-step > span[aria-hidden] { font-family: var(--sans); font-size: 1.45em; }
+.choice-lift-narrow-arrow { display: none; }
+@media (max-width: 720px) {
+  .choice-lift-flow {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "legend" "source" "up" "input" "choice" "output" "down" "target";
+    gap: .35rem;
+  }
+  .choice-lift-step { min-height: 2.4rem; }
+  .choice-lift-wide-arrow { display: none; }
+  .choice-lift-narrow-arrow { display: inline; }
+}

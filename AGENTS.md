@@ -290,9 +290,11 @@ interaction rather than applying a new design indiscriminately.
 - Definition inspection is one full-body modal with target-based back/forward,
   lazy loading, explicit/outside close and an enter-page action. Keep sticky
   contents and scroll controls, but omit the outer header/footer. History anchors
-  the definition's code block, not the user's later scroll position. Ordinary
-  links navigate normally; revisiting the current definition in its body also
-  navigates. Preserve dark/light loading and cancellation, including Safari layout.
+  target's code block or prose container, not the user's later scroll position.
+  In-body same-origin content links use the modal; structural navigation, search
+  results and external links navigate normally. Revisiting the current definition
+  in its body also navigates. Preserve dark/light loading and cancellation,
+  including Safari layout.
 - Preserve automatic syntax help, glossary links, boilerplate source popups,
   universe notation and selective dotted-operator fonts without changing copied
   code. Share palettes across every code surface. Code spans the full containing

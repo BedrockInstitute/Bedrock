@@ -388,7 +388,7 @@ shape (∀̇∈ t a) = refl
 shape (∃̇∈ t a) = refl
 
 Match : ∀ {n} → ℕ → Formula S n → Type ℓ
-Match {n} 0  φ = Σ[ t ∈ Term S n ] (Σ[ u ∈ Term S n ] (φ ≡ (t ∈̇ u)))
+Match {n} 0  φ = Σ[ t ∶ Term S n ] (Σ[ u ∶ Term S n ] (φ ≡ (t ∈̇ u)))
 ```
 
 <!--en-->
@@ -400,10 +400,10 @@ Tags `2` through `4` repeat the pattern for the three binary connectives, each d
 <!--/-->
 
 ```agda
-Match {n} 1  φ = Σ[ t ∈ Term S n ] (Σ[ u ∈ Term S n ] (φ ≡ (t ≐ u)))
-Match {n} 2  φ = Σ[ a ∈ Formula S n ] (Σ[ b ∈ Formula S n ] (φ ≡ (a ∧̇ b)))
-Match {n} 3  φ = Σ[ a ∈ Formula S n ] (Σ[ b ∈ Formula S n ] (φ ≡ (a ∨̇ b)))
-Match {n} 4  φ = Σ[ a ∈ Formula S n ] (Σ[ b ∈ Formula S n ] (φ ≡ (a ⇒̇ b)))
+Match {n} 1  φ = Σ[ t ∶ Term S n ] (Σ[ u ∶ Term S n ] (φ ≡ (t ≐ u)))
+Match {n} 2  φ = Σ[ a ∶ Formula S n ] (Σ[ b ∶ Formula S n ] (φ ≡ (a ∧̇ b)))
+Match {n} 3  φ = Σ[ a ∶ Formula S n ] (Σ[ b ∶ Formula S n ] (φ ≡ (a ∨̇ b)))
+Match {n} 4  φ = Σ[ a ∶ Formula S n ] (Σ[ b ∶ Formula S n ] (φ ≡ (a ⇒̇ b)))
 Match     5 φ = φ ≡ ⊥̇
 ```
 
@@ -416,10 +416,10 @@ The quantifier tags carry the arity shift. For tags `6` and `7` the single slot 
 <!--/-->
 
 ```agda
-Match {n} 6 φ = Σ[ a ∈ Formula S (suc n) ] (φ ≡ (∃̇ a))
-Match {n} 7 φ = Σ[ a ∈ Formula S (suc n) ] (φ ≡ (∀̇ a))
-Match {n} 8 φ = Σ[ t ∈ Term S n ] (Σ[ a ∈ Formula S (suc n) ] (φ ≡ ∀̇∈ t a))
-Match {n} 9 φ = Σ[ t ∈ Term S n ] (Σ[ a ∈ Formula S (suc n) ] (φ ≡ ∃̇∈ t a))
+Match {n} 6 φ = Σ[ a ∶ Formula S (suc n) ] (φ ≡ (∃̇ a))
+Match {n} 7 φ = Σ[ a ∶ Formula S (suc n) ] (φ ≡ (∀̇ a))
+Match {n} 8 φ = Σ[ t ∶ Term S n ] (Σ[ a ∶ Formula S (suc n) ] (φ ≡ ∀̇∈ t a))
+Match {n} 9 φ = Σ[ t ∶ Term S n ] (Σ[ a ∶ Formula S (suc n) ] (φ ≡ ∃̇∈ t a))
 Match     _  _ = ⊥*
 ```
 

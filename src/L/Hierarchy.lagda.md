@@ -395,7 +395,7 @@ transport lines the two facts up on the same value.
 ```agda
     below : IsOrd (fst (lookup b γ)) → Entries (lookup f γ) (fst (lookup b γ))
           → (z : S)
-          → Σ[ δ ∈ V ℓ ] (⟨ δ ∈ fst (lookup b γ) ⟩ × ⟨ fst z ∈ 𝒟ₒ (Lset δ) ⟩)
+          → Σ[ δ ∶ V ℓ ] (⟨ δ ∈ fst (lookup b γ) ⟩ × ⟨ fst z ∈ 𝒟ₒ (Lset δ) ⟩)
           → StepOf b f γ z
 ```
 
@@ -579,7 +579,7 @@ ordinality `ob`.
 <!--/-->
 
 ```agda
-      put : Σ[ δ ∈ V ℓ ] (⟨ δ ∈ fst (lookup b γ) ⟩ × ⟨ x ∈ 𝒟ₒ (Lset δ) ⟩)
+      put : Σ[ δ ∶ V ℓ ] (⟨ δ ∈ fst (lookup b γ) ⟩ × ⟨ x ∈ 𝒟ₒ (Lset δ) ⟩)
           → ⟨ x ∈ fst (lookup v γ) ⟩
       put s = StepAt-back v b f γ h (ok ob vals) z (below ob ents z s)
 ```
@@ -843,7 +843,7 @@ elimination targets the proposition that the canonical entry is recorded.
 
 ```agda
         where
-        named : Σ[ y ∈ S ] ⟨ pr (fst c) (fst y) ∈ fst (lookup f γ) ⟩
+        named : Σ[ y ∶ S ] ⟨ pr (fst c) (fst y) ∈ fst (lookup f γ) ⟩
               → ⟨ pr (fst c) (Lset (fst c)) ∈ fst (lookup f γ) ⟩
         named (y , q) = subst (λ t → ⟨ pr (fst c) t ∈ fst (lookup f γ) ⟩)
           (IH (fst c) c∈ (snd c) y q) q
@@ -986,7 +986,7 @@ that the canonical entry is recorded, so the missing witness is never needed.
 
 ```agda
         where
-        named : Σ[ y ∈ S ] ⟨ pr (fst c) (fst y) ∈ fst f ⟩
+        named : Σ[ y ∶ S ] ⟨ pr (fst c) (fst y) ∈ fst f ⟩
               → ⟨ pr (fst c) (Lset (fst c)) ∈ fst f ⟩
         named (y , q) = subst (λ t → ⟨ pr (fst c) t ∈ fst f ⟩)
           (approx-val zero (suc b) (f ∷ γ) ha ob c y q) q
@@ -1128,7 +1128,7 @@ puts `c` below the argument.
 
 ```agda
       where
-      named : Σ[ y ∈ S ] ⟨ pr (fst c) (fst y) ∈ fst h ⟩
+      named : Σ[ y ∶ S ] ⟨ pr (fst c) (fst y) ∈ fst h ⟩
             → ⟨ fst c ∈ fst (lookup b γ) ⟩
       named (y , p) = dom c y p
 ```
@@ -1336,7 +1336,7 @@ membership would leave pairs out.
 
 ```agda
 HierOf : V ℓ → Type (ℓ-suc (ℓ-suc ℓ))
-HierOf B = Σ[ h ∈ S ] IsHier B h
+HierOf B = Σ[ h ∶ S ] IsHier B h
 ```
 
 <!--en-->
@@ -1417,7 +1417,7 @@ presented by `h`.
 <!--/-->
 
 ```agda
-    read : Σ[ d ∈ S ] (⟨ fst d ∈ B ⟩
+    read : Σ[ d ∶ S ] (⟨ fst d ∈ B ⟩
              × (pr (fst c) (fst z) ≡ pr (fst d) (Lset (fst d))))
          → ⟨ fst c ∈ B ⟩ × (fst z ≡ Lset (fst c))
     read (d , (d∈ , eq)) =
@@ -1696,7 +1696,7 @@ contractible fiber.
 
 ```agda
       fc : (c : S) → ⟨ c ∈ˢ A ⟩
-         → isContr (Σ[ k ∈ S ] ⟨ (k ∷ c ∷ []) ⊨ φ ⟩)
+         → isContr (Σ[ k ∶ S ] ⟨ (k ∷ c ∷ []) ⊨ φ ⟩)
       fc c c∈ = mereFunct φ c ∣ entry c c∈ , (holds c c∈ , only c c∈) ∣₁
 ```
 
@@ -1749,7 +1749,7 @@ elimination is legitimate because the recorded class is a proposition.
 <!--/-->
 
 ```agda
-          conv : Σ[ c ∈ S ] (⟨ fst c ∈ α ⟩ × ⟨ (z ∷ c ∷ []) ⊨ φ ⟩)
+          conv : Σ[ c ∶ S ] (⟨ fst c ∈ α ⟩ × ⟨ (z ∷ c ∷ []) ⊨ φ ⟩)
                → ⟨ Recorded α (fst z) ⟩
           conv (c , (c∈ , hp)) = ∣ c , (c∈ , cong fst (only c c∈ z hp)
                                             ∙ prʟ-fst c (value c c∈)) ∣₁
@@ -1782,9 +1782,9 @@ argument, and the collected set contains it.
 <!--/-->
 
 ```agda
-          conv : Σ[ c ∈ S ] (⟨ fst c ∈ α ⟩
+          conv : Σ[ c ∶ S ] (⟨ fst c ∈ α ⟩
                    × (fst z ≡ pr (fst c) (Lset (fst c))))
-               → Σ[ c ∈ S ] (⟨ fst c ∈ α ⟩ × ⟨ (z ∷ c ∷ []) ⊨ φ ⟩)
+               → Σ[ c ∶ S ] (⟨ fst c ∈ α ⟩ × ⟨ (z ∷ c ∷ []) ⊨ φ ⟩)
 ```
 
 <!--en-->

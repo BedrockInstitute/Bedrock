@@ -134,7 +134,7 @@ The inverse collapse will be compared as a map between elements of the construct
 <!--/-->
 
 ```agda
-open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
+open import Cubical.HITs.CumulativeHierarchy.Base using ( V; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Properties using ( ∈∈ₛ )
 ```
 
@@ -401,7 +401,7 @@ A preimage of a collapse value `v` is an element `x` of the hull whose collapse 
 
 ```agda
   Pre : S → Type (ℓ-suc ℓ)
-  Pre v = Σ[ x ∈ V ℓ ] (⟨ x ∈ˢ HS.M ⟩ × (HSC.π x ≡ fst v))
+  Pre v = Σ[ x ∶ V ℓ ] (⟨ x ∈ˢ HS.M ⟩ × (HSC.π x ≡ fst v))
 ```
 
 <!--en-->
@@ -528,7 +528,7 @@ For a hull member `x` whose collapse is `v`, the actual pair `(v,x)` satisfies `
           → ⟨ (v ∷ x ∷ []) ⊨ P.piFo ⟩
   π-graph x mx v e = rec₁ (snd ((v ∷ x ∷ []) ⊨ P.piFo)) read M-isL
     where
-    read : Σ[ α ∈ V ℓ ] (IsOrd α × ⟨ HS.M ∈ˢ Lset α ⟩) → ⟨ (v ∷ x ∷ []) ⊨ P.piFo ⟩
+    read : Σ[ α ∶ V ℓ ] (IsOrd α × ⟨ HS.M ∈ˢ Lset α ⟩) → ⟨ (v ∷ x ∷ []) ⊨ P.piFo ⟩
 ```
 
 <!--en-->
@@ -1060,7 +1060,7 @@ For a general non-finite constructible ordinal `δ`, `cardOf` provides a cardina
 stage-counted : StageCountedCoded
 stage-counted δ Lδ oδ δ∉ω q = rec₁ squash₁ build (cardOf δ oδ)
   where
-  build : Σ[ μ ∈ S ]
+  build : Σ[ μ ∶ S ]
             ( IsOrd (fst μ) × IsCardinalL μ
 ```
 

@@ -251,7 +251,7 @@ A sequence over `A` is, at the host level, a function from a finite ordinal into
 
 ```agda
 SeqIx : S → Type ℓ
-SeqIx A = Σ[ n ∈ ℕ ] Ix A n
+SeqIx A = Σ[ n ∶ ℕ ] Ix A n
 ```
 
 <!--en-->
@@ -336,7 +336,7 @@ seqL-in : (A : S) (n : ℕ) (x : S)
         → ⟨ fst x ∈ˢ fst (envSet A n) ⟩ → ⟨ fst x ∈ˢ fst (seqL A) ⟩
 seqL-in A n x hx = rec₁ (snd (fst x ∈ˢ fst (seqL A))) from (envSet-out A n x hx)
   where
-  from : Σ[ g ∈ Ix A n ] (fst x ≡ fst (envS A g)) → ⟨ fst x ∈ˢ fst (seqL A) ⟩
+  from : Σ[ g ∶ Ix A n ] (fst x ≡ fst (envS A g)) → ⟨ fst x ∈ˢ fst (seqL A) ⟩
 ```
 
 <!--en-->
@@ -377,7 +377,7 @@ Conversely, membership in `seqL A` yields only the propositionally truncated ass
 
 ```agda
 seqL-out : (A x : S) → ⟨ fst x ∈ˢ fst (seqL A) ⟩
-         → ∥ Σ[ n ∈ ℕ ] ⟨ fst x ∈ˢ fst (envSet A n) ⟩ ∥₁
+         → ∥ Σ[ n ∶ ℕ ] ⟨ fst x ∈ˢ fst (envSet A n) ⟩ ∥₁
 seqL-out A x hx = rec₁ squash₁ step1 (subst ⟨_⟩ (seqL-spec A x) hx .snd)
   where
   step2 : (d : S) (k : ℕ) → # k ≡ fst d
@@ -392,9 +392,9 @@ Inside one branch of the truncated witnesses, suppose the domain object `d` has 
 <!--/-->
 
 ```agda
-        → Σ[ b ∈ S ] ((fst b ≡ fst A)
+        → Σ[ b ∶ S ] ((fst b ≡ fst A)
              × ⟨ (b ∷ d ∷ x ∷ []) ⊨ envOverAt (suc (suc zero)) (suc zero) zero ⟩)
-        → ∥ Σ[ n ∈ ℕ ] ⟨ fst x ∈ˢ fst (envSet A n) ⟩ ∥₁
+        → ∥ Σ[ n ∶ ℕ ] ⟨ fst x ∈ˢ fst (envSet A n) ⟩ ∥₁
   step2 d k q (b , eb , hov) =
     ∣ k , subst (λ w → ⟨ w ∈ˢ fst (envSet A k) ⟩) (sym R.recovers) (envSet-in A R.g) ∣₁
 ```
@@ -422,10 +422,10 @@ The remaining step eliminates the membership of the domain in `ω`: a member of 
 <!--/-->
 
 ```agda
-  step1 : Σ[ d ∈ S ] (⟨ fst d ∈ˢ ω ⟩
-            × ∥ Σ[ b ∈ S ] ((fst b ≡ fst A)
+  step1 : Σ[ d ∶ S ] (⟨ fst d ∈ˢ ω ⟩
+            × ∥ Σ[ b ∶ S ] ((fst b ≡ fst A)
                  × ⟨ (b ∷ d ∷ x ∷ []) ⊨ envOverAt (suc (suc zero)) (suc zero) zero ⟩) ∥₁)
-        → ∥ Σ[ n ∈ ℕ ] ⟨ fst x ∈ˢ fst (envSet A n) ⟩ ∥₁
+        → ∥ Σ[ n ∶ ℕ ] ⟨ fst x ∈ˢ fst (envSet A n) ⟩ ∥₁
   step1 (d , d∈ω , h) = rec₁ squash₁
 ```
 
@@ -489,7 +489,7 @@ The carrier of inputs and values is the type of constructible sets together with
 
 ```agda
   M : Type (ℓ-suc ℓ)
-  M = Σ[ v ∈ S ] ⟨ fst v ∈ˢ fst α ⟩
+  M = Σ[ v ∶ S ] ⟨ fst v ∈ˢ fst α ⟩
 ```
 
 <!--en-->
@@ -687,8 +687,8 @@ The environment reader is extended to a total function on the numerals: outside 
 
 ```agda
   ext : (n : ℕ) → (Fin n → ⟪ fst α ⟫) → ℕ → M
-  ext zero    g k       = num zero
-  ext (suc n) g zero    = up (g zero)
+  ext 0    g k       = num zero
+  ext (suc n) g 0    = up (g zero)
   ext (suc n) g (suc k) = ext n (λ i → g (suc i)) k
 ```
 
@@ -716,7 +716,7 @@ With the length `n` and sequence `g` fixed, `chain n g k` is defined by recursio
 
 ```agda
   chain : (n : ℕ) → (Fin n → ⟪ fst α ⟫) → ℕ → M
-  chain n g zero    = num zero
+  chain n g 0    = num zero
   chain n g (suc k) = app (ext n g k) (chain n g k)
 ```
 
@@ -745,7 +745,7 @@ Suppose two fold chains agree after `k` steps. Then their entries agree at every
   chain-inj : (n : ℕ) (g g' : Fin n → ⟪ fst α ⟫) (k : ℕ)
             → fst (fst (chain n g k)) ≡ fst (fst (chain n g' k))
             → (j : ℕ) → j < k → fst (fst (ext n g j)) ≡ fst (fst (ext n g' j))
-  chain-inj n g g' zero    e j j<0  = ⊥₀-rec (¬-<-zero j<0)
+  chain-inj n g g' 0    e j j<0  = ⊥₀-rec (¬-<-zero j<0)
   chain-inj n g g' (suc k) e j j<sk = go (<-split j<sk)
 ```
 
@@ -837,7 +837,7 @@ To describe one recursive transition semantically, fix an index object `i`. A `S
 
 ```agda
   StepAt : (s C i : S) → Type (ℓ-suc ℓ)
-  StepAt s C i = ∥ Σ[ j ∈ S ] Σ[ a ∈ S ] Σ[ u ∈ S ] Σ[ w ∈ S ]
+  StepAt s C i = ∥ Σ[ j ∶ S ] Σ[ a ∶ S ] Σ[ u ∶ S ] Σ[ w ∶ S ]
       ( (fst j ≡ sucV (fst i))
       × ⟨ pr (fst i) (fst a) ∈ fst s ⟩
       × ⟨ pr (fst i) (fst u) ∈ fst C ⟩
@@ -867,7 +867,7 @@ The last membership assertion is the recurrence equation written as a graph fact
 ```agda
   DomIs : (s n : S) → Type (ℓ-suc ℓ)
   DomIs s n = (x : S)
-    → (⟨ fst x ∈ fst n ⟩ → ∥ Σ[ y ∈ S ] ⟨ pr (fst x) (fst y) ∈ fst s ⟩ ∥₁)
+    → (⟨ fst x ∈ fst n ⟩ → ∥ Σ[ y ∶ S ] ⟨ pr (fst x) (fst y) ∈ fst s ⟩ ∥₁)
     × ((y : S) → ⟨ pr (fst x) (fst y) ∈ fst s ⟩ → ⟨ fst x ∈ fst n ⟩)
 ```
 
@@ -894,7 +894,7 @@ The complete semantic witness begins with a numeral `n∈ω`, its successor `m`,
 
 ```agda
   Wit : (y s : S) → Type (ℓ-suc ℓ)
-  Wit y s = ∥ Σ[ n ∈ S ] Σ[ m ∈ S ] Σ[ C ∈ S ]
+  Wit y s = ∥ Σ[ n ∶ S ] Σ[ m ∶ S ] Σ[ C ∶ S ]
       ( ⟨ fst n ∈ ω ⟩
       × (fst m ≡ sucV (fst n))
       × DomIs s n
@@ -912,7 +912,7 @@ The last component separates the terminal trace value from the length tag. It gi
       × EnvC m C
       × ⟨ pr (# zero) (# zero) ∈ fst C ⟩
       × ((i : S) → ⟨ fst i ∈ fst n ⟩ → StepAt s C i)
-      × ∥ Σ[ v ∈ S ] ( ⟨ pr (fst n) (fst v) ∈ fst C ⟩
+      × ∥ Σ[ v ∶ S ] ( ⟨ pr (fst n) (fst v) ∈ fst C ⟩
                      × ⟨ pr (pr (fst n) (fst v)) (fst y) ∈ fst F ⟩ ) ∥₁ ) ∥₁
 ```
 
@@ -1168,7 +1168,7 @@ The outward reading of `finFo` first obtains a terminal trace value `v` and an a
 
 ```agda
       finOut : (y s n m C b z : S) → ⟨ e7 y s n m C b z ⊨ finFo ⟩
-             → ∥ Σ[ v ∈ S ] ( ⟨ pr (fst n) (fst v) ∈ fst C ⟩
+             → ∥ Σ[ v ∶ S ] ( ⟨ pr (fst n) (fst v) ∈ fst C ⟩
                             × ⟨ pr (pr (fst n) (fst v)) (fst y) ∈ fst F ⟩ ) ∥₁
       finOut y s n m C b z = rec₁ squash₁ (λ { (v , hq) →
         rec₁ squash₁ (λ { (q , (h1 , (h2 , h3))) →
@@ -1309,7 +1309,7 @@ The inward reading of `finFo` starts from a propositionally truncated terminal v
 
 ```agda
       finIn : (y s n m C : S)
-            → ∥ Σ[ v ∈ S ] ( ⟨ pr (fst n) (fst v) ∈ fst C ⟩
+            → ∥ Σ[ v ∶ S ] ( ⟨ pr (fst n) (fst v) ∈ fst C ⟩
                            × ⟨ pr (pr (fst n) (fst v)) (fst y) ∈ fst F ⟩ ) ∥₁
             → ⟨ e7 y s n m C α (nn zero) ⊨ finFo ⟩
       finIn y s n m C = map₁ (λ { (v , (hv , hy)) →
@@ -1355,7 +1355,7 @@ To rebuild the body, assume the six substantive trace conditions: `m=n+1`, the e
       bodyIn : (y s n m C : S) → fst m ≡ sucV (fst n) → DomIs s n → EnvC m C
              → ⟨ pr (# zero) (# zero) ∈ fst C ⟩
              → ((i : S) → ⟨ fst i ∈ fst n ⟩ → StepAt s C i)
-             → ∥ Σ[ v ∈ S ] ( ⟨ pr (fst n) (fst v) ∈ fst C ⟩
+             → ∥ Σ[ v ∶ S ] ( ⟨ pr (fst n) (fst v) ∈ fst C ⟩
                             × ⟨ pr (pr (fst n) (fst v)) (fst y) ∈ fst F ⟩ ) ∥₁
 ```
 
@@ -1783,7 +1783,7 @@ Fix an arbitrary witness with length object `n`, successor `m`, and state enviro
                   (hd : DomIs s n) (hE : EnvC m C')
                   (h0 : ⟨ pr (# zero) (# zero) ∈ fst C' ⟩)
                   (hS : (i : S) → ⟨ fst i ∈ fst n ⟩ → StepAt s C' i)
-                  (hF : ∥ Σ[ v ∈ S ] ( ⟨ pr (fst n) (fst v) ∈ fst C' ⟩
+                  (hF : ∥ Σ[ v ∶ S ] ( ⟨ pr (fst n) (fst v) ∈ fst C' ⟩
 ```
 
 <!--en-->
@@ -1870,7 +1870,7 @@ The central induction states that every value recorded by `C'` at an index `k < 
 ```agda
         entry : (k : ℕ) → k < suc N → (v : S)
               → ⟨ pr (# k) (fst v) ∈ fst C' ⟩ → fst v ≡ fst (fst (chain N g k))
-        entry zero    p v hv = svC (nn zero) v (nn zero) hv h0
+        entry 0    p v hv = svC (nn zero) v (nn zero) hv h0
         entry (suc k) p v hv = rec₁ (setIsSet (fst v) (fst (fst (chain N g (suc k)))))
           (λ { (j , a , u , w , (ej , ha , hu , hw , hFw)) →
 ```
@@ -1978,7 +1978,7 @@ A representation of `s` consists merely of a natural length `n`, an assignment `
 
 ```agda
   Rep : S → Type (ℓ-suc ℓ)
-  Rep s = ∥ Σ[ n ∈ ℕ ] Σ[ g ∈ Ix α n ] (fst s ≡ fst (envS α g)) ∥₁
+  Rep s = ∥ Σ[ n ∶ ℕ ] Σ[ g ∶ Ix α n ] (fst s ≡ fst (envS α g)) ∥₁
 ```
 
 <!--en-->
@@ -2180,7 +2180,7 @@ To build the pairing injection, choose only locally a cardinal representative `�
   pairing : InjL (prodL α) α
   pairing = rec₁ squash₁ build (cardOf α oα)
     where
-    build : Σ[ μ ∈ S ]
+    build : Σ[ μ ∶ S ]
 ```
 
 <!--en-->

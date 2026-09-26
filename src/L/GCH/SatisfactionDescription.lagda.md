@@ -218,7 +218,7 @@ Suppose an entry of `Ev` is already presented as the encoded pair of `n` and `F`
 
 ```agda
     module TR = TowerRead E w (N f0) γ W qw (tg f0) hE
-    arity : (n F : S) → ⟨ pr (fst n) (fst F) ∈ Ev ⟩ → ∥ Σ[ k ∈ ℕ ] (fst n ≡ # k) ∥₁
+    arity : (n F : S) → ⟨ pr (fst n) (fst F) ∈ Ev ⟩ → ∥ Σ[ k ∶ ℕ ] (fst n ≡ # k) ∥₁
     arity n F q∈ = map₁ (λ { (k , (qk , _)) → k , qk }) (TR.entry-out n F q∈)
     module CS = CodesSound C w E N γ W qw tg arity (hC .fst)
     module CC = CodesComplete C w E N γ W qw tg TR.entry-in (hC .snd)
@@ -259,7 +259,7 @@ Apply totality to the genuine key of a formula `a`, using the fact that code-dom
 <!--/-->
 
 ```agda
-    sub : ∀ {n} (a : Formula Ab n) → ∥ Σ[ ya ∈ S ] ⟨ pr (fst (keyS W a)) (fst ya) ∈ Tv ⟩ ∥₁
+    sub : ∀ {n} (a : Formula Ab n) → ∥ Σ[ ya ∶ S ] ⟨ pr (fst (keyS W a)) (fst ya) ∈ Tv ⟩ ∥₁
     sub a = Fr.total-out hTot (keyS W a) (CC.key-in a)
 ```
 
@@ -329,7 +329,7 @@ The outward tower reading concerns an entry already presented as `pr n F`. Under
 
 ```agda
   E-out : (n F : S) → ⟨ pr (fst n) (fst F) ∈ Ev ⟩
-        → ∥ Σ[ k ∈ ℕ ] ((fst n ≡ # k) × (fst F ≡ fst (envSet W k))) ∥₁
+        → ∥ Σ[ k ∶ ℕ ] ((fst n ≡ # k) × (fst F ≡ fst (envSet W k))) ∥₁
   E-out = TR.entry-out
 ```
 
@@ -356,7 +356,7 @@ The table reading is the heart of the soundness direction. It is stated only for
 
 ```agda
   T-out : (x y : S) → ⟨ pr (fst x) (fst y) ∈ Tv ⟩
-        → Σ[ mx ∈ ⟨ fst x ∈ fst (AllCodes W) ⟩ ] (fst y ≡ fst (Table.val W W x mx))
+        → Σ[ mx ∶ ⟨ fst x ∈ fst (AllCodes W) ⟩ ] (fst y ≡ fst (Table.val W W x mx))
   T-out x y h = rec₁ (isPropΣ (snd (fst x ∈ fst (AllCodes W))) (λ mx → setIsSet _ _))
     (λ { (c , yc , (ee , c∈)) → rec₁ (isPropΣ (snd (fst x ∈ fst (AllCodes W))) (λ mx → setIsSet _ _))
       (λ { (k , ψ , e) →
@@ -498,7 +498,7 @@ If a code-domain member is presented as `pr (# n) z`, transporting it into `AllC
 
 ```agda
     decode : (c : S) → ⟨ fst c ∈ Cv ⟩ → (n : ℕ) (z : V ℓ) → fst c ≡ pr (# n) z
-           → ∥ Σ[ ψ ∈ Formula Ab n ] (z ≡ cd ψ) ∥₁
+           → ∥ Σ[ ψ ∶ Formula Ab n ] (z ≡ cd ψ) ∥₁
     decode c c∈ = Match.decodeAll W c (subst (λ u → ⟨ fst c ∈ u ⟩) qC c∈)
 ```
 
@@ -511,7 +511,7 @@ For a candidate code `c`, alignment with the canonical code set makes `c` a vali
 <!--/-->
 
 ```agda
-    tot : (c : S) → ⟨ fst c ∈ Cv ⟩ → ∥ Σ[ yc ∈ S ] ⟨ pr (fst c) (fst yc) ∈ Tv ⟩ ∥₁
+    tot : (c : S) → ⟨ fst c ∈ Cv ⟩ → ∥ Σ[ yc ∶ S ] ⟨ pr (fst c) (fst yc) ∈ Tv ⟩ ∥₁
     tot c c∈ =
       let mx = subst (λ u → ⟨ fst c ∈ u ⟩) qC c∈
       in ∣ SatGraph.valOf W c mx , subst (λ u → ⟨ pr (fst c) (fst (SatGraph.valOf W c mx)) ∈ u ⟩) (sym qT) (SatGraph.pairs-in W c mx) ∣₁
@@ -527,7 +527,7 @@ The real graph also supplies the required shape of arbitrary table members. Unde
 
 ```agda
     onc : (e : S) → ⟨ fst e ∈ Tv ⟩
-        → ∥ Σ[ c ∈ S ] Σ[ yc ∈ S ] ((fst e ≡ pr (fst c) (fst yc)) × ⟨ fst c ∈ Cv ⟩) ∥₁
+        → ∥ Σ[ c ∶ S ] Σ[ yc ∶ S ] ((fst e ≡ pr (fst c) (fst yc)) × ⟨ fst c ∈ Cv ⟩) ∥₁
     onc e e∈ = map₁
       (λ { (x , mx , ee) → x , SatGraph.valOf W x mx , (ee , subst (λ u → ⟨ fst x ∈ u ⟩) (sym qC) mx) })
       (SatGraph.pairs-shape W e (subst (λ u → ⟨ fst e ∈ u ⟩) qT e∈))

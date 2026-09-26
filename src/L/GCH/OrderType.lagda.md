@@ -465,7 +465,7 @@ A table `F` is complete at `x` when every `R`-predecessor `y` of `x` has some re
 
 ```agda
 Complete : S → S → S → Type (ℓ-suc ℓ)
-Complete F R x = (y : S) → Holds R y x → ∥ Σ[ u ∈ S ] Holds F y u ∥₁
+Complete F R x = (y : S) → Holds R y x → ∥ Σ[ u ∶ S ] Holds F y u ∥₁
 ```
 
 <!--en-->
@@ -478,7 +478,7 @@ The predicate `Src F R x w` says that `w` occurs as a value recorded by `F` at s
 
 ```agda
 Src : S → S → S → S → Type (ℓ-suc ℓ)
-Src F R x w = ∥ Σ[ y ∈ S ] (Holds R y x × Holds F y w) ∥₁
+Src F R x w = ∥ Σ[ y ∶ S ] (Holds R y x × Holds F y w) ∥₁
 ```
 
 <!--en-->
@@ -861,7 +861,7 @@ Reading `colFo` outward preserves the propositional truncation around its table 
 
 ```agda
     colFo-out : (z p : S) → ⟨ (z ∷ p ∷ []) ⊨ colFo ⟩
-              → ∥ Σ[ F ∈ S ] (Correct F R × Holds F p z) ∥₁
+              → ∥ Σ[ F ∶ S ] (Correct F R × Holds F p z) ∥₁
     colFo-out z p = map₁ (λ { (F , (hc , ha)) → F
       , ( correct-out zero R (F ∷ z ∷ p ∷ []) hc
         , subst ⟨_⟩ (appAt-adequate zero (suc (suc zero)) (suc zero)
@@ -1096,7 +1096,7 @@ The source entry is converted into the two facts needed: the relation between th
 <!--/-->
 
 ```agda
-          read : Σ[ y ∈ S ] (Holds R y (up a) × Holds F y wS) → ⟨ w ∈ col a ⟩
+          read : Σ[ y ∶ S ] (Holds R y (up a) × Holds F y wS) → ⟨ w ∈ col a ⟩
           read (y , (ry , fy)) = subst (λ t → ⟨ t ∈ col a ⟩) (sym e) (col-in a b b≺a)
             where
             my : Mem y
@@ -1156,10 +1156,10 @@ For the predecessor `r` supplied by `col-out`, completeness of the entry at `a` 
 <!--/-->
 
 ```agda
-          read : Σ[ r ∈ Dom ] ((r ≺ a) × (col r ≡ w)) → ⟨ w ∈ fst v ⟩
+          read : Σ[ r ∶ Dom ] ((r ≺ a) × (col r ≡ w)) → ⟨ w ∈ fst v ⟩
           read (r , (ra , e)) = rec₁ (snd (w ∈ fst v)) inner (cmp (up r) (≺-out r a ra))
             where
-            inner : Σ[ u ∈ S ] Holds F (up r) u → ⟨ w ∈ fst v ⟩
+            inner : Σ[ u ∶ S ] Holds F (up r) u → ⟨ w ∈ fst v ⟩
             inner (u , fu) = val wS .snd
 ```
 
@@ -1241,7 +1241,7 @@ The body of the local formula has two disjuncts. The left disjunct says that `q`
       Body : S → S → Type (ℓ-suc ℓ)
       Body z q =
           (Holds R q (up a)
-             × ∥ Σ[ v ∈ S ] ((fst z ≡ pr (fst q) (fst v)) × ⟨ (v ∷ q ∷ []) ⊨ CF.colFo ⟩) ∥₁)
+             × ∥ Σ[ v ∶ S ] ((fst z ≡ pr (fst q) (fst v)) × ⟨ (v ∷ q ∷ []) ⊨ CF.colFo ⟩) ∥₁)
         ⊎ ((Holds R q (up a) → ⊥₀) × (fst z ≡ fst ea))
 ```
 
@@ -1379,7 +1379,7 @@ Replacement requires the values satisfying `ψ` at each `q ∈ D` to form a cont
 <!--/-->
 
 ```agda
-        fc : (q : S) → ⟨ q ∈ˢ D ⟩ → isContr (Σ[ z ∈ S ] ⟨ (z ∷ q ∷ []) ⊨ ψ ⟩)
+        fc : (q : S) → ⟨ q ∈ˢ D ⟩ → isContr (Σ[ z ∶ S ] ⟨ (z ∷ q ∷ []) ⊨ ψ ⟩)
         fc q mq = mereFunct ψ q
           (decide (FOL.Semantics.decideMembership 𝒮ᵥ lem
             (pr (fst q) (↪ a)) (fst R)))
@@ -1400,7 +1400,7 @@ In the predecessor branch, the canonical output is `zb = prʟ q (colʟ b)`, whos
           zb : S
           zb = prʟ q (colʟ b)
           decide : Dec (Holds R q (up a))
-                 → ∥ Σ[ z ∈ S ] (⟨ (z ∷ q ∷ []) ⊨ ψ ⟩
+                 → ∥ Σ[ z ∶ S ] (⟨ (z ∷ q ∷ []) ⊨ ψ ⟩
                                 × ((z' : S) → ⟨ (z' ∷ q ∷ []) ⊨ ψ ⟩ → z' ≡ z)) ∥₁
 ```
 
@@ -1531,7 +1531,7 @@ Conversely, membership in `Fa` merely yields an index `b` with `b ≺ a` or `b �
 
 ```agda
       Fa-out : (y : S) → ⟨ y ∈ˢ Fa ⟩
-             → ∥ Σ[ b ∈ Dom ] (Below b × (fst y ≡ pr (↪ b) (col b))) ∥₁
+             → ∥ Σ[ b ∶ Dom ] (Below b × (fst y ≡ pr (↪ b) (col b))) ∥₁
       Fa-out y hy = rec₁ squash₁
         (λ { (q , (mq , hψ)) → rec₁ squash₁
           (λ { (inl (h , hv)) → map₁
@@ -1576,7 +1576,7 @@ Specializing the preceding result to the ordered-pair code of `x` and `v` recove
 
 ```agda
       Fa-pair : (x v : S) → Holds Fa x v
-              → ∥ Σ[ b ∈ Dom ] (Below b × (↪ b ≡ fst x) × (col b ≡ fst v)) ∥₁
+              → ∥ Σ[ b ∶ Dom ] (Below b × (↪ b ≡ fst x) × (col b ≡ fst v)) ∥₁
       Fa-pair x v h = map₁ step
         (Fa-out (prʟ x v) (subst (λ w → ⟨ w ∈ fst Fa ⟩) (sym (prʟ-fst x v)) h))
         where
@@ -1591,8 +1591,8 @@ The transport re-points the equation at the internal pair, and the helper splits
 <!--/-->
 
 ```agda
-        step : Σ[ b ∈ Dom ] (Below b × (fst (prʟ x v) ≡ pr (↪ b) (col b)))
-             → Σ[ b ∈ Dom ] (Below b × (↪ b ≡ fst x) × (col b ≡ fst v))
+        step : Σ[ b ∶ Dom ] (Below b × (fst (prʟ x v) ≡ pr (↪ b) (col b)))
+             → Σ[ b ∶ Dom ] (Below b × (↪ b ≡ fst x) × (col b ≡ fst v))
         step (b , (k , e)) = b , (k , sym (fst q) , sym (snd q))
           where
           q : (fst x ≡ ↪ b) × (fst v ≡ col b)
@@ -1651,7 +1651,7 @@ Suppose the chosen entry is represented by `b ≤ a`, so that `x` presents `b` a
 ```agda
         build (Fa-pair x v hxv)
         where
-        build : Σ[ b ∈ Dom ] (Below b × (↪ b ≡ fst x) × (col b ≡ fst v))
+        build : Σ[ b ∶ Dom ] (Below b × (↪ b ≡ fst x) × (col b ≡ fst v))
               → Complete Fa R x × ValueIs Fa R x v
         build (b , (k , ex , ev)) = cmp , (λ w → fwd w , bwd w)
 ```
@@ -1677,7 +1677,7 @@ From `y R x`, the containment hypothesis supplies `y ∈ D`, so `toDom y my` def
 <!--/-->
 
 ```agda
-          pred : (y : S) → Holds R y x → Σ[ c ∈ Dom ] ((c ≺ b) × (↪ c ≡ fst y))
+          pred : (y : S) → Holds R y x → Σ[ c ∶ Dom ] ((c ≺ b) × (↪ c ≡ fst y))
           pred y hy = c , (≺-in c b (subst2 (λ s t → ⟨ pr s t ∈ fst R ⟩)
                               (sym (toDom-val y my)) (sym ex) hy) , toDom-val y my)
             where
@@ -1739,7 +1739,7 @@ For the forward half of `ValueIs`, rewrite `w ∈ v` as `fst w ∈ col b`. The o
           fwd : (w : S) → ⟨ fst w ∈ fst v ⟩ → Src Fa R x w
           fwd w w∈ = map₁ read (col-out b (fst w) (subst (λ t → ⟨ fst w ∈ t ⟩) (sym ev) w∈))
             where
-            read : Σ[ r ∈ Dom ] ((r ≺ b) × (col r ≡ fst w)) → Σ[ y ∈ S ] (Holds R y x × Holds Fa y w)
+            read : Σ[ r ∶ Dom ] ((r ≺ b) × (col r ≡ fst w)) → Σ[ y ∶ S ] (Holds R y x × Holds Fa y w)
             read (r , (rb , er)) = up r
 ```
 
@@ -1781,7 +1781,7 @@ Reading the table entry gives an index `c`, an equation identifying `y` with `�
 <!--/-->
 
 ```agda
-                 → Σ[ c ∈ Dom ] (Below c × (↪ c ≡ fst y) × (col c ≡ fst w))
+                 → Σ[ c ∶ Dom ] (Below c × (↪ c ≡ fst y) × (col c ≡ fst w))
                  → ⟨ fst w ∈ fst v ⟩
             read y hy (c , (_ , ey , ew)) =
               subst2 (λ s t → ⟨ s ∈ t ⟩) ew ev (col-in b c cb)
@@ -1918,7 +1918,7 @@ Conversely, every `y ∈ fst otL` merely has an index `b : Dom` with `col b ≡ 
 <!--/-->
 
 ```agda
-    otL-out : (y : V ℓ) → ⟨ y ∈ fst otL ⟩ → ∥ Σ[ b ∈ Dom ] (col b ≡ y) ∥₁
+    otL-out : (y : V ℓ) → ⟨ y ∈ fst otL ⟩ → ∥ Σ[ b ∶ Dom ] (col b ≡ y) ∥₁
     otL-out y hy = map₁ (λ { (q , (mq , h)) → toDom q mq , sym (colFo-val q mq yS h) })
       (OT.table-out yS hy)
       where
@@ -1986,7 +1986,7 @@ Conversely, `colTable-out` says that any member `y` of the graph is merely equal
 
 ```agda
     colTable-out : (y : S) → ⟨ y ∈ˢ colTable ⟩
-                 → ∥ Σ[ b ∈ Dom ] (fst y ≡ pr (↪ b) (col b)) ∥₁
+                 → ∥ Σ[ b ∶ Dom ] (fst y ≡ pr (↪ b) (col b)) ∥₁
     colTable-out y hy = map₁ (λ { (q , mq , e) → toDom q mq
       , e ∙ cong (λ t → pr t (col (toDom q mq))) (sym (toDom-val q mq)) }) (CT.F-out (fst y) hy)
 ```
@@ -2001,7 +2001,7 @@ The fiber predicate says that a member `v` paired with `x` is the collapse value
 
 ```agda
     Fib : S → S → Type (ℓ-suc ℓ)
-    Fib x v = Σ[ mx ∈ Mem x ] (fst v ≡ col (toDom x mx))
+    Fib x v = Σ[ mx ∶ Mem x ] (fst v ≡ col (toDom x mx))
 ```
 
 <!--en-->
@@ -2250,7 +2250,7 @@ The converse construction is intentionally local to chosen source and target set
 
 ```agda
       module Inverse (X Y : S)
-        (pre : (x : S) → ⟨ fst x ∈ fst X ⟩ → Σ[ b ∈ Dom ] (col b ≡ fst x))
+        (pre : (x : S) → ⟨ fst x ∈ fst X ⟩ → Σ[ b ∶ Dom ] (col b ≡ fst x))
         (bound : (x : S) (mx : ⟨ fst x ∈ fst X ⟩) → ⟨ ↪ (pre x mx .fst) ∈ fst Y ⟩) where
 ```
 

@@ -225,7 +225,7 @@ and project the same bounds.
 ```agda
 private
   Box : (σ : V ℓ) (P : V ℓ → Type (ℓ-suc ℓ)) → Type (ℓ-suc ℓ)
-  Box σ P = Σ[ τ ∈ V ℓ ] (IsOrd τ × ⟨ σ ∈ τ ⟩ × P τ)
+  Box σ P = Σ[ τ ∶ V ℓ ] (IsOrd τ × ⟨ σ ∈ τ ⟩ × P τ)
 
   Raise : (P : V ℓ → Type (ℓ-suc ℓ)) → Type (ℓ-suc ℓ)
   Raise P = {τ τ' : V ℓ} → ⟨ τ ∈ τ' ⟩ → IsOrd τ' → P τ → P τ'
@@ -324,9 +324,9 @@ module Mk {n : ℕ} (φ₀ : Formula S n) (κ : V ℓ) (oκ : IsOrd κ)
 
   Gₙ : ℕ → V ℓ
   Gₙ-ord : (N : ℕ) → IsOrd (Gₙ N)
-  Gₙ zero        = ∅
+  Gₙ 0        = ∅
   Gₙ (suc N)     = jstep (Gₙ N) (Gₙ-ord N) .fst
-  Gₙ-ord zero    = ∅-ord
+  Gₙ-ord 0    = ∅-ord
   Gₙ-ord (suc N) = jstep (Gₙ N) (Gₙ-ord N) .snd .fst
 
   Gₙ-step : (N : ℕ) → ⟨ Gₙ N ∈ Gₙ (suc N) ⟩
@@ -472,7 +472,7 @@ it is the only place.
         decide (no nsat) = rec₁ (snd ((x ∷ γ) ⊨ χ)) collide
           (cl γ bγ ∣ x , (λ sat → lift (nsat sat)) ∣₁)
           where
-          collide : Σ[ q ∈ S ] (⟨ fst q ∈ Lset β ⟩ × ⟨ (q ∷ γ) ⊨ (¬̇ χ) ⟩)
+          collide : Σ[ q ∶ S ] (⟨ fst q ∈ Lset β ⟩ × ⟨ (q ∷ γ) ⊨ (¬̇ χ) ⟩)
                   → ⟨ (x ∷ γ) ⊨ χ ⟩
           collide (q , (fq∈ , refute)) = ⊥₀-rec
             (lower (refute (subst ⟨_⟩
@@ -565,15 +565,15 @@ already states.
 ```agda
 opaque
   mkReflect : ∀ {n} (φ : Formula S n) (δ : V ℓ) → IsOrd δ
-            → Σ[ β ∈ V ℓ ] Σ[ oβ ∈ IsOrd β ]
+            → Σ[ β ∶ V ℓ ] Σ[ oβ ∶ IsOrd β ]
                 (⟨ δ ∈ β ⟩
                  × ((γ : S ^ n) → Below β γ
                     → (γ ⊨ φ) ≡ (γ ⊨ relativize (LsetS β oβ) φ)))
   mkReflect φ δ oδ = M.β , (M.oβ , (δ∈β , M.reflectRel))
     where
-    bdd : Σ[ σ ∈ V ℓ ] (IsOrd σ × BoundedFo (Below′ σ) φ)
+    bdd : Σ[ σ ∶ V ℓ ] (IsOrd σ × BoundedFo (Below′ σ) φ)
     bdd = mkBoundedFo φ
-    b : Σ[ τ ∈ V ℓ ] (IsOrd τ × ⟨ bdd .fst ∈ τ ⟩ × ⟨ δ ∈ τ ⟩)
+    b : Σ[ τ ∶ V ℓ ] (IsOrd τ × ⟨ bdd .fst ∈ τ ⟩ × ⟨ δ ∈ τ ⟩)
     b = bound2 (bdd .fst) δ (bdd .snd .fst) oδ
     module M = Mk φ (b .fst) (b .snd .fst)
                   (liftFoTo (b .snd .snd .fst) φ (bdd .snd .snd))

@@ -1425,7 +1425,7 @@ recursion on `n`: the head is the set presented by `g zero`, equipped with
 
 ```agda
     tab : ∀ {n} → Ix B n → DB.SM ^ n
-    tab {zero} g = []
+    tab {0} g = []
     tab {suc n} g = (⟪ fst B ⟫↪ (g zero) , inB (g zero)) ∷ tab (λ i → g (suc i))
 ```
 
@@ -1443,7 +1443,7 @@ tail. Functional extensionality combines these pointwise equations into
 
 ```agda
     tab-values : ∀ {n} (g : Ix B n) → values (tab g) ≡ (λ i → ⟪ fst B ⟫↪ (g i))
-    tab-values {zero} g = funExt (λ ())
+    tab-values {0} g = funExt (λ ())
     tab-values {suc n} g = funExt
       (λ { zero → refl
          ; (suc i) → funExt⁻ (tab-values (λ j → g (suc j))) i })
@@ -1484,7 +1484,7 @@ arbitrary encoded environment.
 
 ```agda
   envSet-vectors : ∀ {n} (z : S) → ⟨ z ∈ˢ envSet B n ⟩
-                 → ∥ Σ[ δ ∈ DB.SM ^ n ] (fst z ≡ graph δ) ∥₁
+                 → ∥ Σ[ δ ∶ DB.SM ^ n ] (fst z ≡ graph δ) ∥₁
   envSet-vectors {n} z h = map₁
     (λ { (g , qg) → tab g , qg ∙ sym (tab-graph g) }) (envSet-out B n z h)
 ```
@@ -1507,7 +1507,7 @@ representation.
 ```agda
   Sat-out : ∀ {n} (φ : Formula DB.SM n) (z : S)
           → ⟨ z ∈ˢ Sat B (mapFo intoL φ) ⟩
-          → ∥ (Σ[ δ ∈ DB.SM ^ n ] ((fst z ≡ graph δ) × ⟨ δ ⊨ᴮ φ ⟩)) ∥₁
+          → ∥ (Σ[ δ ∶ DB.SM ^ n ] ((fst z ≡ graph δ) × ⟨ δ ⊨ᴮ φ ⟩)) ∥₁
   Sat-out {n} φ z h = map₁
     (λ { (g , qg) → tab g , (qg ∙ sym (tab-graph g)
 ```

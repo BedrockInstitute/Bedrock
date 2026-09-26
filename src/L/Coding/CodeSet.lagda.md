@@ -110,7 +110,7 @@ keyArityAtL c k = ∃̇ (tagAtL (suc c) k zero)
 
 keyArityAtL-out : ∀ {n} (c : Fin n) (k : ℕ) (γ : S ^ n)
                 → ⟨ γ ⊨ keyArityAtL c k ⟩
-                → ∥ (Σ[ z ∈ S ] (fst (lookup c γ) ≡ pr (# k) (fst z))) ∥₁
+                → ∥ (Σ[ z ∶ S ] (fst (lookup c γ) ≡ pr (# k) (fst z))) ∥₁
 keyArityAtL-out c k γ = map₁
   (λ { (z , hz) →
     z , subst ⟨_⟩ (tagAtL-adequate (suc c) k zero (z ∷ γ)) hz })
@@ -166,7 +166,7 @@ arityNumAtL c = ∃̇ (∃̇ (prAtL (suc (suc c)) (suc zero) zero
 
 arityNumAtL-out : ∀ {n} (c : Fin n) (γ : S ^ n)
                 → ⟨ γ ⊨ arityNumAtL c ⟩
-                → ∥ (Σ[ m ∈ ℕ ] Σ[ z ∈ S ]
+                → ∥ (Σ[ m ∶ ℕ ] Σ[ z ∶ S ]
                       (fst (lookup c γ) ≡ pr (# m) (fst z))) ∥₁
 arityNumAtL-out c γ = rec₁ squash₁ (λ { (ar , h) →
   rec₁ squash₁ (λ { (z , (hp , hω)) → map₁
@@ -294,9 +294,9 @@ module _ (A : S) where
   keyS φ = key ι ιL φ , keyL ι ιL φ
 
   private
-    smallAny : Σ[ d ∈ S ] ((p : Σ[ n ∈ ℕ ] Formula ⟪ fst A ⟫ n)
+    smallAny : Σ[ d ∶ S ] ((p : Σ[ n ∶ ℕ ] Formula ⟪ fst A ⟫ n)
                           → ⟨ keyS (snd p) ∈ˢ d ⟩)
-    smallAny = smallDom (Σ[ n ∈ ℕ ] Formula ⟪ fst A ⟫ n) (λ p → keyS (snd p))
+    smallAny = smallDom (Σ[ n ∶ ℕ ] Formula ⟪ fst A ⟫ n) (λ p → keyS (snd p))
 
     sepAny : isContr
       (SetOf (λ x → (x ∈ˢ smallAny .fst) ⊓ ((x ∷ []) ⊨ isCodeAny A)))
@@ -373,20 +373,20 @@ it is not about the graph, it is about `rec₁`{.Agda} at a concrete environment
                 → fst (lookup b γ) ≡ fst A
                 → ⟨ γ ⊨ hasWitnessAt b c ⟩
                 → (k : ℕ) (z : S) → fst (lookup c γ) ≡ pr (# k) (fst z)
-                → ∥ (Σ[ ψ ∈ Formula ⟪ fst A ⟫ k ]
+                → ∥ (Σ[ ψ ∶ Formula ⟪ fst A ⟫ k ]
                       (fst (lookup c γ) ≡ fst (keyS ψ))) ∥₁
   witnessAt-out b c γ qb hw k z qz = rec₁ squash₁ viaSlot hw
     where
     Target : Type (ℓ-suc ℓ)
-    Target = ∥ (Σ[ ψ ∈ Formula ⟪ fst A ⟫ k ]
+    Target = ∥ (Σ[ ψ ∶ Formula ⟪ fst A ⟫ k ]
                  (fst (lookup c γ) ≡ fst (keyS ψ))) ∥₁
 
     onto : (y : V ℓ) → ⟨ y ∈ fst (lookup b γ) ⟩
-         → ∥ Σ[ m ∈ ⟪ fst A ⟫ ] (ι m ≡ y) ∥₁
+         → ∥ Σ[ m ∶ ⟪ fst A ⟫ ] (ι m ≡ y) ∥₁
     onto y y∈ = ∣ ∈-asFiber {a = y} {b = fst A}
       (subst (λ w → ⟨ y ∈ w ⟩) qb y∈) ∣₁
 
-    viaSlot : Σ[ C ∈ S ] ⟨ (C ∷ γ) ⊨ ((var (suc c) ∈̇ var zero)
+    viaSlot : Σ[ C ∶ S ] ⟨ (C ∷ γ) ⊨ ((var (suc c) ∈̇ var zero)
                 ∧̇ (closedAt zero ∧̇ shapedAt zero (suc b))) ⟩
             → Target
     viaSlot (C , (x∈C , (hcl , hsh))) = map₁
@@ -402,12 +402,12 @@ it is not about the graph, it is about `rec₁`{.Agda} at a concrete environment
 
     witness-out : (x : S) → ⟨ (x ∷ []) ⊨ hasWitness A ⟩
                 → (k : ℕ) (z : S) → fst x ≡ pr (# k) (fst z)
-                → ∥ (Σ[ ψ ∈ Formula ⟪ fst A ⟫ k ] (fst x ≡ fst (keyS ψ))) ∥₁
+                → ∥ (Σ[ ψ ∶ Formula ⟪ fst A ⟫ k ] (fst x ≡ fst (keyS ψ))) ∥₁
     witness-out x hw k z qz = rec₁ squash₁ viaCarrier hw
       where
-      viaCarrier : Σ[ B ∈ S ] ⟨ (B ∷ x ∷ [])
+      viaCarrier : Σ[ B ∶ S ] ⟨ (B ∷ x ∷ [])
                      ⊨ ((var zero ≐ con A) ∧̇ hasWitnessAt zero (suc zero)) ⟩
-                 → ∥ (Σ[ ψ ∈ Formula ⟪ fst A ⟫ k ] (fst x ≡ fst (keyS ψ))) ∥₁
+                 → ∥ (Σ[ ψ ∶ Formula ⟪ fst A ⟫ k ] (fst x ≡ fst (keyS ψ))) ∥₁
       viaCarrier (B , (qB , hB)) =
         witnessAt-out zero (suc zero) (B ∷ x ∷ []) qB hB k z qz
 ```
@@ -432,7 +432,7 @@ not contain it.
 ```agda
   IsKeyOverAny : S → hProp (ℓ-suc ℓ)
   IsKeyOverAny x =
-    ∥ (Σ[ n ∈ ℕ ] Σ[ ψ ∈ Formula ⟪ fst A ⟫ n ] (fst x ≡ fst (keyS ψ))) ∥₁
+    ∥ (Σ[ n ∶ ℕ ] Σ[ ψ ∶ Formula ⟪ fst A ⟫ n ] (fst x ≡ fst (keyS ψ))) ∥₁
     , squash₁
 
   opaque

@@ -76,7 +76,7 @@ Given `P : hProp ℓ₁`{.Agda}, Agda does not let us change the level at which 
 
 ```agda
 hasSize : ∀ {ℓ₁} (ℓ₂ : Level) → hProp ℓ₁ → Type (ℓ-max ℓ₁ (ℓ-suc ℓ₂))
-hasSize ℓ₂ P = Σ[ Q ∈ hProp ℓ₂ ] (⟨ P ⟩ ≃ ⟨ Q ⟩)
+hasSize ℓ₂ P = Σ[ Q ∶ hProp ℓ₂ ] (⟨ P ⟩ ≃ ⟨ Q ⟩)
 ```
 
 
@@ -118,7 +118,7 @@ Resizing ℓ₁ ℓ₂ = (P : hProp ℓ₁) → hasSize ℓ₂ P
 
 ```agda
 ΩResizing : ∀ ℓ₁ ℓ₂ → Type (ℓ-max (ℓ-suc ℓ₁) (ℓ-suc ℓ₂))
-ΩResizing ℓ₁ ℓ₂ = Σ[ Ω ∈ Type ℓ₂ ] (hProp ℓ₁ ≃ Ω)
+ΩResizing ℓ₁ ℓ₂ = Σ[ Ω ∶ Type ℓ₂ ] (hProp ℓ₁ ≃ Ω)
 ```
 
 

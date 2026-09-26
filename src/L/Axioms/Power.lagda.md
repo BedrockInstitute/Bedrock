@@ -326,7 +326,7 @@ removes the propositional truncation nor selects an ordinal stage.
 <!--/-->
 
 ```agda
-    rsz : (v : V ℓ) → Σ[ Q ∈ hProp ℓ ] (⟨ isL v ⟩ ≃ ⟨ Q ⟩)
+    rsz : (v : V ℓ) → Σ[ Q ∶ hProp ℓ ] (⟨ isL v ⟩ ≃ ⟨ Q ⟩)
     rsz v = LEM→Resizing lem (isL v)
 ```
 
@@ -346,7 +346,7 @@ formula, and it will not become the final power set.
 
 ```agda
   Ix : Type ℓ
-  Ix = Σ[ m ∈ ⟪ P ⟫ ] ⟨ rsz (⟪ P ⟫↪ m) .fst ⟩
+  Ix = Σ[ m ∶ ⟪ P ⟫ ] ⟨ rsz (⟪ P ⟫↪ m) .fst ⟩
 ```
 
 <!--en-->

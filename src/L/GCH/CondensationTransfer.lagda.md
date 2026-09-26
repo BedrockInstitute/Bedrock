@@ -523,7 +523,7 @@ prevents the proof from treating the adequate bound as chosen data.
 
 ```agda
   Witness : S → Type (ℓ-suc ℓ)
-  Witness d = ∥ Σ[ z ∈ S ] ( ⟨ z ∈ˢ M ⟩ × ⟨ Lset d ∈ˢ M ⟩
+  Witness d = ∥ Σ[ z ∶ S ] ( ⟨ z ∈ˢ M ⟩ × ⟨ Lset d ∈ˢ M ⟩
                            × ⟨ (Lset d ∷ d ∷ z ∷ []) ⊨ₚ levelFo ⟩ ) ∥₁
 ```
 
@@ -600,7 +600,7 @@ escapes into the theorem's data.
 <!--/-->
 
 ```agda
-    step1 : Σ[ γ ∈ S ] (⟨ γ ∈ˢ lam ⟩ × ⟨ d ∈ˢ γ ⟩ × Adequate γ) → Witness d
+    step1 : Σ[ γ ∶ S ] (⟨ γ ∈ˢ lam ⟩ × ⟨ d ∈ˢ γ ⟩ × Adequate γ) → Witness d
     step1 (γ , γ∈λ , d∈γ , adγ) =
       rec₁ squash₁ takeZ hullSat
       where
@@ -678,10 +678,10 @@ witnesses.
 
 ```agda
       finishA : (z d' : A.SM)
-              → Σ[ a ∈ A.SM ]
+              → Σ[ a ∶ A.SM ]
                   ( ⟨ (a ∷ d' ∷ z ∷ []) Mse.⊨ embed levelFo ⟩
                   × (fst d' ≡ d) )
-              → Σ[ w ∈ S ] ( ⟨ w ∈ˢ M ⟩ × ⟨ Lset d ∈ˢ M ⟩
+              → Σ[ w ∶ S ] ( ⟨ w ∈ˢ M ⟩ × ⟨ Lset d ∈ˢ M ⟩
 ```
 
 <!--en-->
@@ -795,7 +795,7 @@ After `z` and `d′` are fixed, the innermost existential asserts only the mere 
 
 ```agda
       takeD : (z : A.SM)
-            → Σ[ d' ∈ A.SM ]
+            → Σ[ d' ∶ A.SM ]
                 ⟨ (d' ∷ z ∷ []) Mse.⊨ ∃̇ (embed levelFo ∧̇ (var (suc zero) ≐ con dM)) ⟩
             → Witness d
       takeD z (d' , hd) = map₁ (finishA z d') hd
@@ -810,7 +810,7 @@ With the outer witness `z` already fixed, the next truncation hides the middle c
 <!--/-->
 
 ```agda
-      takeZ : Σ[ z ∈ A.SM ]
+      takeZ : Σ[ z ∶ A.SM ]
                 ⟨ (z ∷ []) Mse.⊨ ∃̇ (∃̇ (embed levelFo ∧̇ (var (suc zero) ≐ con dM))) ⟩
             → Witness d
       takeZ (z , hz) = rec₁ squash₁ (takeD z) hz
@@ -842,7 +842,7 @@ After opening the witness locally, its hull-membership component for `Lset d` su
 
 ```agda
     where
-    go : Σ[ z ∈ S ] ( ⟨ z ∈ˢ M ⟩ × ⟨ Lset d ∈ˢ M ⟩
+    go : Σ[ z ∶ S ] ( ⟨ z ∈ˢ M ⟩ × ⟨ Lset d ∈ˢ M ⟩
                     × ⟨ (Lset d ∷ d ∷ z ∷ []) ⊨ₚ levelFo ⟩ )
        → ⟨ Lset d ∈ˢ M ⟩ × (π (Lset d) ≡ Lset (π d))
     go (z , z∈M , Ld∈M , amb) = Ld∈M , eq
@@ -915,7 +915,7 @@ The first property required by the abstract condensation argument is closure at 
   levelIn δ oδ δ∈πX =
     rec₁ (snd (Lset δ ∈ˢ HS.C.πX)) go (HS.C.πX-member δ δ∈πX)
     where
-    go : Σ[ d ∈ S ] (⟨ d ∈ˢ M ⟩ × (π d ≡ δ)) → ⟨ Lset δ ∈ˢ HS.C.πX ⟩
+    go : Σ[ d ∶ S ] (⟨ d ∈ˢ M ⟩ × (π d ≡ δ)) → ⟨ Lset δ ∈ˢ HS.C.πX ⟩
 ```
 
 <!--en-->
@@ -969,7 +969,7 @@ The second property is covering. For every hull member `y`, it asks merely for a
 
 ```agda
   cover : (y : S) → ⟨ y ∈ˢ M ⟩
-        → ∥ Σ[ γ ∈ S ] (IsOrd γ × ⟨ γ ∈ˢ HS.C.πX ⟩ × ⟨ π y ∈ˢ Lset γ ⟩) ∥₁
+        → ∥ Σ[ γ ∶ S ] (IsOrd γ × ⟨ γ ∈ˢ HS.C.πX ⟩ × ⟨ π y ∈ˢ Lset γ ⟩) ∥₁
   cover y y∈M = rec₁ squash₁ go (Lset-out lam y (Hull⊆L y y∈M))
     where
     Goal : Type (ℓ-suc ℓ)
@@ -984,7 +984,7 @@ The target `Goal` is itself a propositional truncation. This matters twice: the 
 <!--/-->
 
 ```agda
-    Goal = ∥ Σ[ γ ∈ S ] (IsOrd γ × ⟨ γ ∈ˢ HS.C.πX ⟩ × ⟨ π y ∈ˢ Lset γ ⟩) ∥₁
+    Goal = ∥ Σ[ γ ∶ S ] (IsOrd γ × ⟨ γ ∈ˢ HS.C.πX ⟩ × ⟨ π y ∈ˢ Lset γ ⟩) ∥₁
 ```
 
 <!--en-->
@@ -996,7 +996,7 @@ The construction starts by locating `y` in the constructible hierarchy. Since ev
 <!--/-->
 
 ```agda
-    go : Σ[ c ∈ S ] (⟨ c ∈ˢ lam ⟩ × ⟨ y ∈ˢ 𝒟ₒ (Lset c) ⟩) → Goal
+    go : Σ[ c ∶ S ] (⟨ c ∈ˢ lam ⟩ × ⟨ y ∈ˢ 𝒟ₒ (Lset c) ⟩) → Goal
     go (c , c∈λ , y∈D) = rec₁ squash₁ go₂ (sup p p∈λ)
       where
       p : S
@@ -1051,7 +1051,7 @@ Opening the superadequacy witness locally gives an index `γ ∈ lam` with `p �
 <!--/-->
 
 ```agda
-      go₂ : Σ[ γ ∈ S ] (⟨ γ ∈ˢ lam ⟩ × ⟨ p ∈ˢ γ ⟩ × Adequate γ) → Goal
+      go₂ : Σ[ γ ∶ S ] (⟨ γ ∈ˢ lam ⟩ × ⟨ p ∈ˢ γ ⟩ × Adequate γ) → Goal
       go₂ (γ , γ∈λ , p∈γ , adγ) = rec₁ squash₁ takeZ hullSat
         where
         yM : A.SM
@@ -1083,10 +1083,10 @@ Opening the internal assertion locally gives three hull elements `u`, `a`, and `
 
 ```agda
         finishP : (z a : A.SM)
-                → Σ[ u ∈ A.SM ]
+                → Σ[ u ∶ A.SM ]
                     ( ⟨ (u ∷ a ∷ z ∷ []) Mse.⊨ embed levelFo ⟩
                     × ⟨ y ∈ˢ fst u ⟩ )
-                → Σ[ β ∈ S ] (IsOrd β × ⟨ β ∈ˢ HS.C.πX ⟩
+                → Σ[ β ∶ S ] (IsOrd β × ⟨ β ∈ˢ HS.C.πX ⟩
 ```
 
 <!--en-->
@@ -1209,7 +1209,7 @@ For fixed `z` and `a`, the last existential states merely that a suitable `u` ex
 
 ```agda
         takeA : (z : A.SM)
-              → Σ[ a ∈ A.SM ]
+              → Σ[ a ∶ A.SM ]
                   ⟨ (a ∷ z ∷ []) Mse.⊨ ∃̇ (embed levelFo ∧̇ (con yM ∈̇ var zero)) ⟩
               → Goal
         takeA z (a , ha) = map₁ (finishP z a) ha
@@ -1224,7 +1224,7 @@ The two remaining existential layers obey the same restriction. After `z` is fix
 <!--/-->
 
 ```agda
-        takeZ : Σ[ z ∈ A.SM ]
+        takeZ : Σ[ z ∶ A.SM ]
                   ⟨ (z ∷ []) Mse.⊨ ∃̇ (∃̇ (embed levelFo ∧̇ (con yM ∈̇ var zero))) ⟩
               → Goal
         takeZ (z , hz) = rec₁ squash₁ (takeA z) hz
@@ -1251,7 +1251,7 @@ Thus there is an explicit set `β` with `IsOrd β` and `HS.C.πX ≡ Lset β`. T
 <!--/-->
 
 ```agda
-  condenses : Σ[ β ∈ S ] (IsOrd β × (HS.C.πX ≡ Lset β))
+  condenses : Σ[ β ∶ S ] (IsOrd β × (HS.C.πX ≡ Lset β))
   condenses = Cn.condenses
 ```
 </div>

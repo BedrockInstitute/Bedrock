@@ -272,7 +272,7 @@ Membership in a union yields, merely, an intermediate set containing the element
 
 ```agda
 unionʟ-out : (A y : S) → ⟨ y ∈ˢ unionʟ A ⟩
-           → ∥ Σ[ B ∈ V ℓ ] (⟨ B ∈ fst A ⟩ × ⟨ fst y ∈ B ⟩) ∥₁
+           → ∥ Σ[ B ∶ V ℓ ] (⟨ B ∈ fst A ⟩ × ⟨ fst y ∈ B ⟩) ∥₁
 unionʟ-out A y h = subst ⟨_⟩ (union-spec (fst A) (fst y))
   (subst (λ w → ⟨ fst y ∈ w ⟩) (unionʟ-fst A) h)
 ```
@@ -313,7 +313,7 @@ The iteration sequence is a host-level recursion on the natural numbers: it star
 
 ```agda
   it : ℕ → S
-  it zero    = a
+  it 0    = a
   it (suc n) = step (it n)
 ```
 
@@ -355,7 +355,7 @@ The downward clause says that below every recorded entry, a recorded value exist
 ```agda
   Down : S → Type (ℓ-suc ℓ)
   Down F = (x' v' x : S) → Holds F x' v' → ⟨ fst x ∈ fst x' ⟩
-         → ∥ Σ[ v ∈ S ] Holds F x v ∥₁
+         → ∥ Σ[ v ∶ S ] Holds F x v ∥₁
 ```
 
 <!--en-->
@@ -668,7 +668,7 @@ From a satisfaction of `itFo` one recovers only the propositional truncation of 
 
 ```agda
     itFo-out : (y q : S) → ⟨ (y ∷ q ∷ []) ⊨ itFo ⟩
-             → ∥ Σ[ F ∈ S ] (Correct F × Holds F q y) ∥₁
+             → ∥ Σ[ F ∶ S ] (Correct F × Holds F q y) ∥₁
     itFo-out y q = map₁ (λ { (F , (hc , ha)) → F
       , ( corr-out zero (F ∷ y ∷ q ∷ []) hc
         , subst ⟨_⟩ (appAt-adequate zero (suc (suc zero)) (suc zero) (F ∷ y ∷ q ∷ [])) ha ) })
@@ -714,7 +714,7 @@ The uniqueness lemma begins by cases on the iterate index: at zero, the zero cla
 ```agda
   corr-val : (F : S) → Correct F → (k : ℕ) (v : S)
            → Holds F (nn k) v → fst v ≡ fst (it k)
-  corr-val F (z , (s , d)) zero    v h = z v h
+  corr-val F (z , (s , d)) 0    v h = z v h
   corr-val F (z , (s , d)) (suc k) v h =
     rec₁ (setIsSet (fst v) (fst (it (suc k)))) read
 ```
@@ -730,7 +730,7 @@ At a successor index, `Down` supplies, under propositional truncation, a value r
 ```agda
       (d (nn (suc k)) v (nn k) h (self∈sucV (# k)))
     where
-    read : Σ[ u ∈ S ] Holds F (nn k) u → fst v ≡ fst (it (suc k))
+    read : Σ[ u ∶ S ] Holds F (nn k) u → fst v ≡ fst (it (suc k))
     read (u , hu) = cong fst (only (it k) v
       (subst (λ t → ⟨ (v ∷ t ∷ []) ⊨ stepFo ⟩)
 ```
@@ -872,7 +872,7 @@ The outward reading decomposes any member into a bounded index and its iterate v
 
 ```agda
   Fn-out : (n : ℕ) (y : S) → ⟨ y ∈ˢ Fn n ⟩
-         → ∥ Σ[ k ∈ ℕ ] ((k ≤ n) × (fst y ≡ pr (# k) (fst (it k)))) ∥₁
+         → ∥ Σ[ k ∶ ℕ ] ((k ≤ n) × (fst y ≡ pr (# k) (fst (it k)))) ∥₁
   Fn-out n y h = map₁ (λ { (i , q) → toℕ i
     , (pred-≤-pred (toℕ<n i) , sym q ∙ prʟ-fst (nn (toℕ i)) (it (toℕ i))) })
     (finSet-out (suc n) (λ i → fst (e (toℕ i))) (fst y) h)
@@ -888,7 +888,7 @@ The pair reading decomposes any entry of the finite table into a bounded index a
 
 ```agda
   Fn-pair : (n : ℕ) (x v : S) → Holds (Fn n) x v
-          → ∥ Σ[ k ∈ ℕ ] ((k ≤ n) × ((fst x ≡ # k) × (fst v ≡ fst (it k)))) ∥₁
+          → ∥ Σ[ k ∶ ℕ ] ((k ≤ n) × ((fst x ≡ # k) × (fst v ≡ fst (it k)))) ∥₁
   Fn-pair n x v h = map₁ (λ { (k , (p , q)) → k , (p , pr-inj (sym (prʟ-fst x v) ∙ q)) })
     (Fn-out n (prʟ x v) (subst (λ w → ⟨ w ∈ fst (Fn n) ⟩) (sym (prʟ-fst x v)) h))
 ```
@@ -934,7 +934,7 @@ For the step clause, read the two table entries under propositional truncation. 
     stepC : Step (Fn n)
     stepC x v x' v' hxv hx'v' s = rec₁ (snd ((v' ∷ v ∷ []) ⊨ stepFo)) outer (Fn-pair n x v hxv)
       where
-      outer : Σ[ k ∈ ℕ ] ((k ≤ n) × ((fst x ≡ # k) × (fst v ≡ fst (it k))))
+      outer : Σ[ k ∶ ℕ ] ((k ≤ n) × ((fst x ≡ # k) × (fst v ≡ fst (it k))))
             → ⟨ (v' ∷ v ∷ []) ⊨ stepFo ⟩
 ```
 
@@ -949,7 +949,7 @@ After the first reading has exposed `k`, the second exposes an index `k'` for th
 ```agda
       outer (k , (_ , (ex , ev))) = rec₁ (snd ((v' ∷ v ∷ []) ⊨ stepFo)) inner (Fn-pair n x' v' hx'v')
         where
-        inner : Σ[ k' ∈ ℕ ] ((k' ≤ n) × ((fst x' ≡ # k') × (fst v' ≡ fst (it k'))))
+        inner : Σ[ k' ∶ ℕ ] ((k' ≤ n) × ((fst x' ≡ # k') × (fst v' ≡ fst (it k'))))
               → ⟨ (v' ∷ v ∷ []) ⊨ stepFo ⟩
         inner (k' , (_ , (ex' , ev'))) =
 ```
@@ -995,8 +995,8 @@ The downward clause is proved by eliminating the truncated pair reading and find
     downC : Down (Fn n)
     downC x' v' x h m = rec₁ squash₁ outer (Fn-pair n x' v' h)
       where
-      outer : Σ[ k' ∈ ℕ ] ((k' ≤ n) × ((fst x' ≡ # k') × (fst v' ≡ fst (it k'))))
-            → ∥ Σ[ v ∈ S ] Holds (Fn n) x v ∥₁
+      outer : Σ[ k' ∶ ℕ ] ((k' ≤ n) × ((fst x' ≡ # k') × (fst v' ≡ fst (it k'))))
+            → ∥ Σ[ v ∶ S ] Holds (Fn n) x v ∥₁
 ```
 
 <!--en-->
@@ -1038,7 +1038,7 @@ A numeral representation is an explicit pair of a natural number with the equati
 
 ```agda
   Num : S → Type (ℓ-suc ℓ)
-  Num q = Σ[ k ∈ ℕ ] (nn k ≡ q)
+  Num q = Σ[ k ∶ ℕ ] (nn k ≡ q)
 ```
 
 <!--en-->
@@ -1082,7 +1082,7 @@ Functionality is assembled from a merely-existing numeral representation: the de
       ; funct = λ q q∈ → mereFunct itFo q (map₁ (wit q) (ω-num q q∈)) }
       where
       wit : (q : S) → Num q
-          → Σ[ y ∈ S ] (⟨ (y ∷ q ∷ []) ⊨ itFo ⟩
+          → Σ[ y ∶ S ] (⟨ (y ∷ q ∷ []) ⊨ itFo ⟩
                        × ((y' : S) → ⟨ (y' ∷ q ∷ []) ⊨ itFo ⟩ → y' ≡ y))
 ```
 
@@ -1147,7 +1147,7 @@ Every member of the value domain is, merely, some iterate value: the outward rea
 <!--/-->
 
 ```agda
-  values-out : (y : S) → ⟨ y ∈ˢ values ⟩ → ∥ Σ[ n ∈ ℕ ] (fst y ≡ fst (it n)) ∥₁
+  values-out : (y : S) → ⟨ y ∈ˢ values ⟩ → ∥ Σ[ n ∶ ℕ ] (fst y ≡ fst (it n)) ∥₁
   values-out y hy = rec₁ squash₁
     (λ { (q , (q∈ , h)) → map₁
       (λ { (k , eq) → k , itFo-val k y (itFo-at y (sym eq) h) }) (ω-num q q∈) })
@@ -1189,7 +1189,7 @@ Every member of the union merely lies in some finite iterate. The proof eliminat
 <!--/-->
 
 ```agda
-  iterUnion-out : (z : S) → ⟨ z ∈ˢ iterUnion ⟩ → ∥ Σ[ n ∈ ℕ ] ⟨ fst z ∈ fst (it n) ⟩ ∥₁
+  iterUnion-out : (z : S) → ⟨ z ∈ˢ iterUnion ⟩ → ∥ Σ[ n ∶ ℕ ] ⟨ fst z ∈ fst (it n) ⟩ ∥₁
   iterUnion-out z h = rec₁ squash₁
     (λ { (B , (hB , hz)) → map₁
       (λ { (n , eB) → n , subst (λ w → ⟨ fst z ∈ w ⟩) eB hz })
@@ -1264,7 +1264,7 @@ Conversely, every graph member is merely equal to a canonical pair `(# n, it n)`
 <!--/-->
 
 ```agda
-  iter-out : (y : S) → ⟨ y ∈ˢ iter ⟩ → ∥ Σ[ n ∈ ℕ ] (fst y ≡ pr (# n) (fst (it n))) ∥₁
+  iter-out : (y : S) → ⟨ y ∈ˢ iter ⟩ → ∥ Σ[ n ∶ ℕ ] (fst y ≡ pr (# n) (fst (it n))) ∥₁
   iter-out y hy = rec₁ squash₁
     (λ { (q , q∈ , e) → map₁ (λ { (k , eq) → k
       , e ∙ cong₂ pr (cong fst (sym eq))
@@ -1322,7 +1322,7 @@ Iterating the adjacent containment `k` times proves `it n ⊆ it (k + n)`. The i
 
 ```agda
     it-up : (n k : ℕ) (z : S) → ⟨ fst z ∈ fst (it n) ⟩ → ⟨ fst z ∈ fst (it (k + n)) ⟩
-    it-up n zero    z h = h
+    it-up n 0    z h = h
     it-up n (suc k) z h = it-mono (k + n) z (it-up n k z h)
 ```
 </div>

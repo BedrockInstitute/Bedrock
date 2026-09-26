@@ -51,11 +51,11 @@ open import Cubical.Functions.Embedding using ( Embedding-into-isSet→isSet )
 ```
 
 <!--en-->
-The proof will form several propositions by truncating an existential: the statement that x lies in the image of g is ∥ Σ[ y ∈ B ] (g y ≡ x) ∥₁, which is merely inhabited rather than carrying a chosen preimage. Such truncated statements are propositions by `squash₁`, and a proof of one cannot be eliminated into arbitrary data, only into a proposition-valued target. That restriction is exactly why the classical hypothesis will be needed: to turn a mere existence into a chosen preimage when the argument requires one.
+The proof will form several propositions by truncating an existential: the statement that `x`{.Agda} lies in the image of `g`{.Agda} is `∥ Σ[ y ∶ B ] (g y ≡ x) ∥₁`{.Agda}, which is merely inhabited rather than carrying a chosen preimage. Such truncated statements are propositions by `squash₁`{.Agda}, and a proof of one cannot be eliminated into arbitrary data, only into a proposition-valued target. That restriction is exactly why the classical hypothesis will be needed: to turn a mere existence into a chosen preimage when the argument requires one.
 <!--zh-->
-证明将用对存在命题作命题截断来构造若干命题：x 属于 g 的像这一陈述是 ∥ Σ[ y ∈ B ] (g y ≡ x) ∥₁，它仅保留原像存在这一事实，而不携带选定的原像。这类命题截断陈述借助 `squash₁` 成为命题，且其证明只能消解到命题值的目标中，不能得到任意数据。这一限制正是需要经典假设的原因：当论证需要选定原像时，把单纯的存在性变成选定的原像。
+证明将用对存在命题作命题截断来构造若干命题：`x`{.Agda} 属于 `g`{.Agda} 的像这一陈述是 `∥ Σ[ y ∶ B ] (g y ≡ x) ∥₁`{.Agda}，它仅保留原像存在这一事实，而不携带选定的原像。这类命题截断陈述借助 `squash₁`{.Agda} 成为命题，且其证明只能消解到命题值的目标中，不能得到任意数据。这一限制正是需要经典假设的原因：当论证需要选定原像时，把单纯的存在性变成选定的原像。
 <!--ja-->
-証明は、存在を命題的切り詰めした命題をいくつも作る。x が g の像に属するという主張は ∥ Σ[ y ∈ B ] (g y ≡ x) ∥₁ であり、選ばれた原像を持たず、存在することだけが保留されている。このような命題的切り詰めされた主張は `squash₁` によって命題になり、その証明は命題値の対象へは消去できるが、任意のデータへはできない。この制限こそが古典的仮定を必要とする理由である。議論が選ばれた原像を要する場面で、単なる存在性を選ばれた原像へ変えるのに排中律を使う。
+証明は、存在を命題的切り詰めした命題をいくつも作る。`x`{.Agda} が `g`{.Agda} の像に属するという主張は `∥ Σ[ y ∶ B ] (g y ≡ x) ∥₁`{.Agda} であり、選ばれた原像を持たず、存在することだけが保留されている。このような命題的切り詰めされた主張は `squash₁`{.Agda} によって命題になり、その証明は命題値の対象へは消去できるが、任意のデータへはできない。この制限こそが古典的仮定を必要とする理由である。議論が選ばれた原像を要する場面で、単なる存在性を選ばれた原像へ変えるのに排中律を使う。
 <!--/-->
 
 <!--en-->
@@ -100,7 +100,7 @@ module Bernstein {A B : Type ℓ} (setA : isSet A)
 
 ```agda
   imG : A → hProp ℓ
-  imG x = (∥ Σ[ y ∈ B ] (g y ≡ x) ∥₁ , squash₁)
+  imG x = (∥ Σ[ y ∶ B ] (g y ≡ x) ∥₁ , squash₁)
 ```
 
 <!--en-->
@@ -116,7 +116,7 @@ The base of the badness hierarchy says that x is bad at level zero when it is no
   C₀ x = ((⟨ imG x ⟩ → ⊥₀) , isPropΠ (λ _ → isProp⊥))
 
   C₊ : (A → hProp ℓ) → A → hProp ℓ
-  C₊ C x = (∥ Σ[ y ∈ B ] Σ[ z ∈ A ] ((g y ≡ x) × ((f z ≡ y) × ⟨ C z ⟩)) ∥₁ , squash₁)
+  C₊ C x = (∥ Σ[ y ∶ B ] Σ[ z ∶ A ] ((g y ≡ x) × ((f z ≡ y) × ⟨ C z ⟩)) ∥₁ , squash₁)
 
   Cₙ : ℕ → A → hProp ℓ
 ```
@@ -130,11 +130,11 @@ The two defining equations of `Cₙ` are computation rules: at index zero it is 
 <!--/-->
 
 ```agda
-  Cₙ zero = C₀
+  Cₙ 0 = C₀
   Cₙ (suc n) = C₊ (Cₙ n)
 
   C : A → hProp ℓ
-  C x = (∥ Σ[ n ∈ ℕ ] ⟨ Cₙ n x ⟩ ∥₁ , squash₁)
+  C x = (∥ Σ[ n ∶ ℕ ] ⟨ Cₙ n x ⟩ ∥₁ , squash₁)
 ```
 
 <!--en-->
@@ -162,7 +162,7 @@ The one structural fact promised in the lead is now proved: if x is bad, so is g
   gf-closed : {x : A} → ⟨ C x ⟩ → ⟨ C (g (f x)) ⟩
   gf-closed {x} = rec₁ (snd (C (g (f x)))) go
     where
-    go : Σ[ n ∈ ℕ ] ⟨ Cₙ n x ⟩ → ⟨ C (g (f x)) ⟩
+    go : Σ[ n ∶ ℕ ] ⟨ Cₙ n x ⟩ → ⟨ C (g (f x)) ⟩
     go (n , cx) = c-in {x = g (f x)} {n = suc n} ∣ f x , x , (refl , (refl , cx)) ∣₁
 ```
 
@@ -176,7 +176,7 @@ g ∘ f による閉性は悪さが前へ伝わることを教えるが、元を
 
 ```agda
   C-view : {x : A} → ⟨ C x ⟩
-         → ∥ (⟨ C₀ x ⟩ ⊎ (Σ[ z ∈ A ] ((g (f z) ≡ x) × ⟨ C z ⟩))) ∥₁
+         → ∥ (⟨ C₀ x ⟩ ⊎ (Σ[ z ∶ A ] ((g (f z) ≡ x) × ⟨ C z ⟩))) ∥₁
   C-view {x} = rec₁ squash₁ go
     where
 ```
@@ -190,8 +190,8 @@ The proof splits on the recorded length. At length zero the chain simply asserts
 <!--/-->
 
 ```agda
-    go : Σ[ n ∈ ℕ ] ⟨ Cₙ n x ⟩ → ∥ (⟨ C₀ x ⟩ ⊎ (Σ[ z ∈ A ] ((g (f z) ≡ x) × ⟨ C z ⟩))) ∥₁
-    go (zero , c0) = ∣ inl c0 ∣₁
+    go : Σ[ n ∶ ℕ ] ⟨ Cₙ n x ⟩ → ∥ (⟨ C₀ x ⟩ ⊎ (Σ[ z ∶ A ] ((g (f z) ≡ x) × ⟨ C z ⟩))) ∥₁
+    go (0 , c0) = ∣ inl c0 ∣₁
     go (suc n , cs) = map₁ inr (map₁ (λ { (y , z , gy , fz , cz) →
         z , ((cong g fz ∙ gy) , c-in {x = z} {n = n} cz) }) cs)
 ```
@@ -212,15 +212,15 @@ The second use of excluded middle converts goodness into image membership. Suppo
 ```
 
 <!--en-->
-To turn the mere image membership into a chosen preimage, we may eliminate the truncation into the fiber type Σ[ y ∈ B ] (g y ≡ x) itself, provided that type is a proposition. This is where the hypotheses on g and A earn their keep: injectivity of g shows any two preimages y and y' are equal, using the paths p and p' to g x, and the h-set structure of A makes the resulting equality in A a proposition, which `Σ≡Prop` then extends to the whole pair. Note that the h-set assumption is needed exactly here and nowhere else in the construction.
+To turn the mere image membership into a chosen preimage, we may eliminate the truncation into the fiber type `Σ[ y ∶ B ] (g y ≡ x)`{.Agda} itself, provided that type is a proposition. This is where the hypotheses on `g`{.Agda} and `A`{.Agda} earn their keep: injectivity of `g`{.Agda} shows any two preimages `y`{.Agda} and `y'`{.Agda} are equal, using the paths `p`{.Agda} and `p'`{.Agda} to `g x`{.Agda}, and the h-set structure of `A`{.Agda} makes the resulting equality in `A`{.Agda} a proposition, which `Σ≡Prop`{.Agda} then extends to the whole pair. Note that the h-set assumption is needed exactly here and nowhere else in the construction.
 <!--zh-->
-为了把单纯的像属于变成选定的原像，可以把命题截断直接消去到纤维类型 Σ[ y ∈ B ] (g y ≡ x) 本身，只要该类型是命题。这正是 g 与 A 上的假设发挥作用之处：g 的单射性利用到 g x 的两条路径 p 与 p′ 证明任意两个原像 y 与 y′ 相等，而 A 的 h-集合结构使 A 中所得的相等成为命题，`Σ≡Prop` 再把这一点扩展到整个序对。注意 h-集合假设恰好只在这里、构造中的其他地方都不需要。
+为了把单纯的像属于变成选定的原像，可以把命题截断直接消去到纤维类型 `Σ[ y ∶ B ] (g y ≡ x)`{.Agda} 本身，只要该类型是命题。这正是 `g`{.Agda} 与 `A`{.Agda} 上的假设发挥作用之处：`g`{.Agda} 的单射性利用到 `g x`{.Agda} 的两条路径 `p`{.Agda} 与 `p′`{.Agda} 证明任意两个原像 `y`{.Agda} 与 `y′`{.Agda} 相等，而 `A`{.Agda} 的 h-集合结构使 `A`{.Agda} 中所得的相等成为命题，`Σ≡Prop`{.Agda} 再把这一点扩展到整个序对。注意 h-集合假设恰好只在这里、构造中的其他地方都不需要。
 <!--ja-->
-単なる像への所属を選ばれた原像に変えるには、その繊維型 Σ[ y ∈ B ] (g y ≡ x) 自身が命題である限り、命題的切り詰めをその型へ直接消去できる。ここで g と A に関する仮定が効く。g の単射性は、g x へのパス p と p′ を使って任意の二つの原像 y と y′ が等しいことを示し、A の h-集合としての構造が A における等式を命題にするので、`Σ≡Prop` がこれを対全体へ拡げる。h-集合の仮定が必要なのはまさにこの一点だけで、構成の他のどこでもない。
+単なる像への所属を選ばれた原像に変えるには、その繊維型 `Σ[ y ∶ B ] (g y ≡ x)`{.Agda} 自身が命題である限り、命題的切り詰めをその型へ直接消去できる。ここで `g`{.Agda} と `A`{.Agda} に関する仮定が効く。`g`{.Agda} の単射性は、`g x`{.Agda} へのパス `p`{.Agda} と `p′`{.Agda} を使って任意の二つの原像 `y`{.Agda} と `y′`{.Agda} が等しいことを示し、`A`{.Agda} の h-集合としての構造が `A`{.Agda} における等式を命題にするので、`Σ≡Prop`{.Agda} がこれを対全体へ拡げる。h-集合の仮定が必要なのはまさにこの一点だけで、構成の他のどこでもない。
 <!--/-->
 
 ```agda
-  fiberG-prop : (x : A) → isProp (Σ[ y ∈ B ] (g y ≡ x))
+  fiberG-prop : (x : A) → isProp (Σ[ y ∶ B ] (g y ≡ x))
   fiberG-prop x (y , p) (y' , p') = Σ≡Prop {A = B} {B = λ y → g y ≡ x}
     (λ y → setA (g y) x) (gi y y' (p ∙ sym p'))
 ```
@@ -234,7 +234,7 @@ With fiber propositionhood in hand, `fiberG` is the elimination of the truncated
 <!--/-->
 
 ```agda
-  fiberG : (x : A) → ⟨ imG x ⟩ → Σ[ y ∈ B ] (g y ≡ x)
+  fiberG : (x : A) → ⟨ imG x ⟩ → Σ[ y ∶ B ] (g y ≡ x)
   fiberG x = rec₁ (fiberG-prop x) (λ w → w)
 ```
 
@@ -308,7 +308,7 @@ Surjectivity relative to a verdict is stated for each y ∈ B, with the verdict 
 
 ```agda
   h-surj : (y : B) (d : Dec ⟨ C (g y) ⟩)
-         → ∥ Σ[ x ∈ A ] Σ[ dx ∈ Dec ⟨ C x ⟩ ] (h x dx ≡ y) ∥₁
+         → ∥ Σ[ x ∶ A ] Σ[ dx ∶ Dec ⟨ C x ⟩ ] (h x dx ≡ y) ∥₁
   h-surj y (no nCgy) = ∣ g y , no nCgy , gi (ginv nCgy) y (ginv-spec nCgy) ∣₁
 ```
 
@@ -388,7 +388,7 @@ Surjectivity needs one extra step. The relative lemma `h-surj` applied at the ca
 <!--/-->
 
 ```agda
-  ĥ-surj : (y : B) → ∥ Σ[ x ∈ A ] (ĥ x ≡ y) ∥₁
+  ĥ-surj : (y : B) → ∥ Σ[ x ∶ A ] (ĥ x ≡ y) ∥₁
   ĥ-surj y = map₁ (λ { (x , dx , e) → x , sym (h-cons x dx (lem (C x))) ∙ e })
     (h-surj y (lem (C (g y))))
 ```
@@ -429,9 +429,9 @@ The result type is an explicit dependent triple rather than a record: a function
 <!--/-->
 
 ```agda
-    → Σ[ h ∈ (⟪ a ⟫ → ⟪ b ⟫) ]
+    → Σ[ h ∶ (⟪ a ⟫ → ⟪ b ⟫) ]
         (((x y : ⟪ a ⟫) → h x ≡ h y → x ≡ y)
-      × ((y : ⟪ b ⟫) → ∥ Σ[ x ∈ ⟪ a ⟫ ] (h x ≡ y) ∥₁))
+      × ((y : ⟪ b ⟫) → ∥ Σ[ x ∶ ⟪ a ⟫ ] (h x ≡ y) ∥₁))
 cantor-bernstein a b f fi g gi = M.ĥ , ( M.ĥ-inj , M.ĥ-surj )
   where
 ```
@@ -471,7 +471,7 @@ module MutualInj {ℓ₁ ℓ₂ : Level} (C : Type ℓ₁) (P : C → Type ℓ)
     (R : (a b : C) → Type ℓ₂)
     (setP : (a : C) → isSet (P a))
     (read : (a b : C) → R a b
-          → Σ[ f ∈ (P a → P b) ] ((x y : P a) → f x ≡ f y → x ≡ y)) where
+          → Σ[ f ∶ (P a → P b) ] ((x y : P a) → f x ≡ f y → x ≡ y)) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -486,9 +486,9 @@ The first entry point states the transfer with the two coded injections as expli
 
 ```agda
   mutual→bijection : (a b : C) → R a b → R b a
-    → Σ[ h ∈ (P a → P b) ]
+    → Σ[ h ∶ (P a → P b) ]
         (((x y : P a) → h x ≡ h y → x ≡ y)
-      × ((y : P b) → ∥ Σ[ x ∈ P a ] (h x ≡ y) ∥₁))
+      × ((y : P b) → ∥ Σ[ x ∶ P a ] (h x ≡ y) ∥₁))
   mutual→bijection a b fwd bwd = M.ĥ , ( M.ĥ-inj , M.ĥ-surj )
 ```
 
@@ -517,9 +517,9 @@ The second entry point weakens the input to mere existence: instead of codes, it
 
 ```agda
   ∃bijection : (a b : C) → ∥ R a b ∥₁ → ∥ R b a ∥₁
-    → ∥ Σ[ h ∈ (P a → P b) ]
+    → ∥ Σ[ h ∶ (P a → P b) ]
         (((x y : P a) → h x ≡ h y → x ≡ y)
-      × ((y : P b) → ∥ Σ[ x ∈ P a ] (h x ≡ y) ∥₁)) ∥₁
+      × ((y : P b) → ∥ Σ[ x ∶ P a ] (h x ≡ y) ∥₁)) ∥₁
   ∃bijection a b fwd bwd = rec₁ squash₁
 ```
 

@@ -107,6 +107,7 @@ def analyze(text, path=None):
             pass
     policy = ProsePolicy(chapter=chapter or '', numbered_theorems=tuple(range(5)) if chapter == 'Origin.lagda.md' else (),
                          require_submodules=chapter is not None, variables=chapter is not None,
+                         table_captions=chapter is not None,
                          inline_code=path is None or chapter is not None,
                          inline_math_review=chapter is not None and _SITE_CONFIG.policies.get('inline_math_review', True),
                          math_approvals=_MATH_APPROVALS,

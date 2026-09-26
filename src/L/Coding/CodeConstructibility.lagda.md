@@ -364,7 +364,7 @@ module _ {ℓ' : Level} {K : Type ℓ'} where
 
   Of : (f g : ∀ {m} → Formula K m → S) {n : ℕ} → Formula K n → V ℓ
      → Type (ℓ-max (ℓ-suc ℓ) ℓ')
-  Of f g φ x = ∥ (Σ[ m ∈ ℕ ] Σ[ χ ∈ Formula K m ]
+  Of f g φ x = ∥ (Σ[ m ∶ ℕ ] Σ[ χ ∶ Formula K m ]
                    ((x ≡ fst (f χ))
                     × ((z : V ℓ) → ⟨ z ∈ fst (tree g χ) ⟩
                        → ⟨ z ∈ fst (tree g φ) ⟩))) ∥₁

@@ -568,7 +568,7 @@ Reading the membership clause yields, for each member of the proposed value, a t
 
 ```agda
   mem-out : ⟨ γ ⊨ memAt v w T C N ⟩ → (x : S) → ⟨ fst x ∈ Vv ⟩
-          → ∥ Σ[ c ∈ S ] Σ[ p ∈ S ] Σ[ y ∈ S ]
+          → ∥ Σ[ c ∶ S ] Σ[ p ∶ S ] Σ[ y ∶ S ]
               (⟨ fst c ∈ Cv ⟩ × ((fst c ≡ pr (# 1) (fst p)) × (⟨ pr (fst c) (fst y) ∈ Tv ⟩ × Cuts (fst x) Wv (fst y)))) ∥₁
   mem-out h x x∈ = rec₁ squash₁
     (λ { (c , (c∈ , hc)) → rec₁ squash₁
@@ -616,7 +616,7 @@ Filling the membership clause is the converse construction: it takes the functio
 
 ```agda
   mem-in : ((x : S) → ⟨ fst x ∈ Vv ⟩
-            → ∥ Σ[ c ∈ S ] Σ[ p ∈ S ] Σ[ y ∈ S ]
+            → ∥ Σ[ c ∶ S ] Σ[ p ∶ S ] Σ[ y ∶ S ]
                 (⟨ fst c ∈ Cv ⟩ × ((fst c ≡ pr (# 1) (fst p)) × (⟨ pr (fst c) (fst y) ∈ Tv ⟩ × Cuts (fst x) Wv (fst y)))) ∥₁)
          → ⟨ γ ⊨ memAt v w T C N ⟩
   mem-in g x x∈ = map₁
@@ -677,7 +677,7 @@ Reading the covering clause takes a code `c` that splits as the pair of the tag 
 
 ```agda
   all-out : ⟨ γ ⊨ allAt v w T C N ⟩ → (c p : S) → ⟨ fst c ∈ Cv ⟩ → fst c ≡ pr (# 1) (fst p)
-          → ∥ Σ[ y ∈ S ] Σ[ x ∈ S ] (⟨ pr (fst c) (fst y) ∈ Tv ⟩ × (⟨ fst x ∈ Vv ⟩ × Cuts (fst x) Wv (fst y))) ∥₁
+          → ∥ Σ[ y ∶ S ] Σ[ x ∶ S ] (⟨ pr (fst c) (fst y) ∈ Tv ⟩ × (⟨ fst x ∈ Vv ⟩ × Cuts (fst x) Wv (fst y))) ∥₁
   all-out h c p c∈ ec = rec₁ squash₁
     (λ { (e , (e∈ , hy)) → rec₁ squash₁
       (λ { (y , s' , (ee , hx)) → map₁
@@ -739,7 +739,7 @@ Filling the coverage clause therefore ranges over every member of the proposed c
 
 ```agda
   all-in : ((c p : S) → ⟨ fst c ∈ Cv ⟩ → fst c ≡ pr (# 1) (fst p)
-            → ∥ Σ[ y ∈ S ] Σ[ x ∈ S ] (⟨ pr (fst c) (fst y) ∈ Tv ⟩ × (⟨ fst x ∈ Vv ⟩ × Cuts (fst x) Wv (fst y))) ∥₁)
+            → ∥ Σ[ y ∶ S ] Σ[ x ∶ S ] (⟨ pr (fst c) (fst y) ∈ Tv ⟩ × (⟨ fst x ∈ Vv ⟩ × Cuts (fst x) Wv (fst y))) ∥₁)
          → ⟨ γ ⊨ allAt v w T C N ⟩
   all-in g c c∈ = sndAll-in' (λ p s s∈ p∈ ec →
     map₁ (λ { (y , x , (e∈ , (x∈ , cuts))) →
@@ -1100,7 +1100,7 @@ Each formula's table entry is selected from the already-defined recursion table,
 <!--/-->
 
 ```agda
-    entry : (ψ : Formula Ab 1) → Σ[ y ∈ S ] (⟨ pr (fst (keyS W ψ)) (fst y) ∈ Tv ⟩ × (fst y ≡ fst (Sat W (toS ψ))))
+    entry : (ψ : Formula Ab 1) → Σ[ y ∶ S ] (⟨ pr (fst (keyS W ψ)) (fst y) ∈ Tv ⟩ × (fst y ≡ fst (Sat W (toS ψ))))
     entry ψ = Table.val W W (keyS W ψ) (key∈AllCodes W ψ)
             , ( SR.T-in (keyS W ψ) (key∈AllCodes W ψ)
               , cong fst (val-at W W ψ (keyS W ψ) (key∈AllCodes W ψ) refl) )

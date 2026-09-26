@@ -661,7 +661,7 @@ its existential witness; the hierarchy graph determines the finite stage.
 <!--/-->
 
 ```agda
-        step : Σ[ m ∈ ℕ ] ((m < k) × (fst u ≡ # m)) → ⊥₀
+        step : Σ[ m ∶ ℕ ] ((m < k) × (fst u ≡ # m)) → ⊥₀
         step (m , (hm , qu)) = aMin m inStage hm
           where
           qc : fst c ≡ Lset (fst u)
@@ -782,7 +782,7 @@ type; each explicit witness will force `a` to occur at stage `m`.
       notBelow : (m : ℕ) → fst (lookup b γ) ≡ # m → m < k → ⊥₀
       notBelow m qb hm = rec₁ isProp⊥ atTower hex
         where
-        atTower : Σ[ c ∈ S ] Body c → ⊥₀
+        atTower : Σ[ c ∶ S ] Body c → ⊥₀
         atTower (c , (hg , hmem)) = aMin m inStage hm
 ```
 
@@ -845,7 +845,7 @@ map and composing equalities yields the required value
 <!--/-->
 
 ```agda
-      named : Σ[ j ∈ Lift ℕ ] (# (lower j) ≡ fst (lookup b γ))
+      named : Σ[ j ∶ Lift ℕ ] (# (lower j) ≡ fst (lookup b γ))
             → fst (lookup b γ) ≡ # k
       named (j , qj) = qb ∙ cong #_ (decide (lower j ≟ k))
         where
@@ -1102,7 +1102,7 @@ To read the formula outward, eliminate its propositionally truncated existential
                  → ⟨ precedes R (fst Aʟ) xv yv ⟩
   PrecedesAt-out = rec₁ squash₁ atZ
     where
-    atZ : Σ[ z ∈ S ] Body z → ⟨ precedes R (fst Aʟ) xv yv ⟩
+    atZ : Σ[ z ∶ S ] Body z → ⟨ precedes R (fst Aʟ) xv yv ⟩
 ```
 
 <!--en-->
@@ -1178,7 +1178,7 @@ The converse starts with the propositionally truncated witness in `precedes`. Be
                 → ⟨ γ ⊨ PrecedesAt r A x y ⟩
   PrecedesAt-in = rec₁ squash₁ atZ
     where
-    atZ : Σ[ z ∈ V ℓ ] Witness R (fst Aʟ) xv yv z
+    atZ : Σ[ z ∶ V ℓ ] Witness R (fst Aʟ) xv yv z
 ```
 
 <!--en-->
@@ -1329,7 +1329,7 @@ Before separation can select the ordered pairs satisfying the comparison, all ca
 <!--/-->
 
 ```agda
-pairsBound : Σ[ D ∈ S ] ((u v : Limit) → ⟨ pr (fst u) (fst v) ∈ fst D ⟩)
+pairsBound : Σ[ D ∶ S ] ((u v : Limit) → ⟨ pr (fst u) (fst v) ∈ fst D ⟩)
 pairsBound = d .fst , onPair
   where
   ixL : ⟪ Lset ω ⟫ → S
@@ -1357,7 +1357,7 @@ Applying `smallDom` to this small product produces a constructible set containin
 <!--/-->
 
 ```agda
-  d : Σ[ D ∈ S ] ((p : ⟪ Lset ω ⟫ × ⟪ Lset ω ⟫)
+  d : Σ[ D ∶ S ] ((p : ⟪ Lset ω ⟫ × ⟪ Lset ω ⟫)
                   → ⟨ prʟ (ixL (fst p)) (ixL (snd p)) ∈ˢ D ⟩)
   d = smallDom (⟪ Lset ω ⟫ × ⟪ Lset ω ⟫) (λ p → prʟ (ixL (fst p)) (ixL (snd p)))
 ```
@@ -1854,7 +1854,7 @@ Reading `LimitOrdAt` starts from a propositionally truncated choice of its two b
       LimitOrdAt-out : ⟨ γ ⊨ LimitOrdAt x y ⟩ → ∥ u ≺ˡ v ∥₁
       LimitOrdAt-out = rec₁ squash₁ decide
         where
-        atSplit : (c : S) → Σ[ d ∈ S ] Split c d → ∥ u ≺ˡ v ∥₁
+        atSplit : (c : S) → Σ[ d ∶ S ] Split c d → ∥ u ≺ˡ v ∥₁
         atSplit c (d , hs) = ∣ inl (lift (split-out c d hs)) ∣₁
 ```
 
@@ -1867,7 +1867,7 @@ In the common-level branch, `same-out` returns equality of the actual levels tog
 <!--/-->
 
 ```agda
-        atSame : Σ[ c ∈ S ] Same c → ∥ u ≺ˡ v ∥₁
+        atSame : Σ[ c ∶ S ] Same c → ∥ u ≺ˡ v ∥₁
         atSame (c , hs) = ∣ inr (same-out c hs) ∣₁
 ```
 
@@ -1980,7 +1980,7 @@ For fixed `z`, `c`, and `d`, `Inner` isolates the two facts required by the sepa
 
 ```agda
     Outer : S → Type (ℓ-suc ℓ)
-    Outer z = Σ[ c ∈ S ] ∥ (Σ[ d ∈ S ] Inner z c d) ∥₁
+    Outer z = Σ[ c ∶ S ] ∥ (Σ[ d ∶ S ] Inner z c d) ∥₁
 ```
 
 <!--en-->

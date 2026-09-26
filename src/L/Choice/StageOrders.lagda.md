@@ -159,7 +159,7 @@ Apply the general carving argument to the property that `x` belongs to a stage. 
 <!--/-->
 
 ```agda
-theCarve : (x : S) (p : ⟨ isL x ⟩) → Σ[ δ ∈ S ] IsPredOf (stage x p) δ
+theCarve : (x : S) (p : ⟨ isL x ⟩) → Σ[ δ ∶ S ] IsPredOf (stage x p) δ
 theCarve x p = predOf (λ σ → x ∈ˢ Lset σ) (stage x p) (stage-ord x p)
   (stage-earliest x p)
   (carveAt (λ σ → x ∈ˢ Lset σ) (stage x p) x (stage-mem x p) (λ δ hz → hz))
@@ -311,7 +311,7 @@ For an ambient set `A`, the type `Mem A` consists of a set together with evidenc
 
 ```agda
 Mem : S → Type (ℓ-suc ℓ)
-Mem A = Σ[ x ∈ S ] ⟨ x ∈ˢ A ⟩
+Mem A = Σ[ x ∶ S ] ⟨ x ∈ˢ A ⟩
 ```
 
 <!--en-->
@@ -561,7 +561,7 @@ Membership in `Lset (sucV δ)` is rewritten by the successor-stage equation as m
 <!--/-->
 
 ```agda
-    hasName : (a : New δ) → ∥ Σ[ n ∈ NM.Name ] ⟨ denotes a n ⟩ ∥₁
+    hasName : (a : New δ) → ∥ Σ[ n ∶ NM.Name ] ⟨ denotes a n ⟩ ∥₁
     hasName a = NM.names-complete (a .fst)
       (subst (λ v → ⟨ a .fst ∈ˢ v ⟩) (Lset-suc δ) (a .snd))
 ```
@@ -576,7 +576,7 @@ The name order is a strict well-order, so a merely inhabited family of denoting 
 
 ```agda
     leastOfNew : (a : New δ)
-               → Σ[ n ∈ NM.Name ] IsLeast NM.nameOrder (denotes a) n
+               → Σ[ n ∶ NM.Name ] IsLeast NM.nameOrder (denotes a) n
     leastOfNew a = NM.leastName (fst a) (hasName a)
 ```
 
@@ -655,7 +655,7 @@ For each member `a : New δ`, the construction supplies a name together with `Is
 <!--/-->
 
 ```agda
-  leastNameOf : (a : New δ) → Σ[ t ∈ NM.Name ] IsLeastName t (fst a)
+  leastNameOf : (a : New δ) → Σ[ t ∶ NM.Name ] IsLeastName t (fst a)
   leastNameOf a = leastOfNew a
 ```
 
@@ -768,8 +768,8 @@ The relation `Under δ v x y` records a comparison of the underlying sets `x` an
 
 ```agda
 Under : (δ : S) → SWO (New δ) → S → S → Type (ℓ-suc ℓ)
-Under δ v x y = Σ[ hx ∈ ⟨ x ∈ˢ Lset (sucV δ) ⟩ ]
-                Σ[ hy ∈ ⟨ y ∈ˢ Lset (sucV δ) ⟩ ]
+Under δ v x y = Σ[ hx ∶ ⟨ x ∈ˢ Lset (sucV δ) ⟩ ]
+                Σ[ hy ∶ ⟨ y ∈ˢ Lset (sucV δ) ⟩ ]
                 relOf v (x , hx) (y , hy)
 ```
 

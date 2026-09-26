@@ -534,7 +534,7 @@ Reading `defIn` preserves the propositional truncation around four witnesses `T`
 
 ```agda
   defIn-out : ⟨ δ ⊨ defIn w z N body ⟩
-            → ∥ Σ[ T ∈ S ] Σ[ C ∈ S ] Σ[ E ∈ S ] Σ[ d ∈ S ]
+            → ∥ Σ[ T ∶ S ] Σ[ C ∶ S ] Σ[ E ∶ S ] Σ[ d ∶ S ]
                 (⟨ fst d ∈ Zv ⟩ × ((fst d ≡ 𝒟ₒ Wv) × ⟨ δ4 T C E d ⊨ body ⟩)) ∥₁
   defIn-out = rec₁ squash₁ (λ { (T , (T∈ , h1)) → rec₁ squash₁ (λ { (C , (C∈ , h2)) →
     rec₁ squash₁ (λ { (E , (E∈ , h3)) → map₁ (λ { (d , (d∈ , (hs , (hd , hb)))) →
@@ -750,7 +750,7 @@ The backward direction of `step-out` sends a member of the genuine stage `Lset B
     bwd : (x : V ℓ) → ⟨ x ∈ Lset Bv ⟩ → ⟨ x ∈ Vv ⟩
     bwd x x∈ = rec₁ (snd (x ∈ Vv)) put (Lset-out Bv x x∈)
       where
-      put : Σ[ δ ∈ V ℓ ] (⟨ δ ∈ Bv ⟩ × ⟨ x ∈ 𝒟ₒ (Lset δ) ⟩) → ⟨ x ∈ Vv ⟩
+      put : Σ[ δ ∶ V ℓ ] (⟨ δ ∈ Bv ⟩ × ⟨ x ∈ 𝒟ₒ (Lset δ) ⟩) → ⟨ x ∈ Vv ⟩
       put (δ , (δ∈ , xD)) = rec₁ (snd (x ∈ Vv))
 ```
 
@@ -827,7 +827,7 @@ The `into` conjunct reads outward from a member `x` of the proposed value: the t
     into : ⟨ γ ⊨ intoAt v b f z N ⟩
     into x x∈ = rec₁ squash₁ put (Lset-out Bv (fst x) (subst (λ u → ⟨ fst x ∈ u ⟩) vq x∈))
       where
-      put : Σ[ δ ∈ V ℓ ] (⟨ δ ∈ Bv ⟩ × ⟨ fst x ∈ 𝒟ₒ (Lset δ) ⟩)
+      put : Σ[ δ ∶ V ℓ ] (⟨ δ ∈ Bv ⟩ × ⟨ fst x ∈ 𝒟ₒ (Lset δ) ⟩)
           → ⟨ (x ∷ γ) ⊨ ∃̇∈ (var (sh 1 b)) (∃̇∈ (var (sh 2 f)) (sndEx i0 i1 intoBody)) ⟩
 ```
 
@@ -1004,7 +1004,7 @@ Coverage says that for each `c ∈ Bv` there merely exists a table member that p
 <!--/-->
 
 ```agda
-    entryOf : (c : S) → ⟨ fst c ∈ Bv ⟩ → ∥ Σ[ w ∈ S ] ⟨ pr (fst c) (fst w) ∈ Fv ⟩ ∥₁
+    entryOf : (c : S) → ⟨ fst c ∈ Bv ⟩ → ∥ Σ[ w ∶ S ] ⟨ pr (fst c) (fst w) ∈ Fv ⟩ ∥₁
     entryOf c c∈ = rec₁ squash₁
       (λ { (q , (q∈ , h)) → map₁ (λ { (w , s , (e , _)) → w , subst (λ u → ⟨ u ∈ Fv ⟩) e q∈ })
                               (sndEx-out i0 i1 ⊤̇ (q ∷ c ∷ γ) h) })
@@ -1432,7 +1432,7 @@ For an outer environment with `suc n` positions, `lastFin` denotes its last posi
 
 ```agda
   lastFin : {n : ℕ} → Fin (suc n)
-  lastFin {zero} = zero
+  lastFin {0} = zero
   lastFin {suc n} = suc (lastFin {n})
 ```
 

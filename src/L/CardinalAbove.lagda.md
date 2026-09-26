@@ -96,7 +96,7 @@ The hierarchy contributes membership bridges, presentations, embedding machinery
 <!--/-->
 
 ```agda
-open import Cubical.HITs.CumulativeHierarchy.Base using ( _∈_; sett; setIsSet )
+open import Cubical.HITs.CumulativeHierarchy.Base using ( sett; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Properties
   using ( ∈∈ₛ; ⟪_⟫; ⟪_⟫↪; _∈ₛ_; extensionality; isEmb⟪_⟫↪ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
@@ -245,7 +245,7 @@ CardAboveLᵀ : Type (ℓ-suc ℓ)
 CardAboveLᵀ =
     (κ : SL.S) → IsOrd (fst κ) → IsCardinalL κ
   → (⟨ fst κ ∈ˢ ω ⟩ → ⊥₀)
-  → ∥ Σ[ θ ∈ SL.S ]
+  → ∥ Σ[ θ ∶ SL.S ]
 ```
 
 <!--en-->
@@ -519,7 +519,7 @@ Hartogs の入力は、最も弱い形で述べられる。すべての順序数
 ```agda
 NoInjOrd : Type (ℓ-suc ℓ)
 NoInjOrd = (x : SV.S) → IsOrd x
-         → ∥ Σ[ γ ∈ SV.S ] (IsOrd γ × (⟪ γ ⟫ ↪ ⟪ x ⟫ → ⊥₀)) ∥₁
+         → ∥ Σ[ γ ∶ SV.S ] (IsOrd γ × (⟪ γ ⟫ ↪ ⟪ x ⟫ → ⊥₀)) ∥₁
 ```
 
 <!--en-->
@@ -576,8 +576,8 @@ Suppose an explicit ordinal `γ` with no injection into `a` has been given. The 
 
 ```agda
 cardAboveAt : (a : SV.S) → IsOrd a
-  → Σ[ γ ∈ SV.S ] (IsOrd γ × (⟪ γ ⟫ ↪ ⟪ a ⟫ → ⊥₀))
-  → Σ[ θ ∈ SV.S ] (IsOrd θ × IsCardinal θ × ⟨ a ∈ˢ θ ⟩)
+  → Σ[ γ ∶ SV.S ] (IsOrd γ × (⟪ γ ⟫ ↪ ⟪ a ⟫ → ⊥₀))
+  → Σ[ θ ∶ SV.S ] (IsOrd θ × IsCardinal θ × ⟨ a ∈ˢ θ ⟩)
 cardAboveAt a oa (γ , oγ , noinj) =
   S.θ , S.θ-ord , S.θ-card θ∈sγ , S.a∈θ a∈sγ
 ```
@@ -622,7 +622,7 @@ The ambient existence theorem restores the truncation: from the Hartogs input, w
 
 ```agda
 ambientCardAbove : NoInjOrd → (a : SV.S) → IsOrd a
-  → ∥ Σ[ θ ∈ SV.S ] (IsOrd θ × IsCardinal θ × ⟨ a ∈ˢ θ ⟩) ∥₁
+  → ∥ Σ[ θ ∶ SV.S ] (IsOrd θ × IsCardinal θ × ⟨ a ∈ˢ θ ⟩) ∥₁
 ambientCardAbove ni a oa = map₁ (cardAboveAt a oa) (ni a oa)
 ```
 
@@ -639,7 +639,7 @@ noInjOrd→CardAboveLᵀ : NoInjOrd → CardAboveLᵀ
 noInjOrd→CardAboveLᵀ ni κ oκ cκ κ∉ω =
   map₁ build (ambientCardAbove ni (fst κ) oκ)
   where
-  build : Σ[ θ ∈ SV.S ] (IsOrd θ × IsCardinal θ × ⟨ fst κ ∈ˢ θ ⟩)
+  build : Σ[ θ ∶ SV.S ] (IsOrd θ × IsCardinal θ × ⟨ fst κ ∈ˢ θ ⟩)
 ```
 
 <!--en-->
@@ -651,7 +651,7 @@ The ambient cardinal is presented as an element of `L` at its own successor stag
 <!--/-->
 
 ```agda
-        → Σ[ θ ∈ SL.S ]
+        → Σ[ θ ∶ SL.S ]
             (IsOrd (fst θ) × IsCardinalL θ × ⟨ fst κ ∈ˢ fst θ ⟩)
   build (θ , oθ , cθ , κ∈θ) =
     ordL θ oθ , oθ , ambient→internal (ordL θ oθ) cθ , κ∈θ
@@ -717,7 +717,7 @@ A well-founded relation on the presentation of `a` is a Boolean relation that is
 
 ```agda
   WFR : Type ℓ
-  WFR = Σ[ R ∈ Rel ]
+  WFR = Σ[ R ∶ Rel ]
           ( ({x y z : ⟪ a ⟫} → Holds R x y → Holds R y z → Holds R x z)
           × WellFounded (λ x y → Holds R x y) )
 ```
@@ -861,7 +861,7 @@ The member's transitivity is transported from the collapse's ordinality along th
       tr : isTransV ot
       tr {x} {y} y∈x x∈ot = rec₁ (snd (y ∈ˢ ot)) outer x∈ot
         where
-        outer : Σ[ p ∈ ⟪ a ⟫ ] (col p ≡ x) → ⟨ y ∈ˢ ot ⟩
+        outer : Σ[ p ∶ ⟪ a ⟫ ] (col p ≡ x) → ⟨ y ∈ˢ ot ⟩
 ```
 
 <!--en-->
@@ -1012,7 +1012,7 @@ The fibre over a point consists of an index of a member of `μ` together with an
 
 ```agda
     Fib : ⟪ a ⟫ → Type ℓ
-    Fib x = Σ[ m ∈ ⟪ μ ⟫ ] (F m ≡ x)
+    Fib x = Σ[ m ∶ ⟪ μ ⟫ ] (F m ≡ x)
 ```
 
 <!--en-->
@@ -1038,7 +1038,7 @@ The relation `PreT x y` first requires actual fibres witnessing that both `x` an
 
 ```agda
     PreT : ⟪ a ⟫ → ⟪ a ⟫ → Type ℓ
-    PreT x y = Σ[ p ∈ Fib x ] Σ[ q ∈ Fib y ]
+    PreT x y = Σ[ p ∶ Fib x ] Σ[ q ∶ Fib y ]
                  ⟨ ⟪ μ ⟫↪ (fst p) ∈ₛ ⟪ μ ⟫↪ (fst q) ⟩
 ```
 
@@ -1350,7 +1350,7 @@ For the forward inclusion, suppose `b` belongs to `col (F m)`. The elimination l
       fwd b b∈ = rec₁ (snd (b ∈ₛ ⟪ μ ⟫↪ m)) go
                    (col-out (F m) b (∈∈ₛ {a = b} {b = col (F m)} .snd b∈))
         where
-        go : Σ[ r ∈ ⟪ a ⟫ ] ((r ≺ F m) × (col r ≡ b))
+        go : Σ[ r ∶ ⟪ a ⟫ ] ((r ≺ F m) × (col r ≡ b))
 ```
 
 <!--en-->

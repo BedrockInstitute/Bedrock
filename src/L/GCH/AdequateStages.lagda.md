@@ -645,7 +645,7 @@ If `x ∈ α`, the presentation fibre supplies an index `m` with `ι α m ≡ x`
   suc∈β x x∈ = subst (λ u → ⟨ sucV u ∈ β ⟩) (fib .snd)
     (tr β oβ (b5 .fst) (sucV (ι α (fib .fst))) b5∈ (b5 .snd .snd (fib .fst)))
     where
-    fib : Σ[ m ∈ ⟪ α ⟫ ] (ι α m ≡ x)
+    fib : Σ[ m ∶ ⟪ α ⟫ ] (ι α m ≡ x)
 ```
 
 <!--en-->
@@ -682,7 +682,7 @@ Fix one of the four witness constructions `f` and an index `m` presenting a memb
 
 ```agda
     land : (f : (c : V ℓ) (o : IsOrd c) → CS.S)
-           (b : Σ[ σ ∈ V ℓ ] (IsOrd σ × ((m : ⟪ α ⟫) → ⟨ st f m ∈ σ ⟩)))
+           (b : Σ[ σ ∶ V ℓ ] (IsOrd σ × ((m : ⟪ α ⟫) → ⟨ st f m ∈ σ ⟩)))
          → ⟨ b .fst ∈ β ⟩
          → (m : ⟪ α ⟫) → ⟨ fst (f (ι α m) (oc m)) ∈ Lset β ⟩
     land f b b∈ m =
@@ -746,7 +746,7 @@ A membership proof `c ∈ α` has an actual presentation fibre: it yields an ind
   wit : (c : V ℓ) → ⟨ c ∈ α ⟩ → Witnesses (Lset β) c
   wit c c∈ = subst (Witnesses (Lset β)) (fib .snd) (witAt (fib .fst))
     where
-    fib : Σ[ m ∈ ⟪ α ⟫ ] (ι α m ≡ c)
+    fib : Σ[ m ∶ ⟪ α ⟫ ] (ι α m ≡ c)
     fib = ∈-asFiber {a = c} {b = α} c∈
 ```
 </div>
@@ -830,7 +830,7 @@ The outward reading recovers, under truncation, a chain entry containing any giv
 <!--/-->
 
 ```agda
-  outof : (x : V ℓ) → ⟨ x ∈ γ ⟩ → ∥ Σ[ n ∈ ℕ ] ⟨ x ∈ ch n ⟩ ∥₁
+  outof : (x : V ℓ) → ⟨ x ∈ γ ⟩ → ∥ Σ[ n ∶ ℕ ] ⟨ x ∈ ch n ⟩ ∥₁
   outof x h = map₁ (λ { (n , hn) → lower n , hn })
     (union-family-out (Lift {ℓ-zero} {ℓ} ℕ) F x h)
 ```
@@ -875,8 +875,8 @@ The zeroth ordinal is the initial common bound. Each later ordinal applies `Boun
 <!--/-->
 
 ```agda
-  ch : ℕ → Σ[ β ∈ V ℓ ] IsOrd β
-  ch zero = base .fst , base .snd .fst
+  ch : ℕ → Σ[ β ∶ V ℓ ] IsOrd β
+  ch 0 = base .fst , base .snd .fst
   ch (suc n) = Bound1.β (ch n .fst) (ch n .snd) , Bound1.oβ (ch n .fst) (ch n .snd)
 ```
 
@@ -1040,7 +1040,7 @@ The theorem returns an explicit ordinal index `γ`, together with `p ∈ γ` and
 
 ```agda
 adequate-above : (p : V ℓ) → IsOrd p
-               → Σ[ γ ∈ V ℓ ] (IsOrd γ × ⟨ p ∈ γ ⟩ × Adequate γ)
+               → Σ[ γ ∶ V ℓ ] (IsOrd γ × ⟨ p ∈ γ ⟩ × Adequate γ)
 adequate-above p op = Above.γ p op , ( Above.oγ p op , ( Above.p∈γ p op , Above.adequate p op ))
 ```
 
@@ -1063,7 +1063,7 @@ adequate-above p op = Above.γ p op , ( Above.oγ p op , ( Above.p∈γ p op , A
 ```agda
 Superadequate : V ℓ → Type (ℓ-suc ℓ)
 Superadequate lam = (d : V ℓ) → ⟨ d ∈ lam ⟩
-  → ∥ Σ[ γ ∈ V ℓ ] (⟨ γ ∈ lam ⟩ × ⟨ d ∈ γ ⟩ × Adequate γ) ∥₁
+  → ∥ Σ[ γ ∶ V ℓ ] (⟨ γ ∈ lam ⟩ × ⟨ d ∈ γ ⟩ × Adequate γ) ∥₁
 ```
 
 <!--en-->
@@ -1091,8 +1091,8 @@ The zeroth entry is the explicit ordinal index returned by `adequate-above α o�
 <!--/-->
 
 ```agda
-  ch : ℕ → Σ[ γ ∈ V ℓ ] (IsOrd γ × Adequate γ)
-  ch zero =
+  ch : ℕ → Σ[ γ ∶ V ℓ ] (IsOrd γ × Adequate γ)
+  ch 0 =
     adequate-above α oα .fst
     , ( adequate-above α oα .snd .fst , adequate-above α oα .snd .snd .snd )
   ch (suc n) =
@@ -1289,7 +1289,7 @@ The exported theorem returns an explicit ordinal index `λ` above `α`, together
 
 ```agda
 superadequate-above : (α : V ℓ) → IsOrd α
-                    → Σ[ lam ∈ V ℓ ] (IsOrd lam × ⟨ α ∈ lam ⟩ × Adequate lam × Superadequate lam)
+                    → Σ[ lam ∶ V ℓ ] (IsOrd lam × ⟨ α ∈ lam ⟩ × Adequate lam × Superadequate lam)
 superadequate-above α oα =
   Super.lam α oα , ( Super.olam α oα , ( Super.α∈λ α oα , ( Super.adequate α oα , Super.super α oα )))
 ```

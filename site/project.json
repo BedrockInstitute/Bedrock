@@ -28,6 +28,7 @@
   "expression_types": "_build/expression-types.json",
   "favicon": "site/static/assets/favicon.svg",
   "logo": "site/static/assets/favicon.svg",
+  "stylesheets": ["site/static/bedrock-diagrams.css"],
   "base_url": "",
   "prelude_module": "Base.Prelude",
   "landing_module": "Origin",
@@ -112,7 +113,8 @@
     "inline_math_review": true,
     "formal_setup": true,
     "trilingual": true,
-    "level_name_convention": true
+    "level_name_convention": true,
+    "natural_literal_default": true
   },
   "inline_math_approvals": "site/inline-latex-approvals.json",
   "visible_import_chapters": [
@@ -165,7 +167,6 @@
         "fst",
         "snd",
         "Σ",
-        "Σ-syntax",
         "Σ≡Prop"
       ],
       "Cubical.Functions.Logic": [

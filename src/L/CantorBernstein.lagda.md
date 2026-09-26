@@ -86,8 +86,8 @@ The function `readL` performs this passage. Given a coded graph from `a` to `b`,
 
 ```agda
 setPL a = small-set (fst a)
-readL : (a b : S) → Σ[ F ∈ S ] InjCode F a b
-      → Σ[ f ∈ (⟪ fst a ⟫ → ⟪ fst b ⟫) ]
+readL : (a b : S) → Σ[ F ∶ S ] InjCode F a b
+      → Σ[ f ∶ (⟪ fst a ⟫ → ⟪ fst b ⟫) ]
           ((x y : ⟪ fst a ⟫) → f x ≡ f y → x ≡ y)
 readL a b (F , sv , dm , ij , ran) = SM.small , SM.small-inj
 ```
@@ -105,7 +105,7 @@ The abstract Cantor–Schröder–Bernstein argument can now be instantiated wit
   module SM = Small F a b sv dm ij ran
 
 module MutualInjL = MutualInj S (λ a → ⟪ fst a ⟫)
-  (λ a b → Σ[ F ∈ S ] InjCode F a b) setPL readL
+  (λ a b → Σ[ F ∶ S ] InjCode F a b) setPL readL
 mutual-inj→bijection : (a b : S) → InjL a b → InjL b a
 ```
 
@@ -118,8 +118,8 @@ The public theorem uses the second form because `InjL` records only the proposit
 <!--/-->
 
 ```agda
-  → ∥ Σ[ h ∈ (⟪ fst a ⟫ → ⟪ fst b ⟫) ]
+  → ∥ Σ[ h ∶ (⟪ fst a ⟫ → ⟪ fst b ⟫) ]
        (((x y : ⟪ fst a ⟫) → h x ≡ h y → x ≡ y)
-     × ((y : ⟪ fst b ⟫) → ∥ Σ[ x ∈ ⟪ fst a ⟫ ] (h x ≡ y) ∥₁)) ∥₁
+     × ((y : ⟪ fst b ⟫) → ∥ Σ[ x ∶ ⟪ fst a ⟫ ] (h x ≡ y) ∥₁)) ∥₁
 mutual-inj→bijection = MutualInjL.∃bijection
 ```

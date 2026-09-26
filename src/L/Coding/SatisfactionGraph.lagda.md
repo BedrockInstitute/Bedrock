@@ -437,7 +437,7 @@ The host-level type `GraphWitOn`{.Agda} flattens the same information into five 
 private
   GraphWitOn : ∀ {n} → S → Fin n → Fin n → S ^ n → Type (ℓ-suc ℓ)
   GraphWitOn W x y γ =
-    Σ[ ν ∈ (Fin 10 → S) ] (Σ[ E ∈ S ] (Σ[ C ∈ S ] (Σ[ T ∈ S ] (Σ[ b ∈ S ] ((fst b ≡ fst W) × (Tags (ev ν E C T b γ) NN × (⟨ (ev ν E C T b γ) ⊨ towerAt Ei Bi (NN f0) ⟩ × (⟨ (ev ν E C T b γ) ⊨ closedAt Ci ⟩ × (⟨ (ev ν E C T b γ) ⊨ domAt Ti Ci ⟩ × (⟨ pr (fst (lookup x γ)) (fst (lookup y γ)) ∈ fst T ⟩ × ⟨ (ev ν E C T b γ) ⊨ tableAt Ti Bi Ci Ei NN ⟩))))))))))
+    Σ[ ν ∶ (Fin 10 → S) ] (Σ[ E ∶ S ] (Σ[ C ∶ S ] (Σ[ T ∶ S ] (Σ[ b ∶ S ] ((fst b ≡ fst W) × (Tags (ev ν E C T b γ) NN × (⟨ (ev ν E C T b γ) ⊨ towerAt Ei Bi (NN f0) ⟩ × (⟨ (ev ν E C T b γ) ⊨ closedAt Ci ⟩ × (⟨ (ev ν E C T b γ) ⊨ domAt Ti Ci ⟩ × (⟨ pr (fst (lookup x γ)) (fst (lookup y γ)) ∈ fst T ⟩ × ⟨ (ev ν E C T b γ) ⊨ tableAt Ti Bi Ci Ei NN ⟩))))))))))
 ```
 
 <!--en-->
@@ -789,17 +789,17 @@ closed key set, or table.
 <!--en-->
 When the carrier is already available as an element `B`{.Agda}, the second
 instance uses the constant `B`{.Agda} instead of referring to an outer carrier
-slot. It has exactly two free positions: `suc zero`{.Agda} is the input key and
-`zero`{.Agda} is the proposed output value. The rest of the frame is unchanged,
+slot. It has exactly two free positions: `suc zero`{.Agda type="Fin 2"} is the input key and
+`zero`{.Agda type="Fin 2"} is the proposed output value. The rest of the frame is unchanged,
 so the formula still says merely that some locally suitable candidate package
 records this query. In particular, `SatisfactionClauses` supplies totality and
 domain restriction for the candidate table together with its ten local
 equations; neither those clauses nor this instance by itself makes the graph
 single-valued.
 <!--zh-->
-当载体已经作为元素 `B`{.Agda} 给出时，第二个实例不再引用外围载体槽，而是使用常元 `B`{.Agda}。它恰有两个自由位置：`suc zero`{.Agda} 是输入键，`zero`{.Agda} 是候选输出值。框架的其余部分保持不变，所以这条公式仍只表示某组局部合格的候选数据记录了这次查询。具体而言，`SatisfactionClauses` 提供候选表的全定义性、键域限制以及十条局部方程；无论这些子句还是这个实例本身，都没有使该图成为单值关系。
+当载体已经作为元素 `B`{.Agda} 给出时，第二个实例不再引用外围载体槽，而是使用常元 `B`{.Agda}。它恰有两个自由位置：`suc zero`{.Agda type="Fin 2"} 是输入键，`zero`{.Agda type="Fin 2"} 是候选输出值。框架的其余部分保持不变，所以这条公式仍只表示某组局部合格的候选数据记录了这次查询。具体而言，`SatisfactionClauses` 提供候选表的全定义性、键域限制以及十条局部方程；无论这些子句还是这个实例本身，都没有使该图成为单值关系。
 <!--ja-->
-台が要素 `B`{.Agda} としてすでに与えられている場合、第二の具体化では外側の台のスロットを参照せず、定数 `B`{.Agda} を用いる。自由な位置はちょうど二つで、`suc zero`{.Agda} が入力のキー、`zero`{.Agda} が候補となる出力値である。枠組みの残りは変わらないため、この論理式が述べるのは、局所的な条件を満たす何らかの候補データがこの問い合わせを記録することだけである。具体的には、`SatisfactionClauses` が候補表の全域性、キー領域の制限、十個の局所方程式を与えるが、それらの節にも、この具体化そのものにも、グラフを一価にする条件はない。
+台が要素 `B`{.Agda} としてすでに与えられている場合、第二の具体化では外側の台のスロットを参照せず、定数 `B`{.Agda} を用いる。自由な位置はちょうど二つで、`suc zero`{.Agda type="Fin 2"} が入力のキー、`zero`{.Agda type="Fin 2"} が候補となる出力値である。枠組みの残りは変わらないため、この論理式が述べるのは、局所的な条件を満たす何らかの候補データがこの問い合わせを記録することだけである。具体的には、`SatisfactionClauses` が候補表の全域性、キー領域の制限、十個の局所方程式を与えるが、それらの節にも、この具体化そのものにも、グラフを一価にする条件はない。
 <!--/-->
 
 ```agda

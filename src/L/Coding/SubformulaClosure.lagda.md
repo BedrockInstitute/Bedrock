@@ -138,7 +138,7 @@ the two instances rather than the subject.
 ```agda
   Peel : V ℓ → Type (ℓ-suc ℓ)
   Peel C = (x : V ℓ) → ⟨ x ∈ C ⟩
-         → ∥ (Σ[ m ∈ ℕ ] Σ[ ψ ∈ Formula K m ]
+         → ∥ (Σ[ m ∶ ℕ ] Σ[ ψ ∶ Formula K m ]
                ((x ≡ key f h ψ) × ((z : V ℓ) → ⟨ z ∈ Cl ψ ⟩ → ⟨ z ∈ C ⟩))) ∥₁
 ```
 

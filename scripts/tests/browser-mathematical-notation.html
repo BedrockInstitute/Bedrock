@@ -1,0 +1,154 @@
+<!doctype html><html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mathematical notation regression</title><base href="/zh/Base.Prelude.html">
+<link rel="stylesheet" href="/static/outcrop.css"><link rel="stylesheet" href="/static/appearance.css">
+<script>window.outcrop={baseUrl:'',lang:'zh',module:'Base.Prelude',chapter:'Base.Prelude',preludeModule:'Base.Prelude',storageNamespace:'bedrock',naturalLiteralDefault:true};</script>
+<script src="/static/appearance.js"></script><script defer src="/static/universe-levels.js"></script><script defer src="/static/mathematical-notation.js"></script><script type="module" src="/static/outcrop.js"></script>
+</head><body><h1 id="status">RUNNING mathematical notation</h1><main id="main-content"><article id="fixture"><div class="agda-code-preview" data-preview-lines="1"><div class="agda-code-preview-clip"><pre class="Agda"><span class="agda-code-content">infix 2 Σ[]-syntax Σ[∶]-syntax
+Σ[]-syntax : Type
+Σ[]-syntax = Type</span></pre></div><button class="agda-code-preview-toggle" type="button" hidden aria-expanded="true"></button></div></article></main><pre id="report"></pre>
+<script defer src="/static/code-preview.js"></script>
+<script>
+const checks=[], delay=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+function check(name,ok){checks.push({name,ok:!!ok});document.querySelector('#report').textContent=JSON.stringify(checks,null,2);if(!ok)throw Error(name);}
+async function until(test){const start=Date.now();while(!test()){if(Date.now()-start>10000)throw Error('Timed out');await delay(30);}return test();}
+document.addEventListener('DOMContentLoaded',async()=>{
+ try {
+  const fixture=document.querySelector('#fixture');
+  const preview=fixture.querySelector('.agda-code-preview');
+  const previewToggle=preview.querySelector('button');
+  check('Agda source preview initially exposes one line',preview.classList.contains('is-collapsed')&&!previewToggle.hidden&&previewToggle.getAttribute('aria-expanded')==='false');
+  previewToggle.click();
+  check('Agda source preview can expand',!preview.classList.contains('is-collapsed')&&previewToggle.getAttribute('aria-expanded')==='true');
+  previewToggle.click();
+  check('Agda source preview can collapse again',preview.classList.contains('is-collapsed'));
+  for(const [count,expected] of [[1,'+'],[2,'++'],[3,'+3'],[4,'+4']]){
+    const source=count===1?'suc n':'suc (' .repeat(count-1)+'suc n'+')'.repeat(count-1);
+    const pre=document.createElement('pre');pre.className='Agda';
+    const node=document.createElement('span');node.className='expr-node';node.dataset.sourceNotation='nat-suc';node.dataset.notationValue='n';node.dataset.notationCount=count;node.dataset.notationType='ℕ';
+    node.innerHTML='<a class="InductiveConstructor" href="Cubical.Data.Nat.Base.html#1" data-type="Cubical.Data.Nat.Base#1">'+source+'</a>';
+    pre.appendChild(node);fixture.appendChild(pre);
+    const before=pre.textContent;outcropMathematicalNotation.scan(pre);
+    const badge=pre.querySelector('.nat-suc-notation');
+    check('suc depth '+count+' certified badge',!!badge&&pre.textContent===before);
+    check('suc depth '+count+' entire exponent raised',getComputedStyle(badge,'::after').content==='"'+expected+'"'&&getComputedStyle(badge,'::after').verticalAlign==='super');
+  check('suc depth '+count+' accessible label',badge.getAttribute('aria-label').includes(count<=2?'⁺'.repeat(count):'⁺'+String(count).replace(/[0-9]/g,d=>'⁰¹²³⁴⁵⁶⁷⁸⁹'[Number(d)])));
+  }
+  const inlineSuccessors=document.createElement('p');
+  inlineSuccessors.innerHTML='<code class="Agda inline-ref"><a href="Base.Prelude.html#1" data-agda-origin="Agda.Builtin.Nat.html#234">suc</a> (<a href="Base.Prelude.html#1" data-agda-origin="Agda.Builtin.Nat.html#234">suc</a> (<a href="Base.Prelude.html#1" data-agda-origin="Agda.Builtin.Nat.html#234">suc</a> n))</code> '+
+    '<span data-outcrop-notation="source"><code class="Agda inline-ref"><a href="Base.Prelude.html#1" data-agda-origin="Agda.Builtin.Nat.html#234">suc</a> (suc (suc n))</code></span> '+
+    '<code class="Agda inline-ref"><a href="Base.Prelude.html#2" data-agda-origin="Cubical.Data.FinData.Base.html#123">suc</a> (suc n)</code> '+
+    '<code class="Agda inline-ref"><a href="Base.Prelude.html#1" data-agda-origin="Agda.Builtin.Nat.html#234">suc</a> n</code>';
+  inlineSuccessors.querySelector('code').dataset.agdaInlineType='ℕ';
+  inlineSuccessors.querySelector('code').dataset.hoverHtml='<span class="Agda">ℕ</span>';
+  inlineSuccessors.querySelector('code').setAttribute('role','button');
+  inlineSuccessors.querySelector('code').setAttribute('tabindex','0');
+  fixture.appendChild(inlineSuccessors);outcropMathematicalNotation.scan(inlineSuccessors);
+  check('explicitly typed inline natural successors render',!!inlineSuccessors.querySelector('.nat-suc-notation')&&inlineSuccessors.querySelector('code').textContent==='suc (suc (suc n))');
+  check('compact natural notation has only one keyboard popup target',!inlineSuccessors.querySelector('code').hasAttribute('tabindex')&&inlineSuccessors.querySelector('.nat-suc-notation[tabindex="0"][data-hover-html]'));
+  check('inline source opt-out remains raw',!inlineSuccessors.querySelector('[data-outcrop-notation="source"] .source-notation'));
+  check('inline Fin successor is not mislabeled natural',!inlineSuccessors.querySelectorAll('code')[2].querySelector('.nat-suc-notation'));
+  check('unmarked Nat constructor links stay raw',!inlineSuccessors.querySelectorAll('code')[3].querySelector('.nat-suc-notation'));
+  const typedFin=document.createElement('code');typedFin.className='Agda inline-ref';typedFin.dataset.agdaInlineType='Fin 3';
+  typedFin.dataset.hoverHtml='<code class="Agda inline-ref">Fin 3</code>';typedFin.textContent='suc zero';
+  typedFin.setAttribute('role','button');typedFin.setAttribute('tabindex','0');
+  fixture.appendChild(typedFin);outcropMathematicalNotation.scan(typedFin);
+  check('explicitly typed Fin constructor displays its numeric value',typedFin.querySelector('.fin-notation')?.dataset.mathLabel==='1'&&typedFin.textContent==='suc zero');
+  check('explicit Fin type survives in the source hover',typedFin.querySelector('.fin-notation')?.dataset.hoverHtml.includes('Fin 3'));
+  check('compact finite notation has only one keyboard popup target',!typedFin.hasAttribute('tabindex')&&typedFin.querySelector('.fin-notation[tabindex="0"][data-hover-html]'));
+  const parens=document.createElement('code');parens.className='Agda inline-ref';
+  parens.innerHTML='Fin (<span class="expr-node" data-source-notation="nat-suc" data-notation-value="n" data-notation-count="1" data-notation-type="ℕ">suc n</span>)';
+  fixture.appendChild(parens);outcropMathematicalNotation.scan(parens);
+  check('compact successor elides only its enclosing inline parentheses',parens.querySelectorAll('.notation-elided-parenthesis').length===2&&parens.textContent==='Fin (suc n)');
+  const blockParens=document.createElement('pre');blockParens.className='Agda';
+  blockParens.innerHTML='<a class="Symbol">(</a><span class="expr-node" data-source-notation="nat-suc" data-notation-value="n" data-notation-count="1" data-notation-type="ℕ">suc n</span><a class="Symbol">)</a>';
+  fixture.appendChild(blockParens);outcropMathematicalNotation.scan(blockParens);
+  check('compact successor elides compiler-highlighted parentheses',blockParens.querySelectorAll('.notation-elided-parenthesis').length===2&&blockParens.textContent==='(suc n)');
+  const fin=document.createElement('pre');fin.className='Agda';fin.innerHTML='<span class="expr-node" data-source-notation="fin" data-notation-value="2" data-notation-type="Fin 3">suc (suc zero)</span>';
+  fixture.appendChild(fin);outcropMathematicalNotation.scan(fin);check('Fin value is notation, source intact',fin.querySelector('.fin-notation')?.textContent==='suc (suc zero)');
+  const literal=document.createElement('pre');literal.className='Agda';literal.innerHTML='<a class="Number" id="40">12</a>';fixture.appendChild(literal);outcropMathematicalNotation.scan(literal);
+  check('natural literal offers type help',literal.querySelector('.natural-literal')?.dataset.hoverHtml.includes('ℕ'));
+  const fixity=document.createElement('pre');fixity.className='Agda';
+  fixity.innerHTML='<span class="agda-code-content"><a class="Keyword">infix</a> <a class="Number">2</a> Σ[]-syntax\nvalue = <a class="Number">2</a></span>';
+  fixture.appendChild(fixity);outcropMathematicalNotation.scan(fixity);
+  check('fixity precedence is not a natural-number term',!fixity.querySelectorAll('a.Number')[0].classList.contains('natural-literal'));
+  check('literal on following line keeps natural-number help',fixity.querySelectorAll('a.Number')[1].classList.contains('natural-literal'));
+  const sigma=document.createElement('pre');sigma.className='Agda';sigma.innerHTML='<span class="expr-node"><a data-name="Σ[∶]-syntax" href="Base.Prelude.html#1">Σ[</a> x ∶ A ] B x</span>';
+  fixture.appendChild(sigma);outcropMathematicalNotation.scan(sigma);
+  check('Sigma retains its new Agda syntax',sigma.textContent==='Σ[ x ∶ A ] B x'&&!sigma.querySelector('.source-notation'));
+  const pi=document.createElement('pre');pi.className='Agda';pi.textContent='(x : A) → B x';
+  fixture.appendChild(pi);outcropMathematicalNotation.scan(pi);
+  check('Pi retains ordinary Agda form',pi.textContent==='(x : A) → B x'&&!pi.querySelector('.source-notation'));
+  const source=document.createElement('div');source.dataset.outcropNotation='source';
+  source.innerHTML='<pre class="Agda"><span class="expr-node" data-source-notation="nat-suc" data-notation-value="n" data-notation-count="3" data-notation-type="ℕ">suc (suc (suc n))</span></pre>'+
+    '<pre class="Agda"><span class="expr-node" data-source-notation="fin" data-notation-value="2" data-notation-type="Fin 3">suc (suc zero)</span></pre>'+
+    '<code class="Agda"><a class="Number">12</a></code>'+
+    '<code class="Agda"><a class="Function" href="Base.Prelude.html#1">ℓ-suc</a> ℓ</code>'+
+    '<code class="Agda">(x : A) → B x</code>'+
+    '<pre class="Agda"><span class="expr-node"><a data-name="Σ[∶]-syntax" href="Base.Prelude.html#1">Σ[</a> x ∶ A ] B x</span></pre>';
+  fixture.appendChild(source);
+  outcropUniverseLevels.scan(source);outcropMathematicalNotation.scan(source);
+  check('source opt-out preserves all original Agda text',source.textContent.includes('suc (suc (suc n))')&&source.textContent.includes('ℓ-suc ℓ'));
+  check('source opt-out suppresses every deep notation kind',!source.querySelector('.source-notation, .natural-literal'));
+  const inline=document.createElement('p');inline.innerHTML='Given <code class="Agda inline-ref">b̂ : Lift ℓ A</code>, continue.';
+  fixture.appendChild(inline);
+  const inlineStyle=getComputedStyle(inline.querySelector('code'));
+  check('combining hat clears inline code upper frame',parseFloat(inlineStyle.paddingTop)>=3&&parseFloat(inlineStyle.paddingTop)>parseFloat(inlineStyle.paddingBottom));
+  const badge=fixture.querySelector('.nat-suc-notation');badge.focus();
+  const popup=await until(()=>document.querySelector('.boilerplate-hover-popup'));
+  check('original Agda is available in shared popup',popup.textContent.includes('suc n'));
+  check('popup includes certified natural type',popup.querySelector('.source-notation-type')?.textContent==='ℕ');
+  check('popup does not recursively redecorate source',!popup.querySelector('.nat-suc-notation'));
+  const preludeHtml=await (await fetch('/zh/Base.Prelude.html')).text();
+  const preludeDoc=new DOMParser().parseFromString(preludeHtml,'text/html');
+  const importBlock=name=>[...preludeDoc.querySelectorAll('pre.Agda')].find(pre=>pre.textContent.includes('open import '+name+' public'));
+  const natBlock=importBlock('Cubical.Data.Nat'),finBlock=importBlock('Cubical.Data.FinData');
+  check('compiled Nat and Fin imports are present',!!natBlock&&!!finBlock);
+  const constructorId=(block,name)=>[...block.querySelectorAll('a.InductiveConstructor')].find(a=>a.textContent===name)?.id;
+  const sidecar=await (await fetch('/zh/types/Base.Prelude.json')).json();
+  const plain=html=>new DOMParser().parseFromString('<div>'+html+'</div>','text/html').body.textContent;
+  for(const name of ['zero','suc']){
+    const natType=plain(sidecar[constructorId(natBlock,name)]||'');
+    const finType=plain(sidecar[constructorId(finBlock,name)]||'');
+    check('Nat '+name+' keeps natural constructor type',/ℕ|Nat/.test(natType)&&!natType.includes('Fin'));
+    check('Fin '+name+' keeps finite-index constructor type',finType.includes('Fin'));
+  }
+  const natZero=constructorId(natBlock,'zero');
+  const preludeLink=document.createElement('a');preludeLink.className='type-definition-link';
+  preludeLink.href='/zh/Base.Prelude.html#'+natZero;
+  preludeLink.dataset.name='zero';preludeLink.dataset.type='Base.Prelude#'+natZero;
+  fixture.appendChild(preludeLink);preludeLink.click();
+  const preludeFrame=await until(()=>document.querySelector('.definition-modal-frame.is-ready'));
+  const modalPreludeDoc=preludeFrame.contentDocument;
+  check('Prelude mirror reader initialized before reveal',modalPreludeDoc.documentElement.dataset.outcropReaderReady==='true');
+  const importTarget=modalPreludeDoc.getElementById(natZero);
+  const preludeHeadings=[...modalPreludeDoc.querySelectorAll('article h2[id], article h3[id], article h4[id], article h5[id], article h6[id]')];
+  const importSection=preludeHeadings.filter(heading=>heading.compareDocumentPosition(importTarget)&Node.DOCUMENT_POSITION_FOLLOWING).at(-1);
+  check('Prelude imported definition has an enclosing section',!!importSection&&!!importTarget.closest('pre.Agda'));
+  await modalPreludeDoc.fonts.ready;await delay(350);
+  const preludeSticky=modalPreludeDoc.getElementById('section-sticky');
+  const preludeScroller=modalPreludeDoc.getElementById('main-content');
+  const preludeTop=preludeSticky?preludeSticky.getBoundingClientRect().bottom:preludeScroller.getBoundingClientRect().top;
+  const importOffset=importSection.getBoundingClientRect().top-preludeTop;
+  check('Prelude import modal aligns its section heading (offset '+importOffset.toFixed(1)+'px, scroll '+preludeScroller.scrollTop.toFixed(1)+'/'+(preludeScroller.scrollHeight-preludeScroller.clientHeight).toFixed(1)+', overflow '+getComputedStyle(preludeScroller).overflowY+', modal '+modalPreludeDoc.documentElement.classList.contains('definition-modal-document')+', heading '+importSection.textContent.trim()+')',Math.abs(importOffset)<3);
+  check('Prelude import keeps definition identity for enter-page',document.querySelector('.definition-modal-jump').hash==='#'+natZero);
+  document.querySelector('.definition-modal-close').click();
+  const external=document.createElement('a');external.className='type-definition-link';
+  external.href='/zh/Cubical.Core.Primitives.html#6245';external.dataset.name='Σ-syntax';fixture.appendChild(external);
+  external.click();
+  const modalFrame=await until(()=>document.querySelector('.definition-modal-frame.is-ready'));
+  const modalDoc=modalFrame.contentDocument;
+  check('external mirror reader initialized before reveal',modalDoc.documentElement.dataset.outcropReaderReady==='true');
+  const sigmaTarget=modalDoc.getElementById('6245');
+  check('external definition target is present',!!sigmaTarget);
+  await modalDoc.fonts.ready;
+  await delay(350);
+  const scroller=modalDoc.getElementById('main-content');
+  const sticky=modalDoc.getElementById('section-sticky');
+  const expectedTop=sticky?sticky.getBoundingClientRect().bottom:scroller.getBoundingClientRect().top;
+  check('external definition aligns its line, not whole-file pre',
+    Math.abs(sigmaTarget.getBoundingClientRect().top-expectedTop)<3);
+  document.querySelector('.definition-modal-close').click();
+  document.querySelector('#status').textContent='PASS '+checks.length+'/'+checks.length;
+ } catch(error){document.querySelector('#status').textContent='FAIL '+error.message;console.error(error);}
+});
+</script></body></html>

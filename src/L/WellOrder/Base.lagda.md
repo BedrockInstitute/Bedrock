@@ -209,7 +209,7 @@ Both components of `IsLeast P a`{.Agda} are propositions: the first by the certi
   isPropIsLeast P a = isProp× (snd (P a)) (isPropΠ λ b → isPropΠ λ _ → isProp→ isProp⊥)
 
   isPropLeastOf : {ℓ'' : Level} (P : A → hProp ℓ'')
-                → isProp (Σ[ a ∈ A ] IsLeast P a)
+                → isProp (Σ[ a ∶ A ] IsLeast P a)
   isPropLeastOf P (m , pm , minm) (m' , pm' , minm') =
     Σ≡Prop (isPropIsLeast P) (decide (tri∙ m m'))
 ```
@@ -239,17 +239,17 @@ Here is the search itself. It takes excluded middle at the level where the quest
 <!--/-->
 
 <!--en-->
-The elimination of the truncation in the hypothesis is legitimate because the target `Σ[ a ∈ A ] IsLeast P a`{.Agda} was shown to be a proposition by `isPropLeastOf`{.Agda}. So from the merely inhabited subset we may extract some starting witness `a₀` with its certificate, and then begin the descent `go a₀ (wf∙ a₀) pa₀`{.Agda}: the accessibility data `wf∙ a₀`{.Agda}, part of the bundle, is the fuel for the recursion. Note that the starting witness is arbitrary; the descent, not the choice of starting point, produces the least element.
+The elimination of the truncation in the hypothesis is legitimate because the target `Σ[ a ∶ A ] IsLeast P a`{.Agda} was shown to be a proposition by `isPropLeastOf`{.Agda}. So from the merely inhabited subset we may extract some starting witness `a₀` with its certificate, and then begin the descent `go a₀ (wf∙ a₀) pa₀`{.Agda}: the accessibility data `wf∙ a₀`{.Agda}, part of the bundle, is the fuel for the recursion. Note that the starting witness is arbitrary; the descent, not the choice of starting point, produces the least element.
 <!--zh-->
-假设中截断的消去是合法的，因为目标 `Σ[ a ∈ A ] IsLeast P a`{.Agda} 已被 `isPropLeastOf`{.Agda} 证明为命题。于是可从仅仅非空的子集中提取某个初始见证 `a₀` 及其证书，然后开始下降 `go a₀ (wf∙ a₀) pa₀`{.Agda}：作为束一部分的可及性数据 `wf∙ a₀`{.Agda} 正是递归的燃料。注意初始见证是任意的；产出极小元的是下降过程，而非起点的选取。
+假设中截断的消去是合法的，因为目标 `Σ[ a ∶ A ] IsLeast P a`{.Agda} 已被 `isPropLeastOf`{.Agda} 证明为命题。于是可从仅仅非空的子集中提取某个初始见证 `a₀` 及其证书，然后开始下降 `go a₀ (wf∙ a₀) pa₀`{.Agda}：作为束一部分的可及性数据 `wf∙ a₀`{.Agda} 正是递归的燃料。注意初始见证是任意的；产出极小元的是下降过程，而非起点的选取。
 <!--ja-->
-仮定の切り捨ての除去が正当なのは、目標 `Σ[ a ∈ A ] IsLeast P a`{.Agda} が `isPropLeastOf`{.Agda} によって命題と示されているからである。したがって、単に非空な部分集合から出発点の証人 `a₀` とその証明書を取り出し、降下 `go a₀ (wf∙ a₀) pa₀`{.Agda} を始められる。束の一部である到達可能性のデータ `wf∙ a₀`{.Agda} が再帰の燃料である。出発点の証人は任意であることに注意してほしい。最小要素を生み出すのは出発点の選択ではなく降下のほうである。
+仮定の切り捨ての除去が正当なのは、目標 `Σ[ a ∶ A ] IsLeast P a`{.Agda} が `isPropLeastOf`{.Agda} によって命題と示されているからである。したがって、単に非空な部分集合から出発点の証人 `a₀` とその証明書を取り出し、降下 `go a₀ (wf∙ a₀) pa₀`{.Agda} を始められる。束の一部である到達可能性のデータ `wf∙ a₀`{.Agda} が再帰の燃料である。出発点の証人は任意であることに注意してほしい。最小要素を生み出すのは出発点の選択ではなく降下のほうである。
 <!--/-->
 
 ```agda
   hostLeastOf : {ℓ'' : Level} → LEM (ℓ-max ℓc (ℓ-max ℓₚ ℓ''))
           → (P : A → hProp ℓ'')
-          → ∥ Σ[ a ∈ A ] ⟨ P a ⟩ ∥₁ → Σ[ a ∈ A ] IsLeast P a
+          → ∥ Σ[ a ∶ A ] ⟨ P a ⟩ ∥₁ → Σ[ a ∶ A ] IsLeast P a
   hostLeastOf {ℓ''} lem P =
     rec₁ (isPropLeastOf P) (λ { (a₀ , pa₀) → go a₀ (wf∙ a₀) pa₀ })
 ```
@@ -264,7 +264,7 @@ The auxiliary `go` receives an element `a`, its accessibility data, and a certif
 
 ```agda
     where
-    go : (a : A) → Acc _<∙_ a → ⟨ P a ⟩ → Σ[ m ∈ A ] IsLeast P m
+    go : (a : A) → Acc _<∙_ a → ⟨ P a ⟩ → Σ[ m ∶ A ] IsLeast P m
     go a (acc rs) pa = decide (lem (Smaller , squash₁))
       where
       Smaller : Type (ℓ-max ℓc (ℓ-max ℓₚ ℓ''))
@@ -279,8 +279,8 @@ Applying `lem` to `Smaller` yields either a proof or a refutation, and `decide` 
 <!--/-->
 
 ```agda
-      Smaller = ∥ Σ[ b ∈ A ] ((b <∙ a) × ⟨ P b ⟩) ∥₁
-      decide : Dec Smaller → Σ[ m ∈ A ] IsLeast P m
+      Smaller = ∥ Σ[ b ∶ A ] ((b <∙ a) × ⟨ P b ⟩) ∥₁
+      decide : Dec Smaller → Σ[ m ∶ A ] IsLeast P m
       decide (yes q) = rec₁ (isPropLeastOf P)
         (λ { (b , (b<a , pb)) → go b (rs b b<a) pb }) q
       decide (no ¬q) = a , (pa , λ b pb b<a → ¬q ∣ b , (b<a , pb) ∣₁)
@@ -299,7 +299,7 @@ The theorem `hostLeastOf` is the unrestricted host-level utility: its predicate 
       {K : Type ℓk} {ι : K → ZFStructure.S 𝒮}
       {P : A → hProp ℓs} → Semantics.FormulaPredicate 𝒮 A K ι P
       → LEM (ℓ-max ℓc (ℓ-max ℓₚ ℓs))
-      → ∥ Σ[ a ∈ A ] ⟨ P a ⟩ ∥₁ → Σ[ a ∈ A ] IsLeast P a
+      → ∥ Σ[ a ∶ A ] ⟨ P a ⟩ ∥₁ → Σ[ a ∶ A ] IsLeast P a
   leastOfFormula {P = P} defined lem = hostLeastOf lem P
 ```
 </div>

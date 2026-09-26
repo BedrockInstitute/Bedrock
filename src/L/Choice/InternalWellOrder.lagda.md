@@ -397,7 +397,7 @@ One layer outward, `ro` is fixed to the canonical code order, while the existenc
     Five : (tw pw rl cs ro : S) → Type (ℓ-suc ℓ)
     Five tw pw rl cs ro =
         ⟨ (ro ∷ cs ∷ rl ∷ pw ∷ tw ∷ γ) ⊨ (var zero ≐ con codeOrder) ⟩
-      × ∥ (Σ[ c0 ∈ S ] Six tw pw rl cs ro c0) ∥₁
+      × ∥ (Σ[ c0 ∶ S ] Six tw pw rl cs ro c0) ∥₁
 ```
 
 <!--en-->
@@ -412,7 +412,7 @@ The code-set clause characterizes `cs` over the bound tower. When the formula is
     Four : (tw pw rl cs : S) → Type (ℓ-suc ℓ)
     Four tw pw rl cs =
         ⟨ (cs ∷ rl ∷ pw ∷ tw ∷ γ) ⊨ CodesAt zero (sh3 zero) ⟩
-      × ∥ (Σ[ ro ∈ S ] Five tw pw rl cs ro) ∥₁
+      × ∥ (Σ[ ro ∶ S ] Five tw pw rl cs ro) ∥₁
 ```
 
 <!--en-->
@@ -427,7 +427,7 @@ The table-application clause says that `rl` is some value recorded at the decode
     Three : (tw pw rl : S) → Type (ℓ-suc ℓ)
     Three tw pw rl =
         ⟨ (rl ∷ pw ∷ tw ∷ γ) ⊨ appAt (sh3 f) (sh3 d) zero ⟩
-      × ∥ (Σ[ cs ∈ S ] Four tw pw rl cs) ∥₁
+      × ∥ (Σ[ cs ∶ S ] Four tw pw rl cs) ∥₁
 ```
 
 <!--en-->
@@ -455,7 +455,7 @@ After those memberships, the remaining payload begins with the truncated existen
 <!--/-->
 
 ```agda
-          × ∥ (Σ[ rl ∈ S ] Three tw pw rl) ∥₁ ) )
+          × ∥ (Σ[ rl ∶ S ] Three tw pw rl) ∥₁ ) )
 ```
 
 <!--en-->
@@ -469,7 +469,7 @@ The outermost payload starts with a witness `tw` satisfying the stage graph. Ord
 ```agda
     One : (tw : S) → Type (ℓ-suc ℓ)
     One tw = ⟨ (tw ∷ γ) ⊨ LsetGraphAt zero (suc d) ⟩
-           × ∥ (Σ[ pw ∈ S ] Two tw pw) ∥₁
+           × ∥ (Σ[ pw ∶ S ] Two tw pw) ∥₁
 ```
 
 <!--en-->
@@ -648,7 +648,7 @@ Conversely, reading the innermost satisfaction yields, under propositional trunc
 
 ```agda
       holds-out : StepHolds tw pw rl cs ro c0
-                → ∥ Σ[ t₁ ∈ NM.Name ] Σ[ t₂ ∈ NM.Name ]
+                → ∥ Σ[ t₁ ∶ NM.Name ] Σ[ t₂ ∶ NM.Name ]
                       (LeastFst t₁ × (LeastSnd t₂ × NM._≺ₙ_ t₁ t₂)) ∥₁
       holds-out = St.StepAt-read
 ```
@@ -826,7 +826,7 @@ Inside the propositional truncation returned by the name adequacy theorem, suppo
 <!--/-->
 
 ```agda
-      atNames : Σ[ t₁ ∈ NM.Name ] Σ[ t₂ ∈ NM.Name ]
+      atNames : Σ[ t₁ ∶ NM.Name ] Σ[ t₂ ∶ NM.Name ]
                   ( K.LeastFst t₁ × ( K.LeastSnd t₂ × NM._≺ₙ_ t₁ t₂ ) )
               → Under δ (stepOrder δ od) (fst (lookup u γ)) (fst (lookup v γ))
       atNames (t₁ , (t₂ , (l₁ , (l₂ , lt)))) =
@@ -924,7 +924,7 @@ Every new element has a least name relative to the fixed host-side well-order `o
 <!--/-->
 
 ```agda
-      n₁ : Σ[ t ∈ NM.Name ] IsLeastName δ ordW t (fst (lookup u γ))
+      n₁ : Σ[ t ∶ NM.Name ] IsLeastName δ ordW t (fst (lookup u γ))
       n₁ = leastNameOf δ ordW a
 ```
 
@@ -937,7 +937,7 @@ The same theorem supplies a least name for the second candidate. These two local
 <!--/-->
 
 ```agda
-      n₂ : Σ[ t ∈ NM.Name ] IsLeastName δ ordW t (fst (lookup v γ))
+      n₂ : Σ[ t ∶ NM.Name ] IsLeastName δ ordW t (fst (lookup v γ))
       n₂ = leastNameOf δ ordW b
 ```
 
@@ -1053,7 +1053,7 @@ The six object-language existentials are interpreted as six nested propositional
 <!--/-->
 
 ```agda
-    packAll : relOf (stepOrder δ od) a b → ∥ (Σ[ tw ∈ S ] One tw) ∥₁
+    packAll : relOf (stepOrder δ od) a b → ∥ (Σ[ tw ∶ S ] One tw) ∥₁
     packAll cmp =
       ∣ towerS δ od
       , ( hg

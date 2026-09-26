@@ -389,7 +389,7 @@ The inner record collects a definable power set value `d` over the candidate sta
 
 ```agda
     Inner : S → Type (ℓ-suc ℓ)
-    Inner c = Σ[ d ∈ S ]
+    Inner c = Σ[ d ∶ S ]
       ( ⟨ (d ∷ c ∷ γ) ⊨ DefAt zero (suc zero) ⟩ × ⟨ fst z ∈ fst d ⟩ )
 ```
 
@@ -569,7 +569,7 @@ The outer record is eliminated into the inner reading, and the inner reading fee
 <!--/-->
 
 ```agda
-    atCarrier : Σ[ c ∈ S ] Outer c → β ≡ birth (fst z) (snd z)
+    atCarrier : Σ[ c ∶ S ] Outer c → β ≡ birth (fst z) (snd z)
     atCarrier (c , (hg , (hn , hi))) =
       rec₁ (setIsSet β (birth (fst z) (snd z)))
         (atInner c hg (λ k → lower (hn k))) hi
@@ -737,7 +737,7 @@ The proof eliminates the arity reading into a pair of a natural number and a cod
 ```agda
     rec₁ squash₁ step (arityNumAtL-out c γ hk)
     where
-    step : Σ[ m ∈ ℕ ] Σ[ z ∈ S ] (fst (lookup c γ) ≡ pr (# m) (fst z))
+    step : Σ[ m ∶ ℕ ] Σ[ z ∶ S ] (fst (lookup c γ) ≡ pr (# m) (fst z))
          → ⟨ IsKeyOverAny A (lookup c γ) ⟩
     step (m , (z , qz)) = map₁ (λ { (ψ , q) → m , (ψ , q) })
 ```
@@ -1629,7 +1629,7 @@ For the inward direction, `Related α z` contains an ordinalness proof and, unde
 ```agda
      private
        Pairs : IsOrd α → Type (ℓ-suc ℓ)
-       Pairs o = Σ[ a ∈ Mem (Lset α) ] ∥ (Σ[ c ∈ Mem (Lset α) ]
+       Pairs o = Σ[ a ∶ Mem (Lset α) ] ∥ (Σ[ c ∶ Mem (Lset α) ]
          ( (fst (lookup z γ) ≡ pr (fst a) (fst c)) × ⟨ Ordering α o a c ⟩ )) ∥₁
 ```
 
@@ -1978,7 +1978,7 @@ The outer payload of `Related` supplies an ordinalness proof `o` and only the pr
 <!--/-->
 
 ```agda
-       atOrd : Σ[ o ∈ IsOrd α ] ∥ Pairs o ∥₁ → ⟨ γ ⊨ CondCore z tb f ⟩
+       atOrd : Σ[ o ∶ IsOrd α ] ∥ Pairs o ∥₁ → ⟨ γ ⊨ CondCore z tb f ⟩
        atOrd (o , h) = rec₁ (snd (γ ⊨ CondCore z tb f)) (atPairs o) h
 ```
 
@@ -2107,7 +2107,7 @@ The outward direction starts from a propositionally truncated existential witnes
     cond₀-out : ⟨ (z ∷ []) ⊨ Cond₀ B F ⟩ → ⟨ Related (fst B) (fst z) ⟩
     cond₀-out = rec₁ (snd (Related (fst B) (fst z))) atHeld
       where
-      atHeld : Σ[ c ∈ S ] Held c → ⟨ Related (fst B) (fst z) ⟩
+      atHeld : Σ[ c ∶ S ] Held c → ⟨ Related (fst B) (fst z) ⟩
       atHeld (c , (qc , hc)) =
 ```
 

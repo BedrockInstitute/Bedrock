@@ -135,7 +135,7 @@ sndS x u v e = down (down x ⁅ u , v ⁆ (subst (λ z → ⟨ ⁅ u , v ⁆ ∈
 
 ```agda
 sh : ∀ {m} (k : ℕ) → Fin m → Fin (k + m)
-sh zero i = i
+sh 0 i = i
 sh (suc k) i = suc (sh k i)
 
 i4 : ∀ {j} → Fin (5 + j)
@@ -226,7 +226,7 @@ module _ {m : ℕ} (γ : S ^ m) where
   bigOr-in (suc n) φ (suc k) h = ∣ inr (bigOr-in n (λ j → φ (suc j)) k h) ∣₁
 
   bigOr-out : (n : ℕ) (φ : Fin (suc n) → Formula S m) → ⟨ γ ⊨ bigOr n φ ⟩
-            → ∥ Σ[ k ∈ Fin (suc n) ] ⟨ γ ⊨ φ k ⟩ ∥₁
+            → ∥ Σ[ k ∶ Fin (suc n) ] ⟨ γ ⊨ φ k ⟩ ∥₁
   bigOr-out 0 φ h = ∣ zero , h ∣₁
   bigOr-out (suc n) φ = rec₁ squash₁
     (λ { (inl h) → ∣ zero , h ∣₁
@@ -380,7 +380,7 @@ Out: the witness's second component is pinned by pair injectivity.
 
 ```agda
   sndEx-out : ⟨ γ ⊨ sndEx x u body ⟩
-            → ∥ Σ[ v ∈ S ] Σ[ s ∈ S ] ((X ≡ pr U (fst v)) × ⟨ (v ∷ s ∷ γ) ⊨ body ⟩) ∥₁
+            → ∥ Σ[ v ∶ S ] Σ[ s ∶ S ] ((X ≡ pr U (fst v)) × ⟨ (v ∷ s ∷ γ) ⊨ body ⟩) ∥₁
   sndEx-out = rec₁ squash₁ (λ { (s , (s∈ , h)) → map₁
     (λ { (v , (v∈ , (e , hb))) → v , s , (pr-out (sh 2 x) (sh 2 u) i0 (v ∷ s ∷ γ) e , hb) })
     h })
@@ -415,7 +415,7 @@ module _ {m : ℕ} (x : Fin m) (body : Formula S (3 + m)) (γ : S ^ m) where
     X = fst (lookup x γ)
 
   bothEx-out : ⟨ γ ⊨ bothEx x body ⟩
-             → ∥ Σ[ u ∈ S ] Σ[ v ∈ S ] Σ[ s ∈ S ]
+             → ∥ Σ[ u ∶ S ] Σ[ v ∶ S ] Σ[ s ∶ S ]
                  ((X ≡ pr (fst u) (fst v)) × ⟨ (v ∷ u ∷ s ∷ γ) ⊨ body ⟩) ∥₁
   bothEx-out = rec₁ squash₁ (λ { (s , (s∈ , h)) → rec₁ squash₁
     (λ { (u , (u∈ , h')) → map₁

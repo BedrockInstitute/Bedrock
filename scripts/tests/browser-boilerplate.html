@@ -133,7 +133,7 @@ try {
   const equation=[...preludeDoc.querySelectorAll('.single-line-code')].find(el=>el.textContent.includes('A × B = Σ'));
   check(!!equation,'Prelude uses the requested equals notation');
   const inlineSample=equation.cloneNode(true);fixture.append(inlineSample);
-  check(inlineSample.querySelector('[data-hover-help="="]') && inlineSample.querySelector('[data-hover-help=":"]'),'single-line code automatically carries syntax help');
+  check(inlineSample.querySelector('[data-hover-help="="]') && inlineSample.querySelector('[data-hover-help="_"]'),'single-line code automatically carries syntax help');
   check(inlineSample.querySelector('[data-hover-help="_"]')?.classList.contains('syntax-symbol'),'standalone underscore shares symbolic color and help');
   const inlineTimes=[...inlineSample.querySelectorAll('a[href]')].find(a=>a.textContent==='×');
   check(inlineTimes?.getAttribute('href').startsWith('Base.Prelude.html#'),'inline infix links to Prelude introduction');

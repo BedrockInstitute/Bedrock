@@ -139,7 +139,7 @@ record Recursion : Type (ℓ-suc (ℓ-suc ℓ)) where
 
 ```agda
     funct : (x : S) → ⟨ x ∈ˢ dom ⟩
-          → isContr (Σ[ y ∈ S ] ⟨ (y ∷ x ∷ []) ⊨ graph ⟩)
+          → isContr (Σ[ y ∶ S ] ⟨ (y ∷ x ∷ []) ⊨ graph ⟩)
 ```
 
 <!--en-->
@@ -151,7 +151,7 @@ The lemma `smallDom` gives a common containing set for a family `f : X → S` in
 <!--/-->
 
 ```agda
-smallDom : (X : Type ℓ) (f : X → S) → Σ[ d ∈ S ] ((x : X) → ⟨ f x ∈ˢ d ⟩)
+smallDom : (X : Type ℓ) (f : X → S) → Σ[ d ∶ S ] ((x : X) → ⟨ f x ∈ˢ d ⟩)
 smallDom X f = LsetS β oβ , mem
   where
 ```
@@ -297,9 +297,9 @@ Some constructions naturally prove only that a unique graph value merely exists.
 
 ```agda
 mereFunct : (graph : Formula S 2) (x : S)
-          → ∥ (Σ[ y ∈ S ] (⟨ (y ∷ x ∷ []) ⊨ graph ⟩
+          → ∥ (Σ[ y ∶ S ] (⟨ (y ∷ x ∷ []) ⊨ graph ⟩
                           × ((y' : S) → ⟨ (y' ∷ x ∷ []) ⊨ graph ⟩ → y' ≡ y))) ∥₁
-          → isContr (Σ[ y ∈ S ] ⟨ (y ∷ x ∷ []) ⊨ graph ⟩)
+          → isContr (Σ[ y ∶ S ] ⟨ (y ∷ x ∷ []) ⊨ graph ⟩)
 ```
 
 <!--en-->

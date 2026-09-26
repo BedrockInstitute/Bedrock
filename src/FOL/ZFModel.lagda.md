@@ -130,7 +130,7 @@ That realization is propositional, not a heavier piece of data, is checked now. 
 <!--/-->
 
 ```agda
-SetOf Q = Σ[ b ∈ S ] IsSetOf Q b
+SetOf Q = Σ[ b ∶ S ] IsSetOf Q b
 ```
 
 <!--en-->
@@ -290,7 +290,7 @@ Replacement is the longest field and carries a hypothesis of its own. It takes a
 <!--/-->
 
 ```agda
-                   → ((x : S) → ⟨ x ∈ˢ a ⟩ → isContr (Σ[ y ∈ S ] ⟨ (y ∷ x ∷ []) ⊨ φ ⟩))
+                   → ((x : S) → ⟨ x ∈ˢ a ⟩ → isContr (Σ[ y ∶ S ] ⟨ (y ∷ x ∷ []) ⊨ φ ⟩))
                    → isContr (SetOf (λ y → ∃[ x ∶ S ] (x ∈ˢ a) ⊓ ((y ∷ x ∷ []) ⊨ φ)))
     hasPower       : (a : S) → isContr (SetOf (λ x → x ⊆ˢ a))
 ```
@@ -546,19 +546,19 @@ record isZFCModel : Type (ℓ-suc ℓ) where
 ```
 
 <!--en-->
-The two hypotheses of `hasChoice` say that `a` is a family of nonempty, pairwise disjoint sets, each in the reading available here. Nonemptiness is truncated: for each member `x` of `a` there *merely* exists a `y` in it, `∥ Σ[ y ∈ S ] ⟨ y ∈ˢ x ⟩ ∥₁`, with no chosen witness. Pairwise disjointness is also truncated: if `x` and `y` are two members of `a` that *merely* share a point `z`, then `x ≡ y` holds outright. Note the shape of the disjointness premise: its conclusion is a path in the host, so the truncation of the shared-point evidence is what feeds an untruncated equality.
+The two hypotheses of `hasChoice` say that `a` is a family of nonempty, pairwise disjoint sets, each in the reading available here. Nonemptiness is truncated: for each member `x` of `a` there *merely* exists a `y` in it, `∥ Σ[ y ∶ S ] ⟨ y ∈ˢ x ⟩ ∥₁`, with no chosen witness. Pairwise disjointness is also truncated: if `x` and `y` are two members of `a` that *merely* share a point `z`, then `x ≡ y` holds outright. Note the shape of the disjointness premise: its conclusion is a path in the host, so the truncation of the shared-point evidence is what feeds an untruncated equality.
 <!--zh-->
-`hasChoice` 的两条前提说 `a` 是由非空、两两不交的集合组成的族，各自按此处可用的读法理解。非空性是截断的：对 `a` 的每个成员 `x`，**仅仅**存在其中的 `y`，即 `∥ Σ[ y ∈ S ] ⟨ y ∈ˢ x ⟩ ∥₁`，没有被选定的见证。两两不交同样截断：若 `a` 的两个成员 `x` 与 `y` **仅仅**共享一点 `z`，则 `x ≡ y` 无截断地成立。注意不交前提的形状：其结论是宿主中的路径，正是共享点证据的截断在为无截断的相等供料。
+`hasChoice` 的两条前提说 `a` 是由非空、两两不交的集合组成的族，各自按此处可用的读法理解。非空性是截断的：对 `a` 的每个成员 `x`，**仅仅**存在其中的 `y`，即 `∥ Σ[ y ∶ S ] ⟨ y ∈ˢ x ⟩ ∥₁`，没有被选定的见证。两两不交同样截断：若 `a` 的两个成员 `x` 与 `y` **仅仅**共享一点 `z`，则 `x ≡ y` 无截断地成立。注意不交前提的形状：其结论是宿主中的路径，正是共享点证据的截断在为无截断的相等供料。
 <!--ja-->
-`hasChoice` の二つの仮定は、`a` が空でなく互いに素な集合の族であることを、ここで使える読み方で述べる。空でないことは截断されている。`a` の各要素 `x` に対してその中に `y` が**単に**存在する、つまり `∥ Σ[ y ∈ S ] ⟨ y ∈ˢ x ⟩ ∥₁` であり、選ばれた証拠はない。互いに素なことも截断されている。`a` の二つの要素 `x` と `y` が点 `z` を**単に**共有するなら、`x ≡ y` は截断なしで成る。素であるという前提の形に注意してほしい。その結論はホストのパスであり、共有点の証拠の截断こそが、截断されない相等に材料を供しているのである。
+`hasChoice` の二つの仮定は、`a` が空でなく互いに素な集合の族であることを、ここで使える読み方で述べる。空でないことは截断されている。`a` の各要素 `x` に対してその中に `y` が**単に**存在する、つまり `∥ Σ[ y ∶ S ] ⟨ y ∈ˢ x ⟩ ∥₁` であり、選ばれた証拠はない。互いに素なことも截断されている。`a` の二つの要素 `x` と `y` が点 `z` を**単に**共有するなら、`x ≡ y` は截断なしで成る。素であるという前提の形に注意してほしい。その結論はホストのパスであり、共有点の証拠の截断こそが、截断されない相等に材料を供しているのである。
 <!--/-->
 
 ```agda
     hasChoice :
       (a : S)
-      → ((x : S) → ⟨ x ∈ˢ a ⟩ → ∥ Σ[ y ∈ S ] ⟨ y ∈ˢ x ⟩ ∥₁)
+      → ((x : S) → ⟨ x ∈ˢ a ⟩ → ∥ Σ[ y ∶ S ] ⟨ y ∈ˢ x ⟩ ∥₁)
       → ((x y : S) → ⟨ x ∈ˢ a ⟩ → ⟨ y ∈ˢ a ⟩
-           → ∥ Σ[ z ∈ S ] (⟨ z ∈ˢ x ⟩ × ⟨ z ∈ˢ y ⟩) ∥₁ → x ≡ y)
+           → ∥ Σ[ z ∶ S ] (⟨ z ∈ˢ x ⟩ × ⟨ z ∈ˢ y ⟩) ∥₁ → x ≡ y)
 ```
 
 <!--en-->
@@ -570,8 +570,8 @@ The conclusion is likewise a truncated existence: there *merely* exists a choice
 <!--/-->
 
 ```agda
-      → ∥ Σ[ c ∈ S ] ((x : S) → ⟨ x ∈ˢ a ⟩
-           → isContr (Σ[ z ∈ S ] ⟨ z ∈ˢ (c ∩ x) ⟩)) ∥₁
+      → ∥ Σ[ c ∶ S ] ((x : S) → ⟨ x ∈ˢ a ⟩
+           → isContr (Σ[ z ∶ S ] ⟨ z ∈ˢ (c ∩ x) ⟩)) ∥₁
 ```
 
 <!--en-->

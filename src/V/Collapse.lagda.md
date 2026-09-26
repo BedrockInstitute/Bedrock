@@ -171,7 +171,7 @@ The index type `Fiber x` selects the filtered members: an index `m` into the pre
 
 ```agda
   Fiber : S → Type ℓ
-  Fiber x = Σ[ m ∈ ⟪ x ⟫ ] ⟨ ⟪ x ⟫↪ m ∈ₛ X ⟩
+  Fiber x = Σ[ m ∶ ⟪ x ⟫ ] ⟨ ⟪ x ⟫↪ m ∈ₛ X ⟩
 
   step : (x : S) → (∀ y → y ∈ᵗ x → S) → S
   step x rec = sett (Fiber x) (λ p → rec (⟪ x ⟫↪ (p .fst)) (member x (p .fst)))
@@ -233,10 +233,10 @@ The proof starts from the membership certificate `z∈` and transports it along 
 
 ```agda
   π-member : (x z : S) → ⟨ z ∈ˢ π x ⟩
-           → ∥ Σ[ y ∈ S ] (⟨ y ∈ˢ X ⟩ × (π y ≡ z)) ∥₁
+           → ∥ Σ[ y ∶ S ] (⟨ y ∈ˢ X ⟩ × (π y ≡ z)) ∥₁
   π-member x z z∈ = map₁ mk (subst (λ w → ⟨ z ∈ˢ w ⟩) (π-compute x) z∈)
     where
-    mk : Σ[ p ∈ Fiber x ] (π (⟪ x ⟫↪ (p .fst)) ≡ z)
+    mk : Σ[ p ∶ Fiber x ] (π (⟪ x ⟫↪ (p .fst)) ≡ z)
 ```
 
 <!--en-->
@@ -248,7 +248,7 @@ The auxiliary function `mk` reshapes this recursion data into the promised form.
 <!--/-->
 
 ```agda
-       → Σ[ y ∈ S ] (⟨ y ∈ˢ X ⟩ × (π y ≡ z))
+       → Σ[ y ∶ S ] (⟨ y ∈ˢ X ⟩ × (π y ≡ z))
     mk (p , q) = ⟪ x ⟫↪ (p .fst)
                , ( ∈∈ₛ {a = ⟪ x ⟫↪ (p .fst)} {b = X} .snd (p .snd)
                  , q )
@@ -281,7 +281,7 @@ The set `πX` is the image of `π` restricted to `X`, built with `sett` over the
   πX = sett ⟪ X ⟫ (λ m → π (⟪ X ⟫↪ m))
 
   πX-member : (z : S) → ⟨ z ∈ˢ πX ⟩
-            → ∥ Σ[ y ∈ S ] (⟨ y ∈ˢ X ⟩ × (π y ≡ z)) ∥₁
+            → ∥ Σ[ y ∶ S ] (⟨ y ∈ˢ X ⟩ × (π y ≡ z)) ∥₁
   πX-member z z∈ = map₁ mk z∈
 ```
 
@@ -295,8 +295,8 @@ The converse introduction says that `πX` contains all the collapse values it sh
 
 ```agda
     where
-    mk : Σ[ m ∈ ⟪ X ⟫ ] (π (⟪ X ⟫↪ m) ≡ z)
-       → Σ[ y ∈ S ] (⟨ y ∈ˢ X ⟩ × (π y ≡ z))
+    mk : Σ[ m ∶ ⟪ X ⟫ ] (π (⟪ X ⟫↪ m) ≡ z)
+       → Σ[ y ∶ S ] (⟨ y ∈ˢ X ⟩ × (π y ≡ z))
     mk (m , q) = ⟪ X ⟫↪ m , ( member X m , q )
 
   πX-intro : (y : S) → ⟨ y ∈ˢ X ⟩ → ⟨ π y ∈ˢ πX ⟩
@@ -316,7 +316,7 @@ Transitivity of `πX` takes the form demanded by `isTrans`: if `y` is a member o
   πX-trans : isTrans πX
   πX-trans {x} {y} y∈x x∈πX = rec₁ (snd (y ∈ˢ πX)) go (πX-member x x∈πX)
     where
-    go : Σ[ z ∈ S ] (⟨ z ∈ˢ X ⟩ × (π z ≡ x)) → ⟨ y ∈ˢ πX ⟩
+    go : Σ[ z ∶ S ] (⟨ z ∈ˢ X ⟩ × (π z ≡ x)) → ⟨ y ∈ˢ πX ⟩
 ```
 
 <!--en-->
@@ -332,7 +332,7 @@ The inner step first transports `y∈x` along the path `π z ≡ x` to obtain `y
       where
       y∈πz : y ∈ᵗ π z
       y∈πz = subst (λ w → y ∈ᵗ w) (sym pzx) y∈x
-      go₂ : Σ[ w ∈ S ] (⟨ w ∈ˢ X ⟩ × (π w ≡ y)) → ⟨ y ∈ˢ πX ⟩
+      go₂ : Σ[ w ∶ S ] (⟨ w ∈ˢ X ⟩ × (π w ≡ y)) → ⟨ y ∈ˢ πX ⟩
 ```
 
 <!--en-->
@@ -367,7 +367,7 @@ The first ingredient is an element of the presentation map’s [fibre]{.term-ref
   π∈-fwd : (x y : S) → y ∈ᵗ x → y ∈ᵗ X → ⟨ π y ∈ˢ π x ⟩
   π∈-fwd x y yx yu = subst (λ w → ⟨ π y ∈ˢ w ⟩) (sym (π-compute x)) wit
     where
-    fib : Σ[ m ∈ ⟪ x ⟫ ] (⟪ x ⟫↪ m ≡ y)
+    fib : Σ[ m ∶ ⟪ x ⟫ ] (⟪ x ⟫↪ m ≡ y)
     fib = fiber x yx
 ```
 
@@ -733,7 +733,7 @@ Given such an index pair, the named member `⟪ y ⟫↪ (p .fst)` is a member o
 
 ```agda
         where
-        go : Σ[ p ∈ Fiber y ] (π (⟪ y ⟫↪ (p .fst)) ≡ x) → x ∈ᵗ y
+        go : Σ[ p ∶ Fiber y ] (π (⟪ y ⟫↪ (p .fst)) ≡ x) → x ∈ᵗ y
         go (p , q) = subst (λ w → ⟨ w ∈ˢ y ⟩) (sym ih' ∙ q) (member y (p .fst))
           where
           ih' : π (⟪ y ⟫↪ (p .fst)) ≡ ⟪ y ⟫↪ (p .fst)

@@ -214,8 +214,8 @@ Term codes are described first. A set `t` is a term code at arity `ar` when, mer
 
 ```agda
 IsTmV : V ℓ → V ℓ → V ℓ → Type (ℓ-suc ℓ)
-IsTmV Wv t ar = ∥ (Σ[ x ∈ V ℓ ] ((t ≡ pr (# 0) x) × ⟨ x ∈ Wv ⟩))
-                ⊎ (Σ[ i ∈ V ℓ ] ((t ≡ pr (# 1) i) × ⟨ i ∈ ar ⟩)) ∥₁
+IsTmV Wv t ar = ∥ (Σ[ x ∶ V ℓ ] ((t ≡ pr (# 0) x) × ⟨ x ∈ Wv ⟩))
+                ⊎ (Σ[ i ∶ V ℓ ] ((t ≡ pr (# 1) i) × ⟨ i ∈ ar ⟩)) ∥₁
 ```
 
 <!--en-->
@@ -236,8 +236,8 @@ module CodesSem (Wv Cv : V ℓ) where
 
 ```agda
   AtomP BinP ConP QuP BqP : V ℓ → V ℓ → Type (ℓ-suc ℓ)
-  AtomP ar r = ∥ Σ[ t ∈ V ℓ ] Σ[ u ∈ V ℓ ] ((r ≡ pr t u) × (IsTmV Wv t ar × IsTmV Wv u ar)) ∥₁
-  BinP ar r = ∥ Σ[ a ∈ V ℓ ] Σ[ b ∈ V ℓ ] ((r ≡ pr a b) × (⟨ pr ar a ∈ Cv ⟩ × ⟨ pr ar b ∈ Cv ⟩)) ∥₁
+  AtomP ar r = ∥ Σ[ t ∶ V ℓ ] Σ[ u ∶ V ℓ ] ((r ≡ pr t u) × (IsTmV Wv t ar × IsTmV Wv u ar)) ∥₁
+  BinP ar r = ∥ Σ[ a ∶ V ℓ ] Σ[ b ∶ V ℓ ] ((r ≡ pr a b) × (⟨ pr ar a ∈ Cv ⟩ × ⟨ pr ar b ∈ Cv ⟩)) ∥₁
   ConP ar r = r ≡ # 0
 ```
 
@@ -251,7 +251,7 @@ The quantifier payloads complete the list. An unbounded-quantifier payload is a 
 
 ```agda
   QuP ar r = ⟨ pr (sucV ar) r ∈ Cv ⟩
-  BqP ar r = ∥ Σ[ t ∈ V ℓ ] Σ[ a ∈ V ℓ ] ((r ≡ pr t a) × (IsTmV Wv t ar × ⟨ pr (sucV ar) a ∈ Cv ⟩)) ∥₁
+  BqP ar r = ∥ Σ[ t ∶ V ℓ ] Σ[ a ∶ V ℓ ] ((r ≡ pr t a) × (IsTmV Wv t ar × ⟨ pr (sucV ar) a ∈ Cv ⟩)) ∥₁
 ```
 
 <!--en-->
@@ -309,7 +309,7 @@ A key at arity `ar` is, merely, a tag from the ten together with a payload of th
 
 ```agda
   Key : V ℓ → V ℓ → Type (ℓ-suc ℓ)
-  Key ar p = ∥ Σ[ k ∈ Fin 10 ] Σ[ r ∈ V ℓ ] ((p ≡ pr (# (toℕ k)) r) × PayN (toℕ k) ar r) ∥₁
+  Key ar p = ∥ Σ[ k ∶ Fin 10 ] Σ[ r ∶ V ℓ ] ((p ≡ pr (# (toℕ k)) r) × PayN (toℕ k) ar r) ∥₁
 ```
 </div>
 </details>
@@ -1304,7 +1304,7 @@ For a chosen member `c` and a tower witness `(ar,F)`, the remaining formula choo
 
 ```agda
   Shaped : V ℓ → Type (ℓ-suc ℓ)
-  Shaped c = ∥ Σ[ ar ∈ V ℓ ] Σ[ F ∈ V ℓ ] Σ[ p ∈ V ℓ ]
+  Shaped c = ∥ Σ[ ar ∶ V ℓ ] Σ[ F ∶ V ℓ ] Σ[ p ∶ V ℓ ]
                (⟨ pr ar F ∈ Ev ⟩ × ((c ≡ pr ar p) × Key ar p)) ∥₁
 ```
 
@@ -1966,7 +1966,7 @@ We can now state soundness for a candidate domain `C`. Assume that the constant 
 ```agda
 module CodesSound {m : ℕ} (C w E : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) (W : S)
   (qw : fst (lookup w γ) ≡ fst W) (tg : Tags γ N)
-  (arity : (n F : S) → ⟨ pr (fst n) (fst F) ∈ fst (lookup E γ) ⟩ → ∥ Σ[ k ∈ ℕ ] (fst n ≡ # k) ∥₁)
+  (arity : (n F : S) → ⟨ pr (fst n) (fst F) ∈ fst (lookup E γ) ⟩ → ∥ Σ[ k ∶ ℕ ] (fst n ≡ # k) ∥₁)
   (hs : ⟨ γ ⊨ shapeAt C w E N ⟩) where
 ```
 </summary>
@@ -2448,7 +2448,7 @@ The decoding theorem is the chapter's first main result. Every member `c` of a c
 
 ```agda
   key-out : (c : S) → ⟨ fst c ∈ Cv ⟩
-          → ∥ Σ[ k ∈ ℕ ] Σ[ ψ ∈ Formula ⟪ fst W ⟫ k ] (fst c ≡ fst (keyS W ψ)) ∥₁
+          → ∥ Σ[ k ∶ ℕ ] Σ[ ψ ∶ Formula ⟪ fst W ⟫ k ] (fst c ≡ fst (keyS W ψ)) ∥₁
   key-out c c∈ = rec₁ squash₁
     (λ { (ar , F , p , (q∈ , (ec , key))) → rec₁ squash₁
       (λ { (k , qk) → map₁ (λ { (ψ , e) → k , ψ , e })
@@ -2891,7 +2891,7 @@ The decoding helper fixes the arity explicitly. If a code-domain member `c` has 
 
 ```agda
     decodeAt : (c : S) → ⟨ fst c ∈ Cv ⟩ → (n : ℕ) (z : V ℓ) → fst c ≡ pr (# n) z
-             → ∥ Σ[ ψ ∈ Formula Ab n ] (z ≡ cd ψ) ∥₁
+             → ∥ Σ[ ψ ∶ Formula Ab n ] (z ≡ cd ψ) ∥₁
     decodeAt c c∈ n z e = map₁
       (λ { (n₁ , ψ₁ , e₁) →
         let q = pr-inj (sym e₁ ∙ e)
@@ -2921,7 +2921,7 @@ The term-decoding statement is parameterized by a bound set: every member of the
 
 ```agda
     TmDec : ∀ {n} → Fin 10 → V ℓ → Type (ℓ-suc ℓ)
-    TmDec {n} Nx bound = (x : V ℓ) → ⟨ x ∈ bound ⟩ → ∥ Σ[ t ∈ Term Ab n ] (ct t ≡ pr (# (toℕ Nx)) x) ∥₁
+    TmDec {n} Nx bound = (x : V ℓ) → ⟨ x ∈ bound ⟩ → ∥ Σ[ t ∶ Term Ab n ] (ct t ≡ pr (# (toℕ Nx)) x) ∥₁
 ```
 
 <!--en-->
@@ -2936,7 +2936,7 @@ Constants decode through the fiber of the alphabet embedding: a member of the al
     conDec : ∀ {n} → TmDec {n} f0 Wv
     conDec x x∈ = ∣ con (fib .fst) , cong (pr (# 0)) (fib .snd) ∣₁
       where
-      fib : Σ[ q ∈ Ab ] (ι q ≡ x)
+      fib : Σ[ q ∶ Ab ] (ι q ≡ x)
       fib = ∈-asFiber {a = x} {b = fst W} (subst (λ u → ⟨ x ∈ u ⟩) qw x∈)
 ```
 
@@ -3014,7 +3014,7 @@ For a tag `Nx` and an element `x`, `TmAt Nx x` is the Σ type of a term `t` toge
 
 ```agda
         TmAt : (Nx : Fin 10) (x : V ℓ) → Type (ℓ-suc ℓ)
-        TmAt Nx x = Σ[ t ∈ Term Ab n ] (ct t ≡ pr (# (toℕ Nx)) x)
+        TmAt Nx x = Σ[ t ∶ Term Ab n ] (ct t ≡ pr (# (toℕ Nx)) x)
 ```
 
 <!--en-->
@@ -3027,7 +3027,7 @@ Similarly, `FoAt k z` is the Σ type of a formula `ψ` of arity `k` together wit
 
 ```agda
         FoAt : (k : ℕ) (z : V ℓ) → Type (ℓ-suc ℓ)
-        FoAt k z = Σ[ ψ ∈ Formula Ab k ] (z ≡ cd ψ)
+        FoAt k z = Σ[ ψ ∶ Formula Ab k ] (z ≡ cd ψ)
 ```
 
 <!--en-->

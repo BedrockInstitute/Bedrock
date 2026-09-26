@@ -681,7 +681,7 @@ The local witness now packages the constructible ordinal `β`, its ordinality, t
 <!--/-->
 
 ```agda
-  result : Σ[ b ∈ S ] (IsOrd (fst b) × ⟨ fst y ∈ˢ Lset (fst b) ⟩ × InjL b κ)
+  result : Σ[ b ∶ S ] (IsOrd (fst b) × ⟨ fst y ∈ˢ Lset (fst b) ⟩ × InjL b κ)
   result = St.βL , St.oβ , y∈Lβ , β↪κ
 ```
 </div>

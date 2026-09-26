@@ -21,6 +21,9 @@ FIXTURES = {
     '/universe-regression': 'browser-universe-levels.html',
     '/fonts-regression': 'browser-fonts.html',
     '/mobile-reader': 'browser-mobile-reader.html',
+    '/header-shell-regression': 'browser-header-shell.html',
+    '/punctuation-regression': 'browser-punctuation-wrap.html',
+    '/mathematical-notation-regression': 'browser-mathematical-notation.html',
 }
 
 
@@ -40,6 +43,12 @@ def main():
         def __init__(self, *positional, **kwargs):
             super().__init__(*positional, directory=str(args.site.resolve()), **kwargs)
 
+        def guess_type(self, path):
+            kind = super().guess_type(path)
+            if path.endswith(('.txt', '.md')) and 'charset=' not in kind:
+                return kind + '; charset=utf-8'
+            return kind
+
         def end_headers(self):
             # History entries can reuse an iframe URL. Keep the artificial
             # loading delay observable even when the browser has seen it before.
@@ -56,6 +65,7 @@ def main():
                 fixture = (ROOT / 'scripts/tests' / FIXTURES[url.path]).read_text(encoding='utf-8')
                 fixture = fixture.replace('/site/static/', '/static/')
                 if runtime:
+                    fixture = fixture.replace('__OUTCROP_RUNTIME__', runtime[1])
                     fixture = re.sub(r'/static/([a-z-]+\.js)',
                         lambda match: '/static/' + runtime[1] + '/' + match[1], fixture)
                 payload = fixture.encode('utf-8')

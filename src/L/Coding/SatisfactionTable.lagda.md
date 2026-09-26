@@ -235,7 +235,7 @@ which is the only arity at which it is true.
       (same ψ) p χ
 
   total : ∀ {n} (φ : Formula S n) (x : V ℓ) → ⟨ x ∈ fst (slot φ) ⟩
-        → ∥ (Σ[ y ∈ S ] ⟨ pr x (fst y) ∈ fst (satTable φ) ⟩) ∥₁
+        → ∥ (Σ[ y ∶ S ] ⟨ pr x (fst y) ∈ fst (satTable φ) ⟩) ∥₁
   total φ x h = map₁
     (λ { (m , χ , (q , incl)) → Sat B χ
        , subst (λ w → ⟨ pr w (fst (Sat B χ)) ∈ fst (satTable φ) ⟩) (sym q)

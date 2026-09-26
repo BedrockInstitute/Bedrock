@@ -283,7 +283,7 @@ The position `Ci` is the index of the slot inside this environment, and every cl
 ```agda
     binSame : (k' : ℕ) (op : ∀ {m} → Formula S m → Formula S m → Formula S m)
             → (∀ {m} (ψ : Formula S m) → LCode.Match k' ψ
-               → Σ[ a' ∈ Formula S m ] (Σ[ b' ∈ Formula S m ] (ψ ≡ op a' b')))
+               → Σ[ a' ∶ Formula S m ] (Σ[ b' ∶ Formula S m ] (ψ ≡ op a' b')))
             → (∀ {m} (a' b' : Formula S m)
                → LCode.payOf (op a' b') ≡ prʟ LCode.⌜ a' ⌝ LCode.⌜ b' ⌝)
 ```
@@ -451,7 +451,7 @@ Implication is the third: the slot of `a' ⇒̇ b'` contains the slots' keys of 
 ```agda
     unSame : (k' : ℕ) (op : ∀ {m} → Formula S m → Formula S m)
            → (∀ {m} (ψ : Formula S m) → LCode.Match k' ψ
-              → Σ[ a' ∈ Formula S m ] (ψ ≡ op a'))
+              → Σ[ a' ∶ Formula S m ] (ψ ≡ op a'))
            → (∀ {m} (a' : Formula S m) → LCode.payOf (op a') ≡ LCode.⌜ a' ⌝)
 ```
 
@@ -528,7 +528,7 @@ The fourth move assembles the case at once: the key of `a'` lies in its own slot
 ```agda
     unSucc : (k' : ℕ) (op : ∀ {m} → Formula S (suc m) → Formula S m)
            → (∀ {m} (ψ : Formula S m) → LCode.Match k' ψ
-              → Σ[ a' ∈ Formula S (suc m) ] (ψ ≡ op a'))
+              → Σ[ a' ∶ Formula S (suc m) ] (ψ ≡ op a'))
            → (∀ {m} (a' : Formula S (suc m)) → LCode.payOf (op a') ≡ LCode.⌜ a' ⌝)
            → (∀ {m} (a' : Formula S (suc m)) (z : V ℓ)
 ```
@@ -606,7 +606,7 @@ The rewriting goes through `keyS≡`{.Agda}: it applies `sucV` to `# m ≡ fst a
     binSucc : (k' : ℕ)
             → (op : ∀ {m} → Term S m → Formula S (suc m) → Formula S m)
             → (∀ {m} (ψ : Formula S m) → LCode.Match k' ψ
-               → Σ[ t ∈ Term S m ] (Σ[ a' ∈ Formula S (suc m) ] (ψ ≡ op t a')))
+               → Σ[ t ∶ Term S m ] (Σ[ a' ∶ Formula S (suc m) ] (ψ ≡ op t a')))
             → (∀ {m} (t : Term S m) (a' : Formula S (suc m))
 ```
 

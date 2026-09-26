@@ -207,7 +207,7 @@ InternalBoundedSubset : Type (ℓ-suc ℓ)
 InternalBoundedSubset =
     (κ : SL.S) → IsOrd (fst κ) → IsCardinalL κ → (⟨ fst κ ∈ˢ ω ⟩ → ⊥₀)
   → (y : SL.S) → ((z : SV.S) → ⟨ z ∈ˢ fst y ⟩ → ⟨ z ∈ˢ fst κ ⟩)
-  → ∥ Σ[ β ∈ SL.S ]
+  → ∥ Σ[ β ∶ SL.S ]
 ```
 
 <!--en-->
@@ -251,7 +251,7 @@ SuccCardExists : Type (ℓ-suc ℓ)
 SuccCardExists =
     (κ : SL.S) → IsOrd (fst κ) → IsCardinalL κ
   → (⟨ fst κ ∈ˢ ω ⟩ → ⊥₀)
-  → ∥ Σ[ δ ∈ SL.S ] SuccCardL δ κ ∥₁
+  → ∥ Σ[ δ ∶ SL.S ] SuccCardL δ κ ∥₁
 ```
 
 <!--en-->
@@ -392,7 +392,7 @@ The candidate class is nonempty: the index presenting `θ` is a candidate, carry
 <!--/-->
 
 ```agda
-  nonempty : ∥ Σ[ b ∈ A ] ⟨ Good b ⟩ ∥₁
+  nonempty : ∥ Σ[ b ∶ A ] ⟨ Good b ⟩ ∥₁
   nonempty = ∣ self
             , subst (λ z → IsCardinalL z × ⟨ fst κ ∈ˢ fst z ⟩)
                 (sym upSelf) (cθ , κ∈θ) ∣₁
@@ -407,7 +407,7 @@ The formula-facing search on the well order now produces an actual least candida
 <!--/-->
 
 ```agda
-  least : Σ[ b ∈ A ] IsLeast w Good b
+  least : Σ[ b ∶ A ] IsLeast w Good b
   least = leastOfFormula w definedGood lem nonempty
 ```
 
@@ -583,7 +583,7 @@ The membership of `c` below `δ` is then converted into the strict order of the 
 succCardExists : SuccCardExists
 succCardExists κ oκ cκ κ∉ω = map₁ build (CardAboveL κ oκ cκ κ∉ω)
   where
-  build : Σ[ θ ∈ SL.S ]
+  build : Σ[ θ ∶ SL.S ]
             (IsOrd (fst θ) × IsCardinalL θ × ⟨ fst κ ∈ˢ fst θ ⟩)
 ```
 
@@ -596,7 +596,7 @@ Within one local branch, `build` packages the chosen `δ` with the four clauses 
 <!--/-->
 
 ```agda
-        → Σ[ δ ∈ SL.S ] SuccCardL δ κ
+        → Σ[ δ ∶ SL.S ] SuccCardL δ κ
   build (θ , oθ , cθ , κ∈θ) = R.δ , R.oδ , R.cδ , R.κ∈δ , R.leastness
     where module R = Reduce κ oκ θ oθ cθ κ∈θ
 ```
@@ -778,7 +778,7 @@ For the fixed subset `y`, the bounded-subset estimate supplies, under propositio
 <!--/-->
 
 ```agda
-  place : Σ[ β ∈ SL.S ]
+  place : Σ[ β ∶ SL.S ]
             (IsOrd (fst β) × ⟨ fst y ∈ˢ Lset (fst β) ⟩ × InjL β κ)
         → ⟨ fst y ∈ˢ Lset (fst δ) ⟩
   place (β , ordβ , y∈Lβ , β↪κ) = go (ord-tri (fst β) ordβ (fst δ) ordδ)
@@ -945,8 +945,8 @@ The theorem `succCardExists` gives only the propositionally truncated existence 
   map₁ step (succCardExists κ ordκ cardκ κ∉ω)
   where
   open ModelL.isZFModel zf using ( 𝒫 )
-  step : Σ[ δ ∈ SL.S ] SuccCardL δ κ
-       → Σ[ δ ∈ SL.S ] (SuccCardL δ κ × InjL (𝒫 κ) δ × InjL δ (𝒫 κ))
+  step : Σ[ δ ∶ SL.S ] SuccCardL δ κ
+       → Σ[ δ ∶ SL.S ] (SuccCardL δ κ × InjL (𝒫 κ) δ × InjL δ (𝒫 κ))
 ```
 
 <!--en-->

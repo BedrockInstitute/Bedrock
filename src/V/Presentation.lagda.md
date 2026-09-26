@@ -72,7 +72,7 @@ The first two lemmas convert between indices and membership proofs. The hinge is
 member : (a : S) (m : ⟪ a ⟫) → ⟨ ⟪ a ⟫↪ m ∈ˢ a ⟩
 member a m = ∈∈ₛ {a = ⟪ a ⟫↪ m} {b = a} .snd (∈ₛ⟪ a ⟫↪ m)
 
-fiber : (a : S) {x : S} → ⟨ x ∈ˢ a ⟩ → Σ[ m ∈ ⟪ a ⟫ ] (⟪ a ⟫↪ m ≡ x)
+fiber : (a : S) {x : S} → ⟨ x ∈ˢ a ⟩ → Σ[ m ∶ ⟪ a ⟫ ] (⟪ a ⟫↪ m ≡ x)
 fiber a {x} x∈ = ∈-asFiber {a = x} {b = a} x∈
 
 ↪-inj : {a : S} {m n : ⟪ a ⟫} → ⟪ a ⟫↪ m ≡ ⟪ a ⟫↪ n → m ≡ n

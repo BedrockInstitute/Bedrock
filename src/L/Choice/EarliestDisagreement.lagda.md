@@ -385,7 +385,7 @@ To represent a relation by separation, we first need one set containing every po
 
 ```agda
 pairsAt : (n : ℕ)
-        → Σ[ D ∈ S ] ((u v : V ℓ) → ⟨ u ∈ finiteStage n ⟩ → ⟨ v ∈ finiteStage n ⟩
+        → Σ[ D ∶ S ] ((u v : V ℓ) → ⟨ u ∈ finiteStage n ⟩ → ⟨ v ∈ finiteStage n ⟩
                      → ⟨ pr u v ∈ fst D ⟩)
 pairsAt n = d .fst , onPair
   where
@@ -416,7 +416,7 @@ The product of the two presentations indexes every pair of stage members. Applyi
 <!--/-->
 
 ```agda
-  d : Σ[ D ∈ S ] ((p : ⟪ finiteStage n ⟫ × ⟪ finiteStage n ⟫)
+  d : Σ[ D ∶ S ] ((p : ⟪ finiteStage n ⟫ × ⟪ finiteStage n ⟫)
                   → ⟨ prʟ (ixL (fst p)) (ixL (snd p)) ∈ˢ D ⟩)
   d = smallDom (⟪ finiteStage n ⟫ × ⟪ finiteStage n ⟫)
         (λ p → prʟ (ixL (fst p)) (ixL (snd p)))
@@ -477,7 +477,7 @@ The disagreement point `z`, its membership in `A` and `y`, and its absence from 
 <!--/-->
 
 ```agda
-  step : Σ[ z ∈ V ℓ ] Witness R A x y z → Σ[ z ∈ V ℓ ] Witness R' A x y z
+  step : Σ[ z ∶ V ℓ ] Witness R A x y z → Σ[ z ∶ V ℓ ] Witness R' A x y z
   step (z , (z∈A , (z∈y , (z∉x , ag)))) =
     z , (z∈A , (z∈y , (z∉x , ag')))
     where
@@ -536,7 +536,7 @@ Now define the representing sets recursively. At zero the relation is empty; at 
 ```agda
 opaque
   relAt : ℕ → S
-  relAt zero    = ∅ʟ
+  relAt 0    = ∅ʟ
   relAt (suc n) =
     hasSeparationL (pairsAt (suc n) .fst)
 ```
@@ -649,7 +649,7 @@ To recognize an arbitrary member of the relation set, we must recover its two co
 
 ```agda
 RelOf : (k : ℕ) → V ℓ → Type (ℓ-suc ℓ)
-RelOf k zv = Σ[ x ∈ S ] Σ[ y ∈ S ]
+RelOf k zv = Σ[ x ∶ S ] Σ[ y ∶ S ]
   ( ⟨ fst x ∈ finiteStage k ⟩
   × ( ⟨ fst y ∈ finiteStage k ⟩
     × ( (zv ≡ pr (fst x) (fst y)) × ⟨ before k (fst x) (fst y) ⟩ ) ) )
@@ -677,7 +677,7 @@ The base case reflects `before zero`: since `relAt zero` is empty, a supposed me
 <!--/-->
 
 ```agda
-relAt-out zero zv h = ⊥₀-rec
+relAt-out 0 zv h = ⊥₀-rec
   (∅-empty zv (∈∈ₛ {a = zv} {b = ∅} .fst
     (subst (λ t → ⟨ zv ∈ fst t ⟩) relAt-zero h)))
 relAt-out (suc n) zv h = rec₁ squash₁
@@ -752,7 +752,7 @@ After `x` has been chosen from the successor stage, `AtY` records the remaining 
 
 ```agda
   AtY : (r a x : S) → Type (ℓ-suc ℓ)
-  AtY r a x = Σ[ y ∈ S ] (⟨ fst y ∈ fst (stageS (suc n)) ⟩ × Body r a x y)
+  AtY r a x = Σ[ y ∶ S ] (⟨ fst y ∈ fst (stageS (suc n)) ⟩ × Body r a x y)
 ```
 
 <!--en-->
@@ -866,7 +866,7 @@ For `k = 0`, a `RelOf` witness already contains an impossible proof of `before z
 <!--/-->
 
 ```agda
-relAt-in zero zv (x , (y , (x∈ , (y∈ , (qq , hb))))) = ⊥*-rec hb
+relAt-in 0 zv (x , (y , (x∈ , (y∈ , (qq , hb))))) = ⊥*-rec hb
 relAt-in (suc n) zv (x , (y , (x∈ , (y∈ , (qq , hb))))) =
   subst (λ t → ⟨ t ∈ fst (relAt (suc n)) ⟩) (prS-fst x y ∙ sym qq)
     (subst ⟨_⟩ (sym (relAt-mem n (prS x y))) (inBound , cond))
@@ -1120,7 +1120,7 @@ The innermost clauses require the candidate entry to be the ordered pair of thos
 ```agda
 StepOf : ∀ {n} → Fin n → Fin n → S ^ n → V ℓ → Type (ℓ-suc ℓ)
 StepOf b f γ zv =
-  Σ[ c ∈ S ] Σ[ r ∈ S ] Σ[ x ∈ S ] Σ[ y ∈ S ]
+  Σ[ c ∶ S ] Σ[ r ∶ S ] Σ[ x ∶ S ] Σ[ y ∶ S ]
     ( ⟨ fst c ∈ fst (lookup b γ) ⟩
     × ( ((d : S) → ⟨ fst d ∈ fst (lookup b γ) ⟩ → ⟨ fst c ∈ fst d ⟩ → ⊥₀)
 ```
@@ -1189,7 +1189,7 @@ For a fixed first endpoint `x`, `AtY` packages the remaining endpoint `y`, its m
 
 ```agda
     AtY : (c r A A' x : S) → Type (ℓ-suc ℓ)
-    AtY c r A A' x = Σ[ y ∈ S ] (⟨ fst y ∈ fst A' ⟩ × Body c r A A' x y)
+    AtY c r A A' x = Σ[ y ∶ S ] (⟨ fst y ∈ fst A' ⟩ × Body c r A A' x y)
 ```
 
 <!--en-->
@@ -1292,7 +1292,7 @@ After the first endpoint `x` is exposed, the remaining endpoint is still known o
 
 ```agda
     AtX : (c r A A' : S) → Type (ℓ-suc ℓ)
-    AtX c r A A' = Σ[ x ∈ S ] (⟨ fst x ∈ fst A' ⟩ × ∥ AtY c r A A' x ∥₁)
+    AtX c r A A' = Σ[ x ∶ S ] (⟨ fst x ∈ fst A' ⟩ × ∥ AtY c r A A' x ∥₁)
 ```
 
 <!--en-->
@@ -1333,7 +1333,7 @@ After the stage at `c` has been recovered, the remaining inner quantifiers ident
 
 ```agda
     AtA' : (c r A : S) → Type (ℓ-suc ℓ)
-    AtA' c r A = Σ[ A' ∈ S ]
+    AtA' c r A = Σ[ A' ∶ S ]
       ( ⟨ (A' ∷ A ∷ r ∷ c ∷ γ) ⊨ LsetGraphAt zero (sh4 b) ⟩
       × ∥ AtX c r A A' ∥₁ )
 ```
@@ -1379,7 +1379,7 @@ One quantifier farther out, `AtA` performs the analogous task for the stage inde
 
 ```agda
     AtA : (c r : S) → Type (ℓ-suc ℓ)
-    AtA c r = Σ[ A ∈ S ]
+    AtA c r = Σ[ A ∶ S ]
       ( ⟨ (A ∷ r ∷ c ∷ γ) ⊨ LsetGraphAt zero (suc (suc zero)) ⟩
       × ∥ AtA' c r A ∥₁ )
 ```
@@ -1425,7 +1425,7 @@ The next outer witness is the relation stored by the approximation at `c`. `AtR`
 
 ```agda
     AtR : (c : S) → Type (ℓ-suc ℓ)
-    AtR c = Σ[ r ∈ S ]
+    AtR c = Σ[ r ∶ S ]
       ( ⟨ (r ∷ c ∷ γ) ⊨ appAt (sh2 f) (suc zero) zero ⟩ × ∥ AtA c r ∥₁ )
 ```
 
@@ -1467,7 +1467,7 @@ At the outermost layer, `AtC` chooses a member `c` of the ordinal index and asse
 
 ```agda
     AtC : Type (ℓ-suc ℓ)
-    AtC = Σ[ c ∈ S ]
+    AtC = Σ[ c ∶ S ]
       ( ⟨ fst c ∈ fst (lookup b γ) ⟩
       × ( ⟨ (c ∷ γ) ⊨ ∀̇∈ (var (suc b)) (¬̇ (var (suc zero) ∈̇ var zero)) ⟩
         × ∥ AtR c ∥₁ ) )
@@ -1868,8 +1868,8 @@ Any comparison `before k x y` forces `k` to be a successor. At zero the relation
 <!--/-->
 
 ```agda
-before-suc : (k : ℕ) (x y : V ℓ) → ⟨ before k x y ⟩ → Σ[ m ∈ ℕ ] (k ≡ suc m)
-before-suc zero    x y h = ⊥*-rec h
+before-suc : (k : ℕ) (x y : V ℓ) → ⟨ before k x y ⟩ → Σ[ m ∶ ℕ ] (k ≡ suc m)
+before-suc 0    x y h = ⊥*-rec h
 before-suc (suc m) x y h = m , refl
 ```
 
@@ -1934,7 +1934,7 @@ For such an `m`, membership in `relAt k` is proved by its introduction lemma. Th
 
 ```agda
       where
-      atC : Σ[ m ∈ ℕ ] ((m < k) × (fst c ≡ # m)) → ⟨ x ∈ fst (relAt k) ⟩
+      atC : Σ[ m ∶ ℕ ] ((m < k) × (fst c ≡ # m)) → ⟨ x ∈ fst (relAt k) ⟩
       atC (m , (hm , qc)) = relAt-in k x
         (xx , (yy , (xxk , (yyk , (qx , below)))))
         where
@@ -2152,7 +2152,7 @@ In a branch where `d ≡ # j`, membership of `d` in `# k = # (suc m)` gives `j �
 <!--/-->
 
 ```agda
-        step : Σ[ j ∈ ℕ ] ((j < k) × (fst d ≡ # j)) → ⊥₀
+        step : Σ[ j ∶ ℕ ] ((j < k) × (fst d ≡ # j)) → ⊥₀
         step (j , (hj , qd)) = <-asym mj (pred-≤-pred (subst (λ i → j < i) qk hj))
           where
           mj : m < j
@@ -2391,7 +2391,7 @@ The domain argument is justified by `j < k`: numeral monotonicity gives `# j ∈
 ```agda
         (subst (λ t → ⟨ t ∈ # k ⟩) (sym (numS-fst j)) (#mono j k hj))))
   where
-  named : Σ[ u ∈ S ] ⟨ pr (fst (numS j)) (fst u) ∈ fst (lookup f γ) ⟩
+  named : Σ[ u ∶ S ] ⟨ pr (fst (numS j)) (fst u) ∈ fst (lookup f γ) ⟩
         → ⟨ pr (# j) (fst (relAt j)) ∈ fst (lookup f γ) ⟩
   named (u , p) =
 ```
@@ -2593,7 +2593,7 @@ To prepare the finite family used below for collection by `finSet`, first place 
 
 ```agda
 smallStage : (X : Type ℓ) (g : X → S)
-           → Σ[ σ ∈ V ℓ ] (IsOrd σ × ((x : X) → ⟨ fst (g x) ∈ Lset σ ⟩))
+           → Σ[ σ ∶ V ℓ ] (IsOrd σ × ((x : X) → ⟨ fst (g x) ∈ Lset σ ⟩))
 smallStage X g = bd .fst , (bd .snd .fst , mem)
   where
   bd = boundingOrd X (λ x → stage (fst (g x)) (g x .snd))
@@ -2637,7 +2637,7 @@ The lifted copy of `Fin k` places this finite index type in the universe expecte
 <!--/-->
 
 ```agda
-  famBnd : (k : ℕ) → Σ[ σ ∈ V ℓ ] (IsOrd σ
+  famBnd : (k : ℕ) → Σ[ σ ∶ V ℓ ] (IsOrd σ
          × ((i : Lift {ℓ-zero} {ℓ} (Fin k)) → ⟨ fst (famOf k (lower i)) ∈ Lset σ ⟩))
   famBnd k = smallStage (Lift {ℓ-zero} {ℓ} (Fin k)) (λ i → famOf k (lower i))
 ```
@@ -2728,7 +2728,7 @@ Conversely, membership in `approxSet k` yields only a propositionally truncated 
 
 ```agda
 approx-mem-out : (k : ℕ) (y : V ℓ) → ⟨ y ∈ fst (approxSet k) ⟩
-               → ∥ Σ[ j ∈ ℕ ] ((j < k) × (y ≡ pr (# j) (fst (relAt j)))) ∥₁
+               → ∥ Σ[ j ∶ ℕ ] ((j < k) × (y ≡ pr (# j) (fst (relAt j)))) ∥₁
 approx-mem-out k y h = map₁ named
   (finSet-out k (λ i → fst (famOf k i)) y
     (subst (λ t → ⟨ y ∈ t ⟩) (approxSet-fst k) h))
@@ -2744,8 +2744,8 @@ An enumerated index `i : Fin k` is sent to the natural number `toℕ i`, togethe
 
 ```agda
   where
-  named : Σ[ i ∈ Fin k ] (fst (famOf k i) ≡ y)
-        → Σ[ j ∈ ℕ ] ((j < k) × (y ≡ pr (# j) (fst (relAt j))))
+  named : Σ[ i ∶ Fin k ] (fst (famOf k i) ≡ y)
+        → Σ[ j ∶ ℕ ] ((j < k) × (y ≡ pr (# j) (fst (relAt j))))
   named (i , q) = toℕ i , (toℕ<n i , (sym q ∙ famEq k i))
 approxVals : (k : ℕ) → Values (approxSet k) k
 ```
@@ -2762,7 +2762,7 @@ This membership description proves value correctness. If an entry with first com
 approxVals k m hm u hu = rec₁ (setIsSet (fst u) (fst (relAt m))) named
   (approx-mem-out k (pr (# m) (fst u)) hu)
   where
-  named : Σ[ j ∈ ℕ ] ((j < k) × (pr (# m) (fst u) ≡ pr (# j) (fst (relAt j))))
+  named : Σ[ j ∶ ℕ ] ((j < k) × (pr (# m) (fst u) ≡ pr (# j) (fst (relAt j))))
         → fst u ≡ fst (relAt m)
 ```
 
@@ -2856,7 +2856,7 @@ After transporting the entry into `approxSet k`, `approx-mem-out` produces a pro
 <!--/-->
 
 ```agda
-        atY : Σ[ y ∈ S ] ⟨ pr (fst x) (fst y) ∈ fst (lookup f γ) ⟩
+        atY : Σ[ y ∶ S ] ⟨ pr (fst x) (fst y) ∈ fst (lookup f γ) ⟩
             → ⟨ fst x ∈ fst (lookup a γ) ⟩
         atY (y , p) = rec₁ (snd (fst x ∈ fst (lookup a γ))) named
           (approx-mem-out k (pr (fst x) (fst y))
@@ -2873,7 +2873,7 @@ The first-component equality says that the underlying set of `x` is `# j`. The e
 
 ```agda
           where
-          named : Σ[ j ∈ ℕ ]
+          named : Σ[ j ∶ ℕ ]
                     ((j < k) × (pr (fst x) (fst y) ≡ pr (# j) (fst (relAt j))))
                 → ⟨ fst x ∈ fst (lookup a γ) ⟩
           named (j , (hj , q)) = subst (λ t → ⟨ fst x ∈ t ⟩) (sym qa)
@@ -2916,8 +2916,8 @@ For an explicit decoded `j`, choose `relAt j` as the second component. Entry com
 <!--/-->
 
 ```agda
-        named : Σ[ j ∈ ℕ ] ((j < k) × (fst x ≡ # j))
-              → Σ[ y ∈ S ] ⟨ pr (fst x) (fst y) ∈ fst (lookup f γ) ⟩
+        named : Σ[ j ∶ ℕ ] ((j < k) × (fst x ≡ # j))
+              → Σ[ y ∶ S ] ⟨ pr (fst x) (fst y) ∈ fst (lookup f γ) ⟩
         named (j , (hj , q)) = relAt j
           , subst (λ t → ⟨ pr (fst x) (fst (relAt j)) ∈ t ⟩) (sym qf)
               (subst (λ t → ⟨ pr t (fst (relAt j)) ∈ fst (approxSet k) ⟩)
@@ -2962,7 +2962,7 @@ Membership in the table is first transported to `approxSet k` and read by `appro
 ```agda
         (subst (λ t → ⟨ pr (fst x) (fst y) ∈ t ⟩) qf p))
       where
-      named : Σ[ j ∈ ℕ ]
+      named : Σ[ j ∶ ℕ ]
                 ((j < k) × (pr (fst x) (fst y) ≡ pr (# j) (fst (relAt j))))
             → ⟨ (y ∷ x ∷ γ) ⊨ RelStepAt zero (suc zero) (sh2 f) ⟩
 ```
@@ -3070,7 +3070,7 @@ For any formula `φ` proved equal to the paired recursion graph, `famBuild` retu
 
 ```agda
   famBuild : (φ : Formula S 2) → φ ≡ PairRelGraphAt zero (suc zero)
-           → Σ[ h ∈ S ]
+           → Σ[ h ∶ S ]
                ( ((k : ℕ) → ⟨ pr (# k) (fst (relAt k)) ∈ fst h ⟩)
                × ((cS rS : S) (k : ℕ) → fst cS ≡ # k
                   → ⟨ pr (fst cS) (fst rS) ∈ fst h ⟩ → fst rS ≡ fst (relAt k)) )
@@ -3088,7 +3088,7 @@ Replacement requires the fiber of satisfying outputs over each `c ∈ ωʟ` to b
   famBuild φ qφ = r .fst .fst , (inFam , outFam)
     where
     fc : (c : S) → ⟨ c ∈ˢ ωʟ ⟩
-       → isContr (Σ[ y ∈ S ] ⟨ (y ∷ c ∷ []) ⊨ φ ⟩)
+       → isContr (Σ[ y ∶ S ] ⟨ (y ∷ c ∷ []) ⊨ φ ⟩)
     fc c c∈ = mereFunct φ c (map₁ atK c∈)
 ```
 
@@ -3102,8 +3102,8 @@ In an explicit numeral case `fst c = # j`, the chosen center of the fiber is the
 
 ```agda
       where
-      atK : Σ[ j ∈ Lift ℕ ] (# (lower j) ≡ fst c)
-          → Σ[ y ∈ S ] ( ⟨ (y ∷ c ∷ []) ⊨ φ ⟩
+      atK : Σ[ j ∶ Lift ℕ ] (# (lower j) ≡ fst c)
+          → Σ[ y ∶ S ] ( ⟨ (y ∷ c ∷ []) ⊨ φ ⟩
                        × ((y' : S) → ⟨ (y' ∷ c ∷ []) ⊨ φ ⟩ → y' ≡ y) )
       atK (j , qj) = prS c (relAt (lower j)) , (holds , only)
 ```
@@ -3307,7 +3307,7 @@ The replacement specification yields, propositionally truncated, an internal nat
         (subst ⟨_⟩ (r .fst .snd (prS cS rS))
           (subst (λ t → ⟨ t ∈ fst (r .fst .fst) ⟩) (sym (prS-fst cS rS)) h))
       where
-      atD : Σ[ d ∈ S ] ( ⟨ d ∈ˢ ωʟ ⟩ × ⟨ (prS cS rS ∷ d ∷ []) ⊨ φ ⟩ )
+      atD : Σ[ d ∶ S ] ( ⟨ d ∈ˢ ωʟ ⟩ × ⟨ (prS cS rS ∷ d ∷ []) ⊨ φ ⟩ )
           → fst rS ≡ fst (relAt k)
 ```
 
@@ -3467,7 +3467,7 @@ To read a satisfying assignment, temporarily expose the data hidden by the exist
 
 ```agda
     AtR : Type (ℓ-suc ℓ)
-    AtR = Σ[ r ∈ S ]
+    AtR = Σ[ r ∶ S ]
       ( ⟨ (r ∷ γ) ⊨ appC beforeFam (suc b) zero ⟩
       × ⟨ (r ∷ γ) ⊨ appAt zero (suc x) (suc y) ⟩ )
 ```

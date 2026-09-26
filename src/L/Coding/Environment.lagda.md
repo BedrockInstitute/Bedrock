@@ -461,7 +461,7 @@ The body is the conjunction of three bounded assertions about those five witness
 
 shiftPairAt-adequate : ∀ {n} (p' p : Fin n) (γ : (V ℓ) ^ n)
   → (γ ⊨ shiftPairAt p' p)
-  ≡ (∥ Σ[ i ∈ V ℓ ] Σ[ v ∈ V ℓ ]
+  ≡ (∥ Σ[ i ∶ V ℓ ] Σ[ v ∶ V ℓ ]
        ((⟦ var p ⟧ γ ≡ pr i v) × (⟦ var p' ⟧ γ ≡ pr (sucV i) v)) ∥₁ , squash₁)
 ```
 
@@ -490,7 +490,7 @@ The forward direction must convert a chain of truncated witnesses into one inhab
 <!--/-->
 
 ```agda
-  Tgt = ∥ Σ[ i ∈ V ℓ ] Σ[ v ∈ V ℓ ] ((P ≡ pr i v) × (P' ≡ pr (sucV i) v)) ∥₁
+  Tgt = ∥ Σ[ i ∶ V ℓ ] Σ[ v ∶ V ℓ ] ((P ≡ pr i v) × (P' ≡ pr (sucV i) v)) ∥₁
 
   conclude : (c i v c' j : V ℓ)
     → ⟨ (j ∷ c' ∷ v ∷ i ∷ c ∷ γ)
@@ -804,11 +804,11 @@ The satisfaction of the two readers, once unfolded, takes the shape of two metal
 
 ```agda
   EmptySgl : V ℓ → Type (ℓ-suc ℓ)
-  EmptySgl w = ∥ Σ[ z ∈ V ℓ ] (⟨ z ∈ w ⟩ × Empty' z) ∥₁
+  EmptySgl w = ∥ Σ[ z ∶ V ℓ ] (⟨ z ∈ w ⟩ × Empty' z) ∥₁
             × ((z : V ℓ) → ⟨ z ∈ w ⟩ → Empty' z)
 
   EmptyPair : V ℓ → V ℓ → Type (ℓ-suc ℓ)
-  EmptyPair W w = ∥ Σ[ z ∈ V ℓ ] (⟨ z ∈ w ⟩ × Empty' z) ∥₁
+  EmptyPair W w = ∥ Σ[ z ∶ V ℓ ] (⟨ z ∈ w ⟩ × Empty' z) ∥₁
 ```
 
 <!--en-->
@@ -838,7 +838,7 @@ The forward conversion turns the truncated existence of an empty member into the
 <!--/-->
 
 ```agda
-  empty-member : (w : V ℓ) → ∥ Σ[ z ∈ V ℓ ] (⟨ z ∈ w ⟩ × Empty' z) ∥₁ → ⟨ ∅ ∈ w ⟩
+  empty-member : (w : V ℓ) → ∥ Σ[ z ∶ V ℓ ] (⟨ z ∈ w ⟩ × Empty' z) ∥₁ → ⟨ ∅ ∈ w ⟩
   empty-member w = rec₁ (⟨ ∅ ∈ w ⟩isProp)
     (λ { (z , hz , ez) → subst (λ u → ⟨ u ∈ w ⟩) (empty'→∅ z ez) hz })
 
@@ -893,8 +893,8 @@ In that pair conversion, the classification runs in the opposite direction: a me
         (hall z z∈w))
 
   PairWitness : (V ℓ → Type (ℓ-suc ℓ)) → (V ℓ → Type (ℓ-suc ℓ)) → V ℓ → Type (ℓ-suc ℓ)
-  PairWitness P R Q = ∥ Σ[ w ∈ V ℓ ] (⟨ w ∈ Q ⟩ × P w) ∥₁
-    × (∥ Σ[ w ∈ V ℓ ] (⟨ w ∈ Q ⟩ × R w) ∥₁
+  PairWitness P R Q = ∥ Σ[ w ∶ V ℓ ] (⟨ w ∈ Q ⟩ × P w) ∥₁
+    × (∥ Σ[ w ∶ V ℓ ] (⟨ w ∈ Q ⟩ × R w) ∥₁
 ```
 
 <!--en-->
@@ -928,7 +928,7 @@ The forward theorem `prChar∅-fwd` now takes the three empty-based hypotheses, 
     , (λ y hy → map₁ (sumMap (f y) (g y)) (h₃ y hy))
 
 prChar∅-fwd : (Q W : V ℓ)
-  → ∥ Σ[ w ∈ V ℓ ] (⟨ w ∈ Q ⟩ × EmptySgl w) ∥₁
+  → ∥ Σ[ w ∶ V ℓ ] (⟨ w ∈ Q ⟩ × EmptySgl w) ∥₁
 ```
 
 <!--en-->
@@ -940,7 +940,7 @@ The backward theorem `prChar∅-bwd` mirrors this: from the path `Q ≡ pr ∅ W
 <!--/-->
 
 ```agda
-  → ∥ Σ[ w ∈ V ℓ ] (⟨ w ∈ Q ⟩ × EmptyPair W w) ∥₁
+  → ∥ Σ[ w ∶ V ℓ ] (⟨ w ∈ Q ⟩ × EmptyPair W w) ∥₁
   → ((y : V ℓ) → ⟨ y ∈ Q ⟩ → ∥ EmptySgl y ⊎ EmptyPair W y ∥₁)
   → Q ≡ pr ∅ W
 prChar∅-fwd Q W h₁ h₂ h₃ = prChar-fwd Q ∅ W (fst h) (fst (snd h)) (snd (snd h))
@@ -960,8 +960,8 @@ The intermediate predicate `PairWitness` keeps the argument independent of any p
   h = map-witness Q EmptySgl→SglOf∅ (EmptyPair→PairOf∅ W) (h₁ , h₂ , h₃)
 
 prChar∅-bwd : (Q W : V ℓ) → Q ≡ pr ∅ W
-  → ∥ Σ[ w ∈ V ℓ ] (⟨ w ∈ Q ⟩ × EmptySgl w) ∥₁
-  × (∥ Σ[ w ∈ V ℓ ] (⟨ w ∈ Q ⟩ × EmptyPair W w) ∥₁
+  → ∥ Σ[ w ∶ V ℓ ] (⟨ w ∈ Q ⟩ × EmptySgl w) ∥₁
+  × (∥ Σ[ w ∶ V ℓ ] (⟨ w ∈ Q ⟩ × EmptyPair W w) ∥₁
 ```
 
 <!--en-->

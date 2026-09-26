@@ -11,6 +11,31 @@ retired task ledger or goal code as current project policy.
 The mechanical subset of these rules (the OPTIONS header, the import discipline of
 §2, and the forbidden constructs of §1) is machine-enforced by `scripts/gate/lint-agda.py`
 as part of `make check` and the pre-commit hook.
+The natural-number literal rule below is checked separately during the compiler
+semantic extraction in `make site`: a pure source scan cannot distinguish the
+overloaded `zero`/`suc` constructors of `ℕ` and `Fin` reliably.
+
+Closed expressions that the compiler certifies as `ℕ`, such as `zero`,
+`suc zero` and `suc (suc zero)`, must instead be authored as `0`, `1` and `2`.
+This is a source rule, not a display-only substitution. Keep `Fin` constructors
+and recursive patterns in constructor form. Open natural successors remain Agda
+source; the site may display `suc n` as `n⁺`, `suc (suc n)` as `n⁺⁺`, and three
+or more successors as `n⁺³`, `n⁺⁴`, etc., with the original code in the hover.
+That display requires compiler-certified expression type data in fenced code,
+or an explicit `type="ℕ"` annotation on the complete inline expression. A
+constructor link by itself is not evidence for the whole expression's type.
+For an inline demonstration of the overloaded `Fin` constructors, supply the
+actual result type explicitly, for example `` `suc zero`{.Agda type="Fin 3"} ``.
+This is an authored hover-type assertion and yields the numeral `1` in the site;
+use `.raw-notation` alongside it when first showing the constructor spelling.
+It never replaces a compiler-checked type for fenced Agda code.
+The typed marker also chooses uniquely compiler-indexed `Nat.zero`/`Nat.suc`
+or `Fin.zero`/`Fin.suc` links, including configured Prelude forwarding. An
+unmarked `{.Agda}` expression retains the established reference inference as
+a compatibility fallback; do not assert a type that the mathematics does not
+justify. Long Agda fences may use the reusable `outcrop:agda-preview-lines=N`
+directive documented in Outcrop's Markdown contract; it changes visibility,
+not Agda source or compiler semantics.
 
 The SPDX-header gate applies only to Bedrock-owned files, including new untracked
 files and hidden configuration. Both full and staged scans exclude independent
@@ -230,6 +255,11 @@ Three semantic layers, one marking each:
 - `Base.Prelude` re-exports the direct `hProp` operations
   `⊓ ⊔ ⇒ ¬ ⊤ ⊥` and the `∀[]-syntax` / `∃[]-syntax` forms
   `∀[ x ] …` / `∃[ x ] …`, so each logic symbol has one meaning throughout the book.
+- `Base.Prelude` defines `Σ[]-syntax` and `Σ[∶]-syntax`: write
+  `Σ[ x ] B x` when the type of `x` is inferable, otherwise
+  `Σ[ x ∶ A ] B x`. Both are actual Agda syntax for the ordinary dependent
+  pair, not visual substitutions. Do not use the library's `Σ[ x ∈ A ] B x`
+  spelling: its `∈` conflicts visually with set membership in this book.
 - For `P : hProp ℓ`, write `⟨ P ⟩isProp` for the propositionhood certificate.
   The representation-level projection `P .snd` is forbidden for this purpose;
   `.snd` remains available for ordinary dependent pairs.

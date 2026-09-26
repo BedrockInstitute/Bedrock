@@ -128,7 +128,7 @@ module _ (P : S → hProp (ℓ-suc ℓ)) where
   isLeastOrd α = (γ : S) → IsOrd γ → ⟨ P γ ⟩ → ⟨ γ ∈ˢ α ⟩ → ⊥₀
 
   LeastOrd : Type (ℓ-suc ℓ)
-  LeastOrd = Σ[ α ∈ S ] (IsOrd α × ⟨ P α ⟩ × isLeastOrd α)
+  LeastOrd = Σ[ α ∶ S ] (IsOrd α × ⟨ P α ⟩ × isLeastOrd α)
 ```
 
 <!--en-->
@@ -257,7 +257,7 @@ The negative branch's minimality clause is where the refutation earns its keep: 
 ```agda
         leastProof γ ordγ pγ γ∈α = ¬∃β ∣ γ , (γ∈α , (ordγ , pγ)) ∣₁
 
-  leastOrd : ∥ (Σ[ α ∈ S ] (IsOrd α × ⟨ P α ⟩)) ∥₁ → LeastOrd
+  leastOrd : ∥ (Σ[ α ∶ S ] (IsOrd α × ⟨ P α ⟩)) ∥₁ → LeastOrd
   leastOrd = rec₁ isPropLeastOrd
     (λ { (α , (ordα , pα)) → leastOrdBelow α ordα pα })
 ```

@@ -583,7 +583,7 @@ For an index object `i`, `Ent y s i` says merely that there are model elements `
 
 ```agda
   Ent : (y s i : S) → Type (ℓ-suc ℓ)
-  Ent y s i = ∥ Σ[ u ∈ S ] Σ[ v ∈ S ]
+  Ent y s i = ∥ Σ[ u ∶ S ] Σ[ v ∶ S ]
       ( ⟨ pr (fst i) (fst u) ∈ fst s ⟩
       × ⟨ pr (fst i) (fst v) ∈ fst y ⟩
       × ⟨ pr (fst u) (fst v) ∈ fst E ⟩ ) ∥₁
@@ -599,7 +599,7 @@ The host reading `Wit y s` says merely that some object `n` is the domain of `s`
 
 ```agda
   Wit : (y s : S) → Type (ℓ-suc ℓ)
-  Wit y s = ∥ Σ[ n ∈ S ]
+  Wit y s = ∥ Σ[ n ∶ S ]
       ( ⟨ (n ∷ y ∷ s ∷ []) ⊨ domAt i2 i0 ⟩
       × ⟨ (B ∷ n ∷ y ∷ s ∷ []) ⊨ envOverAt i2 i1 i0 ⟩
       × ((i : S) → ⟨ fst i ∈ fst n ⟩ → Ent y s i) ) ∥₁
@@ -865,8 +865,8 @@ The step clause at each position is proved by eliminating the numeral membership
       step : (i : S) → ⟨ fst i ∈ # N ⟩ → Ent y₀ s i
       step i i∈N = map₁ atIndex (∈#-elim N (fst i) i∈N)
         where
-        atIndex : Σ[ k ∈ ℕ ] ((k < N) × (fst i ≡ # k))
-                → Σ[ u ∈ S ] Σ[ v ∈ S ]
+        atIndex : Σ[ k ∶ ℕ ] ((k < N) × (fst i ≡ # k))
+                → Σ[ u ∶ S ] Σ[ v ∶ S ]
 ```
 
 <!--en-->
@@ -1010,7 +1010,7 @@ The reading lemma states what the step clause provides: two elements and three m
 <!--/-->
 
 ```agda
-          read : Σ[ u ∈ S ] Σ[ v ∈ S ]
+          read : Σ[ u ∶ S ] Σ[ v ∶ S ]
                    ( ⟨ pr (# (toℕ j)) (fst u) ∈ fst s ⟩
                    × ⟨ pr (# (toℕ j)) (fst v) ∈ fst y ⟩
                    × ⟨ pr (fst u) (fst v) ∈ fst E ⟩ )
@@ -1110,7 +1110,7 @@ A representation is the truncated record of a length, an index function and the 
 
 ```agda
   Rep : S → Type (ℓ-suc ℓ)
-  Rep s = ∥ Σ[ n ∈ ℕ ] Σ[ g ∈ Ix A n ] (fst s ≡ fst (envS A g)) ∥₁
+  Rep s = ∥ Σ[ n ∶ ℕ ] Σ[ g ∶ Ix A n ] (fst s ≡ fst (envS A g)) ∥₁
 ```
 
 <!--en-->
@@ -1641,7 +1641,7 @@ The search lemma names a member: for each member `x` of the finite stage it runs
 <!--/-->
 
 ```agda
-  named : (x : V ℓ) → ⟨ x ∈ˢ finiteStage n ⟩ → Σ[ i ∈ Fin size ] (item i ≡ x)
+  named : (x : V ℓ) → ⟨ x ∈ˢ finiteStage n ⟩ → Σ[ i ∶ Fin size ] (item i ≡ x)
   named x hx = decRec (λ q → q) (λ nq → ⊥₀-rec (rec₁ isProp⊥ nq (onto x hx)))
     (DecΣ size (λ i → item i ≡ x)
       (λ i → FOL.Semantics.decideEquality 𝒮ᵥ lem (item i) x))
@@ -2166,7 +2166,7 @@ A predecessor segment records a predecessor `r` of `p` together with the identif
 ```agda
 private
   Seg : OT.Dom → V ℓ → Type (ℓ-suc ℓ)
-  Seg p b = Σ[ r ∈ OT.Dom ] ((r OT.≺ p) × (C.col r ≡ b))
+  Seg p b = Σ[ r ∶ OT.Dom ] ((r OT.≺ p) × (C.col r ≡ b))
 ```
 
 <!--en-->
@@ -2226,7 +2226,7 @@ Assume for contradiction that every element of `ω` belongs to `C.col p`. For a 
     s : (x : ⟪ ω ⟫) → Seg p (⟪ ω ⟫↪ x)
     s x = seg p (⟪ ω ⟫↪ x) (sub (⟪ ω ⟫↪ x) (member ω x))
     fb : (x : ⟪ ω ⟫)
-       → Σ[ m ∈ ⟪ Lset (gOf p) ⟫ ] (⟪ Lset (gOf p) ⟫↪ m ≡ ⟪ Lset ω ⟫↪ (s x .fst))
+       → Σ[ m ∶ ⟪ Lset (gOf p) ⟫ ] (⟪ Lset (gOf p) ⟫↪ m ≡ ⟪ Lset ω ⟫↪ (s x .fst))
 ```
 
 <!--en-->

@@ -506,7 +506,7 @@ The general equation `Sat-mem` separates membership in the environment set from 
 ```agda
   CondAtom : ∀ {n} → Term S n → Term S n
            → (S → S → Type (ℓ-suc ℓ)) → S → Type (ℓ-suc ℓ)
-  CondAtom t u R z = Σ[ v ∈ S ] (Σ[ w ∈ S ]
+  CondAtom t u R z = Σ[ v ∶ S ] (Σ[ w ∶ S ]
     (⟨ (w ∷ v ∷ z ∷ []) ⊨ tmIs t (suc zero) (suc (suc zero)) ⟩
      × (⟨ (w ∷ v ∷ z ∷ []) ⊨ tmIs u zero (suc (suc zero)) ⟩ × R v w)))
 ```
@@ -583,8 +583,8 @@ Its outward mapping is likewise the membership one with the relation exchanged.
 
 ```agda
   CondQuant : ∀ {n} → Formula S (suc n) → S → Type (ℓ-suc ℓ)
-  CondQuant a z = Σ[ x ∈ S ] (⟨ fst x ∈ fst B ⟩
-    × (Σ[ e' ∈ S ] (⟨ (e' ∷ x ∷ z ∷ []) ⊨ consAtL zero (suc zero) (suc (suc zero)) ⟩
+  CondQuant a z = Σ[ x ∶ S ] (⟨ fst x ∈ fst B ⟩
+    × (Σ[ e' ∶ S ] (⟨ (e' ∷ x ∷ z ∷ []) ⊨ consAtL zero (suc zero) (suc (suc zero)) ⟩
                     × ⟨ fst e' ∈ fst (Sat a) ⟩)))
 ```
 
@@ -683,8 +683,8 @@ No truncation appears, because satisfaction of a universal is verified by supply
 
 ```agda
   CondBnd : ∀ {n} → Formula S (suc n) → S → S → Type (ℓ-suc ℓ)
-  CondBnd a z w = Σ[ x ∈ S ] ((⟨ fst x ∈ fst B ⟩ × ⟨ fst x ∈ fst w ⟩)
-    × (Σ[ e' ∈ S ]
+  CondBnd a z w = Σ[ x ∶ S ] ((⟨ fst x ∈ fst B ⟩ × ⟨ fst x ∈ fst w ⟩)
+    × (Σ[ e' ∶ S ]
         (⟨ (e' ∷ x ∷ w ∷ z ∷ []) ⊨ consAtL zero (suc zero) (suc (suc (suc zero))) ⟩
          × ⟨ fst e' ∈ fst (Sat a) ⟩)))
 ```
@@ -699,7 +699,7 @@ The bounded quantifiers add one layer. The condition quantifies, in order, the v
 
 ```agda
   cond∃∈-in : ∀ {n} (t : Term S n) (a : Formula S (suc n)) (z : S)
-            → ∥ (Σ[ w ∈ S ] (⟨ (w ∷ z ∷ []) ⊨ tmIs t zero (suc zero) ⟩
+            → ∥ (Σ[ w ∶ S ] (⟨ (w ∷ z ∷ []) ⊨ tmIs t zero (suc zero) ⟩
                              × ∥ CondBnd a z w ∥₁)) ∥₁
             → ⟨ (z ∷ []) ⊨ cond (∃̇∈ t a) ⟩
 ```
@@ -730,7 +730,7 @@ The first `map₁` eliminates the outer truncation over `w`, and the nested `map
 ```agda
   cond∃∈-out : ∀ {n} (t : Term S n) (a : Formula S (suc n)) (z : S)
              → ⟨ (z ∷ []) ⊨ cond (∃̇∈ t a) ⟩
-             → ∥ (Σ[ w ∈ S ] (⟨ (w ∷ z ∷ []) ⊨ tmIs t zero (suc zero) ⟩
+             → ∥ (Σ[ w ∶ S ] (⟨ (w ∷ z ∷ []) ⊨ tmIs t zero (suc zero) ⟩
                               × ∥ CondBnd a z w ∥₁)) ∥₁
 ```
 

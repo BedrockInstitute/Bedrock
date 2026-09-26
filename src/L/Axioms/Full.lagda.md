@@ -479,7 +479,7 @@ still depends on `lem`, although no choice axiom is used.
 ```agda
 module Images (a : S) (φ : Formula S 2)
               (fc : (x : S) → ⟨ x ∈ˢ a ⟩
-                  → isContr (Σ[ y ∈ S ] ⟨ (y ∷ x ∷ []) ⊨ φ ⟩)) where
+                  → isContr (Σ[ y ∶ S ] ⟨ (y ∷ x ∷ []) ⊨ φ ⟩)) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -517,7 +517,7 @@ definitional reduction; it changes neither this statement nor its assumptions.
 opaque
   hasReplacementL : (a : S) (φ : Formula S 2)
                 → ((x : S) → ⟨ x ∈ˢ a ⟩
-                     → isContr (Σ[ y ∈ S ] ⟨ (y ∷ x ∷ []) ⊨ φ ⟩))
+                     → isContr (Σ[ y ∶ S ] ⟨ (y ∷ x ∷ []) ⊨ φ ⟩))
                 → isContr (SetOf (λ y → ∃[ x ∶ S ] (x ∈ˢ a) ⊓ ((y ∷ x ∷ []) ⊨ φ)))
 ```
 

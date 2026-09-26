@@ -305,11 +305,11 @@ The definition has two clauses. The zeroth stage is `∅ʟ`, the internal empty 
 
 ```agda
   numeralL : ℕ → S
-  numeralL zero    = ∅ʟ
+  numeralL 0    = ∅ʟ
   numeralL (suc n) = sucʟ (numeralL n)
 
   numeralL-fst : (n : ℕ) → fst (numeralL n) ≡ # n
-  numeralL-fst zero    = refl
+  numeralL-fst 0    = refl
 ```
 
 <!--en-->

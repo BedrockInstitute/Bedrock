@@ -117,7 +117,7 @@ of the model.
 
 ```agda
 stageFor : (X : Type ℓ) (f : X → S)
-         → Σ[ β ∈ V ℓ ] (IsOrd β × ((x : X) → ⟨ fst (f x) ∈ Lset β ⟩))
+         → Σ[ β ∶ V ℓ ] (IsOrd β × ((x : X) → ⟨ fst (f x) ∈ Lset β ⟩))
 stageFor X f = β , (oβ , mem)
   where
   b = boundingOrd X (λ x → stage (fst (f x)) (f x .snd))
@@ -179,7 +179,7 @@ module _ (B : S) where
       pairs : Lift {ℓ-zero} {ℓ} (Fin n) → S
       pairs i = prʟ (numeralL (toℕ (lower i))) (ix (g (lower i)))
 
-      sf : Σ[ b ∈ V ℓ ] (IsOrd b
+      sf : Σ[ b ∶ V ℓ ] (IsOrd b
          × ((i : Lift {ℓ-zero} {ℓ} (Fin n)) → ⟨ fst (pairs i) ∈ Lset b ⟩))
       sf = stageFor (Lift {ℓ-zero} {ℓ} (Fin n)) pairs
 
@@ -234,7 +234,7 @@ description as the chapter wrote it, which is worth more than saving them.
                  ∧̇ envOverAt (suc (suc zero)) (suc zero) zero) ))
 
   private
-    sf : (n : ℕ) → Σ[ β ∈ V ℓ ] (IsOrd β × ((g : Ix n) → ⟨ fst (envS g) ∈ Lset β ⟩))
+    sf : (n : ℕ) → Σ[ β ∶ V ℓ ] (IsOrd β × ((g : Ix n) → ⟨ fst (envS g) ∈ Lset β ⟩))
     sf n = stageFor (Ix n) envS
 
     amb : (n : ℕ) → S
@@ -286,7 +286,7 @@ the indices below `n` are exactly the numerals below `n`.
 ```agda
     private
       out : (s : V ℓ) → ⟨ s ∈ fst (envS g) ⟩
-          → ∥ (Σ[ i ∈ Fin n ] (pr (# (toℕ i)) (fst (ix (g i))) ≡ s)) ∥₁
+          → ∥ (Σ[ i ∶ Fin n ] (pr (# (toℕ i)) (fst (ix (g i))) ≡ s)) ∥₁
       out s = map₁ (λ { (li , e) → lower li , e })
 
       into : (i : Fin n) → ⟨ pr (# (toℕ i)) (fst (ix (g i))) ∈ fst (envS g) ⟩
@@ -414,7 +414,7 @@ unwanted elements could enter.
       e = lookup Ei γ
 
       Entry : Fin n → Type (ℓ-suc ℓ)
-      Entry i = Σ[ y ∈ S ] ⟨ pr (# (toℕ i)) (fst y) ∈ fst e ⟩
+      Entry i = Σ[ y ∶ S ] ⟨ pr (# (toℕ i)) (fst y) ∈ fst e ⟩
 
       isPropEntry : (i : Fin n) → isProp (Entry i)
       isPropEntry i (y , p) (y' , p') =
@@ -429,7 +429,7 @@ unwanted elements could enter.
           (nn (toℕ i)) (subst (λ z → ⟨ (# (toℕ i)) ∈ z ⟩) (sym qd)
             (#mono (toℕ i) n (toℕ<n i))))
 
-      fib : (i : Fin n) → Σ[ m ∈ ⟪ fst B ⟫ ] (⟪ fst B ⟫↪ m ≡ fst (entry i .fst))
+      fib : (i : Fin n) → Σ[ m ∶ ⟪ fst B ⟫ ] (⟪ fst B ⟫↪ m ≡ fst (entry i .fst))
       fib i = ∈-asFiber {a = fst (entry i .fst)} {b = fst B}
         (subst (λ z → ⟨ fst (entry i .fst) ∈ z ⟩) qb
           (valuesInAt-out Ei bi γ (envOver-values Ei di bi γ h)
@@ -479,7 +479,7 @@ unwanted elements could enter.
     (sf n .snd .snd g , envSetIn g)
 
   envSet-out : (n : ℕ) (x : S) → ⟨ x ∈ˢ envSet n ⟩
-             → ∥ (Σ[ g ∈ Ix n ] (fst x ≡ fst (envS g))) ∥₁
+             → ∥ (Σ[ g ∶ Ix n ] (fst x ≡ fst (envS g))) ∥₁
   envSet-out n x hx = rec₁ squash₁
     (λ { (d , hd) → map₁
       (λ { (b , (qd , (qb , hov))) →

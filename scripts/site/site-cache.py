@@ -87,6 +87,7 @@ def extractor_inputs() -> list[Path]:
     return [
         ROOT / 'outcrop/src/outcrop/adapters/extract_types.py',
         ROOT / 'outcrop/src/outcrop/adapters/extract_expression_types.py',
+        ROOT / 'outcrop/src/outcrop/core/agda_type_quality.py',
         ROOT / 'scripts/site/extract-types.py',
         ROOT / 'scripts/site/extract-expression-types.py',
     ]
@@ -105,6 +106,7 @@ def render_identity() -> str | None:
               ROOT / 'outcrop/pyproject.toml', config_path,
               *(config.path(value) for value in
                 (config.catalog, config.glossary, config.favicon, config.logo) if value),
+              *(config.path(value) for value in config.stylesheets),
               *(path for path in (package / 'site/resources').rglob('*') if path.is_file())]
     return combined_digest(list(set(inputs)))
 

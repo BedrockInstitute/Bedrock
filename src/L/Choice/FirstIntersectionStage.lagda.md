@@ -297,7 +297,7 @@ reverse.
 <!--/-->
 
 ```agda
-isPropPredOf : (σ : S) → isProp (Σ[ δ ∈ S ] IsPredOf σ δ)
+isPropPredOf : (σ : S) → isProp (Σ[ δ ∶ S ] IsPredOf σ δ)
 isPropPredOf σ (δ , (ordδ , e)) (δ' , (ordδ' , e')) =
   Σ≡Prop (λ d → isProp× (isPropIsOrd d) (setIsSet (sucV d) σ))
     (ord-suc-inj δ δ' ordδ (e ∙ sym e'))
@@ -334,7 +334,7 @@ once: the property is a parameter, and nothing below ever reads into it.
 
 ```agda
   Carved : S → Type (ℓ-suc ℓ)
-  Carved σ = Σ[ δ ∈ S ] (⟨ δ ∈ˢ σ ⟩ × ⟨ P (sucV δ) ⟩)
+  Carved σ = Σ[ δ ∶ S ] (⟨ δ ∈ˢ σ ⟩ × ⟨ P (sucV δ) ⟩)
 ```
 
 <!--en-->
@@ -384,7 +384,7 @@ the least stage is what the case was handed.
 
 ```agda
     atCarve : (σ : S) → IsOrd σ → isLeastOrd P σ
-            → Carved σ → Σ[ δ ∈ S ] IsPredOf σ δ
+            → Carved σ → Σ[ δ ∶ S ] IsPredOf σ δ
     atCarve σ ordσ least (δ , (δ∈σ , m)) = δ , (ordδ , suc≡σ)
 ```
 
@@ -429,7 +429,7 @@ Given `δ ∈ σ`, `suc∈or≡` leaves exactly two possibilities for its succes
 
 ```agda
   predOf : (σ : S) → IsOrd σ → isLeastOrd P σ → ∥ Carved σ ∥₁
-         → Σ[ δ ∈ S ] IsPredOf σ δ
+         → Σ[ δ ∶ S ] IsPredOf σ δ
   predOf σ ordσ least = rec₁ (isPropPredOf σ) (atCarve σ ordσ least)
 ```
 
@@ -561,7 +561,7 @@ Transitivity applied twice reaches two levels down: a member of a member of
 
 ```agda
 stageBound : (a : S) (p : ⟨ isL a ⟩)
-           → Σ[ β ∈ S ] (IsOrd β × ⟨ ω ∈ˢ β ⟩ × ⟨ stage a p ∈ˢ β ⟩)
+           → Σ[ β ∶ S ] (IsOrd β × ⟨ ω ∈ˢ β ⟩ × ⟨ stage a p ∈ˢ β ⟩)
 stageBound a p = bound2 ω (stage a p) ω-ord (stage-ord a p)
 ```
 

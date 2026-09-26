@@ -256,7 +256,7 @@ A fact about `ω` itself, at the strength the membership predicate supports: a m
 ω-limit : (γ : V ℓ) → ⟨ γ ∈ ω ⟩ → ⟨ sucV γ ∈ ω ⟩
 ω-limit γ γ∈ω = rec₁ (snd (sucV γ ∈ ω)) go (ω-mem→numeral γ γ∈ω)
   where
-  go : Σ[ n ∈ ℕ ] (γ ≡ # n) → ⟨ sucV γ ∈ ω ⟩
+  go : Σ[ n ∶ ℕ ] (γ ≡ # n) → ⟨ sucV γ ∈ ω ⟩
   go (n , p) = subst (λ w → ⟨ sucV w ∈ ω ⟩) (sym p) (#∈ω (suc n))
 ```
 
@@ -382,7 +382,7 @@ Membership of `β` in `ω` yields, merely, a numeral with which `β` is identifi
 <!--/-->
 
 ```agda
-  go : Σ[ n ∈ ℕ ] (β ≡ # n) → ⊥₀
+  go : Σ[ n ∶ ℕ ] (β ≡ # n) → ⊥₀
   go (n , p) = no-inj-finite-ω n f' finj'
     where
 ```
@@ -525,9 +525,9 @@ Since `D` and `C` are presented, each of the two elements has a fiber: an index 
 <!--/-->
 
 ```agda
-    fD : Σ[ m ∈ ⟪ fst D ⟫ ] (⟪ fst D ⟫↪ m ≡ fst x)
+    fD : Σ[ m ∶ ⟪ fst D ⟫ ] (⟪ fst D ⟫↪ m ≡ fst x)
     fD = fiber (fst D) mx
-    fC : Σ[ k ∈ ⟪ fst C ⟫ ] (⟪ fst C ⟫↪ k ≡ fst z)
+    fC : Σ[ k ∶ ⟪ fst C ⟫ ] (⟪ fst C ⟫↪ k ≡ fst z)
     fC = fiber (fst C) mz
 ```
 
@@ -594,7 +594,7 @@ The backward reading turns membership into truncated data about a pair. A member
 
 ```agda
     out : (e : S) → ⟨ fst e ∈ fst rel ⟩
-        → ∥ Σ[ x ∈ S ] Σ[ y ∈ S ] ((fst e ≡ pr (fst x) (fst y)) × ⟨ P x y ⟩) ∥₁
+        → ∥ Σ[ x ∶ S ] Σ[ y ∶ S ] ((fst e ≡ pr (fst x) (fst y)) × ⟨ P x y ⟩) ∥₁
     out e h = rec₁ squash₁ (λ { (x , hx) → map₁
       (λ { (y , q , hy) → x , y
          , subst ⟨_⟩ (prAtL-adequate (suc (suc zero)) (suc zero) zero (y ∷ x ∷ e ∷ [])) q
@@ -752,7 +752,7 @@ The linking relation says: `x` and `z` are related when the object language can 
 ```agda
   private
     Chain : S → S → Type (ℓ-suc ℓ)
-    Chain x z = ∥ Σ[ y ∈ S ] (⟨ pr (fst x) (fst y) ∈ fst F ⟩
+    Chain x z = ∥ Σ[ y ∶ S ] (⟨ pr (fst x) (fst y) ∈ fst F ⟩
                              × ⟨ pr (fst y) (fst z) ∈ fst H ⟩) ∥₁
 ```
 
@@ -825,7 +825,7 @@ The composite graph is the separated relation itself.
   K = Composite.rel
 
   K-out : (x z : S) → ⟨ pr (fst x) (fst z) ∈ fst K ⟩
-        → ∥ Σ[ y ∈ S ] (⟨ pr (fst x) (fst y) ∈ fst F ⟩
+        → ∥ Σ[ y ∶ S ] (⟨ pr (fst x) (fst y) ∈ fst F ⟩
                       × ⟨ pr (fst y) (fst z) ∈ fst H ⟩) ∥₁
 ```
 
@@ -1215,8 +1215,8 @@ The two-fold elimination locally unwraps the two witnesses, assembles the compos
 <!--/-->
 
 ```agda
-  step : Σ[ F ∈ S ] InjCode F a b
-       → Σ[ H ∈ S ] InjCode H b c
+  step : Σ[ F ∶ S ] InjCode F a b
+       → Σ[ H ∶ S ] InjCode H b c
        → InjL a c
   step (F , svF , dmF , ijF , ranF) (H , svH , dmH , ijH , ranH) =
     ∣ K.K , (K.svK , K.dmK , K.ijK , K.ranK) ∣₁

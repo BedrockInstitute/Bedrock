@@ -133,7 +133,7 @@ The stepping stone `#⊆suc`{.Agda} says that any member of `# n`{.Agda} is also
 #⊆suc n {x} = ∈sucV-inl {A = # n} {x = x}
 
 #mono : (m n : ℕ) → m < n → ⟨ (# m) ∈ˢ (# n) ⟩
-#mono m zero    m<0    = ⊥₀-rec (¬-<-zero m<0)
+#mono m 0    m<0    = ⊥₀-rec (¬-<-zero m<0)
 #mono m (suc n) m<sucn = ⊎-rec
 ```
 

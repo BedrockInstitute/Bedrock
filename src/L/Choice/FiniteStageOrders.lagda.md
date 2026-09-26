@@ -211,7 +211,7 @@ The fourth field states coverage. Given `x` together with a proof that it belong
 <!--/-->
 
 ```agda
-    onto   : (x : S) → ⟨ x ∈ˢ A ⟩ → ∥ Σ[ i ∈ Fin size ] (item i ≡ x) ∥₁
+    onto   : (x : S) → ⟨ x ∈ˢ A ⟩ → ∥ Σ[ i ∶ Fin size ] (item i ≡ x) ∥₁
 ```
 
 <!--en-->
@@ -254,7 +254,7 @@ bumpLeft (inl i) = inl (suc i)
 bumpLeft (inr j) = inr j
 
 joinFin : (a : ℕ) {b : ℕ} → Fin a ⊎ Fin b → Fin (a + b)
-joinFin zero    (inr j)       = j
+joinFin 0    (inr j)       = j
 ```
 
 <!--en-->
@@ -271,7 +271,7 @@ joinFin (suc a) (inl (suc i)) = suc (joinFin a (inl i))
 joinFin (suc a) (inr j)       = suc (joinFin a (inr j))
 
 splitFin : (a : ℕ) {b : ℕ} → Fin (a + b) → Fin a ⊎ Fin b
-splitFin zero    j       = inr j
+splitFin 0    j       = inr j
 ```
 
 <!--en-->
@@ -287,7 +287,7 @@ splitFin (suc a) zero    = inl zero
 splitFin (suc a) (suc i) = bumpLeft (splitFin a i)
 
 split-join : (a : ℕ) {b : ℕ} (x : Fin a ⊎ Fin b) → splitFin a (joinFin a x) ≡ x
-split-join zero    (inr j)       = refl
+split-join 0    (inr j)       = refl
 split-join (suc a) (inl zero)    = refl
 ```
 
@@ -340,7 +340,7 @@ The count of masks is defined by the recursion it will be enumerated with: lengt
 
 ```agda
 maskCount : ℕ → ℕ
-maskCount zero    = 1
+maskCount 0    = 1
 maskCount (suc n) = maskCount n + maskCount n
 
 maskCons : (n : ℕ) → (Fin (maskCount n) → Vec Bool n)
@@ -360,7 +360,7 @@ maskCons n r (inl j) = false ∷ r j
 maskCons n r (inr j) = true  ∷ r j
 
 maskAt : (n : ℕ) → Fin (maskCount n) → Vec Bool n
-maskAt zero    j = []
+maskAt 0    j = []
 maskAt (suc n) j = maskCons n (maskAt n) (splitFin (maskCount n) j)
 ```
 
@@ -373,8 +373,8 @@ Coverage is the content of `mask-onto`, and it is deliberately untruncated: give
 <!--/-->
 
 ```agda
-mask-onto : (n : ℕ) (v : Vec Bool n) → Σ[ j ∈ Fin (maskCount n) ] (maskAt n j ≡ v)
-mask-onto zero    []          = zero , refl
+mask-onto : (n : ℕ) (v : Vec Bool n) → Σ[ j ∶ Fin (maskCount n) ] (maskAt n j ≡ v)
+mask-onto 0    []          = zero , refl
 mask-onto (suc n) (false ∷ v) =
   joinFin (maskCount n) (inl (mask-onto n v .fst))
   , (cong (maskCons n (maskAt n)) (split-join (maskCount n) (inl (mask-onto n v .fst)))
@@ -437,8 +437,8 @@ The helper `selectStep` performs one step of the filter: given an entry `x` and 
 <!--/-->
 
 ```agda
-selectStep : {ℓ' : Level} {X : Type ℓ'} → X → Σ[ k ∈ ℕ ] (Fin k → X)
-           → Σ[ k ∈ ℕ ] (Fin k → X)
+selectStep : {ℓ' : Level} {X : Type ℓ'} → X → Σ[ k ∶ ℕ ] (Fin k → X)
+           → Σ[ k ∶ ℕ ] (Fin k → X)
 selectStep {X = X} x (k , g) = suc k , h
   where
   h : Fin (suc k) → X
@@ -457,8 +457,8 @@ selectStep {X = X} x (k , g) = suc k , h
   h (suc i) = g i
 
 select : {ℓ' : Level} {X : Type ℓ'} (n : ℕ) → (Fin n → X) → Vec Bool n
-       → Σ[ k ∈ ℕ ] (Fin k → X)
-select zero    f v           = zero , λ ()
+       → Σ[ k ∶ ℕ ] (Fin k → X)
+select 0    f v           = zero , λ ()
 ```
 
 <!--en-->
@@ -475,7 +475,7 @@ select (suc n) f (true ∷ v)  = selectStep (f zero) (select n (λ i → f (suc 
 
 select-out : {ℓ' : Level} {X : Type ℓ'} (n : ℕ) (f : Fin n → X) (v : Vec Bool n)
              (j : Fin (select n f v .fst))
-           → Σ[ i ∈ Fin n ] ((lookup i v ≡ true) × (select n f v .snd j ≡ f i))
+           → Σ[ i ∶ Fin n ] ((lookup i v ≡ true) × (select n f v .snd j ≡ f i))
 ```
 
 <!--en-->
@@ -487,10 +487,10 @@ The proof walks the same recursion as the definition. In the `false` case the he
 <!--/-->
 
 ```agda
-select-out zero    f []          ()
+select-out 0    f []          ()
 select-out (suc n) f (false ∷ v) j       = step (select-out n (λ i → f (suc i)) v j)
   where
-  step : Σ[ i ∈ Fin n ] ((lookup i v ≡ true)
+  step : Σ[ i ∶ Fin n ] ((lookup i v ≡ true)
            × (select n (λ i → f (suc i)) v .snd j ≡ f (suc i)))
 ```
 
@@ -503,7 +503,7 @@ In the `true` case there are two subcases. If the selected position is the first
 <!--/-->
 
 ```agda
-       → Σ[ i ∈ Fin (suc n) ] ((lookup i (false ∷ v) ≡ true)
+       → Σ[ i ∶ Fin (suc n) ] ((lookup i (false ∷ v) ≡ true)
            × (select (suc n) f (false ∷ v) .snd j ≡ f i))
   step (i , e , q) = suc i , (e , q)
 select-out (suc n) f (true ∷ v)  zero    = zero , (refl , refl)
@@ -520,9 +520,9 @@ The second subcase repeats the shift bookkeeping, now with the head present: the
 
 ```agda
   where
-  step : Σ[ i ∈ Fin n ] ((lookup i v ≡ true)
+  step : Σ[ i ∶ Fin n ] ((lookup i v ≡ true)
            × (select n (λ i → f (suc i)) v .snd j ≡ f (suc i)))
-       → Σ[ i ∈ Fin (suc n) ] ((lookup i (true ∷ v) ≡ true)
+       → Σ[ i ∶ Fin (suc n) ] ((lookup i (true ∷ v) ≡ true)
            × (select (suc n) f (true ∷ v) .snd (suc j) ≡ f i))
 ```
 
@@ -539,8 +539,8 @@ The converse specification, `select-in`, says every marked entry is selected: an
 
 select-in : {ℓ' : Level} {X : Type ℓ'} (n : ℕ) (f : Fin n → X) (v : Vec Bool n)
             (i : Fin n) → lookup i v ≡ true
-          → Σ[ j ∈ Fin (select n f v .fst) ] (select n f v .snd j ≡ f i)
-select-in zero    f []          ()      e
+          → Σ[ j ∶ Fin (select n f v .fst) ] (select n f v .snd j ≡ f i)
+select-in 0    f []          ()      e
 ```
 
 <!--en-->
@@ -568,9 +568,9 @@ The final clause performs the prepend bookkeeping: the position found in the tai
 <!--/-->
 
 ```agda
-  step : Σ[ j ∈ Fin (select n (λ i → f (suc i)) v .fst) ]
+  step : Σ[ j ∶ Fin (select n (λ i → f (suc i)) v .fst) ]
            (select n (λ i → f (suc i)) v .snd j ≡ f (suc i))
-       → Σ[ j ∈ Fin (select (suc n) f (true ∷ v) .fst) ]
+       → Σ[ j ∶ Fin (select (suc n) f (true ∷ v) .fst) ]
            (select (suc n) f (true ∷ v) .snd j ≡ f (suc i))
   step (j , q) = suc j , q
 ```
@@ -585,7 +585,7 @@ The final clause performs the prepend bookkeeping: the position found in the tai
 
 ```agda
 marks : {ℓ' : Level} {X : Type ℓ'} (n : ℕ) → (Fin n → X) → (X → Bool) → Vec Bool n
-marks zero    f d = []
+marks 0    f d = []
 marks (suc n) f d = d (f zero) ∷ marks n (λ i → f (suc i)) d
 
 marks-lookup : {ℓ' : Level} {X : Type ℓ'} (n : ℕ) (f : Fin n → X) (d : X → Bool)
@@ -714,7 +714,7 @@ The second component of the same fiber is the path `index-eq i`, recording that 
   index-eq : (i : Fin size) → ⟪ Lset σ ⟫↪ (index i) ≡ item i
   index-eq i = ∈-asFiber {a = item i} {b = Lset σ} (inside i) .snd
 
-  chosen : Vec Bool size → Σ[ k ∈ ℕ ] (Fin k → ⟪ Lset σ ⟫)
+  chosen : Vec Bool size → Σ[ k ∶ ℕ ] (Fin k → ⟪ Lset σ ⟫)
   chosen v = select size index v
 
   part : Vec Bool size → S
@@ -735,7 +735,7 @@ The second component of the same fiber is the path `index-eq i`, recording that 
   part-def v = finSet∈𝒟ₒ (chosen v .fst) (chosen v .snd)
 
   part-out : (v : Vec Bool size) (y : S) → ⟨ y ∈ˢ part v ⟩
-           → ∥ Σ[ i ∈ Fin size ] ((lookup i v ≡ true) × (item i ≡ y)) ∥₁
+           → ∥ Σ[ i ∶ Fin size ] ((lookup i v ≡ true) × (item i ≡ y)) ∥₁
 ```
 
 <!--en-->
@@ -750,8 +750,8 @@ The proof composes two steps. First, `finSet-out` unwraps membership in the span
   part-out v y y∈ = map₁ step
     (finSet-out (chosen v .fst) (λ j → ⟪ Lset σ ⟫↪ (chosen v .snd j)) y y∈)
     where
-    step : Σ[ j ∈ Fin (chosen v .fst) ] (⟪ Lset σ ⟫↪ (chosen v .snd j) ≡ y)
-         → Σ[ i ∈ Fin size ] ((lookup i v ≡ true) × (item i ≡ y))
+    step : Σ[ j ∶ Fin (chosen v .fst) ] (⟪ Lset σ ⟫↪ (chosen v .snd j) ≡ y)
+         → Σ[ i ∶ Fin size ] ((lookup i v ≡ true) × (item i ≡ y))
 ```
 
 <!--en-->
@@ -779,7 +779,7 @@ The opposite specification runs forward. If the bit at position `i` is `true`, t
 <!--/-->
 
 ```agda
-      out : Σ[ i ∈ Fin size ] ((lookup i v ≡ true) × (chosen v .snd j ≡ index i))
+      out : Σ[ i ∶ Fin size ] ((lookup i v ≡ true) × (chosen v .snd j ≡ index i))
       out = select-out size index v j
 
   part-mem : (v : Vec Bool size) (i : Fin size) → lookup i v ≡ true
@@ -799,7 +799,7 @@ Since membership in the spanned set is stated for the embedded name while the go
     (finSet-in (chosen v .fst) (λ j → ⟪ Lset σ ⟫↪ (chosen v .snd j))
       (⟪ Lset σ ⟫↪ (chosen v .snd (ins .fst))) ∣ ins .fst , refl ∣₁)
     where
-    ins : Σ[ j ∈ Fin (chosen v .fst) ] (chosen v .snd j ≡ index i)
+    ins : Σ[ j ∶ Fin (chosen v .fst) ] (chosen v .snd j ≡ index i)
     ins = select-in size index v i e
 ```
 
@@ -847,7 +847,7 @@ The hypothesis of the forward direction is itself merely an existence: some mark
 <!--/-->
 
 ```agda
-      step : Σ[ i ∈ Fin size ] ((lookup i (maskOf x) ≡ true) × (item i ≡ y))
+      step : Σ[ i ∶ Fin size ] ((lookup i (maskOf x) ≡ true) × (item i ≡ y))
            → ⟨ y ∈ˢ x ⟩
       step (i , e , q) = subst (λ w → ⟨ w ∈ˢ x ⟩) q
         (decide-sound (item i ∈ˢ x) (SemV.decideMembership lem (item i) x)
@@ -879,7 +879,7 @@ Given the entry `i` equal to `y`, it suffices to show `item i` belongs to the sp
 <!--/-->
 
 ```agda
-      step : Σ[ i ∈ Fin size ] (item i ≡ y) → ⟨ y ∈ˢ part (maskOf x) ⟩
+      step : Σ[ i ∶ Fin size ] (item i ≡ y) → ⟨ y ∈ˢ part (maskOf x) ⟩
       step (i , q) = subst (λ w → ⟨ w ∈ˢ part (maskOf x) ⟩) q
         (part-mem (maskOf x) i
           (marks-lookup size item
@@ -918,7 +918,7 @@ The record's `inside` field reuses the certificate `part-def` at each enumerated
     ; onto   = cover }
     where
     cover : (x : S) → ⟨ x ∈ˢ 𝒟ₒ (Lset σ) ⟩
-          → ∥ Σ[ j ∈ Fin (maskCount size) ] (part (maskAt size j) ≡ x) ∥₁
+          → ∥ Σ[ j ∶ Fin (maskCount size) ] (part (maskAt size j) ≡ x) ∥₁
 ```
 
 <!--en-->
@@ -986,7 +986,7 @@ The scan's output type `Found P n f` is a disjunction of two explicit alternativ
 
   Found : (P : A → hProp (ℓ-suc ℓ)) (n : ℕ) (f : Fin n → A) → Type (ℓ-suc ℓ)
   Found P n f =
-    (Σ[ i ∈ Fin n ] (⟨ P (f i) ⟩ × ((j : Fin n) → ⟨ P (f j) ⟩ → f j ≺ f i → ⊥₀)))
+    (Σ[ i ∶ Fin n ] (⟨ P (f i) ⟩ × ((j : Fin n) → ⟨ P (f j) ⟩ → f j ≺ f i → ⊥₀)))
     ⊎ ((i : Fin n) → ⟨ P (f i) ⟩ → ⊥₀)
 ```
 
@@ -1002,7 +1002,7 @@ The scan's output type `Found P n f` is a disjunction of two explicit alternativ
   scan : (P : A → hProp (ℓ-suc ℓ))
        → ((a : A) → Dec ⟨ P a ⟩)
        → (n : ℕ) (f : Fin n → A) → Found P n f
-  scan P decP zero    f = inr (λ ())
+  scan P decP 0    f = inr (λ ())
   scan P decP (suc n) f = combine (scan P decP n (λ i → f (suc i))) (decP (f zero))
     where
     combine : Found P n (λ i → f (suc i))
@@ -1132,14 +1132,14 @@ The sub-module `Over` adds the one premise that turns a finite family into a tal
 <summary class="submodule-fold-heading">
 ```agda
   module Over (n : ℕ) (f : Fin n → A)
-              (cov : (a : A) → ∥ Σ[ i ∈ Fin n ] (f i ≡ a) ∥₁) where
+              (cov : (a : A) → ∥ Σ[ i ∶ Fin n ] (f i ≡ a) ∥₁) where
 ```
 </summary>
 <div class="submodule-fold-content">
 
 ```agda
     least : (P : A → hProp (ℓ-suc ℓ)) → ((a : A) → Dec ⟨ P a ⟩)
-          → ∥ Σ[ a ∈ A ] ⟨ P a ⟩ ∥₁ → Σ[ m ∈ A ] Least P m
+          → ∥ Σ[ a ∶ A ] ⟨ P a ⟩ ∥₁ → Σ[ m ∶ A ] Least P m
     least P decP h = decide (scan P decP n f)
       where
 ```
@@ -1156,7 +1156,7 @@ Inside `least`, the auxiliary `nowhere` disposes of the scan's no-satisfier bran
       nowhere : ((i : Fin n) → ⟨ P (f i) ⟩ → ⊥₀) → ⊥₀
       nowhere none = rec₁ isProp⊥ atWitness h
         where
-        atWitness : Σ[ a ∈ A ] ⟨ P a ⟩ → ⊥₀
+        atWitness : Σ[ a ∶ A ] ⟨ P a ⟩ → ⊥₀
         atWitness (a , pa) = rec₁ isProp⊥
 ```
 
@@ -1170,7 +1170,7 @@ Concretely, the witness supplies an element `a` with `⟨ P a ⟩`, and the cove
 
 ```agda
           (λ { (i , q) → none i (subst (λ w → ⟨ P w ⟩) (sym q) pa) }) (cov a)
-      decide : Found P n f → Σ[ m ∈ A ] Least P m
+      decide : Found P n f → Σ[ m ∶ A ] Least P m
       decide (inl (i , pi , mi)) = f i , (pi , everywhere)
         where
         everywhere : (b : A) → ⟨ P b ⟩ → b ≺ f i → ⊥₀
@@ -1221,7 +1221,7 @@ The property to be minimized is `NotAcc`, non-accessibility. Its underlying stat
         where
         NotAcc : A → hProp (ℓ-suc ℓ)
         NotAcc b = (Acc _≺_ b → ⊥₀) , isProp→ isProp⊥
-        found : Σ[ m ∈ A ] Least NotAcc m
+        found : Σ[ m ∶ A ] Least NotAcc m
         found = least NotAcc (λ b → lem (NotAcc b)) ∣ a , nh ∣₁
 ```
 
@@ -1301,7 +1301,7 @@ Witness R A x y z =
   ⟨ z ∈ˢ A ⟩ × ⟨ z ∈ˢ y ⟩ × (⟨ z ∈ˢ x ⟩ → ⊥₀) × Agrees R A x y z
 
 precedes : (R : S → S → hProp (ℓ-suc ℓ)) (A : S) → S → S → hProp (ℓ-suc ℓ)
-precedes R A x y = ∥ Σ[ z ∈ S ] Witness R A x y z ∥₁ , squash₁
+precedes R A x y = ∥ Σ[ z ∶ S ] Witness R A x y z ∥₁ , squash₁
 
 precedes-irrefl : (R : S → S → hProp (ℓ-suc ℓ)) (A x : S) → ⟨ precedes R A x x ⟩ → ⊥₀
 precedes-irrefl R A x = rec₁ isProp⊥ (λ { (z , _ , z∈ , z∉ , _) → z∉ z∈ })
@@ -1335,8 +1335,8 @@ The module collects the three premises the earliest-disagreement order will inhe
 module Difference (R : S → S → hProp (ℓ-suc ℓ)) (A : S)
   (baseTri : (a b : S) → ⟨ a ∈ˢ A ⟩ → ⟨ b ∈ˢ A ⟩ → Tri ⟨ R a b ⟩ (a ≡ b) ⟨ R b a ⟩)
   (baseTrans : (a b c : S) → ⟨ R a b ⟩ → ⟨ R b c ⟩ → ⟨ R a c ⟩)
-  (baseLeast : (P : S → hProp (ℓ-suc ℓ)) → ∥ Σ[ a ∈ S ] (⟨ a ∈ˢ A ⟩ × ⟨ P a ⟩) ∥₁
-             → Σ[ m ∈ S ] (⟨ m ∈ˢ A ⟩ × ⟨ P m ⟩
+  (baseLeast : (P : S → hProp (ℓ-suc ℓ)) → ∥ Σ[ a ∶ S ] (⟨ a ∈ˢ A ⟩ × ⟨ P a ⟩) ∥₁
+             → Σ[ m ∶ S ] (⟨ m ∈ˢ A ⟩ × ⟨ P m ⟩
                  × ((b : S) → ⟨ b ∈ˢ A ⟩ → ⟨ P b ⟩ → ⟨ R b m ⟩ → ⊥₀)))
   where
 ```
@@ -1368,7 +1368,7 @@ With both witnesses exposed, `both` receives the full data: a point `p` witnessi
 ```agda
     rec₁ squash₁ (λ wp → rec₁ squash₁ (both wp) hyz) hxy
     where
-    both : Σ[ p ∈ S ] Witness R A x y p → Σ[ q ∈ S ] Witness R A y z q
+    both : Σ[ p ∶ S ] Witness R A x y p → Σ[ q ∶ S ] Witness R A y z q
          → ⟨ precedes R A x z ⟩
     both (p , p∈A , p∈y , p∉x , agp) (q , q∈A , q∈z , q∉y , agq) =
 ```
@@ -1478,7 +1478,7 @@ Two truncations organise the question. The predicate `Apart w` says, merely, tha
     Apart w = ∥ (⟨ w ∈ˢ x ⟩ × (⟨ w ∈ˢ y ⟩ → ⊥₀))
               ⊎ ((⟨ w ∈ˢ x ⟩ → ⊥₀) × ⟨ w ∈ˢ y ⟩) ∥₁ , squash₁
     Some : Type (ℓ-suc ℓ)
-    Some = ∥ Σ[ a ∈ S ] (⟨ a ∈ˢ A ⟩ × ⟨ Apart a ⟩) ∥₁
+    Some = ∥ Σ[ a ∶ S ] (⟨ a ∈ˢ A ⟩ × ⟨ Apart a ⟩) ∥₁
 ```
 
 <!--en-->
@@ -1588,7 +1588,7 @@ In the other branch, `Some` holds: some member of `A` is apart. The smallest-ele
 ```agda
     decide (yes hs) = side (SemV.decideMembership lem m x)
       where
-      found : Σ[ m ∈ S ] (⟨ m ∈ˢ A ⟩ × ⟨ Apart m ⟩
+      found : Σ[ m ∶ S ] (⟨ m ∈ˢ A ⟩ × ⟨ Apart m ⟩
                 × ((b : S) → ⟨ b ∈ˢ A ⟩ → ⟨ Apart b ⟩ → ⟨ R b m ⟩ → ⊥₀))
       found = baseLeast Apart hs
 ```
@@ -1743,11 +1743,11 @@ Irreflexivity of `before` holds at every numeral, and its proof does no inductio
 <!--/-->
 
 ```agda
-before zero    x y = ⊥
+before 0    x y = ⊥
 before (suc n) = precedes (before n) (finiteStage n)
 
 before-irrefl : (n : ℕ) (x : S) → ⟨ before n x x ⟩ → ⊥₀
-before-irrefl zero    x h = ⊥*-rec h
+before-irrefl 0    x h = ⊥*-rec h
 before-irrefl (suc n) x h = precedes-irrefl (before n) (finiteStage n) x h
 ```
 
@@ -1763,7 +1763,7 @@ The base case's emptiness is recorded separately as `zero-empty`: no set is a me
 zero-empty : (x : S) → ⟨ x ∈ˢ finiteStage zero ⟩ → ⊥₀
 zero-empty x h = rec₁ isProp⊥ step (Lset-out (# zero) x h)
   where
-  step : Σ[ δ ∈ S ] (⟨ δ ∈ˢ ∅ ⟩ × ⟨ x ∈ˢ 𝒟ₒ (Lset δ) ⟩) → ⊥₀
+  step : Σ[ δ ∶ S ] (⟨ δ ∈ˢ ∅ ⟩ × ⟨ x ∈ˢ 𝒟ₒ (Lset δ) ⟩) → ⊥₀
   step (δ , δ∈ , _) = ∅-empty δ (∈∈ₛ {a = δ} {b = ∅} .fst δ∈)
 ```
 
@@ -1791,7 +1791,7 @@ The search machinery of the earlier section works over a type, so a member of a 
 
 ```agda
 Point : ℕ → Type (ℓ-suc ℓ)
-Point n = Σ[ x ∈ S ] ⟨ x ∈ˢ finiteStage n ⟩
+Point n = Σ[ x ∶ S ] ⟨ x ∈ˢ finiteStage n ⟩
 
 Below : (n : ℕ) → Point n → Point n → Type (ℓ-suc ℓ)
 Below n a b = ⟨ before n (a .fst) (b .fst) ⟩
@@ -1853,7 +1853,7 @@ The tally is lifted from sets to points by pairing each entry with its own membe
   points : Fin size → Point n
   points i = item i , inside i
 
-  covers : (a : Point n) → ∥ Σ[ i ∈ Fin size ] (points i ≡ a) ∥₁
+  covers : (a : Point n) → ∥ Σ[ i ∶ Fin size ] (points i ≡ a) ∥₁
   covers a = map₁ (λ { (i , q) → i , Σ≡Prop (λ z → snd (z ∈ˢ finiteStage n)) q })
 ```
 
@@ -1902,8 +1902,8 @@ The last lemma packages least elements in the shape the next stage needs. `least
 ```agda
     ; wf∙    = wellFounded }
 
-  leastMem : (P : S → hProp (ℓ-suc ℓ)) → ∥ Σ[ a ∈ S ] (⟨ a ∈ˢ finiteStage n ⟩ × ⟨ P a ⟩) ∥₁
-           → Σ[ m ∈ S ] (⟨ m ∈ˢ finiteStage n ⟩ × ⟨ P m ⟩
+  leastMem : (P : S → hProp (ℓ-suc ℓ)) → ∥ Σ[ a ∶ S ] (⟨ a ∈ˢ finiteStage n ⟩ × ⟨ P a ⟩) ∥₁
+           → Σ[ m ∶ S ] (⟨ m ∈ˢ finiteStage n ⟩ × ⟨ P m ⟩
                × ((b : S) → ⟨ b ∈ˢ finiteStage n ⟩ → ⟨ P b ⟩
                           → ⟨ before n b m ⟩ → ⊥₀))
 ```
@@ -1935,7 +1935,7 @@ Only the glue remains visible: `Q` reads the set-level predicate at the underlyi
 ```agda
     Q : Point n → hProp (ℓ-suc ℓ)
     Q a = P (a .fst)
-    found : Σ[ m ∈ Point n ] Least Q m
+    found : Σ[ m ∶ Point n ] Least Q m
     found = least Q (λ a → lem (Q a))
       (map₁ (λ { (a , a∈ , pa) → (a , a∈) , pa }) h)
 ```
@@ -1960,7 +1960,7 @@ The base case assembles a record whose three fields are the three small facts ju
 
 ```agda
 stageOrder : (n : ℕ) → StageOrder n
-stageOrder zero = record { tally = empty ; tri = triZero ; trans = transZero }
+stageOrder 0 = record { tally = empty ; tri = triZero ; trans = transZero }
   where
   empty : Tally (finiteStage zero)
   empty = record
@@ -2111,9 +2111,9 @@ The limit's members are packaged as `Limit`, a set together with a membership ce
 
 ```agda
 Limit : Type (ℓ-suc ℓ)
-Limit = Σ[ x ∈ S ] ⟨ x ∈ˢ Lset ω ⟩
+Limit = Σ[ x ∶ S ] ⟨ x ∈ˢ Lset ω ⟩
 
-inSome : (x : S) → ⟨ x ∈ˢ Lset ω ⟩ → ∥ Σ[ n ∈ ℕ ] ⟨ x ∈ˢ finiteStage n ⟩ ∥₁
+inSome : (x : S) → ⟨ x ∈ˢ Lset ω ⟩ → ∥ Σ[ n ∶ ℕ ] ⟨ x ∈ˢ finiteStage n ⟩ ∥₁
 inSome x h = rec₁ squash₁ atStage (Lset-out ω x h)
   where
 ```
@@ -2127,11 +2127,11 @@ It remains to identify the index `δ` below `ω`. Membership `δ ∈ ω` is the 
 <!--/-->
 
 ```agda
-  atStage : Σ[ δ ∈ S ] (⟨ δ ∈ˢ ω ⟩ × ⟨ x ∈ˢ 𝒟ₒ (Lset δ) ⟩)
-          → ∥ Σ[ n ∈ ℕ ] ⟨ x ∈ˢ finiteStage n ⟩ ∥₁
+  atStage : Σ[ δ ∶ S ] (⟨ δ ∈ˢ ω ⟩ × ⟨ x ∈ˢ 𝒟ₒ (Lset δ) ⟩)
+          → ∥ Σ[ n ∶ ℕ ] ⟨ x ∈ˢ finiteStage n ⟩ ∥₁
   atStage (δ , δ∈ω , x∈) = map₁ named δ∈ω
     where
-    named : Σ[ k ∈ Lift ℕ ] (# (lower k) ≡ δ) → Σ[ n ∈ ℕ ] ⟨ x ∈ˢ finiteStage n ⟩
+    named : Σ[ k ∶ Lift ℕ ] (# (lower k) ≡ δ) → Σ[ n ∶ ℕ ] ⟨ x ∈ˢ finiteStage n ⟩
 ```
 
 <!--en-->
@@ -2148,7 +2148,7 @@ With the numeral named, `named` produces the actual stage of appearance. Since `
           (subst (λ w → ⟨ x ∈ˢ 𝒟ₒ (Lset w) ⟩) (sym q) x∈)
 
 levelData : (a : Limit)
-          → Σ[ n ∈ ℕ ] IsLeast natOrder (λ m → a .fst ∈ˢ finiteStage m) n
+          → Σ[ n ∶ ℕ ] IsLeast natOrder (λ m → a .fst ∈ˢ finiteStage m) n
 ```
 
 <!--en-->

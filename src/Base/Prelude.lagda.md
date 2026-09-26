@@ -69,7 +69,7 @@ With these pointers in hand, we turn to the mathematical notions collected in th
 <!--en-->
 ## [Universe levels]{.term-intro #universe-level}
 
-Type theory must distinguish the sizes of types. A type that quantifies over all types would contain itself, so the host sorts types into universes `Type ℓ`{.Agda}, one for each level `ℓ : Level`{.Agda}. Algebraically, universe levels form a join-semilattice with a bottom element, equipped with a successor operator: `ℓ-zero`{.Agda} is the bottom element, `ℓ-suc`{.Agda} is the successor operator and `ℓ-max`{.Agda} is the binary join. Each universe is itself a type:
+Type theory must distinguish the sizes of types. A type that quantifies over all types would contain itself, so the host sorts types into universes `Type ℓ`{.Agda}, one for each level `ℓ : Level`{.Agda}. Algebraically, universe levels form a join-semilattice with a bottom element, equipped with a successor operator: `ℓ-zero`{.Agda} is the bottom element, `ℓ-suc`{.Agda} is the successor operator and `ℓ-max`{.Agda} is the binary join. The source expression `ℓ-suc ℓ`{.Agda .raw-notation} appears on this site as the compact `ℓ-suc ℓ`{.Agda}; hovering reveals the original code. Each universe is itself a type:
 
 <div class="single-line-code" data-note="This reader-facing line is Agda-like pseudocode, not a formal Agda code block. It is closer to code than a traditional mathematical display, but it is not promised to compile on its own. In formal precision, it lies between a conventional mathematical display and complete Agda code."><code>Type ℓ : Type (ℓ-suc ℓ)</code></div>
 
@@ -78,7 +78,7 @@ Whenever the book surveys a totality such as "all sets" or "all propositions", t
 <!--zh-->
 ## [宇宙层级]{.term-intro #universe-level}
 
-类型论必须区分类型的大小。若一个类型能够无条件地量化所有类型，它就会包含自身；因此，宿主把类型分入宇宙 `Type ℓ`{.Agda}，每个层级 `ℓ : Level`{.Agda} 对应一个宇宙。从代数上看，宇宙层级形成一个带后继算子的有底并半格：`ℓ-zero`{.Agda} 是底元，`ℓ-suc`{.Agda} 是后继算子，`ℓ-max`{.Agda} 是二元并运算。每个宇宙本身也是类型：
+类型论必须区分类型的大小。若一个类型能够无条件地量化所有类型，它就会包含自身；因此，宿主把类型分入宇宙 `Type ℓ`{.Agda}，每个层级 `ℓ : Level`{.Agda} 对应一个宇宙。从代数上看，宇宙层级形成一个带后继算子的有底并半格：`ℓ-zero`{.Agda} 是底元，`ℓ-suc`{.Agda} 是后继算子，`ℓ-max`{.Agda} 是二元并运算。源码写法 `ℓ-suc ℓ`{.Agda .raw-notation} 在本站紧凑显示为 `ℓ-suc ℓ`{.Agda}；悬停仍可查看原始代码。每个宇宙本身也是类型：
 
 <div class="single-line-code" data-note="这一行是面向读者的记号，不是正式的 Agda 代码块。它是一种接近 Agda 的伪代码：比传统数学公式更贴近代码，但不保证单独编译通过。就形式化的严格程度而言，它处于通常的数学展示和完整 Agda 代码之间。"><code>Type ℓ : Type (ℓ-suc ℓ)</code></div>
 
@@ -87,7 +87,7 @@ Whenever the book surveys a totality such as "all sets" or "all propositions", t
 <!--ja-->
 ## [宇宙レベル]{.term-intro #universe-level}
 
-型理論では、型の大きさを区別しなければならない。すべての型を量化する型があれば、それは自分自身を含んでしまう。そこでホストは、各レベル `ℓ : Level`{.Agda} に一つずつある宇宙 `Type ℓ`{.Agda} へ型を分類する。代数的には、宇宙レベルは後続演算を備えた最小元付き結び半束をなす。`ℓ-zero`{.Agda} が最小元、`ℓ-suc`{.Agda} が後続演算、`ℓ-max`{.Agda} が二項の結びである。各宇宙はそれ自身も型である。
+型理論では、型の大きさを区別しなければならない。すべての型を量化する型があれば、それは自分自身を含んでしまう。そこでホストは、各レベル `ℓ : Level`{.Agda} に一つずつある宇宙 `Type ℓ`{.Agda} へ型を分類する。代数的には、宇宙レベルは後続演算を備えた最小元付き結び半束をなす。`ℓ-zero`{.Agda} が最小元、`ℓ-suc`{.Agda} が後続演算、`ℓ-max`{.Agda} が二項の結びである。元の式 `ℓ-suc ℓ`{.Agda .raw-notation} は、サイトでは簡潔な `ℓ-suc ℓ`{.Agda} と表示され、ホバーすると元のコードを確認できる。各宇宙はそれ自身も型である。
 
 <div class="single-line-code" data-note="この一行は読者のための表記であり、正式な Agda コードブロックではない。Agda に近い擬似コードで、通常の数学の式よりコードに近い表記だが、それだけでコンパイルできるとは限らない。形式化の厳密さという点では、通常の数学的な表示と、完全な Agda コードの間に位置する。"><code>Type ℓ : Type (ℓ-suc ℓ)</code></div>
 
@@ -261,7 +261,7 @@ Many constructions later in the book need to keep a particular object together w
 
 Given a type `A`{.Agda} and a type `B x`{.Agda} for each `x : A`{.Agda}, we form the Σ type:
 
-<div class="single-line-code"><code>`Σ (x : A) B x`{.Agda}</code></div>
+<div class="single-line-code"><code>`Σ[ x ∶ A ] B x`{.Agda}</code></div>
 
 An element of a Σ type is called a **[dependent pair]{.term-intro #dependent-pair}**. It is built in two steps: choose `a : A`{.Agda}, then choose an element `b`{.Agda} of `B a`{.Agda}; the resulting pair is written `(a , b)`{.Agda}. We call `a`{.Agda} the **[first component]{.term-intro #first-component}** and `b`{.Agda} the **[second component]{.term-intro #second-component}**. Because the type of the second component depends on `a`{.Agda}, only after fixing the first component do we know the type in which the second must lie.
 
@@ -269,7 +269,7 @@ The second component may itself be a proof of a property of the first. This book
 
 When `B`{.Agda} does not depend on `x`{.Agda}, every second component lies in the same type, and the dependent pair specialises to an ordinary product:
 
-<div class="single-line-code"><code>`A × B = Σ (_ : A) B`{.Agda}</code></div>
+<div class="single-line-code"><code>`A × B = Σ[ _ ∶ A ] B`{.Agda}</code></div>
 
 An ordinary product places two independent elements together; a Σ type places a particular `a`{.Agda} together with data belonging to the corresponding type `B a`{.Agda}. Dependent pairs are built with `_,_`{.Agda}, `fst`{.Agda} extracts the first component, and `snd`{.Agda} extracts the second.
 
@@ -280,7 +280,7 @@ An ordinary product places two independent elements together; a Σ type places a
 
 给定一个类型 `A`{.Agda}，以及对每个 `x : A`{.Agda} 指定的类型 `B x`{.Agda}，我们可以构造 Σ 类型：
 
-<div class="single-line-code"><code>`Σ (x : A) B x`{.Agda}</code></div>
+<div class="single-line-code"><code>`Σ[ x ∶ A ] B x`{.Agda}</code></div>
 
 Σ 类型的元素称为**[依值对]{.term-intro #dependent-pair}**。它先给出一个 `a : A`{.Agda}，再给出一个属于 `B a`{.Agda} 的元素 `b`{.Agda}，所得的对写作 `(a , b)`{.Agda}。我们把 `a`{.Agda} 称为**[第一分量]{.term-intro #first-component}**，把 `b`{.Agda} 称为**[第二分量]{.term-intro #second-component}**。由于第二分量的类型取决于 `a`{.Agda}，只有确定第一分量以后，才能确定第二分量应当属于哪个类型。
 
@@ -288,7 +288,7 @@ An ordinary product places two independent elements together; a Σ type places a
 
 当 `B`{.Agda} 不依赖 `x`{.Agda} 时，所有第二分量都属于同一个类型，依值对便特化为普通的积：
 
-<div class="single-line-code"><code>`A × B = Σ (_ : A) B`{.Agda}</code></div>
+<div class="single-line-code"><code>`A × B = Σ[ _ ∶ A ] B`{.Agda}</code></div>
 
 普通的积把两个彼此独立的元素放在一起；Σ 类型则把某个 `a`{.Agda} 与属于相应类型 `B a`{.Agda} 的数据放在一起。依值对用 `_,_`{.Agda} 构造，用 `fst`{.Agda} 取出第一分量，用 `snd`{.Agda} 取出第二分量。
 
@@ -299,7 +299,7 @@ An ordinary product places two independent elements together; a Σ type places a
 
 型 `A`{.Agda} と、各 `x : A`{.Agda} に対して指定された型 `B x`{.Agda} があるとき、Σ 型を作る。
 
-<div class="single-line-code"><code>`Σ (x : A) B x`{.Agda}</code></div>
+<div class="single-line-code"><code>`Σ[ x ∶ A ] B x`{.Agda}</code></div>
 
 Σ 型の元を**[依存対]{.term-intro #dependent-pair}**と呼ぶ。まず `a : A`{.Agda} を選び、次に `B a`{.Agda} の元 `b`{.Agda} を選ぶ。得られた対を `(a , b)`{.Agda} と書く。`a`{.Agda} を**[第一成分]{.term-intro #first-component}**、`b`{.Agda} を**[第二成分]{.term-intro #second-component}**と呼ぶ。第二成分の型は `a`{.Agda} に依存するため、第一成分を定めて初めて、第二成分がどの型に属すべきかが決まる。
 
@@ -307,7 +307,7 @@ An ordinary product places two independent elements together; a Σ type places a
 
 `B`{.Agda} が `x`{.Agda} に依存しない場合、すべての第二成分は同じ型に属し、依存対は通常の積に特化する。
 
-<div class="single-line-code"><code>`A × B = Σ (_ : A) B`{.Agda}</code></div>
+<div class="single-line-code"><code>`A × B = Σ[ _ ∶ A ] B`{.Agda}</code></div>
 
 通常の積は互いに独立した二つの元を一緒にするが、Σ 型は、ある `a`{.Agda} と、対応する型 `B a`{.Agda} に属するデータを一緒にする。依存対は `_,_`{.Agda} で作り、`fst`{.Agda} で第一成分を、`snd`{.Agda} で第二成分を取り出す。
 
@@ -315,7 +315,35 @@ An ordinary product places two independent elements together; a Σ type places a
 
 ```agda
 open import Cubical.Data.Sigma public
-  using ( Σ; Σ-syntax; _×_; _,_; fst; snd )
+  using ( Σ; _×_; _,_; fst; snd )
+```
+
+<!--en-->
+The code block below defines two binding forms for Σ types. It shows only the precedence declaration at first; readers who want the implementation can expand the rest. In `Σ[ x ∶ A ] B x`{.Agda}, the first component's type is explicit; in `Σ[ x ] B x`{.Agda}, Agda infers it. Both construct the same dependent-pair type.
+
+<!--zh-->
+下面的代码块定义了 Σ 类型的两种绑定写法：默认只露出优先级声明，感兴趣时可以展开阅读具体实现。`Σ[ x ∶ A ] B x`{.Agda} 明确给出第一分量的类型，`Σ[ x ] B x`{.Agda} 则让 Agda 推断；两者构造同一个依值对类型。
+
+<!--ja-->
+次のコードブロックで Σ 型の二つの束縛表記を定義する。最初は優先順位の宣言だけを示し、実装の詳細は展開して読める。`Σ[ x ∶ A ] B x`{.Agda} は第一成分の型を明示し、`Σ[ x ] B x`{.Agda} はその推論を Agda に任せる。両者は同じ依存対型を作る。
+
+<!--/-->
+
+<!-- outcrop:agda-preview-lines=1 -->
+
+```agda
+infix 2 Σ[]-syntax Σ[∶]-syntax
+
+Σ[]-syntax : ∀ {ℓ ℓ'} {A : Type ℓ}
+  → (B : A → Type ℓ') → Type (ℓ-max ℓ ℓ')
+Σ[]-syntax {A = A} B = Σ A B
+
+Σ[∶]-syntax : ∀ {ℓ ℓ'} {A : Type ℓ}
+  → (B : A → Type ℓ') → Type (ℓ-max ℓ ℓ')
+Σ[∶]-syntax = Σ[]-syntax
+
+syntax Σ[∶]-syntax {A = A} (λ x → B) = Σ[ x ∶ A ] B
+syntax Σ[]-syntax (λ x → B) = Σ[ x ] B
 ```
 
 <figure class="book-diagram type-comparison" id="fig-pi-sigma" aria-describedby="fig-pi-sigma-caption">
@@ -1648,7 +1676,7 @@ $$\frac{a:A}{|a|_1:\|A\|_1}\qquad\frac{x,y:\|A\|_1}{\mathsf{squash}_1(x,y):x=y}$
 
 Consequently `∥ A ∥₁`{.Agda} is always a proposition, even when `A`{.Agda} carries distinguishable data.
 
-By the **[mere existence]{.term-intro #mere-existence}** of an element of `A`{.Agda}, we mean an element of `∥ A ∥₁`{.Agda}, without specifying an element of `A`{.Agda}. Likewise, saying that an `x : A`{.Agda} satisfying `P x`{.Agda} merely exists means that `∥ Σ[ x ∈ A ] P x ∥₁`{.Agda} has an element. When `P x`{.Agda} is a proposition, this truncated type underlies the logical existential quantification `∃[ x ∶ A ] P x`{.Agda} introduced below.
+By the **[mere existence]{.term-intro #mere-existence}** of an element of `A`{.Agda}, we mean an element of `∥ A ∥₁`{.Agda}, without specifying an element of `A`{.Agda}. Likewise, saying that an `x : A`{.Agda} satisfying `P x`{.Agda} merely exists means that `∥ Σ[ x ∶ A ] P x ∥₁`{.Agda} has an element. When `P x`{.Agda} is a proposition, this truncated type underlies the logical existential quantification `∃[ x ∶ A ] P x`{.Agda} introduced below.
 <!--zh-->
 一个类型所携带的信息可能多于命题应当保留的信息。[命题截断]{.term-ref #propositional-truncation} `∥ A ∥₁`{.Agda} 记录 `A`{.Agda} 具有元素，却有意忘去具体是哪一个元素。它是一种[高阶归纳类型]{.term-intro #higher-inductive-type}，简称 HIT：生成它的不仅有点，还有点之间的路径。点构造子 `∣_∣₁`{.Agda} 把每个 `a : A`{.Agda} 送到 `∣ a ∣₁ : ∥ A ∥₁`{.Agda}；路径构造子 `squash₁`{.Agda} 把截断中的任意两个元素认同起来。其定义规则为
 
@@ -1656,7 +1684,7 @@ $$\frac{a:A}{|a|_1:\|A\|_1}\qquad\frac{x,y:\|A\|_1}{\mathsf{squash}_1(x,y):x=y}$
 
 因此，即使 `A`{.Agda} 携带可区分的资料，`∥ A ∥₁`{.Agda} 仍然总是命题。
 
-本书说 `A`{.Agda} 的元素**[仅仅存在]{.term-intro #mere-existence}**，意指 `∥ A ∥₁`{.Agda} 有元素，而没有指定 `A`{.Agda} 中的某个元素。同样，说满足 `P x`{.Agda} 的 `x : A`{.Agda} 仅仅存在，意指 `∥ Σ[ x ∈ A ] P x ∥₁`{.Agda} 有元素。当 `P x`{.Agda} 是命题时，这个截断类型就是后文引入的逻辑存在量化 `∃[ x ∶ A ] P x`{.Agda} 的底层类型。
+本书说 `A`{.Agda} 的元素**[仅仅存在]{.term-intro #mere-existence}**，意指 `∥ A ∥₁`{.Agda} 有元素，而没有指定 `A`{.Agda} 中的某个元素。同样，说满足 `P x`{.Agda} 的 `x : A`{.Agda} 仅仅存在，意指 `∥ Σ[ x ∶ A ] P x ∥₁`{.Agda} 有元素。当 `P x`{.Agda} 是命题时，这个截断类型就是后文引入的逻辑存在量化 `∃[ x ∶ A ] P x`{.Agda} 的底层类型。
 <!--ja-->
 型は、命題が保持すべき情報より多くの情報をもつことがある。[命題的切り詰め]{.term-ref #propositional-truncation} `∥ A ∥₁`{.Agda} は、`A`{.Agda} に要素があることを記録しつつ、それがどの要素かを意図的に忘れる。これは[高階帰納型]{.term-intro #higher-inductive-type}、略して HIT である。その生成子には点だけでなく、点の間のパスも含まれる。点構成子 `∣_∣₁`{.Agda} は各 `a : A`{.Agda} を `∣ a ∣₁ : ∥ A ∥₁`{.Agda} へ送り、パス構成子 `squash₁`{.Agda} は切り詰めの任意の二要素を同一視する。その定義規則は次のとおりである。
 
@@ -1664,7 +1692,7 @@ $$\frac{a:A}{|a|_1:\|A\|_1}\qquad\frac{x,y:\|A\|_1}{\mathsf{squash}_1(x,y):x=y}$
 
 したがって `A`{.Agda} が区別可能なデータをもっていても、`∥ A ∥₁`{.Agda} は常に命題である。
 
-本書で `A`{.Agda} の要素の**[単なる存在]{.term-intro #mere-existence}**と言うときは、`A`{.Agda} の特定の要素ではなく、`∥ A ∥₁`{.Agda} の要素が与えられることを意味する。同様に、`P x`{.Agda} を満たす `x : A`{.Agda} が単に存在するとは、`∥ Σ[ x ∈ A ] P x ∥₁`{.Agda} に要素があることを意味する。`P x`{.Agda} が命題であるとき、この切り詰められた型が、後で導入する論理的な存在量化 `∃[ x ∶ A ] P x`{.Agda} の基礎となる型である。
+本書で `A`{.Agda} の要素の**[単なる存在]{.term-intro #mere-existence}**と言うときは、`A`{.Agda} の特定の要素ではなく、`∥ A ∥₁`{.Agda} の要素が与えられることを意味する。同様に、`P x`{.Agda} を満たす `x : A`{.Agda} が単に存在するとは、`∥ Σ[ x ∶ A ] P x ∥₁`{.Agda} に要素があることを意味する。`P x`{.Agda} が命題であるとき、この切り詰められた型が、後で導入する論理的な存在量化 `∃[ x ∶ A ] P x`{.Agda} の基礎となる型である。
 <!--/-->
 
 <figure class="book-diagram type-comparison path-figure" id="fig-truncation-witnesses" aria-describedby="fig-truncation-witnesses-caption">
@@ -2200,27 +2228,33 @@ open import Cubical.Data.Bool public using ( Bool; true; false )
 <!--/-->
 
 <!--en-->
-The natural numbers `ℕ`{.Agda} form an inductive type generated by two constructors. The constructor `zero`{.Agda} is an element of `ℕ`{.Agda}; the constructor `suc`{.Agda} takes any `n : ℕ`{.Agda} to another element `suc n : ℕ`{.Agda}. The rules are
+The natural numbers `ℕ`{.Agda} form an inductive type with the original Agda constructors `zero : ℕ`{.Agda .raw-notation} and `suc : ℕ → ℕ`{.Agda .raw-notation}. The first gives a natural number directly; the second takes `n : ℕ`{.Agda} to `suc n : ℕ`{.Agda .raw-notation}. Their rules are
 
 $$\frac{}{\mathsf{zero}:\mathbb{N}}\qquad\frac{n:\mathbb{N}}{\mathsf{suc}\,n:\mathbb{N}}$$
 
-Every element of `ℕ`{.Agda} is generated from these constructors. Its induction principle accordingly has a case for `zero`{.Agda} and a step that passes from `n`{.Agda} to `suc n`{.Agda}.
+Every element of `ℕ`{.Agda} is generated from these constructors. Its induction principle accordingly has a case for `zero`{.Agda type="ℕ"} and a step that passes from `n`{.Agda} to `suc n`{.Agda type="ℕ"}.
+
+Agda also lets us write the closed `ℕ`{.Agda} values `zero`{.Agda .raw-notation}, `suc zero`{.Agda .raw-notation} and `suc (suc zero)`{.Agda .raw-notation} as the numeric literals `0`{.Agda}, `1`{.Agda} and `2`{.Agda}, respectively. With a variable, the raw expression `suc (suc (suc n))`{.Agda .raw-notation type="ℕ"} can instead appear here in compact form as `suc (suc (suc n))`{.Agda type="ℕ"}; hovering over that notation still reveals the original Agda code.
 <!--zh-->
-自然数 `ℕ`{.Agda} 是由两个构造子生成的归纳类型。构造子 `zero`{.Agda} 是 `ℕ`{.Agda} 的元素；构造子 `suc`{.Agda} 把任意 `n : ℕ`{.Agda} 变为另一个元素 `suc n : ℕ`{.Agda}。构造规则为
+自然数 `ℕ`{.Agda} 是归纳类型，它在 Agda 中的原始构造子为 `zero : ℕ`{.Agda .raw-notation} 与 `suc : ℕ → ℕ`{.Agda .raw-notation}。前者直接给出一个自然数；后者把 `n : ℕ`{.Agda} 变为 `suc n : ℕ`{.Agda .raw-notation}。构造规则为
 
 $$\frac{}{\mathsf{zero}:\mathbb{N}}\qquad\frac{n:\mathbb{N}}{\mathsf{suc}\,n:\mathbb{N}}$$
 
-`ℕ`{.Agda} 的每个元素都由这两个构造子生成。相应的归纳原理包含 `zero`{.Agda} 情形，以及从 `n`{.Agda} 过渡到 `suc n`{.Agda} 的归纳步骤。
+`ℕ`{.Agda} 的每个元素都由这两个构造子生成。相应的归纳原理包含 `zero`{.Agda type="ℕ"} 情形，以及从 `n`{.Agda} 过渡到 `suc n`{.Agda type="ℕ"} 的归纳步骤。
+
+对于类型为 `ℕ`{.Agda} 的闭合值，Agda 还允许把 `zero`{.Agda .raw-notation}、`suc zero`{.Agda .raw-notation}、`suc (suc zero)`{.Agda .raw-notation} 分别写成数字字面量 `0`{.Agda}、`1`{.Agda}、`2`{.Agda}。含变量时，原始写法 `suc (suc (suc n))`{.Agda .raw-notation type="ℕ"} 在这里也可紧凑显示为 `suc (suc (suc n))`{.Agda type="ℕ"}；悬停仍能看到未改动的 Agda 代码。
 <!--ja-->
-自然数 `ℕ`{.Agda} は、二つの構成子から生成される帰納型である。構成子 `zero`{.Agda} は `ℕ`{.Agda} の要素であり、構成子 `suc`{.Agda} は任意の `n : ℕ`{.Agda} から別の要素 `suc n : ℕ`{.Agda} を作る。構成規則は次のとおりである。
+自然数 `ℕ`{.Agda} は帰納型であり、Agda における元の構成子は `zero : ℕ`{.Agda .raw-notation} と `suc : ℕ → ℕ`{.Agda .raw-notation} である。前者は自然数を直接与え、後者は `n : ℕ`{.Agda} から `suc n : ℕ`{.Agda .raw-notation} を作る。構成規則は次のとおりである。
 
 $$\frac{}{\mathsf{zero}:\mathbb{N}}\qquad\frac{n:\mathbb{N}}{\mathsf{suc}\,n:\mathbb{N}}$$
 
-`ℕ`{.Agda} のすべての要素は、この二つの構成子から生成される。対応する帰納原理は、`zero`{.Agda} の場合と、`n`{.Agda} から `suc n`{.Agda} へ進む帰納段階からなる。
+`ℕ`{.Agda} のすべての要素は、この二つの構成子から生成される。対応する帰納原理は、`zero`{.Agda type="ℕ"} の場合と、`n`{.Agda} から `suc n`{.Agda type="ℕ"} へ進む帰納段階からなる。
+
+型が `ℕ`{.Agda} である閉じた値 `zero`{.Agda .raw-notation}、`suc zero`{.Agda .raw-notation}、`suc (suc zero)`{.Agda .raw-notation} は、Agda ではそれぞれ数値リテラル `0`{.Agda}、`1`{.Agda}、`2`{.Agda} と書ける。変数を含む元の式 `suc (suc (suc n))`{.Agda .raw-notation type="ℕ"} も、ここでは `suc (suc (suc n))`{.Agda type="ℕ"} のように簡潔に表示できる。この表記をホバーすると元の Agda コードを確認できる。
 <!--/-->
 
 <!--en-->
-To define a function from `ℕ`{.Agda} by recursion, it is therefore enough to give its value at `zero`{.Agda} and to give the value at `suc n`{.Agda} from the value already obtained at `n`{.Agda}.
+To define a function from `ℕ`{.Agda} by recursion, it is therefore enough to give its value at `zero`{.Agda type="ℕ"} and to give the value at `suc n`{.Agda type="ℕ"} from the value already obtained at `n`{.Agda}.
 
 Addition `_+_`{.Agda} combines two natural-number sizes and is used throughout the syntax chapters to compute the number of available variables after contexts are extended or combined.
 
@@ -2232,7 +2266,7 @@ n, & m=0,\\
 \operatorname{suc}(m'+n), & m=\operatorname{suc}(m')
 \end{cases}$$
 <!--zh-->
-因此，要递归定义从 `ℕ`{.Agda} 出发的函数，只需给出函数在 `zero`{.Agda} 处的值，并说明如何由已经得到的 `n`{.Agda} 处之值构造 `suc n`{.Agda} 处之值。
+因此，要递归定义从 `ℕ`{.Agda} 出发的函数，只需给出函数在 `zero`{.Agda type="ℕ"} 处的值，并说明如何由已经得到的 `n`{.Agda} 处之值构造 `suc n`{.Agda type="ℕ"} 处之值。
 
 加法 `_+_`{.Agda} 合并两个自然数大小；在后续句法章节中，扩张或拼接语境时可用它计算可用变元的数量。
 
@@ -2244,7 +2278,7 @@ n, & m=0,\\
 \operatorname{suc}(m'+n), & m=\operatorname{suc}(m')
 \end{cases}$$
 <!--ja-->
-したがって、`ℕ`{.Agda} からの関数を再帰的に定義するには、`zero`{.Agda} での値と、すでに得られた `n`{.Agda} での値から `suc n`{.Agda} での値を作る方法を与えれば十分である。
+したがって、`ℕ`{.Agda} からの関数を再帰的に定義するには、`zero`{.Agda type="ℕ"} での値と、すでに得られた `n`{.Agda} での値から `suc n`{.Agda type="ℕ"} での値を作る方法を与えれば十分である。
 
 加法 `_+_`{.Agda} は二つの自然数の大きさを合わせる。後の構文の章では、文脈を拡張したり連結したりした後に使える変数の個数を計算するために用いる。
 
@@ -2271,11 +2305,13 @@ open import Cubical.Data.Nat public
 <!--/-->
 
 <!--en-->
-`Fin`{.Agda} is a family of types indexed by natural numbers. The type `Fin zero`{.Agda} has no constructors. At an index `suc n`{.Agda}, the constructor `zero`{.Agda} gives an element directly, while `suc`{.Agda} sends each element of `Fin n`{.Agda} to an element of `Fin (suc n)`{.Agda}. These constructors obey the rules
+`Fin`{.Agda} is a family of inductive types indexed by natural numbers. Agda allows constructor <span class="prose-annotation-target">overloading</span><aside class="prose-annotation-note">The same written name can denote different constructors, much as 0 can denote zero in different number systems. When enough type information is available, Agda uses it to decide which constructor is meant.</aside>: the constructors of `Fin`{.Agda} share the names `zero`{.Agda .raw-notation type="Fin (suc n)"} and `suc`{.Agda .raw-notation type="Fin n → Fin (suc n)"} with those of `ℕ`{.Agda}. The type `Fin zero`{.Agda} has no constructors. At an index `suc n`{.Agda}, the constructor `zero`{.Agda .raw-notation type="Fin (suc n)"} gives an element directly, while `suc`{.Agda .raw-notation type="Fin n → Fin (suc n)"} sends each element of `Fin n`{.Agda} to an element of `Fin (suc n)`{.Agda}. These constructors obey the rules
 
 $$\frac{}{\mathsf{zero}:\operatorname{Fin}(\operatorname{suc}\,n)}\qquad\frac{i:\operatorname{Fin}(n)}{\mathsf{suc}\,i:\operatorname{Fin}(\operatorname{suc}\,n)}$$
 
-Consequently `Fin n`{.Agda} has exactly `n`{.Agda} elements: none when `n`{.Agda} is `zero`{.Agda}, and one new element together with a copy of every element of `Fin n`{.Agda} when the index is `suc n`{.Agda}.
+Consequently `Fin n`{.Agda} has exactly `n`{.Agda} elements: none when `n`{.Agda} is `zero`{.Agda type="ℕ"}, and one new element together with a copy of every element of `Fin n`{.Agda} when the index is `suc n`{.Agda type="ℕ"}.
+
+For elements of `Fin 3`{.Agda}, the original expressions `zero`{.Agda .raw-notation type="Fin 3"}, `suc zero`{.Agda .raw-notation type="Fin 3"} and `suc (suc zero)`{.Agda .raw-notation type="Fin 3"} appear in compact form as `zero`{.Agda type="Fin 3"}, `suc zero`{.Agda type="Fin 3"} and `suc (suc zero)`{.Agda type="Fin 3"}. Hovering shows the original constructor expression and its explicitly marked type.
 
 The function `toℕ`{.Agda} forgets the bound and reads a finite index as a natural number. This forgetful map preserves the numerical position while its result no longer carries the bound in its type.
 
@@ -2287,11 +2323,13 @@ $$\operatorname{to\mathbb N}(i)=
 \operatorname{suc}(\operatorname{to\mathbb N}(j)), & i=\mathsf{suc}\,j
 \end{cases}$$
 <!--zh-->
-`Fin`{.Agda} 是以自然数为索引的一族类型。`Fin zero`{.Agda} 没有构造子；当索引为 `suc n`{.Agda} 时，构造子 `zero`{.Agda} 直接给出一个元素，而 `suc`{.Agda} 把 `Fin n`{.Agda} 的每个元素变为 `Fin (suc n)`{.Agda} 的元素。构造规则为
+`Fin`{.Agda} 是以自然数为索引的一族归纳类型。Agda 支持构造子<span class="prose-annotation-target">重载</span><aside class="prose-annotation-note">同一个名称可以指不同的构造子，就像数学中的 0 可以表示不同数系的零。当上下文提供足够的类型信息时，Agda 据此判断所指的是哪一个。</aside>：`Fin`{.Agda} 的构造子与 `ℕ`{.Agda} 的构造子同名，都叫 `zero`{.Agda .raw-notation type="Fin (suc n)"} 和 `suc`{.Agda .raw-notation type="Fin n → Fin (suc n)"}。`Fin zero`{.Agda} 没有构造子；当索引为 `suc n`{.Agda} 时，构造子 `zero`{.Agda .raw-notation type="Fin (suc n)"} 直接给出一个元素，而 `suc`{.Agda .raw-notation type="Fin n → Fin (suc n)"} 把 `Fin n`{.Agda} 的每个元素变为 `Fin (suc n)`{.Agda} 的元素。构造规则为
 
 $$\frac{}{\mathsf{zero}:\operatorname{Fin}(\operatorname{suc}\,n)}\qquad\frac{i:\operatorname{Fin}(n)}{\mathsf{suc}\,i:\operatorname{Fin}(\operatorname{suc}\,n)}$$
 
-因此，`Fin n`{.Agda} 恰有 `n`{.Agda} 个元素：索引为 `zero`{.Agda} 时没有元素；索引由 `n`{.Agda} 变为 `suc n`{.Agda} 时，新增一个元素，并保留由 `Fin n`{.Agda} 的每个元素经 `suc`{.Agda} 构造出的元素。
+因此，`Fin n`{.Agda} 恰有 `n`{.Agda} 个元素：索引为 `zero`{.Agda type="ℕ"} 时没有元素；索引由 `n`{.Agda} 变为 `suc n`{.Agda type="ℕ"} 时，新增一个元素，并保留由 `Fin n`{.Agda} 的每个元素经 `suc`{.Agda type="Fin n → Fin (suc n)"} 构造出的元素。
+
+对于类型为 `Fin 3`{.Agda} 的元素，原始表达式 `zero`{.Agda .raw-notation type="Fin 3"}、`suc zero`{.Agda .raw-notation type="Fin 3"}、`suc (suc zero)`{.Agda .raw-notation type="Fin 3"} 会分别紧凑显示为 `zero`{.Agda type="Fin 3"}、`suc zero`{.Agda type="Fin 3"}、`suc (suc zero)`{.Agda type="Fin 3"}。悬停可查看原始构造子表达式及显式标注的类型。
 
 函数 `toℕ`{.Agda} 忘去界限，把有限索引读作自然数。这个遗忘映射保留索引的数值位置，但结果的类型不再记录原来的界限。
 
@@ -2303,11 +2341,13 @@ $$\operatorname{to\mathbb N}(i)=
 \operatorname{suc}(\operatorname{to\mathbb N}(j)), & i=\mathsf{suc}\,j
 \end{cases}$$
 <!--ja-->
-`Fin`{.Agda} は自然数を添字とする型の族である。`Fin zero`{.Agda} には構成子がない。添字が `suc n`{.Agda} のとき、構成子 `zero`{.Agda} が一つの要素を直接与え、`suc`{.Agda} は `Fin n`{.Agda} の各要素を `Fin (suc n)`{.Agda} の要素へ送る。構成規則は次のとおりである。
+`Fin`{.Agda} は自然数を添字とする帰納型の族である。Agda は構成子の<span class="prose-annotation-target">オーバーロード</span><aside class="prose-annotation-note">同じ名前が異なる構成子を表せることをいう。数学で 0 が異なる数体系の零を表せるのと同様に、十分な型情報があれば Agda はどの構成子かを判別できる。</aside>を許す。`Fin`{.Agda} の構成子 `zero`{.Agda .raw-notation type="Fin (suc n)"} と `suc`{.Agda .raw-notation type="Fin n → Fin (suc n)"} は、`ℕ`{.Agda} の構成子と同じ名前である。`Fin zero`{.Agda} には構成子がない。添字が `suc n`{.Agda} のとき、構成子 `zero`{.Agda .raw-notation type="Fin (suc n)"} が一つの要素を直接与え、`suc`{.Agda .raw-notation type="Fin n → Fin (suc n)"} は `Fin n`{.Agda} の各要素を `Fin (suc n)`{.Agda} の要素へ送る。構成規則は次のとおりである。
 
 $$\frac{}{\mathsf{zero}:\operatorname{Fin}(\operatorname{suc}\,n)}\qquad\frac{i:\operatorname{Fin}(n)}{\mathsf{suc}\,i:\operatorname{Fin}(\operatorname{suc}\,n)}$$
 
-したがって `Fin n`{.Agda} はちょうど `n`{.Agda} 個の要素をもつ。添字が `zero`{.Agda} のとき要素はなく、`n`{.Agda} から `suc n`{.Agda} へ移ると、一つの新しい要素と、`Fin n`{.Agda} の各要素から `suc`{.Agda} で作られる要素が得られる。
+したがって `Fin n`{.Agda} はちょうど `n`{.Agda} 個の要素をもつ。添字が `zero`{.Agda type="ℕ"} のとき要素はなく、`n`{.Agda} から `suc n`{.Agda type="ℕ"} へ移ると、一つの新しい要素と、`Fin n`{.Agda} の各要素から `suc`{.Agda type="Fin n → Fin (suc n)"} で作られる要素が得られる。
+
+型が `Fin 3`{.Agda} である元について、元の式 `zero`{.Agda .raw-notation type="Fin 3"}、`suc zero`{.Agda .raw-notation type="Fin 3"}、`suc (suc zero)`{.Agda .raw-notation type="Fin 3"} は、それぞれ `zero`{.Agda type="Fin 3"}、`suc zero`{.Agda type="Fin 3"}、`suc (suc zero)`{.Agda type="Fin 3"} と簡潔に表示される。ホバーすると元の構成子の式と明示した型を確認できる。
 
 関数 `toℕ`{.Agda} は上界を忘れ、有限添字を自然数として読む。この忘却写像は数としての位置を保つが、結果の型には元の上界が記録されない。
 
@@ -2384,11 +2424,11 @@ a, & i=\mathsf{zero},\\
 <!--/-->
 
 <!--en-->
-For the length-three vector in the figure below, the labels $0,1,2$ abbreviate the `Fin 3`{.Agda} constructors `zero`{.Agda}, `suc zero`{.Agda}, and `suc (suc zero)`{.Agda}.
+The figure below uses finite indices to select positions in a length-three vector.
 <!--zh-->
-下面取一个长度为三的向量；图中的 $0,1,2$ 分别简写 `Fin 3`{.Agda} 的构造子 `zero`{.Agda}、`suc zero`{.Agda}、`suc (suc zero)`{.Agda}。
+下图用有限索引选取长度为三的向量中的位置。
 <!--ja-->
-下図では長さ三のベクトルを取る。図中の $0,1,2$ は `Fin 3`{.Agda} の構成子 `zero`{.Agda}、`suc zero`{.Agda}、`suc (suc zero)`{.Agda} の略記である。
+下図では有限添字を用い、長さ三のベクトルから位置を選ぶ。
 <!--/-->
 
 <figure class="book-diagram type-comparison path-figure" id="fig-fin-vector-lookup" aria-describedby="fig-fin-vector-lookup-caption">

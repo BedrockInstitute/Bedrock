@@ -199,7 +199,7 @@ The hypothesis of `defSet→isL` is a truncated existential: merely some formula
 
 ```agda
 defSet→isL : (σ : V ℓ) → IsOrd σ → (x : V ℓ)
-           → ∥ Σ[ φ ∈ Formula ⟪ Lset σ ⟫ 1 ] (DefOf.defSet (Lset σ) φ ≡ x) ∥₁
+           → ∥ Σ[ φ ∶ Formula ⟪ Lset σ ⟫ 1 ] (DefOf.defSet (Lset σ) φ ≡ x) ∥₁
            → ⟨ isL x ⟩
 defSet→isL σ oσ x p = 𝒟ₒ→isL σ oσ x (𝒟ₒ-intro (Lset σ) x p)
 ```
@@ -274,7 +274,7 @@ Lset-suc : (σ : V ℓ) → Lset (sucV σ) ≡ 𝒟ₒ (Lset σ)
 Lset-suc σ = extensionality (Lset (sucV σ)) (𝒟ₒ (Lset σ)) (sub₁ , sub₂)
   where
   fromEarlier : (x : V ℓ)
-              → Σ[ δ ∈ V ℓ ] (⟨ δ ∈ sucV σ ⟩ × ⟨ x ∈ 𝒟ₒ (Lset δ) ⟩)
+              → Σ[ δ ∶ V ℓ ] (⟨ δ ∈ sucV σ ⟩ × ⟨ x ∈ 𝒟ₒ (Lset δ) ⟩)
 ```
 
 <!--en-->
@@ -394,7 +394,7 @@ finSet : (n : ℕ) → (Fin n → V ℓ) → V ℓ
 finSet n h = sett (Lift {ℓ-zero} {ℓ} (Fin n)) (λ i → h (lower i))
 
 finSet-in : (n : ℕ) (h : Fin n → V ℓ) (y : V ℓ)
-          → ∥ Σ[ i ∈ Fin n ] (h i ≡ y) ∥₁ → ⟨ y ∈ finSet n h ⟩
+          → ∥ Σ[ i ∶ Fin n ] (h i ≡ y) ∥₁ → ⟨ y ∈ finSet n h ⟩
 finSet-in n h y = map₁ (λ { (i , q) → lift i , q })
 ```
 
@@ -408,7 +408,7 @@ The reverse membership lemma `finSet-out` is the same map read backwards, from a
 
 ```agda
 finSet-out : (n : ℕ) (h : Fin n → V ℓ) (y : V ℓ)
-           → ⟨ y ∈ finSet n h ⟩ → ∥ Σ[ i ∈ Fin n ] (h i ≡ y) ∥₁
+           → ⟨ y ∈ finSet n h ⟩ → ∥ Σ[ i ∶ Fin n ] (h i ≡ y) ∥₁
 finSet-out n h y = map₁ (λ { (i , q) → lower i , q })
 ```
 
@@ -434,7 +434,7 @@ The formula is the finite disjunction of equalities. At length zero there is not
 
 ```agda
   finDisj : (n : ℕ) → (Fin n → ⟪ Lset σ ⟫) → Formula ⟪ Lset σ ⟫ 1
-  finDisj zero    g = ⊥̇
+  finDisj 0    g = ⊥̇
   finDisj (suc n) g =
     (var zero ≐ con (g zero)) ∨̇ finDisj n (λ i → g (suc i))
 
@@ -451,7 +451,7 @@ The bridge statement `Hits` says that the member named by the environment is mer
 
 ```agda
     Hits : (n : ℕ) (g : Fin n → ⟪ Lset σ ⟫) (y : V ℓ) → Type (ℓ-suc ℓ)
-    Hits n g y = ∥ Σ[ i ∈ Fin n ] (⟪ Lset σ ⟫↪ (g i) ≡ y) ∥₁
+    Hits n g y = ∥ Σ[ i ∶ Fin n ] (⟪ Lset σ ⟫↪ (g i) ≡ y) ∥₁
 
     sat→hits : (n : ℕ) (g : Fin n → ⟪ Lset σ ⟫) (m : ⟪ Lset σ ⟫)
              → ⟨ (DefC.ι m ∷ []) DefC.⊨ᵐ finDisj n g ⟩
@@ -467,7 +467,7 @@ From satisfaction to hits proceeds by recursion on the length. At zero the formu
 <!--/-->
 
 ```agda
-    sat→hits zero    g m bot = ⊥*-rec bot
+    sat→hits 0    g m bot = ⊥*-rec bot
     sat→hits (suc n) g m = rec₁ squash₁
       (λ { (inl e)  → ∣ zero , sym e ∣₁
          ; (inr sat) → map₁ (λ { (i , q) → suc i , q })
@@ -486,7 +486,7 @@ The reverse direction turns a hit into satisfaction, again by recursion on the l
     hits→sat : (n : ℕ) (g : Fin n → ⟪ Lset σ ⟫) (m : ⟪ Lset σ ⟫)
              → Hits n g (⟪ Lset σ ⟫↪ m)
              → ⟨ (DefC.ι m ∷ []) DefC.⊨ᵐ finDisj n g ⟩
-    hits→sat zero g m =
+    hits→sat 0 g m =
       rec₁ (snd ((DefC.ι m ∷ []) DefC.⊨ᵐ finDisj zero g)) (λ { (() , _) })
 ```
 
@@ -652,7 +652,7 @@ The statement takes two constructible sets as truncated certificates: `⟨ isL x
 
 ```agda
 isL-directed : (x y : V ℓ) → ⟨ isL x ⟩ → ⟨ isL y ⟩
-             → ∥ Σ[ σ ∈ V ℓ ] (IsOrd σ × (⟨ x ∈ Lset σ ⟩ × ⟨ y ∈ Lset σ ⟩)) ∥₁
+             → ∥ Σ[ σ ∶ V ℓ ] (IsOrd σ × (⟨ x ∈ Lset σ ⟩ × ⟨ y ∈ Lset σ ⟩)) ∥₁
 isL-directed x y px py = rec2 squash₁ go px py
   where
   Bound : Type (ℓ-suc ℓ)
@@ -667,9 +667,9 @@ The two truncations are eliminated at once by `rec2`, whose target is the trunca
 <!--/-->
 
 ```agda
-  Bound = Σ[ σ ∈ V ℓ ] (IsOrd σ × (⟨ x ∈ Lset σ ⟩ × ⟨ y ∈ Lset σ ⟩))
-  go : Σ[ α ∈ V ℓ ] (IsOrd α × ⟨ x ∈ Lset α ⟩)
-     → Σ[ β ∈ V ℓ ] (IsOrd β × ⟨ y ∈ Lset β ⟩) → ∥ Bound ∥₁
+  Bound = Σ[ σ ∶ V ℓ ] (IsOrd σ × (⟨ x ∈ Lset σ ⟩ × ⟨ y ∈ Lset σ ⟩))
+  go : Σ[ α ∶ V ℓ ] (IsOrd α × ⟨ x ∈ Lset α ⟩)
+     → Σ[ β ∶ V ℓ ] (IsOrd β × ⟨ y ∈ Lset β ⟩) → ∥ Bound ∥₁
   go (α , (oα , x∈Lα)) (β , (oβ , y∈Lβ)) =
     ∣ bnd .fst , (bnd .snd .fst , ( Lset-mono (bnd .snd .snd .fst) x∈Lα
 ```

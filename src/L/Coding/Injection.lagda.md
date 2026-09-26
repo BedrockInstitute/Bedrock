@@ -270,7 +270,7 @@ module Extract (F D : S)
   Holds x y = ⟨ pr (fst x) (fst y) ∈ fst F ⟩
 
   Fib : S → Type (ℓ-suc ℓ)
-  Fib x = Σ[ y ∈ S ] Holds x y
+  Fib x = Σ[ y ∶ S ] Holds x y
 
   isPropFib : (x : S) → isProp (Fib x)
 ```
@@ -302,7 +302,7 @@ Because `Fib x` is a proposition, `toVal` can eliminate the truncated existence 
 
 ```agda
   Dom : Type (ℓ-suc ℓ)
-  Dom = Σ[ x ∈ S ] ⟨ fst x ∈ fst D ⟩
+  Dom = Σ[ x ∶ S ] ⟨ fst x ∈ fst D ⟩
 
   fib : (u : Dom) → Fib (fst u)
   fib (x , m) = toVal x (domAt-in zero (suc zero) γ dm x m)
@@ -421,7 +421,7 @@ Each small index must also be seen as a member of the domain in Extract's sense,
   at m = toS m , member (fst D) m
 
   fib : (m : ⟪ fst D ⟫)
-      → Σ[ k ∈ ⟪ fst C ⟫ ] (⟪ fst C ⟫↪ k ≡ fst (E.toFun (at m)))
+      → Σ[ k ∶ ⟪ fst C ⟫ ] (⟪ fst C ⟫↪ k ≡ fst (E.toFun (at m)))
   fib m = fiber (fst C)
 ```
 

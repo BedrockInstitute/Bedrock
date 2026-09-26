@@ -196,6 +196,7 @@ A single syntax serves every use the book will make of it; the freedom lies in t
 | the carrier of a structure | the working syntax: any set may appear in a formula as a parameter |
 | `⊥*`{.Agda} (no constants) | the **parameter-free formulas**: countable and codable independently of ambient parameters |
 | a restricted carrier | parameters confined to a class; the shape the constructible-universe development builds `L` with |
+: The constant domain determines which parameters a formula may name.
 
 ## Sentences and parameter-free formulas
 
@@ -216,6 +217,7 @@ The object language is the inductive family `Formula K n`{.Agda}: the constant d
 | 某结构的载体 | 日常工作语法：任何集合都能以参数身份出现在公式里 |
 | `⊥*`{.Agda} (无常元) | **无参公式**：不依赖周围的集合参数即可计数和编码 |
 | 受限制的载体 | 参数只许来自某个类；可构造宇宙诸章构造 `L` 用的正是这个形状 |
+: 常元域的取法决定公式可以指名哪些参数。
 
 ## 句子与无参公式
 
@@ -234,6 +236,7 @@ The object language is the inductive family `Formula K n`{.Agda}: the constant d
 | 構造の台 | 日常の作業用構文：任意の集合がパラメータとして論理式に現れ得る |
 | `⊥*`{.Agda} (定数なし) | **パラメータを持たない論理式**：周囲のパラメータに依存せず可算で符号化できる |
 | 制限された台 | パラメータをあるクラスに限定する。構成可能宇宙の章で `L` を構成するときの形 |
+: 定数域の選び方によって、論理式が名指せるパラメータが決まる。
 
 ## 文とパラメータを持たない論理式
 

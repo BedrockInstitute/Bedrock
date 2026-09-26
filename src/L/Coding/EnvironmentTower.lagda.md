@@ -229,7 +229,7 @@ The entries are first gathered into a common container by the small-domain princ
 
 ```agda
   private
-    dom : Σ[ d ∈ S ] ((k : Lift {ℓ-zero} {ℓ} ℕ) → ⟨ fst (entry (lower k)) ∈ fst d ⟩)
+    dom : Σ[ d ∶ S ] ((k : Lift {ℓ-zero} {ℓ} ℕ) → ⟨ fst (entry (lower k)) ∈ fst d ⟩)
     dom = smallDom (Lift {ℓ-zero} {ℓ} ℕ) (λ k → entry (lower k))
 ```
 
@@ -348,7 +348,7 @@ Conversely, membership in the constructed tower can be read out: every member is
 
 ```agda
   tower-out : (x : S) → ⟨ fst x ∈ fst tower ⟩
-            → ∥ Σ[ n ∈ ℕ ] (fst x ≡ pr (# n) (fst (envSet W n))) ∥₁
+            → ∥ Σ[ n ∶ ℕ ] (fst x ≡ pr (# n) (fst (envSet W n))) ∥₁
   tower-out x hx = rec₁ squash₁ byB (subst ⟨_⟩ (tower-mem x) hx .snd)
     where
     Goal : Type (ℓ-suc ℓ)
@@ -363,7 +363,7 @@ The target type makes that boundary explicit: it is the propositional truncation
 <!--/-->
 
 ```agda
-    Goal = ∥ Σ[ n ∈ ℕ ] (fst x ≡ pr (# n) (fst (envSet W n))) ∥₁
+    Goal = ∥ Σ[ n ∶ ℕ ] (fst x ≡ pr (# n) (fst (envSet W n))) ∥₁
 ```
 
 <!--en-->
@@ -375,7 +375,7 @@ The separating formula binds three witnesses. The first elimination names the ba
 <!--/-->
 
 ```agda
-    byB : Σ[ b ∈ S ] ⟨ (b ∷ x ∷ []) ⊨ ∃̇ (∃̇ ( (var i2 ≐ con W)
+    byB : Σ[ b ∶ S ] ⟨ (b ∷ x ∷ []) ⊨ ∃̇ (∃̇ ( (var i2 ≐ con W)
                     ∧̇ ( prAtL i3 i1 i0
                     ∧̇ ( (var i1 ∈̇ con ωʟ)
                     ∧̇ envSetAt i0 i1 i2 )))) ⟩ → Goal
@@ -392,7 +392,7 @@ The second elimination names the arity as a constructible set.
 
 ```agda
       where
-      byN : Σ[ n ∈ S ] ⟨ (n ∷ b ∷ x ∷ []) ⊨ ∃̇ ( (var i2 ≐ con W)
+      byN : Σ[ n ∶ S ] ⟨ (n ∷ b ∷ x ∷ []) ⊨ ∃̇ ( (var i2 ≐ con W)
                     ∧̇ ( prAtL i3 i1 i0
                     ∧̇ ( (var i1 ∈̇ con ωʟ)
                     ∧̇ envSetAt i0 i1 i2 ))) ⟩ → Goal
@@ -409,7 +409,7 @@ The third elimination names the environment set and exposes the four conjuncts: 
 ```agda
       byN (n , hn) = rec₁ squash₁ byE hn
         where
-        byE : Σ[ F ∈ S ] ⟨ (F ∷ n ∷ b ∷ x ∷ []) ⊨ ( (var i2 ≐ con W)
+        byE : Σ[ F ∶ S ] ⟨ (F ∷ n ∷ b ∷ x ∷ []) ⊨ ( (var i2 ≐ con W)
                     ∧̇ ( prAtL i3 i1 i0
                     ∧̇ ( (var i1 ∈̇ con ωʟ)
 ```
@@ -439,7 +439,7 @@ The numeral identification aligns the recorded arity with the constructible nume
 <!--/-->
 
 ```agda
-          byK : Σ[ k ∈ Lift {ℓ-zero} {ℓ-suc ℓ} ℕ ] (fst n ≡ fst (numeralL (lower k))) → Goal
+          byK : Σ[ k ∶ Lift {ℓ-zero} {ℓ-suc ℓ} ℕ ] (fst n ≡ fst (numeralL (lower k))) → Goal
           byK (k , qn) = ∣ lower k , xq ∙ cong₂ pr (qn ∙ numeralL-fst (lower k)) Eq ∣₁
             where
             module Am = Ambient W (F ∷ n ∷ b ∷ x ∷ []) i0 i1 i2 (lower k)
@@ -737,7 +737,7 @@ The presenting index is recovered from the membership through the fiber of the p
 ```agda
       (envSet-in W (cons (fib .fst) g))
     where
-    fib : Σ[ q ∈ ⟪ fst W ⟫ ] (ι q ≡ x)
+    fib : Σ[ q ∶ ⟪ fst W ⟫ ] (ι q ≡ x)
     fib = ∈-asFiber {a = x} {b = fst W} x∈
 ```
 
@@ -781,7 +781,7 @@ The outward reading of a successor environment recovers its head and tail only u
 
 ```agda
   envSuc-out : {k : ℕ} (e' : S) → ⟨ fst e' ∈ fst (envSet W (suc k)) ⟩
-             → ∥ Σ[ q ∈ ⟪ fst W ⟫ ] Σ[ g ∈ Ix W k ]
+             → ∥ Σ[ q ∶ ⟪ fst W ⟫ ] Σ[ g ∶ Ix W k ]
                   (fst e' ≡ env (cons (ι q) (λ i → ι (g i)))) ∥₁
   envSuc-out {k} e' h = map₁
     (λ { (g' , e) → g' zero , (λ i → g' (suc i)) , (e ∙ env-split g') })
@@ -1284,7 +1284,7 @@ An entry is a truncated record of a natural number arity and an environment set 
 
 ```agda
   Entry : V ℓ → V ℓ → Type (ℓ-suc ℓ)
-  Entry n F = ∥ Σ[ k ∈ ℕ ] ((n ≡ # k) × (F ≡ fst (envSet W k))) ∥₁
+  Entry n F = ∥ Σ[ k ∶ ℕ ] ((n ≡ # k) × (F ≡ fst (envSet W k))) ∥₁
 ```
 
 <!--en-->
@@ -1420,7 +1420,7 @@ The inward reading is proved by ordinary induction on the external natural numbe
 
 ```agda
   entry-in : (k : ℕ) → ⟨ pr (# k) (fst (envSet W k)) ∈ Ev ⟩
-  entry-in zero = rec₁ (snd (pr (# 0) (fst (envSet W 0)) ∈ Ev))
+  entry-in 0 = rec₁ (snd (pr (# 0) (fst (envSet W 0)) ∈ Ev))
     (λ { (p , (p∈ , hs)) → rec₁ (snd (pr (# 0) (fst (envSet W 0)) ∈ Ev))
       (λ { (F , s , (qp , hF)) →
         subst (λ u → ⟨ u ∈ Ev ⟩)
@@ -1550,7 +1550,7 @@ Every member of the candidate tower is read as a standard entry, by transporting
 <!--/-->
 
 ```agda
-    read : (p : S) → ⟨ fst p ∈ Ev ⟩ → ∥ Σ[ k ∈ ℕ ] (fst p ≡ pr (# k) (fst (envSet W k))) ∥₁
+    read : (p : S) → ⟨ fst p ∈ Ev ⟩ → ∥ Σ[ k ∶ ℕ ] (fst p ≡ pr (# k) (fst (envSet W k))) ∥₁
     read p p∈ = Tower.tower-out W p (subst (λ u → ⟨ fst p ∈ u ⟩) qE p∈)
 ```
 
@@ -1657,7 +1657,7 @@ Downward decomposition begins in the same way: fix an entry `p`, choose any code
     hdown : (p : S) → ⟨ fst p ∈ Ev ⟩ → ⟨ (p ∷ γ) ⊨ bothAll i0 (towerDown E w N0) ⟩
     hdown p p∈ = bothAll-in i0 (towerDown E w N0) (p ∷ γ) (λ n F s s∈ n∈ F∈ e →
       rec₁ (snd ((F ∷ n ∷ s ∷ p ∷ γ) ⊨ towerDown E w N0))
-        (λ { (zero , qp) →
+        (λ { (0 , qp) →
           let q = pr-inj (sym e ∙ qp)
 ```
 

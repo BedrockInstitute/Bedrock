@@ -476,7 +476,7 @@ Inside a block that unfolds `𝒟ₒ`, membership in `𝒟ₒ A` reduces to the 
 opaque
   unfolding 𝒟ₒ
   𝒟ₒ-intro : (A x : S)
-           → ∥ Σ[ φ ∈ Formula ⟪ A ⟫ 1 ] (DefOf.defSet A φ ≡ x) ∥₁
+           → ∥ Σ[ φ ∶ Formula ⟪ A ⟫ 1 ] (DefOf.defSet A φ ≡ x) ∥₁
            → ⟨ x ∈ˢ 𝒟ₒ A ⟩
 ```
 
@@ -492,7 +492,7 @@ The proof body is the identity in both directions: once `𝒟ₒ` is unfolded, a
   𝒟ₒ-intro A x p = p
 
   𝒟ₒ-inv : (A x : S) → ⟨ x ∈ˢ 𝒟ₒ A ⟩
-         → ∥ Σ[ φ ∈ Formula ⟪ A ⟫ 1 ] (DefOf.defSet A φ ≡ x) ∥₁
+         → ∥ Σ[ φ ∶ Formula ⟪ A ⟫ 1 ] (DefOf.defSet A φ ≡ x) ∥₁
   𝒟ₒ-inv A x p = p
 ```
 
@@ -553,7 +553,7 @@ The name `fib` abbreviates a fiber computation: the structural membership `δ∈
   fib = ∈-asFiber {a = δ} {b = α} δ∈α
 
 Lset-out : (α x : S) → ⟨ x ∈ˢ Lset α ⟩
-         → ∥ Σ[ δ ∈ S ] (⟨ δ ∈ˢ α ⟩ × ⟨ x ∈ˢ 𝒟ₒ (Lset δ) ⟩) ∥₁
+         → ∥ Σ[ δ ∶ S ] (⟨ δ ∈ˢ α ⟩ × ⟨ x ∈ˢ 𝒟ₒ (Lset δ) ⟩) ∥₁
 ```
 
 <!--en-->

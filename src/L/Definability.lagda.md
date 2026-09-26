@@ -125,11 +125,11 @@ Everything below is relative to one set `A`, so the section works in a module `D
 <!--/-->
 
 <!--en-->
-The class `M` assigns to each set `x` the proposition `x ∈ˢ A`, so the restricted carrier `Σ[ x ∈ S ] (x ∈ᶜ M)` is, elementwise, a member of `A` together with the proof that it is one. The equivalence `e` exhibits this carrier as essentially small. Its first factor is the inverse of `presentation A`, which identifies a member of `A` merely lying in the fiber of the indexing map with an index in `⟪ A ⟫`; its second factor converts, for each `v`, the small membership statement `v ∈ₛ A` into the large one `v ∈ˢ A` and back. These are propositions, so the pointwise conversion is legitimate.
+The class `M` assigns to each set `x` the proposition `x ∈ˢ A`, so the restricted carrier `Σ[ x ∶ S ] (x ∈ᶜ M)` is, elementwise, a member of `A` together with the proof that it is one. The equivalence `e` exhibits this carrier as essentially small. Its first factor is the inverse of `presentation A`, which identifies a member of `A` merely lying in the fiber of the indexing map with an index in `⟪ A ⟫`; its second factor converts, for each `v`, the small membership statement `v ∈ₛ A` into the large one `v ∈ˢ A` and back. These are propositions, so the pointwise conversion is legitimate.
 <!--zh-->
-类 `M` 给每个集合 `x` 指派命题 `x ∈ˢ A`，因此限制载体 `Σ[ x ∈ S ] (x ∈ᶜ M)` 逐元素地就是 `A` 的一个成员连同「它是成员」的证明。等价 `e` 把这个载体表现为本质小。它的第一个因子是 `presentation A` 的逆，把仅仅落在索引映射纤维中的 `A` 的成员等同于 `⟪ A ⟫` 中的索引；第二个因子对每个 `v` 把小隶属陈述 `v ∈ₛ A` 双向换成大隶属陈述 `v ∈ˢ A`。由于这些是命题，逐点转换是合法的。
+类 `M` 给每个集合 `x` 指派命题 `x ∈ˢ A`，因此限制载体 `Σ[ x ∶ S ] (x ∈ᶜ M)` 逐元素地就是 `A` 的一个成员连同「它是成员」的证明。等价 `e` 把这个载体表现为本质小。它的第一个因子是 `presentation A` 的逆，把仅仅落在索引映射纤维中的 `A` 的成员等同于 `⟪ A ⟫` 中的索引；第二个因子对每个 `v` 把小隶属陈述 `v ∈ₛ A` 双向换成大隶属陈述 `v ∈ˢ A`。由于这些是命题，逐点转换是合法的。
 <!--ja-->
-クラス `M` は各集合 `x` に命題 `x ∈ˢ A` を割り当てるので、制限された台 `Σ[ x ∈ S ] (x ∈ᶜ M)` は要素ごとに、`A` の要素と「それが要素である証拠」の対である。同値 `e` はこの台が本質的に小さいことを示す。第一因子は `presentation A` の逆で、索引写像のファイバーに「だけ」落ちている `A` の要素を `⟪ A ⟫` の添字と同一視する。第二因子は各 `v` について、小さい方の所属 `v ∈ₛ A` と大きい方の所属 `v ∈ˢ A` を両方向に変換する。これらは命題なので、点ごとの変換は正当である。
+クラス `M` は各集合 `x` に命題 `x ∈ˢ A` を割り当てるので、制限された台 `Σ[ x ∶ S ] (x ∈ᶜ M)` は要素ごとに、`A` の要素と「それが要素である証拠」の対である。同値 `e` はこの台が本質的に小さいことを示す。第一因子は `presentation A` の逆で、索引写像のファイバーに「だけ」落ちている `A` の要素を `⟪ A ⟫` の添字と同一視する。第二因子は各 `v` について、小さい方の所属 `v ∈ₛ A` と大きい方の所属 `v ∈ˢ A` を両方向に変換する。これらは命題なので、点ごとの変換は正当である。
 <!--/-->
 
 <details open class="submodule-fold">
@@ -144,7 +144,7 @@ module DefOf (A : S) where
   M : S → hProp (ℓ-suc ℓ)
   M x = x ∈ˢ A
 
-  e : ⟪ A ⟫ ≃ (Σ[ x ∈ S ] (x ∈ᶜ M))
+  e : ⟪ A ⟫ ≃ (Σ[ x ∶ S ] (x ∈ᶜ M))
   e = compEquiv (invEquiv (presentation A))
 ```
 
@@ -161,7 +161,7 @@ The constant interpretation `ι` is then just the equivalence `e` read as a func
           propBiimpl→Equiv (snd (v ∈ₛ A)) (snd (v ∈ˢ A))
             (∈∈ₛ {a = v} {b = A} .snd) (∈∈ₛ {a = v} {b = A} .fst)))
 
-  ι : ⟪ A ⟫ → Σ[ x ∈ S ] (x ∈ᶜ M)
+  ι : ⟪ A ⟫ → Σ[ x ∶ S ] (x ∈ᶜ M)
   ι = equivFun e
 ```
 
@@ -198,17 +198,17 @@ The compression `smallSat` packages the two-step evaluation: `⊨ᵐ-small φ (�
   smallSat φ m = ⊨ᵐ-small φ (ι m ∷ []) .fst
 
   defSet : Formula ⟪ A ⟫ 1 → S
-  defSet φ = sett (Σ[ m ∈ ⟪ A ⟫ ] ⟨ smallSat φ m ⟩) (λ p → ⟪ A ⟫↪ (p .fst))
+  defSet φ = sett (Σ[ m ∶ ⟪ A ⟫ ] ⟨ smallSat φ m ⟩) (λ p → ⟪ A ⟫↪ (p .fst))
 
   Def : S
 ```
 
 <!--en-->
-The definable subset `defSet φ` is presented by the index type `Σ[ m ∈ ⟪ A ⟫ ] ⟨ smallSat φ m ⟩`: an index is a member `m` together with a proof that `φ` holds at it, and the indexing map sends such a pair to the set `⟪ A ⟫↪ m`. Note the truncation discipline: the proof component is a proof, not chosen data, and membership in `defSet φ` only asks for a proof to *merely* exist. Finally `Def` applies the same construction one level up, with the formulas themselves as the index family: each formula merely hits some `defSet φ`. Because formulas live in `Type ℓ`, the index type is small and the result is again a set of the hierarchy.
+The definable subset `defSet φ` is presented by the index type `Σ[ m ∶ ⟪ A ⟫ ] ⟨ smallSat φ m ⟩`: an index is a member `m` together with a proof that `φ` holds at it, and the indexing map sends such a pair to the set `⟪ A ⟫↪ m`. Note the truncation discipline: the proof component is a proof, not chosen data, and membership in `defSet φ` only asks for a proof to *merely* exist. Finally `Def` applies the same construction one level up, with the formulas themselves as the index family: each formula merely hits some `defSet φ`. Because formulas live in `Type ℓ`, the index type is small and the result is again a set of the hierarchy.
 <!--zh-->
-可定义子集 `defSet φ` 由索引类型 `Σ[ m ∈ ⟪ A ⟫ ] ⟨ smallSat φ m ⟩` 呈现：一个索引是成员 `m` 连同「`φ` 在 `m` 处成立」的证明，索引映射把这个对子送到集合 `⟪ A ⟫↪ m`。注意截断纪律：证明分量是证明而非被选取的数据，`defSet φ` 的成员只要求这样的证明**仅仅**存在。最后，`Def` 在上一层重复同一构造，以公式本身为索引族：每个索引仅仅命中某个 `defSet φ`。由于公式住在 `Type ℓ` 中，索引类型是小的，结果仍是层级中的集合。
+可定义子集 `defSet φ` 由索引类型 `Σ[ m ∶ ⟪ A ⟫ ] ⟨ smallSat φ m ⟩` 呈现：一个索引是成员 `m` 连同「`φ` 在 `m` 处成立」的证明，索引映射把这个对子送到集合 `⟪ A ⟫↪ m`。注意截断纪律：证明分量是证明而非被选取的数据，`defSet φ` 的成员只要求这样的证明**仅仅**存在。最后，`Def` 在上一层重复同一构造，以公式本身为索引族：每个索引仅仅命中某个 `defSet φ`。由于公式住在 `Type ℓ` 中，索引类型是小的，结果仍是层级中的集合。
 <!--ja-->
-定義可能部分集合 `defSet φ` は、索引型 `Σ[ m ∈ ⟪ A ⟫ ] ⟨ smallSat φ m ⟩` で提示される。索引とはメンバー `m` と「`φ` が `m` で成り立つ」ことの証明の対であり、索引写像はその対を集合 `⟪ A ⟫↪ m` へ送る。切断の規律に注意してほしい。証明の成分は証明であって選ばれたデータではなく、`defSet φ` の所属はそのような証明が「だけ」存在することを要求する。最後に `Def` は同じ構成を一段上で繰り返し、論理式そのものを索引族とする。各索引はある `defSet φ` に「だけ」ヒットする。論理式は `Type ℓ` に住むので索引型は小さく、結果は再び階層の集合になる。
+定義可能部分集合 `defSet φ` は、索引型 `Σ[ m ∶ ⟪ A ⟫ ] ⟨ smallSat φ m ⟩` で提示される。索引とはメンバー `m` と「`φ` が `m` で成り立つ」ことの証明の対であり、索引写像はその対を集合 `⟪ A ⟫↪ m` へ送る。切断の規律に注意してほしい。証明の成分は証明であって選ばれたデータではなく、`defSet φ` の所属はそのような証明が「だけ」存在することを要求する。最後に `Def` は同じ構成を一段上で繰り返し、論理式そのものを索引族とする。各索引はある `defSet φ` に「だけ」ヒットする。論理式は `Type ℓ` に住むので索引型は小さく、結果は再び階層の集合になる。
 <!--/-->
 
 ```agda
@@ -316,7 +316,7 @@ private の補助 `A-mem` は大きい方の所属の証明をファイバーの
 
 ```agda
   private
-    A-mem : (y : S) → ⟨ y ∈ˢ A ⟩ → Σ[ m ∈ ⟪ A ⟫ ] (⟪ A ⟫↪ m ≡ y)
+    A-mem : (y : S) → ⟨ y ∈ˢ A ⟩ → Σ[ m ∶ ⟪ A ⟫ ] (⟪ A ⟫↪ m ≡ y)
     A-mem y y∈ = ∈-asFiber {a = y} {b = A} y∈
 
   defSet⊤≡A : defSet ⊤̇ ≡ A

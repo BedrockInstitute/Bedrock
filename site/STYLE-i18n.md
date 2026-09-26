@@ -56,6 +56,9 @@ English prose.
 ## Prose conventions
 
 Write titles, introductions and detailed explanations in `en`, `zh` and `ja`.
+Give each Markdown table an immediately following `: description` line in its
+own language branch. The renderer places that description centered below the table;
+the shared prose lint requires it for every table, including tables in folds.
 Each language must retain the mathematical substance of the whole passage;
 adding a short Japanese summary to a long bilingual group would hide the rest
 of that passage in the Japanese book. The chapter-framework gate checks matching
@@ -98,6 +101,10 @@ contain no period: `**Lemma** (`name`{.Agda}) Text`, with `引理` or `補題` i
 parallel routes. Fact labels use the same form with `Fact`, `事实` or `事実`, and
 construction labels use `Construction`, `构造` or `構成`. Corollary labels use
 `Corollary`, `推论` or `系`.
+A theorem with an established common name may include it inside the bold label,
+before its separate Agda declaration name: `**Theorem (Diaconescu)** (`SetChoice→LEM`{.Agda})`;
+use `**定理 (Diaconescu)**` in both Chinese and Japanese. The common name is part
+of the theorem label, not an unbolded aside or a substitute for the Agda name.
 Proof labels use `**Proof** Text`, `**证明** 正文` or `**証明** 本文`.
 Every definition, construction, fact, lemma, theorem and corollary encloses at
 least one Agda code block. A Proof continues its statement, but must itself
@@ -202,6 +209,13 @@ by `Base.Prelude`, including occurrences in Prelude's own exposition. Infix
 spellings such as `x ≡ y` resolve to `_≡_`; mixfix parts are paired with their
 corresponding definition, including compiler-declared syntax. Existing explicit
 links take precedence. Quoted text, comments and ambiguous matches stay untouched.
+
+At a notation's first introduction, show its original Agda form before relying
+on the Site's mathematical display transforms. Use `` `suc n`{.Agda .raw-notation} ``
+for an inline source example or `data-outcrop-notation="source"` on a displayed
+code surface; see the [renderer contract](../outcrop/docs/RENDERER-MARKDOWN.md).
+Later examples keep ordinary `{.Agda}` markup. Never author a transformed label
+such as `n⁺³` in place of its source expression.
 
 When the reader-facing label differs from the declaration name, use
 `[V](V.Hierarchy.html#𝒮ᵥ){.Agda}`. The link and type hover resolve to `𝒮ᵥ`, while
@@ -370,6 +384,12 @@ the overall background or their containing type spaces. Use
 and resume whenever another activation is available, including after contraction.
 Keep ordinary paths blue and their endpoint dots white. Print output is static.
 Use responsive layout for narrow screens; display math inside figures keeps visible overflow.
+The `fig-lower-set-choice` flow in `Base.Choice` is an instance-specific layout:
+`site/static/bedrock-diagrams.css` places its four spaces and three steps as a
+rise–cross–descent on wide screens and a vertical sequence on narrow screens.
+Keep `map₁` on both sides of `sc`, with the premise and goal at the original
+level, and retain the trilingual caption. The stylesheet is explicitly listed
+in `site/project.json`; it is not part of Outcrop's generic figure vocabulary.
 SVG geometry uses `viewBox`; its shared role classes are `diagram-path`,
 `diagram-point`, `diagram-map-line`, `diagram-map-tip`, `diagram-guide`,
 `diagram-centre-ring`, `diagram-higher-path`, `diagram-path-space`, and `diagram-space-shape`.
@@ -384,8 +404,9 @@ captions, unstyled figures, ad hoc paint, missing path endpoints and nested
 decorative panels. Regression tests exercise rejected examples. This enforces
 the visual grammar, not the mathematical meaning of an arrow or the quality of
 the surrounding argument: those still require source review and desktop/mobile
-preview in all three languages. Extend the shared components when a new layout
-is needed; do not bypass the gate with a figure-local style.
+preview in all three languages. Extend shared components for reusable layouts;
+keep genuinely chapter-specific CSS in configured instance stylesheets so the
+same gate can inspect it. Do not bypass the gate with untracked figure-local paint.
 
 The 2026-09-22 styling pass used
 [UI UX Pro Max](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill/blob/main/.claude/skills/ui-ux-pro-max/SKILL.md),

@@ -288,7 +288,7 @@ Membership in the product is characterized by a truncated existence: some two me
 
 ```agda
 InProd : S → V ℓ → Type (ℓ-suc ℓ)
-InProd K e = ∥ Σ[ a ∈ S ] Σ[ b ∈ S ]
+InProd K e = ∥ Σ[ a ∶ S ] Σ[ b ∶ S ]
                (⟨ fst a ∈ˢ fst K ⟩ × ⟨ fst b ∈ˢ fst K ⟩
                 × (e ≡ pr (fst a) (fst b))) ∥₁
 ```
@@ -319,7 +319,7 @@ Outward, a member of `prodL K` comes, in truncated form, from two members of `K`
 prodL-out : (K e : S) → ⟨ fst e ∈ˢ fst (prodL K) ⟩ → InProd K (fst e)
 prodL-out K e h = map₁ (λ { (a , b , q , ma , mb) → a , b , ma , mb , q }) (Product.out K e h)
 prodL-fst : (K e : S) → ⟨ fst e ∈ˢ fst (prodL K) ⟩
-          → Σ[ a ∈ ⟪ fst K ⟫ ] Σ[ b ∈ ⟪ fst K ⟫ ]
+          → Σ[ a ∶ ⟪ fst K ⟫ ] Σ[ b ∶ ⟪ fst K ⟫ ]
               (fst e ≡ pr (⟪ fst K ⟫↪ a) (⟪ fst K ⟫↪ b))
 ```
 
@@ -350,7 +350,7 @@ The second components are unique: the injectivity of the ordered pair extracts a
 ```agda
   where
   inner : (a : ⟪ fst K ⟫)
-        → isProp (Σ[ b ∈ ⟪ fst K ⟫ ] (fst e ≡ pr (⟪ fst K ⟫↪ a) (⟪ fst K ⟫↪ b)))
+        → isProp (Σ[ b ∶ ⟪ fst K ⟫ ] (fst e ≡ pr (⟪ fst K ⟫↪ a) (⟪ fst K ⟫↪ b)))
   inner a (b , q) (b' , q') = Σ≡Prop (λ _ → setIsSet _ _)
     (↪-inj {a = fst K} (pr-inj (sym q ∙ q') .snd))
 ```
@@ -364,7 +364,7 @@ The first components are unique for the same reason, so the whole fiber statemen
 <!--/-->
 
 ```agda
-  isPropFib : isProp (Σ[ a ∈ ⟪ fst K ⟫ ] Σ[ b ∈ ⟪ fst K ⟫ ]
+  isPropFib : isProp (Σ[ a ∶ ⟪ fst K ⟫ ] Σ[ b ∶ ⟪ fst K ⟫ ]
                         (fst e ≡ pr (⟪ fst K ⟫↪ a) (⟪ fst K ⟫↪ b)))
   isPropFib (a , b , q) (a' , b' , q') = Σ≡Prop inner
     (↪-inj {a = fst K} (pr-inj (sym q ∙ q') .fst))
@@ -460,7 +460,7 @@ Putting the pieces together, `Lt p q` says that `p` and `q` are coded pairs, of 
 
 ```agda
 Lt : V ℓ → V ℓ → Type (ℓ-suc ℓ)
-Lt p q = ∥ Σ[ a ∈ S ] Σ[ b ∈ S ] Σ[ c ∈ S ] Σ[ d ∈ S ] Σ[ m ∈ S ] Σ[ n ∈ S ]
+Lt p q = ∥ Σ[ a ∶ S ] Σ[ b ∶ S ] Σ[ c ∶ S ] Σ[ d ∶ S ] Σ[ m ∶ S ] Σ[ n ∶ S ]
            ( (p ≡ pr (fst a) (fst b)) × (q ≡ pr (fst c) (fst d))
            × MaxIs m a b × MaxIs n c d × OrdIs m n a b c d ) ∥₁
 ```
@@ -971,7 +971,7 @@ The heart of the transfer is the refutation lemma. It assumes a contradiction-sh
 ```agda
   private
     refute : (p q : Pair) → (p ≺ₚ q → ⊥₀)
-           → Σ[ a ∈ S ] Σ[ b ∈ S ] Σ[ c ∈ S ] Σ[ d ∈ S ] Σ[ m ∈ S ] Σ[ n ∈ S ]
+           → Σ[ a ∶ S ] Σ[ b ∶ S ] Σ[ c ∶ S ] Σ[ d ∶ S ] Σ[ m ∶ S ] Σ[ n ∶ S ]
                ( (code p ≡ pr (fst a) (fst b)) × (code q ≡ pr (fst c) (fst d))
                × MaxIs m a b × MaxIs n c d × OrdIs m n a b c d )
 ```
@@ -1512,7 +1512,7 @@ A coded injection in `L` can be read externally: its graph conditions determine 
 <!--/-->
 
 ```agda
-  coded→ambient : (a b : S) → Σ[ F ∈ S ] InjCode F a b → ⟪ fst a ⟫ ↪ ⟪ fst b ⟫
+  coded→ambient : (a b : S) → Σ[ F ∶ S ] InjCode F a b → ⟪ fst a ⟫ ↪ ⟪ fst b ⟫
   coded→ambient a b (F , sv , dm , ij , ran) = Sm.small , Sm.small-inj
     where module Sm = Small F a b sv dm ij ran
 ω⊆ : (a : V ℓ) → IsOrd a → (⟨ a ∈ˢ ω ⟩ → ⊥₀)
@@ -1576,7 +1576,7 @@ The map `h` evaluates the coded injection after the inclusion `ω ↪ a`.
 <!--/-->
 
 ```agda
-  h : Σ[ F ∈ S ] InjCode F a b → ⟪ ω ⟫ → ⟪ fst b ⟫
+  h : Σ[ F ∶ S ] InjCode F a b → ⟪ ω ⟫ → ⟪ fst b ⟫
   h c x = coded→ambient a b c .fst (ι .fst x)
 ```
 
@@ -1641,7 +1641,7 @@ Two predicates describe the objects in play. `Mem p` says that `p` is a member o
   Mem : S → Type (ℓ-suc ℓ)
   Mem p = ⟨ fst p ∈ˢ fst (prodL a) ⟩
   Comp : S → Type (ℓ-suc ℓ)
-  Comp p = Σ[ x ∈ S ] Σ[ y ∈ S ]
+  Comp p = Σ[ x ∶ S ] Σ[ y ∶ S ]
              (⟨ fst x ∈ˢ fst a ⟩ × ⟨ fst y ∈ˢ fst a ⟩ × (fst p ≡ pr (fst x) (fst y)))
 ```
 
@@ -1670,7 +1670,7 @@ The inner lemma compares the second components: two candidates `y` and `y'` pair
 <!--/-->
 
 ```agda
-          → isProp (Σ[ y ∈ S ] (⟨ fst x ∈ˢ fst a ⟩ × ⟨ fst y ∈ˢ fst a ⟩
+          → isProp (Σ[ y ∶ S ] (⟨ fst x ∈ˢ fst a ⟩ × ⟨ fst y ∈ˢ fst a ⟩
                                 × (fst p ≡ pr (fst x) (fst y))))
     inner x (y , _ , _ , e) (y' , _ , _ , e') =
       Σ≡Prop (λ w → isProp× (snd (fst x ∈ˢ fst a))
@@ -1903,7 +1903,7 @@ The outward direction consumes the four nested existentials in turn and assemble
 
 ```agda
     mapFo-out : (q p : S) → ⟨ (q ∷ p ∷ []) ⊨ mapFo ⟩
-              → ∥ Σ[ x ∈ S ] Σ[ y ∈ S ] Σ[ x' ∈ S ] Σ[ y' ∈ S ] Chain q p x y x' y' ∥₁
+              → ∥ Σ[ x ∶ S ] Σ[ y ∶ S ] Σ[ x' ∶ S ] Σ[ y' ∶ S ] Chain q p x y x' y' ∥₁
     mapFo-out q p = rec₁ squash₁ (λ { (x , hx) → rec₁ squash₁ (λ { (y , hy) →
       rec₁ squash₁ (λ { (x' , hx') → map₁ (λ { (y' , (h1 , (h2 , (h3 , h4)))) →
         x , y , x' , y'
@@ -1991,7 +1991,7 @@ The chain equation writes `q` as `(x₁',y₁')`, while the fixed decomposition 
 <!--/-->
 
 ```agda
-    step : Σ[ x₁ ∈ S ] Σ[ y₁ ∈ S ] Σ[ x₁' ∈ S ] Σ[ y₁' ∈ S ] Chain q p x₁ y₁ x₁' y₁'
+    step : Σ[ x₁ ∶ S ] Σ[ y₁ ∶ S ] Σ[ x₁' ∶ S ] Σ[ y₁' ∶ S ] Chain q p x₁ y₁ x₁' y₁'
          → q ≡ fn p mp
     step (x₁ , y₁ , x₁' , y₁' , (e₁ , e₂ , h3 , h4)) =
       Σ≡Prop (λ v → snd (isL v))
@@ -2894,7 +2894,7 @@ The cardinal representative delivers its data in truncated form: an ordinal `μ`
 <!--/-->
 
 ```agda
-    build : Σ[ μ ∈ S ]
+    build : Σ[ μ ∶ S ]
               ( IsOrd (fst μ) × IsCardinalL μ
               × ((z : V ℓ) → ⟨ z ∈ˢ fst μ ⟩ → ⟨ z ∈ˢ fst γ ⟩)
               × InjL γ μ × InjL μ γ )
@@ -2946,7 +2946,7 @@ The representative `μ` must also be infinite. If `μ ∈ ω`, the inclusion `ω
       μ∉ω : ⟨ fst μ ∈ˢ ω ⟩ → ⊥₀
       μ∉ω h = no-fin γ μ oγ γ∉ω oμ h γ↪μ
   Seg : OT.Dom → V ℓ → Type (ℓ-suc ℓ)
-  Seg p b = Σ[ r ∈ OT.Dom ] ((r OT.≺ p) × (C.col r ≡ b))
+  Seg p b = Σ[ r ∶ OT.Dom ] ((r OT.≺ p) × (C.col r ≡ b))
 ```
 
 <!--en-->
@@ -3219,7 +3219,7 @@ Every member `x` of the collapse value determines its segment: the truncated mem
 
 ```agda
     private
-      pre : (x : S) → ⟨ fst x ∈ˢ C.col p ⟩ → Σ[ r ∈ OT.Dom ] (C.col r ≡ fst x)
+      pre : (x : S) → ⟨ fst x ∈ˢ C.col p ⟩ → Σ[ r ∶ OT.Dom ] (C.col r ≡ fst x)
       pre x mx = seg p (fst x) mx .fst , seg p (fst x) mx .snd .snd
 ```
 

@@ -765,7 +765,7 @@ module FiniteBase where
   P n m k = ((k < n) × (⟪ # n ⟫↪ m ≡ # k))
           , isProp× isProp≤ (isSetS (⟪ # n ⟫↪ m) (# k))
 
-  ω-mem→numeral : (β : S) → ⟨ β ∈ˢ ω ⟩ → ∥ Σ[ n ∈ ℕ ] (β ≡ # n) ∥₁
+  ω-mem→numeral : (β : S) → ⟨ β ∈ˢ ω ⟩ → ∥ Σ[ n ∶ ℕ ] (β ≡ # n) ∥₁
 ```
 
 <!--en-->
@@ -779,8 +779,8 @@ Membership of `β` in `ω` itself only says that β is a numeral in the truncate
 ```agda
   ω-mem→numeral β β∈ω = map₁ hit (subst ⟨_⟩ (ω-specV β) β∈ω)
     where
-    hit : Σ[ n ∈ Lift {ℓ-zero} {ℓ-suc ℓ} ℕ ] ⟨ β ≈ˢ numeralV (lower n) ⟩
-        → Σ[ n ∈ ℕ ] (β ≡ # n)
+    hit : Σ[ n ∶ Lift {ℓ-zero} {ℓ-suc ℓ} ℕ ] ⟨ β ≈ˢ numeralV (lower n) ⟩
+        → Σ[ n ∶ ℕ ] (β ≡ # n)
     hit (n , p) = lower n , p ∙ numeralV≡# (lower n)
 ```
 

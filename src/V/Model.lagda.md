@@ -255,7 +255,7 @@ The outward lemma recovers, from membership in the union, merely some family mem
 <!--/-->
 
 ```agda
-                 → ⟨ x ∈ˢ (⋃ (sett X f)) ⟩ → ∥ Σ[ i ∈ X ] ⟨ x ∈ˢ f i ⟩ ∥₁
+                 → ⟨ x ∈ˢ (⋃ (sett X f)) ⟩ → ∥ Σ[ i ∶ X ] ⟨ x ∈ˢ f i ⟩ ∥₁
 union-family-out X f x h = rec₁ squash₁
   (λ { (v , hv , hx) → map₁
     (λ { (i , q) → i , subst (λ w → ⟨ x ∈ˢ w ⟩) (sym q) hx }) hv })
@@ -294,7 +294,7 @@ private
 <summary class="submodule-fold-heading">
 ```agda
 module _ (a : S) (φ : Formula S 2)
-         (fc : (x : S) → ⟨ x ∈ˢ a ⟩ → isContr (Σ[ y ∈ S ] ⟨ (y ∷ x ∷ []) ⊨ φ ⟩)) where
+         (fc : (x : S) → ⟨ x ∈ˢ a ⟩ → isContr (Σ[ y ∶ S ] ⟨ (y ∷ x ∷ []) ⊨ φ ⟩)) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -421,7 +421,7 @@ The reverse inclusion runs in the other direction: the classification's forward 
   s2 x x∈ₛ = pairing-ax a a x .snd ∣ inl (singl-cls x .fst x∈ₛ) ∣₁
 
 numeralV : ℕ → S
-numeralV zero    = ∅
+numeralV 0    = ∅
 numeralV (suc n) = numeralV n ∪ ⁅ numeralV n , numeralV n ⁆
 
 numeralV≡# : (n : ℕ) → numeralV n ≡ # n
@@ -436,7 +436,7 @@ That the two chains agree is proved by induction on `ℕ`. At zero both sides re
 <!--/-->
 
 ```agda
-numeralV≡# zero    = refl
+numeralV≡# 0    = refl
 numeralV≡# (suc n) = cong₂ (λ u v → ⋃ ⁅ u , v ⁆) (numeralV≡# n)
   (cong (λ u → ⁅ u , u ⁆) (numeralV≡# n) ∙ pair-singleton (# n))
 
@@ -773,7 +773,7 @@ A characteristic function `χ : ⟪ a ⟫ → Ω`{.Agda} now selects the indices
 
 ```agda
     F : (a : S) → (⟪ a ⟫ → Ω) → S
-    F a χ = sett (Σ[ m ∈ ⟪ a ⟫ ] ⟨ decode (χ m) ⟩) (λ p → ⟪ a ⟫↪ (p .fst))
+    F a χ = sett (Σ[ m ∶ ⟪ a ⟫ ] ⟨ decode (χ m) ⟩) (λ p → ⟪ a ⟫↪ (p .fst))
 ```
 
 <!--en-->
@@ -937,7 +937,7 @@ module VModel (ωr : ΩResizing (ℓ-suc ℓ) ℓ) where
     resizing = ΩResizing→Resizing ωr
 
   separateFull : (a : S) (φ : Formula S 1)
-               → Σ[ s ∈ S ] (∀ y → (y ∈ˢ s) ≡ ((y ∈ˢ a) ⊓ ((y ∷ []) ⊨ φ)))
+               → Σ[ s ∶ S ] (∀ y → (y ∈ˢ s) ≡ ((y ∈ˢ a) ⊓ ((y ∷ []) ⊨ φ)))
 ```
 
 <!--en-->
@@ -1070,7 +1070,7 @@ The second fact turns a uniqueness argument into contractibility data. For a cla
 <!--/-->
 
 ```agda
-                      → isContr (Σ[ z ∈ S ] (z ∈ᶜ P))
+                      → isContr (Σ[ z ∶ S ] (z ∈ᶜ P))
   isContrΣ-fromCenter {P} z₀ p₀ u =
     (z₀ , p₀) , λ w → Σ≡Prop (λ v → snd (P v)) (u (w .fst) (w .snd))
 ```
@@ -1097,10 +1097,10 @@ The lemma `choice` states the classical choice-set situation. Its hypotheses: `i
 
 ```agda
   choice : (a : S)
-         → ((x : S) → ⟨ x ∈ˢ a ⟩ → ∥ Σ[ y ∈ S ] ⟨ y ∈ˢ x ⟩ ∥₁)
+         → ((x : S) → ⟨ x ∈ˢ a ⟩ → ∥ Σ[ y ∶ S ] ⟨ y ∈ˢ x ⟩ ∥₁)
          → ((x y : S) → ⟨ x ∈ˢ a ⟩ → ⟨ y ∈ˢ a ⟩
-              → ∥ Σ[ z ∈ S ] (⟨ z ∈ˢ x ⟩ × ⟨ z ∈ˢ y ⟩) ∥₁ → x ≡ y)
-         → ∥ Σ[ c ∈ S ] ((x : S) → ⟨ x ∈ˢ a ⟩
+              → ∥ Σ[ z ∶ S ] (⟨ z ∈ˢ x ⟩ × ⟨ z ∈ˢ y ⟩) ∥₁ → x ≡ y)
+         → ∥ Σ[ c ∶ S ] ((x : S) → ⟨ x ∈ˢ a ⟩
 ```
 
 <!--en-->
@@ -1112,7 +1112,7 @@ The proof applies the choice instance at the small presentation of the family, n
 <!--/-->
 
 ```agda
-              → isContr (Σ[ z ∈ S ] ⟨ z ∈ˢ (c ∩ x) ⟩)) ∥₁
+              → isContr (Σ[ z ∶ S ] ⟨ z ∈ˢ (c ∩ x) ⟩)) ∥₁
   choice a inh disj = map₁ mk (ac ⟪ a ⟫ isSet⟪ a ⟫
                                  (λ m → ⟪ ⟪ a ⟫↪ m ⟫)
                                  (λ m → isSet⟪ ⟪ a ⟫↪ m ⟫) pick)
@@ -1133,8 +1133,8 @@ The choice function then returns, for each index `m`, an actual element `g m` of
         (λ { (y , y∈) → ∈-asFiber {a = y} {b = ⟪ a ⟫↪ m} y∈ .fst })
         (inh (⟪ a ⟫↪ m) (memb a m))
       mk : ((m : ⟪ a ⟫) → ⟪ ⟪ a ⟫↪ m ⟫)
-         → Σ[ c ∈ S ] ((x : S) → ⟨ x ∈ˢ a ⟩
-              → isContr (Σ[ z ∈ S ] ⟨ z ∈ˢ (c ∩ x) ⟩))
+         → Σ[ c ∶ S ] ((x : S) → ⟨ x ∈ˢ a ⟩
+              → isContr (Σ[ z ∶ S ] ⟨ z ∈ˢ (c ∩ x) ⟩))
 ```
 
 <!--en-->
@@ -1165,7 +1165,7 @@ One fact about `c` is recorded before uniqueness: each chosen set really is a me
         c = sett ⟪ a ⟫ chosen
         chosen∈ : (m : ⟪ a ⟫) → ⟨ chosen m ∈ˢ ⟪ a ⟫↪ m ⟩
         chosen∈ m = ∈∈ₛ {a = chosen m} {b = ⟪ a ⟫↪ m} .snd (∈ₛ⟪ ⟪ a ⟫↪ m ⟫↪ (g m))
-        uniq : (x : S) → ⟨ x ∈ˢ a ⟩ → isContr (Σ[ z ∈ S ] ⟨ z ∈ˢ (c ∩ x) ⟩)
+        uniq : (x : S) → ⟨ x ∈ˢ a ⟩ → isContr (Σ[ z ∶ S ] ⟨ z ∈ˢ (c ∩ x) ⟩)
         uniq x x∈a = isContrΣ-fromCenter {P = λ z → z ∈ˢ (c ∩ x)} z₀ pf₀ uniqz
 ```
 

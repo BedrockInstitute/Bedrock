@@ -187,7 +187,7 @@ The type `Ex` states the relevant negation of cardinality positively: merely, th
     not-card κ∈a c = ∈-irrefl a (least α' orda c κ∈a α' a∈δ)
 
     Ex : Type (ℓ-suc ℓ)
-    Ex = ∥ Σ[ γ ∈ SL.S ] (⟨ fst γ ∈ˢ a ⟩ × InjL α' γ) ∥₁
+    Ex = ∥ Σ[ γ ∶ SL.S ] (⟨ fst γ ∈ˢ a ⟩ × InjL α' γ) ∥₁
 
     exFo : Formula SL.S 1
     exFo = ∃̇ ((var zero ∈̇ var (suc zero))
@@ -244,7 +244,7 @@ A witness of the untruncated content of `Ex` consists of `γ ∈ a` and an inter
 <!--/-->
 
 ```agda
-    from-γ : Σ[ γ ∈ SL.S ] (⟨ fst γ ∈ˢ a ⟩ × InjL α' γ) → InjL α' κ
+    from-γ : Σ[ γ ∶ SL.S ] (⟨ fst γ ∈ˢ a ⟩ × InjL α' γ) → InjL α' κ
     from-γ (γ , γ∈a , α↪γ) =
       injl-trans α' γ κ α↪γ
 ```

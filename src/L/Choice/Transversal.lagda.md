@@ -230,9 +230,9 @@ by trichotomy alone. The generic uniqueness theorem
 <summary class="submodule-fold-heading">
 ```agda
 module Trans (zf : isZFModel) (a : S)
-             (inh : (x : S) → ⟨ x ∈ˢ a ⟩ → ∥ Σ[ y ∈ S ] ⟨ y ∈ˢ x ⟩ ∥₁)
+             (inh : (x : S) → ⟨ x ∈ˢ a ⟩ → ∥ Σ[ y ∶ S ] ⟨ y ∈ˢ x ⟩ ∥₁)
              (disj : (x y : S) → ⟨ x ∈ˢ a ⟩ → ⟨ y ∈ˢ a ⟩
-                   → ∥ Σ[ z ∈ S ] (⟨ z ∈ˢ x ⟩ × ⟨ z ∈ˢ y ⟩) ∥₁ → x ≡ y)
+                   → ∥ Σ[ z ∶ S ] (⟨ z ∈ˢ x ⟩ × ⟨ z ∈ˢ y ⟩) ∥₁ → x ≡ y)
              where
 ```
 </summary>
@@ -269,17 +269,17 @@ module Trans (zf : isZFModel) (a : S)
     (λ m → elt m ∷ []) (λ m → refl)
 
   Least : S → S → Type (ℓ-suc ℓ)
-  Least x z = Σ[ h ∈ ⟨ fst z ∈ Lset β ⟩ ] IsLeast W (Cell x) (fst z , h)
+  Least x z = Σ[ h ∶ ⟨ fst z ∈ Lset β ⟩ ] IsLeast W (Cell x) (fst z , h)
 
   private
-    members : (x : S) → ⟨ x ∈ˢ a ⟩ → ∥ Σ[ m ∈ Mem (Lset β) ] ⟨ Cell x m ⟩ ∥₁
+    members : (x : S) → ⟨ x ∈ˢ a ⟩ → ∥ Σ[ m ∶ Mem (Lset β) ] ⟨ Cell x m ⟩ ∥₁
     members x x∈a = map₁ atMember (inh x x∈a)
       where
-      atMember : Σ[ y ∈ S ] ⟨ y ∈ˢ x ⟩ → Σ[ m ∈ Mem (Lset β) ] ⟨ Cell x m ⟩
+      atMember : Σ[ y ∶ S ] ⟨ y ∈ˢ x ⟩ → Σ[ m ∶ Mem (Lset β) ] ⟨ Cell x m ⟩
       atMember (y , y∈x) =
         (fst y , bound-below₂ (fst a) (snd a) (fst x) (fst y) y∈x x∈a) , y∈x
 
-    least : (x : S) → ⟨ x ∈ˢ a ⟩ → Σ[ m ∈ Mem (Lset β) ] IsLeast W (Cell x) m
+    least : (x : S) → ⟨ x ∈ˢ a ⟩ → Σ[ m ∶ Mem (Lset β) ] IsLeast W (Cell x) m
     least x x∈a = leastOfFormula W (definedCell x) lem (members x x∈a)
 
     Predecessor : S → S → S → Type (ℓ-suc ℓ)
@@ -289,11 +289,11 @@ module Trans (zf : isZFModel) (a : S)
     Two : S → S → Type (ℓ-suc ℓ)
     Two x z = ⟨ x ∈ˢ a ⟩
             × (⟨ z ∈ˢ x ⟩
-              × (∥ Σ[ w ∈ S ] Predecessor x z w ∥₁
+              × (∥ Σ[ w ∶ S ] Predecessor x z w ∥₁
                  → Lift {j = ℓ-suc ℓ} ⊥₀))
 
     Out : S → Type (ℓ-suc ℓ)
-    Out z = ∥ Σ[ x ∈ S ] (⟨ x ∈ˢ a ⟩ × Least x z) ∥₁
+    Out z = ∥ Σ[ x ∶ S ] (⟨ x ∈ˢ a ⟩ × Least x z) ∥₁
 
   opaque
     unfolding Pick
@@ -303,7 +303,7 @@ module Trans (zf : isZFModel) (a : S)
     pick-in x x∈a z (hz , (z∈x , mini)) =
       ∣ x , (x∈a , (z∈x , neg)) ∣₁
       where
-      noPredecessor : Σ[ w ∈ S ] Predecessor x z w → ⊥₀
+      noPredecessor : Σ[ w ∶ S ] Predecessor x z w → ⊥₀
       noPredecessor (w , (w∈x , hap)) = mini (fst w , hw) w∈x lt
         where
         hw : ⟨ fst w ∈ Lset β ⟩
@@ -313,14 +313,14 @@ module Trans (zf : isZFModel) (a : S)
         lt : relOf W (fst w , hw) (fst z , hz)
         lt = B.orderL-rep (fst w , hw) (fst z , hz) hpr
 
-      neg : ∥ Σ[ w ∈ S ] Predecessor x z w ∥₁
+      neg : ∥ Σ[ w ∶ S ] Predecessor x z w ∥₁
           → Lift {j = ℓ-suc ℓ} ⊥₀
       neg q = lift (rec₁ isProp⊥ noPredecessor q)
 
     pick-out : (z : S) → ⟨ (z ∷ []) ⊨ Pick a rel ⟩ → Out z
     pick-out z = rec₁ squash₁ atTwo
       where
-      atTwo : Σ[ x ∈ S ] Two x z → Out z
+      atTwo : Σ[ x ∶ S ] Two x z → Out z
       atTwo (x , (x∈a , (z∈x , neg))) =
         ∣ x , (x∈a , (hz , (z∈x , mini))) ∣₁
         where
@@ -380,7 +380,7 @@ module Trans (zf : isZFModel) (a : S)
               → ⟨ z ∈ˢ transversalSet ⟩ × ⟨ z ∈ˢ x ⟩
       outMeet z h = subst ⟨_⟩ (∩-spec transversalSet x z) h
 
-      centre : Σ[ z ∈ S ] ⟨ z ∈ˢ (transversalSet ∩ x) ⟩
+      centre : Σ[ z ∶ S ] ⟨ z ∈ˢ (transversalSet ∩ x) ⟩
       centre = z₀ , inMeet z₀
         (inC z₀ (snd m) (pick-in x x∈a z₀ (snd m , lm))) (fst lm)
 
@@ -391,7 +391,7 @@ module Trans (zf : isZFModel) (a : S)
         z∈x : ⟨ z ∈ˢ x ⟩
         z∈x = snd (outMeet z h)
 
-        atOut : Σ[ x' ∈ S ] (⟨ x' ∈ˢ a ⟩ × Least x' z) → fst z ≡ fst m
+        atOut : Σ[ x' ∶ S ] (⟨ x' ∈ˢ a ⟩ × Least x' z) → fst z ≡ fst m
         atOut (x' , (x'∈a , (hz , lz))) =
           cong (λ p → fst (fst p))
             (isPropLeastOf W (Cell x) ((fst z , hz) , lz') (m , lm))
@@ -402,10 +402,10 @@ module Trans (zf : isZFModel) (a : S)
           lz' : IsLeast W (Cell x) (fst z , hz)
           lz' = subst (λ y → IsLeast W (Cell y) (fst z , hz)) (sym x≡x') lz
 
-    meetsOnce : isContr (Σ[ z ∈ S ] ⟨ z ∈ˢ (transversalSet ∩ x) ⟩)
+    meetsOnce : isContr (Σ[ z ∶ S ] ⟨ z ∈ˢ (transversalSet ∩ x) ⟩)
     meetsOnce = centre , atPoint
       where
-      atPoint : (p : Σ[ z ∈ S ] ⟨ z ∈ˢ (transversalSet ∩ x) ⟩) → centre ≡ p
+      atPoint : (p : Σ[ z ∶ S ] ⟨ z ∈ˢ (transversalSet ∩ x) ⟩) → centre ≡ p
       atPoint (z , h) = sym (Σ≡Prop
         (λ w → snd (w ∈ˢ (transversalSet ∩ x)))
         (Σ≡Prop (λ v → snd (isL v)) (same z h)))
@@ -414,7 +414,7 @@ module Trans (zf : isZFModel) (a : S)
 </details>
 ```agda
   transversal : (x : S) → ⟨ x ∈ˢ a ⟩
-              → isContr (Σ[ z ∈ S ] ⟨ z ∈ˢ (transversalSet ∩ x) ⟩)
+              → isContr (Σ[ z ∶ S ] ⟨ z ∈ˢ (transversalSet ∩ x) ⟩)
   transversal = Cut.meetsOnce
 ```
 </div>
@@ -461,11 +461,11 @@ derived operation of that model.
 ChoiceStatement : isZFModel → Type (ℓ-suc ℓ)
 ChoiceStatement zf =
   (a : S)
-  → ((x : S) → ⟨ x ∈ˢ a ⟩ → ∥ Σ[ y ∈ S ] ⟨ y ∈ˢ x ⟩ ∥₁)
+  → ((x : S) → ⟨ x ∈ˢ a ⟩ → ∥ Σ[ y ∶ S ] ⟨ y ∈ˢ x ⟩ ∥₁)
   → ((x y : S) → ⟨ x ∈ˢ a ⟩ → ⟨ y ∈ˢ a ⟩
-       → ∥ Σ[ z ∈ S ] (⟨ z ∈ˢ x ⟩ × ⟨ z ∈ˢ y ⟩) ∥₁ → x ≡ y)
-  → ∥ Σ[ c ∈ S ] ((x : S) → ⟨ x ∈ˢ a ⟩
-       → isContr (Σ[ z ∈ S ] ⟨ z ∈ˢ (c ∩ x) ⟩)) ∥₁
+       → ∥ Σ[ z ∶ S ] (⟨ z ∈ˢ x ⟩ × ⟨ z ∈ˢ y ⟩) ∥₁ → x ≡ y)
+  → ∥ Σ[ c ∶ S ] ((x : S) → ⟨ x ∈ˢ a ⟩
+       → isContr (Σ[ z ∶ S ] ⟨ z ∈ˢ (c ∩ x) ⟩)) ∥₁
   where open ModelL.isZFModel zf using ( _∩_ )
 
 hasChoiceL : (zf : isZFModel) → ChoiceStatement zf

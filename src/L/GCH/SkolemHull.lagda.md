@@ -292,7 +292,7 @@ The codes form a finite tree algebra over the base generators: a base code names
 
 ```agda
   Sat : (k : ℕ) → Formula (⊥* {ℓ}) (suc k) → Vec S𝒮 k → Type (ℓ-suc ℓ)
-  Sat k ψ vs = ∥ Σ[ a ∈ S𝒮 ] ⟨ (a ∷ vs) ⊨₀ ψ ⟩ ∥₁
+  Sat k ψ vs = ∥ Σ[ a ∶ S𝒮 ] ⟨ (a ∷ vs) ⊨₀ ψ ⟩ ∥₁
 
   satDecision : (k : ℕ) (ψ : Formula (⊥* {ℓ}) (suc k)) (vs : Vec S𝒮 k)
               → Dec (Sat k ψ vs)
@@ -440,7 +440,7 @@ Thus every satisfiable coded query has a satisfying witness in the hull. The the
 ```agda
   closed : (k : ℕ) (ψ : Formula (⊥* {ℓ}) (suc k)) (cs : Vec Code k)
          → Sat k ψ (vals cs)
-         → ∥ Σ[ a ∈ S𝒮 ]
+         → ∥ Σ[ a ∶ S𝒮 ]
               (⟨ toSet a ∈ˢ Hull ⟩ × ⟨ (a ∷ vals cs) ⊨₀ ψ ⟩) ∥₁
   closed k ψ cs w = ∣ a , a∈H , sat ∣₁
 ```
@@ -535,7 +535,7 @@ The source carrier pairs each element of the ambient carrier with the proof that
 
 ```agda
   SA : Type (ℓ-suc ℓ)
-  SA = Σ[ x ∈ S ] ⟨ MA x ⟩
+  SA = Σ[ x ∶ S ] ⟨ MA x ⟩
 ```
 
 <!--en-->
@@ -548,7 +548,7 @@ The target carrier is the same construction for the second predicate, and satisf
 
 ```agda
   SB : Type (ℓ-suc ℓ)
-  SB = Σ[ x ∈ S ] ⟨ MB x ⟩
+  SB = Σ[ x ∶ S ] ⟨ MB x ⟩
 ```
 
 <!--en-->
@@ -605,7 +605,7 @@ It need not identify `q` as the preimage of any previously chosen target witness
 
 ```agda
             → ⟨ map g δ ⊨ᴮ mapFo g (∃̇ φ) ⟩
-            → ∥ Σ[ q ∈ SA ] ⟨ (g q ∷ map g δ) ⊨ᴮ mapFo g φ ⟩ ∥₁
+            → ∥ Σ[ q ∶ SA ] ⟨ (g q ∷ map g δ) ⊨ᴮ mapFo g φ ⟩ ∥₁
 ```
 
 <!--en-->
@@ -926,8 +926,8 @@ The auxiliary matrix is the side condition conjoined with the matrix, and forwar
 
 ```agda
       mat = (var zero ∈̇ renameTm suc t) ∧̇ ψ
-      fwd : ∥ Σ[ q ∈ SA ] (⟨ fst q ∈ˢ fst (⟦ t ⟧ᴬ δ) ⟩ × ⟨ (q ∷ δ) ⊨ᴬ ψ ⟩) ∥₁
-          → ∥ Σ[ x ∈ SB ] (⟨ fst x ∈ˢ fst (⟦ mapTm g t ⟧ᴮ (map g δ)) ⟩
+      fwd : ∥ Σ[ q ∶ SA ] (⟨ fst q ∈ˢ fst (⟦ t ⟧ᴬ δ) ⟩ × ⟨ (q ∷ δ) ⊨ᴬ ψ ⟩) ∥₁
+          → ∥ Σ[ x ∶ SB ] (⟨ fst x ∈ˢ fst (⟦ mapTm g t ⟧ᴮ (map g δ)) ⟩
                         × ⟨ (x ∷ map g δ) ⊨ᴮ mapFo g ψ ⟩) ∥₁
       fwd = map₁ (λ { (q , hq , hψ) →
 ```
@@ -943,9 +943,9 @@ The two components are transported separately: the side condition by `memPath` a
 ```agda
         g q , (subst ⟨_⟩ (memPath t q δ) hq ,
                subst ⟨_⟩ (agree (suc n) ψ (q ∷ δ)) hψ) })
-      bwd : ∥ Σ[ x ∈ SB ] (⟨ fst x ∈ˢ fst (⟦ mapTm g t ⟧ᴮ (map g δ)) ⟩
+      bwd : ∥ Σ[ x ∶ SB ] (⟨ fst x ∈ˢ fst (⟦ mapTm g t ⟧ᴮ (map g δ)) ⟩
                         × ⟨ (x ∷ map g δ) ⊨ᴮ mapFo g ψ ⟩) ∥₁
-          → ∥ Σ[ q ∈ SA ] (⟨ fst q ∈ˢ fst (⟦ t ⟧ᴬ δ) ⟩ × ⟨ (q ∷ δ) ⊨ᴬ ψ ⟩) ∥₁
+          → ∥ Σ[ q ∶ SA ] (⟨ fst q ∈ˢ fst (⟦ t ⟧ᴬ δ) ⟩ × ⟨ (q ∷ δ) ⊨ᴬ ψ ⟩) ∥₁
 ```
 
 <!--en-->
@@ -1075,7 +1075,7 @@ A carrier for the substructure is an element of the ambient carrier together wit
 
 ```agda
     SM : Type (ℓ-suc ℓ)
-    SM = Σ[ x ∈ S ] ⟨ x ∈ˢ M ⟩
+    SM = Σ[ x ∶ S ] ⟨ x ∈ˢ M ⟩
 ```
 
 <!--en-->
@@ -1131,7 +1131,7 @@ Tarski-Vaught の判定条件は、初等性の証人の形である。段階が
     TarskiVaught : Type (ℓ-suc ℓ)
     TarskiVaught = (n : ℕ) (φ : Formula SM (suc n)) (δ : SM ^ n)
                  → ⟨ map inL δ AbsL.⊨ᵐ (mapFo inL (∃̇ φ)) ⟩
-                 → ∥ Σ[ q ∈ SM ] ⟨ (inL q ∷ map inL δ) AbsL.⊨ᵐ (mapFo inL φ) ⟩ ∥₁
+                 → ∥ Σ[ q ∶ SM ] ⟨ (inL q ∷ map inL δ) AbsL.⊨ᵐ (mapFo inL φ) ⟩ ∥₁
 ```
 
 <!--en-->
@@ -1252,7 +1252,7 @@ The hull lies in the stage: every member is the value of some code, and every co
     Hull⊆L : (x : S) → ⟨ x ∈ˢ Hull ⟩ → ⟨ x ∈ˢ Lset α ⟩
     Hull⊆L x x∈H = rec₁ (snd (x ∈ˢ Lset α)) go x∈H
       where
-      go : Σ[ c ∈ Code ] (fst (val c) ≡ x) → ⟨ x ∈ˢ Lset α ⟩
+      go : Σ[ c ∶ Code ] (fst (val c) ≡ x) → ⟨ x ∈ˢ Lset α ⟩
       go (c , q) = subst (λ z → ⟨ z ∈ˢ Lset α ⟩) q (snd (val c))
 ```
 
@@ -1266,7 +1266,7 @@ Membership reads back only as truncated existence: a member of the hull is the v
 
 ```agda
     hull-member : (x : S) → ⟨ x ∈ˢ Hull ⟩
-                → ∥ Σ[ c ∈ Code ] (fst (val c) ≡ x) ∥₁
+                → ∥ Σ[ c ∶ Code ] (fst (val c) ≡ x) ∥₁
     hull-member x x∈H = x∈H
 ```
 
@@ -1370,7 +1370,7 @@ module IsoInv (M : S) (PM : S)
   (p-inj : (x y : S) (x∈ : ⟨ x ∈ˢ M ⟩) (y∈ : ⟨ y ∈ˢ M ⟩)
           → p x ≡ p y → x ≡ y)
   (surj : (z : S) (z∈ : ⟨ z ∈ˢ PM ⟩)
-        → ∥ Σ[ y ∈ S ] (⟨ y ∈ˢ M ⟩ × (p y ≡ z)) ∥₁)
+        → ∥ Σ[ y ∶ S ] (⟨ y ∈ˢ M ⟩ × (p y ≡ z)) ∥₁)
   where
 ```
 </summary>
@@ -1402,7 +1402,7 @@ The source carrier pairs each element of `M` with its membership proof, as in ev
 
 ```agda
   SM : Type (ℓ-suc ℓ)
-  SM = Σ[ x ∈ S ] ⟨ x ∈ˢ M ⟩
+  SM = Σ[ x ∶ S ] ⟨ x ∈ˢ M ⟩
 ```
 
 <!--en-->
@@ -1415,7 +1415,7 @@ The target carrier pairs each element of `PM` with its membership proof.
 
 ```agda
   SPM : Type (ℓ-suc ℓ)
-  SPM = Σ[ x ∈ S ] ⟨ x ∈ˢ PM ⟩
+  SPM = Σ[ x ∶ S ] ⟨ x ∈ˢ PM ⟩
 ```
 
 <!--en-->
@@ -1468,7 +1468,7 @@ Surjectivity promotes to the paired carriers: every element of the target `PM` i
 <!--/-->
 
 ```agda
-  surj' : (p' : SPM) → ∥ Σ[ q ∈ SM ] (g q ≡ p') ∥₁
+  surj' : (p' : SPM) → ∥ Σ[ q ∶ SM ] (g q ≡ p') ∥₁
   surj' (z , z∈) = map₁ (λ { (y , y∈ , e) →
     (y , y∈) , Σ≡Prop (λ w → ⟨ w ∈ˢ PM ⟩isProp) e }) (surj z z∈)
 ```
@@ -1780,7 +1780,7 @@ Every point of the image comes from a member of `X`: surjectivity is truncated, 
 
 ```agda
   surj : (z : S) (z∈ : ⟨ z ∈ˢ PM ⟩)
-       → ∥ Σ[ y ∈ S ] (⟨ y ∈ˢ X ⟩ × (p y ≡ z)) ∥₁
+       → ∥ Σ[ y ∶ S ] (⟨ y ∈ˢ X ⟩ × (p y ≡ z)) ∥₁
   surj = C.πX-member
 ```
 
@@ -1851,7 +1851,7 @@ The substructure machinery is instantiated at the hull, and its formulas receive
 ```agda
   module A = ASt.AtM M H.Hull⊆L using ( Elementary; SM; module SemM; TV→elem; inL )
   module Mse = A.SemM.At A.SM id using ( _⊨_ )
-  codeOf : (q : A.SM) → ∥ Σ[ c ∈ H.T.Code ] (H.T.val c ≡ A.inL q) ∥₁
+  codeOf : (q : A.SM) → ∥ Σ[ c ∶ H.T.Code ] (H.T.val c ≡ A.inL q) ∥₁
   codeOf q = map₁ (λ { (c , e) → c , Σ≡Prop (λ z → ⟨ z ∈ˢ Lset α ⟩isProp) e })
     (H.hull-member (fst q) (snd q))
 ```
@@ -1866,7 +1866,7 @@ Codes lift from single elements to finite environments: the empty environment is
 
 ```agda
   codeEnv : {n : ℕ} (δ : Vec A.SM n)
-          → ∥ Σ[ ds ∈ Vec H.T.Code n ]
+          → ∥ Σ[ ds ∶ Vec H.T.Code n ]
                (map H.T.val ds ≡ map A.inL δ) ∥₁
   codeEnv [] = ∣ [] , refl ∣₁
   codeEnv (q ∷ δ) = map2
@@ -1911,7 +1911,7 @@ The statement is the Tarski-Vaught condition itself: if the stage satisfies an e
 
 ```agda
      → ⟨ map A.inL δ ASt.AbsL.⊨ᵐ (mapFo A.inL (∃̇ ψ)) ⟩
-     → ∥ Σ[ q ∈ A.SM ]
+     → ∥ Σ[ q ∶ A.SM ]
           ⟨ (A.inL q ∷ map A.inL δ) ASt.AbsL.⊨ᵐ (mapFo A.inL ψ) ⟩ ∥₁
   tv n ψ δ h = rec₁ squash₁ takeEnvironment (codeEnv params)
     where
@@ -1952,9 +1952,9 @@ Once this combined environment has codes, least-witness closure supplies a hull 
 <!--/-->
 
 ```agda
-    takeEnvironment : Σ[ ds ∈ Vec H.T.Code (n + countFo ψ) ]
+    takeEnvironment : Σ[ ds ∶ Vec H.T.Code (n + countFo ψ) ]
                         (map H.T.val ds ≡ map A.inL params)
-                    → ∥ Σ[ q ∈ A.SM ]
+                    → ∥ Σ[ q ∶ A.SM ]
                          ⟨ (A.inL q ∷ map A.inL δ) ASt.AbsL.⊨ᵐ
                              (mapFo A.inL ψ) ⟩ ∥₁
 ```
@@ -2029,10 +2029,10 @@ The search returns a least witness inside the hull, satisfying the abstracted bo
 <!--/-->
 
 ```agda
-      finish : Σ[ a ∈ ASt.SL ]
+      finish : Σ[ a ∶ ASt.SL ]
                  ( ⟨ fst a ∈ˢ M ⟩
                  × ⟨ (a ∷ H.T.vals ds) H.T.⊨₀ bodyFo ⟩ )
-             → Σ[ q ∈ A.SM ]
+             → Σ[ q ∶ A.SM ]
                  ⟨ (A.inL q ∷ map A.inL δ) ASt.AbsL.⊨ᵐ (mapFo A.inL ψ) ⟩
 ```
 
@@ -2407,7 +2407,7 @@ The condensation argument assumes two properties of the image. First, if an ordi
   module Condense
     (levelIn : (δ : S) → IsOrd δ → ⟨ δ ∈ˢ C.πX ⟩ → ⟨ Lset δ ∈ˢ C.πX ⟩)
     (cover : (y : S) → ⟨ y ∈ˢ M ⟩
-           → ∥ Σ[ γ ∈ S ] (IsOrd γ × ⟨ γ ∈ˢ C.πX ⟩ × ⟨ C.π y ∈ˢ Lset γ ⟩) ∥₁)
+           → ∥ Σ[ γ ∶ S ] (IsOrd γ × ⟨ γ ∈ˢ C.πX ⟩ × ⟨ C.π y ∈ˢ Lset γ ⟩) ∥₁)
     where
 ```
 </summary>
@@ -2422,7 +2422,7 @@ Separation forms the set of exactly those members of `πX` that are ordinals. Th
 <!--/-->
 
 ```agda
-    β-sep : Σ[ s ∈ S ]
+    β-sep : Σ[ s ∶ S ]
               (∀ y → (y ∈ˢ s) ≡ ((y ∈ˢ C.πX) ⊓ ((y ∷ []) ⊨ₚ isOrdAt)))
     β-sep = separateFromSmall C.πX (λ y → (y ∷ []) ⊨ₚ isOrdAt)
               (λ y → D0.Δ₀-small Δ₀-isOrdAt (y ∷ []))
@@ -2535,7 +2535,7 @@ The covering hypothesis lifts from hull members to collapse members. Since a col
 
 ```agda
     covered : (x : S) → ⟨ x ∈ˢ C.πX ⟩
-            → ∥ Σ[ γ ∈ S ]
+            → ∥ Σ[ γ ∶ S ]
                  (IsOrd γ × ⟨ γ ∈ˢ C.πX ⟩ × ⟨ x ∈ˢ Lset γ ⟩) ∥₁
     covered x x∈πX = rec₁ squash₁ go (C.πX-member x x∈πX)
       where
@@ -2550,8 +2550,8 @@ The inversion is the collapse's own member description: a member of the image is
 <!--/-->
 
 ```agda
-      go : Σ[ y ∈ S ] (⟨ y ∈ˢ M ⟩ × (C.π y ≡ x))
-         → ∥ Σ[ γ ∈ S ]
+      go : Σ[ y ∶ S ] (⟨ y ∈ˢ M ⟩ × (C.π y ≡ x))
+         → ∥ Σ[ γ ∶ S ]
               (IsOrd γ × ⟨ γ ∈ˢ C.πX ⟩ × ⟨ x ∈ˢ Lset γ ⟩) ∥₁
       go (y , y∈M , e) = map₁
         (λ { (γ , oγ , γ∈πX , h) →
@@ -2569,7 +2569,7 @@ The cover transports along the equality of the collapse values. The lifted state
           γ , oγ , γ∈πX , subst (λ w → ⟨ w ∈ˢ Lset γ ⟩) e h })
         (cover y y∈M)
     β-succ : (δ : S) → ⟨ δ ∈ˢ β ⟩
-           → ∥ Σ[ γ ∈ S ] (IsOrd γ × ⟨ δ ∈ˢ γ ⟩ × ⟨ γ ∈ˢ β ⟩) ∥₁
+           → ∥ Σ[ γ ∶ S ] (IsOrd γ × ⟨ δ ∈ˢ γ ⟩ × ⟨ γ ∈ˢ β ⟩) ∥₁
     β-succ δ δ∈β = map₁ go (covered δ (β∈πX δ δ∈β))
 ```
 
@@ -2585,8 +2585,8 @@ delta の順序数性はベータから読まれ、変換は覆いの結論を�
       where
       oδ : IsOrd δ
       oδ = β-ord δ δ∈β
-      go : Σ[ γ ∈ S ] (IsOrd γ × ⟨ γ ∈ˢ C.πX ⟩ × ⟨ δ ∈ˢ Lset γ ⟩)
-         → Σ[ γ ∈ S ] (IsOrd γ × ⟨ δ ∈ˢ γ ⟩ × ⟨ γ ∈ˢ β ⟩)
+      go : Σ[ γ ∶ S ] (IsOrd γ × ⟨ γ ∈ˢ C.πX ⟩ × ⟨ δ ∈ˢ Lset γ ⟩)
+         → Σ[ γ ∶ S ] (IsOrd γ × ⟨ δ ∈ˢ γ ⟩ × ⟨ γ ∈ˢ β ⟩)
 ```
 
 <!--en-->
@@ -2614,7 +2614,7 @@ The reverse inclusion holds because the level at beta contains every smaller lev
 <!--/-->
 
 ```agda
-      go : Σ[ γ ∈ S ] (IsOrd γ × ⟨ γ ∈ˢ C.πX ⟩ × ⟨ x ∈ˢ Lset γ ⟩)
+      go : Σ[ γ ∶ S ] (IsOrd γ × ⟨ γ ∈ˢ C.πX ⟩ × ⟨ x ∈ˢ Lset γ ⟩)
          → ⟨ x ∈ˢ Lset β ⟩
       go (γ , oγ , γ∈πX , x∈Lγ) =
         Lset-mono {α = β} {β = γ} (ord∈β γ γ∈πX oγ) x∈Lγ
@@ -2632,7 +2632,7 @@ The forward inclusion decomposes a member of the level at beta by the stage cons
 ```agda
     Lβ⊆πX x x∈Lβ = rec₁ (snd (x ∈ˢ C.πX)) go (Lset-out β x x∈Lβ)
       where
-      go : Σ[ δ ∈ S ] (⟨ δ ∈ˢ β ⟩ × ⟨ x ∈ˢ 𝒟ₒ (Lset δ) ⟩)
+      go : Σ[ δ ∶ S ] (⟨ δ ∈ˢ β ⟩ × ⟨ x ∈ˢ 𝒟ₒ (Lset δ) ⟩)
          → ⟨ x ∈ˢ C.πX ⟩
       go (δ , δ∈β , x∈𝒟ₒδ) = rec₁ (snd (x ∈ˢ C.πX)) liftStage (β-succ δ δ∈β)
 ```
@@ -2647,7 +2647,7 @@ The lifting stage is stated: from an ordinal inside beta containing delta, produ
 
 ```agda
         where
-        liftStage : Σ[ γ ∈ S ] (IsOrd γ × ⟨ δ ∈ˢ γ ⟩ × ⟨ γ ∈ˢ β ⟩)
+        liftStage : Σ[ γ ∶ S ] (IsOrd γ × ⟨ δ ∈ˢ γ ⟩ × ⟨ γ ∈ˢ β ⟩)
              → ⟨ x ∈ˢ C.πX ⟩
         liftStage (γ , oγ , δ∈γ , γ∈β) =
           C.πX-trans {x = Lset γ} {y = x}
@@ -2706,7 +2706,7 @@ The condensation statement is thus assembled: the collapse image is the level at
 <!--/-->
 
 ```agda
-    condenses : Σ[ γ ∈ S ] (IsOrd γ × (C.πX ≡ Lset γ))
+    condenses : Σ[ γ ∶ S ] (IsOrd γ × (C.πX ≡ Lset γ))
     condenses = β , β-isOrd , ext
 ```
 </div>
@@ -2969,11 +2969,11 @@ Unequal sets have a point in their symmetric difference, classically: the trunca
 <!--/-->
 
 ```agda
-  different : (x y : S) → (x ≡ y → ⊥₀) → ∥ Σ[ z ∈ S ] Different x y z ∥₁
+  different : (x y : S) → (x ≡ y → ⊥₀) → ∥ Σ[ z ∶ S ] Different x y z ∥₁
   different x y nxy = go (lem P)
     where
     P : hProp (ℓ-suc ℓ)
-    P = ∥ Σ[ z ∈ S ] Different x y z ∥₁ , squash₁
+    P = ∥ Σ[ z ∶ S ] Different x y z ∥₁ , squash₁
 ```
 
 <!--en-->
@@ -3035,7 +3035,7 @@ Existential satisfaction is truncated, so the distinguishing point is returned u
 <!--/-->
 
 ```agda
-        → ∥ Σ[ a ∈ ASt.SL ]
+        → ∥ Σ[ a ∶ ASt.SL ]
             ⟨ (a ∷ []) ASt.AbsL.⊨ᵐ (mapFo A.inL (φ (u , u∈M) (v , v∈M))) ⟩ ∥₁
   outer u v u∈M v∈M z d = ∣ a , ∣ objectDifferent d ∣₁ ∣₁
     where
@@ -3113,7 +3113,7 @@ The refutation eliminates the difference point. Elementarity converts the stage'
 <!--/-->
 
 ```agda
-    diff : Σ[ z ∈ S ] Different x y z → ⊥₀
+    diff : Σ[ z ∶ S ] Different x y z → ⊥₀
     diff (z , d) = rec₁ isProp⊥ inside h
       where
       h : ⟨ [] Mse.⊨ (∃̇ (φ xS yS)) ⟩
@@ -3130,7 +3130,7 @@ Elementarity supplies a hull witness satisfying the difference formula. Eliminat
 
 ```agda
         (outer x y x∈M y∈M z d)
-      inside : Σ[ b ∈ A.SM ] ⟨ (b ∷ []) Mse.⊨ φ xS yS ⟩ → ⊥₀
+      inside : Σ[ b ∶ A.SM ] ⟨ (b ∷ []) Mse.⊨ φ xS yS ⟩ → ⊥₀
       inside (b , q) = rec₁ isProp⊥ cases q
         where
         cases : (⟨ fst b ∈ˢ x ⟩ × (⟨ fst b ∈ˢ y ⟩ → Lift ⊥₀))

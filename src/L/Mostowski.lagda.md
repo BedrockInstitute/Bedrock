@@ -42,7 +42,7 @@ so each point is sent to the set of collapse values of its predecessors. A compu
 
 A finite example shows the mechanism. Take three points `s`, `r`, `p` with `s ≺ r`, `r ≺ p`, and, by transitivity, `s ≺ p`, and with no other relations. Then `col s` has no members forced by the recursion, `col r = { col s }`, and `col p = { col s, col r }`, and this is exactly the von Neumann picture of `0`, `1`, `2`. The recursion never inspects the points themselves, only their cones of predecessors.
 
-Three features of the setting shape everything that follows. First, `A` and each fiber `x ≺ y` live in `Type ℓ`, so for each `p` the predecessor cone is the small type `Σ[ r ∈ A ] (r ≺ p)`; the `sett`{.Agda} constructor of the hierarchy `V`{.Agda} turns precisely such a small family into a set of `SV.S`. Second, membership in a `sett`-set is by construction a propositional truncation: `⟨ b ∈ˢ a ⟩` says that some index of the family merely hits `b`, not that a chosen index is available. The chapter therefore proves membership in one direction from given data (`r ≺ p` yields `col r ∈ˢ col p`) and, in the other direction, only a merely existing predecessor with an equation of collapse values. Third, the targets of the later eliminations are propositions, such as an equality of sets or `isTransV x`, so eliminating the truncation into them is legitimate. No extensionality hypothesis on `_≺_` appears, so two points with identical predecessor cones are not distinguished: the collapse is canonical, but not claimed to be injective. The construction uses only well-founded recursion and transport; no classical principle is assumed anywhere in this module.
+Three features of the setting shape everything that follows. First, `A` and each fiber `x ≺ y` live in `Type ℓ`, so for each `p` the predecessor cone is the small type `Σ[ r ∶ A ] (r ≺ p)`; the `sett`{.Agda} constructor of the hierarchy `V`{.Agda} turns precisely such a small family into a set of `SV.S`. Second, membership in a `sett`-set is by construction a propositional truncation: `⟨ b ∈ˢ a ⟩` says that some index of the family merely hits `b`, not that a chosen index is available. The chapter therefore proves membership in one direction from given data (`r ≺ p` yields `col r ∈ˢ col p`) and, in the other direction, only a merely existing predecessor with an equation of collapse values. Third, the targets of the later eliminations are propositions, such as an equality of sets or `isTransV x`, so eliminating the truncation into them is legitimate. No extensionality hypothesis on `_≺_` appears, so two points with identical predecessor cones are not distinguished: the collapse is canonical, but not claimed to be injective. The construction uses only well-founded recursion and transport; no classical principle is assumed anywhere in this module.
 <!--zh-->
 
 一个关系自身能携带多少集合论结构？取带良基传递关系 `_≺_` 的小类型 `A`，该关系取值于 `Type ℓ`。Mostowski 的回答是：仅凭这个关系，就能用递归确定一个函数 `col : A → SV.S`，满足
@@ -53,7 +53,7 @@ Three features of the setting shape everything that follows. First, `A` and each
 
 一个有限的例子可以展示机制。取三点 `s`、`r`、`p`，有 `s ≺ r`、`r ≺ p`，以及传递性所要求的 `s ≺ p`，且无其他关系。递归没有强制 `col s` 的任何成员，`col r = { col s }`，`col p = { col s, col r }`，这正是 von Neumann 的 `0`、`1`、`2` 图景。递归从不检视点本身，只检视它们的前驱锥。
 
-设定的三个特征决定其后的一切。其一，`A` 与每个纤维 `x ≺ y` 都在 `Type ℓ` 中，故对每个 `p`，前驱锥是小类型 `Σ[ r ∈ A ] (r ≺ p)`；层级 `V`{.Agda} 的 `sett`{.Agda} 构造子恰好把这样的小族变成 `SV.S` 中的集合。其二，`sett` 集合中的隶属按构造就是命题截断：`⟨ b ∈ˢ a ⟩` 说的是纯粹存在该族的某个索引，使族在该处的值等于 `b`，而非选定的索引可得。因此本章在一个方向上从给出的数据证明隶属 (`r ≺ p` 给出 `col r ∈ˢ col p`)，在另一方向上只得到纯粹存在的前驱加一条塌缩值等式。其三，之后消去的目标都是命题，如集合间的等式或 `isTransV x`，故向它们消去截断是合法的。这里没有对 `_≺_` 的外延性假设，前驱锥相同的两点不被区分：塌缩是典范的，但并不声称单射。整个构造只用良基递归与传输；这里没有假设任何经典原理。
+设定的三个特征决定其后的一切。其一，`A` 与每个纤维 `x ≺ y` 都在 `Type ℓ` 中，故对每个 `p`，前驱锥是小类型 `Σ[ r ∶ A ] (r ≺ p)`；层级 `V`{.Agda} 的 `sett`{.Agda} 构造子恰好把这样的小族变成 `SV.S` 中的集合。其二，`sett` 集合中的隶属按构造就是命题截断：`⟨ b ∈ˢ a ⟩` 说的是纯粹存在该族的某个索引，使族在该处的值等于 `b`，而非选定的索引可得。因此本章在一个方向上从给出的数据证明隶属 (`r ≺ p` 给出 `col r ∈ˢ col p`)，在另一方向上只得到纯粹存在的前驱加一条塌缩值等式。其三，之后消去的目标都是命题，如集合间的等式或 `isTransV x`，故向它们消去截断是合法的。这里没有对 `_≺_` 的外延性假设，前驱锥相同的两点不被区分：塌缩是典范的，但并不声称单射。整个构造只用良基递归与传输；这里没有假设任何经典原理。
 <!--ja-->
 
 関係だけでどれほどの集合論的構造が得られるのか。`Type ℓ` 値の推移的な整礎関係 `_≺_` を持つ小さな型 `A` を固定する。Mostowski の答えは、関係だけから再帰によって関数 `col : A → SV.S` が定まり、
@@ -64,7 +64,7 @@ Three features of the setting shape everything that follows. First, `A` and each
 
 有限の例で仕組みを見る。三点 `s`、`r`、`p` が `s ≺ r`、`r ≺ p`、および推移性から従う `s ≺ p` だけを関係として持つとすると、再帰は `col s` の要素を何も強制せず、`col r = { col s }`、`col p = { col s, col r }` となる。これはまさに von Neumann の `0`、`1`、`2` の図である。再帰は点そのものを見ず、前者の錐だけを見る。
 
-設定の三つの特徴がその後のすべてを形作る。第一に、`A` と各繊維 `x ≺ y` は `Type ℓ` にあるので、各 `p` の前者の錐は小さな型 `Σ[ r ∈ A ] (r ≺ p)` である。階層 `V`{.Agda} の `sett`{.Agda} 構成子はまさにこのような小さな族を `SV.S` の集合に変える。第二に、`sett` 集合への所属は構成上命題的切り詰めである。`⟨ b ∈ˢ a ⟩` はあるインデックスで族の値が `b` に等しいことが単に存在すると述べるのであって、選ばれたインデックスが得られるとは言わない。したがって本章では、一方向には与えられたデータから所属を証明し (`r ≺ p` が `col r ∈ˢ col p` を与える)、他方向には崩壊値の等式を伴う、単に存在する前者しか得られない。第三に、後の消去の目標は集合の等式や `isTransV x` といった命題なので、そこへの切り詰めの消去は正当である。`_≺_` に対する外延性の仮定は現れず、同じ前者の錐を持つ二点は区別されない。崩壊は正準であるが、単射であるとは主張しない。構成は整礎再帰と輸送だけを用い、ここでは古典的な原理を何も仮定しない。
+設定の三つの特徴がその後のすべてを形作る。第一に、`A` と各繊維 `x ≺ y` は `Type ℓ` にあるので、各 `p` の前者の錐は小さな型 `Σ[ r ∶ A ] (r ≺ p)` である。階層 `V`{.Agda} の `sett`{.Agda} 構成子はまさにこのような小さな族を `SV.S` の集合に変える。第二に、`sett` 集合への所属は構成上命題的切り詰めである。`⟨ b ∈ˢ a ⟩` はあるインデックスで族の値が `b` に等しいことが単に存在すると述べるのであって、選ばれたインデックスが得られるとは言わない。したがって本章では、一方向には与えられたデータから所属を証明し (`r ≺ p` が `col r ∈ˢ col p` を与える)、他方向には崩壊値の等式を伴う、単に存在する前者しか得られない。第三に、後の消去の目標は集合の等式や `isTransV x` といった命題なので、そこへの切り詰めの消去は正当である。`_≺_` に対する外延性の仮定は現れず、同じ前者の錐を持つ二点は区別されない。崩壊は正準であるが、単射であるとは主張しない。構成は整礎再帰と輸送だけを用い、ここでは古典的な原理を何も仮定しない。
 <!--/-->
 
 
@@ -128,21 +128,21 @@ module Mostowski (A : Type ℓ) (_≺_ : A → A → Type ℓ)
 ```
 
 <!--en-->
-The recursion step is the image of the predecessor cone. Given `p` and a recursive call `rec` that already knows `col r` for each `r ≺ p`, the step forms `sett (Σ[ r ∈ A ] (r ≺ p)) (λ z → rec (fst z) (snd z))`: the index type is the total space of pairs `(r , r ≺ p)`, and the family sends such a pair to `rec r`. Abstractly this is exactly the set `{ col r | r ≺ p }`, the collapsing equation the chapter announced. Note how the step type quantifies over arbitrary step functions `rec`, which is what makes the same data serve both the definition and, via the computation law below, reasoning about it.
+The recursion step is the image of the predecessor cone. Given `p` and a recursive call `rec` that already knows `col r` for each `r ≺ p`, the step forms `sett (Σ[ r ∶ A ] (r ≺ p)) (λ z → rec (fst z) (snd z))`: the index type is the total space of pairs `(r , r ≺ p)`, and the family sends such a pair to `rec r`. Abstractly this is exactly the set `{ col r | r ≺ p }`, the collapsing equation the chapter announced. Note how the step type quantifies over arbitrary step functions `rec`, which is what makes the same data serve both the definition and, via the computation law below, reasoning about it.
 <!--zh-->
-递归步就是前驱锥的像。给定 `p` 和已经知道每个 `r ≺ p` 的 `col r` 的递归调用 `rec`，该步造出 `sett (Σ[ r ∈ A ] (r ≺ p)) (λ z → rec (fst z) (snd z))`：索引类型是偶对 `(r , r ≺ p)` 的全空间，族把这样的偶对送到 `rec r`。抽象地说，这正是本章宣告的塌缩方程 `{ col r | r ≺ p }`。注意步型对任意的步函数 `rec` 做了量化，这使同一份数据既用于定义，也经由下面的计算律用于推理。
+递归步就是前驱锥的像。给定 `p` 和已经知道每个 `r ≺ p` 的 `col r` 的递归调用 `rec`，该步造出 `sett (Σ[ r ∶ A ] (r ≺ p)) (λ z → rec (fst z) (snd z))`：索引类型是偶对 `(r , r ≺ p)` 的全空间，族把这样的偶对送到 `rec r`。抽象地说，这正是本章宣告的塌缩方程 `{ col r | r ≺ p }`。注意步型对任意的步函数 `rec` 做了量化，这使同一份数据既用于定义，也经由下面的计算律用于推理。
 <!--ja-->
-再帰の一段は前者の錐の像である。`p` と、各 `r ≺ p` に対してすでに `col r` を知る再帰呼び出し `rec` が与えられれば、この段は `sett (Σ[ r ∈ A ] (r ≺ p)) (λ z → rec (fst z) (snd z))` を形作る。インデックス型は対 `(r , r ≺ p)` の全空間であり、族はその対を `rec r` へ送る。抽象的には、これがまさに章の冒頭で宣言した崩壊方程式 `{ col r | r ≺ p }` である。段の型が任意の段関数 `rec` を量化している点に注目してほしい。おかげで同じデータが定義と、後述の計算法則を通した推論の両方に使える。
+再帰の一段は前者の錐の像である。`p` と、各 `r ≺ p` に対してすでに `col r` を知る再帰呼び出し `rec` が与えられれば、この段は `sett (Σ[ r ∶ A ] (r ≺ p)) (λ z → rec (fst z) (snd z))` を形作る。インデックス型は対 `(r , r ≺ p)` の全空間であり、族はその対を `rec r` へ送る。抽象的には、これがまさに章の冒頭で宣言した崩壊方程式 `{ col r | r ≺ p }` である。段の型が任意の段関数 `rec` を量化している点に注目してほしい。おかげで同じデータが定義と、後述の計算法則を通した推論の両方に使える。
 <!--/-->
 
 ```agda
-  colStep p rec = sett (Σ[ r ∈ A ] (r ≺ p)) (λ z → rec (fst z) (snd z))
+  colStep p rec = sett (Σ[ r ∶ A ] (r ≺ p)) (λ z → rec (fst z) (snd z))
 
   opaque
     col : A → SV.S
     col = W.induction {P = λ _ → SV.S} colStep
 
-    col-eq : (p : A) → col p ≡ sett (Σ[ r ∈ A ] (r ≺ p)) (λ z → col (fst z))
+    col-eq : (p : A) → col p ≡ sett (Σ[ r ∶ A ] (r ≺ p)) (λ z → col (fst z))
 ```
 
 <!--en-->
@@ -172,7 +172,7 @@ Membership admits a computation law in each direction, and the two are usefully 
 <!--/-->
 
 ```agda
-          → ∥ Σ[ r ∈ A ] ((r ≺ p) × (col r ≡ b)) ∥₁
+          → ∥ Σ[ r ∶ A ] ((r ≺ p) × (col r ≡ b)) ∥₁
   col-out p b b∈ =
     map₁ (λ z → fst (fst z) , snd (fst z) , snd z)
       (subst (λ v → ⟨ b ∈ˢ v ⟩) (col-eq p) b∈)
@@ -223,7 +223,7 @@ The second clause proves `col p` itself transitive: given `y ∈ x` and `x ∈ c
 ```agda
       tr {x} {y} y∈x x∈col = rec₁ (snd (y ∈ˢ col p)) outer (col-out p x x∈col)
         where
-        outer : Σ[ r ∈ A ] ((r ≺ p) × (col r ≡ x)) → ⟨ y ∈ˢ col p ⟩
+        outer : Σ[ r ∶ A ] ((r ≺ p) × (col r ≡ x)) → ⟨ y ∈ˢ col p ⟩
         outer (r , rp , e) =
           rec₁ (snd (y ∈ˢ col p)) inner
 ```
@@ -239,7 +239,7 @@ Now the chain closes. From `y ∈ col r`, `col-out` applied at `r` yields merely
 ```agda
             (col-out r y (subst (λ v → ⟨ y ∈ˢ v ⟩) (sym e) y∈x))
           where
-          inner : Σ[ s ∈ A ] ((s ≺ r) × (col s ≡ y)) → ⟨ y ∈ˢ col p ⟩
+          inner : Σ[ s ∶ A ] ((s ≺ r) × (col s ≡ y)) → ⟨ y ∈ˢ col p ⟩
           inner (s , sr , e2) =
             subst (λ v → ⟨ v ∈ˢ col p ⟩) e2 (col-in p s (≺-trans sr rp))
 ```

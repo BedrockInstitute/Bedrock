@@ -222,18 +222,18 @@ Given a proposition-valued class `M`, we can now cut a structure down to the par
 <!--/-->
 
 <!--en-->
-The new carrier is the Σ-type `Σ[ x ∈ S ] (x ∈ᶜ M)`: an inhabitant is a pair of an underlying carrier element and membership evidence in `M`, so restricting does not collect `M` into a set, it only changes which pairs count as elements. The record's `isSetS` field still must be filled, and here the pointwise fact from the chapter opening does the work: since each `M x` is a proposition by its second component, `isSetΣSndProp`{.Agda} applied to `isSetS` proves that this pair type is again an h-set.
+The new carrier is the Σ-type `Σ[ x ∶ S ] (x ∈ᶜ M)`: an inhabitant is a pair of an underlying carrier element and membership evidence in `M`, so restricting does not collect `M` into a set, it only changes which pairs count as elements. The record's `isSetS` field still must be filled, and here the pointwise fact from the chapter opening does the work: since each `M x` is a proposition by its second component, `isSetΣSndProp`{.Agda} applied to `isSetS` proves that this pair type is again an h-set.
 <!--zh-->
-新载体是 Σ 类型 `Σ[ x ∈ S ] (x ∈ᶜ M)`：其元素是「底层载体元素配上 `M` 的成员证据」的对，因此限制并不把 `M` 收集成一个集合，只是改变哪些对算作元素。record 的 `isSetS` 字段仍须填写，这里正是章首那条逐点的事实起作用：由于每个 `M x` 凭第二分量是命题，把 `isSetΣSndProp`{.Agda} 作用于 `isSetS` 便证明这个对类型仍是 h-集合。
+新载体是 Σ 类型 `Σ[ x ∶ S ] (x ∈ᶜ M)`：其元素是「底层载体元素配上 `M` 的成员证据」的对，因此限制并不把 `M` 收集成一个集合，只是改变哪些对算作元素。record 的 `isSetS` 字段仍须填写，这里正是章首那条逐点的事实起作用：由于每个 `M x` 凭第二分量是命题，把 `isSetΣSndProp`{.Agda} 作用于 `isSetS` 便证明这个对类型仍是 h-集合。
 <!--ja-->
-新しい台は Σ 型 `Σ[ x ∈ S ] (x ∈ᶜ M)` である。その要素は「元となる台の要素と `M` への所属の証拠」の対であり、したがって制限は `M` を集合に集めるのではなく、どの対を要素とみなすかを変えるだけである。レコードの `isSetS` フィールドは依然として埋める必要があり、ここで章の冒頭の各点での事実が働く。各 `M x` は第二成分によって命題なので、`isSetS` に `isSetΣSndProp`{.Agda} を適用すれば、この対の型が再び h-集合であることが示される。
+新しい台は Σ 型 `Σ[ x ∶ S ] (x ∈ᶜ M)` である。その要素は「元となる台の要素と `M` への所属の証拠」の対であり、したがって制限は `M` を集合に集めるのではなく、どの対を要素とみなすかを変えるだけである。レコードの `isSetS` フィールドは依然として埋める必要があり、ここで章の冒頭の各点での事実が働く。各 `M x` は第二成分によって命題なので、`isSetS` に `isSetΣSndProp`{.Agda} を適用すれば、この対の型が再び h-集合であることが示される。
 <!--/-->
 
 ```agda
 _↾_ : ∀ {ℓ} (𝒮 : ZFStructure ℓ)
     → (ZFStructure.S 𝒮 → hProp ℓ) → ZFStructure ℓ
 _↾_ {ℓ} 𝒮 M = record
-  { S      = Σ[ x ∈ S ] (x ∈ᶜ M)
+  { S      = Σ[ x ∶ S ] (x ∈ᶜ M)
   ; isSetS = isSetΣSndProp isSetS (λ x → ⟨ M x ⟩isProp)
 ```
 
