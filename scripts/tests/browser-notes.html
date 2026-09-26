@@ -1,0 +1,67 @@
+<!doctype html><html lang="zh"><meta charset="utf-8">
+<title>Margin-note anchor regression</title>
+<link rel="stylesheet" href="/static/outcrop.css">
+<style>
+  body { margin: 2rem; }
+  article { margin: 0 auto; max-width: 40rem; }
+  article details { margin-block: 1rem; }
+</style>
+<h1 id="test-status">RUNNING margin-note regression</h1>
+<article>
+  <details id="route"><summary>学习路线</summary><p>Direct prerequisites and successors.</p><p>Further route content.</p></details>
+  <details id="preview"><summary>展开剩余代码</summary><pre>First line
+Second line
+Third line
+Fourth line</pre></details>
+  <p>Agda 支持构造子<span class="prose-annotation-target" id="overload">重载</span><template class="prose-annotation-template">同一个名称可以指不同的构造子。</template>。</p>
+  <details id="submodule"><summary>子模块</summary>
+    <p>内部的<span class="prose-annotation-target" id="nested">注释</span><template class="prose-annotation-template">内部说明。</template>也跟随所在行。</p>
+  </details>
+</article>
+<pre id="report"></pre>
+<script type="module">
+import { initCodeNotes } from '/static/__OUTCROP_RUNTIME__/reader/notes.js';
+const status = document.querySelector('#test-status');
+const report = document.querySelector('#report');
+const checks = [];
+const frame = () => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+function check(label, ok) {
+  checks.push(`${ok ? 'PASS' : 'FAIL'} ${label}`);
+  report.textContent = checks.join('\n');
+  if (!ok) throw Error(label);
+}
+function aligned(id) {
+  const anchor = document.querySelector(id).closest('.prose-annotation');
+  const target = anchor.querySelector('.prose-annotation-target').getBoundingClientRect();
+  const connector = anchor.querySelector('.prose-annotation-connector').getBoundingClientRect();
+  const note = anchor.querySelector('.prose-annotation-note').getBoundingClientRect();
+  const center = rect => rect.top + rect.height / 2;
+  return Math.abs(center(note) - center(target)) <= 1.1 &&
+    Math.abs(center(connector) - center(target)) <= 1.1;
+}
+try {
+  initCodeNotes();
+  await document.fonts.ready;
+  await frame();
+  check('annotation is structurally anchored beside its term', aligned('#overload'));
+  check('collapsed nested note is hidden with its source',
+    !document.querySelector('#submodule').open &&
+    document.querySelector('#submodule').contains(
+      document.querySelector('#nested').closest('.prose-annotation')));
+  for (const id of ['route', 'preview', 'submodule']) {
+    document.getElementById(id).open = true;
+    await frame();
+    check(`${id} expansion keeps term and note on one line`, aligned('#overload'));
+  }
+  check('opened submodule note follows its own line', aligned('#nested'));
+  for (const id of ['submodule', 'preview', 'route']) {
+    document.getElementById(id).open = false;
+    await frame();
+    check(`${id} collapse keeps term and note on one line`, aligned('#overload'));
+  }
+  status.textContent = 'PASS margin-note anchor regression';
+} catch (error) {
+  status.textContent = `FAIL margin-note anchor regression: ${error.message}`;
+  console.error(error);
+}
+</script></html>

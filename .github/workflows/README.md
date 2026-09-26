@@ -75,9 +75,13 @@ then refreshes the verified wrapper timestamp so checkout times cannot trigger a
 rebuild. A normal cache hit therefore skips GHC and Cabal setup entirely. When the
 compiler must be rebuilt, a separate Cabal cache reuses the package index and compiled
 dependency store. The
-project-interface key separates the stable toolchain fingerprint from the source-tree
-fingerprint, allowing `restore-keys` to supply a useful incremental starting point after
-source edits. Cache, Python, artifact and deployment actions use their Node 24 releases.
+project-interface key separates the stable toolchain fingerprint from a digest of
+the ordered Agda fences and module paths. Its archive contains both the pure
+interfaces and a canonical code-only source mirror. Agda hashes full input
+files, so this mirror is essential: changing prose leaves its bytes and mtime
+unchanged. A code or module-path change gets a new key; `restore-keys` can still
+provide an incremental starting point. This cache never supplies the traced
+HTML/type data. Cache, Python, artifact and deployment actions use their Node 24 releases.
 
 After `typecheck` succeeds, `site-backend` restores the exact patched-Agda and cubical
 caches that job created, including cubical's pinned source archive. It does not install

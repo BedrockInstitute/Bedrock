@@ -340,7 +340,7 @@ The extended assignment `δ` is `v ∷ u ∷ s ∷ γ`, and its layout is the wh
 | 1 | `u` | internal element of `a` |
 | 2 | `s` | the intermediate set, a member of the entry at `q` |
 | `i + 3` | old slot `i` | the original assignment, unchanged |
-: Three new slots precede the unchanged original assignment.
+: Three new slots precede the unchanged original assignment
 
 The pair formula asserts `s ∈ q`, `u ∈ s`, `v ∈ s`, and `q ≡ pr u v`; since `u` sits at slot one and `v` at slot zero, the recursive reads `read a` at slot one and `read b` at slot zero consult exactly the old slots, by `lift3`. Each subproof is assembled by `into` itself at the shifted slot, fed the projection path `element-fst` for the component being read, and the three nested truncated existentials are closed with one explicit `∣_∣₁` per layer.
 <!--zh-->
@@ -352,7 +352,7 @@ The pair formula asserts `s ∈ q`, `u ∈ s`, `v ∈ s`, and `q ≡ pr u v`; si
 | 1 | `u` | `a` 的内部元素 |
 | 2 | `s` | 中间集合，`q` 处条目的成员 |
 | `i + 3` | 旧槽位 `i` | 原赋值，原样保留 |
-: 三个新增槽位排在原赋值之前，原槽位依次后移。
+: 三个新增槽位排在原赋值之前，原槽位依次后移
 
 配对公式断言 `s ∈ q`、`u ∈ s`、`v ∈ s`，以及 `q ≡ pr u v`；由于 `u` 位于一号槽位、`v` 位于零号槽位，经 `lift3` 后，在一号槽位处的 `read a` 与零号槽位处的 `read b` 所查询的恰是原来的槽位。每个子证明由 `into` 自身在移位槽位处组装，喂入被读分量的投影路径 `element-fst`；最后，三个嵌套的截断存在各以一个显式的 `∣_∣₁` 封口。
 <!--ja-->
@@ -364,7 +364,7 @@ The pair formula asserts `s ∈ q`, `u ∈ s`, `v ∈ s`, and `q ≡ pr u v`; si
 | 1 | `u` | `a` の内部要素 |
 | 2 | `s` | 中間集合、`q` の項目の要素 |
 | `i + 3` | 古いスロット `i` | 元の割り当て、そのまま |
-: 三つの新しいスロットが元の割り当てに先立ち、元のスロットは順に後ろへ移る。
+: 三つの新しいスロットが元の割り当てに先立ち、元のスロットは順に後ろへ移る
 
 対の論理式は `s ∈ q`、`u ∈ s`、`v ∈ s`、そして `q ≡ pr u v` を主張する。`u` がスロット 1 に、`v` がスロット 0 にあるので、`lift3` によって、スロット 1 での `read a` とスロット 0 での `read b` はちょうど古いスロットを参照する。各部分証明は `into` 自身がずらしたスロットで組み立て、読まれる成分の射影の経路 `element-fst` を与えられ、最後に三つの入れ子の截断された存在は、層ごとにひとつの明示的な `∣_∣₁` で閉じられる。
 <!--/-->

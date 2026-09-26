@@ -274,11 +274,11 @@ $$c_i = \operatorname{equivFun}\,e\,P_i : \Omega$$
 </section>
 <figcaption id="fig-resizing-comparison-caption">
 <!--en-->
-Resizing each proposition and resizing the whole proposition universe ask for different data.
+Resizing each proposition and resizing the whole proposition universe ask for different data
 <!--zh-->
-逐个命题换级与整个命题宇宙换级，要求的是不同的数据。
+逐个命题换级与整个命题宇宙换级，要求的是不同的数据
 <!--ja-->
-個々の命題のリサイズと命題宇宙全体のリサイズは、異なるデータを要求する。
+個々の命題のリサイズと命題宇宙全体のリサイズは、異なるデータを要求する
 <!--/-->
 </figcaption>
 </figure>
@@ -425,11 +425,11 @@ $$: \operatorname{Type}_{\ell_2}$$
 </div>
 <figcaption id="fig-coded-truth-caption">
 <!--en-->
-A point in `⟨ codedTruth P ⟩`{.Agda} is a whole path in `Ω`{.Agda}: `⟨ codedTruth P ⟩ = (c(⊤) ≡ c(P))`{.Agda}. The two proof types are equivalent, at levels `ℓ₁`{.Agda} and `ℓ₂`{.Agda} respectively.
+A point in `⟨ codedTruth P ⟩`{.Agda} is a whole path in `Ω`{.Agda}: `⟨ codedTruth P ⟩ = (c(⊤) ≡ c(P))`{.Agda}. The two proof types are equivalent, at levels `ℓ₁`{.Agda} and `ℓ₂`{.Agda} respectively
 <!--zh-->
-`⟨ codedTruth P ⟩`{.Agda} 中的一个点，就是 `Ω`{.Agda} 中的一整条路径：`⟨ codedTruth P ⟩ = (c(⊤) ≡ c(P))`{.Agda}。两个证明类型分别位于 `ℓ₁`{.Agda} 和 `ℓ₂`{.Agda} 层，彼此类型等价。
+`⟨ codedTruth P ⟩`{.Agda} 中的一个点，就是 `Ω`{.Agda} 中的一整条路径：`⟨ codedTruth P ⟩ = (c(⊤) ≡ c(P))`{.Agda}。两个证明类型分别位于 `ℓ₁`{.Agda} 和 `ℓ₂`{.Agda} 层，彼此类型等价
 <!--ja-->
-`⟨ codedTruth P ⟩`{.Agda} の一点は、`Ω`{.Agda} の一本のパスそのものである：`⟨ codedTruth P ⟩ = (c(⊤) ≡ c(P))`{.Agda}。二つの証明の型はそれぞれレベル `ℓ₁`{.Agda} と `ℓ₂`{.Agda} に属し、互いに型同値である。
+`⟨ codedTruth P ⟩`{.Agda} の一点は、`Ω`{.Agda} の一本のパスそのものである：`⟨ codedTruth P ⟩ = (c(⊤) ≡ c(P))`{.Agda}。二つの証明の型はそれぞれレベル `ℓ₁`{.Agda} と `ℓ₂`{.Agda} に属し、互いに型同値である
 <!--/-->
 </figcaption>
 </figure>

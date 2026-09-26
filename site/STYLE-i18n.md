@@ -353,6 +353,8 @@ Every textbook figure uses `book-diagram`, a stable `fig-*` id, and a direct
 and hypotheses before the figure; use the caption for a short, recognizable
 takeaway. Do not introduce the next topic in a caption. Separate successive
 figures with substantive prose, without adding formulaic transition paragraphs.
+The short description beneath a figure or table ends without a sentence-final
+period (`.`, `。`, `．` or `｡`) in every language; shared lint enforces this.
 Never place an Agda code block immediately after a figure. Place the code directly
 after the prose that explains it, before the associated illustration, or reorganize
 the surrounding paragraphs so the next code block has its own preceding explanation.

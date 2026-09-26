@@ -182,11 +182,11 @@ $$\mathit{np}\,(\operatorname{lift}\,p):\bot_0$$
 </div>
 <figcaption id="fig-lower-lem-caption">
 <!--en-->
-A positive decision sends its proof downward by `lower`{.Agda}. A negative decision refutes a hypothetical `p : ⟨ P ⟩`{.Agda} by sending it upward with `lift`{.Agda} and applying `np`{.Agda}.
+A positive decision sends its proof downward by `lower`{.Agda}. A negative decision refutes a hypothetical `p : ⟨ P ⟩`{.Agda} by sending it upward with `lift`{.Agda} and applying `np`{.Agda}
 <!--zh-->
-肯定判定通过 `lower`{.Agda} 把证明向下搬移。否定判定则临时假设 `p : ⟨ P ⟩`{.Agda}，经 `lift`{.Agda} 向上搬移，再由 `np`{.Agda} 得到矛盾。
+肯定判定通过 `lower`{.Agda} 把证明向下搬移。否定判定则临时假设 `p : ⟨ P ⟩`{.Agda}，经 `lift`{.Agda} 向上搬移，再由 `np`{.Agda} 得到矛盾
 <!--ja-->
-肯定の判定では `lower`{.Agda} で証明を下へ移す。否定の判定では `p : ⟨ P ⟩`{.Agda} を一時的に仮定し、`lift`{.Agda} で上へ移して `np`{.Agda} を適用し、矛盾を得る。
+肯定の判定では `lower`{.Agda} で証明を下へ移す。否定の判定では `p : ⟨ P ⟩`{.Agda} を一時的に仮定し、`lift`{.Agda} で上へ移して `np`{.Agda} を適用し、矛盾を得る
 <!--/-->
 </figcaption>
 </figure>
@@ -445,11 +445,11 @@ The two round-trip laws close the two triangles in the figure below. Fix `lem : 
 </div>
 <figcaption id="fig-classical-roundtrips-caption">
 <!--en-->
-Encoding and decoding are inverse up to paths. Excluded middle supplies the decisions in $E$; with explicit decisions, encoding, decoding and both round-trip laws are constructive.
+Encoding and decoding are inverse up to paths. Excluded middle supplies the decisions in $E$; with explicit decisions, encoding, decoding and both round-trip laws are constructive
 <!--zh-->
-编码与解码在路径意义下互为逆映射。排中律为 $E$ 提供判定；给定显式判定后，编码、解码与两条往返律都是构造主义的。
+编码与解码在路径意义下互为逆映射。排中律为 $E$ 提供判定；给定显式判定后，编码、解码与两条往返律都是构造主义的
 <!--ja-->
-符号化と復号はパスの意味で互いに逆となる。排中律は $E$ に判定を供給する。明示的な判定が与えられれば、符号化・復号と二つの往復則はいずれも構成的である。
+符号化と復号はパスの意味で互いに逆となる。排中律は $E$ に判定を供給する。明示的な判定が与えられれば、符号化・復号と二つの往復則はいずれも構成的である
 <!--/-->
 </figcaption>
 </figure>

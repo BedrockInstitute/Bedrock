@@ -106,15 +106,27 @@ jobs:
         shell: bash
         run: make toolchain PYTHON=python3 PY=python3
 
-      # Pure-check interfaces remain isolated from the HTML/type-trace cache.
+      - name: Fingerprint Agda source
+        if: steps.scope.outputs.full == 'true'
+        id: agda_source
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "digest=$(python3 -m outcrop agda-stage --source src --fingerprint)" >> "$GITHUB_OUTPUT"
+
+      # Agda hashes complete source files, so restore the canonical code-only
+      # mirror alongside pure interfaces. Prose edits leave both bytes and
+      # timestamps unchanged; the traced website cache stays separate.
       - name: Cache tree interfaces
         if: steps.scope.outputs.full == 'true'
         uses: actions/cache@v6
         with:
-          path: _build/typecheck/_build/2.8.0/agda/src
-          key: bedrock-ifaces-v2-${{ runner.os }}-${{ hashFiles('outcrop/src/outcrop/adapters/agda/**', 'site/agda-libraries.json', 'bedrock.agda-lib') }}-${{ hashFiles('src/**/*.lagda.md') }}
+          path: |
+            _build/typecheck/src
+            _build/typecheck/_build/2.8.0/agda/src
+          key: bedrock-ifaces-v3-${{ runner.os }}-${{ hashFiles('outcrop/src/outcrop/adapters/agda/**', 'outcrop/src/outcrop/adapters/source_stage.py', 'outcrop/src/outcrop/core/source_syntax.py', 'site/agda-libraries.json', 'bedrock.agda-lib') }}-${{ steps.agda_source.outputs.digest }}
           restore-keys: |
-            bedrock-ifaces-v2-${{ runner.os }}-${{ hashFiles('outcrop/src/outcrop/adapters/agda/**', 'site/agda-libraries.json', 'bedrock.agda-lib') }}-
+            bedrock-ifaces-v3-${{ runner.os }}-${{ hashFiles('outcrop/src/outcrop/adapters/agda/**', 'outcrop/src/outcrop/adapters/source_stage.py', 'outcrop/src/outcrop/core/source_syntax.py', 'site/agda-libraries.json', 'bedrock.agda-lib') }}-
 
       - name: Typecheck
         if: steps.scope.outputs.full == 'true'

@@ -376,11 +376,11 @@ $$(a,b) : \sum_{x:A} B(x)$$
 </div>
 <figcaption id="fig-pi-sigma-caption">
 <!--en-->
-A Π type handles "for every `x`{.Agda}, give data depending on `x`{.Agda}"; a Σ type handles "choose an `x`{.Agda}, and keep it together with data depending on it".
+A Π type handles "for every `x`{.Agda}, give data depending on `x`{.Agda}"; a Σ type handles "choose an `x`{.Agda}, and keep it together with data depending on it"
 <!--zh-->
-Π 类型处理的是「对每个 `x`{.Agda}，给出依赖于 `x`{.Agda} 的数据」；Σ 类型处理的是「选定某个 `x`{.Agda}，并将依赖于它的数据与它放在一起」。
+Π 类型处理的是「对每个 `x`{.Agda}，给出依赖于 `x`{.Agda} 的数据」；Σ 类型处理的是「选定某个 `x`{.Agda}，并将依赖于它的数据与它放在一起」
 <!--ja-->
-Π 型が扱うのは「すべての `x`{.Agda} に対して、`x`{.Agda} に依存するデータを与えること」である。Σ 型が扱うのは「一つの `x`{.Agda} を選び、それに依存するデータと一緒に収めること」である。
+Π 型が扱うのは「すべての `x`{.Agda} に対して、`x`{.Agda} に依存するデータを与えること」である。Σ 型が扱うのは「一つの `x`{.Agda} を選び、それに依存するデータと一緒に収めること」である
 <!--/-->
 </figcaption>
 </figure>
@@ -604,11 +604,11 @@ $$\begin{gathered}p:x\equiv y,\quad q:y\equiv z\\[3pt]p\mathbin{\cdot}q:x\equiv 
 </div>
 <figcaption id="fig-path-operations-caption">
 <!--en-->
-Three basic path operations: reflexivity, reversal and composition.
+Three basic path operations: reflexivity, reversal and composition
 <!--zh-->
-路径的三种基本操作：自反、反转与复合。
+路径的三种基本操作：自反、反转与复合
 <!--ja-->
-パスの三つの基本操作：反射、反転、合成。
+パスの三つの基本操作：反射、反転、合成
 <!--/-->
 </figcaption>
 </figure>
@@ -656,11 +656,11 @@ $$f : A\to B,\qquad p:x\equiv y$$
 </div>
 <figcaption id="fig-path-cong-caption">
 <!--en-->
-`cong`{.Agda}: a function sends a path to a path between the images of its endpoints.
+`cong`{.Agda}: a function sends a path to a path between the images of its endpoints
 <!--zh-->
-`cong`{.Agda}：函数把路径送到端点的像之间的路径。
+`cong`{.Agda}：函数把路径送到端点的像之间的路径
 <!--ja-->
-`cong`{.Agda}：関数はパスを、その端点の像の間のパスに送る。
+`cong`{.Agda}：関数はパスを、その端点の像の間のパスに送る
 <!--/-->
 </figcaption>
 </figure>
@@ -738,11 +738,11 @@ $$b := \operatorname{transport}\,p\,a$$
 </div>
 <figcaption id="fig-type-transport-caption">
 <!--en-->
-`transport`{.Agda}: a path between types gives a function between their elements.
+`transport`{.Agda}: a path between types gives a function between their elements
 <!--zh-->
-`transport`{.Agda}：类型之间的路径给出搬移元素的函数。
+`transport`{.Agda}：类型之间的路径给出搬移元素的函数
 <!--ja-->
-`transport`{.Agda}：型の間のパスから、要素を移す関数を得る。
+`transport`{.Agda}：型の間のパスから、要素を移す関数を得る
 <!--/-->
 </figcaption>
 </figure>
@@ -816,11 +816,11 @@ $$v := \operatorname{subst}\,B\,p\,u$$
 </div>
 <figcaption id="fig-path-transport-caption">
 <!--en-->
-`subst`{.Agda}: a path between indices gives a function between the corresponding types.
+`subst`{.Agda}: a path between indices gives a function between the corresponding types
 <!--zh-->
-`subst`{.Agda}：指标之间的路径给出相应类型之间的函数。
+`subst`{.Agda}：指标之间的路径给出相应类型之间的函数
 <!--ja-->
-`subst`{.Agda}：添字の間のパスから、対応する型の間の関数を得る。
+`subst`{.Agda}：添字の間のパスから、対応する型の間の関数を得る
 <!--/-->
 </figcaption>
 </figure>
@@ -867,11 +867,11 @@ $$B : A \to \operatorname{Type}_{\ell}, \qquad x,y:A$$
 <figcaption id="fig-subst-factorization-caption">
 
 <!--en-->
-For each input `p`{.Agda}, the two routes give functions of the same type `B x → B y`{.Agda}. The blue line represents a path between these functions. The proof is omitted here.
+For each input `p`{.Agda}, the two routes give functions of the same type `B x → B y`{.Agda}. The blue line represents a path between these functions. The proof is omitted here
 <!--zh-->
-对每个输入 `p`{.Agda}，两条路线所得的函数都属于同一类型 `B x → B y`{.Agda}。蓝线表示这两个函数之间存在路径。此处省略证明。
+对每个输入 `p`{.Agda}，两条路线所得的函数都属于同一类型 `B x → B y`{.Agda}。蓝线表示这两个函数之间存在路径。此处省略证明
 <!--ja-->
-各入力 `p`{.Agda} に対し、二つの経路から得られる関数は同じ型 `B x → B y`{.Agda} に属する。青い線は、これらの関数の間にパスが存在することを表す。ここでは証明を省略する。
+各入力 `p`{.Agda} に対し、二つの経路から得られる関数は同じ型 `B x → B y`{.Agda} に属する。青い線は、これらの関数の間にパスが存在することを表す。ここでは証明を省略する
 <!--/-->
 
 </figcaption>
@@ -942,11 +942,11 @@ $$\operatorname{funExt}\,h : f\equiv g$$
 </div>
 <figcaption id="fig-path-funext-caption">
 <!--en-->
-`funExt`{.Agda}: paths at every input together give a path between functions.
+`funExt`{.Agda}: paths at every input together give a path between functions
 <!--zh-->
-`funExt`{.Agda}：每个输入处的路径共同给出函数之间的路径。
+`funExt`{.Agda}：每个输入处的路径共同给出函数之间的路径
 <!--ja-->
-`funExt`{.Agda}：すべての入力におけるパスから、関数の間のパスを得る。
+`funExt`{.Agda}：すべての入力におけるパスから、関数の間のパスを得る
 <!--/-->
 </figcaption>
 </figure>
@@ -1114,11 +1114,11 @@ $$h : \prod_{x,y:A}\operatorname{isProp}(x\equiv y)$$
 </div>
 <figcaption id="fig-hlevel-distinction-caption">
 <!--en-->
-A chosen centre, equality of elements, equality of paths: these conditions become successively weaker.
+A chosen centre, equality of elements, equality of paths: these conditions become successively weaker
 <!--zh-->
-选定中心、元素相等、路径相等：这三个条件依次减弱。
+选定中心、元素相等、路径相等：这三个条件依次减弱
 <!--ja-->
-中心の選択、要素の等しさ、パスの等しさ：これらの条件は順に弱くなる。
+中心の選択、要素の等しさ、パスの等しさ：これらの条件は順に弱くなる
 <!--/-->
 </figcaption>
 </figure>
@@ -1197,11 +1197,11 @@ $$\operatorname{isSet}(A)$$
 </div>
 <figcaption id="fig-universe-homotopy-caption">
 <!--en-->
-`Lift`{.Agda} changes the universe in which a type is presented and produces a record copy carrying the same data; `isProp→isSet`{.Agda} changes neither the type nor its universe, but derives one equality property from another.
+`Lift`{.Agda} changes the universe in which a type is presented and produces a record copy carrying the same data; `isProp→isSet`{.Agda} changes neither the type nor its universe, but derives one equality property from another
 <!--zh-->
-`Lift`{.Agda} 改变类型所在的宇宙，并产生一个携带同样数据的记录副本；`isProp→isSet`{.Agda} 不改变类型，也不改变它所在的宇宙，只是从已有的相等性质推出另一个相等性质。
+`Lift`{.Agda} 改变类型所在的宇宙，并产生一个携带同样数据的记录副本；`isProp→isSet`{.Agda} 不改变类型，也不改变它所在的宇宙，只是从已有的相等性质推出另一个相等性质
 <!--ja-->
-`Lift`{.Agda} は型を提示する宇宙を変え、同じデータをもつレコードのコピーを作る。`isProp→isSet`{.Agda} は型もその宇宙も変えず、一つの等しさの性質から別の性質を導くだけである。
+`Lift`{.Agda} は型を提示する宇宙を変え、同じデータをもつレコードのコピーを作る。`isProp→isSet`{.Agda} は型もその宇宙も変えず、一つの等しさの性質から別の性質を導くだけである
 <!--/-->
 </figcaption>
 </figure>
@@ -1389,11 +1389,11 @@ $$F_b=\sum_{a:A}\bigl(f(a)\equiv b\bigr)$$
 </div>
 <figcaption id="fig-fiber-general-caption">
 <!--en-->
-Click the pulsing fibres to contract; click again to expand. The paths in each tuft merge into a single path $p_i$ from $f(a_i)$ to $b_i$, while the candidate preimages merge into $a_i$. The coincidence depicts equality by paths. The condition for $f$ to be an equivalence is that every fibre is contractible.
+Click the pulsing fibres to contract; click again to expand. The paths in each tuft merge into a single path $p_i$ from $f(a_i)$ to $b_i$, while the candidate preimages merge into $a_i$. The coincidence depicts equality by paths. The condition for $f$ to be an equivalence is that every fibre is contractible
 <!--zh-->
-点击闪烁的三束纤维收拢，再次点击展开。每束路径合并为连接 $f(a_i)$ 与 $b_i$ 的一条路径 $p_i$，原像候选则合并为 $a_i$。这里的重合表示路径意义下的相等。每束纤维可缩，正是 $f$ 成为等价的条件。
+点击闪烁的三束纤维收拢，再次点击展开。每束路径合并为连接 $f(a_i)$ 与 $b_i$ 的一条路径 $p_i$，原像候选则合并为 $a_i$。这里的重合表示路径意义下的相等。每束纤维可缩，正是 $f$ 成为等价的条件
 <!--ja-->
-点滅するファイバーをクリックすると収縮し、もう一度クリックすると広がる。各毛束のパスは $f(a_i)$ と $b_i$ を結ぶ一本のパス $p_i$ に合流し、原像の候補は $a_i$ に合流する。重なりはパスによる等しさを表す。各ファイバーが可縮であることが、$f$ が同値となる条件である。
+点滅するファイバーをクリックすると収縮し、もう一度クリックすると広がる。各毛束のパスは $f(a_i)$ と $b_i$ を結ぶ一本のパス $p_i$ に合流し、原像の候補は $a_i$ に合流する。重なりはパスによる等しさを表す。各ファイバーが可縮であることが、$f$ が同値となる条件である
 <!--/-->
 </figcaption>
 </figure>
@@ -1652,11 +1652,11 @@ $$h_Q:\operatorname{isProp}\langle Q\rangle$$
 </div>
 <figcaption id="fig-proposition-and-proof-caption">
 <!--en-->
-The certificate $h_Q$ assigns a path to any two proofs; the curve shows its value $h_Q\,p\,q$ at $p$ and $q$.
+The certificate $h_Q$ assigns a path to any two proofs; the curve shows its value $h_Q\,p\,q$ at $p$ and $q$
 <!--zh-->
-证书 $h_Q$ 为任意两个证明给出路径；右图的曲线表示它在 $p$、$q$ 上的值 $h_Q\,p\,q$。
+证书 $h_Q$ 为任意两个证明给出路径；右图的曲线表示它在 $p$、$q$ 上的值 $h_Q\,p\,q$
 <!--ja-->
-証明書 $h_Q$ は任意の二つの証明にパスを与える。右図の曲線は、その $p$、$q$ における値 $h_Q\,p\,q$ を表す。
+証明書 $h_Q$ は任意の二つの証明にパスを与える。右図の曲線は、その $p$、$q$ における値 $h_Q\,p\,q$ を表す
 <!--/-->
 </figcaption>
 </figure>
@@ -1723,11 +1723,11 @@ $$\frac{a:A}{|a|_1:\|A\|_1}\qquad\frac{x,y:\|A\|_1}{\mathsf{squash}_1(x,y):x=y}$
 </div>
 <figcaption id="fig-truncation-witnesses-caption">
 <!--en-->
-Given `a b : A`{.Agda}, their images in the truncation are joined by the displayed path. The two images need not be judgmentally equal; `squash₁`{.Agda} supplies their equality proof.
+Given `a b : A`{.Agda}, their images in the truncation are joined by the displayed path. The two images need not be judgmentally equal; `squash₁`{.Agda} supplies their equality proof
 <!--zh-->
-给定 `a b : A`{.Agda}，它们在截断中的像由图示路径相连。这两个像未必判断相等；`squash₁`{.Agda} 给出它们之间的相等证明。
+给定 `a b : A`{.Agda}，它们在截断中的像由图示路径相连。这两个像未必判断相等；`squash₁`{.Agda} 给出它们之间的相等证明
 <!--ja-->
-`a b : A`{.Agda} が与えられると、切り詰めでの像は図のパスで結ばれる。二つの像が判断的に等しいとは限らず、`squash₁`{.Agda} がその等しさの証明を与える。
+`a b : A`{.Agda} が与えられると、切り詰めでの像は図のパスで結ばれる。二つの像が判断的に等しいとは限らず、`squash₁`{.Agda} がその等しさの証明を与える
 <!--/-->
 </figcaption>
 </figure>
@@ -1773,11 +1773,11 @@ $$\operatorname{rec}_1\,h\,f\,(|a|_1) = f(a) \qquad (a : A)$$
 </div>
 <figcaption id="fig-truncation-rec-caption">
 <!--en-->
-`rec₁`{.Agda} factors `f : A → P`{.Agda} through the truncation, provided that `P`{.Agda} is a proposition. Both routes give `f a`{.Agda} on a representative `a`{.Agda}.
+`rec₁`{.Agda} factors `f : A → P`{.Agda} through the truncation, provided that `P`{.Agda} is a proposition. Both routes give `f a`{.Agda} on a representative `a`{.Agda}
 <!--zh-->
-当 `P`{.Agda} 是命题时，`rec₁`{.Agda} 使 `f : A → P`{.Agda} 经由截断分解。对代表 `a`{.Agda}，两条路线都得到 `f a`{.Agda}。
+当 `P`{.Agda} 是命题时，`rec₁`{.Agda} 使 `f : A → P`{.Agda} 经由截断分解。对代表 `a`{.Agda}，两条路线都得到 `f a`{.Agda}
 <!--ja-->
-`P`{.Agda} が命題ならば、`rec₁`{.Agda} によって `f : A → P`{.Agda} は切り詰めを経由して分解される。代表 `a`{.Agda} に対し、どちらの経路も `f a`{.Agda} を与える。
+`P`{.Agda} が命題ならば、`rec₁`{.Agda} によって `f : A → P`{.Agda} は切り詰めを経由して分解される。代表 `a`{.Agda} に対し、どちらの経路も `f a`{.Agda} を与える
 <!--/-->
 </figcaption>
 </figure>
@@ -2471,11 +2471,11 @@ $$i\mapsto\operatorname{lookup}\,i\,v$$
 </div>
 <figcaption id="fig-fin-vector-lookup-caption">
 <!--en-->
-Each column follows one position through the vector, its index, and its lookup result. `Fin 3`{.Agda} provides exactly the three valid indices; the entries `a`{.Agda}, `b`{.Agda}, and `c`{.Agda} may coincide.
+Each column follows one position through the vector, its index, and its lookup result. `Fin 3`{.Agda} provides exactly the three valid indices; the entries `a`{.Agda}, `b`{.Agda}, and `c`{.Agda} may coincide
 <!--zh-->
-每一列对齐向量中的一个位置、它的索引和查找结果。`Fin 3`{.Agda} 恰好提供三个合法索引；分量 `a`{.Agda}、`b`{.Agda}、`c`{.Agda} 本身可以相同。
+每一列对齐向量中的一个位置、它的索引和查找结果。`Fin 3`{.Agda} 恰好提供三个合法索引；分量 `a`{.Agda}、`b`{.Agda}、`c`{.Agda} 本身可以相同
 <!--ja-->
-各列はベクトルの一つの位置、その添字、参照結果を揃えている。`Fin 3`{.Agda} が与えるのは三つの有効な添字だけであり、成分 `a`{.Agda}、`b`{.Agda}、`c`{.Agda} 自体は同じでもよい。
+各列はベクトルの一つの位置、その添字、参照結果を揃えている。`Fin 3`{.Agda} が与えるのは三つの有効な添字だけであり、成分 `a`{.Agda}、`b`{.Agda}、`c`{.Agda} 自体は同じでもよい
 <!--/-->
 </figcaption>
 </figure>

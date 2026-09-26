@@ -37,7 +37,7 @@ For a family `B : X → Type ℓ`{.Agda}, there are three kinds of data worth di
 | `(x : X) → B x`{.Agda} | A choice function, which can be evaluated. |
 | `(x : X) → ∥ B x ∥₁`{.Agda} | Existence separately at each index. |
 | `∥ ((x : X) → B x) ∥₁`{.Agda} | Existence of one function on all indices. |
-: Three forms of choice data, from a function to individual and whole-function mere existence.
+: Three forms of choice data, from a function to individual and whole-function mere existence
 
 **Definition** (`SetChoice`{.Agda}) [Choice for set-valued families]{.term-intro #set-valued-choice} at level `ℓ`{.Agda} asserts that the second row of the table above implies the third for every h-set `X : Type ℓ`{.Agda} and every <span class="prose-annotation-target">family `B : X → Type ℓ`{.Agda} whose values `B x`{.Agda} are h-sets</span><aside class="prose-annotation-note">This is the set-valued form of choice in the HoTT Book. Allowing arbitrary values is a stronger principle: it also entails that every type merely admits a surjection from an h-set. Neither use in this book needs that extra strength.</aside>.
 <!--zh-->
@@ -50,7 +50,7 @@ For a family `B : X → Type ℓ`{.Agda}, there are three kinds of data worth di
 | `(x : X) → B x`{.Agda} | 可以求值的选择函数 |
 | `(x : X) → ∥ B x ∥₁`{.Agda} | 逐个指标处的存在 |
 | `∥ ((x : X) → B x) ∥₁`{.Agda} | 一个同时处理全部指标的函数的存在 |
-: 三种选择数据：可求值的函数、逐点的仅仅存在，以及整个函数的仅仅存在。
+: 三种选择数据：可求值的函数、逐点的仅仅存在，以及整个函数的仅仅存在
 
 **定义** (`SetChoice`{.Agda}) 层级 `ℓ`{.Agda} 上的[集合值族的选择]{.term-intro #set-valued-choice}断言：对每个 h-集合 `X : Type ℓ`{.Agda} 及每个<span class="prose-annotation-target">取值 `B x`{.Agda} 都是 h-集合的族 `B : X → Type ℓ`{.Agda}</span><aside class="prose-annotation-note">这是 HoTT 教材采用的集合值族版本。允许任意取值的版本更强：它还蕴含每个类型都仅仅存在一个来自 h-集合的满射。本书的两处取用都不需要这项额外强度。</aside>，上表的第二行蕴含第三行。
 <!--ja-->
@@ -63,7 +63,7 @@ For a family `B : X → Type ℓ`{.Agda}, there are three kinds of data worth di
 | `(x : X) → B x`{.Agda} | 値を計算できる選択関数 |
 | `(x : X) → ∥ B x ∥₁`{.Agda} | 添字ごとの存在 |
 | `∥ ((x : X) → B x) ∥₁`{.Agda} | すべての添字を扱う一つの関数の存在 |
-: 選択に関わる三種類のデータ。関数そのもの、各点での単なる存在、関数全体の単なる存在。
+: 選択に関わる三種類のデータ。関数そのもの、各点での単なる存在、関数全体の単なる存在
 
 **定義** (`SetChoice`{.Agda}) レベル `ℓ`{.Agda} の[集合値族に対する選択]{.term-intro #set-valued-choice}は、任意の h-集合 `X : Type ℓ`{.Agda} と、<span class="prose-annotation-target">各値 `B x`{.Agda} が h-集合である族 `B : X → Type ℓ`{.Agda}</span><aside class="prose-annotation-note">これは HoTT の教科書にある集合値族の形である。任意の値を許す形はより強く、すべての型が h-集合からの全射を単にもつことも含意する。本書の二つの適用には、この追加の強さは要らない。</aside>に対し、上の表の第二行から第三行が従うと主張する。
 <!--/-->
@@ -137,11 +137,11 @@ $$\|(x:X)\to B\,x\|_1$$
 </div>
 <figcaption id="fig-lower-set-choice-caption">
 <!--en-->
-How higher-level choice yields choice at the original level: lift the input, apply the choice principle, then return the result to the original level.
+How higher-level choice yields choice at the original level: lift the input, apply the choice principle, then return the result to the original level
 <!--zh-->
-高层级的选择如何导出原层级的选择：提升输入，应用选择原理，再将结果送回原层级。
+高层级的选择如何导出原层级的选择：提升输入，应用选择原理，再将结果送回原层级
 <!--ja-->
-高いレベルの選択から元のレベルの選択を得る流れ。入力を持ち上げ、選択原理を適用し、結果を元のレベルへ戻す。
+高いレベルの選択から元のレベルの選択を得る流れ。入力を持ち上げ、選択原理を適用し、結果を元のレベルへ戻す
 <!--/-->
 </figcaption>
 </figure>
@@ -156,7 +156,7 @@ To apply `sc`{.Agda} one level higher, we must also supply h-set proofs for the 
 | `B x`{.Agda} | `Lift (B (lower x̂))`{.Agda}, for `x̂ : Lift X`{.Agda} |
 | `setB x`{.Agda} | `isOfHLevelLift 2 (setB (lower x̂))`{.Agda} |
 | `inh x`{.Agda} | `map₁ lift (inh (lower x̂))`{.Agda} |
-: The higher-level arguments are built from data already given at the original level.
+: The higher-level arguments are built from data already given at the original level
 
 The Agda block brings the figure and table together. The table's right column supplies the central choice step, while the block's nested structure follows the figure's ascent, application of choice, and return to the original level. The complete expression has the type shown as the goal at the bottom of the figure.
 <!--zh-->
@@ -169,7 +169,7 @@ The Agda block brings the figure and table together. The table's right column su
 | `B x`{.Agda} | `Lift (B (lower x̂))`{.Agda}，其中 `x̂ : Lift X`{.Agda} |
 | `setB x`{.Agda} | `isOfHLevelLift 2 (setB (lower x̂))`{.Agda} |
 | `inh x`{.Agda} | `map₁ lift (inh (lower x̂))`{.Agda} |
-: 高层级的实参由原层级已有的数据构造。
+: 高层级的实参由原层级已有的数据构造
 
 下面的 Agda 代码把图示与表格接在一起：表格右列给出中间选择步骤所需的输入，代码的嵌套结构则对应图中的上行、应用选择、返回原层。整个表达式的类型正是图底部的目标。
 <!--ja-->
@@ -182,7 +182,7 @@ The Agda block brings the figure and table together. The table's right column su
 | `B x`{.Agda} | `Lift (B (lower x̂))`{.Agda}、ただし `x̂ : Lift X`{.Agda} |
 | `setB x`{.Agda} | `isOfHLevelLift 2 (setB (lower x̂))`{.Agda} |
 | `inh x`{.Agda} | `map₁ lift (inh (lower x̂))`{.Agda} |
-: 高いレベルの引数は、元のレベルですでに与えられたデータから構成される。
+: 高いレベルの引数は、元のレベルですでに与えられたデータから構成される
 
 下の Agda コードは図と表を一つにつなぐ。表の右列が中央の選択に必要な入力を与え、コードの入れ子構造が図の上昇、選択原理の適用、元のレベルへの帰還に対応する。式全体の型は図の下端に示した目標そのものである。
 <!--/-->
@@ -430,11 +430,11 @@ $$n : \neg\langle P\rangle$$
 <figcaption id="fig-choice-gluing-caption">
 
 <!--en-->
-On the left, the inverse of $e$ supplies a path. On the right, $e$ would turn any connecting path into a proof contradicted by `n`{.Agda}.
+On the left, the inverse of $e$ supplies a path. On the right, $e$ would turn any connecting path into a proof contradicted by `n`{.Agda}
 <!--zh-->
-左图通过 $e$ 的逆映射得到路径；右图中若存在连接路径，$e$ 就会把它变为与 `n`{.Agda} 矛盾的证明。
+左图通过 $e$ 的逆映射得到路径；右图中若存在连接路径，$e$ 就会把它变为与 `n`{.Agda} 矛盾的证明
 <!--ja-->
-左図では $e$ の逆写像からパスを得る。右図にパスがあれば、$e$ がそれを `n`{.Agda} と矛盾する証明へ送る。
+左図では $e$ の逆写像からパスを得る。右図にパスがあれば、$e$ がそれを `n`{.Agda} と矛盾する証明へ送る
 <!--/-->
 
 </figcaption>
@@ -637,11 +637,11 @@ $$p:\langle P\rangle$$
 <figcaption id="fig-choice-agreement-caption">
 
 <!--en-->
-On the left, $e$ sends the composite path to a proof of `P`{.Agda}. On the right, the selected boolean varies along $e^{-1}(p)$, giving agreement.
+On the left, $e$ sends the composite path to a proof of `P`{.Agda}. On the right, the selected boolean varies along $e^{-1}(p)$, giving agreement
 <!--zh-->
-左图由 $e$ 把复合路径送到 `P`{.Agda} 的证明；右图沿 $e^{-1}(p)$ 读取所选布尔值，得到二者相等。
+左图由 $e$ 把复合路径送到 `P`{.Agda} 的证明；右图沿 $e^{-1}(p)$ 读取所选布尔值，得到二者相等
 <!--ja-->
-左図では $e$ が合成したパスを `P`{.Agda} の証明へ送る。右図では $e^{-1}(p)$ に沿って選んだブール値を読み、両者の等しさを得る。
+左図では $e$ が合成したパスを `P`{.Agda} の証明へ送る。右図では $e^{-1}(p)$ に沿って選んだブール値を読み、両者の等しさを得る
 <!--/-->
 
 </figcaption>
@@ -654,7 +654,7 @@ On the left, $e$ sends the composite path to a proof of `P`{.Agda}. On the right
 | --- | --- |
 | `yes q`{.Agda} | `yes (agree→P g q)`{.Agda} |
 | `no ne`{.Agda} | `no (λ p → ne (P→agree g p))`{.Agda} |
-: Each Boolean comparison outcome yields the corresponding decision of the proposition.
+: Each Boolean comparison outcome yields the corresponding decision of the proposition
 
 In the second row, a proof of `P`{.Agda} would force the very equality that `ne`{.Agda} refutes. This is the negative map supplied to `mapDec`{.Agda}.
 <!--zh-->
@@ -664,7 +664,7 @@ In the second row, a proof of `P`{.Agda} would force the very equality that `ne`
 | --- | --- |
 | `yes q`{.Agda} | `yes (agree→P g q)`{.Agda} |
 | `no ne`{.Agda} | `no (λ p → ne (P→agree g p))`{.Agda} |
-: 布尔值比较的两种结果分别给出对命题的肯定或否定判定。
+: 布尔值比较的两种结果分别给出对命题的肯定或否定判定
 
 第二行中，`P`{.Agda} 的证明会迫使两个布尔值相等，而这正是 `ne`{.Agda} 所反驳的。因此得到传给 `mapDec`{.Agda} 的否定方向。
 <!--ja-->
@@ -674,7 +674,7 @@ In the second row, a proof of `P`{.Agda} would force the very equality that `ne`
 | --- | --- |
 | `yes q`{.Agda} | `yes (agree→P g q)`{.Agda} |
 | `no ne`{.Agda} | `no (λ p → ne (P→agree g p))`{.Agda} |
-: ブール値の比較の二つの結果から、命題についての肯定または否定の判定が得られる。
+: ブール値の比較の二つの結果から、命題についての肯定または否定の判定が得られる
 
 第二行では、`P`{.Agda} の証明があれば、`ne`{.Agda} が否定する等しさが従ってしまう。これが `mapDec`{.Agda} に渡す否定側の写像である。
 <!--/-->
@@ -723,11 +723,11 @@ The [factorization through truncation shown in the Prelude](Base.Prelude.html#fi
 <figcaption id="fig-choice-truncation-caption">
 
 <!--en-->
-Choice supplies an element of $\|G\|_1$; the right-hand function returns a decision of `P`{.Agda}.
+Choice supplies an element of $\|G\|_1$; the right-hand function returns a decision of `P`{.Agda}
 <!--zh-->
-选择提供 $\|G\|_1$ 的元素，右侧函数由此返回 `P`{.Agda} 的判定。
+选择提供 $\|G\|_1$ 的元素，右侧函数由此返回 `P`{.Agda} 的判定
 <!--ja-->
-選択が $\|G\|_1$ の要素を与え、右側の関数がそこから `P`{.Agda} の判定を返す。
+選択が $\|G\|_1$ の要素を与え、右側の関数がそこから `P`{.Agda} の判定を返す
 <!--/-->
 
 </figcaption>

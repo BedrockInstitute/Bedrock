@@ -134,7 +134,7 @@ $(TYPECHECK_LIB): bedrock.agda-lib
 	@cp -p $< $@
 
 typecheck-stage: $(TYPECHECK_LIB)
-	$(PY) -m outcrop agda-stage --source src --destination $(TYPECHECK_ROOT)/src
+	$(PY) -m outcrop agda-stage --source src --destination $(TYPECHECK_ROOT)/src --code-only
 
 # The ordinary proof gate uses only Agda's type checker. Its private interface
 # tree makes repeat runs incremental without enabling HTML or type tracing.

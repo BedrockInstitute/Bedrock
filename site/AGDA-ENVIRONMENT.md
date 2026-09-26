@@ -42,7 +42,12 @@ source, declaration, `--safe` option or proof assumption.
 ## Modes and budgets
 
 `make typecheck` is a pure incremental proof check. Interfaces live under
-`_build/typecheck`; they never warm the traced HTML cache. `make typecheck-cold`
+`_build/typecheck`; they never warm the traced HTML cache. Its source mirror
+contains only the ordered Agda fences from each `.lagda.md` file, so a prose-only
+edit cannot change Agda's full-file source hash or the CI interface cache key.
+The original book sources remain the input for website highlighting and traces.
+Pure-check diagnostics refer to the compact mirror's line numbers, not the
+Markdown line numbers. `make typecheck-cold`
 is the comparable single-process benchmark, retaining Cubical interfaces and
 timing Agda alone. `typecheck-cold-parallel` is an operational build, not that
 baseline. Both retain their timing reports under `_build/benchmarks`.

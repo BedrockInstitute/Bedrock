@@ -23,6 +23,7 @@ FIXTURES = {
     '/mobile-reader': 'browser-mobile-reader.html',
     '/header-shell-regression': 'browser-header-shell.html',
     '/punctuation-regression': 'browser-punctuation-wrap.html',
+    '/notes-regression': 'browser-notes.html',
     '/mathematical-notation-regression': 'browser-mathematical-notation.html',
 }
 

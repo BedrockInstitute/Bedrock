@@ -41,9 +41,9 @@
     "ja": "Cubical Agda で集合論を形式化する三言語の対話型教科書。排中律の仮定のもとで、構成可能宇宙 L が ZFC と GCH を満たすことを証明する。"
   },
   "taglines": {
-    "en": "Laying the groundwork for the metaphysics of 𝑉.",
-    "zh": "为 𝑉 的形而上学奠基。",
-    "ja": "𝑉 の形而上学のために基礎を築く。"
+    "en": "Laying the groundwork for the metaphysics of 𝑉",
+    "zh": "为 𝑉 的形而上学奠基",
+    "ja": "𝑉 の形而上学のために基礎を築く"
   },
   "topics": [
     "Set theory",

@@ -89,6 +89,16 @@ class OutcropIntegrationTests(unittest.TestCase):
             if 'hashFiles(' in line and 'bedrock.agda-lib' in line:
                 self.assertIn('site/agda-libraries.json', line)
 
+    def test_pure_typecheck_cache_tracks_code_not_prose(self):
+        make = (ROOT / 'Makefile').read_text()
+        workflow = (ROOT / '.github/workflows/ci.yml').read_text()
+        self.assertIn('agda-stage --source src --destination $(TYPECHECK_ROOT)/src --code-only', make)
+        self.assertIn('agda-stage --source src --fingerprint', workflow)
+        interface_cache = workflow.split('      - name: Cache tree interfaces\n', 1)[1].split('      - name:', 1)[0]
+        self.assertIn('_build/typecheck/src', interface_cache)
+        self.assertIn('steps.agda_source.outputs.digest', interface_cache)
+        self.assertNotIn("hashFiles('src/**/*.lagda.md')", interface_cache)
+
 
 if __name__ == '__main__':
     unittest.main()
