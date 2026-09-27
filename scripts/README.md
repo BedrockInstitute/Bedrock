@@ -124,6 +124,7 @@ tab active. The server routes are:
 | `/universe-regression` | Universe notation and recursive hover |
 | `/fonts-regression` | Selective mathematical fonts |
 | `/mobile-reader` | Touch selection, compact controls and landscape code reading |
+| `/ask-ai-regression` | Outcrop's Ask AI selection-handle and desktop drag behavior, using this build's runtime |
 
 `--modal-delay 2` can expose loading states. `browser-mobile-probe.js` is a
 test-only touch probe, not a production asset. Record browser, actions, output

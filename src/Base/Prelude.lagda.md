@@ -454,7 +454,7 @@ open import Cubical.Data.Sum public
 <!--en-->
 A record type can be understood as syntactic sugar for several nested Σ types. For example, suppose we want to package an element `a : A`{.Agda}, an element `b : B a`{.Agda} depending on `a`{.Agda}, and a proof `c : C a b`{.Agda} depending on both. The corresponding nested type is:
 
-<div class="single-line-code"><code>`Σ (a : A) Σ (b : B a) C a b`{.Agda}</code></div>
+<div class="single-line-code"><code>`Σ[ a ∶ A ] Σ[ b ∶ B a ] C a b`{.Agda}</code></div>
 
 Its elements have the shape:
 
@@ -468,7 +468,7 @@ This carries the same data as the nested Σ value `(a , (b , c))`{.Agda}, withou
 <!--zh-->
 记录类型可以看作多重嵌套的 Σ 类型的语法糖。例如，要把一个元素 `a : A`{.Agda}、一个依赖于 `a`{.Agda} 的元素 `b : B a`{.Agda}，以及一个依赖于前两者的证明 `c : C a b`{.Agda} 放在一起，可以使用类型：
 
-<div class="single-line-code"><code>`Σ (a : A) Σ (b : B a) C a b`{.Agda}</code></div>
+<div class="single-line-code"><code>`Σ[ a ∶ A ] Σ[ b ∶ B a ] C a b`{.Agda}</code></div>
 
 其中的元素具有如下嵌套形状：
 
@@ -482,7 +482,7 @@ This carries the same data as the nested Σ value `(a , (b , c))`{.Agda}, withou
 <!--ja-->
 レコード型は、複数の Σ 型を入れ子にしたものに対する構文糖と考えられる。たとえば、元 `a : A`{.Agda}、`a`{.Agda} に依存する元 `b : B a`{.Agda}、さらにその両方に依存する証明 `c : C a b`{.Agda} を一緒にまとめるとする。対応する入れ子の型は次のものである。
 
-<div class="single-line-code"><code>`Σ (a : A) Σ (b : B a) C a b`{.Agda}</code></div>
+<div class="single-line-code"><code>`Σ[ a ∶ A ] Σ[ b ∶ B a ] C a b`{.Agda}</code></div>
 
 その元は次の形になる。
 
@@ -983,19 +983,19 @@ Paths are themselves elements of types, so new paths can in turn relate paths. H
 
 - **`isContr A`{.Agda}: `A`{.Agda} is [contractible]{.term-intro #contractible}.** This requires a chosen centre in `A`{.Agda} and, for every `x : A`{.Agda}, a path from the centre to `x`{.Agda}. Thus `A`{.Agda} must be inhabited, and every element is equal to the chosen centre, so no two elements can be distinguished by equality. This book reads the data carried by `isContr`{.Agda} as **[unique existence]{.term-intro #unique-existence}**: the centre supplies existence, and the paths from the centre to every element supply uniqueness.
 - **`isProp A`{.Agda}: `A`{.Agda} is a [proposition]{.term-intro #proposition}.** This requires any two elements of `A`{.Agda} to be equal. It neither chooses a centre nor requires `A`{.Agda} to be inhabited; it says only that if proofs of `A`{.Agda} exist, no distinction remains between them. A proposition may therefore have no proof or have a proof, but it cannot have two distinguishable proofs.
-- **`isSet A`{.Agda}: `A`{.Agda} is an [h-set]{.term-intro #h-set}.** The prefix marks a notion of the host: an h-set is a type satisfying `isSet`{.Agda}, not a set of the set theory being modelled. The condition does not require every two elements of `A`{.Agda} to be equal. Instead, it requires the path type between any two elements to be a proposition. Elements of `A`{.Agda} may differ, and paths may connect some of them; but once the same source and target are fixed, any two such paths are equal. Distinctions may remain among elements, while no further distinguishable structure remains among their equality proofs.
+- **`isSet A`{.Agda}: `A`{.Agda} is an [h-set]{.term-intro #h-set}.** Conventionally, the h stands for homotopy. In this book, it can also serve as a reminder of the host: an h-set is a type satisfying `isSet`{.Agda} in the host, not a set of the set theory introduced later. The condition does not require every two elements of `A`{.Agda} to be equal. Instead, it requires the path type between any two elements to be a proposition. Elements of `A`{.Agda} may differ, and paths may connect some of them; but once the same source and target are fixed, any two such paths are equal. Distinctions may remain among elements, while no further distinguishable structure remains among their equality proofs.
 <!--zh-->
 路径本身也是类型中的元素，所以路径之间还可以形成新的路径。同伦层级按照这些相等证明还能保留多少可区分的结构，对类型进行分类。这里衡量的不是类型的大小；类型的大小由宇宙层级处理，同伦层级关心的是元素及其相等证明如何彼此区分。
 
 - **`isContr A`{.Agda}：`A`{.Agda} 是[可缩]{.term-intro #contractible}的。** 这要求在 `A`{.Agda} 中选定一个中心，并为每个 `x : A`{.Agda} 给出一条从中心到 `x`{.Agda} 的路径。因此，`A`{.Agda} 不仅必须有元素，而且所有元素都与选定的中心相等，彼此之间也就无法通过相等加以区分。本书把 `isContr`{.Agda} 携带的这组数据读作**[唯一存在]{.term-intro #unique-existence}**：中心给出存在性，所有元素都等于中心则给出唯一性。
 - **`isProp A`{.Agda}：`A`{.Agda} 是[命题]{.term-intro #proposition}。** 这要求 `A`{.Agda} 中任意两个元素都相等。它不要求预先选定中心，甚至不要求 `A`{.Agda} 一定有元素；它只说明，一旦 `A`{.Agda} 有证明，这些证明之间便没有可区分的差别。因此，一个命题可以没有证明，也可以有证明，但不能有两个彼此不同的证明。
-- **`isSet A`{.Agda}：`A`{.Agda} 是 [h-集合]{.term-intro #h-set}。** 前缀标明这是宿主层的概念：h-集合指满足 `isSet`{.Agda} 的类型，而不是所建模的集合论中的集合。这不要求 `A`{.Agda} 中任意两个元素都相等，而是要求任意两个元素之间的路径类型本身为命题。换言之，`A`{.Agda} 的元素可以彼此不同，也可以存在连接某些元素的路径；但给定相同的起点和终点以后，两条这样的路径必定相等。元素层面仍可保留差别，相等证明之间则不再保留可区分的更高结构。
+- **`isSet A`{.Agda}：`A`{.Agda} 是 [h-集合]{.term-intro #h-set}。** 通常，h 取自 homotopy (同伦)。在本书中，也可以把它联想为 host (宿主)，以提醒读者：h-集合是宿主中满足 `isSet`{.Agda} 的类型，而不是后文要介绍的集合论中的集合。这不要求 `A`{.Agda} 中任意两个元素都相等，而是要求任意两个元素之间的路径类型本身为命题。换言之，`A`{.Agda} 的元素可以彼此不同，也可以存在连接某些元素的路径；但给定相同的起点和终点以后，两条这样的路径必定相等。元素层面仍可保留差别，相等证明之间则不再保留可区分的更高结构。
 <!--ja-->
 パス自身も型の要素なので、パスどうしの間にさらにパスを作れる。ホモトピーレベルは、このような等しさの証明に区別できる構造がどれだけ残るかによって型を分類する。型の大きさを測るものではない。大きさを扱うのは宇宙レベルであり、ホモトピーレベルが扱うのは要素とその等しさの証明をどこまで区別できるかである。
 
 - **`isContr A`{.Agda}：`A`{.Agda} は[可縮]{.term-intro #contractible}である。** これは `A`{.Agda} の中に中心を一つ選び、すべての `x : A`{.Agda} に対して中心から `x`{.Agda} へのパスを与えることを要求する。したがって `A`{.Agda} には要素が存在し、すべての要素が選ばれた中心と等しいので、等しさによって要素を区別できない。本書では `isContr`{.Agda} が持つこのデータを**[一意存在]{.term-intro #unique-existence}**と読む。中心が存在を与え、すべての要素へのパスが一意性を与える。
 - **`isProp A`{.Agda}：`A`{.Agda} は[命題]{.term-intro #proposition}である。** これは `A`{.Agda} の任意の二要素が等しいことを要求する。中心を選ぶ必要はなく、`A`{.Agda} に要素が存在することさえ要求しない。`A`{.Agda} の証明が存在するなら、それらの間に区別が残らないことだけを述べる。したがって命題には証明がないことも、証明があることもあるが、互いに区別できる二つの証明はあり得ない。
-- **`isSet A`{.Agda}：`A`{.Agda} は [h-集合]{.term-intro #h-set}である。** 接頭辞はホストレベルの概念であることを示す。h-集合とは `isSet`{.Agda} を満たす型であり、モデル化される集合論の集合ではない。これは `A`{.Agda} の任意の二要素が等しいことを要求するのではなく、任意の二要素の間のパス型が命題であることを要求する。`A`{.Agda} の要素は互いに異なっていてよく、その一部を結ぶパスが存在してもかまわない。しかし始点と終点を同じものに固定すれば、その間の任意の二つのパスは等しくなる。要素の間には区別が残り得るが、等しさの証明の間には、それ以上区別できる構造が残らない。
+- **`isSet A`{.Agda}：`A`{.Agda} は [h-集合]{.term-intro #h-set}である。** 通常、h は homotopy (ホモトピー) の頭文字である。本書では host (ホスト) を連想するための手掛かりともなる。h-集合はホストにおいて `isSet`{.Agda} を満たす型であり、後に扱う集合論の集合とは異なるからである。これは `A`{.Agda} の任意の二要素が等しいことを要求するのではなく、任意の二要素の間のパス型が命題であることを要求する。`A`{.Agda} の要素は互いに異なっていてよく、その一部を結ぶパスが存在してもかまわない。しかし始点と終点を同じものに固定すれば、その間の任意の二つのパスは等しくなる。要素の間には区別が残り得るが、等しさの証明の間には、それ以上区別できる構造が残らない。
 <!--/-->
 
 <figure class="book-diagram type-comparison hlevel-comparison" id="fig-hlevel-distinction" aria-describedby="fig-hlevel-distinction-caption">

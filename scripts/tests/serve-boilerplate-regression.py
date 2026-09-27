@@ -26,6 +26,13 @@ FIXTURES = {
     '/notes-regression': 'browser-notes.html',
     '/mathematical-notation-regression': 'browser-mathematical-notation.html',
 }
+OUTCROP_FIXTURES = {
+    '/ask-ai-regression': ROOT / 'outcrop/tests/browser-ask-ai.html',
+}
+
+
+def fixture_path(path):
+    return OUTCROP_FIXTURES.get(path) or ROOT / 'scripts/tests' / FIXTURES[path]
 
 
 def main():
@@ -58,12 +65,12 @@ def main():
 
         def do_GET(self):
             url = urlsplit(self.path)
-            if url.path in FIXTURES:
+            if url.path in FIXTURES or url.path in OUTCROP_FIXTURES:
                 # Exercise the exact production generation, not mutable source
                 # copies. Popup iframe pages already reference this same hash.
                 page = (args.site / 'en/index.html').read_text(encoding='utf-8')
                 runtime = re.search(r'/static/(runtime/[0-9a-f]+)/outcrop.js', page)
-                fixture = (ROOT / 'scripts/tests' / FIXTURES[url.path]).read_text(encoding='utf-8')
+                fixture = fixture_path(url.path).read_text(encoding='utf-8')
                 fixture = fixture.replace('/site/static/', '/static/')
                 if runtime:
                     fixture = fixture.replace('__OUTCROP_RUNTIME__', runtime[1])
@@ -96,9 +103,9 @@ def main():
             super().do_GET()
 
         def translate_path(self, path):
-            fixture = FIXTURES.get(urlsplit(path).path)
-            if fixture:
-                return str(ROOT / 'scripts/tests' / fixture)
+            fixture = urlsplit(path).path
+            if fixture in FIXTURES or fixture in OUTCROP_FIXTURES:
+                return str(fixture_path(fixture))
             result = Path(super().translate_path(path))
             candidate = result.with_suffix(result.suffix + '.html')
             return str(candidate if not result.exists() and candidate.is_file() else result)
