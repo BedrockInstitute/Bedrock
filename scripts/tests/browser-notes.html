@@ -14,6 +14,7 @@ Second line
 Third line
 Fourth line</pre></details>
   <p>Agda 支持构造子<span class="prose-annotation-target" id="overload">重载</span><template class="prose-annotation-template">同一个名称可以指不同的构造子。</template>。</p>
+  <p style="max-width: 23rem">这一段先占据一些行宽，然后解释<span class="prose-annotation-target" id="wrapped">取值 B x 都是 h-集合的族 B : X → Type ℓ</span><template class="prose-annotation-template">跨行目标的旁注也须完全留在正文之外。</template>。</p>
   <details id="submodule"><summary>子模块</summary>
     <p>内部的<span class="prose-annotation-target" id="nested">注释</span><template class="prose-annotation-template">内部说明。</template>也跟随所在行。</p>
   </details>
@@ -32,18 +33,23 @@ function check(label, ok) {
 }
 function aligned(id) {
   const anchor = document.querySelector(id).closest('.prose-annotation');
+  const article = document.querySelector('article').getBoundingClientRect();
   const target = anchor.querySelector('.prose-annotation-target').getBoundingClientRect();
   const connector = anchor.querySelector('.prose-annotation-connector').getBoundingClientRect();
   const note = anchor.querySelector('.prose-annotation-note').getBoundingClientRect();
   const center = rect => rect.top + rect.height / 2;
   return Math.abs(center(note) - center(target)) <= 1.1 &&
-    Math.abs(center(connector) - center(target)) <= 1.1;
+    Math.abs(center(connector) - center(target)) <= 1.1 &&
+    note.left >= article.right + 1 && connector.left >= article.right;
 }
 try {
   initCodeNotes();
   await document.fonts.ready;
   await frame();
   check('annotation is structurally anchored beside its term', aligned('#overload'));
+  check('wrapped annotation spans multiple lines',
+    document.querySelector('#wrapped').getClientRects().length > 1);
+  check('wrapped annotation stays entirely outside the reading column', aligned('#wrapped'));
   check('collapsed nested note is hidden with its source',
     !document.querySelector('#submodule').open &&
     document.querySelector('#submodule').contains(
@@ -52,12 +58,14 @@ try {
     document.getElementById(id).open = true;
     await frame();
     check(`${id} expansion keeps term and note on one line`, aligned('#overload'));
+    check(`${id} expansion keeps wrapped note outside the article`, aligned('#wrapped'));
   }
   check('opened submodule note follows its own line', aligned('#nested'));
   for (const id of ['submodule', 'preview', 'route']) {
     document.getElementById(id).open = false;
     await frame();
     check(`${id} collapse keeps term and note on one line`, aligned('#overload'));
+    check(`${id} collapse keeps wrapped note outside the article`, aligned('#wrapped'));
   }
   status.textContent = 'PASS margin-note anchor regression';
 } catch (error) {
