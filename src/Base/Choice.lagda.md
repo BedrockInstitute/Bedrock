@@ -230,11 +230,11 @@ private module Diaconescu {ℓ} (P : hProp ℓ) where
 <div class="submodule-fold-content">
 
 <!--en-->
-First import the [set quotient]{.term-intro #set-quotient} and binary-relation tools used below. Given a type `A`{.Agda} and a relation `R`{.Agda}, the quotient `A / R`{.Agda} has points `[ a ]`{.Agda}; a proof of `R a b`{.Agda} gives a path `[ a ] ≡ [ b ]`{.Agda}, and `squash/`{.Agda} ensures that the result is an h-set. `BinaryRelation`{.Agda} supplies the vocabulary for the relation laws we will verify.
+First import the [set quotient]{.term-intro #set-quotient} and binary-relation tools used below. Given a type `A`{.Agda} and a relation `R`{.Agda}, the quotient `A / R`{.Agda} has points `[ a ]`{.Agda}; a proof of `R a b`{.Agda} gives a path `[ a ] ≡ [ b ]`{.Agda}, and `squash/`{.Agda} ensures that the result is an h-set. `BinaryRelation`{.Agda} supplies the vocabulary for the relation laws we will verify. The imported isomorphism theorem `isEquivRel→effectiveIso`{.Agda} says that, when `R`{.Agda} is a proposition-valued equivalence relation, paths `[ a ] ≡ [ b ]`{.Agda} in the quotient are isomorphic to proofs of `R a b`{.Agda}. This lets us read equality of quotient points through the original relation.
 <!--zh-->
-先引入下文要用的[集合商]{.term-intro #set-quotient}与二元关系工具。给定类型 `A`{.Agda} 与关系 `R`{.Agda}，商 `A / R`{.Agda} 中有点 `[ a ]`{.Agda}；`R a b`{.Agda} 的证明给出路径 `[ a ] ≡ [ b ]`{.Agda}，`squash/`{.Agda} 则保证结果是 h-集合。`BinaryRelation`{.Agda} 提供随后验证关系定律所用的表述。
+先引入下文要用的[集合商]{.term-intro #set-quotient}与二元关系工具。给定类型 `A`{.Agda} 与关系 `R`{.Agda}，商 `A / R`{.Agda} 中有点 `[ a ]`{.Agda}；`R a b`{.Agda} 的证明给出路径 `[ a ] ≡ [ b ]`{.Agda}，`squash/`{.Agda} 则保证结果是 h-集合。`BinaryRelation`{.Agda} 提供随后验证关系定律所用的表述。这里引入的同构定理 `isEquivRel→effectiveIso`{.Agda} 说：若 `R`{.Agda} 是取值于命题的等价关系，则商中 `[ a ] ≡ [ b ]`{.Agda} 的路径与 `R a b`{.Agda} 的证明同构。由此可以通过原关系理解商中两点的相等。
 <!--ja-->
-まず、以下で使う[集合商]{.term-intro #set-quotient}と二項関係の道具を導入する。型 `A`{.Agda} と関係 `R`{.Agda} に対し、商 `A / R`{.Agda} は点 `[ a ]`{.Agda} をもち、`R a b`{.Agda} の証明からパス `[ a ] ≡ [ b ]`{.Agda} が得られる。`squash/`{.Agda} はその結果が h-集合であることを保証する。`BinaryRelation`{.Agda} は、これから検証する関係の法則を記述するために使う。
+まず、以下で使う[集合商]{.term-intro #set-quotient}と二項関係の道具を導入する。型 `A`{.Agda} と関係 `R`{.Agda} に対し、商 `A / R`{.Agda} は点 `[ a ]`{.Agda} をもち、`R a b`{.Agda} の証明からパス `[ a ] ≡ [ b ]`{.Agda} が得られる。`squash/`{.Agda} はその結果が h-集合であることを保証する。`BinaryRelation`{.Agda} は、これから検証する関係の法則を記述するために使う。ここで導入する同型定理 `isEquivRel→effectiveIso`{.Agda} は、`R`{.Agda} が命題値の同値関係ならば、商におけるパス `[ a ] ≡ [ b ]`{.Agda} と `R a b`{.Agda} の証明が同型になることを述べる。これにより、商の点の等しさを元の関係から理解できる。
 <!--/-->
 
 ```agda
@@ -260,11 +260,11 @@ First import the [set quotient]{.term-intro #set-quotient} and binary-relation t
 
 
 <!--en-->
-**Construction** (`Glued`{.Agda}) Take the quotient by this relation. We want to characterize paths between its distinguished points `[ true ]`{.Agda} and `[ false ]`{.Agda} by proofs of `P`{.Agda}. The library's isomorphism theorem applies once we verify that `_~_`{.Agda} is a proposition-valued equivalence relation.
+**Construction** (`Glued`{.Agda}) Take the quotient by this relation. We want to characterize paths between its distinguished points `[ true ]`{.Agda} and `[ false ]`{.Agda} by proofs of `P`{.Agda}. The isomorphism theorem applies once we verify that `_~_`{.Agda} is a proposition-valued equivalence relation.
 <!--zh-->
-**构造** (`Glued`{.Agda}) 按这个关系取商。我们希望用 `P`{.Agda} 的证明来刻画两个特殊点 `[ true ]`{.Agda} 与 `[ false ]`{.Agda} 之间的路径。只要验证 `_~_`{.Agda} 是取值于命题的等价关系，就能应用库中的同构定理。
+**构造** (`Glued`{.Agda}) 按这个关系取商。我们希望用 `P`{.Agda} 的证明来刻画两个特殊点 `[ true ]`{.Agda} 与 `[ false ]`{.Agda} 之间的路径。只要验证 `_~_`{.Agda} 是取值于命题的等价关系，就能应用同构定理。
 <!--ja-->
-**構成** (`Glued`{.Agda}) この関係による商を取る。二つの点 `[ true ]`{.Agda} と `[ false ]`{.Agda} の間のパスを、`P`{.Agda} の証明によって特徴付けたい。`_~_`{.Agda} が命題値の同値関係であることを確かめれば、ライブラリの同型定理を適用できる。
+**構成** (`Glued`{.Agda}) この関係による商を取る。二つの点 `[ true ]`{.Agda} と `[ false ]`{.Agda} の間のパスを、`P`{.Agda} の証明によって特徴付けたい。`_~_`{.Agda} が命題値の同値関係であることを確かめれば、同型定理を適用できる。
 <!--/-->
 
 ```agda
@@ -274,11 +274,11 @@ First import the [set quotient]{.term-intro #set-quotient} and binary-relation t
 
 
 <!--en-->
-**Lemma** (`~-prop`{.Agda}) For the quotient just constructed, `isEquivRel→effectiveIso`{.Agda} requires a proposition-valued equivalence relation. The checks use only the definition of `_~_`{.Agda}. Each diagonal entry is the proposition `⊤*`{.Agda}; each off-diagonal entry is the proposition packaged in `P`{.Agda}.
+**Lemma** (`~-prop`{.Agda}) For the quotient just constructed, the isomorphism theorem requires a proposition-valued equivalence relation. The checks use only the definition of `_~_`{.Agda}. Each diagonal entry is the proposition `⊤*`{.Agda}; each off-diagonal entry is the proposition packaged in `P`{.Agda}.
 <!--zh-->
-**引理** (`~-prop`{.Agda}) 对于刚构造的商，`isEquivRel→effectiveIso`{.Agda} 要求关系取值于命题并满足等价律。验证只需查看 `_~_`{.Agda} 的定义：对角格是命题 `⊤*`{.Agda}，非对角格是 `P`{.Agda} 所打包的命题。
+**引理** (`~-prop`{.Agda}) 对于刚构造的商，同构定理要求关系取值于命题并满足等价律。验证只需查看 `_~_`{.Agda} 的定义：对角格是命题 `⊤*`{.Agda}，非对角格是 `P`{.Agda} 所打包的命题。
 <!--ja-->
-**補題** (`~-prop`{.Agda}) いま構成した商に `isEquivRel→effectiveIso`{.Agda} を使うには、関係が命題値で同値律を満たす必要がある。検証には `_~_`{.Agda} の定義だけを使う。対角成分は命題 `⊤*`{.Agda} であり、非対角成分は `P`{.Agda} に含まれる命題である。
+**補題** (`~-prop`{.Agda}) いま構成した商に同型定理を使うには、関係が命題値で同値律を満たす必要がある。検証には `_~_`{.Agda} の定義だけを使う。対角成分は命題 `⊤*`{.Agda} であり、非対角成分は `P`{.Agda} に含まれる命題である。
 <!--/-->
 
 ```agda
@@ -353,11 +353,11 @@ If the endpoints differ, the middle boolean equals one of them, so one of the tw
 
 
 <!--en-->
-**Lemma** (`~-equivRel`{.Agda}) The three laws form the equivalence-relation record required by `isEquivRel→effectiveIso`{.Agda}.
+**Lemma** (`~-equivRel`{.Agda}) The three laws form the equivalence-relation record required by the isomorphism theorem.
 <!--zh-->
-**引理** (`~-equivRel`{.Agda}) 三条定律组成 `isEquivRel→effectiveIso`{.Agda} 所需的等价关系记录。
+**引理** (`~-equivRel`{.Agda}) 三条定律组成同构定理所需的等价关系记录。
 <!--ja-->
-**補題** (`~-equivRel`{.Agda}) 三つの法則を、`isEquivRel→effectiveIso`{.Agda} が要求する同値関係のレコードにまとめる。
+**補題** (`~-equivRel`{.Agda}) 三つの法則を、同型定理が要求する同値関係のレコードにまとめる。
 <!--/-->
 
 ```agda
@@ -367,11 +367,11 @@ If the endpoints differ, the middle boolean equals one of them, so one of the tw
 
 
 <!--en-->
-**Lemma** (`quotientPath≃P`{.Agda}) The verified laws let us apply `isEquivRel→effectiveIso`{.Agda}. It identifies the path type between `[ true ]`{.Agda} and `[ false ]`{.Agda} with `true ~ false`{.Agda}, which is defined to be `⟨ P ⟩`{.Agda}. The library also supplies the two round-trip laws; `isoToEquiv`{.Agda} gives the following type equivalence.
+**Lemma** (`quotientPath≃P`{.Agda}) The verified laws let us apply the isomorphism theorem. It identifies the path type between `[ true ]`{.Agda} and `[ false ]`{.Agda} with `true ~ false`{.Agda}, which is defined to be `⟨ P ⟩`{.Agda}. Applying `isoToEquiv`{.Agda} to this isomorphism yields the following type equivalence.
 <!--zh-->
-**引理** (`quotientPath≃P`{.Agda}) 验证这些定律后，就能应用 `isEquivRel→effectiveIso`{.Agda}。它给出 `[ true ]`{.Agda} 与 `[ false ]`{.Agda} 之间的路径类型与 `true ~ false`{.Agda} 的同构，而后者按定义就是 `⟨ P ⟩`{.Agda}。库也提供了两条往返律，再经 `isoToEquiv`{.Agda} 得到下面的类型等价。
+**引理** (`quotientPath≃P`{.Agda}) 验证这些定律后，就能应用同构定理。它给出 `[ true ]`{.Agda} 与 `[ false ]`{.Agda} 之间的路径类型与 `true ~ false`{.Agda} 的同构，而后者按定义就是 `⟨ P ⟩`{.Agda}。再用 `isoToEquiv`{.Agda} 将这个同构转为下面的类型等价。
 <!--ja-->
-**補題** (`quotientPath≃P`{.Agda}) これらの法則を確認すると、`isEquivRel→effectiveIso`{.Agda} を適用できる。これは `[ true ]`{.Agda} と `[ false ]`{.Agda} の間のパス型と `true ~ false`{.Agda} の同型を与える。後者は定義上 `⟨ P ⟩`{.Agda} である。二つの往復則もライブラリが与えるので、`isoToEquiv`{.Agda} により次の型同値を得る。
+**補題** (`quotientPath≃P`{.Agda}) これらの法則を確認すると、同型定理を適用できる。これは `[ true ]`{.Agda} と `[ false ]`{.Agda} の間のパス型と `true ~ false`{.Agda} の同型を与える。後者は定義上 `⟨ P ⟩`{.Agda} である。この同型を `isoToEquiv`{.Agda} で次の型同値に変換する。
 <!--/-->
 
 ```agda
@@ -463,10 +463,11 @@ On the left, the inverse of $e$ supplies a path. On the right, $e$ would turn an
 <!--/-->
 
 ```agda
-  open import Cubical.Foundations.HLevels using ( isSetΣSndProp )
-  open import Cubical.Data.Bool.Properties using ( isSetBool )
   pickIsSet : (x : Glued) → isSet (Pick x)
   pickIsSet x = isSetΣSndProp isSetBool (λ b → squash/ [ b ] x)
+    where
+      open import Cubical.Foundations.HLevels using ( isSetΣSndProp )
+      open import Cubical.Data.Bool.Properties using ( isSetBool )
 ```
 
 
@@ -499,18 +500,12 @@ On the left, the inverse of $e$ supplies a path. On the right, $e$ would turn an
 
 
 <!--en-->
-Why not simply choose `true`{.Agda} at `[ true ]`{.Agda} and `false`{.Agda} at `[ false ]`{.Agda}? These classes may be equal, and a function on the quotient must respect that equality. Choosing on the two named representatives separately does not establish a function on `Glued`{.Agda}.
-
 For the next two auxiliary maps, temporarily suppose an actual `g : (x : Glued) → Pick x`{.Agda} is given, rather than only its mere existence. The inner parameterized submodule holds `g`{.Agda} fixed; `_`{.Agda} means the module itself needs no name. Its private definitions still require `g`{.Agda} when used outside the submodule, so no global choice function has been assumed. We will later eliminate the truncation to obtain a decision without this temporary supposition.
 
 <!--zh-->
-为什么不直接在 `[ true ]`{.Agda} 处选 `true`{.Agda}，在 `[ false ]`{.Agda} 处选 `false`{.Agda}？这两个商类可能相等，而商上的函数必须尊重这种相等。分别在两个具名代表元处作出选取，还不能构成 `Glued`{.Agda} 上的函数。
-
 接下来暂设已取得实际函数 `g : (x : Glued) → Pick x`{.Agda}，而不只是知道它仅仅存在。里面的带参数子模块将 `g`{.Agda} 固定为共同参数；`_`{.Agda} 表示模块本身无须命名。离开子模块后，使用这些私有辅助定义仍须传入 `g`{.Agda}，所以这里并未凭空假设全局选择函数。稍后再消去截断，去掉这个暂设而得到判定。
 
 <!--ja-->
-`[ true ]`{.Agda} で `true`{.Agda} を、`[ false ]`{.Agda} で `false`{.Agda} を選ぶだけではなぜ足りないのか。この二つの商類は等しいかもしれず、商上の関数はその等しさを保たなければならない。二つの代表元で別々に選んでも、`Glued`{.Agda} 上の関数を定めたことにはならない。
-
 次の二つの補助写像を作る間、単なる存在ではなく、実際の関数 `g : (x : Glued) → Pick x`{.Agda} が与えられたと仮定する。内側の引数付き部分モジュールは `g`{.Agda} を固定し、`_`{.Agda} はモジュール自体に名前が不要であることを表す。外で非公開の補助定義を使うときには、なお `g`{.Agda} を渡すので、大域的な選択関数を仮定したわけではない。後で切り詰めを除去し、この一時的な仮定なしに判定を得る。
 
 <!--/-->
@@ -752,6 +747,130 @@ SetChoice→LEM : ∀ {ℓ} → SetChoice ℓ → LEM ℓ
 SetChoice→LEM sc P = rec₁ (isPropDec ⟨ P ⟩isProp) decide (merePicker sc)
   where open Diaconescu P
 ```
+
+<!--en-->
+Now that the proof is complete, consider a tempting shortcut: why not prescribe `true`{.Agda} at `[ true ]`{.Agda} and `false`{.Agda} at `[ false ]`{.Agda}? The diagram follows this question from separate pointwise witnesses through `SetChoice`{.Agda} to one function on the quotient. Suppose `P`{.Agda} holds and follow the path between the two names of the same point.
+<!--zh-->
+证明完成后，再回看一个看似直接的做法：为什么不在 `[ true ]`{.Agda} 处选 `true`{.Agda}，在 `[ false ]`{.Agda} 处选 `false`{.Agda}？下图从逐点找到代表元，经 `SetChoice`{.Agda} 走到商上的同一个函数。先假设 `P`{.Agda} 成立，沿同一个商点的两种写法之间的路径看一看。
+<!--ja-->
+証明を終えたところで、一見簡単そうな方法を振り返ろう。`[ true ]`{.Agda} では `true`{.Agda} を、`[ false ]`{.Agda} では `false`{.Agda} を選ぶだけではなぜ足りないのか。次の図は、各点で別々に代表元を得るところから `SetChoice`{.Agda} を経て、商の上の一つの関数へ進む。`P`{.Agda} が成り立つと仮定し、同じ点の二つの表記を結ぶパスをたどってみよう。
+<!--/-->
+
+<figure class="book-diagram choice-contrast-figure" id="fig-choice-decision" aria-describedby="fig-choice-decision-caption">
+<div class="diagram-framed choice-contrast-frame">
+<div class="choice-contrast-premise">
+<!--en-->
+<span>If $P$ holds, the quotient has a path</span>
+<!--zh-->
+<span>若 $P$ 成立，商中有路径</span>
+<!--ja-->
+<span>$P$ が成り立つと、商にはパスがある</span>
+<!--/-->
+<strong>$p:[\mathsf{true}]\equiv[\mathsf{false}]$</strong>
+</div>
+<div class="choice-contrast-columns">
+<section class="diagram-panel choice-contrast-panel choice-contrast-pointwise">
+<!--en-->
+<h4>Separate existence at each point</h4>
+<!--zh-->
+<h4>逐点分别存在</h4>
+<!--ja-->
+<h4>各点で別々に存在</h4>
+<!--/-->
+<div class="choice-contrast-type">$(x : \mathsf{Glued})\to\|\mathsf{Pick}\,x\|_1$</div>
+<!--en-->
+<p>Even if representatives were found separately:</p>
+<!--zh-->
+<p>即使暂时分别找到代表元：</p>
+<!--ja-->
+<p>仮に代表元を別々に見つけても：</p>
+<!--/-->
+<div class="choice-contrast-picks">
+<div class="choice-contrast-pick"><span>$[\mathsf{true}]$</span><span class="choice-contrast-correspondence" aria-hidden="true"></span><strong>$\mathsf{true}$</strong></div>
+<div class="choice-contrast-pick"><span>$[\mathsf{false}]$</span><span class="choice-contrast-correspondence" aria-hidden="true"></span><strong>$\mathsf{false}$</strong></div>
+</div>
+<div class="choice-contrast-verdict choice-contrast-insufficient">
+<!--en-->
+<span>When $P$ holds, the two names denote one point. Different representatives can be found separately, but prescribing them as outputs would give one input both true and false: not a function on the quotient.</span>
+<!--zh-->
+<span>当 $P$ 成立时，两种写法是同一个商点。分别找到不同代表元并不矛盾；若按写法指定输出，同一个输入却会同时得到 true 和 false，因而不是商上的函数。</span>
+<!--ja-->
+<span>$P$ が成り立つと、二つの表記は同じ商点を指す。異なる代表元を別々に見つけても矛盾しないが、表記ごとに出力を指定すると同じ入力に true と false の両方を与えてしまい、商の上の関数にならない。</span>
+<!--/-->
+</div>
+</section>
+<div class="choice-contrast-choice-bridge diagram-implication">
+<span>$\mathsf{SetChoice}$</span>
+<span class="choice-contrast-choice-arrow" aria-hidden="true"></span>
+<!--en-->
+<span class="choice-contrast-choice-note">A single function exists, merely</span>
+<!--zh-->
+<span class="choice-contrast-choice-note">仅仅存在一个统一的函数</span>
+<!--ja-->
+<span class="choice-contrast-choice-note">一つの関数が単に存在</span>
+<!--/-->
+</div>
+<section class="diagram-panel choice-contrast-panel choice-contrast-global">
+<!--en-->
+<h4>One function on the quotient</h4>
+<!--zh-->
+<h4>商上的同一个函数</h4>
+<!--ja-->
+<h4>商の上の一つの関数</h4>
+<!--/-->
+<div class="choice-contrast-type">$\|((x : \mathsf{Glued})\to\mathsf{Pick}\,x)\|_1$</div>
+<!--en-->
+<p>Inside this remaining truncation, take one function $g$:</p>
+<!--zh-->
+<p>在剩余的外层截断内部，看同一个函数 $g$：</p>
+<!--ja-->
+<p>残る外側の切り詰めの内側で、一つの関数 $g$ を見る：</p>
+<!--/-->
+<div class="choice-contrast-map">
+<div class="choice-contrast-map-name"><span>$f:\mathsf{Glued}\to\mathsf{Bool}$</span><span>$f(x)=(g\,x).\mathsf{fst}$</span></div>
+<div class="path-stage choice-contrast-path-stage" style="aspect-ratio:360/240">
+<svg viewBox="0 0 360 240" aria-hidden="true" focusable="false">
+<path class="diagram-path" d="M55 60 Q180 5 305 60 M55 185 Q180 130 305 185"/>
+<path class="diagram-map-line" d="M55 72 V165 M305 72 V165"/>
+<path class="diagram-map-tip" d="M51 158 L55 165 L59 158 M301 158 L305 165 L309 158"/>
+<circle class="diagram-point" cx="55" cy="60" r="4"/><circle class="diagram-point" cx="305" cy="60" r="4"/>
+<circle class="diagram-point" cx="55" cy="185" r="4"/><circle class="diagram-point" cx="305" cy="185" r="4"/>
+</svg>
+<span class="path-label" style="left:15.2778%;top:15.4167%">$[\mathsf{true}]$</span>
+<span class="path-label" style="left:84.7222%;top:15.4167%">$[\mathsf{false}]$</span>
+<span class="path-label" style="left:50%;top:6.25%">$p$</span>
+<span class="path-label" style="left:10.8333%;top:48.75%">$f$</span>
+<span class="path-label" style="left:89.4444%;top:48.75%">$f$</span>
+<span class="path-label" style="left:15.2778%;top:90%">$b_0$</span>
+<span class="path-label" style="left:84.7222%;top:90%">$b_1$</span>
+<span class="path-label" style="left:50%;top:56.25%">$\operatorname{cong}\,f\,p$</span>
+</div>
+</div>
+<div class="choice-contrast-verdict choice-contrast-coherent">
+<div class="choice-contrast-equivalence">$b_0\equiv b_1\quad\Longleftrightarrow\quad P$</div>
+<!--en-->
+<span>The representative certificates give the reverse direction. Comparing $b_0$ and $b_1$ therefore decides $P$.</span>
+<!--zh-->
+<span>代表元证书给出反向蕴含；比较 $b_0$ 与 $b_1$ 就能判定 $P$。</span>
+<!--ja-->
+<span>代表元の証明が逆向きの含意を与える。よって $b_0$ と $b_1$ の比較で $P$ を判定できる。</span>
+<!--/-->
+</div>
+</section>
+</div>
+</div>
+<figcaption id="fig-choice-decision-caption">
+
+<!--en-->
+One function sends the path between quotient points to a path between its Boolean outputs; the resulting decision is a proposition, so it can leave the outer truncation
+<!--zh-->
+同一个函数把商点间的路径送成布尔输出间的路径；判定是命题，因此可以消去外层截断
+<!--ja-->
+一つの関数が商点間のパスをブール出力間のパスへ送る。判定は命題なので、外側の切り詰めを除ける
+<!--/-->
+
+</figcaption>
+</figure>
 
 
 <!--en-->

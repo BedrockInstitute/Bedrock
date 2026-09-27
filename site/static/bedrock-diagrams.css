@@ -1,4 +1,4 @@
-/* Figure-specific layout for the lowering-choice diagram in Base.Choice.
+/* Figure-specific layout for the choice diagrams in Base.Choice.
    Licensing is declared by the repository's REUSE.toml. */
 .choice-lift-flow {
   display: grid;
@@ -35,4 +35,62 @@
   .choice-lift-step { min-height: 2.4rem; }
   .choice-lift-wide-arrow { display: none; }
   .choice-lift-narrow-arrow { display: inline; }
+}
+
+.choice-contrast-frame { display: grid; gap: var(--diagram-gap); }
+.choice-contrast-premise {
+  display: flex; flex-wrap: wrap; align-items: baseline; justify-content: center;
+  gap: .3rem .8rem; text-align: center; color: var(--fg-alt);
+}
+.choice-contrast-premise strong { color: var(--text-fg); font-weight: 600; }
+.choice-contrast-columns {
+  display: grid; grid-template-columns: minmax(0, 1fr) 6.2rem minmax(0, 1fr);
+  gap: .55rem; align-items: stretch;
+}
+.choice-contrast-choice-bridge {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: .45rem; text-align: center; font-size: .77em; line-height: 1.35;
+}
+.choice-contrast-choice-bridge > :first-child { color: var(--text-fg); font-weight: 600; }
+.choice-contrast-choice-arrow { color: var(--diagram-path-color); font-size: 2rem; line-height: 1; }
+.choice-contrast-choice-arrow::before { content: "→"; }
+.choice-contrast-choice-note { color: var(--fg-alt); }
+.choice-contrast-panel {
+  min-width: 0; display: flex; flex-direction: column; gap: .7rem;
+  padding: 1rem;
+}
+.choice-contrast-panel h4 { margin: 0; font-size: 1em; text-align: center; }
+.choice-contrast-panel p { margin: 0; color: var(--fg-alt); font-size: .87em; }
+.choice-contrast-type { text-align: center; font-size: .83em; color: var(--fg-alt); }
+.choice-contrast-picks { display: grid; gap: .35rem; }
+.choice-contrast-pick {
+  display: grid; grid-template-columns: minmax(0, 1fr) 1.2rem minmax(0, 1fr);
+  align-items: center; gap: .2rem; text-align: center;
+  padding: .35rem .5rem; border-radius: var(--diagram-radius);
+  border: 1px solid var(--diagram-space-border); background: var(--diagram-space-bg);
+}
+.choice-contrast-correspondence { border-top: 1px dashed var(--diagram-path-color); }
+.choice-contrast-pointwise .choice-contrast-pick { border-style: dashed; }
+.choice-contrast-pick strong { font-weight: 600; }
+.choice-contrast-map {
+  display: grid; gap: .25rem; min-width: 0;
+}
+.choice-contrast-map-name {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: .2rem .65rem;
+  text-align: center; font-size: .8em;
+}
+.choice-contrast-path-stage { max-width: 22.5rem; margin: .15rem auto; }
+.choice-contrast-path-stage .path-label { font-size: clamp(.72rem, 1.7vw, .9rem); }
+.choice-contrast-equivalence { text-align: center; font-size: .96em; margin-bottom: .3rem; }
+.choice-contrast-verdict {
+  margin-top: auto; padding-top: .65rem; border-top: 1px solid var(--diagram-space-border);
+  font-size: .89em; line-height: 1.55;
+}
+.choice-contrast-insufficient { color: var(--fg-alt); }
+.choice-contrast-coherent { color: var(--text-fg); }
+@media (max-width: 1050px) {
+  .choice-contrast-columns { grid-template-columns: minmax(0, 1fr); }
+  .choice-contrast-choice-bridge { padding: .25rem 0; gap: .15rem; }
+  .choice-contrast-choice-arrow::before { content: "↓"; }
+  .choice-contrast-path-stage .path-label { font-size: clamp(.74rem, 3.2vw, .9rem); }
 }
