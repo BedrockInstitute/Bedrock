@@ -989,7 +989,7 @@ Paths are themselves elements of types, so new paths can in turn relate paths. H
 
 - **`isContr A`{.Agda}：`A`{.Agda} 是[可缩]{.term-intro #contractible}的。** 这要求在 `A`{.Agda} 中选定一个中心，并为每个 `x : A`{.Agda} 给出一条从中心到 `x`{.Agda} 的路径。因此，`A`{.Agda} 不仅必须有元素，而且所有元素都与选定的中心相等，彼此之间也就无法通过相等加以区分。本书把 `isContr`{.Agda} 携带的这组数据读作**[唯一存在]{.term-intro #unique-existence}**：中心给出存在性，所有元素都等于中心则给出唯一性。
 - **`isProp A`{.Agda}：`A`{.Agda} 是[命题]{.term-intro #proposition}。** 这要求 `A`{.Agda} 中任意两个元素都相等。它不要求预先选定中心，甚至不要求 `A`{.Agda} 一定有元素；它只说明，一旦 `A`{.Agda} 有证明，这些证明之间便没有可区分的差别。因此，一个命题可以没有证明，也可以有证明，但不能有两个彼此不同的证明。
-- **`isSet A`{.Agda}：`A`{.Agda} 是 [h-集合]{.term-intro #h-set}。** 通常，h 取自 homotopy (同伦)。在本书中，也可以把它联想为 host (宿主)，以提醒读者：h-集合是宿主中满足 `isSet`{.Agda} 的类型，而不是后文要介绍的集合论中的集合。这不要求 `A`{.Agda} 中任意两个元素都相等，而是要求任意两个元素之间的路径类型本身为命题。换言之，`A`{.Agda} 的元素可以彼此不同，也可以存在连接某些元素的路径；但给定相同的起点和终点以后，两条这样的路径必定相等。元素层面仍可保留差别，相等证明之间则不再保留可区分的更高结构。
+- **`isSet A`{.Agda}：`A`{.Agda} 是 [h-集合]{.term-intro #h-set}。** 通常，h 取自 homotopy (同伦)。在本书中，也可以把它联想为 host (宿主)：h-集合是宿主中满足 `isSet`{.Agda} 的类型，而不是后文要介绍的集合论中的集合。这不要求 `A`{.Agda} 中任意两个元素都相等，而是要求任意两个元素之间的路径类型本身为命题。换言之，`A`{.Agda} 的元素可以彼此不同，也可以存在连接某些元素的路径；但给定相同的起点和终点以后，两条这样的路径必定相等。元素层面仍可保留差别，相等证明之间则不再保留可区分的更高结构。
 <!--ja-->
 パス自身も型の要素なので、パスどうしの間にさらにパスを作れる。ホモトピーレベルは、このような等しさの証明に区別できる構造がどれだけ残るかによって型を分類する。型の大きさを測るものではない。大きさを扱うのは宇宙レベルであり、ホモトピーレベルが扱うのは要素とその等しさの証明をどこまで区別できるかである。
 
@@ -1241,21 +1241,21 @@ For types `A`{.Agda} and `B`{.Agda}, `A ≃ B`{.Agda} is a [dependent pair]{.ter
 <!--en-->
 For a fixed `b : B`{.Agda}, the **[fibre]{.term-intro #fiber}** of `f`{.Agda} over `b`{.Agda} is the dependent pair type:
 
-<div class="single-line-code"><code>`Σ (a : A) (f a ≡ b)`{.Agda}</code></div>
+<div class="single-line-code"><code>`Σ[ a ∶ A ] (f a ≡ b)`{.Agda}</code></div>
 
 An element of the fibre has two components. The first is a candidate preimage `a : A`{.Agda}; the second is a path `f a ≡ b`{.Agda} witnessing that this candidate really maps to `b`{.Agda}. An empty fibre means that `b`{.Agda} has no preimage. Elements of a fibre that cannot be identified by a path represent substantively different ways to return from `b`{.Agda} to `A`{.Agda}.
 
 <!--zh-->
 对固定的 `b : B`{.Agda}，`f`{.Agda} 在 `b`{.Agda} 上的**[纤维]{.term-intro #fiber}**是下面这个依值对类型：
 
-<div class="single-line-code"><code>`Σ (a : A) (f a ≡ b)`{.Agda}</code></div>
+<div class="single-line-code"><code>`Σ[ a ∶ A ] (f a ≡ b)`{.Agda}</code></div>
 
 纤维的一个元素由两部分组成：第一分量是一个候选原像 `a : A`{.Agda}，第二分量是一条路径 `f a ≡ b`{.Agda}，证明这个 `a`{.Agda} 的确映到 `b`{.Agda}。纤维为空，表示 `b`{.Agda} 没有原像；纤维中若有彼此不能通过路径等同的元素，则表示从 `b`{.Agda} 返回 `A`{.Agda} 时存在实质不同的选择。
 
 <!--ja-->
 固定した `b : B`{.Agda} 上の `f`{.Agda} の**[ファイバー]{.term-intro #fiber}**は、次の依存対型である。
 
-<div class="single-line-code"><code>`Σ (a : A) (f a ≡ b)`{.Agda}</code></div>
+<div class="single-line-code"><code>`Σ[ a ∶ A ] (f a ≡ b)`{.Agda}</code></div>
 
 ファイバーの要素は二つの成分を持つ。第一成分は原像の候補 `a : A`{.Agda}、第二成分はその候補が実際に `b`{.Agda} へ写ることを示すパス `f a ≡ b`{.Agda} である。ファイバーが空なら `b`{.Agda} に原像はない。ファイバーにパスで同一視できない要素があれば、`b`{.Agda} から `A`{.Agda} へ戻る方法に本質的な違いが残っている。
 
@@ -1495,7 +1495,7 @@ Four closure principles recur later in the book:
 
 - `isPropΠ`{.Agda} says that propositions are closed under Π types. If every `B x`{.Agda} is a proposition, then `(x : A) → B x`{.Agda} is also a proposition. Universally quantifying a family of propositions therefore produces another proposition.
 - `isProp→`{.Agda} is the non-dependent specialization of `isPropΠ`{.Agda}. If `B`{.Agda} is a proposition, then the function type `A → B`{.Agda} is a proposition, with no propositionhood requirement on its source type `A`{.Agda}.
-- `isPropΣ`{.Agda} handles dependent pairs. If `A`{.Agda} and every `B x`{.Agda} are propositions, then `Σ (x : A) (B x)`{.Agda} is also a proposition.
+- `isPropΣ`{.Agda} handles dependent pairs. If `A`{.Agda} and every `B x`{.Agda} are propositions, then `Σ[ x ∶ A ] B x`{.Agda} is also a proposition.
 - `isProp×`{.Agda} is the non-dependent specialization of `isPropΣ`{.Agda}. If `A`{.Agda} and `B`{.Agda} are propositions, then a pair consisting of a proof of each is again a proposition: any two such pairs are equal componentwise.
 <!--zh-->
 在立方类型论中，命题是满足 `isProp`{.Agda} 的类型。这个条件保证该类型的任意两个元素都相等，因此其中只保留「是否存在证明」这一逻辑信息，不再区分不同的证明。类型具有元素时，相应命题成立；无法构造元素时，则尚未得到该命题的证明。
@@ -1504,7 +1504,7 @@ Four closure principles recur later in the book:
 
 - `isPropΠ`{.Agda} 表明命题对 Π 类型封闭。若每个 `B x`{.Agda} 都是命题，那么 `(x : A) → B x`{.Agda} 也是命题。因此，对一族命题作全称量化，所得结果仍然是命题。
 - `isProp→`{.Agda} 是 `isPropΠ`{.Agda} 不带依赖时的特例。只要值域 `B`{.Agda} 是命题，函数类型 `A → B`{.Agda} 就是命题，而无须要求定义域 `A`{.Agda} 也是命题。
-- `isPropΣ`{.Agda} 处理依值对。若 `A`{.Agda} 和每个 `B x`{.Agda} 都是命题，那么 `Σ (x : A) (B x)`{.Agda} 仍是命题。
+- `isPropΣ`{.Agda} 处理依值对。若 `A`{.Agda} 和每个 `B x`{.Agda} 都是命题，那么 `Σ[ x ∶ A ] B x`{.Agda} 仍是命题。
 - `isProp×`{.Agda} 是 `isPropΣ`{.Agda} 不带依赖时的特例。若 `A`{.Agda} 与 `B`{.Agda} 都是命题，那么同时包含二者证明的对仍是命题：任意两个这样的对都逐分量相等。
 <!--ja-->
 立方型理論では、命題とは `isProp`{.Agda} を満たす型である。この条件により、その型の任意の二つの元は等しくなる。したがって、証明どうしを区別せず、証明が存在するかどうかという論理的な情報だけが残る。型の元を構成すれば対応する命題が成り立つことが示され、元をまだ構成できなければ、その命題の証明はまだ得られていない。
@@ -1513,7 +1513,7 @@ Four closure principles recur later in the book:
 
 - `isPropΠ`{.Agda} は、命題が Π 型に対して閉じていることを示す。すべての `B x`{.Agda} が命題なら、`(x : A) → B x`{.Agda} も命題である。したがって、命題の族を全称量化して得られる結果も命題である。
 - `isProp→`{.Agda} は `isPropΠ`{.Agda} の依存しない特別な場合である。終域 `B`{.Agda} が命題なら、定義域 `A`{.Agda} が命題であることを仮定しなくても、関数型 `A → B`{.Agda} は命題になる。
-- `isPropΣ`{.Agda} は依存対を扱う。`A`{.Agda} と各 `B x`{.Agda} が命題なら、`Σ (x : A) (B x)`{.Agda} も命題になる。
+- `isPropΣ`{.Agda} は依存対を扱う。`A`{.Agda} と各 `B x`{.Agda} が命題なら、`Σ[ x ∶ A ] B x`{.Agda} も命題になる。
 - `isProp×`{.Agda} は `isPropΣ`{.Agda} の依存しない特別な場合である。`A`{.Agda} と `B`{.Agda} が命題なら、それぞれの証明を組にした型も命題である。そのような二つの組は成分ごとに等しくなる。
 <!--/-->
 
