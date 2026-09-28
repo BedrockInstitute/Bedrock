@@ -8,8 +8,10 @@ documented one level down instead.
 
 ## Workflow
 
-`ci.yml` starts on every push and pull request, without workflow-level path
-filters. The existing `typecheck` job always runs lint, both unit-test suites and
+`ci.yml` starts automatically only on pushes to `main`, without workflow-level path
+filters. Pushes to other branches and pull-request updates do not start CI;
+`workflow_dispatch` remains available for an intentional full manual run.
+The existing `typecheck` job always runs lint, both unit-test suites and
 the Origin closure gate. Agda work is conditional on the changed-file scope.
 For non-documentation pushes to `main`, or any manual dispatch, it subsequently
 builds and deploys the multilingual site. Its full job graph is:
@@ -38,8 +40,9 @@ pipeline. Do not expand the allowlist to cover inputs consumed by the website.
 | Missing baseline/history or invalid policy | Same checks | Conservatively use the full pipeline |
 
 The shared `outcrop.adapters.ci_scope` helper compares the whole push's `before`
-revision to the checked-out event revision, or the PR base's merge base to that
-revision. Initial pushes with no usable baseline run fully. Classification uses
+revision to the checked-out event revision. The reusable helper also supports a
+PR base's merge base, though this workflow does not subscribe to PR events.
+Initial pushes with no usable baseline run fully. Classification uses
 the complete NUL-delimited Git diff, not an API's truncated changed-file list;
 renames check both old and new paths. Checkout fetches full history for this job.
 

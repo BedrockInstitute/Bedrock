@@ -25,6 +25,9 @@ class BedrockCIScopeTests(unittest.TestCase):
 
     def test_expensive_steps_scoped_but_existing_required_gate_remains(self):
         workflow = (ROOT / '.github/workflows/ci.yml').read_text()
+        triggers = workflow.split('\npermissions:', 1)[0]
+        self.assertIn('on:\n  push:\n    branches:\n      - main\n  workflow_dispatch:', triggers)
+        self.assertNotIn('pull_request:', triggers)
         job = workflow.split('  typecheck:\n', 1)[1].split('  site-backend:\n')[0]
         self.assertNotIn('    if:', job.split('    steps:\n')[0])
         self.assertIn('fetch-depth: 0', job)
