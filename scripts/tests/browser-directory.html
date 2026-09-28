@@ -22,9 +22,15 @@
   check('review icon comes before reading icon in each route link',routeLinks.every(link=>
     [...link.parentElement.querySelector('.route-statuses').children].map(icon=>icon.classList[0]).join('|')===
     'route-review-status|route-reading-status'));
-  check('status buttons are outside chapter link hit regions',routeLinks.every(link=>{
+  check('compact status buttons keep original spacing outside chapter link hit regions',routeLinks.every(link=>{
     const buttons=[...link.parentElement.querySelectorAll('.route-statuses > button')];
-    return buttons.length===2&&link.getBoundingClientRect().right<=buttons[0].getBoundingClientRect().left;
+    if(buttons.length!==2) return false;
+    const first=buttons[0].getBoundingClientRect();
+    const second=buttons[1].getBoundingClientRect();
+    const rem=parseFloat(win.getComputedStyle(doc.documentElement).fontSize);
+    return Math.abs(first.width-rem)<1&&Math.abs(second.width-rem)<1&&
+      Math.abs(second.left-first.right-rem/4)<1&&
+      link.getBoundingClientRect().right<=first.left;
   }));
   check('sidebar statuses use prerequisites and human-review catalog data',
     routeStatus('Base.Prelude')?.querySelector('.route-reading-status.is-available')&&
