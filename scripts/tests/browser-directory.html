@@ -12,6 +12,15 @@
   const button=selector=>root.querySelector(selector), view=()=>canvas.querySelector('svg').getAttribute('viewBox').split(' ').map(Number);
   check('interactive contents title',doc.querySelector('h1').textContent==='交互式目录');
   check('module tree removed, current route retained',!doc.querySelector('.modnav')&&doc.querySelector('.current-route'));
+  const routeLinks=[...doc.querySelectorAll('.current-route .route-nav [data-chapter]')];
+  check('every current-route chapter has reading and review icons',routeLinks.length>0&&routeLinks.every(link=>
+    link.querySelector('.route-statuses .route-reading-status')&&link.querySelector('.route-statuses .route-review-status')));
+  const routeLink=id=>routeLinks.find(link=>link.dataset.chapter===id);
+  check('sidebar statuses use prerequisites and human-review catalog data',
+    routeLink('Base.Prelude')?.querySelector('.route-reading-status.is-available')&&
+    routeLink('Base.Prelude')?.querySelector('.route-review-status.is-reviewed')&&
+    routeLink('FOL.ZFStructure')?.querySelector('.route-reading-status.is-pending')&&
+    routeLink('FOL.ZFStructure')?.querySelector('.route-review-status.is-unreviewed'));
   check('graph title matches tab',doc.querySelector('#tab-dependency-map').textContent===root.querySelector('h2').textContent);
   check('namespace default with every chapter',button('[data-depmap-layout]').value==='namespace'&&canvas.querySelectorAll('.depmap-node').length===120);
   check('secondary controls folded',!root.querySelector('.depmap-options').open);
@@ -41,7 +50,7 @@
   button('[data-depmap-fullscreen]').click();await delay(100);check('390px full-screen graph remains usable',canvas.clientHeight>=180&&doc.querySelector('dialog[open]').scrollWidth<=win.innerWidth+1);button('[data-depmap-fullscreen]').click();
   doc.querySelector('#tab-milestones').click();await delay(80);
   check('Origin uses site brand for heading and document title',doc.querySelector('h1').textContent==='Bedrock' && doc.title==='Bedrock');
-  check('Origin tagline is plain text, not a definition',doc.querySelector('.book-tagline').textContent==='为 𝑉 的形而上学奠基。' && !doc.querySelector('.book-tagline a'));
+  check('Origin tagline is plain text, not a definition',doc.querySelector('.book-tagline').textContent==='为 𝑉 的形而上学奠基' && !doc.querySelector('.book-tagline a'));
   check('homepage lead replaces guide instructions',!doc.querySelector('[data-home-intro]').hidden && doc.querySelector('[data-guide-intro]').hidden);
   for (const panel of ['reading-explorer','dependency-map','term-glossary']) {
     doc.querySelector('#tab-'+panel).click();
