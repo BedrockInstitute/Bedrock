@@ -13,14 +13,36 @@
   check('interactive contents title',doc.querySelector('h1').textContent==='交互式目录');
   check('module tree removed, current route retained',!doc.querySelector('.modnav')&&doc.querySelector('.current-route'));
   const routeLinks=[...doc.querySelectorAll('.current-route .route-nav [data-chapter]')];
-  check('every current-route chapter has reading and review icons',routeLinks.length>0&&routeLinks.every(link=>
-    link.querySelector('.route-statuses .route-reading-status')&&link.querySelector('.route-statuses .route-review-status')));
   const routeLink=id=>routeLinks.find(link=>link.dataset.chapter===id);
+  const routeStatus=id=>routeLink(id)?.parentElement.querySelector('.route-statuses');
+  check('every current-route chapter has reading and review icons',routeLinks.length>0&&routeLinks.every(link=>
+    link.parentElement.querySelector('.route-statuses .route-reading-status')&&
+    link.parentElement.querySelector('.route-statuses .route-review-status')&&
+    !link.contains(link.parentElement.querySelector('.route-statuses'))));
+  check('review icon comes before reading icon in each route link',routeLinks.every(link=>
+    [...link.parentElement.querySelector('.route-statuses').children].map(icon=>icon.classList[0]).join('|')===
+    'route-review-status|route-reading-status'));
+  check('status buttons are outside chapter link hit regions',routeLinks.every(link=>{
+    const buttons=[...link.parentElement.querySelectorAll('.route-statuses > button')];
+    return buttons.length===2&&link.getBoundingClientRect().right<=buttons[0].getBoundingClientRect().left;
+  }));
   check('sidebar statuses use prerequisites and human-review catalog data',
-    routeLink('Base.Prelude')?.querySelector('.route-reading-status.is-available')&&
-    routeLink('Base.Prelude')?.querySelector('.route-review-status.is-reviewed')&&
-    routeLink('FOL.ZFStructure')?.querySelector('.route-reading-status.is-pending')&&
-    routeLink('FOL.ZFStructure')?.querySelector('.route-review-status.is-unreviewed'));
+    routeStatus('Base.Prelude')?.querySelector('.route-reading-status.is-available')&&
+    routeStatus('Base.Prelude')?.querySelector('.route-review-status.is-reviewed')&&
+    routeStatus('FOL.ZFStructure')?.querySelector('.route-reading-status.is-pending')&&
+    routeStatus('FOL.ZFStructure')?.querySelector('.route-review-status.is-unreviewed'));
+  if(win.matchMedia('(hover: hover) and (pointer: fine)').matches){
+    check('sidebar status hover help is localized',
+      win.getComputedStyle(routeStatus('Base.Prelude').querySelector('.route-review-status'),'::after').content==='"已人工校阅"'&&
+      win.getComputedStyle(routeStatus('Base.Prelude').querySelector('.route-reading-status'),'::after').content==='"可以开始"');
+  }
+  const reviewButton=routeStatus('Base.Prelude').querySelector('.route-review-status');
+  const currentUrl=win.location.href;
+  reviewButton.click();
+  check('status tap opens help without chapter navigation',reviewButton.classList.contains('is-tip-open')&&
+    win.getComputedStyle(reviewButton,'::after').visibility==='visible'&&win.location.href===currentUrl);
+  doc.querySelector('article').click();
+  check('outside tap closes status help',!reviewButton.classList.contains('is-tip-open'));
   check('graph title matches tab',doc.querySelector('#tab-dependency-map').textContent===root.querySelector('h2').textContent);
   check('namespace default with every chapter',button('[data-depmap-layout]').value==='namespace'&&canvas.querySelectorAll('.depmap-node').length===120);
   check('secondary controls folded',!root.querySelector('.depmap-options').open);
