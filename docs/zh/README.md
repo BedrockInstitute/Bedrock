@@ -5,7 +5,7 @@
 [English](../../README.md) · **中文** · [日本語](../ja/README.md)
 
 [![CI](https://github.com/BedrockInstitute/Bedrock/actions/workflows/ci.yml/badge.svg)](https://github.com/BedrockInstitute/Bedrock/actions/workflows/ci.yml)
-![Status: early](https://img.shields.io/badge/status-early-orange)
+![Status: first goal proved](https://img.shields.io/badge/first%20goal-L%20%E2%8A%A8%20GCH%20proved-brightgreen)
 [![Agda](https://img.shields.io/badge/Agda-2.8.0-blue)](https://github.com/agda/agda)
 [![cubical](https://img.shields.io/badge/cubical-0.9-blue)](https://github.com/agda/cubical)
 [![Content: CC BY-NC-SA 4.0](https://img.shields.io/badge/content-CC%20BY--NC--SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
@@ -22,13 +22,15 @@
 
 > **`L` ⊨ GCH**，其中 `L` 是在以高阶归纳类型实现的累积层级 `V` 之上构造的可构造层级。这是一个宿主内部的语义定理。
 
-**它已经证成。**`L⊨GCH` 与 `L⊨ZFC` 都陈述在 [src/Milestones.lagda.md](../../src/Milestones.lagda.md) 中，各自只依赖 `LEM (ℓ-suc ℓ)`，不多不少：内部基数、内部单射、模型自身的幂集。证明项是 `src/L/GCH/Theorem.lagda.md` 中的 `L⊨GCH`。
+**它已经证成。**`L⊨GCH` 与 `L⊨ZFC` 都陈述在 [src/Origin.lagda.md](../../src/Origin.lagda.md) 中，各自只依赖 `LEM (ℓ-suc ℓ)`，不多不少：内部基数、内部单射、模型自身的幂集。证明项是 `src/L/GCH/Theorem.lagda.md` 中的 `L⊨GCH`。
 
 内容是哥德尔 1938 年的结果，但证明路线不是教科书上的那条，此前也没有人针对 GCH 走过这条路线。它适合作为第一个目标，因为它会演练本项目其余部分所需的整个基础层：深嵌入的一阶语言、累积层级、`L`，以及双语义机制；同时，它从第一行起就贯彻了下文那套宿主语言最大化的进路。把它做对，其余一切所依赖的基础设施也就得到了校准。
 
-截至 2026-09-08：**26,587 行非空 Agda 代码 · 清空项目缓存后的类型检查 212.06 秒 (保留 Cubical 缓存) · 峰值内存 1.62 GiB。**
+截至 2026-09-22：**25,931 行非空 Agda 代码 · 清空项目缓存后的类型检查 203.17 秒 (保留 Cubical 缓存) · 峰值内存 1.57 GiB。**
 
-121 个章节构成有向无环依赖图，共 1,605 条直接导入边、230 条骨架边，最长链含 31 个模块。
+截至 2026-09-24，源码依赖图包含 120 个章节、1,511 条不重复的直接导入边和 227 条传递约简边，最长链含 31 个模块；这些计数未应用网站的枢纽与预览过滤。
+
+这些是注明日期的测量记录，不代表当前版本的性能或验收结果。需要重新测量时，请使用 `make typecheck-cold` 和 [脚本说明](../../scripts/README.md) 中的源码统计命令。
 
 ## 方向
 
@@ -58,7 +60,7 @@ Cubical 类型论是当代类型论的前沿，是当下正被书写的数学基
 
 ## 作者声明
 
-本项目的所有内容均由 AI 辅助完成，但每一行都经作者逐字审阅，本文档亦不例外。
+本项目的所有内容均由 AI 辅助完成，但每一行都经作者逐字校阅，本文档亦不例外。
 
 ## 依赖
 
@@ -70,7 +72,31 @@ Cubical 类型论是当代类型论的前沿，是当下正被书写的数学基
 | [cubical](https://github.com/agda/cubical) | 0.9 |
 | [Python](https://www.python.org) | 3.11+ |
 
-`make check` (类型检查、四个检查器、阅读顺序检查及门禁单元测试) 与站点构建需要 Python 3.11+。开发工具 (`reuse` 检查器) 的版本固定在 [requirements-dev.txt](../../requirements-dev.txt) 中，由 `make venv` 安装到本地虚拟环境，每个克隆运行一次即可。每次推送都会经 [GitHub Actions](../../.github/workflows/ci.yml) 针对上述版本进行类型检查。
+`make check` (类型检查、源码与教材检查，以及两套测试) 与站点构建需要 Python 3.11+。开发工具 (`reuse` 检查器) 的版本固定在 [requirements-dev.txt](../../requirements-dev.txt) 中，由 `make venv` 安装到本地虚拟环境。[GitHub Actions](../../.github/workflows/ci.yml) 在每次推送时运行 lint 与测试。确认仅修改说明文档时，跳过 Agda 检查和网站部署；其他改动及手动运行仍保留完整检查。
+
+首次克隆后，请先安装 GHC/Cabal、`make`、`patch` 和 Python 3.11+，再初始化固定版本的子模块并安装工具链：
+
+```sh
+git submodule update --init --recursive
+make bootstrap
+make check
+```
+
+`make bootstrap` 在 `_build/` 中构建本地编译器并安装固定版本的 Cubical，不修改用户的全局 Agda 配置。纯类型检查与网站语义数据使用独立缓存。`make typecheck-cold` 是保留 Cubical 缓存的单进程基线；`make typecheck-cold-parallel AGDA_JOBS=2` 衡量并行检查，`make html-cold` 衡量包含高亮和类型数据的编译过程。不要混用这些计时结果。
+
+## 网站框架
+
+可选的 `outcrop-agda` 编译器插桩、构建、类型数据导出与并行调度也由 Outcrop 提供。Bedrock 只保留 [库依赖锁定](../../site/agda-libraries.json)、入口模块、数学检查与本项目的资源及部署配置；见 [工具链说明](../../site/AGDA-ENVIRONMENT.md)。普通 Markdown 渲染不需要安装 Agda。
+
+网站采用 [Outcrop](https://github.com/BedrockInstitute/Outcrop)，由 `outcrop/` 子模块固定版本。**Outcrop Core** 渲染 Markdown 与可选的编译器语义数据；**Outcrop Site** 提供完整交互式教材，包括学习路线、依赖图、多语搜索、类型提示与定义弹窗、外观设置、Ask AI 和可复用检查规则。Bedrock 通过 [site/project.json](../../site/project.json) 提供正文、目录、术语、品牌和数学政策。
+
+初始化子模块后，`make venv` 会安装本地框架包；已有虚拟环境也可运行 `.venv/bin/python -m pip install -e ./outcrop`。随后用 `make site` 构建、`make serve` 预览。详见 [实例说明](../../site/README.md) 与 [Outcrop 架构](../../outcrop/docs/ARCHITECTURE.md)。其他教材可以复用同一框架，无须复制 Bedrock 的数学内容或网站实现。
+
+[site/](../../site/README.md) 保存长期维护的配置、编写规范、术语、阅读元数据与品牌资产。[dev/](../../dev/README.md) 仅保存研究工作材料和临时开发内容，并在相关任务结束后清理。
+
+[src/](../../src/README.md) 保存三语证明与文学主文件，[docs/](../README.md) 保存面向读者的项目文档。[scripts/](../../scripts/README.md) 列出 Bedrock 的检查、命令适配器、Git 钩子和浏览器测试。CI 与部署说明位于 [.github/workflows/](../../.github/workflows/README.md)。
+
+`make check` 不构建网站，也不进行浏览器验收。网站改动后，需要通过已安装的 Python 环境运行 `outcrop check-links` 和 `outcrop check-search` 检查新输出，再测试受影响的浏览器交互。`make milestone-lint` 另行检查 Origin 闭包。共享改动先在 Outcrop 提交并发布，再由 Bedrock 记录新的子模块版本。
 
 ## 贡献
 
@@ -80,10 +106,12 @@ AI agent 以 [AGENTS.md](../../AGENTS.md) 的唯一规则集为准，人类贡�
 
 Bedrock 采用多重许可；逐文件的条款在 [`REUSE.toml`](../../REUSE.toml) 中声明，并由 `reuse lint` 验证。简而言之：
 
-- **[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)**：数学、文稿与品牌标识 (`src/`、`docs/`、`README`、`site/static/assets/`)。
-- **[AGPL-3.0-only](https://www.gnu.org/licenses/agpl-3.0.html)**：其余所有第一方代码与配置，含内嵌的 [1lab](https://1lab.dev) 前端。
-- **[OFL-1.1](https://openfontlicense.org)**：自托管网页字体 (`site/static/fonts/`)。
+- **[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)**：数学、文稿、编写规范与元数据、品牌资产，具体范围见 `REUSE.toml`。
+- **[AGPL-3.0-only](https://www.gnu.org/licenses/agpl-3.0.html)**：第一方软件及适用此许可的配置。Outcrop 单独维护其第三方署名。
+- **[OFL-1.1](https://openfontlicense.org)**：Outcrop 提供的自托管网页字体 (`outcrop/src/outcrop/site/resources/static/fonts/`)。
 
 完整许可文本见 [`LICENSES/`](../../LICENSES/)；第三方署名与 AGPL 第 13 条对应源代码声明见 [NOTICE](../../NOTICE)。
+
+Outcrop 独立维护逐文件许可及继承的第三方资源和字体署名。
 
 © 2026 Bedrock Institute。

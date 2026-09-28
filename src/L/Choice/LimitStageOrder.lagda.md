@@ -1,3 +1,7 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # The limit-stage order inside L
 <!--zh-->
@@ -6,41 +10,9 @@
 # L の内部にある極限段階の順序
 <!--/-->
 
-<!--en-->
-An external strict well-order on the members of `Lset ω`{.Agda} is already
-available. The question here is how its comparison can be used by formulas
-inside `L`. The answer will pass through three distinct forms: a meta-level
-comparison, an object-language description of that comparison, and, once the
-finite-stage description has been supplied, a constructible set realizing the
-described relation.
-<!--zh-->
-`Lset ω`{.Agda} 的诸成员在外部已经带有严格良序。本章的问题是：怎样让 `L`内部的公式使用这个比较？答案要依次经过三种彼此有别的形态：元层面的比较、对象语言中对该比较的描述，以及在有穷层描述已经给出后实现该关系的可构造集合。
-<!--ja-->
-`Lset ω`{.Agda} の要素には、外側ですでに狭義整列順序が与えられている。ここでの問いは、その比較を `L` の内部の論理式からどのように使えるようにするかである。答えは三つの異なる形を順に通る。メタ水準の比較、その比較の対象言語による記述、そして有限段階の記述が与えられた後に、その関係を実現する構成可能集合である。
-<!--/-->
-
-```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-```
-
-<!--en-->
-All constructions are relative to one explicit instance of excluded middle at
-level `ℓ-suc ℓ`. Earlier work used this hypothesis to obtain the least finite
-stage at which a limit-stage member appears, and the present chapter also passes
-it to the separation and bounding results it uses. This hypothesis decides
-propositions when those constructions require it; it does not provide a choice
-function for an arbitrary family.
-<!--zh-->
-本章的全部构造都相对于层级 `ℓ-suc ℓ` 上一个显式的排中律实例。前文已用这条假设取得极限层成员首次出现的最小有穷层，本章还把同一实例传给所用的分离结果与取界结果。它在这些构造需要时判定命题，却不为任意集合族提供选择函数。
-<!--ja-->
-この章のすべての構成は、レベル `ℓ-suc ℓ` における一つの明示的な排中律の実例に相対している。先の章では、この仮定から極限段階の要素が最初に現れる有限段階を得た。この章では、用いる分出と上界の結果にも同じ実例を渡す。この仮定は必要な箇所で命題を判定するが、任意の族に対する選択関数を与えない。
-<!--/-->
-
 ```agda
 open import Base.Prelude
 open import Base.Classical using ( LEM )
-
 ```
 
 <!--en-->
@@ -58,8 +30,60 @@ provide that instance and expose `codeOrder`{.Agda} for subsequent use.
 
 ```agda
 module L.Choice.LimitStageOrder {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-
 ```
+
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax using
+  ( Formula; var; con; _∈̇_; _∧̇_; _∨̇_; ¬̇_; _⇒̇_; ∃̇_; ∀̇_; ∀̇∈ )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Coding {ℓ} using ( pr; pr-inj; #mono; #-inj′ )
+open import L.Constructible {ℓ}
+  using ( 𝒮ʟ; isL; isL-trans; Lset; Lset→isL; IsOrd )
+open import L.Ordinal {ℓ} using ( numeral-ord; #∈ω; ∈#-elim; #∈#-elim; ω-ord )
+open import L.Axioms.Basic {ℓ} using ( LsetS )
+open import L.Axioms.Infinity {ℓ} lem using ( ωʟ )
+open import L.Axioms.Full {ℓ} lem using ( hasSeparationL )
+open import L.Recursion {ℓ} lem using ( smallDom )
+open import L.Coding.Model {ℓ} using ( appAt; appAt-adequate; prAtL; prAtL-adequate; prʟ; prʟ-fst )
+open import L.Coding.Expressions {ℓ} using ( numL )
+open import L.Coding.HierarchySequence {ℓ} lem using ( LsetGraphAt )
+open import L.Hierarchy {ℓ} lem using ( Lset-only; Lset-defines )
+open import L.Choice.FiniteStageOrders {ℓ} lem
+  using ( Limit; level; level-in; levelData; limitOrder
+        ; before; precedes; Agrees; Witness; finiteStage )
+open import L.Choice.NameComparison {ℓ} lem using ( module Adequacy )
+open import L.WellOrder.Base {ℓ-suc ℓ} using ( SWO; Tri; lt; eq; gt )
+import FOL.Absoluteness
+```
+
+<!--en-->
+An external strict well-order on the members of `Lset ω`{.Agda} is already
+available. The question here is how its comparison can be used by formulas
+inside `L`. The answer will pass through three distinct forms: a meta-level
+comparison, an object-language description of that comparison, and, once the
+finite-stage description has been supplied, a constructible set realizing the
+described relation.
+<!--zh-->
+`Lset ω`{.Agda} 的诸成员在外部已经带有严格良序。本章的问题是：怎样让 `L`内部的公式使用这个比较？答案要依次经过三种彼此有别的形态：元层面的比较、对象语言中对该比较的描述，以及在有穷层描述已经给出后实现该关系的可构造集合。
+<!--ja-->
+`Lset ω`{.Agda} の要素には、外側ですでに狭義整列順序が与えられている。ここでの問いは、その比較を `L` の内部の論理式からどのように使えるようにするかである。答えは三つの異なる形を順に通る。メタ水準の比較、その比較の対象言語による記述、そして有限段階の記述が与えられた後に、その関係を実現する構成可能集合である。
+<!--/-->
+
+<!--en-->
+All constructions are relative to one explicit instance of excluded middle at
+level `ℓ-suc ℓ`. Earlier work used this hypothesis to obtain the least finite
+stage at which a limit-stage member appears, and the present chapter also passes
+it to the separation and bounding results it uses. This hypothesis decides
+propositions when those constructions require it; it does not provide a choice
+function for an arbitrary family.
+<!--zh-->
+本章的全部构造都相对于层级 `ℓ-suc ℓ` 上一个显式的排中律实例。前文已用这条假设取得极限层成员首次出现的最小有穷层，本章还把同一实例传给所用的分离结果与取界结果。它在这些构造需要时判定命题，却不为任意集合族提供选择函数。
+<!--ja-->
+この章のすべての構成は、レベル `ℓ-suc ℓ` における一つの明示的な排中律の実例に相対している。先の章では、この仮定から極限段階の要素が最初に現れる有限段階を得た。この章では、用いる分出と上界の結果にも同じ実例を渡す。この仮定は必要な箇所で命題を判定するが、任意の族に対する選択関数を与えない。
+<!--/-->
+
+
 
 <!--en-->
 The object language must describe comparisons without confusing syntax with
@@ -78,14 +102,6 @@ comparison of finite indices.
 対象言語は、構文と階層における意味を混同せずに比較を記述しなければならない。論理式は変数、定数、所属、結合子、量化子を使う。定数領域は構成可能な台なので、定数はすでに特定の構成可能集合を指す。後で必要となる二つの基本的な判定は、符号化の補題から得られる。順序対の等式は二つの成分を決定し、数項の符号化も単射である。さらに `#mono`{.Agda} は `k < m` を、`# k`{.Agda} が `# m`{.Agda} に属するという事実へ移す。したがって集合論的所属は、有限添字の狭義比較を忠実に表せる。
 <!--/-->
 
-```agda
-open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using
-  ( Formula; var; con; _∈̇_; _∧̇_; _∨̇_; ¬̇_; _⇒̇_; ∃̇_; ∀̇_; ∀̇∈ )
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-open import V.Coding {ℓ} using ( pr; pr-inj; #mono; #-inj′ )
-```
-
 <!--en-->
 The intended structure is the constructible universe. An element of its carrier
 packages a set with evidence of constructibility, and transitivity supplies the
@@ -103,14 +119,6 @@ then allow formulas to refer to this hierarchy from inside the structure.
 `Lset ω`{.Agda} である。数項と順序数に関する事実により、添字と、それが名指す段階を区別できる。包装された段階と定数 `ωʟ`{.Agda} によって、論理式は構造の内部からこの階層について語れる。
 <!--/-->
 
-```agda
-open import L.Constructible {ℓ}
-  using ( 𝒮ʟ; isL; isL-trans; Lset; Lset→isL; IsOrd )
-open import L.Ordinal {ℓ} using ( numeral-ord; #∈ω; ∈#-elim; #∈#-elim; ω-ord )
-open import L.Axioms.Basic {ℓ} using ( LsetS )
-open import L.Axioms.Infinity {ℓ} lem using ( ωʟ )
-```
-
 <!--en-->
 Three bridges turn a semantic comparison into a set of `L`. First,
 `smallDom`{.Agda} puts a small family inside one common constructible set, but
@@ -125,14 +133,6 @@ domain from the problem of stating the exact relation on that domain.
 <!--ja-->
 三つの橋によって、意味論上の比較を `L` の集合へ変える。まず `smallDom`{.Agda} は、小さな族を一つの共通な構成可能集合に入れるが、その上界が族の像と一致するとは主張しない。次に分出は、その上界から一変数の論理式を満たす要素だけを正確に取り出す。最後に、順序対、関係への所属、階層列を記述する符号化論理式には、充足を対応する集合の事実へ移す妥当性の法則がある。これらにより、共通の領域を見つける問題と、その領域上で正確な関係を述べる問題を分けて扱える。
 <!--/-->
-
-```agda
-open import L.Axioms.Full {ℓ} lem using ( hasSeparationL )
-open import L.Recursion {ℓ} lem using ( smallDom )
-open import L.Coding.Model {ℓ} using ( appAt; appAt-adequate; prAtL; prAtL-adequate; prʟ; prʟ-fst )
-open import L.Coding.Expressions {ℓ} using ( numL )
-open import L.Coding.HierarchySequence {ℓ} lem using ( LsetGraphAt )
-```
 
 <!--en-->
 The comparison to be represented is already defined externally. At a successor
@@ -155,14 +155,6 @@ have exactly the form required by `Adequacy.Keys`{.Agda}.
 表現すべき比較は、外側ですでに定義されている。後続段階では、`before (suc n)`{.Agda} が `before n`{.Agda} によってより前の点を並べ、`finiteStage n`{.Agda} の二つの部分集合を最初の相違で比較する。`precedes R A x y`{.Agda} の証人は `A` に属し、`y` に属して `x` には属さず、より前のすべての点で `x` と `y` が一致することを記録する。その存在は命題的に切り詰められている。型 `Limit`{.Agda} は `Lset ω`{.Agda} の要素を包装し、その最小出現段階が `limitOrder`{.Agda} の第一の鍵になる。対応する `before`{.Agda} の比較を使うのは、段階が等しい場合だけである。得られる関係集合の二つの表現方向は、`Adequacy.Keys`{.Agda} が要求する形に正確に一致する。
 <!--/-->
 
-```agda
-open import L.Hierarchy {ℓ} lem using ( Lset-only; Lset-defines )
-open import L.Choice.FiniteStageOrders {ℓ} lem
-  using ( Limit; level; level-in; levelData; limitOrder
-        ; before; precedes; Agrees; Witness; finiteStage )
-open import L.Choice.NameComparison {ℓ} lem using ( module Adequacy )
-```
-
 <!--en-->
 The order `limitOrder`{.Agda} is available as an `SWO`{.Agda} bundle: besides
 its comparison it provides trichotomy, irreflexivity, transitivity and
@@ -176,11 +168,6 @@ transitivity refute the incompatible branches.
 <!--ja-->
 `limitOrder`{.Agda} は `SWO`{.Agda} の構造として与えられている。比較そのものに加え、三分性、非反射性、推移性、整礎性を備える。内部化の議論はこれらの法則を証明し直さない。後では、最初の三つを一つの目的に使う。対象言語の選言から読み戻せるのが命題的に切り詰められた狭義比較だけであるとき、三分性が候補となる枝を示し、非反射性と推移性が両立しない枝を退ける。
 <!--/-->
-
-```agda
-open import L.WellOrder.Base {ℓ-suc ℓ} using ( SWO; Tri; lt; eq; gt )
-
-```
 
 <!--en-->
 The limit comparison has the lexicographic shape needed later. Its first
@@ -200,7 +187,6 @@ truncation.
 <!--/-->
 
 ```agda
-import FOL.Absoluteness
 open import Cubical.Data.Nat.Order using ( _<_; _≟_ )
 import Cubical.Data.Nat.Order as NatOrder
 ```
@@ -245,7 +231,6 @@ contain every one of these pairs; exactness will come only after separation.
   using ( ⟪_⟫; ⟪_⟫↪; ∈-asFiber; ∈∈ₛ; ∈ₛ⟪_⟫↪_ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( module InfinitySet )
 open InfinitySet using ( #_; ω )
-
 ```
 
 <!--en-->
@@ -266,7 +251,6 @@ well-ordered.
 
 ```agda
 open hPropStructure 𝒮ʟ
-
 ```
 
 <!--en-->
@@ -287,7 +271,6 @@ formula to ordinary membership facts about its underlying sets.
 ```agda
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
 open AbsL renaming ( _⊨ᵐ_ to _⊨_ )
-
 ```
 
 <!--en-->
@@ -309,7 +292,6 @@ required finite-stage formula and thereby obtains the usable instance.
 
 ```agda
 open SWO limitOrder using () renaming ( _<∙_ to _≺ˡ_ )
-
 ```
 
 <!--en-->
@@ -349,7 +331,6 @@ mathematical assumption is added.
 opaque
   towerS : ℕ → S
   towerS k = LsetS (# k) (numeral-ord k)
-
 ```
 
 <!--en-->
@@ -369,7 +350,6 @@ those views.
 ```agda
   towerS-fst : (k : ℕ) → fst (towerS k) ≡ Lset (# k)
   towerS-fst k = refl
-
 ```
 
 <!--en-->
@@ -388,7 +368,6 @@ objects through the hierarchy-sequence description.
 ```agda
   numS : ℕ → S
   numS k = # k , numL k
-
 ```
 
 <!--en-->
@@ -408,7 +387,6 @@ stages.
 ```agda
   numS-fst : (k : ℕ) → fst (numS k) ≡ # k
   numS-fst k = refl
-
 ```
 
 <!--en-->
@@ -480,7 +458,6 @@ used only with a propositional target and does not select a smaller index.
 
 ```agda
                      ⇒̇ ¬̇ (var (sh2 x) ∈̇ var zero) )) )
-
 ```
 
 <!--en-->
@@ -500,12 +477,18 @@ and later to prove that any level recognized by the formula equals `# k`{.Agda}.
 `LevelAt`{.Agda} の二つの読みを証明するため、実際の極限段階の要素 `a`、自然数 `k`、そして `k` をその最小出現レベルと同定する等式 `qk : level a ≡ k` を固定する。`levelData a`{.Agda} の正の成分を `qk` に沿って運ぶと `aIn`{.Agda} が得られる。これは `a` の基礎集合が `Lset (# k)`{.Agda} に属するという事実である。負の成分は、`m < k` である任意の `m` に対し、`Lset (# m)`{.Agda} への所属が不可能であることを述べる。これらは、論理式が真のレベルを認識するために必要な存在と最小性の事実であり、さらに論理式が認識したどのレベルも `# k`{.Agda} に等しいことを示すために使われる。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Level (a : Limit) (k : ℕ) (qk : level a ≡ k) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     aIn : ⟨ fst a ∈ Lset (# k) ⟩
     aIn = subst (λ j → ⟨ fst a ∈ Lset (# j) ⟩) qk (level-in a)
-
 ```
 
 <!--en-->
@@ -530,7 +513,6 @@ propositional truncation is involved.
     aMin : (m : ℕ) → ⟨ fst a ∈ Lset (# m) ⟩ → m < k → ⊥₀
     aMin m h hm = levelData a .snd .snd m h
       (lift (subst (λ j → m < j) (sym qk) hm))
-
 ```
 
 <!--en-->
@@ -547,8 +529,15 @@ the value of `x` belongs to the underlying set of `c`. The private type
 `LevelAt`{.Agda} の二つの読みは、任意の環境にある任意の位置 `b` と`x` について証明される。外向きに論理式を読むためには、存在量化が隠している情報に名前を付けると便利である。それは、`b` の値において階層のグラフを満たす台の要素 `c` と、`x` の値が `c` の基礎集合に属するという証明である。私的な型 `Body`{.Agda} は、命題的切り詰めを施す前のこの証人データにほかならない。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
   module _ {n : ℕ} (b x : Fin n) (γ : S ^ n) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
     private
       Body : S → Type (ℓ-suc ℓ)
       Body c = ⟨ (c ∷ γ) ⊨ LsetGraphAt zero (suc b) ⟩
@@ -570,7 +559,6 @@ established separately.
 <!--/-->
 
 ```agda
-
     LevelAt-in : fst (lookup b γ) ≡ # k → fst (lookup x γ) ≡ fst a
                → ⟨ γ ⊨ LevelAt b x ⟩
     LevelAt-in qb qx = hω , (hex , hmin)
@@ -593,7 +581,6 @@ position.
 
 ```agda
       hω = subst (λ u → ⟨ u ∈ ω ⟩) (sym qb) (#∈ω k)
-
 ```
 
 <!--en-->
@@ -633,7 +620,6 @@ and completes the existential witness under propositional truncation.
 
 ```agda
           (subst (λ u → ⟨ u ∈ Lset (# k) ⟩) (sym qx) aIn)
-
 ```
 
 <!--en-->
@@ -675,7 +661,7 @@ its existential witness; the hierarchy graph determines the finite stage.
 <!--/-->
 
 ```agda
-        step : Σ[ m ∈ ℕ ] ((m < k) × (fst u ≡ # m)) → ⊥₀
+        step : Σ[ m ∶ ℕ ] ((m < k) × (fst u ≡ # m)) → ⊥₀
         step (m , (hm , qu)) = aMin m inStage hm
           where
           qc : fst c ≡ Lset (fst u)
@@ -723,7 +709,6 @@ truncated numeral data may be eliminated into it.
 <!--/-->
 
 ```agda
-
     LevelAt-out : ⟨ γ ⊨ LevelAt b x ⟩ → fst (lookup x γ) ≡ fst a
                 → fst (lookup b γ) ≡ # k
     LevelAt-out (hω , (hex , hmin)) qx =
@@ -777,7 +762,6 @@ member of the same finite stage.
 ```agda
         (subst (λ w → ⟨ fst (lookup x γ) ∈ w ⟩) (sym (towerS-fst k))
           (subst (λ w → ⟨ w ∈ Lset (# k) ⟩) (sym qx) aIn)))
-
 ```
 
 <!--en-->
@@ -798,7 +782,7 @@ type; each explicit witness will force `a` to occur at stage `m`.
       notBelow : (m : ℕ) → fst (lookup b γ) ≡ # m → m < k → ⊥₀
       notBelow m qb hm = rec₁ isProp⊥ atTower hex
         where
-        atTower : Σ[ c ∈ S ] Body c → ⊥₀
+        atTower : Σ[ c ∶ S ] Body c → ⊥₀
         atTower (c , (hg , hmem)) = aMin m inStage hm
 ```
 
@@ -844,7 +828,6 @@ below the true level.
           inStage : ⟨ fst a ∈ Lset (# m) ⟩
           inStage = subst (λ w → ⟨ w ∈ Lset (# m) ⟩) qx
             (subst (λ w → ⟨ fst (lookup x γ) ∈ w ⟩) qc hmem)
-
 ```
 
 <!--en-->
@@ -862,7 +845,7 @@ map and composing equalities yields the required value
 <!--/-->
 
 ```agda
-      named : Σ[ j ∈ Lift ℕ ] (# (lower j) ≡ fst (lookup b γ))
+      named : Σ[ j ∶ Lift ℕ ] (# (lower j) ≡ fst (lookup b γ))
             → fst (lookup b γ) ≡ # k
       named (j , qj) = qb ∙ cong #_ (decide (lower j ≟ k))
         where
@@ -891,6 +874,11 @@ reported by that formula for the fixed member `a` must be its true level.
         decide (NatOrder.eq e) = e
         decide (NatOrder.gt h) = ⊥₀-rec (notAbove (lower j) qb h)
 ```
+</div>
+</details>
+
+</div>
+</details>
 
 <!--en-->
 ## The earliest disagreement, said inside
@@ -917,7 +905,6 @@ of the dependent carrier, not a set-theoretic ordered pair.
 opaque
   memS : (A : S) (z : V ℓ) → ⟨ z ∈ fst A ⟩ → S
   memS A z h = z , isL-trans {x = fst A} {y = z} h (snd A)
-
 ```
 
 <!--en-->
@@ -935,7 +922,6 @@ it represents without unfolding the package.
 ```agda
   memS-fst : (A : S) (z : V ℓ) (h : ⟨ z ∈ fst A ⟩) → fst (memS A z h) ≡ z
   memS-fst A z h = refl
-
 ```
 
 <!--en-->
@@ -968,7 +954,7 @@ asks whether the set-theoretic pair of `w` and `z` belongs to the relation set
 stored at `r`. The existential binder for `z` and the universal binder for
 `w` account for the two-position shift applied to the older variables.
 <!--zh-->
-这个见证还必须是关系 `r` 所判定的最先分歧点。对载体 `A` 中的每个 `w`，若该关系把 `w` 排在 `z` 之前，则 `w` 属于 `x` 与属于 `y` 必须双向一致。公式通过 `appAt`{.Agda} 查阅关系；在语义上，这询问由 `w` 与 `z` 组成的集合论有序对是否属于存放在 `r` 的关系集。约束 `z` 的存在量词与约束 `w` 的全称量词，正好说明旧变量为何要移过两个位置。
+这个见证还必须是关系 `r` 所判定的最先分歧点。对载体 `A` 中的每个 `w`，若该关系把 `w` 排在 `z` 之前，则 `w` 属于 `x` 与属于 `y` 必须双向一致。公式通过 `appAt`{.Agda} 查阅关系；在语义上，这询问由 `w` 与 `z` 组成的集合论有序对是否属于存放在 `r` 的关系集。约束 `z` 的存在量词与约束 `w` 的全称量词，正好说明旧变元为何要移过两个位置。
 <!--ja-->
 この証人はさらに、`r` の関係が定める最初の相違でなければならない。台 `A`の各 `w` について、その関係が `w` を `z` より前に置くなら、`w` の `x` への所属と `y` への所属は両方向で一致しなければならない。論理式は
 `appAt`{.Agda} を通して関係を調べる。意味論的には、`w` と `z` の集合論的な順序対が `r` に格納された関係集合に属するかを問うている。`z` を束縛する存在量化子と `w` を束縛する全称量化子が、以前の変項を二つずらす理由である。
@@ -979,7 +965,6 @@ stored at `r`. The existential binder for `z` and the universal binder for
              ( appAt (sh2 r) zero (suc zero)
              ⇒̇ ( ((var zero ∈̇ var (sh2 x)) ⇒̇ (var zero ∈̇ var (sh2 y)))
                ∧̇ ((var zero ∈̇ var (sh2 y)) ⇒̇ (var zero ∈̇ var (sh2 x))) ) ) ) ) )
-
 ```
 
 <!--en-->
@@ -1001,13 +986,19 @@ is a well-order.
 `R`{.Agda} に順序公理を仮定しない。この論理式は一段階の比較の定義を表すだけであり、特定の関係が整列順序であるという後の証明には依存しない。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Precedes {n : ℕ} (r A x y : Fin n) (γ : S ^ n)
                 (R : V ℓ → V ℓ → hProp (ℓ-suc ℓ))
                 (Rrep : (u v : S) → ⟨ pr (fst u) (fst v) ∈ fst (lookup r γ) ⟩
                       → ⟨ R (fst u) (fst v) ⟩)
                 (Rfill : (u v : S) → ⟨ R (fst u) (fst v) ⟩
+                       → ⟨ pr (fst u) (fst v) ∈ fst (lookup r γ) ⟩)
+                where
 ```
+</summary>
+<div class="submodule-fold-content">
 
 <!--en-->
 Fix the carrier first. Every claim about a point earlier than the disagreement
@@ -1020,8 +1011,6 @@ comparison never ranges beyond the stage on which its base relation acts.
 <!--/-->
 
 ```agda
-                       → ⟨ pr (fst u) (fst v) ∈ fst (lookup r γ) ⟩)
-                where
   private
     Aʟ : S
     Aʟ = lookup A γ
@@ -1038,10 +1027,8 @@ every clause.
 <!--/-->
 
 ```agda
-
     xv : V ℓ
     xv = fst (lookup x γ)
-
 ```
 
 <!--en-->
@@ -1057,7 +1044,6 @@ fails to belong to the left one.
 ```agda
     yv : V ℓ
     yv = fst (lookup y γ)
-
 ```
 
 <!--en-->
@@ -1071,7 +1057,6 @@ Before the first disagreement, the two sets must give the same membership answer
 ```agda
     Both : V ℓ → Type (ℓ-suc ℓ)
     Both w = (⟨ w ∈ xv ⟩ → ⟨ w ∈ yv ⟩) × (⟨ w ∈ yv ⟩ → ⟨ w ∈ xv ⟩)
-
 ```
 
 <!--en-->
@@ -1087,7 +1072,6 @@ For a proposed disagreement witness `z`, `Agreeing z` examines every `w` in the 
     Agreeing z = (w : S) → ⟨ fst w ∈ fst Aʟ ⟩
                → ⟨ (w ∷ z ∷ γ) ⊨ appAt (sh2 r) zero (suc zero) ⟩
                → Both (fst w)
-
 ```
 
 <!--en-->
@@ -1103,7 +1087,6 @@ The witness itself must lie in the carrier and in `yv`, while being absent from 
     Body z = ⟨ fst z ∈ fst Aʟ ⟩
            × ( ⟨ fst z ∈ yv ⟩
              × ( (⟨ fst z ∈ xv ⟩ → Lift {j = ℓ-suc ℓ} ⊥₀) × Agreeing z ) )
-
 ```
 
 <!--en-->
@@ -1119,7 +1102,7 @@ To read the formula outward, eliminate its propositionally truncated existential
                  → ⟨ precedes R (fst Aʟ) xv yv ⟩
   PrecedesAt-out = rec₁ squash₁ atZ
     where
-    atZ : Σ[ z ∈ S ] Body z → ⟨ precedes R (fst Aʟ) xv yv ⟩
+    atZ : Σ[ z ∶ S ] Body z → ⟨ precedes R (fst Aʟ) xv yv ⟩
 ```
 
 <!--en-->
@@ -1180,7 +1163,6 @@ Adequacy for `appAt` converts that pair-membership statement into satisfaction i
 
 ```agda
           (sym (appAt-adequate (sh2 r) zero (suc zero) (wS ∷ z ∷ γ))) hp
-
 ```
 
 <!--en-->
@@ -1196,7 +1178,7 @@ The converse starts with the propositionally truncated witness in `precedes`. Be
                 → ⟨ γ ⊨ PrecedesAt r A x y ⟩
   PrecedesAt-in = rec₁ squash₁ atZ
     where
-    atZ : Σ[ z ∈ V ℓ ] Witness R (fst Aʟ) xv yv z
+    atZ : Σ[ z ∶ V ℓ ] Witness R (fst Aʟ) xv yv z
 ```
 
 <!--en-->
@@ -1274,6 +1256,8 @@ Now `Rrep` reads relation-set membership back as `R (fst w) zS`; transporting th
 ```agda
         hR = subst (λ u → ⟨ R (fst w) u ⟩) qz (Rrep w zS hp)
 ```
+</div>
+</details>
 
 <!--en-->
 ## The order, composed
@@ -1295,7 +1279,6 @@ An element `a : Limit` carries a proof that its underlying set belongs to `Lset 
 opaque
   limitEl : Limit → S
   limitEl a = fst a , Lset→isL ω ω-ord (fst a) (snd a)
-
 ```
 
 <!--en-->
@@ -1309,7 +1292,6 @@ Packaging does not alter the set: projecting `limitEl a` returns `fst a` by defi
 ```agda
   limitEl-fst : (a : Limit) → fst (limitEl a) ≡ fst a
   limitEl-fst a = refl
-
 ```
 
 <!--en-->
@@ -1323,7 +1305,6 @@ To place a relation inside `L`, its related endpoints must be represented by an 
 ```agda
   prS : S → S → S
   prS a b = prʟ a b
-
 ```
 
 <!--en-->
@@ -1337,7 +1318,6 @@ The projection law for `prS` identifies its underlying set with the ambient orde
 ```agda
   prS-fst : (a b : S) → fst (prS a b) ≡ pr (fst a) (fst b)
   prS-fst a b = prʟ-fst a b
-
 ```
 
 <!--en-->
@@ -1349,7 +1329,7 @@ Before separation can select the ordered pairs satisfying the comparison, all ca
 <!--/-->
 
 ```agda
-pairsBound : Σ[ D ∈ S ] ((u v : Limit) → ⟨ pr (fst u) (fst v) ∈ fst D ⟩)
+pairsBound : Σ[ D ∶ S ] ((u v : Limit) → ⟨ pr (fst u) (fst v) ∈ fst D ⟩)
 pairsBound = d .fst , onPair
   where
   ixL : ⟪ Lset ω ⟫ → S
@@ -1366,7 +1346,6 @@ Each presentation index really denotes a member of `Lset ω`. The membership bri
 
 ```agda
     (∈∈ₛ {a = ⟪ Lset ω ⟫↪ m} {b = Lset ω} .snd (∈ₛ⟪ Lset ω ⟫↪ m))
-
 ```
 
 <!--en-->
@@ -1378,10 +1357,9 @@ Applying `smallDom` to this small product produces a constructible set containin
 <!--/-->
 
 ```agda
-  d : Σ[ D ∈ S ] ((p : ⟪ Lset ω ⟫ × ⟪ Lset ω ⟫)
+  d : Σ[ D ∶ S ] ((p : ⟪ Lset ω ⟫ × ⟪ Lset ω ⟫)
                   → ⟨ prʟ (ixL (fst p)) (ixL (snd p)) ∈ˢ D ⟩)
   d = smallDom (⟪ Lset ω ⟫ × ⟪ Lset ω ⟫) (λ p → prʟ (ixL (fst p)) (ixL (snd p)))
-
 ```
 
 <!--en-->
@@ -1411,7 +1389,6 @@ The two fiber witnesses recover exactly the presentation indices used above, tog
 ```agda
     fu = ∈-asFiber {a = fst u} {b = Lset ω} (snd u)
     fv = ∈-asFiber {a = fst v} {b = Lset ω} (snd v)
-
 ```
 
 <!--en-->
@@ -1450,7 +1427,6 @@ eliminated only into contradiction.
     (λ k → SWO.irr∙ limitOrder b (subst (λ t → t ≺ˡ b) q k)) h)
   decide (gt k) = ⊥₀-rec (rec₁ isProp⊥
     (λ j → SWO.irr∙ limitOrder a (SWO.trans∙ limitOrder a b a j k)) h)
-
 ```
 
 <!--en-->
@@ -1464,7 +1440,6 @@ The defining property of `level a` places `fst a` in `finiteStage (level a)`. An
 ```agda
 levelStage : (a : Limit) (k : ℕ) → level a ≡ k → ⟨ fst a ∈ finiteStage k ⟩
 levelStage a k q = subst (λ j → ⟨ fst a ∈ Lset (# j) ⟩) q (level-in a)
-
 ```
 
 <!--en-->
@@ -1478,13 +1453,27 @@ used only when the value at `b` denotes `# m` and the first endpoint lies in
 `Described` は条件つきの枠組みである。`before m` を記述するための論理式 `BeforeAt` と内向きの規則を受け取る。この規則を使えるのは、`b` にある値が `# m` を表し、第一の端点が `finiteStage m` に属する場合に限られる。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Described
   (BeforeAt : ∀ {n} → Fin n → Fin n → Fin n → Formula S n)
   (BeforeAt-in : ∀ {n} (b x y : Fin n) (γ : S ^ n) (m : ℕ)
                → fst (lookup b γ) ≡ # m
                → ⟨ fst (lookup x γ) ∈ finiteStage m ⟩
+               → ⟨ fst (lookup y γ) ∈ finiteStage m ⟩
+               → ⟨ before m (fst (lookup x γ)) (fst (lookup y γ)) ⟩
+               → ⟨ γ ⊨ BeforeAt b x y ⟩)
+  (BeforeAt-out : ∀ {n} (b x y : Fin n) (γ : S ^ n) (m : ℕ)
+                → fst (lookup b γ) ≡ # m
+                → ⟨ fst (lookup x γ) ∈ finiteStage m ⟩
+                → ⟨ fst (lookup y γ) ∈ finiteStage m ⟩
+                → ⟨ γ ⊨ BeforeAt b x y ⟩
+                → ⟨ before m (fst (lookup x γ)) (fst (lookup y γ)) ⟩)
+  where
 ```
+</summary>
+<div class="submodule-fold-content">
 
 <!--en-->
 The inward hypothesis also requires the second endpoint to lie in the same finite stage and requires the actual comparison `before m x y`; from these data it produces satisfaction of `BeforeAt`. Thus the framework does not construct a finite-stage relation or infer its order laws.
@@ -1494,14 +1483,6 @@ The inward hypothesis also requires the second endpoint to lie in the same finit
 内向きの仮定は、第二の端点も同じ有限段階に属することと、実際の比較 `before m x y` が成り立つことをさらに要求し、そこから `BeforeAt` の充足を与える。したがって、この枠組みは有限段階の関係を構成せず、その順序法則も導かない。
 <!--/-->
 
-```agda
-               → ⟨ fst (lookup y γ) ∈ finiteStage m ⟩
-               → ⟨ before m (fst (lookup x γ)) (fst (lookup y γ)) ⟩
-               → ⟨ γ ⊨ BeforeAt b x y ⟩)
-  (BeforeAt-out : ∀ {n} (b x y : Fin n) (γ : S ^ n) (m : ℕ)
-                → fst (lookup b γ) ≡ # m
-```
-
 <!--en-->
 The outward hypothesis has the same numeral and stage boundaries and reads satisfaction back as `before m x y`. Only a formula satisfying both directions can instantiate the framework; the actual `BeforeAt` and hence the resulting `codeOrder` are supplied by `EarliestDisagreement`, not unconditionally at this point.
 <!--zh-->
@@ -1509,14 +1490,6 @@ The outward hypothesis has the same numeral and stage boundaries and reads satis
 <!--ja-->
 外向きの仮定も同じ数項と段階の境界を持ち、充足を `before m x y` として読み戻す。両方向を満たす論理式だけがこの枠組みを具体化できる。実際の `BeforeAt` と、そこから得られる `codeOrder` は `EarliestDisagreement` によって与えられ、この時点で無条件に得られるものではない。
 <!--/-->
-
-```agda
-                → ⟨ fst (lookup x γ) ∈ finiteStage m ⟩
-                → ⟨ fst (lookup y γ) ∈ finiteStage m ⟩
-                → ⟨ γ ⊨ BeforeAt b x y ⟩
-                → ⟨ before m (fst (lookup x γ)) (fst (lookup y γ)) ⟩)
-  where
-```
 
 <!--en-->
 The first branch of `LimitOrdAt` handles unequal levels. It binds two candidate numerals, proves separately that they are the least levels of `x` and `y`, and requires the numeral for `x` to be a member of the numeral for `y`, which expresses strict inequality of natural-number levels.
@@ -1545,7 +1518,6 @@ The second branch handles equal levels by binding one common numeral. Both `Leve
 ```agda
       ∨̇ ∃̇ ( LevelAt zero (suc x)
            ∧̇ ( LevelAt zero (suc y) ∧̇ BeforeAt zero (suc x) (suc y) ) )
-
 ```
 
 <!--en-->
@@ -1560,13 +1532,18 @@ membership.
 この論理式の妥当性を示すため、環境の二つの位置 `x` と `y` を固定し、その値を実際の `u,v : Limit` と同一視する。明示された添字 `ku,kv` と真のレベルとの等式により、自然数の比較、数項の所属、段階への所属の間を明確に移れる。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
   module Order {n : ℕ} (x y : Fin n) (γ : S ^ n)
                (u v : Limit) (ku kv : ℕ)
                (qu : level u ≡ ku) (qv : level v ≡ kv)
                (qx : fst (lookup x γ) ≡ fst u)
                (qy : fst (lookup y γ) ≡ fst v)
+               where
 ```
+</summary>
+<div class="submodule-fold-content">
 
 <!--en-->
 The two `Level` instances provide more than convenient names: each one supplies the verified reading of `LevelAt` for the corresponding actual endpoint and its least level. They are the bridge that rules out spurious numeral witnesses in the outward direction.
@@ -1577,11 +1554,8 @@ The two `Level` instances provide more than convenient names: each one supplies 
 <!--/-->
 
 ```agda
-               where
-    private
-      module Lu = Level u ku qu
-      module Lv = Level v kv qv
-
+    private module Lu = Level u ku qu
+    private module Lv = Level v kv qv
 ```
 
 <!--en-->
@@ -1593,11 +1567,11 @@ The two `Level` instances provide more than convenient names: each one supplies 
 <!--/-->
 
 ```agda
+    private
       Split : S → S → Type (ℓ-suc ℓ)
       Split c d = ⟨ (d ∷ c ∷ γ) ⊨ LevelAt (suc zero) (sh2 x) ⟩
                 × ( ⟨ (d ∷ c ∷ γ) ⊨ LevelAt zero (sh2 y) ⟩
                   × ⟨ fst c ∈ fst d ⟩ )
-
 ```
 
 <!--en-->
@@ -1613,7 +1587,6 @@ The two `Level` instances provide more than convenient names: each one supplies 
       Same c = ⟨ (c ∷ γ) ⊨ LevelAt zero (suc x) ⟩
              × ( ⟨ (c ∷ γ) ⊨ LevelAt zero (suc y) ⟩
                × ⟨ (c ∷ γ) ⊨ BeforeAt zero (suc x) (suc y) ⟩ )
-
 ```
 
 <!--en-->
@@ -1644,7 +1617,6 @@ Strict inequality of natural numbers gives `# ku ∈ # kv` by numeral monotonici
               (numS-fst kv) qy
           , subst2 (λ s t → ⟨ s ∈ t ⟩) (sym (numS-fst ku)) (sym (numS-fst kv))
               (#mono ku kv hlt) )
-
 ```
 
 <!--en-->
@@ -1694,7 +1666,6 @@ Finally, transport the given comparison from index `level u` to `ku` and align i
                 (levelStage v ku (e ∙ qu)))
               (subst2 (λ s t → ⟨ before ku s t ⟩) (sym qx) (sym qy)
                 (subst (λ j → ⟨ before j (fst u) (fst v) ⟩) qu h)) )
-
 ```
 
 <!--en-->
@@ -1725,7 +1696,6 @@ Each numeral identification is obtained in the correct extended environment: the
         qc = Lu.LevelAt-out (suc zero) (sh2 x) (d ∷ c ∷ γ) hx qx
         qd : fst d ≡ # kv
         qd = Lv.LevelAt-out zero (sh2 y) (d ∷ c ∷ γ) hy qy
-
 ```
 
 <!--en-->
@@ -1793,7 +1763,6 @@ The abstract `BeforeAt-out` hypothesis now applies at the numeral represented by
         below = subst (λ j → ⟨ before j (fst u) (fst v) ⟩) (sym qu)
           (subst2 (λ s t → ⟨ before ku s t ⟩) qx qy
             (BeforeAt-out zero (suc x) (suc y) (c ∷ γ) ku qc xIn yIn hb))
-
 ```
 
 <!--en-->
@@ -1812,7 +1781,6 @@ inputs.
 ```agda
     opaque
       unfolding LimitOrdAt
-
 ```
 
 <!--en-->
@@ -1840,12 +1808,10 @@ If the levels agree, a single numeral `# ku` certifies both `LevelAt` statements
 <!--/-->
 
 ```agda
-
         inner-in : (e : level v ≡ level u)
                  → ⟨ before (level u) (fst u) (fst v) ⟩
                  → ⟨ γ ⊨ LimitOrdAt x y ⟩
         inner-in e k = ∣ inr ∣ numS ku , same-in e k ∣₁ ∣₁
-
 ```
 
 <!--en-->
@@ -1874,7 +1840,6 @@ The second external alternative already contains both ingredients needed at a co
 
 ```agda
         decide-in (inr (e , k)) = inner-in e k
-
 ```
 
 <!--en-->
@@ -1889,7 +1854,7 @@ Reading `LimitOrdAt` starts from a propositionally truncated choice of its two b
       LimitOrdAt-out : ⟨ γ ⊨ LimitOrdAt x y ⟩ → ∥ u ≺ˡ v ∥₁
       LimitOrdAt-out = rec₁ squash₁ decide
         where
-        atSplit : (c : S) → Σ[ d ∈ S ] Split c d → ∥ u ≺ˡ v ∥₁
+        atSplit : (c : S) → Σ[ d ∶ S ] Split c d → ∥ u ≺ˡ v ∥₁
         atSplit c (d , hs) = ∣ inl (lift (split-out c d hs)) ∣₁
 ```
 
@@ -1902,10 +1867,8 @@ In the common-level branch, `same-out` returns equality of the actual levels tog
 <!--/-->
 
 ```agda
-
-        atSame : Σ[ c ∈ S ] Same c → ∥ u ≺ˡ v ∥₁
+        atSame : Σ[ c ∶ S ] Same c → ∥ u ≺ˡ v ∥₁
         atSame (c , hs) = ∣ inr (same-out c hs) ∣₁
-
 ```
 
 <!--en-->
@@ -1939,6 +1902,8 @@ Each existential is eliminated only into the propositionally truncated target. T
           (λ { (c , hd) → rec₁ squash₁ (atSplit c) hd }) h
         decide (inr h) = rec₁ squash₁ atSame h
 ```
+</div>
+</details>
 
 <!--en-->
 ## The order, as a set
@@ -1974,7 +1939,6 @@ Within an instance of `Described`, separation applies `Cond₀` to the common bo
   opaque
     codeOrder : S
     codeOrder = hasSeparationL (pairsBound .fst) Cond₀ .fst .fst
-
 ```
 
 <!--en-->
@@ -1989,7 +1953,6 @@ The separation specification is the usable characterization of membership: a can
     codeOrder-mem : (z : S) → (z ∈ˢ codeOrder)
                   ≡ ((z ∈ˢ pairsBound .fst) ⊓ ((z ∷ []) ⊨ Cond₀))
     codeOrder-mem = hasSeparationL (pairsBound .fst) Cond₀ .fst .snd
-
 ```
 
 <!--en-->
@@ -2005,7 +1968,6 @@ For fixed `z`, `c`, and `d`, `Inner` isolates the two facts required by the sepa
     Inner : S → S → S → Type (ℓ-suc ℓ)
     Inner z c d = ⟨ (d ∷ c ∷ z ∷ []) ⊨ prAtL (sh2 zero) (suc zero) zero ⟩
                 × ⟨ (d ∷ c ∷ z ∷ []) ⊨ LimitOrdAt (suc zero) zero ⟩
-
 ```
 
 <!--en-->
@@ -2018,8 +1980,7 @@ For fixed `z`, `c`, and `d`, `Inner` isolates the two facts required by the sepa
 
 ```agda
     Outer : S → Type (ℓ-suc ℓ)
-    Outer z = Σ[ c ∈ S ] ∥ (Σ[ d ∈ S ] Inner z c d) ∥₁
-
+    Outer z = Σ[ c ∶ S ] ∥ (Σ[ d ∶ S ] Inner z c d) ∥₁
 ```
 
 <!--en-->
@@ -2033,7 +1994,6 @@ Given actual components and the two facts in `Inner`, the separating condition i
 ```agda
     cond-in : (z c d : S) → Inner z c d → ⟨ (z ∷ []) ⊨ Cond₀ ⟩
     cond-in z c d hi = ∣ c , ∣ d , hi ∣₁ ∣₁
-
 ```
 
 <!--en-->
@@ -2047,7 +2007,6 @@ Conversely, satisfaction of `Cond₀` already has the truncated nested shape rec
 ```agda
     cond-out : (z : S) → ⟨ (z ∷ []) ⊨ Cond₀ ⟩ → ∥ Outer z ∥₁
     cond-out z h = h
-
 ```
 
 <!--en-->
@@ -2092,7 +2051,6 @@ The alignment equality is obtained in two transparent steps. The projection of t
 
 ```agda
        ∙ cong₂ pr (limitEl-fst u) (limitEl-fst v)
-
 ```
 
 <!--en-->
@@ -2107,7 +2065,6 @@ The first separation obligation uses the defining property of `pairsBound`: it c
     inBound : ⟨ fst (prS (limitEl u) (limitEl v)) ∈ fst (pairsBound .fst) ⟩
     inBound = subst (λ t → ⟨ t ∈ fst (pairsBound .fst) ⟩) (sym qz)
       (pairsBound .snd u v)
-
 ```
 
 <!--en-->
@@ -2135,7 +2092,6 @@ The comparison conjunct is supplied by `LimitOrdAt-in` at the environment contai
 <!--/-->
 
 ```agda
-
     hord : ⟨ (limitEl v ∷ limitEl u ∷ prS (limitEl u) (limitEl v) ∷ [])
           ⊨ LimitOrdAt (suc zero) zero ⟩
     hord = Order.LimitOrdAt-in (suc zero) zero
@@ -2152,7 +2108,6 @@ The reading law starts from membership of `pr (fst u) (fst v)` in `codeOrder`. S
 <!--/-->
 
 ```agda
-
   codeOrder-rep : (u v : Limit)
                 → ⟨ pr (fst u) (fst v) ∈ fst codeOrder ⟩ → u ≺ˡ v
   codeOrder-rep u v h = strictLimit u v
@@ -2185,10 +2140,8 @@ The given membership concerns the external pair, whereas the separating specific
 <!--/-->
 
 ```agda
-
     inSet : ⟨ fst (prS (limitEl u) (limitEl v)) ∈ fst codeOrder ⟩
     inSet = subst (λ t → ⟨ t ∈ fst codeOrder ⟩) (sym qz) h
-
 ```
 
 <!--en-->
@@ -2233,7 +2186,6 @@ Injectivity of ordered-pair coding separates that pair equality into `fst u = fs
 
 ```agda
       split = pr-inj qcd
-
 ```
 
 <!--en-->
@@ -2271,11 +2223,16 @@ does not depend on it.
 `CodeKeys` は、任意の構成可能な台 `A` 上の名前比較で、この条件つきのコード関係を利用する一つの方法を記録する。`A` とその構成可能性の証明に加えて、`A` の要素からなる小さい型上の狭義整列順序 `w` を固定する。名前比較の妥当性の結果は、パラメータには `w` を、コードには現在の `Described` の具体例を使える。この入れ子のモジュールは表現定理から得られる再利用可能な帰結であり、主要な構成はこれに依存しない。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
   module CodeKeys (A : V ℓ) (pA : ⟨ isL A ⟩) (w : SWO ⟪ A ⟫) where
-    private
-      module Ad = Adequacy A pA w
+```
+</summary>
+<div class="submodule-fold-content">
 
+```agda
+    private module Ad = Adequacy A pA w
 ```
 
 <!--en-->
@@ -2288,7 +2245,6 @@ The strict relation of `w` is given a local symbol to keep the parameter compari
 
 ```agda
     open SWO w using () renaming ( _<∙_ to _≺ₚ_ )
-
 ```
 
 <!--en-->
@@ -2313,6 +2269,11 @@ separately represented parameter order.
       where
       open Ad.Keys codeOrder Ps codeOrder-rep codeOrder-fill Prep Pfill public
 ```
+</div>
+</details>
+
+</div>
+</details>
 
 <!--en-->
 ## What is left, named exactly

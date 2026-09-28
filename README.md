@@ -27,7 +27,7 @@ The first, self-contained target was a full mechanization of
 > theorem internal to the host.
 
 **It is proved.** `L⊨GCH` and `L⊨ZFC` are both stated in
-[src/Milestones.lagda.md](src/Milestones.lagda.md), each on `LEM (ℓ-suc ℓ)` and
+[src/Origin.lagda.md](src/Origin.lagda.md), each on `LEM (ℓ-suc ℓ)` and
 nothing else: internal cardinals, internal injections, the model's own power set.
 The proof term is `L⊨GCH` in `src/L/GCH/Theorem.lagda.md`.
 
@@ -38,9 +38,13 @@ language, the cumulative hierarchy, `L`, and the dual-semantics machinery. And i
 commits from line one to the host-language-maximalist approach described below.
 Getting it right calibrated the infrastructure everything else will stand on.
 
-As of 2026-09-08: **26,587 nonblank Agda code lines · 212.06 s fresh project typecheck (Cubical cache retained) · 1.62 GiB peak RSS.**
+As of 2026-09-22: **25,931 nonblank Agda code lines · 203.17 s fresh project typecheck (Cubical cache retained) · 1.57 GiB peak RSS.**
 
-The 120 chapters form an acyclic dependency graph with 1,487 direct imports, 224 skeleton edges and a longest chain of 30 modules.
+As of 2026-09-24, the source dependency graph has 120 chapters, 1,511 unique direct imports, 227 transitively reduced edges and a longest chain of 31 modules, before website hub/preview filtering.
+
+These are dated measurements, not a benchmark or verification result for the
+current checkout. Use `make typecheck-cold` and the source metrics command in the
+[scripts guide](scripts/README.md) when a fresh measurement is needed.
 
 ## Direction
 
@@ -95,8 +99,8 @@ ordinary sense: the groundwork beneath an inquiry. Both meanings are intended.
 
 ## Authorship
 
-Everything in this project is produced with AI assistance, and every line of it,
-this document included, is reviewed word by word by the author.
+Everything in this project is produced with AI assistance, but every line,
+this document included, receives the author's word-by-word editorial review.
 
 ## Dependencies
 
@@ -111,14 +115,18 @@ The development typechecks against the following pinned toolchain:
 For a fresh clone, install GHC/Cabal, `make`, `patch`, and Python 3.11+, then run:
 
 ```sh
+git submodule update --init --recursive
 make bootstrap
 make check
 ```
 
-`make bootstrap` builds the repository's patched Agda and installs the pinned
+`make bootstrap` builds Outcrop's optional Agda toolchain and installs the pinned
 cubical library under `_build`; it does not modify the user's global Agda
-configuration. See [tools/bedrock-agda/README.md](tools/bedrock-agda/README.md)
+configuration. See [Agda environment](site/AGDA-ENVIRONMENT.md)
 for versioning, deployment, verification, and upgrade instructions.
+Run `make help` (also the default `make`) for public, diagnostic and internal
+targets. Setup is explicit; `make -j bootstrap` still installs Python before
+starting toolchain setup.
 
 The build keeps formal-check and website measurements distinct. Use
 `make typecheck-cold` for the timed single-process pure Agda baseline, or
@@ -128,10 +136,42 @@ expression-type data together; `make site-cold` uses parallel module checking
 before the HTML backend and renderer. The proof and site modes use separate
 project-interface caches.
 
-`make check` (typecheck, the four linters, reading-order validation and gate tests) and the site build run on Python 3.11+; developer tooling (the `reuse` linter) is
+`make check` (typechecking, source/textbook lint and both test suites) and the site build run on Python 3.11+; developer tooling (the `reuse` linter) is
 pinned in [requirements-dev.txt](requirements-dev.txt) and installed into a local virtual
-environment by `make venv` (run once per clone). Every push is typechecked against these versions
-by [GitHub Actions](.github/workflows/ci.yml).
+environment by `make venv` (run once per clone). [GitHub Actions](.github/workflows/ci.yml)
+runs lint and tests on every push. Confirmed documentation-only changes skip Agda
+and website deployment; other changes and manual runs retain the full checks.
+
+## Website framework
+
+The website uses [Outcrop](https://github.com/BedrockInstitute/Outcrop), pinned in
+the `outcrop/` submodule. **Outcrop Core** renders Markdown and optional compiler
+semantics; **Outcrop Site** supplies the complete interactive textbook, including
+routes, dependency graph, multilingual search, hover/modal, appearance, Ask AI
+and reusable lint. Bedrock supplies its content, catalog, terminology, brand and
+mathematical policies through [site/project.json](site/project.json).
+
+[site/](site/README.md) holds durable configuration, authoring rules, terminology,
+reading metadata and brand assets. [dev/](dev/README.md) holds working research
+and temporary development material, which is cleaned up when its task ends.
+[src/](src/README.md) contains the trilingual proof/exposition masters;
+[docs/](docs/README.md) contains reader-facing project documents.
+[scripts/](scripts/README.md) indexes Bedrock's gates, command adapters, hooks
+and browser fixtures. CI and deployment are documented in
+[.github/workflows/](.github/workflows/README.md).
+
+Initialize submodules before installing dependencies. `make venv` installs the
+local package; an existing environment can use
+`.venv/bin/python -m pip install -e ./outcrop`. Then `make site` builds the textbook
+and `make serve` previews it. See [the instance guide](site/README.md) and
+[Outcrop's architecture](outcrop/docs/ARCHITECTURE.md). Another textbook can use
+the same framework without copying Bedrock's mathematics or website code.
+
+`make check` does not build or browser-test the website. After website changes,
+validate the fresh output with `outcrop check-links` and `outcrop check-search`
+through the installed Python environment, then run affected browser scenarios.
+`make milestone-lint` additionally checks the Origin closure. Shared changes are
+committed and published in Outcrop before Bedrock records their submodule revision.
 
 ## Contributing
 
@@ -143,11 +183,12 @@ AI agents work from [AGENTS.md](AGENTS.md), the one rule set. Human contributors
 Bedrock is multi-licensed; per-file terms are declared in [`REUSE.toml`](REUSE.toml) and
 verified by `reuse lint`. In short:
 
-- **[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)**: the maths, prose, and brand assets (`src/`, `docs/`, `README`, `site/static/assets/`).
-- **[AGPL-3.0-only](https://www.gnu.org/licenses/agpl-3.0.html)**: all other first-party code and config, including the vendored [1lab](https://1lab.dev) front-end.
-- **[OFL-1.1](https://openfontlicense.org)**: the self-hosted web fonts (`site/static/fonts/`).
+- **[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)**: the maths, prose, editorial specifications/metadata and brand assets, as listed in `REUSE.toml`.
+- **[AGPL-3.0-only](https://www.gnu.org/licenses/agpl-3.0.html)**: first-party software and the configuration covered by that license. Outcrop maintains its own third-party notices.
+- **[OFL-1.1](https://openfontlicense.org)**: the self-hosted web fonts supplied by Outcrop (`outcrop/src/outcrop/site/resources/static/fonts/`).
 
 Full texts are in [`LICENSES/`](LICENSES/); [NOTICE](NOTICE) has the third-party attributions
 and the AGPL section 13 corresponding-source statement.
+Outcrop maintains its own per-file licensing and inherited vendor/font attribution.
 
 © 2026 Bedrock Institute.

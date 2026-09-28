@@ -1,22 +1,18 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # Definable subsets of a set
-
-For a set `A`, the operator `Def A`{.Agda} collects exactly the subsets of `A` defined by a first-order formula over the restricted structure on `A`, with finitely many parameters from `A`. Its membership theorem exposes the formula, environment, and satisfaction relation used by later constructibility arguments.
-
-Two design points carry the chapter. The formulas take `A`'s small member type `⟪ A ⟫` as their constant domain, so "parameters from `A`" is enforced by the type. And satisfaction is the **inner** semantics, on the restricted structure `𝒮ᵥ ↾ (∈ A)`: quantifiers range over members of `A` only, which is what "definable *in* `(A, ∈)`" means in the textbook, and which lets the essential smallness of the previous chapters apply here: every formula evaluates small, so `Def A` is a set, with no resizing needed at all.
 <!--zh-->
 # 集合的可定义子集
-
-对集合 `A`，算子 `Def A`{.Agda} 恰好收集由 `A` 上限制结构中的一阶公式，并使用 `A` 中有限多个参数所定义的 `A` 的子集。其隶属定理给出后续可构造性论证所需的公式、环境与满足关系。
-
-本章依赖两个设计点。公式以 `A` 的小成员类型 `⟪ A ⟫` 为常元域，因此类型本身保证参数来自 `A`。满足采用限制结构 `𝒮ᵥ ↾ (∈ A)` 上的**内层**语义，量词的范围只包括 `A` 的成员。这正是教科书中「在 `(A, ∈)` **中**可定义」的含义，也使前几章的本质小性在此适用：任何公式的求值都是小类型，因此 `Def A` 是集合，降层无需额外代价。
 <!--ja-->
 # 集合の定義可能な部分集合
-
-集合 `A` に対して、演算子 `Def A`{.Agda} は、`A` 上の制限構造における一階論理式と `A` の有限個のパラメータで定義される `A` の部分集合をちょうど集める。その所属定理は、後の構成可能性の議論で使う論理式、環境、充足関係を取り出す。
-
-本章を支える設計上の要点が二つある。第一に、論理式は `A` の小さな要素型 `⟪ A ⟫` を定数域として取るので、「`A` からのパラメータ」が型そのものによって強制される。第二に、充足は制限構造 `𝒮ᵥ ↾ (∈ A)` 上の**内側**の意味論で読まれ、量化子の範囲は `A` の要素だけに限られる。これが教科書で「`(A, ∈)` **の中で**定義可能」と言う意味であり、前の章々の本質的小ささがここで効く。すべての論理式の評価は小さな型になるので、`Def A` は集合であり、レベルの引き下げは一切不要である。
 <!--/-->
+
+```agda
+open import Base.Prelude
+```
 
 <!--en-->
 The question of this chapter: for a set `A`, which subsets of `A` can be singled out by a first-order formula interpreted inside `(A, ∈)`? The answer will be collected into a single operator `Def A`{.Agda}, itself a set of the ambient hierarchy. Everything takes place at one fixed universe level ℓ, so that `Def A` is small enough to exist as a set at the same level as `A`.
@@ -27,31 +23,50 @@ The question of this chapter: for a set `A`, which subsets of `A` can be singled
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-open import Base.Prelude
-open import Cubical.Data.Sigma using ( Σ-cong-equiv-snd )
-
 module L.Definability {ℓ : Level} where
-
-open import FOL.ZFStructure using ( ZFStructure; Transitive )
 ```
 
-<!--en-->
-The formulas come from an inductive object language: `Formula K n` has constants indexed by a type `K` and `n` slots indexing free variables, with atoms built from a structure's membership and equality relations. Choosing `K = ⟪ A ⟫`, the small member type of `A`, makes "parameters from `A`" true by construction: every constant names a member of `A`. The bounded fragment `Δ₀` will matter later, when the inner and outer readings of satisfaction are compared; constant mapping and relabelling are the operations that move a formula between constant domains and transport satisfaction along such a move.
-<!--zh-->
-公式来自归纳的对象语言：`Formula K n` 的常元由类型 `K` 索引，`n` 个槽位索引自由变量，原子公式由结构的隶属与相等关系构成。取 `K = ⟪ A ⟫`，即 `A` 的小成员类型，「参数来自 `A`」便由构造自动成立：每个常元指称 `A` 的一个成员。有界片段 `Δ₀` 稍后比较满足的内层与外层读法时才会用到；常元映射与改名则是把公式在常元域之间移动并沿此移动搬运满足关系的操作。
-<!--ja-->
-論理式は帰納的な対象言語から来る。`Formula K n` は、定数が型 `K` で添字づけられ、自由変数の `n` 個のスロットを持ち、原子論理式は構造の所属と等号の関係から組み立てられる。`K = ⟪ A ⟫`、つまり `A` の小さな要素型を選べば、「`A` からのパラメータ」は構成そのものによって成り立つ。すべての定数は `A` の要素を名指すからである。有界断片 `Δ₀` は、充足の内側と外側の読みを比べる際に後で効く。定数の対応付けと改名は、論理式を定数域の間で移し、その移動に沿って充足を輸送する操作である。
-<!--/-->
-
 ```agda
+open import FOL.ZFStructure using ( ZFStructure; Transitive )
 open import FOL.Syntax using ( Formula; var; con; _∈̇_; ⊤̇ )
 open import FOL.LevyHierarchy using ( Δ₀ )
 open import FOL.Manipulation.ConstantMapping using ( mapFo )
 open import FOL.Manipulation.Relabelling using ( mapΔ₀; ⊨-map )
 import FOL.Absoluteness
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Smallness {ℓ} using ( module InnerSmall )
 ```
+
+<!--en-->
+
+For a set `A`, the operator `Def A`{.Agda} collects exactly the subsets of `A` defined by a first-order formula over the restricted structure on `A`, with finitely many parameters from `A`. Its membership theorem exposes the formula, environment, and satisfaction relation used by later constructibility arguments.
+
+Two design points carry the chapter. The formulas take `A`'s small member type `⟪ A ⟫` as their constant domain, so "parameters from `A`" is enforced by the type. And satisfaction is the **inner** semantics, on the restricted structure `𝒮ᵥ ↾ (∈ A)`: quantifiers range over members of `A` only, which is what "definable *in* `(A, ∈)`" means in the textbook, and which lets the essential smallness of the previous chapters apply here: every formula evaluates small, so `Def A` is a set, with no resizing needed at all.
+<!--zh-->
+
+对集合 `A`，算子 `Def A`{.Agda} 恰好收集由 `A` 上限制结构中的一阶公式，并使用 `A` 中有限多个参数所定义的 `A` 的子集。其隶属定理给出后续可构造性论证所需的公式、环境与满足关系。
+
+本章依赖两个设计点。公式以 `A` 的小成员类型 `⟪ A ⟫` 为常元域，因此类型本身保证参数来自 `A`。满足采用限制结构 `𝒮ᵥ ↾ (∈ A)` 上的**内层**语义，量词的范围只包括 `A` 的成员。这正是教科书中「在 `(A, ∈)` **中**可定义」的含义，也使前几章的本质小性在此适用：任何公式的求值都是小类型，因此 `Def A` 是集合，降层无需额外代价。
+<!--ja-->
+
+集合 `A` に対して、演算子 `Def A`{.Agda} は、`A` 上の制限構造における一階論理式と `A` の有限個のパラメータで定義される `A` の部分集合をちょうど集める。その所属定理は、後の構成可能性の議論で使う論理式、環境、充足関係を取り出す。
+
+本章を支える設計上の要点が二つある。第一に、論理式は `A` の小さな要素型 `⟪ A ⟫` を定数域として取るので、「`A` からのパラメータ」が型そのものによって強制される。第二に、充足は制限構造 `𝒮ᵥ ↾ (∈ A)` 上の**内側**の意味論で読まれ、量化子の範囲は `A` の要素だけに限られる。これが教科書で「`(A, ∈)` **の中で**定義可能」と言う意味であり、前の章々の本質的小ささがここで効く。すべての論理式の評価は小さな型になるので、`Def A` は集合であり、レベルの引き下げは一切不要である。
+<!--/-->
+
+
+
+```agda
+open import Cubical.Data.Sigma using ( Σ-cong-equiv-snd )
+```
+
+<!--en-->
+The formulas come from an inductive object language: `Formula K n` has constants indexed by a type `K` and `n` slots indexing free variables, with atoms built from a structure's membership and equality relations. Choosing `K = ⟪ A ⟫`, the small member type of `A`, makes "parameters from `A`" true by construction: every constant names a member of `A`. The bounded fragment `Δ₀` will matter later, when the inner and outer readings of satisfaction are compared; constant mapping and relabelling are the operations that move a formula between constant domains and transport satisfaction along such a move.
+<!--zh-->
+公式来自归纳的对象语言：`Formula K n` 的常元由类型 `K` 索引，`n` 个槽位索引自由变元，原子公式由结构的隶属与相等关系构成。取 `K = ⟪ A ⟫`，即 `A` 的小成员类型，「参数来自 `A`」便由构造自动成立：每个常元指称 `A` 的一个成员。有界片段 `Δ₀` 稍后比较满足的内层与外层读法时才会用到；常元映射与改名则是把公式在常元域之间移动并沿此移动搬运满足关系的操作。
+<!--ja-->
+論理式は帰納的な対象言語から来る。`Formula K n` は、定数が型 `K` で添字づけられ、自由変数の `n` 個のスロットを持ち、原子論理式は構造の所属と等号の関係から組み立てられる。`K = ⟪ A ⟫`、つまり `A` の小さな要素型を選べば、「`A` からのパラメータ」は構成そのものによって成り立つ。すべての定数は `A` の要素を名指すからである。有界断片 `Δ₀` は、充足の内側と外側の読みを比べる際に後で効く。定数の対応付けと改名は、論理式を定数域の間で移し、その移動に沿って充足を輸送する操作である。
+<!--/-->
 
 <!--en-->
 "Definable *in* `(A, ∈)`" means quantifiers may only range over members of `A`. So satisfaction must be taken in the structure restricted to the class `x ↦ x ∈ˢ A`, not in the ambient hierarchy. The chapter works over the ambient structure `𝒮ᵥ` carried by the level-ℓ hierarchy, with carrier `S` and membership `∈ₛ`; the restriction to `A` and the smallness of the restricted world come from the smallness chapter: given a class, a small type with an equivalence to the restricted carrier, and a constant interpretation, it rebuilds the restricted structure and proves every formula evaluates to a small proposition there. The restriction class here is simply membership in `A`.
@@ -62,11 +77,8 @@ import FOL.Absoluteness
 <!--/-->
 
 ```agda
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-open import V.Smallness {ℓ} using ( module InnerSmall )
-
 open import Cubical.Foundations.Equiv
-  using ( _≃_; equivFun; invEq; invEquiv; compEquiv; propBiimpl→Equiv )
+  using ( invEquiv; compEquiv; propBiimpl→Equiv )
 open import Cubical.Functions.Embedding using ( isEmbedding→Inj )
 ```
 
@@ -113,20 +125,26 @@ Everything below is relative to one set `A`, so the section works in a module `D
 <!--/-->
 
 <!--en-->
-The class `M` assigns to each set `x` the proposition `x ∈ˢ A`, so the restricted carrier `Σ[ x ∈ S ] (x ∈ᶜ M)` is, elementwise, a member of `A` together with the proof that it is one. The equivalence `e` exhibits this carrier as essentially small. Its first factor is the inverse of `presentation A`, which identifies a member of `A` merely lying in the fiber of the indexing map with an index in `⟪ A ⟫`; its second factor converts, for each `v`, the small membership statement `v ∈ₛ A` into the large one `v ∈ˢ A` and back. These are propositions, so the pointwise conversion is legitimate.
+The class `M` assigns to each set `x` the proposition `x ∈ˢ A`, so the restricted carrier `Σ[ x ∶ S ] (x ∈ᶜ M)` is, elementwise, a member of `A` together with the proof that it is one. The equivalence `e` exhibits this carrier as essentially small. Its first factor is the inverse of `presentation A`, which identifies a member of `A` merely lying in the fiber of the indexing map with an index in `⟪ A ⟫`; its second factor converts, for each `v`, the small membership statement `v ∈ₛ A` into the large one `v ∈ˢ A` and back. These are propositions, so the pointwise conversion is legitimate.
 <!--zh-->
-类 `M` 给每个集合 `x` 指派命题 `x ∈ˢ A`，因此限制载体 `Σ[ x ∈ S ] (x ∈ᶜ M)` 逐元素地就是 `A` 的一个成员连同「它是成员」的证明。等价 `e` 把这个载体表现为本质小。它的第一个因子是 `presentation A` 的逆，把仅仅落在索引映射纤维中的 `A` 的成员等同于 `⟪ A ⟫` 中的索引；第二个因子对每个 `v` 把小隶属陈述 `v ∈ₛ A` 双向换成大隶属陈述 `v ∈ˢ A`。由于这些是命题，逐点转换是合法的。
+类 `M` 给每个集合 `x` 指派命题 `x ∈ˢ A`，因此限制载体 `Σ[ x ∶ S ] (x ∈ᶜ M)` 逐元素地就是 `A` 的一个成员连同「它是成员」的证明。等价 `e` 把这个载体表现为本质小。它的第一个因子是 `presentation A` 的逆，把仅仅落在索引映射纤维中的 `A` 的成员等同于 `⟪ A ⟫` 中的索引；第二个因子对每个 `v` 把小隶属陈述 `v ∈ₛ A` 双向换成大隶属陈述 `v ∈ˢ A`。由于这些是命题，逐点转换是合法的。
 <!--ja-->
-クラス `M` は各集合 `x` に命題 `x ∈ˢ A` を割り当てるので、制限された台 `Σ[ x ∈ S ] (x ∈ᶜ M)` は要素ごとに、`A` の要素と「それが要素である証拠」の対である。同値 `e` はこの台が本質的に小さいことを示す。第一因子は `presentation A` の逆で、索引写像のファイバーに「だけ」落ちている `A` の要素を `⟪ A ⟫` の添字と同一視する。第二因子は各 `v` について、小さい方の所属 `v ∈ₛ A` と大きい方の所属 `v ∈ˢ A` を両方向に変換する。これらは命題なので、点ごとの変換は正当である。
+クラス `M` は各集合 `x` に命題 `x ∈ˢ A` を割り当てるので、制限された台 `Σ[ x ∶ S ] (x ∈ᶜ M)` は要素ごとに、`A` の要素と「それが要素である証拠」の対である。同値 `e` はこの台が本質的に小さいことを示す。第一因子は `presentation A` の逆で、索引写像のファイバーに「だけ」落ちている `A` の要素を `⟪ A ⟫` の添字と同一視する。第二因子は各 `v` について、小さい方の所属 `v ∈ₛ A` と大きい方の所属 `v ∈ˢ A` を両方向に変換する。これらは命題なので、点ごとの変換は正当である。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module DefOf (A : S) where
+```
+</summary>
+<div class="submodule-fold-content">
 
+```agda
   M : S → hProp (ℓ-suc ℓ)
   M x = x ∈ˢ A
 
-  e : ⟪ A ⟫ ≃ (Σ[ x ∈ S ] (x ∈ᶜ M))
+  e : ⟪ A ⟫ ≃ (Σ[ x ∶ S ] (x ∈ᶜ M))
   e = compEquiv (invEquiv (presentation A))
 ```
 
@@ -143,7 +161,7 @@ The constant interpretation `ι` is then just the equivalence `e` read as a func
           propBiimpl→Equiv (snd (v ∈ₛ A)) (snd (v ∈ˢ A))
             (∈∈ₛ {a = v} {b = A} .snd) (∈∈ₛ {a = v} {b = A} .fst)))
 
-  ι : ⟪ A ⟫ → Σ[ x ∈ S ] (x ∈ᶜ M)
+  ι : ⟪ A ⟫ → Σ[ x ∶ S ] (x ∈ᶜ M)
   ι = equivFun e
 ```
 
@@ -156,7 +174,6 @@ Opening `InnerSmall` at this data rebuilds the world: the structure `𝒮M` rest
 <!--/-->
 
 ```agda
-
   open InnerSmall M ⟪ A ⟫ e {K = ⟪ A ⟫} ι public
 ```
 
@@ -171,7 +188,7 @@ With the inner satisfaction `⊨ᵐ` and its smallness in scope, the operator ca
 <!--en-->
 The compression `smallSat` packages the two-step evaluation: `⊨ᵐ-small φ (ι m ∷ [])` is a pair whose first component is a small proposition equivalent to the inner satisfaction statement, and whose second component is that equivalence. The environment `ι m ∷ []` has a single entry because `φ` has one free-variable slot, filled by the member `m` through `ι`. Independently of this, any constants occurring in `φ` are interpreted through the constant interpretation `ι`, so they may name arbitrary members of `A`: parameters enter through constants, and the variable entry only fixes where the single free slot is evaluated. The underlying proposition `⟨ smallSat φ m ⟩` says that `φ` holds at `m` inside `(A, ∈)`, in the small form suitable for indexing a `sett`.
 <!--zh-->
-压缩 `smallSat` 打包了两步求值：`⊨ᵐ-small φ (ι m ∷ [])` 是一个对子，第一分量是与内层满足陈述等价的小命题，第二分量是那个等价本身。环境 `ι m ∷ []` 只有一项，因为 `φ` 只有一个自由变量槽位，由成员 `m` 经 `ι` 填入。与此独立地，`φ` 中出现的任何常元都经常元解释 `ι` 解释，因此可以指称 `A` 的任意成员：参数经由常元进入，而变量那一项只是固定单个自由槽位的求值位置。底层命题 `⟨ smallSat φ m ⟩` 表示 `φ` 在 `(A, ∈)` 内于 `m` 处成立，且已是适合为 `sett` 充当索引的小形式。
+压缩 `smallSat` 打包了两步求值：`⊨ᵐ-small φ (ι m ∷ [])` 是一个对子，第一分量是与内层满足陈述等价的小命题，第二分量是那个等价本身。环境 `ι m ∷ []` 只有一项，因为 `φ` 只有一个自由变元槽位，由成员 `m` 经 `ι` 填入。与此独立地，`φ` 中出现的任何常元都经常元解释 `ι` 解释，因此可以指称 `A` 的任意成员：参数经由常元进入，而变元那一项只是固定单个自由槽位的求值位置。底层命题 `⟨ smallSat φ m ⟩` 表示 `φ` 在 `(A, ∈)` 内于 `m` 处成立，且已是适合为 `sett` 充当索引的小形式。
 <!--ja-->
 圧縮 `smallSat` は二段階の評価をまとめる。`⊨ᵐ-small φ (ι m ∷ [])` は対で、第一成分は内側の充足の命題と同値な小さな命題、第二成分がその同値である。環境 `ι m ∷ []` の項目が一つなのは、`φ` の自由変数のスロットが一つで、それを要素 `m` が `ι` を通じて埋めるからである。それとは独立に、`φ` に現れる任意の定数は定数の解釈 `ι` を通して解釈されるので、`A` のどんな要素でも名指せる。パラメータは定数を通じて入り、変数の項は単一の自由スロットをどこで評価するかを固定するだけである。根底の命題 `⟨ smallSat φ m ⟩` は、`φ` が `(A, ∈)` の中で `m` において成り立つことを、`sett` の添字に適した小さな形で言う。
 <!--/-->
@@ -181,17 +198,17 @@ The compression `smallSat` packages the two-step evaluation: `⊨ᵐ-small φ (�
   smallSat φ m = ⊨ᵐ-small φ (ι m ∷ []) .fst
 
   defSet : Formula ⟪ A ⟫ 1 → S
-  defSet φ = sett (Σ[ m ∈ ⟪ A ⟫ ] ⟨ smallSat φ m ⟩) (λ p → ⟪ A ⟫↪ (p .fst))
+  defSet φ = sett (Σ[ m ∶ ⟪ A ⟫ ] ⟨ smallSat φ m ⟩) (λ p → ⟪ A ⟫↪ (p .fst))
 
   Def : S
 ```
 
 <!--en-->
-The definable subset `defSet φ` is presented by the index type `Σ[ m ∈ ⟪ A ⟫ ] ⟨ smallSat φ m ⟩`: an index is a member `m` together with a proof that `φ` holds at it, and the indexing map sends such a pair to the set `⟪ A ⟫↪ m`. Note the truncation discipline: the proof component is a proof, not chosen data, and membership in `defSet φ` only asks for a proof to *merely* exist. Finally `Def` applies the same construction one level up, with the formulas themselves as the index family: each formula merely hits some `defSet φ`. Because formulas live in `Type ℓ`, the index type is small and the result is again a set of the hierarchy.
+The definable subset `defSet φ` is presented by the index type `Σ[ m ∶ ⟪ A ⟫ ] ⟨ smallSat φ m ⟩`: an index is a member `m` together with a proof that `φ` holds at it, and the indexing map sends such a pair to the set `⟪ A ⟫↪ m`. Note the truncation discipline: the proof component is a proof, not chosen data, and membership in `defSet φ` only asks for a proof to *merely* exist. Finally `Def` applies the same construction one level up, with the formulas themselves as the index family: each formula merely hits some `defSet φ`. Because formulas live in `Type ℓ`, the index type is small and the result is again a set of the hierarchy.
 <!--zh-->
-可定义子集 `defSet φ` 由索引类型 `Σ[ m ∈ ⟪ A ⟫ ] ⟨ smallSat φ m ⟩` 呈现：一个索引是成员 `m` 连同「`φ` 在 `m` 处成立」的证明，索引映射把这个对子送到集合 `⟪ A ⟫↪ m`。注意截断纪律：证明分量是证明而非被选取的数据，`defSet φ` 的成员只要求这样的证明**仅仅**存在。最后，`Def` 在上一层重复同一构造，以公式本身为索引族：每个索引仅仅命中某个 `defSet φ`。由于公式住在 `Type ℓ` 中，索引类型是小的，结果仍是层级中的集合。
+可定义子集 `defSet φ` 由索引类型 `Σ[ m ∶ ⟪ A ⟫ ] ⟨ smallSat φ m ⟩` 呈现：一个索引是成员 `m` 连同「`φ` 在 `m` 处成立」的证明，索引映射把这个对子送到集合 `⟪ A ⟫↪ m`。注意截断纪律：证明分量是证明而非被选取的数据，`defSet φ` 的成员只要求这样的证明**仅仅**存在。最后，`Def` 在上一层重复同一构造，以公式本身为索引族：每个索引仅仅命中某个 `defSet φ`。由于公式住在 `Type ℓ` 中，索引类型是小的，结果仍是层级中的集合。
 <!--ja-->
-定義可能部分集合 `defSet φ` は、索引型 `Σ[ m ∈ ⟪ A ⟫ ] ⟨ smallSat φ m ⟩` で提示される。索引とはメンバー `m` と「`φ` が `m` で成り立つ」ことの証明の対であり、索引写像はその対を集合 `⟪ A ⟫↪ m` へ送る。切断の規律に注意してほしい。証明の成分は証明であって選ばれたデータではなく、`defSet φ` の所属はそのような証明が「だけ」存在することを要求する。最後に `Def` は同じ構成を一段上で繰り返し、論理式そのものを索引族とする。各索引はある `defSet φ` に「だけ」ヒットする。論理式は `Type ℓ` に住むので索引型は小さく、結果は再び階層の集合になる。
+定義可能部分集合 `defSet φ` は、索引型 `Σ[ m ∶ ⟪ A ⟫ ] ⟨ smallSat φ m ⟩` で提示される。索引とはメンバー `m` と「`φ` が `m` で成り立つ」ことの証明の対であり、索引写像はその対を集合 `⟪ A ⟫↪ m` へ送る。切断の規律に注意してほしい。証明の成分は証明であって選ばれたデータではなく、`defSet φ` の所属はそのような証明が「だけ」存在することを要求する。最後に `Def` は同じ構成を一段上で繰り返し、論理式そのものを索引族とする。各索引はある `defSet φ` に「だけ」ヒットする。論理式は `Type ℓ` に住むので索引型は小さく、結果は再び階層の集合になる。
 <!--/-->
 
 ```agda
@@ -299,7 +316,7 @@ private の補助 `A-mem` は大きい方の所属の証明をファイバーの
 
 ```agda
   private
-    A-mem : (y : S) → ⟨ y ∈ˢ A ⟩ → Σ[ m ∈ ⟪ A ⟫ ] (⟪ A ⟫↪ m ≡ y)
+    A-mem : (y : S) → ⟨ y ∈ˢ A ⟩ → Σ[ m ∶ ⟪ A ⟫ ] (⟪ A ⟫↪ m ≡ y)
     A-mem y y∈ = ∈-asFiber {a = y} {b = A} y∈
 
   defSet⊤≡A : defSet ⊤̇ ≡ A
@@ -347,7 +364,6 @@ The dual containment `Def∋⊆A` says every element of `Def A` is a subset of `
 <!--/-->
 
 ```agda
-
   Def∋⊆A : (x : S) → ⟨ x ∈ˢ Def ⟩ → (y : S) → ⟨ y ∈ˢ x ⟩ → ⟨ y ∈ˢ A ⟩
   Def∋⊆A x = rec₁ (isPropΠ λ y → isPropΠ λ _ → snd (y ∈ˢ A))
     (λ { (φ , q) y y∈x → defSet⊆A φ y (subst (λ s → ⟨ y ∈ˢ s ⟩) (sym q) y∈x) })
@@ -360,7 +376,7 @@ When `A` is transitive, each **member** `a` of `A` is itself definable, by the s
 <!--zh-->
 ## 传递性之下，A ⊆ Def A
 
-当 `A` 传递时，`A` 的每个**成员** `a` 自身也可定义：仍用模型章构造交集的那条两符号途径，即原子公式「该变量属于 `a`」。分离暗含的「∈ A」条件恰好由传递性保证：`a` 的成员已是 `A` 的成员，于是原子公式刻出的正是 `a`。故 `A ⊆ Def A`：没有任何元素被遗漏。与上一节合观，迭代 `Def` 只增不减，正合可构造塔的需要。
+当 `A` 传递时，`A` 的每个**成员** `a` 自身也可定义：仍用模型章构造交集的那条两符号途径，即原子公式「该变元属于 `a`」。分离暗含的「属于 `A`」条件恰好由传递性保证：`a` 的成员已是 `A` 的成员，于是原子公式刻出的正是 `a`。故 `A ⊆ Def A`：没有任何元素被遗漏。与上一节合观，迭代 `Def` 只增不减，正合可构造塔的需要。
 <!--ja-->
 ## 推移性の下で A ⊆ Def A
 
@@ -370,14 +386,20 @@ When `A` is transitive, each **member** `a` of `A` is itself definable, by the s
 <!--en-->
 The submodule takes transitivity of `A` as an explicit hypothesis. The atomic formula `atom mₐ` is `var zero ∈̇ con mₐ`: one free-variable slot, and a single constant naming the element `mₐ`. This is where the design choice of using `⟪ A ⟫` as the constant domain pays off again: every member of `A` is available as a constant, with `ι` decoding it into the restricted carrier.
 <!--zh-->
-子模块以 `A` 的传递性为显式前提。原子公式 `atom mₐ` 是 `var zero ∈̇ con mₐ`：一个自由变量槽位，加上命名元素 `mₐ` 的单个常元。这里再次体现了以 `⟪ A ⟫` 为常元域这一设计选择的好处：`A` 的每个成员都可充作常元，由 `ι` 解码到限制载体。
+子模块以 `A` 的传递性为显式前提。原子公式 `atom mₐ` 是 `var zero ∈̇ con mₐ`：一个自由变元槽位，加上命名元素 `mₐ` 的单个常元。这里再次体现了以 `⟪ A ⟫` 为常元域这一设计选择的好处：`A` 的每个成员都可充作常元，由 `ι` 解码到限制载体。
 <!--ja-->
 この議論は `A` の推移性を明示的な仮定として取る。原子論理式 `atom mₐ` は `var zero ∈̇ con mₐ` で、自由変数のスロットが一つと、要素 `mₐ` を名指す単一の定数からなる。`⟪ A ⟫` を定数域として使うという設計判断がここでも効く。`A` のすべての要素が定数として使え、`ι` がそれを制限された台へ復号するからである。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
   module Refine (Atrans : Transitive 𝒮ᵥ M) where
+```
+</summary>
+<div class="submodule-fold-content">
 
+```agda
     atom : ⟪ A ⟫ → Formula ⟪ A ⟫ 1
     atom mₐ = var zero ∈̇ con mₐ
 
@@ -530,6 +552,11 @@ The proof concatenates three paths. First, `defSet-mem` reads membership in the 
       ∙ sym (⊨-map Abs.𝒮M ι id φ (ι m ∷ []))
       ∙ Abs.abs₀ (mapΔ₀ ι d) (ι m ∷ [])
 ```
+</div>
+</details>
+
+</div>
+</details>
 
 <!--en-->
 ## Recap

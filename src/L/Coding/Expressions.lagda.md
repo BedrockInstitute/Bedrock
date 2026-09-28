@@ -1,28 +1,18 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # Formula expressions for coded recursion
-
-The coded satisfaction recursion must decide, inside `L`, questions of the form: does the environment `γ` satisfy the coded formula `c`? To recognize a compound value such as a Kuratowski pair while keeping the description bounded, its witnesses must themselves be elements of the model. For a pair `q` with components `u` and `v`, a constructible set `s` is needed with `s` a member of `q` and `u`, `v` members of `s`, and the reading formula binds all three at once, evaluating the two component conditions in the assignment `v, u, s` followed by the old assignment, with the old slots preserved under the shift.
-
-The chapter builds this once, as a structural reader on a small expression language of assignment slots, constructible literals, numerals, and Kuratowski pairs, and proves it adequate in both directions. The outward direction starts from a satisfaction judgment, eliminates its three truncated existentials into a path proposition, and composes the pairing equation with the recursive component paths. The inward direction chooses the explicit internal elements of the two subexpressions and obtains their common constructible container, without extracting any choice from a truncation.
-
-The same reader then specializes in several directions. Membership of an expression's value in the denotation of a term uses transitivity of `L`: the ambient value's membership in the constructible interpretation of the term proves that value constructible, so it can serve as a model element; this is a genuine construction, distinct from the proposition-valued target restriction that licenses eliminating a truncation. Extensional set descriptions are an ordinary pair of universally quantified implications, with no outer truncation; they characterize a candidate set rather than construct one. The arity-tag recognizers read two nested pairing layers, the arity paired with a tag-and-payload code. Finally the successor and environment-extension formulas are lifted by bounded absoluteness, whose transfer rests on the established transitive-model setup together with the compatibility of lookups under projection. The environment-extension formula closes the chapter.
 <!--zh-->
 # 码化递归所用的公式表达式
-
-码化的满足关系递归要在 `L` 内部判定形如「环境 `γ` 是否满足码 `c` 所示公式」的问题。要用有界公式识别 Kuratowski 对这样的复合取值，其见证本身必须是模型元素。对分量 `u`、`v` 的配对 `q`，需要一个可构造集合 `s`，使 `s` 属于 `q`，而 `u`、`v` 属于 `s`；读式一次性绑定这三者，并在「`v, u, s` 接原赋值」的扩展赋值中求取两个分量条件，原槽位在移位下保持不变。
-
-本章把这件事一次做好：在由赋值槽位、可构造字面常元、数码与 Kuratowski 对组成的小表达式语言上建立一条结构读式，并证明其双向充分性。向外方向从满足判断出发，把三层截断存在消去到取值为命题的路径中，再将配对等式与递归的分量路径串联。向内方向为两个子表达式选定显式的内部元素，并取得它们共同的可构造容器，而不从任何截断中抽取选择。
-
-同一读式随后沿几个方向特化。表达式取值属于词项所指的隶属关系使用 `L` 的传递性：该周遭取值属于词项的可构造解释这一事实证明了取值可构造，故它能充当模型元素；这是一次真正的构造，与「截断只能消去到取值为命题的目标」这一限制不同。外延集合描述是一对普通的全称蕴含，外层没有截断；它刻画一个候选集合，而不构造它。元数标签识别器读取两层嵌套的配对：元数与「标签加载荷」之对。最后，后继公式与环境扩展公式经有界绝对性抬升，其转换立足于既有的传递模型设置，以及查值在投影下的相容性。本章以环境扩展公式收尾。
 <!--ja-->
 # 符号化再帰のための論理式表現
-
-符号化された充足関係の再帰は、`L` の内部で「環境 `γ` は符号 `c` の論理式を充足するか」という形の問いを判定しなければならない。Kuratowski 対のような複合的な値を有界論理式で認識するには、証人自身が模型の要素でなければならない。成分 `u` と `v` をもつ対 `q` に対しては、`s` が `q` に属し、`u` と `v` が `s` に属する構成可能集合 `s` が要る。読みの論理式はこの三者を一度に束縛し、`v, u, s` に元の割り当てを続けた拡張割り当てのもとで二つの成分条件を評価する。元のスロットはずらしの下で保たれる。
-
-本章はこれを一度だけ組み立てる。代入スロット、構成可能なリテラル、数項、Kuratowski 対からなる小さな式の言語上の構造的な読みを与え、その双方向の妥当性を証明する。外向きの方向は充足の判断から出発し、三つの命題的切り捨てを受けた存在を命題値のパスへ消去し、対の等式を帰納的な成分のパスと連結する。内向きの方向は二つの部分式の明示的な内部要素を選び、それらの共通の構成可能コンテナを取得する。截断から選択を取り出すことは一切ない。
-
-同じ読みはいくつもの方向に特殊化される。式の値がある項の指示への所属は `L` の推移性を用いる。周囲の値が項の構成可能な解釈に属するという事実がその値の構成可能性を証明し、それによって値は模型の要素として働ける。これは実際の構成であって、截断の消去を正当化する命題値の対象という制限とは別物である。外延的な集合の記述は普通の全称含意の対であり、外側に截断はなく、候補となる集合を構成するのではなく特徴づける。アリティ付きタグの認識器は二層の入れ子の対、すなわちアリティと「タグとペイロードの対」を読む。最後に、後者と環境拡張の論理式は有界絶対性によって持ち上げられる。その転送は確立された推移的モデルの設定と、射影の下での参照の相容性に依拠する。環境拡張の論理式が本章を閉じる。
 <!--/-->
+
+```agda
+open import Base.Prelude
+```
 
 <!--en-->
 To keep a first-order description of a compound value in the bounded fragment, fixed pieces are named by constants and each witness is bounded. Everything here takes place at one fixed level `ℓ`: the ambient hierarchy is `V ℓ`, and the model whose elements the bounded quantifiers range over is the constructible one sitting inside it. Since a satisfaction judgment compares truth values, the facts the formulas assert are propositions in `hProp (ℓ-suc ℓ)`.
@@ -33,14 +23,52 @@ To keep a first-order description of a compound value in the bounded fragment, f
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-open import Base.Prelude
-
 module L.Coding.Expressions {ℓ : Level} where
-
-open import FOL.ZFStructure using ( module hPropStructure )
 ```
+
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax
+  using ( Term; Formula; var; con; _∈̇_; _≐_; _∧̇_; _⇒̇_; ∀̇_; ∃̇∈ )
+import FOL.Absoluteness
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Coding {ℓ} using ( pr )
+open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
+open import FOL.Manipulation.ConstantBounding using ( BoundedFo )
+open import L.Absoluteness {ℓ} using ( InL; liftFo; transferFo )
+open import L.Coding.Environment {ℓ}
+  using ( sucAt; Δ₀-sucAt; sucAt-adequate; consAt; Δ₀-consAt; consAt-adequate
+        ; env; cons; shiftPairAt; sgl0At; pair0At; tag0At )
+open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
+open import L.Coding.Model {ℓ}
+  using ( lookup-fst; prʟ; prʟ-fst; prAtL; prAtL-adequate; envOverAt
+        ; Container; container )
+```
+
+<!--en-->
+
+The coded satisfaction recursion must decide, inside `L`, questions of the form: does the environment `γ` satisfy the coded formula `c`? To recognize a compound value such as a Kuratowski pair while keeping the description bounded, its witnesses must themselves be elements of the model. For a pair `q` with components `u` and `v`, a constructible set `s` is needed with `s` a member of `q` and `u`, `v` members of `s`, and the reading formula binds all three at once, evaluating the two component conditions in the assignment `v, u, s` followed by the old assignment, with the old slots preserved under the shift.
+
+The chapter builds this once, as a structural reader on a small expression language of assignment slots, constructible literals, numerals, and Kuratowski pairs, and proves it adequate in both directions. The outward direction starts from a satisfaction judgment, eliminates its three truncated existentials into a path proposition, and composes the pairing equation with the recursive component paths. The inward direction chooses the explicit internal elements of the two subexpressions and obtains their common constructible container, without extracting any choice from a truncation.
+
+The same reader then specializes in several directions. Membership of an expression's value in the denotation of a term uses transitivity of `L`: the ambient value's membership in the constructible interpretation of the term proves that value constructible, so it can serve as a model element; this is a genuine construction, distinct from the proposition-valued target restriction that licenses eliminating a truncation. Extensional set descriptions are an ordinary pair of universally quantified implications, with no outer truncation; they characterize a candidate set rather than construct one. The arity-tag recognizers read two nested pairing layers, the arity paired with a tag-and-payload code. Finally the successor and environment-extension formulas are lifted by bounded absoluteness, whose transfer rests on the established transitive-model setup together with the compatibility of lookups under projection. The environment-extension formula closes the chapter.
+<!--zh-->
+
+码化的满足关系递归要在 `L` 内部判定形如「环境 `γ` 是否满足码 `c` 所示公式」的问题。要用有界公式识别 Kuratowski 对这样的复合取值，其见证本身必须是模型元素。对分量 `u`、`v` 的配对 `q`，需要一个可构造集合 `s`，使 `s` 属于 `q`，而 `u`、`v` 属于 `s`；读式一次性绑定这三者，并在「`v, u, s` 接原赋值」的扩展赋值中求取两个分量条件，原槽位在移位下保持不变。
+
+本章把这件事一次做好：在由赋值槽位、可构造字面常元、数码与 Kuratowski 对组成的小表达式语言上建立一条结构读式，并证明其双向充分性。向外方向从满足判断出发，把三层截断存在消去到取值为命题的路径中，再将配对等式与递归的分量路径串联。向内方向为两个子表达式选定显式的内部元素，并取得它们共同的可构造容器，而不从任何截断中抽取选择。
+
+同一读式随后沿几个方向特化。表达式取值属于词项所指的隶属关系使用 `L` 的传递性：该周遭取值属于词项的可构造解释这一事实证明了取值可构造，故它能充当模型元素；这是一次真正的构造，与「截断只能消去到取值为命题的目标」这一限制不同。外延集合描述是一对普通的全称蕴含，外层没有截断；它刻画一个候选集合，而不构造它。元数标签识别器读取两层嵌套的配对：元数与「标签加载荷」之对。最后，后继公式与环境扩展公式经有界绝对性抬升，其转换立足于既有的传递模型设置，以及查值在投影下的相容性。本章以环境扩展公式收尾。
+<!--ja-->
+
+符号化された充足関係の再帰は、`L` の内部で「環境 `γ` は符号 `c` の論理式を充足するか」という形の問いを判定しなければならない。Kuratowski 対のような複合的な値を有界論理式で認識するには、証人自身が模型の要素でなければならない。成分 `u` と `v` をもつ対 `q` に対しては、`s` が `q` に属し、`u` と `v` が `s` に属する構成可能集合 `s` が要る。読みの論理式はこの三者を一度に束縛し、`v, u, s` に元の割り当てを続けた拡張割り当てのもとで二つの成分条件を評価する。元のスロットはずらしの下で保たれる。
+
+本章はこれを一度だけ組み立てる。代入スロット、構成可能なリテラル、数項、Kuratowski 対からなる小さな式の言語上の構造的な読みを与え、その双方向の妥当性を証明する。外向きの方向は充足の判断から出発し、三つの命題的切り捨てを受けた存在を命題値のパスへ消去し、対の等式を帰納的な成分のパスと連結する。内向きの方向は二つの部分式の明示的な内部要素を選び、それらの共通の構成可能コンテナを取得する。截断から選択を取り出すことは一切ない。
+
+同じ読みはいくつもの方向に特殊化される。式の値がある項の指示への所属は `L` の推移性を用いる。周囲の値が項の構成可能な解釈に属するという事実がその値の構成可能性を証明し、それによって値は模型の要素として働ける。これは実際の構成であって、截断の消去を正当化する命題値の対象という制限とは別物である。外延的な集合の記述は普通の全称含意の対であり、外側に截断はなく、候補となる集合を構成するのではなく特徴づける。アリティ付きタグの認識器は二層の入れ子の対、すなわちアリティと「タグとペイロードの対」を読む。最後に、後者と環境拡張の論理式は有界絶対性によって持ち上げられる。その転送は確立された推移的モデルの設定と、射影の下での参照の相容性に依拠する。環境拡張の論理式が本章を閉じる。
+<!--/-->
+
+
 
 <!--en-->
 Two sides of one distinction run through the chapter. Out in the hierarchy, the structure `𝒮ᵥ` interprets the first-order language over `V ℓ`, and Kuratowski pairing there is the operation `pr`. Inside the model, the same language is reinterpreted over constructible sets. A clause that recognizes a compound value must therefore be readable in both places at once, and each adequacy statement below says exactly that: the truth value of the internal formula, read in the model, is identified, as a path, with the corresponding ambient statement about `pr` and the projected assignment.
@@ -50,14 +78,6 @@ Two sides of one distinction run through the chapter. Out in the hierarchy, the 
 ひとつの区別の二つの側面が本章を貫く。階層の外では、構造 `𝒮ᵥ` が `V ℓ` の上で一階の言語を解釈し、そこの Kuratowski 対が演算 `pr` である。模型の内側では、同じ言語が構成可能集合の上で改めて解釈される。したがって複合的な値を認識する節は、両方の場所で同時に読めなければならず、以下の各妥当性の主張が述べるのはまさにそのことである。内部の論理式の模型での真理値が、経路として、`pr` と射影された割り当てについての対応する周囲の主張と同一視されるのである。
 <!--/-->
 
-```agda
-open import FOL.Syntax
-  using ( Term; Formula; var; con; _∈̇_; _≐_; _∧̇_; _⇒̇_; ∀̇_; ∃̇∈ )
-import FOL.Absoluteness
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-open import V.Coding {ℓ} using ( pr )
-```
-
 <!--en-->
 An element of the constructible model is an ambient set together with a proof that it is constructible. Transitivity of `L` is what lets bounded witnesses move between the two sides: a member of a constructible set is itself constructible, by `isL-trans`, and so becomes an element of the model in its own right. Bounded absoluteness does the corresponding work for formulas. A Δ₀ formula about the hierarchy, all of whose constants name constructible sets, means the same inside `L`; the constant bounding recorded by the `BoundedFo` data is precisely the hypothesis this transfer needs. The successor and environment-extension formulas are already proved on the hierarchy side, and lifting them into the model is a matter of applying this transfer.
 <!--zh-->
@@ -66,14 +86,6 @@ An element of the constructible model is an ambient set together with a proof th
 構成可能模型の要素とは、周囲の集合に「それが構成可能である」という証明を添えたものである。`L` の推移性が、有界な証人が両側の間を移れるようにする。`isL-trans` により、構成可能集合の要素はそれ自身構成可能であり、したがってそれ自体が模型の要素になれる。有界絶対性は論理式について対応する仕事をする。階層についての、すべての定数が構成可能集合を名指す Δ₀ 論理式は、`L` の内部でも意味を変えない。`BoundedFo` データが記録する定数の有界性は、この転送が要る前提そのものである。後者と環境拡張の論理式はすでに階層の側で証明されており、模型への持ち上げはこの転送を適用することにほかならない。
 <!--/-->
 
-```agda
-open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
-open import FOL.Manipulation.ConstantBounding using ( BoundedFo )
-open import L.Absoluteness {ℓ} using ( InL; liftFo; transferFo )
-open import L.Coding.Environment {ℓ}
-  using ( sucAt; Δ₀-sucAt; sucAt-adequate; consAt; Δ₀-consAt; consAt-adequate
-```
-
 <!--en-->
 The numerals need one compatibility fact. The internal numeral `numeralL k` realizes the von Neumann natural `k` inside the model, and `numeralL-fst` identifies its projection with the ambient `# k`; both directions of the numeral clause lean on this. Because several clauses quantify over finitely many slots at once, environments are shifted along a reindexing of slots. One logical form recurs throughout: an adequacy statement is a path of truth values, obtained from the two implications of an equivalence of propositions, and the bounded quantifiers of the object language are read as truncated existence.
 <!--zh-->
@@ -81,11 +93,6 @@ The numerals need one compatibility fact. The internal numeral `numeralL k` real
 <!--ja-->
 数項にはひとつの相容性の事実が必要である。内部の数項 `numeralL k` はフォン・ノイマンの自然数 `k` を模型の内部で実現し、`numeralL-fst` はその射影を周囲の `# k` と同一視する。数項の節の両方向はこれに依存する。いくつかの節は有限個のスロットについて同時に量化するので、環境はスロットの再索引付けに沿って移される。ひとつの論理的な形式が全章を貫く。妥当性の主張は命題の同値の二つの含意から得られる真理値の経路であり、対象言語の有界量化子は命題的切り捨てを受けた存在として読まれる。
 <!--/-->
-
-```agda
-        ; env; cons; shiftPairAt; sgl0At; pair0At; tag0At )
-open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
-```
 
 <!--en-->
 The ambient hierarchy `V ℓ` is an h-set, so the equality of two of its sets is a proposition and can sit inside a truth value; this is what makes the packaged equations below legitimate. The natural numbers enter as sets: `# k` is the von Neumann numeral in the hierarchy and `sucV` its successor operation, a notion distinct from any universe level and from the arity indices the codes carry. Propositional truncation gives mere existence, and eliminating it is legitimate only into a proposition-valued target, a restriction the pair reader's outward proof honors explicitly.
@@ -110,13 +117,10 @@ The truth values at work are the propositions of `hProp` at level `ℓ-suc ℓ`,
 <!--/-->
 
 ```agda
-
 open hPropStructure 𝒮ʟ using ( S )
 
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
 open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ ; ⟦_⟧ᵐ to ⟦_⟧ )
-
-open import L.Coding.Model {ℓ}
 ```
 
 <!--en-->
@@ -126,11 +130,6 @@ One piece of the model dictionary matters for the main construction: the pair-sh
 <!--ja-->
 模型の辞書の中で、主な構成に決定的なのは対の形をした事実である。模型の対 `prʟ` は `prʟ-fst` によって周囲の対へ射影され、その有界な読みの論理式が `prAtL` である。レコード `Container` と `container` は、ある対に等しい値に対して、両方の成分を収める構成可能集合をひとつ作る。有界な論理式で対を読むには、まさにそのような中間集合が必要であり、`lookup-fst` と `envOverAt` は、のちに使われる同じ辞書の射影と環境の事実である。
 <!--/-->
-
-```agda
-  using ( lookup-fst; prʟ; prʟ-fst; prAtL; prAtL-adequate; envOverAt
-        ; Container; container )
-```
 
 <!--en-->
 A bounded quantifier in the model ranges over elements of `S`, so any compound value a formula must recognize has to be matched by bounded witnesses that are themselves elements of the model. This section builds the general tool: an inductive language `Expr` of values assembled from assignment slots, constructible literals, numerals, and Kuratowski pairs, together with one structural reader turning an expression into a formula, and a two-sided adequacy theorem identifying the formula's meaning with the value the expression denotes. Everything else in the chapter is a specialization of this reader.
@@ -152,8 +151,17 @@ Two small preparations open the section. `PairIs a p` packages the statement tha
 private
   PairIs : V ℓ → V ℓ → hProp (ℓ-suc ℓ)
   PairIs a p = (a ≡ p) , setIsSet a p
+```
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
+```agda
 module PairExpression where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   data Expr (n : ℕ) : Type (ℓ-suc ℓ) where
 ```
 
@@ -267,7 +275,6 @@ Adequacy has two directions, and `out`{.Agda} is the one a soundness proof consu
 <!--/-->
 
 ```agda
-
   out : ∀ {n m} (e : Expr n) (ρ : Fin n → Fin m) (q : Fin m) (γ : S ^ m)
        → ⟨ γ ⊨ read e ρ q ⟩ → fst (lookup q γ) ≡ value e (λ i → fst (lookup (ρ i) γ))
   out (slot i) ρ q γ h = h
@@ -333,6 +340,7 @@ The extended assignment `δ` is `v ∷ u ∷ s ∷ γ`, and its layout is the wh
 | 1 | `u` | internal element of `a` |
 | 2 | `s` | the intermediate set, a member of the entry at `q` |
 | `i + 3` | old slot `i` | the original assignment, unchanged |
+: Three new slots precede the unchanged original assignment
 
 The pair formula asserts `s ∈ q`, `u ∈ s`, `v ∈ s`, and `q ≡ pr u v`; since `u` sits at slot one and `v` at slot zero, the recursive reads `read a` at slot one and `read b` at slot zero consult exactly the old slots, by `lift3`. Each subproof is assembled by `into` itself at the shifted slot, fed the projection path `element-fst` for the component being read, and the three nested truncated existentials are closed with one explicit `∣_∣₁` per layer.
 <!--zh-->
@@ -344,6 +352,7 @@ The pair formula asserts `s ∈ q`, `u ∈ s`, `v ∈ s`, and `q ≡ pr u v`; si
 | 1 | `u` | `a` 的内部元素 |
 | 2 | `s` | 中间集合，`q` 处条目的成员 |
 | `i + 3` | 旧槽位 `i` | 原赋值，原样保留 |
+: 三个新增槽位排在原赋值之前，原槽位依次后移
 
 配对公式断言 `s ∈ q`、`u ∈ s`、`v ∈ s`，以及 `q ≡ pr u v`；由于 `u` 位于一号槽位、`v` 位于零号槽位，经 `lift3` 后，在一号槽位处的 `read a` 与零号槽位处的 `read b` 所查询的恰是原来的槽位。每个子证明由 `into` 自身在移位槽位处组装，喂入被读分量的投影路径 `element-fst`；最后，三个嵌套的截断存在各以一个显式的 `∣_∣₁` 封口。
 <!--ja-->
@@ -355,6 +364,7 @@ The pair formula asserts `s ∈ q`, `u ∈ s`, `v ∈ s`, and `q ≡ pr u v`; si
 | 1 | `u` | `a` の内部要素 |
 | 2 | `s` | 中間集合、`q` の項目の要素 |
 | `i + 3` | 古いスロット `i` | 元の割り当て、そのまま |
+: 三つの新しいスロットが元の割り当てに先立ち、元のスロットは順に後ろへ移る
 
 対の論理式は `s ∈ q`、`u ∈ s`、`v ∈ s`、そして `q ≡ pr u v` を主張する。`u` がスロット 1 に、`v` がスロット 0 にあるので、`lift3` によって、スロット 1 での `read a` とスロット 0 での `read b` はちょうど古いスロットを参照する。各部分証明は `into` 自身がずらしたスロットで組み立て、読まれる成分の射影の経路 `element-fst` を与えられ、最後に三つの入れ子の截断された存在は、層ごとにひとつの明示的な `∣_∣₁` で閉じられる。
 <!--/-->
@@ -408,7 +418,6 @@ The two directions assemble into the advertised form. `adequate` states that the
 <!--/-->
 
 ```agda
-
   adequate : ∀ {n m} (e : Expr n) (ρ : Fin n → Fin m) (q : Fin m) (γ : S ^ m)
             → (γ ⊨ read e ρ q) ≡ PairIs (fst (lookup q γ)) (value e (λ i → fst (lookup (ρ i) γ)))
   adequate e ρ q γ = ⇔toPath (out e ρ q γ) (into e ρ q γ)
@@ -426,7 +435,6 @@ The outward reader of `member` eliminates the truncated bounded existential and 
 <!--/-->
 
 ```agda
-
   member-out : ∀ {n} (e : Expr n) (C : Term S n) (γ : S ^ n)
               → ⟨ γ ⊨ member e C ⟩ → ⟨ value e (λ i → fst (lookup i γ)) ∈ fst (⟦ C ⟧ γ) ⟩
   member-out e C γ = rec₁ (snd (value e (λ i → fst (lookup i γ)) ∈ fst (⟦ C ⟧ γ)))
@@ -450,6 +458,8 @@ The inward reader must exhibit the member, and the value of `e` itself serves, o
     x : S
     x = value e (λ i → fst (lookup i γ)) , isL-trans h (snd (⟦ C ⟧ γ))
 ```
+</div>
+</details>
 
 <!--en-->
 The first specialization turns the generic reader into a tag recognizer. `tagAtL s k x` reads, at slot `s`, the expression pairing the numeral `k` with the slot `x`; it is therefore the bounded formula asserting that the entry at `s` is the ordered pair of `# k` and the entry at `x`. Codes in the recursion carry a numeric tag paired with their payload, and this is exactly that shape.
@@ -460,7 +470,6 @@ The first specialization turns the generic reader into a tag recognizer. `tagAtL
 <!--/-->
 
 ```agda
-
 tagAtL : ∀ {n} → Fin n → ℕ → Fin n → Formula S n
 tagAtL s k x = PairExpression.read
   (PairExpression.pair (PairExpression.numeral k) (PairExpression.slot x)) id s
@@ -550,8 +559,17 @@ The definition binds one fresh variable for the candidates and is the conjunctio
 extAt : ∀ {n} → Fin n → Formula S (suc n) → Formula S n
 extAt y φ = ∀̇ ((var zero ∈̇ var (suc y)) ⇒̇ φ)
          ∧̇ ∀̇ (φ ⇒̇ (var zero ∈̇ var (suc y)))
+```
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
+```agda
 module _ {n : ℕ} (y : Fin n) (φ : Formula S (suc n)) (γ : S ^ n) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   extAt-out : ⟨ γ ⊨ extAt y φ ⟩ → (z : S)
 ```
 
@@ -581,14 +599,13 @@ Introduction runs the projections in reverse and is the ordered pair of the two 
 <!--/-->
 
 ```agda
-
   extAt-in-both : ((z : S) → ⟨ fst z ∈ fst (lookup y γ) ⟩ → ⟨ (z ∷ γ) ⊨ φ ⟩)
                 → ((z : S) → ⟨ (z ∷ γ) ⊨ φ ⟩ → ⟨ fst z ∈ fst (lookup y γ) ⟩)
                 → ⟨ γ ⊨ extAt y φ ⟩
   extAt-in-both f g = f , g
-
-
 ```
+</div>
+</details>
 
 <!--en-->
 ## Reading a key in two layers
@@ -629,7 +646,6 @@ The adequacy statement identifies the truth value of this formula with the propo
 <!--/-->
 
 ```agda
-
 arityTagPairAtL-adequate : ∀ {n} (c ar : Fin n) (k : ℕ) (a b : Fin n) (γ : S ^ n)
   → (γ ⊨ arityTagPairAtL c ar k a b)
   ≡ PairIs (fst (lookup c γ))
@@ -748,8 +764,6 @@ The definition applies the extension characterization at slot `E`{.Agda}, with t
 ```agda
 envSetAt : ∀ {n} → Fin n → Fin n → Fin n → Formula S n
 envSetAt E ar B = extAt E (envOverAt zero (suc ar) (suc B))
-
-
 ```
 
 <!--en-->
@@ -813,7 +827,6 @@ The proof composes three paths. The transfer lemma first equates satisfaction of
     transferFo (sucAt i j) _ (Δ₀-sucAt i j) γ
   ∙ sucAt-adequate i j (map fst γ)
   ∙ cong₂ PairIs (lookup-fst j γ) (cong sucV (lookup-fst i γ))
-
 ```
 
 <!--en-->
@@ -862,7 +875,6 @@ private
 <!--/-->
 
 ```agda
-
   bddPair0 : ∀ {n} (k j : Fin n) → BoundedFo InL (pair0At k j)
   bddPair0 k j = (_ , (_ , _)) , ((_ , _) , (_ , ((_ , _) , (_ , _))))
 
@@ -914,7 +926,6 @@ With the boundedness certificates assembled, `consAtL e' m e`{.Agda} is the lift
 <!--/-->
 
 ```agda
-
 consAtL : ∀ {n} → Fin n → Fin n → Fin n → Formula S n
 consAtL e' m e = liftFo (consAt e' m e) (bddCons e' m e)
 
@@ -951,7 +962,6 @@ The hierarchy-side adequacy theorem `consAt-adequate`{.Agda} then rewrites ambie
       (lookup-fst e γ ∙ hE)
   ∙ cong₂ PairIs (lookup-fst e' γ)
       (cong (λ w → env (cons w g)) (lookup-fst m γ))
-
 ```
 
 <!--en-->

@@ -24,13 +24,21 @@ Rules (apply to Markdown prose, `*.md` / `*.lagda.md`; the verbatim LICENSE is e
  9. Standalone theorem-style labels use a bold label followed by a space, never a
      period. Fact, lemma, theorem and corollary labels must immediately name an Agda declaration:
      `**Fact** (`name`{.Agda}) Text` (likewise in Chinese and Japanese).         [report only]
- 10. An outermost construction, fact, lemma, theorem or corollary developed through prose and code
-     ends its proof with a standalone `∎` after its final code block. Explanatory prose
-     may follow outside the proof. Nested statements inside a disclosure belong to
-     that proof and need no separate mark.                                       [report only]
- 11. Reader-facing disclosure summaries begin with the localized optional-reading
-     marker: `Optional:`, `选读：` or `発展：`.                                  [report only]
+ 10. Every definition, construction, fact, lemma, theorem, corollary or proof
+     encloses Agda code; semantic definition endings require no prose end mark.
+     Folded helpers obey the same rule. Parallel names use one Construction
+     header and a bullet per name, never several empty parallel labels.       [report only]
+ 11. Foldable
+     submodules use a single-line Agda declaration as their summary and close
+     after the submodule's last code block.                                      [report only]
  12. Japanese prose uses plain style (である体), not polite です・ます forms.      [report only]
+ 13. An unboxed Agda link names one declaration only. Applications, type
+     annotations and equations use one complete inline-code span.             [report only]
+ 14. In every chapter, standalone symbolic variables in prose use inline Agda
+     markup. Exact pre-existing lines are tracked as a shrinking legacy list. [report only]
+ 15. Inline LaTeX outside figures requires an explicit human approval tied to
+     its exact context. Explicit temporary chapter allowances end when the
+     catalog marks human_reviewed true. Standalone display math is allowed.  [report only]
 
 "Chinese context" = the punctuation is adjacent to (or, for quotes/parens, wraps) a
 CJK ideograph or CJK punctuation, looking past whitespace, markdown emphasis markers,
@@ -47,11 +55,11 @@ Usage:
 Exit status is non-zero if any violation remains (in --fix, only the report-only ones).
 """
 
+import json
 import os
-import re
 import subprocess
 import sys
-from pathlib import Path   # cutover step 7: _masters_for_cjk() needs it
+from pathlib import Path
 
 # CUTOVER STEP 7 gave this per-file linter its first whole-tree check, so it needs
 # a root. It had none: every other check here reads the files named on the command
@@ -59,605 +67,53 @@ from pathlib import Path   # cutover step 7: _masters_for_cjk() needs it
 ROOT = Path(__file__).resolve().parent.parent.parent
 SRC = ROOT / "src"
 
-# Verbatim third-party text (licenses, etc.) is never linted, whatever its extension.
-EXCLUDE_BASENAMES = {
-    "license", "license.md", "license.txt", "licence", "licence.md",
-    "copying", "copying.md", "unlicense", "notice", "notice.md",
-}
-
-# ---- character classes -------------------------------------------------------
-
-# "CJK wide" characters that wrap without spaces: Han ideographs plus Japanese kana.
-# (The long-vowel mark ー U+30FC and middle dot ・ U+30FB fall in the katakana block and
-#  are plain text here, never dashes — EM_DASHES below is unchanged.)
-CJK_IDEOGRAPH = [(0x3040, 0x309F), (0x30A0, 0x30FF), (0x31F0, 0x31FF),
-                 (0x3400, 0x4DBF), (0x4E00, 0x9FFF), (0xF900, 0xFAFF), (0x20000, 0x2FA1F)]
-# CJK punctuation / full-width forms used as "Chinese context":
-CJK_PUNCT = [(0x3000, 0x303F), (0xFF00, 0xFFEF), (0x2018, 0x2019), (0x201C, 0x201D)]
-
-FULLWIDTH = {",": "，", ";": "；", ":": "：", "!": "！", "?": "？"}
-EM_DASHES = {"—", "―"}            # U+2014, U+2015  (en dash U+2013 and hyphen are allowed)
-SKIP = set(" \t\r*_~()[]")        # whitespace, markdown emphasis, transparent brackets
-
-# i18n language markers (see dev/STYLE-i18n.md). Treated as hard block boundaries so the
-# CJK reflow never merges prose across (or into) a language switch.
-MARKER_RE = re.compile(r"^\s*<!--\s*(en|zh|ja|/)\s*-->\s*$")
-ROUTE_METADATA_RE = re.compile(r"<!--\s*bedrock-routes\s*\{.*?\}\s*-->", re.S)
-SINGLE_LINE_CODE_RE = re.compile(
-    r"^\s*<div class=\"single-line-code\"(?: data-note=\"[^\"]+\")?><code>(?:[^<\n]+|<[^>\n]+>)+</code></div>\s*$")
-
-
-def strip_route_metadata(text):
-    """Blank machine-readable route metadata without changing line numbers."""
-    return ROUTE_METADATA_RE.sub(lambda match: re.sub(r"[^\n]", " ", match.group(0)), text)
-
-
-def _in(cp, ranges):
-    return any(a <= cp <= b for a, b in ranges)
-
-
-def is_cjk_ideograph(ch):
-    return _in(ord(ch), CJK_IDEOGRAPH)
-
-
-def is_cjk_punct(ch):
-    return _in(ord(ch), CJK_PUNCT)
-
-
-def is_cjk(ch):
-    return is_cjk_ideograph(ch) or is_cjk_punct(ch)
-
-
-# ---- protected-region mask ---------------------------------------------------
-
-def build_protected(text):
-    """Boolean mask: True where chars are inside code / link dest / URL (untouchable)."""
-    n = len(text)
-    prot = [False] * n
-
-    for match in ROUTE_METADATA_RE.finditer(text):
-        for j in range(match.start(), match.end()):
-            prot[j] = True
-
-    # fenced code blocks (``` or ~~~), inclusive of the fence lines
-    pos = 0
-    fenced = False
-    for line in text.split("\n"):
-        stripped = line.lstrip()
-        is_fence = stripped.startswith("```") or stripped.startswith("~~~")
-        if fenced or is_fence:
-            for j in range(pos, pos + len(line)):
-                prot[j] = True
-        if is_fence:
-            fenced = not fenced
-        pos += len(line) + 1  # + newline
-
-    def mask(pattern, start_off=0):
-        for m in re.finditer(pattern, text):
-            for j in range(m.start() + start_off, m.end()):
-                prot[j] = True
-
-    mask(r"`[^`\n]*`")                       # inline code
-    mask(r"\]\([^)\n]*\)", start_off=1)      # markdown link/image destination: the (...) part
-    mask(r"[A-Za-z][A-Za-z0-9+.\-]*://[^\s)]+")  # bare URLs
-    mask(r"\$\$[^$]*\$\$")                    # display math $$...$$ (may span lines)
-    mask(r"\$[^$\n]+\$")                      # inline math $...$
-    mask(r"<[^>\n]*>")                          # raw HTML tags and attributes
-    mask(r"&(?:#[0-9]+|#x[0-9A-Fa-f]+|[A-Za-z][A-Za-z0-9]+);")  # HTML entities
-    return prot
-
-
-# ---- adjacency ---------------------------------------------------------------
-
-def _scan(text, prot, i, step):
-    """Nearest meaningful char in direction `step`, skipping spaces/emphasis/protected.
-    Stops at a line boundary."""
-    j = i + step
-    while 0 <= j < len(text):
-        c = text[j]
-        if c == "\n":
-            return None
-        if c in SKIP or prot[j]:
-            j += step
-            continue
-        return c
-    return None
-
-
-def cjk_adjacent(text, prot, i):
-    left = _scan(text, prot, i, -1)
-    right = _scan(text, prot, i, +1)
-    return (left is not None and is_cjk(left)) or (right is not None and is_cjk(right))
-
-
-# ---- line reflow (a soft wrap between two CJK chars renders as a space) -------
-
-_BLOCK_START = re.compile(r"^\s*([-*+]\s|\d+\.\s|#{1,6}\s|```|~~~|\||>|<)")
-
-
-def _strip_trailing_md(s):
-    s = s.rstrip()
-    while True:
-        n = re.sub(r"`[^`]*`$", "", re.sub(r"(?:\*+|_+|~+)$", "", s)).rstrip()
-        if n == s:
-            return s
-        s = n
-
-
-def _strip_leading_md(s):
-    while True:
-        n = re.sub(r"^`[^`]*`", "", re.sub(r"^(?:\*+|_+|~+)", "", s)).lstrip()
-        if n == s:
-            return s
-        s = n
-
-
-def _cont_text(line, blockquote):
-    s = line.lstrip()
-    return re.sub(r"^>\s?", "", s) if blockquote else s
-
-
-def _can_merge(prev, line):
-    """Should `line` (a wrapped continuation) join `prev` with no space between them?"""
-    if not prev.strip() or not line.strip():
-        return False, False
-    if MARKER_RE.match(prev) or MARKER_RE.match(line):
-        return False, False
-    bq = prev.lstrip().startswith(">") and line.lstrip().startswith(">")
-    if _BLOCK_START.match(line) and not bq:
-        return False, False
-    last = _strip_trailing_md(prev)
-    first = _strip_leading_md(_cont_text(line, bq))
-    if not last or not first:
-        return False, bq
-    L, R = last[-1], first[0]
-    # Join when the wrap would render a bad space: between two CJK ideographs, or
-    # adjacent to a full-width symbol (which never takes an adjacent space). Keep the
-    # break at CJK<->Latin / Latin<->Latin boundaries, where the space is wanted.
-    join = is_cjk_punct(L) or is_cjk_punct(R) or (is_cjk_ideograph(L) and is_cjk_ideograph(R))
-    return join, bq
-
-
-def reflow(text):
-    out = []
-    fenced = False
-    for line in text.split("\n"):
-        if line.lstrip().startswith(("```", "~~~")):
-            fenced = not fenced
-            out.append(line)
-            continue
-        if fenced or not out:
-            out.append(line)
-            continue
-        ok, bq = _can_merge(out[-1], line)
-        if ok:
-            out[-1] = out[-1].rstrip() + _cont_text(line, bq)
-        else:
-            out.append(line)
-    return "\n".join(out)
-
-
-def wrap_break_lines(text):
-    """1-based line numbers whose trailing soft-wrap renders as a CJK-CJK space."""
-    lines = text.split("\n")
-    res = []
-    fenced = False
-    for i in range(len(lines) - 1):
-        if lines[i].lstrip().startswith(("```", "~~~")):
-            fenced = not fenced
-            continue
-        if fenced:
-            continue
-        if _can_merge(lines[i], lines[i + 1])[0]:
-            res.append(i + 1)
-    return res
-
-
-def line_to_index(text, lineno):
-    off = 0
-    for k, line in enumerate(text.split("\n")):
-        if k + 1 == lineno:
-            return off
-        off += len(line) + 1
-    return 0
-
-
-# ---- Agda code blocks must be English-only -----------------------------------
-
-_AGDA_FENCE = re.compile(r"^\s*(```+|~~~+)\s*([A-Za-z0-9_-]*)\s*$")
-_CLOSE_FENCE = re.compile(r"^\s*(```+|~~~+)\s*$")
-
-
-def agda_block_violations(text):
-    """Chinese / full-width characters inside an ```agda code block are banned.
-
-    Agda's own Unicode operators (≡ ℕ λ Δ₀ 𝒮 …) are not CJK and are allowed; only
-    CJK ideographs and full-width symbols are flagged, for manual translation."""
-    out = []
-    in_agda = False
-    off = 0
-    for line in text.split("\n"):
-        if not in_agda:
-            m = _AGDA_FENCE.match(line)
-            if m and m.group(2).lower() == "agda":
-                in_agda = True
-        elif _CLOSE_FENCE.match(line):
-            in_agda = False
-        else:
-            bad = [c for c in line if is_cjk(c)]
-            if bad:
-                col = next(i for i, c in enumerate(line) if is_cjk(c))
-                uniq = "".join(dict.fromkeys(bad))
-                out.append(Violation(off + col,
-                                     f"Agda code must be English-only; translate {uniq!r} to English", False))
-        off += len(line) + 1
-    return out
-
-
-def single_line_code_violations(text):
-    """Keep centered code displays as one safe, non-Agda HTML line."""
-    out = []
-    for match in re.finditer(r"[^\n]*single-line-code[^\n]*", text):
-        if not SINGLE_LINE_CODE_RE.fullmatch(match.group(0)):
-            out.append(Violation(match.start(),
-                                 "single-line-code must be one centered <div> with one inline <code>",
-                                 False))
-    return out
-
-
-_STATEMENT_LABELS = {"Construction", "Fact", "Lemma", "Theorem", "Corollary",
-                     "构造", "事实", "引理", "定理", "推论",
-                     "構成", "事実", "補題", "系"}
-_PROOF_LABELS = {"Proof", "证明", "証明", "Definition", "定义", "定義"}
-_THEOREM_LABEL_RE = re.compile(
-    r"^\s*\*\*(Construction|Fact|Lemma|Theorem|Corollary|Proof|Definition|构造|事实|引理|定理|推论|证明|定义|構成|事実|補題|系|証明|定義)(?:[.。])?\*\*")
-
-
-def theorem_label_violations(text):
-    """Enforce the reader-facing lemma/theorem/proof label convention."""
-    out = []
-    fenced = False
-    offset = 0
-    for line in text.split("\n"):
-        if line.lstrip().startswith(("```", "~~~")):
-            fenced = not fenced
-            offset += len(line) + 1
-            continue
-        if fenced:
-            offset += len(line) + 1
-            continue
-        for match in _THEOREM_LABEL_RE.finditer(line):
-            label = match.group(1)
-            label_start = line.index("**", match.start())
-            rest = line[label_start:]
-            if label in _STATEMENT_LABELS:
-                valid = re.match(
-                    rf"\*\*{re.escape(label)}\*\* \(`[^`\n]+`\{{\.Agda\}}\) ",
-                    rest)
-                message = ("named statement label must have no period and must use "
-                           f"**{label}** (`name`{{.Agda}}) Text")
-            else:
-                valid = rest.startswith(f"**{label}** ")
-                message = ("proof/definition label must have no period and must use "
-                           f"**{label}** Text")
-            if not valid:
-                out.append(Violation(offset + label_start, message, False))
-        offset += len(line) + 1
-    return out
-
-
-_QED_START_RE = re.compile(r"^\*\*(Construction|Fact|Lemma|Theorem|Corollary)\*\* ")
-_QED_HEADING_RE = re.compile(r"^#{1,2}\s")
-
-
-def _qed_structure(text):
-    """Return English statement labels and section boundaries with disclosure depth."""
-    labels = []
-    headings = [0]
-    depth = 0
-    fenced = False
-    offset = 0
-    for line in text.splitlines(keepends=True):
-        stripped = line.strip()
-        if stripped.startswith(("```", "~~~")):
-            fenced = not fenced
-        elif not fenced:
-            if _QED_HEADING_RE.match(line):
-                headings.append(offset)
-            label = _QED_START_RE.match(line)
-            if label:
-                labels.append((offset, depth))
-            depth += len(re.findall(r"<details\b", line))
-            depth -= len(re.findall(r"</details>", line))
-        offset += len(line)
-    headings.append(len(text))
-    return labels, sorted(set(headings))
-
-
-def qed_violations(text):
-    """Require one ∎ for each outermost theorem-style proof.
-
-    English labels identify each trilingual statement once; the parallel Chinese and
-    Japanese labels lie in the same i18n block and therefore need no duplicate mark.
-    Within a section, labels at the shallowest disclosure depth are the outer proofs;
-    labels nested in their disclosure are explanatory proof steps.
-    """
-    out = []
-    labels, headings = _qed_structure(text)
-    for section_start, section_end in zip(headings, headings[1:]):
-        section_labels = [(position, depth) for position, depth in labels
-                          if section_start <= position < section_end]
-        if not section_labels:
-            continue
-        outer_depth = min(depth for _, depth in section_labels)
-        outer = [position for position, depth in section_labels if depth == outer_depth]
-        for index, start in enumerate(outer):
-            end = outer[index + 1] if index + 1 < len(outer) else section_end
-            segment = text[start:end]
-            fences = list(re.finditer(r"(?m)^```\s*$", segment))
-            if not fences:
-                continue
-            tail = segment[fences[-1].end():]
-            tail = re.sub(r"(?m)^\s*<!--(?:en|zh|ja|/)-->\s*$", "", tail)
-            if not re.match(r"\s*(?:</details>\s*)*∎(?:[ \t]*(?:\n|$))", tail):
-                out.append(Violation(
-                    start,
-                    "outermost construction/lemma/theorem/corollary must end with standalone "
-                    "`∎` after its complete proof",
-                    False,
-                ))
-    return out
-
-
-_OPTIONAL_SUMMARY_PREFIX = {
-    "en": "Optional:",
-    "zh": "选读：",
-    "ja": "発展：",
-}
-
-
-def optional_summary_violations(text):
-    """Require a localized optional-reading marker on every visible summary."""
-    out = []
-    language = None
-    fenced = False
-    offset = 0
-    for line in text.splitlines(keepends=True):
-        stripped = line.strip()
-        if stripped.startswith(("```", "~~~")):
-            fenced = not fenced
-            offset += len(line)
-            continue
-        if not fenced:
-            marker = MARKER_RE.match(line)
-            if marker:
-                code = marker.group(1)
-                language = None if code == "/" else code
-            else:
-                for match in re.finditer(r"<summary>(.*?)</summary>", line):
-                    if language not in _OPTIONAL_SUMMARY_PREFIX:
-                        out.append(Violation(
-                            offset + match.start(),
-                            "disclosure summary must be inside an explicit language group",
-                            False,
-                        ))
-                        continue
-                    prefix = _OPTIONAL_SUMMARY_PREFIX[language]
-                    if not match.group(1).lstrip().startswith(prefix):
-                        out.append(Violation(
-                            offset + match.start(1),
-                            f"disclosure summary must begin with {prefix!r} ({language})",
-                            False,
-                        ))
-        offset += len(line)
-    return out
-
-
-_JA_POLITE_BOUNDARY = (
-    r"(?=$|[\s。！？、；：…」』）\]}]|"
-    r"が(?:$|[\s、。！？])|けれど|けど|から|ので|ね|よ|か|し)"
-)
-_JA_POLITE_RE = re.compile(
-    rf"ませんでした|でした|でしょう|ました|ません|ましょう|ください|"
-    rf"(?:です|ます){_JA_POLITE_BOUNDARY}"
-)
-
-
-def japanese_polite_violations(text, prot=None):
-    """Reject polite-style forms in explicit Japanese prose blocks.
-
-    Protected Markdown regions are ignored. Bare `です` and `ます` require a
-    sentence boundary or a genuine connective, so ordinary sequences such as
-    `包んですぐ`, `段階ですでに`, and the lexical adverb `ますます` are exempt.
-    """
-    if prot is None:
-        prot = build_protected(text)
-    out = []
-    language = None
-    offset = 0
-    for line in text.splitlines(keepends=True):
-        marker = MARKER_RE.match(line)
-        if marker:
-            code = marker.group(1)
-            language = None if code == "/" else code
-        elif language == "ja":
-            for match in _JA_POLITE_RE.finditer(line):
-                start = offset + match.start()
-                end = offset + match.end()
-                if any(prot[start:end]):
-                    continue
-                if match.group(0) == "ます":
-                    left = text[max(0, start - 2):start]
-                    right = text[end:end + 2]
-                    if left == "ます" or right == "ます":
-                        continue
-                out.append(Violation(
-                    start,
-                    f"Japanese prose must use plain style (である体); rewrite {match.group(0)!r}",
-                    False,
-                ))
-        offset += len(line)
-    return out
-
-
-# ---- analysis ----------------------------------------------------------------
-
-class Violation:
-    __slots__ = ("index", "message", "fixable")
-
-    def __init__(self, index, message, fixable):
-        self.index = index
-        self.message = message
-        self.fixable = fixable
-
-
-def analyze(text):
-    """Return (fixed_text, fixable_violations, manual_violations).
-
-    fixed_text applies rules 1-3. Each list holds Violation objects (against `text`)."""
-    prot = build_protected(text)
-    n = len(text)
-    edits = {}            # index -> replacement char (rules 1-3)
-    fixable = []
-    manual = []
-
-    # Rule 1: sentence punctuation -> full-width
-    for i, ch in enumerate(text):
-        if prot[i] or ch not in FULLWIDTH:
-            continue
-        if ch == ":":
-            if text[i + 1:i + 3] == "//":
-                continue
-            if i > 0 and text[i - 1].isdigit() and i + 1 < n and text[i + 1].isdigit():
-                continue
-        if cjk_adjacent(text, prot, i):
-            edits[i] = FULLWIDTH[ch]
-            fixable.append(Violation(i, f"half-width '{ch}' in Chinese context -> '{FULLWIDTH[ch]}'", True))
-
-    # Rule 2: Chinese double quotes -> 「」
-    for pat, opench, closech in ((r'"[^"\n]*"', '"', '"'), (r"“[^”\n]*”", "“", "”")):
-        for m in re.finditer(pat, text):
-            s, e = m.start(), m.end() - 1
-            if prot[s] or prot[e]:
-                continue
-            inner = text[s + 1:e]
-            ctx = any(is_cjk(c) for c in inner) or cjk_adjacent(text, prot, s) or cjk_adjacent(text, prot, e)
-            if ctx:
-                edits[s] = "「"
-                edits[e] = "」"
-                fixable.append(Violation(s, f"Chinese double quote {opench}…{closech} -> 「…」", True))
-
-    # Rule 3: full-width parens in Chinese context -> half-width
-    for i, ch in enumerate(text):
-        if prot[i]:
-            continue
-        if ch in "（）" and cjk_adjacent(text, prot, i):
-            edits[i] = "(" if ch == "（" else ")"
-            fixable.append(Violation(i, f"full-width '{ch}' in Chinese context -> '{edits[i]}'", True))
-
-    # Rule 3b: half-width parens in Chinese context get English-style outer spacing
-    LEAD_GLUE = set("*_~`")  # markdown emphasis / code fence chars that still want a space before '('
-    for m in re.finditer(r"\([^()]*\)", text):  # content may wrap across a soft line break
-        s, e = m.start(), m.end() - 1
-        if prot[s] or prot[e]:
-            continue
-        content = text[s + 1:e]
-        if not (cjk_adjacent(text, prot, s) or cjk_adjacent(text, prot, e) or any(is_cjk(c) for c in content)):
-            continue
-        if s > 0 and s not in edits:
-            p = text[s - 1]
-            if is_cjk_ideograph(p) or p.isalnum() or p in LEAD_GLUE:
-                edits[s] = " ("
-                fixable.append(Violation(s, "half-width '(' in Chinese context needs a leading space", True))
-        if e + 1 < n and e not in edits:
-            nxt = text[e + 1]
-            if is_cjk_ideograph(nxt) or nxt.isalnum():
-                edits[e] = ") "
-                fixable.append(Violation(e, "half-width ')' in Chinese context needs a trailing space", True))
-
-    # Rule 3c: no space adjacent to a full-width punctuation symbol (same line)
-    for i, ch in enumerate(text):
-        if prot[i] or not is_cjk_punct(ch):
-            continue
-        j = i + 1
-        while j < n and text[j] in " \t":
-            if j not in edits:
-                edits[j] = ""
-                fixable.append(Violation(i, f"no space after full-width '{ch}'", True))
-            j += 1
-        # space(s) before, but only when they are not leading indentation
-        k = i - 1
-        while k >= 0 and text[k] in " \t":
-            k -= 1
-        if k >= 0 and text[k] != "\n" and k < i - 1:
-            for m2 in range(k + 1, i):
-                if m2 not in edits:
-                    edits[m2] = ""
-            fixable.append(Violation(i, f"no space before full-width '{ch}'", True))
-
-    # Rule 3d: no space between two CJK ideographs (markdown-adjacent spaces are exempt)
-    ideo = r"[぀-ヿㇰ-ㇿ㐀-䶿一-鿿]"
-    for m in re.finditer(rf"(?<={ideo})[ \t]+(?={ideo})", text):
-        if any(prot[k] for k in range(m.start(), m.end())):
-            continue
-        for k in range(m.start(), m.end()):
-            edits.setdefault(k, "")
-        fixable.append(Violation(m.start(), "no space between Chinese characters", True))
-
-    # Rule 4: em dash (report only)
-    for i, ch in enumerate(text):
-        if prot[i]:
-            continue
-        if ch in EM_DASHES:
-            manual.append(Violation(i, f"em dash '{ch}' is banned; rewrite with ，：。() or split the sentence", False))
-
-    # Rule 5: single quotes in Chinese context + nesting (report only)
-    for i, ch in enumerate(text):
-        if prot[i]:
-            continue
-        if ch in ("‘", "’") and cjk_adjacent(text, prot, i):
-            manual.append(Violation(i, f"single quote '{ch}' in Chinese context is banned (use 「」, no nesting)", False))
-        elif ch == "'" and cjk_adjacent(text, prot, i):
-            manual.append(Violation(i, "ASCII single quote as a Chinese quotation mark is banned (use 「」)", False))
-        elif ch in ("『", "』"):
-            manual.append(Violation(i, f"nested-quote bracket '{ch}' is banned (no quote nesting)", False))
-
-    # Rule 5 (cont.): detect 「 opened while already inside 「…」
-    depth = 0
-    for i, ch in enumerate(text):
-        if prot[i]:
-            continue
-        if ch == "「":
-            if depth > 0:
-                manual.append(Violation(i, "nested 「 is banned (no quote nesting)", False))
-            depth += 1
-        elif ch == "」" and depth > 0:
-            depth -= 1
-
-    # Rule 6: Agda code blocks must be English-only (no Chinese / full-width)
-    manual.extend(agda_block_violations(text))
-
-    # Rule 8: centered single-line code displays have one canonical form.
-    manual.extend(single_line_code_violations(text))
-
-    # Rule 9: theorem-style labels have one named, punctuation-free form.
-    manual.extend(theorem_label_violations(text))
-    # Rule 10: completed constructions and lemmas visibly close after their code.
-    manual.extend(qed_violations(text))
-    # Rule 11: disclosures are visibly marked as optional reading in every language.
-    manual.extend(optional_summary_violations(text))
-    # Rule 12: Japanese prose consistently uses plain style.
-    manual.extend(japanese_polite_violations(text, prot))
-
-    char_fixed = "".join(edits.get(i, c) for i, c in enumerate(text)) if edits else text
-
-    # Rule 3e: reflow CJK soft-wraps (a line break between two CJK chars renders as a space)
-    for ln in wrap_break_lines(char_fixed):
-        fixable.append(Violation(line_to_index(char_fixed, ln),
-                                 "line break renders as a space between Chinese characters; join with the next line", True))
-    fixed = reflow(char_fixed)
-    return fixed, fixable, manual
-
+from outcrop.site import SiteConfig
+_SITE_CONFIG = SiteConfig.load(ROOT / 'site/project.json', root=ROOT)
+_BARE_VARIABLE_LEGACY_PATH = _SITE_CONFIG.path(_SITE_CONFIG.values['variable_legacy'])
+
+from outcrop.core.prose_lint import EXCLUDE_BASENAMES, ProsePolicy
+from outcrop.core.prose_lint import analyze as analyze_prose, theorem_label_violations as label_violations
+from outcrop.core.prose_lint import new_bare_variable_violations as bare_variable_policy_violations
+from outcrop.core.i18n_markers import shared_cjk_errors
+from outcrop.site.math_review import load_math_review
+_MATH_APPROVALS, _MATH_TEMPORARY = load_math_review(_SITE_CONFIG)
+def load_bare_variable_legacy():
+    """Exact old prose lines, never chapter-level exclusions."""
+    with _BARE_VARIABLE_LEGACY_PATH.open(encoding="utf-8") as source:
+        entries = json.load(source)
+    if entries.get("version") != 1:
+        raise ValueError("unknown inline Agda legacy inventory version")
+    return {chapter: set(lines) for chapter, lines in entries["lines"].items()}
+
+
+_BARE_VARIABLE_LEGACY = load_bare_variable_legacy()
+
+def new_bare_variable_violations(text, chapter, legacy=None):
+    return bare_variable_policy_violations(text, chapter,
+        _BARE_VARIABLE_LEGACY if legacy is None else legacy)
+
+
+
+def theorem_label_violations(text, path=None):
+    numbered = range(5) if path and Path(path).resolve() == SRC / 'Origin.lagda.md' else ()
+    return label_violations(text, numbered_theorems=numbered)
+
+def analyze(text, path=None):
+    chapter = None
+    if path is not None:
+        try:
+            chapter = Path(path).resolve().relative_to(SRC).as_posix()
+        except ValueError:
+            pass
+    policy = ProsePolicy(chapter=chapter or '', numbered_theorems=tuple(range(5)) if chapter == 'Origin.lagda.md' else (),
+                         require_submodules=chapter is not None, variables=chapter is not None,
+                         table_captions=chapter is not None,
+                         inline_code=path is None or chapter is not None,
+                         inline_math_review=chapter is not None and _SITE_CONFIG.policies.get('inline_math_review', True),
+                         math_approvals=_MATH_APPROVALS,
+                         math_temporary=_MATH_TEMPORARY,
+                         variable_legacy=_BARE_VARIABLE_LEGACY)
+    return analyze_prose(text, policy=policy)
 
 # ---- driver ------------------------------------------------------------------
 
@@ -691,6 +147,9 @@ def target_files(explicit, staged):
             and os.path.basename(f).lower() not in EXCLUDE_BASENAMES
             and not f.startswith(".claude/")    # Claude skill/config, not prose docs
             and not f.startswith("archive/")    # outside every gate (archived D20, live DD13)
+            # Compiler HTML is an input fixture, not an authored Markdown master.
+            # Its corresponding examples/renderer/chapters sources are linted.
+            and not f.startswith("outcrop/")  # independent project, linted by its own configured gate
             # A brief and a report are FROZEN RECORDS. A brief says what an agent was told
             # on a date; a report says what it found. Neither is live guidance, and neither
             # is ever rewritten, so a style gate over them can only force an edit to a
@@ -705,6 +164,7 @@ def target_files(explicit, staged):
 def main(argv):
     mode = "check"
     staged = False
+    docs_only = False
     paths = []
     for a in argv:
         if a == "--check":
@@ -713,6 +173,8 @@ def main(argv):
             mode = "fix"
         elif a == "--staged":
             staged = True
+        elif a == "--docs-only":
+            docs_only = True
         elif a.startswith("-"):
             sys.stderr.write(f"unknown option: {a}\n")
             return 2
@@ -720,6 +182,8 @@ def main(argv):
             paths.append(a)
 
     files = target_files(paths, staged)
+    if docs_only:
+        files = [path for path in files if not Path(path).resolve().is_relative_to(SRC)]
     total_fixable = 0
     total_manual = 0
     fixed_files = []
@@ -730,12 +194,12 @@ def main(argv):
                 text = fh.read()
         except (OSError, UnicodeDecodeError):
             continue
-        fixed, fixable, manual = analyze(text)
+        fixed, fixable, manual = analyze(text, path)
 
         if mode == "fix":
             cur = text
             for _ in range(6):  # converge: char fixes + reflow may interact
-                nxt = analyze(cur)[0]
+                nxt = analyze(cur, path)[0]
                 if nxt == cur:
                     break
                 cur = nxt
@@ -744,7 +208,7 @@ def main(argv):
                     fh.write(cur)
                 fixed_files.append(path)
             # report manual violations against the fixed text
-            manual = analyze(cur)[2]
+            manual = analyze(cur, path)[2]
             if manual:
                 report(path, cur, manual)
                 total_manual += len(manual)
@@ -772,7 +236,7 @@ def main(argv):
         # C-8, the shared-CJK check. It reads every master under src/ and not the
         # file list, so a caller that NAMES files gets the lint alone. `make check`
         # and the pre-commit hook both name none, which is why this fires at both.
-        if not paths:
+        if not paths and not docs_only:
             cjk = check_shared_cjk()
             for msg in cjk:
                 print(msg, file=sys.stderr)
@@ -800,9 +264,6 @@ def main(argv):
 # keeps the check alive**: archiving check-tree.py without this move would have
 # retired a live check in silence, which is the failure clause W4 exists for.
 # ---------------------------------------------------------------------------
-CJK_SHARED = re.compile(r"[　-〿㐀-䶿一-鿿！-～]")
-MARKER_SHARED = re.compile(r"<!--\s*(en|zh|ja|/)\s*-->")
-
 def _masters_for_cjk() -> list[Path]:
     """The working tree, not the index: a new untracked master must not escape the audit."""
     return sorted(p for p in SRC.rglob("*.lagda.md"))
@@ -811,23 +272,8 @@ def check_shared_cjk() -> list[str]:
     """Prose outside every language marker is shared and reaches the English book verbatim."""
     bad = []
     for p in _masters_for_cjk():
-        text = strip_route_metadata(p.read_text(encoding="utf-8"))
-        in_fence = False
-        lang = None
-        for n, line in enumerate(text.split("\n"), 1):
-            if line.startswith("```"):
-                in_fence = not in_fence
-                continue
-            if in_fence:
-                continue
-            if (m := MARKER_SHARED.search(line)):
-                lang = None if m.group(1) == "/" else m.group(1)
-                continue
-            if lang is None and CJK_SHARED.search(line):
-                bad.append(f"{p.relative_to(ROOT)}:{n}: CJK_SHARED in SHARED prose (outside any "
-                           f"<!--en|zh|ja--> block). Shared prose is copied verbatim into "
-                           f"every language, so this would appear untranslated in the "
-                           f"English book. Wrap it in a language block")
+        for n, message in shared_cjk_errors(p.read_text(encoding='utf-8')):
+            bad.append(f'{p.relative_to(ROOT)}:{n}: CJK_SHARED: {message}; wrap it in a language block')
     return bad
 
 

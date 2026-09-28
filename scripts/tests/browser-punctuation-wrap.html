@@ -1,0 +1,70 @@
+<!doctype html><html lang="zh"><meta charset="utf-8">
+<title>Terminal punctuation wrap regression</title>
+<link rel="stylesheet" href="/static/outcrop.css">
+<style>
+  article { max-width: none; margin: 2rem; }
+  article p { overflow-wrap: anywhere; text-wrap: wrap; }
+</style>
+<h1 id="test-status">RUNNING punctuation wrap regression</h1>
+<article><p id="probe">A sentence after inline Agda <code class="Agda inline-ref">Lift X<span aria-hidden="true" inert style="display:none">hidden source</span></code> .</p></article>
+<pre id="report"></pre>
+<script type="module">
+import { initPunctuationWrap, strandedPunctuation } from '/static/__OUTCROP_RUNTIME__/reader/punctuation-wrap.js';
+const language = new URLSearchParams(location.search).get('lang') || 'zh';
+document.documentElement.lang = language;
+const article = document.querySelector('article');
+const paragraph = document.querySelector('#probe');
+const status = document.querySelector('#test-status');
+const report = document.querySelector('#report');
+const original = paragraph.innerHTML;
+const lines = [];
+function check(label, ok) {
+  lines.push(`${ok ? 'PASS' : 'FAIL'} ${label}`);
+  report.textContent = lines.join('\n');
+  if (!ok) throw new Error(label);
+}
+function orphan() {
+  const dot = paragraph.lastChild;
+  const preceding = paragraph.querySelector('code').firstChild;
+  const end = document.createRange();
+  end.setStart(dot, dot.length - 1); end.setEnd(dot, dot.length);
+  const before = document.createRange();
+  before.setStart(preceding, preceding.length - 1); before.setEnd(preceding, preceding.length);
+  return end.getBoundingClientRect().top > before.getBoundingClientRect().bottom + 1;
+}
+async function frame() {
+  await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+}
+try {
+  await document.fonts.ready;
+  let width = 0;
+  for (let candidate = 130; candidate <= 390; candidate++) {
+    article.style.width = `${candidate}px`;
+    paragraph.style.letterSpacing = '';
+    if (!orphan()) continue;
+    paragraph.style.letterSpacing = '-.04em';
+    if (!orphan()) { width = candidate; break; }
+  }
+  paragraph.style.letterSpacing = '';
+  check('found a naturally stranded terminal period', width > 0 && orphan());
+  check('reader detects the stranded period', strandedPunctuation(paragraph));
+  initPunctuationWrap();
+  await frame();
+  check('period remains isolated without tracking', paragraph.classList.contains('punctuation-tracking') || !orphan());
+  check('bounded tracking rejoins the terminal period', paragraph.classList.contains('punctuation-tracking') && !orphan());
+  check('source markup and text stay unchanged', paragraph.innerHTML === original);
+  check('tracking remains bounded', Math.abs(parseFloat(getComputedStyle(paragraph).letterSpacing)) <=
+    parseFloat(getComputedStyle(paragraph).fontSize) * .041);
+  article.style.width = '700px';
+  await frame();
+  check('tracking clears after widening', !paragraph.classList.contains('punctuation-tracking'));
+  document.documentElement.classList.add('theme-dark');
+  article.style.width = `${width}px`;
+  await frame();
+  check('dark theme retains the same rescue', paragraph.classList.contains('punctuation-tracking') && !orphan());
+  status.textContent = 'PASS punctuation wrap regression';
+} catch (error) {
+  status.textContent = `FAIL punctuation wrap regression: ${error.message}`;
+  console.error(error);
+}
+</script></html>

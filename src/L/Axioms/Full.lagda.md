@@ -1,3 +1,7 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # Separation and replacement, in full
 <!--zh-->
@@ -6,43 +10,9 @@
 # 完全な分出公理と置換公理
 <!--/-->
 
-<!--en-->
-Bounded separation can form the subset of a constructible set defined by a
-Δ₀ formula, but the separation scheme permits an arbitrary first-order
-formula. This chapter closes that gap by reflecting one formula at a stage
-containing the set to be separated. It then proves full replacement by placing
-all values of a functional relation on the source set in one stage and
-collecting them with the full separation result. These are the two
-formula-scheme fields proved here;
-the complete ZF and ZFC records are assembled later.
-<!--zh-->
-有界分离能够形成由 Δ₀ 公式定义的可构造子集，但分离模式允许任意一阶公式。本章先在一个包含待分离集合的层上反射一条指定公式，以此弥合两者之间的差距；随后把函数性关系在源集合上的所有值置于同一层，再用刚得到的完整分离收集它们，从而证明完整替换。本章证明的正是这两个公式模式字段；完整的 ZF 与 ZFC record 留待后文装配。
-<!--ja-->
-有界な分出公理は、Δ₀ 論理式で定義される構成可能な部分集合を作れるが、分出公理図式は任意の一階論理式を許す。本章では、分出する集合を含む段階で一つの論理式を反映することにより、この隔たりを埋める。次に、始集合上の関数的関係のすべての値を一つの段階へ入れ、得られた完全な分出公理で集めることにより、完全な置換公理を証明する。本章で証明するのは、この二つの公理図式の欄である。ZF と ZFC のレコード全体は後の章で組み立てる。
-<!--/-->
-
-```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-```
-
-<!--en-->
-The sole classical parameter is the host principle `LEM`. At the stated
-universe level it decides each proposition by returning either a proof or a
-refutation. This is not a host-level axiom of choice and gives no operation
-that selects witnesses from an arbitrary family of propositionally truncated
-existences. It is also distinct from the choice axiom later interpreted inside
-the set-theoretic model.
-<!--zh-->
-唯一的经典参数是宿主层原理 `LEM`。在指定的宇宙层级上，它对每个命题返回证明或反驳。它不是宿主层选择公理，也不给出从任意一族命题截断存在中选取见证的操作；它还不同于后文在集合论模型内部解释的选择公理。
-<!--ja-->
-古典的なパラメータは、ホスト側の原理 `LEM` だけである。指定された宇宙レベルで、各命題について証明か反駁のいずれかを返す。これはホスト側の選択公理ではなく、命題的切り詰めを受けた存在の任意の族から証人を選ぶ操作も与えない。また、後に集合論のモデル内で解釈される選択公理とも異なる。
-<!--/-->
-
 ```agda
 open import Base.Prelude
 open import Base.Classical using ( LEM )
-
 ```
 
 <!--en-->
@@ -62,8 +32,54 @@ of the unbounded universal case.
 
 ```agda
 module L.Axioms.Full {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-
 ```
+
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax using ( con; Formula; ∃̇∈ )
+open import FOL.Manipulation.Renaming using ( renameFo; module Sat )
+open import FOL.Manipulation.Relativization using ( relativize; Δ₀-relativize )
+import FOL.Absoluteness
+import FOL.ZFModel
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import L.Constructible {ℓ}
+  using ( 𝒮ʟ; isL; isL-trans; Lset; Lset-layer; layer-trans; Lset-mono )
+open import L.Stage {ℓ} lem using ( stage; stage-ord; stage-mem )
+open import L.Axioms.Separation {ℓ} lem
+  using ( module FunctionalImage; separateΔ₀ )
+open import L.Axioms.Basic {ℓ} using ( LsetS )
+open import L.FormulaReflection {ℓ} lem using ( mkReflect )
+```
+
+<!--en-->
+Bounded separation can form the subset of a constructible set defined by a
+Δ₀ formula, but the separation scheme permits an arbitrary first-order
+formula. This chapter closes that gap by reflecting one formula at a stage
+containing the set to be separated. It then proves full replacement by placing
+all values of a functional relation on the source set in one stage and
+collecting them with the full separation result. These are the two
+formula-scheme fields proved here;
+the complete ZF and ZFC records are assembled later.
+<!--zh-->
+有界分离能够形成由 Δ₀ 公式定义的可构造子集，但分离模式允许任意一阶公式。本章先在一个包含待分离集合的层上反射一条指定公式，以此弥合两者之间的差距；随后把函数性关系在源集合上的所有值置于同一层，再用刚得到的完整分离收集它们，从而证明完整替换。本章证明的正是这两个公式模式字段；完整的 ZF 与 ZFC record 留待后文装配。
+<!--ja-->
+有界な分出公理は、Δ₀ 論理式で定義される構成可能な部分集合を作れるが、分出公理図式は任意の一階論理式を許す。本章では、分出する集合を含む段階で一つの論理式を反映することにより、この隔たりを埋める。次に、始集合上の関数的関係のすべての値を一つの段階へ入れ、得られた完全な分出公理で集めることにより、完全な置換公理を証明する。本章で証明するのは、この二つの公理図式の欄である。ZF と ZFC のレコード全体は後の章で組み立てる。
+<!--/-->
+
+<!--en-->
+The sole classical parameter is the host principle `LEM`. At the stated
+universe level it decides each proposition by returning either a proof or a
+refutation. This is not a host-level axiom of choice and gives no operation
+that selects witnesses from an arbitrary family of propositionally truncated
+existences. It is also distinct from the choice axiom later interpreted inside
+the set-theoretic model.
+<!--zh-->
+唯一的经典参数是宿主层原理 `LEM`。在指定的宇宙层级上，它对每个命题返回证明或反驳。它不是宿主层选择公理，也不给出从任意一族命题截断存在中选取见证的操作；它还不同于后文在集合论模型内部解释的选择公理。
+<!--ja-->
+古典的なパラメータは、ホスト側の原理 `LEM` だけである。指定された宇宙レベルで、各命題について証明か反駁のいずれかを返す。これはホスト側の選択公理ではなく、命題的切り詰めを受けた存在の任意の族から証人を選ぶ操作も与えない。また、後に集合論のモデル内で解釈される選択公理とも異なる。
+<!--/-->
+
+
 
 <!--en-->
 The argument moves between syntax and semantics. A value of `Formula S n` is
@@ -80,14 +96,6 @@ not from the syntactic transformation alone.
 議論では構文と意味論の間を行き来する。`Formula S n` の要素は、`n` 個の変数位置をもち、`S` の要素を定数とする対象言語の論理式である。`con` はそのような定数を論理式へ入れる。改名は変数が読む環境の位置を変え、それに対応する充足関係の定理を伴う。相対化は各非有界量化子を、選んだ定数で有界な量化子に置き換え、`Δ₀-relativize` は得られた論理式が有界であることを構造的に証明する。元の論理式と相対化された論理式の一致は反映から得られるのであり、構文変換だけからは得られない。
 <!--/-->
 
-```agda
-open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using ( con; Formula; ∃̇∈ )
-open import FOL.Manipulation.Renaming using ( renameFo; module Sat )
-open import FOL.Manipulation.Relativization using ( relativize; Δ₀-relativize )
-import FOL.Absoluteness
-```
-
 <!--en-->
 Two structures interpret this language. The ambient cumulative hierarchy
 `𝒮ᵥ` interprets all sets in `V ℓ`, while `𝒮ʟ` has as elements the sets equipped
@@ -102,14 +110,6 @@ minimality itself, are used in this chapter.
 <!--ja-->
 この言語には二つの構造による解釈がある。周囲の累積階層の構造 `𝒮ᵥ` は `V ℓ` のすべての集合を解釈し、`𝒮ʟ` の要素は構成可能性の証明を備えた集合である。添字 `β` に対し、`Lset β` は対応する構成可能段階である。その段階であることの証明から推移性が得られ、順序数添字どうしの厳密な所属に沿って `Lset-mono` が所属を上の段階へ移す。構成可能集合ごとに、`stage` はその集合を含む最小の順序数段階の添字を、順序数性と所属の証明とともに与える。本章で使うのは後の二つの事実であり、最小性そのものではない。
 <!--/-->
-
-```agda
-import FOL.ZFModel
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-open import L.Constructible {ℓ}
-  using ( 𝒮ʟ; isL; isL-trans; Lset; Lset-layer; layer-trans; Lset-mono )
-open import L.Stage {ℓ} lem using ( stage; stage-ord; stage-mem )
-```
 
 <!--en-->
 Bounded separation and reflection provide the bridge to arbitrary formulas.
@@ -126,14 +126,6 @@ as an object-language constant.
 <!--ja-->
 有界な分出公理と反映が、任意の論理式への橋渡しをする。有界な一変数論理式に対し、`separateΔ₀` は必要な要素をもつ一意な構成可能集合を作る。一つの任意の論理式 `φ` と一つの順序数 `δ` に対し、`mkReflect` は `δ ∈ β` を満たす順序数 `β` を作り、成分が `Lset β` に属する環境上で `φ` とその相対化を同一視する。これは指定された論理式とパラメータについての反映であり、`Lset β` が初等部分モデルであるという主張ではない。置換公理のためには、`FunctionalImage` が、ある `x ∈ˢ a` と関係するすべての `y` を含む一つの順序数段階を与え、`LsetS` がその段階を対象言語の定数として表す。
 <!--/-->
-
-```agda
-open import L.Axioms.Separation {ℓ} lem
-  using ( module FunctionalImage; separateΔ₀ )
-open import L.Axioms.Basic {ℓ} using ( LsetS )
-open import L.FormulaReflection {ℓ} lem using ( mkReflect )
-
-```
 
 <!--en-->
 Several host constructions make the semantic equalities precise. `⇔toPath`
@@ -167,9 +159,7 @@ certificates needed to remain inside the model.
 <!--/-->
 
 ```agda
-
 open hPropStructure 𝒮ʟ
-
 ```
 
 <!--en-->
@@ -189,7 +179,6 @@ ordinary data extraction and uses no description principle.
 ```agda
 module ModelL = FOL.ZFModel 𝒮ʟ
 open ModelL using ( SetOf )
-
 ```
 
 <!--en-->
@@ -208,7 +197,6 @@ arbitrary host predicate into the syntax.
 ```agda
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
 open AbsL renaming ( _⊨ᵐ_ to _⊨_ )
-
 ```
 
 <!--en-->
@@ -254,7 +242,6 @@ reflection.
 private
   transIn : (β : V ℓ) {x y : V ℓ} → ⟨ x ∈ y ⟩ → ⟨ y ∈ Lset β ⟩ → ⟨ x ∈ Lset β ⟩
   transIn β = layer-trans (Lset-layer β)
-
 ```
 
 <!--en-->
@@ -274,7 +261,6 @@ not reverse the mathematical relation.
   swap : Fin 2 → Fin 2
   swap zero    = suc zero
   swap (suc _) = zero
-
 ```
 
 <!--en-->
@@ -291,7 +277,6 @@ its semantic justification is supplied separately by renaming correctness.
 ```agda
   swapFo : Formula S 2 → Formula S 2
   swapFo = renameFo swap
-
 ```
 
 <!--en-->
@@ -310,7 +295,6 @@ two-entry environment.
   swapAgrees : (x z : S) → Ren.Agrees swap (x ∷ z ∷ []) (z ∷ x ∷ [])
   swapAgrees x z zero       = refl
   swapAgrees x z (suc zero) = refl
-
 ```
 
 <!--en-->
@@ -401,7 +385,6 @@ rather than used only as an ambient set.
 
 ```agda
   c   = LsetS β oβ
-
 ```
 
 <!--en-->
@@ -420,7 +403,6 @@ The parameter now lies in the reflection stage. `stage-mem` gives
   fa∈β : ⟨ fst a ∈ Lset β ⟩
   fa∈β = Lset-mono {α = β} {β = sa} (R .snd .snd .fst)
            (stage-mem (fst a) (a .snd))
-
 ```
 
 <!--en-->
@@ -441,7 +423,6 @@ No comparison is asserted for arbitrary `x : S` outside `a`.
   bridge : (x : S) → ⟨ x ∈ˢ a ⟩
          → ((x ∷ []) ⊨ φ) ≡ ((x ∷ []) ⊨ relativize c φ)
   bridge x x∈a = R .snd .snd .snd (x ∷ []) (transIn β x∈a fa∈β , tt*)
-
 ```
 
 <!--en-->
@@ -493,12 +474,21 @@ still depends on `lem`, although no choice axiom is used.
 各 `x ∈ˢ a` に対し、仮定は関係する値の依存和 `Σ y , (y ∷ x ∷ []) ⊨ φ` を可縮にする。その中心が一つの値を与え、収縮が関係するすべての値を中心と同一視するので、この段階ではホスト側の選択公理を使わない。`FunctionalImage` は小さな表示 `⟪ fst a ⟫` にわたる。各小さな添字が表す要素について中心の最小段階を取り、`boundingOrd` がそれらすべてを一つの順序数 `βimg` で上から抑える。任意の `x ∈ˢ a` が与えられると、`∈-asFiber` は小さな添字と、その表示値が `x` の基礎にある集合に等しいというパスを返す。そのパスに沿って関係を添字が表す始域の要素へ移し、可縮性によって選ばれた中心を関係する各 `y` と同一視し、その等しさに沿って共通の段階上界を移す。この構成の最小段階を求める操作は依然として `lem` に依存するが、選択公理は使わない。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Images (a : S) (φ : Formula S 2)
               (fc : (x : S) → ⟨ x ∈ˢ a ⟩
-                  → isContr (Σ[ y ∈ S ] ⟨ (y ∷ x ∷ []) ⊨ φ ⟩)) where
+                  → isContr (Σ[ y ∶ S ] ⟨ (y ∷ x ∷ []) ⊨ φ ⟩)) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   open FunctionalImage a (λ x y → (y ∷ x ∷ []) ⊨ φ) fc public
 ```
+</div>
+</details>
 
 <!--en-->
 ## Replacement
@@ -527,7 +517,7 @@ definitional reduction; it changes neither this statement nor its assumptions.
 opaque
   hasReplacementL : (a : S) (φ : Formula S 2)
                 → ((x : S) → ⟨ x ∈ˢ a ⟩
-                     → isContr (Σ[ y ∈ S ] ⟨ (y ∷ x ∷ []) ⊨ φ ⟩))
+                     → isContr (Σ[ y ∶ S ] ⟨ (y ∷ x ∷ []) ⊨ φ ⟩))
                 → isContr (SetOf (λ y → ∃[ x ∶ S ] (x ∈ˢ a) ⊓ ((y ∷ x ∷ []) ⊨ φ)))
 ```
 
@@ -584,10 +574,8 @@ that the image itself has only one member.
 <!--/-->
 
 ```agda
-
     Image : S → hProp (ℓ-suc ℓ)
     Image y = ∃[ x ∶ S ] (x ∈ˢ a) ⊓ ((y ∷ x ∷ []) ⊨ φ)
-
 ```
 
 <!--en-->
@@ -608,7 +596,6 @@ is bounded by `a`. The formula `φ` may still contain unbounded quantifiers, so
 ```agda
     imageFo : Formula S 1
     imageFo = ∃̇∈ (con a) (swapFo φ)
-
 ```
 
 <!--en-->
@@ -629,7 +616,6 @@ extension of the image predicate.
 ```agda
     BoundedImage : S → hProp (ℓ-suc ℓ)
     BoundedImage y = (y ∈ˢ LsetS βimg βimg-ord) ⊓ ((y ∷ []) ⊨ imageFo)
-
 ```
 
 <!--en-->
@@ -673,7 +659,6 @@ the body of `imageFo`. Thus the branch constructs both parts of
 ```agda
         range∈βimg x x∈a y h
         , ∣ x , (x∈a , subst ⟨_⟩ (sym (⊨-swap φ x y)) h) ∣₁ }
-
 ```
 
 <!--en-->

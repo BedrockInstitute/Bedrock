@@ -3,230 +3,82 @@
 import importlib.util
 from pathlib import Path
 import unittest
+from unittest.mock import patch
 
 
 SPEC = importlib.util.spec_from_file_location(
     "lint_prose", Path(__file__).resolve().parents[1] / "gate/lint-prose.py")
 lint_prose = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(lint_prose)
+from outcrop.core import prose_lint as prose_rules
+from outcrop.core.math_lint import inline_math
 
 
-class TheoremLabelTests(unittest.TestCase):
-    def violations(self, text):
-        return lint_prose.theorem_label_violations(text)
+class BedrockProsePolicyTests(unittest.TestCase):
+    def test_docs_only_preserves_non_source_checks_without_rechecking_masters(self):
+        root = Path(__file__).resolve().parents[2]
+        doc, master = root / 'README.md', root / 'src/Base/Prelude.lagda.md'
+        with patch.object(lint_prose, 'target_files', return_value=[str(doc), str(master)]), \
+                patch.object(lint_prose, 'analyze', return_value=('', [], [])) as analyze, \
+                patch.object(lint_prose, 'check_shared_cjk') as shared:
+            self.assertEqual(lint_prose.main(['--check', '--docs-only']), 0)
+            self.assertEqual(analyze.call_count, 1)
+            self.assertEqual(analyze.call_args.args[1], str(doc))
+            shared.assert_not_called()
 
-    def test_named_statements_and_proofs_accept_canonical_format(self):
-        valid = "\n".join([
-            "**Lemma** (`helper`{.Agda}) Text.",
-            "**引理** (`helper`{.Agda}) 正文。",
-            "**補題** (`helper`{.Agda}) 本文。",
-            "**Fact** (`property`{.Agda}) Text.",
-            "**事实** (`property`{.Agda}) 正文。",
-            "**事実** (`property`{.Agda}) 本文。",
-            "**Theorem** (`result`{.Agda}) Text.",
-            "**定理** (`result`{.Agda}) 正文。",
-            "**Corollary** (`consequence`{.Agda}) Text.",
-            "**推论** (`consequence`{.Agda}) 正文。",
-            "**系** (`consequence`{.Agda}) 本文。",
-            "**Proof** Text.",
-            "**证明** 正文。",
-            "**証明** 本文。",
-        ])
-        self.assertEqual(self.violations(valid), [])
+    def test_opening_chapters_math_uses_figure_convention_or_explicit_approval(self):
+        root = Path(__file__).resolve().parents[2]
+        figure_count = approved_count = 0
+        for name in ('Prelude', 'Impredicativity', 'Classical', 'Choice'):
+            chapter = f'Base/{name}.lagda.md'
+            path = root / 'src' / chapter
+            text = path.read_text()
+            with self.subTest(chapter=chapter):
+                self.assertNotIn(chapter, lint_prose._MATH_TEMPORARY)
+                self.assertFalse(any('inline LaTeX' in hit.message for hit in lint_prose.analyze(text, path)[2]))
+                for item in inline_math(text):
+                    if item.figure_reference:
+                        figure_count += 1
+                    else:
+                        self.assertIn(item.fingerprint, lint_prose._MATH_APPROVALS.get(chapter, ()))
+                        approved_count += 1
+        # The trilingual Fin-figure legend moved into the Fin introduction,
+        # removing one figure-reference math paragraph per edition.
+        self.assertEqual((figure_count, approved_count), (24, 9))
 
-    def test_period_and_missing_statement_name_are_rejected(self):
-        invalid = "\n".join([
-            "**Lemma.** Text.",
-            "**定理。**正文。",
-            "**Theorem** Text.",
-            "**证明。**正文。",
-        ])
-        self.assertEqual(len(self.violations(invalid)), 4)
+    def test_inline_math_deferrals_end_on_human_review_not_content_edits(self):
+        root = Path(__file__).resolve().parents[2]
+        strict = {'Base/Prelude.lagda.md', 'Base/Impredicativity.lagda.md',
+                  'Base/Classical.lagda.md', 'Base/Choice.lagda.md'}
+        self.assertFalse(strict.intersection(lint_prose._MATH_TEMPORARY))
+        for chapter in lint_prose._MATH_TEMPORARY:
+            with self.subTest(chapter=chapter):
+                path = root / 'src' / chapter
+                text = path.read_text()
+                self.assertFalse(any('inline LaTeX' in hit.message for hit in lint_prose.analyze(text, path)[2]))
+                self.assertFalse(any('inline LaTeX' in hit.message for hit in lint_prose.analyze(text + '\n', path)[2]))
+                with patch.dict(lint_prose._MATH_TEMPORARY, {chapter: False}):
+                    self.assertTrue(any('allowance expired' in hit.message for hit in lint_prose.analyze(text, path)[2]))
+        # Even an unchanged opening chapter cannot inherit a later chapter's deferral.
+        text = 'Compare $x$.\n'
+        self.assertTrue(any('inline LaTeX' in hit.message for hit in lint_prose.analyze(text, root / 'src/Base/Prelude.lagda.md')[2]))
 
-    def test_numbered_milestone_heading_is_outside_named_statement_rule(self):
-        self.assertEqual(self.violations("**Theorem 1.** Text."), [])
+    def test_legacy_inventory_matches_exact_old_line_only(self):
+        import hashlib
 
-    def test_labels_inside_agda_fences_are_ignored(self):
-        self.assertEqual(self.violations("```agda\n**Lemma.**\n```"), [])
-
-
-class QedTests(unittest.TestCase):
-    def test_top_level_construction_and_lemma_end_after_final_code_block(self):
-        text = """**Construction** (`make`{.Agda}) Text.
-<!--zh-->
-**构造** (`make`{.Agda}) 正文。
-<!--ja-->
-**構成** (`make`{.Agda}) 本文。
-<!--/-->
-```agda
-make = value
-```
-
-∎
-
-<!--en-->
-**Lemma** (`law`{.Agda}) Text.
-<!--zh-->
-**引理** (`law`{.Agda}) 正文。
-<!--ja-->
-**補題** (`law`{.Agda}) 本文。
-<!--/-->
-```agda
-law = proof
-```
-
-∎
-"""
-        self.assertEqual(lint_prose.qed_violations(text), [])
-
-    def test_only_outer_theorem_needs_qed_when_helpers_are_nested(self):
-        text = """## Result
-**Theorem** (`result`{.Agda}) Text.
-```agda
-result = helper
-```
-<details>
-**Construction** (`value`{.Agda}) Text.
-```agda
-value = item
-```
-**Lemma** (`helper`{.Agda}) Text.
-```agda
-helper = proof
-```
-</details>
-
-∎
-"""
-        self.assertEqual(lint_prose.qed_violations(text), [])
-
-    def test_missing_outer_qed_is_rejected_despite_nested_statements(self):
-        text = """## Result
-**Theorem** (`result`{.Agda}) Text.
-```agda
-result = helper
-```
-<details>
-**Lemma** (`helper`{.Agda}) Text.
-```agda
-helper = proof
-```
-</details>
-"""
-        violations = lint_prose.qed_violations(text)
-        self.assertEqual(len(violations), 1)
-
-    def test_missing_qed_is_rejected(self):
-        text = """**Lemma** (`law`{.Agda}) Text.
-```agda
-law = proof
-```
-</details>
-"""
-        violations = lint_prose.qed_violations(text)
-        self.assertEqual(len(violations), 1)
-
-    def test_fact_requires_qed(self):
-        text = """**Fact** (`property`{.Agda}) Text.
-```agda
-property = proof
-```
-"""
-        violations = lint_prose.qed_violations(text)
-        self.assertEqual(len(violations), 1)
-
-    def test_corollary_requires_qed(self):
-        text = """**Corollary** (`consequence`{.Agda}) Text.
-```agda
-consequence = proof
-```
-"""
-        violations = lint_prose.qed_violations(text)
-        self.assertEqual(len(violations), 1)
-
-    def test_explanation_may_follow_completed_proof(self):
-        text = """**Lemma** (`helper`{.Agda}) Text.
-```agda
-helper = proof
-```
-∎
-
-The result has this broader interpretation.
-
-**Theorem** (`result`{.Agda}) Text.
-```agda
-result = helper
-```
-∎
-"""
-        self.assertEqual(lint_prose.qed_violations(text), [])
+        chapter = 'V/CantorBernstein.lagda.md'
+        line = 'The statement says x lies in the image of g.'
+        legacy = {chapter: {hashlib.sha256(line.encode()).hexdigest()}}
+        self.assertEqual(lint_prose.new_bare_variable_violations(line, chapter, legacy), [])
+        self.assertTrue(lint_prose.new_bare_variable_violations(line + '\n' + line, chapter, legacy))
+        changed = line.replace('says x', 'asserts x')
+        self.assertTrue(lint_prose.new_bare_variable_violations(changed, chapter, legacy))
 
 
-class OptionalSummaryTests(unittest.TestCase):
-    def violations(self, text):
-        return lint_prose.optional_summary_violations(text)
-
-    def test_localized_optional_markers_are_accepted(self):
-        text = """<!--en-->
-<details><summary>Optional: details</summary></details>
-<!--zh-->
-<details><summary>选读：说明</summary></details>
-<!--ja-->
-<details><summary>発展：説明</summary></details>
-<!--/-->
-"""
-        self.assertEqual(self.violations(text), [])
-
-    def test_missing_or_wrong_language_marker_is_rejected(self):
-        text = """<!--en-->
-<summary>Details</summary>
-<!--zh-->
-<summary>Optional: 说明</summary>
-<!--/-->
-"""
-        self.assertEqual(len(self.violations(text)), 2)
-
-    def test_summary_outside_language_group_is_rejected(self):
-        self.assertEqual(len(self.violations("<summary>Optional: details</summary>")), 1)
-
-
-class JapanesePlainStyleTests(unittest.TestCase):
-    def violations(self, text):
-        return lint_prose.japanese_polite_violations(text)
-
-    def test_polite_forms_in_japanese_prose_are_rejected(self):
-        text = """<!--ja-->
-これは命題です。写像を返しますが、まだ終わりません。
-<!--/-->
-"""
-        self.assertEqual(len(self.violations(text)), 3)
-
-    def test_plain_style_and_lexical_masumasu_are_accepted(self):
-        text = """<!--ja-->
-これは命題である。包んですぐ戻る。段階ですでに成立する。これですべてである。これはますます重要である。
-<!--/-->
-"""
-        self.assertEqual(self.violations(text), [])
-
-    def test_polite_forms_before_connectives_are_rejected(self):
-        text = """<!--ja-->
-これは命題ですが、証明は後である。値を返しますので、場合分けできる。
-<!--/-->
-"""
-        self.assertEqual(len(self.violations(text)), 2)
-
-    def test_other_languages_and_protected_regions_are_ignored(self):
-        text = """<!--en-->
-です ます
-<!--ja-->
-`です` [参照](https://example.test/ます) <span title="です">常体である。</span>
-```text
-これは例です。
-```
-<!--/-->
-"""
-        self.assertEqual(self.violations(text), [])
-
-
-if __name__ == "__main__":
-    unittest.main()
+    def test_numbered_registry_labels_are_scoped_and_still_require_code(self):
+        text = '**Theorem 0** Text.\n\n```agda\nopen import Base.Choice public using ( SetChoice→LEM )\n```\n\n'
+        self.assertEqual(lint_prose.theorem_label_violations(text, 'src/Origin.lagda.md'), [])
+        self.assertTrue(lint_prose.theorem_label_violations(text, 'src/Base/Choice.lagda.md'))
+        self.assertEqual(prose_rules.statement_violations(text), [])
+        self.assertTrue(prose_rules.statement_violations(text.replace('```agda', '```text')))
+        self.assertTrue(lint_prose.theorem_label_violations(text.replace('Theorem', 'Lemma'), 'src/Origin.lagda.md'))

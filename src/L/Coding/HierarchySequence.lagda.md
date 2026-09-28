@@ -1,3 +1,7 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # A sequence for the constructible hierarchy
 <!--zh-->
@@ -5,6 +9,35 @@
 <!--ja-->
 # 構成可能階層を表す列
 <!--/-->
+
+```agda
+open import Base.Prelude
+open import Base.Classical using ( LEM )
+```
+
+<!--en-->
+Fix a universe level `ℓ`{.Agda} and assume `lem : LEM (ℓ-suc ℓ)`{.Agda}. This hypothesis supplies a decision for each proposition at that level; it remains an explicit parameter of the constructions below.
+<!--zh-->
+固定宇宙层级 `ℓ`{.Agda}，并假设 `lem : LEM (ℓ-suc ℓ)`{.Agda}。这个假设为相应层级的每个命题提供判定，并始终作为下文构造的显式参数。
+<!--ja-->
+宇宙レベル `ℓ`{.Agda} を固定し、`lem : LEM (ℓ-suc ℓ)`{.Agda} を仮定する。この仮定は該当するレベルの各命題に判定を与え、以下の構成の明示的なパラメータとして保たれる。
+<!--/-->
+
+```agda
+module L.Coding.HierarchySequence {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+```
+
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax using ( Formula; var; _∈̇_; _∧̇_; _⇒̇_; ∃̇_; ∀̇_ )
+import FOL.Absoluteness
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Coding {ℓ} using ( pr )
+open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans; 𝒟ₒ )
+open import L.Coding.Model {ℓ} using ( appAt; appAt-adequate; domAt; domAt-in; domAt-out; prAtL; prAtL-adequate )
+open import L.Coding.Expressions {ℓ} using ( extAt; extAt-out; extAt-in; extAt-in-both )
+open import L.Coding.DefinablePowerSet {ℓ} lem using ( DefAt; DefAt-in; DefAt-out )
+```
 
 <!--en-->
 This chapter describes successive definable-power-set stages by a function graph. It characterizes partial approximations to that function and packages the graph used later to recognize initial segments of the constructible hierarchy.
@@ -46,23 +79,6 @@ the same statement then costs minutes instead of seconds.
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-open import Base.Prelude
-open import Base.Classical using ( LEM )
-
-module L.Coding.HierarchySequence {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-
-open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using ( Formula; var; _∈̇_; _∧̇_; _⇒̇_; ∃̇_; ∀̇_ )
-import FOL.Absoluteness
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-open import V.Coding {ℓ} using ( pr )
-open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans; 𝒟ₒ )
-open import L.Coding.Model {ℓ} using ( appAt; appAt-adequate; domAt; domAt-in; domAt-out; prAtL; prAtL-adequate )
-open import L.Coding.Expressions {ℓ} using ( extAt; extAt-out; extAt-in; extAt-in-both )
-open import L.Coding.DefinablePowerSet {ℓ} lem using ( DefAt; DefAt-in; DefAt-out )
-
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
 
 open hPropStructure 𝒮ʟ
@@ -143,7 +159,7 @@ Records b f γ c w = ⟨ fst c ∈ fst (lookup b γ) ⟩
                   × ⟨ pr (fst c) (fst w) ∈ fst (lookup f γ) ⟩
 
 StepOf : ∀ {n} → Fin n → Fin n → S ^ n → S → Type (ℓ-suc ℓ)
-StepOf b f γ z = Σ[ c ∈ S ] Σ[ w ∈ S ]
+StepOf b f γ z = Σ[ c ∶ S ] Σ[ w ∶ S ]
                    (Records b f γ c w × ⟨ fst z ∈ 𝒟ₒ (fst w) ⟩)
 
 PowOK : ∀ {n} → Fin n → Fin n → S ^ n → Type (ℓ-suc ℓ)
@@ -190,8 +206,15 @@ body are shared between all three, so each projection is one line.
 装配体则是把同样三个存在量词填上。可定义幂集由 `PowOK`{.Agda} 所提供的那个模型元素给出，它自己的编码等式在那个元素处是 `refl`{.Agda}，而 `DefAt`{.Agda} 的引入别无所需。这一步的诸读法于是就是 `extAt`{.Agda} 的诸方向：把那两半插进去；而它们有三条而非两条，`StepAt-out`{.Agda} 把这一步的一个成员读作一份载荷，`StepAt-back`{.Agda} 把一份载荷放回去，而 `StepAt-in`{.Agda} 由两个方向一并造出这一步，因为一个以外延造出的集合，必须从两侧逐成员地重新进入。读体与装配体为三者所共用，故每个投影都只有一行。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module _ {n : ℕ} (v b f : Fin n) (γ : S ^ n) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     Φ : Formula S (suc n)
     Φ = ∃̇ (∃̇ (∃̇ (StepBody b f)))
@@ -219,16 +242,16 @@ Perf: `env` spelled out at both ends; via an abbreviation, 15 s per conversion.
     unfold ok z = rec₁ squash₁ viaArg
       where
       viaPow : (c w : S)
-             → Σ[ d ∈ S ] ⟨ (d ∷ w ∷ c ∷ z ∷ γ) ⊨ StepBody b f ⟩
+             → Σ[ d ∶ S ] ⟨ (d ∷ w ∷ c ∷ z ∷ γ) ⊨ StepBody b f ⟩
              → ∥ StepOf b f γ z ∥₁
       viaPow c w (d , hd) = ∣ readBody ok z c w d hd ∣₁
 
       viaVal : (c : S)
-             → Σ[ w ∈ S ] ⟨ (w ∷ c ∷ z ∷ γ) ⊨ ∃̇ (StepBody b f) ⟩
+             → Σ[ w ∶ S ] ⟨ (w ∷ c ∷ z ∷ γ) ⊨ ∃̇ (StepBody b f) ⟩
              → ∥ StepOf b f γ z ∥₁
       viaVal c (w , hw) = rec₁ squash₁ (viaPow c w) hw
 
-      viaArg : Σ[ c ∈ S ] ⟨ (c ∷ z ∷ γ) ⊨ ∃̇ (∃̇ (StepBody b f)) ⟩
+      viaArg : Σ[ c ∶ S ] ⟨ (c ∷ z ∷ γ) ⊨ ∃̇ (∃̇ (StepBody b f)) ⟩
              → ∥ StepOf b f γ z ∥₁
       viaArg (c , hc) = rec₁ squash₁ (viaVal c) hc
 
@@ -267,6 +290,8 @@ Perf: `env` spelled out at both ends; via an abbreviation, 15 s per conversion.
     (λ z z∈ → rec₁ (snd ((z ∷ γ) ⊨ Φ)) (fill ok z) (into z z∈))
     (λ z h → rec₁ (snd (fst z ∈ fst (lookup v γ))) (back z) (unfold ok z h))
 ```
+</div>
+</details>
 
 <!--en-->
 ## Approximations to the hierarchy sequence
@@ -324,9 +349,17 @@ at a variable environment.
 private
   sh2 : ∀ {n} → Fin n → Fin (suc (suc n))
   sh2 i = suc (suc i)
+```
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
+```agda
 module RecShape (Step : ∀ {n} → Fin n → Fin n → Fin n → Formula S n) where
+```
+</summary>
+<div class="submodule-fold-content">
 
+```agda
   Domain₀ : S → V ℓ → Type (ℓ-suc ℓ)
   Domain₀ h B = (c z : S) → ⟨ pr (fst c) (fst z) ∈ fst h ⟩ → ⟨ fst c ∈ B ⟩
 
@@ -337,14 +370,23 @@ module RecShape (Step : ∀ {n} → Fin n → Fin n → Fin n → Formula S n) w
 
   GraphAt : ∀ {n} → Fin n → Fin n → Formula S n
   GraphAt w b = ∃̇ (ApproxAt zero (suc b) ∧̇ Step (suc w) (suc b) zero)
+```
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
+```agda
   module _ {n : ℕ} (f a : Fin n) (γ : S ^ n) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
     ApproxAt-dom : ⟨ γ ⊨ ApproxAt f a ⟩ → Domain₀ (lookup f γ) (fst (lookup a γ))
     ApproxAt-dom h = domAt-out f a γ (h .fst)
 
     ApproxAt-value : ⟨ γ ⊨ ApproxAt f a ⟩ → (c : S)
                    → ⟨ fst c ∈ fst (lookup a γ) ⟩
-                   → ∥ (Σ[ z ∈ S ] ⟨ pr (fst c) (fst z) ∈ fst (lookup f γ) ⟩) ∥₁
+                   → ∥ (Σ[ z ∶ S ] ⟨ pr (fst c) (fst z) ∈ fst (lookup f γ) ⟩) ∥₁
     ApproxAt-value h = domAt-in f a γ (h .fst)
 
     ApproxAt-step : ⟨ γ ⊨ ApproxAt f a ⟩ → (c z : S)
@@ -359,10 +401,21 @@ module RecShape (Step : ∀ {n} → Fin n → Fin n → Fin n → Formula S n) w
                 → ⟨ γ ⊨ ApproxAt f a ⟩
     ApproxAt-in hd hs = hd , λ c z p → hs c z
       (subst ⟨_⟩ (appAt-adequate (sh2 f) (suc zero) zero (z ∷ c ∷ γ)) p)
+```
+</div>
+</details>
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
+```agda
   module _ {n : ℕ} (w b : Fin n) (γ : S ^ n) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
     GraphOf : Type (ℓ-suc ℓ)
-    GraphOf = Σ[ f ∈ S ] ( ⟨ (f ∷ γ) ⊨ ApproxAt zero (suc b) ⟩
+    GraphOf = Σ[ f ∶ S ] ( ⟨ (f ∷ γ) ⊨ ApproxAt zero (suc b) ⟩
                          × ⟨ (f ∷ γ) ⊨ Step (suc w) (suc b) zero ⟩ )
 
     Graph-in : (f : S) → ⟨ (f ∷ γ) ⊨ ApproxAt zero (suc b) ⟩
@@ -371,14 +424,26 @@ module RecShape (Step : ∀ {n} → Fin n → Fin n → Fin n → Formula S n) w
 
     Graph-out : ⟨ γ ⊨ GraphAt w b ⟩ → ∥ GraphOf ∥₁
     Graph-out h = h
-
+```
+</div>
+</details>
+```agda
   PairGraphAt : ∀ {n} → Fin n → Fin n → Formula S n
   PairGraphAt e c = ∃̇ (prAtL (suc e) (suc c) zero ∧̇ GraphAt zero (suc c))
+```
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
+```agda
   module _ {n : ℕ} (e c : Fin n) (γ : S ^ n)
            (φ : Formula S n) (qφ : φ ≡ PairGraphAt e c) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
     PairOf : Type (ℓ-suc ℓ)
-    PairOf = Σ[ z ∈ S ] ( (fst (lookup e γ) ≡ pr (fst (lookup c γ)) (fst z))
+    PairOf = Σ[ z ∶ S ] ( (fst (lookup e γ) ≡ pr (fst (lookup c γ)) (fst z))
                         × ⟨ (z ∷ γ) ⊨ GraphAt zero (suc c) ⟩ )
 
     PairGraph-in : (z : S) → fst (lookup e γ) ≡ pr (fst (lookup c γ)) (fst z)
@@ -392,11 +457,16 @@ module RecShape (Step : ∀ {n} → Fin n → Fin n → Fin n → Formula S n) w
       (λ { (z , (hq , hg)) →
         z , (subst ⟨_⟩ (prAtL-adequate (suc e) (suc c) zero (z ∷ γ)) hq , hg) })
       (subst (λ ψ → ⟨ γ ⊨ ψ ⟩) qφ h)
+```
+</div>
+</details>
 
+</div>
+</details>
+```agda
 open RecShape StepAt public renaming ( GraphAt to LsetGraphAt
                                      ; Graph-in to LsetGraph-in
                                      ; Graph-out to LsetGraph-out )
-
 ```
 
 <!--en-->

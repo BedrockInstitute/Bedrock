@@ -1,28 +1,18 @@
-<!--en-->
-Internal reasoning about syntax begins with a set of formula keys inside `L`. This chapter compares such a candidate domain with the external formula grammar in two directions: every member merely decodes to a formula key, and every genuine formula key belongs to the domain. These claims concern code membership, not the truth or satisfaction of the encoded formulas.
-<!--zh-->
-关于语法的内部论证从 `L` 中的一组公式键开始。本章从两个方向比较候选码域与外部公式文法：域中每个成员都纯粹地可解码为某条公式的键，而每条真实公式的键都属于该域。这些结论只涉及码的隶属，不涉及被编码公式的真值或满足关系。
-<!--ja-->
-構文についての内部的な議論は、`L` の中の論理式キーの集合から始まる。本章は、候補となる符号領域と外部の論理式文法を二方向に比較する。領域の各要素は、ある論理式のキーへ単に復号でき、すべての真正な論理式キーは領域に属する。これらは符号の所属についての主張であり、符号化された論理式の真理や充足についての主張ではない。
-<!--/-->
-
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
-
 ```
 
 <!--en-->
-The argument uses excluded middle together with propositional truncation. Truncation records that a decoding witness exists without choosing one, and it may be eliminated only when the target is again a proposition.
+# Soundness and completeness of the closed code domain
 <!--zh-->
-以下论证同时使用排中律与命题截断。命题截断只记录解码见证的存在，而不从中选定一个见证；只有当目标仍是命题时，才能消去这层截断。
+# 封闭码定义域的可靠性与完备性
 <!--ja-->
-以下の議論では、排中律と命題的切り詰めを併用する。命題的切り詰めは、復号の証人を選び出すことなく、その存在だけを記録する。この切り詰めを除去できるのは、行き先も命題である場合に限られる。
+# 閉じた符号の定義域の健全性と完全性
 <!--/-->
 
 ```agda
 open import Base.Prelude
 open import Base.Classical using ( LEM )
-
 ```
 
 <!--en-->
@@ -35,8 +25,63 @@ Assume `lem : LEM (ℓ-suc ℓ)`. Every construction in the chapter is relative 
 
 ```agda
 module L.Coding.CodeDomainAdequacy {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-
 ```
+
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax using
+  ( Formula; Term; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇_; ∀̇_; ∃̇∈; ∀̇∈ )
+import FOL.Absoluteness
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Coding {ℓ} using ( pr; pr-inj; #-inj′; #mono )
+open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
+open import L.Coding.Environment {ℓ} using ( env )
+open import L.Coding.EnvironmentSet {ℓ} lem using ( envSet )
+open import L.Axioms.Numerals {ℓ} using ( numeralL-fst; sucʟ; sucʟ-fst )
+open import L.Coding.Model {ℓ} using ( appAt; appAt-adequate )
+open import L.Coding.Expressions {ℓ} using ( sucAtL )
+open import L.Coding.Model {ℓ} using ( container )
+import L.Coding.Expressions {ℓ} as CodingExpressions
+open import L.Coding.Quantification {ℓ} using
+  ( i0; i1; i2; i3; i4; i5; i6; i7; i8; sh
+  ; pr-out; pr-in; down; fstS; sndS; suc-out; suc-in
+  ; sndEx; sndAll; bothEx
+  ; sndEx-out; sndAll-in; bothEx-out; bothAll-in
+  ; fillSnd; fillBoth; useSnd; useBoth
+  ; f0; f1; f2; f3; f4; f5; f6; f7; f8; f9
+  ; bigOr-in; bigOr-out )
+open import L.Coding.EnvironmentTower {ℓ} lem using ( module Tower; nn )
+open import L.Coding.CodeDomain {ℓ} using
+  ( isTm; keyUp; keyExpr; atomKeyExpr; bndKeyExpr
+  ; unKey; binKey; atomKey; bndKey
+  ; Tags; shN; module Shape; shapeAt; module Close; closeAt; codesAt )
+open import L.Coding.CodeAlphabet {ℓ} using ( module Alphabet )
+open import L.Coding.Expressions {ℓ} using ( tagAtL-adequate )
+open import L.Coding.Closure {ℓ} using ( closedAt; binSameClosed-in; unSuccClosed-in; binSuccClosed-in )
+open import L.Coding.CodeShape {ℓ} using
+  ( shapedAt; shaped-in; ShapeWit; BinWit; bothTm; fstTm; noneB; isTmAt )
+open import L.Coding.CodeSet {ℓ} lem using
+  ( AllCodes; AllCodes-out; key∈AllCodes; keyS; codeS; witnessAt-out )
+open import L.Ordinal {ℓ} using ( ∈#-elim )
+```
+
+<!--en-->
+Internal reasoning about syntax begins with a set of formula keys inside `L`. This chapter compares such a candidate domain with the external formula grammar in two directions: every member merely decodes to a formula key, and every genuine formula key belongs to the domain. These claims concern code membership, not the truth or satisfaction of the encoded formulas.
+<!--zh-->
+关于语法的内部论证从 `L` 中的一组公式键开始。本章从两个方向比较候选码域与外部公式文法：域中每个成员都纯粹地可解码为某条公式的键，而每条真实公式的键都属于该域。这些结论只涉及码的隶属，不涉及被编码公式的真值或满足关系。
+<!--ja-->
+構文についての内部的な議論は、`L` の中の論理式キーの集合から始まる。本章は、候補となる符号領域と外部の論理式文法を二方向に比較する。領域の各要素は、ある論理式のキーへ単に復号でき、すべての真正な論理式キーは領域に属する。これらは符号の所属についての主張であり、符号化された論理式の真理や充足についての主張ではない。
+<!--/-->
+
+<!--en-->
+The argument uses excluded middle together with propositional truncation. Truncation records that a decoding witness exists without choosing one, and it may be eliminated only when the target is again a proposition.
+<!--zh-->
+以下论证同时使用排中律与命题截断。命题截断只记录解码见证的存在，而不从中选定一个见证；只有当目标仍是命题时，才能消去这层截断。
+<!--ja-->
+以下の議論では、排中律と命題的切り詰めを併用する。命題的切り詰めは、復号の証人を選び出すことなく、その存在だけを記録する。この切り詰めを除去できるのは、行き先も命題である場合に限られる。
+<!--/-->
+
+
 
 <!--en-->
 The chapter speaks about the full first-order language of set theory: formulas with the two bounded quantifiers as well as the unbounded ones, and terms built from variables and constants. These are the objects whose codes the domain must gather and describe.
@@ -46,14 +91,6 @@ The chapter speaks about the full first-order language of set theory: formulas w
 本章は集合論の完全な一階言語を扱う。論理式には非有界の量化子に加えて二つの有界量化子があり、項は変数と定数から作られる。領域が集めて記述すべき対象は、これらである。
 <!--/-->
 
-```agda
-open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using
-  ( Formula; Term; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇_; ∀̇_; ∃̇∈; ∀̇∈ )
-import FOL.Absoluteness
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-```
-
 <!--en-->
 Formula keys are nested ordered pairs, so injectivity of pairing recovers their arity, tag, and payload from an equality of keys. Natural-number arities are represented by von Neumann numerals, and constructible environment sets provide internal representatives for finite parameter vectors.
 <!--zh-->
@@ -61,14 +98,6 @@ Formula keys are nested ordered pairs, so injectivity of pairing recovers their 
 <!--ja-->
 論理式キーは入れ子の順序対なので、対符号化の単射性により、キーの等しさからアリティ、タグ、ペイロードを復元できる。自然数のアリティはフォン・ノイマン数項で表され、構成可能な環境集合が有限パラメータベクトルの内部表現を与える。
 <!--/-->
-
-```agda
-open import V.Coding {ℓ} using ( pr; pr-inj; #-inj′; #mono )
-open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
-open import L.Coding.Environment {ℓ} using ( env )
-open import L.Coding.EnvironmentSet {ℓ} lem using ( envSet )
-open import L.Axioms.Numerals {ℓ} using ( numeralL-fst; sucʟ; sucʟ-fst )
-```
 
 <!--en-->
 The object language can express that a structurally assembled key belongs to a candidate domain. Ordered-pair expressions build the nested key, and their adequacy theorem identifies satisfaction of the resulting formula with membership of the corresponding host-level pair code.
@@ -79,10 +108,6 @@ The object language can express that a structurally assembled key belongs to a c
 <!--/-->
 
 ```agda
-open import L.Coding.Model {ℓ} using ( appAt; appAt-adequate )
-open import L.Coding.Expressions {ℓ} using ( sucAtL )
-open import L.Coding.Model {ℓ} using ( container )
-import L.Coding.Expressions {ℓ} as CodingExpressions
 module E = CodingExpressions.PairExpression
 ```
 
@@ -94,14 +119,6 @@ Quantifier codes change arity. The body of either kind of quantifier is a key at
 量化子の符号ではアリティが変わる。どちらの量化子でも本体は後続アリティのキーであり、有界量化子はさらに現在のアリティで正当な項をもつ。対、後続、拡張環境についての意味論的補題が、束縛子の下で起こるこれらの変化を正確に表す。
 <!--/-->
 
-```agda
-open import L.Coding.Quantification {ℓ} using
-  ( i0; i1; i2; i3; i4; i5; i6; i7; i8; sh
-  ; pr-out; pr-in; down; fstS; sndS; suc-out; suc-in
-  ; sndEx; sndAll; bothEx
-  ; sndEx-out; sndAll-in; bothEx-out; bothAll-in
-```
-
 <!--en-->
 Existential payload descriptions are propositionally truncated, sometimes through two nested witnesses. Their inward and outward readings preserve that truncation. The ten constructor tags are represented by the numerals zero through nine, and a separate environment tower records the arity at which each code is read.
 <!--zh-->
@@ -110,14 +127,6 @@ Existential payload descriptions are propositionally truncated, sometimes throug
 存在的なペイロードの記述は命題的に切り詰められ、ときには二重の証人を含む。その内向きと外向きの読みは、この切り詰めを保つ。十個の構成子タグは零から九までの数項で表され、別の環境塔が各符号を読むアリティを記録する。
 <!--/-->
 
-```agda
-  ; fillSnd; fillBoth; useSnd; useBoth
-  ; f0; f1; f2; f3; f4; f5; f6; f7; f8; f9
-  ; bigOr-in; bigOr-out )
-open import L.Coding.EnvironmentTower {ℓ} lem using ( module Tower; nn )
-open import L.Coding.CodeDomain {ℓ} using
-```
-
 <!--en-->
 The description `codesAt` has two complementary halves. `shapeAt` reads an existing domain member as one of the ten constructor shapes and, for composite codes, requires its immediate subkeys to remain in the domain. `closeAt` goes in the generating direction: legal terms and existing subkeys produce the corresponding new key.
 <!--zh-->
@@ -125,14 +134,6 @@ The description `codesAt` has two complementary halves. `shapeAt` reads an exist
 <!--ja-->
 記述 `codesAt` には、相補的な二つの部分がある。`shapeAt` は領域の既存要素を十種類の構成子形のいずれかとして読み、複合符号では直下の部分キーも領域に残ることを要求する。`closeAt` は生成する向きの主張であり、正当な項と既存の部分キーから対応する新しいキーが得られる。
 <!--/-->
-
-```agda
-  ( isTm; keyUp; keyExpr; atomKeyExpr; bndKeyExpr
-  ; unKey; binKey; atomKey; bndKey
-  ; Tags; shN; module Shape; shapeAt; module Close; closeAt; codesAt )
-open import L.Coding.CodeAlphabet {ℓ} using ( module Alphabet )
-
-```
 
 <!--en-->
 A constructor tag is an element of `Fin 10`; its natural-number value selects one of the ten payload predicates and is automatically less than ten. Environments are finite vectors, while the codes stored in the hierarchy are nested set-theoretic pairs.
@@ -153,9 +154,6 @@ Decoding branches over disjoint constructor cases and often returns only a propo
 <!--ja-->
 復号は互いに排他的な構成子の場合に分かれ、多くの場合、命題的に切り詰められた証人だけを返す。対の等しさは成分ごとに移され、不可能なタグは空型へ至る。これらの操作から、単に存在する論理式を大域的に選ぶ復号写像は得られない。
 <!--/-->
-
-```agda
-```
 
 <!--en-->
 The cumulative hierarchy supplies set-valued ordered-pair codes, von Neumann numerals, and the successor operation on arities. Membership has a small fibre presentation, and equality of hierarchy sets is a proposition; these facts justify the truncated decompositions and their elimination into membership or equality claims.
@@ -182,9 +180,7 @@ The carrier of the constructible structure is fixed as `S`, so every environment
 <!--/-->
 
 ```agda
-
 open hPropStructure 𝒮ʟ using ( S )
-
 ```
 
 <!--en-->
@@ -218,9 +214,8 @@ Term codes are described first. A set `t` is a term code at arity `ar` when, mer
 
 ```agda
 IsTmV : V ℓ → V ℓ → V ℓ → Type (ℓ-suc ℓ)
-IsTmV Wv t ar = ∥ (Σ[ x ∈ V ℓ ] ((t ≡ pr (# 0) x) × ⟨ x ∈ Wv ⟩))
-                ⊎ (Σ[ i ∈ V ℓ ] ((t ≡ pr (# 1) i) × ⟨ i ∈ ar ⟩)) ∥₁
-
+IsTmV Wv t ar = ∥ (Σ[ x ∶ V ℓ ] ((t ≡ pr (# 0) x) × ⟨ x ∈ Wv ⟩))
+                ⊎ (Σ[ i ∶ V ℓ ] ((t ≡ pr (# 1) i) × ⟨ i ∈ ar ⟩)) ∥₁
 ```
 
 <!--en-->
@@ -231,11 +226,18 @@ The first three payload predicates cover atomic formulas, binary connectives, an
 最初の三種類のペイロード述語は、原子論理式、二項結合子、偽を扱う。原子のペイロードは二つの正当な項符号へ単に分解され、二項のペイロードは候補領域にすでに属する同じアリティの二つの部分キーへ単に分解される。偽のペイロードは直接の等式 `r = # 0` であり、存在証人をもたない。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module CodesSem (Wv Cv : V ℓ) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   AtomP BinP ConP QuP BqP : V ℓ → V ℓ → Type (ℓ-suc ℓ)
-  AtomP ar r = ∥ Σ[ t ∈ V ℓ ] Σ[ u ∈ V ℓ ] ((r ≡ pr t u) × (IsTmV Wv t ar × IsTmV Wv u ar)) ∥₁
-  BinP ar r = ∥ Σ[ a ∈ V ℓ ] Σ[ b ∈ V ℓ ] ((r ≡ pr a b) × (⟨ pr ar a ∈ Cv ⟩ × ⟨ pr ar b ∈ Cv ⟩)) ∥₁
+  AtomP ar r = ∥ Σ[ t ∶ V ℓ ] Σ[ u ∶ V ℓ ] ((r ≡ pr t u) × (IsTmV Wv t ar × IsTmV Wv u ar)) ∥₁
+  BinP ar r = ∥ Σ[ a ∶ V ℓ ] Σ[ b ∶ V ℓ ] ((r ≡ pr a b) × (⟨ pr ar a ∈ Cv ⟩ × ⟨ pr ar b ∈ Cv ⟩)) ∥₁
   ConP ar r = r ≡ # 0
 ```
 
@@ -249,8 +251,7 @@ The quantifier payloads complete the list. An unbounded-quantifier payload is a 
 
 ```agda
   QuP ar r = ⟨ pr (sucV ar) r ∈ Cv ⟩
-  BqP ar r = ∥ Σ[ t ∈ V ℓ ] Σ[ a ∈ V ℓ ] ((r ≡ pr t a) × (IsTmV Wv t ar × ⟨ pr (sucV ar) a ∈ Cv ⟩)) ∥₁
-
+  BqP ar r = ∥ Σ[ t ∶ V ℓ ] Σ[ a ∶ V ℓ ] ((r ≡ pr t a) × (IsTmV Wv t ar × ⟨ pr (sucV ar) a ∈ Cv ⟩)) ∥₁
 ```
 
 <!--en-->
@@ -308,8 +309,10 @@ A key at arity `ar` is, merely, a tag from the ten together with a payload of th
 
 ```agda
   Key : V ℓ → V ℓ → Type (ℓ-suc ℓ)
-  Key ar p = ∥ Σ[ k ∈ Fin 10 ] Σ[ r ∈ V ℓ ] ((p ≡ pr (# (toℕ k)) r) × PayN (toℕ k) ar r) ∥₁
+  Key ar p = ∥ Σ[ k ∶ Fin 10 ] Σ[ r ∶ V ℓ ] ((p ≡ pr (# (toℕ k)) r) × PayN (toℕ k) ar r) ∥₁
 ```
+</div>
+</details>
 
 <!--en-->
 Fix an environment containing a proposed term code `t`, an arity set `ar`, a working set `Wv`, and two entries known to be the numerals zero and one. Under these tag equations, the object-language predicate `isTm` can be compared exactly with the ambient predicate `IsTmV Wv t ar`.
@@ -319,12 +322,18 @@ Fix an environment containing a proposed term code `t`, an arity set `ar`, a wor
 候補となる項符号 `t`、アリティ集合 `ar`、作業集合 `Wv`、そしてそれぞれ数項零と一であることが分かっている二つの要素を含む環境を固定する。これらのタグ等式のもとで、対象言語の述語 `isTm` と外部の述語 `IsTmV Wv t ar` を正確に比較できる。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module _ {k : ℕ} (t ar w N0 N1 : Fin k) (δ : S ^ k)
   (q0 : fst (lookup N0 δ) ≡ # 0) (q1 : fst (lookup N1 δ) ≡ # 1) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     Wv = fst (lookup w δ)
-
 ```
 
 <!--en-->
@@ -355,7 +364,6 @@ The variable branch repeats the same three moves with the numeral one and the ar
        ; (inr h) → map₁
            (λ { (v , s , (e , v∈)) → inr (fst v , (e ∙ cong (λ a → pr a (fst v)) q1 , v∈)) })
            (sndEx-out t N1 (var i0 ∈̇ var (sh 2 ar)) δ h) })
-
 ```
 
 <!--en-->
@@ -387,6 +395,8 @@ The variable branch fills the witness `i` under the existential at the numeral-o
            ∣ inr (fillSnd t δ (lookup N1 δ) (down (lookup ar δ) i i∈)
                     (e ∙ cong (λ a → pr a i) (sym q1)) (var i0 ∈̇ var (sh 2 ar)) i∈ N1 refl) ∣₁ })
 ```
+</div>
+</details>
 
 <!--en-->
 The predicate `keyUp C ar r` expresses one precise membership statement: the pair `(suc ar,r)` belongs to `C`. Its bounded existential presentation chooses an actual member of `C` and then exposes enough of that member to verify both its pair shape and the successor equation.
@@ -396,8 +406,15 @@ The predicate `keyUp C ar r` expresses one precise membership statement: the pai
 述語 `keyUp C ar r` は、一つの正確な所属、すなわち対 `(suc ar,r)` が `C` に属することを表す。その有界存在による表現は、`C` の実際の要素を選び、その要素を順に明らかにして、対の形と後続の等式の両方を確かめる。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module _ {k : ℕ} (C ar r : Fin k) (δ : S ^ k) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   keyUp-out : ⟨ δ ⊨ keyUp C ar r ⟩ → ⟨ pr (sucV (fst (lookup ar δ))) (fst (lookup r δ)) ∈ fst (lookup C δ) ⟩
   keyUp-out = rec₁ (snd (pr (sucV (fst (lookup ar δ))) (fst (lookup r δ)) ∈ fst (lookup C δ)))
     (λ { (c' , (c'∈ , h)) → rec₁ (snd (pr (sucV (fst (lookup ar δ))) (fst (lookup r δ)) ∈ fst (lookup C δ)))
@@ -431,7 +448,6 @@ The three bounded witnesses therefore serve only to certify the displayed member
 ```agda
         h' })
       h })
-
 ```
 
 <!--en-->
@@ -465,6 +481,8 @@ Concretely, `ar'` represents `suc ar`, `c'` represents the member `(suc ar,r)` o
     c' = down (lookup C δ) (pr (sucV (fst (lookup ar δ))) (fst (lookup r δ))) h
     c = container c' ar' (lookup r δ) (cong (λ a → pr a (fst (lookup r δ))) (sym (sucʟ-fst (lookup ar δ))))
 ```
+</div>
+</details>
 
 <!--en-->
 Fix a candidate domain `C`, an arity value `A`, a tag value `N`, and a payload `a`. The unary key assembled from these data is the nested pair `(A,(N,a))`.
@@ -474,8 +492,15 @@ Fix a candidate domain `C`, an arity value `A`, a tag value `N`, and a payload `
 候補領域 `C`、アリティ値 `A`、タグ値 `N`、ペイロード `a` を固定する。これらから組み立てる単項キーは、入れ子の対 `(A,(N,a))` である。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module _ {k : ℕ} (C ar N a : Fin k) (δ : S ^ k) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     Cv = fst (lookup C δ)
     A = fst (lookup ar δ)
@@ -491,10 +516,8 @@ The outward reading of `unKey` states precisely that the nested key `(A,(N,a))` 
 <!--/-->
 
 ```agda
-
   unKey-out : ⟨ δ ⊨ unKey C ar N a ⟩ → ⟨ pr A (pr Nv (fst (lookup a δ))) ∈ Cv ⟩
   unKey-out = E.member-out (keyExpr ar N (E.slot a)) (var C) δ
-
 ```
 
 <!--en-->
@@ -508,8 +531,9 @@ Adequacy works in the reverse direction as well: membership `(A,(N,a)) ∈ C` yi
 ```agda
   unKey-in : ⟨ pr A (pr Nv (fst (lookup a δ))) ∈ Cv ⟩ → ⟨ δ ⊨ unKey C ar N a ⟩
   unKey-in = E.member-in (keyExpr ar N (E.slot a)) (var C) δ
-
 ```
+</div>
+</details>
 
 <!--en-->
 For a binary constructor, fix two payload components `a` and `b`. Their ordered pair `P=(a,b)` becomes the payload of the key `(A,(N,P))`; the arity and tag occupy the same outer positions as in the unary case.
@@ -519,8 +543,15 @@ For a binary constructor, fix two payload components `a` and `b`. Their ordered 
 二項構成子について、二つのペイロード成分 `a` と `b` を固定する。その順序対 `P=(a,b)` がキー `(A,(N,P))` のペイロードとなり、アリティとタグは単項の場合と同じ外側の位置を占める。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module _ {k : ℕ} (C ar N a b : Fin k) (δ : S ^ k) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     Cv = fst (lookup C δ)
     A = fst (lookup ar δ)
@@ -537,7 +568,6 @@ The two argument values form the ordered pair `P = (a,b)`. This pair is the payl
 
 ```agda
     P = pr (fst (lookup a δ)) (fst (lookup b δ))
-
 ```
 
 <!--en-->
@@ -551,7 +581,6 @@ The outward reading of `binKey` is precisely the membership `(A,(N,(a,b))) ∈ C
 ```agda
   binKey-out : ⟨ δ ⊨ binKey C ar N a b ⟩ → ⟨ pr A (pr Nv P) ∈ Cv ⟩
   binKey-out = E.member-out (keyExpr ar N (E.pair (E.slot a) (E.slot b))) (var C) δ
-
 ```
 
 <!--en-->
@@ -565,8 +594,9 @@ The inward reading is its reverse, and the two together identify the formula sta
 ```agda
   binKey-in : ⟨ pr A (pr Nv P) ∈ Cv ⟩ → ⟨ δ ⊨ binKey C ar N a b ⟩
   binKey-in = E.member-in (keyExpr ar N (E.pair (E.slot a) (E.slot b))) (var C) δ
-
 ```
+</div>
+</details>
 
 <!--en-->
 An atomic key has two term codes as its payload. Each term code carries its own term tag and argument, and the pair of these two term codes is placed beneath the atomic constructor tag and the common arity.
@@ -576,8 +606,15 @@ An atomic key has two term codes as its payload. Each term code carries its own 
 原子キーのペイロードは二つの項符号である。各項符号はそれぞれの項タグと引数をもち、その二つの項符号の対が、原子構成子のタグと共通のアリティの下に置かれる。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module _ {k : ℕ} (C ar N Nx x Ny y : Fin k) (δ : S ^ k) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     Cv = fst (lookup C δ)
     A = fst (lookup ar δ)
@@ -595,7 +632,6 @@ Write the two term codes as `T=(Nx,x)` and `U=(Ny,y)`. At this stage `Nx` and `N
 ```agda
     T = pr (fst (lookup Nx δ)) (fst (lookup x δ))
     U = pr (fst (lookup Ny δ)) (fst (lookup y δ))
-
 ```
 
 <!--en-->
@@ -609,7 +645,6 @@ The atomic clause reads outward as `(A,(N,(T,U))) ∈ C`, where `T` and `U` are 
 ```agda
   atomKey-out : ⟨ δ ⊨ atomKey C ar N Nx x Ny y ⟩ → ⟨ pr A (pr Nv (pr T U)) ∈ Cv ⟩
   atomKey-out = E.member-out (atomKeyExpr ar N Nx x Ny y) (var C) δ
-
 ```
 
 <!--en-->
@@ -623,8 +658,9 @@ The inward reading is its reverse, closing the atomic case in both directions li
 ```agda
   atomKey-in : ⟨ pr A (pr Nv (pr T U)) ∈ Cv ⟩ → ⟨ δ ⊨ atomKey C ar N Nx x Ny y ⟩
   atomKey-in = E.member-in (atomKeyExpr ar N Nx x Ny y) (var C) δ
-
 ```
+</div>
+</details>
 
 <!--en-->
 A bounded-quantifier key carries two different components in its payload: a term code for the bound and a subformula code for the body. The common outer data are again the current arity `A` and the bounded-quantifier tag `N`.
@@ -634,8 +670,15 @@ A bounded-quantifier key carries two different components in its payload: a term
 有界量化子のキーのペイロードには、異なる二つの成分がある。境界を表す項符号と、本体を表す部分論理式の符号である。共通する外側のデータは、やはり現在のアリティ `A` と有界量化子タグ `N` である。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module _ {k : ℕ} (C ar N Nx x a : Fin k) (δ : S ^ k) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     Cv = fst (lookup C δ)
     A = fst (lookup ar δ)
@@ -653,7 +696,6 @@ Write the bound-term code as `T=(Nx,x)` and the body code as `Av`. The term is c
 ```agda
     T = pr (fst (lookup Nx δ)) (fst (lookup x δ))
     Av = fst (lookup a δ)
-
 ```
 
 <!--en-->
@@ -667,7 +709,6 @@ The bounded-key clause reads outward as `(A,(N,(T,Av))) ∈ C`. The innermost pa
 ```agda
   bndKey-out : ⟨ δ ⊨ bndKey C ar N Nx x a ⟩ → ⟨ pr A (pr Nv (pr T Av)) ∈ Cv ⟩
   bndKey-out = E.member-out (bndKeyExpr ar N Nx x a) (var C) δ
-
 ```
 
 <!--en-->
@@ -682,6 +723,8 @@ Conversely, membership of `(A,(N,(T,Av)))` in `C` yields satisfaction of `bndKey
   bndKey-in : ⟨ pr A (pr Nv (pr T Av)) ∈ Cv ⟩ → ⟨ δ ⊨ bndKey C ar N Nx x a ⟩
   bndKey-in = E.member-in (bndKeyExpr ar N Nx x a) (var C) δ
 ```
+</div>
+</details>
 
 <!--en-->
 Now fix a candidate code domain `C`, a working set `W`, and ten environment entries certified to be the numerals zero through nine. For each tag, the object-language payload description can then be compared with its ambient predicate `AtomP`, `BinP`, `ConP`, `QuP`, or `BqP`.
@@ -691,9 +734,16 @@ Now fix a candidate code domain `C`, a working set `W`, and ten environment entr
 ここで、候補となる符号領域 `C`、作業集合 `W`、そして零から九までの数項であることが証明された十個の環境要素を固定する。すると各タグについて、対象言語のペイロード記述を、対応する外部の述語 `AtomP`、`BinP`、`ConP`、`QuP`、`BqP` と比較できる。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module PayRead {m : ℕ} (C w : Fin m) (N : Fin 10 → Fin m) (δ : S ^ (9 + m))
   (tg : Tags δ (shN 9 N)) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     Cv = fst (lookup (sh 9 C) δ)
     Wv = fst (lookup (sh 9 w) δ)
@@ -726,7 +776,6 @@ Both sides of the comparison use the same underlying sets `Wv` and `Cv`. The syn
 ```agda
     module Sh = Shape C w N
   open CodesSem Wv Cv
-
 ```
 
 <!--en-->
@@ -756,7 +805,6 @@ The last payload shape covers the two bounded quantifiers. Its body requires a l
 ```agda
     bqBody : Formula S (12 + m)
     bqBody = isTm i1 i8 (sh 12 w) (sh 12 (N f0)) (sh 12 (N f1)) ∧̇ keyUp (sh 12 C) i8 i0
-
 ```
 
 <!--en-->
@@ -785,7 +833,6 @@ The consumption itself is one application of the two-fold existential eliminatio
 
 ```agda
     (bothEx-out i0 tmBody δ h)
-
 ```
 
 <!--en-->
@@ -817,7 +864,6 @@ The second legality claim is inserted in the same way. The auxiliary environment
     where
     δ12 : (t u : V ℓ) (e : R ≡ pr t u) → S ^ (12 + m)
     δ12 t u e = sndS rS t u e ∷ fstS rS t u e ∷ container rS (fstS rS t u e) (sndS rS t u e) e .fst ∷ δ
-
 ```
 
 <!--en-->
@@ -846,7 +892,6 @@ As with the atoms, the two existentials of the binary condition are consumed by 
 
 ```agda
     (bothEx-out i0 binBody δ h)
-
 ```
 
 <!--en-->
@@ -878,7 +923,6 @@ The binary helper records the same shifted-context shape, now built from the two
     where
     δ12 : (a b : V ℓ) (e : R ≡ pr a b) → S ^ (12 + m)
     δ12 a b e = sndS rS a b e ∷ fstS rS a b e ∷ container rS (fstS rS a b e) (sndS rS a b e) e .fst ∷ δ
-
 ```
 
 <!--en-->
@@ -892,7 +936,6 @@ The falsity payload contains no subordinate data. Its formula says that `R` is t
 ```agda
   con-out : ⟨ δ ⊨ Sh.conPay ⟩ → ConP A R
   con-out h = h ∙ q0
-
 ```
 
 <!--en-->
@@ -906,7 +949,6 @@ Conversely, an equation `R ≡ # 0` composes with the zero-tag equation in rever
 ```agda
   con-in : ConP A R → ⟨ δ ⊨ Sh.conPay ⟩
   con-in h = h ∙ sym q0
-
 ```
 
 <!--en-->
@@ -920,7 +962,6 @@ For either unbounded quantifier, the payload is a body key at the successor arit
 ```agda
   qu-out : ⟨ δ ⊨ Sh.quPay ⟩ → QuP A R
   qu-out = keyUp-out (sh 9 C) i5 i0 δ
-
 ```
 
 <!--en-->
@@ -934,7 +975,6 @@ In the reverse direction, membership of `pr (sucV A) R` in the code set supplies
 ```agda
   qu-in : QuP A R → ⟨ δ ⊨ Sh.quPay ⟩
   qu-in = keyUp-in (sh 9 C) i5 i0 δ
-
 ```
 
 <!--en-->
@@ -963,7 +1003,6 @@ The two existentials of the bounded body are consumed by the same two-fold elimi
 
 ```agda
     (bothEx-out i0 bqBody δ h)
-
 ```
 
 <!--en-->
@@ -995,7 +1034,6 @@ The body key enters through the successor-key lemma, and the helper records the 
     where
     δ12 : (t a : V ℓ) (e : R ≡ pr t a) → S ^ (12 + m)
     δ12 t a e = sndS rS t a e ∷ fstS rS t a e ∷ container rS (fstS rS t a e) (sndS rS t a e) e .fst ∷ δ
-
 ```
 
 <!--en-->
@@ -1041,7 +1079,6 @@ Label nine is the bounded existential. Labels ten and beyond name no constructor
 ```agda
   payN-out 9 = bq-out
   payN-out (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc _)))))))))) h = h
-
 ```
 
 <!--en-->
@@ -1088,6 +1125,8 @@ Label nine completes the list; beyond ten there is nothing to read, since no leg
   payN-in 9 = bq-in
   payN-in (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc _)))))))))) h = h
 ```
+</div>
+</details>
 
 <!--en-->
 The ten-way reader interprets a tagged payload in a seven-entry extension of the ambient environment. It reads the code set and constant alphabet from the ambient entries, while `N` selects ten ambient positions whose values are identified with the numerals zero through nine by the tag hypothesis.
@@ -1097,9 +1136,16 @@ The ten-way reader interprets a tagged payload in a seven-entry extension of the
 十通りの読みは、周囲の環境を七項目だけ拡張した環境でタグ付きペイロードを解釈する。符号集合と定数アルファベットは周囲の項目から読み、`N` は周囲の環境にある十個の位置を選ぶ。タグの仮定は、それらの値をそれぞれ数項 0 から 9 までと同定する。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module TenRead {m : ℕ} (C w : Fin m) (N : Fin 10 → Fin m) (δ : S ^ (7 + m))
   (tg : Tags δ (shN 7 N)) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     Cv = fst (lookup (sh 7 C) δ)
     Wv = fst (lookup (sh 7 w) δ)
@@ -1130,7 +1176,6 @@ The tag reader converts satisfaction of the `j`-th tag atom into a key. The trun
 <!--/-->
 
 ```agda
-
   at-out : (j : Fin 10) → ⟨ δ ⊨ Sh.at j ⟩ → Key A P
   at-out j h = map₁
     (λ { (r , s , (e , hp)) → j , fst r
@@ -1148,7 +1193,6 @@ The two existentials of the tag atom are consumed by its own elimination, so the
 
 ```agda
     (sndEx-out i0 (sh 7 (N j)) (Sh.pay j) δ h)
-
 ```
 
 <!--en-->
@@ -1192,10 +1236,8 @@ The ten-way outward reader consumes the disjunction and quotes the tag reader at
 <!--/-->
 
 ```agda
-
   ten-out : ⟨ δ ⊨ Sh.ten ⟩ → Key A P
   ten-out h = rec₁ squash₁ (λ { (j , hj) → at-out j hj }) (bigOr-out δ 9 Sh.at h)
-
 ```
 
 <!--en-->
@@ -1211,6 +1253,8 @@ The inward reader enters the disjunction at the witnessed tag, with the payload 
   ten-in = rec₁ (snd (δ ⊨ Sh.ten))
     (λ { (j , r , (e , pay)) → bigOr-in δ 9 Sh.at j (at-in j r e pay) })
 ```
+</div>
+</details>
 
 <!--en-->
 The shape reader fixes three ambient sets: the candidate code set `C`, the constant alphabet `w`, and the tower `E` of arity-family pairs. Their underlying iterative sets are used respectively for code membership, legal constant terms, and witnesses `(ar,F)` belonging to the tower.
@@ -1220,8 +1264,15 @@ The shape reader fixes three ambient sets: the candidate code set `C`, the const
 形の読みは三つの周囲の集合を固定する。候補となる符号集合 `C`、定数アルファベット `w`、そしてアリティと族の対からなる塔 `E` である。それぞれの基礎にある反復集合は、符号の所属、定数項の合法性、塔に属する証人 `(ar,F)` に用いられる。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module ShapeRead {m : ℕ} (C w E : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) (tg : Tags γ N) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     Cv = fst (lookup C γ)
     Wv = fst (lookup w γ)
@@ -1241,7 +1292,6 @@ For a chosen member `c` and a tower witness `(ar,F)`, the remaining formula choo
     inner : Formula S (5 + m)
     inner = sndEx i4 i1 Sh.ten
   open CodesSem Wv Cv
-
 ```
 
 <!--en-->
@@ -1254,9 +1304,8 @@ For a chosen member `c` and a tower witness `(ar,F)`, the remaining formula choo
 
 ```agda
   Shaped : V ℓ → Type (ℓ-suc ℓ)
-  Shaped c = ∥ Σ[ ar ∈ V ℓ ] Σ[ F ∈ V ℓ ] Σ[ p ∈ V ℓ ]
+  Shaped c = ∥ Σ[ ar ∶ V ℓ ] Σ[ F ∶ V ℓ ] Σ[ p ∶ V ℓ ]
                (⟨ pr ar F ∈ Ev ⟩ × ((c ≡ pr ar p) × Key ar p)) ∥₁
-
 ```
 
 <!--en-->
@@ -1301,7 +1350,6 @@ The original shape satisfaction is universally quantified over members of the co
 
 ```agda
     (h c c∈)
-
 ```
 
 <!--en-->
@@ -1363,6 +1411,8 @@ Applying the assumed shape assignment to `c` and its membership supplies precise
 ```agda
     (k c c∈)
 ```
+</div>
+</details>
 
 <!--en-->
 The closure clauses are interpreted after a tower member has been decomposed as `q ≡ pr ar F`. In the resulting four-entry extension, `A` is the fixed arity `ar`; the code set and constant alphabet remain available from the ambient environment, and the tag equations remain valid after the shift.
@@ -1372,8 +1422,15 @@ The closure clauses are interpreted after a tower member has been decomposed as 
 塔の要素を `q ≡ pr ar F` と分解した後で、各閉性の節を解釈する。得られる四項目の拡張では、`A` は固定されたアリティ `ar` である。符号集合と定数アルファベットは周囲の環境から引き続き参照でき、タグ等式もシフト後に保たれる。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module CloseRead {m : ℕ} (C w : Fin m) (N : Fin 10 → Fin m) (δ : S ^ (4 + m)) (tg : Tags δ (shN 4 N)) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     Cv = fst (lookup (sh 4 C) δ)
     A = fst (lookup i1 δ)
@@ -1421,7 +1478,6 @@ The membership is transported along the tag equations, which rename the three sl
     subst (λ u → ⟨ u ∈ Cv ⟩)
       (cong (pr A) (cong₂ pr (tg k) (cong₂ pr (cong (λ a → pr a (fst x)) (tg Nx)) (cong (λ a → pr a (fst y)) (tg Ny)))))
       (atomKey-out (sh 6 C) i3 (sh 6 (N k)) (sh 6 (N Nx)) i1 (sh 6 (N Ny)) i0 (y ∷ x ∷ δ) (h x x∈ y y∈))
-
 ```
 
 <!--en-->
@@ -1515,7 +1571,6 @@ For the quantifier clauses, the environment must remember both a subkey and the 
     δ8 = c₂ ∷ δ7
     δ10 : S ^ (10 + m)
     δ10 = b ∷ container c₂ arS b e₂ .fst ∷ δ8
-
 ```
 
 <!--en-->
@@ -1563,7 +1618,6 @@ For falsity there is no subordinate code to inspect. Reading its closure clause 
   conClose-out k h =
     subst (λ u → ⟨ u ∈ Cv ⟩) (cong (pr A) (cong₂ pr (tg k) (tg f0)))
       (unKey-out (sh 4 C) i1 (sh 4 (N k)) (sh 4 (N f0)) δ h)
-
 ```
 
 <!--en-->
@@ -1623,7 +1677,6 @@ The extended environment packages the three quantified components with the origi
 
 ```agda
     δ8 = a ∷ ar' ∷ container c₁ ar' a e₁ .fst ∷ c₁ ∷ δ
-
 ```
 
 <!--en-->
@@ -1700,7 +1753,6 @@ The eight-slot environment repeats the packaging used by the unbounded case, wit
     where
     δ8 : S ^ (8 + m)
     δ8 = a ∷ ar' ∷ container c₁ ar' a e₁ .fst ∷ c₁ ∷ δ
-
 ```
 
 <!--en-->
@@ -1734,6 +1786,8 @@ Introduce the quantified subkey data and the bounding term, then apply the assum
         (sym (cong (pr A) (cong₂ pr (tg k) (cong (λ v → pr v (fst a)) (cong (λ v → pr v (fst x)) (tg Nx))))))
         (g c₁ ar' a s c₁∈ e₁ (suc-out i5 i1 (a ∷ ar' ∷ s ∷ c₁ ∷ δ) hs) x x∈)))
 ```
+</div>
+</details>
 
 <!--en-->
 ## Soundness: decoding every member
@@ -1751,14 +1805,6 @@ To prove soundness, we now connect three descriptions already available: numeric
 健全性を証明するため、ここまでに得た三つの記述を結ぶ。数値タグは十種類の構成子を識別し、形と閉包の論理式は集合内部の符号を記述し、`AllCodes` はそれらの符号を外部の論理式文法へ結び戻す。関係する性質は命題なので、代表を選ばずに切り詰められた証人を除去できる。
 <!--/-->
 
-```agda
-open import L.Coding.Expressions {ℓ} using ( tagAtL-adequate )
-open import L.Coding.Closure {ℓ} using ( closedAt; binSameClosed-in; unSuccClosed-in; binSuccClosed-in )
-open import L.Coding.CodeShape {ℓ} using
-  ( shapedAt; shaped-in; ShapeWit; BinWit; bothTm; fstTm; noneB; isTmAt )
-open import L.Coding.CodeSet {ℓ} lem using
-```
-
 <!--en-->
 The canonical code set provides both directions of this comparison: a member can be read as a formula key, and every formula has a canonical key. The remaining imports supply the witnesses for recorded arities and the fact that conjunctions of propositions are again propositions.
 <!--zh-->
@@ -1766,11 +1812,6 @@ The canonical code set provides both directions of this comparison: a member can
 <!--ja-->
 標準的な符号集合は、この比較の両方向を与える。その要素は論理式キーとして読め、どの論理式にも標準的なキーがある。残りの導入からは、記録されたアリティの証人と、二つの命題の連言も命題であるという事実を得る。
 <!--/-->
-
-```agda
-  ( AllCodes; AllCodes-out; key∈AllCodes; keyS; codeS; witnessAt-out )
-
-```
 
 <!--en-->
 Fix a working set `Wv`, whose elements may occur as constants, and a candidate code domain `Cv`. The following argument is parametric in these two sets; no assumption yet identifies `Cv` with the canonical domain `AllCodes`.
@@ -1780,10 +1821,16 @@ Fix a working set `Wv`, whose elements may occur as constants, and a candidate c
 定数として現れうる要素をもつ作業集合 `Wv` と、候補となる符号領域 `Cv` を固定する。以下の議論はこの二つの集合をパラメータとし、この時点では `Cv` が標準的な領域 `AllCodes` であるとは仮定しない。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module _ (Wv Cv : V ℓ) where
-  open CodesSem Wv Cv
+```
+</summary>
+<div class="submodule-fold-content">
 
+```agda
+  open CodesSem Wv Cv
 ```
 
 <!--en-->
@@ -1858,6 +1905,8 @@ Applying this elimination to `key` completes the alignment: the tag and payload 
 ```agda
     key
 ```
+</div>
+</details>
 
 <!--en-->
 The first recovery lemma converts a term-code statement into a satisfaction of the shape chapter's term predicate. It is stated for arbitrary slots and proved by eliminating the truncated `IsTmV` into the proposition-valued satisfaction.
@@ -1902,7 +1951,6 @@ The variable branch repeats the construction with the numeral slot presenting th
 ```agda
            , ( subst ⟨_⟩ (sym (tagAtL-adequate (suc ti) 1 zero (down (lookup Ni env) i i∈ ∷ env))) e
              , i∈ ) ∣₁ ∣₁ })
-
 ```
 
 <!--en-->
@@ -1913,11 +1961,18 @@ We can now state soundness for a candidate domain `C`. Assume that the constant 
 これで候補領域 `C` の健全性を述べられる。定数字母表が集合 `W` であり、十個のタグ枠に正しい数項が入り、環境集合に記録された各アリティが自然数の数項であり、`C` が形の記述を満たすと仮定する。これらの仮定から、`C` の各要素を論理式キーとして復元する。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module CodesSound {m : ℕ} (C w E : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) (W : S)
   (qw : fst (lookup w γ) ≡ fst W) (tg : Tags γ N)
-  (arity : (n F : S) → ⟨ pr (fst n) (fst F) ∈ fst (lookup E γ) ⟩ → ∥ Σ[ k ∈ ℕ ] (fst n ≡ # k) ∥₁)
+  (arity : (n F : S) → ⟨ pr (fst n) (fst F) ∈ fst (lookup E γ) ⟩ → ∥ Σ[ k ∶ ℕ ] (fst n ≡ # k) ∥₁)
   (hs : ⟨ γ ⊨ shapeAt C w E N ⟩) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
 ```
 
@@ -1947,7 +2002,6 @@ The payload conditions are henceforth interpreted relative to the fixed working 
 
 ```agda
   open CodesSem Wv Cv
-
 ```
 
 <!--en-->
@@ -2002,7 +2056,6 @@ The arity equation is transported last, since the shape witness and the target d
 ```agda
         in subst (λ a → PayN n a r) (q .fst) (keyAt Wv Cv ar' p key n r (q .snd)) })
       (SR.shape-out hs c c∈)
-
 ```
 
 <!--en-->
@@ -2034,7 +2087,6 @@ Pair injectivity splits the equation into the two component equations, and each 
         in subst (λ u → ⟨ pr (fst ar) u ∈ Cv ⟩) (sym (q .fst)) ha
          , subst (λ u → ⟨ pr (fst ar) u ∈ Cv ⟩) (sym (q .snd)) hb })
       (subst (λ P → P (fst ar) (pr (fst a) (fst b))) eq (at c c∈ k (fst ar) (pr (fst a) (fst b)) e))
-
 ```
 
 <!--en-->
@@ -2064,7 +2116,6 @@ Once the bounded payload has been aligned with the displayed nested pair, its bo
 ```agda
         subst (λ u → ⟨ pr (sucV (fst ar)) u ∈ Cv ⟩) (sym (pr-inj er .snd)) ha })
       (subst (λ P → P (fst ar) (pr (fst a) (fst b))) eq (at c c∈ k (fst ar) (pr (fst a) (fst b)) e))
-
 ```
 
 <!--en-->
@@ -2187,7 +2238,6 @@ Pair injectivity separates the payload equality into equations for its two compo
         arS , (fstS rS t u er , (sndS rS t u er
         , ( ek ∙ cong (λ v → pr (fst arS) (pr (# k) v)) er
           , g (fstS rS t u er) (sndS rS t u er) refl refl )))
-
 ```
 
 <!--en-->
@@ -2217,7 +2267,6 @@ The second component is treated identically, so the two recovered term witnesses
 ```agda
         , tmWit zero (suc (suc zero)) (sh 4 (sh 2 w)) (env4 c' arS uS tS)
             (subst (λ x → IsTmV Wv x (fst arS)) (sym qu) hu)
-
 ```
 
 <!--en-->
@@ -2245,7 +2294,6 @@ Tag zero denotes membership. Its payload contains two legal term codes, so the b
 <!--/-->
 
 ```agda
-
       fill : (k : Fin 10) (c' arS rS : S) → PayN (toℕ k) (fst arS) (fst rS)
            → fst c' ≡ pr (fst arS) (pr (# (toℕ k)) (fst rS))
            → ∥ ShapeWit (sh 2 w) (δ' c) c' ∥₁
@@ -2344,7 +2392,6 @@ The bounded existential has the same payload shape as the bounded universal, but
 ```agda
           (pairWit 9 (fstTm (sh 2 w)) c' arS rS ek t a er (first c' arS t a ht)))))))))) })
         pay
-
 ```
 
 <!--en-->
@@ -2389,7 +2436,6 @@ The two unbounded quantifiers are discharged by quoting the reader at the succes
     , ( unSuccClosed-in C 7 γ (λ c' ar a c'∈ e → at c' c'∈ 7 (fst ar) (fst a) e)
     , ( binSuccClosed-in C 8 γ (bqAt 8 refl)
     ,   binSuccClosed-in C 9 γ (bqAt 9 refl) )))))
-
 ```
 
 <!--en-->
@@ -2402,7 +2448,7 @@ The decoding theorem is the chapter's first main result. Every member `c` of a c
 
 ```agda
   key-out : (c : S) → ⟨ fst c ∈ Cv ⟩
-          → ∥ Σ[ k ∈ ℕ ] Σ[ ψ ∈ Formula ⟪ fst W ⟫ k ] (fst c ≡ fst (keyS W ψ)) ∥₁
+          → ∥ Σ[ k ∶ ℕ ] Σ[ ψ ∶ Formula ⟪ fst W ⟫ k ] (fst c ≡ fst (keyS W ψ)) ∥₁
   key-out c c∈ = rec₁ squash₁
     (λ { (ar , F , p , (q∈ , (ec , key))) → rec₁ squash₁
       (λ { (k , qk) → map₁ (λ { (ψ , e) → k , ψ , e })
@@ -2435,6 +2481,8 @@ The required shape data is precisely the result of applying `shape-out` to the a
 ```agda
     (SR.shape-out hs c c∈)
 ```
+</div>
+</details>
 
 <!--en-->
 ## Completeness: encoding every formula
@@ -2453,9 +2501,7 @@ Two arithmetic facts about finite indices enter here: converting a natural numbe
 <!--/-->
 
 ```agda
-open import L.Ordinal {ℓ} using ( ∈#-elim )
 open import Cubical.Data.FinData.Properties using ( fromℕ'; toFromId' )
-
 ```
 
 <!--en-->
@@ -2466,11 +2512,18 @@ For completeness, assume a code-domain slot `C`, an alphabet slot `w`, and an ar
 完全性を示すため、符号領域のスロット `C`、アルファベットのスロット `w`、アリティ塔のスロット `E` を固定し、十個のタグが正しく解釈されると仮定する。さらに、すべての正準な塔の要素が `E` に属し、上向きの閉包条項が成り立つと仮定する。目標は、アルファベット上のすべての論理式のキーが `C` に属することである。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module CodesComplete {m : ℕ} (C w E : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) (W : S)
   (qw : fst (lookup w γ) ≡ fst W) (tg : Tags γ N)
   (arity∈ : (n : ℕ) → ⟨ pr (# n) (fst (envSet W n)) ∈ fst (lookup E γ) ⟩)
   (hc : ⟨ γ ⊨ closeAt C w E N ⟩) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   open Alphabet W
 ```
 
@@ -2485,7 +2538,6 @@ Write `Cv` for the underlying set named by the code-domain slot. Completeness wi
 ```agda
   private
     Cv = fst (lookup C γ)
-
 ```
 
 <!--en-->
@@ -2499,7 +2551,6 @@ Every constant of the alphabet belongs to the alphabet slot: the identification 
 ```agda
     ι∈w : (q : Ab) → ⟨ ι q ∈ fst (lookup w γ) ⟩
     ι∈w q = subst (λ u → ⟨ ι q ∈ u ⟩) (sym qw) (ι∈ q)
-
 ```
 
 <!--en-->
@@ -2513,7 +2564,6 @@ An alphabet entry is represented internally by an element of the slot `w`. The o
 ```agda
     ιS : Ab → S
     ιS q = down (lookup w γ) (ι q) (ι∈w q)
-
 ```
 
 <!--en-->
@@ -2527,7 +2577,6 @@ The canonical tower entry at arity `n`, the pair of the numeral `n` with the env
 ```agda
     qS : ℕ → S
     qS n = down (lookup E γ) (pr (# n) (fst (envSet W n))) (arity∈ n)
-
 ```
 
 <!--en-->
@@ -2541,7 +2590,6 @@ The four-slot context assembles the lowered tower entry, the numeral, their pair
 ```agda
     δ4 : ℕ → S ^ (4 + m)
     δ4 n = envSet W n ∷ nn n ∷ container (qS n) (nn n) (envSet W n) refl .fst ∷ qS n ∷ γ
-
 ```
 
 <!--en-->
@@ -2555,7 +2603,6 @@ The full closure clause is satisfied at that context, because the hypothesis say
 ```agda
     frame : (n : ℕ) → ⟨ δ4 n ⊨ Close.all C w N ⟩
     frame n = useBoth i0 (qS n ∷ γ) (nn n) (envSet W n) refl (Close.all C w N) (hc (qS n) (arity∈ n))
-
 ```
 
 <!--en-->
@@ -2581,7 +2628,6 @@ Every variable index below `n` names a numeral below the numeral of `n`: the mon
 ```agda
     var∈ : (n : ℕ) (i : Fin n) → ⟨ # (toℕ i) ∈ # n ⟩
     var∈ n i = #mono (toℕ i) n (toℕ<n i)
-
 ```
 
 <!--en-->
@@ -2661,6 +2707,8 @@ The bounded existential repeats the same two arguments at its own tag, completin
   key-in {n} (∃̇∈ (var i) a) =
     CR.bqClose-out n f9 f1 i5 (frame n .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd ) (keyS W a) (nn (suc n)) (codeS W a) (key-in a) refl refl (nn (toℕ i)) (var∈ n i)
 ```
+</div>
+</details>
 
 <!--en-->
 ## The canonical closed code domain
@@ -2678,10 +2726,17 @@ It remains to show that the canonical domain really satisfies the description. T
 最後に、正準な符号領域が実際にこの記述を満たすことを示す。符号スロットには `AllCodes W` を、アリティのスロットには `W` 上の環境塔を表させ、等式 `qC` と `qE` でそれぞれの同一視を記録する。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module CodesHolds {m : ℕ} (C w E : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) (W : S)
   (qw : fst (lookup w γ) ≡ fst W) (qC : fst (lookup C γ) ≡ fst (AllCodes W))
   (qE : fst (lookup E γ) ≡ fst (Tower.tower W)) (tg : Tags γ N) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   open Alphabet W
   private
 ```
@@ -2699,7 +2754,6 @@ Write `Cv`, `Wv`, and `Ev` for the underlying sets named by the code-domain, alp
     Wv = fst (lookup w γ)
     Ev = fst (lookup E γ)
     open CodesSem Wv Cv
-
 ```
 
 <!--en-->
@@ -2714,7 +2768,6 @@ Suppose a set `Wv′` contains the representative of every alphabet entry. Then 
     tmV : ∀ {n} (Wv′ : V ℓ) → ((q : Ab) → ⟨ ι q ∈ Wv′ ⟩) → (t : Term Ab n) → IsTmV Wv′ (ct t) (# n)
     tmV Wv′ into (con q) = ∣ inl (ι q , (refl , into q)) ∣₁
     tmV {n} Wv′ into (var i) = ∣ inr (# (toℕ i) , (refl , #mono (toℕ i) n (toℕ<n i))) ∣₁
-
 ```
 
 <!--en-->
@@ -2728,7 +2781,6 @@ The constants of the alphabet belong to the environment's alphabet slot, transpo
 ```agda
     ι∈w : (q : Ab) → ⟨ ι q ∈ Wv ⟩
     ι∈w q = subst (λ u → ⟨ ι q ∈ u ⟩) (sym qw) (ι∈ q)
-
 ```
 
 <!--en-->
@@ -2742,7 +2794,6 @@ By definition of `AllCodes W`, the key of every formula over the alphabet belong
 ```agda
     mem : ∀ {n} (ψ : Formula Ab n) → ⟨ fst (keyS W ψ) ∈ Cv ⟩
     mem ψ = subst (λ u → ⟨ fst (keyS W ψ) ∈ u ⟩) (sym qC) (key∈AllCodes W ψ)
-
 ```
 
 <!--en-->
@@ -2756,7 +2807,6 @@ Likewise, the tower contains the canonical entry pairing the numeral `# n` with 
 ```agda
     entry∈ : (n : ℕ) → ⟨ pr (# n) (fst (envSet W n)) ∈ Ev ⟩
     entry∈ n = subst (λ u → ⟨ pr (# n) (fst (envSet W n)) ∈ u ⟩) (sym qE) (Tower.tower-in′ W n)
-
 ```
 
 <!--en-->
@@ -2814,7 +2864,6 @@ The bounded quantifiers pair the bounding term with the subformula key, completi
 
 ```agda
     keyOf (∃̇∈ t a) = ∣ f9 , pr (ct t) (cd a) , (refl , ∣ ct t , cd a , (refl , (tm t , mem a)) ∣₁) ∣₁
-
 ```
 
 <!--en-->
@@ -2842,7 +2891,7 @@ The decoding helper fixes the arity explicitly. If a code-domain member `c` has 
 
 ```agda
     decodeAt : (c : S) → ⟨ fst c ∈ Cv ⟩ → (n : ℕ) (z : V ℓ) → fst c ≡ pr (# n) z
-             → ∥ Σ[ ψ ∈ Formula Ab n ] (z ≡ cd ψ) ∥₁
+             → ∥ Σ[ ψ ∶ Formula Ab n ] (z ≡ cd ψ) ∥₁
     decodeAt c c∈ n z e = map₁
       (λ { (n₁ , ψ₁ , e₁) →
         let q = pr-inj (sym e₁ ∙ e)
@@ -2872,8 +2921,7 @@ The term-decoding statement is parameterized by a bound set: every member of the
 
 ```agda
     TmDec : ∀ {n} → Fin 10 → V ℓ → Type (ℓ-suc ℓ)
-    TmDec {n} Nx bound = (x : V ℓ) → ⟨ x ∈ bound ⟩ → ∥ Σ[ t ∈ Term Ab n ] (ct t ≡ pr (# (toℕ Nx)) x) ∥₁
-
+    TmDec {n} Nx bound = (x : V ℓ) → ⟨ x ∈ bound ⟩ → ∥ Σ[ t ∶ Term Ab n ] (ct t ≡ pr (# (toℕ Nx)) x) ∥₁
 ```
 
 <!--en-->
@@ -2888,7 +2936,7 @@ Constants decode through the fiber of the alphabet embedding: a member of the al
     conDec : ∀ {n} → TmDec {n} f0 Wv
     conDec x x∈ = ∣ con (fib .fst) , cong (pr (# 0)) (fib .snd) ∣₁
       where
-      fib : Σ[ q ∈ Ab ] (ι q ≡ x)
+      fib : Σ[ q ∶ Ab ] (ι q ≡ x)
       fib = ∈-asFiber {a = x} {b = fst W} (subst (λ u → ⟨ x ∈ u ⟩) qw x∈)
 ```
 
@@ -2901,7 +2949,6 @@ Variables decode through the numeral elimination: a member of the arity numeral 
 <!--/-->
 
 ```agda
-
     varDec : (n : ℕ) (A : V ℓ) → A ≡ # n → TmDec {n} f1 A
     varDec n A qa x x∈ = map₁
       (λ { (j , (p , ex)) → var (fromℕ' n j p) , cong (pr (# 1)) (cong #_ (toFromId' n j p) ∙ sym ex) })
@@ -2916,8 +2963,15 @@ Fix one entry `q` of the environment tower and an equation identifying its recor
 環境塔の一つの項目 `q` を固定し、そこに記録されたアリティが `# n` と等しいと仮定する。局所文脈 `δ4` は、閉包論理式が要求する四つの値、すなわちアリティ表、アリティの数項、その項目と表を結ぶ容器、そして項目自身を与える。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
     module At (q : S) (q∈ : ⟨ fst q ∈ Ev ⟩) (ar F s : S) (n : ℕ) (qa : fst ar ≡ # n) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
       private
         δ4 : S ^ (4 + m)
         δ4 = F ∷ ar ∷ s ∷ q ∷ γ
@@ -2935,7 +2989,6 @@ Within this fixed context, `CloseRead` turns satisfaction of each closure formul
 ```agda
         module CR = CloseRead C w N δ4 tg
         module Cl = Close C w N
-
 ```
 
 <!--en-->
@@ -2961,8 +3014,7 @@ For a tag `Nx` and an element `x`, `TmAt Nx x` is the Σ type of a term `t` toge
 
 ```agda
         TmAt : (Nx : Fin 10) (x : V ℓ) → Type (ℓ-suc ℓ)
-        TmAt Nx x = Σ[ t ∈ Term Ab n ] (ct t ≡ pr (# (toℕ Nx)) x)
-
+        TmAt Nx x = Σ[ t ∶ Term Ab n ] (ct t ≡ pr (# (toℕ Nx)) x)
 ```
 
 <!--en-->
@@ -2975,8 +3027,7 @@ Similarly, `FoAt k z` is the Σ type of a formula `ψ` of arity `k` together wit
 
 ```agda
         FoAt : (k : ℕ) (z : V ℓ) → Type (ℓ-suc ℓ)
-        FoAt k z = Σ[ ψ ∈ Formula Ab k ] (z ≡ cd ψ)
-
+        FoAt k z = Σ[ ψ ∶ Formula Ab k ] (z ≡ cd ψ)
 ```
 
 <!--en-->
@@ -3039,7 +3090,6 @@ The final equality is assembled in three layers: `qa` aligns the outer arity, th
                 (cong₂ pr qa (cong (pr (# (toℕ k))) (cong₂ pr (sym et) (sym eu)) ∙ sym (code t u))) })
               d2 })
             d1)
-
 ```
 
 <!--en-->
@@ -3100,7 +3150,6 @@ The outer elimination supplies the first recovered formula and completes the pro
 
 ```agda
             d1)
-
 ```
 
 <!--en-->
@@ -3114,13 +3163,12 @@ Falsity has no subformula: its payload is simply the numeral zero. Once the reco
 ```agda
         conIn : (k : Fin 10) (c₀ : Formula Ab n) → cd c₀ ≡ pr (# (toℕ k)) (# 0) → ⟨ δ4 ⊨ Cl.conClose k ⟩
         conIn k c₀ code = CR.conClose-in k (in-key c₀ (pr A (pr (# (toℕ k)) (# 0))) (cong₂ pr qa (sym code)))
-
 ```
 
 <!--en-->
 Binding one variable changes the arity of the body from `n` to `suc n`. The quantifier closure hypothesis therefore presents its immediate subkey at the successor arity, and `decodeAt` recovers a formula body of precisely that arity.
 <!--zh-->
-约束一个变量会使主体的元数由 `n` 变为 `suc n`。因此，量词闭包的假设把直接子键置于后继元数处，而 `decodeAt` 恰好恢复出具有这一元数的公式主体。
+约束一个变元会使主体的元数由 `n` 变为 `suc n`。因此，量词闭包的假设把直接子键置于后继元数处，而 `decodeAt` 恰好恢复出具有这一元数的公式主体。
 <!--ja-->
 変数を一つ束縛すると、本体のアリティは `n` から `suc n` に変わる。したがって量化子の閉包に関する仮定は、直接の下位キーを後続アリティに置き、`decodeAt` はちょうどそのアリティをもつ論理式の本体を復元する。
 <!--/-->
@@ -3159,7 +3207,6 @@ Eliminating the recovered body completes the proof that the domain is closed und
 
 ```agda
             d1)
-
 ```
 
 <!--en-->
@@ -3222,7 +3269,6 @@ With the recovered term `t` and body `ψ₁`, their code equations identify `G` 
                 (cong₂ pr qa (cong (pr (# (toℕ k))) (cong₂ pr (sym et) ea) ∙ sym (code t ψ₁))) })
               d2 })
             d1)
-
 ```
 
 <!--en-->
@@ -3288,6 +3334,8 @@ The last four clauses treat bounded universal and existential quantification. Ea
         , ( bqIn f9 f0 (sh 8 w) ∃̇∈ (λ _ _ → refl) (λ _ _ _ _ → conDec)
         ,   bqIn f9 f1 i5 ∃̇∈ (λ _ _ → refl) (λ _ _ _ _ → varDec n A qa) ))))))))))))))))
 ```
+</div>
+</details>
 
 <!--en-->
 It remains to establish the closure clauses at every entry `q` of the environment tower. The tower theorem expresses `q`, under propositional truncation, as the canonical entry `(# n, envSet W n)` for some `n`. Its first-component equation identifies the recorded arity with `# n`, so the eighteen clauses assembled in `At.all` apply at that entry.
@@ -3298,7 +3346,6 @@ It remains to establish the closure clauses at every entry `q` of the environmen
 <!--/-->
 
 ```agda
-
     close : ⟨ γ ⊨ closeAt C w E N ⟩
     close q q∈ = bothAll-in i0 (Close.all C w N) (q ∷ γ) (λ ar F s s∈ ar∈ F∈ e →
       rec₁ (snd ((F ∷ ar ∷ s ∷ q ∷ γ) ⊨ Close.all C w N))
@@ -3315,10 +3362,11 @@ The canonical domain `AllCodes W` now satisfies both halves of `codesAt`: `shape
 <!--/-->
 
 ```agda
-
   holds : ⟨ γ ⊨ codesAt C w E N ⟩
   holds = shape , close
 ```
+</div>
+</details>
 
 <!--en-->
 ## Recap

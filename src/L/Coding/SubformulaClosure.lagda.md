@@ -1,3 +1,7 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # Closure under subformulas
 <!--zh-->
@@ -5,6 +9,34 @@
 <!--ja-->
 # 部分式についての閉包
 <!--/-->
+
+```agda
+open import Base.Prelude
+```
+
+<!--en-->
+Fix a universe level `ℓ`{.Agda}. Keeping the level as a parameter lets the constructions be instantiated at each required size without identifying distinct universes.
+<!--zh-->
+固定宇宙层级 `ℓ`{.Agda}。保留这个层级参数，使构造可以在所需的各个大小处实例化，而不必把不同的宇宙视为同一个。
+<!--ja-->
+宇宙レベル `ℓ`{.Agda} を固定する。このレベルをパラメータとして保つことで、異なる宇宙を同一視せずに、必要な大きさで構成を具体化できる。
+<!--/-->
+
+```agda
+module L.Coding.SubformulaClosure {ℓ : Level} where
+```
+
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax using ( Formula )
+import FOL.Absoluteness
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Coding {ℓ} using ( pr )
+open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
+open import L.Coding.Closure {ℓ} using ( closedAt; binShapeAt; unShapeAt; bothSameAt; oneSameAt; oneSuccAt; succSndAt; binSameClosed-in; unSameClosed-in; unSuccClosed-in; binSuccClosed-in )
+open import L.Coding.CodeConstructibility {ℓ}
+  using ( closure; closureL; closure-inv; byTag; Concl; key )
+```
 
 <!--en-->
 A recursion over formula codes needs an index set containing the immediate
@@ -29,21 +61,6 @@ and hand back what the formula's own closure already contains.
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-open import Base.Prelude
-
-module L.Coding.SubformulaClosure {ℓ : Level} where
-
-open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using ( Formula )
-import FOL.Absoluteness
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-open import V.Coding {ℓ} using ( pr )
-open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
-open import L.Coding.Closure {ℓ} using ( closedAt; binShapeAt; unShapeAt; bothSameAt; oneSameAt; oneSuccAt; succSndAt; binSameClosed-in; unSameClosed-in; unSuccClosed-in; binSuccClosed-in )
-open import L.Coding.CodeConstructibility {ℓ}
-  using ( closure; closureL; closure-inv; byTag; Concl; key )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( module InfinitySet )
 open InfinitySet using ( #_; sucV )
@@ -72,8 +89,15 @@ be evaluated.
 `clo φ` は外側で構成した集合 `closure f h φ` とその構成可能性の証明を組み合わせ、`closedAt` を評価できる `L` の要素にする。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module _ {K : Type ℓ} (f : K → V ℓ) (h : (k : K) → ⟨ isL (f k) ⟩) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     Cl : ∀ {n} → Formula K n → V ℓ
     Cl = closure f h
@@ -114,7 +138,7 @@ the two instances rather than the subject.
 ```agda
   Peel : V ℓ → Type (ℓ-suc ℓ)
   Peel C = (x : V ℓ) → ⟨ x ∈ C ⟩
-         → ∥ (Σ[ m ∈ ℕ ] Σ[ ψ ∈ Formula K m ]
+         → ∥ (Σ[ m ∶ ℕ ] Σ[ ψ ∶ Formula K m ]
                ((x ≡ key f h ψ) × ((z : V ℓ) → ⟨ z ∈ Cl ψ ⟩ → ⟨ z ∈ C ⟩))) ∥₁
 ```
 
@@ -144,8 +168,15 @@ is a proposition.
 剥开所返回的那个截断当场消掉，这是允许的，因为要产出的是一条隶属、或一对隶属，而隶属是命题。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
   module _ (D : S) (peel : Peel (fst D)) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
     private
       C : V ℓ
       C = fst D
@@ -233,11 +264,16 @@ any model element whose underlying set satisfies `Peel`; `closureClosed` supplie
       , ( up γ 7 (λ _ _ r → r)
       , ( sndUp γ 8 (λ _ a b r → r a b refl)
       , sndUp γ 9 (λ _ a b r → r a b refl) )))))
-
+```
+</div>
+</details>
+```agda
   closureClosed : ∀ {n m} (φ : Formula K n) (γ : S ^ m)
                 → ⟨ (clo φ ∷ γ) ⊨ closedAt zero ⟩
   closureClosed φ γ = closedOf (clo φ) (closure-inv f h φ) γ
 ```
+</div>
+</details>
 
 <!--en-->
 ## Recap

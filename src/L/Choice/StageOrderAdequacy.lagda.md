@@ -1,34 +1,18 @@
-<!--en-->
-# Adequacy of the stage-order description
-
-The metatheory already carries a strict well order at every constructible stage, but the object language of `L` can speak only through formulas. This chapter translates that order into formulas: it describes the birth stage of each set, the code set that travels with each carrier, and the comparison rule of the stage order, proving that the descriptions are faithful to their meta-language meanings. One piece is deliberately left as a parameter: the comparison inside a fixed birth stage.
-<!--zh-->
-# 层序描述的充分性
-
-元理论已经在每个可构造层携带一个严格良序，但 `L` 的对象语言只能通过公式说话。本章把这一层序翻译成公式：描述每个集合的诞生层、随载体变化的码集，以及层序的比较规则，并证明这些描述忠实于其元语言含义。其中有一件被刻意留作参数：固定诞生层内部的比较。
-<!--ja-->
-# 段階順序の記述の妥当性
-
-メタ理論には、すでにすべての構成可能な段階で狭義の整列順序があるが、`L` の対象言語は論理式を通してしか語れない。この章は、その順序を論理式へ翻訳する。各集合の誕生段階・台とともに動くコードの集合・段階順序の比較の規則を記述し、それらがメタ言語の意味に忠実であることを証明する。ただ一つ、意図的に引数のまま残したものがある。固定された誕生段階の内部での比較である。
-<!--/-->
-
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
-
 ```
 
 <!--en-->
-Classical reasoning enters through one explicit hypothesis, `lem`{.Agda}. It will be used when ordinal stages must be compared, while the formulas constructed in this chapter remain ordinary formulas of the object language. Thus a semantic argument may use excluded middle without inserting a new axiom into the language being interpreted.
+# Adequacy of the stage-order description
 <!--zh-->
-经典推理只经由一个显式假设 `lem`{.Agda} 进入。比较序数层时会用到它，而本章构造的公式仍是对象语言的普通公式。因此，语义论证可以使用排中律，却不会把新公理写进被解释的语言。
+# 层序描述的充分性
 <!--ja-->
-古典的推論は、明示された一つの仮定 `lem`{.Agda} を通してだけ入る。順序数段階を比較するときにこれを用いるが、この章で構成する論理式は対象言語の通常の論理式のままである。したがって、意味論的な議論で排中律を使っても、解釈される言語に新しい公理を加えることにはならない。
+# 段階順序の記述の妥当性
 <!--/-->
 
 ```agda
 open import Base.Prelude
 open import Base.Classical using ( LEM )
-
 ```
 
 <!--en-->
@@ -41,8 +25,63 @@ Keep the two levels of discourse distinct from the outset. The previously constr
 
 ```agda
 module L.Choice.StageOrderAdequacy {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-
 ```
+
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax using
+  ( Formula; Term; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; ¬̇_; ∃̇_ )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Model {ℓ} using ( ∈sucV-elim )
+open import L.Constructible {ℓ}
+  using ( 𝒮ʟ; isL; isL-trans; Lset; IsOrd; isPropIsOrd; Lset-mono; Lset→isL; 𝒟ₒ )
+open import L.Ordinal {ℓ} using ( suc-ord; mem-ord )
+open import L.Ordinal.Linear {ℓ} lem using ( ord-tri )
+open import L.Ordinal.Stages {ℓ} lem using ( suc∈or≡ )
+open import L.Axioms.Basic {ℓ} using ( Lset-suc; LsetS; 𝒟ₒS; extensionalL )
+open import L.Stage {ℓ} lem using ( stage; stage-ord; stage-mem; stage-earliest )
+open import L.Choice.FirstIntersectionStage {ℓ} lem using ( ord-suc-inj )
+open import L.Choice.StageOrders {ℓ} lem
+  using ( birth; birth-ord; birth-suc; birth-mem; birth-stage; birth-proof
+        ; Mem; New; relOf; carry; Under; stepAt
+        ; orderAt; orderAt-step; module Family )
+open import L.WellOrder.Base {ℓ-suc ℓ} using ( SWO )
+open import L.Coding.Model {ℓ} using ( prAtL; prAtL-adequate )
+open import L.Coding.Expressions {ℓ} using ( extAt; extAt-in; extAt-out; extAt-in-both )
+open import L.Coding.HierarchySequence {ℓ} lem using ( LsetGraphAt )
+open import L.Coding.DefinablePowerSet {ℓ} lem using ( DefAt; DefAt-stage )
+open import L.Coding.CodeSet {ℓ} lem
+  using ( arityNumAtL; arityNumAtL-in; arityNumAtL-out; hasWitnessAt
+        ; witnessAt-in; witnessAt-out; keyS; codeS
+        ; AllCodes; AllCodes-in; AllCodes-out; IsKeyOverAny )
+open import L.Hierarchy {ℓ} lem using ( Lset-only; Lset-defines )
+open import L.Choice.OrderTable {ℓ} lem
+  using ( Ordering; strict; Related; IsRel; Values; Entries
+        ; related-in; module Described )
+open import V.Coding {ℓ} using ( pr )
+import FOL.Absoluteness
+```
+
+<!--en-->
+
+The metatheory already carries a strict well order at every constructible stage, but the object language of `L` can speak only through formulas. This chapter translates that order into formulas: it describes the birth stage of each set, the code set that travels with each carrier, and the comparison rule of the stage order, proving that the descriptions are faithful to their meta-language meanings. One piece is deliberately left as a parameter: the comparison inside a fixed birth stage.
+<!--zh-->
+
+元理论已经在每个可构造层携带一个严格良序，但 `L` 的对象语言只能通过公式说话。本章把这一层序翻译成公式：描述每个集合的诞生层、随载体变化的码集，以及层序的比较规则，并证明这些描述忠实于其元语言含义。其中有一件被刻意留作参数：固定诞生层内部的比较。
+<!--ja-->
+
+メタ理論には、すでにすべての構成可能な段階で狭義の整列順序があるが、`L` の対象言語は論理式を通してしか語れない。この章は、その順序を論理式へ翻訳する。各集合の誕生段階・台とともに動くコードの集合・段階順序の比較の規則を記述し、それらがメタ言語の意味に忠実であることを証明する。ただ一つ、意図的に引数のまま残したものがある。固定された誕生段階の内部での比較である。
+<!--/-->
+
+<!--en-->
+Classical reasoning enters through one explicit hypothesis, `lem`{.Agda}. It will be used when ordinal stages must be compared, while the formulas constructed in this chapter remain ordinary formulas of the object language. Thus a semantic argument may use excluded middle without inserting a new axiom into the language being interpreted.
+<!--zh-->
+经典推理只经由一个显式假设 `lem`{.Agda} 进入。比较序数层时会用到它，而本章构造的公式仍是对象语言的普通公式。因此，语义论证可以使用排中律，却不会把新公理写进被解释的语言。
+<!--ja-->
+古典的推論は、明示された一つの仮定 `lem`{.Agda} を通してだけ入る。順序数段階を比較するときにこれを用いるが、この章で構成する論理式は対象言語の通常の論理式のままである。したがって、意味論的な議論で排中律を使っても、解釈される言語に新しい公理を加えることにはならない。
+<!--/-->
+
+
 
 <!--en-->
 The translation uses only the object language's ordinary atoms and connectives. Membership states that a proposed witness lies in a stage or code set, equality identifies two represented objects, and existential quantification hides the auxiliary sets needed by the description. Later proofs interpret these formulas in the constructible structure and compare the resulting propositions with their meta-language counterparts.
@@ -52,14 +91,6 @@ The translation uses only the object language's ordinary atoms and connectives. 
 この翻訳で使うのは、対象言語の通常の原子式と結合子だけである。所属の原子式は候補となる証人が段階やコード集合に属することを述べ、等号の原子式は表現された二つの対象を同一視し、存在量化は記述に必要な補助集合を隠する。後の証明では、これらの論理式を構成可能な構造で解釈し、得られた命題を対応するメタ言語の命題と比較する。
 <!--/-->
 
-```agda
-open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using
-  ( Formula; Term; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; ¬̇_; ∃̇_ )
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-open import V.Model {ℓ} using ( ∈sucV-elim )
-```
-
 <!--en-->
 The relevant geometry of the hierarchy is simple. Ordinals linearly order the stages, membership between ordinal indices makes the tower monotone, and the successor of an ordinal separates a stage from its next definable-power-set stage. These facts will let us identify a proposed birth ordinal by comparing its successor with the least stage at which the set appears.
 <!--zh-->
@@ -67,14 +98,6 @@ The relevant geometry of the hierarchy is simple. Ordinals linearly order the st
 <!--ja-->
 ここで必要な階層の姿は単純である。順序数は各段階を線形に並べ、順序数の添字どうしの所属は塔を単調にし、ある順序数の後続はその段階と次の定義可能冪の段階を分ける。これらの事実により、候補となる誕生順序数の後続を、集合が初めて現れる段階と比較して、その候補を同定できる。
 <!--/-->
-
-```agda
-open import L.Constructible {ℓ}
-  using ( 𝒮ʟ; isL; isL-trans; Lset; IsOrd; isPropIsOrd; Lset-mono; Lset→isL; 𝒟ₒ )
-open import L.Ordinal {ℓ} using ( suc-ord; mem-ord )
-open import L.Ordinal.Linear {ℓ} lem using ( ord-tri )
-open import L.Ordinal.Stages {ℓ} lem using ( suc∈or≡ )
-```
 
 <!--en-->
 For a constructible set `x`, its least containing stage is a successor, and `birth x`{.Agda} is the ordinal immediately below it. Consequently `x` is absent from `Lset (birth x)` but present in `Lset (sucV (birth x))`, which is the definable power set of the former stage. The formula `BirthAt`{.Agda} will express these two membership facts; leastness itself remains a meta-language theorem.
@@ -84,14 +107,6 @@ For a constructible set `x`, its least containing stage is a successor, and `bir
 構成可能集合 `x` を含む最初の段階は後続段階であり、`birth x`{.Agda} はその直前の順序数である。したがって `x` は `Lset (birth x)` には属さず、前者の定義可能冪である `Lset (sucV (birth x))` には属する。論理式 `BirthAt`{.Agda} が表すのはこの二つの所属事実であり、最小性そのものはメタ言語の定理から得られる。
 <!--/-->
 
-```agda
-open import L.Axioms.Basic {ℓ} using ( Lset-suc; LsetS; 𝒟ₒS; extensionalL )
-open import L.Stage {ℓ} lem using ( stage; stage-ord; stage-mem; stage-earliest )
-open import L.Choice.FirstIntersectionStage {ℓ} lem using ( ord-suc-inj )
-open import L.Choice.StageOrders {ℓ} lem
-  using ( birth; birth-ord; birth-suc; birth-mem; birth-stage; birth-proof
-```
-
 <!--en-->
 The existing stage order compares two members lexicographically by birth. An earlier birth decides the comparison immediately; equal births defer to the local order on the new elements of that stage. The later formula mirrors precisely this one unfolding equation, so its adequacy concerns the relation already carried by `orderAt`{.Agda}, not the construction of that order.
 <!--zh-->
@@ -99,14 +114,6 @@ The existing stage order compares two members lexicographically by birth. An ear
 <!--ja-->
 既存の段階順序は、二つの要素を誕生段階によって辞書式に比較する。誕生が早ければ比較はそこで決まり、誕生が等しければ、その段階の新しい要素上の局所順序に委ねられる。後で作る論理式は、この一回の展開方程式だけを正確に写す。したがって、その妥当性が対象とするのは `orderAt`{.Agda} がすでに備える関係であり、順序の構成ではない。
 <!--/-->
-
-```agda
-        ; Mem; New; relOf; carry; Under; stepAt
-        ; orderAt; orderAt-step; module Family )
-open import L.WellOrder.Base {ℓ-suc ℓ} using ( SWO )
-open import L.Coding.Model {ℓ} using ( prAtL; prAtL-adequate )
-open import L.Coding.Expressions {ℓ} using ( extAt; extAt-in; extAt-out; extAt-in-both )
-```
 
 <!--en-->
 The same-stage comparison needs formulas over a carrier that varies with the common birth ordinal. Hence its syntax cannot be fixed once at a single stage. The code predicate used below ranges over every finite arity relative to a carrier held in a variable slot, allowing the carrier and its formula codes to move together.
@@ -116,14 +123,6 @@ The same-stage comparison needs formulas over a carrier that varies with the com
 同じ段階の内部での比較には、共通の誕生順序数とともに変わる台上の論理式が必要である。そのため、使う構文を一つの段階にあらかじめ固定することはできない。以下のコード述語は、変数スロットに置かれた台に相対して、すべての有限アリティを扱い、台とその論理式コードを一緒に動かせるようにする。
 <!--/-->
 
-```agda
-open import L.Coding.HierarchySequence {ℓ} lem using ( LsetGraphAt )
-open import L.Coding.DefinablePowerSet {ℓ} lem using ( DefAt; DefAt-stage )
-open import L.Coding.CodeSet {ℓ} lem
-  using ( arityNumAtL; arityNumAtL-in; arityNumAtL-out; hasWitnessAt
-        ; witnessAt-in; witnessAt-out; keyS; codeS
-```
-
 <!--en-->
 The final target is a relation represented as a set of ordered pairs in `L`. A table below the ambient stage supplies local relation values, and the formula must agree with the meta-language comparison for every encoded pair. This agreement will require both correctness and existence of table entries, and it remains conditional on the two adequacy directions supplied for the local step formula.
 <!--zh-->
@@ -131,14 +130,6 @@ The final target is a relation represented as a set of ordered pairs in `L`. A t
 <!--ja-->
 最終的な目標は、`L` の中で関係を順序対の集合として表すことである。周囲の段階より下の表が局所関係の値を与え、論理式は符号化された各順序対についてメタ言語の比較と一致しなければならない。この一致には表の値の正しさと存在の両方が必要であり、局所ステップの論理式について与えられる二方向の妥当性を前提とする。
 <!--/-->
-
-```agda
-        ; AllCodes; AllCodes-in; AllCodes-out; IsKeyOverAny )
-open import L.Hierarchy {ℓ} lem using ( Lset-only; Lset-defines )
-open import L.Choice.OrderTable {ℓ} lem
-  using ( Ordering; strict; Related; IsRel; Values; Entries
-        ; related-in; module Described )
-```
 
 <!--en-->
 An element of the represented relation is read as a code `pr u v`{.Agda}. Adequacy therefore has two tasks: recover some compared members `u` and `v` from such a pair code, and prove that their stage-order comparison holds; conversely, a known comparison must put the corresponding pair code into the represented set. The existence involved here is propositionally truncated, so it does not select a canonical decomposition.
@@ -148,11 +139,6 @@ An element of the represented relation is read as a code `pr u v`{.Agda}. Adequa
 表現された関係の要素は、コード `pr u v`{.Agda} として読まれる。したがって妥当性には二つの向きがある。このような対のコードから比較される要素 `u` と `v` を何らかの形で取り出し、その段階順序による比較を示す向きと、既知の比較から対応する対のコードを表現集合に入れる向きである。ここでの存在は命題的切り詰めを受けているため、標準的な分解を選ばない。
 <!--/-->
 
-```agda
-open import V.Coding {ℓ} using ( pr )
-
-```
-
 <!--en-->
 Several identifications in the proof transport relations along equal stage indices or equal pair codes. Because ordinality and constructibility evidence are propositions, changing such evidence does not change the mathematical object being represented. This proof irrelevance is what permits transport without turning certificates into additional choices.
 <!--zh-->
@@ -160,10 +146,6 @@ Several identifications in the proof transport relations along equal stage indic
 <!--ja-->
 証明では、等しい段階添字や等しい対のコードに沿って関係を何度か輸送する。順序数性と構成可能性の証拠は命題なので、それらの証拠を取り替えても、表現される数学的対象は変わらない。この証明無関係性により、証明書を余分な選択へ変えることなく輸送できる。
 <!--/-->
-
-```agda
-import FOL.Absoluteness
-```
 
 <!--en-->
 Existential satisfaction is propositionally truncated throughout. A proof may use a stage value, a definable-power-set value, a decoded formula, or a table entry only when its target is again a proposition. In particular, none of the eliminations below yields a canonical witness, a chosen decoder, or a choice function assigning local relation values.
@@ -189,7 +171,6 @@ Two successor constructions play different roles. `sucV`{.Agda} advances an ordi
 ```agda
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( module InfinitySet )
 open InfinitySet using ( sucV; #_ )
-
 ```
 
 <!--en-->
@@ -202,7 +183,6 @@ Formulas will be interpreted in the constructible structure `𝒮ʟ`{.Agda}. The
 
 ```agda
 open hPropStructure 𝒮ʟ
-
 ```
 
 <!--en-->
@@ -216,7 +196,6 @@ We write `γ ⊨ φ`{.Agda} for satisfaction at an environment and `⟦ t ⟧ γ
 ```agda
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
 open AbsL renaming ( _⊨ᵐ_ to _⊨_ ; ⟦_⟧ᵐ to ⟦_⟧ )
-
 ```
 
 <!--en-->
@@ -230,7 +209,6 @@ The first shift names the variable two slots outward, preparing the formulas tha
 ```agda
 sh2 : ∀ {n} → Fin n → Fin (suc (suc n))
 sh2 i = suc (suc i)
-
 ```
 
 <!--en-->
@@ -244,7 +222,6 @@ The second shift moves variables three slots outward.
 ```agda
 sh3 : ∀ {n} → Fin n → Fin (suc (suc (suc n)))
 sh3 i = suc (suc (suc i))
-
 ```
 
 <!--en-->
@@ -259,7 +236,6 @@ A private shift moves variables four slots outward, reserved for the four-object
 private
   sh4 : ∀ {n} → Fin n → Fin (suc (suc (suc (suc n))))
   sh4 i = suc (suc (suc (suc i)))
-
 ```
 
 <!--en-->
@@ -274,7 +250,6 @@ The term shift moves a term past four new bindings: constants keep their values,
   tm4 : ∀ {n} → Term S n → Term S (suc (suc (suc (suc n))))
   tm4 (con k) = con k
   tm4 (var i) = var (sh4 i)
-
 ```
 
 <!--en-->
@@ -304,7 +279,6 @@ To place `Lset β` in a formula environment, we package the stage together with 
 opaque
   towerS : (β : V ℓ) → IsOrd β → S
   towerS β ob = LsetS β ob
-
 ```
 
 <!--en-->
@@ -318,7 +292,6 @@ The underlying set of the packaged stage is the stage itself, definitionally.
 ```agda
   towerS-fst : (β : V ℓ) (ob : IsOrd β) → fst (towerS β ob) ≡ Lset β
   towerS-fst β ob = refl
-
 ```
 
 <!--en-->
@@ -332,7 +305,6 @@ The second witness needed by `BirthAt` is the definable power set of that stage.
 ```agda
   powS : (β : V ℓ) → IsOrd β → S
   powS β ob = 𝒟ₒS β ob
-
 ```
 
 <!--en-->
@@ -380,13 +352,18 @@ Fix an environment `γ`. The candidate ordinal is the underlying set at slot `b`
 環境 `γ` を固定する。候補となる順序数はスロット `b` の要素の底の集合であり、誕生を調べる集合はスロット `x` の要素である。以下の議論はすべてこの二つの解釈に相対的なので、定理は特別に選んだ定数ではなく、任意の変数割り当てについて成り立つ。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
-
 module _ {n : ℕ} (b x : Fin n) (γ : S ^ n) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     β : V ℓ
     β = fst (lookup b γ)
-
 ```
 
 <!--en-->
@@ -400,7 +377,6 @@ The element `z` carries both its underlying set and evidence that it belongs to 
 ```agda
     z : S
     z = lookup x γ
-
 ```
 
 <!--en-->
@@ -413,9 +389,8 @@ The inner record collects a definable power set value `d` over the candidate sta
 
 ```agda
     Inner : S → Type (ℓ-suc ℓ)
-    Inner c = Σ[ d ∈ S ]
+    Inner c = Σ[ d ∶ S ]
       ( ⟨ (d ∷ c ∷ γ) ⊨ DefAt zero (suc zero) ⟩ × ⟨ fst z ∈ fst d ⟩ )
-
 ```
 
 <!--en-->
@@ -430,7 +405,6 @@ The outer record adds the satisfaction of the stage graph at the raised index, t
     Outer : S → Type (ℓ-suc ℓ)
     Outer c = ⟨ (c ∷ γ) ⊨ LsetGraphAt zero (suc b) ⟩
             × ( (⟨ fst z ∈ fst c ⟩ → Lift {j = ℓ-suc ℓ} ⊥₀) × ∥ Inner c ∥₁ )
-
 ```
 
 <!--en-->
@@ -462,7 +436,6 @@ Using `Lset-suc`{.Agda}, membership in `𝒟ₒ (Lset β)` becomes membership in
       where
       mem : ⟨ fst z ∈ Lset (sucV β) ⟩
       mem = subst (λ u → ⟨ fst z ∈ u ⟩) (sym (Lset-suc β)) hin
-
 ```
 
 <!--en-->
@@ -507,7 +480,6 @@ In the equality case, `stage x ≡ β` transports the known membership `x ∈ Ls
 
 ```agda
           (stage-mem (fst z) (snd z))))
-
 ```
 
 <!--en-->
@@ -538,7 +510,6 @@ From `sucV β ≡ stage x`{.Agda} and the identity `stage x ≡ sucV (birth x)`{
       go (inr (inl e)) = ord-suc-inj β (birth (fst z) (snd z)) ob
         (e ∙ sym (birth-suc (fst z) (snd z)))
       go (inr (inr h)) = ⊥₀-rec (early h)
-
 ```
 
 <!--en-->
@@ -598,12 +569,10 @@ The outer record is eliminated into the inner reading, and the inner reading fee
 <!--/-->
 
 ```agda
-
-    atCarrier : Σ[ c ∈ S ] Outer c → β ≡ birth (fst z) (snd z)
+    atCarrier : Σ[ c ∶ S ] Outer c → β ≡ birth (fst z) (snd z)
     atCarrier (c , (hg , (hn , hi))) =
       rec₁ (setIsSet β (birth (fst z) (snd z)))
         (atInner c hg (λ k → lower (hn k))) hi
-
 ```
 
 <!--en-->
@@ -632,7 +601,6 @@ The stage graph at the raised index holds because the packaged stage is the stag
 
 ```agda
     hg = Lset-defines zero (suc b) (towerS β ob ∷ γ) ob (towerS-fst β ob)
-
 ```
 
 <!--en-->
@@ -660,7 +628,6 @@ The stage equation for `DefAt` identifies its satisfaction proposition with equa
 <!--/-->
 
 ```agda
-
     hd : ⟨ (powS β ob ∷ towerS β ob ∷ γ) ⊨ DefAt zero (suc zero) ⟩
     hd = subst ⟨_⟩
       (sym (DefAt-stage β ob zero (suc zero)
@@ -677,13 +644,14 @@ Finally, `birth-mem`{.Agda} places `x` in `Lset (sucV (birth x))`. Replacing the
 <!--/-->
 
 ```agda
-
     hm : ⟨ fst z ∈ fst (powS β ob) ⟩
     hm = subst (λ u → ⟨ fst z ∈ u ⟩) (sym (powS-fst β ob))
       (subst (λ u → ⟨ fst z ∈ u ⟩) (Lset-suc β)
         (subst (λ u → ⟨ fst z ∈ Lset (sucV u) ⟩) (sym e)
           (birth-mem (fst z) (snd z))))
 ```
+</div>
+</details>
 
 <!--en-->
 ## The codes at any arity, at a carrier held in a slot
@@ -704,7 +672,6 @@ The per-code recognizer combines two clauses: the first reads an arity numeral f
 ```agda
 isCodeAnyAt : ∀ {n} → Fin n → Fin n → Formula S n
 isCodeAnyAt c w = arityNumAtL c ∧̇ hasWitnessAt w c
-
 ```
 
 <!--en-->
@@ -715,8 +682,15 @@ The inward reading is stated for a working set `A`, two slots, an environment al
 内向きの読み出しは、作業集合 `A`、二つの枠、`A` と揃った環境、アリティ `k` の論理式、そして符号の枠をその論理式のキーと同一視する等式に対して述べられ、二つの連言項を満たす。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module _ (A : S) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   codeAnyAt-in : ∀ {n k} (c w : Fin n) (γ : S ^ n)
                → fst (lookup w γ) ≡ fst A
                → (ψ : Formula ⟪ fst A ⟫ k) → fst (lookup c γ) ≡ fst (keyS A ψ)
@@ -734,7 +708,6 @@ The two conjuncts are filled by their own inward readings: the arity reading nam
 ```agda
   codeAnyAt-in {k = k} c w γ qw ψ qc =
     arityNumAtL-in c γ k (codeS A ψ) qc , witnessAt-in A w c γ ψ qw qc
-
 ```
 
 <!--en-->
@@ -764,7 +737,7 @@ The proof eliminates the arity reading into a pair of a natural number and a cod
 ```agda
     rec₁ squash₁ step (arityNumAtL-out c γ hk)
     where
-    step : Σ[ m ∈ ℕ ] Σ[ z ∈ S ] (fst (lookup c γ) ≡ pr (# m) (fst z))
+    step : Σ[ m ∶ ℕ ] Σ[ z ∶ S ] (fst (lookup c γ) ≡ pr (# m) (fst z))
          → ⟨ IsKeyOverAny A (lookup c γ) ⟩
     step (m , (z , qz)) = map₁ (λ { (ψ , q) → m , (ψ , q) })
 ```
@@ -780,6 +753,8 @@ The witness-reading elimination recovers the formula and the code equation at th
 ```agda
       (witnessAt-out A w c γ qw hw m z qz)
 ```
+</div>
+</details>
 
 <!--en-->
 ## The set, in one extension
@@ -800,7 +775,6 @@ The witness-reading elimination recovers the formula and the code equation at th
 ```agda
 CodesAt : ∀ {n} → Fin n → Fin n → Formula S n
 CodesAt c w = extAt c (isCodeAnyAt zero (suc w))
-
 ```
 
 <!--en-->
@@ -811,9 +785,16 @@ The outward reading of the code set says that the slot holds exactly the code se
 符号の集合の外向きの読み出しは、その枠が作業のアルファベットの符号の集合をちょうど保持すると言う。証明は、二方向で外延性によって進む。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module _ (A : S) {n : ℕ} (c w : Fin n) (γ : S ^ n)
          (qw : fst (lookup w γ) ≡ fst A) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   CodesAt-out : ⟨ γ ⊨ CodesAt c w ⟩ → lookup c γ ≡ AllCodes A
   CodesAt-out h = extensionalL step
     where
@@ -860,7 +841,6 @@ Conversely, suppose the value in slot `c` is equal to `AllCodes A`. To prove `Co
 <!--/-->
 
 ```agda
-
   CodesAt-in : lookup c γ ≡ AllCodes A → ⟨ γ ⊨ CodesAt c w ⟩
   CodesAt-in q = extAt-in-both c (isCodeAnyAt zero (suc w)) γ into back
     where
@@ -881,7 +861,6 @@ For the first implication, the equality of sets turns slot membership into membe
       (λ { (k , (ψ , qk)) →
              codeAnyAt-in A {k = k} zero (suc w) (x ∷ γ) qw ψ qk })
       (AllCodes-out A x (subst (λ u → ⟨ fst x ∈ fst u ⟩) q hx))
-
 ```
 
 <!--en-->
@@ -898,6 +877,8 @@ For the converse implication, `codeAnyAt-out` turns satisfaction into the trunca
     back x hx = subst (λ u → ⟨ fst x ∈ fst u ⟩) (sym q)
       (AllCodes-in A x (codeAnyAt-out A zero (suc w) (x ∷ γ) qw hx))
 ```
+</div>
+</details>
 
 <!--en-->
 ## The order at a stage, unfolded once
@@ -918,7 +899,6 @@ At an ordinal `δ`, the already constructed order `orderAt δ` compares members 
 ```agda
 stepOrder : (δ : V ℓ) → IsOrd δ → SWO (New δ)
 stepOrder δ oδ = stepAt δ (carry (Lset δ) (orderAt δ oδ))
-
 ```
 
 <!--en-->
@@ -946,7 +926,6 @@ Suppose the birth ordinal of a constructible set `x` belongs to an ordinal `α`.
 <!--/-->
 
 ```agda
-
 bornIn : (α : V ℓ) → IsOrd α → (x : V ℓ) (p : ⟨ isL x ⟩)
        → ⟨ birth x p ∈ α ⟩ → ⟨ x ∈ Lset α ⟩
 bornIn α oα x p h = reach (suc∈or≡ (birth x p) α (birth-ord x p) oα h)
@@ -966,7 +945,6 @@ The two alternatives supplied by `suc∈or≡` finish the argument. If the succe
   reach (inl k) = Lset-mono {α = α} {β = sucV (birth x p)} k
     {x = x} (birth-mem x p)
   reach (inr e) = subst (λ w → ⟨ x ∈ Lset w ⟩) e (birth-mem x p)
-
 ```
 
 <!--en-->
@@ -977,11 +955,16 @@ Now fix an ambient ordinal `α`. Every member of `Lset α` has a birth ordinal b
 周囲の順序数 `α` を固定する。`Lset α` の各要素は `α` より下の誕生順序数をもつので、`orderAt α` の再帰方程式が必要とする前段階の順序は、ちょうど必要な添字で利用できる。これにより、その方程式を二つの要素の誕生段階の比較として直接述べられる。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module _ (α : V ℓ) (oα : IsOrd α) where
-  private
-    module Fam = Family α (λ δ _ → orderAt δ) oα
+```
+</summary>
+<div class="submodule-fold-content">
 
+```agda
+  private module Fam = Family α (λ δ _ → orderAt δ) oα
 ```
 
 <!--en-->
@@ -995,7 +978,6 @@ Every layer member is constructible, by the layer's constructibility and transit
 ```agda
   memberL : (a : Mem (Lset α)) → ⟨ isL (fst a) ⟩
   memberL a = Lset→isL α oα (fst a) (snd a)
-
 ```
 
 <!--en-->
@@ -1009,7 +991,6 @@ Because every member `a` of `Lset α` is constructible, it has a birth ordinal. 
 ```agda
   bornOf : (a : Mem (Lset α)) → V ℓ
   bornOf a = birth (fst a) (memberL a)
-
 ```
 
 <!--en-->
@@ -1023,7 +1004,6 @@ The fact `bornOf a ∈ α` has two roles. It confirms that the birth ordinal is 
 ```agda
   bornMem : (a : Mem (Lset α)) → ⟨ bornOf a ∈ α ⟩
   bornMem a = Fam.bornAt a .snd
-
 ```
 
 <!--en-->
@@ -1055,6 +1035,8 @@ The proof uses `orderAt-step` to expose one layer of the membership recursion an
                        (fst a) (fst b) ) )
   order-unfold a b = cong (λ z → relOf (z oα) a b) (orderAt-step α)
 ```
+</div>
+</details>
 
 <!--en-->
 The member-to-carrier wrapper packages each layer member as a carrier element, so that the formula environment can hold it.
@@ -1068,7 +1050,6 @@ The member-to-carrier wrapper packages each layer member as a carrier element, s
 opaque
   memS : (α : V ℓ) (oα : IsOrd α) → Mem (Lset α) → S
   memS α oα a = fst a , memberL α oα a
-
 ```
 
 <!--en-->
@@ -1083,7 +1064,6 @@ The first-projection equation confirms the packaging preserves the underlying se
   memS-fst : (α : V ℓ) (oα : IsOrd α) (a : Mem (Lset α))
            → fst (memS α oα a) ≡ fst a
   memS-fst α oα a = refl
-
 ```
 
 <!--en-->
@@ -1098,7 +1078,6 @@ The birth presentation packages the birth ordinal with the constructibility tran
   bornS : (α : V ℓ) (oα : IsOrd α) → ⟨ isL α ⟩ → Mem (Lset α) → S
   bornS α oα pα a = bornOf α oα a
                   , isL-trans {x = α} {y = bornOf α oα a} (bornMem α oα a) pα
-
 ```
 
 <!--en-->
@@ -1113,7 +1092,6 @@ The first-projection equation confirms the packaging preserves the birth ordinal
   bornS-fst : (α : V ℓ) (oα : IsOrd α) (pα : ⟨ isL α ⟩) (a : Mem (Lset α))
             → fst (bornS α oα pα a) ≡ bornOf α oα a
   bornS-fst α oα pα a = refl
-
 ```
 
 <!--en-->
@@ -1150,7 +1128,6 @@ The step-formula type is a four-slot formula family, parameterized by the carrie
 ```agda
 StpFo : Type (ℓ-suc ℓ)
 StpFo = ∀ {n} → Fin n → Fin n → Fin n → Fin n → Formula S n
-
 ```
 
 <!--en-->
@@ -1197,7 +1174,6 @@ The inward reading produces the formula satisfaction from the specific table ent
           → Under (fst (lookup d γ)) (stepOrder (fst (lookup d γ)) od)
               (fst (lookup u γ)) (fst (lookup v γ))
           → ⟨ γ ⊨ Stp d f u v ⟩
-
 ```
 
 <!--en-->
@@ -1208,10 +1184,13 @@ The module `Ordered` assumes an abstract step formula together with these two re
 モジュール `Ordered` は、抽象的なステップ論理式と、この二つの読みを仮定する。したがって以下で得られるのは、誕生段階優先の規則の条件つき翻訳である。同じ誕生段階での比較の妥当性から段階全体の比較の妥当性を導くが、具体的なステップ論理式がこのインターフェースを満たすことは、この章では主張しない。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Ordered (Stp : StpFo) (stp-out : StpOut Stp) (stp-in : StpIn Stp) where
-
 ```
+</summary>
+<div class="submodule-fold-content">
 
 <!--en-->
 The four newly bound objects are the compared sets `u,v` and their candidate birth ordinals `du,dv`. The first two clauses assert `BirthAt du u` and `BirthAt dv v`; at this point those clauses identify births only when the later reading supplies ordinality of `du` and `dv`.
@@ -1275,11 +1254,18 @@ To read `CondCore`, fix the ordinal stage denoted by `tb` and a table over that 
 `CondCore` を読むため、`tb` が表す順序数段階と、その段階上の表を固定する。`Values` は記録された各値が対応する局所関係を実現することを保証し、`Entries` は段階より下の各台で何らかの値が記録されていることだけを述べる。これらが、後の二方向で使う仮定である。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
   module _ {n : ℕ} (z : Fin n) (tb : Term S n) (f : Fin n) (γ : S ^ n)
            (oα : IsOrd (fst (⟦ tb ⟧ γ)))
            (vals : Values (lookup f γ) (fst (⟦ tb ⟧ γ)))
            (ents : Entries (lookup f γ) (fst (⟦ tb ⟧ γ))) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
     private
 ```
 
@@ -1294,7 +1280,6 @@ The stage ordinal is named for direct reference.
 ```agda
       α : V ℓ
       α = fst (⟦ tb ⟧ γ)
-
 ```
 
 <!--en-->
@@ -1308,7 +1293,6 @@ The shifting lemma confirms that the four-slot renaming preserves the denotation
 ```agda
       shift : (u v du dv : S) → ⟦ tm4 tb ⟧ (dv ∷ du ∷ v ∷ u ∷ γ) ≡ ⟦ tb ⟧ γ
       shift u v du dv = tm4-val tb u v du dv γ
-
 ```
 
 <!--en-->
@@ -1337,7 +1321,6 @@ Concretely, `ents d hd` gives the truncated pair consisting of a value `r` and i
 
 ```agda
         (λ { (r , hr) → k r hr (vals d r hd hr) }) (ents d hd)
-
 ```
 
 <!--en-->
@@ -1351,7 +1334,6 @@ The deep satisfaction type reads the ordered body at the four-slot environment b
 ```agda
       Deep : (u v du : S) → S → Type (ℓ-suc ℓ)
       Deep u v du dv = ⟨ (dv ∷ du ∷ v ∷ u ∷ γ) ⊨ OrdBody tb f ⟩
-
 ```
 
 <!--en-->
@@ -1365,7 +1347,6 @@ The two readings use the same defining equation of `CondCore` in opposite direct
 ```agda
     opaque
      unfolding CondCore
-
 ```
 
 <!--en-->
@@ -1397,7 +1378,6 @@ The local name `Goal` records the proposition that the argument in slot `z` sati
        where
        Goal : Type (ℓ-suc ℓ)
        Goal = ⟨ Related α (fst (lookup z γ)) ⟩
-
 ```
 
 <!--en-->
@@ -1429,7 +1409,6 @@ Adequacy of the pairing formula identifies the set in slot `z` with `pr (fst u) 
          where
          qz : fst (lookup z γ) ≡ pr (fst u) (fst v)
          qz = subst ⟨_⟩ (prAtL-adequate (sh2 z) (suc zero) zero (v ∷ u ∷ γ)) hp
-
 ```
 
 <!--en-->
@@ -1443,7 +1422,6 @@ The membership of the first birth stage in the ordinal is transported along the 
 ```agda
          hmu : ⟨ fst du ∈ α ⟩
          hmu = subst (λ w → ⟨ fst du ∈ fst w ⟩) (shift u v du dv) hmu₀
-
 ```
 
 <!--en-->
@@ -1457,7 +1435,6 @@ The second birth stage is transported by the same shift, so both birth stages ar
 ```agda
          hmv : ⟨ fst dv ∈ α ⟩
          hmv = subst (λ w → ⟨ fst dv ∈ fst w ⟩) (shift u v du dv) hmv₀
-
 ```
 
 <!--en-->
@@ -1471,7 +1448,6 @@ The first birth stage is an ordinal: it belongs to the ordinal, and members of o
 ```agda
          odu : IsOrd (fst du)
          odu = mem-ord {A = α} oα (fst du) hmu
-
 ```
 
 <!--en-->
@@ -1485,7 +1461,6 @@ The second birth stage is an ordinal by the same argument.
 ```agda
          odv : IsOrd (fst dv)
          odv = mem-ord {A = α} oα (fst dv) hmv
-
 ```
 
 <!--en-->
@@ -1499,7 +1474,6 @@ The reading lemma of the birth formula now applies to the first birth stage: wit
 ```agda
          qu : fst du ≡ birth (fst u) (snd u)
          qu = BirthAt-out (suc zero) (sh3 zero) ((dv ∷ du ∷ v ∷ u ∷ γ)) hbu odu
-
 ```
 
 <!--en-->
@@ -1513,7 +1487,6 @@ The same reading applies to the second birth stage and the second object.
 ```agda
          qv : fst dv ≡ birth (fst v) (snd v)
          qv = BirthAt-out zero (sh2 zero) ((dv ∷ du ∷ v ∷ u ∷ γ)) hbv odv
-
 ```
 
 <!--en-->
@@ -1528,7 +1501,6 @@ The first object can now be regarded as a member of `Lset α`. Its constructibil
          a : Mem (Lset α)
          a = fst u , bornIn α oα (fst u) (snd u)
                (subst (λ w → ⟨ w ∈ α ⟩) qu hmu)
-
 ```
 
 <!--en-->
@@ -1543,7 +1515,6 @@ The second object is packaged identically.
          c : Mem (Lset α)
          c = fst v , bornIn α oα (fst v) (snd v)
                (subst (λ w → ⟨ w ∈ α ⟩) qv hmv)
-
 ```
 
 <!--en-->
@@ -1557,7 +1528,6 @@ The packaged member `a` carries the same underlying set as `u`, although its con
 ```agda
          qa : bornOf α oα a ≡ fst du
          qa = birth-proof (fst u) (memberL α oα a) (snd u) ∙ sym qu
-
 ```
 
 <!--en-->
@@ -1571,7 +1541,6 @@ The birth ordinal of the packaged second object agrees with the recorded second 
 ```agda
          qc : bornOf α oα c ≡ fst dv
          qc = birth-proof (fst v) (memberL α oα c) (snd v) ∙ sym qv
-
 ```
 
 <!--en-->
@@ -1585,7 +1554,6 @@ It remains to prove the meta-language comparison `relOf (orderAt α oα) a c`. T
 ```agda
          fill : relOf (orderAt α oα) a c → ⟨ Related α (pr (fst u) (fst v)) ⟩
          fill = related-in α oα a c
-
 ```
 
 <!--en-->
@@ -1648,7 +1616,6 @@ The alignment uses the equality `qa` between the two carrier ordinals. `stepMove
                , stepMoved (fst du) (bornOf α oα a) (sym qa) odu
                    (mem-ord {A = α} oα (bornOf α oα a) (bornMem α oα a))
                    (fst u) (fst v) und)))
-
 ```
 
 <!--en-->
@@ -1662,9 +1629,8 @@ For the inward direction, `Related α z` contains an ordinalness proof and, unde
 ```agda
      private
        Pairs : IsOrd α → Type (ℓ-suc ℓ)
-       Pairs o = Σ[ a ∈ Mem (Lset α) ] ∥ (Σ[ c ∈ Mem (Lset α) ]
+       Pairs o = Σ[ a ∶ Mem (Lset α) ] ∥ (Σ[ c ∶ Mem (Lset α) ]
          ( (fst (lookup z γ) ≡ pr (fst a) (fst c)) × ⟨ Ordering α o a c ⟩ )) ∥₁
-
 ```
 
 <!--en-->
@@ -1709,7 +1675,6 @@ Every term is interpreted in the structure `𝒮ʟ`, whose elements pair an unde
 
 ```agda
          pα = snd (⟦ tb ⟧ γ)
-
 ```
 
 <!--en-->
@@ -1737,11 +1702,9 @@ For every member of `Lset α`, its true birth ordinal lies below `α`. Since the
 <!--/-->
 
 ```agda
-
          hmu : ⟨ fst du ∈ α ⟩
          hmu = subst (λ w → ⟨ w ∈ α ⟩) (sym (bornS-fst α oα pα a))
            (bornMem α oα a)
-
 ```
 
 <!--en-->
@@ -1756,7 +1719,6 @@ The birth stage of the second member belongs to the ordinal by the same transpor
          hmv : ⟨ fst dv ∈ α ⟩
          hmv = subst (λ w → ⟨ w ∈ α ⟩) (sym (bornS-fst α oα pα c))
            (bornMem α oα c)
-
 ```
 
 <!--en-->
@@ -1770,7 +1732,6 @@ The first birth stage is an ordinal, since it lies inside the ordinal.
 ```agda
          odu : IsOrd (fst du)
          odu = mem-ord {A = α} oα (fst du) hmu
-
 ```
 
 <!--en-->
@@ -1784,7 +1745,6 @@ The second birth stage is an ordinal by the same reading.
 ```agda
          odv : IsOrd (fst dv)
          odv = mem-ord {A = α} oα (fst dv) hmv
-
 ```
 
 <!--en-->
@@ -1815,7 +1775,6 @@ The comparison is obtained by transporting the strict reading along the identifi
          cmp = transport (order-unfold α oα a c)
            (strict α oα a c (subst (λ o' → ⟨ Ordering α o' a c ⟩)
              (isPropIsOrd α o oα) hord))
-
 ```
 
 <!--en-->
@@ -1831,7 +1790,6 @@ The equation contained in `Related` identifies the argument with the ordered pai
          hp = subst ⟨_⟩
            (sym (prAtL-adequate (sh2 z) (suc zero) zero (v ∷ u ∷ γ)))
            (q ∙ cong₂ pr (sym (memS-fst α oα a)) (sym (memS-fst α oα c)))
-
 ```
 
 <!--en-->
@@ -1846,7 +1804,6 @@ To fill the first `BirthAt` clause, the inward reading supplies both facts that 
          hbu : ⟨ (dv ∷ du ∷ v ∷ u ∷ γ) ⊨ BirthAt (suc zero) (sh3 zero) ⟩
          hbu = BirthAt-in (suc zero) (sh3 zero) (dv ∷ du ∷ v ∷ u ∷ γ) odu
            (bornS-birth α oα pα a)
-
 ```
 
 <!--en-->
@@ -1861,7 +1818,6 @@ The birth formula for the second birth stage is filled at the same deep environm
          hbv : ⟨ (dv ∷ du ∷ v ∷ u ∷ γ) ⊨ BirthAt zero (sh2 zero) ⟩
          hbv = BirthAt-in zero (sh2 zero) (dv ∷ du ∷ v ∷ u ∷ γ) odv
            (bornS-birth α oα pα c)
-
 ```
 
 <!--en-->
@@ -1893,7 +1849,6 @@ The endpoint transports use the exposed underlying-set equations for `memS`. The
            (stepMoved (bornOf α oα a) (fst du) (sym (bornS-fst α oα pα a))
              (mem-ord {A = α} oα (bornOf α oα a) (bornMem α oα a)) odu
              (fst a) (fst c) und)
-
 ```
 
 <!--en-->
@@ -1923,7 +1878,6 @@ Inside `OrdBody`, four new binders lie in front of the original environment, so 
 ```agda
            hmu₀ : ⟨ fst du ∈ fst (⟦ tm4 tb ⟧ (dv ∷ du ∷ v ∷ u ∷ γ)) ⟩
            hmu₀ = subst (λ w → ⟨ fst du ∈ fst w ⟩) (sym (shift u v du dv)) hmu
-
 ```
 
 <!--en-->
@@ -1984,7 +1938,6 @@ In the equal-birth branch, the birth equality is rewritten to an equality betwee
              ( bornS-fst α oα pα c ∙ e ∙ sym (bornS-fst α oα pα a)
              , stp-in (suc zero) (sh4 f) (sh3 zero) (sh2 zero)
                  (dv ∷ du ∷ v ∷ u ∷ γ) odu r hr hrel (moved und) ) ∣₁
-
 ```
 
 <!--en-->
@@ -2000,7 +1953,6 @@ Applying this two-branch translation to `cmp` completes the comparison clause of
                      ∨̇ ( (var zero ≐ var (suc zero))
                        ∧̇ Stp (suc zero) (sh4 f) (sh3 zero) (sh2 zero) ) ) ⟩
            side = atCmp cmp
-
 ```
 
 <!--en-->
@@ -2015,7 +1967,6 @@ The pair-level assembly eliminates the truncated existence of the second member:
        atPairs : (o : IsOrd α) → Pairs o → ⟨ γ ⊨ CondCore z tb f ⟩
        atPairs o (a , h) = rec₁ (snd (γ ⊨ CondCore z tb f))
          (λ { (c , (q , hord)) → atRel o a c q hord }) h
-
 ```
 
 <!--en-->
@@ -2027,9 +1978,8 @@ The outer payload of `Related` supplies an ordinalness proof `o` and only the pr
 <!--/-->
 
 ```agda
-       atOrd : Σ[ o ∈ IsOrd α ] ∥ Pairs o ∥₁ → ⟨ γ ⊨ CondCore z tb f ⟩
+       atOrd : Σ[ o ∶ IsOrd α ] ∥ Pairs o ∥₁ → ⟨ γ ⊨ CondCore z tb f ⟩
        atOrd (o , h) = rec₁ (snd (γ ⊨ CondCore z tb f)) (atPairs o) h
-
 ```
 
 <!--en-->
@@ -2044,6 +1994,8 @@ The specification identifies the satisfaction of the core clause with the relati
      CondCore-spec : (γ ⊨ CondCore z tb f) ≡ Related α (fst (lookup z γ))
      CondCore-spec = ⇔toPath CondCore-out CondCore-in
 ```
+</div>
+</details>
 
 <!--en-->
 ## The frame's two hypotheses, discharged
@@ -2064,7 +2016,6 @@ The specification identifies the satisfaction of the core clause with the relati
 ```agda
   Cond : ∀ {n} → Fin n → Fin n → Formula S (suc n)
   Cond b f = CondCore zero (var (suc b)) (suc f)
-
 ```
 
 <!--en-->
@@ -2079,7 +2030,6 @@ The specification identifies the satisfaction of the core clause with the relati
   Cond₀ : S → S → Formula S 1
   Cond₀ B F =
     ∃̇ ( (var zero ≐ con F) ∧̇ CondCore (suc zero) (con B) zero )
-
 ```
 
 <!--en-->
@@ -2108,7 +2058,6 @@ Prepending `z` moves every old environment slot one place to the right. Conseque
 
 ```agda
     CondCore-spec zero (var (suc b)) (suc f) (z ∷ γ) ob vals ents
-
 ```
 
 <!--en-->
@@ -2119,9 +2068,16 @@ For separation, the ambient environment contains only the candidate `z`, so the 
 分出を行うとき、周囲の環境には候補 `z` しかないため、定数形式は参照する順序表を束縛しなければならない。束縛された要素 `c` の基礎集合が固定された順序表 `F` の基礎集合と等しく、`c` を順序表のスロットに置いた核心の比較が成り立つなら、`c` は適切な証人である。補助命題 `Held c` はこの二つの事実をまとめる。`c` は順序表の代表であり、論理式の符号ではない。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
   module _ (B F : S) (oB : IsOrd (fst B))
            (vals : Values F (fst B)) (ents : Entries F (fst B)) (z : S) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
     private
       Held : S → Type (ℓ-suc ℓ)
       Held c = (fst c ≡ fst F)
@@ -2137,7 +2093,6 @@ In the two-slot environment `c ∷ z ∷ []`, slot zero is the bound table repre
 
 ```agda
              × ⟨ (c ∷ z ∷ []) ⊨ CondCore (suc zero) (con B) zero ⟩
-
 ```
 
 <!--en-->
@@ -2152,7 +2107,7 @@ The outward direction starts from a propositionally truncated existential witnes
     cond₀-out : ⟨ (z ∷ []) ⊨ Cond₀ B F ⟩ → ⟨ Related (fst B) (fst z) ⟩
     cond₀-out = rec₁ (snd (Related (fst B) (fst z))) atHeld
       where
-      atHeld : Σ[ c ∈ S ] Held c → ⟨ Related (fst B) (fst z) ⟩
+      atHeld : Σ[ c ∶ S ] Held c → ⟨ Related (fst B) (fst z) ⟩
       atHeld (c , (qc , hc)) =
 ```
 
@@ -2183,7 +2138,6 @@ These transported readings are exactly the hypotheses required to read the core 
 ```agda
             (ents x hx))
           hc
-
 ```
 
 <!--en-->
@@ -2198,8 +2152,9 @@ For the inward direction there is already a specified table `F`, so it can serve
     cond₀-in : ⟨ Related (fst B) (fst z) ⟩ → ⟨ (z ∷ []) ⊨ Cond₀ B F ⟩
     cond₀-in h = ∣ F , (refl
       , CondCore-in (suc zero) (con B) zero (F ∷ z ∷ []) oB vals ents h) ∣₁
-
 ```
+</div>
+</details>
 
 <!--en-->
 The two implications give a path between the satisfaction proposition for `Cond₀ B F` and `Related (fst B) (fst z)`. Hence the constant formula has exactly the same mathematical reading as the variable form under the same ordinality, value, and entry hypotheses. This equality concerns proposition-valued meanings; it does not identify the two formulas syntactically or choose a distinguished presentation of the table.
@@ -2226,9 +2181,10 @@ The generic table construction can now use `Cond` when the stage and table occup
 <!--/-->
 
 ```agda
-
   open Described Cond Cond₀ cond-spec cond₀-spec public
 ```
+</div>
+</details>
 
 <!--en-->
 ## Recap

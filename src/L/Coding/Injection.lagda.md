@@ -1,16 +1,19 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # Coded injections
-
-Later cardinal arguments repeatedly move between two representations of an injection: a graph that a formula can quantify over, and an actual function between the small member types of sets. The gap between them is filled in three layers. The object language first needs a formula saying that the graph is injective, the mirror of the single-valuedness clause already available. Then, assuming single-valuedness and an exact domain, the graph can be read as a genuine function whose values remain elements of the constructible model. Finally that function transfers to the canonical small presentations of a stated domain and range. This chapter adds the injectivity formula and carries out both readback layers used by the Cantor-Bernstein and GCH constructions.
 <!--zh-->
 # 编码单射
-
-后续的基数论证反复在单射的两种表示之间往返：一种是公式可以量化的图，另一种是集合的小成员类型之间的实际函数。两者之间的缝隙分三层填补。对象语言首先需要一条表达图是单射的公式，它是已有单值性条款的对偶。其次，在单值性与恰当定义域的假设下，图可以读成一个真正的函数，取值仍是可构造模型的元素。最后，该函数可转移到指定定义域与值域的典范小呈现上。本章补上单射性公式，并完成 Cantor-Bernstein 与 GCH 构造所用的两层读回。
 <!--ja-->
 # 符号化された単射
-
-後の基数論では、対象言語が量化できるグラフと、集合の小さな要素型の間の実際の単射という二つの表現を往復する。この溝は三層で埋める。まず対象言語には、グラフが単射であることを言う論理式、すでにある一価性の条項の鏡像が必要になる。次に、一価性とちょうどの定義域を仮定すれば、グラフは値が構成可能モデルの要素にとどまる本物の関数として読める。最後にその関数は、指定された定義域と値域の標準的な小さな提示へ移る。本章は単射性の論理式を加え、Cantor-Bernstein と GCH の構成が使う二段階の読み戻しを実行する。
 <!--/-->
+
+```agda
+open import Base.Prelude
+open import Base.Classical using ( LEM )
+```
 
 <!--en-->
 The construction is valid constructively. Although the ambient development carries `LEM (ℓ-suc ℓ)`, the proofs below never invoke it: existence of a graph value is truncated, but single-valuedness makes the entire image fiber a proposition, so truncation elimination recovers its unique inhabitant without a choice principle.
@@ -21,13 +24,32 @@ The construction is valid constructively. Although the ambient development carri
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-open import Base.Prelude
-open import Base.Classical using ( LEM )
-
 module L.Coding.Injection {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
+
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax using ( Formula; var; _≐_; _⇒̇_; ∀̇_ )
+import FOL.Absoluteness
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Coding {ℓ} using ( pr )
+open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
+open import L.Coding.Model {ℓ} using ( appAt; appAt-adequate; svAt; svAt-out; domAt; domAt-in )
+open import V.Presentation {ℓ} using ( member; fiber; ↪-inj )
+```
+
+<!--en-->
+
+Later cardinal arguments repeatedly move between two representations of an injection: a graph that a formula can quantify over, and an actual function between the small member types of sets. The gap between them is filled in three layers. The object language first needs a formula saying that the graph is injective, the mirror of the single-valuedness clause already available. Then, assuming single-valuedness and an exact domain, the graph can be read as a genuine function whose values remain elements of the constructible model. Finally that function transfers to the canonical small presentations of a stated domain and range. This chapter adds the injectivity formula and carries out both readback layers used by the Cantor-Bernstein and GCH constructions.
+<!--zh-->
+
+后续的基数论证反复在单射的两种表示之间往返：一种是公式可以量化的图，另一种是集合的小成员类型之间的实际函数。两者之间的缝隙分三层填补。对象语言首先需要一条表达图是单射的公式，它是已有单值性条款的对偶。其次，在单值性与恰当定义域的假设下，图可以读成一个真正的函数，取值仍是可构造模型的元素。最后，该函数可转移到指定定义域与值域的典范小呈现上。本章补上单射性公式，并完成 Cantor-Bernstein 与 GCH 构造所用的两层读回。
+<!--ja-->
+
+後の基数論では、対象言語が量化できるグラフと、集合の小さな要素型の間の実際の単射という二つの表現を往復する。この溝は三層で埋める。まず対象言語には、グラフが単射であることを言う論理式、すでにある一価性の条項の鏡像が必要になる。次に、一価性とちょうどの定義域を仮定すれば、グラフは値が構成可能モデルの要素にとどまる本物の関数として読める。最後にその関数は、指定された定義域と値域の標準的な小さな提示へ移る。本章は単射性の論理式を加え、Cantor-Bernstein と GCH の構成が使う二段階の読み戻しを実行する。
+<!--/-->
+
+
 
 <!--en-->
 Let `S` be the carrier of the constructible model. An element of `S` consists of an ambient set in `V ℓ` together with evidence that it is constructible. Consequently graph assertions are statements about the first projections. The formulas for application, single-valuedness, and exact domain connect internal satisfaction with precisely these projected graph facts.
@@ -36,15 +58,6 @@ Let `S` be the carrier of the constructible model. An element of `S` consists of
 <!--ja-->
 `S` を構成可能モデルの台とする。`S` の要素は `V ℓ` の周囲の集合と、その構成可能性の証明からなるため、グラフについての主張は第一射影について述べられる。適用、一価性、正確な定義域を表す論理式は、内部の充足をこれらの射影されたグラフの事実と結び付ける。
 <!--/-->
-
-```agda
-
-open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using ( Formula; var; _≐_; _⇒̇_; ∀̇_ )
-import FOL.Absoluteness
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-open import V.Coding {ℓ} using ( pr )
-```
 
 <!--en-->
 The second readback layer needs the canonical presentation machinery: a set presented by an index type and an indexing map, with `member` turning an index into an explicit membership proof and `fiber` doing the converse by returning an actual index, not a truncated one. `Σ≡Prop` will reduce equality of dependent pairs to equality of first components when the second components are propositions, which is exactly how the fiber of images and the pairs of the model carrier are handled.
@@ -55,9 +68,6 @@ The second readback layer needs the canonical presentation machinery: a set pres
 <!--/-->
 
 ```agda
-open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
-open import L.Coding.Model {ℓ} using ( appAt; appAt-adequate; svAt; svAt-out; domAt; domAt-in )
-open import V.Presentation {ℓ} using ( member; fiber; ↪-inj )
 open import Cubical.HITs.CumulativeHierarchy.Properties using ( ⟪_⟫; ⟪_⟫↪ )
 ```
 
@@ -84,7 +94,6 @@ Bounded absoluteness relates satisfaction in the constructible model to satisfac
 <!--/-->
 
 ```agda
-
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
 open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
 ```
@@ -129,9 +138,15 @@ For the readback, fix a variable index `f` and an environment `γ` of model elem
 読み戻しでは変数の添字 `f` と模型要素からなる割り当て `γ` を固定する。`Holds₀ x y` は射影された事実で、`x` と `y` の底の集合の順序対が底のグラフ、すなわち変数 `f` が `γ` から選ぶ項目に属すということである。以下の両方向は、適用の条項の充足の判断をこの `Holds₀` と比べるもので、妥当性のパスが議論の要になる。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
-
 module _ {n : ℕ} (f : Fin n) (γ : S ^ n) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     Holds₀ : S → S → Type (ℓ-suc ℓ)
     Holds₀ x y = ⟨ pr (fst x) (fst y) ∈ fst (lookup f γ) ⟩
@@ -202,6 +217,8 @@ The inward direction `injAt-in` runs the same transports forward: given the proj
   injAt-in h y x x' p q = h y x x'
     (subst ⟨_⟩ (at₁ y x x') p) (subst ⟨_⟩ (at₂ y x x') q)
 ```
+</div>
+</details>
 
 <!--en-->
 ## Extracting an injection into the model
@@ -225,11 +242,17 @@ The section takes the graph `F` and the domain `D` as model elements, together w
 この節は、グラフ `F` と定義域 `D` を模型の要素として、二つの充足の仮定とともに取る。変数ゼロでのグラフの一価性と、`D` のすべての要素が `F` の下で値を持つと言うちょうどの定義域の条項である。環境 `γ` はそれらを、充足の判断が期待する固定の順序でまとめる。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Extract (F D : S)
                (sv : ⟨ (F ∷ D ∷ []) ⊨ svAt zero ⟩)
                (dm : ⟨ (F ∷ D ∷ []) ⊨ domAt zero (suc zero) ⟩) where
+```
+</summary>
+<div class="submodule-fold-content">
 
+```agda
   γ : S ^ 2
   γ = F ∷ D ∷ []
 ```
@@ -243,12 +266,11 @@ module Extract (F D : S)
 <!--/-->
 
 ```agda
-
   Holds : S → S → Type (ℓ-suc ℓ)
   Holds x y = ⟨ pr (fst x) (fst y) ∈ fst F ⟩
 
   Fib : S → Type (ℓ-suc ℓ)
-  Fib x = Σ[ y ∈ S ] Holds x y
+  Fib x = Σ[ y ∶ S ] Holds x y
 
   isPropFib : (x : S) → isProp (Fib x)
 ```
@@ -279,9 +301,8 @@ Because `Fib x` is a proposition, `toVal` can eliminate the truncated existence 
 <!--/-->
 
 ```agda
-
   Dom : Type (ℓ-suc ℓ)
-  Dom = Σ[ x ∈ S ] ⟨ fst x ∈ fst D ⟩
+  Dom = Σ[ x ∶ S ] ⟨ fst x ∈ fst D ⟩
 
   fib : (u : Dom) → Fib (fst u)
   fib (x , m) = toVal x (domAt-in zero (suc zero) γ dm x m)
@@ -302,9 +323,17 @@ The function `toFun` sends a domain entry to the output `y : S` in its unique fi
 
   toFun-graph : (u : Dom) → Holds (fst u) (toFun u)
   toFun-graph u = snd (fib u)
+```
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
+```agda
   module _ (ij : ⟨ γ ⊨ injAt zero ⟩) where
+```
+</summary>
+<div class="submodule-fold-content">
 
+```agda
     toFun-inj : (u v : Dom) → fst (toFun u) ≡ fst (toFun v)
 ```
 
@@ -322,6 +351,11 @@ With injectivity of the graph also assumed, `toFun-inj` turns equality of output
       (subst (λ w → ⟨ pr (fst (fst u)) w ∈ fst F ⟩) e (toFun-graph u))
       (toFun-graph v)
 ```
+</div>
+</details>
+
+</div>
+</details>
 
 <!--en-->
 ## Restricting to the small carriers
@@ -345,13 +379,18 @@ The parameters name the three constructible sets at play: the graph `F`, the dom
 パラメータは、ここで働く三つの構成可能集合、グラフ `F`、定義域 `D`、値域 `C` を名指す。最初の三つの仮定は、Extract と toFun-inj が使った充足の主張そのものである。最後の `ran` が新しいもので、入力 `x` と、対 `(x, y)` がグラフに属すような値 `y` に対して、`y` の底の集合が `C` の底の集合に属すことを証明書として与える。これは値域の制限を呼び出し側の仮定として述べたもので、この節自身はグラフが特定の値域を持って作られたと仮定しない。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Small (F D C : S)
              (sv : ⟨ (F ∷ D ∷ []) ⊨ svAt zero ⟩)
              (dm : ⟨ (F ∷ D ∷ []) ⊨ domAt zero (suc zero) ⟩)
              (ij : ⟨ (F ∷ D ∷ []) ⊨ injAt zero ⟩)
              (ran : (x y : S) → ⟨ pr (fst x) (fst y) ∈ fst F ⟩
+                  → ⟨ fst y ∈ fst C ⟩) where
 ```
+</summary>
+<div class="submodule-fold-content">
 
 <!--en-->
 Under the single-valuedness and exact-domain hypotheses, `Extract` supplies the unique graph value for each domain member. To compare this construction with the small presentation, `toS` turns an index `m` of the canonical presentation of `D` into a model element. The first component is the presented set itself; the second is its constructibility certificate, obtained by `isL-trans` from the explicit membership `member (fst D) m` and the certificate that `D` itself is constructible. Transitivity is exactly the principle needed: a member of a constructible set is constructible.
@@ -362,8 +401,6 @@ Under the single-valuedness and exact-domain hypotheses, `Extract` supplies the 
 <!--/-->
 
 ```agda
-                  → ⟨ fst y ∈ fst C ⟩) where
-
   module E = Extract F D sv dm
 
   toS : ⟪ fst D ⟫ → S
@@ -380,12 +417,11 @@ Each small index must also be seen as a member of the domain in Extract's sense,
 <!--/-->
 
 ```agda
-
   at : ⟪ fst D ⟫ → E.Dom
   at m = toS m , member (fst D) m
 
   fib : (m : ⟪ fst D ⟫)
-      → Σ[ k ∈ ⟪ fst C ⟫ ] (⟪ fst C ⟫↪ k ≡ fst (E.toFun (at m)))
+      → Σ[ k ∶ ⟪ fst C ⟫ ] (⟪ fst C ⟫↪ k ≡ fst (E.toFun (at m)))
   fib m = fiber (fst C)
 ```
 
@@ -419,6 +455,8 @@ Injectivity of `small` is proved by routing an equality of indices back through 
     (E.toFun-inj ij (at m) (at n)
       (sym (snd (fib m)) ∙ cong ⟪ fst C ⟫↪ e ∙ snd (fib n)))
 ```
+</div>
+</details>
 
 <!--en-->
 ## Recap

@@ -1,3 +1,7 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # The power set in L
 <!--zh-->
@@ -5,6 +9,46 @@
 <!--ja-->
 # L における冪集合
 <!--/-->
+
+```agda
+open import Base.Prelude
+open import Base.Classical using ( LEM; LEM→Resizing; LEM→ΩResizing )
+```
+
+<!--en-->
+Fix a universe level `ℓ` and one assumption `lem : LEM (ℓ-suc ℓ)`. The goal is
+the model field saying that, for each `a` in `L`, there is a unique model element
+whose members are exactly the model elements internally included in `a`.
+Uniqueness is packaged by the host type `isContr`; the object-theoretic content
+is the power-set axiom, and extensionality supplies its uniqueness. The same
+single `lem` reaches the proof through four routes: propositional resizing, the
+Ω-resizing for the ambient power set, the canonical stage function, and
+the reflection used by full Separation. No further classical assumption is
+introduced.
+<!--zh-->
+固定宇宙层级 `ℓ` 与唯一的假设 `lem : LEM (ℓ-suc ℓ)`。目标模型字段断言：对 `L` 中每个 `a`，恰有一个模型元素，其成员正是内部包含于 `a` 的模型元素。唯一性由宿主类型 `isContr` 打包；对象理论内容是幂集公理，而唯一性来自外延性。同一个 `lem` 经四条路径进入证明：命题换级、外围幂集所需的命题宇宙换级、典范层函数，以及完整分离所用的反射。这里没有引入其他经典假设。
+<!--ja-->
+宇宙レベル `ℓ` と、ただ一つの仮定 `lem : LEM (ℓ-suc ℓ)` を固定する。目標のモデルフィールドは、`L` の各 `a` に対して、`a` に内部的に含まれるモデル要素をちょうど要素とするモデル要素が一意に存在する、と述べる。一意性はホスト型 `isContr` にまとめられる。対象理論での内容は冪集合公理であり、その一意性は外延性から従う。同じ一つの `lem` が、命題リサイズ、周囲の冪集合のための小さな分類子、正準な段階の関数、完全な分出で用いる反映という四つの経路を通って証明に入る。別の古典的仮定は加わらない。
+<!--/-->
+
+```agda
+module L.Axioms.Power {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+```
+
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax using ( Formula; var; con; _∈̇_; ∀̇∈ )
+import FOL.Absoluteness
+import FOL.ZFModel
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Model {ℓ} using ( module Power )
+open import L.Constructible {ℓ}
+  using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset; Lset-mono )
+open import L.Ordinal {ℓ} using ( boundingOrd )
+open import L.Stage {ℓ} lem using ( stage; stage-ord; stage-mem )
+open import L.Axioms.Basic {ℓ} using ( LsetS )
+open import L.Axioms.Full {ℓ} lem using ( hasSeparationL )
+```
 
 <!--en-->
 For a constructible set `a`, what should its power set inside `L` contain? The
@@ -31,11 +75,6 @@ is produced inside the constructible model.
 証明は三段階で進む。まず周囲の冪集合からすべての候補の小さな表示を得る。次に、構成可能な候補を表示する添字を残し、それらの段階を一つの順序数 `β` で抑える。最後に `Lset β` の内部で分出を行い、`a` に内部的に含まれるモデル要素だけを集める。ホスト側の構成が上界を与え、最終的な集合そのものは構成可能モデル内で作られる。
 <!--/-->
 
-```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-```
-
 <!--en-->
 The construction needs two kinds of smallness. Propositional resizing replaces
 a proposition at the model's truth-value level by an equivalent proposition at
@@ -51,32 +90,7 @@ that supplies the indices.
 構成には二種類の小ささが必要である。命題リサイズは、モデルの真理値のレベルにある命題を、小さな添字のレベルにある同値な命題へ置き換える。非可述性のパッケージはさらに、小さな命題のための小さな分類子を与え、周囲の階層で冪集合を作れるようにする。どちらも排中律から導かれるが、解決する大きさの問題は異なる。命題リサイズは構成可能性を小さな添字型に収め、分類子はその添字を供給する周囲の冪集合を構成する。
 <!--/-->
 
-```agda
-open import Base.Prelude
-open import Base.Classical using ( LEM; lem→resizing; lem→ΩResizing )
 
-```
-
-<!--en-->
-Fix a universe level `ℓ` and one assumption `lem : LEM (ℓ-suc ℓ)`. The goal is
-the model field saying that, for each `a` in `L`, there is a unique model element
-whose members are exactly the model elements internally included in `a`.
-Uniqueness is packaged by the host type `isContr`; the object-theoretic content
-is the power-set axiom, and extensionality supplies its uniqueness. The same
-single `lem` reaches the proof through four routes: propositional resizing, the
-Ω-resizing for the ambient power set, the canonical stage function, and
-the reflection used by full Separation. No further classical assumption is
-introduced.
-<!--zh-->
-固定宇宙层级 `ℓ` 与唯一的假设 `lem : LEM (ℓ-suc ℓ)`。目标模型字段断言：对 `L` 中每个 `a`，恰有一个模型元素，其成员正是内部包含于 `a` 的模型元素。唯一性由宿主类型 `isContr` 打包；对象理论内容是幂集公理，而唯一性来自外延性。同一个 `lem` 经四条路径进入证明：命题换级、外围幂集所需的命题宇宙换级、典范层函数，以及完整分离所用的反射。这里没有引入其他经典假设。
-<!--ja-->
-宇宙レベル `ℓ` と、ただ一つの仮定 `lem : LEM (ℓ-suc ℓ)` を固定する。目標のモデルフィールドは、`L` の各 `a` に対して、`a` に内部的に含まれるモデル要素をちょうど要素とするモデル要素が一意に存在する、と述べる。一意性はホスト型 `isContr` にまとめられる。対象理論での内容は冪集合公理であり、その一意性は外延性から従う。同じ一つの `lem` が、命題リサイズ、周囲の冪集合のための小さな分類子、正準な段階の関数、完全な分出で用いる反映という四つの経路を通って証明に入る。別の古典的仮定は加わらない。
-<!--/-->
-
-```agda
-module L.Axioms.Power {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-
-```
 
 <!--en-->
 Three levels of discourse meet in the proof. Host types organize indices and
@@ -92,14 +106,6 @@ where the object-theoretic power-set axiom must be established.
 証明では三つの水準を区別する。ホスト型は添字と証明を組織する。周囲の構造 `𝒮ᵥ` の要素は累積階層のすべての集合である。制限された構造 `𝒮ʟ` の要素は、周囲の集合とその構成可能性の証拠との対である。論理式の言語は、`𝒮ʟ` の内部で包含を表すための有界全称量化子を備えている。したがって周囲の構造は部分集合の候補を列挙でき、対象理論の冪集合公理は制限された構造の中で証明される。
 <!--/-->
 
-```agda
-open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using ( Formula; var; con; _∈̇_; ∀̇∈ )
-import FOL.Absoluteness
-import FOL.ZFModel
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-```
-
 <!--en-->
 The ambient hierarchy provides a set `𝒫V A` containing every ambient subset of
 `A`, together with its membership specification. The constructible hierarchy
@@ -114,14 +120,6 @@ uses only its ordinality and membership facts.
 <!--ja-->
 周囲の階層は、`A` の周囲でのすべての部分集合を含む集合 `𝒫V A` と、その所属の仕様を与える。構成可能階層は段階 `Lset α` とその厳密な単調性を与える。すなわち `α ∈ β` なら、前の段階への所属を後の段階へ持ち上げられる。各構成可能な候補には、段階の関数が、その候補を含む段階の正準な順序数添字を与える。上界補題は、この小さな順序数添字の族を一つの順序数の真に下へ収める。段階の関数は最小性も証明するが、本章で使うのは順序数性と段階への所属だけである。
 <!--/-->
-
-```agda
-open import V.Model {ℓ} using ( module Power )
-open import L.Constructible {ℓ}
-  using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset; Lset-mono )
-open import L.Ordinal {ℓ} using ( boundingOrd )
-open import L.Stage {ℓ} lem using ( stage; stage-ord; stage-mem )
-```
 
 <!--en-->
 Once the ordinal bound `β` is available, `LsetS β oβ` is a model element
@@ -139,29 +137,22 @@ same `lem`, even in this bounded instance.
 順序数の上界 `β` が得られると、`LsetS β oβ` は、考えている内部部分集合をすべて含むと分かっているモデル要素になる。したがって、残る数学的操作は、包含を表す一変数論理式による分出である。一般定理 `hasSeparationL` は任意の論理式を受け取る。反映する段階を見つけ、その段階で論理式を有界な相対化に置き換え、有界な分出を適用する。ここでの論理式はすでに Δ₀ であるが、この呼び出しは実際にこの一般的な経路を通る。そのため、この有界な場合にも、論理式の反映とパラメータの段階の構成は、同じ `lem` の実際の使用である。
 <!--/-->
 
-```agda
-open import L.Axioms.Basic {ℓ} using ( LsetS )
-open import L.Axioms.Full {ℓ} lem using ( hasSeparationL )
-
-```
-
 <!--en-->
 Every hierarchy set has a small presentation: a type `⟪P⟫` of indices and an
 embedding `⟪P⟫↪` that presents its members. Membership in `P` is the
 propositional truncation of a fibre of this embedding. Because the map is an
 embedding, each fibre is already a proposition, so `∈-asFiber` may recover the
-index and its identifying path without invoking Choice. The equivalence maps
-also let the proof move between a resized proposition and its original form.
+index and its identifying path without invoking Choice. The functions `equivFun` and `invEq` move proofs between a resized proposition
+and its original form, using the equivalence supplied by the resizing witness.
 At the end, propositional extensionality turns two implications into a path of
 truth values.
 <!--zh-->
-层级中的每个集合都有小表现：索引类型 `⟪P⟫` 与呈现其成员的嵌入 `⟪P⟫↪`。属于 `P` 被定义为该嵌入某个纤维的命题截断。由于此映射是嵌入，每个纤维本来就是命题，故 `∈-asFiber` 可以恢复索引及识别它的路径，而无须使用选择公理。等价的两个方向还让证明在降级命题与原命题之间往返。最后，命题外延性把两个方向的蕴含变成真值之间的路径。
+层级中的每个集合都有小表现：索引类型 `⟪P⟫` 与呈现其成员的嵌入 `⟪P⟫↪`。属于 `P` 被定义为该嵌入某个纤维的命题截断。由于此映射是嵌入，每个纤维本来就是命题，故 `∈-asFiber` 可以恢复索引及识别它的路径，而无须使用选择公理。换级见证提供类型等价，`equivFun` 与 `invEq` 让证明在降级命题与原命题之间往返。最后，命题外延性把两个方向的蕴含变成真值之间的路径。
 <!--ja-->
-階層の各集合は小さな表現を持つ。添字型 `⟪P⟫` と、その要素を呈示する埋め込み `⟪P⟫↪` である。`P` への所属は、この埋め込みのファイバーの命題的切り詰めとして定義される。写像が埋め込みなので各ファイバーはすでに命題であり、`∈-asFiber` は選択公理を使わずに添字とそれを特定するパスを復元できる。同値の二方向は、リサイズされた命題と元の命題との間の往復にも使われる。最後には命題外延性が、二方向の含意を真理値の間のパスへ変える。
+階層の各集合は小さな表現を持つ。添字型 `⟪P⟫` と、その要素を呈示する埋め込み `⟪P⟫↪` である。`P` への所属は、この埋め込みのファイバーの命題的切り詰めとして定義される。写像が埋め込みなので各ファイバーはすでに命題であり、`∈-asFiber` は選択公理を使わずに添字とそれを特定するパスを復元できる。リサイズの証拠が与える型同値により、`equivFun` と `invEq` はリサイズされた命題と元の命題の間で証明を移す。最後には命題外延性が、二方向の含意を真理値の間のパスへ変える。
 <!--/-->
 
 ```agda
-open import Cubical.Foundations.Equiv using ( _≃_; invEq; equivFun )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
 open import Cubical.HITs.CumulativeHierarchy.Properties
   using ( ∈-asFiber; ⟪_⟫; ⟪_⟫↪ )
@@ -181,9 +172,7 @@ Thus the smallness argument concerns the index type, not the model carrier.
 <!--/-->
 
 ```agda
-
 open hPropStructure 𝒮ʟ
-
 ```
 
 <!--en-->
@@ -204,7 +193,6 @@ bridge from internal inclusion to ambient inclusion used below.
 module ModelL = FOL.ZFModel 𝒮ʟ
 open ModelL using ( SetOf; _⊆ˢ_ )
 module ModelV = FOL.ZFModel 𝒮ᵥ
-
 ```
 
 <!--en-->
@@ -224,25 +212,24 @@ direct inner meaning of the bounded inclusion formula.
 ```agda
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
 open AbsL renaming ( _⊨ᵐ_ to _⊨_ )
-
 ```
 
 <!--en-->
 The ambient power-set construction is instantiated with Ω-resizing
-obtained from `lem→ΩResizing lem`. This construction uses only the
+obtained from `LEM→ΩResizing lem`. This construction uses only the
 classifier derived from `ΩResizing`: it represents a characteristic function by a
 function into a small type of truth-value codes and forms the corresponding
 hierarchy set. Propositional resizing of `isL` is a separate operation and does
 not enter this instantiation. Keeping these roles distinct will make the later
 index construction transparent.
 <!--zh-->
-外围幂集构造以 `lem→ΩResizing lem` 给出的命题宇宙换级实例化。这里仅使用由 `ΩResizing` 导出的分类器：特征函数被表示为一个取值于小真值码类型的函数，再由此形成层级中的集合。对 `isL` 作命题换级是另一项独立操作，并不进入这次实例化。区分这两种作用，才能看清稍后的小索引是怎样形成的。
+外围幂集构造以 `LEM→ΩResizing lem` 给出的命题宇宙换级实例化。这里仅使用由 `ΩResizing` 导出的分类器：特征函数被表示为一个取值于小真值码类型的函数，再由此形成层级中的集合。对 `isL` 作命题换级是另一项独立操作，并不进入这次实例化。区分这两种作用，才能看清稍后的小索引是怎样形成的。
 <!--ja-->
-周囲の冪集合の構成には、`lem→ΩResizing lem` から得られる小さな分類子を与える。ここで使うのは `ΩResizing` から導かれる分類子だけである。特性関数を小さな真理値コードの型への関数として表し、それに対応する階層の集合を作る。`isL` の命題リサイズは別の操作であり、この具体化には入らない。二つの役割を分けることで、後の小さな添字の構成が明確になる。
+周囲の冪集合の構成には、`LEM→ΩResizing lem` から得られる小さな分類子を与える。ここで使うのは `ΩResizing` から導かれる分類子だけである。特性関数を小さな真理値コードの型への関数として表し、それに対応する階層の集合を作る。`isL` の命題リサイズは別の操作であり、この具体化には入らない。二つの役割を分けることで、後の小さな添字の構成が明確になる。
 <!--/-->
 
 ```agda
-module Pow = Power (lem→ΩResizing lem)
+module Pow = Power (LEM→ΩResizing lem)
 ```
 
 <!--en-->
@@ -283,7 +270,6 @@ proof later passes it to the general Separation interface.
 ```agda
 subFo : S → Formula S 1
 subFo a = ∀̇∈ (var zero) (var zero ∈̇ con a)
-
 ```
 
 <!--en-->
@@ -310,8 +296,15 @@ the model.
 `a : S` を固定する。その第一射影 `A` は、構成可能性の証拠を忘れて、同じ集合を周囲の階層で見たものである。集合 `P = Pow.𝒫V A` は、周囲での完全な冪集合の仕様を満たす。`P` への所属に必要なのは周囲の意味で `A` に含まれることだけであり、構成可能性の仮定はない。したがって、構成可能でない周囲の部分集合があれば、それも `P` に属する。また、この構成から `P` 自身の構成可能性は得られない。証明が使うのは小さな表示 `⟪P⟫` だけであり、後でその添字を構成可能性によって選び出す。`P` はモデルで最終的に返される冪集合ではない。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Bound (a : S) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     A P : V ℓ
     A = fst a
@@ -333,10 +326,8 @@ removes the propositional truncation nor selects an ordinal stage.
 <!--/-->
 
 ```agda
-
-    rsz : (v : V ℓ) → Σ[ Q ∈ hProp ℓ ] (⟨ isL v ⟩ ≃ ⟨ Q ⟩)
-    rsz v = lem→resizing lem (isL v)
-
+    rsz : (v : V ℓ) → Σ[ Q ∶ hProp ℓ ] (⟨ isL v ⟩ ≃ ⟨ Q ⟩)
+    rsz v = LEM→Resizing lem (isL v)
 ```
 
 <!--en-->
@@ -355,8 +346,7 @@ formula, and it will not become the final power set.
 
 ```agda
   Ix : Type ℓ
-  Ix = Σ[ m ∈ ⟪ P ⟫ ] ⟨ rsz (⟪ P ⟫↪ m) .fst ⟩
-
+  Ix = Σ[ m ∶ ⟪ P ⟫ ] ⟨ rsz (⟪ P ⟫↪ m) .fst ⟩
 ```
 
 <!--en-->
@@ -377,7 +367,6 @@ additional work needed to obtain a definite stage index.
   private
     unres : (i : Ix) → ⟨ isL (⟪ P ⟫↪ (i .fst)) ⟩
     unres i = invEq (rsz (⟪ P ⟫↪ (i .fst)) .snd) (i .snd)
-
 ```
 
 <!--en-->
@@ -399,7 +388,6 @@ general rule for extracting arbitrary truncated witnesses. Only `stage-ord` and
 ```agda
     stg : Ix → V ℓ
     stg i = stage (⟪ P ⟫↪ (i .fst)) (unres i)
-
 ```
 
 <!--en-->
@@ -418,7 +406,6 @@ bound is exactly the form later required by `Lset-mono`.
 
 ```agda
     b = boundingOrd Ix stg (λ i → stage-ord (⟪ P ⟫↪ (i .fst)) (unres i))
-
 ```
 
 <!--en-->
@@ -438,7 +425,6 @@ bound suffices for the power-set axiom, so no condensation estimate is needed.
 ```agda
   β : V ℓ
   β = b .fst
-
 ```
 
 <!--en-->
@@ -457,7 +443,6 @@ bounding property are the two facts about `β` needed in the remainder.
 ```agda
   oβ : IsOrd β
   oβ = b .snd .fst
-
 ```
 
 <!--en-->
@@ -529,6 +514,8 @@ is one of the stages bounded by `β`. Combining `stage-mem`, `b.snd.snd i`, and
       , equivFun (rsz (⟪ P ⟫↪ (fib .fst)) .snd)
           (subst (λ w → ⟨ isL w ⟩) (sym pa) (x .snd))
 ```
+</div>
+</details>
 
 <!--en-->
 ## The field

@@ -1,0 +1,424 @@
+{
+  "baseline_commit": "d62ebaa641e6865fce4dd76e8a37cf2ee9e5a270",
+  "legacy_commit": "053e89ffd04f1687b83afd7c57b784e02538c125",
+  "removed_baseline_tag": "double-negation-turn-2026-09-28",
+  "files": [
+    {
+      "path": "reports/ALTERNATIVE-ROUTES.md",
+      "source": "_build/double-negation-investigation/ALTERNATIVE-ROUTES.md",
+      "sha256": "c55279542b2e6c7ad346f59123614cfc20ed5433db918ba5df9eab10c6750057",
+      "kind": "historical-report"
+    },
+    {
+      "path": "experiments/BooleanCompletion.agda",
+      "source": "_build/double-negation-investigation/BooleanCompletion.agda",
+      "sha256": "2013cc519cdf8213a211298d6a1357a8c3982d6926029b70629df25b25f7e536",
+      "kind": "proof-source"
+    },
+    {
+      "path": "experiments/BooleanPower.agda",
+      "source": "_build/double-negation-investigation/BooleanPower.agda",
+      "sha256": "643636eab50664ce365aa976e3eb8b7585db58a6c017b4ad0aab43756df9c48d",
+      "kind": "proof-source"
+    },
+    {
+      "path": "experiments/Boundary.agda",
+      "source": "_build/double-negation-investigation/Boundary.agda",
+      "sha256": "5d1ef3945a229d82758c1bfe762e3b65e397431049f175d19c0cb04ab628a2b0",
+      "kind": "proof-source"
+    },
+    {
+      "path": "reports/COMPLETION-BOUNDARY.md",
+      "source": "_build/double-negation-investigation/COMPLETION-BOUNDARY.md",
+      "sha256": "ac44d8676b8952ce96af2bf85b64fd675809cf5f33ec0b39afb823e9f2612ee8",
+      "kind": "historical-report"
+    },
+    {
+      "path": "reports/COVER-OBSTRUCTIONS.md",
+      "source": "_build/double-negation-investigation/COVER-OBSTRUCTIONS.md",
+      "sha256": "cbc78587096de2a0afa61de6daf41c00efcd6960dc53d4d7e3fb36419e740e01",
+      "kind": "historical-report"
+    },
+    {
+      "path": "reports/CUBICAL-ASSEMBLY-AUDIT.md",
+      "source": "_build/double-negation-investigation/CUBICAL-ASSEMBLY-AUDIT.md",
+      "sha256": "bcd464bfb9abee96946a61558233747207e38cfd5a9591602018c4a18aa95baf",
+      "kind": "historical-report"
+    },
+    {
+      "path": "experiments/ConditionalImage.agda",
+      "source": "_build/double-negation-investigation/ConditionalImage.agda",
+      "sha256": "d30631c4c39a3c46e72b816f65124d65bcf7fb3abca7e3dfaa6fc31a05e33a2b",
+      "kind": "proof-source"
+    },
+    {
+      "path": "experiments/CoverObstructions.agda",
+      "source": "_build/double-negation-investigation/CoverObstructions.agda",
+      "sha256": "1add3e10cc1995160215bcc2057d0eae83ed440ad906d0e11fb50a7a8dd056d5",
+      "kind": "proof-source"
+    },
+    {
+      "path": "reports/DEEP-FOL-OMEGA.md",
+      "source": "_build/double-negation-investigation/DEEP-FOL-OMEGA.md",
+      "sha256": "c8c70c77889714dd7ee5c970fbde6379382bcf82a95d76fd61c1b760a0281eac",
+      "kind": "historical-report"
+    },
+    {
+      "path": "reports/DENSE-POWER-AUDIT.md",
+      "source": "_build/double-negation-investigation/DENSE-POWER-AUDIT.md",
+      "sha256": "2e86bfd04531f1ec02a31f35c2d0f4ab607a0b4c66d66bd13317ebd3f088e0bc",
+      "kind": "historical-report"
+    },
+    {
+      "path": "experiments/DeepFOLOmega.agda",
+      "source": "_build/double-negation-investigation/DeepFOLOmega.agda",
+      "sha256": "de5e0ab04eda4ce248c5e4ad2e5c6e8ef36a9c092ce60b837a04df1727b96ab1",
+      "kind": "proof-source"
+    },
+    {
+      "path": "experiments/DeepFOLOmegaTrees.agda",
+      "source": "_build/double-negation-investigation/DeepFOLOmegaTrees.agda",
+      "sha256": "9220eff763f567939bd886e49f07a865267fce3bf57a81f2b192930894624f68",
+      "kind": "proof-source"
+    },
+    {
+      "path": "experiments/DeepNegativeFOL.agda",
+      "source": "_build/double-negation-investigation/DeepNegativeFOL.agda",
+      "sha256": "10fb080e1be5543415ccbe4d45d7e1b2cc73e7e3d178859b0839d2c9bda180ac",
+      "kind": "proof-source"
+    },
+    {
+      "path": "experiments/DensePower.agda",
+      "source": "_build/double-negation-investigation/DensePower.agda",
+      "sha256": "4d1ebe692770c2ef9c31eb29d3c2c2292efa4063ad0a3bbd15f7170b4d4204b7",
+      "kind": "proof-source"
+    },
+    {
+      "path": "experiments/ExtensionalityBoundary.agda",
+      "source": "_build/double-negation-investigation/ExtensionalityBoundary.agda",
+      "sha256": "c48e914f8b5953fc44d4bae87cd1b5788a6de88c7bd21586f4780184e45b21e5",
+      "kind": "proof-source"
+    },
+    {
+      "path": "reports/FUNCTION-OBJECT-BOUNDARY.md",
+      "source": "_build/double-negation-investigation/FUNCTION-OBJECT-BOUNDARY.md",
+      "sha256": "d8dda905389b26c92d38ca0aba31993d7685055e12e90f9aa8c0c20c4157e2fc",
+      "kind": "historical-report"
+    },
+    {
+      "path": "experiments/FiniteFunctionObjects.agda",
+      "source": "_build/double-negation-investigation/FiniteFunctionObjects.agda",
+      "sha256": "60717f77866b1e32e2d360c98106a90034b8a748daed1cb4d674ad451e08cb08",
+      "kind": "proof-source"
+    },
+    {
+      "path": "experiments/FunctionObjectBoundary.agda",
+      "source": "_build/double-negation-investigation/FunctionObjectBoundary.agda",
+      "sha256": "75d41250e8cafd0c48e621bc41790dc5dfe90302ff4376672032487d4ae01c04",
+      "kind": "proof-source"
+    },
+    {
+      "path": "experiments/FunctionPower.agda",
+      "source": "_build/double-negation-investigation/FunctionPower.agda",
+      "sha256": "ff7cb8f8ad4ab6576d05df31291ba23438d5cf5c84fc1773401bba4bd940fde8",
+      "kind": "proof-source"
+    },
+    {
+      "path": "experiments/HartogsRelationBoundary.agda",
+      "source": "_build/double-negation-investigation/HartogsRelationBoundary.agda",
+      "sha256": "3f385ae34392e04d7eaf485ccd6ce92a3d49f38a7547f803b9495b984d20c98a",
+      "kind": "proof-source"
+    },
+    {
+      "path": "reports/INTERNAL-RESIZING-INTERFACE.md",
+      "source": "_build/double-negation-investigation/INTERNAL-RESIZING-INTERFACE.md",
+      "sha256": "3fc39276020e69fbf4016a106882cd0d54e7a94d5709ca4b7ad0600a0f954f34",
+      "kind": "historical-report"
+    },
+    {
+      "path": "experiments/InternalResizing.agda",
+      "source": "_build/double-negation-investigation/InternalResizing.agda",
+      "sha256": "14eb68d7cda3b9020babaa0e7362d0816413a8bbdc83240f2acac2aa0216c8c1",
+      "kind": "proof-source"
+    },
+    {
+      "path": "reports/L-STAGE-BOUNDARY.md",
+      "source": "_build/double-negation-investigation/L-STAGE-BOUNDARY.md",
+      "sha256": "43ba0e0a4995ed447626b9b6a60961c2b3e0ed2142d1734343819a39b1e289e9",
+      "kind": "historical-report"
+    },
+    {
+      "path": "experiments/ModalFullness.agda",
+      "source": "_build/double-negation-investigation/ModalFullness.agda",
+      "sha256": "9537dfb84494c5b7850f046b90608f2b2bf4af6d53a2cd0259c4d6284731f42f",
+      "kind": "proof-source"
+    },
+    {
+      "path": "experiments/ModalQuotient.agda",
+      "source": "_build/double-negation-investigation/ModalQuotient.agda",
+      "sha256": "c2d4effb7fa1d1fd79a7218227d7ee690bfb2ab27d940f1df00e7c11dd9789d8",
+      "kind": "proof-source"
+    },
+    {
+      "path": "experiments/ModalTrees.agda",
+      "source": "_build/double-negation-investigation/ModalTrees.agda",
+      "sha256": "5483ea5d24453e41d3b4eefbf4e6d892f952db246bcc0d48b952d080f2a3f79a",
+      "kind": "proof-source"
+    },
+    {
+      "path": "reports/POWERSET-AUDIT.md",
+      "source": "_build/double-negation-investigation/POWERSET-AUDIT.md",
+      "sha256": "eab6fa986be291765e1edad60d18c0904e60bcf07a52b63004a03d169215eae7",
+      "kind": "historical-report"
+    },
+    {
+      "path": "experiments/QuantifierTransport.agda",
+      "source": "_build/double-negation-investigation/QuantifierTransport.agda",
+      "sha256": "7b07f7202d12971fb3c38cb6971810a2b8d862589ee8e87d9866c733a047b82d",
+      "kind": "proof-source"
+    },
+    {
+      "path": "reports/RELATIONAL-EXPONENTIAL.md",
+      "source": "_build/double-negation-investigation/RELATIONAL-EXPONENTIAL.md",
+      "sha256": "6567fe5e3237a6fc6630e0ab36579a30f7c909d59c293dd7b3b7f953b9961323",
+      "kind": "historical-report",
+      "original_sha256": "e67b5767d7651b5d7df21431c461630c6f2c9b603296a3cc7e7d626e2597ce4d",
+      "terminology_edits": [
+        {
+          "line": 59,
+          "original": "Here arrows denote constructions in both directions, not inverse laws for the\n",
+          "archived": "Here arrows denote constructions in both directions, not round-trip laws for the\n"
+        }
+      ]
+    },
+    {
+      "path": "reports/RELATIONAL-FUNCTION-SIZE.md",
+      "source": "_build/double-negation-investigation/RELATIONAL-FUNCTION-SIZE.md",
+      "sha256": "0107164d8509c73e2d22efa2429346e8bf21c2ac7f468499e8a29f3825d2c36f",
+      "kind": "historical-report",
+      "original_sha256": "78b695c2e3113884d58d648259b38a9103aad02da799cf739fb3f19f3c7cba30",
+      "terminology_edits": [
+        {
+          "line": 62,
+          "original": "the forward/backward inverse law at each F to obtain, under double negation,\n",
+          "archived": "the forward/backward round-trip law at each F to obtain, under double negation,\n"
+        }
+      ]
+    },
+    {
+      "path": "reports/RELATIONAL-PROP-UNIVERSE.md",
+      "source": "_build/double-negation-investigation/RELATIONAL-PROP-UNIVERSE.md",
+      "sha256": "b1ee53d304eabbd530d531b6c12a694995a6f669acb0faccee5f39bbe9482c33",
+      "kind": "historical-report",
+      "original_sha256": "0967a735565fd14dbd17c4c7f534e88b7433986ad8115439de8daeb336ab13bb",
+      "terminology_edits": [
+        {
+          "line": 38,
+          "original": "and associativity. It defines isomorphisms by two such maps and inverse laws.\n",
+          "archived": "and associativity. It defines isomorphisms by two such maps and round-trip laws.\n"
+        },
+        {
+          "line": 53,
+          "original": "false fiber is not P. The inverse laws are proved using modal totality and\n",
+          "archived": "false fiber is not P. The round-trip laws are proved using modal totality and\n"
+        },
+        {
+          "line": 105,
+          "original": "The theorem checks both inverse laws; its unconditional instance uses the\n",
+          "archived": "The theorem checks both round-trip laws; its unconditional instance uses the\n"
+        },
+        {
+          "line": 118,
+          "original": "into Boolean, with checked inverse laws. Predicate pullback along arbitrary\n",
+          "archived": "into Boolean, with checked round-trip laws. Predicate pullback along arbitrary\n"
+        }
+      ]
+    },
+    {
+      "path": "reports/RELATIONAL-QUANTIFIERS.md",
+      "source": "_build/double-negation-investigation/RELATIONAL-QUANTIFIERS.md",
+      "sha256": "6e92885cb0def2e492459daf95b1b4a0cf100d138e0de42291f0dd84bc6acc24",
+      "kind": "historical-report",
+      "original_sha256": "56399b9d700d0d025f6c9eefe3c6509d1e22ea9aab81bbf882fb3147b0ccb3cd",
+      "terminology_edits": [
+        {
+          "line": 77,
+          "original": "and their inverse laws. A valid internal port must account for that elimination\n",
+          "archived": "and their round-trip laws. A valid internal port must account for that elimination\n"
+        }
+      ]
+    },
+    {
+      "path": "experiments/RelationalClassifier.agda",
+      "source": "_build/double-negation-investigation/RelationalClassifier.agda",
+      "sha256": "e1624fba5fc948c761d2ceaca9dd70e8352e80ff2a8c1ba0e9063b3e47991036",
+      "kind": "proof-source"
+    },
+    {
+      "path": "experiments/RelationalExponential.agda",
+      "source": "_build/double-negation-investigation/RelationalExponential.agda",
+      "sha256": "3d28e768a9d301d18da19179fe889c5ab4e8ea7bbbe340c321fa20ba3ea4de82",
+      "kind": "proof-source"
+    },
+    {
+      "path": "experiments/RelationalFunctionBoundary.agda",
+      "source": "_build/double-negation-investigation/RelationalFunctionBoundary.agda",
+      "sha256": "3df14c780831326877ef8c12fade7ecfc04f94fef36cbf853c24ce2219e4e397",
+      "kind": "proof-source"
+    },
+    {
+      "path": "experiments/RelationalLargeFunctions.agda",
+      "source": "_build/double-negation-investigation/RelationalLargeFunctions.agda",
+      "sha256": "a36f0f6c4dd80ff07f9cd3cb4745a76c995270f43f9c2d8bd57104e7ef32b0d5",
+      "kind": "proof-source"
+    },
+    {
+      "path": "experiments/RelationalOmega.agda",
+      "source": "_build/double-negation-investigation/RelationalOmega.agda",
+      "sha256": "4f57c4f846cb8a7fd24dce7c8a430f2f67255bbfdc42aa4caf71171ae932d62f",
+      "kind": "proof-source"
+    },
+    {
+      "path": "experiments/RelationalPropUniverse.agda",
+      "source": "_build/double-negation-investigation/RelationalPropUniverse.agda",
+      "sha256": "410cb6a0ba12ab872cf37f3b684133be4478ed098dec89e4dc9a0c8246f97578",
+      "kind": "proof-source"
+    },
+    {
+      "path": "experiments/RelationalSmallFunctionAudit.agda",
+      "source": "_build/double-negation-investigation/RelationalSmallFunctionAudit.agda",
+      "sha256": "0094c19b09d5363fb26054ef4bbdcc20a248a9899a476054af12003e234aaa05",
+      "kind": "proof-source"
+    },
+    {
+      "path": "experiments/RelationalTruth.agda",
+      "source": "_build/double-negation-investigation/RelationalTruth.agda",
+      "sha256": "d71cf4019cbe3157850297f6ba2680dbd02b8a5e122e710827113320cec9afce",
+      "kind": "proof-source"
+    },
+    {
+      "path": "reports/SEPARATION-AND-EXTRACTION.md",
+      "source": "_build/double-negation-investigation/SEPARATION-AND-EXTRACTION.md",
+      "sha256": "721efe650277abbaa1d8d4b0f72a2b8376c24099ed8c87479e2f212abaae788c",
+      "kind": "historical-report"
+    },
+    {
+      "path": "reports/SUBCOUNTABLE-OBSTRUCTION.md",
+      "source": "_build/double-negation-investigation/SUBCOUNTABLE-OBSTRUCTION.md",
+      "sha256": "3232b4ed0fd0d951e402c3247a7563ce035f59b3895680ea82c11cbed1fbaf7e",
+      "kind": "historical-report"
+    },
+    {
+      "path": "reports/SUPPORTED-IMAGE.md",
+      "source": "_build/double-negation-investigation/SUPPORTED-IMAGE.md",
+      "sha256": "8f6b96937908f4412b653c4986a83ddcb2a62a4814678d507871db75fd81bde2",
+      "kind": "historical-report"
+    },
+    {
+      "path": "experiments/SameLevel.agda",
+      "source": "_build/double-negation-investigation/SameLevel.agda",
+      "sha256": "ab1e7f1d4ed07869575139031cc48f129cd94fc6ac922dcafbf273b63792503b",
+      "kind": "expected-failure"
+    },
+    {
+      "path": "experiments/SeparationBoundary.agda",
+      "source": "_build/double-negation-investigation/SeparationBoundary.agda",
+      "sha256": "ec0e3506b50313dc7a2e2e5cbec7212b3817c3d2eee53e6235789d5c57aafa79",
+      "kind": "proof-source"
+    },
+    {
+      "path": "experiments/SheafBoundary.agda",
+      "source": "_build/double-negation-investigation/SheafBoundary.agda",
+      "sha256": "0ae8e204a0b36c178c938e45f1ba29d9cd83e455ed0a751b5791d641d41f12b7",
+      "kind": "proof-source"
+    },
+    {
+      "path": "experiments/StableRelations.agda",
+      "source": "_build/double-negation-investigation/StableRelations.agda",
+      "sha256": "f1957aaeab6b7bc92a8d659b1784573eb7741662219948320ee26b0d908dfded",
+      "kind": "proof-source"
+    },
+    {
+      "path": "experiments/StagePowerBoundary.agda",
+      "source": "_build/double-negation-investigation/StagePowerBoundary.agda",
+      "sha256": "06e9f89806dd368210a1ffc2292ec07454030885dc267fd0e8b0a3dc10173b3a",
+      "kind": "proof-source"
+    },
+    {
+      "path": "experiments/SubcountableObstruction.agda",
+      "source": "_build/double-negation-investigation/SubcountableObstruction.agda",
+      "sha256": "1bdc59f30906fdf4ddfa82e764ff2ebc8411373e4f0832eb743a71953d015e71",
+      "kind": "proof-source"
+    },
+    {
+      "path": "experiments/SupportedImage.agda",
+      "source": "_build/double-negation-investigation/SupportedImage.agda",
+      "sha256": "61c76bb2994cbc8df83ba037faf938769a67dea2c1da34ebd0fb7ac975b2bc32",
+      "kind": "proof-source"
+    },
+    {
+      "path": "experiments/TruthChoice.agda",
+      "source": "_build/double-negation-investigation/TruthChoice.agda",
+      "sha256": "892c023ab77f97e1eef5ec40d3c9fd88f2be636815f55070df527f8ee43e7550",
+      "kind": "proof-source"
+    },
+    {
+      "path": "experiments/UniqueExtraction.agda",
+      "source": "_build/double-negation-investigation/UniqueExtraction.agda",
+      "sha256": "6b8e87f2994b9d27cfb1dc29b7057fc4c7b1970b103b5169f3e9dab566883bbd",
+      "kind": "proof-source"
+    },
+    {
+      "path": "experiments/boundary.agda-lib",
+      "source": "_build/double-negation-investigation/boundary.agda-lib",
+      "sha256": "2115098db64dee6af2b188a40adff13e58213a2e790cd4557e515e54c8ea59f6",
+      "kind": "library"
+    },
+    {
+      "path": "reports/INITIAL-FEASIBILITY.md",
+      "source": "dev/DOUBLE-NEGATION.md",
+      "sha256": "00221a140d0922fe5e3ddc0c7f3f743a1d4332d9e449c94e12f8aa7c52b6de27",
+      "kind": "historical-report"
+    },
+    {
+      "path": "legacy/Milestones.lagda.md.snapshot",
+      "source": "git:053e89ff:src/Milestones.lagda.md",
+      "sha256": "fe0eddafd9aa274aa1fef5ad9af21bbf04c9c5e580641336fe17c95312202d46",
+      "kind": "legacy-proof"
+    },
+    {
+      "path": "legacy/V/InternalClassicality.lagda.md.snapshot",
+      "source": "git:053e89ff:src/V/InternalClassicality.lagda.md",
+      "sha256": "5a4666c4188fd79d92fbb96979b98ecc335185349569db494aa99793cf13e24b",
+      "kind": "legacy-proof"
+    },
+    {
+      "path": "reports/ORIGINAL-INTERNAL-CLASSICALITY.md",
+      "source": "git:053e89ff:dev/INTERNAL-CLASSICALITY.md",
+      "sha256": "6a2a28b4666f0b7b9482f16a8615ecb3066306147096dc08f9b349ffd2495884",
+      "kind": "historical-report"
+    },
+    {
+      "path": "legacy/original-branch.patch",
+      "source": "git-diff:--unified=0:23c0a41f6cb87d4a8fe70fc4b8306c577bdf4d0f..053e89ff",
+      "sha256": "3bcf83d19f3234b694bf8b7acaecf70f5ee67e303cba2459d33de74720958581",
+      "kind": "legacy-diff"
+    }
+  ],
+  "external_downloads": [
+    {
+      "local_cache": "_build/double-negation-investigation/palmgren-universe.pdf",
+      "source_url": "https://www2.math.uu.se/~palmgren/universe.pdf",
+      "sha256": "e4d0e76da6a69c140a55a7585b8c4109274204cba56bdc8a865c3bbd2f90dc78",
+      "archived": false,
+      "reason": "Third-party download or text extraction; retained locally, cited rather than redistributed."
+    },
+    {
+      "local_cache": "_build/double-negation-investigation/palmgren-universe.txt",
+      "source_url": "https://www2.math.uu.se/~palmgren/universe.pdf",
+      "sha256": "be94786fa8eb2d3ce901e3199f479d1c4738709d07c688cff1261d8c61b80597",
+      "archived": false,
+      "reason": "Third-party download or text extraction; retained locally, cited rather than redistributed."
+    }
+  ]
+}

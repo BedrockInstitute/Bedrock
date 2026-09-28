@@ -1,28 +1,19 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # Canonical names for successor-stage members
-
-A member of a successor stage is determined by a formula and finitely many parameters from the preceding stage. This chapter packages that data as a name, proves that every member has one, and orders all names so that a least representative can be chosen.
-
-A member of a successor stage is a definable subset of the stage below, and the earlier chapters said what that means twice over: once in `L.Definability`, as a formula with parameters drawn from that stage, and once in `FOL.Manipulation.ParameterAbstraction`, after the parameters leave the syntax, as a **parameter-free formula together with a vector of parameters**. The second form is the one that can be compared. Its formula is a finite piece of syntax, so its code is a hereditarily finite set and has already appeared at the limit stage `Lset ω`, which `L.Choice.FiniteStageOrders` well-orders; its parameters are members of the stage below, which the surrounding construction has well-ordered by the time it calls this one. A **name** is that pair, with the arity between them, and this chapter builds it, shows every member of the successor stage has one, and well-orders the names.
-
-The order is a three-key lexicographic comparison, written out. Nothing here is an instance of a general order on dependent sums, and that is deliberate: such a thing would have to carry a family of orders indexed by the first key and prove its four laws in that generality, which is a larger theorem than the one wanted, for a single use. The three keys are named, and each is compared by an order that already exists.
 <!--zh-->
 # 后继层成员的典范名字
-
-后继层的成员由一条公式及前一层中的有限多个参数确定。本章把这些数据封装成名字，证明每个成员都有名字，再良序化所有名字，以便选出最小代表。
-
-后继层的成员就是下面那一层的可定义子集，而前面的章节已经把这句话说了两遍：一遍在 `L.Definability` 中，说成带参数的公式，参数取自那一层；另一遍在 `FOL.Manipulation.ParameterAbstraction` 中，在参数离开语法之后，说成**一条无参公式配上一个参数向量**。可比较的是后一种形式。它的公式是一段有穷的语法，故它的码是遗传有穷集，早已现身于极限层 `Lset ω`，而 `L.Choice.FiniteStageOrders` 恰把那里良序化；它的参数是下面那一层的成员，而在外围构造调用本章时，那一层已被良序化。**名字**就是这样一对，中间夹着元数；本章造出它，证明后继层的每个成员都有一个，并把诸名字良序化。
-
-那个序是一次写开了的三键字典序比较。此处没有任何东西是「依值和上的一般序」的实例，而这是有意为之：那样一件东西得携带一族以第一个键为索引的序，并在那种一般性下证出它的四条定律，而这比所要的定理更大，却只用一次。三个键各有其名，而每个键都由一个已然存在的序来比较。
 <!--ja-->
 # 後者段階の要素の正準な名前
-
-後続段階の要素は、一つの論理式と直前の段階から取った有限個のパラメータによって定まる。本章ではそのデータを名前としてまとめ、すべての要素が名前をもつことを示し、最小の代表を選べるよう名前全体を整列する。
-
-後続段階の要素とは、その下の段階の定義可能部分集合のことであり、前の章たちはこのことを二通りに述べてきた。一つは `L.Definability` で、その段階から取ったパラメータ付きの論理式としてであり、もう一つは `FOL.Manipulation.ParameterAbstraction` で、パラメータを構文から取り除いた後の「パラメータなし論理式とパラメータ列の組」としてである。比較できるのは後者の形である。その論理式は有限な構文片なので、そのコードは遺伝的有限集合であり、極限段階 `Lset ω` に既に現れている。`L.Choice.FiniteStageOrders` はまさにそこを整列する。パラメータは下の段階の要素であり、この章が呼ばれる時点で、外側の構成によって既に整列されている。**名前**とは、その間にアリティを挟んだこの組であり、本章はそれを構成し、後続段階の各要素が名前をもつことを示し、名前全体を整列する。
-
-この順序は、三つの鍵による辞書式比較をそのまま書き下したものである。ここに「依存和上の一般的な順序」のインスタンスは何もなく、それは意図的なことである。そのような一般論は、第一の鍵で索引された順序の族を運び、四つの法則をその一般性のもとで証明せねばならず、一度しか使わない用途には大きすぎる定理になる。三つの鍵にはそれぞれ名前がついており、各鍵は既に存在する順序によって比較される。
 <!--/-->
+
+```agda
+open import Base.Prelude
+open import Base.Classical using ( LEM )
+```
 
 <!--en-->
 The explicit classical input is `lem : LEM (ℓ-suc ℓ)`. It supplies the finite-stage limit order used for formula codes and the least-element search used at the end. Keeping it as a module parameter records the common strength required by both constructions; the intervening coding, abstraction, lexicographic laws, and accessibility arguments add no further axiom.
@@ -33,65 +24,87 @@ The explicit classical input is `lem : LEM (ℓ-suc ℓ)`. It supplies the finit
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-open import Base.Prelude
-open import Cubical.Data.Sigma using ( ΣPathP )
-open import Cubical.Foundations.Prelude using ( toPathP )
-open import Cubical.Data.Nat using ( +-comm )
-open import Base.Classical using ( LEM )
-
 module L.Choice.CanonicalNames {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
-<!--en-->
-The vocabulary a name is written in comes from the first-order language of set theory. A formula here carries a domain of constant symbols together with a fixed number of free-variable slots, and the constructors cover membership, equality, the connectives, falsity, and both kinds of quantifiers, with bounded forms listed alongside. This syntax already exists; the chapter only needs to name and compare formulas of a special shape, those whose constant domain is empty.
-<!--zh-->
-名字赖以书写的词汇来自集合论的一阶语言。这里的公式带有一个常元符号域和固定数目的自由变量槽位，构造子覆盖了隶属、相等、联结词、假，以及两类量词，其中受限形式也一并列出。这套语法早已存在；本章只需对一种特殊形状的公式，即常元域为空的那些公式，加以命名和比较。
-<!--ja-->
-名前を書き表す語彙は、集合論の一階述語論理の言語から来る。ここでの論理式は、定数記号の領域と固定個数の自由変数スロットをともに持ち、構成子は所属、等号、論理結合子、偽、そして両種の量化子を覆う。有界形式も並べて挙げられている。この構文は既に存在しており、本章が要するのは、定数領域が空であるという特別な形の論理式に名前を付け、比較することだけである。
-<!--/-->
-
 ```agda
-
 open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax using
   ( Term; con; var
   ; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
 import FOL.Semantics
-```
-
-<!--en-->
-Several existing operations on formulas do the real work of turning a definition with constants into a name. The coding of terms and formulas as sets supplies the code that will become the first key; the relabelling lemma says that reading a formula under an embedding of constant domains preserves satisfaction; occurrence counting and parameter abstraction together replace constants by fresh variables and a parameter vector. On the side of the universe, the structure `𝒮ᵥ` interprets the language inside `V`, and the pair construction `pr` is what packages code fragments as sets.
-<!--zh-->
-几项既有的公式操作承担了「把带常元的定义变成名字」的实质工作。把词项与公式编码为集合的操作给出将成为第一个键的码；改名引理说，经常元域的嵌入去读一条公式时满足关系不变；出现计数与参数抽象一起，把常元换成新变量和一个参数向量。在宇宙一侧，结构 `𝒮ᵥ` 在 `V` 之内解释这套语言，而配对构造 `pr` 正是把码的片段包装成集合的东西。
-<!--ja-->
-定数付きの定義を名前へ変える実質的な作業は、論理式に対する既存のいくつかの操作が担う。項と論理式を集合へ符号化する操作は、第一の鍵となるコードを供給する。定数の改名の補題は、定数領域の埋め込みを通して論理式を読んでも充足関係が保たれることを述べる。出現の数え上げとパラメータの抽象は、定数を新しい変数とパラメータ列に置き換える。宇宙の側では、構造 `𝒮ᵥ` が `V` の中でこの言語を解釈し、対の構成 `pr` がコードの断片を集合として包む。
-<!--/-->
-
-```agda
 open import FOL.Manipulation.ConstantMapping using ( mapTm; embed )
 open import FOL.Manipulation.Relabelling using ( embed-⊨ )
 open import FOL.Manipulation.ConstantOccurrences using ( countFo; constantsFo )
 open import FOL.Manipulation.ParameterAbstraction using ( absFo; ⊨-abs₁ )
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-```
-
-<!--en-->
-The constructible side contributes the objects being named. `Lset` is a stage of the constructible hierarchy inside `V`, and `𝒟ₒ` is the definable-powerset operator: it takes a set and returns the set of its subsets definable by a one-variable formula with constants from it. Crucially, `𝒟ₒ` hands back only a truncated witness that such a formula exists, so completeness of naming will inherit that truncation rather than a chosen formula. The module `DefOf` carries the inner satisfaction relation and its smallness facts, which denotation is built from.
-<!--zh-->
-可构造一侧贡献的是被命名的对象。`Lset` 是 `V` 之内可构造层级的一层，而 `𝒟ₒ` 是可定义幂集算子：它取一个集合，返回其中由「带该集合常元的单变量公式」可定义的子集所成之集。关键在于，`𝒟ₒ` 交还的只是「存在这样一条公式」这一截断的见证，因此命名的完备性将继承这种截断，而非一条被选定的公式。模块 `DefOf` 载有内层满足关系及其小性事实，指称正是由它们造出的。
-<!--ja-->
-構成可能な側は、名前を付けられる対象を供給する。`Lset` は `V` の中の構成可能階層の一つの段階であり、`𝒟ₒ` は定義可能冪集合の演算子である。これは集合を一つ取り、その部分集合のうち、それを定数域とする一変数の論理式で定義できるもの全体を返す。決定的なのは、`𝒟ₒ` が手渡すのはそのような論理式が存在することの截断された証拠だけだという点で、したがって名前付けの完全性は、選ばれた論理式ではなくこの截断を引き継ぐことになる。モジュール `DefOf` は内側の充足関係とその小ささの事実を運び、指示対象はこれらから組み立てられる。
-<!--/-->
-
-```agda
 open import V.Coding {ℓ} using ( pr; module VCode )
 open import V.Model {ℓ} using ( self∈sucV )
 open import L.Constructible {ℓ}
   using ( Lset; Lset-mono; 𝒟ₒ; 𝒟ₒ-inv )
 open import L.Definability {ℓ} using ( module DefOf )
+open import L.Ordinal {ℓ} using ( numeral-ord; #∈ω )
+open import L.Ordinal.Stages {ℓ} lem using ( ord∈Lset-suc )
+open import L.Axioms.Basic {ℓ} using ( pr∈Lset-suc )
+open import L.Choice.FiniteStageOrders {ℓ} lem using ( Limit; inSome; limitOrder; Tri-map )
+open import L.WellOrder.Base {ℓ-suc ℓ}
+  using ( Tri; lt; eq; gt; SWO; IsLeast; leastOfFormula )
 ```
+
+<!--en-->
+
+A member of a successor stage is determined by a formula and finitely many parameters from the preceding stage. This chapter packages that data as a name, proves that every member has one, and orders all names so that a least representative can be chosen.
+
+A member of a successor stage is a definable subset of the stage below, and the earlier chapters said what that means twice over: once in `L.Definability`, as a formula with parameters drawn from that stage, and once in `FOL.Manipulation.ParameterAbstraction`, after the parameters leave the syntax, as a **parameter-free formula together with a vector of parameters**. The second form is the one that can be compared. Its formula is a finite piece of syntax, so its code is a hereditarily finite set and has already appeared at the limit stage `Lset ω`, which `L.Choice.FiniteStageOrders` well-orders; its parameters are members of the stage below, which the surrounding construction has well-ordered by the time it calls this one. A **name** is that pair, with the arity between them, and this chapter builds it, shows every member of the successor stage has one, and well-orders the names.
+
+The order is a three-key lexicographic comparison, written out. Nothing here is an instance of a general order on dependent sums, and that is deliberate: such a thing would have to carry a family of orders indexed by the first key and prove its four laws in that generality, which is a larger theorem than the one wanted, for a single use. The three keys are named, and each is compared by an order that already exists.
+<!--zh-->
+
+后继层的成员由一条公式及前一层中的有限多个参数确定。本章把这些数据封装成名字，证明每个成员都有名字，再良序化所有名字，以便选出最小代表。
+
+后继层的成员就是下面那一层的可定义子集，而前面的章节已经把这句话说了两遍：一遍在 `L.Definability` 中，说成带参数的公式，参数取自那一层；另一遍在 `FOL.Manipulation.ParameterAbstraction` 中，在参数离开语法之后，说成**一条无参公式配上一个参数向量**。可比较的是后一种形式。它的公式是一段有穷的语法，故它的码是遗传有穷集，早已现身于极限层 `Lset ω`，而 `L.Choice.FiniteStageOrders` 恰把那里良序化；它的参数是下面那一层的成员，而在外围构造调用本章时，那一层已被良序化。**名字**就是这样一对，中间夹着元数；本章造出它，证明后继层的每个成员都有一个，并把诸名字良序化。
+
+那个序是一次写开了的三键字典序比较。此处没有任何东西是「依值和上的一般序」的实例，而这是有意为之：那样一件东西得携带一族以第一个键为索引的序，并在那种一般性下证出它的四条定律，而这比所要的定理更大，却只用一次。三个键各有其名，而每个键都由一个已然存在的序来比较。
+<!--ja-->
+
+後続段階の要素は、一つの論理式と直前の段階から取った有限個のパラメータによって定まる。本章ではそのデータを名前としてまとめ、すべての要素が名前をもつことを示し、最小の代表を選べるよう名前全体を整列する。
+
+後続段階の要素とは、その下の段階の定義可能部分集合のことであり、前の章たちはこのことを二通りに述べてきた。一つは `L.Definability` で、その段階から取ったパラメータ付きの論理式としてであり、もう一つは `FOL.Manipulation.ParameterAbstraction` で、パラメータを構文から取り除いた後の「パラメータなし論理式とパラメータ列の組」としてである。比較できるのは後者の形である。その論理式は有限な構文片なので、そのコードは遺伝的有限集合であり、極限段階 `Lset ω` に既に現れている。`L.Choice.FiniteStageOrders` はまさにそこを整列する。パラメータは下の段階の要素であり、この章が呼ばれる時点で、外側の構成によって既に整列されている。**名前**とは、その間にアリティを挟んだこの組であり、本章はそれを構成し、後続段階の各要素が名前をもつことを示し、名前全体を整列する。
+
+この順序は、三つの鍵による辞書式比較をそのまま書き下したものである。ここに「依存和上の一般的な順序」のインスタンスは何もなく、それは意図的なことである。そのような一般論は、第一の鍵で索引された順序の族を運び、四つの法則をその一般性のもとで証明せねばならず、一度しか使わない用途には大きすぎる定理になる。三つの鍵にはそれぞれ名前がついており、各鍵は既に存在する順序によって比較される。
+<!--/-->
+
+
+
+```agda
+open import Cubical.Data.Sigma using ( ΣPathP )
+open import Cubical.Foundations.Prelude using ( toPathP )
+open import Cubical.Data.Nat using ( +-comm )
+```
+
+<!--en-->
+The vocabulary a name is written in comes from the first-order language of set theory. A formula here carries a domain of constant symbols together with a fixed number of free-variable slots, and the constructors cover membership, equality, the connectives, falsity, and both kinds of quantifiers, with bounded forms listed alongside. This syntax already exists; the chapter only needs to name and compare formulas of a special shape, those whose constant domain is empty.
+<!--zh-->
+名字赖以书写的词汇来自集合论的一阶语言。这里的公式带有一个常元符号域和固定数目的自由变元槽位，构造子覆盖了隶属、相等、联结词、假，以及两类量词，其中受限形式也一并列出。这套语法早已存在；本章只需对一种特殊形状的公式，即常元域为空的那些公式，加以命名和比较。
+<!--ja-->
+名前を書き表す語彙は、集合論の一階述語論理の言語から来る。ここでの論理式は、定数記号の領域と固定個数の自由変数スロットをともに持ち、構成子は所属、等号、論理結合子、偽、そして両種の量化子を覆う。有界形式も並べて挙げられている。この構文は既に存在しており、本章が要するのは、定数領域が空であるという特別な形の論理式に名前を付け、比較することだけである。
+<!--/-->
+
+<!--en-->
+Several existing operations on formulas do the real work of turning a definition with constants into a name. The coding of terms and formulas as sets supplies the code that will become the first key; the relabelling lemma says that reading a formula under an embedding of constant domains preserves satisfaction; occurrence counting and parameter abstraction together replace constants by fresh variables and a parameter vector. On the side of the universe, the structure `𝒮ᵥ` interprets the language inside `V`, and the pair construction `pr` is what packages code fragments as sets.
+<!--zh-->
+几项既有的公式操作承担了「把带常元的定义变成名字」的实质工作。把词项与公式编码为集合的操作给出将成为第一个键的码；改名引理说，经常元域的嵌入去读一条公式时满足关系不变；出现计数与参数抽象一起，把常元换成新变元和一个参数向量。在宇宙一侧，结构 `𝒮ᵥ` 在 `V` 之内解释这套语言，而配对构造 `pr` 正是把码的片段包装成集合的东西。
+<!--ja-->
+定数付きの定義を名前へ変える実質的な作業は、論理式に対する既存のいくつかの操作が担う。項と論理式を集合へ符号化する操作は、第一の鍵となるコードを供給する。定数の改名の補題は、定数領域の埋め込みを通して論理式を読んでも充足関係が保たれることを述べる。出現の数え上げとパラメータの抽象は、定数を新しい変数とパラメータ列に置き換える。宇宙の側では、構造 `𝒮ᵥ` が `V` の中でこの言語を解釈し、対の構成 `pr` がコードの断片を集合として包む。
+<!--/-->
+
+<!--en-->
+The constructible side contributes the objects being named. `Lset` is a stage of the constructible hierarchy inside `V`, and `𝒟ₒ` is the definable-powerset operator: it takes a set and returns the set of its subsets definable by a one-variable formula with constants from it. Crucially, `𝒟ₒ` hands back only a truncated witness that such a formula exists, so completeness of naming will inherit that truncation rather than a chosen formula. The module `DefOf` carries the inner satisfaction relation and its smallness facts, which denotation is built from.
+<!--zh-->
+可构造一侧贡献的是被命名的对象。`Lset` 是 `V` 之内可构造层级的一层，而 `𝒟ₒ` 是可定义幂集算子：它取一个集合，返回其中由「带该集合常元的单变元公式」可定义的子集所成之集。关键在于，`𝒟ₒ` 交还的只是「存在这样一条公式」这一截断的见证，因此命名的完备性将继承这种截断，而非一条被选定的公式。模块 `DefOf` 载有内层满足关系及其小性事实，指称正是由它们造出的。
+<!--ja-->
+構成可能な側は、名前を付けられる対象を供給する。`Lset` は `V` の中の構成可能階層の一つの段階であり、`𝒟ₒ` は定義可能冪集合の演算子である。これは集合を一つ取り、その部分集合のうち、それを定数域とする一変数の論理式で定義できるもの全体を返す。決定的なのは、`𝒟ₒ` が手渡すのはそのような論理式が存在することの截断された証拠だけだという点で、したがって名前付けの完全性は、選ばれた論理式ではなくこの截断を引き継ぐことになる。モジュール `DefOf` は内側の充足関係とその小ささの事実を運び、指示対象はこれらから組み立てられる。
+<!--/-->
 
 <!--en-->
 The first key needs a home where an order already reaches it. The numerals of the language, the von Neumann naturals, are ordinals inside `L`, and each numeral sits in the successor of its own stage; pairs of stage members appear two stages later. The limit stage `Lset ω` collects what appears by some finite stage, and `Limit` is a member of it together with a certificate of that membership. On this stage `limitOrder` well-orders everything, and `Tri-map` transports trichotomy verdicts along an equivalence, a tool the last key's trichotomy will reuse.
@@ -101,26 +114,16 @@ The first key needs a home where an order already reaches it. The numerals of th
 第一の鍵には、既に順序が届く居場所が必要である。この言語の数項、すなわち von Neumann 自然数は `L` の中の順序数であり、各数項はその一段上の段階に属する。段階の要素どうしの対は、さらに二段先に現れる。極限段階 `Lset ω` は、何らかの有限段階までに現れたものを集め、`Limit` はその要素に所属の証明書を添えたものである。この段階の上で `limitOrder` がすべてを整列し、`Tri-map` は同値に沿って三分の判定を輸送する。この道具は第三の鍵の三分で再利用される。
 <!--/-->
 
-```agda
-open import L.Ordinal {ℓ} using ( numeral-ord; #∈ω )
-open import L.Ordinal.Stages {ℓ} lem using ( ord∈Lset-suc )
-open import L.Axioms.Basic {ℓ} using ( pr∈Lset-suc )
-open import L.Choice.FiniteStageOrders {ℓ} lem using ( Limit; inSome; limitOrder; Tri-map )
-open import L.WellOrder.Base {ℓ-suc ℓ}
-```
-
 <!--en-->
-The abstract notion of order is a strict well-order packaged as a record: a strict comparison, trichotomy, irreflexivity, transitivity, and well-foundedness, together with a least-element search `leastOf` that consumes such a record. These four laws are exactly what the names will be shown to satisfy. On the type-theoretic side, the imported tools handle the dependent bookkeeping that arises because a name's formula and parameter vector have the arity as an index: a way to build a path into a dependent pair, a commutation of substitution with a constant function along a path, the two directions of an equivalence, and injectivity extracted from an embedding.
+The abstract notion of order is a strict well-order packaged as a record: a strict comparison, trichotomy, irreflexivity, transitivity, and well-foundedness. Its formula-facing least-element search `leastOfFormula` consumes such a record together with a formula package. These four laws are exactly what the names will be shown to satisfy. The equality arguments must also respect dependent types, because a name's formula and parameter vector have the arity as an index. Paths in dependent pairs and substitution along arity paths keep these data aligned; equivalences move between presentations, while the injectivity of an embedding recovers equality of the original indices.
 <!--zh-->
-序的抽象概念被打包成记录的严格良序：一个严格比较、三歧性、非自反性、传递性与良基性，连同使用这种记录的最小元搜索 `leastOf`。名字将被证明恰好满足这四条定律。在类型论一侧，导入的工具处理因名字的公式与参数向量以元数为索引而产生的依值类型中的等式处理：向依值对中造路径的办法、替换沿路径与常值函数的交换、等价的两个方向，以及从嵌入提取的单射性。
+序的抽象概念被打包成记录的严格良序：一个严格比较、三歧性、非自反性、传递性与良基性。其面向公式的最小元搜索 `leastOfFormula` 同时接收这种记录与一个公式包。名字将被证明恰好满足这四条定律。相等论证还必须尊重依赖关系，因为名字的公式与参数向量都以元数为索引。依值对中的路径与沿元数路径的替换使这些数据保持对应；类型等价负责在不同呈现之间搬移，嵌入的单射性则恢复原来索引的相等。
 <!--ja-->
-順序の抽象概念は、レコードとしてまとめられた狭義整列順序である。狭義の比較、三分性、非反射性、推移性、整礎性に加え、そのようなレコードを用いる最小要素探索 `leastOf` をともなう。名前が満たすと示されるのは、まさにこの四つの法則である。型理論の側で読み込まれる道具は、名前の論理式とパラメータ列がアリティを指数にもつことから生じる依存型における等式の処理を扱う。依存対へのパスの構成、パスに沿った置換と定数関数の交換、同値の両方向、そして埋め込みから取り出す単射性である。
+順序の抽象概念は、レコードとしてまとめられた狭義整列順序である。狭義の比較、三分性、非反射性、推移性、整礎性を備える。論理式に面する最小要素探索 `leastOfFormula` は、このレコードと論理式のパッケージをともに受け取る。名前が満たすと示されるのは、まさにこの四つの法則である。等式の議論では依存関係にも注意が必要である。名前の論理式とパラメータ列はともにアリティを添字にもつ。依存対のパスとアリティのパスに沿う置換がこれらのデータを対応させ、型同値が異なる提示の間を移し、埋め込みの単射性が元の添字の等しさを復元する。
 <!--/-->
 
 ```agda
-  using ( Tri; lt; eq; gt; SWO; IsLeast; leastOf )
 open import Cubical.Foundations.Transport using ( constSubstCommSlice )
-open import Cubical.Foundations.Equiv using ( equivFun; invEq )
 open import Cubical.Functions.Embedding using ( isEmbedding→Inj )
 ```
 
@@ -159,7 +162,7 @@ Two eliminations have their target types fixed by the mathematics. The empty typ
 <!--/-->
 
 ```agda
-open import Cubical.HITs.CumulativeHierarchy.Base using ( sett )
+open import Cubical.HITs.CumulativeHierarchy.Base using ( sett; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Properties
 ```
 
@@ -176,7 +179,6 @@ The last group fixes the concrete interpretation the names will be read in. `#` 
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( module InfinitySet )
 open InfinitySet using ( #_; ω )
-
 ```
 
 <!--en-->
@@ -228,10 +230,10 @@ A membership certificate for the limit stage is hard to use directly, because it
 ```agda
 private
   AtStage : S → Type (ℓ-suc ℓ)
-  AtStage x = Σ[ k ∈ ℕ ] ⟨ x ∈ˢ Lset (# k) ⟩
+  AtStage x = Σ[ k ∶ ℕ ] ⟨ x ∈ˢ Lset (# k) ⟩
 
   raiseTo : (x : S) (d k : ℕ) → ⟨ x ∈ˢ Lset (# k) ⟩ → ⟨ x ∈ˢ Lset (# (d + k)) ⟩
-  raiseTo x zero    k h = h
+  raiseTo x 0    k h = h
 ```
 
 <!--en-->
@@ -296,7 +298,7 @@ With numerals, pairs and tags in place, the placement of every parameter-free co
 <!--en-->
 Terms are handled first, and their induction is two clauses. A variable has no constant content, so its code is the numeral for its de Bruijn index wrapped in the tag `1`, and `tag∈limit` applies at once. The constant clause of a parameter-free term is a contradiction: the constant domain `⊥*` has no elements, so the impossible case is discharged by the empty type's recursor. The `mapTm` in the statement is the embedding of a parameter-free term into the working syntax, which replaces constants by host values; over `⊥*` it has nothing to replace.
 <!--zh-->
-先处理词项，其归纳只有两条子句。变量不含常元内容，故其码是包在标签 `1` 里的 de Bruijn 序号的数码，`tag∈limit` 当即适用。无参词项的常元子句是矛盾：常元域 `⊥*` 没有元素，不可能情形由空类型的消去子打发。陈述中的 `mapTm` 是把无参词项嵌入工作语法的操作，它把常元换成宿主值；对 `⊥*` 而言无物可换。
+先处理词项，其归纳只有两条子句。变元不含常元内容，故其码是包在标签 `1` 里的 de Bruijn 序号的数码，`tag∈limit` 当即适用。无参词项的常元子句是矛盾：常元域 `⊥*` 没有元素，不可能情形由空类型的消去子打发。陈述中的 `mapTm` 是把无参词项嵌入工作语法的操作，它把常元换成宿主值；对 `⊥*` 而言无物可换。
 <!--ja-->
 まず項を扱う。その帰納は二つの節からなる。変数は定数の内容をもたないので、そのコードは de Bruijn 番号の数項をタグ `1` で包んだものであり、`tag∈limit` が直ちに適用される。パラメータなし項の定数の節は矛盾である。定数領域 `⊥*` には要素がないので、不可能な場合は空型の消去子で片付く。述語の中の `mapTm` は、パラメータなし項を作業用の構文へ埋め込む操作で、定数をホストの値に置き換える。`⊥*` の上では置き換えるものは何もない。
 <!--/-->
@@ -378,7 +380,6 @@ The proof invokes the general fact that a function whose result type does not de
 ```agda
 code-shift e χ = sym (constSubstCommSlice
   (λ k → Formula (⊥* {ℓ}) (suc k)) S (λ _ ψ → VCode.⌜ embed ψ ⌝) e χ)
-
 ```
 
 <!--en-->
@@ -396,7 +397,7 @@ The gap is closed by an **erasure** running the other way, and the erasure can b
 
 码与元数都相同的两个名字，其公式必须相同，否则那次比较就会把两个不同的名字判为「互不更小、又不与任何东西相等」。`V.Coding` 证过它自己的单射性，但它是对工作语法证的，那里的常元域是载体；此处所需的是无参公式的单射性，而无参公式经 `embed`{.Agda} 映入那套语法。
 
-上述缺口由一个反向的**抹除**补上，而抹除可以粗糙，因为它只需在无参公式上作左逆。常元被送到序号为零的变量，那个槽位总在，因为视野中的每条公式至少有一个自由变量槽位；其余每条子句都是构造子上的恒等。对一条本来就没有常元的公式，抹除逐条子句什么也没改，于是单射性就是三次路径复合。
+上述缺口由一个反向的**抹除**补上，而抹除可以粗糙，因为它只需在无参公式上作左逆。常元被送到序号为零的变元，那个槽位总在，因为视野中的每条公式至少有一个自由变元槽位；其余每条子句都是构造子上的恒等。对一条本来就没有常元的公式，抹除逐条子句什么也没改，于是单射性就是三次路径复合。
 <!--ja-->
 ## パラメータなし論理式はその像から復元できる
 
@@ -410,7 +411,7 @@ The gap is closed by an **erasure** running the other way, and the erasure can b
 <!--en-->
 The erasure of a term does the only creative work. A constant, whose value in the working syntax is an arbitrary set, is replaced by the variable of index zero; a variable is left alone. This is legitimate only because the target restricts to formulas of arity `suc n`, so slot zero always exists. The erasure of a formula is then declared homomorphically, taking each constructor to itself with the erasures of the parts.
 <!--zh-->
-词项的抹除是唯一有创造性的工作。常元 (在工作语法中取值为任意集合) 被换成序号为零的变量；变量保持原样。这之所以合法，只因目标限定在元数为 `suc n` 的公式，故零号槽位总在。公式的抹除随后按同态方式声明：每个构造子映到自身，各部分取抹除。
+词项的抹除是唯一有创造性的工作。常元 (在工作语法中取值为任意集合) 被换成序号为零的变元；变元保持原样。这之所以合法，只因目标限定在元数为 `suc n` 的公式，故零号槽位总在。公式的抹除随后按同态方式声明：每个构造子映到自身，各部分取抹除。
 <!--ja-->
 項の抹消が、唯一の創造的な仕事をする。作業用の構文では任意の集合を値にもつ定数は、番号零の変数に置き換えられる。変数はそのまま残る。これが正当なのは、帰結がアリティ `suc n` の論理式に制限されているからで、だからこそ零番のスロットが常に存在する。論理式の抹消はその後、同型的に宣言される。各構成子を自身へ写し、部分には抹消を施す。
 <!--/-->
@@ -459,13 +460,12 @@ The remaining five clauses are literally the identity: falsity has no parts, and
 <!--en-->
 The left-inverse property is stated and proved one level at a time. For a term, `eraseTm` after `mapTm ⊥*-rec` returns the term itself: the constant case is void because a parameter-free term has no constants, and the variable case is `refl`, since both composites rebuild the same variable. The formula-level statement then claims that erasing the embedding of a parameter-free formula gives back that formula, up to a path.
 <!--zh-->
-左逆性质逐层陈述、逐层证明。对词项而言，`mapTm ⊥*-rec` 之后再作 `eraseTm` 得回原词项：常元情形是空的，因为无参词项本无常元；变量情形是 `refl`，因为两种复合都重建同一个变量。公式层面的陈述随后主张：抹除一条无参公式的嵌入，沿一条路径得回原公式。
+左逆性质逐层陈述、逐层证明。对词项而言，`mapTm ⊥*-rec` 之后再作 `eraseTm` 得回原词项：常元情形是空的，因为无参词项本无常元；变元情形是 `refl`，因为两种复合都重建同一个变元。公式层面的陈述随后主张：抹除一条无参公式的嵌入，沿一条路径得回原公式。
 <!--ja-->
 左逆の性質は、一段ずつ述べられ、一段ずつ証明される。項については、`mapTm ⊥*-rec` の後で `eraseTm` を施すと元の項が返る。定数の場合は、パラメータなし項には定数がないので空であり、変数の場合は、どちらの合成も同じ変数を組み立て直すので `refl` である。論理式の水準の主張はその次に、パラメータなし論理式の埋め込みを抹消すれば、パスをひとつ添えて元の論理式が返る、と述べる。
 <!--/-->
 
 ```agda
-
   eraseTm-embed : ∀ {n} (t : Term (⊥* {ℓ}) (suc n))
                 → eraseTm (mapTm ⊥*-rec t) ≡ t
   eraseTm-embed (con c) = ⊥*-rec c
@@ -515,7 +515,6 @@ Injectivity is now one sentence. Suppose two parameter-free formulas at the same
 <!--/-->
 
 ```agda
-
 code-inj : ∀ {n} (χ ψ : Formula (⊥* {ℓ}) (suc n))
          → VCode.⌜ embed χ ⌝ ≡ VCode.⌜ embed ψ ⌝ → χ ≡ ψ
 code-inj χ ψ e = sym (eraseFo-embed χ)
@@ -532,9 +531,9 @@ Everything in the rest of the chapter is relative to one set `A`, the stage the 
 <!--zh-->
 ## 命名数据
 
-一个名字记录元数、一条多出一个输出变量的无参公式，以及相应长度的参数向量。它所指称的，是该公式在这个环境下从层中界定出的子集。
+一个名字记录元数、一条多出一个输出变元的无参公式，以及相应长度的参数向量。它所指称的，是该公式在这个环境下从层中界定出的子集。
 
-本章余下的一切都相对于一个集合 `A`，即诸名字据以写出的那一层，也相对于该层成员上的一个严格良序，故工作在模块 `Naming A w` 之内进行。一个**名字**由三部分组成：一个元数、一条比该元数多一个自由变量槽位的无参公式，以及一个由 `A` 的小成员类型取出、长度等于该元数的参数向量。多出的那个槽位正是用于选出子集的；其余槽位接收诸参数，而第一个键当即从那条公式读出。
+本章余下的一切都相对于一个集合 `A`，即诸名字据以写出的那一层，也相对于该层成员上的一个严格良序，故工作在模块 `Naming A w` 之内进行。一个**名字**由三部分组成：一个元数、一条比该元数多一个自由变元槽位的无参公式，以及一个由 `A` 的小成员类型取出、长度等于该元数的参数向量。多出的那个槽位正是用于选出子集的；其余槽位接收诸参数，而第一个键当即从那条公式读出。
 <!--ja-->
 ## 名前を構成するデータ
 
@@ -546,30 +545,36 @@ Everything in the rest of the chapter is relative to one set `A`, the stage the 
 <!--en-->
 The module takes the stage `A` and, crucially, a strict well-order of its members as parameters, since the third key will compare parameters by that order and nothing in this chapter constructs one over an arbitrary stage. The type `Name` is a dependent triple: a natural number `k`, a parameter-free formula with `suc k` free-variable slots, and a vector of `k` members of `A`'s carrier. The vector's length is forced to be the arity, so a name cannot pair a formula with the wrong number of parameters.
 <!--zh-->
-模块取层 `A`，以及关键的、其成员上的一个严格良序作为参数，因为第三个键将按这个序比较参数，而本章不会在任意层上构造一个序。类型 `Name` 是一个依值三元组：自然数 `k`、有 `suc k` 个自由变量槽位的无参公式、以及由 `k` 个 `A` 载体成员组成的向量。向量长度被强制等于元数，故名字不可能把公式与错误数目的参数配对。
+模块取层 `A`，以及关键的、其成员上的一个严格良序作为参数，因为第三个键将按这个序比较参数，而本章不会在任意层上构造一个序。类型 `Name` 是一个依值三元组：自然数 `k`、有 `suc k` 个自由变元槽位的无参公式、以及由 `k` 个 `A` 载体成员组成的向量。向量长度被强制等于元数，故名字不可能把公式与错误数目的参数配对。
 <!--ja-->
 モジュールは、段階 `A` と、決定的に重要なことにその要素の上の狭義整列順序とをパラメータとして取る。第三の鍵がパラメータをその順序で比較するのであり、任意の段階の上に順序を作るのはこの章の仕事ではないからである。型 `Name` は依存的な三つ組である。自然数 `k`、`suc k` 個の自由変数スロットをもつパラメータなし論理式、そして `A` の台の `k` 個の要素の列。列の長さはアリティに強制されるので、名前が公式と誤った個数のパラメータを組にすることはない。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Naming (A : S) (w : SWO ⟪ A ⟫) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   module DA = DefOf A
   open DA using ( _⊨ᵐ_ )
 
   Name : Type ℓ
-  Name = Σ[ k ∈ ℕ ] (Formula (⊥* {ℓ}) (suc k) × Vec ⟪ A ⟫ k)
+  Name = Σ[ k ∶ ℕ ] (Formula (⊥* {ℓ}) (suc k) × Vec ⟪ A ⟫ k)
 ```
 
 <!--en-->
 The projections name the three keys' sources: `arity` returns the number, `formula` the embedded-free formula of exactly one more variable slot, and `params` the vector. Their types are dependent on the name itself, so `formula a` lives at arity `suc (arity a)` and `params a` at `arity a`; this dependence is the source of every transport question in the comparison to come.
 <!--zh-->
-诸投影标出三个键的来源：`arity` 返回那个数，`formula` 返回恰好多一个变量槽位的无参公式，`params` 返回那个向量。它们的类型依值于名字自身，故 `formula a` 处在元数 `suc (arity a)` 上，`params a` 处在 `arity a` 上；这份依值正是后文比较中每个传输问题的来源。
+诸投影标出三个键的来源：`arity` 返回那个数，`formula` 返回恰好多一个变元槽位的无参公式，`params` 返回那个向量。它们的类型依值于名字自身，故 `formula a` 处在元数 `suc (arity a)` 上，`params a` 处在 `arity a` 上；这份依值正是后文比较中每个传输问题的来源。
 <!--ja-->
 射たちは三つの鍵の出所に名前を与える。`arity` はその数を返し、`formula` はちょうど一つ多い変数スロットをもつパラメータなし論理式を、`params` は列を返す。それらの型は名前そのものに依存する。だから `formula a` はアリティ `suc (arity a)` に、`params a` は `arity a` に住む。この依存性こそ、のちの比較における輸送の問題すべての出所である。
 <!--/-->
 
 ```agda
-
   arity : Name → ℕ
   arity a = a .fst
 
@@ -611,24 +616,23 @@ A subset of `A` carved by a predicate is presented directly: `subsetOf` takes a 
 <!--/-->
 
 ```agda
+  private module SemM = FOL.Semantics DA.𝒮M
   private
-    module SemM = FOL.Semantics DA.𝒮M
     open SemM using ( _^_ )
 
     subsetOf : (⟪ A ⟫ → hProp ℓ) → S
-    subsetOf P = sett (Σ[ m ∈ ⟪ A ⟫ ] ⟨ P m ⟩) (λ p → ⟪ A ⟫↪ (p .fst))
+    subsetOf P = sett (Σ[ m ∶ ⟪ A ⟫ ] ⟨ P m ⟩) (λ p → ⟪ A ⟫↪ (p .fst))
 ```
 
 <!--en-->
 Two presentation details matter before the denotation itself. The auxiliary `⟪⟫↪-inj` records that the map `⟪ A ⟫↪` is an embedding, so a path between two of its values comes from a path between the underlying indices; this recovers `m' ≡ m` and will close the forward direction of the membership specification. The environment is then assembled: for a member `m` marking the free variable, it is `DA.ι m` followed by the parameters each decoded by `DA.ι`. The head entry fills the one extra slot that carves the subset, the tail entries fill the parameter slots, and the length of the environment is definitionally `suc (arity a)`, exactly the arity of the name's formula.
 <!--zh-->
-在指称本身之前，有两个呈现细节要交代。辅助事实 `⟪⟫↪-inj` 记录映射 `⟪ A ⟫↪` 是嵌入，故其两个值之间的路径来自底层索引之间的路径；这将恢复 `m' ≡ m`，并在隶属规格的正向中使用。环境随即拼装而成：对标记自由变量的成员 `m`，环境是 `DA.ι m` 后接逐个经 `DA.ι` 解码的诸参数。头一项填入界定子集的那个额外槽位，其余各项填入参数槽位，且环境的长度按定义就是 `suc (arity a)`，恰为该名字公式的元数。
+在指称本身之前，有两个呈现细节要交代。辅助事实 `⟪⟫↪-inj` 记录映射 `⟪ A ⟫↪` 是嵌入，故其两个值之间的路径来自底层索引之间的路径；这将恢复 `m' ≡ m`，并在隶属规格的正向中使用。环境随即拼装而成：对标记自由变元的成员 `m`，环境是 `DA.ι m` 后接逐个经 `DA.ι` 解码的诸参数。头一项填入界定子集的那个额外槽位，其余各项填入参数槽位，且环境的长度按定义就是 `suc (arity a)`，恰为该名字公式的元数。
 <!--ja-->
 指示対象そのものの前に、提示上の二つの細部を確かめる。補題 `⟪⟫↪-inj` は、写像 `⟪ A ⟫↪` が埋め込みであること、つまりその値の間の経路が根底の添字の間の経路から来ることを記録する。これにより `m' ≡ m` が復元され、所属の仕様の順方向を閉じるのに使われる。環境はその後組み立てられる。自由変数を担う要素 `m` に対し、環境は `DA.ι m` に `DA.ι` で復号したパラメータ列を続けたものである。先頭の項が部分集合を切り出す一つの余分なスロットを埋め、残りの項がパラメータのスロットを埋める。環境の長さは定義上 `suc (arity a)` であり、名前の論理式のアリティとちょうど一致する。
 <!--/-->
 
 ```agda
-
     ⟪⟫↪-inj : {m' m : ⟪ A ⟫} → ⟪ A ⟫↪ m' ≡ ⟪ A ⟫↪ m → m' ≡ m
     ⟪⟫↪-inj {m'} {m} = isEmbedding→Inj isEmb⟪ A ⟫↪ m' m
 
@@ -716,7 +720,7 @@ A member of `𝒟ₒ A`{.Agda} is, by that operator's own specification, merely 
 
 可定义幂集的规格为后继层的每个成员给出一条带常元的公式。把这些常元抽象出去，就得到构成其名字的无参公式与参数向量。
 
-按那个算子自己的规格，`𝒟ₒ A`{.Agda} 的成员仅仅是「由带 `A` 中常元的单变量公式可定义的子集」；参数抽象把这样一条公式变成元数更高的无参公式，并给出其中出现的常元列表。从前者读出后者，就是命名的全部，而且它是一个函数。
+按那个算子自己的规格，`𝒟ₒ A`{.Agda} 的成员仅仅是「由带 `A` 中常元的单变元公式可定义的子集」；参数抽象把这样一条公式变成元数更高的无参公式，并给出其中出现的常元列表。从前者读出后者，就是命名的全部，而且它是一个函数。
 <!--ja-->
 ## 後者段階の各要素は名前をもつ
 
@@ -771,7 +775,6 @@ Two constant interpretations of a parameter-free formula both have type `⊥* �
 <!--/-->
 
 ```agda
-
     sameReading : (λ (b : ⊥* {ℓ}) → DA.ι (⊥*-rec b)) ≡ ⊥*-rec
     sameReading = funExt (λ b → ⊥*-rec b)
 
@@ -805,7 +808,6 @@ With the two readings identified as propositions, `satAt-abs` lifts the identifi
 <!--/-->
 
 ```agda
-
     satAt-abs : (φ : Formula ⟪ A ⟫ 1) (m : ⟪ A ⟫)
               → satAt (nameOf φ) m ≡ DA.smallSat φ m
     satAt-abs φ m = ⇔toPath fwd bwd
@@ -862,22 +864,22 @@ The equality `denote-defSet` is the predicate agreement `satAt-abs` made into an
   denote-defSet φ = cong subsetOf (funExt (satAt-abs φ))
 
   names-complete : (x : S) → ⟨ x ∈ˢ 𝒟ₒ A ⟩
-                 → ∥ Σ[ a ∈ Name ] (denote a ≡ x) ∥₁
+                 → ∥ Σ[ a ∶ Name ] (denote a ≡ x) ∥₁
   names-complete x h = map₁ named (𝒟ₒ-inv A x h)
 ```
 
 <!--en-->
-Inside the truncation, the step from the inverted data to the desired pair is ordinary: the formula `φ` is named by `nameOf φ`, and the required equality is `denote-defSet φ ∙ q`, the path from the name's denotation to `defSet φ` followed by the given path to `x`. Since the target `∥ Σ[ a ∈ Name ] (denote a ≡ x) ∥₁` is a proposition, `map₁` may work under the truncation, mapping the merely supplied formula to a merely supplied name without ever inspecting which one it is.
+Inside the truncation, the step from the inverted data to the desired pair is ordinary: the formula `φ` is named by `nameOf φ`, and the required equality is `denote-defSet φ ∙ q`, the path from the name's denotation to `defSet φ` followed by the given path to `x`. Since the target `∥ Σ[ a ∶ Name ] (denote a ≡ x) ∥₁` is a proposition, `map₁` may work under the truncation, mapping the merely supplied formula to a merely supplied name without ever inspecting which one it is.
 <!--zh-->
-在截断之内，从反演数据到目标对的步骤是平凡的：公式 `φ` 由 `nameOf φ` 命名，所需的等式是 `denote-defSet φ ∙ q`，即从名字的指称到 `defSet φ` 的路径再接上给定的到 `x` 的路径。由于目标 `∥ Σ[ a ∈ Name ] (denote a ≡ x) ∥₁` 是命题，`map₁` 可以在截断之下工作，把仅仅给出的公式映为仅仅给出的名字，而无须检视它究竟是哪一条。
+在截断之内，从反演数据到目标对的步骤是平凡的：公式 `φ` 由 `nameOf φ` 命名，所需的等式是 `denote-defSet φ ∙ q`，即从名字的指称到 `defSet φ` 的路径再接上给定的到 `x` 的路径。由于目标 `∥ Σ[ a ∶ Name ] (denote a ≡ x) ∥₁` 是命题，`map₁` 可以在截断之下工作，把仅仅给出的公式映为仅仅给出的名字，而无须检视它究竟是哪一条。
 <!--ja-->
-切断の内側では、反転されたデータから求める対への段階は普通のものである。論理式 `φ` は `nameOf φ` によって名付けられ、必要な等式は `denote-defSet φ ∙ q`、つまり名前の指示対象から `defSet φ` への経路に、与えられた `x` への経路を続けたものである。目標の `∥ Σ[ a ∈ Name ] (denote a ≡ x) ∥₁` は命題なので、`map₁` は切断の下で働き、ただ与えられた論理式をただ与えられた名前へ写す。それがどの論理式かを検査することは一切ない。
+切断の内側では、反転されたデータから求める対への段階は普通のものである。論理式 `φ` は `nameOf φ` によって名付けられ、必要な等式は `denote-defSet φ ∙ q`、つまり名前の指示対象から `defSet φ` への経路に、与えられた `x` への経路を続けたものである。目標の `∥ Σ[ a ∶ Name ] (denote a ≡ x) ∥₁` は命題なので、`map₁` は切断の下で働き、ただ与えられた論理式をただ与えられた名前へ写す。それがどの論理式かを検査することは一切ない。
 <!--/-->
 
 ```agda
     where
-    named : Σ[ φ ∈ Formula ⟪ A ⟫ 1 ] (DA.defSet φ ≡ x)
-          → Σ[ a ∈ Name ] (denote a ≡ x)
+    named : Σ[ φ ∶ Formula ⟪ A ⟫ 1 ] (DA.defSet φ ≡ x)
+          → Σ[ a ∶ Name ] (denote a ≡ x)
     named (φ , q) = nameOf φ , (denote-defSet φ ∙ q)
 ```
 
@@ -1127,7 +1129,7 @@ The main theorem is induction on the length. The empty vector's accessibility is
 <!--/-->
 
 ```agda
-  ≺ᵥ-wf zero    []      = acc (λ { [] h → ⊥*-rec h })
+  ≺ᵥ-wf 0    []      = acc (λ { [] h → ⊥*-rec h })
   ≺ᵥ-wf (suc k) (x ∷ p) = consAcc k (≺ᵥ-wf k) x p (≺ᵥ-wf k p)
 ```
 
@@ -1164,12 +1166,10 @@ The right lemma is the mirror image: moving the *other* vector along its own len
 <!--/-->
 
 ```agda
-
     ≺ᵥ-subst-right : {i j k : ℕ} (e : i ≡ j) (p : Vec ⟪ A ⟫ k) (q : Vec ⟪ A ⟫ i)
                    → (p ≺ᵥ subst (Vec ⟪ A ⟫) e q) ≡ (p ≺ᵥ q)
     ≺ᵥ-subst-right e p q = sym (constSubstCommSlice
       (Vec ⟪ A ⟫) (Type (ℓ-suc ℓ)) (λ _ v → p ≺ᵥ v) e q)
-
 ```
 
 <!--en-->
@@ -1509,7 +1509,6 @@ The middle layer fixes a code and descends through arities. Its telescope is sho
 <!--/-->
 
 ```agda
-
     accAtArity : (c : Limit)
                → ((b : Name) → codeOf b ≺ c → Acc _≺ₙ_ b)
                → (k : ℕ) → Acc _<_ k
@@ -1542,7 +1541,6 @@ The outer layer descends through codes and needs no equation for the arity at al
 <!--/-->
 
 ```agda
-
     accAtCode : (c : Limit) → Acc _≺_ c → (a : Name) → codeOf a ≡ c → Acc _≺ₙ_ a
     accAtCode c (acc rc) a qc =
       accAtArity c ihC (arity a) (<-wellfounded (arity a)) a qc refl
@@ -1596,21 +1594,30 @@ The record `nameOrder` collects the four laws already proved, field by field: th
 ```
 
 <!--en-->
-The least-element search takes the bundle at its word. Its family argument is a function into `hProp`, so the property is stated at each name; the hypothesis is the truncation `∥ Σ ... ∥₁`, mere inhabitedness, carrying no chosen witness; and the conclusion is an explicit pair of a name and its leastness, a chosen witness after all, extracted by `leastOf` with the module's classical hypothesis `lem`. The truncation may be eliminated because the whole type of a least witness, `Σ[ a ∈ Name ] IsLeast nameOrder P a`, is a proposition: any two least witnesses coincide by trichotomy. Thus classical descent converts mere inhabitation into a definite least name.
+The least-element search is applied only to the denotation predicate needed by the naming construction. A name denotes `x` when its semantic value equals `x`; this is presented by the equality formula with the denotation in the variable slot and `x` as a constant. The environment depends on the candidate name, but the formula is fixed. Thus the classical descent decides satisfaction of an exhibited formula rather than an arbitrary host predicate.
 <!--zh-->
-极小元搜索照字面兑现这份记录。它的族实参是映入 `hProp` 的函数，性质陈述在每个名字上；假设是截断 `∥ Σ ... ∥₁`，即仅仅非空，不携带任何被选出的见证；结论则是一对显式的名字与它的最小性，终究是被选出的见证，由 `leastOf` 借助模块的经典假设 `lem` 抽出。截断之所以能消去，是因为极小见证的整个类型 `Σ[ a ∈ Name ] IsLeast nameOrder P a` 是命题：任意两个极小见证由三歧性得到相等。因此经典下降把名字族的仅仅非空转化为一个确定的极小名字。
+极小元搜索只施用于命名构造所需的指称谓词。一个名字指称 `x`，意思是其语义值等于 `x`；这由等词公式呈现，其中名字的指称放在变元槽，`x` 作为常元。环境随候选名字变化，公式本身则固定。因此，经典下降所判定的是一条已明确给出的公式是否满足，而不是任意宿主谓词。
 <!--ja-->
-最小要素探索はこの束をその言葉どおりに使う。族の引数は `hProp` への関数なので、性質は各名前の上で述べられる。仮定は截断 `∥ Σ ... ∥₁`、つまり単に非空であることで、選ばれた証人を運ばない。結論は名前とその最小性の明示的な対であり、結局は選ばれた証人で、`leastOf` がこのモジュールの古典的仮定 `lem` とともにこれを取り出す。切り捨てを除去できるのは、最小証人全体の型 `Σ[ a ∈ Name ] IsLeast nameOrder P a` が命題だからである。任意の二つの最小証人は三分性により一致する。したがって古典的降下が単なる非空性を確定した最小の名前へ変換する。
+最小要素探索は、名前付けの構成に必要な指示述語だけに適用される。名前が `x` を指示するとは、その意味値が `x` に等しいことであり、これは指示対象を変数の枠に、`x` を定数に置く等号の論理式で表示される。環境は候補となる名前に応じて変わるが、論理式は固定されている。したがって古典的降下が判定するのは、明示された論理式の充足であって、任意のホスト述語ではない。
 <!--/-->
 
 ```agda
     ; trans∙ = ≺ₙ-trans
     ; wf∙    = ≺ₙ-wf }
 
-  leastName : (P : Name → hProp (ℓ-suc ℓ))
-            → ∥ Σ[ a ∈ Name ] ⟨ P a ⟩ ∥₁ → Σ[ a ∈ Name ] IsLeast nameOrder P a
-  leastName = leastOf nameOrder lem
+  Denotes : S → Name → hProp (ℓ-suc ℓ)
+  Denotes x a = (denote a ≡ x) , setIsSet (denote a) x
+
+  definedDenotes : (x : S) → FOL.Semantics.FormulaPredicate 𝒮ᵥ Name S id (Denotes x)
+  definedDenotes x = FOL.Semantics.presented 1 (var zero ≐ con x)
+    (λ a → denote a ∷ []) (λ a → refl)
+
+  leastName : (x : S) → ∥ Σ[ a ∶ Name ] ⟨ Denotes x a ⟩ ∥₁
+            → Σ[ a ∶ Name ] IsLeast nameOrder (Denotes x) a
+  leastName x = leastOfFormula nameOrder (definedDenotes x) lem
 ```
+</div>
+</details>
 
 <!--en-->
 ## Recap
@@ -1621,7 +1628,7 @@ Every successor-stage member now has a name, and the names carry a strict well-o
 <!--zh-->
 ## 小结
 
-现在，后继层的每个成员都有名字，而诸名字带有严格良序，因而可以选出最小代表。一个 `Name`{.Agda} 由一个元数、一条多一个变量的无参公式，以及一个取自该层的参数向量组成；`denote`{.Agda} 是它所界定的子集，而 `denote-mem`{.Agda} 在可定义幂集据以定义的内层语义中陈述这一点。`names-complete`{.Agda} 说明后继层的每个成员都由某个名字指称；该存在结论是截断的，因为可定义幂集本来就是这样给出它的公式的。
+现在，后继层的每个成员都有名字，而诸名字带有严格良序，因而可以选出最小代表。一个 `Name`{.Agda} 由一个元数、一条多一个变元的无参公式，以及一个取自该层的参数向量组成；`denote`{.Agda} 是它所界定的子集，而 `denote-mem`{.Agda} 在可定义幂集据以定义的内层语义中陈述这一点。`names-complete`{.Agda} 说明后继层的每个成员都由某个名字指称；该存在结论是截断的，因为可定义幂集本来就是这样给出它的公式的。
 
 `code∈limit`{.Agda} 把第一个键放到极限层那个序可以比较它的地方，而 `code-inj`{.Agda} 在元数对齐后保证编码单射：此时相等的码还原出相等的无参公式。`_≺ᵥ_`{.Agda} 跨长度地为第三个键排序，而 `_≺ₙ_`{.Agda} 就是三键比较本身，连同严格良序的全部四条定律，以及 `leastName`{.Agda}，即非空族的最小名字。两者的组合正是后续选择构造所消费的：单一层之上的一族子集成为一族名字，而 `leastName` 选出一个典范代表，自始至终不必从截断的完备性陈述里挑选公式。
 <!--ja-->

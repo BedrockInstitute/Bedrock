@@ -1,28 +1,18 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # Models of ZF and ZFC
-
-A bare structure becomes a model of set theory by supplying witnesses for the ZF axioms. This chapter develops that road in stages: it says what it means for a set to realize a class, proves realizers unique from an explicit extensionality argument, introduces a description operator that reads a set back off its unique existence, and assembles the axioms into a record. It closes by extending a ZF model to ZFC with the axiom of choice.
-
-Nothing in a bare structure yet deserves the name set theory. Its membership relation need not admit an empty set, need not pair two elements, and need not gather the subsets of anything. What a universe of sets must provide is exactly what the **axioms of ZF** say, and this chapter states them. A **model of ZF** is a structure whose fields supply the axioms, so "`𝒮` satisfies ZF" means precisely that such a witness exists at `𝒮`.
-
-The setting is fixed once here: equality and membership in `𝒮` take values in `hProp ℓ`, so every such assertion is a proposition, and the module runs entirely at one universe level `ℓ` with its axioms living in `Type (ℓ-suc ℓ)`.
 <!--zh-->
 # ZF 与 ZFC 的模型
-
-一个裸结构通过为 ZF 公理提供见证而成为集合论模型。本章分几步走完这条路：先说明集合何时实现一个类，再由显式的外延性论证证明实现者的唯一性，引入一个从唯一存在读出集合的摹状词算子，然后把公理汇成一个 record。最后加入选择公理，把 ZF 模型扩展为 ZFC 模型。
-
-裸结构中还没有任何东西配得上「集合论」之名。它的成员关系未必容纳空集，未必能配对两个元素，也未必能聚出子集。一个集合宇宙必须提供什么，正是 **ZF 公理**所陈述的内容，本章把它们一一写出。**ZF 模型**是其字段供给这些公理的结构，因此「`𝒮` 满足 ZF」恰是说：这样的见证在 `𝒮` 处存在。
-
-设定在此一次确定：`𝒮` 的等词与成员关系取值于 `hProp ℓ`，所以每条这样的断言都是命题；整个模块在同一个宇宙层级 `ℓ` 上运行，而它的公理住在 `Type (ℓ-suc ℓ)` 中。
 <!--ja-->
 # ZF と ZFC のモデル
-
-公理を持たない構造は、ZF の各公理の証拠を与えることで集合論のモデルになる。本章ではこの道を段階を追って進める。まず集合がいつクラスを実現するかを定め、明示的な外延性の議論から実現者の一意性を証明し、一意存在から集合を読み出す確定記述の演算子を導入し、公理を record にまとめる。最後に選択公理を加えて、ZF モデルを ZFC モデルへ拡張する。
-
-裸の構造には、集合論の名に値するものはまだ何もない。その所属関係が空集合を許すとは限らず、二つの要素を対にできるとも、何かの部分集合を集められるとも限らない。集合の宇宙が何を提供しなければならないかは、まさに **ZF 公理**の述べる通りであり、本章はそれを書き下ろす。**ZF モデル**とは、そのフィールドが公理を供給する構造であり、「`𝒮` が ZF を満たす」とは、そのような証拠が `𝒮` で存在することを意味するにすぎない。
-
-設定はここで一度だけ確定する。`𝒮` の等号と所属は `hProp ℓ` に値を取るので、その主張はすべて命題である。モジュール全体が同じ宇宙レベル `ℓ` で動作し、公理は `Type (ℓ-suc ℓ)` に住む。
 <!--/-->
+
+```agda
+open import FOL.ZFStructure using ( ZFStructure; module hPropStructure )
+```
 
 <!--en-->
 The module signature says what kind of thing will be studied: `𝒮` is a `ZFStructure` whose truth values are propositions, that is, a structure over `hProp ℓ`. Two consequences follow immediately. First, the structure's equality `≈ˢ` and membership `∈ˢ` return propositions with underlying types, so membership claims in this chapter are things one can inhabit with proofs. Second, the parameter `{ℓ}` is a universe level, and it stays fixed throughout: the carrier `S` lives in `Type ℓ`, while statements quantifying over all subsets of `S`, such as the axioms themselves, will land in `Type (ℓ-suc ℓ)`.
@@ -33,13 +23,37 @@ The module signature says what kind of thing will be studied: `𝒮` is a `ZFStr
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-open import Base.Prelude
-open import FOL.ZFStructure using ( ZFStructure; module hPropStructure )
-
 module FOL.ZFModel {ℓ} (𝒮 : ZFStructure ℓ) where
 ```
+
+```agda
+open import Base.Prelude
+open import FOL.Syntax using ( Formula; var; con; _∈̇_ )
+open import FOL.Semantics 𝒮 using ( module At )
+```
+
+<!--en-->
+
+A bare structure becomes a model of set theory by supplying witnesses for the ZF axioms. This chapter develops that road in stages: it says what it means for a set to realize a class, proves realizers unique from an explicit extensionality argument, introduces a description operator that reads a set back off its unique existence, and assembles the axioms into a record. It closes by extending a ZF model to ZFC with the axiom of choice.
+
+Nothing in a bare structure yet deserves the name set theory. Its membership relation need not admit an empty set, need not pair two elements, and need not gather the subsets of anything. What a universe of sets must provide is exactly what the **axioms of ZF** say, and this chapter states them. A **model of ZF** is a structure whose fields supply the axioms, so "`𝒮` satisfies ZF" means precisely that such a witness exists at `𝒮`.
+
+The setting is fixed once here: equality and membership in `𝒮` take values in `hProp ℓ`, so every such assertion is a proposition, and the module runs entirely at one universe level `ℓ` with its axioms living in `Type (ℓ-suc ℓ)`.
+<!--zh-->
+
+一个裸结构通过为 ZF 公理提供见证而成为集合论模型。本章分几步走完这条路：先说明集合何时实现一个类，再由显式的外延性论证证明实现者的唯一性，引入一个从唯一存在读出集合的摹状词算子，然后把公理汇成一个 record。最后加入选择公理，把 ZF 模型扩展为 ZFC 模型。
+
+裸结构中还没有任何东西配得上「集合论」之名。它的成员关系未必容纳空集，未必能配对两个元素，也未必能聚出子集。一个集合宇宙必须提供什么，正是 **ZF 公理**所陈述的内容，本章把它们一一写出。**ZF 模型**是其字段供给这些公理的结构，因此「`𝒮` 满足 ZF」恰是说：这样的见证在 `𝒮` 处存在。
+
+设定在此一次确定：`𝒮` 的等词与成员关系取值于 `hProp ℓ`，所以每条这样的断言都是命题；整个模块在同一个宇宙层级 `ℓ` 上运行，而它的公理住在 `Type (ℓ-suc ℓ)` 中。
+<!--ja-->
+
+公理を持たない構造は、ZF の各公理の証拠を与えることで集合論のモデルになる。本章ではこの道を段階を追って進める。まず集合がいつクラスを実現するかを定め、明示的な外延性の議論から実現者の一意性を証明し、一意存在から集合を読み出す確定記述の演算子を導入し、公理を record にまとめる。最後に選択公理を加えて、ZF モデルを ZFC モデルへ拡張する。
+
+裸の構造には、集合論の名に値するものはまだ何もない。その所属関係が空集合を許すとは限らず、二つの要素を対にできるとも、何かの部分集合を集められるとも限らない。集合の宇宙が何を提供しなければならないかは、まさに **ZF 公理**の述べる通りであり、本章はそれを書き下ろす。**ZF モデル**とは、そのフィールドが公理を供給する構造であり、「`𝒮` が ZF を満たす」とは、そのような証拠が `𝒮` で存在することを意味するにすぎない。
+
+設定はここで一度だけ確定する。`𝒮` の等号と所属は `hProp ℓ` に値を取るので、その主張はすべて命題である。モジュール全体が同じ宇宙レベル `ℓ` で動作し、公理は `Type (ℓ-suc ℓ)` に住む。
+<!--/-->
 
 <!--en-->
 The axioms assert facts directly in `hProp`{.Agda}. Their constant interpretation is the canonical one from the semantics chapter: the constant domain is the carrier itself and the interpretation is `id`{.Agda}, so a constant appearing in a formula simply *is* the set it names.
@@ -58,8 +72,6 @@ The working vocabulary for the axioms is assembled here. The syntax chapter supp
 <!--/-->
 
 ```agda
-open import FOL.Syntax using ( Formula; var; con; _∈̇_ )
-open import FOL.Semantics 𝒮 using ( module At )
 open import Cubical.Induction.WellFounded using ( WellFounded )
 ```
 
@@ -72,7 +84,6 @@ Two openings put the structure and satisfaction names into scope; the direct `hP
 <!--/-->
 
 ```agda
-
 open hPropStructure 𝒮
 
 open At S id using ( _⊨_ )
@@ -111,15 +122,15 @@ SetOf : (S → hProp ℓ) → Type (ℓ-suc ℓ)
 ```
 
 <!--en-->
-That realization is propositional, not a heavier piece of data, is checked now. The function type `(x : S) → (x ∈ˢ b) ≡ Q x` is a proposition precisely because each fiber is: `hProp ℓ` is `hProp ℓ`, and `isSetHProp` says the type of paths between two propositions packed in `hProp` is an h-set, so its identity types are propositions; `isPropΠ`{.Agda} lifts the pointwise fact to the whole function type. Hence `SetOf Q`{.Agda}, a dependent pair of a candidate set `b` and evidence `IsSetOf Q b`, still has propositional second components, a fact used repeatedly later.
+That realization is propositional, not a heavier piece of data, is checked now. The function type `(x : S) → (x ∈ˢ b) ≡ Q x` is a proposition precisely because each value of the family is: `isSetHProp` says that `hProp ℓ` is an h-set, so the path type between any two of its elements is a proposition; `isPropΠ`{.Agda} lifts the pointwise fact to the whole function type. Hence `SetOf Q`{.Agda}, a dependent pair of a candidate set `b` and evidence `IsSetOf Q b`, still has propositional second components, a fact used repeatedly later.
 <!--zh-->
-实现是命题而不是更重的数据，这一点现在检验。函数类型 `(x : S) → (x ∈ˢ b) ≡ Q x` 是命题，恰因每个纤维都是命题：`hProp ℓ` 即 `hProp ℓ`，`isSetHProp` 说明 `hProp` 中两个命题之间的路径类型是 h-集合，其恒等类型因此是命题；`isPropΠ`{.Agda} 把逐点事实提升到整个函数类型。于是 `SetOf Q`{.Agda}，即候选集合 `b` 与证据 `IsSetOf Q b` 组成的依值对，其第二分量仍是命题，这一事实后面会反复使用。
+实现是命题而不是更重的数据，这一点现在检验。函数类型 `(x : S) → (x ∈ˢ b) ≡ Q x` 是命题，恰因这族类型的每个取值都是命题：`isSetHProp` 说明 `hProp ℓ` 是 h-集合，因此其中任意两个元素之间的路径类型都是命题；`isPropΠ`{.Agda} 把逐点事实提升到整个函数类型。于是 `SetOf Q`{.Agda}，即候选集合 `b` 与证据 `IsSetOf Q b` 组成的依值对，其第二分量仍是命题，这一事实后面会反复使用。
 <!--ja-->
-実現がより重いデータではなく命題であることを、ここで確かめる。関数型 `(x : S) → (x ∈ˢ b) ≡ Q x` が命題なのは、各繊維が命題だからである。`hProp ℓ` は `hProp ℓ` であり、`isSetHProp` は `hProp` に包まれた二つの命題の間のパス型が h-集合であることを述べるので、その恒等型は命題になる。`isPropΠ`{.Agda} がこの各点の事実を関数型全体へ持ち上げる。したがって `SetOf Q`{.Agda}、つまり候補の集合 `b` と証拠 `IsSetOf Q b` の依存対は、第二成分が命題である対のままである。この事実は後で繰り返し使われる。
+実現がより重いデータではなく命題であることを、ここで確かめる。関数型 `(x : S) → (x ∈ˢ b) ≡ Q x` が命題なのは、この型族の各値が命題だからである。`isSetHProp` は `hProp ℓ` が h-集合であることを述べるので、その任意の二要素の間のパス型は命題になる。`isPropΠ`{.Agda} がこの各点の事実を関数型全体へ持ち上げる。したがって `SetOf Q`{.Agda}、つまり候補の集合 `b` と証拠 `IsSetOf Q b` の依存対は、第二成分が命題である対のままである。この事実は後で繰り返し使われる。
 <!--/-->
 
 ```agda
-SetOf Q = Σ[ b ∈ S ] IsSetOf Q b
+SetOf Q = Σ[ b ∶ S ] IsSetOf Q b
 ```
 
 <!--en-->
@@ -181,7 +192,6 @@ The extracted set would be useless without a way to read back what its members a
 <!--/-->
 
 ```agda
-
 ℩-spec : {Q : S → hProp ℓ} (c : isContr (SetOf Q)) → IsSetOf Q (℩ c)
 ℩-spec c = c .fst .snd
 ```
@@ -222,7 +232,6 @@ The notation `a ⊆ˢ b` will be used inside the power-set axiom and in later ar
 <!--/-->
 
 ```agda
-
 infix 20 _⊆ˢ_
 ```
 
@@ -281,7 +290,7 @@ Replacement is the longest field and carries a hypothesis of its own. It takes a
 <!--/-->
 
 ```agda
-                   → ((x : S) → ⟨ x ∈ˢ a ⟩ → isContr (Σ[ y ∈ S ] ⟨ (y ∷ x ∷ []) ⊨ φ ⟩))
+                   → ((x : S) → ⟨ x ∈ˢ a ⟩ → isContr (Σ[ y ∶ S ] ⟨ (y ∷ x ∷ []) ⊨ φ ⟩))
                    → isContr (SetOf (λ y → ∃[ x ∶ S ] (x ∈ˢ a) ⊓ ((y ∷ x ∷ []) ⊨ φ)))
     hasPower       : (a : S) → isContr (SetOf (λ x → x ⊆ˢ a))
 ```
@@ -297,7 +306,7 @@ Every other axiom speaks either the object language or plain membership; regular
 
 Now `℩` turns each unique existence into an operation, and `℩-spec`{.Agda} turns it into its specification; every specification below is literally one projection. The union of a pair gives binary union, and binary union gives the **successor** `a ⁺ = a ∪ {a}` (the pair of `a` with itself is the singleton): this is von Neumann's step from one set to the next, the step the axiom of infinity will later use.
 <!--zh-->
-把每个 `λ` 读回自然语言，熟悉的陈述一一归位。没有谁实现 `⊥`，所以 `hasEmpty`{.Agda} 就是空集。配对的成员是与 `a` 或 `b` 相等者；并的成员是成员的成员。分离留下 `a` 中满足 `φ` 的成员 (环境 `x ∷ []` 把唯一的自由变量填上)。替换先要求 `φ` 在 `a` 上是函数性的，即在 `isContr`{.Agda} 意义下一进一出，再收集输出。幂集的成员就是子集。
+把每个 `λ` 读回自然语言，熟悉的陈述一一归位。没有谁实现 `⊥`，所以 `hasEmpty`{.Agda} 就是空集。配对的成员是与 `a` 或 `b` 相等者；并的成员是成员的成员。分离留下 `a` 中满足 `φ` 的成员 (环境 `x ∷ []` 把唯一的自由变元填上)。替换先要求 `φ` 在 `a` 上是函数性的，即在 `isContr`{.Agda} 意义下一进一出，再收集输出。幂集的成员就是子集。
 
 ## 正则公理为何置于元层面
 
@@ -363,7 +372,6 @@ Separation becomes an operation in the formula itself: `separate a φ` applies `
 <!--/-->
 
 ```agda
-
   separate : (a : S) → Formula S 1 → S
   separate a φ = ℩ (hasSeparation a φ)
 
@@ -383,7 +391,6 @@ The trailing blank line closes this block of operations; the next sections build
 
 ```agda
   𝒫 a = ℩ (hasPower a)
-
 ```
 
 <!--en-->
@@ -393,7 +400,7 @@ Binary intersection is deliberately **not** a field. The two-symbol formula `var
 <!--zh-->
 ## 由分离导出的交
 
-二元交刻意**不设**为字段。两个符号的公式 `var zero ∈̇ con b`{.Agda} 表示「该变量是 `b` 的成员」；把它传给 `separate`{.Agda} 并作用于 `a`，分离公理就给出 `a ∩ b`。它的规格与分离的规格完全相同，因为按 `⊨` 的定义子句，该公式的满足直接计算为 `x ∈ˢ b`。这是一般模式的一次具体运用：凡能被公式指名的宿主谓词，分离都能把它变成集合。
+二元交刻意**不设**为字段。两个符号的公式 `var zero ∈̇ con b`{.Agda} 表示「该变元是 `b` 的成员」；把它传给 `separate`{.Agda} 并作用于 `a`，分离公理就给出 `a ∩ b`。它的规格与分离的规格完全相同，因为按 `⊨` 的定义子句，该公式的满足直接计算为 `x ∈ˢ b`。这是一般模式的一次具体运用：凡能被公式指名的宿主谓词，分离都能把它变成集合。
 <!--ja-->
 ## 分出から導かれる共通部分
 
@@ -494,7 +501,6 @@ As with every other unique existence, `ω` is the centre extracted by `℩` from
 
 ```agda
   ω = ℩ hasInfinity
-
 ```
 
 <!--en-->
@@ -540,19 +546,19 @@ record isZFCModel : Type (ℓ-suc ℓ) where
 ```
 
 <!--en-->
-The two hypotheses of `hasChoice` say that `a` is a family of nonempty, pairwise disjoint sets, each in the reading available here. Nonemptiness is truncated: for each member `x` of `a` there *merely* exists a `y` in it, `∥ Σ[ y ∈ S ] ⟨ y ∈ˢ x ⟩ ∥₁`, with no chosen witness. Pairwise disjointness is also truncated: if `x` and `y` are two members of `a` that *merely* share a point `z`, then `x ≡ y` holds outright. Note the shape of the disjointness premise: its conclusion is a path in the host, so the truncation of the shared-point evidence is what feeds an untruncated equality.
+The two hypotheses of `hasChoice` say that `a` is a family of nonempty, pairwise disjoint sets, each in the reading available here. Nonemptiness is truncated: for each member `x` of `a` there *merely* exists a `y` in it, `∥ Σ[ y ∶ S ] ⟨ y ∈ˢ x ⟩ ∥₁`, with no chosen witness. Pairwise disjointness is also truncated: if `x` and `y` are two members of `a` that *merely* share a point `z`, then `x ≡ y` holds outright. Note the shape of the disjointness premise: its conclusion is a path in the host, so the truncation of the shared-point evidence is what feeds an untruncated equality.
 <!--zh-->
-`hasChoice` 的两条前提说 `a` 是由非空、两两不交的集合组成的族，各自按此处可用的读法理解。非空性是截断的：对 `a` 的每个成员 `x`，**仅仅**存在其中的 `y`，即 `∥ Σ[ y ∈ S ] ⟨ y ∈ˢ x ⟩ ∥₁`，没有被选定的见证。两两不交同样截断：若 `a` 的两个成员 `x` 与 `y` **仅仅**共享一点 `z`，则 `x ≡ y` 无截断地成立。注意不交前提的形状：其结论是宿主中的路径，正是共享点证据的截断在为无截断的相等供料。
+`hasChoice` 的两条前提说 `a` 是由非空、两两不交的集合组成的族，各自按此处可用的读法理解。非空性是截断的：对 `a` 的每个成员 `x`，**仅仅**存在其中的 `y`，即 `∥ Σ[ y ∶ S ] ⟨ y ∈ˢ x ⟩ ∥₁`，没有被选定的见证。两两不交同样截断：若 `a` 的两个成员 `x` 与 `y` **仅仅**共享一点 `z`，则 `x ≡ y` 无截断地成立。注意不交前提的形状：其结论是宿主中的路径，正是共享点证据的截断在为无截断的相等供料。
 <!--ja-->
-`hasChoice` の二つの仮定は、`a` が空でなく互いに素な集合の族であることを、ここで使える読み方で述べる。空でないことは截断されている。`a` の各要素 `x` に対してその中に `y` が**単に**存在する、つまり `∥ Σ[ y ∈ S ] ⟨ y ∈ˢ x ⟩ ∥₁` であり、選ばれた証拠はない。互いに素なことも截断されている。`a` の二つの要素 `x` と `y` が点 `z` を**単に**共有するなら、`x ≡ y` は截断なしで成る。素であるという前提の形に注意してほしい。その結論はホストのパスであり、共有点の証拠の截断こそが、截断されない相等に材料を供しているのである。
+`hasChoice` の二つの仮定は、`a` が空でなく互いに素な集合の族であることを、ここで使える読み方で述べる。空でないことは截断されている。`a` の各要素 `x` に対してその中に `y` が**単に**存在する、つまり `∥ Σ[ y ∶ S ] ⟨ y ∈ˢ x ⟩ ∥₁` であり、選ばれた証拠はない。互いに素なことも截断されている。`a` の二つの要素 `x` と `y` が点 `z` を**単に**共有するなら、`x ≡ y` は截断なしで成る。素であるという前提の形に注意してほしい。その結論はホストのパスであり、共有点の証拠の截断こそが、截断されない相等に材料を供しているのである。
 <!--/-->
 
 ```agda
     hasChoice :
       (a : S)
-      → ((x : S) → ⟨ x ∈ˢ a ⟩ → ∥ Σ[ y ∈ S ] ⟨ y ∈ˢ x ⟩ ∥₁)
+      → ((x : S) → ⟨ x ∈ˢ a ⟩ → ∥ Σ[ y ∶ S ] ⟨ y ∈ˢ x ⟩ ∥₁)
       → ((x y : S) → ⟨ x ∈ˢ a ⟩ → ⟨ y ∈ˢ a ⟩
-           → ∥ Σ[ z ∈ S ] (⟨ z ∈ˢ x ⟩ × ⟨ z ∈ˢ y ⟩) ∥₁ → x ≡ y)
+           → ∥ Σ[ z ∶ S ] (⟨ z ∈ˢ x ⟩ × ⟨ z ∈ˢ y ⟩) ∥₁ → x ≡ y)
 ```
 
 <!--en-->
@@ -564,8 +570,8 @@ The conclusion is likewise a truncated existence: there *merely* exists a choice
 <!--/-->
 
 ```agda
-      → ∥ Σ[ c ∈ S ] ((x : S) → ⟨ x ∈ˢ a ⟩
-           → isContr (Σ[ z ∈ S ] ⟨ z ∈ˢ (c ∩ x) ⟩)) ∥₁
+      → ∥ Σ[ c ∶ S ] ((x : S) → ⟨ x ∈ˢ a ⟩
+           → isContr (Σ[ z ∶ S ] ⟨ z ∈ˢ (c ∩ x) ⟩)) ∥₁
 ```
 
 <!--en-->

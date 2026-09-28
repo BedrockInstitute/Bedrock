@@ -1,0 +1,3 @@
+[submodule "outcrop"]
+	path = outcrop
+	url = https://github.com/BedrockInstitute/Outcrop.git

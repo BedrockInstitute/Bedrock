@@ -1,22 +1,18 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # The alphabet of formula codes
-
-A statement about a constructible set `W` typically mentions members of `W`: to say, for instance, that some `x` in `W` satisfies a property, the formula carries `x` as a parameter. Internally, such parameters appear as constant symbols of a first-order language. The ambient coding of syntax, however, expects constants that are sets of the hierarchy `V ℓ`, not abstract references to members of an arbitrary set. So a bridge is needed: a language whose alphabet indexes the members of `W`, together with an embedding that gives each index its denotation as a set.
-
-This chapter builds that bridge for a fixed `W`. The alphabet is the type of member indices of the underlying set of `W`; the embedding sends each index to the set it designates, and supplies a certificate that this set is a member of `W`. Relabeling constants along the embedding turns every term and formula over the alphabet into syntax over sets, to which the existing `V`-valued coding applies, yielding the term code `ct` and the formula code `cd`. Because the coding ignores arities, transporting a formula across an equality of arities leaves its code unchanged, as `cd-subst` records.
 <!--zh-->
 # 公式码的字母表
-
-关于可构造集合 `W` 的陈述往往会提到 `W` 的成员：比如说，要断言 `W` 中某个 `x` 满足一条性质，公式就要带着 `x` 作为参数。在集合论内部，这样的参数以一阶语言的常元符号出现。然而，外围的语法编码要求常元是层级 `V ℓ` 中的集合，而不是对任意集合成员的抽象指称。因此需要一座桥：一种字母表可索引 `W` 成员的语言，连同把每个索引送到其集合指称的嵌入。
-
-本章对固定的 `W` 搭建这座桥。字母表是 `W` 底层集合的成员索引类型；嵌入把每个索引送到它所指称的集合，并附上该集合属于 `W` 的证书。沿嵌入改标每个常元后，字母表上的每个词项与每条公式都成为以集合为常元的语法，从而适用已有的取值于 `V` 的编码，得到词项码 `ct` 与公式码 `cd`。由于该编码不查看元数，沿元数相等路径传输公式不会改变其码，这正是 `cd-subst` 所记录的事实。
 <!--ja-->
 # 論理式符号のアルファベット
-
-構成可能集合 `W` についての主張は、しばしば `W` の要素に言及する。たとえば `W` に属するある `x` が性質を満たすと言うには、論理式は `x` をパラメータとして伴わなければならない。集合論の内部では、このようなパラメータは一階言語の定数記号として現れる。しかし周囲の構文符号化は、定数が任意の集合の要素への抽象的な参照ではなく、階層 `V ℓ` の集合であることを要求する。そこで橋渡しが必要になる。アルファベットが `W` の要素を索引づけ、各インデックスに集合としての指示対象を与える埋め込みをそろえた言語である。
-
-この章では、固定された `W` に対しその橋を構築する。アルファベットは `W` の台集合の要素へのインデックスの型であり、埋め込みは各インデックスをそれが指す集合へ送り、その集合が `W` に属することの証拠を添える。埋め込みに沿って各定数を書き換えれば、アルファベット上のすべての項と論理式は集合を定数とする構文になり、既存の `V` 値の符号化が適用できて、項の符号 `ct` と論理式の符号 `cd` が得られる。符号化はアリティを調べないので、アリティの相等の経路に沿って論理式を輸送しても符号は変わらず、これが `cd-subst` の記録する事実である。
 <!--/-->
+
+```agda
+open import Base.Prelude
+```
 
 <!--en-->
 Everything in this chapter takes place at a single type-theoretic universe level `ℓ`, fixed once and used throughout. The hierarchy `V ℓ` of sets at this level is the target of the eventual coding, and the first-order language is the setting in which parameters live. The plan is uniform: given a constructible set `W`, read its members as constant symbols, name them by abstract indices, and transport each name to the set it denotes in `V ℓ`. Nothing in that plan depends on which `W` is chosen, so it is carried out for an arbitrary `W`.
@@ -27,30 +23,47 @@ Everything in this chapter takes place at a single type-theoretic universe level
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-open import Base.Prelude
-open import Cubical.Foundations.Prelude using ( J; substRefl )
-
 module L.Coding.CodeAlphabet {ℓ : Level} where
-
-open import FOL.ZFStructure using ( module hPropStructure )
 ```
 
-<!--en-->
-The object-language syntax is generic in its alphabet. A type `Formula K n` of formulas over constants `K` and arity `n` never inspects what the constants are; it only arranges them into logical structure. Consequently, any function on the alphabet extends to a relabeling of syntax: mapping each constant through the function rewrites every occurrence while leaving connectives, quantifiers and variables untouched. Here the function will be the embedding of member indices into `V ℓ`, and the relabeled formulas will have sets as constants, which is precisely the input format of the set-valued syntax coding over the hierarchy. What remains is to choose the alphabet and the embedding so that the constants are genuinely the members of `W`.
-<!--zh-->
-对象语言的语法对字母表是泛的。常元类型为 `K`、元数为 `n` 的公式类型 `Formula K n` 从不查看常元本身是什么，只把它们安排进逻辑结构中。因此，字母表上的任何函数都能扩充为语法的改标：把每个常元沿该函数映射，即可改写每一处出现，而联结词、量词与变量保持不变。这里所用的函数将是把成员索引嵌入 `V ℓ` 的映射，改标后的公式以集合为常元，恰好是层级上取值于集合的语法编码所要求的输入格式。剩下的只是选好字母表与嵌入，使这些常元确实是 `W` 的成员。
-<!--ja-->
-対象言語の構文はアルファベットに対して汎用である。定数の型 `K` とアリティ `n` に対する論理式の型 `Formula K n` は、定数が何であるかを決して調べず、それらを論理構造へ配置するだけである。したがって、アルファベット上の任意の関数は構文の書き換えへ拡張される。各定数をその関数を通して写せば、すべての出現が書き換えられ、論理結合子・量化子・変数はそのまま保たれる。ここで使う関数は要素のインデックスを `V ℓ` へ埋め込む写像であり、書き換え後の論理式は集合を定数とするので、階層上の集合値の構文符号化が要求する入力の形式にちょうど合う。残るのは、これらの定数が実際に `W` の要素になるようにアルファベットと埋め込みを選ぶことである。
-<!--/-->
-
 ```agda
+open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax using ( Formula; Term )
 open import FOL.Manipulation.ConstantMapping using ( mapFo; mapTm )
 open import V.Coding {ℓ} using ( module VCode )
 open import L.Constructible {ℓ} using ( 𝒮ʟ )
 ```
+
+<!--en-->
+
+A statement about a constructible set `W` typically mentions members of `W`: to say, for instance, that some `x` in `W` satisfies a property, the formula carries `x` as a parameter. Internally, such parameters appear as constant symbols of a first-order language. The ambient coding of syntax, however, expects constants that are sets of the hierarchy `V ℓ`, not abstract references to members of an arbitrary set. So a bridge is needed: a language whose alphabet indexes the members of `W`, together with an embedding that gives each index its denotation as a set.
+
+This chapter builds that bridge for a fixed `W`. The alphabet is the type of member indices of the underlying set of `W`; the embedding sends each index to the set it designates, and supplies a certificate that this set is a member of `W`. Relabeling constants along the embedding turns every term and formula over the alphabet into syntax over sets, to which the existing `V`-valued coding applies, yielding the term code `ct` and the formula code `cd`. Because the coding ignores arities, transporting a formula across an equality of arities leaves its code unchanged, as `cd-subst` records.
+<!--zh-->
+
+关于可构造集合 `W` 的陈述往往会提到 `W` 的成员：比如说，要断言 `W` 中某个 `x` 满足一条性质，公式就要带着 `x` 作为参数。在集合论内部，这样的参数以一阶语言的常元符号出现。然而，外围的语法编码要求常元是层级 `V ℓ` 中的集合，而不是对任意集合成员的抽象指称。因此需要一座桥：一种字母表可索引 `W` 成员的语言，连同把每个索引送到其集合指称的嵌入。
+
+本章对固定的 `W` 搭建这座桥。字母表是 `W` 底层集合的成员索引类型；嵌入把每个索引送到它所指称的集合，并附上该集合属于 `W` 的证书。沿嵌入改标每个常元后，字母表上的每个词项与每条公式都成为以集合为常元的语法，从而适用已有的取值于 `V` 的编码，得到词项码 `ct` 与公式码 `cd`。由于该编码不查看元数，沿元数相等路径传输公式不会改变其码，这正是 `cd-subst` 所记录的事实。
+<!--ja-->
+
+構成可能集合 `W` についての主張は、しばしば `W` の要素に言及する。たとえば `W` に属するある `x` が性質を満たすと言うには、論理式は `x` をパラメータとして伴わなければならない。集合論の内部では、このようなパラメータは一階言語の定数記号として現れる。しかし周囲の構文符号化は、定数が任意の集合の要素への抽象的な参照ではなく、階層 `V ℓ` の集合であることを要求する。そこで橋渡しが必要になる。アルファベットが `W` の要素を索引づけ、各インデックスに集合としての指示対象を与える埋め込みをそろえた言語である。
+
+この章では、固定された `W` に対しその橋を構築する。アルファベットは `W` の台集合の要素へのインデックスの型であり、埋め込みは各インデックスをそれが指す集合へ送り、その集合が `W` に属することの証拠を添える。埋め込みに沿って各定数を書き換えれば、アルファベット上のすべての項と論理式は集合を定数とする構文になり、既存の `V` 値の符号化が適用できて、項の符号 `ct` と論理式の符号 `cd` が得られる。符号化はアリティを調べないので、アリティの相等の経路に沿って論理式を輸送しても符号は変わらず、これが `cd-subst` の記録する事実である。
+<!--/-->
+
+
+
+```agda
+open import Cubical.Foundations.Prelude using ( J; substRefl )
+```
+
+<!--en-->
+The object-language syntax is generic in its alphabet. A type `Formula K n` of formulas over constants `K` and arity `n` never inspects what the constants are; it only arranges them into logical structure. Consequently, any function on the alphabet extends to a relabeling of syntax: mapping each constant through the function rewrites every occurrence while leaving connectives, quantifiers and variables untouched. Here the function will be the embedding of member indices into `V ℓ`, and the relabeled formulas will have sets as constants, which is precisely the input format of the set-valued syntax coding over the hierarchy. What remains is to choose the alphabet and the embedding so that the constants are genuinely the members of `W`.
+<!--zh-->
+对象语言的语法对字母表是泛的。常元类型为 `K`、元数为 `n` 的公式类型 `Formula K n` 从不查看常元本身是什么，只把它们安排进逻辑结构中。因此，字母表上的任何函数都能扩充为语法的改标：把每个常元沿该函数映射，即可改写每一处出现，而联结词、量词与变元保持不变。这里所用的函数将是把成员索引嵌入 `V ℓ` 的映射，改标后的公式以集合为常元，恰好是层级上取值于集合的语法编码所要求的输入格式。剩下的只是选好字母表与嵌入，使这些常元确实是 `W` 的成员。
+<!--ja-->
+対象言語の構文はアルファベットに対して汎用である。定数の型 `K` とアリティ `n` に対する論理式の型 `Formula K n` は、定数が何であるかを決して調べず、それらを論理構造へ配置するだけである。したがって、アルファベット上の任意の関数は構文の書き換えへ拡張される。各定数をその関数を通して写せば、すべての出現が書き換えられ、論理結合子・量化子・変数はそのまま保たれる。ここで使う関数は要素のインデックスを `V ℓ` へ埋め込む写像であり、書き換え後の論理式は集合を定数とするので、階層上の集合値の構文符号化が要求する入力の形式にちょうど合う。残るのは、これらの定数が実際に `W` の要素になるようにアルファベットと埋め込みを選ぶことである。
+<!--/-->
 
 <!--en-->
 Two distinctions organize the construction. First, a member of a set of the hierarchy is presented by an abstract index `q` in `⟪ a ⟫`, and the embedding `⟪ a ⟫↪` sends that index to the set it designates; the index is a name, the value `⟪ a ⟫↪ q` is the denotation in `V ℓ`, and the two roles are kept apart. Second, `W` is not an arbitrary set but an element of the carrier `S` of the constructible structure, so it comes with an underlying set `fst W` of the hierarchy and a constructibility certificate; this is what licenses reading its members as parameters of a language about constructible sets. The alphabet will be `⟪ fst W ⟫` itself, and the next section assembles these pieces into the codes `ct` and `cd`.
@@ -90,8 +103,15 @@ An element `W : S` packages a set of the hierarchy with structure data; `fst W` 
 要素 `W : S` は、階層のある集合を構造のデータとともに束ねたものである。`fst W` がその台集合になる。したがって `Ab` は `⟪ fst W ⟫`、つまりその集合の要素へのインデックスの型であり、`ι` は埋め込み `⟪ fst W ⟫↪` で、各インデックスを `V ℓ` 内の指された要素へ送る。つまり `Ab` の要素こそが利用可能な定数記号であり、`ι` は集合としてのその指示対象を計算する。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Alphabet (W : S) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   Ab : Type ℓ
   Ab = ⟪ fst W ⟫
 
@@ -108,7 +128,6 @@ The membership certificate `ι∈` says that for every constant symbol `q`, the 
 <!--/-->
 
 ```agda
-
   ι∈ : (q : Ab) → ⟨ ι q ∈ fst W ⟩
   ι∈ q = ∈∈ₛ {a = ι q} {b = fst W} .snd (∈ₛ⟪ fst W ⟫↪ q)
 
@@ -133,6 +152,8 @@ A formula of type `Formula Ab n` carries an arity `n`, and in dependent type the
   cd-subst {n} e ψ = J (λ n' e' → cd (subst (Formula Ab) e' ψ) ≡ cd ψ)
     (cong cd (substRefl {B = Formula Ab} ψ)) e
 ```
+</div>
+</details>
 
 <!--en-->
 ## Recap

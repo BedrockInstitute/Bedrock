@@ -8,40 +8,63 @@ the proofs and their prose. This is an English developer-facing folder guide; th
 
 Each module is **one `.lagda.md` file**. The Agda code appears once; prose for every language
 lives in the same file, wrapped in `<!--en--> / <!--zh--> / <!--ja--> / <!--/-->` markers
-(grammar: [dev/STYLE-i18n.md](../dev/STYLE-i18n.md)). The markers are HTML comments, invisible
+(grammar: [site/STYLE-i18n.md](../site/STYLE-i18n.md)). The markers are HTML comments, invisible
 to Agda, so a master typechecks directly. Code is **English-only** inside ` ```agda ` fences.
 Nothing here is generated: the woven mono-lingual copies and the rendered site live under
 `_build/` (git-ignored).
 
-## `Milestones.lagda.md` and the reading catalog
+## `Origin.lagda.md` and the reading catalog
 
-`Milestones.lagda.md` is the Agda and HTML build root. Its import closure reaches every
-other module, so `agda src/Milestones.lagda.md` typechecks the whole development. The
-machine-readable reading catalog lives in [`dev/reading-catalog.json`](../dev/reading-catalog.json):
+`Origin.lagda.md` is the Agda and HTML build root. Its import closure reaches every
+other module. Use `make typecheck` from the repository root to check that closure
+with the pinned local compiler and isolated pure-check cache, not a global
+`agda` executable. `make check` also runs lint and unit tests; `make milestone-lint`
+separately verifies that all source modules are consumed by Origin. The
+machine-readable reading catalog lives in [`site/reading-catalog.json`](../site/reading-catalog.json):
 it stores the reading order, translated chapter labels, stages, descriptions and routes.
-The site renders the reading guide from that data, while the sidebar's module tree remains
-the derived **structure catalog**. When you add a module, add it to the reading catalog after
+The site renders the interactive contents from that data and derives the
+namespace dependency graph from actual imports. When you add a module, add it to the reading catalog after
 its prerequisites and before its substantive consumers; `scripts/gate/check-reading-order.py`
-checks exact coverage and prerequisite order. Milestones is the explicitly labelled preview.
+checks exact coverage and prerequisite order. Origin is the explicitly labelled preview.
 
 ## Current modules
 
-`Milestones.lagda.md` is the trophy case and reads first in the catalog: the
-storefront, before the foundations stage. It states `V⊨ZF`, `V⊨ZF-impredicative`, `V⊨ZFC`, `L⊨ZFC` and
-`L⊨GCH`, each a self-contained signature naming its proving chapter. **Both `L` trophies are
+`Origin.lagda.md` is the trophy case and reads first in the catalog: the
+storefront, before the foundations stage. It displays the implications `SetChoice→LEM` and
+`LEM→ΩResizing`, followed by `V⊨ZF`, `V⊨ZFC`, `L⊨ZFC` and
+`L⊨GCH`, each imported from its proving chapter. **Both `L` trophies are
 proved.** `L⊨GCH` was proved on 2026-09-05; its statement type is `GCHStatement` in
 `L/GCH.lagda.md` and its proof term is `L⊨GCH` in `L/GCH/Theorem.lagda.md`. The only
 hypothesis either takes is `LEM (ℓ-suc ℓ)`.
 
 The namespace tree is the structure catalog, derived and never hand-maintained. **The reading
 order is not the namespace order** (the two-catalog doctrine in
-[dev/STYLE-agda.md](../dev/STYLE-agda.md)). Retired chapters left the tree entirely on
-2026-09-06: the archive now lives outside the repository, at `~/Agentic/Archive/Bedrock-archive`,
-mirroring the paths the files had here.
+[site/STYLE-agda.md](../site/STYLE-agda.md)). Retired chapters are not build inputs;
+use Git history to inspect removed material rather than relying on a contributor's
+private archive location.
+
+## Authoring and verification
+
+Follow [Agda conventions](../site/STYLE-agda.md),
+[trilingual prose rules](../site/STYLE-i18n.md) and the reusable
+[Markdown contract](../outcrop/docs/RENDERER-MARKDOWN.md). The catalog owns
+human-review status; automated checks do not grant it. Glossary introductions
+and explicit forward links follow [GLOSSARY](../site/GLOSSARY.md).
+
+Statements and proofs require accompanying Agda code, not an explicit Markdown
+`∎`. The website places QED overlays from compiler-certified signature/equation
+endings, including submodules but not where-local helpers. Keep proof prose next
+to its code without adding layout-only source text.
+
+Inline Agda expressions use complete `{.Agda}` spans. Inline LaTeX follows the
+figure-reference or explicit-approval rules in STYLE-i18n; temporary later-chapter
+allowances expire on human review. [scripts/](../scripts/README.md) documents the
+gates and supplemental literary audit. Source/semantic changes require a fresh
+`make site`, not just rerendering old compiler output.
 
 ## Symbol master table
 
-Required by [dev/STYLE-agda.md](../dev/STYLE-agda.md) §5: one row per symbol introduced
+Required by [site/STYLE-agda.md](../site/STYLE-agda.md) §5: one row per symbol introduced
 so far. Layers are the marking system of STYLE-agda §4 (① host, ③ structure fields,
 ④ object syntax).
 
@@ -85,3 +108,4 @@ so far. Layers are the marking system of STYLE-agda §4 (① host, ③ structure
 | `𝒮ʟ` | the constructible structure | ③ | `L.Constructible` | `\McS` `\_L` |
 | `∩` | binary intersection | ① | `ZF` | `\cap` |
 | `ω` | the set of numerals | ① | `ZF` | `\omega` |
+: Symbols, semantic layers, introducing chapters and input sequences

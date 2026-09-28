@@ -1,38 +1,18 @@
-<!--en-->
-# Building and collapsing a Skolem hull
-
-This chapter builds the Skolem hull of a starting set inside a constructible stage, proves that the hull is elementary in the stage, collapses it onto a transitive set by a membership-preserving bijection, and records how satisfaction and bounded formulas travel across that collapse. The key distinction is that the hull itself is only a coded image; transitivity appears only after the Mostowski collapse.
-<!--zh-->
-# 构造并塌缩 Skolem 壳
-
-本章在可构造层内对起始集合作 Skolem 壳，证明壳在层中初等，再经保持隶属的双射把它塌缩到传递集上，并整理满足关系与有界公式如何跨过这次塌缩。关键区别是：壳本身只是编码所得的像；传递性只在 Mostowski 塌缩之后出现。
-<!--ja-->
-# Skolem 包を構成して崩壊させる
-
-本章は、構成可能段階の中の始集合の Skolem 包を作り、包が段階の中で初等的であることを示し、所属を保つ全単射によって推移的集合へ崩壊させ、充足関係と有界論理式が崩壊を越えてどう移るかを整理する。重要なのは、包そのものはコードで与えられた像にすぎず、推移性は Mostowski 崩壊の後に初めて得られる、という点である。
-<!--/-->
-
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
-
 ```
 
 <!--en-->
-The chapter runs on classical logic, and the hypothesis enters here. The hull construction decides satisfiability of queries, the extensionality proof decides membership in both directions, and the elementarity transfer eliminates double negation; each of these steps consumes excluded middle.
+# Building and collapsing a Skolem hull
 <!--zh-->
-本章依赖经典逻辑，假设在此引入。壳的构造要判定查询的可满足性，外延性证明要双向判定隶属，初等性移送要消去双重否定；这些步骤都在消耗排中律。
+# 构造并塌缩 Skolem 壳
 <!--ja-->
-本章は古典論理に依拠し、仮定はここで入る。包の構成は問いの充足可能性を判定し、外延性の証明は両方向で所属を判定し、初等性の移送は二重否定を除去する。これらの段階はどれも排中律を消費する。
+# Skolem 包を構成して崩壊させる
 <!--/-->
 
 ```agda
 open import Base.Prelude
-open import Cubical.Relation.Nullary using ( decRec )
-open import Cubical.HITs.PropositionalTruncation using ( map2 )
-open import Cubical.Data.Sum using () renaming ( map to sumMap )
-open import Cubical.Data.Vec using ( _++_ )
 open import Base.Classical using ( LEM )
-
 ```
 
 <!--en-->
@@ -45,8 +25,67 @@ The module fixes the universe level `ℓ` and states the standing form of the cl
 
 ```agda
 module L.GCH.SkolemHull {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-
 ```
+
+```agda
+open import FOL.ZFStructure using ( ZFStructure; module hPropStructure; _↾_ )
+open import FOL.Syntax using
+  ( Formula; Term; con; var; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊥̇
+  ; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
+open import FOL.LevyHierarchy using
+  ( Δ₀; δ-∈; δ-≐; δ-∧; δ-∨; δ-⇒; δ-⊥; δ-∀∈; δ-∃∈ )
+import FOL.Absoluteness
+import FOL.Manipulation.ConstantOccurrences
+import FOL.Semantics
+open import FOL.Manipulation.ConstantOccurrences using ( countFo; constantsFo )
+open import FOL.Manipulation.ParameterAbstraction using ( absFo; ⊨-abs )
+open import FOL.Manipulation.ConstantMapping using ( mapFo; mapTm; mapFo-comp; embed )
+open import FOL.Manipulation.Relabelling using ( embed-⊨; mapΔ₀; ⊨-map )
+open import FOL.Manipulation.Renaming using ( renameTm )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV )
+open import V.Presentation {ℓ} using ( member; fiber )
+open import V.Collapse {ℓ} using ( module Collapse; isExt; isTrans )
+open import V.Smallness {ℓ} using ( separateFromSmall; module Δ₀Small )
+open import L.Axioms.Basic {ℓ} using ( ∅∈𝒟ₒ; Lset-suc )
+open import L.Constructible {ℓ}
+  using ( 𝒮ʟ; isTransV; IsOrd; Lset; Lset-in; Lset-out; Lset-mono; 𝒟ₒ
+        ; layer-trans; Lset-layer )
+open import L.Ordinal {ℓ} using ( mem-ord; ω-ord; #∈ω; ∅-ord )
+open import L.Ordinal.Stages {ℓ} lem using ( ord∈Lset→∈; rank-Lset )
+open import L.Ordinal.Linear {ℓ} lem using ( ord-tri )
+open import L.Rank {ℓ} using ( rank-fix )
+open import L.WellOrder.Base {ℓ-suc ℓ} using ( SWO; leastOfFormula )
+open import L.Choice.StageOrders {ℓ} lem using ( orderAt )
+open import L.Coding.CodeConstructibility {ℓ} using ( cup-out; cup-inl; cup-inr; sgl-out )
+```
+
+<!--en-->
+
+This chapter builds the Skolem hull of a starting set inside a constructible stage, proves that the hull is elementary in the stage, collapses it onto a transitive set by a membership-preserving bijection, and records how satisfaction and bounded formulas travel across that collapse. The key distinction is that the hull itself is only a coded image; transitivity appears only after the Mostowski collapse.
+<!--zh-->
+
+本章在可构造层内对起始集合作 Skolem 壳，证明壳在层中初等，再经保持隶属的双射把它塌缩到传递集上，并整理满足关系与有界公式如何跨过这次塌缩。关键区别是：壳本身只是编码所得的像；传递性只在 Mostowski 塌缩之后出现。
+<!--ja-->
+
+本章は、構成可能段階の中の始集合の Skolem 包を作り、包が段階の中で初等的であることを示し、所属を保つ全単射によって推移的集合へ崩壊させ、充足関係と有界論理式が崩壊を越えてどう移るかを整理する。重要なのは、包そのものはコードで与えられた像にすぎず、推移性は Mostowski 崩壊の後に初めて得られる、という点である。
+<!--/-->
+
+<!--en-->
+The chapter runs on classical logic, and the hypothesis enters here. The hull construction decides satisfiability of queries, the extensionality proof decides membership in both directions, and the elementarity transfer eliminates double negation; each of these steps consumes excluded middle.
+<!--zh-->
+本章依赖经典逻辑，假设在此引入。壳的构造要判定查询的可满足性，外延性证明要双向判定隶属，初等性移送要消去双重否定；这些步骤都在消耗排中律。
+<!--ja-->
+本章は古典論理に依拠し、仮定はここで入る。包の構成は問いの充足可能性を判定し、外延性の証明は両方向で所属を判定し、初等性の移送は二重否定を除去する。これらの段階はどれも排中律を消費する。
+<!--/-->
+
+```agda
+open import Cubical.Relation.Nullary using ( decRec )
+open import Cubical.HITs.PropositionalTruncation using ( map2 )
+open import Cubical.Data.Sum using () renaming ( map to sumMap )
+open import Cubical.Data.Vec using ( _++_ )
+```
+
+
 
 <!--en-->
 The object language is the book's first-order language: formulas built from terms by equality and membership, closed under the propositional connectives and under unbounded and bounded quantifiers. The predicate `Δ₀` singles out the formulas whose quantifiers are all bounded.
@@ -56,14 +95,6 @@ The object language is the book's first-order language: formulas built from term
 対象言語は本書の一階の言語である。論理式は項から等号と所属で作られ、命題の結合子、非有界と有界の量化子の下で閉じている。述語 `Δ₀` は、すべての量化子が有界である論理式を選び出す。
 <!--/-->
 
-```agda
-open import FOL.ZFStructure using ( ZFStructure; module hPropStructure; _↾_ )
-open import FOL.Syntax using
-  ( Formula; Term; con; var; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊥̇
-  ; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
-open import FOL.LevyHierarchy using
-```
-
 <!--en-->
 The predicate `Δ₀` is an inductive certificate following the structure of a formula: its constructors cover atoms, connectives, and bounded quantifiers, while unbounded quantifiers have no constructor. Such a certificate supports the later absoluteness argument; `countFo` and `constantsFo` record every constant occurrence.
 <!--zh-->
@@ -71,14 +102,6 @@ The predicate `Δ₀` is an inductive certificate following the structure of a f
 <!--ja-->
 述語 `Δ₀` は論理式の構造に沿う帰納的な証拠である。その構成子は原子式・結合子・有界量化子を覆うが、非有界量化子に対応する構成子はない。この証拠が後の絶対性の議論を支え、`countFo` と `constantsFo` は定数の各出現を記録する。
 <!--/-->
-
-```agda
-  ( Δ₀; δ-∈; δ-≐; δ-∧; δ-∨; δ-⇒; δ-⊥; δ-∀∈; δ-∃∈ )
-import FOL.Absoluteness
-import FOL.Manipulation.ConstantOccurrences
-import FOL.Semantics
-open import FOL.Manipulation.ConstantOccurrences using ( countFo; constantsFo )
-```
 
 <!--en-->
 Parameter abstraction replaces constant occurrences by extra environment variables; constant mapping and relabelling change constant alphabets while preserving semantics; and `renameTm` renames variable slots along a context map, providing the weakening by `suc` used below. The ambient hierarchy is opened with its extensionality, the property that sets with the same members are equal.
@@ -88,14 +111,6 @@ Parameter abstraction replaces constant occurrences by extra environment variabl
 パラメータ抽象は定数の出現を追加の環境変数で置き換え、定数写像と定数改名は意味を保って定数アルファベットを変える。`renameTm` は文脈写像に沿って変数の位置を改名し、これにより以下で `suc` による弱化が得られる。周囲の階層は外延性とともに開かれる。同じ要素をもつ集合は等しい、という性質である。
 <!--/-->
 
-```agda
-open import FOL.Manipulation.ParameterAbstraction using ( absFo; ⊨-abs )
-open import FOL.Manipulation.ConstantMapping using ( mapFo; mapTm; mapFo-comp; embed )
-open import FOL.Manipulation.Relabelling using ( embed-⊨; mapΔ₀; ⊨-map )
-open import FOL.Manipulation.Renaming using ( renameTm )
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV )
-```
-
 <!--en-->
 Presentations index the elements of a set by a small type with an embedding, and their fibers name presented elements. The collapse constructs a transitive image of any carrier `X`; extensionality of the restricted membership relation is needed later to make the collapse map injective on `X`. Δ₀ smallness separates a bounded-definable class into a set. The empty set belongs to every definability successor, and `Lset-suc` identifies the stage at a successor index with the definable powerset of the preceding stage.
 <!--zh-->
@@ -103,14 +118,6 @@ Presentations index the elements of a set by a small type with an embedding, and
 <!--ja-->
 提示は、埋め込みをもつ小さな型で集合の要素を索引づけ、その繊維が提示された要素を名指す。崩壊は任意の台 `X` から推移的な像を構成し、崩壊写像を `X` 上で単射にするために制限された所属関係の外延性を用いる。Δ₀ の小ささは、有界に定義できるクラスを集合へ分離する。空集合は各定義可能性後続に属し、`Lset-suc` は後続添字の段階を直前の段階の定義可能冪集合と同一視する。
 <!--/-->
-
-```agda
-open import V.Presentation {ℓ} using ( member; fiber )
-open import V.Collapse {ℓ} using ( module Collapse; isExt; isTrans )
-open import V.Smallness {ℓ} using ( separateFromSmall; module Δ₀Small )
-open import L.Axioms.Basic {ℓ} using ( ∅∈𝒟ₒ; Lset-suc )
-open import L.Constructible {ℓ}
-```
 
 <!--en-->
 The constructible stage `Lset α` is transitive and its construction is monotone in the index, so a larger index yields a larger stage. The ordinal facts used repeatedly in the hull argument are that members of ordinals are ordinals, that `ω` is an ordinal, that numerals belong to `ω`, and that the empty set is an ordinal.
@@ -120,14 +127,6 @@ The constructible stage `Lset α` is transitive and its construction is monotone
 構成可能な段階 `Lset α` は推移的であり、その構成は指数について単調なので、より大きな指数はより大きな段階を与える。包の議論で繰り返し使う順序数の事実は、順序数の要素が順序数であること、`ω` が順序数であること、数項が `ω` に属すること、空集合が順序数であることである。
 <!--/-->
 
-```agda
-  using ( 𝒮ʟ; isTransV; IsOrd; Lset; Lset-in; Lset-out; Lset-mono; 𝒟ₒ
-        ; layer-trans; Lset-layer )
-open import L.Ordinal {ℓ} using ( mem-ord; ω-ord; #∈ω; ∅-ord )
-open import L.Ordinal.Stages {ℓ} lem using ( ord∈Lset→∈; rank-Lset )
-open import L.Ordinal.Linear {ℓ} lem using ( ord-tri )
-```
-
 <!--en-->
 Well orders come with a least-element selector: from the truncated existence of some element satisfying a predicate, it returns an element that satisfies the predicate and is least in the well order. The rank characterization of stage membership and the stage orders restricted to a stage carrier feed this selector its inputs, and the coding of unions and singletons builds the finite starting sets used later.
 <!--zh-->
@@ -135,14 +134,6 @@ Well orders come with a least-element selector: from the truncated existence of 
 <!--ja-->
 整列順序には最小要素の選択子が伴う。述語を満たす要素の存在の切り詰められた主張から、述語を満たし整列順序で最小の要素を返す。段階の所属のランクによる特徴づけと、段階の台に制限した段階の順序がこの選択子に入力を供給し、和と単元を符号化する仕組みが、後で使う有限の始集合を作る。
 <!--/-->
-
-```agda
-open import L.Rank {ℓ} using ( rank-fix )
-open import L.WellOrder.Base {ℓ-suc ℓ} using ( SWO; leastOf )
-open import L.Choice.StageOrders {ℓ} lem using ( orderAt )
-open import L.Coding.CodeConstructibility {ℓ} using ( cup-out; cup-inl; cup-inr; sgl-out )
-
-```
 
 <!--en-->
 The environments of this chapter are vectors of carrier elements, and the operations on them are componentwise: mapping a function over an environment, looking up an index, extending by one element, and concatenating. Pairs with propositional second components record elements together with certificates that never distinguish.
@@ -152,9 +143,6 @@ The environments of this chapter are vectors of carrier elements, and the operat
 本章の環境は台の要素のベクトルであり、その演算は成分ごとに行われる。関数を環境へ写すこと、索引で参照すること、要素を一つ加えて延ばすこと、そして連結である。第二成分が命題である対は、要素を、決して区別しない証拠とともに記録する。
 <!--/-->
 
-```agda
-```
-
 <!--en-->
 The empty type represents contradiction: `⊥*-rec` eliminates an inhabitant into any target, while `isProp⊥` allows a truncation to be eliminated when the target is contradiction. Satisfaction of existential formulas and membership in presented sets are expressed by propositional truncation, so they retain existence without choosing a witness.
 <!--zh-->
@@ -162,9 +150,6 @@ The empty type represents contradiction: `⊥*-rec` eliminates an inhabitant int
 <!--ja-->
 空型は矛盾を表す。`⊥*-rec` はその要素から任意の目標へ消去し、`isProp⊥` は目標が矛盾であるとき命題的切り詰めの消去を可能にする。存在論理式の充足と提示された集合への所属は命題的切り詰めで表され、証人を選ばずに存在だけを保持する。
 <!--/-->
-
-```agda
-```
 
 <!--en-->
 The cumulative hierarchy presents a set by an index type and a valuation. The hull uses the finite tree type `Code` as its index type; formulas occur inside witness codes, but are not themselves the codes. The constructions supply the empty set, unions, unordered-pair and singleton constructions, and the infinite ordinal with its successor.
@@ -193,7 +178,6 @@ The small membership relation `_∈ₛ_` and its bridge `∈∈ₛ` to the ambie
 ```agda
 open import Cubical.HITs.CumulativeHierarchy.Properties
   using ( _∈ₛ_; ∈∈ₛ; ⟪_⟫; ⟪_⟫↪; extensionality )
-
 ```
 
 <!--en-->
@@ -206,7 +190,6 @@ Opening the ambient structure fixes the unqualified symbols for ambient equality
 
 ```agda
 open hPropStructure 𝒮ᵥ
-
 ```
 
 <!--en-->
@@ -222,7 +205,6 @@ module SemV = FOL.Semantics 𝒮ᵥ using ( _^_; module At )
 open SemV using ( _^_ )
 module CS = hPropStructure 𝒮ʟ using ( S )
 module Cnt = FOL.Manipulation.ConstantOccurrences.ZeroOccurrences CS.S using ( erase; erase-inv )
-
 ```
 
 <!--en-->
@@ -236,10 +218,19 @@ With an empty constant domain, `Δ₀-small` shows that the truth value of every
 ```agda
 module D0 = Δ₀Small {ℓc = ℓ-suc ℓ} {K = ⊥* {ℓ-suc ℓ}} (λ b → ⊥*-rec b)
   using ( Δ₀-small )
+```
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
+```agda
 module TermAlgebra (𝒮 : ZFStructure (ℓ-suc ℓ))
                    (toSet : ZFStructure.S 𝒮 → V ℓ)
                    (wo : SWO (ZFStructure.S 𝒮))
+                   (junk : ZFStructure.S 𝒮)
+                   {K : Type ℓ} (emb : K → ZFStructure.S 𝒮) where
 ```
+</summary>
+<div class="submodule-fold-content">
 
 <!--en-->
 The remaining parameters are a default element `junk` and a family of base generators indexed by `K`; only the later hull instance identifies `K` with a presentation of the starting set. The junk value is a bookkeeping device, and the constructions below never inspect it.
@@ -248,12 +239,6 @@ The remaining parameters are a default element `junk` and a family of base gener
 <!--ja-->
 残りの引数は、既定の要素 `junk` と、`K` で索引づけられた基底の生成元の族である。`K` を始集合の提示と同一視するのは、後の包の実例である。既定の値は簿記のためのもので、後の構成がそれを調べることはない。
 <!--/-->
-
-```agda
-                   (junk : ZFStructure.S 𝒮)
-                   {K : Type ℓ} (emb : K → ZFStructure.S 𝒮) where
-
-```
 
 <!--en-->
 Only the unqualified Agda name `_∈ˢ_` is hidden from the parameter structure; satisfaction `_⊨₀_` still interprets atomic membership using `𝒮`. Renaming the carrier keeps the chapter's own references to the ambient carrier unambiguous.
@@ -265,7 +250,6 @@ Only the unqualified Agda name `_∈ˢ_` is hidden from the parameter structure;
 
 ```agda
   open ZFStructure 𝒮 hiding ( _∈ˢ_ ) renaming ( S to S𝒮 )
-
 ```
 
 <!--en-->
@@ -293,11 +277,9 @@ The codes form a finite tree algebra over the base generators: a base code names
 <!--/-->
 
 ```agda
-
   data Code : Type ℓ where
     base : K → Code
     wit  : (k : ℕ) → Formula (⊥* {ℓ}) (suc k) → Vec Code k → Code
-
 ```
 
 <!--en-->
@@ -310,8 +292,26 @@ The codes form a finite tree algebra over the base generators: a base code names
 
 ```agda
   Sat : (k : ℕ) → Formula (⊥* {ℓ}) (suc k) → Vec S𝒮 k → Type (ℓ-suc ℓ)
-  Sat k ψ vs = ∥ Σ[ a ∈ S𝒮 ] ⟨ (a ∷ vs) ⊨₀ ψ ⟩ ∥₁
+  Sat k ψ vs = ∥ Σ[ a ∶ S𝒮 ] ⟨ (a ∷ vs) ⊨₀ ψ ⟩ ∥₁
 
+  satDecision : (k : ℕ) (ψ : Formula (⊥* {ℓ}) (suc k)) (vs : Vec S𝒮 k)
+              → Dec (Sat k ψ vs)
+  satDecision k ψ vs = Sem.decideSatisfaction ⊥*-rec lem vs (∃̇ ψ)
+```
+
+<!--en-->
+The search predicate is presented by the formula already stored in the query. Its environment puts the candidate in the newly bound front slot and then appends the fixed parameter vector. The reading proof is reflexivity because the host predicate is defined to be exactly this satisfaction judgment.
+<!--zh-->
+搜索谓词由查询中已经存放的公式呈现。其环境把候选放在最前的新槽位，再接上固定的参数向量。读取证明就是自反性，因为宿主谓词按定义恰是这条满足判断。
+<!--ja-->
+探索述語は、問いにすでに格納された論理式によって表示される。その環境は候補を新しい先頭の枠に置き、その後ろに固定された引数ベクトルを続ける。ホスト述語は定義によりまさにこの充足判断なので、読み取りの証明は反射律である。
+<!--/-->
+
+```agda
+  searchPredicate : (k : ℕ) (ψ : Formula (⊥* {ℓ}) (suc k)) (vs : Vec S𝒮 k)
+                  → Sem.FormulaPredicate S𝒮 (⊥* {ℓ}) ⊥*-rec
+                      (λ a → (a ∷ vs) ⊨₀ ψ)
+  searchPredicate k ψ vs = Sem.presented (suc k) ψ (λ a → a ∷ vs) (λ a → refl)
 ```
 
 <!--en-->
@@ -325,8 +325,7 @@ Given this truncated existence, `search` returns a least satisfying element for 
 ```agda
   search : (k : ℕ) (ψ : Formula (⊥* {ℓ}) (suc k)) (vs : Vec S𝒮 k)
          → Sat k ψ vs → S𝒮
-  search k ψ vs w = leastOf wo {ℓ'' = ℓ-suc ℓ} lem (λ a → (a ∷ vs) ⊨₀ ψ) w .fst
-
+  search k ψ vs w = leastOfFormula wo (searchPredicate k ψ vs) lem w .fst
 ```
 
 <!--en-->
@@ -342,7 +341,6 @@ Code vectors are evaluated componentwise, mutually with the evaluation of single
     vals : {m : ℕ} → Vec Code m → Vec S𝒮 m
     vals [] = []
     vals (c ∷ cs') = val c ∷ vals cs'
-
 ```
 
 <!--en-->
@@ -357,8 +355,7 @@ A satisfiable witness code evaluates to the least satisfying element; an unsatis
     val : Code → S𝒮
     val (base m) = emb m
     val (wit k ψ cs) = decRec (search k ψ (vals cs)) (λ _ → junk)
-                       (lem (Sat k ψ (vals cs) , squash₁))
-
+                       (satDecision k ψ (vals cs))
 ```
 
 <!--en-->
@@ -386,12 +383,10 @@ Given a satisfiability witness for the query stored in a witness code, this lemm
 <!--/-->
 
 ```agda
-
   val-wit : (k : ℕ) (ψ : Formula (⊥* {ℓ}) (suc k)) (cs : Vec Code k)
           → (w : Sat k ψ (vals cs)) → val (wit k ψ cs) ≡ search k ψ (vals cs) w
   val-wit k ψ cs w = sum-stuck w squash₁ (search k ψ (vals cs)) (λ _ → junk)
-                       (lem (Sat k ψ (vals cs) , squash₁))
-
+                       (satDecision k ψ (vals cs))
 ```
 
 <!--en-->
@@ -406,7 +401,6 @@ Evaluating a code vector is the same as mapping the evaluation over it, proved b
   vals≡map : {m : ℕ} (cs : Vec Code m) → vals cs ≡ map val cs
   vals≡map [] = refl
   vals≡map (c ∷ cs') = cong₂ _∷_ refl (vals≡map cs')
-
 ```
 
 <!--en-->
@@ -420,7 +414,6 @@ The hull is presented exactly as the hierarchy presents its sets: a code family 
 ```agda
   Hull : V ℓ
   Hull = sett Code (λ c → toSet (val c))
-
 ```
 
 <!--en-->
@@ -434,7 +427,6 @@ Membership in the presentation is direct: the value of any code is a member of t
 ```agda
   inHull : (c : Code) → ⟨ toSet (val c) ∈ˢ Hull ⟩
   inHull c = ∣ c , refl ∣₁
-
 ```
 
 <!--en-->
@@ -448,7 +440,7 @@ Thus every satisfiable coded query has a satisfying witness in the hull. The the
 ```agda
   closed : (k : ℕ) (ψ : Formula (⊥* {ℓ}) (suc k)) (cs : Vec Code k)
          → Sat k ψ (vals cs)
-         → ∥ Σ[ a ∈ S𝒮 ]
+         → ∥ Σ[ a ∶ S𝒮 ]
               (⟨ toSet a ∈ˢ Hull ⟩ × ⟨ (a ∷ vals cs) ⊨₀ ψ ⟩) ∥₁
   closed k ψ cs w = ∣ a , a∈H , sat ∣₁
 ```
@@ -465,7 +457,6 @@ The witness is not searched for again: it is the value the term algebra already 
     where
     a : S𝒮
     a = search k ψ (vals cs) w
-
 ```
 
 <!--en-->
@@ -478,8 +469,7 @@ The selector returns `a` together with both components of `IsLeast`: a proof tha
 
 ```agda
     pa : ⟨ (a ∷ vals cs) ⊨₀ ψ ⟩
-    pa = leastOf wo {ℓ'' = ℓ-suc ℓ} lem (λ a → (a ∷ vals cs) ⊨₀ ψ) w .snd .fst
-
+    pa = leastOfFormula wo (searchPredicate k ψ (vals cs)) lem w .snd .fst
 ```
 
 <!--en-->
@@ -494,7 +484,6 @@ That the witness belongs to the hull comes from the witness code built for this 
     a∈H : ⟨ toSet a ∈ˢ Hull ⟩
     a∈H = subst (λ z → ⟨ toSet z ∈ˢ Hull ⟩) (val-wit k ψ cs w)
             (inHull (wit k ψ cs))
-
 ```
 
 <!--en-->
@@ -509,6 +498,8 @@ Satisfaction is the recorded component, and the closure clause is complete.
     sat : ⟨ (a ∷ vals cs) ⊨₀ ψ ⟩
     sat = pa
 ```
+</div>
+</details>
 
 <!--en-->
 ## Transporting satisfaction along a carrier map
@@ -526,10 +517,13 @@ With the hull built and closed, the chapter turns to its second task, transporti
 包が作られ閉じたので、本章は二つ目の作業、構造の間の充足の移送に移る。移送は、周囲の台の上の二つの述語に対して述べられる。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module SatTransfer (MA MB : S → hProp (ℓ-suc ℓ)) where
-
 ```
+</summary>
+<div class="submodule-fold-content">
 
 <!--en-->
 The source carrier pairs each element of the ambient carrier with the proof that it satisfies the first predicate. Its formulas are read only at such pairs.
@@ -541,8 +535,7 @@ The source carrier pairs each element of the ambient carrier with the proof that
 
 ```agda
   SA : Type (ℓ-suc ℓ)
-  SA = Σ[ x ∈ S ] ⟨ MA x ⟩
-
+  SA = Σ[ x ∶ S ] ⟨ MA x ⟩
 ```
 
 <!--en-->
@@ -555,8 +548,7 @@ The target carrier is the same construction for the second predicate, and satisf
 
 ```agda
   SB : Type (ℓ-suc ℓ)
-  SB = Σ[ x ∈ S ] ⟨ MB x ⟩
-
+  SB = Σ[ x ∶ S ] ⟨ MB x ⟩
 ```
 
 <!--en-->
@@ -585,7 +577,6 @@ The target structure does the same on the other side, with its own satisfaction 
 
 ```agda
   open SemB.At SB id renaming ( _⊨_ to _⊨ᴮ_ ; ⟦_⟧ to ⟦_⟧ᴮ )
-
 ```
 
 <!--en-->
@@ -614,8 +605,7 @@ It need not identify `q` as the preimage of any previously chosen target witness
 
 ```agda
             → ⟨ map g δ ⊨ᴮ mapFo g (∃̇ φ) ⟩
-            → ∥ Σ[ q ∈ SA ] ⟨ (g q ∷ map g δ) ⊨ᴮ mapFo g φ ⟩ ∥₁
-
+            → ∥ Σ[ q ∶ SA ] ⟨ (g q ∷ map g δ) ⊨ᴮ mapFo g φ ⟩ ∥₁
 ```
 
 <!--en-->
@@ -626,13 +616,18 @@ The transfer module receives the map together with the atomic hypotheses. Atomic
 移送のモジュールは、写像と原子的な仮定を受け取る。原子的な所属と等号には、`g` を越えた双方向の一致が必要である。そうして初めて、帰納の中の所属と等号のアトムが命題のパスになる。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
   module Along (g : SA → SB)
     (at∈ : (n : ℕ) (t u : Term SA n) (δ : SA ^ n)
          → (δ ⊨ᴬ (t ∈̇ u)) ≡ (map g δ ⊨ᴮ mapFo g (t ∈̇ u)))
     (at≐ : (n : ℕ) (t u : Term SA n) (δ : SA ^ n)
          → (δ ⊨ᴬ (t ≐ u)) ≡ (map g δ ⊨ᴮ mapFo g (t ≐ u)))
+    (wit : Witness g) where
 ```
+</summary>
+<div class="submodule-fold-content">
 
 <!--en-->
 The witness principle is the third hypothesis, completing the data of the transfer.
@@ -641,11 +636,6 @@ The witness principle is the third hypothesis, completing the data of the transf
 <!--ja-->
 証人の原理が第三の仮定であり、移送のデータはこれでそろう。
 <!--/-->
-
-```agda
-    (wit : Witness g) where
-
-```
 
 <!--en-->
 The first weakening fact is stated in the source structure. Renaming by `suc` shifts every old variable past the new head of the environment, so evaluation at `x ∷ δ` recovers evaluation at `δ`; constants are unaffected.
@@ -672,7 +662,6 @@ The same weakening is sound in the target structure, and the next statement begi
 <!--/-->
 
 ```agda
-
       renB : {n : ℕ} (t : Term SB n) (x : SB) (δ : SB ^ n)
            → ⟦ renameTm suc t ⟧ᴮ (x ∷ δ) ≡ ⟦ t ⟧ᴮ δ
       renB (con c) x δ = refl
@@ -692,7 +681,6 @@ Mapping and weakening commute on terms, definitionally: the map of a weakened te
                 → mapTm g (renameTm suc t) ≡ renameTm suc (mapTm g t)
       mapTm-ren (con c) = refl
       mapTm-ren (var i) = refl
-
 ```
 
 <!--en-->
@@ -708,7 +696,6 @@ The mapped weakened term, evaluated at an arbitrary target point `x` followed by
            → ⟦ mapTm g (renameTm suc t) ⟧ᴮ (x ∷ map g δ) ≡ ⟦ mapTm g t ⟧ᴮ (map g δ)
       renG t x δ = cong (λ u → ⟦ u ⟧ᴮ (x ∷ map g δ)) (mapTm-ren t)
                  ∙ renB (mapTm g t) x (map g δ)
-
 ```
 
 <!--en-->
@@ -753,7 +740,6 @@ The chain ends by weakening in the target structure. With it, the side condition
 
 ```agda
         ∙ memRen t (g q) δ
-
 ```
 
 <!--en-->
@@ -768,7 +754,6 @@ The classical step is packaged once: for a proposition, double-negation eliminat
       dne : (P : hProp (ℓ-suc ℓ)) → (((⟨ P ⟩) → ⊥₀) → ⊥₀) → ⟨ P ⟩
       dne P h = decRec (λ p → p)
         (λ (np : ⟨ P ⟩ → ⊥₀) → ⊥₀-rec (h np)) (lem P)
-
 ```
 
 <!--en-->
@@ -941,8 +926,8 @@ The auxiliary matrix is the side condition conjoined with the matrix, and forwar
 
 ```agda
       mat = (var zero ∈̇ renameTm suc t) ∧̇ ψ
-      fwd : ∥ Σ[ q ∈ SA ] (⟨ fst q ∈ˢ fst (⟦ t ⟧ᴬ δ) ⟩ × ⟨ (q ∷ δ) ⊨ᴬ ψ ⟩) ∥₁
-          → ∥ Σ[ x ∈ SB ] (⟨ fst x ∈ˢ fst (⟦ mapTm g t ⟧ᴮ (map g δ)) ⟩
+      fwd : ∥ Σ[ q ∶ SA ] (⟨ fst q ∈ˢ fst (⟦ t ⟧ᴬ δ) ⟩ × ⟨ (q ∷ δ) ⊨ᴬ ψ ⟩) ∥₁
+          → ∥ Σ[ x ∶ SB ] (⟨ fst x ∈ˢ fst (⟦ mapTm g t ⟧ᴮ (map g δ)) ⟩
                         × ⟨ (x ∷ map g δ) ⊨ᴮ mapFo g ψ ⟩) ∥₁
       fwd = map₁ (λ { (q , hq , hψ) →
 ```
@@ -958,9 +943,9 @@ The two components are transported separately: the side condition by `memPath` a
 ```agda
         g q , (subst ⟨_⟩ (memPath t q δ) hq ,
                subst ⟨_⟩ (agree (suc n) ψ (q ∷ δ)) hψ) })
-      bwd : ∥ Σ[ x ∈ SB ] (⟨ fst x ∈ˢ fst (⟦ mapTm g t ⟧ᴮ (map g δ)) ⟩
+      bwd : ∥ Σ[ x ∶ SB ] (⟨ fst x ∈ˢ fst (⟦ mapTm g t ⟧ᴮ (map g δ)) ⟩
                         × ⟨ (x ∷ map g δ) ⊨ᴮ mapFo g ψ ⟩) ∥₁
-          → ∥ Σ[ q ∈ SA ] (⟨ fst q ∈ˢ fst (⟦ t ⟧ᴬ δ) ⟩ × ⟨ (q ∷ δ) ⊨ᴬ ψ ⟩) ∥₁
+          → ∥ Σ[ q ∶ SA ] (⟨ fst q ∈ˢ fst (⟦ t ⟧ᴬ δ) ⟩ × ⟨ (q ∷ δ) ⊨ᴬ ψ ⟩) ∥₁
 ```
 
 <!--en-->
@@ -990,6 +975,11 @@ The two components close the bounded-existential transfer, and the ten-clause in
 ```agda
           x , (subst ⟨_⟩ (sym (memRen t x δ)) hx , hψ) }) h))
 ```
+</div>
+</details>
+
+</div>
+</details>
 
 <!--en-->
 ## The Tarski-Vaught criterion inside a stage
@@ -1007,10 +997,13 @@ For an ordinal index `α`, the stage `Lset α` supplies the ambient structure in
 順序数の指数 `α` に対し、段階 `Lset α` を周囲の構造とすれば、上の移送からその内部での初等性が得られる。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module AtStage (α : S) (ordα : IsOrd α) where
-
 ```
+</summary>
+<div class="submodule-fold-content">
 
 <!--en-->
 The stage is transitive, and the reason is precise: `Lset-layer α` proves that the layer at `α` is transitive, and `layer-trans` turns that into transitivity of `Lset α`. The ordinality hypothesis is not used here; it is reserved for the well order below.
@@ -1023,7 +1016,6 @@ The stage is transitive, and the reason is precise: `Lset-layer α` proves that 
 ```agda
   Ltr : isTransV (Lset α)
   Ltr = layer-trans (Lset-layer α)
-
 ```
 
 <!--en-->
@@ -1037,7 +1029,6 @@ Transitivity lets bounded formulas be interpreted absolutely between `Lset α` a
 ```agda
   module AbsL = FOL.Absoluteness.Single 𝒮ᵥ (λ x → x ∈ˢ Lset α) Ltr
     using ( SM; 𝒮M; _⊨ᵐ_; ⟦_⟧ᵐ; abs₀ )
-
 ```
 
 <!--en-->
@@ -1051,7 +1042,6 @@ The stage carrier is the type of elements that belong to `Lset α`; every hull m
 ```agda
   SL : Type (ℓ-suc ℓ)
   SL = AbsL.SM
-
 ```
 
 <!--en-->
@@ -1065,9 +1055,15 @@ The stage order of the earlier chapter restricts to a well order on this carrier
 ```agda
   wL : SWO SL
   wL = orderAt α ordα
-  module AtM (M : S) (M⊆L : (x : S) → ⟨ x ∈ˢ M ⟩ → ⟨ x ∈ˢ Lset α ⟩) where
-
 ```
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
+```agda
+  module AtM (M : S) (M⊆L : (x : S) → ⟨ x ∈ˢ M ⟩ → ⟨ x ∈ˢ Lset α ⟩) where
+```
+</summary>
+<div class="submodule-fold-content">
 
 <!--en-->
 A carrier for the substructure is an element of the ambient carrier together with the proof that it belongs to `M`; formulas are read only at such pairs.
@@ -1079,8 +1075,7 @@ A carrier for the substructure is an element of the ambient carrier together wit
 
 ```agda
     SM : Type (ℓ-suc ℓ)
-    SM = Σ[ x ∈ S ] ⟨ x ∈ˢ M ⟩
-
+    SM = Σ[ x ∶ S ] ⟨ x ∈ˢ M ⟩
 ```
 
 <!--en-->
@@ -1095,7 +1090,6 @@ The semantics of the substructure is the ambient semantics restricted to `M`: te
     module SemM = FOL.Semantics (𝒮ᵥ ↾ (λ x → x ∈ˢ M))
       using ( module At )
     open SemM.At SM id renaming ( _⊨_ to _⊨ᵐ_ ; ⟦_⟧ to ⟦_⟧ᵐ )
-
 ```
 
 <!--en-->
@@ -1109,7 +1103,6 @@ The inclusion into the stage pairs each element of the carrier with its stage me
 ```agda
     inL : SM → SL
     inL c = fst c , M⊆L (fst c) (snd c)
-
 ```
 
 <!--en-->
@@ -1124,7 +1117,6 @@ Elementarity states that satisfaction is unchanged by this inclusion, for every 
     Elementary : Type (ℓ-suc (ℓ-suc ℓ))
     Elementary = (n : ℕ) (φ : Formula SM n) (δ : SM ^ n)
                → (δ ⊨ᵐ φ) ≡ (map inL δ AbsL.⊨ᵐ (mapFo inL φ))
-
 ```
 
 <!--en-->
@@ -1139,8 +1131,7 @@ Tarski-Vaught の判定条件は、初等性の証人の形である。段階が
     TarskiVaught : Type (ℓ-suc ℓ)
     TarskiVaught = (n : ℕ) (φ : Formula SM (suc n)) (δ : SM ^ n)
                  → ⟨ map inL δ AbsL.⊨ᵐ (mapFo inL (∃̇ φ)) ⟩
-                 → ∥ Σ[ q ∈ SM ] ⟨ (inL q ∷ map inL δ) AbsL.⊨ᵐ (mapFo inL φ) ⟩ ∥₁
-
+                 → ∥ Σ[ q ∶ SM ] ⟨ (inL q ∷ map inL δ) AbsL.⊨ᵐ (mapFo inL φ) ⟩ ∥₁
 ```
 
 <!--en-->
@@ -1168,7 +1159,6 @@ Terms agree across the inclusion: a term of the carrier evaluates to the same un
 <!--/-->
 
 ```agda
-
       tm-agree : (n : ℕ) (t : Term SM n) (δ : SM ^ n)
                → fst (⟦ t ⟧ᵐ δ) ≡ fst (AbsL.⟦ mapTm inL t ⟧ᵐ (map inL δ))
       tm-agree n (con c) δ = refl
@@ -1185,13 +1175,14 @@ Elementarity follows by instantiating the shared induction: the two atoms are th
 <!--/-->
 
 ```agda
-
     TV→elem : TarskiVaught → Elementary
     TV→elem tv = Tr.Along.agree inL
       (λ n t u δ → cong₂ _∈ˢ_ (tm-agree n t δ) (tm-agree n u δ))
       (λ n t u δ → cong₂ _≈ˢ_ (tm-agree n t δ) (tm-agree n u δ))
       tv
 ```
+</div>
+</details>
 
 <!--en-->
 ## Closing the starting set under least witnesses
@@ -1209,12 +1200,18 @@ A starting set `X` is assumed to lie in the stage, and the index `α` is assumed
 始集合 `X` がこの段階に含まれ、指数 `α` が空集合を含むと仮定する。空集合が `Lset α` に属するのは、`∅` が順序数 `α` の中にあり、基底の層で符号化されているからである。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
   module Hull (X : S) (X⊆L : (x : S) → ⟨ x ∈ˢ X ⟩ → ⟨ x ∈ˢ Lset α ⟩)
                (∅∈α : ⟨ ∅ ∈ˢ α ⟩) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
     ∅∈Lsetα : ⟨ ∅ ∈ˢ Lset α ⟩
     ∅∈Lsetα = Lset-in α ∅ ∅ ∅∈α (∅∈𝒟ₒ ∅)
-
 ```
 
 <!--en-->
@@ -1228,7 +1225,6 @@ The embedding of the starting set's presentation lands in the stage carrier: eac
 ```agda
     inStg : ⟪ X ⟫ → SL
     inStg m = ⟪ X ⟫↪ m , X⊆L (⟪ X ⟫↪ m) (member X m)
-
 ```
 
 <!--en-->
@@ -1242,7 +1238,6 @@ The term algebra is instantiated at the restricted structure of the stage: its c
 ```agda
     module T = TermAlgebra AbsL.𝒮M fst wL (∅ , ∅∈Lsetα) {K = ⟪ X ⟫} inStg
     open T using ( Code; base; val; Hull; inHull )
-
 ```
 
 <!--en-->
@@ -1257,7 +1252,7 @@ The hull lies in the stage: every member is the value of some code, and every co
     Hull⊆L : (x : S) → ⟨ x ∈ˢ Hull ⟩ → ⟨ x ∈ˢ Lset α ⟩
     Hull⊆L x x∈H = rec₁ (snd (x ∈ˢ Lset α)) go x∈H
       where
-      go : Σ[ c ∈ Code ] (fst (val c) ≡ x) → ⟨ x ∈ˢ Lset α ⟩
+      go : Σ[ c ∶ Code ] (fst (val c) ≡ x) → ⟨ x ∈ˢ Lset α ⟩
       go (c , q) = subst (λ z → ⟨ z ∈ˢ Lset α ⟩) q (snd (val c))
 ```
 
@@ -1271,9 +1266,8 @@ Membership reads back only as truncated existence: a member of the hull is the v
 
 ```agda
     hull-member : (x : S) → ⟨ x ∈ˢ Hull ⟩
-                → ∥ Σ[ c ∈ Code ] (fst (val c) ≡ x) ∥₁
+                → ∥ Σ[ c ∶ Code ] (fst (val c) ≡ x) ∥₁
     hull-member x x∈H = x∈H
-
 ```
 
 <!--en-->
@@ -1287,7 +1281,6 @@ In the other direction no truncation is needed: the value of every code is a mem
 ```agda
     val-in-Hull : (c : Code) → ⟨ fst (val c) ∈ˢ Hull ⟩
     val-in-Hull c = inHull c
-
 ```
 
 <!--en-->
@@ -1302,7 +1295,6 @@ The starting set enters the hull member by member. A member `x` of `X` is presen
     module XInM (x : S) (x∈X : ⟨ x ∈ˢ X ⟩) where
       mx : ⟪ X ⟫
       mx = fiber X x∈X .fst
-
 ```
 
 <!--en-->
@@ -1316,7 +1308,6 @@ The fiber carries the identification of the presented element with `x`, which is
 ```agda
       x≡val : ⟪ X ⟫↪ mx ≡ x
       x≡val = fiber X x∈X .snd
-
 ```
 
 <!--en-->
@@ -1330,7 +1321,6 @@ The base code at that index evaluates to the presented element, hence to `x`; th
 ```agda
       inM : ⟨ x ∈ˢ Hull ⟩
       inM = subst (λ z → ⟨ z ∈ˢ Hull ⟩) x≡val (inHull (base mx))
-
 ```
 
 <!--en-->
@@ -1345,6 +1335,11 @@ Assembled once, the containment of the starting set in the hull becomes a single
     X⊆M : (x : S) → ⟨ x ∈ˢ X ⟩ → ⟨ x ∈ˢ Hull ⟩
     X⊆M x x∈X = XInM.inM x x∈X
 ```
+</div>
+</details>
+
+</div>
+</details>
 
 <!--en-->
 ## Satisfaction is invariant under the collapse isomorphism
@@ -1362,11 +1357,24 @@ To compare satisfaction before and after an isomorphism, fix sets `M`, `PM`, and
 同型の前後で充足関係を比較するため、集合 `M`、`PM` と、`M` の要素を `PM` の要素へ送る台の写像 `p` を固定する。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module IsoInv (M : S) (PM : S)
   (p : S → S)
   (p∈ : (x : S) → ⟨ x ∈ˢ M ⟩ → ⟨ p x ∈ˢ PM ⟩)
+  (iso-fwd : (x y : S) (x∈ : ⟨ x ∈ˢ M ⟩) (y∈ : ⟨ y ∈ˢ M ⟩)
+           → ⟨ y ∈ˢ x ⟩ → ⟨ p y ∈ˢ p x ⟩)
+  (iso-bwd : (x y : S) (x∈ : ⟨ x ∈ˢ M ⟩) (y∈ : ⟨ y ∈ˢ M ⟩)
+           → ⟨ p y ∈ˢ p x ⟩ → ⟨ y ∈ˢ x ⟩)
+  (p-inj : (x y : S) (x∈ : ⟨ x ∈ˢ M ⟩) (y∈ : ⟨ y ∈ˢ M ⟩)
+          → p x ≡ p y → x ≡ y)
+  (surj : (z : S) (z∈ : ⟨ z ∈ˢ PM ⟩)
+        → ∥ Σ[ y ∶ S ] (⟨ y ∈ˢ M ⟩ × (p y ≡ z)) ∥₁)
+  where
 ```
+</summary>
+<div class="submodule-fold-content">
 
 <!--en-->
 Besides the closure condition `p∈`, the map `p` satisfies four hypotheses. `iso-fwd` preserves membership, `iso-bwd` reflects it, and the last two parameters state injectivity on `M` and surjectivity onto the target `PM`.
@@ -1376,14 +1384,6 @@ Besides the closure condition `p∈`, the map `p` satisfies four hypotheses. `is
 閉性の条件 `p∈` に加えて、写像 `p` には四つの仮定を置く。`iso-fwd` は所属を保存し、`iso-bwd` は所属を反映し、最後の二つの引数は `M` 上の単射性と終域 `PM` への全射性を述べる。
 <!--/-->
 
-```agda
-  (iso-fwd : (x y : S) (x∈ : ⟨ x ∈ˢ M ⟩) (y∈ : ⟨ y ∈ˢ M ⟩)
-           → ⟨ y ∈ˢ x ⟩ → ⟨ p y ∈ˢ p x ⟩)
-  (iso-bwd : (x y : S) (x∈ : ⟨ x ∈ˢ M ⟩) (y∈ : ⟨ y ∈ˢ M ⟩)
-           → ⟨ p y ∈ˢ p x ⟩ → ⟨ y ∈ˢ x ⟩)
-  (p-inj : (x y : S) (x∈ : ⟨ x ∈ˢ M ⟩) (y∈ : ⟨ y ∈ˢ M ⟩)
-```
-
 <!--en-->
 The map `p` is injective on `M` and merely surjective onto `PM`. With preservation and reflection, these are exactly the data of a membership isomorphism between the two structures.
 <!--zh-->
@@ -1391,14 +1391,6 @@ The map `p` is injective on `M` and merely surjective onto `PM`. With preservati
 <!--ja-->
 写像 `p` は `M` 上で単射であり、`PM` へ単に全射である。保存と反映と合わせて、これらはまさに二つの構造の間の所属の同型のデータである。
 <!--/-->
-
-```agda
-          → p x ≡ p y → x ≡ y)
-  (surj : (z : S) (z∈ : ⟨ z ∈ˢ PM ⟩)
-        → ∥ Σ[ y ∈ S ] (⟨ y ∈ˢ M ⟩ × (p y ≡ z)) ∥₁)
-  where
-
-```
 
 <!--en-->
 The source carrier pairs each element of `M` with its membership proof, as in every restricted structure of the chapter.
@@ -1410,8 +1402,7 @@ The source carrier pairs each element of `M` with its membership proof, as in ev
 
 ```agda
   SM : Type (ℓ-suc ℓ)
-  SM = Σ[ x ∈ S ] ⟨ x ∈ˢ M ⟩
-
+  SM = Σ[ x ∶ S ] ⟨ x ∈ˢ M ⟩
 ```
 
 <!--en-->
@@ -1424,8 +1415,7 @@ The target carrier pairs each element of `PM` with its membership proof.
 
 ```agda
   SPM : Type (ℓ-suc ℓ)
-  SPM = Σ[ x ∈ S ] ⟨ x ∈ˢ PM ⟩
-
+  SPM = Σ[ x ∶ S ] ⟨ x ∈ˢ PM ⟩
 ```
 
 <!--en-->
@@ -1439,7 +1429,6 @@ The isomorphism lifts to the paired carriers: apply `p` to the underlying elemen
 ```agda
   g : SM → SPM
   g m = p (fst m) , p∈ (fst m) (snd m)
-
 ```
 
 <!--en-->
@@ -1468,7 +1457,6 @@ The target semantics interprets the mapped terms and formulas in the restriction
 
 ```agda
   open module Pse = SemPM.At SPM id public renaming ( _⊨_ to _⊨ᵖᵐ_ ; ⟦_⟧ to ⟦_⟧ᵖᵐ )
-
 ```
 
 <!--en-->
@@ -1480,10 +1468,9 @@ Surjectivity promotes to the paired carriers: every element of the target `PM` i
 <!--/-->
 
 ```agda
-  surj' : (p' : SPM) → ∥ Σ[ q ∈ SM ] (g q ≡ p') ∥₁
+  surj' : (p' : SPM) → ∥ Σ[ q ∶ SM ] (g q ≡ p') ∥₁
   surj' (z , z∈) = map₁ (λ { (y , y∈ , e) →
     (y , y∈) , Σ≡Prop (λ w → ⟨ w ∈ˢ PM ⟩isProp) e }) (surj z z∈)
-
 ```
 
 <!--en-->
@@ -1496,7 +1483,6 @@ The general satisfaction-transfer theorem now applies to the predicates of membe
 
 ```agda
   module Tr = SatTransfer (λ x → x ∈ˢ M) (λ x → x ∈ˢ PM)
-
 ```
 
 <!--en-->
@@ -1524,7 +1510,6 @@ Terms agree under the map `p`: applying `p` to the value of a term of `M` equals
 <!--/-->
 
 ```agda
-
     tm-agree : {n : ℕ} (t : Term SM n) (δ : SM ^ n)
              → p (fst (⟦ t ⟧ᵐ δ)) ≡ fst (⟦ mapTm g t ⟧ᵖᵐ (map g δ))
     tm-agree (con m) δ = refl
@@ -1574,7 +1559,6 @@ The backward direction closes the membership clause: reflection through the isom
 
 ```agda
             (sym (tm-agree t δ)) h)))
-
 ```
 
 <!--en-->
@@ -1635,7 +1619,6 @@ The surjectivity lemma supplies the preimage, and the two transports compose int
 
 ```agda
         (surj' p') }) h
-
 ```
 
 <!--en-->
@@ -1650,7 +1633,6 @@ With the atomic cases and witness principle in place, the shared induction prove
   agree : (n : ℕ) (φ : Formula SM n) (δ : SM ^ n)
         → (δ ⊨ᵐ φ) ≡ (map g δ ⊨ᵖᵐ mapFo g φ)
   agree = Tr.Along.agree g at∈ at≐ wit
-
 ```
 
 <!--en-->
@@ -1665,7 +1647,6 @@ The agreement is recorded in two one-directional forms for later composition. Fo
   iso-inv : (n : ℕ) (φ : Formula SM n) (δ : SM ^ n)
           → ⟨ δ ⊨ᵐ φ ⟩ → ⟨ map g δ ⊨ᵖᵐ mapFo g φ ⟩
   iso-inv n φ δ = subst ⟨_⟩ (agree n φ δ)
-
 ```
 
 <!--en-->
@@ -1680,7 +1661,19 @@ Backward returns outer satisfaction to inner satisfaction. The chapter then inst
   iso-inv-bwd : (n : ℕ) (φ : Formula SM n) (δ : SM ^ n)
               → ⟨ map g δ ⊨ᵖᵐ mapFo g φ ⟩ → ⟨ δ ⊨ᵐ φ ⟩
   iso-inv-bwd n φ δ = subst ⟨_⟩ (sym (agree n φ δ))
+```
+</div>
+</details>
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
+```agda
 module CollapseIso (X : S) (Xext : isExt X) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   module C = Collapse X using ( module InjExt; π; πX; πX-intro; πX-member )
 ```
 
@@ -1694,7 +1687,6 @@ Extensionality of `X` is exactly what the collapse needs: the restricted structu
 
 ```agda
   module CI = C.InjExt Xext using ( iso; π-inj )
-
 ```
 
 <!--en-->
@@ -1708,7 +1700,6 @@ The target carrier is the collapse image `πX`; its points are precisely the col
 ```agda
   PM : S
   PM = C.πX
-
 ```
 
 <!--en-->
@@ -1722,7 +1713,6 @@ The map `p` sends each set to its Mostowski collapse value.
 ```agda
   p : S → S
   p = C.π
-
 ```
 
 <!--en-->
@@ -1736,7 +1726,6 @@ Members of `X` land in the image, by the collapse's own introduction rule for th
 ```agda
   p∈ : (x : S) → ⟨ x ∈ˢ X ⟩ → ⟨ p x ∈ˢ PM ⟩
   p∈ = C.πX-intro
-
 ```
 
 <!--en-->
@@ -1751,7 +1740,6 @@ Membership is preserved forward along the collapse: if `y` is a member of `x` in
   iso-fwd : (x y : S) (x∈ : ⟨ x ∈ˢ X ⟩) (y∈ : ⟨ y ∈ˢ X ⟩)
           → ⟨ y ∈ˢ x ⟩ → ⟨ p y ∈ˢ p x ⟩
   iso-fwd x y x∈ y∈ = CI.iso x y x∈ y∈ .fst
-
 ```
 
 <!--en-->
@@ -1766,7 +1754,6 @@ Membership reflects backward as well: a collapsed membership can only have arise
   iso-bwd : (x y : S) (x∈ : ⟨ x ∈ˢ X ⟩) (y∈ : ⟨ y ∈ˢ X ⟩)
           → ⟨ p y ∈ˢ p x ⟩ → ⟨ y ∈ˢ x ⟩
   iso-bwd x y x∈ y∈ = CI.iso x y x∈ y∈ .snd
-
 ```
 
 <!--en-->
@@ -1781,7 +1768,6 @@ The collapse is injective on `X`: two members with equal collapses are equal. Fa
   p-inj : (x y : S) (x∈ : ⟨ x ∈ˢ X ⟩) (y∈ : ⟨ y ∈ˢ X ⟩)
         → p x ≡ p y → x ≡ y
   p-inj = CI.π-inj
-
 ```
 
 <!--en-->
@@ -1794,9 +1780,8 @@ Every point of the image comes from a member of `X`: surjectivity is truncated, 
 
 ```agda
   surj : (z : S) (z∈ : ⟨ z ∈ˢ PM ⟩)
-       → ∥ Σ[ y ∈ S ] (⟨ y ∈ˢ X ⟩ × (p y ≡ z)) ∥₁
+       → ∥ Σ[ y ∶ S ] (⟨ y ∈ˢ X ⟩ × (p y ≡ z)) ∥₁
   surj = C.πX-member
-
 ```
 
 <!--en-->
@@ -1811,6 +1796,8 @@ For the extensional set `X`, collapse preserves and reflects membership, is inje
   module I = IsoInv X PM p p∈ iso-fwd iso-bwd p-inj surj
     using ( SM; SPM; g; surj'; iso-inv; iso-inv-bwd; _⊨ᵐ_; _⊨ᵖᵐ_; ⟦_⟧ᵐ; ⟦_⟧ᵖᵐ )
 ```
+</div>
+</details>
 
 <!--en-->
 ## The Skolem hull is elementary
@@ -1828,11 +1815,14 @@ Hence satisfaction transfers in both directions between the structure on `X` and
 したがって、`X` 上の構造と `πX` 上の構造の間で充足関係を双方向に移せる。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module HullElemDown (α : S) (ordα : IsOrd α)
   (X : S) (X⊆L : (x : S) → ⟨ x ∈ˢ X ⟩ → ⟨ x ∈ˢ Lset α ⟩) (∅∈α : ⟨ ∅ ∈ˢ α ⟩) where
-
 ```
+</summary>
+<div class="submodule-fold-content">
 
 <!--en-->
 Applied to the Skolem hull inside `Lset α`, this reduces elementarity to the Tarski-Vaught witness condition.
@@ -1861,7 +1851,7 @@ The substructure machinery is instantiated at the hull, and its formulas receive
 ```agda
   module A = ASt.AtM M H.Hull⊆L using ( Elementary; SM; module SemM; TV→elem; inL )
   module Mse = A.SemM.At A.SM id using ( _⊨_ )
-  codeOf : (q : A.SM) → ∥ Σ[ c ∈ H.T.Code ] (H.T.val c ≡ A.inL q) ∥₁
+  codeOf : (q : A.SM) → ∥ Σ[ c ∶ H.T.Code ] (H.T.val c ≡ A.inL q) ∥₁
   codeOf q = map₁ (λ { (c , e) → c , Σ≡Prop (λ z → ⟨ z ∈ˢ Lset α ⟩isProp) e })
     (H.hull-member (fst q) (snd q))
 ```
@@ -1875,9 +1865,8 @@ Codes lift from single elements to finite environments: the empty environment is
 <!--/-->
 
 ```agda
-
   codeEnv : {n : ℕ} (δ : Vec A.SM n)
-          → ∥ Σ[ ds ∈ Vec H.T.Code n ]
+          → ∥ Σ[ ds ∶ Vec H.T.Code n ]
                (map H.T.val ds ≡ map A.inL δ) ∥₁
   codeEnv [] = ∣ [] , refl ∣₁
   codeEnv (q ∷ δ) = map2
@@ -1894,7 +1883,6 @@ The cons case composes the two truncated existences into one: the extended vecto
 ```agda
     (λ { (c , ec) (ds , eds) → c ∷ ds , cong₂ _∷_ ec eds })
     (codeOf q) (codeEnv δ)
-
 ```
 
 <!--en-->
@@ -1923,7 +1911,7 @@ The statement is the Tarski-Vaught condition itself: if the stage satisfies an e
 
 ```agda
      → ⟨ map A.inL δ ASt.AbsL.⊨ᵐ (mapFo A.inL (∃̇ ψ)) ⟩
-     → ∥ Σ[ q ∈ A.SM ]
+     → ∥ Σ[ q ∶ A.SM ]
           ⟨ (A.inL q ∷ map A.inL δ) ASt.AbsL.⊨ᵐ (mapFo A.inL ψ) ⟩ ∥₁
   tv n ψ δ h = rec₁ squash₁ takeEnvironment (codeEnv params)
     where
@@ -1940,7 +1928,6 @@ Parameter abstraction replaces every constant occurrence by an additional free v
 ```agda
     bodyFo : Formula (⊥* {ℓ}) (suc (n + countFo ψ))
     bodyFo = absFo ψ
-
 ```
 
 <!--en-->
@@ -1954,7 +1941,6 @@ The environment for the abstracted body is the old environment followed by the c
 ```agda
     params : Vec A.SM (n + countFo ψ)
     params = δ ++ constantsFo ψ
-
 ```
 
 <!--en-->
@@ -1966,9 +1952,9 @@ Once this combined environment has codes, least-witness closure supplies a hull 
 <!--/-->
 
 ```agda
-    takeEnvironment : Σ[ ds ∈ Vec H.T.Code (n + countFo ψ) ]
+    takeEnvironment : Σ[ ds ∶ Vec H.T.Code (n + countFo ψ) ]
                         (map H.T.val ds ≡ map A.inL params)
-                    → ∥ Σ[ q ∈ A.SM ]
+                    → ∥ Σ[ q ∶ A.SM ]
                          ⟨ (A.inL q ∷ map A.inL δ) ASt.AbsL.⊨ᵐ
                              (mapFo A.inL ψ) ⟩ ∥₁
 ```
@@ -1998,7 +1984,6 @@ The key identification states that the abstracted body, read in the bare search 
 <!--/-->
 
 ```agda
-
       body-path : (b : ASt.SL)
                 → ((b ∷ H.T.vals ds) H.T.⊨₀ bodyFo)
                 ≡ ((b ∷ map A.inL δ) ASt.AbsL.⊨ᵐ mapFo A.inL ψ)
@@ -2019,7 +2004,6 @@ The path combines two semantic compatibility laws: `⊨-abs` relates parameter a
                  (b ∷ map A.inL δ))
         ∙ sym (⊨-map ASt.AbsL.𝒮M A.inL id ψ
                  (b ∷ map A.inL δ))
-
 ```
 
 <!--en-->
@@ -2034,7 +2018,6 @@ The stage's satisfaction of the existential is transported along the body path i
       witness : H.T.Sat (n + countFo ψ) bodyFo (H.T.vals ds)
       witness = map₁ (λ { (b , hb) →
         b , subst ⟨_⟩ (sym (body-path b)) hb }) h
-
 ```
 
 <!--en-->
@@ -2046,10 +2029,10 @@ The search returns a least witness inside the hull, satisfying the abstracted bo
 <!--/-->
 
 ```agda
-      finish : Σ[ a ∈ ASt.SL ]
+      finish : Σ[ a ∶ ASt.SL ]
                  ( ⟨ fst a ∈ˢ M ⟩
                  × ⟨ (a ∷ H.T.vals ds) H.T.⊨₀ bodyFo ⟩ )
-             → Σ[ q ∈ A.SM ]
+             → Σ[ q ∶ A.SM ]
                  ⟨ (A.inL q ∷ map A.inL δ) ASt.AbsL.⊨ᵐ (mapFo A.inL ψ) ⟩
 ```
 
@@ -2066,7 +2049,6 @@ The witness is read back into the carrier of the substructure: the underlying se
         where
         q : A.SM
         q = fst a , a∈H
-
 ```
 
 <!--en-->
@@ -2080,7 +2062,6 @@ The inclusion of the witness into the stage is the witness itself: the two carri
 ```agda
         q≡a : A.inL q ≡ a
         q≡a = Σ≡Prop (λ z → ⟨ z ∈ˢ Lset α ⟩isProp) refl
-
 ```
 
 <!--en-->
@@ -2096,7 +2077,6 @@ The satisfaction of the body at the witness transports along the body path into 
         sat = subst (λ b → ⟨ (b ∷ map A.inL δ) ASt.AbsL.⊨ᵐ
                                 (mapFo A.inL ψ) ⟩)
                 (sym q≡a) (subst ⟨_⟩ (body-path a) ha)
-
 ```
 
 <!--en-->
@@ -2111,6 +2091,8 @@ The Tarski-Vaught condition therefore yields elementarity of the hull in `Lset �
   elem : A.Elementary
   elem = A.TV→elem tv
 ```
+</div>
+</details>
 
 <!--en-->
 ## Reading parameter-free formulas in the ambient universe
@@ -2130,7 +2112,6 @@ For formulas with empty constant domain, ambient satisfaction can then be compar
 
 ```agda
 module AtP = SemV.At (⊥* {ℓ-suc ℓ}) (λ b → ⊥*-rec b) using ( _⊨_ )
-
 ```
 
 <!--en-->
@@ -2177,7 +2158,6 @@ Ordinality is expressed by a one-slot bounded formula saying that the parameter 
   isOrdAt =
     (∀̇∈ (var zero) (∀̇∈ (var zero) (var zero ∈̇ var (suc (suc zero)))))
     ∧̇ (∀̇∈ (var zero) (∀̇∈ (var zero) (∀̇∈ (var zero) (var zero ∈̇ var (suc (suc zero))))))
-
 ```
 
 <!--en-->
@@ -2193,7 +2173,6 @@ The `Δ₀` certificate follows the outer conjunction, then the two bounded quan
   Δ₀-isOrdAt =
     δ-∧ (δ-∀∈ (δ-∀∈ δ-∈))
         (δ-∀∈ (δ-∀∈ (δ-∀∈ δ-∈)))
-
 ```
 
 <!--en-->
@@ -2204,11 +2183,17 @@ The two reading lemmas identify satisfaction of `isOrdAt` exactly with the ordin
 二つの読み取り補題は、`isOrdAt` の充足と順序数述語を双方向に正確に対応させる。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Amb where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   opaque
     unfolding isOrdAt
-
 ```
 
 <!--en-->
@@ -2224,7 +2209,6 @@ Reading ordinality out of the formula unpacks the two bounded clauses into the t
     isOrdAt-out x h =
         ( λ {x₁} {y} y∈x₁ x₁∈x → h .fst x₁ x₁∈x y y∈x₁ )
       , ( λ a a∈x {x₁} {y} y∈x₁ x₁∈a → h .snd a a∈x x₁ x₁∈a y y∈x₁ )
-
 ```
 
 <!--en-->
@@ -2240,6 +2224,10 @@ Conversely, the two fields of `IsOrd` satisfy the two bounded clauses. The three
     isOrdAt-in x o =
         ( λ a a∈x b hb → o .fst {a} {b} hb a∈x )
       , ( λ a a∈x b b∈a c hc → o .snd a a∈x {b} {c} hc b∈a )
+```
+</div>
+</details>
+```agda
 isOrd-at-p : Formula (⊥* {ℓ-suc ℓ}) 3
 ```
 
@@ -2269,7 +2257,6 @@ The second conjunct says that each member `a` of the parameter is transitive: wh
 
 ```agda
         (∀̇∈ (var zero) (var zero ∈̇ var (suc (suc zero))))))
-
 ```
 
 <!--en-->
@@ -2335,9 +2322,15 @@ The unbounded quantifier cases are impossible because no `Δ₀` certificate has
 非有界量化子の場合は、それに対応する `Δ₀` の構成子が存在しないため不可能である。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module HullStage (lam : S) (ordλ : IsOrd lam)
+  (succλ : (d : S) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩)
+  (X : S) (X⊆L : (x : S) → ⟨ x ∈ˢ X ⟩ → ⟨ x ∈ˢ Lset lam ⟩) (∅∈λ : ⟨ ∅ ∈ˢ lam ⟩) where
 ```
+</summary>
+<div class="submodule-fold-content">
 
 <!--en-->
 The frame receives a stage whose index admits successors of its members, a starting set contained in that stage, and the empty set's membership in the index.
@@ -2346,12 +2339,6 @@ The frame receives a stage whose index admits successors of its members, a start
 <!--ja-->
 枠組みは、指数が要素の後続を認める段階、その段階に含まれる始集合、そして空集合の指数への所属を受け取る。
 <!--/-->
-
-```agda
-  (succλ : (d : S) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩)
-  (X : S) (X⊆L : (x : S) → ⟨ x ∈ˢ X ⟩ → ⟨ x ∈ˢ Lset lam ⟩) (∅∈λ : ⟨ ∅ ∈ˢ lam ⟩) where
-
-```
 
 <!--en-->
 Inside `Lset lam`, the starting set generates a Skolem hull `M`. Every element of `M` remains in the stage.
@@ -2364,7 +2351,6 @@ Inside `Lset lam`, the starting set generates a Skolem hull `M`. Every element o
 ```agda
   module ASt = AtStage lam ordλ
     using ( module AbsL; module AtM; module Hull; Ltr; SL; wL )
-
 ```
 
 <!--en-->
@@ -2379,7 +2365,6 @@ The original set and the empty-set fallback are both represented in the hull con
   module H = ASt.Hull X X⊆L ∅∈λ
     using ( module T; module XInM; Hull⊆L; X⊆M; hull-member
           ; val-in-Hull; ∅∈Lsetα; inStg )
-
 ```
 
 <!--en-->
@@ -2393,7 +2378,6 @@ This set `M` is the carrier whose elementarity and Mostowski collapse enter the 
 ```agda
   M : S
   M = H.T.Hull
-
 ```
 
 <!--en-->
@@ -2407,7 +2391,6 @@ For the hull `M`, let `π` be its Mostowski collapse and `πX` its image. Every 
 ```agda
   module C = Collapse M
     using ( module InjExt; π; πX; πX-intro; πX-member; πX-trans; fixes )
-
 ```
 
 <!--en-->
@@ -2418,13 +2401,17 @@ The condensation argument assumes two properties of the image. First, if an ordi
 凝縮の議論では、崩壊像について二つの性質を仮定する。第一に、順序数 `δ` が像に属するなら、段階 `Lset δ` も像に属する。第二に、包の各要素の崩壊は、像に属する順序数を添字とするある段階に属する。この閉性と被覆の性質により、崩壊像を `L` の一つの段階と同定できる。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
   module Condense
     (levelIn : (δ : S) → IsOrd δ → ⟨ δ ∈ˢ C.πX ⟩ → ⟨ Lset δ ∈ˢ C.πX ⟩)
     (cover : (y : S) → ⟨ y ∈ˢ M ⟩
-           → ∥ Σ[ γ ∈ S ] (IsOrd γ × ⟨ γ ∈ˢ C.πX ⟩ × ⟨ C.π y ∈ˢ Lset γ ⟩) ∥₁)
+           → ∥ Σ[ γ ∶ S ] (IsOrd γ × ⟨ γ ∈ˢ C.πX ⟩ × ⟨ C.π y ∈ˢ Lset γ ⟩) ∥₁)
     where
 ```
+</summary>
+<div class="submodule-fold-content">
 
 <!--en-->
 Separation forms the set of exactly those members of `πX` that are ordinals. Thus `β` records the ordinal part of the collapse image. The separating predicate is the bounded ordinality formula, small at every environment by its Δ₀ certificate.
@@ -2435,11 +2422,10 @@ Separation forms the set of exactly those members of `πX` that are ordinals. Th
 <!--/-->
 
 ```agda
-    β-sep : Σ[ s ∈ S ]
+    β-sep : Σ[ s ∶ S ]
               (∀ y → (y ∈ˢ s) ≡ ((y ∈ˢ C.πX) ⊓ ((y ∷ []) ⊨ₚ isOrdAt)))
     β-sep = separateFromSmall C.πX (λ y → (y ∷ []) ⊨ₚ isOrdAt)
               (λ y → D0.Δ₀-small Δ₀-isOrdAt (y ∷ []))
-
 ```
 
 <!--en-->
@@ -2453,7 +2439,6 @@ We call this ordinal part `β`; the following argument proves that it is itself 
 ```agda
     β : S
     β = β-sep .fst
-
 ```
 
 <!--en-->
@@ -2467,7 +2452,6 @@ Membership in `β` is equivalent to membership in `πX` together with satisfacti
 ```agda
     β-spec : (y : S) → (y ∈ˢ β) ≡ ((y ∈ˢ C.πX) ⊓ ((y ∷ []) ⊨ₚ isOrdAt))
     β-spec = β-sep .snd
-
 ```
 
 <!--en-->
@@ -2481,7 +2465,6 @@ The first projection of the equivalence shows every member of beta is a member o
 ```agda
     β∈πX : (δ : S) → ⟨ δ ∈ˢ β ⟩ → ⟨ δ ∈ˢ C.πX ⟩
     β∈πX δ δ∈β = subst ⟨_⟩ (β-spec δ) δ∈β .fst
-
 ```
 
 <!--en-->
@@ -2495,7 +2478,6 @@ The second component converts satisfaction of this constant-free one-variable fo
 ```agda
     β-ord : (δ : S) → ⟨ δ ∈ˢ β ⟩ → IsOrd δ
     β-ord δ δ∈β = Amb.isOrdAt-out δ (subst ⟨_⟩ (β-spec δ) δ∈β .snd)
-
 ```
 
 <!--en-->
@@ -2509,7 +2491,6 @@ Conversely, an ordinal of the collapse image lies in beta: both defining compone
 ```agda
     ord∈β : (δ : S) → ⟨ δ ∈ˢ C.πX ⟩ → IsOrd δ → ⟨ δ ∈ˢ β ⟩
     ord∈β δ δ∈πX oδ = subst ⟨_⟩ (sym (β-spec δ)) (δ∈πX , Amb.isOrdAt-in δ oδ)
-
 ```
 
 <!--en-->
@@ -2554,7 +2535,7 @@ The covering hypothesis lifts from hull members to collapse members. Since a col
 
 ```agda
     covered : (x : S) → ⟨ x ∈ˢ C.πX ⟩
-            → ∥ Σ[ γ ∈ S ]
+            → ∥ Σ[ γ ∶ S ]
                  (IsOrd γ × ⟨ γ ∈ˢ C.πX ⟩ × ⟨ x ∈ˢ Lset γ ⟩) ∥₁
     covered x x∈πX = rec₁ squash₁ go (C.πX-member x x∈πX)
       where
@@ -2569,8 +2550,8 @@ The inversion is the collapse's own member description: a member of the image is
 <!--/-->
 
 ```agda
-      go : Σ[ y ∈ S ] (⟨ y ∈ˢ M ⟩ × (C.π y ≡ x))
-         → ∥ Σ[ γ ∈ S ]
+      go : Σ[ y ∶ S ] (⟨ y ∈ˢ M ⟩ × (C.π y ≡ x))
+         → ∥ Σ[ γ ∶ S ]
               (IsOrd γ × ⟨ γ ∈ˢ C.πX ⟩ × ⟨ x ∈ˢ Lset γ ⟩) ∥₁
       go (y , y∈M , e) = map₁
         (λ { (γ , oγ , γ∈πX , h) →
@@ -2588,7 +2569,7 @@ The cover transports along the equality of the collapse values. The lifted state
           γ , oγ , γ∈πX , subst (λ w → ⟨ w ∈ˢ Lset γ ⟩) e h })
         (cover y y∈M)
     β-succ : (δ : S) → ⟨ δ ∈ˢ β ⟩
-           → ∥ Σ[ γ ∈ S ] (IsOrd γ × ⟨ δ ∈ˢ γ ⟩ × ⟨ γ ∈ˢ β ⟩) ∥₁
+           → ∥ Σ[ γ ∶ S ] (IsOrd γ × ⟨ δ ∈ˢ γ ⟩ × ⟨ γ ∈ˢ β ⟩) ∥₁
     β-succ δ δ∈β = map₁ go (covered δ (β∈πX δ δ∈β))
 ```
 
@@ -2604,8 +2585,8 @@ delta の順序数性はベータから読まれ、変換は覆いの結論を�
       where
       oδ : IsOrd δ
       oδ = β-ord δ δ∈β
-      go : Σ[ γ ∈ S ] (IsOrd γ × ⟨ γ ∈ˢ C.πX ⟩ × ⟨ δ ∈ˢ Lset γ ⟩)
-         → Σ[ γ ∈ S ] (IsOrd γ × ⟨ δ ∈ˢ γ ⟩ × ⟨ γ ∈ˢ β ⟩)
+      go : Σ[ γ ∶ S ] (IsOrd γ × ⟨ γ ∈ˢ C.πX ⟩ × ⟨ δ ∈ˢ Lset γ ⟩)
+         → Σ[ γ ∶ S ] (IsOrd γ × ⟨ δ ∈ˢ γ ⟩ × ⟨ γ ∈ˢ β ⟩)
 ```
 
 <!--en-->
@@ -2633,7 +2614,7 @@ The reverse inclusion holds because the level at beta contains every smaller lev
 <!--/-->
 
 ```agda
-      go : Σ[ γ ∈ S ] (IsOrd γ × ⟨ γ ∈ˢ C.πX ⟩ × ⟨ x ∈ˢ Lset γ ⟩)
+      go : Σ[ γ ∶ S ] (IsOrd γ × ⟨ γ ∈ˢ C.πX ⟩ × ⟨ x ∈ˢ Lset γ ⟩)
          → ⟨ x ∈ˢ Lset β ⟩
       go (γ , oγ , γ∈πX , x∈Lγ) =
         Lset-mono {α = β} {β = γ} (ord∈β γ γ∈πX oγ) x∈Lγ
@@ -2651,7 +2632,7 @@ The forward inclusion decomposes a member of the level at beta by the stage cons
 ```agda
     Lβ⊆πX x x∈Lβ = rec₁ (snd (x ∈ˢ C.πX)) go (Lset-out β x x∈Lβ)
       where
-      go : Σ[ δ ∈ S ] (⟨ δ ∈ˢ β ⟩ × ⟨ x ∈ˢ 𝒟ₒ (Lset δ) ⟩)
+      go : Σ[ δ ∶ S ] (⟨ δ ∈ˢ β ⟩ × ⟨ x ∈ˢ 𝒟ₒ (Lset δ) ⟩)
          → ⟨ x ∈ˢ C.πX ⟩
       go (δ , δ∈β , x∈𝒟ₒδ) = rec₁ (snd (x ∈ˢ C.πX)) liftStage (β-succ δ δ∈β)
 ```
@@ -2666,7 +2647,7 @@ The lifting stage is stated: from an ordinal inside beta containing delta, produ
 
 ```agda
         where
-        liftStage : Σ[ γ ∈ S ] (IsOrd γ × ⟨ δ ∈ˢ γ ⟩ × ⟨ γ ∈ˢ β ⟩)
+        liftStage : Σ[ γ ∶ S ] (IsOrd γ × ⟨ δ ∈ˢ γ ⟩ × ⟨ γ ∈ˢ β ⟩)
              → ⟨ x ∈ˢ C.πX ⟩
         liftStage (γ , oγ , δ∈γ , γ∈β) =
           C.πX-trans {x = Lset γ} {y = x}
@@ -2714,7 +2695,6 @@ The second half does the same for the forward inclusion, and the two halves iden
 
 ```agda
         (Lβ⊆πX x (∈∈ₛ {a = x} {b = Lset β} .snd x∈ₛLβ))
-
 ```
 
 <!--en-->
@@ -2726,12 +2706,24 @@ The condensation statement is thus assembled: the collapse image is the level at
 <!--/-->
 
 ```agda
-    condenses : Σ[ γ ∈ S ] (IsOrd γ × (C.πX ≡ Lset γ))
+    condenses : Σ[ γ ∶ S ] (IsOrd γ × (C.πX ≡ Lset γ))
     condenses = β , β-isOrd , ext
+```
+</div>
+</details>
+
+</div>
+</details>
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
+```agda
 module UnionKit (α lam x : S) (ordα : IsOrd α) (ordλ : IsOrd lam)
   (α∈λ : ⟨ α ∈ˢ lam ⟩) (x⊆Lα : (z : S) → ⟨ z ∈ˢ x ⟩ → ⟨ z ∈ˢ Lset α ⟩)
   (x∈Lλ : ⟨ x ∈ˢ Lset lam ⟩) (α∉ω : ⟨ α ∈ˢ ω ⟩ → ⊥₀) where
 ```
+</summary>
+<div class="submodule-fold-content">
 
 <!--en-->
 The starting set is the union of `Lset α` and the singleton `{x}`; singleton classification gives `x ∈ {x}`.
@@ -2742,12 +2734,10 @@ The starting set is the union of `Lset α` and the singleton `{x}`; singleton cl
 <!--/-->
 
 ```agda
-
   X : S
   X = Lset α ∪ ⁅ x ⁆s
   x∈sgl : ⟨ x ∈ₛ ⁅ x ⁆s ⟩
   x∈sgl = SetPackage.classification (SingletonPackage x) x .snd refl
-
 ```
 
 <!--en-->
@@ -2761,7 +2751,6 @@ The extra point belongs to the starting set through the right side of the union.
 ```agda
   x∈X : ⟨ x ∈ˢ X ⟩
   x∈X = cup-inr (Lset α) ⁅ x ⁆s x (∈∈ₛ {a = x} {b = ⁅ x ⁆s} .snd x∈sgl)
-
 ```
 
 <!--en-->
@@ -2775,7 +2764,6 @@ Every member of the stage belongs to the starting set through the left side.
 ```agda
   Lα∈X : (z : S) → ⟨ z ∈ˢ Lset α ⟩ → ⟨ z ∈ˢ X ⟩
   Lα∈X = cup-inl (Lset α) ⁅ x ⁆s
-
 ```
 
 <!--en-->
@@ -2789,7 +2777,6 @@ The singleton characterization says that every member of `{x}` is equal to `x`.
 ```agda
   sgl≡ : (z : S) → ⟨ z ∈ˢ ⁅ x ⁆s ⟩ → z ≡ x
   sgl≡ = sgl-out x
-
 ```
 
 <!--en-->
@@ -2804,7 +2791,6 @@ Consequently, membership in the starting set splits into two cases: a point belo
   X-mem : (z : S) → ⟨ z ∈ˢ X ⟩
         → ⟨ (z ∈ˢ Lset α) ⊔ (z ∈ˢ ⁅ x ⁆s) ⟩
   X-mem = cup-out (Lset α) ⁅ x ⁆s
-
 ```
 
 <!--en-->
@@ -2833,7 +2819,6 @@ A member on the singleton side reduces to the extra point, whose stage membershi
 
 ```agda
     go (inr z∈sgl) = subst (λ u → ⟨ u ∈ˢ Lset lam ⟩) (sym (sgl≡ z z∈sgl)) x∈Lλ
-
 ```
 
 <!--en-->
@@ -2880,7 +2865,6 @@ Infinity means not belonging to `ω`, and the trichotomy of ordinals decides the
       (⊎-rec (λ α≡ω → subst (λ w → ⟨ sucV ∅ ∈ˢ w ⟩) (sym α≡ω) (#∈ω 1))
                (λ ω∈α → ordα .fst (#∈ω 1) ω∈α))
       (ord-tri α ordα ω ω-ord)
-
 ```
 
 <!--en-->
@@ -2894,7 +2878,6 @@ The empty set appears at the first successor stage, by the base-layer coding tra
 ```agda
   ∅∈Lset1 : ⟨ ∅ ∈ˢ Lset (sucV ∅) ⟩
   ∅∈Lset1 = subst (λ w → ⟨ ∅ ∈ˢ w ⟩) (sym (Lset-suc ∅)) (∅∈𝒟ₒ ∅)
-
 ```
 
 <!--en-->
@@ -2909,7 +2892,6 @@ Monotonicity lifts the empty set first into `Lset α` and then into `Lset lam`.
   ∅∈Lλ : ⟨ ∅ ∈ˢ Lset lam ⟩
   ∅∈Lλ = Lset-mono {α = lam} {β = α} α∈λ
     (Lset-mono {α = α} {β = sucV ∅} one∈α ∅∈Lset1)
-
 ```
 
 <!--en-->
@@ -2924,9 +2906,19 @@ The rank characterization then promotes this to membership of the empty set in t
   ∅∈λ : ⟨ ∅ ∈ˢ lam ⟩
   ∅∈λ = subst (λ w → ⟨ w ∈ˢ lam ⟩) (rank-fix ∅ ∅-ord)
     (rank-Lset lam ordλ ∅ ∅∈Lλ)
+```
+</div>
+</details>
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
+```agda
 module HullExt (α : S) (ordα : IsOrd α)
   (X : S) (X⊆L : (x : S) → ⟨ x ∈ˢ X ⟩ → ⟨ x ∈ˢ Lset α ⟩)
+  (∅∈α : ⟨ ∅ ∈ˢ α ⟩) where
 ```
+</summary>
+<div class="submodule-fold-content">
 
 <!--en-->
 The empty-set membership assumption ensures that the Skolem hull at `Lset α` has the default value required by its term algebra.
@@ -2935,11 +2927,6 @@ The empty-set membership assumption ensures that the Skolem hull at `Lset α` ha
 <!--ja-->
 空集合が指数に属するという仮定により、`Lset α` における Skolem 包は、その項代数に必要な既定値をもつ。
 <!--/-->
-
-```agda
-  (∅∈α : ⟨ ∅ ∈ˢ α ⟩) where
-
-```
 
 <!--en-->
 Let `M` be the Skolem hull of `X` inside `Lset α`. Its inclusion into the stage is elementary. We compare formulas in the hull with their interpretations in the stage in order to prove that membership restricted to `M` is extensional.
@@ -2966,7 +2953,6 @@ The hull is named, and the symmetric difference of two sets is stated at the lev
 <!--/-->
 
 ```agda
-
   M : S
   M = H.T.Hull
   Different : S → S → S → Type (ℓ-suc ℓ)
@@ -2983,11 +2969,11 @@ Unequal sets have a point in their symmetric difference, classically: the trunca
 <!--/-->
 
 ```agda
-  different : (x y : S) → (x ≡ y → ⊥₀) → ∥ Σ[ z ∈ S ] Different x y z ∥₁
+  different : (x y : S) → (x ≡ y → ⊥₀) → ∥ Σ[ z ∶ S ] Different x y z ∥₁
   different x y nxy = go (lem P)
     where
     P : hProp (ℓ-suc ℓ)
-    P = ∥ Σ[ z ∈ S ] Different x y z ∥₁ , squash₁
+    P = ∥ Σ[ z ∶ S ] Different x y z ∥₁ , squash₁
 ```
 
 <!--en-->
@@ -3016,10 +3002,12 @@ Both directions of the agreement are decided by excluded middle, and each failin
 
 ```agda
       fwd z zx = decRec (λ zy → zy)
-        (λ nzy → ⊥₀-rec (np ∣ z , inl (zx , nzy) ∣₁)) (lem (z ∈ˢ y))
+        (λ nzy → ⊥₀-rec (np ∣ z , inl (zx , nzy) ∣₁))
+        (FOL.Semantics.decideMembership 𝒮ᵥ lem z y)
       bwd : (z : S) → z ∈ᵗ y → z ∈ᵗ x
       bwd z zy = decRec (λ zx → zx)
-        (λ nzx → ⊥₀-rec (np ∣ z , inr (zy , nzx) ∣₁)) (lem (z ∈ˢ x))
+        (λ nzx → ⊥₀-rec (np ∣ z , inr (zy , nzx) ∣₁))
+        (FOL.Semantics.decideMembership 𝒮ᵥ lem z x)
 ```
 
 <!--en-->
@@ -3047,7 +3035,7 @@ Existential satisfaction is truncated, so the distinguishing point is returned u
 <!--/-->
 
 ```agda
-        → ∥ Σ[ a ∈ ASt.SL ]
+        → ∥ Σ[ a ∶ ASt.SL ]
             ⟨ (a ∷ []) ASt.AbsL.⊨ᵐ (mapFo A.inL (φ (u , u∈M) (v , v∈M))) ⟩ ∥₁
   outer u v u∈M v∈M z d = ∣ a , ∣ objectDifferent d ∣₁ ∣₁
     where
@@ -3114,7 +3102,6 @@ The two hull members are read as elements of the substructure carrier, ready to 
     xS = x , x∈M
     yS : A.SM
     yS = y , y∈M
-
 ```
 
 <!--en-->
@@ -3126,7 +3113,7 @@ The refutation eliminates the difference point. Elementarity converts the stage'
 <!--/-->
 
 ```agda
-    diff : Σ[ z ∈ S ] Different x y z → ⊥₀
+    diff : Σ[ z ∶ S ] Different x y z → ⊥₀
     diff (z , d) = rec₁ isProp⊥ inside h
       where
       h : ⟨ [] Mse.⊨ (∃̇ (φ xS yS)) ⟩
@@ -3143,7 +3130,7 @@ Elementarity supplies a hull witness satisfying the difference formula. Eliminat
 
 ```agda
         (outer x y x∈M y∈M z d)
-      inside : Σ[ b ∈ A.SM ] ⟨ (b ∷ []) Mse.⊨ φ xS yS ⟩ → ⊥₀
+      inside : Σ[ b ∶ A.SM ] ⟨ (b ∷ []) Mse.⊨ φ xS yS ⟩ → ⊥₀
       inside (b , q) = rec₁ isProp⊥ cases q
         where
         cases : (⟨ fst b ∈ˢ x ⟩ × (⟨ fst b ∈ˢ y ⟩ → Lift ⊥₀))
@@ -3162,7 +3149,6 @@ Either disjunct identifies the witness as a member of one hull member but not th
               → ⊥₀
         cases (inl (bx , nby)) = lower (nby (ag1 (fst b) (snd b) bx))
         cases (inr (by , nbx)) = lower (nbx (ag2 (fst b) (snd b) by))
-
 ```
 
 <!--en-->
@@ -3177,7 +3163,7 @@ Extensionality of the hull is proved by classical contradiction. Since the unive
   hullExt : isExt M
   hullExt x y x∈M y∈M ag1 ag2 =
     decRec (λ p → p) (λ np → ⊥₀-rec (bad np))
-      (lem ((x ≡ y) , isSetS x y))
+      (FOL.Semantics.decideEquality 𝒮ᵥ lem x y)
     where
 ```
 
@@ -3193,6 +3179,8 @@ The contradictory branch is eliminated by `bad`, completing extensionality of th
     bad : (x ≡ y → ⊥₀) → ⊥₀
     bad = refute x y x∈M y∈M ag1 ag2
 ```
+</div>
+</details>
 
 <!--en-->
 ## Carrying bounded formulas across the collapse
@@ -3210,10 +3198,13 @@ To compare the collapse with the ambient universe, now fix a transitive set `U`.
 崩壊と周囲の宇宙を比較するため、ここで推移的集合 `U` を固定する。定数を含まない Δ₀ 論理式を `U` の要素で評価すると、`U` 上の制限構造と周囲の構造で同じ真理値をもつ。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Unpack (U : S) (Utr : isTrans U) where
-
 ```
+</summary>
+<div class="submodule-fold-content">
 
 <!--en-->
 An element of the restricted carrier `SM` is a set together with evidence that it belongs to `U`. Projecting each such pair to its first component gives the corresponding ambient environment, and bounded absoluteness `abs₀` compares satisfaction before and after this projection.
@@ -3225,7 +3216,6 @@ An element of the restricted carrier `SM` is a set together with evidence that i
 
 ```agda
   module Ab = FOL.Absoluteness.Single 𝒮ᵥ (λ x → x ∈ˢ U) Utr using (SM; abs₀; _⊨ᵐ_)
-
 ```
 
 <!--en-->
@@ -3255,10 +3245,20 @@ The final path uses function extensionality: because the constant domain is empt
 ```agda
     ∙ cong (λ ι → SemV.At._⊨_ (⊥* {ℓ-suc ℓ}) ι (map fst δ) φ)
            (funExt (λ b → ⊥*-rec b))
+```
+</div>
+</details>
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
+```agda
 module Frame (lam : S) (ordλ : IsOrd lam)
   (succλ : (d : S) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩)
   (X : S) (X⊆Lλ : (z : S) → ⟨ z ∈ˢ X ⟩ → ⟨ z ∈ˢ Lset lam ⟩)
+  (∅∈λ : ⟨ ∅ ∈ˢ lam ⟩) where
 ```
+</summary>
+<div class="submodule-fold-content">
 
 <!--en-->
 We also assume `∅ ∈ lam`, the base-stage hypothesis used by the hull construction.
@@ -3267,11 +3267,6 @@ We also assume `∅ ∈ lam`, the base-stage hypothesis used by the hull constru
 <!--ja-->
 さらに `∅ ∈ lam` を仮定する。これは包の構成が用いる基底段階の仮定である。
 <!--/-->
-
-```agda
-  (∅∈λ : ⟨ ∅ ∈ˢ lam ⟩) where
-
-```
 
 <!--en-->
 Let `M` be the hull of `X` inside `Lset lam`. We use its inclusion into the stage, the resulting notion of elementarity, and the extensionality proved above.
@@ -3286,7 +3281,6 @@ Let `M` be the hull of `X` inside `Lset lam`. We use its inclusion into the stag
   module ASt = HS.ASt using (module AbsL; module AtM; Ltr; SL)
   module A = ASt.AtM HS.M HS.H.Hull⊆L using (Elementary; SM; module SemM; inL)
   module HE = HullExt lam ordλ X X⊆Lλ ∅∈λ using (hullExt)
-
 ```
 
 <!--en-->
@@ -3300,7 +3294,6 @@ Thus `M` is extensional. This is the hypothesis needed to identify `M` with its 
 ```agda
   Mext : isExt HS.M
   Mext = HE.hullExt
-
 ```
 
 <!--en-->
@@ -3311,10 +3304,13 @@ The carry argument takes explicitly the elementarity of the inclusion `M → Lse
 移送の議論は、包含 `M → Lset lam` の初等性を明示的に受け取る。これと `M` の外延性から、以下で使う二つの比較、すなわち包から段階への比較と、包からその崩壊への比較が得られる。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
   module Carry (elem : A.Elementary) where
-
 ```
+</summary>
+<div class="submodule-fold-content">
 
 <!--en-->
 The comparison now involves three structures: the hull `M`, the stage `Lset lam`, and the transitive collapse image `πX`. The collapse isomorphism relates the first and third, while bounded absoluteness relates each transitive set to the ambient universe.
@@ -3328,7 +3324,6 @@ The comparison now involves three structures: the hull `M`, the stage `Lset lam`
     module CIso = CollapseIso HS.M Mext using (module I; iso-fwd; iso-bwd)
     module TL = Unpack (Lset lam) ASt.Ltr using (read)
     module Tπ = Unpack HS.C.πX HS.C.πX-trans using (module Ab; read)
-
 ```
 
 <!--en-->
@@ -3343,7 +3338,6 @@ Membership is preserved by the collapse directly: the forward direction of the m
     member-push : (x y : S) → ⟨ x ∈ˢ HS.M ⟩ → ⟨ y ∈ˢ HS.M ⟩
                 → ⟨ y ∈ˢ x ⟩ → ⟨ HS.C.π y ∈ˢ HS.C.π x ⟩
     member-push = CIso.iso-fwd
-
 ```
 
 <!--en-->
@@ -3358,7 +3352,6 @@ Because `Lset lam` is transitive, every constant-free Δ₀ formula has equal re
     atL : {n : ℕ} {φ : Formula (⊥* {ℓ-suc ℓ}) n} → Δ₀ φ → (δ : ASt.SL ^ n)
         → (δ ASt.AbsL.⊨ᵐ embed φ) ≡ (map fst δ ⊨ₚ φ)
     atL dφ δ = TL.read dφ δ
-
 ```
 
 <!--en-->
@@ -3373,7 +3366,6 @@ The collapse image `πX` is also transitive, so the same agreement holds there f
     atπ : {n : ℕ} {φ : Formula (⊥* {ℓ-suc ℓ}) n} → Δ₀ φ → (δ : Tπ.Ab.SM ^ n)
         → (δ Tπ.Ab.⊨ᵐ embed φ) ≡ (map fst δ ⊨ₚ φ)
     atπ dφ δ = Tπ.read dφ δ
-
 ```
 
 <!--en-->
@@ -3449,7 +3441,6 @@ For `pull`, ambient truth at the collapse values is moved backward along `atπ` 
 <!--/-->
 
 ```agda
-
     pull : {n : ℕ} {φ : Formula (⊥* {ℓ-suc ℓ}) n} → Δ₀ φ → (δ : A.SM ^ n)
          → ⟨ map fst (map CIso.I.g δ) ⊨ₚ φ ⟩
          → ⟨ map fst δ ⊨ₚ φ ⟩
@@ -3471,3 +3462,8 @@ Together, `push` and `pull` show that for every constant-free Δ₀ formula and 
                  (sym (embed-map CIso.I.g φ))
                  (subst ⟨_⟩ (sym (atπ dφ (map CIso.I.g δ))) h)))
 ```
+</div>
+</details>
+
+</div>
+</details>

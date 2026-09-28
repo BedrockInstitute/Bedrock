@@ -1,34 +1,18 @@
-<!--en-->
-# Injecting the successor cardinal into the power set
-
-Cantor's theorem inside `L` rules out an internally coded injection from `𝒫 κ` into `κ`. Starting from a successor cardinal `δ` of `κ` and a separately supplied comparison `InjL (𝒫 κ) δ`, this chapter constructs the reverse comparison `InjL δ (𝒫 κ)`. Here `InjL a b` is the propositional truncation of the existence of a graph in `L` coding an injection from `a` to `b`. The proof transfers the ordinal order on `δ` back to `𝒫 κ`, collapses that order to an ordinal `μ`, and uses Cantor's obstruction to show that `μ` cannot lie below `δ`.
-<!--zh-->
-# 把后继基数单射到幂集
-
-`L` 内部的 Cantor 定理排除了从 `𝒫 κ` 到 `κ` 的内部编码单射。本章从 `κ` 的后继基数 `δ` 以及另行给出的比较 `InjL (𝒫 κ) δ` 出发，构造反方向的比较 `InjL δ (𝒫 κ)`。这里，`InjL a b` 是「存在一张 `L` 中的图，编码从 `a` 到 `b` 的单射」的命题截断。证明先把 `δ` 上的序数次序沿给定单射拉回到 `𝒫 κ`，再把所得次序塌缩为序数 `μ`，最后用 Cantor 障碍证明 `μ` 不可能属于 `δ`。
-<!--ja-->
-# 後続基数を冪集合へ単射する
-
-`L` の内部での Cantor の定理は、`𝒫 κ` から `κ` への内部的に符号化された単射を排除する。この章では、`κ` の後続基数 `δ` と、別に与えられた比較 `InjL (𝒫 κ) δ` から、逆向きの比較 `InjL δ (𝒫 κ)` を構成する。ここで `InjL a b` は、`a` から `b` への単射を符号化する `L` のグラフが存在することの命題的切り詰めである。証明では、`δ` 上の順序数の順序を与えられた単射に沿って `𝒫 κ` へ引き戻し、その順序を順序数 `μ` へ崩壊して、Cantor の障害から `μ` が `δ` に属しえないことを示す。
-<!--/-->
-
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
-
 ```
 
 <!--en-->
-Classical reasoning enters through the explicit parameter `lem`. Ordinal trichotomy supplies the visible case splits, while the separation and coded-injection results used in the argument are also instantiated with the same assumption. Thus the chapter records its classical dependence in one place.
+# Injecting the successor cardinal into the power set
 <!--zh-->
-经典推理通过显式参数 `lem` 引入。序数三歧性给出证明中可见的分类讨论，而这里使用的分离定理与编码单射结果也以同一个假设实例化。因此，本章把经典依赖统一记录在一处。
+# 把后继基数单射到幂集
 <!--ja-->
-古典的推論は、明示的なパラメータ `lem` を通して導入される。順序数の三分法が証明中の目に見える場合分けを与え、ここで用いる分出定理と符号化された単射に関する結果も、同じ仮定のもとで具体化されている。したがって、この章の古典的な依存は一箇所に明記されている。
+# 後続基数を冪集合へ単射する
 <!--/-->
 
 ```agda
 open import Base.Prelude
 open import Base.Classical using ( LEM )
-
 ```
 
 <!--en-->
@@ -41,8 +25,51 @@ The excluded-middle assumption is indexed at `ℓ-suc ℓ`, the level at which t
 
 ```agda
 module L.GCH.SuccessorIntoPowerSet {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-
 ```
+
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax
+  using ( Formula; var; con; _∈̇_; _∧̇_; ¬̇_; ∃̇_; ∃̇∈ )
+import FOL.ZFModel
+import FOL.Absoluteness
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; regularityV )
+open import V.Coding {ℓ} using ( pr )
+open import L.Constructible {ℓ}
+  using ( 𝒮ʟ; IsOrd; isL; isL-trans; isTransV; isPropIsTransV )
+open import L.Ordinal {ℓ} using ( mem-ord )
+open import L.Ordinal.Linear {ℓ} lem using ( Tri; ord-tri )
+open import L.Axioms.Full {ℓ} lem using ( hasSeparationL )
+open import L.Cardinal {ℓ} lem using ( InjCode; InjL; SuccCardL )
+open import L.InjectionComposition {ℓ} lem using ( appC; appC-adequate; inclusion-coded; injl-trans; module Relation )
+open import L.Coding.Model {ℓ} using ( svAt-out; domAt-in )
+open import L.Coding.Injection {ℓ} lem using ( injAt-out )
+open import L.GCH.BelowSuccessorCardinal {ℓ} lem using ( below-succ-injects )
+open import L.GCH.Assembly {ℓ} lem using ( SuccIntoPower )
+open import L.DefinableInjection {ℓ} lem using ( module Inj )
+open import L.GCH.OrderType {ℓ} lem using ( Holds; module Code )
+```
+
+<!--en-->
+
+Cantor's theorem inside `L` rules out an internally coded injection from `𝒫 κ` into `κ`. Starting from a successor cardinal `δ` of `κ` and a separately supplied comparison `InjL (𝒫 κ) δ`, this chapter constructs the reverse comparison `InjL δ (𝒫 κ)`. Here `InjL a b` is the propositional truncation of the existence of a graph in `L` coding an injection from `a` to `b`. The proof transfers the ordinal order on `δ` back to `𝒫 κ`, collapses that order to an ordinal `μ`, and uses Cantor's obstruction to show that `μ` cannot lie below `δ`.
+<!--zh-->
+
+`L` 内部的 Cantor 定理排除了从 `𝒫 κ` 到 `κ` 的内部编码单射。本章从 `κ` 的后继基数 `δ` 以及另行给出的比较 `InjL (𝒫 κ) δ` 出发，构造反方向的比较 `InjL δ (𝒫 κ)`。这里，`InjL a b` 是「存在一张 `L` 中的图，编码从 `a` 到 `b` 的单射」的命题截断。证明先把 `δ` 上的序数次序沿给定单射拉回到 `𝒫 κ`，再把所得次序塌缩为序数 `μ`，最后用 Cantor 障碍证明 `μ` 不可能属于 `δ`。
+<!--ja-->
+
+`L` の内部での Cantor の定理は、`𝒫 κ` から `κ` への内部的に符号化された単射を排除する。この章では、`κ` の後続基数 `δ` と、別に与えられた比較 `InjL (𝒫 κ) δ` から、逆向きの比較 `InjL δ (𝒫 κ)` を構成する。ここで `InjL a b` は、`a` から `b` への単射を符号化する `L` のグラフが存在することの命題的切り詰めである。証明では、`δ` 上の順序数の順序を与えられた単射に沿って `𝒫 κ` へ引き戻し、その順序を順序数 `μ` へ崩壊して、Cantor の障害から `μ` が `δ` に属しえないことを示す。
+<!--/-->
+
+<!--en-->
+Classical reasoning enters through the explicit parameter `lem`. Ordinal trichotomy supplies the visible case splits, while the separation and coded-injection results used in the argument are also instantiated with the same assumption. Thus the chapter records its classical dependence in one place.
+<!--zh-->
+经典推理通过显式参数 `lem` 引入。序数三歧性给出证明中可见的分类讨论，而这里使用的分离定理与编码单射结果也以同一个假设实例化。因此，本章把经典依赖统一记录在一处。
+<!--ja-->
+古典的推論は、明示的なパラメータ `lem` を通して導入される。順序数の三分法が証明中の目に見える場合分けを与え、ここで用いる分出定理と符号化された単射に関する結果も、同じ仮定のもとで具体化されている。したがって、この章の古典的な依存は一箇所に明記されている。
+<!--/-->
+
+
 
 <!--en-->
 The diagonal subset and the later pullback order must be sets of `L`, so both are described by first-order formulas interpreted in the constructible model. The available syntax expresses membership, conjunction, negation, and the bounded or unbounded existential witnesses needed to describe those relations.
@@ -52,14 +79,6 @@ The diagonal subset and the later pullback order must be sets of `L`, so both ar
 対角部分集合と後で用いる引き戻し順序は、ともに `L` の集合でなければならない。そこで、構成可能モデルで解釈される一階の論理式によって両者を記述する。ここで用意される構文は、所属・連言・否定と、これらの関係を表すために必要な有界または非有界の存在証人を表現できる。
 <!--/-->
 
-```agda
-open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax
-  using ( Formula; var; con; _∈̇_; _∧̇_; ¬̇_; ∃̇_; ∃̇∈ )
-import FOL.ZFModel
-import FOL.Absoluteness
-```
-
 <!--en-->
 The pullback order will be proved well-founded by sending every descending step to a membership step in the ambient cumulative hierarchy and applying regularity there. Facts about constructible ordinals then turn membership below an ordinal into the ordinal structure needed for comparison.
 <!--zh-->
@@ -67,14 +86,6 @@ The pullback order will be proved well-founded by sending every descending step 
 <!--ja-->
 引き戻し順序の整礎性は、その下降の各段階を周囲の累積階層における所属の一段階へ移し、そこで正則性を適用して証明する。続いて、構成可能な順序数についての事実により、順序数の下への所属から比較に必要な順序数構造を得る。
 <!--/-->
-
-```agda
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; regularityV )
-open import V.Coding {ℓ} using ( pr )
-open import L.Constructible {ℓ}
-  using ( 𝒮ʟ; IsOrd; isL; isL-trans; isTransV; isPropIsTransV )
-open import L.Ordinal {ℓ} using ( mem-ord )
-```
 
 <!--en-->
 An internal size comparison has two levels. `InjCode F a b` retains a particular constructible graph and its injection laws, whereas `InjL a b` retains only the propositionally truncated existence of such a code. Successor-cardinal minimality, coded inclusions, and composition will let the proof combine these comparisons without exposing a global graph.
@@ -84,14 +95,6 @@ An internal size comparison has two levels. `InjCode F a b` retains a particular
 内部の大きさの比較には二つの層がある。`InjCode F a b` は特定の構成可能なグラフとその単射の法則を保持するが、`InjL a b` はそのような符号が存在するという命題的切り詰めだけを保持する。後続基数の最小性、符号化された包含、単射の合成により、大域的なグラフを取り出さずにこれらの比較を組み合わせられる。
 <!--/-->
 
-```agda
-open import L.Ordinal.Linear {ℓ} lem using ( Tri; ord-tri )
-open import L.Axioms.Full {ℓ} lem using ( hasSeparationL )
-open import L.Cardinal {ℓ} lem using ( InjCode; InjL; SuccCardL )
-open import L.InjectionComposition {ℓ} lem using ( appC; appC-adequate; inclusion-coded; injl-trans; module Relation )
-open import L.Coding.Model {ℓ} using ( svAt-out; domAt-in )
-```
-
 <!--en-->
 Two earlier results control the final comparison. Every ordinal strictly below the successor cardinal `δ` injects into its base `κ`, and a coded well-order can be collapsed to a constructible ordinal together with coded maps to and from its collapse image. The third ingredient, `InjL (𝒫 κ) δ`, is an assumption of this chapter's conditional theorem; it is not a consequence of the successor-cardinal record alone.
 <!--zh-->
@@ -99,14 +102,6 @@ Two earlier results control the final comparison. Every ordinal strictly below t
 <!--ja-->
 先の二つの結果が最終的な比較を支える。後続基数 `δ` より真に小さい順序数はすべて、その基数 `κ` へ単射する。また、符号化された整列順序は構成可能な順序数へ崩壊でき、崩壊像への符号化写像と、そこから戻る符号化写像が得られる。第三の材料 `InjL (𝒫 κ) δ` は、この章の条件付き定理の仮定であり、後続基数の記録だけからは従わない。
 <!--/-->
-
-```agda
-open import L.Coding.Injection {ℓ} lem using ( injAt-out )
-open import L.GCH.BelowSuccessorCardinal {ℓ} lem using ( below-succ-injects )
-open import L.GCH.Assembly {ℓ} lem using ( SuccIntoPower )
-open import L.DefinableInjection {ℓ} lem using ( module Inj )
-open import L.GCH.OrderType {ℓ} lem using ( Holds; module Code )
-```
 
 <!--en-->
 Several equalities below identify dependent pairs whose second components are proofs. Since those proof components are propositions, equality of the underlying sets suffices; transport then moves membership and graph facts along the resulting identifications.
@@ -142,7 +137,6 @@ Membership of underlying sets is read in the ambient hierarchy when regularity a
 <!--/-->
 
 ```agda
-
 open hPropStructure 𝒮ᵥ using ( _∈ˢ_ )
 ```
 
@@ -261,10 +255,13 @@ We now fix an arbitrary constructible set `κ` and prove the internal Cantor obs
 ここで任意の構成可能集合 `κ` を固定し、そのモデル内の冪集合について内部の Cantor の障害を証明する。この部分では、`κ` が基数であることも無限であることも仮定しない。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Cantor (zf : ModelL.isZFModel) (κ : SL.S) where
-
 ```
+</summary>
+<div class="submodule-fold-content">
 
 <!--en-->
 Throughout the diagonal argument, `𝒫 κ` means the power set supplied by the fixed ZF model on `L`. Thus its elements are precisely the subsets recognized inside that model.
@@ -276,7 +273,6 @@ Throughout the diagonal argument, `𝒫 κ` means the power set supplied by the 
 
 ```agda
   open ModelL.isZFModel zf using ( 𝒫 )
-
 ```
 
 <!--en-->
@@ -287,10 +283,13 @@ The diagonal argument is carried out for one explicitly given graph `F` together
 対角の議論は、明示的に与えられた一つのグラフ `F` とその符号について展開される。後の主張はすべて、この固定されたグラフに関するものである。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
   module Diag (F : SL.S) (code : InjCode F (𝒫 κ) κ) where
-
 ```
+</summary>
+<div class="submodule-fold-content">
 
 <!--en-->
 The environment of the graph pairs the graph with the power set over which it is total.
@@ -303,7 +302,6 @@ The environment of the graph pairs the graph with the power set over which it is
 ```agda
     γF : SL.S ^ 2
     γF = F ∷ 𝒫 κ ∷ []
-
 ```
 
 <!--en-->
@@ -317,7 +315,6 @@ The range clause of the coding says that every value recorded by the graph belon
 ```agda
     ranF : (x y : SL.S) → Holds F x y → ⟨ fst y ∈ fst κ ⟩
     ranF = code .snd .snd .snd
-
 ```
 
 <!--en-->
@@ -330,9 +327,8 @@ The totality clause says that every member of `𝒫 κ` has some value under `F`
 
 ```agda
     valF : (x : SL.S) → ⟨ fst x ∈ fst (𝒫 κ) ⟩
-         → ∥ Σ[ y ∈ SL.S ] Holds F x y ∥₁
+         → ∥ Σ[ y ∶ SL.S ] Holds F x y ∥₁
     valF = domAt-in zero (suc zero) γF (code .snd .fst)
-
 ```
 
 <!--en-->
@@ -346,7 +342,6 @@ The injectivity clause recovers the input from the value: two members with the s
 ```agda
     injF : (y x x' : SL.S) → Holds F x y → Holds F x' y → fst x ≡ fst x'
     injF = injAt-out zero γF (code .snd .snd .fst)
-
 ```
 
 <!--en-->
@@ -359,9 +354,8 @@ The diagonal predicate says, merely, that some member `A` of the power set has i
 
 ```agda
     Diagonal : SL.S → Type (ℓ-suc ℓ)
-    Diagonal ξ = ∥ Σ[ A ∈ SL.S ] ( ⟨ fst A ∈ fst (𝒫 κ) ⟩ × Holds F A ξ
+    Diagonal ξ = ∥ Σ[ A ∶ SL.S ] ( ⟨ fst A ∈ fst (𝒫 κ) ⟩ × Holds F A ξ
                                  × (⟨ fst ξ ∈ fst A ⟩ → ⊥₀) ) ∥₁
-
 ```
 
 <!--en-->
@@ -392,7 +386,6 @@ The formula defining the diagonal condition searches within `𝒫 κ` for a set 
       φD : Formula SL.S 1
       φD = ∃̇∈ (con (𝒫 κ))
              (appC F zero (suc zero) ∧̇ ¬̇ (var (suc zero) ∈̇ var zero))
-
 ```
 
 <!--en-->
@@ -407,7 +400,6 @@ Adequacy of the application coding identifies the formula atom for applying `F` 
       φD-out : (ξ : SL.S) → ⟨ (ξ ∷ []) ⊨ φD ⟩ → Diagonal ξ
       φD-out ξ = map₁ (λ { (A , (mA , (h , n))) →
         A , mA , transport (a1 ξ A) h , (λ k → lower (n k)) })
-
 ```
 
 <!--en-->
@@ -423,7 +415,6 @@ Conversely, a chosen `A ∈ 𝒫 κ`, a graph fact `Holds F A ξ`, and a proof t
             → (⟨ fst ξ ∈ fst A ⟩ → ⊥₀) → ⟨ (ξ ∷ []) ⊨ φD ⟩
       φD-in ξ A mA h n =
         ∣ A , (mA , (transport (sym (a1 ξ A)) h , (λ k → lift (n k)))) ∣₁
-
 ```
 
 <!--en-->
@@ -437,7 +428,6 @@ The diagonal set is separated out of `κ` by the bounded formula.
 ```agda
     D₀ : SL.S
     D₀ = fst (fst (hasSeparationL κ φD))
-
 ```
 
 <!--en-->
@@ -451,7 +441,6 @@ Its membership specification is the separation's own reading: membership in the 
 ```agda
     D₀-spec : (ξ : SL.S) → (ξ SL.∈ˢ D₀) ≡ ((ξ SL.∈ˢ κ) ⊓ ((ξ ∷ []) ⊨ φD))
     D₀-spec = snd (fst (hasSeparationL κ φD))
-
 ```
 
 <!--en-->
@@ -465,7 +454,6 @@ The diagonal set is a member of the internal power set: the pointwise reading pr
 ```agda
     D₀∈𝒫κ : ⟨ fst D₀ ∈ fst (𝒫 κ) ⟩
     D₀∈𝒫κ = into-power zf κ D₀ (λ z h → fst (subst ⟨_⟩ (D₀-spec z) h))
-
 ```
 
 <!--en-->
@@ -477,7 +465,7 @@ To derive the contradiction, suppose the graph assigns the diagonal set `D₀` s
 <!--/-->
 
 ```agda
-    absurd : Σ[ ξ ∈ SL.S ] Holds F D₀ ξ → ⊥₀
+    absurd : Σ[ ξ ∶ SL.S ] Holds F D₀ ξ → ⊥₀
     absurd (ξ , h₀) = out inside
       where
 ```
@@ -510,8 +498,9 @@ The converse direction uses that refutation as data. The range clause gives `ξ 
       inside : ⟨ fst ξ ∈ fst D₀ ⟩
       inside = subst ⟨_⟩ (sym (D₀-spec ξ))
         (ranF D₀ ξ h₀ , φD-in ξ D₀ D₀∈𝒫κ h₀ out)
-
 ```
+</div>
+</details>
 
 <!--en-->
 The two halves refute any internal coded injection from the power set into `κ`: the injection is eliminated into a graph, and the graph's value at the diagonal set is eliminated into the contradiction. The target is the empty type, so both eliminations are legitimate.
@@ -525,7 +514,7 @@ The two halves refute any internal coded injection from the power set into `κ`:
   no-inj : InjL (𝒫 κ) κ → ⊥₀
   no-inj = rec₁ isProp⊥ step
     where
-    step : Σ[ F ∈ SL.S ] InjCode F (𝒫 κ) κ → ⊥₀
+    step : Σ[ F ∶ SL.S ] InjCode F (𝒫 κ) κ → ⊥₀
     step (F , code) = rec₁ isProp⊥ D.absurd (D.valF D.D₀ D.D₀∈𝒫κ)
 ```
 
@@ -540,6 +529,8 @@ For the chosen graph `F`, the diagonal construction supplies both the internal s
 ```agda
       where module D = Diag F code
 ```
+</div>
+</details>
 
 <!--en-->
 ## Ordering the power set and comparing its order type
@@ -557,12 +548,15 @@ For the reverse comparison, fix a successor cardinal `δ` of `κ` and one partic
 逆向きの比較を構成するため、`κ` の後続基数 `δ` と、仮定された単射 `𝒫 κ ↪ δ` を符号化する特定のグラフ `G` を固定する。このグラフは命題的切り詰めから得られる局所的な分岐の中でだけ利用でき、最終結果は再び `InjL` の主張になる。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Build (zf : ModelL.isZFModel) (κ δ : SL.S) (sc : SuccCardL δ κ)
              (G : SL.S)
              (code : InjCode G (ModelL.isZFModel.𝒫 zf κ) δ) where
-
 ```
+</summary>
+<div class="submodule-fold-content">
 
 <!--en-->
 The source `𝒫 κ` is again the internal power set determined by the fixed ZF model. The construction never replaces it by the ambient power set of the underlying set.
@@ -574,7 +568,6 @@ The source `𝒫 κ` is again the internal power set determined by the fixed ZF 
 
 ```agda
   open ModelL.isZFModel zf using ( 𝒫 )
-
 ```
 
 <!--en-->
@@ -588,7 +581,6 @@ The ordinality of the successor is the first component of its record.
 ```agda
   ordδ : IsOrd (fst δ)
   ordδ = sc .fst
-
 ```
 
 <!--en-->
@@ -602,7 +594,6 @@ The power set is named as the source of the comparison.
 ```agda
   P : SL.S
   P = 𝒫 κ
-
 ```
 
 <!--en-->
@@ -616,7 +607,6 @@ The environment of the graph pairs the graph with the power set.
 ```agda
   γG : SL.S ^ 2
   γG = G ∷ P ∷ []
-
 ```
 
 <!--en-->
@@ -630,7 +620,6 @@ The range clause of the coding says every value lands in the successor.
 ```agda
   ranG : (x y : SL.S) → Holds G x y → ⟨ fst y ∈ fst δ ⟩
   ranG = code .snd .snd .snd
-
 ```
 
 <!--en-->
@@ -644,7 +633,6 @@ Single-valuedness concerns one fixed input: if `G` records both `G(x)=y` and `G(
 ```agda
   svG : (x y y' : SL.S) → Holds G x y → Holds G x y' → fst y ≡ fst y'
   svG = svAt-out zero γG (code .fst)
-
 ```
 
 <!--en-->
@@ -656,9 +644,8 @@ Totality gives a propositionally truncated value witness for every `x ∈ P`. It
 <!--/-->
 
 ```agda
-  valG : (x : SL.S) → ⟨ fst x ∈ fst P ⟩ → ∥ Σ[ y ∈ SL.S ] Holds G x y ∥₁
+  valG : (x : SL.S) → ⟨ fst x ∈ fst P ⟩ → ∥ Σ[ y ∶ SL.S ] Holds G x y ∥₁
   valG = domAt-in zero (suc zero) γG (code .snd .fst)
-
 ```
 
 <!--en-->
@@ -683,10 +670,9 @@ For a fixed input `x`, any two graph values of `G` must coincide by single-value
 <!--/-->
 
 ```agda
-  isPropVal : (x : SL.S) → isProp (Σ[ y ∈ SL.S ] Holds G x y)
+  isPropVal : (x : SL.S) → isProp (Σ[ y ∶ SL.S ] Holds G x y)
   isPropVal x (y , h) (y' , h') =
     Σ≡Prop (λ w → snd (pr (fst x) (fst w) ∈ fst G)) (S≡ (svG x y y' h h'))
-
 ```
 
 <!--en-->
@@ -698,7 +684,7 @@ The domain clause initially supplies a value of `G` only under propositional tru
 <!--/-->
 
 ```agda
-  val : (x : SL.S) → ⟨ fst x ∈ fst P ⟩ → Σ[ y ∈ SL.S ] Holds G x y
+  val : (x : SL.S) → ⟨ fst x ∈ fst P ⟩ → Σ[ y ∶ SL.S ] Holds G x y
   val x m = rec₁ (isPropVal x) (λ z → z) (valG x m)
 ```
 
@@ -712,10 +698,9 @@ Define `a` to precede `b` when they both belong to `P` and there merely exist gr
 
 ```agda
   Read : SL.S → SL.S → Type (ℓ-suc ℓ)
-  Read a b = ∥ Σ[ x ∈ SL.S ] Σ[ y ∈ SL.S ]
+  Read a b = ∥ Σ[ x ∶ SL.S ] Σ[ y ∶ SL.S ]
                ( ⟨ fst a ∈ fst P ⟩ × ⟨ fst b ∈ fst P ⟩
                × Holds G a x × Holds G b y × ⟨ fst x ∈ fst y ⟩ ) ∥₁
-
 ```
 
 <!--en-->
@@ -730,7 +715,6 @@ To express this relation in the object language, the environment places `A`, `B`
   private
     env5 : SL.S → SL.S → SL.S → SL.S → SL.S → SL.S ^ 5
     env5 p A B x y = y ∷ x ∷ B ∷ A ∷ p ∷ []
-
 ```
 
 <!--en-->
@@ -758,12 +742,10 @@ The second adequacy equality performs the same translation for `B` and `y`. Toge
 <!--/-->
 
 ```agda
-
     b2 : (p A B x y : SL.S)
        → ⟨ env5 p A B x y ⊨ appC G (suc (suc zero)) zero ⟩ ≡ Holds G B y
     b2 p A B x y = cong ⟨_⟩
       (appC-adequate G (suc (suc zero)) zero (env5 p A B x y))
-
 ```
 
 <!--en-->
@@ -792,7 +774,6 @@ Inside the two existential binders, the remaining clauses say that the witnesses
 
 ```agda
           ∧̇ (appC G (suc (suc zero)) zero ∧̇ (var (suc zero) ∈̇ var zero)))))
-
 ```
 
 <!--en-->
@@ -808,7 +789,6 @@ Reading the formula outward first retains the two image witnesses under proposit
       read a b p (ma , mb , h) = rec₁ squash₁
         (λ { (x , hx) → map₁ (λ { (y , ha , hb , hxy) → x , y , ma , mb
           , transport (b1 p a b x y) ha , transport (b2 p a b x y) hb , hxy }) hx }) h
-
 ```
 
 <!--en-->
@@ -836,9 +816,7 @@ The bounded-relation construction now turns this definable predicate into an act
 <!--/-->
 
 ```agda
-
     module Pullback = Relation P P φR (λ a b → Read a b , squash₁) read fill
-
 ```
 
 <!--en-->
@@ -852,7 +830,6 @@ For the converse reading, the two adequacy equalities turn the graph facts `Hold
 ```agda
   R : SL.S
   R = Pullback.rel
-
 ```
 
 <!--en-->
@@ -866,7 +843,6 @@ An entry of `R` can be read back as the truncated data defining the pullback: th
 ```agda
   R-out : (a b : SL.S) → Holds R a b → Read a b
   R-out = Pullback.pair-out
-
 ```
 
 <!--en-->
@@ -881,7 +857,6 @@ The inward reading constructs the relation entry from the two endpoint membershi
   R-in : (a b x y : SL.S) → ⟨ fst a ∈ fst P ⟩ → ⟨ fst b ∈ fst P ⟩
        → Holds G a x → Holds G b y → ⟨ fst x ∈ fst y ⟩ → Holds R a b
   R-in a b x y ma mb ha hb hxy = Pullback.into a b ma mb ∣ x , y , ma , mb , ha , hb , hxy ∣₁
-
 ```
 
 <!--en-->
@@ -924,7 +899,6 @@ The order-type construction replaces members of `P` by a small presented domain 
   module OT = Code P R Rsub
     using ( Dom; Dom≡; toDom; up; up-mem; up-toDom; ↪; _≺_; ≺-in; ≺-out
           ; module Conjuncts )
-
 ```
 
 <!--en-->
@@ -938,7 +912,6 @@ For an index `b` in this domain, let `v b` be the unique value that `G` assigns 
 ```agda
   v : OT.Dom → SL.S
   v b = fst (val (OT.up b) (OT.up-mem b))
-
 ```
 
 <!--en-->
@@ -952,7 +925,6 @@ The second component of the chosen value records the corresponding graph fact `H
 ```agda
   v-holds : (b : OT.Dom) → Holds G (OT.up b) (v b)
   v-holds b = snd (val (OT.up b) (OT.up-mem b))
-
 ```
 
 <!--en-->
@@ -966,7 +938,6 @@ Every value of `G` belongs to the successor cardinal `δ`, by the range clause o
 ```agda
   v∈δ : (b : OT.Dom) → ⟨ fst (v b) ∈ fst δ ⟩
   v∈δ b = ranG (OT.up b) (v b) (v-holds b)
-
 ```
 
 <!--en-->
@@ -980,7 +951,6 @@ Each `G`-value is an ordinal, inherited from the ordinality of `δ`.
 ```agda
   ord-v : (b : OT.Dom) → IsOrd (fst (v b))
   ord-v b = mem-ord {A = fst δ} ordδ (fst (v b)) (v∈δ b)
-
 ```
 
 <!--en-->
@@ -1010,7 +980,6 @@ The two single-valuedness equalities replace the image witnesses read from `R` b
 ```agda
         (svG (OT.up b) y (v b) hb (v-holds b)) hxy })
     (R-out (OT.up a) (OT.up b) (OT.≺-out a b k))
-
 ```
 
 <!--en-->
@@ -1026,7 +995,6 @@ The backward comparison constructs the pulled-back relation from the membership 
   ≺-bwd a b h = OT.≺-in a b
     (R-in (OT.up a) (OT.up b) (v a) (v b)
       (OT.up-mem a) (OT.up-mem b) (v-holds a) (v-holds b) h)
-
 ```
 
 <!--en-->
@@ -1041,7 +1009,6 @@ To prove well-foundedness, fix a hierarchy element `u` and consider every domain
   private
     Pacc : V ℓ → Type (ℓ-suc ℓ)
     Pacc u = (b : OT.Dom) → fst (v b) ≡ u → Acc OT._≺_ b
-
 ```
 
 <!--en-->
@@ -1057,7 +1024,6 @@ The induction step constructs accessibility for a predecessor whose representati
     accStep u IH b e = acc (λ a k →
       IH (fst (v a)) (subst (λ w → ⟨ fst (v a) ∈ˢ w ⟩) e (≺-fwd a b k))
          a refl)
-
 ```
 
 <!--en-->
@@ -1071,7 +1037,6 @@ Accessibility at every hierarchy element is proved by the regularity induction o
 ```agda
     accAt : (u : V ℓ) → Pacc u
     accAt = WF.WFI.induction regularityV {P = Pacc} accStep
-
 ```
 
 <!--en-->
@@ -1085,7 +1050,6 @@ Well-foundedness of the pulled-back order is assembled from the accessibility at
 ```agda
   wf : WellFounded OT._≺_
   wf b = accAt (fst (v b)) b refl
-
 ```
 
 <!--en-->
@@ -1100,7 +1064,6 @@ Transitivity of the pulled-back order composes the two forward comparisons throu
   ≺-trans : {a b c : OT.Dom} → a OT.≺ b → b OT.≺ c → a OT.≺ c
   ≺-trans {a} {b} {c} k k' = ≺-bwd a c
     (ordδ .snd (fst (v c)) (v∈δ c) (≺-fwd a b k) (≺-fwd b c k'))
-
 ```
 
 <!--en-->
@@ -1144,12 +1107,10 @@ Well-foundedness and transitivity now support the collapse map `col` and its ima
 <!--/-->
 
 ```agda
-
   module C = OT.Conjuncts wf ≺-trans
     using ( module Inj; col; col-ord; col-out; colTable; colTable-in
           ; colTable-pair; otL; otL-in; otL-out )
   module I = C.Inj tri using ( code; col-inj; module Inverse )
-
 ```
 
 <!--en-->
@@ -1192,7 +1153,6 @@ Every collapse value `col b` is already known to be an ordinal, hence transitive
 ```agda
       (λ { (b , e) → subst isTransV e (C.col-ord b .fst) })
       (C.otL-out x h)
-
 ```
 
 <!--en-->
@@ -1208,7 +1168,7 @@ It remains to show that the image itself is transitive. Given `y∈x` and `x∈o
     tr {x} {y} y∈x x∈ot =
       rec₁ (snd (y ∈ˢ fst C.otL)) outer (C.otL-out x x∈ot)
       where
-      outer : Σ[ b ∈ OT.Dom ] (C.col b ≡ x) → ⟨ y ∈ˢ fst C.otL ⟩
+      outer : Σ[ b ∶ OT.Dom ] (C.col b ≡ x) → ⟨ y ∈ˢ fst C.otL ⟩
 ```
 
 <!--en-->
@@ -1223,7 +1183,7 @@ After replacing `x` by `col b`, the collapse equation for membership in `col b` 
       outer (b , e) = rec₁ (snd (y ∈ˢ fst C.otL)) inner
         (C.col-out b y (subst (λ w → ⟨ y ∈ˢ w ⟩) (sym e) y∈x))
         where
-        inner : Σ[ r ∈ OT.Dom ] ((r OT.≺ b) × (C.col r ≡ y))
+        inner : Σ[ r ∶ OT.Dom ] ((r OT.≺ b) × (C.col r ≡ y))
               → ⟨ y ∈ˢ fst C.otL ⟩
 ```
 
@@ -1250,8 +1210,7 @@ For a hierarchy element `w`, the fibre `Fib w` consists of an index `b` together
 
 ```agda
   Fib : V ℓ → Type (ℓ-suc ℓ)
-  Fib w = Σ[ b ∈ OT.Dom ] (C.col b ≡ w)
-
+  Fib w = Σ[ b ∶ OT.Dom ] (C.col b ≡ w)
 ```
 
 <!--en-->
@@ -1266,7 +1225,6 @@ Injectivity of `col` makes each fibre a proposition. If `b` and `b'` both collap
   isPropFib : (w : V ℓ) → isProp (Fib w)
   isPropFib w (b , e) (b' , e') =
     Σ≡Prop (λ _ → setIsSet _ _) (I.col-inj b b' (e ∙ sym e'))
-
 ```
 
 <!--en-->
@@ -1280,7 +1238,6 @@ Membership `w∈otL` supplies a preimage index only under propositional truncati
 ```agda
   fib : (w : V ℓ) → ⟨ w ∈ˢ fst C.otL ⟩ → Fib w
   fib w h = rec₁ (isPropFib w) (λ z → z) (C.otL-out w h)
-
 ```
 
 <!--en-->
@@ -1291,12 +1248,21 @@ The unique preimage just obtained lets the collapse table be read in reverse on 
 いま得た一意な原像により、崩壊の表を `otL` 全体で逆向きに読める。その添字が表すもとの要素は `P` に属するので、逆向きの構成は `L` にあるグラフを作り、とくに以下で用いる内部の符号化された単射 `Back.injL : InjL otL P` を与える。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
   module Back where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
     open I.Inverse C.otL P (λ w mw → fib (fst w) mw)
       (λ w mw → OT.up-mem (fib (fst w) mw .fst)) public
       using ( fn; graph; at; only; M; inj; injL ) renaming ( SourceMem to Mem )
 ```
+</div>
+</details>
 
 <!--en-->
 Let `μ` denote the collapse ordinal `otL`. Ordinal trichotomy compares `μ` with the successor cardinal `δ`. The helper `from-sub` isolates the common construction for the equality and `δ∈μ` branches: whenever every member of `δ` is also a member of `μ`, it will produce the desired `InjL δ P`.
@@ -1325,7 +1291,6 @@ The inclusion coding packages the subset fact into a coded injection from `δ` i
 ```agda
     from-sub sub =
       injl-trans δ C.otL P (inclusion-coded δ C.otL sub) Back.injL
-
 ```
 
 <!--en-->
@@ -1357,6 +1322,8 @@ Both remaining cases give the containment needed by `from-sub`. If `μ=δ`, tran
     go (inr (inr δ∈ot)) =
       from-sub (λ z h → ot-ord .fst h δ∈ot)
 ```
+</div>
+</details>
 
 <!--en-->
 ## The successor cardinal reaches the power set

@@ -1,3 +1,7 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # Quantifying over coded pairs and finite formula families
 <!--zh-->
@@ -5,6 +9,41 @@
 <!--ja-->
 # 符号化された順序対の成分と有限論理式族を量化する
 <!--/-->
+
+```agda
+open import Base.Prelude
+```
+
+<!--en-->
+Fix a universe level `ℓ`{.Agda}. Keeping the level as a parameter lets the constructions be instantiated at each required size without identifying distinct universes.
+<!--zh-->
+固定宇宙层级 `ℓ`{.Agda}。保留这个层级参数，使构造可以在所需的各个大小处实例化，而不必把不同的宇宙视为同一个。
+<!--ja-->
+宇宙レベル `ℓ`{.Agda} を固定する。このレベルをパラメータとして保つことで、異なる宇宙を同一視せずに、必要な大きさで構成を具体化できる。
+<!--/-->
+
+```agda
+module L.Coding.Quantification {ℓ : Level} where
+```
+
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax using
+  ( Formula; var; _∧̇_; _∨̇_; _⇒̇_; ∃̇∈; ∀̇∈ )
+open import FOL.LevyHierarchy using
+  ( Δ₀; δ-∧; δ-⇒; δ-∀∈; δ-∃∈ )
+import FOL.Absoluteness
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Coding {ℓ} using ( pr )
+open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
+open import L.Absoluteness {ℓ} using ( Δ₀-liftFo )
+open import L.Coding.PairFormulas {ℓ} using ( Δ₀-prAt; ∈pair-introL; ∈pair-introR )
+open import L.Coding.Environment {ℓ} using ( Δ₀-sucAt )
+open import L.Coding.Model {ℓ} using ( prAtL; prAtL-adequate )
+open import L.Coding.Expressions {ℓ} using ( sucAtL; sucAtL-adequate )
+open import L.Coding.Model {ℓ} using ( container )
+import L.Coding.Expressions {ℓ} as CodingExpressions
+```
 
 <!--en-->
 This chapter supplies the shared finite-slot machinery used by coded formulas.
@@ -30,28 +69,6 @@ required by bounded syntax.
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-open import Base.Prelude
-
-module L.Coding.Quantification {ℓ : Level} where
-
-open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using
-  ( Formula; var; _∧̇_; _∨̇_; _⇒̇_; ∃̇∈; ∀̇∈ )
-open import FOL.LevyHierarchy using
-  ( Δ₀; δ-∧; δ-⇒; δ-∀∈; δ-∃∈ )
-import FOL.Absoluteness
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-open import V.Coding {ℓ} using ( pr )
-open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
-open import L.Absoluteness {ℓ} using ( Δ₀-liftFo )
-open import L.Coding.PairFormulas {ℓ} using ( Δ₀-prAt; ∈pair-introL; ∈pair-introR )
-open import L.Coding.Environment {ℓ} using ( Δ₀-sucAt )
-open import L.Coding.Model {ℓ} using ( prAtL; prAtL-adequate )
-open import L.Coding.Expressions {ℓ} using ( sucAtL; sucAtL-adequate )
-open import L.Coding.Model {ℓ} using ( container )
-import L.Coding.Expressions {ℓ} as CodingExpressions
 module E = CodingExpressions.PairExpression
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
@@ -117,9 +134,8 @@ sndS x u v e = down (down x ⁅ u , v ⁆ (subst (λ z → ⟨ ⁅ u , v ⁆ ∈
 ```
 
 ```agda
-
 sh : ∀ {m} (k : ℕ) → Fin m → Fin (k + m)
-sh zero i = i
+sh 0 i = i
 sh (suc k) i = suc (sh k i)
 
 i4 : ∀ {j} → Fin (5 + j)
@@ -192,8 +208,17 @@ bigOr 0 φ = φ zero
 bigOr (suc n) φ = φ zero ∨̇ bigOr n (λ k → φ (suc k))
 bigAnd 0 φ = φ zero
 bigAnd (suc n) φ = φ zero ∧̇ bigAnd n (λ k → φ (suc k))
+```
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
+```agda
 module _ {m : ℕ} (γ : S ^ m) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   bigOr-in : (n : ℕ) (φ : Fin (suc n) → Formula S m) (k : Fin (suc n))
            → ⟨ γ ⊨ φ k ⟩ → ⟨ γ ⊨ bigOr n φ ⟩
   bigOr-in 0 φ zero h = h
@@ -201,7 +226,7 @@ module _ {m : ℕ} (γ : S ^ m) where
   bigOr-in (suc n) φ (suc k) h = ∣ inr (bigOr-in n (λ j → φ (suc j)) k h) ∣₁
 
   bigOr-out : (n : ℕ) (φ : Fin (suc n) → Formula S m) → ⟨ γ ⊨ bigOr n φ ⟩
-            → ∥ Σ[ k ∈ Fin (suc n) ] ⟨ γ ⊨ φ k ⟩ ∥₁
+            → ∥ Σ[ k ∶ Fin (suc n) ] ⟨ γ ⊨ φ k ⟩ ∥₁
   bigOr-out 0 φ h = ∣ zero , h ∣₁
   bigOr-out (suc n) φ = rec₁ squash₁
     (λ { (inl h) → ∣ zero , h ∣₁
@@ -218,6 +243,8 @@ module _ {m : ℕ} (γ : S ^ m) where
   bigAnd-out (suc n) φ h zero = h .fst
   bigAnd-out (suc n) φ h (suc k) = bigAnd-out n (λ j → φ (suc j)) (h .snd) k
 ```
+</div>
+</details>
 
 <!--en-->
 ## Bounded atoms and successor semantics
@@ -314,8 +341,17 @@ bothAll x body =
 
 Δ₀-bothAll : ∀ {m} (x : Fin m) (body : Formula S (3 + m)) → Δ₀ body → Δ₀ (bothAll x body)
 Δ₀-bothAll x body d = δ-∀∈ (δ-∀∈ (δ-∀∈ (δ-⇒ (Δ₀-prAtL (sh 3 x) i1 i0) d)))
+```
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
+```agda
 module _ {m : ℕ} (x u : Fin m) (body : Formula S (2 + m)) (γ : S ^ m) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     X = fst (lookup x γ)
     U = fst (lookup u γ)
@@ -344,7 +380,7 @@ Out: the witness's second component is pinned by pair injectivity.
 
 ```agda
   sndEx-out : ⟨ γ ⊨ sndEx x u body ⟩
-            → ∥ Σ[ v ∈ S ] Σ[ s ∈ S ] ((X ≡ pr U (fst v)) × ⟨ (v ∷ s ∷ γ) ⊨ body ⟩) ∥₁
+            → ∥ Σ[ v ∶ S ] Σ[ s ∶ S ] ((X ≡ pr U (fst v)) × ⟨ (v ∷ s ∷ γ) ⊨ body ⟩) ∥₁
   sndEx-out = rec₁ squash₁ (λ { (s , (s∈ , h)) → map₁
     (λ { (v , (v∈ , (e , hb))) → v , s , (pr-out (sh 2 x) (sh 2 u) i0 (v ∷ s ∷ γ) e , hb) })
     h })
@@ -362,13 +398,24 @@ Out: the witness's second component is pinned by pair injectivity.
                → ⟨ (v ∷ s ∷ γ) ⊨ body ⟩)
             → ⟨ γ ⊨ sndAll x u body ⟩
   sndAll-in k s s∈ v v∈ e = k v s s∈ v∈ (pr-out (sh 2 x) (sh 2 u) i0 (v ∷ s ∷ γ) e)
+```
+</div>
+</details>
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
+```agda
 module _ {m : ℕ} (x : Fin m) (body : Formula S (3 + m)) (γ : S ^ m) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     X = fst (lookup x γ)
 
   bothEx-out : ⟨ γ ⊨ bothEx x body ⟩
-             → ∥ Σ[ u ∈ S ] Σ[ v ∈ S ] Σ[ s ∈ S ]
+             → ∥ Σ[ u ∶ S ] Σ[ v ∶ S ] Σ[ s ∶ S ]
                  ((X ≡ pr (fst u) (fst v)) × ⟨ (v ∷ u ∷ s ∷ γ) ⊨ body ⟩) ∥₁
   bothEx-out = rec₁ squash₁ (λ { (s , (s∈ , h)) → rec₁ squash₁
     (λ { (u , (u∈ , h')) → map₁
@@ -391,6 +438,8 @@ module _ {m : ℕ} (x : Fin m) (body : Formula S (3 + m)) (γ : S ^ m) where
              → ⟨ γ ⊨ bothAll x body ⟩
   bothAll-in k s s∈ u u∈ v v∈ e = k u v s s∈ u∈ v∈ (pr-out (sh 3 x) i1 i0 (v ∷ u ∷ s ∷ γ) e)
 ```
+</div>
+</details>
 
 <!--en-->
 ## Supplying the container witnesses
@@ -413,9 +462,16 @@ callers to reason only about its components.
 Supplying the junk: a pair at a slot, with its components as
 elements, fills any of the four.
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module _ {m : ℕ} (x : Fin m) (γ : S ^ m) (u v : S)
          (e : fst (lookup x γ) ≡ pr (fst u) (fst v)) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     c = container (lookup x γ) u v e
 
@@ -439,6 +495,8 @@ module _ {m : ℕ} (x : Fin m) (γ : S ^ m) (u v : S)
   useBoth body h = bothAll-out x body γ h u v (c .fst) (c .snd .fst) (c .snd .snd .fst)
     (c .snd .snd .snd) e
 ```
+</div>
+</details>
 
 <!--en-->
 ## Recap

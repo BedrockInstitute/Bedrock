@@ -1,0 +1,3 @@
+name: bedrock-modal-boundary
+include: .
+depend: cubical

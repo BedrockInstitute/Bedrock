@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><title>Mobile reader acceptance</title>
+<style>body{font:15px/1.6 system-ui;margin:1rem 420px 1rem 1rem}iframe{position:fixed;top:1rem;right:1rem;width:390px;height:844px;border:1px solid #888}pre{white-space:pre-wrap}button{padding:.6rem;margin:.3rem}</style>
+<h1>Mobile reader acceptance</h1>
+<p>390px, simulated coarse pointer. This is not evidence from an iPhone.</p>
+<button id="origin">Load Origin, cold hover data</button>
+<button id="chapter">Load code chapter</button>
+<button id="tap">Tap first V</button>
+<button id="run" disabled>Run mobile acceptance</button>
+<pre id="checks"></pre>
+<pre id="report">Loading…</pre><iframe title="Reader" id="reader"></iframe>
+<script>
+const frame=document.querySelector('iframe'), report=document.querySelector('#report');
+let page='/zh/index.html#milestones';
+async function load(url){
+ page=url;report.textContent='Loading…';
+ const target=new URL(url,location.href);target.searchParams.set('reader-test','touch');
+ const loaded=new Promise(resolve=>frame.onload=resolve);frame.src=target.href;await loaded;
+}
+document.querySelector('#origin').onclick=()=>load('/zh/index.html#milestones');
+document.querySelector('#chapter').onclick=()=>load('/zh/Base.Impredicativity.html');
+document.querySelector('#tap').onclick=()=>{
+ const w=frame.contentWindow,a=w.document.querySelector('#milestones a[data-type="V.Hierarchy#9153"]');
+ if(!a)return;
+ a.dispatchEvent(new w.PointerEvent('pointerdown',{bubbles:true,pointerType:'touch'}));a.click();
+};
+const pause=ms=>new Promise(r=>setTimeout(r,ms));
+async function until(fn){for(let i=0;i<200;i++){const value=fn();if(value)return value;await pause(50)}throw Error('Timeout '+fn.toString())}
+// DOMContentLoaded can precede the reader's module initialization, especially
+// in a freshly loaded modal. Wait for the actual interaction owners as well.
+const readerReady=w=>w.__mobileProbe?.ready&&w.document.querySelector('.code-fullscreen-toggle')&&w.document.querySelector('.type-inspector');
+document.querySelector('#run').onclick=async()=>{
+ const results=[],output=document.querySelector('#checks');
+ function check(ok,name){results.push({ok:!!ok,name});output.textContent=JSON.stringify(results,null,2);if(!ok)throw Error(name)}
+ const tap=(w,node)=>{node.dispatchEvent(new w.PointerEvent('pointerdown',{bubbles:true,pointerType:'touch'}));node.click()};
+ const touch=(w,node,type,x,y)=>{const e=new w.Event(type,{bubbles:true,cancelable:true});e.touches=type==='touchend'?[]:[{clientX:x,clientY:y}];node.dispatchEvent(e)};
+ try{
+  await load('/zh/index.html#milestones');
+  await until(()=>readerReady(frame.contentWindow));
+  let w=frame.contentWindow,d=w.document;
+  const v=d.querySelector('#milestones a[data-type="V.Hierarchy#9153"]');
+  tap(w,v);
+  check(d.querySelector('.name-hover-popup')&&!d.querySelector('.definition-modal'),'first V tap immediately shows a hover, not a modal');
+  tap(w,d.body);await pause(700);
+  check(!d.querySelector('.name-hover-popup'),'outside touch cancels a pending type request');
+  tap(w,v);await until(()=>d.querySelector('.name-hover-popup:not([aria-busy])'));
+  check(d.querySelector('.name-hover-popup').textContent.includes('ZFStructure'),'Origin milestone V still resolves the real type');
+  const preface=[...d.querySelectorAll('article p')].filter(p=>/形而上学|越过首个目标/.test(p.textContent));
+  check(preface.length===2&&preface.every(p=>!p.querySelector('a[data-type]')),'broad preface V is ordinary prose, not the formal model');
+  const originParagraph=[...d.querySelectorAll('#milestones p')].find(p=>p.textContent.startsWith('Bedrock 在'));
+  check(originParagraph&&w.getComputedStyle(originParagraph).textWrap==='wrap'&&
+    w.getComputedStyle(originParagraph).lineBreak==='normal'&&
+    !originParagraph.classList.contains('punctuation-tracking'),
+    'narrow Origin prose keeps native wrapping without paragraph-wide tracking');
+  await pause(650);check(!!d.querySelector('.name-hover-popup'),'mobile hover persists without a timeout');
+  await load('/zh/FOL.Syntax.html');
+  await until(()=>readerReady(frame.contentWindow));
+  w=frame.contentWindow;d=w.document;
+  check(!d.querySelector('h1 [data-term]')&&
+    w.getComputedStyle(d.querySelector('h1 .boilerplate-hover')).textDecorationLine==='none',
+    'chapter title has neither a reader term nor a misleading underline');
+  const readerTerm=d.querySelector('#p-3 .term-ref[data-term="object-language"]');
+  check(!!readerTerm,'body text retains its reader-term affordance');
+  readerTerm.dispatchEvent(new w.MouseEvent('mouseenter'));
+  tap(w,readerTerm);
+  await until(()=>!d.querySelector('#term-popup').hidden);
+  check(d.querySelector('#term-popup-name').textContent==='对象语言'&&
+    !d.querySelector('.definition-modal'),
+    'touch hover followed by click keeps the prose term explanation open');
+  tap(w,d.body);
+  check(d.querySelector('#term-popup').hidden,'outside touch closes the term explanation');
+  await load('/zh/Base.Choice.html');
+  await until(()=>readerReady(frame.contentWindow));
+  w=frame.contentWindow;d=w.document;
+  for(const expression of ['g [ true ] .snd','g [ false ] .snd','λ x → g x .fst']) {
+    const inline=[...d.querySelectorAll('li code.Agda')].find(code=>code.textContent===expression);
+    check(!!inline,'projection expression retains its inline code frame: '+expression);
+    const field=[...inline.querySelectorAll('a[data-type]')].find(a=>a.textContent===expression.split('.').at(-1));
+    check(!!field&&field.textContent!==expression,'only the field token links to its definition: '+expression);
+    tap(w,field);await until(()=>d.querySelector('.name-hover-popup:not([aria-busy])'));
+    check(!d.querySelector('.definition-modal'),'projection field tap opens hover, not a modal');
+    tap(w,d.body);
+  }
+  await load('/zh/Base.Impredicativity.html');
+  await until(()=>readerReady(frame.contentWindow));
+  w=frame.contentWindow;d=w.document;
+  const leaf=d.querySelector('pre.Agda .expr-node a[data-type]'),block=leaf.closest('pre'),originalParent=block.parentElement;
+  leaf.scrollIntoView({block:'center'});
+  let rect=leaf.getBoundingClientRect();
+  leaf.dispatchEvent(new w.PointerEvent('pointerdown',{bubbles:true,pointerType:'touch'}));
+  touch(w,leaf,'touchstart',rect.x+2,rect.y+2);
+  const hintInactive=()=>!d.querySelector('.ast-swipe-hint')||d.querySelector('.ast-swipe-hint').hidden;
+  check(!block.classList.contains('ast-ranges-visible')&&hintInactive(),'touch-down alone never activates code');
+  touch(w,leaf,'touchmove',rect.x+2,rect.y+60);
+  touch(w,leaf,'touchend',rect.x+2,rect.y+60);await pause(350);
+  check(!block.classList.contains('ast-ranges-visible')&&hintInactive()&&d.querySelector('.type-inspector').hidden,'scroll beginning on code leaves ranges, help and hover inactive');
+  touch(w,leaf,'touchstart',rect.x+2,rect.y+2);
+  touch(w,leaf,'touchcancel',rect.x+2,rect.y+2);await pause(350);
+  check(!block.classList.contains('ast-ranges-visible'),'canceled touch never activates ranges');
+  touch(w,leaf,'touchstart',rect.x+2,rect.y+2);
+  const pinch=new w.Event('touchstart',{bubbles:true});pinch.touches=[{clientX:rect.x,clientY:rect.y},{clientX:rect.x+40,clientY:rect.y}];leaf.dispatchEvent(pinch);
+  await pause(350);touch(w,leaf,'touchend',rect.x+2,rect.y+2);
+  check(!block.classList.contains('ast-ranges-visible'),'multi-touch cancels a pending hold');
+  const keyword=block.querySelector('[data-hover-help]');
+  if(keyword){
+    const point=keyword.getBoundingClientRect();
+    keyword.dispatchEvent(new w.PointerEvent('pointerdown',{bubbles:true,pointerType:'touch'}));
+    touch(w,keyword,'touchstart',point.x+2,point.y+2);touch(w,keyword,'touchmove',point.x+2,point.y+50);touch(w,keyword,'touchend',point.x+2,point.y+50);
+    check(!block.classList.contains('ast-ranges-visible')&&!d.querySelector('.name-hover-popup'),'scroll starting on syntax help does not activate it');
+    tap(w,keyword);
+    check(block.classList.contains('ast-ranges-visible')&&!!d.querySelector('.name-hover-popup'),'confirmed syntax tap still activates the shared code surface');
+    tap(w,d.body);
+  }
+  leaf.dispatchEvent(new w.PointerEvent('pointerdown',{bubbles:true,pointerType:'touch'}));
+  touch(w,leaf,'touchstart',rect.x+2,rect.y+2);touch(w,leaf,'touchend',rect.x+2,rect.y+2);leaf.click();
+  await until(()=>!d.querySelector('.type-inspector').hidden);
+  check(!d.querySelector('.ast-swipe-hint').hidden&&!d.querySelector('.code-fullscreen-toggle').hidden,'AST hint and portrait fullscreen control activate together');
+  await until(()=>!d.querySelector('.code-copy-mobile').hidden);
+  const copyControl=d.querySelector('.code-copy-mobile'),fullControl=d.querySelector('.code-fullscreen-toggle');
+  const copyRect=copyControl.getBoundingClientRect(),fullRect=fullControl.getBoundingClientRect();
+  check(Math.abs(fullRect.left-copyRect.right-8)<2&&Math.abs(fullRect.top-copyRect.top)<2,
+    'mobile code copy sits beside fullscreen with an eight-pixel gap');
+  check(!d.querySelector('.single-line-code .code-copy-button, code.Agda .code-copy-button'),
+    'inline and centered single-line code have no copy action');
+  d.querySelector('.code-fullscreen-toggle').click();
+  const plane=d.querySelector('.code-fullscreen-plane');
+  check(plane.contains(block)&&block===leaf.closest('pre'),'fullscreen moves the original code nodes');
+  check(!!d.querySelector('.code-fullscreen-controls .code-copy-fullscreen')&&copyControl.hidden,
+    'landscape reader keeps a copy action and hides the portrait control');
+  check(plane.clientWidth>plane.clientHeight&&w.getComputedStyle(plane).transform!=='none','portrait viewport becomes an independent landscape plane');
+  const closeControl=d.querySelector('.code-fullscreen-close'),controls=closeControl.parentElement;
+  controls.style.setProperty('--code-safe-right','36px');controls.style.setProperty('--code-safe-top','20px');
+  check(w.getComputedStyle(closeControl).right==='36px'&&w.getComputedStyle(closeControl).top==='20px','rotated controls respect logical safe-area insets');
+  controls.style.removeProperty('--code-safe-right');controls.style.removeProperty('--code-safe-top');
+  const closeBefore=closeControl.getBoundingClientRect(),spacer=d.createElement('div');spacer.style.height='2000px';plane.append(spacer);plane.scrollTop=plane.scrollHeight;
+  const closeAfter=closeControl.getBoundingClientRect();
+  check(Math.abs(closeBefore.top-closeAfter.top)<1&&Math.abs(closeBefore.left-closeAfter.left)<1,'close control stays fixed while long code is scrolled');
+  spacer.remove();plane.scrollTop=0;
+  const first=plane.querySelector('.expr-node a[data-type]');rect=first.getBoundingClientRect();
+  first.dispatchEvent(new w.PointerEvent('pointerdown',{bubbles:true,pointerType:'touch'}));
+  touch(w,first,'touchstart',rect.x+2,rect.y+2);touch(w,first,'touchend',rect.x+2,rect.y+2);first.click();
+  await until(()=>plane.querySelector('.type-inspector:not([hidden])'));
+  const popup=plane.querySelector('.type-inspector');
+  check(popup.querySelector('.type-value').textContent.trim().length>0,'rotated code uses the normal semantic hover');
+  const pbox=popup.getBoundingClientRect(),lbox=first.getBoundingClientRect();
+  check(pbox.right<=lbox.left+2,'rotated hover opens below its anchor in logical coordinates');
+  // The spacer test and popup placement above queue native scroll events.
+  // Finish that artificial scroll before starting a new hold: a real scroll
+  // deliberately cancels an uncommitted hold in the production reader.
+  await new Promise(resolve=>w.requestAnimationFrame(()=>w.requestAnimationFrame(resolve)));
+  // Physical vertical motion is logical horizontal motion in the rotated plane.
+  rect=first.getBoundingClientRect();
+  touch(w,first,'touchstart',rect.x+2,rect.y+2);await pause(350);
+  touch(w,first,'touchmove',rect.x+2,rect.y+42);await pause(50);
+  check(!!block.querySelector('.expr-active')&&!first.classList.contains('name-active'),'rotated swipe selects a parent and clears the leaf highlight');
+  touch(w,first,'touchmove',rect.x+2,rect.y-38);await pause(50);
+  check(first.classList.contains('name-active')&&!block.querySelector('.expr-active'),'reverse rotated swipe returns to the original leaf');
+  touch(w,first,'touchend',rect.x+2,rect.y-38);
+  const inner=popup.querySelector('a[data-type]:not([data-hover-stop])');
+  tap(w,inner);await until(()=>plane.querySelector('.name-hover-popup:not([aria-busy])'));
+  check(plane.contains(d.querySelector('.name-hover-popup')),'nested hover stays in the same rotated coordinate surface');
+  // Inspect the actual local definition, so its final proof is also a real
+  // AST-enabled block near the bottom of the mirrored chapter.
+  tap(w,block.querySelector('a[id="6001"]'));
+  await until(()=>plane.querySelector('.name-hover-popup:not([aria-busy]) .type-definition-link'));
+  const action=plane.querySelector('.name-hover-popup .type-definition-link');
+  const inspectedURL=new URL(action.href);inspectedURL.searchParams.set('reader-test','touch');action.href=inspectedURL;
+  tap(w,action);
+  await until(()=>d.querySelector('.definition-modal-frame.is-ready'));
+  check(!d.querySelector('.code-fullscreen')&&block.parentElement===originalParent,'modal action exits fullscreen and restores the same original block');
+  check(!d.querySelector('article').inert,'fullscreen cleanup restores body interactivity');
+  const mirror=d.querySelector('.definition-modal-frame'),mw=mirror.contentWindow,md=mw.document;
+  await until(()=>readerReady(mw));
+  const mirrorLeaf=[...md.querySelectorAll('pre.Agda .expr-node a[data-type]')].filter(n=>n.getClientRects().length).at(-1);
+  mirrorLeaf.scrollIntoView({block:'center'});tap(mw,mirrorLeaf);
+  await until(()=>!md.querySelector('.code-fullscreen-toggle').hidden);
+  const readingScroll=md.querySelector('#main-content').scrollTop;
+  check(readingScroll>md.querySelector('#main-content').scrollHeight*.8,'modal restoration test really starts near the document bottom');
+  md.querySelector('.code-fullscreen-toggle').click();
+  await until(()=>d.querySelector('.has-fullscreen-code'));
+  await pause(100);
+  check(mirror.getBoundingClientRect().height>=w.innerHeight-2,'code inside a modal also fills the browser viewport');
+  md.querySelector('.code-fullscreen-close').click();
+  await until(()=>!d.querySelector('.has-fullscreen-code'));
+  await until(()=>Math.abs(md.querySelector('#main-content').scrollTop-readingScroll)<2);
+  check(!!d.querySelector('.definition-modal'),'closing modal code fullscreen preserves its near-bottom reading position');
+  md.querySelector('.code-fullscreen-toggle').click();
+  await until(()=>d.querySelector('.has-fullscreen-code'));
+  md.dispatchEvent(new mw.KeyboardEvent('keydown',{key:'Escape',bubbles:true,cancelable:true}));
+  await until(()=>!d.querySelector('.has-fullscreen-code'));
+  check(!!d.querySelector('.definition-modal')&&!md.querySelector('.code-fullscreen'),'Escape exits only the code surface, not its containing modal');
+  d.querySelector('.definition-modal-close').click();
+  check(!d.querySelector('.definition-modal'),'normal modal close remains functional');
+  const theorem=d.querySelector('pre.Agda a[id][data-name="ΩResizing→Resizing"]');
+  check(!!theorem,'reported ΩResizing→Resizing definition is included');
+  const theoremBlock=d.querySelector('.agda-definition-end[aria-label$="ΩResizing→Resizing"]').closest('pre');
+  const visibleToken=pre=>[...pre.querySelectorAll('.expr-node a[data-type]')].find(a=>a.getClientRects().length&&!a.closest('.universe-source'));
+  const ordinaryBlock=[...d.querySelectorAll('pre.Agda')].find(pre=>!pre.closest('summary')&&!pre.querySelector('.agda-definition-end')&&visibleToken(pre));
+  check(ordinaryBlock&&theoremBlock.querySelector('.agda-definition-end'),'font comparison covers both ordinary and QED frames');
+  for(const [label,codeBlock] of [['ordinary',ordinaryBlock],['QED theorem',theoremBlock]]) {
+    const token=visibleToken(codeBlock);
+    token.scrollIntoView({block:'center'});
+    const tokenRect=token.getBoundingClientRect();
+    token.dispatchEvent(new w.PointerEvent('pointerdown',{bubbles:true,pointerType:'touch'}));
+    touch(w,token,'touchstart',tokenRect.x+2,tokenRect.y+2);
+    touch(w,token,'touchend',tokenRect.x+2,tokenRect.y+2);token.click();
+    await until(()=>!d.querySelector('.code-fullscreen-toggle').hidden);
+    const before=w.getComputedStyle(codeBlock).fontSize;
+    const range=d.createRange();range.selectNodeContents(token);
+    const glyph=range.getBoundingClientRect();
+    d.querySelector('.code-fullscreen-toggle').click();await pause(100);
+    // Moving the original DOM resets live Range boundaries to its old parent.
+    range.selectNodeContents(token);
+    const style=w.getComputedStyle(codeBlock), rotated=range.getBoundingClientRect();
+    check(style.fontSize===before,label+' fullscreen preserves declared code size ('+before+' → '+style.fontSize+', '+token.textContent+', '+d.URL+')');
+    check(style.getPropertyValue('-webkit-text-size-adjust')==='100%'||style.getPropertyValue('text-size-adjust')==='100%',label+' disables automatic text inflation without disabling zoom');
+    check(Math.abs(rotated.width-glyph.height)<1&&Math.abs(rotated.height-glyph.width)<1,label+' fullscreen preserves actual rotated glyph dimensions');
+    check(style.fontSize===w.getComputedStyle(ordinaryBlock).fontSize,label+' uses the same font size as ordinary code');
+    d.querySelector('.code-fullscreen-close').click();
+  }
+  w.scrollTo(0,0);await pause(260);
+  const search=d.querySelector('.search-form'),languages=d.querySelector('#lang-switch');
+  const searchToggle=d.querySelector('#search-toggle'),languageToggle=d.querySelector('#language-toggle');
+  const compactButtons=[searchToggle,languageToggle,d.querySelector('#theme-toggle')].map(button=>button.getBoundingClientRect());
+  check(compactButtons.every(rect=>rect.width>=44&&rect.height>=44),'all three compact controls retain 44px touch targets');
+  check(compactButtons.slice(1).every((rect,i)=>Math.abs(rect.left-compactButtons[i].right-4)<.1),'compact control gaps are four pixels');
+  check(Math.abs(d.documentElement.clientWidth-compactButtons[2].right-4)<.1,'compact controls sit at the right gutter');
+  check(search.inert&&languages.inert,'mobile language and search panels start closed');
+  searchToggle.click();
+  check(!search.inert&&searchToggle.getAttribute('aria-expanded')==='true'&&d.activeElement.id==='search-box','search button opens and focuses search');
+  w.scrollTo(0,400);await pause(300);w.scrollTo(0,100);await pause(300);
+  check(!search.inert&&searchToggle.getAttribute('aria-expanded')==='true','scroll in either direction never toggles search');
+  languageToggle.click();
+  check(search.inert&&!languages.inert&&languageToggle.getAttribute('aria-expanded')==='true','language button opens options and closes search');
+  check(languages.querySelectorAll('a').length===2&&languages.querySelector('.cur'),'all three editions remain available');
+  d.dispatchEvent(new w.KeyboardEvent('keydown',{key:'Escape',bubbles:true}));
+  check(languages.inert&&d.activeElement===languageToggle,'Escape closes language options and restores focus');
+  searchToggle.click();d.querySelector('article').click();
+  check(search.inert,'outside click closes search');
+  check(w.getComputedStyle(d.querySelector('.search-form')).transitionDuration!=='0s','mobile search has a short visual transition');
+  check(w.__mobileProbe.errors.length===0,'mobile interactions have no unhandled errors');
+  output.textContent='PASS '+results.length+'\n'+JSON.stringify(results,null,2);
+ }catch(error){output.textContent+='\nFAIL '+error.stack}
+};
+setInterval(()=>{const w=frame.contentWindow;if(w?.__mobileProbe)report.textContent=JSON.stringify({page,...w.__mobileProbe,popups:[...w.document.querySelectorAll('.name-hover-popup')].map(p=>p.textContent.slice(0,100))},null,2);},250);
+load(page).then(()=>{
+ const run=document.querySelector('#run');run.disabled=false;
+ if(new URLSearchParams(location.search).get('run')==='1')run.click();
+});
+</script></html>

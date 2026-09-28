@@ -1,0 +1,136 @@
+/* Figure-specific layout for Bedrock's mathematical diagrams.
+   Licensing is declared by the repository's REUSE.toml. */
+.quantifier-context-scene { position: relative; max-width: 30rem; margin-inline: auto; }
+.quantifier-context-scene .quantifier-context-label {
+  position: absolute; transform: translate(-50%, -50%);
+  line-height: 1; white-space: nowrap;
+}
+.quantifier-context-scene .quantifier-context-heading {
+  color: var(--fg-alt); font-size: clamp(.8rem, 3.8vw, 1rem);
+}
+.quantifier-context-scene .quantifier-context-space {
+  fill: var(--diagram-space-bg); stroke: var(--diagram-space-border); rx: 18px;
+}
+.quantifier-context-scene .quantifier-context-divider {
+  fill: none; stroke: var(--diagram-space-border); stroke-dasharray: 4 5;
+}
+.quantifier-context-scene .quantifier-context-old-path,
+.quantifier-context-scene .quantifier-context-old-tip {
+  fill: none; stroke: var(--diagram-relation-color); stroke-width: 2;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+.quantifier-context-scene .quantifier-context-new-path,
+.quantifier-context-scene .quantifier-context-new-tip {
+  fill: none; stroke: var(--diagram-path-color); stroke-width: 2;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+.quantifier-context-scene .quantifier-context-old-node {
+  fill: var(--text-bg); stroke: var(--diagram-relation-color); stroke-width: 2;
+}
+.quantifier-context-scene .quantifier-context-new-node {
+  fill: color-mix(in srgb, var(--diagram-path-color) 12%, var(--text-bg));
+  stroke: var(--diagram-path-color); stroke-width: 2;
+}
+.quantifier-context-scene .quantifier-context-insert {
+  fill: var(--text-bg); stroke: var(--diagram-path-color); stroke-width: 2;
+}
+.quantifier-context-scene .quantifier-context-plus,
+.quantifier-context-scene .quantifier-context-new-value { color: var(--diagram-path-color); }
+.quantifier-context-scene .quantifier-context-plus { font-size: 1.45rem; }
+.quantifier-context-scene .quantifier-context-value { font-size: 1.3rem; }
+.quantifier-context-scene .quantifier-context-index { font-size: 1rem; }
+
+.choice-lift-flow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(3rem, 4.5rem) minmax(0, 1fr);
+  grid-template-areas:
+    "legend legend legend"
+    "input choice output"
+    "up . down"
+    "source . target";
+  align-items: center; gap: .55rem var(--diagram-gap); text-align: center;
+}
+.choice-lift-legend { grid-area: legend; color: var(--fg-alt); font-size: .88em; }
+.choice-lift-source { grid-area: source; }
+.choice-lift-up { grid-area: up; }
+.choice-lift-input { grid-area: input; }
+.choice-lift-choice { grid-area: choice; }
+.choice-lift-output { grid-area: output; }
+.choice-lift-down { grid-area: down; }
+.choice-lift-target { grid-area: target; }
+.choice-lift-flow .diagram-space { display: grid; place-items: center; }
+.choice-lift-flow .math.display, .choice-lift-flow .katex-display { margin: 0; }
+.choice-lift-flow .diagram-space .math.display { font-size: clamp(.82rem, 1.9vw, .96rem); }
+.choice-lift-step { display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: .05rem; min-width: 0; color: var(--diagram-relation-color);
+  font-size: .85em; line-height: 1.2; }
+.choice-lift-step > span[aria-hidden] { font-family: var(--sans); font-size: 1.45em; }
+.choice-lift-narrow-arrow { display: none; }
+@media (max-width: 720px) {
+  .choice-lift-flow {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "legend" "source" "up" "input" "choice" "output" "down" "target";
+    gap: .35rem;
+  }
+  .choice-lift-step { min-height: 2.4rem; }
+  .choice-lift-wide-arrow { display: none; }
+  .choice-lift-narrow-arrow { display: inline; }
+}
+
+.choice-contrast-frame { display: grid; gap: var(--diagram-gap); }
+.choice-contrast-premise {
+  display: flex; flex-wrap: wrap; align-items: baseline; justify-content: center;
+  gap: .3rem .8rem; text-align: center; color: var(--fg-alt);
+}
+.choice-contrast-premise strong { color: var(--text-fg); font-weight: 600; }
+.choice-contrast-columns {
+  display: grid; grid-template-columns: minmax(0, 1fr) 6.2rem minmax(0, 1fr);
+  gap: .55rem; align-items: stretch;
+}
+.choice-contrast-choice-bridge {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: .45rem; text-align: center; font-size: .77em; line-height: 1.35;
+}
+.choice-contrast-choice-bridge > :first-child { color: var(--text-fg); font-weight: 600; }
+.choice-contrast-choice-arrow { color: var(--diagram-path-color); font-size: 2rem; line-height: 1; }
+.choice-contrast-choice-arrow::before { content: "→"; }
+.choice-contrast-choice-note { color: var(--fg-alt); }
+.choice-contrast-panel {
+  min-width: 0; display: flex; flex-direction: column; gap: .7rem;
+  padding: 1rem;
+}
+.choice-contrast-panel h4 { margin: 0; font-size: 1em; text-align: center; }
+.choice-contrast-panel p { margin: 0; color: var(--fg-alt); font-size: .87em; }
+.choice-contrast-type { text-align: center; font-size: .83em; color: var(--fg-alt); }
+.choice-contrast-picks { display: grid; gap: .35rem; }
+.choice-contrast-pick {
+  display: grid; grid-template-columns: minmax(0, 1fr) 1.2rem minmax(0, 1fr);
+  align-items: center; gap: .2rem; text-align: center;
+  padding: .35rem .5rem; border-radius: var(--diagram-radius);
+  border: 1px solid var(--diagram-space-border); background: var(--diagram-space-bg);
+}
+.choice-contrast-correspondence { border-top: 1px dashed var(--diagram-path-color); }
+.choice-contrast-pointwise .choice-contrast-pick { border-style: dashed; }
+.choice-contrast-pick strong { font-weight: 600; }
+.choice-contrast-map {
+  display: grid; gap: .25rem; min-width: 0;
+}
+.choice-contrast-map-name {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: .2rem .65rem;
+  text-align: center; font-size: .8em;
+}
+.choice-contrast-path-stage { max-width: 22.5rem; margin: .15rem auto; }
+.choice-contrast-path-stage .path-label { font-size: clamp(.72rem, 1.7vw, .9rem); }
+.choice-contrast-equivalence { text-align: center; font-size: .96em; margin-bottom: .3rem; }
+.choice-contrast-verdict {
+  margin-top: auto; padding-top: .65rem; border-top: 1px solid var(--diagram-space-border);
+  font-size: .89em; line-height: 1.55;
+}
+.choice-contrast-insufficient { color: var(--fg-alt); }
+.choice-contrast-coherent { color: var(--text-fg); }
+@media (max-width: 1050px) {
+  .choice-contrast-columns { grid-template-columns: minmax(0, 1fr); }
+  .choice-contrast-choice-bridge { padding: .25rem 0; gap: .15rem; }
+  .choice-contrast-choice-arrow::before { content: "↓"; }
+  .choice-contrast-path-stage .path-label { font-size: clamp(.74rem, 3.2vw, .9rem); }
+}

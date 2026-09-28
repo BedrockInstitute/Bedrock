@@ -1,20 +1,17 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # Describing the satisfaction table
-
-The object language cannot invoke the host language's recursion on formulas. It therefore needs a bounded description of the graph that recursion should produce. This chapter treats `T` as a candidate relation of formula keys and environment sets, and asks which local equations each matching entry must obey. The answer consists of ten constructor clauses and two conditions on the first projection of `T`; semantic correctness, uniqueness, closure of the code domain, and existence of canonical data require further arguments.
 <!--zh-->
 # 描述满足关系表
-
-对象语言不能直接调用宿主语言中关于公式的递归，因此需要用有界方式描述该递归应产生的图。本章把 `T` 视为由公式键与环境集组成的候选关系，并追问每个匹配条目应服从哪些局部方程。答案由十条构造子子句和关于 `T` 第一投影的两项条件组成；语义正确性、唯一性、码域闭包以及典范数据的存在都还需要后续论证。
 <!--ja-->
 # 充足関係表を記述する
-
-対象言語から、メタ言語にある論理式上の再帰を直接呼び出すことはできない。そこで、その再帰が作るべきグラフを有界な仕方で記述する必要がある。本章では `T` を、論理式の鍵と環境集合からなる候補関係とみなし、一致する各要素が従うべき局所方程式を調べる。その答えは十個の構成子の節と、`T` の第一射影に関する二条件である。意味論的な正しさ、一意性、符号領域の閉性、正準なデータの存在には、さらに後の議論が必要である。
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
+open import Base.Prelude
 ```
 
 <!--en-->
@@ -26,10 +23,34 @@ There are two levels in this description. Agda supplies the metatheory in which 
 <!--/-->
 
 ```agda
-open import Base.Prelude
 module L.Coding.SatisfactionClauses {ℓ : Level} where
-
 ```
+
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax using
+  ( Formula; Term; var; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊤̇; ⊥̇; ∃̇∈; ∀̇∈ )
+open import FOL.LevyHierarchy using ( checkΔ₀; Δ₀ )
+open import L.Constructible {ℓ} using ( 𝒮ʟ )
+open import L.Coding.Model {ℓ} using ( prAtL )
+open import L.Coding.Expressions {ℓ} using ( sucAtL; consAtL )
+open import L.Coding.Quantification {ℓ} using
+  ( f0; f1; i0; i1; i2; i3; i4; i5; i6; i8; i9; i11; i12; i14; i16; i17; i19; sh
+  ; sndEx; sndAll; bothEx; bothAll; bigAnd )
+```
+
+<!--en-->
+
+The object language cannot invoke the host language's recursion on formulas. It therefore needs a bounded description of the graph that recursion should produce. This chapter treats `T` as a candidate relation of formula keys and environment sets, and asks which local equations each matching entry must obey. The answer consists of ten constructor clauses and two conditions on the first projection of `T`; semantic correctness, uniqueness, closure of the code domain, and existence of canonical data require further arguments.
+<!--zh-->
+
+对象语言不能直接调用宿主语言中关于公式的递归，因此需要用有界方式描述该递归应产生的图。本章把 `T` 视为由公式键与环境集组成的候选关系，并追问每个匹配条目应服从哪些局部方程。答案由十条构造子子句和关于 `T` 第一投影的两项条件组成；语义正确性、唯一性、码域闭包以及典范数据的存在都还需要后续论证。
+<!--ja-->
+
+対象言語から、メタ言語にある論理式上の再帰を直接呼び出すことはできない。そこで、その再帰が作るべきグラフを有界な仕方で記述する必要がある。本章では `T` を、論理式の鍵と環境集合からなる候補関係とみなし、一致する各要素が従うべき局所方程式を調べる。その答えは十個の構成子の節と、`T` の第一射影に関する二条件である。意味論的な正しさ、一意性、符号領域の閉性、正準なデータの存在には、さらに後の議論が必要である。
+<!--/-->
+
+
 
 <!--en-->
 A formula with `j` free slots is interpreted after those slots receive elements of the constructible carrier. Membership, equality, the propositional connectives, and bounded quantifiers are enough to state every clause below. The final Δ₀ witness will concern this object-language syntax; it will not by itself interpret the clauses or provide any of their witnesses.
@@ -39,14 +60,6 @@ A formula with `j` free slots is interpreted after those slots receive elements 
 `j` 個の自由な枠をもつ論理式は、それらの枠に構成可能な台の元を入れてから解釈される。所属、等号、命題結合子、有界量化子だけで、以下のすべての節を述べられる。最後の Δ₀ の証人が扱うのは、この対象言語の構文である。それだけで節を解釈したり、節に現れる証人を与えたりするものではない。
 <!--/-->
 
-```agda
-open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using
-  ( Formula; Term; var; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊤̇; ⊥̇; ∃̇∈; ∀̇∈ )
-open import FOL.LevyHierarchy using ( checkΔ₀; Δ₀ )
-open import L.Constructible {ℓ} using ( 𝒮ʟ )
-```
-
 <!--en-->
 The candidate relation is expressed through coded ordered pairs. Three shapes organize the chapter: an environment-tower entry pairs an arity `ar` with an environment set `F`; a formula key pairs the same arity with a tagged payload; and a member of `T` pairs that key with a candidate value set. Bounded pair readers expose these components, while the successor and cons predicates describe the arity increase and the extension of an encoded environment.
 <!--zh-->
@@ -55,14 +68,6 @@ The candidate relation is expressed through coded ordered pairs. Three shapes or
 候補関係は符号化された順序対によって表される。本章を組織する形は三つある。環境の塔の要素はアリティ `ar` と環境集合 `F` を対にし、論理式の鍵は同じアリティとタグ付きペイロードを対にし、`T` の要素はその鍵と候補値集合をさらに対にする。有界な対の読みがこれらの成分を取り出し、後続と cons の述語がそれぞれアリティの増加と符号化環境の拡張を記述する。
 <!--/-->
 
-```agda
-open import L.Coding.Model {ℓ} using ( prAtL )
-open import L.Coding.Expressions {ℓ} using ( sucAtL; consAtL )
-open import L.Coding.Quantification {ℓ} using
-  ( f0; f1; i0; i1; i2; i3; i4; i5; i6; i8; i9; i11; i12; i14; i16; i17; i19; sh
-  ; sndEx; sndAll; bothEx; bothAll; bigAnd )
-```
-
 <!--en-->
 There are exactly ten formula-constructor positions, indexed by `Fin 10`. Converting such an index to a natural number lets one common family dispatch to the appropriate clause. The value stored in a tag slot is still an arbitrary parameter here; a later `Tags` hypothesis will identify each slot with its intended standard numeral.
 <!--zh-->
@@ -70,9 +75,6 @@ There are exactly ten formula-constructor positions, indexed by `Fin 10`. Conver
 <!--ja-->
 論理式の構成子にはちょうど十個の位置があり、`Fin 10` で添字付けられる。その添字を自然数へ移すことで、一つの族から対応する節を選べる。ただし、ここでタグの枠に入る値はまだ任意のパラメータである。各枠を意図された標準数項と同定するのは、後の `Tags` 仮定である。
 <!--/-->
-
-```agda
-```
 
 <!--en-->
 All object-language variables range over `S`, the carrier of the constructible structure. A slot such as `T`, `C`, or `w` names a position in an assignment; only after evaluation does that position denote a constructible set. Keeping this distinction prevents a syntactic clause from being mistaken for a metatheoretic construction of a table or a code set.
@@ -170,8 +172,15 @@ The five constructor relations below share three parameters: the candidate relat
 以下の五つの構成子関係は、候補関係 `T`、台を与える境界 `w`、十個のタグ枠からなる族 `N` という三つのパラメータを共有する。局所名 `N0` と `N1` は、最初の二つのタグ枠を、新たに束縛された変数の先まで移すだけである。この添字の調整は参照先を保つが、枠を標準数項と同定する等式は加えない。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Rel {m : ℕ} (T w : Fin m) (N : Fin 10 → Fin m) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     N0 N1 : ∀ {j} → Fin (j + m)
     N0 {j} = sh j (N f0)
@@ -233,7 +242,6 @@ Atomic formulas do not recurse through formula children. Their payload consists 
   atomBody rel =
     ∃̇∈ (var (sh 16 w)) (∃̇∈ (var (sh 17 w))
       (tmIs i4 i2 i1 N0 N1 ∧̇ (tmIs i3 i2 i0 N0 N1 ∧̇ rel)))
-
 ```
 
 <!--en-->
@@ -247,7 +255,6 @@ Falsity gives the simplest extension equation. Its property is impossible, so th
 ```agda
   botRel : Formula S (12 + m)
   botRel = extB i0 i8 ⊥̇
-
 ```
 
 <!--en-->
@@ -262,7 +269,6 @@ For a binary connective, the payload is decomposed into two formula codes `a` an
   binRel : (∀ {j} → Formula S j → Formula S j → Formula S j) → Formula S (12 + m)
   binRel op =
     bothAll i3 (subAt (sh 15 T) i12 i1 (subAt (sh 19 T) i16 i4 (extB i11 i19 (binBody op))))
-
 ```
 
 <!--en-->
@@ -276,7 +282,6 @@ The payload of an unbounded quantified formula is its body code. The relation re
 ```agda
   quRel : (∀ {j} → Term S j → Formula S (suc j) → Formula S j) → Formula S (12 + m)
   quRel q = subSucAt (sh 12 T) i9 i3 (extB i6 i14 (quBody q))
-
 ```
 
 <!--en-->
@@ -291,7 +296,6 @@ The payload of a bounded quantifier is a pair `(t,a)` of a bound-term code and a
   bqRel : (∀ {j} → Term S j → Formula S (suc j) → Formula S j)
         → (∀ {j} → Formula S j → Formula S j → Formula S j) → Formula S (12 + m)
   bqRel q c = bothAll i3 (subSucAt (sh 15 T) i12 i0 (extB i9 i17 (bqBody q c)))
-
 ```
 
 <!--en-->
@@ -305,7 +309,6 @@ For an atomic payload, the pair reader exposes the two term codes and `extB` app
 ```agda
   atomRel : Formula S (18 + m) → Formula S (12 + m)
   atomRel rel = bothAll i3 (extB i3 i11 (atomBody rel))
-
 ```
 
 <!--en-->
@@ -352,6 +355,8 @@ Tag 9 has the existential polarity. Using `∃[]-syntax` with conjunction, it me
   relN 9 = bqRel ∃̇∈ _∧̇_
   relN (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc _)))))))))) = ⊤̇
 ```
+</div>
+</details>
 
 <!--en-->
 We can now place a constructor relation into the common frame. The data to be connected are an environment-tower pair, a formula code of the same arity with a tagged payload, and a candidate entry of `T` at that code. The local relation module is reused so that every tag is judged with the same meanings of `T`, `w`, and the two term-code tags.
@@ -361,11 +366,16 @@ We can now place a constructor relation into the common frame. The data to be co
 これで構成子関係を共通の枠へ置ける。結び付けるデータは、環境の塔の対、同じアリティとタグ付きペイロードをもつ論理式符号、そしてその符号における `T` の候補要素である。同じ局所関係モジュールを再利用することで、どのタグも同じ `T`、`w`、二つの項符号タグの解釈の下で判定される。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Clause {m : ℕ} (T w C E : Fin m) (N : Fin 10 → Fin m) where
-  private
-    module R = Rel T w N
+```
+</summary>
+<div class="submodule-fold-content">
 
+```agda
+  private module R = Rel T w N
 ```
 
 <!--en-->
@@ -395,7 +405,6 @@ The two domain conditions supply the existence that the universal local clauses 
   total onC : Formula S m
   total = ∀̇∈ (var C) (∃̇∈ (var (sh 1 T)) (sndEx i0 i1 ⊤̇))
   onC = ∀̇∈ (var T) (bothEx i0 (var i1 ∈̇ var (sh 4 C)))
-
 ```
 
 <!--en-->
@@ -409,8 +418,9 @@ The ten local clauses are gathered by one finite conjunction. The argument `9` m
 ```agda
   ten : Formula S m
   ten = bigAnd 9 clause
-
 ```
+</div>
+</details>
 
 <!--en-->
 The formula `tableAt` now conjoins three demands: truncated totality over `C`, the restriction of every table member to a key in `C`, and all ten constructor clauses. This is a local bounded specification for a candidate relation. It does not prove that `C` is closed under child codes, that `E` is the intended environment tower, that the tags are standard, that values are unique, or that the candidate is a canonical satisfaction table. Later chapters separately supply the tower and code descriptions, tag calibration, semantic bridges, and pinning arguments needed to relate suitable candidates to canonical data.
@@ -423,7 +433,6 @@ The formula `tableAt` now conjoins three demands: truncated totality over `C`, t
 ```agda
 tableAt : ∀ {m} → Fin m → Fin m → Fin m → Fin m → (Fin 10 → Fin m) → Formula S m
 tableAt T w C E N = Clause.total T w C E N ∧̇ (Clause.onC T w C E N ∧̇ Clause.ten T w C E N)
-
 ```
 
 <!--en-->

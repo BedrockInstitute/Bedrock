@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "copyright_year": 2026,
+  "programming_language": {"name": "Cubical Agda", "url": "https://github.com/agda/cubical"},
+  "external_libraries": [
+    {"prefix": "Cubical", "name": "Cubical", "url": "https://github.com/agda/cubical"},
+    {"prefix": "Agda", "name": "Agda", "url": "https://agda.readthedocs.io/"}
+  ],
+  "name": "Bedrock",
+  "publisher": "Bedrock Institute",
+  "storage_namespace": "bedrock",
+  "canonical": "https://bedrock.institute",
+  "repository": "https://github.com/BedrockInstitute/Bedrock",
+  "source_tree": "https://github.com/BedrockInstitute/Bedrock/blob/main/src",
+  "languages": [
+    "en",
+    "zh",
+    "ja"
+  ],
+  "sources": "src",
+  "source_extension": ".lagda.md",
+  "variable_legacy": "site/inline-agda-legacy.json",
+  "numbered_theorems": {"Origin": [0, 1, 2, 3, 4]},
+  "catalog": "site/reading-catalog.json",
+  "glossary": "site/glossary.toml",
+  "highlighted": "_build/html",
+  "types": "_build/types.json",
+  "expression_types": "_build/expression-types.json",
+  "favicon": "site/static/assets/favicon.svg",
+  "logo": "site/static/assets/favicon.svg",
+  "stylesheets": ["site/static/bedrock-diagrams.css"],
+  "base_url": "",
+  "prelude_module": "Base.Prelude",
+  "landing_module": "Origin",
+  "hubs": [
+    "Base.Prelude"
+  ],
+  "descriptions": {
+    "en": "A trilingual textbook of machine-checked set theory in Cubical Agda. Proving ZFC and GCH in the constructible universe L, assuming excluded middle.",
+    "zh": "以 Cubical Agda 形式化构建集合论的三语交互式教科书。在排中律假设下，证明可构造宇宙 L 满足 ZFC 与 GCH。",
+    "ja": "Cubical Agda で集合論を形式化する三言語の対話型教科書。排中律の仮定のもとで、構成可能宇宙 L が ZFC と GCH を満たすことを証明する。"
+  },
+  "taglines": {
+    "en": "Laying the groundwork for the metaphysics of 𝑉",
+    "zh": "为 𝑉 的形而上学奠基",
+    "ja": "𝑉 の形而上学のために基礎を築く"
+  },
+  "topics": [
+    "Set theory",
+    "Constructible universe",
+    "Generalized continuum hypothesis",
+    "Cubical type theory",
+    "Formalized mathematics"
+  ],
+  "license": {
+    "name": "CC-BY-NC-SA-4.0",
+    "url": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
+  },
+  "agent": {
+    "guide": "# Bedrock\n\n> {blurb}\n\nBedrock is a machine-checked development, in Cubical Agda, of the set theory behind\ncontemporary questions about the universe of sets. Two results are proved and both are\nre-exported by the chapter `Origin`: `L⊨ZFC` and `L⊨GCH`, the constructible universe\nas a model of ZFC and as a model in which the generalized continuum hypothesis holds.\nBesides their universe parameter, each requires only excluded middle at `LEM (ℓ-suc ℓ)`.\nThe long-term aim is forcing, set-theoretic geology, the definability of ground models\nand the mantle.\n\nThe project is host-language maximalist: every set-theoretic notion is rebuilt in\ntype-theory-native idiom rather than transcribed from the textbook ZF axioms, and the\ndeeply embedded first-order `Formula` is used only where syntax is itself the object of\nstudy. Every file typechecks under Agda 2.8.0 with the cubical 0.9 library and the\n`--safe` flag, so nothing here is postulated.\n\nThis site is the development published as a trilingual mathematics textbook. One chapter\nis one Agda module. The displayed Agda is the formal content; the prose around it is the\nexposition, written in English, Chinese and Japanese from a single master. The reading\norder is a dependency order: a chapter's prerequisites are the modules it imports.\n",
+    "translations": {
+      "en": {
+        "docTitle": "Explain a passage of the Bedrock textbook",
+        "intro": "I am reading the Bedrock online textbook and I want you to explain the passage I selected. Read the sources listed below before you answer.",
+        "hProject": "What Bedrock is",
+        "fLibrary": "This page is an external library module, rendered inside Bedrock for reference. It is not a chapter of the book.",
+        "project": [
+          "Bedrock is a machine-checked development of set theory in Cubical Agda. Two results are proved: the constructible universe L is a model of ZFC, and GCH holds in it. They are the definitions `L⊨ZFC` and `L⊨GCH` re-exported by the chapter Origin. Besides their universe parameter, each requires only excluded middle at `LEM (ℓ-suc ℓ)`. Every file typechecks under Agda 2.8.0 with the cubical 0.9 library and the `--safe` flag, so nothing in the development is postulated. The long-term aim is forcing, set-theoretic geology, and the definability of ground models.",
+          "The project is host-language maximalist: every set-theoretic notion is rebuilt in type-theory-native idiom rather than transcribed from the textbook ZF axioms, and the deeply embedded first-order `Formula` is used only where syntax is itself the object of study. This matters when you read a definition here, because it will often not look like the one in a set theory textbook.",
+          "The site is that development published as a trilingual textbook, in English, Chinese and Japanese. One chapter is one Agda module. The displayed Agda is the formal content and the prose around it is the exposition; the reading order is a dependency order, so a chapter's prerequisites are the modules it imports."
+        ],
+        "want": [
+          "Explain the passage I selected: what it says, why it is put this way, what it rests on, and what it is used for later. Define any notation I would have to know. If it is Agda code, walk through the term and name the type of each part.",
+          "Follow the links above instead of guessing. If the passage cannot be understood without a prerequisite chapter, say which one and what I need from it. If the sources contradict what you expected, trust the sources: this is a machine-checked development and the Agda is the authority.",
+          "Answer in English."
+        ]
+      },
+      "zh": {
+        "docTitle": "请解释 Bedrock 教科书中的一段内容",
+        "intro": "我正在阅读 Bedrock 在线教科书，想请你解释我选中的这段内容。回答之前请先读下面列出的资料。",
+        "hProject": "关于 Bedrock 这个项目",
+        "fLibrary": "本页是外部库的一个模块，在 Bedrock 中渲染以供查阅，并不是本书的章节。",
+        "project": [
+          "Bedrock 是用 Cubical Agda 完成的机器验证集合论。目前已经证明两项结果：可构造宇宙 L 是 ZFC 的模型，并且 GCH 在其中成立。它们是由原点一章重新导出的定义 `L⊨ZFC` 与 `L⊨GCH`；除宇宙参数外，二者都仅需 `LEM (ℓ-suc ℓ)` 这一层的排中律假设。全部文件都在 Agda 2.8.0 与 cubical 0.9 库下带 `--safe` 通过类型检查，因此开发中没有任何公设。长期目标是力迫法、集合论地质学，以及基模型的可定义性。",
+          "本项目采取宿主语言最大化的路线：每个集合论概念都以类型论原生的方式重建，而不是照抄教科书的 ZF 公理；深嵌入的一阶 `Formula` 只在语法本身成为研究对象时才使用。读这里的定义时这一点很关键，因为它往往与集合论教科书里的写法并不相同。",
+          "本站是该开发成果出版成的三语教科书，语言为英文、中文与日文。一章即一个 Agda 模块。展示的 Agda 是形式内容，围绕它的散文是讲解；阅读顺序就是依赖顺序，一章的先修就是它导入的模块。"
+        ],
+        "want": [
+          "请解释我选中的这段内容：它说的是什么，为什么这样表述，它依赖什么，后面又被用在哪里。我需要知道的记号请一并定义。如果选中的是 Agda 代码，请逐步讲解这个项，并说明各部分的类型。",
+          "请顺着上面的链接去读，不要猜测。如果这段内容离开某个先修章节就无法理解，请指出是哪一章，以及我需要从那一章掌握什么。如果资料与你的预期不符，请以资料为准：这是机器验证的开发，Agda 才是权威。",
+          "请用中文回答。"
+        ]
+      },
+      "ja": {
+        "docTitle": "Bedrock 教科書の一節を説明してください",
+        "intro": "Bedrock のオンライン教科書を読んでいます。選択した一節を説明してください。答える前に、下に挙げた資料を読んでください。",
+        "hProject": "Bedrock とは",
+        "fLibrary": "このページは外部ライブラリのモジュールで、参照用に Bedrock 内へ描画したものです。本書の章ではありません。",
+        "project": [
+          "Bedrock は Cubical Agda による機械検証された集合論です。二つの結果が証明されています。構成可能宇宙 L が ZFC のモデルであること、そしてその中で GCH が成り立つことです。それらは原点の章から再エクスポートされる定義 `L⊨ZFC` と `L⊨GCH` で、宇宙パラメータのほかに必要なのは `LEM (ℓ-suc ℓ)` の排中律のみです。すべてのファイルは Agda 2.8.0 と cubical 0.9 ライブラリのもとで `--safe` 付きに型検査を通るので、この開発には postulate がありません。長期的な目標は強制法、集合論的地質学、そして基礎モデルの定義可能性です。",
+          "この企画はホスト言語最大主義を採ります。集合論の概念はすべて型理論に固有の語法で作り直され、教科書の ZF 公理を書き写したものではありません。深く埋め込まれた一階の `Formula` は、構文そのものが研究対象になる場面でのみ使われます。ここでの定義を読むときこの点が重要です。集合論の教科書に載っている形とは違って見えることが多いからです。",
+          "本サイトはその開発成果を英語、中国語、日本語の三言語の教科書として公開したものです。一つの章が一つの Agda モジュールです。表示された Agda が形式的な内容で、その周りの文章が解説です。読書順は依存順であり、章の前提はその章が import するモジュールです。"
+        ],
+        "want": [
+          "選択した一節を説明してください。何を述べているのか、なぜこの書き方なのか、何に依拠し、後で何に使われるのか。知っておくべき記法も定義してください。Agda のコードなら、項を順に追い、各部分の型を示してください。",
+          "推測せず、上のリンクをたどってください。前提となる章なしでは理解できない場合は、どの章で、そこから何が必要かを述べてください。資料が予想と食い違う場合は資料に従ってください。これは機械検証された開発であり、権威は Agda にあります。",
+          "日本語で答えてください。"
+        ]
+      }
+    }
+  },
+  "policies": {
+    "inline_math_review": true,
+    "formal_setup": true,
+    "trilingual": true,
+    "level_name_convention": true,
+    "natural_literal_default": true
+  },
+  "inline_math_approvals": "site/inline-latex-approvals.json",
+  "visible_import_chapters": [
+    "Origin"
+  ],
+  "legacy_pages": {
+    "Milestones.html": "index.html#milestones"
+  },
+  "source_links": [
+    {
+      "url": "https://github.com/BedrockInstitute/Bedrock/blob/main/README.md",
+      "description": "the project overview, build instructions and repository structure."
+    },
+    {
+      "url": "https://github.com/BedrockInstitute/Bedrock/blob/main/docs/en/CHARTER.md",
+      "description": "the charter, the full methodological statement behind host-language maximalism."
+    }
+  ],
+  "agda_policy": {
+    "options": [
+      "--cubical",
+      "--safe",
+      "--guardedness"
+    ],
+    "bare_open_hubs": [
+      "Base.Prelude"
+    ],
+    "prelude_public_names": {
+      "Cubical.Data.Empty": [
+        "isProp⊥*",
+        "rec",
+        "rec*",
+        "⊥",
+        "⊥*"
+      ],
+      "Cubical.Data.Empty.Properties": [
+        "isProp⊥",
+        "isProp⊥*"
+      ],
+      "Cubical.Data.Unit": [
+        "Unit",
+        "Unit*",
+        "isPropUnit*",
+        "tt",
+        "tt*"
+      ],
+      "Cubical.Data.Sigma": [
+        "_,_",
+        "_×_",
+        "fst",
+        "snd",
+        "Σ",
+        "Σ≡Prop"
+      ],
+      "Cubical.Functions.Logic": [
+        "_⇒_",
+        "_⊓_",
+        "_⊔_",
+        "¬_",
+        "⇔toPath",
+        "∀[]-syntax",
+        "∀[∶]-syntax",
+        "∃[]-syntax",
+        "∃[∶]-syntax",
+        "⊤"
+      ],
+      "Cubical.Data.Sum": [
+        "_⊎_",
+        "inl",
+        "inr",
+        "rec"
+      ],
+      "Cubical.Data.Bool": [
+        "Bool",
+        "false",
+        "true"
+      ],
+      "Cubical.Data.Nat": [
+        "_+_",
+        "suc",
+        "zero",
+        "ℕ"
+      ],
+      "Cubical.Data.FinData": [
+        "Fin",
+        "suc",
+        "toℕ",
+        "zero"
+      ],
+      "Cubical.Foundations.Prelude": [
+        "Level",
+        "Lift",
+        "Type",
+        "_∙_",
+        "_≡_",
+        "cong",
+        "cong₂",
+        "funExt",
+        "isContr",
+        "isProp",
+        "isProp→isSet",
+        "isSet",
+        "lift",
+        "lower",
+        "refl",
+        "subst",
+        "subst2",
+        "sym",
+        "transport",
+        "ℓ-max",
+        "ℓ-suc",
+        "ℓ-zero"
+      ],
+      "Cubical.Foundations.HLevels": [
+        "hProp",
+        "isOfHLevelLift",
+        "isOfHLevelRespectEquiv",
+        "isProp×",
+        "isPropΠ",
+        "isPropΣ",
+        "isProp→",
+        "isSetHProp"
+      ],
+      "Cubical.Foundations.Equiv": [
+        "_≃_",
+        "equivFun",
+        "invEq"
+      ],
+      "Cubical.Foundations.Equiv.Base": [
+        "_≃_",
+        "equivFun"
+      ],
+      "Cubical.Core.Glue": [
+        "_≃_",
+        "equivFun"
+      ],
+      "Agda.Builtin.Cubical.Glue": [
+        "_≃_",
+        "equivFun"
+      ],
+      "Cubical.Foundations.Equiv.Properties": [
+        "congEquiv"
+      ],
+      "Cubical.Foundations.Isomorphism": [
+        "Iso",
+        "iso",
+        "isoToEquiv"
+      ],
+      "Cubical.Data.Vec": [
+        "Vec",
+        "[]",
+        "_∷_",
+        "lookup",
+        "map"
+      ],
+      "Cubical.HITs.PropositionalTruncation": [
+        "map",
+        "rec",
+        "squash₁",
+        "∣_∣₁",
+        "∥_∥₁"
+      ],
+      "Cubical.Relation.Nullary": [
+        "Dec",
+        "isPropDec",
+        "mapDec",
+        "no",
+        "yes"
+      ]
+    },
+    "prelude_module": "Base.Prelude",
+    "empty_family": "Cubical.Data.Empty",
+    "forbid_monomorphic_empty": true,
+    "hprop_projection": true
+  }
+}

@@ -2,69 +2,139 @@ name: ci
 
 on:
   push:
-  pull_request:
+    branches:
+      - main
   workflow_dispatch:
 
-# Start with the proof gate alone. A main-branch backend build starts only after
-# that job has completed successfully, and the two independent site jobs then
-# fan out from one shared HTML/type-data artifact.
+# Keep the required typecheck job alive even on documentation-only changes.
+# Its lightweight gates always run; compiler/backend/deployment work is scoped
+# by an explicit documentation allowlist. Manual runs always select full CI.
 permissions:
   contents: read
 
 jobs:
   typecheck:
     runs-on: ubuntu-latest
+    outputs:
+      full: ${{ steps.scope.outputs.full }}
     steps:
       - name: Checkout
         uses: actions/checkout@v5
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.11'
+
+      - name: Install Outcrop
+        run: python3 -m pip install ./outcrop
+
+      - name: Classify changes
+        id: scope
+        run: python3 -m outcrop.adapters.ci_scope --project-root . --policy site/ci-docs.json
+
+      # This is the only job that builds and saves the patched Agda toolchain.
+      # site-backend starts after the post-job cache save and restores the exact
+      # same key, so a cold workflow compiles Agda only once. Restore this first
+      # so a cache hit can skip Haskell setup altogether.
+      - name: Cache outcrop-agda
+        if: steps.scope.outputs.full == 'true'
+        id: outcrop_agda
+        uses: actions/cache@v6
+        with:
+          path: |
+            _build/outcrop-agda
+          key: outcrop-agda-${{ runner.os }}-${{ hashFiles('outcrop/src/outcrop/adapters/agda/resources/**', 'outcrop/src/outcrop/adapters/agda/build.py', 'outcrop/src/outcrop/adapters/agda/archive.py') }}
+
+      - name: Cache cubical dependency
+        if: steps.scope.outputs.full == 'true'
+        uses: actions/cache@v6
+        with:
+          path: _build/dependencies
+          key: cubical-source-v2-${{ runner.os }}-${{ hashFiles('site/agda-libraries.json') }}
+
+      - name: Validate restored Bedrock toolchain
+        if: steps.scope.outputs.full == 'true' && steps.outcrop_agda.outputs.cache-hit == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -x _build/outcrop-agda/bin/outcrop-agda
+          _build/outcrop-agda/bin/outcrop-agda --outcrop-version
+          # Checkout timestamps are newer than a restored cache. Mark the
+          # verified wrapper current so Make does not rebuild it without the
+          # deliberately skipped Haskell setup.
+          touch _build/outcrop-agda/bin/outcrop-agda
 
       - name: Set up pinned Haskell toolchain
+        if: steps.scope.outputs.full == 'true' && steps.outcrop_agda.outputs.cache-hit != 'true'
+        id: setup_haskell
         uses: haskell-actions/setup@v2
         with:
           ghc-version: '9.4.8'
           cabal-version: '3.12.1.0'
-          cabal-update: true
+          cabal-update: false
 
-      # This is the only job that builds and saves the patched Agda toolchain.
-      # site-backend starts after the post-job cache save and restores the exact
-      # same key, so a cold workflow compiles Agda only once.
-      - name: Cache bedrock-agda
-        uses: actions/cache@v4
+      # A toolchain source change invalidates outcrop-agda, but usually leaves
+      # its Haskell dependency graph intact. Reuse Cabal's package index and
+      # compiled store so that rebuilding the patched compiler avoids fetching
+      # and recompiling unchanged dependencies.
+      - name: Cache Cabal dependencies
+        if: steps.scope.outputs.full == 'true' && steps.outcrop_agda.outputs.cache-hit != 'true'
+        id: cabal
+        uses: actions/cache@v6
         with:
           path: |
-            _build/bedrock-agda
-            _build/bin/bedrock-agda
-          key: bedrock-agda-${{ runner.os }}-${{ hashFiles('tools/bedrock-agda/**') }}
+            ~/.cabal/packages
+            ${{ steps.setup_haskell.outputs['cabal-store'] }}
+          key: >-
+            bedrock-cabal-v1-${{ runner.os }}-${{ steps.setup_haskell.outputs['ghc-version'] }}-${{ steps.setup_haskell.outputs['cabal-version'] }}-${{ hashFiles('outcrop/src/outcrop/adapters/agda/resources/manifest.json', 'site/agda-libraries.json') }}
+          restore-keys: |
+            bedrock-cabal-v1-${{ runner.os }}-${{ steps.setup_haskell.outputs['ghc-version'] }}-${{ steps.setup_haskell.outputs['cabal-version'] }}-
 
-      - name: Cache cubical dependency
-        uses: actions/cache@v4
-        with:
-          path: _build/dependencies
-          key: cubical-source-v2-${{ runner.os }}-${{ hashFiles('tools/bedrock-agda/environment.json') }}
+      - name: Update Cabal package index
+        if: >-
+          steps.scope.outputs.full == 'true' &&
+          steps.outcrop_agda.outputs.cache-hit != 'true' &&
+          steps.cabal.outputs.cache-hit != 'true'
+        shell: bash
+        run: cabal update
 
       - name: Set up Bedrock toolchain
+        if: steps.scope.outputs.full == 'true'
         shell: bash
-        run: make toolchain PYTHON=python3
+        run: make toolchain PYTHON=python3 PY=python3
 
-      # Pure-check interfaces remain isolated from the HTML/type-trace cache.
-      - name: Cache tree interfaces
-        uses: actions/cache@v4
-        with:
-          path: _build/typecheck/_build/2.8.0/agda/src
-          key: bedrock-ifaces-${{ runner.os }}-${{ hashFiles('tools/bedrock-agda/**', 'src/**/*.lagda.md', 'bedrock.agda-lib') }}
-          restore-keys: |
-            bedrock-ifaces-${{ runner.os }}-${{ hashFiles('tools/bedrock-agda/**') }}-
-
-      - name: Typecheck
+      - name: Fingerprint Agda source
+        if: steps.scope.outputs.full == 'true'
+        id: agda_source
         shell: bash
         run: |
           set -euo pipefail
-          make typecheck-ci PYTHON=python3
+          echo "digest=$(python3 -m outcrop agda-stage --source src --fingerprint)" >> "$GITHUB_OUTPUT"
 
-      - name: Set up Python 3.11
-        uses: actions/setup-python@v5
+      # Agda hashes complete source files, so restore the canonical code-only
+      # mirror alongside pure interfaces. Prose and fence repartition leave
+      # both bytes and timestamps unchanged; the traced site cache is separate.
+      - name: Cache tree interfaces
+        if: steps.scope.outputs.full == 'true'
+        uses: actions/cache@v6
         with:
-          python-version: '3.11'
+          path: |
+            _build/typecheck/src
+            _build/typecheck/_build/2.8.0/agda/src
+          key: bedrock-ifaces-v4-${{ runner.os }}-${{ hashFiles('outcrop/src/outcrop/adapters/agda/build.py', 'outcrop/src/outcrop/adapters/agda/parallel.py', 'outcrop/src/outcrop/adapters/agda/archive.py', 'outcrop/src/outcrop/adapters/agda/libraries.py', 'outcrop/src/outcrop/adapters/agda/resources/**', 'outcrop/src/outcrop/adapters/source_stage.py', 'outcrop/src/outcrop/core/source_syntax.py', 'site/agda-libraries.json', 'bedrock.agda-lib') }}-${{ steps.agda_source.outputs.digest }}
+          restore-keys: |
+            bedrock-ifaces-v4-${{ runner.os }}-${{ hashFiles('outcrop/src/outcrop/adapters/agda/build.py', 'outcrop/src/outcrop/adapters/agda/parallel.py', 'outcrop/src/outcrop/adapters/agda/archive.py', 'outcrop/src/outcrop/adapters/agda/libraries.py', 'outcrop/src/outcrop/adapters/agda/resources/**', 'outcrop/src/outcrop/adapters/source_stage.py', 'outcrop/src/outcrop/core/source_syntax.py', 'site/agda-libraries.json', 'bedrock.agda-lib') }}-
+
+      - name: Typecheck
+        if: steps.scope.outputs.full == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          make typecheck-ci PYTHON=python3 PY=python3
 
       - name: Lint and test
         shell: bash
@@ -83,70 +153,111 @@ jobs:
     needs: typecheck
     if: >-
       success() &&
+      needs.typecheck.outputs.full == 'true' &&
       (github.event_name == 'workflow_dispatch' ||
        (github.event_name == 'push' && github.ref == 'refs/heads/main'))
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v5
+        with:
+          submodules: recursive
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.11'
+
+      - name: Install Outcrop
+        run: python3 -m pip install ./outcrop
 
       # These exact caches were restored or created by typecheck. Restore-only
       # actions make the handoff explicit and prevent a second toolchain build.
-      - name: Restore bedrock-agda
-        uses: actions/cache/restore@v4
+      - name: Restore outcrop-agda
+        uses: actions/cache/restore@v6
         with:
           path: |
-            _build/bedrock-agda
-            _build/bin/bedrock-agda
-          key: bedrock-agda-${{ runner.os }}-${{ hashFiles('tools/bedrock-agda/**') }}
+            _build/outcrop-agda
+          key: outcrop-agda-${{ runner.os }}-${{ hashFiles('outcrop/src/outcrop/adapters/agda/resources/**', 'outcrop/src/outcrop/adapters/agda/build.py', 'outcrop/src/outcrop/adapters/agda/archive.py') }}
           fail-on-cache-miss: true
 
       - name: Restore cubical dependency
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v6
         with:
           path: _build/dependencies
-          key: cubical-source-v2-${{ runner.os }}-${{ hashFiles('tools/bedrock-agda/environment.json') }}
+          key: cubical-source-v2-${{ runner.os }}-${{ hashFiles('site/agda-libraries.json') }}
           fail-on-cache-miss: true
 
       - name: Configure Bedrock toolchain
         shell: bash
         run: |
           set -euo pipefail
-          test -x _build/bin/bedrock-agda
-          _build/bin/bedrock-agda --bedrock-version
+          test -x _build/outcrop-agda/bin/outcrop-agda
+          _build/outcrop-agda/bin/outcrop-agda --outcrop-version
           # Checkout timestamps are newer than a restored cache. Mark the
           # verified wrapper current so Make does not mistake that for a source
           # change and invoke Cabal on this deliberately Haskell-free runner.
-          touch _build/bin/bedrock-agda
-          python3 tools/bedrock-agda/setup.py
+          touch _build/outcrop-agda/bin/outcrop-agda
+          make toolchain PY=python3 PYTHON=python3
+
+      - name: Fingerprint site backend
+        id: cache_keys
+        run: python3 scripts/site/site-cache.py --cache-keys backend >> "$GITHUB_OUTPUT"
 
       - name: Cache combined site backend
-        uses: actions/cache@v4
+        id: site_backend
+        uses: actions/cache@v6
         with:
           path: |
             _build/2.8.0/agda/src
             _build/html
-            _build/bedrock-agda-types.jsonl
-          key: bedrock-site-${{ runner.os }}-${{ hashFiles('tools/bedrock-agda/**', 'src/**/*.lagda.md', 'bedrock.agda-lib') }}
+            _build/outcrop-agda-types.jsonl
+            _build/types.json
+            _build/expression-types.json
+            _build/cache/site-backend.json
+          key: bedrock-site-v6-${{ runner.os }}-${{ steps.cache_keys.outputs.backend }}-${{ steps.cache_keys.outputs.extractor }}-${{ steps.cache_keys.outputs.code }}-${{ steps.cache_keys.outputs.source }}
           restore-keys: |
-            bedrock-site-${{ runner.os }}-${{ hashFiles('tools/bedrock-agda/**') }}-
+            bedrock-site-v6-${{ runner.os }}-${{ steps.cache_keys.outputs.backend }}-${{ steps.cache_keys.outputs.extractor }}-${{ steps.cache_keys.outputs.code }}-
+            bedrock-site-v6-${{ runner.os }}-${{ steps.cache_keys.outputs.backend }}-${{ steps.cache_keys.outputs.extractor }}-
+            bedrock-site-v6-${{ runner.os }}-${{ steps.cache_keys.outputs.backend }}-
+            bedrock-site-v6-${{ runner.os }}-
+            bedrock-site-v5-${{ runner.os }}-${{ steps.cache_keys.outputs.backend }}-${{ steps.cache_keys.outputs.extractor }}-
+            bedrock-site-v5-${{ runner.os }}-${{ steps.cache_keys.outputs.backend }}-
+            bedrock-site-v5-${{ runner.os }}-
+            bedrock-site-v4-${{ runner.os }}-
 
-      - name: Build shared site backend
+      - name: Validate restored site backend
+        if: steps.site_backend.outputs.cache-hit == 'true'
         shell: bash
         run: |
           set -euo pipefail
-          make site-backend-ci PY=python3 PYTHON=python3
+          test -f _build/2.8.0/agda/src/Origin.agdai
+          test -f _build/html/.bedrock-checked
+          test -s _build/outcrop-agda-types.jsonl
+          test -s _build/types.json
+          test -s _build/expression-types.json
+          test -s _build/cache/site-backend.json
 
-      # This artifact contains only host-neutral highlighted HTML and normalized
-      # type data. Each peer job renders, checks and deploys its own URL layout.
+      # Even an exact archive hit is only a candidate. The driver checks the
+      # recorded producer/source/extractor identities; broad or legacy fallback
+      # cannot authorize reusing incompatible compiler interfaces or traces.
+      - name: Refresh shared site backend
+        shell: bash
+        run: |
+          set -euo pipefail
+          make site-backend PY=python3 LOCAL_PARALLEL=1
+
+      # This artifact contains host-neutral highlighted HTML, normalized type
+      # data and the source inventory. Each peer job renders its own URL layout.
       - name: Upload site backend
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: site-backend
           path: |
             _build/html
             _build/types.json
             _build/expression-types.json
+            _build/cache/site-backend.json
           include-hidden-files: true
           retention-days: 1
 
@@ -165,36 +276,63 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v5
+        with:
+          submodules: recursive
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.11'
+
+      - name: Install Outcrop
+        run: python3 -m pip install ./outcrop
 
       - name: Download site backend
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: site-backend
           path: _build
+
+      - name: Fingerprint Pages render
+        id: cache_keys
+        run: python3 scripts/site/site-cache.py --cache-keys render --base-url "/${GITHUB_REPOSITORY#*/}" >> "$GITHUB_OUTPUT"
+
+      - name: Cache Pages render
+        uses: actions/cache@v6
+        with:
+          path: |
+            _build/site
+            _build/cache/render-*.json
+            _build/cache/code-context.json.gz
+          key: bedrock-pages-v2-${{ runner.os }}-${{ steps.cache_keys.outputs.render }}-${{ steps.cache_keys.outputs.source }}
+          restore-keys: |
+            bedrock-pages-v2-${{ runner.os }}-${{ steps.cache_keys.outputs.render }}-
+            bedrock-pages-v2-${{ runner.os }}-
+            bedrock-pages-v1-${{ runner.os }}-
 
       - name: Render Pages site
         shell: bash
         run: |
           set -euo pipefail
-          make site-render BASE_URL=/${GITHUB_REPOSITORY#*/} PY=python3
+          make site-render PY=python3 RENDER_INCREMENTAL=1 BASE_URL="/${GITHUB_REPOSITORY#*/}"
 
       - name: Link check
         shell: bash
-        run: python3 scripts/site/link-check.py _build/site
+        run: python3 -m outcrop check-links _build/site
 
       - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           path: _build/site
 
       - name: Configure Pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6
         with:
           enablement: true
 
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
 
   cloudflare:
     needs: site-backend
@@ -205,26 +343,63 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v5
+        with:
+          submodules: recursive
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.11'
+
+      - name: Install Outcrop
+        run: python3 -m pip install ./outcrop
 
       - name: Download site backend
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: site-backend
           path: _build
+
+      - name: Fingerprint Cloudflare render
+        id: cache_keys
+        run: python3 scripts/site/site-cache.py --cache-keys render >> "$GITHUB_OUTPUT"
+
+      - name: Cache Cloudflare render
+        uses: actions/cache@v6
+        with:
+          path: |
+            _build/site
+            _build/cache/render-*.json
+            _build/cache/code-context.json.gz
+          key: bedrock-cloudflare-v2-${{ runner.os }}-${{ steps.cache_keys.outputs.render }}-${{ steps.cache_keys.outputs.source }}
+          restore-keys: |
+            bedrock-cloudflare-v2-${{ runner.os }}-${{ steps.cache_keys.outputs.render }}-
+            bedrock-cloudflare-v2-${{ runner.os }}-
+            bedrock-cloudflare-v1-${{ runner.os }}-
 
       - name: Render Cloudflare site
         shell: bash
         run: |
           set -euo pipefail
-          make site-render BASE_URL= PY=python3
+          make site-render PY=python3 RENDER_INCREMENTAL=1
 
       - name: Link check
         shell: bash
-        run: python3 scripts/site/link-check.py _build/site
+        run: python3 -m outcrop check-links _build/site
+
+      # wrangler-action installs Wrangler through npm because this repository
+      # has no Node project or lockfile. Cache npm's download store, not a
+      # synthetic node_modules tree.
+      - name: Cache Wrangler npm downloads
+        uses: actions/cache@v6
+        with:
+          path: ~/.npm
+          key: wrangler-npm-v1-${{ runner.os }}-3.90.0
 
       - name: Deploy to Cloudflare Pages
-        uses: cloudflare/wrangler-action@v3
+        uses: cloudflare/wrangler-action@v4
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          wranglerVersion: '3.90.0'
           command: pages deploy _build/site --project-name=bedrock

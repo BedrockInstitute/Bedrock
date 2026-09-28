@@ -1,34 +1,18 @@
-<!--en-->
-# Injecting an infinite constructible stage into its index
-
-This chapter proves the stage estimate used in GCH: if `δ` is a non-finite constructible ordinal, then `Lset δ` admits an internal coded injection into `δ`. The conclusion `InjL` is the propositional truncation of the type of constructible graphs satisfying the injection conditions. Thus it asserts that such a graph exists, without retaining a chosen graph; it asserts neither a host-level function nor a bijection, and it does not assume that `δ` is itself an internal cardinal.
-<!--zh-->
-# 把无穷可构造层单射到其指标
-
-本章证明 GCH 所用的层估计：若 `δ` 是非有限的可构造序数，则 `Lset δ` 有一条到 `δ` 的内部编码单射。结论 `InjL` 是「满足单射条件的可构造图」这一类型的命题截断。因此，它只断言这样的图存在，而不保留某个选定的图；它既不声称给出宿主层函数，也不声称双射，并且不假设 `δ` 本身是内部基数。
-<!--ja-->
-# 無限構成可能段階をその添字へ単射する
-
-この章では GCH に用いる段階評価を証明する。`δ` が有限でない構成可能順序数なら、`Lset δ` から `δ` への内部的に符号化された単射が存在する。結論 `InjL` は、単射の条件を満たす構成可能なグラフの型を命題的切り詰めにかけたものである。したがって、そのようなグラフの存在だけを主張し、特定のグラフは保持しない。ホスト側の関数も全単射も主張せず、`δ` 自身が内部基数であることも仮定しない。
-<!--/-->
-
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
-
 ```
 
 <!--en-->
-The proof repeatedly separates existence from choice. Classical reasoning supplies suitable stages and cardinal representatives, while every exported injection remains under propositional truncation. Local witnesses may therefore be used inside propositional arguments without turning them into canonical global data.
+# Injecting an infinite constructible stage into its index
 <!--zh-->
-本章反复区分存在与选择。经典推理提供合适的层和基数代表，而每条对外给出的单射始终处于命题截断之下。因此，局部见证可以在命题性论证内部使用，却不会变成典范的全局数据。
+# 把无穷可构造层单射到其指标
 <!--ja-->
-この証明では、存在と選択を一貫して区別する。古典的推論は適切な段階と基数代表を与えるが、外部に示される単射はすべて命題的切り詰めの内側にとどまる。したがって、局所的な証人を命題の証明の中で使っても、それが標準的な大域データになることはない。
+# 無限構成可能段階をその添字へ単射する
 <!--/-->
 
 ```agda
 open import Base.Prelude
 open import Base.Classical using ( LEM )
-
 ```
 
 <!--en-->
@@ -41,8 +25,57 @@ The argument is uniform in the universe level and uses only the displayed instan
 
 ```agda
 module L.GCH.StageInjection {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-
 ```
+
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax using ( Formula; var; con; _∈̇_; _∧̇_ )
+open import FOL.Manipulation.Renaming using ( renameFo; module Sat )
+import FOL.Absoluteness
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Collapse {ℓ} using ( isExt )
+open import V.Model {ℓ} using ( self∈sucV )
+open import L.Constructible {ℓ}
+  using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset; Lset-mono; Lset-layer; layer-trans )
+open import L.Ordinal {ℓ} using ( #∈ω; suc-ord )
+open import L.Ordinal.Stages {ℓ} lem using ( ord∈Lset→∈ )
+open import L.Axioms.Basic {ℓ} using ( LsetS )
+open import L.Axioms.Numerals {ℓ} using ( sucʟ; sucʟ-fst )
+open import L.Stage {ℓ} lem using ( stage; stage-ord; stage-mem )
+open import L.Cardinal {ℓ} lem using ( InjL; IsCardinalL )
+open import L.GCH.Assembly {ℓ} lem using ( StageCountedCoded )
+open import L.InjectionComposition {ℓ} lem using ( inclusion-coded; injl-trans )
+open import L.GCH.CardinalRepresentative {ℓ} lem using ( cardOf )
+open import L.DefinableInjection {ℓ} lem using ( DefinableMap; module Inj )
+open import L.GCH.SkolemHull {ℓ} lem
+  using ( module Frame; module HullStage; module HullElemDown )
+open import L.GCH.ConstructibleHull {ℓ} lem using ( module PiIn; module Condense′ )
+open import L.GCH.CardinalSquareLaw {ℓ} lem using ( ordL; ω⊆; no-fin; module Shift )
+open import L.GCH.AdequateStages {ℓ} lem using ( superadequate-above; Superadequate )
+open import L.GCH.StageCountingTools {ℓ} lem using ( move )
+open import L.GCH.HullCounting {ℓ} lem using ( ord⊆Lset; module Count; S≡ )
+```
+
+<!--en-->
+
+This chapter proves the stage estimate used in GCH: if `δ` is a non-finite constructible ordinal, then `Lset δ` admits an internal coded injection into `δ`. The conclusion `InjL` is the propositional truncation of the type of constructible graphs satisfying the injection conditions. Thus it asserts that such a graph exists, without retaining a chosen graph; it asserts neither a host-level function nor a bijection, and it does not assume that `δ` is itself an internal cardinal.
+<!--zh-->
+
+本章证明 GCH 所用的层估计：若 `δ` 是非有限的可构造序数，则 `Lset δ` 有一条到 `δ` 的内部编码单射。结论 `InjL` 是「满足单射条件的可构造图」这一类型的命题截断。因此，它只断言这样的图存在，而不保留某个选定的图；它既不声称给出宿主层函数，也不声称双射，并且不假设 `δ` 本身是内部基数。
+<!--ja-->
+
+この章では GCH に用いる段階評価を証明する。`δ` が有限でない構成可能順序数なら、`Lset δ` から `δ` への内部的に符号化された単射が存在する。結論 `InjL` は、単射の条件を満たす構成可能なグラフの型を命題的切り詰めにかけたものである。したがって、そのようなグラフの存在だけを主張し、特定のグラフは保持しない。ホスト側の関数も全単射も主張せず、`δ` 自身が内部基数であることも仮定しない。
+<!--/-->
+
+<!--en-->
+The proof repeatedly separates existence from choice. Classical reasoning supplies suitable stages and cardinal representatives, while every exported injection remains under propositional truncation. Local witnesses may therefore be used inside propositional arguments without turning them into canonical global data.
+<!--zh-->
+本章反复区分存在与选择。经典推理提供合适的层和基数代表，而每条对外给出的单射始终处于命题截断之下。因此，局部见证可以在命题性论证内部使用，却不会变成典范的全局数据。
+<!--ja-->
+この証明では、存在と選択を一貫して区別する。古典的推論は適切な段階と基数代表を与えるが、外部に示される単射はすべて命題的切り詰めの内側にとどまる。したがって、局所的な証人を命題の証明の中で使っても、それが標準的な大域データになることはない。
+<!--/-->
+
+
 
 <!--en-->
 To turn the inverse collapse into an injection inside `L`, its graph must be expressed in the first-order language of the constructible structure. Only variables, constants, membership, and conjunction are needed. Formula renaming will exchange the two argument positions while preserving satisfaction, and the ambient cumulative hierarchy supplies the sets on which the collapse is computed.
@@ -52,14 +85,6 @@ To turn the inverse collapse into an injection inside `L`, its graph must be exp
 逆崩壊を `L` の内部の単射にするには、そのグラフを構成可能構造の一階言語で表さなければならない。必要なのは変数、定数、所属、連言だけである。論理式の名前替えによって二つの引数位置を交換しても充足関係が保たれ、周囲の累積階層が崩壊を計算する集合を与える。
 <!--/-->
 
-```agda
-open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using ( Formula; var; con; _∈̇_; _∧̇_ )
-open import FOL.Manipulation.Renaming using ( renameFo; module Sat )
-import FOL.Absoluteness
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-```
-
 <!--en-->
 The collapse will be injective because the hull carries the required extensionality. Later, `self∈sucV` places `δ` in its set-theoretic successor `δ+1`, while the constructible-stage lemmas provide transitivity, monotonicity, and the passage between a stage and its layers. Ordinal successors are kept distinct from successor stages throughout this argument.
 <!--zh-->
@@ -67,14 +92,6 @@ The collapse will be injective because the hull carries the required extensional
 <!--ja-->
 包が必要な外延性を備えるため、崩壊は包の上で単射になる。後で `self∈sucV` は `δ` を集合論的な後続 `δ+1` に入れ、構成可能段階の補題は推移性、単調性、段階とその層の間の移行を与える。この議論では、順序数の後続と構成可能な後続段階を区別する。
 <!--/-->
-
-```agda
-open import V.Collapse {ℓ} using ( isExt )
-open import V.Model {ℓ} using ( self∈sucV )
-open import L.Constructible {ℓ}
-  using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset; Lset-mono; Lset-layer; layer-trans )
-open import L.Ordinal {ℓ} using ( #∈ω; suc-ord )
-```
 
 <!--en-->
 Two complementary stage facts will be used. A constructible stage can be packaged as an element of `L`, and if an ordinal `x` belongs to the stage `Lset α`, then rank comparison yields `x ∈ α`. The target `InjL` records the mere existence of an internal coded injection, while `IsCardinalL` will apply only to the cardinal representative introduced later.
@@ -84,14 +101,6 @@ Two complementary stage facts will be used. A constructible stage can be package
 後では、段階に関する二つの相補的な事実を用いる。構成可能段階は `L` の要素としてまとめられ、順序数 `x` が段階 `Lset α` に属するなら、階数の比較から `x ∈ α` が従う。目標 `InjL` は内部的に符号化された単射の単なる存在を記録し、`IsCardinalL` は後で導入する基数代表にだけ適用される。
 <!--/-->
 
-```agda
-open import L.Ordinal.Stages {ℓ} lem using ( ord∈Lset→∈ )
-open import L.Axioms.Basic {ℓ} using ( LsetS )
-open import L.Axioms.Numerals {ℓ} using ( sucʟ; sucʟ-fst )
-open import L.Stage {ℓ} lem using ( stage; stage-ord; stage-mem )
-open import L.Cardinal {ℓ} lem using ( InjL; IsCardinalL )
-```
-
 <!--en-->
 The desired estimate has the interface `StageCountedCoded`. Its proof first replaces the arbitrary infinite ordinal `δ` by an internal cardinal representative `μ`, counts a suitable Skolem hull into `μ`, and then composes coded injections. To make the inverse collapse participate in this chain, it will be presented as a definable map whose graph is a set of `L`.
 <!--zh-->
@@ -99,14 +108,6 @@ The desired estimate has the interface `StageCountedCoded`. Its proof first repl
 <!--ja-->
 求める評価は `StageCountedCoded` という型で表される。証明では、まず任意の無限順序数 `δ` を内部の基数代表 `μ` で表し、適切な Skolem 包を `μ` へ数え上げ、最後に符号化された単射を合成する。逆崩壊もこの鎖に組み込めるよう、そのグラフが `L` の要素である定義可能写像として表す。
 <!--/-->
-
-```agda
-open import L.GCH.Assembly {ℓ} lem using ( StageCountedCoded )
-open import L.InjectionComposition {ℓ} lem using ( inclusion-coded; injl-trans )
-open import L.GCH.CardinalRepresentative {ℓ} lem using ( cardOf )
-open import L.DefinableInjection {ℓ} lem using ( DefinableMap; module Inj )
-open import L.GCH.SkolemHull {ℓ} lem
-```
 
 <!--en-->
 The global comparison will combine three ingredients. Condensation turns a hull into a stage `Lset β`; the shift for non-finite ordinals and the cardinal representative `μ` make the starting set injectable into `μ`; and composition transports these local comparisons back to the desired endpoints. None of these steps changes an internal coded injection into a host-level function.
@@ -116,14 +117,6 @@ The global comparison will combine three ingredients. Condensation turns a hull 
 全体の比較は三つの材料を組み合わせる。凝縮は包を段階 `Lset β` に変え、有限でない順序数に対するシフトと基数代表 `μ` は始点を `μ` へ単射できるようにし、最後に合成がこれらの局所的な比較を求める端点へつなぎ戻す。どの段階でも、内部的に符号化された単射がホスト側の関数に変わることはない。
 <!--/-->
 
-```agda
-  using ( module Frame; module HullStage; module HullElemDown )
-open import L.GCH.ConstructibleHull {ℓ} lem using ( module PiIn; module Condense′ )
-open import L.GCH.CardinalSquareLaw {ℓ} lem using ( ordL; ω⊆; no-fin; module Shift )
-open import L.GCH.AdequateStages {ℓ} lem using ( superadequate-above; Superadequate )
-open import L.GCH.StageCountingTools {ℓ} lem using ( move )
-```
-
 <!--en-->
 The hull-count theorem is the quantitative input: once its starting set injects into a non-finite internal cardinal, the generated hull does too. We will also use that every ordinal is contained in its own constructible stage, and that equality of the underlying sets determines equality of elements of the constructible carrier because their constructibility proofs are propositions.
 <!--zh-->
@@ -131,11 +124,6 @@ The hull-count theorem is the quantitative input: once its starting set injects 
 <!--ja-->
 包の計数定理が、ここでの量的な入力である。出発集合が有限でない内部基数へ単射するなら、そこから生成される包も同じ基数へ単射する。また、各順序数が自分自身の構成可能段階に含まれることと、構成可能性の証明が命題なので基礎集合の等しさから構成可能な台の要素の等しさが決まることも用いる。
 <!--/-->
-
-```agda
-open import L.GCH.HullCounting {ℓ} lem using ( ord⊆Lset; module Count; S≡ )
-
-```
 
 <!--en-->
 The inverse collapse will be compared as a map between elements of the constructible carrier `S`. Such an element includes both an underlying set and a constructibility proof, but the proof component is propositional. Consequently, equality of underlying sets determines equality in `S`, so the coded graph does not depend on which constructibility evidence presents its values.
@@ -146,7 +134,7 @@ The inverse collapse will be compared as a map between elements of the construct
 <!--/-->
 
 ```agda
-open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
+open import Cubical.HITs.CumulativeHierarchy.Base using ( V; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Properties using ( ∈∈ₛ )
 ```
 
@@ -172,10 +160,6 @@ Propositional truncation appears at two decisive points. It lets the proof use t
 命題的切り詰めは、二つの決定的な箇所に現れる。包がある論理式を満たすことを示す際には、包が単に構成可能であるという事実を命題である充足の主張へ消去できる。また、すべての `InjL` の結論も、その最外層が命題的切り詰めである。したがって、ここでの切り詰めの消去先は常に命題である。
 <!--/-->
 
-```agda
-
-```
-
 <!--en-->
 Membership written `_∈ˢ_` is membership in the ambient hierarchy structure `𝒮ᵥ`. It is used for statements about the hull, its collapse image, and ordinal indices before those sets are packaged as elements of the constructible structure.
 <!--zh-->
@@ -186,7 +170,6 @@ Membership written `_∈ˢ_` is membership in the ambient hierarchy structure `�
 
 ```agda
 open hPropStructure 𝒮ᵥ using ( _∈ˢ_ )
-
 ```
 
 <!--en-->
@@ -199,7 +182,6 @@ The type `S` is the carrier of the constructible structure: an element consists 
 
 ```agda
 open hPropStructure 𝒮ʟ using ( S )
-
 ```
 
 <!--en-->
@@ -242,13 +224,19 @@ We first isolate the geometric part of the argument from its later cardinal esti
 まず、議論の幾何的な部分を、後で行う基数評価から切り離する。後続について閉じた順序数 `lam` と、`Lset lam` に含まれる出発集合 `X` を固定する。さらに、この添字が空集合を含み、`X` から生成される Skolem 包が必要な意味で初等的であると仮定する。この時点では、目標となる基数はまだ現れない。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Site (lam : V ℓ) (ordλ : IsOrd lam)
   (succλ : (d : V ℓ) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩)
   (X : V ℓ) (X⊆Lλ : (z : V ℓ) → ⟨ z ∈ˢ X ⟩ → ⟨ z ∈ˢ Lset lam ⟩)
   (∅∈λ : ⟨ ∅ ∈ˢ lam ⟩)
   (elem : Frame.A.Elementary lam ordλ succλ X X⊆Lλ ∅∈λ)
+  (sup : Superadequate lam)
+  (X-isL : ⟨ isL X ⟩) where
 ```
+</summary>
+<div class="submodule-fold-content">
 
 <!--en-->
 Superadequacy of `lam` supplies the closure and correctness conditions required by condensation. Constructibility of `X` ensures that the successive finite closure stages used to generate the hull, and hence their union, remain in `L`. The hull and its collapse image can therefore both be represented inside the constructible structure.
@@ -257,12 +245,6 @@ Superadequacy of `lam` supplies the closure and correctness conditions required 
 <!--ja-->
 `lam` の強化された十分性は、凝縮に必要な閉性と正しさの条件を与える。`X` の構成可能性により、包を生成する有限な閉包段階の列とその合併は `L` の中にとどまる。したがって、包とその崩壊像の双方を構成可能構造の内部で表せる。
 <!--/-->
-
-```agda
-  (sup : Superadequate lam)
-  (X-isL : ⟨ isL X ⟩) where
-
-```
 
 <!--en-->
 Condensation now identifies the collapse image with `Lset β` for some ordinal `β`. Independently, the hull construction proves that the hull `M` is constructible. These are exactly the two facts needed to regard the inverse collapse as a map from a constructible stage to a constructible hull.
@@ -302,10 +284,8 @@ The ordinal `β` measures the height of the collapse image. At this general site
 <!--/-->
 
 ```agda
-
   β : V ℓ
   β = condenses′ .fst
-
 ```
 
 <!--en-->
@@ -319,7 +299,6 @@ The accompanying proof that `β` is an ordinal makes `Lset β` a genuine ordinal
 ```agda
   oβ : IsOrd β
   oβ = condenses′ .snd .fst
-
 ```
 
 <!--en-->
@@ -333,7 +312,6 @@ The equality `ext : πX = Lset β` is the hinge between collapse theory and the 
 ```agda
   ext : HSC.πX ≡ Lset β
   ext = condenses′ .snd .snd
-
 ```
 
 <!--en-->
@@ -347,7 +325,6 @@ Because `β` is an ordinal, `Lset β` is constructible and can be packaged as an
 ```agda
   Lβ : S
   Lβ = LsetS β oβ
-
 ```
 
 <!--en-->
@@ -361,7 +338,6 @@ The ordinal `β` itself is also constructible and is packaged as `βL`. Although
 ```agda
   βL : S
   βL = ordL β oβ
-
 ```
 
 <!--en-->
@@ -375,7 +351,6 @@ An internal coded map must have a codomain in the carrier `S`, not merely an ext
 ```agda
   hullL : S
   hullL = Condense′.hullL lam ordλ succλ X X⊆Lλ ∅∈λ elem sup X-isL
-
 ```
 
 <!--en-->
@@ -389,7 +364,6 @@ The equality `M≡` connects the two presentations of the hull. Collapse theorem
 ```agda
   M≡ : fst hullL ≡ HS.M
   M≡ = Condense′.hullL-spec lam ordλ succλ X X⊆Lλ ∅∈λ elem sup X-isL
-
 ```
 
 <!--en-->
@@ -403,7 +377,6 @@ The hull frame proves that membership on `M` is extensional. This is the precise
 ```agda
   Mext : isExt HS.M
   Mext = Frame.Mext lam ordλ succλ X X⊆Lλ ∅∈λ
-
 ```
 
 <!--en-->
@@ -428,8 +401,7 @@ A preimage of a collapse value `v` is an element `x` of the hull whose collapse 
 
 ```agda
   Pre : S → Type (ℓ-suc ℓ)
-  Pre v = Σ[ x ∈ V ℓ ] (⟨ x ∈ˢ HS.M ⟩ × (HSC.π x ≡ fst v))
-
+  Pre v = Σ[ x ∶ V ℓ ] (⟨ x ∈ˢ HS.M ⟩ × (HSC.π x ≡ fst v))
 ```
 
 <!--en-->
@@ -444,7 +416,6 @@ Preimages are unique, because the collapse is injective on the hull: two records
   isPropPre : (v : S) → isProp (Pre v)
   isPropPre v (x , mx , e) (x' , mx' , e') =
     Σ≡Prop (λ x → isProp× (snd (x ∈ˢ HS.M)) (setIsSet _ _)) (CI.π-inj x x' mx mx' (e ∙ sym e'))
-
 ```
 
 <!--en-->
@@ -458,7 +429,6 @@ The inverse collapse is required only for points of its image, which condensatio
 ```agda
   Mem : S → Type (ℓ-suc ℓ)
   Mem v = ⟨ fst v ∈ˢ fst Lβ ⟩
-
 ```
 
 <!--en-->
@@ -473,7 +443,6 @@ Membership in `Lset β` gives only the propositionally truncated type of preimag
   pre : (v : S) → Mem v → Pre v
   pre v m = rec₁ (isPropPre v) (λ w → w)
     (HSC.πX-member (fst v) (subst (λ w → ⟨ fst v ∈ˢ w ⟩) (sym ext) m))
-
 ```
 
 <!--en-->
@@ -489,7 +458,6 @@ The preimage is packaged as a constructible set: its constructibility is transpo
   fn v m = pre v m .fst
          , isL-trans {x = fst hullL} {y = pre v m .fst}
              (subst (λ w → ⟨ pre v m .fst ∈ˢ w ⟩) (sym M≡) (pre v m .snd .fst)) (snd hullL)
-
 ```
 
 <!--en-->
@@ -504,7 +472,6 @@ The renaming swaps the two variable slots: slot zero becomes slot one and conver
   ρ : Fin 2 → Fin 2
   ρ zero = suc zero
   ρ (suc zero) = zero
-
 ```
 
 <!--en-->
@@ -520,7 +487,6 @@ The two environments list the same carrier elements in opposite orders. The proo
     ag : (x v : S) → Ren.Agrees ρ (x ∷ v ∷ []) (v ∷ x ∷ [])
     ag x v zero = refl
     ag x v (suc zero) = refl
-
 ```
 
 <!--en-->
@@ -534,7 +500,6 @@ Satisfaction of the renamed formula at the ordered environment equals satisfacti
 ```agda
     rn : (x v : S) → ⟨ (x ∷ v ∷ []) ⊨ renameFo ρ P.piFo ⟩ ≡ ⟨ (v ∷ x ∷ []) ⊨ P.piFo ⟩
     rn x v = cong ⟨_⟩ (Ren.⊨-rename ρ P.piFo (x ∷ v ∷ []) (v ∷ x ∷ []) (ag x v))
-
 ```
 
 <!--en-->
@@ -563,7 +528,7 @@ For a hull member `x` whose collapse is `v`, the actual pair `(v,x)` satisfies `
           → ⟨ (v ∷ x ∷ []) ⊨ P.piFo ⟩
   π-graph x mx v e = rec₁ (snd ((v ∷ x ∷ []) ⊨ P.piFo)) read M-isL
     where
-    read : Σ[ α ∈ V ℓ ] (IsOrd α × ⟨ HS.M ∈ˢ Lset α ⟩) → ⟨ (v ∷ x ∷ []) ⊨ P.piFo ⟩
+    read : Σ[ α ∶ V ℓ ] (IsOrd α × ⟨ HS.M ∈ˢ Lset α ⟩) → ⟨ (v ∷ x ∷ []) ⊨ P.piFo ⟩
 ```
 
 <!--en-->
@@ -592,7 +557,6 @@ Given a constructible stage `Lset α` containing the hull, transitivity of the l
 
 ```agda
       G = P.good-at α oα (fst x) mx (layer-trans (Lset-layer α) {x = HS.M} {y = fst x} mx M∈Lα)
-
 ```
 
 <!--en-->
@@ -608,7 +572,6 @@ The proof `defines` is the bridge from the actual inverse value to the internal 
   defines v m =
       subst (λ w → ⟨ pre v m .fst ∈ˢ w ⟩) (sym M≡) (pre v m .snd .fst)
     , transport (sym (rn (fn v m) v)) (π-graph (fn v m) (pre v m .snd .fst) v (pre v m .snd .snd))
-
 ```
 
 <!--en-->
@@ -637,7 +600,6 @@ For an alternative output `x'` satisfying the graph, the first conjunct says tha
 
 ```agda
     mx' = subst (λ w → ⟨ fst x' ∈ˢ w ⟩) M≡ hx
-
 ```
 
 <!--en-->
@@ -665,10 +627,8 @@ Each uniquely determined preimage satisfies `π(pre(v)) = v`. Hence, if the two 
 <!--/-->
 
 ```agda
-
   inj : (v : S) (m : Mem v) (v' : S) (m' : Mem v') → fst (fn v m) ≡ fst (fn v' m') → fst v ≡ fst v'
   inj v m v' m' q = sym (pre v m .snd .snd) ∙ cong HSC.π q ∙ pre v' m' .snd .snd
-
 ```
 
 <!--en-->
@@ -683,6 +643,8 @@ The restricted inverse is packaged as a coded injection from `Lβ` into the hull
   Lβ↪M : InjL Lβ hullL
   Lβ↪M = Inj.injL Dmap inj
 ```
+</div>
+</details>
 
 <!--en-->
 ## Collapsing the hull back to the original stage
@@ -700,13 +662,16 @@ The counting module `At` fixes a non-finite constructible ordinal `δL`, its ord
 計数のモジュール `At` は、非有限の構成可能な順序数 `δL`、その順序数性、`ω` への所属の排除、同じく非有限な内部の基数代表 `μ`、そして `δL` と `μ` の間の双方向の符号化された単射を固定する。これらが、基数代表で非有限の段階を数えるために必要なデータそのものである。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module At (δL : S) (oδ : IsOrd (fst δL)) (δ∉ω : ⟨ fst δL ∈ˢ ω ⟩ → ⊥₀)
           (μ : S) (oμ : IsOrd (fst μ)) (cμ : IsCardinalL μ)
           (μ∉ω : ⟨ fst μ ∈ˢ ω ⟩ → ⊥₀)
           (δ↪μ : InjL δL μ) (μ↪δ : InjL μ δL) where
-
 ```
+</summary>
+<div class="submodule-fold-content">
 
 <!--en-->
 It is useful to separate the carrier element `δL` from its underlying ambient ordinal `δ = fst δL`. Set-theoretic successor, stage membership, and the collapse act on `δ`, while internal coded injections retain the packaged endpoint `δL`.
@@ -733,7 +698,6 @@ The stage of the ordinal `δ` is the earliest constructible level containing it;
   private
     α₀ : V ℓ
     α₀ = stage δ (snd δL)
-
 ```
 
 <!--en-->
@@ -747,7 +711,6 @@ The least-stage construction always returns an ordinal index. Applied to the con
 ```agda
     oα₀ : IsOrd α₀
     oα₀ = stage-ord δ (snd δL)
-
 ```
 
 <!--en-->
@@ -761,7 +724,6 @@ The ordinal `δ` belongs to its own stage, which is the membership fact that anc
 ```agda
     δ∈Lα₀ : ⟨ δ ∈ˢ Lset α₀ ⟩
     δ∈Lα₀ = stage-mem δ (snd δL)
-
 ```
 
 <!--en-->
@@ -774,7 +736,6 @@ A superadequate level above the stage index is obtained; it carries all the clos
 
 ```agda
     sa = superadequate-above α₀ oα₀
-
 ```
 
 <!--en-->
@@ -789,7 +750,6 @@ Choose the strengthened adequate stage supplied above and denote its ordinal ind
   opaque
     lam : V ℓ
     lam = sa .fst
-
 ```
 
 <!--en-->
@@ -803,7 +763,6 @@ The chosen high index `λ` is an ordinal. Its transitivity will first carry `δ`
 ```agda
     ordλ : IsOrd lam
     ordλ = sa .snd .fst
-
 ```
 
 <!--en-->
@@ -817,7 +776,6 @@ Successor closure is the second property of the index used immediately below: fr
 ```agda
     succλ : (d : V ℓ) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩
     succλ = sa .snd .snd .snd .fst .snd .fst
-
 ```
 
 <!--en-->
@@ -831,7 +789,6 @@ Superadequacy says that above every member `d` of `λ` there merely exists an ad
 ```agda
     sup : Superadequate lam
     sup = sa .snd .snd .snd .snd
-
 ```
 
 <!--en-->
@@ -858,7 +815,6 @@ Take the starting set to be the von Neumann successor `X = δ+1`. It contains `�
 ```agda
   X : V ℓ
   X = sucV δ
-
 ```
 
 <!--en-->
@@ -872,7 +828,6 @@ Successor closure of the ordinal index now gives `X = δ+1 ∈ λ`. This is an o
 ```agda
   sucδ∈λ : ⟨ X ∈ˢ lam ⟩
   sucδ∈λ = succλ δ δ∈λ
-
 ```
 
 <!--en-->
@@ -886,7 +841,6 @@ If `z ∈ X`, transitivity of the ordinal `λ` and `X ∈ λ` give `z ∈ λ`. T
 ```agda
   X⊆Lλ : (z : V ℓ) → ⟨ z ∈ˢ X ⟩ → ⟨ z ∈ˢ Lset lam ⟩
   X⊆Lλ z hz = ord⊆Lset lam ordλ z (ordλ .fst hz sucδ∈λ)
-
 ```
 
 <!--en-->
@@ -900,7 +854,6 @@ Because `δ` is non-finite, every finite ordinal lies below `δ`; in particular 
 ```agda
   ∅∈λ : ⟨ ∅ ∈ˢ lam ⟩
   ∅∈λ = ordλ .fst (ω⊆ δ oδ δ∉ω ∅ (#∈ω zero)) δ∈λ
-
 ```
 
 <!--en-->
@@ -914,7 +867,6 @@ The starting set is constructible, because the coded successor of a constructibl
 ```agda
   X-isL : ⟨ isL X ⟩
   X-isL = subst (λ w → ⟨ isL w ⟩) (sucʟ-fst δL) (snd (sucʟ δL))
-
 ```
 
 <!--en-->
@@ -955,7 +907,6 @@ The Skolem hull generated from `X` is elementary in the surrounding stage `Lset 
 
 ```agda
   elem = HullElemDown.elem lam ordλ X X⊆Lλ ∅∈λ
-
 ```
 
 <!--en-->
@@ -968,7 +919,6 @@ Skolem 包は、基数の代表 `μ` によって数えられる。始点がす�
 
 ```agda
   hull↪μ = Count.hull↪κ lam ordλ succλ X X⊆Lλ ∅∈λ elem sup X-isL μ oμ cμ μ∉ω base
-
 ```
 
 <!--en-->
@@ -982,7 +932,6 @@ Apply the general condensation construction to this hull. It supplies an ordinal
 ```agda
   module St = Site lam ordλ succλ X X⊆Lλ ∅∈λ elem sup X-isL
     using ( β; oβ; ext; Lβ; hullL; Lβ↪M )
-
 ```
 
 <!--en-->
@@ -1011,7 +960,6 @@ The ordinal `δ` belongs to its own successor, which is the starting set for the
 ```agda
   δ∈X : ⟨ δ ∈ˢ X ⟩
   δ∈X = self∈sucV δ
-
 ```
 
 <!--en-->
@@ -1025,7 +973,6 @@ The ordinal `δ` therefore belongs to the hull, because the hull contains every 
 ```agda
   δ∈M : ⟨ δ ∈ˢ HS.M ⟩
   δ∈M = HSH.X⊆M δ δ∈X
-
 ```
 
 <!--en-->
@@ -1041,7 +988,6 @@ The successor `X = δ+1` is transitive and is contained in the hull `M`. The col
   πδ = HSC.fixes X
     (λ a a∈ₛX → ∈∈ₛ {a = a} {b = HS.M} .fst (HSH.X⊆M a (∈∈ₛ {a = a} {b = X} .snd a∈ₛX)))
     (suc-ord oδ .fst) δ δ∈X
-
 ```
 
 <!--en-->
@@ -1069,7 +1015,6 @@ The ordinal-stage bound now applies: when an ordinal `δ` belongs to `Lset β`, 
 ```agda
   δ∈β : ⟨ δ ∈ˢ St.β ⟩
   δ∈β = ord∈Lset→∈ St.β St.oβ δ oδ δ∈Lβ
-
 ```
 
 <!--en-->
@@ -1083,7 +1028,6 @@ The canonical carrier presentation `Lδ` has underlying set `Lset δ`. It is the
 ```agda
   Lδ : S
   Lδ = LsetS δ oδ
-
 ```
 
 <!--en-->
@@ -1101,6 +1045,8 @@ The final comparison follows the chain `Lset δ ↪ Lset β ↪ M ↪ μ ↪ δ`
     (injl-trans St.Lβ St.hullL δL St.Lβ↪M
       (injl-trans St.hullL μ δL hull↪μ μ↪δ))
 ```
+</div>
+</details>
 
 <!--en-->
 For a general non-finite constructible ordinal `δ`, `cardOf` provides a cardinal representative only under propositional truncation. The proof works with a local representative `μ` inside the eliminator and applies `At.result`. This is legitimate because the target `InjL Lδ δ` is itself a propositionally truncated existence and hence a proposition. The resulting theorem is the stage-counting interface used later by both the GCH assembly and the bounded-subset argument; it proves only `Lset δ ↪ δ`, not GCH by itself.
@@ -1114,7 +1060,7 @@ For a general non-finite constructible ordinal `δ`, `cardOf` provides a cardina
 stage-counted : StageCountedCoded
 stage-counted δ Lδ oδ δ∉ω q = rec₁ squash₁ build (cardOf δ oδ)
   where
-  build : Σ[ μ ∈ S ]
+  build : Σ[ μ ∶ S ]
             ( IsOrd (fst μ) × IsCardinalL μ
 ```
 

@@ -1,17 +1,34 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+module FOL.Manipulation.ConstantOccurrences where
+```
+
 <!--en-->
 # Constants by occurrence
+<!--zh-->
+# 逐次出现地处理常元
+<!--ja-->
+# 出現ごとに扱う定数
+<!--/-->
+
+```agda
+open import Base.Prelude
+open import FOL.Syntax using
+  ( Term; con; var; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
+open import FOL.Manipulation.ConstantMapping using ( mapTm; mapFo )
+```
+
+<!--en-->
 
 Parameter abstraction needs a finite list of a formula's constants without assuming decidable equality on the constant domain. This chapter therefore counts and enumerates constant occurrences, preserving repetitions, and develops the index arithmetic that places their replacement variables after the existing free variables.
 
 A formula's constants form an ordered list of occurrences. This chapter counts and enumerates them, supplies the index arithmetic used by abstraction, and handles the boundary case in which the list is empty.
 <!--zh-->
-# 逐次出现地处理常元
 
-参数抽象需要公式常元的有限列表，但不能假设常元域上的相等可判定。因此本章逐次出现地计数并枚举常元，保留重复项，再建立把替代变量放在已有自由变量之后所需的指标算术。
+参数抽象需要公式常元的有限列表，但不能假设常元域上的相等可判定。因此本章逐次出现地计数并枚举常元，保留重复项，再建立把替代变元放在已有自由变元之后所需的指标算术。
 
 公式的常元组成一列有序的出现。本章计数并枚举这些出现，给出抽象所需的序号算术，并处理该列为空的边界情形。
 <!--ja-->
-# 出現ごとに扱う定数
 
 パラメータ抽象には論理式の定数の有限リストが必要であるが、定数域の等号が判定可能とは仮定できない。そこで本章では重複を残したまま定数の出現を数えて列挙し、その置換変数を既存の自由変数の後ろへ配置する添字計算を整える。
 
@@ -21,21 +38,14 @@ A formula's constants form an ordered list of occurrences. This chapter counts a
 <!--en-->
 Parameter abstraction rewrites a formula that mentions constants as a parameter-free formula of higher arity, together with the list of constants that the new variables will stand for. The construction needs that list to be finite, but it may not assume that equality on the constant domain is decidable, so it cannot merge or deduplicate entries. Two occurrences of the same constant therefore stay two separate positions, each later receiving its own replacement variable. The work divides into three steps: count the occurrences, enumerate them in order, and develop the index arithmetic that places the new variables after the existing free variables.
 <!--zh-->
-参数抽象把一条提及常元的公式改写为一条元数更高的无参公式，同时给出常元的列表，让新的变量逐个对应这些常元。构造需要这个列表是有限的，但不能假设常元域上的相等可判定，因此不能合并或去重条目。同一常元的两次出现因此保持为两个独立的位置，日后各自获得自己的替代变量。工作分三步：计数出现，按序枚举出现，再建立把新变量放在已有自由变量之后的序号算术。
+参数抽象把一条提及常元的公式改写为一条元数更高的无参公式，同时给出常元的列表，让新的变元逐个对应这些常元。构造需要这个列表是有限的，但不能假设常元域上的相等可判定，因此不能合并或去重条目。同一常元的两次出现因此保持为两个独立的位置，日后各自获得自己的替代变元。工作分三步：计数出现，按序枚举出现，再建立把新变元放在已有自由变元之后的序号算术。
 <!--ja-->
 パラメータの抽象化は、定数に言及する論理式を、より高いアリティの無パラメータ論理式へと組み替え、新しい変数が代わりを務める定数のリストを同時に与える。このリストは有限でなければならないが、定数域の等号が判定可能であるとは仮定できないため、項目を統合したり重複を取り除いたりすることはできない。同じ定数の二つの出現は二つの独立した位置のままであり、後でそれぞれが専用の置換変数を受け取る。仕事は三段階に分かれる。出現を数えること、出現を順に列挙すること、そして新しい変数を既存の自由変数の後ろへ置く添字計算を整えることである。
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-module FOL.Manipulation.ConstantOccurrences where
-
-open import Base.Prelude
 open import Cubical.Data.Nat using ( snotz )
 open import Cubical.Data.Vec using ( _++_ )
-open import FOL.Syntax using
-  ( Term; con; var; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
 ```
 
 <!--en-->
@@ -45,10 +55,6 @@ Concretely, a formula's constants are read off as an ordered list of occurrences
 <!--ja-->
 具体的には、論理式の定数は出現の順序付きリストとして読み出される。定数は項のどこに現れても、またどの量化子の下に現れても、リストの次の位置を占める。したがって数え上げと列挙は並んで進む。数は出現がいくつあるかを記録する自然数であり、列挙はちょうどその長さのベクトルで、論理式が定数に言及した順にそれらを保持する。重複は解消されずにそのまま残るので、定数同士の比較は一切行われない。章の最後は、出現リストが空である境界の場合である。そこでは論理式が空の定数アルファベットの上で表せることが示される。
 <!--/-->
-
-```agda
-open import FOL.Manipulation.ConstantMapping using ( mapTm; mapFo )
-```
 
 <!--en-->
 ## Counting by occurrence
@@ -67,9 +73,9 @@ The count is a structural recursion over the ten constructors, with a term's cou
 
 本章的设计要点在此定下，先于任何语法上的挪动。一条公式的常元**按出现计数，而非按取值**：带 `k` 次常元出现的公式给出长度为 `k` 的向量，同一常元的两次出现就是该向量的两个条目，两处写的是同一个集合。
 
-若读者期待的是公式所提及的常元之**集**，他会寻找一个可判定的相等关系，把同一常元的两次出现认作一次，却找不到这样的相等。本来就没有可找的：常元域是任意类型，其相等未必可判定；本书也不对预期使用的集合载体假设可判定相等。逐次出现地计数，正是使整章避开这一要求的关键。代价是抽象所得的元数高于严格必要的元数，多出的部分对应于同一取值被当作两个不同变量重复处理；下游分辨不出其中差别：参数向量仍是参数向量。
+若读者期待的是公式所提及的常元之**集**，他会寻找一个可判定的相等关系，把同一常元的两次出现认作一次，却找不到这样的相等。本来就没有可找的：常元域是任意类型，其相等未必可判定；本书也不对预期使用的集合载体假设可判定相等。逐次出现地计数，正是使整章避开这一要求的关键。代价是抽象所得的元数高于严格必要的元数，多出的部分对应于同一取值被当作两个不同变元重复处理；下游分辨不出其中差别：参数向量仍是参数向量。
 
-计数是对十个构造子的一次结构递归，其输入是词项各部分的计数：常元算作一次出现，变量算作零次。复合构造子的计数取其两部分之和，左部在先。
+计数是对十个构造子的一次结构递归，其输入是词项各部分的计数：常元算作一次出现，变元算作零次。复合构造子的计数取其两部分之和，左部在先。
 <!--ja-->
 ## 出現ごとの数え上げ
 
@@ -92,7 +98,7 @@ A small example fixes the convention. In `∀̇∈ (con a) ((con a) ∈̇ (var f
 
 ```agda
 countTm : ∀ {ℓc} {K : Type ℓc} {n} → Term K n → ℕ
-countTm (con c) = suc zero
+countTm (con c) = 1
 countTm (var i) = zero
 
 countFo : ∀ {ℓc} {K : Type ℓc} {n} → Formula K n → ℕ
@@ -220,7 +226,7 @@ padRight b zero    = zero
 padRight b (suc i) = suc (padRight b i)
 
 padLeft : ∀ a {b} → Fin b → Fin (a + b)
-padLeft zero    j = j
+padLeft 0    j = j
 ```
 
 <!--en-->
@@ -240,7 +246,7 @@ Each placement comes with one law, and it is exactly the law an environment obey
 <!--zh-->
 每件安置装置各有一条定律，而这条定律正是环境所遵守的那一条：在拼接向量中查一个被安置过的序号，就是在对应的那一半中查原来的序号。与它们并列的还有第三条同形的定律，即查值可以穿过 `map`{.Agda}；正是这条定律使常元的解释得以穿过收集出的出现向量。三条定律都对向量与序号同时作结构递归，每个基例或步例都化归为 `refl`{.Agda} 或归纳假设，不涉及任何其他等价装置。
 <!--ja-->
-それぞれの配置には一つの法則が付き、それは環境が従う法則そのものである。連結されたベクトルの中で配置済みの添字を参照することは、対応する半分の中で元の添字を参照することに他ならない。これらと並ぶ第三の同型の法則は、参照が `map`{.Agda} を通り抜けるというもので、定数の解釈が出現のベクトルを通り抜けられるのはこの法則による。三つの法則はどれもベクトルと添字への同時の構造的帰納で証明され、各基底場合と各帰納段階は `refl`{.Agda} または帰納の仮定に帰着する。
+それぞれの配置には一つの法則が付き、それは環境が従う法則そのものである。連結されたベクトルの中で配置済みの添字を参照することは、対応する半分の中で元の添字を参照することに他ならない。これらと並ぶ第三の同じ形の法則は、参照が `map`{.Agda} を通り抜けるというもので、定数の解釈が出現のベクトルを通り抜けられるのはこの法則による。三つの法則はどれもベクトルと添字への同時の構造的帰納で証明され、各基底場合と各帰納段階は `refl`{.Agda} または帰納の仮定に帰着する。
 <!--/-->
 
 <!--en-->
@@ -268,10 +274,9 @@ The second law covers a parameter with natural index `j : Fin b` into the second
 <!--/-->
 
 ```agda
-
 lookup-padLeft : ∀ {ℓa} {A : Type ℓa} a {b} (p : Vec A a) (q : Vec A b) (j : Fin b)
                → lookup (padLeft a j) (p ++ q) ≡ lookup j q
-lookup-padLeft zero    []      q j = refl
+lookup-padLeft 0    []      q j = refl
 lookup-padLeft (suc a) (x ∷ p) q j = lookup-padLeft a p q j
 
 lookup-map : ∀ {ℓa ℓb} {A : Type ℓa} {B : Type ℓb} {n}
@@ -280,7 +285,7 @@ lookup-map : ∀ {ℓa ℓb} {A : Type ℓa} {B : Type ℓb} {n}
 <!--en-->
 The third law concerns a relabelled vector: `lookup j (map f v) ≡ f (lookup j v)`. Reading the mapped vector and then applying `f` is the same as applying `f` first. In parameter abstraction this is what lets the interpretation of the constants travel with the occurrences: if `f` assigns to each constant the value its replacement variable should carry, and `v` is the vector of occurrences collected from a formula, then looking up any position of `map f v` computes `f` of the constant at that position. The proof follows the same shape as the two placement laws, descending through the vector and the index together.
 <!--zh-->
-第三条定律关于被改名的向量：`lookup j (map f v) ≡ f (lookup j v)`。读取被映射的向量再施加 `f`，与先施加 `f` 再读取一致。在参数抽象中，正是这条定律让常元的解释随出现一同前进：若 `f` 给每个常元指派其替代变量应取的值，`v` 是从公式收集出的出现向量，则查 `map f v` 的任一位置，都计算出该位置上常元的 `f` 像。证明与两条安置定律同形，沿向量与序号一同下降。
+第三条定律关于被改名的向量：`lookup j (map f v) ≡ f (lookup j v)`。读取被映射的向量再施加 `f`，与先施加 `f` 再读取一致。在参数抽象中，正是这条定律让常元的解释随出现一同前进：若 `f` 给每个常元指派其替代变元应取的值，`v` 是从公式收集出的出现向量，则查 `map f v` 的任一位置，都计算出该位置上常元的 `f` 像。证明与两条安置定律同形，沿向量与序号一同下降。
 <!--ja-->
 第三の法則は、名前の付け替えられたベクトルに関するものである。`lookup j (map f v) ≡ f (lookup j v)`。写像済みのベクトルを読んでから `f` を施すことは、先に `f` を施してから読むことと同じである。パラメータ抽象では、この法則によって定数の解釈が出現と共に進む。`f` が各定数に、その置換変数が取るべき値を割り当て、`v` が論理式から収集した出現のベクトルなら、`map f v` の任意の位置を参照することは、その位置の定数に `f` を施した値を計算する。証明は二つの配置の法則と同じ形で、ベクトルと添字を共に降りていく。
 <!--/-->
@@ -315,10 +320,13 @@ The boundary question of the occurrence interface is: what does a count of zero 
 出現というインターフェースの境界の問いは、数が零であることは構文に対して何を強制するのか、というものである。この節は、任意の定数型 `K` に対してこの問いに答える。入力は論理式 `φ` と、その出現数が零である証明である。答えが `K` がどの型であるかに依存してはならず、とりわけ `K` 上の判定可能な等号を用いてはならないので、議論は一度だけ展開され、レベル `ℓ` のすべてのそのような `K` に対して一様に成り立つ。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module ZeroOccurrences {ℓ : Level} (K : Type ℓ) where
-
 ```
+</summary>
+<div class="submodule-fold-content">
 
 <!--en-->
 The section formalises the boundary case. Its input is a formula `φ` together with a proof `p : countFo φ ≡ 0`; from `p` the construction first extracts, for each subterm and subformula, a proof that its own count is zero, and on that basis rebuilds the same syntax over the empty constant alphabet. The map `eraseTm`{.Agda} and `erase`{.Agda} go from `K` to `⊥*`{.Agda}, and the maps `eraseTm-inv`{.Agda} and `erase-inv`{.Agda} show that relabelling along `⊥*-rec`{.Agda}, the eliminator that reads a constant out of the empty type, returns the original term or formula as a path. Together they say that over `K`, the formulas with no constant occurrences are exactly the images of parameter-free formulas, without any decidability assumption on `K`.
@@ -338,11 +346,11 @@ The first ingredient is arithmetical: a sum is zero only when both summands are.
 
 ```agda
   plus-zero-l : {a b : ℕ} → a + b ≡ 0 → a ≡ 0
-  plus-zero-l {zero} {b} p = refl
+  plus-zero-l {0} {b} p = refl
   plus-zero-l {suc a} {b} p = ⊥₀-rec (snotz p)
 
   plus-zero-r : {a b : ℕ} → a + b ≡ 0 → b ≡ 0
-  plus-zero-r {zero} {b} p = p
+  plus-zero-r {0} {b} p = p
 ```
 
 <!--en-->
@@ -404,7 +412,6 @@ The round trip is what makes the construction more than a translation: mapping b
 <!--/-->
 
 ```agda
-
   eraseTm-inv : {n : ℕ} (t : Term K n) (p : countTm t ≡ 0)
               → mapTm ⊥*-rec (eraseTm t p) ≡ t
   eraseTm-inv (con a) p = ⊥₀-rec (snotz p)
@@ -416,9 +423,9 @@ The round trip is what makes the construction more than a translation: mapping b
 <!--en-->
 At the formula level the inverse `erase-inv` is proved by structural induction over the syntax tree, combining the term-level inverse with itself recursively. The atoms display the base pattern with two subparts: since `mapFo` distributes the relabelling into the two erased terms, the goal is a path between two applications of the same constructor, and `cong₂` lifts the pair of term-level paths `eraseTm-inv t _` and `eraseTm-inv u _` to that path. The zero-count proofs for the subterms come from `plus-zero-l` and `plus-zero-r` applied to `p`, exactly as in `erase` itself.
 <!--zh-->
-在公式层面，逆定律 `erase-inv` 由对语法树的结构归纳证明，把词项层面的逆与自身递归地结合起来。两条原子关系以两个子部分展示了基例模式：由于 `mapFo` 把改名分配到两个被消去的词项中，目标是同一构造子的两次应用之间的路径，`cong₂` 把词项层面的两条路径 `eraseTm-inv t _` 与 `eraseTm-inv u _` 提升为该路径。子词项的计数为零的证明由 `plus-zero-l` 与 `plus-zero-r` 作用于 `p` 得到，与 `erase` 自身完全一致。
+在公式层面，[往返律]{.term-ref #round-trip-law} `erase-inv` 由对语法树的结构归纳证明，把词项层面的逆与自身递归地结合起来。两条原子关系以两个子部分展示了基例模式：由于 `mapFo` 把改名分配到两个被消去的词项中，目标是同一构造子的两次应用之间的路径，`cong₂` 把词项层面的两条路径 `eraseTm-inv t _` 与 `eraseTm-inv u _` 提升为该路径。子词项的计数为零的证明由 `plus-zero-l` 与 `plus-zero-r` 作用于 `p` 得到，与 `erase` 自身完全一致。
 <!--ja-->
-論理式レベルでは、逆法則 `erase-inv` は構文木についての構造的帰納によって証明され、項レベルの逆を再帰的に組み合わせる。二つの原子関係が、二つの部分を持つ基底の場合を示す。`mapFo` が名前替えを消去された二つの項へ分配するので、ゴールは同じ構成子の二つの応用の間のパスであり、`cong₂` が項レベルの二つのパス `eraseTm-inv t _` と `eraseTm-inv u _` をそのパスへ引き上げる。部分項の数が零である証明は、`erase` 自身とまったく同様に、`p` に `plus-zero-l` と `plus-zero-r` を施して得られる。
+論理式レベルでは、[往復則]{.term-ref #round-trip-law} `erase-inv` は構文木についての構造的帰納によって証明され、項レベルの逆を再帰的に組み合わせる。二つの原子関係が、二つの部分を持つ基底の場合を示す。`mapFo` が名前替えを消去された二つの項へ分配するので、ゴールは同じ構成子の二つの応用の間のパスであり、`cong₂` が項レベルの二つのパス `eraseTm-inv t _` と `eraseTm-inv u _` をそのパスへ引き上げる。部分項の数が零である証明は、`erase` 自身とまったく同様に、`p` に `plus-zero-l` と `plus-zero-r` を施して得られる。
 <!--/-->
 
 ```agda
@@ -430,11 +437,11 @@ At the formula level the inverse `erase-inv` is proved by structural induction o
 ```
 
 <!--en-->
-Because `erase` preserves the shape of the formula at every node, the induction hypothesis available at each node already has exactly the form the inverse needs there. The three binary connectives repeat the two-subpart pattern: for `∧̇`, `∨̇` and `⇒̇` the count of the whole splits between the two subformulas, and `cong₂` lifts the pair of induction hypotheses to a path between the reconstructed connectives. The uniformity is structural rather than coincidental: the inverse law is a property of the syntax tree, checked one node at a time.
+Because `erase` preserves the shape of the formula at every node, the induction hypothesis available at each node already has exactly the form the inverse needs there. The three binary connectives repeat the two-subpart pattern: for `∧̇`, `∨̇` and `⇒̇` the count of the whole splits between the two subformulas, and `cong₂` lifts the pair of induction hypotheses to a path between the reconstructed connectives. The uniformity is structural rather than coincidental: the [round-trip law]{.term-ref #round-trip-law} is a property of the syntax tree, checked one node at a time.
 <!--zh-->
-由于 `erase` 在每个节点都保持公式的形状，每个节点可用的归纳假设已经恰是该处逆定律所需的形式。三条二元连接词重复双部分模式：对 `∧̇`、`∨̇` 与 `⇒̇`，整体的计数在两个子公式之间拆分，`cong₂` 把一对归纳假设提升为重建后的连接词之间的路径。这种一致性是结构性的而非偶然：逆定律是语法树的性质，一次核查一个节点。
+由于 `erase` 在每个节点都保持公式的形状，每个节点可用的归纳假设已经恰是该处[往返律]{.term-ref #round-trip-law}所需的形式。三条二元连接词重复双部分模式：对 `∧̇`、`∨̇` 与 `⇒̇`，整体的计数在两个子公式之间拆分，`cong₂` 把一对归纳假设提升为重建后的连接词之间的路径。这种一致性是结构性的而非偶然：[往返律]{.term-ref #round-trip-law}是语法树的性质，一次核查一个节点。
 <!--ja-->
-`erase` がすべての節点で論理式の形を保つため、各節点で使える帰納の仮定は、そこで逆法則が必要とする形をすでにちょうど持っている。三つの二項結合子は二部分の型を繰り返す。`∧̇`、`∨̇`、`⇒̇` のいずれでも、全体の数は二つの部分論理式の間で分かれ、`cong₂` が一対の帰納の仮定を再構成された結合子の間のパスへ引き上げる。この一様さは偶然ではなく構造的なものである。逆法則は構文木の性質であり、一節点ずつ検査されるからである。
+`erase` がすべての節点で論理式の形を保つため、各節点で使える帰納の仮定は、そこで[往復則]{.term-ref #round-trip-law}が必要とする形をすでにちょうど持っている。三つの二項結合子は二部分の型を繰り返す。`∧̇`、`∨̇`、`⇒̇` のいずれでも、全体の数は二つの部分論理式の間で分かれ、`cong₂` が一対の帰納の仮定を再構成された結合子の間のパスへ引き上げる。この一様さは偶然ではなく構造的なものである。[往復則]{.term-ref #round-trip-law}は構文木の性質であり、一節点ずつ検査されるからである。
 <!--/-->
 
 ```agda
@@ -474,6 +481,8 @@ The bounded quantifiers close the induction, mixing a term and a formula just as
   erase-inv (∃̇∈ t φ) p =
     cong₂ ∃̇∈ (eraseTm-inv t (plus-zero-l p)) (erase-inv φ (plus-zero-r p))
 ```
+</div>
+</details>
 
 <!--en-->
 ## Recap
@@ -482,7 +491,7 @@ Occurrences give a formula's constants a finite interface that never asks whethe
 <!--zh-->
 ## 小结
 
-出现为公式的常元提供了一个有限接口，它从不追问常元域中两个符号是否相等。计数 `countFo`{.Agda} 既是出现之枚举的指标，也是此后参数抽象的指标：每次出现各得一个替代变量；安置装置及其查值定律为拼接环境补足所需的序号算术。当计数为零时，`ZeroOccurrences`{.Agda} 证明该公式恰是某条无参公式的精确像，于是可以采用空常元域而不损失任何语法。
+出现为公式的常元提供了一个有限接口，它从不追问常元域中两个符号是否相等。计数 `countFo`{.Agda} 既是出现之枚举的指标，也是此后参数抽象的指标：每次出现各得一个替代变元；安置装置及其查值定律为拼接环境补足所需的序号算术。当计数为零时，`ZeroOccurrences`{.Agda} 证明该公式恰是某条无参公式的精确像，于是可以采用空常元域而不损失任何语法。
 <!--ja-->
 ## まとめ
 

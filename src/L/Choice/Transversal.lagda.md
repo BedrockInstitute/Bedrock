@@ -1,3 +1,7 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # Choice by a transversal
 <!--zh-->
@@ -5,6 +9,42 @@
 <!--ja-->
 # 横断集合による選択
 <!--/-->
+
+```agda
+open import Base.Prelude
+open import Base.Classical using ( LEM )
+```
+
+<!--en-->
+Fix a universe level `ℓ`{.Agda} and assume `lem : LEM (ℓ-suc ℓ)`{.Agda}. This hypothesis supplies a decision for each proposition at that level; it remains an explicit parameter of the constructions below.
+<!--zh-->
+固定宇宙层级 `ℓ`{.Agda}，并假设 `lem : LEM (ℓ-suc ℓ)`{.Agda}。这个假设为相应层级的每个命题提供判定，并始终作为下文构造的显式参数。
+<!--ja-->
+宇宙レベル `ℓ`{.Agda} を固定し、`lem : LEM (ℓ-suc ℓ)`{.Agda} を仮定する。この仮定は該当するレベルの各命題に判定を与え、以下の構成の明示的なパラメータとして保たれる。
+<!--/-->
+
+```agda
+module L.Choice.Transversal {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+```
+
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax using ( Formula; var; con; _∈̇_; _∧̇_; ¬̇_; ∃̇_ )
+import FOL.Semantics
+import FOL.ZFModel
+import FOL.Absoluteness
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Coding {ℓ} using ( pr )
+open import L.Constructible {ℓ}
+  using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset; Lset→isL )
+open import L.Axioms.Basic {ℓ} using ( LsetS )
+open import L.Choice.FirstIntersectionStage {ℓ} lem using ( bound-below₂ )
+open import L.Choice.StageOrders {ℓ} lem using ( Mem; relOf )
+open import L.Choice.InternalWellOrder {ℓ} lem using ( module Bound )
+open import L.Coding.Model {ℓ} using ( appC; appC-adequate )
+open import L.WellOrder.Base {ℓ-suc ℓ}
+  using ( SWO; IsLeast; isPropLeastOf; leastOfFormula )
+```
 
 <!--en-->
 This chapter proves the axiom of choice for `𝒮ʟ` by separating the least member
@@ -57,28 +97,6 @@ transport along the intersection's specification.
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-open import Base.Prelude
-open import Base.Classical using ( LEM )
-
-module L.Choice.Transversal {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-
-open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using ( Formula; var; con; _∈̇_; _∧̇_; ¬̇_; ∃̇_ )
-import FOL.ZFModel
-import FOL.Absoluteness
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-open import V.Coding {ℓ} using ( pr )
-open import L.Constructible {ℓ}
-  using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset; Lset→isL )
-open import L.Axioms.Basic {ℓ} using ( LsetS )
-open import L.Choice.FirstIntersectionStage {ℓ} lem using ( bound-below₂ )
-open import L.Choice.StageOrders {ℓ} lem using ( Mem; relOf )
-open import L.Choice.InternalWellOrder {ℓ} lem using ( module Bound )
-open import L.Coding.Model {ℓ} using ( appC; appC-adequate )
-open import L.WellOrder.Base {ℓ-suc ℓ}
-  using ( SWO; IsLeast; isPropLeastOf; leastOf )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 
 open hPropStructure 𝒮ʟ
@@ -208,15 +226,21 @@ by trichotomy alone. The generic uniqueness theorem
 随后进行分离与计数。`transversalSet`{.Agda} 是模型中的分离，依照该描述施于 `β`{.Agda} 处的塔。`Cut`{.Agda} 固定族中的一个成员：交的收缩中心就是相应极小元；由 `pick-in`{.Agda}，它属于横截集，而极小性本身保证它属于该成员。唯一性在这里使用两两不交：交中的另一点满足描述，因而是族中某个成员的极小元，同时又属于当前成员；两个成员因此相交并相等，所以该点也是当前成员的极小元。极小元由三歧唯一，泛型定理 `isPropLeastOf`{.Agda} 完成最后这步比较。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Trans (zf : isZFModel) (a : S)
-             (inh : (x : S) → ⟨ x ∈ˢ a ⟩ → ∥ Σ[ y ∈ S ] ⟨ y ∈ˢ x ⟩ ∥₁)
+             (inh : (x : S) → ⟨ x ∈ˢ a ⟩ → ∥ Σ[ y ∶ S ] ⟨ y ∈ˢ x ⟩ ∥₁)
              (disj : (x y : S) → ⟨ x ∈ˢ a ⟩ → ⟨ y ∈ˢ a ⟩
-                   → ∥ Σ[ z ∈ S ] (⟨ z ∈ˢ x ⟩ × ⟨ z ∈ˢ y ⟩) ∥₁ → x ≡ y)
+                   → ∥ Σ[ z ∶ S ] (⟨ z ∈ˢ x ⟩ × ⟨ z ∈ˢ y ⟩) ∥₁ → x ≡ y)
              where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   open ModelL.isZFModel zf using ( separate; separate-spec; _∩_; ∩-spec )
-  private
-    module B = Bound (fst a) (snd a)
+  private module B = Bound (fst a) (snd a)
 
   β : V ℓ
   β = B.boundOrd
@@ -236,19 +260,27 @@ module Trans (zf : isZFModel) (a : S)
   Cell : S → Mem (Lset β) → hProp (ℓ-suc ℓ)
   Cell x m = fst m ∈ fst x
 
+  CellFormula : S → Formula S 1
+  CellFormula x = var zero ∈̇ con x
+
+  definedCell : (x : S)
+              → FOL.Semantics.FormulaPredicate 𝒮ʟ (Mem (Lset β)) S id (Cell x)
+  definedCell x = FOL.Semantics.presented 1 (CellFormula x)
+    (λ m → elt m ∷ []) (λ m → refl)
+
   Least : S → S → Type (ℓ-suc ℓ)
-  Least x z = Σ[ h ∈ ⟨ fst z ∈ Lset β ⟩ ] IsLeast W (Cell x) (fst z , h)
+  Least x z = Σ[ h ∶ ⟨ fst z ∈ Lset β ⟩ ] IsLeast W (Cell x) (fst z , h)
 
   private
-    members : (x : S) → ⟨ x ∈ˢ a ⟩ → ∥ Σ[ m ∈ Mem (Lset β) ] ⟨ Cell x m ⟩ ∥₁
+    members : (x : S) → ⟨ x ∈ˢ a ⟩ → ∥ Σ[ m ∶ Mem (Lset β) ] ⟨ Cell x m ⟩ ∥₁
     members x x∈a = map₁ atMember (inh x x∈a)
       where
-      atMember : Σ[ y ∈ S ] ⟨ y ∈ˢ x ⟩ → Σ[ m ∈ Mem (Lset β) ] ⟨ Cell x m ⟩
+      atMember : Σ[ y ∶ S ] ⟨ y ∈ˢ x ⟩ → Σ[ m ∶ Mem (Lset β) ] ⟨ Cell x m ⟩
       atMember (y , y∈x) =
         (fst y , bound-below₂ (fst a) (snd a) (fst x) (fst y) y∈x x∈a) , y∈x
 
-    least : (x : S) → ⟨ x ∈ˢ a ⟩ → Σ[ m ∈ Mem (Lset β) ] IsLeast W (Cell x) m
-    least x x∈a = leastOf W lem (Cell x) (members x x∈a)
+    least : (x : S) → ⟨ x ∈ˢ a ⟩ → Σ[ m ∶ Mem (Lset β) ] IsLeast W (Cell x) m
+    least x x∈a = leastOfFormula W (definedCell x) lem (members x x∈a)
 
     Predecessor : S → S → S → Type (ℓ-suc ℓ)
     Predecessor x z w = ⟨ w ∈ˢ x ⟩
@@ -257,11 +289,11 @@ module Trans (zf : isZFModel) (a : S)
     Two : S → S → Type (ℓ-suc ℓ)
     Two x z = ⟨ x ∈ˢ a ⟩
             × (⟨ z ∈ˢ x ⟩
-              × (∥ Σ[ w ∈ S ] Predecessor x z w ∥₁
+              × (∥ Σ[ w ∶ S ] Predecessor x z w ∥₁
                  → Lift {j = ℓ-suc ℓ} ⊥₀))
 
     Out : S → Type (ℓ-suc ℓ)
-    Out z = ∥ Σ[ x ∈ S ] (⟨ x ∈ˢ a ⟩ × Least x z) ∥₁
+    Out z = ∥ Σ[ x ∶ S ] (⟨ x ∈ˢ a ⟩ × Least x z) ∥₁
 
   opaque
     unfolding Pick
@@ -271,7 +303,7 @@ module Trans (zf : isZFModel) (a : S)
     pick-in x x∈a z (hz , (z∈x , mini)) =
       ∣ x , (x∈a , (z∈x , neg)) ∣₁
       where
-      noPredecessor : Σ[ w ∈ S ] Predecessor x z w → ⊥₀
+      noPredecessor : Σ[ w ∶ S ] Predecessor x z w → ⊥₀
       noPredecessor (w , (w∈x , hap)) = mini (fst w , hw) w∈x lt
         where
         hw : ⟨ fst w ∈ Lset β ⟩
@@ -281,14 +313,14 @@ module Trans (zf : isZFModel) (a : S)
         lt : relOf W (fst w , hw) (fst z , hz)
         lt = B.orderL-rep (fst w , hw) (fst z , hz) hpr
 
-      neg : ∥ Σ[ w ∈ S ] Predecessor x z w ∥₁
+      neg : ∥ Σ[ w ∶ S ] Predecessor x z w ∥₁
           → Lift {j = ℓ-suc ℓ} ⊥₀
       neg q = lift (rec₁ isProp⊥ noPredecessor q)
 
     pick-out : (z : S) → ⟨ (z ∷ []) ⊨ Pick a rel ⟩ → Out z
     pick-out z = rec₁ squash₁ atTwo
       where
-      atTwo : Σ[ x ∈ S ] Two x z → Out z
+      atTwo : Σ[ x ∶ S ] Two x z → Out z
       atTwo (x , (x∈a , (z∈x , neg))) =
         ∣ x , (x∈a , (hz , (z∈x , mini))) ∣₁
         where
@@ -319,8 +351,17 @@ module Trans (zf : isZFModel) (a : S)
 
     outC : (z : S) → ⟨ z ∈ˢ transversalSet ⟩ → ⟨ (z ∷ []) ⊨ Pick a rel ⟩
     outC z h = snd (subst ⟨_⟩ (csp z) h)
+```
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
+```agda
   module Cut (x : S) (x∈a : ⟨ x ∈ˢ a ⟩) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
     private
       m : Mem (Lset β)
       m = least x x∈a .fst
@@ -339,7 +380,7 @@ module Trans (zf : isZFModel) (a : S)
               → ⟨ z ∈ˢ transversalSet ⟩ × ⟨ z ∈ˢ x ⟩
       outMeet z h = subst ⟨_⟩ (∩-spec transversalSet x z) h
 
-      centre : Σ[ z ∈ S ] ⟨ z ∈ˢ (transversalSet ∩ x) ⟩
+      centre : Σ[ z ∶ S ] ⟨ z ∈ˢ (transversalSet ∩ x) ⟩
       centre = z₀ , inMeet z₀
         (inC z₀ (snd m) (pick-in x x∈a z₀ (snd m , lm))) (fst lm)
 
@@ -350,7 +391,7 @@ module Trans (zf : isZFModel) (a : S)
         z∈x : ⟨ z ∈ˢ x ⟩
         z∈x = snd (outMeet z h)
 
-        atOut : Σ[ x' ∈ S ] (⟨ x' ∈ˢ a ⟩ × Least x' z) → fst z ≡ fst m
+        atOut : Σ[ x' ∶ S ] (⟨ x' ∈ˢ a ⟩ × Least x' z) → fst z ≡ fst m
         atOut (x' , (x'∈a , (hz , lz))) =
           cong (λ p → fst (fst p))
             (isPropLeastOf W (Cell x) ((fst z , hz) , lz') (m , lm))
@@ -361,18 +402,23 @@ module Trans (zf : isZFModel) (a : S)
           lz' : IsLeast W (Cell x) (fst z , hz)
           lz' = subst (λ y → IsLeast W (Cell y) (fst z , hz)) (sym x≡x') lz
 
-    meetsOnce : isContr (Σ[ z ∈ S ] ⟨ z ∈ˢ (transversalSet ∩ x) ⟩)
+    meetsOnce : isContr (Σ[ z ∶ S ] ⟨ z ∈ˢ (transversalSet ∩ x) ⟩)
     meetsOnce = centre , atPoint
       where
-      atPoint : (p : Σ[ z ∈ S ] ⟨ z ∈ˢ (transversalSet ∩ x) ⟩) → centre ≡ p
+      atPoint : (p : Σ[ z ∶ S ] ⟨ z ∈ˢ (transversalSet ∩ x) ⟩) → centre ≡ p
       atPoint (z , h) = sym (Σ≡Prop
         (λ w → snd (w ∈ˢ (transversalSet ∩ x)))
         (Σ≡Prop (λ v → snd (isL v)) (same z h)))
-
+```
+</div>
+</details>
+```agda
   transversal : (x : S) → ⟨ x ∈ˢ a ⟩
-              → isContr (Σ[ z ∈ S ] ⟨ z ∈ˢ (transversalSet ∩ x) ⟩)
+              → isContr (Σ[ z ∶ S ] ⟨ z ∈ˢ (transversalSet ∩ x) ⟩)
   transversal = Cut.meetsOnce
 ```
+</div>
+</details>
 
 <!--en-->
 ## The theorem
@@ -415,11 +461,11 @@ derived operation of that model.
 ChoiceStatement : isZFModel → Type (ℓ-suc ℓ)
 ChoiceStatement zf =
   (a : S)
-  → ((x : S) → ⟨ x ∈ˢ a ⟩ → ∥ Σ[ y ∈ S ] ⟨ y ∈ˢ x ⟩ ∥₁)
+  → ((x : S) → ⟨ x ∈ˢ a ⟩ → ∥ Σ[ y ∶ S ] ⟨ y ∈ˢ x ⟩ ∥₁)
   → ((x y : S) → ⟨ x ∈ˢ a ⟩ → ⟨ y ∈ˢ a ⟩
-       → ∥ Σ[ z ∈ S ] (⟨ z ∈ˢ x ⟩ × ⟨ z ∈ˢ y ⟩) ∥₁ → x ≡ y)
-  → ∥ Σ[ c ∈ S ] ((x : S) → ⟨ x ∈ˢ a ⟩
-       → isContr (Σ[ z ∈ S ] ⟨ z ∈ˢ (c ∩ x) ⟩)) ∥₁
+       → ∥ Σ[ z ∶ S ] (⟨ z ∈ˢ x ⟩ × ⟨ z ∈ˢ y ⟩) ∥₁ → x ≡ y)
+  → ∥ Σ[ c ∶ S ] ((x : S) → ⟨ x ∈ˢ a ⟩
+       → isContr (Σ[ z ∶ S ] ⟨ z ∈ˢ (c ∩ x) ⟩)) ∥₁
   where open ModelL.isZFModel zf using ( _∩_ )
 
 hasChoiceL : (zf : isZFModel) → ChoiceStatement zf

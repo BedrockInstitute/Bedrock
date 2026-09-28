@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "libraries": [
+    {
+      "name": "cubical",
+      "version": "0.9",
+      "url": "https://github.com/agda/cubical/archive/refs/tags/v0.9.tar.gz",
+      "sha256": "3dde4c1936e8b5583a5adda429de7a6a6e14295d09434591d65ad52c7009cf9a",
+      "archive_root": "cubical-0.9",
+      "library": "cubical.agda-lib"
+    }
+  ]
+}

@@ -1,0 +1,170 @@
+# Translation glossary
+
+This is the **canonical, machine-checked glossary** for Bedrock's trilingual docs. It exists
+to stop terminology drift: when the same English term is translated again and again by
+different passes (often by AI agents), the rendering tends to wander. The glossary fixes the
+rendering once, and `scripts/gate/check-glossary.py` enforces it.
+
+The term data lives in **[`glossary.toml`](glossary.toml)**, the single source of truth the
+checker reads (via `tomllib`, so Python 3.11+). This document is the human-readable
+explanation: what the checks do and how to maintain an entry. There is only one copy of the
+data, so nothing can fall out of sync.
+
+The same registry also controls reader-facing term introductions and quick review on the
+website. It does not duplicate this data in a second pedagogical glossary. The site generates
+one language-local `terms.json` from `glossary.toml`; that JSON is a build artifact.
+
+## How it works
+
+The checker runs two complementary checks, both part of `make check` (the commit gate) and the
+pre-commit hook, so drift is caught in CI, not in review. Both are **report-only**: they never
+rewrite text, because the right fix is a translation judgement, not a mechanical substitution.
+
+1. **Avoid check (a denylist).** For every entry's `avoid` list it scans language-scoped prose
+   (`docs/zh/`, `docs/ja/`, and the `<!--zh-->` / `<!--ja-->` prose of `src/**.lagda.md`
+   masters) and flags any known off-glossary rendering, pointing at the canonical one.
+   Explicit `en:` aliases are checked in English with word boundaries; untagged
+   aliases keep their existing CJK-only meaning. Code and links stay protected.
+2. **Presence check (a safety net).** For an entry with `presence = true`, when the English
+   term appears in a doc's English source but the canonical rendering is absent from the
+   parallel translation, it warns. This catches wrong renderings the `avoid` list does not
+   enumerate. It runs on standalone parallel docs and explicitly translated
+   language groups in masters. Missing language blocks retain English fallback
+   and are not mistaken for translations. Each translated group is checked
+   separately, so a correct term elsewhere cannot hide a local mismatch.
+
+## Maintaining `glossary.toml`
+
+Each term is a `[[term]]` entry. Under the owner's 2026-09-07 instruction, the
+coordinator audits existing terms as well as new ones and makes the final
+terminology decisions. Dispatches gather literature evidence, not independent
+vocabularies. Search online for the actual mathematical sense in English,
+Chinese and Japanese. Adopt an attested term when appropriate; if no suitable
+term is found, record the queries and form a descriptive expression from
+attested terminology. A negative search is not proof that a term never occurs.
+Record supporting URLs and distinguish direct attestation from a composed
+expression. Update the canonical table before agents resume dependent prose.
+This owner instruction replaces the former approval protocol. An entry has this shape:
+
+```toml
+[[term]]
+category = "Set theory"        # human grouping only; the checker ignores it
+en = "forcing"
+zh = "力迫"
+ja = "強制"
+avoid = ["zh:宪章", "ja:憲章"]   # optional; omit if none
+presence = true                # optional; omit for an advisory-only entry
+notes = "..."                  # optional; human-only, the checker ignores it
+```
+
+- **`en` / `zh` / `ja`** are required: the term and its canonical Chinese and Japanese
+  renderings. Values are plain strings (TOML is not prose-linted, so no backtick wrapping is
+  needed, unlike in this Markdown doc).
+- **`avoid`** is a list of known wrong renderings. Tag an item with a language (`en:...`, `zh:宪章`,
+  `ja:憲章`) to scope it to that language; an untagged item (`散文`) applies to both Chinese and
+  Japanese. Omit `avoid` for an advisory-only entry (agents read the term; the Avoid check does
+  not enforce it).
+- **`presence = true`** enables the safety-net check. Use it for distinctive terms whose
+  canonical rendering should always be present; omit it for common English words (where the
+  English term may appear in prose that does not call for the term), to avoid false warnings.
+- **`notes`** and **`category`** are human-only and ignored by the checker.
+- **False positive?** Put `<!-- glossary-ignore -->` on the line for the Avoid check, or
+  `<!-- glossary-ignore: charter -->` to suppress one term. For the Presence check, the scoped
+  form anywhere in the translated doc suppresses that term's presence warning for that doc.
+
+Renderings in `glossary.toml` are taken verbatim from the owner's tuned parallel docs (the
+en/zh/ja `CHARTER.md` and `README.md`). Where Chinese and Japanese deliberately diverge (for
+example `forcing` is `力迫` in zh but `強制` in ja), the `notes` say so; do not "unify" them.
+
+## Reader-facing terms
+
+Every technical concept named for textbook readers must use the reader-facing extension.
+Entries that exist only to guide editors, route labels or development prose do not. This
+distinction is semantic and therefore reviewed with the prose rather than guessed from word
+frequency:
+
+```toml
+id = "host-environment"
+audience = "reader"
+introduced_in = "Base.Prelude"
+matching = "auto"
+recap_en = "The Cubical Agda environment that supports the formalisation of the object theory."
+recap_zh = "承载对象理论形式化的 Cubical Agda 环境。"
+recap_ja = "対象理論の形式化を支える Cubical Agda の環境。"
+```
+
+`id` is a stable concept identifier and must not be derived anew when a rendering changes.
+`introduced_in` names the chapter containing the formal introduction. The three `recap_*`
+fields contain the short, language-local review shown on hover or focus. Keep literature and
+editorial evidence in `notes`; it is not reader-facing copy.
+
+Register a formal abbreviation separately from ordinary word forms:
+
+```toml
+abbreviations = { en = "HIT", zh = "HIT", ja = "HIT" }
+```
+
+The keys may cover any subset of `en`, `zh` and `ja`; omit the field when there is no
+abbreviation. The full names remain in `en` / `zh` / `ja`. The registry validates the
+abbreviation, treats it as an audited form for automatic links and introduction-order
+checks, shows it beside the full name in the website glossary, and includes it in
+glossary search and `terms.json`. State the abbreviation alongside the full name at
+its first introduction, so the reader learns the relationship before seeing the short form.
+
+Use `matching = "auto"` only when the canonical rendering has the same technical meaning
+outside any explicitly audited exclusions. The renderer links those later occurrences automatically, preferring longer
+forms. Use `matching = "explicit"` for short or ambiguous forms such as Chinese 层. Such an
+occurrence must use an explicit term-reference marker. Optional `forms_en`, `forms_zh` and
+`forms_ja` arrays list audited inflected or alternate surface forms. Use the structured
+`abbreviations` field for a short name instead of repeating it in `forms_*`.
+If ambiguity is language-specific, keep `matching = "auto"` and set
+`auto_languages` to the unambiguous subset of `en`, `zh`, `ja`; omitted languages
+still accept explicit `term-ref` markers. For example, the logical sentence is
+automatic in English and Chinese, while Japanese `文` is explicit because it also
+occurs in unrelated words such as `本文` and `文脈`.
+For an otherwise automatic term that appears inside an unrelated fixed phrase,
+list that whole phrase in `auto_exclude_en`, `auto_exclude_zh` or
+`auto_exclude_ja`. The renderer and prerequisite lint then skip only the term
+form inside that phrase; other occurrences on the same line still link. Audit
+the phrase rather than imposing CJK word boundaries, which would also hide
+legitimate mathematical compounds. For example, Japanese `台` remains the
+carrier term in `台の要素` but not in `土台` or `舞台`.
+
+How often a term occurs is not a criterion (owner ruling, 2026-09-12). A page carrying many
+term links is acceptable and useful: the link marks the word as a registered term rather than
+ordinary usage, and the dotted underline is deliberately quiet. What disqualifies automatic
+matching is a measured collision. Because Chinese and Japanese have no word boundary, a short
+rendering can be the prefix of a longer, different term, and automatic matching would then link
+only that prefix. Measure the share before choosing: `proposition` was registered explicit
+because 246 of 950 Chinese occurrences (26%) and 291 of 973 Japanese ones (30%) sit inside a
+longer term: `命题截断` / `命题换级` / `命题值` / `命题性` and their Japanese counterparts. `path`
+(3%) and `projection` (8%) stayed automatic, since their compounds `路径类型` / `投影等式` /
+`射影方程` keep the term as their head, so the link lands on the right concept. A morphological derivative such as 可缩性 belongs
+in `forms_zh` instead, so that automatic matching links the whole word.
+
+The first introduction is marked in each language with the same stable identifier:
+
+```markdown
+[host]{.term-intro #host-environment}
+[宿主]{.term-intro #host-environment}
+[ホスト]{.term-intro #host-environment}
+```
+
+Do not put either term marker in a chapter-level `#` title. The title can already
+reveal source code through its separate code mark; introduce the term in the first
+relevant prose paragraph below it, where the dotted underline and term hover
+describe the same interaction.
+Subsection headings may still introduce terms.
+
+For an explicitly matched later occurrence, replace `term-intro` with `term-ref`. The
+`check-term-introductions.py` gate requires exactly one introduction in every language, checks
+the declared module and rendering, and rejects unknown identifiers.
+
+Bare uses of automatically linked terminology require the introduction chapter in
+the proof prerequisite graph. A deliberate cross-chapter lookup may instead use
+an explicit `term-ref` marker, including for an automatically matched entry. This
+lets a parallel reading route point to a definition without adding an unused Agda
+import. It does not move the formal introduction: the marker's ID and rendering
+are still validated, and references within the introduction chapter itself may
+not precede that introduction. Use direct descriptions for a different concept
+or a type-family value; a link must not disguise an ambiguous or broader use.

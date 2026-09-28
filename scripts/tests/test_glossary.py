@@ -6,9 +6,10 @@ Run: python3 scripts/tests/test_glossary.py   (or: make test)
 
 import importlib.util
 import os
-import sys
 import tempfile
 import unittest
+from pathlib import Path
+from unittest.mock import patch
 
 SCRIPTS = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 
@@ -22,12 +23,15 @@ def _load(modname, filename):
 
 cg = _load("check_glossary", "gate/check-glossary.py")  # noqa: E402
 
+from outcrop.core import glossary_lint as glossary_rules
+from outcrop.core.markdown_core import auto_link_terms
+from outcrop.core.term_registry import load_entries
 # Golden glossary rows (term, zh, ja, avoid-list, presence), exercising tagged and untagged avoids.
 ROWS = [
     ("charter", "纲领", "綱領", ["zh:宪章", "ja:憲章"], True),
     ("prose", "文稿", "文章", ["散文"], False),
 ]
-CHECKS = cg.build_checks(ROWS)
+CHECKS = glossary_rules.build_checks(ROWS)
 
 
 def write(tmp, rel, content):
@@ -42,41 +46,20 @@ def msgs(violations):
     return [m for _ln, _idx, m in violations]
 
 
-class GlossaryTableTests(unittest.TestCase):
-    def test_build_checks_expands_tagged_and_untagged(self):
-        forb = {(f, lang) for f, lang, _t, _c in CHECKS}
-        self.assertIn(("宪章", "zh"), forb)
-        self.assertIn(("憲章", "ja"), forb)
-        self.assertNotIn(("宪章", "ja"), forb)   # zh-tagged is not checked in ja
-        self.assertIn(("散文", "zh"), forb)       # untagged applies to both
-        self.assertIn(("散文", "ja"), forb)
-
-    def test_load_glossary_reads_toml(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            p = write(tmp, "glossary.toml",
-                      '[[term]]\ncategory = "Other"\nen = "charter"\nzh = "纲领"\nja = "綱領"\n'
-                      'avoid = ["zh:宪章"]\npresence = true\n\n'
-                      '[[term]]\nen = "prose"\nzh = "文稿"\nja = "文章"\navoid = ["散文"]\n')
-            rows = cg.load_glossary(p)
-            self.assertEqual(rows[0], ("charter", "纲领", "綱領", ["zh:宪章"], True))
-            self.assertEqual(rows[1], ("prose", "文稿", "文章", ["散文"], False))
-
-    def test_load_glossary_preserves_order_and_optional_fields(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            p = write(tmp, "glossary.toml",
-                      '[[term]]\nen = "forcing"\nzh = "力迫"\nja = "強制"\npresence = true\n\n'
-                      '[[term]]\nen = "charter"\nzh = "纲领"\nja = "綱領"\navoid = ["zh:宪章"]\n')
-            rows = cg.load_glossary(p)
-            self.assertEqual([r[0] for r in rows], ["forcing", "charter"])  # array order preserved
-            self.assertEqual(rows[0][3], [])    # missing avoid -> empty list
-            self.assertFalse(rows[1][4])        # missing presence -> False
-
-    def test_build_presence_selects_opted_in_rows(self):
-        rows = [("charter", "纲领", "綱領", [], True), ("prose", "文稿", "文章", ["散文"], False)]
-        self.assertEqual(cg.build_presence(rows), [("charter", "纲领", "綱領")])
-
-
 class FileCheckTests(unittest.TestCase):
+    def test_extras_only_preserves_route_metadata_and_doc_presence(self):
+        master = str(Path(__file__).resolve().parents[2] / 'src/Base/Prelude.lagda.md')
+        with patch.object(cg, 'target_files', return_value=[master]), \
+                patch.object(cg, 'check_file') as text, \
+                patch.object(cg, 'master_presence_violations') as master_presence, \
+                patch.object(cg, 'route_metadata_violations', return_value=['bad route translation']) as metadata, \
+                patch.object(cg, 'build_presence', return_value=['required']), \
+                patch.object(cg, 'discover_presence_targets', return_value=[(master, 'zh', master)]), \
+                patch.object(cg, 'presence_violations', return_value=[]) as docs:
+            self.assertEqual(cg.main(['--extras-only']), 1)
+            text.assert_not_called(); master_presence.assert_not_called()
+            metadata.assert_called_once(); docs.assert_called_once()
+
     def test_zh_doc_flags_avoided_term(self):
         with tempfile.TemporaryDirectory() as tmp:
             p = write(tmp, "docs/zh/CHARTER.md", "# Bedrock 宪章\n")
@@ -131,78 +114,27 @@ class FileCheckTests(unittest.TestCase):
             self.assertEqual(cg.check_file(ok, CHECKS), [])
             self.assertEqual(len(cg.check_file(other, CHECKS)), 1)  # prose still flagged
 
+    def test_object_language_terms_avoid_unrelated_compounds(self):
+        glossary = Path(__file__).resolve().parents[2] / 'site/glossary.toml'
+        entries = load_entries(glossary)
+        term = next(item for item in entries if item.get('id') == 'object-term')
+        sentence = next(item for item in entries if item.get('id') == 'object-sentence')
 
-class MasterScopeTests(unittest.TestCase):
-    def test_route_metadata_checks_only_language_values(self):
-        text = '<!-- bedrock-routes {"id":"宪章", "title":{"zh":"宪章", "en":"宪章"}} -->'
-        hits = cg.route_metadata_violations(text, CHECKS)
-        self.assertEqual(len(hits), 1)
-        self.assertIn("纲领", hits[0])
+        japanese = auto_link_terms('<p>項と数項、連言項、単項、項目、一項、2 項結合子。</p>',
+                                   'ja', 'FOL.Syntax', [term])
+        self.assertEqual(japanese.count('data-term="object-term"'), 1)
+        self.assertIn('>項</a>と数項', japanese)
 
-    MASTER = ("# T\n\n<!--zh-->\n这是 宪章 块。\n<!--ja-->\n憲章 ブロック。\n<!--/-->\n\n"
-              "<!--en-->\nThe 宪章 here is shared-ish English.\n<!--/-->\n")
+        english = auto_link_terms('<p>A term, proof term, and in terms of syntax.</p>',
+                                  'en', 'FOL.Syntax', [term])
+        self.assertEqual(english.count('data-term="object-term"'), 1)
 
-    def test_zh_group_flagged_ja_group_flagged_en_group_clean(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            p = write(tmp, "src/M.lagda.md", self.MASTER)
-            v = cg.check_file(p, CHECKS)
-            self.assertEqual(len(v), 2)  # the zh 宪章 and the ja 憲章; the en-group 宪章 is ignored
-            joined = " ".join(msgs(v))
-            self.assertIn("use 纲领 (zh)", joined)
-            self.assertIn("use 綱領 (ja)", joined)
-
-    def test_english_aliases_are_word_bounded_and_language_scoped(self):
-        checks = cg.build_checks([("constant mapping", "常量映射", "定数写像",
-                                   ["en:constant remap"], False)])
-        with tempfile.TemporaryDirectory() as tmp:
-            p = write(tmp, "src/M.lagda.md", "<!--en-->\nA constant remap.\n"
-                      "A constant remapping.\n`constant remap`\n<!--zh-->\nconstant remap\n<!--/-->")
-            self.assertEqual(len(cg.check_file(p, checks)), 1)
-
-    def test_master_presence_checks_only_present_translations(self):
-        text = "<!--en-->\nA charter.\n<!--zh-->\n纲领。\n<!--/-->"
-        self.assertEqual(cg.master_presence_violations("M.lagda.md", text,
-                         [("charter", "纲领", "綱領")]), [])
-        text += "\n<!--en-->\nThe charter.\n<!--ja-->\n別の言葉。\n<!--/-->"
-        hits = cg.master_presence_violations("M.lagda.md", text,
-                                           [("charter", "纲领", "綱領")])
-        self.assertEqual(len(hits), 1)
-        self.assertIn("綱領", hits[0][1])
-
-
-PRESENCE = [("charter", "纲领", "綱領")]
-
-
-class PresenceTests(unittest.TestCase):
-    EN = "# Bedrock Charter\n\nThe full treatment is in the Charter.\n"
-
-    def test_warns_when_canonical_rendering_absent(self):
-        v = cg.presence_violations("docs/zh/CHARTER.md", "zh", self.EN, "# 文档\n标题。\n", PRESENCE)
-        self.assertEqual(len(v), 1)
-        self.assertIn("纲领", v[0][1])
-
-    def test_clean_when_canonical_present(self):
-        v = cg.presence_violations("docs/zh/CHARTER.md", "zh", self.EN, "# Bedrock 纲领\n", PRESENCE)
-        self.assertEqual(v, [])
-
-    def test_no_warning_when_term_absent_in_english(self):
-        v = cg.presence_violations("docs/zh/X.md", "zh", "# Intro\nNothing here.\n", "标题。\n", PRESENCE)
-        self.assertEqual(v, [])
-
-    def test_english_term_only_in_protected_region_does_not_count(self):
-        en = "See `charter` and [x](charter.md)\n"  # inline code + link dest, both protected
-        v = cg.presence_violations("docs/zh/X.md", "zh", en, "标题。\n", PRESENCE)
-        self.assertEqual(v, [])
-
-    def test_japanese_uses_ja_rendering(self):
-        v = cg.presence_violations("docs/ja/CHARTER.md", "ja", self.EN, "# Bedrock タイトル\n", PRESENCE)
-        self.assertIn("綱領", v[0][1])
-
-    def test_scoped_ignore_in_target_suppresses(self):
-        tgt = "# 文档\n<!-- glossary-ignore: charter -->\n"
-        v = cg.presence_violations("docs/zh/X.md", "zh", self.EN, tgt, PRESENCE)
-        self.assertEqual(v, [])
-
-
-if __name__ == "__main__":
-    unittest.main(verbosity=2)
+        self.assertNotIn('data-term="object-sentence"',
+                         auto_link_terms('<p>文、本文、文章、文脈。</p>',
+                                         'ja', 'FOL.Syntax', [sentence]))
+        self.assertIn('data-term="object-sentence"',
+                      auto_link_terms('<p>A sentence can contain names.</p>',
+                                      'en', 'FOL.Syntax', [sentence]))
+        self.assertIn('data-term="object-sentence"',
+                      auto_link_terms('<p>这个句子可以含有常元。</p>',
+                                      'zh', 'FOL.Syntax', [sentence]))

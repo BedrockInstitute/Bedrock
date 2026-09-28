@@ -1,6 +1,6 @@
 #!/bin/sh
 # Bedrock pre-push gate. The milestone-consumption check is deliberately absent
-# from pre-commit: only the final pushed tree must be closed under Milestones.
+# from pre-commit: only the final pushed tree must be closed under Origin.
 set -e
 PY=python3
 [ -x .venv/bin/python ] && PY=.venv/bin/python

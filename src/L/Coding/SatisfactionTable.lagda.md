@@ -1,3 +1,7 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # Satisfaction tables over subformulas
 <!--zh-->
@@ -5,6 +9,37 @@
 <!--ja-->
 # 部分式上の充足関係表
 <!--/-->
+
+```agda
+open import Base.Prelude
+open import Base.Classical using ( LEM )
+```
+
+<!--en-->
+Fix a universe level `ℓ`{.Agda} and assume `lem : LEM (ℓ-suc ℓ)`{.Agda}. This hypothesis supplies a decision for each proposition at that level; it remains an explicit parameter of the constructions below.
+<!--zh-->
+固定宇宙层级 `ℓ`{.Agda}，并假设 `lem : LEM (ℓ-suc ℓ)`{.Agda}。这个假设为相应层级的每个命题提供判定，并始终作为下文构造的显式参数。
+<!--ja-->
+宇宙レベル `ℓ`{.Agda} を固定し、`lem : LEM (ℓ-suc ℓ)`{.Agda} を仮定する。この仮定は該当するレベルの各命題に判定を与え、以下の構成の明示的なパラメータとして保たれる。
+<!--/-->
+
+```agda
+module L.Coding.SatisfactionTable {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+```
+
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax
+  using ( Formula )
+open import V.Coding {ℓ} using ( pr; pr-inj; #-inj′ )
+open import L.Constructible {ℓ} using ( 𝒮ʟ; isL )
+open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
+open import L.Coding.Model {ℓ} using ( module LCode; prʟ; prʟ-fst )
+open import L.Coding.CodeConstructibility {ℓ}
+  using ( tree; Of; tree-inv )
+  renaming ( module Parts to TreeParts )
+open import L.Coding.Satisfaction {ℓ} lem using ( Sat )
+```
 
 <!--en-->
 For a formula `φ`, this chapter builds `satTable φ`, whose entries pair each subformula key with its recursively defined satisfaction value, and proves that a key determines the value recorded beside it.
@@ -39,25 +74,8 @@ two things at one key would not be a function at all.
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-open import Base.Prelude
 open import Cubical.Foundations.Prelude using ( J )
-open import Base.Classical using ( LEM )
 
-module L.Coding.SatisfactionTable {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-
-open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax
-  using ( Formula )
-open import V.Coding {ℓ} using ( pr; pr-inj; #-inj′ )
-open import L.Constructible {ℓ} using ( 𝒮ʟ; isL )
-open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
-open import L.Coding.Model {ℓ} using ( module LCode; prʟ; prʟ-fst )
-open import L.Coding.CodeConstructibility {ℓ}
-  using ( tree; Of; tree-inv )
-  renaming ( module Parts to TreeParts )
-open import L.Coding.Satisfaction {ℓ} lem using ( Sat )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( module InfinitySet )
 open InfinitySet using ( #_ )
@@ -100,8 +118,17 @@ is why they come from one recursion rather than two.
 ```agda
 keyʟ : ∀ {n} → Formula S n → S
 keyʟ {n} φ = prʟ (numeralL n) LCode.⌜ φ ⌝
+```
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
+```agda
 module _ (B : S) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   ent : ∀ {n} → Formula S n → S
   ent φ = prʟ (keyʟ φ) (Sat B φ)
 
@@ -136,10 +163,20 @@ readings below are four instantiations of it and no induction runs here.
 每个成员都是被收集之物之一。那正是闭包那一章所证的求逆，且它在那里是对着两个收集同时陈述的，故下面四条读式是它的四次实例化，此处不跑归纳。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
   module Parts (f : ∀ {m} → Formula S m → S) where
-    open TreeParts f public
+```
+</summary>
+<div class="submodule-fold-content">
 
+```agda
+    open TreeParts f public
+```
+</div>
+</details>
+```agda
   satTable-inv : ∀ {n} (φ : Formula S n) (x : V ℓ)
                → ⟨ x ∈ fst (satTable φ) ⟩ → Of ent ent φ x
   satTable-inv = tree-inv ent ent
@@ -198,7 +235,7 @@ which is the only arity at which it is true.
       (same ψ) p χ
 
   total : ∀ {n} (φ : Formula S n) (x : V ℓ) → ⟨ x ∈ fst (slot φ) ⟩
-        → ∥ (Σ[ y ∈ S ] ⟨ pr x (fst y) ∈ fst (satTable φ) ⟩) ∥₁
+        → ∥ (Σ[ y ∶ S ] ⟨ pr x (fst y) ∈ fst (satTable φ) ⟩) ∥₁
   total φ x h = map₁
     (λ { (m , χ , (q , incl)) → Sat B χ
        , subst (λ w → ⟨ pr w (fst (Sat B χ)) ∈ fst (satTable φ) ⟩) (sym q)
@@ -241,6 +278,8 @@ which is the only arity at which it is true.
   entry-in φ = subst (λ w → ⟨ w ∈ fst (satTable φ) ⟩)
     (prʟ-fst (keyʟ φ) (Sat B φ)) (Parts.self ent φ)
 ```
+</div>
+</details>
 
 <!--en-->
 ## Subkeys determined by a constructor tag
@@ -277,7 +316,6 @@ payload read is the formula's.
 <!--/-->
 
 ```agda
-
 keyʟ-shape : ∀ {m} (ψ : Formula S m) (k : ℕ) (ar p : V ℓ)
            → fst (keyʟ ψ) ≡ pr ar (pr (# k) p)
            → LCode.Match k ψ

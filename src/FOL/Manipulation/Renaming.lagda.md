@@ -1,17 +1,36 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+module FOL.Manipulation.Renaming where
+```
+
 <!--en-->
 # Variable renaming
+<!--zh-->
+# 变元改名
+<!--ja-->
+# 変数の改名
+<!--/-->
+
+```agda
+open import Base.Prelude
+open import FOL.ZFStructure using ( ZFStructure )
+open import FOL.Syntax using
+  ( Term; con; var
+  ; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
+import FOL.Semantics
+```
+
+<!--en-->
 
 A map between finite variable contexts acts on terms and formulas by renaming free variables while leaving constants fixed. The accompanying agreement relation on environments gives one semantic theorem that covers weakening, exchange, and contraction.
 
 The syntax chapter pointed out an absence: no substitution, no weakening. The quantifier clauses take bodies in an extended context directly, so the classical apparatus for moving variables around is unnecessary. What little variable motion the book does need is covered by one device: **renaming**, a map `ρ : Fin n → Fin m` pushed through a formula, with a single correctness theorem that handles weakening, exchange, and contraction in one stroke.
 <!--zh-->
-# 变量改名
 
-有限变量语境之间的映射通过改名自由变量作用于词项与公式，同时保持常元不变。环境上的相符关系给出一条语义定理，统一涵盖弱化、交换与收缩。
+有限变元语境之间的映射通过改名自由变元作用于词项与公式，同时保持常元不变。环境上的相符关系给出一条语义定理，统一涵盖弱化、交换与收缩。
 
-语法章提过一处缺席：没有替换，也没有弱化。量词子句直接取扩展语境中的公式体，因此经典的整套变量替换机制并无必要。本书确实需要的那一点变量调整，由一个操作完成：**改名**，即沿公式推送一个映射 `ρ : Fin n → Fin m`，并配一条正确性定理，弱化、交换、收缩都由此得出。
+语法章提过一处缺席：没有替换，也没有弱化。量词子句直接取扩展语境中的公式体，因此经典的整套变元替换机制并无必要。本书确实需要的那一点变元调整，由一个操作完成：**改名**，即沿公式推送一个映射 `ρ : Fin n → Fin m`，并配一条正确性定理，弱化、交换、收缩都由此得出。
 <!--ja-->
-# 変数の改名
 
 有限な変数文脈の間の写像は、定数を固定したまま自由変数を改名して項と論理式へ作用する。環境の一致関係を用いる一つの意味論的定理が、弱化、交換、縮約をまとめて扱う。
 
@@ -21,19 +40,10 @@ The syntax chapter pointed out an absence: no substitution, no weakening. The qu
 <!--en-->
 Suppose a formula has its free variables indexed by `n` slots, and we want to view it in a context of `m` slots. A map `ρ : Fin n → Fin m` tells us where each variable goes, and renaming applies it to every free variable of the formula. The only complication is the quantifiers: their bodies live in a context with one extra slot, so `ρ` must be extended beneath each binder in a way that leaves the bound variable alone.
 <!--zh-->
-设想一个公式，其自由变量由 `n` 个槽位索引，而我们想在 `m` 个槽位的语境中看待它。映射 `ρ : Fin n → Fin m` 告诉我们每个变量去向何处，改名就是把这一映射作用到公式的每个自由变量上。唯一的复杂之处在量词：量词体活在多出一个槽位的语境中，因此 `ρ` 必须在每个约束子之下以不惊动被约束变量的方式扩展。
+设想一个公式，其自由变元由 `n` 个槽位索引，而我们想在 `m` 个槽位的语境中看待它。映射 `ρ : Fin n → Fin m` 告诉我们每个变元去向何处，改名就是把这一映射作用到公式的每个自由变元上。唯一的复杂之处在量词：量词体活在多出一个槽位的语境中，因此 `ρ` 必须在每个约束子之下以不惊动被约束变元的方式扩展。
 <!--ja-->
 公式の自由変数が `n` 個のスロットで索引づけられているとき、それを `m` 個のスロットの文脈で捉えたい場面を考える。写像 `ρ : Fin n → Fin m` が各変数の行き先を決め、改名とはこの写像を公式のすべての自由変数に作用させることである。難所は量詞である。量詞の本体はスロットを一つ余分に持つ文脈で生きるので、`ρ` を束縛変数を乱さないように各束縛子の下で拡張する必要がある。
 <!--/-->
-
-```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-module FOL.Manipulation.Renaming where
-
-open import Base.Prelude
-open import FOL.ZFStructure using ( ZFStructure )
-```
 
 <!--en-->
 One correctness theorem then measures renaming: under a suitable relation between the old and new environments, the renamed formula denotes the same proposition as the original. Since the proposition is computed in an arbitrary proposition-valued set-theoretic structure, the theorem has exactly the generality of satisfaction itself, and the usual structural rules of sequent practice, weakening, exchange, and contraction, all fall out as particular choices of `ρ`.
@@ -43,13 +53,6 @@ One correctness theorem then measures renaming: under a suitable relation betwee
 そして改名は一つの正しさの定理で測られる。旧環境と新環境の間の適切な関係のもとで、改名された公式は元の公式と同じ命題を表す。命題は任意の命題値をとる任意の集合論的構造の上で計算されるので、定理は充足関係そのものとまったく同じ一般性を持ち、シーケント計算で慣用される構造規則、すなわち弱化、交換、縮約は、すべて `ρ` の特定の選択として得られる。
 <!--/-->
 
-```agda
-open import FOL.Syntax using
-  ( Term; con; var
-  ; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
-import FOL.Semantics
-```
-
 <!--en-->
 ## The syntactic layer
 
@@ -57,7 +60,7 @@ import FOL.Semantics
 <!--zh-->
 ## 语法层
 
-`renameTm`{.Agda} 与 `renameFo`{.Agda} 将映射 `Fin n → Fin m` 贯穿语法。在约束子之下，`liftρ`{.Agda} 固定新约束的变量，并通过给定映射移动原有变量。
+`renameTm`{.Agda} 与 `renameFo`{.Agda} 将映射 `Fin n → Fin m` 贯穿语法。在约束子之下，`liftρ`{.Agda} 固定新约束的变元，并通过给定映射移动原有变元。
 <!--ja-->
 ## 構文の水準
 
@@ -67,7 +70,7 @@ import FOL.Semantics
 <!--en-->
 Take a formula with a free variable under a bounded quantifier, say `∀̇∈ x₀ (var 1 ∈̇ var 0)` in a context of two slots: the bound variable is slot 0 of the body, and slot 1 of the body is the free variable 0 of the outside. A renaming `ρ : Fin n → Fin m` moves the outside variables; under the binder we need a map on `Fin (suc n) → Fin (suc m)` that sends the bound slot 0 to slot 0 and sends each old slot `suc i` to `suc (ρ i)`. That extension is `liftρ ρ`, and it guarantees the bound variable is never disturbed.
 <!--zh-->
-取一个在有界量词之下含自由变量的公式，例如双槽位语境中的 `∀̇∈ x₀ (var 1 ∈̇ var 0)`：被约束变量是公式体的第零槽位，而公式体的第 1 槽位正是外层的自由变量 0。改名 `ρ : Fin n → Fin m` 移动外层变量；在约束子之下，我们需要 `Fin (suc n) → Fin (suc m)` 上的一个映射，把被约束的第零槽位送到第零槽位，并把每个旧槽位 `suc i` 送到 `suc (ρ i)`。这一扩展就是 `liftρ ρ`，它保证被约束变量从不被扰动。
+取一个在有界量词之下含自由变元的公式，例如双槽位语境中的 `∀̇∈ x₀ (var 1 ∈̇ var 0)`：被约束变元是公式体的第零槽位，而公式体的第 1 槽位正是外层的自由变元 0。改名 `ρ : Fin n → Fin m` 移动外层变元；在约束子之下，我们需要 `Fin (suc n) → Fin (suc m)` 上的一个映射，把被约束的第零槽位送到第零槽位，并把每个旧槽位 `suc i` 送到 `suc (ρ i)`。这一扩展就是 `liftρ ρ`，它保证被约束变元从不被扰动。
 <!--ja-->
 有界量詞の下に自由変数を持つ公式を取ろう。たとえば二つのスロットの文脈における `∀̇∈ x₀ (var 1 ∈̇ var 0)` である。束縛変数は本体のスロット 0 であり、本体のスロット 1 は外側の自由変数 0 にあたる。改名 `ρ : Fin n → Fin m` は外側の変数を動かすが、束縛子の下では `Fin (suc n) → Fin (suc m)` 上の写像、つまり束縛されたスロット 0 をスロット 0 へ送り、各旧スロット `suc i` を `suc (ρ i)` へ送るものが必要になる。この拡張が `liftρ ρ` であり、束縛変数が決して乱されないことを保証する。
 <!--/-->
@@ -81,13 +84,12 @@ liftρ ρ (suc i) = suc (ρ i)
 <!--en-->
 With the lifting in hand, renaming extends to terms and then to formulas by structural recursion. The type of `renameTm` states the whole idea: a term with `n` free-variable slots becomes a term with `m` slots. A constant `con k` names no free variable at all, so it passes through unchanged; constants belong to the alphabet, not to the context, and their interpretation is a separate matter. The only other term form is a variable, where `ρ` finally acts.
 <!--zh-->
-有了提升，改名便可对词项、再对公式做结构递归地扩展。`renameTm` 的类型已经说出全部想法：含 `n` 个自由变量槽位的词项变为含 `m` 个槽位的词项。常元 `con k` 完全不指名任何自由变量，因此原样通过；常元属于字母表而非语境，其解释是另一回事。词项仅剩的另一种形式是变量，`ρ` 在此才真正起作用。
+有了提升，改名便可对词项、再对公式做结构递归地扩展。`renameTm` 的类型已经说出全部想法：含 `n` 个自由变元槽位的词项变为含 `m` 个槽位的词项。常元 `con k` 完全不指名任何自由变元，因此原样通过；常元属于字母表而非语境，其解释是另一回事。词项仅剩的另一种形式是变元，`ρ` 在此才真正起作用。
 <!--ja-->
 持ち上げが手に入れば、改名は項へ、さらに公式へと構造的再帰で拡張できる。`renameTm` の型が考えのすべてを述べている。`n` 個の自由変数スロットを持つ項が `m` 個のスロットを持つ項になるのである。定数 `con k` は自由変数をまったく名指さないのでそのまま通る。定数は文脈ではなくアルファベットに属し、その解釈は別の問題である。項のもう一つの形式である変数において、初めて `ρ` が実際に働く。
 <!--/-->
 
 ```agda
-
 renameTm : ∀ {ℓc} {K : Type ℓc} {n m} → (Fin n → Fin m) → Term K n → Term K m
 renameTm ρ (con k) = con k
 ```
@@ -95,7 +97,7 @@ renameTm ρ (con k) = con k
 <!--en-->
 For formulas the pattern continues: `renameFo` has the same shape, turning a formula over `n` slots into one over `m`. The atomic clauses rename their term arguments, so in our example `var 1 ∈̇ var 0` under the outer map becomes `var (ρ 1) ∈̇ var (ρ 0)` as far as the outside slots are concerned. The propositional connectives and falsity carry no variables of their own and are rebuilt recursively from the renamed subformulas.
 <!--zh-->
-公式的模式相同：`renameFo` 形状一致，把 `n` 个槽位上的公式变为 `m` 个槽位上的公式。两条原子子句对其词项参数改名，因此在我们的例子中，就外层槽位而言 `var 1 ∈̇ var 0` 变为 `var (ρ 1) ∈̇ var (ρ 0)`。命题联结词与假值自身不带变量，由改名后的子公式递归重建。
+公式的模式相同：`renameFo` 形状一致，把 `n` 个槽位上的公式变为 `m` 个槽位上的公式。两条原子子句对其词项参数改名，因此在我们的例子中，就外层槽位而言 `var 1 ∈̇ var 0` 变为 `var (ρ 1) ∈̇ var (ρ 0)`。命题联结词与假值自身不带变元，由改名后的子公式递归重建。
 <!--ja-->
 公式でも同じ流れである。`renameFo` は同じ形をし、`n` 個のスロット上の公式を `m` 個のスロット上の公式へ変える。原子の節は項の引数を改名するので、例の公式では、外側のスロットにかぎれば `var 1 ∈̇ var 0` は `var (ρ 1) ∈̇ var (ρ 0)` になる。命題結合子と偽はそれ自身は変数を持たず、改名された部分公式から再帰的に組み立て直される。
 <!--/-->
@@ -128,7 +130,7 @@ renameFo ρ (∀̇ φ)    = ∀̇ renameFo (liftρ ρ) φ
 <!--en-->
 The bounded quantifiers use both maps at once, and our example sits exactly here. For `∀̇∈ t φ`, the bound `t` lives in the outer context and is renamed with `ρ`, while the body `φ` is renamed with `liftρ ρ`. So `∀̇∈ x₀ (var 1 ∈̇ var 0)` under `ρ` becomes `∀̇∈ (renamed bound) (var (suc (ρ 0)) ∈̇ var 0)`: the reference to free variable 0 follows the renaming through its shift, and the bound occurrence of slot 0 is untouched. The syntactic layer is now complete; the next section asks whether the result means the same as what we started with.
 <!--zh-->
-有界量词同时使用两个映射，我们的例子恰好落在这里。对 `∀̇∈ t φ`，界限 `t` 住在外层语境，用 `ρ` 改名；公式体 `φ` 用 `liftρ ρ` 改名。于是 `∀̇∈ x₀ (var 1 ∈̇ var 0)` 在 `ρ` 之下变为 `∀̇∈ (改名后的界限) (var (suc (ρ 0)) ∈̇ var 0)`：对自由变量 0 的引用随移位跟随改名，而槽位 0 的被约束出现原封不动。语法层至此完成；下一节追问结果是否与我们出发的公式含义相同。
+有界量词同时使用两个映射，我们的例子恰好落在这里。对 `∀̇∈ t φ`，界限 `t` 住在外层语境，用 `ρ` 改名；公式体 `φ` 用 `liftρ ρ` 改名。于是 `∀̇∈ x₀ (var 1 ∈̇ var 0)` 在 `ρ` 之下变为 `∀̇∈ (改名后的界限) (var (suc (ρ 0)) ∈̇ var 0)`：对自由变元 0 的引用随移位跟随改名，而槽位 0 的被约束出现原封不动。语法层至此完成；下一节追问结果是否与我们出发的公式含义相同。
 <!--ja-->
 有界量詞は二つの写像を同時に使う。例の公式はまさにここにある。`∀̇∈ t φ` では、限界 `t` は外側の文脈に住むので `ρ` で改名され、本体 `φ` は `liftρ ρ` で改名される。したがって `ρ` の下で `∀̇∈ x₀ (var 1 ∈̇ var 0)` は `∀̇∈ (改名された限界) (var (suc (ρ 0)) ∈̇ var 0)` になる。自由変数 0 への言及は移動に従って改名を追い、スロット 0 の束縛された出現はそのままである。これで構文の水準は完成である。次の節は、結果が最初の公式と同じ意味を持つかを問う。
 <!--/-->
@@ -145,7 +147,7 @@ renameFo ρ (∃̇∈ t φ) = ∃̇∈ (renameTm ρ t) (renameFo (liftρ ρ) φ)
 <!--zh-->
 ## 语义层
 
-`Agrees ρ γ δ`{.Agda} 表示两个环境给经 `ρ` 对应的变量指派相等的取值。该条件在约束子下扩展环境时仍保持，结构归纳遂证明改名后词项释义与公式满足关系相等。
+`Agrees ρ γ δ`{.Agda} 表示两个环境给经 `ρ` 对应的变元指派相等的取值。该条件在约束子下扩展环境时仍保持，结构归纳遂证明改名后词项释义与公式满足关系相等。
 <!--ja-->
 ## 意味論の水準
 
@@ -160,10 +162,16 @@ Syntax alone cannot say whether a renaming preserves meaning; we need to compare
 構文だけでは改名が意味を保つかを言えず、環境を比較する必要がある。環境は構造の台の要素からなるベクトルで、長さは文脈と一致する。大きい文脈には `γ : S ^ m`、小さい文脈には `δ : S ^ n` である。問いはこう変わる。`ρ` の視点から、`γ` と `δ` はいつ同じ割り当てとみなせるのか。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Sat {ℓ} (𝒮 : ZFStructure ℓ)
            {ℓc} {K : Type ℓc} (ι : K → ZFStructure.S 𝒮) where
+```
+</summary>
+<div class="submodule-fold-content">
 
+```agda
   open ZFStructure 𝒮
 
   private module Sem = FOL.Semantics 𝒮
@@ -172,7 +180,7 @@ module Sat {ℓ} (𝒮 : ZFStructure ℓ)
 <!--en-->
 The answer is the relation `Agrees ρ γ δ`: for every index `i` of the small context, `δ` at `i` and `γ` at `ρ i` must be equal elements, the equality being a path in the carrier. Note the direction of the lookup: `ρ` goes from the small context to the big one, so `δ` assigns to `i` exactly what `γ` assigns to `ρ i`. In our running example with `n = 2`, agreement on the variable `1` of the body reads `lookup (ρ 0) γ ≡ lookup 1 δ`, that is, the big environment must match the small one at the image position.
 <!--zh-->
-答案就是关系 `Agrees ρ γ δ`：对小语境的每个索引 `i`，`δ` 在 `i` 处与 `γ` 在 `ρ i` 处必须取相等的元素，该相等是载体中的路径。注意查找的方向：`ρ` 从小语境走向大语境，因此 `δ` 在 `i` 处指派的正是 `γ` 在 `ρ i` 处指派的。在我们 `n = 2` 的运行例子中，公式体变量 `1` 上的相符读作 `lookup (ρ 0) γ ≡ lookup 1 δ`，即大环境必须在像的位置与小环境匹配。
+答案就是关系 `Agrees ρ γ δ`：对小语境的每个索引 `i`，`δ` 在 `i` 处与 `γ` 在 `ρ i` 处必须取相等的元素，该相等是载体中的路径。注意查找的方向：`ρ` 从小语境走向大语境，因此 `δ` 在 `i` 处指派的正是 `γ` 在 `ρ i` 处指派的。在我们 `n = 2` 的运行例子中，公式体变元 `1` 上的相符读作 `lookup (ρ 0) γ ≡ lookup 1 δ`，即大环境必须在像的位置与小环境匹配。
 <!--ja-->
 答えが関係 `Agrees ρ γ δ` である。小さい文脈の各索引 `i` について、`δ` の `i` での値と `γ` の `ρ i` での値が台におけるパスとして等しくなければならない。参照の向きに注意してほしい。`ρ` は小さい文脈から大きい文脈へ向かうので、`δ` が `i` に割り当てるのは `γ` が `ρ i` に割り当てる値とちょうど同じである。`n = 2` の例では、本体の変数 `1` での一致は `lookup (ρ 0) γ ≡ lookup 1 δ` と読める。つまり大きい環境は像の位置で小さい環境と一致しなければならない。
 <!--/-->
@@ -188,7 +196,7 @@ The answer is the relation `Agrees ρ γ δ`: for every index `i` of the small c
 <!--en-->
 The correctness theorem: a renamed formula in the big environment means the same as the original in the small one. Terms first, then the usual induction, every case a congruence, the binder cases stepping through `agrees∷`{.Agda}. Weakening (inserting an unused variable), exchange, and contraction are all instances, obtained by choosing `ρ`.
 <!--zh-->
-正确性定理：变换后的公式在大环境中的含义，与原公式在小环境中的相同。先处理词项，然后照例归纳，每个情形是一条同余，约束子情形依赖 `agrees∷`{.Agda}。弱化 (插入未用的变量)、交换、收缩都是特例，取相应的 `ρ` 即得。
+正确性定理：变换后的公式在大环境中的含义，与原公式在小环境中的相同。先处理词项，然后照例归纳，每个情形是一条同余，约束子情形依赖 `agrees∷`{.Agda}。弱化 (插入未用的变元)、交换、收缩都是特例，取相应的 `ρ` 即得。
 <!--ja-->
 正しさの定理：改名された論理式の大きい環境における意味は、元の論理式の小さい環境における意味と同じである。まず項から始め、いつもの帰納法に進む。各場合は同余性であり、束縛子の場合は `agrees∷`{.Agda} を経由する。弱化 (使われない変数の挿入)、交換、縮約はすべて特殊例で、`ρ` を選ぶことによって得られる。
 <!--/-->
@@ -217,14 +225,13 @@ Everything now rests on the two theorems. For terms: evaluating `renameTm ρ t` 
 <!--/-->
 
 ```agda
-
   ⟦⟧-rename : ∀ {n m} (ρ : Fin n → Fin m) (t : Term K n)
 ```
 
 <!--en-->
 The term proof is short because there is so little to a term. A constant denotes `ι k` independently of the environment, so the two evaluations are the same by `refl`. A variable `var i` denotes `lookup i δ` on the small side and `lookup (ρ i) γ` on the big side, and agreement at index `i` is exactly the path between them, so `ag i` closes the case. The real content is one level up, in the formula theorem.
 <!--zh-->
-词项的证明很短，因为词项本身内容很少。常元的释义 `ι k` 与环境无关，两次求值经 `refl` 相同。变量 `var i` 在小侧释义为 `lookup i δ`，在大侧释义为 `lookup (ρ i) γ`，而索引 `i` 处的相符恰是二者之间的路径，故 `ag i` 了结此情形。真正的内容在上一层的公式定理中。
+词项的证明很短，因为词项本身内容很少。常元的释义 `ι k` 与环境无关，两次求值经 `refl` 相同。变元 `var i` 在小侧释义为 `lookup i δ`，在大侧释义为 `lookup (ρ i) γ`，而索引 `i` 处的相符恰是二者之间的路径，故 `ag i` 了结此情形。真正的内容在上一层的公式定理中。
 <!--ja-->
 項の証明は短い。項の中身が少ないからである。定数は環境に依存せず `ι k` を表すので、二つの評価は `refl` で同じである。変数 `var i` は小さい側では `lookup i δ`、大きい側では `lookup (ρ i) γ` を表し、索引 `i` での一致がまさに両者をつなぐパスなので、`ag i` がこの場合を閉じる。本質は一つ上の公式の定理にある。
 <!--/-->
@@ -289,7 +296,7 @@ The unbounded universal `∀̇ φ` is the dual, using `∀[ x ] P x` in place of
 <!--en-->
 The bounded existential `∃̇∈ t φ` closes the induction in the mirror image: `∃[ x ] P x` over `x`, the renamed bound `x ∈ˢ ⟦ t ⟧ γ` joined to the body satisfaction by `⊓`, and the same recursive call through `agrees∷`. Notice what was never used: injectivity of `ρ`. The theorem is stated for an arbitrary map `Fin n → Fin m`, so collapsing two variables onto one, as in contraction, is as admissible as spacing them out, as in weakening, or reordering them, as in exchange.
 <!--zh-->
-有界存在量词 `∃̇∈ t φ` 以镜像结束归纳：对 `x` 的 `∃[ x ] P x`，改名后的界限 `x ∈ˢ ⟦ t ⟧ γ` 经 `⊓` 与公式体满足相接，以及经 `agrees∷` 的同一递归调用。注意什么从未被用到：`ρ` 的单射性。定理对任意映射 `Fin n → Fin m` 陈述，因此把两个变量收缩到一处，如收缩；把变量拉开间距，如弱化；或调换次序，如交换；都是同样可采纳的。
+有界存在量词 `∃̇∈ t φ` 以镜像结束归纳：对 `x` 的 `∃[ x ] P x`，改名后的界限 `x ∈ˢ ⟦ t ⟧ γ` 经 `⊓` 与公式体满足相接，以及经 `agrees∷` 的同一递归调用。注意什么从未被用到：`ρ` 的单射性。定理对任意映射 `Fin n → Fin m` 陈述，因此把两个变元收缩到一处，如收缩；把变元拉开间距，如弱化；或调换次序，如交换；都是同样可采纳的。
 <!--ja-->
 有界存在量詞 `∃̇∈ t φ` が鏡像の形で帰納を閉じる。`x` に対する `∃[ x ] P x`、改名された限界 `x ∈ˢ ⟦ t ⟧ γ` を `⊓` で本体の充足に結び、`agrees∷` を経る同じ再帰呼び出しである。決して使われなかったものに注目してほしい。`ρ` の単射性である。定理は任意の写像 `Fin n → Fin m` に対して述べられているので、二つの変数を一つへ畳み込むこと (縮約) も、変数を間隔を空けて並べること (弱化) も、順序を入れ替えること (交換) も、同じく許される。
 <!--/-->
@@ -299,6 +306,8 @@ The bounded existential `∃̇∈ t φ` closes the induction in the mirror image
     cong₂ _⊓_ (cong (x ∈ˢ_) (⟦⟧-rename ρ t γ δ ag))
               (⊨-rename (liftρ ρ) φ (x ∷ γ) (x ∷ δ) (agrees∷ x ag))))
 ```
+</div>
+</details>
 
 <!--en-->
 ## Recap
@@ -307,7 +316,7 @@ Variable renaming consists of the syntactic maps, environment agreement, and the
 <!--zh-->
 ## 小结
 
-变量改名由语法映射、环境相符关系与定理 `⊨-rename`{.Agda} 组成。选择不同语境映射，即可将这一统一接口特化为弱化、交换或收缩。
+变元改名由语法映射、环境相符关系与定理 `⊨-rename`{.Agda} 组成。选择不同语境映射，即可将这一统一接口特化为弱化、交换或收缩。
 <!--ja-->
 ## まとめ
 

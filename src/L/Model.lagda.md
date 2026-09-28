@@ -1,27 +1,56 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # The constructible universe models ZFC
-
-The constructible structure `𝒮ʟ` satisfies every axiom of ZF, and its canonical well-order supplies the axiom of choice. The resulting statements are `L⊨ZF`{.Agda} and `L⊨ZFC`{.Agda}. Both are proved in cubical Agda from one explicitly stated instance of excluded middle at the truth-value level of the model.
 <!--zh-->
 # 可构造宇宙是 ZFC 的模型
-
-可构造结构 `𝒮ʟ` 满足 ZF 的全部公理，而它的典范良序进一步给出选择公理。所得陈述分别记作 `L⊨ZF`{.Agda} 与 `L⊨ZFC`{.Agda}。两者都在立方 Agda 中证明，只采用一项明确声明的排中律实例，其层级与模型的命题宇宙相同。
 <!--ja-->
 # 構成可能宇宙は ZFC のモデル
-
-構成可能構造 `𝒮ʟ` は ZF のすべての公理を満たし、その標準的な整列順序から選択公理も得られる。得られる主張を `L⊨ZF`{.Agda} と `L⊨ZFC`{.Agda} と記する。いずれも cubical Agda の中で証明され、モデルの命題宇宙と同じレベルにある、明示された一つの排中律だけを用いる。
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
 open import Base.Prelude
 open import Base.Classical using ( LEM )
-
-module L.Model {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-
-open import FOL.ZFStructure using ( module hPropStructure )
 ```
+
+<!--en-->
+Fix a universe level `ℓ`{.Agda} and assume `lem : LEM (ℓ-suc ℓ)`{.Agda}. This hypothesis supplies a decision for each proposition at that level; it remains an explicit parameter of the constructions below.
+<!--zh-->
+固定宇宙层级 `ℓ`{.Agda}，并假设 `lem : LEM (ℓ-suc ℓ)`{.Agda}。这个假设为相应层级的每个命题提供判定，并始终作为下文构造的显式参数。
+<!--ja-->
+宇宙レベル `ℓ`{.Agda} を固定し、`lem : LEM (ℓ-suc ℓ)`{.Agda} を仮定する。この仮定は該当するレベルの各命題に判定を与え、以下の構成の明示的なパラメータとして保たれる。
+<!--/-->
+
+```agda
+module L.Model {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+```
+
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+import FOL.ZFModel
+open import L.Constructible {ℓ} using ( 𝒮ʟ )
+open import L.Axioms.Basic {ℓ}
+  using ( extensionalL; regularityL; hasEmptyL; hasPairL; hasUnionL )
+open import L.Axioms.Numerals {ℓ}
+  using ( numeralL; numeralL-zero; numeralL-suc )
+open import L.Axioms.Infinity {ℓ} lem using ( hasInfinityL )
+open import L.Axioms.Full {ℓ} lem using ( hasSeparationL; hasReplacementL )
+open import L.Axioms.Power {ℓ} lem using ( hasPowerL )
+open import L.Choice.Transversal {ℓ} lem using ( hasChoiceL )
+```
+
+<!--en-->
+
+The constructible structure `𝒮ʟ` satisfies every axiom of ZF, and its canonical well-order supplies the axiom of choice. The resulting statements are `L⊨ZF`{.Agda} and `L⊨ZFC`{.Agda}. Both are proved in cubical Agda from one explicitly stated instance of excluded middle at the truth-value level of the model.
+<!--zh-->
+
+可构造结构 `𝒮ʟ` 满足 ZF 的全部公理，而它的典范良序进一步给出选择公理。所得陈述分别记作 `L⊨ZF`{.Agda} 与 `L⊨ZFC`{.Agda}。两者都在立方 Agda 中证明，只采用一项明确声明的排中律实例，其层级与模型的命题宇宙相同。
+<!--ja-->
+
+構成可能構造 `𝒮ʟ` は ZF のすべての公理を満たし、その標準的な整列順序から選択公理も得られる。得られる主張を `L⊨ZF`{.Agda} と `L⊨ZFC`{.Agda} と記する。いずれも cubical Agda の中で証明され、モデルの命題宇宙と同じレベルにある、明示された一つの排中律だけを用いる。
+<!--/-->
 
 <!--en-->
 This is a semantic relative-consistency result. The host metatheory constructs both the ambient hierarchy and its constructible substructure, then verifies the axioms directly in the latter. Accordingly, the theorem does not assert an unqualified consistency statement: it exhibits a model of ZFC relative to the metatheory in which the formalization is carried out.
@@ -31,14 +60,6 @@ This is a semantic relative-consistency result. The host metatheory constructs b
 これは意味論的な相対無矛盾性の結果である。宿主メタ理論の中で周囲の階層とその構成可能な部分構造を作り、後者において各公理を直接検証する。したがって、無条件の無矛盾性を主張するのではなく、形式化を担うメタ理論に相対して ZFC のモデルを与える。
 <!--/-->
 
-```agda
-import FOL.ZFModel
-open import L.Constructible {ℓ} using ( 𝒮ʟ )
-open import L.Axioms.Basic {ℓ}
-  using ( extensionalL; regularityL; hasEmptyL; hasPairL; hasUnionL )
-open import L.Axioms.Numerals {ℓ}
-```
-
 <!--en-->
 The elementary set operations and numerals are obtained constructively. The proofs of infinity, separation, replacement, power set, and the constructible choice theorem use the selected excluded-middle instance. This distinction records exactly where classical reasoning enters the model.
 <!--zh-->
@@ -46,14 +67,6 @@ The elementary set operations and numerals are obtained constructively. The proo
 <!--ja-->
 基本的な集合演算と数項は構成的に得られる。無限、分出、置換、冪集合、および構成可能な選択定理の証明は、選んだ排中律の実例を用いる。この区別により、古典的推論がモデルに入る箇所が正確に示される。
 <!--/-->
-
-```agda
-  using ( numeralL; numeralL-zero; numeralL-suc )
-open import L.Axioms.Infinity {ℓ} lem using ( hasInfinityL )
-open import L.Axioms.Full {ℓ} lem using ( hasSeparationL; hasReplacementL )
-open import L.Axioms.Power {ℓ} lem using ( hasPowerL )
-open import L.Choice.Transversal {ℓ} lem using ( hasChoiceL )
-```
 
 <!--en-->
 ## The ZF model
@@ -70,7 +83,6 @@ The model structure collects twelve verified clauses. Extensionality, regularity
 <!--/-->
 
 ```agda
-
 open hPropStructure 𝒮ʟ
 
 module ModelL = FOL.ZFModel 𝒮ʟ
@@ -139,7 +151,6 @@ An `isZFCModel` consists of a ZF model together with the choice statement interp
 <!--/-->
 
 ```agda
-
 L⊨ZFC : isZFCModel
 L⊨ZFC = record { zf = L⊨ZF ; hasChoice = hasChoiceL L⊨ZF }
 ```

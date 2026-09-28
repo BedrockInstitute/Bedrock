@@ -1,28 +1,18 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # Strict well-orders and least-element search
-
-Suppose a property of natural numbers is known to hold of at least one number. Then it holds of a least number: among the witnesses there is a smallest one. For a general strict well-order, this chapter uses a descent from a known witness. If some strictly smaller element is still a witness, move down to it and repeat. If not, the current element is least. Well-foundedness of the order guarantees this descent cannot continue forever, so the process stops at a least witness.
-
-This chapter turns that argument into a theorem for any strict well-order, not just the natural numbers. Two pieces of order data carry the proof. First, a comparison of two elements has three possible outcomes, strictly below, equal, or strictly above, and representing these outcomes as explicit data lets a proof reason by cases on them; this is what shows a least witness, once found, is unique, since two least witnesses cannot be strictly below each other. Second, well-foundedness is presented as an accessibility certificate for every element, and it is these certificates, handed down step by step, that let the descent be carried out inside type theory. One genuinely classical ingredient remains in this proof: at each step the search decides whether some smaller witness still exists, and that mere-existence question is settled by excluded middle at the level where it is asked. Everything else, including the uniqueness of the result, is constructive.
-
-The chapter first defines comparison data, then states the order laws together, then proves that being least is a proposition and that least witnesses exist. It closes by assembling the strict order on the natural numbers into an instance, so the search applies there concretely.
 <!--zh-->
 # 严格良序与最小元搜索
-
-设自然数的一个性质至少对一个数成立。那么它对一个最小的数成立：见证之中必有最小者。对于一般的严格良序，本章采用从已知见证出发的下降论证：若仍有严格更小的元素满足该性质，就移到那里重复；若没有，当前元素即为最小。序的良基性保证这样的下降不可能永远继续，因此过程会停在某个最小见证处。
-
-本章把这个论证推广成对任意严格良序成立的定理，而不只对自然数。两块序数据承担证明。其一，两个元素的比较有三种结果：严格小于、相等、严格大于；把这三种结果表示为显式数据，证明便可按情形推理，这正说明极小见证一旦找到便唯一，因为两个极小见证不可能彼此严格更小。其二，良基性表述为每个元素的可及性证书，正是这些证书逐层下传，使下降得以在类型论中执行。本章的这个证明还使用一个经典成分：每一步都判定是否仍存在更小的见证，这个单纯存在性问题由所问层级上的排中律判定。其余部分，包括结果的唯一性，都是构造性的。
-
-本章先定义比较数据，再把序定律一并陈述，然后证明「是极小元」是命题且极小见证存在，最后把自然数上的严格序组装成实例，使搜索在那里具体可用。
 <!--ja-->
 # 狭義整列順序と最小要素の探索
-
-自然数のある性質が少なくとも一つの数で成り立つとする。すると、その性質は最小の数で成り立つ。証人のうちには最小のものがあるからである。一般の狭義整列順序に対して、本章は既知の証人からの降下を用いる。まだ真に小さい要素が性質を満たすならそこへ移って繰り返し、満たさなければ現在の要素が最小である。順序の整礎性がこの降下は永遠に続かないことを保証し、探索は最小証人で止まる。
-
-本章は、この議論を自然数だけでなく任意の狭義整列順序に対する定理にする。証明を支えるのは二つの順序のデータである。第一に、二つの要素の比較には真に小さい・等しい・真に大きいという三つの結果があり、これらを明示的なデータとして表せば証明は場合分けで推論できる。これが最小証人の一意性を示すもので、二つの最小証人は互いに真に小さいことはあり得ない。第二に、整礎性は各要素への到達可能性の証明書として表され、この証明書を一歩ごとに受け渡すことで、降下を型理論の中で実行できる。本章のこの証明には古典的な成分が一つある。各段階で、より小さい証人がまだ存在するかどうかを判定し、この単なる存在の問いを、それが問われるレベルでの排中律によって決着する。結果の一意性を含め、それ以外はすべて構成的である。
-
-本章はまず比較データを定義し、次に順序の法則をまとめて述べ、さらに「最小であること」が命題であることと最小証人の存在を示し、最後に自然数上の狭義順序を実例として組み立てて、探索がそこで具体的に使えるようにする。
 <!--/-->
+
+```agda
+open import Base.Prelude
+```
 
 <!--en-->
 The carrier of the order and the order relation itself need not sit at the same universe level: a relation may be valued at a fixed level `ℓₚ` while its carrier lives at any level. This separation is a matter of generality, not of the mathematics of the search; the least-element argument below never compares levels.
@@ -39,13 +29,39 @@ Two mathematical notions then do the work. Well-foundedness is phrased through t
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-open import Base.Prelude
-open import Base.Classical using ( LEM )
-
 module L.WellOrder.Base {ℓₚ : Level} where
 ```
+
+```agda
+open import Base.Classical using ( LEM )
+open import FOL.ZFStructure using ( ZFStructure )
+import FOL.Semantics as Semantics
+```
+
+<!--en-->
+
+Suppose a property of natural numbers is known to hold of at least one number. Then it holds of a least number: among the witnesses there is a smallest one. For a general strict well-order, this chapter uses a descent from a known witness. If some strictly smaller element is still a witness, move down to it and repeat. If not, the current element is least. Well-foundedness of the order guarantees this descent cannot continue forever, so the process stops at a least witness.
+
+This chapter turns that argument into a theorem for any strict well-order, not just the natural numbers. Two pieces of order data carry the proof. First, a comparison of two elements has three possible outcomes, strictly below, equal, or strictly above, and representing these outcomes as explicit data lets a proof reason by cases on them; this is what shows a least witness, once found, is unique, since two least witnesses cannot be strictly below each other. Second, well-foundedness is presented as an accessibility certificate for every element, and it is these certificates, handed down step by step, that let the descent be carried out inside type theory. One genuinely classical ingredient remains in this proof: at each step the search decides whether some smaller witness still exists, and that mere-existence question is settled by excluded middle at the level where it is asked. Everything else, including the uniqueness of the result, is constructive.
+
+The chapter first defines comparison data, then states the order laws together, then proves that being least is a proposition and that least witnesses exist. It closes by assembling the strict order on the natural numbers into an instance, so the search applies there concretely.
+<!--zh-->
+
+设自然数的一个性质至少对一个数成立。那么它对一个最小的数成立：见证之中必有最小者。对于一般的严格良序，本章采用从已知见证出发的下降论证：若仍有严格更小的元素满足该性质，就移到那里重复；若没有，当前元素即为最小。序的良基性保证这样的下降不可能永远继续，因此过程会停在某个最小见证处。
+
+本章把这个论证推广成对任意严格良序成立的定理，而不只对自然数。两块序数据承担证明。其一，两个元素的比较有三种结果：严格小于、相等、严格大于；把这三种结果表示为显式数据，证明便可按情形推理，这正说明极小见证一旦找到便唯一，因为两个极小见证不可能彼此严格更小。其二，良基性表述为每个元素的可及性证书，正是这些证书逐层下传，使下降得以在类型论中执行。本章的这个证明还使用一个经典成分：每一步都判定是否仍存在更小的见证，这个单纯存在性问题由所问层级上的排中律判定。其余部分，包括结果的唯一性，都是构造性的。
+
+本章先定义比较数据，再把序定律一并陈述，然后证明「是极小元」是命题且极小见证存在，最后把自然数上的严格序组装成实例，使搜索在那里具体可用。
+<!--ja-->
+
+自然数のある性質が少なくとも一つの数で成り立つとする。すると、その性質は最小の数で成り立つ。証人のうちには最小のものがあるからである。一般の狭義整列順序に対して、本章は既知の証人からの降下を用いる。まだ真に小さい要素が性質を満たすならそこへ移って繰り返し、満たさなければ現在の要素が最小である。順序の整礎性がこの降下は永遠に続かないことを保証し、探索は最小証人で止まる。
+
+本章は、この議論を自然数だけでなく任意の狭義整列順序に対する定理にする。証明を支えるのは二つの順序のデータである。第一に、二つの要素の比較には真に小さい・等しい・真に大きいという三つの結果があり、これらを明示的なデータとして表せば証明は場合分けで推論できる。これが最小証人の一意性を示すもので、二つの最小証人は互いに真に小さいことはあり得ない。第二に、整礎性は各要素への到達可能性の証明書として表され、この証明書を一歩ごとに受け渡すことで、降下を型理論の中で実行できる。本章のこの証明には古典的な成分が一つある。各段階で、より小さい証人がまだ存在するかどうかを判定し、この単なる存在の問いを、それが問われるレベルでの排中律によって決着する。結果の一意性を含め、それ以外はすべて構成的である。
+
+本章はまず比較データを定義し、次に順序の法則をまとめて述べ、さらに「最小であること」が命題であることと最小証人の存在を示し、最後に自然数上の狭義順序を実例として組み立てて、探索がそこで具体的に使えるようにする。
+<!--/-->
+
+
 
 <!--en-->
 The search must also live with incomplete information. The hypothesis says only that the set of witnesses is merely inhabited, an inhabitant of `∥_∥₁`{.Agda}, and at each descent step the question whether some strictly smaller witness remains is again a mere existence statement. Neither assumption hands over a chosen witness, and neither needs to: propositional truncation may be eliminated because the goal, being a least element, is a proposition, and that propositionhood is proved in this chapter. Excluded middle enters precisely to turn each such existence question into a two-way decision, a proof or a refutation.
@@ -56,7 +72,6 @@ The search must also live with incomplete information. The hypothesis says only 
 <!--/-->
 
 ```agda
-
 open import Cubical.Induction.WellFounded using ( Acc; acc; WellFounded )
 open import Cubical.Data.Nat.Order using ( _<_; <-trans; ¬m<m; <-wellfounded; _≟_ )
 import Cubical.Data.Nat.Order as NatOrder
@@ -165,8 +180,15 @@ The definition takes `P` as a family of `hProp`{.Agda}: each fiber is packaged w
 定義では `P` を `hProp`{.Agda} 値の族として取る。各ファイバーは「それが命題である」という証明書とともに梱包されている。`⟨ P a ⟩`{.Agda} が基礎型を射影するので、`IsLeast P a`{.Agda} は、`a` が `P` を満たすことの証人と、他の各証人 `b` をその証明書 `⟨ P b ⟩`{.Agda} とともに `b <∙ a`{.Agda} の反証へ送る関数との対である。最小性の条件が要求されるのは実際に述語を満たす要素についてだけであり、部分集合の外の要素はどこにあってもよいことに注意してほしい。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module _ {ℓc : Level} {A : Type ℓc} (w : SWO {ℓc} A) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   open SWO w
 
   IsLeast : {ℓ'' : Level} → (A → hProp ℓ'') → A → Type (ℓ-max ℓc (ℓ-max ℓₚ ℓ''))
@@ -187,7 +209,7 @@ Both components of `IsLeast P a`{.Agda} are propositions: the first by the certi
   isPropIsLeast P a = isProp× (snd (P a)) (isPropΠ λ b → isPropΠ λ _ → isProp→ isProp⊥)
 
   isPropLeastOf : {ℓ'' : Level} (P : A → hProp ℓ'')
-                → isProp (Σ[ a ∈ A ] IsLeast P a)
+                → isProp (Σ[ a ∶ A ] IsLeast P a)
   isPropLeastOf P (m , pm , minm) (m' , pm' , minm') =
     Σ≡Prop (isPropIsLeast P) (decide (tri∙ m m'))
 ```
@@ -217,18 +239,18 @@ Here is the search itself. It takes excluded middle at the level where the quest
 <!--/-->
 
 <!--en-->
-The elimination of the truncation in the hypothesis is legitimate because the target `Σ[ a ∈ A ] IsLeast P a`{.Agda} was shown to be a proposition by `isPropLeastOf`{.Agda}. So from the merely inhabited subset we may extract some starting witness `a₀` with its certificate, and then begin the descent `go a₀ (wf∙ a₀) pa₀`{.Agda}: the accessibility data `wf∙ a₀`{.Agda}, part of the bundle, is the fuel for the recursion. Note that the starting witness is arbitrary; the descent, not the choice of starting point, produces the least element.
+The elimination of the truncation in the hypothesis is legitimate because the target `Σ[ a ∶ A ] IsLeast P a`{.Agda} was shown to be a proposition by `isPropLeastOf`{.Agda}. So from the merely inhabited subset we may extract some starting witness `a₀` with its certificate, and then begin the descent `go a₀ (wf∙ a₀) pa₀`{.Agda}: the accessibility data `wf∙ a₀`{.Agda}, part of the bundle, is the fuel for the recursion. Note that the starting witness is arbitrary; the descent, not the choice of starting point, produces the least element.
 <!--zh-->
-假设中截断的消去是合法的，因为目标 `Σ[ a ∈ A ] IsLeast P a`{.Agda} 已被 `isPropLeastOf`{.Agda} 证明为命题。于是可从仅仅非空的子集中提取某个初始见证 `a₀` 及其证书，然后开始下降 `go a₀ (wf∙ a₀) pa₀`{.Agda}：作为束一部分的可及性数据 `wf∙ a₀`{.Agda} 正是递归的燃料。注意初始见证是任意的；产出极小元的是下降过程，而非起点的选取。
+假设中截断的消去是合法的，因为目标 `Σ[ a ∶ A ] IsLeast P a`{.Agda} 已被 `isPropLeastOf`{.Agda} 证明为命题。于是可从仅仅非空的子集中提取某个初始见证 `a₀` 及其证书，然后开始下降 `go a₀ (wf∙ a₀) pa₀`{.Agda}：作为束一部分的可及性数据 `wf∙ a₀`{.Agda} 正是递归的燃料。注意初始见证是任意的；产出极小元的是下降过程，而非起点的选取。
 <!--ja-->
-仮定の切り捨ての除去が正当なのは、目標 `Σ[ a ∈ A ] IsLeast P a`{.Agda} が `isPropLeastOf`{.Agda} によって命題と示されているからである。したがって、単に非空な部分集合から出発点の証人 `a₀` とその証明書を取り出し、降下 `go a₀ (wf∙ a₀) pa₀`{.Agda} を始められる。束の一部である到達可能性のデータ `wf∙ a₀`{.Agda} が再帰の燃料である。出発点の証人は任意であることに注意してほしい。最小要素を生み出すのは出発点の選択ではなく降下のほうである。
+仮定の切り捨ての除去が正当なのは、目標 `Σ[ a ∶ A ] IsLeast P a`{.Agda} が `isPropLeastOf`{.Agda} によって命題と示されているからである。したがって、単に非空な部分集合から出発点の証人 `a₀` とその証明書を取り出し、降下 `go a₀ (wf∙ a₀) pa₀`{.Agda} を始められる。束の一部である到達可能性のデータ `wf∙ a₀`{.Agda} が再帰の燃料である。出発点の証人は任意であることに注意してほしい。最小要素を生み出すのは出発点の選択ではなく降下のほうである。
 <!--/-->
 
 ```agda
-  leastOf : {ℓ'' : Level} → LEM (ℓ-max ℓc (ℓ-max ℓₚ ℓ''))
+  hostLeastOf : {ℓ'' : Level} → LEM (ℓ-max ℓc (ℓ-max ℓₚ ℓ''))
           → (P : A → hProp ℓ'')
-          → ∥ Σ[ a ∈ A ] ⟨ P a ⟩ ∥₁ → Σ[ a ∈ A ] IsLeast P a
-  leastOf {ℓ''} lem P =
+          → ∥ Σ[ a ∶ A ] ⟨ P a ⟩ ∥₁ → Σ[ a ∶ A ] IsLeast P a
+  hostLeastOf {ℓ''} lem P =
     rec₁ (isPropLeastOf P) (λ { (a₀ , pa₀) → go a₀ (wf∙ a₀) pa₀ })
 ```
 
@@ -242,7 +264,7 @@ The auxiliary `go` receives an element `a`, its accessibility data, and a certif
 
 ```agda
     where
-    go : (a : A) → Acc _<∙_ a → ⟨ P a ⟩ → Σ[ m ∈ A ] IsLeast P m
+    go : (a : A) → Acc _<∙_ a → ⟨ P a ⟩ → Σ[ m ∶ A ] IsLeast P m
     go a (acc rs) pa = decide (lem (Smaller , squash₁))
       where
       Smaller : Type (ℓ-max ℓc (ℓ-max ℓₚ ℓ''))
@@ -257,39 +279,80 @@ Applying `lem` to `Smaller` yields either a proof or a refutation, and `decide` 
 <!--/-->
 
 ```agda
-      Smaller = ∥ Σ[ b ∈ A ] ((b <∙ a) × ⟨ P b ⟩) ∥₁
-      decide : Dec Smaller → Σ[ m ∈ A ] IsLeast P m
+      Smaller = ∥ Σ[ b ∶ A ] ((b <∙ a) × ⟨ P b ⟩) ∥₁
+      decide : Dec Smaller → Σ[ m ∶ A ] IsLeast P m
       decide (yes q) = rec₁ (isPropLeastOf P)
         (λ { (b , (b<a , pb)) → go b (rs b b<a) pb }) q
       decide (no ¬q) = a , (pa , λ b pb b<a → ¬q ∣ b , (b<a , pb) ∣₁)
 ```
 
 <!--en-->
+The theorem `hostLeastOf` is the unrestricted host-level utility: its predicate may be any function into `hProp`{.Agda}, so the classical question asked during the descent need not come from the language of set theory. It is exported to callers as `HostLeast.leastOf`, making that boundary visible at each call. Model-facing constructions normally need a narrower boundary. If `P` is supplied through `FormulaPredicate`, its formula, environment, and reading theorem travel with it; `leastOfFormula` performs the same descent but makes that definability evidence part of the theorem's input.
+<!--zh-->
+定理 `hostLeastOf` 是不受限制的宿主层工具：其谓词可以是任意取值于 `hProp`{.Agda} 的函数，所以下降过程中提出的经典问题未必来自集合论语言。它以 `HostLeast.leastOf` 的名字向调用方导出，使这条边界在每个调用点都可见。面向模型的构造通常需要更窄的边界。若通过 `FormulaPredicate` 供给 `P`，它的公式、环境与读取定理便会随之同行；`leastOfFormula` 执行同样的下降，但把这份可定义性证据纳入定理的输入。
+<!--ja-->
+定理 `hostLeastOf` は制限のないホスト層の道具である。その述語は `hProp`{.Agda} への任意の関数でよく、降下中に問われる古典的命題が集合論の言語から来る必要はない。呼び出し側には `HostLeast.leastOf` として公開され、この境界が各呼び出しで見える。モデルに面する構成には通常、より狭い境界が要る。`P` を `FormulaPredicate` を通して与えれば、その論理式、環境、読み取り定理も一緒に運ばれる。`leastOfFormula` は同じ降下を行うが、この定義可能性の証拠を定理の入力の一部にする。
+<!--/-->
+
+```agda
+  leastOfFormula : ∀ {ℓs ℓk} {𝒮 : ZFStructure ℓs}
+      {K : Type ℓk} {ι : K → ZFStructure.S 𝒮}
+      {P : A → hProp ℓs} → Semantics.FormulaPredicate 𝒮 A K ι P
+      → LEM (ℓ-max ℓc (ℓ-max ℓₚ ℓs))
+      → ∥ Σ[ a ∶ A ] ⟨ P a ⟩ ∥₁ → Σ[ a ∶ A ] IsLeast P a
+  leastOfFormula {P = P} defined lem = hostLeastOf lem P
+```
+</div>
+</details>
+
+<!--en-->
+The unrestricted operation is exported only through the `HostLeast` namespace. This makes a call site state that it is performing host-level search. Formula-facing code should instead call `leastOfFormula`, whose input contains the object formula and its checked semantic reading.
+<!--zh-->
+不受限制的运算只经 `HostLeast` 命名空间导出。这样，调用处会明确表明它正在执行宿主层搜索。面向模型的代码应改用 `leastOfFormula`，其输入包含对象公式及经过检查的语义读取。
+<!--ja-->
+制限のない演算は `HostLeast` 名前空間を通してのみ公開する。これにより、呼び出し側はホスト層の探索を行っていることを明示する。モデルに面するコードは代わりに、対象論理式と検査済みの意味論的読みを入力に含む `leastOfFormula` を使うべきである。
+<!--/-->
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
+```agda
+module HostLeast {ℓc : Level} {A : Type ℓc} (w : SWO {ℓc} A) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
+  leastOf = hostLeastOf w
+```
+</div>
+</details>
+
+<!--en-->
 ## The natural numbers, well-ordered
 
-The usual strict order on the natural numbers satisfies all four laws of the bundle, and its well-foundedness follows by induction on the upper number. This section assembles `natOrder : SWO {ℓ-zero} ℕ`{.Agda}; a concrete consumer, `L.Choice.FiniteStageOrders`{.Agda}, calls `leastOf natOrder`{.Agda} to pick the earliest natural-numbered finite stage witnessing a property. The library already supplies every ingredient about the usual order, so the bundle is assembled rather than proved: the relation, irreflexivity, transitivity and well-foundedness are the library's own, and the trichotomy is the library's three-way decision procedure with its answer renamed into the chapter's constructors.
+The usual strict order on the natural numbers satisfies all four laws of the bundle, and its well-foundedness follows by induction on the upper number. This section assembles `natOrder : SWO {ℓ-zero} ℕ`{.Agda}; a concrete consumer, `L.Choice.FiniteStageOrders`{.Agda}, calls `leastOfFormula natOrder`{.Agda} to pick the earliest natural-numbered finite stage satisfying a represented property. The library already supplies every ingredient about the usual order, so the bundle is assembled rather than proved: the relation, irreflexivity, transitivity and well-foundedness are the library's own, and the trichotomy is the library's three-way decision procedure with its answer renamed into the chapter's constructors.
 
 One genuine step remains. The order on the natural numbers lives at the bottom universe level, while the relation of a bundle is valued at the fixed level `ℓₚ`; each comparison is therefore wrapped in `Lift`{.Agda}, which changes only where the type lives and nothing about its inhabitants.
 <!--zh-->
 ## 自然数，良序化
 
-自然数上的通常严格序满足束的全部四条定律，其良基性对上侧自然数作归纳即得。本节组装 `natOrder : SWO {ℓ-zero} ℕ`{.Agda}；一个具体使用处 `L.Choice.FiniteStageOrders`{.Agda} 调用 `leastOf natOrder`{.Agda}，从以自然数编号的有限层中挑出见证某性质的最早层。关于通常的序，库中已有全部所需材料，因此这个束只需组装而无需另行证明：关系、非自反性、传递性与良基性直接取自库，三歧性则是库的三路判定程序、其答案按本章构造子重新命名。
+自然数上的通常严格序满足束的全部四条定律，其良基性对上侧自然数作归纳即得。本节组装 `natOrder : SWO {ℓ-zero} ℕ`{.Agda}；一个具体使用处 `L.Choice.FiniteStageOrders`{.Agda} 调用 `leastOfFormula natOrder`{.Agda}，从以自然数编号的有限层中挑出满足某个已表示性质的最早层。关于通常的序，库中已有全部所需材料，因此这个束只需组装而无需另行证明：关系、非自反性、传递性与良基性直接取自库，三歧性则是库的三路判定程序、其答案按本章构造子重新命名。
 
 剩下的一步是真正的调整。自然数上的序处在最底宇宙层级，而束的关系取值于固定层级 `ℓₚ`；因此每次比较都要用 `Lift`{.Agda} 包一层，它只改变类型所在的层级，不改变其居民。
 <!--ja-->
 ## 自然数の整列順序
 
-自然数上の通常の狭義順序は束の四つの法則をすべて満たし、その整礎性は上側の自然数についての帰納で従う。この節では `natOrder : SWO {ℓ-zero} ℕ`{.Agda} を組み立てる。具体的な利用箇所である `L.Choice.FiniteStageOrders`{.Agda} は `leastOf natOrder`{.Agda} を呼び、自然数で番号づけられた有限段階のうち、性質を証明する最も早いものを選び出す。通常の順序について必要な材料はすべてライブラリが供給するため、この束は証明するのではなく組み立てるだけである。関係・非反射性・推移性・整礎性はライブラリのものをそのまま使い、三分性はライブラリの三路判定の手続きの答えを本章の構成子に名前を変えたものである。
+自然数上の通常の狭義順序は束の四つの法則をすべて満たし、その整礎性は上側の自然数についての帰納で従う。この節では `natOrder : SWO {ℓ-zero} ℕ`{.Agda} を組み立てる。具体的な利用箇所である `L.Choice.FiniteStageOrders`{.Agda} は `leastOfFormula natOrder`{.Agda} を呼び、自然数で番号づけられた有限段階のうち、表示された性質を満たす最も早いものを選び出す。通常の順序について必要な材料はすべてライブラリが供給するため、この束は証明するのではなく組み立てるだけである。関係・非反射性・推移性・整礎性はライブラリのものをそのまま使い、三分性はライブラリの三路判定の手続きの答えを本章の構成子に名前を変えたものである。
 
 残る真の調整が一つある。自然数の順序は最下層の宇宙レベルに住む一方、束の関係は固定レベル `ℓₚ` で値をとる。そこで各比較を `Lift`{.Agda} で包む。これは型の住むレベルを変えるだけで、住人については何も変えない。
 <!--/-->
 
 <!--en-->
-`liftAcc` transports accessibility data from the plain order to its lifted copy. Given `acc r`{.Agda} at `n`, it returns `acc`{.Agda} of a function that, from `m` below `n` in the lifted order, first unwraps the lifted proof with `lower`{.Agda} and recurses at `m`. This is structural recursion on the accessibility argument, the same pattern that will drive `leastOf`. Note the two universe arguments of `Lift`{.Agda}: the source stays at zero and only the target is `ℓₚ`.
+`liftAcc` transports accessibility data from the plain order to its lifted copy. Given `acc r`{.Agda} at `n`, it returns `acc`{.Agda} of a function that, from `m` below `n` in the lifted order, first unwraps the lifted proof with `lower`{.Agda} and recurses at `m`. This is structural recursion on the accessibility argument, the same pattern that drives the least-witness search. Note the two universe arguments of `Lift`{.Agda}: the source stays at zero and only the target is `ℓₚ`.
 <!--zh-->
-`liftAcc` 把可及性数据从原本的序搬运到其抬升副本。给定 `n` 处的 `acc r`{.Agda}，它返回某个函数的 `acc`{.Agda}：该函数从抬升序中位于 `n` 之下的 `m` 出发，先用 `lower`{.Agda} 拆开抬升的证明，再在 `m` 处递归。这是对可及性参数的结构递归，与稍后驱动 `leastOf` 的模式相同。注意 `Lift`{.Agda} 的两个宇宙参数：源层级保持为零，只有目标层级是 `ℓₚ`。
+`liftAcc` 把可及性数据从原本的序搬运到其抬升副本。给定 `n` 处的 `acc r`{.Agda}，它返回某个函数的 `acc`{.Agda}：该函数从抬升序中位于 `n` 之下的 `m` 出发，先用 `lower`{.Agda} 拆开抬升的证明，再在 `m` 处递归。这是对可及性参数的结构递归，也正是驱动最小见证搜索的模式。注意 `Lift`{.Agda} 的两个宇宙参数：源层级保持为零，只有目标层级是 `ℓₚ`。
 <!--ja-->
-`liftAcc` は到達可能性のデータを元の順序からその持ち上げられたコピーへ運ぶ。`n` における `acc r`{.Agda} が与えられると、持ち上げられた順序で `n` より下の `m` に対し、まず `lower`{.Agda} で持ち上げられた証明をほどいてから `m` で再帰する関数の `acc`{.Agda} を返す。これは到達可能性の引数に対する構造的再帰であり、後に `leastOf` を駆動するのと同じパターンである。`Lift`{.Agda} が二つの宇宙引数をもつことに注意してほしい。ソースはゼロのままで、ターゲットだけが `ℓₚ` である。
+`liftAcc` は到達可能性のデータを元の順序からその持ち上げられたコピーへ運ぶ。`n` における `acc r`{.Agda} が与えられると、持ち上げられた順序で `n` より下の `m` に対し、まず `lower`{.Agda} で持ち上げられた証明をほどいてから `m` で再帰する関数の `acc`{.Agda} を返す。これは到達可能性の引数に対する構造的再帰であり、最小証人の探索を駆動するのと同じパターンである。`Lift`{.Agda} が二つの宇宙引数をもつことに注意してほしい。ソースはゼロのままで、ターゲットだけが `ℓₚ` である。
 <!--/-->
 
 ```agda
@@ -349,13 +412,13 @@ The three clauses of `fromNat` complete the translation. Reading them together s
 <!--en-->
 ## Recap
 
-Strict well-orders can now be passed around as a single structure, compared by trichotomy, and searched for least witnesses. `SWO`{.Agda} gathers the relation with its four laws, and `leastOf`{.Agda} extracts, from any merely inhabited subset, a least witness that is unique up to the path supplied by `isPropLeastOf`{.Agda}. The natural-number instance `natOrder`{.Agda} supports searches over natural-number indices, for instance when a later chapter picks the earliest finite stage of L witnessing a property. Excluded middle enters only as the decision asked at each descent step of the search; the bundle definition, its laws and the natural-number order remain constructive.
+Strict well-orders can now be passed around as a single structure, compared by trichotomy, and searched for least witnesses. `SWO`{.Agda} gathers the relation with its four laws. `HostLeast.leastOf`{.Agda} exposes unrestricted host-predicate search, while `leastOfFormula`{.Agda} requires a formula, environment, and reading theorem before model-facing code can use the same descent. The natural-number instance `natOrder`{.Agda} supports searches over natural-number indices, for instance when a later chapter picks the earliest finite stage of L witnessing a formula-defined property. Excluded middle enters only as the decision asked at each descent step of the search; the bundle definition, its laws and the natural-number order remain constructive.
 <!--zh-->
 ## 小结
 
-现在，严格良序可以作为一个结构整体传递、以三歧作比较，并搜索最小见证。`SWO`{.Agda} 把关系连同四条定律收在一起，`leastOf`{.Agda} 从任何仅仅非空的子集中取出极小见证，且由 `isPropLeastOf`{.Agda} 提供的路径保证唯一。自然数实例 `natOrder`{.Agda} 支持在自然数索引上搜索，例如后续章节从 L 的有限层中挑选见证某性质的最早层。排中律只在搜索每一步下降所问的判定处进入；束的定义、其定律与自然数序本身仍是构造性的。
+现在，严格良序可以作为一个结构整体传递、以三歧作比较，并搜索最小见证。`SWO`{.Agda} 把关系连同四条定律收在一起。`HostLeast.leastOf`{.Agda} 明示不受限制的宿主谓词搜索，而 `leastOfFormula`{.Agda} 要求公式、环境与读取定理齐备，面向模型的代码才能使用同一套下降过程。自然数实例 `natOrder`{.Agda} 支持在自然数索引上搜索，例如后续章节从 L 的有限层中挑选见证某个公式定义性质的最早层。排中律只在搜索每一步下降所问的判定处进入；束的定义、其定律与自然数序本身仍是构造性的。
 <!--ja-->
 ## まとめ
 
-これで狭義整列順序を一つの構造として受け渡し、三分性で比較し、最小の証人を探索できるようになった。`SWO`{.Agda} は関係と四つの法則をまとめ、`leastOf`{.Agda} は単に非空なだけの任意の部分集合から最小の証人を取り出す。その一意性は `isPropLeastOf`{.Agda} の供給するパスによって理解される。自然数の実例 `natOrder`{.Agda} は自然数による添字上の探索を可能にする。例えば後の章では、性質を証明する L の最も早い有限段階を選ぶために使われる。排中律が入るのは探索の各降下段階で問われる判定のところだけである。束の定義、その法則、そして自然数の順序は構成的なままである。
+これで狭義整列順序を一つの構造として受け渡し、三分性で比較し、最小の証人を探索できるようになった。`SWO`{.Agda} は関係と四つの法則をまとめる。`HostLeast.leastOf`{.Agda} は制限のないホスト述語の探索を明示し、`leastOfFormula`{.Agda} は論理式、環境、読み取り定理を要求してから、モデルに面するコードに同じ降下を許す。自然数の実例 `natOrder`{.Agda} は自然数による添字上の探索を可能にする。例えば後の章では、論理式で定義された性質を証明する L の最も早い有限段階を選ぶために使われる。排中律が入るのは探索の各降下段階で問われる判定のところだけである。束の定義、その法則、そして自然数の順序は構成的なままである。
 <!--/-->

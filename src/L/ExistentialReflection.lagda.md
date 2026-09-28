@@ -1,13 +1,53 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # Existential reflection into a constructible stage
+<!--zh-->
+# 存在公式到可构造层的反射
+<!--ja-->
+# 存在論理式の構成可能段階への反映
+<!--/-->
+
+```agda
+open import Base.Prelude
+open import Base.Classical using ( LEM )
+```
+
+<!--en-->
+Fix a universe level `ℓ`{.Agda} and assume `lem : LEM (ℓ-suc ℓ)`{.Agda}. This hypothesis supplies a decision for each proposition at that level; it remains an explicit parameter of the constructions below.
+<!--zh-->
+固定宇宙层级 `ℓ`{.Agda}，并假设 `lem : LEM (ℓ-suc ℓ)`{.Agda}。这个假设为相应层级的每个命题提供判定，并始终作为下文构造的显式参数。
+<!--ja-->
+宇宙レベル `ℓ`{.Agda} を固定し、`lem : LEM (ℓ-suc ℓ)`{.Agda} を仮定する。この仮定は該当するレベルの各命題に判定を与え、以下の構成の明示的なパラメータとして保たれる。
+<!--/-->
+
+```agda
+module L.ExistentialReflection {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+```
+
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax using ( Formula; ∃̇_ )
+import FOL.Semantics
+import FOL.Absoluteness
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Model {ℓ} using ( union-family-in; union-family-out )
+open import L.Constructible {ℓ}
+  using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset; Lset-mono; Lset-in; Lset-out
+        ; Lset→isL )
+open import L.Ordinal {ℓ} using ( ∅-ord; boundingOrd; bound2; setUnion-ord )
+open import L.Stage {ℓ} lem using ( LeastOrd; leastOrd )
+```
+
+<!--en-->
 
 For one existential formula and parameters from a constructible stage, this chapter builds a larger ordinal stage that contains witnesses whenever the ambient constructible universe does. Iterating the witness-selection step and taking an ordinal limit makes the stage closed under answers to that formula.
 <!--zh-->
-# 存在公式到可构造层的反射
 
 对一条存在公式以及来自某个可构造层的参数，本章构造一个更大的序数层：只要环境可构造宇宙中存在见证，该层也包含见证。迭代见证选择步骤并取序数极限，可使这一层包含该公式对其中参数所需的见证。
 <!--ja-->
-# 存在論理式の構成可能段階への反映
 
 一つの存在論理式と構成可能段階から取ったパラメータに対し、周囲の構成可能宇宙に証人があればそれを含む、より大きな順序数段階を構成する。証人を選ぶ操作を反復して順序数極限を取ると、その論理式への解答について閉じた段階が得られる。
 <!--/-->
@@ -39,24 +79,8 @@ layers have to be merged into one.
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-open import Base.Prelude
 open import Cubical.Data.Nat using ( +-comm )
-open import Base.Classical using ( LEM )
 
-module L.ExistentialReflection {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-
-open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using ( Formula; ∃̇_ )
-import FOL.Absoluteness
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-open import V.Model {ℓ} using ( union-family-in; union-family-out )
-open import L.Constructible {ℓ}
-  using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset; Lset-mono; Lset-in; Lset-out
-        ; Lset→isL )
-open import L.Ordinal {ℓ} using ( ∅-ord; boundingOrd; bound2; setUnion-ord )
-open import L.Stage {ℓ} lem using ( LeastOrd; leastOrd )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; sett; _∈_ )
 open import Cubical.HITs.CumulativeHierarchy.Properties
   using ( ∈∈ₛ; ∈-asFiber; ⟪_⟫; ⟪_⟫↪; ∈ₛ⟪_⟫↪_ )
@@ -119,7 +143,7 @@ Below-mono σ∈τ {ρ = p ∷ ρ} (h , hs) =
   Lset-mono σ∈τ h , Below-mono σ∈τ hs
 
 indexEnv : (σ : V ℓ) (oσ : IsOrd σ) {k : ℕ} (ρ : S ^ k) → Below σ ρ
-         → Σ[ ms ∈ ⟪ Lset σ ⟫ ^ k ] (LsetEnv σ oσ ms ≡ ρ)
+         → Σ[ ms ∶ ⟪ Lset σ ⟫ ^ k ] (LsetEnv σ oσ ms ≡ ρ)
 indexEnv σ oσ []      _        = [] , refl
 indexEnv σ oσ (p ∷ ρ) (h , hs) = (m ∷ fst rest) , cong₂ _∷_ eltEq (snd rest)
   where
@@ -164,11 +188,15 @@ Sat ψ ρ q = (q ∷ ρ) ⊨ ψ
 SatEx : {k : ℕ} (ψ : Formula S (suc k)) (ρ : S ^ k) → hProp (ℓ-suc ℓ)
 SatEx ψ ρ = ∃[ q ∶ S ] Sat ψ ρ q
 
+satExDecision : {k : ℕ} (ψ : Formula S (suc k)) (ρ : S ^ k)
+              → Dec ⟨ SatEx ψ ρ ⟩
+satExDecision ψ ρ = FOL.Semantics.decideSatisfaction 𝒮ʟ id lem ρ (∃̇ ψ)
+
 Wit : {k : ℕ} (ψ : Formula S (suc k)) (ρ : S ^ k) → V ℓ → hProp (ℓ-suc ℓ)
 Wit ψ ρ σ = ∃[ q ∶ S ] ((fst q ∈ Lset σ) ⊓ Sat ψ ρ q)
 
 witnessed : {k : ℕ} (ψ : Formula S (suc k)) (ρ : S ^ k) → ⟨ SatEx ψ ρ ⟩
-          → ∥ (Σ[ α ∈ V ℓ ] (IsOrd α × ⟨ Wit ψ ρ α ⟩)) ∥₁
+          → ∥ (Σ[ α ∶ V ℓ ] (IsOrd α × ⟨ Wit ψ ρ α ⟩)) ∥₁
 witnessed ψ ρ = rec₁ squash₁
   (λ { (q , satq) → map₁
       (λ { (α , (oα , q∈Lα)) → α , (oα , ∣ q , (q∈Lα , satq) ∣₁) })
@@ -184,7 +212,7 @@ decideStage ψ ρ (yes sat) = pick ψ ρ sat .fst
 decideStage ψ ρ (no _)    = ∅
 
 pickStage : {k : ℕ} (ψ : Formula S (suc k)) (ρ : S ^ k) → V ℓ
-pickStage ψ ρ = decideStage ψ ρ (lem (SatEx ψ ρ))
+pickStage ψ ρ = decideStage ψ ρ (satExDecision ψ ρ)
 
 decideStage-ord : {k : ℕ} (ψ : Formula S (suc k)) (ρ : S ^ k)
                   (d : Dec ⟨ SatEx ψ ρ ⟩)
@@ -194,7 +222,7 @@ decideStage-ord ψ ρ (no _)    = ∅-ord
 
 pickStage-ord : {k : ℕ} (ψ : Formula S (suc k)) (ρ : S ^ k)
               → IsOrd (pickStage ψ ρ)
-pickStage-ord ψ ρ = decideStage-ord ψ ρ (lem (SatEx ψ ρ))
+pickStage-ord ψ ρ = decideStage-ord ψ ρ (satExDecision ψ ρ)
 ```
 
 <!--en-->
@@ -212,10 +240,10 @@ refutes itself.
 ```agda
 pickWitness : {k : ℕ} (ψ : Formula S (suc k)) (ρ : S ^ k) → ⟨ SatEx ψ ρ ⟩
             → ⟨ Wit ψ ρ (pickStage ψ ρ) ⟩
-pickWitness ψ ρ sat = go (lem (SatEx ψ ρ)) refl
+pickWitness ψ ρ sat = go (satExDecision ψ ρ) refl
   where
   go : (d : Dec ⟨ SatEx ψ ρ ⟩)
-     → lem (SatEx ψ ρ) ≡ d → ⟨ Wit ψ ρ (pickStage ψ ρ) ⟩
+     → satExDecision ψ ρ ≡ d → ⟨ Wit ψ ρ (pickStage ψ ρ) ⟩
   go (yes s) e = subst (λ d → ⟨ Wit ψ ρ (decideStage ψ ρ d) ⟩) (sym e)
                    (pick ψ ρ s .snd .snd .fst)
   go (no ¬s) e = ⊥₀-rec (¬s sat)
@@ -259,12 +287,20 @@ chapter builds its ladder and gets the argument, rather than running it again.
 ```agda
 ClosedFor : (β : V ℓ) {k : ℕ} (ψ : Formula S (suc k)) → Type (ℓ-suc ℓ)
 ClosedFor β {k} ψ = (ρ : S ^ k) → Below β ρ → ⟨ SatEx ψ ρ ⟩ → ⟨ Wit ψ ρ β ⟩
+```
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
+```agda
 module Ladder (G : ℕ → V ℓ) (G-ord : (n : ℕ) → IsOrd (G n))
               (G-up : (n : ℕ) → ⟨ G n ∈ G (suc n) ⟩) where
+```
+</summary>
+<div class="submodule-fold-content">
 
+```agda
   reach : (n d : ℕ) → ⟨ G n ∈ G (suc (d + n)) ⟩
-  reach n zero    = G-up n
+  reach n 0    = G-up n
   reach n (suc d) =
     G-ord (suc (suc (d + n))) .fst {x = G (suc (d + n))} {y = G n}
       (reach n d) (G-up (suc (d + n)))
@@ -301,26 +337,26 @@ tuple merges all of them, and monotonicity carries the earlier entries up.
 <!--/-->
 
 ```agda
-  δ∈top→fin : (δ : V ℓ) → ⟨ δ ∈ top ⟩ → ∥ (Σ[ N ∈ ℕ ] ⟨ δ ∈ G N ⟩) ∥₁
+  δ∈top→fin : (δ : V ℓ) → ⟨ δ ∈ top ⟩ → ∥ (Σ[ N ∶ ℕ ] ⟨ δ ∈ G N ⟩) ∥₁
   δ∈top→fin δ δ∈ = map₁ (λ { (i , h) → lower i , h })
     (union-family-out (Lift {ℓ-zero} {ℓ} ℕ) fam δ δ∈)
 
-  localize₁ : (e : V ℓ) → ⟨ e ∈ Lset top ⟩ → ∥ (Σ[ N ∈ ℕ ] ⟨ e ∈ Lset (G N) ⟩) ∥₁
+  localize₁ : (e : V ℓ) → ⟨ e ∈ Lset top ⟩ → ∥ (Σ[ N ∶ ℕ ] ⟨ e ∈ Lset (G N) ⟩) ∥₁
   localize₁ e e∈ = rec₁ squash₁
     (λ { (δ , (δ∈top , e∈𝒟ₒδ)) → map₁
         (λ { (N , δ∈GN) → N , Lset-in (G N) δ e δ∈GN e∈𝒟ₒδ })
         (δ∈top→fin δ δ∈top) })
     (Lset-out top e e∈)
 
-  localize : {j : ℕ} (ρ : S ^ j) → Below top ρ → ∥ (Σ[ N ∈ ℕ ] Below (G N) ρ) ∥₁
+  localize : {j : ℕ} (ρ : S ^ j) → Below top ρ → ∥ (Σ[ N ∶ ℕ ] Below (G N) ρ) ∥₁
   localize []      _        = ∣ zero , tt* ∣₁
   localize (p ∷ ρ) (h , hs) = rec₁ squash₁
     (λ { (N , h') → map₁ (merge N h') (localize ρ hs) })
     (localize₁ (fst p) h)
     where
     merge : (N : ℕ) → ⟨ fst p ∈ Lset (G N) ⟩
-          → Σ[ M ∈ ℕ ] Below (G M) ρ
-          → Σ[ M ∈ ℕ ] Below (G M) (p ∷ ρ)
+          → Σ[ M ∶ ℕ ] Below (G M) ρ
+          → Σ[ M ∶ ℕ ] Below (G M) (p ∷ ρ)
     merge N h' (M , hs') = suc (M + N)
       , ( Lset-mono (reach N M) h'
         , Below-mono (subst (λ n → ⟨ G M ∈ G (suc n) ⟩) (+-comm N M)
@@ -360,16 +396,22 @@ monotonicity, and the equation transported back.
 有了它，极限对该矩阵闭合。把环境定位到某一级：它是那一级之层的某个索引元组的像，至多相差一个等式，而读取引理把它连同元组一并给出。它的作答层落在下一级上，故落在作答层里的东西便落在那一级的层里，因而落在极限之下；再用两次单调性，把那个等式移回去。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
   module _ {k : ℕ} (ψ : Formula S (suc k))
            (answers : (n : ℕ) (ms : ⟪ Lset (G n) ⟫ ^ k)
                     → ⟨ pickStage ψ (LsetEnv (G n) (G-ord n) ms) ∈ G (suc n) ⟩)
            where
+```
+</summary>
+<div class="submodule-fold-content">
 
+```agda
     closure : ClosedFor top ψ
     closure ρ below sat = rec₁ squash₁ atRung (localize ρ below)
       where
-      atRung : Σ[ N ∈ ℕ ] Below (G N) ρ → ⟨ Wit ψ ρ top ⟩
+      atRung : Σ[ N ∶ ℕ ] Below (G N) ρ → ⟨ Wit ψ ρ top ⟩
       atRung (N , belowN) = map₁ found (pickWitness ψ ρₘ satₘ)
         where
         idx = indexEnv (G N) (G-ord N) ρ belowN
@@ -379,8 +421,8 @@ monotonicity, and the equation transported back.
         e = idx .snd
         satₘ : ⟨ SatEx ψ ρₘ ⟩
         satₘ = subst (λ r → ⟨ SatEx ψ r ⟩) (sym e) sat
-        found : Σ[ q ∈ S ] (⟨ fst q ∈ Lset (pickStage ψ ρₘ) ⟩ × ⟨ Sat ψ ρₘ q ⟩)
-              → Σ[ q ∈ S ] (⟨ fst q ∈ Lset top ⟩ × ⟨ Sat ψ ρ q ⟩)
+        found : Σ[ q ∶ S ] (⟨ fst q ∈ Lset (pickStage ψ ρₘ) ⟩ × ⟨ Sat ψ ρₘ q ⟩)
+              → Σ[ q ∶ S ] (⟨ fst q ∈ Lset top ⟩ × ⟨ Sat ψ ρ q ⟩)
         found (q , (fq∈pick , satq)) = q
           , ( land q (pickStage ψ ρₘ) (G (suc N))
                 fq∈pick (answers N (idx .fst)) (G∈top (suc N))
@@ -411,6 +453,11 @@ syntax and the meta-level requires no further work.
     reflect : (ρ : S ^ k) → Below top ρ → (ρ ⊨ (∃̇ ψ)) ≡ Wit ψ ρ top
     reflect ρ below = ⇔toPath (closure ρ below) (reflect-bwd ρ)
 ```
+</div>
+</details>
+
+</div>
+</details>
 
 <!--en-->
 ## The step for a single matrix
@@ -442,11 +489,17 @@ the step is closed inside the seal and the caller sees only its conclusion.
 步进被封印。展开来，它是由排中律所造的界再造出的界，而闭包论证反复在诸级上匹配；透明的定义会把那整座塔推进每一次转换检查。三条性质各开封一次，其中最后一条是唯一用到传递性之处，故从回答经上界进入步进的这条链封在印内，调用方只见其结论。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Single {k : ℕ} (ψ : Formula S (suc k)) where
+```
+</summary>
+<div class="submodule-fold-content">
 
+```agda
   Fbnd : (σ : V ℓ) (oσ : IsOrd σ)
-       → Σ[ β ∈ V ℓ ] (IsOrd β × ((ms : ⟪ Lset σ ⟫ ^ k)
+       → Σ[ β ∶ V ℓ ] (IsOrd β × ((ms : ⟪ Lset σ ⟫ ^ k)
                                  → ⟨ pickStage ψ (LsetEnv σ oσ ms) ∈ β ⟩))
   Fbnd σ oσ = boundingOrd (⟪ Lset σ ⟫ ^ k)
                 (λ ms → pickStage ψ (LsetEnv σ oσ ms))
@@ -470,6 +523,8 @@ module Single {k : ℕ} (ψ : Formula S (suc k)) where
         (Fbnd σ oσ .snd .snd ms)
         (bound2 (Fbnd σ oσ .fst) σ (Fbnd σ oσ .snd .fst) oσ .snd .snd .fst)
 ```
+</div>
+</details>
 
 <!--en-->
 ## Recap

@@ -1,22 +1,19 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # Cantor–Schröder–Bernstein for small presentations
-
-Mutual injections between the small presentations of two sets determine a bijection. The proof first constructs the bijection for small types under excluded middle, then gives a generic form that turns any mutually available coded injections into such a bijection.
-
-The classical Cantor–Schröder–Bernstein theorem says that injections $f : A → B$ and $g : B → A$ yield a bijection $A → B$. In this chapter the two types share one universe level ℓ, and the only extra assumption is excluded middle at that level: for every proposition living at level ℓ, a proof or a refutation. The argument itself belongs to the index types $A$ and $B$, not to the sets of the cumulative hierarchy, which is precisely what later lets it be replayed on the member types of arbitrary small presentations. The proof needs to form some propositions by truncation and then to decide them; the setup below therefore fixes both the classical hypothesis and the proposition-valued vocabulary it will be applied to.
 <!--zh-->
 # 小呈现上的 Cantor–Schröder–Bernstein 定理
-
-两个集合的小呈现之间若有双向单射，便可得到双射。证明先在排中律下为小类型构造双射，再给出通用形式，把任意可双向读出的编码单射转成这类双射。
-
-经典的 Cantor–Schröder–Bernstein 定理说，单射 $f : A → B$ 与 $g : B → A$ 给出双射 $A → B$。本章中两个类型共享同一个宇宙层级 ℓ，而唯一的额外假设是该层级上的排中律：对住在层级 ℓ 的每个命题，给出证明或反驳。论证本身属于指标类型 $A$ 与 $B$，而不属于累积层级中的集合；正因如此，后面才能把它原样搬到任意小呈现的成员类型上。证明需要用命题截断造出一些命题，然后对它们作判定；下面的设置因此同时固定了经典假设，以及将要施加于其上的命题值词汇。
 <!--ja-->
 # 小さな提示に対する Cantor–Schröder–Bernstein の定理
-
-二つの集合の小さな提示の間に双方向の単射があれば、全単射が得られる。まず排中律の下で小さな型について全単射を構成し、さらに任意の相互に読み出せる符号化された単射からそのような全単射を得る一般的な形にまとめる。
-
-古典的な Cantor–Schröder–Bernstein の定理は、単射 $f : A → B$ と $g : B → A$ から全単射 $A → B$ が得られるというものである。この章では二つの型が同一の宇宙レベル ℓ を共有し、追加の仮定はそのレベルでの排中律、すなわちレベル ℓ に住む各命題に対する証明か反証かだけである。議論そのものは累積階層の集合ではなく指標型 $A$ と $B$ に属する。まさにそのおかげで、後で任意の小さな提示のメンバー型へそのまま再生できるのである。証明は命題を命題的切り詰めで作り、それを判定する必要があるため、以下の設定ではその古典的仮定と、それを適用する命題値の語彙の両方を固定する。
 <!--/-->
+
+```agda
+open import Base.Prelude
+open import Base.Classical using ( LEM )
+```
 
 <!--en-->
 A decision at level ℓ is packaged once and reused throughout: `LEM ℓ`{.Agda} takes a proposition `P : hProp ℓ`{.Agda} and returns either a proof of `⟨ P ⟩`{.Agda} or a refutation, a map from `⟨ P ⟩`{.Agda} into the empty type. The module parameter `lem` is therefore an instance at this one level, not a global principle for all levels. Everything constructed in the chapter will be parametric in it, so the hypothesis appears explicitly wherever a classical verdict is consumed.
@@ -27,26 +24,39 @@ A decision at level ℓ is packaged once and reused throughout: `LEM ℓ`{.Agda}
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-open import Base.Prelude
-open import Base.Classical using ( LEM )
-
 module V.CantorBernstein {ℓ : Level} (lem : LEM ℓ) where
+```
 
+<!--en-->
+
+Mutual injections between the small presentations of two sets determine a bijection. The proof first constructs the bijection for small types under excluded middle, then gives a generic form that turns any mutually available coded injections into such a bijection.
+
+The classical Cantor–Schröder–Bernstein theorem says that injections $f : A → B$ and $g : B → A$ yield a bijection $A → B$. In this chapter the two types share one universe level ℓ, and the only extra assumption is excluded middle at that level: for every proposition living at level ℓ, a proof or a refutation. The argument itself belongs to the index types $A$ and $B$, not to the sets of the cumulative hierarchy, which is precisely what later lets it be replayed on the member types of arbitrary small presentations. The proof needs to form some propositions by truncation and then to decide them; the setup below therefore fixes both the classical hypothesis and the proposition-valued vocabulary it will be applied to.
+<!--zh-->
+
+两个集合的小呈现之间若有双向单射，便可得到双射。证明先在排中律下为小类型构造双射，再给出通用形式，把任意可双向读出的编码单射转成这类双射。
+
+经典的 Cantor–Schröder–Bernstein 定理说，单射 $f : A → B$ 与 $g : B → A$ 给出双射 $A → B$。本章中两个类型共享同一个宇宙层级 ℓ，而唯一的额外假设是该层级上的排中律：对住在层级 ℓ 的每个命题，给出证明或反驳。论证本身属于指标类型 $A$ 与 $B$，而不属于累积层级中的集合；正因如此，后面才能把它原样搬到任意小呈现的成员类型上。证明需要用命题截断造出一些命题，然后对它们作判定；下面的设置因此同时固定了经典假设，以及将要施加于其上的命题值词汇。
+<!--ja-->
+
+二つの集合の小さな提示の間に双方向の単射があれば、全単射が得られる。まず排中律の下で小さな型について全単射を構成し、さらに任意の相互に読み出せる符号化された単射からそのような全単射を得る一般的な形にまとめる。
+
+古典的な Cantor–Schröder–Bernstein の定理は、単射 $f : A → B$ と $g : B → A$ から全単射 $A → B$ が得られるというものである。この章では二つの型が同一の宇宙レベル ℓ を共有し、追加の仮定はそのレベルでの排中律、すなわちレベル ℓ に住む各命題に対する証明か反証かだけである。議論そのものは累積階層の集合ではなく指標型 $A$ と $B$ に属する。まさにそのおかげで、後で任意の小さな提示のメンバー型へそのまま再生できるのである。証明は命題を命題的切り詰めで作り、それを判定する必要があるため、以下の設定ではその古典的仮定と、それを適用する命題値の語彙の両方を固定する。
+<!--/-->
+
+
+
+```agda
 open import Cubical.Functions.Embedding using ( Embedding-into-isSet→isSet )
 ```
 
 <!--en-->
-The proof will form several propositions by truncating an existential: the statement that x lies in the image of g is ∥ Σ[ y ∈ B ] (g y ≡ x) ∥₁, which is merely inhabited rather than carrying a chosen preimage. Such truncated statements are propositions by `squash₁`, and a proof of one cannot be eliminated into arbitrary data, only into a proposition-valued target. That restriction is exactly why the classical hypothesis will be needed: to turn a mere existence into a chosen preimage when the argument requires one.
+The proof will form several propositions by truncating an existential: the statement that `x`{.Agda} lies in the image of `g`{.Agda} is `∥ Σ[ y ∶ B ] (g y ≡ x) ∥₁`{.Agda}, which is merely inhabited rather than carrying a chosen preimage. Such truncated statements are propositions by `squash₁`{.Agda}, and a proof of one cannot be eliminated into arbitrary data, only into a proposition-valued target. That restriction is exactly why the classical hypothesis will be needed: to turn a mere existence into a chosen preimage when the argument requires one.
 <!--zh-->
-证明将用对存在命题作命题截断来构造若干命题：x 属于 g 的像这一陈述是 ∥ Σ[ y ∈ B ] (g y ≡ x) ∥₁，它仅保留原像存在这一事实，而不携带选定的原像。这类命题截断陈述借助 `squash₁` 成为命题，且其证明只能消解到命题值的目标中，不能得到任意数据。这一限制正是需要经典假设的原因：当论证需要选定原像时，把单纯的存在性变成选定的原像。
+证明将用对存在命题作命题截断来构造若干命题：`x`{.Agda} 属于 `g`{.Agda} 的像这一陈述是 `∥ Σ[ y ∶ B ] (g y ≡ x) ∥₁`{.Agda}，它仅保留原像存在这一事实，而不携带选定的原像。这类命题截断陈述借助 `squash₁`{.Agda} 成为命题，且其证明只能消解到命题值的目标中，不能得到任意数据。这一限制正是需要经典假设的原因：当论证需要选定原像时，把单纯的存在性变成选定的原像。
 <!--ja-->
-証明は、存在を命題的切り詰めした命題をいくつも作る。x が g の像に属するという主張は ∥ Σ[ y ∈ B ] (g y ≡ x) ∥₁ であり、選ばれた原像を持たず、存在することだけが保留されている。このような命題的切り詰めされた主張は `squash₁` によって命題になり、その証明は命題値の対象へは消去できるが、任意のデータへはできない。この制限こそが古典的仮定を必要とする理由である。議論が選ばれた原像を要する場面で、単なる存在性を選ばれた原像へ変えるのに排中律を使う。
+証明は、存在を命題的切り詰めした命題をいくつも作る。`x`{.Agda} が `g`{.Agda} の像に属するという主張は `∥ Σ[ y ∶ B ] (g y ≡ x) ∥₁`{.Agda} であり、選ばれた原像を持たず、存在することだけが保留されている。このような命題的切り詰めされた主張は `squash₁`{.Agda} によって命題になり、その証明は命題値の対象へは消去できるが、任意のデータへはできない。この制限こそが古典的仮定を必要とする理由である。議論が選ばれた原像を要する場面で、単なる存在性を選ばれた原像へ変えるのに排中律を使う。
 <!--/-->
-
-```agda
-```
 
 <!--en-->
 Two kinds of propositions dominate the chapter: membership in the image of g, and reachability by a finite alternating chain. Both are stored as elements of `hProp ℓ`, which packages an underlying type with a proof that it is a proposition; `⟨ P ⟩`{.Agda} projects the underlying type, while the propositionhood proof stays in the second component. The remaining imports supply the machinery around them: disjoint sums for the bad/good case split, `isProp⊥` for the refutation side, `Σ≡Prop` for identifying pairs whose second components are proposition-valued, and the cumulative hierarchy together with the fact that a member type `⟪ a ⟫`{.Agda} of a set embeds into an h-set, which will later certify that the member types are h-sets.
@@ -78,13 +88,19 @@ The construction is packaged in a module `Bernstein`{.Agda} taking exactly the c
 構成はモジュール `Bernstein`{.Agda} にまとめられ、受け取るのはまさに古典的なデータである。二つの型、$A$ の h-集合としての構造、そして二つの単射で、各々は関数とその単射性の証明の組として与えられる。最初の材料は像の述語 `imG x` で、ある $y ∈ B$ が $g y ≡ x$ を満たすことを単に (単に) 主張する。ここで原像は選ばれない。命題的切り詰め ∥ ⋯ ∥₁ が証人を消して命題だけを残し、`squash₁` がその命題性の証明書になる。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Bernstein {A B : Type ℓ} (setA : isSet A)
                  (f : A → B) (fi : (x y : A) → f x ≡ f y → x ≡ y)
                  (g : B → A) (gi : (x y : B) → g x ≡ g y → x ≡ y) where
+```
+</summary>
+<div class="submodule-fold-content">
 
+```agda
   imG : A → hProp ℓ
-  imG x = (∥ Σ[ y ∈ B ] (g y ≡ x) ∥₁ , squash₁)
+  imG x = (∥ Σ[ y ∶ B ] (g y ≡ x) ∥₁ , squash₁)
 ```
 
 <!--en-->
@@ -96,12 +112,11 @@ The base of the badness hierarchy says that x is bad at level zero when it is no
 <!--/-->
 
 ```agda
-
   C₀ : A → hProp ℓ
   C₀ x = ((⟨ imG x ⟩ → ⊥₀) , isPropΠ (λ _ → isProp⊥))
 
   C₊ : (A → hProp ℓ) → A → hProp ℓ
-  C₊ C x = (∥ Σ[ y ∈ B ] Σ[ z ∈ A ] ((g y ≡ x) × ((f z ≡ y) × ⟨ C z ⟩)) ∥₁ , squash₁)
+  C₊ C x = (∥ Σ[ y ∶ B ] Σ[ z ∶ A ] ((g y ≡ x) × ((f z ≡ y) × ⟨ C z ⟩)) ∥₁ , squash₁)
 
   Cₙ : ℕ → A → hProp ℓ
 ```
@@ -115,11 +130,11 @@ The two defining equations of `Cₙ` are computation rules: at index zero it is 
 <!--/-->
 
 ```agda
-  Cₙ zero = C₀
+  Cₙ 0 = C₀
   Cₙ (suc n) = C₊ (Cₙ n)
 
   C : A → hProp ℓ
-  C x = (∥ Σ[ n ∈ ℕ ] ⟨ Cₙ n x ⟩ ∥₁ , squash₁)
+  C x = (∥ Σ[ n ∶ ℕ ] ⟨ Cₙ n x ⟩ ∥₁ , squash₁)
 ```
 
 <!--en-->
@@ -131,7 +146,6 @@ Before using the hierarchy, one small bookkeeping lemma is recorded: a badness p
 <!--/-->
 
 ```agda
-
   c-in : {x : A} {n : ℕ} → ⟨ Cₙ n x ⟩ → ⟨ C x ⟩
   c-in {x} {n} h = ∣ n , h ∣₁
 ```
@@ -145,11 +159,10 @@ The one structural fact promised in the lead is now proved: if x is bad, so is g
 <!--/-->
 
 ```agda
-
   gf-closed : {x : A} → ⟨ C x ⟩ → ⟨ C (g (f x)) ⟩
   gf-closed {x} = rec₁ (snd (C (g (f x)))) go
     where
-    go : Σ[ n ∈ ℕ ] ⟨ Cₙ n x ⟩ → ⟨ C (g (f x)) ⟩
+    go : Σ[ n ∶ ℕ ] ⟨ Cₙ n x ⟩ → ⟨ C (g (f x)) ⟩
     go (n , cx) = c-in {x = g (f x)} {n = suc n} ∣ f x , x , (refl , (refl , cx)) ∣₁
 ```
 
@@ -162,9 +175,8 @@ g ∘ f による閉性は悪さが前へ伝わることを教えるが、元を
 <!--/-->
 
 ```agda
-
   C-view : {x : A} → ⟨ C x ⟩
-         → ∥ (⟨ C₀ x ⟩ ⊎ (Σ[ z ∈ A ] ((g (f z) ≡ x) × ⟨ C z ⟩))) ∥₁
+         → ∥ (⟨ C₀ x ⟩ ⊎ (Σ[ z ∶ A ] ((g (f z) ≡ x) × ⟨ C z ⟩))) ∥₁
   C-view {x} = rec₁ squash₁ go
     where
 ```
@@ -178,8 +190,8 @@ The proof splits on the recorded length. At length zero the chain simply asserts
 <!--/-->
 
 ```agda
-    go : Σ[ n ∈ ℕ ] ⟨ Cₙ n x ⟩ → ∥ (⟨ C₀ x ⟩ ⊎ (Σ[ z ∈ A ] ((g (f z) ≡ x) × ⟨ C z ⟩))) ∥₁
-    go (zero , c0) = ∣ inl c0 ∣₁
+    go : Σ[ n ∶ ℕ ] ⟨ Cₙ n x ⟩ → ∥ (⟨ C₀ x ⟩ ⊎ (Σ[ z ∶ A ] ((g (f z) ≡ x) × ⟨ C z ⟩))) ∥₁
+    go (0 , c0) = ∣ inl c0 ∣₁
     go (suc n , cs) = map₁ inr (map₁ (λ { (y , z , gy , fz , cz) →
         z , ((cong g fz ∙ gy) , c-in {x = z} {n = n} cz) }) cs)
 ```
@@ -193,7 +205,6 @@ The second use of excluded middle converts goodness into image membership. Suppo
 <!--/-->
 
 ```agda
-
   notC→imG : {x : A} → (⟨ C x ⟩ → ⊥₀) → ⟨ imG x ⟩
   notC→imG {x} nC with lem (imG x)
   ... | yes h = h
@@ -201,16 +212,15 @@ The second use of excluded middle converts goodness into image membership. Suppo
 ```
 
 <!--en-->
-To turn the mere image membership into a chosen preimage, we may eliminate the truncation into the fiber type Σ[ y ∈ B ] (g y ≡ x) itself, provided that type is a proposition. This is where the hypotheses on g and A earn their keep: injectivity of g shows any two preimages y and y' are equal, using the paths p and p' to g x, and the h-set structure of A makes the resulting equality in A a proposition, which `Σ≡Prop` then extends to the whole pair. Note that the h-set assumption is needed exactly here and nowhere else in the construction.
+To turn the mere image membership into a chosen preimage, we may eliminate the truncation into the fiber type `Σ[ y ∶ B ] (g y ≡ x)`{.Agda} itself, provided that type is a proposition. This is where the hypotheses on `g`{.Agda} and `A`{.Agda} earn their keep: injectivity of `g`{.Agda} shows any two preimages `y`{.Agda} and `y'`{.Agda} are equal, using the paths `p`{.Agda} and `p'`{.Agda} to `g x`{.Agda}, and the h-set structure of `A`{.Agda} makes the resulting equality in `A`{.Agda} a proposition, which `Σ≡Prop`{.Agda} then extends to the whole pair. Note that the h-set assumption is needed exactly here and nowhere else in the construction.
 <!--zh-->
-为了把单纯的像属于变成选定的原像，可以把命题截断直接消去到纤维类型 Σ[ y ∈ B ] (g y ≡ x) 本身，只要该类型是命题。这正是 g 与 A 上的假设发挥作用之处：g 的单射性利用到 g x 的两条路径 p 与 p′ 证明任意两个原像 y 与 y′ 相等，而 A 的 h-集合结构使 A 中所得的相等成为命题，`Σ≡Prop` 再把这一点扩展到整个序对。注意 h-集合假设恰好只在这里、构造中的其他地方都不需要。
+为了把单纯的像属于变成选定的原像，可以把命题截断直接消去到纤维类型 `Σ[ y ∶ B ] (g y ≡ x)`{.Agda} 本身，只要该类型是命题。这正是 `g`{.Agda} 与 `A`{.Agda} 上的假设发挥作用之处：`g`{.Agda} 的单射性利用到 `g x`{.Agda} 的两条路径 `p`{.Agda} 与 `p′`{.Agda} 证明任意两个原像 `y`{.Agda} 与 `y′`{.Agda} 相等，而 `A`{.Agda} 的 h-集合结构使 `A`{.Agda} 中所得的相等成为命题，`Σ≡Prop`{.Agda} 再把这一点扩展到整个序对。注意 h-集合假设恰好只在这里、构造中的其他地方都不需要。
 <!--ja-->
-単なる像への所属を選ばれた原像に変えるには、その繊維型 Σ[ y ∈ B ] (g y ≡ x) 自身が命題である限り、命題的切り詰めをその型へ直接消去できる。ここで g と A に関する仮定が効く。g の単射性は、g x へのパス p と p′ を使って任意の二つの原像 y と y′ が等しいことを示し、A の h-集合としての構造が A における等式を命題にするので、`Σ≡Prop` がこれを対全体へ拡げる。h-集合の仮定が必要なのはまさにこの一点だけで、構成の他のどこでもない。
+単なる像への所属を選ばれた原像に変えるには、その繊維型 `Σ[ y ∶ B ] (g y ≡ x)`{.Agda} 自身が命題である限り、命題的切り詰めをその型へ直接消去できる。ここで `g`{.Agda} と `A`{.Agda} に関する仮定が効く。`g`{.Agda} の単射性は、`g x`{.Agda} へのパス `p`{.Agda} と `p′`{.Agda} を使って任意の二つの原像 `y`{.Agda} と `y′`{.Agda} が等しいことを示し、`A`{.Agda} の h-集合としての構造が `A`{.Agda} における等式を命題にするので、`Σ≡Prop`{.Agda} がこれを対全体へ拡げる。h-集合の仮定が必要なのはまさにこの一点だけで、構成の他のどこでもない。
 <!--/-->
 
 ```agda
-
-  fiberG-prop : (x : A) → isProp (Σ[ y ∈ B ] (g y ≡ x))
+  fiberG-prop : (x : A) → isProp (Σ[ y ∶ B ] (g y ≡ x))
   fiberG-prop x (y , p) (y' , p') = Σ≡Prop {A = B} {B = λ y → g y ≡ x}
     (λ y → setA (g y) x) (gi y y' (p ∙ sym p'))
 ```
@@ -224,8 +234,7 @@ With fiber propositionhood in hand, `fiberG` is the elimination of the truncated
 <!--/-->
 
 ```agda
-
-  fiberG : (x : A) → ⟨ imG x ⟩ → Σ[ y ∈ B ] (g y ≡ x)
+  fiberG : (x : A) → ⟨ imG x ⟩ → Σ[ y ∶ B ] (g y ≡ x)
   fiberG x = rec₁ (fiberG-prop x) (λ w → w)
 ```
 
@@ -238,7 +247,6 @@ For a good element x, the chosen preimage can now be named `ginv x`: it is the f
 <!--/-->
 
 ```agda
-
   ginv : {x : A} → (⟨ C x ⟩ → ⊥₀) → B
   ginv {x} nC = fiberG x (notC→imG nC) .fst
 
@@ -255,7 +263,6 @@ The candidate bijection h is now defined on a hypothetical verdict rather than o
 <!--/-->
 
 ```agda
-
   h : (x : A) → Dec ⟨ C x ⟩ → B
   h x (yes _) = f x
   h x (no nC) = ginv nC
@@ -270,7 +277,6 @@ h の単射性は判定の対について四つの場合で証明する。両側
 <!--/-->
 
 ```agda
-
   h-inj : (x x' : A) (dx : Dec ⟨ C x ⟩) (dx' : Dec ⟨ C x' ⟩)
         → h x dx ≡ h x' dx' → x ≡ x'
   h-inj x x' (yes cx) (yes cx') e = fi x x' e
@@ -301,9 +307,8 @@ Surjectivity relative to a verdict is stated for each y ∈ B, with the verdict 
 <!--/-->
 
 ```agda
-
   h-surj : (y : B) (d : Dec ⟨ C (g y) ⟩)
-         → ∥ Σ[ x ∈ A ] Σ[ dx ∈ Dec ⟨ C x ⟩ ] (h x dx ≡ y) ∥₁
+         → ∥ Σ[ x ∶ A ] Σ[ dx ∶ Dec ⟨ C x ⟩ ] (h x dx ≡ y) ∥₁
   h-surj y (no nCgy) = ∣ g y , no nCgy , gi (ginv nCgy) y (ginv-spec nCgy) ∣₁
 ```
 
@@ -330,7 +335,6 @@ The final lemma answers an objection to the whole design: h was defined relative
 <!--/-->
 
 ```agda
-
   h-cons : (x : A) (dx dx' : Dec ⟨ C x ⟩) → h x dx ≡ h x dx'
   h-cons x (yes cx) (yes cx') = refl
   h-cons x (yes cx) (no nCx') = ⊥₀-rec (nCx' cx)
@@ -347,7 +351,6 @@ With consistency established, the verdict can be fed in once and for all. The ne
 <!--/-->
 
 ```agda
-
   ĥ : A → B
 ```
 
@@ -372,7 +375,6 @@ Injectivity transfers verbatim from the relative version, since the canonical ve
 <!--/-->
 
 ```agda
-
   ĥ-inj : (x x' : A) → ĥ x ≡ ĥ x' → x ≡ x'
   ĥ-inj x x' e = h-inj x x' (lem (C x)) (lem (C x')) e
 ```
@@ -386,11 +388,12 @@ Surjectivity needs one extra step. The relative lemma `h-surj` applied at the ca
 <!--/-->
 
 ```agda
-
-  ĥ-surj : (y : B) → ∥ Σ[ x ∈ A ] (ĥ x ≡ y) ∥₁
+  ĥ-surj : (y : B) → ∥ Σ[ x ∶ A ] (ĥ x ≡ y) ∥₁
   ĥ-surj y = map₁ (λ { (x , dx , e) → x , sym (h-cons x dx (lem (C x))) ∙ e })
     (h-surj y (lem (C (g y))))
 ```
+</div>
+</details>
 
 <!--en-->
 The abstract construction now applies to the cumulative hierarchy itself. Each element a of V comes with a member type ⟪ a ⟫, the type of its members. The Bernstein construction asks for an h-set structure on its first type, so the first step is to certify that ⟪ a ⟫ is one. The embedding ⟪ a ⟫↪ sends each member index to the member it indexes inside V; since V is an h-set and the embedding is an embedding, its domain inherits the h-set condition. With that single fact, two mutual injections between ⟪ a ⟫ and ⟪ b ⟫ produce a bijection packaged as a dependent triple.
@@ -426,9 +429,9 @@ The result type is an explicit dependent triple rather than a record: a function
 <!--/-->
 
 ```agda
-    → Σ[ h ∈ (⟪ a ⟫ → ⟪ b ⟫) ]
+    → Σ[ h ∶ (⟪ a ⟫ → ⟪ b ⟫) ]
         (((x y : ⟪ a ⟫) → h x ≡ h y → x ≡ y)
-      × ((y : ⟪ b ⟫) → ∥ Σ[ x ∈ ⟪ a ⟫ ] (h x ≡ y) ∥₁))
+      × ((y : ⟪ b ⟫) → ∥ Σ[ x ∶ ⟪ a ⟫ ] (h x ≡ y) ∥₁))
 cantor-bernstein a b f fi g gi = M.ĥ , ( M.ĥ-inj , M.ĥ-surj )
   where
 ```
@@ -461,13 +464,17 @@ The parameters spell out the exact strength required. The carrier C lives at its
 パラメータは必要な強さを正確に列挙する。台 C はそれ自身のレベル ℓ₁ に、関係 R は ℓ₂ に住むので、符号やその関係は小さくなくて構わない。小さくなければならないのは各 P a で、排中律が使える固定レベル ℓ に住む。各 a について P a は h-集合だと仮定され、Bernstein モジュールの h-集合性の仮定に対応する。関係 R 自身は型としてまったく任意である。読み戻し以外には何も仮定しない。読み戻しは R a b の元から、第 1 成分が関数 P a → P b、第 2 成分がその関数の単射性の証明である対を返す。特に、取り出された単射は正味のデータであり、命題的切り詰めされた存在ではない。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module MutualInj {ℓ₁ ℓ₂ : Level} (C : Type ℓ₁) (P : C → Type ℓ)
     (R : (a b : C) → Type ℓ₂)
     (setP : (a : C) → isSet (P a))
     (read : (a b : C) → R a b
-          → Σ[ f ∈ (P a → P b) ] ((x y : P a) → f x ≡ f y → x ≡ y)) where
+          → Σ[ f ∶ (P a → P b) ] ((x y : P a) → f x ≡ f y → x ≡ y)) where
 ```
+</summary>
+<div class="submodule-fold-content">
 
 <!--en-->
 The first entry point states the transfer with the two coded injections as explicit arguments: from a forward code in R a b and a backward code in R b a, it returns the bijection between P a and P b as a triple, in exactly the shape of the previous section. The statement quantifies over inhabitants of the relation, not over their truncation, so the codes are available as data throughout.
@@ -478,11 +485,10 @@ The first entry point states the transfer with the two coded injections as expli
 <!--/-->
 
 ```agda
-
   mutual→bijection : (a b : C) → R a b → R b a
-    → Σ[ h ∈ (P a → P b) ]
+    → Σ[ h ∶ (P a → P b) ]
         (((x y : P a) → h x ≡ h y → x ≡ y)
-      × ((y : P b) → ∥ Σ[ x ∈ P a ] (h x ≡ y) ∥₁))
+      × ((y : P b) → ∥ Σ[ x ∶ P a ] (h x ≡ y) ∥₁))
   mutual→bijection a b fwd bwd = M.ĥ , ( M.ĥ-inj , M.ĥ-surj )
 ```
 
@@ -510,11 +516,10 @@ The second entry point weakens the input to mere existence: instead of codes, it
 <!--/-->
 
 ```agda
-
   ∃bijection : (a b : C) → ∥ R a b ∥₁ → ∥ R b a ∥₁
-    → ∥ Σ[ h ∈ (P a → P b) ]
+    → ∥ Σ[ h ∶ (P a → P b) ]
         (((x y : P a) → h x ≡ h y → x ≡ y)
-      × ((y : P b) → ∥ Σ[ x ∈ P a ] (h x ≡ y) ∥₁)) ∥₁
+      × ((y : P b) → ∥ Σ[ x ∶ P a ] (h x ≡ y) ∥₁)) ∥₁
   ∃bijection a b fwd bwd = rec₁ squash₁
 ```
 
@@ -530,3 +535,5 @@ The proof nests two truncation eliminations. Eliminating fwd yields some code w;
     (λ w → rec₁ squash₁ (λ w' → ∣ mutual→bijection a b w w' ∣₁) bwd)
     fwd
 ```
+</div>
+</details>

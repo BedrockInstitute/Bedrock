@@ -1,0 +1,97 @@
+{
+  "version": 1,
+  "approved": [
+    {
+      "chapter": "Base/Prelude.lagda.md",
+      "fingerprint": "7f34fd1f1790e831941c7c1a40237d5f134b1be3ba4e9776002c719dbaade1bb",
+      "reviewer": "Project owner, explicit approval on 2026-09-25",
+      "reason": "Explicitly approved paragraph M016 (en): ordinary equality and judgmental equality notation compared with Agda."
+    },
+    {
+      "chapter": "Base/Prelude.lagda.md",
+      "fingerprint": "0d9bafa3d595386587b334f8db5dc7783a92780337d8cd0dd571a623d8cb3766",
+      "reviewer": "Project owner, explicit approval on 2026-09-25",
+      "reason": "Explicitly approved paragraph M017 (en): ordinary equality and judgmental equality notation compared with Agda."
+    },
+    {
+      "chapter": "Base/Prelude.lagda.md",
+      "fingerprint": "98f249a73c865bbc90a8535ccc8da05a9560c228df845fc6d8049722ce91329e",
+      "reviewer": "Project owner, explicit approval on 2026-09-25",
+      "reason": "Explicitly approved paragraph M017 (en): ordinary equality and judgmental equality notation compared with Agda."
+    },
+    {
+      "chapter": "Base/Prelude.lagda.md",
+      "fingerprint": "676d8958802ff4871d471a013c91709763138920ff35889fa7709a0af4784f42",
+      "reviewer": "Project owner, explicit approval on 2026-09-25",
+      "reason": "Explicitly approved paragraph M018 (zh): ordinary equality and judgmental equality notation compared with Agda."
+    },
+    {
+      "chapter": "Base/Prelude.lagda.md",
+      "fingerprint": "4d15bcb07be9100c3a65ef8685d08ce5d16c4ae6f0e013546bf4d31c2854d71a",
+      "reviewer": "Project owner, explicit approval on 2026-09-25",
+      "reason": "Explicitly approved paragraph M019 (zh): ordinary equality and judgmental equality notation compared with Agda."
+    },
+    {
+      "chapter": "Base/Prelude.lagda.md",
+      "fingerprint": "7d2c5118b55a4d1fb52dd4b88555df805f718cac36f61c1f83c234e125592601",
+      "reviewer": "Project owner, explicit approval on 2026-09-25",
+      "reason": "Explicitly approved paragraph M019 (zh): ordinary equality and judgmental equality notation compared with Agda."
+    },
+    {
+      "chapter": "Base/Prelude.lagda.md",
+      "fingerprint": "8c5db56774e52e715e1ccfe5b119c4a36e5d5ff479a9ca6b6bfa256e080cf0e0",
+      "reviewer": "Project owner, explicit approval on 2026-09-25",
+      "reason": "Explicitly approved paragraph M020 (ja): ordinary equality and judgmental equality notation compared with Agda."
+    },
+    {
+      "chapter": "Base/Prelude.lagda.md",
+      "fingerprint": "a1ee00de70add53c5b10ef1e97458a3cd845284a085b5b7ffa8b71975a768a90",
+      "reviewer": "Project owner, explicit approval on 2026-09-25",
+      "reason": "Explicitly approved paragraph M021 (ja): ordinary equality and judgmental equality notation compared with Agda."
+    },
+    {
+      "chapter": "Base/Prelude.lagda.md",
+      "fingerprint": "1bacad27d1adc9e326ff9a7b277bb447b37e27261f6ebe104e230ec7a8973089",
+      "reviewer": "Project owner, explicit approval on 2026-09-25",
+      "reason": "Explicitly approved paragraph M021 (ja): ordinary equality and judgmental equality notation compared with Agda."
+    }
+  ],
+  "temporary": [
+    {
+      "chapter": "FOL/LevyHierarchy.lagda.md",
+      "reviewer": "Project owner, explicit instruction on 2026-09-25",
+      "reason": "Explicitly defer inline LaTeX while this chapter is not human-reviewed; content edits and bulk replacements are allowed. Marking it human-reviewed ends this temporary allowance.",
+      "until": "human_reviewed"
+    },
+    {
+      "chapter": "FOL/Manipulation/ParameterAbstraction.lagda.md",
+      "reviewer": "Project owner, explicit instruction on 2026-09-25",
+      "reason": "Explicitly defer inline LaTeX while this chapter is not human-reviewed; content edits and bulk replacements are allowed. Marking it human-reviewed ends this temporary allowance.",
+      "until": "human_reviewed"
+    },
+    {
+      "chapter": "FOL/Semantics.lagda.md",
+      "reviewer": "Project owner, explicit instruction on 2026-09-25",
+      "reason": "Explicitly defer inline LaTeX while this chapter is not human-reviewed; content edits and bulk replacements are allowed. Marking it human-reviewed ends this temporary allowance.",
+      "until": "human_reviewed"
+    },
+    {
+      "chapter": "FOL/ZFModel.lagda.md",
+      "reviewer": "Project owner, explicit instruction on 2026-09-25",
+      "reason": "Explicitly defer inline LaTeX while this chapter is not human-reviewed; content edits and bulk replacements are allowed. Marking it human-reviewed ends this temporary allowance.",
+      "until": "human_reviewed"
+    },
+    {
+      "chapter": "L/Choice/FiniteStageOrders.lagda.md",
+      "reviewer": "Project owner, explicit instruction on 2026-09-25",
+      "reason": "Explicitly defer inline LaTeX while this chapter is not human-reviewed; content edits and bulk replacements are allowed. Marking it human-reviewed ends this temporary allowance.",
+      "until": "human_reviewed"
+    },
+    {
+      "chapter": "V/CantorBernstein.lagda.md",
+      "reviewer": "Project owner, explicit instruction on 2026-09-25",
+      "reason": "Explicitly defer inline LaTeX while this chapter is not human-reviewed; content edits and bulk replacements are allowed. Marking it human-reviewed ends this temporary allowance.",
+      "until": "human_reviewed"
+    }
+  ]
+}

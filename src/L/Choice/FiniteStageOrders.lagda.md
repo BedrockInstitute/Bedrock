@@ -1,5 +1,46 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # Well-orders on finite stages
+<!--zh-->
+# 有限层上的良序
+<!--ja-->
+# 有限段階上の整列順序
+<!--/-->
+
+```agda
+open import Base.Prelude
+open import Base.Classical using ( LEM )
+```
+
+<!--en-->
+The setting is the constructible universe built over the ambient cumulative hierarchy $V$. Excluded middle enters here as an explicit hypothesis: the module is parameterized by a decision `lem` for every proposition at level `ℓ-suc ℓ`. This one level is all the chapter asks for, and every construction below is allowed to call this single fixed decision; nothing is claimed for propositions at other levels beyond what the displayed theorems actually prove.
+<!--zh-->
+讨论的舞台是建立在累积层级 $V$ 之上的可构造宇宙。排中律在这里作为显式假设出现：整个模块由一个参数 `lem` 给出，它对层级 `ℓ-suc ℓ` 上的每个命题作出判定。本章需要的正是这一个层级，下文的所有构造都可以使用这一固定判定；对于其他层级上的命题，除已证明的定理所述内容外，不作任何论断。
+<!--ja-->
+舞台となるのは、周囲の累積階層 $V$ の上に構成される構成可能宇宙である。排中律はここで明示的な仮定として現れる。モジュールは、階層 `ℓ-suc ℓ` のすべての命題に対する判定を与えるパラメータ `lem` を受け取る。本章が必要とするのはこの一つの階層だけで、以下の構成はどれもこの固定された判定を用いる。表示されている定理が実際に証明する範囲を超えて、他の階層の命題については何も主張しない。
+<!--/-->
+
+```agda
+module L.Choice.FiniteStageOrders {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+```
+
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+import FOL.Semantics
+open import FOL.Syntax using ( var; _∈̇_ )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV )
+open import L.Constructible {ℓ} using ( IsOrd; Lset; Lset-out; 𝒟ₒ; 𝒟ₒ∋⊆ )
+open import L.Ordinal {ℓ} using ( numeral-ord )
+open import L.Axioms.Basic {ℓ}
+  using ( finSet; finSet-in; finSet-out; Lset-suc; module FinOf )
+open import L.WellOrder.Base {ℓ-suc ℓ}
+  using ( Tri; lt; eq; gt; SWO; IsLeast; leastOfFormula; natOrder )
+```
+
+<!--en-->
 
 This chapter proves that every numeral-indexed stage is finite and equips it with the earliest-disagreement well-order, then combines stage number and local order to well-order the limit stage.
 
@@ -13,7 +54,6 @@ Finiteness propagates up the tower because the definable subsets of a finite set
 
 The limit-stage construction does not require a compatibility theorem for the finite-stage orders. It uses the first stage at which an element appears as the primary key. Two members of the limit that first appear at different finite stages are compared by those stage numbers alone; two that first appear at the same stage are compared by that stage's own order. No compatibility between the finite-stage orders is needed, and none is asserted.
 <!--zh-->
-# 有限层上的良序
 
 本章证明每个以数码为索引的层都是有穷的，并以最先分歧赋予其良序；随后结合层号与局部序来良序化极限层。
 
@@ -27,7 +67,6 @@ The limit-stage construction does not require a compatibility theorem for the fi
 
 极限层的构造无须假设或证明各有穷层序之间相容。它先比较元素首次出现的层号；层号相同，才使用该层自己的序。因此，不同层的元素由层号比较，同一层首次出现的元素由局部序比较。
 <!--ja-->
-# 有限段階上の整列順序
 
 本章では、数項で添字づけられた各段階が有限であることを証明し、最初の相違による整列順序を与える。さらに段階番号と局所順序を組み合わせて極限段階を整列順序づける。
 
@@ -42,22 +81,7 @@ The limit-stage construction does not require a compatibility theorem for the fi
 極限段階の構成には、有限段階の順序どうしの整合性を仮定したり証明したりする必要がない。まず要素が初めて現れる段階番号を比較し、番号が等しいときだけ、その段階自身の順序を用いる。したがって異なる段階の要素は段階番号で、同じ段階に初めて現れる要素は局所順序で比較される。
 <!--/-->
 
-<!--en-->
-The setting is the constructible universe built over the ambient cumulative hierarchy $V$. Excluded middle enters here as an explicit hypothesis: the module is parameterized by a decision `lem` for every proposition at level `ℓ-suc ℓ`. This one level is all the chapter asks for, and every construction below is allowed to call this single fixed decision; nothing is claimed for propositions at other levels beyond what the displayed theorems actually prove.
-<!--zh-->
-讨论的舞台是建立在累积层级 $V$ 之上的可构造宇宙。排中律在这里作为显式假设出现：整个模块由一个参数 `lem` 给出，它对层级 `ℓ-suc ℓ` 上的每个命题作出判定。本章需要的正是这一个层级，下文的所有构造都可以使用这一固定判定；对于其他层级上的命题，除已证明的定理所述内容外，不作任何论断。
-<!--ja-->
-舞台となるのは、周囲の累積階層 $V$ の上に構成される構成可能宇宙である。排中律はここで明示的な仮定として現れる。モジュールは、階層 `ℓ-suc ℓ` のすべての命題に対する判定を与えるパラメータ `lem` を受け取る。本章が必要とするのはこの一つの階層だけで、以下の構成はどれもこの固定された判定を用いる。表示されている定理が実際に証明する範囲を超えて、他の階層の命題については何も主張しない。
-<!--/-->
 
-```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-open import Base.Prelude
-open import Base.Classical using ( LEM )
-
-module L.Choice.FiniteStageOrders {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-```
 
 <!--en-->
 The names used throughout are those of the constructible hierarchy: a stage `Lset α` of the tower, the operator `𝒟ₒ` producing the definable subsets of a stage, and the fact `numeral-ord` that the numeral `# n` is an ordinal. In particular each finite stage `Lset (# n)` is a genuine stage, which is what lets the recursion of later sections climb the numerals. Also imported is `Lset-suc` and the `FinOf` machinery, which ties a stage to the finite sets inside it.
@@ -66,15 +90,6 @@ The names used throughout are those of the constructible hierarchy: a stage `Lse
 <!--ja-->
 以下で使う名前は構成可能階層のものである。塔の段階 `Lset α`、段階の定義可能部分集合を生み出す演算子 `𝒟ₒ`、そして数項 `# n` が順序数であるという事実 `numeral-ord` である。したがって各有限段階 `Lset (# n)` は正真正銘の段階であり、これが後の節の帰納が数項を登れる理由である。ここではさらに `Lset-suc` と `FinOf` の仕組みも取り込み、段階とその内部の有限集合とを結びつける。
 <!--/-->
-
-```agda
-
-open import FOL.ZFStructure using ( module hPropStructure )
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV )
-open import L.Constructible {ℓ} using ( IsOrd; Lset; Lset-out; 𝒟ₒ; 𝒟ₒ∋⊆ )
-open import L.Ordinal {ℓ} using ( numeral-ord )
-open import L.Axioms.Basic {ℓ}
-```
 
 <!--en-->
 Comparison needs a base order with trichotomy. The order `natOrder` on natural numbers is a strict, strongly well-founded linear order packaged as `SWO`, with a three-case comparison `Tri` split into `lt`, `eq`, `gt`. The search routines of later sections are written against this interface, so they work for any `SWO`, and the natural number instance is the one that orders the numerals.
@@ -85,11 +100,9 @@ Comparison needs a base order with trichotomy. The order `natOrder` on natural n
 <!--/-->
 
 ```agda
-  using ( finSet; finSet-in; finSet-out; Lset-suc; module FinOf )
-open import L.WellOrder.Base {ℓ-suc ℓ}
-  using ( Tri; lt; eq; gt; SWO; IsLeast; leastOf; natOrder )
+module SemV = FOL.Semantics 𝒮ᵥ
 
-open import Cubical.Data.Bool using ( Bool; true; false; false≢true )
+open import Cubical.Data.Bool using ( false≢true )
 ```
 
 <!--en-->
@@ -198,7 +211,7 @@ The fourth field states coverage. Given `x` together with a proof that it belong
 <!--/-->
 
 ```agda
-    onto   : (x : S) → ⟨ x ∈ˢ A ⟩ → ∥ Σ[ i ∈ Fin size ] (item i ≡ x) ∥₁
+    onto   : (x : S) → ⟨ x ∈ˢ A ⟩ → ∥ Σ[ i ∶ Fin size ] (item i ≡ x) ∥₁
 ```
 
 <!--en-->
@@ -241,7 +254,7 @@ bumpLeft (inl i) = inl (suc i)
 bumpLeft (inr j) = inr j
 
 joinFin : (a : ℕ) {b : ℕ} → Fin a ⊎ Fin b → Fin (a + b)
-joinFin zero    (inr j)       = j
+joinFin 0    (inr j)       = j
 ```
 
 <!--en-->
@@ -258,7 +271,7 @@ joinFin (suc a) (inl (suc i)) = suc (joinFin a (inl i))
 joinFin (suc a) (inr j)       = suc (joinFin a (inr j))
 
 splitFin : (a : ℕ) {b : ℕ} → Fin (a + b) → Fin a ⊎ Fin b
-splitFin zero    j       = inr j
+splitFin 0    j       = inr j
 ```
 
 <!--en-->
@@ -274,7 +287,7 @@ splitFin (suc a) zero    = inl zero
 splitFin (suc a) (suc i) = bumpLeft (splitFin a i)
 
 split-join : (a : ℕ) {b : ℕ} (x : Fin a ⊎ Fin b) → splitFin a (joinFin a x) ≡ x
-split-join zero    (inr j)       = refl
+split-join 0    (inr j)       = refl
 split-join (suc a) (inl zero)    = refl
 ```
 
@@ -327,7 +340,7 @@ The count of masks is defined by the recursion it will be enumerated with: lengt
 
 ```agda
 maskCount : ℕ → ℕ
-maskCount zero    = 1
+maskCount 0    = 1
 maskCount (suc n) = maskCount n + maskCount n
 
 maskCons : (n : ℕ) → (Fin (maskCount n) → Vec Bool n)
@@ -347,7 +360,7 @@ maskCons n r (inl j) = false ∷ r j
 maskCons n r (inr j) = true  ∷ r j
 
 maskAt : (n : ℕ) → Fin (maskCount n) → Vec Bool n
-maskAt zero    j = []
+maskAt 0    j = []
 maskAt (suc n) j = maskCons n (maskAt n) (splitFin (maskCount n) j)
 ```
 
@@ -360,9 +373,8 @@ Coverage is the content of `mask-onto`, and it is deliberately untruncated: give
 <!--/-->
 
 ```agda
-
-mask-onto : (n : ℕ) (v : Vec Bool n) → Σ[ j ∈ Fin (maskCount n) ] (maskAt n j ≡ v)
-mask-onto zero    []          = zero , refl
+mask-onto : (n : ℕ) (v : Vec Bool n) → Σ[ j ∶ Fin (maskCount n) ] (maskAt n j ≡ v)
+mask-onto 0    []          = zero , refl
 mask-onto (suc n) (false ∷ v) =
   joinFin (maskCount n) (inl (mask-onto n v .fst))
   , (cong (maskCons n (maskAt n)) (split-join (maskCount n) (inl (mask-onto n v .fst)))
@@ -425,8 +437,8 @@ The helper `selectStep` performs one step of the filter: given an entry `x` and 
 <!--/-->
 
 ```agda
-selectStep : {ℓ' : Level} {X : Type ℓ'} → X → Σ[ k ∈ ℕ ] (Fin k → X)
-           → Σ[ k ∈ ℕ ] (Fin k → X)
+selectStep : {ℓ' : Level} {X : Type ℓ'} → X → Σ[ k ∶ ℕ ] (Fin k → X)
+           → Σ[ k ∶ ℕ ] (Fin k → X)
 selectStep {X = X} x (k , g) = suc k , h
   where
   h : Fin (suc k) → X
@@ -445,8 +457,8 @@ selectStep {X = X} x (k , g) = suc k , h
   h (suc i) = g i
 
 select : {ℓ' : Level} {X : Type ℓ'} (n : ℕ) → (Fin n → X) → Vec Bool n
-       → Σ[ k ∈ ℕ ] (Fin k → X)
-select zero    f v           = zero , λ ()
+       → Σ[ k ∶ ℕ ] (Fin k → X)
+select 0    f v           = zero , λ ()
 ```
 
 <!--en-->
@@ -463,7 +475,7 @@ select (suc n) f (true ∷ v)  = selectStep (f zero) (select n (λ i → f (suc 
 
 select-out : {ℓ' : Level} {X : Type ℓ'} (n : ℕ) (f : Fin n → X) (v : Vec Bool n)
              (j : Fin (select n f v .fst))
-           → Σ[ i ∈ Fin n ] ((lookup i v ≡ true) × (select n f v .snd j ≡ f i))
+           → Σ[ i ∶ Fin n ] ((lookup i v ≡ true) × (select n f v .snd j ≡ f i))
 ```
 
 <!--en-->
@@ -475,10 +487,10 @@ The proof walks the same recursion as the definition. In the `false` case the he
 <!--/-->
 
 ```agda
-select-out zero    f []          ()
+select-out 0    f []          ()
 select-out (suc n) f (false ∷ v) j       = step (select-out n (λ i → f (suc i)) v j)
   where
-  step : Σ[ i ∈ Fin n ] ((lookup i v ≡ true)
+  step : Σ[ i ∶ Fin n ] ((lookup i v ≡ true)
            × (select n (λ i → f (suc i)) v .snd j ≡ f (suc i)))
 ```
 
@@ -491,7 +503,7 @@ In the `true` case there are two subcases. If the selected position is the first
 <!--/-->
 
 ```agda
-       → Σ[ i ∈ Fin (suc n) ] ((lookup i (false ∷ v) ≡ true)
+       → Σ[ i ∶ Fin (suc n) ] ((lookup i (false ∷ v) ≡ true)
            × (select (suc n) f (false ∷ v) .snd j ≡ f i))
   step (i , e , q) = suc i , (e , q)
 select-out (suc n) f (true ∷ v)  zero    = zero , (refl , refl)
@@ -508,9 +520,9 @@ The second subcase repeats the shift bookkeeping, now with the head present: the
 
 ```agda
   where
-  step : Σ[ i ∈ Fin n ] ((lookup i v ≡ true)
+  step : Σ[ i ∶ Fin n ] ((lookup i v ≡ true)
            × (select n (λ i → f (suc i)) v .snd j ≡ f (suc i)))
-       → Σ[ i ∈ Fin (suc n) ] ((lookup i (true ∷ v) ≡ true)
+       → Σ[ i ∶ Fin (suc n) ] ((lookup i (true ∷ v) ≡ true)
            × (select (suc n) f (true ∷ v) .snd (suc j) ≡ f i))
 ```
 
@@ -527,8 +539,8 @@ The converse specification, `select-in`, says every marked entry is selected: an
 
 select-in : {ℓ' : Level} {X : Type ℓ'} (n : ℕ) (f : Fin n → X) (v : Vec Bool n)
             (i : Fin n) → lookup i v ≡ true
-          → Σ[ j ∈ Fin (select n f v .fst) ] (select n f v .snd j ≡ f i)
-select-in zero    f []          ()      e
+          → Σ[ j ∶ Fin (select n f v .fst) ] (select n f v .snd j ≡ f i)
+select-in 0    f []          ()      e
 ```
 
 <!--en-->
@@ -556,9 +568,9 @@ The final clause performs the prepend bookkeeping: the position found in the tai
 <!--/-->
 
 ```agda
-  step : Σ[ j ∈ Fin (select n (λ i → f (suc i)) v .fst) ]
+  step : Σ[ j ∶ Fin (select n (λ i → f (suc i)) v .fst) ]
            (select n (λ i → f (suc i)) v .snd j ≡ f (suc i))
-       → Σ[ j ∈ Fin (select (suc n) f (true ∷ v) .fst) ]
+       → Σ[ j ∶ Fin (select (suc n) f (true ∷ v) .fst) ]
            (select (suc n) f (true ∷ v) .snd j ≡ f (suc i))
   step (j , q) = suc j , q
 ```
@@ -572,9 +584,8 @@ The final clause performs the prepend bookkeeping: the position found in the tai
 <!--/-->
 
 ```agda
-
 marks : {ℓ' : Level} {X : Type ℓ'} (n : ℕ) → (Fin n → X) → (X → Bool) → Vec Bool n
-marks zero    f d = []
+marks 0    f d = []
 marks (suc n) f d = d (f zero) ∷ marks n (λ i → f (suc i)) d
 
 marks-lookup : {ℓ' : Level} {X : Type ℓ'} (n : ℕ) (f : Fin n → X) (d : X → Bool)
@@ -675,8 +686,15 @@ A member of `Lset σ` lives in the stage as a set, but `finSet` needs a name in 
 `Lset σ` の要素は集合としてその段階にあるが、`finSet` には小さな要素型 `⟪ Lset σ ⟫` の名前が必要である。埋め込み `⟪ Lset σ ⟫↪` はその名前を集合として読む。所属は切り詰められたファイバーとして提示されるが、この埋め込みのファイバーは命題なので、`∈-asFiber` は切り詰めを消去し、明示的な名前と、それが `item i` に等しいというパスを返せる。`index i` と `index-eq i` は、このファイバー要素の二つの射影である。重複を許す有限な数え上げの任意のファイバーから添字を選ぶこととは異なり、そちらのファイバーは命題とは限らない。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module PowerStep (σ : S) (oσ : IsOrd σ) (t : Tally (Lset σ)) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   open Tally t
   open FinOf σ oσ using ( finSet∈𝒟ₒ )
 
@@ -693,11 +711,10 @@ The second component of the same fiber is the path `index-eq i`, recording that 
 <!--/-->
 
 ```agda
-
   index-eq : (i : Fin size) → ⟪ Lset σ ⟫↪ (index i) ≡ item i
   index-eq i = ∈-asFiber {a = item i} {b = Lset σ} (inside i) .snd
 
-  chosen : Vec Bool size → Σ[ k ∈ ℕ ] (Fin k → ⟪ Lset σ ⟫)
+  chosen : Vec Bool size → Σ[ k ∶ ℕ ] (Fin k → ⟪ Lset σ ⟫)
   chosen v = select size index v
 
   part : Vec Bool size → S
@@ -718,7 +735,7 @@ The second component of the same fiber is the path `index-eq i`, recording that 
   part-def v = finSet∈𝒟ₒ (chosen v .fst) (chosen v .snd)
 
   part-out : (v : Vec Bool size) (y : S) → ⟨ y ∈ˢ part v ⟩
-           → ∥ Σ[ i ∈ Fin size ] ((lookup i v ≡ true) × (item i ≡ y)) ∥₁
+           → ∥ Σ[ i ∶ Fin size ] ((lookup i v ≡ true) × (item i ≡ y)) ∥₁
 ```
 
 <!--en-->
@@ -733,8 +750,8 @@ The proof composes two steps. First, `finSet-out` unwraps membership in the span
   part-out v y y∈ = map₁ step
     (finSet-out (chosen v .fst) (λ j → ⟪ Lset σ ⟫↪ (chosen v .snd j)) y y∈)
     where
-    step : Σ[ j ∈ Fin (chosen v .fst) ] (⟪ Lset σ ⟫↪ (chosen v .snd j) ≡ y)
-         → Σ[ i ∈ Fin size ] ((lookup i v ≡ true) × (item i ≡ y))
+    step : Σ[ j ∶ Fin (chosen v .fst) ] (⟪ Lset σ ⟫↪ (chosen v .snd j) ≡ y)
+         → Σ[ i ∶ Fin size ] ((lookup i v ≡ true) × (item i ≡ y))
 ```
 
 <!--en-->
@@ -762,7 +779,7 @@ The opposite specification runs forward. If the bit at position `i` is `true`, t
 <!--/-->
 
 ```agda
-      out : Σ[ i ∈ Fin size ] ((lookup i v ≡ true) × (chosen v .snd j ≡ index i))
+      out : Σ[ i ∶ Fin size ] ((lookup i v ≡ true) × (chosen v .snd j ≡ index i))
       out = select-out size index v j
 
   part-mem : (v : Vec Bool size) (i : Fin size) → lookup i v ≡ true
@@ -782,7 +799,7 @@ Since membership in the spanned set is stated for the embedded name while the go
     (finSet-in (chosen v .fst) (λ j → ⟪ Lset σ ⟫↪ (chosen v .snd j))
       (⟪ Lset σ ⟫↪ (chosen v .snd (ins .fst))) ∣ ins .fst , refl ∣₁)
     where
-    ins : Σ[ j ∈ Fin (chosen v .fst) ] (chosen v .snd j ≡ index i)
+    ins : Σ[ j ∶ Fin (chosen v .fst) ] (chosen v .snd j ≡ index i)
     ins = select-in size index v i e
 ```
 
@@ -799,7 +816,8 @@ The remaining path `path` concatenates the slot's equality with `index-eq i`, so
     path = cong ⟪ Lset σ ⟫↪ (ins .snd) ∙ index-eq i
 
   maskOf : S → Vec Bool size
-  maskOf x = marks size item (λ y → decideOf (y ∈ˢ x) (lem (y ∈ˢ x)))
+  maskOf x = marks size item
+    (λ y → decideOf (y ∈ˢ x) (SemV.decideMembership lem y x))
 
   part-mask : (x : S) → ⟨ x ∈ˢ 𝒟ₒ (Lset σ) ⟩ → part (maskOf x) ≡ x
 ```
@@ -829,10 +847,10 @@ The hypothesis of the forward direction is itself merely an existence: some mark
 <!--/-->
 
 ```agda
-      step : Σ[ i ∈ Fin size ] ((lookup i (maskOf x) ≡ true) × (item i ≡ y))
+      step : Σ[ i ∶ Fin size ] ((lookup i (maskOf x) ≡ true) × (item i ≡ y))
            → ⟨ y ∈ˢ x ⟩
       step (i , e , q) = subst (λ w → ⟨ w ∈ˢ x ⟩) q
-        (decide-sound (item i ∈ˢ x) (lem (item i ∈ˢ x))
+        (decide-sound (item i ∈ˢ x) (SemV.decideMembership lem (item i) x)
           (sym (marks-lookup size item
 ```
 
@@ -845,7 +863,7 @@ The backward direction starts from membership of `y` in `x` and must produce mem
 <!--/-->
 
 ```agda
-                 (λ z → decideOf (z ∈ˢ x) (lem (z ∈ˢ x))) i) ∙ e))
+                 (λ z → decideOf (z ∈ˢ x) (SemV.decideMembership lem z x)) i) ∙ e))
     bwd : (y : S) → ⟨ y ∈ˢ x ⟩ → ⟨ y ∈ˢ part (maskOf x) ⟩
     bwd y y∈x = rec₁ (snd (y ∈ˢ part (maskOf x))) step
       (onto y (𝒟ₒ∋⊆ (Lset σ) x x∈ y y∈x))
@@ -861,11 +879,13 @@ Given the entry `i` equal to `y`, it suffices to show `item i` belongs to the sp
 <!--/-->
 
 ```agda
-      step : Σ[ i ∈ Fin size ] (item i ≡ y) → ⟨ y ∈ˢ part (maskOf x) ⟩
+      step : Σ[ i ∶ Fin size ] (item i ≡ y) → ⟨ y ∈ˢ part (maskOf x) ⟩
       step (i , q) = subst (λ w → ⟨ w ∈ˢ part (maskOf x) ⟩) q
         (part-mem (maskOf x) i
-          (marks-lookup size item (λ z → decideOf (z ∈ˢ x) (lem (z ∈ˢ x))) i
-           ∙ decide-true (item i ∈ˢ x) (lem (item i ∈ˢ x))
+          (marks-lookup size item
+             (λ z → decideOf (z ∈ˢ x) (SemV.decideMembership lem z x)) i
+           ∙ decide-true (item i ∈ˢ x)
+             (SemV.decideMembership lem (item i) x)
 ```
 
 <!--en-->
@@ -898,7 +918,7 @@ The record's `inside` field reuses the certificate `part-def` at each enumerated
     ; onto   = cover }
     where
     cover : (x : S) → ⟨ x ∈ˢ 𝒟ₒ (Lset σ) ⟩
-          → ∥ Σ[ j ∈ Fin (maskCount size) ] (part (maskAt size j) ≡ x) ∥₁
+          → ∥ Σ[ j ∶ Fin (maskCount size) ] (part (maskAt size j) ≡ x) ∥₁
 ```
 
 <!--en-->
@@ -913,19 +933,21 @@ The witness index is the one that `mask-onto` produces for the verdict mask `mas
     cover x x∈ = ∣ mask-onto size (maskOf x) .fst
                  , (cong part (mask-onto size (maskOf x) .snd) ∙ part-mask x x∈) ∣₁
 ```
+</div>
+</details>
 
 <!--en-->
 ## Smallest elements, and well-foundedness
 
-This section spends the tally built earlier rather than making one. Fix a type with a relation that is trichotomous, irreflexive and transitive: everything a strict well-order asks for except well-foundedness. The procedure `scan` walks a finite family and returns, without any truncation, either an entry that satisfies the predicate and is smallest among the entries that do, or a refutation showing no entry satisfies it. It is a plain recursion on the length: at each step excluded middle decides the predicate at the head, and trichotomy compares the head with the best found so far; the four combinations are the four clauses. The absence of truncation matters, because the caller wants an actual element, not a mere existence. Assuming the family merely covers the whole type, `Search.Over.least` upgrades this to a smallest element of any merely inhabited predicate over the whole type: the no-entry-satisfies-it branch is refuted by the witness, whose fiber in the family the predicate would have to hit. Well-foundedness then follows by the minimal-counterexample argument, described when its code is reached.
+This section spends the tally built earlier rather than making one. Fix a type with a relation that is trichotomous, irreflexive and transitive: everything a strict well-order asks for except well-foundedness. The procedure `scan` walks a finite family and returns, without any truncation, either an entry that satisfies the predicate and is smallest among the entries that do, or a refutation showing no entry satisfies it. It is a plain recursion on the length: at each step a supplied decision procedure decides the predicate at the head, and trichotomy compares the head with the best found so far. Thus the scan itself is constructive relative to pointwise decidability and does not request excluded middle for an arbitrary predicate. Assuming the family merely covers the whole type, `Search.Over.least` upgrades this to a smallest element of any merely inhabited decidable predicate. Well-foundedness later supplies its particular decision procedure from the chapter's classical hypothesis.
 <!--zh-->
 ## 最小元与良基性
 
-本节花用的是先前造好的点名册，而非再造一份。固定一个类型及其上一个三歧、非自反且传递的关系，即严格良序所要求的一切，只差良基。过程 `scan` 走过一个有穷族，并且不带任何截断地返回：要么是一个满足谓词、且在满足者之中最小的条目，要么是「没有条目满足它」的反驳。它是沿长度的普通递归：每一步由排中律判定谓词在头部是否成立，再由三歧比较头部与迄今为止的最佳者；四种组合即四条子句。全程无截断这一点很要紧，因为调用方要的是一个货真价实的元素，不是仅仅的存在性。在「该族单纯覆盖整个类型」的假设下，`Search.Over.least` 把它升级为「整个类型上任一单纯非空谓词的最小元」：「没有条目满足它」那一支被见证者驳倒，因为该谓词本该命中它在族中的纤维。良基性随后的最小反例论证在其代码处再作说明。
+本节花用的是先前造好的点名册，而非再造一份。固定一个类型及其上一个三歧、非自反且传递的关系，即严格良序所要求的一切，只差良基。过程 `scan` 走过一个有穷族，并且不带任何截断地返回：要么是一个满足谓词、且在满足者之中最小的条目，要么是「没有条目满足它」的反驳。它是沿长度的普通递归：每一步由外部供给的判定过程判定谓词在头部是否成立，再由三歧比较头部与迄今为止的最佳者。因此扫描本身只相对于逐点可判定性作构造，不再向任意谓词索取排中律。在「该族单纯覆盖整个类型」的假设下，`Search.Over.least` 把它升级为任一仅仅非空的可判定谓词的最小元。后面的良基性证明才从本章的经典假设取得它所需的特定判定过程。
 <!--ja-->
 ## 最小要素と整礎性
 
-この節では、先につくった数え上げを使う側の議論を進める。型と、その上の三岐・非反射・推移的な関係を固定する。これは整列順序が要求する性質のうち整礎性を除くすべてである。手続き `scan` は有限族をたどり、截断を一切伴わずに、述語を満たし満たすものの中で最小である項目か、満たす項目が存在しないことの反駁を返す。長さについての素朴な再帰である。各段階で排中律が頭部での述語を判定し、三岐性が頭部とそれまでの最良の候補を比較する。四つの組み合わせが四つの節である。どこにも截断がないことが重要である。呼び出し側が求めるのは単なる存在ではなく実際の要素だからである。族が型全体を単に被覆するという仮定の下で、`Search.Over.least` はこれを「型全体上の任意の単に非空な述語の最小要素」へと引き上げる。満たす項目がないという枝は、述語がそのファイバーを命中させねばならない証人によって反駁される。整礎性はその後、最小の反例の議論によって導かれ、そのコードのところで述べる。
+この節では、先につくった数え上げを使う側の議論を進める。型と、その上の三岐・非反射・推移的な関係を固定する。これは整列順序が要求する性質のうち整礎性を除くすべてである。手続き `scan` は有限族をたどり、截断を一切伴わずに、述語を満たし満たすものの中で最小である項目か、満たす項目が存在しないことの反駁を返す。長さについての素朴な再帰であり、各段階では外から与えられた判定手続きが頭部の述語を判定し、三岐性が頭部とそれまでの最良の候補を比較する。したがって走査自体は各点での決定可能性に相対して構成的であり、任意の述語について排中律を要求しない。有限族が型を単に被覆するとき、`Search.Over.least` は単に非空な決定可能述語の最小要素を与える。後の整礎性証明が必要とする特定の判定手続きは、本章の古典的仮定から供給される。
 <!--/-->
 
 <!--en-->
@@ -936,12 +958,18 @@ Fix a strict relation `≺` on `A` with trichotomy, irreflexivity and transitivi
 `A` 上の狭義関係 `≺` が三岐性・非反射性・推移性を満たすとする。整礎性は仮定せず、有限な被覆族から導く。述語 `P` に対し、`Least P m` は `m` が `P` を満たすことと、より小さい充足者がすべて矛盾を導くことを記録する。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Search {A : Type (ℓ-suc ℓ)} (_≺_ : A → A → Type (ℓ-suc ℓ))
               (tri : (a b : A) → Tri (a ≺ b) (a ≡ b) (b ≺ a))
               (irr : (a : A) → a ≺ a → ⊥₀)
               (trans : (a b c : A) → a ≺ b → b ≺ c → a ≺ c) where
+```
+</summary>
+<div class="submodule-fold-content">
 
+```agda
   Least : (P : A → hProp (ℓ-suc ℓ)) → A → Type (ℓ-suc ℓ)
 ```
 
@@ -958,23 +986,24 @@ The scan's output type `Found P n f` is a disjunction of two explicit alternativ
 
   Found : (P : A → hProp (ℓ-suc ℓ)) (n : ℕ) (f : Fin n → A) → Type (ℓ-suc ℓ)
   Found P n f =
-    (Σ[ i ∈ Fin n ] (⟨ P (f i) ⟩ × ((j : Fin n) → ⟨ P (f j) ⟩ → f j ≺ f i → ⊥₀)))
+    (Σ[ i ∶ Fin n ] (⟨ P (f i) ⟩ × ((j : Fin n) → ⟨ P (f j) ⟩ → f j ≺ f i → ⊥₀)))
     ⊎ ((i : Fin n) → ⟨ P (f i) ⟩ → ⊥₀)
 ```
 
 <!--en-->
-`scan` is defined by recursion on the family's length. The empty family returns the right alternative vacuously. For a family with a head, the recursion first handles the tail, shifting positions by one, and the verdict of excluded middle on `P` at the head is handed to `combine`, which merges the tail's outcome with the head's verdict into an outcome for the whole family.
+`scan` is defined by recursion on the family's length. The empty family returns the right alternative vacuously. For a family with a head, the recursion first handles the tail, shifting positions by one, and the supplied verdict on `P` at the head is handed to `combine`, which merges the tail's outcome with the head's verdict into an outcome for the whole family.
 <!--zh-->
-`scan` 沿族长度递归定义。空族空虚地返回右支。对有头部的族，递归先处理尾部，把位置整体后移一位；排中律对 `P` 在头部的判定交给 `combine`，它把尾部的结果与头部的判定合并成整个族的结果。
+`scan` 沿族长度递归定义。空族空虚地返回右支。对有头部的族，递归先处理尾部，把位置整体后移一位；外部供给的 `P` 在头部的判定交给 `combine`，它把尾部的结果与头部的判定合并成整个族的结果。
 <!--ja-->
-`scan` は族の長さについての再帰で定義される。空の族は空虚に右の選択肢を返す。頭部を持つ族では、再帰がまず尾を (位置を一つずらして) 処理し、頭部での `P` に対する排中律の判定が `combine` に渡される。`combine` は尾の結果と頭部の判定を族全体の結果へと統合する。
+`scan` は族の長さについての再帰で定義される。空の族は空虚に右の選択肢を返す。頭部を持つ族では、再帰がまず尾を (位置を一つずらして) 処理し、外から与えられた頭部での `P` の判定が `combine` に渡される。`combine` は尾の結果と頭部の判定を族全体の結果へと統合する。
 <!--/-->
 
 ```agda
-
-  scan : (P : A → hProp (ℓ-suc ℓ)) (n : ℕ) (f : Fin n → A) → Found P n f
-  scan P zero    f = inr (λ ())
-  scan P (suc n) f = combine (scan P n (λ i → f (suc i))) (lem (P (f zero)))
+  scan : (P : A → hProp (ℓ-suc ℓ))
+       → ((a : A) → Dec ⟨ P a ⟩)
+       → (n : ℕ) (f : Fin n → A) → Found P n f
+  scan P decP 0    f = inr (λ ())
+  scan P decP (suc n) f = combine (scan P decP n (λ i → f (suc i))) (decP (f zero))
     where
     combine : Found P n (λ i → f (suc i))
 ```
@@ -1099,13 +1128,19 @@ The sub-module `Over` adds the one premise that turns a finite family into a tal
 副モジュール `Over` は、有限族を数え上げへと変えるための唯一の前提を追加する。`cov` は `A` のすべての要素が族によって単に命中されると言うもので、重複を許す截断的被覆である。この前提のもとで `least` は走査の答えを型全体への最小要素へと引き上げる。入力は「ある要素が `P` を満たす」という截断された証人だけであるが、出力は明示的なデータ、すなわち要素と `Least P m` の組である。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
-
   module Over (n : ℕ) (f : Fin n → A)
-              (cov : (a : A) → ∥ Σ[ i ∈ Fin n ] (f i ≡ a) ∥₁) where
+              (cov : (a : A) → ∥ Σ[ i ∶ Fin n ] (f i ≡ a) ∥₁) where
+```
+</summary>
+<div class="submodule-fold-content">
 
-    least : (P : A → hProp (ℓ-suc ℓ)) → ∥ Σ[ a ∈ A ] ⟨ P a ⟩ ∥₁ → Σ[ m ∈ A ] Least P m
-    least P h = decide (scan P n f)
+```agda
+    least : (P : A → hProp (ℓ-suc ℓ)) → ((a : A) → Dec ⟨ P a ⟩)
+          → ∥ Σ[ a ∶ A ] ⟨ P a ⟩ ∥₁ → Σ[ m ∶ A ] Least P m
+    least P decP h = decide (scan P decP n f)
       where
 ```
 
@@ -1121,7 +1156,7 @@ Inside `least`, the auxiliary `nowhere` disposes of the scan's no-satisfier bran
       nowhere : ((i : Fin n) → ⟨ P (f i) ⟩ → ⊥₀) → ⊥₀
       nowhere none = rec₁ isProp⊥ atWitness h
         where
-        atWitness : Σ[ a ∈ A ] ⟨ P a ⟩ → ⊥₀
+        atWitness : Σ[ a ∶ A ] ⟨ P a ⟩ → ⊥₀
         atWitness (a , pa) = rec₁ isProp⊥
 ```
 
@@ -1135,7 +1170,7 @@ Concretely, the witness supplies an element `a` with `⟨ P a ⟩`, and the cove
 
 ```agda
           (λ { (i , q) → none i (subst (λ w → ⟨ P w ⟩) (sym q) pa) }) (cov a)
-      decide : Found P n f → Σ[ m ∈ A ] Least P m
+      decide : Found P n f → Σ[ m ∶ A ] Least P m
       decide (inl (i , pi , mi)) = f i , (pi , everywhere)
         where
         everywhere : (b : A) → ⟨ P b ⟩ → b ≺ f i → ⊥₀
@@ -1186,8 +1221,8 @@ The property to be minimized is `NotAcc`, non-accessibility. Its underlying stat
         where
         NotAcc : A → hProp (ℓ-suc ℓ)
         NotAcc b = (Acc _≺_ b → ⊥₀) , isProp→ isProp⊥
-        found : Σ[ m ∈ A ] Least NotAcc m
-        found = least NotAcc ∣ a , nh ∣₁
+        found : Σ[ m ∶ A ] Least NotAcc m
+        found = least NotAcc (λ b → lem (NotAcc b)) ∣ a , nh ∣₁
 ```
 
 <!--en-->
@@ -1217,6 +1252,11 @@ In the negative branch, `b` would be a non-accessible element strictly below the
 ```agda
           pick (no nb) = ⊥₀-rec (found .snd .snd b nb hb)
 ```
+</div>
+</details>
+
+</div>
+</details>
 
 <!--en-->
 ## The earliest disagreement
@@ -1261,7 +1301,7 @@ Witness R A x y z =
   ⟨ z ∈ˢ A ⟩ × ⟨ z ∈ˢ y ⟩ × (⟨ z ∈ˢ x ⟩ → ⊥₀) × Agrees R A x y z
 
 precedes : (R : S → S → hProp (ℓ-suc ℓ)) (A : S) → S → S → hProp (ℓ-suc ℓ)
-precedes R A x y = ∥ Σ[ z ∈ S ] Witness R A x y z ∥₁ , squash₁
+precedes R A x y = ∥ Σ[ z ∶ S ] Witness R A x y z ∥₁ , squash₁
 
 precedes-irrefl : (R : S → S → hProp (ℓ-suc ℓ)) (A x : S) → ⟨ precedes R A x x ⟩ → ⊥₀
 precedes-irrefl R A x = rec₁ isProp⊥ (λ { (z , _ , z∈ , z∉ , _) → z∉ z∈ })
@@ -1289,13 +1329,19 @@ The module collects the three premises the earliest-disagreement order will inhe
 このモジュールは、最初の相違の順序が受け継ぐ三つの前提を集める。`baseTri` と `baseTrans` は、`A` の要素に制限した `R` が三岐かつ推移的であると言い、`baseLeast` は `A` の上の最小要素原理である。`A` の要素のある性質が単に非空であることから、その性質を満たし、より小さい `A` の要素がどれも満たさない要素を返す。結論の形に注意してほしい。呼び出し側が実際の最小要素を必要とするので、截断ではなく明示的なデータである。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Difference (R : S → S → hProp (ℓ-suc ℓ)) (A : S)
   (baseTri : (a b : S) → ⟨ a ∈ˢ A ⟩ → ⟨ b ∈ˢ A ⟩ → Tri ⟨ R a b ⟩ (a ≡ b) ⟨ R b a ⟩)
   (baseTrans : (a b c : S) → ⟨ R a b ⟩ → ⟨ R b c ⟩ → ⟨ R a c ⟩)
-  (baseLeast : (P : S → hProp (ℓ-suc ℓ)) → ∥ Σ[ a ∈ S ] (⟨ a ∈ˢ A ⟩ × ⟨ P a ⟩) ∥₁
-             → Σ[ m ∈ S ] (⟨ m ∈ˢ A ⟩ × ⟨ P m ⟩
+  (baseLeast : (P : S → hProp (ℓ-suc ℓ)) → ∥ Σ[ a ∶ S ] (⟨ a ∈ˢ A ⟩ × ⟨ P a ⟩) ∥₁
+             → Σ[ m ∶ S ] (⟨ m ∈ˢ A ⟩ × ⟨ P m ⟩
+                 × ((b : S) → ⟨ b ∈ˢ A ⟩ → ⟨ P b ⟩ → ⟨ R b m ⟩ → ⊥₀)))
+  where
 ```
+</summary>
+<div class="submodule-fold-content">
 
 <!--en-->
 The statement of transitivity takes the two hypotheses exactly as `precedes` produces them: truncated witnesses for `x ≺ y` and for `y ≺ z`, and returns a truncated witness for `x ≺ z`. The proof therefore begins by eliminating the first truncation, then the second, both into a target that is again a truncation and hence a proposition.
@@ -1306,9 +1352,6 @@ The statement of transitivity takes the two hypotheses exactly as `precedes` pro
 <!--/-->
 
 ```agda
-                 × ((b : S) → ⟨ b ∈ˢ A ⟩ → ⟨ P b ⟩ → ⟨ R b m ⟩ → ⊥₀)))
-  where
-
   precedes-trans : (x y z : S) → ⟨ precedes R A x y ⟩ → ⟨ precedes R A y z ⟩
                  → ⟨ precedes R A x z ⟩
   precedes-trans x y z hxy hyz =
@@ -1325,7 +1368,7 @@ With both witnesses exposed, `both` receives the full data: a point `p` witnessi
 ```agda
     rec₁ squash₁ (λ wp → rec₁ squash₁ (both wp) hyz) hxy
     where
-    both : Σ[ p ∈ S ] Witness R A x y p → Σ[ q ∈ S ] Witness R A y z q
+    both : Σ[ p ∶ S ] Witness R A x y p → Σ[ q ∶ S ] Witness R A y z q
          → ⟨ precedes R A x z ⟩
     both (p , p∈A , p∈y , p∉x , agp) (q , q∈A , q∈z , q∉y , agq) =
 ```
@@ -1435,7 +1478,7 @@ Two truncations organise the question. The predicate `Apart w` says, merely, tha
     Apart w = ∥ (⟨ w ∈ˢ x ⟩ × (⟨ w ∈ˢ y ⟩ → ⊥₀))
               ⊎ ((⟨ w ∈ˢ x ⟩ → ⊥₀) × ⟨ w ∈ˢ y ⟩) ∥₁ , squash₁
     Some : Type (ℓ-suc ℓ)
-    Some = ∥ Σ[ a ∈ S ] (⟨ a ∈ˢ A ⟩ × ⟨ Apart a ⟩) ∥₁
+    Some = ∥ Σ[ a ∶ S ] (⟨ a ∈ˢ A ⟩ × ⟨ Apart a ⟩) ∥₁
 ```
 
 <!--en-->
@@ -1463,7 +1506,7 @@ For the forward clause, suppose `w ∈ˢ x` and ask excluded middle about `w ∈
 <!--/-->
 
 ```agda
-      fwd wx = pick (lem (w ∈ˢ y))
+      fwd wx = pick (SemV.decideMembership lem w y)
         where
         pick : Dec ⟨ w ∈ˢ y ⟩ → ⟨ w ∈ˢ y ⟩
         pick (yes h) = h
@@ -1480,7 +1523,7 @@ The backward clause is the mirror image. Assuming `w ∈ˢ y`, excluded middle d
 
 ```agda
       bwd : ⟨ w ∈ˢ y ⟩ → ⟨ w ∈ˢ x ⟩
-      bwd wy = pick (lem (w ∈ˢ x))
+      bwd wy = pick (SemV.decideMembership lem w x)
         where
         pick : Dec ⟨ w ∈ˢ x ⟩ → ⟨ w ∈ˢ x ⟩
         pick (yes h) = h
@@ -1543,9 +1586,9 @@ In the other branch, `Some` holds: some member of `A` is apart. The smallest-ele
 <!--/-->
 
 ```agda
-    decide (yes hs) = side (lem (m ∈ˢ x))
+    decide (yes hs) = side (SemV.decideMembership lem m x)
       where
-      found : Σ[ m ∈ S ] (⟨ m ∈ˢ A ⟩ × ⟨ Apart m ⟩
+      found : Σ[ m ∶ S ] (⟨ m ∈ˢ A ⟩ × ⟨ Apart m ⟩
                 × ((b : S) → ⟨ b ∈ˢ A ⟩ → ⟨ Apart b ⟩ → ⟨ R b m ⟩ → ⊥₀))
       found = baseLeast Apart hs
 ```
@@ -1628,6 +1671,8 @@ The mirrored branch assumes instead that `m` does not belong to `x`, and produce
         ag : Agrees R A x y m
         ag w w∈A hw = agree w (belowM w w∈A hw)
 ```
+</div>
+</details>
 
 <!--en-->
 ## The finite stages
@@ -1698,11 +1743,11 @@ Irreflexivity of `before` holds at every numeral, and its proof does no inductio
 <!--/-->
 
 ```agda
-before zero    x y = ⊥
+before 0    x y = ⊥
 before (suc n) = precedes (before n) (finiteStage n)
 
 before-irrefl : (n : ℕ) (x : S) → ⟨ before n x x ⟩ → ⊥₀
-before-irrefl zero    x h = ⊥*-rec h
+before-irrefl 0    x h = ⊥*-rec h
 before-irrefl (suc n) x h = precedes-irrefl (before n) (finiteStage n) x h
 ```
 
@@ -1715,11 +1760,10 @@ The base case's emptiness is recorded separately as `zero-empty`: no set is a me
 <!--/-->
 
 ```agda
-
 zero-empty : (x : S) → ⟨ x ∈ˢ finiteStage zero ⟩ → ⊥₀
 zero-empty x h = rec₁ isProp⊥ step (Lset-out (# zero) x h)
   where
-  step : Σ[ δ ∈ S ] (⟨ δ ∈ˢ ∅ ⟩ × ⟨ x ∈ˢ 𝒟ₒ (Lset δ) ⟩) → ⊥₀
+  step : Σ[ δ ∶ S ] (⟨ δ ∈ˢ ∅ ⟩ × ⟨ x ∈ˢ 𝒟ₒ (Lset δ) ⟩) → ⊥₀
   step (δ , δ∈ , _) = ∅-empty δ (∈∈ₛ {a = δ} {b = ∅} .fst δ∈)
 ```
 
@@ -1747,7 +1791,7 @@ The search machinery of the earlier section works over a type, so a member of a 
 
 ```agda
 Point : ℕ → Type (ℓ-suc ℓ)
-Point n = Σ[ x ∈ S ] ⟨ x ∈ˢ finiteStage n ⟩
+Point n = Σ[ x ∶ S ] ⟨ x ∈ˢ finiteStage n ⟩
 
 Below : (n : ℕ) → Point n → Point n → Type (ℓ-suc ℓ)
 Below n a b = ⟨ before n (a .fst) (b .fst) ⟩
@@ -1779,9 +1823,15 @@ Inside `Ordered`, the first task is trichotomy about points. `triPoint` applies 
 `Ordered` の内部での最初の課題は、点についての三分法である。`triPoint` は集合についての三分法 `tri` を `Tri-map` に渡す。中央の選言肢は結論がパスなので変換が要り、`Σ≡Prop` がまさにそれを供給する。第二成分は命題の証明であるから、根底の集合の間のパスは点の間のパスへ延長できる。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
-
 module Ordered (n : ℕ) (r : StageOrder n) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   open StageOrder r public
   open Tally tally
 
@@ -1803,7 +1853,7 @@ The tally is lifted from sets to points by pairing each entry with its own membe
   points : Fin size → Point n
   points i = item i , inside i
 
-  covers : (a : Point n) → ∥ Σ[ i ∈ Fin size ] (points i ≡ a) ∥₁
+  covers : (a : Point n) → ∥ Σ[ i ∶ Fin size ] (points i ≡ a) ∥₁
   covers a = map₁ (λ { (i , q) → i , Σ≡Prop (λ z → snd (z ∈ˢ finiteStage n)) q })
 ```
 
@@ -1852,8 +1902,8 @@ The last lemma packages least elements in the shape the next stage needs. `least
 ```agda
     ; wf∙    = wellFounded }
 
-  leastMem : (P : S → hProp (ℓ-suc ℓ)) → ∥ Σ[ a ∈ S ] (⟨ a ∈ˢ finiteStage n ⟩ × ⟨ P a ⟩) ∥₁
-           → Σ[ m ∈ S ] (⟨ m ∈ˢ finiteStage n ⟩ × ⟨ P m ⟩
+  leastMem : (P : S → hProp (ℓ-suc ℓ)) → ∥ Σ[ a ∶ S ] (⟨ a ∈ˢ finiteStage n ⟩ × ⟨ P a ⟩) ∥₁
+           → Σ[ m ∶ S ] (⟨ m ∈ˢ finiteStage n ⟩ × ⟨ P m ⟩
                × ((b : S) → ⟨ b ∈ˢ finiteStage n ⟩ → ⟨ P b ⟩
                           → ⟨ before n b m ⟩ → ⊥₀))
 ```
@@ -1885,9 +1935,12 @@ Only the glue remains visible: `Q` reads the set-level predicate at the underlyi
 ```agda
     Q : Point n → hProp (ℓ-suc ℓ)
     Q a = P (a .fst)
-    found : Σ[ m ∈ Point n ] Least Q m
-    found = least Q (map₁ (λ { (a , a∈ , pa) → (a , a∈) , pa }) h)
+    found : Σ[ m ∶ Point n ] Least Q m
+    found = least Q (λ a → lem (Q a))
+      (map₁ (λ { (a , a∈ , pa) → (a , a∈) , pa }) h)
 ```
+</div>
+</details>
 
 <!--en-->
 The recursion starts with the empty tally and vacuous order laws at stage zero. At a successor, the previous tally is lifted across the definable power set. Earliest disagreement supplies trichotomy from the two subset hypotheses and supplies transitivity directly from the preceding stage's order; the successor-stage identity is used only where membership must be moved between the stage and that definable power set.
@@ -1907,7 +1960,7 @@ The base case assembles a record whose three fields are the three small facts ju
 
 ```agda
 stageOrder : (n : ℕ) → StageOrder n
-stageOrder zero = record { tally = empty ; tri = triZero ; trans = transZero }
+stageOrder 0 = record { tally = empty ; tri = triZero ; trans = transZero }
   where
   empty : Tally (finiteStage zero)
   empty = record
@@ -1970,7 +2023,6 @@ The identification `step` is the path `Lset-suc (# n)`, stating that the stage a
 <!--/-->
 
 ```agda
-
   step : finiteStage (suc n) ≡ 𝒟ₒ (finiteStage n)
   step = Lset-suc (# n)
 
@@ -2004,7 +2056,6 @@ The auxiliary `members` extracts the inclusion hypothesis that `precedes-tri` as
 <!--/-->
 
 ```agda
-
   members : (x : S) → ⟨ x ∈ˢ finiteStage (suc n) ⟩
           → (w : S) → ⟨ w ∈ˢ x ⟩ → ⟨ w ∈ˢ finiteStage n ⟩
   members x x∈ = 𝒟ₒ∋⊆ (finiteStage n) x (subst (λ v → ⟨ x ∈ˢ v ⟩) step x∈)
@@ -2060,9 +2111,9 @@ The limit's members are packaged as `Limit`, a set together with a membership ce
 
 ```agda
 Limit : Type (ℓ-suc ℓ)
-Limit = Σ[ x ∈ S ] ⟨ x ∈ˢ Lset ω ⟩
+Limit = Σ[ x ∶ S ] ⟨ x ∈ˢ Lset ω ⟩
 
-inSome : (x : S) → ⟨ x ∈ˢ Lset ω ⟩ → ∥ Σ[ n ∈ ℕ ] ⟨ x ∈ˢ finiteStage n ⟩ ∥₁
+inSome : (x : S) → ⟨ x ∈ˢ Lset ω ⟩ → ∥ Σ[ n ∶ ℕ ] ⟨ x ∈ˢ finiteStage n ⟩ ∥₁
 inSome x h = rec₁ squash₁ atStage (Lset-out ω x h)
   where
 ```
@@ -2076,11 +2127,11 @@ It remains to identify the index `δ` below `ω`. Membership `δ ∈ ω` is the 
 <!--/-->
 
 ```agda
-  atStage : Σ[ δ ∈ S ] (⟨ δ ∈ˢ ω ⟩ × ⟨ x ∈ˢ 𝒟ₒ (Lset δ) ⟩)
-          → ∥ Σ[ n ∈ ℕ ] ⟨ x ∈ˢ finiteStage n ⟩ ∥₁
+  atStage : Σ[ δ ∶ S ] (⟨ δ ∈ˢ ω ⟩ × ⟨ x ∈ˢ 𝒟ₒ (Lset δ) ⟩)
+          → ∥ Σ[ n ∶ ℕ ] ⟨ x ∈ˢ finiteStage n ⟩ ∥₁
   atStage (δ , δ∈ω , x∈) = map₁ named δ∈ω
     where
-    named : Σ[ k ∈ Lift ℕ ] (# (lower k) ≡ δ) → Σ[ n ∈ ℕ ] ⟨ x ∈ˢ finiteStage n ⟩
+    named : Σ[ k ∶ Lift ℕ ] (# (lower k) ≡ δ) → Σ[ n ∶ ℕ ] ⟨ x ∈ˢ finiteStage n ⟩
 ```
 
 <!--en-->
@@ -2097,20 +2148,25 @@ With the numeral named, `named` produces the actual stage of appearance. Since `
           (subst (λ w → ⟨ x ∈ˢ 𝒟ₒ (Lset w) ⟩) (sym q) x∈)
 
 levelData : (a : Limit)
-          → Σ[ n ∈ ℕ ] IsLeast natOrder (λ m → a .fst ∈ˢ finiteStage m) n
+          → Σ[ n ∶ ℕ ] IsLeast natOrder (λ m → a .fst ∈ˢ finiteStage m) n
 ```
 
 <!--en-->
-`levelData` is where the truncated existence meets the least-element theorem. It applies `leastOf` for the natural-number order and excluded middle to the predicate `m ↦ a .fst ∈ˢ finiteStage m` and the truncated witness `inSome`, returning an explicit numeral together with `IsLeast` data: the stage at that numeral contains the set, and no smaller numeral has that property. The level is therefore the least stage of appearance, not an arbitrary stage selected from the truncation.
+`levelData` is where the truncated existence meets the formula-facing least-element theorem. The predicate `m ↦ a .fst ∈ˢ finiteStage m` is presented by the atomic membership formula, with `a.fst` and `finiteStage m` in its two environment slots. Applying the natural-number order and the truncated witness `inSome` returns an explicit numeral together with `IsLeast` data: the stage at that numeral contains the set, and no smaller numeral has that property. The level is therefore the least stage of appearance, not an arbitrary stage selected from the truncation.
 <!--zh-->
-`levelData` 正是截断存在与最小元定理相遇之处。它对谓词 `m ↦ a .fst ∈ˢ finiteStage m` 与截断见证 `inSome` 应用自然数序的 `leastOf` 与排中律，返回一个显式数码连同 `IsLeast` 数据：该数码处的层含有该集合，且更小的数码都没有该性质。因此层号是最小的出现层，而非从截断中任意选出的层。
+`levelData` 正是截断存在与面向公式的最小元定理相遇之处。谓词 `m ↦ a .fst ∈ˢ finiteStage m` 由原子隶属公式呈现，`a.fst` 与 `finiteStage m` 分居环境的两个槽位。把自然数序与截断见证 `inSome` 交给搜索，便返回一个显式数码连同 `IsLeast` 数据：该数码处的层含有该集合，且更小的数码都没有该性质。因此层号是最小的出现层，而非从截断中任意选出的层。
 <!--ja-->
-`levelData` が、截断された存在と最小要素の定理が出会う箇所である。述語 `m ↦ a .fst ∈ˢ finiteStage m` と截断された証人 `inSome` に対し、自然数順序についての `leastOf` と排中律を適用すると、明示的な数項と `IsLeast` のデータが返る。その数項の段階は集合を含み、より小さい数項ではその性質は成り立たない。したがってレベルは最小の出現段階であり、截断から任意に選ばれた段階ではない。
+`levelData` は、截断された存在と論理式に面する最小要素定理が出会う箇所である。述語 `m ↦ a .fst ∈ˢ finiteStage m` は原子的な所属の論理式で表示され、`a.fst` と `finiteStage m` が環境の二つの枠を占める。自然数順序と截断された証人 `inSome` を探索へ渡すと、明示的な数項と `IsLeast` のデータが返る。その数項の段階は集合を含み、より小さい数項ではその性質は成り立たない。したがってレベルは最小の出現段階であり、截断から任意に選ばれた段階ではない。
 <!--/-->
 
 ```agda
-levelData a =
-  leastOf natOrder lem (λ m → a .fst ∈ˢ finiteStage m) (inSome (a .fst) (a .snd))
+levelPredicate : (a : Limit) → FOL.Semantics.FormulaPredicate 𝒮ᵥ ℕ (⊥* {ℓ}) ⊥*-rec
+  (λ m → a .fst ∈ˢ finiteStage m)
+levelPredicate a = FOL.Semantics.presented 2 (var zero ∈̇ var (suc zero))
+  (λ m → a .fst ∷ finiteStage m ∷ []) (λ m → refl)
+
+levelData a = leastOfFormula natOrder (levelPredicate a) lem
+  (inSome (a .fst) (a .snd))
 
 level : Limit → ℕ
 level a = levelData a .fst
@@ -2403,7 +2459,7 @@ Finite tallies climb through definable powersets, support the well-founded earli
 
 `precedes`{.Agda} compares two subsets at the earliest point where they disagree. It is irreflexive for free, transitive by comparing two witnesses, and trichotomous by the excluded middle together with the base's smallest elements. Well-foundedness does not follow from the definition of the comparison alone. Here it comes from the tally through `Search`{.Agda}; the descending-chain example on subsets of the natural numbers shows why the finite-stage hypothesis matters.
 
-`limitOrder`{.Agda} is a strict well-order on the members of `Lset ω`{.Agda}, with the level as the primary key and each finite stage's own order inside a level. It is the interface the axiom of choice will take: with it, `leastOf`{.Agda} picks a member out of any inhabited property of members of the limit stage, and picks the same one every time.
+`limitOrder`{.Agda} is a strict well-order on the members of `Lset ω`{.Agda}, with the level as the primary key and each finite stage's own order inside a level. Model-facing selection combines it with `leastOfFormula`{.Agda}: the searched property is supplied by an object formula, environment, and checked reading theorem, and the resulting least member is canonical.
 <!--zh-->
 ## 小结
 
@@ -2413,7 +2469,7 @@ Finite tallies climb through definable powersets, support the well-founded earli
 
 `precedes`{.Agda} 在两个子集最先分歧之处比较它们。它的非自反性直接由定义推出，传递性由比较两个见证得到，三歧则由排中律连同基底的最小元得到。良基性并不单由这条比较的定义推出；在这里，它经由 `Search`{.Agda} 从点名册得到。自然数子集上的下降链例子说明了为何有穷层这一假设不可省略。
 
-`limitOrder`{.Agda} 是 `Lset ω`{.Agda} 诸成员上的一个严格良序，以层号为主键，层内则用各有穷层自己的序。它就是选择公理将要取用的接口：有了它，`leastOf`{.Agda} 能从极限层诸成员的任一非空性质中挑出一个成员，且每次挑出同一个。
+`limitOrder`{.Agda} 是 `Lset ω`{.Agda} 诸成员上的一个严格良序，以层号为主键，层内则用各有穷层自己的序。面向模型的选取把它与 `leastOfFormula`{.Agda} 组合使用：被搜索的性质由对象语言公式、环境与经过检查的读取定理给出，所得最小成员因而是典范的。
 <!--ja-->
 ## まとめ
 
@@ -2423,5 +2479,5 @@ Finite tallies climb through definable powersets, support the well-founded earli
 
 `precedes`{.Agda} は二つの部分集合を最初に相違する点で比較する。非反射性は定義から直接従い、推移性は二つの証人の比較から、三分法は排中律と基底の最小要素とから得られる。整礎性はそもそもこの比較の性質ではない：それは数え上げから `Search`{.Agda} を通じて来るものであり、無限の基底の上では成立しなくなるであろう。だからこそ有限性を先に確立しておく必要があったのである。
 
-`limitOrder`{.Agda} は `Lset ω`{.Agda} の要素上の狭義の整列順序であり、レベルを第一の鍵とし、レベルの内側では各有限段階自身の順序を用いる。これが選択公理が取る interface である：これがあれば、`leastOf`{.Agda} は極限段階の要素上の任意の inhabited な性質から一つの要素を取り出し、毎回同じものを取り出す。
+`limitOrder`{.Agda} は `Lset ω`{.Agda} の要素上の狭義の整列順序であり、レベルを第一の鍵とし、レベルの内側では各有限段階自身の順序を用いる。モデルに面する選択では、これを `leastOfFormula`{.Agda} と組み合わせる。探索される性質は対象言語の論理式、環境、検査済みの読み取り定理によって与えられ、得られる最小要素は標準的である。
 <!--/-->

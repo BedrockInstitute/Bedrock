@@ -5,7 +5,7 @@
 [English](../../README.md) · [中文](../zh/README.md) · **日本語**
 
 [![CI](https://github.com/BedrockInstitute/Bedrock/actions/workflows/ci.yml/badge.svg)](https://github.com/BedrockInstitute/Bedrock/actions/workflows/ci.yml)
-![Status: early](https://img.shields.io/badge/status-early-orange)
+![Status: first goal proved](https://img.shields.io/badge/first%20goal-L%20%E2%8A%A8%20GCH%20proved-brightgreen)
 [![Agda](https://img.shields.io/badge/Agda-2.8.0-blue)](https://github.com/agda/agda)
 [![cubical](https://img.shields.io/badge/cubical-0.9-blue)](https://github.com/agda/cubical)
 [![Content: CC BY-NC-SA 4.0](https://img.shields.io/badge/content-CC%20BY--NC--SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
@@ -22,13 +22,15 @@
 
 > **`L` ⊨ GCH**。ここで `L` は、高次帰納型として実現された累積階層 `V` の上に構成される構成可能階層である。これはホストの内部における意味論的な定理である。
 
-**それは証明された。**`L⊨GCH` と `L⊨ZFC` はいずれも [src/Milestones.lagda.md](../../src/Milestones.lagda.md) に述べられており、どちらも `LEM (ℓ-suc ℓ)` のみに依存する。内部の基数、内部の単射、モデル自身の冪集合である。証明項は `src/L/GCH/Theorem.lagda.md` の `L⊨GCH` である。
+**それは証明された。**`L⊨GCH` と `L⊨ZFC` はいずれも [src/Origin.lagda.md](../../src/Origin.lagda.md) に述べられており、どちらも `LEM (ℓ-suc ℓ)` のみに依存する。内部の基数、内部の単射、モデル自身の冪集合である。証明項は `src/L/GCH/Theorem.lagda.md` の `L⊨GCH` である。
 
 その内容はゲーデルの 1938 年の結果だが、辿る経路は教科書のものではなく、GCH に対して誰かがこれまで辿ったものでもない。これが最初の礎石としてふさわしいのは、本プロジェクトの残り全体が必要とする基盤層、すなわち深い埋め込みによる一階言語、累積階層、`L`、そして二重意味論の機構を、ことごとく動かすからである。しかも一行目から、下に述べるホスト言語最大主義の方針に立脚している。これを正しく仕上げることが、以後のすべてが立脚する基盤を較正する。
 
-2026-09-08 現在：**空行を除く Agda コード 26,587 行 · プロジェクトキャッシュ削除後の型検査 212.06 秒 (Cubical キャッシュ保持) · 最大 RSS 1.62 GiB。**
+2026-09-22 現在：**空行を除く Agda コード 25,931 行 · プロジェクトキャッシュ削除後の型検査 203.17 秒 (Cubical キャッシュ保持) · 最大 RSS 1.57 GiB。**
 
-121 章の依存関係は有向非巡回グラフをなし、直接 import は 1,605 辺、骨格は 230 辺、最長の鎖は 31 モジュール。
+2026-09-24 現在、ソースの依存グラフは 120 章、重複を除く直接 import 1,511 辺、推移簡約 227 辺からなり、最長の鎖は 31 モジュールである。これらはサイトのハブとプレビューのフィルターを適用する前の値である。
+
+これらは日付付きの測定記録であり、現在の版の性能や検証結果を示すものではない。新しい測定には `make typecheck-cold` と [スクリプトの説明](../../scripts/README.md) にあるソース集計コマンドを使う。
 
 ## 方向
 
@@ -58,7 +60,7 @@ Cubical 型理論は現代型理論の最前線であり、いままさに書か
 
 ## 著者について
 
-本プロジェクトのすべての内容は AI の補助のもとで作成されているが、その一行一行は、本文書も含めて、著者が一字一句、目を通している。
+本プロジェクトのすべての内容は AI の補助のもとで作成されているが、本文書を含め、その一行一行を著者が一字一句校閲している。
 
 ## 依存
 
@@ -70,7 +72,31 @@ Cubical 型理論は現代型理論の最前線であり、いままさに書か
 | [cubical](https://github.com/agda/cubical) | 0.9 |
 | [Python](https://www.python.org) | 3.11+ |
 
-`make check` (型検査、四つのリンター、読書順序の検査およびゲートの単体テスト) とサイトのビルドは Python 3.11+ を必要とする。開発用ツール (`reuse` リンター) は [requirements-dev.txt](../../requirements-dev.txt) に固定され、`make venv` でローカルの仮想環境に導入される (クローンごとに一度実行すればよい)。プッシュのたびに、[GitHub Actions](../../.github/workflows/ci.yml) によって上記のバージョンに対して型検査される。
+`make check` (型検査、ソースと教材の検査、および両方のテスト群) とサイトのビルドは Python 3.11+ を必要とする。開発用ツール (`reuse` リンター) は [requirements-dev.txt](../../requirements-dev.txt) に固定され、`make venv` でローカルの仮想環境に導入される。[GitHub Actions](../../.github/workflows/ci.yml) はプッシュのたびに lint とテストを実行する。説明文書のみの変更と確認できた場合は Agda の検査とサイトのデプロイを省略し、それ以外の変更と手動実行では完全な検査を維持する。
+
+初回のクローン後は、GHC/Cabal、`make`、`patch`、Python 3.11+ を用意し、固定されたサブモジュールを初期化してからツールチェインを導入する：
+
+```sh
+git submodule update --init --recursive
+make bootstrap
+make check
+```
+
+`make bootstrap` は `_build/` 内でローカルのコンパイラーを構築し、固定版の Cubical を導入する。ユーザーのグローバル Agda 設定は変更しない。純粋な型検査とサイトの意味情報には独立したキャッシュを使う。`make typecheck-cold` は Cubical キャッシュを保持した単一プロセスの基準測定、`make typecheck-cold-parallel AGDA_JOBS=2` は並列検査、`make html-cold` はハイライトと型情報を含むコンパイルの測定である。これらの所要時間を混同しない。
+
+## ウェブサイトの基盤
+
+任意の `outcrop-agda` コンパイラー計装、ビルド、型情報の出力、並列スケジューラーも Outcrop が提供する。Bedrock は [ライブラリの固定](../../site/agda-libraries.json)、入口モジュール、数学上の検査、リソースとデプロイの設定を保持する。[ツールチェインの説明](../../site/AGDA-ENVIRONMENT.md)を参照。通常の Markdown 描画に Agda の導入は不要である。
+
+サイトは [Outcrop](https://github.com/BedrockInstitute/Outcrop) を使用し、`outcrop/` サブモジュールでその版を固定する。**Outcrop Core** は Markdown と任意のコンパイラー意味情報を描画する。**Outcrop Site** は学習ルート、依存グラフ、多言語検索、型情報と定義モーダル、外観設定、Ask AI、再利用可能な検査規則を含む教材サイト全体を提供する。Bedrock は [site/project.json](../../site/project.json) を通じて本文、目次、用語、ブランド、数学上の方針を与える。
+
+サブモジュールの初期化後、`make venv` がローカルのパッケージを導入する。既存の仮想環境では `.venv/bin/python -m pip install -e ./outcrop` も利用できる。`make site` で構築し、`make serve` でプレビューする。[インスタンスの説明](../../site/README.md) と [Outcrop の構成](../../outcrop/docs/ARCHITECTURE.md) を参照。他の教材も、Bedrock の数学やサイト実装を複製せずに同じ基盤を利用できる。
+
+[site/](../../site/README.md) は継続的に保守する構成、執筆規則、用語、読書用メタデータ、ブランド素材を保持する。[dev/](../../dev/README.md) は研究の作業資料と一時的な開発資料のみを保持し、関連する作業の終了後に整理する。
+
+[src/](../../src/README.md) は三言語の証明と解説のマスターを、[docs/](../README.md) は読者向けのプロジェクト文書を保持する。[scripts/](../../scripts/README.md) は Bedrock の検査、コマンドアダプター、Git フック、ブラウザーテストを案内する。CI とデプロイの説明は [.github/workflows/](../../.github/workflows/README.md) にある。
+
+`make check` はサイトの構築やブラウザーでの検証を行わない。サイト変更後は、導入済みの Python 環境から `outcrop check-links` と `outcrop check-search` で新しい出力を検査し、影響するブラウザー操作を確認する。`make milestone-lint` は Origin の閉包を別途検査する。共有部分の変更は Outcrop で先にコミットして公開し、その後 Bedrock が新しいサブモジュール版を記録する。
 
 ## 貢献
 
@@ -80,10 +106,12 @@ AI エージェントは [AGENTS.md](../../AGENTS.md) の唯一の規則集を�
 
 Bedrock は複数ライセンスを採用しており、ファイルごとの条項は [`REUSE.toml`](../../REUSE.toml) に宣言され、`reuse lint` が検証する。要するに、
 
-- **[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)**：数学・文章・ブランドマーク (`src/`、`docs/`、`README`、`site/static/assets/`)。
-- **[AGPL-3.0-only](https://www.gnu.org/licenses/agpl-3.0.html)**：その他すべてのプロジェクト自身のコードと構成 (取り込んだ [1lab](https://1lab.dev) フロントエンドを含む)。
-- **[OFL-1.1](https://openfontlicense.org)**：自己ホストのウェブフォント (`site/static/fonts/`)。
+- **[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)**：数学・文章・執筆仕様とメタデータ・ブランド素材。具体的な範囲は `REUSE.toml` に記す。
+- **[AGPL-3.0-only](https://www.gnu.org/licenses/agpl-3.0.html)**：プロジェクト自身のソフトウェアと、このライセンスが適用される構成。Outcrop は第三者のクレジットを別途管理する。
+- **[OFL-1.1](https://openfontlicense.org)**：Outcrop が提供する自己ホストのウェブフォント (`outcrop/src/outcrop/site/resources/static/fonts/`)。
 
 完全なライセンス本文は [`LICENSES/`](../../LICENSES/) にある。第三者のクレジットと AGPL 第 13 条の対応ソース表明は [NOTICE](../../NOTICE) を参照。
+
+Outcrop はファイルごとのライセンスと、継承した第三者資産およびフォントの帰属を別途管理する。
 
 © 2026 Bedrock Institute。

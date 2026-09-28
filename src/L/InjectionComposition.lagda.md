@@ -1,26 +1,68 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # Composition and inclusion of coded injections
+<!--zh-->
+# 编码单射的复合与包含
+<!--ja-->
+# 符号化された単射の合成と包含
+<!--/-->
+
+```agda
+open import Base.Prelude
+open import Base.Classical using ( LEM )
+```
+
+<!--en-->
+Fix a universe level `ℓ`{.Agda} and assume `lem : LEM (ℓ-suc ℓ)`{.Agda}. This hypothesis supplies a decision for each proposition at that level; it remains an explicit parameter of the constructions below.
+<!--zh-->
+固定宇宙层级 `ℓ`{.Agda}，并假设 `lem : LEM (ℓ-suc ℓ)`{.Agda}。这个假设为相应层级的每个命题提供判定，并始终作为下文构造的显式参数。
+<!--ja-->
+宇宙レベル `ℓ`{.Agda} を固定し、`lem : LEM (ℓ-suc ℓ)`{.Agda} を仮定する。この仮定は該当するレベルの各命題に判定を与え、以下の構成の明示的なパラメータとして保たれる。
+<!--/-->
+
+```agda
+module L.InjectionComposition {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+```
+
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax
+  using ( Formula; var; _≐_; _∧̇_; ∃̇_ )
+import FOL.Absoluteness
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Coding {ℓ} using ( pr; pr-inj )
+open import V.Presentation {ℓ} using ( member; fiber; ↪-inj )
+open import L.Constructible {ℓ}
+  using ( 𝒮ʟ; isL; isL-trans; IsOrd )
+open import L.Ordinal {ℓ} using ( ω-ord; #∈ω )
+import L.Ordinal.SquareLaw {ℓ} lem as SQ
+open import L.Recursion {ℓ} lem using ( smallDom )
+open import L.Axioms.Full {ℓ} lem using ( hasSeparationL )
+open import L.Coding.Model {ℓ} using ( prAtL; prAtL-adequate; prʟ; prʟ-fst; svAt; svAt-in; svAt-out; domAt; domAt-in; domAt-out; domAt-intro )
+open import L.Coding.Model {ℓ} using ( appC; appC-adequate ) public
+open import L.Coding.Injection {ℓ} lem
+  using ( injAt; injAt-out; injAt-in; module Small )
+open import L.Cardinal {ℓ} lem using ( InjCode; InjL )
+open import L.DefinableInjection {ℓ} lem
+  using ( DefinableMap ) renaming ( module Inj to DefinableInj )
+```
+
+<!--en-->
 
 This chapter develops two constructions of coded injections inside `L` and proves one exclusion. First, two coded injections compose: the composite is the graph relating `x` to `z` when some intermediate `y` has `(x, y)` in the first graph and `(y, z)` in the second. Second, an inclusion of sets is coded by the identity map on the smaller set, whose graph is the set of ordered pairs defined by equality: the pairs `(x, y)` with `y = x`. Finally, no injection exists from `ω` into the square of a finite ordinal.
 <!--zh-->
-# 编码单射的复合与包含
 
 本章在 `L` 内部发展两种编码单射的构造，并证明一个排除。其一，两个编码单射的复合：当某个中间值 `y` 使 `(x, y)` 落在第一个图、`(y, z)` 落在第二个图时，复合图把 `x` 关联到 `z`。其二，集合的包含由较小集合上的恒等映射编码，其图是由相等定义的有序对集合：即满足 `y = x` 的那些对 `(x, y)`。最后，从 `ω` 到有限序数平方的单射不存在。
 <!--ja-->
-# 符号化された単射の合成と包含
 
 本章は、`L` の内部で符号化された単射の構成を二つ発展させ、一つの排除を証明する。第一に、二つの符号化された単射の合成である。ある中間の `y` が `(x, y)` を最初のグラフに、`(y, z)` を第二のグラフに持つとき、合成のグラフは `x` を `z` に関係付ける。第二に、集合の包含は、小さい方の集合上の恒等写像によって符号化される。そのグラフは、等号で定義される順序対の集合、すなわち `y = x` を満たす対 `(x, y)` の全体である。最後に、`ω` から有限順序数の平方への単射は存在しない。
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-open import Base.Prelude
 open import Cubical.HITs.PropositionalTruncation using ( rec2 )
-open import Base.Classical using ( LEM )
-
-module L.InjectionComposition {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-
 ```
 
 <!--en-->
@@ -31,14 +73,6 @@ Properties and applications of graphs are expressed by formulas of the model lan
 グラフの性質と適用は、モデル言語の論理式によって表される。各変数の枠は要素の列に対して読まれ、充足が構造の意味論となる。二つの構造が現れる。周囲の階層が集合を供給し、構成可能構造がグラフの住み、読まれる台を供給する。
 <!--/-->
 
-```agda
-open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax
-  using ( Formula; var; _≐_; _∧̇_; ∃̇_ )
-import FOL.Absoluteness
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-```
-
 <!--en-->
 Ordered pairs of ambient sets are coded by a pairing operation whose two components are recoverable: equal codes have equal components. Small sets come with presentations, an index type embedded into the hierarchy, so that facts about presented elements transfer to facts about indices. Constructibility is a predicate with downward closure along membership: a member of a constructible set is constructible.
 <!--zh-->
@@ -46,13 +80,6 @@ Ordered pairs of ambient sets are coded by a pairing operation whose two compone
 <!--ja-->
 周囲の集合の順序対は、二つの成分が復元できる対の演算で符号化される。等しい符号は等しい成分をもつ。小さな集合には提示が伴い、階層へ埋め込まれた索引型によって、提示された要素についての事実が索引についての事実へ移る。構成可能性は、所属に沿って下方閉な述語である。構成可能な集合の要素は構成可能である。
 <!--/-->
-
-```agda
-open import V.Coding {ℓ} using ( pr; pr-inj )
-open import V.Presentation {ℓ} using ( member; fiber; ↪-inj )
-open import L.Constructible {ℓ}
-  using ( 𝒮ʟ; isL; isL-trans; IsOrd )
-```
 
 <!--en-->
 Four materials carry the chapter. The ordinal `ω` with the fact that its members are exactly the numerals. The finite dictionary between numerals and finite sets, with its abstract chase argument. The small-domain principle, which bounds any small family of constructible sets by a single stage. And separation inside `L`, available for formulas of arbitrary complexity, which carves every relation below out of a shared bound.
@@ -63,11 +90,7 @@ Four materials carry the chapter. The ordinal `ω` with the fact that its member
 <!--/-->
 
 ```agda
-open import L.Ordinal {ℓ} using ( ω-ord; #∈ω )
-import L.Ordinal.SquareLaw {ℓ} lem as SQ
 open SQ using ( module FiniteBase )
-open import L.Recursion {ℓ} lem using ( smallDom )
-open import L.Axioms.Full {ℓ} lem using ( hasSeparationL )
 ```
 
 <!--en-->
@@ -78,13 +101,6 @@ Inside `L`, the application atoms of the language are read at constants: a graph
 `L` の内部では、言語の適用のアトムは定数のもとで読まれる。グラフに引数を適用したものは再び論理式であり、この読みは忠実である。単射の三つの論理条件は、これらのアトムのもとでそれぞれ導入と除去の形をもつ。符号化された単射は、定義域と終域の提示の間の本物の関数として読み戻すこともできる。
 <!--/-->
 
-```agda
-open import L.Coding.Model {ℓ} using ( prAtL; prAtL-adequate; prʟ; prʟ-fst; svAt; svAt-in; svAt-out; domAt; domAt-in; domAt-out; domAt-intro )
-open import L.Coding.Model {ℓ} using ( appC; appC-adequate ) public
-open import L.Coding.Injection {ℓ} lem
-  using ( injAt; injAt-out; injAt-in; module Small )
-```
-
 <!--en-->
 The code of an injection is the graph together with all four conditions: single-valuedness, domain totality, and injectivity as formulas read over the domain, plus the range clause stated in the meta-language. The internal injection relation `InjL`{.Agda} asserts, merely, that such a graph with its four conditions exists. The definable-injection construction converts a map given with a defining formula into such a code.
 <!--zh-->
@@ -92,13 +108,6 @@ The code of an injection is the graph together with all four conditions: single-
 <!--ja-->
 単射の符号とは、グラフに四条件のすべてを合わせたものである。すなわち、定義域の上で読まれる論理式としての一価性・定義域の全域性・単射性と、メタ言語で述べられる値域の条項である。内部単射の関係 `InjL`{.Agda} は、そのようなグラフと四条件が、単に、存在すると主張する。定義可能な単射の構成は、定義の論理式とともに与えられた写像をそのような符号へ変える。
 <!--/-->
-
-```agda
-open import L.Cardinal {ℓ} lem using ( InjCode; InjL )
-open import L.DefinableInjection {ℓ} lem
-  using ( DefinableMap ) renaming ( module Inj to DefinableInj )
-
-```
 
 <!--en-->
 Internal existence is asserted through propositional truncation: a statement holds without a selected witness, and truncated statements eliminate only into propositions. The empty type and the natural numbers bound the finite argument below from both sides.
@@ -108,20 +117,16 @@ Internal existence is asserted through propositional truncation: a statement hol
 内部の存在は命題的切り詰めによって主張される。主張は証人を選ばずに成り立ち、切り詰められた主張は命題へしか消去できない。空の型と自然数が、後の有限の議論を両側から抑える。
 <!--/-->
 
-```agda
-```
-
 <!--en-->
-Some proofs move both components of a pair at once, and a two-place transport serves them. Between the presentation types of two sets, an equivalence carries functions and injections across; a path between sets yields such an equivalence. The ambient hierarchy is the carrier on which every membership statement of the chapter is read.
+A path between sets yields an equivalence between their presentation types, along which functions and injections can be moved. When proving injectivity, `retEq e x` supplies the round-trip path `invEq e (equivFun e x) ≡ x`, so a recovered preimage can be identified with the original input. The ambient hierarchy is the carrier on which every membership statement of the chapter is read.
 <!--zh-->
-有的证明让一对的两个分量同时变动，二元的搬运正为此服务。在两个集合的呈现类型之间，等价把函数与单射搬运过去；集合之间的路径给出这样的等价。外围层级是本章一切成员陈述所读取的载体。
+集合之间的路径给出呈现类型之间的等价，函数与单射可沿这份等价搬运。证明单射性时，`retEq e x` 提供往返路径 `invEq e (equivFun e x) ≡ x`，从而把恢复出的原像与原来的输入等同。外围层级是本章一切成员陈述所读取的载体。
 <!--ja-->
-一つの証明が対の両成分を同時に動かすことがあり、二項の輸送がこれに仕える。二つの集合の提示型の間では、同値が関数と単射を運び、集合の間のパスがそのような同値を与える。周囲の階層は、本章のすべての所属の主張が読まれる台である。
+集合間のパスは提示型間の同値を与え、それに沿って関数と単射を移せる。単射性の証明では、`retEq e x` が往復のパス `invEq e (equivFun e x) ≡ x` を与え、復元した原像を元の入力と同一視できる。周囲の階層は、本章のすべての所属の主張が読まれる台である。
 <!--/-->
 
 ```agda
-import Cubical.Foundations.Equiv as Equiv
-open Equiv using ( equivFun; invEq; retEq; _≃_ )
+open import Cubical.Foundations.Equiv using ( retEq )
 open import Cubical.Foundations.Univalence using ( pathToEquiv )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 ```
@@ -152,7 +157,6 @@ Presentations pair index types with embeddings into the hierarchy, and their fib
 ```agda
 open import Cubical.HITs.CumulativeHierarchy.Properties
   using ( ⟪_⟫; ⟪_⟫↪ )
-
 ```
 
 <!--en-->
@@ -168,8 +172,6 @@ open hPropStructure 𝒮ʟ using ( S )
 
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
 open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
-
-
 ```
 
 <!--en-->
@@ -199,13 +201,18 @@ Carving a relation by separation needs its candidates to lie in one constructibl
 分出で関係を刻むには、候補となる要素が一つの構成可能集合の中になければならない。共有の装置は任意の小さな添字族 `g : I → S` を受け取り、各 `g i` を含む構成可能集合を返す。後の `PairBound` で初めて、選んだ定義域と終域から生じる順序対に具体化する。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module StageBound (I : Type ℓ) (g : I → S) where
+```
+</summary>
+<div class="submodule-fold-content">
 
+```agda
   opaque
     bnd : S
     bnd = smallDom I g .fst
-
 ```
 
 <!--en-->
@@ -220,6 +227,8 @@ The reader states the bound's purpose directly: each member of the family, read 
     below : (i : I) → ⟨ fst (g i) ∈ fst bnd ⟩
     below = smallDom I g .snd
 ```
+</div>
+</details>
 
 <!--en-->
 ## Excluding finite targets
@@ -247,7 +256,7 @@ A fact about `ω` itself, at the strength the membership predicate supports: a m
 ω-limit : (γ : V ℓ) → ⟨ γ ∈ ω ⟩ → ⟨ sucV γ ∈ ω ⟩
 ω-limit γ γ∈ω = rec₁ (snd (sucV γ ∈ ω)) go (ω-mem→numeral γ γ∈ω)
   where
-  go : Σ[ n ∈ ℕ ] (γ ≡ # n) → ⟨ sucV γ ∈ ω ⟩
+  go : Σ[ n ∶ ℕ ] (γ ≡ # n) → ⟨ sucV γ ∈ ω ⟩
   go (n , p) = subst (λ w → ⟨ sucV w ∈ ω ⟩) (sym p) (#∈ω (suc n))
 ```
 
@@ -262,7 +271,6 @@ The numerals embed into the presentation of `ω`, and the route is direct. An in
 ```agda
 numeral-into-ω : (m : ℕ) → ⟪ # m ⟫ → ⟪ ω ⟫
 numeral-into-ω m i = fiber ω (ω-ord .fst (member (# m) i) (#∈ω m)) .fst
-
 ```
 
 <!--en-->
@@ -374,7 +382,7 @@ Membership of `β` in `ω` yields, merely, a numeral with which `β` is identifi
 <!--/-->
 
 ```agda
-  go : Σ[ n ∈ ℕ ] (β ≡ # n) → ⊥₀
+  go : Σ[ n ∶ ℕ ] (β ≡ # n) → ⊥₀
   go (n , p) = no-inj-finite-ω n f' finj'
     where
 ```
@@ -422,12 +430,17 @@ A relation between two sets of `L` will be a set of coded ordered pairs. The bou
 `L` の二つの集合の間の関係は、符号化された順序対の集合になる。上界はどの論理式が現れるより先に、対を数え上げる。索引型は、定義域からの提示の索引と終域からの索引の積である。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module PairBound (D C : S) where
+```
+</summary>
+<div class="submodule-fold-content">
 
+```agda
   Ix : Type ℓ
   Ix = ⟪ fst D ⟫ × ⟪ fst C ⟫
-
 ```
 
 <!--en-->
@@ -458,7 +471,6 @@ One L-element per index, on each side.
 ```agda
     toC k = ⟪ fst C ⟫↪ k
           , isL-trans {x = fst C} {y = ⟪ fst C ⟫↪ k} (member (fst C) k) (snd C)
-
 ```
 
 <!--en-->
@@ -487,7 +499,6 @@ The bound is read off the device and used from here on only through membership; 
 ```agda
   bnd : S
   bnd = SB.bnd
-
 ```
 
 <!--en-->
@@ -514,9 +525,9 @@ Since `D` and `C` are presented, each of the two elements has a fiber: an index 
 <!--/-->
 
 ```agda
-    fD : Σ[ m ∈ ⟪ fst D ⟫ ] (⟪ fst D ⟫↪ m ≡ fst x)
+    fD : Σ[ m ∶ ⟪ fst D ⟫ ] (⟪ fst D ⟫↪ m ≡ fst x)
     fD = fiber (fst D) mx
-    fC : Σ[ k ∈ ⟪ fst C ⟫ ] (⟪ fst C ⟫↪ k ≡ fst z)
+    fC : Σ[ k ∶ ⟪ fst C ⟫ ] (⟪ fst C ⟫↪ k ≡ fst z)
     fC = fiber (fst C) mz
 ```
 
@@ -535,6 +546,8 @@ The two indices form one index of the bound's family, whose value is the coded p
     pa = prʟ-fst (toD (fD .fst)) (toC (fC .fst))
        ∙ cong₂ pr (fD .snd) (fC .snd)
 ```
+</div>
+</details>
 
 <!--en-->
 A relation is carved from the bound given three data: a formula in three slots and a host predicate `P` on pairs, with adequacy in both directions. The reading order of the formula is value, index, pair: at the environment `y ∷ x ∷ e`, the formula is read as `P x y`.
@@ -544,12 +557,15 @@ A relation is carved from the bound given three data: a formula in three slots a
 上界から関係を刻むのに三つのデータが要る。三つの枠をもつ論理式と、対の上の述語 `P`、そして両方向の妥当性である。論理式の読みの順は値、添字、対である。環境 `y ∷ x ∷ e` のもとで、論理式は `P x y` として読まれる。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Relation (D C : S) (φ : Formula S 3) (P : S → S → hProp (ℓ-suc ℓ))
                 (read : (x y e : S) → ⟨ (y ∷ x ∷ e ∷ []) ⊨ φ ⟩ → ⟨ P x y ⟩)
                 (fill : (x y e : S) → ⟨ P x y ⟩ → ⟨ (y ∷ x ∷ e ∷ []) ⊨ φ ⟩) where
-
 ```
+</summary>
+<div class="submodule-fold-content">
 
 <!--en-->
 The carving formula quantifies the two slots existentially, and besides the given formula it asserts, in the object language, that the third slot codes the ordered pair of the first two. Separation at the shared bound, applied to this one-slot formula, returns the relation as an element of `L`.
@@ -566,7 +582,6 @@ The carving formula quantifies the two slots existentially, and besides the give
 
     rel : S
     rel = hasSeparationL (PairBound.bnd D C) fo .fst .fst
-
 ```
 
 <!--en-->
@@ -579,7 +594,7 @@ The backward reading turns membership into truncated data about a pair. A member
 
 ```agda
     out : (e : S) → ⟨ fst e ∈ fst rel ⟩
-        → ∥ Σ[ x ∈ S ] Σ[ y ∈ S ] ((fst e ≡ pr (fst x) (fst y)) × ⟨ P x y ⟩) ∥₁
+        → ∥ Σ[ x ∶ S ] Σ[ y ∶ S ] ((fst e ≡ pr (fst x) (fst y)) × ⟨ P x y ⟩) ∥₁
     out e h = rec₁ squash₁ (λ { (x , hx) → map₁
       (λ { (y , q , hy) → x , y
          , subst ⟨_⟩ (prAtL-adequate (suc (suc zero)) (suc zero) zero (y ∷ x ∷ e ∷ [])) q
@@ -596,7 +611,6 @@ Everything is truncated, matching the form in which the relation will be consume
 ```agda
          , read x y e hy }) hx })
       (subst ⟨_⟩ (hasSeparationL (PairBound.bnd D C) fo .fst .snd e) h .snd)
-
 ```
 
 <!--en-->
@@ -629,7 +643,6 @@ The coded pair of `x` and `y` lies in the shared bound by the bound's reader; th
           , subst ⟨_⟩ (sym (prAtL-adequate (suc (suc zero)) (suc zero) zero (y ∷ x ∷ prʟ x y ∷ [])))
               (prʟ-fst x y)
           , fill x y (prʟ x y) h ∣₁ ∣₁ ))
-
 ```
 
 <!--en-->
@@ -660,6 +673,8 @@ Its witness presents `e` as the coded pair of some `x'` and `y'`; injectivity of
         (Σ≡Prop (λ v → snd (isL v)) (sym (pr-inj (sym (prʟ-fst x y) ∙ q) .snd))) h' })
     (out (prʟ x y) (subst (λ w → ⟨ w ∈ fst rel ⟩) (sym (prʟ-fst x y)) h))
 ```
+</div>
+</details>
 
 <!--en-->
 ## Composing coded injections
@@ -675,12 +690,23 @@ Two coded injections compose when the codomain of the first is the domain of the
 最初の終域が第二の定義域であるとき、二つの符号化された単射は合成できる。合成物もまたグラフであり、その検証は置換をやり直さない。二つの入力グラフはすでに集合として存在し、合成物は共有の上界の中で分出された一つの関係である。モジュールは二つのグラフと、それぞれ三つの読みの条件を受け取る。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Comp (D E C F H : S)
             (svF : ⟨ (F ∷ D ∷ []) ⊨ svAt zero ⟩)
             (dmF : ⟨ (F ∷ D ∷ []) ⊨ domAt zero (suc zero) ⟩)
             (ijF : ⟨ (F ∷ D ∷ []) ⊨ injAt zero ⟩)
+            (ranF : (x y : S) → ⟨ pr (fst x) (fst y) ∈ fst F ⟩
+                  → ⟨ fst y ∈ fst E ⟩)
+            (svH : ⟨ (H ∷ E ∷ []) ⊨ svAt zero ⟩)
+            (dmH : ⟨ (H ∷ E ∷ []) ⊨ domAt zero (suc zero) ⟩)
+            (ijH : ⟨ (H ∷ E ∷ []) ⊨ injAt zero ⟩)
+            (ranH : (y z : S) → ⟨ pr (fst y) (fst z) ∈ fst H ⟩
+                  → ⟨ fst z ∈ fst C ⟩) where
 ```
+</summary>
+<div class="submodule-fold-content">
 
 <!--en-->
 Besides the three reading conditions, each graph carries its range clause as a separate assumption of the module: every coded pair of the first graph has its value in the middle set, and every coded pair of the second has its value in the final codomain.
@@ -690,14 +716,6 @@ Besides the three reading conditions, each graph carries its range clause as a s
 三つの読みの条件に加えて、各グラフは値域の条項をモジュールの独立な仮定として運ぶ。最初のグラフの各符号化された対の値は中間の集合にあり、第二のグラフの各対の値は最終の終域にある。
 <!--/-->
 
-```agda
-            (ranF : (x y : S) → ⟨ pr (fst x) (fst y) ∈ fst F ⟩
-                  → ⟨ fst y ∈ fst E ⟩)
-            (svH : ⟨ (H ∷ E ∷ []) ⊨ svAt zero ⟩)
-            (dmH : ⟨ (H ∷ E ∷ []) ⊨ domAt zero (suc zero) ⟩)
-            (ijH : ⟨ (H ∷ E ∷ []) ⊨ injAt zero ⟩)
-```
-
 <!--en-->
 These two clauses are stated in the meta-language, not as formulas.
 <!--zh-->
@@ -705,12 +723,6 @@ These two clauses are stated in the meta-language, not as formulas.
 <!--ja-->
 この二つの条項は、論理式としてではなくメタ言語で述べられる。
 <!--/-->
-
-```agda
-            (ranH : (y z : S) → ⟨ pr (fst y) (fst z) ∈ fst H ⟩
-                  → ⟨ fst z ∈ fst C ⟩) where
-
-```
 
 <!--en-->
 Each pair of a code and its domain is just the two-slot environment that the three formula conditions require: slot zero holds the graph, slot one holds the domain. One environment per graph.
@@ -740,9 +752,8 @@ The linking relation says: `x` and `z` are related when the object language can 
 ```agda
   private
     Chain : S → S → Type (ℓ-suc ℓ)
-    Chain x z = ∥ Σ[ y ∈ S ] (⟨ pr (fst x) (fst y) ∈ fst F ⟩
+    Chain x z = ∥ Σ[ y ∶ S ] (⟨ pr (fst x) (fst y) ∈ fst F ⟩
                              × ⟨ pr (fst y) (fst z) ∈ fst H ⟩) ∥₁
-
 ```
 
 <!--en-->
@@ -757,7 +768,6 @@ The carving formula has a single existential, over the intermediate value. Insid
     opaque
       body : Formula S 3
       body = ∃̇ (appC F (suc (suc zero)) zero ∧̇ appC H zero (suc zero))
-
 ```
 
 <!--en-->
@@ -773,7 +783,6 @@ Adequacy of the application atoms moves each conjunct to its intended membership
       read x z p = map₁ (λ { (y , hf , hh) → y
         , subst ⟨_⟩ (appC-adequate F (suc (suc zero)) zero (y ∷ z ∷ x ∷ p ∷ [])) hf
         , subst ⟨_⟩ (appC-adequate H zero (suc zero) (y ∷ z ∷ x ∷ p ∷ [])) hh })
-
 ```
 
 <!--en-->
@@ -789,7 +798,6 @@ The converse moves a linking witness back into the object language along the sam
       fill x z p = map₁ (λ { (y , hf , hh) → y
         , subst ⟨_⟩ (sym (appC-adequate F (suc (suc zero)) zero (y ∷ z ∷ x ∷ p ∷ []))) hf
         , subst ⟨_⟩ (sym (appC-adequate H zero (suc zero) (y ∷ z ∷ x ∷ p ∷ []))) hh })
-
 ```
 
 <!--en-->
@@ -802,7 +810,6 @@ The bounded-relation device is instantiated once, with the linking relation as i
 
 ```agda
     module Composite = Relation D C body (λ x z → Chain x z , squash₁) read fill
-
 ```
 
 <!--en-->
@@ -818,7 +825,7 @@ The composite graph is the separated relation itself.
   K = Composite.rel
 
   K-out : (x z : S) → ⟨ pr (fst x) (fst z) ∈ fst K ⟩
-        → ∥ Σ[ y ∈ S ] (⟨ pr (fst x) (fst y) ∈ fst F ⟩
+        → ∥ Σ[ y ∶ S ] (⟨ pr (fst x) (fst y) ∈ fst F ⟩
                       × ⟨ pr (fst y) (fst z) ∈ fst H ⟩) ∥₁
 ```
 
@@ -832,7 +839,6 @@ Its backward reading is inherited unchanged: a coded pair in the composite yield
 
 ```agda
   K-out = Composite.pair-out
-
 ```
 
 <!--en-->
@@ -894,7 +900,6 @@ Single-valuedness of the first graph identifies `w` and `w'`; the identification
               (sym (svAt-out zero γF svF x w w' hf hf')) hh') })
         (K-out x y' q) })
       (K-out x y p))
-
 ```
 
 <!--en-->
@@ -938,7 +943,6 @@ Injectivity of the second graph at the common value `y` identifies `w` and `w'`;
               (sym (injAt-out zero γH ijH y w w' hh hh')) hf') })
         (K-out x' y q) })
       (K-out x y p))
-
 ```
 
 <!--en-->
@@ -981,7 +985,6 @@ If `x` has a composite value, the linking witness exhibits an intermediate `w` w
 ```agda
         (λ { (w , (hf , _)) → domAt-out zero (suc zero) γF dmF x w hf })
         (K-out x y p) })
-
 ```
 
 <!--en-->
@@ -1011,7 +1014,6 @@ The second graph's domain introduction, applied at `w`, produces `z` with `(w, z
 ```agda
         (domAt-in zero (suc zero) γH dmH w (ranF x w hf)) })
       (domAt-in zero (suc zero) γF dmF x mx)
-
 ```
 
 <!--en-->
@@ -1037,9 +1039,10 @@ The three reading conditions together with the range clause are exactly what let
 <!--/-->
 
 ```agda
-  private
-    module Sm = Small K D C svK dmK ijK ranK
+  private module Sm = Small K D C svK dmK ijK ranK
 ```
+</div>
+</details>
 
 <!--en-->
 ## Coding inclusions
@@ -1055,11 +1058,14 @@ An inclusion needs no new construction: when `D` is contained in `C`, the identi
 包含には新しい構成は要らない。`D` が `C` に含まれるなら、`D` 上の恒等写像はもともと `C` への写像である。符号化されるのはその写像のグラフであり、対象言語では値の枠と添字の枠の間の等号として書かれる。モジュールは二つの集合と点ごとの包含を受け取る。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module InclGraph (D C : S)
                  (sub : (z : V ℓ) → ⟨ z ∈ fst D ⟩ → ⟨ z ∈ fst C ⟩) where
-
 ```
+</summary>
+<div class="submodule-fold-content">
 
 <!--en-->
 The definable-map record is filled with the identity on the domain: the function sends each
@@ -1101,7 +1107,6 @@ The graph formula is equality between the two slots, and that it holds of the fu
       ; graph = var zero ≐ var (suc zero)
       ; defines = λ _ _ → refl
       ; only = λ _ _ _ h → Σ≡Prop (λ w → snd (isL w)) h }
-
 ```
 
 <!--en-->
@@ -1119,7 +1124,6 @@ The shared construction turns the map into a graph with its three reading condit
   opaque
     G : S
     G = I.F
-
 ```
 
 <!--en-->
@@ -1146,10 +1150,8 @@ The same graph is read back through the shared reading as a function between the
 <!--/-->
 
 ```agda
-  private
-    module Sm = Small G D C (code .fst) (code .snd .fst)
-      (code .snd .snd .fst) (code .snd .snd .snd)
-
+  private module Sm = Small G D C (code .fst) (code .snd .fst)
+            (code .snd .snd .fst) (code .snd .snd .snd)
 ```
 
 <!--en-->
@@ -1165,6 +1167,8 @@ The induced function is named `incl`, and its route matters. An index of `D`'s p
     incl : ⟪ fst D ⟫ → ⟪ fst C ⟫
     incl = Sm.small
 ```
+</div>
+</details>
 
 <!--en-->
 ## Inclusion and composition at the internal-existence level
@@ -1186,7 +1190,6 @@ inclusion-coded : (a b : S)
                 → InjL a b
 inclusion-coded a b sub = ∣ I.G , I.code ∣₁
   where module I = InclGraph a b sub
-
 ```
 
 <!--en-->
@@ -1212,8 +1215,8 @@ The two-fold elimination locally unwraps the two witnesses, assembles the compos
 <!--/-->
 
 ```agda
-  step : Σ[ F ∈ S ] InjCode F a b
-       → Σ[ H ∈ S ] InjCode H b c
+  step : Σ[ F ∶ S ] InjCode F a b
+       → Σ[ H ∶ S ] InjCode H b c
        → InjL a c
   step (F , svF , dmF , ijF , ranF) (H , svH , dmH , ijH , ranH) =
     ∣ K.K , (K.svK , K.dmK , K.ijK , K.ranK) ∣₁
@@ -1240,12 +1243,20 @@ The principal instance starts from a member `D` of an ordinal `C`. The only assu
 主要な実例は、順序数 `C` の要素 `D` から始まる。仮定は `D` が順序数 `C` に属することだけである。`C` の推移性により、`D` の各要素が `C` の要素であることが従い、これが符号化の必要とする点ごとの包含にほかならない。モジュールはこの対に対して包含の構成を開くので、そのグラフ・符号・導かれた写像が一つの名のもとで使える。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module OrdIncl (C : S) (oC : IsOrd (fst C))
                (D : S) (D∈C : ⟨ fst D ∈ fst C ⟩) where
+```
+</summary>
+<div class="submodule-fold-content">
 
+```agda
   open InclGraph D C (λ _ z∈D → oC .fst z∈D D∈C) public
 ```
+</div>
+</details>
 
 <!--en-->
 ## Recap

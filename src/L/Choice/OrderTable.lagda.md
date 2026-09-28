@@ -1,34 +1,18 @@
-<!--en-->
-# An internal table of stage orders
-
-At a constructible ordinal index `α`, the preceding construction already gives a host-level strict well-order on the members of `Lset α`. The purpose of this chapter is to represent its binary comparison by a set inside `L`, so that formulas interpreted in the model can quantify over that relation. The result is conditional on an adequate object-language description of one recursive step and applies when `α` is both an ordinal and constructible. It represents the relation underlying the existing order; it does not yet assert in the object language that this relation is a well-order.
-<!--zh-->
-# 层序的内部表
-
-在可构造序数层索引 `α` 处，先前的构造已经给出 `Lset α` 的成员上的宿主层严格良序。本章要把它的二元比较表示为 `L` 内部的一个集合，使模型中解释的公式能够量化这条关系。所得结果以单步递归已有充分的对象语言描述为条件，并且只适用于既是序数又可构造的 `α`。它表示已有序的底层关系，而尚未在对象语言中断言这条关系是良序。
-<!--ja-->
-# 段階順序の内部の表
-
-構成可能な順序数の段階添字 `α` では、先の構成によって `Lset α` の要素上のホスト側の狭義整列順序がすでに得られている。本章の目的は、その二項比較を `L` の内部の集合として表現し、モデルで解釈される論理式がその関係を量化できるようにすることである。結果は、一段階の再帰について妥当な対象言語の記述が与えられることを前提とし、`α` が順序数かつ構成可能である場合に適用される。ここで表現するのは既存の順序の基礎となる関係であり、この関係が整列順序であるという対象言語の主張はまだ与えない。
-<!--/-->
-
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
-
 ```
 
 <!--en-->
-The single classical assumption is excluded middle at the universe level used throughout the construction. It is already needed by the stage orders and supplies the replacement and separation principles used later; the local arguments about truncation, transport, and extensional uniqueness add no second classical hypothesis.
+# An internal table of stage orders
 <!--zh-->
-全章唯一的经典假设，是构造所处宇宙层级上的排中律。先前的层序已经需要它，后文使用的替换与分离也由它供给；关于截断、搬运与外延唯一性的局部论证不再加入第二项经典假设。
+# 层序的内部表
 <!--ja-->
-この章で用いる古典的仮定は、構成が置かれる宇宙レベルでの排中律だけである。先に得た段階順序がすでにこれを必要とし、後で用いる置換と分出もこれから得られる。切り詰め、輸送、外延的な一意性についての局所的な議論が、別の古典的仮定を加えることはない。
+# 段階順序の内部の表
 <!--/-->
 
 ```agda
 open import Base.Prelude
 open import Base.Classical using ( LEM )
-
 ```
 
 <!--en-->
@@ -41,8 +25,48 @@ Fixing `lem : LEM (ℓ-suc ℓ)` at the module boundary makes that dependence un
 
 ```agda
 module L.Choice.OrderTable {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-
 ```
+
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax using ( Formula )
+import FOL.Absoluteness
+import FOL.ZFModel
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-induction )
+open import V.Coding {ℓ} using ( pr; pr-inj )
+open import L.Constructible {ℓ}
+  using ( 𝒮ʟ; isL; isL-trans; Lset; Lset→isL; IsOrd; isPropIsOrd )
+open import L.Ordinal {ℓ} using ( mem-ord )
+open import L.Axioms.Basic {ℓ} using ( extensionalL )
+open import L.Axioms.Full {ℓ} lem using ( hasReplacementL; hasSeparationL )
+open import L.Recursion {ℓ} lem using ( mereFunct; smallDom )
+open import L.Coding.Model {ℓ} using ( domAt-intro; prʟ; prʟ-fst )
+open import L.Coding.Expressions {ℓ} using ( extAt; extAt-in; extAt-out; extAt-in-both )
+open import L.Coding.HierarchySequence {ℓ} lem using ( module RecShape )
+open import L.Choice.StageOrders {ℓ} lem using ( Mem; relOf; orderAt; memOf; carry )
+open import L.WellOrder.Base {ℓ-suc ℓ} using ( SWO; Tri; lt; eq; gt )
+```
+
+<!--en-->
+
+At a constructible ordinal index `α`, the preceding construction already gives a host-level strict well-order on the members of `Lset α`. The purpose of this chapter is to represent its binary comparison by a set inside `L`, so that formulas interpreted in the model can quantify over that relation. The result is conditional on an adequate object-language description of one recursive step and applies when `α` is both an ordinal and constructible. It represents the relation underlying the existing order; it does not yet assert in the object language that this relation is a well-order.
+<!--zh-->
+
+在可构造序数层索引 `α` 处，先前的构造已经给出 `Lset α` 的成员上的宿主层严格良序。本章要把它的二元比较表示为 `L` 内部的一个集合，使模型中解释的公式能够量化这条关系。所得结果以单步递归已有充分的对象语言描述为条件，并且只适用于既是序数又可构造的 `α`。它表示已有序的底层关系，而尚未在对象语言中断言这条关系是良序。
+<!--ja-->
+
+構成可能な順序数の段階添字 `α` では、先の構成によって `Lset α` の要素上のホスト側の狭義整列順序がすでに得られている。本章の目的は、その二項比較を `L` の内部の集合として表現し、モデルで解釈される論理式がその関係を量化できるようにすることである。結果は、一段階の再帰について妥当な対象言語の記述が与えられることを前提とし、`α` が順序数かつ構成可能である場合に適用される。ここで表現するのは既存の順序の基礎となる関係であり、この関係が整列順序であるという対象言語の主張はまだ与えない。
+<!--/-->
+
+<!--en-->
+The single classical assumption is excluded middle at the universe level used throughout the construction. It is already needed by the stage orders and supplies the replacement and separation principles used later; the local arguments about truncation, transport, and extensional uniqueness add no second classical hypothesis.
+<!--zh-->
+全章唯一的经典假设，是构造所处宇宙层级上的排中律。先前的层序已经需要它，后文使用的替换与分离也由它供给；关于截断、搬运与外延唯一性的局部论证不再加入第二项经典假设。
+<!--ja-->
+この章で用いる古典的仮定は、構成が置かれる宇宙レベルでの排中律だけである。先に得た段階順序がすでにこれを必要とし、後で用いる置換と分出もこれから得られる。切り詰め、輸送、外延的な一意性についての局所的な議論が、別の古典的仮定を加えることはない。
+<!--/-->
+
+
 
 <!--en-->
 Two levels of discourse must be kept separate. The relation to be represented is defined in the host type theory, while its recursive description is a first-order formula interpreted in `L`. Membership induction connects the stages: its motive may take values in any dependent type family, so the later simultaneous package of a table and a relation does not have to be a proposition for the recursion to be legitimate.
@@ -52,14 +76,6 @@ Two levels of discourse must be kept separate. The relation to be represented is
 ここでは二つの議論の水準を区別する必要がある。表現される関係はホストの型理論で定義され、その再帰的な記述は `L` で解釈される一階論理式である。所属に沿う帰納が各段階を結ぶ。その動機は任意の依存型族に値を取れるので、後で表と関係を同時に運ぶ組が命題であることは、再帰の正当性の前提ではない。
 <!--/-->
 
-```agda
-open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using ( Formula )
-import FOL.Absoluteness
-import FOL.ZFModel
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-induction )
-```
-
 <!--en-->
 The final relation lives in the constructible model, but its endpoints begin as members of the host set `Lset α`. Once ordinalness `oα` is fixed, `Lset→isL` packages each such endpoint as an element of the model; this conversion uses the ordinalness of `α`, not a separate proof that `α` itself is constructible. The constructibility witness for `α` has a different later role: it packages the index itself as the model element `A`, which serves as the domain for replacement and as a parameter of separation. Ordinal membership supplies ordinalness at smaller indices, while pair injectivity and extensionality recover endpoints and identify sets from their members.
 <!--zh-->
@@ -67,14 +83,6 @@ The final relation lives in the constructible model, but its endpoints begin as 
 <!--ja-->
 最終的な関係は構成可能モデルの中にあるが、その端点はまずホスト集合 `Lset α` の要素として現れる。順序数性 `oα` を固定すると、`Lset→isL` によって各端点をモデル要素としてまとめられる。この変換が使うのは `α` の順序数性であり、`α` 自身が構成可能であるという別の証明ではない。`α` の構成可能性の証人は、後で異なる役割を果たす。段階の添字自身をモデル要素 `A` としてまとめ、置換公理の定義域と分出公理のパラメータにするためである。順序数の要素に関する法則が小さい添字の順序数性を与え、対の符号化の単射性と外延性が、それぞれ端点の復元と要素による集合の同一視を与える。
 <!--/-->
-
-```agda
-open import V.Coding {ℓ} using ( pr; pr-inj )
-open import L.Constructible {ℓ}
-  using ( 𝒮ʟ; isL; isL-trans; Lset; Lset→isL; IsOrd; isPropIsOrd )
-open import L.Ordinal {ℓ} using ( mem-ord )
-open import L.Axioms.Basic {ℓ} using ( extensionalL )
-```
 
 <!--en-->
 The construction will use the two set-existence principles for different purposes. Replacement collects the relation values at all lower indices into one table, after truncated existence and extensional uniqueness have made each graph fiber contractible. Separation then cuts the current relation out of one common containing set. Thus the table and the relation at its bound are produced together, but by distinct arguments.
@@ -84,14 +92,6 @@ The construction will use the two set-existence principles for different purpose
 この構成では、二つの集合存在原理を異なる目的に用いる。命題的切り詰めのもとの存在と外延的な一意性によって各グラフの繊維を可縮にした後、置換がすべての小さい添字での関係の値を一つの表に集める。分出は一つの共通の包含集合から現在の関係を切り出す。したがって、上界より下の表と上界での関係は同時に作られるが、その存在を与える議論は別々である。
 <!--/-->
 
-```agda
-open import L.Axioms.Full {ℓ} lem using ( hasReplacementL; hasSeparationL )
-open import L.Recursion {ℓ} lem using ( mereFunct; smallDom )
-open import L.Coding.Model {ℓ} using ( domAt-intro; prʟ; prʟ-fst )
-open import L.Coding.Expressions {ℓ} using ( extAt; extAt-in; extAt-out; extAt-in-both )
-open import L.Coding.HierarchySequence {ℓ} lem using ( module RecShape )
-```
-
 <!--en-->
 The order itself is already available as `orderAt α oα`, a strict well-order on `Mem (Lset α)`. This chapter uses its underlying comparison, trichotomy, irreflexivity, and transitivity, and later transports the same order to a small presentation of the stage. No new comparison rule or well-foundedness proof is introduced here.
 <!--zh-->
@@ -100,12 +100,6 @@ The order itself is already available as `orderAt α oα`, a strict well-order o
 順序そのものは、`Mem (Lset α)` 上の狭義整列順序 `orderAt α oα` としてすでに得られている。本章ではその基礎となる比較、三分性、非反射性、推移性を用い、後には同じ順序を段階の小さな提示へ運ぶ。新しい比較規則や整礎性の証明をここで導入することはない。
 <!--/-->
 
-```agda
-open import L.Choice.StageOrders {ℓ} lem using ( Mem; relOf; orderAt; memOf; carry )
-open import L.WellOrder.Base {ℓ-suc ℓ} using ( SWO; Tri; lt; eq; gt )
-
-```
-
 <!--en-->
 Many later equalities compare dependent pairs whose second components are membership proofs. Since membership and ordinalness are propositions, equality of the underlying sets determines equality of the packaged members, and changing a certificate does not create a different mathematical endpoint. Transport along pair-component equalities can therefore align comparisons without turning proofs into extra choices.
 <!--zh-->
@@ -113,9 +107,6 @@ Many later equalities compare dependent pairs whose second components are member
 <!--ja-->
 後で現れる多くの等式は、第二成分が所属の証明である依存対を比較する。所属と順序数性は命題なので、底の集合の等しさからまとめられた要素の等しさが定まり、証明書を取り替えても別の数学的端点は生じない。そのため、対の成分の等式に沿って比較を輸送しても、証明を余分な選択に変えることはない。
 <!--/-->
-
-```agda
-```
 
 <!--en-->
 Propositional truncation will mark every place where existence is needed without a selected witness. Small presentations serve a different role: they replace a possibly large membership fiber by a small index type whose embedding returns the represented member. Keeping these devices distinct is essential, since one hides a choice while the other controls size.
@@ -140,9 +131,7 @@ From this point, propositions and quantifiers are read in the membership structu
 <!--/-->
 
 ```agda
-
 open hPropStructure 𝒮ʟ
-
 ```
 
 <!--en-->
@@ -156,7 +145,6 @@ The internal set-builder interface will later state that a candidate has exactly
 ```agda
 module ModelL = FOL.ZFModel 𝒮ʟ
 open ModelL using ( SetOf )
-
 ```
 
 <!--en-->
@@ -170,7 +158,6 @@ Formula satisfaction is compared with host-level predicates through absoluteness
 ```agda
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
 open AbsL renaming ( _⊨ᵐ_ to _⊨_ )
-
 ```
 
 <!--en-->
@@ -206,7 +193,6 @@ A class in the model must be proposition-valued, whereas no proof has been given
 ```agda
 Ordering : (α : V ℓ) → IsOrd α → Mem (Lset α) → Mem (Lset α) → hProp (ℓ-suc ℓ)
 Ordering α oα a b = ∥ relOf (orderAt α oα) a b ∥₁ , squash₁
-
 ```
 
 <!--en-->
@@ -273,7 +259,6 @@ For an index `α`, `Related α z` says, under propositional truncation, that `z`
 Related : V ℓ → V ℓ → hProp (ℓ-suc ℓ)
 Related α z = ∃[ oα ∶ IsOrd α ] (∃[ a ∶ Mem (Lset α) ] (∃[ b ∶ Mem (Lset α) ]
   ((z ≡ pr (fst a) (fst b)) , setIsSet z (pr (fst a) (fst b))) ⊓ Ordering α oα a b))
-
 ```
 
 <!--en-->
@@ -288,7 +273,6 @@ A model set `r` realizes this class when its membership agrees with `Related α`
 Realizes : V ℓ → S → hProp (ℓ-suc ℓ)
 Realizes α r = ∀[ z ∶ S ] ((fst z ∈ fst r) ⇒ Related α (fst z))
                         ⊓ (Related α (fst z) ⇒ (fst z ∈ fst r))
-
 ```
 
 <!--en-->
@@ -302,7 +286,6 @@ Realizes α r = ∀[ z ∶ S ] ((fst z ∈ fst r) ⇒ Related α (fst z))
 ```agda
 IsRel : V ℓ → S → Type (ℓ-suc ℓ)
 IsRel α r = ⟨ Realizes α r ⟩
-
 ```
 
 <!--en-->
@@ -318,7 +301,6 @@ rel-path : (α : V ℓ) (r : S) → IsRel α r
          → (z : S) → (fst z ∈ fst r) ≡ Related α (fst z)
 rel-path α r p z =
   ⇔toPath {P = fst z ∈ fst r} {Q = Related α (fst z)} (p z .fst) (p z .snd)
-
 ```
 
 <!--en-->
@@ -333,7 +315,6 @@ If `r` and `r'` both realize the class, their membership propositions agree poin
 rel-unique : (α : V ℓ) (r r' : S) → IsRel α r → IsRel α r' → r ≡ r'
 rel-unique α r r' p q = extensionalL
   (λ z → rel-path α r p z ∙ sym (rel-path α r' q z))
-
 ```
 
 <!--en-->
@@ -344,11 +325,17 @@ The forward reading starts with specified members `a,b` and an actual stage-orde
 順方向の読みは、指定された要素 `a,b` と実際の段階順序の比較から始まる。二つの底の集合が符号化された対を作り、順序数性の証明書、まとめられた二要素、切り詰められた比較が `Related` の証人を与える。証人は切り詰めの内側で構成されるので、切り詰められた情報から選択を取り出してはいない。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module _ (α : V ℓ) (oα : IsOrd α) (a b : Mem (Lset α)) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   related-in : relOf (orderAt α oα) a b → ⟨ Related α (pr (fst a) (fst b)) ⟩
   related-in h = ∣ oα , ∣ a , ∣ b , (refl , ∣ h ∣₁) ∣₁ ∣₁ ∣₁
-
 ```
 
 <!--en-->
@@ -396,7 +383,6 @@ Pair-code injectivity first recovers equality of the underlying endpoint sets. E
       ea = Σ≡Prop (λ x → snd (x ∈ Lset α)) (pr-inj q .fst)
       eb : b ≡ b'
       eb = Σ≡Prop (λ x → snd (x ∈ Lset α)) (pr-inj q .snd)
-
 ```
 
 <!--en-->
@@ -408,7 +394,7 @@ The outer ordinal certificate is explicit, while each endpoint exists only under
 <!--/-->
 
 ```agda
-    atOrd : Σ[ o ∈ IsOrd α ] ⟨ ∃[ a' ∶ Mem (Lset α) ] (∃[ b' ∶ Mem (Lset α) ] ((pr (fst a) (fst b) ≡ pr (fst a') (fst b'))
+    atOrd : Σ[ o ∶ IsOrd α ] ⟨ ∃[ a' ∶ Mem (Lset α) ] (∃[ b' ∶ Mem (Lset α) ] ((pr (fst a) (fst b) ≡ pr (fst a') (fst b'))
                  , setIsSet _ (pr (fst a') (fst b'))) ⊓ Ordering α o a' b') ⟩
           → ⟨ Ordering α oα a b ⟩
     atOrd (o , h₁) = rec₁ squash₁
@@ -426,6 +412,8 @@ After both temporary endpoints have been exposed, the pair-alignment argument su
 ```agda
         (λ { (b' , (q , hr)) → atPair o a' b' q hr }) h₂ }) h₁
 ```
+</div>
+</details>
 
 <!--en-->
 ## Whatever realizes the class, read at both shapes
@@ -443,12 +431,18 @@ The useful representation lemmas are stated for any `r` realizing `Related α`, 
 有用な表現補題は、再帰が最後に構成する関係だけでなく、`Related α` を実現する任意の `r` について述べられる。これにより、小さい段階の表にすでに記録された関係の値を直ちに読める。順序数性の証明 `oα` を固定すると、`Lset α` の各要素は構成可能であり、モデルの要素としてまとめられる。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module _ (α : V ℓ) (oα : IsOrd α) (r : S) (hr : IsRel α r) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     memL : Mem (Lset α) → S
     memL c = fst c , Lset→isL α oα (fst c) (snd c)
-
 ```
 
 <!--en-->
@@ -464,7 +458,6 @@ The model's internal ordered pair of the packaged endpoints and the host Kuratow
           → (fst (prʟ (memL a) (memL b)) ∈ fst r)
           ≡ (pr (fst a) (fst b) ∈ fst r)
     atRel a b = cong (λ x → x ∈ fst r) (prʟ-fst (memL a) (memL b))
-
 ```
 
 <!--en-->
@@ -480,7 +473,6 @@ Applying `Related α` to the same pair equality gives the companion bridge on th
               → ⟨ Related α (fst (prʟ (memL a) (memL b))) ⟩
               ≡ ⟨ Related α (pr (fst a) (fst b)) ⟩
     atRelated a b = cong (λ x → ⟨ Related α x ⟩) (prʟ-fst (memL a) (memL b))
-
 ```
 
 <!--en-->
@@ -508,7 +500,6 @@ The reading direction reverses the route. Membership of the host pair is transpo
 <!--/-->
 
 ```agda
-
   rel-rep : (a b : Mem (Lset α))
           → ⟨ pr (fst a) (fst b) ∈ fst r ⟩ → relOf (orderAt α oα) a b
   rel-rep a b h = related-out α oα a b
@@ -525,11 +516,9 @@ Some later arguments work with the small presentation `⟪ Lset α ⟫` rather t
 <!--/-->
 
 ```agda
-
   private
     atIx : ⟪ Lset α ⟫ → Mem (Lset α)
     atIx m = ⟪ Lset α ⟫↪ m , memOf (Lset α) m
-
 ```
 
 <!--en-->
@@ -542,7 +531,6 @@ Carrying `orderAt` along that presentation gives a strict order on the small ind
 
 ```agda
   open SWO (carry (Lset α) (orderAt α oα)) using () renaming ( _<∙_ to _≺ᶜ_ )
-
 ```
 
 <!--en-->
@@ -557,7 +545,6 @@ For presentation indices `u,v`, a carried comparison is first read as the compar
   ixRel-fill : (u v : ⟪ Lset α ⟫) → u ≺ᶜ v
              → ⟨ pr (⟪ Lset α ⟫↪ u) (⟪ Lset α ⟫↪ v) ∈ fst r ⟩
   ixRel-fill u v = rel-fill (atIx u) (atIx v)
-
 ```
 
 <!--en-->
@@ -573,6 +560,8 @@ Conversely, membership of the pair of embedded endpoints is read by the earlier 
             → ⟨ pr (⟪ Lset α ⟫↪ u) (⟪ Lset α ⟫↪ v) ∈ fst r ⟩ → u ≺ᶜ v
   ixRel-rep u v = rel-rep (atIx u) (atIx v)
 ```
+</div>
+</details>
 
 <!--en-->
 ## What a table records
@@ -594,7 +583,6 @@ The first table condition is soundness of recorded values. If an index `c` lies 
 Values : S → V ℓ → Type (ℓ-suc ℓ)
 Values h B = (c r : S) → ⟨ fst c ∈ B ⟩
            → ⟨ pr (fst c) (fst r) ∈ fst h ⟩ → IsRel (fst c) r
-
 ```
 
 <!--en-->
@@ -608,8 +596,7 @@ The second condition is totality below the bound. Every `c ∈ B` has some recor
 ```agda
 Entries : S → V ℓ → Type (ℓ-suc ℓ)
 Entries h B = (c : S) → ⟨ fst c ∈ B ⟩
-            → ∥ (Σ[ r ∈ S ] ⟨ pr (fst c) (fst r) ∈ fst h ⟩) ∥₁
-
+            → ∥ (Σ[ r ∶ S ] ⟨ pr (fst c) (fst r) ∈ fst h ⟩) ∥₁
 ```
 
 <!--en-->
@@ -641,13 +628,24 @@ The recursive construction now assumes two formulas with one semantic meaning. `
 再帰的な構成はここで、同じ意味をもつ二つの論理式を仮定する。`Cond b f` は、近似の表がグラフの内部で束縛されるときに用いる変数スロットの形である。`Cond₀ B F` は、固定された順序数と完成した表を分出のパラメータにするときに用いる定数の形である。最初の妥当性の等式は、順序数性と `Values`、`Entries` を仮定し、調べる各対象について変数形式の充足を対応する `Related` と同一視する。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Described
   (Cond : ∀ {n} → Fin n → Fin n → Formula S (suc n))
   (Cond₀ : S → S → Formula S 1)
   (cond-spec : ∀ {n} (b f : Fin n) (γ : S ^ n) → IsOrd (fst (lookup b γ))
              → Values (lookup f γ) (fst (lookup b γ))
+             → Entries (lookup f γ) (fst (lookup b γ))
+             → (z : S)
+             → ((z ∷ γ) ⊨ Cond b f) ≡ Related (fst (lookup b γ)) (fst z))
+  (cond₀-spec : (b f : S) → IsOrd (fst b)
+              → Values f (fst b) → Entries f (fst b)
+              → (z : S) → ((z ∷ []) ⊨ Cond₀ b f) ≡ Related (fst b) (fst z))
+  where
 ```
+</summary>
+<div class="submodule-fold-content">
 
 <!--en-->
 The variable-form hypothesis is pointwise and genuinely bidirectional: it both reads a satisfying coded object as a related pair and constructs satisfaction from relatedness. Only correctness and truncated existence of entries below the ordinal are required. No exact-domain claim is assumed here, so possible entries outside the bound play no part in the semantic identification.
@@ -657,14 +655,6 @@ The variable-form hypothesis is pointwise and genuinely bidirectional: it both r
 変数形式の仮定は点ごとであり、実際に双方向である。論理式を満たす符号化対象を関係する対として読む向きと、関係することから充足を構成する向きの両方を含む。必要なのは、順序数より下の項目の正しさと、命題的切り詰めのもとの存在だけである。ここでは正確な定義域を仮定しないので、上界の外にありうる項目はこの意味論的な同一視に関与しない。
 <!--/-->
 
-```agda
-             → Entries (lookup f γ) (fst (lookup b γ))
-             → (z : S)
-             → ((z ∷ γ) ⊨ Cond b f) ≡ Related (fst (lookup b γ)) (fst z))
-  (cond₀-spec : (b f : S) → IsOrd (fst b)
-              → Values f (fst b) → Entries f (fst b)
-```
-
 <!--en-->
 The constant-form equation gives the same pointwise equivalence after the ordinal and table have become fixed model elements. This second presentation is required by separation, whose defining formula has one free slot for the possible relation member. The equation identifies the meanings of the two contexts; it does not claim that `Cond` and `Cond₀` are syntactically equal.
 <!--zh-->
@@ -672,12 +662,6 @@ The constant-form equation gives the same pointwise equivalence after the ordina
 <!--ja-->
 順序数と表が固定されたモデル要素になった後、定数形式の等式が同じ点ごとの同値を与える。分出で用いる定義論理式は、関係の要素の候補のために一つだけ自由スロットを残すので、この第二の提示が必要である。この等式は二つの文脈の意味を同一視するが、`Cond` と `Cond₀` が構文的に等しいとは主張しない。
 <!--/-->
-
-```agda
-              → (z : S) → ((z ∷ []) ⊨ Cond₀ b f) ≡ Related (fst b) (fst z))
-  where
-
-```
 
 <!--en-->
 Given the variable condition, `StepAt v b f` specifies a candidate value extensionally: an object belongs to the value in slot `v` exactly when it satisfies `Cond b f`. This is a two-way membership specification, not an existence theorem. The actual set realizing the specification will be produced later by the recursive use of replacement and separation.
@@ -690,7 +674,6 @@ Given the variable condition, `StepAt v b f` specifies a candidate value extensi
 ```agda
   StepAt : ∀ {n} → Fin n → Fin n → Fin n → Formula S n
   StepAt v b f = extAt v (Cond b f)
-
 ```
 
 <!--en-->
@@ -701,11 +684,18 @@ Fix slots for the candidate value, ordinal index, and lower table, together with
 候補の値、順序数の添字、小さい段階の表の三つのスロットを固定し、順序数性、値の健全性、命題的切り詰めのもとの項目の存在を満たす環境を与える。これらの仮定のもとで、妥当性の等式は条件に共通の点ごとの意味を与える。続く二つの読みはこれを逆向きに用いる。外延的なステップ仕様から候補の値についての `IsRel` の証明を得る向きと、すでにある `IsRel` の証明からその仕様を満たす向きである。後の章で具体的な実例が与えられるまでは、構成全体がこの仮定されたステップ記述に相対したままである。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
   module _ {n : ℕ} (v b f : Fin n) (γ : S ^ n)
            (ob : IsOrd (fst (lookup b γ)))
            (vals : Values (lookup f γ) (fst (lookup b γ)))
            (ents : Entries (lookup f γ) (fst (lookup b γ))) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
     private
 ```
 
@@ -720,7 +710,6 @@ Once an ordinal bound, a sound table, and entries at every smaller argument have
 ```agda
       same : (z : S) → ((z ∷ γ) ⊨ Cond b f) ≡ Related (fst (lookup b γ)) (fst z)
       same = cond-spec b f γ ob vals ents
-
 ```
 
 <!--en-->
@@ -736,7 +725,6 @@ Suppose a candidate value satisfies the extensional step. Membership in that val
     step-rel h z =
         (λ hz → subst ⟨_⟩ (same z) (extAt-out v (Cond b f) γ h z hz))
       , (λ hz → extAt-in v (Cond b f) γ h z (subst ⟨_⟩ (sym (same z)) hz))
-
 ```
 
 <!--en-->
@@ -753,6 +741,8 @@ The same argument reverses. If a set already realizes the stage relation, its tw
       (λ z hz → subst ⟨_⟩ (sym (same z)) (sp z .fst hz))
       (λ z h → sp z .snd (subst ⟨_⟩ (same z) h))
 ```
+</div>
+</details>
 
 <!--en-->
 ## Approximations and the graph
@@ -793,8 +783,15 @@ To prove that an approximation records only correct values, fix its table and do
 近似が正しい値だけを記録することを示すため、その表と定義域を固定し、引数の候補 `u` を考える。帰納に用いる性質は、`u` が構成可能な順序数なら、記録された各対 `(u,r)` の値 `r` が `u` での関係を実現する、というものである。記録されたすべての値を対象にするため、単値性を仮定していない。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
   module _ {n : ℕ} (f a : Fin n) (γ : S ^ n) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
     private
       Value : V ℓ → Type (ℓ-suc ℓ)
       Value u = ⟨ isL u ⟩ → IsOrd u → (r : S)
@@ -810,7 +807,6 @@ Membership induction is applied to the underlying set of the recorded argument `
 <!--/-->
 
 ```agda
-
     approx-val : ⟨ γ ⊨ ApproxAt f a ⟩ → IsOrd (fst (lookup a γ))
                → (c : S) → IsOrd (fst c) → (r : S)
                → ⟨ pr (fst c) (fst r) ∈ fst (lookup f γ) ⟩ → IsRel (fst c) r
@@ -862,8 +858,9 @@ For an entry `(e,t)` with `e∈u`, the induction hypothesis proves that `t` real
           IH (fst e) e∈ (snd e) (mem-ord {A = u} ou (fst e) e∈) t q
         ents : Entries (lookup f γ) u
         ents e e∈ = ApproxAt-value f a γ h e (oa .fst {x = u} {y = fst e} e∈ u∈a)
-
 ```
+</div>
+</details>
 
 <!--en-->
 ## The graph holds of nothing else
@@ -881,8 +878,15 @@ A graph assertion contains only a propositionally truncated witness for the supp
 グラフの主張が含む、それを支える近似の証人は命題的切り詰めの中にある。しかし、求める結論である「表示された値が順序数の引数での関係を実現する」は命題である。したがって、その結論へ切り詰めを除去できる。ここで得られるのはグラフの値の正しさであり、一意性にはさらに二つの実現集合を外延性で比較する必要がある。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
   module _ {n : ℕ} (w b : Fin n) (γ : S ^ n) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
     graph-only : ⟨ γ ⊨ GraphAt w b ⟩ → IsOrd (fst (lookup b γ))
                → IsRel (fst (lookup b γ)) (lookup w γ)
     graph-only h ob = rec₁ (snd (Realizes (fst (lookup b γ)) (lookup w γ)))
@@ -918,7 +922,6 @@ Correctness of every value recorded by `f` is the preceding membership-induction
           (mem-ord {A = fst (lookup b γ)} ob (fst c) c∈) r p
         ents : Entries f (fst (lookup b γ))
         ents = ApproxAt-value zero (suc b) (f ∷ γ) ha
-
 ```
 
 <!--en-->
@@ -978,7 +981,6 @@ The second approximation clause checks the recursive step at each recorded pair 
 <!--/-->
 
 ```agda
-
       onStep : (c r : S) → ⟨ pr (fst c) (fst r) ∈ fst h ⟩
              → ⟨ (r ∷ c ∷ h ∷ γ) ⊨ StepAt zero (suc zero) (suc (suc zero)) ⟩
       onStep c r p = step-table zero (suc zero) (suc (suc zero)) (r ∷ c ∷ h ∷ γ)
@@ -1014,7 +1016,6 @@ Notice the asymmetry between local soundness and local completeness. Soundness n
         vals' e t _ q = vals e t (dom e t q) q
         ents' : Entries h (fst c)
         ents' e e∈ = ents e (ob .fst {x = fst c} {y = fst e} e∈ c∈)
-
 ```
 
 <!--en-->
@@ -1030,6 +1031,8 @@ The exact-domain equivalence and the local step proof are precisely the two conj
       approx = ApproxAt-in zero (suc b) (h ∷ γ)
         (domAt-intro zero (suc b) (h ∷ γ) onDom) onStep
 ```
+</div>
+</details>
 
 <!--en-->
 ## The pair graph
@@ -1066,7 +1069,6 @@ The class `Recorded B` describes the intended members of a table below `B`. An o
   Recorded B z = ∃[ c ∶ S ] (fst c ∈ B) ⊓ (∃[ r ∶ S ]
     ((z ≡ pr (fst c) (fst r)) , setIsSet z (pr (fst c) (fst r)))
     ⊓ Realizes (fst c) r)
-
 ```
 
 <!--en-->
@@ -1080,7 +1082,6 @@ A model set is a table for `B` when membership in it is pointwise equivalent to 
 ```agda
   IsTable : V ℓ → S → Type (ℓ-suc (ℓ-suc ℓ))
   IsTable B h = (z : S) → (fst z ∈ fst h) ≡ Recorded B (fst z)
-
 ```
 
 <!--en-->
@@ -1093,8 +1094,7 @@ The recursive datum at `α` contains two model sets: a table representing all co
 
 ```agda
   Bundle : V ℓ → Type (ℓ-suc (ℓ-suc ℓ))
-  Bundle α = Σ[ h ∈ S ] Σ[ r ∈ S ] (IsTable α h × IsRel α r)
-
+  Bundle α = Σ[ h ∶ S ] Σ[ r ∶ S ] (IsTable α h × IsRel α r)
 ```
 
 <!--en-->
@@ -1105,8 +1105,15 @@ Fix an exact table `h` for a bound `B`. To use its specification at a concrete e
 上界 `B` に対する正確な表 `h` を固定する。その仕様を具体的な要素に使うには、モデル要素の内部の順序対と、それらの基礎の集合からなるホスト側の Kuratowski 対をそろえる必要がある。内部対の射影則に沿って表の所属同値を運ぶと、基礎の順序対 `(c,r)` で使える形になる。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
   module _ (B : V ℓ) (oB : IsOrd B) (h : S) (sp : IsTable B h) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
     private
       atPair : (c r : S)
              → (pr (fst c) (fst r) ∈ fst h) ≡ Recorded B (pr (fst c) (fst r))
@@ -1123,7 +1130,6 @@ The exact table specification is applied to the internal pair and then viewed th
 
 ```agda
         (sp (prʟ c r))
-
 ```
 
 <!--en-->
@@ -1155,7 +1161,6 @@ The decomposition supplied by `Recorded` is propositionally truncated, so its el
         where
         isPropBoth : isProp (⟨ fst c ∈ B ⟩ × IsRel (fst c) r)
         isPropBoth = isProp× (snd (fst c ∈ B)) (snd (Realizes (fst c) r))
-
 ```
 
 <!--en-->
@@ -1187,7 +1192,6 @@ The first-component equality transports `d∈B` to `c∈B`. Equality of the seco
           where
           rt : r ≡ t
           rt = Σ≡Prop (λ x → snd (isL x)) (pr-inj q .snd)
-
 ```
 
 <!--en-->
@@ -1199,7 +1203,7 @@ The outer recorded witness first provides an index `d` in `B` and a further trun
 <!--/-->
 
 ```agda
-        outer : Σ[ d ∈ S ] ( ⟨ fst d ∈ B ⟩
+        outer : Σ[ d ∶ S ] ( ⟨ fst d ∈ B ⟩
                   × ⟨ ∃[ t ∶ S ] ((pr (fst c) (fst r) ≡ pr (fst d) (fst t))
                         , setIsSet _ (pr (fst d) (fst t))) ⊓ Realizes (fst d) t ⟩ )
               → ⟨ fst c ∈ B ⟩ × IsRel (fst c) r
@@ -1216,7 +1220,6 @@ For each possible realizing value `t`, the equality of pairs reduces the witness
 
 ```agda
           (λ { (t , (q , hr)) → inner d t d∈ q hr }) hs
-
 ```
 
 <!--en-->
@@ -1232,8 +1235,9 @@ The converse table reading is direct. Given `c∈B` and a model element `r` real
              → ⟨ pr (fst c) (fst r) ∈ fst h ⟩
     table-in c r c∈ hr = subst ⟨_⟩ (sym (atPair c r))
       ∣ c , (c∈ , ∣ r , (refl , hr) ∣₁) ∣₁
-
 ```
+</div>
+</details>
 
 <!--en-->
 Before the relation at an ordinal `α` can be obtained by separation, all possible related pairs need one containing set in `L`. The required bound returns a model set `D` containing every object in `Related α`. It is only a common container and may have unrelated members; exactness is not claimed at this stage.
@@ -1245,7 +1249,7 @@ Before the relation at an ordinal `α` can be obtained by separation, all possib
 
 ```agda
   bound : (α : V ℓ) (oα : IsOrd α)
-        → Σ[ D ∈ S ] ((z : S) → ⟨ Related α (fst z) ⟩ → ⟨ fst z ∈ fst D ⟩)
+        → Σ[ D ∶ S ] ((z : S) → ⟨ Related α (fst z) ⟩ → ⟨ fst z ∈ fst D ⟩)
   bound α oα = d .fst , confine
     where
     ixL : ⟪ Lset α ⟫ → S
@@ -1261,7 +1265,6 @@ The small presentation of `Lset α` supplies indices for all of its members. Eac
 
 ```agda
     ixL m = ⟪ Lset α ⟫↪ m , Lset→isL α oα (⟪ Lset α ⟫↪ m) (memOf (Lset α) m)
-
 ```
 
 <!--en-->
@@ -1273,10 +1276,9 @@ Pairs of presentation indices form a small indexing type. Applying the common-do
 <!--/-->
 
 ```agda
-    d : Σ[ D ∈ S ] ((p : ⟪ Lset α ⟫ × ⟪ Lset α ⟫)
+    d : Σ[ D ∶ S ] ((p : ⟪ Lset α ⟫ × ⟪ Lset α ⟫)
                     → ⟨ prʟ (ixL (fst p)) (ixL (snd p)) ∈ˢ D ⟩)
     d = smallDom (⟪ Lset α ⟫ × ⟪ Lset α ⟫) (λ p → prʟ (ixL (fst p)) (ixL (snd p)))
-
 ```
 
 <!--en-->
@@ -1307,7 +1309,6 @@ Membership proofs for `a` and `b` identify them with elements of the small prese
       where
       fa = ∈-asFiber {a = fst a} {b = Lset α} (snd a)
       fb = ∈-asFiber {a = fst b} {b = Lset α} (snd b)
-
 ```
 
 <!--en-->
@@ -1336,7 +1337,6 @@ The pair of recovered endpoints already belongs to `D` by the previous result. T
 
 ```agda
             subst (λ x → ⟨ x ∈ fst (d .fst) ⟩) (sym q) (onPair a b) }) h₂ }) h₁ })
-
 ```
 
 <!--en-->
@@ -1383,7 +1383,6 @@ The ordinal `α` and its constructibility proof form a model element `A`. This i
         where
         A : S
         A = α , hα
-
 ```
 
 <!--en-->
@@ -1397,7 +1396,6 @@ Every member `c` of an ordinal `α` is itself an ordinal. This inherited ordinal
 ```agda
         ordOf : (c : S) → ⟨ fst c ∈ α ⟩ → IsOrd (fst c)
         ordOf c c∈ = mem-ord {A = α} oα (fst c) c∈
-
 ```
 
 <!--en-->
@@ -1411,7 +1409,6 @@ For `c∈α`, the model element `c` already carries its constructibility proof, 
 ```agda
         bun : (c : S) → ⟨ fst c ∈ α ⟩ → Bundle (fst c)
         bun c c∈ = IH (fst c) c∈ (snd c) (ordOf c c∈)
-
 ```
 
 <!--en-->
@@ -1425,7 +1422,6 @@ From the recursive bundle at `c`, select its current-relation component and call
 ```agda
         value : (c : S) → ⟨ fst c ∈ α ⟩ → S
         value c c∈ = bun c c∈ .snd .fst
-
 ```
 
 <!--en-->
@@ -1439,7 +1435,6 @@ The specification stored with that component states that the chosen value realiz
 ```agda
         relOK : (c : S) (c∈ : ⟨ fst c ∈ α ⟩) → IsRel (fst c) (value c c∈)
         relOK c c∈ = bun c c∈ .snd .snd .snd
-
 ```
 
 <!--en-->
@@ -1453,7 +1448,6 @@ For each `c` whose underlying ordinal lies below `α`, the induction hypothesis 
 ```agda
         entry : (c : S) → ⟨ fst c ∈ α ⟩ → S
         entry c c∈ = prʟ c (value c c∈)
-
 ```
 
 <!--en-->
@@ -1513,11 +1507,9 @@ The recursive graph proof for the relation value can now be combined with the ca
 <!--/-->
 
 ```agda
-
         holds : (c : S) (c∈ : ⟨ fst c ∈ α ⟩) → ⟨ (entry c c∈ ∷ c ∷ []) ⊨ φ ⟩
         holds c c∈ = PairGraph-in zero (suc zero) (entry c c∈ ∷ c ∷ []) φ qφ
           (value c c∈) (prʟ-fst c (value c c∈)) (below c c∈ (entry c c∈))
-
 ```
 
 <!--en-->
@@ -1563,7 +1555,6 @@ Composing the given identification of `k` with `(c,r)`, the equality of the two 
 ```agda
                 (relOK c c∈)))
             ∙ sym (prʟ-fst c (value c c∈)) )
-
 ```
 
 <!--en-->
@@ -1576,9 +1567,8 @@ For each `c ∈ α`, existence and uniqueness now describe a single point of the
 
 ```agda
         fc : (c : S) → ⟨ c ∈ˢ A ⟩
-           → isContr (Σ[ k ∈ S ] ⟨ (k ∷ c ∷ []) ⊨ φ ⟩)
+           → isContr (Σ[ k ∶ S ] ⟨ (k ∷ c ∷ []) ⊨ φ ⟩)
         fc c c∈ = mereFunct φ c ∣ entry c c∈ , (holds c c∈ , only c c∈) ∣₁
-
 ```
 
 <!--en-->
@@ -1592,7 +1582,6 @@ Replacement may therefore collect the paired graph values over the internal doma
 ```agda
         rep : isContr (SetOf (λ z → ∃[ c ∶ S ] (c ∈ˢ A) ⊓ ((z ∷ c ∷ []) ⊨ φ)))
         rep = hasReplacementL A φ fc
-
 ```
 
 <!--en-->
@@ -1606,7 +1595,6 @@ The table `H` is the constructible set at the center of this contractible replac
 ```agda
         H : S
         H = rep .fst .fst
-
 ```
 
 <!--en-->
@@ -1638,7 +1626,6 @@ In the forward direction, replacement membership merely supplies an index `c` be
                , ( cong fst (only c c∈ z hp) ∙ prʟ-fst c (value c c∈)
                  , relOK c c∈ ) ∣₁) ∣₁ })
             (subst ⟨_⟩ (rep .fst .snd z) hz)
-
 ```
 
 <!--en-->
@@ -1670,7 +1657,6 @@ That transport path starts with the recorded equality for `z`, replaces `r` by t
                      (rel-unique (fst c) r (value c c∈) hs (relOK c c∈)))
                      ∙ sym (prʟ-fst c (value c c∈)))))
                 (holds c c∈) }) hr) }) hz)
-
 ```
 
 <!--en-->
@@ -1684,7 +1670,6 @@ The exact table specification now yields correctness of all values recorded by `
 ```agda
         tvals : Values H α
         tvals = table-out α oα H spec .snd
-
 ```
 
 <!--en-->
@@ -1699,7 +1684,6 @@ Completeness is obtained pointwise. For each `c ∈ α`, the recursive value at 
         tents : Entries H α
         tents c c∈ = ∣ value c c∈
                     , table-in α oα H spec c (value c c∈) c∈ (relOK c c∈) ∣₁
-
 ```
 
 <!--en-->
@@ -1714,7 +1698,6 @@ The table has now supplied the value correctness and completeness needed to read
         sep : isContr (SetOf (λ x → (x ∈ˢ bound α oα .fst)
                                   ⊓ ((x ∷ []) ⊨ Cond₀ A H)))
         sep = hasSeparationL (bound α oα .fst) (Cond₀ A H)
-
 ```
 
 <!--en-->
@@ -1744,7 +1727,6 @@ Conversely, an element satisfying `Related α` lies in the common bound by its d
 ```agda
                       ( bound α oα .snd z hz
                       , subst ⟨_⟩ (sym (cond₀-spec A H oα tvals tents z)) hz ))
-
 ```
 
 <!--en-->
@@ -1758,7 +1740,6 @@ For a layer index `α` equipped with both constructibility and ordinalness, the 
 ```agda
   relL : (α : V ℓ) → ⟨ isL α ⟩ → IsOrd α → S
   relL α hα oα = tableAt α hα oα .snd .fst
-
 ```
 
 <!--en-->
@@ -1790,12 +1771,18 @@ For two members `a` and `b` of `Lset α`, the filling direction specializes the 
 `Lset α` の二要素 `a` と `b` について、埋める向きは一般の実現補題を `relL` に特殊化する。したがって、すでに構成されている狭義整列順序 `orderAt α` によるホスト側の比較から、二つの底の集合を符号化した順序対が `relL` に属することが従う。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
   module _ (α : V ℓ) (hα : ⟨ isL α ⟩) (oα : IsOrd α) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
     relL-fill : (a b : Mem (Lset α)) → relOf (orderAt α oα) a b
               → ⟨ pr (fst a) (fst b) ∈ fst (relL α hα oα) ⟩
     relL-fill = rel-fill α oα (relL α hα oα) (relL-spec α hα oα)
-
 ```
 
 <!--en-->
@@ -1812,6 +1799,11 @@ The reading direction gives the converse for the same two layer members: members
              → relOf (orderAt α oα) a b
     relL-rep = rel-rep α oα (relL α hα oα) (relL-spec α hα oα)
 ```
+</div>
+</details>
+
+</div>
+</details>
 
 <!--en-->
 ## Recap

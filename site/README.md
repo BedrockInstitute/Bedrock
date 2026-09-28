@@ -1,95 +1,200 @@
-# site
+# Bedrock website instance
 
-The static-site **front-end assets** consumed by
-[scripts/site/render-site.py](../scripts/site/render-site.py). These are committed source; the rendered
-site they produce is generated into `_build/site/` (git-ignored). English developer doc; the
-rule set is [AGENTS.md](../AGENTS.md).
+This directory owns Bedrock's durable book/site configuration, authoring
+specifications, editorial metadata and brand assets, not reusable implementation.
+It is not limited to static assets. Temporary development work belongs in
+`dev/` and must be cleaned up when finished. The framework is
+[Outcrop](https://github.com/BedrockInstitute/Outcrop), pinned as the `outcrop/`
+Git submodule. Follow [AGENTS.md](../AGENTS.md) and the current write scope.
 
-**Read this file when your write scope names a path under `site/`.**
+## Responsibilities
 
-**The publishing pipeline runs outside `make check`:** `scripts/site/extract-types.py`,
-`gen-depmap.py`, `link-check.py`, `render-site.py`, `weave-i18n.py`, `i18n_markers.py` and
-`depmap-template.html`. `make html`, `make types`, `make site`, `make serve` and the two deploy
-workflows run them. The one exception is `weave-i18n.py --check`, which `make lint` does run,
-because a broken language marker is a defect in a master rather than in the site.
+| Bedrock owns | Outcrop owns |
+| --- | --- |
+| `site/project.json`, `site/static/` | Outcrop Core: Markdown, multilingual structure, optional compiler semantics and pure lint engines |
+| `src/`, `site/reading-catalog.json`, `site/glossary.toml` | Outcrop Site: complete page shell, routes, graph, search, appearance, hover/modal, notes, diagrams, Ask AI and publication |
+| Library lock, entry/options, resource/cache policy, mathematical gates and deployment | Optional Agda toolchain/trace producer, weaving, metrics, templates, browser resources and generic site lint |
 
-The dependency map derives its graph from fenced source imports and its learning
-stages from `dev/reading-catalog.json`. Compact, learning-stage and namespace
-layouts share the same nodes and edges; skeleton mode preserves reachability.
-Milestones appears at the bottom as a dependency endpoint, although readers meet
-its theorem statements first as a preview.
+The public API is `from outcrop.core import MarkdownDocument, CodeContext` and
+`from outcrop.site import SiteConfig, build_site`. Shared source lives under
+`outcrop/src/outcrop/`; resources are in `outcrop/src/outcrop/site/resources/`,
+with `static/outcrop.js`, `static/outcrop.css`, templates, fonts and vendor assets.
+Do not add a second implementation under this directory.
 
-## Contents
+Framework references:
 
-- `template.html`: the page shell. The renderer fills `%%...%%` slots (content, navigation, the
-  external-library banner, cache-busting `?v=` asset versions, the canonical link, the
-  JSON-LD graph, the `window.bedrock` page config, and so on).
-- `static/`: assets copied verbatim to the site root.
-  - `bedrock.css`: styles (the palette and Agda token colours are **adapted from the 1lab**).
-  - `bedrock.js`: theme toggle, KaTeX, type-on-hover, fuzzy search, language switch.
-  - `ask-ai.js` / `ask-ai.css`: select a passage, get a handover text for an assistant.
-  - `assets/`: the brand marks (`favicon.svg`, `brand.svg`, `banner.png`). `brand.svg` is a
-    bottom-padded variant of the favicon mark, for inline use beside heading text in the READMEs;
-    `banner.png` is the README/social hero card.
-  - `fonts/`: self-hosted woff2 (EB Garamond, Inria Sans, JuliaMono); no runtime font CDN.
-- `vendor/1lab/`: **vendored upstream 1lab assets** kept under their own license, with the
-  upstream font and icon license texts under `vendor/1lab/static/licenses/`.
+- [Architecture and interaction contracts](../outcrop/docs/ARCHITECTURE.md)
+- [Markdown input and optional compiler evidence](../outcrop/docs/RENDERER-MARKDOWN.md)
+- [Reusable authoring recipes](../outcrop/docs/RENDERER-RECIPES.md)
+- [Configuration, CLI and independent project](../outcrop/docs/SITE-CONFIG.md)
 
-## The agent-readable layer
+## Persistent instance files
 
-A reader who selects a sentence and asks an assistant about it, and the assistant that
-then follows the link, need the same thing: a stable name for the block, and a cheap way
-to read the rest. `make site` therefore emits, beside the pages:
+| Files | Purpose |
+| --- | --- |
+| `project.json`, `static/assets/`, `static/bedrock-diagrams.css` | Website identity, framework inputs, branding and Bedrock-specific figure layouts |
+| `reading-catalog.json`, `TEACHING.md` | Chapters, routes, review status and teaching architecture |
+| `glossary.toml`, `GLOSSARY.md` | Canonical terminology and its maintenance contract |
+| `STYLE-agda.md`, `STYLE-i18n.md` | Formal-code and trilingual authoring rules |
+| `agda-libraries.json`, `AGDA-ENVIRONMENT.md` | Dependency lock and compiler/build policy |
+| `host-lem-inventory.json`, `inline-agda-legacy.json` | Proof classification and narrowly scoped lint allowances |
+| `inline-latex-approvals.json` | Explicit occurrence approvals and temporary allowances ending at human review; no automatic legacy exemptions |
+| `ARCHITECTURE.md` | Instance boundaries, gate mapping and verification requirements |
+| `ci-docs.json` | Conservative CI documentation-only allowlist; unknown changes retain full checks |
 
-- `/<lang>/<Module>.md`, a plain-Markdown twin of every chapter: the same prose, the same
-  Agda in fenced blocks, and YAML front matter giving the chapter's stage, reading-order
-  position, prerequisites, canonical URL and Agda master. Each page advertises its own
-  twin with `<link rel="alternate" type="text/markdown">` and links it in the footer.
-- `/llms.txt` (copied to `/.well-known/llms.txt`), the guide an agent reads first: what
-  Bedrock is, how the site is addressed, what is fetchable, and every chapter in reading
-  order. Generated from the reading catalog, so it cannot drift from the book.
-- `/robots.txt` and `/sitemap.xml`, with hreflang alternates for the three editions.
-- `_headers`, the Cloudflare Pages rules that serve `.md` as `text/markdown` and open the
-  JSON endpoints to cross-origin fetches. GitHub Pages ignores this file; Cloudflare is
-  the canonical deployment.
+The proof and prose gates consume these same files even when no website is built.
+Directory ownership does not make configuration dependent on running a renderer.
 
-Anchors are the citable part. `sec-0` is a chapter's title and `sec-1`, `sec-2`, ... its
-headings; `p-1`, `p-2`, ... number the prose blocks (paragraphs, list items, block quotes
-and tables) in document order, the outermost block being the addressable unit. Inside a
-displayed Agda block, Agda's own highlighter has already named every token by character
-offset and every definition by its identifier, so code needs no scheme of Bedrock's.
-`scripts/tests/test_agent_layer.py` pins all of this.
+Inline LaTeX is otherwise restricted to standalone displays, figures and
+figure-explanation paragraphs using `图中的` / `in the figure` / `図中の`.
+This mechanical allowance is local to the paragraph, not a human approval. The
+active inventory is [dev/INLINE-LATEX-REVIEW.md](../dev/INLINE-LATEX-REVIEW.md);
+unreviewed occurrences fail lint unless an explicit temporary allowance is active
+while the chapter's catalog flag is `human_reviewed: false`. Text edits and bulk
+replacements are allowed; changing that flag to true ends the allowance. The
+first four chapters remain strict. See [STYLE-i18n.md](STYLE-i18n.md)
+for the authoring rule and the Outcrop configuration contract for review keys.
 
-## Where a chapter lives
+## Install and build
 
-**One rule, in one place.** [scripts/site/reading_routes.py](../scripts/site/reading_routes.py)
-decides a chapter's address and puts it on the catalog node as `page` and `anchor`. Every
-consumer links through those two fields and none of them builds a filename from a module
-name: the renderer (`chapter_href`), the reading-route explorer, the dependency map, the
-search index, the glossary, the sitemap, the Markdown twins and llms.txt.
+From the Bedrock repository root:
 
-The rule exists because a preview chapter has **no page of its own**. The reading guide
-embeds its entire body, so `Milestones` is read at `index.html#milestones` and no
-`Milestones.html` is written. Because the guide embeds the whole chapter, every anchor
-the chapter defines still resolves there, which is why an explicit anchor beats the
-panel's own: `chapter_href("Milestones", "#1354")` is `index.html#1354`.
+```sh
+git submodule update --init --recursive
+make bootstrap
+make site
+make serve
+```
 
-A module with no catalog entry is a Cubical library page rendered for reference, not a
-chapter, and keeps its own filename.
+`make venv` installs the pinned developer requirements and the local Outcrop
+package in editable mode. An existing environment can install it explicitly with
+`.venv/bin/python -m pip install -e ./outcrop`. Reinitialize submodules after a
+fresh clone and update them to the revision recorded by the consuming commit;
+do not silently track an unpinned framework branch.
 
-The ask-an-assistant dialog is built entirely in the browser from `window.bedrock` and
-the selection. It sends nothing anywhere: it produces text the reader copies into
-whatever assistant they already use. Its three language editions live in `ask-ai.js`,
-because the reader reads the handover before pasting it.
+`make site` builds highlighted Agda and semantic data, then renders all editions
+into `_build/site`. Local runs keep content-aware state under `_build/cache`:
+an unchanged build returns immediately. Prose-only edits and code-fence
+repartitioning retain unchanged compiler evidence: the cache relocates certified
+anchors and source ranges, then refreshes the expression normalizer and pages.
+Changed Agda code, compiler inputs, unsafe fence splits, or missing cache
+artifacts trigger the complete backend path.
+GitHub Actions uses the same content checks in its backend job and separately
+caches the Pages and Cloudflare renders. `make clean` removes the local cache.
+`make site-render SITE_OUT=...` deliberately rerenders
+from existing backend data and does not replace compiler regeneration when code
+or trace contracts change. `LANGS`, `BASE_URL` and `SITE_OUT` remain the
+instance's Make overrides.
+`make site-backend` prepares only the reusable backend artifact.
+`make site-render RENDER_INCREMENTAL=1` consumes that validated artifact and
+retains the render-cache optimization used by CI. There is no `CI`-specific
+implementation of `site`. An explicit forced render invalidates only its own
+output's cached receipt so different manual options cannot create a false hit.
+Local and Actions keys share content fingerprints, with separate producer,
+extractor and render identities. Unrelated Make, document and lint edits do not
+invalidate website evidence. Compatible legacy archives can be restored as
+candidates, but the driver always validates their identities before reuse.
+The cache paths and backend-to-deployment artifact remain unchanged; the
+[workflow guide](../.github/workflows/README.md#content-identities-and-archive-restoration)
+documents key versions, fallback rules and the one-time render identity transition.
+See `make help` and [the target reference](AGDA-ENVIRONMENT.md#build-entry-points).
 
-## Licensing
+On a fresh machine, install GHC/Cabal, `make`, `patch` and Python 3.11+ first.
+`make bootstrap` includes `make venv` and installs the local compiler/libraries;
+the separate `make venv` is useful when only updating Python dependencies.
 
-All first-party code here (`template.html`, `static/bedrock.css`, `static/bedrock.js`,
-`static/ask-ai.js`, `static/ask-ai.css`, and the
-renderer) is **AGPL-3.0-only**, the repository's default; that folds in the front-end assets
-adapted from [the 1lab](https://1lab.dev) and the vendored 1lab tree under `vendor/1lab/` (also
-AGPL-3.0). The self-hosted fonts under `static/fonts/` are **OFL-1.1**, and the brand assets
-under `static/assets/` are **CC BY-NC-SA 4.0** (the project content
-license). Per-file terms are
-declared in [`REUSE.toml`](../REUSE.toml) and verified by `reuse lint`; attributions and the
-AGPL section 13 source statement are in [NOTICE](../NOTICE).
+The thin commands in `scripts/site/` supply Bedrock-specific paths and policies;
+the [scripts index](../scripts/README.md) maps them to gates and browser fixtures.
+The common tools are package commands:
+
+```sh
+.venv/bin/python -m outcrop lint --config site/project.json --project-root .
+.venv/bin/python -m outcrop check-links _build/site
+.venv/bin/python -m outcrop check-search _build/site
+```
+
+## Instance policy
+
+`site/project.json` supplies the visible name, publisher, icons, source/canonical
+URLs, deployment prefix, licenses, agent text and storage namespace. Bedrock
+retains `storage_namespace: "bedrock"`, preserving existing theme, palette, route,
+language and completion preferences. The shared browser transport is now
+`window.outcrop`; its name does not determine preference keys.
+
+The source corpus remains `.lagda.md`. `Base.Prelude` is the explicit teaching
+vocabulary forwarding point. `Origin` is the configured overview embedded at
+`index.html#milestones`; definition fragments still resolve to their own anchors
+within that page. Its numbered results and visible public re-exports are explicit
+instance exceptions. The chapter catalog owns translated titles, routes, order
+and human-review status. Never set review badges merely because a test passes.
+The preface uses mathematical `V` in the broad foundational sense, without an
+Agda link or code styling. The milestones' formal model `V` retains its semantic
+links and definition inspection.
+
+The default homepage and the Origin tab are headed `Bedrock`; the other three
+tabs retain their localized interactive-contents heading. The trilingual slogan
+lives in `site/project.json` under `taglines`, above the homepage description,
+not in the preface. Its `𝑉` is plain mathematical text, not the linked formal
+model. Existing `#milestones` links remain valid and `#origin` is an alias.
+
+Outcrop generates SEO metadata, absolute language alternates, Markdown mirror
+metadata and the shared AI endpoint inventory. Bedrock's `agent.guide` supplies
+only project-specific context. Full trilingual/internal/external search uses
+`search-content.json`; the per-language `search.json` is a legacy identifier index.
+The homepage mirror retains the Origin chapter with `homepage_title` and `tagline`
+front matter. Ask AI and llms.txt share endpoint descriptions; no extra service or
+index submission is involved. See the Outcrop configuration contract for citation
+stability, optional semantic payloads and hosting-header limitations.
+
+On compact screens, explicit language and search icon buttons reveal their
+controls; scrolling never toggles the search field. A code-block touch commits
+AST highlighting and its help only on a completed tap or stationary hold, not
+at touch-down when the gesture might become native scrolling.
+
+`policies.level_name_convention: true` records the book-wide convention that `ℓ`
+with its supported suffixes denotes a universe-level parameter. Outcrop defaults
+this policy to false. Primitive shortening still needs semantic evidence; the
+convention does not authorize guessed AST nodes or change the original code.
+
+Statements and proofs retain their labels and code requirements, but Markdown
+contains no standalone QED marks. Compiler-certified functions with signatures
+and equations and all completed `data` declarations receive the exact `∎` at
+their final code line. A data-containing mutual or inductive-recursive group
+receives one mark after its final member, not member-wise marks. Submodule
+definitions are included; where-local functions remain excluded. The semi-transparent overlay
+reserves no line or padding and has fixed opacity 0.25, even over code. Proof
+prose stays close to its associated code through ordinary structural CSS; code occupies the full width
+of its containing column without an external QED gutter or left outdent.
+Code frames grow vertically and scroll only horizontally. Folded
+submodules retain their own indented columns and compact declaration headers.
+See the shared recipes rather than adding chapter-specific layout fixes.
+
+## Verification
+
+`make check` includes pure Agda typechecking, reusable and instance lint, and both test suites, but does
+not browser-test the website. `make milestone-lint` remains the additional Origin
+closure gate. A website change also needs fresh rendering, link/search validation
+and actual browser interaction against that output.
+
+Bedrock's content-dependent browser fixtures remain under `scripts/tests/`.
+Serve them with `scripts/tests/serve-boilerplate-regression.py --site <output>`;
+redirect server stdout/stderr to a task log. Run fixtures sequentially with the
+tested tab active, and record the production runtime hash. Outcrop's independent
+example and browser fixture live under `outcrop/examples/renderer/` and
+`outcrop/tests/`; its fixture builder is
+`outcrop/scripts/build-renderer-fixtures.py`.
+
+[The Bedrock architecture guide](ARCHITECTURE.md) defines the gate
+mapping and browser acceptance matrix. Record fresh results with each change;
+past runs do not certify new code. Narrow desktop Chrome and synthetic touch
+events do not establish real iPhone Safari behavior.
+
+CI keeps lint, tests and the Origin closure check on every push/PR. Confirmed
+documentation-only changes skip Agda and deployment; source, configuration,
+assets, workflow or unknown changes take the full path. Manual dispatch always
+runs fully. This does not change local Make targets; see the
+[workflow guide](../.github/workflows/README.md) for comparison and cache rules.
+
+Bedrock brand/content licensing remains in [REUSE.toml](../REUSE.toml) and
+[NOTICE](../NOTICE); Outcrop maintains its own inherited software, font and vendor
+attributions. Moving an implementation does not relicense it.

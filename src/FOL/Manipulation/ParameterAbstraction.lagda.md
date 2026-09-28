@@ -1,17 +1,39 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+module FOL.Manipulation.ParameterAbstraction where
+```
+
 <!--en-->
 # Parameter abstraction
+<!--zh-->
+# 参数抽象
+<!--ja-->
+# パラメータ抽象
+<!--/-->
+
+```agda
+open import Base.Prelude
+open import FOL.ZFStructure using ( ZFStructure )
+open import FOL.Syntax using
+  ( Term; con; var
+  ; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
+import FOL.Semantics
+open import FOL.Manipulation.ConstantOccurrences using
+  ( countTm; countFo; constantsTm; constantsFo; padRight; padLeft
+  ; lookup-padRight; lookup-padLeft; lookup-map )
+```
+
+<!--en-->
 
 A formula with constants can be converted into a parameter-free formula by replacing each constant occurrence with a fresh variable and recording the constants in a vector. Supplying that vector through the environment preserves satisfaction, which makes formulas with parameters available to later coding arguments.
 
 This chapter builds the replacement itself. The occurrence count from FOL.Manipulation.ConstantOccurrences fixes how many new variables are needed, and a placement decides which variable slot each occurrence receives. The substitution runs in a single structural pass, and the adequacy theorem at the end identifies satisfaction before and after, which is what later coding of formulas will rely on.
 <!--zh-->
-# 参数抽象
 
-带常元的公式可通过将每次常元出现替换为新变量，并把这些常元记录在向量中，转成无参公式。通过环境供给该向量会保持满足关系，从而使带参数公式可用于后续符号化论证。
+带常元的公式可通过将每次常元出现替换为新变元，并把这些常元记录在向量中，转成无参公式。通过环境供给该向量会保持满足关系，从而使带参数公式可用于后续符号化论证。
 
-本章构造这个替换本身。FOL.Manipulation.ConstantOccurrences 中的出现计数决定了需要多少个新变量，而安置决定每次出现获得哪个变量位。替换只做一次结构遍历；章末的充分性定理识别替换前后的满足关系，这正是后续对公式符号化时所依赖的事实。
+本章构造这个替换本身。FOL.Manipulation.ConstantOccurrences 中的出现计数决定了需要多少个新变元，而安置决定每次出现获得哪个变元位。替换只做一次结构遍历；章末的充分性定理识别替换前后的满足关系，这正是后续对公式符号化时所依赖的事实。
 <!--ja-->
-# パラメータ抽象
 
 定数を含む論理式は、定数の各出現を新しい変数で置き換え、その定数をベクトルに記録することで、パラメータを持たない論理式へ変換できる。そのベクトルを環境から与えても充足関係は保存されるため、パラメータ付き論理式を後の符号化に利用できる。
 
@@ -23,9 +45,9 @@ Chapter introductions of formulas often need constants: to say that a set $a$ is
 
 The replacement works occurrence by occurrence, not constant by constant. If the constant $c$ appears twice, it is recorded twice and receives two variables. Recording occurrences this way means the translation never has to decide whether two names are equal, so the alphabet `K` needs no decidable equality; the positional count from the chapter on constant occurrences does all the bookkeeping.
 <!--zh-->
-公式的章首引言常常需要常元：要说集合 $a$ 可由参数定义，人们会写下提到 $a$ 的公式。但对编码论证而言，只使用无参公式会更方便。参数抽象正是使这成为可能的翻译：把每次常元出现换成新变量，并把诸常元记录在一个向量中，交给环境供给。
+公式的章首引言常常需要常元：要说集合 $a$ 可由参数定义，人们会写下提到 $a$ 的公式。但对编码论证而言，只使用无参公式会更方便。参数抽象正是使这成为可能的翻译：把每次常元出现换成新变元，并把诸常元记录在一个向量中，交给环境供给。
 
-这个替换按出现逐一进行，而不是按常元本身。若常元 $c$ 出现两次，它就被记录两次、获得两个变量。按出现记录意味着翻译无须判断两个名字是否相等，因此字母表 `K` 不需要可判定相等；常元出现一章的位置计数完成了全部簿记。
+这个替换按出现逐一进行，而不是按常元本身。若常元 $c$ 出现两次，它就被记录两次、获得两个变元。按出现记录意味着翻译无须判断两个名字是否相等，因此字母表 `K` 不需要可判定相等；常元出现一章的位置计数完成了全部簿记。
 <!--ja-->
 論理式を使う議論では定数が要る。集合 $a$ がパラメータ付きで定義可能だと言うには、$a$ を名前で言及する論理式を書くからである。しかし符号化の議論では、パラメータを持たない論理式だけを扱えると便利である。パラメータ抽象はそれを可能にする翻訳である。定数の各出現を新しい変数に置き換え、定数をベクトルに記録して環境から供給できるようにする。
 
@@ -33,13 +55,7 @@ The replacement works occurrence by occurrence, not constant by constant. If the
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-module FOL.Manipulation.ParameterAbstraction where
-
-open import Base.Prelude
 open import Cubical.Data.Vec using ( _++_ )
-open import FOL.ZFStructure using ( ZFStructure )
 ```
 
 <!--en-->
@@ -47,7 +63,7 @@ Concretely, the translation consumes two pieces of data prepared in "Constants b
 
 The whole construction is one structural pass over the formula. Its adequacy theorem, proved at the end of the chapter, identifies satisfaction of the original formula under a constant interpretation with satisfaction of the abstraction under the extended environment, and this identification is what later coding arguments rely on.
 <!--zh-->
-具体地，这个翻译消耗「逐次出现地处理常元」一章准备好的两份数据：常元出现的数目，它决定需要多少个新变量；以及记录下来的常元向量，它决定这些变量在解释之后代表什么。替换本身由一个安置描述，即一个函数，决定每次出现获得哪个变量位。
+具体地，这个翻译消耗「逐次出现地处理常元」一章准备好的两份数据：常元出现的数目，它决定需要多少个新变元；以及记录下来的常元向量，它决定这些变元在解释之后代表什么。替换本身由一个安置描述，即一个函数，决定每次出现获得哪个变元位。
 
 整个构造是对公式的一次结构性遍历。章末证明的充分性定理把原公式在常元解释下的满足，与抽象在扩张环境下的满足等同起来；后续编码论证所依赖的正是这一等同。
 <!--ja-->
@@ -56,26 +72,13 @@ The whole construction is one structural pass over the formula. Its adequacy the
 構成全体は論理式の上の一度の構造的な走査である。章の末尾で証明される妥当性の定理は、定数解釈の下での元の論理式の充足と、拡張された環境の下での抽象化の充足を同一視する。後の符号化の議論が依拠するのはまさにこの同一視である。
 <!--/-->
 
-```agda
-open import FOL.Syntax using
-  ( Term; con; var
-  ; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
-import FOL.Semantics
-open import FOL.Manipulation.ConstantOccurrences using
-```
-
 <!--en-->
 Since every constant occurrence becomes a variable, the translated formula contains no constants at all: it lives over an alphabet with no inhabitants. The code uses the empty type `⊥*` as that alphabet. No interpretation of it is ever demanded, because there is nothing to interpret; the type only has to exist so the translated syntax has a well-formed carrier.
 <!--zh-->
-由于每次常元出现都成为变量，翻译后的公式完全不含常元：它定义在一个没有成员的字母表上。代码以空类型 `⊥*` 充当这个字母表。永远不会向它索要解释，因为无可解释之物；这个类型只需存在，使翻译后的语法有一个良构的载体。
+由于每次常元出现都成为变元，翻译后的公式完全不含常元：它定义在一个没有成员的字母表上。代码以空类型 `⊥*` 充当这个字母表。永远不会向它索要解释，因为无可解释之物；这个类型只需存在，使翻译后的语法有一个良构的载体。
 <!--ja-->
 定数の出現はすべて変数になるため、翻訳後の論理式には定数がまったく含まれない。つまり、元をひとつも持たないアルファベットの上にある。コードでは空の型 `⊥*` がこのアルファベットの役を担う。解釈すべきものがないので、この解釈が実際に要求されることはなく、型が存在して翻訳後の構文に well-formed な台を与えるだけで十分である。
 <!--/-->
-
-```agda
-  ( countTm; countFo; constantsTm; constantsFo; padRight; padLeft
-  ; lookup-padRight; lookup-padLeft; lookup-map )
-```
 
 <!--en-->
 ## The abstraction
@@ -86,7 +89,7 @@ The traversal is stated for an arbitrary placement `θ`, and that generality is 
 <!--zh-->
 ## 抽象
 
-安置为每次常元出现指派较大语境中的一个变量。`placeFo` 按结构执行替换，而 `absFo` 选择原自由变量之后的连续区块，其长度正是出现次数。
+安置为每次常元出现指派较大语境中的一个变元。`placeFo` 按结构执行替换，而 `absFo` 选择原自由变元之后的连续区块，其长度正是出现次数。
 
 遍历针对任意安置 `θ` 陈述，这种泛型是递归强加的：子公式处使用的安置就在遍历内部产生，归纳假设因此必须对所有安置成立。让 `θ` 保持抽象也使充分性证明保持模块化。本节先对词项、再对公式构造这两个遍历。
 <!--ja-->
@@ -100,7 +103,7 @@ The traversal is stated for an arbitrary placement `θ`, and that generality is 
 <!--en-->
 The general form of the replacement is a traversal that takes, besides the formula, a placement `θ : Fin (countTm t) → Fin (n + k)`: it reads the occurrence slots of `t` in the order the counting chapter enumerates them, and for each one names a variable slot among the `n + k` available, of which `n` are the original free variables and `k` are the fresh parameter slots. The output is a term over the empty alphabet `⊥*`, since no constant survives.
 <!--zh-->
-替换的一般形式是一个遍历，除公式外还接受一个安置 `θ : Fin (countTm t) → Fin (n + k)`：它按计数章枚举的次序读取 `t` 的诸出现位，并为每一次出现指名 `n + k` 个可用位中的一个，其中 `n` 个是原自由变量，`k` 个是新的参数位。输出是空字母表 `⊥*` 上的词项，因为没有常元存活下来。
+替换的一般形式是一个遍历，除公式外还接受一个安置 `θ : Fin (countTm t) → Fin (n + k)`：它按计数章枚举的次序读取 `t` 的诸出现位，并为每一次出现指名 `n + k` 个可用位中的一个，其中 `n` 个是原自由变元，`k` 个是新的参数位。输出是空字母表 `⊥*` 上的词项，因为没有常元存活下来。
 <!--ja-->
 置き換えの一般形は走査で、論理式のほかに配置 `θ : Fin (countTm t) → Fin (n + k)` を受け取る。`θ` は数え上げの章で列挙された順に `t` の出現の枠を読み、それぞれに対して利用可能な `n + k` 個の枠の一つを指名する。このうち `n` 個は元の自由変数、`k` 個は新しいパラメータの枠である。出力は空のアルファベット `⊥*` の上の項である。生き残る定数はないからである。
 <!--/-->
@@ -117,7 +120,7 @@ placeFo : ∀ {ℓz ℓc} {K : Type ℓc} {n k} (φ : Formula K n)
 <!--en-->
 The term cases show the two moves. A constant `con c` has one occurrence, namely slot zero, and the placement says which variable replaces it: `var (θ zero)`. A variable `var i` contributes no occurrence, so the placement is unused, but the context has grown from `n` to `n + k` and the old index must be re-embedded: `padRight k` sends `i` to the same slot among the first `n`, which by the pad law keeps its value in a concatenated environment.
 <!--zh-->
-词项的两个情形展示了两种手法。常元 `con c` 恰有一次出现，即第零位，安置指出由哪个变量取代它：`var (θ zero)`。变量 `var i` 不贡献出现，故安置不被使用，但语境已从 `n` 增长为 `n + k`，旧序号必须重新嵌入：`padRight k` 把 `i` 送到前 `n` 个位中的同一位，由补位定律，它在拼接环境中仍取原值。
+词项的两个情形展示了两种手法。常元 `con c` 恰有一次出现，即第零位，安置指出由哪个变元取代它：`var (θ zero)`。变元 `var i` 不贡献出现，故安置不被使用，但语境已从 `n` 增长为 `n + k`，旧序号必须重新嵌入：`padRight k` 把 `i` 送到前 `n` 个位中的同一位，由补位定律，它在拼接环境中仍取原值。
 <!--ja-->
 項の二つの場合が、二つの基本的な動きを示す。定数 `con c` は出現をちょうど一つ、すなわち第 0 枠に持ち、配置がどの変数で置き換えるかを決める。それが `var (θ zero)` である。変数 `var i` は出現を持たないので配置は使われないが、文脈は `n` から `n + k` へ伸びたため、古い添字を埋め込み直す必要がある。`padRight k` は `i` を先頭 `n` 枠の中の同じ位置へ送り、参照法則により連結された環境でも値は保たれる。
 <!--/-->
@@ -165,7 +168,7 @@ placeFo (∀̇∈ t φ) θ = ∀̇∈ (placeTm t (λ i → θ (padRight (countFo
 <!--en-->
 Under a binder the context grows by one, and this is the second recurring move. In `∃̇∈ t φ`, the bound variable is consed onto the left of the environment when the semantics evaluates the body, so every parameter slot shifts up by one: the body is traversed under the placement `suc ∘ θ`, adjusted further by `padLeft` past the term's occurrence, while the term itself is placed at the front by `padRight` past the body's occurrences. The unbounded quantifiers `∃̇` and `∀̇` carry only the shift, and with these clauses the traversal covers all ten formula constructors.
 <!--zh-->
-在约束子之下语境增一，这是第二种反复出现的手法。在 `∃̇∈ t φ` 中，语义求值公式体时会把界定变量前置到环境左侧，故每个参数位都上移一：公式体在安置 `suc ∘ θ` 之下遍历，再经 `padLeft` 越过词项的出现而调整；词项本身则以越过公式体出现的 `padRight` 安置在前段。无界量词 `∃̇` 与 `∀̇` 只带移位。这些子句合起来覆盖了全部十个公式构造子。
+在约束子之下语境增一，这是第二种反复出现的手法。在 `∃̇∈ t φ` 中，语义求值公式体时会把界定变元前置到环境左侧，故每个参数位都上移一：公式体在安置 `suc ∘ θ` 之下遍历，再经 `padLeft` 越过词项的出现而调整；词项本身则以越过公式体出现的 `padRight` 安置在前段。无界量词 `∃̇` 与 `∀̇` 只带移位。这些子句合起来覆盖了全部十个公式构造子。
 <!--ja-->
 束縛子の下では文脈が一つ伸ぶ。これが二つ目の繰り返し現れる動きである。`∃̇∈ t φ` では、意味論が本体を評価するときに束縛変数を環境の左に追加するため、パラメータの枠はすべて一つずれる。本体は配置 `suc ∘ θ` の下で走査され、さらに項の出現を越える `padLeft` で調整される。項そのものは本体の出現を越える `padRight` で前の方に配置される。非有界の量化子 `∃̇` と `∀̇` はずらしだけを持つ。これらの節で十個の論理式の構成子がすべてカバーされる。
 <!--/-->
@@ -181,9 +184,9 @@ The instance is the one the rest of the book will use: take the budget to be exa
 
 `padLeft n` is exactly the placement that sends occurrence `j` to slot `n + j`, so each recorded constant receives the first free slot after the original variables, in the order `constantsFo φ` lists them. Nothing else needs to be chosen.
 <!--zh-->
-本书余下部分使用的实例取如下参数：参数位的数目恰好等于出现次数，安置则取紧随原变量之后的那一段。这就是所需的抽象，其类型可以概括为：`K` 上带 `n` 个自由变量的公式，变为带 `n + countFo φ` 个自由变量的无参公式。
+本书余下部分使用的实例取如下参数：参数位的数目恰好等于出现次数，安置则取紧随原变元之后的那一段。这就是所需的抽象，其类型可以概括为：`K` 上带 `n` 个自由变元的公式，变为带 `n + countFo φ` 个自由变元的无参公式。
 
-`padLeft n` 恰是把出现 `j` 送到第 `n + j` 位的那个安置，于是每个被记录的常元、按 `constantsFo φ` 列出它们的次序，分别获得原变量之后第一个空闲位。除此之外无须再做任何选择。
+`padLeft n` 恰是把出现 `j` 送到第 `n + j` 位的那个安置，于是每个被记录的常元、按 `constantsFo φ` 列出它们的次序，分别获得原变元之后第一个空闲位。除此之外无须再做任何选择。
 <!--ja-->
 本の残りの部分で使うのは次のインスタンスである。予算を出現回数ちょうどにとり、配置は変数の直後に続く領域とする。これが求める抽象化であり、その型が本章の主結果を述べる。`K` 上の自由変数 `n` 個の論理式が、自由変数 `n + countFo φ` 個の無パラメータ論理式になる。
 
@@ -212,7 +215,7 @@ The comparison is stated inside a structure `𝒮` with carrier `S`, under one i
 <!--zh-->
 ## 充分性
 
-充分性比较常元解释下的原公式与扩展变量环境下的抽象公式。只要安置后的每个变量都带有其所记录常元的解释，词项释义与公式满足关系便依结构归纳相符。
+充分性比较常元解释下的原公式与扩展变元环境下的抽象公式。只要安置后的每个变元都带有其所记录常元的解释，词项释义与公式满足关系便依结构归纳相符。
 
 这一比较在载体为 `S` 的结构 `𝒮` 内、在原常元的一个解释 `ι : K → S` 之下陈述。两种语义读法并排建立：`_⊨_` 与 `⟦_⟧` 对应 `K` 上、`ι` 之下的公式与词项；其更名副本 `_⊨₀_`、`⟦_⟧₀` 对应抽象的常元域 `⊥*`。无参一侧不需要真正的解释，因为 `⊥*` 为空，但语义模块要求这份资料，`⊥*-rec` 空虚地供给了它。
 <!--ja-->
@@ -226,14 +229,20 @@ The comparison is stated inside a structure `𝒮` with carrier `S`, under one i
 <!--en-->
 Adequacy is the statement that the abstraction does not change meaning. It compares two evaluations of the same formula: the original syntax over `K` with its constants interpreted by a map `ι : K → S`, against the translated syntax over the empty alphabet evaluated in the concatenated environment `γ ++ σ`, where `γ` holds the values of the original free variables and `σ` holds the interpretations of the recorded constants. Here `S` is the carrier of a proposition-valued structure `𝒮`, and `S ^ n` is the type of environments of length `n`.
 <!--zh-->
-充分性是说抽象不改变意义。它比较同一公式的两种求值：`K` 上的原语法、其常元由映射 `ι : K → S` 解释；对空字母表上的翻译语法，在拼接环境 `γ ++ σ` 中求值，其中 `γ` 存放原自由变量的值，`σ` 存放所记录常元的解释。这里 `S` 是命题值结构 `𝒮` 的载体，`S ^ n` 是长度为 `n` 的环境的类型。
+充分性是说抽象不改变意义。它比较同一公式的两种求值：`K` 上的原语法、其常元由映射 `ι : K → S` 解释；对空字母表上的翻译语法，在拼接环境 `γ ++ σ` 中求值，其中 `γ` 存放原自由变元的值，`σ` 存放所记录常元的解释。这里 `S` 是命题值结构 `𝒮` 的载体，`S ^ n` 是长度为 `n` 的环境的类型。
 <!--ja-->
 妥当性とは、抽象化が意味を変えないという主張である。同じ論理式の二つの評価を比較する。一方は `K` 上の元の構文で、定数は写像 `ι : K → S` によって解釈される。他方は空のアルファベット上の翻訳後の構文で、連結された環境 `γ ++ σ` の中で評価される。`γ` は元の自由変数の値を、`σ` は記録された定数の解釈を保持する。ここで `S` は命題値の構造 `𝒮` の台であり、`S ^ n` は長さ `n` の環境の型である。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module _ {ℓ} (𝒮 : ZFStructure ℓ) where
+```
+</summary>
+<div class="submodule-fold-content">
 
+```agda
   open ZFStructure 𝒮
 
   private module Sem = FOL.Semantics 𝒮
@@ -243,15 +252,20 @@ module _ {ℓ} (𝒮 : ZFStructure ℓ) where
 <!--en-->
 The comparison rests on a single hypothesis connecting the two sides: for every occurrence, the variable the placement named holds the interpretation of the constant recorded there, that is, `lookup (θ j) (γ ++ σ) ≡ ι (lookup j (constantsFo φ))`. All that follows is structural induction on the syntax with this hypothesis maintained. Since the translated syntax lives over the empty alphabet, its reading `_⊨₀_` and `⟦_⟧₀` needs no genuine constant interpretation, though the semantics module requires one as data; the elimination of the empty type supplies it vacuously.
 <!--zh-->
-这一比较只依赖一条连接两侧的假设：对每次出现，安置所指名的变量持有该处所记录常元的解释，即 `lookup (θ j) (γ ++ σ) ≡ ι (lookup j (constantsFo φ))`。以下的一切都是在此假设之下对语法的结构归纳。由于翻译后的语法定义在空字母表上，其读法 `_⊨₀_` 与 `⟦_⟧₀` 不需要真正的常元解释，尽管语义模块要求这份资料；空类型的消去空虚地供给了它。
+这一比较只依赖一条连接两侧的假设：对每次出现，安置所指名的变元持有该处所记录常元的解释，即 `lookup (θ j) (γ ++ σ) ≡ ι (lookup j (constantsFo φ))`。以下的一切都是在此假设之下对语法的结构归纳。由于翻译后的语法定义在空字母表上，其读法 `_⊨₀_` 与 `⟦_⟧₀` 不需要真正的常元解释，尽管语义模块要求这份资料；空类型的消去空虚地供给了它。
 <!--ja-->
 この比較は、両側をつなぐただ一つの仮定に依存する。各出現について、配置の指名した変数がそこに記録された定数の解釈を保持する、すなわち `lookup (θ j) (γ ++ σ) ≡ ι (lookup j (constantsFo φ))` というものである。この後のすべては、この仮定を保ちながら構文に対する構造的帰納法である。翻訳後の構文は空のアルファベットの上にあるため、その読み方 `_⊨₀_` と `⟦_⟧₀` には本物の定数解釈は要らない。ただし意味論のモジュールはこのデータを要求するため、空の型の消去が空虚にそれを供給する。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
-
   module _ {ℓz ℓc} {K : Type ℓc} (ι : K → S) where
+```
+</summary>
+<div class="submodule-fold-content">
 
+```agda
     open Sem.At K ι using ( _⊨_; ⟦_⟧ )
     open Sem.At (⊥* {ℓz}) ⊥*-rec using ()
       renaming ( _⊨_ to _⊨₀_ ; ⟦_⟧ to ⟦_⟧₀ )
@@ -319,7 +333,7 @@ With `leftHalf` and `rightHalf` in place, the splitting invariant is established
 <!--en-->
 Terms first, two cases and both immediate. A constant's value is what the hypothesis says the slot holds; a variable's value is untouched, and the pad law finds it again in the extended environment.
 <!--zh-->
-先看词项，两个情形都立即成立。常元的取值正是假设所述那个位置上的解释；变量的取值不变，补位定律保证它在扩张后的环境中仍取原值。
+先看词项，两个情形都立即成立。常元的取值正是假设所述那个位置上的解释；变元的取值不变，补位定律保证它在扩张后的环境中仍取原值。
 <!--ja-->
 まず項から始める。二つの場合はいずれもすぐに示せる。定数の値は、仮定がその位置に述べている解釈そのものである。変数の値は変化せず、補埋の法則が拡張された環境の中でそれを再び見つけ出す。
 <!--/-->
@@ -343,7 +357,7 @@ The induction starts at terms, where the invariant already does all the work. Th
 <!--en-->
 For a variable `var i` nothing was replaced, only re-indexed: the translation moved it to `padRight k i`, the same slot in the wider context, and the pad law shows that looking it up in `γ ++ σ` recovers the original value. With the constant and variable cases settled, every remaining constructor is either a two-part node handled by the splitting invariant or a binder, and the formula-level induction follows the same pattern.
 <!--zh-->
-对变量 `var i`，没有任何东西被替换，只是重新编号：翻译把它移到 `padRight k i`，即较宽语境中的同一位，补位定律表明在 `γ ++ σ` 中查出即可恢复原值。常元与变量两个情形解决后，其余构造子要么是由拆分不变量处理的二元节点，要么是约束子，公式层面的归纳遵循同一模式。
+对变元 `var i`，没有任何东西被替换，只是重新编号：翻译把它移到 `padRight k i`，即较宽语境中的同一位，补位定律表明在 `γ ++ σ` 中查出即可恢复原值。常元与变元两个情形解决后，其余构造子要么是由拆分不变量处理的二元节点，要么是约束子，公式层面的归纳遵循同一模式。
 <!--ja-->
 変数 `var i` では何も置き換えられず、付け替えられただけである。翻訳はそれを `padRight k i`、すなわち広い文脈の中の同じ枠へ移し、補埋の法則により `γ ++ σ` で調べれば元の値が回復する。定数と変数の場合が済むと、残りの構成子は分割の不変条件で扱われる二項ノードか束縛子のどちらかで、論理式レベルの帰納法も同じ型に従う。
 <!--/-->
@@ -550,7 +564,7 @@ One point of shape, and the reason the arity-one case is worth writing down: at 
 <!--zh-->
 ## 何谓可定义子集
 
-参数抽象把可定义子集背后的数据拆开列出：一条无参公式、一个有限参数向量，以及用于检验成员关系的变量。充分性表明，这种呈现与原带常元公式具有完全相同的外延。
+参数抽象把可定义子集背后的数据拆开列出：一条无参公式、一个有限参数向量，以及用于检验成员关系的变元。充分性表明，这种呈现与原带常元公式具有完全相同的外延。
 
 还有一处形状，也是元数一的情形值得单写的理由：在元数一处，扩张后的环境是 `x ∷ map ι p`，一个成员后接诸参数，而那正是本书别处每一个单条目环境的形状。
 <!--ja-->
@@ -574,6 +588,11 @@ For definable subsets of one variable, the corollary fixes the environment to `x
            → ((x ∷ []) ⊨ φ) ≡ ((x ∷ map ι (constantsFo φ)) ⊨₀ absFo φ)
     ⊨-abs₁ φ x = ⊨-abs φ (x ∷ [])
 ```
+</div>
+</details>
+
+</div>
+</details>
 
 <!--en-->
 ## Recap
@@ -582,7 +601,7 @@ For definable subsets of one variable, the corollary fixes the environment to `x
 <!--zh-->
 ## 小结
 
-`absFo` 为每次常元出现增加一个变量以消去常元，`⊨-abs` 则在把记录的常元附加到环境后识别满足关系。这就是公式本身需要符号化时所用的有限参数呈现。
+`absFo` 为每次常元出现增加一个变元以消去常元，`⊨-abs` 则在把记录的常元附加到环境后识别满足关系。这就是公式本身需要符号化时所用的有限参数呈现。
 <!--ja-->
 ## まとめ
 

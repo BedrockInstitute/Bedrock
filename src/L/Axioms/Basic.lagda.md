@@ -1,28 +1,18 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # The basic axioms
-
-How does a set-producing operation lift into the constructible universe? A set belongs to `L` when it can be presented as a definable subset of an ordinal stage `Lset σ`. The chapter repeatedly finds one ordinal stage containing the needed inputs, writes a formula over that stage whose extension is the desired set, and proves the extensional equation in the surrounding hierarchy.
-
-The closure lemma `defSet→isL` completes this pattern. Given an ordinal `σ` and the mere existence of a unary formula whose extension is `x`, `𝒟ₒ-intro` recognizes `x` as a definable subset of `Lset σ`, and `𝒟ₒ→isL` places it in `L`. The identity `Lset (sucV σ) ≡ 𝒟ₒ (Lset σ)` explains the stage calculation: the next stage consists exactly of the definable subsets of the present one. The packaged sets `LsetS` and `𝒟ₒS` provide these two sets as elements of the carrier `S`.
-
-This method constructs the empty set, unordered pairs, and unions inside `L`. Extensionality follows by using transitivity to extend agreement from constructible members to all surrounding members; regularity instead restricts the hierarchy's accessibility proof recursively. When two inputs need a common stage, `bound2` supplies a common strict upper bound without comparing their original stages.
 <!--zh-->
 # 基本公理
-
-造集合运算怎样提升到可构造宇宙中？一个集合属于 `L`，当且仅当它能呈现为某个序数层 `Lset σ` 的可定义子集。本章反复使用同一思路：找出一个容纳所需输入的序数层，在该层上写出外延为目标集合的公式，再在周遭集合层级中证明相应的外延等式。
-
-闭包引理 `defSet→isL` 完成这一过程。给定序数 `σ`，若仅仅存在一条外延为 `x` 的一元公式，`𝒟ₒ-intro` 便认出 `x` 是 `Lset σ` 的可定义子集，`𝒟ₒ→isL` 再把它放入 `L`。恒等式 `Lset (sucV σ) ≡ 𝒟ₒ (Lset σ)` 说明了层计算：下一层恰由当前层的可定义子集组成。打包后的集合 `LsetS` 与 `𝒟ₒS` 把这两个集合给成载体 `S` 的元素。
-
-本章以此在 `L` 中构造空集、无序对与并。外延性利用传递性，把关于可构造成员的一致性推广到所有周遭成员；正则公理则递归限制层级的可及性证明。若两个输入需要公共层，`bound2` 会给出共同的严格上界，而无须比较原来的两层。
 <!--ja-->
 # 基本公理
-
-集合を作る演算を構成可能宇宙へ移すには、どうすればよいであろうか。集合が `L` に属するとは、ある順序数段階 `Lset σ` の定義可能部分集合として表示できることである。本章では、必要な入力を含む一つの順序数段階を見つけ、その段階上で目的の集合を外延にもつ論理式を書き、周囲の階層で外延的な等式を証明する、という方法を繰り返す。
-
-閉包補題 `defSet→isL` がこの方法を完成させる。順序数 `σ` と、外延が `x` である一変数論理式の単なる存在が与えられると、`𝒟ₒ-intro` は `x` を `Lset σ` の定義可能部分集合として認識し、`𝒟ₒ→isL` はそれを `L` に入れる。恒等式 `Lset (sucV σ) ≡ 𝒟ₒ (Lset σ)` は段階の計算を説明する。次の段階は、現在の段階の定義可能部分集合全体にちょうど一致する。`LsetS` と `𝒟ₒS` はこの二つの集合を台 `S` の要素としてまとめる。
-
-この方法で空集合、非順序対、和集合を `L` の中に構成する。外延性では推移性により構成可能な要素についての一致を周囲のすべての要素へ広げるが、正則性では階層の可到達性の証明を再帰的に制限する。二つの入力に共通段階が必要なとき、`bound2` は元の段階を比較せずに共通の厳密上界を与える。
 <!--/-->
+
+```agda
+open import Base.Prelude
+```
 
 <!--en-->
 The setting fixes one universe level `ℓ` and works in the cumulative hierarchy `V` at that level. Everything in this chapter is constructive: no excluded middle, no resizing, no choice. The carrier on which the axioms will be proved is the type of sets of `V` together with a constructibility certificate `isL`, and every claim below is established from the ambient hierarchy alone.
@@ -33,15 +23,54 @@ The setting fixes one universe level `ℓ` and works in the cumulative hierarchy
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
+module L.Axioms.Basic {ℓ : Level} where
+```
 
-open import Base.Prelude
+```agda
+open import FOL.Syntax using ( Formula; var; con; _≐_; _∈̇_; _∨̇_; ⊤̇; ⊥̇; ∃̇∈ )
+open import FOL.ZFStructure using ( ↾-reflects; module hPropStructure )
+import FOL.ZFModel
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV; regularityV )
+open import V.Model {ℓ}
+  using ( empty-spec; pair-spec; union-spec; self∈sucV; ∈sucV-elim
+        ; pair-singleton )
+open import V.Coding {ℓ} using ( pr )
+open import L.Definability {ℓ} using ( module DefOf )
+open import L.Constructible {ℓ}
+  using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset; Lset-layer
+        ; layer-trans; 𝒟ₒ; 𝒟ₒ-intro; Lset-in; Lset-out; Lset⊆𝒟ₒ
+        ; Lset-mono; Lset→isL )
+open import L.Ordinal {ℓ} using ( ∅-ord; suc-ord; bound2 )
+```
+
+<!--en-->
+
+How does a set-producing operation lift into the constructible universe? A set belongs to `L` when it can be presented as a definable subset of an ordinal stage `Lset σ`. The chapter repeatedly finds one ordinal stage containing the needed inputs, writes a formula over that stage whose extension is the desired set, and proves the extensional equation in the surrounding hierarchy.
+
+The closure lemma `defSet→isL` completes this pattern. Given an ordinal `σ` and the mere existence of a unary formula whose extension is `x`, `𝒟ₒ-intro` recognizes `x` as a definable subset of `Lset σ`, and `𝒟ₒ→isL` places it in `L`. The identity `Lset (sucV σ) ≡ 𝒟ₒ (Lset σ)` explains the stage calculation: the next stage consists exactly of the definable subsets of the present one. The packaged sets `LsetS` and `𝒟ₒS` provide these two sets as elements of the carrier `S`.
+
+This method constructs the empty set, unordered pairs, and unions inside `L`. Extensionality follows by using transitivity to extend agreement from constructible members to all surrounding members; regularity instead restricts the hierarchy's accessibility proof recursively. When two inputs need a common stage, `bound2` supplies a common strict upper bound without comparing their original stages.
+<!--zh-->
+
+造集合运算怎样提升到可构造宇宙中？一个集合属于 `L`，当且仅当它能呈现为某个序数层 `Lset σ` 的可定义子集。本章反复使用同一思路：找出一个容纳所需输入的序数层，在该层上写出外延为目标集合的公式，再在周遭集合层级中证明相应的外延等式。
+
+闭包引理 `defSet→isL` 完成这一过程。给定序数 `σ`，若仅仅存在一条外延为 `x` 的一元公式，`𝒟ₒ-intro` 便认出 `x` 是 `Lset σ` 的可定义子集，`𝒟ₒ→isL` 再把它放入 `L`。恒等式 `Lset (sucV σ) ≡ 𝒟ₒ (Lset σ)` 说明了层计算：下一层恰由当前层的可定义子集组成。打包后的集合 `LsetS` 与 `𝒟ₒS` 把这两个集合给成载体 `S` 的元素。
+
+本章以此在 `L` 中构造空集、无序对与并。外延性利用传递性，把关于可构造成员的一致性推广到所有周遭成员；正则公理则递归限制层级的可及性证明。若两个输入需要公共层，`bound2` 会给出共同的严格上界，而无须比较原来的两层。
+<!--ja-->
+
+集合を作る演算を構成可能宇宙へ移すには、どうすればよいであろうか。集合が `L` に属するとは、ある順序数段階 `Lset σ` の定義可能部分集合として表示できることである。本章では、必要な入力を含む一つの順序数段階を見つけ、その段階上で目的の集合を外延にもつ論理式を書き、周囲の階層で外延的な等式を証明する、という方法を繰り返す。
+
+閉包補題 `defSet→isL` がこの方法を完成させる。順序数 `σ` と、外延が `x` である一変数論理式の単なる存在が与えられると、`𝒟ₒ-intro` は `x` を `Lset σ` の定義可能部分集合として認識し、`𝒟ₒ→isL` はそれを `L` に入れる。恒等式 `Lset (sucV σ) ≡ 𝒟ₒ (Lset σ)` は段階の計算を説明する。次の段階は、現在の段階の定義可能部分集合全体にちょうど一致する。`LsetS` と `𝒟ₒS` はこの二つの集合を台 `S` の要素としてまとめる。
+
+この方法で空集合、非順序対、和集合を `L` の中に構成する。外延性では推移性により構成可能な要素についての一致を周囲のすべての要素へ広げるが、正則性では階層の可到達性の証明を再帰的に制限する。二つの入力に共通段階が必要なとき、`bound2` は元の段階を比較せずに共通の厳密上界を与える。
+<!--/-->
+
+
+
+```agda
 open import Cubical.HITs.PropositionalTruncation using ( rec2 )
 open import Cubical.Foundations.Prelude using ( isPropIsContr )
-
-module L.Axioms.Basic {ℓ : Level} where
-
-open import FOL.Syntax using ( Formula; var; con; _≐_; _∈̇_; _∨̇_; ⊤̇; ⊥̇; ∃̇∈ )
 ```
 
 <!--en-->
@@ -52,14 +81,6 @@ The defining step of the closure pattern is expressed in a first-order language.
 閉包パターンの切り出しのステップは一階の言語の中で行われる。その論理式は構造の小さな添字型の上にあり、等式と所属が原子的な述語で、選言と有界存在量化が使える。これがまさに定義可能性の演算子が消費するものである。構造から部分構造への移行について、後で効いてくる周囲の事実が二つある。制限の中の二つの要素の間のパスは、すでに基底の集合の間のパスであり、継承される公理が利用するのはこの向きである。
 <!--/-->
 
-```agda
-open import FOL.ZFStructure using ( ↾-reflects; module hPropStructure )
-import FOL.ZFModel
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV; regularityV )
-open import V.Model {ℓ}
-  using ( empty-spec; pair-spec; union-spec; self∈sucV; ∈sucV-elim
-```
-
 <!--en-->
 Each construction to be lifted already satisfies its membership law in the ambient hierarchy: the empty set has no members, every member of an unordered pair is one of its two entries, and union has its exact two-way classification. These ambient laws, proved once in the hierarchy, serve as the standards against which the formulas carved below are checked by extensionality; they are inherited, not re-derived. Two further ambient facts enter the computations: membership in the successor `sucV σ` splits into members of `σ` and `σ` itself, and the singleton is identified with the pair `⁅ x , x ⁆`. The Kuratowski code `pr` of an ordered pair will have its stage placement computed from unordered pairs.
 <!--zh-->
@@ -68,14 +89,6 @@ Each construction to be lifted already satisfies its membership law in the ambie
 持ち上げる対象となる各構成は、周囲の階層ですでに所属の法則を満たしている。空集合は元をひとつももたず、非順序対のすべての元は二つの項のいずれかであり、和集合は正確な双方向の特徴づけをもつ。これらの周囲の法則は階層で一度証明され、後で切り出される論理式を外延性で検査するときの基準となる。再証明されるのではなく、継承されるのである。計算にはさらに二つの周囲の事実が入る。後者 `sucV σ` への所属は「`σ` の要素である」場合と「`σ` そのものである」場合に分かれること、そして一元集合が対 `⁅ x , x ⁆` と同一視されることである。順序対のクラトフスキー符号 `pr` がどの段階に置かれるかは、非順序対から計算される。
 <!--/-->
 
-```agda
-        ; pair-singleton )
-open import V.Coding {ℓ} using ( pr )
-open import L.Definability {ℓ} using ( module DefOf )
-open import L.Constructible {ℓ}
-  using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset; Lset-layer
-```
-
 <!--en-->
 On the constructible side, `Lset` indexes stages by sets, `IsOrd` records which indices are ordinals, and `isL` is the class of constructible sets, transitive by `isL-trans`. The definable powerset of a stage is `𝒟ₒ`; `𝒟ₒ-intro` recognizes a definable subset from a formula and an extensional equation, and `Lset-in`, `Lset-out`, `Lset⊆𝒟ₒ`, `Lset-mono` and `Lset→isL` let membership in a stage be converted, carried upward along a larger stage, and read as a constructibility certificate. Stage transitivity is `layer-trans`.
 <!--zh-->
@@ -83,12 +96,6 @@ On the constructible side, `Lset` indexes stages by sets, `IsOrd` records which 
 <!--ja-->
 構成可能な側は、塔とその簿記を供給する。`Lset` は集合を添字として段階を与え、`IsOrd` は順序数性の証明書、`isL` は構成可能集合のクラスで、`isL-trans` により推移的である。段階の定義可能冪集合は `𝒟ₒ` である。`𝒟ₒ-intro` が論理式と外延的な等式から定義可能部分集合を認識し、`Lset-in`、`Lset-out`、`Lset⊆𝒟ₒ`、`Lset-mono`、`Lset→isL` は段階への所属の変換、より大きな段階に沿った持ち上げ、構成可能性の証明書としての読み替えを可能にする。段階の推移性は `layer-trans` である。
 <!--/-->
-
-```agda
-        ; layer-trans; 𝒟ₒ; 𝒟ₒ-intro; Lset-in; Lset-out; Lset⊆𝒟ₒ
-        ; Lset-mono; Lset→isL )
-open import L.Ordinal {ℓ} using ( ∅-ord; suc-ord; bound2 )
-```
 
 <!--en-->
 Three ordinal facts control the stages: the empty set is an ordinal, the successor of an ordinal is an ordinal, and `bound2` returns an ordinal strictly containing each of two given ordinals. Pairing uses the last result to place two constructible arguments in one common stage without comparing their original stages or choosing a maximum. Finite index types then describe finite images inside that stage, while binary sums express the disjunctions that define them.
@@ -142,7 +149,6 @@ The semantic side is fixed once. Truth values are the propositions at level `ℓ
 <!--/-->
 
 ```agda
-
 module ModelL = FOL.ZFModel 𝒮ʟ
 open ModelL using ( SetOf; setOf-unique )
 ```
@@ -193,7 +199,7 @@ The hypothesis of `defSet→isL` is a truncated existential: merely some formula
 
 ```agda
 defSet→isL : (σ : V ℓ) → IsOrd σ → (x : V ℓ)
-           → ∥ Σ[ φ ∈ Formula ⟪ Lset σ ⟫ 1 ] (DefOf.defSet (Lset σ) φ ≡ x) ∥₁
+           → ∥ Σ[ φ ∶ Formula ⟪ Lset σ ⟫ 1 ] (DefOf.defSet (Lset σ) φ ≡ x) ∥₁
            → ⟨ isL x ⟩
 defSet→isL σ oσ x p = 𝒟ₒ→isL σ oσ x (𝒟ₒ-intro (Lset σ) x p)
 ```
@@ -268,7 +274,7 @@ Lset-suc : (σ : V ℓ) → Lset (sucV σ) ≡ 𝒟ₒ (Lset σ)
 Lset-suc σ = extensionality (Lset (sucV σ)) (𝒟ₒ (Lset σ)) (sub₁ , sub₂)
   where
   fromEarlier : (x : V ℓ)
-              → Σ[ δ ∈ V ℓ ] (⟨ δ ∈ sucV σ ⟩ × ⟨ x ∈ 𝒟ₒ (Lset δ) ⟩)
+              → Σ[ δ ∶ V ℓ ] (⟨ δ ∈ sucV σ ⟩ × ⟨ x ∈ 𝒟ₒ (Lset δ) ⟩)
 ```
 
 <!--en-->
@@ -296,7 +302,6 @@ The first inclusion applies the bridge in its forward direction. A structural me
 <!--/-->
 
 ```agda
-
   sub₁ : ⟨ Lset (sucV σ) ⊆ 𝒟ₒ (Lset σ) ⟩
   sub₁ x x∈ₛ = ∈∈ₛ {a = x} {b = 𝒟ₒ (Lset σ)} .fst
     (rec₁ (snd (x ∈ 𝒟ₒ (Lset σ))) (fromEarlier x)
@@ -389,7 +394,7 @@ finSet : (n : ℕ) → (Fin n → V ℓ) → V ℓ
 finSet n h = sett (Lift {ℓ-zero} {ℓ} (Fin n)) (λ i → h (lower i))
 
 finSet-in : (n : ℕ) (h : Fin n → V ℓ) (y : V ℓ)
-          → ∥ Σ[ i ∈ Fin n ] (h i ≡ y) ∥₁ → ⟨ y ∈ finSet n h ⟩
+          → ∥ Σ[ i ∶ Fin n ] (h i ≡ y) ∥₁ → ⟨ y ∈ finSet n h ⟩
 finSet-in n h y = map₁ (λ { (i , q) → lift i , q })
 ```
 
@@ -402,12 +407,20 @@ The reverse membership lemma `finSet-out` is the same map read backwards, from a
 <!--/-->
 
 ```agda
-
 finSet-out : (n : ℕ) (h : Fin n → V ℓ) (y : V ℓ)
-           → ⟨ y ∈ finSet n h ⟩ → ∥ Σ[ i ∈ Fin n ] (h i ≡ y) ∥₁
+           → ⟨ y ∈ finSet n h ⟩ → ∥ Σ[ i ∶ Fin n ] (h i ≡ y) ∥₁
 finSet-out n h y = map₁ (λ { (i , q) → lower i , q })
+```
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
+```agda
 module FinOf (σ : V ℓ) (oσ : IsOrd σ) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   module DefC = DefOf (Lset σ)
 ```
 
@@ -420,9 +433,8 @@ The formula is the finite disjunction of equalities. At length zero there is not
 <!--/-->
 
 ```agda
-
   finDisj : (n : ℕ) → (Fin n → ⟪ Lset σ ⟫) → Formula ⟪ Lset σ ⟫ 1
-  finDisj zero    g = ⊥̇
+  finDisj 0    g = ⊥̇
   finDisj (suc n) g =
     (var zero ≐ con (g zero)) ∨̇ finDisj n (λ i → g (suc i))
 
@@ -439,7 +451,7 @@ The bridge statement `Hits` says that the member named by the environment is mer
 
 ```agda
     Hits : (n : ℕ) (g : Fin n → ⟪ Lset σ ⟫) (y : V ℓ) → Type (ℓ-suc ℓ)
-    Hits n g y = ∥ Σ[ i ∈ Fin n ] (⟪ Lset σ ⟫↪ (g i) ≡ y) ∥₁
+    Hits n g y = ∥ Σ[ i ∶ Fin n ] (⟪ Lset σ ⟫↪ (g i) ≡ y) ∥₁
 
     sat→hits : (n : ℕ) (g : Fin n → ⟪ Lset σ ⟫) (m : ⟪ Lset σ ⟫)
              → ⟨ (DefC.ι m ∷ []) DefC.⊨ᵐ finDisj n g ⟩
@@ -455,7 +467,7 @@ From satisfaction to hits proceeds by recursion on the length. At zero the formu
 <!--/-->
 
 ```agda
-    sat→hits zero    g m bot = ⊥*-rec bot
+    sat→hits 0    g m bot = ⊥*-rec bot
     sat→hits (suc n) g m = rec₁ squash₁
       (λ { (inl e)  → ∣ zero , sym e ∣₁
          ; (inr sat) → map₁ (λ { (i , q) → suc i , q })
@@ -471,11 +483,10 @@ The reverse direction turns a hit into satisfaction, again by recursion on the l
 <!--/-->
 
 ```agda
-
     hits→sat : (n : ℕ) (g : Fin n → ⟪ Lset σ ⟫) (m : ⟪ Lset σ ⟫)
              → Hits n g (⟪ Lset σ ⟫↪ m)
              → ⟨ (DefC.ι m ∷ []) DefC.⊨ᵐ finDisj n g ⟩
-    hits→sat zero g m =
+    hits→sat 0 g m =
       rec₁ (snd ((DefC.ι m ∷ []) DefC.⊨ᵐ finDisj zero g)) (λ { (() , _) })
 ```
 
@@ -504,7 +515,6 @@ The two directions of the bridge are exactly the two inclusions that the identit
 <!--/-->
 
 ```agda
-
   defSet≡ : (n : ℕ) (g : Fin n → ⟪ Lset σ ⟫)
           → DefC.defSet (finDisj n g) ≡ finSet n (λ i → ⟪ Lset σ ⟫↪ (g i))
   defSet≡ n g = extensionality _ _ (sub₁ , sub₂)
@@ -609,6 +619,8 @@ The hypothesis `hσ i` states merely that `h i` lies in the stage. Membership in
     qg : (i : Fin n) → ⟪ Lset σ ⟫↪ (g i) ≡ h i
     qg i = ∈-asFiber {a = h i} {b = Lset σ} (hσ i) .snd
 ```
+</div>
+</details>
 
 <!--en-->
 ## Two sets, one stage
@@ -640,7 +652,7 @@ The statement takes two constructible sets as truncated certificates: `⟨ isL x
 
 ```agda
 isL-directed : (x y : V ℓ) → ⟨ isL x ⟩ → ⟨ isL y ⟩
-             → ∥ Σ[ σ ∈ V ℓ ] (IsOrd σ × (⟨ x ∈ Lset σ ⟩ × ⟨ y ∈ Lset σ ⟩)) ∥₁
+             → ∥ Σ[ σ ∶ V ℓ ] (IsOrd σ × (⟨ x ∈ Lset σ ⟩ × ⟨ y ∈ Lset σ ⟩)) ∥₁
 isL-directed x y px py = rec2 squash₁ go px py
   where
   Bound : Type (ℓ-suc ℓ)
@@ -655,9 +667,9 @@ The two truncations are eliminated at once by `rec2`, whose target is the trunca
 <!--/-->
 
 ```agda
-  Bound = Σ[ σ ∈ V ℓ ] (IsOrd σ × (⟨ x ∈ Lset σ ⟩ × ⟨ y ∈ Lset σ ⟩))
-  go : Σ[ α ∈ V ℓ ] (IsOrd α × ⟨ x ∈ Lset α ⟩)
-     → Σ[ β ∈ V ℓ ] (IsOrd β × ⟨ y ∈ Lset β ⟩) → ∥ Bound ∥₁
+  Bound = Σ[ σ ∶ V ℓ ] (IsOrd σ × (⟨ x ∈ Lset σ ⟩ × ⟨ y ∈ Lset σ ⟩))
+  go : Σ[ α ∶ V ℓ ] (IsOrd α × ⟨ x ∈ Lset α ⟩)
+     → Σ[ β ∶ V ℓ ] (IsOrd β × ⟨ y ∈ Lset β ⟩) → ∥ Bound ∥₁
   go (α , (oα , x∈Lα)) (β , (oβ , y∈Lβ)) =
     ∣ bnd .fst , (bnd .snd .fst , ( Lset-mono (bnd .snd .snd .fst) x∈Lα
 ```
@@ -865,7 +877,6 @@ Packaging mirrors the underlying set: `∅ʟ` is the pair of `∅` with its cons
 <!--/-->
 
 ```agda
-
 ∅ʟ : S
 ∅ʟ = ∅ , ∅∈L
 
@@ -1096,8 +1107,15 @@ The pairing field is stated over two arguments. Its predicate `Q x` says that an
 対のフィールドは二つの実引数について述べられる。述語 `Q x` は、要素 `x` が `a` または `b` に等しいことを、モデルの真理値で解釈した論理和として表す。集合がこのフィールドを実現するとは、その要素がちょうど `Q` を満たすことである。構成 `mkPair` は、両方の実引数の基底集合を含む共通の順序数段階を仮定し、上界の段階がまさにそれを供給する。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module PairOf (a b : S) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   Q : S → hProp (ℓ-suc ℓ)
   Q x = (x ≈ˢ a) ⊔ (x ≈ˢ b)
 
@@ -1130,12 +1148,14 @@ The construction is not yet the field: it needs a stage, and only its mere exist
 <!--/-->
 
 ```agda
-
   build : ∥ SetOf Q ∥₁
   build = rec₁ squash₁
     (λ { (σ , (oσ , (fa∈ , fb∈))) → ∣ mkPair σ oσ fa∈ fb∈ ∣₁ })
     (isL-directed (fst a) (fst b) (a .snd) (b .snd))
-
+```
+</div>
+</details>
+```agda
 hasPairL : (a b : S) → isContr (SetOf (λ x → (x ≈ˢ a) ⊔ (x ≈ˢ b)))
 ```
 
@@ -1179,8 +1199,15 @@ The membership condition `Q` is an indexed disjunction inside the model's truth 
 所属の条件 `Q` は、モデルの真理値の内部での添字つき論理和である。`a` の要素であるある `y` について `x` が `y` の要素であるとき、`x` はこの和集合を実現する。構成 `mkUnion` が仮定するのは一つだけ、ある順序数段階 `σ` が `a` の基底の集合を含むことである。収容すべき第二の引数はないので、対の場合と違って上界順序数は不要であり、`a` がすでにもつ段階そのもので足りる。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module UnionOf (a : S) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   Q : S → hProp (ℓ-suc ℓ)
   Q x = ∃[ y ∶ S ] (y ∈ˢ a) ⊓ (x ∈ˢ y)
 
@@ -1396,7 +1423,10 @@ The assembly mirrors the pairing field. The argument's own certificate `a .snd` 
 
 ```agda
   build = rec₁ squash₁ (λ { (σ , (oσ , fa∈)) → ∣ mkUnion σ oσ fa∈ ∣₁ }) (a .snd)
-
+```
+</div>
+</details>
+```agda
 hasUnionL : (a : S) → isContr (SetOf (λ x → ∃[ y ∶ S ] (y ∈ˢ a) ⊓ (x ∈ˢ y)))
 hasUnionL a = mere→uniqueL (UnionOf.Q a) (UnionOf.build a)
 ```

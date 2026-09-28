@@ -1,3 +1,62 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
+<!--en-->
+# Reading and validating the satisfaction clauses
+<!--zh-->
+# 读取并验证满足关系子句
+<!--ja-->
+# 充足関係の節の読み取りと検証
+<!--/-->
+
+```agda
+open import Base.Prelude
+open import Base.Classical using ( LEM )
+```
+
+<!--en-->
+Fix a universe level `ℓ`{.Agda} and assume `lem : LEM (ℓ-suc ℓ)`{.Agda}. This hypothesis supplies a decision for each proposition at that level; it remains an explicit parameter of the constructions below.
+<!--zh-->
+固定宇宙层级 `ℓ`{.Agda}，并假设 `lem : LEM (ℓ-suc ℓ)`{.Agda}。这个假设为相应层级的每个命题提供判定，并始终作为下文构造的显式参数。
+<!--ja-->
+宇宙レベル `ℓ`{.Agda} を固定し、`lem : LEM (ℓ-suc ℓ)`{.Agda} を仮定する。この仮定は該当するレベルの各命題に判定を与え、以下の構成の明示的なパラメータとして保たれる。
+<!--/-->
+
+```agda
+module L.Coding.SatisfactionClauseSemantics {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+```
+
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax using
+  ( Formula; Term; var; con; _∈̇_; _∧̇_; _∨̇_; _⇒̇_; ⊤̇; ⊥̇; ∃̇_; ∀̇_; ∃̇∈; ∀̇∈ )
+import FOL.Absoluteness
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Coding {ℓ} using ( pr; pr-inj; #-inj′ )
+open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
+open import L.Coding.Environment {ℓ} using ( env; lookup-spec )
+open import L.Coding.EnvironmentSet {ℓ} lem using ( envSet )
+open import L.Coding.Model {ℓ} using ( prAtL; container )
+open import L.Coding.Expressions {ℓ} using ( sucAtL; consAtL )
+import L.Coding.Expressions {ℓ} as CodingExpressions
+open import L.Axioms.Basic {ℓ} using ( extensionalL )
+open import L.Coding.Quantification {ℓ} using
+  ( i0; i1; i2; i3; i4; i5; i6; i8; i9; i11; i12; i14; i16; i17; i19; sh
+  ; pr-out; pr-in; down; sndS; suc-out; suc-in
+  ; sndEx; sndAll; bothEx
+  ; sndEx-out; sndAll-in; bothEx-out; bothAll-in
+  ; fillSnd; fillBoth; useSnd; useBoth )
+open import L.Coding.CodeDomain {ℓ} using ( Tags )
+open import L.Coding.CodeAlphabet {ℓ} using ( module Alphabet )
+open import L.Coding.SatisfactionClauses {ℓ}
+  using ( extB; fstAll; subAt; subSucAt; tmIs; module Rel; module Clause )
+open import FOL.Manipulation.ConstantMapping using ( mapFo; mapTm )
+open import L.Coding.Satisfaction {ℓ} lem using ( Sat; Sat-mem; cond )
+open import L.Coding.SatisfactionBridge {ℓ} lem using ( asConst )
+import L.Coding.SatisfactionBridge {ℓ} lem as Semantic
+```
+
 <!--en-->
 The specification `tableAt` combines two domain conditions, `total` and `onC`, with ten constructor clauses. How does one constructor clause become a step in the semantic recursion? This chapter first reads each clause as an exact extensional condition on a candidate value set, then proves the same condition for the recursively constructed set `SatW`. Extensionality can identify the two values once the surrounding argument also supplies the matching code, its subvalues, and a table entry. The local bridges alone do not prove that a whole table is functional or uniquely determined.
 <!--zh-->
@@ -5,11 +64,6 @@ The specification `tableAt` combines two domain conditions, `total` and `onC`, w
 <!--ja-->
 仕様 `tableAt` は、二つの定義域条件 `total`、`onC` と十個の構成子の節を組み合わせる。一つの構成子の節は、どのように意味論的再帰の一段階になるのであろうか。本章はまず各節を候補となる値集合の正確な外延条件として読み、次に再帰的に構成した集合 `SatW` も同じ条件を満たすことを示す。周囲の議論からさらに、一致するコード、その部分値、表要素が与えられれば、外延性によって二つの値を同一視できる。局所的な橋渡しだけでは、表全体の単値性や一意性は証明されない。
 <!--/-->
-
-```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
-```
 
 <!--en-->
 The argument takes excluded middle at level `ℓ-suc ℓ` as an explicit parameter. Decoding witnesses will nevertheless remain merely existent when their type has been propositionally truncated; the classical hypothesis does not turn those witnesses into chosen data.
@@ -20,10 +74,7 @@ The argument takes excluded middle at level `ℓ-suc ℓ` as an explicit paramet
 <!--/-->
 
 ```agda
-open import Base.Prelude
 open import Cubical.Data.Nat using ( znots; snotz )
-open import Base.Classical using ( LEM )
-
 ```
 
 <!--en-->
@@ -34,11 +85,6 @@ All subsequent constructions are relative to the fixed hypothesis `lem`. This ke
 以下の構成はすべて、固定した仮定 `lem` に相対して述べられる。これにより、局所的な節の読み補題が後で全体の健全性と完全性の証明に使われても、その論理的な費用が明示されたままになる。
 <!--/-->
 
-```agda
-module L.Coding.SatisfactionClauseSemantics {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-
-```
-
 <!--en-->
 Two languages meet in this proof. The internal formulas describe coded tables inside `L`; the external formulas are interpreted recursively in the structure presented by `W`. The bridge must respect each formula constructor, including bounded quantifiers whose bounds are term values in the current environment.
 <!--zh-->
@@ -47,14 +93,6 @@ Two languages meet in this proof. The internal formulas describe coded tables in
 この証明では二つの言語が出会う。内部の論理式は `L` の中で符号化された表を記述し、外部の論理式は `W` が表示する構造で再帰的に解釈される。橋渡しはすべての論理式構成子を保たなければならず、有界量化子の境界は現在の環境における項の値によって与えられる。
 <!--/-->
 
-```agda
-open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using
-  ( Formula; Term; var; con; _∈̇_; _∧̇_; _∨̇_; _⇒̇_; ⊤̇; ⊥̇; ∃̇_; ∀̇_; ∃̇∈; ∀̇∈ )
-import FOL.Absoluteness
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-```
-
 <!--en-->
 A finite environment is represented internally by its graph of ordered pairs `(i,v)`. Pair injectivity recovers an index and its value, while `lookup-spec` states that the canonical graph contains exactly the pair belonging to each host-level slot. Membership in `envSet W n` later says, merely, that a set is the graph of some length-`n` assignment into `W`.
 <!--zh-->
@@ -62,14 +100,6 @@ A finite environment is represented internally by its graph of ordered pairs `(i
 <!--ja-->
 有限環境は内部では順序対 `(i,v)` のグラフとして表される。順序対の単射性から添字と値を復元でき、`lookup-spec` は正準なグラフが各ホストレベルのスロットに対応する対をちょうど含むことを述べる。後で `envSet W n` に属するという主張から得られるのは、その集合が長さ `n` で `W` に値を取る何らかの割り当てのグラフだという単なる存在である。
 <!--/-->
-
-```agda
-open import V.Coding {ℓ} using ( pr; pr-inj; #-inj′ )
-open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
-open import L.Coding.Environment {ℓ} using ( env; lookup-spec )
-open import L.Coding.EnvironmentSet {ℓ} lem using ( envSet )
-open import L.Coding.Model {ℓ} using ( prAtL; container )
-```
 
 <!--en-->
 The internal clauses can inspect pair components only through bounded formulas. A `container` supplies one constructible set containing both components, so the pair readers can bind them without an unbounded search. The analogous `consAtL` reader connects the graph of `x ∷ δ` with the graph of `δ`, which is the semantic step needed for quantifiers.
@@ -80,11 +110,7 @@ The internal clauses can inspect pair components only through bounded formulas. 
 <!--/-->
 
 ```agda
-open import L.Coding.Expressions {ℓ} using ( sucAtL; consAtL )
-import L.Coding.Expressions {ℓ} as CodingExpressions
 module E = CodingExpressions.PairExpression
-open import L.Axioms.Basic {ℓ} using ( extensionalL )
-open import L.Coding.Quantification {ℓ} using
 ```
 
 <!--en-->
@@ -95,14 +121,6 @@ Three kinds of finite index must remain distinct. A natural `n` is a formula ari
 ここでは三種類の有限添字を区別しなければならない。自然数 `n` は論理式のアリティ、`# n` はコード内でそのアリティを表す集合論的な数項、`Fin m` は長さ `m` のホストレベルのベクトルのスロットを選ぶ。`i0` から `i19` までの名前とシフト `sh` が扱うのは最後の種類だけである。束縛子がベクトルの先頭に値を加えるたびに、以前のスロットはその分だけずらされる。
 <!--/-->
 
-```agda
-  ( i0; i1; i2; i3; i4; i5; i6; i8; i9; i11; i12; i14; i16; i17; i19; sh
-  ; pr-out; pr-in; down; sndS; suc-out; suc-in
-  ; sndEx; sndAll; bothEx
-  ; sndEx-out; sndAll-in; bothEx-out; bothAll-in
-  ; fillSnd; fillBoth; useSnd; useBoth )
-```
-
 <!--en-->
 The common table frame has a fixed nested shape. An environment-tower entry codes `(ar,F)`, a formula key codes `(ar,p)`, its payload codes `(tag,r)`, and a table entry codes `(c,yc)`. The readers below repeatedly peel these pairs so that a constructor relation can speak about the candidate value `yc` over the environment set `F`.
 <!--zh-->
@@ -110,14 +128,6 @@ The common table frame has a fixed nested shape. An environment-tower entry code
 <!--ja-->
 共通の表の枠組みには、固定された入れ子の形がある。環境塔の要素は `(ar,F)`、論理式キーは `(ar,p)`、そのペイロードは `(tag,r)`、表の要素は `(c,yc)` を符号化する。以下の読み補題はこれらの対を順にほどき、構成子の関係が環境集合 `F` 上の候補値 `yc` の外延を述べられるようにする。
 <!--/-->
-
-```agda
-open import L.Coding.CodeDomain {ℓ} using ( Tags )
-open import L.Coding.CodeAlphabet {ℓ} using ( module Alphabet )
-open import L.Coding.SatisfactionClauses {ℓ}
-  using ( extB; fstAll; subAt; subSucAt; tmIs; module Rel; module Clause )
-
-```
 
 <!--en-->
 The external environment is a finite vector, but the table stores a set-theoretic graph. Moving between them requires both host-level finite lookup and object-level pair membership. Products and coproducts then record the alternatives exposed by formula and term constructors without conflating those alternatives with the coded sets themselves.
@@ -127,9 +137,6 @@ The external environment is a finite vector, but the table stores a set-theoreti
 外部の環境は有限ベクトルであるが、表に保存されるのは集合論的なグラフである。両者を行き来するには、ホストレベルの有限参照と対象レベルの対の所属の双方が必要である。積と直和は論理式や項の構成子から生じる場合を記録するが、それらの場合を符号化された集合そのものと混同しない。
 <!--/-->
 
-```agda
-```
-
 <!--en-->
 Most semantic comparisons are paths between propositions, obtained from implications in both directions. Propositional truncation is equally essential: pair decompositions and decoded environments may be used inside a proposition, while no global choice of their witnesses is produced.
 <!--zh-->
@@ -137,9 +144,6 @@ Most semantic comparisons are paths between propositions, obtained from implicat
 <!--ja-->
 意味論的な比較の多くは、二方向の含意から得られる命題間のパスである。命題的切り詰めも同じく本質的である。対の分解や復号された環境の証人は命題の内部では利用できるが、それらの証人の大域的な選択は得られない。
 <!--/-->
-
-```agda
-```
 
 <!--en-->
 All codes live in the cumulative hierarchy. Ordered-pair codes and the numerals `# n` are therefore actual sets, and their injectivity lets later proofs recover arities, tags, and payloads from equations between codes. The h-set structure of the hierarchy ensures that these recovered equalities are proposition-valued.
@@ -153,7 +157,6 @@ All codes live in the cumulative hierarchy. Ordered-pair codes and the numerals 
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( module InfinitySet )
 open InfinitySet {ℓ} using ( #_; sucV )
-
 ```
 
 <!--en-->
@@ -190,7 +193,6 @@ The central type records an extensional fact about a set `y`: every member of `y
 ExtFact : (y F : V ℓ) (P : S → Type (ℓ-suc ℓ)) → Type (ℓ-suc ℓ)
 ExtFact y F P = ((z : S) → ⟨ fst z ∈ y ⟩ → ⟨ fst z ∈ F ⟩ × P z)
               × ((z : S) → ⟨ fst z ∈ F ⟩ → P z → ⟨ fst z ∈ y ⟩)
-
 ```
 
 <!--en-->
@@ -201,11 +203,17 @@ The extensional set builder is read definitionally: satisfaction of the builder 
 外延的な集合の構成子の読みは定義的である。構成子の充足は文字どおり、二つの所属の方向の対であり、性質は束縛変数で延長された環境のもとで評価される。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module _ {j : ℕ} (y F : Fin j) (φ : Formula S (1 + j)) (δ : S ^ j) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   extB-out : ⟨ δ ⊨ extB y F φ ⟩ → ExtFact (fst (lookup y δ)) (fst (lookup F δ)) (λ z → ⟨ (z ∷ δ) ⊨ φ ⟩)
   extB-out h = h
-
 ```
 
 <!--en-->
@@ -220,6 +228,8 @@ Filling is likewise definitional: an extensional fact is exactly satisfaction of
   extB-in : ExtFact (fst (lookup y δ)) (fst (lookup F δ)) (λ z → ⟨ (z ∷ δ) ⊨ φ ⟩) → ⟨ δ ⊨ extB y F φ ⟩
   extB-in h = h
 ```
+</div>
+</details>
 
 <!--en-->
 Suppose `y` and `y'` satisfy the same extension condition over `F`: among the elements of `F`, membership in either set is characterized by the property `P`. Extensionality reduces equality of their underlying sets to two membership conversions. In the first direction, a member of `y` passes through the outward half of its extension fact and then through the inward half for `y'`.
@@ -257,8 +267,15 @@ To use a subformula value, fix a table slot `T`, an arity slot `ar`, a payload s
 部分論理式の値を使うため、表のスロット `T`、アリティのスロット `ar`、ペイロードのスロット `a`、そして四つの新しい要素を期待する本体を固定する。読み補題は一致する表の対 `(c₁,ya)` を取り出し、古い環境の前に、値 `ya`、キー `c₁`、対の成分を収める集合、表の要素そのものの構成可能な表示をこの順に置く。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module _ {j : ℕ} (T ar a : Fin j) (body : Formula S (4 + j)) (δ : S ^ j) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     Tv = fst (lookup T δ)
     TS = lookup T δ
@@ -275,7 +292,6 @@ Write `A` for the projected arity and `Av` for the projected payload. The matchi
 
 ```agda
     Av = fst (lookup a δ)
-
 ```
 
 <!--en-->
@@ -319,13 +335,14 @@ Filling is the converse: given a proof of the body for every matching table entr
 <!--/-->
 
 ```agda
-
   subAt-in : ((c₁ ya s e' : S) → ⟨ fst e' ∈ Tv ⟩ → fst e' ≡ pr (fst c₁) (fst ya) → fst c₁ ≡ pr A Av
               → ⟨ (ya ∷ c₁ ∷ s ∷ e' ∷ δ) ⊨ body ⟩)
            → ⟨ δ ⊨ subAt T ar a body ⟩
   subAt-in g e' e'∈ = bothAll-in i0 (prAtL i1 (sh 4 ar) (sh 4 a) ⇒̇ body) (e' ∷ δ)
     (λ c₁ ya s s∈ c₁∈ ya∈ e hp → g c₁ ya s e' e'∈ e (pr-out i1 (sh 4 ar) (sh 4 a) (ya ∷ c₁ ∷ s ∷ e' ∷ δ) hp))
 ```
+</div>
+</details>
 
 <!--en-->
 The second subclause reader is stated for the raised-arity shape: its body is extended by six slots, because the subformula of a quantified formula is read at the raised arity.
@@ -335,9 +352,15 @@ The second subclause reader is stated for the raised-arity shape: its body is ex
 第二の部分節の読みは、アリティが上がった形に対して述べられる。その本体は六つの枠を延長する。量化された論理式の部分論理式は、上げられたアリティで読まれるからである。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
-
 module _ {j : ℕ} (T ar a : Fin j) (body : Formula S (6 + j)) (δ : S ^ j) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     Tv = fst (lookup T δ)
     TS = lookup T δ
@@ -354,7 +377,6 @@ The arity value of the outer formula is named, and the raised one is recovered s
 
 ```agda
     Av = fst (lookup a δ)
-
 ```
 
 <!--en-->
@@ -417,7 +439,6 @@ Applying `useBoth` to the chosen table entry removes the outer table quantifier 
     δ6 = ar' ∷ container c₁ ar' (lookup a δ) e .fst ∷ δ4
     h4 : ⟨ δ4 ⊨ fstAll i1 (sh 4 a) (sucAtL (sh 6 ar) i0 ⇒̇ body) ⟩
     h4 = useBoth i0 (e'S ∷ δ) c₁ ya refl (fstAll i1 (sh 4 a) (sucAtL (sh 6 ar) i0 ⇒̇ body)) (h e'S m)
-
 ```
 
 <!--en-->
@@ -450,6 +471,8 @@ The introduction proof receives the components exposed by the two universal pair
         (pr-out (sh 2 i1) i0 (sh 2 (sh 4 a)) (ar' ∷ s' ∷ ya ∷ c₁ ∷ s ∷ e' ∷ δ) hp)
         (suc-out (sh 6 ar) i0 (ar' ∷ s' ∷ ya ∷ c₁ ∷ s ∷ e' ∷ δ) hs))
 ```
+</div>
+</details>
 
 <!--en-->
 `TmIsV t z v` records the two possible term-code shapes, under propositional truncation. Either `t=(#0,v)`, the constant case, or there merely exists an index `i` with `t=(#1,i)` and the graph entry `(i,v)` belonging to `z`, the variable case. For an arbitrary relation `z`, this statement contains no functionality or uniqueness claim.
@@ -461,8 +484,7 @@ The introduction proof receives the components exposed by the two universal pair
 
 ```agda
 TmIsV : V ℓ → V ℓ → V ℓ → Type (ℓ-suc ℓ)
-TmIsV t z v = ∥ (t ≡ pr (# 0) v) ⊎ (Σ[ i ∈ V ℓ ] ((t ≡ pr (# 1) i) × ⟨ pr i v ∈ z ⟩)) ∥₁
-
+TmIsV t z v = ∥ (t ≡ pr (# 0) v) ⊎ (Σ[ i ∶ V ℓ ] ((t ≡ pr (# 1) i) × ⟨ pr i v ∈ z ⟩)) ∥₁
 ```
 
 <!--en-->
@@ -473,9 +495,16 @@ The local reader is parameterized by five host-level slots: the term code, the e
 局所的な読み補題は、項コード、環境グラフ、候補値、二つのタグ数項という五つのホストレベルのスロットでパラメータ化される。仮定 `q0` と `q1` は最後の二スロットを `#0` と `#1` に同一視し、局所名 `Tv` と `Z` は項コードとグラフを、符号化の等式が置かれる累積階層へ射影する。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module _ {j : ℕ} (t z v N0 N1 : Fin j) (δ : S ^ j)
   (q0 : fst (lookup N0 δ) ≡ # 0) (q1 : fst (lookup N1 δ) ≡ # 1) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     Tv = fst (lookup t δ)
     Z = fst (lookup z δ)
@@ -492,7 +521,6 @@ The remaining projections name the proposed value `Vv` and the actual set stored
 ```agda
     Vv = fst (lookup v δ)
     N1v = fst (lookup N1 δ)
-
 ```
 
 <!--en-->
@@ -506,7 +534,6 @@ The inner bounded existential ranges over entries `q` of the graph `z`, not over
 ```agda
     inner : Formula S (2 + j)
     inner = ∃̇∈ (var (sh 2 z)) (prAtL i0 i1 (sh 3 v))
-
 ```
 
 <!--en-->
@@ -519,8 +546,7 @@ The inner bounded existential ranges over entries `q` of the graph `z`, not over
 
 ```agda
     Inner : (i s : S) → Type (ℓ-suc ℓ)
-    Inner i s = ∥ Σ[ q ∈ S ] (⟨ fst q ∈ Z ⟩ × ⟨ (q ∷ i ∷ s ∷ δ) ⊨ prAtL i0 i1 (sh 3 v) ⟩) ∥₁
-
+    Inner i s = ∥ Σ[ q ∶ S ] (⟨ fst q ∈ Z ⟩ × ⟨ (q ∷ i ∷ s ∷ δ) ⊨ prAtL i0 i1 (sh 3 v) ⟩) ∥₁
 ```
 
 <!--en-->
@@ -533,8 +559,7 @@ The inner bounded existential ranges over entries `q` of the graph `z`, not over
 
 ```agda
     Outer : Type (ℓ-suc ℓ)
-    Outer = ∥ Σ[ i ∈ S ] Σ[ s ∈ S ] ((Tv ≡ pr N1v (fst i)) × ⟨ (i ∷ s ∷ δ) ⊨ inner ⟩) ∥₁
-
+    Outer = ∥ Σ[ i ∶ S ] Σ[ s ∶ S ] ((Tv ≡ pr N1v (fst i)) × ⟨ (i ∷ s ∷ δ) ⊨ inner ⟩) ∥₁
 ```
 
 <!--en-->
@@ -550,7 +575,6 @@ From an inner witness `q`, `pr-out` gives `fst q=pr (fst i) Vv`; transporting th
     viaQ i s e = map₁
       (λ { (q , (q∈ , hp)) → inr (fst i , ( e ∙ cong (λ a → pr a (fst i)) q1
          , subst (λ u → ⟨ u ∈ Z ⟩) (pr-out i0 i1 (sh 3 v) (q ∷ i ∷ s ∷ δ) hp) q∈ )) })
-
 ```
 
 <!--en-->
@@ -564,7 +588,6 @@ From an inner witness `q`, `pr-out` gives `fst q=pr (fst i) Vv`; transporting th
 ```agda
     viaI : Outer → TmIsV Tv Z Vv
     viaI = rec₁ squash₁ (λ { (i , s , (e , hq)) → viaQ i s e hq })
-
 ```
 
 <!--en-->
@@ -579,7 +602,6 @@ The object formula `tmIs` is a disjunction of two code shapes. In the constant b
     cases : ⟨ δ ⊨ prAtL t N0 v ⟩ ⊎ ⟨ δ ⊨ sndEx t N1 inner ⟩ → TmIsV Tv Z Vv
     cases (inl h) = ∣ inl (pr-out t N0 v δ h ∙ cong (λ a → pr a Vv) q0) ∣₁
     cases (inr h) = viaI (sndEx-out t N1 inner δ h)
-
 ```
 
 <!--en-->
@@ -593,7 +615,6 @@ The public elimination `tmIs-out` performs that case analysis under the outer di
 ```agda
   tmIs-out : ⟨ δ ⊨ tmIs t z v N0 N1 ⟩ → TmIsV Tv Z Vv
   tmIs-out h = rec₁ squash₁ cases h
-
 ```
 
 <!--en-->
@@ -606,7 +627,7 @@ For the converse, `build` turns either concrete code shape back into satisfactio
 
 ```agda
   private
-    build : (Tv ≡ pr (# 0) Vv) ⊎ (Σ[ i ∈ V ℓ ] ((Tv ≡ pr (# 1) i) × ⟨ pr i Vv ∈ Z ⟩))
+    build : (Tv ≡ pr (# 0) Vv) ⊎ (Σ[ i ∶ V ℓ ] ((Tv ≡ pr (# 1) i) × ⟨ pr i Vv ∈ Z ⟩))
           → ⟨ δ ⊨ tmIs t z v N0 N1 ⟩
     build (inl e) = ∣ inl (pr-in t N0 v δ (e ∙ cong (λ a → pr a Vv) (sym q0))) ∣₁
     build (inr (i , (e , hp))) = ∣ inr (fillSnd t δ (lookup N1 δ) iS e' inner hq N1 refl) ∣₁
@@ -654,7 +675,6 @@ To prove `hq`, choose `qS` from the graph. Its membership is the given fact `hp`
 
 ```agda
       hq = ∣ qS , (hp , pr-in i0 i1 (sh 3 v) δ3 refl) ∣₁
-
 ```
 
 <!--en-->
@@ -669,6 +689,8 @@ Finally, `tmIs-in` eliminates the propositional truncation in `TmIsV` into the p
   tmIs-in : TmIsV Tv Z Vv → ⟨ δ ⊨ tmIs t z v N0 N1 ⟩
   tmIs-in = rec₁ (snd (δ ⊨ tmIs t z v N0 N1)) build
 ```
+</div>
+</details>
 
 <!--en-->
 `Frame` fixes the host-level slots for the table `T`, carrier `w`, code domain `C`, and environment tower `E`, together with the ten tag slots `N` and the surrounding assignment `γ`. The hypothesis `Tags γ N` identifies each tag slot with its numeral, allowing a clause selected by `k : Fin 10` to be read as the relation `relN (toℕ k)`.
@@ -678,8 +700,15 @@ Finally, `tmIs-in` eliminates the propositional truncation in `TmIsV` into the p
 `Frame` は、表 `T`、台 `w`、コード領域 `C`、環境塔 `E` のホストレベルのスロットに加え、十個のタグスロット `N` と周囲の割り当て `γ` を固定する。仮定 `Tags γ N` は各タグスロットを対応する数項と同一視し、`k : Fin 10` で選ばれた節を関係 `relN (toℕ k)` として読めるようにする。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Frame {m : ℕ} (T w C E : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) (tg : Tags γ N) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     Tv = fst (lookup T γ)
     Cv = fst (lookup C γ)
@@ -724,11 +753,18 @@ For one clause instance, `At` fixes a tower pair `(ar,F)`, a formula key `c=(ar,
 一つの節の実例について、`At` は塔の対 `(ar,F)`、論理式キー `c=(ar,p)`、タグ付きペイロード `p=(N k,r)`、表の対 `(c,yc)` を固定する。所属 `q∈` と `e∈` はそれぞれ `E` と `T` における射影された対について述べる。このモジュール自身は `c∈C` を証明せず、`r` を復号せず、表の値の一意性も示さない。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
   module At (ar F c p r yc : S) (q∈ : ⟨ pr (fst ar) (fst F) ∈ Ev ⟩)
             (ec : fst c ≡ pr (fst ar) (fst p)) (k : Fin 10)
             (ep : fst p ≡ pr (fst (lookup (N k) γ)) (fst r))
             (e∈ : ⟨ pr (fst c) (fst yc) ∈ Tv ⟩) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
     qS eS : S
 ```
 
@@ -743,7 +779,6 @@ For one clause instance, `At` fixes a tower pair `(ar,F)`, a formula key `c=(ar,
 ```agda
     qS = down (lookup E γ) (pr (fst ar) (fst F)) q∈
     eS = down (lookup T γ) (pr (fst c) (fst yc)) e∈
-
 ```
 
 <!--en-->
@@ -774,8 +809,9 @@ The twelve-slot environment completes the nesting. At the front is the candidate
     δ9 = r ∷ container p (lookup (N k) γ) r ep .fst ∷ δ7
     δ12 : S ^ (12 + m)
     δ12 = yc ∷ container eS c yc refl .fst ∷ eS ∷ δ9
-
 ```
+</div>
+</details>
 
 <!--en-->
 The outward reading starts from satisfaction of clause `k` and fixes all data matching one instance of its frame: `ar` and `F` from a tower pair, a code `c=(ar,p)` in `C`, a tagged payload `p=(#k,r)`, and a candidate value `yc` with `(c,yc)` in `T`. It then returns satisfaction of `relN (toℕ k)` at the corresponding twelve-slot environment. The table hypothesis here is membership of the pair `(c,yc)`; the representative table member and its container are constructed locally.
@@ -834,7 +870,6 @@ For the converse direction, suppose the constructor relation can be proved from 
 <!--/-->
 
 ```agda
-
   clause-in : (k : Fin 10)
             → ((q ar F s c p s1 r s2 e yc s3 : S) → ⟨ fst q ∈ Ev ⟩ → fst q ≡ pr (fst ar) (fst F)
                → ⟨ fst c ∈ Cv ⟩ → fst c ≡ pr (fst ar) (fst p) → fst p ≡ pr (# (toℕ k)) (fst r)
@@ -845,7 +880,7 @@ For the converse direction, suppose the constructor relation can be proved from 
 <!--en-->
 The proof rebuilds the universally quantified frame in its logical order. It handles an arbitrary `q` in `E` together with every exposed decomposition `q=(ar,F)`, then an arbitrary `c` in `C` together with every matching decomposition `c=(ar,p)`. It next identifies the tag and payload of `p`, and finally handles an arbitrary `e` in `T` together with every decomposition `e=(c,yc)`. Each bounded introduction places its new value at the head of the environment, while the accompanying `s`-variables retain the pair-decomposition witnesses required by the formulas.
 <!--zh-->
-证明按逻辑次序重建这个全称量化的框架。它先处理 `E` 中任意的 `q` 以及每个被暴露出的分解 `q=(ar,F)`，再处理 `C` 中任意的 `c` 以及每个匹配的分解 `c=(ar,p)`；继而识别 `p` 的标签与载荷，最后处理 `T` 中任意的 `e` 以及每个分解 `e=(c,yc)`。每次有界引入都把新值放在环境头部，而相伴的 `s` 变量保留公式所需的配对分解见证。
+证明按逻辑次序重建这个全称量化的框架。它先处理 `E` 中任意的 `q` 以及每个被暴露出的分解 `q=(ar,F)`，再处理 `C` 中任意的 `c` 以及每个匹配的分解 `c=(ar,p)`；继而识别 `p` 的标签与载荷，最后处理 `T` 中任意的 `e` 以及每个分解 `e=(c,yc)`。每次有界引入都把新值放在环境头部，而相伴的 `s` 变元保留公式所需的配对分解见证。
 <!--ja-->
 証明は全称量化された枠を論理的な順序で組み直す。まず `E` の任意の `q` と、そこから取り出される各分解 `q=(ar,F)` を扱い、次に `C` の任意の `c` と、それに一致する各分解 `c=(ar,p)` を扱う。続いて `p` のタグとペイロードを同定し、最後に `T` の任意の `e` と各分解 `e=(c,yc)` を扱う。有界な導入のたびに新しい値が環境の先頭に置かれ、対応する `s` 変数が論理式に必要な対分解の証人を保持する。
 <!--/-->
@@ -879,7 +914,7 @@ Totality is read outward as truncated existence: for each member of the code dom
 <!--/-->
 
 ```agda
-  total-out : ⟨ γ ⊨ Cl.total ⟩ → (c : S) → ⟨ fst c ∈ Cv ⟩ → ∥ Σ[ yc ∈ S ] ⟨ pr (fst c) (fst yc) ∈ Tv ⟩ ∥₁
+  total-out : ⟨ γ ⊨ Cl.total ⟩ → (c : S) → ⟨ fst c ∈ Cv ⟩ → ∥ Σ[ yc ∶ S ] ⟨ pr (fst c) (fst yc) ∈ Tv ⟩ ∥₁
   total-out h c c∈ = rec₁ squash₁
     (λ { (e , (e∈ , hs)) → map₁
       (λ { (yc , s , (ee , _)) → yc , subst (λ u → ⟨ u ∈ Tv ⟩) ee e∈ })
@@ -896,7 +931,6 @@ For a fixed `c∈C`, applying the standing hypothesis `h` yields, under proposit
 
 ```agda
     (h c c∈)
-
 ```
 
 <!--en-->
@@ -908,7 +942,7 @@ Conversely, assume that every `c` in `C` has, propositionally truncated, a value
 <!--/-->
 
 ```agda
-  total-in : ((c : S) → ⟨ fst c ∈ Cv ⟩ → ∥ Σ[ yc ∈ S ] ⟨ pr (fst c) (fst yc) ∈ Tv ⟩ ∥₁) → ⟨ γ ⊨ Cl.total ⟩
+  total-in : ((c : S) → ⟨ fst c ∈ Cv ⟩ → ∥ Σ[ yc ∶ S ] ⟨ pr (fst c) (fst yc) ∈ Tv ⟩ ∥₁) → ⟨ γ ⊨ Cl.total ⟩
   total-in g c c∈ = map₁
     (λ { (yc , m) → down (lookup T γ) (pr (fst c) (fst yc)) m
        , ( m , fillSnd i0 (down (lookup T γ) (pr (fst c) (fst yc)) m ∷ c ∷ γ) c yc refl ⊤̇ (λ b → b) i1 refl ) })
@@ -924,12 +958,10 @@ The on-domain condition starts with an arbitrary element `e` of `T`, rather than
 <!--/-->
 
 ```agda
-
   onC-out : ⟨ γ ⊨ Cl.onC ⟩ → (e : S) → ⟨ fst e ∈ Tv ⟩
-          → ∥ Σ[ c ∈ S ] Σ[ yc ∈ S ] ((fst e ≡ pr (fst c) (fst yc)) × ⟨ fst c ∈ Cv ⟩) ∥₁
+          → ∥ Σ[ c ∶ S ] Σ[ yc ∶ S ] ((fst e ≡ pr (fst c) (fst yc)) × ⟨ fst c ∈ Cv ⟩) ∥₁
   onC-out h e e∈ = map₁ (λ { (c , yc , s , (ee , c∈)) → c , yc , (ee , c∈) })
     (bothEx-out i0 (var i1 ∈̇ var (sh 4 C)) (e ∷ γ) (h e e∈))
-
 ```
 
 <!--en-->
@@ -941,12 +973,14 @@ The converse asks for precisely that truncated decomposition of every member of 
 <!--/-->
 
 ```agda
-  onC-in : ((e : S) → ⟨ fst e ∈ Tv ⟩ → ∥ Σ[ c ∈ S ] Σ[ yc ∈ S ] ((fst e ≡ pr (fst c) (fst yc)) × ⟨ fst c ∈ Cv ⟩) ∥₁)
+  onC-in : ((e : S) → ⟨ fst e ∈ Tv ⟩ → ∥ Σ[ c ∶ S ] Σ[ yc ∶ S ] ((fst e ≡ pr (fst c) (fst yc)) × ⟨ fst c ∈ Cv ⟩) ∥₁)
          → ⟨ γ ⊨ Cl.onC ⟩
   onC-in g e e∈ = rec₁ (snd ((e ∷ γ) ⊨ bothEx i0 (var i1 ∈̇ var (sh 4 C))))
     (λ { (c , yc , (ee , c∈)) → fillBoth i0 (e ∷ γ) c yc ee (var i1 ∈̇ var (sh 4 C)) c∈ })
     (g e e∈)
 ```
+</div>
+</details>
 
 <!--en-->
 ## Reading the constructor relations
@@ -964,10 +998,17 @@ The constructor readers work over a frame `δ` with twelve slots added in front 
 構成子の読み取りは、元の `m` 枠の環境の前に十二の枠を加えた環境 `δ` 上で行われる。したがって元の枠 `T` と `w`、および十個の数項の枠 `N` はこの接頭部の先にあり、枠そのものでは候補値 `yc` が `i0`、構成子のペイロード `r` が `i3` に置かれる。この位置を固定することで、どの構成子を読む場合にも同じ外側の枠を使える。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module RelRead {m : ℕ} (T w : Fin m) (N : Fin 10 → Fin m) (δ : S ^ (12 + m)) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
+  private module R = Rel T w N
   private
-    module R = Rel T w N
     yc = lookup i0 δ
     r = lookup i3 δ
 ```
@@ -1014,7 +1055,7 @@ For a binary connective, the payload `r` must decompose as the two child codes `
           → (a b c₁ ya c₂ yb : S) → Rv ≡ pr (fst a) (fst b)
           → ⟨ pr (fst c₁) (fst ya) ∈ Tv ⟩ → fst c₁ ≡ pr A (fst a)
           → ⟨ pr (fst c₂) (fst yb) ∈ Tv ⟩ → fst c₂ ≡ pr A (fst b)
-          → ∥ Σ[ s ∈ S ] Σ[ s₁ ∈ S ] Σ[ e₁ ∈ S ] Σ[ s₂ ∈ S ] Σ[ e₂ ∈ S ]
+          → ∥ Σ[ s ∶ S ] Σ[ s₁ ∶ S ] Σ[ e₁ ∶ S ] Σ[ s₂ ∶ S ] Σ[ e₂ ∶ S ]
 ```
 
 <!--en-->
@@ -1076,7 +1117,6 @@ The same construction realizes the second membership proof as `e₂S : S`, an ac
 ```agda
     e₂S : S
     e₂S = down (lookup (sh 19 T) δ19) (pr (fst c₂) (fst yb)) m₂
-
 ```
 
 <!--en-->
@@ -1136,7 +1176,7 @@ For an unbounded quantifier, the payload `r` is the child formula code. A matchi
 ```agda
   qu-out : (q : ∀ {j} → Term S j → Formula S (suc j) → Formula S j) → ⟨ δ ⊨ R.quRel q ⟩
          → (c₁ ya ar' : S) → ⟨ pr (fst c₁) (fst ya) ∈ Tv ⟩ → fst c₁ ≡ pr (fst ar') Rv → fst ar' ≡ sucV A
-         → ∥ Σ[ s ∈ S ] Σ[ s' ∈ S ] Σ[ e' ∈ S ] Ext (ar' ∷ s' ∷ ya ∷ c₁ ∷ s ∷ e' ∷ δ) (R.quBody q) ∥₁
+         → ∥ Σ[ s ∶ S ] Σ[ s' ∶ S ] Σ[ e' ∶ S ] Ext (ar' ∷ s' ∷ ya ∷ c₁ ∷ s ∷ e' ∷ δ) (R.quBody q) ∥₁
   qu-out q h c₁ ya ar' mem e es =
     ∣ container e'S c₁ ya refl .fst , container c₁ ar' r e .fst , e'S
 ```
@@ -1154,7 +1194,6 @@ The three witnesses have distinct roles. `e'S` is an actual member of `T` realiz
     where
     e'S : S
     e'S = down (lookup (sh 12 T) δ) (pr (fst c₁) (fst ya)) mem
-
 ```
 
 <!--en-->
@@ -1198,7 +1237,7 @@ The bounded-quantifier payload has two syntactic components: the bound term code
          → (c : ∀ {j} → Formula S j → Formula S j → Formula S j) → ⟨ δ ⊨ R.bqRel q c ⟩
          → (t a c₁ ya ar' : S) → Rv ≡ pr (fst t) (fst a)
          → ⟨ pr (fst c₁) (fst ya) ∈ Tv ⟩ → fst c₁ ≡ pr (fst ar') (fst a) → fst ar' ≡ sucV A
-         → ∥ Σ[ s ∈ S ] Σ[ s₁ ∈ S ] Σ[ s' ∈ S ] Σ[ e' ∈ S ]
+         → ∥ Σ[ s ∶ S ] Σ[ s₁ ∶ S ] Σ[ s' ∶ S ] Σ[ e' ∶ S ]
 ```
 
 <!--en-->
@@ -1243,7 +1282,6 @@ The hypothesis `mem` is membership of the underlying pair `(c₁,ya)` in the tab
 
 ```agda
     e'S = down (lookup (sh 15 T) δ15) (pr (fst c₁) (fst ya)) mem
-
 ```
 
 <!--en-->
@@ -1301,9 +1339,8 @@ For an atomic formula, `t` and `u` are the two term codes stored in the payload,
 ```agda
   atom-out : (rel : Formula S (18 + m)) → ⟨ δ ⊨ R.atomRel rel ⟩
            → (t u : S) → Rv ≡ pr (fst t) (fst u)
-           → ∥ Σ[ s ∈ S ] Ext (u ∷ t ∷ s ∷ δ) (R.atomBody rel) ∥₁
+           → ∥ Σ[ s ∶ S ] Ext (u ∷ t ∷ s ∷ δ) (R.atomBody rel) ∥₁
   atom-out rel h t u er = ∣ container r t u er .fst , useBoth i3 δ t u er (extB i3 i11 (R.atomBody rel)) h ∣₁
-
 ```
 
 <!--en-->
@@ -1320,6 +1357,8 @@ Conversely, assume the extension condition can be proved for every decomposition
           → ⟨ δ ⊨ R.atomRel rel ⟩
   atom-in rel g = bothAll-in i3 (extB i3 i11 (R.atomBody rel)) δ (λ t u s s∈ t∈ u∈ er → g t u s er)
 ```
+</div>
+</details>
 
 <!--en-->
 ## Bridging clauses to semantic satisfaction
@@ -1337,13 +1376,6 @@ The relation readings are complete: each constructor's clause has been converted
 関係の読み出しは完成である。それぞれの構成子の節が外延の事実へ変換され、それぞれの外延の事実が節へ変換された。本章はここから、これらの対象言語の関係を、メタレベルの充足の意味論へ結ぶ橋に移る。
 <!--/-->
 
-```agda
-open import FOL.Manipulation.ConstantMapping using ( mapFo; mapTm )
-open import L.Coding.Satisfaction {ℓ} lem using ( Sat; Sat-mem; cond )
-open import L.Coding.SatisfactionBridge {ℓ} lem using ( asConst )
-import L.Coding.SatisfactionBridge {ℓ} lem as Semantic
-```
-
 <!--en-->
 The bridge module is parameterized by a set `W` of the hierarchy whose members form the constant alphabet of the internal language. The definability and semantic modules are opened at `W`, so that formulas over the alphabet `Ab` can be interpreted in the small model carried by `W`.
 <!--zh-->
@@ -1352,13 +1384,18 @@ The bridge module is parameterized by a set `W` of the hierarchy whose members f
 橋のモジュールは、階層の集合 `W` をパラメータとする。その要素が内部言語の定数のアルファベットをなす。定義可能性と意味論のモジュールが `W` で開かれ、アルファベット `Ab` の上の論理式が、`W` が担う小さなモデルの中で解釈できるようにする。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
-
 module Bridge (W : S) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   open Alphabet W
-  private
-    module DB = Semantic.DB W
-    module Sem = Semantic.SemB W
+  private module DB = Semantic.DB W
+  private module Sem = Semantic.SemB W
 ```
 
 <!--en-->
@@ -1370,8 +1407,8 @@ The small model's satisfaction judgment is renamed to `⊨ᴮ` and its term valu
 <!--/-->
 
 ```agda
+  private
     open Sem.At DB.SM id using () renaming ( _⊨_ to _⊨ᴮ_ ; ⟦_⟧ to ⟦_⟧ᴮ )
-
 ```
 
 <!--en-->
@@ -1385,7 +1422,6 @@ The meta-level meaning of a formula `ψ` at a meta-level environment `δ` is the
 ```agda
     Meaning : ∀ {n} → Formula Ab n → DB.SM ^ n → hProp (ℓ-suc ℓ)
     Meaning ψ δ = δ ⊨ᴮ mapFo DB.ι ψ
-
 ```
 
 <!--en-->
@@ -1399,7 +1435,6 @@ The underlying set `Wv` is the carrier over which the small-model quantifiers ra
 ```agda
   private
     Wv = fst W
-
 ```
 
 <!--en-->
@@ -1413,7 +1448,6 @@ The map `toS` relabels every constant of a formula over the alphabet `Ab` into t
 ```agda
   toS : ∀ {n} → Formula Ab n → Formula S n
   toS = mapFo (asConst W)
-
 ```
 
 <!--en-->
@@ -1441,7 +1475,6 @@ The outward reading of membership in `SatW ψ` follows from the membership speci
   Sat-out : ∀ {n} (ψ : Formula Ab n) (z : S) → ⟨ fst z ∈ fst (SatW ψ) ⟩
           → ⟨ fst z ∈ fst (envSet W n) ⟩ × ⟨ (z ∷ []) ⊨ cond W (toS ψ) ⟩
   Sat-out ψ z h = subst ⟨_⟩ (Sat-mem W (toS ψ) z) h
-
 ```
 
 <!--en-->
@@ -1528,7 +1561,6 @@ For conjunction, the pointwise path compares two descriptions of the same candid
 ```agda
     (λ z → (z ∷ env) ⊨ (var i0 ∈̇ var (suc ya)) ∧̇ (var i0 ∈̇ var (suc yb)))
     (λ z i → (fst z ∈ sym qa i) ⊓ (fst z ∈ sym qb i))
-
 ```
 
 <!--en-->
@@ -1558,7 +1590,6 @@ The pointwise comparison for disjunction transports membership of the same `z` a
 ```agda
     (λ z → (z ∷ env) ⊨ (var i0 ∈̇ var (suc ya)) ∨̇ (var i0 ∈̇ var (suc yb)))
     (λ z i → (fst z ∈ sym qa i) ⊔ (fst z ∈ sym qb i))
-
 ```
 
 <!--en-->
@@ -1588,7 +1619,6 @@ The required path is pointwise: `qa` and `qb` rename the antecedent and conseque
 ```agda
     (λ z → (z ∷ env) ⊨ (var i0 ∈̇ var (suc ya)) ⇒̇ (var i0 ∈̇ var (suc yb)))
     (λ z i → (fst z ∈ sym qa i) ⇒ (fst z ∈ sym qb i))
-
 ```
 
 <!--en-->
@@ -1662,7 +1692,6 @@ The lemma `child` aligns the encoded and semantic views of one bound variable. I
 <!--/-->
 
 ```agda
-
     child : ∀ {n k} (a : Formula Ab (suc n)) (δ : DB.SM ^ n) (x : DB.SM)
       (γ : S ^ k) (zi yai : Fin k) → fst (lookup zi γ) ≡ Semantic.graph W δ
       → fst (lookup yai γ) ≡ fst (SatW a)
@@ -1728,7 +1757,6 @@ The remaining arguments to `consAtL-in` supply the old graph equation `qz`, the 
 
 ```agda
             i0 i1 (sh 2 zi) qz refl (Semantic.envFor-graph W (x ∷ δ)) ∣₁
-
 ```
 
 <!--en-->
@@ -1772,7 +1800,6 @@ The universal bridge states the same extensional fact for `∀̇ a`: the interna
 <!--/-->
 
 ```agda
-
   allBridge : ∀ {n} (a : Formula Ab (suc n)) {k : ℕ} (γ : S ^ k) (wi yai : Fin k)
             → fst (lookup wi γ) ≡ Wv → fst (lookup yai γ) ≡ fst (SatW a)
             → ExtFact (fst (SatW (∀̇ a))) (fst (envSet W n)) (λ z → ⟨ (z ∷ γ) ⊨ quAll wi yai ⟩)
@@ -1836,7 +1863,6 @@ The semantic value of a term is obtained by mapping each constant from the alpha
   private
     value : ∀ {n} → Term Ab n → DB.SM ^ n → DB.SM
     value t δ = ⟦ mapTm DB.ι t ⟧ᴮ δ
-
 ```
 
 <!--en-->
@@ -1880,7 +1906,6 @@ The converse lemma reconstructs `TmIsV` from the actual semantic value. For a co
 <!--/-->
 
 ```agda
-
     term-in : ∀ {n} (t : Term Ab n) (δ : DB.SM ^ n) (z v : S)
       → fst z ≡ Semantic.graph W δ → fst v ≡ fst (value t δ)
       → TmIsV (ct t) (fst z) (fst v)
@@ -1899,7 +1924,6 @@ For a variable, the witness uses the numeral `# (toℕ i)` as its stored index. 
 ```agda
       , subst (λ E → ⟨ pr (# (toℕ i)) (fst v) ∈ E ⟩) (sym qz)
           (subst ⟨_⟩ (sym (lookup-spec (Semantic.values W δ) i (fst v))) e)) ∣₁
-
 ```
 
 <!--en-->
@@ -1910,13 +1934,16 @@ The bounded-quantifier module fixes the bounding term, the subformula, five slot
 有界量化子のモジュールは、境界の項、部分式、五つのスロット、そして五つの等式を固定する。台、項の符号化、部分式の値、そして二つの数項のスロットで、すべて共有された文脈の上で読まれる。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
   module BqBridge {n : ℕ} (t : Term Ab n) (a : Formula Ab (suc n)) {k : ℕ} (Γ : S ^ k)
     (wi ti yai N0i N1i : Fin k)
     (qw : fst (lookup wi Γ) ≡ Wv) (qt : fst (lookup ti Γ) ≡ ct t) (qa : fst (lookup yai Γ) ≡ fst (SatW a))
     (q0 : fst (lookup N0i Γ) ≡ # 0) (q1 : fst (lookup N1i Γ) ≡ # 1) where
-
 ```
+</summary>
+<div class="submodule-fold-content">
 
 <!--en-->
 The remaining proof must connect the object-language term clause used by the bounded quantifier with the semantic term value just established. The local lemmas keep that connection at the fixed slots and equations of `BqBridge`, so every later quantifier argument uses the same carrier, term code, child value, and numeral tags.
@@ -1943,7 +1970,6 @@ If the object-language term clause holds at `v ∷ z ∷ Γ`, `tmIs-out` first r
             → TmIsV (ct t) (fst z) (fst v)
       tmOut z v h = subst (λ u → TmIsV u (fst z) (fst v)) qt
         (tmIs-out (suc (suc ti)) i1 i0 (suc (suc N0i)) (suc (suc N1i)) (v ∷ z ∷ Γ) q0 q1 h)
-
 ```
 
 <!--en-->
@@ -1959,7 +1985,6 @@ Conversely, a `TmIsV` statement for `ct t` is transported backward along `qt` an
             → ⟨ (v ∷ z ∷ Γ) ⊨ tmIs (suc (suc ti)) i1 i0 (suc (suc N0i)) (suc (suc N1i)) ⟩
       tmIn' z v h = tmIs-in (suc (suc ti)) i1 i0 (suc (suc N0i)) (suc (suc N1i)) (v ∷ z ∷ Γ) q0 q1
         (subst (λ u → TmIsV u (fst z) (fst v)) (sym qt) h)
-
 ```
 
 <!--en-->
@@ -1973,7 +1998,6 @@ For a semantic environment `δ`, `bound δ` is the value of the bounding term em
 ```agda
       bound : DB.SM ^ n → S
       bound δ = Semantic.intoL W (value t δ)
-
 ```
 
 <!--en-->
@@ -1988,7 +2012,6 @@ The bound belongs to the carrier: the value's second component is its membership
       bound∈W : (δ : DB.SM ^ n) → ⟨ fst (bound δ) ∈ fst (lookup wi Γ) ⟩
       bound∈W δ = subst (λ X → ⟨ fst (value t δ) ∈ X ⟩)
         (sym qw) (snd (value t δ))
-
 ```
 
 <!--en-->
@@ -2003,7 +2026,6 @@ When `z` is the graph of `δ`, the underlying set of `bound δ` is definitionall
       bound-term : (δ : DB.SM ^ n) (z : S) → fst z ≡ Semantic.graph W δ
                  → TmIsV (ct t) (fst z) (fst (bound δ))
       bound-term δ z qz = term-in t δ z (bound δ) qz refl
-
 ```
 
 <!--en-->
@@ -2064,7 +2086,6 @@ The last argument is exactly the hypothesis that `x` lies in the semantic value 
 
 ```agda
           (Semantic.intoL W x) (subst (λ X → ⟨ fst x ∈ X ⟩) (sym qw) (snd x)) hx))
-
 ```
 
 <!--en-->
@@ -2111,6 +2132,8 @@ In the reverse map, the outer truncated witness supplies a candidate term value 
           , subst ⟨_⟩ (child a δ (fst x , subst (λ X → ⟨ fst x ∈ X ⟩) qw hx)
               (v ∷ z ∷ Γ) i1 (sh 2 yai) qz qa) hc }) h }))
 ```
+</div>
+</details>
 
 <!--en-->
 The atomic body binds two values, not three: a carrier element `v` proposed as the value of `t`, and a carrier element `x` proposed as the value of `u`. It then conjoins the two `tmIs` clauses with the given relation formula `rel`, evaluated in the context `x ∷ v ∷ z ∷ Γ`; the coded environment `z` is already free, and `rel` is a formula rather than a bound entry.
@@ -2136,14 +2159,23 @@ The atomic body binds two values, not three: a carrier element `v` proposed as t
 `AtomBridge` は所属原子と等号原子に共通する証明を抽象化する。項 `t`、`u` と五つのスロット等式が、それらの符号とタグ `# 0`、`# 1` の読み方を定める。さらに引数 `op`、`R`、`rel` がそれぞれメタレベルの原子、対応する周囲の二項関係、その関係を表す対象言語の論理式を指定する。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
-
   module AtomBridge {n : ℕ} (t u : Term Ab n) {k : ℕ} (Γ : S ^ k)
     (wi ti ui N0i N1i : Fin k)
     (qw : fst (lookup wi Γ) ≡ Wv) (qt : fst (lookup ti Γ) ≡ ct t) (qu : fst (lookup ui Γ) ≡ ct u)
     (q0 : fst (lookup N0i Γ) ≡ # 0) (q1 : fst (lookup N1i Γ) ≡ # 1)
     (op : ∀ {j} → Term Ab j → Term Ab j → Formula Ab j)
+    (R : V ℓ → V ℓ → Type (ℓ-suc ℓ))
+    (rel : Formula S (3 + k))
+    (agree : (z v x : S) → (⟨ (x ∷ v ∷ z ∷ Γ) ⊨ rel ⟩ → R (fst v) (fst x))
+                           × (R (fst v) (fst x) → ⟨ (x ∷ v ∷ z ∷ Γ) ⊨ rel ⟩))
+    (cnd-out : (δ : DB.SM ^ n) → ⟨ Meaning (op t u) δ ⟩ → R (fst (value t δ)) (fst (value u δ)))
+    (cnd-in : (δ : DB.SM ^ n) → R (fst (value t δ)) (fst (value u δ)) → ⟨ Meaning (op t u) δ ⟩) where
 ```
+</summary>
+<div class="submodule-fold-content">
 
 <!--en-->
 The agreement hypothesis states the exact interface between `rel` and `R` at the three newly prepended entries. Satisfaction of `rel` in `x ∷ v ∷ z ∷ Γ` yields `R (fst v) (fst x)`, and a proof of that relation reconstructs satisfaction of `rel`. Thus the bridge may use an arbitrary representing formula only when both directions are supplied.
@@ -2153,14 +2185,6 @@ The agreement hypothesis states the exact interface between `rel` and `R` at the
 一致の仮定は、新たに先頭へ加えられた三つの項目における `rel` と `R` の正確な接続を述べる。`x ∷ v ∷ z ∷ Γ` での `rel` の充足から `R (fst v) (fst x)` が得られ、その関係の証明から `rel` の充足を組み立て直せる。したがって、橋渡しが任意の表現式を使えるのは、両方向が与えられている場合に限られる。
 <!--/-->
 
-```agda
-    (R : V ℓ → V ℓ → Type (ℓ-suc ℓ))
-    (rel : Formula S (3 + k))
-    (agree : (z v x : S) → (⟨ (x ∷ v ∷ z ∷ Γ) ⊨ rel ⟩ → R (fst v) (fst x))
-                           × (R (fst v) (fst x) → ⟨ (x ∷ v ∷ z ∷ Γ) ⊨ rel ⟩))
-    (cnd-out : (δ : DB.SM ^ n) → ⟨ Meaning (op t u) δ ⟩ → R (fst (value t δ)) (fst (value u δ)))
-```
-
 <!--en-->
 Two further hypotheses connect the chosen relation to the intended atomic semantics. The first sends `Meaning (op t u) δ` to `R` of the two evaluated term values, while the second reconstructs that meaning from the same relation. These hypotheses keep the generic bridge neutral between membership and equality.
 <!--zh-->
@@ -2168,11 +2192,6 @@ Two further hypotheses connect the chosen relation to the intended atomic semant
 <!--ja-->
 さらに二つの仮定が、選んだ関係を意図した原子の意味論へ結び付ける。第一の仮定は `Meaning (op t u) δ` を二つの項の評価値の間の `R` へ送り、第二の仮定は同じ関係からその意味を組み立て直す。このため、一般的な橋渡しは所属と等号のどちらにも同じ形で使える。
 <!--/-->
-
-```agda
-    (cnd-in : (δ : DB.SM ^ n) → R (fst (value t δ)) (fst (value u δ)) → ⟨ Meaning (op t u) δ ⟩) where
-
-```
 
 <!--en-->
 The context `δ3 z v x = x ∷ v ∷ z ∷ Γ` places the proposed value of `u` at slot `i0`, the proposed value of `t` at `i1`, and the coded environment at `i2`. These are the three newly exposed entries used by the two term clauses and the relation interface; the inherited entries of `Γ` remain available to the generic formula `rel`. Only `x` and `v` are newly bound by `atomEx`, while `z` is already the free environment argument.
@@ -2186,7 +2205,6 @@ The context `δ3 z v x = x ∷ v ∷ z ∷ Γ` places the proposed value of `u` 
     private
       δ3 : (z v x : S) → S ^ (3 + k)
       δ3 z v x = x ∷ v ∷ z ∷ Γ
-
 ```
 
 <!--en-->
@@ -2232,7 +2250,6 @@ For `u`, backward transport along `qu` changes `TmIsV (ct u) (fst z) (fst x)` in
 ```agda
       uIn z v x h = tmIs-in (suc (suc (suc ui))) i2 i0 (sh 3 N0i) (sh 3 N1i) (δ3 z v x) q0 q1
         (subst (λ w → TmIsV w (fst z) (fst x)) (sym qu) h)
-
 ```
 
 <!--en-->
@@ -2280,7 +2297,6 @@ The local names `v` and `x` are the embeddings into `L` of the evaluated terms `
         v x : S
         v = Semantic.intoL W (value t δ)
         x = Semantic.intoL W (value u δ)
-
 ```
 
 <!--en-->
@@ -2310,6 +2326,11 @@ The inner witness supplies a second candidate `x`, its membership proof `hx : x 
 ```agda
             (term-out u δ z x qz (uOut z v x hu)) (agree z v x .fst hr)) }) h })
 ```
+</div>
+</details>
+
+</div>
+</details>
 
 <!--en-->
 ## Recap

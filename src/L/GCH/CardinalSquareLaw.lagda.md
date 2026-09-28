@@ -1,21 +1,77 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # The square law for infinite L-cardinals
-
-For an infinite cardinal `κ` of `L`, the set of ordered pairs of members of `κ` injects into `κ` itself, by an internal coded injection. This chapter builds that injection. The route runs through the Gödel order on pairs: the order is written as a formula of the first-order object language, read off at the ordinal `κ` as the external Gödel order, and collapsed to an order type that the counting lemmas compare with `κ`. The chapter works at a fixed universe level `ℓ`, under excluded middle at the next level, the one classical assumption on which the ordinal comparisons below depend.
 <!--zh-->
 # L 中无穷基数的平方律
-
-对 `L` 中的无穷基数 `κ`，其成员的有序对所成之集可经 `L` 内部的编码单射注入 `κ` 自身。本章构造这个单射。路线经由对上的 Gödel 序：把这条序写成第一阶对象语言的公式，在序数 `κ` 处读作外部的 Gödel 序，再塌缩到序型，由计数引理与 `κ` 比较。本章在固定的宇宙层级 `ℓ` 上工作，使用高一层的排中律，即下文所有序数比较所依赖的唯一经典假设。
 <!--ja-->
 # L の無限基数における平方律
-
-`L` の無限基数 `κ` に対し、その要素の順序対からなる集合は、`L` の内部での符号化された単射によって `κ` 自身へ注入される。本章はこの単射を構成する。道筋は対の上の Gödel 順序を経由する。順序を一階の対象言語の論理式として書き下し、順序数 `κ` のところで外部の Gödel 順序として読み、崩壊によって順序型へ落とし、計数の補題によって `κ` と比較する。本章は固定された宇宙レベル `ℓ` の上で、一つ上のレベルの排中律、すなわち以下の順序数の比較が依存する唯一の古典的仮定のもとで進む。
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
+open import Base.Prelude
+open import Base.Classical using ( LEM )
 ```
+
+<!--en-->
+Fix a universe level `ℓ`{.Agda} and assume `lem : LEM (ℓ-suc ℓ)`{.Agda}. This hypothesis supplies a decision for each proposition at that level; it remains an explicit parameter of the constructions below.
+<!--zh-->
+固定宇宙层级 `ℓ`{.Agda}，并假设 `lem : LEM (ℓ-suc ℓ)`{.Agda}。这个假设为相应层级的每个命题提供判定，并始终作为下文构造的显式参数。
+<!--ja-->
+宇宙レベル `ℓ`{.Agda} を固定し、`lem : LEM (ℓ-suc ℓ)`{.Agda} を仮定する。この仮定は該当するレベルの各命題に判定を与え、以下の構成の明示的なパラメータとして保たれる。
+<!--/-->
+
+```agda
+module L.GCH.CardinalSquareLaw {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+```
+
+```agda
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax
+  using ( Formula; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; ¬̇_; ∃̇_ )
+import FOL.Absoluteness
+import FOL.Semantics
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; regularityV; ∈-irrefl )
+open import L.Choice.FirstIntersectionStage {ℓ} lem using ( ord-suc-inj )
+open import V.Model {ℓ} using ( ∈sucV-elim; ∈sucV-inl; self∈sucV )
+open import V.Presentation {ℓ} using ( member; fiber; ↪-inj )
+open import V.Coding {ℓ} using ( pr; pr-inj )
+open import L.Constructible {ℓ}
+  using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset→isL )
+open import L.Ordinal {ℓ} using ( mem-ord; suc-ord; ω-ord; #∈ω; ω-mem-ord )
+open import L.Ordinal.Stages {ℓ} lem using ( ord∈Lset-suc )
+open import L.Ordinal.Linear {ℓ} lem using ( ord-tri )
+import L.Ordinal.SquareLaw {ℓ} lem as SQ
+open import L.WellOrder.Base {ℓₚ = ℓ-suc ℓ}
+  using ( lt; eq; gt ) renaming ( Tri to TriW )
+open import L.Axioms.Basic {ℓ} using ( ∅ʟ )
+open import L.Axioms.Infinity {ℓ} lem using ( ωʟ )
+open import L.Axioms.Numerals {ℓ} using ( sucʟ; sucʟ-fst )
+open import L.Coding.Model {ℓ} using ( prAtL; prAtL-adequate; prʟ; prʟ-fst; svAt; svAt-out; domAt )
+open import L.Coding.Expressions {ℓ} using ( sucAtL; sucAtL-adequate )
+open import L.Coding.Injection {ℓ} lem using ( injAt; module Extract; module Small )
+open import L.Cardinal {ℓ} lem using ( InjCode; InjL; IsCardinalL; _↪_ )
+open import L.InjectionComposition {ℓ} lem using ( inclusion-coded; injl-trans )
+open import L.GCH.CardinalRepresentative {ℓ} lem using ( cardOf )
+open import L.DefinableInjection {ℓ} lem using ( DefinableMap; module Inj )
+open import L.GCH.OrderType {ℓ} lem using ( Holds; module Code )
+open import L.InjectionComposition {ℓ} lem
+  using ( appC; appC-adequate; ω-limit; finite-excl-ω )
+open import L.InjectionComposition {ℓ} lem public using ( module Relation )
+```
+
+<!--en-->
+
+For an infinite cardinal `κ` of `L`, the set of ordered pairs of members of `κ` injects into `κ` itself, by an internal coded injection. This chapter builds that injection. The route runs through the Gödel order on pairs: the order is written as a formula of the first-order object language, read off at the ordinal `κ` as the external Gödel order, and collapsed to an order type that the counting lemmas compare with `κ`. The chapter works at a fixed universe level `ℓ`, under excluded middle at the next level, the one classical assumption on which the ordinal comparisons below depend.
+<!--zh-->
+
+对 `L` 中的无穷基数 `κ`，其成员的有序对所成之集可经 `L` 内部的编码单射注入 `κ` 自身。本章构造这个单射。路线经由对上的 Gödel 序：把这条序写成第一阶对象语言的公式，在序数 `κ` 处读作外部的 Gödel 序，再塌缩到序型，由计数引理与 `κ` 比较。本章在固定的宇宙层级 `ℓ` 上工作，使用高一层的排中律，即下文所有序数比较所依赖的唯一经典假设。
+<!--ja-->
+
+`L` の無限基数 `κ` に対し、その要素の順序対からなる集合は、`L` の内部での符号化された単射によって `κ` 自身へ注入される。本章はこの単射を構成する。道筋は対の上の Gödel 順序を経由する。順序を一階の対象言語の論理式として書き下し、順序数 `κ` のところで外部の Gödel 順序として読み、崩壊によって順序型へ落とし、計数の補題によって `κ` と比較する。本章は固定された宇宙レベル `ℓ` の上で、一つ上のレベルの排中律、すなわち以下の順序数の比較が依存する唯一の古典的仮定のもとで進む。
+<!--/-->
 
 <!--en-->
 The construction is not constructive throughout, and the reason lies in the mathematics rather than in the formalism. To order the pairs of an ordinal one must decide, for two ordinals `a` and `b`, whether `a` belongs to `b`; and every classical decision of this chapter is an instance of that single question. The module therefore receives excluded middle at level `ℓ-suc ℓ` as explicit data, the level of the membership propositions being decided.
@@ -26,10 +82,7 @@ The construction is not constructive throughout, and the reason lies in the math
 <!--/-->
 
 ```agda
-open import Base.Prelude
 open import Cubical.Foundations.HLevels using ( isSetΣSndProp )
-open import Base.Classical using ( LEM )
-
 ```
 
 <!--en-->
@@ -40,11 +93,6 @@ The module parameter fixes that instance once, and every classical step of the c
 モジュールパラメータはその実例を一度だけ固定し、本章の古典的な段階はどれも正確にこれを消費する。
 <!--/-->
 
-```agda
-module L.GCH.CardinalSquareLaw {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-
-```
-
 <!--en-->
 The order to be internalized is written in the first-order object language: formulas built from membership and equality atoms by the connectives, negation and the unbounded existential, interpreted over the ambient hierarchy. Two facts of the hierarchy stand beside it, and both are used to end arguments: membership is well-founded, so ordinals admit induction along `∈`, and no set belongs to itself, so impossible comparisons can be refuted outright.
 <!--zh-->
@@ -52,14 +100,6 @@ The order to be internalized is written in the first-order object language: form
 <!--ja-->
 内在化される順序は、一階の対象言語で書かれる。所属と等しさ (等号) の原子式から、結合子、否定、非有界の存在量化子によって作られる論理式であり、周囲の階層の上で解釈される。階層の二つの事実がその傍らにあり、どちらも議論を閉じるために使われる。所属は整礎であり、順序数は `∈` に沿った帰納を許し、またどの集合も自分自身に属さないため、あり得ない比較はそのまま反証できる。
 <!--/-->
-
-```agda
-open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax
-  using ( Formula; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; ¬̇_; ∃̇_ )
-import FOL.Absoluteness
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; regularityV; ∈-irrefl )
-```
 
 <!--en-->
 Reading the coordinates of a coded pair, and counting with them, rests on three facts. The successor operation on ordinals is injective, so equal successors have equal predecessors. Every member of an ordinal is named by an index of its small presentation, the naming is injective, and a member of a constructible set is itself constructible. And the ordered pair `pr` is injective in both coordinates, so a coded pair determines its two entries.
@@ -69,14 +109,6 @@ Reading the coordinates of a coded pair, and counting with them, rests on three 
 符号化された対の座標を読み、それで計数するには、三つの事実が要る。順序数の後続演算は単射であり、等しい後続は等しい先行者をもつ。順序数の各要素は小さな提示の添字によって名指され、その名指しは単射で、構成可能な集合の要素はそれ自身構成可能である。そして順序対 `pr` は両座標で単射であり、符号化された対はその二つの成分を確定する。
 <!--/-->
 
-```agda
-open import L.Choice.FirstIntersectionStage {ℓ} lem using ( ord-suc-inj )
-open import V.Model {ℓ} using ( ∈sucV-elim; ∈sucV-inl; self∈sucV )
-open import V.Presentation {ℓ} using ( member; fiber; ↪-inj )
-open import V.Coding {ℓ} using ( pr; pr-inj )
-open import L.Constructible {ℓ}
-```
-
 <!--en-->
 On the constructible side, the inner structure `𝒮ʟ` restricts the hierarchy to the transitive class of constructible sets. The ordinal facts used throughout are closure facts: members of ordinals are ordinals, successors of ordinals are ordinals, the members of `ω` are ordinals, and any two ordinals are comparable by trichotomy. Beside them stands the external Gödel order on pairs, the order this chapter internalizes.
 <!--zh-->
@@ -84,14 +116,6 @@ On the constructible side, the inner structure `𝒮ʟ` restricts the hierarchy 
 <!--ja-->
 構成可能な側では、内側の構造 `𝒮ʟ` が階層を構成可能な集合という推移的クラスに制限する。全体を通して使う順序数の事実は閉性の事実である。順序数の要素は順序数であり、順序数の後続は順序数であり、`ω` の要素は順序数であり、任意の二つの順序数は三分法によって比較できる。その傍らには、対の上の外部の Gödel 順序、すなわち本章が内在化する順序がある。
 <!--/-->
-
-```agda
-  using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset→isL )
-open import L.Ordinal {ℓ} using ( mem-ord; suc-ord; ω-ord; #∈ω; ω-mem-ord )
-open import L.Ordinal.Stages {ℓ} lem using ( ord∈Lset-suc )
-open import L.Ordinal.Linear {ℓ} lem using ( ord-tri )
-import L.Ordinal.SquareLaw {ℓ} lem as SQ
-```
 
 <!--en-->
 The comparison of two ordinals is packaged as three-case data rather than as a truth value, because the proofs below must inspect which case occurred: strictly below, equal, or strictly above. The empty set and `ω` are available as elements of `L`, and the internal successor numerals come with the identification of their underlying sets, which lets a numeral slot be read as an ambient natural number.
@@ -101,14 +125,6 @@ The comparison of two ordinals is packaged as three-case data rather than as a t
 二つの順序数の比較は、真理値ではなく三つの場合のデータとしてまとめられる。下の証明は、どの場合が起こったかを検査しなければならないからである。狭義に下、等しい、狭義に上。空集合と `ω` は `L` の要素として使え、内部の後続数詞はその基底集合の同一視を伴い、数項のスロットを周囲の自然数として読めるようにする。
 <!--/-->
 
-```agda
-open import L.WellOrder.Base {ℓₚ = ℓ-suc ℓ}
-  using ( lt; eq; gt ) renaming ( Tri to TriW )
-open import L.Axioms.Basic {ℓ} using ( ∅ʟ )
-open import L.Axioms.Infinity {ℓ} lem using ( ωʟ )
-open import L.Axioms.Numerals {ℓ} using ( sucʟ; sucʟ-fst )
-```
-
 <!--en-->
 Inside `L`, ordered pairs and graph conditions are expressed by first-order formulas with inner and ambient readings. Pairing adequacy identifies the coded pair with the ambient ordered pair of its two entries, while the graph readings express single-valuedness, domain, injectivity, and containment of values in the codomain. Together these conditions describe an internal coded injection.
 <!--zh-->
@@ -116,14 +132,6 @@ Inside `L`, ordered pairs and graph conditions are expressed by first-order form
 <!--ja-->
 `L` の内部では、順序対とグラフの条件を、内側と外側の二つの読みをもつ一階論理式で表す。対の妥当性は符号化された対を二つの成分からなる周囲の順序対と同一視し、グラフの読みは単値性、定義域、単射性、値が終域に属することを表す。これらの条件が内部の符号化された単射を記述する。
 <!--/-->
-
-```agda
-open import L.Coding.Model {ℓ} using ( prAtL; prAtL-adequate; prʟ; prʟ-fst; svAt; svAt-out; domAt )
-open import L.Coding.Expressions {ℓ} using ( sucAtL; sucAtL-adequate )
-open import L.Coding.Injection {ℓ} lem using ( injAt; module Extract; module Small )
-open import L.Cardinal {ℓ} lem using ( InjCode; InjL; IsCardinalL; _↪_ )
-open import L.InjectionComposition {ℓ} lem using ( inclusion-coded; injl-trans )
-```
 
 <!--en-->
 Three mathematical transitions drive the construction. An ordinal is replaced by an internal cardinal representative contained in it and internally equipotent to it. A definable injective function yields a coded injection. Finally, a well-founded transitive relation is collapsed to an ordinal order type, while trichotomy makes the collapse map injective.
@@ -133,14 +141,6 @@ Three mathematical transitions drive the construction. An ordinal is replaced by
 構成は三つの数学的な移行によって進む。まず順序数を、その中に含まれ、内部でそれと同じ濃度をもつ内部基数の代表に替える。次に、定義可能な単射関数から符号化された単射を得る。最後に、整礎で推移的な関係を順序数としての順序型へ崩壊し、三分法によって崩壊写像の単射性を示す。
 <!--/-->
 
-```agda
-open import L.GCH.CardinalRepresentative {ℓ} lem using ( cardOf )
-open import L.DefinableInjection {ℓ} lem using ( DefinableMap; module Inj )
-open import L.GCH.OrderType {ℓ} lem using ( Holds; module Code )
-open import L.InjectionComposition {ℓ} lem
-  using ( appC; appC-adequate; ω-limit; finite-excl-ω )
-```
-
 <!--en-->
 A comparison of two coded pairs carries six dependent witnesses: four coordinates and their two maxima. Products retain the simultaneous equations and order conditions, while disjoint sums retain the alternative comparison cases. Since the proof components are propositions, they do not create additional choices in the resulting order data.
 <!--zh-->
@@ -148,9 +148,6 @@ A comparison of two coded pairs carries six dependent witnesses: four coordinate
 <!--ja-->
 二つの符号化された対の比較は、四つの座標と二つの最大値という六つの依存する証人を伴う。積は同時に成り立つ等式と順序条件を保ち、非交和は比較の場合分けを保つ。証明の成分は命題なので、得られる順序データに余分な選択を生じさせない。
 <!--/-->
-
-```agda
-```
 
 <!--en-->
 The coordinates of a coded pair are members of the underlying set of `κ`, read through the small presentation of that set. Beside the presentation stand the ambient membership, the empty set with its emptiness proof, and `ω` with the successor operation, the notions in which the two coordinates are compared and counted.
@@ -190,12 +187,10 @@ Two carriers are named and kept apart. The ambient carrier carries the hierarchy
 <!--/-->
 
 ```agda
-
 open hPropStructure 𝒮ᵥ using ( _∈ˢ_ )
 module SV = hPropStructure 𝒮ᵥ using ()
 module SL = hPropStructure 𝒮ʟ using (S; _∈ˢ_)
 open SL using ( S )
-
 ```
 
 <!--en-->
@@ -209,7 +204,6 @@ The absoluteness instance is fixed over the transitive class of constructible se
 ```agda
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using (_^_; _⊨ᵐ_)
 open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
-
 ```
 
 <!--en-->
@@ -241,7 +235,6 @@ The pair path is exactly that construction: from `a ≡ a'` and `b ≡ b'` it fo
 opaque
   isL-ord : (x : V ℓ) → IsOrd x → ⟨ isL x ⟩
   isL-ord x ox = Lset→isL (sucV x) (suc-ord ox) x (ord∈Lset-suc x ox)
-
 ```
 
 <!--en-->
@@ -255,9 +248,7 @@ Thus an ordinal `x` can be regarded as the element `ordL x ox` of the constructi
 ```agda
 ordL : (x : V ℓ) → IsOrd x → S
 ordL x ox = x , isL-ord x ox
-open import L.InjectionComposition {ℓ} lem public using ( module Relation )
-private
-  module Product (K : S) = Relation K K
+private module Product (K : S) = Relation K K
 ```
 
 <!--en-->
@@ -269,10 +260,9 @@ The describing condition of the product says that both coordinates are members o
 <!--/-->
 
 ```agda
-    ((var (suc zero) ∈̇ con K) ∧̇ (var zero ∈̇ con K))
-    (λ x y → (fst x ∈ˢ fst K) ⊓ (fst y ∈ˢ fst K))
-    (λ x y e h → h) (λ x y e h → h)
-
+          ((var (suc zero) ∈̇ con K) ∧̇ (var zero ∈̇ con K))
+          (λ x y → (fst x ∈ˢ fst K) ⊓ (fst y ∈ˢ fst K))
+          (λ x y e h → h) (λ x y e h → h)
 ```
 
 <!--en-->
@@ -286,7 +276,6 @@ The describing condition of the product says that both coordinates are members o
 ```agda
 prodL : S → S
 prodL = Product.rel
-
 ```
 
 <!--en-->
@@ -299,10 +288,9 @@ Membership in the product is characterized by a truncated existence: some two me
 
 ```agda
 InProd : S → V ℓ → Type (ℓ-suc ℓ)
-InProd K e = ∥ Σ[ a ∈ S ] Σ[ b ∈ S ]
+InProd K e = ∥ Σ[ a ∶ S ] Σ[ b ∶ S ]
                (⟨ fst a ∈ˢ fst K ⟩ × ⟨ fst b ∈ˢ fst K ⟩
                 × (e ≡ pr (fst a) (fst b))) ∥₁
-
 ```
 
 <!--en-->
@@ -317,7 +305,6 @@ Inward, the ordered pair of any two members of `K` belongs to `prodL K`; this is
 prodL-in : (K a b : S) → ⟨ fst a ∈ˢ fst K ⟩ → ⟨ fst b ∈ˢ fst K ⟩
          → ⟨ pr (fst a) (fst b) ∈ˢ fst (prodL K) ⟩
 prodL-in K a b ma mb = Product.into K a b ma mb (ma , mb)
-
 ```
 
 <!--en-->
@@ -332,7 +319,7 @@ Outward, a member of `prodL K` comes, in truncated form, from two members of `K`
 prodL-out : (K e : S) → ⟨ fst e ∈ˢ fst (prodL K) ⟩ → InProd K (fst e)
 prodL-out K e h = map₁ (λ { (a , b , q , ma , mb) → a , b , ma , mb , q }) (Product.out K e h)
 prodL-fst : (K e : S) → ⟨ fst e ∈ˢ fst (prodL K) ⟩
-          → Σ[ a ∈ ⟪ fst K ⟫ ] Σ[ b ∈ ⟪ fst K ⟫ ]
+          → Σ[ a ∶ ⟪ fst K ⟫ ] Σ[ b ∶ ⟪ fst K ⟫ ]
               (fst e ≡ pr (⟪ fst K ⟫↪ a) (⟪ fst K ⟫↪ b))
 ```
 
@@ -363,7 +350,7 @@ The second components are unique: the injectivity of the ordered pair extracts a
 ```agda
   where
   inner : (a : ⟪ fst K ⟫)
-        → isProp (Σ[ b ∈ ⟪ fst K ⟫ ] (fst e ≡ pr (⟪ fst K ⟫↪ a) (⟪ fst K ⟫↪ b)))
+        → isProp (Σ[ b ∶ ⟪ fst K ⟫ ] (fst e ≡ pr (⟪ fst K ⟫↪ a) (⟪ fst K ⟫↪ b)))
   inner a (b , q) (b' , q') = Σ≡Prop (λ _ → setIsSet _ _)
     (↪-inj {a = fst K} (pr-inj (sym q ∙ q') .snd))
 ```
@@ -377,7 +364,7 @@ The first components are unique for the same reason, so the whole fiber statemen
 <!--/-->
 
 ```agda
-  isPropFib : isProp (Σ[ a ∈ ⟪ fst K ⟫ ] Σ[ b ∈ ⟪ fst K ⟫ ]
+  isPropFib : isProp (Σ[ a ∶ ⟪ fst K ⟫ ] Σ[ b ∶ ⟪ fst K ⟫ ]
                         (fst e ≡ pr (⟪ fst K ⟫↪ a) (⟪ fst K ⟫↪ b)))
   isPropFib (a , b , q) (a' , b' , q') = Σ≡Prop inner
     (↪-inj {a = fst K} (pr-inj (sym q ∙ q') .fst))
@@ -415,7 +402,6 @@ The definition offers two alternatives: either `a` belongs to `b` and `m` is `b`
 MaxIs m a b =
   ∥ (⟨ fst a ∈ˢ fst b ⟩ × (fst m ≡ fst b))
   ⊎ ((⟨ fst a ∈ˢ fst b ⟩ → ⊥₀) × (fst m ≡ fst a)) ∥₁
-
 ```
 
 <!--en-->
@@ -443,11 +429,9 @@ The maximum is expressible as a bounded formula: `m` equals `b` when `a` belongs
 <!--/-->
 
 ```agda
-
 maxAt : ∀ {k} → Fin k → Fin k → Fin k → Formula S k
 maxAt m a b = ((var a ∈̇ var b) ∧̇ (var m ≐ var b))
             ∨̇ ((¬̇ (var a ∈̇ var b)) ∧̇ (var m ≐ var a))
-
 ```
 
 <!--en-->
@@ -475,12 +459,10 @@ Putting the pieces together, `Lt p q` says that `p` and `q` are coded pairs, of 
 <!--/-->
 
 ```agda
-
 Lt : V ℓ → V ℓ → Type (ℓ-suc ℓ)
-Lt p q = ∥ Σ[ a ∈ S ] Σ[ b ∈ S ] Σ[ c ∈ S ] Σ[ d ∈ S ] Σ[ m ∈ S ] Σ[ n ∈ S ]
+Lt p q = ∥ Σ[ a ∶ S ] Σ[ b ∶ S ] Σ[ c ∶ S ] Σ[ d ∶ S ] Σ[ m ∶ S ] Σ[ n ∶ S ]
            ( (p ≡ pr (fst a) (fst b)) × (q ≡ pr (fst c) (fst d))
            × MaxIs m a b × MaxIs n c d × OrdIs m n a b c d ) ∥₁
-
 ```
 
 <!--en-->
@@ -495,7 +477,6 @@ Six binders need six slots beyond the caller's environment, and `↑6` shifts an
 private
   ↑6 : ∀ {k} → Fin k → Fin (suc (suc (suc (suc (suc (suc k))))))
   ↑6 i = suc (suc (suc (suc (suc (suc i)))))
-
 ```
 
 <!--en-->
@@ -571,12 +552,10 @@ Adequacy is checked against a concrete six-entry context. The context extends th
 <!--/-->
 
 ```agda
-
   private
     env : ∀ {k} → S ^ k → S → S → S → S → S → S
         → S ^ (suc (suc (suc (suc (suc (suc k))))))
     env γ a b c d m n = n ∷ m ∷ d ∷ c ∷ b ∷ a ∷ γ
-
 ```
 
 <!--en-->
@@ -592,7 +571,6 @@ The first adequacy lemma reads the pair atom at that context: satisfaction of th
         → ⟨ env γ a b c d m n ⊨ prAtL (↑6 p) i5 i4 ⟩
         ≡ (fst (lookup p γ) ≡ pr (fst a) (fst b))
     atP p γ a b c d m n = cong ⟨_⟩ (prAtL-adequate (↑6 p) i5 i4 (env γ a b c d m n))
-
 ```
 
 <!--en-->
@@ -608,7 +586,6 @@ The second does the same for `q` and the pair of `c` and `d`. With these two ide
         → ⟨ env γ a b c d m n ⊨ prAtL (↑6 q) i3 i2 ⟩
         ≡ (fst (lookup q γ) ≡ pr (fst c) (fst d))
     atQ q γ a b c d m n = cong ⟨_⟩ (prAtL-adequate (↑6 q) i3 i2 (env γ a b c d m n))
-
 ```
 
 <!--en-->
@@ -655,7 +632,6 @@ The second maximum datum is mapped identically, completing the witness of `Lt` a
         , map₁ (λ { (inl h) → inl h
                     ; (inr (n , e)) → inr ((λ k → lower (n k)) , e) }) hN
         , hO ) ∣₁ }) hm }) hd }) hc }) hb }) ha })
-
 ```
 
 <!--en-->
@@ -701,9 +677,8 @@ The two maximum data are mapped back, this time lifted into the object level's g
 ```agda
                         ; (inr (n , e)) → inr ((λ k → lift (n k)) , e) }) hN
             , hO )))) ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ })
-private
-  module Godel (P : S) = Relation P P
-    ((var (suc zero) ∈̇ con P) ∧̇ ((var zero ∈̇ con P) ∧̇ ltAt (suc zero) zero))
+private module Godel (P : S) = Relation P P
+          ((var (suc zero) ∈̇ con P) ∧̇ ((var zero ∈̇ con P) ∧̇ ltAt (suc zero) zero))
 ```
 
 <!--en-->
@@ -715,10 +690,9 @@ The host reading adds membership in `P` on both sides, conjoined with the order 
 <!--/-->
 
 ```agda
-    (λ p q → (fst p ∈ˢ fst P) ⊓ ((fst q ∈ˢ fst P) ⊓ (Lt (fst p) (fst q) , squash₁)))
-    (λ p q e h → h .fst , h .snd .fst , lt-out (suc zero) zero (q ∷ p ∷ e ∷ []) (h .snd .snd))
-    (λ p q e h → h .fst , h .snd .fst , lt-in (suc zero) zero (q ∷ p ∷ e ∷ []) (h .snd .snd))
-
+          (λ p q → (fst p ∈ˢ fst P) ⊓ ((fst q ∈ˢ fst P) ⊓ (Lt (fst p) (fst q) , squash₁)))
+          (λ p q e h → h .fst , h .snd .fst , lt-out (suc zero) zero (q ∷ p ∷ e ∷ []) (h .snd .snd))
+          (λ p q e h → h .fst , h .snd .fst , lt-in (suc zero) zero (q ∷ p ∷ e ∷ []) (h .snd .snd))
 ```
 
 <!--en-->
@@ -732,7 +706,6 @@ The host reading adds membership in `P` on both sides, conjoined with the order 
 ```agda
 godel : S → S
 godel = Godel.rel
-
 ```
 
 <!--en-->
@@ -747,7 +720,6 @@ Inward: for two members `p` and `q` of `P` with `p` below `q`, their ordered pai
 godel-in : (P p q : S) → ⟨ fst p ∈ˢ fst P ⟩ → ⟨ fst q ∈ˢ fst P ⟩
          → Lt (fst p) (fst q) → ⟨ pr (fst p) (fst q) ∈ˢ fst (godel P) ⟩
 godel-in P p q mp mq l = Godel.into P p q mp mq (mp , mq , l)
-
 ```
 
 <!--en-->
@@ -780,10 +752,13 @@ The order module then fixes an ordinal `κ`, the case at which the square law is
 順序のモジュールはついで、平方律が述べられる場合である順序数 `κ` を固定する。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Order (κ : S) (oκ : IsOrd (fst κ)) where
-
 ```
+</summary>
+<div class="submodule-fold-content">
 
 <!--en-->
 `K` is the underlying set of the ordinal `κ`; the carrier on which the square law unfolds is precisely this set of ordinals below `κ`.
@@ -796,7 +771,6 @@ module Order (κ : S) (oκ : IsOrd (fst κ)) where
 ```agda
   K : V ℓ
   K = fst κ
-
 ```
 
 <!--en-->
@@ -810,7 +784,6 @@ module Order (κ : S) (oκ : IsOrd (fst κ)) where
 ```agda
   ↑ : ⟪ K ⟫ → V ℓ
   ↑ = ⟪ K ⟫↪
-
 ```
 
 <!--en-->
@@ -824,7 +797,6 @@ An index `m : ⟪ K ⟫` names the ambient set `↑ m`, together with a proof th
 ```agda
   upK : ⟪ K ⟫ → S
   upK m = ↑ m , isL-trans {x = K} {y = ↑ m} (member K m) (snd κ)
-
 ```
 
 <!--en-->
@@ -838,7 +810,6 @@ The carrier of the order to be compared is `Pair`, the type of two indices of `�
 ```agda
   Pair : Type ℓ
   Pair = ⟪ K ⟫ × ⟪ K ⟫
-
 ```
 
 <!--en-->
@@ -852,7 +823,6 @@ On the coordinates themselves stands the coordinate order `≺₁`, quoted from 
 ```agda
   _≺₁_ : ⟪ K ⟫ → ⟪ K ⟫ → Type (ℓ-suc ℓ)
   _≺₁_ = SQ._≺₁_ K oκ
-
 ```
 
 <!--en-->
@@ -866,7 +836,6 @@ On pairs stands the Gödel order `≺ₚ`: compare maxima first, then the first 
 ```agda
   _≺ₚ_ : Pair → Pair → Type (ℓ-suc ℓ)
   _≺ₚ_ = SQ._≺_ K oκ
-
 ```
 
 <!--en-->
@@ -880,7 +849,6 @@ The maximum operation `maxOrd` returns, for two ordinals below `κ`, the larger 
 ```agda
   maxOrd : ⟪ K ⟫ → ⟪ K ⟫ → ⟪ K ⟫
   maxOrd = SQ.maxOrd K oκ
-
 ```
 
 <!--en-->
@@ -958,7 +926,6 @@ In the above case the host witness puts `b` inside `a`; an affirmative internal 
 ```agda
           (subst2 (λ x y → ⟨ x ∈ˢ y ⟩) ea eb a∈b) h))
     go (gt h) (inr (_ , e))   = e ∙ ea
-
 ```
 
 <!--en-->
@@ -1004,7 +971,7 @@ The heart of the transfer is the refutation lemma. It assumes a contradiction-sh
 ```agda
   private
     refute : (p q : Pair) → (p ≺ₚ q → ⊥₀)
-           → Σ[ a ∈ S ] Σ[ b ∈ S ] Σ[ c ∈ S ] Σ[ d ∈ S ] Σ[ m ∈ S ] Σ[ n ∈ S ]
+           → Σ[ a ∶ S ] Σ[ b ∶ S ] Σ[ c ∶ S ] Σ[ d ∶ S ] Σ[ m ∶ S ] Σ[ n ∶ S ]
                ( (code p ≡ pr (fst a) (fst b)) × (code q ≡ pr (fst c) (fst d))
                × MaxIs m a b × MaxIs n c d × OrdIs m n a b c d )
 ```
@@ -1067,7 +1034,6 @@ The equation `en` supplies the same identification for the second pair, so `OrdI
 
 ```agda
       en = max-out c d n c' d' ec ed hN
-
 ```
 
 <!--en-->
@@ -1096,7 +1062,6 @@ The equality case transfers as well: an equality of the named sets, cycled throu
 
 ```agda
             , subst2 (λ x y → ⟨ x ∈ˢ y ⟩) eb ed h )
-
 ```
 
 <!--en-->
@@ -1126,7 +1091,6 @@ If the two maxima are equal, the equality of the underlying sets becomes an equa
 ```agda
       outer (inr (e , h)) = rec₁ isProp⊥
         (λ w → nk (inr (↪-inj {a = K} (sym em ∙ e ∙ en) , inner w))) h
-
 ```
 
 <!--en-->
@@ -1154,12 +1118,10 @@ In the equality case, a putative `p ≺ₚ q` transports to `q ≺ₚ q` and vio
 <!--/-->
 
 ```agda
-
     go : TriW (p ≺ₚ q) (p ≡ q) (q ≺ₚ p) → p ≺ₚ q
     go (lt k) = k
     go (eq e) = refuted (λ k → SQ.irr≺ K oκ q (subst (λ w → w ≺ₚ q) e k))
     go (gt h) = refuted (λ k → SQ.irr≺ K oκ p (SQ.trans≺ K oκ p q p k h))
-
 ```
 
 <!--en-->
@@ -1207,7 +1169,6 @@ If `x < y`, transitivity with `y < z` gives `x < z`; if `x = y`, the given compa
     ≤→≺ : (x y z : ⟪ K ⟫) → SQ._≤₁_ K oκ x y → y ≺₁ z → x ≺₁ z
     ≤→≺ x y z (inl h) h' = SQ.trans₁ K oκ x y z h h'
     ≤→≺ x y z (inr e) h' = subst (λ w → w ≺₁ z) (sym e) h'
-
 ```
 
 <!--en-->
@@ -1235,7 +1196,6 @@ The segment lemmas now read off the order. If a pair `r` is below a pair `p`, th
 <!--/-->
 
 ```agda
-
   fst∈suc : (r p : Pair) → r ≺ₚ p
           → ⟨ ↑ (fst r) ∈ˢ sucV (↑ (maxOrd (fst p) (snd p))) ⟩
   fst∈suc (a , b) (c , d) (inl h) =
@@ -1253,7 +1213,6 @@ In the equal-max case the first coordinate is at most the shared maximum and the
 
 ```agda
     ≤→∈suc a (maxOrd a b) (maxOrd c d) (SQ.max-spec K oκ a b .fst) e
-
 ```
 
 <!--en-->
@@ -1282,9 +1241,17 @@ These two bounds show that every predecessor of a pair `(c, d)` has both coordin
 
 ```agda
     ≤→∈suc b (maxOrd a b) (maxOrd c d) (SQ.max-spec K oκ a b .snd) e
-module Coll (κ : S) (oκ : IsOrd (fst κ)) where
-
 ```
+</div>
+</details>
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
+```agda
+module Coll (κ : S) (oκ : IsOrd (fst κ)) where
+```
+</summary>
+<div class="submodule-fold-content">
 
 <!--en-->
 These bounds control every predecessor segment of the Gödel order. Together with well-foundedness and transitivity, they place the relation on `prodL κ` in the setting where it can be collapsed to its ordinal order type.
@@ -1296,7 +1263,6 @@ These bounds control every predecessor segment of the Gödel order. Together wit
 
 ```agda
   open Order κ oκ
-
 ```
 
 <!--en-->
@@ -1310,7 +1276,6 @@ The set to be collapsed onto an order type is `P`, the product: the ordered pair
 ```agda
   P : S
   P = prodL κ
-
 ```
 
 <!--en-->
@@ -1324,7 +1289,6 @@ The relation of the collapse is `R`, the Gödel order on that product: two membe
 ```agda
   R : S
   R = godel P
-
 ```
 
 <!--en-->
@@ -1338,7 +1302,6 @@ Gödel 関係では直接従う。`y R x` なら、`y` と `x` はともにそ�
 ```agda
   Rsub : (y x : S) → Holds R y x → ⟨ fst y ∈ fst P ⟩ × ⟨ fst x ∈ fst P ⟩
   Rsub y x h = godel-out P y x h .fst , godel-out P y x h .snd .fst
-
 ```
 
 <!--en-->
@@ -1354,7 +1317,6 @@ The order-type machinery is instantiated once and for this product. Its domain i
   φ : OT.Dom → Pair
   φ m = prodL-fst κ (OT.up m) (OT.up-mem m) .fst
       , prodL-fst κ (OT.up m) (OT.up-mem m) .snd .fst
-
 ```
 
 <!--en-->
@@ -1368,7 +1330,6 @@ The reading comes with its equation: the internal coding of the index equals the
 ```agda
   φ-eq : (m : OT.Dom) → OT.↪ m ≡ code (φ m)
   φ-eq m = prodL-fst κ (OT.up m) (OT.up-mem m) .snd .snd
-
 ```
 
 <!--en-->
@@ -1382,7 +1343,6 @@ The reading comes with its equation: the internal coding of the index equals the
 ```agda
   φ-inj : (m n : OT.Dom) → φ m ≡ φ n → m ≡ n
   φ-inj m n e = OT.Dom≡ (φ-eq m ∙ cong code e ∙ sym (φ-eq n))
-
 ```
 
 <!--en-->
@@ -1397,7 +1357,6 @@ The forward transfer reads the internal order outward: if two indices compare in
   ≺-fwd : (m n : OT.Dom) → m OT.≺ n → φ m ≺ₚ φ n
   ≺-fwd m n k = lt→≺ (φ m) (φ n)
     (subst2 Lt (φ-eq m) (φ-eq n) (godel-out P (OT.up m) (OT.up n) (OT.≺-out m n k) .snd .snd))
-
 ```
 
 <!--en-->
@@ -1413,7 +1372,6 @@ The backward transfer reads the host order inward, quoting the inward reading of
   ≺-bwd m n k = OT.≺-in m n
     (godel-in P (OT.up m) (OT.up n) (OT.up-mem m) (OT.up-mem n)
       (subst2 Lt (sym (φ-eq m)) (sym (φ-eq n)) (≺→lt (φ m) (φ n) k)))
-
 ```
 
 <!--en-->
@@ -1441,11 +1399,9 @@ Transitivity transfers the same way: two internal steps are read outward, compos
 <!--/-->
 
 ```agda
-
   ≺-trans : {a b c : OT.Dom} → a OT.≺ b → b OT.≺ c → a OT.≺ c
   ≺-trans {a} {b} {c} k k' =
     ≺-bwd a c (SQ.trans≺ K oκ (φ a) (φ b) (φ c) (≺-fwd a b k) (≺-fwd b c k'))
-
 ```
 
 <!--en-->
@@ -1476,7 +1432,6 @@ The three cases are read back through the backward transfer for the two strict c
     go (lt h) = inl (≺-bwd a b h)
     go (eq e) = inr (inl (φ-inj a b e))
     go (gt h) = inr (inr (≺-bwd b a h))
-
 ```
 
 <!--en-->
@@ -1493,6 +1448,8 @@ Well-foundedness and transitivity construct the collapse and its order type.
   injL-ot : InjL P C.otL
   injL-ot = ∣ C.colTable , I.code ∣₁
 ```
+</div>
+</details>
 
 <!--en-->
 ## Three counting facts
@@ -1555,7 +1512,7 @@ A coded injection in `L` can be read externally: its graph conditions determine 
 <!--/-->
 
 ```agda
-  coded→ambient : (a b : S) → Σ[ F ∈ S ] InjCode F a b → ⟪ fst a ⟫ ↪ ⟪ fst b ⟫
+  coded→ambient : (a b : S) → Σ[ F ∶ S ] InjCode F a b → ⟪ fst a ⟫ ↪ ⟪ fst b ⟫
   coded→ambient a b (F , sv , dm , ij , ran) = Sm.small , Sm.small-inj
     where module Sm = Small F a b sv dm ij ran
 ω⊆ : (a : V ℓ) → IsOrd a → (⟨ a ∈ˢ ω ⟩ → ⊥₀)
@@ -1619,7 +1576,7 @@ The map `h` evaluates the coded injection after the inclusion `ω ↪ a`.
 <!--/-->
 
 ```agda
-  h : Σ[ F ∈ S ] InjCode F a b → ⟪ ω ⟫ → ⟪ fst b ⟫
+  h : Σ[ F ∶ S ] InjCode F a b → ⟪ ω ⟫ → ⟪ fst b ⟫
   h c x = coded→ambient a b c .fst (ι .fst x)
 ```
 
@@ -1639,11 +1596,18 @@ For the product construction, fix a graph `F` that is single-valued on `a`, has 
 積上の写像を構成するため、`a` 上で単値であり、定義域が `a`、単射的で、値が `b` に入るグラフ `F` を固定する。これらが符号化された単射 `a ↪ b` の四条件である。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module ProdMap (a b F : S)
                (sv : ⟨ (F ∷ a ∷ []) ⊨ svAt zero ⟩)
                (dm : ⟨ (F ∷ a ∷ []) ⊨ domAt zero (suc zero) ⟩)
+               (ij : ⟨ (F ∷ a ∷ []) ⊨ injAt zero ⟩)
+               (ran : (x y : S) → ⟨ pr (fst x) (fst y) ∈ fst F ⟩
+                    → ⟨ fst y ∈ fst b ⟩) where
 ```
+</summary>
+<div class="submodule-fold-content">
 
 <!--en-->
 The map `h` evaluates the coded injection after the inclusion `ω ↪ a`. For the product construction, fix a graph `F` that is single-valued on `a`, has domain `a`, is injective, and takes its values in `b`; these are the four conditions of a coded injection `a ↪ b`.
@@ -1652,13 +1616,6 @@ The map `h` evaluates the coded injection after the inclusion `ω ↪ a`. For th
 <!--ja-->
 写像 `h` は包含 `ω ↪ a` の後で符号化された単射を評価する。積上の写像を構成するため、`a` 上で単値であり、定義域が `a`、単射的で、値が `b` に入るグラフ `F` を固定する。これらが符号化された単射 `a ↪ b` の四条件である。
 <!--/-->
-
-```agda
-               (ij : ⟨ (F ∷ a ∷ []) ⊨ injAt zero ⟩)
-               (ran : (x y : S) → ⟨ pr (fst x) (fst y) ∈ fst F ⟩
-                    → ⟨ fst y ∈ fst b ⟩) where
-
-```
 
 <!--en-->
 The extraction module reads the actual function out of the graph: `toFun` computes the value at each domain element, `toFun-graph` certifies that the pair belongs to the graph, and `toFun-inj` transfers the graph's injectivity to the function.
@@ -1670,7 +1627,6 @@ The extraction module reads the actual function out of the graph: `toFun` comput
 
 ```agda
   module E = Extract F a sv dm using (toFun; toFun-graph; toFun-inj)
-
 ```
 
 <!--en-->
@@ -1685,7 +1641,7 @@ Two predicates describe the objects in play. `Mem p` says that `p` is a member o
   Mem : S → Type (ℓ-suc ℓ)
   Mem p = ⟨ fst p ∈ˢ fst (prodL a) ⟩
   Comp : S → Type (ℓ-suc ℓ)
-  Comp p = Σ[ x ∈ S ] Σ[ y ∈ S ]
+  Comp p = Σ[ x ∶ S ] Σ[ y ∶ S ]
              (⟨ fst x ∈ˢ fst a ⟩ × ⟨ fst y ∈ˢ fst a ⟩ × (fst p ≡ pr (fst x) (fst y)))
 ```
 
@@ -1698,7 +1654,6 @@ The components of a product member are unique, and `isPropComp` proves it. The f
 <!--/-->
 
 ```agda
-
   isPropComp : (p : S) → isProp (Comp p)
   isPropComp p (x , y , _ , _ , e) (x' , y' , _ , _ , e') =
     Σ≡Prop inner (Σ≡Prop (λ v → snd (isL v)) (pr-inj (sym e ∙ e') .fst))
@@ -1715,7 +1670,7 @@ The inner lemma compares the second components: two candidates `y` and `y'` pair
 <!--/-->
 
 ```agda
-          → isProp (Σ[ y ∈ S ] (⟨ fst x ∈ˢ fst a ⟩ × ⟨ fst y ∈ˢ fst a ⟩
+          → isProp (Σ[ y ∶ S ] (⟨ fst x ∈ˢ fst a ⟩ × ⟨ fst y ∈ˢ fst a ⟩
                                 × (fst p ≡ pr (fst x) (fst y))))
     inner x (y , _ , _ , e) (y' , _ , _ , e') =
       Σ≡Prop (λ w → isProp× (snd (fst x ∈ˢ fst a))
@@ -1732,7 +1687,6 @@ The last component is discharged by the equality of underlying sets, and the uni
 
 ```agda
         (Σ≡Prop (λ v → snd (isL v)) (pr-inj (sym e ∙ e') .snd))
-
 ```
 
 <!--en-->
@@ -1760,11 +1714,9 @@ The graph lemma certifies that the computed value is paired with its input insid
 <!--/-->
 
 ```agda
-
     val-graph : (x : S) (mx : ⟨ fst x ∈ˢ fst a ⟩)
               → ⟨ pr (fst x) (fst (val x mx)) ∈ fst F ⟩
     val-graph x mx = E.toFun-graph (x , mx)
-
 ```
 
 <!--en-->
@@ -1779,7 +1731,6 @@ The injectivity lemma transfers the graph's injectivity to the computed values: 
     val-inj : (x : S) (mx : ⟨ fst x ∈ˢ fst a ⟩) (x' : S) (mx' : ⟨ fst x' ∈ˢ fst a ⟩)
             → fst (val x mx) ≡ fst (val x' mx') → fst x ≡ fst x'
     val-inj x mx x' mx' = E.toFun-inj ij (x , mx) (x' , mx')
-
 ```
 
 <!--en-->
@@ -1794,7 +1745,6 @@ The lifted map `fn` acts on a member of the product by applying `F` coordinatewi
   fn : (p : S) → Mem p → S
   fn p mp = prʟ (val (comp p mp .fst) (comp p mp .snd .snd .fst))
                 (val (comp p mp .snd .fst) (comp p mp .snd .snd .snd .fst))
-
 ```
 
 <!--en-->
@@ -1838,12 +1788,10 @@ The chain type assembles what the graph formula must witness: `p` is the pair of
 <!--/-->
 
 ```agda
-
   Chain : S → S → S → S → S → S → Type (ℓ-suc ℓ)
   Chain q p x y x' y' =
       (fst p ≡ pr (fst x) (fst y)) × (fst q ≡ pr (fst x') (fst y'))
     × ⟨ pr (fst x) (fst x') ∈ fst F ⟩ × ⟨ pr (fst y) (fst y') ∈ fst F ⟩
-
 ```
 
 <!--en-->
@@ -1873,7 +1821,6 @@ The last two atoms are the application clauses: the graph of `F` contains the pa
 ```agda
        ∧̇ (appC F i3 i1
        ∧̇ appC F i2 i0))))))
-
 ```
 
 <!--en-->
@@ -1888,7 +1835,6 @@ Adequacy is checked against the six-entry context that adds the four witnesses, 
     private
       env₄ : S → S → S → S → S → S → S ^ 6
       env₄ q p x y x' y' = y' ∷ x' ∷ y ∷ x ∷ q ∷ p ∷ []
-
 ```
 
 <!--en-->
@@ -1903,7 +1849,6 @@ The first adequacy lemma reads the pair atom for `p`: satisfaction of the pairin
       at1 : (q p x y x' y' : S)
           → ⟨ env₄ q p x y x' y' ⊨ prAtL i5 i3 i2 ⟩ ≡ (fst p ≡ pr (fst x) (fst y))
       at1 q p x y x' y' = cong ⟨_⟩ (prAtL-adequate i5 i3 i2 (env₄ q p x y x' y'))
-
 ```
 
 <!--en-->
@@ -1918,7 +1863,6 @@ The second adequacy lemma does the same for `q`, against the witnesses `x'` and 
       at2 : (q p x y x' y' : S)
           → ⟨ env₄ q p x y x' y' ⊨ prAtL i4 i1 i0 ⟩ ≡ (fst q ≡ pr (fst x') (fst y'))
       at2 q p x y x' y' = cong ⟨_⟩ (prAtL-adequate i4 i1 i0 (env₄ q p x y x' y'))
-
 ```
 
 <!--en-->
@@ -1933,7 +1877,6 @@ The third adequacy lemma reads the first application atom: satisfaction in `L` i
       at3 : (q p x y x' y' : S)
           → ⟨ env₄ q p x y x' y' ⊨ appC F i3 i1 ⟩ ≡ ⟨ pr (fst x) (fst x') ∈ fst F ⟩
       at3 q p x y x' y' = cong ⟨_⟩ (appC-adequate F i3 i1 (env₄ q p x y x' y'))
-
 ```
 
 <!--en-->
@@ -1948,7 +1891,6 @@ The fourth does the same for the second coordinates, completing the translation 
       at4 : (q p x y x' y' : S)
           → ⟨ env₄ q p x y x' y' ⊨ appC F i2 i0 ⟩ ≡ ⟨ pr (fst y) (fst y') ∈ fst F ⟩
       at4 q p x y x' y' = cong ⟨_⟩ (appC-adequate F i2 i0 (env₄ q p x y x' y'))
-
 ```
 
 <!--en-->
@@ -1961,7 +1903,7 @@ The outward direction consumes the four nested existentials in turn and assemble
 
 ```agda
     mapFo-out : (q p : S) → ⟨ (q ∷ p ∷ []) ⊨ mapFo ⟩
-              → ∥ Σ[ x ∈ S ] Σ[ y ∈ S ] Σ[ x' ∈ S ] Σ[ y' ∈ S ] Chain q p x y x' y' ∥₁
+              → ∥ Σ[ x ∶ S ] Σ[ y ∶ S ] Σ[ x' ∶ S ] Σ[ y' ∶ S ] Chain q p x y x' y' ∥₁
     mapFo-out q p = rec₁ squash₁ (λ { (x , hx) → rec₁ squash₁ (λ { (y , hy) →
       rec₁ squash₁ (λ { (x' , hx') → map₁ (λ { (y' , (h1 , (h2 , (h3 , h4)))) →
         x , y , x' , y'
@@ -1979,7 +1921,6 @@ Each atom is transported along its own adequacy path, so the chain records ordin
         , ( transport (at1 q p x y x' y') h1 , transport (at2 q p x y x' y') h2
           , transport (at3 q p x y x' y') h3 , transport (at4 q p x y x' y') h4 ) })
         hx' }) hy }) hx })
-
 ```
 
 <!--en-->
@@ -2009,7 +1950,6 @@ The last two application atoms complete the nested conjunction of the four asser
 ```agda
         , ( transport (sym (at3 q p x y x' y')) h3
           , transport (sym (at4 q p x y x' y')) h4 ))) ∣₁ ∣₁ ∣₁ ∣₁
-
 ```
 
 <!--en-->
@@ -2040,7 +1980,6 @@ The four components of the member `p` are named once, as in the image lemma, so 
     mx = comp p mp .snd .snd .fst
     my = comp p mp .snd .snd .snd .fst
     e = comp p mp .snd .snd .snd .snd
-
 ```
 
 <!--en-->
@@ -2052,7 +1991,7 @@ The chain equation writes `q` as `(x₁',y₁')`, while the fixed decomposition 
 <!--/-->
 
 ```agda
-    step : Σ[ x₁ ∈ S ] Σ[ y₁ ∈ S ] Σ[ x₁' ∈ S ] Σ[ y₁' ∈ S ] Chain q p x₁ y₁ x₁' y₁'
+    step : Σ[ x₁ ∶ S ] Σ[ y₁ ∶ S ] Σ[ x₁' ∶ S ] Σ[ y₁' ∶ S ] Chain q p x₁ y₁ x₁' y₁'
          → q ≡ fn p mp
     step (x₁ , y₁ , x₁' , y₁' , (e₁ , e₂ , h3 , h4)) =
       Σ≡Prop (λ v → snd (isL v))
@@ -2101,7 +2040,6 @@ The second coordinate is treated identically, with its own membership and its ow
 
 ```agda
              (subst (λ w → ⟨ pr w (fst y₁') ∈ fst F ⟩) y₁≡y h4) (val-graph y my)
-
 ```
 
 <!--en-->
@@ -2147,7 +2085,6 @@ The uniqueness theorem shows that no second graph value is possible, so the form
 ```agda
           , val-graph (comp p mp .snd .fst) (comp p mp .snd .snd .snd .fst) )
     ; only = only }
-
 ```
 
 <!--en-->
@@ -2223,11 +2160,11 @@ The definable map and its injectivity assemble into the internal injection: `pro
 <!--/-->
 
 ```agda
-
   injL : InjL (prodL a) (prodL b)
   injL = Inj.injL M inj
-
 ```
+</div>
+</details>
 
 <!--en-->
 Because `InjL` is propositionally truncated, a coded injection `a ↪ b` may be lifted without choosing its graph globally.
@@ -2259,10 +2196,13 @@ To absorb the extra top element of an infinite ordinal, it remains to inject its
 無限順序数に加わる頂点を吸収するには、その後続をもとの順序数へ単射すれば十分である。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Shift (mL : S) (om : IsOrd (fst mL)) (m∉ω : ⟨ fst mL ∈ˢ ω ⟩ → ⊥₀) where
-
 ```
+</summary>
+<div class="submodule-fold-content">
 
 <!--en-->
 Write `m` for the underlying ordinal of `mL`. Membership and finiteness decisions concern this set, while `mL` retains the evidence that it is an element of `L`.
@@ -2276,7 +2216,6 @@ Write `m` for the underlying ordinal of `mL`. Membership and finiteness decision
   private
     m : V ℓ
     m = fst mL
-
 ```
 
 <!--en-->
@@ -2290,7 +2229,6 @@ The domain of the shift is the internal successor `D = sucʟ mL`: the successor 
 ```agda
     D : S
     D = sucʟ mL
-
 ```
 
 <!--en-->
@@ -2304,7 +2242,6 @@ Equality of two elements of `L` is equality of their underlying sets, since the 
 ```agda
     S≡ : {x y : S} → fst x ≡ fst y → x ≡ y
     S≡ = Σ≡Prop (λ v → snd (isL v))
-
 ```
 
 <!--en-->
@@ -2318,7 +2255,6 @@ Since `m` is infinite, every member of `ω` belongs to `m`; the containment is q
 ```agda
     ω⊆m : (z : V ℓ) → ⟨ z ∈ˢ ω ⟩ → ⟨ z ∈ˢ m ⟩
     ω⊆m = ω⊆ m om m∉ω
-
 ```
 
 <!--en-->
@@ -2334,7 +2270,6 @@ Membership in the shift's domain is stated, and the first decision is defined: a
     Mem x = ⟨ fst x ∈ˢ fst D ⟩
     Fin? : S → Type (ℓ-suc ℓ)
     Fin? x = Dec ⟨ fst x ∈ˢ ω ⟩
-
 ```
 
 <!--en-->
@@ -2348,7 +2283,6 @@ The second decision separates the members of the successor: an element of `sucʟ
 ```agda
     Top? : S → Type (ℓ-suc ℓ)
     Top? x = ⟨ fst x ∈ˢ m ⟩ ⊎ (fst x ≡ m)
-
 ```
 
 <!--en-->
@@ -2361,8 +2295,7 @@ The first decision is an instance of excluded middle, applied to the membership 
 
 ```agda
     fin? : (x : S) → Fin? x
-    fin? x = lem (fst x ∈ˢ ω)
-
+    fin? x = FOL.Semantics.decideMembership 𝒮ᵥ lem (fst x) ω
 ```
 
 <!--en-->
@@ -2375,7 +2308,7 @@ The second decision is also an instance of excluded middle, refined by the succe
 
 ```agda
     top? : (x : S) → Mem x → Top? x
-    top? x h = go (lem (fst x ∈ˢ m))
+    top? x h = go (FOL.Semantics.decideMembership 𝒮ᵥ lem (fst x) m)
       where
       go : Dec ⟨ fst x ∈ˢ m ⟩ → Top? x
       go (yes k) = inl k
@@ -2394,7 +2327,6 @@ In the refuted case the elimination consumes the truncated membership in the suc
         (subst (λ w → ⟨ fst x ∈ˢ w ⟩) (sucʟ-fst mL) h) (λ k → ⊥₀-rec (nk k)) (λ q → q))
     not-both : (x : S) → ⟨ fst x ∈ˢ m ⟩ → fst x ≡ m → ⊥₀
     not-both x k q = ∈-irrefl m (subst (λ w → ⟨ w ∈ˢ m ⟩) q k)
-
 ```
 
 <!--en-->
@@ -2408,7 +2340,6 @@ The finite and top cases cannot overlap. If `x` belongs to `ω` and equals `m`, 
 ```agda
     ω-fin : (x : S) → ⟨ fst x ∈ˢ ω ⟩ → fst x ≡ m → ⊥₀
     ω-fin x k q = m∉ω (subst (λ w → ⟨ w ∈ˢ ω ⟩) q k)
-
 ```
 
 <!--en-->
@@ -2423,7 +2354,6 @@ A successor can never be empty. Indeed, `a` belongs to `sucV a`; if `sucV a = �
     suc≢∅ : (a : V ℓ) → sucV a ≡ ∅ → ⊥₀
     suc≢∅ a e = ∅-empty a
       (∈∈ₛ {a = a} {b = ∅} .fst (subst (λ w → ⟨ a ∈ˢ w ⟩) e (self∈sucV a)))
-
 ```
 
 <!--en-->
@@ -2439,7 +2369,6 @@ The three cases now define the value of the shift. A finite member is sent to it
     value x (yes _) _       = sucʟ x
     value x (no _) (inl _) = x
     value x (no _) (inr _) = ∅ʟ
-
 ```
 
 <!--en-->
@@ -2467,12 +2396,10 @@ The witness type for the graph formula is declared: either `x` is finite and `y`
 <!--/-->
 
 ```agda
-
     Wit : (y x : S) → Type (ℓ-suc ℓ)
     Wit y x = ∥ (⟨ fst x ∈ˢ ω ⟩ × (fst y ≡ sucV (fst x)))
               ⊎ ( ((⟨ fst x ∈ˢ ω ⟩ → ⊥₀) × ⟨ fst x ∈ˢ m ⟩ × (fst y ≡ fst x))
                 ⊎ ((fst x ≡ m) × (fst y ≡ ∅)) ) ∥₁
-
 ```
 
 <!--en-->
@@ -2501,7 +2428,6 @@ The two guarded alternatives inside complete the second and third disjuncts: a n
 
 ```agda
             ∨̇ ((var (suc zero) ≐ con mL) ∧̇ (var zero ≐ con ∅ʟ)) )
-
 ```
 
 <!--en-->
@@ -2516,7 +2442,6 @@ The adequacy of the successor clause is recorded once: satisfaction of the succe
     private
       sa : (y x : S) → ⟨ (y ∷ x ∷ []) ⊨ sucAtL (suc zero) zero ⟩ ≡ (fst y ≡ sucV (fst x))
       sa y x = cong ⟨_⟩ (sucAtL-adequate (suc zero) zero (y ∷ x ∷ []))
-
 ```
 
 <!--en-->
@@ -2545,7 +2470,6 @@ The third disjunct carries only the two equations of the top case, so its transl
 
 ```agda
                               ; (inr (q , e)) → inr (inr (q , e)) }) h })
-
 ```
 
 <!--en-->
@@ -2559,7 +2483,6 @@ The three inward lemmas rebuild the formula from each kind of witness. For a fin
 ```agda
     in-fin : (y x : S) → ⟨ fst x ∈ˢ ω ⟩ → fst y ≡ sucV (fst x) → ⟨ (y ∷ x ∷ []) ⊨ graph ⟩
     in-fin y x k e = ∣ inl (k , transport (sym (sa y x)) e) ∣₁
-
 ```
 
 <!--en-->
@@ -2574,7 +2497,6 @@ For a non-finite member of `m`, the refutation of `x ∈ ω` is lifted into the 
     in-mid : (y x : S) → (⟨ fst x ∈ˢ ω ⟩ → ⊥₀) → ⟨ fst x ∈ˢ m ⟩ → fst y ≡ fst x
            → ⟨ (y ∷ x ∷ []) ⊨ graph ⟩
     in-mid y x n k e = ∣ inr ∣ inl ((λ hx → lift (n hx)) , (k , e)) ∣₁ ∣₁
-
 ```
 
 <!--en-->
@@ -2588,7 +2510,6 @@ For the top element, the two equations of the top case are assembled directly in
 ```agda
     in-top : (y x : S) → fst x ≡ m → fst y ≡ ∅ → ⟨ (y ∷ x ∷ []) ⊨ graph ⟩
     in-top y x q e = ∣ inr ∣ inr (q , e) ∣₁ ∣₁
-
 ```
 
 <!--en-->
@@ -2603,7 +2524,6 @@ The shift function is now defined through the two decisions: the value is the su
   private
     fn : (x : S) → Mem x → S
     fn x h = value x (fin? x) (top? x h)
-
 ```
 
 <!--en-->
@@ -2619,7 +2539,6 @@ The defining clause is verified in all three cases: the finite case quotes the s
     defines' x (yes k) _       = in-fin (sucʟ x) x k (sucʟ-fst x)
     defines' x (no n) (inl k) = in-mid x x n k refl
     defines' x (no n) (inr q) = in-top ∅ʟ x q refl
-
 ```
 
 <!--en-->
@@ -2682,7 +2601,6 @@ If the chosen input is the top element, a finite witness contradicts its non-fin
       go (no n) (inr q) (inl (k' , _))            = ⊥₀-rec (n k')
       go (no n) (inr q) (inr (inl (_ , k , _)))   = ⊥₀-rec (not-both x k q)
       go (no n) (inr q) (inr (inr (_ , e)))       = S≡ e
-
 ```
 
 <!--en-->
@@ -2712,7 +2630,6 @@ Excluded middle supplies the two decisions for each input. The preceding existen
 ```agda
       ; defines = λ x h → defines' x (fin? x) (top? x h)
       ; only = λ x h → only' x (fin? x) (top? x h) }
-
 ```
 
 <!--en-->
@@ -2789,6 +2706,10 @@ The definable shift and the preceding case analysis give the coded injection `su
 
 ```agda
   injL = Inj.injL M (λ x h x' h' → inj' x (fin? x) (top? x h) x' (fin? x') (top? x' h'))
+```
+</div>
+</details>
+```agda
 opaque
   fiber-inj : (g : V ℓ) {x y : V ℓ} (mx : ⟨ x ∈ˢ g ⟩) (my : ⟨ y ∈ˢ g ⟩)
             → fiber g mx .fst ≡ fiber g my .fst → x ≡ y
@@ -2804,11 +2725,9 @@ For each constructible infinite ordinal `a` that is an internal cardinal, the in
 <!--/-->
 
 ```agda
-
 Goal : V ℓ → Type (ℓ-suc ℓ)
 Goal a = (la : ⟨ isL a ⟩) → IsOrd a → IsCardinalL (a , la)
        → (⟨ a ∈ˢ ω ⟩ → ⊥₀) → InjL (prodL (a , la)) (a , la)
-
 ```
 
 <!--en-->
@@ -2819,12 +2738,15 @@ The induction step receives the set `a`, the induction hypothesis for every memb
 帰納の段階は、集合 `a`、`a` の各要素に対する帰納仮定、そして四つの仮定を受け取る。構成可能性、順序数性、内部の基数性、無限性である。基数性の仮定は、`κ` がみずからの要素へ内部的に単射することを排除するもので、崩壊の計数が用いる形そのものである。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Step (a : V ℓ) (ih : (a' : V ℓ) → ⟨ a' ∈ˢ a ⟩ → Goal a')
             (la : ⟨ isL a ⟩) (oa : IsOrd a) (carda : IsCardinalL (a , la))
             (a∉ω : ⟨ a ∈ˢ ω ⟩ → ⊥₀) where
-
 ```
+</summary>
+<div class="submodule-fold-content">
 
 <!--en-->
 Write `κ` for the constructible set whose underlying ordinal is `a`. This keeps the ambient ordinal data and the proof that it belongs to `L` together whenever an internal construction is formed.
@@ -2837,7 +2759,6 @@ Write `κ` for the constructible set whose underlying ordinal is `a`. This keeps
 ```agda
   κ : S
   κ = a , la
-
 ```
 
 <!--en-->
@@ -2851,7 +2772,6 @@ We now consider `κ × κ` with its Gödel order and the ordinal obtained by col
 ```agda
   open Order κ oa
   open Coll κ oa
-
 ```
 
 <!--en-->
@@ -2883,7 +2803,6 @@ Because `m` is a member of the ordinal `a`, it is itself an ordinal. Its constru
     om = mem-ord {A = a} oa m m∈a
     mL : S
     mL = ordL m om
-
 ```
 
 <!--en-->
@@ -2975,7 +2894,7 @@ The cardinal representative delivers its data in truncated form: an ordinal `μ`
 <!--/-->
 
 ```agda
-    build : Σ[ μ ∈ S ]
+    build : Σ[ μ ∶ S ]
               ( IsOrd (fst μ) × IsCardinalL μ
               × ((z : V ℓ) → ⟨ z ∈ˢ fst μ ⟩ → ⟨ z ∈ˢ fst γ ⟩)
               × InjL γ μ × InjL μ γ )
@@ -3027,7 +2946,7 @@ The representative `μ` must also be infinite. If `μ ∈ ω`, the inclusion `ω
       μ∉ω : ⟨ fst μ ∈ˢ ω ⟩ → ⊥₀
       μ∉ω h = no-fin γ μ oγ γ∉ω oμ h γ↪μ
   Seg : OT.Dom → V ℓ → Type (ℓ-suc ℓ)
-  Seg p b = Σ[ r ∈ OT.Dom ] ((r OT.≺ p) × (C.col r ≡ b))
+  Seg p b = Σ[ r ∶ OT.Dom ] ((r OT.≺ p) × (C.col r ≡ b))
 ```
 
 <!--en-->
@@ -3039,11 +2958,9 @@ Segments are unique: two predecessors of `p` with equal collapse values are equa
 <!--/-->
 
 ```agda
-
   isPropSeg : (p : OT.Dom) (b : V ℓ) → isProp (Seg p b)
   isPropSeg p b (r , _ , e) (r' , _ , e') =
     Σ≡Prop (λ r → isProp× (OT.isProp≺ r p) (setIsSet _ _)) (I.col-inj r r' (e ∙ sym e'))
-
 ```
 
 <!--en-->
@@ -3059,7 +2976,6 @@ Every member of a collapse value determines its segment, by the outward reading 
   seg p b h = rec₁ (isPropSeg p b) (λ z → z) (C.col-out p b h)
   mx : OT.Dom → ⟪ K ⟫
   mx p = maxOrd (φ p .fst) (φ p .snd)
-
 ```
 
 <!--en-->
@@ -3087,7 +3003,6 @@ The second coordinate of every `r ≺ p` obeys the same bound. We therefore use 
 <!--/-->
 
 ```agda
-
     seg-snd : (p r : OT.Dom) → r OT.≺ p → ⟨ ↑ (φ r .snd) ∈ˢ sucV (mV p) ⟩
     seg-snd p r k = snd∈suc (φ r) (φ p) (≺-fwd r p k)
   gfin : OT.Dom → V ℓ
@@ -3106,7 +3021,6 @@ For each predecessor `r ≺ p`, the two coordinate bounds select two indices in 
 ```agda
     h : (p r : OT.Dom) (k : r OT.≺ p) → ⟪ gfin p ⟫ × ⟪ gfin p ⟫
     h p r k = fiber (gfin p) (seg-fst p r k) .fst , fiber (gfin p) (seg-snd p r k) .fst
-
 ```
 
 <!--en-->
@@ -3134,7 +3048,6 @@ Applying the second projection to the same code equality likewise identifies the
 <!--/-->
 
 ```agda
-
     h-snd : (p r r' : OT.Dom) (k : r OT.≺ p) (k' : r' OT.≺ p)
           → h p r k ≡ h p r' k'
           → fiber (gfin p) (seg-snd p r k) .fst
@@ -3155,7 +3068,6 @@ Equality of the first fiber indices implies equality of the ambient ordinals nam
           → h p r k ≡ h p r' k' → φ r .fst ≡ φ r' .fst
   step-e1 p r r' k k' e =
     ↪-inj {a = K} (fiber-inj (gfin p) (seg-fst p r k) (seg-fst p r' k') (h-fst p r r' k k' e))
-
 ```
 
 <!--en-->
@@ -3171,7 +3083,6 @@ The second transfer lemma does the same for the second coordinates, so an equali
           → h p r k ≡ h p r' k' → φ r .snd ≡ φ r' .snd
   step-e2 p r r' k k' e =
     ↪-inj {a = K} (fiber-inj (gfin p) (seg-snd p r k) (seg-snd p r' k') (h-snd p r r' k k' e))
-
 ```
 
 <!--en-->
@@ -3218,7 +3129,6 @@ Because `mV p ∈ ω`, the maximum is an ordinal, and its successor `g` is an or
     og = suc-ord (ω-mem-ord (mV p) m∈ω)
     g∈ω : ⟨ g ∈ˢ ω ⟩
     g∈ω = ω-limit (mV p) m∈ω
-
 ```
 
 <!--en-->
@@ -3264,7 +3174,6 @@ Injectivity is proved by composing three equations: the collapse value of the se
 ```agda
          ∙ cong C.col (step-inj p (s x .fst) (s y .fst) (s x .snd .fst) (s y .snd .fst) e)
          ∙ s y .snd .snd)
-
 ```
 
 <!--en-->
@@ -3280,8 +3189,17 @@ Trichotomy now proves `C.col p ∈ ω`. Equality `C.col p = ω` would give the f
     go (inl k)         = k
     go (inr (inl e))   = ⊥₀-rec (refute (λ z z∈ω → subst (λ w → ⟨ z ∈ˢ w ⟩) (sym e) z∈ω))
     go (inr (inr ω∈c)) = ⊥₀-rec (refute (λ z z∈ω → C.col-ord p .fst z∈ω ω∈c))
-  module Inv (p : OT.Dom) (g : S)
 ```
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
+```agda
+  module Inv (p : OT.Dom) (g : S)
+             (bfst : (r : OT.Dom) → r OT.≺ p → ⟨ ↑ (φ r .fst) ∈ˢ fst g ⟩)
+             (bsnd : (r : OT.Dom) → r OT.≺ p → ⟨ ↑ (φ r .snd) ∈ˢ fst g ⟩) where
+```
+</summary>
+<div class="submodule-fold-content">
 
 <!--en-->
 Assume that, for every `r ≺ p`, both coordinates represented by `φ r` belong to the carrier of `g`. These two bounds ensure that the pair represented by `r` belongs to the internal product `prodL g`, the codomain of the inverse collapse.
@@ -3290,12 +3208,6 @@ Assume that, for every `r ≺ p`, both coordinates represented by `φ r` belong 
 <!--ja-->
 各 `r ≺ p` について、`φ r` が表す二つの座標がとも `g` の台に属すると仮定する。この二つの上界により、`r` が表す対は内部の積 `prodL g` に属する。この積が逆崩壊の終域になる。
 <!--/-->
-
-```agda
-             (bfst : (r : OT.Dom) → r OT.≺ p → ⟨ ↑ (φ r .fst) ∈ˢ fst g ⟩)
-             (bsnd : (r : OT.Dom) → r OT.≺ p → ⟨ ↑ (φ r .snd) ∈ˢ fst g ⟩) where
-
-```
 
 <!--en-->
 Every member `x` of the collapse value determines its segment: the truncated membership is eliminated, since segments are unique, and yields a predecessor `r` whose collapse value is the underlying set of `x`.
@@ -3307,9 +3219,8 @@ Every member `x` of the collapse value determines its segment: the truncated mem
 
 ```agda
     private
-      pre : (x : S) → ⟨ fst x ∈ˢ C.col p ⟩ → Σ[ r ∈ OT.Dom ] (C.col r ≡ fst x)
+      pre : (x : S) → ⟨ fst x ∈ˢ C.col p ⟩ → Σ[ r ∶ OT.Dom ] (C.col r ≡ fst x)
       pre x mx = seg p (fst x) mx .fst , seg p (fst x) mx .snd .snd
-
 ```
 
 <!--en-->
@@ -3338,7 +3249,6 @@ The bound `bsnd` supplies the second coordinate membership. Together the two bou
 
 ```agda
                     (bsnd _ (seg p (fst x) mx .snd .fst)))
-
 ```
 
 <!--en-->
@@ -3352,6 +3262,10 @@ Consequently, collapse on the initial segment below `p` has a definable inverse 
 ```agda
     open I.Inverse (C.colʟ p) (prodL g) pre bound public
       using ( fn; graph; at; only; M; inj; injL ) renaming ( SourceMem to Mem )
+```
+</div>
+</details>
+```agda
   colIn : (p : OT.Dom) → ⟨ C.col p ∈ˢ a ⟩
   colIn p = go (ord-tri (mV p) (ord↑ (mx p)) ω ω-ord)
     where
@@ -3398,7 +3312,6 @@ The carrier `g` is the successor of the maximum, and is an ordinal because the m
 <!--/-->
 
 ```agda
-
       g : V ℓ
       g = sucV (mV p)
       og : IsOrd g
@@ -3431,9 +3344,7 @@ For every `r ≺ p`, the bounds `seg-fst` and `seg-snd` place both coordinates o
 <!--/-->
 
 ```agda
-
       module IV = Inv p gL (seg-fst p) (seg-snd p) using (injL)
-
 ```
 
 <!--en-->
@@ -3461,7 +3372,6 @@ If the cardinal were contained in the collapse value, composing that inclusion w
 <!--/-->
 
 ```agda
-
       go' : ⟨ C.col p ∈ˢ a ⟩ ⊎ ((C.col p ≡ a) ⊎ ⟨ a ∈ˢ C.col p ⟩) → ⟨ C.col p ∈ˢ a ⟩
       go' (inl h)       = h
       go' (inr (inl e)) = ⊥₀-rec (absurd (λ z z∈a → subst (λ w → ⟨ z ∈ˢ w ⟩) (sym e) z∈a))
@@ -3484,6 +3394,8 @@ The product first injects into the collapse order type `C.otL`. Every member `z`
     ot⊆a z hz = rec₁ (snd (z ∈ˢ a))
       (λ { (b , e) → subst (λ w → ⟨ w ∈ˢ a ⟩) e (colIn b) }) (C.otL-out z hz)
 ```
+</div>
+</details>
 
 <!--en-->
 Membership well-founded induction now proves the square law. Given an ordinal `κ` that is an internal cardinal and satisfies `ω ∈ κ`, the induction step constructed above yields an internal injection `prodL κ ↪ κ` once the required proof that `κ` is not finite is supplied.

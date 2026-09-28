@@ -1,27 +1,51 @@
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+```
+
 <!--en-->
 # The constructible universe satisfies GCH
-
-The preceding chapters established the three estimates needed to compare an infinite internal cardinal's power set with its successor. Together with the ZF model structure on `L`, they prove that the constructible universe satisfies the generalized continuum hypothesis. The only classical assumption is the same instance of excluded middle used throughout the construction of the model and its internal cardinal theory.
 <!--zh-->
 # 可构造宇宙满足 GCH
-
-前几章已经建立了比较无穷内部基数的幂集与其后继基数所需的三项估计。它们与 `L` 上的 ZF 模型结构合在一起，证明可构造宇宙满足广义连续统假设。唯一的经典假设，仍是构造该模型及其内部基数理论时始终采用的同一个排中律实例。
 <!--ja-->
 # 構成可能宇宙は GCH を満たす
-
-前章までに、無限な内部基数の冪集合をその後続基数と比較するための三つの評価を確立した。それらを `L` 上の ZF モデル構造と合わせると、構成可能宇宙が一般連続体仮説を満たすことが従う。古典的仮定は、モデルとその内部基数論の構成を通して用いてきた同じ排中律の実例だけである。
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-
 open import Base.Prelude
 open import Base.Classical using ( LEM )
-
-module L.GCH.Theorem {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-
-open import L.Model {ℓ} lem using ( L⊨ZF )
 ```
+
+<!--en-->
+Fix a universe level `ℓ`{.Agda} and assume `lem : LEM (ℓ-suc ℓ)`{.Agda}. This hypothesis supplies a decision for each proposition at that level; it remains an explicit parameter of the constructions below.
+<!--zh-->
+固定宇宙层级 `ℓ`{.Agda}，并假设 `lem : LEM (ℓ-suc ℓ)`{.Agda}。这个假设为相应层级的每个命题提供判定，并始终作为下文构造的显式参数。
+<!--ja-->
+宇宙レベル `ℓ`{.Agda} を固定し、`lem : LEM (ℓ-suc ℓ)`{.Agda} を仮定する。この仮定は該当するレベルの各命題に判定を与え、以下の構成の明示的なパラメータとして保たれる。
+<!--/-->
+
+```agda
+module L.GCH.Theorem {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+```
+
+```agda
+open import L.Model {ℓ} lem using ( L⊨ZF )
+open import L.GCH {ℓ} lem using ( GCHStatement )
+open import L.GCH.Assembly {ℓ} lem using ( gch-from-internal-bill )
+open import L.GCH.StageInjection {ℓ} lem using ( stage-counted )
+open import L.GCH.SuccessorIntoPowerSet {ℓ} lem using ( succ-into-power )
+open import L.GCH.BoundedSubset {ℓ} lem using ( internal-bounded-subset )
+```
+
+<!--en-->
+
+The preceding chapters established the three estimates needed to compare an infinite internal cardinal's power set with its successor. Together with the ZF model structure on `L`, they prove that the constructible universe satisfies the generalized continuum hypothesis. The only classical assumption is the same instance of excluded middle used throughout the construction of the model and its internal cardinal theory.
+<!--zh-->
+
+前几章已经建立了比较无穷内部基数的幂集与其后继基数所需的三项估计。它们与 `L` 上的 ZF 模型结构合在一起，证明可构造宇宙满足广义连续统假设。唯一的经典假设，仍是构造该模型及其内部基数理论时始终采用的同一个排中律实例。
+<!--ja-->
+
+前章までに、無限な内部基数の冪集合をその後続基数と比較するための三つの評価を確立した。それらを `L` 上の ZF モデル構造と合わせると、構成可能宇宙が一般連続体仮説を満たすことが従う。古典的仮定は、モデルとその内部基数論の構成を通して用いてきた同じ排中律の実例だけである。
+<!--/-->
 
 <!--en-->
 The target is `GCHStatement L⊨ZF`. It quantifies over `κ` in `L` whose underlying set is an ordinal, which is an internal cardinal, and which does not belong to `ω`. It asks merely for a successor cardinal `δ` and for internal coded injections in both directions between `𝒫 κ` and `δ`; the power set here is the one determined by `L⊨ZF`.
@@ -30,14 +54,6 @@ The target is `GCHStatement L⊨ZF`. It quantifies over `κ` in `L` whose underl
 <!--ja-->
 目標は `GCHStatement L⊨ZF` である。これは、基礎となる集合が順序数であり、内部基数であり、かつ `ω` に属さない `L` の要素 `κ` にわたって量化する。結論は、後続基数 `δ` と、`𝒫 κ` と `δ` の間の両方向の内部的に符号化された単射が単に存在することを求める。ここで冪集合を定めるのは `L⊨ZF` である。
 <!--/-->
-
-```agda
-open import L.GCH {ℓ} lem using ( GCHStatement )
-open import L.GCH.Assembly {ℓ} lem using ( gch-from-internal-bill )
-open import L.GCH.StageInjection {ℓ} lem using ( stage-counted )
-open import L.GCH.SuccessorIntoPowerSet {ℓ} lem using ( succ-into-power )
-open import L.GCH.BoundedSubset {ℓ} lem using ( internal-bounded-subset )
-```
 
 <!--en-->
 Fix such a `κ`. The general implication first obtains its internal successor cardinal `δ`. For every `y ∈ 𝒫 κ`, the bounded-subset theorem supplies an ordinal `β` such that `y ∈ Lset β` and `β` injects into `κ`. The fact that `δ` is an internal cardinal and that `κ ∈ δ`, together with ordinal trichotomy, forces `β ∈ δ`; hence `y ∈ Lset δ`. Thus the whole power set injects into `Lset δ`, and the stage-counting theorem injects that stage into `δ`, yielding `InjL (𝒫 κ) δ`. Finally, `succ-into-power`, using the infinitude of `κ` and the successor-cardinal facts for `δ`, turns this comparison into `InjL δ (𝒫 κ)`. These two injections establish the required instance of GCH, recorded as `L⊨GCH`.

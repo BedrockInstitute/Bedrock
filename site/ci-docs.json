@@ -1,0 +1,10 @@
+{
+  "files": [
+    "README.md", "AGENTS.md", "CONTRIBUTING.md", "src/README.md",
+    "scripts/README.md", ".github/workflows/README.md",
+    "site/README.md", "site/ARCHITECTURE.md", "site/AGDA-ENVIRONMENT.md",
+    "site/STYLE-agda.md", "site/STYLE-i18n.md", "site/GLOSSARY.md", "site/TEACHING.md"
+  ],
+  "markdown_trees": ["docs", "dev"],
+  "submodules": {"outcrop": ".github/docs-only.json"}
+}
