@@ -15,7 +15,8 @@ document.addEventListener('DOMContentLoaded',async()=>{
  try {
   const fixture=document.querySelector('#fixture');
   const preview=fixture.querySelector('.agda-code-preview');
-  const previewToggle=preview.querySelector('button');
+  const previewToggle=preview.querySelector('.agda-code-preview-toggle');
+  await until(()=>preview.classList.contains('is-collapsed')&&!previewToggle.hidden&&previewToggle.getAttribute('aria-expanded')==='false');
   check('Agda source preview initially exposes one line',preview.classList.contains('is-collapsed')&&!previewToggle.hidden&&previewToggle.getAttribute('aria-expanded')==='false');
   previewToggle.click();
   check('Agda source preview can expand',!preview.classList.contains('is-collapsed')&&previewToggle.getAttribute('aria-expanded')==='true');
@@ -63,6 +64,18 @@ document.addEventListener('DOMContentLoaded',async()=>{
   blockParens.innerHTML='<a class="Symbol">(</a><span class="expr-node" data-source-notation="nat-suc" data-notation-value="n" data-notation-count="1" data-notation-type="ℕ">suc n</span><a class="Symbol">)</a>';
   fixture.appendChild(blockParens);outcropMathematicalNotation.scan(blockParens);
   check('compact successor elides compiler-highlighted parentheses',blockParens.querySelectorAll('.notation-elided-parenthesis').length===2&&blockParens.textContent==='(suc n)');
+  const syntaxHtml=await (await fetch('/zh/FOL.Syntax.html')).text();
+  const syntaxDoc=new DOMParser().parseFromString(syntaxHtml,'text/html');
+  const syntaxInline=[...syntaxDoc.querySelectorAll('p code.Agda.inline-ref')]
+    .find(code=>code.textContent==='Formula K (suc n)');
+  check('chapter inline formula carries certified nested successor',!!syntaxInline&&
+    syntaxInline.querySelector('.expr-node[data-source-notation="nat-suc"][data-notation-type="ℕ"]')?.textContent==='suc n');
+  const syntaxClone=syntaxInline.cloneNode(true);fixture.appendChild(syntaxClone);
+  outcropMathematicalNotation.scan(syntaxClone);
+  check('chapter inline formula displays n superscript plus without losing source',
+    syntaxClone.querySelector('.nat-suc-notation')?.dataset.mathLabel==='n⁺'&&
+    syntaxClone.querySelectorAll('.notation-elided-parenthesis').length===2&&
+    syntaxClone.textContent==='Formula K (suc n)');
   const fin=document.createElement('pre');fin.className='Agda';fin.innerHTML='<span class="expr-node" data-source-notation="fin" data-notation-value="2" data-notation-type="Fin 3">suc (suc zero)</span>';
   fixture.appendChild(fin);outcropMathematicalNotation.scan(fin);check('Fin value is notation, source intact',fin.querySelector('.fin-notation')?.textContent==='suc (suc zero)');
   const literal=document.createElement('pre');literal.className='Agda';literal.innerHTML='<a class="Number" id="40">12</a>';fixture.appendChild(literal);outcropMathematicalNotation.scan(literal);

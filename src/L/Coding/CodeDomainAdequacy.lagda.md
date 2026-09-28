@@ -3168,7 +3168,7 @@ Falsity has no subformula: its payload is simply the numeral zero. Once the reco
 <!--en-->
 Binding one variable changes the arity of the body from `n` to `suc n`. The quantifier closure hypothesis therefore presents its immediate subkey at the successor arity, and `decodeAt` recovers a formula body of precisely that arity.
 <!--zh-->
-约束一个变量会使主体的元数由 `n` 变为 `suc n`。因此，量词闭包的假设把直接子键置于后继元数处，而 `decodeAt` 恰好恢复出具有这一元数的公式主体。
+约束一个变元会使主体的元数由 `n` 变为 `suc n`。因此，量词闭包的假设把直接子键置于后继元数处，而 `decodeAt` 恰好恢复出具有这一元数的公式主体。
 <!--ja-->
 変数を一つ束縛すると、本体のアリティは `n` から `suc n` に変わる。したがって量化子の閉包に関する仮定は、直接の下位キーを後続アリティに置き、`decodeAt` はちょうどそのアリティをもつ論理式の本体を復元する。
 <!--/-->

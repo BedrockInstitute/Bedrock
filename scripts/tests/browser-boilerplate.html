@@ -305,7 +305,7 @@ try {
   const bounds=narrowPopup.getBoundingClientRect();
   check(bounds.left>=0 && bounds.right<=narrow.contentWindow.innerWidth+1,'390px boilerplate popup stays within viewport',bounds.width);
   check(narrowPopup.textContent.includes('OPTIONS') && !narrowPopup.textContent.includes('module'),'390px parameterized title still shows only OPTIONS');
-  check(narrowDoc.querySelector('.chapter-review.is-unreviewed')?.getAttribute('aria-label')==='未人工校阅','later chapter displays the unreviewed warning');
+  check(narrowDoc.querySelector('.chapter-review.is-unreviewed')?.getAttribute('aria-label')==='正在人工审阅','later chapter displays the in-review warning');
   narrow.src='/zh/Base.Choice.html';
   await until(()=>narrow.contentDocument?.querySelector('article > pre.Agda:has(> .agda-definition-end)'));
   await narrow.contentDocument.fonts.ready;

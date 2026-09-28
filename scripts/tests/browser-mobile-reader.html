@@ -99,9 +99,18 @@ document.querySelector('#run').onclick=async()=>{
   touch(w,leaf,'touchstart',rect.x+2,rect.y+2);touch(w,leaf,'touchend',rect.x+2,rect.y+2);leaf.click();
   await until(()=>!d.querySelector('.type-inspector').hidden);
   check(!d.querySelector('.ast-swipe-hint').hidden&&!d.querySelector('.code-fullscreen-toggle').hidden,'AST hint and portrait fullscreen control activate together');
+  await until(()=>!d.querySelector('.code-copy-mobile').hidden);
+  const copyControl=d.querySelector('.code-copy-mobile'),fullControl=d.querySelector('.code-fullscreen-toggle');
+  const copyRect=copyControl.getBoundingClientRect(),fullRect=fullControl.getBoundingClientRect();
+  check(Math.abs(fullRect.left-copyRect.right-8)<2&&Math.abs(fullRect.top-copyRect.top)<2,
+    'mobile code copy sits beside fullscreen with an eight-pixel gap');
+  check(!d.querySelector('.single-line-code .code-copy-button, code.Agda .code-copy-button'),
+    'inline and centered single-line code have no copy action');
   d.querySelector('.code-fullscreen-toggle').click();
   const plane=d.querySelector('.code-fullscreen-plane');
   check(plane.contains(block)&&block===leaf.closest('pre'),'fullscreen moves the original code nodes');
+  check(!!d.querySelector('.code-fullscreen-controls .code-copy-fullscreen')&&copyControl.hidden,
+    'landscape reader keeps a copy action and hides the portrait control');
   check(plane.clientWidth>plane.clientHeight&&w.getComputedStyle(plane).transform!=='none','portrait viewport becomes an independent landscape plane');
   const closeControl=d.querySelector('.code-fullscreen-close'),controls=closeControl.parentElement;
   controls.style.setProperty('--code-safe-right','36px');controls.style.setProperty('--code-safe-top','20px');

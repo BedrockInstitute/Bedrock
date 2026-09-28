@@ -1001,45 +1001,248 @@ notes = "the metaphor; the project name Bedrock stays untranslated"
 
 [[term]]
 category = "Logic and philosophy"
+id = "object-language"
+audience = "reader"
+en = "object language"
+zh = "对象语言"
+ja = "対象言語"
+introduced_in = "FOL.Syntax"
+matching = "auto"
+recap_en = "The formal language whose terms and formulas describe set-theoretic claims; their meaning is supplied separately."
+recap_zh = "用词项和公式写出集合论陈述的形式语言；这些写法的含义另行给出。"
+recap_ja = "項と論理式で集合論の主張を書く形式言語。その意味は別に与える。"
+notes = "The syntactic language of FOL.Syntax, distinct from the set theory called the object theory in Base.Prelude."
+
+[[term]]
+category = "Logic and philosophy"
+id = "object-term"
+audience = "reader"
 en = "term"
 zh = "词项"
 ja = "項"
-notes = "of the object language"
+introduced_in = "FOL.Syntax"
+matching = "auto"
+forms_en = ["terms"]
+auto_exclude_en = ["terms lead back", "which terms may be its elements", "the term `isOfHLevelLift", "proof term", "proof terms", "in terms of"]
+auto_exclude_ja = ["一項", "二項", "三項", "単項", "零項", "0 項", "1 項", "2 項", "3 項", "数項", "連言項", "項目", "事項", "条項", "どの項がその要素", "証明項", "第零項", "第一項", "第二項", "第三項"]
+recap_en = "A written expression referring to one object, built here from a constant name or a variable position."
+recap_zh = "指代单个对象的写法；在这里由常元名或变元位置构成。"
+recap_ja = "一つの対象を指す書き方。ここでは定数名か変数位置から作る。"
+notes = "Of the object language. Japanese 項 is excluded inside unrelated compounds such as 項目 and 二項. English glossary terms and host type-theoretic terms in Base.Prelude are excluded. Japanese 項 is attested in Kyoto University first-order logic notes, https://www.kurims.kyoto-u.ac.jp/~terui/cs2012ch1.pdf ."
 
 [[term]]
 category = "Logic and philosophy"
+id = "object-formula"
+audience = "reader"
 en = "formula"
 zh = "公式"
 ja = "論理式"
-notes = "zh 公式 vs ja 論理式 (deliberate)"
+introduced_in = "FOL.Syntax"
+matching = "auto"
+forms_en = ["formulas"]
+recap_en = "A written claim built from atomic comparisons, connectives and quantifiers; syntax alone does not say whether it holds."
+recap_zh = "由原子比较、联结词和量词组成的书面陈述；语法本身不判断它是否成立。"
+recap_ja = "原子的な比較、結合子、量化子から作る主張の書き方。構文だけでは成否は決まらない。"
+notes = "zh 公式 vs ja 論理式 (deliberate); the first-order formation rules are attested in https://logic.fudan.edu.cn/doc/Course/2020/mathlogic/Lecture10h.pdf ."
 
 [[term]]
 category = "Logic and philosophy"
+id = "atomic-formula"
+audience = "reader"
+en = "atomic formula"
+zh = "原子公式"
+ja = "原子論理式"
+introduced_in = "FOL.Syntax"
+matching = "auto"
+forms_en = ["atomic formulas"]
+recap_en = "A formula formed directly by comparing two terms with membership or equality, before connectives or quantifiers are added."
+recap_zh = "直接用隶属或相等比较两个词项而形成的公式，尚未加入联结词或量词。"
+recap_ja = "二つの項を所属または等号で直接比較した論理式。結合子や量化子はまだ加えていない。"
+notes = "The membership and equality constructors of Formula; Chinese 原子公式 is used in Fudan first-order logic notes, https://logic.fudan.edu.cn/doc/Course/2020/mathlogic/Lecture10h.pdf ."
+
+[[term]]
+category = "Logic and philosophy"
+id = "object-sentence"
+audience = "reader"
 en = "sentence"
 zh = "句子"
 ja = "文"
-notes = "a formula with no free variables; zh 句子 per the owner's math-logic convention"
+introduced_in = "FOL.Syntax"
+matching = "auto"
+auto_languages = ["en", "zh"]
+forms_en = ["sentences"]
+recap_en = "A formula with no free variables; it may still contain constant names."
+recap_zh = "没有自由变元的公式；它仍可以含有常元名。"
+recap_ja = "自由変数をもたない論理式。定数名は含んでよい。"
+notes = "A formula with no free variables; zh 句子 per the owner's math-logic convention. The one-character Japanese 文 is too ambiguous for corpus-wide automatic matching: it also occurs in 文章, 本文, 文脈 and 文書. Kyoto University first-order logic notes use 文 in this sense: https://www.kurims.kyoto-u.ac.jp/~terui/cs2012ch1.pdf ."
 
 [[term]]
 category = "Logic and philosophy"
+id = "parameter-free-formula"
+audience = "reader"
 en = "parameter-free"
 zh = "无参"
 ja = "無パラメータ"
-notes = "无参公式, formulas with constant domain ⊥*; like sentences, no named definition (owner ruling 2026-07-19), spelt Formula ⊥* n; ja tentative"
+introduced_in = "FOL.Syntax"
+matching = "auto"
+forms_en = ["parameter-free formula", "parameter-free formulas"]
+forms_zh = ["无参公式"]
+forms_ja = ["パラメータを持たない論理式"]
+recap_en = "A formula without constant names, written here with the empty constant domain; it may still have free variables."
+recap_zh = "不含常元名的公式，在这里把常元域取为空类型；它仍可以有自由变元。"
+recap_ja = "定数名を含まない論理式。ここでは定数域を空型とし、自由変数は残ってよい。"
+notes = "Formulas with constant domain ⊥*; unlike sentences, they may have free variables. No named definition (owner ruling 2026-07-19), spelt Formula ⊥* n; ja tentative."
 
 [[term]]
 category = "Logic and philosophy"
+id = "constant-domain"
+audience = "reader"
 en = "constant domain"
 zh = "常元域"
 ja = "定数域"
 avoid = ["zh:常量域"]
+introduced_in = "FOL.Syntax"
+matching = "auto"
+recap_en = "The type K of constant names available when building a term or formula; it need not be a model's carrier."
+recap_zh = "构造词项或公式时可用的常元名所组成的类型 K；它不必是模型的载体。"
+recap_ja = "項や論理式を作るときに使える定数名の型 K。モデルの台である必要はない。"
 notes = "The K parameter indexing constant symbols in syntax. Chinese 常元 follows Wang Wei, first-order languages and expansion by parameters: https://logic.fudan.edu.cn/doc/Event/2024/summer/FMOA0727.pdf . Japanese 定数 is attested in https://www.jaist.ac.jp/~y-keita/I211-2020/I211-lecnote.pdf ; the domain compounds are descriptive, not claimed as fixed literature headwords."
 
 [[term]]
 category = "Logic and philosophy"
+id = "bounded-quantifier"
+audience = "reader"
 en = "bounded quantifier"
 zh = "有界量词"
 ja = "有界量化子"
+introduced_in = "FOL.Syntax"
+matching = "auto"
+forms_en = ["bounded quantifiers"]
+recap_en = "A quantifier ranging over members of a set named by a term, rather than over every object."
+recap_zh = "只在某个词项所描述的集合的成员中量化，而非遍及所有对象的量词。"
+recap_ja = "すべての対象ではなく、項が表す集合の要素に範囲を限る量化子。"
+
+[[term]]
+category = "Logic and philosophy"
+id = "constant-name"
+audience = "reader"
+en = "constant name"
+zh = "常元名"
+ja = "定数名"
+introduced_in = "FOL.Syntax"
+matching = "auto"
+forms_en = ["constant names"]
+recap_en = "A symbol selected from K for a term; its denoted object is not fixed by the syntax alone."
+recap_zh = "从 K 中选取、用来构造词项的符号；语法本身并未指定它所指的对象。"
+recap_ja = "K から選んで項を作る記号。構文だけでは、それが指す対象は決まらない。"
+notes = "The name, not its eventual denotation. Chinese 常元 follows Wang Wei's first-order language notes and Japanese 定数名 follows standard 定数記号 usage; see constant-domain entry."
+
+[[term]]
+category = "Logic and philosophy"
+id = "variable-context"
+audience = "reader"
+en = "context"
+zh = "语境"
+ja = "文脈"
+introduced_in = "FOL.Syntax"
+matching = "auto"
+forms_en = ["contexts"]
+recap_en = "The finite list of variable positions currently available to an expression; n is its length."
+recap_zh = "表达式当前可用的变元位置的有限序列，其长度为 n。"
+recap_ja = "式で現在使える変数位置の有限列。その長さが n である。"
+avoid = ["zh:变量语境"]
+notes = "In this syntax chapter, context is a de Bruijn variable context, not a general rhetorical context."
+
+[[term]]
+category = "Logic and philosophy"
+id = "variable-position"
+audience = "reader"
+en = "variable position"
+zh = "变元位置"
+ja = "変数位置"
+avoid = ["zh:变量位置"]
+introduced_in = "FOL.Syntax"
+matching = "auto"
+forms_en = ["variable positions"]
+recap_en = "A numbered slot available in the current context, represented by an element of Fin n."
+recap_zh = "当前语境中一个可用的编号槽位，由 Fin n 的元素表示。"
+recap_ja = "現在の文脈で使える番号付きの場所。Fin n の元で表す。"
+notes = "Chinese 变元 pairs with 常元 for first-order syntactic symbols; Peking University's discrete mathematics syllabus explicitly uses 个体变元 and 个体常元 together: https://courseweb.pku.edu.cn/course/CourseAction.do?course_id=47&dispatch=toIndex&longa=1&view=%2Fopencourse2%2Fcourse.jsp . Generic mathematical 变量 is a separate sense."
+
+[[term]]
+category = "Logic and philosophy"
+id = "syntax-precedence"
+audience = "reader"
+en = "precedence"
+zh = "优先级"
+ja = "優先順位"
+introduced_in = "Base.Prelude"
+matching = "auto"
+recap_en = "The rule for grouping operators when parentheses are omitted; it does not change which expressions are legal."
+recap_zh = "省去括号时决定运算符如何分组的规则；它不改变哪些表达式可以构成。"
+recap_ja = "括弧を省いたときの演算子のまとまり方を決める規則。作れる式の種類は変わらない。"
+notes = "Agda's mixfix operator fixity: https://agda.readthedocs.io/en/v2.8.0/language/mixfix-operators.html ."
+
+[[term]]
+category = "Logic and philosophy"
+id = "object-quantifier"
+audience = "reader"
+en = "quantifier"
+zh = "量词"
+ja = "量化子"
+introduced_in = "FOL.Syntax"
+matching = "auto"
+forms_en = ["quantifiers"]
+auto_exclude_en = ["quantifier over every"]
+recap_en = "A syntax form for every or some object; its body receives one new variable position."
+recap_zh = "表达「对每一个」或「存在某个」的语法形式，其公式体新增一个变元位置。"
+recap_ja = "「すべて」や「ある」を表す構文。本体には変数位置が一つ増える。"
+
+[[term]]
+category = "Logic and philosophy"
+id = "bound-variable"
+audience = "reader"
+en = "bound variable"
+zh = "约束变元"
+ja = "束縛変数"
+avoid = ["zh:约束变量"]
+introduced_in = "FOL.Syntax"
+matching = "auto"
+forms_en = ["bound variables"]
+recap_en = "A variable occurrence whose object is supplied by an enclosing quantifier."
+recap_zh = "由外层量词提供所指对象的变元出现。"
+recap_ja = "外側の量化子によって指す対象が与えられる変数の出現。"
+notes = "The distinction between bound and free variable occurrences is standard in first-order logic; see https://plato.stanford.edu/entries/quantification/ and https://www2.yukawa.kyoto-u.ac.jp/~kanehisa.takasaki/edu/logic/logic8.html ."
+
+[[term]]
+category = "Logic and philosophy"
+id = "free-variable"
+audience = "reader"
+en = "free variable"
+zh = "自由变元"
+ja = "自由変数"
+avoid = ["zh:自由变量"]
+introduced_in = "FOL.Syntax"
+matching = "auto"
+forms_en = ["free variables"]
+recap_en = "A variable occurrence not supplied by the quantifier under discussion; its value comes from the outer context."
+recap_zh = "不由当前讨论的量词提供所指对象的变元出现；其值来自外层语境。"
+recap_ja = "いま扱う量化子に束縛されず、外側の文脈から値を受け取る変数の出現。"
+notes = "Free is relative to the quantifier/scope under discussion, not a claim that the variable is unbound everywhere."
+
+[[term]]
+category = "Logic and philosophy"
+id = "de-bruijn-indexing"
+audience = "reader"
+en = "de Bruijn indexing"
+zh = "de Bruijn 索引"
+ja = "de Bruijn 添字"
+introduced_in = "FOL.Syntax"
+matching = "auto"
+recap_en = "Representing variables by the number of binders between their occurrence and the binder they refer to, instead of storing names."
+recap_zh = "用变元出现处到其约束者之间的层数来表示变元，而不保存变元名。"
+recap_ja = "変数名を保存せず、出現位置から対応する束縛子までの距離を番号で表す方法。"
+notes = "Agda 2.8.0 documentation uses de Bruijn indices in a typed syntax example: https://agda.readthedocs.io/en/v2.8.0/language/syntactic-sugar.html ."
 
 [[term]]
 category = "Logic and philosophy"

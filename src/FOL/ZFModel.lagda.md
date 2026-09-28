@@ -306,7 +306,7 @@ Every other axiom speaks either the object language or plain membership; regular
 
 Now `℩` turns each unique existence into an operation, and `℩-spec`{.Agda} turns it into its specification; every specification below is literally one projection. The union of a pair gives binary union, and binary union gives the **successor** `a ⁺ = a ∪ {a}` (the pair of `a` with itself is the singleton): this is von Neumann's step from one set to the next, the step the axiom of infinity will later use.
 <!--zh-->
-把每个 `λ` 读回自然语言，熟悉的陈述一一归位。没有谁实现 `⊥`，所以 `hasEmpty`{.Agda} 就是空集。配对的成员是与 `a` 或 `b` 相等者；并的成员是成员的成员。分离留下 `a` 中满足 `φ` 的成员 (环境 `x ∷ []` 把唯一的自由变量填上)。替换先要求 `φ` 在 `a` 上是函数性的，即在 `isContr`{.Agda} 意义下一进一出，再收集输出。幂集的成员就是子集。
+把每个 `λ` 读回自然语言，熟悉的陈述一一归位。没有谁实现 `⊥`，所以 `hasEmpty`{.Agda} 就是空集。配对的成员是与 `a` 或 `b` 相等者；并的成员是成员的成员。分离留下 `a` 中满足 `φ` 的成员 (环境 `x ∷ []` 把唯一的自由变元填上)。替换先要求 `φ` 在 `a` 上是函数性的，即在 `isContr`{.Agda} 意义下一进一出，再收集输出。幂集的成员就是子集。
 
 ## 正则公理为何置于元层面
 
@@ -400,7 +400,7 @@ Binary intersection is deliberately **not** a field. The two-symbol formula `var
 <!--zh-->
 ## 由分离导出的交
 
-二元交刻意**不设**为字段。两个符号的公式 `var zero ∈̇ con b`{.Agda} 表示「该变量是 `b` 的成员」；把它传给 `separate`{.Agda} 并作用于 `a`，分离公理就给出 `a ∩ b`。它的规格与分离的规格完全相同，因为按 `⊨` 的定义子句，该公式的满足直接计算为 `x ∈ˢ b`。这是一般模式的一次具体运用：凡能被公式指名的宿主谓词，分离都能把它变成集合。
+二元交刻意**不设**为字段。两个符号的公式 `var zero ∈̇ con b`{.Agda} 表示「该变元是 `b` 的成员」；把它传给 `separate`{.Agda} 并作用于 `a`，分离公理就给出 `a ∩ b`。它的规格与分离的规格完全相同，因为按 `⊨` 的定义子句，该公式的满足直接计算为 `x ∈ˢ b`。这是一般模式的一次具体运用：凡能被公式指名的宿主谓词，分离都能把它变成集合。
 <!--ja-->
 ## 分出から導かれる共通部分
 

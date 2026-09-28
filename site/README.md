@@ -32,7 +32,7 @@ Framework references:
 
 | Files | Purpose |
 | --- | --- |
-| `project.json`, `static/assets/`, `static/bedrock-diagrams.css` | Website identity, framework inputs, branding and the Base.Choice-specific figure layout |
+| `project.json`, `static/assets/`, `static/bedrock-diagrams.css` | Website identity, framework inputs, branding and Bedrock-specific figure layouts |
 | `reading-catalog.json`, `TEACHING.md` | Chapters, routes, review status and teaching architecture |
 | `glossary.toml`, `GLOSSARY.md` | Canonical terminology and its maintenance contract |
 | `STYLE-agda.md`, `STYLE-i18n.md` | Formal-code and trilingual authoring rules |
@@ -74,10 +74,11 @@ do not silently track an unpinned framework branch.
 
 `make site` builds highlighted Agda and semantic data, then renders all editions
 into `_build/site`. Local runs keep content-aware state under `_build/cache`:
-an unchanged build returns immediately, and a prose-only chapter edit reuses its
-unchanged highlighted code and types, refreshes that chapter and the guide, and
-rebuilds the global search index. Changed Agda code, code-fence partitioning,
-compiler inputs, or missing cache artifacts trigger the complete backend path.
+an unchanged build returns immediately. Prose-only edits and code-fence
+repartitioning retain unchanged compiler evidence: the cache relocates certified
+anchors and source ranges, then refreshes the expression normalizer and pages.
+Changed Agda code, compiler inputs, unsafe fence splits, or missing cache
+artifacts trigger the complete backend path.
 GitHub Actions uses the same content checks in its backend job and separately
 caches the Pages and Cloudflare renders. `make clean` removes the local cache.
 `make site-render SITE_OUT=...` deliberately rerenders
@@ -156,9 +157,11 @@ this policy to false. Primitive shortening still needs semantic evidence; the
 convention does not authorize guessed AST nodes or change the original code.
 
 Statements and proofs retain their labels and code requirements, but Markdown
-contains no standalone QED marks. Compiler-certified signature/equation
-definitions receive the exact `∎` at their final code line, including definitions
-in submodules but excluding where-local helpers. The semi-transparent overlay
+contains no standalone QED marks. Compiler-certified functions with signatures
+and equations and all completed `data` declarations receive the exact `∎` at
+their final code line. A data-containing mutual or inductive-recursive group
+receives one mark after its final member, not member-wise marks. Submodule
+definitions are included; where-local functions remain excluded. The semi-transparent overlay
 reserves no line or padding and has fixed opacity 0.25, even over code. Proof
 prose stays close to its associated code through ordinary structural CSS; code occupies the full width
 of its containing column without an external QED gutter or left outdent.

@@ -115,8 +115,8 @@ jobs:
           echo "digest=$(python3 -m outcrop agda-stage --source src --fingerprint)" >> "$GITHUB_OUTPUT"
 
       # Agda hashes complete source files, so restore the canonical code-only
-      # mirror alongside pure interfaces. Prose edits leave both bytes and
-      # timestamps unchanged; the traced website cache stays separate.
+      # mirror alongside pure interfaces. Prose and fence repartition leave
+      # both bytes and timestamps unchanged; the traced site cache is separate.
       - name: Cache tree interfaces
         if: steps.scope.outputs.full == 'true'
         uses: actions/cache@v6
@@ -124,9 +124,9 @@ jobs:
           path: |
             _build/typecheck/src
             _build/typecheck/_build/2.8.0/agda/src
-          key: bedrock-ifaces-v3-${{ runner.os }}-${{ hashFiles('outcrop/src/outcrop/adapters/agda/**', 'outcrop/src/outcrop/adapters/source_stage.py', 'outcrop/src/outcrop/core/source_syntax.py', 'site/agda-libraries.json', 'bedrock.agda-lib') }}-${{ steps.agda_source.outputs.digest }}
+          key: bedrock-ifaces-v4-${{ runner.os }}-${{ hashFiles('outcrop/src/outcrop/adapters/agda/build.py', 'outcrop/src/outcrop/adapters/agda/parallel.py', 'outcrop/src/outcrop/adapters/agda/archive.py', 'outcrop/src/outcrop/adapters/agda/libraries.py', 'outcrop/src/outcrop/adapters/agda/resources/**', 'outcrop/src/outcrop/adapters/source_stage.py', 'outcrop/src/outcrop/core/source_syntax.py', 'site/agda-libraries.json', 'bedrock.agda-lib') }}-${{ steps.agda_source.outputs.digest }}
           restore-keys: |
-            bedrock-ifaces-v3-${{ runner.os }}-${{ hashFiles('outcrop/src/outcrop/adapters/agda/**', 'outcrop/src/outcrop/adapters/source_stage.py', 'outcrop/src/outcrop/core/source_syntax.py', 'site/agda-libraries.json', 'bedrock.agda-lib') }}-
+            bedrock-ifaces-v4-${{ runner.os }}-${{ hashFiles('outcrop/src/outcrop/adapters/agda/build.py', 'outcrop/src/outcrop/adapters/agda/parallel.py', 'outcrop/src/outcrop/adapters/agda/archive.py', 'outcrop/src/outcrop/adapters/agda/libraries.py', 'outcrop/src/outcrop/adapters/agda/resources/**', 'outcrop/src/outcrop/adapters/source_stage.py', 'outcrop/src/outcrop/core/source_syntax.py', 'site/agda-libraries.json', 'bedrock.agda-lib') }}-
 
       - name: Typecheck
         if: steps.scope.outputs.full == 'true'
@@ -214,8 +214,12 @@ jobs:
             _build/types.json
             _build/expression-types.json
             _build/cache/site-backend.json
-          key: bedrock-site-v5-${{ runner.os }}-${{ steps.cache_keys.outputs.backend }}-${{ steps.cache_keys.outputs.extractor }}-${{ steps.cache_keys.outputs.source }}
+          key: bedrock-site-v6-${{ runner.os }}-${{ steps.cache_keys.outputs.backend }}-${{ steps.cache_keys.outputs.extractor }}-${{ steps.cache_keys.outputs.code }}-${{ steps.cache_keys.outputs.source }}
           restore-keys: |
+            bedrock-site-v6-${{ runner.os }}-${{ steps.cache_keys.outputs.backend }}-${{ steps.cache_keys.outputs.extractor }}-${{ steps.cache_keys.outputs.code }}-
+            bedrock-site-v6-${{ runner.os }}-${{ steps.cache_keys.outputs.backend }}-${{ steps.cache_keys.outputs.extractor }}-
+            bedrock-site-v6-${{ runner.os }}-${{ steps.cache_keys.outputs.backend }}-
+            bedrock-site-v6-${{ runner.os }}-
             bedrock-site-v5-${{ runner.os }}-${{ steps.cache_keys.outputs.backend }}-${{ steps.cache_keys.outputs.extractor }}-
             bedrock-site-v5-${{ runner.os }}-${{ steps.cache_keys.outputs.backend }}-
             bedrock-site-v5-${{ runner.os }}-

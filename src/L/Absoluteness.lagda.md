@@ -206,7 +206,7 @@ transferFo : ∀ {n} (φ : Formula (V ℓ) n) (h : BoundedFo InL φ) → Δ₀ �
 <!--en-->
 The first step changes the interpretation structure and leaves the syntax alone. Absoluteness is applied with the inner Δ₀ witness `Δ₀-liftFo h dφ`, and it rewrites satisfaction of the lifted formula in `L` into satisfaction of the same formula in the hierarchy, at the projected environment. The second step is the relabelling theorem `⊨-map` at `f = fst`, which handles the interpretation of the constants of the lifted formula and of the environment variables under the projection: the formula says the same thing when its constants and its environment entries are both read through `fst`. The two steps agree with how the inner world was built, and `sym` presents the second in the direction the chain needs.
 <!--zh-->
-第一步更换解释结构而语法不动。绝对性以内层 Δ₀ 见证 `Δ₀-liftFo h dφ` 施用，把抬升后公式在 `L` 中的满足，改写为同一公式在层级中、于投影后环境下的满足。第二步是取 `f = fst` 的改名定理 `⊨-map`，它处理抬升后公式的常元与环境变量在投影之下的解释：当常元与环境分量都经 `fst` 读取时，这条公式所说的东西不变。两步都与内层世界的构造方式一致，`sym` 再把第二步摆成链条所需的方向。
+第一步更换解释结构而语法不动。绝对性以内层 Δ₀ 见证 `Δ₀-liftFo h dφ` 施用，把抬升后公式在 `L` 中的满足，改写为同一公式在层级中、于投影后环境下的满足。第二步是取 `f = fst` 的改名定理 `⊨-map`，它处理抬升后公式的常元与环境变元在投影之下的解释：当常元与环境分量都经 `fst` 读取时，这条公式所说的东西不变。两步都与内层世界的构造方式一致，`sym` 再把第二步摆成链条所需的方向。
 <!--ja-->
 第一段階は解釈する構造を取り替えるだけで、構文はそのままである。絶対性は、内側の Δ₀ の証拠 `Δ₀-liftFo h dφ` とともに適用され、持ち上げられた論理式の `L` における充足を、同じ論理式の、射影後の環境での階層における充足へ書き換える。第二段階は `f = fst` とした改名の定理 `⊨-map` で、持ち上げられた論理式の定数と環境の変数の、射影の下での解釈を処理する。定数と環境の各成分を `fst` を通して読んでも、この論理式の述べることは変わらないのである。二つの段階は内側の世界の作られ方と一致し、`sym` が第二を連鎖に必要な向きで提示する。
 <!--/-->

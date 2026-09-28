@@ -880,7 +880,7 @@ For the converse direction, suppose the constructor relation can be proved from 
 <!--en-->
 The proof rebuilds the universally quantified frame in its logical order. It handles an arbitrary `q` in `E` together with every exposed decomposition `q=(ar,F)`, then an arbitrary `c` in `C` together with every matching decomposition `c=(ar,p)`. It next identifies the tag and payload of `p`, and finally handles an arbitrary `e` in `T` together with every decomposition `e=(c,yc)`. Each bounded introduction places its new value at the head of the environment, while the accompanying `s`-variables retain the pair-decomposition witnesses required by the formulas.
 <!--zh-->
-证明按逻辑次序重建这个全称量化的框架。它先处理 `E` 中任意的 `q` 以及每个被暴露出的分解 `q=(ar,F)`，再处理 `C` 中任意的 `c` 以及每个匹配的分解 `c=(ar,p)`；继而识别 `p` 的标签与载荷，最后处理 `T` 中任意的 `e` 以及每个分解 `e=(c,yc)`。每次有界引入都把新值放在环境头部，而相伴的 `s` 变量保留公式所需的配对分解见证。
+证明按逻辑次序重建这个全称量化的框架。它先处理 `E` 中任意的 `q` 以及每个被暴露出的分解 `q=(ar,F)`，再处理 `C` 中任意的 `c` 以及每个匹配的分解 `c=(ar,p)`；继而识别 `p` 的标签与载荷，最后处理 `T` 中任意的 `e` 以及每个分解 `e=(c,yc)`。每次有界引入都把新值放在环境头部，而相伴的 `s` 变元保留公式所需的配对分解见证。
 <!--ja-->
 証明は全称量化された枠を論理的な順序で組み直す。まず `E` の任意の `q` と、そこから取り出される各分解 `q=(ar,F)` を扱い、次に `C` の任意の `c` と、それに一致する各分解 `c=(ar,p)` を扱う。続いて `p` のタグとペイロードを同定し、最後に `T` の任意の `e` と各分解 `e=(c,yc)` を扱う。有界な導入のたびに新しい値が環境の先頭に置かれ、対応する `s` 変数が論理式に必要な対分解の証人を保持する。
 <!--/-->

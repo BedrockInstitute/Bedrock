@@ -25,7 +25,7 @@ Parameter abstraction needs a finite list of a formula's constants without assum
 A formula's constants form an ordered list of occurrences. This chapter counts and enumerates them, supplies the index arithmetic used by abstraction, and handles the boundary case in which the list is empty.
 <!--zh-->
 
-参数抽象需要公式常元的有限列表，但不能假设常元域上的相等可判定。因此本章逐次出现地计数并枚举常元，保留重复项，再建立把替代变量放在已有自由变量之后所需的指标算术。
+参数抽象需要公式常元的有限列表，但不能假设常元域上的相等可判定。因此本章逐次出现地计数并枚举常元，保留重复项，再建立把替代变元放在已有自由变元之后所需的指标算术。
 
 公式的常元组成一列有序的出现。本章计数并枚举这些出现，给出抽象所需的序号算术，并处理该列为空的边界情形。
 <!--ja-->
@@ -38,7 +38,7 @@ A formula's constants form an ordered list of occurrences. This chapter counts a
 <!--en-->
 Parameter abstraction rewrites a formula that mentions constants as a parameter-free formula of higher arity, together with the list of constants that the new variables will stand for. The construction needs that list to be finite, but it may not assume that equality on the constant domain is decidable, so it cannot merge or deduplicate entries. Two occurrences of the same constant therefore stay two separate positions, each later receiving its own replacement variable. The work divides into three steps: count the occurrences, enumerate them in order, and develop the index arithmetic that places the new variables after the existing free variables.
 <!--zh-->
-参数抽象把一条提及常元的公式改写为一条元数更高的无参公式，同时给出常元的列表，让新的变量逐个对应这些常元。构造需要这个列表是有限的，但不能假设常元域上的相等可判定，因此不能合并或去重条目。同一常元的两次出现因此保持为两个独立的位置，日后各自获得自己的替代变量。工作分三步：计数出现，按序枚举出现，再建立把新变量放在已有自由变量之后的序号算术。
+参数抽象把一条提及常元的公式改写为一条元数更高的无参公式，同时给出常元的列表，让新的变元逐个对应这些常元。构造需要这个列表是有限的，但不能假设常元域上的相等可判定，因此不能合并或去重条目。同一常元的两次出现因此保持为两个独立的位置，日后各自获得自己的替代变元。工作分三步：计数出现，按序枚举出现，再建立把新变元放在已有自由变元之后的序号算术。
 <!--ja-->
 パラメータの抽象化は、定数に言及する論理式を、より高いアリティの無パラメータ論理式へと組み替え、新しい変数が代わりを務める定数のリストを同時に与える。このリストは有限でなければならないが、定数域の等号が判定可能であるとは仮定できないため、項目を統合したり重複を取り除いたりすることはできない。同じ定数の二つの出現は二つの独立した位置のままであり、後でそれぞれが専用の置換変数を受け取る。仕事は三段階に分かれる。出現を数えること、出現を順に列挙すること、そして新しい変数を既存の自由変数の後ろへ置く添字計算を整えることである。
 <!--/-->
@@ -73,9 +73,9 @@ The count is a structural recursion over the ten constructors, with a term's cou
 
 本章的设计要点在此定下，先于任何语法上的挪动。一条公式的常元**按出现计数，而非按取值**：带 `k` 次常元出现的公式给出长度为 `k` 的向量，同一常元的两次出现就是该向量的两个条目，两处写的是同一个集合。
 
-若读者期待的是公式所提及的常元之**集**，他会寻找一个可判定的相等关系，把同一常元的两次出现认作一次，却找不到这样的相等。本来就没有可找的：常元域是任意类型，其相等未必可判定；本书也不对预期使用的集合载体假设可判定相等。逐次出现地计数，正是使整章避开这一要求的关键。代价是抽象所得的元数高于严格必要的元数，多出的部分对应于同一取值被当作两个不同变量重复处理；下游分辨不出其中差别：参数向量仍是参数向量。
+若读者期待的是公式所提及的常元之**集**，他会寻找一个可判定的相等关系，把同一常元的两次出现认作一次，却找不到这样的相等。本来就没有可找的：常元域是任意类型，其相等未必可判定；本书也不对预期使用的集合载体假设可判定相等。逐次出现地计数，正是使整章避开这一要求的关键。代价是抽象所得的元数高于严格必要的元数，多出的部分对应于同一取值被当作两个不同变元重复处理；下游分辨不出其中差别：参数向量仍是参数向量。
 
-计数是对十个构造子的一次结构递归，其输入是词项各部分的计数：常元算作一次出现，变量算作零次。复合构造子的计数取其两部分之和，左部在先。
+计数是对十个构造子的一次结构递归，其输入是词项各部分的计数：常元算作一次出现，变元算作零次。复合构造子的计数取其两部分之和，左部在先。
 <!--ja-->
 ## 出現ごとの数え上げ
 
@@ -285,7 +285,7 @@ lookup-map : ∀ {ℓa ℓb} {A : Type ℓa} {B : Type ℓb} {n}
 <!--en-->
 The third law concerns a relabelled vector: `lookup j (map f v) ≡ f (lookup j v)`. Reading the mapped vector and then applying `f` is the same as applying `f` first. In parameter abstraction this is what lets the interpretation of the constants travel with the occurrences: if `f` assigns to each constant the value its replacement variable should carry, and `v` is the vector of occurrences collected from a formula, then looking up any position of `map f v` computes `f` of the constant at that position. The proof follows the same shape as the two placement laws, descending through the vector and the index together.
 <!--zh-->
-第三条定律关于被改名的向量：`lookup j (map f v) ≡ f (lookup j v)`。读取被映射的向量再施加 `f`，与先施加 `f` 再读取一致。在参数抽象中，正是这条定律让常元的解释随出现一同前进：若 `f` 给每个常元指派其替代变量应取的值，`v` 是从公式收集出的出现向量，则查 `map f v` 的任一位置，都计算出该位置上常元的 `f` 像。证明与两条安置定律同形，沿向量与序号一同下降。
+第三条定律关于被改名的向量：`lookup j (map f v) ≡ f (lookup j v)`。读取被映射的向量再施加 `f`，与先施加 `f` 再读取一致。在参数抽象中，正是这条定律让常元的解释随出现一同前进：若 `f` 给每个常元指派其替代变元应取的值，`v` 是从公式收集出的出现向量，则查 `map f v` 的任一位置，都计算出该位置上常元的 `f` 像。证明与两条安置定律同形，沿向量与序号一同下降。
 <!--ja-->
 第三の法則は、名前の付け替えられたベクトルに関するものである。`lookup j (map f v) ≡ f (lookup j v)`。写像済みのベクトルを読んでから `f` を施すことは、先に `f` を施してから読むことと同じである。パラメータ抽象では、この法則によって定数の解釈が出現と共に進む。`f` が各定数に、その置換変数が取るべき値を割り当て、`v` が論理式から収集した出現のベクトルなら、`map f v` の任意の位置を参照することは、その位置の定数に `f` を施した値を計算する。証明は二つの配置の法則と同じ形で、ベクトルと添字を共に降りていく。
 <!--/-->
@@ -491,7 +491,7 @@ Occurrences give a formula's constants a finite interface that never asks whethe
 <!--zh-->
 ## 小结
 
-出现为公式的常元提供了一个有限接口，它从不追问常元域中两个符号是否相等。计数 `countFo`{.Agda} 既是出现之枚举的指标，也是此后参数抽象的指标：每次出现各得一个替代变量；安置装置及其查值定律为拼接环境补足所需的序号算术。当计数为零时，`ZeroOccurrences`{.Agda} 证明该公式恰是某条无参公式的精确像，于是可以采用空常元域而不损失任何语法。
+出现为公式的常元提供了一个有限接口，它从不追问常元域中两个符号是否相等。计数 `countFo`{.Agda} 既是出现之枚举的指标，也是此后参数抽象的指标：每次出现各得一个替代变元；安置装置及其查值定律为拼接环境补足所需的序号算术。当计数为零时，`ZeroOccurrences`{.Agda} 证明该公式恰是某条无参公式的精确像，于是可以采用空常元域而不损失任何语法。
 <!--ja-->
 ## まとめ
 

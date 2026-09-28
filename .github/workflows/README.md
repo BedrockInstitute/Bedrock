@@ -76,20 +76,21 @@ rebuild. A normal cache hit therefore skips GHC and Cabal setup entirely. When t
 compiler must be rebuilt, a separate Cabal cache reuses the package index and compiled
 dependency store. The
 project-interface key separates the stable toolchain fingerprint from a digest of
-the ordered Agda fences and module paths. Its archive contains both the pure
+the concatenated Agda code and module paths. Its archive contains both the pure
 interfaces and a canonical code-only source mirror. Agda hashes full input
-files, so this mirror is essential: changing prose leaves its bytes and mtime
-unchanged. A code or module-path change gets a new key; `restore-keys` can still
+files, so this mirror is essential: changing prose or repartitioning code fences
+leaves its bytes and mtime unchanged. A code or module-path change gets a new key; `restore-keys` can still
 provide an incremental starting point. This cache never supplies the traced
 HTML/type data. Cache, Python, artifact and deployment actions use their Node 24 releases.
 
 After `typecheck` succeeds, `site-backend` restores the exact patched-Agda and cubical
 caches that job created, including cubical's pinned source archive. It does not install
 GHC or redownload cubical. The combined backend cache stores interfaces, highlighted
-HTML, expression types and a source/code inventory. A partial restore compares the
-Agda fences of each chapter. If only prose changed, it reuses the compiler-produced
-code blocks and updates the surrounding text without running Agda or extracting types.
-Code or backend changes still run the combined Agda traversal. The host-neutral
+HTML, expression types and a source/code inventory. A partial restore compares
+the concatenated Agda code of each chapter. If only prose or fence boundaries change,
+it relocates certified highlights, links and trace offsets, then refreshes only
+the expression normalizer without running Agda. Unsafe splits fall back to the
+compiler. Code or backend changes still run the combined Agda traversal. The host-neutral
 HTML/type-data artifact also carries the inventory for deployment jobs.
 The backend job invokes `make site-backend PY=python3 LOCAL_PARALLEL=1`;
 deployment jobs invoke `make site-render PY=python3 RENDER_INCREMENTAL=1`
@@ -105,8 +106,8 @@ validated backend artifact. The command is read-only and never starts Agda.
 
 | Layer | Identity and invalidation |
 | --- | --- |
-| Compiler and pure-check interfaces | Existing toolchain/library/source keys and isolated paths, unchanged |
-| Site backend (`bedrock-site-v5`) | Producer identity, extractor identity, then source inventory |
+| Compiler and pure-check interfaces | Toolchain/library identity and canonical concatenated code source in isolated paths (`bedrock-ifaces-v4`) |
+| Site backend (`bedrock-site-v6`) | Producer identity, extractor identity, concatenated code inventory, then raw source inventory |
 | Producer compatibility | Installed compiler identity, compiler integration sources/resources, source grammar, library lock and project library descriptor; not the whole Makefile or cache orchestration script |
 | Extractor compatibility | The two extraction implementations and their Bedrock invocation adapters; changes rerun extraction without recompiling compatible evidence |
 | Pages/Cloudflare render (`v2`, separate prefixes) | Render build key plus source inventory; key covers producer/code/type products, actual renderer Python dependencies, packaged resources, configured catalog/glossary/icons, project config, language and base URL |
@@ -119,8 +120,8 @@ renderer dependencies. Figure checks invoked by rendering remain dependencies.
 Changing compiler invocation semantics or the cache protocol requires updating
 its producer inputs/schema; never silently reinterpret an existing receipt.
 
-Restoration tries the closest compatible prefix first, then a same-layer/OS
-fallback, including the prior backend `v4` and host render `v1` archives. This
+Restoration tries the closest compatible code prefix first, then a same-layer/OS
+fallback, including the prior backend `v5`/`v4` and host render `v1` archives. This
 allows existing evidence to survive the key migration. A recovered archive is
 only a candidate: the driver always validates producer, source and extractor
 identities, even on an exact Actions hit. Incompatible producer evidence loses

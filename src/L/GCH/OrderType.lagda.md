@@ -511,7 +511,7 @@ Correct F R = (x v : S) → Holds F x v → Complete F R x × ValueIs F R x v
 <!--en-->
 The formula `completeAt f R x` uses an unbounded universal quantifier for a candidate predecessor `y`. The implication restricts attention to those `y` for which `R` records the pair `(y,x)`, and its conclusion uses an unbounded existential quantifier for a value `u` such that `F` records `(y,u)`. Under the existential binder, `u` occupies the new zeroth slot and the earlier variables are shifted.
 <!--zh-->
-公式 `completeAt f R x` 用无界全称量词引入候选前驱 `y`。蕴含只关注 `R` 记录有序对 `(y,x)` 的那些 `y`，其结论再用无界存在量词引入取值 `u`，要求 `F` 记录 `(y,u)`。进入存在量词后，`u` 占据新的第零槽位，原有变量相应后移。
+公式 `completeAt f R x` 用无界全称量词引入候选前驱 `y`。蕴含只关注 `R` 记录有序对 `(y,x)` 的那些 `y`，其结论再用无界存在量词引入取值 `u`，要求 `F` 记录 `(y,u)`。进入存在量词后，`u` 占据新的第零槽位，原有变元相应后移。
 <!--ja-->
 論理式 `completeAt f R x` は、候補となる先行者 `y` を非有界全称量化子で導入する。含意によって、`R` が対 `(y,x)` を記録する `y` だけに条件を課し、その結論では非有界存在量化子で値 `u` を導入して、`F` が `(y,u)` を記録することを要求する。存在量化子の内側では `u` が新しい第零スロットを占め、それまでの変数は一つずつずれる。
 <!--/-->

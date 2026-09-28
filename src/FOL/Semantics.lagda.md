@@ -39,7 +39,7 @@ open import FOL.Syntax using
 The object language consists of symbols and rules for combining them, and so far none of the symbols denotes anything. What must be supplied before `∈̇` or `_≐_` can be read? A structure decides what the variables range over and what the two atomic predicates mean there; an interpretation gives each constant symbol its carrier element; an environment gives each available variable position its current value. Once these data are fixed, structural recursion assigns to every term a carrier element and to every formula a proposition. The whole chapter turns on one distinction, that between a symbol and its denotation: the sign `∈̇` belongs to the syntax, what it comes to mean is the relation `∈ˢ`{.Agda} of the structure, and the two live on different layers.
 <!--zh-->
 
-对象语言由符号与组合规则构成，而这些符号至今没有任何指称。要让 `∈̇` 或 `_≐_` 成为可读的东西，需要供给什么？结构决定变量在什么范围内取值、两条原子谓词在那里指什么；解释为每个常元符号指定其载体元素；环境为每个可用的变量位置指定当前取值。这些数据一经固定，结构递归便为每个词项指定一个载体元素，为每条公式指定一个命题。全章系于一个区分，即符号与指称之分：记号 `∈̇` 属于语法，它最终意味的是结构的关系 `∈ˢ`{.Agda}，二者居于不同的层。
+对象语言由符号与组合规则构成，而这些符号至今没有任何指称。要让 `∈̇` 或 `_≐_` 成为可读的东西，需要供给什么？结构决定变元在什么范围内取值、两条原子谓词在那里指什么；解释为每个常元符号指定其载体元素；环境为每个可用的变元位置指定当前取值。这些数据一经固定，结构递归便为每个词项指定一个载体元素，为每条公式指定一个命题。全章系于一个区分，即符号与指称之分：记号 `∈̇` 属于语法，它最终意味的是结构的关系 `∈ˢ`{.Agda}，二者居于不同的层。
 <!--ja-->
 
 対象言語は記号とその組み合わせの規則からなり、現時点で記号は何も表示しない。`∈̇` や `_≐_` を読めるようにするには、何を供給しなければならないのであろうか。構造は、変数が何の上を動くかと、二つの原始的な述語がそこで何を意味するかを決める。解釈は各定数記号に台の要素を割り当て、環境は利用できる各変数位置に現在の値を与える。これらのデータが固定されると、構造的再帰によってすべての項に台の要素が、すべての論理式に命題が割り当てられる。本章を貫くのは、記号とその表示という一つの区別である。記号 `∈̇` は構文に属し、それが意味するようになるのは構造の関係 `∈ˢ`{.Agda} であり、両者は異なる層に住んでいる。
@@ -60,7 +60,7 @@ open ZFStructure 𝒮
 <!--en-->
 The fields of the record are now in scope under their own names: `S` for the carrier, `∈ˢ` and `≈ˢ` for the relations, so `x ∈ˢ y` reads as the structure's membership proposition about `x` and `y`. The constructors of the object language are in scope as well, and each kind of symbol has a clear partner on the semantic side. A constant symbol needs a carrier element, fixed once by a function from the constant domain to `S`. A variable position needs a value that may change from use to use; an environment supplies it. An atomic formula needs one of the two relations. A connective or a quantifier needs no set theory at all: the logical operations on propositions from the Prelude, `⊓`, `⊔`, `⇒`, `∀[ x ] P x` and `∃[ x ] P x`, take their places. Interpretation is compositional: the meaning of a term or formula is determined from its constructor and the meanings of its immediate parts.
 <!--zh-->
-record 的字段如今以自己的名字进入作用域：`S` 是载体，`∈ˢ` 与 `≈ˢ` 是两个关系，于是 `x ∈ˢ y` 读作结构关于 `x`、`y` 的隶属命题。对象语言的构造子也在作用域内，每一类符号在语义一侧都有明确的对应物。常元符号需要一个载体元素，由从常元域到 `S` 的函数一次固定。变量位置需要一个可随使用变化的取值，由环境供给。原子公式需要两个关系之一。联结词与量词则完全不需要集合论：《基础词汇》中命题上的逻辑运算 `⊓`、`⊔`、`⇒`、`∀[ x ] P x`、`∃[ x ] P x` 在此就位。解释遵循组合原则：词项或公式的意义由它的构造子及其直接组成部分的意义共同确定。
+record 的字段如今以自己的名字进入作用域：`S` 是载体，`∈ˢ` 与 `≈ˢ` 是两个关系，于是 `x ∈ˢ y` 读作结构关于 `x`、`y` 的隶属命题。对象语言的构造子也在作用域内，每一类符号在语义一侧都有明确的对应物。常元符号需要一个载体元素，由从常元域到 `S` 的函数一次固定。变元位置需要一个可随使用变化的取值，由环境供给。原子公式需要两个关系之一。联结词与量词则完全不需要集合论：《基础词汇》中命题上的逻辑运算 `⊓`、`⊔`、`⇒`、`∀[ x ] P x`、`∃[ x ] P x` 在此就位。解释遵循组合原则：词项或公式的意义由它的构造子及其直接组成部分的意义共同确定。
 <!--ja-->
 レコードのフィールドは今や固有の名前でスコープに入っている。`S` が台を、`∈ˢ` と `≈ˢ` が二つの関係を表し、したがって `x ∈ˢ y` は `x` と `y` についての構造の所属命題と読む。対象言語の構成子もスコープにあり、各種の記号には意味論の側に明確な対応物がある。定数記号には台の要素が一つ必要であり、定数域から `S` への関数によって一度に固定される。変数の位置には、使用のたびに変わりうる値が必要で、それを供給するのが環境である。原子論理式には二つの関係のいずれかが必要である。結合子と量化子には集合論はまったく要らず、「基礎語彙」の命題上の論理演算 `⊓`、`⊔`、`⇒`、`∀[ x ] P x`、`∃[ x ] P x` がそこに収まる。解釈は合成的である。項や論理式の意味は、その構成子と、直接の構成部分の意味から定まる。
 <!--/-->
@@ -72,7 +72,7 @@ A term of arity `n` may refer to the positions `0` through `n - 1`, and an **env
 <!--zh-->
 ## 环境
 
-元数为 `n` 的词项可以引用位置 `0` 到 `n - 1`，**环境** `γ` 为其中每个位置指派一个载体元素。`S ^ 2`{.Agda} 中的环境有两个分量，可供 `var zero` 与 `var (suc zero)` 读取；某个具体的词项或公式可以只用其一、两者都用，或都不用。因此长度 `n` 界定的是可用位置的范围，而不是实际出现的变量的个数。绑定遵循同一原理：量词考虑来自载体的一个候选元素时，环境把该元素加在最前面从而得到扩展，公式体在位置 `zero` 处读取它。
+元数为 `n` 的词项可以引用位置 `0` 到 `n - 1`，**环境** `γ` 为其中每个位置指派一个载体元素。`S ^ 2`{.Agda} 中的环境有两个分量，可供 `var zero` 与 `var (suc zero)` 读取；某个具体的词项或公式可以只用其一、两者都用，或都不用。因此长度 `n` 界定的是可用位置的范围，而不是实际出现的变元的个数。绑定遵循同一原理：量词考虑来自载体的一个候选元素时，环境把该元素加在最前面从而得到扩展，公式体在位置 `zero` 处读取它。
 <!--ja-->
 ## 環境
 
@@ -101,7 +101,7 @@ Two judgments carry the semantics. Write `⟦ t ⟧ γ`{.Agda} for the carrier e
 <!--zh-->
 ## 求值与满足
 
-两个判断承载语义。以 `⟦ t ⟧ γ`{.Agda} 表示词项 `t` 在环境 `γ` 下指称的载体元素，以 `γ ⊨ φ`{.Agda} 表示陈述公式 `φ` 在 `γ` 下成立的那个命题。二者都相对于一个固定的常元解释 `ι : K → S` 而定义：常元从 `ι` 取值，变量则继续随 `γ` 变化。量词一出现，这种分离就显出作用：绑定改变变量的取值，而常元符号的指称不动。
+两个判断承载语义。以 `⟦ t ⟧ γ`{.Agda} 表示词项 `t` 在环境 `γ` 下指称的载体元素，以 `γ ⊨ φ`{.Agda} 表示陈述公式 `φ` 在 `γ` 下成立的那个命题。二者都相对于一个固定的常元解释 `ι : K → S` 而定义：常元从 `ι` 取值，变元则继续随 `γ` 变化。量词一出现，这种分离就显出作用：绑定改变变元的取值，而常元符号的指称不动。
 <!--ja-->
 ## 評価と充足
 
@@ -113,7 +113,7 @@ The interpretation and the environment answer two different questions. The const
 
 Fix a constant domain `K` and an interpretation `ι : K → S`. At this fixed interpretation, term evaluation sends a term and an environment to an element of `S`, while satisfaction sends a formula and an environment to a proposition. Satisfaction is defined by structural recursion: atomic formulas use the two relations of the structure, connectives use the propositional operations of the Prelude, falsity uses the empty proposition, and quantifiers range over the carrier. In a bounded quantifier, the denotation of the bound determines the membership condition on the quantified element.
 <!--zh-->
-解释与环境回答的是两个不同的问题。常元 `con k` 指称 `ι k`，与供给哪个环境无关；变量 `var i` 指称 `lookup i γ`，与固定哪个解释无关。因此，环境只在变量这一情形参与词项求值，常元符号的含义始终由 `ι` 固定。这两个情形穷尽了词项求值。
+解释与环境回答的是两个不同的问题。常元 `con k` 指称 `ι k`，与供给哪个环境无关；变元 `var i` 指称 `lookup i γ`，与固定哪个解释无关。因此，环境只在变元这一情形参与词项求值，常元符号的含义始终由 `ι` 固定。这两个情形穷尽了词项求值。
 
 固定常元域 `K` 与解释 `ι : K → S`。在这个固定解释下，词项求值把词项和环境送到 `S` 的元素，满足关系则把公式和环境送到命题。满足关系按公式结构递归定义：原子式使用结构的两个关系，联结词使用《基础词汇》中的命题运算，假使用空命题，量词遍及载体。在有界量词中，界限的指称决定被量化元素须满足的成员条件。
 <!--ja-->
@@ -169,7 +169,7 @@ Falsity needs no environment: `⊥̇` is read as the empty proposition `⊥`. Th
 
 The bounded forms add one ingredient: membership in the denotation of the bound. `∀̇∈ t φ` demands that membership in `⟦ t ⟧ γ` imply the body, so every member of `⟦ t ⟧ γ` satisfies `φ`; `∃̇∈ t φ` asks for an element that is a member and satisfies the body. Note where each environment is used. The bound `t` lies outside the new binder and is evaluated in the original `γ`; only the body sees the extension `x ∷ γ`. These two clauses are precisely the semantic content of the readings "every member of `t` satisfies `φ`" and "some member of `t` satisfies `φ`".
 <!--zh-->
-假不需要任何环境：`⊥̇` 被读作空命题 `⊥`。量词是载体最终登场之处。无界的 `∃̇ φ` 表达对载体的存在量化：即 `S` 的某个元素 `x` 使公式体在扩展环境 `x ∷ γ` 下成立的那个命题。它的对偶 `∀̇ φ` 表达全称量化，其证明是一个函数，为每个 `x : S` 指派公式体在 `x ∷ γ` 下的证明。在公式体内部，位置 `zero` 持有候选元素 `x`，而 `γ` 的各分量已移到后继位置；外层公式中自由的变量从尾部读取。由命题截断，存在量化只记录这样的元素存在，并不把该元素作为数据携带。
+假不需要任何环境：`⊥̇` 被读作空命题 `⊥`。量词是载体最终登场之处。无界的 `∃̇ φ` 表达对载体的存在量化：即 `S` 的某个元素 `x` 使公式体在扩展环境 `x ∷ γ` 下成立的那个命题。它的对偶 `∀̇ φ` 表达全称量化，其证明是一个函数，为每个 `x : S` 指派公式体在 `x ∷ γ` 下的证明。在公式体内部，位置 `zero` 持有候选元素 `x`，而 `γ` 的各分量已移到后继位置；外层公式中自由的变元从尾部读取。由命题截断，存在量化只记录这样的元素存在，并不把该元素作为数据携带。
 
 有界形式增加一个成分：属于界限指称的成员资格。`∀̇∈ t φ` 要求属于 `⟦ t ⟧ γ` 蕴涵公式体，于是 `⟦ t ⟧ γ` 的每个成员都满足 `φ`；`∃̇∈ t φ` 寻求一个既是成员又满足公式体的元素。注意各环境用在哪里：界限 `t` 位于新绑定之外，在原有的 `γ` 中求值；只有公式体面对扩展 `x ∷ γ`。这两条子句正是「`t` 的每个成员都满足 `φ`」与「`t` 的某个成员满足 `φ`」这两种读法的语义内容。
 <!--ja-->

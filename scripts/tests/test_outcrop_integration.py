@@ -58,6 +58,8 @@ class OutcropIntegrationTests(unittest.TestCase):
         self.assertIn('--cache-keys backend', backend)
         self.assertIn('steps.cache_keys.outputs.backend', backend)
         self.assertIn('steps.cache_keys.outputs.extractor', backend)
+        self.assertIn('steps.cache_keys.outputs.code', backend)
+        self.assertIn('bedrock-site-v6-${{ runner.os }}-', backend)
         self.assertIn('bedrock-site-v4-${{ runner.os }}-', backend)
         self.assertNotIn('touch _build/outcrop-agda-types.jsonl', backend)
 

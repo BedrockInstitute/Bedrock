@@ -568,7 +568,7 @@ Compose the induction of the last section with the adapter of the section before
 <!--zh-->
 ## 无需命题换级的 Δ₀ 分离
 
-把上一节的归纳与之前的适配器复合，本章的核心定理便出现了。取典范常元解释：语言的常元就是结构中的集合本身，`ι` 为恒等函数。此时带一个自由变量的 Δ₀ 公式 `φ` 在 `S` 上定义一个逐点小的谓词，`separateFromSmall` 把它变成集合。结果是分离公理模式限制到 Δ₀ 公式的完整实例，证明中既无命题换级原则，也无任何经典公理或选择：`hasSize` 见证由归纳供给，其余交给库构造。模型章仍欠无限制的分离公理；本定理说明，Lévy 层级中的 Δ₀ 档无需 `V` 的表示之外的任何东西。
+把上一节的归纳与之前的适配器复合，本章的核心定理便出现了。取典范常元解释：语言的常元就是结构中的集合本身，`ι` 为恒等函数。此时带一个自由变元的 Δ₀ 公式 `φ` 在 `S` 上定义一个逐点小的谓词，`separateFromSmall` 把它变成集合。结果是分离公理模式限制到 Δ₀ 公式的完整实例，证明中既无命题换级原则，也无任何经典公理或选择：`hasSize` 见证由归纳供给，其余交给库构造。模型章仍欠无限制的分离公理；本定理说明，Lévy 层级中的 Δ₀ 档无需 `V` 的表示之外的任何东西。
 <!--ja-->
 ## 命題リサイズを要しない Δ₀ 分出
 
@@ -578,7 +578,7 @@ Compose the induction of the last section with the adapter of the section before
 <!--en-->
 The two opening lines fix the canonical interpretation: `Δ₀Small id` instantiates the induction at the identity, and the satisfaction relation for one free variable is re-exported as `_⊨_`. The theorem's type is the separation specification with `φ` in place of an arbitrary predicate: a set `s` such that, for every `y`, membership in `s` is equal, as truth values, to membership in `a` conjoined with `y` satisfying `φ` at the one-point environment `y ∷ []`. The proof is a single application of `separateFromSmall`, passing the predicate `λ y → (y ∷ []) ⊨ φ` together with its pointwise smallness, which is `Δ₀-small c` applied at every one-point environment. Nothing else intervenes: the Δ₀ witness `c` is consumed exactly once, by the induction.
 <!--zh-->
-开头两行固定典范解释：`Δ₀Small id` 在恒等处实例化归纳，单自由变量的满足关系再导出为 `_⊨_`。定理的类型是以 `φ` 替换任意谓词的分离规格：一个集合 `s`，使得对每个 `y`，`s` 中的隶属作为真值等于 `a` 中的隶属与「`y` 在单元环境 `y ∷ []` 下满足 `φ`」的合取。证明是 `separateFromSmall` 的一次应用：传入谓词 `λ y → (y ∷ []) ⊨ φ` 及其逐点 `hasSize` 见证，后者是 `Δ₀-small c` 在每个单元环境处的应用。此外别无他物：Δ₀ 见证 `c` 恰好被归纳消费一次。
+开头两行固定典范解释：`Δ₀Small id` 在恒等处实例化归纳，单自由变元的满足关系再导出为 `_⊨_`。定理的类型是以 `φ` 替换任意谓词的分离规格：一个集合 `s`，使得对每个 `y`，`s` 中的隶属作为真值等于 `a` 中的隶属与「`y` 在单元环境 `y ∷ []` 下满足 `φ`」的合取。证明是 `separateFromSmall` 的一次应用：传入谓词 `λ y → (y ∷ []) ⊨ φ` 及其逐点 `hasSize` 见证，后者是 `Δ₀-small c` 在每个单元环境处的应用。此外别无他物：Δ₀ 见证 `c` 恰好被归纳消费一次。
 <!--ja-->
 冒頭の二行は正準な解釈を固定する。`Δ₀Small id` が恒等写像で帰納法を具体化し、自由変数一つの充足関係が `_⊨_` として再エクスポートされる。定理の型は、任意の述語の代わりに `φ` を入れた分出の仕様である。すなわち集合 `s` で、各 `y` に対して `s` への所属が、真理値として、`a` への所属と「一点環境 `y ∷ []` で `y` が `φ` を満たす」との連言に等しいもの。証明は `separateFromSmall` の一度の適用であり、述語 `λ y → (y ∷ []) ⊨ φ` とその各点の小ささ、すなわちすべての一点環境での `Δ₀-small c` の適用を渡すだけである。ほかに何も介在しない。Δ₀ の証人 `c` は帰納法によってちょうど一度消費されるのである。
 <!--/-->

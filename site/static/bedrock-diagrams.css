@@ -1,5 +1,45 @@
-/* Figure-specific layout for the choice diagrams in Base.Choice.
+/* Figure-specific layout for Bedrock's mathematical diagrams.
    Licensing is declared by the repository's REUSE.toml. */
+.quantifier-context-scene { position: relative; max-width: 30rem; margin-inline: auto; }
+.quantifier-context-scene .quantifier-context-label {
+  position: absolute; transform: translate(-50%, -50%);
+  line-height: 1; white-space: nowrap;
+}
+.quantifier-context-scene .quantifier-context-heading {
+  color: var(--fg-alt); font-size: clamp(.8rem, 3.8vw, 1rem);
+}
+.quantifier-context-scene .quantifier-context-space {
+  fill: var(--diagram-space-bg); stroke: var(--diagram-space-border); rx: 18px;
+}
+.quantifier-context-scene .quantifier-context-divider {
+  fill: none; stroke: var(--diagram-space-border); stroke-dasharray: 4 5;
+}
+.quantifier-context-scene .quantifier-context-old-path,
+.quantifier-context-scene .quantifier-context-old-tip {
+  fill: none; stroke: var(--diagram-relation-color); stroke-width: 2;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+.quantifier-context-scene .quantifier-context-new-path,
+.quantifier-context-scene .quantifier-context-new-tip {
+  fill: none; stroke: var(--diagram-path-color); stroke-width: 2;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+.quantifier-context-scene .quantifier-context-old-node {
+  fill: var(--text-bg); stroke: var(--diagram-relation-color); stroke-width: 2;
+}
+.quantifier-context-scene .quantifier-context-new-node {
+  fill: color-mix(in srgb, var(--diagram-path-color) 12%, var(--text-bg));
+  stroke: var(--diagram-path-color); stroke-width: 2;
+}
+.quantifier-context-scene .quantifier-context-insert {
+  fill: var(--text-bg); stroke: var(--diagram-path-color); stroke-width: 2;
+}
+.quantifier-context-scene .quantifier-context-plus,
+.quantifier-context-scene .quantifier-context-new-value { color: var(--diagram-path-color); }
+.quantifier-context-scene .quantifier-context-plus { font-size: 1.45rem; }
+.quantifier-context-scene .quantifier-context-value { font-size: 1.3rem; }
+.quantifier-context-scene .quantifier-context-index { font-size: 1rem; }
+
 .choice-lift-flow {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(3rem, 4.5rem) minmax(0, 1fr);

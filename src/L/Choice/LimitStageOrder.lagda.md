@@ -954,7 +954,7 @@ asks whether the set-theoretic pair of `w` and `z` belongs to the relation set
 stored at `r`. The existential binder for `z` and the universal binder for
 `w` account for the two-position shift applied to the older variables.
 <!--zh-->
-这个见证还必须是关系 `r` 所判定的最先分歧点。对载体 `A` 中的每个 `w`，若该关系把 `w` 排在 `z` 之前，则 `w` 属于 `x` 与属于 `y` 必须双向一致。公式通过 `appAt`{.Agda} 查阅关系；在语义上，这询问由 `w` 与 `z` 组成的集合论有序对是否属于存放在 `r` 的关系集。约束 `z` 的存在量词与约束 `w` 的全称量词，正好说明旧变量为何要移过两个位置。
+这个见证还必须是关系 `r` 所判定的最先分歧点。对载体 `A` 中的每个 `w`，若该关系把 `w` 排在 `z` 之前，则 `w` 属于 `x` 与属于 `y` 必须双向一致。公式通过 `appAt`{.Agda} 查阅关系；在语义上，这询问由 `w` 与 `z` 组成的集合论有序对是否属于存放在 `r` 的关系集。约束 `z` 的存在量词与约束 `w` 的全称量词，正好说明旧变元为何要移过两个位置。
 <!--ja-->
 この証人はさらに、`r` の関係が定める最初の相違でなければならない。台 `A`の各 `w` について、その関係が `w` を `z` より前に置くなら、`w` の `x` への所属と `y` への所属は両方向で一致しなければならない。論理式は
 `appAt`{.Agda} を通して関係を調べる。意味論的には、`w` と `z` の集合論的な順序対が `r` に格納された関係集合に属するかを問うている。`z` を束縛する存在量化子と `w` を束縛する全称量化子が、以前の変項を二つずらす理由である。

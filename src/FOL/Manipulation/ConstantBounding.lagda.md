@@ -55,7 +55,7 @@ Why should a formula come with a certificate about its constants? Consider a map
 <!--en-->
 The answer is a definition that follows the shape of the syntax itself. A term is either a constant, which must come with a proof of `P`, or a variable, which mentions no constant and so imposes no condition; a formula is built from these, and its certificate is assembled from the certificates of its parts. Because the certificate mirrors the constructor structure of `Term K n` and `Formula K n`, matching against it delivers exactly the domain proof at each constant occurrence. Two later uses shape the design: the monotonicity section transports certificates along an implication of predicates, and the relabelling section feeds them to the partial map; the Δ₀ constructors are imported so the relabelled formula can keep its Lévy-hierarchy witness, and the unit type supplies the trivial certificate carried by anything with no constants.
 <!--zh-->
-答案是一个随语法形状而定的定义。词项要么是常元，必须附带 `P` 的证明；要么是变量，不含常元，因此不施加任何条件。公式由这些构造而成，其证书也由各部分的证书组装而成。由于证书镜像了 `Term K n` 与 `Formula K n` 的构造子结构，对其作匹配就会在每次常元出现处恰好交付定义域证明。两处后续用途塑造了设计：单调性一节沿谓词间的蕴含传递证书，改名一节把证书交给部分映射；引入 Δ₀ 构造子是为了让改名后的公式保住其 Lévy 层级见证，而 `⊤*` 则为一切不含常元者提供平凡证书。
+答案是一个随语法形状而定的定义。词项要么是常元，必须附带 `P` 的证明；要么是变元，不含常元，因此不施加任何条件。公式由这些构造而成，其证书也由各部分的证书组装而成。由于证书镜像了 `Term K n` 与 `Formula K n` 的构造子结构，对其作匹配就会在每次常元出现处恰好交付定义域证明。两处后续用途塑造了设计：单调性一节沿谓词间的蕴含传递证书，改名一节把证书交给部分映射；引入 Δ₀ 构造子是为了让改名后的公式保住其 Lévy 层级见证，而 `⊤*` 则为一切不含常元者提供平凡证书。
 <!--ja-->
 その答えが、構文の形そのものに沿った定義である。項は定数であるなら `P` の証明を伴わねばならず、変数なら定数を含まないので条件を課さない。論理式はこれらから組み立てられ、その証明書も各部分の証明書から組み上がる。証明書は `Term K n` と `Formula K n` の構成子構造を写しているので、それに対する照合は各定数の出現箇所で定義域の証明をちょうど届けてくれる。設計を形づくるのは二つの後の用途である。単調性の節は述語の含意に沿って証明書を移し、改名の節は証明書を部分写像に渡す。Δ₀ の構成子は、改名後の論理式が Lévy 階層の証拠を保てるように読み込まれ、`⊤*` は定数を含まないものが持つ自明な証明書を供給する。
 <!--/-->
@@ -67,7 +67,7 @@ The answer is a definition that follows the shape of the syntax itself. A term i
 <!--zh-->
 ## 证书
 
-`BoundedTm P`{.Agda} 与 `BoundedFo P`{.Agda} 随语法结构而定：常元携带 `P` 的证明，变量携带平凡数据，复合公式则配有其各部分的证书。因此，模式匹配会在每次常元出现处恰好给出所需证据。
+`BoundedTm P`{.Agda} 与 `BoundedFo P`{.Agda} 随语法结构而定：常元携带 `P` 的证明，变元携带平凡数据，复合公式则配有其各部分的证书。因此，模式匹配会在每次常元出现处恰好给出所需证据。
 <!--ja-->
 ## 証明書
 
@@ -77,7 +77,7 @@ The answer is a definition that follows the shape of the syntax itself. A term i
 <!--en-->
 Start with terms, where the condition is simplest. Take a predicate `P` on constants and a term such as `c ∈̇ var i` built from a constant `c` and a variable. The certificate `BoundedTm P t` is defined by recursion on `t`: for `con c` it is `P c` itself, the domain proof at that occurrence, while for `var i` it is `⊤*`, the unit type raised to the level of `P c` so that both cases have type `Type ℓp`. A variable asks for nothing; its trivial certificate simply fills the slot.
 <!--zh-->
-从条件最简单的词项入手。取常元上的谓词 `P` 和一个由常元 `c` 与变量构成的词项，如 `c ∈̇ var i`。证书 `BoundedTm P t` 对 `t` 递归定义：对 `con c`，证书就是 `P c` 本身，即该出现处的定义域证明；对 `var i`，证书是 `⊤*`，即提升到 `P c` 所在层级的单元素类型，使两种情形类型均为 `Type ℓp`。变量一无所求；其平凡证书只是把空位填上。
+从条件最简单的词项入手。取常元上的谓词 `P` 和一个由常元 `c` 与变元构成的词项，如 `c ∈̇ var i`。证书 `BoundedTm P t` 对 `t` 递归定义：对 `con c`，证书就是 `P c` 本身，即该出现处的定义域证明；对 `var i`，证书是 `⊤*`，即提升到 `P c` 所在层级的单元素类型，使两种情形类型均为 `Type ℓp`。变元一无所求；其平凡证书只是把空位填上。
 <!--ja-->
 条件が最も単純な項から始めよう。定数上の述語 `P` と、定数 `c` と変数からなる `c ∈̇ var i` のような項を取る。証明書 `BoundedTm P t` は `t` に対する再帰で定義される。`con c` に対しては証明書は `P c` そのものであり、これがその出現での定義域の証明である。`var i` に対しては `⊤*`、すなわち `P c` と同じレベルへ持ち上げた単元型であり、両方の場合が型 `Type ℓp` を持つようにする。変数は何も要求しないので、その自明な証明書が空所を埋めるだけである。
 <!--/-->
@@ -94,7 +94,7 @@ BoundedFo P (t ∈̇ u)  = BoundedTm P t × BoundedTm P u
 <!--en-->
 The recursion pattern is uniform: whenever a constructor has term or formula arguments, its certificate is the product of theirs; whenever a constructor mentions no constant, its certificate is trivial. For example, in `(c ∈̇ d) ∧̇ ∃̇ (var 0 ≐ c)` with two occurrences of the constant `c`, the certificate is a fourfold pairing that ends in two copies of the proof `P c`: one per occurrence, in the position where the occurrence sits. In contrast, `⊥̇` and bare variables carry nothing but `⊤*`. So the certificate follows occurrences, not the constant symbols abstractly: the same constant occurring twice contributes two proofs.
 <!--zh-->
-递归模式是统一的：凡构造子带有词项或公式参数，其证书就是各参数证书的乘积；凡构造子不提及常元，其证书就是平凡的。例如在 `(c ∈̇ d) ∧̇ ∃̇ (var 0 ≐ c)` 中常元 `c` 出现两次，证书是一个四重配对，末端是两份 `P c` 的证明：每次出现一份，位置与出现的位置对应。相反，`⊥̇` 与裸变量只携带 `⊤*`。所以证书跟随的是出现，而不是抽象的常元符号：同一常元出现两次就贡献两份证明。
+递归模式是统一的：凡构造子带有词项或公式参数，其证书就是各参数证书的乘积；凡构造子不提及常元，其证书就是平凡的。例如在 `(c ∈̇ d) ∧̇ ∃̇ (var 0 ≐ c)` 中常元 `c` 出现两次，证书是一个四重配对，末端是两份 `P c` 的证明：每次出现一份，位置与出现的位置对应。相反，`⊥̇` 与裸变元只携带 `⊤*`。所以证书跟随的是出现，而不是抽象的常元符号：同一常元出现两次就贡献两份证明。
 <!--ja-->
 再帰のパターンは一様である。構成子が項や論理式の引数を持つなら、その証明書は引数の証明書の積になり、構成子が定数に触れないなら、その証明書は自明である。たとえば `(c ∈̇ d) ∧̇ ∃̇ (var 0 ≐ c)` では定数 `c` が二回現れるが、証明書は四重の組であり、その末端に証明 `P c` が二部、それぞれの出現の位置に対応して入る。逆に `⊥̇` や素の変数が持つのは `⊤*` だけである。つまり証明書は抽象的な定数記号ではなく出現に従い、同じ定数が二回現れれば証明も二部になる。
 <!--/-->
@@ -110,7 +110,7 @@ BoundedFo P ⊥̇        = ⊤*
 <!--en-->
 Quantifiers bind variables and therefore leave constants untouched, so the unbounded forms pass their body's certificate through unchanged. A bounded quantifier, however, carries a bounding term that may mention constants: for `∀̇∈ t φ` the certificate pairs the term certificate for `t` with the formula certificate for `φ`, exactly as our example formula `∃̇ (var 0 ≐ c)` shows, where the outer body's certificate is just the certificate of `var 0 ≐ c`. These clauses exhaust the constructors of `Formula K n`, and each clause is read off the shape of the formula rather than computed by searching it.
 <!--zh-->
-量词约束的是变量，因此不触及常元，无界形式就把主体的证书原样传出。但带界量词携带一个可能提及常元的界定词项：对 `∀̇∈ t φ`，证书把 `t` 的词项证书与 `φ` 的公式证书配对，正如例式 `∃̇ (var 0 ≐ c)` 所示，其主体的证书就是 `var 0 ≐ c` 的证书。这些子句穷尽了 `Formula K n` 的构造子，而且每条子句都是从公式形状直接读出的，不是靠搜索计算出来的。
+量词约束的是变元，因此不触及常元，无界形式就把主体的证书原样传出。但带界量词携带一个可能提及常元的界定词项：对 `∀̇∈ t φ`，证书把 `t` 的词项证书与 `φ` 的公式证书配对，正如例式 `∃̇ (var 0 ≐ c)` 所示，其主体的证书就是 `var 0 ≐ c` 的证书。这些子句穷尽了 `Formula K n` 的构造子，而且每条子句都是从公式形状直接读出的，不是靠搜索计算出来的。
 <!--ja-->
 量化子は変数を束縛するので定数には触れず、非有界の形式は本体の証明書をそのまま通す。しかし有界量化子は定数を含みうる界の項を伴うので、`∀̇∈ t φ` の証明書は `t` の項の証明書と `φ` の論理式の証明書の組になる。例の式 `∃̇ (var 0 ≐ c)` が示すとおり、その本体の証明書は `var 0 ≐ c` の証明書にほかならない。これらの節は `Formula K n` の全構成子を尽くし、各節は式の形から直接読み取られるのであって、探索によって計算されるのではない。
 <!--/-->
@@ -139,7 +139,7 @@ If `P` implies `Q`, every `P`-bounded term or formula is also `Q`-bounded. The p
 <!--en-->
 Certificates are only useful if they can be moved between predicates. Think of a predicate as restricting which constants are allowed: widening `P` to `Q` along a pointwise implication `P⊆Q` cannot invalidate any certificate, since every occurrence accepted by `P` is still accepted by `Q`. For a single constant this is one application: `P⊆Q c` turns the proof `P c` into `Q c`. `BoundedTm-mono` extends this to whole terms by recursion: the constant case performs that single application, and the variable case passes through, since `⊤*` is inhabited regardless of the predicate.
 <!--zh-->
-证书只有在能于谓词之间移动时才有用。把谓词想成对允许常元的限制：沿逐点蕴含 `P⊆Q` 把 `P` 放宽为 `Q` 不会使任何证书失效，因为被 `P` 接受的每次出现仍被 `Q` 接受。对单个常元这是一次应用：`P⊆Q c` 把证明 `P c` 变成 `Q c`。`BoundedTm-mono` 对整个词项递归地扩展这一点：常元情形做那一次应用，变量情形直接通过，因为 `⊤*` 无论谓词如何都有元素。
+证书只有在能于谓词之间移动时才有用。把谓词想成对允许常元的限制：沿逐点蕴含 `P⊆Q` 把 `P` 放宽为 `Q` 不会使任何证书失效，因为被 `P` 接受的每次出现仍被 `Q` 接受。对单个常元这是一次应用：`P⊆Q c` 把证明 `P c` 变成 `Q c`。`BoundedTm-mono` 对整个词项递归地扩展这一点：常元情形做那一次应用，变元情形直接通过，因为 `⊤*` 无论谓词如何都有元素。
 <!--ja-->
 証明書は、述語の間で移せてこそ有用である。述語を許される定数の制限と考えれば、各点的含意 `P⊆Q` に沿って `P` を `Q` へ広げても証明書は無効にならない。`P` が受け入れる出現は `Q` も受け入れるからである。単一の定数に対してはこれは一度の適用にすぎず、`P⊆Q c` が証明 `P c` を `Q c` へ変える。`BoundedTm-mono` はこれを項全体へ再帰で拡張する。定数の場合はその一度の適用を行い、変数の場合は素通りする。`⊤*` は述語にかかわらず要素を持つからである。
 <!--/-->
@@ -262,7 +262,7 @@ The triangle appears here as the parameter `down-correct`: for every `c` and `p 
 <!--en-->
 Relabelling a term now just threads the certificate through. `liftTm` takes `t` together with `h : BoundedTm P t`; matching `h` at the constant node hands over precisely the proof `p : P c` that `down c` requires, so the node becomes `con (down c p)`. At a variable, `h` is trivial and the node passes through. The partial map has become total, but only on terms that present their domain proofs.
 <!--zh-->
-对词项改名只需把证书穿起来。`liftTm` 接受 `t` 连同 `h : BoundedTm P t`；在常元结点对 `h` 作匹配，恰好交出 `down c` 所需的证明 `p : P c`，于是结点变成 `con (down c p)`。在变量处，`h` 是平凡的，结点原样通过。部分映射变成了全映射，但只对出示定义域证明的词项如此。
+对词项改名只需把证书穿起来。`liftTm` 接受 `t` 连同 `h : BoundedTm P t`；在常元结点对 `h` 作匹配，恰好交出 `down c` 所需的证明 `p : P c`，于是结点变成 `con (down c p)`。在变元处，`h` 是平凡的，结点原样通过。部分映射变成了全映射，但只对出示定义域证明的词项如此。
 <!--ja-->
 項の改名は、証明書を通して配線するだけである。`liftTm` は `t` と `h : BoundedTm P t` を受け取り、定数の節点で `h` を照合すれば、`down c` が必要とする証明 `p : P c` がちょうど渡され、節点は `con (down c p)` になる。変数では `h` は自明で、節点はそのまま通る。部分写像は全域的になるが、それは定義域の証明を提示する項の上でのみである。
 <!--/-->
@@ -318,7 +318,7 @@ Correctness says the relabelling changed nothing that matters: pushing the resul
 <!--en-->
 Two facts close the story of the triangle. First, relabelling the lifted term into the common constant domain `W` along `up` yields the same term as relabelling the original along `proj`; second, relabelling preserves the Δ₀ certificate, since it changes constants but no quantifier structure. The base case is a term. For the constant `con c`, the certificate provides `p : P c`, and the desired path is just the triangle's edge `down-correct c p` placed under `cong con`. For `var i` both sides compute to `mapTm _ (var i)` applied to the same variable, so the path is `refl`.
 <!--zh-->
-两件事实为三角的故事收尾。其一，把提升后的词项沿 `up` 改名到共同常元域 `W`，与把原词项沿 `proj` 改名所得的词项相同；其二，改名保持 Δ₀ 证书，因为它改动的是常元而非量词结构。基例是词项。对常元 `con c`，证书提供 `p : P c`，所需路径就是把三角的边 `down-correct c p` 经 `cong con` 放置。对 `var i`，两边都计算为对同一变量的 `mapTm _ (var i)`，故路径是 `refl`。
+两件事实为三角的故事收尾。其一，把提升后的词项沿 `up` 改名到共同常元域 `W`，与把原词项沿 `proj` 改名所得的词项相同；其二，改名保持 Δ₀ 证书，因为它改动的是常元而非量词结构。基例是词项。对常元 `con c`，证书提供 `p : P c`，所需路径就是把三角的边 `down-correct c p` 经 `cong con` 放置。对 `var i`，两边都计算为对同一变元的 `mapTm _ (var i)`，故路径是 `refl`。
 <!--ja-->
 三角形の物語を閉じるのは二つの事実である。第一に、持ち上げた項を `up` に沿って共通の定数域 `W` へ改名したものは、元の項を `proj` に沿って改名した項と一致する。第二に、改名は Δ₀ の証明書を保存する。変わるのは定数であって量化子構造ではないからである。基底は項である。定数 `con c` では証明書が `p : P c` を供給し、求めるパスは三角形の辺 `down-correct c p` を `cong con` の下に置いたものである。`var i` では両辺とも同じ変数に対する `mapTm _ (var i)` に計算されるので、パスは `refl` である。
 <!--/-->

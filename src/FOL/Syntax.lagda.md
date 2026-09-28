@@ -4,11 +4,11 @@ module FOL.Syntax where
 ```
 
 <!--en-->
-# The object language
+# The [object language]{.term-intro #object-language}
 <!--zh-->
-# 对象语言
+# [对象语言]{.term-intro #object-language}
 <!--ja-->
-# 対象言語
+# [対象言語]{.term-intro #object-language}
 <!--/-->
 
 ```agda
@@ -17,49 +17,57 @@ open import Base.Prelude
 
 <!--en-->
 
-Usually we write a claim about sets and ask whether it holds. Here we first ask a different question: what parts make up such a claim, and how can they be combined? Treating the written claim itself as a mathematical object, we build a small **object language**.
+Usually we write a claim about sets and ask whether it holds. Here we first ask a different question: what parts make up such a claim, and how can they be combined? Treating the written claim itself as a mathematical object, we build an **object language**.
 <!--zh-->
 
-通常，我们写下一句关于集合的话，接着问它是否成立。本章先换一个问题：这句话由哪些部分组成，又能怎样与别的话组合？我们把写出的陈述本身当作数学对象，为此构造一种小型的**对象语言**。
+通常，写下关于集合的陈述后，我们会问它是否成立。本章暂且不问真假，先看陈述怎样写成、又怎样组合。为此，我们把陈述的写法本身当作数学对象，构造一门**对象语言**。
 <!--ja-->
 
-通常、集合についての文を書き、それが成り立つかを問う。ここではまず別の問いを立てる。その文は何からできていて、ほかの文とどう組み合わせられるのか。書かれた主張そのものを数学的な対象として扱うため、小さな**対象言語**を作る。
+集合について何かを述べれば、ふつうはそれが成り立つかを問う。本章では真偽をひとまず脇に置き、主張をどう書き、どう組み合わせるかを考える。書かれた形そのものを数学の対象として扱うために、**対象言語**を作る。
 <!--/-->
 
 <!--en-->
 We start with ways to refer to an object, then use those references to make claims, and finally add forms that say *for every* or *there exists*. At each step, the Agda code specifies which written forms are possible. What these forms mean, and whether a claim holds, comes later.
 <!--zh-->
-我们先看怎样指代一个对象，再用这些写法组成关于对象的陈述，最后加入表达「对每一个」和「存在某个」的写法。每一步的 Agda 代码都会规定哪些组合可以写出。至于这些写法指什么、陈述是否成立，则留待后文。
+我们先规定怎样指代对象，再用这些写法组成陈述，最后加入「对每个对象」和「存在某个对象」的说法。Agda 代码会逐步划定哪些表达式可以写出。至于它们指什么、陈述是否成立，留待后文再谈。
 <!--ja-->
-まず対象を指す書き方を用意し、それを使って対象についての主張を作り、最後に「すべての」や「ある」を表す書き方を加える。各段階の Agda コードは、どの組み合わせが書けるかを定める。それらが何を指し、主張が成り立つかどうかは、後で扱う。
+まず対象の指し方を定め、それを使って主張を書き、最後に「どの対象についても」「ある対象について」を表す形を加える。Agda のコードは、その都度どんな式を書けるかを定める。それらが何を指し、主張が成り立つかどうかは、後で考える。
 <!--/-->
 
 <!--en-->
-## Terms
+Some choices below may seem odd at first. Why prepare names for objects and number the places where objects can be inserted? Why settle the written forms before explaining their meaning, or treat some logical signs as basic and define others from them? These are worthwhile questions, but we need not answer them all at once. Mathematics does not force a single way to define an object language. Many familiar approaches can be shown to express much the same things, though each is convenient for different purposes. We use an established approach, choosing the balance we find best suited to the set theory developed in this book. The reasons for individual choices will become clearer as we interpret and use the expressions later.
+<!--zh-->
+下面的定义有些取舍乍看可能不太自然：为什么要预先备好对象的名字，又为什么用数字去标记那些可以填入对象的位置？为什么先规定写法、后解释含义？为什么有些逻辑记号作为基本形式，有些则由它们定义出来？这些问题值得带着往下读，不必在本章急于解答。对象语言并没有数学上唯一的标准定义：许多常见方案虽然写法不同，却可以证明在表达能力上大体相当，只是使用起来各有便利。本书采用一种较成熟的方案，并针对后文的集合论研究，在这些便利之间作出我们认为最合适的平衡。随着后文解释和使用这些表达式，具体取舍的理由也会逐渐明朗。
+<!--ja-->
+以下の定義には、初めは不思議に思える選択もある。対象の名前をあらかじめ用意し、対象を入れる場所を数字で表すのはなぜか。意味より先に書き方を定め、論理記号の一部を基本形として、ほかをそこから定義するのはなぜか。どれも大切な問いだが、本章で一度に答える必要はない。対象言語の定義に、数学的に唯一の標準形があるわけではない。よく使われる方法は、書き方が違っても表現力はおおむね同じだと証明できる場合が多いが、使い勝手にはそれぞれ長所がある。本書では確立された方法の一つを採り、後で扱う集合論に最も適した形になるよう、そうした長所の間でバランスを取っている。後で式の意味を定め、実際に使うにつれて、個々の選択の理由も見えてくる。
+<!--/-->
+
+<!--en-->
+## [Terms]{.term-intro #object-term}
 
 Before saying that one object belongs to another, we need a way to refer to each object. We might choose a name in advance, or leave a numbered place to be filled when the expression is used. A written form that refers to one object in either way is called a **term**.
 
-Let `K`{.Agda} be the type of names chosen in advance. Its elements are **constant names**, and `K`{.Agda} is the **constant domain**. Let `n`{.Agda} count the numbered places currently available. Together these places form a **context**; each place is a **variable position**. The type `Fin n`{.Agda}, introduced in the Prelude, contains precisely the positions 0 through one less than `n`{.Agda}. Thus `Term K n`{.Agda} records the two ways an object can be referred to, before either kind of name has been given a meaning.
+Let `K`{.Agda} be the type of names chosen in advance. Its elements are **[constant names]{.term-intro #constant-name}**, and `K`{.Agda} is the **[constant domain]{.term-intro #constant-domain}**. Let `n`{.Agda} count the numbered places currently available. Together these places form a **[context]{.term-intro #variable-context}**; each place is a **[variable position]{.term-intro #variable-position}**. The type `Fin n`{.Agda}, introduced in the Prelude, contains precisely the positions from `0` through one less than `n`{.Agda}. Thus `Term K n`{.Agda} can record either way of referring to an object, without yet assigning a meaning to a name or position.
 <!--zh-->
-## 词项
+## [词项]{.term-intro #object-term}
 
-要说一个对象属于另一个对象，先得有指代它们的写法。我们可以预先选好名字，也可以留出一个带编号的位置，等使用这条陈述时再填入对象。这样指代单个对象的写法称为**词项**。
+要写「一个对象属于另一个对象」，先得有办法指代这两个对象。可以预先给对象取名，也可以留下带编号的位置，等使用表达式时再指定对象。这样指代单个对象的表达式叫作**词项**。
 
-用类型 `K`{.Agda} 收集预先选好的名字，其中的元素称为**常元名**，`K`{.Agda} 称为**常元域**。再用自然数 `n`{.Agda} 记录当前留有多少个带编号的位置；这些位置合起来称为**语境**，其中每个位置称为**变量位置**。《基础词汇》引入的 `Fin n`{.Agda} 恰好包含从 0 到比 `n`{.Agda} 小一的所有位置。因此，`Term K n`{.Agda} 记录了指代对象的两种来源，此时还没有指定任何名字指向什么。
+先把预定的名字收进类型 `K`{.Agda}：其中的元素叫作**[常元名]{.term-intro #constant-name}**，`K`{.Agda} 叫作**[常元域]{.term-intro #constant-domain}**。再用自然数 `n`{.Agda} 表示当前有多少个带编号的位置；这些位置合起来是**[语境]{.term-intro #variable-context}**，每个位置是一个**[变元位置]{.term-intro #variable-position}**。《基础词汇》引入的 `Fin n`{.Agda} 正好给出从 `0` 起、到 `n`{.Agda} 的前一个数为止的全部位置。`Term K n`{.Agda} 可以记录这两种指代方式，但尚未规定名字和位置究竟指什么。
 <!--ja-->
-## 項
+## [項]{.term-intro #object-term}
 
-ある対象が別の対象に属すると述べるには、まずそれぞれを指す書き方が要る。あらかじめ名前を選んでもよいし、文を使うときに対象を入れる番号付きの場所を空けておいてもよい。このいずれかの方法で一つの対象を指す書き方を**項**という。
+ある対象が別の対象に属すると書くには、まず両者を指す表現が要る。名前をあらかじめ決めてもよいし、番号付きの場所を残しておき、式を使うときに対象を割り当ててもよい。こうして一つの対象を指す表現を**項**と呼ぶ。
 
-あらかじめ選ぶ名前を型 `K`{.Agda} に集める。その元を**定数名**といい、`K`{.Agda} を**定数域**という。自然数 `n`{.Agda} は、その時点で使える番号付きの場所の個数である。これらの場所を合わせて**文脈**といい、一つひとつを**変数位置**という。「基礎語彙」で導入した `Fin n`{.Agda} には、0 から `n`{.Agda} より一つ小さい位置までがちょうど含まれる。したがって `Term K n`{.Agda} は対象を指す二つの方法を記録するが、どの名前が何を指すかはまだ定めない。
+あらかじめ決める名前を型 `K`{.Agda} に集め、その元を**[定数名]{.term-intro #constant-name}**、`K`{.Agda} を**[定数域]{.term-intro #constant-domain}**と呼ぶ。一方、自然数 `n`{.Agda} は、今使える番号付きの場所の数を表す。場所全体が**[文脈]{.term-intro #variable-context}**で、一つひとつが**[変数位置]{.term-intro #variable-position}**である。「基礎語彙」で導入した `Fin n`{.Agda} は、`0` から `n`{.Agda} の一つ手前までの位置をちょうど含む。`Term K n`{.Agda} は、この二通りで作られる項の型である。ただし、名前や位置が実際に何を指すかはまだ決めない。
 <!--/-->
 
 <!--en-->
-The declaration makes these two choices part of a term's type. Changing the number of available positions does not change `K`{.Agda}, and a particular term need not use every name or position available to it. The family lives at the same universe level as `K`{.Agda}.
+**Definition** (`Term`{.Agda}) For a universe level `ℓ`{.Agda}, a type `K : Type ℓ`{.Agda}, and a natural number `n : ℕ`{.Agda}, define the inductive type `Term K n : Type ℓ`{.Agda}.
 <!--zh-->
-下面把这两项选择写进词项的类型。改变可用位置的个数不会改变 `K`{.Agda}，而一个具体的词项也不必用尽所有名字或位置。这个类型族与 `K`{.Agda} 处于同一宇宙层级。
+**定义** (`Term`{.Agda}) 给定宇宙层级 `ℓ`{.Agda}、类型 `K : Type ℓ`{.Agda} 和自然数 `n : ℕ`{.Agda}，定义归纳类型 `Term K n : Type ℓ`{.Agda}。
 <!--ja-->
-以下では、この二つの選択を項の型に含める。使える位置の個数を変えても `K`{.Agda} は変わらず、個々の項が使える名前や位置をすべて使う必要もない。この型の族は `K`{.Agda} と同じ宇宙レベルにある。
+**定義** (`Term`{.Agda}) 宇宙レベル `ℓ`{.Agda}、型 `K : Type ℓ`{.Agda}、自然数 `n : ℕ`{.Agda} に対し、帰納型 `Term K n : Type ℓ`{.Agda} を定める。
 <!--/-->
 
 ```agda
@@ -67,11 +75,11 @@ data Term {ℓ} (K : Type ℓ) (n : ℕ) : Type ℓ where
 ```
 
 <!--en-->
-The two constructors now say how to make a term. Given a name `k : K`{.Agda}, `con k`{.Agda} is a term made from that name, not the object it will eventually denote. Given a position `i : Fin n`{.Agda}, `var i`{.Agda} refers to the object that will fill that position. In a context of length two, positions 0 and 1 are available, but position 2 cannot be written as a term of that type. A `con`{.Agda} term can still have type `Term K 2`{.Agda} even though it uses neither position. We write `t`{.Agda} and `u`{.Agda} for terms, and `i`{.Agda} and `j`{.Agda} for positions.
+Each `k : K`{.Agda} determines a term `con k : Term K n`{.Agda}; each `i : Fin n`{.Agda} determines a term `var i : Term K n`{.Agda}.
 <!--zh-->
-接着，两个构造子说明如何形成词项。给定名字 `k : K`{.Agda}，`con k`{.Agda} 是用这个名字形成的词项，并不是它将来所指的对象。给定位置 `i : Fin n`{.Agda}，`var i`{.Agda} 指代将来填入该位置的对象。语境长度为二时，位置 0 和 1 可用，位置 2 则根本写不成这种类型的词项。由 `con`{.Agda} 得到的词项即使不使用任何位置，仍可以属于 `Term K 2`{.Agda}。下文以 `t`{.Agda}、`u`{.Agda} 表示词项，以 `i`{.Agda}、`j`{.Agda} 表示位置。
+每个 `k : K`{.Agda} 确定一个词项 `con k : Term K n`{.Agda}；每个 `i : Fin n`{.Agda} 确定一个词项 `var i : Term K n`{.Agda}。
 <!--ja-->
-続く二つの構成子が項の作り方を示す。名前 `k : K`{.Agda} があれば、`con k`{.Agda} はその名前から作る項であり、後でその名前が指す対象そのものではない。位置 `i : Fin n`{.Agda} があれば、`var i`{.Agda} は後でそこに入る対象を指す。長さ二の文脈では位置 0 と 1 が使えるが、位置 2 はその型の項としてそもそも書けない。`con`{.Agda} で作った項はどの位置も使わないが、それでも `Term K 2`{.Agda} に属し得る。以下では `t`{.Agda} と `u`{.Agda} を項、`i`{.Agda} と `j`{.Agda} を位置に使う。
+各 `k : K`{.Agda} に対して項 `con k : Term K n`{.Agda} を、各 `i : Fin n`{.Agda} に対して項 `var i : Term K n`{.Agda} を定める。
 <!--/-->
 
 ```agda
@@ -80,31 +88,33 @@ The two constructors now say how to make a term. Given a name `k : K`{.Agda}, `c
 ```
 
 <!--en-->
-## Formulas
-
-Once we can refer to objects, we can write a claim about them. Such a written claim is a **formula**; we use `φ`{.Agda}, `ψ`{.Agda} and `θ`{.Agda} for formulas. The simplest ones say that one term belongs to another or that two terms are equal. These are **atomic formulas**. From them we can write *and*, *or* and *if … then …*, as well as the forms for *every* and *some* introduced below.
-
-The small dot on `∈̇`{.Agda}, `∧̇`{.Agda} and the other logical signs distinguishes a *written claim* in this language from an Agda proposition about objects. For instance, `t ∈̇ u`{.Agda} records a claim about membership; it does not yet say that the objects referred to by `t`{.Agda} and `u`{.Agda} really stand in that relation. The meaning is supplied later.
+These constructors produce ways to refer to objects, not the objects themselves. From a name `k : K`{.Agda}, `con k`{.Agda} is a term; from a position `i : Fin n`{.Agda}, `var i`{.Agda} is another. In a context of length two, positions `0` and `1` are available, but `2` is not. A term formed by `con`{.Agda} can nevertheless have type `Term K 2`{.Agda}: it uses no position at all. We write `t`{.Agda} and `u`{.Agda} for terms, and `i`{.Agda} and `j`{.Agda} for positions.
 <!--zh-->
-## 公式
-
-有了指代对象的词项，便可以写出关于对象的陈述。这种写出的陈述称为**公式**，下文用 `φ`{.Agda}、`ψ`{.Agda}、`θ`{.Agda} 表示。最简单的公式说的是：一个词项所指的对象属于另一个，或者两者相等；它们称为**原子公式**。在此基础上，还能写「并且」「或者」「如果……那么……」，以及下文要介绍的「每一个」「某个」。
-
-`∈̇`{.Agda}、`∧̇`{.Agda} 等逻辑记号上的小点，用来区分这种*写出的陈述*与 Agda 中关于对象的命题。例如，`t ∈̇ u`{.Agda} 记录了一句关于隶属的话，还没有断言 `t`{.Agda}、`u`{.Agda} 将来所指的对象确实满足隶属关系。它的含义要在后文才确定。
+这两个构造子形成的是指代对象的写法，而不是对象本身。给定名字 `k : K`{.Agda}，可以写出词项 `con k`{.Agda}；给定位置 `i : Fin n`{.Agda}，可以写出词项 `var i`{.Agda}。若语境长度为二，可用位置只有 `0` 和 `1`，没有 `2`。不过，`con`{.Agda} 形成的词项不占用任何位置，仍可属于 `Term K 2`{.Agda}。下文用 `t`{.Agda}、`u`{.Agda} 表示词项，用 `i`{.Agda}、`j`{.Agda} 表示位置。
 <!--ja-->
-## 論理式
-
-対象を指す項ができたので、今度は対象についての主張を書ける。このように書かれた主張を**論理式**といい、以下では `φ`{.Agda}、`ψ`{.Agda}、`θ`{.Agda} で表す。最も単純な論理式は、一方の項が指す対象が他方に属する、または両者が等しいというもので、**原子論理式**と呼ぶ。それらから「かつ」「または」「もし…ならば…」、さらに後で述べる「すべて」や「ある」を書ける。
-
-`∈̇`{.Agda} や `∧̇`{.Agda} などの論理記号に付く小さな点は、この*書かれた主張*と、対象についての Agda の命題を区別する。たとえば `t ∈̇ u`{.Agda} は所属についての主張を記録するだけで、`t`{.Agda} と `u`{.Agda} が後で指す対象の間に所属関係が実際に成り立つとはまだ述べない。その意味は後で与える。
+この二つの構成子が作るのは対象の指し方であり、対象そのものではない。名前 `k : K`{.Agda} から項 `con k`{.Agda} を、位置 `i : Fin n`{.Agda} から項 `var i`{.Agda} を作れる。文脈の長さが二なら使える位置は `0` と `1` だけで、`2` は含まれない。一方、`con`{.Agda} で作る項は位置をまったく使わないので、`Term K 2`{.Agda} 型にも属する。以下、項を `t`{.Agda}、`u`{.Agda}、位置を `i`{.Agda}、`j`{.Agda} と書く。
 <!--/-->
 
 <!--en-->
-Before giving the construction rules, we set how an expression without parentheses is grouped. The two comparisons bind most tightly; then come negation, *and* and *or*, and finally *if … then …*. The latter groups to the right: `φ ⇒̇ ψ ⇒̇ θ`{.Agda} is read as `φ ⇒̇ (ψ ⇒̇ θ)`{.Agda}. These **precedence** declarations affect the reading of an expression, not which formulas can be built.
+## [Formulas]{.term-intro #object-formula}
+
+Once we can refer to objects, we can write a claim about them. Such a written claim is a **formula**; we use `φ`{.Agda}, `ψ`{.Agda} and `θ`{.Agda} for formulas. The simplest ones say that one term belongs to another or that two terms are equal. These are **[atomic formulas]{.term-intro #atomic-formula}**. From them we can write *and*, *or* and *if … then …*, as well as the forms for *every* and *some* introduced below.
 <!--zh-->
-给出形成规则之前，先约定没有括号时怎样分组：两种比较结合得最紧，其次是「非」，再是「并且」「或者」，最后是「如果……那么……」。最后一种向右分组，因此 `φ ⇒̇ ψ ⇒̇ θ`{.Agda} 读作 `φ ⇒̇ (ψ ⇒̇ θ)`{.Agda}。下面的**优先级**声明只决定怎样读已经写出的表达式，不改变哪些公式可以形成。
+## [公式]{.term-intro #object-formula}
+
+有了词项，就能写出关于对象的陈述。这种书面陈述叫作**公式**，下文用 `φ`{.Agda}、`ψ`{.Agda}、`θ`{.Agda} 表示。最简单的公式由两个词项写成，形如「前者属于后者」或「两者相等」。这类公式叫作**[原子公式]{.term-intro #atomic-formula}**。在此基础上，还能写「并且」「或者」「如果……那么……」，以及下文要介绍的「每个」「某个」。
 <!--ja-->
-作り方の規則を示す前に、括弧を省いた書き方のまとまり方を定める。二つの比較が最も強く結び付き、次に「でない」、「かつ」「または」、最後に「もし…ならば…」が続く。最後の形は右にまとまり、`φ ⇒̇ ψ ⇒̇ θ`{.Agda} は `φ ⇒̇ (ψ ⇒̇ θ)`{.Agda} と読む。以下の**優先順位**宣言は、書かれた式の読み方を決めるだけで、作れる論理式の種類は変えない。
+## [論理式]{.term-intro #object-formula}
+
+項があれば、対象についての主張を書ける。書かれた主張を**論理式**と呼び、以下では `φ`{.Agda}、`ψ`{.Agda}、`θ`{.Agda} と書く。最も単純なのは、二つの項について所属か等しさを述べる**[原子論理式]{.term-intro #atomic-formula}**である。そこから「かつ」「または」「もし…ならば…」を組み立て、さらに後で「どの対象についても」「ある対象について」という形を加える。
+<!--/-->
+
+<!--en-->
+Before giving the construction rules, we set how an expression without parentheses is grouped. Membership and equality bind most tightly; then come the negation defined below, *and* and *or*, and finally *if … then …*. The last of these groups to the right: `φ ⇒̇ ψ ⇒̇ θ`{.Agda} is read as `φ ⇒̇ (ψ ⇒̇ θ)`{.Agda}. These **precedence** declarations affect how a formula is read, not which formulas can be built.
+<!--zh-->
+写公式时常省略括号，因此要先约定各记号如何结合。隶属和相等结合得最紧，其次是稍后定义的「非」，再是「并且」「或者」，最后是「如果……那么……」。最后一种向右结合，所以 `φ ⇒̇ ψ ⇒̇ θ`{.Agda} 读作 `φ ⇒̇ (ψ ⇒̇ θ)`{.Agda}。下面的**优先级**声明只影响公式的读法，不会增减可写出的公式。
+<!--ja-->
+括弧を省いても読み違えないよう、先に結び付きの強さを決める。所属と等号が最も強く、次が後で定義する「でない」、その次が「かつ」「または」、最後が「もし…ならば…」である。最後の形は右側からまとまるので、`φ ⇒̇ ψ ⇒̇ θ`{.Agda} は `φ ⇒̇ (ψ ⇒̇ θ)`{.Agda} と読む。以下の**優先順位**宣言が変えるのは論理式の読み方であり、作れる論理式は変わらない。
 <!--/-->
 
 ```agda
@@ -115,64 +125,45 @@ infix  13 ¬̇_
 ```
 
 <!--en-->
-Like terms, formulas retain the choices `K`{.Agda} and `n`{.Agda}. The first two constructors compare terms that can use the same positions. The next three combine already written formulas without changing those positions. `⊥̇`{.Agda} is the form for a claim that is always false. Each is a distinct way to build a formula; the code does not yet decide which claims hold.
+The small dot on `∈̇`{.Agda}, `∧̇`{.Agda} and the other logical signs distinguishes a *written claim* in this language from an Agda proposition about objects. For instance, `t ∈̇ u`{.Agda} records a claim about membership; it does not yet say that the objects referred to by `t`{.Agda} and `u`{.Agda} really stand in that relation. The meaning is supplied later.
 <!--zh-->
-与词项一样，公式保留 `K`{.Agda} 和 `n`{.Agda} 这两项选择。前两个构造子比较同一语境中的词项；接下来的三个把已有公式组合起来，而不改变可用的位置。`⊥̇`{.Agda} 是永远为假的陈述。它们各自都是形成公式的独立方式；这些代码还不判断哪条陈述成立。
+`∈̇`{.Agda}、`∧̇`{.Agda} 等记号上的小点提醒我们：这里写的是对象语言中的陈述，不是直接在 Agda 中提出的命题。例如，`t ∈̇ u`{.Agda} 只是写下一条隶属陈述；`t`{.Agda}、`u`{.Agda} 究竟指什么，以及隶属关系是否成立，都还没有确定。
 <!--ja-->
-項と同じく、論理式にも `K`{.Agda} と `n`{.Agda} の二つの選択が残る。最初の二つの構成子は同じ文脈の項を比較する。続く三つは使える位置を変えずに、すでに書いた論理式を組み合わせる。`⊥̇`{.Agda} は必ず偽になる主張の形である。それぞれが論理式を作る独立の方法であり、このコードはまだどの主張が成り立つかを判定しない。
+`∈̇`{.Agda} や `∧̇`{.Agda} などに付く点は、対象言語に*書かれた主張*を、Agda で対象について直接述べる命題と区別する。たとえば `t ∈̇ u`{.Agda} は所属を述べる形を記録するだけである。`t`{.Agda} と `u`{.Agda} が何を指し、その所属が成り立つかは、まだ決まっていない。
+<!--/-->
+
+<!--en-->
+**Definition** (`Formula`{.Agda}) For a universe level `ℓ`{.Agda}, a type `K : Type ℓ`{.Agda}, and a natural number `n : ℕ`{.Agda}, define the inductive type `Formula K n : Type ℓ`{.Agda}.
+<!--zh-->
+**定义** (`Formula`{.Agda}) 给定宇宙层级 `ℓ`{.Agda}、类型 `K : Type ℓ`{.Agda} 和自然数 `n : ℕ`{.Agda}，定义归纳类型 `Formula K n : Type ℓ`{.Agda}。
+<!--ja-->
+**定義** (`Formula`{.Agda}) 宇宙レベル `ℓ`{.Agda}、型 `K : Type ℓ`{.Agda}、自然数 `n : ℕ`{.Agda} に対し、帰納型 `Formula K n : Type ℓ`{.Agda} を定める。
 <!--/-->
 
 ```agda
 data Formula {ℓ} (K : Type ℓ) (n : ℕ) : Type ℓ where
-  _∈̇_ _≐_     : Term K n → Term K n → Formula K n
-  _∧̇_ _∨̇_ _⇒̇_ : Formula K n → Formula K n → Formula K n
-  ⊥̇            : Formula K n
 ```
 
 <!--en-->
-The forms for *or* and *if … then …* have their own constructors, rather than being rewritten using *not* and *and*. Such rewritings can depend on additional logical rules that we have not assumed. Keeping the forms distinct lets us explain the meaning of each directly in the next chapters.
+The constructors `_∈̇_`{.Agda} and `_≐_`{.Agda} each take two terms of `Term K n`{.Agda} and yield a formula. The constructors `_∧̇_`{.Agda}, `_∨̇_`{.Agda} and `_⇒̇_`{.Agda} each take two formulas of `Formula K n`{.Agda} and yield another. The constructor `⊥̇`{.Agda} takes no arguments.
 <!--zh-->
-「或者」与「如果……那么……」各有自己的构造子，而不是先用「非」「并且」改写出来。这类改写可能依赖我们尚未假定的额外逻辑规则。保留不同的写法，后文就能分别说明它们的含义。
+构造子 `_∈̇_`{.Agda} 和 `_≐_`{.Agda} 各取两个 `Term K n`{.Agda} 中的词项，得到一个公式；`_∧̇_`{.Agda}、`_∨̇_`{.Agda} 和 `_⇒̇_`{.Agda} 各取两个 `Formula K n`{.Agda} 中的公式，得到另一个公式；`⊥̇`{.Agda} 不取参数。
 <!--ja-->
-「または」と「もし…ならば…」にはそれぞれ独立の構成子を与え、「でない」や「かつ」を使った書き換えとはしない。そのような書き換えには、まだ仮定していない論理の規則が必要なことがある。形を分けておけば、後の章でそれぞれの意味を直接説明できる。
+構成子 `_∈̇_`{.Agda} と `_≐_`{.Agda} はそれぞれ `Term K n`{.Agda} の項を二つ取り、一つの論理式を作る。`_∧̇_`{.Agda}、`_∨̇_`{.Agda}、`_⇒̇_`{.Agda} はそれぞれ `Formula K n`{.Agda} の論理式を二つ取り、新たな論理式を作る。`⊥̇`{.Agda} は引数を取らない。
 <!--/-->
 
+```agda
+  _∈̇_ _≐_     : Term K n → Term K n → Formula K n
+  _∧̇_ _∨̇_ _⇒̇_ : Formula K n → Formula K n → Formula K n
+  ⊥̇           : Formula K n
+```
+
 <!--en-->
-*For every object* and *there exists an object* differ from joining two finished claims: the claim that follows must have a place for the object under discussion. A **quantifier** opens one new position inside that claim. If one position was already available outside, the positions now look like this:
-
-| location | available positions | what they refer to |
-|---|---|---|
-| outside the quantifier | 0 | the object already available |
-| inside its body | 0, 1 | the newly chosen object, then the original one |
-: A quantifier adds a position at the front of its body’s context
-
-The new position 0 is called **bound** by the quantifier; the old positions remain **free** with respect to it and shift up by one. In Agda, the body therefore has type `Formula K (suc n)`{.Agda}, while the complete formula has type `Formula K n`{.Agda}. The body need not use its new position. Recording positions this way is called **de Bruijn indexing**: no variable names need to be stored or renamed, and a reference outside the available range cannot be formed.
-
-The other two forms say *for every member of* and *for some member of* a set described by a term `t`{.Agda}. That term is written before the new position is opened, so it has type `Term K n`{.Agda}; only the claim following it uses the extended context. We keep these **bounded quantifiers** as separate constructors, allowing later chapters to recognize a formula that uses only these forms.
+The constructors `∃̇_`{.Agda} and `∀̇_`{.Agda} each take a formula in `Formula K (suc n)`{.Agda} and yield one in `Formula K n`{.Agda}. The constructors `∀̇∈`{.Agda} and `∃̇∈`{.Agda} also take a term in `Term K n`{.Agda}.
 <!--zh-->
-「对每个对象」与「存在某个对象」不同于连接两条已经写好的陈述：后面的陈述还需要一个位置，指向当前谈论的对象。引入这样一个新位置的写法称为**量词**。如果外面原本有一个可用位置，内外的对应关系如下：
-
-| 所在位置 | 可用的位置 | 指向什么 |
-|---|---|---|
-| 量词外 | 0 | 原先可以谈论的对象 |
-| 公式体内 | 0、1 | 新选取的对象、原有的对象 |
-: 量词在公式体语境的最前面增加一个位置
-
-新的位置 0 称为被量词**约束**，原有位置相对于这个量词仍是**自由**的，并顺移一位。因此，在 Agda 中，量词后面的公式体属于 `Formula K (suc n)`{.Agda}，整条公式属于 `Formula K n`{.Agda}。公式体可以不使用新位置。这种按位置记录引用关系的方法称为 **de Bruijn 索引**：无须保存变量名、考虑何时改名，也无法写出越过可用范围的引用。
-
-另外两种写法表示「对某个集合的每个成员」和「对它的某个成员」。描述这个集合的词项 `t`{.Agda} 在新位置出现之前就已写好，因此属于外层的 `Term K n`{.Agda}；只有后面的陈述使用扩展后的语境。它们称为**有界量词**，这里保留为独立的构造子，方便后文识别只使用这些形式的公式。
+构造子 `∃̇_`{.Agda} 和 `∀̇_`{.Agda} 各取一个 `Formula K (suc n)`{.Agda} 中的公式，得到 `Formula K n`{.Agda} 中的公式；`∀̇∈`{.Agda} 和 `∃̇∈`{.Agda} 还各取一个 `Term K n`{.Agda} 中的词项。
 <!--ja-->
-「すべての対象について」や「ある対象が存在する」は、完成した二つの主張をつなぐのとは違う。後に続く主張には、今取り上げている対象を指す場所が必要になる。そのための位置を新しく開く書き方を**量化子**という。外側ですでに位置を一つ使えるなら、内外の対応は次のようになる：
-
-| 場所 | 利用できる位置 | 指すもの |
-|---|---|---|
-| 量化子の外 | 0 | もとから参照できる対象 |
-| 本体の中 | 0、1 | 新しく選ぶ対象、もとの対象 |
-: 量化子は本体の文脈の先頭に位置を一つ加える
-
-新しい位置 0 は量化子に**束縛**され、もとの位置はこの量化子に対しては**自由**なまま一つずつ後ろへずれる。そのため Agda では後に続く本体が `Formula K (suc n)`{.Agda} 型で、できあがった論理式が `Formula K n`{.Agda} 型になる。本体は新しい位置を使わなくてもよい。このように位置で参照を記録する方法を **de Bruijn 添字**という。変数名を保存したり、名前の付け替えを考えたりする必要がなく、使える範囲の外も参照できない。
-
-残る二つの形は、「ある集合のすべての元について」と「そのある元について」を表す。集合を表す項 `t`{.Agda} は新しい位置を開く前に書くので、外側の `Term K n`{.Agda} 型である。後に続く主張だけが拡張された文脈を使う。これらを**有界量化子**として独立の構成子にしておくと、後の章でこの形だけを使う論理式を見分けられる。
+構成子 `∃̇_`{.Agda} と `∀̇_`{.Agda} はそれぞれ `Formula K (suc n)`{.Agda} の論理式を一つ取り、`Formula K n`{.Agda} の論理式を作る。`∀̇∈`{.Agda} と `∃̇∈`{.Agda} は、さらに `Term K n`{.Agda} の項を一つ取る。
 <!--/-->
 
 ```agda
@@ -181,11 +172,79 @@ The other two forms say *for every member of* and *for some member of* a set des
 ```
 
 <!--en-->
-Negation illustrates the opposite choice. We define `¬̇ φ`{.Agda} as `φ ⇒̇ ⊥̇`{.Agda}, rather than adding another constructor. A function that inspects a formula therefore sees an implication, not a separate negation case. Under the intended interpretation, this implication expresses the refutation of `φ`{.Agda}.
+The symbol `⊥̇`{.Agda} is intended to express an always-false claim. For now, the formation rules specify only which formulas can be written, not whether any formula holds. The forms for *or* (`_∨̇_`{.Agda}) and *if … then …* (`_⇒̇_`{.Agda}) have their own constructors, rather than being rewritten using *not* (`¬̇_`{.Agda}) and *and* (`_∧̇_`{.Agda}). Such rewritings can depend on additional logical rules that we have not assumed. Keeping the forms distinct lets us explain the meaning of each directly in the next chapters.
 <!--zh-->
-否定则采取另一种方式：将 `¬̇ φ`{.Agda} 定义为 `φ ⇒̇ ⊥̇`{.Agda}，而不再增加构造子。因此，检查公式的函数看到的是蕴涵，不必单设否定的情形。在预期的解释下，这个蕴涵表达的正是对 `φ`{.Agda} 的否证。
+`⊥̇`{.Agda} 预定用来表达恒假的陈述。目前这些形成规则只规定哪些公式可以写出，还没有判定任何公式的真假。「或者」的 `_∨̇_`{.Agda} 与「如果……那么……」的 `_⇒̇_`{.Agda} 各有一个构造子，不必先用表示「非」的 `¬̇_`{.Agda} 和表示「并且」的 `_∧̇_`{.Agda} 改写。那样改写有时需要尚未假定的逻辑规则。将几种写法分开，后文便能分别解释它们的含义。
 <!--ja-->
-否定は別の方法を採る。構成子を増やすのではなく、`¬̇ φ`{.Agda} を `φ ⇒̇ ⊥̇`{.Agda} と定義する。したがって論理式を調べる関数が見るのは含意であり、否定のために独立な場合を設ける必要はない。意図する解釈のもとで、この含意は `φ`{.Agda} の反駁を表す。
+`⊥̇`{.Agda} は、常に偽となる主張を表すものとして用意する。今はどの論理式を書けるかを定めるだけで、真偽はまだ判定しない。「または」の `_∨̇_`{.Agda} と「もし…ならば…」の `_⇒̇_`{.Agda} には、それぞれ構成子を用意する。「でない」を表す `¬̇_`{.Agda} や「かつ」を表す `_∧̇_`{.Agda} で書き換えて済ませると、まだ仮定していない論理の規則が必要になる場合がある。形を分けておけば、後でそれぞれの意味を直接与えられる。
+<!--/-->
+
+<!--en-->
+The constructors `∀̇_`{.Agda} (*for every object*) and `∃̇_`{.Agda} (*there exists an object*) differ from joining two finished claims: the claim that follows must have a place for the object under discussion. A **[quantifier]{.term-intro #object-quantifier}** opens one new position inside that claim. The figure follows the positions when one was already available outside.
+<!--zh-->
+`∀̇_`{.Agda} 表示「对每个对象」，`∃̇_`{.Agda} 表示「存在某个对象」。它们不是把两条现成陈述接起来：后面的陈述还得指向新谈及的对象。为此，**[量词]{.term-intro #object-quantifier}**会在后续公式中添一个位置。下图以原来已有一个位置为例，展示编号如何变化。
+<!--ja-->
+`∀̇_`{.Agda} は「どの対象についても」、`∃̇_`{.Agda} は「ある対象について」を表す。これらは、できあがった主張を二つつなぐだけでは書けない。後に続く主張には、新たに取り上げる対象を指す場所が要る。そこで**[量化子]{.term-intro #object-quantifier}**は、後続の論理式に位置を一つ加える。次の図は、もともと一つ位置がある場合に番号がどう変わるかを示す。
+<!--/-->
+
+<figure class="book-diagram quantifier-context-figure" id="fig-quantifier-context" aria-describedby="fig-quantifier-context-caption">
+<div class="diagram-framed">
+<div class="quantifier-context-scene" aria-hidden="true">
+<svg class="quantifier-context-geometry" viewBox="0 0 360 275" aria-hidden="true" focusable="false">
+<rect class="diagram-space-shape quantifier-context-space" x="28" y="105" width="112" height="112"/>
+<rect class="diagram-space-shape quantifier-context-space" x="205" y="74" width="126" height="174"/>
+<path class="diagram-guide quantifier-context-divider" d="M218 162 H318"/>
+<path class="diagram-map-line quantifier-context-old-path" d="M110 161 C159 161 167 205 247 205"/>
+<path class="diagram-map-tip quantifier-context-old-tip" d="M238 199 L248 205 L238 211"/>
+<path class="diagram-map-line quantifier-context-new-path" d="M187 98 C215 99 217 128 247 128"/>
+<path class="diagram-map-tip quantifier-context-new-tip" d="M238 122 L248 128 L238 134"/>
+<circle class="diagram-point quantifier-context-insert" cx="169" cy="98" r="18"/>
+<circle class="diagram-point quantifier-context-old-node" cx="85" cy="161" r="25"/>
+<circle class="diagram-point quantifier-context-new-node" cx="273" cy="128" r="25"/>
+<circle class="diagram-point quantifier-context-old-node" cx="273" cy="205" r="25"/>
+</svg>
+<span class="quantifier-context-label quantifier-context-heading" style="left:23.33%;top:16.36%">$n = 1$</span>
+<span class="quantifier-context-label quantifier-context-heading" style="left:74.17%;top:16.36%">$n + 1 = 2$</span>
+<span class="quantifier-context-label quantifier-context-plus" style="left:46.94%;top:35.64%">$+$</span>
+<span class="quantifier-context-label quantifier-context-value" style="left:23.61%;top:58.55%">$a$</span>
+<span class="quantifier-context-label quantifier-context-value quantifier-context-new-value" style="left:75.83%;top:46.55%">$x$</span>
+<span class="quantifier-context-label quantifier-context-value" style="left:75.83%;top:74.55%">$a$</span>
+<span class="quantifier-context-label quantifier-context-index" style="left:13.05%;top:58.55%">$0$</span>
+<span class="quantifier-context-label quantifier-context-index" style="left:87.5%;top:46.55%">$0$</span>
+<span class="quantifier-context-label quantifier-context-index" style="left:87.5%;top:74.55%">$1$</span>
+</div>
+</div>
+<figcaption id="fig-quantifier-context-caption">
+<!--en-->
+The lower arrow shows the old position `0` becoming `1` while still referring to $a$; the upper arrow shows the quantifier opening a new position `0` for $x$
+<!--zh-->
+下方箭头表示旧位置 `0` 顺移为 `1`，仍指向 $a$；上方箭头表示量词为 $x$ 新开位置 `0`
+<!--ja-->
+下の矢印は、もとの位置 `0` が `1` にずれても $a$ を指し続けることを示し、上の矢印は新たに扱う $x$ のために位置 `0` が加わることを示す
+<!--/-->
+</figcaption>
+</figure>
+
+<!--en-->
+The new position `0` represents a **[bound variable]{.term-intro #bound-variable}** of the quantifier; the old positions represent **[free variables]{.term-intro #free-variable}** relative to it and shift up by one. In Agda, the body therefore has type `Formula K (suc n)`{.Agda}, while the complete formula has type `Formula K n`{.Agda}. The body need not use its new position. Recording positions this way is called **[de Bruijn indexing]{.term-intro #de-bruijn-indexing}**: no variable names need to be stored or renamed, and a reference outside the available range cannot be formed.
+
+The constructors `∀̇∈`{.Agda} and `∃̇∈`{.Agda} say *for every member of* and *for some member of* a set described by a term `t`{.Agda}. That term is written before the new position is opened, so it has type `Term K n`{.Agda}; only the claim following it uses the extended context. We keep these **[bounded quantifiers]{.term-intro #bounded-quantifier}** as separate constructors, allowing later chapters to recognize a formula that uses only these forms.
+<!--zh-->
+新增的 `0` 号位置对应这个量词的**[约束变元]{.term-intro #bound-variable}**；原有位置上的变元相对于它仍是**[自由变元]{.term-intro #free-variable}**，编号各向后挪一位。因此，量词内部的公式体属于 `Formula K (suc n)`{.Agda}，整条公式属于 `Formula K n`{.Agda}。公式体也可以不用新位置。这种只记录位置、不保存名字的方法叫作 **[de Bruijn 索引]{.term-intro #de-bruijn-indexing}**：无需为避免重名而更换变元名称，也写不出越过可用范围的引用。
+
+`∀̇∈`{.Agda} 和 `∃̇∈`{.Agda} 把量化范围限定在某个集合的成员中，用词项 `t`{.Agda} 指明这个集合。`t`{.Agda} 在新位置加入前就已写成，所以仍属于外层的 `Term K n`{.Agda}；只有量词后面的公式体使用扩展语境。这两种写法称为**[有界量词]{.term-intro #bounded-quantifier}**，各有独立的构造子，后文便能辨认只使用有界量词的公式。
+<!--ja-->
+新しい `0` 番の位置が、この量化子の**[束縛変数]{.term-intro #bound-variable}**に当たる。もとの位置にある変数は、この量化子から見れば**[自由変数]{.term-intro #free-variable}**のままで、番号だけが一つ後ろへずれる。したがって量化子の内側の論理式は `Formula K (suc n)`{.Agda} 型、全体は `Formula K n`{.Agda} 型になる。内側で新しい位置を使わなくてもよい。名前を保存せず、位置で参照を記録する方法が **[de Bruijn 添字]{.term-intro #de-bruijn-indexing}**である。名前の衝突を避けるための付け替えが要らず、使える範囲の外を参照する式も作れない。
+
+`∀̇∈`{.Agda} と `∃̇∈`{.Agda} は、項 `t`{.Agda} が指す集合の元に範囲を限る形である。`t`{.Agda} は新しい位置を加える前に書くため、外側の `Term K n`{.Agda} 型のままである。拡張された文脈を使うのは、量化子の内側の論理式だけである。これらを**[有界量化子]{.term-intro #bounded-quantifier}**という独立の構成子にしておけば、後で有界量化子だけを使う論理式を見分けられる。
+<!--/-->
+
+<!--en-->
+**Definition** (`¬̇_`{.Agda}) The constructors above give the basic forms of formulas; negation needs no additional one. We define `¬̇ φ`{.Agda} as `φ ⇒̇ ⊥̇`{.Agda}. A function that inspects a formula therefore sees an implication, not a separate negation case. Under the intended interpretation, this implication expresses the refutation of `φ`{.Agda}.
+<!--zh-->
+**定义** (`¬̇_`{.Agda}) 上面的构造子给出了公式的基本形式；否定无须再添一种。我们规定 `¬̇ φ`{.Agda} 就是 `φ ⇒̇ ⊥̇`{.Agda}。因此，递归检查公式时只会遇到蕴涵，无须再处理一种独立的否定情形。后文赋予公式含义时，这个蕴涵便表达对 `φ`{.Agda} 的否定。
+<!--ja-->
+**定義** (`¬̇_`{.Agda}) ここまでの構成子で論理式の基本形はそろっており、否定のために別の構成子を加える必要はない。`¬̇ φ`{.Agda} を `φ ⇒̇ ⊥̇`{.Agda} と定める。そのため、論理式を再帰的に調べるときは含意の場合を扱えば足り、否定の場合を増やさずに済む。後で意味を与えると、この含意は `φ`{.Agda} の否定を表す。
 <!--/-->
 
 ```agda
@@ -194,11 +253,11 @@ Negation illustrates the opposite choice. We define `¬̇ φ`{.Agda} as `φ ⇒�
 ```
 
 <!--en-->
-Truth is likewise defined, not primitive: `⊤̇`{.Agda} unfolds to `⊥̇ ⇒̇ ⊥̇`{.Agda}. The future interpretation needs only its implication and falsity cases to give meaning to both derived symbols. These definitions work for every constant domain and context length.
+**Definition** (`⊤̇`{.Agda}) Truth is likewise defined, not primitive: `⊤̇`{.Agda} unfolds to `⊥̇ ⇒̇ ⊥̇`{.Agda}. The future interpretation needs only its implication and falsity cases to give meaning to both derived symbols. These definitions work for every constant domain and context length.
 <!--zh-->
-真也由定义给出，而非原始构造子：`⊤̇`{.Agda} 展开为 `⊥̇ ⇒̇ ⊥̇`{.Agda}。后文的解释只需处理蕴涵与假，就能解释这两个派生符号。这些定义对任意常元域和语境长度都适用。
+**定义** (`⊤̇`{.Agda}) 真也不另设构造子，而规定 `⊤̇`{.Agda} 就是 `⊥̇ ⇒̇ ⊥̇`{.Agda}。所以，后文只需解释蕴涵和假，就能同时解释否定与真。这两项定义不依赖特定的常元域或语境长度。
 <!--ja-->
-真も原始的な構成子ではなく、`⊤̇`{.Agda} を `⊥̇ ⇒̇ ⊥̇`{.Agda} と定義する。後の解釈は含意と偽を扱うだけで、この二つの派生記号にも意味を与えられる。これらの定義は任意の定数域と文脈の長さで使える。
+**定義** (`⊤̇`{.Agda}) 真も構成子を増やさず、`⊤̇`{.Agda} を `⊥̇ ⇒̇ ⊥̇`{.Agda} と定める。したがって後では含意と偽を解釈すれば、否定と真にも意味が定まる。どちらの定義も、定数域や文脈の長さを選ばずに使える。
 <!--/-->
 
 ```agda
@@ -207,11 +266,11 @@ Truth is likewise defined, not primitive: `⊤̇`{.Agda} unfolds to `⊥̇ ⇒̇
 ```
 
 <!--en-->
-A single formation rule can serve different interpretations. If `K`{.Agda} is a structure’s carrier, constant symbols can name its elements. Choosing a type of names for a restricted collection limits the available parameters; the empty type `⊥*`{.Agda} permits none. The variable context is a separate choice.
+The same rules for forming terms and formulas work with different choices of `K`{.Agda}. If `K`{.Agda} is a structure’s carrier, constant symbols can name its elements. Restricting the type of names restricts the available constant parameters; choosing the empty type `⊥*`{.Agda} leaves none. The number of variable positions is chosen independently through `n`{.Agda}.
 
-## Sentences and parameter-free formulas
+## [Sentences]{.term-intro #object-sentence} and [parameter-free formulas]{.term-intro #parameter-free-formula}
 
-There are two distinct ways to rule out names. A **sentence** has no free variables: its context length is zero, giving `Formula K 0`{.Agda}, but it may still contain constants. A **parameter-free formula** has no constants: its constant domain is `⊥*`{.Agda}, giving `Formula ⊥* n`{.Agda}, but it may still have free variables. Neither needs a separate datatype or code name.
+There are two distinct ways to rule out names. A **[sentence]{.term-ref #object-sentence}** has no free variables: its context length is zero, giving `Formula K 0`{.Agda}, but it may still contain constants. A **parameter-free formula** has no constants: its constant domain is `⊥*`{.Agda}, giving `Formula ⊥* n`{.Agda}, but it may still have free variables. Neither needs a separate datatype or code name.
 
 | names available | formula type |
 |---|---|
@@ -227,43 +286,43 @@ Because the empty type maps to any `K`{.Agda}, a parameter-free formula can be c
 
 The types record which constants and variable positions are available, while the quantifier constructors record how scope changes. They do not yet assign meanings to terms or formulas. To do that, we first need a structure in which their symbols can be interpreted.
 <!--zh-->
-同一套形成规则可以服务于不同的解释。若 `K`{.Agda} 是某个结构的载体，常元符号就能指名其中的元素；若只为某个受限范围选取名字类型，可用参数就受到限制；取空类型 `⊥*`{.Agda} 则不允许常元。变量语境是另一个独立的选择。
+词项与公式的形成规则适用于不同的常元域 `K`{.Agda}。若取某个结构的载体作为 `K`{.Agda}，常元就能指名其中的任意元素；若只为一部分对象预留名字，可用的常元便随之减少；若取空类型 `⊥*`{.Agda}，就没有可用的常元。变元位置的数量则由 `n`{.Agda} 独立决定。
 
-## 句子与无参公式
+## [句子]{.term-intro #object-sentence}与[无参公式]{.term-intro #parameter-free-formula}
 
-排除名字有两种不同的方式。**句子**没有自由变量：语境长度为零，得到 `Formula K 0`{.Agda}，但仍可含有常元。**无参公式**没有常元：常元域取空类型 `⊥*`{.Agda}，得到 `Formula ⊥* n`{.Agda}，但仍可含有自由变量。两者都不需要另设数据类型或代码名称。
+我们可以分别禁用两类指代方式。**[句子]{.term-ref #object-sentence}**没有自由变元：把语境长度设为零，便得到 `Formula K 0`{.Agda}，但常元仍可出现。**无参公式**没有常元：把常元域设为空类型 `⊥*`{.Agda}，便得到 `Formula ⊥* n`{.Agda}，但仍可有自由变元。这两类公式都不用另设数据类型或代码名称。
 
-| 可用的名字 | 公式类型 |
+| 可用的指代方式 | 公式类型 |
 |---|---|
 | 两者皆可 | `Formula K n`{.Agda} |
 | 仅常元 | `Formula K 0`{.Agda} |
-| 仅变量位置 | `Formula ⊥* n`{.Agda} |
+| 仅变元位置 | `Formula ⊥* n`{.Agda} |
 | 两者均无 | `Formula ⊥* 0`{.Agda} |
-: 自由变量与常元名受彼此独立的限制
+: 自由变元与常元名可以分别禁用
 
-空类型可以映入任意 `K`{.Agda}，因此后文的常元映射操作能把无参公式带入任意常元域。无参公式不必先枚举结构的元素，就可以枚举语法。但这并不意味着只有无参语法才能编码；后文也会编码含有载体常元的公式。
+空类型总能映入任意 `K`{.Agda}，所以后文的常元映射可以把无参公式送入任意常元域。这样，不必先枚举结构的元素，就能枚举无参公式。不过，能编码的并非只有无参公式：后文也会编码带有载体常元的公式。
 
 ## 小结
 
-这些类型记录可用的常元与变量位置，量词构造子则记录作用域如何变化。它们尚未赋予词项和公式含义。要做到这一点，首先需要一个结构，让这些符号有解释的所在。
+本章只规定词项和公式怎样写：常元与变元位置提供指代方式，量词决定新位置的作用范围。它们究竟指什么、公式何时成立，还没有规定。下一步先建立一个结构，用来解释这些符号。
 <!--ja-->
-同じ形成規則を異なる解釈に使える。`K`{.Agda} が構造の台なら、定数記号はその元を名指せる。対象を限定した名前の型を選べば利用できるパラメータは制限され、空型 `⊥*`{.Agda} なら定数は一つもない。変数文脈はこれとは独立に選ぶ。
+項と論理式の作り方は、定数域 `K`{.Agda} の選び方によらず同じである。ある構造の台を `K`{.Agda} にすれば、その元を定数で名指せる。名前を付ける対象を一部に限れば、使える定数も減る。空型 `⊥*`{.Agda} を選べば、使える定数はない。変数位置の数は `n`{.Agda} で独立に決める。
 
-## 文とパラメータを持たない論理式
+## [文]{.term-intro #object-sentence}と[パラメータを持たない論理式]{.term-intro #parameter-free-formula}
 
-名前を排除する方法は二つある。**文**には自由変数がない。文脈の長さをゼロにした `Formula K 0`{.Agda} であり、定数は含められる。**パラメータを持たない論理式**には定数がない。定数域を空型 `⊥*`{.Agda} にした `Formula ⊥* n`{.Agda} であり、自由変数は含められる。どちらにも別のデータ型やコード名は設けない。
+定数名と変数位置は、それぞれ独立に使わないようにできる。**[文]{.term-ref #object-sentence}**は自由変数を持たない。文脈の長さをゼロにした `Formula K 0`{.Agda} だが、定数は使える。一方、**パラメータを持たない論理式**は定数を持たない。定数域を空型 `⊥*`{.Agda} にした `Formula ⊥* n`{.Agda} だが、自由変数は使える。どちらのためにも別のデータ型やコード名は要らない。
 
-| 利用できる名前 | 論理式の型 |
+| 使える指し方 | 論理式の型 |
 |---|---|
 | 両方 | `Formula K n`{.Agda} |
 | 定数のみ | `Formula K 0`{.Agda} |
 | 位置のみ | `Formula ⊥* n`{.Agda} |
 | どちらもなし | `Formula ⊥* 0`{.Agda} |
-: 自由変数と定数名は独立に制限される
+: 自由変数と定数名は別々に使えなくできる
 
-空型から任意の `K`{.Agda} への写像があるので、後の定数写像によって、パラメータを持たない論理式をどの定数域にも移せる。このような論理式なら、構造の元を先に列挙せずに構文を列挙できる。ただし、符号化できるのはそれだけではない。後の章では台の定数を含む論理式も符号化する。
+空型から任意の `K`{.Agda} への写像がある。そこで後の定数写像を使えば、パラメータを持たない論理式をどの定数域にも移せる。構造の元を先に列挙しなくても、この種の論理式なら列挙できる。ただし、符号化できるのはこれだけではない。後の章では、台の元を定数として使う論理式も符号化する。
 
 ## まとめ
 
-これらの型は利用できる定数と変数位置を記録し、量化子の構成子は作用域の変化を記録する。まだ項や論理式に意味は与えていない。そのためには、まず記号を解釈する構造が必要である。
+本章で決めたのは、項と論理式の書き方である。定数と変数位置で対象を指し、量化子で新しい位置の作用域を定める。それらが何を指し、論理式がいつ成り立つかは、まだ決めていない。次は、その記号を解釈するための構造を用意する。
 <!--/-->

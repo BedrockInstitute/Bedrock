@@ -55,7 +55,7 @@ Rewriting one unbounded quantifier at one spot is easy; the task here is to do i
 <!--zh-->
 ## 算子
 
-`relativize c` 保持原子公式与已有的有界量词不变，同时把 `∃̇` 和 `∀̇` 替换为受 `con c` 约束的量词。由于界是常元，进入约束子时无须随变量移动而调整。定义是对十个公式构造子的简单递归，读代码之前值得先陈述它的不动点这一语法不变量：相对化之后，结果中的每个量词都有界，而且引入的界限只有 `con c` 本身的出现。
+`relativize c` 保持原子公式与已有的有界量词不变，同时把 `∃̇` 和 `∀̇` 替换为受 `con c` 约束的量词。由于界是常元，进入约束子时无须随变元移动而调整。定义是对十个公式构造子的简单递归，读代码之前值得先陈述它的不动点这一语法不变量：相对化之后，结果中的每个量词都有界，而且引入的界限只有 `con c` 本身的出现。
 <!--ja-->
 ## 演算子
 
@@ -81,7 +81,7 @@ relativize c (φ ∨̇ ψ)  = relativize c φ ∨̇ relativize c ψ
 <!--en-->
 The two unbounded clauses carry the whole point. `∃̇ φ` becomes `∃̇∈ (con c) φ′` and `∀̇ φ` becomes `∀̇∈ (con c) φ′`, where `φ′` is the relativization of the body: the quantifier now ranges only over elements of the constant `con c`. The two already bounded clauses keep their original bound term `t` untouched, precisely because it already restricts the quantifier; only the body is relativized. Note that the bound `con c` is a term, not a variable, so extending the environment with a freshly bound value never disturbs it: no de Bruijn style reindexing is needed anywhere in the transformation.
 <!--zh-->
-两条无界子句承载了整个要点。`∃̇ φ` 变为 `∃̇∈ (con c) φ′`，`∀̇ φ` 变为 `∀̇∈ (con c) φ′`，其中 `φ′` 是主体的相对化：量词现在只在常元 `con c` 的元素上取值。两条本就有界的子句保持原界限词项 `t` 不动，正因为它已经约束了量词；只有主体被相对化。注意界限 `con c` 是词项而非变量，所以用新绑定值扩展环境时它不受任何干扰：整个变换无须任何 de Bruijn 式的重编号。
+两条无界子句承载了整个要点。`∃̇ φ` 变为 `∃̇∈ (con c) φ′`，`∀̇ φ` 变为 `∀̇∈ (con c) φ′`，其中 `φ′` 是主体的相对化：量词现在只在常元 `con c` 的元素上取值。两条本就有界的子句保持原界限词项 `t` 不动，正因为它已经约束了量词；只有主体被相对化。注意界限 `con c` 是词项而非变元，所以用新绑定值扩展环境时它不受任何干扰：整个变换无须任何 de Bruijn 式的重编号。
 <!--ja-->
 非有界な二つの節が要点すべてを担う。`∃̇ φ` は `∃̇∈ (con c) φ′` へ、`∀̇ φ` は `∀̇∈ (con c) φ′` へ変わる。ここで `φ′` は本体の相対化であり、量化子は今や定数 `con c` の要素の上だけをわたる。既に有界な二つの節は、元の境界の項 `t` をそのまま保つ。それはすでに量化子を制限しているからで、相対化されるのは本体だけである。境界の `con c` は変数ではなく項なので、新しく束縛した値で環境を拡張してもまったく乱されない。変換のどこでも de Bruijn 流の再索引付けは不要である。
 <!--/-->

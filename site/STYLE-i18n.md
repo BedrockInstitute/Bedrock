@@ -96,6 +96,13 @@ CJK prose (zh and ja) follows the repository's house style enforced by
 CJK characters. Japanese prose consistently uses plain style (である体). It does not use polite
 です・ます forms. Agda code blocks are English-only. See the gate commands in `Makefile`.
 
+In Chinese first-order syntax, pair **`变元`** with **`常元`**: use `变元位置`,
+`自由变元`, `约束变元`, `常元名` and `常元域` consistently. This distinguishes
+object-language symbols from a general mathematical or Agda `变量` and from a fixed quantity
+called a `常量`. Do not rewrite `自变量`, `不变量`, or a numerical `常量` merely to
+make the character stems match. The reader glossary is authoritative for the
+registered compounds.
+
 Standalone definition, construction, lemma, theorem and corollary labels name the corresponding Agda declaration and
 contain no period: `**Lemma** (`name`{.Agda}) Text`, with `引理` or `補題` in the
 parallel routes. Fact labels use the same form with `Fact`, `事实` or `事実`, and
@@ -112,7 +119,9 @@ contain code after the Proof label; a standalone Proof has the same code rule.
 The next statement, heading or enclosing fold boundary ends that prose scope.
 All three language routes are checked, including folded submodules and numbered
 labels. Do not write standalone `∎` in Markdown. QED decoration is generated
-from Agda definition semantics, independently of these prose scopes.
+from Agda definition semantics, independently of these prose scopes. Completed
+`data` declarations receive a mark; data-containing mutual and
+inductive-recursive groups receive one mark after the whole group.
 
 Do not stack empty parallel statement labels. Group related names
 under one Construction label, with space-separated, individually styled names
@@ -131,11 +140,14 @@ second = value₂
 
 ````
 
-Outcrop places the exact rectangular mark at the lower right of each definition's
-final code line, including intermediate lines of a code block. A definition has
-an explicit type signature followed by equation clauses; its where body belongs
-to that definition, and where-local helpers receive no independent mark. Submodule
-definitions are included. The mark has opacity 0.25 and reserves no line or
+Outcrop places the exact rectangular mark at the lower right of each eligible
+declaration's final code line, including intermediate lines of a code block.
+Functions require an explicit type signature followed by equation clauses;
+their where bodies belong to the enclosing function, and where-local functions
+receive no independent mark. Every completed `data` declaration also receives
+a mark. A data-containing mutual or inductive-recursive group receives only one
+mark at the end of the whole group. Submodule declarations are included. The
+mark has opacity 0.25 and reserves no line or
 padding, even over code. Prose Proof paragraphs keep their tight code spacing,
 without depending on a mark or special frame. All code blocks span their containing
 column without a left outdent or external QED gutter. Each folded submodule keeps
@@ -244,6 +256,9 @@ chapter, as with the record-type link in the discussion of `Lift`. Prefer that d
 lookup to an opaque paraphrase or an unlinked promise of an explanation below.
 The term gate still validates the audited label and unique trilingual introduction;
 bare occurrences must still follow their introduction or its prerequisite chapter.
+Chapter-level headings do not receive automatic glossary links; subsection
+headings do. Explicit `term-intro` or `term-ref` markers in a chapter heading
+remain available when the title itself is the formal introduction or reference.
 
 ## Centered single-line code
 

@@ -49,7 +49,7 @@ Structures here are proposition-valued: a `ZFStructure`{.Agda} has a carrier who
 <!--en-->
 On the syntactic side, formulas have constants `con` and variables `var` and the two bounded quantifiers `∀̇∈` and `∃̇∈`, whose range is the members of a term's value. The Lévy hierarchy enters through its inductive characterizations: `Δ₀`{.Agda} is the inductive class of formulas built from atomic membership and equality by the propositional connectives and the bounded quantifiers, with constructors named `δ-`. `Σ₁`{.Agda} and `Π₁`{.Agda} are built on top: either a Δ₀ formula, or an unbounded existential (respectively universal) whose matrix is again Σ₁ (respectively Π₁), witnessed by `σ-∃`{.Agda} and `π-∀`{.Agda}. These witnesses are exactly the induction data the absoluteness proof will consume.
 <!--zh-->
-句法方面，公式有常元 `con`、变量 `var`，以及两个有界量词 `∀̇∈` 与 `∃̇∈`，其范围是某词项取值的成员。Lévy 层谱以归纳刻画的方式进入：`Δ₀`{.Agda} 是由原子成员关系与等词出发、经命题联结词与有界量词生成的公式的归纳类，构造子名为 `δ-`。`Σ₁`{.Agda} 与 `Π₁`{.Agda} 建立其上：要么是一条 Δ₀ 公式，要么是一个无界存在 (相应地全称) 量词、其母式仍为 Σ₁ (相应地 Π₁)，由 `σ-∃`{.Agda} 与 `π-∀`{.Agda} 见证。这些见证正是绝对性证明将要消耗的归纳数据。
+句法方面，公式有常元 `con`、变元 `var`，以及两个有界量词 `∀̇∈` 与 `∃̇∈`，其范围是某词项取值的成员。Lévy 层谱以归纳刻画的方式进入：`Δ₀`{.Agda} 是由原子成员关系与等词出发、经命题联结词与有界量词生成的公式的归纳类，构造子名为 `δ-`。`Σ₁`{.Agda} 与 `Π₁`{.Agda} 建立其上：要么是一条 Δ₀ 公式，要么是一个无界存在 (相应地全称) 量词、其母式仍为 Σ₁ (相应地 Π₁)，由 `σ-∃`{.Agda} 与 `π-∀`{.Agda} 见证。这些见证正是绝对性证明将要消耗的归纳数据。
 <!--ja-->
 構文の側では、論理式には定数 `con` と変数 `var`、そして項の値の要素を範囲とする二つの有界量化子 `∀̇∈` と `∃̇∈` が現れる。Lévy 階層は帰納的特徴づけを通して登場する。`Δ₀`{.Agda} は、原始的な所属と等号から出発し、命題結合子と有界量化子で作られる論理式の帰納的な類であり、その構成子には `δ-` 系の名前が付いている。`Σ₁`{.Agda} と `Π₁`{.Agda} はその上に築かれる。Δ₀ 論理式であるか、無制限の存在 (それぞれ全称) 量化子を持ち母式が再び Σ₁ (それぞれ Π₁) であるかで、`σ-∃`{.Agda} と `π-∀`{.Agda} が証拠となる。これらの証拠こそ、絶対性の証明が消費する帰納のデータである。
 <!--/-->
@@ -149,7 +149,7 @@ The inner reading uses `ι := id`{.Agda}: inside `𝒮 ↾ M`, a constant is the
 <!--en-->
 The two worlds differ only in how environments are read: an inner environment `δ : SM ^ n` names outer values through `fst`{.Agda}, so `map fst δ` is the corresponding outer environment. Two lemmas connect the term evaluation on the two sides. A constant evaluates to its own first projection on both sides, and a variable is a lookup in both worlds, so the dictionary is settled at the atoms.
 <!--zh-->
-两个世界的差别只在环境的读法：内层环境 `δ : SM ^ n` 经 `fst`{.Agda} 给出外层的取值，`map fst δ` 就是相应的外层环境。两条引理连接两侧的词项求值。常元在两侧都取自己的第一投影为值，变量在两个世界都只是一次查表，因此词典问题在原子层面就已解决。
+两个世界的差别只在环境的读法：内层环境 `δ : SM ^ n` 经 `fst`{.Agda} 给出外层的取值，`map fst δ` 就是相应的外层环境。两条引理连接两侧的词项求值。常元在两侧都取自己的第一投影为值，变元在两个世界都只是一次查表，因此词典问题在原子层面就已解决。
 <!--ja-->
 二つの世界の違いは環境の読み方にだけある。内側の環境 `δ : SM ^ n` は `fst`{.Agda} を通して外側の値を名指すので、`map fst δ` が対応する外側の環境である。二つの補題が両側の項の評価を結ぶ。定数はどちらの側でも自分の第一射影を値とし、変数はどちらの世界でも一回の参照にすぎない。したがって辞書の問題は原子の段階で解決される。
 <!--/-->
@@ -173,7 +173,7 @@ The first lemma commutes lookup with projection, pointwise along the vector: rea
 <!--en-->
 The second lemma lifts this to terms: evaluating a term in the inner world and projecting gives its outer value under the projected environment. For a constant, both sides compute to `fst m` by the respective interpretations `id` and `fst`, so `refl` suffices. For a variable, the outer value is a lookup into `map fst δ`, which the first lemma rewrites into the projection of the inner lookup; `sym` places the equation in the required direction. Any term is built from these two cases, so the dictionary is complete.
 <!--zh-->
-第二条引理把这一点提升到词项：在内层求值再投影，等于在投影后的环境中求值。常元情形，两侧按各自的解释 `id` 与 `fst` 都计算到 `fst m`，`refl` 即可。变量情形，外层值是对 `map fst δ` 的查表，第一条引理把它改写为内层查表的投影；`sym` 把等式摆到所需方向。任何词项都由这两种情形生成，词典于是完备。
+第二条引理把这一点提升到词项：在内层求值再投影，等于在投影后的环境中求值。常元情形，两侧按各自的解释 `id` 与 `fst` 都计算到 `fst m`，`refl` 即可。变元情形，外层值是对 `map fst δ` 的查表，第一条引理把它改写为内层查表的投影；`sym` 把等式摆到所需方向。任何词项都由这两种情形生成，词典于是完备。
 <!--ja-->
 二つ目の補題はこれを項へ持ち上げる。内側で項を評価してから射影したものは、射影後の環境での外側の値に等しい。定数の場合は、それぞれの解釈 `id` と `fst` により両辺とも `fst m` に計算され、`refl` で足りる。変数の場合は、外側の値が `map fst δ` への参照であり、最初の補題がそれを内側の参照の射影へ書き換える。`sym` は等式を必要な向きに置くためのものである。すべての項はこの二つの場合から作られるので、辞書はこれで完結である。
 <!--/-->

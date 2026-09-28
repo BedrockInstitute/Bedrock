@@ -60,7 +60,7 @@ open import Cubical.Foundations.Prelude using ( J; substRefl )
 <!--en-->
 The object-language syntax is generic in its alphabet. A type `Formula K n` of formulas over constants `K` and arity `n` never inspects what the constants are; it only arranges them into logical structure. Consequently, any function on the alphabet extends to a relabeling of syntax: mapping each constant through the function rewrites every occurrence while leaving connectives, quantifiers and variables untouched. Here the function will be the embedding of member indices into `V ℓ`, and the relabeled formulas will have sets as constants, which is precisely the input format of the set-valued syntax coding over the hierarchy. What remains is to choose the alphabet and the embedding so that the constants are genuinely the members of `W`.
 <!--zh-->
-对象语言的语法对字母表是泛的。常元类型为 `K`、元数为 `n` 的公式类型 `Formula K n` 从不查看常元本身是什么，只把它们安排进逻辑结构中。因此，字母表上的任何函数都能扩充为语法的改标：把每个常元沿该函数映射，即可改写每一处出现，而联结词、量词与变量保持不变。这里所用的函数将是把成员索引嵌入 `V ℓ` 的映射，改标后的公式以集合为常元，恰好是层级上取值于集合的语法编码所要求的输入格式。剩下的只是选好字母表与嵌入，使这些常元确实是 `W` 的成员。
+对象语言的语法对字母表是泛的。常元类型为 `K`、元数为 `n` 的公式类型 `Formula K n` 从不查看常元本身是什么，只把它们安排进逻辑结构中。因此，字母表上的任何函数都能扩充为语法的改标：把每个常元沿该函数映射，即可改写每一处出现，而联结词、量词与变元保持不变。这里所用的函数将是把成员索引嵌入 `V ℓ` 的映射，改标后的公式以集合为常元，恰好是层级上取值于集合的语法编码所要求的输入格式。剩下的只是选好字母表与嵌入，使这些常元确实是 `W` 的成员。
 <!--ja-->
 対象言語の構文はアルファベットに対して汎用である。定数の型 `K` とアリティ `n` に対する論理式の型 `Formula K n` は、定数が何であるかを決して調べず、それらを論理構造へ配置するだけである。したがって、アルファベット上の任意の関数は構文の書き換えへ拡張される。各定数をその関数を通して写せば、すべての出現が書き換えられ、論理結合子・量化子・変数はそのまま保たれる。ここで使う関数は要素のインデックスを `V ℓ` へ埋め込む写像であり、書き換え後の論理式は集合を定数とするので、階層上の集合値の構文符号化が要求する入力の形式にちょうど合う。残るのは、これらの定数が実際に `W` の要素になるようにアルファベットと埋め込みを選ぶことである。
 <!--/-->

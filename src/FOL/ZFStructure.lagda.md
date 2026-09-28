@@ -21,29 +21,29 @@ A first-order language about sets has two primitive predicates: equality and mem
 
 Because both relations take values in `hProp`{.Agda}, each atomic statement has an underlying type whose inhabitants are its proofs. A class over the carrier can therefore be used to cut out a smaller structure: `Transitive`{.Agda} expresses that members of members of a class stay in the class, and the restriction `𝒮 ↾ M` turns the class into the carrier of a new structure of dependent pairs. Since the membership proof types are propositions, that pair carrier is again an h-set, and equality of first projections already determines equality of the pairs.
 
-Three membership notations must be kept apart throughout: the host-level class membership `∈ᶜ`{.Agda}, which tests whether a carrier element satisfies a predicate `M`; the proposition-valued structure membership `∈ˢ`{.Agda}; and the object-language membership symbol `∈̇`{.Agda} introduced in "The object language", which is only given meaning once a structure interprets it.
+Three membership notations must be kept apart throughout: the host-level class membership `∈ᶜ`{.Agda}, which tests whether a carrier element satisfies a predicate `M`; the proposition-valued structure membership `∈ˢ`{.Agda}; and the object-language membership symbol `∈̇`{.Agda} introduced in "The [object language]{.term-ref #object-language}", which is only given meaning once a structure interprets it.
 <!--zh-->
 
-关于集合的一阶语言有两个初始谓词：等词与隶属。要解释它，就必须选定变量的取值范围，以及这两个谓词在那里分别指什么。`ZFStructure`{.Agda} 正是打包这些数据：一个由「集合」组成的载体，加上等词与隶属的命题值解释。这个 record 只要求载体是 h-集合，别无其他；其中不内置任何 ZF 公理。
+关于集合的一阶语言有两个初始谓词：等词与隶属。要解释它，就必须选定变元的取值范围，以及这两个谓词在那里分别指什么。`ZFStructure`{.Agda} 正是打包这些数据：一个由「集合」组成的载体，加上等词与隶属的命题值解释。这个 record 只要求载体是 h-集合，别无其他；其中不内置任何 ZF 公理。
 
 两个关系都取值于 `hProp`{.Agda}，因此每条原子陈述都有一个底层类型，其元素就是该陈述的证明。载体上的类也因而可以用来裁出较小的结构：`Transitive`{.Agda} 表达类的元素之元素仍留在类中，限制 `𝒮 ↾ M` 则把类变成一个由依值对组成的新结构的载体。由于各隶属证明类型都是命题，这个对载体仍是 h-集合，且第一投影的相等已经决定整个对的相等。
 
-全章要区分三种隶属记号：宿主层的类隶属 `∈ᶜ`{.Agda}，检验载体元素是否满足谓词 `M`；取命题值的结构隶属 `∈ˢ`{.Agda}；以及「对象语言」一章语法中的隶属符号 `∈̇`{.Agda}，只有在结构给出解释之后它才有意义。
+全章要区分三种隶属记号：宿主层的类隶属 `∈ᶜ`{.Agda}，检验载体元素是否满足谓词 `M`；取命题值的结构隶属 `∈ˢ`{.Agda}；以及「[对象语言]{.term-ref #object-language}」一章语法中的隶属符号 `∈̇`{.Agda}，只有在结构给出解释之后它才有意义。
 <!--ja-->
 
 集合についての一階言語には、等号と所属という二つの原始述語がある。これを解釈するには、変数が何を渡り歩くかを定め、その二つの述語がそこで何を意味するかを指定しなければならない。`ZFStructure`{.Agda} はまさにこのデータをまとめる。すなわち「集合」からなる台と、等号と所属の命題値の解釈である。レコードが要求するのは台が h-集合であることだけで、ZF の公理は組み込まれていない。
 
 二つの関係はどちらも `hProp`{.Agda} に値を取るので、各原子文には証明を要素とする基礎型がある。台の上のクラスは、それによってより小さな構造を切り出すのに使える。`Transitive`{.Agda} はクラスの要素の要素が再びそのクラスに属することを表し、制限 `𝒮 ↾ M` はクラスを依存対からなる新しい構造の台に変える。各所属の証明の型が命題であるため、この対の台は再び h-集合であり、第一射影の等しさだけで対全体の等しさが定まる。
 
-全章を通して三つの所属の記法を区別しなければならない。ホストレベルのクラス所属 `∈ᶜ`{.Agda} は、台の要素が述語 `M` を満たすかを調べる。構造の所属 `∈ˢ`{.Agda} は命題に値を持つフィールドである。そして「対象言語」の章の構文にある対象言語の所属記号 `∈̇`{.Agda} は、構造が解釈を与えて初めて意味を持つ。
+全章を通して三つの所属の記法を区別しなければならない。ホストレベルのクラス所属 `∈ᶜ`{.Agda} は、台の要素が述語 `M` を満たすかを調べる。構造の所属 `∈ˢ`{.Agda} は命題に値を持つフィールドである。そして「[対象言語]{.term-ref #object-language}」の章の構文にある[対象言語]{.term-ref #object-language}の所属記号 `∈̇`{.Agda} は、構造が解釈を与えて初めて意味を持つ。
 <!--/-->
 
 <!--en-->
-Membership appears on three distinct levels, and the notation keeps them apart. At the host level, a class is a predicate `M` valued in `hProp`{.Agda}, and `x ∈ᶜ M` is the underlying proposition `⟨ M x ⟩`{.Agda}: a type witnessing that `x` satisfies the predicate. This is a relation between a carrier element and a predicate, not between two sets. At the structure level, `x ∈ˢ y` is a proposition about two carrier elements. The object level belongs to the syntax introduced in "The object language", where `∈̇` is a mere symbol awaiting interpretation.
+Membership appears on three distinct levels, and the notation keeps them apart. At the host level, a class is a predicate `M` valued in `hProp`{.Agda}, and `x ∈ᶜ M` is the underlying proposition `⟨ M x ⟩`{.Agda}: a type witnessing that `x` satisfies the predicate. This is a relation between a carrier element and a predicate, not between two sets. At the structure level, `x ∈ˢ y` is a proposition about two carrier elements. The object level belongs to the syntax introduced in "The [object language]{.term-ref #object-language}", where `∈̇` is a mere symbol awaiting interpretation.
 <!--zh-->
-隶属出现在三个不同的层面上，记法把它们彼此分开。在宿主层，类是取值于 `hProp`{.Agda} 的谓词 `M`，`x ∈ᶜ M` 就是底层命题 `⟨ M x ⟩`{.Agda}：一个见证 `x` 满足该谓词的类型。这是载体元素与谓词之间的关系，不是两个集合之间的关系。在结构层，`x ∈ˢ y` 是关于两个载体元素的命题。对象层属于「对象语言」一章的语法，那里的 `∈̇` 只是一个等待解释的符号。
+隶属出现在三个不同的层面上，记法把它们彼此分开。在宿主层，类是取值于 `hProp`{.Agda} 的谓词 `M`，`x ∈ᶜ M` 就是底层命题 `⟨ M x ⟩`{.Agda}：一个见证 `x` 满足该谓词的类型。这是载体元素与谓词之间的关系，不是两个集合之间的关系。在结构层，`x ∈ˢ y` 是关于两个载体元素的命题。对象层属于「[对象语言]{.term-ref #object-language}」一章的语法，那里的 `∈̇` 只是一个等待解释的符号。
 <!--ja-->
-所属は三つの異なる層に現れ、記法がそれらを区別する。ホストレベルでは、クラスは `hProp`{.Agda} 値の述語 `M` であり、`x ∈ᶜ M` は基底の命題 `⟨ M x ⟩`{.Agda}、つまり `x` が述語を満たすことを証拠立てる型である。これは台の要素と述語の間の関係であって、二つの集合の間の関係ではない。構造レベルでは、`x ∈ˢ y` が二つの台の要素についての命題である。対象レベルは「対象言語」の章の構文に属し、そこの `∈̇` は解釈を待つ単なる記号である。
+所属は三つの異なる層に現れ、記法がそれらを区別する。ホストレベルでは、クラスは `hProp`{.Agda} 値の述語 `M` であり、`x ∈ᶜ M` は基底の命題 `⟨ M x ⟩`{.Agda}、つまり `x` が述語を満たすことを証拠立てる型である。これは台の要素と述語の間の関係であって、二つの集合の間の関係ではない。構造レベルでは、`x ∈ˢ y` が二つの台の要素についての命題である。対象レベルは「[対象言語]{.term-ref #object-language}」の章の構文に属し、そこの `∈̇` は解釈を待つ単なる記号である。
 <!--/-->
 
 ```agda
@@ -79,7 +79,7 @@ The record is deliberately bare model-theoretic data. It requires the carrier to
 
 为什么集合的等词应当是字段，而不是直接采用宿主中的路径相等？因为集合论语言把 `=` 与 `∈` 当作初始符号，而结构正是对它们意义的一次选定。两个载体元素即使作为宿主类型的元素并不相同，也可能被结构判为相等。把 `≈ˢ` 与 `∈ˢ` 做成取命题值的字段，准确写出了结构所提供的数据；这个 record 不对两种关系施加任何相容性定律。
 
-约定全书通用：花体 `𝒮` 代表结构，`S` 代表其载体，`x`、`y`、`z` 代表载体元素，即这门语言所谈的「集合」。上标 `ˢ` 标示一个符号是**当前结构的字段**，纸面上的隶属记号一族已一字一层：库的 `∈` 表示宿主，`∈ˢ` 表示结构，对象语言中的 `∈̇` 表示语法。
+约定全书通用：花体 `𝒮` 代表结构，`S` 代表其载体，`x`、`y`、`z` 代表载体元素，即这门语言所谈的「集合」。上标 `ˢ` 标示一个符号是**当前结构的字段**，纸面上的隶属记号一族已一字一层：库的 `∈` 表示宿主，`∈ˢ` 表示结构，[对象语言]{.term-ref #object-language}中的 `∈̇` 表示语法。
 
 这个 record 刻意只记录裸的模型论数据：要求载体是 h-集合，并给出两个命题值关系；不主张外延性、良基性或任何其他 ZF 公理。那些属于后文的模型诸章，在那里成为模型的进一步字段。
 <!--ja-->
@@ -87,7 +87,7 @@ The record is deliberately bare model-theoretic data. It requires the carrier to
 
 集合の等号は、ホストのパス等式をそのまま使わず、なぜフィールドとして与えるのであろうか。集合論の言語は `=` と `∈` を原始記号として扱い、構造とはそれらの意味の選択にほかならない。二つの台の要素は、ホスト型の要素としては異なっていても、構造には等しいとされることがある。`≈ˢ` と `∈ˢ` を命題値のフィールドにすることで、構造が実際に与えるデータを正確に表す。このレコードは二つの関係の間にいかなる整合性の法則も課さない。
 
-約束は本書全体で共通である。筆記体の `𝒮` は構造を、`S` はその台を、`x`、`y`、`z` は台の要素、すなわちこの言語が語る「集合」を表す。上付きの `ˢ` は、その記号が**当該構造のフィールド**であることの印で、紙面上の所属記号の族はすでに一字一層に分かれている。ライブラリの `∈` がホストを、`∈ˢ` が構造を、対象言語の `∈̇` が構文を表す。
+約束は本書全体で共通である。筆記体の `𝒮` は構造を、`S` はその台を、`x`、`y`、`z` は台の要素、すなわちこの言語が語る「集合」を表す。上付きの `ˢ` は、その記号が**当該構造のフィールド**であることの印で、紙面上の所属記号の族はすでに一字一層に分かれている。ライブラリの `∈` がホストを、`∈ˢ` が構造を、[対象言語]{.term-ref #object-language}の `∈̇` が構文を表す。
 
 このレコードは、あえて素のモデル論的データだけを記録する。台が h-集合であることを要求し、二つの真理値関係を与えるが、外延性や正則性、その他の ZF 公理は一切主張しない。それらは後のモデル諸章に属し、そこでモデルのさらなるフィールドとして現れる。
 <!--/-->
@@ -210,15 +210,15 @@ Transitive 𝒮 M = ∀ {x y} → y ∈ᵗ x → x ∈ᶜ M → y ∈ᶜ M
 <!--en-->
 ## Substructures
 
-Given a proposition-valued class `M`, we can now cut a structure down to the part of its carrier that satisfies `M`. The restriction `𝒮 ↾ M` is again a `ZFStructure`{.Agda}, and its carrier is the type of dependent pairs `(x , proof)` with `x : S` and `proof : x ∈ᶜ M`. Equality and membership on the restricted elements are inherited from `𝒮`: both relations look only at the first projections and apply the original relations there. This changes what counts as an element of the structure; it does not construct a set representing `M`, nor does it by itself fix a syntax or a constant domain.
+Given a proposition-valued class `M`, we can now cut a structure down to the part of its carrier that satisfies `M`. The restriction `𝒮 ↾ M` is again a `ZFStructure`{.Agda}, and its carrier is the type of dependent pairs `(x , proof)` with `x : S` and `proof : x ∈ᶜ M`. Equality and membership on the restricted elements are inherited from `𝒮`: both relations look only at the first projections and apply the original relations there. This changes what counts as an element of the structure; it does not construct a set representing `M`, nor does it by itself fix a syntax or a [constant domain]{.term-ref #constant-domain}.
 <!--zh-->
 ## 子结构
 
-给定命题值类 `M`，现在可以把结构裁剪到载体中满足 `M` 的那一部分。限制 `𝒮 ↾ M` 仍是一个 `ZFStructure`{.Agda}，其载体是依值对 `(x , proof)` 的类型，其中 `x : S` 且 `proof : x ∈ᶜ M`。限制元素上的等词与隶属从 `𝒮` 继承：两种关系都只看第一投影，并在其上应用原关系。这改变的是结构中什么算作元素；它不构造表示 `M` 的集合，也不自行确定语法或常元域。
+给定命题值类 `M`，现在可以把结构裁剪到载体中满足 `M` 的那一部分。限制 `𝒮 ↾ M` 仍是一个 `ZFStructure`{.Agda}，其载体是依值对 `(x , proof)` 的类型，其中 `x : S` 且 `proof : x ∈ᶜ M`。限制元素上的等词与隶属从 `𝒮` 继承：两种关系都只看第一投影，并在其上应用原关系。这改变的是结构中什么算作元素；它不构造表示 `M` 的集合，也不自行确定语法或[常元域]{.term-ref #constant-domain}。
 <!--ja-->
 ## 部分構造
 
-命題値のクラス `M` が与えられれば、台のうち `M` を満たす部分へ構造を切り詰められる。制限 `𝒮 ↾ M` は再び `ZFStructure`{.Agda} であり、その台は依存対 `(x , proof)` の型である。ここで `x : S` かつ `proof : x ∈ᶜ M` である。制限された要素に対する等号と所属は `𝒮` から受け継がれる。どちらの関係も第一射影だけを見て、そこに元の関係を適用する。変わるのは構造の要素の範囲であって、`M` を表す集合を構成するのでも、構文や定数域をそれ自体で固定するのでもない。
+命題値のクラス `M` が与えられれば、台のうち `M` を満たす部分へ構造を切り詰められる。制限 `𝒮 ↾ M` は再び `ZFStructure`{.Agda} であり、その台は依存対 `(x , proof)` の型である。ここで `x : S` かつ `proof : x ∈ᶜ M` である。制限された要素に対する等号と所属は `𝒮` から受け継がれる。どちらの関係も第一射影だけを見て、そこに元の関係を適用する。変わるのは構造の要素の範囲であって、`M` を表す集合を構成するのでも、構文や[定数域]{.term-ref #constant-domain}をそれ自体で固定するのでもない。
 <!--/-->
 
 <!--en-->
@@ -279,13 +279,13 @@ The relations of `𝒮 ↾ M` ignore the second components, so one might ask whe
 <!--en-->
 ## Recap
 
-A `ZFStructure`{.Agda} records four fields: a carrier, its h-set proof, and proposition-valued interpretations of equality and membership. It includes no ZF axioms. For proposition-valued structures, `∈ᵗ` exposes the underlying membership type, `Transitive` states closure under members of members, and `𝒮 ↾ M` restricts the carrier to a class of dependent pairs. The lemma `↾-reflects`{.Agda} lifts equality of first projections to equality in that restricted carrier. The next step is to interpret the object-language formulas themselves inside such a structure.
+A `ZFStructure`{.Agda} records four fields: a carrier, its h-set proof, and proposition-valued interpretations of equality and membership. It includes no ZF axioms. For proposition-valued structures, `∈ᵗ` exposes the underlying membership type, `Transitive` states closure under members of members, and `𝒮 ↾ M` restricts the carrier to a class of dependent pairs. The lemma `↾-reflects`{.Agda} lifts equality of first projections to equality in that restricted carrier. The next step is to interpret the [formulas]{.term-ref #object-formula} of the [object language]{.term-ref #object-language} inside such a structure.
 <!--zh-->
 ## 小结
 
-`ZFStructure`{.Agda} 记录四个字段：载体、载体的 h-集合性证明，以及等词与成员关系的真值解释；其中不包含 ZF 公理。对命题值结构，`∈ᵗ` 给出成员真值的底层类型，`Transitive` 陈述对元素之元素的闭合，`𝒮 ↾ M` 把载体限制到一个由依值对组成的类。引理 `↾-reflects`{.Agda} 把第一投影的相等提升为限制载体中的相等。下一步是在这样的结构中解释对象语言的公式本身。
+`ZFStructure`{.Agda} 记录四个字段：载体、载体的 h-集合性证明，以及等词与成员关系的真值解释；其中不包含 ZF 公理。对命题值结构，`∈ᵗ` 给出成员真值的底层类型，`Transitive` 陈述对元素之元素的闭合，`𝒮 ↾ M` 把载体限制到一个由依值对组成的类。引理 `↾-reflects`{.Agda} 把第一投影的相等提升为限制载体中的相等。下一步是在这样的结构中解释[对象语言]{.term-ref #object-language}的[公式]{.term-ref #object-formula}本身。
 <!--ja-->
 ## まとめ
 
-`ZFStructure`{.Agda} は、台、その h-集合性の証明、等号と所属の真理値による解釈という四つのフィールドを記録し、ZF の公理は含まない。命題値の構造では、`∈ᵗ` が所属の基礎型を与え、`Transitive` が要素の要素についての閉性を述べ、`𝒮 ↾ M` が台を依存対からなるクラスへ制限する。`↾-reflects`{.Agda} は、第一射影の等しさを制限された台の等しさへ持ち上げる。次の段階は、このような構造の中で対象言語の論理式そのものを解釈することである。
+`ZFStructure`{.Agda} は、台、その h-集合性の証明、等号と所属の真理値による解釈という四つのフィールドを記録し、ZF の公理は含まない。命題値の構造では、`∈ᵗ` が所属の基礎型を与え、`Transitive` が要素の要素についての閉性を述べ、`𝒮 ↾ M` が台を依存対からなるクラスへ制限する。`↾-reflects`{.Agda} は、第一射影の等しさを制限された台の等しさへ持ち上げる。次の段階は、このような構造の中で[対象言語]{.term-ref #object-language}の[論理式]{.term-ref #object-formula}そのものを解釈することである。
 <!--/-->

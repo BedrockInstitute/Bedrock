@@ -133,6 +133,8 @@ $(TYPECHECK_LIB): bedrock.agda-lib
 	@mkdir -p $(@D)
 	@cp -p $< $@
 
+# The canonical source mirror joins Agda fences in order. Splitting/merging a
+# Markdown fence without changing code leaves both staged bytes and interfaces warm.
 typecheck-stage: $(TYPECHECK_LIB)
 	$(PY) -m outcrop agda-stage --source src --destination $(TYPECHECK_ROOT)/src --code-only
 
@@ -314,7 +316,8 @@ html-cold-parallel: $(OUTCROP_AGDA) $(AGDA_ENV_STAMP) bedrock.agda-lib $(AGDA_SO
 	@touch $(AGDA_STAMP)
 
 # Raw extraction consumes an already prepared backend. Only types/html own
-# compiler freshness; the content-cache driver deliberately calls _types.
+# compiler freshness. After a certified position rebase the cache driver calls
+# types-local-expressions alone; identifier types contain no source offsets.
 types-local-identifiers:
 	$(PY) scripts/site/extract-types.py --agda $(abspath $(AGDA)) \
 		--html-dir $(HTML_DIR) --out _build/types.json

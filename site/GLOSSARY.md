@@ -117,6 +117,11 @@ forms. Use `matching = "explicit"` for short or ambiguous forms such as Chinese 
 occurrence must use an explicit term-reference marker. Optional `forms_en`, `forms_zh` and
 `forms_ja` arrays list audited inflected or alternate surface forms. Use the structured
 `abbreviations` field for a short name instead of repeating it in `forms_*`.
+If ambiguity is language-specific, keep `matching = "auto"` and set
+`auto_languages` to the unambiguous subset of `en`, `zh`, `ja`; omitted languages
+still accept explicit `term-ref` markers. For example, the logical sentence is
+automatic in English and Chinese, while Japanese `文` is explicit because it also
+occurs in unrelated words such as `本文` and `文脈`.
 For an otherwise automatic term that appears inside an unrelated fixed phrase,
 list that whole phrase in `auto_exclude_en`, `auto_exclude_zh` or
 `auto_exclude_ja`. The renderer and prerequisite lint then skip only the term

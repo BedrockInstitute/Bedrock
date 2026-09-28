@@ -63,7 +63,7 @@ open import Cubical.Data.Sigma using ( Σ-cong-equiv-snd )
 <!--en-->
 The formulas come from an inductive object language: `Formula K n` has constants indexed by a type `K` and `n` slots indexing free variables, with atoms built from a structure's membership and equality relations. Choosing `K = ⟪ A ⟫`, the small member type of `A`, makes "parameters from `A`" true by construction: every constant names a member of `A`. The bounded fragment `Δ₀` will matter later, when the inner and outer readings of satisfaction are compared; constant mapping and relabelling are the operations that move a formula between constant domains and transport satisfaction along such a move.
 <!--zh-->
-公式来自归纳的对象语言：`Formula K n` 的常元由类型 `K` 索引，`n` 个槽位索引自由变量，原子公式由结构的隶属与相等关系构成。取 `K = ⟪ A ⟫`，即 `A` 的小成员类型，「参数来自 `A`」便由构造自动成立：每个常元指称 `A` 的一个成员。有界片段 `Δ₀` 稍后比较满足的内层与外层读法时才会用到；常元映射与改名则是把公式在常元域之间移动并沿此移动搬运满足关系的操作。
+公式来自归纳的对象语言：`Formula K n` 的常元由类型 `K` 索引，`n` 个槽位索引自由变元，原子公式由结构的隶属与相等关系构成。取 `K = ⟪ A ⟫`，即 `A` 的小成员类型，「参数来自 `A`」便由构造自动成立：每个常元指称 `A` 的一个成员。有界片段 `Δ₀` 稍后比较满足的内层与外层读法时才会用到；常元映射与改名则是把公式在常元域之间移动并沿此移动搬运满足关系的操作。
 <!--ja-->
 論理式は帰納的な対象言語から来る。`Formula K n` は、定数が型 `K` で添字づけられ、自由変数の `n` 個のスロットを持ち、原子論理式は構造の所属と等号の関係から組み立てられる。`K = ⟪ A ⟫`、つまり `A` の小さな要素型を選べば、「`A` からのパラメータ」は構成そのものによって成り立つ。すべての定数は `A` の要素を名指すからである。有界断片 `Δ₀` は、充足の内側と外側の読みを比べる際に後で効く。定数の対応付けと改名は、論理式を定数域の間で移し、その移動に沿って充足を輸送する操作である。
 <!--/-->
@@ -188,7 +188,7 @@ With the inner satisfaction `⊨ᵐ` and its smallness in scope, the operator ca
 <!--en-->
 The compression `smallSat` packages the two-step evaluation: `⊨ᵐ-small φ (ι m ∷ [])` is a pair whose first component is a small proposition equivalent to the inner satisfaction statement, and whose second component is that equivalence. The environment `ι m ∷ []` has a single entry because `φ` has one free-variable slot, filled by the member `m` through `ι`. Independently of this, any constants occurring in `φ` are interpreted through the constant interpretation `ι`, so they may name arbitrary members of `A`: parameters enter through constants, and the variable entry only fixes where the single free slot is evaluated. The underlying proposition `⟨ smallSat φ m ⟩` says that `φ` holds at `m` inside `(A, ∈)`, in the small form suitable for indexing a `sett`.
 <!--zh-->
-压缩 `smallSat` 打包了两步求值：`⊨ᵐ-small φ (ι m ∷ [])` 是一个对子，第一分量是与内层满足陈述等价的小命题，第二分量是那个等价本身。环境 `ι m ∷ []` 只有一项，因为 `φ` 只有一个自由变量槽位，由成员 `m` 经 `ι` 填入。与此独立地，`φ` 中出现的任何常元都经常元解释 `ι` 解释，因此可以指称 `A` 的任意成员：参数经由常元进入，而变量那一项只是固定单个自由槽位的求值位置。底层命题 `⟨ smallSat φ m ⟩` 表示 `φ` 在 `(A, ∈)` 内于 `m` 处成立，且已是适合为 `sett` 充当索引的小形式。
+压缩 `smallSat` 打包了两步求值：`⊨ᵐ-small φ (ι m ∷ [])` 是一个对子，第一分量是与内层满足陈述等价的小命题，第二分量是那个等价本身。环境 `ι m ∷ []` 只有一项，因为 `φ` 只有一个自由变元槽位，由成员 `m` 经 `ι` 填入。与此独立地，`φ` 中出现的任何常元都经常元解释 `ι` 解释，因此可以指称 `A` 的任意成员：参数经由常元进入，而变元那一项只是固定单个自由槽位的求值位置。底层命题 `⟨ smallSat φ m ⟩` 表示 `φ` 在 `(A, ∈)` 内于 `m` 处成立，且已是适合为 `sett` 充当索引的小形式。
 <!--ja-->
 圧縮 `smallSat` は二段階の評価をまとめる。`⊨ᵐ-small φ (ι m ∷ [])` は対で、第一成分は内側の充足の命題と同値な小さな命題、第二成分がその同値である。環境 `ι m ∷ []` の項目が一つなのは、`φ` の自由変数のスロットが一つで、それを要素 `m` が `ι` を通じて埋めるからである。それとは独立に、`φ` に現れる任意の定数は定数の解釈 `ι` を通して解釈されるので、`A` のどんな要素でも名指せる。パラメータは定数を通じて入り、変数の項は単一の自由スロットをどこで評価するかを固定するだけである。根底の命題 `⟨ smallSat φ m ⟩` は、`φ` が `(A, ∈)` の中で `m` において成り立つことを、`sett` の添字に適した小さな形で言う。
 <!--/-->
@@ -376,7 +376,7 @@ When `A` is transitive, each **member** `a` of `A` is itself definable, by the s
 <!--zh-->
 ## 传递性之下，A ⊆ Def A
 
-当 `A` 传递时，`A` 的每个**成员** `a` 自身也可定义：仍用模型章构造交集的那条两符号途径，即原子公式「该变量属于 `a`」。分离暗含的「∈ A」条件恰好由传递性保证：`a` 的成员已是 `A` 的成员，于是原子公式刻出的正是 `a`。故 `A ⊆ Def A`：没有任何元素被遗漏。与上一节合观，迭代 `Def` 只增不减，正合可构造塔的需要。
+当 `A` 传递时，`A` 的每个**成员** `a` 自身也可定义：仍用模型章构造交集的那条两符号途径，即原子公式「该变元属于 `a`」。分离暗含的「属于 `A`」条件恰好由传递性保证：`a` 的成员已是 `A` 的成员，于是原子公式刻出的正是 `a`。故 `A ⊆ Def A`：没有任何元素被遗漏。与上一节合观，迭代 `Def` 只增不减，正合可构造塔的需要。
 <!--ja-->
 ## 推移性の下で A ⊆ Def A
 
@@ -386,7 +386,7 @@ When `A` is transitive, each **member** `a` of `A` is itself definable, by the s
 <!--en-->
 The submodule takes transitivity of `A` as an explicit hypothesis. The atomic formula `atom mₐ` is `var zero ∈̇ con mₐ`: one free-variable slot, and a single constant naming the element `mₐ`. This is where the design choice of using `⟪ A ⟫` as the constant domain pays off again: every member of `A` is available as a constant, with `ι` decoding it into the restricted carrier.
 <!--zh-->
-子模块以 `A` 的传递性为显式前提。原子公式 `atom mₐ` 是 `var zero ∈̇ con mₐ`：一个自由变量槽位，加上命名元素 `mₐ` 的单个常元。这里再次体现了以 `⟪ A ⟫` 为常元域这一设计选择的好处：`A` 的每个成员都可充作常元，由 `ι` 解码到限制载体。
+子模块以 `A` 的传递性为显式前提。原子公式 `atom mₐ` 是 `var zero ∈̇ con mₐ`：一个自由变元槽位，加上命名元素 `mₐ` 的单个常元。这里再次体现了以 `⟪ A ⟫` 为常元域这一设计选择的好处：`A` 的每个成员都可充作常元，由 `ι` 解码到限制载体。
 <!--ja-->
 この議論は `A` の推移性を明示的な仮定として取る。原子論理式 `atom mₐ` は `var zero ∈̇ con mₐ` で、自由変数のスロットが一つと、要素 `mₐ` を名指す単一の定数からなる。`⟪ A ⟫` を定数域として使うという設計判断がここでも効く。`A` のすべての要素が定数として使え、`ι` がそれを制限された台へ復号するからである。
 <!--/-->

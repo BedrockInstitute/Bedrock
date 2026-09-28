@@ -710,7 +710,7 @@ Renaming and application adequacy put those two assumptions into the forms expec
 <!--en-->
 This exact correspondence makes the selection definable. The map has input set `X` and codomain `Lγ`: for each proof that `x ∈ X`, its value is `fn x m`, and the earlier level-membership theorem places that value in `Lγ`. The graph formula is read in the environment `(value,input)`, so its first variable denotes the selected witness and its second variable denotes the input.
 <!--zh-->
-这一精确对应使该选取成为可定义映射。映射的输入集是 `X`，陪域是 `Lγ`：对每个 `x ∈ X` 的证明，其取值为 `fn x m`，而先前的层隶属定理把该值置于 `Lγ` 中。图公式在环境 `(取值,输入)` 中读取，因此第一个变量表示选出的见证，第二个变量表示输入。
+这一精确对应使该选取成为可定义映射。映射的输入集是 `X`，陪域是 `Lγ`：对每个 `x ∈ X` 的证明，其取值为 `fn x m`，而先前的层隶属定理把该值置于 `Lγ` 中。图公式在环境 `(取值,输入)` 中读取，因此第一个变元表示选出的见证，第二个变元表示输入。
 <!--ja-->
 この正確な対応により、選択は定義可能な写像になる。入力集合は `X`、終域は `Lγ` である。`x ∈ X` の各証明に対する値は `fn x m` であり、先に示した段階への所属によって、その値は `Lγ` に入る。グラフ論理式は環境 `(値,入力)` で読まれるので、第一変数が選ばれた証人を、第二変数が入力を表す。
 <!--/-->

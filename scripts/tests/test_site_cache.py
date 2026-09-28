@@ -31,6 +31,7 @@ class SiteCacheTests(unittest.TestCase):
             'outcrop/src/outcrop/site/site_lint.py': (False, False, False),
             'outcrop/src/outcrop/core/prose_lint.py': (False, False, False),
             'outcrop/src/outcrop/adapters/source_stage.py': (False, False, False),
+            'outcrop/src/outcrop/adapters/agda/reweave.py': (False, False, False),
             'outcrop/src/outcrop/adapters/extract_types.py': (False, True, False),
             'outcrop/src/outcrop/core/agda_type_quality.py': (False, True, True),
             'site/agda-libraries.json': (True, False, False),
@@ -57,7 +58,7 @@ class SiteCacheTests(unittest.TestCase):
             files = (Path(folder) / 'types.json', Path(folder) / 'expressions.json')
             for path in files:
                 path.write_text('{}')
-            current = {'Sample': {'source': 'prose-1', 'blocks': ['code-1']}}
+            current = {'Sample': {'source': 'prose-1', 'code': 'code-1', 'blocks': ['code-1']}}
             with patch.object(cache, 'TYPES', files), patch.object(cache, 'render_identity', return_value='renderer'):
                 first = cache.render_build_key(current, {'producer': 'compiler'}, ['en'], '')
                 for path in files:
@@ -66,6 +67,8 @@ class SiteCacheTests(unittest.TestCase):
                 current['Sample']['source'] = 'prose-2'
                 self.assertEqual(first, cache.render_build_key(current, {'producer': 'compiler'}, ['en'], ''))
                 current['Sample']['blocks'] = ['code-2']
+                self.assertEqual(first, cache.render_build_key(current, {'producer': 'compiler'}, ['en'], ''))
+                current['Sample']['code'] = 'code-2'
                 self.assertNotEqual(first, cache.render_build_key(current, {'producer': 'compiler'}, ['en'], ''))
 
     def test_reweave_preserves_certified_code_and_updates_prose(self):
@@ -109,7 +112,7 @@ class CacheWorkflowTests(unittest.TestCase):
         self.source.parent.mkdir(parents=True)
         self.source.write_text('```agda\nx = 1\n```\n\nOld prose.\n')
         cache.HTML.mkdir(parents=True)
-        (cache.HTML / 'Sample.md').write_text('<pre class="Agda"><a id="42">x</a> = 1\n</pre>\n\nOld prose.\n')
+        (cache.HTML / 'Sample.md').write_text('<pre class="Agda"><a id="9">x</a> = 1\n</pre>\n\nOld prose.\n')
         cache.STAMP.touch(); cache.TRACE.write_text('trace')
         for path in cache.TYPES:
             path.write_text('{}')
@@ -128,6 +131,8 @@ class CacheWorkflowTests(unittest.TestCase):
         elif command[1] == '_types':
             for path in cache.TYPES:
                 path.write_text('{"fresh": true}')
+        elif command[1] == 'types-local-expressions':
+            cache.TYPES[1].write_text('{"fresh_expressions": true}')
         else:
             out = Path(command[command.index('--out') + 1])
             for lang in self.args.langs.split(','):
@@ -147,17 +152,18 @@ class CacheWorkflowTests(unittest.TestCase):
         cache.build(self.args)
         self.run.assert_not_called()
 
-    def test_prose_only_updates_chapter_overview_and_search_without_compiler(self):
+    def test_prose_only_updates_site_without_compiler(self):
         self.warm(); self.edit_prose()
         before = [path.read_bytes() for path in cache.TYPES]
         cache.build(self.args)
-        self.assertEqual(self.run.call_count, 1)
-        command = self.run.call_args.args[0]
+        self.assertEqual(self.run.call_count, 2)
+        self.assertEqual(self.run.call_args_list[0].args[0][1], 'types-local-expressions')
+        command = self.run.call_args_list[1].args[0]
         self.assertEqual(command[1], 'scripts/site/render-site.py')
-        self.assertIn('--incremental', command)
-        self.assertEqual([command[i+1] for i, value in enumerate(command) if value == '--module'], ['Origin', 'Sample'])
-        self.assertEqual(before, [path.read_bytes() for path in cache.TYPES])
-        self.assertIn('<a id="42">x</a>', (cache.HTML / 'Sample.md').read_text())
+        self.assertNotIn('--incremental', command)
+        self.assertEqual(before[0], cache.TYPES[0].read_bytes())
+        self.assertNotEqual(before[1], cache.TYPES[1].read_bytes())
+        self.assertIn('<a id="9">x</a>', (cache.HTML / 'Sample.md').read_text())
         self.assertIn('New prose.', (cache.HTML / 'Sample.md').read_text())
 
     def test_prose_plus_extractor_change_does_not_recompile_from_timestamps(self):
@@ -166,6 +172,45 @@ class CacheWorkflowTests(unittest.TestCase):
             cache.build(self.args)
         self.assertEqual([call.args[0][1] for call in self.run.call_args_list],
                          ['_types', 'scripts/site/render-site.py'])
+
+    def test_fence_split_relocates_anchors_links_and_trace_without_compiler(self):
+        self.args.backend_only = True
+        self.source.write_text('```agda\nx = 1\ny = 2\n```\n')
+        (cache.HTML / 'Sample.md').write_text(
+            '<pre class="Agda"><a id="9">x</a> = 1\n<a id="15">y</a> = 2\n</pre>')
+        old = cache.source_inventory(cache.source_paths())['Sample']
+        self.backend['sources'] = {'Sample': old}
+        cache.write_state(cache.BACKEND_STATE, self.backend)
+        (cache.HTML / 'Other.md').write_text('<a href="Sample.html#15">y</a>')
+        cache.TRACE.write_text(json.dumps({
+            'path': str(self.source.resolve()), 'start': 15, 'end': 16,
+            'sourceHash': old['traceHash'], 'type': 'Nat',
+        }) + '\n')
+        self.source.write_text('```agda\nx = 1\n```\n\nMore prose.\n\n```agda\ny = 2\n```\n')
+        current = cache.source_inventory(cache.source_paths())['Sample']
+        self.assertEqual(old['code'], current['code'])
+        cache.build(self.args)
+        self.assertEqual([call.args[0][1] for call in self.run.call_args_list],
+                         ['types-local-expressions'])
+        moved = current['spans'][1][0]
+        self.assertIn(f'id="{moved}"', (cache.HTML / 'Sample.md').read_text())
+        self.assertIn(f'Sample.html#{moved}', (cache.HTML / 'Other.md').read_text())
+        trace = json.loads(cache.TRACE.read_text())
+        self.assertEqual(trace['start'], moved)
+        self.assertEqual(trace['sourceHash'], current['traceHash'])
+        self.assertEqual(cache.read_state(cache.BACKEND_STATE)['sources']['Sample'], current)
+
+    def test_fence_split_inside_highlight_token_falls_back_to_compiler(self):
+        self.args.backend_only = True
+        self.source.write_text('```agda\nx = 1\ny = 2\n```\n')
+        (cache.HTML / 'Sample.md').write_text(
+            '<pre class="Agda"><a id="9">x = 1\ny = 2\n</a></pre>')
+        self.backend['sources'] = cache.source_inventory(cache.source_paths())
+        cache.write_state(cache.BACKEND_STATE, self.backend)
+        self.source.write_text('```agda\nx = 1\n```\n\n```agda\ny = 2\n```\n')
+        cache.build(self.args)
+        self.assertEqual([call.args[0][1] for call in self.run.call_args_list],
+                         ['html', '_types'])
 
     def test_code_and_compiler_changes_rebuild_evidence(self):
         self.source.write_text(self.source.read_text().replace('x = 1', 'x = 2'))
@@ -244,6 +289,7 @@ class CacheWorkflowTests(unittest.TestCase):
         self.assertNotEqual(first['source'], second['source'])
         self.assertEqual(first['backend'], second['backend'])
         self.assertEqual(first['extractor'], second['extractor'])
+        self.assertEqual(first['code'], second['code'])
         self.assertEqual(cache.read_state(cache.BACKEND_STATE), self.backend)
         self.run.assert_not_called()
 

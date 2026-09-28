@@ -89,7 +89,7 @@ completed migration scripts are not part of the build or test workflow.
 
 | Area | Retained contract | Verification |
 | --- | --- | --- |
-| Code surfaces | one target identity, real compiler ranges, leaves, syntax, recursive help, stop rules | unit contracts; boilerplate/universe browser fixtures; direct interactions |
+| Code surfaces | one target identity, real compiler ranges, leaves, syntax, recursive help, stop rules; source-preserving copy on formal Agda fences | unit contracts; boilerplate/universe/mobile-reader browser fixtures; direct interactions |
 | Hover | ancestor delays, downward positioning, persistent touch, smaller/larger nodes, cleanup | lifecycle contracts; sequential browser fixtures |
 | Definitions and prose links | full page, target history, redirect identity, code/prose alignment, Prelude import section alignment, loading cancellation, theme, native navigation exceptions | modal contracts; browser regression and manual navigation |
 | Navigation | sidebar/sticky tree hit regions, drawer focus, routes, completion, tabs, languages | directory fixture and direct keyboard/click tests |

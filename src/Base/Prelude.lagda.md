@@ -13,7 +13,7 @@ module Base.Prelude where
 
 <!--en-->
 
-In this book, set theory is the **[object theory]{.term-intro #object-theory}** and cubical type theory is the **[metatheory]{.term-intro #metatheory}**: we construct models of set theory, interpret their sentences and prove their properties within cubical type theory. Agda checks the constructions and proofs, while the Cubical library supplies their basic vocabulary. We call this working environment the **[host]{.term-intro #host-environment}**. A host type or function therefore belongs to the metatheory, not to the objects inside a set-theoretic model.
+In this book, set theory is the **[object theory]{.term-intro #object-theory}** and cubical type theory is the **[metatheory]{.term-intro #metatheory}**: we construct models of set theory, interpret their [sentences]{.term-ref #object-sentence} and prove their properties within cubical type theory. Agda checks the constructions and proofs, while the Cubical library supplies their basic vocabulary. We call this working environment the **[host]{.term-intro #host-environment}**. A host type or function therefore belongs to the metatheory, not to the objects inside a set-theoretic model.
 
 This chapter introduces that vocabulary through its mathematical meaning and use. There is no need to memorize every symbol: later chapters import these notions together from `Base.Prelude`{.Agda}, and you can return here whenever a definition needs refreshing.
 
@@ -28,7 +28,7 @@ Hover over a marked name or expression to see its type; names in the popup can b
 Keywords and syntax symbols offer brief explanations and links to the official Agda manual, while terms lead back to where they are first introduced. Basic vocabulary leads first to its explanation in this chapter; to explore a library definition further, follow the visible Cubical imports to its source.
 <!--zh-->
 
-本书以集合论为**[对象理论]{.term-intro #object-theory}**，以立方类型论为**[元理论]{.term-intro #metatheory}**：在立方类型论中构造集合论的模型，解释其语句，并证明其性质。Agda 检查这些构造与证明，Cubical 库提供所需的基础词汇；我们把这套工作环境简称为**[宿主]{.term-intro #host-environment}**。因此，「宿主中的类型或函数」属于元理论，而不是集合论模型内部的对象。
+本书以集合论为**[对象理论]{.term-intro #object-theory}**，以立方类型论为**[元理论]{.term-intro #metatheory}**：在立方类型论中构造集合论的模型，解释其中的[句子]{.term-ref #object-sentence}，并证明其性质。Agda 检查这些构造与证明，Cubical 库提供所需的基础词汇；我们把这套工作环境简称为**[宿主]{.term-intro #host-environment}**。因此，「宿主中的类型或函数」属于元理论，而不是集合论模型内部的对象。
 
 本章从数学含义和实际用法两方面介绍这些词汇。不必一次记住所有符号：后续章节会从 `Base.Prelude`{.Agda} 统一引入它们，遇到不熟悉的概念时，再回到这里查阅即可。
 
@@ -43,7 +43,7 @@ Keywords and syntax symbols offer brief explanations and links to the official A
 关键字和语法符号附有简短解释及 Agda 官方文档链接，术语则链接到首次引入的位置。基础词汇先指向本章的讲解；若想进一步了解库中的定义，可以沿可见的 Cubical 导入代码进入原文。
 <!--ja-->
 
-本書では集合論を**[対象理論]{.term-intro #object-theory}**、立方型理論を**[メタ理論]{.term-intro #metatheory}**とする。立方型理論の中で集合論のモデルを構成し、その文を解釈して性質を証明する。Agda が構成と証明を検査し、Cubical ライブラリが基礎語彙を提供する。この環境を**[ホスト]{.term-intro #host-environment}**と呼ぶ。したがって、ホストの型や関数はメタ理論に属し、集合論のモデル内部の対象とは異なる。
+本書では集合論を**[対象理論]{.term-intro #object-theory}**、立方型理論を**[メタ理論]{.term-intro #metatheory}**とする。立方型理論の中で集合論のモデルを構成し、その[文]{.term-ref #object-sentence}を解釈して性質を証明する。Agda が構成と証明を検査し、Cubical ライブラリが基礎語彙を提供する。この環境を**[ホスト]{.term-intro #host-environment}**と呼ぶ。したがって、ホストの型や関数はメタ理論に属し、集合論のモデル内部の対象とは異なる。
 
 本章では、その語彙を数学的な意味と使い方から紹介する。記号を一度に覚える必要はない。後の章では `Base.Prelude`{.Agda} からまとめて導入するので、必要なときにここへ戻り、意味を確かめればよい。
 
@@ -319,13 +319,13 @@ open import Cubical.Data.Sigma public
 ```
 
 <!--en-->
-The code block below defines two binding forms for Σ types. It shows only the precedence declaration at first; readers who want the implementation can expand the rest. In `Σ[ x ∶ A ] B x`{.Agda}, the first component's type is explicit; in `Σ[ x ] B x`{.Agda}, Agda infers it. Both construct the same dependent-pair type.
+The code block below defines two binding forms for Σ types. It shows only the [precedence]{.term-intro #syntax-precedence} declaration at first; readers who want the implementation can expand the rest. In `Σ[ x ∶ A ] B x`{.Agda}, the first component's type is explicit; in `Σ[ x ] B x`{.Agda}, Agda infers it. Both construct the same dependent-pair type.
 
 <!--zh-->
-下面的代码块定义了 Σ 类型的两种绑定写法：默认只露出优先级声明，感兴趣时可以展开阅读具体实现。`Σ[ x ∶ A ] B x`{.Agda} 明确给出第一分量的类型，`Σ[ x ] B x`{.Agda} 则让 Agda 推断；两者构造同一个依值对类型。
+下面的代码块定义了 Σ 类型的两种绑定写法：默认只露出[优先级]{.term-intro #syntax-precedence}声明，感兴趣时可以展开阅读具体实现。`Σ[ x ∶ A ] B x`{.Agda} 明确给出第一分量的类型，`Σ[ x ] B x`{.Agda} 则让 Agda 推断；两者构造同一个依值对类型。
 
 <!--ja-->
-次のコードブロックで Σ 型の二つの束縛表記を定義する。最初は優先順位の宣言だけを示し、実装の詳細は展開して読める。`Σ[ x ∶ A ] B x`{.Agda} は第一成分の型を明示し、`Σ[ x ] B x`{.Agda} はその推論を Agda に任せる。両者は同じ依存対型を作る。
+次のコードブロックで Σ 型の二つの束縛表記を定義する。最初は[優先順位]{.term-intro #syntax-precedence}の宣言だけを示し、実装の詳細は展開して読める。`Σ[ x ∶ A ] B x`{.Agda} は第一成分の型を明示し、`Σ[ x ] B x`{.Agda} はその推論を Agda に任せる。両者は同じ依存対型を作る。
 
 <!--/-->
 
@@ -2075,7 +2075,7 @@ Class membership is written `x ∈ᶜ M`{.Agda} and read "`x`{.Agda} belongs to 
 
 <div class="single-line-code"><code>`x ∈ᶜ M  :=  ⟨ M x ⟩`{.Agda}</code></div>
 
-To prove `x ∈ᶜ M`{.Agda} is therefore to construct a proof of `⟨ M x ⟩`{.Agda}. The superscript `ᶜ`{.Agda} marks this as class membership. It distinguishes this host-level predicate from the membership relation between sets that later chapters interpret in a model of set theory: the former says whether an object satisfies a property, whereas the latter is a relation in the object language.
+To prove `x ∈ᶜ M`{.Agda} is therefore to construct a proof of `⟨ M x ⟩`{.Agda}. The superscript `ᶜ`{.Agda} marks this as class membership. It distinguishes this host-level predicate from the membership relation between sets that later chapters interpret in a model of set theory: the former says whether an object satisfies a property, whereas the latter is a relation in the [object language]{.term-ref #object-language}.
 <!--zh-->
 一个随对象变化的命题，可以从给定的一批对象中挑出恰好使它成立的对象。集合论把这种由性质划定的对象范围称为类。
 
@@ -2115,7 +2115,7 @@ To prove `x ∈ᶜ M`{.Agda} is therefore to construct a proof of `⟨ M x ⟩`{
 
 <div class="single-line-code"><code>`x ∈ᶜ M  :=  ⟨ M x ⟩`{.Agda}</code></div>
 
-したがって `x ∈ᶜ M`{.Agda} を証明することは、命題 `⟨ M x ⟩`{.Agda} の証明を構成することである。上付きの `ᶜ`{.Agda} は、ここでクラスへの所属を使っていることを示す。これはホストレベルの述語を、後に集合論のモデルで解釈する集合間の所属関係から区別する。前者は対象がある性質を満たすかを述べ、後者は対象言語の関係である。
+したがって `x ∈ᶜ M`{.Agda} を証明することは、命題 `⟨ M x ⟩`{.Agda} の証明を構成することである。上付きの `ᶜ`{.Agda} は、ここでクラスへの所属を使っていることを示す。これはホストレベルの述語を、後に集合論のモデルで解釈する集合間の所属関係から区別する。前者は対象がある性質を満たすかを述べ、後者は[対象言語]{.term-ref #object-language}の関係である。
 <!--/-->
 
 ```agda
@@ -2256,7 +2256,7 @@ $$\frac{}{\mathsf{zero}:\mathbb{N}}\qquad\frac{n:\mathbb{N}}{\mathsf{suc}\,n:\ma
 <!--en-->
 To define a function from `ℕ`{.Agda} by recursion, it is therefore enough to give its value at `zero`{.Agda type="ℕ"} and to give the value at `suc n`{.Agda type="ℕ"} from the value already obtained at `n`{.Agda}.
 
-Addition `_+_`{.Agda} combines two natural-number sizes and is used throughout the syntax chapters to compute the number of available variables after contexts are extended or combined.
+Addition `_+_`{.Agda} combines two natural-number sizes and is used throughout the syntax chapters to compute the number of available variables after [contexts]{.term-ref #variable-context} are extended or combined.
 
 $$\mathord{+}:\mathbb N\to\mathbb N\to\mathbb N$$
 
@@ -2268,7 +2268,7 @@ n, & m=0,\\
 <!--zh-->
 因此，要递归定义从 `ℕ`{.Agda} 出发的函数，只需给出函数在 `zero`{.Agda type="ℕ"} 处的值，并说明如何由已经得到的 `n`{.Agda} 处之值构造 `suc n`{.Agda type="ℕ"} 处之值。
 
-加法 `_+_`{.Agda} 合并两个自然数大小；在后续句法章节中，扩张或拼接语境时可用它计算可用变元的数量。
+加法 `_+_`{.Agda} 合并两个自然数大小；在后续句法章节中，扩张或拼接[语境]{.term-ref #variable-context}时可用它计算可用变元的数量。
 
 $$\mathord{+}:\mathbb N\to\mathbb N\to\mathbb N$$
 
@@ -2280,7 +2280,7 @@ n, & m=0,\\
 <!--ja-->
 したがって、`ℕ`{.Agda} からの関数を再帰的に定義するには、`zero`{.Agda type="ℕ"} での値と、すでに得られた `n`{.Agda} での値から `suc n`{.Agda type="ℕ"} での値を作る方法を与えれば十分である。
 
-加法 `_+_`{.Agda} は二つの自然数の大きさを合わせる。後の構文の章では、文脈を拡張したり連結したりした後に使える変数の個数を計算するために用いる。
+加法 `_+_`{.Agda} は二つの自然数の大きさを合わせる。後の構文の章では、[文脈]{.term-ref #variable-context}を拡張したり連結したりした後に使える変数の個数を計算するために用いる。
 
 $$\mathord{+}:\mathbb N\to\mathbb N\to\mathbb N$$
 

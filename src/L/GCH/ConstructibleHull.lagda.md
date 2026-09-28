@@ -2148,7 +2148,7 @@ The satisfaction graph over the stage supplies the satisfaction sets of all code
 <!--en-->
 The code set at the empty alphabet collects the codes of the parameter-free formulas. Such formulas may have free variables; what they lack is constants, and the free variables will be assigned by the parameter environments of the searches.
 <!--zh-->
-空字母表处的码集收集无常元公式的码。这些公式可以带有自由变量；它们缺少的是常元，而自由变量将由搜索的参数环境赋值。
+空字母表处的码集收集无常元公式的码。这些公式可以带有自由变元；它们缺少的是常元，而自由变元将由搜索的参数环境赋值。
 <!--ja-->
 空のアルファベットでの符号の集合は、無定数の論理式の符号を集める。そのような論理式は自由変数をもつことがある。欠けているのは定数であり、自由変数に値を与えるのは、探索のパラメータ環境である。
 <!--/-->
@@ -3430,7 +3430,7 @@ The decoding maps a member of the internal `ω` to a natural number with the num
 <!--en-->
 Lookups in `vecOf f` recover `f` entry by entry. Now fix a set `Z`, an arity `k`, a formula `χ` with one witness variable and `k` parameter variables, a parameter vector `vs` drawn from `Z`, and evidence that `χ` has a witness at `vs`.
 <!--zh-->
-在 `vecOf f` 中逐项查找会恢复 `f`。现固定集合 `Z`、元数 `k`、含一个见证变量与 `k` 个参数变量的公式 `χ`、取自 `Z` 的参数向量 `vs`，以及 `χ` 在 `vs` 处有见证的证据。
+在 `vecOf f` 中逐项查找会恢复 `f`。现固定集合 `Z`、元数 `k`、含一个见证变元与 `k` 个参数变元的公式 `χ`、取自 `Z` 的参数向量 `vs`，以及 `χ` 在 `vs` 处有见证的证据。
 <!--ja-->
 `vecOf f` の各成分を参照すると `f` が復元される。ここで、集合 `Z`、アリティ `k`、一つの証人変数と `k` 個のパラメータ変数をもつ論理式 `χ`、`Z` から取ったパラメータベクトル `vs`、そして `χ` が `vs` で証人をもつことの証拠を固定する。
 <!--/-->
@@ -4152,7 +4152,7 @@ In the third case, the stage clause encoded by `witFo` proves directly that `w �
 <!--en-->
 The separation formula expresses these three cases inside the constructible structure: membership in `Z`, equality with the empty set, or the renamed formula `witFo`. The renaming places its two free variables in the slots created by the existential wrapper.
 <!--zh-->
-分离公式在可构造结构内部表达这三种情形：属于 `Z`、等于空集，或满足改名后的 `witFo`。改名把它的两个自由变量放入存在包所形成的槽位。
+分离公式在可构造结构内部表达这三种情形：属于 `Z`、等于空集，或满足改名后的 `witFo`。改名把它的两个自由变元放入存在包所形成的槽位。
 <!--ja-->
 分出の論理式は、構成可能な構造の内部で三つの場合を表す。`Z` への所属、空集合との等しさ、または改名された `witFo` の充足である。改名は、その二つの自由変数を存在量化で作られた位置に配置する。
 <!--/-->

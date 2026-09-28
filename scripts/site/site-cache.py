@@ -2,9 +2,9 @@
 """Content-aware local cache for the complete Bedrock site build.
 
 Agda's highlighted anchors and expression ranges describe code, while its
-source hash also includes literate prose. When fenced code is byte-for-byte
-unchanged, keep those certified code surfaces and weave the new prose around
-them. Any change to the code blocks or their partition invokes Agda again.
+source hash also includes literate prose. When the concatenated Agda code is
+unchanged, rebase certified positions and weave the new prose/fence partition
+around them. Changes to Agda code still invoke the compiler.
 """
 
 from __future__ import annotations
@@ -17,6 +17,8 @@ import os
 from pathlib import Path
 import re
 import subprocess
+from outcrop.adapters.agda.reweave import CodeRelocation, rebase_hrefs, rebase_pres, rebase_trace
+from outcrop.adapters.extract_expression_types import source_hash as trace_source_hash
 from outcrop.adapters.python_inputs import dependency_files
 
 
@@ -59,9 +61,16 @@ def source_inventory(paths: dict[str, Path]) -> dict[str, dict]:
     result = {}
     for module, path in paths.items():
         raw = path.read_bytes()
-        blocks = [hashlib.sha256(match.group(1).encode()).hexdigest()
-                  for match in FENCE.finditer(raw.decode('utf-8'))]
-        result[module] = {'source': hashlib.sha256(raw).hexdigest(), 'blocks': blocks}
+        matches = list(FENCE.finditer(raw.decode('utf-8')))
+        code = ''.join(match.group(1) for match in matches)
+        result[module] = {
+            'source': hashlib.sha256(raw).hexdigest(),
+            'traceHash': trace_source_hash(path),
+            'code': hashlib.sha256(code.encode()).hexdigest(),
+            'blocks': [hashlib.sha256(match.group(1).encode()).hexdigest()
+                       for match in matches],
+            'spans': [[match.start(1) + 1, match.end(1) + 1] for match in matches],
+        }
     return result
 
 
@@ -75,6 +84,7 @@ def backend_inputs() -> list[Path]:
         ROOT / 'site/agda-libraries.json',
         *(path for path in agda_adapter.rglob('*') if path.is_file()
           and '__pycache__' not in path.parts
+          and path.name != 'reweave.py'  # post-compiler relocation, not producer
           and path.suffix in {'.py', '.json', '.patch', '.hs'}),
     ]
 
@@ -134,7 +144,8 @@ def archive_keys(args):
     current = source_inventory(paths)
     keys = {'source': key_digest({module: item['source'] for module, item in current.items()})}
     if args.cache_keys == 'backend':
-        keys.update(backend=backend_identity(), extractor=extractor_identity())
+        keys.update(backend=backend_identity(), extractor=extractor_identity(),
+                    code=key_digest({module: item['code'] for module, item in current.items()}))
     else:
         backend = read_state(BACKEND_STATE)
         validate_artifact(backend, paths, current)
@@ -183,6 +194,51 @@ def reweave(module: str, path: Path) -> str | None:
     return FENCE.sub(lambda _: next(replacement), source)
 
 
+def rebase_source(module: str, path: Path, old_info: dict, new_info: dict):
+    """Reweave one source after validating identical code across fence cuts."""
+    source = path.read_text(encoding='utf-8')
+    old = highlighted_path(module).read_text(encoding='utf-8')
+    blocks = [match.group(1) for match in FENCE.finditer(source)]
+    relocation = CodeRelocation(
+        tuple(tuple(span) for span in old_info['spans']),
+        tuple(tuple(span) for span in new_info['spans']),
+    )
+    pres = rebase_pres(old, relocation.old_spans, old_info['blocks'], blocks, relocation)
+    replacement = iter(pres)
+    woven = FENCE.sub(lambda _: next(replacement), source)
+    return woven, relocation
+
+
+def apply_rebases(paths: dict[str, Path], current: dict[str, dict],
+                  previous: dict[str, dict], changed: set[str]) -> None:
+    """Move compiler positions and inbound links before re-extracting expressions."""
+    refreshed = {}
+    relocations = {}
+    trace_paths = {}
+    for module in sorted(changed):
+        woven, relocation = rebase_source(module, paths[module], previous[module], current[module])
+        refreshed[module] = woven
+        relocations[module] = relocation
+        trace_paths[str(paths[module].resolve())] = (
+            relocation, previous[module]['traceHash'], current[module]['traceHash'])
+
+    # Prepare every output before replacing any build artifact. In particular,
+    # an unplaceable compiler link or a fence bisecting a highlighted token must
+    # fall back to the compiler without leaving half-relocated evidence behind.
+    outputs = {}
+    for path in (*HTML.glob('*.md'), *HTML.glob('*.html')):
+        old = path.read_text(encoding='utf-8')
+        updated = rebase_hrefs(refreshed.get(path.stem, old), relocations)
+        if updated != old:
+            outputs[path] = updated
+    old_trace = TRACE.read_text(encoding='utf-8')
+    new_trace = rebase_trace(old_trace, trace_paths)
+    for path, updated in outputs.items():
+        path.write_text(updated, encoding='utf-8')
+    if new_trace != old_trace:
+        TRACE.write_text(new_trace, encoding='utf-8')
+
+
 def adopt_backend(paths: dict[str, Path]) -> bool:
     """Trust an earlier full build only when its outputs still match every master."""
     if not STAMP.is_file() or not TRACE.is_file():
@@ -218,7 +274,7 @@ def output_present(out: Path, langs: list[str]) -> bool:
 
 def render_build_key(current: dict[str, dict], backend: dict, langs: list[str],
                      base_url: str) -> dict:
-    code = {module: info['blocks'] for module, info in current.items()}
+    code = {module: info['code'] for module, info in current.items()}
     code_hash = hashlib.sha256(json.dumps(code, sort_keys=True).encode()).hexdigest()
     return {'render': render_identity(), 'producer': backend['producer'],
             'code': code_hash, 'types': [digest(path) for path in TYPES],
@@ -304,7 +360,7 @@ def prepare_backend(args, paths: dict[str, Path], current: dict[str, dict],
                if backend is None or current[module]['source'] != backend['sources'].get(module, {}).get('source')}
     code_changed = (getattr(args, 'cold', False) or backend is None or producer != backend.get('producer')
                     or set(current) != set(backend.get('sources', {}))
-                    or any(current[module]['blocks'] != backend['sources'].get(module, {}).get('blocks')
+                    or any(current[module]['code'] != backend['sources'].get(module, {}).get('code')
                            for module in current))
     external_rebuild = (not args.backend_only and backend is not None and STAMP.is_file()
                         and STAMP.stat().st_mtime_ns != backend.get('stamp'))
@@ -312,21 +368,23 @@ def prepare_backend(args, paths: dict[str, Path], current: dict[str, dict],
             or any(not highlighted_path(module).is_file() for module in paths)):
         code_changed = True
 
-    refreshed = {}
-    if not code_changed:
-        for module in changed:
-            woven = reweave(module, paths[module])
-            if woven is None:
-                code_changed = True
-                break
-            refreshed[module] = woven
+    rebased = False
+    previous_extractor = backend.get('extractor') if backend else None
+    if not code_changed and not external_rebuild and changed:
+        try:
+            apply_rebases(paths, current, backend['sources'], changed)
+        except (KeyError, OSError, ValueError) as error:
+            print(f'site cache: cannot safely relocate compiler evidence ({error})', flush=True)
+            code_changed = True
+        else:
+            rebased = True
 
     rebuilt = False
     if code_changed:
         print('site cache: Agda inputs changed; rebuilding compiler evidence', flush=True)
         if backend is not None and producer == backend.get('producer'):
             for module in current:
-                if current[module]['blocks'] != backend['sources'].get(module, {}).get('blocks'):
+                if current[module]['code'] != backend['sources'].get(module, {}).get('code'):
                     interface = INTERFACES / (module.replace('.', '/') + '.agdai')
                     interface.unlink(missing_ok=True)
             # Checkout/compiler-wrapper timestamps are not content identities.
@@ -350,20 +408,20 @@ def prepare_backend(args, paths: dict[str, Path], current: dict[str, dict],
         rebuilt = True
     elif external_rebuild:
         print('site cache: compiler output was rebuilt externally', flush=True)
+        backend['sources'] = current
         backend['compile_stamp'] = STAMP.stat().st_mtime_ns
         backend['stamp'] = STAMP.stat().st_mtime_ns
         rebuilt = True
-    elif refreshed:
-        for module, woven in refreshed.items():
-            highlighted_path(module).write_text(woven, encoding='utf-8')
+    elif rebased:
         backend['sources'] = current
-        print(f'site cache: reused Agda evidence for {len(refreshed)} prose-only module(s)',
+        backend['extractor'] = None
+        print(f'site cache: relocated Agda evidence for {len(changed)} code-preserving module(s)',
               flush=True)
-    if code_changed or external_rebuild or refreshed or adopted:
+    if code_changed or external_rebuild or rebased or adopted:
         write_state(BACKEND_STATE, backend)
 
     missing_types = any(not path.is_file() for path in TYPES)
-    extractor_changed = backend.get('extractor') != extractor
+    extractor_changed = previous_extractor != extractor
     if rebuilt or missing_types or extractor_changed:
         # A failed extractor must not certify leftover files from an older
         # compilation. The raw target cannot re-enter Make's timestamp check.
@@ -373,8 +431,14 @@ def prepare_backend(args, paths: dict[str, Path], current: dict[str, dict],
         run(make_command(args, '_types'))
         backend['extractor'] = extractor
         write_state(BACKEND_STATE, backend)
+    elif rebased:
+        # Identifier types contain no source offsets. Only expression ranges
+        # need refreshing after the trace and highlighted links have moved.
+        run(make_command(args, 'types-local-expressions'))
+        backend['extractor'] = extractor
+        write_state(BACKEND_STATE, backend)
 
-    if not (rebuilt or missing_types or extractor_changed or refreshed):
+    if not (rebuilt or missing_types or extractor_changed or rebased):
         print('site cache: compiler evidence and semantic products are current', flush=True)
 
     return backend

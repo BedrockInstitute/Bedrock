@@ -24,6 +24,8 @@ def _load(modname, filename):
 cg = _load("check_glossary", "gate/check-glossary.py")  # noqa: E402
 
 from outcrop.core import glossary_lint as glossary_rules
+from outcrop.core.markdown_core import auto_link_terms
+from outcrop.core.term_registry import load_entries
 # Golden glossary rows (term, zh, ja, avoid-list, presence), exercising tagged and untagged avoids.
 ROWS = [
     ("charter", "纲领", "綱領", ["zh:宪章", "ja:憲章"], True),
@@ -111,3 +113,28 @@ class FileCheckTests(unittest.TestCase):
             other = write(tmp, "docs/zh/Y.md", "散文 <!-- glossary-ignore: charter -->\n")
             self.assertEqual(cg.check_file(ok, CHECKS), [])
             self.assertEqual(len(cg.check_file(other, CHECKS)), 1)  # prose still flagged
+
+    def test_object_language_terms_avoid_unrelated_compounds(self):
+        glossary = Path(__file__).resolve().parents[2] / 'site/glossary.toml'
+        entries = load_entries(glossary)
+        term = next(item for item in entries if item.get('id') == 'object-term')
+        sentence = next(item for item in entries if item.get('id') == 'object-sentence')
+
+        japanese = auto_link_terms('<p>項と数項、連言項、単項、項目、一項、2 項結合子。</p>',
+                                   'ja', 'FOL.Syntax', [term])
+        self.assertEqual(japanese.count('data-term="object-term"'), 1)
+        self.assertIn('>項</a>と数項', japanese)
+
+        english = auto_link_terms('<p>A term, proof term, and in terms of syntax.</p>',
+                                  'en', 'FOL.Syntax', [term])
+        self.assertEqual(english.count('data-term="object-term"'), 1)
+
+        self.assertNotIn('data-term="object-sentence"',
+                         auto_link_terms('<p>文、本文、文章、文脈。</p>',
+                                         'ja', 'FOL.Syntax', [sentence]))
+        self.assertIn('data-term="object-sentence"',
+                      auto_link_terms('<p>A sentence can contain names.</p>',
+                                      'en', 'FOL.Syntax', [sentence]))
+        self.assertIn('data-term="object-sentence"',
+                      auto_link_terms('<p>这个句子可以含有常元。</p>',
+                                      'zh', 'FOL.Syntax', [sentence]))

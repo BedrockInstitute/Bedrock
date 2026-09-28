@@ -1340,7 +1340,7 @@ seq-map A B E (sv , dm , ij , ran) = SeqMap.injL A B E sv dm ij ran
 <!--en-->
 ## Pinning a quantified variable to a constant
 <!--zh-->
-## 把量化变量固定为常元
+## 把量化变元固定为常元
 <!--ja-->
 ## 量化変数を定数に固定する
 <!--/-->
@@ -1456,7 +1456,7 @@ injFo b f B = svAt f ∧̇ domAt f B ∧̇ injAt f
 <!--en-->
 To prove the reading laws for `injFo`, fix the target `b`, the two relevant slots `f` and `B`, and an assignment `γ`. The local names `F` and `A` denote the carrier elements found in those slots. The following arguments can then state the result directly as an `InjCode F A b`, keeping the bookkeeping of variable lookup out of the mathematical statement.
 <!--zh-->
-为证明 `injFo` 的读法，固定目标 `b`、两个相关槽位 `f` 与 `B`，以及赋值 `γ`。局部名称 `F` 与 `A` 分别表示这两个槽位中的载体元素。后续论证于是可以把结论直接陈述为 `InjCode F A b`，不让变量查询的簿记遮蔽数学内容。
+为证明 `injFo` 的读法，固定目标 `b`、两个相关槽位 `f` 与 `B`，以及赋值 `γ`。局部名称 `F` 与 `A` 分别表示这两个槽位中的载体元素。后续论证于是可以把结论直接陈述为 `InjCode F A b`，不让变元查询的簿记遮蔽数学内容。
 <!--ja-->
 `injFo` の読み出し則を示すため、目標 `b`、関係する二つの位置 `f` と `B`、および割当て `γ` を固定する。局所名 `F` と `A` は、それぞれの位置にある台の要素を表す。これにより、後の議論では変数参照の処理を数学的な主張から切り離し、結論を直接 `InjCode F A b` と述べられる。
 <!--/-->

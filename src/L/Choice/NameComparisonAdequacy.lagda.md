@@ -477,7 +477,7 @@ chapter proves that the slot descriptions recover precisely this comparison at
 the level of propositions, while retaining truncation and the stated
 minimality conditions.
 <!--zh-->
-打开 `Naming A w`，便固定充分性所要对照的元语言对象。一条名字是依值三元组：元数 `k`、具有 `suc k` 个变量位置的无参公式，以及恰由 `A` 的 `k` 个成员组成的向量。名字的码取自该公式，名字的指称则是该公式在这些参数下从 `A` 中界定出的子集。名字序先由 `limitOrder` 比较公式码，再按自然数序比较元数，最后在元数相等时按 `w` 对参数向量作字典序比较。本章余下部分将在命题层证明槽位描述恰好恢复这次比较，同时保留命题截断与所陈述的最小性条件。
+打开 `Naming A w`，便固定充分性所要对照的元语言对象。一条名字是依值三元组：元数 `k`、具有 `suc k` 个变元位置的无参公式，以及恰由 `A` 的 `k` 个成员组成的向量。名字的码取自该公式，名字的指称则是该公式在这些参数下从 `A` 中界定出的子集。名字序先由 `limitOrder` 比较公式码，再按自然数序比较元数，最后在元数相等时按 `w` 对参数向量作字典序比较。本章余下部分将在命题层证明槽位描述恰好恢复这次比较，同时保留命题截断与所陈述的最小性条件。
 <!--ja-->
 `Naming A w` を開くことで、妥当性の基準となるメタ言語の対象が固定される。名前は依存的な三つ組であり、アリティ `k`、`suc k` 個の変数位置をもつ無パラメータ論理式、`A` の要素をちょうど `k` 個並べたベクトルからなる。コードは論理式から得られ、指示対象は、そのパラメータのもとで論理式が `A` から切り出す部分集合である。名前の順序は、まず論理式コードを `limitOrder` で比較し、次にアリティを自然数の順序で比較し、長さが等しい場合にパラメータ・ベクトルを `w` によって辞書式に比較する。本章の残りは、スロットによる記述が命題の水準でこの比較を正確に復元することを、命題的切り詰めと所定の最小性条件を保ったまま証明する。
 <!--/-->
@@ -1664,7 +1664,7 @@ limit-stage code with the skeleton slot. With `qa` identifying the arity slot
 and `q₀` identifying the empty-alphabet code set, `codeFree-in` turns precisely
 this formula and code equation into satisfaction of `FreeAt`.
 <!--zh-->
-第一个合取项来自名字 `t` 所携带的实际无参公式。该公式有 `suc (arity t)` 个变量位置，而 `qs` 把它在极限层中的码与骨架位置认同。再用 `qa` 认定元数位置、用 `q₀` 认定空字母表的码集，`codeFree-in` 就把这条公式及其码等式转成对 `FreeAt` 的满足。
+第一个合取项来自名字 `t` 所携带的实际无参公式。该公式有 `suc (arity t)` 个变元位置，而 `qs` 把它在极限层中的码与骨架位置认同。再用 `qa` 认定元数位置、用 `q₀` 认定空字母表的码集，`codeFree-in` 就把这条公式及其码等式转成对 `FreeAt` 的满足。
 <!--ja-->
 最初の連言は、名前 `t` がもつ具体的な無パラメータ論理式から得られる。この論理式には `suc (arity t)` 個の変数位置があり、`qs` はその極限段階での符号を骨格のスロットと同定する。さらに `qa` がアリティのスロットを、`q₀` が空のアルファベットの符号集合を同定するので、`codeFree-in` はこの論理式と符号の等式をそのまま `FreeAt` の充足へ変換する。
 <!--/-->

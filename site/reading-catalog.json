@@ -387,7 +387,7 @@
         "zh": "对象语言",
         "ja": "対象言語"
       },
-      "human_reviewed": false
+      "human_reviewed": true
     },
     {
       "id": "FOL.ZFStructure",
@@ -507,7 +507,7 @@
       "id": "FOL.Manipulation.Renaming",
       "title": {
         "en": "Variable renaming",
-        "zh": "变量改名",
+        "zh": "变元改名",
         "ja": "変数の改名"
       },
       "stage": {
@@ -517,7 +517,7 @@
       },
       "description": {
         "en": "Variable renaming",
-        "zh": "变量改名",
+        "zh": "变元改名",
         "ja": "変数の改名"
       },
       "human_reviewed": false

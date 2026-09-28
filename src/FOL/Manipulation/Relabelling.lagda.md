@@ -45,7 +45,7 @@ Take a formula over a constant domain `K` and rename its constants along a funct
 <!--en-->
 The action under study is written `mapTm f` on terms and `mapFo f` on formulas: a function `f : K → K'` relabels each constant `con k` to `con (f k)` and leaves every variable untouched. Because it acts on constants only, every connective and every quantifier, bounded or unbounded, keeps its exact position, which is the reason the Lévy classification should survive. The classification itself is given by inductive witnesses: an inhabitant of `Δ₀ φ` is explicit data certifying that every quantifier in `φ` is bounded, one constructor per permitted shape, and `Σₙ k φ` and `Πₙ k φ` record the alternating unbounded blocks.
 <!--zh-->
-被研究的作用在词项上记作 `mapTm f`，在公式上记作 `mapFo f`：函数 `f : K → K'` 把每个常元 `con k` 改名为 `con (f k)`，并让每个变量原样不动。由于它只作用于常元，每个联结词与每个量词 (无论有界与否) 都保持原位，这正是 Lévy 分类应当幸存的原因。分类本身以归纳见证给出：`Δ₀ φ` 的一个元素是显式数据，证明 `φ` 中每个量词都有界，每个获准的形状对应一个构造子；`Σₙ k φ` 与 `Πₙ k φ` 则记录交替的无界块。
+被研究的作用在词项上记作 `mapTm f`，在公式上记作 `mapFo f`：函数 `f : K → K'` 把每个常元 `con k` 改名为 `con (f k)`，并让每个变元原样不动。由于它只作用于常元，每个联结词与每个量词 (无论有界与否) 都保持原位，这正是 Lévy 分类应当幸存的原因。分类本身以归纳见证给出：`Δ₀ φ` 的一个元素是显式数据，证明 `φ` 中每个量词都有界，每个获准的形状对应一个构造子；`Σₙ k φ` 与 `Πₙ k φ` 则记录交替的无界块。
 <!--ja-->
 問題の作用は、項には `mapTm f`、論理式には `mapFo f` と書かれる。関数 `f : K → K'` は各定数 `con k` を `con (f k)` へ改名し、変数はそのまま残す。定数にだけ作用するため、すべての結合子とすべての量化子 (有界かどうかにかかわらず) は元の位置を保ち、これが Lévy 分類が生き延びるはずだと期待できる理由である。分類そのものは帰納的な証人で与えられる。`Δ₀ φ` の元は `φ` のすべての量化子が有界であることを証明する明示的なデータであり、許容される形ごとに一つの構成子を持ち、`Σₙ k φ` と `Πₙ k φ` は交互に現れる非有界の列を記録する。
 <!--/-->
@@ -104,7 +104,7 @@ module _ {ℓ} (𝒮 : ZFStructure ℓ) where
 <!--en-->
 The atomic case already shows why the two readings must agree. Consider the formula `t ∈̇ u`: the first reading evaluates it as `⟦ mapTm f t ⟧ γ ∈ˢ ⟦ mapTm f u ⟧ γ`, the second as `⟦ t ⟧∘ γ ∈ˢ ⟦ u ⟧∘ γ`. The term lemma `⟦⟧-map` gives `⟦ mapTm f t ⟧ γ ≡ ⟦ t ⟧∘ γ` for every term, and both of its cases hold by `refl`: a relabelled constant `con (f k)` evaluates to `ι (f k)`, which is exactly what the composite reading computes, and a variable ignores constants altogether.
 <!--zh-->
-原子情形已经显示了两种读法为何必须一致。考虑公式 `t ∈̇ u`：第一种读法把它求值为 `⟦ mapTm f t ⟧ γ ∈ˢ ⟦ mapTm f u ⟧ γ`，第二种读法求值为 `⟦ t ⟧∘ γ ∈ˢ ⟦ u ⟧∘ γ`。词项引理 `⟦⟧-map` 对每个词项给出 `⟦ mapTm f t ⟧ γ ≡ ⟦ t ⟧∘ γ`，其两种情形都由 `refl` 成立：改名后的常元 `con (f k)` 求值为 `ι (f k)`，这正是复合读法所计算的；而变量完全不涉及常元。
+原子情形已经显示了两种读法为何必须一致。考虑公式 `t ∈̇ u`：第一种读法把它求值为 `⟦ mapTm f t ⟧ γ ∈ˢ ⟦ mapTm f u ⟧ γ`，第二种读法求值为 `⟦ t ⟧∘ γ ∈ˢ ⟦ u ⟧∘ γ`。词项引理 `⟦⟧-map` 对每个词项给出 `⟦ mapTm f t ⟧ γ ≡ ⟦ t ⟧∘ γ`，其两种情形都由 `refl` 成立：改名后的常元 `con (f k)` 求值为 `ι (f k)`，这正是复合读法所计算的；而变元完全不涉及常元。
 <!--ja-->
 原子論理式の場合が、二つの読み方がなぜ一致しなければならないかをすでに示している。論理式 `t ∈̇ u` を考えると、第一の読み方はこれを `⟦ mapTm f t ⟧ γ ∈ˢ ⟦ mapTm f u ⟧ γ` と評価し、第二の読み方は `⟦ t ⟧∘ γ ∈ˢ ⟦ u ⟧∘ γ` と評価する。項の補題 `⟦⟧-map` はすべての項に対して `⟦ mapTm f t ⟧ γ ≡ ⟦ t ⟧∘ γ` を与え、その二つの場合はどちらも `refl` で成立する。改名された定数 `con (f k)` の評価値は `ι (f k)` であり、これは合成の読み方が計算するものそのものだからである。変数は定数にまったく関与しない。
 <!--/-->
