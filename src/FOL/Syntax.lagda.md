@@ -4,11 +4,11 @@ module FOL.Syntax where
 ```
 
 <!--en-->
-# The [object language]{.term-intro #object-language}
+# The object language
 <!--zh-->
-# [对象语言]{.term-intro #object-language}
+# 对象语言
 <!--ja-->
-# [対象言語]{.term-intro #object-language}
+# 対象言語
 <!--/-->
 
 ```agda
@@ -17,13 +17,13 @@ open import Base.Prelude
 
 <!--en-->
 
-Usually we write a claim about sets and ask whether it holds. Here we first ask a different question: what parts make up such a claim, and how can they be combined? Treating the written claim itself as a mathematical object, we build an **object language**.
+Usually we write a claim about sets and ask whether it holds. Here we first ask a different question: what parts make up such a claim, and how can they be combined? Treating the written claim itself as a mathematical object, we build an **[object language]{.term-intro #object-language}**.
 <!--zh-->
 
-通常，写下关于集合的陈述后，我们会问它是否成立。本章暂且不问真假，先看陈述怎样写成、又怎样组合。为此，我们把陈述的写法本身当作数学对象，构造一门**对象语言**。
+通常，写下关于集合的陈述后，我们会问它是否成立。本章暂且不问真假，先看陈述怎样写成、又怎样组合。为此，我们把陈述的写法本身当作数学对象，构造一门**[对象语言]{.term-intro #object-language}**。
 <!--ja-->
 
-集合について何かを述べれば、ふつうはそれが成り立つかを問う。本章では真偽をひとまず脇に置き、主張をどう書き、どう組み合わせるかを考える。書かれた形そのものを数学の対象として扱うために、**対象言語**を作る。
+集合について何かを述べれば、ふつうはそれが成り立つかを問う。本章では真偽をひとまず脇に置き、主張をどう書き、どう組み合わせるかを考える。書かれた形そのものを数学の対象として扱うために、**[対象言語]{.term-intro #object-language}**を作る。
 <!--/-->
 
 <!--en-->

@@ -99,8 +99,8 @@ ordinary sense: the groundwork beneath an inquiry. Both meanings are intended.
 
 ## Authorship
 
-Everything in this project is produced with AI assistance, and every line of it,
-this document included, is reviewed word by word by the author.
+Everything in this project is produced with AI assistance, but every line,
+this document included, receives the author's word-by-word editorial review.
 
 ## Dependencies
 

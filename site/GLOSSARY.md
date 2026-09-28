@@ -150,6 +150,12 @@ The first introduction is marked in each language with the same stable identifie
 [ホスト]{.term-intro #host-environment}
 ```
 
+Do not put either term marker in a chapter-level `#` title. The title can already
+reveal source code through its separate code mark; introduce the term in the first
+relevant prose paragraph below it, where the dotted underline and term hover
+describe the same interaction.
+Subsection headings may still introduce terms.
+
 For an explicitly matched later occurrence, replace `term-intro` with `term-ref`. The
 `check-term-introductions.py` gate requires exactly one introduction in every language, checks
 the declared module and rendering, and rejects unknown identifiers.

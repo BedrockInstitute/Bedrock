@@ -53,6 +53,22 @@ document.querySelector('#run').onclick=async()=>{
     !originParagraph.classList.contains('punctuation-tracking'),
     'narrow Origin prose keeps native wrapping without paragraph-wide tracking');
   await pause(650);check(!!d.querySelector('.name-hover-popup'),'mobile hover persists without a timeout');
+  await load('/zh/FOL.Syntax.html');
+  await until(()=>readerReady(frame.contentWindow));
+  w=frame.contentWindow;d=w.document;
+  check(!d.querySelector('h1 [data-term]')&&
+    w.getComputedStyle(d.querySelector('h1 .boilerplate-hover')).textDecorationLine==='none',
+    'chapter title has neither a reader term nor a misleading underline');
+  const readerTerm=d.querySelector('#p-3 .term-ref[data-term="object-language"]');
+  check(!!readerTerm,'body text retains its reader-term affordance');
+  readerTerm.dispatchEvent(new w.MouseEvent('mouseenter'));
+  tap(w,readerTerm);
+  await until(()=>!d.querySelector('#term-popup').hidden);
+  check(d.querySelector('#term-popup-name').textContent==='对象语言'&&
+    !d.querySelector('.definition-modal'),
+    'touch hover followed by click keeps the prose term explanation open');
+  tap(w,d.body);
+  check(d.querySelector('#term-popup').hidden,'outside touch closes the term explanation');
   await load('/zh/Base.Choice.html');
   await until(()=>readerReady(frame.contentWindow));
   w=frame.contentWindow;d=w.document;
