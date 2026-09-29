@@ -58,7 +58,8 @@ class SiteCacheTests(unittest.TestCase):
             files = (Path(folder) / 'types.json', Path(folder) / 'expressions.json')
             for path in files:
                 path.write_text('{}')
-            current = {'Sample': {'source': 'prose-1', 'code': 'code-1', 'blocks': ['code-1']}}
+            current = {'Sample': {'source': 'prose-1', 'code': 'code-1',
+                                  'blocks': ['code-1'], 'spans': [[9, 18]]}}
             with patch.object(cache, 'TYPES', files), patch.object(cache, 'render_identity', return_value='renderer'):
                 first = cache.render_build_key(current, {'producer': 'compiler'}, ['en'], '')
                 for path in files:
@@ -68,6 +69,9 @@ class SiteCacheTests(unittest.TestCase):
                 self.assertEqual(first, cache.render_build_key(current, {'producer': 'compiler'}, ['en'], ''))
                 current['Sample']['blocks'] = ['code-2']
                 self.assertEqual(first, cache.render_build_key(current, {'producer': 'compiler'}, ['en'], ''))
+                current['Sample']['spans'] = [[19, 28]]
+                self.assertNotEqual(first, cache.render_build_key(current, {'producer': 'compiler'}, ['en'], ''))
+                current['Sample']['spans'] = [[9, 18]]
                 current['Sample']['code'] = 'code-2'
                 self.assertNotEqual(first, cache.render_build_key(current, {'producer': 'compiler'}, ['en'], ''))
 
@@ -152,19 +156,36 @@ class CacheWorkflowTests(unittest.TestCase):
         cache.build(self.args)
         self.run.assert_not_called()
 
-    def test_prose_only_updates_site_without_compiler(self):
+    def test_prose_after_code_updates_only_affected_pages_without_compiler(self):
         self.warm(); self.edit_prose()
         before = [path.read_bytes() for path in cache.TYPES]
+        self.run.side_effect = self.produce_with_unchanged_expression_types
         cache.build(self.args)
         self.assertEqual(self.run.call_count, 2)
         self.assertEqual(self.run.call_args_list[0].args[0][1], 'types-local-expressions')
         command = self.run.call_args_list[1].args[0]
         self.assertEqual(command[1], 'scripts/site/render-site.py')
-        self.assertNotIn('--incremental', command)
+        self.assertIn('--incremental', command)
         self.assertEqual(before[0], cache.TYPES[0].read_bytes())
-        self.assertNotEqual(before[1], cache.TYPES[1].read_bytes())
+        self.assertEqual(before[1], cache.TYPES[1].read_bytes())
         self.assertIn('<a id="9">x</a>', (cache.HTML / 'Sample.md').read_text())
         self.assertIn('New prose.', (cache.HTML / 'Sample.md').read_text())
+
+    def test_prose_before_code_rerenders_all_pages_when_anchors_move(self):
+        self.warm()
+        old_key = cache.read_state(cache.site_state_path(Path(self.args.site_out)))['key']
+        self.source.write_text('New introduction.\n\n' + self.source.read_text())
+        self.run.side_effect = self.produce_with_unchanged_expression_types
+        cache.build(self.args)
+        self.assertEqual([call.args[0][1] for call in self.run.call_args_list],
+                         ['types-local-expressions', 'scripts/site/render-site.py'])
+        self.assertNotIn('--incremental', self.run.call_args.args[0])
+        command = self.run.call_args.args[0]
+        self.assertNotEqual(command[command.index('--code-cache-key') + 1], cache.key_digest(old_key))
+
+    def produce_with_unchanged_expression_types(self, command):
+        if command[1] != 'types-local-expressions':
+            self.produce(command)
 
     def test_prose_plus_extractor_change_does_not_recompile_from_timestamps(self):
         self.edit_prose()

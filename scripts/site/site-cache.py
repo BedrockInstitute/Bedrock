@@ -276,8 +276,12 @@ def render_build_key(current: dict[str, dict], backend: dict, langs: list[str],
                      base_url: str) -> dict:
     code = {module: info['code'] for module, info in current.items()}
     code_hash = hashlib.sha256(json.dumps(code, sort_keys=True).encode()).hexdigest()
+    # Code-context HTML contains links to absolute source offsets. Prose edits
+    # may move those offsets without changing the Agda code or extracted types.
+    spans = {module: info['spans'] for module, info in current.items()}
     return {'render': render_identity(), 'producer': backend['producer'],
-            'code': code_hash, 'types': [digest(path) for path in TYPES],
+            'code': code_hash, 'spans': key_digest(spans),
+            'types': [digest(path) for path in TYPES],
             'langs': langs, 'base_url': base_url}
 
 
