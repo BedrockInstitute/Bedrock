@@ -88,7 +88,6 @@ Excluded middle supplies local decisions such as whether a member of a union lie
 
 ```agda
 open import Cubical.HITs.PropositionalTruncation using ( rec2 )
-open import Cubical.Foundations.HLevels using ( isSetΣSndProp )
 open import Cubical.Data.Nat using ( znots; snotz )
 ```
 
@@ -282,16 +281,16 @@ S≡ = Σ≡Prop (λ v → snd (isL v))
 ```
 
 <!--en-->
-The carrier `S` is an h-set. Its first component lies in the cumulative hierarchy, which is an h-set, and each fiber of constructibility proofs is a proposition; hence every equality type in `S` is a proposition.
+The carrier `S` is an h-set by `isSetClass`{.Agda}, applied to the cumulative hierarchy and the constructibility predicate.
 <!--zh-->
-载体 `S` 是 h-集合。其第一分量位于本身为 h-集合的累积层级中，而每个可构造性证明纤维都是命题；因此 `S` 中的每个等式类型都是命题。
+对累积层级与可构造性谓词应用 `isSetClass`{.Agda}，得到载体 `S` 的 h-集合性。
 <!--ja-->
-台 `S` は h-集合である。第一成分が属する累積階層は h-集合であり、構成可能性の証明からなる各ファイバーは命題なので、`S` のすべての等式型は命題になる。
+累積階層と構成可能性の述語に `isSetClass`{.Agda} を適用し、台 `S` が h-集合であることを得る。
 <!--/-->
 
 ```agda
 isSetS : isSet S
-isSetS = isSetΣSndProp setIsSet (λ v → snd (isL v))
+isSetS = isSetClass setIsSet (λ v → snd (isL v))
 ```
 
 <!--en-->

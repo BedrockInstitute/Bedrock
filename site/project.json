@@ -236,7 +236,8 @@
         "isPropΠ",
         "isPropΣ",
         "isProp→",
-        "isSetHProp"
+        "isSetHProp",
+        "isSetΣSndProp"
       ],
       "Cubical.Foundations.Equiv": [
         "_≃_",

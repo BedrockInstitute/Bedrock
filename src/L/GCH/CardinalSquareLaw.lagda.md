@@ -81,10 +81,6 @@ The construction is not constructive throughout, and the reason lies in the math
 この構成がすべて構成的なわけではなく、その理由は形式化ではなく数学にある。順序数の対を順序づけるには、二つの順序数 `a` と `b` について `a` が `b` に属するかを判定しなければならない。本章の古典的な判定はどれもこの一つの問いの実例である。そこでモジュールは、レベル `ℓ-suc ℓ` の排中律を明示的なデータとして受け取る。判定される所属の命題の住むレベルである。
 <!--/-->
 
-```agda
-open import Cubical.Foundations.HLevels using ( isSetΣSndProp )
-```
-
 <!--en-->
 The module parameter fixes that instance once, and every classical step of the chapter consumes precisely it.
 <!--zh-->
@@ -207,16 +203,16 @@ open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
 ```
 
 <!--en-->
-The inner carrier is an h-set, and this is what makes equality of its elements manageable. Its elements are pairs whose second components are propositions, so two elements are equal exactly when their underlying sets are, and the pair-path lemma builds the equality of two pairs from equalities of their components.
+The inner carrier is an h-set by `isSetClass`{.Agda}, applied to the underlying sets and their constructibility proofs. The following pair-path lemma builds equality of two pairs from equalities of their components.
 <!--zh-->
-内层载体是 h-集合，这使其元素的相等易于处理。其元素是第二分量为命题的对，所以两个元素恰在其底层集合相等时相等；对路径引理则由各分量的等式构造两个对的等式。
+对底层集合及其可构造性证明应用 `isSetClass`{.Agda}，得到内层载体的 h-集合性。随后的对路径引理由两处分量的等式构造两个对的等式。
 <!--ja-->
-内側の台は h-集合であり、そのため要素の等しさを扱える。要素は第二成分が命題である対なので、二つの要素が等しいのは基底集合が等しいときに限る。対のパスの補題は、各成分の等しさから二つの対の等しさを構成する。
+基礎となる集合とその構成可能性の証明に `isSetClass`{.Agda} を適用し、内側の台が h-集合であることを得る。続く対のパスの補題は、各成分の等しさから二つの対の等しさを構成する。
 <!--/-->
 
 ```agda
 isSetS : isSet S
-isSetS = isSetΣSndProp setIsSet (λ v → snd (isL v))
+isSetS = isSetClass setIsSet (λ v → snd (isL v))
 opaque
   pair≡ : {A : Type ℓ} {B : Type ℓ} {a a' : A} {b b' : B}
         → a ≡ a' → b ≡ b' → (a , b) ≡ (a' , b')

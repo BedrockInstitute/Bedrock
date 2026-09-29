@@ -27,6 +27,34 @@ class OutcropIntegrationTests(unittest.TestCase):
         self.assertEqual(config['landing_module'], 'Origin')
         self.assertEqual(config['programming_language']['name'], 'Cubical Agda')
 
+    def test_class_hset_lemma_is_owned_by_prelude_even_in_where_imports(self):
+        from outcrop.core.agda_lint import AgdaPolicy, lint_text
+        config = json.loads((ROOT / 'site/project.json').read_text())
+        policy = AgdaPolicy(**config['agda_policy'])
+        source = '''```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+module Test where
+open import Base.Prelude
+open import Cubical.Foundations.HLevels using ( isSetΣSndProp )
+f = isSetΣSndProp
+g = localSetClass
+  where
+    open import Cubical.Foundations.HLevels
+      using () renaming ( isSetΣSndProp to localSetClass )
+```'''
+        findings = lint_text(source, policy)
+        self.assertEqual(
+            [(line, rule) for line, rule, _ in findings if rule == 'prelude-import'],
+            [(5, 'prelude-import'), (9, 'prelude-import')], findings)
+
+        allowed = '''```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+module Test where
+open import Base.Prelude
+f = isSetClass
+```'''
+        self.assertEqual(lint_text(allowed, policy), [])
+
     def test_every_ci_job_installs_into_its_final_python_environment(self):
         workflow = (ROOT / '.github/workflows/ci.yml').read_text()
         jobs = re.split(r'^  [\w-]+:\n', workflow.split('\njobs:\n', 1)[1], flags=re.M)[1:]

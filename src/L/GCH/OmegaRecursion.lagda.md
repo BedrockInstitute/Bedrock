@@ -68,12 +68,6 @@ The base library is opened, and excluded middle is received as an explicit hypot
 基礎ライブラリを開き、本書の常の形式に従って、排中律を明示的な仮定として受け取る。
 <!--/-->
 
-```agda
-open import Cubical.Foundations.HLevels using ( isSetΣSndProp )
-```
-
-
-
 <!--en-->
 The description of the iteration is written in the object language, whose formulas use equality, conjunction, implication, and the unbounded existential and universal quantifiers; formula renaming and absoluteness support reading the same formula under different environments.
 <!--zh-->
@@ -183,16 +177,16 @@ module Ren = Sat 𝒮ʟ id
 ```
 
 <!--en-->
-The carrier is an h-set, since the hierarchy is an h-set and constructibility is propositional; equalities of constructible sets are therefore propositions.
+Applying `isSetClass`{.Agda} to the hierarchy and constructibility predicate makes the carrier an h-set.
 <!--zh-->
-载体是 h-集合，因为层级是 h-集合且可构造性是命题；因此可构造集合之间的相等是命题。
+对层级与可构造性谓词应用 `isSetClass`{.Agda}，可知载体是 h-集合。
 <!--ja-->
-台は h-集合である。階層が h-集合であり、構成可能性が命題だからである。したがって構成可能な集合の間の等式は命題になる。
+階層と構成可能性の述語に `isSetClass`{.Agda} を適用し、台が h-集合であることを得る。
 <!--/-->
 
 ```agda
 isSetS : isSet S
-isSetS = isSetΣSndProp setIsSet (λ v → snd (isL v))
+isSetS = isSetClass setIsSet (λ v → snd (isL v))
 ```
 
 <!--en-->

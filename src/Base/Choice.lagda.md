@@ -455,18 +455,17 @@ On the left, the inverse of $e$ supplies a path. On the right, $e$ would turn an
 
 
 <!--en-->
-**Lemma** (`pickIsSet`{.Agda}) The family `Pick`{.Agda} is set-valued. Its first component is `Bool`{.Agda}, an h-set; for each boolean, its second component is a path in the h-set `Glued`{.Agda}, hence a proposition. An h-set paired with a proposition-valued family is again an h-set.
+**Lemma** (`pickIsSet`{.Agda}) The family `Pick`{.Agda} is set-valued. Apply `isSetClass`{.Agda} to the h-set `Bool`{.Agda}: for each boolean, the second component is a path in the h-set `Glued`{.Agda}, hence a proposition.
 <!--zh-->
-**引理** (`pickIsSet`{.Agda}) 族 `Pick`{.Agda} 取值于 h-集合：第一分量 `Bool`{.Agda} 是 h-集合；固定布尔值后的第二分量是 h-集合 `Glued`{.Agda} 中的路径，因而是命题。h-集合与命题值族组成的依值对仍是 h-集合。
+**引理** (`pickIsSet`{.Agda}) 族 `Pick`{.Agda} 取值于 h-集合。这里将 `isSetClass`{.Agda} 用于 h-集合 `Bool`{.Agda}：固定布尔值后的第二分量是 h-集合 `Glued`{.Agda} 中的路径，因而是命题。
 <!--ja-->
-**補題** (`pickIsSet`{.Agda}) 族 `Pick`{.Agda} は h-集合値である。第一成分の `Bool`{.Agda} は h-集合であり、ブール値を固定した第二成分は h-集合 `Glued`{.Agda} のパスだから命題である。h-集合と命題値族の依存対は再び h-集合になる。
+**補題** (`pickIsSet`{.Agda}) 族 `Pick`{.Agda} は h-集合値である。h-集合 `Bool`{.Agda} に `isSetClass`{.Agda} を適用する。ブール値を固定した第二成分は h-集合 `Glued`{.Agda} のパスなので、命題である。
 <!--/-->
 
 ```agda
   pickIsSet : (x : Glued) → isSet (Pick x)
-  pickIsSet x = isSetΣSndProp isSetBool (λ b → squash/ [ b ] x)
+  pickIsSet x = isSetClass isSetBool (λ b → squash/ [ b ] x)
     where
-      open import Cubical.Foundations.HLevels using ( isSetΣSndProp )
       open import Cubical.Data.Bool.Properties using ( isSetBool )
 ```
 

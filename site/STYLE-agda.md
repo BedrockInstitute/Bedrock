@@ -126,6 +126,12 @@ Third-party license headers must remain intact; Outcrop owns its separate checks
   `_≃_`, `Iso`, `iso`, `isoToEquiv`, `equivFun`, `invEq`, `congEquiv`, and
   `isOfHLevelRespectEquiv` are public vocabulary. Do not import these names again,
   including through their lower-level re-export modules or renamed aliases.
+  `isSetClass` is the Prelude's public name for
+  `Cubical.Foundations.HLevels.isSetΣSndProp`: an h-set restricted by any
+  proposition-valued family remains an h-set. Only `Base.Prelude` imports the
+  library name; all consumers, including `where`-local proofs, use `isSetClass`
+  from the Prelude. The ownership lint checks direct, qualified and renamed
+  imports of the library name.
   A consumer may hide a public name when preserving an existing local definition:
   `V.Collapse` uses `open import Base.Prelude hiding ( iso )` for its local
   membership-preservation lemma, leaving the library constructor public elsewhere.

@@ -71,12 +71,6 @@ The classical assumption is explicit because one later existence proof must deci
 古典的仮定を明示するのは、後の存在証明で、候補となる点が現在扱う点に先行するかどうかを判定する必要があるからである。整礎再帰そのものはこの判定を必要としない。排中律が使われるのは、関係が成り立つ場合と成り立たない場合に分けて一つの置換関数を定める箇所である。
 <!--/-->
 
-```agda
-open import Cubical.Foundations.HLevels using ( isSetΣSndProp )
-```
-
-
-
 <!--en-->
 The collapse will be recognized by formulas of the first-order language of sets. Ordered-pair membership and equality provide the atomic tests, while conjunction, disjunction, implication, negation, and the unbounded quantifiers express the table conditions. Apparent restrictions such as“for every predecessor”are written by placing the relation atom in an implication, rather than by using a bounded-quantifier constructor.
 <!--zh-->
@@ -171,16 +165,16 @@ open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
 ```
 
 <!--en-->
-The underlying hierarchy carrier `V ℓ` is an h-set, and constructibility evidence is proposition-valued. Therefore the dependent-pair carrier `S` is also an h-set: equalities of constructible sets are propositions. This is what lets later truncated case analyses eliminate into equalities of carrier elements.
+Applying `isSetClass`{.Agda} to the hierarchy and constructibility predicate shows that the carrier `S` is an h-set. This lets later truncated case analyses eliminate into equalities of carrier elements.
 <!--zh-->
-底层层级载体 `V ℓ` 是 h-集合，而可构造性证据取值于命题。因此，依值对载体 `S` 也是 h-集合，即可构造集合之间的相等是命题。后文遂可把截断分情形消去到载体元素的等式中。
+对层级与可构造性谓词应用 `isSetClass`{.Agda}，可知载体 `S` 是 h-集合。后文遂可把截断分情形消去到载体元素的等式中。
 <!--ja-->
-基礎となる階層の台 `V ℓ` は h-集合であり、構成可能性の証拠は命題値である。したがって、依存対からなる台 `S` も h-集合であり、構成可能な集合の間の等式は命題になる。このため、後の切り詰められた場合分けを台の要素の等式へ除去できる。
+階層と構成可能性の述語に `isSetClass`{.Agda} を適用し、台 `S` が h-集合であることを得る。これにより、後の切り詰められた場合分けを台の要素の等式へ除去できる。
 <!--/-->
 
 ```agda
 isSetS : isSet S
-isSetS = isSetΣSndProp setIsSet (λ v → snd (isL v))
+isSetS = isSetClass setIsSet (λ v → snd (isL v))
 ```
 
 <!--en-->
