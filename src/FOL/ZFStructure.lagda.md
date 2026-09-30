@@ -63,7 +63,6 @@ Why supply an equality relation instead of using Agda's path equality `x ≡ y`{
 ```agda
 record ZFStructure (ℓ : Level) {ℓΩ : Level} (Ω : Type ℓΩ)
   : Type (ℓ-max (ℓ-suc ℓ) ℓΩ) where
-  infix 20 _≈ˢ_ _∈ˢ_
   field
     S         : Type ℓ
     isSetS    : isSet S
@@ -79,6 +78,8 @@ The remaining fields give a truth value for each ordered pair of carrier element
 
 ```agda
     _≈ˢ_ _∈ˢ_ : S → S → Ω
+
+  infix 20 _≈ˢ_ _∈ˢ_
 ```
 
 <!--en-->
@@ -249,7 +250,7 @@ Restriction does not require transitivity or proposition-valued relations: the s
 <!--/-->
 
 ```agda
-open ZFStructure hiding ( _≈ˢ_; _∈ˢ_ )
+open ZFStructure using ( S; isSetS )
 ```
 
 <!--en-->

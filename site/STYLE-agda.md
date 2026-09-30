@@ -299,11 +299,12 @@ postfix `↑` weakening. `⌜_⌝` belongs to the coding chapters.
 
 Fixity is centralized: one table in the syntax chapter, quoted in its prose.
 Every `infix`, `infixl` or `infixr` declaration must precede the corresponding
-name's first declaration (including its type signature, field or constructor).
+name's first declaration (including its type signature or constructor), except
+that fixities in a record's own namespace have no ordering restriction.
 It need not be adjacent: explanatory prose and other declarations may intervene.
 The `fixity-order` lint checks the concatenated formal code across fences, with
-separate module/record and local scopes. Put record-field fixities inside the
-record, before its field declarations.
+separate module/record and local scopes. The record exception does not relax
+the rule for ordinary functions outside that namespace.
 Baseline: ④ atoms `≐ ∈̇` = 18, `∧̇ ∨̇` = 12, `⇒̇` = 10, `¬̇` = 13; ③ `∈ˢ ≈ˢ` = 20.
 Corresponding operations across layers share a level (`∧̇` with `⊓`, `⇒̇` with `⇒`).
 

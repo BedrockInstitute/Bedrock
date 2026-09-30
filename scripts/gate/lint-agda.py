@@ -32,7 +32,8 @@ Report-only checks (prose is lint-prose.py's business; STYLE-agda.md is the law)
   K [infix-application] binary operators use infix application, not their
                     underscore-bearing prefix names with two explicit operands
   L [fixity-order]  infix/infixl/infixr precedes the name's first declaration;
-                    intervening prose and declarations are allowed
+                    intervening prose and declarations are allowed; record
+                    namespaces impose no fixity-order restriction
 
 Exemptions:
   - The designated hub modules (BARE_OPEN_HUBS: curated re-export preludes,
