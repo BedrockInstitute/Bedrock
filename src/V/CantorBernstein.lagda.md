@@ -36,7 +36,7 @@ The classical Cantor–Schröder–Bernstein theorem says that injections $f : A
 
 两个集合的小呈现之间若有双向单射，便可得到双射。证明先在排中律下为小类型构造双射，再给出通用形式，把任意可双向读出的编码单射转成这类双射。
 
-经典的 Cantor–Schröder–Bernstein 定理说，单射 $f : A → B$ 与 $g : B → A$ 给出双射 $A → B$。本章中两个类型共享同一个宇宙层级 ℓ，而唯一的额外假设是该层级上的排中律：对住在层级 ℓ 的每个命题，给出证明或反驳。论证本身属于指标类型 $A$ 与 $B$，而不属于累积层级中的集合；正因如此，后面才能把它原样搬到任意小呈现的成员类型上。证明需要用命题截断造出一些命题，然后对它们作判定；下面的设置因此同时固定了经典假设，以及将要施加于其上的命题值词汇。
+经典的 Cantor–Schröder–Bernstein 定理说，单射 $f : A → B$ 与 $g : B → A$ 给出双射 $A → B$。本章中两个类型共享同一个宇宙层级 ℓ，而唯一的额外假设是该层级上的排中律：对住在层级 ℓ 的每个命题，给出证明或反驳。论证本身属于指标类型 $A$ 与 $B$，而不属于累积层级中的集合；正因如此，后面才能把它原样搬到任意小呈现的元素类型上。证明需要用命题截断造出一些命题，然后对它们作判定；下面的设置因此同时固定了经典假设，以及将要施加于其上的命题值词汇。
 <!--ja-->
 
 二つの集合の小さな提示の間に双方向の単射があれば、全単射が得られる。まず排中律の下で小さな型について全単射を構成し、さらに任意の相互に読み出せる符号化された単射からそのような全単射を得る一般的な形にまとめる。
@@ -61,7 +61,7 @@ The proof will form several propositions by truncating an existential: the state
 <!--en-->
 Two kinds of propositions dominate the chapter: membership in the image of g, and reachability by a finite alternating chain. Both are stored as elements of `hProp ℓ`, which packages an underlying type with a proof that it is a proposition; `⟨ P ⟩`{.Agda} projects the underlying type, while the propositionhood proof stays in the second component. The remaining imports supply the machinery around them: disjoint sums for the bad/good case split, `isProp⊥` for the refutation side, `Σ≡Prop` for identifying pairs whose second components are proposition-valued, and the cumulative hierarchy together with the fact that a member type `⟪ a ⟫`{.Agda} of a set embeds into an h-set, which will later certify that the member types are h-sets.
 <!--zh-->
-本章由两类命题主导：属于 g 的像，以及经由有限交错链可达。二者都存为 `hProp ℓ` 的元素，它把底层类型与「它是命题」的证明打包在一起；`⟨ P ⟩`{.Agda} 投影出底层类型，而命题性证明留在第二个分量。其余导入提供围绕它们的机制：坏/好情形分裂用的不交和、反驳一侧的 `isProp⊥`、对第二分量为命题值的序对作识别的 `Σ≡Prop`，以及累积层级本身与「集合的成员类型 `⟪ a ⟫`{.Agda} 嵌入到一个集合、因而它是 h-集合」这一事实。
+本章由两类命题主导：属于 `g`{.Agda} 的像，以及经由有限交错链可达。二者都存为 `hProp ℓ` 的元素，它把底层类型与「它是命题」的证明打包在一起；`⟨ P ⟩`{.Agda} 投影出底层类型，而命题性证明留在第二个分量。其余导入提供围绕它们的机制：坏/好情形分裂用的不交和、反驳一侧的 `isProp⊥`、对第二分量为命题值的序对作识别的 `Σ≡Prop`，以及累积层级本身与「集合的元素类型 `⟪ a ⟫`{.Agda} 嵌入到一个集合、因而它是 h-集合」这一事实。
 <!--ja-->
 この章を支配するのは二種類の命題である。g の像への所属と、有限の交互の鎖で到達できることである。どちらも `hProp ℓ` の要素として保存される。`hProp ℓ` は基礎型と、それが命題であることの証明をひとまとめにするもので、`⟨ P ⟩`{.Agda} が基礎型を取り出し、命題性の証明は第 2 成分に残る。残りの import はその周辺の機構を供給する。良し悪しの場合分けのための非交和、反証側のための `isProp⊥`、第 2 成分が命題値であるような対を同一視するための `Σ≡Prop`、そして累積階層と、集合のメンバー型 `⟪ a ⟫`{.Agda} がある集合へ埋め込めるため h-集合であるという事実である。
 <!--/-->
@@ -199,7 +199,7 @@ The proof splits on the recorded length. At length zero the chain simply asserts
 <!--en-->
 The second use of excluded middle converts goodness into image membership. Suppose x is good, in the strong sense that `C x` admits a refutation. Deciding the proposition `imG x` gives either a preimage, which is what we want, or a refutation of image membership, that is, a proof of `C₀ x`. But level zero implies badness via `c-in`, contradicting the assumed refutation of `C x`; from that contradiction anything follows. So `notC→imG` produces an inhabitant of `⟨ imG x ⟩`, still merely, not yet a chosen preimage.
 <!--zh-->
-排中律的第二次使用把好性转成像属于关系。设 x 是好的，取强意义：`C x` 容许一个反驳。判定命题 `imG x` 要么给出原像，这正是我们想要的，要么给出像属于的反驳，即 `C₀ x` 的证明。但第零层经 `c-in` 蕴含坏性，与假设的 `C x` 的反驳矛盾；由该矛盾可推出任何东西。于是 `notC→imG` 产出 `⟨ imG x ⟩` 的一个元，仍只表明原像存在，还没有选定原像。
+排中律的第二次使用把好性转成像成员关系。设 `x`{.Agda} 是好的，取强意义：`C x` 容许一个反驳。判定命题 `imG x` 要么给出原像，这正是我们想要的，要么给出像属于的反驳，即 `C₀ x` 的证明。但第零层经 `c-in` 蕴含坏性，与假设的 `C x` 的反驳矛盾；由该矛盾可推出任何东西。于是 `notC→imG` 产出 `⟨ imG x ⟩` 的一个元，仍只表明原像存在，还没有选定原像。
 <!--ja-->
 排中律の二度目の使用は、良さを像への所属に変える。x が良いとする。ここでは `C x` が反証を許すという強い意味で取る。命題 `imG x` を判定すると、原像が得られるか、望むところである。あるいは像への所属の反証、すなわち `C₀ x` の証明が得られる。しかしレベル 0 は `c-in` を経由して悪さを含意し、仮定された `C x` の反証と矛盾する。この矛盾から何でも出る。したがって `notC→imG` は `⟨ imG x ⟩` の元を作るが、それはまだ存在することだけを述べており、まだ原像は選ばれていない。
 <!--/-->
@@ -315,7 +315,7 @@ Surjectivity relative to a verdict is stated for each y ∈ B, with the verdict 
 <!--en-->
 In the bad case for g y, `C-view` decomposes the badness proof into two alternatives. The first says g y is outside the image of g, but y itself witnesses its image membership with the path reflexivity, a contradiction that yields anything, in particular the required truncated statement. The second produces z ∈ A with g (f z) ≡ g y and z bad; then z is a preimage, for h z = f z and g (f z) equals g y, so injectivity of g identifies f z with y. Both branches exhibit their witnesses inside one truncation, so no verdict other than the one already assumed is consumed.
 <!--zh-->
-g y 是坏的情形下，`C-view` 把坏性证明分解为两个选项。第一个说 g y 在 g 的像之外，但 y 自己用自反路径见证了它的像属于关系，这矛盾可推出任何东西，特别是所需的命题截断陈述。第二个给出 z ∈ A 使 g (f z) ≡ g y 且 z 是坏的；此时 z 是原像，因为 h z = f z 且 g (f z) 等于 g y，再由 g 的单射性把 f z 等同于 y。两个分支都在单个命题截断内展示其见证，因此除已假设的判定外不消耗其他判定。
+`g y`{.Agda} 是坏的情形下，`C-view` 把坏性证明分解为两个选项。第一个说 `g y`{.Agda} 在 `g`{.Agda} 的像之外，但 `y`{.Agda} 自己用自反路径见证了它的像成员关系，这矛盾可推出任何东西，特别是所需的命题截断陈述。第二个给出 `z ∈ A`{.Agda} 使 `g (f z) ≡ g y`{.Agda} 且 `z`{.Agda} 是坏的；此时 `z`{.Agda} 是原像，因为 `h z = f z`{.Agda} 且 `g (f z)`{.Agda} 等于 `g y`{.Agda}，再由 `g`{.Agda} 的单射性把 `f z`{.Agda} 等同于 `y`{.Agda}。两个分支都在单个命题截断内展示其见证，因此除已假设的判定外不消耗其他判定。
 <!--ja-->
 g y が悪いの場合は `C-view` が悪さの証明を二つの選択肢に分解する。第一は g y が g の像の外にあるというもので、しかし y 自身がパス反射律で像への所属の証人となり、矛盾から何でも、特に必要な命題的切り詰めされた主張が出る。第二は g (f z) ≡ g y かつ z が悪いような z ∈ A を作り出す。このとき z は原像である。h z = f z であり g (f z) は g y に等しく、g の単射性で f z を y と同一視できるからである。両方の枝が証人を一つの命題的切り詰めの中で示すので、すでに仮定した判定以外の判定は消費されない。
 <!--/-->
@@ -398,7 +398,7 @@ Surjectivity needs one extra step. The relative lemma `h-surj` applied at the ca
 <!--en-->
 The abstract construction now applies to the cumulative hierarchy itself. Each element a of V comes with a member type ⟪ a ⟫, the type of its members. The Bernstein construction asks for an h-set structure on its first type, so the first step is to certify that ⟪ a ⟫ is one. The embedding ⟪ a ⟫↪ sends each member index to the member it indexes inside V; since V is an h-set and the embedding is an embedding, its domain inherits the h-set condition. With that single fact, two mutual injections between ⟪ a ⟫ and ⟪ b ⟫ produce a bijection packaged as a dependent triple.
 <!--zh-->
-抽象构造现在应用于累积层级本身。V 的每个元素 a 都带有成员类型 ⟪ a ⟫，即其成员的类型。Bernstein 构造要求第一个类型具有 h-集合结构，所以第一步是证明 ⟪ a ⟫ 是 h-集合。嵌入 ⟪ a ⟫↪ 把每个成员指标送到它在 V 内所指标的成员；由于 V 是 h-集合且该映射是嵌入，其定义域继承了 h-集合性。有了这一条事实，⟪ a ⟫ 与 ⟪ b ⟫ 之间的两条互逆单射便产生一个打包成依赖三元组的双射。
+抽象构造现在应用于累积层级本身。`V`{.Agda} 的每个元素 `a`{.Agda} 都带有元素类型 `⟪ a ⟫`{.Agda}，即其元素的类型。Bernstein 构造要求第一个类型具有 h-集合结构，所以第一步是证明 `⟪ a ⟫`{.Agda} 是 h-集合。嵌入 `⟪ a ⟫↪`{.Agda} 把每个元素指标送到它在 `V`{.Agda} 内所指标的元素；由于 `V`{.Agda} 是 h-集合且该映射是嵌入，其定义域继承了 h-集合性。有了这一条事实，`⟪ a ⟫`{.Agda} 与 `⟪ b ⟫`{.Agda} 之间的两条互逆单射便产生一个打包成依赖三元组的双射。
 <!--ja-->
 抽象的な構成を、いよいよ累積階層そのものに適用する。V の各元 a はメンバー型 ⟪ a ⟫、すなわちそのメンバーの型を伴う。Bernstein の構成は第一の型が h-集合であることを要求するので、最初の一歩は ⟪ a ⟫ がそうであることの証明である。埋め込み ⟪ a ⟫↪ は各メンバーの指標を、V の中でそれが指すメンバーへ送る。V は h-集合であり、この写像は埋め込みなので、その定義域は h-集合性を受け継ぐ。この一事実があれば、⟪ a ⟫ と ⟪ b ⟫ の間の相互の単射から、依存する三つ組としてまとめられた全単射が得られる。
 <!--/-->
@@ -423,7 +423,7 @@ cantor-bernstein : (a b : V ℓ) (f : ⟪ a ⟫ → ⟪ b ⟫)
 <!--en-->
 The result type is an explicit dependent triple rather than a record: a function h from ⟪ a ⟫ to ⟪ b ⟫, its injectivity as a proposition-valued component, and mere surjectivity, asserting for each y of ⟪ b ⟫ a truncated preimage. The asymmetry between the two side conditions is deliberate and mirrors the abstract theorem: injectivity is stated as honest data, surjectivity only as mere existence. Nothing in the statement quantifies over stages or membership of the hierarchy; everything happens inside the two member types.
 <!--zh-->
-结果类型是显式的依赖三元组而非记录：从 ⟪ a ⟫ 到 ⟪ b ⟫ 的函数 h，其单射性作为命题值分量，以及仅仅存在的满射性，即对 ⟪ b ⟫ 的每个 y 断言一个命题截断的原像。两侧条件之间的不对称是刻意的，与抽象定理一致：单射性作为真正的数据陈述，满射性只作为单纯存在陈述。陈述中没有任何对层级的层或属于关系的量化；一切都发生在两个成员类型内部。
+结果类型是显式的依赖三元组而非记录：从 ⟪ a ⟫ 到 `⟪ b ⟫`{.Agda} 的函数 h，其单射性作为命题值分量，以及仅仅存在的满射性，即对 `⟪ b ⟫`{.Agda} 的每个 `y`{.Agda} 断言一个命题截断的原像。两侧条件之间的不对称是刻意的，与抽象定理一致：单射性作为真正的数据陈述，满射性只作为单纯存在陈述。陈述中没有任何对层级的层或成员关系的量化；一切都发生在两个元素类型内部。
 <!--ja-->
 結果の型はレコードではなく明示的な依存する三つ組である。⟪ a ⟫ から ⟪ b ⟫ への関数 h、その単射性を命題値の成分として、そして単なる全射性、すなわち ⟪ b ⟫ の各 y に対する命題的切り詰めされた原像の主張である。二つの側条件の非対称性は意図的なもので、抽象定理と呼応する。単射性は正味のデータとして、全射性は単なる存在として述べられる。主張のどこにも階層の段や所属についての量化はなく、すべては二つのメンバー型の内部で起こる。
 <!--/-->
@@ -451,7 +451,7 @@ The proof is a single instantiation. Instantiating the module `Bernstein` at A =
 <!--en-->
 The corollary above hard-wires the member types of V. A more reusable form keeps the setting abstract: a carrier `C` of codes, an assignment `P` of a small type to each code, and a relation `R a b` expressing that a codes an injection from P a to P b. What ties the abstraction to the previous section is the readback `read`: from an inhabitant of R a b it extracts an actual function together with its injectivity proof. Given one such readback in each direction, the Bernstein construction applies verbatim. Two entry points are provided, one taking the pair of coded injections as data and one taking it merely, with the bijection then merely existing as well.
 <!--zh-->
-上面的推论把 V 的成员类型写死了。更可复用的形式使设置保持抽象：一个码的载体 `C`、给每个码指派一个小类型的 `P`，以及表达「a 编码了从 P a 到 P b 的单射」的关系 `R a b`。把这一抽象与上一节联系起来的是读回 `read`：从 R a b 的一个元提取出真实的函数及其单射性证明。给定两个方向各一条这样的读回，Bernstein 构造便可逐字应用。这里提供两个入口：一个把这对编码单射作为数据，一个单纯地接受它，此时双射也单纯地存在。
+上面的推论把 `V`{.Agda} 的元素类型写死了。更可复用的形式使设置保持抽象：一个码的载体 `C`、给每个码指派一个小类型的 `P`，以及表达「`a`{.Agda} 编码了从 `P a`{.Agda} 到 `P b`{.Agda} 的单射」的关系 `R a b`。把这一抽象与上一节联系起来的是读回 `read`：从 `R a b`{.Agda} 的一个元提取出真实的函数及其单射性证明。给定两个方向各一条这样的读回，Bernstein 构造便可逐字应用。这里提供两个入口：一个把这对编码单射作为数据，一个单纯地接受它，此时双射也单纯地存在。
 <!--ja-->
 上の帰結は V のメンバー型に固定されている。より再利用しやすい形は、設定を抽象的に保つ。符号の台 `C`、各符号に小さな型を割り当てる `P`、そして a が P a から P b への単射を符号化していることを表す関係 `R a b` である。この抽象を前節と結びつけるのが読み戻し `read` である。R a b の元から、実際の関数とその単射性の証明を取り出す。両方向にそのような読み戻しがあれば、Bernstein の構成はそのまま適用できる。入口は二つ用意されている。一方は符号化された単射の対をデータとして受け取り、もう一方は単なる存在として受け取り、その場合は全単射も単に存在するだけになる。
 <!--/-->

@@ -28,7 +28,7 @@ module L.Coding.SatisfactionGraph {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 open import FOL.Syntax using ( Formula; var; con; _≐_; _∧̇_; ∃̇_ )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
@@ -108,13 +108,13 @@ open import Cubical.HITs.CumulativeHierarchy.Base using ( _∈_ )
 <!--en-->
 From now on `S` is the carrier of the constructible structure: an element consists of a hierarchy set together with evidence of constructibility. Relations in this structure have proposition-valued truth values, and brackets expose the underlying proposition whose inhabitants are proofs. Equality or membership of the underlying hierarchy sets must therefore remain distinct from an object-language formula that asserts equality or membership.
 <!--zh-->
-从现在起，`S` 表示可构造结构的载体：它的元素由一个层级集合及其可构造性证据组成。结构中的关系取命题值，尖括号取出其底层命题，而证明就是该命题的元素。因此，底层层级集合的相等或隶属必须与对象语言中断言相等或隶属的公式区别开来。
+从现在起，`S` 表示可构造结构的载体：它的元素由一个层级集合及其可构造性证据组成。结构中的关系取命题值，尖括号取出其底层命题，而证明就是该命题的元素。因此，底层层级集合的相等或成员关系必须与对象语言中断言相等或成员关系的公式区别开来。
 <!--ja-->
 以下では、`S` を構成可能構造の台とする。その要素は階層の集合と、それが構成可能であることの証拠からなる。この構造の関係は命題値をとり、山括弧は証明が要素となる基礎の命題を取り出す。したがって、基礎となる階層集合の等しさや所属と、等号や所属を主張する対象言語の論理式とは区別しなければならない。
 <!--/-->
 
 ```agda
-open hPropStructure 𝒮ʟ
+open hPropView 𝒮ʟ
 ```
 
 <!--en-->
@@ -408,7 +408,7 @@ pin に続く連言は、一つの表項目を解釈するための条件を並�
 <!--en-->
 The final conjunct `tableAt Ti Bi Ci Ei NN` supplies the local recursion specification. Its first domain condition gives, under propositional truncation, some value for every key in `C`; its second says that every member of `T` can be decomposed, again under truncation, as a key from `C` paired with a value. The remaining ten clauses characterize matching entries by extensional equations, one for each formula constructor. These conditions describe a candidate relation locally. They neither make `T` single-valued nor choose a value for each key. Uniqueness at a genuine formula key is proved later by structural induction in `PinnedRecursion`{.Agda}.
 <!--zh-->
-最后的合取项 `tableAt Ti Bi Ci Ei NN` 给出局部递归规格。它的第一项域条件说，`C` 中每个键都在命题截断下有某个取值；第二项说，`T` 的每个成员都能再次在命题截断下分解为 `C` 中的键与一个取值之对。余下十条子句分别对应一个公式构造子，用外延方程刻画所有匹配的表项。这些条件只在局部描述一张候选关系，既不使 `T` 成为单值关系，也不为每个键选出一个取值。真实公式键处的唯一性要到后面的 `PinnedRecursion`{.Agda} 中通过结构归纳证明。
+最后的合取项 `tableAt Ti Bi Ci Ei NN` 给出局部递归规格。它的第一项域条件说，`C` 中每个键都在命题截断下有某个取值；第二项说，`T` 的每个元素都能再次在命题截断下分解为 `C` 中的键与一个取值之对。余下十条子句分别对应一个公式构造子，用外延方程刻画所有匹配的表项。这些条件只在局部描述一张候选关系，既不使 `T` 成为单值关系，也不为每个键选出一个取值。真实公式键处的唯一性要到后面的 `PinnedRecursion`{.Agda} 中通过结构归纳证明。
 <!--ja-->
 最後の連言項 `tableAt Ti Bi Ci Ei NN` は、局所的な再帰の仕様を与える。第一の領域条件は、`C` の各キーに対して、命題的切り詰めのもとで何らかの値があることを述べる。第二の条件は、`T` の各要素が、やはり命題的切り詰めのもとで、`C` のキーと値との対に分解できることを述べる。残る十個の節は論理式の構成子に一つずつ対応し、該当する表の項目を外延的な等式で特徴づける。これらは候補関係を局所的に記述するだけで、`T` を一価にせず、各キーの値を選びもしない。真正な論理式のキーにおける一意性は、後の `PinnedRecursion`{.Agda} で構造帰納法により示される。
 <!--/-->
@@ -508,7 +508,7 @@ the atom with exactly this membership, and the proof transports along that
 one path. This is the single substantial bridge of the inward direction;
 everything else is re-packing.
 <!--zh-->
-三份守卫证书原样通过：它们是恰在框架装配的那个环境处读取的公式之满足，因此可以站在合取项所在的地方。查询条目是唯一必须换语言的分量。在宿主一侧它是寻常的隶属：两个查询值的有序对属于表的底层集合。应用原子的充分性律把该原子的满足认同为恰是这个隶属，证明沿那条唯一的路径作运输。这是内向方向唯一的实质性桥梁；其余一切只是重新打包。
+三份守卫证书原样通过：它们是恰在框架装配的那个环境处读取的公式之满足，因此可以站在合取项所在的地方。查询条目是唯一必须换语言的分量。在宿主一侧它是寻常的成员关系：两个查询值的有序对属于表的底层集合。应用原子的充分性律把该原子的满足认同为恰是这个成员关系，证明沿那条唯一的路径作运输。这是内向方向唯一的实质性桥梁；其余一切只是重新打包。
 <!--ja-->
 三つの保護条件の証明書は、そのまま通り抜ける。それらは、枠組みが組み立てるその環境のもとで読んだ論理式の充足だからである。問い合わせの項目が、言語を変えねばならない唯一の部品である。ホスト側ではそれはありふれた所属、すなわち二つの問い合わせ値の順序対が表の基礎集合に属することである。適用の原子の妥当性の法則は、原子の充足をまさにこの所属と同一視し、証明はその一本の道に沿って運搬する。これが内向きの方向における唯一の実質的な橋であり、ほかのすべては組み直しにすぎない。
 <!--/-->
@@ -616,7 +616,7 @@ the corresponding fact on the other side.
 <!--en-->
 The remaining fields are recovered in the directions required by the flat record. The calibration conjunct is read by `nums-out`{.Agda} as the host-level `Tags` family. The tower, closure, and exact-domain satisfactions already have the required types and are retained unchanged. Satisfaction of the query atom is the one field that crosses back to an ordinary membership: transport along `appAt-adequate`{.Agda} turns it into membership of the ordered query pair in the underlying set of `T`.
 <!--zh-->
-余下字段按平坦记录所需的方向恢复。校准合取项由 `nums-out`{.Agda} 读成宿主层的 `Tags` 等式族；塔、闭包与精确键定义域的满足已经具有所需类型，因而原样保留。查询原子的满足是唯一需要换回寻常隶属关系的字段：沿 `appAt-adequate`{.Agda} 搬运后，便得到查询有序对属于 `T` 的底集。
+余下字段按平坦记录所需的方向恢复。校准合取项由 `nums-out`{.Agda} 读成宿主层的 `Tags` 等式族；塔、闭包与精确键定义域的满足已经具有所需类型，因而原样保留。查询原子的满足是唯一需要换回寻常成员关系的字段：沿 `appAt-adequate`{.Agda} 搬运后，便得到查询有序对属于 `T` 的底集。
 <!--ja-->
 残る欄は、平坦な記録が要求する向きに復元される。校正の連言項は `nums-out`{.Agda} によってホスト層の `Tags` の等式族として読まれる。塔、閉性、正確なキー領域の充足はすでに必要な型をもつので、そのまま保たれる。問い合わせの原子の充足だけは通常の所属へ戻す必要がある。`appAt-adequate`{.Agda} に沿って移送すると、問い合わせの順序対が `T` の基礎集合に属することが得られる。
 <!--/-->
@@ -881,7 +881,7 @@ present two readings supply the represented relation on which those later
 arguments operate, but do not themselves choose, prove unique, or semantically
 interpret a table.
 <!--zh-->
-外向读式反转这项转换，并为本章收尾：二元公式的一次满足只给出一份含有所查询条目的候选记录之命题截断。这正是满足关系图公式在本章中的边界。随后，`PinnedRecursion` 对一条真正的公式作结构递归，证明只要它的键属于候选键集，而且候选表在该键处记录了一个值，该值就与外部定义的 `Sat`{.Agda} 取值具有相同底层集合。`SatisfactionBridge` 另行赋予该取值以语义，把其中的隶属关系与限制结构中的满足联系起来。最后，`UniformSatisfaction` 在真正的定义域 `AllCodes B`{.Agda} 上使用 `satGraph B`{.Agda}；该域上的存在性与钉扎所得的唯一性共同满足抽象递归定理的条件，从而组装出一张一致的表。本章的两条读式提供后续论证所使用的表示关系，但自身既不选取表，也不证明表唯一，更不解释表的语义。
+外向读式反转这项转换，并为本章收尾：二元公式的一次满足只给出一份含有所查询条目的候选记录之命题截断。这正是满足关系图公式在本章中的边界。随后，`PinnedRecursion` 对一条真正的公式作结构递归，证明只要它的键属于候选键集，而且候选表在该键处记录了一个值，该值就与外部定义的 `Sat`{.Agda} 取值具有相同底层集合。`SatisfactionBridge` 另行赋予该取值以语义，把其中的成员关系与限制结构中的满足联系起来。最后，`UniformSatisfaction` 在真正的定义域 `AllCodes B`{.Agda} 上使用 `satGraph B`{.Agda}；该域上的存在性与钉扎所得的唯一性共同满足抽象递归定理的条件，从而组装出一张一致的表。本章的两条读式提供后续论证所使用的表示关系，但自身既不选取表，也不证明表唯一，更不解释表的语义。
 <!--ja-->
 外向きの読みはこの変換を逆にたどり、本章を締めくくる。二項の論理式の充足から得られるのは、問い合わせた要素を含む候補の記録を命題的に切り詰めたものだけである。これが、この章における充足関係グラフの正確な限界である。続く `PinnedRecursion` は、実際の論理式について構造的再帰を行い、そのキーが候補キー集合に属し、候補表がそこで値を記録しているならば、その値が外部で定義された値 `Sat`{.Agda} と同じ基礎集合をもつことを証明する。`SatisfactionBridge` は別に、その値への所属を制限構造での充足と結びつけ、値に意味論的な内容を与える。最後に `UniformSatisfaction` は、実際の領域 `AllCodes B`{.Agda} 上で `satGraph B`{.Agda} を用いる。その領域での存在と、固定性から得られる一意性を合わせて抽象的再帰定理の仮定を満たし、一つの一様な表を組み立てる。本章の二つの読みは、これらの後続の議論が扱う表現された関係を与えるが、それ自体が表を選んだり、一意性を証明したり、その意味論を説明したりするわけではない。
 <!--/-->

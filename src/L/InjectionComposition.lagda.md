@@ -28,7 +28,7 @@ module L.InjectionComposition {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 open import FOL.Syntax
   using ( Formula; var; _≐_; _∧̇_; ∃̇_ )
 import FOL.Absoluteness
@@ -76,7 +76,7 @@ Properties and applications of graphs are expressed by formulas of the model lan
 <!--en-->
 Ordered pairs of ambient sets are coded by a pairing operation whose two components are recoverable: equal codes have equal components. Small sets come with presentations, an index type embedded into the hierarchy, so that facts about presented elements transfer to facts about indices. Constructibility is a predicate with downward closure along membership: a member of a constructible set is constructible.
 <!--zh-->
-外围集合的有序对由一个配对运算编码，其两个分量皆可恢复：相等的码有相等的分量。小集合带有呈现，即嵌入层级的索引类型，因此关于被呈现元素的事实可转移为关于索引的事实。可构造性是沿隶属向下封闭的谓词：可构造集合的成员是可构造的。
+外围集合的有序对由一个配对运算编码，其两个分量皆可恢复：相等的码有相等的分量。小集合带有呈现，即嵌入层级的索引类型，因此关于被呈现元素的事实可转移为关于索引的事实。可构造性是沿成员关系向下封闭的谓词：可构造集合的元素是可构造的。
 <!--ja-->
 周囲の集合の順序対は、二つの成分が復元できる対の演算で符号化される。等しい符号は等しい成分をもつ。小さな集合には提示が伴い、階層へ埋め込まれた索引型によって、提示された要素についての事実が索引についての事実へ移る。構成可能性は、所属に沿って下方閉な述語である。構成可能な集合の要素は構成可能である。
 <!--/-->
@@ -84,7 +84,7 @@ Ordered pairs of ambient sets are coded by a pairing operation whose two compone
 <!--en-->
 Four materials carry the chapter. The ordinal `ω` with the fact that its members are exactly the numerals. The finite dictionary between numerals and finite sets, with its abstract chase argument. The small-domain principle, which bounds any small family of constructible sets by a single stage. And separation inside `L`, available for formulas of arbitrary complexity, which carves every relation below out of a shared bound.
 <!--zh-->
-四项材料支撑全章。序数 `ω`，连同「其成员恰为数码」的事实。数码与有限集之间的有限词典，及其抽象追逐论证。小域原理：把由可构造集合组成的任何小族界于单一层。以及 `L` 内部的分离，对任意复杂度的公式可用，下文的每个关系都由此从公共界中刻出。
+四项材料支撑全章。序数 `ω`，连同「其元素恰为数码」的事实。数码与有限集之间的有限词典，及其抽象追逐论证。小域原理：把由可构造集合组成的任何小族界于单一层。以及 `L` 内部的分离，对任意复杂度的公式可用，下文的每个关系都由此从公共界中刻出。
 <!--ja-->
 四つの材料が本章を支える。序数 `ω` と、その要素がちょうど数項であるという事実。数項と有限集合の間の有限の対応辞と、その抽象的な追跡論法。小さな定義域の原理、すなわち構成可能集合の小さな族を一つの段階で抑えるもの。そして `L` 内部の分出であり、任意の複雑さの論理式に使えるので、以下のどの関係も共有の上界から刻み出される。
 <!--/-->
@@ -120,7 +120,7 @@ Internal existence is asserted through propositional truncation: a statement hol
 <!--en-->
 A path between sets yields an equivalence between their presentation types, along which functions and injections can be moved. When proving injectivity, `retEq e x` supplies the round-trip path `invEq e (equivFun e x) ≡ x`, so a recovered preimage can be identified with the original input. The ambient hierarchy is the carrier on which every membership statement of the chapter is read.
 <!--zh-->
-集合之间的路径给出呈现类型之间的等价，函数与单射可沿这份等价搬运。证明单射性时，`retEq e x` 提供往返路径 `invEq e (equivFun e x) ≡ x`，从而把恢复出的原像与原来的输入等同。外围层级是本章一切成员陈述所读取的载体。
+集合之间的路径给出呈现类型之间的等价，函数与单射可沿这份等价搬运。证明单射性时，`retEq e x` 提供往返路径 `invEq e (equivFun e x) ≡ x`，从而把恢复出的原像与原来的输入等同。外围层级是本章一切成员关系陈述所读取的载体。
 <!--ja-->
 集合間のパスは提示型間の同値を与え、それに沿って関数と単射を移せる。単射性の証明では、`retEq e x` が往復のパス `invEq e (equivFun e x) ≡ x` を与え、復元した原像を元の入力と同一視できる。周囲の階層は、本章のすべての所属の主張が読まれる台である。
 <!--/-->
@@ -168,7 +168,7 @@ The constructible carrier is opened under the name on which every set of the cha
 <!--/-->
 
 ```agda
-open hPropStructure 𝒮ʟ using ( S )
+open hPropView 𝒮ʟ using ( S )
 
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
 open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
@@ -218,7 +218,7 @@ module StageBound (I : Type ℓ) (g : I → S) where
 <!--en-->
 The reader states the bound's purpose directly: each member of the family, read as an ambient element, belongs to the bound. Every pair later admitted to a `Relation` reaches the bound through this reader.
 <!--zh-->
-读取器直接陈述界的用途：族的每个成员按外围元素读取时都属于该界。此后每个被纳入 `Relation` 的对都经此读取器进入该界。
+读取器直接陈述界的用途：族的每个元素按外围元素读取时都属于该界。此后每个被纳入 `Relation` 的对都经此读取器进入该界。
 <!--ja-->
 読み手は上界の目的をそのまま述べる。族の各構成員は、周囲の要素として読めば上界に属する。後で `Relation` に入れられる各対は、この読み手を通して上界に入る。
 <!--/-->
@@ -237,7 +237,7 @@ The exclusion reads: no injection exists from `ω` into the square of a finite o
 <!--zh-->
 ## 排除有限目标
 
-后文所需的有限排除取如下形式：从 `ω` 到有限序数平方的单射不存在。这条路线几乎完全避开 `ω` 的内部隶属。所用到的只是：`ω` 的每个成员仅仅地是某个数码；每个数码呈现一个有限集，且词典在两个方向上都单射；以及一条抽象追逐。给定从每个有限呈现到某个固定类型的单射、再给定从该固定类型到某个有限呈现之平方的单射，便导出从较大有限集到较小有限集的单射。
+后文所需的有限排除取如下形式：从 `ω` 到有限序数平方的单射不存在。这条路线几乎完全避开 `ω` 的内部成员关系。所用到的只是：`ω` 的每个元素仅仅地是某个数码；每个数码呈现一个有限集，且词典在两个方向上都单射；以及一条抽象追逐。给定从每个有限呈现到某个固定类型的单射、再给定从该固定类型到某个有限呈现之平方的单射，便导出从较大有限集到较小有限集的单射。
 <!--ja-->
 ## 有限な終域の排除
 
@@ -247,7 +247,7 @@ The exclusion reads: no injection exists from `ω` into the square of a finite o
 <!--en-->
 A fact about `ω` itself, at the strength the membership predicate supports: a member of `ω` is, merely, a numeral, and the successor of the numeral `n` is again a numeral, hence again a member. The identification of `γ` with its numeral is transported along the successor.
 <!--zh-->
-关于 `ω` 自身的一条事实，取其隶属谓词所能支撑的强度：`ω` 的成员仅仅地是某个数码，而数码 `n` 的后继仍是数码，因而仍是成员。`γ` 与其数码的同一视沿后继搬运。
+关于 `ω` 自身的一条事实，取其成员关系谓词所能支撑的强度：`ω` 的元素仅仅地是某个数码，而数码 `n` 的后继仍是数码，因而仍是元素。`γ` 与其数码的同一视沿后继搬运。
 <!--ja-->
 `ω` 自身についての事実であり、所属の述語が支える強さでのものである。`ω` の要素は、単に、ある数項であり、数項 `n` の後続は再び数項、したがって再び要素である。`γ` とその数項の同一視は後続に沿って輸送される。
 <!--/-->
@@ -364,7 +364,7 @@ finite-excl-ω β oβ β∈ω f finj =
 <!--en-->
 Let `β` be an ordinal member of `ω`, and let a function from the presentation of `ω` to the square of the presentation of `β` be injective; the claim is a contradiction.
 <!--zh-->
-设 `β` 是 `ω` 的序数成员，并设从 `ω` 的呈现到 `β` 之呈现的平方的函数为单射；要证的是矛盾。
+设 `β` 是 `ω` 的序数元素，并设从 `ω` 的呈现到 `β` 之呈现的平方的函数为单射；要证的是矛盾。
 <!--ja-->
 `β` を `ω` の順序数の要素とし、`ω` の提示から `β` の提示の平方への関数が単射だとする。主張は矛盾であり、
 <!--/-->
@@ -446,7 +446,7 @@ module PairBound (D C : S) where
 <!--en-->
 Each presentation index is realized as an element of the carrier: the presented set, which is constructible because it is a member of the constructible set `D` or `C`, the constructibility being transported down along membership.
 <!--zh-->
-每个呈现索引被实现为载体的元素：即那个被呈现的集合；它是可构造集合 `D` 或 `C` 的成员，可构造性沿隶属向下搬运。
+每个呈现索引被实现为载体的元素：即那个被呈现的集合；它是可构造集合 `D` 或 `C` 的元素，可构造性沿成员关系向下搬运。
 <!--ja-->
 各提示の索引は台の要素として実現される。それは提示された集合であり、構成可能な集合 `D` または `C` の要素なので、所属に沿って構成可能性が降ろされる。
 <!--/-->
@@ -491,7 +491,7 @@ The family sends each pair of indices to the coded ordered pair of the two reali
 <!--en-->
 The bound is read off the device and used from here on only through membership; nothing below needs its construction.
 <!--zh-->
-界从该装置读出，此后只通过隶属使用；下文无需其构造。
+界从该装置读出，此后只通过成员关系使用；下文无需其构造。
 <!--ja-->
 上界は装置から読み出され、以降は所属を通してのみ使われる。以下でその構成は必要とされない。
 <!--/-->
@@ -534,7 +534,7 @@ Since `D` and `C` are presented, each of the two elements has a fiber: an index 
 <!--en-->
 The two indices form one index of the bound's family, whose value is the coded pair of the presented elements; along the two fiber paths this equals the coded pair of `x` and `z`. Transporting membership along that equality finishes the reader.
 <!--zh-->
-两个索引构成界的族的一个索引，族在该索引处的取值是被呈现元素们的编码对，沿两条纤维路径它等于 `x` 与 `z` 的编码对。沿该相等搬运隶属，读取器即告完成。
+两个索引构成界的族的一个索引，族在该索引处的取值是被呈现元素们的编码对，沿两条纤维路径它等于 `x` 与 `z` 的编码对。沿该相等搬运成员关系，读取器即告完成。
 <!--ja-->
 二つの索引は上界の族の一つの索引となり、その索引での族の値は提示された要素たちの符号化された対で、二つの繊維のパスに沿って `x` と `z` の符号化された対と等しくなる。その等しさに沿って所属を輸送すれば、読み手は完了する。
 <!--/-->
@@ -587,7 +587,7 @@ The carving formula quantifies the two slots existentially, and besides the give
 <!--en-->
 The backward reading turns membership into truncated data about a pair. A member `e` of the relation satisfies the carving formula by the separation specification; the two existentials unwrap to components `x` and `y` with a proof that `e` codes their pair, restored to the coding operation's own form by adequacy, and the formula part is read into `P x y`.
 <!--zh-->
-反向读取把隶属换成关于某一对的截断数据。关系的成员 `e` 由分离规格满足刻画公式；两层存在量化解开得到分量 `x`、`y`，以及「`e` 编码其对子」的证明，经充分性恢复为编码运算自身的形式，而公式部分被读成 `P x y`。
+反向读取把成员关系换成关于某一对的截断数据。关系的元素 `e` 由分离规格满足刻画公式；两层存在量化解开得到分量 `x`、`y`，以及「`e` 编码其对子」的证明，经充分性恢复为编码运算自身的形式，而公式部分被读成 `P x y`。
 <!--ja-->
 逆の読みは、所属を一つの対についての切り詰められたデータへ変える。関係の要素 `e` は分出の仕様により刻むための論理式を満たす。二つの存在量化が解けて成分 `x` と `y` が現れ、`e` がその対を符号化することの証明が、妥当性によって符号化の演算自身の形に戻され、論理式の部分は `P x y` へ読み替えられる。
 <!--/-->
@@ -616,7 +616,7 @@ Everything is truncated, matching the form in which the relation will be consume
 <!--en-->
 The forward direction builds membership from the predicate.
 <!--zh-->
-正向由谓词构造隶属。
+正向由谓词构造成员关系。
 <!--ja-->
 順方向は述語から所属を作る。
 <!--/-->
@@ -632,7 +632,7 @@ The forward direction builds membership from the predicate.
 <!--en-->
 The coded pair of `x` and `y` lies in the shared bound by the bound's reader; the coding clause of the formula holds by the coding operation's computation, and the given formula holds by adequacy; separation certifies membership, transported along the coding's definitional equality.
 <!--zh-->
-`x` 与 `y` 的编码对由界的读取器进入共享界；公式的编码条款由编码运算的计算成立，给定公式由充分性成立；分离给出隶属，并沿编码的定义性相等搬运。
+`x` 与 `y` 的编码对由界的读取器进入共享界；公式的编码条款由编码运算的计算成立，给定公式由充分性成立；分离给出成员关系，并沿编码的定义性相等搬运。
 <!--ja-->
 `x` と `y` の符号化された対は、上界の読み手によって共有の上界に入る。論理式の符号化の条項は符号化の演算の計算で成り立ち、与えられた論理式は妥当性で成り立つ。分出が所属を証明し、符号化の定義的な等しさに沿って輸送される。
 <!--/-->
@@ -773,7 +773,7 @@ The carving formula has a single existential, over the intermediate value. Insid
 <!--en-->
 Adequacy of the application atoms moves each conjunct to its intended membership: the first into the first graph at the pair `(x, y)`, the second into the second graph at `(y, z)`. What remains is exactly a linking witness, in truncated form.
 <!--zh-->
-应用原子的充分性把每个合取项搬到其本意的隶属：第一个搬到第一个图在 `(x, y)` 处的隶属，第二个搬到第二个图在 `(y, z)` 处的隶属。剩下的恰是截断形式的连接见证。
+应用原子的充分性把每个合取项搬到其本意的成员关系：第一个搬到第一个图在 `(x, y)` 处的成员关系，第二个搬到第二个图在 `(y, z)` 处的成员关系。剩下的恰是截断形式的连接见证。
 <!--ja-->
 適用アトムの妥当性が、各連言を本来の所属へ運ぶ。第一は `(x, y)` における最初のグラフへの所属へ、第二は `(y, z)` における第二のグラフへの所属へ。残るのは、切り詰められた形の結びの証人である。
 <!--/-->
@@ -1238,7 +1238,7 @@ The composite module carries the whole verification, so at this level the compos
 <!--en-->
 The principal instance starts from a member `D` of an ordinal `C`. The only assumption is that `D` belongs to the ordinal `C`; transitivity of `C` then says that every member of `D` is a member of `C`, which is exactly the pointwise inclusion the coding requires. The module opens the inclusion construction for this pair, so its graph, code, and induced map are all available under one name.
 <!--zh-->
-主要实例从序数 `C` 的成员 `D` 出发。唯一的假设是 `D` 属于序数 `C`；`C` 的传递性随即断言 `D` 的每个成员都是 `C` 的成员，而这正是编码所需的逐点包含。模块对这一对打开包含构造，于是其图、码与导出映射都在同一个名字下可用。
+主要实例从序数 `C` 的元素 `D` 出发。唯一的假设是 `D` 属于序数 `C`；`C` 的传递性随即断言 `D` 的每个元素都是 `C` 的元素，而这正是编码所需的逐点包含。模块对这一对打开包含构造，于是其图、码与导出映射都在同一个名字下可用。
 <!--ja-->
 主要な実例は、順序数 `C` の要素 `D` から始まる。仮定は `D` が順序数 `C` に属することだけである。`C` の推移性により、`D` の各要素が `C` の要素であることが従い、これが符号化の必要とする点ごとの包含にほかならない。モジュールはこの対に対して包含の構成を開くので、そのグラフ・符号・導かれた写像が一つの名のもとで使える。
 <!--/-->
@@ -1265,7 +1265,7 @@ Three results serve the internal cardinal arguments. The finite exclusion shows 
 <!--zh-->
 ## 小结
 
-三项结果服务于内部基数论证。有限排除表明从 `ω` 到任何有限序数平方的单射不存在：`ω` 的成员仅仅地是数码，呈现类型 `⟪ # n ⟫` 与有限集 `Fin n` 在两个方向上各有一个单射，若假设存在到某个有限平方的单射，抽象追逐便导出从较大有限集到较小有限集的单射。复合把两个编码单射变成一个，经连接关系核验单值性、定义域上的全域性、单射性与值域条款。包含由恒等图把逐点包含编码为单射。在存在层面，两种操作都提升到截断的内部关系，因此基数界限的构造与比较完全可以经由居于 `L` 内部的图进行。
+三项结果服务于内部基数论证。有限排除表明从 `ω` 到任何有限序数平方的单射不存在：`ω` 的元素仅仅地是数码，呈现类型 `⟪ # n ⟫` 与有限集 `Fin n` 在两个方向上各有一个单射，若假设存在到某个有限平方的单射，抽象追逐便导出从较大有限集到较小有限集的单射。复合把两个编码单射变成一个，经连接关系核验单值性、定义域上的全域性、单射性与值域条款。包含由恒等图把逐点包含编码为单射。在存在层面，两种操作都提升到截断的内部关系，因此基数界限的构造与比较完全可以经由居于 `L` 内部的图进行。
 <!--ja-->
 ## まとめ
 

@@ -11,19 +11,19 @@
 <!--/-->
 
 ```agda
-open import FOL.ZFStructure using ( ZFStructure; module hPropStructure )
+open import FOL.ZFStructure using ( ZFStructureₕ; module hPropView )
 ```
 
 <!--en-->
 The module signature says what kind of thing will be studied: `𝒮` is a `ZFStructure` whose truth values are propositions, that is, a structure over `hProp ℓ`. Two consequences follow immediately. First, the structure's equality `≈ˢ` and membership `∈ˢ` return propositions with underlying types, so membership claims in this chapter are things one can inhabit with proofs. Second, the parameter `{ℓ}` is a universe level, and it stays fixed throughout: the carrier `S` lives in `Type ℓ`, while statements quantifying over all subsets of `S`, such as the axioms themselves, will land in `Type (ℓ-suc ℓ)`.
 <!--zh-->
-模块签名说明了要研究的对象类型：`𝒮` 是一个 `ZFStructure`，其真值为命题，即 `hProp ℓ` 上的结构。由此立刻得到两点。其一，结构的等词 `≈ˢ` 与成员 `∈ˢ` 返回带有底层类型的命题，因此本章的成员断言都是可以用证明占据的东西。其二，参数 `{ℓ}` 是宇宙层级，全程固定：载体 `S` 住在 `Type ℓ`，而量化 `S` 全部子集的陈述，即公理本身，则落在 `Type (ℓ-suc ℓ)`。
+模块签名说明了要研究的对象类型：`𝒮` 是一个 `ZFStructure`，其真值为命题，即 `hProp ℓ` 上的结构。由此立刻得到两点。其一，结构的等词 `≈ˢ` 与元素 `∈ˢ` 返回带有底层类型的命题，因此本章的元素断言都是可以用证明占据的东西。其二，参数 `{ℓ}` 是宇宙层级，全程固定：载体 `S` 住在 `Type ℓ`，而量化 `S` 全部子集的陈述，即公理本身，则落在 `Type (ℓ-suc ℓ)`。
 <!--ja-->
 モジュールのシグネチャは、調べる対象の種類を示す。`𝒮` は真理値が命題である `ZFStructure`、すなわち `hProp ℓ` の上の構造である。ここから二つのことがすぐに従う。第一に、構造の等号 `≈ˢ` と所属 `∈ˢ` は基礎型をもつ命題を返すので、本章の所属の主張は証拠で満たせるものになる。第二に、パラメータ `{ℓ}` は宇宙レベルであり、全体を通して固定される。台 `S` は `Type ℓ` に住み、`S` のすべての部分集合を量化する命題、つまり公理そのものは `Type (ℓ-suc ℓ)` に置かれる。
 <!--/-->
 
 ```agda
-module FOL.ZFModel {ℓ} (𝒮 : ZFStructure ℓ) where
+module FOL.ZFModel {ℓ} (𝒮 : ZFStructureₕ ℓ) where
 ```
 
 ```agda
@@ -66,7 +66,7 @@ The axioms assert facts directly in `hProp`{.Agda}. Their constant interpretatio
 <!--en-->
 The working vocabulary for the axioms is assembled here. The syntax chapter supplies `Formula`{.Agda}, the membership symbol `∈̇`{.Agda}, and the constructors `var`{.Agda} and `con`{.Agda}; separation and replacement will take formulas as genuine inputs. The semantics chapter contributes the module `At`, which fixes a constant interpretation and exposes satisfaction for formulas at it. From the host library come `Σ≡Prop`{.Agda}, used to reduce a path of dependent pairs whose second components are propositions, the type `WellFounded`{.Agda} of well-foundedness that regularity will record, the empty type `⊥*`, and propositional truncation `∥_∥₁`{.Agda} for the axiom of choice.
 <!--zh-->
-这里汇集公理所需的工作词汇。语法章提供 `Formula`{.Agda}、成员符号 `∈̇`{.Agda} 与构造子 `var`{.Agda}、`con`{.Agda}；分离与替换将把公式作为真正的输入。语义章贡献模块 `At`，它固定一个常元解释，并给出该解释下公式的满足关系。宿主库则提供 `Σ≡Prop`{.Agda} (用于化归第二分量为命题的依值对的路径)、正则公理将要记录的良基类型 `WellFounded`{.Agda}、空类型 `⊥*`，以及选择公理所用的命题截断 `∥_∥₁`{.Agda}。
+这里汇集公理所需的工作词汇。语法章提供 `Formula`{.Agda}、元素符号 `∈̇`{.Agda} 与构造子 `var`{.Agda}、`con`{.Agda}；分离与替换将把公式作为真正的输入。语义章贡献模块 `At`，它固定一个常元解释，并给出该解释下公式的满足关系。宿主库则提供 `Σ≡Prop`{.Agda} (用于化归第二分量为命题的依值对的路径)、正则公理将要记录的良基类型 `WellFounded`{.Agda}、空类型 `⊥*`，以及选择公理所用的命题截断 `∥_∥₁`{.Agda}。
 <!--ja-->
 ここで公理に必要な作業用の語彙をそろえる。構文の章は `Formula`{.Agda}、所属記号 `∈̇`{.Agda}、構成子 `var`{.Agda} と `con`{.Agda} を供給し、分出と置換は論理式を本物の入力として受け取ることになる。意味論の章はモジュール `At` を提供する。これは定数解釈を一つに固定し、その解釈での論理式の充足を公開する。ホストのライブラリからは、第二成分が命題である依存対のパスを帰着させる `Σ≡Prop`{.Agda}、正則性が記録する整礎性の型 `WellFounded`{.Agda}、空の型 `⊥*`、そして選択公理で使う命題の截断 `∥_∥₁`{.Agda} が来る。
 <!--/-->
@@ -76,15 +76,15 @@ open import Cubical.Induction.WellFounded using ( WellFounded )
 ```
 
 <!--en-->
-Two openings put the structure and satisfaction names into scope; the direct `hProp` operations are already supplied by the prelude. Opening `hPropStructure 𝒮` brings the structure's carrier `S`, its h-set certificate, and the two truth-valued relations `≈ˢ` and `∈ˢ`, together with the Type-valued reading `∈ᵗ`{.Agda} of membership. Finally, opening `At S id`{.Agda} instantiates the satisfaction relation `_⊨_`{.Agda} at the canonical constant interpretation, where a constant denotes itself, so a free variable slot in a formula is read as membership of a specific set.
+Two openings put the structure and satisfaction names into scope; the direct `hProp` operations are already supplied by the prelude. Opening `hPropView 𝒮` brings the structure's carrier `S`, its h-set certificate, and the two truth-valued relations `≈ˢ` and `∈ˢ`, together with the Type-valued reading `∈ᵗ`{.Agda} of membership. Finally, opening `At S id`{.Agda} instantiates the satisfaction relation `_⊨_`{.Agda} at the canonical constant interpretation, where a constant denotes itself, so a free variable slot in a formula is read as membership of a specific set.
 <!--zh-->
-两个 open 把结构与满足关系的名字带入作用域；`hProp` 上的直接逻辑运算已由基础词汇提供。打开 `hPropStructure 𝒮` 得到结构的载体 `S`、其 h-集合性证据，以及两个真值关系 `≈ˢ` 与 `∈ˢ`，连同成员的 Type 值读法 `∈ᵗ`{.Agda}。最后，打开 `At S id`{.Agda} 在典范常元解释下实例化满足关系 `_⊨_`{.Agda}，其中常元指自身，于是公式中的自由变元槽就被读作对某个具体集合的隶属。
+两个 open 把结构与满足关系的名字带入作用域；`hProp` 上的直接逻辑运算已由基础词汇提供。打开 `hPropView 𝒮` 得到结构的载体 `S`、其 h-集合性证据，以及两个真值关系 `≈ˢ` 与 `∈ˢ`，连同元素的 Type 值读法 `∈ᵗ`{.Agda}。最后，打开 `At S id`{.Agda} 在典范常元解释下实例化满足关系 `_⊨_`{.Agda}，其中常元指自身，于是公式中的自由变元槽就被读作对某个具体集合的成员关系。
 <!--ja-->
-二つの open が構造と充足関係の名前をスコープに入れる。`hProp` 上の直接の論理演算は基礎語彙からすでに得られている。`hPropStructure 𝒮` を開くと、構造の台 `S`、その h-集合性の証拠、真理値を返す二つの関係 `≈ˢ` と `∈ˢ`、さらに所属の Type 値の読み `∈ᵗ`{.Agda} が得られる。最後に `At S id`{.Agda} を開くと、充足関係 `_⊨_`{.Agda} が正準な定数解釈で具体化される。そこでは定数が自分自身を指すので、論理式の自由変数の枠は、特定の集合への所属として読まれる。
+二つの open が構造と充足関係の名前をスコープに入れる。`hProp` 上の直接の論理演算は基礎語彙からすでに得られている。`hPropView 𝒮` を開くと、構造の台 `S`、その h-集合性の証拠、真理値を返す二つの関係 `≈ˢ` と `∈ˢ`、さらに所属の Type 値の読み `∈ᵗ`{.Agda} が得られる。最後に `At S id`{.Agda} を開くと、充足関係 `_⊨_`{.Agda} が正準な定数解釈で具体化される。そこでは定数が自分自身を指すので、論理式の自由変数の枠は、特定の集合への所属として読まれる。
 <!--/-->
 
 ```agda
-open hPropStructure 𝒮
+open hPropView 𝒮
 
 open At S id using ( _⊨_ )
 ```
@@ -96,7 +96,7 @@ Nearly every axiom to come has the same shape: *there is a set whose members are
 <!--zh-->
 ## 把类实现为集合
 
-接下来的公理几乎全是同一个形状：**存在一个集合，其成员恰好是如此这般者**。先把「如此这般」说清楚。**类**是载体上的命题值谓词 `S → hProp ℓ`：可以对它谈论隶属，却不保证有集合恰好收齐它的全部成员。(类在前面已经出现过：结构章的限制 `𝒮 ↾ M` 正是沿这样一个 `M` 进行的。) 本节定义集合何时实现一个类，指出实现本身是命题，并把两者打包在一起。
+接下来的公理几乎全是同一个形状：**存在一个集合，其元素恰好是如此这般者**。先把「如此这般」说清楚。**类**是载体上的命题值谓词 `S → hProp ℓ`：可以对它谈论成员关系，却不保证有集合恰好收齐它的全部元素。(类在前面已经出现过：结构章的限制 `𝒮 ↾ M` 正是沿这样一个 `M` 进行的。) 本节定义集合何时实现一个类，指出实现本身是命题，并把两者打包在一起。
 <!--ja-->
 ## クラスを集合として実現する
 
@@ -136,7 +136,7 @@ SetOf Q = Σ[ b ∶ S ] IsSetOf Q b
 <!--en-->
 How many realizers can one class have? Under **extensionality** (sets with the same members are equal; it will be the first field of the record) the answer is at most one, in the strong, structural sense: any single realizer makes the whole type of realizers contractible. The lemma takes extensionality as an explicit input, because the record that will provide it has not been defined yet.
 <!--zh-->
-一个类能有几个实现者？在**外延公理** (成员相同的集合相等；它将是 record 的第一个字段) 之下，答案是至多一个，而且是结构意义上的强「至多一」：任何一个实现者都使实现者的整个类型可缩。这条引理把外延性作为显式输入，因为提供外延性的 record 此时还没有定义。
+一个类能有几个实现者？在**外延公理** (元素相同的集合相等；它将是 record 的第一个字段) 之下，答案是至多一个，而且是结构意义上的强「至多一」：任何一个实现者都使实现者的整个类型可缩。这条引理把外延性作为显式输入，因为提供外延性的 record 此时还没有定义。
 <!--ja-->
 一つのクラスに実現者はいくつあり得るであろうか。**外延性** (同じ要素をもつ集合は等しい。これは record の最初のフィールドになる) の下では、答えは高々一つであり、しかも強い構造的な意味でそうである。どれか一つの実現者が、実現者全体の型を可縮にする。この補題が外延性を明示的な入力として受け取るのは、それを提供する record がまだ定義されていないからである。
 <!--/-->
@@ -186,7 +186,7 @@ The operator `℩` takes a contraction proof of `SetOf Q` and returns its center
 <!--en-->
 The extracted set would be useless without a way to read back what its members are, and that reading is again a projection: `℩-spec c`{.Agda} is the specification carried by the center, that is, the second component of the first component of the contraction. Together the two say: the unique set of the `Q`s exists, and `℩` hands you that set together with the certificate `x ∈ˢ (℩ c) ≡ Q x`{.Agda}. Every derived operation in the next sections consists of applying `℩` to an axiom field and quoting `℩-spec`{.Agda} as its specification.
 <!--zh-->
-若无法读回该集合的成员是什么，提取出的集合便毫无用处；而这个读法同样是投影：`℩-spec c`{.Agda} 就是中心所携带的规格，即收缩的第一分量的第二分量。两者合起来说：由 `Q` 者组成的唯一集合存在，而 `℩` 把这个集合连同证书 `x ∈ˢ (℩ c) ≡ Q x`{.Agda} 一并交给你。后文每个派生运算都由「把 `℩` 用于某个公理字段」与「引用 `℩-spec`{.Agda} 作为规格」组成。
+若无法读回该集合的元素是什么，提取出的集合便毫无用处；而这个读法同样是投影：`℩-spec c`{.Agda} 就是中心所携带的规格，即收缩的第一分量的第二分量。两者合起来说：由 `Q` 者组成的唯一集合存在，而 `℩` 把这个集合连同证书 `x ∈ˢ (℩ c) ≡ Q x`{.Agda} 一并交给你。后文每个派生运算都由「把 `℩` 用于某个公理字段」与「引用 `℩-spec`{.Agda} 作为规格」组成。
 <!--ja-->
 取り出した集合の要素が何であるかを読み戻す手段がなければ、その集合は役に立たない。この読み戻しもまた射影である。`℩-spec c`{.Agda} は中心が担う仕様、すなわち収縮の第一成分の第二成分である。両者を合わせると、`Q` なるものからなる一意な集合が存在し、`℩` はその集合を証書 `x ∈ˢ (℩ c) ≡ Q x`{.Agda} とともに手渡す、となる。以降の派生演算はいずれも、公理のフィールドに `℩` を適用し、`℩-spec`{.Agda} を仕様として引用するだけで構成される。
 <!--/-->
@@ -203,7 +203,7 @@ One derived relation completes the vocabulary: `a ⊆ˢ b` when every member of 
 <!--zh-->
 ## 子集
 
-还需要一个派生关系来补全词汇：`a ⊆ˢ b` 谓 `a` 的每个成员都是 `b` 的成员。这正是外延公理所比较的关系，只不过作为真值而非定理前提来读。与将要返回集合的公理不同，它住在 `hProp ℓ` 中，并且用 `hProp` 上直接的全称量词而非宿主函数类型来陈述。幂集字段与选择公理的选择集形式都将用它表述。
+还需要一个派生关系来补全词汇：`a ⊆ˢ b` 谓 `a` 的每个元素都是 `b` 的元素。这正是外延公理所比较的关系，只不过作为真值而非定理前提来读。与将要返回集合的公理不同，它住在 `hProp ℓ` 中，并且用 `hProp` 上直接的全称量词而非宿主函数类型来陈述。幂集字段与选择公理的选择集形式都将用它表述。
 <!--ja-->
 ## 部分集合
 
@@ -226,7 +226,7 @@ a ⊆ˢ b = ∀[ x ∶ S ] (x ∈ˢ a) ⇒ (x ∈ˢ b)
 <!--en-->
 The notation `a ⊆ˢ b` will be used inside the power-set axiom and in later arguments. Its precedence is fixed here so formulas containing membership, equality, and subset have an unambiguous reading.
 <!--zh-->
-记号 `a ⊆ˢ b` 将用于幂集公理及后续论证。这里固定它的优先级，使同时含成员、等词与子集的式子有明确读法。
+记号 `a ⊆ˢ b` 将用于幂集公理及后续论证。这里固定它的优先级，使同时含元素、等词与子集的式子有明确读法。
 <!--ja-->
 記号 `a ⊆ˢ b` は冪集合の公理と後の議論で用いる。所属、等号、部分集合を同時に含む式が一意に読めるよう、ここで優先順位を定める。
 <!--/-->
@@ -252,7 +252,7 @@ Here is the heart of the chapter. The fields group into three kinds. First, exte
 <!--en-->
 The record is a proposition-valued structure plus the guarantees the axioms demand, and it itself lives in `Type (ℓ-suc ℓ)` because its fields quantify over all of `S`. The first two fields are not of the unique-existence form. Extensionality is the implication from pointwise agreement of membership truth values to a path `a ≡ b`, exactly the hypothesis that made `setOf-unique` work. Regularity takes `WellFounded _∈ᵗ_`, well-foundedness of the Type-valued membership: this supplies `Acc` data for every element and thereby supports recursion and induction along membership. The remaining fields each assert `isContr (SetOf Q)` for a class `Q`.
 <!--zh-->
-这个 record 是命题值结构加上公理所要求的保证；由于字段量化了整个 `S`，它自身住在 `Type (ℓ-suc ℓ)`。头两个字段不是唯一存在形态。外延性是从成员真值逐点相等得到路径 `a ≡ b` 的蕴涵，正是让 `setOf-unique` 得以成立的那个假设。正则公理取 `WellFounded _∈ᵗ_`，即 Type 值成员关系的良基性：它为每个元素提供 `Acc` 数据，从而支持沿成员关系的递归与归纳。其余字段各自对某个类 `Q` 断言 `isContr (SetOf Q)`。
+这个 record 是命题值结构加上公理所要求的保证；由于字段量化了整个 `S`，它自身住在 `Type (ℓ-suc ℓ)`。头两个字段不是唯一存在形态。外延性是从元素真值逐点相等得到路径 `a ≡ b` 的蕴涵，正是让 `setOf-unique` 得以成立的那个假设。正则公理取 `WellFounded _∈ᵗ_`，即 Type 值成员关系的良基性：它为每个元素提供 `Acc` 数据，从而支持沿成员关系的递归与归纳。其余字段各自对某个类 `Q` 断言 `isContr (SetOf Q)`。
 <!--ja-->
 この record は、命題値の構造に公理が要求する保証を加えたものである。フィールドが `S` 全体を量化するため、record 自身は `Type (ℓ-suc ℓ)` に住む。最初の二つのフィールドは一意存在の形ではない。外延性は、所属の真理値が各点で一致することからパス `a ≡ b` を得る含意であり、`setOf-unique` を成立させた仮定そのものである。正則性は `WellFounded _∈ᵗ_`、つまり Type 値の所属関係の整礎性である。これは各要素に `Acc` のデータを与え、所属に沿った再帰と帰納を可能にする。残りのフィールドはそれぞれ、あるクラス `Q` に対して `isContr (SetOf Q)` を主張する。
 <!--/-->
@@ -268,7 +268,7 @@ record isZFModel : Type (ℓ-suc ℓ) where
 <!--en-->
 Reading each class back into words recovers the textbook statements. Nothing realizes `⊥`, so the empty set is the unique set realizing the constantly-false class. The pair of `a` and `b` realizes the class of sets structurally equal to `a` or to `b`, joined by the direct `hProp` disjunction `⊔`{.Agda}. The union of `a` realizes the class of sets `x` that are members of some member `y` of `a`, conjoined by `⊓`{.Agda} and existentially gathered by `∃[ x ] P x`{.Agda}. Separation, the first formula-consuming field, keeps exactly those members `x` of `a` satisfying `φ`: the class is the conjunction of membership in `a` with the satisfaction of `φ` at the one-element environment `x ∷ []`, whose single entry fills the only free-variable slot of a `Formula S 1`.
 <!--zh-->
-把每个类读回自然语言，教科书的陈述一一重现。没有谁实现 `⊥`，所以空集就是实现恒假类的唯一集合。`a` 与 `b` 的配对实现「与 `a` 结构相等或与 `b` 结构相等」的类，用 `hProp` 上直接的析取 `⊔`{.Agda} 连接。`a` 的并实现那些 `x`：存在 `a` 的成员 `y` 使 `x` 属于 `y`，用 `⊓`{.Agda} 合取、`∃[ x ] P x`{.Agda} 存在聚合。分离是第一个消费公式的字段，恰好留下 `a` 中满足 `φ` 的成员 `x`：该类是「属于 `a`」与「`φ` 在单元素环境 `x ∷ []` 下满足」的合取，这个环境的唯一一项填入 `Formula S 1` 唯一的自由变元槽。
+把每个类读回自然语言，教科书的陈述一一重现。没有谁实现 `⊥`，所以空集就是实现恒假类的唯一集合。`a` 与 `b` 的配对实现「与 `a` 结构相等或与 `b` 结构相等」的类，用 `hProp` 上直接的析取 `⊔`{.Agda} 连接。`a` 的并实现那些 `x`：存在 `a` 的元素 `y` 使 `x` 属于 `y`，用 `⊓`{.Agda} 合取、`∃[ x ] P x`{.Agda} 存在聚合。分离是第一个消费公式的字段，恰好留下 `a` 中满足 `φ` 的元素 `x`：该类是「属于 `a`」与「`φ` 在单元素环境 `x ∷ []` 下满足」的合取，这个环境的唯一一项填入 `Formula S 1` 唯一的自由变元槽。
 <!--ja-->
 それぞれのクラスを自然言語に読み戻すと、教科書の言明がそのまま現れる。`⊥` を実現するものはないので、空集合とは恒偽のクラスを実現する一意な集合である。`a` と `b` の対は、「`a` と構造的に等しいか `b` と構造的に等しい」というクラスを実現し、`hProp` 上の直接の選言 `⊔`{.Agda} で結ばれる。`a` の和集合は、「`a` のある要素 `y` に属する」という形の `x` のクラスを実現し、`⊓`{.Agda} で連言し、`∃[ x ] P x`{.Agda} で存在的に集める。分出は最初の論理式を受け取るフィールドで、`a` の要素のうち `φ` を満たすものをちょうど残す。クラスは「`a` への所属」と「論理式 `φ` が一要素の環境 `x ∷ []` で充足されること」の連言であり、この環境の唯一の項が `Formula S 1` の唯一の自由変数の枠を埋める。
 <!--/-->
@@ -284,7 +284,7 @@ Reading each class back into words recovers the textbook statements. Nothing rea
 <!--en-->
 Replacement is the longest field and carries a hypothesis of its own. It takes a `Formula S 2`, whose two free-variable slots are read in the order given by the environment `y ∷ x ∷ []`: first the output value, then the input. The hypothesis says `φ` is *functional on `a`*: for every member `x` of `a` there is exactly one `y` satisfying `φ`, exactly-oneness being the `isContr`{.Agda} of the type of such `y`. Under that hypothesis the field asserts unique existence of the image, the set of `y` that stand in the relation `φ` to some member of `a`. Note what it does not assert: without the functionality hypothesis the field makes no claim at all, mirroring the classical restriction of replacement to functional formulas. Finally, the power set of `a` realizes the class of subsets, using the derived relation `⊆ˢ` from the previous section.
 <!--zh-->
-替换是最长的字段，并自带一个前提。它取 `Formula S 2`，其两个自由变元槽按环境 `y ∷ x ∷ []` 的次序读：先是输出值，再是输入。前提说 `φ` 在 `a` 上是**函数性**的：对 `a` 的每个成员 `x`，恰有一个 `y` 满足 `φ`，这个「恰一」就是由这些 `y` 组成的类型的 `isContr`{.Agda}。在该前提之下，字段断言像集的唯一存在，即与 `a` 的某个成员处于关系 `φ` 的那些 `y` 组成的集合。注意它不断言什么：没有函数性前提时，字段不作任何断言，这与经典处理中替换公理限于函数性公式的限制一致。最后，`a` 的幂集实现子集的类，用的是上一节的派生关系 `⊆ˢ`。
+替换是最长的字段，并自带一个前提。它取 `Formula S 2`，其两个自由变元槽按环境 `y ∷ x ∷ []` 的次序读：先是输出值，再是输入。前提说 `φ` 在 `a` 上是**函数性**的：对 `a` 的每个元素 `x`，恰有一个 `y` 满足 `φ`，这个「恰一」就是由这些 `y` 组成的类型的 `isContr`{.Agda}。在该前提之下，字段断言像集的唯一存在，即与 `a` 的某个元素处于关系 `φ` 的那些 `y` 组成的集合。注意它不断言什么：没有函数性前提时，字段不作任何断言，这与经典处理中替换公理限于函数性公式的限制一致。最后，`a` 的幂集实现子集的类，用的是上一节的派生关系 `⊆ˢ`。
 <!--ja-->
 置換は最も長いフィールドで、それ自身の仮定を一つ持つ。受け取るのは `Formula S 2` であり、その二つの自由変数の枠は環境 `y ∷ x ∷ []` の順で読まれる。まず出力の値、次に入力である。仮定は、`φ` が `a` の上で**関数的**であること、つまり `a` の各要素 `x` に対して `φ` を満たす `y` がちょうど一つあることである。このちょうど一つは、そのような `y` の型の `isContr`{.Agda} として表される。この仮定の下で、フィールドは像の一意存在、すなわち `a` のある要素と関係 `φ` に立つ `y` 全体の集合を主張する。何を主張しないかにも注意してほしい。関数性の仮定がなければ、このフィールドは何も主張しない。これは、古典的な扱いで置換公理が関数的な論理式に限られることと対応している。最後に、`a` の冪集合は部分集合のクラスを実現し、前節の派生関係 `⊆ˢ` を用いる。
 <!--/-->
@@ -306,7 +306,7 @@ Every other axiom speaks either the object language or plain membership; regular
 
 Now `℩` turns each unique existence into an operation, and `℩-spec`{.Agda} turns it into its specification; every specification below is literally one projection. The union of a pair gives binary union, and binary union gives the **successor** `a ⁺ = a ∪ {a}` (the pair of `a` with itself is the singleton): this is von Neumann's step from one set to the next, the step the axiom of infinity will later use.
 <!--zh-->
-把每个 `λ` 读回自然语言，熟悉的陈述一一归位。没有谁实现 `⊥`，所以 `hasEmpty`{.Agda} 就是空集。配对的成员是与 `a` 或 `b` 相等者；并的成员是成员的成员。分离留下 `a` 中满足 `φ` 的成员 (环境 `x ∷ []` 把唯一的自由变元填上)。替换先要求 `φ` 在 `a` 上是函数性的，即在 `isContr`{.Agda} 意义下一进一出，再收集输出。幂集的成员就是子集。
+把每个 `λ` 读回自然语言，熟悉的陈述一一归位。没有谁实现 `⊥`，所以 `hasEmpty`{.Agda} 就是空集。配对的元素是与 `a` 或 `b` 相等者；并的元素是元素的元素。分离留下 `a` 中满足 `φ` 的元素 (环境 `x ∷ []` 把唯一的自由变元填上)。替换先要求 `φ` 在 `a` 上是函数性的，即在 `isContr`{.Agda} 意义下一进一出，再收集输出。幂集的元素就是子集。
 
 ## 正则公理为何置于元层面
 
@@ -348,7 +348,7 @@ record の中では、各フィールドに `℩` を適用することで演算
 <!--en-->
 The union operation `⋃ a` extracts the union certificate of `a`, and binary union is defined from it: `a ∪ b` is the union of the pair `pair a b`, which is exactly the set whose members are the members of `a` together with the members of `b`. No separate axiom is spent on binary union; it is a composite of pairing and union. Note the definition's direction: `∪` is built from `⋃` applied to a pair, not the reverse.
 <!--zh-->
-并运算 `⋃ a` 提取 `a` 的并证书，而二元并由它定义：`a ∪ b` 是配对 `pair a b` 的并，恰是「成员为 `a` 的成员与 `b` 的成员之全体」的集合。二元并不另外花费公理，它是配对与并的复合。注意定义的方向：`∪` 是由 `⋃` 作用于配对而构造，而不是相反。
+并运算 `⋃ a` 提取 `a` 的并证书，而二元并由它定义：`a ∪ b` 是配对 `pair a b` 的并，恰是「元素为 `a` 的元素与 `b` 的元素之全体」的集合。二元并不另外花费公理，它是配对与并的复合。注意定义的方向：`∪` 是由 `⋃` 作用于配对而构造，而不是相反。
 <!--ja-->
 和集合の演算 `⋃ a` は `a` の和の証拠を取り出し、二項の和集合はそれから定義される。`a ∪ b` は対 `pair a b` の和集合であり、その要素は `a` の要素と `b` の要素の全体にほかならない。二項の和集合に別の公理は使わず、対と和の合成として得られる。定義の向きに注意してほしい。`∪` は対に `⋃` を適用して作られるのであり、その逆ではない。
 <!--/-->
@@ -366,7 +366,7 @@ The union operation `⋃ a` extracts the union certificate of `a`, and binary un
 <!--en-->
 Separation becomes an operation in the formula itself: `separate a φ` applies `℩` to the separation certificate at `a` and the formula `φ`, so the resulting set depends on a piece of object-language syntax. Its specification again quotes `℩-spec` verbatim, giving `x ∈ˢ separate a φ ≡ (x ∈ˢ a) ⊓ ((x ∷ []) ⊨ φ)` for every `x`: membership combines belonging to `a` with satisfying `φ`. The power set operation `𝒫 a` extracts the power set certificate, and its members will be read off, via the class it realizes, as exactly the subsets of `a`.
 <!--zh-->
-分离成为以公式为参数的运算：`separate a φ` 把 `℩` 用于 `a` 与公式 `φ` 处的分离证书，因此所得集合依赖一段对象语言语法。其规格同样逐字引用 `℩-spec`，给出对每个 `x` 的 `x ∈ˢ separate a φ ≡ (x ∈ˢ a) ⊓ ((x ∷ []) ⊨ φ)`：成员关系由「属于 `a`」与「满足 `φ`」合成。幂集运算 `𝒫 a` 提取幂集证书；经由它实现的类读出，其成员恰是 `a` 的子集。
+分离成为以公式为参数的运算：`separate a φ` 把 `℩` 用于 `a` 与公式 `φ` 处的分离证书，因此所得集合依赖一段对象语言语法。其规格同样逐字引用 `℩-spec`，给出对每个 `x` 的 `x ∈ˢ separate a φ ≡ (x ∈ˢ a) ⊓ ((x ∷ []) ⊨ φ)`：成员关系由「属于 `a`」与「满足 `φ`」合成。幂集运算 `𝒫 a` 提取幂集证书；经由它实现的类读出，其元素恰是 `a` 的子集。
 <!--ja-->
 分出は、論理式そのものを引数とする演算になる。`separate a φ` は `a` と論理式 `φ` における分出の証拠に `℩` を適用するので、得られる集合は対象言語の構文の一部に依存する。その仕様もやはり `℩-spec` をそのまま引用し、すべての `x` について `x ∈ˢ separate a φ ≡ (x ∈ˢ a) ⊓ ((x ∷ []) ⊨ φ)` を与える。所属とは、`a` への属することと `φ` の充足の連言である。冪集合の演算 `𝒫 a` は冪集合の証拠を取り出す。それが実現するクラスを通して読めば、その要素は `a` の部分集合ちょうどである。
 <!--/-->
@@ -400,7 +400,7 @@ Binary intersection is deliberately **not** a field. The two-symbol formula `var
 <!--zh-->
 ## 由分离导出的交
 
-二元交刻意**不设**为字段。两个符号的公式 `var zero ∈̇ con b`{.Agda} 表示「该变元是 `b` 的成员」；把它传给 `separate`{.Agda} 并作用于 `a`，分离公理就给出 `a ∩ b`。它的规格与分离的规格完全相同，因为按 `⊨` 的定义子句，该公式的满足直接计算为 `x ∈ˢ b`。这是一般模式的一次具体运用：凡能被公式指名的宿主谓词，分离都能把它变成集合。
+二元交刻意**不设**为字段。两个符号的公式 `var zero ∈̇ con b`{.Agda} 表示「该变元是 `b` 的元素」；把它传给 `separate`{.Agda} 并作用于 `a`，分离公理就给出 `a ∩ b`。它的规格与分离的规格完全相同，因为按 `⊨` 的定义子句，该公式的满足直接计算为 `x ∈ˢ b`。这是一般模式的一次具体运用：凡能被公式指名的宿主谓词，分离都能把它变成集合。
 <!--ja-->
 ## 分出から導かれる共通部分
 
@@ -410,7 +410,7 @@ Binary intersection is deliberately **not** a field. The two-symbol formula `var
 <!--en-->
 The definition is one line of applied syntax: `a ∩ b` separates `a` along the formula whose only content is the atomic membership statement `var zero ∈̇ con b`. Because the constant `b` denotes itself under the interpretation `id`{.Agda}, satisfying that formula at the environment `x ∷ []` reduces, by the defining clauses of satisfaction, to the truth value `x ∈ˢ b`. The specification theorem is then the separation specification at this particular formula, unchanged: membership in the intersection is the conjunction `x ∈ˢ a ⊓ x ∈ˢ b`. No new axiom and no new existence proof are spent; a two-symbol formula already names a host predicate that separation can realize.
 <!--zh-->
-定义是应用语法的一行：`a ∩ b` 沿着那条内容仅为原子成员断言 `var zero ∈̇ con b` 的公式分离 `a`。由于常元 `b` 在解释 `id`{.Agda} 下指自身，在环境 `x ∷ []` 下满足该公式，按满足关系的定义子句化归为真值 `x ∈ˢ b`。于是规格定理就是分离规格在该特定公式上的原样引用：交中的成员关系是合取 `x ∈ˢ a ⊓ x ∈ˢ b`。不需要新公理，也不需要新的存在性证明；一条双符号公式已经指名了分离能够实现的一个宿主谓词。
+定义是应用语法的一行：`a ∩ b` 沿着那条内容仅为原子元素断言 `var zero ∈̇ con b` 的公式分离 `a`。由于常元 `b` 在解释 `id`{.Agda} 下指自身，在环境 `x ∷ []` 下满足该公式，按满足关系的定义子句化归为真值 `x ∈ˢ b`。于是规格定理就是分离规格在该特定公式上的原样引用：交中的成员关系是合取 `x ∈ˢ a ⊓ x ∈ˢ b`。不需要新公理，也不需要新的存在性证明；一条双符号公式已经指名了分离能够实现的一个宿主谓词。
 <!--ja-->
 定義は構文を適用した一行である。`a ∩ b` は、内容が原子式の所属主張 `var zero ∈̇ con b` だけである論理式に沿って `a` を分出する。定数 `b` は解釈 `id`{.Agda} の下で自分自身を指すので、環境 `x ∷ []` でこの論理式を充足することは、充足関係の定義節によって真理値 `x ∈ˢ b` へと計算される。したがって仕様定理は、この特定の論理式での分出の仕様をそのまま引用したものであり、共通部分への所属は連言 `x ∈ˢ a ⊓ x ∈ˢ b` である。新しい公理も存在の新しい証明も要らない。二つの記号からなる論理式が、分出が実現できるホストの述語をすでに名指しているのである。
 <!--/-->
@@ -430,7 +430,7 @@ One axiom remains, the one that forces a genuinely infinite set into existence. 
 <!--zh-->
 ## 无穷
 
-只剩无穷公理，它要求一个真正无穷的集合存在。**数码**是冯·诺伊曼自然数：`∅`、`∅ ⁺`、`(∅ ⁺) ⁺`，如此继续。record 把数码链本身作为字段，并用两条以裸成员与裸等词表述的命题方程确定它：第零个数码没有成员，后继数码的成员恰是前一个数码及其成员。由外延公理，这两条方程分别给出 `numeral zero ≡ ∅` 与 `numeral (suc n) ≡ numeral n ⁺`，所以其强度与直接定义数码链相同。方程不提及派生的 `∅`{.Agda}，因此具体模型可以采用最便于载体计算的数码链定义，并在证明方程时避免展开摹状词算子。
+只剩无穷公理，它要求一个真正无穷的集合存在。**数码**是冯·诺伊曼自然数：`∅`、`∅ ⁺`、`(∅ ⁺) ⁺`，如此继续。record 把数码链本身作为字段，并用两条以裸元素与裸等词表述的命题方程确定它：第零个数码没有元素，后继数码的元素恰是前一个数码及其元素。由外延公理，这两条方程分别给出 `numeral zero ≡ ∅` 与 `numeral (suc n) ≡ numeral n ⁺`，所以其强度与直接定义数码链相同。方程不提及派生的 `∅`{.Agda}，因此具体模型可以采用最便于载体计算的数码链定义，并在证明方程时避免展开摹状词算子。
 <!--ja-->
 ## 無限
 
@@ -440,7 +440,7 @@ One axiom remains, the one that forces a genuinely infinite set into existence. 
 <!--en-->
 The chain is a function `numeral : ℕ → S`, so indexing by the host's natural numbers is explicit data. The zero case is a negative condition: any inhabitant `z` of the Type-valued membership `z ∈ˢ numeral zero` yields a contradiction, witnessed in the empty host type `⊥*`. Note the reading: `∈ˢ` returns a proposition in `hProp ℓ`, `⟨_⟩` takes its underlying type, and from an inhabitant of that type the field derives absurdity. This says the zeroth numeral has no members, without mentioning the derived empty set.
 <!--zh-->
-数码链是函数 `numeral : ℕ → S`，用宿主自然数作索引是显式数据。零的情形是否定条件：`z ∈ˢ numeral zero` 这个 Type 值隶属的任何居民都导出矛盾，见证落在空宿主类型 `⊥*` 中。注意读法：`∈ˢ` 返回 `hProp ℓ` 中的命题，`⟨_⟩` 取其底层类型，从该类型的居民出发，字段导出荒谬。这说明第零个数码没有成员，却完全未提及派生的空集。
+数码链是函数 `numeral : ℕ → S`，用宿主自然数作索引是显式数据。零的情形是否定条件：`z ∈ˢ numeral zero` 这个 Type 值成员关系的任何居民都导出矛盾，见证落在空宿主类型 `⊥*` 中。注意读法：`∈ˢ` 返回 `hProp ℓ` 中的命题，`⟨_⟩` 取其底层类型，从该类型的居民出发，字段导出荒谬。这说明第零个数码没有元素，却完全未提及派生的空集。
 <!--ja-->
 数項の列は関数 `numeral : ℕ → S` であり、ホストの自然数による添字付けが明示的なデータになっている。零の場合は否定の条件である。Type 値の所属 `z ∈ˢ numeral zero` の任意の inhabitant は矛盾を導き、その証拠は空のホスト型 `⊥*` に落ちる。読み方に注意してほしい。`∈ˢ` は `hProp ℓ` の命題を返し、`⟨_⟩` がその基礎型を取り、その型の inhabitant からフィールドは荒謬を導く。これは第零の数項が要素をもたないことを述べるものであり、派生した空集合には一言も触れない。
 <!--/-->
@@ -456,7 +456,7 @@ The chain is a function `numeral : ℕ → S`, so indexing by the host's natural
 <!--en-->
 The successor case is a pair of implications, both inside the truncated-free propositional reading. The first says a member `z` of `numeral (suc n)` is a member of `numeral n` or structurally equal to it, the disjunction being the hProp `⊔`{.Agda}; the second says every such member of the previous numeral, or thing equal to it, is a member of the successor. Together the two directions say the members of a successor numeral are exactly the previous numeral together with its members, which is exactly the von Neumann step, stated only with `∈ˢ` and `≈ˢ`.
 <!--zh-->
-后继情形是一对蕴涵，都处于无截断的命题读法之内。第一条说 `numeral (suc n)` 的成员 `z` 属于 `numeral n` 或与之结构相等，析取直接使用 `hProp` 上的 `⊔`{.Agda}；第二条说前一个数码的每个这样的成员、以及与之相等者，都属于后继。两个方向合起来说：后继数码的成员恰是前一个数码连同其成员，这正是冯·诺伊曼步骤，仅用 `∈ˢ` 与 `≈ˢ` 陈述。
+后继情形是一对蕴涵，都处于无截断的命题读法之内。第一条说 `numeral (suc n)` 的元素 `z` 属于 `numeral n` 或与之结构相等，析取直接使用 `hProp` 上的 `⊔`{.Agda}；第二条说前一个数码的每个这样的元素、以及与之相等者，都属于后继。两个方向合起来说：后继数码的元素恰是前一个数码连同其元素，这正是冯·诺伊曼步骤，仅用 `∈ˢ` 与 `≈ˢ` 陈述。
 <!--ja-->
 後者の場合は二つの含意の組で、どちらも截断を含まない命題の読みの中にある。第一は、`numeral (suc n)` の要素 `z` が `numeral n` の要素であるか、それと構造的に等しいことを述べ、選言には `hProp` 上の `⊔`{.Agda} である。第二は、直前の数項のそのような要素、およびそれと等しいものが、後者の要素であることを述べる。両方向を合わせると、後者の数項の要素はちょうど直前の数項とその要素であり、これがまさにフォン・ノイマンの一歩で、`∈ˢ` と `≈ˢ` だけで述べられている。
 <!--/-->
@@ -468,7 +468,7 @@ The successor case is a pair of implications, both inside the truncated-free pro
 <!--en-->
 `isNumeral`{.Agda} determines the class of objects *equal to some numeral*. The quantification runs over `ℕ` lifted to the working level, since the indexing data lives at the bottom universe. The chosen form of the **axiom of infinity** says that this exact class is a set. Consequently `ω` is characterized in both directions: every numeral belongs to it, and every member is equal to a numeral.
 <!--zh-->
-`isNumeral`{.Agda} 所定出的类由**与某个数码相等**的对象组成。量化取提升到工作层级的 `ℕ`，因为索引数据位于最底层宇宙。本章采用的**无穷公理**说这个确切的类是集合。因此 `ω` 得到双向刻画：每个数码都属于它，而它的每个成员都与某个数码相等。
+`isNumeral`{.Agda} 所定出的类由**与某个数码相等**的对象组成。量化取提升到工作层级的 `ℕ`，因为索引数据位于最底层宇宙。本章采用的**无穷公理**说这个确切的类是集合。因此 `ω` 得到双向刻画：每个数码都属于它，而它的每个元素都与某个数码相等。
 <!--ja-->
 `isNumeral`{.Agda} が定めるクラスは、**ある数項と等しい**対象からなる。添字のデータが最下層の宇宙にあるため、量化は作業レベルへ lift された `ℕ` 上を走る。ここで採用する**無限公理**は、この正確なクラスが集合であると述べる。したがって `ω` は双方向に特徴づけられる。すべての数項がそこに属し、そのすべての要素はある数項と等しくなる。
 <!--/-->
@@ -494,7 +494,7 @@ The class `isNumeral` is an existential written directly in `hProp`: `∃[ x ] P
 <!--en-->
 As with every other unique existence, `ω` is the centre extracted by `℩` from `hasInfinity`. Because the class realized is `isNumeral` itself, the specification `℩-spec` says every member of `ω` is equal to some numeral; that is what makes this strong form usable as the set of naturals, not merely a set into which the numerals embed.
 <!--zh-->
-与其他唯一存在一样，`ω` 是 `℩` 从 `hasInfinity` 取出的中心。由于被实现的类就是 `isNumeral` 本身，规格 `℩-spec` 说 `ω` 的每个成员都与某个数码相等；正是这一点使这个强形式可以直接当作自然数集来用，而不只是数码能嵌入其中的一个集合。
+与其他唯一存在一样，`ω` 是 `℩` 从 `hasInfinity` 取出的中心。由于被实现的类就是 `isNumeral` 本身，规格 `℩-spec` 说 `ω` 的每个元素都与某个数码相等；正是这一点使这个强形式可以直接当作自然数集来用，而不只是数码能嵌入其中的一个集合。
 <!--ja-->
 他の一意存在と同様に、`ω` は `℩` が `hasInfinity` から取り出す中心である。実現されるクラスが `isNumeral` そのものであるため、仕様 `℩-spec` は `ω` のすべての要素がある数項と等しいことを述べる。この強い形を自然数の集合として直接使えるのはこのためであり、数項が埋め込まれる単なる集合ではない。
 <!--/-->
@@ -518,7 +518,7 @@ The **axiom of choice** is taken in choice-set form: given a set `a` whose membe
 
 ## ZFC：作为扩展的选择公理
 
-这里采用选择集形式的**选择公理**：给定集合 `a`，若其成员非空且两两不交，则存在一个集合，与 `a` 的每个成员恰交于一点。该形式只用成员关系和派生的交即可陈述；它与其他形式的等价性属于模型内部的数学，留待需要时证明。命题截断 `∥_∥₁`{.Agda} 分别包住非空性、公共点证据与选择集的存在。因此公理断言存在，却不在全局选定见证。把它保持为独立的扩展而非基础 record 的字段，正好保留了 ZF 所证与选择公理所增之间的区别。
+这里采用选择集形式的**选择公理**：给定集合 `a`，若其元素非空且两两不交，则存在一个集合，与 `a` 的每个元素恰交于一点。该形式只用成员关系和派生的交即可陈述；它与其他形式的等价性属于模型内部的数学，留待需要时证明。命题截断 `∥_∥₁`{.Agda} 分别包住非空性、公共点证据与选择集的存在。因此公理断言存在，却不在全局选定见证。把它保持为独立的扩展而非基础 record 的字段，正好保留了 ZF 所证与选择公理所增之间的区别。
 <!--ja-->
 ## 最初の定理
 
@@ -548,7 +548,7 @@ record isZFCModel : Type (ℓ-suc ℓ) where
 <!--en-->
 The two hypotheses of `hasChoice` say that `a` is a family of nonempty, pairwise disjoint sets, each in the reading available here. Nonemptiness is truncated: for each member `x` of `a` there *merely* exists a `y` in it, `∥ Σ[ y ∶ S ] ⟨ y ∈ˢ x ⟩ ∥₁`, with no chosen witness. Pairwise disjointness is also truncated: if `x` and `y` are two members of `a` that *merely* share a point `z`, then `x ≡ y` holds outright. Note the shape of the disjointness premise: its conclusion is a path in the host, so the truncation of the shared-point evidence is what feeds an untruncated equality.
 <!--zh-->
-`hasChoice` 的两条前提说 `a` 是由非空、两两不交的集合组成的族，各自按此处可用的读法理解。非空性是截断的：对 `a` 的每个成员 `x`，**仅仅**存在其中的 `y`，即 `∥ Σ[ y ∶ S ] ⟨ y ∈ˢ x ⟩ ∥₁`，没有被选定的见证。两两不交同样截断：若 `a` 的两个成员 `x` 与 `y` **仅仅**共享一点 `z`，则 `x ≡ y` 无截断地成立。注意不交前提的形状：其结论是宿主中的路径，正是共享点证据的截断在为无截断的相等供料。
+`hasChoice` 的两条前提说 `a` 是由非空、两两不交的集合组成的族，各自按此处可用的读法理解。非空性是截断的：对 `a` 的每个元素 `x`，**仅仅**存在其中的 `y`，即 `∥ Σ[ y ∶ S ] ⟨ y ∈ˢ x ⟩ ∥₁`，没有被选定的见证。两两不交同样截断：若 `a` 的两个元素 `x` 与 `y` **仅仅**共享一点 `z`，则 `x ≡ y` 无截断地成立。注意不交前提的形状：其结论是宿主中的路径，正是共享点证据的截断在为无截断的相等供料。
 <!--ja-->
 `hasChoice` の二つの仮定は、`a` が空でなく互いに素な集合の族であることを、ここで使える読み方で述べる。空でないことは截断されている。`a` の各要素 `x` に対してその中に `y` が**単に**存在する、つまり `∥ Σ[ y ∶ S ] ⟨ y ∈ˢ x ⟩ ∥₁` であり、選ばれた証拠はない。互いに素なことも截断されている。`a` の二つの要素 `x` と `y` が点 `z` を**単に**共有するなら、`x ≡ y` は截断なしで成る。素であるという前提の形に注意してほしい。その結論はホストのパスであり、共有点の証拠の截断こそが、截断されない相等に材料を供しているのである。
 <!--/-->
@@ -564,7 +564,7 @@ The two hypotheses of `hasChoice` say that `a` is a family of nonempty, pairwise
 <!--en-->
 The conclusion is likewise a truncated existence: there *merely* exists a choice set `c` such that for every member `x` of `a`, the intersection `c ∩ x` has exactly one element, expressed as `isContr` of the type of its elements. The inner `isContr` is not a truncation: for each `x`, it provides an element of `c ∩ x` and proves that every other such element equals it. The outer truncation applies to the existence of a suitable `c`, so the axiom supplies no distinguished choice set.
 <!--zh-->
-结论同样是截断的存在：**仅仅**存在一个选择集 `c`，使得对 `a` 的每个成员 `x`，交 `c ∩ x` 恰有一个元素，即其元素类型的 `isContr`。内层 `isContr` 不是截断：对每个 `x`，它给出 `c ∩ x` 的一个元素，并证明其他此类元素都与之相等。外层截断作用于合适的 `c` 的存在性，因此公理不指定某个选择集。
+结论同样是截断的存在：**仅仅**存在一个选择集 `c`，使得对 `a` 的每个元素 `x`，交 `c ∩ x` 恰有一个元素，即其元素类型的 `isContr`。内层 `isContr` 不是截断：对每个 `x`，它给出 `c ∩ x` 的一个元素，并证明其他此类元素都与之相等。外层截断作用于合适的 `c` 的存在性，因此公理不指定某个选择集。
 <!--ja-->
 結論も截断された存在である。選択集合 `c` が**単に**存在し、`a` の各要素 `x` に対して共通部分 `c ∩ x` がちょうど一つの要素をもつ。これはその要素の型の `isContr` で表される。内側の `isContr` は截断ではない。各 `x` について `c ∩ x` の要素を一つ与え、他のそのような要素がすべてそれに等しいことを示す。外側の截断は適切な `c` の存在にかかるため、公理は特定の選択集合を指定しない。
 <!--/-->
@@ -581,7 +581,7 @@ A model of ZF is a record with three kinds of fields: extensionality, which make
 <!--zh-->
 ## 小结
 
-ZF 模型是一个含三类字段的 record：外延性，它使实现者唯一；空集、配对、并、分离、替换、幂集的唯一存在字段，其中分离与替换限于本书自己的公式；以及正则公理，作为宿主对成员关系的良基性陈述在元层面，从而沿成员关系的递归与归纳可用。`℩` 把字段转为运算，其规格都是投影；二元并与后继是复合，交则由分离加一条满足关系直接计算的双符号公式得到。无穷以数码链进入，即由裸成员方程确定的函数 `ℕ → S`；强形式使 `ω` 成为成员全为数码的集合。`isZFCModel`{.Agda} 在此之上添加选择公理，其中非空性与公共点证据截断，结论也截断，而每个所选交集的 `isContr` 不截断。
+ZF 模型是一个含三类字段的 record：外延性，它使实现者唯一；空集、配对、并、分离、替换、幂集的唯一存在字段，其中分离与替换限于本书自己的公式；以及正则公理，作为宿主对成员关系的良基性陈述在元层面，从而沿成员关系的递归与归纳可用。`℩` 把字段转为运算，其规格都是投影；二元并与后继是复合，交则由分离加一条满足关系直接计算的双符号公式得到。无穷以数码链进入，即由裸元素方程确定的函数 `ℕ → S`；强形式使 `ω` 成为元素全为数码的集合。`isZFCModel`{.Agda} 在此之上添加选择公理，其中非空性与公共点证据截断，结论也截断，而每个所选交集的 `isContr` 不截断。
 <!--ja-->
 ## まとめ
 

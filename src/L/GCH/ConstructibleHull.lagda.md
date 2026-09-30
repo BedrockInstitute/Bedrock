@@ -28,7 +28,7 @@ module L.GCH.ConstructibleHull {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 open import FOL.Syntax
   using ( Formula; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ∃̇_; ∀̇_; ∀̇∈; ⊥̇ )
 open import FOL.Manipulation.ConstantMapping using ( mapFo; mapFo-comp )
@@ -126,7 +126,7 @@ The chapter speaks the first-order language of set theory: formulas are built ov
 <!--en-->
 Formula readings move between environments by renaming, and renaming is harmless for satisfaction. The ambient hierarchy contributes the background facts: induction along membership, extensionality of sets, and the presentation of an element as an index together with its membership proof.
 <!--zh-->
-公式的读法经改名在环境间移动，而改名对满足无害。环境层级提供背景事实：沿隶属的归纳、集合的外延性，以及「元素=索引连同其隶属证明」的呈现方式。
+公式的读法经改名在环境间移动，而改名对满足无害。环境层级提供背景事实：沿成员关系的归纳、集合的外延性，以及「元素=索引连同其成员关系证明」的呈现方式。
 <!--ja-->
 論理式の読みは、改名によって環境の間を移動する。改名は充足にとって無害である。周囲の階層は、所属に沿う帰納、集合の外延性、そして「要素＝添字とその所属の証明」という提示の仕方という、背景の事実を供給する。
 <!--/-->
@@ -134,7 +134,7 @@ Formula readings move between environments by renaming, and renaming is harmless
 <!--en-->
 The argument begins where every set of `L` lives: in the tower of stages indexed by ordinals. The collapse of a set is computed from its members alone, and constructibility travels along membership; what must be shown is that this local computation never leaves `L`. Since a hull is not transitive, the argument cannot invoke global facts about the collapse; it re-derives, stage by stage, that the values stay inside.
 <!--zh-->
-论证从 `L` 中每个集合的居所开始：以序数为索引的层之塔。一个集合的塌缩只由其成员算出，而可构造性沿隶属传递；有待证明的是这场局部计算从不离开 `L`。由于壳不传递，论证无法援引关于塌缩的全局事实，而必须逐层重新推得取值留在内部。
+论证从 `L` 中每个集合的居所开始：以序数为索引的层之塔。一个集合的塌缩只由其元素算出，而可构造性沿成员关系传递；有待证明的是这场局部计算从不离开 `L`。由于壳不传递，论证无法援引关于塌缩的全局事实，而必须逐层重新推得取值留在内部。
 <!--ja-->
 議論は、`L` のすべての集合の住む場所からはじまる。順序数で添字づけられた段階の塔である。集合の崩壊はその要素だけから計算され、構成可能性は所属に沿って伝わる。示すべきは、この局所的な計算が `L` の外に出ないことである。包は推移的ではないので、議論は崩壊についての大域的な事実を使えず、段階ごとに、値が内側にとどまることを改めて導く。
 <!--/-->
@@ -142,7 +142,7 @@ The argument begins where every set of `L` lives: in the tower of stages indexed
 <!--en-->
 The constructible set `ωʟ` represents the ambient `ω`, and its specification identifies its members with the internal numerals. Separation will carve the bounded slices and one-step closures used later. In both operations the result is an element of `L` again, which is what keeps the whole construction inside the universe it describes.
 <!--zh-->
-可构造集合 `ωʟ` 表示周遭的 `ω`，其规格把它的成员认作内部数码。后文用分离刻出有界切片与单步闭包。这两种运算的结果都仍是 `L` 的元素，这正是使整个构造留在它所描述的宇宙之内的原因。
+可构造集合 `ωʟ` 表示周遭的 `ω`，其规格把它的元素认作内部数码。后文用分离刻出有界切片与单步闭包。这两种运算的结果都仍是 `L` 的元素，这正是使整个构造留在它所描述的宇宙之内的原因。
 <!--ja-->
 構成可能集合 `ωʟ` は周囲の `ω` を表し、その仕様は要素を内部の数項と同定する。後では分出によって有界な切片と一段階の閉包を切り出す。どちらの演算も、結果が再び `L` の要素である。それが、構成全体を、その記述対象の宇宙の内側に保つのである。
 <!--/-->
@@ -166,7 +166,7 @@ Environments code parameter vectors as single sets, from which the vectors are r
 <!--en-->
 The uniform satisfaction table assigns to every code its satisfaction set, read externally; the canonical-names construction places numerals and the codes of parameter-free formulas, which may still have free-variable slots, in `Lset ω`; the internal well-order of a stage compares its members, first by birth stage and then by name.
 <!--zh-->
-一致满足表为每条码指派其满足集，并向外部读取；典范名构造把数码以及无常元公式的码放入 `Lset ω`，无常元公式仍可带有自由变元槽；某层的内部良序比较其成员，先按诞生层、再按名字。
+一致满足表为每条码指派其满足集，并向外部读取；典范名构造把数码以及无常元公式的码放入 `Lset ω`，无常元公式仍可带有自由变元槽；某层的内部良序比较其元素，先按诞生层、再按名字。
 <!--ja-->
 一様な充足の表は、すべての符号にその充足集合を割り当て、外側で読める。正準名の構成は、数項と、定数を持たない論理式のコードを `Lset ω` に置く。そのような論理式にも自由変数の枠は残りえる。段階の内部の整列順序は要素を、まず誕生の段階、つぎに名前で比較する。
 <!--/-->
@@ -182,7 +182,7 @@ Least-element search over a strict well-order returns, from an inhabited family,
 <!--en-->
 Correctness, completeness at an argument, and the value clause are each a formula with its two satisfaction readings; internal ω-recursion iterates a definable two-place step along the model's own `ω`. The hull's members are named by codes of arbitrary nesting depth, so no single separation can produce the hull; it is reached by iterating a definable one-step closure along `ω`, and this is why the closure must be built ω times.
 <!--zh-->
-正确性、在实参处的完备性、以及取值子句，各自都是带两条满足读式的公式；内部 ω 递归沿模型自身的 `ω` 迭代一个可定义的二元步进。壳的成员由任意嵌套深度的码名指，因此任何一次分离都造不出壳；只能沿 `ω` 迭代一个可定义的单步闭包抵达它，这正是闭包必须构建 ω 次的原因。
+正确性、在实参处的完备性、以及取值子句，各自都是带两条满足读式的公式；内部 ω 递归沿模型自身的 `ω` 迭代一个可定义的二元步进。壳的元素由任意嵌套深度的码名指，因此任何一次分离都造不出壳；只能沿 `ω` 迭代一个可定义的单步闭包抵达它，这正是闭包必须构建 ω 次的原因。
 <!--ja-->
 正しさ、入力での完備さ、値の条項は、それぞれ二つの充足の読みをもつ論理式である。内部 ω 再帰は、モデル自身の `ω` に沿って、定義可能な二項のステップを反復する。包の要素は、任意の入れ子の深さの符号に名指されるので、一度の分離で包を作ることはできない。`ω` に沿って、定義可能な一段階の閉包を反復することではじめて届く。閉包を ω 回作らねばならない理由はこれである。
 <!--/-->
@@ -249,14 +249,14 @@ open import Cubical.HITs.CumulativeHierarchy.Properties using ( ⟪_⟫; ⟪_⟫
 <!--en-->
 Two levels of membership must be distinguished. Ambient membership belongs to the cumulative hierarchy, whereas an element of the constructible carrier packages an ambient set together with a proof of constructibility; carrier membership is read through those underlying sets.
 <!--zh-->
-这里须区分两层隶属。外围隶属属于累积层级；可构造载体的元素则把外围集合与其可构造性证明打包，而载体上的隶属通过底层集合读取。
+这里须区分两层成员关系。外围成员关系属于累积层级；可构造载体的元素则把外围集合与其可构造性证明打包，而载体上的成员关系通过底层集合读取。
 <!--ja-->
 二つの所属を区別する必要がある。外側の所属は累積階層の関係である。一方、構成可能な台の要素は外側の集合とその構成可能性の証明を組にし、台上の所属はその基底集合を通して読まれる。
 <!--/-->
 
 ```agda
-open hPropStructure 𝒮ᵥ
-module CS = hPropStructure 𝒮ʟ using ( S; _∈ˢ_ )
+open hPropView 𝒮ᵥ
+module CS = hPropView 𝒮ʟ using ( S; _∈ˢ_ )
 ```
 
 <!--en-->
@@ -417,7 +417,7 @@ module PiIn (Mʟ : CS.S) where
 <!--en-->
 Let `M` be the underlying set of the chosen constructible carrier. Its accompanying certificate ensures that every member later lifted from `M` is constructible.
 <!--zh-->
-令 `M` 为所选可构造载体的底层集合。随附的证书保证，此后从 `M` 提升出的每个成员都是可构造的。
+令 `M` 为所选可构造载体的底层集合。随附的证书保证，此后从 `M` 提升出的每个元素都是可构造的。
 <!--ja-->
 選んだ構成可能な台の基底集合を `M` とする。付随する証明により、後に `M` から持ち上げる各要素が構成可能であることが保証される。
 <!--/-->
@@ -430,7 +430,7 @@ Let `M` be the underlying set of the chosen constructible carrier. Its accompany
 <!--en-->
 The collapse `π x` is formed from the collapse values of those members of `x` that also lie in `M`; `πX` collects the values `π x` for `x ∈ M`. This restricted predecessor relation makes the definition meaningful without assuming that `M` is transitive.
 <!--zh-->
-`π x` 由 `x` 的成员中同时属于 `M` 者的塌缩值组成；`πX` 收集所有 `x ∈ M` 的取值 `π x`。这种受限的前驱关系使定义无须假设 `M` 传递。
+`π x` 由 `x` 的元素中同时属于 `M` 者的塌缩值组成；`πX` 收集所有 `x ∈ M` 的取值 `π x`。这种受限的前驱关系使定义无须假设 `M` 传递。
 <!--ja-->
 `π x` は、`x` の要素のうち `M` にも属するものの崩壊値から作られ、`πX` は `x ∈ M` に対する値 `π x` を集める。この制限された先行者関係により、`M` の推移性を仮定せずに定義できる。
 <!--/-->
@@ -442,7 +442,7 @@ The collapse `π x` is formed from the collapse values of those members of `x` t
 <!--en-->
 Since constructibility is inherited by members, every `y ∈ M` is constructible. Hence such a `y` can be paired with that proof and treated as an element of the constructible carrier.
 <!--zh-->
-可构造性向成员传递，所以每个 `y ∈ M` 都可构造。因此可把 `y` 与该证明配对，视为可构造载体的元素。
+可构造性向元素传递，所以每个 `y ∈ M` 都可构造。因此可把 `y` 与该证明配对，视为可构造载体的元素。
 <!--ja-->
 構成可能性は要素へ受け継がれるので、各 `y ∈ M` は構成可能である。したがって `y` をその証明と組にし、構成可能な台の要素として扱える。
 <!--/-->
@@ -455,7 +455,7 @@ Since constructibility is inherited by members, every `y ∈ M` is constructible
 <!--en-->
 The lifting `up` packages a member as a carrier element. The first lemma reads the collapse value outward: every member of `π x` is the collapse of a member of `x` that lies in `M`, which follows from the computation clause of the collapse, the identity `π x` equals the image of the collapse over the members of `x` inside `M`.
 <!--zh-->
-提升 `up` 把成员打包为载体元素。第一条引理向外读取塌缩值：`π x` 的每个成员都是 `x` 的某个属于 `M` 的成员的塌缩，其依据是塌缩的计算子句，即恒等式「`π x` 等于 `x` 在 `M` 内成员上的塌缩像」。
+提升 `up` 把元素打包为载体元素。第一条引理向外读取塌缩值：`π x` 的每个元素都是 `x` 的某个属于 `M` 的元素的塌缩，其依据是塌缩的计算子句，即恒等式「`π x` 等于 `x` 在 `M` 内元素上的塌缩像」。
 <!--ja-->
 持ち上げ `up` は、要素を台の要素としてまとめる。最初の補題は、崩壊値を外向きに読む。`π x` の要素はどれも、`x` の、`M` に属する要素の崩壊である。これは崩壊の計算の条項、すなわち「`π x` は `x` の `M` の中の要素の上の崩壊の像に等しい」という恒等式から従う。
 <!--/-->
@@ -471,7 +471,7 @@ The lifting `up` packages a member as a carrier element. The first lemma reads t
 <!--en-->
 The conversion turns the collapse's own fibre witness into the member statement: the fibre pairs a presented index with the proof that the collapse of the presented element equals `w`, and the presented element is a member of `x` whose collapse is taken.
 <!--zh-->
-该转换把塌缩自身的纤维见证变成成员陈述：纤维把被呈现的索引与「被呈现元素的塌缩等于 `w`」的证明配对，而被呈现的元素正是被取塌缩的 `x` 的成员。
+该转换把塌缩自身的纤维见证变成成员关系陈述：纤维把被呈现的索引与「被呈现元素的塌缩等于 `w`」的证明配对，而被呈现的元素正是被取塌缩的 `x` 的元素。
 <!--ja-->
 この変換は、崩壊自身のファイバーの証人を、要素についての主張へ変える。ファイバーは、提示された添字と、「提示された要素の崩壊が `w` に等しい」証明を組にする。提示された要素は、崩壊が取られる `x` の要素である。
 <!--/-->
@@ -487,7 +487,7 @@ The conversion turns the collapse's own fibre witness into the member statement:
 <!--en-->
 The membership relation of `M` is expressed using three free-variable slots, read by `Relation` at the environment `y ∷ x ∷ e ∷ []`; the third slot carries the coded pair, while the formula asserts `y ∈ M`, `x ∈ M`, and `y ∈ x`.
 <!--zh-->
-`M` 的隶属关系使用三个自由变元槽，并由 `Relation` 在环境 `y ∷ x ∷ e ∷ []` 下读取；第三槽携带编码对，而公式断言 `y ∈ M`、`x ∈ M` 与 `y ∈ x`。
+`M` 的成员关系使用三个自由变元槽，并由 `Relation` 在环境 `y ∷ x ∷ e ∷ []` 下读取；第三槽携带编码对，而公式断言 `y ∈ M`、`x ∈ M` 与 `y ∈ x`。
 <!--ja-->
 `M` の所属関係は三つの自由変数スロットで表され、`Relation` により環境 `y ∷ x ∷ e ∷ []` で読まれる。第三スロットは符号化された対を載せ、論理式は `y ∈ M`、`x ∈ M`、`y ∈ x` を主張する。
 <!--/-->
@@ -502,7 +502,7 @@ The membership relation of `M` is expressed using three free-variable slots, rea
 <!--en-->
 The host-side reading of the relation is exactly the three memberships, conjoined; this is the adequacy that lets the object-language formula and the external statement stand for each other.
 <!--zh-->
-关系的宿主侧读法恰是三条隶属的合取；正是这种充分性使对象语言公式与外部陈述可以互相代表。
+关系的宿主侧读法恰是三条成员关系的合取；正是这种充分性使对象语言公式与外部陈述可以互相代表。
 <!--ja-->
 関係のホスト側の読みは、三つの所属の連言そのものである。この妥当性があるから、対象言語の論理式と外側の主張は互いに代わり合える。
 <!--/-->
@@ -528,7 +528,7 @@ The relation becomes an element of the model: a set of pairs of carrier elements
 <!--en-->
 The introduction reading exhibits both endpoint memberships and the membership between them, which is the content of the relation at the pair.
 <!--zh-->
-引入读式出示两端点的隶属及二者之间的隶属，这正是该关系在此对上的内容。
+引入读式出示两端点的成员关系及二者之间的成员关系，这正是该关系在此对上的内容。
 <!--ja-->
 導入の読み出しは、両端の所属と、その間の所属を示す。それがこの対での関係の内容である。
 <!--/-->
@@ -542,7 +542,7 @@ The introduction reading exhibits both endpoint memberships and the membership b
 <!--en-->
 The elimination reading returns the same three memberships; the two directions together say the relation is adequate, neither stronger nor weaker than the host-side statement.
 <!--zh-->
-消去读式返回同样的三个隶属；两个方向合起来说明该关系是充分的，既不强于也不弱于宿主侧陈述。
+消去读式返回同样的三个成员关系；两个方向合起来说明该关系是充分的，既不强于也不弱于宿主侧陈述。
 <!--ja-->
 消去の読み出しは、同じ三つの所属を返す。二方向合わせて、この関係が妥当であること、ホスト側の主張よりも強くも弱くもないことが分かる。
 <!--/-->
@@ -615,7 +615,7 @@ The inward reading chooses the table `F` for the existential quantifier and supp
 <!--en-->
 Uniqueness is proved by one membership induction. The motive says: at every constructible member `x` of the carrier, any table correct for the relation and complete at `x` assigns the collapse of `x` as its value. Both the constructibility and the membership travel with the motive, because the table's entries are pairs of carrier elements.
 <!--zh-->
-唯一性由一次隶属归纳证明。动机说：对载体的每个可构造成员 `x`，凡对该关系正确、且在 `x` 处完备的表，其取值必是 `x` 的塌缩。可构造性与隶属都随动机同行，因为表的条目是载体元素组成的对。
+唯一性由一次成员关系归纳证明。动机说：对载体的每个可构造元素 `x`，凡对该关系正确、且在 `x` 处完备的表，其取值必是 `x` 的塌缩。可构造性与成员关系都随动机同行，因为表的条目是载体元素组成的对。
 <!--ja-->
 一意性は、所属に沿う帰納が一回で証明する。動機はこう言う。台の構成可能な要素 `x` のそれぞれで、その関係に対して正しく `x` で完備な表は、`x` の崩壊を値として割り当てる、と。構成可能性も所属も、表の項目が台の要素の対であるために、動機とともに運ばれる。
 <!--/-->
@@ -631,7 +631,7 @@ Uniqueness is proved by one membership induction. The motive says: at every cons
 <!--en-->
 The induction runs along membership in the ambient hierarchy, exactly as the collapse itself is defined along it: to prove the motive at `x`, prove it at every member of `x`.
 <!--zh-->
-归纳沿环境层级的隶属运行，与塌缩自身的定义方式一致：要证 `x` 处的动机，就证 `x` 的每个成员处的动机。
+归纳沿环境层级的成员关系运行，与塌缩自身的定义方式一致：要证 `x` 处的动机，就证 `x` 的每个元素处的动机。
 <!--ja-->
 帰納は、周囲の階層の所属に沿って走る。崩壊そのものがそうやって定義されているからである。`x` での動機を証明するには、`x` のすべての要素での動機を証明する。
 <!--/-->
@@ -647,7 +647,7 @@ The induction runs along membership in the ambient hierarchy, exactly as the col
 <!--en-->
 The step compares members: the recorded value and the collapse have the same members, and extensionality of the ambient hierarchy turns that into equality. The argument is presented as a carrier element, so its entries may be typed over the carrier.
 <!--zh-->
-步进比较成员：被记录取值与塌缩有相同的成员，而环境层级的外延性把这一点变成相等。实参被呈现为载体元素，故其条目可以载体为类型。
+步进比较元素：被记录取值与塌缩有相同的元素，而环境层级的外延性把这一点变成相等。实参被呈现为载体元素，故其条目可以载体为类型。
 <!--ja-->
 ステップは要素を比較する。記録された値と崩壊は同じ要素をもち、周囲の階層の外延性がそれを等しさへ変える。入力は台の要素として提示されるので、その項目は台の上で型づけられる。
 <!--/-->
@@ -662,7 +662,7 @@ The step compares members: the recorded value and the collapse have the same mem
 <!--en-->
 Forward: a member `w` of the recorded value is carried, and the value clause produces a relation entry together with a table entry at it. The carrying packages `w` with the constructibility inherited from the recorded value.
 <!--zh-->
-向前：被记录取值的成员 `w` 被载入，取值子句产出一条关系条目及其处的表条目。载入时把从被记录取值承袭来的可构造性与 `w` 打包。
+向前：被记录取值的元素 `w` 被载入，取值子句产出一条关系条目及其处的表条目。载入时把从被记录取值承袭来的可构造性与 `w` 打包。
 <!--ja-->
 前向き：記録された値の要素 `w` を台に載せ、値の条項が、関係の項目と、そこの表の項目を作る。載せるとき、記録された値から受け継いだ構成可能性を `w` とともに包む。
 <!--/-->
@@ -710,7 +710,7 @@ The relation entry also says the component lies in the argument, which unlocks t
 <!--en-->
 Backward: a member `w` of the collapse decomposes, by the outward reading already proved, into a component of the argument inside the carrier whose collapse is `w`. Completeness at the original argument `x`, applied to the predecessor `y`, supplies an entry `(y,u)`.
 <!--zh-->
-向后：塌缩的成员 `w` 由已证的向外读法分解为载体中实参的某分量，其塌缩为 `w`。把表在原实参 `x` 处的完备性用于前驱 `y`，得到表项 `(y,u)`。
+向后：塌缩的元素 `w` 由已证的向外读法分解为载体中实参的某分量，其塌缩为 `w`。把表在原实参 `x` 处的完备性用于前驱 `y`，得到表项 `(y,u)`。
 <!--ja-->
 後ろ向き：崩壊の要素 `w` は、すでに証明した外向きの読みによって、台の中の入力の成分へと分解され、その成分の崩壊が `w` になる。元の実引数 `x` における表の完備さを前者 `y` に適用すると、項目 `(y,u)` が得られる。
 <!--/-->
@@ -726,7 +726,7 @@ Backward: a member `w` of the collapse decomposes, by the outward reading alread
 <!--en-->
 The component is carried as a carrier element, and the relation entry at the pair is reintroduced from the two memberships and the membership between them.
 <!--zh-->
-该分量被载为载体元素，而该对处的关系条目由两个隶属与二者之间的隶属重新引入。
+该分量被载为载体元素，而该对处的关系条目由两个成员关系与二者之间的成员关系重新引入。
 <!--ja-->
 その成分は台の要素として載せられ、対での関係の項目が、二つの所属とその間の所属から改めて導入される。
 <!--/-->
@@ -770,7 +770,7 @@ The equation `eu` is the induction hypothesis at the component: the table's valu
 <!--en-->
 Applying the induction to the underlying set of a carrier element gives the same uniqueness statement in the restricted structure. The resulting determination lemma says that whenever the collapse formula is satisfied at a member of `M`, its value must equal that member's collapse.
 <!--zh-->
-把归纳施于载体元素的底层集合，便在受限结构中得到同一唯一性陈述。所得确定性引理说明：塌缩公式若在 `M` 的成员处成立，其取值必等于该成员的塌缩。
+把归纳施于载体元素的底层集合，便在受限结构中得到同一唯一性陈述。所得确定性引理说明：塌缩公式若在 `M` 的元素处成立，其取值必等于该元素的塌缩。
 <!--ja-->
 台の要素の基礎集合に帰納を適用すると、制限された構造で同じ一意性の主張が得られる。得られる決定補題は、崩壊の論理式が `M` の要素で成立するなら、その値はその要素の崩壊に等しいことを述べる。
 <!--/-->
@@ -821,7 +821,7 @@ The cutting formula is the single atomic formula: the free slot is a member of t
 <!--en-->
 Separation applied at `Mʟ` yields the slice as an element of `L`, so the slice is more than a mere class of members. This is what lets the slice serve as the domain of an internal recursion.
 <!--zh-->
-把分离施于 `Mʟ`，切片便作为 `L` 的元素而得，而不只是成员的类。因此切片可以作为内部递归的定义域使用。
+把分离施于 `Mʟ`，切片便作为 `L` 的元素而得，而不只是元素的类。因此切片可以作为内部递归的定义域使用。
 <!--ja-->
 分離を `Mʟ` に適用することで、スライスも `L` の要素として得られ、単なる要素の類では終わらない。このため、スライスを内部再帰の定義域として使える。
 <!--/-->
@@ -835,7 +835,7 @@ Separation applied at `Mʟ` yields the slice as an element of `L`, so the slice 
 <!--en-->
 The membership specification identifies membership in the slice with membership in the carrier together with satisfaction of the cutting formula, which unpacks to lying in the underlying set of `K`.
 <!--zh-->
-隶属规格把「属于切片」等同于「属于载体且满足切割公式」，后者展开即落在 `K` 的底层集合之中。
+成员关系规格把「属于切片」等同于「属于载体且满足切割公式」，后者展开即落在 `K` 的底层集合之中。
 <!--ja-->
 所属の仕様は、スライスへの所属を、台への所属と切り出しの論理式の充足とを合わせたものとして同定する。後者はほどけば、`K` の基礎の集合の中にあることにほかならない。
 <!--/-->
@@ -861,7 +861,7 @@ The inward direction combines membership in `M` with membership in the underlyin
 <!--en-->
 The outward direction reads the same specification back into its two components. A member `q` of the carrier is good at a stage `δ` when membership in that stage yields both a constructible presentation of its collapse and the collapse formula at `q`.
 <!--zh-->
-向外方向把同一规格读回其两个分量。载体成员 `q` 在层 `δ` 处称为「好」，若它属于该层时，既能得到其塌缩的可构造呈现，也能得到 `q` 处的塌缩公式。
+向外方向把同一规格读回其两个分量。载体元素 `q` 在层 `δ` 处称为「好」，若它属于该层时，既能得到其塌缩的可构造呈现，也能得到 `q` 处的塌缩公式。
 <!--ja-->
 外向きの方向は、同じ仕様を二つの成分へ読み戻す。台の要素 `q` が段階 `δ` で「良い」とは、その段階に属するとき、崩壊の構成可能な表示と `q` における崩壊の論理式の両方が得られることである。
 <!--/-->
@@ -881,7 +881,7 @@ The outward direction reads the same specification back into its two components.
 <!--en-->
 The second component of goodness packages the collapse as an element of `𝒮ʟ` using its constructibility proof, and states that the collapse formula holds of this value and the chosen presentation of the member of `M`.
 <!--zh-->
-「好」的第二分量利用可构造性证明把塌缩包装成 `𝒮ʟ` 的元素，并断言塌缩公式在该取值与所选的 `M` 成员呈现上成立。
+「好」的第二分量利用可构造性证明把塌缩包装成 `𝒮ʟ` 的元素，并断言塌缩公式在该取值与所选的 `M` 元素呈现上成立。
 <!--ja-->
 「良いこと」の第二成分は、構成可能性の証明によって崩壊を `𝒮ʟ` の要素として包み、その値と選んだ `M` の要素の表示について崩壊の論理式が成立することを述べる。
 <!--/-->
@@ -893,7 +893,7 @@ The second component of goodness packages the collapse as an element of `𝒮ʟ`
 <!--en-->
 Goodness is a proposition: membership in the carrier, in the stage, constructibility, and satisfaction are each one. This matters because the stage decomposition returns a merely-existing witness, and a merely-existing goodness can be consumed without choosing among witnesses.
 <!--zh-->
-「好」是命题：对载体的隶属、对层的隶属、可构造性与满足各自为命题。这一点至关重要，因为层的分解只返回仅仅存在的见证，而仅仅存在的「好」可以被消费，无须在见证之间挑选。
+「好」是命题：对载体的成员关系、对层的成员关系、可构造性与满足各自为命题。这一点至关重要，因为层的分解只返回仅仅存在的见证，而仅仅存在的「好」可以被消费，无须在见证之间挑选。
 <!--ja-->
 「良いこと」は命題である。台への所属も、段階への所属も、構成可能性も充足も、それぞれ命題だからである。ここが大切である。段階の分解が返すのは、単に存在するだけの証人であるが、命題である「良いこと」なら、証人を選ぶことなく消費できるのである。
 <!--/-->
@@ -924,7 +924,7 @@ Fix an ordinal stage `δ'` and assume goodness for every `q` that lies both in `
 <!--en-->
 The slice is cut at the stage `Lset δ'`: the members of the carrier that the stage already contains. Because the stage is a set of `L`, the slice is an element of `L` by separation, and it is exactly the domain the induction hypothesis speaks about.
 <!--zh-->
-切片在层 `Lset δ'` 处切出：该层已容纳的载体成员。由于该层是 `L` 的集合，切片由分离成为 `L` 的元素，而它恰是归纳假设所谈论的定义域。
+切片在层 `Lset δ'` 处切出：该层已容纳的载体元素。由于该层是 `L` 的集合，切片由分离成为 `L` 的元素，而它恰是归纳假设所谈论的定义域。
 <!--ja-->
 スライスは、段階 `Lset δ'` で切り出される。その段階がすでに収めている台の要素である。段階は `L` の集合なので、スライスは分離によって `L` の要素になり、これこそ帰納の仮定が語る定義域である。
 <!--/-->
@@ -936,7 +936,7 @@ The slice is cut at the stage `Lset δ'`: the members of the carrier that the st
 <!--en-->
 Stages are transitive, so a member of a member of the stage is still inside the stage; this is the fact that later restricts the table's conditions to smaller arguments. By the induction hypothesis, the collapse of a slice member is available as an element of `𝒮ʟ`; its constructibility proof is the first component of goodness.
 <!--zh-->
-层是传递的，因此层的成员的成员仍在层内；这条事实稍后会把表的条件限制到更小的实参。由归纳假设，切片成员的塌缩可作为 `𝒮ʟ` 的元素使用；其可构造性证明正是「好」的第一分量。
+层是传递的，因此层的元素的元素仍在层内；这条事实稍后会把表的条件限制到更小的实参。由归纳假设，切片元素的塌缩可作为 `𝒮ʟ` 的元素使用；其可构造性证明正是「好」的第一分量。
 <!--ja-->
 段階は推移的である。したがって、段階の要素の要素も段階の内側にあり、この事実が後で表の条件をより小さい入力へ制限する。帰納の仮定により、スライスの要素の崩壊は `𝒮ʟ` の要素として得られ、その構成可能性の証明が「良いこと」の第一成分である。
 <!--/-->
@@ -951,7 +951,7 @@ Stages are transitive, so a member of a member of the stage is still inside the 
 <!--en-->
 The collapse formula holds at the pair of that collapse and the member, by the same induction hypothesis: the second component of goodness is exactly a satisfaction of the formula at the pair, transported along the identification of the element with its underlying set.
 <!--zh-->
-塌缩公式在该塌缩与成员组成的对上成立，同样由归纳假设给出：「好」的第二分量恰是该公式在此对上的一个满足，沿「元素与其底层集合的认同」运输而来。
+塌缩公式在该塌缩与元素组成的对上成立，同样由归纳假设给出：「好」的第二分量恰是该公式在此对上的一个满足，沿「元素与其底层集合的认同」运输而来。
 <!--ja-->
 崩壊の論理式が、その崩壊と要素の対の上で成立するのも、同じ帰納の仮定による。「良いこと」の第二成分はちょうど、この対での論理式の充足であり、要素とその基礎の集合の同定に沿って運ばれる。
 <!--/-->
@@ -967,7 +967,7 @@ The collapse formula holds at the pair of that collapse and the member, by the s
 <!--en-->
 The identification uses the membership of the member in the carrier, read out of the slice specification; the underlying set has not changed, so the transport is determined by the propositionality of constructibility.
 <!--zh-->
-该认同使用从切片规格读出的「成员属于载体」；底层集合未曾改变，而由于可构造性的证明是命题，该同一视足以确定所需的运输。
+该认同使用从切片规格读出的「元素属于载体」；底层集合未曾改变，而由于可构造性的证明是命题，该同一视足以确定所需的运输。
 <!--ja-->
 この同定には、スライスの仕様から読み出した要素の台への所属を使う。基礎集合は変わっておらず、構成可能性の証明は命題なので、この同一視に沿った輸送は一意に定まる。
 <!--/-->
@@ -997,7 +997,7 @@ Over the slice, these collapse values form an internal recursion with domain the
 <!--en-->
 Functionality holds because the collapse formula determines its value at every member of the carrier: any other value satisfying the formula at the same pair is equal to it, which the determination lemma reads out. The equality of the corresponding `𝒮ʟ`-elements then follows because their constructibility proofs are proposition-valued.
 <!--zh-->
-函数性成立，因为塌缩公式在载体的每个成员处都确定其取值：在同一对处满足公式的任何其他取值都等于它，确定性引理读出这一点。随后，由于其中的可构造性证明是命题值的，便得到相应 `𝒮ʟ` 元素的相等。
+函数性成立，因为塌缩公式在载体的每个元素处都确定其取值：在同一对处满足公式的任何其他取值都等于它，确定性引理读出这一点。随后，由于其中的可构造性证明是命题值的，便得到相应 `𝒮ʟ` 元素的相等。
 <!--ja-->
 関数性が成立するのは、崩壊の論理式が台のすべての要素でその値を決めるからである。同じ対で論理式を満たすほかの値はどれもそれと等しく、決定の補題がそれを読み出す。対応する `𝒮ʟ` の要素の等しさは、構成可能性の証明が命題値であることから従う。
 <!--/-->
@@ -1022,7 +1022,7 @@ The graph recursion of `L` collects the table: a set of pairs of carrier element
 <!--en-->
 The collected set is the table at the stage: an element of `L` that pairs each slice member with its constructible collapse.
 <!--zh-->
-收集所得的集合就是该层处的表：一个 `L` 的元素，把每个切片成员与其可构造的塌缩配成对。
+收集所得的集合就是该层处的表：一个 `L` 的元素，把每个切片元素与其可构造的塌缩配成对。
 <!--ja-->
 集められた集合が、この段階での表である。`L` の要素であり、スライスの各要素と、その構成可能な崩壊とを対にする。
 <!--/-->
@@ -1035,7 +1035,7 @@ The collected set is the table at the stage: an element of `L` that pairs each s
 <!--en-->
 The inward reading of the table exhibits its entries: at every slice member, the pair of the member with its collapse is recorded.
 <!--zh-->
-表的向内读式出示其条目：在每个切片成员处，成员与其塌缩组成的对都被记录。
+表的向内读式出示其条目：在每个切片元素处，元素与其塌缩组成的对都被记录。
 <!--ja-->
 表の内向きの読み出しは、その項目を示す。スライスの各要素で、要素とその崩壊の対が記録される。
 <!--/-->
@@ -1048,7 +1048,7 @@ The inward reading of the table exhibits its entries: at every slice member, the
 <!--en-->
 The outward reading decomposes an entry into a slice member and a value equal to the collapse of its underlying set. Together with the inward reading this says the table records exactly the collapses, nothing distorted.
 <!--zh-->
-向外读式把一条条目分解为切片成员与其底层集合的塌缩相等的取值。与向内读式合起来，这说明表记录的恰是诸塌缩，毫无走样。
+向外读式把一条条目分解为切片元素与其底层集合的塌缩相等的取值。与向内读式合起来，这说明表记录的恰是诸塌缩，毫无走样。
 <!--ja-->
 外向きの読み出しは、項目をスライスの要素と、その基礎集合の崩壊に等しい値へ分解する。内向きの読み出しと合わせて、表が記録するのは崩壊そのものであり、歪みがないことが分かる。
 <!--/-->
@@ -1062,7 +1062,7 @@ The outward reading decomposes an entry into a slice member and a value equal to
 <!--en-->
 An argument `x` is closed when every member of `x` that also belongs to `M` lies in the stage slice. This condition is imposed on each argument separately, because no transitivity assumption is made on `M`.
 <!--zh-->
-实参 `x` 称为封闭，若 `x` 的每个同时属于 `M` 的成员都落在层切片中。这个条件须逐实参给出，因为这里并未假定 `M` 传递。
+实参 `x` 称为封闭，若 `x` 的每个同时属于 `M` 的元素都落在层切片中。这个条件须逐实参给出，因为这里并未假定 `M` 传递。
 <!--ja-->
 引数 `x` が閉じているとは、`x` の要素であり、かつ `M` に属するものがすべて段階スライスに入ることである。この条件は引数ごとに課される。ここでは `M` の推移性を仮定していない。
 <!--/-->
@@ -1076,7 +1076,7 @@ An argument `x` is closed when every member of `x` that also belongs to `M` lies
 <!--en-->
 A slice member is closed by transitivity of the stage: any member of it that lies in `M` remains in the stage and therefore belongs to the slice.
 <!--zh-->
-切片成员因层的传递性而封闭：它的任何同时属于 `M` 的成员仍在该层内，因而属于切片。
+切片元素因层的传递性而封闭：它的任何同时属于 `M` 的元素仍在该层内，因而属于切片。
 <!--ja-->
 スライスの要素は段階の推移性によって閉じている。その要素であり、かつ `M` に属するものは段階内にとどまるので、スライスに属する。
 <!--/-->
@@ -1090,7 +1090,7 @@ A slice member is closed by transitivity of the stage: any member of it that lie
 <!--en-->
 For a closed argument, completeness of the table is the truncated existence of the table's own entry at each related member: closedness places that member inside the slice, where the table records its collapse. The relation entry is decomposed to name the member.
 <!--zh-->
-对封闭的实参，表的完备性就是「表在相关成员处有自己的条目」的截断存在：封闭性把该成员放进切片，表在那里记录其塌缩。关系条目被分解以指名该成员。
+对封闭的实参，表的完备性就是「表在相关元素处有自己的条目」的截断存在：封闭性把该元素放进切片，表在那里记录其塌缩。关系条目被分解以指名该元素。
 <!--ja-->
 閉じた入力に対する表の完備さとは、関係する各要素での表自身の項目の切り詰められた存在である。閉じていることがその要素をスライスの中へ置き、表がそこに崩壊を記録する。関係の項目は分解されて、その要素を名指す。
 <!--/-->
@@ -1106,7 +1106,7 @@ For a closed argument, completeness of the table is the truncated existence of t
 <!--en-->
 The member is carried as a carrier element, and closedness places the carried element inside the slice, which is exactly the hypothesis under which the table recorded the collapse.
 <!--zh-->
-该成员被载为载体元素，而封闭性把载入后的元素放进切片，这正是表记录其塌缩时所用的假设。
+该元素被载为载体元素，而封闭性把载入后的元素放进切片，这正是表记录其塌缩时所用的假设。
 <!--ja-->
 その要素は台の要素として載せられ、閉じていることが、載せられた要素をスライスの中へ置く。これは、表が崩壊を記録したときの仮定そのものである。
 <!--/-->
@@ -1120,7 +1120,7 @@ The member is carried as a carrier element, and closedness places the carried el
 <!--en-->
 For a closed argument, the value clause holds of the collapse itself. The proof has two directions: every member of the collapse value comes from a related member, and every member related to the argument is carried into the collapse value by the table.
 <!--zh-->
-对封闭的实参，取值子句对塌缩自身成立。证明有两个方向：塌缩值的每个成员都来自某个相关成员，而与实参有关系的每个成员都被表载入塌缩值。
+对封闭的实参，取值子句对塌缩自身成立。证明有两个方向：塌缩值的每个元素都来自某个相关元素，而与实参有关系的每个元素都被表载入塌缩值。
 <!--ja-->
 閉じた入力に対して、値の条項は崩壊そのものについて成立する。証明には二方向ある。崩壊値の要素はどれも関係する要素から来ており、入力と関係する要素はどれも、表によって崩壊値の中へ運ばれる。
 <!--/-->
@@ -1136,7 +1136,7 @@ For a closed argument, the value clause holds of the collapse itself. The proof 
 <!--en-->
 Forward: a member `w` of the candidate value `v` is decomposed by the collapse reading into a component of the argument inside the carrier, whose collapse equals `w`. The decomposition is a truncated existence, and the elimination targets a proposition.
 <!--zh-->
-向前：候选取值 `v` 的成员 `w` 经塌缩读法分解为载体中实参的分量，其塌缩等于 `w`。该分解是截断的存在，而消去的目标是一条命题。
+向前：候选取值 `v` 的元素 `w` 经塌缩读法分解为载体中实参的分量，其塌缩等于 `w`。该分解是截断的存在，而消去的目标是一条命题。
 <!--ja-->
 前向きでは、候補の値 `v` の要素 `w` を、崩壊の読み出しによって台の中の入力の成分へ分解する。その成分の崩壊は `w` に等しくなる。分解は切り詰められた存在であり、消去の対象は命題である。
 <!--/-->
@@ -1165,7 +1165,7 @@ The component is lifted to the carrier. Its membership in the argument yields th
 <!--en-->
 Backward: a source entry for `w` names a related member whose table value is `w`. The pair reading splits the entry into memberships and an equality; the collapse reading places `w` in the collapse of the first component, and the two equations transport it back into the recorded value.
 <!--zh-->
-向后：`w` 的一条源条目名指一个表取值为 `w` 的相关成员。对读法把条目拆成隶属与等式；塌缩读法把 `w` 放进第一分量的塌缩，而两条等式再把它运回被记录取值。
+向后：`w` 的一条源条目名指一个表取值为 `w` 的相关元素。对读法把条目拆成成员关系与等式；塌缩读法把 `w` 放进第一分量的塌缩，而两条等式再把它运回被记录取值。
 <!--ja-->
 後ろ向き：`w` のソースの項目は、表の値が `w` であるような関係する要素を名指す。対の読み出しが項目を所属と等式に分け、崩壊の読み出しが `w` を第一成分の崩壊の中に置き、二つの等式がそれを記録された値へ運び戻す。
 <!--/-->
@@ -1180,7 +1180,7 @@ Backward: a source entry for `w` names a related member whose table value is `w`
 <!--en-->
 The correctness of the table at each entry is assembled from the two clauses at the slice member that the entry names. The pair reading contributes the slice membership and the carrier membership.
 <!--zh-->
-表在每条条目处的正确性，由该条目所指名的切片成员处的两个子句装配而成。对读法贡献切片隶属与载体隶属。
+表在每条条目处的正确性，由该条目所指名的切片元素处的两个子句装配而成。对读法贡献切片成员关系与载体成员关系。
 <!--ja-->
 それぞれの項目での表の正しさは、その項目が名指すスライスの要素での二つの条項から組み立てられる。対の読み出しが、スライスへの所属と台への所属を与える。
 <!--/-->
@@ -1196,7 +1196,7 @@ The correctness of the table at each entry is assembled from the two clauses at 
 <!--en-->
 The carrier membership and closedness complete the hypotheses, and the step module is parameterized by an argument `q` of the carrier all of whose members lie below the earlier stage. This is the situation needed for an element of the definable powerset of `Lset δ'`; here closedness follows from `q⊆`.
 <!--zh-->
-载体隶属与封闭性补全诸假设；步进模块由载体的实参 `q` 参数化，其所有成员都低于更早层。这是 `Lset δ'` 的可定义幂集中的元素所需的情形；此时封闭性由 `q⊆` 得出。
+载体成员关系与封闭性补全诸假设；步进模块由载体的实参 `q` 参数化，其所有元素都低于更早层。这是 `Lset δ'` 的可定义幂集中的元素所需的情形；此时封闭性由 `q⊆` 得出。
 <!--ja-->
 台への所属と閉じていることが仮定を完成させ、ステップのモジュールは、その要素がすべてより前の段階の下にあるような台の入力 `q` でパラメータづけられる。これは `Lset δ'` の定義可能冪集合の要素に必要な状況であり、ここでは閉じていることが `q⊆` から従う。
 <!--/-->
@@ -1225,7 +1225,7 @@ The argument is carried as a carrier element, so that it can serve as an environ
 <!--en-->
 Closedness of the carried argument holds by the hypothesis: each member inside the carrier lies below the earlier stage, and the slice admits it. The members of the argument inside the carrier are then cut out as their own slice, the domain on which the collapse value will be computed.
 <!--zh-->
-载入后实参的封闭性由假设成立：其在载体内的每个成员都低于更早层，切片接纳它们。实参在载体内的成员随后被切出为它们自己的切片，塌缩取值将在这个定义域上计算。
+载入后实参的封闭性由假设成立：其在载体内的每个元素都低于更早层，切片接纳它们。实参在载体内的元素随后被切出为它们自己的切片，塌缩取值将在这个定义域上计算。
 <!--ja-->
 載せた入力の閉じていることは仮定から成立する。台の中のその要素はすべてより前の段階の下にあり、スライスが受け入れる。そして台の中の入力の要素が、それ自身のスライスとして切り出される。崩壊の値はこの定義域の上で計算される。
 <!--/-->
@@ -1239,7 +1239,7 @@ Closedness of the carried argument holds by the hypothesis: each member inside t
 <!--en-->
 The collapse value of `q` is built as an internal recursion: domain the slice of members of `q` in the carrier, graph the collapse formula. This functional graph therefore meets the hypotheses of replacement in `L`.
 <!--zh-->
-`q` 的塌缩取值被构造为一个内部递归：定义域是 `q` 在载体内的成员切片，图是塌缩公式。因此，这个函数图满足 `L` 中替换原理的假设。
+`q` 的塌缩取值被构造为一个内部递归：定义域是 `q` 在载体内的元素切片，图是塌缩公式。因此，这个函数图满足 `L` 中替换原理的假设。
 <!--ja-->
 `q` の崩壊値は、内部の再帰として作られる。定義域は台の中の `q` の要素のスライス、グラフは崩壊の論理式である。したがって、この関数的グラフは `L` における置換の仮定を満たす。
 <!--/-->
@@ -1255,7 +1255,7 @@ The collapse value of `q` is built as an internal recursion: domain the slice of
 <!--en-->
 Functionality is assembled through `mereFunct`, from a merely-existing unique value at each argument. The witness `wit` produces such a value together with its satisfaction and uniqueness, all inside the truncation, because uniqueness of the collapse formula at a member of the carrier is a proposition.
 <!--zh-->
-函数性经由 `mereFunct` 装配，所需输入是在每个实参处截断存在的唯一取值。见证 `wit` 在截断内部产出这样的取值连同其满足与唯一性，因为塌缩公式在载体成员处的唯一性是命题。
+函数性经由 `mereFunct` 装配，所需输入是在每个实参处截断存在的唯一取值。见证 `wit` 在截断内部产出这样的取值连同其满足与唯一性，因为塌缩公式在载体元素处的唯一性是命题。
 <!--ja-->
 関数性は `mereFunct` を通して組み立てられる。各入力で、一意な値が「単に存在する」ことからである。証人 `wit` は、そのような値と、その充足と一意性とを、切り詰めの内側で産出する。台の要素での崩壊の論理式の一意性が命題だからである。
 <!--/-->
@@ -1287,7 +1287,7 @@ The witness is the global collapse value `C.π (fst y)`, presented as constructi
 <!--en-->
 The membership of `y` in the carrier comes from the slice of `q`. The hypothesis puts every member of `q` in `Lset δ'`, so every such carrier element is admitted by the stage slice.
 <!--zh-->
-`y` 在载体中的隶属来自 `q` 的切片。假设把 `q` 的每个成员放入 `Lset δ'`，所以其中每个属于载体的元素都被层切片接纳。
+`y` 在载体中的成员关系来自 `q` 的切片。假设把 `q` 的每个元素放入 `Lset δ'`，所以其中每个属于载体的元素都被层切片接纳。
 <!--ja-->
 `y` の台への所属は `q` のスライスから来る。仮定により `q` の各要素は `Lset δ'` に入るので、そのうち台に属する要素はすべて段階スライスに入る。
 <!--/-->
@@ -1301,7 +1301,7 @@ The membership of `y` in the carrier comes from the slice of `q`. The hypothesis
 <!--en-->
 Replacement now collects the values of this recursion into an element of `L`: its members are exactly the constructible collapse values of members of `q` that lie in `M`.
 <!--zh-->
-替换把该递归的取值收集成 `L` 的一个元素：其成员恰是 `q` 中同时属于 `M` 的成员之可构造塌缩值。
+替换把该递归的取值收集成 `L` 的一个元素：其元素恰是 `q` 中同时属于 `M` 的元素之可构造塌缩值。
 <!--ja-->
 置換はこの再帰の値を `L` の要素として集める。その要素はちょうど、`q` の要素であり、かつ `M` に属するものの構成可能な崩壊値である。
 <!--/-->
@@ -1313,7 +1313,7 @@ Replacement now collects the values of this recursion into an element of `L`: it
 <!--en-->
 The underlying set of the table agrees with the collapse of `q`, proved by extensionality through a member-by-member equivalence. Forward: a member of the table is a value at some member `y` of `q` inside the carrier, and the elimination targets the proposition that `w` lies in the collapse of `q`.
 <!--zh-->
-表的底层集合与 `q` 的塌缩一致，由逐成员等价经外延性证明。向前：表的成员是载体中某个成员 `y` 处的取值，而消去的目标是命题「`w` 属于 `q` 的塌缩」。
+表的底层集合与 `q` 的塌缩一致，由逐元素等价经外延性证明。向前：表的元素是载体中某个元素 `y` 处的取值，而消去的目标是命题「`w` 属于 `q` 的塌缩」。
 <!--ja-->
 表の基礎の集合は、`q` の崩壊と一致する。要素ごとの同値を通して外延性で証明される。前向き：表の要素は、台の中の `q` のある要素 `y` での値であり、消去の対象は「`w` が `q` の崩壊に属する」という命題である。
 <!--/-->
@@ -1329,7 +1329,7 @@ The underlying set of the table agrees with the collapse of `q`, proved by exten
 <!--en-->
 The outward reading names the member `y` and its value; the determination lemma identifies the value with the collapse of `y`, and the collapse reading places the collapse of `y` inside the collapse of `q`, which the transport composes.
 <!--zh-->
-向外读法名指成员 `y` 及其取值；确定性引理把该取值同认于 `y` 的塌缩，而塌缩读法把 `y` 的塌缩放进 `q` 的塌缩，运输把两者复合。
+向外读法名指元素 `y` 及其取值；确定性引理把该取值同认于 `y` 的塌缩，而塌缩读法把 `y` 的塌缩放进 `q` 的塌缩，运输把两者复合。
 <!--ja-->
 外向きの読み出しが要素 `y` とその値を名指し、決定の補題がその値を `y` の崩壊と同一視し、崩壊の読み出しが `y` の崩壊を `q` の崩壊の中へ置く。輸送がこの二つを合成する。
 <!--/-->
@@ -1359,7 +1359,7 @@ Since `w` belongs to the constructible value set `Vq.table`, transitivity of `L`
 <!--en-->
 Backward: a member of the collapse of `q` decomposes into a component of `q` inside the carrier whose collapse equals it, which is precisely the form in which the table records entries.
 <!--zh-->
-向后：`q` 的塌缩的成员分解为载体中 `q` 的某分量，其塌缩等于该成员；这恰是表记录条目的形式。
+向后：`q` 的塌缩的元素分解为载体中 `q` 的某分量，其塌缩等于该元素；这恰是表记录条目的形式。
 <!--ja-->
 後ろ向き：`q` の崩壊の要素は、台の中の `q` の成分へと分解され、その成分の崩壊がそれと等しくなる。これは、表が項目を記録する形そのものである。
 <!--/-->
@@ -1391,7 +1391,7 @@ The equation transports `w` to the collapse of the component, and the table's in
 <!--en-->
 The carried component lies in the slice of `q` by its carrier membership, and in the stage slice by the hypothesis that members of `q` lie below the earlier stage.
 <!--zh-->
-载入后的分量因其在载体中的隶属而属于 `q` 的切片，又因「`q` 的成员低于更早层」的假设而属于层切片。
+载入后的分量因其在载体中的成员关系而属于 `q` 的切片，又因「`q` 的元素低于更早层」的假设而属于层切片。
 <!--ja-->
 載せた成分は、台への所属によって `q` のスライスの中にあり、また「`q` の要素はより前の段階の下にある」という仮定によって、段階のスライスの中にもある。
 <!--/-->
@@ -1421,9 +1421,9 @@ The second clause of goodness is the collapse formula satisfied at the pair of t
 
 The induction runs along membership in the hierarchy, consuming at each step the decomposition of membership in the stage.
 <!--zh-->
-「好」的第二个子句是塌缩公式在该塌缩与成员组成的对上成立：表的正确性、封闭实参处的完备性、以及认同取值与塌缩的取值子句。有了两个子句，层归纳即可陈述：在每个序数处的「好」。
+「好」的第二个子句是塌缩公式在该塌缩与元素组成的对上成立：表的正确性、封闭实参处的完备性、以及认同取值与塌缩的取值子句。有了两个子句，层归纳即可陈述：在每个序数处的「好」。
 
-归纳沿层级的隶属运行，每步消耗「属于层」的分解。
+归纳沿层级的成员关系运行，每步消耗「属于层」的分解。
 <!--ja-->
 「良いこと」の第二の条項は、崩壊と要素の対の上で崩壊の論理式が成立することである。表の正しさ、閉じた入力での完備さ、そして値を崩壊と同定する値の条項である。二つの条項がそろえば、段階の帰納を述べられる。すべての順序数での「良いこと」である。
 
@@ -1445,7 +1445,7 @@ The induction runs along membership in the hierarchy, consuming at each step the
 <!--en-->
 To prove goodness at `δ`, the membership of `q` in the stage `Lset δ` is decomposed: `q` lies in the definable powerset of an earlier stage `δ'`. The decomposition is eliminated into goodness, because goodness is a proposition.
 <!--zh-->
-要证 `δ` 处的「好」，先把 `q` 对层 `Lset δ` 的隶属分解：`q` 落在更早层 `δ'` 的可定义幂集内。该分解被消去到「好」之中，因为「好」是命题。
+要证 `δ` 处的「好」，先把 `q` 对层 `Lset δ` 的成员关系分解：`q` 落在更早层 `δ'` 的可定义幂集内。该分解被消去到「好」之中，因为「好」是命题。
 <!--ja-->
 `δ` での「良いこと」を証明するには、段階 `Lset δ` への `q` の所属を分解する。`q` は、より前の段階 `δ'` の定義可能冪集合の中にある、と。分解は「良いこと」へ消去される。「良いこと」が命題だからである。
 <!--/-->
@@ -1461,7 +1461,7 @@ To prove goodness at `δ`, the membership of `q` in the stage `Lset δ` is decom
 <!--en-->
 The decomposition names the earlier stage `δ'` below `δ` and the membership of `q` in its definable powerset. Using goodness below `δ'`, the step construction yields goodness at `q`. The definable powerset clause then says every member of `q` lies in the stage `Lset δ'`, which is the closedness hypothesis the step consumes.
 <!--zh-->
-分解给出低于 `δ` 的更早层 `δ'`，以及 `q` 属于其可定义幂集。利用 `δ'` 以下的「好」，步进构造得到 `q` 处的「好」。可定义幂集子句进而说 `q` 的每个成员都落在层 `Lset δ'` 内，这正是步进所消费的封闭性假设。
+分解给出低于 `δ` 的更早层 `δ'`，以及 `q` 属于其可定义幂集。利用 `δ'` 以下的「好」，步进构造得到 `q` 处的「好」。可定义幂集子句进而说 `q` 的每个元素都落在层 `Lset δ'` 内，这正是步进所消费的封闭性假设。
 <!--ja-->
 分解は、`δ` の下のより前の段階 `δ'` と、その定義可能冪集合への `q` の所属を名指す。`δ'` より下での「良いこと」を使うと、ステップの構成から `q` での「良いこと」が得られる。定義可能冪集合の条項はさらに、`q` のすべての要素が段階 `Lset δ'` の中にあると言う。これが、ステップが消費する閉じていることの仮定である。
 <!--/-->
@@ -1477,7 +1477,7 @@ The decomposition names the earlier stage `δ'` below `δ` and the membership of
 <!--en-->
 Ordinality of `δ'` follows from `δ' ∈ δ`. Applying the induction hypothesis below `δ'`, together with the definable-powerset fact that every member of `q` lies in `Lset δ'`, yields goodness at `q`. Thus the membership induction proves `good-at`. Since `M` itself belongs to `L`, its constructibility certificate supplies a stage containing `M`; transitivity of that stage then places every member of `M` inside it.
 <!--zh-->
-由 `δ' ∈ δ` 得到 `δ'` 的序数性。把归纳假设用于 `δ'` 以下，并结合可定义幂集所给出的「`q` 的每个成员都属于 `Lset δ'`」，即可得到 `q` 处的「好」，从而闭合 `good-at` 的隶属归纳。又因 `M` 本身属于 `L`，其可构造性证书给出一个包含 `M` 的层；该层的传递性于是把 `M` 的每个成员也放入其中。
+由 `δ' ∈ δ` 得到 `δ'` 的序数性。把归纳假设用于 `δ'` 以下，并结合可定义幂集所给出的「`q` 的每个元素都属于 `Lset δ'`」，即可得到 `q` 处的「好」，从而闭合 `good-at` 的成员关系归纳。又因 `M` 本身属于 `L`，其可构造性证书给出一个包含 `M` 的层；该层的传递性于是把 `M` 的每个元素也放入其中。
 <!--ja-->
 `δ' ∈ δ` から `δ'` の順序数性が得られる。`δ'` より下で帰納の仮定を使い、`q` のすべての要素が `Lset δ'` に属するという定義可能冪集合の事実を合わせると、`q` での「良いこと」が得られ、`good-at` の所属帰納が閉じる。また `M` 自身が `L` に属するので、その構成可能性の証明から `M` を含む段階が得られ、その段階の推移性によって `M` の各要素も段階内に入る。
 <!--/-->
@@ -1493,7 +1493,7 @@ Ordinality of `δ'` follows from `δ' ∈ δ`. Applying the induction hypothesis
 <!--en-->
 A stage containing the constructible carrier `M` is obtained from the proof `Mʟ`, and goodness at that stage yields constructibility of the collapse of every member of `M`. The following claim begins the corresponding argument for members of the whole collapse image `C.πX`, again eliminating a truncated presentation into constructibility.
 <!--zh-->
-由证明 `Mʟ` 取得一个包含可构造载体 `M` 的层，而该层处的「好」给出 `M` 每个成员之塌缩的可构造性。下一条结论开始对整个塌缩像 `C.πX` 的成员作相应论证，同样把截断呈现消去到可构造性。
+由证明 `Mʟ` 取得一个包含可构造载体 `M` 的层，而该层处的「好」给出 `M` 每个元素之塌缩的可构造性。下一条结论开始对整个塌缩像 `C.πX` 的元素作相应论证，同样把截断呈现消去到可构造性。
 <!--ja-->
 証明 `Mʟ` から構成可能な台 `M` を含む段階を取り、その段階での「良いこと」から `M` の各要素の崩壊が構成可能であることを得る。続く主張は、崩壊像全体 `C.πX` の要素について同じ議論を始め、やはり切り詰められた表示を構成可能性へ消去する。
 <!--/-->
@@ -1509,7 +1509,7 @@ A stage containing the constructible carrier `M` is obtained from the proof `Mʟ
 <!--en-->
 The statement of `πX-isL` is about members: each member of the collapse image is the collapse of some member of the carrier, hence constructible.
 <!--zh-->
-`πX-isL` 的陈述是关于成员的：塌缩像的每个成员都是载体某个成员的塌缩，故可构造。
+`πX-isL` 的陈述是关于元素的：塌缩像的每个元素都是载体某个元素的塌缩，故可构造。
 <!--ja-->
 `πX-isL` の主張は要素についてのものである。
 <!--/-->
@@ -1532,7 +1532,7 @@ The statement of `πX-isL` is about members: each member of the collapse image i
 <!--en-->
 This says exactly that the collapse image is contained in `L`; it is a statement about members, and no claim is made that the image itself is an element of `L`. With the first half finished, the second half opens under new parameters: a stage `lam` closed under successors of its members, and a start `X` whose members all lie in the stage.
 <!--zh-->
-这恰是说塌缩像包含于 `L`；它是关于成员的陈述，并不主张像本身是 `L` 的元素。前半完成后，后半在新参数下开启：一个对其成员的后继封闭的层 `lam`，以及成员全部落在该层内的起点 `X`。
+这恰是说塌缩像包含于 `L`；它是关于元素的陈述，并不主张像本身是 `L` 的元素。前半完成后，后半在新参数下开启：一个对其元素的后继封闭的层 `lam`，以及元素全部落在该层内的起点 `X`。
 <!--ja-->
 崩壊像の各要素は台のどこかの要素の崩壊であり、だから構成可能である。これは、崩壊像が `L` に含まれると言っているだけである。像そのものが `L` の要素であるとは主張していない。前半が終わり、後半は新しいパラメータで始まる。要素の後者で閉じた段階 `lam` と、その要素がすべて段階の中にある始点 `X` である。
 <!--/-->
@@ -1551,7 +1551,7 @@ module Telescope (lam : S) (ordλ : IsOrd lam)
 <!--en-->
 The empty set lies in the stage as well, and the hull machinery is opened on these data: the hull carrier `M`, the fact that the hull is contained in the stage, and that every member of the start is a member of the hull.
 <!--zh-->
-空集也落在该层中；壳机制在这些数据上打开：壳载体 `M`、「壳包含于该层」以及「起点的每个成员都是壳的成员」。
+空集也落在该层中；壳机制在这些数据上打开：壳载体 `M`、「壳包含于该层」以及「起点的每个元素都是壳的元素」。
 <!--ja-->
 空集合も段階の中にあり、包の機構がこれらのデータの上で開かれる。包の台 `M`、包が段階に含まれること、そして始点のすべての要素が包の要素であることである。
 <!--/-->
@@ -1566,7 +1566,7 @@ The empty set lies in the stage as well, and the hull machinery is opened on the
 <!--en-->
 A hull code is either a base name for a member of `X`, or `wit k ψ cs`, which stores a constant-free formula and codes for its parameters. Its value is obtained by evaluating the subcodes and then, according as a witness exists, choosing the least witness or the junk value.
 <!--zh-->
-壳码或是起点成员的基础名，或是 `wit k ψ cs`，其中保存一条无常元公式及其参数的子码。先求出子码的值，再依是否存在见证，取最小见证或废弃值作为该码的值。
+壳码或是起点元素的基础名，或是 `wit k ψ cs`，其中保存一条无常元公式及其参数的子码。先求出子码的值，再依是否存在见证，取最小见证或废弃值作为该码的值。
 <!--ja-->
 包の符号は、`X` の要素に対する基底名か、無定数公式とそのパラメータの符号を保存する `wit k ψ cs` である。部分符号を評価した後、証人が存在するかどうかに応じて、最小の証人または廃棄値をその値とする。
 <!--/-->
@@ -1580,7 +1580,7 @@ A hull code is either a base name for a member of `X`, or `wit k ψ cs`, which s
 <!--en-->
 The small carrier `SL` collects the members of the stage over which everything is typed. A parameter vector is drawn from a set `Z` when each of its components belongs to the underlying set of `Z`; the searches of the step range only over such vectors.
 <!--zh-->
-小载体 `SL` 收集所有命名与搜索所涉的层内成员。参数向量取自集合 `Z`，指每个分量都属于 `Z` 的底层集合；步进的搜索只在这样的向量上进行。
+小载体 `SL` 收集所有命名与搜索所涉的层内元素。参数向量取自集合 `Z`，指每个分量都属于 `Z` 的底层集合；步进的搜索只在这样的向量上进行。
 <!--ja-->
 小さな台 `SL` は、すべてが型づけられる、段階の要素を集める。集合 `Z` から取ったパラメータのベクトルとは、各成分が `Z` の基礎の集合に属することである。ステップの探索はそのようなベクトルだけにわたる。
 <!--/-->
@@ -1627,7 +1627,7 @@ The package contains the operation `Φ`, a two-variable formula `ΦFo`, and a pr
 <!--en-->
 The remaining fields pin the step down: any set satisfying the formula is the step's, members grow, the junk value is always present, and for every search at parameters from the current set the least witness is adjoined.
 <!--zh-->
-其余字段把步进钉死：任何满足该公式的集合都是步进之集；成员递增；废弃值总在；而对取自当前集合参数的每一次搜索，最小见证都被补入。
+其余字段把步进钉死：任何满足该公式的集合都是步进之集；元素递增；废弃值总在；而对取自当前集合参数的每一次搜索，最小见证都被补入。
 <!--ja-->
 残りのフィールドがステップを確定させる。論理式を満たす集合はどれもステップの集合であり、要素は増え、廃棄値はつねにあり、現在の集合から取ったパラメータでのすべての探索に、最小の証人が加わる。
 <!--/-->
@@ -1643,7 +1643,7 @@ The remaining fields pin the step down: any set satisfying the formula is the st
 <!--en-->
 The outward field reads a member of the step host-side, provided the current set lies below the stage: every member of the step is an old member, the junk value, or the value of a search. This reading is what the exhaustion proof will spend.
 <!--zh-->
-向外的字段在「当前集合低于该层」的前提下，从宿主一侧读取步进的成员：步进的每个成员都是旧成员、废弃值、或某次搜索的取值。穷尽性证明所要消耗的正是这条读法。
+向外的字段在「当前集合低于该层」的前提下，从宿主一侧读取步进的元素：步进的每个元素都是旧元素、废弃值、或某次搜索的取值。穷尽性证明所要消耗的正是这条读法。
 <!--ja-->
 外向きのフィールドは、現在の集合が段階の下にあるとき、ステップの要素をホスト側で読む。ステップの要素は、古い要素、廃棄値、探索の値のいずれかである。使い尽くしの証明が使うのはこの読み出しである。
 <!--/-->
@@ -1729,7 +1729,7 @@ The iteration is governed by its defining equation: applying the step `n+1` time
 <!--en-->
 The iterates grow with their index: if `n` does not exceed `n'`, then everything collected by the `n`-th iterate is still collected by the `n'`-th. The growth field of the step is applied once for each step of the difference, keeping the old members every time; the numeric equation carries the count, and the constructibility of the member travels with it, since it belongs to a constructible iterate. This monotonicity is what makes collection in an earlier iterate permanent.
 <!--zh-->
-迭代随其指标增长：若 `n` 不超过 `n'`，则第 `n` 个迭代所收集的一切仍被第 `n'` 个迭代收集。步进的增长字段沿差值逐次施加，每次都保留旧成员；数值等式搬运计数，而成员的可构造性随行，因为它属于某个可构造的迭代。这一单调性使「较早迭代中的收集」成为永久的性质。
+迭代随其指标增长：若 `n` 不超过 `n'`，则第 `n` 个迭代所收集的一切仍被第 `n'` 个迭代收集。步进的增长字段沿差值逐次施加，每次都保留旧元素；数值等式搬运计数，而元素的可构造性随行，因为它属于某个可构造的迭代。这一单调性使「较早迭代中的收集」成为永久的性质。
 <!--ja-->
 反復はその添字とともに増える。`n` が `n'` を超えなければ、`n` 番目の反復が集めたものはすべて、`n'` 番目の反復も集める。ステップの成長のフィールドを差のぶんだけ繰り返し適用し、そのたびに古い要素は保たれる。数の等式が計数を運び、要素の構成可能性もそれとともに運ばれる。その要素は構成可能な反復に属するからである。この単調性により、早い段階で集められたものは、その後も収められたままになる。
 <!--/-->
@@ -1747,7 +1747,7 @@ Monotonicity of the iterates follows from the growth field: a member of an earli
 
 The witness code is one deeper than its code vector, because its value is computed one step after the values of the parameters.
 <!--zh-->
-迭代的单调性由增长字段而来：早前迭代的成员在之后每个迭代中仍是成员，且可构造性随行。壳码的深度由递归指定：基础码深度为零。
+迭代的单调性由增长字段而来：早前迭代的元素在之后每个迭代中仍是元素，且可构造性随行。壳码的深度由递归指定：基础码深度为零。
 
 见证码比其码向量深一层，因为其取值在诸参数取值之后的下一步才计算。
 <!--ja-->
@@ -1809,7 +1809,7 @@ A helper records how a case split on a decidable disjunction behaves when one di
 <!--en-->
 The refutation branch is proved by the function extensionality of the impossible function: no member exists to distinguish.
 <!--zh-->
-反驳分支由不可能函数的函数外延性证明：不存在任何成员可以区分二者。
+反驳分支由不可能函数的函数外延性证明：不存在任何元素可以区分二者。
 <!--ja-->
 反駁の分岐は、不可能な関数の関数外延性で証明される。区別するような要素は存在しないからである。
 <!--/-->
@@ -1821,7 +1821,7 @@ The refutation branch is proved by the function extensionality of the impossible
 <!--en-->
 Hull into union, first half: every hull code has its value staged at the iterate indexed by its depth. A base code names a member of the start, present at the zeroth iterate.
 <!--zh-->
-壳入并，前半：每个壳码的取值都安排在以其深度为索引的迭代处。基础码名指起点的成员，它在第零个迭代处已在。
+壳入并，前半：每个壳码的取值都安排在以其深度为索引的迭代处。基础码名指起点的元素，它在第零个迭代处已在。
 <!--ja-->
 包から合併へ、前半：すべての包の符号の値は、その深さで添字づけられた反復に用意される。base の符号は始点の要素を名指し、それは零番目の反復にある。
 <!--/-->
@@ -1882,7 +1882,7 @@ The parameters of a code vector are available at the maximum of the entry depths
 <!--en-->
 The choice proceeds recursively over the parameter vector. For the empty vector, the empty code vector has the required value vector; at a nonempty vector, hull membership supplies a code for the head and recursion supplies codes for the tail.
 <!--zh-->
-该选取沿参数向量递归进行。对空向量，空码向量的值向量正合要求；对非空向量，头项的壳成员资格给出它的码，递归则给出尾部各项的码。
+该选取沿参数向量递归进行。对空向量，空码向量的值向量正合要求；对非空向量，头项的壳成员关系事实给出它的码，递归则给出尾部各项的码。
 <!--ja-->
 この選択はパラメータベクトルについて再帰する。空ベクトルでは空の符号ベクトルの値ベクトルが条件を満たす。空でない場合は、先頭の包への所属からその符号を得て、尾部の符号を再帰的に得る。
 <!--/-->
@@ -1898,7 +1898,7 @@ The choice proceeds recursively over the parameter vector. For the empty vector,
 <!--en-->
 The recursive step codes the head by hull membership and the tail recursively; the value equation is assembled componentwise, with the carrier equality reduced to the underlying sets.
 <!--zh-->
-递归步进为头部按壳成员资格取码、为尾部递归取码；取值方程按分量装配，其中载体的相等化归为底层集合的相等。
+递归步进为头部按壳成员关系事实取码、为尾部递归取码；取值方程按分量装配，其中载体的相等化归为底层集合的相等。
 <!--ja-->
 帰納のステップは、先頭を包の要素として符号化し、尾を帰納的に符号化する。値の等式は成分ごとに組み立てられ、台の等しさは基礎の集合の等しさへ帰着する。
 <!--/-->
@@ -1973,7 +1973,7 @@ No environment satisfies falsity: unpacking such a satisfaction proof would prod
 <!--en-->
 Union into hull, second half: every member of every iterate lies in the hull, by induction on the iterate index. The base case is the start, whose members are hull members by the hull chapter.
 <!--zh-->
-并入壳，后半：每个迭代的每个成员都在壳内，对迭代指标归纳。基础情形是起点，其成员由壳章即是壳成员。
+并入壳，后半：每个迭代的每个元素都在壳内，对迭代指标归纳。基础情形是起点，其元素由壳章即是壳元素。
 <!--ja-->
 合併から包へ、後半：すべての反復のすべての要素が包の中にある。反復の添字についての帰納である。基底の場合は始点であり、その要素は包の章によって包の要素である。
 <!--/-->
@@ -1989,7 +1989,7 @@ Union into hull, second half: every member of every iterate lies in the hull, by
 <!--en-->
 The step case reads a member of the successor iterate through the outward clause: it is an old member, already in the hull by the induction hypothesis; it is the junk value, already in the hull; or it is a searched value, handled next.
 <!--zh-->
-步进情形经向外子句读取后继迭代的成员：它是旧成员，由归纳假设已在壳内；是废弃值，已在壳内；或是被搜索的值，交由下一步处理。
+步进情形经向外子句读取后继迭代的元素：它是旧元素，由归纳假设已在壳内；是废弃值，已在壳内；或是被搜索的值，交由下一步处理。
 <!--ja-->
 ステップの場合は、外向きの条項を通して、後者の反復の要素を読む。それは古い要素であり、帰納の仮定によってすでに包の中にある。廃棄値でもあり、すでに包の中にある。あるいは探索された値で、つぎに扱われる。
 <!--/-->
@@ -2005,7 +2005,7 @@ The step case reads a member of the successor iterate through the outward clause
 <!--en-->
 A searched value is matched with the code vector of its parameters, each parameter being a hull member by the induction hypothesis; the search then lies in the hull by `search-val`, and the equation transports that membership to `z`. The union of the iterates is named as the element of `L` presenting the hull.
 <!--zh-->
-被搜索的值与其参数的码向量相匹配，每个参数由归纳假设是壳成员；于是该搜索经 `search-val` 落在壳内，等式再把这一成员资格运给 `z`。诸迭代的并被命名为呈现壳的 `L` 元素。
+被搜索的值与其参数的码向量相匹配，每个参数由归纳假设是壳元素；于是该搜索经 `search-val` 落在壳内，等式再把这一成员关系事实运给 `z`。诸迭代的并被命名为呈现壳的 `L` 元素。
 <!--ja-->
 探索された値は、そのパラメータの符号のベクトルと対応づけられ、各パラメータは帰納の仮定によって包の要素である。だから探索は `search-val` によって包の中にあり、等式がその所属を `z` へ運ぶ。反復の合併が、包を提示する `L` の要素として名づけられる。
 <!--/-->
@@ -2021,7 +2021,7 @@ A searched value is matched with the code vector of its parameters, each paramet
 <!--en-->
 The hull as an element of `L` is the union of the iterates, and its membership description says its members are exactly the hull members. Forward: a member of the union lies at some iterate, hence in the hull.
 <!--zh-->
-作为 `L` 元素的壳是诸迭代的并，其隶属描述说它的成员恰是壳的成员。向前：并的成员落在某个迭代处，故在壳内。
+作为 `L` 元素的壳是诸迭代的并，其成员关系描述说它的元素恰是壳的元素。向前：并的元素落在某个迭代处，故在壳内。
 <!--ja-->
 `L` の要素としての包は、反復の合併であり、その所属の記述は、要素がちょうど包の要素であると言う。前向き：合併の要素はある反復に属し、だから包の中にある。
 <!--/-->
@@ -2037,7 +2037,7 @@ The hull as an element of `L` is the union of the iterates, and its membership d
 <!--en-->
 The iterate index is consumed by the outward reading of the union, and the constructibility of the member is carried from the union, itself constructible by construction.
 <!--zh-->
-迭代指标由并的向外读法消去，成员的可构造性则由这个并继承；该并依构造即为可构造集合。
+迭代指标由并的向外读法消去，元素的可构造性则由这个并继承；该并依构造即为可构造集合。
 <!--ja-->
 反復の添字は、合併の外向きの読み出しに消費され、要素の構成可能性は合併から運ばれる。合併そのものが、構成によって構成可能なのである。
 <!--/-->
@@ -2050,7 +2050,7 @@ The iterate index is consumed by the outward reading of the union, and the const
 <!--en-->
 Backward: a hull member is named by a code, whose value appears at the iterate indexed by the code's depth; the inward reading of the union admits it.
 <!--zh-->
-向后：壳成员由某个码名指，其取值出现在以该码深度为索引的迭代处；并的向内读式接纳它。
+向后：壳元素由某个码名指，其取值出现在以该码深度为索引的迭代处；并的向内读式接纳它。
 <!--ja-->
 後ろ向き：包の要素はある符号に名指され、その値は、符号の深さで添字づけられた反復に現れる。合併の内向きの読み出しがそれを受け入れる。
 <!--/-->
@@ -2066,7 +2066,7 @@ Backward: a hull member is named by a code, whose value appears at the iterate i
 <!--en-->
 The named member is carried into the carrier: its constructibility follows from the hull being contained in the stage, whose element presentation supplies the certificate.
 <!--zh-->
-被名指的成员被载入载体：其可构造性由「壳包含于该层」而来，而该层的元素呈现供给了证书。
+被名指的元素被载入载体：其可构造性由「壳包含于该层」而来，而该层的元素呈现供给了证书。
 <!--ja-->
 名指された要素は台の中へ載せられる。その構成可能性は、包が段階に含まれることから従い、段階の要素としての提示が証明書を供給する。
 <!--/-->
@@ -2333,7 +2333,7 @@ The ordered pair of the key and its satisfaction set belongs to the satisfaction
 <!--en-->
 The proof runs by path induction on the equation of underlying sets, with the propositionality of code-set membership absorbing the difference of membership proofs. Only the underlying sets matter, so the transport is silent about everything else.
 <!--zh-->
-证明沿底层集合等式作路径归纳，而码集隶属的命题性吸收了隶属证明之间的差异。起作用的只有底层集合，因此运输对其余一切保持沉默。
+证明沿底层集合等式作路径归纳，而码集成员关系的命题性吸收了成员关系证明之间的差异。起作用的只有底层集合，因此运输对其余一切保持沉默。
 <!--ja-->
 証明は、基礎の集合の等式の上のパス帰納で進む。符号集合への所属の命題性が、所属の証明の違いを吸収する。大切なのは基礎の集合だけなので、輸送はそのほかの何ものにも触れない。
 <!--/-->
@@ -2407,7 +2407,7 @@ The formula is opened for computation at its own slots, since the readings must 
 <!--en-->
 The introduction builds the satisfaction from three data: the code-set membership of `s`, an element `c` of the hierarchy, and the equation identifying `s` with the pair of the successor numeral and `c`. The numeral, the successor clause and the pair clause are filled in order.
 <!--zh-->
-引入由三个数据建成满足：`s` 的码集隶属、层级的一个元素 `c`，以及把 `s` 同认于「后继数码与 `c` 之对」的等式。数码、后继子句与对子句依次填入。
+引入由三个数据建成满足：`s` 的码集成员关系、层级的一个元素 `c`，以及把 `s` 同认于「后继数码与 `c` 之对」的等式。数码、后继子句与对子句依次填入。
 <!--ja-->
 導入は、三つのデータから充足を作る。`s` の符号集合への所属、階層の要素 `c`、そして `s` を「後者の数項と `c` の対」と同定する等式である。数項、後者の条項、対の条項が、この順で満たされる。
 <!--/-->
@@ -2455,7 +2455,7 @@ The successor clause is transported from the equation of the numeral at slot `a`
 <!--en-->
 The elimination recovers the two data: the code-set membership of `s`, and the truncated statement that `s` is the pair of the successor numeral with some code. The existential chain of the formula is unpacked step by step.
 <!--zh-->
-消去收回两条数据：`s` 的码集隶属，以及「`s` 是后继数码与某个码之对」的截断陈述。公式的存在链被逐步拆开。
+消去收回两条数据：`s` 的码集成员关系，以及「`s` 是后继数码与某个码之对」的截断陈述。公式的存在链被逐步拆开。
 <!--ja-->
 消去は、二つのデータを取り戻す。`s` の符号集合への所属と、「`s` は後者の数項とある符号の対である」という切り詰められた主張である。論理式の存在の連鎖が、一歩ずつほどかれる。
 <!--/-->
@@ -2591,7 +2591,7 @@ The seven-slot environment is recorded, and the host-side minimality is stated r
 <!--en-->
 The clause ends in the empty type: minimality is refutation, and the data of a counterexample, a smaller extension with the pair membership, is exactly what must be impossible.
 <!--zh-->
-该子句终止于空类型：极小性表现为排除反例，也就是排除一个更小的扩展及其相应的对隶属。
+该子句终止于空类型：极小性表现为排除反例，也就是排除一个更小的扩展及其相应的对成员关系。
 <!--ja-->
 この条項は空型で終わる。極小性は反駁であり、反例のデータ、つまりより小さい拡張とその対への所属が、ちょうど不可能でなければならないのである。
 <!--/-->
@@ -2670,7 +2670,7 @@ The fourth reading states the extension equation, transported along the adequacy
 <!--en-->
 The fifth reading states the graph membership of the pair of the key and the table, transported along the adequacy of the application coding.
 <!--zh-->
-第五条读法给出「键与表之对」的图隶属，沿应用编码的充分性运输。
+第五条读法给出「键与表之对」的图成员关系，沿应用编码的充分性运输。
 <!--ja-->
 第五の読み出しは、キーと表の対のグラフへの所属を述べる。適用の符号化の妥当性に沿って運ばれたものである。
 <!--/-->
@@ -2683,7 +2683,7 @@ The fifth reading states the graph membership of the pair of the key and the tab
 <!--en-->
 The sixth reading is the membership of the extended environment in the satisfaction table, the fact that says the witness satisfies the coded formula at the parameters.
 <!--zh-->
-第六条读法是扩展环境对满足表的隶属，即「见证在参数处满足被编码公式」这一事实。
+第六条读法是扩展环境对满足表的成员关系，即「见证在参数处满足被编码公式」这一事实。
 <!--ja-->
 第六の読み出しは、拡張された環境の充足の表への所属である。証人がパラメータで符号化された論理式を満たす、という事実である。
 <!--/-->
@@ -2738,7 +2738,7 @@ The cons clause of the candidate extension is transported from its host equation
 <!--en-->
 The filling reading assembles a satisfaction of the body from its eight components: the numeral clause, the key clause, the environment clause, the extension equation, the graph membership, the table membership, the stage membership, and minimality.
 <!--zh-->
-填充读法由八个分量装配出体的满足：数码子句、键子句、环境子句、扩展等式、图隶属、表隶属、层隶属，以及极小性。
+填充读法由八个分量装配出体的满足：数码子句、键子句、环境子句、扩展等式、图成员关系、表成员关系、层成员关系，以及极小性。
 <!--ja-->
 充填の読み出しは、八つの成分から本体の充足を組み立てる。数項の条項、キーの条項、環境の条項、拡張の等式、グラフへの所属、表への所属、段階への所属、そして極小性である。
 <!--/-->
@@ -3059,7 +3059,7 @@ At this point two nested truncations remain: the outer one hides the extension e
 <!--en-->
 The numeral slot carries a member of the internal `ω`, and `decode-num` decodes it: a truncated natural number `n` together with the equation identifying the entry with the ambient numeral `# n`. Decoding is the bridge between the internal numbering and the natural-number bookkeeping of the witness data.
 <!--zh-->
-数码槽位装着内部 `ω` 的一个成员，`decode-num` 将其解码：得到截断的自然数 `n`，以及把该条目与外围数码 `# n` 等同的等式。解码是内部编号与见证数据的自然数记账之间的桥梁。
+数码槽位装着内部 `ω` 的一个元素，`decode-num` 将其解码：得到截断的自然数 `n`，以及把该条目与外围数码 `# n` 等同的等式。解码是内部编号与见证数据的自然数记账之间的桥梁。
 <!--ja-->
 数項のスロットには内部の `ω` の要素が収められており、`decode-num` がそれを解読する。切り詰められた自然数 `n` と、その項目を周囲の数項 `# n` と同一視する等式が得られるのである。解読は、内部の付番と証人のデータの自然数の管理とを結ぶ橋である。
 <!--/-->
@@ -3074,7 +3074,7 @@ The numeral slot carries a member of the internal `ω`, and `decode-num` decodes
 <!--en-->
 `LeastWitnessData` is the honest data behind a least witness: a natural number `n`, an assignment `g` of `n` indices into the presentation of `Z`, the equation saying that `e` is the environment naming those values, and the stage membership placing `s` in `Lset ω`.
 <!--zh-->
-`LeastWitnessData` 是最小见证背后的真实数据：自然数 `n`、把 `n` 个索引指派到 `Z` 呈现中的赋值 `g`、说明 `e` 正是命名这些取值的环境的等式，以及把 `s` 放入 `Lset ω` 的层隶属。
+`LeastWitnessData` 是最小见证背后的真实数据：自然数 `n`、把 `n` 个索引指派到 `Z` 呈现中的赋值 `g`、说明 `e` 正是命名这些取值的环境的等式，以及把 `s` 放入 `Lset ω` 的层成员关系。
 <!--ja-->
 `LeastWitnessData` は最小証人の背後にある実際のデータである。自然数 `n`、`Z` の提示への `n` 個の添字の割り当て `g`、`e` がそれらの値を名指す環境であることの等式、そして `s` を `Lset ω` に置く段階の所属である。
 <!--/-->
@@ -3121,7 +3121,7 @@ The body of the conversion consumes the body satisfaction: it unpacks into the t
 <!--en-->
 With the numeral `n` and the equation naming the key, the data assembles: the length `n`, the recovered assignment `g`, the recovery equation for the environment, and the stage membership of `s`. The seven-entry context is named once so the recovery can address its slots.
 <!--zh-->
-有了数码 `n` 与点名键的等式，数据即可组装：长度 `n`、恢复出的赋值 `g`、环境的恢复等式，以及 `s` 的层隶属。七条目语境被一次性命名，使恢复过程能够寻址各个槽位。
+有了数码 `n` 与点名键的等式，数据即可组装：长度 `n`、恢复出的赋值 `g`、环境的恢复等式，以及 `s` 的层成员关系。七条目语境被一次性命名，使恢复过程能够寻址各个槽位。
 <!--ja-->
 数項 `n` と鍵を名指す等式が揃うと、データが組み上がる。長さ `n`、復元された割り当て `g`、環境の復元の等式、そして `s` の段階の所属である。七項目の文脈には一度名前が与えられ、復元が各スロットを参照できるようにする。
 <!--/-->
@@ -3153,7 +3153,7 @@ The environment clause recovers an assignment `g` of indices in `Z` and proves t
 <!--en-->
 The stage membership of the key's value is the last piece of the data. It is proved from the pair equation: the second component `c` of the key is a code, and codes are constructible by the limit stage.
 <!--zh-->
-键的取值的层隶属是数据的最后一块。它由对等式证明：键的第二分量 `c` 是一个码，而码在极限层处就可构造。
+键的取值的层成员关系是数据的最后一块。它由对等式证明：键的第二分量 `c` 是一个码，而码在极限层处就可构造。
 <!--ja-->
 鍵の値の段階の所属がデータの最後の部分である。これは対の等式から証明される。鍵の第二成分 `c` はコードであり、コードは極限の段階で既に構成可能である。
 <!--/-->
@@ -3169,7 +3169,7 @@ The stage membership of the key's value is the last piece of the data. It is pro
 <!--en-->
 Both components of the key therefore live in `Lset ω`: the successor numeral belongs to the limit by the numerals' membership, and pairs of members of a limit stage stay in the limit. Transporting along the pair equation places `s` in `Lset ω`, completing `LeastWitnessData`.
 <!--zh-->
-于是键的两个分量都住在 `Lset ω` 中：后继数码凭数码的隶属属于极限层，而极限层成员的有序对仍留在极限层。沿对等式传输后，`s` 便落入 `Lset ω`，`LeastWitnessData` 随之完成。
+于是键的两个分量都住在 `Lset ω` 中：后继数码凭数码的成员关系属于极限层，而极限层元素的有序对仍留在极限层。沿对等式传输后，`s` 便落入 `Lset ω`，`LeastWitnessData` 随之完成。
 <!--ja-->
 したがって鍵の二つの成分はどちらも `Lset ω` に住む。後続の数項は数項の所属によって極限に属し、極限の段階の要素の順序対はやはり極限にとどまる。対の等式に沿って輸送すれば `s` は `Lset ω` に入り、`LeastWitnessData` が完成する。
 <!--/-->
@@ -3199,7 +3199,7 @@ The outward reading of the witness formula now assembles: satisfaction of `witFo
 <!--en-->
 For comparing two witnesses, we retain seven of the eight body clauses: the numeral, environment, extension, table, membership, stage, and minimality clauses. The key clause is not needed here, because the two witnesses already share `s`, and uniqueness of the value associated with that key identifies their tables.
 <!--zh-->
-为比较两个见证，这里保留体的八条子句中的七条：数码、环境、延拓、表、隶属、层与最小性子句。这里不需要键子句，因为两份见证已经共享 `s`，而该键所对应之值的唯一性会把两张表同一视。
+为比较两个见证，这里保留体的八条子句中的七条：数码、环境、延拓、表、成员关系、层与最小性子句。这里不需要键子句，因为两份见证已经共享 `s`，而该键所对应之值的唯一性会把两张表同一视。
 <!--ja-->
 二つの証人を比較するため、本体の八つの節のうち、数項、環境、延長、表、所属、段階、最小性の七つを保持する。ここではキーの節は必要ない。二つの証人はすでに `s` を共有しており、そのキーに対応する値の一意性によって二つの表が同定されるからである。
 <!--/-->
@@ -3398,7 +3398,7 @@ The inner lemma receives both unpacked body witnesses: tables, extensions, keys,
 <!--en-->
 The first key is decoded to a numeral, allowing the preceding uniqueness argument to run at that arity. The same decoding principle is recorded as `ω-num`: every member of the internal `ω` is, up to truncation, an ambient numeral `# n`.
 <!--zh-->
-第一条键被解码为一个数码，使前述唯一性论证可在该元数处进行。同一解码原理写成 `ω-num`：内部 `ω` 的每个成员在命题截断意义下都是某个外围数码 `# n`。
+第一条键被解码为一个数码，使前述唯一性论证可在该元数处进行。同一解码原理写成 `ω-num`：内部 `ω` 的每个元素在命题截断意义下都是某个外围数码 `# n`。
 <!--ja-->
 最初のキーを数項へ解読すると、先の一意性の議論をそのアリティで行える。同じ解読原理を `ω-num` として記録する。内部の `ω` の各要素は、命題的切り詰めのもとで、ある周囲の数項 `# n` である。
 <!--/-->
@@ -3414,7 +3414,7 @@ The first key is decoded to a numeral, allowing the preceding uniqueness argumen
 <!--en-->
 The decoding maps a member of the internal `ω` to a natural number with the numeral equation, and `vecOf` turns a function on `Fin k` into a length-`k` vector of constructible elements, the form the satisfaction clauses consume.
 <!--zh-->
-解码把内部 `ω` 的成员映射为自然数并附数码等式；`vecOf` 把 `Fin k` 上的函数变成长度 `k` 的可构造元素向量，即满足子句所消耗的形态。
+解码把内部 `ω` 的元素映射为自然数并附数码等式；`vecOf` 把 `Fin k` 上的函数变成长度 `k` 的可构造元素向量，即满足子句所消耗的形态。
 <!--ja-->
 解読は、内部の `ω` の要素を数項の等式とともに自然数へ写す。そして `vecOf` は `Fin k` の上の関数を、構成可能な要素の長さ `k` のベクトル、すなわち充足の節が消費する形へ変える。
 <!--/-->
@@ -3683,7 +3683,7 @@ The pair of the key and the table belongs to the pairs of the table family, whic
 <!--en-->
 The extension by the least witness belongs to the table: the table's membership equation reads it as satisfaction of `χ`, and the leastness data supplies exactly that satisfaction.
 <!--zh-->
-由最小见证得到的扩展属于表：表的隶属等式把它读作对 `χ` 的满足，而最小性数据恰供给了这份满足。
+由最小见证得到的扩展属于表：表的成员关系等式把它读作对 `χ` 的满足，而最小性数据恰供给了这份满足。
 <!--ja-->
 最小証人による拡張は表に属する。表の所属の等式がそれを `χ` の充足として読み、最小性のデータがまさにその充足を供給するのである。
 <!--/-->
@@ -3696,7 +3696,7 @@ The extension by the least witness belongs to the table: the table's membership 
 <!--en-->
 The least witness belongs to the stage `Lset lam`; in the internal presentation `A = LsetS lam ordλ`, this is exactly the membership proof carried by `a`.
 <!--zh-->
-最小见证属于层 `Lset lam`；在内部表示 `A = LsetS lam ordλ` 中，这正是 `a` 所携带的隶属证明。
+最小见证属于层 `Lset lam`；在内部表示 `A = LsetS lam ordλ` 中，这正是 `a` 所携带的成员关系证明。
 <!--ja-->
 最小証人は段階 `Lset lam` に属する。内部表示 `A = LsetS lam ordλ` では、これはまさに `a` がもつ所属の証明である。
 <!--/-->
@@ -3741,7 +3741,7 @@ The internal relation between the smaller candidate and `a` is filled from the a
 <!--en-->
 The eight clauses together show that `witFo` holds at `(aS, Z)`: `a` is the least witness of `χ` over the chosen parameters, expressed entirely inside the constructible structure. We next read the same body data outward under the assumption that every member of `Z` lies in `Lset lam`.
 <!--zh-->
-八条子句合起来证明 `witFo` 在 `(aS, Z)` 处成立：`a` 是 `χ` 在所选参数上的最小见证，而且这一事实完全在可构造结构内部表达。接下来假设 `Z` 的每个成员都属于 `Lset lam`，并把同一份体数据读到外围。
+八条子句合起来证明 `witFo` 在 `(aS, Z)` 处成立：`a` 是 `χ` 在所选参数上的最小见证，而且这一事实完全在可构造结构内部表达。接下来假设 `Z` 的每个元素都属于 `Lset lam`，并把同一份体数据读到外围。
 <!--ja-->
 八つの節を合わせると、`witFo` が `(aS, Z)` で成り立つ。すなわち `a` は、選んだパラメータにおける `χ` の最小証人であり、この事実は構成可能な構造の内部だけで表されている。次に、`Z` の各要素が `Lset lam` に属すると仮定し、同じ本体のデータを周囲で読む。
 <!--/-->
@@ -3757,7 +3757,7 @@ The eight clauses together show that `witFo` holds at `(aS, Z)`: `a` is the leas
 <!--en-->
 A body witness provides eight facts: the arity numeral, key shape, recovered parameter environment, extension equation, indexed table, table membership, stage membership, and minimality. Their outward readings reconstruct the semantic search represented by the code.
 <!--zh-->
-一份体见证提供八项事实：元数数码、键的形状、恢复出的参数环境、延拓等式、带索引的表、表隶属、层隶属与最小性。把这些事实读到外围，便可重建该码所表示的语义搜索。
+一份体见证提供八项事实：元数数码、键的形状、恢复出的参数环境、延拓等式、带索引的表、表成员关系、层成员关系与最小性。把这些事实读到外围，便可重建该码所表示的语义搜索。
 <!--ja-->
 本体の証人は八つの事実を与える。アリティの数項、キーの形、復元されたパラメータ環境、延長の等式、添字付けられた表、表への所属、段階への所属、そして最小性である。これらを周囲で読むと、コードが表す意味論的な探索を復元できる。
 <!--/-->
@@ -3795,7 +3795,7 @@ The arity component of a decoded key belongs to the internal `ω`. Thus, up to p
 <!--en-->
 Inside this case, the first fact says that the slot component `s` of the key is itself a code, that is, a member of `C₀`. This follows from the key inversion: a key is the ordered pair of an arity numeral and a code, and reading the pair apart exhibits the code.
 <!--zh-->
-在此情形中，第一条事实说：键的槽位分量 `s` 本身就是一个码，即 `C₀` 的成员。这由键的求逆得出：键是有序对「元数数码与码」，把对拆开便显现出码。
+在此情形中，第一条事实说：键的槽位分量 `s` 本身就是一个码，即 `C₀` 的元素。这由键的求逆得出：键是有序对「元数数码与码」，把对拆开便显现出码。
 <!--ja-->
 この場合の最初の事実は、鍵のスロット成分 `s` がそれ自体コード、すなわち `C₀` の要素であることを言う。これは鍵の逆読みから従う。鍵はアリティの数項とコードの順序対であり、対を分解すればコードが現れる。
 <!--/-->
@@ -3859,7 +3859,7 @@ For every position `i`, the first component of `lookup i vs` is `g′ i`. Thus `
 <!--en-->
 The recovered environment genuinely comes from the starting set: each entry of `vs`, read as a set, is a member of `Z`. This is the `From Z vs` record.
 <!--zh-->
-恢复出的环境确实来自起始集合：`vs` 的每个条目作为集合都是 `Z` 的成员。这正是 `From Z vs` 记录。
+恢复出的环境确实来自起始集合：`vs` 的每个条目作为集合都是 `Z` 的元素。这正是 `From Z vs` 记录。
 <!--ja-->
 復元された環境は、実際に始集合から来ている。`vs` の各項目は、集合として読めば `Z` の要素である。これが `From Z vs` の記録である。
 <!--/-->
@@ -3950,7 +3950,7 @@ The predicate `P b` says that `b`, prepended to the recovered environment, satis
 <!--en-->
 Membership in the satisfaction table of `χ` agrees with `P b`, because the environment of `ext b` computes to the graph of `b ∷ vs`. This converts between the coded and the semantic readings of satisfaction.
 <!--zh-->
-在 `χ` 的满足表中的隶属与 `P b` 一致，因为 `ext b` 的环境计算为 `b ∷ vs` 的图。这在满足的编码读法与语义读法之间转换。
+在 `χ` 的满足表中的成员关系与 `P b` 一致，因为 `ext b` 的环境计算为 `b ∷ vs` 的图。这在满足的编码读法与语义读法之间转换。
 <!--ja-->
 `χ` の充足表への所属は `P b` と一致する。`ext b` の環境が `b ∷ vs` のグラフとして計算されるからである。これが、充足の符号化された読みと意味論的な読みを切り替える。
 <!--/-->
@@ -3963,7 +3963,7 @@ Membership in the satisfaction table of `χ` agrees with `P b`, because the envi
 <!--en-->
 The table component of the key is next identified with the satisfaction table of `χ` at the raised arity; with both components decoded, the key's member can be read semantically.
 <!--zh-->
-键的表分量随后被认同为 `χ` 在提升元数处的满足表；两个分量都解码后，键的成员便可按语义读取。
+键的表分量随后被认同为 `χ` 在提升元数处的满足表；两个分量都解码后，键的元素便可按语义读取。
 <!--ja-->
 鍵の表の成分は、アリティを上げた `χ` の充足表と同一視される。両成分が解読されれば、鍵の要素を意味論的に読める。
 <!--/-->
@@ -3975,7 +3975,7 @@ The table component of the key is next identified with the satisfaction table of
 <!--en-->
 The witness slot satisfies the recovered formula: the membership recorded in the key is transported along the environment and table identifications into satisfaction of `χ` at the extended environment.
 <!--zh-->
-见证槽位满足恢复出的公式：键中记录的隶属沿环境与表的同一视搬运，成为 `χ` 在延拓环境处的满足。
+见证槽位满足恢复出的公式：键中记录的成员关系沿环境与表的同一视搬运，成为 `χ` 在延拓环境处的满足。
 <!--ja-->
 証人のスロットは、復元された論理式を充足する。鍵に記録された所属が、環境と表の同一視に沿って運ばれ、延長された環境のもとでの `χ` の充足になる。
 <!--/-->
@@ -4005,7 +4005,7 @@ Leastness says that no stage element `b` satisfying `χ` lies below `wS`. Satisf
 <!--en-->
 The smaller candidate is packaged as a constructible element `bS`, and its extended environment is shown to lie in the table, which is exactly the membership the minimality of the key refutes.
 <!--zh-->
-更小的候选被打包为可构造元素 `bS`，其延拓环境被证明落在表中，而这正是键的最小性所反驳的隶属。
+更小的候选被打包为可构造元素 `bS`，其延拓环境被证明落在表中，而这正是键的最小性所反驳的成员关系。
 <!--ja-->
 より小さい候補は構成可能な要素 `bS` として包まれ、その延長された環境が表の中にあることが示される。これこそ、鍵の最小性が反証する所属である。
 <!--/-->
@@ -4108,7 +4108,7 @@ Since the arity recorded in every body witness belongs to the internal `ω`, num
 <!--en-->
 Members of `Z` lie in the bound by the left inclusion of the union.
 <!--zh-->
-`Z` 的成员由并的左包含落入界内。
+`Z` 的元素由并的左包含落入界内。
 <!--ja-->
 `Z` の要素は、和の左の包含によって上界の中に入る。
 <!--/-->
@@ -4121,7 +4121,7 @@ Members of `Z` lie in the bound by the left inclusion of the union.
 <!--en-->
 Every member of `Lset lam` lies in `Bnd Z` through the right inclusion. The one-step closure condition then has three cases: an old member of `Z`, the empty set used when no witness exists, or a set `w` satisfying `witFo` with base `Z`.
 <!--zh-->
-`Lset lam` 的每个成员都由右包含进入 `Bnd Z`。一步闭包条件于是有三种情形：`Z` 的旧成员、无见证时使用的空集，或与基 `Z` 一起满足 `witFo` 的集合 `w`。
+`Lset lam` 的每个元素都由右包含进入 `Bnd Z`。一步闭包条件于是有三种情形：`Z` 的旧元素、无见证时使用的空集，或与基 `Z` 一起满足 `witFo` 的集合 `w`。
 <!--ja-->
 `Lset lam` の各要素は右側の包含によって `Bnd Z` に入る。一段階の閉包条件には三つの場合がある。`Z` の既存の要素、証人がないときに使う空集合、または基礎 `Z` とともに `witFo` を充足する集合 `w` である。
 <!--/-->
@@ -4227,7 +4227,7 @@ Conversely, each of the three cases of the body produces the corresponding satis
 <!--en-->
 Separation inside `L` selects from `Bnd Z` exactly the sets satisfying `sepFo Z`; call the resulting constructible set `Φ Z`. Its membership path identifies membership in `Φ Z` with membership in the bound together with satisfaction of the formula.
 <!--zh-->
-在 `L` 内作分离，从 `Bnd Z` 中恰好选出满足 `sepFo Z` 的集合；所得可构造集记为 `Φ Z`。其隶属路径把「属于 `Φ Z`」同一视为「属于该界并满足公式」。
+在 `L` 内作分离，从 `Bnd Z` 中恰好选出满足 `sepFo Z` 的集合；所得可构造集记为 `Φ Z`。其成员关系路径把「属于 `Φ Z`」同一视为「属于该界并满足公式」。
 <!--ja-->
 `L` の内部で分出を行い、`Bnd Z` から `sepFo Z` を充足する集合だけを選ぶ。その構成可能集合を `Φ Z` とする。その所属のパスは、`Φ Z` への所属を、上界への所属と論理式の充足との組に同定する。
 <!--/-->
@@ -4241,7 +4241,7 @@ Separation inside `L` selects from `Bnd Z` exactly the sets satisfying `sepFo Z`
 <!--en-->
 The membership specification reads: `w` belongs to `Φ Z` exactly when `w` belongs to the bound and satisfies the separation formula.
 <!--zh-->
-隶属规格读作：`w` 属于 `Φ Z`，当且仅当 `w` 属于界 `Bnd Z` 且满足分离公式。
+成员关系规格读作：`w` 属于 `Φ Z`，当且仅当 `w` 属于界 `Bnd Z` 且满足分离公式。
 <!--ja-->
 所属の仕様は次のように読める。`w` が `Φ Z` に属するのは、`w` が上界 `Bnd Z` に属し、分出の論理式を満たすとき、そのときに限る。
 <!--/-->
@@ -4254,7 +4254,7 @@ The membership specification reads: `w` belongs to `Φ Z` exactly when `w` belon
 <!--en-->
 Every body case lands in `Φ Z`. The membership case enters through the bound; the proof packages the bound membership produced from each disjunct together with its separation satisfaction.
 <!--zh-->
-体的每种情形都落入 `Φ Z`。隶属情形经界进入；证明把每个析取支产生的界隶属与其分离满足打包。
+体的每种情形都落入 `Φ Z`。成员关系情形经界进入；证明把每个析取支产生的界成员关系与其分离满足打包。
 <!--ja-->
 本体のどの場合も `Φ Z` に着地する。所属の場合は上界を通って入り、証明は、各選言支から産み出される上界への所属を、分出の充足とともに包む。
 <!--/-->
@@ -4283,7 +4283,7 @@ The empty-set case lies in the bound because `∅ ∈ Lset lam`. The witness cas
 <!--en-->
 Conversely, membership in `Φ Z` yields a truncated body case, by the membership specification and the separation reading. For the biconditional formula, the body is then rewritten in a three-slot arrangement.
 <!--zh-->
-反过来，`Φ Z` 中的隶属由隶属规格与分离读法给出截断的体情形。为写双条件公式，体随后改写为三空位排列。
+反过来，`Φ Z` 中的成员关系由成员关系规格与分离读法给出截断的体情形。为写双条件公式，体随后改写为三空位排列。
 <!--ja-->
 逆に、`Φ Z` への所属からは、所属の仕様と分出の読みを通して、切り詰められた本体の場合が得られる。同値の論理式のために、本体は三つの枠の並びへ書き直される。
 <!--/-->
@@ -4299,7 +4299,7 @@ Conversely, membership in `Φ Z` yields a truncated body case, by the membership
 <!--en-->
 The graph formula `ΦFo` quantifies over a fresh set `w` and states both implications between `w ∈ Z'` and the three-case condition `Body Z w`. Thus `(Z', Z)` satisfies `ΦFo` exactly when `Z'` has the same members as `Φ Z`.
 <!--zh-->
-图公式 `ΦFo` 对新集合 `w` 作全称量化，并陈述 `w ∈ Z'` 与三种情形组成的条件 `Body Z w` 之间的两个蕴涵。因此 `(Z', Z)` 满足 `ΦFo`，恰当 `Z'` 与 `Φ Z` 具有相同成员。
+图公式 `ΦFo` 对新集合 `w` 作全称量化，并陈述 `w ∈ Z'` 与三种情形组成的条件 `Body Z w` 之间的两个蕴涵。因此 `(Z', Z)` 满足 `ΦFo`，恰当 `Z'` 与 `Φ Z` 具有相同元素。
 <!--ja-->
 グラフの論理式 `ΦFo` は新しい集合 `w` を全称量化し、`w ∈ Z'` と三つの場合からなる条件 `Body Z w` の間の二つの含意を述べる。したがって `(Z', Z)` が `ΦFo` を充足するのは、`Z'` と `Φ Z` が同じ要素をもつとき、かつそのときに限る。
 <!--/-->
@@ -4370,7 +4370,7 @@ The converse assembles the three cases into the three-slot reading, transporting
 <!--en-->
 The definability clause is then proved: the pair `(Φ Z, Z)` satisfies the graph formula. Each direction of the biconditional is the corresponding membership direction composed with the body transfer.
 <!--zh-->
-随后证明可定义性条款：对 `(Φ Z, Z)` 满足图公式。双条件的每个方向都是相应隶属方向与体转移的复合。
+随后证明可定义性条款：对 `(Φ Z, Z)` 满足图公式。双条件的每个方向都是相应成员关系方向与体转移的复合。
 <!--ja-->
 続いて、定義可能性の条項が証明される。対 `(Φ Z, Z)` はグラフの論理式を充足する。同値のそれぞれの向きは、対応する所属の向きと本体の転送の合成である。
 <!--/-->
@@ -4385,7 +4385,7 @@ The definability clause is then proved: the pair `(Φ Z, Z)` satisfies the graph
 <!--en-->
 Uniqueness of the graph is proved by extensionality of the constructible structure: for any `Z'` whose pair with `Z` satisfies the graph formula, every member of `Z'` satisfies the body, and `Φ-in` places it in `Φ Z`.
 <!--zh-->
-图的唯一性由可构造结构的外延性证明：对任何「其与 `Z` 的对满足图公式」的 `Z'`，`Z'` 的每个成员都满足体，而 `Φ-in` 把它放入 `Φ Z`。
+图的唯一性由可构造结构的外延性证明：对任何「其与 `Z` 的对满足图公式」的 `Z'`，`Z'` 的每个元素都满足体，而 `Φ-in` 把它放入 `Φ Z`。
 <!--ja-->
 グラフの一意性は、構成可能な構造の外延性によって証明される。`Z` との対がグラフの論理式を充足する任意の `Z'` のすべての要素は本体を満たし、`Φ-in` がそれを `Φ Z` の中に置く。
 <!--/-->
@@ -4401,7 +4401,7 @@ Uniqueness of the graph is proved by extensionality of the constructible structu
 <!--en-->
 The backward direction of the extensionality argument reads each member of `Φ Z` as a truncated body case and applies the graph formula at that member.
 <!--zh-->
-外延性论证的反向把 `Φ Z` 的每个成员读作截断的体情形，并在该成员处应用图公式。
+外延性论证的反向把 `Φ Z` 的每个元素读作截断的体情形，并在该元素处应用图公式。
 <!--ja-->
 外延性の議論の逆方向は、`Φ Z` の各要素を切り詰められた本体の場合として読み、その要素のもとでグラフの論理式を適用する。
 <!--/-->
@@ -4431,7 +4431,7 @@ We have therefore obtained a definable one-step operation `Φ`: the formula `ΦF
 <!--en-->
 This step contains every old member of `Z`, always contains the empty set, and contains the least witness for every satisfiable formula with parameters from `Z`. Conversely, its members arise only from these three cases, so `Φ` is exactly the desired one-step closure.
 <!--zh-->
-这一步包含 `Z` 的每个旧成员，始终包含空集，并对每条以 `Z` 中元素为参数且可满足的公式包含其最小见证。反过来，它的成员只来自这三种情形，因此 `Φ` 恰是所需的一步闭包。
+这一步包含 `Z` 的每个旧元素，始终包含空集，并对每条以 `Z` 中元素为参数且可满足的公式包含其最小见证。反过来，它的元素只来自这三种情形，因此 `Φ` 恰是所需的一步闭包。
 <!--ja-->
 この一段階は `Z` の既存の各要素を含み、常に空集合を含み、さらに `Z` の要素をパラメータとする充足可能な各論理式の最小証人を含む。逆に、その要素はこの三つの場合からしか生じないので、`Φ` は求める一段階の閉包にほかならない。
 <!--/-->
@@ -4447,7 +4447,7 @@ This step contains every old member of `Z`, always contains the empty set, and c
 <!--en-->
 Assume every member of `Z` lies in `Lset lam`. If `z ∈ Φ Z`, the membership characterization gives three possibilities: `z` was already in `Z`, `z = ∅`, or `witFo` holds at `(z, Z)`. In the third case, decoding the body reconstructs a semantic search from parameters in `Z` whose result is `z`.
 <!--zh-->
-假设 `Z` 的每个成员都属于 `Lset lam`。若 `z ∈ Φ Z`，隶属刻画给出三种可能：`z` 原已属于 `Z`，`z = ∅`，或 `witFo` 在 `(z, Z)` 处成立。在第三种情形中，解码公式体会重建一次以 `Z` 中元素为参数、结果为 `z` 的语义搜索。
+假设 `Z` 的每个元素都属于 `Lset lam`。若 `z ∈ Φ Z`，成员关系刻画给出三种可能：`z` 原已属于 `Z`，`z = ∅`，或 `witFo` 在 `(z, Z)` 处成立。在第三种情形中，解码公式体会重建一次以 `Z` 中元素为参数、结果为 `z` 的语义搜索。
 <!--ja-->
 `Z` の各要素が `Lset lam` に属すると仮定する。`z ∈ Φ Z` なら、所属の特徴づけから三つの可能性が得られる。`z` がすでに `Z` に属する場合、`z = ∅` の場合、または `witFo` が `(z, Z)` で成り立つ場合である。第三の場合、本体を解読すると、`Z` の要素をパラメータとし、結果が `z` である意味論的探索が復元される。
 <!--/-->
@@ -4479,7 +4479,7 @@ In the witness case, `z ∈ Φ Z` first makes `z` constructible, so it can be re
 <!--en-->
 Since `Φ Z` is constructible and constructibility is transitive, every member `z` of `Φ Z` is constructible.
 <!--zh-->
-由于 `Φ Z` 可构造且可构造性具有传递性，`Φ Z` 的每个成员 `z` 都可构造。
+由于 `Φ Z` 可构造且可构造性具有传递性，`Φ Z` 的每个元素 `z` 都可构造。
 <!--ja-->
 `Φ Z` は構成可能であり、構成可能性は推移的なので、`Φ Z` の各要素 `z` も構成可能である。
 <!--/-->
@@ -4532,7 +4532,7 @@ Assume that the hull `M` is itself constructible. This turns `M` into a construc
 <!--en-->
 Regarded as a constructible carrier, `M` has a collapse image `πX`. Every member of this image is the collapse value of some member of `M`, and the constructible-carrier theorem proves that such values belong to `L`.
 <!--zh-->
-把 `M` 视为可构造载体后，可得到其塌缩像 `πX`。该像的每个成员都是 `M` 某个成员的塌缩值，而可构造载体定理证明这些值都属于 `L`。
+把 `M` 视为可构造载体后，可得到其塌缩像 `πX`。该像的每个元素都是 `M` 某个元素的塌缩值，而可构造载体定理证明这些值都属于 `L`。
 <!--ja-->
 `M` を構成可能な台とみなすと、その崩壊像 `πX` が得られる。この像の各要素は `M` のある要素の崩壊値であり、構成可能な台についての定理から、そのような値は `L` に属する。
 <!--/-->
@@ -4546,7 +4546,7 @@ Regarded as a constructible carrier, `M` has a collapse image `πX`. Every membe
 <!--en-->
 Consequently, every `x ∈ πX` is constructible. We now return to the hull generated from `X` inside `Lset λ`, assuming that `λ` is an ordinal closed under successors and that every member of `X` lies in this stage.
 <!--zh-->
-因此，每个 `x ∈ πX` 都可构造。现在回到由 `X` 在 `Lset λ` 内生成的壳，并假设 `λ` 是对后继封闭的序数，且 `X` 的每个成员都属于这一层。
+因此，每个 `x ∈ πX` 都可构造。现在回到由 `X` 在 `Lset λ` 内生成的壳，并假设 `λ` 是对后继封闭的序数，且 `X` 的每个元素都属于这一层。
 <!--ja-->
 したがって、すべての `x ∈ πX` は構成可能である。ここで、`X` から `Lset λ` の内部で生成される包に戻る。`λ` は後続について閉じた順序数であり、`X` の各要素はこの段階に属すると仮定する。
 <!--/-->
@@ -4616,7 +4616,7 @@ The union of the finite closure stages is already an element `hullL` of the cons
 <!--en-->
 The underlying set of `hullL` is exactly `M`. Hence the external characterization of the Skolem hull and the constructible set obtained by iteration describe the same members, while `hullL` additionally carries a proof of constructibility.
 <!--zh-->
-`hullL` 的底层集合恰是 `M`。因此，Skolem 壳的外围刻画与迭代所得的可构造集合描述了同样的成员，而 `hullL` 还携带其可构造性的证明。
+`hullL` 的底层集合恰是 `M`。因此，Skolem 壳的外围刻画与迭代所得的可构造集合描述了同样的元素，而 `hullL` 还携带其可构造性的证明。
 <!--ja-->
 `hullL` の台集合はちょうど `M` である。したがって、Skolem 包の周囲での特徴づけと、反復から得た構成可能集合は同じ要素を記述し、`hullL` はさらに構成可能性の証明も備えている。
 <!--/-->
@@ -4642,7 +4642,7 @@ The closure stages of the hull are indexed by natural numbers: `hullStep n` is t
 <!--en-->
 At a successor index, the next stage is `Φ` applied to the current one. This operation retains the current members, includes the empty set, and adjoins the least witness for each coded search whose parameters are already present.
 <!--zh-->
-在后继索引处，下一层就是把 `Φ` 作用于当前层所得的结果。该运算保留当前成员，加入空集，并为每个参数已经出现的编码搜索加入其最小见证。
+在后继索引处，下一层就是把 `Φ` 作用于当前层所得的结果。该运算保留当前元素，加入空集，并为每个参数已经出现的编码搜索加入其最小见证。
 <!--ja-->
 後続の添字では、次の段階は現在の段階に `Φ` を作用させたものである。この演算は現在の要素を保ち、空集合を加え、さらにパラメータがすでに現れている各符号化された探索について最小証人を加える。
 <!--/-->
@@ -4655,7 +4655,7 @@ At a successor index, the next stage is `Φ` applied to the current one. This op
 <!--en-->
 Each code has a finite depth, and the value it denotes belongs to the closure stage at that depth. Since every hull member is represented by a code, this gives a finite stage containing it, without choosing a canonical code for the member.
 <!--zh-->
-每个码都有一个有限深度，而它所指称的值属于以该深度为索引的闭包层。由于每个壳成员都由某个码表示，这便为它给出一个包含它的有限层，但并不为该成员选定典范码。
+每个码都有一个有限深度，而它所指称的值属于以该深度为索引的闭包层。由于每个壳元素都由某个码表示，这便为它给出一个包含它的有限层，但并不为该元素选定典范码。
 <!--ja-->
 各コードには有限の深さがあり、それが指す値はその深さの閉包段階に属する。包の各要素は何らかのコードで表されるので、その要素を含む有限段階が得られるが、要素ごとに正準的なコードを選ぶわけではない。
 <!--/-->
@@ -4668,7 +4668,7 @@ Each code has a finite depth, and the value it denotes belongs to the closure st
 <!--en-->
 Conversely, every member of every finite closure stage belongs to `M`. Together with the coded description of hull members, this proves that the union of the stages and the Skolem hull have exactly the same elements.
 <!--zh-->
-反过来，每个有限闭包层的每个成员都属于 `M`。结合壳成员的编码刻画，这便证明诸层之并与 Skolem 壳恰有相同的元素。
+反过来，每个有限闭包层的每个元素都属于 `M`。结合壳元素的编码刻画，这便证明诸层之并与 Skolem 壳恰有相同的元素。
 <!--ja-->
 逆に、各有限閉包段階のすべての要素は `M` に属する。包の要素の符号による特徴づけと合わせると、これにより段階の合併と Skolem 包がまったく同じ要素をもつことが分かる。
 <!--/-->
@@ -4681,7 +4681,7 @@ Conversely, every member of every finite closure stage belongs to `M`. Together 
 <!--en-->
 The union of the stages is constructible: the hull stage `M` is an element of `L`. This is the first of the two membership facts the chapter set out to prove.
 <!--zh-->
-诸层之并可构造：壳层 `M` 是 `L` 的元素。这是本章要证明的两条隶属事实中的第一条。
+诸层之并可构造：壳层 `M` 是 `L` 的元素。这是本章要证明的两条成员关系事实中的第一条。
 <!--ja-->
 段階の合併は構成可能である。殻の段階 `M` は `L` の要素である。これが本章が証明を目指した二つの所属の事実のうちの一つである。
 <!--/-->
@@ -4707,7 +4707,7 @@ The second follows through the discharge: every value of the collapse `πX` of t
 <!--en-->
 Condensation now yields an ordinal `β` for which the collapse image is exactly `Lset β`. The earlier memberwise constructibility statement is thereby strengthened to an identification of the whole image with one stage of the constructible hierarchy. The conclusion asserts this equality and the ordinality of `β`; it makes no further comparison between `β` and `λ`.
 <!--zh-->
-凝聚现在给出一个序数 `β`，使塌缩像恰等于 `Lset β`。由此，先前逐个成员的可构造性陈述加强为把整个像认同为可构造层级中的一个层。结论只断言这一等式与 `β` 的序数性，并未进一步比较 `β` 与 `λ`。
+凝聚现在给出一个序数 `β`，使塌缩像恰等于 `Lset β`。由此，先前逐个元素的可构造性陈述加强为把整个像认同为可构造层级中的一个层。结论只断言这一等式与 `β` 的序数性，并未进一步比较 `β` 与 `λ`。
 <!--ja-->
 凝縮により、崩壊像がちょうど `Lset β` となる順序数 `β` が得られる。これにより、先の要素ごとの構成可能性は、像全体を構成可能階層の一つの段階と同一視する主張へ強められる。結論が主張するのはこの等式と `β` の順序数性であり、`β` と `λ` の間の比較までは含まない。
 <!--/-->

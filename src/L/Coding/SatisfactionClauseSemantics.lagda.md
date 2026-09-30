@@ -28,7 +28,7 @@ module L.Coding.SatisfactionClauseSemantics {ℓ : Level} (lem : LEM (ℓ-suc �
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 open import FOL.Syntax using
   ( Formula; Term; var; con; _∈̇_; _∧̇_; _∨̇_; _⇒̇_; ⊤̇; ⊥̇; ∃̇_; ∀̇_; ∃̇∈; ∀̇∈ )
 import FOL.Absoluteness
@@ -132,7 +132,7 @@ The common table frame has a fixed nested shape. An environment-tower entry code
 <!--en-->
 The external environment is a finite vector, but the table stores a set-theoretic graph. Moving between them requires both host-level finite lookup and object-level pair membership. Products and coproducts then record the alternatives exposed by formula and term constructors without conflating those alternatives with the coded sets themselves.
 <!--zh-->
-外部环境是有限向量，表中保存的却是集合论的图。因此二者之间的转换同时需要宿主层的有限查找与对象层的配对隶属。积与余积记录公式构造子和词项构造子产生的不同情形，但不会把这些情形与被编码的集合混为一谈。
+外部环境是有限向量，表中保存的却是集合论的图。因此二者之间的转换同时需要宿主层的有限查找与对象层的配对成员关系。积与余积记录公式构造子和词项构造子产生的不同情形，但不会把这些情形与被编码的集合混为一谈。
 <!--ja-->
 外部の環境は有限ベクトルであるが、表に保存されるのは集合論的なグラフである。両者を行き来するには、ホストレベルの有限参照と対象レベルの対の所属の双方が必要である。積と直和は論理式や項の構成子から生じる場合を記録するが、それらの場合を符号化された集合そのものと混同しない。
 <!--/-->
@@ -162,13 +162,13 @@ open InfinitySet {ℓ} using ( #_; sucV )
 <!--en-->
 The internal assignments range over the constructible carrier `S`, but their equations and memberships concern the underlying sets selected by `fst`. Bounded absoluteness supplies the interpretation of internal formulas in this carrier. Every reader therefore ends with a concrete statement about projected sets, ready to be compared with the external recursion.
 <!--zh-->
-内部赋值取值于可构造载体 `S`，但其中的等式与隶属都是关于 `fst` 投影出的底层集合陈述的。有界绝对性给出内部公式在该载体中的解释。因此，每个读式最终都得到关于投影后集合的具体陈述，可以继续与外部递归比较。
+内部赋值取值于可构造载体 `S`，但其中的等式与成员关系都是关于 `fst` 投影出的底层集合陈述的。有界绝对性给出内部公式在该载体中的解释。因此，每个读式最终都得到关于投影后集合的具体陈述，可以继续与外部递归比较。
 <!--ja-->
 内部の割り当ては構成可能な台 `S` に値を取るが、そこで現れる等式と所属は `fst` で射影した底集合について述べられる。有界絶対性が、この台における内部論理式の解釈を与える。したがって各読み補題は最後に射影された集合についての具体的な主張を返し、外部の再帰と比較できる形になる。
 <!--/-->
 
 ```agda
-open hPropStructure 𝒮ʟ using ( S )
+open hPropView 𝒮ʟ using ( S )
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _^_; _⊨ᵐ_ )
 open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
 ```
@@ -184,7 +184,7 @@ open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
 <!--en-->
 The central type records an extensional fact about a set `y`: every member of `y` belongs to `F` and satisfies the property, and conversely every member of `F` satisfying the property belongs to `y`. A value set is described by such a fact rather than by a chosen enumeration.
 <!--zh-->
-中心类型记录关于集合 `y` 的外延事实：`y` 的每个成员都属于 `F` 且满足该性质；反之，`F` 中满足该性质的每个元素都属于 `y`。值集合由这样的事实描述，而非由选定的枚举描述。
+中心类型记录关于集合 `y` 的外延事实：`y` 的每个元素都属于 `F` 且满足该性质；反之，`F` 中满足该性质的每个元素都属于 `y`。值集合由这样的事实描述，而非由选定的枚举描述。
 <!--ja-->
 中心となる型は、集合 `y` についての外延的な事実を記録する。`y` のすべての要素が `F` に属し性質を満たすこと、また逆に、`F` の中で性質を満たすすべての要素が `y` に属することである。値の集合は、選ばれた列挙ではなく、このような事実によって記述される。
 <!--/-->
@@ -198,7 +198,7 @@ ExtFact y F P = ((z : S) → ⟨ fst z ∈ y ⟩ → ⟨ fst z ∈ F ⟩ × P z)
 <!--en-->
 The extensional set builder is read definitionally: satisfaction of the builder is literally the pair of the two membership directions, with the property evaluated in the environment extended by the bound variable.
 <!--zh-->
-外延集合构造子的读取是定义性的：构造子的满足字面上就是两个隶属方向的二元组，其中性质在由约束变元延拓后的环境中求值。
+外延集合构造子的读取是定义性的：构造子的满足字面上就是两个成员关系方向的二元组，其中性质在由约束变元延拓后的环境中求值。
 <!--ja-->
 外延的な集合の構成子の読みは定義的である。構成子の充足は文字どおり、二つの所属の方向の対であり、性質は束縛変数で延長された環境のもとで評価される。
 <!--/-->
@@ -234,7 +234,7 @@ Filling is likewise definitional: an extensional fact is exactly satisfaction of
 <!--en-->
 Suppose `y` and `y'` satisfy the same extension condition over `F`: among the elements of `F`, membership in either set is characterized by the property `P`. Extensionality reduces equality of their underlying sets to two membership conversions. In the first direction, a member of `y` passes through the outward half of its extension fact and then through the inward half for `y'`.
 <!--zh-->
-假定 `y` 与 `y'` 在 `F` 上满足同一个外延条件：对 `F` 中的元素而言，属于任一集合都由性质 `P` 刻画。外延性把二者底层集合的相等化为两个隶属转换。正向转换先用 `y` 的外延事实向外读出成员满足的条件，再用 `y'` 的外延事实向内得到该成员属于 `y'`。
+假定 `y` 与 `y'` 在 `F` 上满足同一个外延条件：对 `F` 中的元素而言，属于任一集合都由性质 `P` 刻画。外延性把二者底层集合的相等化为两个成员关系转换。正向转换先用 `y` 的外延事实向外读出元素满足的条件，再用 `y'` 的外延事实向内得到该元素属于 `y'`。
 <!--ja-->
 `y` と `y'` が `F` 上で同じ外延条件を満たすと仮定する。すなわち、`F` の要素については、どちらの集合への所属も性質 `P` によって特徴付けられる。外延性により、底集合の等しさは二方向の所属の変換へ帰着する。順方向では、`y` の要素をその外延条件の外向きの半分で読み、続いて `y'` の外延条件の内向きの半分を適用する。
 <!--/-->
@@ -250,7 +250,7 @@ ext-unique y y' F P (o1 , i1') (o2 , i2') =
 <!--en-->
 The backward conversion closes the biconditional: a member of the right-hand side is first recognized as a member of `F` satisfying the property, and the second half of the extensional fact then returns its membership in `y`. Composing the two conversions gives the equality of the underlying sets of `y` and `y'`; what is identified is the underlying set, not any chosen coding evidence.
 <!--zh-->
-反向转换补全该双条件：右侧的成员先被认作 `F` 中满足该性质的元素，外延事实的另一半随即返回它在 `y` 中的隶属。两个转换复合起来，就得到 `y` 与 `y'` 的底层集合相等；被同一视的是底层集合，而不是任何选定的编码证据。
+反向转换补全该双条件：右侧的元素先被认作 `F` 中满足该性质的元素，外延事实的另一半随即返回它在 `y` 中的成员关系。两个转换复合起来，就得到 `y` 与 `y'` 的底层集合相等；被同一视的是底层集合，而不是任何选定的编码证据。
 <!--ja-->
 逆方向の変換が同値を閉じる。右側の要素は、まず `F` に属し性質を満たす要素として認められ、外延的な事実のもう半分が、`y` の中での所属を返す。二つの変換を合成すれば、`y` と `y'` の底の集合の等しさが得られる。同一視されるのは底の集合であり、選ばれた符号化の証拠ではない。
 <!--/-->
@@ -460,7 +460,7 @@ For the converse direction, it is enough to prove the body uniformly for every p
 <!--en-->
 The introduction proof receives the components exposed by the two universal pair readers. It uses `pr-out` to recover the equation `c₁=(ar',Av)` and `suc-out` to recover `ar'=suc A`, then passes those equations, the table memberships, and the six-slot environment to the uniform hypothesis `g`.
 <!--zh-->
-引入证明接收两层全称配对读式暴露出的分量。它用 `pr-out` 恢复等式 `c₁=(ar',Av)`，用 `suc-out` 恢复 `ar'=suc A`，再把这些等式、表隶属事实与六槽环境交给一致前提 `g`。
+引入证明接收两层全称配对读式暴露出的分量。它用 `pr-out` 恢复等式 `c₁=(ar',Av)`，用 `suc-out` 恢复 `ar'=suc A`，再把这些等式、表成员关系事实与六槽环境交给一致前提 `g`。
 <!--ja-->
 導入の証明は、二段の全称的な対の読みから現れる成分を受け取る。`pr-out` で等式 `c₁=(ar',Av)` を、`suc-out` で `ar'=suc A` を復元し、それらの等式、表への所属、六スロットの環境を一様な仮定 `g` に渡す。
 <!--/-->
@@ -565,7 +565,7 @@ The inner bounded existential ranges over entries `q` of the graph `z`, not over
 <!--en-->
 From an inner witness `q`, `pr-out` gives `fst q=pr (fst i) Vv`; transporting the known membership `q∈Z` along this equation yields the required graph membership of `(i,Vv)`. In parallel, `q1` changes the outer equation from the actual tag slot `N1v` to `#1`. These are exactly the two fields of the variable branch of `TmIsV`.
 <!--zh-->
-从内层见证 `q` 出发，`pr-out` 给出 `fst q=pr (fst i) Vv`；沿该等式搬运已知的隶属 `q∈Z`，便得到所需的图条目 `(i,Vv)` 属于 `Z`。与此同时，`q1` 把外层等式中的实际标签槽 `N1v` 改写为 `#1`。这两部分恰好组成 `TmIsV` 的变元分支。
+从内层见证 `q` 出发，`pr-out` 给出 `fst q=pr (fst i) Vv`；沿该等式搬运已知的成员关系 `q∈Z`，便得到所需的图条目 `(i,Vv)` 属于 `Z`。与此同时，`q1` 把外层等式中的实际标签槽 `N1v` 改写为 `#1`。这两部分恰好组成 `TmIsV` 的变元分支。
 <!--ja-->
 内側の証人 `q` から `pr-out` により `fst q=pr (fst i) Vv` が得られ、既知の所属 `q∈Z` をこの等式に沿って輸送すると、必要なグラフ要素 `(i,Vv)` の所属が得られる。同時に `q1` は、外側の等式に現れる実際のタグスロット `N1v` を `#1` に書き換える。この二つが `TmIsV` の変数の場合の二つの成分そのものである。
 <!--/-->
@@ -593,7 +593,7 @@ From an inner witness `q`, `pr-out` gives `fst q=pr (fst i) Vv`; transporting th
 <!--en-->
 The object formula `tmIs` is a disjunction of two code shapes. In the constant branch, `pr-out` reads `Tv=pr(q0,Vv)` and the equation `q0=#0` converts it to the first branch of `TmIsV`. In the variable branch, `sndEx-out` produces `Outer`, which `viaI` converts to the graph-membership branch.
 <!--zh-->
-对象公式 `tmIs` 是两种码形状的析取。在常元分支中，`pr-out` 读出 `Tv=pr(q0,Vv)`，再由 `q0=#0` 把它化为 `TmIsV` 的第一分支。在变元分支中，`sndEx-out` 产生 `Outer`，随后由 `viaI` 转成图隶属分支。
+对象公式 `tmIs` 是两种码形状的析取。在常元分支中，`pr-out` 读出 `Tv=pr(q0,Vv)`，再由 `q0=#0` 把它化为 `TmIsV` 的第一分支。在变元分支中，`sndEx-out` 产生 `Outer`，随后由 `viaI` 转成图成员关系分支。
 <!--ja-->
 対象論理式 `tmIs` は二つのコード形の選言である。定数の場合、`pr-out` が `Tv=pr(q0,Vv)` を読み出し、`q0=#0` によってそれを `TmIsV` の第一の場合へ変換する。変数の場合、`sndEx-out` が `Outer` を生成し、`viaI` がそれをグラフ所属の場合へ変換する。
 <!--/-->
@@ -668,7 +668,7 @@ The equation `e'` rewrites the canonical tag equation into the actual tag-one sl
 <!--en-->
 To prove `hq`, choose `qS` from the graph. Its membership is the given fact `hp`, and `pr-in` proves by reflexivity that its underlying set is the pair of `iS` and `Vv`. This supplies exactly the graph entry demanded by the variable branch.
 <!--zh-->
-为证明 `hq`，从图中选择 `qS`。其隶属事实就是给定的 `hp`，而 `pr-in` 以自反性证明其底层集合是 `iS` 与 `Vv` 的配对。这恰好给出变元分支所需的图条目。
+为证明 `hq`，从图中选择 `qS`。其成员关系事实就是给定的 `hp`，而 `pr-in` 以自反性证明其底层集合是 `iS` 与 `Vv` 的配对。这恰好给出变元分支所需的图条目。
 <!--ja-->
 `hq` を証明するには、グラフから `qS` を選ぶ。その所属は与えられた事実 `hp` であり、`pr-in` は反射性によって、その底集合が `iS` と `Vv` の対であることを示す。これで変数の場合に必要なグラフ要素がちょうど得られる。
 <!--/-->
@@ -748,7 +748,7 @@ The preceding stages expose the nested key. `inner4 k` ranges over every `c∈C`
 <!--en-->
 For one clause instance, `At` fixes a tower pair `(ar,F)`, a formula key `c=(ar,p)`, a tagged payload `p=(N k,r)`, and a table pair `(c,yc)`. The memberships `q∈` and `e∈` concern the projected pairs in `E` and `T`; the module does not itself prove that `c∈C`, decode `r`, or show that the table value is unique.
 <!--zh-->
-对于一条子句实例，`At` 固定塔配对 `(ar,F)`、公式键 `c=(ar,p)`、带标签载荷 `p=(N k,r)` 与表配对 `(c,yc)`。隶属 `q∈` 和 `e∈` 分别涉及 `E` 与 `T` 中投影后的配对；该模块本身不证明 `c∈C`，不解码 `r`，也不证明表值唯一。
+对于一条子句实例，`At` 固定塔配对 `(ar,F)`、公式键 `c=(ar,p)`、带标签载荷 `p=(N k,r)` 与表配对 `(c,yc)`。成员关系 `q∈` 和 `e∈` 分别涉及 `E` 与 `T` 中投影后的配对；该模块本身不证明 `c∈C`，不解码 `r`，也不证明表值唯一。
 <!--ja-->
 一つの節の実例について、`At` は塔の対 `(ar,F)`、論理式キー `c=(ar,p)`、タグ付きペイロード `p=(N k,r)`、表の対 `(c,yc)` を固定する。所属 `q∈` と `e∈` はそれぞれ `E` と `T` における射影された対について述べる。このモジュール自身は `c∈C` を証明せず、`r` を復号せず、表の値の一意性も示さない。
 <!--/-->
@@ -771,7 +771,7 @@ For one clause instance, `At` fixes a tower pair `(ar,F)`, a formula key `c=(ar,
 <!--en-->
 `qS` and `eS` lift the two projected pair memberships back to elements of the constructible carrier. Their underlying sets are definitionally `pr (fst ar) (fst F)` and `pr (fst c) (fst yc)`, respectively. They serve only as representatives to which the bounded pair readers can be applied when the twelve-slot environment is assembled.
 <!--zh-->
-`qS` 与 `eS` 把两个投影后的配对隶属提升回可构造载体中的元素。它们的底层集合分别按定义为 `pr (fst ar) (fst F)` 与 `pr (fst c) (fst yc)`。二者只充当代表，使组装十二槽环境时能够应用有界配对读式。
+`qS` 与 `eS` 把两个投影后的配对成员关系提升回可构造载体中的元素。它们的底层集合分别按定义为 `pr (fst ar) (fst F)` 与 `pr (fst c) (fst yc)`。二者只充当代表，使组装十二槽环境时能够应用有界配对读式。
 <!--ja-->
 `qS` と `eS` は、二つの射影された対の所属を構成可能な台の要素へ持ち上げる。それらの底集合はそれぞれ定義により `pr (fst ar) (fst F)` と `pr (fst c) (fst yc)` である。十二スロットの環境を組み立てるとき、有界な対の読み補題を適用するための表示としてだけ使われる。
 <!--/-->
@@ -784,7 +784,7 @@ For one clause instance, `At` fixes a tower pair `(ar,F)`, a formula key `c=(ar,
 <!--en-->
 The frame begins with an actual tower member `qS` whose underlying pair is `(ar,F)`. The four new slots record `F`, `ar`, a witness for the pair decomposition, and `qS`; the next three record the payload `p`, a witness that `c=(ar,p)`, and the code `c`. Thus the successive environments retain both the mathematical data and the bounded witnesses by which the object-language clause obtained them.
 <!--zh-->
-框架从实际的塔成员 `qS` 开始，其底层配对是 `(ar,F)`。新增的四个槽位记录 `F`、`ar`、配对分解的见证与 `qS`；随后的三个槽位记录载荷 `p`、`c=(ar,p)` 的见证与代码 `c`。因此，逐层扩展的环境既保留数学数据，也保留对象语言子句取得这些数据时所用的有界见证。
+框架从实际的塔元素 `qS` 开始，其底层配对是 `(ar,F)`。新增的四个槽位记录 `F`、`ar`、配对分解的见证与 `qS`；随后的三个槽位记录载荷 `p`、`c=(ar,p)` 的见证与代码 `c`。因此，逐层扩展的环境既保留数学数据，也保留对象语言子句取得这些数据时所用的有界见证。
 <!--ja-->
 枠は、基礎の対が `(ar,F)` である塔の実際の要素 `qS` から始まる。新しい四つの枠には `F`、`ar`、対への分解の証人、`qS` が入り、続く三つにはペイロード `p`、`c=(ar,p)` の証人、符号 `c` が入る。このように、順次拡張される環境は、数学的データと、対象言語の節がそのデータを得るために用いた有界な証人の両方を保持する。
 <!--/-->
@@ -800,7 +800,7 @@ The frame begins with an actual tower member `qS` whose underlying pair is `(ar,
 <!--en-->
 The twelve-slot environment completes the nesting. At the front is the candidate value `yc`, followed by a container exposing the components of the table pair `(c,yc)` and the actual table member `eS` whose underlying set is that pair; the nine earlier objects follow. This is the environment at which the relation body is read.
 <!--zh-->
-十二槽环境完成这层嵌套。候选取值 `yc` 居首，随后是暴露表配对 `(c,yc)` 两个分量的容纳集合，以及底层集合正是该配对的实际表成员 `eS`；再后是先前九个对象。关系体就在这个环境中读取。
+十二槽环境完成这层嵌套。候选取值 `yc` 居首，随后是暴露表配对 `(c,yc)` 两个分量的容纳集合，以及底层集合正是该配对的实际表元素 `eS`；再后是先前九个对象。关系体就在这个环境中读取。
 <!--ja-->
 十二の枠の環境がこの入れ子を完成させる。先頭には候補値 `yc` があり、表の対 `(c,yc)` の二成分を取り出すコンテナと、底集合がその対である実際の表要素 `eS` が続き、その後に先の九つの対象が並ぶ。関係の本体はこの環境で読み取られる。
 <!--/-->
@@ -816,7 +816,7 @@ The twelve-slot environment completes the nesting. At the front is the candidate
 <!--en-->
 The outward reading starts from satisfaction of clause `k` and fixes all data matching one instance of its frame: `ar` and `F` from a tower pair, a code `c=(ar,p)` in `C`, a tagged payload `p=(#k,r)`, and a candidate value `yc` with `(c,yc)` in `T`. It then returns satisfaction of `relN (toℕ k)` at the corresponding twelve-slot environment. The table hypothesis here is membership of the pair `(c,yc)`; the representative table member and its container are constructed locally.
 <!--zh-->
-向外读式从第 `k` 条子句的满足出发，并固定该子句一个框架实例的全部匹配数据：来自塔配对的 `ar` 与 `F`、`C` 中的代码 `c=(ar,p)`、带标签的载荷 `p=(#k,r)`，以及满足 `(c,yc)` 属于 `T` 的候选取值 `yc`。随后，它返回相应十二槽环境处 `relN (toℕ k)` 的满足。这里的表前提是配对 `(c,yc)` 的隶属；实际表成员及其容纳集合都在局部构造。
+向外读式从第 `k` 条子句的满足出发，并固定该子句一个框架实例的全部匹配数据：来自塔配对的 `ar` 与 `F`、`C` 中的代码 `c=(ar,p)`、带标签的载荷 `p=(#k,r)`，以及满足 `(c,yc)` 属于 `T` 的候选取值 `yc`。随后，它返回相应十二槽环境处 `relN (toℕ k)` 的满足。这里的表前提是配对 `(c,yc)` 的成员关系；实际表元素及其容纳集合都在局部构造。
 <!--ja-->
 外向きの読み取りは第 `k` 節の充足から出発し、その枠の一つの実例に対応するデータをすべて固定する。塔の対から得られる `ar` と `F`、`C` に属するコード `c=(ar,p)`、タグ付きペイロード `p=(#k,r)`、そして `(c,yc)` が `T` に属する候補値 `yc` である。そのうえで、対応する十二の枠の環境における `relN (toℕ k)` の充足を返す。ここで表について仮定するのは対 `(c,yc)` の所属であり、実際の表要素とそのコンテナは局所的に構成される。
 <!--/-->
@@ -832,7 +832,7 @@ The outward reading starts from satisfaction of clause `k` and fixes all data ma
 <!--en-->
 With the matching data fixed, the module `A` gives one coherent realization of all twelve frame slots. The first elimination opens the tower pair, and the final `useSnd` opens the actual table member as `(c,yc)`. Between them, the proof must still pass through the code and tag layers; naming `h4` before those steps makes explicit that the conclusion follows by successively specializing the single outer clause, rather than by assuming the constructor relation separately.
 <!--zh-->
-匹配数据固定后，模块 `A` 为全部十二个框架槽给出一个彼此相容的实现。第一次消去打开塔配对，最后的 `useSnd` 把实际表成员打开为 `(c,yc)`；二者之间还必须经过代码层与标签层。先命名 `h4`，正是为了表明结论来自对同一条外层子句的逐次特化，而不是另行假定构造子关系。
+匹配数据固定后，模块 `A` 为全部十二个框架槽给出一个彼此相容的实现。第一次消去打开塔配对，最后的 `useSnd` 把实际表元素打开为 `(c,yc)`；二者之间还必须经过代码层与标签层。先命名 `h4`，正是为了表明结论来自对同一条外层子句的逐次特化，而不是另行假定构造子关系。
 <!--ja-->
 対応するデータを固定すると、モジュール `A` は十二の枠すべてに対して整合した一つの実現を与える。最初の除去が塔の対を開き、最後の `useSnd` が実際の表の要素を `(c,yc)` として開く。その間には符号とタグの層を通る必要がある。そこで先に `h4` を名づけることで、結論が構成子の関係を別に仮定したものではなく、一つの外側の節を順次特殊化して得られることが明示される。
 <!--/-->
@@ -848,7 +848,7 @@ With the matching data fixed, the module `A` gives one coherent realization of a
 <!--en-->
 The three intermediate judgments mark the three semantic layers of the common frame. At `δ4`, `h4` has opened the tower entry `(ar,F)` and is ready to range over codes in `C`; at `δ7`, `h7` has also decomposed `c=(ar,p)`; at `δ9`, `h9` has identified `p` as the tag-`k` payload `r` and is ready to inspect entries of `T`. The final elimination then decomposes the chosen table member as `(c,yc)` and reaches the constructor relation.
 <!--zh-->
-三条中间判断标出共同框架的三个语义层次。在 `δ4` 处，`h4` 已打开塔条目 `(ar,F)`，可以开始考察 `C` 中的代码；在 `δ7` 处，`h7` 还分解了 `c=(ar,p)`；在 `δ9` 处，`h9` 已把 `p` 识别为标签 `k` 的载荷 `r`，可以考察 `T` 中的条目。最后一次消去把所选表成员分解为 `(c,yc)`，由此抵达构造子关系。
+三条中间判断标出共同框架的三个语义层次。在 `δ4` 处，`h4` 已打开塔条目 `(ar,F)`，可以开始考察 `C` 中的代码；在 `δ7` 处，`h7` 还分解了 `c=(ar,p)`；在 `δ9` 处，`h9` 已把 `p` 识别为标签 `k` 的载荷 `r`，可以考察 `T` 中的条目。最后一次消去把所选表元素分解为 `(c,yc)`，由此抵达构造子关系。
 <!--ja-->
 三つの中間判断は、共通の枠の三つの意味論的な層を示す。`δ4` では `h4` が塔の項目 `(ar,F)` を開き、`C` の符号を調べられる状態にある。`δ7` では `h7` がさらに `c=(ar,p)` を分解している。`δ9` では `h9` が `p` をタグ `k` のペイロード `r` と同定し、`T` の項目を調べられる状態にある。最後の除去で、選んだ表の要素を `(c,yc)` と分解し、構成子の関係に到達する。
 <!--/-->
@@ -864,7 +864,7 @@ The three intermediate judgments mark the three semantic layers of the common fr
 <!--en-->
 For the converse direction, suppose the constructor relation can be proved from every complete matching frame. Such a frame consists of a tower member `q=(ar,F)`, a code `c=(ar,p)` in `C`, a tag decomposition `p=(#k,r)`, and a table member `e=(c,yc)`, together with the four pair witnesses `s`, `s1`, `s2`, and `s3`. Proving the relation in the displayed environment for all this data is exactly the premise needed to reconstruct clause `k`.
 <!--zh-->
-反向构造假定：每个完整匹配的框架都能证明构造子关系。这样的框架包含塔成员 `q=(ar,F)`、`C` 中的代码 `c=(ar,p)`、标签分解 `p=(#k,r)`、表成员 `e=(c,yc)`，以及四个配对见证 `s`、`s1`、`s2` 与 `s3`。若对所有这些数据都能在所示环境中证明该关系，便恰好具备重建第 `k` 条子句所需的前提。
+反向构造假定：每个完整匹配的框架都能证明构造子关系。这样的框架包含塔元素 `q=(ar,F)`、`C` 中的代码 `c=(ar,p)`、标签分解 `p=(#k,r)`、表元素 `e=(c,yc)`，以及四个配对见证 `s`、`s1`、`s2` 与 `s3`。若对所有这些数据都能在所示环境中证明该关系，便恰好具备重建第 `k` 条子句所需的前提。
 <!--ja-->
 逆向きの構成では、完全に対応するすべての枠から構成子の関係を証明できると仮定する。そのような枠は、塔の要素 `q=(ar,F)`、`C` に属する符号 `c=(ar,p)`、タグの分解 `p=(#k,r)`、表の要素 `e=(c,yc)`、および四つの対の証人 `s`、`s1`、`s2`、`s3` からなる。これらすべてのデータについて表示された環境で関係を証明できることが、第 `k` 節を再構成するために必要な前提そのものである。
 <!--/-->
@@ -908,7 +908,7 @@ Before the host-level rule `g` is applied, the payload equation is composed with
 <!--en-->
 Totality is read outward as truncated existence: for each member of the code domain, the totality clause guarantees that some table entry with that first component exists, and the truncated decomposition of the table entry recovers the value `yc`.
 <!--zh-->
-全定义性向外读取为经过命题截断的存在陈述：对码定义域的每个成员，全定义性子句保证存在以该成员为第一分量的表条目，而表条目经过命题截断的分解会恢复取值 `yc`。
+全定义性向外读取为经过命题截断的存在陈述：对码定义域的每个元素，全定义性子句保证存在以该元素为第一分量的表条目，而表条目经过命题截断的分解会恢复取值 `yc`。
 <!--ja-->
 全域性は、切り詰められた存在として外向きに読まれる。符号領域の各要素に対して、全域性の条項が、その第一成分をもつ表の項目の存在を保証し、表の項目の切り詰められた分解が値 `yc` を復元する。
 <!--/-->
@@ -924,7 +924,7 @@ Totality is read outward as truncated existence: for each member of the code dom
 <!--en-->
 For a fixed `c∈C`, applying the standing hypothesis `h` yields, under propositional truncation, a table member `e` together with its membership in `T` and a decomposition statement. The reader `sndEx-out` decomposes `e` as `(c,yc)`, and transporting the membership of `e` along that equation proves `(c,yc)∈T`. Both decompositions remain hidden by the truncation, so the result supplies existence without selecting a canonical value.
 <!--zh-->
-固定 `c∈C` 后，把既有假设 `h` 用于 `c`，便在命题截断下得到一个表成员 `e`、它属于 `T` 的证明以及一条分解陈述。读式 `sndEx-out` 再把 `e` 分解为 `(c,yc)`，并沿该等式搬运 `e` 的隶属证明，从而得到 `(c,yc)∈T`。两层分解都由命题截断隐藏，因此结论只给出存在性，并不选取典范取值。
+固定 `c∈C` 后，把既有假设 `h` 用于 `c`，便在命题截断下得到一个表元素 `e`、它属于 `T` 的证明以及一条分解陈述。读式 `sndEx-out` 再把 `e` 分解为 `(c,yc)`，并沿该等式搬运 `e` 的成员关系证明，从而得到 `(c,yc)∈T`。两层分解都由命题截断隐藏，因此结论只给出存在性，并不选取典范取值。
 <!--ja-->
 `c∈C` を固定して仮定 `h` を `c` に適用すると、命題的切り詰めの下で、表要素 `e`、その `T` への所属、および分解を述べる証明が得られる。読み補題 `sndEx-out` がさらに `e` を `(c,yc)` に分解し、その等式に沿って `e` の所属を運ぶことで `(c,yc)∈T` を示す。二段の分解はいずれも切り詰めの内部にとどまるので、結論は存在を与えるだけで、正準な値を選ばない。
 <!--/-->
@@ -936,7 +936,7 @@ For a fixed `c∈C`, applying the standing hypothesis `h` yields, under proposit
 <!--en-->
 Conversely, assume that every `c` in `C` has, propositionally truncated, a value `yc` with `(c,yc)` in `T`. The membership proof is turned by `down` into an element `e : S` of `T` whose underlying set is that pair; `fillSnd` supplies the bounded witnesses that decompose `e` back into `c` and `yc`. The remaining body is truth, so this data constructs the totality clause without choosing a value globally and without asserting uniqueness.
 <!--zh-->
-反过来，假定对 `C` 中每个 `c`，都有一个经过命题截断的存在陈述，断言某个 `yc` 满足 `(c,yc)` 属于 `T`。`down` 把这条隶属证明实现为 `T` 的一个元素 `e : S`，其底层集合正是该配对；`fillSnd` 再给出把 `e` 分解回 `c` 与 `yc` 的有界见证。余下的主体为真，故这些数据足以构造全定义性子句，同时既不全局选择取值，也不主张唯一性。
+反过来，假定对 `C` 中每个 `c`，都有一个经过命题截断的存在陈述，断言某个 `yc` 满足 `(c,yc)` 属于 `T`。`down` 把这条成员关系证明实现为 `T` 的一个元素 `e : S`，其底层集合正是该配对；`fillSnd` 再给出把 `e` 分解回 `c` 与 `yc` 的有界见证。余下的主体为真，故这些数据足以构造全定义性子句，同时既不全局选择取值，也不主张唯一性。
 <!--ja-->
 逆に、`C` の各 `c` について、`(c,yc)` が `T` に属するような値 `yc` が命題的に切り詰められて存在すると仮定する。`down` はその所属の証明を、基礎の集合がその対である `T` の要素 `e : S` に実現し、`fillSnd` は `e` を `c` と `yc` に分解する有界な証人を与える。残る本体は真なので、このデータから全域性の節を構成できる。値の大域的な選択も一意性の主張も含まれない。
 <!--/-->
@@ -952,7 +952,7 @@ Conversely, assume that every `c` in `C` has, propositionally truncated, a value
 <!--en-->
 The on-domain condition starts with an arbitrary element `e` of `T`, rather than with a pair already chosen in advance. Its outward reading recovers, under propositional truncation, objects `c` and `yc` such that `e=(c,yc)` and `c` belongs to `C`. Thus every member of the table has a code from the stated domain as its first component, but the result says neither that the decomposition is selected canonically nor that a code has only one value.
 <!--zh-->
-定义域约束从 `T` 的任意元素 `e` 出发，而不是预先给定一个配对。其向外读法在命题截断下恢复 `c` 与 `yc`，满足 `e=(c,yc)` 且 `c` 属于 `C`。因此，表的每个成员都以给定定义域中的代码为第一分量；这个结论既不典范地选定分解，也不说明一个代码只有一个取值。
+定义域约束从 `T` 的任意元素 `e` 出发，而不是预先给定一个配对。其向外读法在命题截断下恢复 `c` 与 `yc`，满足 `e=(c,yc)` 且 `c` 属于 `C`。因此，表的每个元素都以给定定义域中的代码为第一分量；这个结论既不典范地选定分解，也不说明一个代码只有一个取值。
 <!--ja-->
 領域条件は、あらかじめ選ばれた対ではなく、`T` の任意の要素 `e` から出発する。その外向きの読み取りは、`e=(c,yc)` かつ `c` が `C` に属するような `c` と `yc` を、命題的切り詰めの下で復元する。したがって表の各要素の第一成分は指定された領域の符号であるが、分解の正準な選択も、一つの符号が値を一つしか持たないことも述べていない。
 <!--/-->
@@ -967,7 +967,7 @@ The on-domain condition starts with an arbitrary element `e` of `T`, rather than
 <!--en-->
 The converse asks for precisely that truncated decomposition of every member of `T` and inserts it into the two bounded existentials of `onC`. Together the two readings identify `onC` with the claim that the first projection of every table member lies in `C`. Combined with totality this fixes the table's domain projection, but it still does not make the table single-valued.
 <!--zh-->
-反向读法恰好要求 `T` 的每个成员都具有上述经过命题截断的分解，再把该分解注入 `onC` 的两层有界存在量词。两条读法合起来把 `onC` 精确解释为「每个表成员的第一投影属于 `C`」。它与全定义性结合后确定表的定义域投影，但仍不使这张表成为单值关系。
+反向读法恰好要求 `T` 的每个元素都具有上述经过命题截断的分解，再把该分解注入 `onC` 的两层有界存在量词。两条读法合起来把 `onC` 精确解释为「每个表元素的第一投影属于 `C`」。它与全定义性结合后确定表的定义域投影，但仍不使这张表成为单值关系。
 <!--ja-->
 逆向きの読み取りは、`T` の各要素についてまさにこの切り詰められた分解を要求し、それを `onC` の二つの有界存在量化へ入れる。二方向の読み取りを合わせると、`onC` は「表の各要素の第一射影が `C` に属する」という主張に正確に対応する。全域性と組み合わせれば表の領域射影は定まるが、表が一価の関係になるわけではない。
 <!--/-->
@@ -1045,7 +1045,7 @@ For any further local environment `env`, `Ext env φ` states the exact extension
 <!--en-->
 For a binary connective, the payload `r` must decompose as the two child codes `a` and `b`. The keys `c₁=(A,a)` and `c₂=(A,b)` must have table values `ya` and `yb`. From these hypotheses, `bin-out` returns five auxiliary witnesses under propositional truncation: one container for `r=(a,b)`, and for each child both an actual member of `T` and a container witnessing its decomposition. The mathematical conclusion is an `Ext` fact for the outer value `yc`, whose body tests membership in `ya` and `yb` using the connective `op`.
 <!--zh-->
-对于二元联结词，载荷 `r` 必须分解为两个子公式码 `a` 与 `b`，而键 `c₁=(A,a)`、`c₂=(A,b)` 必须分别在表中具有取值 `ya`、`yb`。由这些假设，`bin-out` 在命题截断下返回五个辅助见证：一个见证 `r=(a,b)` 的容纳集合，以及每个子公式对应的一个 `T` 的实际成员和一个分解容纳集合。数学结论是关于外层取值 `yc` 的 `Ext` 事实，其主体以联结词 `op` 组合对 `ya` 与 `yb` 的隶属判断。
+对于二元联结词，载荷 `r` 必须分解为两个子公式码 `a` 与 `b`，而键 `c₁=(A,a)`、`c₂=(A,b)` 必须分别在表中具有取值 `ya`、`yb`。由这些假设，`bin-out` 在命题截断下返回五个辅助见证：一个见证 `r=(a,b)` 的容纳集合，以及每个子公式对应的一个 `T` 的实际元素和一个分解容纳集合。数学结论是关于外层取值 `yc` 的 `Ext` 事实，其主体以联结词 `op` 组合对 `ya` 与 `yb` 的成员关系判断。
 <!--ja-->
 二項結合子では、ペイロード `r` が二つの子論理式の符号 `a` と `b` に分解されなければならない。また、鍵 `c₁=(A,a)` と `c₂=(A,b)` は、それぞれ表の値 `ya` と `yb` を持つ必要がある。これらの仮定から `bin-out` は、命題的切り詰めの下で五つの補助的な証人を返す。一つは `r=(a,b)` のコンテナで、各子論理式については `T` の実際の要素とその分解を示すコンテナである。数学的な結論は外側の値 `yc` に関する `Ext` であり、その本体は `ya` と `yb` への所属を結合子 `op` で組み合わせる。
 <!--/-->
@@ -1093,7 +1093,7 @@ The first step is to open the payload equation `r=(a,b)` inside the twelve-slot 
 <!--en-->
 The membership proof for `(c₁,ya)` does not itself supply an element of the structure `S`; `down` realizes it as `e₁S : S`, an actual member of `T` with that underlying pair. The environment `δ19` then prefixes `ya`, `c₁`, their pair container, and `e₁S` to `δ15`. These four slots are exactly the frame expected by the first `subAt` reading.
 <!--zh-->
-关于 `(c₁,ya)` 的隶属证明本身并不直接给出结构 `S` 的元素；`down` 把它实现为 `e₁S : S`，即 `T` 中底层配对为 `(c₁,ya)` 的一个实际成员。环境 `δ19` 再把 `ya`、`c₁`、二者的配对容器与 `e₁S` 加到 `δ15` 前面。这四个槽位恰是第一次 `subAt` 读取所需的框架。
+关于 `(c₁,ya)` 的成员关系证明本身并不直接给出结构 `S` 的元素；`down` 把它实现为 `e₁S : S`，即 `T` 中底层配对为 `(c₁,ya)` 的一个实际元素。环境 `δ19` 再把 `ya`、`c₁`、二者的配对容器与 `e₁S` 加到 `δ15` 前面。这四个槽位恰是第一次 `subAt` 读取所需的框架。
 <!--ja-->
 `(c₁,ya)` の所属証明そのものは、構造 `S` の要素を直接与えない。`down` はそれを、基礎の対が `(c₁,ya)` である `T` の実際の要素 `e₁S : S` として実現する。環境 `δ19` はさらに `ya`、`c₁`、両者の対のコンテナ、`e₁S` を `δ15` の前に置く。この四つの枠が、最初の `subAt` の読み取りが要求する枠に正確に一致する。
 <!--/-->
@@ -1109,7 +1109,7 @@ The membership proof for `(c₁,ya)` does not itself supply an element of the st
 <!--en-->
 The same construction realizes the second membership proof as `e₂S : S`, an actual table member with underlying pair `(c₂,yb)`. The second `subAt-out` supplies its accompanying pair container when it extends `δ19`. Hence both child values are available to `binBody`, while neither membership proof has been turned into a global choice from the table.
 <!--zh-->
-同一构造把第二条隶属证明实现为 `e₂S : S`，即底层配对为 `(c₂,yb)` 的实际表成员。第二次 `subAt-out` 在扩展 `δ19` 时会补上相应的配对容器。因此，`binBody` 可以同时读取两个子公式取值，而两条隶属证明都没有被提升为从表中进行的全局选择。
+同一构造把第二条成员关系证明实现为 `e₂S : S`，即底层配对为 `(c₂,yb)` 的实际表元素。第二次 `subAt-out` 在扩展 `δ19` 时会补上相应的配对容器。因此，`binBody` 可以同时读取两个子公式取值，而两条成员关系证明都没有被提升为从表中进行的全局选择。
 <!--ja-->
 同じ構成により、二つ目の所属証明は、基礎の対が `(c₂,yb)` である実際の表の要素 `e₂S : S` として実現される。二つ目の `subAt-out` は `δ19` を拡張するときに対応する対のコンテナも与える。こうして `binBody` は二つの子の値をともに読めるが、どちらの所属証明も表からの大域的な選択には変えられていない。
 <!--/-->
@@ -1122,7 +1122,7 @@ The same construction realizes the second membership proof as `e₂S : S`, an ac
 <!--en-->
 The converse begins with a rule for every possible decomposition of the binary frame. Besides the child codes and values, the rule receives the payload container, the two actual table members, their pair containers, and the equations proving that their keys are `(A,a)` and `(A,b)`. Its conclusion must be the `Ext` fact for the outer value `yc` in the environment obtained by adding these eleven objects to the original twelve-slot frame.
 <!--zh-->
-反向构造从一条适用于二元框架所有可能分解的规则开始。除子公式码与取值外，该规则还接收载荷容器、两个实际表成员、它们的配对容器，以及证明相应键分别为 `(A,a)`、`(A,b)` 的等式。它必须在原十二槽框架前加入这十一个对象所得的环境中，给出外层取值 `yc` 的 `Ext` 事实。
+反向构造从一条适用于二元框架所有可能分解的规则开始。除子公式码与取值外，该规则还接收载荷容器、两个实际表元素、它们的配对容器，以及证明相应键分别为 `(A,a)`、`(A,b)` 的等式。它必须在原十二槽框架前加入这十一个对象所得的环境中，给出外层取值 `yc` 的 `Ext` 事实。
 <!--ja-->
 逆向きの構成は、二項の枠のあらゆる分解に対する規則から始まる。規則は子論理式の符号と値に加えて、ペイロードのコンテナ、二つの実際の表の要素、それぞれの対のコンテナ、および鍵が `(A,a)` と `(A,b)` であることを示す等式を受け取る。その結論は、元の十二枠の前にこれら十一の対象を加えた環境における、外側の値 `yc` の `Ext` でなければならない。
 <!--/-->
@@ -1184,7 +1184,7 @@ For an unbounded quantifier, the payload `r` is the child formula code. A matchi
 <!--en-->
 The three witnesses have distinct roles. `e'S` is an actual member of `T` realizing the pair `(c₁,ya)`; one container witnesses that pair, and the other witnesses `c₁=(ar',r)`. The general successor-arity reader already knows how to combine these witnesses with `ar'=suc A` and then expose the innermost extension fact.
 <!--zh-->
-三个见证各有不同作用。`e'S` 是 `T` 中实现配对 `(c₁,ya)` 的实际成员；一个容器见证该配对，另一个容器见证 `c₁=(ar',r)`。通用的后继元数读式已经能够把这些见证与 `ar'=suc A` 结合，再揭示最内层的外延事实。
+三个见证各有不同作用。`e'S` 是 `T` 中实现配对 `(c₁,ya)` 的实际元素；一个容器见证该配对，另一个容器见证 `c₁=(ar',r)`。通用的后继元数读式已经能够把这些见证与 `ar'=suc A` 结合，再揭示最内层的外延事实。
 <!--ja-->
 三つの証人にはそれぞれ異なる役割がある。`e'S` は対 `(c₁,ya)` を実現する `T` の実際の要素で、一方のコンテナはその対を、もう一方は `c₁=(ar',r)` を証明する。後続アリティに対する一般の読み取りは、これらの証人を `ar'=suc A` と組み合わせて、最も内側の外延条件を取り出す。
 <!--/-->
@@ -1199,7 +1199,7 @@ The three witnesses have distinct roles. `e'S` is an actual member of `T` realiz
 <!--en-->
 Conversely, suppose every actual table member `e'=(c₁,ya)` whose key satisfies `c₁=(ar',r)` and `ar'=suc A` yields the required `Ext` fact, for every choice of the two pair containers. This universal premise is strong enough to rebuild the bounded structure of `quRel`. It concerns all matching entries and does not presume that the child value `ya` is unique.
 <!--zh-->
-反过来，假定每个实际表成员 `e'=(c₁,ya)`，只要其键满足 `c₁=(ar',r)` 与 `ar'=suc A`，就在任意两个配对容器下给出所需的 `Ext` 事实。这条全称前提足以重建 `quRel` 的有界结构；它考察所有匹配条目，并不预设子公式取值 `ya` 唯一。
+反过来，假定每个实际表元素 `e'=(c₁,ya)`，只要其键满足 `c₁=(ar',r)` 与 `ar'=suc A`，就在任意两个配对容器下给出所需的 `Ext` 事实。这条全称前提足以重建 `quRel` 的有界结构；它考察所有匹配条目，并不预设子公式取值 `ya` 唯一。
 <!--ja-->
 逆に、鍵が `c₁=(ar',r)` と `ar'=suc A` を満たす実際の表の要素 `e'=(c₁,ya)` が、二つの対のコンテナのどの選び方に対しても必要な `Ext` を与えると仮定する。この全称的な前提から `quRel` の有界な構造を組み直せる。これは対応するすべての項目を扱うもので、子の値 `ya` の一意性を仮定しない。
 <!--/-->
@@ -1227,7 +1227,7 @@ No additional payload decomposition is needed for an unbounded quantifier: its p
 <!--en-->
 The bounded-quantifier payload has two syntactic components: the bound term code `t` and the child formula code `a`, so `r=(t,a)`. The child key is `c₁=(ar',a)` at successor arity, and its table value is `ya`. The four truncated witnesses record the payload pair, the child table member, and the two relevant pair decompositions. The resulting `Ext` fact characterizes the outer value `yc`; inside its body, the term code is evaluated and its value bounds the quantification.
 <!--zh-->
-有界量词的载荷有两个句法分量：界词项码 `t` 与子公式码 `a`，故 `r=(t,a)`。子公式键是在后继元数处的 `c₁=(ar',a)`，其表取值为 `ya`。四个见证在命题截断下打包在一起，记录载荷配对、子公式表成员与两个相关的配对分解。所得 `Ext` 事实刻画外层取值 `yc`；在其主体内部，词项码被求值，而所得词项值限制量化范围。
+有界量词的载荷有两个句法分量：界词项码 `t` 与子公式码 `a`，故 `r=(t,a)`。子公式键是在后继元数处的 `c₁=(ar',a)`，其表取值为 `ya`。四个见证在命题截断下打包在一起，记录载荷配对、子公式表元素与两个相关的配对分解。所得 `Ext` 事实刻画外层取值 `yc`；在其主体内部，词项码被求值，而所得词项值限制量化范围。
 <!--ja-->
 有界量化子のペイロードには、境界を与える項の符号 `t` と子論理式の符号 `a` という二つの構文的成分があり、`r=(t,a)` である。子の鍵は後続アリティにおける `c₁=(ar',a)` で、その表の値が `ya` である。切り詰められた四つの証人は、ペイロードの対、子の表の要素、および関係する二つの対分解を記録する。得られる `Ext` は外側の値 `yc` を特徴付け、その本体の中で項の符号が評価され、その値が量化の範囲を制限する。
 <!--/-->
@@ -1243,7 +1243,7 @@ The bounded-quantifier payload has two syntactic components: the bound term code
 <!--en-->
 The proof packages exactly four witnesses: a container for `r=(t,a)`, a container and an actual table member for `(c₁,ya)`, and a container for `c₁=(ar',a)`. After `useBoth` opens the payload, `subSucAt-out` reads the child value at successor arity. The environment supplied to `Ext` adds nine local slots to the twelve-slot frame, and `Ext` itself places the candidate encoded environment `z` in one further head slot, matching the arity of `bqBody`.
 <!--zh-->
-证明恰好打包四个见证：`r=(t,a)` 的容器、配对 `(c₁,ya)` 的容器与实际表成员，以及 `c₁=(ar',a)` 的容器。`useBoth` 打开载荷后，`subSucAt-out` 在后继元数处读取子公式取值。传给 `Ext` 的环境在十二槽框架前增加九个局部槽位，而 `Ext` 自身再把候选编码环境 `z` 放入一个新的头槽，恰与 `bqBody` 的元数吻合。
+证明恰好打包四个见证：`r=(t,a)` 的容器、配对 `(c₁,ya)` 的容器与实际表元素，以及 `c₁=(ar',a)` 的容器。`useBoth` 打开载荷后，`subSucAt-out` 在后继元数处读取子公式取值。传给 `Ext` 的环境在十二槽框架前增加九个局部槽位，而 `Ext` 自身再把候选编码环境 `z` 放入一个新的头槽，恰与 `bqBody` 的元数吻合。
 <!--ja-->
 証明がまとめる証人は正確に四つである。`r=(t,a)` のコンテナ、対 `(c₁,ya)` のコンテナと実際の表の要素、そして `c₁=(ar',a)` のコンテナである。`useBoth` がペイロードを開いた後、`subSucAt-out` が後続アリティにおける子の値を読む。`Ext` に渡す環境は十二枠の前に九つの局所的な枠を加え、`Ext` 自身が候補となる符号化環境 `z` をさらに一つの先頭枠へ置くので、`bqBody` のアリティと一致する。
 <!--/-->
@@ -1287,7 +1287,7 @@ The hypothesis `mem` is membership of the underlying pair `(c₁,ya)` in the tab
 <!--en-->
 The converse premise ranges over nine objects because it must accept every realization of the payload and child-table decompositions. Here `s₁` is a pair container for the table member, while `s'` is a container for the successor-arity child key; neither is the semantic witness bound by the quantified formula. Given the membership and pair equations, the premise supplies the `Ext` fact for `yc` and thereby determines the bounded relation locally.
 <!--zh-->
-反向前提量化九个对象，因为它必须接受载荷分解与子公式表分解的每一种实现。这里 `s₁` 是表成员的配对容器，`s'` 是后继元数子公式键的容器；二者都不是量化公式所约束的语义见证。在给定隶属证明与配对等式后，该前提提供关于 `yc` 的 `Ext` 事实，从而局部确定有界量词关系。
+反向前提量化九个对象，因为它必须接受载荷分解与子公式表分解的每一种实现。这里 `s₁` 是表元素的配对容器，`s'` 是后继元数子公式键的容器；二者都不是量化公式所约束的语义见证。在给定成员关系证明与配对等式后，该前提提供关于 `yc` 的 `Ext` 事实，从而局部确定有界量词关系。
 <!--ja-->
 逆向きの前提が九つの対象を量化するのは、ペイロードと子の表の分解のあらゆる実現を受け取る必要があるためである。ここで `s₁` は表の要素の対コンテナ、`s'` は後続アリティの子の鍵のコンテナであり、どちらも量化された論理式が束縛する意味論的な証人ではない。所属の証明と対の等式が与えられると、この前提は `yc` に関する `Ext` を与え、有界量化子の関係を局所的に定める。
 <!--/-->
@@ -1319,7 +1319,7 @@ To rebuild `bqRel`, `bothAll-in` first handles every decomposition `r=(t,a)` of 
 <!--en-->
 At the innermost stage all structural obligations have become explicit: the payload is `(t,a)`, the child table member is `(c₁,ya)`, its key is `(ar',a)`, and `ar'` is the successor of `A`. These are exactly the hypotheses of the assumed rule `g`, so its extension fact closes the successor-arity subvalue clause. No assertion about the uniqueness of `ya` is used in this reconstruction.
 <!--zh-->
-到最内层时，所有结构义务都已显式给出：载荷为 `(t,a)`，子公式表成员为 `(c₁,ya)`，其键为 `(ar',a)`，且 `ar'` 是 `A` 的后继。这些恰是规则 `g` 的假设，故它给出的外延事实可以闭合后继元数子值子句。此处的重建不使用任何关于 `ya` 唯一性的断言。
+到最内层时，所有结构义务都已显式给出：载荷为 `(t,a)`，子公式表元素为 `(c₁,ya)`，其键为 `(ar',a)`，且 `ar'` 是 `A` 的后继。这些恰是规则 `g` 的假设，故它给出的外延事实可以闭合后继元数子值子句。此处的重建不使用任何关于 `ya` 唯一性的断言。
 <!--ja-->
 最も内側の段階では、構造上の義務がすべて明示されている。ペイロードは `(t,a)`、子の表の要素は `(c₁,ya)`、その鍵は `(ar',a)` であり、`ar'` は `A` の後続である。これらは仮定した規則 `g` の前提と正確に一致するため、`g` の与える外延条件が後続アリティの子の値の節を閉じる。この再構成では `ya` の一意性をまったく用いない。
 <!--/-->
@@ -1379,7 +1379,7 @@ The relation readings are complete: each constructor's clause has been converted
 <!--en-->
 The bridge module is parameterized by a set `W` of the hierarchy whose members form the constant alphabet of the internal language. The definability and semantic modules are opened at `W`, so that formulas over the alphabet `Ab` can be interpreted in the small model carried by `W`.
 <!--zh-->
-桥模块以层级的一个集合 `W` 为参数，其成员构成内部语言的常元字母表。可定义性与语义模块在 `W` 处打开，使字母表 `Ab` 上的公式能在 `W` 携带的小模型中解释。
+桥模块以层级的一个集合 `W` 为参数，其元素构成内部语言的常元字母表。可定义性与语义模块在 `W` 处打开，使字母表 `Ab` 上的公式能在 `W` 携带的小模型中解释。
 <!--ja-->
 橋のモジュールは、階層の集合 `W` をパラメータとする。その要素が内部言語の定数のアルファベットをなす。定義可能性と意味論のモジュールが `W` で開かれ、アルファベット `Ab` の上の論理式が、`W` が担う小さなモデルの中で解釈できるようにする。
 <!--/-->
@@ -1427,7 +1427,7 @@ The meta-level meaning of a formula `ψ` at a meta-level environment `δ` is the
 <!--en-->
 The underlying set `Wv` is the carrier over which the small-model quantifiers range. Keeping it separate from the presentation `W : S` matters in the later bridges: object-language membership uses the set `Wv`, while constructibility evidence remains in the second component of `W`. Thus the bridges quantify over members of the fixed model, not over every constructible set.
 <!--zh-->
-底层集合 `Wv` 是小模型量词的取值载体。把它与呈现 `W : S` 区分开来，对后续桥接很重要：对象语言的隶属使用集合 `Wv`，而可构造性证据保留在 `W` 的第二分量中。因此，各桥只对固定模型的成员量化，而不是对所有可构造集合量化。
+底层集合 `Wv` 是小模型量词的取值载体。把它与呈现 `W : S` 区分开来，对后续桥接很重要：对象语言的成员关系使用集合 `Wv`，而可构造性证据保留在 `W` 的第二分量中。因此，各桥只对固定模型的元素量化，而不是对所有可构造集合量化。
 <!--ja-->
 基礎の集合 `Wv` は、小モデルの量化子が走る台である。これを表示 `W : S` と区別しておくことは、後の橋にとって重要である。対象言語の所属は集合 `Wv` を使い、構成可能性の証拠は `W` の第二成分に残る。したがって橋が量化するのは固定されたモデルの要素であり、すべての構成可能集合ではない。
 <!--/-->
@@ -1466,7 +1466,7 @@ The constructible satisfaction set `SatW ψ` collects the coded environments tha
 <!--en-->
 The outward reading of membership in `SatW ψ` follows from the membership specification of the internal satisfaction: a member of `SatW ψ` is a coded environment that lies in the environment set at the correct arity and satisfies the relabeled formula's condition.
 <!--zh-->
-`SatW ψ` 中隶属的向外读法来自内部满足的隶属规格：`SatW ψ` 的成员是一个编码环境，它属于正确元数的环境集，并满足改名后公式的条件。
+`SatW ψ` 中成员关系的向外读法来自内部满足的成员关系规格：`SatW ψ` 的元素是一个编码环境，它属于正确元数的环境集，并满足改名后公式的条件。
 <!--ja-->
 `SatW ψ` への所属の外向きの読み出しは、内部の充足の所属の仕様から従う。`SatW ψ` の要素は、正しいアリティの環境の集合に属し、付け替えられた論理式の条件を満たす、符号化された環境である。
 <!--/-->
@@ -1480,7 +1480,7 @@ The outward reading of membership in `SatW ψ` follows from the membership speci
 <!--en-->
 The inward direction starts from membership in the correct environment set together with the recursive condition, transports that pair backward along `Sat-mem`, and obtains membership in `SatW ψ`. Thus `Sat-out` and `Sat-in` are exactly the two transports supplied by the membership specification; they require no additional semantic hypothesis.
 <!--zh-->
-向内方向从「属于正确的环境集」与「满足递归条件」这两个事实出发，把它们沿 `Sat-mem` 反向搬运，从而得到属于 `SatW ψ`。因此，`Sat-out` 与 `Sat-in` 恰是隶属规格所给路径的两个搬运方向，不需要额外的语义假设。
+向内方向从「属于正确的环境集」与「满足递归条件」这两个事实出发，把它们沿 `Sat-mem` 反向搬运，从而得到属于 `SatW ψ`。因此，`Sat-out` 与 `Sat-in` 恰是成员关系规格所给路径的两个搬运方向，不需要额外的语义假设。
 <!--ja-->
 内向きの方向は、正しい環境集合への所属と再帰条件という二つの事実から出発し、その対を `Sat-mem` に沿って逆向きに輸送することで `SatW ψ` への所属を得る。したがって `Sat-out` と `Sat-in` は、所属の仕様が与えるパスに沿う二方向の輸送そのものであり、追加の意味論的仮定を必要としない。
 <!--/-->
@@ -1494,7 +1494,7 @@ The inward direction starts from membership in the correct environment set toget
 <!--en-->
 The lemma `extension-path` turns a pointwise path of truth values into an exact extension theorem for `SatW ψ`. For each encoded environment `z`, its premise identifies the recursive condition `cond W (toS ψ)` with the target proposition `P z`. Using the two directions of `Sat-mem`, the conclusion says that the members of `SatW ψ` are exactly the members of `envSet W n` satisfying `P`; it neither decodes `z` nor chooses a representative environment vector.
 <!--zh-->
-引理 `extension-path` 把逐点的真值路径转化为关于 `SatW ψ` 的精确外延定理。对每个编码环境 `z`，其前提把递归条件 `cond W (toS ψ)` 与目标命题 `P z` 识别起来。借助 `Sat-mem` 的两个方向，结论说明 `SatW ψ` 的成员恰是 `envSet W n` 中满足 `P` 的成员；这里既不解码 `z`，也不选择环境向量的代表。
+引理 `extension-path` 把逐点的真值路径转化为关于 `SatW ψ` 的精确外延定理。对每个编码环境 `z`，其前提把递归条件 `cond W (toS ψ)` 与目标命题 `P z` 识别起来。借助 `Sat-mem` 的两个方向，结论说明 `SatW ψ` 的元素恰是 `envSet W n` 中满足 `P` 的元素；这里既不解码 `z`，也不选择环境向量的代表。
 <!--ja-->
 補題 `extension-path` は、各点における真理値のパスを `SatW ψ` の正確な外延定理へ変える。符号化された各環境 `z` について、その前提は再帰条件 `cond W (toS ψ)` を目標命題 `P z` と同定する。`Sat-mem` の二方向を用いると、結論は `SatW ψ` の要素が、`P` を満たす `envSet W n` の要素にちょうど一致すると述べる。ここでは `z` を復号せず、環境ベクトルの代表も選ばない。
 <!--/-->
@@ -1510,7 +1510,7 @@ The lemma `extension-path` turns a pointwise path of truth values into an exact 
 <!--en-->
 The outward direction reads the two components of membership in `SatW ψ` through `Sat-out` and transports the condition along the pointwise equality. The inward direction transports the property back and applies `Sat-in`. Both directions use only the pointwise equality, not any choice of representatives.
 <!--zh-->
-向外方向经 `Sat-out` 读取 `SatW ψ` 中隶属的两个分量，并沿逐点等式运输条件。向内方向把性质运回并应用 `Sat-in`。两个方向都只使用逐点等式，不选取任何代表。
+向外方向经 `Sat-out` 读取 `SatW ψ` 中成员关系的两个分量，并沿逐点等式运输条件。向内方向把性质运回并应用 `Sat-in`。两个方向都只使用逐点等式，不选取任何代表。
 <!--ja-->
 外向きの方向は、`Sat-out` を通して `SatW ψ` への所属の二つの成分を読み、各点の等式に沿って条件を運ぶ。内向きの方向は、性質を運び戻して `Sat-in` を適用する。どちらの方向も、代表を選ぶことなく、各点の等式だけを使う。
 <!--/-->
@@ -1523,7 +1523,7 @@ The outward direction reads the two components of membership in `SatW ψ` throug
 <!--en-->
 For falsity, the target property has no inhabitants for any `z`. If `z` belonged to `SatW ⊥̇`, `Sat-out` would expose the impossible satisfaction of falsity; conversely, an assumed proof of that impossible property eliminates the candidate immediately. The remaining component merely records that every hypothetical member would have the correct arity, so `botBridge` gives the empty extension inside `envSet W n`.
 <!--zh-->
-对假式而言，目标性质对任何 `z` 都没有元素。若 `z` 属于 `SatW ⊥̇`，`Sat-out` 会给出不可能成立的假式满足；反过来，假定有这项不可能的性质，便可立即消去候选。剩余分量只记录每个假想成员都会具有正确元数，因此 `botBridge` 给出 `envSet W n` 内的空外延。
+对假式而言，目标性质对任何 `z` 都没有元素。若 `z` 属于 `SatW ⊥̇`，`Sat-out` 会给出不可能成立的假式满足；反过来，假定有这项不可能的性质，便可立即消去候选。剩余分量只记录每个假想元素都会具有正确元数，因此 `botBridge` 给出 `envSet W n` 内的空外延。
 <!--ja-->
 偽の場合、目標の性質はどの `z` に対しても要素を持たない。もし `z` が `SatW ⊥̇` に属すれば、`Sat-out` は不可能な偽の充足を取り出す。逆に、その不可能な性質の証明を仮定すれば、候補は直ちに除去できる。残る成分は、仮に要素があれば正しいアリティを持つことを記録するだけなので、`botBridge` は `envSet W n` の内部で空の外延を与える。
 <!--/-->
@@ -1553,7 +1553,7 @@ Assume slots `ya` and `yb` of `env` contain the underlying satisfaction sets of 
 <!--en-->
 For conjunction, the pointwise path compares two descriptions of the same candidate environment `z`. The recursive condition says that `z` belongs to both `SatW a` and `SatW b`; transporting those two memberships along `qa` and `qb` gives exactly the two object-language membership atoms in the clause body. No child environment is decoded at this step.
 <!--zh-->
-对合取而言，这条逐点路径比较同一个候选环境 `z` 的两种描述。递归条件说 `z` 同时属于 `SatW a` 与 `SatW b`；沿 `qa` 和 `qb` 传输这两份隶属，恰好得到子句主体中的两条对象语言隶属原子。这一步不解码任何子环境。
+对合取而言，这条逐点路径比较同一个候选环境 `z` 的两种描述。递归条件说 `z` 同时属于 `SatW a` 与 `SatW b`；沿 `qa` 和 `qb` 传输这两份成员关系，恰好得到子句主体中的两条对象语言成员关系原子。这一步不解码任何子环境。
 <!--ja-->
 連言では、点ごとのパスが同じ候補環境 `z` の二つの記述を比較する。再帰条件は `z` が `SatW a` と `SatW b` の両方に属すことを述べ、二つの所属を `qa` と `qb` に沿って輸送すると、節の本体にある二つの対象言語の所属原子がちょうど得られる。この段階では子環境を復号しない。
 <!--/-->
@@ -1582,7 +1582,7 @@ The disjunction bridge gives an exact extension description. An environment belo
 <!--en-->
 The pointwise comparison for disjunction transports membership of the same `z` along the two slot equations. Its two alternatives are membership in `SatW a` and membership in `SatW b`; the object-language disjunction records precisely that alternative, without producing an additional environment witness.
 <!--zh-->
-析取的逐点比较沿两条槽位等式传输同一个 `z` 的隶属。两种可能分别是 `z` 属于 `SatW a` 与 `z` 属于 `SatW b`；对象语言析取准确记录这一选择，并不产生额外的环境见证。
+析取的逐点比较沿两条槽位等式传输同一个 `z` 的成员关系。两种可能分别是 `z` 属于 `SatW a` 与 `z` 属于 `SatW b`；对象语言析取准确记录这一选择，并不产生额外的环境见证。
 <!--ja-->
 選言の点ごとの比較は、同じ `z` の所属を二つのスロット等式に沿って輸送する。二つの選択肢は `z` の `SatW a` への所属と `SatW b` への所属であり、対象言語の選言はこの選択を正確に記録する。ここで別の環境の証人が作られることはない。
 <!--/-->
@@ -1624,7 +1624,7 @@ The required path is pointwise: `qa` and `qb` rename the antecedent and conseque
 <!--en-->
 Both unbounded quantifier bodies range first over the carrier named by `wi`. The existential body asks for some carrier member `x`, while the universal body treats every such `x`; in either case an inner bounded existential chooses an entry of the child value and requires it to be the graph obtained by consing `x` onto the old environment.
 <!--zh-->
-两种无界量词主体都先在 `wi` 指名的载体上量化。存在主体要求某个载体成员 `x`，全称主体则处理每个这样的 `x`；两者的内层都有一个有界存在，它从子公式的值中取一个条目，并要求该条目是把 `x` 添加到旧环境前端所得的图。
+两种无界量词主体都先在 `wi` 指名的载体上量化。存在主体要求某个载体元素 `x`，全称主体则处理每个这样的 `x`；两者的内层都有一个有界存在，它从子公式的值中取一个条目，并要求该条目是把 `x` 添加到旧环境前端所得的图。
 <!--ja-->
 二つの非有界量化子の本体は、まず `wi` が名指す台の上で量化する。存在の本体は台のある要素 `x` を求め、全称の本体はそのようなすべての `x` を扱う。どちらの場合も内側の有界存在が子論理式の値から項目を取り、それが `x` を古い環境の先頭に加えて得られるグラフであることを要求する。
 <!--/-->
@@ -1670,7 +1670,7 @@ For the outward half, `Sat-out` first supplies membership of `z` in the environm
 <!--en-->
 For the inward half, membership in the environment set again yields only a truncated pair `δ , q`. The backward hypothesis sends `P z` to `Meaning ψ δ`, and the inverse direction of `Sat-small-spec` returns membership in `SatW ψ`. This elimination is valid because the membership goal is a proposition, so no global choice of a decoding vector is made.
 <!--zh-->
-在向内的一半中，属于环境集合仍只给出截断的 `δ , q`。反向假设把 `P z` 送到 `Meaning ψ δ`，再沿 `Sat-small-spec` 的逆向得到 `z ∈ SatW ψ`。由于目标隶属是命题，这次截断消去是合法的，也没有全局选取解码向量。
+在向内的一半中，属于环境集合仍只给出截断的 `δ , q`。反向假设把 `P z` 送到 `Meaning ψ δ`，再沿 `Sat-small-spec` 的逆向得到 `z ∈ SatW ψ`。由于目标成员关系是命题，这次截断消去是合法的，也没有全局选取解码向量。
 <!--ja-->
 内向きの半分でも、環境集合への所属から得られるのは切り詰められた組 `δ , q` だけである。逆向きの仮定が `P z` を `Meaning ψ δ` に送り、`Sat-small-spec` の逆向きが `z ∈ SatW ψ` を返す。目標の所属は命題なので、この切り詰めの消去は正当であり、復号ベクトルを大域的に選ぶことはない。
 <!--/-->
@@ -1686,7 +1686,7 @@ For the inward half, membership in the environment set again yields only a trunc
 <!--en-->
 The lemma `child` aligns the encoded and semantic views of one bound variable. If the old coded environment is the graph of `δ` and the named child value is `SatW a`, then saying that some member of that child value is the graph obtained by consing `x` onto the old environment is propositionally equal to `Meaning a (x ∷ δ)`.
 <!--zh-->
-引理 `child` 对齐一个约束变元的编码读法与语义读法。若旧编码环境是 `δ` 的图，且被指名的子公式值为 `SatW a`，那么「子公式值的某个成员是把 `x` 添加到旧环境前端所得的图」与 `Meaning a (x ∷ δ)` 命题相等。
+引理 `child` 对齐一个约束变元的编码读法与语义读法。若旧编码环境是 `δ` 的图，且被指名的子公式值为 `SatW a`，那么「子公式值的某个元素是把 `x` 添加到旧环境前端所得的图」与 `Meaning a (x ∷ δ)` 命题相等。
 <!--ja-->
 補題 `child` は、一つの束縛変数について符号化された見方と意味論的な見方をそろえる。古い符号化環境が `δ` のグラフであり、名指された子論理式の値が `SatW a` なら、その値のある要素が `x` を古い環境の先頭に加えて得られるグラフであるという主張は、`Meaning a (x ∷ δ)` と命題として等しくなる。
 <!--/-->
@@ -1718,7 +1718,7 @@ The proof is a pair of implications joined by `⇔toPath`. The outward direction
 <!--en-->
 In the outward direction, the bounded existential is eliminated into the proposition `Meaning a (x ∷ δ)`. The cons clause and the equation for the old graph identify its witness `e` with the graph of `x ∷ δ`; after `qa` turns `e`'s membership into membership in `SatW a`, `Sat-small-spec` yields the desired semantic satisfaction.
 <!--zh-->
-在向外方向，有界存在被消去到命题 `Meaning a (x ∷ δ)` 中。序接子句连同旧图的等式，把见证 `e` 认作 `x ∷ δ` 的图；再由 `qa` 把 `e` 的隶属改写为属于 `SatW a`，`Sat-small-spec` 随即给出所需的语义满足。
+在向外方向，有界存在被消去到命题 `Meaning a (x ∷ δ)` 中。序接子句连同旧图的等式，把见证 `e` 认作 `x ∷ δ` 的图；再由 `qa` 把 `e` 的成员关系改写为属于 `SatW a`，`Sat-small-spec` 随即给出所需的语义满足。
 <!--ja-->
 外向きには、有界存在を命題 `Meaning a (x ∷ δ)` の中へ消去する。先頭追加の節と古いグラフの等式によって、証人 `e` は `x ∷ δ` のグラフと同定される。さらに `qa` が `e` の所属を `SatW a` への所属に書き換え、`Sat-small-spec` が求める意味論的充足を与える。
 <!--/-->
@@ -1762,7 +1762,7 @@ The remaining arguments to `consAtL-in` supply the old graph equation `qz`, the 
 <!--en-->
 The existential bridge is the first quantifier result: membership in the internal value of `∃̇ a` over the environment set is the same as satisfying the bounded-existential shape `quEx` over the carrier, with the two slot equations naming the carrier and the child value.
 <!--zh-->
-存在桥接是量词的第一个结果：`∃̇ a` 的内部值在环境集上的隶属，与在载体上满足有界存在形状 `quEx` 是同一回事，其中两条槽位等式分别点名载体与子值。
+存在桥接是量词的第一个结果：`∃̇ a` 的内部值在环境集上的成员关系，与在载体上满足有界存在形状 `quEx` 是同一回事，其中两条槽位等式分别点名载体与子值。
 <!--ja-->
 存在の橋渡しは、量化子に関する最初の結果である。環境の集合の上での `∃̇ a` の内部の値への所属は、台の上で有界存在の形 `quEx` を充足することと同じであり、二つのスロットの等式が台と子の値を名指す。
 <!--/-->
@@ -1794,7 +1794,7 @@ For the existential bridge, `direct-extension` leaves only the two translations 
 <!--en-->
 The universal bridge states the same extensional fact for `∀̇ a`: the internal value contains an environment exactly when every carrier member, consed onto the environment, satisfies the child formula.
 <!--zh-->
-全称桥接为 `∀̇ a` 陈述同样的外延事实：内部值包含一个环境，当且仅当载体的每个成员添加到该环境之后都满足子公式。
+全称桥接为 `∀̇ a` 陈述同样的外延事实：内部值包含一个环境，当且仅当载体的每个元素添加到该环境之后都满足子公式。
 <!--ja-->
 全称の橋渡しは `∀̇ a` に対して同じ外延的事実を述べる。内部の値が環境を含むのは、台のすべての要素をその環境の先頭に加えたときに子論理式が充足される場合であり、またその場合に限られる。
 <!--/-->
@@ -1810,7 +1810,7 @@ The universal bridge states the same extensional fact for `∀̇ a`: the interna
 <!--en-->
 In the forward map required by `direct-extension`, an arbitrary object-level member of the named carrier is converted to a restricted-model element, the semantic universal hypothesis is applied to it, and `child` is read from semantic satisfaction back to the encoded extension clause. In the reverse map, a restricted-model element is embedded into the carrier, the encoded universal is applied, and `child` is read outward to recover semantic satisfaction.
 <!--zh-->
-在 `direct-extension` 所需的前向映射中，先把被指名载体的任意对象层成员变成限制模型的元素，对它施用语义全称假设，再从语义满足向编码扩展子句反向读取 `child`。在反向映射中，先把限制模型元素嵌入载体，施用编码全称，再向外读取 `child` 以恢复语义满足。
+在 `direct-extension` 所需的前向映射中，先把被指名载体的任意对象层元素变成限制模型的元素，对它施用语义全称假设，再从语义满足向编码扩展子句反向读取 `child`。在反向映射中，先把限制模型元素嵌入载体，施用编码全称，再向外读取 `child` 以恢复语义满足。
 <!--ja-->
 `direct-extension` が要求する前向きの写像では、名指された台の任意の対象レベルの要素を制限模型の要素に変え、意味論的な全称の仮定を適用し、`child` を意味論的充足から符号化された拡張の節へ逆向きに読む。逆向きの写像では、制限模型の要素を台へ埋め込み、符号化された全称を適用してから、`child` を外向きに読んで意味論的充足を復元する。
 <!--/-->
@@ -1825,7 +1825,7 @@ In the forward map required by `direct-extension`, an arbitrary object-level mem
 <!--en-->
 The bounded quantifiers are stated in the object language with three nested bounded layers: the value of the bounding term, a member of the carrier inside it, and the extension entry, in the same order for both quantifiers.
 <!--zh-->
-有界量词的对象语言形状有三层嵌套的有界量化：界项的取值、其内落在载体中的成员、以及扩展条目，两个量词的次序相同。
+有界量词的对象语言形状有三层嵌套的有界量化：界项的取值、其内落在载体中的元素、以及扩展条目，两个量词的次序相同。
 <!--ja-->
 有界の量化子は、対象言語で三重に入れ子になった有界の層として述べられる。境界の項の値、その内側で台に属する要素、そして拡張の項目であり、順序は両方の量化子で同じである。
 <!--/-->
@@ -1884,7 +1884,7 @@ For a constant term, `term-out` eliminates the truncated `TmIsV` evidence into a
 <!--en-->
 For a variable term, the constant-shaped branch is ruled out by the same tag distinction. In the variable-shaped branch, pair injectivity identifies the stored index with the numeral of `i`; the equation `qz` moves its membership into the canonical graph, and `lookup-spec` then says that the proposed value is exactly the `i`th entry of `δ`. The truncation is eliminated only into this propositional equality.
 <!--zh-->
-对变元词项，常元形状的分支同样由标签互异而排除。在变元形状的分支，对编码的单射性把所存索引认作 `i` 的数码；等式 `qz` 把相应隶属移入典范图，`lookup-spec` 随即说明候选值恰是 `δ` 的第 `i` 个条目。截断只被消去到这条命题性等式中。
+对变元词项，常元形状的分支同样由标签互异而排除。在变元形状的分支，对编码的单射性把所存索引认作 `i` 的数码；等式 `qz` 把相应成员关系移入典范图，`lookup-spec` 随即说明候选值恰是 `δ` 的第 `i` 个条目。截断只被消去到这条命题性等式中。
 <!--ja-->
 変数項では、定数の形をした分枝が同じタグの相違によって排除される。変数の形をした分枝では、対の符号化の単射性が格納された添字を `i` の数項と同定し、等式 `qz` がその所属を正準なグラフへ移す。そこで `lookup-spec` により、候補の値が `δ` の第 `i` 成分にちょうど等しいと分かる。切り詰めはこの命題的な等式の中へのみ消去される。
 <!--/-->
@@ -1990,7 +1990,7 @@ Conversely, a `TmIsV` statement for `ct t` is transported backward along `qt` an
 <!--en-->
 For a semantic environment `δ`, `bound δ` is the value of the bounding term embedded back into `L`. It serves as the canonical witness for the outer value slot of the coded bounded quantifier, and its members are the elements over which the bounded formula ranges.
 <!--zh-->
-对语义环境 `δ`，`bound δ` 是界项取值重新嵌入 `L` 后所得的集合。它充当编码有界量词最外层取值槽的典范见证，而有界公式所量化的对象正是它的成员。
+对语义环境 `δ`，`bound δ` 是界项取值重新嵌入 `L` 后所得的集合。它充当编码有界量词最外层取值槽的典范见证，而有界公式所量化的对象正是它的元素。
 <!--ja-->
 意味論的環境 `δ` に対し、`bound δ` は境界項の値を `L` へ埋め戻した集合である。これは符号化された有界量化子の最外側の値スロットに対する正準な証人となり、有界論理式はその要素の上を動く。
 <!--/-->
@@ -2003,7 +2003,7 @@ For a semantic environment `δ`, `bound δ` is the value of the bounding term em
 <!--en-->
 The bound belongs to the carrier: the value's second component is its membership in the carrier, transported along the carrier's naming equation.
 <!--zh-->
-界属于载体：取值的第二分量是它在载体中的隶属，沿载体的命名等式传输。
+界属于载体：取值的第二分量是它在载体中的成员关系，沿载体的命名等式传输。
 <!--ja-->
 境界は台に属する。値の第二成分が台への所属であり、台の名指しの等式に沿って輸送される。
 <!--/-->
@@ -2047,7 +2047,7 @@ The representation-level certificate from `bound-term` is then converted by `tmI
 <!--en-->
 For the forward half of the bounded universal bridge, consider an arbitrary candidate value `v` satisfying the term clause and an arbitrary carrier member `x` lying in `v`. The lemma `term-out` identifies the underlying set of `v` with the underlying set of the actual semantic value of `t`, so membership of `x` transports to the semantic bound. The universal semantic hypothesis gives the child's truth, and `child` converts it back to the encoded extension clause.
 <!--zh-->
-在有界全称桥接的前向一半中，任取满足词项子句的候选值 `v`，再任取既属于载体又属于 `v` 的成员 `x`。引理 `term-out` 把 `v` 的底层集合认同为 `t` 的真实语义值之底层集合，因此 `x` 的隶属可传输到语义界中。语义全称假设给出子公式的真值，再由 `child` 把它转回编码扩展子句。
+在有界全称桥接的前向一半中，任取满足词项子句的候选值 `v`，再任取既属于载体又属于 `v` 的元素 `x`。引理 `term-out` 把 `v` 的底层集合认同为 `t` 的真实语义值之底层集合，因此 `x` 的成员关系可传输到语义界中。语义全称假设给出子公式的真值，再由 `child` 把它转回编码扩展子句。
 <!--ja-->
 有界な全称の橋渡しの前向きの半分では、項の節を満たす任意の候補値 `v` と、台に属しかつ `v` に属す任意の要素 `x` を考える。補題 `term-out` は `v` の基礎の集合を `t` の実際の意味論的な値の基礎の集合と同定するので、`x` の所属を意味論的な境界への所属へ輸送できる。全称の意味論的仮定が子論理式の真理を与え、`child` がそれを符号化された拡張の節へ戻す。
 <!--/-->
@@ -2063,7 +2063,7 @@ For the forward half of the bounded universal bridge, consider an arbitrary cand
 <!--en-->
 For the reverse half, an arbitrary restricted-model element `x` lying in the semantic bound must satisfy the child. The coded universal is instantiated with the canonical value `bound δ`, using `bound∈W` and `bound-read`, and with the embedded element `intoL W x`, using its carrier membership and the assumed bound membership. Reading `child` outward then gives `Meaning a (x ∷ δ)`.
 <!--zh-->
-在反向一半中，要证明语义界内任意限制模型元素 `x` 满足子公式。把编码全称实例化于典范值 `bound δ`，所需条件由 `bound∈W` 与 `bound-read` 提供；再实例化于嵌入后的元素 `intoL W x`，使用它的载体隶属与假定的界内隶属。最后向外读取 `child`，得到 `Meaning a (x ∷ δ)`。
+在反向一半中，要证明语义界内任意限制模型元素 `x` 满足子公式。把编码全称实例化于典范值 `bound δ`，所需条件由 `bound∈W` 与 `bound-read` 提供；再实例化于嵌入后的元素 `intoL W x`，使用它的载体成员关系与假定的界内成员关系。最后向外读取 `child`，得到 `Meaning a (x ∷ δ)`。
 <!--ja-->
 逆向きの半分では、意味論的境界に属す任意の制限模型の要素 `x` が子論理式を満たすことを示す。符号化された全称を正準な値 `bound δ` に適用し、必要な条件を `bound∈W` と `bound-read` から得る。さらに埋め込まれた要素 `intoL W x` に適用し、その台への所属と仮定された境界への所属を使う。最後に `child` を外向きに読むと `Meaning a (x ∷ δ)` が得られる。
 <!--/-->
@@ -2079,7 +2079,7 @@ For the reverse half, an arbitrary restricted-model element `x` lying in the sem
 <!--en-->
 The last argument is exactly the hypothesis that `x` lies in the semantic value of the bounding term. Supplying it completes the universal verifier for every such `x`, and hence completes the reverse implication required by `direct-extension`.
 <!--zh-->
-最后一个参数恰是假设 `x` 属于界项的语义值。供给这份隶属后，便为每个这样的 `x` 完成全称验证者，也就完成了 `direct-extension` 所需的反向蕴涵。
+最后一个参数恰是假设 `x` 属于界项的语义值。供给这份成员关系后，便为每个这样的 `x` 完成全称验证者，也就完成了 `direct-extension` 所需的反向蕴涵。
 <!--ja-->
 最後の引数は、`x` が境界項の意味論的な値に属すという仮定そのものである。この所属を与えると、そのようなすべての `x` に対する全称の検証者が完成し、`direct-extension` が要求する逆向きの含意も完成する。
 <!--/-->
@@ -2107,7 +2107,7 @@ The bounded existential bridge states the same extensional fact for `∃̇∈ t 
 <!--en-->
 From a semantic witness `x` for the bounded existential, the forward map chooses the canonical outer value `bound δ`, supplies its carrier membership and term certificate, and embeds `x` as the inner carrier witness. Its membership in the semantic bound is retained, while `child` read backward produces the required encoded extension witness. Every existential witness remains under propositional truncation.
 <!--zh-->
-从有界存在的语义见证 `x` 出发，前向映射选取典范外层值 `bound δ`，供给其载体隶属与词项证书，并把 `x` 嵌入为内层载体见证。`x` 属于语义界的证据得到保留，而反向读取 `child` 产生所需的编码扩展见证。所有存在见证始终留在命题截断之内。
+从有界存在的语义见证 `x` 出发，前向映射选取典范外层值 `bound δ`，供给其载体成员关系与词项证书，并把 `x` 嵌入为内层载体见证。`x` 属于语义界的证据得到保留，而反向读取 `child` 产生所需的编码扩展见证。所有存在见证始终留在命题截断之内。
 <!--ja-->
 有界な存在の意味論的証人 `x` から、前向きの写像は正準な外側の値 `bound δ` を選び、その台への所属と項の証明を与え、`x` を内側の台の証人として埋め込む。`x` の意味論的境界への所属は保たれ、`child` を逆向きに読むことで必要な符号化された拡張の証人が得られる。存在の証人はすべて命題的切り詰めの内側に保たれる。
 <!--/-->
@@ -2123,7 +2123,7 @@ From a semantic witness `x` for the bounded existential, the forward map chooses
 <!--en-->
 In the reverse map, the outer truncated witness supplies a candidate term value `v`, and the inner one supplies a carrier member `x` lying in `v` together with an encoded child extension. Reading the term clause outward identifies the underlying set of `v` with the underlying set of the actual semantic bound. That equality transports `x`'s membership to the true bound, and `child` transports the encoded child evidence to semantic satisfaction.
 <!--zh-->
-在反向映射中，外层截断见证给出候选词项值 `v`，内层见证给出既属于载体又属于 `v` 的成员 `x`，以及编码的子公式扩展。向外读取词项子句，把 `v` 的底层集合认同为真实语义界的底层集合；沿该等式把 `x` 的隶属传输到真实界，再由 `child` 把编码的子公式证据转成语义满足。
+在反向映射中，外层截断见证给出候选词项值 `v`，内层见证给出既属于载体又属于 `v` 的元素 `x`，以及编码的子公式扩展。向外读取词项子句，把 `v` 的底层集合认同为真实语义界的底层集合；沿该等式把 `x` 的成员关系传输到真实界，再由 `child` 把编码的子公式证据转成语义满足。
 <!--ja-->
 逆向きの写像では、外側の切り詰められた証人が項の候補値 `v` を与え、内側の証人が台に属しかつ `v` に属す要素 `x` と、符号化された子論理式の拡張を与える。項の節を外向きに読むと、`v` の基礎の集合が実際の意味論的な境界の基礎の集合と同定される。その等式に沿って `x` の所属を真の境界へ輸送し、さらに `child` が符号化された子の証拠を意味論的充足へ移す。
 <!--/-->
@@ -2154,7 +2154,7 @@ The atomic body binds two values, not three: a carrier element `v` proposed as t
 <!--en-->
 `AtomBridge` abstracts the common proof for membership and equality atoms. The terms `t` and `u` and the five slot equations determine how their codes and the tags `# 0`, `# 1` are read; the parameters `op`, `R`, and `rel` then specify the meta-level atom, its ambient binary relation, and the object-language formula that represents that relation.
 <!--zh-->
-`AtomBridge` 抽出隶属原子与相等原子共有的证明。词项 `t`、`u` 及五条槽位等式决定如何读取它们的代码与标签 `# 0`、`# 1`；参数 `op`、`R`、`rel` 则分别指定元层原子、对应的外围二元关系，以及表示该关系的对象语言公式。
+`AtomBridge` 抽出成员关系原子与相等原子共有的证明。词项 `t`、`u` 及五条槽位等式决定如何读取它们的代码与标签 `# 0`、`# 1`；参数 `op`、`R`、`rel` 则分别指定元层原子、对应的外围二元关系，以及表示该关系的对象语言公式。
 <!--ja-->
 `AtomBridge` は所属原子と等号原子に共通する証明を抽象化する。項 `t`、`u` と五つのスロット等式が、それらの符号とタグ `# 0`、`# 1` の読み方を定める。さらに引数 `op`、`R`、`rel` がそれぞれメタレベルの原子、対応する周囲の二項関係、その関係を表す対象言語の論理式を指定する。
 <!--/-->
@@ -2188,7 +2188,7 @@ The agreement hypothesis states the exact interface between `rel` and `R` at the
 <!--en-->
 Two further hypotheses connect the chosen relation to the intended atomic semantics. The first sends `Meaning (op t u) δ` to `R` of the two evaluated term values, while the second reconstructs that meaning from the same relation. These hypotheses keep the generic bridge neutral between membership and equality.
 <!--zh-->
-另外两条假设把所选关系连接到目标原子语义。第一条把 `Meaning (op t u) δ` 送到两个词项求值之间的 `R`，第二条则从同一关系重建该语义。正因如此，这条一般桥接可同时适用于隶属与相等。
+另外两条假设把所选关系连接到目标原子语义。第一条把 `Meaning (op t u) δ` 送到两个词项求值之间的 `R`，第二条则从同一关系重建该语义。正因如此，这条一般桥接可同时适用于成员关系与相等。
 <!--ja-->
 さらに二つの仮定が、選んだ関係を意図した原子の意味論へ結び付ける。第一の仮定は `Meaning (op t u) δ` を二つの項の評価値の間の `R` へ送り、第二の仮定は同じ関係からその意味を組み立て直す。このため、一般的な橋渡しは所属と等号のどちらにも同じ形で使える。
 <!--/-->
@@ -2318,7 +2318,7 @@ The reverse implication of `atomBridge` starts with a meta-level environment `δ
 <!--en-->
 The inner witness supplies a second candidate `x`, its membership proof `hx : x ∈ W`, proofs `ht` and `hu` of the two term clauses, and a proof `hr` of the object-language relation. The proofs `hv` and `hx` record the bounds of the two existential quantifiers, but no further use of them is needed here. First, `agree z v x .fst` reads `hr` as `R (fst v) (fst x)`. Because `z` is the canonical graph of `δ`, `tOut` and `uOut` feed the two term-clause proofs to `term-out`, which identifies the underlying sets of `v` and `x` with those of the semantic values of `t` and `u`. Then `subst2` transports `R` along those identifications, and `cnd-in` turns the transported relation into `Meaning (op t u) δ`. This completes the atomic bridge. Downstream it is instantiated for membership and equality. In `SatSoundC`, subcode closure and structural recursion pin table entries to `SatW` by comparing extension facts; in `SatHoldsC`, decoding, prescribed table values, totality, and the stated domain let the same bridges fill all ten clauses. `SatisfactionDescription` supplies the code-domain and environment-tower facts, proves that the canonical graph `SatGraph.pairs W` satisfies `tableAt`, and packages `towerAt`, `codesAt`, and `tableAt` as `satAt`. Its `SatRead` module exposes two-way membership readers for the resulting table graph, code set, and environment tower.
 <!--zh-->
-内层见证给出第二个候选值 `x`、其成员证明 `hx : x ∈ W`、两条词项子句的证明 `ht` 与 `hu`，以及对象语言关系的证明 `hr`。`hv` 与 `hx` 记录两个存在量词的界，但这里无需再使用它们。首先，`agree z v x .fst` 把 `hr` 读成 `R (fst v) (fst x)`。由于 `z` 是 `δ` 的典范图，`tOut` 与 `uOut` 把两条词项子句证明交给 `term-out`；所得等式分别把 `v`、`x` 的底层集合认同为 `t`、`u` 的语义值之底层集合。随后，`subst2` 沿这两条同一视搬运 `R`，最后 `cnd-in` 把搬运后的关系化为 `Meaning (op t u) δ`。原子桥至此完成。下游分别为隶属关系与相等关系实例化该桥。在 `SatSoundC` 中，对子码封闭与公式结构递归通过比较外延事实，把表项固定为 `SatW`；在 `SatHoldsC` 中，码的解码、给定的表值、全定义性与指定定义域使同一组桥能够填入全部十条子句。`SatisfactionDescription` 提供码域与环境塔的事实，证明典范图 `SatGraph.pairs W` 满足 `tableAt`，并把 `towerAt`、`codesAt` 与 `tableAt` 封装为 `satAt`。其中的 `SatRead` 模块为所得满足图、码集与环境塔给出双向隶属读式。
+内层见证给出第二个候选值 `x`、其成员关系证明 `hx : x ∈ W`、两条词项子句的证明 `ht` 与 `hu`，以及对象语言关系的证明 `hr`。`hv` 与 `hx` 记录两个存在量词的界，但这里无需再使用它们。首先，`agree z v x .fst` 把 `hr` 读成 `R (fst v) (fst x)`。由于 `z` 是 `δ` 的典范图，`tOut` 与 `uOut` 把两条词项子句证明交给 `term-out`；所得等式分别把 `v`、`x` 的底层集合认同为 `t`、`u` 的语义值之底层集合。随后，`subst2` 沿这两条同一视搬运 `R`，最后 `cnd-in` 把搬运后的关系化为 `Meaning (op t u) δ`。原子桥至此完成。下游分别为成员关系与相等关系实例化该桥。在 `SatSoundC` 中，对子码封闭与公式结构递归通过比较外延事实，把表项固定为 `SatW`；在 `SatHoldsC` 中，码的解码、给定的表值、全定义性与指定定义域使同一组桥能够填入全部十条子句。`SatisfactionDescription` 提供码域与环境塔的事实，证明典范图 `SatGraph.pairs W` 满足 `tableAt`，并把 `towerAt`、`codesAt` 与 `tableAt` 封装为 `satAt`。其中的 `SatRead` 模块为所得满足图、码集与环境塔给出双向成员关系读式。
 <!--ja-->
 内側の証人は、第二の候補 `x`、その所属証明 `hx : x ∈ W`、二つの項の節の証明 `ht` と `hu`、および対象言語の関係の証明 `hr` を与える。`hv` と `hx` は二つの存在量化子の境界を記録するが、ここではそれ以上使う必要はない。まず `agree z v x .fst` が `hr` を `R (fst v) (fst x)` として読み取る。`z` は `δ` の正準なグラフなので、`tOut` と `uOut` は二つの項の節の証明を `term-out` に渡す。得られる等式は、`v` と `x` の基礎の集合を、それぞれ `t` と `u` の意味論的な値の基礎の集合と同定する。次に `subst2` がその二つの同定に沿って `R` を運び、最後に `cnd-in` が運ばれた関係を `Meaning (op t u) δ` に変える。これで原子の橋が完成する。下流では所属と等号の場合にそれぞれ具体化される。`SatSoundC` では、部分符号に関する閉性と論理式の構造再帰により、外延事実を比較して表要素を `SatW` に固定する。`SatHoldsC` では、コードの復号、あらかじめ与えられた表の値、全域性、および指定された領域を使い、同じ橋によって十個の節をすべて満たす。`SatisfactionDescription` はコード領域と環境の塔に関する事実を与え、正準なグラフ `SatGraph.pairs W` が `tableAt` を満たすことを証明し、`towerAt`、`codesAt`、`tableAt` を `satAt` としてまとめる。その `SatRead` モジュールは、得られた充足関係グラフ、コード集合、環境の塔について、所属を両方向に読む補題を公開する。
 <!--/-->
@@ -2343,7 +2343,7 @@ The inner witness supplies a second candidate `x`, its membership proof `hx : x 
 <!--en-->
 The clause semantics is now tied to ordinary satisfaction in both directions. Environment graphs interpret variables, the recursive bridges handle the logical constructors, and the atomic bridge transports membership and equality through the values of their terms. The proof uses only the existence and extensional facts stated by the coded table; it does not assume that an arbitrary table relation is already functional.
 <!--zh-->
-各条子句的内部语义至此与通常的满足关系双向对应。环境图解释变元，递归桥接处理逻辑构造子，原子桥接则沿词项取值搬运隶属关系与相等关系。证明只使用编码表所陈述的存在事实与外延事实，并未假定任意表关系本身已经是函数。
+各条子句的内部语义至此与通常的满足关系双向对应。环境图解释变元，递归桥接处理逻辑构造子，原子桥接则沿词项取值搬运成员关系与相等关系。证明只使用编码表所陈述的存在事实与外延事实，并未假定任意表关系本身已经是函数。
 <!--ja-->
 各節の内部意味論は、通常の充足関係と双方向に結びついた。環境グラフが変数を解釈し、再帰的な橋渡しが論理構成子を扱い、原子式の橋渡しが項の値に沿って所属と等号を運ぶ。証明が用いるのは、符号化された表が述べる存在と外延性の事実だけであり、任意の表関係がすでに関数的であるとは仮定していない。
 <!--/-->

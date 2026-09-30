@@ -28,7 +28,7 @@ module L.FormulaReflection {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 open import FOL.Syntax
   using ( Term; con; var; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊥̇
         ; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
@@ -83,7 +83,7 @@ lint-agda: keep (⊤̇ names the defining formula behind `LsetS`)
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( ∅ )
 
-open hPropStructure 𝒮ʟ using ( S )
+open hPropView 𝒮ʟ using ( S )
 
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
 open AbsL renaming ( _⊨ᵐ_ to _⊨_ ; ⟦_⟧ᵐ to ⟦_⟧ )
@@ -137,7 +137,7 @@ formula, empty at the atoms and at every node that binds nothing.
 <!--zh-->
 ## 层对公式的义务
 
-沿公式走下去，需要额外处理的节点是无界量词：每个带一个矩阵，而上一章为该矩阵所造的步进函数必须落在下一级里。沿公式的结构把这些隶属关系收集起来，便得到该级必须满足的一组条件；它是一棵与公式同形的树，在原子处，以及在每个不绑定任何东西的节点处为空。
+沿公式走下去，需要额外处理的节点是无界量词：每个带一个矩阵，而上一章为该矩阵所造的步进函数必须落在下一级里。沿公式的结构把这些成员关系收集起来，便得到该级必须满足的一组条件；它是一棵与公式同形的树，在原子处，以及在每个不绑定任何东西的节点处为空。
 <!--ja-->
 ## 段階が論理式に対して満たす条件
 
@@ -156,7 +156,7 @@ lets the merges below raise the pieces to their join.
 <!--zh-->
 全称量词贡献的是**否定后**矩阵的步进，因为对它的论证是反证：要知道层中的一切都满足该矩阵，就是要知道 L 中没有东西反驳它，而须被纳入层里的正是那个反驳。
 
-这些条件只会随着级的增大而更易满足，因为每一项都是一条隶属关系，而隶属关系经序数继承。正是这一点使下面的诸次合并能把各部分提升到它们的并处。
+这些条件只会随着级的增大而更易满足，因为每一项都是一条成员关系，而成员关系经序数继承。正是这一点使下面的诸次合并能把各部分提升到它们的并处。
 <!--/-->
 
 ```agda
@@ -204,7 +204,7 @@ quantifier adds one step function to its child's.
 <!--zh-->
 ## 联合步骤
 
-接下来构造满足这些条件的一步。沿公式递归，从当前一级出发构造位于其上的一个序数，并携带整棵隶属关系树。三种形状覆盖所有构造子：没有额外条件的节点取当前级自身的上界；有两个子节点时合并两个子序数；量词节点则在子节点之上再加入一个步进函数。
+接下来构造满足这些条件的一步。沿公式递归，从当前一级出发构造位于其上的一个序数，并携带整棵成员关系树。三种形状覆盖所有构造子：没有额外条件的节点取当前级自身的上界；有两个子节点时合并两个子序数；量词节点则在子节点之上再加入一个步进函数。
 <!--ja-->
 ## 共同の一段階
 
@@ -304,7 +304,7 @@ extra ordinal is in the first rung, hence under the limit. And at every rung, th
 whole tree of memberships holds against the next rung, which is the answering
 hypothesis in the form the induction wants.
 <!--zh-->
-有两条读法从该步进白得，因为它们本就被造了进去。那个额外的序数落在第一级里，因而落在极限之下。而在每一级上，整棵隶属树都对下一级成立，这正是归纳所要的、作答假设的那个形式。
+有两条读法从该步进白得，因为它们本就被造了进去。那个额外的序数落在第一级里，因而落在极限之下。而在每一级上，整棵成员关系树都对下一级成立，这正是归纳所要的、作答假设的那个形式。
 <!--/-->
 
 <details open class="submodule-fold">

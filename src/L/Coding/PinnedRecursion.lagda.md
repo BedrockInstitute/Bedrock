@@ -28,7 +28,7 @@ module L.Coding.PinnedRecursion {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 open import FOL.Syntax using
   ( Formula; Term; var; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇∈; ∀̇∈; ∃̇_; ∀̇_ )
 import FOL.Absoluteness
@@ -83,7 +83,7 @@ The argument is carried out relative to an explicit instance of excluded middle.
 <!--en-->
 Structural recursion follows the ten constructors of the formula grammar: membership and equality atoms, conjunction, disjunction, implication, falsity, the two unbounded quantifiers, `∀[]-syntax`, and `∃[]-syntax`. Constant relabelling lets the same syntactic tree be read first over the member alphabet of a carrier and then over the constructible carrier, without changing its constructor structure.
 <!--zh-->
-结构递归沿公式文法的十个构造子进行：隶属与相等原子式、合取、析取、蕴含、假、两个无界量词、`∀[]-syntax` 与 `∃[]-syntax`。常元重标记使同一棵语法树先在某个载体的成员字母表上读取，再在可构造载体上读取，而不改变其构造结构。
+结构递归沿公式文法的十个构造子进行：成员关系与相等原子式、合取、析取、蕴含、假、两个无界量词、`∀[]-syntax` 与 `∃[]-syntax`。常元重标记使同一棵语法树先在某个载体的元素字母表上读取，再在可构造载体上读取，而不改变其构造结构。
 <!--ja-->
 構造再帰は論理式文法の十個の構成子、すなわち所属と等号の原子論理式、連言、選言、含意、偽、二つの非有界量化子、`∀[]-syntax`、`∃[]-syntax` に沿って進む。定数の付け替えにより、同じ構文木をまず台の要素からなるアルファベット上で読み、次に構成可能な台の上で読むことができ、構成子の形は変わらない。
 <!--/-->
@@ -139,7 +139,7 @@ Clause environments are finite vectors, and extending a frame shifts every older
 <!--en-->
 Propositional truncation preserves that a witness exists while forgetting which witness it was. Its eliminator therefore requires a proposition-valued target. Membership in the hierarchy is proposition-valued, and the hierarchy `V` is an h-set, so an equality between two of its sets is also a proposition and is a legitimate target for the eliminations used below.
 <!--zh-->
-命题截断保留见证存在这一事实，却忘去具体见证；因此，其消去目标必须取值于命题。层级中的隶属取值于命题，而层级 `V` 是 h-集合，所以其中两个集合之间的等式也是命题，可以作为下文诸次消去的合法目标。
+命题截断保留见证存在这一事实，却忘去具体见证；因此，其消去目标必须取值于命题。层级中的成员关系取值于命题，而层级 `V` 是 h-集合，所以其中两个集合之间的等式也是命题，可以作为下文诸次消去的合法目标。
 <!--ja-->
 命題的切り詰めは、証人が存在することを保ちつつ、それがどの証人であったかを忘れる。したがって、その消去先は命題値でなければならない。階層における所属は命題値であり、階層 `V` は h-集合なので、その二つの集合の等式も命題である。このため、以下で用いる消去の正当な行き先になる。
 <!--/-->
@@ -168,13 +168,13 @@ Write `S` for the carrier of the first-order structure on `L`. An element of `S`
 <!--/-->
 
 ```agda
-open hPropStructure 𝒮ʟ using ( S )
+open hPropView 𝒮ʟ using ( S )
 ```
 
 <!--en-->
 Object-language clauses are interpreted in the first-order structure carried by `L`. The notation `γ ⊨ φ` therefore means that the formula `φ` is satisfied by the finite environment `γ` in that structure. The bridge lemmas will compare such internal satisfaction statements with membership in the externally defined set `SatW ψ`.
 <!--zh-->
-对象语言子句在 `L` 所承载的一阶结构中解释。因此，记号 `γ ⊨ φ` 表示有限环境 `γ` 在该结构中满足公式 `φ`。后续桥引理将把这种内部满足断言与外部定义集合 `SatW ψ` 中的隶属相比较。
+对象语言子句在 `L` 所承载的一阶结构中解释。因此，记号 `γ ⊨ φ` 表示有限环境 `γ` 在该结构中满足公式 `φ`。后续桥引理将把这种内部满足断言与外部定义集合 `SatW ψ` 中的成员关系相比较。
 <!--ja-->
 対象言語の節は、`L` が担う一階構造で解釈される。したがって `γ ⊨ φ` は、その構造の有限環境 `γ` が論理式 `φ` を充足することを意味する。後の橋渡し補題は、この内部的な充足の主張を、外部で定義された集合 `SatW ψ` への所属と比較する。
 <!--/-->
@@ -361,7 +361,7 @@ For `∃[]-syntax`, the canonical tag is nine and the payload is the pair of the
 <!--en-->
 Now suppose `c` belongs to the canonical code set and is presented as the pair of the arity numeral `# n` with a payload `z`. Membership in `AllCodes W` yields, under propositional truncation, some arity `n₁`, some formula `ψ₁` of that arity, and an equality between `c` and its key. The remaining work is to reconcile `n₁` with the stated `n`.
 <!--zh-->
-现设 `c` 属于典范码集，并被表示为元数数码 `# n` 与载荷 `z` 的有序对。`c` 在 `AllCodes W` 中的隶属，经命题截断给出某个元数 `n₁`、该元数上的某条公式 `ψ₁`，以及 `c` 与其键之间的等式。余下任务是把 `n₁` 与题设的 `n` 对齐。
+现设 `c` 属于典范码集，并被表示为元数数码 `# n` 与载荷 `z` 的有序对。`c` 在 `AllCodes W` 中的成员关系，经命题截断给出某个元数 `n₁`、该元数上的某条公式 `ψ₁`，以及 `c` 与其键之间的等式。余下任务是把 `n₁` 与题设的 `n` 对齐。
 <!--ja-->
 いま `c` が標準的な符号集合に属し、アリティの数項 `# n` とペイロード `z` の対として表示されているとする。`AllCodes W` への所属からは、命題的切り詰めのもとで、あるアリティ `n₁`、そのアリティの論理式 `ψ₁`、そして `c` とそのキーとの等式が得られる。残る仕事は `n₁` を指定された `n` と一致させることである。
 <!--/-->
@@ -452,7 +452,7 @@ Let `Wv` denote the underlying hierarchy set of the carrier `W`. Quantifier brid
 <!--en-->
 The environment tower supplies the row for a formula's arity, while the clause frame combines that row with the formula key, its tagged code, and a proposed table value. Reading a constructor clause at this frame exposes the semantic relation that characterizes the proposed value by its members.
 <!--zh-->
-环境塔给出公式元数所对应的一行；子句框架把这一行与公式键、带标签的公式码及候选表值组合起来。在该框架处读取构造子子句，便会露出按成员刻画候选值的语义关系。
+环境塔给出公式元数所对应的一行；子句框架把这一行与公式键、带标签的公式码及候选表值组合起来。在该框架处读取构造子子句，便会露出按成员关系刻画候选值的语义关系。
 <!--ja-->
 環境塔は論理式のアリティに対応する行を与え、節の枠はその行を論理式キー、タグ付き符号、候補となる表の値と組み合わせる。この枠で構成子の節を読むと、候補の値をその要素によって特徴づける意味論的関係が現れる。
 <!--/-->
@@ -494,7 +494,7 @@ The ten constructor clauses are stored as one finite conjunction indexed by `Fin
 <!--en-->
 The case module packages the data of one induction step: a formula, its tag, its payload set, the equation between code and payload, membership of its key in the code domain, a candidate table entry, and the entry's membership. The tower reading supplies the canonical tower entry for the formula's arity.
 <!--zh-->
-情形模块打包一次归纳步骤的数据：一条公式、其标签、其载荷集合、码与载荷间的等式、其键在码域中的成员资格、一个候选表条目及该条目的隶属。塔读取为该公式的元数供给典范塔条目。
+情形模块打包一次归纳步骤的数据：一条公式、其标签、其载荷集合、码与载荷间的等式、其键在码域中的成员关系事实、一个候选表条目及该条目的成员关系。塔读取为该公式的元数供给典范塔条目。
 <!--ja-->
 場合のモジュールは、一つの帰納の一歩のデータをまとめる。論理式、そのタグ、そのペイロードの集合、コードとペイロードの等式、コードの定義域の中でのキーの所属、候補の表の項目、そして項目の所属である。塔の読みが、論理式のアリティのための正準な塔の項目を供給する。
 <!--/-->
@@ -576,7 +576,7 @@ The central predicate is conditional. If the key of `ψ` lies in the code domain
 <!--en-->
 The proof of `Pinned` is organized by structural recursion on the given formula. Recursive calls are made only for immediate formula children supplied by the syntax constructor. There is no recursion on members of `C`, no well-founded recursion on arbitrary codes, and no attempt to define a value for a code that has not already been identified with a formula key.
 <!--zh-->
-`Pinned` 的证明按给定公式作结构递归。递归调用只施于语法构造子直接给出的公式子式。这里既不在 `C` 的成员上递归，也不在任意码上作良基递归，更不会试图给尚未被识别为公式键的码定义值。
+`Pinned` 的证明按给定公式作结构递归。递归调用只施于语法构造子直接给出的公式子式。这里既不在 `C` 的元素上递归，也不在任意码上作良基递归，更不会试图给尚未被识别为公式键的码定义值。
 <!--ja-->
 `Pinned` の証明は、与えられた論理式についての構造再帰として組み立てられる。再帰呼出しは、構文の構成子が直接与える子論理式にだけ行われる。`C` の要素についての再帰でも、任意の符号についての整礎再帰でもなく、論理式キーと同定されていない符号に値を定義する試みでもない。
 <!--/-->
@@ -617,7 +617,7 @@ All three binary connectives share the same recursive pattern. The parameters id
 <!--en-->
 The bridge is formulated for an environment containing the two child values at named coordinates. A separate closure reader turns membership of the compound key in `Cv` into membership of both child keys, at the same arity. The recursive hypotheses can then identify whichever child entries totality provides with `SatW a` and `SatW b`.
 <!--zh-->
-该桥针对一个在指定坐标含有两个子值的环境陈述。另有一条封闭读取把复合键在 `Cv` 中的隶属转化为两个同元数子键的隶属。于是，无论全定义性给出哪些子表项，递归假设都能分别把它们与 `SatW a`、`SatW b` 等同。
+该桥针对一个在指定坐标含有两个子值的环境陈述。另有一条封闭读取把复合键在 `Cv` 中的成员关系转化为两个同元数子键的成员关系。于是，无论全定义性给出哪些子表项，递归假设都能分别把它们与 `SatW a`、`SatW b` 等同。
 <!--ja-->
 橋渡しは、指定された座標に二つの子の値を含む環境について述べられる。別の閉性の読み手が、複合キーの `Cv` への所属から、同じアリティの二つの子キーの所属を取り出す。これにより、全域性がどの子表項目を与えても、再帰仮定によってそれぞれを `SatW a` と `SatW b` に同定できる。
 <!--/-->
@@ -681,7 +681,7 @@ The relation reading is obtained from the clause by the tag identification, and 
 <!--en-->
 The local module `K` records the compound formula itself, its constructor tag, a constructible representative of the paired child-code payload, the compound key's domain membership, and the candidate entry. It therefore fixes one concrete clause frame for the entire binary argument; the recursive hypotheses concern only the two immediate children.
 <!--zh-->
-局部模块 `K` 记录复合公式本身、其构造子标签、成对子公式码载荷的一个可构造表示、复合键的定义域成员资格，以及候选表项。这样，整个二元论证只使用一个具体子句框架；递归假设则只涉及两个直接子公式。
+局部模块 `K` 记录复合公式本身、其构造子标签、成对子公式码载荷的一个可构造表示、复合键的定义域成员关系事实，以及候选表项。这样，整个二元论证只使用一个具体子句框架；递归假设则只涉及两个直接子公式。
 <!--ja-->
 局所モジュール `K` は、複合論理式そのもの、その構成子タグ、対になった子論理式符号のペイロードの構成可能な表現、複合キーの領域への所属、候補の表項目を記録する。これにより、二項の場合の議論全体に一つの具体的な節の枠が固定され、再帰仮定は二つの直下の子論理式だけに関わる。
 <!--/-->
@@ -709,7 +709,7 @@ The two unbounded quantifiers also share one recursive case. Their body has succ
 <!--en-->
 The carrier coordinate remains in the original ambient environment and is reached after the frame extensions by an index shift; the child value is a newly exposed coordinate of the relation witness. Closure supplies membership of the successor-arity body key, and the recursive hypothesis identifies every table entry at that key with the body's canonical satisfaction set. The bridge then matches the object-language quantifier with quantification over `Wv`.
 <!--zh-->
-载体坐标仍位于原来的外围环境中，框架延拓后通过索引移位访问；子公式值则是关系见证新露出的坐标。封闭性给出后继元数主体键的成员资格，递归假设把该键处每个表项都等同于主体的典范满足关系集合。于是，桥把对象语言量词与在 `Wv` 上的量化准确对应起来。
+载体坐标仍位于原来的外围环境中，框架延拓后通过索引移位访问；子公式值则是关系见证新露出的坐标。封闭性给出后继元数主体键的成员关系事实，递归假设把该键处每个表项都等同于主体的典范满足关系集合。于是，桥把对象语言量词与在 `Wv` 上的量化准确对应起来。
 <!--ja-->
 台の座標は元の周囲の環境に残り、枠を拡張した後は添字のずらしによって参照される。子論理式の値は、関係の証人が新しく露わにする座標である。閉性から後続アリティの本体キーの所属が得られ、再帰仮定はそのキーにおけるすべての表項目を、本体の標準的な充足関係集合に同定する。これにより橋渡しは、対象言語の量化子を `Wv` 上の量化に正確に対応させる。
 <!--/-->
@@ -757,7 +757,7 @@ At the extended environment, the relation clause provides an extension fact for 
 <!--en-->
 Here `K` is instantiated with the quantified formula `qA a`, not with its body `a`. Its payload representative is constructed from the body's code, while the domain membership and candidate entry belong to the quantified formula's key. The body appears separately as the sole recursive child, at successor arity.
 <!--zh-->
-这里，`K` 实例化于量化公式 `qA a`，而非其主体 `a`。它的载荷表示由主体码构造，但定义域成员资格与候选表项属于量化公式的键。主体则作为唯一递归子式单独出现，并处于后继元数。
+这里，`K` 实例化于量化公式 `qA a`，而非其主体 `a`。它的载荷表示由主体码构造，但定义域成员关系事实与候选表项属于量化公式的键。主体则作为唯一递归子式单独出现，并处于后继元数。
 <!--ja-->
 ここで `K` が具体化されるのは、量化された論理式 `qA a` であり、その本体 `a` ではない。ペイロードの表現は本体の符号から作られるが、領域への所属と候補の表項目は量化された論理式のキーに属する。本体は、後続アリティにある唯一の再帰的な子論理式として別に現れる。
 <!--/-->
@@ -802,7 +802,7 @@ The body equation records how the bounded-quantifier body is spelled with five s
 <!--en-->
 The bridge identifies the recursively defined satisfaction set of the bounded formula with the extension described by this five-slot body over encoded environments. Its quantifier and connective are still parameters here, so the statement covers both the universal and existential bounded cases; it must not be read as asserting existential membership in every instance. This extension fact is what can be compared with the extension fact extracted from the table clause.
 <!--zh-->
-这条桥把有界公式的递归满足集与五槽语义体在编码环境上描述的外延对应起来。这里量词与联结词仍是参数，所以同一陈述同时涵盖有界全称与有界存在两种情形，不能一概读成存在某个成员。随后，证明正是把这条外延事实与从表子句读出的外延事实相比较。
+这条桥把有界公式的递归满足集与五槽语义体在编码环境上描述的外延对应起来。这里量词与联结词仍是参数，所以同一陈述同时涵盖有界全称与有界存在两种情形，不能一概读成存在某个元素。随后，证明正是把这条外延事实与从表子句读出的外延事实相比较。
 <!--ja-->
 この橋は、有界論理式について再帰的に定めた充足集合を、符号化された環境上で五つのスロットをもつ意味論的本体が記述する外延と対応させる。ここでは量化子と結合子がまだパラメータなので、同じ主張が有界全称の場合と有界存在の場合の両方を扱う。したがって、すべての場合にある要素の存在を主張していると読んではいけない。証明では、この外延事実を表の節から読み取った外延事実と比較する。
 <!--/-->
@@ -962,7 +962,7 @@ Three named components support the atomic case: the payload as a carrier element
 <!--en-->
 For the membership atom, satisfaction at the displayed environment is definitionally the same proposition as membership of the two underlying sets. The two implications in `memAgree` are therefore identities. This is the local agreement needed by the atomic bridge; it makes no statement about other relation symbols.
 <!--zh-->
-对这个隶属原子而言，在所示环境中的满足关系依定义就是两个底层集合之间的隶属命题。因此，`memAgree` 中的两个方向都是恒等映射。这只是原子桥在此处需要的局部相合，并未对其他关系符号作出陈述。
+对这个成员关系原子而言，在所示环境中的满足关系依定义就是两个底层集合之间的成员关系命题。因此，`memAgree` 中的两个方向都是恒等映射。这只是原子桥在此处需要的局部相合，并未对其他关系符号作出陈述。
 <!--ja-->
 この所属原子では、表示された環境における充足は、二つの基礎集合の間の所属命題と定義上同じである。したがって `memAgree` の二つの向きはいずれも恒等写像である。これは原子の橋がこの箇所で必要とする局所的な一致であり、ほかの関係記号については何も主張しない。
 <!--/-->
@@ -1022,7 +1022,7 @@ The next form of the binary closure lemma fixes the two child formulas before th
 <!--en-->
 For an unbounded quantifier, closure follows the sole formula component of the constructor payload. Thus, if the key of the quantified formula at arity `n` lies in the domain, then the key of its body at successor arity lies there as well. The statement is local to this presented constructor code; it does not decode arbitrary domain elements.
 <!--zh-->
-对无界量词而言，封闭性只沿构造子载荷中唯一的公式分量向下。因此，若元数为 `n` 的量化公式之键属于定义域，则其后继元数处的体公式之键也属于定义域。这个陈述只针对当前给出的构造子码，并不解码任意定义域成员。
+对无界量词而言，封闭性只沿构造子载荷中唯一的公式分量向下。因此，若元数为 `n` 的量化公式之键属于定义域，则其后继元数处的体公式之键也属于定义域。这个陈述只针对当前给出的构造子码，并不解码任意定义域元素。
 <!--ja-->
 非有界量化子では、閉性は構成子のペイロードに含まれる唯一の論理式成分だけをたどる。したがって、アリティ `n` の量化された論理式の鍵が領域に属すれば、後続アリティにある本体の鍵も領域に属する。この主張は、ここで提示された構成子符号に局所的なものであり、領域の任意の要素を復号するものではない。
 <!--/-->
@@ -1070,7 +1070,7 @@ Two named components support the bounded-quantifier closure: the payload present
 <!--en-->
 The pinned predicate is proved by structural recursion on the formula. The membership atom applies the atomic case with the identity agreement for the membership relation, consuming no subformula hypotheses.
 <!--zh-->
-钉扎谓词由公式的结构递归证明。隶属原子以隶属关系的恒等相合应用原子情形，不消耗任何子公式假设。
+钉扎谓词由公式的结构递归证明。成员关系原子以成员关系的恒等相合应用原子情形，不消耗任何子公式假设。
 <!--ja-->
 釘づけの述語は、論理式の構造についての構造再帰で証明される。所属の原子は、所属の関係に対する恒等の一致とともに原子の場合を適用し、下位の論理式の仮定を一切消費しない。
 <!--/-->
@@ -1207,7 +1207,7 @@ Fix the table, carrier, code-domain, and environment-tower slots in one environm
 <!--en-->
 Three further assumptions provide existence only under propositional truncation. A domain member presented as an arity-code pair merely decodes to a formula of that stated arity; totality merely supplies some table value at each domain key; and every table member merely decomposes into a key-value pair whose key belongs to the domain. None of these assumptions defines a reusable decoder or value-selection function.
 <!--zh-->
-另外三个假设只在命题截断下提供存在性。若一个定义域成员被表示为元数码与载荷之对，则仅能得到同一元数的某个公式解码；全定义性仅给出每个定义域键处某个表值的存在；每个表成员也仅能在命题截断下分解为键值对，并证明其中的键属于定义域。这些假设都没有定义可复用的解码函数或表值选择函数。
+另外三个假设只在命题截断下提供存在性。若一个定义域元素被表示为元数码与载荷之对，则仅能得到同一元数的某个公式解码；全定义性仅给出每个定义域键处某个表值的存在；每个表元素也仅能在命题截断下分解为键值对，并证明其中的键属于定义域。这些假设都没有定义可复用的解码函数或表值选择函数。
 <!--ja-->
 さらに三つの仮定は、命題的切り詰めの下でのみ存在を与える。領域の要素がアリティ符号とペイロードの対として提示されると、指定されたそのアリティの論理式へ単に復号できるだけである。全域性は各領域の鍵にある何らかの表の値を単に与え、表の各要素も、鍵が領域に属す鍵と値の対へ単に分解される。これらの仮定はいずれも、再利用できる復号関数や値の選択関数を定めない。
 <!--/-->
@@ -1215,7 +1215,7 @@ Three further assumptions provide existence only under propositional truncation.
 <!--en-->
 The final assumption finishes the domain condition by requiring every represented table element to be merely a pair `(c,yc)` with `c` in the stated code domain. Thus totality controls entries from keys to values, while this condition controls table members back to domain keys. The abbreviations `Tv` and `Cv` name only the underlying table and domain sets used in these local statements.
 <!--zh-->
-最后一个假设补全定义域条件：每个已经表示在表中的成员，都只在命题截断下被识别为某个对 `(c,yc)`，并且 `c` 属于给定的公式码定义域。因此，全定义性控制从键到表值的方向，这条条件则控制从表成员回到定义域键的方向。缩写 `Tv` 与 `Cv` 只命名这些局部陈述所用的底层表集合与定义域集合。
+最后一个假设补全定义域条件：每个已经表示在表中的元素，都只在命题截断下被识别为某个对 `(c,yc)`，并且 `c` 属于给定的公式码定义域。因此，全定义性控制从键到表值的方向，这条条件则控制从表元素回到定义域键的方向。缩写 `Tv` 与 `Cv` 只命名这些局部陈述所用的底层表集合与定义域集合。
 <!--ja-->
 最後の仮定は領域条件を完成させる。表に表示された各要素は、指定された符号領域に `c` が属すような対 `(c,yc)` として、単に存在するものとして同定される。したがって全域性は鍵から値への向きを制御し、この条件は表の要素から領域の鍵へ戻る向きを制御する。略記 `Tv` と `Cv` は、これらの局所的な主張で使う表と領域の基礎集合を名づけるだけである。
 <!--/-->
@@ -1258,7 +1258,7 @@ We also name the underlying environment-tower set and the carrier. The frame, cl
 <!--en-->
 To obtain such arity evidence, present an element `q` of the environment tower as the pair `(ar,F)`. The tower specification, together with the carrier equation and the zero-tag equation, is then sufficient to read that pair as a merely existing natural arity and its canonical environment set.
 <!--zh-->
-要取得这样的元数证据，先把环境塔中的成员 `q` 表示为对 `(ar,F)`。于是，环境塔规格连同载体等式与零标签等式，足以把该对读成只在命题截断下存在的自然数元数及其典范环境集。
+要取得这样的元数证据，先把环境塔中的元素 `q` 表示为对 `(ar,F)`。于是，环境塔规格连同载体等式与零标签等式，足以把该对读成只在命题截断下存在的自然数元数及其典范环境集。
 <!--ja-->
 このアリティの証拠を得るには、環境の塔の要素 `q` を対 `(ar,F)` として提示する。すると塔の仕様に、台の等式と零タグの等式を合わせることで、その対から、単に存在する自然数アリティとその正準な環境集合を読み取れる。
 <!--/-->
@@ -1296,7 +1296,7 @@ The first top-level table condition is totality on the stated code domain. The h
 <!--en-->
 The second top-level condition says that every represented table element lies over a key in the stated domain. The hypothesis `onc` is precisely this condition at the level of underlying sets, so the frame lemma turns it into satisfaction of the corresponding object-language clause.
 <!--zh-->
-第二条顶层条件说，每个已经表示在表中的成员都位于给定定义域的某个键之上。假设 `onc` 正是在底层集合层面陈述这一条件，因此框架引理把它化为相应对象语言子句的满足证明。
+第二条顶层条件说，每个已经表示在表中的元素都位于给定定义域的某个键之上。假设 `onc` 正是在底层集合层面陈述这一条件，因此框架引理把它化为相应对象语言子句的满足证明。
 <!--ja-->
 第二の最上位条件は、表に表示された各要素が、指定された領域の鍵の上にあることを述べる。仮定 `onc` は基礎集合の水準でまさにこの条件を表すので、枠の補題によって対応する対象言語の節の充足へ変換できる。
 <!--/-->
@@ -1309,7 +1309,7 @@ The second top-level condition says that every represented table element lies ov
 <!--en-->
 Each constructor clause is tested on the same twelve-object configuration. The fields listed first record those objects: a tower entry and its arity and environment set, a code-domain element and its constructor payload, and a table entry with its value, together with the auxiliary witnesses required by the object-language formula.
 <!--zh-->
-每条构造子子句都在同一种十二对象配置上检验。前面的字段记录这些对象：一个环境塔条目及其元数与环境集，一个公式码定义域成员及其构造子载荷，一个表条目及其取值，以及对象语言公式所需的辅助见证。
+每条构造子子句都在同一种十二对象配置上检验。前面的字段记录这些对象：一个环境塔条目及其元数与环境集，一个公式码定义域元素及其构造子载荷，一个表条目及其取值，以及对象语言公式所需的辅助见证。
 <!--ja-->
 各構成子の節は、同じ十二対象の配置について検証される。最初のフィールド群はそれらの対象を記録する。すなわち、塔の要素とそのアリティおよび環境集合、論理式符号の領域の要素とその構成子ペイロード、表の要素とその値、そして対象言語の論理式が必要とする補助的な証人である。
 <!--/-->
@@ -1325,7 +1325,7 @@ Each constructor clause is tested on the same twelve-object configuration. The f
 <!--en-->
 The remaining fields state the relations that make those objects one coherent frame. They say that the tower element is the arity-environment pair, the code lies in the domain and splits into arity, tag, and payload, and the table element lies in the table and splits into that code and its proposed value. These are local presentation equations, not uniqueness or global decoding claims.
 <!--zh-->
-其余字段陈述把这些对象连成一个一致框架的关系：环境塔成员是元数与环境集组成的对；公式码属于定义域，并分解为元数、标签与载荷；表成员属于表，并分解为该公式码与其候选值。这些只是局部表示等式，并不声称唯一性，也不声称存在全局解码。
+其余字段陈述把这些对象连成一个一致框架的关系：环境塔元素是元数与环境集组成的对；公式码属于定义域，并分解为元数、标签与载荷；表元素属于表，并分解为该公式码与其候选值。这些只是局部表示等式，并不声称唯一性，也不声称存在全局解码。
 <!--ja-->
 残りのフィールドは、それらの対象を一つの整合した枠にする関係を述べる。塔の要素がアリティと環境集合の対であること、論理式の符号が領域に属してアリティ、タグ、ペイロードへ分かれること、そして表の要素が表に属してその符号と候補値へ分かれることである。これらは局所的な表示の等式であり、一意性や大域的な復号を主張しない。
 <!--/-->
@@ -1421,7 +1421,7 @@ The transfer lemma is the key move: given the arity equation, the environment-se
 <!--en-->
 The frame equations first show that `c` is the canonical key of the decoded formula and that the supplied table member is the pair of `c` with `yc`. The value-agreement hypothesis then identifies the underlying set of `yc` with the recursive satisfaction set. Finally, transport reverses that value equality and the equation identifying `F` with the canonical environment set, converting the bridge's extension fact into the extension fact required by the frame.
 <!--zh-->
-框架中的等式先证明 `c` 是解码公式的典范键，并证明给定表成员是 `c` 与 `yc` 组成的对。取值相合假设随即把 `yc` 的底层集合认同为递归满足集。最后，证明沿这条取值等式的逆向以及 `F` 与典范环境集的等式作运输，把桥给出的外延事实化为框架所需的外延事实。
+框架中的等式先证明 `c` 是解码公式的典范键，并证明给定表元素是 `c` 与 `yc` 组成的对。取值相合假设随即把 `yc` 的底层集合认同为递归满足集。最后，证明沿这条取值等式的逆向以及 `F` 与典范环境集的等式作运输，把桥给出的外延事实化为框架所需的外延事实。
 <!--ja-->
 まず枠の等式から、`c` が復号された論理式の正準な鍵であり、与えられた表の要素が `c` と `yc` の対であることを示す。すると値の一致の仮定により、`yc` の基礎集合が再帰的な充足集合と同定される。最後に、その値の等式を逆向きに用い、さらに `F` を正準な環境集合と同定する等式に沿って運ぶことで、橋の外延事実を枠が要求する外延事実へ変換する。
 <!--/-->
@@ -1524,7 +1524,7 @@ For any binary constructor, the two child entries are first identified with the 
 <!--en-->
 The bridge's extension fact is stated at the formula that applies the binary connective to the two membership atoms over the child satisfaction sets.
 <!--zh-->
-桥的外延事实在「把二元联结词施于两个子满足集上的隶属原子」的公式处陈述。
+桥的外延事实在「把二元联结词施于两个子满足集上的成员关系原子」的公式处陈述。
 <!--ja-->
 橋の外延の事実は、二つの下位の充足集合の上の所属の原子に、二項の結合子を適用する論理式の上で述べられる。
 <!--/-->
@@ -1583,7 +1583,7 @@ For an unbounded quantified formula, the recursive child has successor arity, wh
 <!--en-->
 The clause tests a candidate encoded environment `z`. Its outer constructor, later instantiated as `∃[]-syntax` or `∀[]-syntax`, ranges over the carrier `W`; for each such element, the inner `∃[]-syntax` asks for a member of the child's represented satisfaction set that is the encoded environment obtained by adjoining that element to `z`. This is the object-language description of one quantifier step, not a decoder or a reusable choice of witnesses.
 <!--zh-->
-该子句检验一个候选编码环境 `z`。其外层构造子随后会实例化为 `∃[]-syntax` 或 `∀[]-syntax`，并在载体 `W` 上量化；对每个这样的元素，内层的 `∃[]-syntax` 要求子公式所表示的满足关系集中存在一个成员，它正是把该元素添到 `z` 所得的编码环境。这是对象语言对一步量化的描述，并不构成解码器，也不提供可复用的见证选择。
+该子句检验一个候选编码环境 `z`。其外层构造子随后会实例化为 `∃[]-syntax` 或 `∀[]-syntax`，并在载体 `W` 上量化；对每个这样的元素，内层的 `∃[]-syntax` 要求子公式所表示的满足关系集中存在一个元素，它正是把该元素添到 `z` 所得的编码环境。这是对象语言对一步量化的描述，并不构成解码器，也不提供可复用的见证选择。
 <!--ja-->
 この節は、候補となる符号化環境 `z` を判定する。外側の構成子は後で `∃[]-syntax` または `∀[]-syntax` に具体化され、台 `W` 上を量化する。その各要素について、内側の `∃[]-syntax` は、その要素を `z` に付け加えて得られる符号化環境が、子論理式を表す充足集合の要素として存在することを要求する。これは一回の量化を対象言語で記述したものであり、復号器でも、再利用可能な証人の選択でもない。
 <!--/-->
@@ -1761,7 +1761,7 @@ Bottom has neither term data nor a formula child. Its bridge says directly that 
 <!--en-->
 Tag `0` is the membership atom. Here the relation formula already means ordinary membership in the constructible structure, so both directions of the agreement proof and both directions connecting atomic meaning to membership are identities. The atomic argument still verifies the two term codes and their values before applying that relation.
 <!--zh-->
-标签 `0` 对应隶属原子。这里的关系公式在可构造结构中本来就表示通常的隶属关系，因此相符证明的两个方向，以及连接原子意义与隶属关系的两个方向，都是恒等映射。原子论证仍会先验证两个词项码及其取值，再施用该关系。
+标签 `0` 对应成员关系原子。这里的关系公式在可构造结构中本来就表示通常的成员关系，因此相符证明的两个方向，以及连接原子意义与成员关系的两个方向，都是恒等映射。原子论证仍会先验证两个词项码及其取值，再施用该关系。
 <!--ja-->
 タグ `0` は所属の原子論理式に対応する。ここでの関係式は構成可能な構造における通常の所属をそのまま意味するので、一致の証明の両方向と、原子の意味を所属に結び付ける両方向はいずれも恒等写像である。それでも原子の場合の議論は、関係を適用する前に二つの項の符号とその値を検証する。
 <!--/-->
@@ -1854,7 +1854,7 @@ The bounded existential uses the parallel three-layer body with `∃[]-syntax`, 
 <!--en-->
 To prove one constructor clause, the twelve objects and their membership and pairing equations are first collected into `Args k`. This fixes a single matching frame. The decoded arity, formula, and constructor shape remain inside propositional truncation in `Fill.data'`, because the original hypotheses do not choose any of them.
 <!--zh-->
-为证明一条构造子子句，先把十二个对象及其隶属与配对等式汇集为 `Args k`，从而固定一个匹配框架。解码出的元数、公式与构造子形状仍留在 `Fill.data'` 的命题截断之内，因为原有前提并未选择其中任何一项。
+为证明一条构造子子句，先把十二个对象及其成员关系与配对等式汇集为 `Args k`，从而固定一个匹配框架。解码出的元数、公式与构造子形状仍留在 `Fill.data'` 的命题截断之内，因为原有前提并未选择其中任何一项。
 <!--ja-->
 一つの構成子の節を証明するため、まず十二個の対象と、それらの所属および対の等式を `Args k` に集め、一つの対応する枠を固定する。復号されたアリティ、論理式、構成子の形は `Fill.data'` の命題的切り詰めの内側にとどまる。元の仮定はそのいずれも選択していないからである。
 <!--/-->
@@ -1895,7 +1895,7 @@ The ten constructor clauses are joined into one finite conjunction. This conjunc
 <!--en-->
 The three parts now fit the definition of `tableAt`: `total` gives a merely existing table value for every code in `C`, `onC` says every table member has a key in `C`, and `ten` supplies all constructor clauses. Together they prove that the given relation satisfies the table specification, without asserting that it is a globally chosen function or that its values are unique.
 <!--zh-->
-这三部分现在恰好组成 `tableAt` 的定义：`total` 对 `C` 中每个码给出经过命题截断的表取值存在性，`onC` 说明每个表成员的键都属于 `C`，`ten` 则给出全部构造子子句。三者共同证明给定关系满足表规格，但不宣称它是全局选定的函数，也不在此证明其取值唯一。
+这三部分现在恰好组成 `tableAt` 的定义：`total` 对 `C` 中每个码给出经过命题截断的表取值存在性，`onC` 说明每个表元素的键都属于 `C`，`ten` 则给出全部构造子子句。三者共同证明给定关系满足表规格，但不宣称它是全局选定的函数，也不在此证明其取值唯一。
 <!--ja-->
 これで三つの部分が `tableAt` の定義をちょうど満たす。`total` は `C` の各符号について表の値が命題的に切り詰められて存在することを与え、`onC` は表の各要素の鍵が `C` に属することを述べ、`ten` はすべての構成子の節を与える。これらは与えられた関係が表の仕様を満たすことを証明するが、それが大域的に選ばれた関数であることも、ここで値が一意であることも主張しない。
 <!--/-->
@@ -1958,7 +1958,7 @@ If `x` belongs to the slot generated by `ψ`, then, under propositional truncati
 <!--en-->
 The local equality `mapped ψ` first rewrites the concrete slot as the generic tree that collects `keyʟ (toS χ)`. Applying `tree-inv` then yields, merely, a contributing formula `χ` and equality with that internal key. The map keeps this equality and replaces the internal key by `keyS W χ` using `keyBridge`; the accompanying subtree inclusion is deliberately discarded by the stated result.
 <!--zh-->
-局部等式 `mapped ψ` 先把具体槽位改写为收集 `keyʟ (toS χ)` 的一般树。随后施用 `tree-inv`，在命题截断下得到贡献该成员的公式 `χ` 及其与这个内部键的等式。映射保留该等式，再用 `keyBridge` 把内部键换成 `keyS W χ`；所得结论有意舍弃了相伴的子树包含证明。
+局部等式 `mapped ψ` 先把具体槽位改写为收集 `keyʟ (toS χ)` 的一般树。随后施用 `tree-inv`，在命题截断下得到贡献该元素的公式 `χ` 及其与这个内部键的等式。映射保留该等式，再用 `keyBridge` 把内部键换成 `keyS W χ`；所得结论有意舍弃了相伴的子树包含证明。
 <!--ja-->
 局所的な等式 `mapped ψ` は、まず具体的なスロットを `keyʟ (toS χ)` を集める一般の木へ書き換える。次に `tree-inv` を適用すると、寄与した論理式 `χ` と、その内部の鍵との等式が命題的に切り詰められて得られる。この写像はその等式を保ち、`keyBridge` によって内部の鍵を `keyS W χ` に置き換える。付随する部分木の包含証明は、定理の結論から意図的に捨てられる。
 <!--/-->
@@ -1973,7 +1973,7 @@ The local equality `mapped ψ` first rewrites the concrete slot as the generic t
 <!--en-->
 The equality `mapped` is proved by structural recursion because `toS` changes only constants and leaves every formula constructor in place. Membership atoms, equality atoms, and bottom agree definitionally. For a binary connective, the slot consists of the singleton containing the formula's own key together with the union of the two child trees, so the two recursive equalities are combined under the same unions.
 <!--zh-->
-等式 `mapped` 由结构递归证明，因为 `toS` 只改变常元，并保留每个公式构造子。隶属原子、相等原子与假命题的两种表示按定义相同。对于二元联结词，槽位由含有公式自身键的单元素集合与两棵子树的并组成，所以两条递归等式在相同的并运算下组合起来。
+等式 `mapped` 由结构递归证明，因为 `toS` 只改变常元，并保留每个公式构造子。成员关系原子、相等原子与假命题的两种表示按定义相同。对于二元联结词，槽位由含有公式自身键的单元素集合与两棵子树的并组成，所以两条递归等式在相同的并运算下组合起来。
 <!--ja-->
 等式 `mapped` は構造再帰で証明される。`toS` は定数だけを変え、論理式の各構成子をそのまま保つからである。所属の原子論理式、等号の原子論理式、偽では二つの表示が定義上等しくなる。二項結合子では、スロットは論理式自身の鍵を含む一元集合と二つの子の木の合併からなるので、二つの再帰的な等式を同じ合併の下で組み合わせる。
 <!--/-->
@@ -2111,7 +2111,7 @@ For each `c ∈ Cv`, transport by `qC` places `c` in the canonical slot, where `
 <!--en-->
 For a member `e` of `Tv`, the equation `qT` first transports its membership to the canonical satisfaction table. The inversion `ent-slot` then yields, under propositional truncation, an arity `m`, a formula `χ`, and an equality between `fst e` and the underlying set of the canonical entry contributed by `χ`. Composing that equality with `prʟ-fst` gives `fst e ≡ pr (fst (keyʟ χ)) (fst (Sat W χ))`.
 <!--zh-->
-对于 `Tv` 的成员 `e`，等式 `qT` 先把其成员关系搬到典范满足关系表。求逆引理 `ent-slot` 随后在命题截断下给出元数 `m`、公式 `χ`，以及 `fst e` 与 `χ` 所贡献典范条目的底层集合之间的等式。再把这条等式与 `prʟ-fst` 复合，便得到 `fst e ≡ pr (fst (keyʟ χ)) (fst (Sat W χ))`。
+对于 `Tv` 的元素 `e`，等式 `qT` 先把其成员关系搬到典范满足关系表。求逆引理 `ent-slot` 随后在命题截断下给出元数 `m`、公式 `χ`，以及 `fst e` 与 `χ` 所贡献典范条目的底层集合之间的等式。再把这条等式与 `prʟ-fst` 复合，便得到 `fst e ≡ pr (fst (keyʟ χ)) (fst (Sat W χ))`。
 <!--ja-->
 `Tv` の要素 `e` について、等式 `qT` はまずその所属を正準な充足関係表へ移す。次に `ent-slot` は、命題的切り詰めの下で、アリティ `m`、論理式 `χ`、および `fst e` と `χ` が供給した正準な項目の底集合との等式を返す。この等式を `prʟ-fst` と合成すると、`fst e ≡ pr (fst (keyʟ χ)) (fst (Sat W χ))` が得られる。
 <!--/-->

@@ -13,7 +13,7 @@ module FOL.Manipulation.Relativization where
 
 ```agda
 open import Base.Prelude
-open import FOL.ZFStructure using ( ZFStructure )
+open import FOL.ZFStructure using ( ZFStructure; ZFStructureₕ )
 open import FOL.Syntax using
   ( con; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
 open import FOL.LevyHierarchy using
@@ -26,7 +26,7 @@ import FOL.Semantics
 Relativization replaces each unbounded quantifier by one bounded by a chosen constant. The transformed formula is Δ₀, and its ordinary satisfaction agrees with a semantics in which the original formula's unbounded quantifiers range only over members of the chosen set. The chapter builds three pieces in order: the rewriting operator itself, a witness that its output lies in the Δ₀ class of the Lévy hierarchy (see the chapter on that hierarchy for the definition of bounded formulas), and the correctness theorem identifying the meaning of the rewrite with bounded quantification over the chosen set. The setting is deliberately general: formulas may have constants from any type `K`, and the semantics may take values in the proposition universe `hProp ℓ` through a structure `𝒮`, so the theorem applies wherever a genuine ZF-like structure is later supplied.
 <!--zh-->
 
-相对化把每个无界量词替换为受选定常元约束的量词。变换后的公式是 Δ₀，并且其通常满足关系与一种语义相符；在该语义中，原公式的无界量词只在选定集合的成员上取值。本章依次构造三件东西：改写算子本身、说明其输出落在 Lévy 层级中 Δ₀ 类的见证 (有界公式的定义见该层级一章)，以及把改写结果的含义同选定集合上的有界量化相认同的正确性定理。论述保持一般性：公式可以带有任意类型 `K` 的常元，语义也可以通过结构 `𝒮` 取值于命题宇宙 `hProp ℓ`。
+相对化把每个无界量词替换为受选定常元约束的量词。变换后的公式是 Δ₀，并且其通常满足关系与一种语义相符；在该语义中，原公式的无界量词只在选定集合的元素上取值。本章依次构造三件东西：改写算子本身、说明其输出落在 Lévy 层级中 Δ₀ 类的见证 (有界公式的定义见该层级一章)，以及把改写结果的含义同选定集合上的有界量化相认同的正确性定理。论述保持一般性：公式可以带有任意类型 `K` 的常元，语义也可以通过结构 `𝒮` 取值于命题宇宙 `hProp ℓ`。
 <!--ja-->
 
 相対化は、各非有界量化子を選んだ定数で有界化する。変換後の論理式は Δ₀ であり、その通常の充足関係は、元の論理式の非有界量化子を選んだ集合の要素だけにわたらせる意味論と一致する。本章は三つの要素をこの順に構築する。すなわち、書き換え演算子そのもの、その出力が Lévy 階層の Δ₀ クラスに属することの証拠 (有界論理式の定義は階層の章を参照)、そして書き換えの意味を選んだ集合の上の有界量化と同一視する正当性定理である。議論は一般的に保たれている。論理式は任意の型 `K` の定数を持つことができ、意味論も構造 `𝒮` を通じて命題宇宙 `hProp ℓ` に値をとれる。
@@ -183,7 +183,7 @@ To compare the two readings, fix a proposition-valued ZF structure `𝒮` with d
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module Correct {ℓ} (𝒮 : ZFStructure ℓ)
+module Correct {ℓ} (𝒮 : ZFStructureₕ ℓ)
                {ℓc} {K : Type ℓc} (ι : K → ZFStructure.S 𝒮) (c : K) where
 ```
 </summary>

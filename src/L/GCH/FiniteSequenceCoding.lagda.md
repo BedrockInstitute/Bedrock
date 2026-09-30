@@ -28,7 +28,7 @@ module L.GCH.FiniteSequenceCoding {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 open import FOL.Syntax using ( Formula; var; con; _≐_; _∧̇_; ∃̇_; ∀̇∈; ∃̇∈ )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; regularityV )
@@ -83,7 +83,7 @@ open import Cubical.HITs.PropositionalTruncation using ( rec2 )
 <!--en-->
 Two descriptions of the same objects will be used throughout. At the object-language level, equality, conjunction, and bounded or unbounded quantification describe sequence graphs and recursive traces inside `L`. At the host level, presentations turn membership in a set into small indices, while regularity later supports the well-founded argument behind the square law.
 <!--zh-->
-下文始终交替使用同一对象的两种描述。在对象语言层面，相等、合取以及有界或无界量化描述 `L` 内部的序列图与递归轨迹。在宿主层面，呈现把集合成员化为小索引，而正则公理稍后支撑平方律背后的良基论证。
+下文始终交替使用同一对象的两种描述。在对象语言层面，相等、合取以及有界或无界量化描述 `L` 内部的序列图与递归轨迹。在宿主层面，呈现把集合元素化为小索引，而正则公理稍后支撑平方律背后的良基论证。
 <!--ja-->
 以下では、同じ対象について二つの記述を行き来する。対象言語の水準では、等号、連言、有界および非有界の量化によって、`L` の内部の列のグラフと再帰の軌跡を記述する。ホストの水準では、提示によって集合の要素を小さな添字として扱い、正則性は後で平方律を支える整礎的な議論に用いられる。
 <!--/-->
@@ -91,7 +91,7 @@ Two descriptions of the same objects will be used throughout. At the object-lang
 <!--en-->
 The coding relies on two rigid families of set codes. Ordered-pair injectivity recovers both coordinates from an equality of pair codes, and von Neumann numerals faithfully record natural numbers and their order inside `ω`. Transitivity of constructibility keeps every member of a constructible ordinal inside `L`, so these ambient codes can be used as elements of the constructible model.
 <!--zh-->
-编码依赖两类具有刚性的集合码。有序对码的单射性可从对码相等恢复两个坐标，冯·诺伊曼数码则在 `ω` 内忠实记录自然数及其顺序。可构造性的传递性保证可构造序数的每个成员仍在 `L` 中，因而这些外围码可作为可构造模型的元素使用。
+编码依赖两类具有刚性的集合码。有序对码的单射性可从对码相等恢复两个坐标，冯·诺伊曼数码则在 `ω` 内忠实记录自然数及其顺序。可构造性的传递性保证可构造序数的每个元素仍在 `L` 中，因而这些外围码可作为可构造模型的元素使用。
 <!--ja-->
 符号化は、二つの剛直な集合符号の族に依存する。順序対の符号の単射性により、対の符号の等しさから二つの座標を復元でき、フォン・ノイマン数項は自然数とその順序を `ω` の内部で忠実に記録する。構成可能性の推移性により、構成可能な順序数の各要素も `L` にとどまるので、これらの周囲の符号を構成可能モデルの要素として使える。
 <!--/-->
@@ -107,7 +107,7 @@ The set-theoretic graphs used here must be visible to first-order reasoning in `
 <!--en-->
 A finite sequence is represented by an environment graph with a numeral as its exact domain. For each fixed length, the environment-set construction collects precisely those graphs and reads a member back only under propositional truncation. The recursion machinery will nevertheless produce an actual value once the graph formula has a unique output, and coded-injection composition will carry the resulting bounds between constructible sets.
 <!--zh-->
-有限序列表示为以数码为准确规定义域的环境图。对每个固定长度，环境集构造恰好收集这些图，而从成员反向读取表示时只得到命题截断的结果。尽管如此，一旦图公式的输出唯一，递归机制仍可产出实际取值；编码单射的复合则把所得的界在可构造集合之间传递。
+有限序列表示为以数码为准确规定义域的环境图。对每个固定长度，环境集构造恰好收集这些图，而从元素反向读取表示时只得到命题截断的结果。尽管如此，一旦图公式的输出唯一，递归机制仍可产出实际取值；编码单射的复合则把所得的界在可构造集合之间传递。
 <!--ja-->
 有限列は、数項をちょうど定義域とする環境のグラフとして表す。各固定長について、環境集合の構成はそのようなグラフだけを集め、要素から表現を読み戻す向きは命題的に切り詰められている。それでも、グラフの論理式の出力が一意なら、再帰の仕組みは実際の値を与える。さらに、符号化された単射の合成によって、得られた上界を構成可能集合の間で移せる。
 <!--/-->
@@ -123,7 +123,7 @@ The final counting argument need not assume that the given infinite ordinal is a
 <!--en-->
 Lengths live as natural numbers, positions as elements of `Fin n`, and internal domain markers as numerals. Moving between these three views requires order facts such as `toℕ i < n` and the inverse conversion from a number below `n` to a finite index. Equality of dependent pairs is controlled by their data component because the accompanying membership proofs are propositions.
 <!--zh-->
-长度以自然数表示，位置以 `Fin n` 的元素表示，内部定义域标记则以数码表示。在这三种视角之间转换，需要 `toℕ i < n` 之类的顺序事实，以及从小于 `n` 的自然数反向构造有穷索引。由于随附的隶属证明是命题，依值对的相等由其数据分量控制。
+长度以自然数表示，位置以 `Fin n` 的元素表示，内部定义域标记则以数码表示。在这三种视角之间转换，需要 `toℕ i < n` 之类的顺序事实，以及从小于 `n` 的自然数反向构造有穷索引。由于随附的成员关系证明是命题，依值对的相等由其数据分量控制。
 <!--ja-->
 長さは自然数、位置は `Fin n` の要素、内部の定義域の標識は数項として表す。この三つの見方の間を移るには、`toℕ i < n` のような順序の事実と、`n` 未満の自然数から有限添字を作り直す逆変換が必要である。付随する所属の証明は命題なので、依存対の等しさはデータの成分によって決まる。
 <!--/-->
@@ -137,7 +137,7 @@ open import Cubical.Data.FinData.Properties using ( toℕ<n; fromℕ'; toFromId'
 <!--en-->
 The injectivity proof repeatedly separates two possibilities for an index below a successor: it lies below the predecessor, or it is the last index. Propositional extensionality then converts two membership implications into equality of sets, and the cumulative hierarchy supplies the sets and their canonical presentations on which these arguments run.
 <!--zh-->
-单射性证明反复区分后继以下索引的两种情形：它小于前驱，或者正是末索引。命题外延性随后把两个隶属蕴含化为集合相等，累积层级则提供承载这些论证的集合及其典范呈现。
+单射性证明反复区分后继以下索引的两种情形：它小于前驱，或者正是末索引。命题外延性随后把两个成员关系蕴含化为集合相等，累积层级则提供承载这些论证的集合及其典范呈现。
 <!--ja-->
 単射性の証明では、後続数未満の添字について、前の数未満である場合と最後の添字である場合を繰り返し分ける。命題外延性は二つの所属の含意を集合の等しさへ変え、累積階層はこの議論を行う集合とその標準的な提示を与える。
 <!--/-->
@@ -165,7 +165,7 @@ import Cubical.Induction.WellFounded as WF
 <!--en-->
 Propositional truncation records that a representation exists while deliberately forgetting which representation was supplied. Its eliminator is used only when the target is itself a proposition, such as membership or equality of sets. This restriction is the reason the chapter can prove existence and injectivity without silently choosing a length, an assignment, or an internal graph.
 <!--zh-->
-命题截断记录某个表示存在，同时刻意忘却所给的是哪一个表示。只有当目标本身是命题时，例如集合的隶属或相等，才使用它的消去原则。这项限制保证本章能够证明存在性与单射性，而不会暗中选取长度、赋值或内部图。
+命题截断记录某个表示存在，同时刻意忘却所给的是哪一个表示。只有当目标本身是命题时，例如集合的成员关系或相等，才使用它的消去原则。这项限制保证本章能够证明存在性与单射性，而不会暗中选取长度、赋值或内部图。
 <!--ja-->
 命題的切り詰めは、ある表現が存在することを記録しつつ、どの表現が与えられたかを意図的に忘れる。その除去則を使うのは、集合の所属や等しさのように、目標自身が命題である場合だけである。この制限により、長さ、割り当て、内部グラフを暗黙に選ぶことなく、存在と単射性を証明できる。
 <!--/-->
@@ -173,25 +173,25 @@ Propositional truncation records that a representation exists while deliberately
 <!--en-->
 At the ambient level, membership is proposition-valued. This matters whenever a truncated witness is eliminated into a membership claim: no data are selected, and only the truth of membership survives.
 <!--zh-->
-在外围层面，隶属是命题值的。每当把截断见证消去到隶属断言中，这一点都至关重要：没有数据被选出，留下的只有隶属为真。
+在外围层面，成员关系是命题值的。每当把截断见证消去到成员关系断言中，这一点都至关重要：没有数据被选出，留下的只有成员关系为真。
 <!--ja-->
 周囲の水準では、所属は命題値である。切り詰められた証人を所属の主張へ除去するとき、この点が効く。データは何も選ばれず、所属が成り立つという事実だけが残る。
 <!--/-->
 
 ```agda
-open hPropStructure 𝒮ᵥ using ( _∈ˢ_ )
+open hPropView 𝒮ᵥ using ( _∈ˢ_ )
 ```
 
 <!--en-->
 Write `SV` for the proposition-valued structure on the ambient cumulative hierarchy. It provides the outer notion of membership used to compare pair codes, numerals, and set-theoretic graphs before they are regarded as constructible objects.
 <!--zh-->
-以 `SV` 表示外围累积层级上的命题值结构。它提供外围隶属概念，用来比较有序对码、数码与集合论图，随后再把这些对象视为可构造对象。
+以 `SV` 表示外围累积层级上的命题值结构。它提供外围成员关系概念，用来比较有序对码、数码与集合论图，随后再把这些对象视为可构造对象。
 <!--ja-->
 周囲の累積階層上の命題値構造を `SV` と書く。これは、順序対の符号、数項、集合論的グラフを構成可能な対象として見る前に比較するための、外側の所属概念を与える。
 <!--/-->
 
 ```agda
-module SV = hPropStructure 𝒮ᵥ using ()
+module SV = hPropView 𝒮ᵥ using ()
 ```
 
 <!--en-->
@@ -203,14 +203,14 @@ Write `S` for the carrier of the constructible structure `SL`. An element of `S`
 <!--/-->
 
 ```agda
-module SL = hPropStructure 𝒮ʟ using ( S; _∈ˢ_ )
+module SL = hPropView 𝒮ʟ using ( S; _∈ˢ_ )
 open SL using ( S )
 ```
 
 <!--en-->
 Formulas with constants from `S` are evaluated in the constructible structure, while their atomic content can also be read after projection to ambient sets. Transitivity of `L` makes these readings agree, allowing an object-language graph condition to justify the ambient membership equations used in the fold.
 <!--zh-->
-带有 `S` 中常元的公式在可构造结构中求值，其原子内容也可投影到底层外围集合后读取。`L` 的传递性使两种读法一致，从而对象语言中的图条件能够证成折叠所用的外围隶属等式。
+带有 `S` 中常元的公式在可构造结构中求值，其原子内容也可投影到底层外围集合后读取。`L` 的传递性使两种读法一致，从而对象语言中的图条件能够证成折叠所用的外围成员关系等式。
 <!--ja-->
 `S` の定数を含む論理式は構成可能構造で評価され、その原子的な内容は周囲の集合へ射影して読むこともできる。`L` の推移性により二つの読み方が一致するので、対象言語のグラフ条件から、畳み込みで用いる周囲の所属の等式を得られる。
 <!--/-->
@@ -271,7 +271,7 @@ private
 <!--en-->
 For a particular length `n` and assignment `g`, the graph `envS A g` lies in the common container. This inclusion supplies the ambient half of separation membership; the defining formula will supply the exact finite-environment condition.
 <!--zh-->
-对特定长度 `n` 与赋值 `g`，图 `envS A g` 属于这个公共容器。这条包含提供分离隶属的外围一半；定义公式则提供准确的有限环境条件。
+对特定长度 `n` 与赋值 `g`，图 `envS A g` 属于这个公共容器。这条包含提供分离成员关系的外围一半；定义公式则提供准确的有限环境条件。
 <!--ja-->
 特定の長さ `n` と割り当て `g` に対し、グラフ `envS A g` は共通の容器に属する。この包含が分出による所属の外側の半分を与え、定義論理式が有限環境であるという正確な条件を与える。
 <!--/-->
@@ -284,7 +284,7 @@ For a particular length `n` and assignment `g`, the graph `envS A g` lies in the
 <!--en-->
 The one-variable formula says that the candidate `x` is an environment graph over `A` whose domain is some member of the internal `ω`. The bounded witness is therefore only known at first to be an element of `ω`; recovering an actual natural length from it is a later, propositionally truncated step.
 <!--zh-->
-这个一元公式断言：候选对象 `x` 是 `A` 上的环境图，其定义域是内部 `ω` 的某个成员。因此起初只知道这个有界见证属于 `ω`；从中恢复实际的自然数长度要到稍后进行，而且结果仍在命题截断之内。
+这个一元公式断言：候选对象 `x` 是 `A` 上的环境图，其定义域是内部 `ω` 的某个元素。因此起初只知道这个有界见证属于 `ω`；从中恢复实际的自然数长度要到稍后进行，而且结果仍在命题截断之内。
 <!--ja-->
 この一変数論理式は、候補 `x` が `A` 上の環境のグラフであり、その定義域が内部の `ω` のある要素であることを述べる。したがって、有界な証人について最初に分かるのは `ω` に属すことだけである。そこから実際の自然数の長さを復元するのは後の段階であり、その結果も命題的に切り詰められている。
 <!--/-->
@@ -298,7 +298,7 @@ seqFo A = ∃̇∈ (con ωʟ) (∃̇ ( (var zero ≐ con A)
 <!--en-->
 Separation now removes the surplus elements of the common container. The resulting set `seqL A` contains exactly those container elements satisfying the finite-environment description. Keeping the definition opaque affects normalization only; the mathematical content is fixed by the membership equation that follows.
 <!--zh-->
-现在用分离去除公共容器中的多余元素。所得集合 `seqL A` 恰好包含容器中满足有限环境描述的元素。保持定义不透明只影响归一化；其数学内容由随后给出的隶属等式完全确定。
+现在用分离去除公共容器中的多余元素。所得集合 `seqL A` 恰好包含容器中满足有限环境描述的元素。保持定义不透明只影响归一化；其数学内容由随后给出的成员关系等式完全确定。
 <!--ja-->
 ここで分出を用いて、共通の容器に含まれる余分な要素を除く。得られる集合 `seqL A` は、容器の要素のうち有限環境の記述を満たすものをちょうど含む。定義を不透明に保つことは正規化にだけ影響し、数学的内容は続く所属の等式によって完全に定まる。
 <!--/-->
@@ -326,7 +326,7 @@ An element belongs to `seqL A` precisely when it both lies in the common contain
 <!--en-->
 Every member of an environment set of length `n` belongs to `seqL A`. The proof reads the truncated presentation of the member and then introduces it into the separated set.
 <!--zh-->
-长度为 `n` 的环境集的每个成员都属于 `seqL A`。证明先读取该成员的截断呈现，再把它引入分离所得的集合。
+长度为 `n` 的环境集的每个元素都属于 `seqL A`。证明先读取该元素的截断呈现，再把它引入分离所得的集合。
 <!--ja-->
 長さ `n` の環境集合のすべての要素は `seqL A` に属する。証明は、その要素の切り詰められた提示を読み、その後に分出された集合の中へ導入する。
 <!--/-->
@@ -342,7 +342,7 @@ seqL-in A n x hx = rec₁ (snd (fst x ∈ˢ fst (seqL A))) from (envSet-out A n 
 <!--en-->
 The member is transported to its graph form, which is a member of the container by the bounding record; the description is then satisfied by the canonical entry.
 <!--zh-->
-该成员先被搬运到图形式。界定记录表明这个图属于容器，随后典范条目便满足相应描述。
+该元素先被搬运到图形式。界定记录表明这个图属于容器，随后典范条目便满足相应描述。
 <!--ja-->
 その要素はグラフの形へ運ばれ、界定の記録によって容器の中にある。そして、正準な項目によって記述が充足される。
 <!--/-->
@@ -358,7 +358,7 @@ The member is transported to its graph form, which is a member of the container 
 <!--en-->
 The description's witness consists of the numeral of the length, its membership in the internal `ω`, and the graph relation of the environment over `A`, all packaged in the truncated existential.
 <!--zh-->
-描述的见证由长度的数码、其在内部 `ω` 中的隶属，以及该环境在 `A` 上的图关系组成，全部打包进截断存在。
+描述的见证由长度的数码、其在内部 `ω` 中的成员关系，以及该环境在 `A` 上的图关系组成，全部打包进截断存在。
 <!--ja-->
 記述の証人は、長さの数項、内部の `ω` への所属、そして `A` の上の環境のグラフの関係からなり、すべて切り詰められた存在の中にまとめられる。
 <!--/-->
@@ -370,7 +370,7 @@ The description's witness consists of the numeral of the length, its membership 
 <!--en-->
 Conversely, membership in `seqL A` yields only the propositionally truncated assertion that some natural length `n` makes the member an element of `envSet A n`. The argument discards the container component of the separation equation and reads the existential information from the defining formula; it does not choose a length uniformly for all members.
 <!--zh-->
-反过来，属于 `seqL A` 只给出经过命题截断的断言：存在某个自然数长度 `n`，使该成员属于 `envSet A n`。论证舍去分离等式中的容器分量，从定义公式读取存在信息；它并未为所有成员一致地选取长度。
+反过来，属于 `seqL A` 只给出经过命题截断的断言：存在某个自然数长度 `n`，使该元素属于 `envSet A n`。论证舍去分离等式中的容器分量，从定义公式读取存在信息；它并未为所有元素一致地选取长度。
 <!--ja-->
 逆に、`seqL A` への所属から得られるのは、ある自然数の長さ `n` が存在し、その要素が `envSet A n` に属すという命題的に切り詰められた主張だけである。分出の等式のうち容器の成分を捨て、定義論理式から存在情報を読み取るが、すべての要素に対して長さを一様に選ぶわけではない。
 <!--/-->
@@ -402,7 +402,7 @@ Inside one branch of the truncated witnesses, suppose the domain object `d` has 
 <!--en-->
 For the fixed length `k`, the environment clauses determine each entry uniquely: exactness of the domain gives mere existence, single-valuedness makes the entry fiber a proposition, and the value restriction places the recovered value in the presentation of `A`. Extensionality, using also the clause that every graph member has pair shape, then identifies the whole set `x` with the canonical environment graph.
 <!--zh-->
-在固定长度 `k` 下，环境的各项条件唯一确定每个条目：准确的定义域给出仅有的存在性，单值性使条目纤维成为命题，取值限制则把恢复出的值放入 `A` 的呈现。随后外延性还使用「图的每个成员都具有对形」这一条，把整个集合 `x` 与典范环境图等同。
+在固定长度 `k` 下，环境的各项条件唯一确定每个条目：准确的定义域给出仅有的存在性，单值性使条目纤维成为命题，取值限制则把恢复出的值放入 `A` 的呈现。随后外延性还使用「图的每个元素都具有对形」这一条，把整个集合 `x` 与典范环境图等同。
 <!--ja-->
 長さ `k` を固定すると、環境の各条件がそれぞれの項目を一意に定める。正確な定義域が切り詰められた存在を与え、一価性が項目のファイバーを命題にし、値の制限が復元された値を `A` の提示に置く。さらに、グラフのすべての要素が対の形をもつという条件も用い、外延性によって集合 `x` 全体を標準的な環境のグラフと同一視する。
 <!--/-->
@@ -416,7 +416,7 @@ For the fixed length `k`, the environment clauses determine each entry uniquely:
 <!--en-->
 The remaining step eliminates the membership of the domain in `ω`: a member of `ω` is, merely, a numeral.
 <!--zh-->
-剩余步骤消去定义域在 `ω` 中的隶属：`ω` 的成员仅仅是某个数码。
+剩余步骤消去定义域在 `ω` 中的成员关系：`ω` 的元素仅仅是某个数码。
 <!--ja-->
 残りの段階は、定義域の `ω` への所属を消去する。`ω` の要素は、単に、ある数項である。
 <!--/-->
@@ -508,7 +508,7 @@ Numerals become elements of the carrier: since `α` is not in `ω`, the infinitu
 <!--en-->
 Presentation indices of `α` also become elements of the carrier, with constructibility transported along the membership of `α` and membership witnessed by the presentation.
 <!--zh-->
-`α` 的呈现索引也成为载体元素：可构造性沿 `α` 的隶属搬运，而隶属由呈现见证。
+`α` 的呈现索引也成为载体元素：可构造性沿 `α` 的成员关系搬运，而成员关系由呈现见证。
 <!--ja-->
 `α` の提示の索引も台の要素になる。構成可能性は `α` の所属に沿って運ばれ、所属は提示によって証明される。
 <!--/-->
@@ -521,7 +521,7 @@ Presentation indices of `α` also become elements of the carrier, with construct
 <!--en-->
 Single-valuedness together with the exact-domain clause turns the graph `F` into an actual host function on members of `prodL α`. Domain membership initially gives only a truncated output, but the fiber of possible outputs is a proposition, so its unique value can be extracted. The separate hypothesis `ij` is still needed to conclude that equal outputs have equal inputs.
 <!--zh-->
-单值性与准确的定义域子句共同把图 `F` 读成 `prodL α` 成员上的实际宿主函数。定义域隶属起初只给出截断的输出，但可能输出所成的纤维是命题，故可提取其中的唯一取值。要从输出相等推出输入相等，仍须另用假设 `ij`。
+单值性与准确的定义域子句共同把图 `F` 读成 `prodL α` 元素上的实际宿主函数。定义域成员关系起初只给出截断的输出，但可能输出所成的纤维是命题，故可提取其中的唯一取值。要从输出相等推出输入相等，仍须另用假设 `ij`。
 <!--ja-->
 一価性と正確な定義域の条件を合わせると、グラフ `F` を `prodL α` の要素上の実際のホスト関数として読める。定義域への所属から最初に得られる出力は切り詰められているが、可能な出力のファイバーは命題なので、その一意な値を取り出せる。等しい出力から入力の等しさを結論するには、別の仮定 `ij` がなお必要である。
 <!--/-->
@@ -533,7 +533,7 @@ Single-valuedness together with the exact-domain clause turns the graph `F` into
 <!--en-->
 The coded pair of two carrier elements belongs to the product: both coordinates are in `α`, and the pair operation transports this into membership in `prodL α`.
 <!--zh-->
-两个载体元素的编码对属于乘积：两个坐标都在 `α` 中，配对运算把这一点转化为对 `prodL α` 的隶属。
+两个载体元素的编码对属于乘积：两个坐标都在 `α` 中，配对运算把这一点转化为对 `prodL α` 的成员关系。
 <!--ja-->
 台の二つの要素の符号化された対は積の中にある。両方の座標が `α` の中にあり、対の演算がそれを `prodL α` への所属に変えるからである。
 <!--/-->
@@ -548,7 +548,7 @@ The coded pair of two carrier elements belongs to the product: both coordinates 
 <!--en-->
 For an input `x` already known to belong to `prodL α`, define `val x` to be the unique output recorded by `F` at `x`. The membership proof is part of the input because the graph is required to be total exactly on the product, not on every constructible set.
 <!--zh-->
-对已经知道属于 `prodL α` 的输入 `x`，定义 `val x` 为 `F` 在 `x` 处记录的唯一输出。隶属证明是输入数据的一部分，因为图只被要求恰好在该乘积上全域，而非在每个可构造集合上全域。
+对已经知道属于 `prodL α` 的输入 `x`，定义 `val x` 为 `F` 在 `x` 处记录的唯一输出。成员关系证明是输入数据的一部分，因为图只被要求恰好在该乘积上全域，而非在每个可构造集合上全域。
 <!--ja-->
 `prodL α` に属すことが分かっている入力 `x` に対し、`val x` を `F` が `x` に記録する一意な出力と定める。所属の証明も入力データに含めるのは、グラフが全域的であると要求されるのがちょうどこの積の上だけであり、すべての構成可能集合の上ではないからである。
 <!--/-->
@@ -639,7 +639,7 @@ If two applications have equal outputs, injectivity of `F` first identifies thei
 <!--en-->
 The comparison of pair inputs passes from constructible pair codes to their ambient Kuratowski codes and back. After these transports, pair injectivity yields exactly the two component equalities required by `app-inj`; no equality of the accompanying membership proofs is needed.
 <!--zh-->
-对输入对的比较先从可构造对码转到外围 Kuratowski 对码，再转回去。完成这些搬运后，有序对的单射性恰好给出 `app-inj` 所需的两条分量相等；无需比较随附的隶属证明。
+对输入对的比较先从可构造对码转到外围 Kuratowski 对码，再转回去。完成这些搬运后，有序对的单射性恰好给出 `app-inj` 所需的两条分量相等；无需比较随附的成员关系证明。
 <!--ja-->
 対入力の比較では、構成可能な対符号から周囲のクラトフスキー対符号へ移り、さらに戻る。これらの輸送の後、対の単射性が `app-inj` に必要な二つの成分の等しさをちょうど与える。付随する所属の証明を比較する必要はない。
 <!--/-->
@@ -667,7 +667,7 @@ The companion uniqueness fact runs in the forward direction. If `F` records some
 <!--en-->
 To apply single-valuedness, the supplied membership is first transported from the ambient pair code to the constructible pair used by `val`. It is then compared with `val-graph`, the canonical membership for the extracted value. Since both entries now have the same input, the single-valuedness clause identifies their outputs.
 <!--zh-->
-为应用单值性，先把给定的隶属从外围对码搬运到 `val` 所用的可构造对。随后将它与 `val-graph` 给出的典范图隶属比较。此时两条记录具有相同输入，单值性子句便认同它们的输出。
+为应用单值性，先把给定的成员关系从外围对码搬运到 `val` 所用的可构造对。随后将它与 `val-graph` 给出的典范图成员关系比较。此时两条记录具有相同输入，单值性子句便认同它们的输出。
 <!--ja-->
 一価性を適用するため、まず与えられた所属を周囲の対符号から `val` が用いる構成可能な対へ輸送する。次に、それを抽出された値についての標準的な所属 `val-graph` と比較する。二つの項目は同じ入力をもつので、一価性の条件がそれらの出力を同一視する。
 <!--/-->
@@ -800,7 +800,7 @@ The pair `q` separates the code equation into equality of the numeral coordinate
 <!--en-->
 Once the lengths coincide, equality of the environment graphs follows from function extensionality. For each finite index `i`, the proof compares the corresponding presented members of `α`; injectivity of the presentation embedding reduces their equality to equality of the underlying sets recovered from the two chains.
 <!--zh-->
-长度一致后，环境图的相等由函数外延性推出。对每个有穷索引 `i`，证明比较 `α` 的两个相应呈现成员；呈现嵌入的单射性把成员相等化为从两条链恢复的底层集合相等。
+长度一致后，环境图的相等由函数外延性推出。对每个有穷索引 `i`，证明比较 `α` 的两个相应呈现元素；呈现嵌入的单射性把元素相等化为从两条链恢复的底层集合相等。
 <!--ja-->
 長さが一致すれば、環境グラフの等しさは関数外延性から従う。各有限添字 `i` について、`α` の提示における対応する二要素を比較する。提示の埋め込みの単射性により、その等しさは二つの鎖から得た底集合の等しさへ帰着する。
 <!--/-->
@@ -846,7 +846,7 @@ To describe one recursive transition semantically, fix an index object `i`. A `S
 <!--en-->
 The last membership assertion is the recurrence equation written as a graph fact. Its input is the ordered pair `(a,u)`, and its output is `w`. Thus `StepAt` is the host-level meaning that the later first-order step formula must express; it does not yet add any decoder or choice of a global trace.
 <!--zh-->
-最后一条隶属断言把递推等式写成图事实：输入是有序对 `(a,u)`，输出是 `w`。因此 `StepAt` 是稍后的一阶步进公式所要表达的宿主层含义；它尚未加入任何解码器，也未选择一条全局轨迹。
+最后一条成员关系断言把递推等式写成图事实：输入是有序对 `(a,u)`，输出是 `w`。因此 `StepAt` 是稍后的一阶步进公式所要表达的宿主层含义；它尚未加入任何解码器，也未选择一条全局轨迹。
 <!--ja-->
 最後の所属の主張は、漸化式をグラフの事実として書いたものである。入力は順序対 `(a,u)`、出力は `w` である。したがって `StepAt` は、後の一階のステップ論理式が表すべきホスト側の意味であり、復号写像や大域的な軌跡の選択を加えるものではない。
 <!--/-->
@@ -874,7 +874,7 @@ The last membership assertion is the recurrence equation written as a graph fact
 <!--en-->
 `EnvC m C` says that `C` is an environment over `α` with exact domain `m`. Through `envOverAt`, this includes single-valuedness, the domain condition, the requirement that all values lie in `α`, and the requirement that every member of `C` is an ordered pair. Here `m` will be the successor of the sequence length, so the trace has positions from `0` through `n`.
 <!--zh-->
-`EnvC m C` 表示 `C` 是取值于 `α`、定义域恰为 `m` 的环境。通过 `envOverAt`，这同时包含单值性、定义域条件、所有取值均属于 `α`，以及 `C` 的每个成员都是有序对。这里 `m` 将是序列长度的后继，因此轨迹具有从 `0` 到 `n` 的各个位置。
+`EnvC m C` 表示 `C` 是取值于 `α`、定义域恰为 `m` 的环境。通过 `envOverAt`，这同时包含单值性、定义域条件、所有取值均属于 `α`，以及 `C` 的每个元素都是有序对。这里 `m` 将是序列长度的后继，因此轨迹具有从 `0` 到 `n` 的各个位置。
 <!--ja-->
 `EnvC m C` は、`C` が `α` に値を取り、ちょうど `m` を定義域とする環境であることを述べる。`envOverAt` には、一価性、定義域の条件、すべての値が `α` に属すこと、そして `C` の各要素が順序対であることが含まれる。ここで `m` は列の長さの後者になるので、軌跡は `0` から `n` までの位置をもつ。
 <!--/-->
@@ -1130,7 +1130,7 @@ To read `stepFo` outward, the proof eliminates its propositionally truncated wit
 <!--en-->
 Each adequacy equation changes one satisfaction judgment into its intended equality or graph membership. The resulting facts identify `j` as the successor of `i`, read `a` from `s`, and read `u,w` from `C`. Together with the final graph fact for `F`, they have exactly the semantic shape required by `StepAt`.
 <!--zh-->
-每条充分性等式都把一项满足判断传输为其预期的等式或图隶属。所得事实把 `j` 认作 `i` 的后继，从 `s` 读出 `a`，并从 `C` 读出 `u,w`；连同关于 `F` 的最后一条图事实，它们恰好组成 `StepAt` 所需的语义形状。
+每条充分性等式都把一项满足判断传输为其预期的等式或图成员关系。所得事实把 `j` 认作 `i` 的后继，从 `s` 读出 `a`，并从 `C` 读出 `u,w`；连同关于 `F` 的最后一条图事实，它们恰好组成 `StepAt` 所需的语义形状。
 <!--ja-->
 各妥当性の等式は、一つの充足判断を意図された等式またはグラフ所属へ輸送する。得られた事実は `j` を `i` の後者と同一視し、`s` から `a`、`C` から `u,w` を読み取る。最後の `F` に関するグラフの事実と合わせると、ちょうど `StepAt` が要求する意味論的な形になる。
 <!--/-->
@@ -1146,7 +1146,7 @@ Each adequacy equation changes one satisfaction judgment into its intended equal
 <!--en-->
 The pair-adequacy equation identifies the auxiliary object with the ordered pair `(a,u)`. Transporting the `F`-application fact along that equality yields the recurrence membership `((a,u),w)∈F`. This completes the outward passage from the first-order step formula to one semantic transition.
 <!--zh-->
-配对充分性等式把辅助对象认同为有序对 `(a,u)`。沿这条等式传输 `F` 的应用事实，便得到递推所需的隶属 `((a,u),w)∈F`。至此完成从一阶步进公式到一次语义转移的向外读取。
+配对充分性等式把辅助对象认同为有序对 `(a,u)`。沿这条等式传输 `F` 的应用事实，便得到递推所需的成员关系 `((a,u),w)∈F`。至此完成从一阶步进公式到一次语义转移的向外读取。
 <!--ja-->
 対についての妥当性の等式は、補助対象を順序対 `(a,u)` と同一視する。その等式に沿って `F` の適用の事実を輸送すると、漸化式を表す所属 `((a,u),w)∈F` が得られる。これで一階のステップ論理式から一回の意味論的遷移への外向きの読み取りが完了する。
 <!--/-->
@@ -1177,7 +1177,7 @@ The outward reading of `finFo` first obtains a terminal trace value `v` and an a
 <!--en-->
 Adequacy turns the three clauses into the memberships expressing `C(n)=v` and `F(q)=y`, together with the equality `q=(n,v)`. Transport along the last equality replaces `q` in the `F`-membership, producing exactly `F(n,v)=y` in graph form.
 <!--zh-->
-充分性把三个子句分别化为表示 `C(n)=v` 与 `F(q)=y` 的隶属，以及等式 `q=(n,v)`。沿最后这条等式传输 `F` 中的隶属，便以 `(n,v)` 替换 `q`，得到图形式的 `F(n,v)=y`。
+充分性把三个子句分别化为表示 `C(n)=v` 与 `F(q)=y` 的成员关系，以及等式 `q=(n,v)`。沿最后这条等式传输 `F` 中的成员关系，便以 `(n,v)` 替换 `q`，得到图形式的 `F(n,v)=y`。
 <!--ja-->
 妥当性により、三つの条件は `C(n)=v` と `F(q)=y` を表す所属、および等式 `q=(n,v)` へ移される。最後の等式に沿って `F` への所属を輸送し、`q` を `(n,v)` で置き換えると、グラフの形で `F(n,v)=y` が得られる。
 <!--/-->
@@ -1209,7 +1209,7 @@ The body has eight conjuncts. The first two identify the auxiliaries `b=α` and 
 <!--en-->
 The successor adequacy equation supplies `m=n+1`, while the two readings of `domAt` give both directions of exact-domain membership for `s`. The environment formula is transported from the auxiliary base `b` to the fixed `α` using `b=α`; no equality between complete traces is required.
 <!--zh-->
-后继公式的充分性等式给出 `m=n+1`，而 `domAt` 的两个读法给出 `s` 的准确定义域隶属的两个方向。再利用 `b=α`，把环境公式从辅助基集 `b` 传输到固定的 `α`；这里不需要证明两条完整轨迹相等。
+后继公式的充分性等式给出 `m=n+1`，而 `domAt` 的两个读法给出 `s` 的准确定义域成员关系的两个方向。再利用 `b=α`，把环境公式从辅助基集 `b` 传输到固定的 `α`；这里不需要证明两条完整轨迹相等。
 <!--ja-->
 後者論理式の妥当性の等式から `m=n+1` が得られ、`domAt` の二つの読み方から `s` の正確な定義域について両方向の所属が得られる。さらに `b=α` を用い、環境の論理式を補助的な基礎集合 `b` から固定した `α` へ輸送する。軌跡全体の等しさは必要ない。
 <!--/-->
@@ -1288,7 +1288,7 @@ The witnesses are inserted in the same order in which `stepFo` binds them. Rever
 <!--en-->
 The canonical constructible pair `prʟ a u` witnesses the auxiliary pair variable. Pair adequacy identifies its underlying set with `(a,u)`, and transport of the membership `((a,u),w)∈F` gives the required object-language application clause. This completes the inward reading of one transition.
 <!--zh-->
-典范可构造对 `prʟ a u` 充当辅助对变元的见证。配对充分性把其底层集合认同为 `(a,u)`，再传输隶属 `((a,u),w)∈F`，便得到所需的对象语言应用子句。一次转移的向内读取至此完成。
+典范可构造对 `prʟ a u` 充当辅助对变元的见证。配对充分性把其底层集合认同为 `(a,u)`，再传输成员关系 `((a,u),w)∈F`，便得到所需的对象语言应用子句。一次转移的向内读取至此完成。
 <!--ja-->
 標準的な構成可能な対 `prʟ a u` が、補助的な対変数の証人になる。対についての妥当性がその底集合を `(a,u)` と同一視し、所属 `((a,u),w)∈F` を輸送すると、必要な対象言語の適用条件が得られる。これで一回の遷移の内向きの読み取りが完了する。
 <!--/-->
@@ -1334,7 +1334,7 @@ Extend the environment by `v` and the canonical pair `prʟ n v`. Reversing appli
 <!--en-->
 The final transport changes the graph membership whose input is the ambient pair `(n,v)` into satisfaction using the constructible representative `prʟ n v`. The terminal clause is therefore rebuilt without choosing anything beyond the witness already carried by the propositional truncation.
 <!--zh-->
-最后一次传输把以外围有序对 `(n,v)` 为输入的图隶属，化为使用可构造代表 `prʟ n v` 的满足。因此，终端子句得以重建，而没有在命题截断已携带的见证之外再作选择。
+最后一次传输把以外围有序对 `(n,v)` 为输入的图成员关系，化为使用可构造代表 `prʟ n v` 的满足。因此，终端子句得以重建，而没有在命题截断已携带的见证之外再作选择。
 <!--ja-->
 最後の輸送は、周囲の順序対 `(n,v)` を入力とするグラフ所属を、構成可能な代表 `prʟ n v` を用いた充足へ移す。したがって、命題的切り詰めが既に保持する証人以外を選ぶことなく、終端条件が再構成される。
 <!--/-->
@@ -1394,7 +1394,7 @@ Reversing successor adequacy supplies the conjunct for `m=n+1`. The introduction
 <!--en-->
 The initial membership `C(0)=0` gives the sixth conjunct through application adequacy. Each transition below `n` is sent inward by `stepIn`, and `finIn` rebuilds the final tagged-value clause. Along with the preceding five facts, these complete all eight conjuncts of the finite-trace body.
 <!--zh-->
-初始隶属 `C(0)=0` 经应用充分性给出第六个合取项。`n` 以下的每次转移由 `stepIn` 向内送入，`finIn` 则重建最终带标签的取值子句。连同此前五项事实，这些内容补全有限轨迹公式体的全部八个合取项。
+初始成员关系 `C(0)=0` 经应用充分性给出第六个合取项。`n` 以下的每次转移由 `stepIn` 向内送入，`finIn` 则重建最终带标签的取值子句。连同此前五项事实，这些内容补全有限轨迹公式体的全部八个合取项。
 <!--ja-->
 初期の所属 `C(0)=0` は、適用の妥当性を通して第六の連言項を与える。`n` 未満の各遷移は `stepIn` によって内向きに送られ、`finIn` が最後のタグ付きの値の条件を再構成する。先の五つの事実と合わせて、有限軌跡の本体にある八つの連言項がすべて完成する。
 <!--/-->
@@ -1480,7 +1480,7 @@ The standard graph `envS α g` is already known to be an environment over `α` w
 <!--en-->
 To use the environment lookup theorem, the assignment must first be viewed as a family of sets in `V`. The map `gV` sends each finite index to the underlying set named by the corresponding presentation element `g i`; because `g i` presents a member of `α`, this is exactly the value recorded at that index.
 <!--zh-->
-为使用环境的查表定理，先要把赋值看成 `V` 中的一族集合。映射 `gV` 把每个有穷索引送到呈现元素 `g i` 所指名的底层集合；由于 `g i` 呈现 `α` 的一个成员，这正是该索引处记录的取值。
+为使用环境的查表定理，先要把赋值看成 `V` 中的一族集合。映射 `gV` 把每个有穷索引送到呈现元素 `g i` 所指名的底层集合；由于 `g i` 呈现 `α` 的一个元素，这正是该索引处记录的取值。
 <!--ja-->
 環境の参照定理を使うには、まず割り当てを `V` の集合族として見る。写像 `gV` は各有限添字を、表示要素 `g i` が名指す底集合へ送る。`g i` は `α` の要素を表示しているので、これはその添字に記録される値そのものである。
 <!--/-->
@@ -1493,7 +1493,7 @@ To use the environment lookup theorem, the assignment must first be viewed as a 
 <!--en-->
 If `k < N`, then the canonical environment contains the pair whose first coordinate is the numeral `# k` and whose second coordinate is the `k`-th sequence entry. The proof converts `k` to an element of `Fin N`, applies the lookup specification there, and transports the resulting membership back to the natural-number index.
 <!--zh-->
-若 `k < N`，则典范环境包含一个有序对，其第一坐标是数码 `# k`，第二坐标是序列的第 `k` 项。证明先把 `k` 转为 `Fin N` 的元素，在该处应用查表规格，再把所得隶属证明运输回自然数索引。
+若 `k < N`，则典范环境包含一个有序对，其第一坐标是数码 `# k`，第二坐标是序列的第 `k` 项。证明先把 `k` 转为 `Fin N` 的元素，在该处应用查表规格，再把所得成员关系证明运输回自然数索引。
 <!--ja-->
 `k < N` なら、正準な環境は、第一成分が数項 `# k`、第二成分が列の第 `k` 項である順序対を含む。証明では `k` を `Fin N` の要素に直し、そこで参照の仕様を適用して、得られた所属を自然数の添字へ戻す。
 <!--/-->
@@ -1568,7 +1568,7 @@ Here `i = fromℕ' N k p` is the finite index justified by the bound `p : k < N`
 <!--en-->
 The fold has `N + 1` states, from the initial value through the state after all `N` entries have been processed. Each state already comes with a proof that it belongs to `α`; `fiber` turns that membership into a presentation element, producing an assignment `h` indexed by `Fin (suc N)`.
 <!--zh-->
-折叠共有 `N + 1` 个状态，从初值一直到处理完全部 `N` 个条目后的状态。每个状态已经带有属于 `α` 的证明；`fiber` 把这份隶属证明转成呈现元素，从而得到由 `Fin (suc N)` 索引的赋值 `h`。
+折叠共有 `N + 1` 个状态，从初值一直到处理完全部 `N` 个条目后的状态。每个状态已经带有属于 `α` 的证明；`fiber` 把这份成员关系证明转成呈现元素，从而得到由 `Fin (suc N)` 索引的赋值 `h`。
 <!--ja-->
 畳み込みには、初期値から `N` 個すべての項を処理した後の状態まで、`N + 1` 個の状態がある。各状態にはすでに `α` への所属証明があり、`fiber` はその所属を表示要素へ変えて、`Fin (suc N)` で添字づけられた割り当て `h` を作る。
 <!--/-->
@@ -1623,7 +1623,7 @@ For every `k < N + 1`, `chainMem` exhibits the expected graph entry `(# k, chain
 <!--en-->
 The fiber equation identifies the value named by `h i` with the actual fold state, while `toFromId'` restores the original natural-number index. These two identifications complete the graph-membership proof without asserting anything about indices outside `N + 1`.
 <!--zh-->
-纤维等式把 `h i` 所指名的取值与实际折叠状态等同，而 `toFromId'` 还原原来的自然数索引。这两项等同完成图隶属证明，并未对 `N + 1` 之外的索引作任何断言。
+纤维等式把 `h i` 所指名的取值与实际折叠状态等同，而 `toFromId'` 还原原来的自然数索引。这两项等同完成图成员关系证明，并未对 `N + 1` 之外的索引作任何断言。
 <!--ja-->
 ファイバー等式は `h i` が名指す値を実際の畳み込み状態と同一視し、`toFromId'` は元の自然数添字を復元する。この二つの同一視によってグラフへの所属が証明され、`N + 1` の外の添字については何も主張しない。
 <!--/-->
@@ -1696,7 +1696,7 @@ The last existential clause is witnessed by the state `chain N g N`. It occurs i
 <!--en-->
 To prove that `s` has domain `# N`, start with an index in `# N`. The canonical environment supplies a merely existing value at that index, and transport along `e` turns its graph membership into membership in `s`.
 <!--zh-->
-为证明 `s` 的定义域是 `# N`，先取 `# N` 中的一个索引。典范环境在该索引处给出一个仅保持存在性的取值，再沿 `e` 运输其图隶属，便得到该有序对属于 `s`。
+为证明 `s` 的定义域是 `# N`，先取 `# N` 中的一个索引。典范环境在该索引处给出一个仅保持存在性的取值，再沿 `e` 运输其图成员关系，便得到该有序对属于 `s`。
 <!--ja-->
 `s` の定義域が `# N` であることを示すため、まず `# N` の添字を取る。正準な環境はその添字で単に存在する値を与え、`e` に沿ってグラフへの所属を運ぶと、その順序対が `s` に属することが得られる。
 <!--/-->
@@ -1802,7 +1802,7 @@ The terminal clause `hF` merely asserts the existence of a state `v` recorded by
 <!--en-->
 The witness length `n` must equal the canonical numeral `# N` as a set. Both describe the domain of the same sequence `s`: `hd` gives the description through the arbitrary witness, while `dom0` gives it through the chosen representation `s = envS α g`. Extensionality reduces the equality to the two membership implications.
 <!--zh-->
-见证中的长度 `n` 作为集合必等于典范数码 `# N`。二者都描述同一序列 `s` 的定义域：`hd` 给出任意见证中的描述，`dom0` 则经所选表示 `s = envS α g` 给出描述。外延性把该等式化为两个隶属蕴涵。
+见证中的长度 `n` 作为集合必等于典范数码 `# N`。二者都描述同一序列 `s` 的定义域：`hd` 给出任意见证中的描述，`dom0` 则经所选表示 `s = envS α g` 给出描述。外延性把该等式化为两个成员关系蕴涵。
 <!--ja-->
 証人の長さ `n` は、集合として正準な数項 `# N` に等しくなければならない。どちらも同じ列 `s` の定義域を表し、`hd` は任意の証人から、`dom0` は選んだ表示 `s = envS α g` からその記述を与える。外延性により、この等式は所属の二つの含意へ帰着する。
 <!--/-->
@@ -1924,7 +1924,7 @@ The predecessor bound is the small arithmetic fact needed by the induction: from
 <!--en-->
 It remains to determine the candidate output `y`. Eliminating the propositionally truncated terminal witness gives a state `v` recorded at the witness length `n`; the underlying-set equality `n≡ : fst n ≡ # N` transports this membership to index `N`, where the induction identifies `v` with the canonical final fold state.
 <!--zh-->
-最后还需确定所给输出 `y`。消去经过命题截断的终止见证后，得到见证长度 `n` 处记录的状态 `v`；底层集合等式 `n≡ : fst n ≡ # N` 把该隶属运输到索引 `N`，归纳结论便把 `v` 与典范折叠的最终状态等同。
+最后还需确定所给输出 `y`。消去经过命题截断的终止见证后，得到见证长度 `n` 处记录的状态 `v`；底层集合等式 `n≡ : fst n ≡ # N` 把该成员关系运输到索引 `N`，归纳结论便把 `v` 与典范折叠的最终状态等同。
 <!--ja-->
 残るのは、与えられた出力 `y` を決定することである。命題的に切り詰められた終端の証人を除去すると、証人の長さ `n` に記録された状態 `v` が得られる。底集合の等式 `n≡ : fst n ≡ # N` でこの所属を添字 `N` へ運ぶと、帰納法の結論が `v` を正準な最終畳み込み状態と同一視する。
 <!--/-->
@@ -2042,7 +2042,7 @@ The general theorem for a functional definable relation now supplies its unique 
 <!--en-->
 Define `fn s m` to be this unique value for the sequence member `s`. Although the notation includes the membership proof `m`, membership is proposition-valued, so the mathematical value does not depend on a choice among distinct proofs.
 <!--zh-->
-把 `fn s m` 定义为序列成员 `s` 的这个唯一取值。虽然记号中包含隶属证明 `m`，但隶属关系取值于命题，因此数学上的取值不依赖于在不同证明之间作选择。
+把 `fn s m` 定义为序列元素 `s` 的这个唯一取值。虽然记号中包含成员关系证明 `m`，但成员关系取值于命题，因此数学上的取值不依赖于在不同证明之间作选择。
 <!--ja-->
 列の要素 `s` に対するこの一意な値を `fn s m` と定める。記法には所属証明 `m` が含まれるが、所属は命題値なので、数学的な値は異なる証明の選び方に依存しない。
 <!--/-->
@@ -2069,7 +2069,7 @@ Whenever `s` is represented by an assignment `g` of length `n`, the underlying `
 <!--en-->
 The value of `fn` remains inside `α`. A truncated representation may be eliminated into this membership proposition; for each representative `(n,g)`, the second component of `code n g` proves membership in `α`, and `fn-code` transports that fact to `fn s m`.
 <!--zh-->
-`fn` 的取值仍位于 `α` 中。由于目标隶属陈述是命题，可以消去经过命题截断的表示；对每个代表 `(n,g)`，`code n g` 的第二分量证明它属于 `α`，再由 `fn-code` 把该事实运输到 `fn s m`。
+`fn` 的取值仍位于 `α` 中。由于目标成员关系陈述是命题，可以消去经过命题截断的表示；对每个代表 `(n,g)`，`code n g` 的第二分量证明它属于 `α`，再由 `fn-code` 把该事实运输到 `fn s m`。
 <!--ja-->
 `fn` の値は `α` の内部にとどまる。目標となる所属は命題なので、命題的に切り詰められた表示を除去できる。各代表 `(n,g)` については、`code n g` の第二成分が `α` への所属を証し、`fn-code` がその事実を `fn s m` へ運ぶ。
 <!--/-->
@@ -2100,7 +2100,7 @@ These facts form a `DefinableMap` from `seqL α` to `α`. The record stores the 
 <!--en-->
 To prove injectivity, suppose two sequence members have equal `fn` values. Their representations are propositionally truncated, but the desired equality of underlying sets is itself a proposition, so both truncations may be eliminated to compare arbitrary representatives `(n,g)` and `(n',g')`.
 <!--zh-->
-为证明单射性，设两个序列成员的 `fn` 取值相等。它们的表示都经过命题截断，但所求的底层集合等式本身是命题，因此可以同时消去两份截断，比较任意代表 `(n,g)` 与 `(n',g')`。
+为证明单射性，设两个序列元素的 `fn` 取值相等。它们的表示都经过命题截断，但所求的底层集合等式本身是命题，因此可以同时消去两份截断，比较任意代表 `(n,g)` 与 `(n',g')`。
 <!--ja-->
 単射性を示すため、二つの列の要素が同じ `fn` の値をもつと仮定する。それぞれの表示は命題的に切り詰められているが、求める底集合の等式も命題なので、両方の切り詰めを除去して任意の代表 `(n,g)` と `(n',g')` を比較できる。
 <!--/-->

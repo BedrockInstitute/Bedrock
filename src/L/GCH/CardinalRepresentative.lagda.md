@@ -28,7 +28,7 @@ module L.GCH.CardinalRepresentative {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) wher
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 import FOL.Semantics
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Presentation {ℓ} using ( member; fiber )
@@ -64,7 +64,7 @@ Fix excluded middle at level `ℓ-suc ℓ`. It is used by the well-order search 
 <!--en-->
 Two structures are present. The ambient hierarchy supplies membership and the small presentations used for search. The constructible structure supplies the ordinal, cardinal and internal-injection predicates. Constructibility descends along membership, allowing a member found in the ambient hierarchy to be returned to the carrier of `L`.
 <!--zh-->
-这里同时出现两个结构。外围层级提供成员关系以及搜索所用的小呈现；可构造结构提供序数、基数与内部单射谓词。可构造性沿成员关系向下传递，所以在外围层级中找到的成员可以重新进入 `L` 的论域。
+这里同时出现两个结构。外围层级提供成员关系以及搜索所用的小呈现；可构造结构提供序数、基数与内部单射谓词。可构造性沿成员关系向下传递，所以在外围层级中找到的元素可以重新进入 `L` 的论域。
 <!--ja-->
 ここでは二つの構造を使う。周囲の階層は所属関係と探索に用いる小さな表示を与え、構成可能構造は順序数、基数、内部単射の述語を与える。構成可能性は所属に沿って下方へ伝わるので、周囲の階層で見つけた要素を `L` の論域へ戻せる。
 <!--/-->
@@ -101,9 +101,9 @@ Write `SV.S` for ambient sets and `SL.S` for constructible sets. An element of `
 <!--/-->
 
 ```agda
-open hPropStructure 𝒮ᵥ using ( _∈ˢ_ )
-module SV = hPropStructure 𝒮ᵥ using ( S )
-module SL = hPropStructure 𝒮ʟ using ( S )
+open hPropView 𝒮ᵥ using ( _∈ˢ_ )
+module SV = hPropView 𝒮ᵥ using ( S )
+module SL = hPropView 𝒮ʟ using ( S )
 ```
 
 <!--en-->
@@ -151,7 +151,7 @@ cardOf α oα = ∣ μ , oμ , cardμ , μ⊆α , α↪μ , μ↪α ∣₁
 <!--en-->
 Let `T` be the successor of the underlying ordinal `α`. The successor is again an ordinal, so every member of `T` is an ordinal and the order inherited from membership is available throughout the search.
 <!--zh-->
-令 `T` 为序数 `α` 的底层集合的后继。后继仍是序数，因此 `T` 的每个成员都是序数，搜索全程都可使用由成员关系给出的次序。
+令 `T` 为序数 `α` 的底层集合的后继。后继仍是序数，因此 `T` 的每个元素都是序数，搜索全程都可使用由成员关系给出的次序。
 <!--ja-->
 `T` を、順序数 `α` の基礎集合の後続とする。後続も順序数なので、`T` の各要素は順序数であり、探索の全体で所属から得られる順序を使える。
 <!--/-->
@@ -167,7 +167,7 @@ Let `T` be the successor of the underlying ordinal `α`. The successor is again 
 <!--en-->
 The set `T` is constructible. This certificate is needed because a search index names only an ambient member of `T`; downward closure of constructibility will turn that member into an element of `SL.S`.
 <!--zh-->
-集合 `T` 是可构造的。这个证书不可或缺，因为搜索索引最初只指名 `T` 的外围成员；可构造性的向下封闭把该成员化为 `SL.S` 的元素。
+集合 `T` 是可构造的。这个证书不可或缺，因为搜索索引最初只指名 `T` 的外围元素；可构造性的向下封闭把该元素化为 `SL.S` 的元素。
 <!--ja-->
 集合 `T` は構成可能である。この証明が必要なのは、探索インデックスが最初に名指すのは `T` の周囲の要素にすぎず、構成可能性の下方閉性によって初めてその要素を `SL.S` の要素にできるからである。
 <!--/-->
@@ -181,7 +181,7 @@ The set `T` is constructible. This certificate is needed because a search index 
 <!--en-->
 For an index `b` of the presentation of `T`, `upL b` pairs the represented member with its constructibility proof. The latter follows from membership in `T` and the constructibility of `T`.
 <!--zh-->
-对 `T` 的呈现索引 `b`，`upL b` 把所指成员与其可构造性证明配成依值对。后一个证明由该成员属于 `T` 以及 `T` 的可构造性得到。
+对 `T` 的呈现索引 `b`，`upL b` 把所指元素与其可构造性证明配成依值对。后一个证明由该元素属于 `T` 以及 `T` 的可构造性得到。
 <!--ja-->
 `T` の表示インデックス `b` に対し、`upL b` は名指された要素とその構成可能性の証明を対にする。後者は、その要素が `T` に属することと `T` の構成可能性から従う。
 <!--/-->
@@ -203,7 +203,7 @@ For an index `b` of the presentation of `T`, `upL b` pairs the represented membe
 <!--en-->
 Call an index `b` good when there is an internal coded injection from `α` to the constructible member `upL b` that it names. The package `definedGood` exposes this property through `injLAt`: its two environment slots contain `α` and `upL b`, while `InjLAt.fill` and `InjLAt.read` prove the two semantic directions. Thus the later least search sees a fixed object-language formula rather than an arbitrary host predicate.
 <!--zh-->
-若存在从 `α` 到索引 `b` 所指可构造成员 `upL b` 的内部编码单射，就称 `b` 为好索引。包 `definedGood` 通过 `injLAt` 显露这个性质：两个环境槽分别放入 `α` 与 `upL b`，而 `InjLAt.fill` 和 `InjLAt.read` 证明语义的两个方向。因此，后续最小元搜索看到的是一条固定的对象语言公式，而不是任意宿主谓词。
+若存在从 `α` 到索引 `b` 所指可构造元素 `upL b` 的内部编码单射，就称 `b` 为好索引。包 `definedGood` 通过 `injLAt` 显露这个性质：两个环境槽分别放入 `α` 与 `upL b`，而 `InjLAt.fill` 和 `InjLAt.read` 证明语义的两个方向。因此，后续最小元搜索看到的是一条固定的对象语言公式，而不是任意宿主谓词。
 <!--ja-->
 `α` からインデックス `b` が名指す構成可能要素 `upL b` への内部符号化単射があるとき、`b` を良いインデックスと呼ぶ。パッケージ `definedGood` はこの性質を `injLAt` によって公開する。二つの環境位置には `α` と `upL b` が入り、`InjLAt.fill` と `InjLAt.read` が意味論の両方向を証明する。したがって後の最小要素探索が見るのは、任意のホスト述語ではなく固定された対象論理式である。
 <!--/-->
@@ -219,7 +219,7 @@ Call an index `b` good when there is an internal coded injection from `α` to th
 <!--en-->
 The index naming `α` is good: its represented member equals `α`, and the identity inclusion codes an internal injection from `α` to itself. Hence the type of good indices is merely inhabited.
 <!--zh-->
-指名 `α` 的索引是好的：它所指成员等于 `α`，恒等包含则编码出从 `α` 到自身的内部单射。因此，好索引的类型仅仅非空。
+指名 `α` 的索引是好的：它所指元素等于 `α`，恒等包含则编码出从 `α` 到自身的内部单射。因此，好索引的类型仅仅非空。
 <!--ja-->
 `α` を名指すインデックスは良いものである。名指された要素は `α` に等しく、恒等的な包含が `α` から自身への内部単射を符号化する。したがって良いインデックスの型には単に要素が存在する。
 <!--/-->
@@ -251,7 +251,7 @@ Apply the formula-facing least-element search to the well-order `w` and `defined
 <!--en-->
 Lift the chosen index `m` to the constructible carrier and call the result `μ`. By construction its underlying set is the member of `T` named by `m`.
 <!--zh-->
-把选中的索引 `m` 提升到可构造论域，并把所得元素记作 `μ`。依定义，`μ` 的底层集合就是 `m` 在 `T` 中指名的成员。
+把选中的索引 `m` 提升到可构造论域，并把所得元素记作 `μ`。依定义，`μ` 的底层集合就是 `m` 在 `T` 中指名的元素。
 <!--ja-->
 選んだインデックス `m` を構成可能な論域へ持ち上げ、その結果を `μ` と呼ぶ。定義により、`μ` の基礎集合は `m` が `T` の中で名指す要素である。
 <!--/-->
@@ -264,7 +264,7 @@ Lift the chosen index `m` to the constructible carrier and call the result `μ`.
 <!--en-->
 The presentation theorem gives `μ ∈ T`. Since `T` is an ordinal, every member of it is an ordinal; consequently `μ` is an ordinal as required.
 <!--zh-->
-呈现定理给出 `μ ∈ T`。由于 `T` 是序数，其每个成员仍是序数，所以 `μ` 具有所需的序数性。
+呈现定理给出 `μ ∈ T`。由于 `T` 是序数，其每个元素仍是序数，所以 `μ` 具有所需的序数性。
 <!--ja-->
 表示の定理から `μ ∈ T` が得られる。`T` は順序数なので、その各要素も順序数である。したがって `μ` は必要な順序数性を持つ。
 <!--/-->
@@ -277,7 +277,7 @@ The presentation theorem gives `μ ∈ T`. Since `T` is an ordinal, every member
 <!--en-->
 Goodness of the least index is now stated directly as the formula-defined proposition `InjL α μ`, because `μ` is the constructible member named by `m`. Thus the selected candidate immediately supplies the forward injection.
 <!--zh-->
-最小索引的合格性如今直接表述为由公式定义的命题 `InjL α μ`，因为 `μ` 正是 `m` 指名的可构造成员。因此，选中的候选立即给出正向单射。
+最小索引的合格性如今直接表述为由公式定义的命题 `InjL α μ`，因为 `μ` 正是 `m` 指名的可构造元素。因此，选中的候选立即给出正向单射。
 <!--ja-->
 最小インデックスの良さは、今では論理式で定義された命題 `InjL α μ` として直接述べられる。`μ` は `m` が名指す構成可能な要素だからである。したがって、選ばれた候補から前向きの単射が直ちに得られる。
 <!--/-->
@@ -293,7 +293,7 @@ Goodness of the least index is now stated directly as the formula-defined propos
 <!--en-->
 To prove that `μ` is a cardinal, suppose a member `δ ∈ μ` admitted an internal injection `μ ↪ δ`. Transitivity of the ordinal `T` places `δ` in `T`, so its presentation yields an index `b`.
 <!--zh-->
-为证明 `μ` 是基数，假设某个成员 `δ ∈ μ` 允许内部单射 `μ ↪ δ`。序数 `T` 的传递性给出 `δ ∈ T`，于是 `T` 的呈现产生一个指名 `δ` 的索引 `b`。
+为证明 `μ` 是基数，假设某个元素 `δ ∈ μ` 允许内部单射 `μ ↪ δ`。序数 `T` 的传递性给出 `δ ∈ T`，于是 `T` 的呈现产生一个指名 `δ` 的索引 `b`。
 <!--ja-->
 `μ` が基数であることを示すため、ある要素 `δ ∈ μ` に内部単射 `μ ↪ δ` があると仮定する。順序数 `T` の推移性から `δ ∈ T` となり、`T` の表示が `δ` を名指すインデックス `b` を与える。
 <!--/-->
@@ -307,7 +307,7 @@ To prove that `μ` is a cardinal, suppose a member `δ ∈ μ` admitted an inter
 <!--en-->
 The fibre theorem gives both the index `b` and the equality identifying its represented member with `δ`. These data let membership and injection statements be transported between the indexed member and the constructible element `δ`.
 <!--zh-->
-纤维定理同时给出索引 `b` 以及把它所指成员识别为 `δ` 的等式。这些数据使成员关系与单射陈述可以在索引成员和可构造元素 `δ` 之间搬运。
+纤维定理同时给出索引 `b` 以及把它所指元素识别为 `δ` 的等式。这些数据使成员关系与单射陈述可以在索引元素和可构造元素 `δ` 之间搬运。
 <!--ja-->
 ファイバーの定理は、インデックス `b` と、その表示要素を `δ` と同一視する等式を与える。このデータにより、所属と単射の主張を、インデックスで表された要素と構成可能要素 `δ` の間で移送できる。
 <!--/-->
@@ -323,7 +323,7 @@ The fibre theorem gives both the index `b` and the equality identifying its repr
 <!--en-->
 The index `b` is good: compose `α ↪ μ` with the assumed `μ ↪ δ`, and use the fibre equality to match the indexed member. Thus `b` is another candidate in the same search.
 <!--zh-->
-索引 `b` 是好的：把 `α ↪ μ` 与假设的 `μ ↪ δ` 复合，再用纤维等式匹配索引所指的成员。于是 `b` 是同一次搜索中的另一个候选。
+索引 `b` 是好的：把 `α ↪ μ` 与假设的 `μ ↪ δ` 复合，再用纤维等式匹配索引所指的元素。于是 `b` 是同一次搜索中的另一个候选。
 <!--ja-->
 インデックス `b` は良いものである。`α ↪ μ` と仮定した `μ ↪ δ` を合成し、ファイバーの等式でインデックスの表示要素に合わせる。したがって `b` は同じ探索の別の候補である。
 <!--/-->

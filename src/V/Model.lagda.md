@@ -44,7 +44,7 @@ open import V.Smallness {ℓ} using ( separateFromSmall )
 This chapter realizes each axiom of ZF inside the cumulative hierarchy at one fixed universe level `ℓ`. For each axiom asserting the existence of a set, the task is to exhibit that set together with a proof that its membership relation is, as a path of truth values, exactly the required description. The assumptions involved are worth separating at the outset. The stock constructions, namely the empty set, pairing, and union, cost nothing beyond the hierarchy's own set former, and the same is true of replacement, which is read directly off the membership rule of that former. Full separation needs propositional resizing, so that each satisfaction proposition gets a representative one universe down. Power set needs Ω-resizing for propositions, `ΩResizing`{.Agda}. `ΩResizing`{.Agda} presents the higher proposition universe by a low-level type and implies resizing, and the assembled ZF theorem `V⊨ZF`{.Agda} assumes exactly `ΩResizing (ℓ-suc ℓ) ℓ`{.Agda}. The classical convenience theorem `V⊨ZF-fromLEM`{.Agda} derives that package from `LEM (ℓ-suc ℓ)`{.Agda}. For its ZFC part, the theorem `V⊨ZFC`{.Agda} separately assumes choice for set-valued families at `ℓ-suc ℓ`{.Agda}; by Diaconescu's theorem it implies the excluded middle used to obtain the ZF resizing input, and, lowered one universe, it supplies the choice-set axiom. The chapter builds up to these theorems by converting, one axiom at a time, the constructions the hierarchy already provides into the exact shape the axioms demand.
 <!--zh-->
 
-本章在固定的一个宇宙层级 `ℓ` 上，于累积层级内部逐条实现 ZF 的公理。对于要求集合存在的公理，任务是构造这样的集合，并证明其成员关系作为真值的路径恰是该公理所要求的描述。所涉假设值得先分开陈述。层级中已有的构造，即空集、配对与并，只花层级自身集合构造子的代价；替换同样如此，它直接从该构造子的成员规则读出。全分离需要命题换级，使每个满足命题获得低一层宇宙的代表。幂集需要一个命题的命题宇宙换级，即 `ΩResizing`{.Agda}。`ΩResizing`{.Agda} 用低层类型呈现高层命题宇宙，并蕴含命题换级；装配出的 ZF 定理 `V⊨ZF`{.Agda} 恰假设 `ΩResizing (ℓ-suc ℓ) ℓ`{.Agda}。经典便利推论 `V⊨ZF-fromLEM`{.Agda} 则从 `LEM (ℓ-suc ℓ)`{.Agda} 导出该换级包。ZFC 部分另以 `ℓ-suc ℓ`{.Agda} 层的集合值族的选择为假设；由 Diaconescu 定理，它蕴含用于得到 ZF 换级输入的排中律，而降低一层宇宙后又供给选择集公理。本章的工作就是把层级已有的构造逐一转换成公理所要求的精确形状，直至得出这些定理。
+本章在固定的一个宇宙层级 `ℓ` 上，于累积层级内部逐条实现 ZF 的公理。对于要求集合存在的公理，任务是构造这样的集合，并证明其成员关系作为真值的路径恰是该公理所要求的描述。所涉假设值得先分开陈述。层级中已有的构造，即空集、配对与并，只花层级自身集合构造子的代价；替换同样如此，它直接从该构造子的元素规则读出。全分离需要命题换级，使每个满足命题获得低一层宇宙的代表。幂集需要一个命题的命题宇宙换级，即 `ΩResizing`{.Agda}。`ΩResizing`{.Agda} 用低层类型呈现高层命题宇宙，并蕴含命题换级；装配出的 ZF 定理 `V⊨ZF`{.Agda} 恰假设 `ΩResizing (ℓ-suc ℓ) ℓ`{.Agda}。经典便利推论 `V⊨ZF-fromLEM`{.Agda} 则从 `LEM (ℓ-suc ℓ)`{.Agda} 导出该换级包。ZFC 部分另以 `ℓ-suc ℓ`{.Agda} 层的集合值族的选择为假设；由 Diaconescu 定理，它蕴含用于得到 ZF 换级输入的排中律，而降低一层宇宙后又供给选择集公理。本章的工作就是把层级已有的构造逐一转换成公理所要求的精确形状，直至得出这些定理。
 <!--ja-->
 
 本章は、固定した一つの宇宙レベル `ℓ` の上で、累積階層の内側に ZF の各公理を実現する。集合の存在を要求する各公理については、その集合を構成し、所属関係が真理値のパスとして要求された記述にちょうど等しいことを証明する。関係する仮定は初めに区別しておく価値がある。基本的な構成、すなわち空集合、対、和集合は、階層自身の集合構成子の代償しか要らず、置換も同様で、その構成子の所属規則から直接読み取れる。完全な分出には命題リサイズが必要で、各充足命題に一段低い宇宙の代表を与える。冪集合には命題の命題宇宙リサイズ `ΩResizing`{.Agda} が必要である。`ΩResizing`{.Agda} は上位の命題宇宙を低いレベルの型で提示し、命題リサイズを含意する。組み立てられた ZF の定理 `V⊨ZF`{.Agda} はちょうど `ΩResizing (ℓ-suc ℓ) ℓ`{.Agda} を仮定する。古典的な便利のための帰結 `V⊨ZF-fromLEM`{.Agda} は `LEM (ℓ-suc ℓ)`{.Agda} からそのリサイズの束を導く。ZFC の部分では、定理 `V⊨ZFC`{.Agda} がレベル `ℓ-suc ℓ`{.Agda} の集合値族に対する選択を別に仮定する。ディアコネスクの定理により、これは ZF のリサイズ入力を得るための排中律を含意し、一段下げれば選択集合の公理を供給する。本章は、階層がすでに持つ構成を公理の要求する正確な形へ一公理ずつ変換し、これらの定理へ至る。
@@ -71,7 +71,7 @@ The hierarchy contributes the structure `𝒮ᵥ`{.Agda}: its equality is the pa
 <!--en-->
 Three general cubical facts shape the proofs to come. An embedding into a type whose equality types are propositions is injective, which matters whenever a recovered index must be shown to be the only possible one. A path between dependent pairs whose second components are propositions is fixed by the paths between first projections. And membership statements about image sets are typically truncated existentials: they are introduced by `∣_∣₁`{.Agda} and eliminated with `rec₁`{.Agda} into proposition-valued targets, while contradictions are handled by the empty type.
 <!--zh-->
-三条 cubical 一般事实塑造了后面的证明。到相等类型为命题的类型的嵌入是单射，当需要说明回收到的索引是唯一可能时这一点就要用上。第二分量为命题的依值对之间的路径由第一投影之间的路径决定。此外，像集的成员陈述通常是截断的存在式：用 `∣_∣₁`{.Agda} 引入，用 `rec₁`{.Agda} 消入取命题值的目标；矛盾则交给空类型处理。
+三条 cubical 一般事实塑造了后面的证明。到相等类型为命题的类型的嵌入是单射，当需要说明回收到的索引是唯一可能时这一点就要用上。第二分量为命题的依值对之间的路径由第一投影之间的路径决定。此外，像集的成员关系陈述通常是截断的存在式：用 `∣_∣₁`{.Agda} 引入，用 `rec₁`{.Agda} 消入取命题值的目标；矛盾则交给空类型处理。
 <!--ja-->
 cubical の三つの一般的な事実が後の証明を形作る。等号の型が命題である型への埋め込みは単射であり、復元した添字が唯一の可能性であることを示す場面で効く。第二成分が命題である依存対の間のパスは、第一射影の間のパスで決まる。さらに、像の集合への所属の主張はたいてい切り詰められた存在の形をしており、`∣_∣₁`{.Agda} で導入し、`rec₁`{.Agda} で命題値の目標へ消去する。矛盾は空の型で扱う。
 <!--/-->
@@ -84,7 +84,7 @@ open import Cubical.Functions.Embedding
 <!--en-->
 The central construction is the set former `sett`{.Agda}: from a small index type `X` and a family `X → S` it forms the image set, and `y ∈ sett X ix` holds exactly when some index presents `y`, merely. Replacement is read directly off this membership rule. That the hierarchy is an h-set, recorded by `setIsSet`{.Agda}, is what makes the path type `x ≡ y` a proposition and hence a legitimate truth value for the structure's equality.
 <!--zh-->
-核心构造是集合构造子 `sett`{.Agda}：从小索引类型 `X` 与族 `X → S` 造出像集，而 `y ∈ sett X ix` 恰在纯粹地存在某个索引呈现 `y` 时成立。替换直接从这条成员规则读出。层级是 h-集合这一点 (由 `setIsSet`{.Agda} 记录) 使路径类型 `x ≡ y` 成为命题，从而成为结构等词的合法真值。
+核心构造是集合构造子 `sett`{.Agda}：从小索引类型 `X` 与族 `X → S` 造出像集，而 `y ∈ sett X ix` 恰在纯粹地存在某个索引呈现 `y` 时成立。替换直接从这条元素规则读出。层级是 h-集合这一点 (由 `setIsSet`{.Agda} 记录) 使路径类型 `x ≡ y` 成为命题，从而成为结构等词的合法真值。
 <!--ja-->
 中心となる構成は集合の構成子 `sett`{.Agda} である。小さな添字の型 `X` と族 `X → S` から像の集合を作り、所属 `y ∈ sett X ix` は、ある添字が `y` を呈示することが純粋に存在するとき、そのときに限り成る。置換はこの所属の規則から直接読み取る。階層が h-集合であること (`setIsSet`{.Agda} が記録する) により、パス型 `x ≡ y` は命題となり、構造の等号の正当な真理値になる。
 <!--/-->
@@ -98,7 +98,7 @@ open import Cubical.HITs.CumulativeHierarchy.Properties
 <!--en-->
 Membership comes in two shapes, and the whole chapter moves between them. Every set `a` has a small type of indices `⟪ a ⟫`{.Agda} with an embedding `⟪ a ⟫↪`{.Agda} whose image is `a`; the small membership `x ∈ₛ a` says that some index presents `x`. The equivalence `∈∈ₛ` converts between small and ordinary membership pointwise in both directions, and `∈-asFiber` does more: from a proof of `x ∈ a` it returns an actual, untruncated pair of an index and a presenting path. That untruncatedness is what lets index recovery be a function rather than a choice. The stock sets are also ready-made: the empty set with its refutation `∅-empty`, the pair `⁅ a , b ⁆`{.Agda} with `pairing-ax`, the union `⋃ a`{.Agda} with `union-ax`, the singleton `⁅ a ⁆s`{.Agda} with its classification, and the binary union `_∪_`{.Agda}.
 <!--zh-->
-成员关系有两种形态，全章都在二者之间移动。每个集合 `a` 都有小索引类型 `⟪ a ⟫`{.Agda}，配一个像恰为 `a` 的嵌入 `⟪ a ⟫↪`{.Agda}；小隶属 `x ∈ₛ a` 说某个索引呈现 `x`。等价 `∈∈ₛ` 在两个方向上逐点互换小隶属与普通隶属；`∈-asFiber` 则更进一步：从 `x ∈ a` 的证明返回实际的不加截断的对 (一个索引加一条呈现路径)。正是这种不加截断性使索引回收成为函数而非选择。所需的基本集合也已备好：带反驳 `∅-empty` 的空集、配对 `⁅ a , b ⁆`{.Agda} 与 `pairing-ax`、并 `⋃ a`{.Agda} 与 `union-ax`、带分类的单点集 `⁅ a ⁆s`{.Agda}，以及二元并 `_∪_`{.Agda}。
+成员关系有两种形态，全章都在二者之间移动。每个集合 `a` 都有小索引类型 `⟪ a ⟫`{.Agda}，配一个像恰为 `a` 的嵌入 `⟪ a ⟫↪`{.Agda}；小成员关系 `x ∈ₛ a` 说某个索引呈现 `x`。等价 `∈∈ₛ` 在两个方向上逐点互换小成员关系与普通成员关系；`∈-asFiber` 则更进一步：从 `x ∈ a` 的证明返回实际的不加截断的对 (一个索引加一条呈现路径)。正是这种不加截断性使索引回收成为函数而非选择。所需的基本集合也已备好：带反驳 `∅-empty` 的空集、配对 `⁅ a , b ⁆`{.Agda} 与 `pairing-ax`、并 `⋃ a`{.Agda} 与 `union-ax`、带分类的单点集 `⁅ a ⁆s`{.Agda}，以及二元并 `_∪_`{.Agda}。
 <!--ja-->
 所属には二つの形があり、章全体がこの間を行き来する。すべての集合 `a` は小さな添字の型 `⟪ a ⟫`{.Agda} と、像がちょうど `a` である埋め込み `⟪ a ⟫↪`{.Agda} を持ち、小さな所属 `x ∈ₛ a` はある添字が `x` を呈示することを言う。同値 `∈∈ₛ` が小さな所属と通常の所属を双方向に各点で取り替え、`∈-asFiber` はさらに進んで、`x ∈ a` の証明から添字と呈示するパスの対を切り詰めずに実際に返す。この切り詰められていないことが、添字の復元を選択ではなく関数にする。基本的な集合も用意済みである。反駁 `∅-empty` を持つ空集合、対 `⁅ a , b ⁆`{.Agda} と `pairing-ax`、和 `⋃ a`{.Agda} と `union-ax`、分類を持つ一元集合 `⁅ a ⁆s`{.Agda}、そして二項和 `_∪_`{.Agda} である。
 <!--/-->
@@ -114,7 +114,7 @@ open import Cubical.HITs.CumulativeHierarchy.Constructions
 <!--en-->
 A worked conversion shows the method that every specification proof uses. For the pair, the library's `pairing-ax` states a bi-implication between `x ∈ₛ ⁅ a , b ⁆` and the disjunction `x ≡ₕ a ⊔ x ≡ₕ b`; for this structure `≡ₕ u v` is the path type `u ≡ v`, which is definitionally what the structure's `≈ˢ u v` is. So the pairing specification, proved in the next section, is just `⇔toPath` applied to `pairing-ax` with one layer of `∈∈ₛ` threaded through each direction: forward turns the ordinary membership into the small one the classification consumes, backward turns the resulting disjunction back into an ordinary membership. The same three moves convert the empty set, the union, and, with one more truncation layer, membership in the union of an indexed family.
 <!--zh-->
-一个具体的转换展示了所有规格证明都用的方法。对配对，库的 `pairing-ax` 陈述 `x ∈ₛ ⁅ a , b ⁆` 与析取 `x ≡ₕ a ⊔ x ≡ₕ b` 之间的双向蕴含；对当前结构，`≡ₕ u v` 就是路径类型 `u ≡ v`，与结构的 `≈ˢ u v` 按定义相同。于是下一节证明的配对规格只是把 `⇔toPath` 应用于 `pairing-ax`，并在每个方向穿过一层 `∈∈ₛ`：正向把普通隶属转成分类所消耗的小隶属，反向把所得析取转回普通隶属。同样的三步转换空集、并，以及 (多一层截断) 索引族之并的成员关系。
+一个具体的转换展示了所有规格证明都用的方法。对配对，库的 `pairing-ax` 陈述 `x ∈ₛ ⁅ a , b ⁆` 与析取 `x ≡ₕ a ⊔ x ≡ₕ b` 之间的双向蕴含；对当前结构，`≡ₕ u v` 就是路径类型 `u ≡ v`，与结构的 `≈ˢ u v` 按定义相同。于是下一节证明的配对规格只是把 `⇔toPath` 应用于 `pairing-ax`，并在每个方向穿过一层 `∈∈ₛ`：正向把普通成员关系转成分类所消耗的小成员关系，反向把所得析取转回普通成员关系。同样的三步转换空集、并，以及 (多一层截断) 索引族之并的成员关系。
 <!--ja-->
 一つの具体的な変換が、これからのすべての仕様の証明が使う方法を示す。対について、ライブラリの `pairing-ax` は `x ∈ₛ ⁅ a , b ⁆` と選言 `x ≡ₕ a ⊔ x ≡ₕ b` の双条件を述べる。この構造にとって `≡ₕ u v` はパス型 `u ≡ v` であり、構造の `≈ˢ u v` と定義により同じである。したがって次の節で証明される対の仕様は、`pairing-ax` に `⇔toPath` を適用し、両方向で `∈∈ₛ` を一層だけ通すだけである。順方向は通常の所属を分類が消費する小さな所属へ、逆方向は得られた選言を通常の所属へ戻す。同じ三手順が空集合、和、そして (切り詰めをもう一段加えて) 添字付きの族の和への所属を変換する。
 <!--/-->
@@ -150,7 +150,7 @@ The empty set, pairing, and union are the easiest fields to discharge, because t
 <!--zh-->
 ## 基本集合
 
-空集、配对与并是最容易兑现的字段，因为这些构造及其分类在层级库中已经存在。剩下的只是改变陈述的形状。模型 record 的规格是真值的相等，而且是一条路径：对载体的每个元素 `x`，真值 `x ∈ˢ b` 必须作为路径等于类描述 `Q x`。库通过小隶属 `∈ₛ` 陈述其公理，于是每次转换都用同样三步：`∈∈ₛ`{.Agda} 逐点互换小隶属与普通隶属，库的分类给出相应的双向蕴含，`⇔toPath`{.Agda} 把该双向蕴含改写成所需的路径。配对最贴近：库的「等于 `a` 或等于 `b`」与字段的 `(x ≈ˢ a) ⊔ (x ≈ˢ b)` 按定义相同，真正的工作只剩一层 `∈∈ₛ`。
+空集、配对与并是最容易兑现的字段，因为这些构造及其分类在层级库中已经存在。剩下的只是改变陈述的形状。模型 record 的规格是真值的相等，而且是一条路径：对载体的每个元素 `x`，真值 `x ∈ˢ b` 必须作为路径等于类描述 `Q x`。库通过小成员关系 `∈ₛ` 陈述其公理，于是每次转换都用同样三步：`∈∈ₛ`{.Agda} 逐点互换小成员关系与普通成员关系，库的分类给出相应的双向蕴含，`⇔toPath`{.Agda} 把该双向蕴含改写成所需的路径。配对最贴近：库的「等于 `a` 或等于 `b`」与字段的 `(x ≈ˢ a) ⊔ (x ≈ˢ b)` 按定义相同，真正的工作只剩一层 `∈∈ₛ`。
 <!--ja-->
 ## 基本的な集合
 
@@ -160,7 +160,7 @@ The empty set, pairing, and union are the easiest fields to discharge, because t
 <!--en-->
 The empty-set specification asks that, for every carrier element `x`, the truth value of `x ∈ˢ ∅` be the path-equal image of the falsity `⊥`. This is the chapter's basic conversion in miniature. What the library proves is that `∅` has no members in the small membership `∈ₛ`, so the two membership notions must be exchanged pointwise first. Forward, `∈∈ₛ` turns a proof of `x ∈ˢ ∅` into the small membership that `∅-empty` refutes, and from the contradiction the empty type is inhabited, which is exactly what the implication demands. Backward there is nothing to build, since no element of `⊥` can be supplied. `⇔toPath` then converts the resulting bi-implication of propositions into the path of truth values the specification requires.
 <!--zh-->
-空集的规格要求：对载体的每个元素 `x`，真值 `x ∈ˢ ∅` 作为路径恰等于假值 `⊥` 的像。这是本章基本转换的缩影。库所证明的是 `∅` 在小隶属 `∈ₛ` 意义下没有成员，所以先要逐点交换两种隶属。正向，`∈∈ₛ` 把 `x ∈ˢ ∅` 的证明变成被 `∅-empty` 驳斥的小隶属；由这一矛盾，空类型有元素，这正蕴含所需的结论。反向则无需构造任何东西，因为 `⊥` 没有元素可给。`⇔toPath` 最后把所得的命题间双向蕴含转换成规格要求的真值路径。
+空集的规格要求：对载体的每个元素 `x`，真值 `x ∈ˢ ∅` 作为路径恰等于假值 `⊥` 的像。这是本章基本转换的缩影。库所证明的是 `∅` 在小成员关系 `∈ₛ` 意义下没有元素，所以先要逐点交换两种成员关系。正向，`∈∈ₛ` 把 `x ∈ˢ ∅` 的证明变成被 `∅-empty` 驳斥的小成员关系；由这一矛盾，空类型有元素，这正蕴含所需的结论。反向则无需构造任何东西，因为 `⊥` 没有元素可给。`⇔toPath` 最后把所得的命题间双向蕴含转换成规格要求的真值路径。
 <!--ja-->
 空集合の仕様は、台の各要素 `x` について、真理値 `x ∈ˢ ∅` がパスとして偽 `⊥` とちょうど一致することを求める。これは本章の基本変換の縮図である。ライブラリが示すのは、`∅` が小さな所属 `∈ₛ` の意味で元を持たないことなので、まず二つの所属を各点で交換する。順方向では、`∈∈ₛ` が `x ∈ˢ ∅` の証明を `∅-empty` が反駁する小さな所属へ変え、この矛盾から空の型の要素が得られ、まさに含意の要求を満たす。逆方向は構成すべきものがない。`⊥` には要素がないからである。`⇔toPath` が最後に、得られた命題間の双条件を仕様の要求する真理値のパスへ変換する。
 <!--/-->
@@ -177,7 +177,7 @@ pair-spec : (a b x : S) → (x ∈ˢ ⁅ a , b ⁆) ≡ ((x ≈ˢ a) ⊔ (x ≈�
 <!--en-->
 Pairing asks that membership in `⁅ a , b ⁆` equal the disjunction of being equal to `a` and being equal to `b`, where the equalities are read as the structure's `≈ˢ`. The library's `pairing-ax` states a bi-implication between the small membership `x ∈ₛ ⁅ a , b ⁆` and the corresponding disjunction of small equality with `a` or `b`, and the propositional part of the statement already matches the target. Forward, one application of `∈∈ₛ` converts the ordinary membership `x ∈ˢ ⁅ a , b ⁆` into the small form that `pairing-ax` consumes, and its first direction returns the disjunction. Backward, the second direction of `pairing-ax` produces the small membership, and the other half of `∈∈ₛ` lifts it back to ordinary membership. Each direction is a single application of the library result wrapped in one exchange of membership notation.
 <!--zh-->
-配对要求：`⁅ a , b ⁆` 中的成员关系等于「与 `a` 相等或与 `b` 相等」的析取，其中相等按结构的 `≈ˢ` 读出。库的 `pairing-ax` 给出小隶属 `x ∈ₛ ⁅ a , b ⁆` 与「与 `a` 或 `b` 小相等」的析取之间的双向蕴含，其命题部分已与目标形状一致。正向，`∈∈ₛ` 的一次应用把普通成员资格 `x ∈ˢ ⁅ a , b ⁆` 转成 `pairing-ax` 所消耗的小形式，其第一方向返回该析取。反向，`pairing-ax` 的第二方向给出小隶属，`∈∈ₛ` 的另一半再把它提升回普通成员资格。每个方向都是一次库结果的应用，外面只包一层隶属记号的交换。
+配对要求：`⁅ a , b ⁆` 中的成员关系等于「与 `a` 相等或与 `b` 相等」的析取，其中相等按结构的 `≈ˢ` 读出。库的 `pairing-ax` 给出小成员关系 `x ∈ₛ ⁅ a , b ⁆` 与「与 `a` 或 `b` 小相等」的析取之间的双向蕴含，其命题部分已与目标形状一致。正向，`∈∈ₛ` 的一次应用把普通成员关系事实 `x ∈ˢ ⁅ a , b ⁆` 转成 `pairing-ax` 所消耗的小形式，其第一方向返回该析取。反向，`pairing-ax` 的第二方向给出小成员关系，`∈∈ₛ` 的另一半再把它提升回普通成员关系事实。每个方向都是一次库结果的应用，外面只包一层成员关系记号的交换。
 <!--ja-->
 対は、`⁅ a , b ⁆` への所属が「`a` と等しいか `b` と等しいか」の選言に等しいことを求める。等しさは構造の `≈ˢ` として読む。ライブラリの `pairing-ax` は、小さな所属 `x ∈ₛ ⁅ a , b ⁆` と「`a` または `b` との小さな等しさ」の選言との双条件を述べ、その命題の部分はすでに目標の形と一致している。順方向では、`∈∈ₛ` の一度の適用が通常の所属 `x ∈ˢ ⁅ a , b ⁆` を `pairing-ax` の消費する小形式へ変え、その第一方向が選言を返す。逆方向では、`pairing-ax` の第二方向が小さな所属を与え、`∈∈ₛ` のもう半分がそれを通常の所属へ引き上げる。各方向は、ライブラリの結果の一度の適用に所属記法の交換を一層かぶせただけである。
 <!--/-->
@@ -194,7 +194,7 @@ union-spec a x = ⇔toPath
 <!--en-->
 Union is the first specification with an existential shape: membership in `⋃ a` should equal the truncated statement that some `y` lies in `a` with `x` in `y`. Forward, `union-ax` yields such a truncated triple `(v , v in a , x in v)`, but with both memberships in small form. The rewriting happens inside a propositional truncation with a propositional target, so `map₁` transforms the witness in place: `∈∈ₛ` turns `v ∈ₛ a` into an ordinary member of `a`, and `x ∈ₛ v` into an ordinary member of `v`. The outcome is a witness of the indexed disjunction `∃[ x ] P x, the direct `hProp` mere-existence statement over the carrier, and no member is chosen.
 <!--zh-->
-并是第一个带存在形状的规格：`⋃ a` 中的成员关系应等于「某个 `y` 属于 `a` 且 `x` 属于 `y`」的截断陈述。正向，`union-ax` 给出的正是这样的截断三元组 `(v , v ∈ a , x ∈ v)`，只是两个成员资格都是小形式。改写发生在命题截断内部，而目标仍是命题，所以 `map₁` 就地改写见证：`∈∈ₛ` 把 `v ∈ₛ a` 变成 `a` 的普通成员，把 `x ∈ₛ v` 变成 `v` 的普通成员。结果是带索引析取 `∃[ x ] P x 的一个见证，即`hProp` 上对载体的纯粹存在陈述，并且不选出任何成员。
+并是第一个带存在形状的规格：`⋃ a` 中的成员关系应等于「某个 `y` 属于 `a` 且 `x` 属于 `y`」的截断陈述。正向，`union-ax` 给出的正是这样的截断三元组 `(v , v ∈ a , x ∈ v)`，只是两个成员关系事实都是小形式。改写发生在命题截断内部，而目标仍是命题，所以 `map₁` 就地改写见证：`∈∈ₛ` 把 `v ∈ₛ a` 变成 `a` 的普通元素，把 `x ∈ₛ v` 变成 `v` 的普通元素。结果是带索引析取 `∃[ x ] P x 的一个见证，即`hProp` 上对载体的纯粹存在陈述，并且不选出任何元素。
 <!--ja-->
 和は存在の形をもつ最初の仕様である。`⋃ a` への所属は、「ある `y` が `a` に属し `x` が `y` に属する」という切り詰められた主張に等しいはずである。順方向では、`union-ax` がまさにそのような切り詰められた三つ組 `(v , v ∈ a , x ∈ v)` を与えるが、二つの所属がともに小形式である。書き換えは命題の截断の内部で行われ、目標も命題なので、`map₁` が証人をその場で変える。`∈∈ₛ` が `v ∈ₛ a` を `a` の通常の要素へ、`x ∈ₛ v` を `v` の通常の要素へ変える。結果は添字付き選言 `∃[ x ] P x の証人、すなわち`hProp` 上で台を量化する単なる存在の主張であり、どの元も選ばれない。
 <!--/-->
@@ -210,7 +210,7 @@ Union is the first specification with an existential shape: membership in `⋃ a
 <!--en-->
 Backward runs the same exchange in reverse. From a truncated witness of the indexed disjunction, `map₁` takes each case `(v , v in a , x in v)` and, using the other direction of `∈∈ₛ`, rebuilds the small-form triple that `union-ax` consumes; its second direction then returns small membership in `⋃ a`, which the remaining half of `∈∈ₛ` lifts to ordinary membership. Together the two directions give the path of truth values the specification requires, both derived from the one library classification plus the pointwise exchange of membership notation.
 <!--zh-->
-反向把同一交换倒过来做。从带索引析取的截断见证出发，`map₁` 对每个情形 `(v , v ∈ a , x ∈ v)` 用 `∈∈ₛ` 的另一方向重建 `union-ax` 所消耗的小形式三元组；其第二方向给出 `⋃ a` 中的小隶属，再由 `∈∈ₛ` 的另一半提升为普通成员资格。两个方向合起来给出规格所需的真值路径，都来自同一个库分类加上逐点的隶属记号交换。
+反向把同一交换倒过来做。从带索引析取的截断见证出发，`map₁` 对每个情形 `(v , v ∈ a , x ∈ v)` 用 `∈∈ₛ` 的另一方向重建 `union-ax` 所消耗的小形式三元组；其第二方向给出 `⋃ a` 中的小成员关系，再由 `∈∈ₛ` 的另一半提升为普通成员关系事实。两个方向合起来给出规格所需的真值路径，都来自同一个库分类加上逐点的成员关系记号交换。
 <!--ja-->
 逆方向は同じ交換を逆向きに行う。添字付き選言の切り詰められた証人から出発し、`map₁` が各場合 `(v , v ∈ a , x ∈ v)` に対して `∈∈ₛ` の逆向きで `union-ax` の消費する小形式の三つ組を組み立てる。その第二方向が `⋃ a` への小さな所属を返し、`∈∈ₛ` のもう半分がそれを通常の所属へ引き上げる。二つの方向を合わせると仕様の要求する真理値のパスが得られ、いずれも一つのライブラリの分類と各点の所属記法の交換から来る。
 <!--/-->
@@ -224,7 +224,7 @@ Backward runs the same exchange in reverse. From a truncated witness of the inde
 <!--en-->
 The goal of this chapter is to realize each axiom of ZF inside the cumulative hierarchy, at one fixed universe level `ℓ`: the structure `𝒮ᵥ`{.Agda} has a carrier `S` with truth-valued equality and membership, and a model record demands, for each axiom, a set whose membership is path-equal to the prescribed description. The assumptions are uneven, and it pays to separate them. The stock constructions, namely the empty set, pair, union, and infinity, and the whole replacement argument need no extra assumption at all. Full separation needs propositional resizing, so that the satisfaction of each formula becomes a small proposition pointwise. Power set needs Ω-resizing derived from `ΩResizing`, whose carrier can encode and recover every proposition in `hProp ℓ`. The packaged theorems record the combined cost: `V⊨ZF` assumes exactly `ΩResizing (ℓ-suc ℓ) ℓ`, its corollary `V⊨ZF-fromLEM` assumes `LEM (ℓ-suc ℓ)`, and `V⊨ZFC` assumes exactly `SetChoice (ℓ-suc ℓ)`. This section stays on the assumption-free side. It develops the basic membership specifications for the union of a set and then for the union of an indexed family `f : X → S`. The set `⋃ (sett X f)` collects the values of the family through an intermediate set, and it is worth reading membership in that union directly as membership in some family member. Unfolding `union-spec` gives a truncated existential over members `v` of the union, and since each such `v` is itself presented by an index of the `sett`, a second truncated layer sits on top. The two lemmas below compose the layers into one, in each direction.
 <!--zh-->
-本章的目标是在累积层级内部实现 ZF 的每条公理，全程固定在同一个宇宙层级 `ℓ` 上：结构 `𝒮ᵥ`{.Agda} 带有取真值的等词与成员关系的载体 `S`，模型 record 对每条公理都要求一个集合，其成员关系按路径等于所规定的描述。各部分所需假设并不均匀，值得分开列出。层级中已有的构造，即空集、配对、并与无穷，以及整个替换论证，完全不需要额外假设。全分离需要命题换级，使每条公式的满足逐点获得索引层级中的等价代表。幂集需要由 `ΩResizing` 导出的命题宇宙换级，其小载体可以编码并恢复 `hProp ℓ` 中的每个命题。打包的定理记录合并后的代价：`V⊨ZF` 恰假设 `ΩResizing (ℓ-suc ℓ) ℓ`，其推论 `V⊨ZF-fromLEM` 假设 `LEM (ℓ-suc ℓ)`，`V⊨ZFC` 恰假设 `SetChoice (ℓ-suc ℓ)`。本节停留在无需假设的一侧，先为一个集合的并、再为索引族 `f : X → S` 的并展开基本成员规格。集合 `⋃ (sett X f)` 经由一个中间集合收拢族的取值，值得把属于这个并直接读作属于某个族元。展开 `union-spec` 得到对并的成员 `v` 的截断存在式，而每个这样的 `v` 又由 `sett` 的一个索引呈现，于是上面还叠着第二层截断。下面两条引理在两个方向上把各层合而为一。
+本章的目标是在累积层级内部实现 ZF 的每条公理，全程固定在同一个宇宙层级 `ℓ` 上：结构 `𝒮ᵥ`{.Agda} 带有取真值的等词与成员关系的载体 `S`，模型 record 对每条公理都要求一个集合，其成员关系按路径等于所规定的描述。各部分所需假设并不均匀，值得分开列出。层级中已有的构造，即空集、配对、并与无穷，以及整个替换论证，完全不需要额外假设。全分离需要命题换级，使每条公式的满足逐点获得索引层级中的等价代表。幂集需要由 `ΩResizing` 导出的命题宇宙换级，其小载体可以编码并恢复 `hProp ℓ` 中的每个命题。打包的定理记录合并后的代价：`V⊨ZF` 恰假设 `ΩResizing (ℓ-suc ℓ) ℓ`，其推论 `V⊨ZF-fromLEM` 假设 `LEM (ℓ-suc ℓ)`，`V⊨ZFC` 恰假设 `SetChoice (ℓ-suc ℓ)`。本节停留在无需假设的一侧，先为一个集合的并、再为索引族 `f : X → S` 的并展开基本成员关系规格。集合 `⋃ (sett X f)` 经由一个中间集合收拢族的取值，值得把属于这个并直接读作属于某个族元。展开 `union-spec` 得到对并的元素 `v` 的截断存在式，而每个这样的 `v` 又由 `sett` 的一个索引呈现，于是上面还叠着第二层截断。下面两条引理在两个方向上把各层合而为一。
 <!--ja-->
 本章の目標は、一つの固定した宇宙レベル `ℓ` の上で、累積階層の内側に ZF の各公理を実現することである。構造 `𝒮ᵥ`{.Agda} は真理値を返す等号と所属を備えた台 `S` を持ち、モデルの record は各公理について、その所属がパスとして定められた記述に等しい集合を要求する。仮定は部分によって異なるので、分けて述べる価値がある。基本的な構成、すなわち空集合、対、和、無限と、置換の議論全体には、追加の仮定はまったく要らない。完全な分出には命題リサイズが必要で、各論理式の充足が点ごとに小さな命題になる。冪集合には `ΩResizing` から導かれる命題宇宙リサイズが必要で、その小さな台は `hProp ℓ` の各命題を符号化して復元できる。まとめられた定理は合算のコストを記録する。`V⊨ZF` はちょうど `ΩResizing (ℓ-suc ℓ) ℓ` を仮定し、その帰結 `V⊨ZF-fromLEM` は `LEM (ℓ-suc ℓ)` を仮定し、`V⊨ZFC` はちょうど `SetChoice (ℓ-suc ℓ)` を仮定する。この節は仮定の不要な側にとどまり、まず一つの集合の和、次に添字付きの族 `f : X → S` の和について、基本的な所属の仕様を展開する。集合 `⋃ (sett X f)` は中間の集合を通して族の値を集めるが、この和への所属をある族の元への所属として直接読めることは有益である。`union-spec` を展開すると和の元 `v` にわたる切り詰められた存在式が得られ、そのような `v` はそれぞれ `sett` の添字で呈示されるため、その上に第二の切り詰めの層が乗る。以下の二つの補題は、各方向でこの層を一つへまとめる。
 <!--/-->
@@ -232,7 +232,7 @@ The goal of this chapter is to realize each axiom of ZF inside the cumulative hi
 <!--en-->
 The inward lemma turns one concrete membership `x ∈ f i` into membership in the whole union. The witness is written down rather than searched for: the intermediate element is `f i` itself, presented by the index `i` through the reflexive path, with `h` certifying that `x` lies in it. Since `union-spec` is an equality of truth values, `subst ⟨_⟩` transports this witness across the reversed specification, so the truncated triple is consumed exactly in the shape the union characterization expects. Nothing enters beyond `union-spec` itself.
 <!--zh-->
-内向引理把一个具体的成员资格 `x ∈ f i` 变成整个并的成员资格。见证是直接写出而非寻找的：中间元素就是 `f i` 本身，由索引 `i` 经自反路径呈现，`h` 证明 `x` 在其中。由于 `union-spec` 是真值的相等，`subst ⟨_⟩` 沿反向的规格搬运该见证，使这个截断三元组恰以并的特征化所期望的形状被消耗。除 `union-spec` 本身外不进入任何东西。
+内向引理把一个具体的成员关系事实 `x ∈ f i` 变成整个并的成员关系事实。见证是直接写出而非寻找的：中间元素就是 `f i` 本身，由索引 `i` 经自反路径呈现，`h` 证明 `x` 在其中。由于 `union-spec` 是真值的相等，`subst ⟨_⟩` 沿反向的规格搬运该见证，使这个截断三元组恰以并的特征化所期望的形状被消耗。除 `union-spec` 本身外不进入任何东西。
 <!--ja-->
 内向きの補題は、一つの具体的な所属 `x ∈ f i` を和全体への所属へ変える。証人は探し出すのではなく書き下される。中間の要素は `f i` そのものであり、添字 `i` が自反なパスで呈示し、`h` が `x` がそこに属することを証明する。`union-spec` は真理値の等式なので、`subst ⟨_⟩` が逆向きの仕様に沿ってこの証人を運び、切り詰められた三つ組が和の特徴付けの期待するちょうどその形で消費される。`union-spec` 自身のほかには何も入らない。
 <!--/-->
@@ -249,7 +249,7 @@ union-family-out : (X : Type ℓ) (f : X → S) (x : S)
 <!--en-->
 The outward lemma recovers, from membership in the union, merely some family member containing `x`. Unfolding `union-spec` gives a truncated triple `(v , v in the union , x in v)`; the second component says `v` is presented by an index, so a further `map₁` inside the truncation extracts a pair `(i , q)` with `f i ≡ v`. The membership of `x` in `v` is then transported along the reverse of `q` to land in `f i`. The target keeps its truncation, so the eliminator is `rec₁` into `∥ Σ[ i ] ⟨ x ∈ˢ f i ⟩ ∥₁` with `squash₁` as the propositionhood evidence. The conclusion stays a mere existence: some family member contains `x`, and no member is chosen.
 <!--zh-->
-外向引理从「属于并」恢复出：纯粹地存在某个含 `x` 的族元。展开 `union-spec` 得到截断的三元组 `(v , v 在并中 , x 在 v 中)`；第二分量说 `v` 由某个索引呈现，于是在截断内部再作一次 `map₁`，抽出 `(i , q)` 使 `f i ≡ v`。然后把 `x` 在 `v` 中的成员资格沿 `q` 的反向搬运，落进 `f i`。目标保持截断，因此消去用 `rec₁` 进入 `∥ Σ[ i ] ⟨ x ∈ˢ f i ⟩ ∥₁`，以 `squash₁` 为命题性证据；结论仍是纯粹存在：某个族元含 `x`，而不选出任何族元。
+外向引理从「属于并」恢复出：纯粹地存在某个含 `x` 的族元。展开 `union-spec` 得到截断的三元组 `(v , v 在并中 , x 在 v 中)`；第二分量说 `v` 由某个索引呈现，于是在截断内部再作一次 `map₁`，抽出 `(i , q)` 使 `f i ≡ v`。然后把 `x` 在 `v` 中的成员关系事实沿 `q` 的反向搬运，落进 `f i`。目标保持截断，因此消去用 `rec₁` 进入 `∥ Σ[ i ] ⟨ x ∈ˢ f i ⟩ ∥₁`，以 `squash₁` 为命题性证据；结论仍是纯粹存在：某个族元含 `x`，而不选出任何族元。
 <!--ja-->
 外向きの補題は、和への所属から「`x` を含む族の元が純粋に存在する」ことを取り出す。`union-spec` を展開すると、切り詰められた三つ組 `(v , v は和に属する , x は v に属する)` が得られる。第二成分は `v` が添字で呈示されると言うので、截断の内部でさらに `map₁` を行い、`f i ≡ v` なる対 `(i , q)` を取り出す。そして `v` における `x` の所属を `q` の逆向きに沿って運び、`f i` に着地させる。目標は截断を保つので、消去には `squash₁` を命題性の証拠として `rec₁` で `∥ Σ[ i ] ⟨ x ∈ˢ f i ⟩ ∥₁` に入る。結論は純粋な存在のままである。ある族の元が `x` を含むのであり、どの元も選ばれない。
 <!--/-->
@@ -269,7 +269,7 @@ Replacement is a schema, and in ordinary set theory it is a genuine axiom: for e
 <!--zh-->
 ## 无需新增公理的替换
 
-替换是一条模式公理：在通常集合论中，对每个集合 `a` 与在 `a` 上函数性的公式 `φ`，像的存在性必须被公理化地断言。这里由层级自身给出构造，并且不调用任何选择原理。函数性假设以紧缩性陈述：对 `a` 的每个成员 `x`，满足 `(y ∷ x ∷ []) ⊨ φ` 的 `y` 构成的类型是紧缩的，于是中心值带有「其他任何值都与它等同」的证明。由于紧缩性提供实际数据，这个中心值可以被读出并用于构造像。但 `a` 的成员只通过小呈现给出：每个成员都以 `⟪ a ⟫↪ m` 的形式出现，`m` 是类型 `⟪ a ⟫` 的某个索引。因此构造以 `⟪ a ⟫` 本身为像编索引；可能精细的一步，即从成员资格回收索引，是函数而非选择，因为 `∈-asFiber` 的呈现纤维不加截断。需要核对的是：所得集合的成员关系恰有模式所要求的真值。正向只是读出像自身提供的资料；反向从外部成员资格回收一个索引，然后用一次函数性假设的紧缩，把外部给定的值与构造在回收索引处选定的值等同起来。
+替换是一条模式公理：在通常集合论中，对每个集合 `a` 与在 `a` 上函数性的公式 `φ`，像的存在性必须被公理化地断言。这里由层级自身给出构造，并且不调用任何选择原理。函数性假设以紧缩性陈述：对 `a` 的每个元素 `x`，满足 `(y ∷ x ∷ []) ⊨ φ` 的 `y` 构成的类型是紧缩的，于是中心值带有「其他任何值都与它等同」的证明。由于紧缩性提供实际数据，这个中心值可以被读出并用于构造像。但 `a` 的元素只通过小呈现给出：每个元素都以 `⟪ a ⟫↪ m` 的形式出现，`m` 是类型 `⟪ a ⟫` 的某个索引。因此构造以 `⟪ a ⟫` 本身为像编索引；可能精细的一步，即从成员关系事实回收索引，是函数而非选择，因为 `∈-asFiber` 的呈现纤维不加截断。需要核对的是：所得集合的成员关系恰有模式所要求的真值。正向只是读出像自身提供的资料；反向从外部成员关系事实回收一个索引，然后用一次函数性假设的紧缩，把外部给定的值与构造在回收索引处选定的值等同起来。
 <!--ja-->
 ## 追加の公理を要しない置換
 
@@ -279,7 +279,7 @@ Replacement is a schema, and in ordinary set theory it is a genuine axiom: for e
 <!--en-->
 One preliminary fact runs through everything below: if `m` is an index of the presentation of `a`, then the element `⟪ a ⟫↪ m` it presents really is a member of `a`. The small membership `⟪ a ⟫↪ m ∈ₛ a` holds by definition of the presentation, and `∈∈ₛ` lifts it to the structural membership. The section then takes its data: a set `a`, a formula `φ` with two free-variable slots, and the functionality hypothesis `fc`, which asserts for each `x ∈ a` that the type of values `y` satisfying `(y ∷ x ∷ []) ⊨ φ` is contractible. Contractibility is data, a center together with a contraction, so the center value for each member of `a` is available for computation without any choice principle.
 <!--zh-->
-一个预备事实贯穿下文：若 `m` 是 `a` 的呈现中的一个索引，则它呈现的元素 `⟪ a ⟫↪ m` 确实是 `a` 的成员。小成员资格 `⟪ a ⟫↪ m ∈ₛ a` 按呈现的定义成立，`∈∈ₛ` 把它提升为结构性成员资格。本节随后取定数据：集合 `a`、有两个自由变元槽的公式 `φ`，以及函数性假设 `fc`，它对每个 `x ∈ a` 断言满足 `(y ∷ x ∷ []) ⊨ φ` 的 `y` 构成的类型是紧缩的。紧缩性是数据，即一个中心加上一个收缩，因此 `a` 的每个成员的中心值可供计算使用，无需任何选择原理。
+一个预备事实贯穿下文：若 `m` 是 `a` 的呈现中的一个索引，则它呈现的元素 `⟪ a ⟫↪ m` 确实是 `a` 的元素。小成员关系事实 `⟪ a ⟫↪ m ∈ₛ a` 按呈现的定义成立，`∈∈ₛ` 把它提升为结构性成员关系事实。本节随后取定数据：集合 `a`、有两个自由变元槽的公式 `φ`，以及函数性假设 `fc`，它对每个 `x ∈ a` 断言满足 `(y ∷ x ∷ []) ⊨ φ` 的 `y` 构成的类型是紧缩的。紧缩性是数据，即一个中心加上一个收缩，因此 `a` 的每个元素的中心值可供计算使用，无需任何选择原理。
 <!--ja-->
 一つの準備的事実が以下のすべてを貫く。`m` が `a` の提示における添字なら、それが呈示する要素 `⟪ a ⟫↪ m` は実際に `a` の要素である、というものである。小さな所属 `⟪ a ⟫↪ m ∈ₛ a` は提示の定義により成り立ち、`∈∈ₛ` がそれを構造的な所属へ引き上げる。続いてこの節のデータを取る。集合 `a`、自由変数の枠を二つ持つ論理式 `φ`、そして関数性の仮定 `fc` である。`fc` は各 `x ∈ a` に対し、`(y ∷ x ∷ []) ⊨ φ` を満たす `y` の型が緊縮的であると主張する。緊縮性はデータ、つまり中心と緊縮の対なので、`a` の各元に対する中心の値は、いかなる選択原理もなしに計算に使える。
 <!--/-->
@@ -302,7 +302,7 @@ module _ (a : S) (φ : Formula S 2)
 <!--en-->
 The image is then a direct assembly: `replaceImage` is `sett` over the index type `⟪ a ⟫`, sending each index `m` to the center value that `fc` provides for the member `⟪ a ⟫↪ m`. Its specification says that membership in `replaceImage` equals the truth value obtained by disjoining `(x ∈ a) ⊓ φ(y, x)` over all `x`, which is the replacement schema in semantic form: `y` belongs to the image exactly when it arises as the value of `φ` at some member of `a`. As elsewhere in the chapter, `⇔toPath` converts the two implications into the path of truth values the specification asks for.
 <!--zh-->
-像集于是是直接的组装：`replaceImage` 是索引类型 `⟪ a ⟫` 上的 `sett`，把每个索引 `m` 映到 `fc` 为成员 `⟪ a ⟫↪ m` 提供的中心值。其规格说：属于 `replaceImage` 等于对所有 `x` 析取 `(x ∈ a) ⊓ φ(y, x)` 得到的真值。这正是语义形式的替换模式：`y` 属于像，当且仅当它是 `φ` 在 `a` 的某个成员处取的值。与本章其他地方一样，`⇔toPath` 把两个蕴含转换成规格要求的真值路径。
+像集于是是直接的组装：`replaceImage` 是索引类型 `⟪ a ⟫` 上的 `sett`，把每个索引 `m` 映到 `fc` 为元素 `⟪ a ⟫↪ m` 提供的中心值。其规格说：属于 `replaceImage` 等于对所有 `x` 析取 `(x ∈ a) ⊓ φ(y, x)` 得到的真值。这正是语义形式的替换模式：`y` 属于像，当且仅当它是 `φ` 在 `a` 的某个元素处取的值。与本章其他地方一样，`⇔toPath` 把两个蕴含转换成规格要求的真值路径。
 <!--ja-->
 像はこうして直接的な組み立てになる。`replaceImage` は添字型 `⟪ a ⟫` 上の `sett` で、各添字 `m` を、`fc` が要素 `⟪ a ⟫↪ m` のために提供する中心の値へ写す。その仕様は、`replaceImage` への所属が、すべての `x` にわたって `(x ∈ a) ⊓ φ(y, x)` を選言した真理値と等しいことを述べる。これは意味論の形での置換図式である。`y` が像に属するのは、`a` のある元で `φ` の値として生じるときちょうどそのときである。本章の他の場所と同様に、`⇔toPath` が二つの含意を仕様の要求する真理値のパスへ変換する。
 <!--/-->
@@ -319,7 +319,7 @@ The image is then a direct assembly: `replaceImage` is `sett` over the index typ
 <!--en-->
 The forward direction of the specification starts from a membership in the image. Because `replaceImage` is a `sett` indexed by the presentation type of `a`, such a membership carries an index `m` of `⟪ a ⟫` together with a path `q` from the presented element `⟪ a ⟫↪ m` to `y`. The witness for the right-hand side is then assembled from this one index. First, the presented element is a member of `a`, by the preliminary fact `memb`. Second, `fc` provides the value at that member together with the proof that `φ` holds of it and that member; transporting that proof along `q` moves the second free-variable slot from the presented element to `y`. This direction uses none of the uniqueness content of `fc`: however the image presents `y`, some member of `a` is produced at which `φ(y, x)` holds.
 <!--zh-->
-规格的正向方向从像中的成员资格出发。由于 `replaceImage` 是以 `a` 的呈现类型为索引的 `sett`，这样的成员资格带有 `⟪ a ⟫` 的一个索引 `m`，以及一条从被呈现元素 `⟪ a ⟫↪ m` 到 `y` 的路径 `q`。右侧的见证就由这一个索引组装而成。第一，由预备事实 `memb`，被呈现元素是 `a` 的成员。第二，`fc` 在该成员处给出值以及 `φ` 对该值与该成员成立的证明；沿 `q` 传递该证明，就把公式的第二个自由变元槽从被呈现元素移到 `y`。这一方向不使用 `fc` 的任何唯一性内容：无论像以何种方式呈现 `y`，都得到 `a` 中使 `φ(y, x)` 成立的某个成员。
+规格的正向方向从像中的成员关系事实出发。由于 `replaceImage` 是以 `a` 的呈现类型为索引的 `sett`，这样的成员关系事实带有 `⟪ a ⟫` 的一个索引 `m`，以及一条从被呈现元素 `⟪ a ⟫↪ m` 到 `y` 的路径 `q`。右侧的见证就由这一个索引组装而成。第一，由预备事实 `memb`，被呈现元素是 `a` 的元素。第二，`fc` 在该元素处给出值以及 `φ` 对该值与该元素成立的证明；沿 `q` 传递该证明，就把公式的第二个自由变元槽从被呈现元素移到 `y`。这一方向不使用 `fc` 的任何唯一性内容：无论像以何种方式呈现 `y`，都得到 `a` 中使 `φ(y, x)` 成立的某个元素。
 <!--ja-->
 仕様の順方向は像への所属から始まる。`replaceImage` は `a` の提示型を添字とする `sett` なので、その所属には `⟪ a ⟫` の添字 `m` と、呈示された要素 `⟪ a ⟫↪ m` から `y` へのパス `q` が伴う。右辺の証拠はこの一つの添字から組み立てられる。第一に、準備的事実 `memb` により、呈示された要素は `a` の元である。第二に、`fc` がその元に対して値と、`φ` がその値とその元について成り立つことの証明を与えるので、その証明を `q` に沿って輸送すれば、論理式の第二の自由変数の枠は呈示された要素から `y` へ移る。この方向は `fc` の一意性の内容をまったく使わない。像が `y` をどのように呈示しようとも、`φ(y, x)` が成り立つ `a` のある元が得られる。
 <!--/-->
@@ -335,7 +335,7 @@ The forward direction of the specification starts from a membership in the image
 <!--en-->
 The backward direction is where a choice principle would seem unavoidable. It receives a truncated witness `(x , x∈a , hφ)` and must produce an index into the image, an index that presents the very member `x` of `a` at which `φ(y, x)` holds. So the fact that `x` is a member must be turned into an index presenting it. The smallness chapter supplies exactly this: `∈-asFiber` returns, as ordinary untruncated data, an actual pair `mf` of an index and a path from the presented element back to `x`. No choice among possible indices is made, because the recovery is a function. The satisfaction proof `hφ` is then transported along the reverse of the path `mf .snd`, moving the second free-variable slot from `x` to the presented element, which is the shape in which the hypothesis `fc` was stated.
 <!--zh-->
-后向方向正是表面上离不开选择原理之处。它收到截断的见证 `(x , x∈a , hφ)`，必须给出像的一个索引，而且该索引要呈现 `a` 中使 `φ(y, x)` 成立的那个成员 `x` 本身。于是必须把「`x` 是成员」这一事实转化为呈现它的索引。小性一章给出的恰是这个：`∈-asFiber` 以普通的不加截断的数据返回实际的对 `mf`，由一个索引加一条从被呈现元素回到 `x` 的路径组成。回收是函数，因此并没有在可能的索引之间作任何选取。随后把满足证明 `hφ` 沿路径 `mf .snd` 的逆传递，把第二个自由变元槽从 `x` 移到被呈现元素，与前提 `fc` 被陈述的形状一致。
+后向方向正是表面上离不开选择原理之处。它收到截断的见证 `(x , x∈a , hφ)`，必须给出像的一个索引，而且该索引要呈现 `a` 中使 `φ(y, x)` 成立的那个元素 `x` 本身。于是必须把「`x` 是元素」这一事实转化为呈现它的索引。小性一章给出的恰是这个：`∈-asFiber` 以普通的不加截断的数据返回实际的对 `mf`，由一个索引加一条从被呈现元素回到 `x` 的路径组成。回收是函数，因此并没有在可能的索引之间作任何选取。随后把满足证明 `hφ` 沿路径 `mf .snd` 的逆传递，把第二个自由变元槽从 `x` 移到被呈现元素，与前提 `fc` 被陈述的形状一致。
 <!--ja-->
 逆方向は、一見して選択原理が避けられないように思われる箇所である。切り詰められた証拠 `(x , x∈a , hφ)` を受け取り、像への添字を提示しなければならない。しかもその添字は、`φ(y, x)` が成り立つ `a` の元 `x` そのものを呈示するものでなければならない。そこで「`x` が元である」という事実を、それを呈示する添字へ変える必要がある。小ささの章がまさにこれを供給する。`∈-asFiber` は、添字と、呈示された要素から `x` へ戻るパスからなる実際の対 `mf` を、切り詰められていない通常のデータとして返す。復元は関数なので、可能な添字の間で選択を行うことはない。その後、充足の証明 `hφ` をパス `mf .snd` の逆に沿って輸送し、第二の自由変数の枠を `x` から呈示された要素へ移す。これは前提 `fc` が述べられている形と一致する。
 <!--/-->
@@ -351,7 +351,7 @@ The backward direction is where a choice principle would seem unavoidable. It re
 <!--en-->
 The recovered index still has to become membership in the image, and this is the one place where uniqueness enters. At the index `mf .fst`, the functionality hypothesis says the type of suitable values is contractible, so the externally supplied pair `(y , hφ')` is compared with the chosen center: the contraction yields the center together with a path to it, and the first projection of that path identifies `y` with the value the construction assigned to the presented member, which is an index into `replaceImage`. Uniqueness is thus used exactly once, to recognize the externally given value `y` as one of the internally chosen image values. Combined with the presenting index `mf .fst`, this gives membership of `y` in the image.
 <!--zh-->
-回收的索引还须变成像中的成员资格，这正是唯一性唯一进入之处。在索引 `mf .fst` 处，函数性假设说合适值构成的类型是紧缩的，于是把外部给定的对 `(y , hφ')` 与选定中心比较：紧缩给出中心及一条到它的路径，该路径的第一投影把 `y` 与构造赋给被呈现成员的值等同起来，而后者就是 `replaceImage` 的一个索引。因此唯一性恰好用了一次，用来把外部给定的值 `y` 认作内部选出的像值之一。与呈现索引 `mf .fst` 合起来，就得到 `y` 在像中的成员资格。
+回收的索引还须变成像中的成员关系事实，这正是唯一性唯一进入之处。在索引 `mf .fst` 处，函数性假设说合适值构成的类型是紧缩的，于是把外部给定的对 `(y , hφ')` 与选定中心比较：紧缩给出中心及一条到它的路径，该路径的第一投影把 `y` 与构造赋给被呈现元素的值等同起来，而后者就是 `replaceImage` 的一个索引。因此唯一性恰好用了一次，用来把外部给定的值 `y` 认作内部选出的像值之一。与呈现索引 `mf .fst` 合起来，就得到 `y` 在像中的成员关系事实。
 <!--ja-->
 復元した添字はなお像への所属へ変えねばならず、一意性が入るのはここだけである。添字 `mf .fst` において関数性の仮定は、適切な値の型が緊縮的であることを言うので、外部から与えられた対 `(y , hφ')` を選ばれた中心と比べる。緊縮は中心とそれへのパスを与え、そのパスの第一射影により、`y` は構成がその呈示された元に割り当てた値、すなわち `replaceImage` への添字と同一視される。したがって一意性はちょうど一度使われ、外部の値 `y` を内部で選ばれた像の値の一つとして認める役割を果たす。これと呈示する添字 `mf .fst` を合わせれば、`y` の像への所属が得られる。
 <!--/-->
@@ -370,7 +370,7 @@ Strong infinity is the field the library supplies nearly complete. Its `ω` is a
 <!--zh-->
 ## 数码链与 ω
 
-强无穷是库几乎完整供给的字段。库的 `ω` 是在 `Lift ℕ` 上、以数码 `#` 为族的 `sett`，所以 `x` 属于 `ω` 恰当它仅仅被某个 `#` 命中。但 record 的要求是通过模型自身的数码链表述的：零必须是空的，每个后继的成员必须恰为前驱的成员再加上前驱本身。因此工作在于对齐两条取后继方式不同的链：模型链取 `a ∪ ⁅ a , a ⁆`，库链取 `sucV a = a ∪ ⁅ a ⁆s`。两个元素相同的对集 `⁅ a , a ⁆` 与单点集 `⁅ a ⁆s` 有相同的元素，外延性把它变成一条路径；有了这一次等同，两条链便逐级一致，`ω` 的成员特征化就成为 record 的强无穷。
+强无穷是库几乎完整供给的字段。库的 `ω` 是在 `Lift ℕ` 上、以数码 `#` 为族的 `sett`，所以 `x` 属于 `ω` 恰当它仅仅被某个 `#` 命中。但 record 的要求是通过模型自身的数码链表述的：零必须是空的，每个后继的元素必须恰为前驱的元素再加上前驱本身。因此工作在于对齐两条取后继方式不同的链：模型链取 `a ∪ ⁅ a , a ⁆`，库链取 `sucV a = a ∪ ⁅ a ⁆s`。两个元素相同的对集 `⁅ a , a ⁆` 与单点集 `⁅ a ⁆s` 有相同的元素，外延性把它变成一条路径；有了这一次等同，两条链便逐级一致，`ω` 的元素特征化就成为 record 的强无穷。
 <!--ja-->
 ## 数項の列と ω
 
@@ -380,7 +380,7 @@ Strong infinity is the field the library supplies nearly complete. Its `ω` is a
 <!--en-->
 The identification `⁅ a , a ⁆ ≡ ⁅ a ⁆s` is a path between sets, so extensionality reduces it to the two membership inclusions. The first inclusion says every element of the pair with a repeated entry is an element of the singleton. Its input is a membership in `⁅ a , a ⁆`, and the pairing axiom unfolds such a membership into a truncated disjunction: the element equals `a` through the left entry of the pair or through the right one.
 <!--zh-->
-等同 `⁅ a , a ⁆ ≡ ⁅ a ⁆s` 是集合之间的路径，所以外延性把它化归为两个成员收纳。第一个收纳说两个元素相同的对集的每个元素都是单点集的元素。其输入是 `⁅ a , a ⁆` 中的成员资格，配对公理把这样的成员资格展开为截断的析取：该元素经由配对的左分支或右分支等于 `a`。
+等同 `⁅ a , a ⁆ ≡ ⁅ a ⁆s` 是集合之间的路径，所以外延性把它化归为两个元素收纳。第一个收纳说两个元素相同的对集的每个元素都是单点集的元素。其输入是 `⁅ a , a ⁆` 中的成员关系事实，配对公理把这样的成员关系事实展开为截断的析取：该元素经由配对的左分支或右分支等于 `a`。
 <!--ja-->
 同定 `⁅ a , a ⁆ ≡ ⁅ a ⁆s` は集合の間のパスなので、外延性により二つの所属の包含へ帰着する。第一の包含は、同じ項を二度入れた対のすべての元が一元集合の元であることを言う。その入力は `⁅ a , a ⁆` への所属であり、対の公理はそのような所属を切り詰められた選言へ展開する。すなわち、その元は対の左の項を通じて、または右の項を通じて `a` と等しい、というものである。
 <!--/-->
@@ -396,7 +396,7 @@ pair-singleton a = extensionality ⁅ a , a ⁆ ⁅ a ⁆s (s1 , s2)
 <!--en-->
 Both disjuncts ask for the same thing, membership in `⁅ a ⁆s`, so after the truncated disjunction is eliminated into the proposition `x ≡ a`, whose propositionhood follows from the hierarchy being an h-set, each branch supplies its path and the results agree by that very propositionhood. What is consumed here is the backward direction of the singleton's classification, running from the path `x ≡ a` to the small membership `x ∈ₛ ⁅ a ⁆s`; note that it is the opposite direction from the one the reverse inclusion will use.
 <!--zh-->
-两个析取支要求的是同一件事：属于 `⁅ a ⁆s`。于是先把截断的析取消入命题 `x ≡ a` (其命题性来自层级是 h-集合)，每个分支给出自己的路径，而两个结果恰由该命题性等同。这里消耗的是单点集分类的反向：从路径 `x ≡ a` 走到小隶属 `x ∈ₛ ⁅ a ⁆s`；注意它与反向包含将要使用的方向恰好相反。
+两个析取支要求的是同一件事：属于 `⁅ a ⁆s`。于是先把截断的析取消入命题 `x ≡ a` (其命题性来自层级是 h-集合)，每个分支给出自己的路径，而两个结果恰由该命题性等同。这里消耗的是单点集分类的反向：从路径 `x ≡ a` 走到小成员关系 `x ∈ₛ ⁅ a ⁆s`；注意它与反向包含将要使用的方向恰好相反。
 <!--ja-->
 どちらの選言支も同じこと、`⁅ a ⁆s` への所属を要求する。そこでまず切り詰められた選言を命題 `x ≡ a` (その命題性は階層が h-集合であることから従う) へ消去し、各分岐が自らのパスを与えれば、二つの結果はまさにその命題性によって同一視される。ここで使うのは一元集合の分類の逆向きで、パス `x ≡ a` から小さな所属 `x ∈ₛ ⁅ a ⁆s` へ進む方向である。これが後の逆包含で使う向きと逆であることに注意してほしい。
 <!--/-->
@@ -412,7 +412,7 @@ Both disjuncts ask for the same thing, membership in `⁅ a ⁆s`, so after the 
 <!--en-->
 The reverse inclusion runs in the other direction: the classification's forward component turns the membership `x ∈ₛ ⁅ a ⁆s` into the path `x ≡ a`, and this path, injected as the left disjunct, is converted by the pairing axiom into membership in `⁅ a , a ⁆`. With the two sets identified, the model's numeral chain is defined by recursion on `ℕ`: `numeralV zero` is the empty set, and `numeralV (suc n)` unions onto stage `n` a pair whose two entries are both that stage. After the identification this is exactly the von Neumann successor step `n ∪ ⁅ n ⁆s`, since a pair with equal entries and a singleton have the same members.
 <!--zh-->
-反向包含则朝另一方向进行：分类的正向分量把成员资格 `x ∈ₛ ⁅ a ⁆s` 变成路径 `x ≡ a`，把该路径作为左析取支注入后，配对公理把它转成 `⁅ a , a ⁆` 中的成员资格。两个集合等同之后，模型的数码链按 `ℕ` 递归定义：`numeralV zero` 是空集，`numeralV (suc n)` 在第 `n` 阶段上并上一个两个元素都是该阶段的对集。经等同，由于两个元素相同的对集与单点集成员相同，这正是冯·诺伊曼后继步骤 `n ∪ ⁅ n ⁆s`。
+反向包含则朝另一方向进行：分类的正向分量把成员关系事实 `x ∈ₛ ⁅ a ⁆s` 变成路径 `x ≡ a`，把该路径作为左析取支注入后，配对公理把它转成 `⁅ a , a ⁆` 中的成员关系事实。两个集合等同之后，模型的数码链按 `ℕ` 递归定义：`numeralV zero` 是空集，`numeralV (suc n)` 在第 `n` 阶段上并上一个两个元素都是该阶段的对集。经等同，由于两个元素相同的对集与单点集元素相同，这正是冯·诺伊曼后继步骤 `n ∪ ⁅ n ⁆s`。
 <!--ja-->
 逆の包含は逆向きに進む。分類の順方向の成分が所属 `x ∈ₛ ⁅ a ⁆s` をパス `x ≡ a` に変え、このパスを左の選言支として注入すると、対の公理が `⁅ a , a ⁆` への所属へ変換する。二つの集合の同定が済むと、モデルの数項の列は `ℕ` 上の再帰で定義される。`numeralV zero` は空集合、`numeralV (suc n)` は段階 `n` に、両方の項がともにその段階である対を併合する。同定の後、等しい項を持つ対と一元集合は同じ元を持つため、これはまさにフォン・ノイマンの後続の一段階 `n ∪ ⁅ n ⁆s` である。
 <!--/-->
@@ -463,7 +463,7 @@ The proof converts the two descriptions of membership into a path with `⇔toPat
 <!--en-->
 The record's two pinning equations speak of membership in a successor stage, so the chapter needs the case analysis for `sucV` itself: a member of `sucV A` is, merely, a member of `A` or equal to `A`, and both inclusions hold. This is what lets any numeral chain aligned with the library inherit the pinning equations, since the library numerals step by `sucV`. The analysis unfolds `sucV A` once through the union and pairing axioms; the second disjunct, membership in the singleton `⁅ A ⁆s`, is closed by the singleton's classification.
 <!--zh-->
-record 的两条固定方程描述的是后继阶段的成员关系，因此本章需要对 `sucV` 本身的分情形分析：`sucV A` 的成员，纯粹地，要么是 `A` 的成员、要么等于 `A`，且两个方向的收纳都成立。由于库数码按 `sucV` 取后继，这使得任何与库对齐的数码链都能继承固定方程。该分析把 `sucV A` 沿并与配对公理展开一次；第二个析取支，即属于单点集 `⁅ A ⁆s` 的成员资格，由单点集的分类收尾。
+record 的两条固定方程描述的是后继阶段的成员关系，因此本章需要对 `sucV` 本身的分情形分析：`sucV A` 的元素，纯粹地，要么是 `A` 的元素、要么等于 `A`，且两个方向的收纳都成立。由于库数码按 `sucV` 取后继，这使得任何与库对齐的数码链都能继承固定方程。该分析把 `sucV A` 沿并与配对公理展开一次；第二个析取支，即属于单点集 `⁅ A ⁆s` 的成员关系事实，由单点集的分类收尾。
 <!--ja-->
 record の二つの固定方程式は後続の段階への所属について語るため、本章では `sucV` 自身の場合分けが必要である。`sucV A` の元は、切り詰められた意味で、`A` の元であるか `A` と等しいかのいずれかであり、両方向の包含が成り立つ。ライブラリの数項は `sucV` で後続を取るため、この場合分けによってライブラリと整列した任意の数項列が固定方程式を引き継げる。解析は `sucV A` を和と対の公理で一度展開し、第二の選言支、すなわち一元集合 `⁅ A ⁆s` への所属は、その分類で閉じる。
 <!--/-->
@@ -471,7 +471,7 @@ record の二つの固定方程式は後続の段階への所属について語�
 <!--en-->
 The analysis starts from a piece of the previous section that is worth extracting: membership of `x` in the singleton `⁅ A ⁆s` forces the path `x ≡ A`. This is the first half of the singleton's classification, recorded here as `singl≡`. The elimination principle `∈sucV-elim` then turns the case analysis into a usable form: given a proposition `P`, a proof of `P` from membership in `A`, a proof of `P` from equality with `A`, and a member of `sucV A`, it produces a proof of `P`. That `P` is required to be a proposition is exactly what licenses eliminating the truncated case analysis into it.
 <!--zh-->
-分析从上一节的一条事实出发，值得把它单独抽出：`x` 属于单点集 `⁅ A ⁆s` 强制路径 `x ≡ A`。这是单点集分类的前半，此处记为 `singl≡`。消去原则 `∈sucV-elim` 随后把分情形分析变成可用的形式：给定命题 `P`、由「`x` 属于 `A`」得 `P` 的证明、由「`x` 等于 `A`」得 `P` 的证明，以及 `sucV A` 的一个成员，它就给出 `P` 的证明。要求 `P` 是命题，恰好是把截断的分情形消入它的依据。
+分析从上一节的一条事实出发，值得把它单独抽出：`x` 属于单点集 `⁅ A ⁆s` 强制路径 `x ≡ A`。这是单点集分类的前半，此处记为 `singl≡`。消去原则 `∈sucV-elim` 随后把分情形分析变成可用的形式：给定命题 `P`、由「`x` 属于 `A`」得 `P` 的证明、由「`x` 等于 `A`」得 `P` 的证明，以及 `sucV A` 的一个元素，它就给出 `P` 的证明。要求 `P` 是命题，恰好是把截断的分情形消入它的依据。
 <!--ja-->
 分析は前節の事実一つから始める。これを取り出しておく価値がある。`x` が一元集合 `⁅ A ⁆s` に属すればパス `x ≡ A` が強制される、というものである。これは一元集合の分類の前半であり、ここでは `singl≡` として記録する。消去原理 `∈sucV-elim` はこの場合分けを使える形にする。命題 `P`、`x` が `A` の元である場合に `P` を与える証明、`x` が `A` と等しい場合に `P` を与える証明、そして `sucV A` の一つの元が与えられれば、`P` の証明を作る、というものである。`P` が命題であるという要求こそ、切り詰められた場合分けをそこへ消去する根拠である。
 <!--/-->
@@ -488,7 +488,7 @@ private
 <!--en-->
 Mathematically, `sucV A` is the union of the pair `⁅ A , ⁅ A ⁆s ⁆`, so a member of it is a member of one of the two components. The analysis therefore runs in two steps. The union axiom first produces, merely, a component `v` of the pair with `x` a member of `v`; the pairing axiom then splits membership of `v` in the pair into the truncated disjunction `v ≡ A` or `v ≡ ⁅ A ⁆s`. In the left branch, transporting `x ∈ v` along `v ≡ A` gives ordinary membership in `A`, exactly what the first premise expects.
 <!--zh-->
-数学上，`sucV A` 是配对 `⁅ A , ⁅ A ⁆s ⁆` 的并，所以它的成员是该对某个分量的成员。分析因此分两步。并公理先纯粹地给出配对的一个分量 `v`，且 `x` 是 `v` 的成员；配对公理再把「`v` 属于这对」分裂为截断的析取 `v ≡ A` 或 `v ≡ ⁅ A ⁆s`。左支中，沿 `v ≡ A` 传递 `x ∈ v` 即得 `A` 中的普通成员资格，恰是第一个前提所期望的。
+数学上，`sucV A` 是配对 `⁅ A , ⁅ A ⁆s ⁆` 的并，所以它的元素是该对某个分量的元素。分析因此分两步。并公理先纯粹地给出配对的一个分量 `v`，且 `x` 是 `v` 的元素；配对公理再把「`v` 属于这对」分裂为截断的析取 `v ≡ A` 或 `v ≡ ⁅ A ⁆s`。左支中，沿 `v ≡ A` 传递 `x ∈ v` 即得 `A` 中的普通成员关系事实，恰是第一个前提所期望的。
 <!--ja-->
 数学的には、`sucV A` は対 `⁅ A , ⁅ A ⁆s ⁆` の和なので、その元はいずれかの成分の元である。分析は二段階で進む。まず和の公理が、対のある成分 `v` と `x` が `v` の元であることを純粋に与える。次に対の公理が、`v` のこの対への所属を、切り詰められた選言 `v ≡ A` か `v ≡ ⁅ A ⁆s` かへ分裂させる。左の分岐では、`v ≡ A` に沿って `x ∈ v` を輸送すれば `A` への通常の所属が得られ、これは第一の前提の期待するものである。
 <!--/-->
@@ -504,7 +504,7 @@ Mathematically, `sucV A` is the union of the pair `⁅ A , ⁅ A ⁆s ⁆`, so a
 <!--en-->
 In the right branch, transporting along `v ≡ ⁅ A ⁆s` yields membership in the singleton, and `singl≡` converts that into the path `x ≡ A`, which is what the second premise expects. Both truncated eliminations land in the proposition `P`, so they are legitimate, and the two cases together discharge the analysis. The first inclusion is also recorded on its own: `∈sucV-inl` states that a member of `A` is a member of `sucV A`.
 <!--zh-->
-右支中，沿 `v ≡ ⁅ A ⁆s` 传递得到单点集中的成员资格，`singl≡` 把它变成路径 `x ≡ A`，正是第二个前提所期望的。两次截断消去都落入命题 `P`，因而合法，两个情形合起来完成分析。第一个收纳也单独记录：`∈sucV-inl` 陈述 `A` 的成员是 `sucV A` 的成员。
+右支中，沿 `v ≡ ⁅ A ⁆s` 传递得到单点集中的成员关系事实，`singl≡` 把它变成路径 `x ≡ A`，正是第二个前提所期望的。两次截断消去都落入命题 `P`，因而合法，两个情形合起来完成分析。第一个收纳也单独记录：`∈sucV-inl` 陈述 `A` 的元素是 `sucV A` 的元素。
 <!--ja-->
 右の分岐では、`v ≡ ⁅ A ⁆s` に沿った輸送で一元集合への所属が得られ、`singl≡` がそれをパス `x ≡ A` へ変える。これは第二の前提の期待するものである。二度の切り詰めの消去はいずれも命題 `P` に着地するため正当であり、二つの場合が合わさって分析を完結させる。最初の包含も独立に記録される。`∈sucV-inl` は、`A` の元が `sucV A` の元であることを述べる。
 <!--/-->
@@ -521,7 +521,7 @@ In the right branch, transporting along `v ≡ ⁅ A ⁆s` yields membership in 
 <!--en-->
 The proof of `∈sucV-inl` builds rather than analyzes: from the assumed membership of `x` in `A`, it assembles a witness for membership in the union. Inside the truncation, the component `A` of the pair is presented through the pairing axiom via the left disjunct with the reflexive path, and the membership of `x` in `A` is converted into the small form the union axiom consumes. The outer exchange then lifts the whole small-form witness to membership in `sucV A`.
 <!--zh-->
-`∈sucV-inl` 的证明是构造而非分析：从假设的「`x` 属于 `A`」出发，组装出属于并的见证。在截断内部，配对的分量 `A` 经配对公理以带自反路径的左析取支呈现；`x` 属于 `A` 的成员资格则转成并公理所消耗的小形式。外层交换再把整个小形式见证提升为 `sucV A` 中的成员资格。
+`∈sucV-inl` 的证明是构造而非分析：从假设的「`x` 属于 `A`」出发，组装出属于并的见证。在截断内部，配对的分量 `A` 经配对公理以带自反路径的左析取支呈现；`x` 属于 `A` 的成员关系事实则转成并公理所消耗的小形式。外层交换再把整个小形式见证提升为 `sucV A` 中的成员关系事实。
 <!--ja-->
 `∈sucV-inl` の証明は構成であり、解析ではない。仮定された `x` の `A` への所属から、和への所属の証人を組み立てる。切り詰めの内部では、対の成分 `A` が、対の公理を通して自反パス付きの左の選言支として提示され、`x` の `A` への所属は、和の公理が消費する小形式へ変換される。外側の交換が、この小形式の証拠全体を `sucV A` への所属へ引き上げる。
 <!--/-->
@@ -538,7 +538,7 @@ self∈sucV : (a : S) → ⟨ a ∈ˢ sucV a ⟩
 <!--en-->
 The companion `self∈sucV` proves the second inclusion: every set `a` is a member of its own successor. The witness is now the other component `⁅ a ⁆s` of the pair, presented via the right disjunct; the fact that it contains `a` is the second half of the singleton classification applied to the reflexive path. Together the two lemmas give the content the pinning equations need: the members of `sucV A` are, merely, the members of `A` together with `A` itself.
 <!--zh-->
-伴随的 `self∈sucV` 证明第二个收纳：每个集合 `a` 属于它自己的后继。这次的见证是配对的另一分量 `⁅ a ⁆s`，经右析取支呈现；它包含 `a` 这一事实是单点集分类的后半应用于自反路径。两条引理合起来给出固定方程所需的内容：`sucV A` 的成员，仅仅是 `A` 的成员再加上 `A` 本身。
+伴随的 `self∈sucV` 证明第二个收纳：每个集合 `a` 属于它自己的后继。这次的见证是配对的另一分量 `⁅ a ⁆s`，经右析取支呈现；它包含 `a` 这一事实是单点集分类的后半应用于自反路径。两条引理合起来给出固定方程所需的内容：`sucV A` 的元素，仅仅是 `A` 的元素再加上 `A` 本身。
 <!--ja-->
 対応する `self∈sucV` は第二の包含、すなわち任意の集合 `a` が自分自身の後続に属することを示す。今度の証拠は対のもう一方の成分 `⁅ a ⁆s` を右の選言支として提示するもので、それが `a` を含むという事実は、一元集合の分類の後半を自反パスに適用したものである。二つの補題を合わせると、固定方程式に必要な内容が得られる。`sucV A` の元とは、切り詰められた意味で、`A` の元と `A` 自身にほかならない。
 <!--/-->
@@ -553,7 +553,7 @@ self∈sucV a = ∈∈ₛ {a = a} {b = sucV a} .snd
 <!--en-->
 The two pinning equations, for any chain aligned with the library's. The record asks that the zeroth numeral have no members and that the members of each successor numeral be exactly the members of the predecessor together with the predecessor itself. Both statements are about membership in the given chain, while the case analysis of the previous section speaks of membership in `sucV`; the alignment `q : a n ≡ # n` is the bridge, and every statement about membership in the chain transports along `q` to the corresponding statement about the library numerals. The module takes the chain and the alignment as parameters, so the same lemmas serve the model's chain and any other.
 <!--zh-->
-任意与库对齐的链的两条固定方程。record 要求：第零个数码没有成员；每个后继数码的成员恰为其前驱的成员加上前驱本身。这两条陈述都关乎给定链中的成员资格，而上一节的分情形分析谈的是 `sucV` 中的成员资格；对齐 `q : a n ≡ # n` 是桥梁，关于链中成员资格的陈述都可沿 `q` 搬运为关于库数码的相应陈述。该模块把链与对齐作为参数，因此同样的引理既服务模型的链，也服务任何其他链。
+任意与库对齐的链的两条固定方程。record 要求：第零个数码没有元素；每个后继数码的元素恰为其前驱的元素加上前驱本身。这两条陈述都关乎给定链中的成员关系事实，而上一节的分情形分析谈的是 `sucV` 中的成员关系事实；对齐 `q : a n ≡ # n` 是桥梁，关于链中成员关系事实的陈述都可沿 `q` 搬运为关于库数码的相应陈述。该模块把链与对齐作为参数，因此同样的引理既服务模型的链，也服务任何其他链。
 <!--ja-->
 ライブラリと整列する任意の列に対する、二つの固定方程式である。レコードは、第 0 の数項が元を持たないこと、また各後続数項の元が前者の元に前者自身を加えたものにちょうど等しいことを要求する。どちらの主張も与えられた列への所属についてであるが、前節の場合分けは `sucV` への所属について語る。整列 `q : a n ≡ # n` がその橋渡しであり、列への所属についての主張は `q` に沿ってライブラリの数項についての対応する主張へ運べる。モジュールは列と整列をパラメータとして受け取るので、同じ補題がモデルの列にも他の列にも使える。
 <!--/-->
@@ -561,7 +561,7 @@ The two pinning equations, for any chain aligned with the library's. The record 
 <!--en-->
 The zero equation is the easier one. If `z` were a member of the chain's zeroth stage, transporting along `q zero` makes it a member of the library's empty set; after the exchange by `∈∈ₛ`, `∅-empty` refutes that membership in its small form, and the result is an inhabitant of the empty type. Note what is not claimed: no freestanding emptiness of the model's numeral is proved, only that membership in it implies a contradiction, which is all the pinning equation demands.
 <!--zh-->
-第零条方程较简单。若 `z` 是链的第零处的成员，沿 `q zero` 搬运便使它成为库空集的成员；经 `∈∈ₛ` 交换后，`∅-empty` 以小隶属形式驳斥它，结果是空类型的元素。注意并未主张什么：这里没有证明模型数码单独意义上的空性，只证明「属于它蕴含矛盾」，而固定方程要求的恰是这些。
+第零条方程较简单。若 `z` 是链的第零处的元素，沿 `q zero` 搬运便使它成为库空集的元素；经 `∈∈ₛ` 交换后，`∅-empty` 以小成员关系形式驳斥它，结果是空类型的元素。注意并未主张什么：这里没有证明模型数码单独意义上的空性，只证明「属于它蕴含矛盾」，而固定方程要求的恰是这些。
 <!--ja-->
 第 0 の方程式のほうが簡単である。もし `z` が列の第 0 段階の元なら、`q zero` に沿って輸送すればライブラリの空集合の元になる。`∈∈ₛ` による交換を経て、`∅-empty` が小さな所属の形でそれを反駁し、結果は空の型の要素である。主張されない点にも注意してほしい。モデルの数項そのものの空性を証明するのではなく、そこへの所属が矛盾を導くことだけを示す。固定方程式が要求するのはまさにそれである。
 <!--/-->
@@ -601,7 +601,7 @@ The successor equation is a pair of conversions between membership in `a (suc n)
 <!--en-->
 Forward, the membership in the chain is first transported to membership in `# (suc n)`, and from there the `sucV` analysis applies, eliminating into the disjunction of the conclusion. In the first branch, membership in `# n` is transported back along the alignment at stage `n` to membership in `a n`, and the truncated disjunction is introduced with the left injection. In the second branch, the path from `z` to `# n` is composed with the reverse alignment to give a path from `z` to `a n`, taking the right injection. Both branches produce truncated witnesses, so the result remains a mere disjunction, never a decided case.
 <!--zh-->
-正向，先把链中的成员资格搬到 `# (suc n)` 的成员资格，从那里适用 `sucV` 分析，消入结论的析取。第一分支中，`# n` 中的成员资格沿第 `n` 处的对齐搬回 `a n` 中的成员资格，用左注入引入截断析取。第二分支中，`z` 到 `# n` 的路径与反向对齐复合，得到 `z` 到 `a n` 的路径，取右注入。两个分支都产生截断见证，因此结果仍是纯粹的析取，绝不是已判定的情形。
+正向，先把链中的成员关系事实搬到 `# (suc n)` 的成员关系事实，从那里适用 `sucV` 分析，消入结论的析取。第一分支中，`# n` 中的成员关系事实沿第 `n` 处的对齐搬回 `a n` 中的成员关系事实，用左注入引入截断析取。第二分支中，`z` 到 `# n` 的路径与反向对齐复合，得到 `z` 到 `a n` 的路径，取右注入。两个分支都产生截断见证，因此结果仍是纯粹的析取，绝不是已判定的情形。
 <!--ja-->
 順方向では、まず列での所属を `# (suc n)` への所属へ輸送し、そこで `sucV` の分析が適用され、結論の選言へ消去される。第一の枝では、`# n` での所属が段階 `n` での整列に沿って `a n` での所属へ運び戻され、左の注入で切り詰められた選言が導入される。第二の枝では、`z` から `# n` へのパスが逆向きの整列と合成され、`z` から `a n` へのパスが得られ、右の注入を取る。両枝とも切り詰められた証人を生むので、結果はあくまで純粋な選言であり、判定された場合ではない。
 <!--/-->
@@ -617,7 +617,7 @@ Forward, the membership in the chain is first transported to membership in `# (s
 <!--en-->
 Backward has two truncated cases to handle, so the eliminator runs into the membership proposition of `a (suc n)`. In the first case, the member of `a n` is transported to `# n`, the lemma `∈sucV-inl` puts it into the library successor, and the result is transported back along the alignment at the successor stage. The alignment is used in both directions at every step, which is why it was taken as a hypothesis for all `n` at once.
 <!--zh-->
-反向要处理两个截断情形，因此消去器进入 `a (suc n)` 的成员命题。第一情形中，`a n` 的成员被搬到 `# n`，引理 `∈sucV-inl` 把它放进库后继，再沿后继处的对齐搬回。对齐在每一步都被双向使用，这正是把它作为对所有 `n` 一并给出的假设的原因。
+反向要处理两个截断情形，因此消去器进入 `a (suc n)` 的成员关系命题。第一情形中，`a n` 的元素被搬到 `# n`，引理 `∈sucV-inl` 把它放进库后继，再沿后继处的对齐搬回。对齐在每一步都被双向使用，这正是把它作为对所有 `n` 一并给出的假设的原因。
 <!--ja-->
 逆方向では二つの切り詰められた場合を扱うので、消去子は `a (suc n)` の所属の命題へ入る。第一の場合、`a n` の元は `# n` へ運ばれ、補題 `∈sucV-inl` がそれをライブラリの後続に入れ、結果は後続の段階での整列に沿って運び戻される。整列は各段階で両方向に使われる。これが、すべての `n` に対して一度に仮定として取られた理由である。
 <!--/-->
@@ -656,11 +656,11 @@ The power set is the one construction the library's own header disclaims, and Ω
 <!--zh-->
 ## 其余公理所需的假设
 
-还剩两个字段，全分离与幂集，它们提出的是两个不同的宇宙大小问题。全分离要把任意的满足命题 `(y ∷ []) ⊨ φ` (住在 `Type (ℓ-suc ℓ)`) 变小，而没有 Δ₀ 见证可以徒手完成；所需的命题换级逐点为每个这样的命题给出小代表，从而使小性适配器 `separateFromSmall` 得以应用。幂集提出的是另一类问题：`a` 的候选子集是以 `⟪ a ⟫` 为索引的成员命题族，要从它造出集合，每条命题必须编码进一个固定的小类型。`ΩResizing` 恰好给出可从中提取这些编码、解码及所需往返律的低层类型。后面的装配只以命题宇宙换级为参数，经典情形经 `LEM→ΩResizing` 得到它。
+还剩两个字段，全分离与幂集，它们提出的是两个不同的宇宙大小问题。全分离要把任意的满足命题 `(y ∷ []) ⊨ φ` (住在 `Type (ℓ-suc ℓ)`) 变小，而没有 Δ₀ 见证可以徒手完成；所需的命题换级逐点为每个这样的命题给出小代表，从而使小性适配器 `separateFromSmall` 得以应用。幂集提出的是另一类问题：`a` 的候选子集是以 `⟪ a ⟫` 为索引的成员关系命题族，要从它造出集合，每条命题必须编码进一个固定的小类型。`ΩResizing` 恰好给出可从中提取这些编码、解码及所需往返律的低层类型。后面的装配只以命题宇宙换级为参数，经典情形经 `LEM→ΩResizing` 得到它。
 
 ## 幂集
 
-幂集是库文件头明确声明不提供的那一件构造，而命题宇宙换级正是构造它的材料。`a` 的候选子集由进入低层类型 `Ω` 的特征函数 `⟪ a ⟫ → Ω` 描述；解码每个值 `χ m` 便得到索引 `m` 上的命题，凡该命题成立的索引所呈现的元素由 `sett` 收集成集合。证明建立两个收纳：函数选中的都落在给定子集内，子集的每个成员都被选中；第二个方向使用命题上「先编码再解码」的往返，再由外延性收尾。
+幂集是库文件头明确声明不提供的那一件构造，而命题宇宙换级正是构造它的材料。`a` 的候选子集由进入低层类型 `Ω` 的特征函数 `⟪ a ⟫ → Ω` 描述；解码每个值 `χ m` 便得到索引 `m` 上的命题，凡该命题成立的索引所呈现的元素由 `sett` 收集成集合。证明建立两个收纳：函数选中的都落在给定子集内，子集的每个元素都被选中；第二个方向使用命题上「先编码再解码」的往返，再由外延性收尾。
 <!--ja-->
 ## 残る公理に必要な仮定
 
@@ -779,7 +779,7 @@ A characteristic function `χ : ⟪ a ⟫ → Ω`{.Agda} now selects the indices
 <!--en-->
 The power set operation is itself a `sett`: the index type is the function type from `⟪ a ⟫` into `Ω`, and the family realizes each characteristic function as the set selected above. Membership in `𝒫V a` is therefore, merely, membership in one of the realized sets: a member arrives as a truncated pair of a characteristic function and a path from the set it selects to `x`. The forward direction of the specification shows that such an `x` is a subset of `a` in the ambient sense, the inclusion `⊆` of the hierarchy library rather than the structure's relation `⊆ˢ`; the passage between the two is kept separate and handled at the end.
 <!--zh-->
-幂集运算本身就是一次 `sett`：索引类型是从 `⟪ a ⟫` 到 `Ω` 的函数类型，族把每个特征函数实现为上文选出的集合。于是属于 `𝒫V a` 仅仅是属于某个实现的集合：成员以「特征函数加一条从它所选集合到 `x` 的路径」的截断对出现。规格的正向表明这样的 `x` 在环境意义下是 `a` 的子集，即层级库的包含 `⊆`，而非结构的关系 `⊆ˢ`；两者的换算被分开处理，留到最后。
+幂集运算本身就是一次 `sett`：索引类型是从 `⟪ a ⟫` 到 `Ω` 的函数类型，族把每个特征函数实现为上文选出的集合。于是属于 `𝒫V a` 仅仅是属于某个实现的集合：元素以「特征函数加一条从它所选集合到 `x` 的路径」的截断对出现。规格的正向表明这样的 `x` 在环境意义下是 `a` 的子集，即层级库的包含 `⊆`，而非结构的关系 `⊆ˢ`；两者的换算被分开处理，留到最后。
 <!--ja-->
 冪集合の操作そのものも `sett` である。添字型は `⟪ a ⟫` から `Ω` への関数型であり、族が各特性関数を上で選ばれた集合として実現する。したがって `𝒫V a` への所属とは、切り詰められた意味で、実現された集合のどれかへの所属である。すなわち、特性関数と、それが選ぶ集合から `x` へのパスの切り詰められた対として元が現れる。仕様の順方向は、そのような `x` が周辺の意味で `a` の部分集合であること、つまり階層のライブラリの包含 `⊆` であって構造の関係 `⊆ˢ` ではないことを示す。両者の仲立ちには別の段階を設け、最後に扱う。
 <!--/-->
@@ -796,7 +796,7 @@ The power set operation is itself a `sett`: the index type is the function type 
 <!--en-->
 The proof of `x ⊆ a` proceeds member by member, first eliminating the truncated membership in the power set. After transporting the membership of `y` in `x` back along the presenting path, it becomes small membership in the selected set `F a χ`; converting that through `∈∈ₛ` yields a presenting fiber, an index `m` together with a proof that `decode (χ m)` holds and a path identifying `y` with the presented element `⟪ a ⟫↪ m`.
 <!--zh-->
-`x ⊆ a` 的证明逐成员进行，先消去属于幂集的截断成员资格。沿呈现路径把 `y` 在 `x` 中的成员资格搬回后，它变成在所选集合 `F a χ` 中的小隶属；经 `∈∈ₛ` 转换后得到呈现纤维：索引 `m` 加上 `decode (χ m)` 成立的证明，以及一条把 `y` 与被呈现元素 `⟪ a ⟫↪ m` 等同的路径。
+`x ⊆ a` 的证明逐元素进行，先消去属于幂集的截断成员关系事实。沿呈现路径把 `y` 在 `x` 中的成员关系事实搬回后，它变成在所选集合 `F a χ` 中的小成员关系；经 `∈∈ₛ` 转换后得到呈现纤维：索引 `m` 加上 `decode (χ m)` 成立的证明，以及一条把 `y` 与被呈现元素 `⟪ a ⟫↪ m` 等同的路径。
 <!--ja-->
 `x ⊆ a` の証明は元ごとに進み、まず冪集合への切り詰められた所属を消去する。`y` の `x` への所属を呈示するパスに沿って運び戻すと、それは選ばれた集合 `F a χ` への小さな所属になり、`∈∈ₛ` で変換すると呈示するファイバーが得られる。すなわち添字 `m` と、`decode (χ m)` が成り立つことの証明、さらに `y` を呈示された要素 `⟪ a ⟫↪ m` と同一視するパスである。
 <!--/-->
@@ -815,9 +815,9 @@ The remaining work is to turn that fiber into membership of `y` in `a`, which th
 
 Backward builds the witness for membership in the power set, and it needs no choice. The characteristic function `χₓ` is recovered explicitly: the index `m` is sent to the encoding `encode` of the small membership of the presented element `⟪ a ⟫↪ m` in `x`, a function because the small membership fiber of the embedding is untruncated. The truncated pair then packages `χₓ` with the assertion, proved by extensionality from the two inclusions `s1` and `s2`, that the set `χₓ` selects equals `x`.
 <!--zh-->
-剩下的工作是把该纤维变成 `y` 在 `a` 中的成员资格，沿路径的搬运正好完成这一点，因为 `a` 的被呈现元素按构造就是 `a` 的成员。目标始终取命题值，所以两次截断消去都是合法的。于是幂集的任何成员，无论怎样呈现，都只收集 `a` 的成员。
+剩下的工作是把该纤维变成 `y` 在 `a` 中的成员关系事实，沿路径的搬运正好完成这一点，因为 `a` 的被呈现元素按构造就是 `a` 的元素。目标始终取命题值，所以两次截断消去都是合法的。于是幂集的任何元素，无论怎样呈现，都只收集 `a` 的元素。
 
-反向为属于幂集构造见证，且无需选择。特征函数 `χₓ` 被显式回收：索引 `m` 被送到被呈现元素 `⟪ a ⟫↪ m` 在 `x` 中的小隶属的编码 `encode`。这是函数操作而非选择，因为嵌入的小隶属纤维不加截断。截断的对随后把 `χₓ` 与「`χₓ` 所选的集合等于 `x`」的断言打包，该断言由两个收纳 `s1`、`s2` 经外延性建立。
+反向为属于幂集构造见证，且无需选择。特征函数 `χₓ` 被显式回收：索引 `m` 被送到被呈现元素 `⟪ a ⟫↪ m` 在 `x` 中的小成员关系的编码 `encode`。这是函数操作而非选择，因为嵌入的小成员关系纤维不加截断。截断的对随后把 `χₓ` 与「`χₓ` 所选的集合等于 `x`」的断言打包，该断言由两个收纳 `s1`、`s2` 经外延性建立。
 <!--ja-->
 残りの作業は、そのファイバーを `y` の `a` への所属に変えることで、パスに沿う輸送がこれを果たす。`a` の呈示された要素は構成によって `a` の元だからである。目標は終始命題値のままなので、二つの切り詰めの消去はいずれも正当である。こうして冪集合の元は、どのように呈示されようと、`a` の元だけを集める。
 
@@ -835,7 +835,7 @@ Backward builds the witness for membership in the power set, and it needs no cho
 <!--en-->
 The first inclusion shows that the set selected by `χₓ` adds nothing beyond `x`. A small member of `F a χₓ` carries an index `m`, a proof that `decode (χₓ m)` holds, and a presenting path. Since `χₓ m` was defined as the encoding of the membership `⟪ a ⟫↪ m ∈ₛ x`, the round trip `decode∘encode` rewrites the decoded proof back into exactly that membership, and the presenting path transports it onto `y`. So every member of the selected set is a member of `x`.
 <!--zh-->
-第一个收纳表明 `χₓ` 所选的集合没有超出 `x` 的东西。`F a χₓ` 的小成员带有索引 `m`、`decode (χₓ m)` 成立的证明，以及一条呈现路径。由于 `χₓ m` 本就定义为成员资格 `⟪ a ⟫↪ m ∈ₛ x` 的编码，往返 `decode∘encode` 把解码后的证明改写回恰是该成员资格，呈现路径再把它搬运到 `y` 上。于是所选集合的每个成员都是 `x` 的成员。
+第一个收纳表明 `χₓ` 所选的集合没有超出 `x` 的东西。`F a χₓ` 的小元素带有索引 `m`、`decode (χₓ m)` 成立的证明，以及一条呈现路径。由于 `χₓ m` 本就定义为成员关系事实 `⟪ a ⟫↪ m ∈ₛ x` 的编码，往返 `decode∘encode` 把解码后的证明改写回恰是该成员关系事实，呈现路径再把它搬运到 `y` 上。于是所选集合的每个元素都是 `x` 的元素。
 <!--ja-->
 第一の包含は、`χₓ` が選ぶ集合が `x` を超えるものを何も加えないことを示す。`F a χₓ` の小さな元は、添字 `m`、`decode (χₓ m)` が成り立つことの証明、そして呈示するパスを伴う。`χₓ m` はもともと所属 `⟪ a ⟫↪ m ∈ₛ x` の符号として定義されているので、往復 `decode∘encode` が復号された証明をまさにその所属へ書き戻し、呈示するパスがそれを `y` の上へ運ぶ。したがって選ばれた集合のすべての元は `x` の元である。
 <!--/-->
@@ -851,7 +851,7 @@ The first inclusion shows that the set selected by `χₓ` adds nothing beyond `
 <!--en-->
 The second inclusion must go the other way: from an arbitrary member `y` of `x`, produce a small member of `F a χₓ`. The inclusion hypothesis `sub` first gives a presenting fiber for `y` in `a`, and its second component certifies that the presented element and `y` have the same members. The embedding's presentation is used in both directions here, so nothing needs to be chosen: the fiber is untruncated data, and the path `q` extracting `⟪ a ⟫↪ m₀ ≡ y` will be available as an ordinary term.
 <!--zh-->
-第二个收纳要反向进行：从 `x` 的任意成员 `y`，造出 `F a χₓ` 的一个小成员。收纳前提 `sub` 先给出 `y` 在 `a` 中的呈现纤维，其第二分量证明被呈现元素与 `y` 有相同的成员。这里双向使用嵌入的呈现，因此无需选取任何东西：纤维是不加截断的数据，抽出 `⟪ a ⟫↪ m₀ ≡ y` 的路径 `q` 将作为普通项可用。
+第二个收纳要反向进行：从 `x` 的任意元素 `y`，造出 `F a χₓ` 的一个小元素。收纳前提 `sub` 先给出 `y` 在 `a` 中的呈现纤维，其第二分量证明被呈现元素与 `y` 有相同的元素。这里双向使用嵌入的呈现，因此无需选取任何东西：纤维是不加截断的数据，抽出 `⟪ a ⟫↪ m₀ ≡ y` 的路径 `q` 将作为普通项可用。
 <!--ja-->
 第二の包含は逆向きに進める。`x` の任意の元 `y` から、`F a χₓ` の小さな元を作るのである。包含の仮定 `sub` はまず `a` における `y` の呈示するファイバーを与え、その第二成分は、呈示された要素と `y` が同じ元を持つことを証明する。ここでは埋め込みの提示を両方向で使うので、何も選ぶ必要はない。ファイバーは切り詰められていないデータであり、`⟪ a ⟫↪ m₀ ≡ y` を取り出すパス `q` は普通の項として利用できる。
 <!--/-->
@@ -867,7 +867,7 @@ The second inclusion must go the other way: from an arbitrary member `y` of `x`,
 <!--en-->
 The path `q` is obtained by applying `identityPrinciple` to the equal-members data of the inclusion hypothesis, so the presented element `⟪ a ⟫↪ m₀` equals `y`. Transporting the membership of `y` in `x` backwards along `q` lands it at the presented element, and that is precisely the proposition that `decode (χₓ m₀)` decodes to, by the round trip again: `χₓ m₀` was defined as the encoding of exactly this membership. So the pair `(m₀ , h)` of the index with the transported proof inhabits the type defining `F a χₓ`, and it witnesses `y` in the selected set. With both inclusions in place, `power-spec` composes this equivalence with the pointwise exchange between the ambient inclusion `⊆` and the structure's subset relation `⊆ˢ`, giving the field `hasPower` a set whose membership is, as truth values, the subset relation the record states.
 <!--zh-->
-路径 `q` 由对收纳前提的等成员数据应用 `identityPrinciple` 得到，于是被呈现元素 `⟪ a ⟫↪ m₀` 等于 `y`。把 `y` 在 `x` 中的成员资格沿 `q` 反向搬运，落到被呈现元素上；由往返，这恰是 `decode (χₓ m₀)` 解码出的命题：`χₓ m₀` 本就定义为恰好这个成员资格的编码。于是索引与搬运后证明构成的对 `(m₀ , h)` 居于定义 `F a χₓ` 的类型中，见证 `y` 在所选集合里。两个收纳就位后，`power-spec` 把这条等价与「环境包含 `⊆` 与结构的子集关系 `⊆ˢ` 之间逐点交换」复合，为字段 `hasPower` 给出一个集合，其隶属作为真值等于 record 所陈述的子集关系。
+路径 `q` 由对收纳前提的等元素数据应用 `identityPrinciple` 得到，于是被呈现元素 `⟪ a ⟫↪ m₀` 等于 `y`。把 `y` 在 `x` 中的成员关系事实沿 `q` 反向搬运，落到被呈现元素上；由往返，这恰是 `decode (χₓ m₀)` 解码出的命题：`χₓ m₀` 本就定义为恰好这个成员关系事实的编码。于是索引与搬运后证明构成的对 `(m₀ , h)` 居于定义 `F a χₓ` 的类型中，见证 `y` 在所选集合里。两个收纳就位后，`power-spec` 把这条等价与「环境包含 `⊆` 与结构的子集关系 `⊆ˢ` 之间逐点交换」复合，为字段 `hasPower` 给出一个集合，其成员关系作为真值等于 record 所陈述的子集关系。
 <!--ja-->
 パス `q` は、包含の仮定の「元が同じ」というデータに `identityPrinciple` を適用して得られ、呈示された要素 `⟪ a ⟫↪ m₀` が `y` に等しいことが分かる。`x` での `y` の所属を `q` の逆向きに沿って運ぶと呈示された要素に着地し、これが往復によって、まさに `decode (χₓ m₀)` が復号する命題である。`χₓ m₀` はもともとこの所属の符号として定義されていたからである。よって添字と運ばれた証明の対 `(m₀ , h)` は `F a χₓ` を定める型の要素となり、選ばれた集合への `y` の所属の証人になる。両包含が揃うと、`power-spec` はこの同値を、周辺の包含 `⊆` と構造の部分集合の関係 `⊆ˢ` との各点の交換と合成し、欄 `hasPower` に、その所属が真理値としてレコードの述べる部分集合の関係に等しい集合を与える。
 <!--/-->
@@ -884,7 +884,7 @@ The path `q` is obtained by applying `identityPrinciple` to the equal-members da
 <!--en-->
 The specification `power-spec` composes two equalities of truth values. The first is the equivalence just proved: membership in `𝒫V a` equals the ambient inclusion `x ⊆ a`, which quantifies over actual members and is not truncated. The second converts the ambient inclusion into the structure's own subset relation `x ⊆ˢ a`, stated through the structure's membership `∈ˢ`: given a function sending each ordinary member of `x` to an ordinary member of `a`, the two directions of `∈∈ₛ` exchange the membership notations pointwise in both directions. The composite is the power-set field's data: a set `𝒫V a` whose membership, as a truth value, is exactly the subset relation the record states. Note where each smallness input entered: separation consumed `resizing` pointwise, while the power set was built from the low-level type extracted from `ΩResizing`.
 <!--zh-->
-规格 `power-spec` 复合两个真值等式。第一个是刚证的主等价：属于 `𝒫V a` 等于环境意义下的包含 `x ⊆ a`，后者量化于实际成员之上，不加截断。第二个把环境包含转换成结构自己的子集关系 `x ⊆ˢ a`，它经由结构的成员关系 `∈ˢ` 陈述：给定把 `x` 的每个普通成员送到 `a` 的普通成员的函数，`∈∈ₛ` 的两个方向逐点互换两种隶属记号。复合所得正是幂集字段收到的数据：集合 `𝒫V a` 的隶属作为真值恰是 record 所述的子集关系。也请注意各种大小控制进入之处：分离逐点消耗 `resizing`，而幂集直接使用 `ΩResizing` 给出的低层呈现。
+规格 `power-spec` 复合两个真值等式。第一个是刚证的主等价：属于 `𝒫V a` 等于环境意义下的包含 `x ⊆ a`，后者量化于实际元素之上，不加截断。第二个把环境包含转换成结构自己的子集关系 `x ⊆ˢ a`，它经由结构的成员关系 `∈ˢ` 陈述：给定把 `x` 的每个普通元素送到 `a` 的普通元素的函数，`∈∈ₛ` 的两个方向逐点互换两种成员关系记号。复合所得正是幂集字段收到的数据：集合 `𝒫V a` 的成员关系作为真值恰是 record 所述的子集关系。也请注意各种大小控制进入之处：分离逐点消耗 `resizing`，而幂集直接使用 `ΩResizing` 给出的低层呈现。
 <!--ja-->
 仕様 `power-spec` は二つの真理値の等式を合成する。一つ目は今示した本質的な同値、すなわち `𝒫V a` への所属と、実際の元の上で量化され切り詰められていない包含 `x ⊆ a` との一致である。二つ目は、その包含を構造自身の部分集合の関係 `x ⊆ˢ a`、つまり構造の所属 `∈ˢ` を通して述べた形へ変換する。`x` の各通常の元を `a` の通常の元へ送る関数が与えられれば、`∈∈ₛ` の両方向が二つの所属の記法を各点で取り替える。その合成こそ、冪集合のフィールドが受け取るデータである。集合 `𝒫V a` の所属が、真理値として、record の述べる部分集合の関係にちょうど等しいということである。それぞれの小ささの入力が入った場所にも注意してほしい。分出は点ごとに `resizing` を消費し、冪集合は `ΩResizing` から取り出した低いレベルの型だけで組み立てられた。
 <!--/-->
@@ -976,7 +976,7 @@ The first group of entries reuses the chapter's opening conversions. For the emp
 <!--en-->
 The next two entries consume the middle constructions. The replacement field receives the functionality hypothesis `fc` and takes as realizer the image `replaceImage` with its specification; the power-set field takes `𝒫V a` with `power-spec`, the construction built from Ω-resizing alone. The numeral chain then occupies three entries: the operation `numeralV` itself, and the two pinning equations, `numeral-zero` saying that nothing inhabits `numeralV zero`, and `numeral-suc` giving the member-or-predecessor dichotomy for `numeralV (suc n)`. Both equations come from the `NumPin` lemmas applied to the alignment `numeralV≡#`, so they carry exactly the content of that alignment plus the `sucV` case analysis.
 <!--zh-->
-接下来两个条目消费中段的构造。替换字段接收函数性前提 `fc`，以像 `replaceImage` 及其规格为实现者；幂集字段取 `𝒫V a` 及 `power-spec`，即仅由命题宇宙换级造出的构造。数码链占据三项：运算 `numeralV` 本身，以及两条固定方程，`numeral-zero` 说没有元素居于 `numeralV zero`，`numeral-suc` 给出 `numeralV (suc n)` 的「成员或前驱」二分。两条方程都来自把 `NumPin` 引理应用于对齐 `numeralV≡#`，因此其内容恰是该对齐加上 `sucV` 分情形分析。
+接下来两个条目消费中段的构造。替换字段接收函数性前提 `fc`，以像 `replaceImage` 及其规格为实现者；幂集字段取 `𝒫V a` 及 `power-spec`，即仅由命题宇宙换级造出的构造。数码链占据三项：运算 `numeralV` 本身，以及两条固定方程，`numeral-zero` 说没有元素居于 `numeralV zero`，`numeral-suc` 给出 `numeralV (suc n)` 的「元素或前驱」二分。两条方程都来自把 `NumPin` 引理应用于对齐 `numeralV≡#`，因此其内容恰是该对齐加上 `sucV` 分情形分析。
 <!--ja-->
 続く二つの項目は、中盤の構成を使う。置換のフィールドは関数性の仮定 `fc` を受け取り、像 `replaceImage` とその仕様を実現者とする。冪集合のフィールドは `𝒫V a` と `power-spec`、つまり命題宇宙リサイズだけから作った構成を取る。数項の列は三つの項目を占める。演算 `numeralV` 自身と、二つの固定方程式である。`numeral-zero` は `numeralV zero` には元が住まないことを、`numeral-suc` は `numeralV (suc n)` の元が前者の元か前者と等しいかの二分であることを述べる。どちらの方程式も、整列 `numeralV≡#` に対する `NumPin` の補題の適用から来るため、その内容はちょうどこの整列と `sucV` の場合分けである。
 <!--/-->
@@ -992,7 +992,7 @@ The next two entries consume the middle constructions. The replacement field rec
 <!--en-->
 The last field is strong infinity, realized by `ω` with its specification: every member of `ω` is merely a model numeral, which is what the record demands. The auxiliary `one` records the general principle that closes every existence field. For any class `Q : S → hProp (ℓ-suc ℓ)`, an element of `SetOf Q`, that is a realizing set with its specification, already determines an element of `isContr (SetOf Q)`, because `setOf-unique` applied to extensionality contracts all realizers to the given one. So every explicit realizer above becomes the contractibility data its field requires, and extensionality is quoted once in `one` rather than repeated in each entry.
 <!--zh-->
-最后一个字段是强无穷，由 `ω` 及其规格实现：`ω` 的每个成员都仅仅是某个模型数码，这正是 record 的要求。辅助定义 `one` 用一行记录收尾所有存在性字段的一般原则。对任何类 `Q : S → hProp (ℓ-suc ℓ)`，`SetOf Q` 的一个元素，即实现集合连同其规格，已足以确定 `isContr (SetOf Q)` 的元素，因为把 `setOf-unique` 应用于外延性，就能把一切实现者收缩到给定者。于是上面每个显式实现者都变成其字段所需的紧缩数据，外延性在 `one` 中引用一次，而不必在每个条目里重复。
+最后一个字段是强无穷，由 `ω` 及其规格实现：`ω` 的每个元素都仅仅是某个模型数码，这正是 record 的要求。辅助定义 `one` 用一行记录收尾所有存在性字段的一般原则。对任何类 `Q : S → hProp (ℓ-suc ℓ)`，`SetOf Q` 的一个元素，即实现集合连同其规格，已足以确定 `isContr (SetOf Q)` 的元素，因为把 `setOf-unique` 应用于外延性，就能把一切实现者收缩到给定者。于是上面每个显式实现者都变成其字段所需的紧缩数据，外延性在 `one` 中引用一次，而不必在每个条目里重复。
 <!--ja-->
 最後のフィールドは強い無限で、`ω` とその仕様が実現する。`ω` の各元は単にどこかのモデル数項と等しい、というのが record の要求である。補助の `one` は、すべての存在のフィールドを締めくくる一般原則を一行で記録する。任意のクラス `Q : S → hProp (ℓ-suc ℓ)` に対し、`SetOf Q` の元、すなわち実現する集合とその仕様は、`setOf-unique` を外延性に適用すればすべての実現者が与えられたものへ収縮するため、`isContr (SetOf Q)` の元をすでに定める。したがって上の各明示的な実現者は、そのフィールドの要求する可縮データになり、外延性は各項目で繰り返されず `one` で一度引用される。
 <!--/-->
@@ -1037,7 +1037,7 @@ Excluded middle does not yield choice, so the last axiom of ZFC is taken as a se
 <!--zh-->
 ## 另行假设选择公理
 
-排中律推不出选择，因此 ZFC 的最后一条公理被另立为假设，选择集公理由它证明。接口是 `SetChoice`{.Agda}：对 h-集合 `X : Type ℓ` 与取值于 h-集合的族 `B : X → Type ℓ`，若每个取值仅仅居有，则整个 `X` 上存在选择函数，以截断的形式给出。下面的引理假设该接口在层级 `ℓ` 的一个实例，连同固定层级结构 `𝒮ᵥ` 上的一个 `isZFModel`，并从中使用交 `∩` 及其规格。被施加选择的族是一个小呈现：索引类型是 `⟪ a ⟫`，它是一个 h-集合；索引 `m` 上的纤维是 `m` 所呈现的集合 `⟪ ⟪ a ⟫↪ m ⟫`。因此选择选出的是呈现索引，而非集合的元素。由被选索引经一次 `sett` 造出集合 `c`；再由两两不交前提 `disj`，经由模型的交证明 `c` 与 `a` 的每个成员的交是可缩从而唯一的点集。截断在设计上是不对称的：选择集本身仅仅是存在，而每个交都携带显式的 `isContr` 数据。最终定理把一个 `SetChoice (ℓ-suc ℓ)` 实例用两次：`SetChoice→LEM` 把它转为 `LEM (ℓ-suc ℓ)` 供 ZF 部分使用，`lowerSetChoice` 把它降到 `SetChoice ℓ` 供选择引理使用。所以 `V⊨ZFC` 单凭选择而证；排中律由选择经 Diaconescu 定理回收，而非相反。
+排中律推不出选择，因此 ZFC 的最后一条公理被另立为假设，选择集公理由它证明。接口是 `SetChoice`{.Agda}：对 h-集合 `X : Type ℓ` 与取值于 h-集合的族 `B : X → Type ℓ`，若每个取值仅仅居有，则整个 `X` 上存在选择函数，以截断的形式给出。下面的引理假设该接口在层级 `ℓ` 的一个实例，连同固定层级结构 `𝒮ᵥ` 上的一个 `isZFModel`，并从中使用交 `∩` 及其规格。被施加选择的族是一个小呈现：索引类型是 `⟪ a ⟫`，它是一个 h-集合；索引 `m` 上的纤维是 `m` 所呈现的集合 `⟪ ⟪ a ⟫↪ m ⟫`。因此选择选出的是呈现索引，而非集合的元素。由被选索引经一次 `sett` 造出集合 `c`；再由两两不交前提 `disj`，经由模型的交证明 `c` 与 `a` 的每个元素的交是可缩从而唯一的点集。截断在设计上是不对称的：选择集本身仅仅是存在，而每个交都携带显式的 `isContr` 数据。最终定理把一个 `SetChoice (ℓ-suc ℓ)` 实例用两次：`SetChoice→LEM` 把它转为 `LEM (ℓ-suc ℓ)` 供 ZF 部分使用，`lowerSetChoice` 把它降到 `SetChoice ℓ` 供选择引理使用。所以 `V⊨ZFC` 单凭选择而证；排中律由选择经 Diaconescu 定理回收，而非相反。
 <!--ja-->
 ## 選択公理を別に仮定する
 
@@ -1047,7 +1047,7 @@ Excluded middle does not yield choice, so the last axiom of ZFC is taken as a se
 <!--en-->
 Two preliminary facts feed the choice-set construction. The first concerns the index type at which choice will be applied. Each presentation type `⟪ a ⟫` is an h-set: it embeds into the hierarchy through `⟪ a ⟫↪`, whose embedding property `isEmb⟪ a ⟫↪` was recorded when the presentation was introduced, and the hierarchy itself is an h-set by `setIsSet`. A general cubical result, `Embedding-into-isSet→isSet`, transfers the h-set condition back along an embedding, so `isSet⟪ a ⟫` holds for every set `a`. Equality types between indices are therefore propositions. The same result, applied to each member `⟪ a ⟫↪ m`, shows that every value `⟪ ⟪ a ⟫↪ m ⟫` of the family is an h-set, supplying the second condition of `SetChoice`.
 <!--zh-->
-选择集构造要用到两条预备事实。第一条关乎施加选择的索引类型。每个呈现类型 `⟪ a ⟫` 都是 h-集合：它经 `⟪ a ⟫↪` 嵌入层级，而嵌入性质 `isEmb⟪ a ⟫↪` 在引入该呈现时已记录；层级本身由 `setIsSet` 是 h-集合。cubical 的一般结果 `Embedding-into-isSet→isSet` 沿嵌入把 h-集合性传回，于是对每个集合 `a` 都有 `isSet⟪ a ⟫`。索引之间的相等类型因此都是命题。将同一结果应用于每个成员 `⟪ a ⟫↪ m`，还可得族的每个取值 `⟪ ⟪ a ⟫↪ m ⟫` 都是 h-集合，满足 `SetChoice` 的第二项条件。
+选择集构造要用到两条预备事实。第一条关乎施加选择的索引类型。每个呈现类型 `⟪ a ⟫` 都是 h-集合：它经 `⟪ a ⟫↪` 嵌入层级，而嵌入性质 `isEmb⟪ a ⟫↪` 在引入该呈现时已记录；层级本身由 `setIsSet` 是 h-集合。cubical 的一般结果 `Embedding-into-isSet→isSet` 沿嵌入把 h-集合性传回，于是对每个集合 `a` 都有 `isSet⟪ a ⟫`。索引之间的相等类型因此都是命题。将同一结果应用于每个元素 `⟪ a ⟫↪ m`，还可得族的每个取值 `⟪ ⟪ a ⟫↪ m ⟫` 都是 h-集合，满足 `SetChoice` 的第二项条件。
 <!--ja-->
 選択集合の構成には二つの準備的事実が使われる。第一は、選択を適用する添字の型に関するものである。各提示の型 `⟪ a ⟫` は h-集合である。`⟪ a ⟫↪` を通して階層へ埋め込まれ、その埋め込みの性質 `isEmb⟪ a ⟫↪` は提示の導入時に記録済みであり、階層自身は `setIsSet` により h-集合だからである。cubical の一般結果 `Embedding-into-isSet→isSet` が埋め込みに沿って h-集合性を引き戻すので、任意の集合 `a` に対して `isSet⟪ a ⟫` が成る。したがって添字の間の等号の型はすべて命題である。同じ結果を各要素 `⟪ a ⟫↪ m` に適用すると、族の各値 `⟪ ⟪ a ⟫↪ m ⟫` も h-集合となり、`SetChoice` の第二の条件も満たされる。
 <!--/-->
@@ -1090,7 +1090,7 @@ module ChoiceLemma (zf : isZFModel) (ac : SetChoice ℓ) where
 <!--en-->
 The lemma `choice` states the classical choice-set situation. Its hypotheses: `inh` says each member `x` of `a` is merely inhabited, so the family consists of nonempty sets; `disj` says that two members of `a` sharing any element, even merely, are already equal, so the family is pairwise disjoint. The conclusion is a **merely existing** set `c` such that for each member `x` of `a` the type of points meeting `c ∩ x` is contractible. The truncation is asymmetric: the choice set itself is not given as data, only its truncation is inhabited, while the uniqueness of each meeting point is explicit `isContr` data.
 <!--zh-->
-引理 `choice` 陈述经典的选择集情形。前提是：`inh` 说 `a` 的每个成员 `x` 仅仅居有，故族由非空集组成；`disj` 说 `a` 的两个成员哪怕仅仅共享一个元素就已相等，故族两两不交。结论是一个**仅仅存在**的集合 `c`，使得对 `a` 的每个成员 `x`，与 `c ∩ x` 相交的点的类型是紧缩的。截断是不对称的：选择集本身不作为数据给出，只有其截断居有；而每个交点的唯一性却是显式的 `isContr` 数据。
+引理 `choice` 陈述经典的选择集情形。前提是：`inh` 说 `a` 的每个元素 `x` 仅仅居有，故族由非空集组成；`disj` 说 `a` 的两个元素哪怕仅仅共享一个元素就已相等，故族两两不交。结论是一个**仅仅存在**的集合 `c`，使得对 `a` 的每个元素 `x`，与 `c ∩ x` 相交的点的类型是紧缩的。截断是不对称的：选择集本身不作为数据给出，只有其截断居有；而每个交点的唯一性却是显式的 `isContr` 数据。
 <!--ja-->
 補題 `choice` は古典的な選択集合の状況を述べる。仮定は次のとおりである。`inh` は `a` の各元 `x` が単に居住することを言い、族は空でない集合からなる。`disj` は、`a` の二つの元が単に共通の元を共有するだけですでに等しいことを言い、族は互いに素である。結論は、**単に存在する**集合 `c` で、`a` の各元 `x` に対して交 `c ∩ x` の点の型が緊縮的であるというものである。切り詰めは非対称である。選択集合そのものはデータとして与えられず、その切り詰めが居住するだけである。一方、各交点の一意性は明示的な `isContr` のデータである。
 <!--/-->
@@ -1106,7 +1106,7 @@ The lemma `choice` states the classical choice-set situation. Its hypotheses: `i
 <!--en-->
 The proof applies the choice instance at the small presentation of the family, not at the family itself. The index type is `⟪ a ⟫`, an h-set by the first preliminary fact; the family is `λ m → ⟪ ⟪ a ⟫↪ m ⟫`, the set presented by each index. Each value is an h-set by `isSet⟪_⟫`{.Agda}; what remains is to show it merely inhabited, which is the role of `pick`: for each index `m`, a member of the presented set `⟪ a ⟫↪ m` merely exists by `inh` at the member that `memb a m` certifies, and `∈-asFiber` extracts from that membership an actual index into the presentation of `⟪ a ⟫↪ m`. The truncation on the input is preserved throughout, so `pick` never claims to choose a point inside a member of `a`; it only re-indexes the mere existence.
 <!--zh-->
-证明把选择实例施加在族的小呈现上，而非族本身。索引类型是 `⟪ a ⟫`，由第一条预备事实它是 h-集合；族是 `λ m → ⟪ ⟪ a ⟫↪ m ⟫`，即每个索引所呈现的集合。每个取值由 `isSet⟪_⟫`{.Agda} 确认为 h-集合；剩下的只需证明其仅仅居有，这正是 `pick` 的作用：对每个索引 `m`，由 `inh` 在 `memb a m` 所证明的成员处得到所呈现集合 `⟪ a ⟫↪ m` 的成员仅仅存在，`∈-asFiber` 再从该成员资格提取指向 `⟪ a ⟫↪ m` 之呈现的实际索引。输入上的截断全程保持，所以 `pick` 从不宣称在 `a` 的成员内部选了点；它只是给单纯的存在重新编号。
+证明把选择实例施加在族的小呈现上，而非族本身。索引类型是 `⟪ a ⟫`，由第一条预备事实它是 h-集合；族是 `λ m → ⟪ ⟪ a ⟫↪ m ⟫`，即每个索引所呈现的集合。每个取值由 `isSet⟪_⟫`{.Agda} 确认为 h-集合；剩下的只需证明其仅仅居有，这正是 `pick` 的作用：对每个索引 `m`，由 `inh` 在 `memb a m` 所证明的元素处得到所呈现集合 `⟪ a ⟫↪ m` 的元素仅仅存在，`∈-asFiber` 再从该成员关系事实提取指向 `⟪ a ⟫↪ m` 之呈现的实际索引。输入上的截断全程保持，所以 `pick` 从不宣称在 `a` 的元素内部选了点；它只是给单纯的存在重新编号。
 <!--ja-->
 証明は、族そのものではなく族の小さな提示の上で選択の実例を適用する。添字の型は `⟪ a ⟫` で、第一の準備事実により h-集合である。族は `λ m → ⟪ ⟪ a ⟫↪ m ⟫`、つまり各添字が提示する集合である。各値は `isSet⟪_⟫`{.Agda} により h-集合である。残るのはそれぞれを単に居住させることで、それが `pick` の役目である。各添字 `m` に対し、`memb a m` が確かめる要素のところで `inh` が、提示された集合 `⟪ a ⟫↪ m` の要素の単なる存在を与え、`∈-asFiber` がその所属から `⟪ a ⟫↪ m` の提示への実際の添字を取り出す。入力の切り詰めは終始保存されるので、`pick` が `a` の要素の内部で点を選ぶと主張することはなく、単なる存在に添字を付け直すだけである。
 <!--/-->
@@ -1124,7 +1124,7 @@ The proof applies the choice instance at the small presentation of the family, n
 <!--en-->
 The choice function then returns, for each index `m`, an actual element `g m` of the presented set: choice on the h-set of indices yields untruncated data, an element of the presentation of `⟪ a ⟫↪ m`. The remainder `mk` packages this into the conclusion: a set `c` together with, for each member `x` of `a`, contractibility data for the type of points meeting `c ∩ x`. Because the choice function already produced untruncated data at the index level, `mk` is an ordinary function; the truncation reappears only when the whole package is wrapped by `map₁`. This is exactly why the choice set itself is merely existential while each intersection carries explicit `isContr` data.
 <!--zh-->
-选择函数随后对每个索引 `m` 返回所呈现集合的一个实际元素 `g m`：对索引之 h-集合的选择给出不加截断的数据，即 `⟪ a ⟫↪ m` 之呈现的一个元素。其余部分 `mk` 把它打包成结论：集合 `c`，加上对 `a` 的每个成员 `x`，与 `c ∩ x` 相交的点类型的紧缩数据。由于选择函数在索引层产生的已是不加截断的数据，`mk` 是普通函数；截断只在整体被 `map₁` 包装时重新出现。这正是选择集本身只是纯粹存在、而每个交都携带显式 `isContr` 数据的原因。
+选择函数随后对每个索引 `m` 返回所呈现集合的一个实际元素 `g m`：对索引之 h-集合的选择给出不加截断的数据，即 `⟪ a ⟫↪ m` 之呈现的一个元素。其余部分 `mk` 把它打包成结论：集合 `c`，加上对 `a` 的每个元素 `x`，与 `c ∩ x` 相交的点类型的紧缩数据。由于选择函数在索引层产生的已是不加截断的数据，`mk` 是普通函数；截断只在整体被 `map₁` 包装时重新出现。这正是选择集本身只是纯粹存在、而每个交都携带显式 `isContr` 数据的原因。
 <!--ja-->
 選択関数はその後、各添字 `m` に対して提示された集合の実際の要素 `g m` を返す。添字の h-集合上の選択は切り詰められていないデータ、すなわち `⟪ a ⟫↪ m` の提示の要素を与える。残りの `mk` はこれを結論へ包装する。集合 `c` と、`a` の各元 `x` に対する、交 `c ∩ x` の点の型の緊縮データである。選択関数が添字の水準で既に切り詰められていないデータを生んでいるため、`mk` は普通の関数であり、切り詰めが再び現れるのは全体が `map₁` で包まれるときだけである。選択集合そのものが単なる存在でありながら、各交わりが明示的な `isContr` のデータを持つのはまさにこのためである。
 <!--/-->
@@ -1140,7 +1140,7 @@ The choice function then returns, for each index `m`, an actual element `g m` of
 <!--en-->
 Inside `mk`, the chosen data is interpreted. The function `g m` returns an index into the presentation of `⟪ a ⟫↪ m`, so composing with that presentation yields an actual set `chosen m`, a member of the member indexed by `m`. The choice set is then `c = sett ⟪ a ⟫ chosen`: the sets picked for each index, gathered by one application of the hierarchy's set former.
 <!--zh-->
-在 `mk` 内部，把选出的数据加以解释。`g m` 返回的是指向 `⟪ a ⟫↪ m` 之呈现的索引，与该呈现复合后得到实际的集合 `chosen m`，即索引 `m` 所指成员的一个成员。选择集就是 `c = sett ⟪ a ⟫ chosen`：为每个索引选出的集合，经层级集合构造器的一次应用收集起来。
+在 `mk` 内部，把选出的数据加以解释。`g m` 返回的是指向 `⟪ a ⟫↪ m` 之呈现的索引，与该呈现复合后得到实际的集合 `chosen m`，即索引 `m` 所指元素的一个元素。选择集就是 `c = sett ⟪ a ⟫ chosen`：为每个索引选出的集合，经层级集合构造器的一次应用收集起来。
 <!--ja-->
 `mk` の内部で、選ばれたデータを解釈する。`g m` が返すのは `⟪ a ⟫↪ m` の提示への添字なので、その提示と合成すると実際の集合 `chosen m`、すなわち添字 `m` の指す要素の要素の一つが得られる。選択集合は `c = sett ⟪ a ⟫ chosen`、つまり各添字のために選ばれた集合を階層の集合構成子の一度の適用で集めたものである。
 <!--/-->
@@ -1156,7 +1156,7 @@ Inside `mk`, the chosen data is interpreted. The function `g m` returns an index
 <!--en-->
 One fact about `c` is recorded before uniqueness: each chosen set really is a member of the member it came from. This follows from the presentation: an index `g m` into the presentation of a set is, by `∈ₛ⟪ ⟫↪`, a small membership, and `∈∈ₛ` lifts it to the structural membership `⟨ chosen m ∈ˢ ⟪ a ⟫↪ m ⟩`. With the uniqueness helper of the second preliminary fact available, `uniq` becomes a three-part argument: a centre, a proof that the centre lies in the intersection, and a contraction of every other meeting point to the centre.
 <!--zh-->
-在唯一性之前先记录关于 `c` 的一条事实：每个被选集合确实是它来源成员的成员。这由呈现得出：指向集合呈现的索引 `g m` 经 `∈ₛ⟪ ⟫↪` 是小成员资格，`∈∈ₛ` 把它提升为结构性成员资格 `⟨ chosen m ∈ˢ ⟪ a ⟫↪ m ⟩`。有了第二条预备事实的唯一性辅助，`uniq` 成为三段论证：中心、中心居于交中的证明、以及把其他交点紧缩到中心的紧缩。
+在唯一性之前先记录关于 `c` 的一条事实：每个被选集合确实是它来源元素的元素。这由呈现得出：指向集合呈现的索引 `g m` 经 `∈ₛ⟪ ⟫↪` 是小成员关系事实，`∈∈ₛ` 把它提升为结构性成员关系事实 `⟨ chosen m ∈ˢ ⟪ a ⟫↪ m ⟩`。有了第二条预备事实的唯一性辅助，`uniq` 成为三段论证：中心、中心居于交中的证明、以及把其他交点紧缩到中心的紧缩。
 <!--ja-->
 一意性の前に、`c` についての一つの事実を記録する。選ばれた各集合は、その出身の要素の要素に確かになっている。これは提示から従う。集合の提示への添字 `g m` は `∈ₛ⟪ ⟫↪` により小さな所属であり、`∈∈ₛ` がそれを構造的な所属 `⟨ chosen m ∈ˢ ⟪ a ⟫↪ m ⟩` へ引き上げる。第二の準備事実の一意性の補助が揃うと、`uniq` は三段の議論になる。中心、中心が交に属することの証明、そして他の交点を中心へ緊縮する緊縮である。
 <!--/-->
@@ -1172,7 +1172,7 @@ One fact about `c` is recorded before uniqueness: each chosen set really is a me
 <!--en-->
 The centre is computed as follows. The member `x` of `a` has an untruncated presenting fiber: `∈-asFiber` gives an index `m₀` together with a path `mf .snd` presenting `x`. The meeting point is the set chosen at that index, `z₀ = chosen m₀`. This is where the untruncated fibers pay off again: recovering the index from membership is a function, not a choice, so the centre is well defined without any appeal to the choice instance.
 <!--zh-->
-中心这样计算。`a` 的成员 `x` 有不加截断的呈现纤维：`∈-asFiber` 给出索引 `m₀` 及呈现 `x` 的路径 `mf .snd`。交点取该索引处的被选集合 `z₀ = chosen m₀`。这正是不加截断的纤维再次发挥作用之处：从成员资格回收索引是函数而非选择，因此中心的定义无需调用选择实例。
+中心这样计算。`a` 的元素 `x` 有不加截断的呈现纤维：`∈-asFiber` 给出索引 `m₀` 及呈现 `x` 的路径 `mf .snd`。交点取该索引处的被选集合 `z₀ = chosen m₀`。这正是不加截断的纤维再次发挥作用之处：从成员关系事实回收索引是函数而非选择，因此中心的定义无需调用选择实例。
 <!--ja-->
 中心は次のように計算される。`a` の要素 `x` は切り詰められていない提示のファイバーを持ち、`∈-asFiber` が添字 `m₀` と `x` を提示するパス `mf .snd` を与える。交点はその添字で選ばれた集合 `z₀ = chosen m₀` である。ここで再び切り詰められていないファイバーが利く。所属から添字を復元するのは関数であって選択ではないため、中心の定義に選択の実例を呼ぶ必要はない。
 <!--/-->
@@ -1188,7 +1188,7 @@ The centre is computed as follows. The member `x` of `a` has an untruncated pres
 <!--en-->
 The centre must lie in the intersection `c ∩ x`. By the model's `∩-spec`, membership in an intersection is a truth value equal to the conjunction of membership in `c` and in `x`, and the proof transports along the symmetrized specification. Membership in `c` merely witnesses that `z₀` was chosen at index `m₀`, with the reflexive path, and `m₀` presents `x`; membership in `x` follows by transporting `chosen∈ m₀` along that presenting path. The two halves are conjoined as a truncated pair. The remaining duty is the contraction `uniqz`, which must send every `z` meeting `c ∩ x` to a path `z₀ ≡ z`.
 <!--zh-->
-中心必须居于交 `c ∩ x` 中。由模型的 `∩-spec`，交中的成员资格作为真值等于「属于 `c`」与「属于 `x`」的合取，证明沿对称化后的规格进行搬运。属于 `c` 的部分以自反路径仅仅见证 `z₀` 在索引 `m₀` 处被选，而 `m₀` 呈现 `x`；属于 `x` 的部分由把 `chosen∈ m₀` 沿该呈现路径搬运得到。两部分作为截断的序对合取。剩下的任务是紧缩 `uniqz`：它须把交 `c ∩ x` 中的每个 `z` 送到路径 `z₀ ≡ z`。
+中心必须居于交 `c ∩ x` 中。由模型的 `∩-spec`，交中的成员关系事实作为真值等于「属于 `c`」与「属于 `x`」的合取，证明沿对称化后的规格进行搬运。属于 `c` 的部分以自反路径仅仅见证 `z₀` 在索引 `m₀` 处被选，而 `m₀` 呈现 `x`；属于 `x` 的部分由把 `chosen∈ m₀` 沿该呈现路径搬运得到。两部分作为截断的序对合取。剩下的任务是紧缩 `uniqz`：它须把交 `c ∩ x` 中的每个 `z` 送到路径 `z₀ ≡ z`。
 <!--ja-->
 中心は交 `c ∩ x` に属さねばならない。モデルの `∩-spec` により、交への所属は真理値として「`c` への所属」と「`x` への所属」の連言に等しく、証明は対称化した仕様に沿って輸送する。`c` への所属は、自反パスとともに、`z₀` が添字 `m₀` で選ばれたことの単なる証明であり、`m₀` は `x` を提示する。`x` への所属は、`chosen∈ m₀` をその提示のパスに沿って輸送することで従う。二つの半分は切り詰められた組として連言される。残る仕事は緊縮 `uniqz` である。交 `c ∩ x` に属する各 `z` をパス `z₀ ≡ z` に送らねばならない。
 <!--/-->
@@ -1206,7 +1206,7 @@ The contraction is the delicate half. Take any `z` meeting `c ∩ x`; membership
 
 The accounting of the chapter's final theorem is exact. One instance of `SetChoice (ℓ-suc ℓ)` is used twice: `SetChoice→LEM` converts it into `LEM (ℓ-suc ℓ)`, `LEM→ΩResizing` turns that into the exact input of `V⊨ZF`, and `lowerSetChoice` lowers the same choice instance to `SetChoice ℓ`, which feeds `ChoiceLemma` for the choice-set part. The choice set exists merely, while each intersection is uniquely determined by explicit contractibility data.
 <!--zh-->
-紧缩是较精巧的一半。取交 `c ∩ x` 中的任意 `z`；交中的成员资格经 `∩-spec` 搬运为截断的合取 `zcx`。第一分量仅仅说 `z` 居于某个被选集合：即索引 `m` 加上从 `z` 到 `chosen m` 的作为 `c` 成员的路径 `q`。由 `chosen∈`，`chosen m` 是 `⟪ a ⟫↪ m` 的成员，沿 `q` 搬运便知 `z` 也是该成员的成员。于是 `z` 是 `a` 的成员 `x` 与 `⟪ a ⟫↪ m` 的公共元素，不交性随即适用：`disj` 给出路径 `x ≡ ⟪ a ⟫↪ m`。两个成员呈现同一集合，所以它们的呈现索引一致：呈现是嵌入，从而在索引上单射，把复合后的路径交给 `isEmbedding→Inj` 即得 `m ≡ m₀`。因此 `chosen m ≡ chosen m₀ = z₀`，与 `q` 复合即得紧缩路径 `z₀ ≡ z`。目标是 h-集合的元素之间的路径，因而是命题，这正允许在此消去截断。
+紧缩是较精巧的一半。取交 `c ∩ x` 中的任意 `z`；交中的成员关系事实经 `∩-spec` 搬运为截断的合取 `zcx`。第一分量仅仅说 `z` 居于某个被选集合：即索引 `m` 加上从 `z` 到 `chosen m` 的作为 `c` 元素的路径 `q`。由 `chosen∈`，`chosen m` 是 `⟪ a ⟫↪ m` 的元素，沿 `q` 搬运便知 `z` 也是该元素的元素。于是 `z` 是 `a` 的元素 `x` 与 `⟪ a ⟫↪ m` 的公共元素，不交性随即适用：`disj` 给出路径 `x ≡ ⟪ a ⟫↪ m`。两个元素呈现同一集合，所以它们的呈现索引一致：呈现是嵌入，从而在索引上单射，把复合后的路径交给 `isEmbedding→Inj` 即得 `m ≡ m₀`。因此 `chosen m ≡ chosen m₀ = z₀`，与 `q` 复合即得紧缩路径 `z₀ ≡ z`。目标是 h-集合的元素之间的路径，因而是命题，这正允许在此消去截断。
 
 本章最终定理的记账是精确的。`SetChoice (ℓ-suc ℓ)` 的一个实例被使用两次：`SetChoice→LEM` 把它转为 `LEM (ℓ-suc ℓ)`，`LEM→ΩResizing` 再把它转为 `V⊨ZF` 的精确输入；`lowerSetChoice` 把同一选择实例降到 `SetChoice ℓ`，供给 `ChoiceLemma` 作选择集部分。选择集只是纯粹地存在，而每个交由显式的紧缩数据唯一确定。
 <!--ja-->
@@ -1226,7 +1226,7 @@ The accounting of the chapter's final theorem is exact. One instance of `SetChoi
 <!--en-->
 Disjointness is applied to the two members `x` and `⟪ a ⟫↪ m` of `a`, with the shared element `z` as the witness of their overlap; the hypothesis `disj` returns the path `x ≡ ⟪ a ⟫↪ m`. The two indices therefore present the same member, and the presentation `⟪ a ⟫↪` is an embedding, hence injective on indices: `isEmbedding→Inj`, applied to the composition `sym x≡m ∙ sym (mf .snd)`, yields `m ≡ m₀`. Applying `chosen` to that path and composing with `q` produces `z₀ ≡ z`, the path the contraction requires. The target `z₀ ≡ z` is a path between elements of the h-set V, hence a proposition, which licenses eliminating the truncation of the case analysis here.
 <!--zh-->
-把不交性用于 `a` 的两个成员 `x` 与 `⟪ a ⟫↪ m`，以公共元素 `z` 为重叠的见证；前提 `disj` 返回路径 `x ≡ ⟪ a ⟫↪ m`。于是两个索引呈现同一成员，而呈现 `⟪ a ⟫↪` 是嵌入，从而在索引上单射：把复合 `sym x≡m ∙ sym (mf .snd)` 交给 `isEmbedding→Inj`，便得 `m ≡ m₀`。对该路径施加 `chosen` 并与 `q` 复合，即产生紧缩所需的路径 `z₀ ≡ z`。目标 `z₀ ≡ z` 是 h-集合 V 的元素之间的路径，因而是命题，这正允许在此消去分情形的截断。
+把不交性用于 `a` 的两个元素 `x` 与 `⟪ a ⟫↪ m`，以公共元素 `z` 为重叠的见证；前提 `disj` 返回路径 `x ≡ ⟪ a ⟫↪ m`。于是两个索引呈现同一元素，而呈现 `⟪ a ⟫↪` 是嵌入，从而在索引上单射：把复合 `sym x≡m ∙ sym (mf .snd)` 交给 `isEmbedding→Inj`，便得 `m ≡ m₀`。对该路径施加 `chosen` 并与 `q` 复合，即产生紧缩所需的路径 `z₀ ≡ z`。目标 `z₀ ≡ z` 是 h-集合 `V`{.Agda} 的元素之间的路径，因而是命题，这正允许在此消去分情形的截断。
 <!--ja-->
 非交性を `a` の二つの要素 `x` と `⟪ a ⟫↪ m` に適用し、重なりの証人として共通の要素 `z` を渡すと、仮定 `disj` はパス `x ≡ ⟪ a ⟫↪ m` を返す。したがって二つの添字は同じ要素を提示する。提示 `⟪ a ⟫↪` は埋め込みであり、添字の上で単射なので、合成 `sym x≡m ∙ sym (mf .snd)` に `isEmbedding→Inj` を適用すれば `m ≡ m₀` が得られる。このパスに `chosen` を施し `q` と合成すれば、緊縮の要求するパス `z₀ ≡ z` が生まれる。目標 `z₀ ≡ z` は h-集合 V の要素の間のパス、つまり命題であり、これがここで場合分けの切り詰めを消去することを正当化する。
 <!--/-->
@@ -1242,7 +1242,7 @@ Disjointness is applied to the two members `x` and `⟪ a ⟫↪ m` of `a`, with
 <!--en-->
 The conjunction `zcx` is produced by transporting `pf` along the path `∩-spec c x z`, which rewrites membership in `c ∩ x` as a plain pair of the two membership propositions. Its components are then used separately: the first feeds the disjointness witness of the previous step, and the second enters the transport `z∈m` of the membership of `z`. With the centre and the contraction in place, `uniq` supplies the `isContr` data for each member `x` of `a`, and `mk` returns the set `c` together with those data. The choice set itself exists only merely, as an inhabitant of a propositional truncation; the uniqueness of each intersection, by contrast, is explicit, untruncated `isContr` data.
 <!--zh-->
-合取 `zcx` 由把 `pf` 沿路径 `∩-spec c x z` 搬运得到，它把 `c ∩ x` 中的成员资格改写成两个成员命题的普通序对。两个分量随后分开使用：第一个进入上一步的不交性见证，第二个进入 `z` 的成员资格搬运 `z∈m`。中心与紧缩就位后，`uniq` 为 `a` 的每个成员供给 `isContr` 数据，`mk` 返回集合 `c` 连同这些数据。选择集本身只是作为命题截断的一个元素纯粹存在；相比之下，每个交的唯一性是不加截断的显式 `isContr` 数据。
+合取 `zcx` 由把 `pf` 沿路径 `∩-spec c x z` 搬运得到，它把 `c ∩ x` 中的成员关系事实改写成两个成员关系命题的普通序对。两个分量随后分开使用：第一个进入上一步的不交性见证，第二个进入 `z` 的成员关系事实搬运 `z∈m`。中心与紧缩就位后，`uniq` 为 `a` 的每个元素供给 `isContr` 数据，`mk` 返回集合 `c` 连同这些数据。选择集本身只是作为命题截断的一个元素纯粹存在；相比之下，每个交的唯一性是不加截断的显式 `isContr` 数据。
 <!--ja-->
 連言 `zcx` は、`pf` をパス `∩-spec c x z` に沿って輸送して得られ、`c ∩ x` への所属が二つの所属命題の普通の組として書き直される。二つの成分はその後別々に使われる。第一成分は前段の非交性の証人に入り、第二成分は `z` の所属の輸送 `z∈m` に入る。中心と緊縮が揃うと、`uniq` が `a` の各要素に対する `isContr` のデータを供給し、`mk` は集合 `c` とそれらのデータを返す。選択集合そのものは、命題の切り詰めの要素として単に存在するだけである。それに対して、各交の一意性は切り詰められていない明示的な `isContr` のデータである。
 <!--/-->

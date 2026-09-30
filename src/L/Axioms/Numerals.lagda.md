@@ -27,7 +27,7 @@ module L.Axioms.Numerals {ℓ : Level} where
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 import FOL.ZFModel
 open import V.Model {ℓ} using ( pair-singleton; module NumPin )
 open import L.Constructible {ℓ} using ( 𝒮ʟ )
@@ -48,9 +48,9 @@ The whole chapter is constructive: no excluded middle, no resizing, and no choic
 
 本章从模型自身的空集、配对与并运算出发，在 `L` 内构造自然数链，并证明它投影到周遭集合层级中的冯·诺伊曼数码。
 
-数学问题如下。集合 `a` 的冯·诺伊曼后继是 `a ∪ {a}`，而 `L` 的模型把自身的空集、无序对与并供给为典范实现者：每一个都是满足其成员规格的集合之可缩类型的中心，由摹状词算子 `℩` 读出。这样的中心是一个带规格的运算，而不是一条计算规则：其定义本身并未说明，它的底层集合就是周遭集合层级用自身配对与并造出的那个集合。因此，在把这条链与层级的数码链比较之前，需要一族**投影等式**，每一条说：模型的某个运算沿底层集合读出来，就是层级中对应的运算。
+数学问题如下。集合 `a` 的冯·诺伊曼后继是 `a ∪ {a}`，而 `L` 的模型把自身的空集、无序对与并供给为典范实现者：每一个都是满足其成员关系规格的集合之可缩类型的中心，由摹状词算子 `℩` 读出。这样的中心是一个带规格的运算，而不是一条计算规则：其定义本身并未说明，它的底层集合就是周遭集合层级用自身配对与并造出的那个集合。因此，在把这条链与层级的数码链比较之前，需要一族**投影等式**，每一条说：模型的某个运算沿底层集合读出来，就是层级中对应的运算。
 
-每条投影等式的论证有固定的形状。可缩类型的中心与一个显式构造的实现者比较：对配对而言，是把有界配对构造施于两个底层集的一个仅仅存在的公共层，该层由 `isL-directed` 供给。可缩性随后给出从中心到该实现者的路径，而把底层集合投影这个函数作用于该路径，便得到底层集合之间的等式。每一次对截断数据的消去之所以合法，只因目标是层级集合之间的等式，是命题；这又因层级的载体是 h-集合。有了投影等式，内部链与层级链逐步重合，而模型 record 向数码链要求的两条成员方程，也就沿着它们由层级自己的事实推得。
+每条投影等式的论证有固定的形状。可缩类型的中心与一个显式构造的实现者比较：对配对而言，是把有界配对构造施于两个底层集的一个仅仅存在的公共层，该层由 `isL-directed` 供给。可缩性随后给出从中心到该实现者的路径，而把底层集合投影这个函数作用于该路径，便得到底层集合之间的等式。每一次对截断数据的消去之所以合法，只因目标是层级集合之间的等式，是命题；这又因层级的载体是 h-集合。有了投影等式，内部链与层级链逐步重合，而模型 record 向数码链要求的两条元素方程，也就沿着它们由层级自己的事实推得。
 
 全章都是构造性的：不用排中律，不用 resize，也不需要实现者类型的可缩性之外的选择。本章不做的是把诸数码收集成一个集合；那一步收集正是无穷公理本身的内容。
 <!--ja-->
@@ -105,7 +105,7 @@ Two conventions make the code readable. The structure `𝒮ʟ` is the constructi
 ```agda
 open InfinitySet using ( sucV; #_ )
 
-open hPropStructure 𝒮ʟ
+open hPropView 𝒮ʟ
 
 module ModelL = FOL.ZFModel 𝒮ʟ
 open ModelL using ( SetOf; ℩ )
@@ -284,7 +284,7 @@ What this section provides is each individual numeral as an element of the carri
 
 有了后继等式，链就可以沿自然数用普通递归写出，而一次归纳即说明它投影到层级的数码上。第零阶段是内部空集，其底层集合严格就是空集。
 
-本节提供的是每个数码作为载体的元素，连同它的成员行为。它不把所有数码收集成一个集合，也不证明无穷公理；链只是后继等式的迭代，因此归纳只有一步有内容，零的情形是一次计算。
+本节提供的是每个数码作为载体的元素，连同它的元素行为。它不把所有数码收集成一个集合，也不证明无穷公理；链只是后继等式的迭代，因此归纳只有一步有内容，零的情形是一次计算。
 <!--ja-->
 ## 数項列の構成
 
@@ -333,13 +333,13 @@ The model record demands these two laws of a numeral chain: zero must be empty, 
 
 The vehicle is the module `NumPin`, which takes a hierarchy-valued chain `a : ℕ → V ℓ` together with an alignment `q : (n : ℕ) → a n ≡ # n` and returns the two pinning equations for that chain. Our chain supplies the underlying-set family `λ k → fst (numeralL k)` and the alignment `numeralL-fst`.
 <!--zh-->
-## 两条成员方程
+## 两条元素方程
 
-`numeralL-zero`{.Agda} 证明内部零没有成员，而 `numeralL-suc`{.Agda} 刻画下一数码的成员恰为前一数码的成员及前一数码自身。
+`numeralL-zero`{.Agda} 证明内部零没有元素，而 `numeralL-suc`{.Agda} 刻画下一数码的元素恰为前一数码的元素及前一数码自身。
 
-模型 record 向数码链索取这两条律：零必须为空，且每个后继的成员恰是前者的成员连同前者自身，两条都经隶属陈述，而非经派生运算。正是这个措辞使证明很短：每一条都是关于层级数码的事实，沿投影族 `numeralL-fst` 搬运过来。全程从不展开摹状词算子。
+模型 record 向数码链索取这两条律：零必须为空，且每个后继的元素恰是前者的元素连同前者自身，两条都经成员关系陈述，而非经派生运算。正是这个措辞使证明很短：每一条都是关于层级数码的事实，沿投影族 `numeralL-fst` 搬运过来。全程从不展开摹状词算子。
 
-`NumPin` 统一给出这一论证：它接受取值于周遭集合层级的链 `a : ℕ → V ℓ` 连同对齐 `q : (n : ℕ) → a n ≡ # n`，返回该链的两条成员方程。我们的链供给底层集族 `λ k → fst (numeralL k)` 与对齐 `numeralL-fst`。
+`NumPin` 统一给出这一论证：它接受取值于周遭集合层级的链 `a : ℕ → V ℓ` 连同对齐 `q : (n : ℕ) → a n ≡ # n`，返回该链的两条元素方程。我们的链供给底层集族 `λ k → fst (numeralL k)` 与对齐 `numeralL-fst`。
 <!--ja-->
 ## 二つの指定方程式
 
@@ -353,7 +353,7 @@ The vehicle is the module `NumPin`, which takes a hierarchy-valued chain `a : �
 <!--en-->
 The zero equation has the shape of a refutation: a member `z` of the chain's zeroth stage yields an inhabitant of the empty host type. The resulting function type is itself a proposition in the hProp setting. `pinZero` transports the assumed membership along the alignment at stage zero, turning membership in `fst (numeralL zero)` into membership in `# zero`, and the hierarchy's own fact that nothing is a member of `∅` then closes the proof. The transport runs one way only: from the chain to the library numeral.
 <!--zh-->
-零方程式取反驳的形状：链第零阶段的一个成员 `z` 导出空宿主类型的一个元素，所得函数类型在 hProp 设定下自身也是命题。`pinZero` 把假设的隶属沿第零处的对齐传输，把「属于 `fst (numeralL zero)`」变成「属于 `# zero`」，然后层级自己关于 `∅` 无成员的事实合拢证明。传输只走一个方向：从链到库数码。
+零方程式取反驳的形状：链第零阶段的一个元素 `z` 导出空宿主类型的一个元素，所得函数类型在 hProp 设定下自身也是命题。`pinZero` 把假设的成员关系沿第零处的对齐传输，把「属于 `fst (numeralL zero)`」变成「属于 `# zero`」，然后层级自己关于 `∅` 无元素的事实合拢证明。传输只走一个方向：从链到库数码。
 <!--ja-->
 第 0 の方程式は反駁の形をしている。列の第 0 段階の要素 `z` から空のホスト型の要素が得られるので、得られる関数型は hProp の設定ではそれ自身が命題である。`pinZero` は仮定された所属を段階 0 での整列に沿って輸送し、`fst (numeralL zero)` への所属を `# zero` への所属に変え、その後、階層自身の「`∅` には要素がない」という事実が証明を閉じる。輸送は一方向にだけ進む。列からライブラリの数項へ、である。
 <!--/-->
@@ -370,7 +370,7 @@ numeralL-suc : (n : ℕ) (z : S)
 <!--en-->
 The successor equation is a pair of implications, and its second component speaks of the structure equality `≈ˢ`; for this restriction structure, that relation is the underlying path `fst z ≡ fst (numeralL n)`. Forward, a member of `numeralL (suc n)` is transported along the alignment at stage `suc n` into membership in `# (suc n)`, where the hierarchy's own analysis of membership in `sucV` splits it, merely, between a member of `# n` and the case of `# n` itself; each branch is then transported back along the reverse alignment at stage `n`. Backward, a member of `numeralL n` is transported to `# n` and placed into `# (suc n)` by `∈sucV-inl`, and an element equal to `numeralL n` transports its path to `# n` and uses the hierarchy's fact that a set belongs to its own successor. Both directions are `pinSuc`'s output for the chain `λ k → fst (numeralL k)` and the alignment `numeralL-fst`, instantiated at `fst z`.
 <!--zh-->
-后继方程是一对蕴涵，其第二个分句使用结构关系 `≈ˢ`；对当前限制结构，它的底层正是路径 `fst z ≡ fst (numeralL n)`。正向：`numeralL (suc n)` 的成员沿 `suc n` 处的对齐被传输为 `# (suc n)` 的成员，在那里层级自己对 `sucV` 成员的分析把它，仅仅存在地，分为「`# n` 的成员」与「就是 `# n`」两种情形；每个分支再沿 `n` 处的逆向对齐传回链上。反向：`numeralL n` 的成员被传输为 `# n` 后经 `∈sucV-inl` 放进 `# (suc n)`，而与 `numeralL n` 相等的元素则把路径传到 `# n`，再使用层级自己「集合属于自己的后继」的事实。两个方向就是 `pinSuc` 对链 `λ k → fst (numeralL k)` 与对齐 `numeralL-fst` 的输出，实例化在 `fst z` 上。
+后继方程是一对蕴涵，其第二个分句使用结构关系 `≈ˢ`；对当前限制结构，它的底层正是路径 `fst z ≡ fst (numeralL n)`。正向：`numeralL (suc n)` 的元素沿 `suc n` 处的对齐被传输为 `# (suc n)` 的元素，在那里层级自己对 `sucV` 元素的分析把它，仅仅存在地，分为「`# n` 的元素」与「就是 `# n`」两种情形；每个分支再沿 `n` 处的逆向对齐传回链上。反向：`numeralL n` 的元素被传输为 `# n` 后经 `∈sucV-inl` 放进 `# (suc n)`，而与 `numeralL n` 相等的元素则把路径传到 `# n`，再使用层级自己「集合属于自己的后继」的事实。两个方向就是 `pinSuc` 对链 `λ k → fst (numeralL k)` 与对齐 `numeralL-fst` 的输出，实例化在 `fst z` 上。
 <!--ja-->
 後者の方程式は一対の含意であり、その第二の成分が語るのは構造の関係 `≈ˢ` である。この制限構造では、その基底はパス `fst z ≡ fst (numeralL n)` である。順方向では、`numeralL (suc n)` の要素が段階 `suc n` での整列に沿って `# (suc n)` への所属へ輸送され、そこで階層自身の `sucV` の所属の分析が、単に存在するものとして、それを `# n` の要素である場合と `# n` そのものである場合に分ける。各枝はさらに段階 `n` での逆向きの整列に沿って列へ輸送し戻される。逆方向では、`numeralL n` の要素は `# n` へ輸送されたうえで `∈sucV-inl` によって `# (suc n)` へ置かれ、`numeralL n` と等しい要素はパスを `# n` へ運び、階層自身の「集合は自分自身の後続に属する」という事実を使う。どちらの向きも、列 `λ k → fst (numeralL k)` と整列 `numeralL-fst` に対する `pinSuc` の出力を `fst z` に実例化したものである。
 <!--/-->
@@ -392,11 +392,11 @@ What has been established concerns individual numerals: each `numeralL n` exists
 <!--zh-->
 ## 小结
 
-`numeralL`{.Agda} 是 `L` 内部的冯·诺伊曼数码副本，满足模型 record 所要求的精确零与后继成员律。
+`numeralL`{.Agda} 是 `L` 内部的冯·诺伊曼数码副本，满足模型 record 所要求的精确零与后继元素律。
 
-本章的论证有三层。内部后继由唯一存在交出的、作为可缩中心的运算组装而成，投影等式在命题层面把这些运算的底层集合与层级的无序对、并及后继认同起来。然后沿自然数递归，从内部空集出发迭代内部后继，归纳证明 `numeralL-fst`{.Agda}，即把每个阶段的底层集合与周遭数码 `# n` 对齐的路径族。最后，把 `NumPin` 应用于这条对齐便得 `numeralL-zero`{.Agda} 与 `numeralL-suc`{.Agda}，两条成员律对内部链成立，而全部分情形分析都发生在层级的数码上。
+本章的论证有三层。内部后继由唯一存在交出的、作为可缩中心的运算组装而成，投影等式在命题层面把这些运算的底层集合与层级的无序对、并及后继认同起来。然后沿自然数递归，从内部空集出发迭代内部后继，归纳证明 `numeralL-fst`{.Agda}，即把每个阶段的底层集合与周遭数码 `# n` 对齐的路径族。最后，把 `NumPin` 应用于这条对齐便得 `numeralL-zero`{.Agda} 与 `numeralL-suc`{.Agda}，两条元素律对内部链成立，而全部分情形分析都发生在层级的数码上。
 
-这里确立的只是逐个数码的事实：每个 `numeralL n` 存在于 `L` 内并有正确的成员行为。本章没有把各阶段收集成一个集合的陈述，也没有证明无穷。投影等式的用途不止于数码：凡由模型的配对与并组装出的东西，沿底层集合读出来，就是用层级运算组装出的同一个东西。
+这里确立的只是逐个数码的事实：每个 `numeralL n` 存在于 `L` 内并有正确的元素行为。本章没有把各阶段收集成一个集合的陈述，也没有证明无穷。投影等式的用途不止于数码：凡由模型的配对与并组装出的东西，沿底层集合读出来，就是用层级运算组装出的同一个东西。
 <!--ja-->
 ## まとめ
 

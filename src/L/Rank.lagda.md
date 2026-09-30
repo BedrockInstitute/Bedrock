@@ -17,7 +17,7 @@ open import Base.Prelude
 <!--en-->
 Rank is defined inside the cumulative hierarchy `V ℓ`, with carrier `S`. A membership statement `x ∈ˢ y` is proposition-valued, and regularity makes this membership relation well-founded. The induction principle `∈-induction` can therefore define a value in `S` from values already defined for every member.
 <!--zh-->
-秩直接定义在累积层级 `V ℓ` 的载体 `S` 中。成员关系 `x ∈ˢ y` 是命题值的，而正则公理保证这条成员关系良基。因此，成员归纳原理 `∈-induction` 可以利用每个成员处已经定义的值，在当前集合处定义一个 `S` 中的值。
+秩直接定义在累积层级 `V ℓ` 的载体 `S` 中。成员关系 `x ∈ˢ y` 是命题值的，而正则公理保证这条成员关系良基。因此，成员关系归纳原理 `∈-induction` 可以利用每个元素处已经定义的值，在当前集合处定义一个 `S` 中的值。
 <!--ja-->
 ランクは累積階層 `V ℓ` の台 `S` の中で直接定義される。所属 `x ∈ˢ y` は命題値をとり、正則性によりこの所属関係は整礎である。したがって所属帰納 `∈-induction` は、各要素ですでに定義された値から、現在の集合に対する `S` の値を定義できる。
 <!--/-->
@@ -27,7 +27,7 @@ module L.Rank {ℓ : Level} where
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 open import V.Hierarchy {ℓ}
   using ( 𝒮ᵥ; extensionalV; ∈-induction; ∈-induction-compute )
 open import V.Model {ℓ} using ( union-family-in; union-family-out; ∈sucV-elim; self∈sucV )
@@ -42,7 +42,7 @@ The rank of a set is the union, over its members, of the successors of their ran
 Nothing here needs an external type of ordinals: rank takes values in the hierarchy itself, and the recursion runs on well-founded membership, which regularity directly guarantees. Thus every theorem in this chapter is proved without an excluded-middle parameter.
 <!--zh-->
 
-集合的秩是其所有成员之秩的后继的并；用记号说，计算定理 `rank-compute` 把 `rank x` 等同于 `rankStep x (λ y _ → rank y)`。本章证明秩的四条性质：`rank-mono` 说秩沿隶属关系严格增长，`rank-ord` 说秩总是序数，`rank-upper` 给出秩包含于某序数的有条件结论，`rank-fix` 说秩固定每个序数。
+集合的秩是其所有元素之秩的后继的并；用记号说，计算定理 `rank-compute` 把 `rank x` 等同于 `rankStep x (λ y _ → rank y)`。本章证明秩的四条性质：`rank-mono` 说秩沿成员关系严格增长，`rank-ord` 说秩总是序数，`rank-upper` 给出秩包含于某序数的有条件结论，`rank-fix` 说秩固定每个序数。
 
 此处不需要任何外部的序数类型：秩取值于层级自身，而递归依据正则公理所保证的成员关系良基性进行。因此本章每条定理都不需要排中律参数。
 <!--ja-->
@@ -57,7 +57,7 @@ Nothing here needs an external type of ordinals: rank takes values in the hierar
 <!--en-->
 For rank, the value at a set must collect the successor ranks of all its members. The operations `sucV` and small indexed union express this construction. Once the recursive member ranks are known to be ordinals, `suc-ord` and `setUnion-ord` show that the collected value is again an ordinal; `mem-ord` later supplies ordinality for members of an ordinal.
 <!--zh-->
-对秩而言，集合处的值要汇集其所有成员之秩的后继。`sucV` 与小索引并正好表达这一构造。递归得到的成员秩一旦是序数，`suc-ord` 与 `setUnion-ord` 就证明汇集后的值仍是序数；在处理序数自身时，`mem-ord` 再给出其成员的序数性。
+对秩而言，集合处的值要汇集其所有元素之秩的后继。`sucV` 与小索引并正好表达这一构造。递归得到的元素秩一旦是序数，`suc-ord` 与 `setUnion-ord` 就证明汇集后的值仍是序数；在处理序数自身时，`mem-ord` 再给出其元素的序数性。
 <!--ja-->
 ランクでは、集合の各要素のランクの後続を集める必要がある。この構成を表すのが `sucV` と小さな添字付き和である。再帰的に得た各要素のランクが順序数なら、`suc-ord` と `setUnion-ord` により集めた値も順序数になる。順序数自身を扱う際には、`mem-ord` がその要素の順序数性を与える。
 <!--/-->
@@ -65,7 +65,7 @@ For rank, the value at a set must collect the successor ranks of all its members
 <!--en-->
 The indexing is genuinely small. Each set `x` has a small member type `⟪ x ⟫` and an embedding `⟪ x ⟫↪` into `S`; `∈ₛ⟪ x ⟫↪ m` proves that the represented set belongs to `x`. Conversely, a given membership proof can be converted by `∈-asFiber` into an index together with a path identifying its represented set with the member. These two directions connect recursion over membership with the small family used by the union.
 <!--zh-->
-这里的索引确实是小的。每个集合 `x` 都有小成员类型 `⟪ x ⟫` 及其到 `S` 的嵌入 `⟪ x ⟫↪`，而 `∈ₛ⟪ x ⟫↪ m` 证明所表示的集合属于 `x`。反过来，给定成员关系证明，`∈-asFiber` 返回一个索引以及所表示集合与该成员相等的路径。这两个方向把沿成员关系的递归与取并所需的小族连接起来。
+这里的索引确实是小的。每个集合 `x` 都有小元素类型 `⟪ x ⟫` 及其到 `S` 的嵌入 `⟪ x ⟫↪`，而 `∈ₛ⟪ x ⟫↪ m` 证明所表示的集合属于 `x`。反过来，给定成员关系证明，`∈-asFiber` 返回一个索引以及所表示集合与该元素相等的路径。这两个方向把沿成员关系的递归与取并所需的小族连接起来。
 <!--ja-->
 ここで使う添字は実際に小さいものである。各集合 `x` には小さな要素型 `⟪ x ⟫` と `S` への埋め込み `⟪ x ⟫↪` があり、`∈ₛ⟪ x ⟫↪ m` は表された集合が `x` に属することを示す。逆に、所属の証明から `∈-asFiber` により、添字と、その表示が当の要素に等しいというパスを得られる。この二方向が、所属に沿う再帰と和集合を作る小さな族を結ぶ。
 <!--/-->
@@ -79,7 +79,7 @@ open import Cubical.HITs.CumulativeHierarchy.Properties
 <!--en-->
 The recursive step can now be read mathematically: take the small family of members, replace each member by the successor of its recursively computed rank, and form their union. The next section states this construction as `rankStep` and records its computation path.
 <!--zh-->
-于是递归步可以直接读成数学构造：取成员组成的小族，把每个成员换成其递归所得秩的后继，再对这一族取并。下一节把这个构造写成 `rankStep`，并给出它的计算路径。
+于是递归步可以直接读成数学构造：取元素组成的小族，把每个元素换成其递归所得秩的后继，再对这一族取并。下一节把这个构造写成 `rankStep`，并给出它的计算路径。
 <!--ja-->
 これで再帰ステップをそのまま数学的に読める。要素からなる小さな族を取り、各要素を再帰的に得たランクの後続に置き換え、その和集合を作る。次節ではこの構成を `rankStep` として述べ、計算パスを記録する。
 <!--/-->
@@ -89,7 +89,7 @@ open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( ⋃_; module InfinitySet )
 open InfinitySet using ( sucV )
 
-open hPropStructure 𝒮ᵥ
+open hPropView 𝒮ᵥ
 ```
 
 <!--en-->
@@ -99,7 +99,7 @@ The step takes the union, over the members of `x`, of the successors of their ra
 <!--zh-->
 ## 递归
 
-步进取 `x` 的各成员之秩的后继的并。递归调用跑在成员的**小**类型上，而计算法则作为路径命题性地成立、而非定义性地成立，这正是后文证明所用的形式。
+步进取 `x` 的各元素之秩的后继的并。递归调用跑在元素的**小**类型上，而计算法则作为路径命题性地成立、而非定义性地成立，这正是后文证明所用的形式。
 <!--ja-->
 ## 再帰
 
@@ -109,7 +109,7 @@ The step takes the union, over the members of `x`, of the successors of their ra
 <!--en-->
 The recursion equation says: to rank a set `x`, rank every member and take the union of the successors. Formally, the family being unioned is indexed by `⟪ x ⟫`, the small type of members, so the expression `⋃ (sett ⟪ x ⟫ …)` is a legal small union; the embedding `⟪ x ⟫↪` turns an index `m` into the actual set `⟪ x ⟫↪ m`, and the helper `mem` supplies the proof that this embedded set really is a member of `x`, which is what the recursive call `rec` demands. Note the shape of the step: it receives the recursive values through a function `rec` rather than calling `rank` directly, which is what makes it usable as the step of `∈-induction`.
 <!--zh-->
-递归方程说：要对集合 `x` 求秩，就对每个成员求秩，再取其后继的并。形式上，被取并的族以成员的小类型 `⟪ x ⟫` 为索引，故 `⋃ (sett ⟪ x ⟫ …)` 是一次合法的小并；嵌入 `⟪ x ⟫↪` 把索引 `m` 变成实际的集合 `⟪ x ⟫↪ m`，而辅助 `mem` 提供该嵌入集合确实是 `x` 的成员的证明，这正是递归调用 `rec` 所要求的。注意步进函数的形状：它经函数 `rec` 接收递归值，而不直接调用 `rank`，这使它能充当 `∈-induction` 的步进。
+递归方程说：要对集合 `x` 求秩，就对每个元素求秩，再取其后继的并。形式上，被取并的族以元素的小类型 `⟪ x ⟫` 为索引，故 `⋃ (sett ⟪ x ⟫ …)` 是一次合法的小并；嵌入 `⟪ x ⟫↪` 把索引 `m` 变成实际的集合 `⟪ x ⟫↪ m`，而辅助 `mem` 提供该嵌入集合确实是 `x` 的元素的证明，这正是递归调用 `rec` 所要求的。注意步进函数的形状：它经函数 `rec` 接收递归值，而不直接调用 `rank`，这使它能充当 `∈-induction` 的步进。
 <!--ja-->
 再帰方程式は次を言う。集合 `x` のランクを求めるには、各要素のランクを求め、その後続の和集合を取る。形式的には、和を取る族は要素の小さな型 `⟪ x ⟫` で添字づけられるので、`⋃ (sett ⟪ x ⟫ …)` は正当な小さな和である。埋め込み `⟪ x ⟫↪` が添字 `m` を実際の集合 `⟪ x ⟫↪ m` に変え、補助 `mem` がこの埋め込まれた集合が実際に `x` の要素であることの証明を供給する。これは再帰呼び出し `rec` が要求するものである。ステップの形に注意してほしい。`rank` を直接呼ぶのではなく、関数 `rec` を通して再帰的な値を受け取る。これが `∈-induction` のステップとして使える理由である。
 <!--/-->
@@ -125,7 +125,7 @@ rankStep x rec = ⋃ (sett ⟪ x ⟫ (λ m → sucV (rec (⟪ x ⟫↪ m) (mem m
 <!--en-->
 The rank itself is the membership induction applied to this step: `∈-induction rankStep` turns the step function into a total family on all of `S`. The definition is marked `opaque` to keep the checker from unfolding the well-founded eliminator inside it. What is available instead is the computation law `rank-compute`, which exposes the recursion equation as a propositional path: `rank x` is a path to `rankStep x (λ y _ → rank y)`, the same equation with `rank` itself filling every recursive call. Later proofs rewrite by this path rather than reducing `rank` directly.
 <!--zh-->
-秩本身就是把成员归纳用在这个步进上：`∈-induction rankStep` 把步进函数变成整个 `S` 上的全定义族。定义标记为 `opaque`，以免检查器展开其中的良基消去子。取而代之可用的是计算法则 `rank-compute`，它把递归方程作为命题路径暴露出来：`rank x` 有一条到 `rankStep x (λ y _ → rank y)` 的路径，即同一条方程、但每次递归调用都由 `rank` 自身填充。后续证明按这条路径改写，而不直接化简 `rank`。
+秩本身就是把成员关系归纳用在这个步进上：`∈-induction rankStep` 把步进函数变成整个 `S` 上的全定义族。定义标记为 `opaque`，以免检查器展开其中的良基消去子。取而代之可用的是计算法则 `rank-compute`，它把递归方程作为命题路径暴露出来：`rank x` 有一条到 `rankStep x (λ y _ → rank y)` 的路径，即同一条方程、但每次递归调用都由 `rank` 自身填充。后续证明按这条路径改写，而不直接化简 `rank`。
 <!--ja-->
 ランクそのものは、このステップに所属帰納を適用したものである。`∈-induction rankStep` がステップ関数を `S` 全体上の全域的な族に変える。定義には `opaque` が付いており、検証器がその中の整礎消去子を展開しないようにしている。代わりに使えるのが計算法則 `rank-compute` で、これは再帰方程式を命題的なパスとして公開する。`rank x` は `rankStep x (λ y _ → rank y)` へのパスであり、すべての再帰呼び出しが `rank` 自身で満たされた同じ方程式である。後の証明は `rank` を直接簡約せず、このパスで書き換える。
 <!--/-->
@@ -146,7 +146,7 @@ The theorem `rank-mono` states that if `x ∈ˢ y` then `rank x ∈ˢ rank y`. I
 <!--zh-->
 ## 秩沿成员关系严格增长
 
-定理 `rank-mono` 说：若 `x ∈ˢ y`，则 `rank x ∈ˢ rank y`。它直接来自定义之并的形状：`rank y` 是以 `y` 的成员 `w` 为索引的后继 `sucV (rank w)` 之并，故只需把 `rank x` 表为其中某个后继的成员。命题中完全不出现 `IsOrd`{.Agda} 假设。
+定理 `rank-mono` 说：若 `x ∈ˢ y`，则 `rank x ∈ˢ rank y`。它直接来自定义之并的形状：`rank y` 是以 `y` 的元素 `w` 为索引的后继 `sucV (rank w)` 之并，故只需把 `rank x` 表为其中某个后继的元素。命题中完全不出现 `IsOrd`{.Agda} 假设。
 <!--ja-->
 ## ランクは所属に沿って狭義単調に増加する
 
@@ -156,7 +156,7 @@ The theorem `rank-mono` states that if `x ∈ˢ y` then `rank x ∈ˢ rank y`. I
 <!--en-->
 Given `x ∈ˢ y`, the goal is `rank x ∈ˢ rank y`. Unfold `rank y` once by `rank-compute`: the goal becomes membership in the union `⋃ (sett ⟪ y ⟫ (λ m → sucV (rank (⟪ y ⟫↪ m))))`. Now it suffices to exhibit `rank x` as a member of one family member, namely `sucV (rank w)` for some member `w` of `y`; `self∈sucV` puts `rank x` inside its own successor, and `union-family-in` lifts that into the union, transport along the computation path included.
 <!--zh-->
-给定 `x ∈ˢ y`，目标是 `rank x ∈ˢ rank y`。先用 `rank-compute` 把 `rank y` 展开一次：目标变成属于并 `⋃ (sett ⟪ y ⟫ (λ m → sucV (rank (⟪ y ⟫↪ m))))`。于是只需把 `rank x` 表为某个族元、即某成员 `w` 的 `sucV (rank w)` 的成员；`self∈sucV` 把 `rank x` 放进它自身的后继，`union-family-in` 再把它提升进并，包括沿计算路径的传输。
+给定 `x ∈ˢ y`，目标是 `rank x ∈ˢ rank y`。先用 `rank-compute` 把 `rank y` 展开一次：目标变成属于并 `⋃ (sett ⟪ y ⟫ (λ m → sucV (rank (⟪ y ⟫↪ m))))`。于是只需把 `rank x` 表为某个族元、即某元素 `w` 的 `sucV (rank w)` 的元素；`self∈sucV` 把 `rank x` 放进它自身的后继，`union-family-in` 再把它提升进并，包括沿计算路径的传输。
 <!--ja-->
 `x ∈ˢ y` が与えられれば、ゴールは `rank x ∈ˢ rank y` である。まず `rank-compute` で `rank y` を一度展開すると、ゴールは和 `⋃ (sett ⟪ y ⟫ (λ m → sucV (rank (⟪ y ⟫↪ m))))` への所属になる。あとは `rank x` が何らかの族の元、すなわち `y` の要素 `w` に対する `sucV (rank w)` の要素であることを見れば十分である。`self∈sucV` が `rank x` をそれ自身の後続の内側に置き、`union-family-in` が計算パスに沿う輸送込みでそれを和集合の中へ引き上げる。
 <!--/-->
@@ -172,7 +172,7 @@ rank-mono x y x∈y = subst (λ w → ⟨ rank x ∈ˢ w ⟩) (sym (rank-compute
 <!--en-->
 The remaining piece is where the index for the union member comes from. The function `∈-asFiber` turns the given proof `x∈y` into a fiber of the embedding `⟪ y ⟫↪`: a pair whose first component `fib .fst` is an index into `⟪ y ⟫`, and whose second component `fib .snd` is a path saying that the indexed set equals `x`. That path is transported along so that the membership in the successor speaks of `rank x` itself; this is exactly what the code shows.
 <!--zh-->
-剩下的部分是并的族元所用的索引从何而来。函数 `∈-asFiber` 把给定的证明 `x∈y` 转换为嵌入 `⟪ y ⟫↪` 的一个纤维：一个对，其第一分量 `fib .fst` 是 `⟪ y ⟫` 中的一个索引，第二分量 `fib .snd` 是说被索引的集合等于 `x` 的路径。代码正是沿这条路径传输，使得后继中的隶属谈的是 `rank x` 自身。
+剩下的部分是并的族元所用的索引从何而来。函数 `∈-asFiber` 把给定的证明 `x∈y` 转换为嵌入 `⟪ y ⟫↪` 的一个纤维：一个对，其第一分量 `fib .fst` 是 `⟪ y ⟫` 中的一个索引，第二分量 `fib .snd` 是说被索引的集合等于 `x` 的路径。代码正是沿这条路径传输，使得后继中的成员关系谈的是 `rank x` 自身。
 <!--ja-->
 残る部分は、和の族の元に使う添字がどこから来るかである。関数 `∈-asFiber` は与えられた証明 `x∈y` を埋め込み `⟪ y ⟫↪` のファイバーに変換する。これは対であり、第一成分 `fib .fst` は `⟪ y ⟫` への添字、第二成分 `fib .snd` は添字づけられた集合が `x` に等しいというパスである。コードはまさにこのパスに沿って輸送し、後続への所属が `rank x` 自身について語るようにする。
 <!--/-->
@@ -188,7 +188,7 @@ One membership induction. Unfold once by `rank-compute`; the inductive hypothesi
 <!--zh-->
 ## 秩是序数
 
-一次成员归纳。先用 `rank-compute` 展开一次；归纳假设给出每个成员的秩是序数，封闭引理 `suc-ord` 给出每个后继是序数，封闭引理 `setUnion-ord` 给出这一族序数之并仍是序数。
+一次成员关系归纳。先用 `rank-compute` 展开一次；归纳假设给出每个元素的秩是序数，封闭引理 `suc-ord` 给出每个后继是序数，封闭引理 `setUnion-ord` 给出这一族序数之并仍是序数。
 <!--ja-->
 ## ランクは順序数
 
@@ -198,7 +198,7 @@ One membership induction. Unfold once by `rank-compute`; the inductive hypothesi
 <!--en-->
 The statement quantifies over all sets, so the proof is a membership induction with the predicate `λ A → IsOrd (rank A)`. The induction hypothesis hands us, for each member `y` of `A`, the certificate that `rank y` is an ordinal. Since `rank-compute A` propositionally identifies `rank A` with the step, the goal is reached by transporting `IsOrd` along the computation path `rank-compute A`, so what remains is to show that the union of the step is an ordinal.
 <!--zh-->
-命题对所有集合量化，故证明是以 `λ A → IsOrd (rank A)` 为谓词的成员归纳。归纳假设对 `A` 的每个成员 `y` 给出「`rank y` 是序数」的证书。由于 `rank-compute A` 在命题意义下把 `rank A` 等同于步进所得，目标可沿计算路径 `rank-compute A` 传输 `IsOrd` 而达成，剩下只需证步进所得的并是序数。
+命题对所有集合量化，故证明是以 `λ A → IsOrd (rank A)` 为谓词的成员关系归纳。归纳假设对 `A` 的每个元素 `y` 给出「`rank y` 是序数」的证书。由于 `rank-compute A` 在命题意义下把 `rank A` 等同于步进所得，目标可沿计算路径 `rank-compute A` 传输 `IsOrd` 而达成，剩下只需证步进所得的并是序数。
 <!--ja-->
 主張はすべての集合にわたって量化するので、証明は述語 `λ A → IsOrd (rank A)` に関する所属帰納である。帰納仮定は `A` の各要素 `y` に対して、`rank y` が順序数であるという証明書を渡す。`rank-compute A` が `rank A` とステップを命題的に同一視するので、ゴールは計算パス `rank-compute A` に沿って `IsOrd` を輸送することで到達し、残るのはステップの和が順序数であることの証明だけである。
 <!--/-->
@@ -214,7 +214,7 @@ rank-ord = ∈-induction {P = λ A → IsOrd (rank A)} step
 <!--en-->
 That last step composes two closure facts. Each family member `sucV (rank (⟪ A ⟫↪ m))` is the successor of an ordinal, hence an ordinal by `suc-ord`, with the induction hypothesis and the helper `mem` supplying the input certificate. Then `setUnion-ord` closes the small indexed union of ordinals under union. The chain from hypothesis to conclusion: if the ranks of the members are ordinals, so is the rank of the set.
 <!--zh-->
-最后一步组合两个封闭事实。每个族元 `sucV (rank (⟪ A ⟫↪ m))` 是某序数的后继，故由 `suc-ord` 是序数，其输入证书由归纳假设与辅助 `mem` 供给。随后 `setUnion-ord` 保证序数的小索引并仍是序数。从假设到结论的链条是：若成员的秩是序数，则集合的秩也是序数。
+最后一步组合两个封闭事实。每个族元 `sucV (rank (⟪ A ⟫↪ m))` 是某序数的后继，故由 `suc-ord` 是序数，其输入证书由归纳假设与辅助 `mem` 供给。随后 `setUnion-ord` 保证序数的小索引并仍是序数。从假设到结论的链条是：若元素的秩是序数，则集合的秩也是序数。
 <!--ja-->
 この最後のステップは二つの閉性事実を組み合わせる。各族の元 `sucV (rank (⟪ A ⟫↪ m))` は順序数の後続であり、したがって `suc-ord` により順序数である。入力の証明書は帰納仮定と補助 `mem` が供給する。次に `setUnion-ord` が順序数の小さな添字付き和の閉性を与える。仮定から結論への連鎖はこうである。要素のランクが順序数なら、集合のランクも順序数である。
 <!--/-->
@@ -234,7 +234,7 @@ If every member's rank lies in an ordinal, the rank of the set is included in th
 <!--zh-->
 ## 界住秩
 
-若一个集合的每个成员的秩都属于某序数，则该集合的秩包含于该序数：定义之并的每个成员都落在某个成员之秩的后继中，传递性给出所需包含。序数的不动点性质与可构造层中的秩界都用这条论证。
+若一个集合的每个元素的秩都属于某序数，则该集合的秩包含于该序数：定义之并的每个元素都落在某个元素之秩的后继中，传递性给出所需包含。序数的不动点性质与可构造层中的秩界都用这条论证。
 <!--ja-->
 ## ランクの上界
 
@@ -244,7 +244,7 @@ If every member's rank lies in an ordinal, the rank of the set is included in th
 <!--en-->
 The statement is a pointwise inclusion, not a strict membership: assuming `IsOrd β` and that every member rank `rank y` lies strictly in `β`, it concludes that every member of `rank A` lies in `β`. The proof eliminates from the shape of the defining union. Membership in the union yields, via `union-family-out`, merely an index `m` with `x ∈ˢ s m`; since the target `x ∈ˢ β` is a proposition, eliminating this truncation is legitimate, and `∈sucV-elim` then splits membership in the successor `s m = sucV (rank (⟪ A ⟫↪ m))` into its two cases.
 <!--zh-->
-所述是逐点包含而非严格隶属：在 `IsOrd β` 与「每个成员秩 `rank y` 严格属于 `β`」的假设下，结论是 `rank A` 的每个成员都属于 `β`。证明从定义之并的形状出发消去。属于该并经 `union-family-out` 给出仅仅一个索引 `m` 使 `x ∈ˢ s m`；由于目标 `x ∈ˢ β` 是命题，对这个截断做消去是合法的，随后 `∈sucV-elim` 把在后继 `s m = sucV (rank (⟪ A ⟫↪ m))` 中的隶属分成两种情形。
+所述是逐点包含而非严格成员关系：在 `IsOrd β` 与「每个元素秩 `rank y` 严格属于 `β`」的假设下，结论是 `rank A` 的每个元素都属于 `β`。证明从定义之并的形状出发消去。属于该并经 `union-family-out` 给出仅仅一个索引 `m` 使 `x ∈ˢ s m`；由于目标 `x ∈ˢ β` 是命题，对这个截断做消去是合法的，随后 `∈sucV-elim` 把在后继 `s m = sucV (rank (⟪ A ⟫↪ m))` 中的成员关系分成两种情形。
 <!--ja-->
 主張は狭義の所属ではなく各点ごとの包含である。`IsOrd β` と、すべての要素のランク `rank y` が狭義に `β` に属するという仮定の下で、`rank A` のすべての要素が `β` に属すると結論する。証明は定義の和の形からの消去である。和への所属は `union-family-out` を通して、`x ∈ˢ s m` となる添字 `m` を単に (merely) 与える。ゴール `x ∈ˢ β` は命題なので、この切り詰めの消去は正当であり、続いて `∈sucV-elim` が後続 `s m = sucV (rank (⟪ A ⟫↪ m))` への所属を二つの場合に分ける。
 <!--/-->
@@ -276,7 +276,7 @@ The two cases of the successor are where ordinality earns its keep. If `x` is a 
 <!--en-->
 The family `s` is the successor-rank family from the recursion equation, sending an index `m` to `sucV (rank (⟪ A ⟫↪ m))`. The fact `below m` is the hypothesis `bound` applied to the embedded member `⟪ A ⟫↪ m` together with its membership proof, yielding `rank (⟪ A ⟫↪ m) ∈ˢ β`. The whole lemma therefore uses no induction: rewrite by the computation law, take the union apart, and let the ordinal's transitivity absorb the successor.
 <!--zh-->
-族 `s` 就是递归方程中的后继之秩的族，把索引 `m` 映到 `sucV (rank (⟪ A ⟫↪ m))`。事实 `below m` 是把假设 `bound` 作用于被嵌入成员 `⟪ A ⟫↪ m` 及其成员证明，得到 `rank (⟪ A ⟫↪ m) ∈ˢ β`。整个引理因此不依赖任何归纳：按计算法则改写一次，拆开并，让序数的传递性吸收后继。
+族 `s` 就是递归方程中的后继之秩的族，把索引 `m` 映到 `sucV (rank (⟪ A ⟫↪ m))`。事实 `below m` 是把假设 `bound` 作用于被嵌入元素 `⟪ A ⟫↪ m` 及其成员关系证明，得到 `rank (⟪ A ⟫↪ m) ∈ˢ β`。整个引理因此不依赖任何归纳：按计算法则改写一次，拆开并，让序数的传递性吸收后继。
 <!--ja-->
 族 `s` は再帰方程式における後続のランクの族で、添字 `m` を `sucV (rank (⟪ A ⟫↪ m))` に送る。事実 `below m` は仮定 `bound` を埋め込まれた要素 `⟪ A ⟫↪ m` とその所属の証明に適用したもので、`rank (⟪ A ⟫↪ m) ∈ˢ β` を与える。したがってこの補題全体は帰納を一切使わない。計算法則で一度書き換え、和を分解し、順序数の推移性に後続を吸収させるだけである。
 <!--/-->
@@ -296,7 +296,7 @@ Again by membership induction, and this time the proof is an extensionality betw
 <!--zh-->
 ## 序数是自身的秩
 
-仍是成员归纳，而这次的证明是 `rank A` 与 `A` 之间的一次外延。从左到右：`rank A` 的元素落在某个成员之秩的后继里面，而依归纳假设那个秩**就是**该成员，故该元素或就是该成员，或属于它，两种情形都经传递性属于 `A`。从右到左：`A` 的成员是自身的秩，故属于该秩的后继，而那是并的一支。
+仍是成员关系归纳，而这次的证明是 `rank A` 与 `A` 之间的一次外延。从左到右：`rank A` 的元素落在某个元素之秩的后继里面，而依归纳假设那个秩**就是**该元素，故该元素或就是该元素，或属于它，两种情形都经传递性属于 `A`。从右到左：`A` 的元素是自身的秩，故属于该秩的后继，而那是并的一支。
 <!--ja-->
 ## 順序数は自分自身のランクである
 
@@ -306,7 +306,7 @@ Again by membership induction, and this time the proof is an extensionality betw
 <!--en-->
 The theorem states that rank fixes every ordinal, as a path rather than an iff. The induction is set up with a predicate that packages the ordinality hypothesis together with the conclusion, `λ A → IsOrd A → rank A ≡ A`, because the step genuinely needs it: to compare rank A with A it must know that members of the ordinal A are themselves ordinals. So the step receives, alongside the recursive equalities `rank y ≡ y`, the certificate `IsOrd A` and returns the equality at `A`.
 <!--zh-->
-定理说秩固定每个序数，以路径而非等价的形式。归纳以把序数性假设与结论打包在一起的谓词 `λ A → IsOrd A → rank A ≡ A` 设立，因为步进确实需要它：要比较 rank A 与 A，必须知道序数 A 的成员本身也是序数。于是步进在收到递归等式 `rank y ≡ y` 之外，还收到证书 `IsOrd A`，并返回在 `A` 处的等式。
+定理说秩固定每个序数，以路径而非等价的形式。归纳以把序数性假设与结论打包在一起的谓词 `λ A → IsOrd A → rank A ≡ A` 设立，因为步进确实需要它：要比较 `rank A`{.Agda} 与 `A`{.Agda}，必须知道序数 `A`{.Agda} 的元素本身也是序数。于是步进在收到递归等式 `rank y ≡ y` 之外，还收到证书 `IsOrd A`，并返回在 `A` 处的等式。
 <!--ja-->
 定理は、ランクがすべての順序数を固定することを、同値ではなくパスとして述べる。帰納は、順序数性の仮定と結論を一つにまとめた述語 `λ A → IsOrd A → rank A ≡ A` で立てられる。ステップがこれを実際に必要とするからである。rank A と A を比べるには、順序数 A の要素自身も順序数であることを知らねばならない。そこでステップは、再帰的な等式 `rank y ≡ y` に加えて証明書 `IsOrd A` を受け取り、`A` での等式を返す。
 <!--/-->
@@ -322,7 +322,7 @@ rank-fix = ∈-induction {P = λ A → IsOrd A → rank A ≡ A} step
 <!--en-->
 The equality itself comes from `extensionalV`, which turns a pointwise equivalence of membership into a path of sets, and `⇔toPath` packages the two directions. the two sets being compared stay folded. The forward direction `toA` is none other than `rank-upper` at `β = A`: the ordinal bound on member ranks is `A` itself, and the bounding hypothesis is produced on the fly from the induction hypothesis.
 <!--zh-->
-等式本身来自 `extensionalV`，它把逐点的隶属等价变成集合的路径，`⇔toPath` 打包两个方向。被比较的两个集合保持不展开。向前的方向 `toA` 不是别的，正是取 `β = A` 的 `rank-upper`：作用在成员秩上的序数界就是 `A` 自身，而界定假设由归纳假设当场构造。
+等式本身来自 `extensionalV`，它把逐点的成员关系等价变成集合的路径，`⇔toPath` 打包两个方向。被比较的两个集合保持不展开。向前的方向 `toA` 不是别的，正是取 `β = A` 的 `rank-upper`：作用在元素秩上的序数界就是 `A` 自身，而界定假设由归纳假设当场构造。
 <!--ja-->
 等式そのものは `extensionalV` から来る。これは所属の各点ごとの同値を集合のパスに変え、`⇔toPath` が二つの方向をまとめる。比較される二つの集合は展開されないまま保たれる。順方向の `toA` はほかでもなく `β = A` とした `rank-upper` である。要素のランクへの順序数の上界は `A` そのものであり、上界の仮定は帰納仮定からその場で作られる。
 <!--/-->
@@ -338,7 +338,7 @@ The equality itself comes from `extensionalV`, which turns a pointwise equivalen
 <!--en-->
 Both bounding directions lean on the same fact, `mem-ord`: a member of the ordinal A is again an ordinal, so the induction hypothesis applies to it. For `toA`, the hypothesis required by `rank-upper` is `rank y ∈ˢ A`; since `rank y ≡ y` by IH and `y ∈ˢ A` is given, the transport lands it. For `fromA`, the reverse holds: `rank-mono x A x∈A` gives `rank x ∈ˢ rank A`, and the path `rank x ≡ x` from the IH transports it to `x ∈ˢ rank A`. Every ingredient is now in place, and the path `rank A ≡ A` follows.
 <!--zh-->
-两个方向都依赖同一事实 `mem-ord`：序数 A 的成员仍是序数，故归纳假设适用于它。对 `toA`，`rank-upper` 要求的假设是 `rank y ∈ˢ A`；由归纳假设 `rank y ≡ y` 且已给 `y ∈ˢ A`，传输即可落位。对 `fromA`，方向相反：`rank-mono x A x∈A` 给出 `rank x ∈ˢ rank A`，而归纳假设的路径 `rank x ≡ x` 把它传输成 `x ∈ˢ rank A`。至此所有材料齐备，路径 `rank A ≡ A` 随之成立。
+两个方向都依赖同一事实 `mem-ord`：序数 `A`{.Agda} 的元素仍是序数，故归纳假设适用于它。对 `toA`，`rank-upper` 要求的假设是 `rank y ∈ˢ A`；由归纳假设 `rank y ≡ y` 且已给 `y ∈ˢ A`，传输即可落位。对 `fromA`，方向相反：`rank-mono x A x∈A` 给出 `rank x ∈ˢ rank A`，而归纳假设的路径 `rank x ≡ x` 把它传输成 `x ∈ˢ rank A`。至此所有材料齐备，路径 `rank A ≡ A` 随之成立。
 <!--ja-->
 両方向とも同じ事実 `mem-ord` に依存する。順序数 A の要素は再び順序数であり、したがって帰納仮定がそれに適用できる。`toA` に対して `rank-upper` が要求する仮定は `rank y ∈ˢ A` である。帰納仮定により `rank y ≡ y` であり、`y ∈ˢ A` は与えられているので、輸送で収まる。`fromA` では逆向きである。`rank-mono x A x∈A` が `rank x ∈ˢ rank A` を与え、帰納仮定のパス `rank x ≡ x` がそれを `x ∈ˢ rank A` へ輸送する。これで材料がそろい、パス `rank A ≡ A` が従う。
 <!--/-->
@@ -358,7 +358,7 @@ Both bounding directions lean on the same fact, `mem-ord`: a member of the ordin
 <!--zh-->
 ## 小结
 
-`rank`{.Agda} 以序数度量每个集合 (`rank-ord`{.Agda})，并固定序数自身 (`rank-fix`{.Agda})，二者表明它是与每个序数一致的序数值度量。两个证明都是正则公理所给的成员归纳，故本章不引入任何额外假设。它给出沿成员关系严格增长的序数值度量，以及被测集合本身为序数时所需的不动点律。
+`rank`{.Agda} 以序数度量每个集合 (`rank-ord`{.Agda})，并固定序数自身 (`rank-fix`{.Agda})，二者表明它是与每个序数一致的序数值度量。两个证明都是正则公理所给的成员关系归纳，故本章不引入任何额外假设。它给出沿成员关系严格增长的序数值度量，以及被测集合本身为序数时所需的不动点律。
 <!--ja-->
 ## まとめ
 

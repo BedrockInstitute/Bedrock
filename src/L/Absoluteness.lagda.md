@@ -17,7 +17,7 @@ open import Base.Prelude
 <!--en-->
 The whole chapter takes place at a single universe level `ℓ`. Both structures that interpret the language have equality and membership valued in `hProp (ℓ-suc ℓ)`, so a satisfaction statement is a proposition, and two such statements can be compared by a path. The ambient world is the cumulative hierarchy `V` at this level; the inner world is `L`, obtained from it by restricting to the constructible sets.
 <!--zh-->
-本章的全部工作都在同一个宇宙层级 `ℓ` 上进行。解释语言的两个结构，其等词与隶属关系都取值于 `hProp (ℓ-suc ℓ)`，因此一条满足陈述是一个命题，两条这样的陈述可以由一条路径来比较。外围世界是该层级上的累积层级 `V`；内层世界则是 `L`，即在 `V` 中限制到可构造集所得。
+本章的全部工作都在同一个宇宙层级 `ℓ` 上进行。解释语言的两个结构，其等词与成员关系都取值于 `hProp (ℓ-suc ℓ)`，因此一条满足陈述是一个命题，两条这样的陈述可以由一条路径来比较。外围世界是该层级上的累积层级 `V`；内层世界则是 `L`，即在 `V` 中限制到可构造集所得。
 <!--ja-->
 この章の作業はすべて、単一の宇宙レベル `ℓ` の上で行われる。言語を解釈する二つの構造では、等号と所属がともに `hProp (ℓ-suc ℓ)` に値を取るため、充足の主張は命題であり、二つの主張はパスで比較できる。外側の世界はこのレベルの累積階層 `V` であり、内側の世界は `L`、つまり構成可能な集合への制限として得られるものである。
 <!--/-->
@@ -27,7 +27,7 @@ module L.Absoluteness {ℓ : Level} where
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 open import FOL.Syntax using ( Formula )
 open import FOL.LevyHierarchy using ( Δ₀ )
 open import FOL.Manipulation.ConstantBounding using ( BoundedFo; module Relabel )
@@ -92,7 +92,7 @@ Both satisfaction relations take values in the same type `hProp (ℓ-suc ℓ)`. 
 <!--/-->
 
 ```agda
-open hPropStructure 𝒮ʟ using ( S )
+open hPropView 𝒮ʟ using ( S )
 
 module SemV = FOL.Semantics 𝒮ᵥ
 open SemV using ( _^_ )

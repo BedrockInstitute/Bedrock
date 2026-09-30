@@ -28,7 +28,7 @@ module L.Coding.SlotClosure {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 open import FOL.Syntax
   using ( Term; Formula; _∧̇_; _∨̇_; _⇒̇_; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
 import FOL.Absoluteness
@@ -57,7 +57,7 @@ Seven of the language's constructors carry subformulas; the other three do not, 
 <!--zh-->
 抽象的闭合原理在这里落实到具体对象：由公式语法树生成的诸键满足 `closedAt`{.Agda}。这正是沿这些键递归定义图时所需的闭合前提。
 
-语言的构造子中有七个带子公式，其余三个不带，对后者无可闭合。七条子句各是四个动作：把槽位的成员求逆回「它是谁的键」的那条公式、从子句的标签算出那条公式的构造子、把部件的键放回复合公式自己的槽位、再把它们提升到整体的槽位。
+语言的构造子中有七个带子公式，其余三个不带，对后者无可闭合。七条子句各是四个动作：把槽位的元素求逆回「它是谁的键」的那条公式、从子句的标签算出那条公式的构造子、把部件的键放回复合公式自己的槽位、再把它们提升到整体的槽位。
 <!--ja-->
 抽象的な閉包原理を、ここでは具体的な対象に適用する。論理式の構文木が生成する鍵の集合が `closedAt`{.Agda} を満たすことを示す。これは、それらの鍵に沿ってグラフを再帰的に定義するために必要な閉包条件そのものである。
 
@@ -91,7 +91,7 @@ Ordered pairs code the keys, with recoverable components, so a key can be taken 
 <!--en-->
 The satisfaction table chapter is the source of the three central objects. It defines the key `keyʟ`{.Agda} of a formula, the shape lemma `keyʟ-shape`{.Agda} that decomposes a formula by its constructor tag, the slot `slot`{.Agda} attached to a formula at a bound, the inversion `slot-inv`{.Agda} that returns a slot member to the formula it is a key of, and the parts lemmas `Parts`{.Agda} on the key tree.
 <!--zh-->
-满足表一章是三个核心对象的出处。它定义了公式的键 `keyʟ`{.Agda}、按构造子标签分解公式的形状引理 `keyʟ-shape`{.Agda}、挂在公式与某个界上的槽位 `slot`{.Agda}、把槽位成员求逆回其键所属公式的 `slot-inv`{.Agda}，以及关于键树的部件引理 `Parts`{.Agda}。
+满足表一章是三个核心对象的出处。它定义了公式的键 `keyʟ`{.Agda}、按构造子标签分解公式的形状引理 `keyʟ-shape`{.Agda}、挂在公式与某个界上的槽位 `slot`{.Agda}、把槽位元素求逆回其键所属公式的 `slot-inv`{.Agda}，以及关于键树的部件引理 `Parts`{.Agda}。
 <!--ja-->
 充足表の章は、三つの中心の対象の出所である。そこでは、論理式の鍵 `keyʟ`{.Agda}、構成子の標識で論理式を分解する形状の補題 `keyʟ-shape`{.Agda}、論理式と上界に付けられたスロット `slot`{.Agda}、スロットの要素をその鍵である論理式へ戻す `slot-inv`{.Agda}、そして鍵の木についての部品の補題 `Parts`{.Agda} が定義される。
 <!--/-->
@@ -99,7 +99,7 @@ The satisfaction table chapter is the source of the three central objects. It de
 <!--en-->
 A slot member can be inverted only under propositional truncation, so every clause eliminates that truncation into a proposition. The binary same-arity case has a conjunction of two membership propositions; each unary or bounded case has one membership proposition.
 <!--zh-->
-槽位成员只能在命题截断下求逆，因此每条子句都把该截断消去到一个命题。保持元数的二元情形以两个隶属命题的合取为目标；一元情形与有界情形的目标则各是一个隶属命题。
+槽位元素只能在命题截断下求逆，因此每条子句都把该截断消去到一个命题。保持元数的二元情形以两个成员关系命题的合取为目标；一元情形与有界情形的目标则各是一个成员关系命题。
 <!--ja-->
 スロットの要素は命題的切り詰めのもとでのみ逆にたどれるので、各場合はその切り詰めを命題へ消去する。アリティを保つ二項の場合の目標は二つの所属命題の連言であり、一項の場合と有界の場合の目標はそれぞれ一つの所属命題である。
 <!--/-->
@@ -131,7 +131,7 @@ The carrier of the constructible structure is the type on which every code, key,
 <!--/-->
 
 ```agda
-open hPropStructure 𝒮ʟ
+open hPropView 𝒮ʟ
 ```
 
 <!--en-->
@@ -238,7 +238,7 @@ The clauses are organized by the shape of the closure each constructor demands. 
 <!--zh-->
 ## 七条子句
 
-子句按各构造子所要求的闭合形状组织。共证明四个主体，每种形状一个：保持元数的二元构造子、保持元数的一元构造子、抬升元数的一元构造子、把项与抬升元数公式配对的二元构造子。同一主体下两条子句的不同只在构造子的标签与其交还的部件，而两者都是参数。每条子句经四个动作运行：把槽位成员求逆成一条公式、按标签读出其构造子、把部件的键放回该公式自己的槽位、再提升到整体的槽位。
+子句按各构造子所要求的闭合形状组织。共证明四个主体，每种形状一个：保持元数的二元构造子、保持元数的一元构造子、抬升元数的一元构造子、把项与抬升元数公式配对的二元构造子。同一主体下两条子句的不同只在构造子的标签与其交还的部件，而两者都是参数。每条子句经四个动作运行：把槽位元素求逆成一条公式、按标签读出其构造子、把部件的键放回该公式自己的槽位、再提升到整体的槽位。
 <!--ja-->
 ## 七つの場合
 
@@ -323,7 +323,7 @@ The two closure directions are the subtree inclusions from the parts lemmas, for
 <!--en-->
 The first move inverts a member `c` of the slot. It is, merely, the key of some formula `ψ` of arity `m`, and the inversion returns that key's membership in the slot of `φ`. The goal is a conjunction of two memberships, a proposition by `isProp×`, which is what licenses eliminating the truncation.
 <!--zh-->
-第一步对槽位成员 `c` 求逆。它仅仅地是某条元数为 `m` 的公式 `ψ` 的键，求逆同时返回该键属于 `φ` 的槽位。目标是两个隶属的合取，由 `isProp×` 是命题，这使截断消去合法。
+第一步对槽位元素 `c` 求逆。它仅仅地是某条元数为 `m` 的公式 `ψ` 的键，求逆同时返回该键属于 `φ` 的槽位。目标是两个成员关系的合取，由 `isProp×` 是命题，这使截断消去合法。
 <!--ja-->
 最初の動きは、スロットの要素 `c` を逆にたどることである。それは、単に、あるアリティ `m` の論理式 `ψ` の鍵であり、逆にたどる操作は、その鍵が `φ` のスロットに属することを返す。目標は二つの所属の連言で、`isProp×` により命題である。これが切り詰めの消去を正当にする。
 <!--/-->
@@ -353,7 +353,7 @@ The second move computes the constructor. The shape lemma matches `ψ` against t
 <!--en-->
 The third move is the shared computation on the payload. The member `c` is a key-shaped pair whose payload component records the two parts' code components, and the chain proves that those recorded components are, componentwise, the codes `⌜ a' ⌝`{.Agda} and `⌜ b' ⌝`{.Agda}: the payload of `ψ` is the pair of the two parts' codes by the constructor's own payload law, and the shape lemma's payload equation connects it to the pair read from `c`. Do not conflate the three quantities at play: the code `⌜ ψ ⌝`{.Agda} of the whole formula, the payload component inside it, and the final key, which carries the arity in its first slot.
 <!--zh-->
-第三步是关于载荷的共享计算。成员 `c` 是键形的对，其载荷分量记录着两个部件的编码分量；链条证明这些被记录的分量按分量分别是编码 `⌜ a' ⌝`{.Agda} 与 `⌜ b' ⌝`{.Agda}：由构造子自身的载荷法则，`ψ` 的载荷是两个部件编码构成的对，而形状引理的载荷等式把它与从 `c` 读出的对连接起来。此处切莫混淆三个量：整条公式的编码 `⌜ ψ ⌝`{.Agda}、位于其中的载荷分量，以及第一槽携带元数的最终的键。
+第三步是关于载荷的共享计算。元素 `c` 是键形的对，其载荷分量记录着两个部件的编码分量；链条证明这些被记录的分量按分量分别是编码 `⌜ a' ⌝`{.Agda} 与 `⌜ b' ⌝`{.Agda}：由构造子自身的载荷法则，`ψ` 的载荷是两个部件编码构成的对，而形状引理的载荷等式把它与从 `c` 读出的对连接起来。此处切莫混淆三个量：整条公式的编码 `⌜ ψ ⌝`{.Agda}、位于其中的载荷分量，以及第一槽携带元数的最终的键。
 <!--ja-->
 第三の動きは、ペイロードについての共有の計算である。要素 `c` は鍵の形の対であり、そのペイロードの成分は二つの部分のコードの成分を記録している。連鎖は、記録された成分が、成分ごとにコード `⌜ a' ⌝`{.Agda} と `⌜ b' ⌝`{.Agda} であることを証明する。構成子自身のペイロードの法則により `ψ` のペイロードは二つの部分のコードの対であり、形状の補題のペイロードの等式がそれを、`c` から読んだ対と結ぶのである。ここで三つの量を混同してはいけない。論理式全体のコード `⌜ ψ ⌝`{.Agda}、その中のペイロードの成分、そして第一の枠にアリティを運ぶ最終の鍵である。
 <!--/-->
@@ -369,7 +369,7 @@ The third move is the shared computation on the payload. The member `c` is a key
 <!--en-->
 The fourth move carries keys back. A helper first lifts a key from the slot of any formula of arity `m` to the slot of `φ`, using the inclusion returned by the inversion. The arity equation from the shape lemma and the first component equality supplied by injectivity of the coding feed `key≡`, which rewrites the membership of the pair the clause reads into the membership of the key of `a'`.
 <!--zh-->
-第四个动作把键送回。先由辅助函数借求逆返回的包含，把任一同元数公式的键从其槽位提升到 `φ` 的槽位；再由形状引理的元数等式与编码单射性供给的第一分量等式喂给 `key≡`，把子句所读对的隶属改写为 `a'` 的键的隶属。
+第四个动作把键送回。先由辅助函数借求逆返回的包含，把任一同元数公式的键从其槽位提升到 `φ` 的槽位；再由形状引理的元数等式与编码单射性供给的第一分量等式喂给 `key≡`，把子句所读对的成员关系改写为 `a'` 的键的成员关系。
 <!--ja-->
 第四の動きは鍵を戻す。まず補助が、逆にたどる操作が返す包含を使って、アリティ `m` の任意の論理式の鍵をそのスロットから `φ` のスロットへ持ち上げる。そして形状の補題のアリティの等式と、符号化の単射性が供給する第一成分の等式が `key≡` に渡り、場合の読む対の所属が `a'` の鍵の所属へ書き換わる。
 <!--/-->
@@ -384,7 +384,7 @@ The fourth move carries keys back. A helper first lifts a key from the slot of a
 <!--en-->
 The right component repeats the assembly with the right closure direction and the second component equality supplied by the injectivity, rewriting to the membership of the pair with `b'`. The two halves close the clause.
 <!--zh-->
-右分量以右侧闭合方向与单射性供给的第二分量等式重复同一组装，改写为含 `b'` 那个对的隶属。两半合拢，子句证毕。
+右分量以右侧闭合方向与单射性供给的第二分量等式重复同一组装，改写为含 `b'` 那个对的成员关系。两半合拢，子句证毕。
 <!--ja-->
 右の成分は、右の閉包の向きと、単射性が供給する第二成分の等式で同じ組み立てを繰り返し、`b'` を含む対の所属へ書き換える。二つの半分が揃って、場合は証明される。
 <!--/-->
@@ -504,7 +504,7 @@ The proof runs the same four moves with one component. The inversion produces `�
 <!--en-->
 The shared computation is shorter here: the payload of `op a'` is the code of `a'` alone, so the chain identifies the code component recorded in the member `c` with the code component of `a'`, with no pair to split.
 <!--zh-->
-这里的共享计算更短：`op a'` 的载荷就是 `a'` 自己的编码，故链条把成员 `c` 中记录的编码分量直接认同为 `a'` 的编码分量，无须拆分任何对。
+这里的共享计算更短：`op a'` 的载荷就是 `a'` 自己的编码，故链条把元素 `c` 中记录的编码分量直接认同为 `a'` 的编码分量，无须拆分任何对。
 <!--ja-->
 ここでの共有の計算はより短い。`op a'` のペイロードは `a'` 自身のコードなので、連鎖は、要素 `c` に記録されたコードの成分を `a'` のコードの成分と同一視する。対を分解する必要はない。
 <!--/-->
@@ -565,7 +565,7 @@ The reading and the conclusion use the raised form: the clause reads the pair wh
 <!--en-->
 The first two moves are as before: invert the member into a formula, and decompose it by the tag into the single subformula of raised arity.
 <!--zh-->
-前两个动作照旧：把成员求逆成公式，再按标签分解出唯一的、元数抬升的子公式。
+前两个动作照旧：把元素求逆成公式，再按标签分解出唯一的、元数抬升的子公式。
 <!--ja-->
 最初の二つの動きは同様である。要素を論理式へ逆にたどり、標識で、アリティの上がったただ一つの部分論理式へ分解する。
 <!--/-->
@@ -644,7 +644,7 @@ The conclusion is the second-component shape: the clause reads the pair with the
 <!--en-->
 The member `c` is a key-shaped pair whose payload carries two components: the code component of the term `t` in front, and the code component of the subformula `a'` behind. The clause reads the raised arity together with the second component.
 <!--zh-->
-成员 `c` 是键形的对，其载荷携带两个分量：居前的项 `t` 的编码分量，与居后的子公式 `a'` 的编码分量。子句读取的是抬升元数连同第二分量。
+元素 `c` 是键形的对，其载荷携带两个分量：居前的项 `t` 的编码分量，与居后的子公式 `a'` 的编码分量。子句读取的是抬升元数连同第二分量。
 <!--ja-->
 要素 `c` は鍵の形の対であり、そのペイロードは二つの成分を運ぶ。前に項 `t` のコードの成分、後に部分論理式 `a'` のコードの成分である。場合が読むのは、持ち上げられたアリティと第二成分である。
 <!--/-->
@@ -660,7 +660,7 @@ The member `c` is a key-shaped pair whose payload carries two components: the co
 <!--en-->
 The shared computation identifies the payload recorded in the member, componentwise, with the coded pair of `⌜ t ⌝ᵗ`{.Agda} and `⌜ a' ⌝`{.Agda}. The second component equality, supplied by the injectivity of the coding, is what the rewriting consumes; the term rides in the first component and drops out.
 <!--zh-->
-共享计算把成员中记录的载荷按分量认同为 `⌜ t ⌝ᵗ`{.Agda} 与 `⌜ a' ⌝`{.Agda} 的编码对。改写所消耗的是由编码单射性供给的第二分量等式；项乘坐在第一分量里，随后退出。
+共享计算把元素中记录的载荷按分量认同为 `⌜ t ⌝ᵗ`{.Agda} 与 `⌜ a' ⌝`{.Agda} 的编码对。改写所消耗的是由编码单射性供给的第二分量等式；项乘坐在第一分量里，随后退出。
 <!--ja-->
 共有の計算は、要素に記録されたペイロードを成分ごとに、`⌜ t ⌝ᵗ`{.Agda} と `⌜ a' ⌝`{.Agda} の符号化された対と同一視する。書き換えが消費するのは、符号化の単射性が供給する第二成分の等式である。項は第一成分に乗っていて、ここから外れる。
 <!--/-->
@@ -676,7 +676,7 @@ The shared computation identifies the payload recorded in the member, componentw
 <!--en-->
 The rewriting by `keyS≡` uses the arity equation and the second component equality, landing at the membership of the pair the clause reads. The fourth move then carries the key of `a'` up to the slot of `φ` through its own slot and the closure direction, and the inversion supplies the inclusion.
 <!--zh-->
-`keyS≡` 的改写使用元数等式与第二分量等式，落定为子句所读对的隶属。第四个动作随后把 `a'` 的键经它自己的槽位与闭合方向提升到 `φ` 的槽位，而求逆供给那条包含。
+`keyS≡` 的改写使用元数等式与第二分量等式，落定为子句所读对的成员关系。第四个动作随后把 `a'` 的键经它自己的槽位与闭合方向提升到 `φ` 的槽位，而求逆供给那条包含。
 <!--ja-->
 `keyS≡` による書き換えは、アリティの等式と第二成分の等式を使い、場合の読む対の所属に着地する。第四の動きが、`a'` の鍵を自分のスロットと閉包の向きを通して `φ` のスロットへ持ち上げ、逆にたどる操作が包含を供給する。
 <!--/-->

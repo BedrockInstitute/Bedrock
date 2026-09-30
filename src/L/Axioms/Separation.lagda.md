@@ -32,7 +32,7 @@ module L.Axioms.Separation {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
 ```agda
-open import FOL.ZFStructure using ( Transitive; module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 open import FOL.Syntax
   using ( Term; con; var; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇
         ; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
@@ -63,7 +63,7 @@ both statements will move the relevant data into one ordinal stage, form a
 definable subset there, and compare that stage calculation with satisfaction
 in the whole constructible model.
 <!--zh-->
-有界分离所求的不只是可构造集 `a` 的一个宿主层子类型，而是可构造模型中的一个元素，其成员恰为 `a` 中满足给定 Δ₀ 公式的 `x`。有界替换所求的则是函数性 Δ₀ 关系的取值所成之集。两项证明都会先把有关数据放入同一个序数层，在层内形成可定义子集，再把这项层内计算与整个可构造模型中的满足关系比较。
+有界分离所求的不只是可构造集 `a` 的一个宿主层子类型，而是可构造模型中的一个元素，其元素恰为 `a` 中满足给定 Δ₀ 公式的 `x`。有界替换所求的则是函数性 Δ₀ 关系的取值所成之集。两项证明都会先把有关数据放入同一个序数层，在层内形成可定义子集，再把这项层内计算与整个可构造模型中的满足关系比较。
 <!--ja-->
 有界な分出公理が求めるのは、構成可能集合 `a` のホスト側の部分型だけではない。`a` に属し、与えられた Δ₀ 論理式を満たす `x` だけを要素とする、構成可能モデルの要素を求める。有界な置換公理は、関数的な Δ₀ 関係の値からなる集合を求める。どちらの証明でも、関係するデータを一つの順序数段階へ入れ、その段階で定義可能部分集合を作り、この段階内の計算を構成可能モデル全体での充足関係と比較する。
 <!--/-->
@@ -88,7 +88,7 @@ in `φ` is bounded by a term. Membership atoms are Δ₀, conjunction preserves
 the property, and bounded existential quantification preserves it. These three
 closure facts make the separation and image formulas Δ₀.
 <!--zh-->
-对象语言使第一种有界性得到精确定义。公式 `φ : Formula S n` 可以含有来自模型载体 `S` 的常元，并有 `n` 个自由变元槽位。证书 `Δ₀ φ` 表示 `φ` 中出现的每个量词都由一个词项界定。隶属原子是 Δ₀ 的，合取保持这一性质，有界存在量化也保持这一性质。这三项封闭性保证分离公式与像公式仍是 Δ₀ 的。
+对象语言使第一种有界性得到精确定义。公式 `φ : Formula S n` 可以含有来自模型载体 `S` 的常元，并有 `n` 个自由变元槽位。证书 `Δ₀ φ` 表示 `φ` 中出现的每个量词都由一个词项界定。成员关系原子是 Δ₀ 的，合取保持这一性质，有界存在量化也保持这一性质。这三项封闭性保证分离公式与像公式仍是 Δ₀ 的。
 <!--ja-->
 対象言語によって、第一の有界性が正確に定まる。論理式 `φ : Formula S n` はモデルの台 `S` の要素を定数として含むことができ、`n` 個の自由変数の位置をもつ。証明 `Δ₀ φ` は、`φ` に現れるすべての量化子が項によって有界であることを表す。所属の原子論理式は Δ₀ であり、連言と有界存在量化はこの性質を保つ。この三つの閉性によって、分出の論理式と像の論理式も Δ₀ になる。
 <!--/-->
@@ -117,7 +117,7 @@ the constructibility results can then package that subset as an element of the
 model. The remaining task is to prove that this stage-defined subset has the
 same members as the original formula specifies in `L`.
 <!--zh-->
-为何要把常元移入同一个层？层 `Lset σ` 有一个小呈现，所以定义其子集的公式以该呈现中的索引为常元；原公式却以 `S` 的任意元素为常元。完成改名之后，`DefOf (Lset σ)` 可以在外围累积层级中形成该公式选出的子集，再由可构造性结果把这个子集包装成模型元素。余下的问题是证明：这个在层内定义的子集，与原公式在 `L` 中指定的成员完全相同。
+为何要把常元移入同一个层？层 `Lset σ` 有一个小呈现，所以定义其子集的公式以该呈现中的索引为常元；原公式却以 `S` 的任意元素为常元。完成改名之后，`DefOf (Lset σ)` 可以在外围累积层级中形成该公式选出的子集，再由可构造性结果把这个子集包装成模型元素。余下的问题是证明：这个在层内定义的子集，与原公式在 `L` 中指定的元素完全相同。
 <!--ja-->
 なぜ定数を一つの段階へ移すのであろうか。段階 `Lset σ` には小さな提示があるため、その部分集合を定義する論理式は、この提示の添字を定数として使う。これに対して元の論理式は、`S` の任意の要素を定数として使う。改名した後では、`DefOf (Lset σ)` が、その論理式で選ばれる部分集合を周囲の累積階層の中で作り、構成可能性に関する結果がそれをモデルの要素として組み立てる。残る課題は、この段階で定義した部分集合の要素が、元の論理式が `L` で指定する要素と正確に一致することを証明することである。
 <!--/-->
@@ -132,7 +132,7 @@ construction uses `lem`. At the other end, `uniqueL` uses the model's set
 extensionality to prove uniqueness from a pointwise
 membership specification.
 <!--zh-->
-层级工具提供两种规模的序数上界。`bound2` 把两个层索引置于一个共同序数之内，`boundingOrd` 则对由小类型索引的一族层索引作同样处理；层的单调性随后把成员关系提升到共同上界。运算 `stage` 为每个可构造集指派一个最早层索引，使相应的层包含该集合；在这项构造中，只有这个最早层运算使用 `lem`。另一端的 `uniqueL` 使用模型的集合外延性，从逐点成员规格证明唯一性。
+层级工具提供两种规模的序数上界。`bound2` 把两个层索引置于一个共同序数之内，`boundingOrd` 则对由小类型索引的一族层索引作同样处理；层的单调性随后把成员关系提升到共同上界。运算 `stage` 为每个可构造集指派一个最早层索引，使相应的层包含该集合；在这项构造中，只有这个最早层运算使用 `lem`。另一端的 `uniqueL` 使用模型的集合外延性，从逐点成员关系规格证明唯一性。
 <!--ja-->
 階層に関する道具は、二つの規模の順序数上界を与える。`bound2` は二つの段階の添字を一つの共通の順序数の中へ置き、`boundingOrd` は小さな型で添字づけられた族について同じことを行う。その後、段階の単調性によって所属を共通上界まで持ち上げる。操作 `stage` は、各構成可能集合に、それを含む最小の段階の添字を割り当てる。この構成では、この最小段階の操作だけが `lem` を使う。もう一方の端では、`uniqueL` がモデルの集合外延性を使い、各点での所属の仕様から一意性を証明する。
 <!--/-->
@@ -161,7 +161,7 @@ into an index together with a path from its represented set to `x`. The
 construction uses that untruncated fibre data locally; no representative is
 extracted from propositional truncation.
 <!--zh-->
-小呈现把模型成员关系与序数界定及层内可定义性所需的小索引类型连接起来。对累积层级中的集合 `A`，类型 `⟪ A ⟫` 为其呈现的成员编索引，`⟪ A ⟫↪` 返回某索引所指名的集合。反过来，`∈-asFiber` 把成员证明 `x ∈ A` 化为一个索引，以及从其呈现值到 `x` 的路径。构造在局部直接使用这份未经截断的纤维数据；这里没有从命题截断中抽取代表。
+小呈现把模型成员关系与序数界定及层内可定义性所需的小索引类型连接起来。对累积层级中的集合 `A`，类型 `⟪ A ⟫` 为其呈现的元素编索引，`⟪ A ⟫↪` 返回某索引所指名的集合。反过来，`∈-asFiber` 把成员关系证明 `x ∈ A` 化为一个索引，以及从其呈现值到 `x` 的路径。构造在局部直接使用这份未经截断的纤维数据；这里没有从命题截断中抽取代表。
 <!--ja-->
 小さな提示は、モデルの所属を、順序数による上界と段階での定義可能性に必要な小さな添字型へ結びつける。累積階層の集合 `A` に対して、型 `⟪ A ⟫` は提示された要素を添字づけ、`⟪ A ⟫↪` は添字が名指す集合を返す。逆に、`∈-asFiber` は所属の証明 `x ∈ A` を、添字と、その提示された集合から `x` へのパスへ変える。この構成は、切り詰められていないファイバーのデータを局所的に使う。命題的切り詰めから代表を取り出すことはない。
 <!--/-->
@@ -186,7 +186,7 @@ underlying sets and take values in `hProp`.
 <!--/-->
 
 ```agda
-open hPropStructure 𝒮ʟ
+open hPropView 𝒮ʟ
 ```
 
 <!--en-->
@@ -237,7 +237,7 @@ its underlying set. Induction on a Δ₀ formula therefore gives `abs₀`, a pat
 between its ambient and inner truth values. This is Δ₀ absoluteness, not a claim
 that `L` or any stage is elementary for arbitrary formulas.
 <!--zh-->
-可构造类是传递的：可构造集的成员仍可构造。这恰好足以处理有界量词。若一个外围见证属于某个可构造界定词项的解释，就能把它重新包装为 `S` 的元素；反向则可把内层见证投影回其底层集合。于是对 Δ₀ 公式作归纳便得到 `abs₀`，即外围真值与内层真值之间的路径。这是 Δ₀ 绝对性，并不声称 `L` 或任何层对任意公式都是初等的。
+可构造类是传递的：可构造集的元素仍可构造。这恰好足以处理有界量词。若一个外围见证属于某个可构造界定词项的解释，就能把它重新包装为 `S` 的元素；反向则可把内层见证投影回其底层集合。于是对 Δ₀ 公式作归纳便得到 `abs₀`，即外围真值与内层真值之间的路径。这是 Δ₀ 绝对性，并不声称 `L` 或任何层对任意公式都是初等的。
 <!--ja-->
 構成可能クラスは推移的である。構成可能集合の要素は再び構成可能である。これは有界量化子を扱うのにちょうど十分である。構成可能な境界項の解釈に属する周囲の証人は `S` の要素として組み直せ、内側の証人は基礎にある集合へ射影できる。したがって Δ₀ 論理式についての帰納から、その周囲での真理値と内側での真理値の間のパス `abs₀` が得られる。これは Δ₀ 絶対性であり、`L` やいずれかの段階が任意の論理式について初等的であるという主張ではない。
 <!--/-->
@@ -317,7 +317,7 @@ index type required by `boundingOrd`. The canonical small presentation of the
 underlying set `fst a` provides a small way to enumerate the source members
 needed for the bound.
 <!--zh-->
-类型 `Mem` 把一个源元素与它属于 `a` 的证据包装在一起。可缩纤维假设要求这份证据作为输入，所以只有一个裸的 `x : S` 并不足够。由于 `S` 已经位于后继宇宙层级，`Mem` 太大，不能直接充当 `boundingOrd` 所需的小索引类型。底层集合 `fst a` 的典范小呈现提供一种小规模的枚举方式，列出构造上界所需的源成员。
+类型 `Mem` 把一个源元素与它属于 `a` 的证据包装在一起。可缩纤维假设要求这份证据作为输入，所以只有一个裸的 `x : S` 并不足够。由于 `S` 已经位于后继宇宙层级，`Mem` 太大，不能直接充当 `boundingOrd` 所需的小索引类型。底层集合 `fst a` 的典范小呈现提供一种小规模的枚举方式，列出构造上界所需的源元素。
 <!--ja-->
 型 `Mem` は、始域の要素と、それが `a` に属するという証拠を組にする。可縮なファイバーについての仮定はこの証拠を入力として要求するので、単なる `x : S` だけでは足りない。`S` はすでに後続宇宙レベルにあるため、`Mem` は `boundingOrd` が要求する小さな添字型として直接使うには大きすぎる。基礎にある集合 `fst a` の正準な小さな提示は、上界の構成に必要な始域の要素を小さな型で列挙する。
 <!--/-->
@@ -335,7 +335,7 @@ looks like choosing values pointwise, no truncated existence is being
 eliminated: the centres are explicit components of the supplied dependent
 function `fc`.
 <!--zh-->
-对 `p : Mem`，可缩纤维 `fc (p .fst) (p .snd)` 已经包含其中心。函数 `img` 投影出该中心的值分量，从而为每个带证书的源成员给出一个确定的模型元素。这看似逐点选取取值，却没有消去任何经过截断的存在：这些中心本来就是所给依值函数 `fc` 的显式分量。
+对 `p : Mem`，可缩纤维 `fc (p .fst) (p .snd)` 已经包含其中心。函数 `img` 投影出该中心的值分量，从而为每个带证书的源元素给出一个确定的模型元素。这看似逐点选取取值，却没有消去任何经过截断的存在：这些中心本来就是所给依值函数 `fc` 的显式分量。
 <!--ja-->
 `p : Mem` に対して、可縮なファイバー `fc (p .fst) (p .snd)` はすでにその中心を含んでいる。関数 `img` は中心の値の成分を射影し、証明付きの各始域の要素に対して一つの確定したモデル要素を与える。これは各点で値を選んでいるように見えるが、切り詰められた存在を除去してはいない。中心は、与えられた依存関数 `fc` の明示的な成分だからである。
 <!--/-->
@@ -371,7 +371,7 @@ transporting that membership along this equality then covers an
 arbitrary `y` satisfying `R (p .fst) y`. Functionality is used source by source;
 it does not say that values arising from different sources are distinct.
 <!--zh-->
-可缩性还把选定中心与每个其他相关对 `(y , h)` 认同起来。对第一投影取合同，便得到 `img p ≡ y`，这是完整模型元素的相等，连同其可构造性证书也包括在内。把 `img p` 放入共同层，再沿这项相等运输成员证明，便可覆盖任意满足 `R (p .fst) y` 的 `y`。函数性逐个源使用；它并不表示不同源产生的值彼此不同。
+可缩性还把选定中心与每个其他相关对 `(y , h)` 认同起来。对第一投影取合同，便得到 `img p ≡ y`，这是完整模型元素的相等，连同其可构造性证书也包括在内。把 `img p` 放入共同层，再沿这项相等运输成员关系证明，便可覆盖任意满足 `R (p .fst) y` 的 `y`。函数性逐个源使用；它并不表示不同源产生的值彼此不同。
 <!--ja-->
 可縮性はまた、選ばれた中心を、ほかのすべての関係する対 `(y , h)` と同一視する。第一射影に合同性を適用すると `img p ≡ y` が得られる。これは構成可能性の証明も含む、モデル要素全体の等しさである。`img p` を共通の段階へ入れ、この等しさに沿って所属の証明を輸送すれば、`R (p .fst) y` を満たす任意の `y` を扱える。関数性は始域の要素ごとに使われる。異なる始域の要素から生じる値が互いに異なるという主張ではない。
 <!--/-->
@@ -389,7 +389,7 @@ set is constructible as well, so it can be paired with its certificate to form
 an element of `S`. Together with the original membership proof this gives an
 element of `Mem`, to which `img` and the fibre hypothesis may be applied.
 <!--zh-->
-为得到小索引族，`memS` 从索引 `m : ⟪ fst a ⟫` 出发。该索引所呈现的集合已知属于 `fst a`。由于 `a` 可构造且可构造类传递，这个呈现值也可构造，因而能与其证书配成 `S` 的元素；再加上原有的成员证明，就得到 `Mem` 的元素，可以对它应用 `img` 与纤维假设。
+为得到小索引族，`memS` 从索引 `m : ⟪ fst a ⟫` 出发。该索引所呈现的集合已知属于 `fst a`。由于 `a` 可构造且可构造类传递，这个呈现值也可构造，因而能与其证书配成 `S` 的元素；再加上原有的成员关系证明，就得到 `Mem` 的元素，可以对它应用 `img` 与纤维假设。
 <!--ja-->
 小さな添字の族を得るために、`memS` は添字 `m : ⟪ fst a ⟫` から始める。この添字が提示する集合は `fst a` に属する。`a` は構成可能であり、構成可能クラスは推移的なので、この提示された集合も構成可能である。したがって、その集合と証明を組にして `S` の要素を作れる。さらに元の所属の証明を加えると `Mem` の要素となり、`img` とファイバーについての仮定を適用できる。
 <!--/-->
@@ -411,7 +411,7 @@ the constructibility component of `memS`. Thus the same
 membership fact both locates the represented set inside the source and permits
 it to be packaged as a constructible model element.
 <!--zh-->
-局部证明 `fm∈fa` 给出 `memS` 的成员分量。典范呈现先在其小成员关系中陈述成员事实，`∈∈ₛ` 再把该事实转换为累积层级中的命题值成员关系。把传递性施于 `fm∈fa` 与证书 `a .snd`，便得到 `memS` 的可构造性分量。因此，同一项成员事实既把呈现值定位在源集合内，也使它能够被包装成可构造模型元素。
+局部证明 `fm∈fa` 给出 `memS` 的元素分量。典范呈现先在其小成员关系中陈述成员关系事实，`∈∈ₛ` 再把该事实转换为累积层级中的命题值成员关系。把传递性施于 `fm∈fa` 与证书 `a .snd`，便得到 `memS` 的可构造性分量。因此，同一项成员关系事实既把呈现值定位在源集合内，也使它能够被包装成可构造模型元素。
 <!--ja-->
 局所的な証明 `fm∈fa` は、`memS` の所属の成分を与える。正準な提示は、まず小さな所属関係によって所属を述べ、`∈∈ₛ` がその事実を累積階層の命題値の所属へ変換する。`fm∈fa` と証明 `a .snd` に推移性を適用すると、`memS` の構成可能性の成分が得られる。したがって同じ所属の事実が、提示された集合を始集合の中に位置づけると同時に、それを構成可能なモデル要素として組み立てることを可能にする。
 <!--/-->
@@ -470,7 +470,7 @@ member, followed by `img-uniq`, extends the conclusion to every value related
 to that member. Ordinality and range containment are therefore distinct claims
 extracted from the same bounding construction.
 <!--zh-->
-`bImg` 的第二投影证明上界的两个部分。其中第一部分在此命名为 `βimg-ord`，证明 `βimg` 是序数；这使 `Lset βimg` 能够被包装成模型元素。余下部分则对每个小源索引 `m`，给出所选值的层索引属于 `βimg` 的证明。把后一项比较与 `stage-mem` 合用，就能把每个选定像放入 `Lset βimg`；再从呈现的源运输到任意源成员，并应用 `img-uniq`，结论便扩展到与该成员相关的每个值。因此，序数性与值域包含是从同一界定构造中取得的两项不同结论。
+`bImg` 的第二投影证明上界的两个部分。其中第一部分在此命名为 `βimg-ord`，证明 `βimg` 是序数；这使 `Lset βimg` 能够被包装成模型元素。余下部分则对每个小源索引 `m`，给出所选值的层索引属于 `βimg` 的证明。把后一项比较与 `stage-mem` 合用，就能把每个选定像放入 `Lset βimg`；再从呈现的源运输到任意源元素，并应用 `img-uniq`，结论便扩展到与该元素相关的每个值。因此，序数性与值域包含是从同一界定构造中取得的两项不同结论。
 <!--ja-->
 `bImg` の第二射影は、上界の二つの部分を証明する。その第一の部分をここで `βimg-ord` として取り出し、`βimg` が順序数であることを示す。この証明によって、`Lset βimg` をモデル要素として組み立てられる。残る部分は、小さな始域の添字 `m` ごとに、選ばれた値の段階の添字が `βimg` に属することを与える。この比較を `stage-mem` と組み合わせると、選ばれた各像が `Lset βimg` に入る。さらに、提示された始域の要素から任意の始域の要素へ輸送し、`img-uniq` を使うことで、その要素と関係するすべての値へ結論を広げる。したがって、順序数性と値域の包含は、同じ上界の構成から取り出される別々の主張である。
 <!--/-->
@@ -491,7 +491,7 @@ single stage `Lset βimg` contains every value related to a member of `a`. The
 canonical stages used earlier depend on `lem`; this final comparison and upward
 transport introduce no further classical principle.
 <!--zh-->
-为界住关系的每个取值，固定 `x ∈ˢ a`、候选值 `y` 以及 `R x y` 的证明。源集成员关系把 `x` 认同为 `a` 的规范小表现中的一个成员；函数性继而把 `y` 认同为该被呈现成员处选定的值。这个选定值属于自己的典范层，而该层的索引严格位于 `βimg` 之下，所以 `Lset-mono` 把它抬入 `Lset βimg`。最后沿取值等式运输，即可得到 `y` 的层成员证明。因此，同一个层 `Lset βimg` 容纳关系作用于 `a` 的成员所得的一切值。前面选取典范层依赖 `lem`；这里的最终比较与向上运输没有引入更多经典原则。
+为界住关系的每个取值，固定 `x ∈ˢ a`、候选值 `y` 以及 `R x y` 的证明。源集成员关系把 `x` 认同为 `a` 的规范小表现中的一个元素；函数性继而把 `y` 认同为该被呈现元素处选定的值。这个选定值属于自己的典范层，而该层的索引严格位于 `βimg` 之下，所以 `Lset-mono` 把它抬入 `Lset βimg`。最后沿取值等式运输，即可得到 `y` 的层成员关系证明。因此，同一个层 `Lset βimg` 容纳关系作用于 `a` 的元素所得的一切值。前面选取典范层依赖 `lem`；这里的最终比较与向上运输没有引入更多经典原则。
 <!--ja-->
 関係のすべての値を抑えるため、`x ∈ˢ a`、候補 `y`、および `R x y` の証明を固定する。始集合への所属により、`x` は `a` の標準的な小さい表示から得られる要素と同一視される。関数性はさらに、`y` をその表示された要素で選ばれた値と同一視する。その値は自身の標準的な段階に属し、その添字は `βimg` より真に小さいので、`Lset-mono` によって `Lset βimg` へ持ち上がる。最後に値の等式に沿って輸送すれば `y` の所属が得られる。したがって一つの段階 `Lset βimg` が、`a` の要素から関係によって得られるすべての値を含む。先に標準的な段階を選ぶ部分は `lem` に依存するが、ここでの最後の比較と上方への輸送は新たな古典原理を導入しない。
 <!--/-->
@@ -514,7 +514,7 @@ that equality to `memS m .fst ≡ x`, because the second component `isL` of a
 model element is proposition-valued and hence cannot distinguish two packages
 with the same underlying set.
 <!--zh-->
-隶属纤维同时给出比较任意源元素与小表现所需的两项数据。第一投影是 `fst a` 的表现中的索引 `m`；它本来就包含在这份成员证明中，并非从一个仅知非空的集合中作选择。第二投影给出 `m` 所呈现的集合与 `fst x` 之间的等式。由于模型元素的第二分量 `isL` 是命题值的，不能区分底层集合相同的两个包裹，`Σ≡Prop` 把这条底层等式提升为 `memS m .fst ≡ x`。
+成员关系纤维同时给出比较任意源元素与小表现所需的两项数据。第一投影是 `fst a` 的表现中的索引 `m`；它本来就包含在这份成员关系证明中，并非从一个仅知非空的集合中作选择。第二投影给出 `m` 所呈现的集合与 `fst x` 之间的等式。由于模型元素的第二分量 `isL` 是命题值的，不能区分底层集合相同的两个包裹，`Σ≡Prop` 把这条底层等式提升为 `memS m .fst ≡ x`。
 <!--ja-->
 所属のファイバーは、任意の始点と小さい表示を比較するための二つのデータを同時に与える。第一射影は `fst a` の表示の添字 `m` である。これは単に要素が存在する集まりから選んだものではなく、所属の証明そのものに含まれるデータである。第二射影は、`m` が表示する集合と `fst x` との等式を与える。モデル要素の第二成分 `isL` は命題値であり、同じ基礎集合をもつ二つの組を区別しないため、`Σ≡Prop`はこの基礎集合の等式を `memS m .fst ≡ x` へ持ち上げる。
 <!--/-->
@@ -535,7 +535,7 @@ contractible, `img-uniq` equates its centre `img (memS m)` with `y`. This is the
 precise use of functionality: it compares two values for one fixed source. It
 does not assert that different source members have different values.
 <!--zh-->
-原来的关系证明以 `x` 为源。沿 `q` 的逆路径运输后，它成为`R (memS m .fst) y` 的证明，因而与 `fc` 在 `memS m` 处选定的中心落在同一个取值纤维中。该纤维可缩，所以 `img-uniq` 把中心 `img (memS m)` 与 `y` 等同。这正是函数性的用途：比较同一个固定源的两个取值；它并不断言不同源成员的取值彼此不同。
+原来的关系证明以 `x` 为源。沿 `q` 的逆路径运输后，它成为`R (memS m .fst) y` 的证明，因而与 `fc` 在 `memS m` 处选定的中心落在同一个取值纤维中。该纤维可缩，所以 `img-uniq` 把中心 `img (memS m)` 与 `y` 等同。这正是函数性的用途：比较同一个固定源的两个取值；它并不断言不同源元素的取值彼此不同。
 <!--ja-->
 もとの関係の証明は `x` を始点とする。これを `q` の逆向きに沿って輸送すると、`R (memS m .fst) y` の証明になり、`memS m` において `fc` が選んだ中心と同じ値のファイバーに入る。そのファイバーは可縮なので、`img-uniq` は中心`img (memS m)` と `y` を同一視する。関数性が使われるのは、固定した一つの始点に対する二つの値を比較するためである。異なる始点の値が異なるとは主張しない。
 <!--/-->
@@ -563,7 +563,7 @@ are such presentation indices and the subset `defSet` cut out by each unary
 formula. The remaining task is to compare that stage-based definition with
 satisfaction in the constructible model.
 <!--zh-->
-固定层论证从序数索引 `σ` 及其证书 `oσ` 开始。构造 `DefC = DefOf (Lset σ)` 通过 `Lset σ` 的规范小表现处理其成员，并提供以表现索引为常元的公式，以及每条一元公式刻出的子集 `defSet`。余下任务是把这种层内定义与可构造模型中的满足关系作精确比较。
+固定层论证从序数索引 `σ` 及其证书 `oσ` 开始。构造 `DefC = DefOf (Lset σ)` 通过 `Lset σ` 的规范小表现处理其元素，并提供以表现索引为常元的公式，以及每条一元公式刻出的子集 `defSet`。余下任务是把这种层内定义与可构造模型中的满足关系作精确比较。
 <!--ja-->
 固定した段階での議論は、順序数の添字 `σ` とその証明 `oσ` から始まる。構成 `DefC = DefOf (Lset σ)` は、`Lset σ` の要素をその標準的な小さい表示を通して扱う。そして、表示の添字を定数とする論理式と、各一変数論理式が切り出す部分集合 `defSet` を与える。残る課題は、この段階に基づく定義を構成可能モデルでの充足と正確に比較することである。
 <!--/-->
@@ -588,13 +588,13 @@ is again in the stage. Notice that this proof does not use the ordinality
 certificate `oσ`: transitivity follows from `Lset-layer σ` itself. This closure
 is what keeps witnesses of bounded quantifiers inside the restricted world.
 <!--zh-->
-有界公式的绝对性要求所考虑的类具有传递性。这里 `DefC.M` 是 `Lset σ` 的成员类，而 `layer-trans (Lset-layer σ)` 恰好证明：其成员的成员仍在该层中。注意，这份证明不使用序数性证书 `oσ`；传递性直接来自 `Lset-layer σ`。正是这种封闭性保证有界量词的见证留在受限世界内。
+有界公式的绝对性要求所考虑的类具有传递性。这里 `DefC.M` 是 `Lset σ` 的元素类，而 `layer-trans (Lset-layer σ)` 恰好证明：其元素的元素仍在该层中。注意，这份证明不使用序数性证书 `oσ`；传递性直接来自 `Lset-layer σ`。正是这种封闭性保证有界量词的见证留在受限世界内。
 <!--ja-->
 有界論理式の絶対性には、対象となるクラスの推移性が必要である。ここで `DefC.M` は`Lset σ` の要素のクラスであり、`layer-trans (Lset-layer σ)` は、その要素の要素も再び段階内にあることをちょうど証明する。この証明は順序数性の証明 `oσ` を使わない。推移性は `Lset-layer σ` 自体から従う。この閉性によって、有界量化子の証人は制限された世界の内部に留まる。
 <!--/-->
 
 ```agda
-  Atrans : Transitive 𝒮ᵥ DefC.M
+  Atrans : hPropView.Transitive 𝒮ᵥ DefC.M
   Atrans = layer-trans (Lset-layer σ)
 ```
 
@@ -607,7 +607,7 @@ formula is evaluated in the surrounding hierarchy. In particular,
 reading for a `Δ₀` formula. That fact provides the first half of the semantic
 bridge below.
 <!--zh-->
-把 `Atrans` 交给 `DefC.Refine` 后，就可使用有界公式的比较结果。改名后的记号`_⊨σ_` 表示精炼模块给出的外围 `V` 值读法：层索引按其所呈现的成员解释，所得公式在周遭层级中求值。特别地，对 `Δ₀` 公式，`RefC.abs-defSet` 将把属于可定义子集与这种外围读法等同；这构成下述语义桥的前半段。
+把 `Atrans` 交给 `DefC.Refine` 后，就可使用有界公式的比较结果。改名后的记号`_⊨σ_` 表示精炼模块给出的外围 `V` 值读法：层索引按其所呈现的元素解释，所得公式在周遭层级中求值。特别地，对 `Δ₀` 公式，`RefC.abs-defSet` 将把属于可定义子集与这种外围读法等同；这构成下述语义桥的前半段。
 <!--ja-->
 `Atrans` を `DefC.Refine` に与えると、有界論理式を比較する結果が使えるようになる。改名された記法 `_⊨σ_` は、精緻化モジュールが与える周囲の `V` 値の読みを表す。段階の添字を、それが表示する要素として解釈し、得られた論理式を周囲の階層で評価する。特に `Δ₀` 論理式について、`RefC.abs-defSet` は定義可能部分集合への所属をこの周囲の読みと同一視する。これが後の意味論的な橋の前半である。
 <!--/-->
@@ -666,7 +666,7 @@ inside the constructible model at the packaged element
 `(⟪ Lset σ ⟫↪ m , xL)`. The constant bound `h`, the `Δ₀` proof `dφ`, and the
 constructibility proof `xL` justify the three changes of viewpoint.
 <!--zh-->
-这座桥比较同一数学赋值的两条满足命题。左侧先由 `RL.liftFo` 把 `φ` 的每个常元重标为表现索引，再由 `mapFo DefC.ι` 把索引解释为其所呈现的成员，最后在周遭层级中于 `⟪ Lset σ ⟫↪ m` 求值。右侧则在可构造模型内，于打包后的元素`(⟪ Lset σ ⟫↪ m , xL)` 处求原公式的值。常元界 `h`、`Δ₀` 证明 `dφ` 与可构造性证明 `xL` 分别保证这几次视角转换合法。
+这座桥比较同一数学赋值的两条满足命题。左侧先由 `RL.liftFo` 把 `φ` 的每个常元重标为表现索引，再由 `mapFo DefC.ι` 把索引解释为其所呈现的元素，最后在周遭层级中于 `⟪ Lset σ ⟫↪ m` 求值。右侧则在可构造模型内，于打包后的元素`(⟪ Lset σ ⟫↪ m , xL)` 处求原公式的值。常元界 `h`、`Δ₀` 证明 `dφ` 与可构造性证明 `xL` 分别保证这几次视角转换合法。
 <!--ja-->
 この橋は、同じ数学的な付値に対する二つの充足命題を比較する。左辺では、まず`RL.liftFo` が `φ` の各定数を表示の添字へ付け替え、`mapFo DefC.ι` がその添字を表示される要素として解釈し、`_⊨σ_` が周囲の階層で `⟪ Lset σ ⟫↪ m` において評価する。右辺では、もとの論理式を構成可能モデルの内部で、組にした要素`(⟪ Lset σ ⟫↪ m , xL)` において評価する。定数の境界 `h`、`Δ₀` の証明 `dφ`、構成可能性の証明 `xL` が、これらの視点の移動を正当化する。
 <!--/-->
@@ -729,7 +729,7 @@ the small presentation of `Lset σ`; the right side packages the same represente
 set as a model element. The equality therefore connects the stage construction
 to the predicate that separation must realize.
 <!--zh-->
-现在可以直接陈述所需的成员规格。对层表现中的索引 `m`，并给定其所呈现集合可构造的证明 `xL`，属于提升公式刻出的可定义子集，等同于原公式在 `L` 中得到满足。左侧使用 `Lset σ` 的小表现，右侧则把同一被呈现集合包装为模型元素。这条等式因而把层内构造与分离所要实现的谓词连接起来。
+现在可以直接陈述所需的成员关系规格。对层表现中的索引 `m`，并给定其所呈现集合可构造的证明 `xL`，属于提升公式刻出的可定义子集，等同于原公式在 `L` 中得到满足。左侧使用 `Lset σ` 的小表现，右侧则把同一被呈现集合包装为模型元素。这条等式因而把层内构造与分离所要实现的谓词连接起来。
 <!--ja-->
 必要な所属の仕様をここで直接述べられる。段階の表示の添字 `m` と、それが表す集合が構成可能であるという証明 `xL` に対し、持ち上げた論理式が切り出す定義可能部分集合への所属は、もとの論理式が `L` で充足されることに等しくなる。左辺は`Lset σ` の小さい表示を使い、右辺は同じ表示された集合をモデル要素として組にする。この等式が、段階内の構成を分出が実現すべき述語へ結ぶ。
 <!--/-->
@@ -751,7 +751,7 @@ identifies that ambient proposition with satisfaction of the original formula
 inside the constructible model. The order matters: definability reaches the
 ambient hierarchy first, and model absoluteness supplies the final link.
 <!--zh-->
-证明复合两条语义等式。首先，`RefC.abs-defSet` 使用传递性与提升后的 `Δ₀` 证书，把属于 `DefC.defSet (RL.liftFo φ h)` 等同于公式`mapFo DefC.ι (RL.liftFo φ h)` 在被呈现成员处的外围满足。随后 `satBridge` 把这条外围命题等同于原公式在可构造模型内的满足。次序在这里不可颠倒：可定义性先抵达周遭层级，模型绝对性再给出最后一环。
+证明复合两条语义等式。首先，`RefC.abs-defSet` 使用传递性与提升后的 `Δ₀` 证书，把属于 `DefC.defSet (RL.liftFo φ h)` 等同于公式`mapFo DefC.ι (RL.liftFo φ h)` 在被呈现元素处的外围满足。随后 `satBridge` 把这条外围命题等同于原公式在可构造模型内的满足。次序在这里不可颠倒：可定义性先抵达周遭层级，模型绝对性再给出最后一环。
 <!--ja-->
 証明は二つの意味論的な等式の合成である。まず `RefC.abs-defSet` が、推移性と持ち上げられた `Δ₀` の証明を用いて、`DefC.defSet (RL.liftFo φ h)` への所属を、表示された要素における `mapFo DefC.ι (RL.liftFo φ h)` の周囲での充足と同一視する。次に `satBridge` が、その周囲の命題を、もとの論理式の構成可能モデル内部での充足と同一視する。定義可能性によってまず周囲の階層へ到達し、モデルの絶対性が最後のつながりを与える、という順序が要点である。
 <!--/-->
@@ -789,7 +789,7 @@ proposition `carve ψ ∈ 𝒟ₒ (Lset σ)`. This lemma supplies the premise fr
 which `𝒟ₒ→isL` will later derive constructibility. This line introduces the
 truncation; it does not eliminate it or recover a formula from it.
 <!--zh-->
-公式 `ψ` 本身见证 `carve ψ` 是 `Lset σ` 的可定义子集。构造子 `𝒟ₒ-intro` 只要求「存在某条公式及其 `defSet` 与目标集合之间的外延等式」，所以显式数据`(ψ , refl)` 以 `∣ ψ , refl ∣₁` 放入命题截断。因此，成员命题`carve ψ ∈ 𝒟ₒ (Lset σ)` 不保留具体是哪条定义公式。这条引理给出前提，稍后`𝒟ₒ→isL` 将由此前提推出可构造性。此行只引入命题截断，并未从中消去或恢复一条公式。
+公式 `ψ` 本身见证 `carve ψ` 是 `Lset σ` 的可定义子集。构造子 `𝒟ₒ-intro` 只要求「存在某条公式及其 `defSet` 与目标集合之间的外延等式」，所以显式数据`(ψ , refl)` 以 `∣ ψ , refl ∣₁` 放入命题截断。因此，成员关系命题`carve ψ ∈ 𝒟ₒ (Lset σ)` 不保留具体是哪条定义公式。这条引理给出前提，稍后`𝒟ₒ→isL` 将由此前提推出可构造性。此行只引入命题截断，并未从中消去或恢复一条公式。
 <!--ja-->
 論理式 `ψ` 自身が、`carve ψ` が `Lset σ` の定義可能部分集合であることを証言する。構成子 `𝒟ₒ-intro` が要求するのは、そのような論理式と、その `defSet` と対象集合との外延的な等式が単に存在することである。そこで明示的な組 `(ψ , refl)` を`∣ ψ , refl ∣₁` として命題的切り詰めに入れる。その結果、所属命題`carve ψ ∈ 𝒟ₒ (Lset σ)` は、どの論理式が定義したかを保持しない。この補題は、後で `𝒟ₒ→isL` が構成可能性を導くための前提を与える。この行は命題的切り詰めを導入するだけで、そこから論理式を除去して取り出すことはしない。
 <!--/-->
@@ -809,7 +809,7 @@ containment is independent of whether `y` satisfies any formula in the
 constructible model; it follows from the way `defSet` ranges only over the
 stage's presented members.
 <!--zh-->
-`DefC.defSet` 产生的每个可定义子集都包含于其环境集合 `Lset σ`。引理 `carve⊆`为不透明名称记录这条包含：它用 `DefC.defSet⊆A` 从 `y ∈ carve ψ` 得到`y ∈ Lset σ`。这条包含不依赖 `y` 是否在可构造模型中满足某条公式；它来自`defSet` 只遍历该层所呈现成员的定义方式。
+`DefC.defSet` 产生的每个可定义子集都包含于其环境集合 `Lset σ`。引理 `carve⊆`为不透明名称记录这条包含：它用 `DefC.defSet⊆A` 从 `y ∈ carve ψ` 得到`y ∈ Lset σ`。这条包含不依赖 `y` 是否在可构造模型中满足某条公式；它来自`defSet` 只遍历该层所呈现元素的定义方式。
 <!--ja-->
 `DefC.defSet` が作る定義可能部分集合は、すべて周囲の集合 `Lset σ` に含まれる。補題 `carve⊆` は、この包含を不透明な名前について記録する。`DefC.defSet⊆A` によって `y ∈ carve ψ` から `y ∈ Lset σ` を得る。この包含は、`y` が構成可能モデルで何らかの論理式を満たすかどうかには依存しない。`defSet` が段階の表示された要素だけを走るという定義から従う。
 <!--/-->
@@ -828,7 +828,7 @@ produces a proof that the corresponding model element satisfies `φ`. No new
 logical implication is proved here: `subst` simply transports an inhabitant
 from the left endpoint of the established equality to the right endpoint.
 <!--zh-->
-`carveSat` 的正向读法把刻出集合的成员证明变成模型中的满足证明。给定一个被呈现成员属于 `carve (RL.liftFo φ h)`，沿 hProp 等式 `carveSat` 作替换，就得到相应模型元素满足 `φ` 的证明。这里没有另证一条逻辑蕴含；`subst` 只是把等式左端的元素运输到右端。
+`carveSat` 的正向读法把刻出集合的成员关系证明变成模型中的满足证明。给定一个被呈现元素属于 `carve (RL.liftFo φ h)`，沿 hProp 等式 `carveSat` 作替换，就得到相应模型元素满足 `φ` 的证明。这里没有另证一条逻辑蕴含；`subst` 只是把等式左端的元素运输到右端。
 <!--ja-->
 `carveSat` の順向きの読みは、切り出された集合への所属をモデルでの充足へ変える。表示された要素が `carve (RL.liftFo φ h)` に属するなら、hProp の等式 `carveSat` に沿う置換によって、対応するモデル要素が `φ` を満たす証明が得られる。ここで新しい論理的含意を証明しているのではない。`subst` は、すでに得た等式の左端の要素を右端へ輸送するだけである。
 <!--/-->
@@ -849,7 +849,7 @@ Satisfaction of `φ` by the packaged presented member transports along
 members represented in the fixed stage. The later `cover` argument is what
 allows an arbitrary satisfying model element to be represented there.
 <!--zh-->
-反向读法沿同一条等式的相反方向进行。打包后的被呈现成员满足 `φ`，沿`sym (carveSat ...)` 运输后便成为刻出集合的成员证明。`imageOut` 与 `imageIn`合起来给出逐点对应的两个方向，但此时只适用于固定层中已被呈现的成员；稍后的`cover` 论证才保证任意满足的模型元素也能在该层中得到表现。
+反向读法沿同一条等式的相反方向进行。打包后的被呈现元素满足 `φ`，沿`sym (carveSat ...)` 运输后便成为刻出集合的成员关系证明。`imageOut` 与 `imageIn`合起来给出逐点对应的两个方向，但此时只适用于固定层中已被呈现的元素；稍后的`cover` 论证才保证任意满足的模型元素也能在该层中得到表现。
 <!--ja-->
 逆向きの読みは、同じ等式を反対向きにたどる。組にされた表示要素による `φ` の充足を `sym (carveSat ...)` に沿って輸送すると、切り出された集合への所属が得られる。`imageOut` と `imageIn` は合わせて点ごとの対応の両方向を与えるが、この時点では固定した段階に表示される要素だけが対象である。任意の充足するモデル要素をそこで表示できることは、後の `cover` の議論が保証する。
 <!--/-->
@@ -900,7 +900,7 @@ stage membership into the constructibility certificate needed to package the
 presented set as an element of `S`. This is the point in the fixed-stage
 construction where `oσ` is used.
 <!--zh-->
-每个索引 `m : ⟪ Lset σ ⟫` 都呈现该层的一个实际成员。规范的小成员证明`∈ₛ⟪ Lset σ ⟫↪ m` 经 `∈∈ₛ` 的第二个方向转换成外围命题`⟪ Lset σ ⟫↪ m ∈ Lset σ`。由于 `σ` 是序数，`Lset→isL σ oσ` 再把这份层成员证明转成可构造性证书，从而能把被呈现集合包装为 `S` 的元素。固定层构造正是在这里使用 `oσ`。
+每个索引 `m : ⟪ Lset σ ⟫` 都呈现该层的一个实际元素。规范的小成员关系证明`∈ₛ⟪ Lset σ ⟫↪ m` 经 `∈∈ₛ` 的第二个方向转换成外围命题`⟪ Lset σ ⟫↪ m ∈ Lset σ`。由于 `σ` 是序数，`Lset→isL σ oσ` 再把这份层成员关系证明转成可构造性证书，从而能把被呈现集合包装为 `S` 的元素。固定层构造正是在这里使用 `oσ`。
 <!--ja-->
 各添字 `m : ⟪ Lset σ ⟫` は、段階の実際の要素を表示する。標準的な小さい所属の証明 `∈ₛ⟪ Lset σ ⟫↪ m` は、`∈∈ₛ` の第二の向きによって周囲の命題`⟪ Lset σ ⟫↪ m ∈ Lset σ` へ変換される。`σ` は順序数なので、`Lset→isL σ oσ` はこの段階への所属を構成可能性の証明へ変え、表示された集合を `S` の要素として組にできるようにする。固定した段階の構成で `oσ` が使われるのはこの箇所である。
 <!--/-->
@@ -922,7 +922,7 @@ membership specification: propositional extensionality turns the two implication
 at each `z` into a path of truth values, and set extensionality then gives
 uniqueness of the realizing set.
 <!--zh-->
-固定层的通用构造接收一元公式 `χ`、其全部常元满足 `Below` 的证明、`Δ₀` 证书，以及一条覆盖条件：每个满足 `χ` 的模型元素，其底层集合都属于 `Lset σ`。目标是给出实现该满足谓词的可缩类型。`uniqueL` 把目标化为一个带逐点成员规格的显式模型元素：命题外延性先把每个 `z` 处的双向蕴含变成真值路径，集合外延性再给出实现集合的唯一性。
+固定层的通用构造接收一元公式 `χ`、其全部常元满足 `Below` 的证明、`Δ₀` 证书，以及一条覆盖条件：每个满足 `χ` 的模型元素，其底层集合都属于 `Lset σ`。目标是给出实现该满足谓词的可缩类型。`uniqueL` 把目标化为一个带逐点成员关系规格的显式模型元素：命题外延性先把每个 `z` 处的双向蕴含变成真值路径，集合外延性再给出实现集合的唯一性。
 <!--ja-->
 固定した段階での一般構成は、一変数論理式 `χ`、そのすべての定数が `Below` を満たす証明、`Δ₀` の証明、および `χ` を満たす各モデル要素の基礎集合が `Lset σ` に属するという被覆条件を受け取る。目標は、充足述語を実現するものの可縮な型を与えることである。`uniqueL` はこの目標を、点ごとの所属仕様をもつ一つの明示的なモデル要素へ帰着する。命題外延性が各 `z` での二方向の含意を真理値のパスにし、集合外延性が実現する集合の一意性を与える。
 <!--/-->
@@ -943,7 +943,7 @@ of `Lset σ`. Applying `𝒟ₒ→isL σ oσ` to that membership supplies the se
 component of the model element. Thus definability gives existence of a
 constructible realizer; its exact extension is established separately by `spec`.
 <!--zh-->
-选定实现者的底层集合是 `carve (RL.liftFo χ hχ)`。常元界 `hχ` 使每个常元重标入该层成为合法操作，而 `carve∈𝒟ₒ` 证明所得 `defSet` 属于 `Lset σ` 的可定义幂集。把 `𝒟ₒ→isL σ oσ` 施于这份成员证明，就得到模型元素的第二分量。因此，可定义性给出一个可构造实现者的存在；它的精确外延则由另行证明的 `spec` 确定。
+选定实现者的底层集合是 `carve (RL.liftFo χ hχ)`。常元界 `hχ` 使每个常元重标入该层成为合法操作，而 `carve∈𝒟ₒ` 证明所得 `defSet` 属于 `Lset σ` 的可定义幂集。把 `𝒟ₒ→isL σ oσ` 施于这份成员关系证明，就得到模型元素的第二分量。因此，可定义性给出一个可构造实现者的存在；它的精确外延则由另行证明的 `spec` 确定。
 <!--ja-->
 選ばれた実現要素の基礎集合は `carve (RL.liftFo χ hχ)` である。定数の境界 `hχ` により、各定数を段階へ付け替えることが正当化される。`carve∈𝒟ₒ` は、得られた `defSet` が`Lset σ` の定義可能冪集合に属することを証明する。この所属に `𝒟ₒ→isL σ oσ` を適用すると、モデル要素の第二成分が得られる。したがって定義可能性が構成可能な実現要素の存在を与え、その正確な外延は別に `spec` が証明する。
 <!--/-->
@@ -965,7 +965,7 @@ presented representative, `imageOut` yields satisfaction there, and
 The cover hypothesis is unnecessary in this direction because carved membership
 already provides the required stage bound.
 <!--zh-->
-规格对每个模型元素 `z` 给出「`z` 属于 `replElt`」与「`z` 满足 `χ`」之间的路径。正向蕴含从 `z ∈ˢ replElt` 开始。由于 `replElt` 的底层集合就是刻出集合，`carve⊆`把 `fst z` 放入 `Lset σ`，规范表现于是给出指名该集合的索引 `m`。将刻出集合的成员证明运输到被呈现代表后，`imageOut` 给出该处的满足证明，`⊨-transport` 再沿底层集合等式把它搬回 `z`。这个方向无需覆盖假设，因为刻出集合的成员关系已经给出所需的层界。
+规格对每个模型元素 `z` 给出「`z` 属于 `replElt`」与「`z` 满足 `χ`」之间的路径。正向蕴含从 `z ∈ˢ replElt` 开始。由于 `replElt` 的底层集合就是刻出集合，`carve⊆`把 `fst z` 放入 `Lset σ`，规范表现于是给出指名该集合的索引 `m`。将刻出集合的成员关系证明运输到被呈现代表后，`imageOut` 给出该处的满足证明，`⊨-transport` 再沿底层集合等式把它搬回 `z`。这个方向无需覆盖假设，因为刻出集合的成员关系已经给出所需的层界。
 <!--ja-->
 仕様は各モデル要素 `z` について、`z` が `replElt` に属することと、`z` が `χ` を満たすこととの間のパスを与える。順向きの含意は `z ∈ˢ replElt` から始まる。`replElt` の基礎集合は切り出された集合なので、`carve⊆` が `fst z` を `Lset σ` に入れ、標準的な表示がその集合を指す添字 `m` を与える。切り出された集合への所属を表示された代表へ輸送すると、`imageOut` がそこでの充足を与え、`⊨-transport` が基礎集合の等式に沿ってそれを `z` へ戻す。この向きでは所属自体から必要な段階の境界が得られるため、被覆仮定は使わない。
 <!--/-->
@@ -987,7 +987,7 @@ fibre, so no choice principle is involved. The path `q` will be used in opposite
 directions: first to move carved membership to the presented set, and then to
 move satisfaction from the packaged representative back to `z`.
 <!--zh-->
-这些局部数据把通往规范表现的步骤明确写出。首先，`fz∈Lσ` 来自刻出集合对该层的包含。把 `∈-asFiber` 施于这份成员证明，得到索引 `m : ⟪ Lset σ ⟫` 与路径`q : ⟪ Lset σ ⟫↪ m ≡ fst z`。二者是同一个隶属纤维的两个投影，所以这里不涉及任何选择原则。路径 `q` 将沿相反方向使用两次：先把刻出集合的成员证明移到被呈现集合，再把打包代表处的满足证明搬回 `z`。
+这些局部数据把通往规范表现的步骤明确写出。首先，`fz∈Lσ` 来自刻出集合对该层的包含。把 `∈-asFiber` 施于这份成员关系证明，得到索引 `m : ⟪ Lset σ ⟫` 与路径`q : ⟪ Lset σ ⟫↪ m ≡ fst z`。二者是同一个成员关系纤维的两个投影，所以这里不涉及任何选择原则。路径 `q` 将沿相反方向使用两次：先把刻出集合的成员关系证明移到被呈现集合，再把打包代表处的满足证明搬回 `z`。
 <!--ja-->
 これらの局所データは、標準的な表示へ移る過程を明示する。まず `fz∈Lσ` は、切り出された集合が段階に含まれることから従う。この所属に `∈-asFiber` を適用すると、添字 `m : ⟪ Lset σ ⟫` とパス `q : ⟪ Lset σ ⟫↪ m ≡ fst z` が得られる。両者は一つの所属ファイバーの二つの射影なので、選択原理は使われない。パス `q`は互いに逆の向きに使われる。まず切り出された集合への所属を表示された集合へ移し、次に組にした代表での充足を `z` へ戻す。
 <!--/-->
@@ -1008,7 +1008,7 @@ that represented member, is carried along the naming equation to the original
 element. The direction is complete: a member of the carved set satisfies the
 formula, in the model, at itself.
 <!--zh-->
-规格的正向方向以两步收尾。层中被表示的成员被打包成模型元素，其可构造性来自层本身；而对那个被表示成员证得的、对刻出集合的隶属，沿命名等式被搬到原元素身上。该方向完成：刻出集合的成员在模型中、于自身处满足公式。
+规格的正向方向以两步收尾。层中被表示的元素被打包成模型元素，其可构造性来自层本身；而对那个被表示元素证得的、对刻出集合的成员关系，沿命名等式被搬到原元素身上。该方向完成：刻出集合的元素在模型中、于自身处满足公式。
 <!--ja-->
 仕様の順方向は、二つの段階で締めくくられる。層の中で表されたメンバーが、モデルの元として梱包され、その構成可能性は段階そのものから来る。そして、その表されたメンバーに対して証明された、刻まれた集合への所属が、名指しの等式に沿って、もとの元へ運ばれる。これで順方向は完成である。刻まれた集合の元は、モデルの中で、自分自身のもとで論理式を満たすのである。
 <!--/-->
@@ -1024,7 +1024,7 @@ The backward direction begins with the covering hypothesis, and this is the one
 place where the covering hypothesis is used: every element satisfying the formula is assumed to lie in the stage. Applying this hypothesis to the given satisfaction proof. The fibre of
 the stage membership then recovers the index of a canonical representative.
 <!--zh-->
-反向方向从覆盖假设开始，此处使用覆盖假设：每个满足公式的元素都位于该层。把这个假设施于给定的满足证明。层隶属的纤维随即恢复出规范代表的索引。
+反向方向从覆盖假设开始，此处使用覆盖假设：每个满足公式的元素都位于该层。把这个假设施于给定的满足证明。层成员关系的纤维随即恢复出规范代表的索引。
 <!--ja-->
 逆方向は、覆いの仮定から始まる。ここで覆いの仮定を使う。論理式を満たす各要素はこの段階に属すと仮定されているので、与えられた充足の証明を適用すると。すると、段階への所属の繊維が、標準的な代表の添字を取り戻す。
 <!--/-->
@@ -1064,7 +1064,7 @@ the membership back to the original element. Both directions are complete, and
 the specification is, at every element, an equality of two propositions:
 belonging to the carved realization, and satisfying the formula in the model.
 <!--zh-->
-现在使用可定义性的正向蕴含：代表满足公式，于是代表属于刻出的集合；命名等式再把这份隶属搬回原元素。两个方向均已完备，而规格在每个元素处都是两条命题的相等：属于刻出的实现，与在模型中满足公式。
+现在使用可定义性的正向蕴含：代表满足公式，于是代表属于刻出的集合；命名等式再把这份成员关系搬回原元素。两个方向均已完备，而规格在每个元素处都是两条命题的相等：属于刻出的实现，与在模型中满足公式。
 <!--ja-->
 ここで定義可能性の順方向を使う。代表は論理式を満たすので、代表は刻まれた集合に属する。そして名指しの等式が、この所属をもとの元へ運び戻す。両方向がそろい、仕様は、すべての元において、二つの命題の相等となる。刻まれた実現への所属と、モデルの中で論理式を満たすこととの相等である。
 <!--/-->
@@ -1083,7 +1083,7 @@ constants are bounded because the source was supplied below the stage and the
 formula's constants came certified. The fixed-stage theorem then returns exactly the
 contractible realization that the model field's separation asks for.
 <!--zh-->
-层上分离把前面的构造专用于子集。其假设为：源集合已在层内；其公式是「属于源」与给定公式的合取，因隶属原子有界、合取保持有界而成为有界公式；其常元有界，因为源被供在层下、公式的常元带着证书。于是固定层定理返回的恰是模型字段的分离所要的那份可缩实现。
+层上分离把前面的构造专用于子集。其假设为：源集合已在层内；其公式是「属于源」与给定公式的合取，因成员关系原子有界、合取保持有界而成为有界公式；其常元有界，因为源被供在层下、公式的常元带着证书。于是固定层定理返回的恰是模型字段的分离所要的那份可缩实现。
 <!--ja-->
 段階での分出は、先の構成を部分集合に特化したものである。仮定は、始集合がすでに段階の中にあるということ。その論理式は、「始集合への所属」と与えられた論理式との連言であり、所属の原子が有界であり、連言が有界性を保つので、有界な論理式である。定数も有界である。始集合が段階の下に供給され、論理式の定数には証明書が付いていたからである。こうして固定段階の定理は、モデルの欄の分出が求める、ちょうどあの可縮な実現を返す。
 <!--/-->
@@ -1104,7 +1104,7 @@ in the stage as well. This is the mathematical reason the membership conjunct of
 the separation predicate is not decoration: it is what brings every candidate
 under the stage within which the subset is being carved.
 <!--zh-->
-固定层定理的覆盖假设只由第一个合取项即可解除。满足该合取的元素满足「属于源」，而源落在层中、层又传递，于是元素也落在层中。这正是分离谓词中隶属合取项并非装饰的数学缘由：是它把每个候选带进了正在刻出子集的那一层之内。
+固定层定理的覆盖假设只由第一个合取项即可解除。满足该合取的元素满足「属于源」，而源落在层中、层又传递，于是元素也落在层中。这正是分离谓词中成员关系合取项并非装饰的数学缘由：是它把每个候选带进了正在刻出子集的那一层之内。
 <!--ja-->
 固定段階の定理の覆いの仮定は、最初の連言だけによって解除される。連言を満たす元は「始集合への所属」を満たし、始集合は段階の中にあり、段階は推移的である。ゆえにその元も段階の中にある。分出の述語における所属の連言が飾りではない数学的理由は、これである。切り出そうとしている層の内側へ、すべての候補を運び込むのが、この連言なのである。
 <!--/-->
@@ -1180,7 +1180,7 @@ The search for a constant bound starts at terms, and the two cases could hardly
 be more different. A constant is bounded by its own earliest stage, with the
 ordinality of that index and the membership of the constant in its layer. A variable contains no constants, so the empty stage is returned with a vacuous proof; there is no constant to bound, and the result makes no claim that a variable's value belongs to the empty set.
 <!--zh-->
-常元之界的搜索从词项开始，而两种情形迥异。常元以自己的最早层为界，连同该指标的序数性以及该常元在其层中的隶属。变元不含常元，于是返回空层与平凡成立的证明；这里没有需要定界的常元，也不声称变元的取值属于空集。
+常元之界的搜索从词项开始，而两种情形迥异。常元以自己的最早层为界，连同该指标的序数性以及该常元在其层中的成员关系。变元不含常元，于是返回空层与平凡成立的证明；这里没有需要定界的常元，也不声称变元的取值属于空集。
 <!--ja-->
 定数の上界の探索は項から始まり、二つの場合は明確に異なる。定数には、それ自身が初めて属する層を上界として、その添字の順序数性と定数の所属証明を添える。変数は定数を含まないため、空の層と自明な証明を返す。ここには上界を求めるべき定数がなく、変数の値が空集合に属すとは主張しない。
 <!--/-->
@@ -1316,7 +1316,7 @@ all of whose quantifiers are bounded, the predicate "member of the source and
 satisfying the formula" has a contractible realization by a model element. The
 proof is one application of the fixed-stage separation theorem, after the stage has been computed.
 <!--zh-->
-有界分离至此完整陈述。对一个源集合与任何一元公式，只要其量词皆有界，「是源的成员且满足公式」这条谓词就有模型元素给出的可缩实现。证明只需应用一次固定层分离定理，在层算好之后。
+有界分离至此完整陈述。对一个源集合与任何一元公式，只要其量词皆有界，「是源的元素且满足公式」这条谓词就有模型元素给出的可缩实现。证明只需应用一次固定层分离定理，在层算好之后。
 <!--ja-->
 有界な分出が、いま、完全な形で述べられる。始集合と、量化子がすべて有界であるような一変数論理式に対して、「始集合の要素であり論理式を満たす」という述語は、モデルの元による可縮な実現をもつ。段階を定めた後、固定段階での分出定理を一度適用する。
 <!--/-->
@@ -1350,7 +1350,7 @@ The source's own placement is recorded separately: it lies in its earliest
 layer, and the merge's recorded inclusion lifts that membership to the common
 stage. This supplies the covering hypothesis of the fixed-stage theorem. It follows directly from the monotonicity of the tower and the certificate supplied by the stage assignment.
 <!--zh-->
-源自身的位置单独处理：它属于自己的最早层，而合并所得的包含关系把这份隶属提升到公共层。这便给出固定层定理所需的覆盖假设，只用到塔的单调性与层指派所附的证书。
+源自身的位置单独处理：它属于自己的最早层，而合并所得的包含关系把这份成员关系提升到公共层。这便给出固定层定理所需的覆盖假设，只用到塔的单调性与层指派所附的证书。
 <!--ja-->
 始集合自身の位置は別に扱う。始集合はそれが初めて現れる層に属し、併合から得られる包含関係によって、この所属を共通の層まで持ち上げる。これが固定層の定理に必要な被覆の仮定であり、塔の単調性と層の割り当てに伴う証明書から直接得られる。
 <!--/-->
@@ -1374,7 +1374,7 @@ source, a binary formula all of whose quantifiers are bounded, and the
 assumption that each member's fibre of related values is contractible, the image
 predicate has a contractible realization by a model element. The proof transports realizability along an equality of predicates. Functionality is used to bound the related values; once that bound is known, ordinary separation collects the image.
 <!--zh-->
-有界替换连同其函数性假设一并陈述。给定源集合、一条量词皆有界的二元公式，并假设每个源成员所对应的值构成可缩纤维，像谓词便有模型元素给出的可缩实现。证明沿谓词的相等搬运可实现性：函数性用来为相关值取得共同的界，得到这个界后，再由普通的分离收集其像。
+有界替换连同其函数性假设一并陈述。给定源集合、一条量词皆有界的二元公式，并假设每个源元素所对应的值构成可缩纤维，像谓词便有模型元素给出的可缩实现。证明沿谓词的相等搬运可实现性：函数性用来为相关值取得共同的界，得到这个界后，再由普通的分离收集其像。
 <!--ja-->
 有界な置換は、その関数性の仮定とともに述べられる。始集合と、量化子がすべて有界な二変数論理式を取り、各要素に対応する値の繊維が可縮であると仮定する。このとき、像の述語はモデルの元による可縮な実現をもつ。証明は述語の相等に沿って実現可能性を輸送する。関数性によって関連する値に共通の上界を与え、その上界を得た後は通常の分出によって像を集める。
 <!--/-->
@@ -1414,7 +1414,7 @@ existence of the image predicate is the host level's truncated existence. The
 two agree in meaning through the semantics, but they are not the same syntactic
 object, and distinguishing them makes the next equality precise.
 <!--zh-->
-一元像公式具有如下语义。它以对象语言说：源的某个成员与外侧候选相关，而有界存在把那个成员推进环境的第一个槽。此处的有界存在是对象语言自己的量词；像谓词的外层存在则是宿主层面的截断存在。两者经语义而意义相符，却不是同一个句法对象；区分二者，才能精确陈述下一条相等。
+一元像公式具有如下语义。它以对象语言说：源的某个元素与外侧候选相关，而有界存在把那个元素推进环境的第一个槽。此处的有界存在是对象语言自己的量词；像谓词的外层存在则是宿主层面的截断存在。两者经语义而意义相符，却不是同一个句法对象；区分二者，才能精确陈述下一条相等。
 <!--ja-->
 一変数の像の論理式の意味は次のとおりである。それは、対象言語でこう言う。始集合のどこかのメンバーが、外側の候補と関係づけられる、と。そして有界存在が、そのメンバーを環境の最初の枠へ押し込む。ここでの有界存在は、対象言語自身の量化子である。一方、像の述語の外側の存在は、ホストレベルの切り詰められた存在である。二者は意味においては意味論を通して一致するが、同じ統語的な対象ではない。両者を区別することで、次の等式を正確に述べられる。
 <!--/-->
@@ -1429,7 +1429,7 @@ The guarded predicate collects what the construction can verify: the candidate
 lies in the packaged common image stage, and it satisfies the unary image
 formula. The stage-membership conjunct provides a bound for Separation. The other conjunct describes the actual image, so the stage condition can later be removed using the covering theorem.
 <!--zh-->
-带守卫的谓词收集构造所能核验的东西：候选者落在打包好的公共像层中，并且满足那条一元像公式。层成员这一合取项为分离提供一个界，另一个合取项描述真正的像；因此，随后可借覆盖定理去掉层条件。
+带守卫的谓词收集构造所能核验的东西：候选者落在打包好的公共像层中，并且满足那条一元像公式。层元素这一合取项为分离提供一个界，另一个合取项描述真正的像；因此，随后可借覆盖定理去掉层条件。
 <!--ja-->
 守衛つきの述語は、構成が検証できるものを集める。候補が、梱包された共通の像の段階の中にあり、一変数の像の論理式を満たす、ということ。段階への所属を表す連言は分出の上界を与え、もう一方の連言は実際の像を記述する。したがって、後で覆いの定理を用いて段階の条件を取り除ける。
 <!--/-->
@@ -1450,7 +1450,7 @@ predicate at that candidate; the stage conjunct is dropped and the second
 conjunct stands as the claim. Because the source occupies the first slot: no transposition of variables is needed
 anywhere.
 <!--zh-->
-两条谓词的相等逐点成立，而其两个方向用力不同。正向：从被截断的源见证走向带守卫的谓词。消去是合法的，因为带守卫的谓词是命题；覆盖事实供给层隶属；同一个源及其满足证明按公式要求的槽位次序重新放入截断。反向：什么都不需要，因为像公式在候选处的满足，按其语义恰是候选处的像谓词；层合取被丢弃，第二个合取项本身即为所求。由于源占据第一个槽位：全程无须任何变元换位。
+两条谓词的相等逐点成立，而其两个方向用力不同。正向：从被截断的源见证走向带守卫的谓词。消去是合法的，因为带守卫的谓词是命题；覆盖事实供给层成员关系；同一个源及其满足证明按公式要求的槽位次序重新放入截断。反向：什么都不需要，因为像公式在候选处的满足，按其语义恰是候选处的像谓词；层合取被丢弃，第二个合取项本身即为所求。由于源占据第一个槽位：全程无须任何变元换位。
 <!--ja-->
 二つの述語の相等は点ごとに成り立ち、その二方向は手間が違う。順方向。切り詰められた源の証人から、守衛つきの述語へ。消去が正当なのは、守衛つきの述語が命題だからである。覆いの事実が段階への所属を供給し、同じ始域の要素と充足の証明を、論理式が要求する位置の順序で切り詰めの中へ戻す。逆方向には、何も要らない。候補における像の論理式の充足は、その意味論により、ちょうどその候補における像の述語だからである。段階の連言は捨てられ、第二の連言がそのまま主張となる。始域が第一の位置を占めるため。変数の入れ替えは、どこにも要らないのである。
 <!--/-->
@@ -1484,7 +1484,7 @@ component, it yields `Q≡`; transport along `sym Q≡` then proves
 principle, although the construction of the common stage used by
 `range∈βimg` depends on `lem`.
 <!--zh-->
-对 `ReplImage a φ` 中的候选者 `y`，源 `x`、成员证明 `x∈a` 与满足证明 `h` 只在命题截断下给出。由于 `BoundedImage y` 是命题，`rec₁` 可以在构造它的两个合取项时使用这些数据。第一项来自 `range∈βimg`：函数性蕴涵，与 `a` 的成员相关的每个值都属于 `Lset βimg`。对于第二项，把同一个 `x`、`x∈a` 与 `h` 重新放入命题截断。按照 `imageFo = ∃̇∈ (con a) φ` 的语义，这恰是 `y` 满足 `imageFo` 的证明。因此，没有源作为未经截断的数据返回。
+对 `ReplImage a φ` 中的候选者 `y`，源 `x`、成员关系证明 `x∈a` 与满足证明 `h` 只在命题截断下给出。由于 `BoundedImage y` 是命题，`rec₁` 可以在构造它的两个合取项时使用这些数据。第一项来自 `range∈βimg`：函数性蕴涵，与 `a` 的元素相关的每个值都属于 `Lset βimg`。对于第二项，把同一个 `x`、`x∈a` 与 `h` 重新放入命题截断。按照 `imageFo = ∃̇∈ (con a) φ` 的语义，这恰是 `y` 满足 `imageFo` 的证明。因此，没有源作为未经截断的数据返回。
 
 由此完成从 `ReplImage a φ y` 到 `BoundedImage y` 的蕴涵。再结合舍弃层成员关系分量所得的反向蕴涵，便得到 `Q≡`；沿 `sym Q≡` 运输则证明 `replaceΔ₀`。准确地说，在假设 `lem : LEM (ℓ-suc ℓ)`、`φ` 的 Δ₀ 见证，以及每个 `x ∈ˢ a` 对应的值纤维均可缩这些条件下，结论是 `isContr (SetOf (ReplImage a φ))`。这是所陈述的 Δ₀ 替换定理。本分支没有引入额外的经典原理，但 `range∈βimg` 所使用的公共层之构造依赖 `lem`。
 <!--ja-->

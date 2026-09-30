@@ -28,7 +28,7 @@ module L.GCH.Assembly {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 open import FOL.Syntax using ( var; _∈̇_; _∧̇_ )
 import FOL.Semantics
 import FOL.ZFModel
@@ -71,7 +71,7 @@ The only classical principle used in the assembly is excluded middle. It will tu
 <!--en-->
 Two set-theoretic viewpoints meet here. The ambient cumulative hierarchy supplies membership and small presentations, while the constructible subuniverse supplies the predicate `isL` and the stages `Lset α`; the ZF model structure later interprets the internal power set.
 <!--zh-->
-这里汇合了两个集合论视角。外围累积层级提供隶属与小呈现，可构造子宇宙提供谓词 `isL` 和各层 `Lset α`；随后由 ZF 模型结构解释内部幂集。
+这里汇合了两个集合论视角。外围累积层级提供成员关系与小呈现，可构造子宇宙提供谓词 `isL` 和各层 `Lset α`；随后由 ZF 模型结构解释内部幂集。
 <!--ja-->
 ここでは、集合論に関する二つの見方を結び付ける。周囲の累積階層は所属と小さな提示を与え、構成可能な部分宇宙は述語 `isL` と各段階 `Lset α` を与える。内部の冪集合は、後で ZF モデルの構造によって解釈される。
 <!--/-->
@@ -79,7 +79,7 @@ Two set-theoretic viewpoints meet here. The ambient cumulative hierarchy supplie
 <!--en-->
 The minimization argument uses three facts about ordinals: membership in an ordinal is transitive, any two ordinals satisfy trichotomy, and the membership order on the small presentation of an ordinal is a well-order. These facts let a least candidate found in a bounded search control every competing cardinal.
 <!--zh-->
-极小化论证使用序数的三项事实：序数中的隶属具有传递性，任意两个序数满足三分律，并且序数的小呈现上的隶属次序是良序。这些事实使有界搜索所得的最小候选者能够控制任意竞争基数。
+极小化论证使用序数的三项事实：序数中的成员关系具有传递性，任意两个序数满足三分律，并且序数的小呈现上的成员关系次序是良序。这些事实使有界搜索所得的最小候选者能够控制任意竞争基数。
 <!--ja-->
 最小化の議論では、順序数について三つの事実を使う。順序数の所属は推移的であり、任意の二つの順序数には三岐性が成り立ち、順序数の小さな提示上の所属順序は整列順序である。これにより、有界な探索で得た最小候補が、任意の競合する基数を制御できる。
 <!--/-->
@@ -103,7 +103,7 @@ The final GCH statement asks for a successor cardinal together with coded inject
 <!--en-->
 The bounded search is made small by using the presentation of the ordinal `sucV (fst θ)`. Its indices represent the members of `sucV (fst θ)`, hence ordinals no larger than `θ`; `ω` is used separately to express that the cardinal under study is not finite. When two constructible pairs have equal underlying sets, propositionhood of constructibility lifts that equality to the pairs themselves.
 <!--zh-->
-有界搜索通过序数 `sucV (fst θ)` 的小呈现变成一个小类型。其索引表示 `sucV (fst θ)` 的成员，也就是不大于 `θ` 的序数；`ω` 则另用于表达所研究的基数不是有限序数。若两个可构造对的底层集合相等，可构造性的命题性会把这一相等提升为这两个配对的相等。
+有界搜索通过序数 `sucV (fst θ)` 的小呈现变成一个小类型。其索引表示 `sucV (fst θ)` 的元素，也就是不大于 `θ` 的序数；`ω` 则另用于表达所研究的基数不是有限序数。若两个可构造对的底层集合相等，可构造性的命题性会把这一相等提升为这两个配对的相等。
 <!--ja-->
 有界探索には、順序数 `sucV (fst θ)` の小さな提示を使う。その添字は `sucV (fst θ)` の要素、すなわち `θ` 以下の順序数を表す。一方、`ω` は考察する基数が有限順序数でないことを表すために使う。二つの構成可能な対の底の集合が等しいとき、構成可能性が命題であることにより、その等しさを対そのものの等しさへ持ち上げられる。
 <!--/-->
@@ -118,7 +118,7 @@ open InfinitySet {ℓ} using ( ω; sucV )
 <!--en-->
 Trichotomy will be analyzed through three coproduct branches. Impossible branches end in the empty type, while propositional truncation records existence without exposing a chosen witness; its eliminations below therefore always target propositions such as membership or another truncated existence statement.
 <!--zh-->
-三分律将通过余积的三个分支来分析。不可能的分支落入空类型，而命题截断只记录存在而不暴露选定见证；因此下文对它的消去总是以隶属或另一个截断存在陈述等命题为目标。
+三分律将通过余积的三个分支来分析。不可能的分支落入空类型，而命题截断只记录存在而不暴露选定见证；因此下文对它的消去总是以成员关系或另一个截断存在陈述等命题为目标。
 <!--ja-->
 三岐性は、直和の三つの分岐に分けて調べる。不可能な分岐は空型に帰着し、命題的切り詰めは選ばれた証人を外へ出さずに存在だけを記録する。したがって、以下での消去先は、所属や別の切り詰められた存在命題のような命題に限られる。
 <!--/-->
@@ -126,13 +126,13 @@ Trichotomy will be analyzed through three coproduct branches. Impossible branche
 <!--en-->
 Membership written `_∈ˢ_` is ambient membership in the cumulative hierarchy. This is the relation needed for pointwise containments, including the claim that every ambient member of a constructible subset of `κ` also belongs to `κ`.
 <!--zh-->
-记作 `_∈ˢ_` 的隶属是累积层级中的外围隶属。逐点包含使用这一关系，特别是「`κ` 的一个可构造子集的每个外围成员也属于 `κ`」这一陈述。
+记作 `_∈ˢ_` 的成员关系是累积层级中的外围成员关系。逐点包含使用这一关系，特别是「`κ` 的一个可构造子集的每个外围元素也属于 `κ`」这一陈述。
 <!--ja-->
 `_∈ˢ_` と書く所属は、累積階層における周囲の所属である。点ごとの包含、特に「`κ` の構成可能な部分集合の各周囲要素が `κ` にも属する」という主張には、この関係を使う。
 <!--/-->
 
 ```agda
-open hPropStructure 𝒮ᵥ using ( _∈ˢ_ )
+open hPropView 𝒮ᵥ using ( _∈ˢ_ )
 ```
 
 <!--en-->
@@ -144,7 +144,7 @@ We write `SV` for the ambient proposition-valued set-theoretic structure. Its ca
 <!--/-->
 
 ```agda
-module SV = hPropStructure 𝒮ᵥ
+module SV = hPropView 𝒮ᵥ
 ```
 
 <!--en-->
@@ -156,7 +156,7 @@ We write `SL` for the corresponding structure restricted to constructible sets. 
 <!--/-->
 
 ```agda
-module SL = hPropStructure 𝒮ʟ
+module SL = hPropView 𝒮ʟ
 ```
 
 <!--en-->
@@ -197,7 +197,7 @@ StageCountedCoded =
 <!--en-->
 The second interface states the bounded-subset theorem. For an ordinal internal cardinal `κ` that is not finite, and any constructible set `y` whose ambient members all belong to `κ`, there is, merely, an ordinal `β` such that `y` lies in the stage `Lset β` and `β` injects into `κ`. The subset hypothesis quantifies over ambient sets, which covers members that carry no constructibility proof of their own.
 <!--zh-->
-第二个接口陈述有界子集定理。对非有限、序数、内部基数的 `κ`，以及任一「其外围成员都属于 `κ`」的可构造集合 `y`，都仅仅地存在序数 `β`，使 `y` 落在层 `Lset β` 中且 `β` 单射入 `κ`。子集前提量化外围集合，从而覆盖那些自身不带可构造性证明的成员。
+第二个接口陈述有界子集定理。对非有限、序数、内部基数的 `κ`，以及任一「其外围元素都属于 `κ`」的可构造集合 `y`，都仅仅地存在序数 `β`，使 `y` 落在层 `Lset β` 中且 `β` 单射入 `κ`。子集前提量化外围集合，从而覆盖那些自身不带可构造性证明的元素。
 <!--ja-->
 第二のインターフェースは、有界部分集合の定理を述べる。有限ではなく順序数であり内部の基数である `κ` と、その周囲の要素がすべて `κ` に属する構成可能な集合 `y` に対して、単に、順序数 `β` が存在し、`y` が段階 `Lset β` の中にあり、`β` が `κ` へ単射する。部分集合の仮定は周囲の集合の上で量化するので、自分自身の構成可能性の証明をもたない要素も覆う。
 <!--/-->
@@ -308,7 +308,7 @@ The search space is the small presentation of the ordinal successor `sucV (fst �
 <!--en-->
 Membership on the ordinal `sucV (fst θ)` induces a strict well-order on this presentation. That well-order makes it possible to search the small candidate family for a least member.
 <!--zh-->
-序数 `sucV (fst θ)` 上的隶属关系在这一呈现上诱导出严格良序。借助该良序，证明可以在这个小候选族中寻找最小元。
+序数 `sucV (fst θ)` 上的成员关系在这一呈现上诱导出严格良序。借助该良序，证明可以在这个小候选族中寻找最小元。
 <!--ja-->
 順序数 `sucV (fst θ)` 上の所属関係は、この提示に厳密な整列順序を誘導する。この整列順序により、小さな候補族の中で最小要素を探索できる。
 <!--/-->
@@ -338,7 +338,7 @@ For presentation indices `m` and `n`, the induced relation `m < n` holds exactly
 <!--en-->
 Internal cardinality is a proposition. Indeed, `IsCardinalL x` says, for every constructible member `δ` of `x`, that any coded injection from `x` into `δ` leads to the empty type; dependent function types with proposition-valued conclusions remain propositions. This allows cardinality to form one component of the proposition-valued candidate predicate below.
 <!--zh-->
-内部基数性是命题。具体说，`IsCardinalL x` 对 `x` 的每个可构造成员 `δ` 断言：任何从 `x` 到 `δ` 的编码单射都会导出空类型；而结论为命题的依值函数类型仍是命题。因此，基数性可作为下文命题值候选谓词的一个分量。
+内部基数性是命题。具体说，`IsCardinalL x` 对 `x` 的每个可构造元素 `δ` 断言：任何从 `x` 到 `δ` 的编码单射都会导出空类型；而结论为命题的依值函数类型仍是命题。因此，基数性可作为下文命题值候选谓词的一个分量。
 <!--ja-->
 内部の基数性は命題である。実際、`IsCardinalL x` は、`x` の構成可能な各要素 `δ` について、`x` から `δ` への符号化された単射があれば空型が導かれると述べる。命題値の結論をもつ依存関数型は、やはり命題である。したがって、基数性を以下の命題値の候補述語の一成分にできる。
 <!--/-->
@@ -352,7 +352,7 @@ Internal cardinality is a proposition. Indeed, `IsCardinalL x` says, for every c
 <!--en-->
 The candidate predicate asks two things of an index: the constructible set it presents is an internal cardinal, and `κ` belongs to it. Ordinality need not be stored in the predicate, because every presented set is a member of the ordinal `sucV (fst θ)` and is therefore itself an ordinal. The package `definedGood` presents the conjunction by `cardinalAt zero ∧̇ (var one ∈̇ var zero)`. Its environment places the candidate before `κ`, and the two directions of `CardinalAt` give the checked reading of the non-atomic conjunct.
 <!--zh-->
-候选谓词向索引要求两件事：其呈现的可构造集合是内部基数，并且 `κ` 属于它。谓词无需另存序数性，因为每个被呈现的集合都是序数 `sucV (fst θ)` 的成员，因而自身就是序数。包 `definedGood` 用 `cardinalAt zero ∧̇ (var one ∈̇ var zero)` 呈现这个合取；其环境把候选者放在 `κ` 之前，而 `CardinalAt` 的两个方向为非原子合取支给出经过检查的读取。
+候选谓词向索引要求两件事：其呈现的可构造集合是内部基数，并且 `κ` 属于它。谓词无需另存序数性，因为每个被呈现的集合都是序数 `sucV (fst θ)` 的元素，因而自身就是序数。包 `definedGood` 用 `cardinalAt zero ∧̇ (var one ∈̇ var zero)` 呈现这个合取；其环境把候选者放在 `κ` 之前，而 `CardinalAt` 的两个方向为非原子合取支给出经过检查的读取。
 <!--ja-->
 候補述語は、添字に二つの条件を課す。その添字が提示する構成可能な集合が内部基数であることと、`κ` がその集合に属することである。順序数性を述語に別途保存する必要はない。提示される各集合は順序数 `sucV (fst θ)` の要素なので、それ自身も順序数だからである。パッケージ `definedGood` はこの連言を `cardinalAt zero ∧̇ (var one ∈̇ var zero)` で表す。その環境では候補が `κ` より前に置かれ、`CardinalAt` の二方向が非原子的な連言肢の検査済みの読みを与える。
 <!--/-->
@@ -386,7 +386,7 @@ The index presenting `θ` itself presents a constructible set whose underlying s
 <!--en-->
 The candidate class is nonempty: the index presenting `θ` is a candidate, carrying the cardinality and the membership transported along that identification.
 <!--zh-->
-候选类非空：呈现 `θ` 的索引就是候选，它携带沿该同一视搬运的基数性与隶属。
+候选类非空：呈现 `θ` 的索引就是候选，它携带沿该同一视搬运的基数性与成员关系。
 <!--ja-->
 候補の類は空ではない。`θ` を提示する索引が候補であり、その同一視に沿って運ばれた基数性と所属を運ぶ。
 <!--/-->
@@ -427,7 +427,7 @@ Name the constructible set presented by the least candidate `δ`. The following 
 <!--en-->
 By the presentation's membership record, the underlying set of `δ` belongs to the ordinal `sucV (fst θ)`. Thus the construction proves only `fst δ ∈ sucV (fst θ)`, which places `δ` at or below `θ`; it does not assert `fst δ ∈ fst θ`.
 <!--zh-->
-由呈现所附的隶属记录，`δ` 的底层集合属于序数 `sucV (fst θ)`。因此这里证明的只是 `fst δ ∈ sucV (fst θ)`，即 `δ` 不大于 `θ`；并没有断言 `fst δ ∈ fst θ`。
+由呈现所附的成员关系记录，`δ` 的底层集合属于序数 `sucV (fst θ)`。因此这里证明的只是 `fst δ ∈ sucV (fst θ)`，即 `δ` 不大于 `θ`；并没有断言 `fst δ ∈ fst θ`。
 <!--ja-->
 提示に付随する所属の記録により、`δ` の底の集合は順序数 `sucV (fst θ)` に属する。したがって、ここで示されるのは `fst δ ∈ sucV (fst θ)`、すなわち `δ` が `θ` 以下であることだけであり、`fst δ ∈ fst θ` を主張してはいない。
 <!--/-->
@@ -440,7 +440,7 @@ By the presentation's membership record, the underlying set of `δ` belongs to t
 <!--en-->
 The underlying set of `δ` is an ordinal, because it is a member of the ordinal successor of an ordinal.
 <!--zh-->
-`δ` 的底层集是序数，因为它是某序数的序数后继的成员。
+`δ` 的底层集是序数，因为它是某序数的序数后继的元素。
 <!--ja-->
 `δ` の底の集合は順序数である。順序数の順序数としての後続の要素だからである。
 <!--/-->
@@ -492,7 +492,7 @@ Leastness says that no earlier index of the search space is a candidate.
 <!--en-->
 Global leastness is stated as a containment: for every ordinal internal cardinal `c` above `κ`, every member of `δ` belongs to `c`. This is exactly the last clause of the successor-cardinal record, and the proof compares the ordinals `δ` and `c`.
 <!--zh-->
-全局最小性被陈述为包含：对每个位于 `κ` 之上的序数内部基数 `c`，`δ` 的每个成员都属于 `c`。这正是后继基数记录的最后一个条款；证明比较序数 `δ` 与 `c`。
+全局最小性被陈述为包含：对每个位于 `κ` 之上的序数内部基数 `c`，`δ` 的每个元素都属于 `c`。这正是后继基数记录的最后一个条款；证明比较序数 `δ` 与 `c`。
 <!--ja-->
 大域的な最小性は、包含として述べられる。`κ` より上にある順序数の内部基数 `c` ごとに、`δ` のすべての要素は `c` に属する。これは、後続基数の記録の最後の条項そのものであり、証明は順序数 `δ` と `c` を比較する。
 <!--/-->
@@ -540,7 +540,7 @@ In the remaining case, `c ∈ δ`. Since `fst δ ∈ sucV (fst θ)` and the ordi
 <!--en-->
 The recovered index presents exactly `c`, and the constructible set it presents is therefore `c` itself; the candidate predicate for this index is obtained by transporting the cardinality and the membership of `c` along that identification.
 <!--zh-->
-恢复出的索引恰呈现 `c`，其呈现的可构造集合即 `c` 自身；该索引的候选谓词由沿此同一视搬运 `c` 的基数性与隶属得到。
+恢复出的索引恰呈现 `c`，其呈现的可构造集合即 `c` 自身；该索引的候选谓词由沿此同一视搬运 `c` 的基数性与成员关系得到。
 <!--ja-->
 復元された索引はちょうど `c` を提示し、その索引が提示する構成可能な集合は `c` 自身である。この索引のための候補の述語は、`c` の基数性と所属をその同一視に沿って運ぶことで得られる。
 <!--/-->
@@ -556,7 +556,7 @@ The recovered index presents exactly `c`, and the constructible set it presents 
 <!--en-->
 The membership of `c` below `δ` is then converted into the strict order of the search space, contradicting the leastness of the selected index.
 <!--zh-->
-于是「`c` 位于 `δ` 之下」的隶属被转换为搜索空间的严格序，与所选索引的最小性矛盾。
+于是「`c` 位于 `δ` 之下」的成员关系被转换为搜索空间的严格序，与所选索引的最小性矛盾。
 <!--ja-->
 そして、`c` が `δ` より下にあるという所属は、探索空間の厳格な順序に変換され、選ばれた索引の最小性と矛盾する。
 <!--/-->
@@ -625,7 +625,7 @@ stage-is-L δ ordδ = isL-Lset (fst δ) ordδ
 <!--en-->
 The bridging predicate for the power set states its content: for two constructible sets `κ` and `y`, with `κ` an ordinal and `y` a member of the model's power set of `κ`, every ambient member `z` of `y` is constructible, belongs to `κ`, and is an ordinal.
 <!--zh-->
-幂集的桥接谓词陈述其内容：对可构造集合 `κ` 与 `y`，其中 `κ` 是序数且 `y` 属于模型幂集 `𝒫κ`，`y` 的每个外围成员 `z` 都可构造、属于 `κ`，且是序数。
+幂集的桥接谓词陈述其内容：对可构造集合 `κ` 与 `y`，其中 `κ` 是序数且 `y` 属于模型幂集 `𝒫κ`，`y` 的每个外围元素 `z` 都可构造、属于 `κ`，且是序数。
 <!--ja-->
 冪集合のための橋渡しの述語は、その内容を述べる。構成可能な集合 `κ` と `y`、すなわち `κ` が順序数であり `y` がモデルの冪集合 `𝒫κ` の要素であるとき、`y` の周囲のすべての要素 `z` は構成可能であり、`κ` に属し、順序数でもあるのである。
 <!--/-->
@@ -653,7 +653,7 @@ The bridge depends on the chosen ZF model because its premise refers to that mod
 <!--en-->
 The subtle point is a change of domains. Power-set membership yields a subset statement quantified over constructible sets, whereas `z` initially ranges over the ambient hierarchy. Transitivity of `L` first makes `z` available as a constructible set; only then can the internal subset statement be applied, after which ordinality follows from `z ∈ κ` and the ordinality of `κ`.
 <!--zh-->
-这里的细节在于量化域发生了转换。幂集隶属给出的子集陈述量化可构造集合，而 `z` 起初量化整个外围层级。先用 `L` 的传递性证明 `z` 可构造，才能把内部子集陈述施用于它；随后由 `z ∈ κ` 与 `κ` 的序数性得到 `z` 的序数性。
+这里的细节在于量化域发生了转换。幂集成员关系给出的子集陈述量化可构造集合，而 `z` 起初量化整个外围层级。先用 `L` 的传递性证明 `z` 可构造，才能把内部子集陈述施用于它；随后由 `z ∈ κ` 与 `κ` 的序数性得到 `z` 的序数性。
 <!--ja-->
 ここで注意すべき点は、量化領域が変わることである。冪集合への所属から得る部分集合の主張は構成可能な集合にわたって量化するが、`z` は最初、周囲の階層全体を動く。まず `L` の推移性によって `z` が構成可能であることを示して初めて、内部の部分集合の主張を適用できる。その後、`z ∈ κ` と `κ` の順序数性から `z` の順序数性が従う。
 <!--/-->
@@ -715,7 +715,7 @@ The internal subset relation is then applied to the pair of `z` and its construc
 <!--en-->
 The landing lemma is stated for the model, the bounded-subset interface, and a fixed successor cardinal `δ` of `κ`: every member of the model's power set of `κ` lies in the stage `Lset δ`.
 <!--zh-->
-落位引理就模型、有界子集接口与 `κ` 的固定后继基数 `δ` 陈述：模型幂集 `𝒫κ` 的每个成员都落在层 `Lset δ` 中。
+落位引理就模型、有界子集接口与 `κ` 的固定后继基数 `δ` 陈述：模型幂集 `𝒫κ` 的每个元素都落在层 `Lset δ` 中。
 <!--ja-->
 着地の補題は、モデル・有界部分集合のインターフェース・そして `κ` の固定された後続基数 `δ` に対して述べられる。モデルの冪集合 `𝒫κ` のすべての要素は、段階 `Lset δ` の中にある。
 <!--/-->
@@ -747,7 +747,7 @@ stage-landing zf ibs κ ordκ cardκ κ∉ω δ (ordδ , cardδ , κ∈δ , _) y
 <!--en-->
 From `y ∈ 𝒫κ` and `z ∈ y`, the strongest-member lemma yields `z ∈ κ`. Its proof first uses the transitivity of `L` to recognize the ambient member `z` as constructible, so that the internal subset relation expressed by power-set membership can be applied to it.
 <!--zh-->
-由 `y ∈ 𝒫κ` 与 `z ∈ y`，最强成员引理得到 `z ∈ κ`。其证明先利用 `L` 的传递性认出外围成员 `z` 是可构造的，从而能把幂集隶属所表达的内部子集关系施用于 `z`。
+由 `y ∈ 𝒫κ` 与 `z ∈ y`，最强成员关系引理得到 `z ∈ κ`。其证明先利用 `L` 的传递性认出外围元素 `z` 是可构造的，从而能把幂集成员关系所表达的内部子集关系施用于 `z`。
 <!--ja-->
 `y ∈ 𝒫κ` と `z ∈ y` から、最強要素補題は `z ∈ κ` を与える。その証明では、まず `L` の推移性によって外側の要素 `z` が構成可能であると分かるので、冪集合への所属が表す内部の部分集合関係を `z` に適用できる。
 <!--/-->
@@ -759,7 +759,7 @@ From `y ∈ 𝒫κ` and `z ∈ y`, the strongest-member lemma yields `z ∈ κ`.
 <!--en-->
 No injection from `δ` into `κ` can exist, because `δ` is an internal cardinal and `κ` is a member of `δ`. This refutation is the tool used to eliminate the impossible trichotomy branches below.
 <!--zh-->
-从 `δ` 到 `κ` 的单射不可能存在，因为 `δ` 是内部基数且 `κ` 是 `δ` 的成员。这条反驳是下文排除不可能三歧分支的工具。
+从 `δ` 到 `κ` 的单射不可能存在，因为 `δ` 是内部基数且 `κ` 是 `δ` 的元素。这条反驳是下文排除不可能三歧分支的工具。
 <!--ja-->
 `δ` から `κ` への単射は存在し得ない。`δ` は内部の基数であり、`κ` は `δ` の要素だからである。この反駁が、下で不可能な三択の分岐を排除する道具である。
 <!--/-->
@@ -788,7 +788,7 @@ For the fixed subset `y`, the bounded-subset estimate supplies, under propositio
 <!--en-->
 If `β` lies below `δ`, monotonicity of the tower directly places the member at the lower stage inside the higher stage. If `β` equals `δ`, the injection `β ↪ κ` would become an injection `δ ↪ κ`, contradicting the cardinality of `δ`.
 <!--zh-->
-若 `β` 低于 `δ`，塔的单调性直接把较低层中的成员放进较高层。若 `β` 等于 `δ`，则注入 `β ↪ κ` 会变成注入 `δ ↪ κ`，与 `δ` 的基数性矛盾。
+若 `β` 低于 `δ`，塔的单调性直接把较低层中的元素放进较高层。若 `β` 等于 `δ`，则注入 `β ↪ κ` 会变成注入 `δ ↪ κ`，与 `δ` 的基数性矛盾。
 <!--ja-->
 `β` が `δ` より下なら、塔の単調性が、低い段階の要素を高い段階の中に直接置く。`β` が `δ` に等しいなら、注入 `β ↪ κ` は `δ ↪ κ` になり、`δ` の基数性と矛盾する。
 <!--/-->
@@ -820,7 +820,7 @@ In the equality branch, equality of the underlying sets lifts to equality of the
 <!--en-->
 The inclusion is the transitivity of the ordinal `β` applied to the two memberships.
 <!--zh-->
-包含是序数 `β` 的传递性施于两条隶属的结果。
+包含是序数 `β` 的传递性施于两条成员关系的结果。
 <!--ja-->
 包含は、順序数 `β` の推移性を、二つの所属に適用したものである。
 <!--/-->
@@ -840,7 +840,7 @@ The inclusion is the transitivity of the ordinal `β` applied to the two members
 <!--en-->
 The power-set comparison now follows from the chain `𝒫κ ↪ Lset δ ↪ δ`. The first arrow comes from the fact that every member of the internal power set lies in `Lset δ`, and the second counts that constructible stage by `δ`. No stage index is chosen uniformly for the members of `𝒫κ`.
 <!--zh-->
-幂集比较现在来自复合链 `𝒫κ ↪ Lset δ ↪ δ`。第一条箭头来自「内部幂集的每个成员都属于 `Lset δ`」，第二条则用 `δ` 计数这一可构造层。证明没有为 `𝒫κ` 的各个成员一致地选择层索引。
+幂集比较现在来自复合链 `𝒫κ ↪ Lset δ ↪ δ`。第一条箭头来自「内部幂集的每个元素都属于 `Lset δ`」，第二条则用 `δ` 计数这一可构造层。证明没有为 `𝒫κ` 的各个元素一致地选择层索引。
 <!--ja-->
 冪集合の比較は、鎖 `𝒫κ ↪ Lset δ ↪ δ` から従う。第一の矢印は、内部冪集合のすべての要素が `Lset δ` に属することから得られ、第二の矢印は、その構成可能な段階を `δ` で数える。`𝒫κ` の各要素に対して段階の添字を一様に選ぶことはない。
 <!--/-->
@@ -885,7 +885,7 @@ The stage at `δ` is presented as an element of `L` by pairing the stage set wit
 <!--en-->
 The successor cardinal `δ` lies outside `ω`: if it were inside, the membership `κ ∈ δ` would force `κ ∈ ω` by transitivity of `ω`, contradicting the hypothesis.
 <!--zh-->
-后继基数 `δ` 落在 `ω` 之外：若它在 `ω` 内，则隶属 `κ ∈ δ` 经 `ω` 的传递性将迫使 `κ ∈ ω`，与假设矛盾。
+后继基数 `δ` 落在 `ω` 之外：若它在 `ω` 内，则成员关系 `κ ∈ δ` 经 `ω` 的传递性将迫使 `κ ∈ ω`，与假设矛盾。
 <!--ja-->
 後続基数 `δ` は `ω` の外にある。もし `ω` の中にあるなら、所属 `κ ∈ δ` が `ω` の推移性によって `κ ∈ ω` を強制し、仮定と矛盾する。
 <!--/-->
@@ -898,7 +898,7 @@ The successor cardinal `δ` lies outside `ω`: if it were inside, the membership
 <!--en-->
 Every member of the power set is landed inside `Lset δ` by the landing lemma, with its constructibility supplied through the transitivity of `L` from the power-set membership.
 <!--zh-->
-幂集的每个成员由安放引理落入 `Lset δ` 之内，其可构造性经 `L` 的传递性从幂集隶属供给。
+幂集的每个元素由安放引理落入 `Lset δ` 之内，其可构造性经 `L` 的传递性从幂集成员关系供给。
 <!--ja-->
 冪集合のすべての要素は、着地の補題によって `Lset δ` の中に落ちる。その構成可能性は、冪集合への所属から、`L` の推移性を通して供給される。
 <!--/-->

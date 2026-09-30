@@ -28,7 +28,7 @@ module L.CardinalAbove {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-irrefl; regularityV )
 open import V.Presentation {ℓ} using ( member; fiber; ↪-inj )
 open import V.Model {ℓ} using ( self∈sucV )
@@ -66,7 +66,7 @@ The base library is opened, and excluded middle is received at the raised level 
 <!--en-->
 Two properties of the ambient cumulative hierarchy drive the later contradictions. Membership is well-founded, and no set is a member of itself. A presentation supplies indices for a set's members, while `self∈sucV` places a set in its ordinal successor.
 <!--zh-->
-环境累积层级的两条性质推动后面的反证：隶属关系是良基的，而且集合不属于自身。呈现为集合的成员提供索引，而 `self∈sucV` 把集合放入它的序数后继。
+环境累积层级的两条性质推动后面的反证：成员关系是良基的，而且集合不属于自身。呈现为集合的元素提供索引，而 `self∈sucV` 把集合放入它的序数后继。
 <!--ja-->
 周囲の累積階層における二つの性質が、後の背理法を支える。所属は整礎的であり、どの集合も自分自身には属しない。提示は集合の要素に添字を与え、`self∈sucV` は集合をその順序数としての後続に入れる。
 <!--/-->
@@ -90,7 +90,7 @@ Two bridges will connect the construction. The reading lemma turns a coded injec
 <!--en-->
 The hierarchy contributes membership bridges, presentations, embedding machinery, the separation construction with its axiom, and the union operation.
 <!--zh-->
-层级贡献隶属桥、呈现、嵌入机制、带公理的分离构造，以及并运算。
+层级贡献成员关系桥、呈现、嵌入机制、带公理的分离构造，以及并运算。
 <!--ja-->
 階層は、所属の橋、提示、埋め込みの仕組み、公理を伴う分出の構成、そして和の演算を供給する。
 <!--/-->
@@ -149,14 +149,14 @@ The ambient and constructible structures are opened as modules, since both are u
 <!--/-->
 
 ```agda
-module SV = hPropStructure 𝒮ᵥ
-module SL = hPropStructure 𝒮ʟ
+module SV = hPropView 𝒮ᵥ
+module SL = hPropView 𝒮ʟ
 ```
 
 <!--en-->
 The ambient membership is opened under its plain name.
 <!--zh-->
-外围隶属以朴素名字打开。
+外围成员关系以朴素名字打开。
 <!--ja-->
 周囲の所属が、そのままの名前で開かれる。
 <!--/-->
@@ -168,7 +168,7 @@ open SV using ( _∈ˢ_ )
 <!--en-->
 Ambient cardinality says that `κ` admits no injection into the presentation of any member `δ ∈ κ`. Here an injection is a function equipped with ordinary injectivity, rather than a Cubical embedding record. Ordinality is a separate property and will be proved independently for the candidate constructed below.
 <!--zh-->
-环境基数性断言：对每个成员 `δ ∈ κ`，`κ` 的呈现都不能单射到 `δ` 的呈现。这里的单射是一个函数及其通常的单射性证明，并不是 Cubical 的嵌入记录。序数性是另一项性质，后文会为所构造的候选另行证明。
+环境基数性断言：对每个元素 `δ ∈ κ`，`κ` 的呈现都不能单射到 `δ` 的呈现。这里的单射是一个函数及其通常的单射性证明，并不是 Cubical 的嵌入记录。序数性是另一项性质，后文会为所构造的候选另行证明。
 <!--ja-->
 周囲での基数性は、各要素 `δ ∈ κ` に対して、`κ` の提示から `δ` の提示への単射が存在しないことを述べる。ここでいう単射は、通常の単射性の証明を伴う関数であり、Cubical の埋め込みレコードではない。順序数性は別の性質であり、後で構成する候補について独立に証明する。
 <!--/-->
@@ -195,7 +195,7 @@ comp-inj (f , injf) (g , injg) =
 <!--en-->
 If `a ∈ b` and `b` is an ordinal, every member of `a` is also a member of `b` by transitivity. An index presenting a member of `a` can therefore be sent to the fiber of the presentation of `b` over that same set, defining an injection `⟪a⟫ ↪ ⟪b⟫`.
 <!--zh-->
-若 `a ∈ b` 且 `b` 是序数，则由传递性，`a` 的每个成员也是 `b` 的成员。因此，可把呈现 `a` 的一个成员的索引送到 `b` 的呈现在同一集合上的纤维，从而定义单射 `⟪a⟫ ↪ ⟪b⟫`。
+若 `a ∈ b` 且 `b` 是序数，则由传递性，`a` 的每个元素也是 `b` 的元素。因此，可把呈现 `a` 的一个元素的索引送到 `b` 的呈现在同一集合上的纤维，从而定义单射 `⟪a⟫ ↪ ⟪b⟫`。
 <!--ja-->
 `a ∈ b` であり `b` が順序数なら、推移性により `a` の各要素は `b` の要素でもある。そこで、`a` の要素を提示する添字を、同じ集合の上にある `b` の提示のファイバーへ送り、単射 `⟪a⟫ ↪ ⟪b⟫` を定める。
 <!--/-->
@@ -314,7 +314,7 @@ ambient→internal κ c δ δ∈κ h =
 <!--en-->
 Fix a set `a` and an ordinal bound `β`. This is an ambient Hartogs construction in `V ℓ`, not an invocation of the Separation schema of the internal model `L`. It separates from `β` those members whose presentations inject into the presentation of `a`. The result remains in the ambient argument until it has independently been proved to be an ordinal; only then does the theorem that every ordinal is constructible place it in `L`. In the later application `a` is also an ordinal, but only the ordinality of the bound is needed inside this module.
 <!--zh-->
-固定集合 `a` 与序数界 `β`。这是 `V ℓ` 中的外围 Hartogs 构造，并非调用内部模型 `L` 的分离模式。它从 `β` 中分出呈现可单射到 `a` 的呈现的那些成员。所得集合先始终留在外围论证中，待独立证明其为序数后，才由「每个序数都可构造」这一事实放入 `L`。后续应用中的 `a` 也是序数，但在本模块内部只需要界的序数性。
+固定集合 `a` 与序数界 `β`。这是 `V ℓ` 中的外围 Hartogs 构造，并非调用内部模型 `L` 的分离模式。它从 `β` 中分出呈现可单射到 `a` 的呈现的那些元素。所得集合先始终留在外围论证中，待独立证明其为序数后，才由「每个序数都可构造」这一事实放入 `L`。后续应用中的 `a` 也是序数，但在本模块内部只需要界的序数性。
 <!--ja-->
 集合 `a` と順序数の上界 `β` を固定する。これは `V ℓ` における周囲の Hartogs 構成であり、内部モデル `L` の分出公理図式を使うものではない。提示から `a` の提示への単射をもつ要素を `β` から分出する。得られた集合は、独立に順序数だと示されるまでは周囲の議論にとどまり、その後で初めて、すべての順序数が構成可能であるという定理によって `L` に入る。後の適用では `a` も順序数であるが、このモジュールの内部で必要なのは上界の順序数性だけである。
 <!--/-->
@@ -355,7 +355,7 @@ The separation construction of the hierarchy is opened at the ordinal bound with
 <!--en-->
 The separated set is named `θ`: it collects exactly those members of the bound that embed into `a`.
 <!--zh-->
-分离所得集合命名为 `θ`：它恰好收集界中那些可嵌入 `a` 的成员。
+分离所得集合命名为 `θ`：它恰好收集界中那些可嵌入 `a` 的元素。
 <!--ja-->
 分出された集合は `θ` と名付けられる。それは、上界の要素のうち `a` へ埋め込めるものをちょうど集めた集合である。
 <!--/-->
@@ -368,7 +368,7 @@ The separated set is named `θ`: it collects exactly those members of the bound 
 <!--en-->
 Membership in `θ` is introduced from membership in the bound together with a truncated embedding into `a`, through the separation axiom.
 <!--zh-->
-`θ` 中的隶属由「属于界」连同「截断的到 `a` 嵌入」经分离公理引入。
+`θ` 中的成员关系由「属于界」连同「截断的到 `a` 嵌入」经分离公理引入。
 <!--ja-->
 `θ` の中の所属は、上界への所属と、`a` への切り詰められた埋め込みとを、分出の公理を通して導入される。
 <!--/-->
@@ -383,7 +383,7 @@ Membership in `θ` is introduced from membership in the bound together with a tr
 <!--en-->
 Conversely, membership in `θ` forgets the separating condition and keeps only membership in the bound.
 <!--zh-->
-反过来，`θ` 中的隶属忘掉分离条件，只保留界中的隶属。
+反过来，`θ` 中的成员关系忘掉分离条件，只保留界中的成员关系。
 <!--ja-->
 逆に、`θ` の中の所属は分出の条件を忘れ、上界への所属だけを残す。
 <!--/-->
@@ -411,7 +411,7 @@ The separating condition is recovered only as a truncated existence of an embedd
 <!--en-->
 The separated set `θ` is an ordinal. Its transitivity is proved below. Each of its members is transitive because it is also a member of the ordinal `β`; together these are the two parts of `IsOrd θ`.
 <!--zh-->
-分离所得集合 `θ` 是序数。下文先证明它自身的传递性；它的每个成员又因同时属于序数 `β` 而是传递集。这两点合起来正是 `IsOrd θ`。
+分离所得集合 `θ` 是序数。下文先证明它自身的传递性；它的每个元素又因同时属于序数 `β` 而是传递集。这两点合起来正是 `IsOrd θ`。
 <!--ja-->
 分出された集合 `θ` は順序数である。`θ` 自身の推移性は以下で示す。また、その各要素は順序数 `β` の要素でもあるため推移的である。この二つを合わせると `IsOrd θ` が得られる。
 <!--/-->
@@ -427,7 +427,7 @@ The separated set `θ` is an ordinal. Its transitivity is proved below. Each of 
 <!--en-->
 To prove transitivity, take `y ∈ x ∈ θ`. Since `x` is a member of the ordinal bound, it is itself an ordinal, so membership gives an injection from `y` into `x`. Composing this with the merely existing injection from `x` into `a` yields the merely existing injection from `y` into `a`; transitivity of the bound also gives `y ∈ β`, so `θ-in` returns `y ∈ θ`.
 <!--zh-->
-为证传递性，取 `y ∈ x ∈ θ`。由于 `x` 是序数界的成员，它本身也是序数，所以隶属关系给出从 `y` 到 `x` 的单射。把它与仅仅存在的 `x` 到 `a` 的单射复合，得到仅仅存在的 `y` 到 `a` 的单射；界的传递性还给出 `y ∈ β`，于是 `θ-in` 得到 `y ∈ θ`。
+为证传递性，取 `y ∈ x ∈ θ`。由于 `x` 是序数界的元素，它本身也是序数，所以成员关系给出从 `y` 到 `x` 的单射。把它与仅仅存在的 `x` 到 `a` 的单射复合，得到仅仅存在的 `y` 到 `a` 的单射；界的传递性还给出 `y ∈ β`，于是 `θ-in` 得到 `y ∈ θ`。
 <!--ja-->
 推移性を示すため、`y ∈ x ∈ θ` とする。`x` は順序数である上界の要素なので、それ自身も順序数であり、所属から `y` から `x` への単射が得られる。これを、単に存在する `x` から `a` への単射と合成すると、単に存在する `y` から `a` への単射が得られる。また上界の推移性から `y ∈ β` も得られるため、`θ-in` により `y ∈ θ` となる。
 <!--/-->
@@ -485,7 +485,7 @@ It remains to prove `θ ∈ β`, and one ordinal `γ ∈ β` with no injection i
 <!--en-->
 Trichotomy leaves only `θ ∈ β`. That case gives the result directly. If `θ ≡ β`, transporting `γ ∈ β` makes `γ` a member of `θ`; its separating condition then contradicts the assumed absence of an injection `γ ↪ a`. If `β ∈ θ`, the inclusion `θ ⊆ β` gives `β ∈ β`, again a contradiction. This locates `θ` below the chosen bound without asserting that it is the least ordinal with any property.
 <!--zh-->
-三分法中只有 `θ ∈ β` 能够成立，此时结论直接得到。若 `θ ≡ β`，沿等式运输 `γ ∈ β` 会使 `γ` 成为 `θ` 的成员；其分离条件随即与「不存在单射 `γ ↪ a`」的假设矛盾。若 `β ∈ θ`，包含关系 `θ ⊆ β` 又会推出 `β ∈ β`。因此这里只把 `θ` 定位在所选上界之下，并未断言它是满足某种性质的最小序数。
+三分法中只有 `θ ∈ β` 能够成立，此时结论直接得到。若 `θ ≡ β`，沿等式运输 `γ ∈ β` 会使 `γ` 成为 `θ` 的元素；其分离条件随即与「不存在单射 `γ ↪ a`」的假设矛盾。若 `β ∈ θ`，包含关系 `θ ⊆ β` 又会推出 `β ∈ β`。因此这里只把 `θ` 定位在所选上界之下，并未断言它是满足某种性质的最小序数。
 <!--ja-->
 三分性のうち成立しうるのは `θ ∈ β` だけで、この場合は結論が直ちに得られる。`θ ≡ β` なら、`γ ∈ β` を等式に沿って運ぶことで `γ ∈ θ` となり、その分出条件が単射 `γ ↪ a` は存在しないという仮定に反する。`β ∈ θ` なら、包含 `θ ⊆ β` から `β ∈ β` が従い、やはり矛盾する。ここで示したのは `θ` が選んだ上界より下にあることだけで、何らかの性質をもつ最小の順序数だとは述べていない。
 <!--/-->
@@ -557,7 +557,7 @@ The identity injection of the ordinal into itself is named first. If the second 
 <!--en-->
 Only the third case of the trichotomy survives, which is the announced membership.
 <!--zh-->
-只有三分法的第三种情形存留，即所宣告的隶属。
+只有三分法的第三种情形存留，即所宣告的成员关系。
 <!--ja-->
 三岐性の三つ目の場合だけが残り、それが宣言された所属である。
 <!--/-->
@@ -645,7 +645,7 @@ noInjOrd→CardAboveLᵀ ni κ oκ cκ κ∉ω =
 <!--en-->
 The ambient cardinal is presented as an element of `L` at its own successor stage, its cardinality is transported into the internal predicate by the one-directional comparison, and the membership of `κ` below it passes through unchanged.
 <!--zh-->
-环境基数在其自身后继层处呈现为 `L` 的元素，其基数性经单向比较转入内部谓词，而 `κ` 位于其下的隶属原样通过。
+环境基数在其自身后继层处呈现为 `L` 的元素，其基数性经单向比较转入内部谓词，而 `κ` 位于其下的成员关系原样通过。
 <!--ja-->
 周囲の基数は、その自身の後続の段階で `L` の要素として提示され、その基数性は一方向の比較によって内部の述語へ運ばれ、`κ` がその下に属することはそのまま通る。
 <!--/-->
@@ -710,7 +710,7 @@ A Boolean relation holds of two arguments when its value is the Boolean true; th
 <!--en-->
 A well-founded relation on the presentation of `a` is a Boolean relation that is transitive and well-founded. It is not required to be linear or trichotomous, so a member of this type is not yet a well order.
 <!--zh-->
-`a` 的呈现上的良基关系是一个传递且良基的布尔关系。它不要求线性或三歧性，因此该类型的成员还不是良序。
+`a` 的呈现上的良基关系是一个传递且良基的布尔关系。它不要求线性或三歧性，因此该类型的元素还不是良序。
 <!--ja-->
 `a` の提示の上の整礎的な関係とは、推移的かつ整礎的なブールの関係である。線形性や三岐性は要求されないので、この型の要素はまだ整列順序ではない。
 <!--/-->
@@ -741,7 +741,7 @@ Each well-founded Boolean relation is given its own collapse module.
 <!--en-->
 Fix one such relation `w`. Its first component is the Boolean relation `R`; the remaining components certify transitivity and well-foundedness. The collapse argument keeps these roles separate because the relation determines membership, while the proofs justify recursion and ordinal transitivity.
 <!--zh-->
-固定这样一条关系 `w`。它的第一分量是布尔关系 `R`，其余分量分别证明传递性与良基性。塌缩论证将这些作用分开：关系决定隶属，而证明保证递归有效并给出序数的传递性。
+固定这样一条关系 `w`。它的第一分量是布尔关系 `R`，其余分量分别证明传递性与良基性。塌缩论证将这些作用分开：关系决定成员关系，而证明保证递归有效并给出序数的传递性。
 <!--ja-->
 このような関係 `w` を一つ固定する。第一成分はブール関係 `R` であり、残りの成分が推移性と整礎性を保証する。崩壊の議論ではこれらの役割を分ける。関係が所属を定め、証明が再帰の正当性と順序数の推移性を与えるからである。
 <!--/-->
@@ -796,7 +796,7 @@ Well-foundedness is preserved by the same change of universe. Starting from the 
 <!--en-->
 The lifted relation now meets the two hypotheses of the Mostowski construction: it is transitive and well founded. We may therefore use its collapse `col`; the accompanying laws describe membership in each collapse value and prove that every such value is an ordinal.
 <!--zh-->
-提升后的关系现已满足 Mostowski 构造的两项假设：它既传递又良基。因此可以使用其塌缩 `col`；配套定律刻画各塌缩值中的隶属关系，并证明每个塌缩值都是序数。
+提升后的关系现已满足 Mostowski 构造的两项假设：它既传递又良基。因此可以使用其塌缩 `col`；配套定律刻画各塌缩值中的成员关系，并证明每个塌缩值都是序数。
 <!--ja-->
 持ち上げた関係は、Mostowski の構成に必要な二つの仮定、すなわち推移性と整礎性を満たした。そこで、その崩壊 `col` を使える。付随する法則は各崩壊値の所属を記述し、すべての崩壊値が順序数であることを示す。
 <!--/-->
@@ -809,7 +809,7 @@ The lifted relation now meets the two hypotheses of the Mostowski construction: 
 <!--en-->
 Collect all collapse values into their image `ot`. Although the name suggests an order type, an arbitrary member of `WFR` need not be a well order, and no uniqueness or isomorphism theorem is asserted here. What matters is simply that this image can be proved to be an ordinal.
 <!--zh-->
-把所有塌缩值收集为其像 `ot`。名称虽暗示序型，但 `WFR` 的任意成员未必是良序，此处也没有断言唯一性或同构定理。论证所需的只是证明这个像为序数。
+把所有塌缩值收集为其像 `ot`。名称虽暗示序型，但 `WFR` 的任意元素未必是良序，此处也没有断言唯一性或同构定理。论证所需的只是证明这个像为序数。
 <!--ja-->
 すべての崩壊値を像 `ot` として集める。この名前は順序型を思わせるが、`WFR` の任意の要素が整列順序であるとは限らず、ここでは一意性や同型に関する定理も主張しない。必要なのは、この像が順序数であることだけである。
 <!--/-->
@@ -822,7 +822,7 @@ Collect all collapse values into their image `ot`. Although the name suggests an
 <!--en-->
 Each `col p` belongs to the image. The displayed witness is the index `p` together with reflexivity, wrapped in propositional truncation because membership in an image remembers only that some preimage exists.
 <!--zh-->
-每个 `col p` 都属于该像。这里给出的见证是索引 `p` 与自反等式，并包在命题截断中，因为像中的隶属只保留某个原像存在这一事实。
+每个 `col p` 都属于该像。这里给出的见证是索引 `p` 与自反等式，并包在命题截断中，因为像中的成员关系只保留某个原像存在这一事实。
 <!--ja-->
 各 `col p` はこの像に属する。ここで与える証人は添字 `p` と反射律であり、像への所属は逆像が存在することだけを残すため、命題的切り詰めで包まれている。
 <!--/-->
@@ -835,7 +835,7 @@ Each `col p` belongs to the image. The displayed witness is the index `p` togeth
 <!--en-->
 The image is an ordinal. First, a member of the image is merely equal to some collapse value, hence is transitive because that collapse value is an ordinal. Second, the image itself is transitive: if `y ∈ x` and `x` is represented by `col p`, `col-out` merely presents `y` as `col r` for a predecessor `r`; the canonical image witness for `r` then puts `y` in `ot`. Both truncated existences are eliminated only into proposition-valued membership or transitivity goals.
 <!--zh-->
-这个像是序数。首先，像的成员仅仅等于某个塌缩值，而该塌缩值是序数，所以该成员传递。其次，像自身传递：若 `y ∈ x` 且 `x` 由 `col p` 表示，`col-out` 仅仅把 `y` 表示成某个前驱 `r` 的 `col r`；随后 `r` 的典范像见证便给出 `y ∈ ot`。两次截断存在都只消去到命题值的隶属或传递性目标中。
+这个像是序数。首先，像的元素仅仅等于某个塌缩值，而该塌缩值是序数，所以该元素传递。其次，像自身传递：若 `y ∈ x` 且 `x` 由 `col p` 表示，`col-out` 仅仅把 `y` 表示成某个前驱 `r` 的 `col r`；随后 `r` 的典范像见证便给出 `y ∈ ot`。两次截断存在都只消去到命题值的成员关系或传递性目标中。
 <!--ja-->
 この像は順序数である。まず、像の要素はある崩壊値と単に等しく、その崩壊値が順序数なので、その要素は推移的である。次に、像そのものも推移的である。`y ∈ x` で、`x` が `col p` によって表されるなら、`col-out` は `y` をある前者 `r` の `col r` として命題的切り詰めのもとで提示する。そこで `r` に対する正準な像の証人から `y ∈ ot` が得られる。二つの切り詰められた存在はいずれも、命題値の所属または推移性の目標にだけ除去される。
 <!--/-->
@@ -851,7 +851,7 @@ The image is an ordinal. First, a member of the image is merely equal to some co
 <!--en-->
 The member's transitivity is transported from the collapse's ordinality along the presentation equation, and the outer elimination consumes the truncated decomposition of the member inside the image.
 <!--zh-->
-成员的传递性沿呈现等式从塌缩的序数性运输而来，而外层消去消耗该成员在像内截断的分解。
+元素的传递性沿呈现等式从塌缩的序数性运输而来，而外层消去消耗该元素在像内截断的分解。
 <!--ja-->
 要素の推移性は、崩壊の順序数性から、提示の等式に沿って運ばれ、外側の消去が、像の中のその要素の切り詰められた分解を消費する。
 <!--/-->
@@ -897,7 +897,7 @@ Hartogs の候補 `μ` は、`WFR` から得られるすべての崩壊像の後
 <!--en-->
 The bounding ordinal is an ordinal, proved by the bounding lemma from the fact that every member of the family is itself an ordinal.
 <!--zh-->
-上界序数是序数，由界引理从族中每个成员皆为序数这一事实证明。
+上界序数是序数，由界引理从族中每个元素皆为序数这一事实证明。
 <!--ja-->
 上界の順序数は順序数である。族のすべての要素が順序数であるという事実から、上界の補題によって証明される。
 <!--/-->
@@ -910,7 +910,7 @@ The bounding ordinal is an ordinal, proved by the bounding lemma from the fact t
 <!--en-->
 For every `w : WFR`, its collapse image `Col.ot w` is a member of `μ`. This strict bound is the half of the final contradiction supplied in advance: once the opposite inclusion `μ ⊆ Col.ot w` is obtained for a relation pulled back from a hypothetical injection, self-membership follows.
 <!--zh-->
-对每个 `w : WFR`，其塌缩像 `Col.ot w` 都属于 `μ`。这个严格上界预先提供最终矛盾的一半：一旦对从假设单射拉回的关系得到反向包含 `μ ⊆ Col.ot w`，便会推出自隶属。
+对每个 `w : WFR`，其塌缩像 `Col.ot w` 都属于 `μ`。这个严格上界预先提供最终矛盾的一半：一旦对从假设单射拉回的关系得到反向包含 `μ ⊆ Col.ot w`，便会推出自成员关系。
 <!--ja-->
 各 `w : WFR` について、その崩壊像 `Col.ot w` は `μ` に属する。この厳密な上界は、最後の矛盾の半分をあらかじめ与える。仮定した単射から引き戻した関係について逆向きの包含 `μ ⊆ Col.ot w` が得られれば、自己所属が従う。
 <!--/-->
@@ -963,7 +963,7 @@ The excluded-middle instance is lowered from the successor level to the working 
 <!--en-->
 Assume for contradiction an injection `f : ⟪ μ ⟫ ↪ ⟪ a ⟫`. The next construction transports membership among the presented members of `μ` to the image of this injection, producing one of the relations already included in the family `WFR`.
 <!--zh-->
-为导出矛盾，假设有单射 `f : ⟪ μ ⟫ ↪ ⟪ a ⟫`。接下来的构造把 `μ` 的呈现成员之间的隶属关系运到该单射的像上，从而得到一个已包含在 `WFR` 族中的关系。
+为导出矛盾，假设有单射 `f : ⟪ μ ⟫ ↪ ⟪ a ⟫`。接下来的构造把 `μ` 的呈现元素之间的成员关系运到该单射的像上，从而得到一个已包含在 `WFR` 族中的关系。
 <!--ja-->
 矛盾を導くため、単射 `f : ⟪ μ ⟫ ↪ ⟪ a ⟫` があると仮定する。以下では、`μ` の提示された要素間の所属をこの単射の像へ移し、すでに族 `WFR` に含まれる関係を作る。
 <!--/-->
@@ -1005,7 +1005,7 @@ Because both the source and the target are h-sets, the injective function is an 
 <!--en-->
 The fibre over a point consists of an index of a member of `μ` together with an equation saying that `F` maps that index to the point. Thus an inhabitant of `Fib x` is precisely a presentation of `x` as lying in the image of `F`.
 <!--zh-->
-一点上的纤维由 `μ` 的成员索引以及一条等式组成，该等式说明 `F` 把这个索引映到该点。因此，`Fib x` 的元素恰好是 `x` 位于 `F` 的像中的一种呈现。
+一点上的纤维由 `μ` 的元素索引以及一条等式组成，该等式说明 `F` 把这个索引映到该点。因此，`Fib x` 的元素恰好是 `x` 位于 `F` 的像中的一种呈现。
 <!--ja-->
 ある点上のファイバーは、`μ` の要素の添字と、`F` がその添字をその点へ写すことを示す等式からなる。したがって、`Fib x` の要素は、`x` が `F` の像に属することの提示にほかならない。
 <!--/-->
@@ -1031,7 +1031,7 @@ Every fibre of `F` is a proposition. Consequently, whenever two pulled-back rela
 <!--en-->
 The relation `PreT x y` first requires actual fibres witnessing that both `x` and `y` lie in the image of `F`. It then declares `x` to precede `y` exactly when the corresponding presented members of `μ` stand in the small membership relation. Points outside the image therefore have no predecessors in this relation.
 <!--zh-->
-关系 `PreT x y` 首先要求实际的纤维见证，说明 `x` 与 `y` 都在 `F` 的像中；随后规定，当且仅当相应的 `μ` 呈现成员满足小隶属关系时，`x` 先于 `y`。因此，像外的点在该关系中没有前驱。
+关系 `PreT x y` 首先要求实际的纤维见证，说明 `x` 与 `y` 都在 `F` 的像中；随后规定，当且仅当相应的 `μ` 呈现元素满足小成员关系时，`x` 先于 `y`。因此，像外的点在该关系中没有前驱。
 <!--ja-->
 関係 `PreT x y` はまず、`x` と `y` がともに `F` の像にあることを示す実際のファイバーを要求する。そのうえで、対応する `μ` の提示要素が小所属関係にあるとき、ちょうどそのときに `x` が `y` に先行すると定める。したがって、像の外の点にはこの関係での前者がない。
 <!--/-->
@@ -1045,7 +1045,7 @@ The relation `PreT x y` first requires actual fibres witnessing that both `x` an
 <!--en-->
 The pulled-back predecessor relation is a proposition: it is built from two proposition fibres and one membership proposition.
 <!--zh-->
-拉回前驱关系是命题：由两个命题纤维与一个隶属命题构成。
+拉回前驱关系是命题：由两个命题纤维与一个成员关系命题构成。
 <!--ja-->
 引き戻された前者の関係は命題である。二つの命題であるファイバーと一つの所属の命題からできている。
 <!--/-->
@@ -1089,7 +1089,7 @@ If the Boolean relation holds, its value is `true`. Inspecting the excluded-midd
 <!--en-->
 The refutation branch is impossible: if the predecessor fact does not hold, the decider would have returned `false`, contradicting the `true` membership.
 <!--zh-->
-反驳支不可能：若前驱事实不成立，判定器将返回 `false`，与 `true` 隶属矛盾。
+反驳支不可能：若前驱事实不成立，判定器将返回 `false`，与 `true` 成员关系矛盾。
 <!--ja-->
 反駁の分岐は不可能である。前の事実が成立しなければ、判定器は `false` を返し、`true` の所属と矛盾する。
 <!--/-->
@@ -1101,7 +1101,7 @@ The refutation branch is impossible: if the predecessor fact does not hold, the 
 <!--en-->
 The backward reading constructs the Boolean membership from the pulled-back predecessor fact, by the same classical decision.
 <!--zh-->
-向后读法由同一经典判定，从拉回前驱事实构造布尔隶属。
+向后读法由同一经典判定，从拉回前驱事实构造布尔成员关系。
 <!--ja-->
 後ろ向きの読み出しは、同じ古典的な判定によって、引き戻された前者の事実からブールの所属を作る。
 <!--/-->
@@ -1129,7 +1129,7 @@ The empty branch is impossible: the predecessor fact holds by assumption.
 <!--en-->
 To prove transitivity, decode `x R y` and `y R z` into two `PreT` witnesses. They contain four fibre witnesses: one over `x`, two over the shared middle point `y`, and one over `z`. Since the fibre over `y` is a proposition, its two witnesses are equal, so the corresponding members of `μ` can be aligned. Transitivity of the final represented member then composes the two membership steps, producing a `PreT` witness for `x R z`.
 <!--zh-->
-为证明传递性，先把 `x R y` 与 `y R z` 解读为两条 `PreT` 见证。它们共含四条纤维见证：`x` 上一条、共同中点 `y` 上两条、`z` 上一条。由于 `y` 上的纤维是命题，其中两条见证相等，因而可以对齐它们所表示的 `μ` 成员。随后利用最后一个表示成员的传递性复合两步隶属关系，得到 `x R z` 的 `PreT` 见证。
+为证明传递性，先把 `x R y` 与 `y R z` 解读为两条 `PreT` 见证。它们共含四条纤维见证：`x` 上一条、共同中点 `y` 上两条、`z` 上一条。由于 `y` 上的纤维是命题，其中两条见证相等，因而可以对齐它们所表示的 `μ` 元素。随后利用最后一个表示元素的传递性复合两步成员关系，得到 `x R z` 的 `PreT` 见证。
 <!--ja-->
 推移性を示すため、`x R y` と `y R z` を二つの `PreT` の証人として読み取る。そこには四つのファイバーの証人がある。`x` 上に一つ、共通の中間点 `y` 上に二つ、`z` 上に一つである。`y` 上のファイバーは命題なので二つの証人は等しく、対応する `μ` の要素を揃えられる。そこで最後の提示要素の推移性を使って二段階の所属を合成すると、`x R z` に対する `PreT` の証人が得られる。
 <!--/-->
@@ -1145,7 +1145,7 @@ To prove transitivity, decode `x R y` and `y R z` into two `PreT` witnesses. The
 <!--en-->
 Decoding the first relation gives indices `p` and `q` over `x` and `y`; decoding the second gives `q'` and `r` over `y` and `z`. Propositionality of the fibre over `y` identifies `q` with `q'`, allowing the membership represented by the first relation to be rewritten with the same middle index as the second.
 <!--zh-->
-解读第一条关系得到 `x` 与 `y` 上的索引 `p`、`q`；解读第二条关系得到 `y` 与 `z` 上的索引 `q'`、`r`。`y` 上纤维的命题性把 `q` 与 `q'` 认同，因而可将第一条关系所表示的隶属改写为使用与第二条关系相同的中间索引。
+解读第一条关系得到 `x` 与 `y` 上的索引 `p`、`q`；解读第二条关系得到 `y` 与 `z` 上的索引 `q'`、`r`。`y` 上纤维的命题性把 `q` 与 `q'` 认同，因而可将第一条关系所表示的成员关系改写为使用与第二条关系相同的中间索引。
 <!--ja-->
 第一の関係を読み取ると、`x` と `y` 上の添字 `p`、`q` が得られ、第二の関係からは `y` と `z` 上の添字 `q'`、`r` が得られる。`y` 上のファイバーが命題であることから `q` と `q'` が同一視され、第一の関係が表す所属を、第二の関係と同じ中間の添字を使う形に書き換えられる。
 <!--/-->
@@ -1161,7 +1161,7 @@ Decoding the first relation gives indices `p` and `q` over `x` and `y`; decoding
 <!--en-->
 The final member `r` is named, and its transitivity is read from the ordinality of `μ`.
 <!--zh-->
-最终成员 `r` 被命名，其传递性由 `μ` 的序数性读取。
+最终元素 `r` 被命名，其传递性由 `μ` 的序数性读取。
 <!--ja-->
 最後の要素 `r` が名づけられ、その推移性は `μ` の順序数性から読まれる。
 <!--/-->
@@ -1177,7 +1177,7 @@ The final member `r` is named, and its transitivity is read from the ordinality 
 <!--en-->
 The composition of the two membership relations through the transitivity of `r` produces the goal: the first member is inside the third member, which is what the pulled-back relation requires.
 <!--zh-->
-两条隶属关系经 `r` 的传递性复合产出目标：第一成员在第三成员之内，这正是拉回关系所需的。
+两条成员关系经 `r` 的传递性复合产出目标：第一元素在第三元素之内，这正是拉回关系所需的。
 <!--ja-->
 二つの所属の関係を、`r` の推移性を通して合成すると、目標が作られる。第一の要素が第三の要素の中にあること、これが引き戻された関係の要求である。
 <!--/-->
@@ -1197,7 +1197,7 @@ The auxiliary proof constructs accessibility for each predecessor of the given m
 <!--zh-->
 良基性由环境层级中正则公理所给的良基性沿嵌入搬运。辅助引理处理目标已知等于特定层级元素的情形。
 
-辅助证明为给定成员的每个前驱构造可达性。
+辅助证明为给定元素的每个前驱构造可达性。
 <!--ja-->
 整礎性は、周囲の階層の正則性から、埋め込みに沿って運ばれる。補助の補題は、目標が特定の階層の要素と等しい場合を扱う。
 
@@ -1215,7 +1215,7 @@ The auxiliary proof constructs accessibility for each predecessor of the given m
 <!--en-->
 Each predecessor `r` of the member is decomposed into two `μ` members connected by the pulled-back relation, and the accessibility is transported to the first component.
 <!--zh-->
-成员的每个前驱 `r` 被分解为由拉回关系连接的两个 `μ` 成员，可达性被运到第一分量。
+元素的每个前驱 `r` 被分解为由拉回关系连接的两个 `μ` 元素，可达性被运到第一分量。
 <!--ja-->
 要素のそれぞれの前者 `r` は、引き戻された関係で結ばれた二つの `μ` の要素に分解され、アクセス可能性は第一の成分へ運ばれる。
 <!--/-->
@@ -1247,7 +1247,7 @@ The predecessor fact is decomposed to name two internal indices: `p` presents th
 <!--en-->
 The two fibre witnesses over `F m` are equal because that fibre is a proposition. Transporting along this equality rewrites the decoded relation as membership of the predecessor represented by `p` in the member represented by `m`. The equation identifying that latter member with `v` then places the predecessor strictly below `v`, where the accessibility recursion applies.
 <!--zh-->
-`F m` 上的两条纤维见证相等，因为该纤维是命题。沿这一等式运输，可把解读出的关系改写为：`p` 所表示的前驱属于 `m` 所表示的成员。再利用后一个成员与 `v` 的等式，便把前驱严格置于 `v` 之下，从而可以应用可达性递归。
+`F m` 上的两条纤维见证相等，因为该纤维是命题。沿这一等式运输，可把解读出的关系改写为：`p` 所表示的前驱属于 `m` 所表示的元素。再利用后一个元素与 `v` 的等式，便把前驱严格置于 `v` 之下，从而可以应用可达性递归。
 <!--ja-->
 `F m` 上の二つのファイバーの証人は、そのファイバーが命題なので等しくなる。この等式に沿って運ぶと、読み取った関係は、`p` が表す先行要素が `m` の表す要素に属するという形に書き換えられる。後者を `v` と同定する等式によって先行要素は `v` より真に下に置かれ、そこで到達可能性の再帰を適用できる。
 <!--/-->
@@ -1262,7 +1262,7 @@ The two fibre witnesses over `F m` are equal because that fibre is a proposition
 <!--en-->
 Well-foundedness of the pulled-back relation follows from the regularity of the ambient hierarchy: each predecessor of any member lies strictly below some hierarchy element, and the auxiliary lemma produces accessibility there.
 <!--zh-->
-拉回关系的良基性来自环境层级的正则公理：任何成员的每个前驱都严格低于某个层级元素，辅助引理在该处产出可达性。
+拉回关系的良基性来自环境层级的正则公理：任何元素的每个前驱都严格低于某个层级元素，辅助引理在该处产出可达性。
 <!--ja-->
 引き戻された関係の整礎性は、周囲の階層の正則性から従う。ある要素のそれぞれの前者は、ある階層の要素より厳密に下にあり、補助の補題がそこでアクセス可能性を作る。
 <!--/-->
@@ -1306,7 +1306,7 @@ The well-founded transitive relation is packaged with its two proofs, completing
 <!--en-->
 Apply the collapse construction to the particular relation `w` obtained from the hypothetical injection. Its collapse values and their image will now be compared directly with the presented members of `μ`; no claim that `w` is a well order is needed.
 <!--zh-->
-把塌缩构造应用于由假设单射得到的特定关系 `w`。下文将直接比较其塌缩值及其像与 `μ` 的呈现成员；论证不需要声称 `w` 是良序。
+把塌缩构造应用于由假设单射得到的特定关系 `w`。下文将直接比较其塌缩值及其像与 `μ` 的呈现元素；论证不需要声称 `w` 是良序。
 <!--ja-->
 仮定した単射から得た特定の関係 `w` に崩壊の構成を適用する。以下では、その崩壊値と像を `μ` の提示要素と直接比較する。`w` が整列順序であるという主張は必要ない。
 <!--/-->
@@ -1320,9 +1320,9 @@ The key lemma says that the collapse of the pullback relation reproduces the mem
 
 The proof compares members by extensionality in two directions.
 <!--zh-->
-关键引理说：拉回关系的塌缩重现了上界序数的成员。对呈现为层级元素的每个 `μ` 成员，其像的塌缩等于该元素。证明是对层级元素的良基归纳。
+关键引理说：拉回关系的塌缩重现了上界序数的元素。对呈现为层级元素的每个 `μ` 元素，其像的塌缩等于该元素。证明是对层级元素的良基归纳。
 
-证明在两个方向上以外延性比较成员。
+证明在两个方向上以外延性比较元素。
 <!--ja-->
 重要な補題はこう言う。引き戻された関係の崩壊は、上界の順序数の要素を再現する。階層の要素として提示された `μ` の各要素について、その像の崩壊はその要素に等しい、と。証明は、階層の要素の上の整礎帰納である。
 
@@ -1340,7 +1340,7 @@ The proof compares members by extensionality in two directions.
 <!--en-->
 For the forward inclusion, suppose `b` belongs to `col (F m)`. The elimination law `col-out` says merely that `b` is the collapse of some predecessor `r` of `F m`. Decoding that predecessor through `PreT` reveals an index below `m`; the induction hypothesis will identify its represented member with `col r` and hence with `b`.
 <!--zh-->
-先证向前包含。设 `b` 属于 `col (F m)`。消去定律 `col-out` 仅仅断言：`b` 是 `F m` 的某个前驱 `r` 的塌缩值。经 `PreT` 解码此前驱，可得到一个位于 `m` 之下的索引；归纳假设将把该索引所表示的成员与 `col r`，继而与 `b` 认同。
+先证向前包含。设 `b` 属于 `col (F m)`。消去定律 `col-out` 仅仅断言：`b` 是 `F m` 的某个前驱 `r` 的塌缩值。经 `PreT` 解码此前驱，可得到一个位于 `m` 之下的索引；归纳假设将把该索引所表示的元素与 `col r`，继而与 `b` 认同。
 <!--ja-->
 まず順方向の包含を示す。`b` が `col (F m)` に属するとする。除去則 `col-out` は、`b` が `F m` のある前者 `r` の崩壊値であることを命題的切り詰めのもとで述べる。その前者を `PreT` で読み取ると `m` より下の添字が得られ、帰納の仮定が、その添字の表す要素を `col r`、したがって `b` と同一視する。
 <!--/-->
@@ -1356,7 +1356,7 @@ For the forward inclusion, suppose `b` belongs to `col (F m)`. The elimination l
 <!--en-->
 The predecessor witness consists of `r ≺ F m` and an equation `col r ≡ b`. Reading the relation proof back through `R→Pre` yields fibres for `r` and `F m`; their indices identify the corresponding presented members of `μ`, while the final component records membership between them.
 <!--zh-->
-前驱见证由 `r ≺ F m` 与等式 `col r ≡ b` 组成。经 `R→Pre` 读回关系证明，可得到 `r` 与 `F m` 的纤维；其中的索引标识相应的 `μ` 呈现成员，最后一个分量则记录二者之间的隶属。
+前驱见证由 `r ≺ F m` 与等式 `col r ≡ b` 组成。经 `R→Pre` 读回关系证明，可得到 `r` 与 `F m` 的纤维；其中的索引标识相应的 `μ` 呈现元素，最后一个分量则记录二者之间的成员关系。
 <!--ja-->
 前者の証人は `r ≺ F m` と等式 `col r ≡ b` からなる。関係の証明を `R→Pre` で読み戻すと、`r` と `F m` のファイバーが得られる。その添字は対応する `μ` の提示要素を示し、最後の成分はそれらの間の所属を記録する。
 <!--/-->
@@ -1372,7 +1372,7 @@ The predecessor witness consists of `r ≺ F m` and an equation `col r ≡ b`. R
 <!--en-->
 The fibre over `F m` is proposition-valued, so the representative `q` obtained from the relation proof equals the evident representative `(m , refl)`. Transport along this equality turns the decoded membership into the statement that the predecessor index lies inside the set represented by `m`.
 <!--zh-->
-`F m` 上的纤维具有命题性，所以由关系证明得到的代表 `q` 等于显然的代表 `(m , refl)`。沿此等式运输，解码后的隶属便成为「前驱索引属于 `m` 所表示的集合」这一陈述。
+`F m` 上的纤维具有命题性，所以由关系证明得到的代表 `q` 等于显然的代表 `(m , refl)`。沿此等式运输，解码后的成员关系便成为「前驱索引属于 `m` 所表示的集合」这一陈述。
 <!--ja-->
 `F m` 上のファイバーは命題なので、関係の証明から得た代表 `q` は明らかな代表 `(m , refl)` と等しくなる。この等式に沿って輸送すると、読み取った所属は、前者の添字が `m` の表す集合に属すという主張になる。
 <!--/-->
@@ -1388,7 +1388,7 @@ The fibre over `F m` is proposition-valued, so the representative `q` obtained f
 <!--en-->
 Using the equation `⟪ μ ⟫↪ m ≡ v`, this membership places the predecessor's represented set below `v` in ambient membership. The recursive hypothesis is therefore available at that predecessor and identifies its collapse with its represented set.
 <!--zh-->
-利用等式 `⟪ μ ⟫↪ m ≡ v`，上述隶属把前驱所表示的集合置于环境隶属中的 `v` 之下。因此可以在此前驱处使用递归假设，把其塌缩值与其所表示的集合认同。
+利用等式 `⟪ μ ⟫↪ m ≡ v`，上述成员关系把前驱所表示的集合置于环境成员关系中的 `v` 之下。因此可以在此前驱处使用递归假设，把其塌缩值与其所表示的集合认同。
 <!--ja-->
 等式 `⟪ μ ⟫↪ m ≡ v` を使うと、この所属は前者の表す集合を周囲の所属における `v` の下に置く。したがって、その前者で再帰の仮定を使い、その崩壊値を提示された集合と同一視できる。
 <!--/-->
@@ -1404,7 +1404,7 @@ Using the equation `⟪ μ ⟫↪ m ≡ v`, this membership places the predecess
 <!--en-->
 The induction hypothesis identifies the collapse of the decoded index with the member represented by that index. Since the fibre equation also identifies its image with `r`, congruence of `col` yields the required equation between the represented member and `col r`; composing with `col r ≡ b` completes the forward inclusion.
 <!--zh-->
-归纳假设把解码索引的塌缩值与该索引所表示的成员认同。纤维等式又把该索引的像与 `r` 认同，因此对 `col` 使用同余便得到呈现成员与 `col r` 之间所需的等式；再与 `col r ≡ b` 复合，即完成向前包含。
+归纳假设把解码索引的塌缩值与该索引所表示的元素认同。纤维等式又把该索引的像与 `r` 认同，因此对 `col` 使用同余便得到呈现元素与 `col r` 之间所需的等式；再与 `col r ≡ b` 复合，即完成向前包含。
 <!--ja-->
 帰納の仮定は、復号された添字の崩壊値を、その添字が表す要素と同一視する。ファイバーの等式はさらに、その添字の像を `r` と同一視する。そこで `col` の合同性を使うと、提示要素と `col r` の間の必要な等式が得られ、これを `col r ≡ b` と合成すれば順方向の包含が完了する。
 <!--/-->
@@ -1416,7 +1416,7 @@ The induction hypothesis identifies the collapse of the decoded index with the m
 <!--en-->
 For the reverse inclusion, begin with `b` as a member of the set represented by `m`. The aim is to exhibit `b` as a member of `col (F m)`. Transitivity of the ordinal `μ` first promotes `b` to membership in `μ`, allowing its canonical presentation to supply an index `k` for `b`.
 <!--zh-->
-再证反向包含。现从 `b` 属于索引 `m` 所表示的集合出发，目标是证明 `b ∈ col (F m)`。序数 `μ` 的传递性先把 `b` 提升为 `μ` 的成员，于是 `μ` 的典范呈现可以给出表示 `b` 的索引 `k`。
+再证反向包含。现从 `b` 属于索引 `m` 所表示的集合出发，目标是证明 `b ∈ col (F m)`。序数 `μ` 的传递性先把 `b` 提升为 `μ` 的元素，于是 `μ` 的典范呈现可以给出表示 `b` 的索引 `k`。
 <!--ja-->
 次に逆方向の包含を示す。`b` が添字 `m` の表す集合に属すると仮定し、`b ∈ col (F m)` を目指す。まず順序数 `μ` の推移性により `b` は `μ` の要素でもあるので、`μ` の正準な提示から `b` を表す添字 `k` が得られる。
 <!--/-->
@@ -1432,7 +1432,7 @@ For the reverse inclusion, begin with `b` as a member of the set represented by 
 <!--en-->
 Here `fiber μ b∈μ` returns an actual index `k` and an equation `⟪ μ ⟫↪ k ≡ b`. This is possible because small membership `_∈ₛ_` is based on the proposition-valued fibre of the canonical presentation. It is a local inverse to that presentation, not a choice from an arbitrary truncated existence.
 <!--zh-->
-这里 `fiber μ b∈μ` 返回实际索引 `k` 与等式 `⟪ μ ⟫↪ k ≡ b`。这是因为小隶属 `_∈ₛ_` 基于典范呈现中具有命题性的纤维。它是该呈现的局部逆过程，并非从任意截断存在中作选择。
+这里 `fiber μ b∈μ` 返回实际索引 `k` 与等式 `⟪ μ ⟫↪ k ≡ b`。这是因为小成员关系 `_∈ₛ_` 基于典范呈现中具有命题性的纤维。它是该呈现的局部逆过程，并非从任意截断存在中作选择。
 <!--ja-->
 ここで `fiber μ b∈μ` は、実際の添字 `k` と等式 `⟪ μ ⟫↪ k ≡ b` を返す。小所属 `_∈ₛ_` が正準な提示の命題値ファイバーに基づくためである。これはその提示に対する局所的な逆操作であり、任意の切り詰められた存在からの選択ではない。
 <!--/-->
@@ -1448,7 +1448,7 @@ Here `fiber μ b∈μ` returns an actual index `k` and an equation `⟪ μ ⟫�
 <!--en-->
 The equation returned by `fiber` lets us rewrite the original membership `b ∈ ⟪ μ ⟫↪ m` as membership of the represented element `⟪ μ ⟫↪ k`. The evident fibres `(k , refl)` and `(m , refl)`, together with this membership, then establish `PreT (F k) (F m)`.
 <!--zh-->
-`fiber` 返回的等式把原有隶属 `b ∈ ⟪ μ ⟫↪ m` 改写为呈现元素 `⟪ μ ⟫↪ k` 的隶属。随后，显然的两个纤维 `(k , refl)`、`(m , refl)` 与这条隶属共同建立 `PreT (F k) (F m)`。
+`fiber` 返回的等式把原有成员关系 `b ∈ ⟪ μ ⟫↪ m` 改写为呈现元素 `⟪ μ ⟫↪ k` 的成员关系。随后，显然的两个纤维 `(k , refl)`、`(m , refl)` 与这条成员关系共同建立 `PreT (F k) (F m)`。
 <!--ja-->
 `fiber` が返す等式により、もとの所属 `b ∈ ⟪ μ ⟫↪ m` を、提示要素 `⟪ μ ⟫↪ k` の所属として書き換えられる。そこで、明らかな二つのファイバー `(k , refl)`、`(m , refl)` とこの所属から `PreT (F k) (F m)` が得られる。
 <!--/-->
@@ -1480,7 +1480,7 @@ Encoding this `PreT` fact as the Bool relation gives `F k ≺ F m`. The collapse
 <!--en-->
 The recursive hypothesis gives `col (F k) ≡ ⟪ μ ⟫↪ k`. Composing this with the fibre equation `⟪ μ ⟫↪ k ≡ b` transports the membership just constructed to `b ∈ col (F m)`, completing the reverse inclusion.
 <!--zh-->
-递归假设给出 `col (F k) ≡ ⟪ μ ⟫↪ k`。把它与纤维等式 `⟪ μ ⟫↪ k ≡ b` 复合，便可把刚构造的隶属运输为 `b ∈ col (F m)`，从而完成反向包含。
+递归假设给出 `col (F k) ≡ ⟪ μ ⟫↪ k`。把它与纤维等式 `⟪ μ ⟫↪ k ≡ b` 复合，便可把刚构造的成员关系运输为 `b ∈ col (F m)`，从而完成反向包含。
 <!--ja-->
 再帰の仮定から `col (F k) ≡ ⟪ μ ⟫↪ k` が得られる。これをファイバーの等式 `⟪ μ ⟫↪ k ≡ b` と合成し、先ほど作った所属を `b ∈ col (F m)` へ輸送すれば、逆方向の包含が完了する。
 <!--/-->
@@ -1494,7 +1494,7 @@ The recursive hypothesis gives `col (F k) ≡ ⟪ μ ⟫↪ k`. Composing this w
 <!--en-->
 Regularity supplies the accessibility proof needed to specialize the induction to every index `m` of `μ`. Thus `key'` identifies `col (F m)` with the member represented by `m`. The next part of the proof will use these pointwise equalities to establish the inclusion `μ ⊆ Col.ot w`; that inclusion has not yet been asserted here.
 <!--zh-->
-正则公理为 `μ` 的每个索引 `m` 提供专门化该归纳所需的可及性证明。因此，`key'` 把 `col (F m)` 与 `m` 所表示的成员认同。证明的下一部分才会用这些逐点等式建立包含 `μ ⊆ Col.ot w`；此处尚未断言该包含。
+正则公理为 `μ` 的每个索引 `m` 提供专门化该归纳所需的可及性证明。因此，`key'` 把 `col (F m)` 与 `m` 所表示的元素认同。证明的下一部分才会用这些逐点等式建立包含 `μ ⊆ Col.ot w`；此处尚未断言该包含。
 <!--ja-->
 正則性は、`μ` の各添字 `m` で帰納を特殊化するための到達可能性の証明を与える。したがって `key'` は `col (F m)` を `m` が表す要素と同一視する。証明の次の部分で、これらの各点の等式から包含 `μ ⊆ Col.ot w` を導く。この時点ではまだその包含を主張していない。
 <!--/-->
@@ -1509,7 +1509,7 @@ Every member `b` of `μ` also belongs to the collapse image `ot`. The canonical 
 
 Thus the argument establishes only the inclusion `μ ⊆ ot`. Together with `ot ∈ μ`, this inclusion will already be enough for the contradiction, so no equality or order isomorphism between `μ` and `ot` is required.
 <!--zh-->
-`μ` 的每个成员 `b` 也属于坍缩像 `ot`。`μ` 在 `b` 处的典范纤维给出索引 `m`，满足 `⟪ μ ⟫↪ m ≡ b`。引理 `key'` 把这个代表与 `col (F m)` 识别，而 `ot-in` 把该坍缩值放入 `ot`；沿这两个等式传输，便得到 `b ∈ ot`。
+`μ` 的每个元素 `b` 也属于坍缩像 `ot`。`μ` 在 `b` 处的典范纤维给出索引 `m`，满足 `⟪ μ ⟫↪ m ≡ b`。引理 `key'` 把这个代表与 `col (F m)` 识别，而 `ot-in` 把该坍缩值放入 `ot`；沿这两个等式传输，便得到 `b ∈ ot`。
 
 因此，这段论证只建立包含关系 `μ ⊆ ot`。结合 `ot ∈ μ`，这一包含关系已经足以导出矛盾，无须证明 `μ` 与 `ot` 相等或序同构。
 <!--ja-->
@@ -1541,7 +1541,7 @@ The canonical presentation has proposition-valued fibres, so the representative 
 <!--en-->
 By construction of the bound, `ot` is a member of `μ`. Applying the inclusion `μ ⊆ ot` to that particular member gives `ot ∈ ot`, contradicting the irreflexivity of membership. This closes the contradiction generated by the assumed injection `μ ↪ a`.
 <!--zh-->
-由上界的构造，`ot` 是 `μ` 的成员。把包含关系 `μ ⊆ ot` 用于这个特定成员，便得到 `ot ∈ ot`，与隶属关系的非自反性矛盾。这样，由假设的单射 `μ ↪ a` 所引出的矛盾便告完成。
+由上界的构造，`ot` 是 `μ` 的元素。把包含关系 `μ ⊆ ot` 用于这个特定元素，便得到 `ot ∈ ot`，与成员关系的非自反性矛盾。这样，由假设的单射 `μ ↪ a` 所引出的矛盾便告完成。
 <!--ja-->
 上界の構成により、`ot` は `μ` の要素である。この要素に包含 `μ ⊆ ot` を適用すると `ot ∈ ot` が得られ、所属関係の非反射性に反する。これで、仮定した単射 `μ ↪ a` から生じる矛盾が完成する。
 <!--/-->

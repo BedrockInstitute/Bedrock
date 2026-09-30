@@ -27,7 +27,7 @@ module L.Coding.Model {ℓ : Level} where
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 open import FOL.Syntax
   using ( Term; Formula; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇
         ; ∀̇_; ∀̇∈; ∃̇_; ∃̇∈ )
@@ -60,7 +60,7 @@ The second half turns to coding. Ordered pairs and numerals can be built inside 
 
 桥有两个方向。把模型元素向外投影时，可直接舍去其可构造性证书；转移有界读式时，则使用由 `L` 的传递性保证的绝对性。向内读需要在模型中给出见证：由一个对属于可构造图的证明，传递性为该对提供可构造性证书，使它成为 `L` 的元素。
 
-在对读式之上，本章逐步建立「函数即图」的数学描述，值得注意这些条款在逻辑上各自独立。图取值只断言某个给定的有序对属于该图。单值性说一个自变量至多决定一个取值，却不涉及哪些自变量有取值。恰当定义域与取值限制各自再约束一个侧面。而且以上三条条件都不禁止候选图携带并非有序对的额外成员，因为它们只谈及对形状的成员；第四条，即每个成员都是「指标与取值」的对，把这些冗余排除在外。合在一起便是 `envOverAt`：一个相对于定义域 `d` 与值域 `B`、施于单个候选图的谓词；它刻画一个给定的集合何时是 `d` 之上取值于 `B` 的环境，并不构造全体环境的集合。
+在对读式之上，本章逐步建立「函数即图」的数学描述，值得注意这些条款在逻辑上各自独立。图取值只断言某个给定的有序对属于该图。单值性说一个自变量至多决定一个取值，却不涉及哪些自变量有取值。恰当定义域与取值限制各自再约束一个侧面。而且以上三条条件都不禁止候选图携带并非有序对的额外元素，因为它们只谈及对形状的元素；第四条，即每个元素都是「指标与取值」的对，把这些冗余排除在外。合在一起便是 `envOverAt`：一个相对于定义域 `d` 与值域 `B`、施于单个候选图的谓词；它刻画一个给定的集合何时是 `d` 之上取值于 `B` 的环境，并不构造全体环境的集合。
 
 后半章转向编码。有序对与数码都能在 `L` 内部造出，且各自投影到其周遭对应物。由于每个码都是「标签配载荷」，每个内部码都投影为「常元被投影后的公式」的周遭码；正是这一相容性，使层级一侧的读式能够分析造在模型内部的码。末尾还有两个观察：整个环境描述对赋值的依赖只通过三个投影后的集合，故可原样迁移到呈现同样图、定义域与值域的任何其他赋值；而当已知一个码是对时，`L` 的传递性把它的两个分量收进一个可构造集合。
 <!--ja-->
@@ -87,7 +87,7 @@ Adequacy statements compare truth values, so the ambient facts are packaged as p
 <!--en-->
 Transitivity of `L` enters in two related ways. It underlies the Δ₀ absoluteness used to transfer bounded readers, and it constructs model witnesses from members of constructible sets. A direct projection needs no new witness, but the formula transfer that justifies the outward reading still rests on this transitivity theorem.
 <!--zh-->
-`L` 的传递性以两种相关方式进入论证：它是转移有界读式所需 Δ₀ 绝对性的基础，也把可构造集合的成员组成模型内见证。直接投影本身不需要新见证，但向外读取公式所依赖的转移定理仍以传递性为依据。
+`L` 的传递性以两种相关方式进入论证：它是转移有界读式所需 Δ₀ 绝对性的基础，也把可构造集合的元素组成模型内见证。直接投影本身不需要新见证，但向外读取公式所依赖的转移定理仍以传递性为依据。
 <!--ja-->
 `L` の推移性は二つの関連した仕方で使われる。有界な読み式を移す Δ₀ 絶対性の基礎となり、また構成可能集合の要素から模型内の証人を作る。直接の射影に新しい証人は要らないが、論理式を外向きに読む移送定理はこの推移性に依存する。
 <!--/-->
@@ -120,7 +120,7 @@ Truth values are propositions at level `ℓ-suc ℓ`: a formula does not evaluat
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; setIsSet; _∈_ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( ⁅_,_⁆ )
 
-open hPropStructure 𝒮ʟ using ( S )
+open hPropView 𝒮ʟ using ( S )
 ```
 
 <!--en-->
@@ -172,7 +172,7 @@ The bridge this chapter builds runs in two directions. Forward, a satisfaction j
 <!--zh-->
 ## 有序对
 
-本章要搭的桥有两个方向。正向，模型中的一个满足判断 (在元素为模型元素的赋值处求值) 必须转化为关于层级集合的事实；各赋值项先用 `fst` 投影，故环境陈述始终针对投影后的取值。词典的第一个词条识别有序对：周遭读式 `prAt q u v` 说 `q` 处的取值正是 `u`、`v` 两处取值的 Kuratowski 对。这条读式是有界 (Δ₀) 的，其意义具有绝对性，因而改在 `L` 的语言中读出毫无代价；它又不含任何常元，抬升便对常元不施加任何条件。定理精确地陈述结果：抬升后的读式在模型中的满足，是一条通往「`q` 处投影值等于 `u`、`v` 处投影值之 `pr`」的路径。反方向，即把一条赤裸的周遭隶属转回生活在模型内部的见证，要到下一节才首次出现，那时由 `L` 的传递性承担工作。
+本章要搭的桥有两个方向。正向，模型中的一个满足判断 (在元素为模型元素的赋值处求值) 必须转化为关于层级集合的事实；各赋值项先用 `fst` 投影，故环境陈述始终针对投影后的取值。词典的第一个词条识别有序对：周遭读式 `prAt q u v` 说 `q` 处的取值正是 `u`、`v` 两处取值的 Kuratowski 对。这条读式是有界 (Δ₀) 的，其意义具有绝对性，因而改在 `L` 的语言中读出毫无代价；它又不含任何常元，抬升便对常元不施加任何条件。定理精确地陈述结果：抬升后的读式在模型中的满足，是一条通往「`q` 处投影值等于 `u`、`v` 处投影值之 `pr`」的路径。反方向，即把一条赤裸的周遭成员关系转回生活在模型内部的见证，要到下一节才首次出现，那时由 `L` 的传递性承担工作。
 <!--ja-->
 ## 順序対
 
@@ -199,7 +199,7 @@ prAtL q u v = liftFo (prAt q u v) _
 <!--en-->
 The adequacy statement equates, by a single path, satisfaction of the reader in the model with the packaged equality on the right. Note where the projections stand: the assignment `γ` consists of elements of `S`, and the equation is stated about `fst` of the looked-up entries. That is the shape every entry of this dictionary takes, because the concrete membership facts live in the hierarchy, not inside the model's carrier.
 <!--zh-->
-充分性陈述用一条路径把读式在模型中的满足与右边的包装等式等同起来。注意投影所处的位置：赋值 `γ` 由 `S` 的元素组成，而等式是关于所查各项的 `fst` 陈述的。这部词典的每个词条都取这个形状，因为具体的隶属事实生活在层级中，而不在模型的载体内。
+充分性陈述用一条路径把读式在模型中的满足与右边的包装等式等同起来。注意投影所处的位置：赋值 `γ` 由 `S` 的元素组成，而等式是关于所查各项的 `fst` 陈述的。这部词典的每个词条都取这个形状，因为具体的成员关系事实生活在层级中，而不在模型的载体内。
 <!--ja-->
 妥当性の主張は、一本のパスによって、読解式の模型の中での充足と右辺のパッケージ化された等式を等しくする。射影がどこに立っているか注意してほしい。割り当て `γ` は `S` の要素からなり、等式は参照された項目の `fst` について述べられている。この辞書のどの項目もこの形を取る。具体的な所属の事実が模型の台の内側ではなく階層に住んでいるからである。
 <!--/-->
@@ -235,9 +235,9 @@ The forward direction converts satisfaction into membership. The backward direct
 <!--zh-->
 ## 取值
 
-对象语言中的图是有序对的集合，而使用图时，要问的都是某个给定的对是否属于它。下面的读式把这件事表达为一个有界存在：在某词项所指集合的成员范围内存在一员，其主体为对读式。它的含义是那个 Kuratowski 对属于图的底层集合这一周遭隶属。
+对象语言中的图是有序对的集合，而使用图时，要问的都是某个给定的对是否属于它。下面的读式把这件事表达为一个有界存在：在某词项所指集合的元素范围内存在一员，其主体为对读式。它的含义是那个 Kuratowski 对属于图的底层集合这一周遭成员关系。
 
-正向把满足转化为隶属。反方向才是模型真正发挥作用之处：要满足那个存在量词，必须给出一个**模型的元素**，其底集正是那个对，而假设只提供了一个集合。这个对可构造，因为它属于某个可构造集合，而可构造类是传递的。这一步就是全部论证；此后凡要求见证造在模型之内、而非仅在层级之内，都会重复这一步。
+正向把满足转化为成员关系。反方向才是模型真正发挥作用之处：要满足那个存在量词，必须给出一个**模型的元素**，其底集正是那个对，而假设只提供了一个集合。这个对可构造，因为它属于某个可构造集合，而可构造类是传递的。这一步就是全部论证；此后凡要求见证造在模型之内、而非仅在层级之内，都会重复这一步。
 <!--ja-->
 ## グラフの適用
 
@@ -249,7 +249,7 @@ The forward direction converts satisfaction into membership. The backward direct
 <!--en-->
 The definition reads: there merely exists a member of the graph, bounded by the value of the term `F`, satisfying the pair reader. The bound entry of the existential extends the environment, and the three positions of the pair reader name that entry together with the shifted references to the two arguments, while the bound `F` denotes the graph over which the fresh entry ranges.
 <!--zh-->
-定义读作：在该词项 `F` 的值为界的范围内，仅仅存在图的一个成员，满足对读式。存在量词的约束项扩展了环境；对读式的三个位置指称这个新项以及两个论元平移后的引用，而界 `F` 指定这个新条目所遍历的图。
+定义读作：在该词项 `F` 的值为界的范围内，仅仅存在图的一个元素，满足对读式。存在量词的约束项扩展了环境；对读式的三个位置指称这个新项以及两个论元平移后的引用，而界 `F` 指定这个新条目所遍历的图。
 <!--ja-->
 定義は次のように読む。項 `F` の値で限られた範囲の中に、グラフの要素が単にひとつ存在し、対の読解式を満たす、と。存在量化の束縛された項目が環境を伸ばし、対の読解式の三つの位置はその項目と、二つの引数のずらされた参照を指す。`F` 自身は、量化子が施したずらしの下で拡張環境の中で評価される。
 <!--/-->
@@ -266,7 +266,7 @@ private
 <!--en-->
 The adequacy statement names the ingredients. Here `a` and `b` are the projected values of the two argument slots, and `G` is the interpretation of the term: an element of `S`, hence a set carrying its constructibility certificate, whose underlying set is the graph. The claim is a path of truth values between satisfaction and an ambient membership: the pair `pr a b` belongs to the underlying set of the graph.
 <!--zh-->
-充分性陈述点名各成分。`a` 与 `b` 是两个论元槽位的投影值，`G` 是该词项的解释：它是 `S` 的元素，即一个携带可构造性证书的集合，其底层集合就是那个图。所断言的是一条真值路径，连接满足关系与一个周遭隶属：对 `pr a b` 属于图的底层集合。
+充分性陈述点名各成分。`a` 与 `b` 是两个论元槽位的投影值，`G` 是该词项的解释：它是 `S` 的元素，即一个携带可构造性证书的集合，其底层集合就是那个图。所断言的是一条真值路径，连接满足关系与一个周遭成员关系：对 `pr a b` 属于图的底层集合。
 <!--ja-->
 妥当性の主張は材料に名前を付ける。`a` と `b` は二つの引数スロットの射影された値であり、`G` は項の解釈である。それは `S` の要素、つまり構成可能性の証明書を担う集合であり、その底にある集合がグラフである。主張されるのは、充足と周囲の所属、すなわち対 `pr a b` がグラフの底にある集合に属することとの間の、真理値のパスである。
 <!--/-->
@@ -282,7 +282,7 @@ The adequacy statement names the ingredients. Here `a` and `b` are the projected
 <!--en-->
 The auxiliary `read` unpacks one existential fiber. Given an element `z` of the model and a proof that the extended assignment satisfies the pair reader, the adequacy theorem already proved for the pair reader transports that proof to the proposition that the underlying set of `z` equals `pr a b`. The forward direction receives, after unfolding the bounded existential's satisfaction, a truncated pair of a membership `z∈G` and such a reader proof; eliminating the truncation is legitimate because the target membership is a proposition, and inside the branch the membership is transported along the path that `read` supplies.
 <!--zh-->
-辅助工具 `read` 拆开存在量词的一个纤维。给定模型的一个元素 `z`，以及「扩展赋值满足对读式」的证明，上一节的充分性定理把该证明传输到「`z` 的底层集合等于 `pr a b`」这一命题。展开有界存在的满足关系后，前进方向收到的是隶属 `z∈G` 与这样一份读式证明的截断对；由于目标是取命题值的隶属，消去截断是合法的，而在分支内部，隶属沿 `read` 给出的路径传输。
+辅助工具 `read` 拆开存在量词的一个纤维。给定模型的一个元素 `z`，以及「扩展赋值满足对读式」的证明，上一节的充分性定理把该证明传输到「`z` 的底层集合等于 `pr a b`」这一命题。展开有界存在的满足关系后，前进方向收到的是成员关系 `z∈G` 与这样一份读式证明的截断对；由于目标是取命题值的成员关系，消去截断是合法的，而在分支内部，成员关系沿 `read` 给出的路径传输。
 <!--ja-->
 補助の `read` は存在量化の一つのファイバーをほどく。模型の要素 `z` と、拡張された割り当てが対の読解式を充足することの証明が与えられれば、前節の妥当性定理がその証明を、「`z` の底にある集合は `pr a b` に等しい」という命題へ輸送する。有界な存在量化の充足を展開すると、順方向は所属 `z∈G` とそのような読解式の証明の切り詰められた対を受け取る。目標の所属が命題であるため截断の消去は正当であり、分岐の中では所属が `read` の供給するパスに沿って輸送される。
 <!--/-->
@@ -300,7 +300,7 @@ The auxiliary `read` unpacks one existential fiber. Given an element `z` of the 
 <!--en-->
 The backward direction is where the constructible model enters. From a bare membership proof `⟨ pr a b ∈ fst G ⟩` one must produce a proof of the truncated existential, and its first component cannot be the set `pr a b` itself, which is a set of the hierarchy and not an element of `S`. The witness is built in the next lines; the displayed branch packages the membership with a reader proof obtained by transporting `refl` backwards through the adequacy path, which is legitimate because the underlying set of the witness is definitionally `pr a b`.
 <!--zh-->
-反方向才是可构造模型登场之处。从一条赤裸的隶属证明 `⟨ pr a b ∈ fst G ⟩` 出发，必须给出截断存在的一个证明，而其第一个分量不能是集合 `pr a b` 本身：那是层级中的集合，不是 `S` 的元素。见证将在随后几行构造；这里展示的分支把隶属与一份读式证明打包，后者是把 `refl` 沿充分性路径反方向传输得到的，之所以合法，是因为见证的底层集合按定义就是 `pr a b`。
+反方向才是可构造模型登场之处。从一条赤裸的成员关系证明 `⟨ pr a b ∈ fst G ⟩` 出发，必须给出截断存在的一个证明，而其第一个分量不能是集合 `pr a b` 本身：那是层级中的集合，不是 `S` 的元素。见证将在随后几行构造；这里展示的分支把成员关系与一份读式证明打包，后者是把 `refl` 沿充分性路径反方向传输得到的，之所以合法，是因为见证的底层集合按定义就是 `pr a b`。
 <!--ja-->
 逆方向こそ、構成可能モデルが登場する場面である。裸の所属の証明 `⟨ pr a b ∈ fst G ⟩` から、切り詰められた存在量化の住人を与えなければならないが、その第一成分は集合 `pr a b` そのものではいけない。それは階層の集合であって `S` の要素ではないからである。証人は次の行で作られる。ここに示された分岐は、所属と読解式の証明を一つに包む。後者の証明は `refl` を妥当性のパスを逆向きに輸送して得られるもので、証人の底にある集合が定義的に `pr a b` であるため、これで構わない。
 <!--/-->
@@ -317,7 +317,7 @@ The backward direction is where the constructible model enters. From a bare memb
 <!--en-->
 The witness is the one genuinely model-specific construction of this section. To present `pr a b` as an element of `S`, one needs a constructibility certificate for it. The hypothesis says the pair belongs to the underlying set of `G`, and `G` carries its own certificate; transitivity of the constructible class turns these two facts into `isL (pr a b)`. A member of a constructible set is constructible. With the witness in place, the public form `appAt` fixes the graph to sit in a variable slot, reading the term `var f`, and its adequacy is just the general theorem at that particular term: membership of the projected pair in the underlying set of the value at slot `f`.
 <!--zh-->
-见证是本节唯一真正属于模型的构造。要把 `pr a b` 呈现为 `S` 的元素，需要它的可构造性证书。假设说这个对属于 `G` 的底层集合，而 `G` 自带证书；可构造类的传递性把这两个事实变成 `isL (pr a b)`。可构造集合的成员是可构造的。见证就位后，公开形式 `appAt` 把图固定在变元槽位上，即取词项 `var f`；其充分性就是一般定理在该特定词项上的实例：投影对属于槽位 `f` 处取值的底层集合。
+见证是本节唯一真正属于模型的构造。要把 `pr a b` 呈现为 `S` 的元素，需要它的可构造性证书。假设说这个对属于 `G` 的底层集合，而 `G` 自带证书；可构造类的传递性把这两个事实变成 `isL (pr a b)`。可构造集合的元素是可构造的。见证就位后，公开形式 `appAt` 把图固定在变元槽位上，即取词项 `var f`；其充分性就是一般定理在该特定词项上的实例：投影对属于槽位 `f` 处取值的底层集合。
 <!--ja-->
 証人は、この節で唯一、真に模型に固有の構成である。`pr a b` を `S` の要素として提示するには、その構成可能性の証明書が必要である。仮定はこの対が `G` の底にある集合に属すると述べ、`G` は自身の証明書を担っている。構成可能なクラスの推移性がこの二つの事実を `isL (pr a b)` へ変える。構成可能な集合の要素は構成可能なのである。証人が揃ったところで、公開形式 `appAt` はグラフを変数のスロットに固定し、項 `var f` を読む。その妥当性は、特定の項における一般定理の実例、すなわち射影された対がスロット `f` の値の底にある集合に属することにほかならない。
 <!--/-->
@@ -335,7 +335,7 @@ appAt-adequate : ∀ {n} (f x y : Fin n) (γ : S ^ n)
 <!--en-->
 This specialization matters because the remaining graph predicates refer to their graph through an assignment slot. After projection, every such occurrence has the uniform form `pr (fst x) (fst y) ∈ fst (lookup f γ)`, so the later single-valuedness and domain arguments can use one membership statement throughout.
 <!--zh-->
-这一特化使后面的图谓词都能通过赋值槽位引用其图。投影后，每次引用统一写成 `pr (fst x) (fst y) ∈ fst (lookup f γ)`，因此单值性与定义域论证可以始终使用同一种隶属陈述。
+这一特化使后面的图谓词都能通过赋值槽位引用其图。投影后，每次引用统一写成 `pr (fst x) (fst y) ∈ fst (lookup f γ)`，因此单值性与定义域论证可以始终使用同一种成员关系陈述。
 <!--ja-->
 この特殊化により、後のグラフ述語は割り当てのスロットを通してグラフを参照できる。射影後の各出現は一様に `pr (fst x) (fst y) ∈ fst (lookup f γ)` となるので、一価性と定義域の議論では同じ所属の形を一貫して使える。
 <!--/-->
@@ -349,7 +349,7 @@ appAt-adequate f = appTerm-adequate (var f)
 <!--en-->
 The graph being read need not sit in a variable slot; it may be a fixed element of the model named directly. The constant term `con F` is exactly that, and the adequacy statement simplifies accordingly: since the constant is interpreted as the element `F` itself, the right-hand side is membership in `fst F`, with no reference to the environment for the graph.
 <!--zh-->
-被读的图不必落在变元槽位中；它也可以是模型的一个固定元素，被直接命名。常元词项 `con F` 正是如此，而充分性陈述随之简化：由于常元被解释为元素 `F` 本身，右边就是属于 `fst F` 的隶属，完全不再涉及环境中关于图的项。
+被读的图不必落在变元槽位中；它也可以是模型的一个固定元素，被直接命名。常元词项 `con F` 正是如此，而充分性陈述随之简化：由于常元被解释为元素 `F` 本身，右边就是属于 `fst F` 的成员关系，完全不再涉及环境中关于图的项。
 <!--ja-->
 読む対象となるグラフは、変数のスロットにある必要はなく、模型の固定された要素として直接名指されても構わない。定数の項 `con F` はまさにそれであり、妥当性の主張はそれに応じて簡単になる。定数は要素 `F` そのものとして解釈されるので、右辺は `fst F` への所属となり、グラフのための環境の項目にはまったく触れない。
 <!--/-->
@@ -357,7 +357,7 @@ The graph being read need not sit in a variable slot; it may be a fixed element 
 <!--en-->
 The definition instantiates the shared reader at `con F`. Because the constant is interpreted as itself, the bounded existential ranges directly over the members of `fst F`, and the adequacy statement records exactly that: satisfaction is a path to the membership of the projected pair of the two argument values in `fst F`. The membership on the right is ambient membership after projection; the existential on the left still quantifies over elements of the model.
 <!--zh-->
-定义在 `con F` 处实例化共用读式。由于常元被解释为它自身，有界存在直接遍历 `fst F` 的成员，充分性陈述也如实记录这一点：满足关系是一条通往「两个论元值的投影对属于 `fst F`」的路径。右边的隶属是投影后的周遭隶属；左边的存在量词仍在模型的元素上取值。
+定义在 `con F` 处实例化共用读式。由于常元被解释为它自身，有界存在直接遍历 `fst F` 的元素，充分性陈述也如实记录这一点：满足关系是一条通往「两个论元值的投影对属于 `fst F`」的路径。右边的成员关系是投影后的周遭成员关系；左边的存在量词仍在模型的元素上取值。
 <!--ja-->
 定義は共通の読解式を `con F` で実例化する。定数はそれ自身として解釈されるため、有界な存在量化は `fst F` の要素を直接渡る。妥当性の主張はまさにそれを記録する。充足は、二つの引数の値の射影された対が `fst F` に属することへのパスである。右辺の所属は射影後の周囲の所属であり、左辺の存在量化子は依然として模型の要素の上を渡る。
 <!--/-->
@@ -374,7 +374,7 @@ appC-adequate : ∀ {n} (F : S) (x y : Fin n) (γ : S ^ n)
 <!--en-->
 The proof is the shared adequacy theorem at the constant term, and needs no argument of its own. Together with `appAt`, the dictionary now recognizes pair membership in a graph given by a slot and in a graph given as a fixed element, each with its exact meaning as an ambient membership.
 <!--zh-->
-证明就是在常元词项上使用共用充分性定理，自身无需任何论证。与 `appAt` 一道，词典如今同时识别由槽位给出的图与由固定元素给出的图中的对隶属，且各自的意义都精确地是一个周遭隶属。
+证明就是在常元词项上使用共用充分性定理，自身无需任何论证。与 `appAt` 一道，词典如今同时识别由槽位给出的图与由固定元素给出的图中的对成员关系，且各自的意义都精确地是一个周遭成员关系。
 <!--ja-->
 証明は定数の項における共通の妥当性定理であり、自前の議論を何も必要としない。`appAt` と合わせて、辞書はこれで、スロットによって与えられたグラフの中の対の所属と、固定された要素として与えられたグラフの中の対の所属の両方を認識し、それぞれの意味が正確に周囲の所属となっている。
 <!--/-->
@@ -392,7 +392,7 @@ The claim is stated as two directions rather than a single path, in the form in 
 <!--zh-->
 ## 单值性
 
-一个图是单值的，如果其中任意两个第一分量相同的对具有相同的第二分量。这条陈述只谈对之间的隶属；它既不说图有成员，也不说某个给定的论元在图中出现，因此与稍后的定义域条件在逻辑上相互独立。
+一个图是单值的，如果其中任意两个第一分量相同的对具有相同的第二分量。这条陈述只谈对之间的成员关系；它既不说图有元素，也不说某个给定的论元在图中出现，因此与稍后的定义域条件在逻辑上相互独立。
 
 该断言陈述为两个方向而非一条路径，取的正是它实际被使用的形式：向外读，即从对象语言的断言得到「记在同一论元下的两个取值的底层集合相等」这一等式。
 <!--ja-->
@@ -463,7 +463,7 @@ Each helper is an instance of the application adequacy at the environment extend
 <!--en-->
 Reading the object-language claim outward gives the usable conclusion. Given satisfaction of `svAt f`, the quantifiers supply the implication for arbitrary elements `x`, `y`, `y'` of the model; feeding it the two memberships `Holds x y` and `Holds x y'`, each first transported from its external form into the satisfaction the quantifiers expect, yields the equality `fst y ≡ fst y'` of the two underlying values. Note that the conclusion is an equality of projected sets, while the value equalities between `y` and `y'` as elements of the model are not claimed.
 <!--zh-->
-把对象语言的断言向外读，得到可用的结论。给定 `svAt f` 的满足关系，量词为模型的任意元素 `x`、`y`、`y'` 提供那条蕴含；把两条隶属 `Holds x y` 与 `Holds x y'` 各自先从外部形式传输到量词所期望的满足形式再喂入，便得到两个底层值相等的 `fst y ≡ fst y'`。注意结论是投影后集合的相等，而 `y` 与 `y'` 作为模型元素之间的相等并未被断言。
+把对象语言的断言向外读，得到可用的结论。给定 `svAt f` 的满足关系，量词为模型的任意元素 `x`、`y`、`y'` 提供那条蕴含；把两条成员关系 `Holds x y` 与 `Holds x y'` 各自先从外部形式传输到量词所期望的满足形式再喂入，便得到两个底层值相等的 `fst y ≡ fst y'`。注意结论是投影后集合的相等，而 `y` 与 `y'` 作为模型元素之间的相等并未被断言。
 <!--ja-->
 対象言語の主張を外へ読み出すと、使える結論が得られる。`svAt f` の充足が与えられれば、量化子は模型の任意の要素 `x`、`y`、`y'` に対してその含意を供給する。二つの所属 `Holds x y` と `Holds x y'` を、それぞれ外部の形から量化子が期待する充足の形へ輸送して渡せば、二つの底にある値の等式 `fst y ≡ fst y'` が得られる。結論が射影後の集合の等式であり、模型の要素としての `y` と `y'` の等式は主張されていないことに注意してほしい。
 <!--/-->
@@ -480,7 +480,7 @@ Reading the object-language claim outward gives the usable conclusion. Given sat
 <!--en-->
 The converse builds satisfaction rather than extracting it. A function taking any three elements with two agreeing memberships to the equality of their values is exactly what the three quantifiers and the two implications ask for; each expected membership proof is manufactured by transporting the external one forward along `at` or `at'`. Together the two lemmas say that satisfaction of `svAt f` and the external single-valuedness condition imply each other, though the statement keeps them as two functions rather than one packaged path.
 <!--zh-->
-逆向构造的是满足关系本身。一个从任意三个带两条隶属的元素到「其取值相等」的函数，恰是三个量词与两条蕴含所要求的东西；每个所需的隶属证明都由外部那条沿 `at` 或 `at'` 正向传输而造出。两条引理合起来说明：`svAt f` 的满足与外部的单值性条件相互蕴涵，只是陈述把二者保持为两个函数，而非打包成一条路径。
+逆向构造的是满足关系本身。一个从任意三个带两条成员关系的元素到「其取值相等」的函数，恰是三个量词与两条蕴含所要求的东西；每个所需的成员关系证明都由外部那条沿 `at` 或 `at'` 正向传输而造出。两条引理合起来说明：`svAt f` 的满足与外部的单值性条件相互蕴涵，只是陈述把二者保持为两个函数，而非打包成一条路径。
 <!--ja-->
 逆向きは充足を取り出すのではなく組み立てる。二つの所属が一致する任意の三つの要素を、それらの値の等しさへ送る関数は、三つの量化子と二つの含意が要求するものにちょうど等しく、必要な所属の証明はそれぞれ、外部のものを `at` か `at'` に沿って順方向へ輸送して作られる。二つの補題を合わせると、`svAt f` の充足と外部の一価性の条件は互いに従うが、述べ方はそれらを二つの関数として保ち、一本のパスへはまとめていない。
 <!--/-->
@@ -497,7 +497,7 @@ The converse builds satisfaction rather than extracting it. A function taking an
 <!--en-->
 The introduction direction `svAt-in` mirrors the extraction, with the transports pointing the other way: each external membership is carried forward along the adequacy path into the satisfaction the implications expect, and the three quantifiers then apply the function `h`. Both directions keep the whole statement at the level of underlying sets: the conclusion is an equality of the projected values `fst y` and `fst y'`, and the memberships supplied are about projected pairs. Nothing here asserts that every argument has a value, or that the graph is inhabited; those are separate questions settled by the domain condition.
 <!--zh-->
-引入方向 `svAt-in` 是消去的镜像，只是传输方向相反：每条外部隶属沿充分性路径正向传输为各蕴含所期望的满足形式，然后三个全称量词施用函数 `h`。两个方向都把整个陈述保持在底层集合的层面：结论是投影值 `fst y` 与 `fst y'` 的相等，所供给的隶属也针对投影后的对。这里没有断言每个论元都有取值，也没有断言图非空；那是下一节定义域条件的事。
+引入方向 `svAt-in` 是消去的镜像，只是传输方向相反：每条外部成员关系沿充分性路径正向传输为各蕴含所期望的满足形式，然后三个全称量词施用函数 `h`。两个方向都把整个陈述保持在底层集合的层面：结论是投影值 `fst y` 与 `fst y'` 的相等，所供给的成员关系也针对投影后的对。这里没有断言每个论元都有取值，也没有断言图非空；那是下一节定义域条件的事。
 <!--ja-->
 導入の方向 `svAt-in` は除去の鏡像で、輸送の向きが逆である。外部の所属をそれぞれ妥当性の経路に沿って順方向へ、含意が期待する充足の形へ運び、三つの全称量化子が関数 `h` を適用する。どちらの方向でも、主張全体が底にある集合の水準に保たれる。結論は射影された値 `fst y` と `fst y'` の等しさであり、供給される所属も射影された対についてのものである。ここでは、すべての引数が値を持つことも、グラフが空でないことも主張しない。それは次節の定義域の条件に委ねられている。
 <!--/-->
@@ -520,7 +520,7 @@ The three logical components developed so far, application, single-valuedness, a
 
 上一节的取值读式回答一个问题：这两个值组成的对属于该图吗？一个图可以在某些论元处命中、在另一些处落空，故下一个结构性质问的是：哪些论元有条目。落在定义域中就是有取值，其读式只是对模型的一次无界存在。定义域条件随后把候选集合 `d` 与图相比较，说「属于 `d`」与「有取值」互相蕴含；由于对象语言没有自带的双条件，这条陈述写成两条蕴含。
 
-至此发展出的三个逻辑成分，取值、单值性与恰当定义域，彼此独立，且在后文中各自单独被用到：一个图可以单值却漏掉某些论元，可以恰定义在 `d` 上却多值，等等。这个条件并不构造任何东西；它是一个谓词，某个候选集合要么满足它要么不满足。两条消去引理各只用一个方向：`domAt-out`{.Agda} 消费一条实际的条目而得到定义域中的隶属，`domAt-in`{.Agda} 则消费定义域中的隶属，只得到条目的截断存在，因为仅凭定义域中的隶属，人们只知道某个条目存在。当需要从外部证据证明某个集合**满足**这条描述时所需的引入方向，另取了第三个名字。
+至此发展出的三个逻辑成分，取值、单值性与恰当定义域，彼此独立，且在后文中各自单独被用到：一个图可以单值却漏掉某些论元，可以恰定义在 `d` 上却多值，等等。这个条件并不构造任何东西；它是一个谓词，某个候选集合要么满足它要么不满足。两条消去引理各只用一个方向：`domAt-out`{.Agda} 消费一条实际的条目而得到定义域中的成员关系，`domAt-in`{.Agda} 则消费定义域中的成员关系，只得到条目的截断存在，因为仅凭定义域中的成员关系，人们只知道某个条目存在。当需要从外部证据证明某个集合**满足**这条描述时所需的引入方向，另取了第三个名字。
 <!--ja-->
 ## 定義域
 
@@ -589,7 +589,7 @@ module _ {n : ℕ} (f d : Fin n) (γ : S ^ n) where
 <!--en-->
 The extraction `domAt-out` consumes an entry and yields domain membership. Given an actual witness pair `x`, `y` with the membership `p`, the truncated form is assembled as `∣ y , p ∣₁`, transported backward through `step` into the satisfaction the quantifier expects, and fed to the first implication at `x`. The output is a plain membership proof of the projected `x` in the projected `d`, with no truncation left.
 <!--zh-->
-消去 `domAt-out` 从条目得到定义域中的隶属。给定实际的见证对 `x`、`y` 及隶属 `p`，先把截断形式组装为 `∣ y , p ∣₁`，沿 `step` 反向传输到量词所期望的满足形式，再在 `x` 处喂给第一条蕴含。输出是一条素净的隶属证明：投影后的 `x` 属于投影后的 `d`，不留任何截断。
+消去 `domAt-out` 从条目得到定义域中的成员关系。给定实际的见证对 `x`、`y` 及成员关系 `p`，先把截断形式组装为 `∣ y , p ∣₁`，沿 `step` 反向传输到量词所期望的满足形式，再在 `x` 处喂给第一条蕴含。输出是一条素净的成员关系证明：投影后的 `x` 属于投影后的 `d`，不留任何截断。
 <!--ja-->
 除去の `domAt-out` は項目を消費して定義域への所属を与える。実際の証人の対 `x`、`y` と所属 `p` が与えられれば、切り詰められた形は `∣ y , p ∣₁` として組み立てられ、`step` を逆向きに輸送されて量化子が期待する充足の形になり、`x` で最初の含意に渡される。出力は、射影された `x` が射影された `d` に属するという、切り詰めのない素の所属の証明である。
 <!--/-->
@@ -606,7 +606,7 @@ The extraction `domAt-out` consumes an entry and yields domain membership. Given
 <!--en-->
 The extraction `domAt-in` runs the other way, and keeps the truncation. Domain membership `m` is fed to the second implication, whose conclusion is the satisfaction of the having-a-value formula; transporting forward through `step` turns it into the truncated dependent sum. That truncated form is the correct statement: from membership in the domain alone one merely knows that some entry exists, not which one.
 <!--zh-->
-消去 `domAt-in` 反向执行，并保留截断。定义域中的隶属 `m` 被喂给第二条蕴含，其结论正是「有取值」公式的满足；沿 `step` 正向传输后，它变成截断的依赖和。这个截断形式正是应有的陈述：仅凭定义域中的隶属，人们只知道某个条目存在，并不知道是哪一个。
+消去 `domAt-in` 反向执行，并保留截断。定义域中的成员关系 `m` 被喂给第二条蕴含，其结论正是「有取值」公式的满足；沿 `step` 正向传输后，它变成截断的依赖和。这个截断形式正是应有的陈述：仅凭定义域中的成员关系，人们只知道某个条目存在，并不知道是哪一个。
 <!--ja-->
 除去の `domAt-in` は逆方向に進み、切り詰めを保つ。定義域への所属 `m` は二つ目の含意に渡され、その結論は「値を持つ」公式の充足である。`step` に沿って順方向に輸送すると、切り詰められた依存和に変わる。この切り詰められた形こそ正しい主張である。定義域への所属だけからは、ある項目が存在することしか、どれであるかは分からない。
 <!--/-->
@@ -623,7 +623,7 @@ The extraction `domAt-in` runs the other way, and keeps the truncation. Domain m
 <!--en-->
 The introduction direction packages the two implications pointwise. The hypothesis asks, for each `x`, a pair of functions: one from the truncated existence of an entry to membership in `d`, and one back. Since the target propositions are propositions, consuming a truncated sum here is legitimate, and the transports through `step` in each component mirror those of the two extraction lemmas.
 <!--zh-->
-引入方向把两条蕴含逐点打包。假设要求：对每个 `x`，给出一对函数，一个从条目的截断存在到 `d` 中的隶属，一个反向。由于目标都是命题，此处消费截断和是合法的；每个分量中沿 `step` 的传输与两条消去引理互为镜像。
+引入方向把两条蕴含逐点打包。假设要求：对每个 `x`，给出一对函数，一个从条目的截断存在到 `d` 中的成员关系，一个反向。由于目标都是命题，此处消费截断和是合法的；每个分量中沿 `step` 的传输与两条消去引理互为镜像。
 <!--ja-->
 導入の方向は、二つの含意を点的に包装する。仮定は、各 `x` に対して関数の対を要求する。一方は項目の切り詰められた存在から `d` への所属へ、もう一方はその逆へ進むものである。対象がどちらも命題であるため、ここで切り詰められた和を消去するのは正当であり、各成分での `step` に沿う輸送は、二つの除去の補題と互いに鏡像である。
 <!--/-->
@@ -767,7 +767,7 @@ codeBridgeTm (con c) = tagBridge 0 c
 <!--en-->
 For terms the recursion has two cases. A constant is coded as the tag 0 applied to itself, so the bridge is `tagBridge 0` at that constant. A variable is coded as the tag 1 applied to the numeral of its index, and the extra congruence step moves the projection equation of that numeral under the tag, since `mapTm fst` has replaced the variable constant by its projection. The formula recursion starts the same way: membership pairs its two terms, with the tag 0 here marking the membership constructor of the ambient coding, and the payload path is `prʟ-fst` followed by congruence over the two term bridges.
 <!--zh-->
-词项的递归只有两种情形。常元被编码为标签 0 作用于其自身，故桥就是在该常元处的 `tagBridge 0`。变元被编码为标签 1 作用于其下标的数码，而额外那步同余把该数码的投影等式移到标签之下，因为 `mapTm fst` 已把变元常元换成它的投影。公式的递归同样开头：隶属把两个词项配成对，这里的标签 0 标记环境编码中的隶属构造子，载荷路径是 `prʟ-fst` 再接对两条词项桥的同余。
+词项的递归只有两种情形。常元被编码为标签 0 作用于其自身，故桥就是在该常元处的 `tagBridge 0`。变元被编码为标签 1 作用于其下标的数码，而额外那步同余把该数码的投影等式移到标签之下，因为 `mapTm fst` 已把变元常元换成它的投影。公式的递归同样开头：成员关系把两个词项配成对，这里的标签 0 标记环境编码中的成员关系构造子，载荷路径是 `prʟ-fst` 再接对两条词项桥的同余。
 <!--ja-->
 項の再帰には二つの場合しかない。定数はタグ 0 をそれ自身に施したものとして符号化されるので、橋はその定数での `tagBridge 0` である。変数はタグ 1 をその添字の数項に施したものとして符号化され、追加の合同の段階が、数項の射影等式をタグの下へ移す。`mapTm fst` が変数の定数をその射影に置き換えたからである。論理式の再帰も同じように始まる。所属は二つの項を対にし、ここでのタグ 0 は周囲の符号化における所属の構成子を示し、本体のパスは `prʟ-fst` に二つの項の橋に対する合同が続く。
 <!--/-->
@@ -838,7 +838,7 @@ What this section provides is a predicate on a single candidate, together with e
 <!--zh-->
 ## 环境
 
-给定集合 B 之上的环境是一个取值都落在 B 中的函数，因此一个候选集合 e 恰在以下四条同时成立时才算一个：它是单值的；它的定义域是给定的 d；它的取值落在 B 中；而且它**由诸对构成**。这四条在逻辑上各自独立，各有其用。单值性只约束重复出现的论元；定义域一条说有对出现的论元恰是 d 的成员；取值限制说每个取值都落在 B 中。前三条只谈及 e 中那些是有序对的成员，所以一个另带非对元素的集合也能通过它们。第四条合取项弥补了这一点，它要求 e 的每个成员都是「d 的一个成员与 B 的一个成员」的对，从而使每个环境都是 d × B 的子集；排除非对成员这件事，正是前三条无法给出的。
+给定集合 `B`{.Agda} 之上的环境是一个取值都落在 `B`{.Agda} 中的函数，因此一个候选集合 e 恰在以下四条同时成立时才算一个：它是单值的；它的定义域是给定的 `d`{.Agda}；它的取值落在 `B`{.Agda} 中；而且它**由诸对构成**。这四条在逻辑上各自独立，各有其用。单值性只约束重复出现的论元；定义域一条说有对出现的论元恰是 `d`{.Agda} 的元素；取值限制说每个取值都落在 `B`{.Agda} 中。前三条只谈及 e 中那些是有序对的元素，所以一个另带非对元素的集合也能通过它们。第四条合取项弥补了这一点，它要求 e 的每个元素都是「`d`{.Agda} 的一个元素与 `B`{.Agda} 的一个元素」的对，从而使每个环境都是 `d × B`{.Agda} 的子集；排除非对元素这件事，正是前三条无法给出的。
 
 本节给出的是关于单个候选的谓词，以及把每个合取项读回出来的消去引理。某个特定集合**是否就是**给定长度的全体环境的集合，是另一个更难的问题，这里不作解决。
 <!--ja-->
@@ -869,7 +869,7 @@ valuesInAt-out : ∀ {n} (f B : Fin n) (γ : S ^ n)
 <!--en-->
 Reading the clause out is one direction, and it is direct. Given a pair with first component x and value y in the graph, apply the universal quantifiers at x and y; the remaining obligation is the implication inside. The membership fact p is first converted into a satisfaction of the antecedent, which `appAt-adequate` identifies with membership at the projected environment (y ∷ x ∷ γ), so transporting along the symmetric equation supplies exactly the argument the quantified body demands. The conclusion is membership of the projected value in the projected B, no truncation involved anywhere.
 <!--zh-->
-把这一条读出来只需一个方向，而且是直接的。设图中已有以 x 为第一分量、以 y 为取值的对；把全称量词施加于 x 与 y 即可，剩下的待证事项就是其中的蕴含。故先把隶属事实 p 换成前件的满足：`appAt-adequate` 把该满足等同于在投影后的环境 (y ∷ x ∷ γ) 处的隶属，沿其对称等式作替换，便恰好给出量化主体所需要的论据。结论是投影后的取值属于投影后的 B，全程不涉及截断。
+把这一条读出来只需一个方向，而且是直接的。设图中已有以 `x`{.Agda} 为第一分量、以 `y`{.Agda} 为取值的对；把全称量词施加于 `x`{.Agda} 与 `y`{.Agda} 即可，剩下的待证事项就是其中的蕴含。故先把成员关系事实 `p`{.Agda} 换成前件的满足：`appAt-adequate` 把该满足等同于在投影后的环境 `(y ∷ x ∷ γ)`{.Agda} 处的成员关系，沿其对称等式作替换，便恰好给出量化主体所需要的论据。结论是投影后的取值属于投影后的 `B`{.Agda}，全程不涉及截断。
 <!--ja-->
 この条項を読み出すのは一方向だけで、しかも直接である。第一成分 x、値 y となる対がグラフにあれば、全称量化子を x と y に適用し、残る課題は内側の含意である。まず所属の事実 p を前件の充足へ変換する。`appAt-adequate` はその充足を、射影した環境 (y ∷ x ∷ γ) での所属と同一視するので、その対称な等式に沿って輸送すれば、量化された本体が要求する論拠がちょうど得られる。結論は射影した値の射影した B への所属であり、至る所で截断は現れない。
 <!--/-->
@@ -886,7 +886,7 @@ pairsInAt : ∀ {n} → Fin n → Fin n → Fin n → Formula S n
 <!--en-->
 The fourth conjunct, the pairs clause, is written with bounded quantifiers alone. It says: for every member s of e there is a member u of d and a member v of B with s equal to the pair of u and v. Because the quantifiers range over actual members, the clause constrains only what already lies in the sets e, d and B, and its meaning will be read off those sets after projection. The body is the pair reader `prAtL` from earlier in this chapter, at indices shifted by the three binders.
 <!--zh-->
-第四个合取项，即诸对那条，全部用有界量词写出。它说：对 e 的每个成员 s，存在 d 的成员 u 与 B 的成员 v，使 s 等于 u 与 v 的对。由于量词遍历的是实际成员，这条只约束 e、d、B 中已有的东西，其含义也将在投影后从这些集合读出。主体是本章前文的对读式 `prAtL`，下标按三个约束子后移。
+第四个合取项，即诸对那条，全部用有界量词写出。它说：对 e 的每个元素 s，存在 `d`{.Agda} 的元素 u 与 `B`{.Agda} 的元素 v，使 s 等于 u 与 v 的对。由于量词遍历的是实际元素，这条只约束 `e`{.Agda}、`d`{.Agda}、`B`{.Agda} 中已有的东西，其含义也将在投影后从这些集合读出。主体是本章前文的对读式 `prAtL`，下标按三个约束子后移。
 <!--ja-->
 第四の連言、すなわち対の条項は、有界量化子だけで書かれている。e のすべての要素 s に対し、d の要素 u と B の要素 v で、s が u と v の対に等しいものが存在する、と述べるのである。量化子が実際の要素を動くので、この条項は e、d、B にすでにあるものだけを制約し、その意味は射影後にこれらの集合から読み出される。本体は本章の前で与えた対の読み式 `prAtL` で、添字は三つの束縛子ぶんだけ後ろへずれる。
 <!--/-->
@@ -903,7 +903,7 @@ pairsIn-out : ∀ {n} (e d B : Fin n) (γ : S ^ n) → ⟨ γ ⊨ pairsInAt e d 
 <!--en-->
 The extraction from the pairs clause keeps the shape of satisfaction: the conclusion is a propositional truncation, merely asserting that such u and v exist. The hypothesis h is an ordinary proof that the formula holds, and s∈ is an ordinary membership of the projected s in the projected e. The type says precisely what is recovered: u in d, v in B, and the underlying set of s equal to the pair of their underlying sets, all merely.
 <!--zh-->
-从诸对那条读出时保留了满足的形状：结论是一个命题截断，只是**仅仅存在**这样的 u 与 v。前提 h 是「公式成立」的普通证明，而 s∈ 是投影后的 s 属于投影后的 e 的普通隶属。该类型准确说明能恢复什么：u 在 d 中、v 在 B 中，且 s 的底集等于二者底集的对，一切都仅仅是存在。
+从诸对那条读出时保留了满足的形状：结论是一个命题截断，只是**仅仅存在**这样的 u 与 v。前提 h 是「公式成立」的普通证明，而 s∈ 是投影后的 s 属于投影后的 e 的普通成员关系。该类型准确说明能恢复什么：u 在 `d`{.Agda} 中、v 在 `B`{.Agda} 中，且 s 的底集等于二者底集的对，一切都仅仅是存在。
 <!--ja-->
 対の条項からの抽出は充足の形を保つ。結論は命題的截断であり、そのような u と v が単に存在することしか主張しない。前提 h は「公式が成り立つ」ことの截断された証明であり、s∈ は射影した s の射影した e への普通の所属である。この型は、何が取り出せるかを正確に述べる。u が d に属し、v が B に属し、s の底集合がそれらの底集合の対に等しいこと、すべて単に存在するとしてである。
 <!--/-->
@@ -935,7 +935,7 @@ The proof peels the two bounded existentials inside the truncation. Elimination 
 <!--en-->
 The reverse direction takes the per-member statement as a hypothesis. For every s whose projection lies in the projected e, the hypothesis merely supplies a truncated quadruple: u and v, their memberships, and the pair equation; the task is to turn that into satisfaction of the bounded formula. The two directions are kept as separate lemmas rather than merged into a path, because later arguments use exactly one direction at a time.
 <!--zh-->
-反方向把逐成员的陈述取为前提。对每个投影后属于投影后 e 的 s，前提仅仅提供被截断的四元组：u、v、二者各自的隶属，以及对的等式；任务是把它们变成有界公式的满足。两个方向保持为两条引理而不合并成一条路径，因为有关论证每次恰好只用一个方向。
+反方向把逐元素的陈述取为前提。对每个投影后属于投影后 e 的 s，前提仅仅提供被截断的四元组：u、v、二者各自的成员关系，以及对的等式；任务是把它们变成有界公式的满足。两个方向保持为两条引理而不合并成一条路径，因为有关论证每次恰好只用一个方向。
 <!--ja-->
 逆向きは、要素ごとの主張を前提として取る。射影した s が射影した e に属するすべての s に対し、前提が与えるのは截断された四つ組、すなわち u と v とそれぞれの所属および対の等式の単なる存在であり、課題はそれを有界公式の充足へ変えることである。両方向は一つの経路に併合されず、別々の補題として保たれる。後の議論は毎回どちらか一方向しか使わないからである。
 <!--/-->
@@ -951,7 +951,7 @@ pairsIn-in : ∀ {n} (e d B : Fin n) (γ : S ^ n)
 <!--en-->
 The construction transforms the truncated data of the hypothesis directly into satisfaction of the formula. The witnesses u and v pass through with their memberships, and the pair equation eq is carried to the body's satisfaction by transporting along the symmetry of the adequacy path, since here one travels from the set-level pair equation back to the reader's satisfaction. Truncation enters only through `map₁`, which rebuilds the truncated sum around the rearranged data; the formula's own meaning supplies whatever truncation its quantifiers carry.
 <!--zh-->
-构造把前提中的被截断数据直接变成公式的满足。见证 u 与 v 连同各自的隶属原样通过，而对等式 eq 则沿充分性路径的对称等式传输，变成主体的满足，因为这里是从集合层面的对等式走回读式的满足。截断只经由 `map₁` 进入，它在重新整理的数据周围重建被截断的和；公式自身的含义会供给其量词所需的任何截断。
+构造把前提中的被截断数据直接变成公式的满足。见证 u 与 v 连同各自的成员关系原样通过，而对等式 eq 则沿充分性路径的对称等式传输，变成主体的满足，因为这里是从集合层面的对等式走回读式的满足。截断只经由 `map₁` 进入，它在重新整理的数据周围重建被截断的和；公式自身的含义会供给其量词所需的任何截断。
 <!--ja-->
 構成は、前提の截断されたデータを公式の充足へ直接変換する。証拠 u と v はそれぞれの所属とともにそのまま通り、対の等式 eq は妥当性の経路の対称な等式に沿って輸送され、本体の充足になる。ここでは集合レベルの対の等式から読み式の充足へ戻るからである。截断は `map₁` を通してのみ現れ、並べ直したデータの周りに截断された和を組み立て直す。公式自身の意味が、その量化子の担う截断を供給する。
 <!--/-->
@@ -1037,7 +1037,7 @@ This is what will later let a statement about an assignment be turned into a sta
 <!--en-->
 The transfer theorem needs the introduction direction of the value restriction, the direction not extracted earlier: from the statement about every pair in the graph, back to a satisfaction. Given a function sending any pair in the graph to a value in B, the two universal quantifiers are applied, and the membership fact is converted into a satisfaction of the antecedent by the adequacy equation of the application reader. With this, both directions of `valuesInAt` are available as lemmas, one each.
 <!--zh-->
-迁移定理需要取值限制的引入方向，即此前未曾提取的那个方向：从「图中每个对如何如何」的陈述回到满足本身。给定一个把图中任一对送到 B 中取值的函数，只需施加那两个全称量词，并用取值读式的充分性等式把隶属事实换成前件的满足。至此，`valuesInAt` 的两个方向各有一条引理可用。
+迁移定理需要取值限制的引入方向，即此前未曾提取的那个方向：从「图中每个对如何如何」的陈述回到满足本身。给定一个把图中任一对送到 `B`{.Agda} 中取值的函数，只需施加那两个全称量词，并用取值读式的充分性等式把成员关系事实换成前件的满足。至此，`valuesInAt` 的两个方向各有一条引理可用。
 <!--ja-->
 移転の定理には、値の制限の導入方向、つまり前に取り出されなかった方向、「グラフのすべての対についての主張」から充足そのものへ戻る方向が必要である。グラフの中の任意の対を B の値へ送る関数が与えられれば、二つの全称量化子を適用し、適用の読み式の妥当性の等式によって所属の事実を前件の充足へ変える。これで `valuesInAt` の両方向が、方向ごとに一つの補題として使えるようになった。
 <!--/-->
@@ -1070,7 +1070,7 @@ envOverAt-transport : ∀ {n n'} (γ : S ^ n) (γ' : S ^ n')
 <!--en-->
 Single-valuedness transfers by composing the extraction lemma at γ with the introduction lemma at γ'. Given two values y and y' recorded against x at γ', the hypothesis is first moved back to a satisfaction at γ along the path that identifies pair membership in the projected graph on the two sides; the extraction lemma then yields equality of the two projected values, and the introduction lemma repackages it as satisfaction at γ'. The equality itself needs no transport, since values are elements of S on both sides.
 <!--zh-->
-单值性的迁移是把 γ 处的消去引理与 `γ'` 处的引入引理复合。设在 `γ'` 处同一自变量 x 下记有两个取值 y 与 `y'`，先用「认同两侧投影图中对隶属」的路径把前提搬回 γ 一侧的满足；消去引理随后给出两个投影值相等，引入引理再把它包装成 `γ'` 处的满足。这个相等本身无需传输，因为两侧的取值都是 S 的元素。
+单值性的迁移是把 γ 处的消去引理与 `γ'` 处的引入引理复合。设在 `γ'` 处同一自变量 `x`{.Agda} 下记有两个取值 `y`{.Agda} 与 `y'`，先用「认同两侧投影图中对成员关系」的路径把前提搬回 γ 一侧的满足；消去引理随后给出两个投影值相等，引入引理再把它包装成 `γ'` 处的满足。这个相等本身无需传输，因为两侧的取值都是 `S`{.Agda} 的元素。
 <!--ja-->
 一価性の移転は、γ での消去補題と `γ'` での導入補題の合成である。`γ'` で同じ入力 x に対する二つの値 y と `y'` が記録されていれば、まず両側の射影されたグラフにおける対の所属を同一視する経路に沿って、前提を γ 側の充足へ戻す。消去補題が二つの射影された値の相等を与え、導入補題がそれを `γ'` での充足として包み直す。相等そのものには輸送が要らない。両側の値とも S の要素だからである。
 <!--/-->
@@ -1086,7 +1086,7 @@ envOverAt-transport γ γ' e d B e' d' B' qe qd qb h =
 <!--en-->
 The domain clause transfers through the introduction lemma for `domAt`, supplying both implications at γ'. The first implication reads: having a value forces membership in the domain. From the merely truncated existence of a value, the extraction lemma at γ produces membership in the projected domain d, which needs no witness to be eliminated into, and the path qd carries that membership across to d'.
 <!--zh-->
-定义域一条经由 `domAt` 的引入引理迁移，在 `γ'` 处同时给出两个蕴含。第一个蕴含说：有取值就必在定义域中。从取值的仅仅被截断的存在出发，γ 处的消去引理给出对投影后定义域 d 的隶属，消去到隶属命题无需选定任何见证，再由路径 qd 把这条隶属搬到 `d'` 一侧。
+定义域一条经由 `domAt` 的引入引理迁移，在 `γ'` 处同时给出两个蕴含。第一个蕴含说：有取值就必在定义域中。从取值的仅仅被截断的存在出发，γ 处的消去引理给出对投影后定义域 `d`{.Agda} 的成员关系，消去到成员关系命题无需选定任何见证，再由路径 qd 把这条成员关系搬到 `d'` 一侧。
 <!--ja-->
 定義域の条項は `domAt` の導入補題を通って移り、`γ'` で二つの含意をそろえて与える。第一の含意は、値を持てば定義域に属する、というものである。値の切り詰められた存在だけから、γ での消去補題が射影された定義域 d への所属を生む。所属という命題への消去には証人を選ぶ必要がなく、経路 qd がその所属を `d'` 側へ運ぶ。
 <!--/-->
@@ -1102,7 +1102,7 @@ The domain clause transfers through the introduction lemma for `domAt`, supplyin
 <!--en-->
 The second implication reads in the opposite direction: membership in the domain forces having a value. A membership in d' is first moved back along the symmetric path, the extraction lemma at γ then yields the merely truncated existence of an entry, and the truncation is transformed internally by replacing the body's satisfaction with its γ'-side form. The value y itself passes through untouched, which is correct: the two graphs agree only after projection, and the entries are elements of S.
 <!--zh-->
-第二个蕴含方向相反：在定义域中就必有取值。先把 `d'` 中的隶属沿对称路径搬回，γ 处的消去引理随即给出「有条目」的仅仅被截断的存在，再在截断内部把主体的满足换成 `γ'` 一侧的形式。取值 y 本身原样通过，这也正确：两个图只是投影后一致，而条目是 S 的元素。
+第二个蕴含方向相反：在定义域中就必有取值。先把 `d'` 中的成员关系沿对称路径搬回，γ 处的消去引理随即给出「有条目」的仅仅被截断的存在，再在截断内部把主体的满足换成 `γ'` 一侧的形式。取值 `y`{.Agda} 本身原样通过，这也正确：两个图只是投影后一致，而条目是 `S`{.Agda} 的元素。
 <!--ja-->
 第二の含意は逆向きで、定義域に属すれば値を持つ、というものである。まず `d'` での所属を対称な経路で戻し、γ での消去補題が「項目がある」ことの切り詰められた存在を与える。そして切り詰めの内側で、本体の充足を `γ'` 側の形へ置き換える。値の y 自身はそのまま通る。これが正しいのは、二つのグラフが一致するのは射影後だけで、項目は S の要素だからである。
 <!--/-->
@@ -1118,7 +1118,7 @@ The second implication reads in the opposite direction: membership in the domain
 <!--en-->
 For the value restriction, begin with a pair membership in the new projected graph. The symmetric graph-membership path moves it to the old graph; `valuesInAt-out` there yields membership of the value in the old set `B`; one forward transport along `qb : B ≡ B′` then gives membership in `B′`. Thus `qb` is used once, in the direction from the old value set to the new one.
 <!--zh-->
-迁移取值限制时，先从新投影图中的一条对隶属出发。沿图隶属路径的反向把它搬回旧图，随后旧环境处的 `valuesInAt-out` 给出该取值属于旧集合 `B`；最后沿 `qb : B ≡ B′` 正向搬运一次，得到它属于 `B′`。因此 `qb` 只使用一次，方向从旧取值集合到新取值集合。
+迁移取值限制时，先从新投影图中的一条对成员关系出发。沿图成员关系路径的反向把它搬回旧图，随后旧环境处的 `valuesInAt-out` 给出该取值属于旧集合 `B`；最后沿 `qb : B ≡ B′` 正向搬运一次，得到它属于 `B′`。因此 `qb` 只使用一次，方向从旧取值集合到新取值集合。
 <!--ja-->
 値の制限では、新しい射影グラフへの対の所属から始める。グラフ所属のパスを逆向きに使って旧グラフへ移し、そこで `valuesInAt-out` により値が旧集合 `B` に属することを得る。最後に `qb : B ≡ B′` に沿って一度だけ順方向へ輸送し、`B′` への所属を得る。したがって `qb` を使うのは旧値集合から新値集合への一回だけである。
 <!--/-->
@@ -1134,7 +1134,7 @@ For the value restriction, begin with a pair membership in the new projected gra
 <!--en-->
 The pairs clause is the last to move, and the transports stay inside the truncation. Reading the clause out at γ gives, merely, witnesses u and v with their memberships in the projected d and B and the pair equation. The two memberships are carried to d' and B' by qd and qb respectively, while the equation `fst s ≡ pr (fst u) (fst v)` needs no transport at all: it speaks about underlying sets, and the hypotheses say exactly that those agree, so it is the same equation on both sides.
 <!--zh-->
-诸对一条最后迁移，而各次传输都留在截断之内。在 γ 处读出该条，仅仅是得到见证 u 与 v、二者对投影后 d 与 B 的隶属，以及对的等式。两条隶属分别由 qd 与 qb 搬到 `d'` 与 `B'`，而等式 `fst s ≡ pr (fst u) (fst v)` 完全无需传输：它谈的是底层集合，前提恰好说这些集合一致，故这条等式在两侧是同一条。
+诸对一条最后迁移，而各次传输都留在截断之内。在 γ 处读出该条，仅仅是得到见证 u 与 v、二者对投影后 `d`{.Agda} 与 `B`{.Agda} 的成员关系，以及对的等式。两条成员关系分别由 qd 与 qb 搬到 `d'` 与 `B'`，而等式 `fst s ≡ pr (fst u) (fst v)` 完全无需传输：它谈的是底层集合，前提恰好说这些集合一致，故这条等式在两侧是同一条。
 <!--ja-->
 対の条項が最後に移り、輸送はすべて切り詰めの内側にとどまる。γ で条項を読み出すと、証拠 u と v、射影された d と B へのそれぞれの所属、そして対の等式が単に存在するとして得られる。二つの所属は qd と qb によってそれぞれ `d'` と `B'` へ運ばれる。一方、等式 `fst s ≡ pr (fst u) (fst v)` には輸送がまったく要らない。これは底にある集合についての主張であり、前提はまさにそれらが一致することを言っているので、等式は両側で同一である。
 <!--/-->
@@ -1150,7 +1150,7 @@ The pairs clause is the last to move, and the transports stay inside the truncat
 <!--en-->
 The remaining ingredient is the path `at`: for each x and y, the path identifying membership of the pair in the projected graph on the two sides. It is congruence, applying the equality qe of the two graphs to the membership predicate at fixed pair components. Every transport inside the theorem that concerns the graph goes through this one path, so the whole argument rests on the three given equalities and nothing hidden.
 <!--zh-->
-剩下的原料就是路径 `at`：对每个 x 与 y，认同两侧「该对属于投影后的图」的路径。它是同余性，即把两条图之间的等式 qe 作用到固定对分量的隶属谓词上。定理内部凡涉及图的传输都经过这一条路径，因此整个论证只依赖所给的三条等式，别无隐藏之物。
+剩下的原料就是路径 `at`：对每个 `x`{.Agda} 与 `y`{.Agda}，认同两侧「该对属于投影后的图」的路径。它是同余性，即把两条图之间的等式 qe 作用到固定对分量的成员关系谓词上。定理内部凡涉及图的传输都经过这一条路径，因此整个论证只依赖所给的三条等式，别无隐藏之物。
 <!--ja-->
 残りの材料は経路 `at` である。各 x と y に対し、両側で「その対が射影されたグラフに属する」ことを同一視する経路である。これは合同であり、二つのグラフの間の等式 qe を、対の成分を固定した所属述語に適用したものである。定理の内部でグラフに関わる輸送はすべてこの一つの経路を通るので、議論全体は与えられた三つの等式のみに依存し、隠れたものはない。
 <!--/-->
@@ -1170,7 +1170,7 @@ Reading a pair-shaped code exposes its two components, and it is convenient to h
 <!--zh-->
 ## 容纳配对分量
 
-读取配对形状的码会暴露它的两个分量，而把二者同时呈现为**同一个**可构造集合的成员会带来方便。候选对象由数学本身决定：若 `fst x` 是 `fst u` 与 `fst v` 的有序对，则无序对 `⁅ fst u , fst v ⁆` 属于 `fst x`，故由 `L` 的传递性它自身可构造，且两个分量都是它的成员。本节记录的正是这个见证连同三条隶属事实：一个类型 `Container x u v`，以及从路径 `fst x ≡ pr (fst u) (fst v)` 造出它的构造 `container`。
+读取配对形状的码会暴露它的两个分量，而把二者同时呈现为**同一个**可构造集合的元素会带来方便。候选对象由数学本身决定：若 `fst x` 是 `fst u` 与 `fst v` 的有序对，则无序对 `⁅ fst u , fst v ⁆` 属于 `fst x`，故由 `L` 的传递性它自身可构造，且两个分量都是它的元素。本节记录的正是这个见证连同三条成员关系事实：一个类型 `Container x u v`，以及从路径 `fst x ≡ pr (fst u) (fst v)` 造出它的构造 `container`。
 <!--ja-->
 ## 対の成分を収める集合
 
@@ -1180,7 +1180,7 @@ Reading a pair-shaped code exposes its two components, and it is convenient to h
 <!--en-->
 The type packages one element `s` of the model with three ambient membership facts, all stated after projection: the underlying set of `s` is a member of `fst x`, and the underlying sets of `u` and `v` are members of `fst s`. No claim is made beyond these; in particular nothing asserts that `s` is the least such set. The construction `container` takes the hypothesis that `fst x` equals `pr (fst u) (fst v)` and returns the witness with its three certificates in one package.
 <!--zh-->
-该类型把模型的一个元素 `s` 与三条周遭隶属事实打包，全部在投影后陈述：`s` 的底集属于 `fst x`，而 `u`、`v` 的底集都属于 `fst s`。除此之外不作任何断言；特别地，它并不声称 `s` 是具有此性质的极小集合。构造 `container` 以「`fst x` 等于 `pr (fst u) (fst v)`」为前提，把见证连同三份证书一并返回。
+该类型把模型的一个元素 `s` 与三条周遭成员关系事实打包，全部在投影后陈述：`s` 的底集属于 `fst x`，而 `u`、`v` 的底集都属于 `fst s`。除此之外不作任何断言；特别地，它并不声称 `s` 是具有此性质的极小集合。构造 `container` 以「`fst x` 等于 `pr (fst u) (fst v)`」为前提，把见证连同三份证书一并返回。
 <!--ja-->
 この型は、モデルの要素 `s` に三つの周囲の所属の事実を、すべて射影後に述べる形でまとめる。`s` の底集合が `fst x` に属し、`u` と `v` の底集合がともに `fst s` に属するというものである。それ以外の主張はなく、とりわけ `s` がこの性質を持つ極小の集合であるとは言わない。構成 `container` は「`fst x` が `pr (fst u) (fst v)` に等しい」という仮定を受け取り、証拠と三つの証明書をひとまとめにして返す。
 <!--/-->
@@ -1197,7 +1197,7 @@ opaque
 <!--en-->
 The witness is the unordered pair of the two underlying sets. As one member of the outer unordered pair in the Kuratowski encoding, it belongs to `pr (fst u) (fst v)` by the introduction rule at the reflexive path, and transporting along the hypothesis `e` moves that membership into membership in `fst x`. This is precisely the input transitivity of `L` consumes: since the unordered pair is a member of a constructible set, `isL-trans` yields it as an element of `S`, certificate included. The two remaining memberships, of `fst u` and `fst v` in it, are the two introduction rules at reflexive paths.
 <!--zh-->
-见证就是两个底集的无序对。作为 Kuratowski 编码之外层无序对的一个成员，它在自反路径上的引入规则下属于 `pr (fst u) (fst v)`，沿前提 `e` 传输后便成为对 `fst x` 的隶属。而这恰是 `L` 传递性所消费的输入：既然该无序对属于一个可构造集合，`isL-trans` 便把它连同证书一起作为 `S` 的元素给出。余下的两条隶属，即 `fst u` 与 `fst v` 属于它，则由自反路径上的两条引入规则给出。
+见证就是两个底集的无序对。作为 Kuratowski 编码之外层无序对的一个元素，它在自反路径上的引入规则下属于 `pr (fst u) (fst v)`，沿前提 `e` 传输后便成为对 `fst x` 的成员关系。而这恰是 `L` 传递性所消费的输入：既然该无序对属于一个可构造集合，`isL-trans` 便把它连同证书一起作为 `S` 的元素给出。余下的两条成员关系，即 `fst u` 与 `fst v` 属于它，则由自反路径上的两条引入规则给出。
 <!--ja-->
 証拠は、二つの底集合の非順序対である。Kuratowski 符号の外側の非順序対の一要素として、反射経路での導入規則により `pr (fst u) (fst v)` に属し、仮定 `e` に沿って輸送すれば `fst x` への所属になる。これこそ `L` の推移性が受け取る入力である。非順序対が構成可能な集合に属する以上、`isL-trans` はそれを証明書込みで `S` の要素として与える。残る二つの所属、すなわち `fst u` と `fst v` がそれに属することは、反射経路での二つの導入規則による。
 <!--/-->
@@ -1217,7 +1217,7 @@ The chapter closes the gap between the two sides of the semantics. Formulas are 
 <!--zh-->
 ## 小结
 
-本章弥合了语义两侧之间的裂缝。公式在 `L` 中、在由可构造元素组成的环境处被满足，而它们需要表达的具体事实却是关于底集的周遭事实；词典各词条以精确的充分性路径把两侧连起来。有序对识别是绝对的；图的隶属经传递性获得可构造的见证；环境描述汇集了单值性、恰当定义域、取值限制与诸对条目，且只依赖三个投影后的集合。语法符号化随之在 `L` 内部实例化，桥定理表明内部码投影为投影后公式的周遭码，于是写在层级一侧的读式可以施于内部造出的码。容器则为配对形状的码给出一个同时容纳两个分量的可构造集合。
+本章弥合了语义两侧之间的裂缝。公式在 `L` 中、在由可构造元素组成的环境处被满足，而它们需要表达的具体事实却是关于底集的周遭事实；词典各词条以精确的充分性路径把两侧连起来。有序对识别是绝对的；图的成员关系经传递性获得可构造的见证；环境描述汇集了单值性、恰当定义域、取值限制与诸对条目，且只依赖三个投影后的集合。语法符号化随之在 `L` 内部实例化，桥定理表明内部码投影为投影后公式的周遭码，于是写在层级一侧的读式可以施于内部造出的码。容器则为配对形状的码给出一个同时容纳两个分量的可构造集合。
 <!--ja-->
 ## まとめ
 

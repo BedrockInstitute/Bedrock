@@ -13,7 +13,7 @@ module FOL.Manipulation.Renaming where
 
 ```agda
 open import Base.Prelude
-open import FOL.ZFStructure using ( ZFStructure )
+open import FOL.ZFStructure using ( ZFStructure; ZFStructureₕ )
 open import FOL.Syntax using
   ( Term; con; var
   ; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
@@ -165,7 +165,7 @@ Syntax alone cannot say whether a renaming preserves meaning; we need to compare
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module Sat {ℓ} (𝒮 : ZFStructure ℓ)
+module Sat {ℓ} (𝒮 : ZFStructureₕ ℓ)
            {ℓc} {K : Type ℓc} (ι : K → ZFStructure.S 𝒮) where
 ```
 </summary>

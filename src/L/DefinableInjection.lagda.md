@@ -28,7 +28,7 @@ module L.DefinableInjection {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 open import FOL.Syntax
   using ( Formula; var; _∈̇_; _∧̇_; _⇒̇_; ¬̇_; ∃̇_; ∀̇_ )
 import FOL.Absoluteness
@@ -90,8 +90,8 @@ For sets `a` and `b`, `InjCode F a b` has exactly four components. The graph `F`
 
 ```agda
 open import Cubical.HITs.CumulativeHierarchy.Base using ( _∈_ )
-open hPropStructure 𝒮ʟ using ( S )
-open hPropStructure 𝒮ᵥ using ( _∈ˢ_ )
+open hPropView 𝒮ʟ using ( S )
+open hPropView 𝒮ᵥ using ( _∈ˢ_ )
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _^_; _⊨ᵐ_ )
 open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
 ```
@@ -193,7 +193,7 @@ module InjLAt {n : ℕ} (A B : Fin n) (γ : S ^ n) where
 <!--en-->
 Internal cardinality is the assertion that no member of a candidate receives an injection from the candidate. The formula below says exactly this: after binding a possible smaller member, membership in the candidate implies the negation of the `injLAt` formula. Its reading converts only the formula for the injection; the outer universal quantifier, implication, and negation compute to the function type already used by `IsCardinalL`.
 <!--zh-->
-内部基数性断言：候选者的任何成员都不能接受一条从候选者出发的单射。下式准确表达这一点：约束一个可能的较小成员后，「它属于候选者」蕴含 `injLAt` 公式的否定。其读取只需转换单射公式；外围的全称量词、蕴涵与否定会直接计算成 `IsCardinalL` 已使用的函数类型。
+内部基数性断言：候选者的任何元素都不能接受一条从候选者出发的单射。下式准确表达这一点：约束一个可能的较小元素后，「它属于候选者」蕴含 `injLAt` 公式的否定。其读取只需转换单射公式；外围的全称量词、蕴涵与否定会直接计算成 `IsCardinalL` 已使用的函数类型。
 <!--ja-->
 内部の基数性とは、候補のどの要素にも候補からの単射が存在しないという主張である。次の論理式はそれをそのまま述べる。より小さいかもしれない要素を束縛した後、その候補への所属から `injLAt` 論理式の否定を導く。読み取りで変換する必要があるのは単射の論理式だけであり、外側の全称量化、含意、否定は `IsCardinalL` がすでに使う関数型へ計算される。
 <!--/-->
@@ -239,7 +239,7 @@ Two type-theoretic facts govern the proof. When the second component of a depend
 <!--en-->
 The carrier `S` comes from the structure on `L`: an element `x : S` consists of an ambient set `fst x` together with a propositional certificate that it is constructible. Membership notation is taken from the ambient hierarchy, so expressions in the record explicitly compare underlying sets, such as `fst x ∈ˢ fst dom`. The certificates remain available in the second components whenever a construction must return an element of `L`.
 <!--zh-->
-论域 `S` 来自 `L` 上的结构：元素 `x : S` 由外围集合 `fst x` 与它可构造的命题性证书组成。成员记号取自外围层级，所以记录中的表达式明确比较底层集合，例如 `fst x ∈ˢ fst dom`。当构造必须返回 `L` 的元素时，可构造性证书仍保留在第二分量中。
+论域 `S` 来自 `L` 上的结构：元素 `x : S` 由外围集合 `fst x` 与它可构造的命题性证书组成。元素记号取自外围层级，所以记录中的表达式明确比较底层集合，例如 `fst x ∈ˢ fst dom`。当构造必须返回 `L` 的元素时，可构造性证书仍保留在第二分量中。
 <!--ja-->
 台 `S` は `L` 上の構造から来る。要素 `x : S` は、周囲の集合 `fst x` と、それが構成可能であることを示す命題値の証明からなる。所属の記法は周囲の階層から取るため、レコード内の式は `fst x ∈ˢ fst dom` のように基礎集合を明示的に比較する。構成が `L` の要素を返す必要があるときには、構成可能性の証明が第二成分として残っている。
 <!--/-->
@@ -339,7 +339,7 @@ module Graph (M : DefinableMap) where
 <!--en-->
 To meet the recursion hypothesis, retain `dom` and `graph` and prove that the satisfying-value fiber at each domain point has a center. The center is the pair `(fn x m, defines x m)`: the given value together with its satisfaction proof. The membership evidence `m` is passed directly to `fn`, so this construction does not extend the rule beyond `dom`. Neither `into` nor injectivity is needed at this stage.
 <!--zh-->
-为满足递归所需的假设，保留 `dom` 与 `graph`，并证明定义域每一点的满足值纤维都有中心。该中心是 `(fn x m, defines x m)`，即给定取值及其满足证明。成员证据 `m` 直接传给 `fn`，所以这一步不会把取值规则扩张到 `dom` 之外。此处既不需要 `into`，也不需要单射性。
+为满足递归所需的假设，保留 `dom` 与 `graph`，并证明定义域每一点的满足值纤维都有中心。该中心是 `(fn x m, defines x m)`，即给定取值及其满足证明。成员关系证据 `m` 直接传给 `fn`，所以这一步不会把取值规则扩张到 `dom` 之外。此处既不需要 `into`，也不需要单射性。
 <!--ja-->
 再帰に必要な仮定を満たすため、`dom` と `graph` をそのまま用い、定義域の各点で充足する値のファイバーに中心があることを証明する。その中心は `(fn x m, defines x m)`、すなわち与えられた値とその充足の証明である。所属の証拠 `m` はそのまま `fn` に渡されるので、この構成は値を定める規則を `dom` の外へ拡張しない。この段階では `into` も単射性も必要ない。
 <!--/-->
@@ -367,7 +367,7 @@ It remains to contract every candidate `(y,h)` to that center. The field `only` 
 <!--en-->
 Replacement now collects the ordered-pair values into a constructible set `F`. The auxiliary pairing formula reconciles the two conventions: the original relation is evaluated as `(value,input)`, while members of `F` are `pr(input,value)`. `F-in` inserts every prescribed entry, and `F-out` says under propositional truncation that every member has such an origin. For fixed `x` and `y`, `pair-out` strengthens membership of `pr(x,y)` to a domain proof and an equality `y = fn(x)`. This elimination is valid because `Fib x y` is a proposition, using proof irrelevance of membership and the fact that equality in `V` is proposition-valued. These readings prove `sv`, single-valuedness, and `dm`, that the domain is exactly `dom`. Forming `F` is the step that uses the Replacement theorem and hence the given excluded middle; the subsequent readings introduce no choice.
 <!--zh-->
-现在由替换把有序对取值收集成可构造集合 `F`。辅助配对公式协调两种次序：原关系按 `(值,输入)` 解释，而 `F` 的成员是 `pr(输入,值)`。`F-in` 写入每个指定条目，`F-out` 则在命题截断下说明每个成员都来自这样的条目。固定 `x` 与 `y` 后，`pair-out` 把 `pr(x,y)` 属于 `F` 加强为一份定义域证明与等式 `y = fn(x)`。这次消去是合法的，因为 `Fib x y` 是命题，其中用到成员证明的证明无关性以及 `V` 中相等取值于命题。由这些读式可证明 `sv` 所表达的单值性，以及 `dm` 所表达的定义域恰为 `dom`。形成 `F` 的步骤使用替换定理，因而依赖给定的排中律；后续读取没有引入选择。
+现在由替换把有序对取值收集成可构造集合 `F`。辅助配对公式协调两种次序：原关系按 `(值,输入)` 解释，而 `F` 的元素是 `pr(输入,值)`。`F-in` 写入每个指定条目，`F-out` 则在命题截断下说明每个元素都来自这样的条目。固定 `x` 与 `y` 后，`pair-out` 把 `pr(x,y)` 属于 `F` 加强为一份定义域证明与等式 `y = fn(x)`。这次消去是合法的，因为 `Fib x y` 是命题，其中用到成员关系证明的证明无关性以及 `V` 中相等取值于命题。由这些读式可证明 `sv` 所表达的单值性，以及 `dm` 所表达的定义域恰为 `dom`。形成 `F` 的步骤使用替换定理，因而依赖给定的排中律；后续读取没有引入选择。
 <!--ja-->
 ここで置換により、順序対としての値を構成可能集合 `F` に集める。補助的な対の論理式が二つの順序を調整する。もとの関係は `(値,入力)` として解釈されるが、`F` の要素は `pr(入力,値)` である。`F-in` は指定された各項目を入れ、`F-out` は命題的切り詰めのもとで、すべての要素がそのような項目に由来することを述べる。`x` と `y` を固定すると、`pair-out` は `pr(x,y)` が `F` に属することから、定義域の証明と等式 `y = fn(x)` を得る。この除去が正当なのは、`Fib x y` が命題だからである。ここでは所属の証明無関係性と、`V` における等しさが命題値であることを用いる。これらの読み取りから、`sv` が表す一価性と、`dm` が表す定義域が正確に `dom` であることが従う。`F` の形成には置換定理が使われるため、与えられた排中律に依存する。その後の読み取りに選択は入らない。
 <!--/-->
@@ -406,7 +406,7 @@ The fourth condition for the eventual code is containment in the codomain. Given
 <!--en-->
 To turn this graph into an injection code, add the genuinely new hypothesis of injectivity. For two inputs equipped with proofs of membership in `dom`, it says that equality of the underlying sets of their selected values implies equality of the underlying input sets. The membership arguments remain explicit because `fn` is dependently typed in them. Their proof irrelevance guarantees coherence between different proofs, but the hypothesis is stated with the exact evidence supplied at the two inputs. Its conclusion has precisely the strength required by the equality clause of `injAt`.
 <!--zh-->
-要把这张函数图变成单射编码，还须加入真正新的单射性假设。对两个各自带有 `dom` 成员证明的输入，它断言：若所选取值的底层集合相等，则输入的底层集合相等。成员实参仍然显式出现，因为 `fn` 的类型依值地依赖于它们。证明无关性保证不同成员证明之间相容，但这条假设仍按两个输入处实际给出的证据陈述。其结论的强度恰好符合 `injAt` 的相等条款。
+要把这张函数图变成单射编码，还须加入真正新的单射性假设。对两个各自带有 `dom` 成员关系证明的输入，它断言：若所选取值的底层集合相等，则输入的底层集合相等。元素实参仍然显式出现，因为 `fn` 的类型依值地依赖于它们。证明无关性保证不同成员关系证明之间相容，但这条假设仍按两个输入处实际给出的证据陈述。其结论的强度恰好符合 `injAt` 的相等条款。
 <!--ja-->
 このグラフを単射の符号にするには、実質的に新しい仮定として単射性を加える必要がある。`dom` への所属の証明を伴う二つの入力について、選ばれた値の基礎集合が等しければ、入力の基礎集合も等しいと仮定する。`fn` の型は所属の証明に依存しているので、その引数は明示されたままである。証明無関係性は異なる所属の証明の間の整合性を保証するが、仮定自体は二つの入力で実際に与えられた証拠について述べられる。その結論は `injAt` の等号の条項が要求する強さと正確に一致する。
 <!--/-->

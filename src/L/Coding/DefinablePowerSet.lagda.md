@@ -28,7 +28,7 @@ module L.Coding.DefinablePowerSet {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 open import FOL.Syntax using ( Formula; var; _∈̇_; _∧̇_; ∃̇_ )
 open import FOL.Manipulation.ConstantMapping using ( mapFo )
 import FOL.Absoluteness
@@ -93,7 +93,7 @@ and a lemma's worth of difference.
 <!--zh-->
 这就是整条路线为之存在的那一步。在它之前的每一章，构造的都是调用方**持有**的载体上的一个组件：`L` 的一个集合，在公式里被点名为常元。内部层级无法那样持有自己的层。它的图把层绑定起来，因为一个图不能点名它所定义的那个对象，而集合进入公式的唯一方式是被点名。故可定义幂集的描述必须能**在那层绑定之下**表述出来，其中载体只占周遭环境的一个位置，此外没有别的。
 
-那条描述所说的，就是这个算子本身。`u` 是载体的可定义幂集，其诸成员恰是「由一条公式在载体中定义出的那些集合」：仅仅存在载体之上的一个码 `c` 与一个取值 `v`，该取值就是满足关系那场递归在那个码处所记录的东西，而 `u` 的那个成员是「其单条目环境落在 `v` 中的载体诸成员」之集。三个合取项，而每一个都是某章早已给出的东西，只是读在一位上、不读在常元上。
+那条描述所说的，就是这个算子本身。`u` 是载体的可定义幂集，其诸元素恰是「由一条公式在载体中定义出的那些集合」：仅仅存在载体之上的一个码 `c` 与一个取值 `v`，该取值就是满足关系那场递归在那个码处所记录的东西，而 `u` 的那个元素是「其单条目环境落在 `v` 中的载体诸元素」之集。三个合取项，而每一个都是某章早已给出的东西，只是读在一位上、不读在常元上。
 
 有一处形状上的修正是必须的，值得在公式出现之前先讲。码与取值由**相邻的**两个存在量词绑定，中间不隔任何合取项。若中间隔一个合取项再嵌套，那两条假设就会落在不同的环境上，于是这条路线将平白多出一条它永远用不着的弱化引理：同一条公式、同样的合取项数目、同样的深度，差别恰好是多出一条引理。
 <!--/-->
@@ -106,7 +106,7 @@ open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( module InfinitySet )
 open InfinitySet using ( #_ )
 
-open hPropStructure 𝒮ʟ
+open hPropView 𝒮ʟ
 
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
 open AbsL renaming ( _⊨ᵐ_ to _⊨_ )
@@ -147,9 +147,9 @@ finite functions and vectors the same statement walled a chapter at over eight
 minutes, and the chapter that met it wrote its two clauses by hand instead. This
 one does the same.
 <!--zh-->
-元数一处的可定义性，问的是一条公式对单个成员是否成立，而满足关系那场递归是在**环境**处作答的；把两者接起来的，正是「把那个成员指派给仅有的那一个变元」的环境。环境就是它的图，而长度为一的图只是一个对：数码零配上那个取值。
+元数一处的可定义性，问的是一条公式对单个元素是否成立，而满足关系那场递归是在**环境**处作答的；把两者接起来的，正是「把那个元素指派给仅有的那一个变元」的环境。环境就是它的图，而长度为一的图只是一个对：数码零配上那个取值。
 
-于是读式只有一行。「这一位上的集合，其成员恰是诸对 `(0, y)`」就是 `extAt`{.Agda} 施于标签读式，而标签读式本来就给出底集之间的那条等式，故这里完全不必再证任何关于对的事。
+于是读式只有一行。「这一位上的集合，其元素恰是诸对 `(0, y)`」就是 `extAt`{.Agda} 施于标签读式，而标签读式本来就给出底集之间的那条等式，故这里完全不必再证任何关于对的事。
 
 定义的两个方向都在那个单元素索引类型上手工写出，这是基于实测的取舍，而非风格偏好。把「属于一个单条目集合」解码回来，只需一次两分支的情形分析，其中一支不可能出现；若改走库里「有穷函数与向量」的路线，同一条陈述曾使某一章的处理耗时超过八分钟，遇到它的那一章于是改为手写两条子句。本章沿用这一做法。
 <!--/-->
@@ -254,9 +254,9 @@ Its two directions are `extAt`{.Agda}'s own two, and the existential inside the
 condition is read by the previous section. Nothing here inspects the value, which
 is why this section knows nothing about codes.
 <!--zh-->
-单独取出第三个合取项来看，它涉及三样东西：那个成员、载体，以及满足关系递归所记录的取值。它说的是：那个成员恰是「其单条目环境落在该取值之中」的那些载体成员之集，也就是把可定义子集逐字写出，只是用递归取值代替了满足关系。
+单独取出第三个合取项来看，它涉及三样东西：那个元素、载体，以及满足关系递归所记录的取值。它说的是：那个元素恰是「其单条目环境落在该取值之中」的那些载体元素之集，也就是把可定义子集逐字写出，只是用递归取值代替了满足关系。
 
-那个条件是一个合取而非单独一条子句，因为「属于载体」这一点不能由其余部分推出。递归取值的成员是一个环境，不是载体的子集，故仅凭后半句，对那个成员来自何处毫无说明；可定义子集本就取自载体，公式必须把这一点明确说出。
+那个条件是一个合取而非单独一条子句，因为「属于载体」这一点不能由其余部分推出。递归取值的元素是一个环境，不是载体的子集，故仅凭后半句，对那个元素来自何处毫无说明；可定义子集本就取自载体，公式必须把这一点明确说出。
 
 它的两个方向就是 `extAt`{.Agda} 自身的两个方向，条件中的存在量词由上一节读出。这里的任何步骤都不去查看那个取值，正因如此，本节无须涉及码的具体内容。
 <!--/-->
@@ -410,7 +410,7 @@ module _ (A : S) where
 <!--en-->
 Given a formula over members of the carrier stored at `w`, `graphAt-holds` supplies its formula key and uniform satisfaction value in the graph, while `graphAt-unique` proves that this value is unique.
 <!--zh-->
-给定一条公式，其常元取自槽位 `w` 中载体的成员，`graphAt-holds` 在图中给出该公式的键与一致满足关系的取值，`graphAt-unique` 则证明此取值唯一。
+给定一条公式，其常元取自槽位 `w` 中载体的元素，`graphAt-holds` 在图中给出该公式的键与一致满足关系的取值，`graphAt-unique` 则证明此取值唯一。
 <!--ja-->
 スロット `w` にある台の要素を定数とする論理式について、`graphAt-holds` はグラフ内の論理式の鍵と一様な充足関係の値を与え、`graphAt-unique` はその値の一意性を示す。
 <!--/-->
@@ -507,7 +507,7 @@ module _ (B : S) where
 <!--en-->
 `DefAt u w` says that every member of `u` is defined over the carrier at `w` by some one-variable code and its graph value. `DefOK` records the constructibility condition required to interpret this description for a general carrier.
 <!--zh-->
-`DefAt u w` 表示 `u` 的每个成员都由某个单自由变元编码及其图中取值在槽位 `w` 的载体上定义。`DefOK` 记录对一般载体解释该描述所需的可构造性条件。
+`DefAt u w` 表示 `u` 的每个元素都由某个单自由变元编码及其图中取值在槽位 `w` 的载体上定义。`DefOK` 记录对一般载体解释该描述所需的可构造性条件。
 <!--ja-->
 `DefAt u w` は、`u` の各要素が、スロット `w` の台上で自由変数一つのコードとそのグラフ値によって定義されることを表す。`DefOK` は一般の台でこの記述を解釈するために必要な構成可能性の条件を記録する。
 <!--/-->
@@ -539,7 +539,7 @@ would have needed is implied by its own hypothesis.
 
 那个旁条件关乎对象语言的量词能取到哪些对象。描述里的每个存在量词都在 `L` 上取值，故这条描述所刻画的集合只能包含可构造集。若载体的某个可定义子集不可构造，这条描述仍会被满足，只是满足它的将是「诸可构造者之集」，于是它对一个并非可定义幂集的东西成立。`DefOK`{.Agda} 所说的正是这一缺口不会出现。
 
-能在调用处取得载体的调用方无须**写出**这样的条件，因为持有载体的调用方同时掌握关于它的定理。处于一位上的载体则是周遭环境放在那里的任何东西，在那层绑定之下没有关于它的定理可用，故这个条件必须作为假设随证明传递，并在该位被填上之处解除。这个条件只附加在消去那一半：引入方向被给定 `u` **就是**可定义幂集，且 `u` 是 `L` 的元素，故其成员本就可构造，它本会需要的那个条件由它自身的假设蕴含。
+能在调用处取得载体的调用方无须**写出**这样的条件，因为持有载体的调用方同时掌握关于它的定理。处于一位上的载体则是周遭环境放在那里的任何东西，在那层绑定之下没有关于它的定理可用，故这个条件必须作为假设随证明传递，并在该位被填上之处解除。这个条件只附加在消去那一半：引入方向被给定 `u` **就是**可定义幂集，且 `u` 是 `L` 的元素，故其元素本就可构造，它本会需要的那个条件由它自身的假设蕴含。
 <!--/-->
 
 ```agda
@@ -716,7 +716,7 @@ condition is for, since a set the description holds of has to be re-entered
 member by member, and each member either is an element of `L` or is absent
 altogether.
 <!--zh-->
-装配与描述是处理逐成员情形的两半，两种读法就是把它们分别放到 `extAt`{.Agda} 自身的两个方向上。引入方向说：可定义幂集满足这条描述，即它的每个成员都是一个可定义子集，而那三个合取项由「定义它的那条公式」给出。消去方向说：别的东西都不满足；这里正是那个旁条件起作用的地方，因为一个满足描述的集合要逐成员地重新进入，而每个成员要么是 `L` 的元素，要么根本不在其中。
+装配与描述是处理逐元素情形的两半，两种读法就是把它们分别放到 `extAt`{.Agda} 自身的两个方向上。引入方向说：可定义幂集满足这条描述，即它的每个元素都是一个可定义子集，而那三个合取项由「定义它的那条公式」给出。消去方向说：别的东西都不满足；这里正是那个旁条件起作用的地方，因为一个满足描述的集合要逐元素地重新进入，而每个元素要么是 `L` 的元素，要么根本不在其中。
 <!--/-->
 
 ```agda

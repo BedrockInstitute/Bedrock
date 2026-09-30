@@ -28,7 +28,7 @@ module L.GCH {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 import FOL.ZFModel
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; IsOrd )
@@ -71,14 +71,14 @@ open InfinitySet {ℓ} using ( ω )
 <!--en-->
 A ZF model supplies its own power-set operation. For a model proof `zf`, the notation `𝒫 κ` denotes the set that the power-set axiom of that model assigns to `κ`. Consequently, every set and every membership assertion in the comparison remains internal to the constructible structure.
 <!--zh-->
-ZF 模型带有自身的幂集运算。给定模型证明 `zf`，记号 `𝒫 κ` 表示该模型的幂集公理为 `κ` 给出的集合。因此，这一比较中的集合与成员陈述都留在可构造结构内部。
+ZF 模型带有自身的幂集运算。给定模型证明 `zf`，记号 `𝒫 κ` 表示该模型的幂集公理为 `κ` 给出的集合。因此，这一比较中的集合与成员关系陈述都留在可构造结构内部。
 <!--ja-->
 ZF モデルはそれ自身の冪集合演算を備える。モデルの証明 `zf` に対して、`𝒫 κ` はそのモデルの冪集合公理が `κ` に与える集合を表す。したがって、この比較に現れる集合と所属の主張は、すべて構成可能構造の内部にとどまる。
 <!--/-->
 
 ```agda
-open hPropStructure 𝒮ᵥ using ( _∈ˢ_ )
-open hPropStructure 𝒮ʟ using ( S )
+open hPropView 𝒮ᵥ using ( _∈ˢ_ )
+open hPropView 𝒮ʟ using ( S )
 
 module ModelL = FOL.ZFModel 𝒮ʟ
 GCHStatement : ModelL.isZFModel → Type (ℓ-suc ℓ)

@@ -35,7 +35,7 @@ module L.Axioms.Full {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 open import FOL.Syntax using ( con; Formula; ∃̇∈ )
 open import FOL.Manipulation.Renaming using ( renameFo; module Sat )
 open import FOL.Manipulation.Relativization using ( relativize; Δ₀-relativize )
@@ -106,7 +106,7 @@ constructible set, `stage` gives the least ordinal index whose stage contains it
 together with ordinality and membership proofs. Only the latter two facts, not
 minimality itself, are used in this chapter.
 <!--zh-->
-这套语言有两种结构解释。外围的累积层级结构 `𝒮ᵥ` 解释 `V ℓ` 中的所有集合；`𝒮ʟ` 的元素则是配有可构造性证明的集合。对指标 `β`，`Lset β` 是相应的可构造层；它的层证明给出传递性，而序数指标之间的严格隶属关系使 `Lset-mono` 可以把成员关系提升到更高层。对每个可构造集，`stage` 给出包含它的最小序数层指标，以及序数性与成员关系的证明。本章只使用后两项事实，不使用极小性本身。
+这套语言有两种结构解释。外围的累积层级结构 `𝒮ᵥ` 解释 `V ℓ` 中的所有集合；`𝒮ʟ` 的元素则是配有可构造性证明的集合。对指标 `β`，`Lset β` 是相应的可构造层；它的层证明给出传递性，而序数指标之间的严格成员关系使 `Lset-mono` 可以把成员关系提升到更高层。对每个可构造集，`stage` 给出包含它的最小序数层指标，以及序数性与成员关系的证明。本章只使用后两项事实，不使用极小性本身。
 <!--ja-->
 この言語には二つの構造による解釈がある。周囲の累積階層の構造 `𝒮ᵥ` は `V ℓ` のすべての集合を解釈し、`𝒮ʟ` の要素は構成可能性の証明を備えた集合である。添字 `β` に対し、`Lset β` は対応する構成可能段階である。その段階であることの証明から推移性が得られ、順序数添字どうしの厳密な所属に沿って `Lset-mono` が所属を上の段階へ移す。構成可能集合ごとに、`stage` はその集合を含む最小の順序数段階の添字を、順序数性と所属の証明とともに与える。本章で使うのは後の二つの事実であり、最小性そのものではない。
 <!--/-->
@@ -122,7 +122,7 @@ about `Lset β`. For replacement, `FunctionalImage` gives one ordinal stage
 containing every `y` related to some `x ∈ˢ a`, and `LsetS` presents that stage
 as an object-language constant.
 <!--zh-->
-有界分离与反射共同搭起通往任意公式的桥梁。对有界的一元公式，`separateΔ₀` 构造具有所需成员的唯一可构造集。对一条任意公式 `φ` 和一个序数 `δ`，`mkReflect` 产生满足 `δ ∈ β` 的序数 `β`，并在条目落于 `Lset β` 的环境上认同 `φ` 与其相对化。这只是针对指定公式与参数的反射，并不声称 `Lset β` 是初等子模型。对于替换，`FunctionalImage` 给出一个序数层，容纳每个与某个 `x ∈ˢ a` 相关的 `y`；`LsetS` 则把该层表示成对象语言常元。
+有界分离与反射共同搭起通往任意公式的桥梁。对有界的一元公式，`separateΔ₀` 构造具有所需元素的唯一可构造集。对一条任意公式 `φ` 和一个序数 `δ`，`mkReflect` 产生满足 `δ ∈ β` 的序数 `β`，并在条目落于 `Lset β` 的环境上认同 `φ` 与其相对化。这只是针对指定公式与参数的反射，并不声称 `Lset β` 是初等子模型。对于替换，`FunctionalImage` 给出一个序数层，容纳每个与某个 `x ∈ˢ a` 相关的 `y`；`LsetS` 则把该层表示成对象语言常元。
 <!--ja-->
 有界な分出公理と反映が、任意の論理式への橋渡しをする。有界な一変数論理式に対し、`separateΔ₀` は必要な要素をもつ一意な構成可能集合を作る。一つの任意の論理式 `φ` と一つの順序数 `δ` に対し、`mkReflect` は `δ ∈ β` を満たす順序数 `β` を作り、成分が `Lset β` に属する環境上で `φ` とその相対化を同一視する。これは指定された論理式とパラメータについての反映であり、`Lset β` が初等部分モデルであるという主張ではない。置換公理のためには、`FunctionalImage` が、ある `x ∈ˢ a` と関係するすべての `y` を含む一つの順序数段階を与え、`LsetS` がその段階を対象言語の定数として表す。
 <!--/-->
@@ -153,13 +153,13 @@ stage transitivity. Object-language formulas range over this carrier; their
 constants and environment entries therefore retain the constructibility
 certificates needed to remain inside the model.
 <!--zh-->
-`𝒮ʟ` 的载体 `S` 由 `V ℓ` 中的底层集合及其可构造性证明组成。其相等与隶属关系只考察底层集合，因此 `x ∈ˢ a` 给出后文配合层传递性使用的外围隶属。对象语言公式以这一载体为论域，所以它们的常元与环境条目都保留了留在模型内部所需的可构造性证书。
+`𝒮ʟ` 的载体 `S` 由 `V ℓ` 中的底层集合及其可构造性证明组成。其相等与成员关系只考察底层集合，因此 `x ∈ˢ a` 给出后文配合层传递性使用的外围成员关系。对象语言公式以这一载体为论域，所以它们的常元与环境条目都保留了留在模型内部所需的可构造性证书。
 <!--ja-->
 `𝒮ʟ` の台 `S` は、`V ℓ` の集合と、その構成可能性の証明からなる。その等しさと所属関係は基礎にある集合だけを見るので、`x ∈ˢ a` は、後で段階の推移性と組み合わせる外側の所属を与える。対象言語の論理式はこの台にわたって量化するため、その定数と環境の各成分は、モデル内にとどまるために必要な構成可能性の証明を保っている。
 <!--/-->
 
 ```agda
-open hPropStructure 𝒮ʟ
+open hPropView 𝒮ʟ
 ```
 
 <!--en-->
@@ -334,7 +334,7 @@ formula and then transports the entire contractible type of realizers along
 `sym Q≡`. Thus uniqueness comes from `separateΔ₀`; it is not reconstructed after
 reflection.
 <!--zh-->
-完整分离量化每条一元对象语言公式 `φ : Formula S 1`，不带有界性假设。其目标说：存在唯一的模型集合，其成员恰是既属于 `a` 又满足 `φ` 的元素 `x`。证明先把有界分离用于相对化后的公式，再沿 `sym Q≡` 运输实现者的整个可缩类型。因此，唯一性来自 `separateΔ₀`，无需在反射之后重新证明。
+完整分离量化每条一元对象语言公式 `φ : Formula S 1`，不带有界性假设。其目标说：存在唯一的模型集合，其元素恰是既属于 `a` 又满足 `φ` 的元素 `x`。证明先把有界分离用于相对化后的公式，再沿 `sym Q≡` 运输实现者的整个可缩类型。因此，唯一性来自 `separateΔ₀`，无需在反射之后重新证明。
 <!--ja-->
 完全な分出公理は、有界性の仮定を置かず、すべての一変数対象言語論理式 `φ : Formula S 1` を量化する。その目標は、`a` に属し、かつ `φ` を満たす `x` だけを要素とするモデル内の集合が一意に存在することである。証明は相対化された論理式に有界な分出公理を適用し、実現者全体の可縮な型を `sym Q≡` に沿って輸送する。したがって一意性は `separateΔ₀` から得られ、反映の後で証明し直す必要はない。
 <!--/-->
@@ -357,7 +357,7 @@ propositions of `φ` and its relativization for every environment lying in
 point matters: the reflection theorem is built to contain that index and is not
 being enlarged afterwards.
 <!--zh-->
-先把参数 `a` 放到将要使用反射的层之下。其底层集合的最早层指标是 `sa`，`stage-ord` 证明该指标为序数。以 `sa` 为输入对 `φ` 应用 `mkReflect`，得到序数 `β`、严格隶属关系 `sa ∈ β`，以及对每个落在 `Lset β` 中的环境，`φ` 与其相对化的满足命题之间的路径。此时把 `sa` 传入构造十分关键：反射层从一开始就被构造成包含该指标，而不是事后再扩张。
+先把参数 `a` 放到将要使用反射的层之下。其底层集合的最早层指标是 `sa`，`stage-ord` 证明该指标为序数。以 `sa` 为输入对 `φ` 应用 `mkReflect`，得到序数 `β`、严格成员关系 `sa ∈ β`，以及对每个落在 `Lset β` 中的环境，`φ` 与其相对化的满足命题之间的路径。此时把 `sa` 传入构造十分关键：反射层从一开始就被构造成包含该指标，而不是事后再扩张。
 <!--ja-->
 まず、反映を使う段階の中にパラメータ `a` が入るよう準備する。その基礎にある集合の最小段階添字を `sa` とし、`stage-ord` がこの添字の順序数性を証明する。`sa` を与えて `mkReflect φ` を適用すると、順序数 `β`、厳密な所属 `sa ∈ β`、および `Lset β` に入るすべての環境について `φ` とその相対化の充足命題を結ぶパスが得られる。ここで `sa` を渡すことには意味がある。反映段階は初めからこの添字を含むように作られるのであり、後から拡大されるのではない。
 <!--/-->
@@ -394,7 +394,7 @@ The parameter now lies in the reflection stage. `stage-mem` gives
 `fa∈β : fst a ∈ Lset β`. This does not identify `a` with an ordinal: `sa` and
 `β` are indices, whereas `fst a` is the set being placed in the higher stage.
 <!--zh-->
-现在可把参数放入反射层。`stage-mem` 给出 `fst a ∈ Lset sa`，而反射数据给出严格的序数隶属 `sa ∈ β`。可构造层级的单调性把二者合成，得到 `fa∈β : fst a ∈ Lset β`。这并未把 `a` 与序数认同：`sa` 和 `β` 是指标，`fst a` 才是被放入更高层的集合。
+现在可把参数放入反射层。`stage-mem` 给出 `fst a ∈ Lset sa`，而反射数据给出严格的序数成员关系 `sa ∈ β`。可构造层级的单调性把二者合成，得到 `fa∈β : fst a ∈ Lset β`。这并未把 `a` 与序数认同：`sa` 和 `β` 是指标，`fst a` 才是被放入更高层的集合。
 <!--ja-->
 これでパラメータを反映段階へ入れられる。`stage-mem` は `fst a ∈ Lset sa` を与え、反映のデータは順序数の厳密な所属 `sa ∈ β` を与える。構成可能階層の単調性により、この二つから `fa∈β : fst a ∈ Lset β` が得られる。ここで `a` を順序数と同一視してはいない。`sa` と `β` は添字であり、`fst a` は上の段階へ入れられる集合である。
 <!--/-->
@@ -414,7 +414,7 @@ one-entry environment. The reflection component of `R` then gives `bridge`, a
 path from satisfaction of `φ` at `x` to satisfaction of its relativization.
 No comparison is asserted for arbitrary `x : S` outside `a`.
 <!--zh-->
-反射只适用于条目落在 `Lset β` 中的环境，因此分离谓词中的成员合取项不可缺少。给定 `x ∈ˢ a`，传递性把该事实与 `fa∈β` 合起来，得到 `fst x ∈ Lset β`；`_` 则给出单元素环境空尾部的平凡条件。于是，`R` 的反射分量给出 `bridge`，即 `φ` 在 `x` 处的满足关系与其相对化的满足关系之间的路径。对于 `a` 外的任意 `x : S`，这里不作比较。
+反射只适用于条目落在 `Lset β` 中的环境，因此分离谓词中的元素合取项不可缺少。给定 `x ∈ˢ a`，传递性把该事实与 `fa∈β` 合起来，得到 `fst x ∈ Lset β`；`_` 则给出单元素环境空尾部的平凡条件。于是，`R` 的反射分量给出 `bridge`，即 `φ` 在 `x` 处的满足关系与其相对化的满足关系之间的路径。对于 `a` 外的任意 `x : S`，这里不作比较。
 <!--ja-->
 反映を適用できるのは、成分が `Lset β` に属する環境だけなので、分出公理の述語にある所属の連言が本質的な役割を果たす。`x ∈ˢ a` が与えられると、推移性によりこの事実と `fa∈β` から `fst x ∈ Lset β` が得られ、`_` が一成分環境の空の末尾に対する自明な条件を与える。そこで `R` の反映成分を使うと、`x` における `φ` の充足関係から、その相対化の充足関係へのパス `bridge` が得られる。`a` の外にある任意の `x : S` については、比較を主張しない。
 <!--/-->
@@ -434,7 +434,7 @@ the pointwise paths into `Q≡`. This is equality of predicates; no existential
 truncation is eliminated and no extensionality argument about candidate sets is
 performed here.
 <!--zh-->
-最后要比较两个宿主层谓词。在每个方向上，共同的成员证明 `x ∈ˢ a` 都被原样保留，只有满足关系的证明沿 `bridge` 或其逆向运输。`⇔toPath` 把这两个映射变成 `x` 处两个命题值之间的路径，`funExt` 再把逐点路径合成为 `Q≡`。这只是谓词的相等；此处既不消去存在的命题截断，也不对候选集合作外延性论证。
+最后要比较两个宿主层谓词。在每个方向上，共同的成员关系证明 `x ∈ˢ a` 都被原样保留，只有满足关系的证明沿 `bridge` 或其逆向运输。`⇔toPath` 把这两个映射变成 `x` 处两个命题值之间的路径，`funExt` 再把逐点路径合成为 `Q≡`。这只是谓词的相等；此处既不消去存在的命题截断，也不对候选集合作外延性论证。
 <!--ja-->
 残る仕事は、二つのホスト側の述語を比較することである。どちらの方向でも、共通の所属証明 `x ∈ˢ a` はそのまま保ち、充足関係の証明だけを `bridge` またはその逆向きに沿って輸送する。`⇔toPath` はこの二つの写像を `x` における命題値の間のパスに変え、`funExt` が各点でのパスを `Q≡` へまとめる。これは述語の等しさである。ここでは存在の命題的切り詰めを除去せず、候補集合について外延性を使う議論も行わない。
 <!--/-->
@@ -469,7 +469,7 @@ identifies its chosen centre with every related `y` and transports the common
 stage bound along that equality. The least-stage operation in this construction
 still depends on `lem`, although no choice axiom is used.
 <!--zh-->
-对每个 `x ∈ˢ a`，假设都使相关值的依值和 `Σ y , (y ∷ x ∷ []) ⊨ φ` 可缩。其中心给出一个值，收缩则把每个相关值与该中心认同，所以这一步不使用宿主层选择公理。`FunctionalImage` 遍历小表示 `⟪ fst a ⟫`；它为每个小指标所表示成员的中心取最早层，再由 `boundingOrd` 用一个序数 `βimg` 界住所有这些层。给定任意成员 `x ∈ˢ a`，`∈-asFiber` 返回一个小指标，以及该指标的表示值与 `x` 的底层集合相等的路径。沿此路径可把关系搬到该指标所表示的源，再由可缩性把所选中心与每个相关的 `y` 认同，并沿这一相等搬运公共层界。这一构造中的最早层操作仍依赖 `lem`，但不使用选择公理。
+对每个 `x ∈ˢ a`，假设都使相关值的依值和 `Σ y , (y ∷ x ∷ []) ⊨ φ` 可缩。其中心给出一个值，收缩则把每个相关值与该中心认同，所以这一步不使用宿主层选择公理。`FunctionalImage` 遍历小表示 `⟪ fst a ⟫`；它为每个小指标所表示元素的中心取最早层，再由 `boundingOrd` 用一个序数 `βimg` 界住所有这些层。给定任意元素 `x ∈ˢ a`，`∈-asFiber` 返回一个小指标，以及该指标的表示值与 `x` 的底层集合相等的路径。沿此路径可把关系搬到该指标所表示的源，再由可缩性把所选中心与每个相关的 `y` 认同，并沿这一相等搬运公共层界。这一构造中的最早层操作仍依赖 `lem`，但不使用选择公理。
 <!--ja-->
 各 `x ∈ˢ a` に対し、仮定は関係する値の依存和 `Σ y , (y ∷ x ∷ []) ⊨ φ` を可縮にする。その中心が一つの値を与え、収縮が関係するすべての値を中心と同一視するので、この段階ではホスト側の選択公理を使わない。`FunctionalImage` は小さな表示 `⟪ fst a ⟫` にわたる。各小さな添字が表す要素について中心の最小段階を取り、`boundingOrd` がそれらすべてを一つの順序数 `βimg` で上から抑える。任意の `x ∈ˢ a` が与えられると、`∈-asFiber` は小さな添字と、その表示値が `x` の基礎にある集合に等しいというパスを返す。そのパスに沿って関係を添字が表す始域の要素へ移し、可縮性によって選ばれた中心を関係する各 `y` と同一視し、その等しさに沿って共通の段階上界を移す。この構成の最小段階を求める操作は依然として `lem` に依存するが、選択公理は使わない。
 <!--/-->
@@ -508,7 +508,7 @@ predicate is propositionally truncated, so it records existence without
 exposing a chosen source. The `opaque` boundary changes only Agda's
 definitional reduction; it changes neither this statement nor its assumptions.
 <!--zh-->
-`hasReplacementL` 的假设使 `a` 的每个成员之上的值纤维可缩，而其结论使实现像谓词的模型集合所成之类型可缩。这是两种不同的唯一性：前者为每个源给出唯一的值，后者给出恰好收集所有这些值的唯一集合。像谓词中的源存在经过命题截断，只记录源的存在而不暴露一个选定的源。`opaque` 边界只改变 Agda 的定义性化归，既不改变这个陈述，也不增添假设。
+`hasReplacementL` 的假设使 `a` 的每个元素之上的值纤维可缩，而其结论使实现像谓词的模型集合所成之类型可缩。这是两种不同的唯一性：前者为每个源给出唯一的值，后者给出恰好收集所有这些值的唯一集合。像谓词中的源存在经过命题截断，只记录源的存在而不暴露一个选定的源。`opaque` 边界只改变 Agda 的定义性化归，既不改变这个陈述，也不增添假设。
 <!--ja-->
 `hasReplacementL` の仮定は、`a` の各要素上の値のファイバーを可縮にし、その結論は像の述語を実現するモデル内の集合の型を可縮にする。これは異なる二つの一意性である。前者は各始域の要素に一つの値を与え、後者はそれらすべてをちょうど集める一つの集合を与える。像の述語にある始域の要素の存在は命題的切り詰めを受けているため、存在するという事実だけを記録し、選ばれた要素を外へ出さない。`opaque` の境界が変えるのは Agda の定義上の簡約だけであり、この主張も仮定も変えない。
 <!--/-->
@@ -541,7 +541,7 @@ twelve fields of `L⊨ZF`. Only after that ZF record has been assembled does
 already contained in `fc` requires no host-level axiom of choice, and the later
 choice field is a conclusion, not a premise of this proof.
 <!--zh-->
-替换证明现在已有恰好两项所需材料。由逐点可缩纤维，`Images` 给出一个序数层，容纳与 `a` 的成员相关的每个值。在该层上把完整分离用于一元公式 `imageFo`，便得到实现 `BoundedImage` 的集合所成的可缩类型。下文证明的路径 `Q≡` 将这一谓词认同于不带层条件的像谓词 `Image`；因此沿 `sym Q≡` 运输，就得到所要求的可缩类型 `SetOf Image`。这正是任意公式 `φ` 的完整替换，而不是对前一章有界替换定理的调用。
+替换证明现在已有恰好两项所需材料。由逐点可缩纤维，`Images` 给出一个序数层，容纳与 `a` 的元素相关的每个值。在该层上把完整分离用于一元公式 `imageFo`，便得到实现 `BoundedImage` 的集合所成的可缩类型。下文证明的路径 `Q≡` 将这一谓词认同于不带层条件的像谓词 `Image`；因此沿 `sym Q≡` 运输，就得到所要求的可缩类型 `SetOf Image`。这正是任意公式 `φ` 的完整替换，而不是对前一章有界替换定理的调用。
 
 稍后，`L.Model` 把 `hasSeparationL` 与 `hasReplacementL` 用作 `L⊨ZF` 十二个字段中的两个。只有在这份 ZF record 装配完成之后，`hasChoiceL L⊨ZF` 才给出组成 `L⊨ZFC` 所需的对象理论选择字段。此处 `lem : LEM (ℓ-suc ℓ)` 是经典的宿主层假设，`fc` 则是定理明列的逐点唯一存在假设。从 `fc` 已经携带的中心作投影不需要宿主层选择公理；后文的选择字段是所得结论，并非本证明的前提。
 <!--ja-->
@@ -568,7 +568,7 @@ which source was used. Thus contractibility of `SetOf Image` will say that
 there is a unique model set with exactly these image members; it does not say
 that the image itself has only one member.
 <!--zh-->
-替换所要求的谓词直接采用模型公理中的变元次序。候选者 `y` 属于 `Image`，当且仅当存在某个 `x ∈ˢ a`，使 `φ` 在环境 `y ∷ x ∷ []` 中成立，其中像在前，源在后。`hProp` 中的索引存在采用命题截断：它保留适当的源存在这一事实，却忘去具体使用了哪个源。因此，`SetOf Image` 的可缩性表示恰有一个模型集合以这些像为成员，并不表示像集本身只有一个成员。
+替换所要求的谓词直接采用模型公理中的变元次序。候选者 `y` 属于 `Image`，当且仅当存在某个 `x ∈ˢ a`，使 `φ` 在环境 `y ∷ x ∷ []` 中成立，其中像在前，源在后。`hProp` 中的索引存在采用命题截断：它保留适当的源存在这一事实，却忘去具体使用了哪个源。因此，`SetOf Image` 的可缩性表示恰有一个模型集合以这些像为元素，并不表示像集本身只有一个元素。
 <!--ja-->
 置換公理が要求する述語を、モデルの公理と同じ変数順序で直接述べる。候補 `y` が `Image` に属すのは、ある `x ∈ˢ a` について、像を先、始域の要素を後に置いた環境 `y ∷ x ∷ []` で `φ` が成り立つとき、またそのときに限る。`hProp` の添字付き存在は命題的切り詰めを用いる。適切な始域の要素が存在するという事実は保つが、それがどの要素かは忘れる。したがって `SetOf Image` の可縮性が述べるのは、ちょうどこれらの像を要素とするモデル内の集合が一意に存在することであり、像集合そのものの要素が一つしかないということではない。
 <!--/-->
@@ -588,7 +588,7 @@ positions preserves the intended relation. Only this newly added existential
 is bounded by `a`. The formula `φ` may still contain unbounded quantifiers, so
 `imageFo` need not be a Δ₀ formula and must be handled by full separation.
 <!--zh-->
-要用分离得到同一条件，须先把它表达成一元对象语言公式。在 `imageFo` 中，有界存在量词遍历常元 `a` 的成员；引入源见证 `x` 后，公式体在环境 `x ∷ y ∷ []` 中求值。由于 `φ` 预期的是 `y ∷ x ∷ []`，公式体取为 `swapFo φ`，而 `⊨-swap` 证明这次位置交换保持原来要表达的关系。只有新添的这一个存在量词受 `a` 约束；`φ` 仍可含无界量词，所以 `imageFo` 未必是 Δ₀ 公式，必须由完整分离处理。
+要用分离得到同一条件，须先把它表达成一元对象语言公式。在 `imageFo` 中，有界存在量词遍历常元 `a` 的元素；引入源见证 `x` 后，公式体在环境 `x ∷ y ∷ []` 中求值。由于 `φ` 预期的是 `y ∷ x ∷ []`，公式体取为 `swapFo φ`，而 `⊨-swap` 证明这次位置交换保持原来要表达的关系。只有新添的这一个存在量词受 `a` 约束；`φ` 仍可含无界量词，所以 `imageFo` 未必是 Δ₀ 公式，必须由完整分离处理。
 <!--ja-->
 同じ条件を分出公理によって得るには、それを一変数の対象言語論理式として表す必要がある。`imageFo` の有界存在量化子は定数 `a` の要素にわたる。始域の証人 `x` を導入すると、本体は環境 `x ∷ y ∷ []` で評価される。`φ` が想定する環境は `y ∷ x ∷ []` なので、本体には `swapFo φ` を置き、`⊨-swap` が、この位置交換によって意図した関係が保たれることを証明する。`a` によって有界なのは、新たに加えたこの存在量化子だけである。`φ` は非有界な量化子を含み得るので、`imageFo` は Δ₀ 論理式とは限らず、完全な分出公理によって扱う必要がある。
 <!--/-->
@@ -673,7 +673,7 @@ transport in the defining equation above converts the set obtained by full
 separation into the unique set required by full replacement. No witness is
 selected during this comparison.
 <!--zh-->
-反向蕴含直接丢弃层成员关系这一分量。`imageFo` 的满足已经在命题截断之下包含一个源 `x`、它属于 `a` 的证明，以及 `swapFo φ` 在 `x ∷ y ∷ []` 中成立的证明。`map₁` 把同一个源及其成员证明保留在命题截断内部，同时沿 `⊨-swap φ x y` 运输，把最后一项变为 `φ` 在 `y ∷ x ∷ []` 中的满足；所得正是 `Image y`。它与正向蕴含共同证明 `Q≡`，而定义等式开头的运输则把完整分离得到的集合变为完整替换所要求的唯一集合。这次比较没有选出任何见证。
+反向蕴含直接丢弃层成员关系这一分量。`imageFo` 的满足已经在命题截断之下包含一个源 `x`、它属于 `a` 的证明，以及 `swapFo φ` 在 `x ∷ y ∷ []` 中成立的证明。`map₁` 把同一个源及其成员关系证明保留在命题截断内部，同时沿 `⊨-swap φ x y` 运输，把最后一项变为 `φ` 在 `y ∷ x ∷ []` 中的满足；所得正是 `Image y`。它与正向蕴含共同证明 `Q≡`，而定义等式开头的运输则把完整分离得到的集合变为完整替换所要求的唯一集合。这次比较没有选出任何见证。
 <!--ja-->
 逆向きの含意では、段階への所属の成分をそのまま捨てる。`imageFo` の充足はすでに、命題的切り詰めの下に、始域の要素 `x`、それが `a` に属すことの証明、そして `x ∷ y ∷ []` における `swapFo φ` の充足を含んでいる。`map₁` は同じ始域の要素と所属の証明を命題的切り詰めの内側に保ったまま、`⊨-swap φ x y` に沿う輸送によって最後の成分を `y ∷ x ∷ []` における `φ` の充足へ変える。得られるのは `Image y` である。これと順方向の含意から `Q≡` が証明され、上の定義式の冒頭にある輸送が、完全な分出公理で得た集合を、完全な置換公理が要求する一意な集合へ変える。この比較では証人を一つも選び出していない。
 <!--/-->

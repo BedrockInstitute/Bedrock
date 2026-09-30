@@ -27,7 +27,7 @@ module L.Coding.Closure {ℓ : Level} where
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 open import FOL.Syntax
   using ( Formula; var; _∧̇_; _⇒̇_; ∀̇_; ∀̇∈; ∃̇_ )
 import FOL.Absoluteness
@@ -46,7 +46,7 @@ open import L.Coding.Expressions {ℓ}
 A domain of formula codes is closed under immediate subformula codes when every constructor key it contains brings along the formula subcodes that its constructor demands; the atomic constructors and bottom carry no such obligations, since their term and numeral components are not demands of `closedAt`. This chapter explains why such a demand is needed and what it says. The subcode clauses of `L.Coding.Expressions` constrain a table only where the codes they consult actually carry entries, so a table satisfying all ten of them can be almost empty; what pins a value is a property of the index set itself, and the closure predicate `closedAt` states exactly that property as a single object-language formula. The chapter builds the predicate from two quantifier frames, one for binary and one for unary constructors, instantiates three payload relations to obtain its seven clauses, and proves both directions between satisfaction of those clauses and meta-level closure data: eliminations that read a satisfied clause into the subcodes it demands, and introductions that assemble satisfaction from such membership data. Once available, `closedAt` supports structural induction over codes stored inside `L`.
 <!--zh-->
 
-若一个公式码定义域中每个构造子键都带有其构造子所要求的公式子码，就称它对直接子公式码封闭；两个原子构造子与底不承担这类义务，因为它们的词项分量与数码分量不是 `closedAt` 的义务。本章解释为什么需要这项要求、以及它说了什么。`L.Coding.Expressions` 中的诸子码子句只在它所查询的码确实带有条目之处约束一张表，因此满足全部十条子句的表可以几乎为空；真正确定取值的是索引集自身的一个性质，而封闭谓词 `closedAt` 恰把这个性质表述为一条对象语言公式。本章用两个量化框架 (二元构造子一个、一元构造子一个) 构造该谓词，实例化三条载荷关系得到其七条子句，并证明这些子句的满足与元层面封闭数据之间的两个方向：把已满足的子句读回其所要求子码的消去，以及从这类隶属数据拼装满足的引入。此后，`closedAt` 便可支持对 `L` 内存储的码作结构归纳。
+若一个公式码定义域中每个构造子键都带有其构造子所要求的公式子码，就称它对直接子公式码封闭；两个原子构造子与底不承担这类义务，因为它们的词项分量与数码分量不是 `closedAt` 的义务。本章解释为什么需要这项要求、以及它说了什么。`L.Coding.Expressions` 中的诸子码子句只在它所查询的码确实带有条目之处约束一张表，因此满足全部十条子句的表可以几乎为空；真正确定取值的是索引集自身的一个性质，而封闭谓词 `closedAt` 恰把这个性质表述为一条对象语言公式。本章用两个量化框架 (二元构造子一个、一元构造子一个) 构造该谓词，实例化三条载荷关系得到其七条子句，并证明这些子句的满足与元层面封闭数据之间的两个方向：把已满足的子句读回其所要求子码的消去，以及从这类成员关系数据拼装满足的引入。此后，`closedAt` 便可支持对 `L` 内存储的码作结构归纳。
 <!--ja-->
 
 論理式の符号の定義域は、そこに含まれる各構成子のキーが、その構成子の要求する部分論理式符号を伴うとき、直下の部分論理式符号に閉じている。2 つの原子構成子と底はこのような義務を負わない。それらの項や数項の成分は `closedAt` の義務ではないからである。本章は、この要求がなぜ必要か、そして何を述べているかを説明する。`L.Coding.Expressions` の部分符号の節は、参照する符号が実際にエントリを持つ場所でしか表を拘束しないため、十個の節すべてを満たす表がほとんど空でありえる。値を定めるのは索引集合自身の性質であり、閉性述語 `closedAt` はまさにその性質を一つの対象言語の論理式として述べる。本章は、2 項構成子用と 1 項構成子用の 2 つの量化フレームからこの述語を組み立て、3 つのペイロード関係を具体化して七つの節を得て、それらの節の充足とメタレベルの閉性データとの両方向を証明する。充足された節をその要求する部分符号へと読み出す除去と、そのような所属データから充足を組み立てる導入である。これが揃えば、`closedAt` は `L` 内に保存された符号についての構造帰納法を支える。
@@ -55,7 +55,7 @@ A domain of formula codes is closed under immediate subformula codes when every 
 <!--en-->
 The chapter begins with a defect in what the coding clauses already say. In `L.Coding.Expressions`, each compound constructor came with a clause tying a table's entry at a code to entries at its immediate subcodes. Such a clause constrains a table only where the codes it consults actually carry entries, so a table can satisfy all ten clauses while being almost empty: take the index set to be a single **compound** code, put one entry there with any value at all, and every clause that looks for an entry at a subcode goes vacuous, since the subcodes carry no entry. The clauses alone do not pin a value. What pins it is a demand on the index set itself, that it contain the immediate subformula codes of each of its members. That demand, stated as a formula of the object language, is the closure predicate `closedAt` built in this chapter.
 <!--zh-->
-本章从一个缺陷开始，即已有编码子句的一个漏洞。在 `L.Coding.Expressions` 中，每个复合构造子都带有一条子句，把表在某个码处的条目与其直接子码处的条目联系起来。这类子句只在它所查询的码确实带有条目之处起约束作用，因此一张表可以在几乎为空的情况下满足全部十条子句：取索引集为单独一个**复合**码，在该处放一个值任取的条目，则所有查找子码条目的子句都空洞成立，因为诸子码没有条目。诸子句本身不能确定任何取值；真正起决定作用的是对索引集本身的一项要求：它须含有其每个成员的直接子公式码。这项要求以对象语言的公式表述，就是本章构造的封闭谓词 `closedAt`。
+本章从一个缺陷开始，即已有编码子句的一个漏洞。在 `L.Coding.Expressions` 中，每个复合构造子都带有一条子句，把表在某个码处的条目与其直接子码处的条目联系起来。这类子句只在它所查询的码确实带有条目之处起约束作用，因此一张表可以在几乎为空的情况下满足全部十条子句：取索引集为单独一个**复合**码，在该处放一个值任取的条目，则所有查找子码条目的子句都空洞成立，因为诸子码没有条目。诸子句本身不能确定任何取值；真正起决定作用的是对索引集本身的一项要求：它须含有其每个元素的直接子公式码。这项要求以对象语言的公式表述，就是本章构造的封闭谓词 `closedAt`。
 <!--ja-->
 本章は、既存の符号化の節が持つ欠陥から始まる。`L.Coding.Expressions` では、各複合構成子に、ある符号での表のエントリをその直接の部分符号でのエントリと結びつける節が付いていた。この種の節は、参照する符号が実際にエントリを持つ場所でしか拘束力を持たないため、ほとんど空の表でも十個の節すべてを満たせる。索引集合をただ一つの**複合**符号とし、そこに任意の値のエントリを一つ置けば、部分符号のエントリを探す節はすべて空洞に成立する。部分符号がエントリを持たないからである。節だけでは値は定まらない。値を定めるのは索引集合自身への要求、すなわちその各メンバーの直接の部分論理式符号を含むという要求である。この要求を対象言語の論理式として述べたものが、本章で構成する閉性述語 `closedAt` である。
 <!--/-->
@@ -71,7 +71,7 @@ The counterexample also shows what would go wrong without repair. The entry sits
 <!--en-->
 The repair is a quantifier pattern, and it needs the same two frames as the clauses, minus the table. What remains is the shape reader and the implication: for every key of that shape in the set, such and such keys are in the set too. A key is an arity paired with a code, so a subkey is built either from the same arity, or from its successor for the four constructors that bind a variable. The bounded universal ranges over members of the set, the further universals range over the decoded parts, and the implication guards the demand behind the shape check.
 <!--zh-->
-修复是一个量化模式，所需的框架与诸子句相同，只是去掉了表。剩下的是形状读式与那个蕴含：对集合中每个该形状的键，某某几个键也在该集合中。一个键是元数与码之对，故一个子键或由同一个元数造出，或对绑定变元的四个构造子由其后继造出。有界全称遍历集合的成员，其余全称遍历解码出的各部分，而蕴含把要求置于形状检查之后。
+修复是一个量化模式，所需的框架与诸子句相同，只是去掉了表。剩下的是形状读式与那个蕴含：对集合中每个该形状的键，某某几个键也在该集合中。一个键是元数与码之对，故一个子键或由同一个元数造出，或对绑定变元的四个构造子由其后继造出。有界全称遍历集合的元素，其余全称遍历解码出的各部分，而蕴含把要求置于形状检查之后。
 <!--ja-->
 修復は量化のパターンであり、それを述べるのに必要なのは、節と同じ 2 つのフレームから表を取り除いたものである。残るのは形状の読み手と含意である。その形状の鍵が集合にあるならば、かような鍵もまた集合にある、と。鍵はアリティと符号の対なので、部分鍵は同じアリティから、あるいは変数を束縛する 4 つの構成子についてはその後者から作られる。有界全称は集合のメンバーを走り、さらに全称は解読された各部分を走り、含意が要求を形状の検査の後ろに置く。
 <!--/-->
@@ -95,7 +95,7 @@ A relation to state in a frame is a parameter, and the seven concrete clauses ar
 <!--en-->
 The existentially supplied successor is the one place where mere existence appears. Inside the arity-raising relations, the bound variable is witnessed to be the successor of the frame's arity, and that witness is packaged only truncated: the proposition records existence without retaining a chosen witness as data. Later the readers of these clauses discharge the truncation, which is legitimate because the membership claims they feed are propositions.
 <!--zh-->
-以存在量词给出的后继是唯一出现「仅仅存在」之处。在抬升元数的那些关系内部，约束变元被见证为框架元数的后继，而这个见证只以截断形式打包：这个命题记录后继的存在，却不把选定的见证保留为数据。后文这些子句的读式会消去该截断；这是合法的，因为它们所输送的隶属主张都是命题。
+以存在量词给出的后继是唯一出现「仅仅存在」之处。在抬升元数的那些关系内部，约束变元被见证为框架元数的后继，而这个见证只以截断形式打包：这个命题记录后继的存在，却不把选定的见证保留为数据。后文这些子句的读式会消去该截断；这是合法的，因为它们所输送的成员关系主张都是命题。
 <!--ja-->
 存在量化で与えられる後続こそ、命題的切り詰められた存在が現れる唯一の場所である。アリティを上げる関係の内部では、束縛変数がフレームのアリティの後続であることが証人され、その証人は切り詰めのかたちでだけ残る。残るのは後続が存在することであり、選ばれた証人をデータとして保持しない。後ほど、これらの節の読み手が切り詰めを解消する。入力となる所属の主張が命題であるため、その解消は正当である。
 <!--/-->
@@ -103,7 +103,7 @@ The existentially supplied successor is the one place where mere existence appea
 <!--en-->
 Everything is stated at the level of sets and membership. A code stored in `L` is read as an element of the cumulative hierarchy; the subcode demand is literally a list of membership statements, a pair `pr` pairing an arity with a payload being a member of the domain set. This is what makes the predicate transportable: satisfaction of an object-language formula about membership, nothing more.
 <!--zh-->
-一切都在集合与隶属的层面陈述。存于 `L` 中的码被读作累积层级的一个元素；子码要求在字面上就是一列隶属陈述：由 `pr` 把元数与载荷配成的对属于定义域集合。这正是该谓词可被传递的原因：它只是关于隶属的对象语言公式的满足，别无其他。
+一切都在集合与成员关系的层面陈述。存于 `L` 中的码被读作累积层级的一个元素；子码要求在字面上就是一列成员关系陈述：由 `pr` 把元数与载荷配成的对属于定义域集合。这正是该谓词可被传递的原因：它只是关于成员关系的对象语言公式的满足，别无其他。
 <!--ja-->
 すべては集合と所属のレベルで述べられる。`L` に保存された符号は累積階層の要素として読まれ、部分符号の要求は文字通り所属の主張の並びである。`pr` がアリティとペイロードを組んだ対が定義域の集合に属する、という主張である。これが述語を輸送可能にする理由である。所属についての対象言語の論理式の充足、それだけである。
 <!--/-->
@@ -123,7 +123,7 @@ The formulas are evaluated over the carrier `S` of `L`, in an environment `γ : 
 <!--/-->
 
 ```agda
-open hPropStructure 𝒮ʟ using ( S )
+open hPropView 𝒮ʟ using ( S )
 ```
 
 <!--en-->
@@ -142,7 +142,7 @@ open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
 <!--en-->
 Four object-language readers supply the building blocks, each with an adequacy proof equating its satisfaction with the meta-level claim it reads. One reads membership in the set stored at an environment slot; two check that a code is the tagged pair of an arity with its one or two payload components; one expresses having the successor of a stored arity as a payload. With shape, membership, and successor all readable inside the object language, the whole closure demand collapses into one formula, and the rest of the chapter unfolds what that formula says and how to satisfy it.
 <!--zh-->
-四个对象语言读式提供构件，每个读式都带有一条充分性证明，把它的满足等同于它所读取的元层面主张。一个读取「属于某环境槽中存储的集合」；两个检查某个码确是元数与其一个或两个载荷分量的带标记对；一个表达「以某存储元数的后继作为载荷」。形状、隶属与后继都能在对象语言内部读取后，整个封闭要求便收缩为一个公式；本章其余部分展开这个公式说了什么、以及如何满足它。
+四个对象语言读式提供构件，每个读式都带有一条充分性证明，把它的满足等同于它所读取的元层面主张。一个读取「属于某环境槽中存储的集合」；两个检查某个码确是元数与其一个或两个载荷分量的带标记对；一个表达「以某存储元数的后继作为载荷」。形状、成员关系与后继都能在对象语言内部读取后，整个封闭要求便收缩为一个公式；本章其余部分展开这个公式说了什么、以及如何满足它。
 <!--ja-->
 4 つの対象言語の読み手が構成要素を供給し、それぞれに、その充足を読み取り先のメタレベルの主張と同一視する妥当性証明が付く。一つは環境スロットに保存された集合への所属を読み、二つはある符号がアリティとその 1 つまたは 2 つのペイロード成分のタグ付きの対であることを確認し、一つは保存されたアリティの後続をペイロードとして持つことを表す。形状・所属・後続がすべて対象言語の内部で読めるようになれば、閉性の要求全体が一つの論理式に収まる。本章の残りは、この論理式が何を言うか、そしてどう充足するかを展開する。
 <!--/-->
@@ -266,7 +266,7 @@ Its three bound slots follow the same inside-out order: the single payload compo
 <!--en-->
 `binShape-out` is the elimination direction for the binary frame. Its type takes a proof that the environment `γ` satisfies the frame for an arbitrary relation `rel`, then the chosen code `c` with arity `ar` and components `a`, `b`, together with the membership hypothesis that `c` belongs to the domain.
 <!--zh-->
-`binShape-out` 是二元框架的消去方向。其类型先取「环境 `γ` 满足任意关系 `rel` 上的该框架」这一证明，然后取选定的码 `c`、元数 `ar` 与分量 `a`、`b`，以及 `c` 属于定义域的隶属假设。
+`binShape-out` 是二元框架的消去方向。其类型先取「环境 `γ` 满足任意关系 `rel` 上的该框架」这一证明，然后取选定的码 `c`、元数 `ar` 与分量 `a`、`b`，以及 `c` 属于定义域的成员关系假设。
 <!--ja-->
 `binShape-out` は 2 項フレームの除去方向である。その型は、環境 `γ` が任意の関係 `rel` についてフレームを充足するという証明を取り、続いて選ばれた符号 `c`、アリティ `ar`、成分 `a`、`b`、そして `c` が定義域に属するという所属の仮定を受け取る。
 <!--/-->
@@ -294,7 +294,7 @@ The remaining hypothesis is the shape equation saying that `c` really is the tag
 <!--en-->
 The proof is short because the frame was designed for this reading. The hypothesis `h` is a function, and applying it at `c` with membership and shape produces what is wanted, except that the shape argument must be transported along the adequacy path for `arityTagPairAtL` in the extended environment: adequacy is stated as a path between propositions, and `subst` along it moves the proof to the form the conclusion needs.
 <!--zh-->
-证明很短，因为框架正是为这种读法设计的。假设 `h` 是一个函数，在 `c` 处连同隶属与形状施加它就得到所要的结论，只是形状论证须沿 `arityTagPairAtL` 在扩大环境中的充分性路径作移送：充分性是命题之间的路径，沿它的 `subst` 把证明移到结论所需的形式。
+证明很短，因为框架正是为这种读法设计的。假设 `h` 是一个函数，在 `c` 处连同成员关系与形状施加它就得到所要的结论，只是形状论证须沿 `arityTagPairAtL` 在扩大环境中的充分性路径作移送：充分性是命题之间的路径，沿它的 `subst` 把证明移到结论所需的形式。
 <!--ja-->
 証明は短い。フレームがこの読み方のために設計されているからである。仮説 `h` は関数であり、`c` において所属と形状とともに適用すれば求めるものが得られる。ただし形状の引数は、拡張環境における `arityTagPairAtL` の妥当性のパスに沿って移送される必要がある。妥当性は命題間のパスとして述べられ、それに沿う `subst` が証明を結論の必要とする形へ移す。
 <!--/-->
@@ -309,7 +309,7 @@ The proof is short because the frame was designed for this reading. The hypothes
 <!--en-->
 `unShape-out` is the same elimination for the unary frame. It takes satisfaction of `unShapeAt C k rel` in `γ`, a code `c` with a single payload component `a` and arity `ar`, and the membership hypothesis for `c`.
 <!--zh-->
-`unShape-out` 是一元框架的同一消去。它取 `γ` 对 `unShapeAt C k rel` 的满足、带唯一载荷分量 `a` 与元数 `ar` 的码 `c`，以及 `c` 的隶属假设。
+`unShape-out` 是一元框架的同一消去。它取 `γ` 对 `unShapeAt C k rel` 的满足、带唯一载荷分量 `a` 与元数 `ar` 的码 `c`，以及 `c` 的成员关系假设。
 <!--ja-->
 `unShape-out` は 1 項フレームに対する同じ除去である。`γ` による `unShapeAt C k rel` の充足、唯一のペイロード成分 `a` とアリティ `ar` を持つ符号 `c`、そして `c` の所属の仮定を受け取る。
 <!--/-->
@@ -359,7 +359,7 @@ Four generic relations cover the payload shapes. The seven active closure clause
 <!--en-->
 The two arity-preserving relations are plain conjunctions of subcode membership. Given the four fresh entries of a binary frame, `bothSameAt C` asserts that both subformula slots, named by the indices `a4` and `b4`, already belong to the set that entry `sh4 C` points to. Its unary counterpart `oneSameAt C` is a single such membership claim over the three fresh entries of a unary frame, for constructors whose sole component lives at the same arity.
 <!--zh-->
-两条保持元数的关系就是子码隶属的简单合取。在二元框架的四个新条目之下，`bothSameAt C` 断言由索引 `a4` 与 `b4` 指名的两个子公式槽位都已经属于条目 `sh4 C` 所指的那个集合。其一元对应物 `oneSameAt C` 则在一元框架的三个新条目之下给出单条这样的隶属断言，用于其唯一分量与自身同元数的构造子。
+两条保持元数的关系就是子码成员关系的简单合取。在二元框架的四个新条目之下，`bothSameAt C` 断言由索引 `a4` 与 `b4` 指名的两个子公式槽位都已经属于条目 `sh4 C` 所指的那个集合。其一元对应物 `oneSameAt C` 则在一元框架的三个新条目之下给出单条这样的成员关系断言，用于其唯一分量与自身同元数的构造子。
 <!--ja-->
 アリティを保つ二つの関係は、部分符号の所属の単純な連言である。二項フレームの四つの新規エントリの下で、`bothSameAt C` はインデックス `a4` と `b4` が指す二つの部分論理式スロットが、エントリ `sh4 C` の指す集合に既に属することを主張する。その一項版 `oneSameAt C` は、一項フレームの三つの新規エントリの下で単一の所属主張を与え、唯一の成分が同じアリティに置かれる構成子に対応する。
 <!--/-->
@@ -392,7 +392,7 @@ The two arity-raising relations quantify the successor existentially. The bound 
 <!--en-->
 Reading them back is what a consumer does, so each is stated at the clause, already composed with its frame: given a key of that shape in the set, the keys the constructor demands are in the set. The two that change arity discharge a truncation on the way, which the target admits because membership is a proposition.
 <!--zh-->
-这些关系的反向读式由使用者调用，因此每条都直接在相应子句处陈述，并已与其框架复合：若集合中含有某种形状的键，那么相应构造子所需的子键也属于该集合。两条改变元数的读式途中消去一次截断；目标是隶属命题，因此允许该消去。
+这些关系的反向读式由使用者调用，因此每条都直接在相应子句处陈述，并已与其框架复合：若集合中含有某种形状的键，那么相应构造子所需的子键也属于该集合。两条改变元数的读式途中消去一次截断；目标是成员关系命题，因此允许该消去。
 <!--ja-->
 これらの関係の逆方向の読み出しは利用者が行うので、各版は節の位置で、フレームと既に合成された形で述べられる。集合がその形状のキーを含むなら、構成子が要求する子キーも集合に属する。アリティを変える二つの読み出しは途中で命題的切り詰めを一つ解消する。帰結が所属命題なので、その解消が許される。
 <!--/-->
@@ -400,7 +400,7 @@ Reading them back is what a consumer does, so each is stated at the clause, alre
 <!--en-->
 Four readings unfold the clauses back into concrete membership data, one per payload shape. The first handles the binary connectives at the same arity. Its input is a satisfaction proof of the full clause `binShapeAt C k (bothSameAt C)`, together with a key of the right shape: model elements `c`, `ar`, `a`, `b`, membership of `c` in the set at `C`, and the shape equation presenting `c` as the ordered pair of the arity `ar` with the coded application to `a` and `b`.
 <!--zh-->
-四个读式把各子句展开回具体的隶属数据，每种载荷形状一个。第一个处理同元数的二元联结词。其输入是完整子句 `binShapeAt C k (bothSameAt C)` 的满足证明，连同形状正确的键：模型元素 `c`、`ar`、`a`、`b`，`c` 在 `C` 处集合中的隶属，以及把 `c` 呈现为「元数 `ar` 与对 `a`、`b` 的编码应用之有序对」的形状等式。
+四个读式把各子句展开回具体的成员关系数据，每种载荷形状一个。第一个处理同元数的二元联结词。其输入是完整子句 `binShapeAt C k (bothSameAt C)` 的满足证明，连同形状正确的键：模型元素 `c`、`ar`、`a`、`b`，`c` 在 `C` 处集合中的成员关系，以及把 `c` 呈现为「元数 `ar` 与对 `a`、`b` 的编码应用之有序对」的形状等式。
 <!--ja-->
 4 つの読み手が各節を具体的な所属データへ展開し直す。ペイロードの形ごとに一つである。最初のものは同アリティの 2 項結合子を扱う。入力は節全体 `binShapeAt C k (bothSameAt C)` の充足証明と、正しい形のキーである。すなわちモデルの要素 `c`、`ar`、`a`、`b`、`C` の集合への `c` の所属、そして `c` を「アリティ `ar` と `a`、`b` への符号化された適用の順序対」として呈示する形状の等式である。
 <!--/-->
@@ -416,7 +416,7 @@ Four readings unfold the clauses back into concrete membership data, one per pay
 <!--en-->
 Its conclusion is the conjunction the constructor demands: both subformula keys, the pairs of the same arity `ar` with `a` and with `b`, are members of the set. The proof runs the generic frame elimination and then applies adequacy, which converts a satisfaction statement about the coded membership reader into the plain membership claim it means; this conversion is the one proof step shared by all four readings.
 <!--zh-->
-其结论是构造子所要求的合取：由同一元数 `ar` 分别与 `a`、`b` 配成的两个子公式键都属于该集合。证明先运行通用框架消去，再施加充分性转换，它把关于编码隶属读式的满足陈述转换为它所指的普通隶属主张；这一转换是四个读式共用的唯一证明步骤。
+其结论是构造子所要求的合取：由同一元数 `ar` 分别与 `a`、`b` 配成的两个子公式键都属于该集合。证明先运行通用框架消去，再施加充分性转换，它把关于编码成员关系读式的满足陈述转换为它所指的普通成员关系主张；这一转换是四个读式共用的唯一证明步骤。
 <!--ja-->
 帰結は構成子が要求する連言である。同じアリティ `ar` を `a` および `b` と対にした 2 つの部分論理式キーが集合の要素になる。証明は一般的なフレーム除去を走らせた後、妥当性を適用する。これは符号化された所属の読み手についての充足の主張を、それが意味する通常の所属の主張へ変換するもので、4 つの読み手すべてに共通する唯一の証明の一段である。
 <!--/-->
@@ -432,7 +432,7 @@ Its conclusion is the conjunction the constructor demands: both subformula keys,
 <!--en-->
 The second reading covers the unary constructors at the same arity. Its hypotheses mirror the first with one component fewer: a satisfaction proof of the clause built from `oneSameAt`, the key's parts `c`, `ar`, `a`, membership of `c`, and the shape equation presenting `c` as the pair of the arity `ar` with the coded numeral `k` applied to `a` alone.
 <!--zh-->
-第二个读式覆盖同元数的一元构造子。其假设仿照第一个但少一个分量：由 `oneSameAt` 构造的子句的满足证明，键的各部分 `c`、`ar`、`a`，`c` 的隶属，以及把 `c` 呈现为「元数 `ar` 与编码数码 `k` 单独作用于 `a`」之对的形状等式。
+第二个读式覆盖同元数的一元构造子。其假设仿照第一个但少一个分量：由 `oneSameAt` 构造的子句的满足证明，键的各部分 `c`、`ar`、`a`，`c` 的成员关系，以及把 `c` 呈现为「元数 `ar` 与编码数码 `k` 单独作用于 `a`」之对的形状等式。
 <!--ja-->
 2 番目の読み手は同アリティの 1 項構成子を扱う。仮定は最初のものを一成分分減らして写したものである。`oneSameAt` から作られる節の充足証明、キーの各部 `c`、`ar`、`a`、`c` の所属、そして `c` を「アリティ `ar` と、符号化された数 `k` の `a` への適用」の対として呈示する形状の等式である。
 <!--/-->
@@ -449,7 +449,7 @@ The second reading covers the unary constructors at the same arity. Its hypothes
 <!--en-->
 The conclusion is a single membership, of the pair of `ar` with `a`. Since `oneSameAt` never raised the arity, no truncation appears, and the proof is just the unary frame elimination followed by the adequacy conversion. The third reading turns to the successor arity: `unSuccClosed-out` reads the clause built from `oneSuccAt`.
 <!--zh-->
-结论是一条隶属：`ar` 与 `a` 之对的隶属。由于 `oneSameAt` 从未抬升元数，其中不出现截断，证明就是一元框架消去再加充分性转换。第三个读式转向后继元数：`unSuccClosed-out` 读取由 `oneSuccAt` 构造的子句。
+结论是一条成员关系：`ar` 与 `a` 之对的成员关系。由于 `oneSameAt` 从未抬升元数，其中不出现截断，证明就是一元框架消去再加充分性转换。第三个读式转向后继元数：`unSuccClosed-out` 读取由 `oneSuccAt` 构造的子句。
 <!--ja-->
 帰結は単一の所属、すなわち `ar` と `a` の対の所属である。`oneSameAt` はアリティを上げないため切り詰めは現れず、証明は 1 項フレームの除去に妥当性の変換が続くだけである。3 番目の読み手は後続アリティに移る。`unSuccClosed-out` が `oneSuccAt` から作られる節を読む。
 <!--/-->
@@ -482,7 +482,7 @@ Its hypotheses match the previous unary reading, but the conclusion names the su
 <!--en-->
 The third reading, for the unbounded quantifiers, raises the arity. Its hypotheses are the usual unary ones: satisfaction of `unShapeAt C k (oneSuccAt C)`, the key's parts `c`, `ar`, `a`, membership of `c`, and the shape equation. The conclusion replaces the arity `ar` by its successor: the required subformula key pairs `a` with `sucV (fst ar)`, the successor of the key's arity, not with `ar` itself. This is the reading appropriate to the unbounded quantifiers, which bind a variable and so store their body one arity higher.
 <!--zh-->
-第三种读式面向无界量词，抬升了元数。其假设是通常的一元假设：`unShapeAt C k (oneSuccAt C)` 的满足，键的各部分 `c`、`ar`、`a`，`c` 的隶属，以及形状等式。结论把元数 `ar` 换成其后继：所需的子公式键把 `a` 与键元数的后继 `sucV (fst ar)` 配对，而非与 `ar` 本身配对。这正是无界量词所需的读式：它们绑定变元，因此把体存放在高一个元数处。
+第三种读式面向无界量词，抬升了元数。其假设是通常的一元假设：`unShapeAt C k (oneSuccAt C)` 的满足，键的各部分 `c`、`ar`、`a`，`c` 的成员关系，以及形状等式。结论把元数 `ar` 换成其后继：所需的子公式键把 `a` 与键元数的后继 `sucV (fst ar)` 配对，而非与 `ar` 本身配对。这正是无界量词所需的读式：它们绑定变元，因此把体存放在高一个元数处。
 <!--ja-->
 3 つ目の読み出しは非有界量詞のもので、アリティを上げる。仮定は通常の 1 項のものである。`unShapeAt C k (oneSuccAt C)` の充足、キーの各部 `c`、`ar`、`a`、`c` の所属、そして形状の等式である。帰結はアリティ `ar` をその後続に置き換える。要求される部分論理式キーは、`ar` 自身ではなくキーのアリティの後続 `sucV (fst ar)` と `a` を対にする。これは変数を束縛し、本体を一つ高いアリティの下に保存する非有界量詞に適した読み出しである。
 <!--/-->
@@ -498,7 +498,7 @@ The third reading, for the unbounded quantifiers, raises the arity. Its hypothes
 <!--en-->
 This is where the existential inside `oneSuccAt` matters. The successor is demanded only merely: the frame elimination hands over a propositionally truncated witness, together with certificates that it is the successor of the arity and that it pairs with `a` into the set. Such a truncation may be eliminated here because the goal is a proposition: membership in a set is an hProp, so `rec₁` converts the mere existence into the concrete membership claim without choosing a canonical witness.
 <!--zh-->
-这里 `oneSuccAt` 内部的存在量词起了作用。子句对后继只是「仅仅存在」式地要求：框架消去所给出的是被命题截断的见证，连同两个证书，即它是元数的后继，且它与 `a` 配对进入该集合。这一截断在此可以消去，因为目标是命题：集合中的隶属是 hProp，故 `rec₁` 把「仅仅存在」转换为具体的隶属主张，而无须选定某个典范见证。
+这里 `oneSuccAt` 内部的存在量词起了作用。子句对后继只是「仅仅存在」式地要求：框架消去所给出的是被命题截断的见证，连同两个证书，即它是元数的后继，且它与 `a` 配对进入该集合。这一截断在此可以消去，因为目标是命题：集合中的成员关系是 hProp，故 `rec₁` 把「仅仅存在」转换为具体的成员关系主张，而无须选定某个典范见证。
 <!--ja-->
 ここで `oneSuccAt` 内部の存在量化が効いてくる。後続は命題的に切り詰められた形でしか要求されない。フレーム除去が渡すのは命題的に切り詰められた証人と、それがアリティの後続であること、また `a` と対になって集合に入ることの 2 つの証明書である。この切り詰めがここで除却できるのは、帰結が命題だからである。集合への所属は hProp なので、`rec₁` は命題的切り詰められた存在を具体的な所属の主張へ変換でき、標準的な証人を選ぶ必要はない。
 <!--/-->
@@ -514,7 +514,7 @@ This is where the existential inside `oneSuccAt` matters. The successor is deman
 <!--en-->
 The adequacy lemmas of the two readers then turn those satisfactions into equations and memberships about the actual model values, and the transport along the first equation re-expresses the membership at the witness as membership at `sucV (fst ar)`. So the reading ends exactly where it should: with the membership of the successor key.
 <!--zh-->
-两个读式的充分性引理随后把这些满足转换为关于模型实际取值的等式与隶属，沿第一条等式的移送把见证处的隶属改写为 `sucV (fst ar)` 处的隶属。于是这条读式恰好在应在之处结束：以后继键的隶属收尾。
+两个读式的充分性引理随后把这些满足转换为关于模型实际取值的等式与成员关系，沿第一条等式的移送把见证处的成员关系改写为 `sucV (fst ar)` 处的成员关系。于是这条读式恰好在应在之处结束：以后继键的成员关系收尾。
 <!--ja-->
 2 つの読み手の妥当性補題は、これらの充足をモデルの実際の値についての等式と所属へ変え、最初の等式に沿う輸送が証人での所属を `sucV (fst ar)` での所属として表し直す。こうして読み出しはあるべき場所で終わる。すなわち後続キーの所属で締めくくられるのである。
 <!--/-->
@@ -530,7 +530,7 @@ The adequacy lemmas of the two readers then turn those satisfactions into equati
 <!--en-->
 The fourth reading covers the bounded quantifiers. Its hypotheses copy the binary pattern: satisfaction of `binShapeAt C k (succSndAt C)`, the four model values `c`, `ar`, `a`, `b`, membership of `c`, and the shape equation presenting `c` as the pair of `ar` with the coded application to `a`, `b`.
 <!--zh-->
-第四种读式覆盖有界量词。其假设照搬二元模式：`binShapeAt C k (succSndAt C)` 的满足，四个模型值 `c`、`ar`、`a`、`b`，`c` 的隶属，以及把 `c` 呈现为「`ar` 与对 `a`、`b` 的编码应用之对」的形状等式。
+第四种读式覆盖有界量词。其假设照搬二元模式：`binShapeAt C k (succSndAt C)` 的满足，四个模型值 `c`、`ar`、`a`、`b`，`c` 的成员关系，以及把 `c` 呈现为「`ar` 与对 `a`、`b` 的编码应用之对」的形状等式。
 <!--ja-->
 4 つ目の読み出しは有界量詞を担う。仮定は 2 項のパターンをそのまま写す。`binShapeAt C k (succSndAt C)` の充足、4 つのモデル値 `c`、`ar`、`a`、`b`、`c` の所属、そして `c` を「`ar` と `a`、`b` への符号化された適用の対」として呈示する形状の等式である。
 <!--/-->
@@ -546,7 +546,7 @@ The fourth reading covers the bounded quantifiers. Its hypotheses copy the binar
 <!--en-->
 The conclusion asks only about the second component: `sucV (fst ar)` paired with `b` must be in the set, since the first slot carries the bounding term rather than a subformula. As in the unbounded case, the existential inside `succSndAt` supplies the successor merely, and the elimination of that truncation is legitimate because the membership target is a proposition.
 <!--zh-->
-结论只问第二个分量：`sucV (fst ar)` 与 `b` 之对须属于该集合，因为第一个槽放的是有界词项而非子公式。与无界情形一样，`succSndAt` 内部的存在量词以「仅仅存在」的方式给出后继，而该截断的消去合法，因为隶属目标是命题。
+结论只问第二个分量：`sucV (fst ar)` 与 `b` 之对须属于该集合，因为第一个槽放的是有界词项而非子公式。与无界情形一样，`succSndAt` 内部的存在量词以「仅仅存在」的方式给出后继，而该截断的消去合法，因为成员关系目标是命题。
 <!--ja-->
 帰結は第二成分だけを問う。`sucV (fst ar)` と `b` の対が集合に属さねばならない。第一スロットが載せるのは部分論理式ではなく有界の項だからである。非有界の場合と同様、`succSndAt` 内部の存在量化は後続を命題的に切り詰められた形で与え、所属の帰結が命題であるため、その切り詰めの除却は正当である。
 <!--/-->
@@ -562,7 +562,7 @@ The conclusion asks only about the second component: `sucV (fst ar)` paired with
 <!--en-->
 The proof body is the binary counterpart of the previous one: the two certificates are converted by `sucAtL-adequate` and `appAt-adequate`, and the transport along the successor equation re-expresses the pairing membership at `sucV (fst ar)`.
 <!--zh-->
-证明体是上一条读式的二元对应：两个证书经 `sucAtL-adequate` 与 `appAt-adequate` 转换，沿后继等式的移送把配对隶属改写到 `sucV (fst ar)` 处。
+证明体是上一条读式的二元对应：两个证书经 `sucAtL-adequate` 与 `appAt-adequate` 转换，沿后继等式的移送把配对成员关系改写到 `sucV (fst ar)` 处。
 <!--ja-->
 証明の本体は前の読み出しの 2 項版である。2 つの証明書は `sucAtL-adequate` と `appAt-adequate` によって変換され、後続の等式に沿う輸送が対の所属を `sucV (fst ar)` のもとで表し直す。
 <!--/-->
@@ -578,7 +578,7 @@ The proof body is the binary counterpart of the previous one: the two certificat
 <!--en-->
 The propositionhood of the membership conclusion is what licenses the truncation elimination in each successor-arity reading. These four readings, in two same-arity and two successor-arity forms, are all a consumer needs: every closure clause can be unfolded into concrete membership data.
 <!--zh-->
-隶属结论的命题性，正是每条后继元数读式中截断消去所需的许可。这四种读式，两条保持元数、两条抬升元数，就是使用者的全部所需：每条封闭性子句都能展开为具体的隶属数据。
+成员关系结论的命题性，正是每条后继元数读式中截断消去所需的许可。这四种读式，两条保持元数、两条抬升元数，就是使用者的全部所需：每条封闭性子句都能展开为具体的成员关系数据。
 <!--ja-->
 所属の帰結の命題性こそが、各後続アリティの読み出しにおける切り詰めの除却を許すものである。同アリティの 2 つと後続アリティの 2 つ、この 4 つの読み出しが利用者に必要なすべてであり、どの閉性節も具体的な所属データへ展開できる。
 <!--/-->
@@ -647,7 +647,7 @@ Each definition pairs a constructor key with the right relation: the numerals 2,
 <!--en-->
 The converse starts from actual meta-level subcode closure and turns it into satisfaction of each object-language frame. For same-arity clauses, the supplied membership facts directly establish the required payload memberships. For arity-raising clauses, the L-numeral `sucʟ ar` supplies the existential successor witness together with the equations and membership certificate that the frame demands.
 <!--zh-->
-反方向从元层面真实的子码封闭数据出发，把它转成每条对象语言框架的满足。对同元数子句，给定的隶属事实直接建立所需的载荷隶属；对抬升元数的子句，L 数码 `sucʟ ar` 提供存在量化的后继见证，以及框架所需的等式与隶属证书。
+反方向从元层面真实的子码封闭数据出发，把它转成每条对象语言框架的满足。对同元数子句，给定的成员关系事实直接建立所需的载荷成员关系；对抬升元数的子句，`L`{.Agda} 数码 `sucʟ ar` 提供存在量化的后继见证，以及框架所需的等式与成员关系证书。
 <!--ja-->
 逆方向は、メタレベルで実際に与えられた部分符号の閉性から出発し、それを各対象言語フレームの充足へ移す。同じアリティの節では、与えられた所属事実が必要なペイロードの所属を直接示する。アリティを上げる節では、L 数項 `sucʟ ar` が存在量化された後続の証人と、フレームが要求する等式および所属の証明を与える。
 <!--/-->
@@ -655,7 +655,7 @@ The converse starts from actual meta-level subcode closure and turns it into sat
 <!--en-->
 The introduction direction answers the converse need: given meta-level closure data, produce satisfaction of the clause. For the binary frame, `binShape-in` takes a function `g` which, from a key's parts `c`, `ar`, `a`, `b`, membership of `c`, and the shape equation, returns satisfaction of the arbitrary relation `rel` in the extended environment; it concludes satisfaction of the whole shape `binShapeAt C k rel`.
 <!--zh-->
-引入方向回答相反的需求：给定元层面的封闭数据，产出子句的满足。对二元框架，`binShape-in` 取函数 `g`，它从键的各部分 `c`、`ar`、`a`、`b`、`c` 的隶属以及形状等式，给出任意关系 `rel` 在扩张环境中的满足；其结论是整个形状 `binShapeAt C k rel` 的满足。
+引入方向回答相反的需求：给定元层面的封闭数据，产出子句的满足。对二元框架，`binShape-in` 取函数 `g`，它从键的各部分 `c`、`ar`、`a`、`b`、`c` 的成员关系以及形状等式，给出任意关系 `rel` 在扩张环境中的满足；其结论是整个形状 `binShapeAt C k rel` 的满足。
 <!--ja-->
 導入の方向は逆向きの需要に答える。メタレベルの閉性データから、節の充足を作るのである。2 項フレームでは、`binShape-in` は関数 `g` を受け取る。`g` はキーの各部 `c`、`ar`、`a`、`b`、`c` の所属、そして形状の等式から、任意の関係 `rel` の拡張環境での充足を返す。結論は形状全体 `binShapeAt C k rel` の充足である。
 <!--/-->
@@ -671,7 +671,7 @@ The introduction direction answers the converse need: given meta-level closure d
 <!--en-->
 This is the semantic content of the quantifiers read backward: satisfaction of a bounded universal is a function defined on members of the set, and satisfaction of an implication is a function on the proof of its premise. So `g` applied to the key's data is already the required satisfaction; the only conversion is along `arityTagPairAtL-adequate`, aligning the tag equation the frame reads with the shape equation `g` was handed.
 <!--zh-->
-这正是把量词语义反过来读：有界全称的满足是定义在集合成员上的函数，蕴涵的满足是其前提之证明上的函数。因此把 `g` 施加于键的数据就已得到所需的满足；唯一需要的转换沿 `arityTagPairAtL-adequate` 完成，把框架读取的标记等式与 `g` 收到的形状等式对齐。
+这正是把量词语义反过来读：有界全称的满足是定义在集合元素上的函数，蕴涵的满足是其前提之证明上的函数。因此把 `g` 施加于键的数据就已得到所需的满足；唯一需要的转换沿 `arityTagPairAtL-adequate` 完成，把框架读取的标记等式与 `g` 收到的形状等式对齐。
 <!--ja-->
 これは量詞の意味論を逆向きに読んだものである。有界全称の充足は集合の要素上で定義された関数であり、含意の充足はその前提の証明上の関数である。したがって `g` をキーのデータに適用すれば求める充足が得られる。必要な変換は `arityTagPairAtL-adequate` に沿うものだけで、フレームの読むタグの等式を `g` に渡された形状の等式と整列させる。
 <!--/-->
@@ -704,7 +704,7 @@ The unary version drops one component: `g` receives `c`, `ar`, `a` and returns s
 <!--en-->
 The same-arity introductions are now built by composing the generic frame introductions with the concrete relations. For the unary frame, the tag equation delivered by `arityTagAtL-adequate` aligns the shape the frame reads with the data a caller supplies. The first composed introduction `binSameClosed-in` instantiates the binary frame at `bothSameAt C`: instead of an arbitrary relation, the caller now owes meta-level membership data, and the lemma repackages that data as satisfaction of the clause.
 <!--zh-->
-同元数的引入通过把通用框架引入与具体关系复合而得到。对一元框架，`arityTagAtL-adequate` 给出的标记等式把框架读取的形状与使用者提供的数据对齐。第一条复合引入 `binSameClosed-in` 把二元框架实例化在 `bothSameAt C` 上：使用者不再对任意关系负责，而是交付元层面的隶属数据，这条引理把该数据重新包装为子句的满足。
+同元数的引入通过把通用框架引入与具体关系复合而得到。对一元框架，`arityTagAtL-adequate` 给出的标记等式把框架读取的形状与使用者提供的数据对齐。第一条复合引入 `binSameClosed-in` 把二元框架实例化在 `bothSameAt C` 上：使用者不再对任意关系负责，而是交付元层面的成员关系数据，这条引理把该数据重新包装为子句的满足。
 <!--ja-->
 同アリティの導入は、一般的なフレームの導入と具体的な関係を合成して作られる。1 項フレームでは、`arityTagAtL-adequate` が与えるタグの等式が、フレームの読む形状と利用者が渡すデータを整列させる。最初の合成導入 `binSameClosed-in` は 2 項フレームを `bothSameAt C` で具体化する。任意の関係の代わりに、利用者が負うのはメタレベルの所属データであり、この補題がそのデータを節の充足として組み直す。
 <!--/-->
@@ -721,7 +721,7 @@ The same-arity introductions are now built by composing the generic frame introd
 <!--en-->
 Here `g` is the closure obligation itself, stated as data: from a key of the given shape it must produce membership of both subformula keys, the pairs of the arity `ar` with `a` and with `b`. The lemma converts that data into satisfaction of the full clause, so a recursion over codes can discharge the binary-connective obligations by supplying exactly this membership data.
 <!--zh-->
-这里 `g` 就是以数据形式陈述的封闭义务：从给定形状的键出发，它须产出两个子公式键的隶属，即元数 `ar` 分别与 `a`、`b` 配成的两对。这条引理把该数据转换为完整子句的满足，因此对码作递归时，只需提供这样的隶属数据即可完成二元联结词的封闭义务。
+这里 `g` 就是以数据形式陈述的封闭义务：从给定形状的键出发，它须产出两个子公式键的成员关系，即元数 `ar` 分别与 `a`、`b` 配成的两对。这条引理把该数据转换为完整子句的满足，因此对码作递归时，只需提供这样的成员关系数据即可完成二元联结词的封闭义务。
 <!--ja-->
 ここで `g` はデータとして述べられた閉性の義務そのものである。与えられた形状のキーから、2 つの部分論理式キー、すなわちアリティ `ar` を `a` および `b` と組んだ 2 つの対の所属を生み出さねばならない。補題がこのデータを節全体の充足へ変換するので、符号上の再帰はこの所属データを供給するだけで 2 項結合子の閉性の義務を果たせる。
 <!--/-->
@@ -737,7 +737,7 @@ Here `g` is the closure obligation itself, stated as data: from a key of the giv
 <!--en-->
 To build satisfaction of the conjunction, the two membership claims that `g` returns must be recast as satisfaction of the two `appAt` conjuncts. The adequacy lemma for `appAt` equates the two forms, and here it is used in the direction opposite to the elimination side, since the goal now reads from data to satisfaction.
 <!--zh-->
-为构造合取的满足，须把 `g` 返回的两条隶属主张改写为两个 `appAt` 合取项的满足。`appAt` 的充分性引理把两种形态等同起来，这里它的使用方向与消去一侧相反，因为目标此时是从数据读向满足。
+为构造合取的满足，须把 `g` 返回的两条成员关系主张改写为两个 `appAt` 合取项的满足。`appAt` 的充分性引理把两种形态等同起来，这里它的使用方向与消去一侧相反，因为目标此时是从数据读向满足。
 <!--ja-->
 連言の充足を作るには、`g` が返す 2 つの所属の主張を、`appAt` の 2 つの連言項の充足として言い換えねばならない。`appAt` の妥当性補題は両者の形を同一視するもので、ここでは除却の側とは逆向きに使われる。帰結が今度はデータから充足へと読まれるからである。
 <!--/-->
@@ -770,7 +770,7 @@ The two components are handled by the same reading, one conjunct at a time. The 
 <!--en-->
 For the unary same-arity clause a single membership claim suffices: `g` returns membership of the one subformula key, and the composition with the generic unary introduction, with `rel` fixed to `oneSameAt C`, turns it into satisfaction of the clause.
 <!--zh-->
-对一元同元数子句，一条隶属主张即可：`g` 给出唯一子公式键的隶属，把它与 `rel` 取为 `oneSameAt C` 的通用一元引入复合，便得到子句的满足。
+对一元同元数子句，一条成员关系主张即可：`g` 给出唯一子公式键的成员关系，把它与 `rel` 取为 `oneSameAt C` 的通用一元引入复合，便得到子句的满足。
 <!--ja-->
 1 項の同アリティの節では、単一の所属の主張で足りる。`g` が唯一の部分論理式キーの所属を返し、`rel` を `oneSameAt C` に固定した一般的な 1 項導入と合成すれば、それが節の充足になる。
 <!--/-->
@@ -786,7 +786,7 @@ For the unary same-arity clause a single membership claim suffices: `g` returns 
 <!--en-->
 The last two introductions raise the arity, starting with `unSuccClosed-in`. Its hypothesis `g` receives the usual unary key data but must conclude membership of the successor key: the pair of `sucV (fst ar)`, the successor of the key's arity, with `a`.
 <!--zh-->
-最后两条引入抬升元数，先看 `unSuccClosed-in`。其假设 `g` 收到通常的一元键数据，但须得出后继键的隶属：键元数的后继 `sucV (fst ar)` 与 `a` 之对。
+最后两条引入抬升元数，先看 `unSuccClosed-in`。其假设 `g` 收到通常的一元键数据，但须得出后继键的成员关系：键元数的后继 `sucV (fst ar)` 与 `a` 之对。
 <!--ja-->
 残る 2 つの導入はアリティを上げる。まず `unSuccClosed-in` である。仮定 `g` はいつもの 1 項キーのデータを受け取るが、後続キーの所属を結論せねばならない。すなわちキーのアリティの後続 `sucV (fst ar)` と `a` の対の所属である。
 <!--/-->
@@ -819,7 +819,7 @@ The relation `oneSuccAt` demands its successor only existentially and merely, so
 <!--en-->
 The second certificate is the pairing claim. `g` already yields membership of the successor key, and the numeral's projection law re-expresses that as membership of `pr (sucʟ ar) (fst a)`, which the adequacy lemma for `appAt` converts into the satisfaction of the pairing conjunct. Injecting the witness with its certificates into propositional truncation needs no propositionhood premise; that requirement belongs to elimination, not introduction.
 <!--zh-->
-第二个证书是配对主张。`g` 已经给出后继键的隶属，数码的投影法则把它改写为 `pr (sucʟ ar) (fst a)` 的隶属，再由 `appAt` 的充分性引理转换为配对合取项的满足。把见证与其证书注入命题截断不需要任何命题性前提；那一要求属于消去，而非引入。
+第二个证书是配对主张。`g` 已经给出后继键的成员关系，数码的投影法则把它改写为 `pr (sucʟ ar) (fst a)` 的成员关系，再由 `appAt` 的充分性引理转换为配对合取项的满足。把见证与其证书注入命题截断不需要任何命题性前提；那一要求属于消去，而非引入。
 <!--ja-->
 第 2 の証明書は対の主張である。`g` は既に後続キーの所属を与えており、数項の射影の法則がそれを `pr (sucʟ ar) (fst a)` の所属として表し、`appAt` の妥当性補題が対の連言項の充足へ変換する。証人と証明書を命題的切り詰めへ注入するのに命題性の前提は不要である。その要件は除却に属し、導入には属しない。
 <!--/-->
@@ -835,7 +835,7 @@ The second certificate is the pairing claim. `g` already yields membership of th
 <!--en-->
 The final introduction `binSuccClosed-in` covers the bounded quantifiers. Its hypothesis `g` receives the binary key's four values and must produce membership of the second component under the successor arity: the pair of `sucV (fst ar)` with `b`, since the first slot carries the bounding term rather than a subformula.
 <!--zh-->
-最后一条引入 `binSuccClosed-in` 覆盖有界量词。其假设 `g` 收到二元键的四个值，须产出第二分量在后继元数下的隶属：`sucV (fst ar)` 与 `b` 之对，因为第一个槽放的是有界词项而非子公式。
+最后一条引入 `binSuccClosed-in` 覆盖有界量词。其假设 `g` 收到二元键的四个值，须产出第二分量在后继元数下的成员关系：`sucV (fst ar)` 与 `b` 之对，因为第一个槽放的是有界词项而非子公式。
 <!--ja-->
 最後の導入 `binSuccClosed-in` は有界量詞を担当する。仮定 `g` は 2 項キーの 4 つの値を受け取り、後続アリティの下での第 2 成分の所属を生み出す。すなわち `sucV (fst ar)` と `b` の対である。第 1 スロットが載せるのは部分論理式ではなく有界の項だからである。
 <!--/-->
@@ -867,7 +867,7 @@ The construction is the same as the unary successor introduction, applied at the
 <!--en-->
 The binary successor case uses the same witness and the same two adequacy facts, now for the formula component of a bounded quantifier. Thus every active constructor clause has both readings: satisfaction yields the required subcode memberships, and actual closure data yields satisfaction. These two directions make `closedAt C` the object-language form of meta-level closure under immediate formula subcodes.
 <!--zh-->
-二元后继情形使用同一个见证和同两条充分性事实，只是这次用于有界量词的公式分量。于是每条有效构造子子句都有两个读法：满足给出所需的子码隶属，而真实的封闭数据给出满足。这两个方向使 `closedAt C` 正好成为元层面直接公式子码封闭的对象语言表达。
+二元后继情形使用同一个见证和同两条充分性事实，只是这次用于有界量词的公式分量。于是每条有效构造子子句都有两个读法：满足给出所需的子码成员关系，而真实的封闭数据给出满足。这两个方向使 `closedAt C` 正好成为元层面直接公式子码封闭的对象语言表达。
 <!--ja-->
 2 項の後続の場合も同じ証人と同じ 2 つの妥当性の事実を使い、今度は有界量化子の論理式成分に適用する。したがって、有効な各構成子の節には両方向の読みがある。充足から必要な部分符号の所属が得られ、実際の閉性データから充足が得られる。この両方向により、`closedAt C` は直下の部分論理式符号に関するメタレベルの閉性を対象言語で表したものになる。
 <!--/-->
@@ -888,7 +888,7 @@ The binary successor case uses the same witness and the same two adequacy facts,
 <!--zh-->
 ## 小结
 
-`closedAt` 要求定义域中的每个复合码都带上其子句将读取的子公式码。消去引理取出这些子码，引入引理则从元语言的隶属事实构造同样的七项义务。
+`closedAt` 要求定义域中的每个复合码都带上其子句将读取的子公式码。消去引理取出这些子码，引入引理则从元语言的成员关系事实构造同样的七项义务。
 <!--ja-->
 ## まとめ
 

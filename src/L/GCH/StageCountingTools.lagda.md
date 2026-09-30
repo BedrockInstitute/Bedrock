@@ -28,7 +28,7 @@ module L.GCH.StageCountingTools {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 open import FOL.Syntax
   using ( Formula; var; con; _≐_; _∈̇_; _∧̇_; _⇒̇_; ∃̇_; ∀̇_; ∀̇∈ )
 import FOL.Absoluteness
@@ -103,7 +103,7 @@ open import Cubical.Data.FinData using ( inj-toℕ )
 <!--en-->
 The internal graphs used below must be described by formulas that `L` itself can interpret. Equality, membership, conjunction, implication, and bounded and unbounded quantifiers provide the language for saying that a relation is a total single-valued injection and for defining its action on finite environments.
 <!--zh-->
-下文使用的内部图必须由 `L` 自身能够解释的公式描述。相等、隶属、合取、蕴涵以及有界和无界量词，共同提供了表达「一个关系是全域单值单射」并定义它在有限环境上作用的语言。
+下文使用的内部图必须由 `L` 自身能够解释的公式描述。相等、成员关系、合取、蕴涵以及有界和无界量词，共同提供了表达「一个关系是全域单值单射」并定义它在有限环境上作用的语言。
 <!--ja-->
 以下で使う内部グラフは、`L` 自身が解釈できる論理式で記述する必要がある。等号、所属、連言、含意、有界量化子と非有界量化子によって、関係が全域的で一価な単射であることと、その有限環境への作用を表す。
 <!--/-->
@@ -111,7 +111,7 @@ The internal graphs used below must be described by formulas that `L` itself can
 <!--en-->
 There are two levels of data throughout the argument. A set in the cumulative hierarchy has a small presentation whose indices name its members, while an element of `L` also carries a proof of constructibility. Moving between these levels lets an internal graph act as an ordinary function on presentation indices.
 <!--zh-->
-整个论证始终涉及两层数据。累积层级中的集合带有小呈现，其索引为成员命名；`L` 的元素还携带可构造性证明。在这两层之间往返，便可让内部图作为普通函数作用于呈现索引。
+整个论证始终涉及两层数据。累积层级中的集合带有小呈现，其索引为元素命名；`L` 的元素还携带可构造性证明。在这两层之间往返，便可让内部图作为普通函数作用于呈现索引。
 <!--ja-->
 議論では一貫して二つの水準のデータを扱う。累積階層の集合には、その要素を名指す小さな提示があり、`L` の要素には構成可能性の証明も添えられている。この二つの水準を行き来することで、内部グラフを提示のインデックス上の通常の関数として働かせられる。
 <!--/-->
@@ -143,7 +143,7 @@ For each natural number `n`, the set of environments over `A` of length `n` has 
 <!--en-->
 The second part orders the members of `Lset ω` first by birth stage and then, when birth stages agree, by the local step order. This distinction matters: a predecessor may have the same birth stage as its successor, although every predecessor still lies in the successor of that common stage.
 <!--zh-->
-第二部分先按诞生层排列 `Lset ω` 的成员；诞生层相同时，再按该层上的步进序排列。这一区分不可忽略：一个前驱可以与其后继具有相同诞生层，但每个前驱仍落在该共同层的后继层中。
+第二部分先按诞生层排列 `Lset ω` 的元素；诞生层相同时，再按该层上的步进序排列。这一区分不可忽略：一个前驱可以与其后继具有相同诞生层，但每个前驱仍落在该共同层的后继层中。
 <!--ja-->
 後半では、`Lset ω` の要素をまず誕生段階で並べ、誕生段階が等しいときにはその段階の局所的な順序で並べる。この区別は欠かせない。前者が後者の前者であっても誕生段階が同じ場合があるが、それでも各前者はその共通段階の後続段階に属する。
 <!--/-->
@@ -151,7 +151,7 @@ The second part orders the members of `Lset ω` first by birth stage and then, w
 <!--en-->
 Collapsing this well order assigns an ordinal to each member of `Lset ω`. The task is then to prove that every collapse value belongs to `ω`. The proof will bound one predecessor segment at a time by a finite constructible stage and rule out an injection of `ω` into that stage.
 <!--zh-->
-塌缩这一良序，会为 `Lset ω` 的每个成员赋予一个序数。接下来的任务是证明每个塌缩值都属于 `ω`。证明逐个处理前驱段，把它界定在某个有限可构造层内，并排除从 `ω` 到该层的单射。
+塌缩这一良序，会为 `Lset ω` 的每个元素赋予一个序数。接下来的任务是证明每个塌缩值都属于 `ω`。证明逐个处理前驱段，把它界定在某个有限可构造层内，并排除从 `ω` 到该层的单射。
 <!--ja-->
 この整列順序を崩壊させると、`Lset ω` の各要素に順序数が割り当てられる。次の課題は、すべての崩壊値が `ω` に属すことを示すことである。証明では前者切片を一つずつ有限な構成可能段階で抑え、`ω` からその段階への単射を排除する。
 <!--/-->
@@ -171,7 +171,7 @@ open FiniteBase using ( fromFin; fromFin-inj )
 <!--en-->
 A finite stage comes with a finite tally that lists all its members. Repetitions may occur, so the tally is a surjective naming device rather than a bijection. This is enough: excluded middle permits a bounded search for one name of each given member.
 <!--zh-->
-每个有限层都带有列出其全部成员的有限名册。名册中可以出现重复，因此它只是满射式的命名手段，并非双射。这已经足够：排中律允许通过有界搜索，为每个给定成员找到一个名字。
+每个有限层都带有列出其全部元素的有限名册。名册中可以出现重复，因此它只是满射式的命名手段，并非双射。这已经足够：排中律允许通过有界搜索，为每个给定元素找到一个名字。
 <!--ja-->
 有限段階には、その全要素を列挙する有限な名簿がある。重複していてもよいので、この名簿は全単射ではなく、全射的に名前を与えるものである。それで十分である。排中律を使った有界探索により、与えられた各要素の名前を一つ見つけられる。
 <!--/-->
@@ -179,7 +179,7 @@ A finite stage comes with a finite tally that lists all its members. Repetitions
 <!--en-->
 The chosen tally index places each member of a finite stage in a finite ordinal presentation. Composing a hypothetical injection from `ω` with this naming map, and then duplicating the result on the diagonal, contradicts the finite square exclusion theorem.
 <!--zh-->
-所找出的名册索引把有限层的每个成员送入一个有限序数呈现。若假设存在从 `ω` 出发的单射，把它与这一命名映射复合，再沿对角线复制所得值，就会与有限平方排除定理矛盾。
+所找出的名册索引把有限层的每个元素送入一个有限序数呈现。若假设存在从 `ω` 出发的单射，把它与这一命名映射复合，再沿对角线复制所得值，就会与有限平方排除定理矛盾。
 <!--ja-->
 見つけた名簿のインデックスによって、有限段階の各要素を有限順序数の提示へ送れる。`ω` からの単射があると仮定してこの命名写像と合成し、得られた値を対角線上で二重にすると、有限平方の排除定理に反する。
 <!--/-->
@@ -218,7 +218,7 @@ open InfinitySet {ℓ} using ( #_; ω; sucV )
 <!--en-->
 Existence in membership and graph readings is often retained only under propositional truncation `∥_∥₁`. Such a witness may be eliminated when the target is a proposition, or when uniqueness first makes the target type a proposition; the operation does not select arbitrary representatives.
 <!--zh-->
-隶属关系与图的读法中的存在性，往往只保留在命题截断 `∥_∥₁` 之下。只有当目标是命题，或先由唯一性使目标类型成为命题时，才能消去这样的见证；这一操作不会任意选取代表。
+成员关系与图的读法中的存在性，往往只保留在命题截断 `∥_∥₁` 之下。只有当目标是命题，或先由唯一性使目标类型成为命题时，才能消去这样的见证；这一操作不会任意选取代表。
 <!--ja-->
 所属やグラフの読みで現れる存在は、しばしば命題的切り詰め `∥_∥₁` の下にだけ保たれる。この証人を消去できるのは、行き先が命題である場合、または一意性によって行き先の型をまず命題にした場合である。この操作は任意の代表を選ぶものではない。
 <!--/-->
@@ -236,7 +236,7 @@ The same distinction applies to the final count. `InjL A B` retains only the pro
 <!--/-->
 
 ```agda
-open hPropStructure 𝒮ᵥ using ( _∈ˢ_ )
+open hPropView 𝒮ᵥ using ( _∈ˢ_ )
 ```
 
 <!--en-->
@@ -248,26 +248,26 @@ By contrast, the sequence construction begins with a particular graph `E` and th
 <!--/-->
 
 ```agda
-module SV = hPropStructure 𝒮ᵥ using ()
+module SV = hPropView 𝒮ᵥ using ()
 ```
 
 <!--en-->
 Every entry read from a member of a constructible set is itself constructible, by transitivity of `L`. This elementary fact is what permits finite environments and the ordered pairs in their graphs to remain objects of the internal model.
 <!--zh-->
-从可构造集合的成员中读出的每个条目，本身也因 `L` 的传递性而可构造。正是这一基本事实，使有限环境及其图中的有序对仍然是内部模型的对象。
+从可构造集合的元素中读出的每个条目，本身也因 `L` 的传递性而可构造。正是这一基本事实，使有限环境及其图中的有序对仍然是内部模型的对象。
 <!--ja-->
 構成可能集合の要素から読み取った各項目は、`L` の推移性によってそれ自身も構成可能である。この基本的な事実により、有限環境とそのグラフに現れる順序対を内部モデルの対象として扱える。
 <!--/-->
 
 ```agda
-module SL = hPropStructure 𝒮ʟ using ( S )
+module SL = hPropView 𝒮ʟ using ( S )
 open SL using ( S )
 ```
 
 <!--en-->
 Satisfaction notation connects the formula-level description of a graph with these ambient membership facts. Adequacy lemmas will be used in both directions, so the proof can build an internal formula from concrete graph data and later read that formula back.
 <!--zh-->
-满足记号把公式层的图描述与这些外围隶属事实连接起来。充分性引理将在两个方向上使用，因此证明既能由具体图数据填充内部公式，也能随后从该公式读回这些数据。
+满足记号把公式层的图描述与这些外围成员关系事实连接起来。充分性引理将在两个方向上使用，因此证明既能由具体图数据填充内部公式，也能随后从该公式读回这些数据。
 <!--ja-->
 充足の記法は、論理式の水準でのグラフの記述を、これらの周囲の所属の事実と結び付ける。妥当性補題を両方向に用いることで、具体的なグラフのデータから内部論理式を満たし、後でその論理式からデータを読み戻せる。
 <!--/-->
@@ -449,7 +449,7 @@ module SeqMap (A B E : S)
 <!--en-->
 The final range clause says only that every value occurring in `E` belongs to `B`. It does not require every member of `B` to occur, so the data describe an injection rather than a surjection or a bijection.
 <!--zh-->
-最后的值域条款只要求 `E` 中出现的每个值都属于 `B`。它不要求 `B` 的每个成员都被命中，因此这些数据描述的是单射，而非满射或双射。
+最后的值域条款只要求 `E` 中出现的每个值都属于 `B`。它不要求 `B` 的每个元素都被命中，因此这些数据描述的是单射，而非满射或双射。
 <!--ja-->
 最後の値域条件が述べるのは、`E` に現れるすべての値が `B` に属すことだけである。`B` の各要素が像になることは要求しないので、このデータが表すのは単射であり、全射や全単射ではない。
 <!--/-->
@@ -550,7 +550,7 @@ The lifted assignment applies the extracted function entry by entry: the image o
 <!--en-->
 Every entry of an `A`-environment is constructible, by transporting the membership in `A` along the transitivity of constructibility.
 <!--zh-->
-`A` 环境的每个条目都可构造：把对 `A` 的隶属沿可构造性的传递性搬运。
+`A` 环境的每个条目都可构造：把对 `A` 的成员关系沿可构造性的传递性搬运。
 <!--ja-->
 `A` の環境のどの項目も構成可能である。`A` への所属を、構成可能性の推移性に沿って運ぶからである。
 <!--/-->
@@ -576,7 +576,7 @@ Likewise for the entries of `B`-environments.
 <!--en-->
 For an index object `i`, `Ent y s i` says merely that there are model elements `u` and `v` such that `s(i)=u`, `y(i)=v`, and the graph `E` sends `u` to `v`. The witnesses and all three graph-membership facts are kept under propositional truncation.
 <!--zh-->
-对索引对象 `i`，`Ent y s i` 仅仅断言存在模型元素 `u` 与 `v`，使得 `s(i)=u`、`y(i)=v`，且图 `E` 把 `u` 送到 `v`。这些见证以及三项图隶属事实都保留在命题截断之下。
+对索引对象 `i`，`Ent y s i` 仅仅断言存在模型元素 `u` 与 `v`，使得 `s(i)=u`、`y(i)=v`，且图 `E` 把 `u` 送到 `v`。这些见证以及三项图成员关系事实都保留在命题截断之下。
 <!--ja-->
 インデックス対象 `i` に対し、`Ent y s i` は、`s(i)=u`、`y(i)=v` であり、グラフ `E` が `u` を `v` へ送るような模型の要素 `u` と `v` がもっぱら存在することを述べる。これらの証人と三つのグラフ所属の事実は、すべて命題的切り詰めの下に保たれる。
 <!--/-->
@@ -655,7 +655,7 @@ To read an entry from the formula, the proof eliminates the two nested existenti
 <!--en-->
 The adequacy laws for the two environment applications and for application of `E` convert formula satisfaction into the three ambient memberships. Packaging the recovered `u`, `v`, and these memberships produces the required truncated entry.
 <!--zh-->
-两个环境应用以及图 `E` 的应用各有充分性定律，它们把公式的满足转换为三项外围隶属。把读回的 `u`、`v` 与这些隶属打包，便得到所需的截断条目。
+两个环境应用以及图 `E` 的应用各有充分性定律，它们把公式的满足转换为三项外围成员关系。把读回的 `u`、`v` 与这些成员关系打包，便得到所需的截断条目。
 <!--ja-->
 二つの環境の適用とグラフ `E` の適用についての妥当性法則により、論理式の充足を三つの周囲の所属へ変換する。読み戻した `u`、`v` とこれらの所属を組にすると、必要な切り詰められた項目が得られる。
 <!--/-->
@@ -670,7 +670,7 @@ The adequacy laws for the two environment applications and for application of `E
 <!--en-->
 The reverse direction maps a truncated entry into satisfaction of the formula. It uses the same three adequacy equalities in reverse, turning the ambient graph memberships into the two environment-application clauses and the application clause for `E`.
 <!--zh-->
-反方向把一个截断条目映为公式的满足。证明反向使用同三条充分性等式，把外围图隶属转换为两项环境应用条款与一项 `E` 的应用条款。
+反方向把一个截断条目映为公式的满足。证明反向使用同三条充分性等式，把外围图成员关系转换为两项环境应用条款与一项 `E` 的应用条款。
 <!--ja-->
 逆方向では、切り詰められた項目を論理式の充足へ写す。同じ三つの妥当性の等しさを逆向きに用い、周囲のグラフ所属を二つの環境適用の条項と `E` の適用の条項へ変換する。
 <!--/-->
@@ -686,7 +686,7 @@ The reverse direction maps a truncated entry into satisfaction of the formula. I
 <!--en-->
 After both witnesses are repackaged under the nested existential quantifiers, the graph-membership clause for `E` completes satisfaction of the entry formula. Hence `entOut` and `entIn` establish the exact correspondence needed for each index.
 <!--zh-->
-把两个见证重新装入嵌套存在量词后，`E` 的图隶属条款补全条目公式的满足。因此，`entOut` 与 `entIn` 给出了每个索引处所需的精确对应。
+把两个见证重新装入嵌套存在量词后，`E` 的图成员关系条款补全条目公式的满足。因此，`entOut` 与 `entIn` 给出了每个索引处所需的精确对应。
 <!--ja-->
 二つの証人を入れ子の存在量化子の下へ戻すと、`E` のグラフ所属の条項によって項目の論理式の充足が完成する。こうして `entOut` と `entIn` は、各インデックスで必要となる正確な対応を与える。
 <!--/-->
@@ -800,7 +800,7 @@ The intended output is the environment graph of the coordinatewise image `fg g`.
 <!--en-->
 The next lemma exposes the elementary membership fact needed to build this witness: each coordinate pair occurs in the graph of an environment. It remains local because the public result of the subsection is the existence and uniqueness of the whole image environment.
 <!--zh-->
-下一个引理给出构造该见证所需的基本隶属事实：每个坐标对都属于环境图。它保持为局部引理，因为本小节的公开结论是整个像环境的存在性与唯一性。
+下一个引理给出构造该见证所需的基本成员关系事实：每个坐标对都属于环境图。它保持为局部引理，因为本小节的公开结论是整个像环境的存在性与唯一性。
 <!--ja-->
 次の補題は、この証人を構成するために必要な基本的な所属の事実を与える。各座標の対は環境グラフに属する。この補題が局所的なのは、この小節で公開する結論が像の環境全体の存在と一意性だからである。
 <!--/-->
@@ -856,7 +856,7 @@ The fact `envOver B (fg g)` is initially stated in the shorter environment conta
 <!--en-->
 The step clause at each position is proved by eliminating the numeral membership into a bounded natural number. The eliminated data names a specific index whose value is available in both sequences.
 <!--zh-->
-每个位置处的步进子句由消去数码隶属为有界自然数证明。消去的数据名指一个具体索引，其取值在两条序列中都可用。
+每个位置处的步进子句由消去数码成员关系为有界自然数证明。消去的数据名指一个具体索引，其取值在两条序列中都可用。
 <!--ja-->
 それぞれの位置でのステップの条項は、数項の所属を有界の自然数へ消去することで証明される。消去されたデータが、両方の列で値の得られる具体的な添字を名指す。
 <!--/-->
@@ -872,7 +872,7 @@ The step clause at each position is proved by eliminating the numeral membership
 <!--en-->
 For the recovered finite index `j`, the required entry consists of the source value `vA g j`, the target value `vB (fg g) j`, and three graph memberships: the source environment stores the first value at `j`, the target environment stores the second there, and `E` relates the first value to the second. Constructibility proofs turn both values into elements of the carrier `S`.
 <!--zh-->
-对恢复出的有限索引 `j`，所需条目由源值 `vA g j`、目标值 `vB (fg g) j` 与三条图隶属组成：源环境在 `j` 处存放前者，目标环境在该处存放后者，而 `E` 把前者联系到后者。可构造性证明把这两个值提升为载体 `S` 的元素。
+对恢复出的有限索引 `j`，所需条目由源值 `vA g j`、目标值 `vB (fg g) j` 与三条图成员关系组成：源环境在 `j` 处存放前者，目标环境在该处存放后者，而 `E` 把前者联系到后者。可构造性证明把这两个值提升为载体 `S` 的元素。
 <!--ja-->
 復元された有限添字 `j` に対し、必要な項目は源の値 `vA g j`、目標の値 `vB (fg g) j`、および三つのグラフ所属からなる。源の環境は `j` に前者を、目標の環境は同じ位置に後者を格納し、`E` は前者を後者に関係づける。構成可能性の証明により、二つの値はいずれも台 `S` の要素になる。
 <!--/-->
@@ -888,7 +888,7 @@ For the recovered finite index `j`, the required entry consists of the source va
 <!--en-->
 The environment-entry lemma supplies the first two memberships, transported along the equation that identifies the given position with the numeral for `j` and, for the source, along the presentation equation `e`. The graph theorem `f-graph` supplies the third. The finite index `j` is defined immediately below from the bounded natural number obtained in the preceding step.
 <!--zh-->
-环境条目引理给出前两条隶属，并沿「给定位置等于 `j` 的数码」这一等式运输；源环境的一项还要沿呈现等式 `e` 运输。图定理 `f-graph` 给出第三条隶属。有限索引 `j` 随即由上一步得到的有界自然数定义。
+环境条目引理给出前两条成员关系，并沿「给定位置等于 `j` 的数码」这一等式运输；源环境的一项还要沿呈现等式 `e` 运输。图定理 `f-graph` 给出第三条成员关系。有限索引 `j` 随即由上一步得到的有界自然数定义。
 <!--ja-->
 環境の項目補題が最初の二つの所属を与え、それらを、与えられた位置と `j` の数項を同一視する等式に沿って移送する。源の環境については、さらに提示の等式 `e` に沿って移送する。三つ目の所属はグラフ定理 `f-graph` から得られる。有限添字 `j` は、直前に得た有界自然数からすぐ下で定義される。
 <!--/-->
@@ -904,7 +904,7 @@ The environment-entry lemma supplies the first two memberships, transported alon
 <!--en-->
 The internal index `j` is constructed from the bounded natural number by the finite decoding, and the numeral equation composes the membership transport with the recovery of the index value.
 <!--zh-->
-内部索引 `j` 由有界自然数的有限解码构造，数码等式由隶属运输与索引值恢复复合而成。
+内部索引 `j` 由有界自然数的有限解码构造，数码等式由成员关系运输与索引值恢复复合而成。
 <!--ja-->
 内部の添字 `j` は、有界の自然数の有限の復号から構成され、数項の等式は、所属の輸送と添字の値の復元を合成したものである。
 <!--/-->
@@ -988,7 +988,7 @@ Recovery also proves that the underlying set of `y` is the environment graph gen
 <!--en-->
 At each index `j`, the step clause yields, under propositional truncation, a source value, a candidate target value, and the three graph memberships relating them. The target equality is a proposition, so `rec₁` may pass these data to `read`. That lemma proves equality of the represented values; injectivity of the presentation of `B` then gives `gR j ≡ fg g j`.
 <!--zh-->
-在每个索引 `j` 处，步骤子句在命题截断下给出一个源值、一个候选目标值以及联系二者的三条图隶属。目标等式是命题，因此 `rec₁` 可以把这些数据交给 `read`。该引理证明两个被呈现的值相等，再由 `B` 的呈现单射性得到 `gR j ≡ fg g j`。
+在每个索引 `j` 处，步骤子句在命题截断下给出一个源值、一个候选目标值以及联系二者的三条图成员关系。目标等式是命题，因此 `rec₁` 可以把这些数据交给 `read`。该引理证明两个被呈现的值相等，再由 `B` 的呈现单射性得到 `gR j ≡ fg g j`。
 <!--ja-->
 各添字 `j` で、ステップの節は命題的切り詰めのもとに、源の値、候補となる目標値、および両者を結ぶ三つのグラフ所属を与える。目標の等式は命題なので、`rec₁` はこれらのデータを `read` に渡せる。この補題が表示された二つの値の等しさを示し、`B` の表示の単射性から `gR j ≡ fg g j` が従う。
 <!--/-->
@@ -1004,7 +1004,7 @@ At each index `j`, the step clause yields, under propositional truncation, a sou
 <!--en-->
 The reading lemma states what the step clause provides: two elements and three memberships, identifying the argument in the source sequence, the value in the unknown environment, and the relation fact connecting them through the coded pairing.
 <!--zh-->
-读取引理陈述步进子句所供内容：两个元素与三条隶属，认同源序列中的实参、未知环境中的取值，以及经编码配对连接二者的关系事实。
+读取引理陈述步进子句所供内容：两个元素与三条成员关系，认同源序列中的实参、未知环境中的取值，以及经编码配对连接二者的关系事实。
 <!--ja-->
 読み出しの補題は、ステップの条項が供給するものを述べる。二つの要素と三つの所属であり、源の列の中の引数、未知の環境の中の値、そして符号化された対でそれらを結ぶ関係の事実を同定する。
 <!--/-->
@@ -1090,7 +1090,7 @@ Function extensionality turns `pt` into equality of the two index functions. App
 <!--en-->
 Membership in the sequence set is stated as a type so that the argument can carry it alongside each element.
 <!--zh-->
-序列集的隶属被陈述为类型，使论证能把它与每个元素并肩携带。
+序列集的成员关系被陈述为类型，使论证能把它与每个元素并肩携带。
 <!--ja-->
 列の集合への所属は型として記録され、議論が、写す各要素とともにそれを運べるようにする。
 <!--/-->
@@ -1116,7 +1116,7 @@ A representation is the truncated record of a length, an index function and the 
 <!--en-->
 Starting from membership in `seqL A`, `seqL-out` gives a propositionally truncated length `n` together with membership in the corresponding fixed-length environment set. For that `n`, `envSet-out` gives a truncated index function and presentation equation. Mapping and eliminating only into the truncated target combines the two stages without choosing a global representation.
 <!--zh-->
-从 `seqL A` 中的隶属出发，`seqL-out` 在命题截断下给出长度 `n` 及相应定长环境集中的隶属。对这个 `n`，`envSet-out` 再给出截断的索引函数与呈现等式。映射这些数据，并且只向截断目标作消去，就能合并两个阶段而不选择全局表示。
+从 `seqL A` 中的成员关系出发，`seqL-out` 在命题截断下给出长度 `n` 及相应定长环境集中的成员关系。对这个 `n`，`envSet-out` 再给出截断的索引函数与呈现等式。映射这些数据，并且只向截断目标作消去，就能合并两个阶段而不选择全局表示。
 <!--ja-->
 `seqL A` への所属から、`seqL-out` は命題的切り詰めのもとで長さ `n` と、対応する固定長環境集合への所属を与える。その `n` に対して `envSet-out` は、切り詰められた添字関数と提示の等式を与える。これらを写し、切り詰められた目標にだけ除去することで、大域的な表示を選ばずに二段階を合成できる。
 <!--/-->
@@ -1131,7 +1131,7 @@ Starting from membership in `seqL A`, `seqL-out` gives a propositionally truncat
 <!--en-->
 The recursion package uses `seqL A` as its domain and `fo` as its graph. For every member `s`, a truncated representation of `s` determines the canonical image environment; `AtSeq.wit` proves that this image satisfies the graph, while `AtSeq.only` proves that every other satisfying value has the same underlying set. Thus the graph is total and single-valued in the sense required by `mereFunct`.
 <!--zh-->
-递归包以 `seqL A` 为定义域，以 `fo` 为图。对每个成员 `s`，它的一个截断表示确定典范像环境；`AtSeq.wit` 证明该像满足图，而 `AtSeq.only` 证明任何其他满足图的值都具有相同的底层集合。因此，这个图具有 `mereFunct` 所要求的全定义性与单值性。
+递归包以 `seqL A` 为定义域，以 `fo` 为图。对每个元素 `s`，它的一个截断表示确定典范像环境；`AtSeq.wit` 证明该像满足图，而 `AtSeq.only` 证明任何其他满足图的值都具有相同的底层集合。因此，这个图具有 `mereFunct` 所要求的全定义性与单值性。
 <!--ja-->
 再帰の構造は `seqL A` を定義域、`fo` をグラフとする。各要素 `s` の切り詰められた表示から標準的な像の環境が定まり、`AtSeq.wit` はその像がグラフを満たすことを、`AtSeq.only` はほかのどの充足値も同じ基礎の集合をもつことを示す。したがって、このグラフは `mereFunct` が要求する意味で全域的かつ一価である。
 <!--/-->
@@ -1202,7 +1202,7 @@ Whenever `s` is presented by a length `n` and an index function `g`, the compute
 <!--en-->
 Membership in the target sequence set is proved by transporting along the code equation and applying the inward reading of the target sequence set.
 <!--zh-->
-目标序列集的隶属由沿码等式运输并应用目标序列集的向内读式证明。
+目标序列集的成员关系由沿码等式运输并应用目标序列集的向内读式证明。
 <!--ja-->
 目標の列の集合への所属は、符号の等式に沿って運び、目標の列の集合の内向きの読み出しを適用することで証明される。
 <!--/-->
@@ -1281,7 +1281,7 @@ With a common length, `env-pt` reads equality of the target graphs as equality o
 <!--en-->
 For arbitrary members `s` and `s'`, their representations are available only under propositional truncation. The desired equality `fst s ≡ fst s'` is a proposition because cumulative-hierarchy values form a set, so `rec2` may expose one representation of each input locally and pass them to the canonical comparison.
 <!--zh-->
-对任意成员 `s` 与 `s'`，它们的表示只在命题截断下可用。累积层级的值形成集合，因此目标等式 `fst s ≡ fst s'` 是命题；于是 `rec2` 可以在局部展开两个输入各自的一个表示，并把它们交给典范呈现的比较。
+对任意元素 `s` 与 `s'`，它们的表示只在命题截断下可用。累积层级的值形成集合，因此目标等式 `fst s ≡ fst s'` 是命题；于是 `rec2` 可以在局部展开两个输入各自的一个表示，并把它们交给典范呈现的比较。
 <!--ja-->
 任意の要素 `s` と `s'` について、その表示は命題的切り詰めのもとでしか得られない。累積階層の値は集合をなすため、目標の等式 `fst s ≡ fst s'` は命題である。そこで `rec2` により、各入力の表示を局所的に一つずつ取り出し、標準表示どうしの比較に渡せる。
 <!--/-->
@@ -1398,7 +1398,7 @@ pin-out c φ γ = rec₁ (snd ((c ∷ γ) ⊨ φ))
 <!--en-->
 An `InjCode F a b` consists of four proposition-valued conditions: single-valuedness of `F`, the assertion that its domain is `a`, injectivity of its graph, and containment of its values in `b`. Formula satisfaction is proposition-valued, and the last condition is a dependent function into membership propositions, so their nested product is again a proposition.
 <!--zh-->
-`InjCode F a b` 由四个命题值条件组成：`F` 的单值性、其定义域为 `a`、图的单射性，以及其取值包含于 `b`。公式满足取命题值，最后一个条件则是取值于隶属命题的依值函数，因此它们的嵌套积仍是命题。
+`InjCode F a b` 由四个命题值条件组成：`F` 的单值性、其定义域为 `a`、图的单射性，以及其取值包含于 `b`。公式满足取命题值，最后一个条件则是取值于成员关系命题的依值函数，因此它们的嵌套积仍是命题。
 <!--ja-->
 `InjCode F a b` は四つの命題値の条件からなる。`F` の一価性、その定義域が `a` であること、グラフの単射性、そして値が `b` に含まれることである。論理式の充足は命題値であり、最後の条件は所属命題を値とする依存関数なので、それらの入れ子の積も命題になる。
 <!--/-->
@@ -1414,7 +1414,7 @@ isPropInjCode F a b =
 <!--en-->
 The remaining range condition quantifies over an argument, a value, and a proof that the graph relates them. Its conclusion is membership of the value in `b`, which is a proposition; repeated dependent products therefore preserve propositionality and complete the proof for `InjCode`.
 <!--zh-->
-余下的值域条件依次量化实参、取值以及图联系二者的证明，其结论是该取值属于 `b`。隶属是命题，故反复形成依值函数仍保持命题性，从而完成 `InjCode` 为命题的证明。
+余下的值域条件依次量化实参、取值以及图联系二者的证明，其结论是该取值属于 `b`。成员关系是命题，故反复形成依值函数仍保持命题性，从而完成 `InjCode` 为命题的证明。
 <!--ja-->
 残る値域条件は、引数、値、およびグラフが両者を関係づける証明を順に量化する。その結論は値が `b` に属するという命題である。したがって依存関数を繰り返しても命題性が保たれ、`InjCode` が命題であることの証明が完成する。
 <!--/-->
@@ -1479,7 +1479,7 @@ module InjFo {n : ℕ} (b : S) (f B : Fin n) (γ : S ^ n) where
 <!--en-->
 The reading lemma turns satisfaction of the injection formula into the four clauses of an injection code. For the domain clause, a graph witness for an input is eliminated from propositional truncation into the proposition that the input belongs to `A`; conversely, membership in `A` produces the required domain witness.
 <!--zh-->
-读取引理把单射公式的满足转换为单射码的四条性质。对定义域条款，输入的图见证从命题截断消去到「该输入属于 `A`」这一命题；反过来，`A` 中的隶属给出所需的定义域见证。
+读取引理把单射公式的满足转换为单射码的四条性质。对定义域条款，输入的图见证从命题截断消去到「该输入属于 `A`」这一命题；反过来，`A` 中的成员关系给出所需的定义域见证。
 <!--ja-->
 読み取りの補題は、単射論理式の充足を単射符号の四つの条件へ変換する。定義域の条件では、入力に対するグラフの証人を命題的切り詰めから「その入力が `A` に属する」という命題へ除去する。逆に、`A` への所属から必要な定義域の証人が得られる。
 <!--/-->
@@ -1495,7 +1495,7 @@ The reading lemma turns satisfaction of the injection formula into the four clau
 <!--en-->
 Single-valuedness and injectivity are transferred by reading their semantic clauses at `γ` and rebuilding the corresponding clauses for the two-entry environment `(F,A)`. The range condition uses adequacy of application to turn graph membership in `F` into the application atom expected by the formula, after which its last clause yields membership of the value in the fixed target `b`.
 <!--zh-->
-单值性与单射性通过如下方式搬运：先在 `γ` 处读出各自的语义条款，再为二元环境 `(F,A)` 重建相应条款。值域条件利用应用的充分性，把 `F` 中的图隶属转换为公式所需的应用原子，随后公式的末条款给出该值属于固定目标 `b`。
+单值性与单射性通过如下方式搬运：先在 `γ` 处读出各自的语义条款，再为二元环境 `(F,A)` 重建相应条款。值域条件利用应用的充分性，把 `F` 中的图成员关系转换为公式所需的应用原子，随后公式的末条款给出该值属于固定目标 `b`。
 <!--ja-->
 一価性と単射性については、それぞれの意味論的な条件を `γ` で読み取り、二項環境 `(F,A)` に対する対応する条件を組み立て直す。値域の条件では、適用の妥当性によって `F` のグラフ所属を論理式が要求する適用原子へ変換し、最後の条項から値が固定された目標 `b` に属することを得る。
 <!--/-->
@@ -1526,7 +1526,7 @@ The filling lemma is the converse construction: from the four data of a coded in
 <!--en-->
 For totality, a truncated graph witness is eliminated only into the proposition that the input lies in `A`, while membership in `A` supplies a witness in the other direction. The remaining clauses rebuild single-valuedness and injectivity at `γ`, and application adequacy converts the range hypothesis into the final formula clause. Together, `read` and `fill` give both directions between formula satisfaction and the four injection-code conditions.
 <!--zh-->
-对于全域性，截断的图见证只被消去到「输入属于 `A`」这一命题，而 `A` 中的隶属则在反方向提供见证。其余条款在 `γ` 处重建单值性与单射性，并由应用的充分性把值域假设转换为公式的末条款。因此，`read` 与 `fill` 给出公式满足和单射码四项条件之间的两个方向。
+对于全域性，截断的图见证只被消去到「输入属于 `A`」这一命题，而 `A` 中的成员关系则在反方向提供见证。其余条款在 `γ` 处重建单值性与单射性，并由应用的充分性把值域假设转换为公式的末条款。因此，`read` 与 `fill` 给出公式满足和单射码四项条件之间的两个方向。
 <!--ja-->
 全域性については、切り詰められたグラフの証人を「入力が `A` に属する」という命題にだけ除去し、逆向きには `A` への所属から証人を与える。残りの条項は `γ` で一価性と単射性を組み立て直し、適用の妥当性によって値域の仮定を論理式の最後の条項へ変換する。したがって `read` と `fill` は、論理式の充足と単射符号の四条件の間の両方向を与える。
 <!--/-->
@@ -1600,7 +1600,7 @@ move a a' b b' qa qb h =
 <!--en-->
 The exclusion argument works with finite stages of the form `Lset (# n)`, and begins by taking the tally of such a finite stage: an indexed enumeration of its members.
 <!--zh-->
-排除论证处理形如 `Lset (# n)` 的有限层，并从取该有限层的名册开始：即其成员的一个带索引枚举。
+排除论证处理形如 `Lset (# n)` 的有限层，并从取该有限层的名册开始：即其元素的一个带索引枚举。
 <!--ja-->
 排除の議論は、`Lset (# n)` の形の有限段階を扱い、そのような有限段階の名簿を取ることから始まる。すなわちその要素の、索引づけられた列挙である。
 <!--/-->
@@ -1623,7 +1623,7 @@ private module FinNo (n : ℕ) where
 <!--en-->
 The tally supplies its size, its member at each index, and the covering fact that every member appears at some index.
 <!--zh-->
-名册供给其大小、每个索引处的成员，以及「每个成员都出现在某个索引处」的覆盖事实。
+名册供给其大小、每个索引处的元素，以及「每个元素都出现在某个索引处」的覆盖事实。
 <!--ja-->
 名簿は、その大きさ、各索引での要素、そしてすべての要素がある索引に現れるという覆いの事実を供給する。
 <!--/-->
@@ -1635,7 +1635,7 @@ The tally supplies its size, its member at each index, and the covering fact tha
 <!--en-->
 The search lemma names a member: for each member `x` of the finite stage it runs a decidable search through the finitely many indices, comparing each entry with `x` by excluded middle, and returns an index whose entry is `x`. The search returns some index; it does not claim that index to be unique, and it is a finitary decision on a finite family rather than an appeal to any choice principle.
 <!--zh-->
-搜索引理为成员命名：对有限层的每个成员 `x`，它在有限多个索引上运行可判定搜索，用排中律逐项比较条目与 `x`，返回条目等于 `x` 的某索引。搜索返回的是某个索引；并不主张该索引唯一，而且这是对有限族的有限判定，不是诉诸任何选择原理。
+搜索引理为元素命名：对有限层的每个元素 `x`，它在有限多个索引上运行可判定搜索，用排中律逐项比较条目与 `x`，返回条目等于 `x` 的某索引。搜索返回的是某个索引；并不主张该索引唯一，而且这是对有限族的有限判定，不是诉诸任何选择原理。
 <!--ja-->
 探索の補題は要素に名前を与える。有限段階の各要素 `x` に対して、有限の索引の上で判定可能な探索を走らせ、排中律で各項目を `x` と比較し、その項目が `x` に等しい索引を返す。探索が返すのはある索引であって、それが一意だとは主張しない。これは有限の族の上の有限の判定であり、選択の原理への訴えではない。
 <!--/-->
@@ -1727,7 +1727,7 @@ private
 <!--en-->
 The general form follows by transporting the finite case along the membership of `g` in `ω`: a member of `ω` is, merely, a numeral, and the transport moves the whole exclusion statement to the stage of that numeral. The elimination is legitimate because the target is a contradiction.
 <!--zh-->
-一般形式沿 `g` 在 `ω` 中的隶属搬运有限情形而得：`ω` 的成员仅仅是某个数码，该搬运把整条排除陈述移至该数码的层。由于目标是矛盾命题，消去合法。
+一般形式沿 `g` 在 `ω` 中的成员关系搬运有限情形而得：`ω` 的元素仅仅是某个数码，该搬运把整条排除陈述移至该数码的层。由于目标是矛盾命题，消去合法。
 <!--ja-->
 一般の形は、`g` の `ω` への所属に沿って有限の場合を運ぶことで得られる。`ω` の要素は、単に、ある数項であり、この輸送が排除の主張全体をその数項の段階へ移す。目標が矛盾の命題であるため、消去は正当である。
 <!--/-->
@@ -1780,7 +1780,7 @@ specω = relL-spec ω hω ω-ord
 <!--en-->
 The endpoint condition recovers stage membership for both endpoints of every related pair. Unfolding the coded pair yields two members of `Lset ω`, and the component equations identify their underlying sets with the endpoints `y` and `x`.
 <!--zh-->
-端点条件从每个相关对中恢复两个端点的层隶属。展开编码对会得到 `Lset ω` 的两个成员，而分量等式把它们的底层集合分别认同于端点 `y` 与 `x`。
+端点条件从每个相关对中恢复两个端点的层成员关系。展开编码对会得到 `Lset ω` 的两个元素，而分量等式把它们的底层集合分别认同于端点 `y` 与 `x`。
 <!--ja-->
 端点条件は、関係する各対の両端点について段階への所属を復元する。符号化された対を展開すると `Lset ω` の二つの要素が得られ、成分の等式がそれらの底の集合を端点 `y` と `x` にそれぞれ同一視する。
 <!--/-->
@@ -1796,7 +1796,7 @@ Rsub y x h = rec₁ isP
 <!--en-->
 Both memberships are transported along the two component equations supplied by the injectivity of the ordered-pair coding.
 <!--zh-->
-两个隶属沿有序对编码的单射性所供给的两条分量等式搬运。
+两个成员关系沿有序对编码的单射性所供给的两条分量等式搬运。
 <!--ja-->
 二つの所属は、順序対の符号化の単射性が供給する、二つの成分の等式に沿って運ばれる。
 <!--/-->
@@ -1812,7 +1812,7 @@ Both memberships are transported along the two component equations supplied by t
 <!--en-->
 The conjunction of the two memberships is a proposition, and the relatedness of the coded pair is produced from the relation specification at the constructible ordered pair.
 <!--zh-->
-两个隶属的合取是命题；编码对的关联性由可构造有序对处的关系规格产出。
+两个成员关系的合取是命题；编码对的关联性由可构造有序对处的关系规格产出。
 <!--ja-->
 二つの所属の連言は命題であり、符号化された対の関係は、構成可能な順序対のもとの関係の仕様から産み出される。
 <!--/-->
@@ -1978,7 +1978,7 @@ module I = C.Inj triω using ( code; col-inj )
 <!--en-->
 The birth-stage family is instantiated at the internal `ω`: every presented member of `Lset ω` has a birth stage in `ω`, ordered by a family relation.
 <!--zh-->
-诞生层族在内部 `ω` 处实例化：`Lset ω` 的每个被呈现成员在 `ω` 中有一个诞生层，族关系对其排序。
+诞生层族在内部 `ω` 处实例化：`Lset ω` 的每个被呈现元素在 `ω` 中有一个诞生层，族关系对其排序。
 <!--ja-->
 誕生段階の族は、内部の `ω` のもとで具体化される。`Lset ω` の提示されたすべての要素は `ω` の中に誕生段階をもち、族の関係がそれを順序づける。
 <!--/-->
@@ -2005,7 +2005,7 @@ private
 <!--en-->
 The birth stage of a member is read as an ambient set.
 <!--zh-->
-成员的诞生层被读作外围集合。
+元素的诞生层被读作外围集合。
 <!--ja-->
 要素の誕生段階は、周囲の集合として読まれる。
 <!--/-->
@@ -2031,7 +2031,7 @@ Every birth stage belongs to the internal `ω`, since the whole family lives bel
 <!--en-->
 Every birth stage is an ordinal: it is a member of the ordinal `ω`, and members of ordinals are ordinals.
 <!--zh-->
-每个诞生层都是序数：它是序数 `ω` 的成员，而序数的成员是序数。
+每个诞生层都是序数：它是序数 `ω` 的元素，而序数的元素是序数。
 <!--ja-->
 すべての誕生段階は順序数である。順序数 `ω` の要素であり、順序数の要素は順序数だからである。
 <!--/-->
@@ -2044,7 +2044,7 @@ Every birth stage is an ordinal: it is a member of the ordinal `ω`, and members
 <!--en-->
 Every presented member of `Lset ω` belongs to the stage indexed by its own birth stage raised by one: the member's constructibility is transported into that successor stage.
 <!--zh-->
-`Lset ω` 的每个被呈现成员都属于以其诞生层后继为指数的层：该成员的可构造性被搬运进该后继层。
+`Lset ω` 的每个被呈现元素都属于以其诞生层后继为指数的层：该元素的可构造性被搬运进该后继层。
 <!--ja-->
 `Lset ω` の提示されたすべての要素は、その自身の誕生段階を一つ上げた段階に属する。要素の構成可能性が、その後続の段階の中へ運ばれるのである。
 <!--/-->
@@ -2104,7 +2104,7 @@ In the equality subcase `sucV (bAt a) ≡ bAt b`, the proof first places this or
 <!--en-->
 Every point of the internal collapse domain is read as a presented member of `Lset ω`.
 <!--zh-->
-内部塌缩定义域的每个点都被读作 `Lset ω` 的被呈现成员。
+内部塌缩定义域的每个点都被读作 `Lset ω` 的被呈现元素。
 <!--ja-->
 内部の崩壊の定義域のすべての点は、`Lset ω` の提示された要素として読まれる。
 <!--/-->
@@ -2117,7 +2117,7 @@ Every point of the internal collapse domain is read as a presented member of `Ls
 <!--en-->
 For a collapse-domain point `p`, the guard index `gOf p` is the successor of the birth stage of the member represented by `p`. The finite stage `Lset (gOf p)` will contain every predecessor of `p`.
 <!--zh-->
-对塌缩定义域中的点 `p`，护卫指标 `gOf p` 是 `p` 所表示成员的诞生层后继。有限层 `Lset (gOf p)` 将包含 `p` 的每个前驱。
+对塌缩定义域中的点 `p`，护卫指标 `gOf p` 是 `p` 所表示元素的诞生层后继。有限层 `Lset (gOf p)` 将包含 `p` 的每个前驱。
 <!--ja-->
 崩壊領域の点 `p` に対し、護衛となる添字 `gOf p` は、`p` が表す要素の誕生段階の後続である。有限段階 `Lset (gOf p)` が `p` のすべての先行者を含むことになる。
 <!--/-->
@@ -2130,7 +2130,7 @@ For a collapse-domain point `p`, the guard index `gOf p` is the successor of the
 <!--en-->
 Every guard belongs to the internal `ω`, since it is the successor of a member of `ω`.
 <!--zh-->
-每个护卫层都属于内部 `ω`，因为它是 `ω` 中某成员的后继。
+每个护卫层都属于内部 `ω`，因为它是 `ω` 中某元素的后继。
 <!--ja-->
 どの衛も内部の `ω` の中にある。`ω` の要素の後続だからである。
 <!--/-->
@@ -2187,7 +2187,7 @@ Predecessor segments are propositions: two records with the same collapse value 
 <!--en-->
 Every membership in a collapse value yields a predecessor segment: the truncated reading of the collapse is eliminated into the proposition-valued segment.
 <!--zh-->
-塌缩值中的每个隶属都给出一个前驱段：塌缩的截断读取被消去到取值于命题的段中。
+塌缩值中的每个成员关系都给出一个前驱段：塌缩的截断读取被消去到取值于命题的段中。
 <!--ja-->
 崩壊の値の中の所属はどれも、先行者の区間を与える。崩壊の切り詰められた読みが、命題値の区間の中へ消去されるのである。
 <!--/-->
@@ -2216,7 +2216,7 @@ col-fin p = go (ord-tri (C.col p) (C.col-ord p) ω ω-ord)
 <!--en-->
 Assume for contradiction that every element of `ω` belongs to `C.col p`. For a presented element `x` of `ω`, membership in the collapse yields a predecessor `r ≺ p` whose collapse value is the set presented by `x`. The type `Seg` of such predecessors is a proposition, so `seg` may eliminate the truncated membership evidence and `s x` records this uniquely determined predecessor. The bound on the segment places the set represented by `r`, rather than its collapse value, in `Lset (gOf p)`; `fb x` chooses its canonical presentation there.
 <!--zh-->
-反设 `ω` 的每个元素都属于 `C.col p`。给定 `ω` 的一个呈现元素 `x`，它属于塌缩这一事实给出一个前驱 `r ≺ p`，且 `r` 的塌缩值就是 `x` 所呈现的集合。这样的前驱所成的类型 `Seg` 是命题，因此 `seg` 可以消去截断的隶属证据，而 `s x` 记录这个唯一确定的前驱。前驱段的界把 `r` 所表示的集合，而非它的塌缩值，放入 `Lset (gOf p)`；`fb x` 随后取出该集合在此层中的典范呈现。
+反设 `ω` 的每个元素都属于 `C.col p`。给定 `ω` 的一个呈现元素 `x`，它属于塌缩这一事实给出一个前驱 `r ≺ p`，且 `r` 的塌缩值就是 `x` 所呈现的集合。这样的前驱所成的类型 `Seg` 是命题，因此 `seg` 可以消去截断的成员关系证据，而 `s x` 记录这个唯一确定的前驱。前驱段的界把 `r` 所表示的集合，而非它的塌缩值，放入 `Lset (gOf p)`；`fb x` 随后取出该集合在此层中的典范呈现。
 <!--ja-->
 背理法のため、`ω` のすべての要素が `C.col p` に属すると仮定する。`ω` の提示要素 `x` に対し、崩壊への所属から、崩壊値が `x` の提示する集合に等しい前者 `r ≺ p` が得られる。そのような前者からなる型 `Seg` は命題なので、`seg` は切り詰められた所属の証拠を除去でき、`s x` は一意に定まる前者を記録する。前者区間の界が `Lset (gOf p)` に入れるのは `r` の表す集合であって、その崩壊値ではない。`fb x` はその集合のこの段階での標準的な提示を取り出す。
 <!--/-->
@@ -2292,7 +2292,7 @@ In the remaining case `ω ∈ C.col p`. Since `C.col p` is an ordinal and theref
 <!--en-->
 The order-type image is therefore contained in `ω`. Its outward reading supplies, under propositional truncation, an index `b` and an equation identifying a given image member `z` with `C.col b`. Because the target assertion `z∈ω` is a proposition, this witness may be eliminated there; transport of `col-fin b` along the equation proves the required membership. This establishes only `C.otL ⊆ ω`, not the reverse inclusion.
 <!--zh-->
-因此，序型像包含于 `ω`。其向外读法在命题截断下给出索引 `b`，以及把给定像元素 `z` 认同于 `C.col b` 的等式。目标断言 `z∈ω` 是命题，故可向其中消去该见证；沿等式搬运 `col-fin b` 即得所需隶属。这里仅证明 `C.otL ⊆ ω`，并未证明反向包含。
+因此，序型像包含于 `ω`。其向外读法在命题截断下给出索引 `b`，以及把给定像元素 `z` 认同于 `C.col b` 的等式。目标断言 `z∈ω` 是命题，故可向其中消去该见证；沿等式搬运 `col-fin b` 即得所需成员关系。这里仅证明 `C.otL ⊆ ω`，并未证明反向包含。
 <!--ja-->
 したがって、順序型の像は `ω` に含まれる。その外向きの読みは、命題的切り詰めのもとで、添字 `b` と、与えられた像の要素 `z` を `C.col b` と同一視する等式を与える。目標の命題 `z∈ω` は命題なので、そこへこの証人を除去でき、`col-fin b` を等式に沿って移送すれば求める所属が得られる。ここで示すのは `C.otL ⊆ ω` だけであり、逆向きの包含ではない。
 <!--/-->

@@ -28,7 +28,7 @@ module L.Recursion {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 open import FOL.Syntax using ( Formula )
 import FOL.Absoluteness
 import FOL.ZFModel
@@ -89,7 +89,7 @@ For a predicate on the constructible carrier, `SetOf` is the type of a set toget
 <!--/-->
 
 ```agda
-open hPropStructure 𝒮ʟ
+open hPropView 𝒮ʟ
 
 module ModelL = FOL.ZFModel 𝒮ʟ
 open ModelL using ( SetOf )
@@ -145,7 +145,7 @@ record Recursion : Type (ℓ-suc (ℓ-suc ℓ)) where
 <!--en-->
 The lemma `smallDom` gives a common containing set for a family `f : X → S` indexed by `X : Type ℓ`. It does not assert that this containing set is the exact image of `f`, nor does it by itself supply the domain of every recursion. When a larger stage is used as a domain, totality and uniqueness must still be proved at all of its members.
 <!--zh-->
-引理 `smallDom` 为一族 `f : X → S` 给出共同的包含集合，其中 `X : Type ℓ`。它并不声称该集合恰好是 `f` 的像，也不会自动给出每项递归的定义域。若采用更大的层作为定义域，仍须对其中所有成员证明取值存在且唯一。
+引理 `smallDom` 为一族 `f : X → S` 给出共同的包含集合，其中 `X : Type ℓ`。它并不声称该集合恰好是 `f` 的像，也不会自动给出每项递归的定义域。若采用更大的层作为定义域，仍须对其中所有成员关系证明取值存在且唯一。
 <!--ja-->
 補題 `smallDom` は、`X : Type ℓ` で添字づけられた族 `f : X → S` を共通に含む集合を与える。その集合が `f` の像と一致するとは主張せず、すべての再帰の定義域を自動的に与えるものでもない。より大きな段階を定義域に用いるなら、そのすべての要素で値の存在と一意性をなお証明する必要がある。
 <!--/-->
@@ -175,7 +175,7 @@ The bounding principle is applied to the stages of the values: each `f x` is con
 <!--en-->
 Membership then follows in two steps: each value appears at its own stage, and stages are monotone, so a value below `β` in the stage order is a member of the stage at `β`. Every `f x` is thus an element of the domain set.
 <!--zh-->
-隶属随后分两步得到：每个取值出现在自己的层，而层是单调的，故在层序中低于 `β` 的取值是 `β` 处那个层的成员。于是每个 `f x` 都是该定义域集合的元素。
+成员关系随后分两步得到：每个取值出现在自己的层，而层是单调的，故在层序中低于 `β` 的取值是 `β` 处那个层的元素。于是每个 `f x` 都是该定义域集合的元素。
 <!--ja-->
 所属は二段階で従う。各値は自分の段階に現れ、段階は単調なので、段階の順序で `β` より下にある値は `β` における段階の要素である。こうしてすべての `f x` が定義域の集合の要素になる。
 <!--/-->
@@ -248,7 +248,7 @@ The value range is the first component of this result. Its membership specificat
 <!--en-->
 The two directions of the specification are useful separately. A concrete graph witness places its value in the range. Conversely, membership in the range yields only the truncated existence of an originating index and graph witness; it does not choose that index.
 <!--zh-->
-这条规格的两个方向可以分别使用。具体的图见证把相应取值放入值域；反过来，值域中的成员只给出来源索引及图见证的截断存在性，并不选定该索引。
+这条规格的两个方向可以分别使用。具体的图见证把相应取值放入值域；反过来，值域中的元素只给出来源索引及图见证的截断存在性，并不选定该索引。
 <!--ja-->
 仕様の二つの向きは別々に利用できる。具体的なグラフの証人から、その値が値域に属することが従う。逆に、値域への所属から得られるのは、元となる添字とグラフの証人の切り詰められた存在だけであり、その添字を選ぶことはできない。
 <!--/-->
@@ -265,7 +265,7 @@ The two directions of the specification are useful separately. A concrete graph 
 <!--en-->
 Functionality also determines a metatheoretic value at every member of the domain: it is the first component of the contraction centre. Any other `y` satisfying the graph at the same index is equal to this value, by the contraction supplied in the recursion data.
 <!--zh-->
-存在唯一性还为定义域的每个成员确定一个元理论取值，即可缩类型中心的第一分量。若另一个 `y` 在同一索引处满足图，则递归数据给出的收缩证明它等于该取值。
+存在唯一性还为定义域的每个元素确定一个元理论取值，即可缩类型中心的第一分量。若另一个 `y` 在同一索引处满足图，则递归数据给出的收缩证明它等于该取值。
 <!--ja-->
 関数性は、定義域の各要素におけるメタ理論上の値も定める。それは可縮な型の中心の第一成分である。同じ添字で別の `y` がグラフを満たすなら、再帰データが与える収縮によってこの値と等しくなる。
 <!--/-->
@@ -434,7 +434,7 @@ No complexity bound on the graph formula or stage-locality certificate for its c
 <!--zh-->
 ## 构造的适用范围
 
-这项结果要求满足三项条件：定义域是 `L` 中的集合；关系由可构造结构上的二元公式表达；它在定义域的每一点具有唯一取值。`Definition` 形式从一个元理论全函数及两条充分性证明导出最后一项。辅助引理 `smallDom` 可以为由 `Type ℓ` 中类型索引的一族元素给出共同的包含层，但若把该层用作定义域，仍须对其中新增的每个成员证明存在唯一性。
+这项结果要求满足三项条件：定义域是 `L` 中的集合；关系由可构造结构上的二元公式表达；它在定义域的每一点具有唯一取值。`Definition` 形式从一个元理论全函数及两条充分性证明导出最后一项。辅助引理 `smallDom` 可以为由 `Type ℓ` 中类型索引的一族元素给出共同的包含层，但若把该层用作定义域，仍须对其中新增的每个成员关系证明存在唯一性。
 
 在此处调用替换时，无须限制图公式的复杂度，也无须另交常元位于同一层的证书。这一便利来自已经证明的一般替换定理；它并不声称任意公式都是绝对的，而且每次应用仍须给出公式及其充分性证明。
 <!--ja-->

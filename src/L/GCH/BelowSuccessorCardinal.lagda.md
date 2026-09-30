@@ -28,7 +28,7 @@ module L.GCH.BelowSuccessorCardinal {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) wher
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 open import FOL.Syntax using ( Formula; var; _∈̇_; _∧̇_; ∃̇_ )
 import FOL.Semantics
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; regularityV; ∈-irrefl )
@@ -78,19 +78,19 @@ The exceptional branch produces only a truncated witness. Accordingly, the proof
 ```agda
 import Cubical.Induction.WellFounded as WF
 
-open hPropStructure 𝒮ᵥ using ( _∈ˢ_ )
+open hPropView 𝒮ᵥ using ( _∈ˢ_ )
 ```
 
 <!--en-->
 Write `SV.S` for the carrier of the ambient hierarchy. Membership induction takes place on this type: an element is a set of `V`, without yet carrying evidence that it belongs to `L`.
 <!--zh-->
-以 `SV.S` 表示外围层级的论域。成员归纳在这个类型上进行：它的元素是 `V` 中的集合，此时还没有附带该集合属于 `L` 的证书。
+以 `SV.S` 表示外围层级的论域。成员关系归纳在这个类型上进行：它的元素是 `V` 中的集合，此时还没有附带该集合属于 `L` 的证书。
 <!--ja-->
 周囲の階層の論域を `SV.S` と書く。所属に関する帰納法はこの型の上で行われる。その要素は `V` の集合であり、この時点では `L` に属する証明をまだ伴わない。
 <!--/-->
 
 ```agda
-module SV = hPropStructure 𝒮ᵥ using ( S )
+module SV = hPropView 𝒮ᵥ using ( S )
 ```
 
 <!--en-->
@@ -102,7 +102,7 @@ Write `SL.S` for the carrier of the constructible universe. Its elements are pai
 <!--/-->
 
 ```agda
-module SL = hPropStructure 𝒮ʟ using ( S )
+module SL = hPropView 𝒮ʟ using ( S )
 module Sem = FOL.Semantics 𝒮ʟ
 module At = Sem.At SL.S id
 ```
@@ -141,7 +141,7 @@ below-succ-injects κ δ (ordδ , _ , κ∈δ , least) α =
 <!--en-->
 Because `κ ∈ δ` and `δ` is an ordinal, `κ` is itself an ordinal. The induction step may therefore apply ordinal trichotomy to `a` and the underlying set of `κ`. Its induction hypothesis is available at every member of `a`, which is exactly what the third trichotomy branch will require.
 <!--zh-->
-由于 `κ ∈ δ` 且 `δ` 是序数，`κ` 本身也是序数。因此归纳步骤可以对 `a` 与 `κ` 的底层集合应用序数三分法。归纳假设在 `a` 的每个成员处都可用，这恰好是三分法第三个分支所需的条件。
+由于 `κ ∈ δ` 且 `δ` 是序数，`κ` 本身也是序数。因此归纳步骤可以对 `a` 与 `κ` 的底层集合应用序数三分法。归纳假设在 `a` 的每个元素处都可用，这恰好是三分法第三个分支所需的条件。
 <!--ja-->
 `κ ∈ δ` であり `δ` が順序数なので、`κ` 自身も順序数である。したがって帰納段階では、`a` と `κ` の基礎となる集合に順序数の三分法を適用できる。帰納仮定は `a` の各要素で利用でき、これは三分法の第三の分岐が必要とするものである。
 <!--/-->
@@ -209,7 +209,7 @@ The type `Ex` states the relevant negation of cardinality positively: merely, th
 <!--en-->
 The formula `exFo` binds the possible `γ`, conjoins `γ ∈ α'` with the formula `injLAt α' γ`, and therefore presents exactly `Ex`. The maps `exFill` and `exRead` prove the two directions under propositional truncation. Excluded middle is then applied through `decideSatisfaction` to this formula. If satisfaction holds, the required mere witness is present; if it is refuted, every proposed member and injection yields a contradiction, precisely the condition saying that `α'` is a cardinal.
 <!--zh-->
-公式 `exFo` 约束可能的 `γ`，把 `γ ∈ α'` 与公式 `injLAt α' γ` 合取起来，因而恰好呈现 `Ex`。映射 `exFill` 与 `exRead` 在命题截断下证明两个方向。随后经 `decideSatisfaction` 对这条公式应用排中律。若满足成立，所需的仅仅见证已经得到；若满足被反驳，那么任取成员与单射都会导出矛盾，这恰好是说 `α'` 为基数的条件。
+公式 `exFo` 约束可能的 `γ`，把 `γ ∈ α'` 与公式 `injLAt α' γ` 合取起来，因而恰好呈现 `Ex`。映射 `exFill` 与 `exRead` 在命题截断下证明两个方向。随后经 `decideSatisfaction` 对这条公式应用排中律。若满足成立，所需的仅仅见证已经得到；若满足被反驳，那么任取元素与单射都会导出矛盾，这恰好是说 `α'` 为基数的条件。
 <!--ja-->
 論理式 `exFo` は候補 `γ` を束縛し、`γ ∈ α'` と論理式 `injLAt α' γ` を連言して、ちょうど `Ex` を表す。写像 `exFill` と `exRead` が命題的切り詰めのもとで両方向を証明する。その後、`decideSatisfaction` を通してこの論理式に排中律を適用する。充足するなら必要な単なる証人があり、反証されるなら任意の要素と単射が矛盾を導く。これは `α'` が基数であるという条件にほかならない。
 <!--/-->
@@ -238,7 +238,7 @@ The refutation branch is impossible by `not-card`, so both outcomes produce `Ex`
 <!--en-->
 A witness of the untruncated content of `Ex` consists of `γ ∈ a` and an internal injection from `α'` to `γ`. Since members of an ordinal are ordinals and `δ` is transitive, `γ` again satisfies the induction predicate. The induction hypothesis supplies an injection from `γ` to `κ`, and transitivity of internal injection composes the two.
 <!--zh-->
-`Ex` 的未截断内容给出 `γ ∈ a` 以及从 `α'` 到 `γ` 的内部单射。序数的成员仍是序数，并且 `δ` 具有传递性，所以 `γ` 再次满足归纳谓词。归纳假设给出从 `γ` 到 `κ` 的单射，再由内部单射的传递性把两者复合。
+`Ex` 的未截断内容给出 `γ ∈ a` 以及从 `α'` 到 `γ` 的内部单射。序数的元素仍是序数，并且 `δ` 具有传递性，所以 `γ` 再次满足归纳谓词。归纳假设给出从 `γ` 到 `κ` 的单射，再由内部单射的传递性把两者复合。
 <!--ja-->
 `Ex` の切り詰め前の内容は、`γ ∈ a` と `α'` から `γ` への内部単射からなる。順序数の要素は順序数であり、`δ` は推移的なので、`γ` は再び帰納述語を満たす。帰納仮定が `γ` から `κ` への単射を与え、内部単射の推移性が二つを合成する。
 <!--/-->
@@ -266,7 +266,7 @@ To invoke the induction hypothesis at `γ`, the proof supplies all three compone
 <!--en-->
 The first trichotomy branch has `a ∈ κ`. Because an ordinal is transitive, every member of `a` is then a member of `κ`; this inclusion is coded as an internal injection from `α'` to `κ`.
 <!--zh-->
-三分法的第一个分支是 `a ∈ κ`。序数具有传递性，所以 `a` 的每个成员也都是 `κ` 的成员；把这个包含关系编码起来，就得到从 `α'` 到 `κ` 的内部单射。
+三分法的第一个分支是 `a ∈ κ`。序数具有传递性，所以 `a` 的每个元素也都是 `κ` 的元素；把这个包含关系编码起来，就得到从 `α'` 到 `κ` 的内部单射。
 <!--ja-->
 三分法の第一の分岐は `a ∈ κ` である。順序数は推移的なので、`a` の各要素は `κ` の要素でもある。この包含を符号化すれば、`α'` から `κ` への内部単射が得られる。
 <!--/-->

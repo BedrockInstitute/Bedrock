@@ -28,7 +28,7 @@ module L.Choice.OrderTable {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 open import FOL.Syntax using ( Formula )
 import FOL.Absoluteness
 import FOL.ZFModel
@@ -52,7 +52,7 @@ open import L.WellOrder.Base {ℓ-suc ℓ} using ( SWO; Tri; lt; eq; gt )
 At a constructible ordinal index `α`, the preceding construction already gives a host-level strict well-order on the members of `Lset α`. The purpose of this chapter is to represent its binary comparison by a set inside `L`, so that formulas interpreted in the model can quantify over that relation. The result is conditional on an adequate object-language description of one recursive step and applies when `α` is both an ordinal and constructible. It represents the relation underlying the existing order; it does not yet assert in the object language that this relation is a well-order.
 <!--zh-->
 
-在可构造序数层索引 `α` 处，先前的构造已经给出 `Lset α` 的成员上的宿主层严格良序。本章要把它的二元比较表示为 `L` 内部的一个集合，使模型中解释的公式能够量化这条关系。所得结果以单步递归已有充分的对象语言描述为条件，并且只适用于既是序数又可构造的 `α`。它表示已有序的底层关系，而尚未在对象语言中断言这条关系是良序。
+在可构造序数层索引 `α` 处，先前的构造已经给出 `Lset α` 的元素上的宿主层严格良序。本章要把它的二元比较表示为 `L` 内部的一个集合，使模型中解释的公式能够量化这条关系。所得结果以单步递归已有充分的对象语言描述为条件，并且只适用于既是序数又可构造的 `α`。它表示已有序的底层关系，而尚未在对象语言中断言这条关系是良序。
 <!--ja-->
 
 構成可能な順序数の段階添字 `α` では、先の構成によって `Lset α` の要素上のホスト側の狭義整列順序がすでに得られている。本章の目的は、その二項比較を `L` の内部の集合として表現し、モデルで解釈される論理式がその関係を量化できるようにすることである。結果は、一段階の再帰について妥当な対象言語の記述が与えられることを前提とし、`α` が順序数かつ構成可能である場合に適用される。ここで表現するのは既存の順序の基礎となる関係であり、この関係が整列順序であるという対象言語の主張はまだ与えない。
@@ -71,7 +71,7 @@ The single classical assumption is excluded middle at the universe level used th
 <!--en-->
 Two levels of discourse must be kept separate. The relation to be represented is defined in the host type theory, while its recursive description is a first-order formula interpreted in `L`. Membership induction connects the stages: its motive may take values in any dependent type family, so the later simultaneous package of a table and a relation does not have to be a proposition for the recursion to be legitimate.
 <!--zh-->
-这里必须区分两个论述层次。待表示的关系定义在宿主类型论中，而它的递归描述是一条在 `L` 中解释的一阶公式。成员归纳连接各层：它的动机可以取值于任意依值类型族，因此后文同时包含表与关系的资料包无须先被证明为命题，递归本身便已合法。
+这里必须区分两个论述层次。待表示的关系定义在宿主类型论中，而它的递归描述是一条在 `L` 中解释的一阶公式。成员关系归纳连接各层：它的动机可以取值于任意依值类型族，因此后文同时包含表与关系的资料包无须先被证明为命题，递归本身便已合法。
 <!--ja-->
 ここでは二つの議論の水準を区別する必要がある。表現される関係はホストの型理論で定義され、その再帰的な記述は `L` で解釈される一階論理式である。所属に沿う帰納が各段階を結ぶ。その動機は任意の依存型族に値を取れるので、後で表と関係を同時に運ぶ組が命題であることは、再帰の正当性の前提ではない。
 <!--/-->
@@ -79,7 +79,7 @@ Two levels of discourse must be kept separate. The relation to be represented is
 <!--en-->
 The final relation lives in the constructible model, but its endpoints begin as members of the host set `Lset α`. Once ordinalness `oα` is fixed, `Lset→isL` packages each such endpoint as an element of the model; this conversion uses the ordinalness of `α`, not a separate proof that `α` itself is constructible. The constructibility witness for `α` has a different later role: it packages the index itself as the model element `A`, which serves as the domain for replacement and as a parameter of separation. Ordinal membership supplies ordinalness at smaller indices, while pair injectivity and extensionality recover endpoints and identify sets from their members.
 <!--zh-->
-最终关系位于可构造模型中，但它的端点起初是宿主集合 `Lset α` 的成员。固定序数性证明 `oα` 后，`Lset→isL` 把每个端点打包为模型元素；这一步使用 `α` 的序数性，而不使用 `α` 本身可构造的另一份证明。`α` 的可构造性见证在后文承担不同作用：它把层索引本身打包为模型元素 `A`，供替换作为定义域、供分离作为参数。序数成员法则给出较小索引的序数性，而对编码的单射性与外延性分别恢复端点、按成员认同集合。
+最终关系位于可构造模型中，但它的端点起初是宿主集合 `Lset α` 的元素。固定序数性证明 `oα` 后，`Lset→isL` 把每个端点打包为模型元素；这一步使用 `α` 的序数性，而不使用 `α` 本身可构造的另一份证明。`α` 的可构造性见证在后文承担不同作用：它把层索引本身打包为模型元素 `A`，供替换作为定义域、供分离作为参数。序数元素法则给出较小索引的序数性，而对编码的单射性与外延性分别恢复端点、按元素认同集合。
 <!--ja-->
 最終的な関係は構成可能モデルの中にあるが、その端点はまずホスト集合 `Lset α` の要素として現れる。順序数性 `oα` を固定すると、`Lset→isL` によって各端点をモデル要素としてまとめられる。この変換が使うのは `α` の順序数性であり、`α` 自身が構成可能であるという別の証明ではない。`α` の構成可能性の証人は、後で異なる役割を果たす。段階の添字自身をモデル要素 `A` としてまとめ、置換公理の定義域と分出公理のパラメータにするためである。順序数の要素に関する法則が小さい添字の順序数性を与え、対の符号化の単射性と外延性が、それぞれ端点の復元と要素による集合の同一視を与える。
 <!--/-->
@@ -103,7 +103,7 @@ The order itself is already available as `orderAt α oα`, a strict well-order o
 <!--en-->
 Many later equalities compare dependent pairs whose second components are membership proofs. Since membership and ordinalness are propositions, equality of the underlying sets determines equality of the packaged members, and changing a certificate does not create a different mathematical endpoint. Transport along pair-component equalities can therefore align comparisons without turning proofs into extra choices.
 <!--zh-->
-后文许多等式比较的是依值对，其第二分量是成员证明。由于成员关系与序数性都是命题，底层集的相等便决定打包成员的相等，而更换证书不会产生不同的数学端点。因此，可以沿对分量的等式搬运比较，而不会把证明变成额外的选择。
+后文许多等式比较的是依值对，其第二分量是成员关系证明。由于成员关系与序数性都是命题，底层集的相等便决定打包元素的相等，而更换证书不会产生不同的数学端点。因此，可以沿对分量的等式搬运比较，而不会把证明变成额外的选择。
 <!--ja-->
 後で現れる多くの等式は、第二成分が所属の証明である依存対を比較する。所属と順序数性は命題なので、底の集合の等しさからまとめられた要素の等しさが定まり、証明書を取り替えても別の数学的端点は生じない。そのため、対の成分の等式に沿って比較を輸送しても、証明を余分な選択に変えることはない。
 <!--/-->
@@ -111,7 +111,7 @@ Many later equalities compare dependent pairs whose second components are member
 <!--en-->
 Propositional truncation will mark every place where existence is needed without a selected witness. Small presentations serve a different role: they replace a possibly large membership fiber by a small index type whose embedding returns the represented member. Keeping these devices distinct is essential, since one hides a choice while the other controls size.
 <!--zh-->
-命题截断将标出每个只需存在而不选定见证之处。小呈现承担另一种任务：它用一个小索引类型呈现可能较大的成员纤维，再由嵌入返回所表示的成员。二者必须分清，因为前者隐藏选择，后者控制大小。
+命题截断将标出每个只需存在而不选定见证之处。小呈现承担另一种任务：它用一个小索引类型呈现可能较大的元素纤维，再由嵌入返回所表示的元素。二者必须分清，因为前者隐藏选择，后者控制大小。
 <!--ja-->
 命題的切り詰めは、証人を選ばず存在だけを必要とするすべての箇所を示す。小さな提示の役割は別である。大きいかもしれない所属の繊維を小さな添字型で提示し、その埋め込みから表される要素を返す。一方は選択を隠し、他方は大きさを制御するので、この二つを区別することが大切である。
 <!--/-->
@@ -125,19 +125,19 @@ open import Cubical.HITs.CumulativeHierarchy.Properties
 <!--en-->
 From this point, propositions and quantifiers are read in the membership structure of `L`. A statement that a model element realizes a class is therefore expressed as a proposition about its members, not as an external collection assembled by metatheoretic comprehension.
 <!--zh-->
-从这里起，命题与量词都在 `L` 的成员结构中读取。因此，说一个模型元素实现某个类，是对其成员作出的命题，而不是借元理论的概括另行组装一个外部集合。
+从这里起，命题与量词都在 `L` 的成员关系结构中读取。因此，说一个模型元素实现某个类，是对其元素作出的命题，而不是借元理论的概括另行组装一个外部集合。
 <!--ja-->
 ここから先、命題と量化は `L` の所属構造で読む。したがって、モデルの要素があるクラスを実現するという主張は、その要素の所属についての命題として表され、メタ理論の内包によって別の外部集合を作ることではない。
 <!--/-->
 
 ```agda
-open hPropStructure 𝒮ʟ
+open hPropView 𝒮ʟ
 ```
 
 <!--en-->
 The internal set-builder interface will later state that a candidate has exactly the members satisfying a formula. This is an extensional specification of a set; existence still has to come from replacement or separation at the appropriate point of the recursion.
 <!--zh-->
-后面使用的内部集合构造接口，将陈述某个候选集合恰以满足一条公式的对象为成员。这只是集合的外延规格；集合的存在仍须在递归的相应位置由替换或分离给出。
+后面使用的内部集合构造接口，将陈述某个候选集合恰以满足一条公式的对象为元素。这只是集合的外延规格；集合的存在仍须在递归的相应位置由替换或分离给出。
 <!--ja-->
 後で用いる内部の集合記法は、候補の集合が、ある論理式を満たす対象をちょうど要素にもつことを述べる。これは集合の外延的な仕様であり、集合の存在そのものは、再帰の適切な箇所で置換または分出から得なければならない。
 <!--/-->
@@ -250,7 +250,7 @@ In the reverse branch, combining a hypothetical forward witness with the reverse
 <!--en-->
 For an index `α`, `Related α z` says, under propositional truncation, that `z` is the Kuratowski pair of two members of `Lset α` related by the stage order. The ordinalness certificate is quantified inside the class, so the class does not depend on a chosen proof that `α` is an ordinal. The endpoint decomposition and comparison witness remain within their truncation boundaries.
 <!--zh-->
-对索引 `α`，`Related α z` 在命题截断意义下断言：`z` 是 `Lset α` 的两个成员所成的 Kuratowski 对，且这两个成员由层序关联。序数性证书在类的内部量化，因此该类不依赖于一份选定的 `α` 为序数的证明。端点分解与比较见证都留在各自的截断边界内。
+对索引 `α`，`Related α z` 在命题截断意义下断言：`z` 是 `Lset α` 的两个元素所成的 Kuratowski 对，且这两个元素由层序关联。序数性证书在类的内部量化，因此该类不依赖于一份选定的 `α` 为序数的证明。端点分解与比较见证都留在各自的截断边界内。
 <!--ja-->
 添字 `α` に対して `Related α z` は、命題的切り詰めのもとで、`z` が `Lset α` の二つの要素の Kuratowski 対であり、その二要素が段階順序で関係づけられていることを述べる。順序数性の証明書はクラスの内側で量化されるので、このクラスは `α` が順序数であるという選ばれた証明に依存しない。端点の分解と比較の証人は、それぞれの切り詰めの境界内にとどまる。
 <!--/-->
@@ -264,7 +264,7 @@ Related α z = ∃[ oα ∶ IsOrd α ] (∃[ a ∶ Mem (Lset α) ] (∃[ b ∶ M
 <!--en-->
 A model set `r` realizes this class when its membership agrees with `Related α` in both directions at every model element `z`. The outward implication excludes unrelated or malformed members, and the inward implication includes every related pair. Quantifying over model elements is sufficient here because constructibility is transitive, so every member of a constructible set can itself be packaged as an element of the model.
 <!--zh-->
-模型集合 `r` 实现这个类，是指对每个模型元素 `z`，`r` 的成员关系与 `Related α` 双向一致。向外蕴含排除无关或形状错误的成员，向内蕴含纳入每个被关联的对。这里只量化模型元素已经足够，因为可构造性具有传递性，可构造集的每个成员都能再次打包为模型元素。
+模型集合 `r` 实现这个类，是指对每个模型元素 `z`，`r` 的成员关系与 `Related α` 双向一致。向外蕴含排除无关或形状错误的元素，向内蕴含纳入每个被关联的对。这里只量化模型元素已经足够，因为可构造性具有传递性，可构造集的每个元素都能再次打包为模型元素。
 <!--ja-->
 モデルの集合 `r` がこのクラスを実現するとは、すべてのモデル要素 `z` について、`r` への所属と `Related α` が双方向に一致することである。外向きの含意は無関係な要素や形の違う要素を排除し、内向きの含意は関係するすべての対を含める。構成可能性は推移的であり、構成可能な集合の各要素もモデルの要素としてまとめられるので、ここではモデル要素だけを量化すれば十分である。
 <!--/-->
@@ -278,7 +278,7 @@ Realizes α r = ∀[ z ∶ S ] ((fst z ∈ fst r) ⇒ Related α (fst z))
 <!--en-->
 `IsRel α r` is the type of evidence for that exact membership specification. It asserts that `r` realizes the host-defined class; it does not add a strict-order structure to `r`, nor does it claim that the relation satisfies an object-language well-order formula.
 <!--zh-->
-`IsRel α r` 是上述精确成员规格的证据类型。它断言 `r` 实现宿主层定义的类；它既不为 `r` 添加严格序结构，也不声称该关系满足某条对象语言良序公式。
+`IsRel α r` 是上述精确成员关系规格的证据类型。它断言 `r` 实现宿主层定义的类；它既不为 `r` 添加严格序结构，也不声称该关系满足某条对象语言良序公式。
 <!--ja-->
 `IsRel α r` は、この正確な所属仕様の証拠の型である。これは `r` がホスト側で定義されたクラスを実現することを述べるだけで、`r` に狭義順序の構造を加えず、関係が対象言語の整列順序の論理式を満たすとも主張しない。
 <!--/-->
@@ -306,7 +306,7 @@ rel-path α r p z =
 <!--en-->
 If `r` and `r'` both realize the class, their membership propositions agree pointwise, and extensionality in `L` identifies the two sets. The uniqueness proved here is uniqueness of the realizing set. It does not make the truncated ordinal certificate, endpoint decomposition, or comparison witness in `Related` uniquely chosen.
 <!--zh-->
-若 `r` 与 `r'` 都实现该类，则两者的成员命题逐点一致，`L` 中的外延性遂认同这两个集合。这里证明的是实现集合的唯一性；它并不把 `Related` 中经过截断的序数证书、端点分解或比较见证变成唯一选定的资料。
+若 `r` 与 `r'` 都实现该类，则两者的成员关系命题逐点一致，`L` 中的外延性遂认同这两个集合。这里证明的是实现集合的唯一性；它并不把 `Related` 中经过截断的序数证书、端点分解或比较见证变成唯一选定的资料。
 <!--ja-->
 `r` と `r'` がともにこのクラスを実現するなら、両者の所属命題は点ごとに一致し、`L` の外延性が二つの集合を同一視する。ここで示す一意性は実現集合の一意性である。`Related` の中で切り詰められた順序数性の証明書、端点の分解、比較の証人が一意に選ばれることを意味しない。
 <!--/-->
@@ -320,7 +320,7 @@ rel-unique α r r' p q = extensionalL
 <!--en-->
 The forward reading starts with specified members `a,b` and an actual stage-order comparison. Their underlying sets form the coded pair, while the ordinal certificate, the two packaged members, and the truncated comparison give a witness of `Related`. Since the witness is constructed inside the truncations, no choice is being extracted.
 <!--zh-->
-正向读式从指定的成员 `a,b` 与一项实际的层序比较出发。其底层集组成编码对，而序数证书、两个打包成员与截断后的比较共同给出 `Related` 的见证。见证是在各层截断内部构造的，因此这里没有从截断信息中提取选择。
+正向读式从指定的元素 `a,b` 与一项实际的层序比较出发。其底层集组成编码对，而序数证书、两个打包元素与截断后的比较共同给出 `Related` 的见证。见证是在各层截断内部构造的，因此这里没有从截断信息中提取选择。
 <!--ja-->
 順方向の読みは、指定された要素 `a,b` と実際の段階順序の比較から始まる。二つの底の集合が符号化された対を作り、順序数性の証明書、まとめられた二要素、切り詰められた比較が `Related` の証人を与える。証人は切り詰めの内側で構成されるので、切り詰められた情報から選択を取り出してはいない。
 <!--/-->
@@ -373,7 +373,7 @@ Suppose the truncated record presents endpoints `a',b'` and an ordinalness proof
 <!--en-->
 Pair-code injectivity first recovers equality of the underlying endpoint sets. Each endpoint is a dependent pair of a set and its membership proof in `Lset α`; because that proof is propositional, equality of the first components lifts to equality of the complete members. The comparison can therefore be transported at its correct dependent type.
 <!--zh-->
-对编码的单射性先恢复底层端点集的相等。每个端点都是由集合及其属于 `Lset α` 的证明组成的依值对；由于该证明是命题，第一分量的相等可以提升为完整成员的相等。比较因而能在正确的依值类型中搬运。
+对编码的单射性先恢复底层端点集的相等。每个端点都是由集合及其属于 `Lset α` 的证明组成的依值对；由于该证明是命题，第一分量的相等可以提升为完整元素的相等。比较因而能在正确的依值类型中搬运。
 <!--ja-->
 対の符号化の単射性は、まず底にある端点の集合の等しさを復元する。各端点は、集合とそれが `Lset α` に属する証明からなる依存対である。その証明は命題なので、第一成分の等しさは要素全体の等しさへ持ち上がる。これにより、比較を正しい依存型の中で輸送できる。
 <!--/-->
@@ -426,7 +426,7 @@ After both temporary endpoints have been exposed, the pair-alignment argument su
 <!--en-->
 The useful representation lemmas are stated for any `r` realizing `Related α`, not only for the relation eventually constructed by the recursion. This allows a relation value already recorded in a lower table to be read immediately. For fixed ordinalness `oα`, each member of `Lset α` is constructible and can therefore be packaged as an element of the model.
 <!--zh-->
-真正有用的表示引理针对任意实现 `Related α` 的 `r`，而不限于递归最终构造的关系。这样，较低层表中已经记录的关系取值便能立即被读取。固定序数性证明 `oα` 后，`Lset α` 的每个成员都是可构造的，因而可以打包成模型元素。
+真正有用的表示引理针对任意实现 `Related α` 的 `r`，而不限于递归最终构造的关系。这样，较低层表中已经记录的关系取值便能立即被读取。固定序数性证明 `oα` 后，`Lset α` 的每个元素都是可构造的，因而可以打包成模型元素。
 <!--ja-->
 有用な表現補題は、再帰が最後に構成する関係だけでなく、`Related α` を実現する任意の `r` について述べられる。これにより、小さい段階の表にすでに記録された関係の値を直ちに読める。順序数性の証明 `oα` を固定すると、`Lset α` の各要素は構成可能であり、モデルの要素としてまとめられる。
 <!--/-->
@@ -478,7 +478,7 @@ Applying `Related α` to the same pair equality gives the companion bridge on th
 <!--en-->
 The filling direction begins with a host-level comparison of two members. The forward `Related` reading turns it into relatedness of their coded pair, the realization proof turns relatedness into membership in `r`, and the pair bridge returns the statement to the host pair. Hence every pair compared by `orderAt` occurs in any realizing set.
 <!--zh-->
-填充方向从两个成员的一项宿主层比较出发。`Related` 的正向读式把它化为编码对的关联性，实现证明再把关联性化为属于 `r`，最后由有序对桥把陈述搬回宿主对。因此，`orderAt` 所比较的每一对都属于任意实现集合。
+填充方向从两个元素的一项宿主层比较出发。`Related` 的正向读式把它化为编码对的关联性，实现证明再把关联性化为属于 `r`，最后由有序对桥把陈述搬回宿主对。因此，`orderAt` 所比较的每一对都属于任意实现集合。
 <!--ja-->
 埋める向きは、二つの要素のホスト側の比較から始まる。`Related` の順方向の読みがそれを符号化された対の関係へ変え、実現の証明が関係を `r` への所属へ変え、対の橋が主張をホスト側の対へ戻す。したがって、`orderAt` で比較されるすべての対は、任意の実現集合に属する。
 <!--/-->
@@ -510,7 +510,7 @@ The reading direction reverses the route. Membership of the host pair is transpo
 <!--en-->
 Some later arguments work with the small presentation `⟪ Lset α ⟫` rather than with dependent member pairs. An index in that presentation embeds into the underlying set and carries precisely the membership proof needed to form an element of `Mem (Lset α)`.
 <!--zh-->
-后续有些论证使用小呈现 `⟪ Lset α ⟫`，而不直接使用依值成员对。呈现中的索引嵌入底层集合，并携带恰好足以组成 `Mem (Lset α)` 元素的成员证明。
+后续有些论证使用小呈现 `⟪ Lset α ⟫`，而不直接使用依值元素对。呈现中的索引嵌入底层集合，并携带恰好足以组成 `Mem (Lset α)` 元素的成员关系证明。
 <!--ja-->
 後の議論には、依存的な要素の対ではなく、小さな提示 `⟪ Lset α ⟫` を用いるものがある。その提示の添字は底の集合へ埋め込まれ、`Mem (Lset α)` の要素を作るために必要な所属の証明を備えている。
 <!--/-->
@@ -536,7 +536,7 @@ Carrying `orderAt` along that presentation gives a strict order on the small ind
 <!--en-->
 For presentation indices `u,v`, a carried comparison is first read as the comparison of their associated stage members. The earlier filling theorem then places the Kuratowski pair of the embedded endpoints in `r`. This is the small-index form of comparison-to-membership.
 <!--zh-->
-对呈现索引 `u,v`，搬运后的比较先被读成相应层成员之间的比较。先前的填充定理随后把嵌入端点所成的 Kuratowski 对放入 `r`。这就是从比较到成员关系的小索引形式。
+对呈现索引 `u,v`，搬运后的比较先被读成相应层元素之间的比较。先前的填充定理随后把嵌入端点所成的 Kuratowski 对放入 `r`。这就是从比较到成员关系的小索引形式。
 <!--ja-->
 提示の添字 `u,v` について、運ばれた比較は、まず対応する段階要素の比較として読まれる。先の埋める定理が、埋め込まれた端点の Kuratowski 対を `r` に入れる。これが、比較から所属へ向かう小さい添字での形である。
 <!--/-->
@@ -550,7 +550,7 @@ For presentation indices `u,v`, a carried comparison is first read as the compar
 <!--en-->
 Conversely, membership of the pair of embedded endpoints is read by the earlier theorem as a comparison of the associated stage members. By the definition of the carried order, this is exactly the strict comparison of `u` and `v` in the small presentation.
 <!--zh-->
-反过来，嵌入端点所成的对属于 `r`，经先前定理读成相应层成员的比较。按照搬运序的定义，这恰是小呈现中 `u` 与 `v` 的严格比较。
+反过来，嵌入端点所成的对属于 `r`，经先前定理读成相应层元素的比较。按照搬运序的定义，这恰是小呈现中 `u` 与 `v` 的严格比较。
 <!--ja-->
 逆に、埋め込まれた端点の対が `r` に属するなら、先の定理によって対応する段階要素の比較として読める。運ばれた順序の定義から、これは小さな提示における `u` と `v` の狭義比較そのものである。
 <!--/-->
@@ -658,7 +658,7 @@ The variable-form hypothesis is pointwise and genuinely bidirectional: it both r
 <!--en-->
 The constant-form equation gives the same pointwise equivalence after the ordinal and table have become fixed model elements. This second presentation is required by separation, whose defining formula has one free slot for the possible relation member. The equation identifies the meanings of the two contexts; it does not claim that `Cond` and `Cond₀` are syntactically equal.
 <!--zh-->
-当序数与表已成为固定模型元素后，常元形式的等式给出同样的逐点等价。分离所用的定义公式只为可能的关系成员保留一个自由槽，因此需要这种第二种呈现。该等式认同两种语境的含义，而不声称 `Cond` 与 `Cond₀` 在语法上相等。
+当序数与表已成为固定模型元素后，常元形式的等式给出同样的逐点等价。分离所用的定义公式只为可能的关系元素保留一个自由槽，因此需要这种第二种呈现。该等式认同两种语境的含义，而不声称 `Cond` 与 `Cond₀` 在语法上相等。
 <!--ja-->
 順序数と表が固定されたモデル要素になった後、定数形式の等式が同じ点ごとの同値を与える。分出で用いる定義論理式は、関係の要素の候補のために一つだけ自由スロットを残すので、この第二の提示が必要である。この等式は二つの文脈の意味を同一視するが、`Cond` と `Cond₀` が構文的に等しいとは主張しない。
 <!--/-->
@@ -666,7 +666,7 @@ The constant-form equation gives the same pointwise equivalence after the ordina
 <!--en-->
 Given the variable condition, `StepAt v b f` specifies a candidate value extensionally: an object belongs to the value in slot `v` exactly when it satisfies `Cond b f`. This is a two-way membership specification, not an existence theorem. The actual set realizing the specification will be produced later by the recursive use of replacement and separation.
 <!--zh-->
-给定变元条件后，`StepAt v b f` 外延地刻画候选取值：一个对象属于槽位 `v` 中的取值，当且仅当它满足 `Cond b f`。这是一项双向成员规格，而不是存在定理。实现该规格的实际集合将在后面的递归中由替换与分离产生。
+给定变元条件后，`StepAt v b f` 外延地刻画候选取值：一个对象属于槽位 `v` 中的取值，当且仅当它满足 `Cond b f`。这是一项双向成员关系规格，而不是存在定理。实现该规格的实际集合将在后面的递归中由替换与分离产生。
 <!--ja-->
 変数形式の条件を与えると、`StepAt v b f` は候補の値を外延的に指定する。ある対象がスロット `v` の値に属することと、`Cond b f` を満たすことがちょうど一致する。これは双方向の所属仕様であり、存在定理ではない。この仕様を実現する実際の集合は、後の再帰で置換と分出を用いて作られる。
 <!--/-->
@@ -715,7 +715,7 @@ Once an ordinal bound, a sound table, and entries at every smaller argument have
 <!--en-->
 Suppose a candidate value satisfies the extensional step. Membership in that value then implies the condition, hence relatedness, while relatedness implies the condition and therefore membership. These two implications say exactly that the candidate realizes the relation at the chosen ordinal.
 <!--zh-->
-设一个候选取值满足此外延步进。对该取值的隶属先推出条件成立，再由语义桥得到关联性；反过来，关联性推出条件成立，继而推出隶属。两条蕴含合在一起，恰好说明候选取值实现所选序数处的关系。
+设一个候选取值满足此外延步进。对该取值的成员关系先推出条件成立，再由语义桥得到关联性；反过来，关联性推出条件成立，继而推出成员关系。两条蕴含合在一起，恰好说明候选取值实现所选序数处的关系。
 <!--ja-->
 候補の値が外延的な一段階を満たすとする。その値への所属から条件が従い、さらに関係づけられていることが従う。逆に、関係づけられていることから条件が従い、そこから所属が従う。この二つの含意を合わせると、候補が選んだ順序数での関係を実現することになる。
 <!--/-->
@@ -730,7 +730,7 @@ Suppose a candidate value satisfies the extensional step. Membership in that val
 <!--en-->
 The same argument reverses. If a set already realizes the stage relation, its two membership implications can be transported across the semantic equivalence to prove the extensional step. Thus the step formula and realization carry the same information once the ordinal and the table hypotheses are available.
 <!--zh-->
-同一论证也可反向使用。若一个集合已经实现该层关系，就能把它的两条隶属蕴含沿语义等价搬运，得到此外延步进。因此，在序数与表的假设齐备时，步进公式的满足与关系的实现携带相同的信息。
+同一论证也可反向使用。若一个集合已经实现该层关系，就能把它的两条成员关系蕴含沿语义等价搬运，得到此外延步进。因此，在序数与表的假设齐备时，步进公式的满足与关系的实现携带相同的信息。
 <!--ja-->
 同じ議論は逆向きにも使える。ある集合がすでに段階の関係を実現していれば、その二つの所属に関する含意を意味論的同値に沿って運び、外延的な一段階を証明できる。したがって、順序数と表についての仮定がそろえば、一段階の論理式と関係の実現は同じ情報を表す。
 <!--/-->
@@ -801,7 +801,7 @@ To prove that an approximation records only correct values, fix its table and do
 <!--en-->
 Membership induction is applied to the underlying set of the recorded argument `c`. This is legitimate for the Type-valued property just described: membership induction is a recursion principle for arbitrary dependent type families, not only for propositions. The approximation's domain is assumed ordinal so that membership below one recorded argument remains inside that domain.
 <!--zh-->
-证明对已记录实参 `c` 的底层集合作沿成员关系的归纳。上述性质取值于一般的类型，仍可使用这条原则，因为沿成员关系的归纳允许任意依值类型族，并不只允许命题。逼近的定义域另有序数性假设，以保证一个已记录实参以下的成员仍落在该定义域内。
+证明对已记录实参 `c` 的底层集合作沿成员关系的归纳。上述性质取值于一般的类型，仍可使用这条原则，因为沿成员关系的归纳允许任意依值类型族，并不只允许命题。逼近的定义域另有序数性假设，以保证一个已记录实参以下的元素仍落在该定义域内。
 <!--ja-->
 記録された引数 `c` の基礎の集合について、所属に沿う帰納を行う。この原理は命題だけでなく任意の依存型族に対する再帰原理なので、先ほどの Type 値の性質にも適用できる。近似の定義域には別に順序数性を仮定し、記録された一つの引数より下の要素が同じ定義域にとどまることを保証する。
 <!--/-->
@@ -849,7 +849,7 @@ The argument `u` is paired with its constructibility proof so that it can be use
 <!--en-->
 For an entry `(e,t)` with `e∈u`, the induction hypothesis proves that `t` realizes the relation at `e`; membership in an ordinal also makes `e` ordinal. Completeness is obtained differently: transitivity of the approximation's ordinal domain turns `e∈u` and `u` in the domain into `e` in the domain, and the approximation supplies some value there under propositional truncation. The recursive step at `u` is therefore fully justified. In particular, two values recorded at one argument can later be identified because both realize the same class, although no separately named uniqueness lemma is introduced here.
 <!--zh-->
-对于满足 `e∈u` 的条目 `(e,t)`，归纳假设证明 `t` 实现 `e` 处的关系；序数的成员法则同时给出 `e` 的序数性。完备性的来源不同：逼近定义域的传递性把 `e∈u` 与 `u` 属于定义域合成为 `e` 属于定义域，随后逼近以命题截断形式给出那里存在某个取值。因此，`u` 处的递归步进得到了全部所需前提。特别地，同一实参处的两个已记录取值都实现同一个类，故以后可由外延唯一性认同它们；此处并未引入另一个具名的唯一性引理。
+对于满足 `e∈u` 的条目 `(e,t)`，归纳假设证明 `t` 实现 `e` 处的关系；序数的元素法则同时给出 `e` 的序数性。完备性的来源不同：逼近定义域的传递性把 `e∈u` 与 `u` 属于定义域合成为 `e` 属于定义域，随后逼近以命题截断形式给出那里存在某个取值。因此，`u` 处的递归步进得到了全部所需前提。特别地，同一实参处的两个已记录取值都实现同一个类，故以后可由外延唯一性认同它们；此处并未引入另一个具名的唯一性引理。
 <!--ja-->
 `e∈u` を満たす要素 `(e,t)` については、帰納仮定が `t` は `e` での関係を実現すると示す。また、順序数の要素であることから `e` も順序数である。完全性は別の仕方で得られる。近似の順序数領域の推移性により、`e∈u` と `u` が領域に属することから `e` も領域に属し、近似がそこで何らかの値の存在を命題的切り詰めのもとで与える。これで `u` での再帰の一段階に必要な前提がすべてそろう。同じ引数に二つの値が記録されていれば、どちらも同じクラスを実現するので後に外延的一意性から同一視できるが、ここでは別の名前をもつ一意性補題は導入しない。
 <!--/-->
@@ -912,7 +912,7 @@ After a graph witness is opened inside this propositional target, it provides an
 <!--en-->
 Correctness of every value recorded by `f` is the preceding membership-induction result, applied to each member of the ordinal bound; the member is ordinal by `mem-ord`. Completeness below the bound is already the value-existence half of the approximation's exact-domain specification. Hence the outer step yields the promised realization.
 <!--zh-->
-`f` 所记录每个取值的正确性来自前面的沿成员关系归纳结论，并逐一应用于序数界的成员；`mem-ord` 保证这些成员仍是序数。界下的完备性则正是逼近精确定义域规格中「存在取值」的方向。因此，外层步进给出所需的关系实现。
+`f` 所记录每个取值的正确性来自前面的沿成员关系归纳结论，并逐一应用于序数界的元素；`mem-ord` 保证这些元素仍是序数。界下的完备性则正是逼近精确定义域规格中「存在取值」的方向。因此，外层步进给出所需的关系实现。
 <!--ja-->
 `f` が記録する各値の正しさは、直前の所属に沿う帰納の結果を順序数の上界の各要素に適用して得る。その要素が順序数であることは `mem-ord` が保証する。上界より下での完全性は、近似の正確な定義域の仕様にある値の存在の向きである。したがって、外側の一段階から求める実現が得られる。
 <!--/-->
@@ -1007,7 +1007,7 @@ Boundedness first turns the recorded pair into `c` below the ambient bound. Sinc
 <!--en-->
 Notice the asymmetry between local soundness and local completeness. Soundness needs only the fact that an entry is recorded, because boundedness recovers its ambient-domain membership. Completeness starts from `e∈c`; transitivity of the ambient ordinal combines this with `c` below the bound, after which the original completeness hypothesis supplies an entry at `e`.
 <!--zh-->
-局部健全性与局部完备性的来源并不对称。健全性只需知道某条目已被记录，因为有界性可恢复其对外围定义域的隶属。完备性则从 `e∈c` 出发，利用外围序数的传递性和 `c` 属于该界得到 `e` 属于该界，随后原来的完备性假设在 `e` 处给出条目。
+局部健全性与局部完备性的来源并不对称。健全性只需知道某条目已被记录，因为有界性可恢复其对外围定义域的成员关系。完备性则从 `e∈c` 出发，利用外围序数的传递性和 `c` 属于该界得到 `e` 属于该界，随后原来的完备性假设在 `e` 处给出条目。
 <!--ja-->
 局所的な正しさと局所的な完全性の由来は対称ではない。正しさには要素が記録されているという事実だけで十分であり、有界性から周囲の領域への所属を回収できる。完全性は `e∈c` から始まり、周囲の順序数の推移性と `c` が上界より下にあることから `e` も上界より下にあると示し、もとの完全性から `e` での要素を得る。
 <!--/-->
@@ -1059,7 +1059,7 @@ Replacement acts on a graph whose value is a complete table entry. `PairGraphAt`
 <!--en-->
 The class `Recorded B` describes the intended members of a table below `B`. An object belongs to it merely when there are a model element `c` in `B` and a model element `r` realizing the relation at `c`, such that the object is the ordered pair of their underlying sets. The existential data are propositionally truncated. The definition itself does not require `B` to be ordinal; ordinality will matter when this class is used for an ordinal bound.
 <!--zh-->
-类 `Recorded B` 描述界 `B` 以下一张表应有的成员。一个对象属于该类，是指以命题截断形式存在模型元素 `c` 与 `r`，其中 `c` 属于 `B`，`r` 实现 `c` 处的关系，而且该对象等于二者底层集合组成的有序对。定义本身不要求 `B` 为序数；在序数界上使用这个类时，序数性才发挥作用。
+类 `Recorded B` 描述界 `B` 以下一张表应有的元素。一个对象属于该类，是指以命题截断形式存在模型元素 `c` 与 `r`，其中 `c` 属于 `B`，`r` 实现 `c` 处的关系，而且该对象等于二者底层集合组成的有序对。定义本身不要求 `B` 为序数；在序数界上使用这个类时，序数性才发挥作用。
 <!--ja-->
 クラス `Recorded B` は、`B` より下の表がもつべき要素を記述する。ある対象がこのクラスに属するとは、モデル要素 `c` と `r` が命題的切り詰めのもとで存在し、`c` が `B` に属し、`r` が `c` での関係を実現し、その対象が二つの基礎の集合の順序対に等しいことである。定義そのものは `B` が順序数であることを要求せず、このクラスを順序数の上界で使うときに順序数性が働く。
 <!--/-->
@@ -1074,7 +1074,7 @@ The class `Recorded B` describes the intended members of a table below `B`. An o
 <!--en-->
 A model set is a table for `B` when membership in it is pointwise equivalent to belonging to `Recorded B`. Both directions matter. One excludes every unrelated or out-of-domain object, while the other includes every pair `(c,r)` with `c∈B` and `r` realizing the relation at `c`. Thus `IsTable` expresses exact representation, not only closure under correct entries.
 <!--zh-->
-模型中的集合若要成为 `B` 的表，它的隶属必须逐点等价于属于 `Recorded B`。两个方向都不可缺少：一个排除不相关对象和定义域外对象，另一个纳入每个满足 `c∈B` 且 `r` 实现 `c` 处关系的对 `(c,r)`。因此，`IsTable` 表达的是精确表示，而不只是对正确条目的封闭性。
+模型中的集合若要成为 `B` 的表，它的成员关系必须逐点等价于属于 `Recorded B`。两个方向都不可缺少：一个排除不相关对象和定义域外对象，另一个纳入每个满足 `c∈B` 且 `r` 实现 `c` 处关系的对 `(c,r)`。因此，`IsTable` 表达的是精确表示，而不只是对正确条目的封闭性。
 <!--ja-->
 モデルの集合が `B` の表であるとは、その集合への所属が各点で `Recorded B` への所属と同値であることである。二つの向きがともに必要である。一方は無関係な対象や領域外の対象を排除し、他方は `c∈B` かつ `r` が `c` での関係を実現する各対 `(c,r)` を含める。したがって `IsTable` は、正しい要素についての閉性だけでなく正確な表現を述べる。
 <!--/-->
@@ -1100,7 +1100,7 @@ The recursive datum at `α` contains two model sets: a table representing all co
 <!--en-->
 Fix an exact table `h` for a bound `B`. To use its specification at a concrete entry, one must align two versions of ordered pairing: the internal pair of model elements and the host-level Kuratowski pair of their underlying sets. The projection law for internal pairing transports the table equivalence to the underlying pair `(c,r)`.
 <!--zh-->
-固定界 `B` 的一张精确表 `h`。要在具体条目处使用其规格，必须对齐两种有序对：模型元素构成的内部对，以及其底层集合构成的宿主层 Kuratowski 对。内部配对的投影律把表的隶属等价搬运到 `(c,r)` 的底层有序对处。
+固定界 `B` 的一张精确表 `h`。要在具体条目处使用其规格，必须对齐两种有序对：模型元素构成的内部对，以及其底层集合构成的宿主层 Kuratowski 对。内部配对的投影律把表的成员关系等价搬运到 `(c,r)` 的底层有序对处。
 <!--ja-->
 上界 `B` に対する正確な表 `h` を固定する。その仕様を具体的な要素に使うには、モデル要素の内部の順序対と、それらの基礎の集合からなるホスト側の Kuratowski 対をそろえる必要がある。内部対の射影則に沿って表の所属同値を運ぶと、基礎の順序対 `(c,r)` で使える形になる。
 <!--/-->
@@ -1151,7 +1151,7 @@ An actual table entry `(c,r)` can now be read in two ways at once. Exactness yie
 <!--en-->
 The decomposition supplied by `Recorded` is propositionally truncated, so its elimination needs a proposition-valued target. Here the target is the product of membership in `B` and realization of the relation. Membership is a proposition, realization is a proposition, and their product is again a proposition. This, rather than any property of the whole bundle, is what licenses the elimination.
 <!--zh-->
-`Recorded` 给出的分解位于命题截断中，所以消去它时目标必须为命题。这里的目标是「属于 `B`」与「实现该关系」的积；隶属是命题，关系实现也是命题，二者的积仍是命题。消去的合法性来自这个局部目标，而不是整个包的任何性质。
+`Recorded` 给出的分解位于命题截断中，所以消去它时目标必须为命题。这里的目标是「属于 `B`」与「实现该关系」的积；成员关系是命题，关系实现也是命题，二者的积仍是命题。消去的合法性来自这个局部目标，而不是整个包的任何性质。
 <!--ja-->
 `Recorded` が与える分解は命題的切り詰めの中にあるため、その除去先は命題でなければならない。ここでの目標は、`B` への所属と関係の実現との積である。所属も実現も命題であり、その積も命題である。除去を正当化するのはこの局所的な目標であって、束全体についての性質ではない。
 <!--/-->
@@ -1166,7 +1166,7 @@ The decomposition supplied by `Recorded` is propositionally truncated, so its el
 <!--en-->
 Inside the propositional elimination, suppose the recorded decomposition uses another pair `(d,t)`. Equality of the Kuratowski pairs `(c,r)` and `(d,t)` forces equality of their first underlying components and equality of their second underlying components. The first equality will transfer domain membership, while the second aligns the proposed value with the realizing value from the decomposition.
 <!--zh-->
-在命题消去的内部，设已记录分解使用的是另一对 `(d,t)`。Kuratowski 对 `(c,r)` 与 `(d,t)` 相等，便迫使它们的第一底层分量相等，也迫使第二底层分量相等。第一条等式用于搬运定义域隶属，第二条等式用于把待读取值与分解中的实现取值对齐。
+在命题消去的内部，设已记录分解使用的是另一对 `(d,t)`。Kuratowski 对 `(c,r)` 与 `(d,t)` 相等，便迫使它们的第一底层分量相等，也迫使第二底层分量相等。第一条等式用于搬运定义域成员关系，第二条等式用于把待读取值与分解中的实现取值对齐。
 <!--ja-->
 命題への除去の内側で、記録された分解が別の対 `(d,t)` を使うとする。Kuratowski 対 `(c,r)` と `(d,t)` の等しさから、第一の基礎成分どうしと第二の基礎成分どうしがそれぞれ等しいと分かる。第一の等しさは定義域への所属を運び、第二の等しさは読みたい値と分解に現れた実現値をそろえる。
 <!--/-->
@@ -1225,7 +1225,7 @@ For each possible realizing value `t`, the equality of pairs reduces the witness
 <!--en-->
 The converse table reading is direct. Given `c∈B` and a model element `r` realizing the relation at `c`, the pair `(c,r)` has the required truncated `Recorded` witness. Exactness of the table then turns that class membership into membership in `h`, with the internal-pair projection supplying the necessary alignment of representations.
 <!--zh-->
-表读式的反方向较为直接。给定 `c∈B` 以及实现 `c` 处关系的模型元素 `r`，有序对 `(c,r)` 便具有 `Recorded` 所需的命题截断见证。表的精确性再把这项类隶属转成对 `h` 的隶属，而内部有序对的投影律负责对齐两种表示。
+表读式的反方向较为直接。给定 `c∈B` 以及实现 `c` 处关系的模型元素 `r`，有序对 `(c,r)` 便具有 `Recorded` 所需的命题截断见证。表的精确性再把这项类成员关系转成对 `h` 的成员关系，而内部有序对的投影律负责对齐两种表示。
 <!--ja-->
 表を読む逆向きは直接的である。`c∈B` と、`c` での関係を実現するモデル要素 `r` が与えられれば、対 `(c,r)` は `Recorded` が要求する命題的切り詰められた証人をもつ。表の正確性により、そのクラスへの所属を `h` への所属へ変え、内部対の射影則が二つの表現をそろえる。
 <!--/-->
@@ -1242,7 +1242,7 @@ The converse table reading is direct. Given `c∈B` and a model element `r` real
 <!--en-->
 Before the relation at an ordinal `α` can be obtained by separation, all possible related pairs need one containing set in `L`. The required bound returns a model set `D` containing every object in `Related α`. It is only a common container and may have unrelated members; exactness is not claimed at this stage.
 <!--zh-->
-在通过分离得到序数 `α` 处的关系之前，需要先在 `L` 中找到一个集合，容纳所有可能的相关有序对。所需的界返回模型集合 `D`，使 `Related α` 中的每个对象都属于 `D`。它只是共同容器，可能含有无关成员；此时并不声称精确性。
+在通过分离得到序数 `α` 处的关系之前，需要先在 `L` 中找到一个集合，容纳所有可能的相关有序对。所需的界返回模型集合 `D`，使 `Related α` 中的每个对象都属于 `D`。它只是共同容器，可能含有无关元素；此时并不声称精确性。
 <!--ja-->
 順序数 `α` での関係を分出によって得る前に、関係しうるすべての順序対を含む一つの `L` の集合が必要である。求める上界は、`Related α` の各対象を含むモデル集合 `D` を返す。これは共通の容器にすぎず、無関係な要素を含んでもよいため、この時点では正確性を主張しない。
 <!--/-->
@@ -1258,7 +1258,7 @@ Before the relation at an ordinal `α` can be obtained by separation, all possib
 <!--en-->
 The small presentation of `Lset α` supplies indices for all of its members. Each index is turned into a model element by pairing the presented underlying set with its constructibility proof, obtained from membership in the constructible stage. This makes internal ordered pairing available for every presented endpoint.
 <!--zh-->
-`Lset α` 的小呈现为其所有成员提供索引。每个索引所呈现的底层集合与其可构造性证明打包，成为模型元素；该证明来自它对可构造层的隶属。于是，每个被呈现端点都可用于内部有序配对。
+`Lset α` 的小呈现为其所有元素提供索引。每个索引所呈现的底层集合与其可构造性证明打包，成为模型元素；该证明来自它对可构造层的成员关系。于是，每个被呈现端点都可用于内部有序配对。
 <!--ja-->
 `Lset α` の小さい提示は、その全要素に添字を与える。各添字が提示する基礎の集合を、構成可能な段階への所属から得た構成可能性の証明と組にして、モデル要素にする。これにより、提示された各端点について内部の順序対を作れる。
 <!--/-->
@@ -1270,7 +1270,7 @@ The small presentation of `Lset α` supplies indices for all of its members. Eac
 <!--en-->
 Pairs of presentation indices form a small indexing type. Applying the common-domain principle to the family of their internal ordered pairs gives a model set `D` containing every member of that family. The principle supplies containment only; it neither computes the exact image nor filters pairs according to the stage order.
 <!--zh-->
-呈现索引的有序对形成一个小索引类型。把共同定义域原则应用于这些索引所对应的内部有序对族，便得到模型集合 `D`，其中包含该族的每个成员。这条原则只给出包含关系，既不计算精确像，也不按照层序筛选有序对。
+呈现索引的有序对形成一个小索引类型。把共同定义域原则应用于这些索引所对应的内部有序对族，便得到模型集合 `D`，其中包含该族的每个元素。这条原则只给出包含关系，既不计算精确像，也不按照层序筛选有序对。
 <!--ja-->
 提示の添字の対は小さい添字型をなす。それらに対応する内部順序対の族へ共通領域の原理を適用すると、その族の各要素を含むモデル集合 `D` が得られる。この原理が与えるのは包含だけであり、正確な像を計算せず、段階の順序に従って対を選別することもない。
 <!--/-->
@@ -1284,7 +1284,7 @@ Pairs of presentation indices form a small indexing type. Applying the common-do
 <!--en-->
 The common bound must also be usable for ordinary members `a,b` of `Lset α`, not just for presentation indices. Represent each member by its fiber index, use the bound for the corresponding internal pair, and transport membership along the equality between the presented pair and the host-level pair `pr(fst a,fst b)`. Thus every pair of stage members lies in `D`.
 <!--zh-->
-共同界不仅要适用于呈现索引，还要适用于 `Lset α` 的普通成员 `a,b`。先用各自的纤维索引表示这两个成员，再对相应内部有序对使用共同界，并沿「被呈现有序对等于宿主层有序对 `pr(fst a,fst b)`」的等式搬运隶属。因此，该层任意两个成员组成的有序对都属于 `D`。
+共同界不仅要适用于呈现索引，还要适用于 `Lset α` 的普通元素 `a,b`。先用各自的纤维索引表示这两个元素，再对相应内部有序对使用共同界，并沿「被呈现有序对等于宿主层有序对 `pr(fst a,fst b)`」的等式搬运成员关系。因此，该层任意两个元素组成的有序对都属于 `D`。
 <!--ja-->
 共通の上界は提示の添字だけでなく、`Lset α` の通常の要素 `a,b` にも使えなければならない。各要素をそのファイバー添字で表し、対応する内部順序対について上界を使い、提示された対とホスト側の対 `pr(fst a,fst b)` との等しさに沿って所属を運ぶ。したがって、段階の任意の二要素からなる順序対は `D` に属する。
 <!--/-->
@@ -1300,7 +1300,7 @@ The common bound must also be usable for ordinary members `a,b` of `Lset α`, no
 <!--en-->
 Membership proofs for `a` and `b` identify them with elements of the small presentation. The resulting fiber equalities identify both endpoints, and congruence of ordered pairing identifies the two host-level pairs. Combined with the projection law for internal pairing, this is the equality used in the preceding transport.
 <!--zh-->
-`a` 与 `b` 的隶属证明把它们分别认同为小呈现中的元素，所得纤维等式对齐两个端点；有序配对的合同性进而对齐两个宿主层有序对。再结合内部配对的投影律，就得到上一段搬运所需的等式。
+`a` 与 `b` 的成员关系证明把它们分别认同为小呈现中的元素，所得纤维等式对齐两个端点；有序配对的合同性进而对齐两个宿主层有序对。再结合内部配对的投影律，就得到上一段搬运所需的等式。
 <!--ja-->
 `a` と `b` の所属証明は、それぞれを小さい提示の要素と同定する。得られるファイバーの等しさが二つの端点をそろえ、順序対を作る操作の合同性がホスト側の二つの対を同定する。内部対の射影則と合わせると、直前の所属の輸送に必要な等しさになる。
 <!--/-->
@@ -1314,7 +1314,7 @@ Membership proofs for `a` and `b` identify them with elements of the small prese
 <!--en-->
 Now take an arbitrary object in `Related α`. Its definition gives, through three nested propositionally truncated existentials, an ordinal certificate and two members `a,b` of `Lset α`, together with an equality identifying the object with their pair and the propositionally truncated comparison fact. The target, membership in `D`, is a proposition, so the three existential truncations may be eliminated one after another. Containment depends only on the endpoints and their pair equality; even the truncated comparison is unnecessary for this coarse bound.
 <!--zh-->
-现取 `Related α` 中的任意对象。它的定义通过三层嵌套且经过命题截断的存在量词，给出序数性证明、`Lset α` 的两个成员 `a,b`，以及把该对象认同为二者有序对的等式；层序比较本身还保留在命题截断之内。目标「属于 `D`」是命题，因此可以逐层消去三层存在量词的命题截断。这个粗略界只依赖两个端点及有序对等式，连截断后的比较事实也无须使用。
+现取 `Related α` 中的任意对象。它的定义通过三层嵌套且经过命题截断的存在量词，给出序数性证明、`Lset α` 的两个元素 `a,b`，以及把该对象认同为二者有序对的等式；层序比较本身还保留在命题截断之内。目标「属于 `D`」是命题，因此可以逐层消去三层存在量词的命题截断。这个粗略界只依赖两个端点及有序对等式，连截断后的比较事实也无须使用。
 <!--ja-->
 `Related α` の任意の対象を取る。その定義は、命題的に切り詰められた三重の存在量化を通して、順序数性の証明、`Lset α` の二要素 `a,b`、および対象をその順序対と同定する等しさを与える。段階順序の比較そのものも、さらに命題的切り詰めの内側にある。目標である `D` への所属は命題なので、三つの存在量化の切り詰めを順に除去できる。この粗い上界に必要なのは二つの端点と対の等しさだけであり、切り詰められた比較の事実さえ使わない。
 <!--/-->
@@ -1330,7 +1330,7 @@ Now take an arbitrary object in `Related α`. Its definition gives, through thre
 <!--en-->
 The pair of recovered endpoints already belongs to `D` by the previous result. Transporting this membership along the reverse of the recovered pair equality places the original object in `D`. The witnesses remain confined to the propositional proof, so the bound does not choose endpoints for each related object.
 <!--zh-->
-由前面的结论，恢复出的两个端点所成有序对已经属于 `D`。沿所恢复有序对等式的反向搬运这项隶属，就得到原对象属于 `D`。这些见证只留在命题证明内部，所以该界并没有为每个相关对象选择端点。
+由前面的结论，恢复出的两个端点所成有序对已经属于 `D`。沿所恢复有序对等式的反向搬运这项成员关系，就得到原对象属于 `D`。这些见证只留在命题证明内部，所以该界并没有为每个相关对象选择端点。
 <!--ja-->
 回収した二つの端点からなる順序対は、先の結果によりすでに `D` に属する。回収した対の等しさの逆向きにこの所属を運ぶと、もとの対象が `D` に属すると分かる。証人は命題の証明の内部にとどまるため、この上界は各対象の端点を選んでいない。
 <!--/-->
@@ -1358,7 +1358,7 @@ The table and current relation are constructed together by membership recursion.
 <!--en-->
 At the induction step for `α`, assume recursively that every member `δ` of `α` has a bundle whenever its constructibility and ordinality are supplied. The task is to produce the corresponding table below `α` and the relation at `α`. The paired graph formula is kept as an explicit parameter together with an equality to the intended formula; this changes no mathematical hypothesis and lets the replacement argument use exactly that graph.
 <!--zh-->
-在 `α` 处的归纳步中，递归假设说：对 `α` 的每个成员 `δ`，只要给出其可构造性与序数性，就有相应的包。当前任务是产生 `α` 以下的表以及 `α` 处的关系。成对图公式作为显式参数保留，并带有它等于预期公式的证明；这不增加数学假设，只保证替换论证使用的正是那张图。
+在 `α` 处的归纳步中，递归假设说：对 `α` 的每个元素 `δ`，只要给出其可构造性与序数性，就有相应的包。当前任务是产生 `α` 以下的表以及 `α` 处的关系。成对图公式作为显式参数保留，并带有它等于预期公式的证明；这不增加数学假设，只保证替换论证使用的正是那张图。
 <!--ja-->
 `α` での帰納の一段階では、`α` の各要素 `δ` について、その構成可能性と順序数性が与えられれば対応する束がある、と再帰的に仮定する。ここでの課題は、`α` より下の表と `α` での関係を作ることである。順序対を値とするグラフの論理式を、意図した論理式との等しさとともに明示的な引数として保つ。これは数学的仮定を増やさず、置換の議論がまさにそのグラフを使うことを保証する。
 <!--/-->
@@ -1374,7 +1374,7 @@ At the induction step for `α`, assume recursively that every member `δ` of `α
 <!--en-->
 The ordinal `α` and its constructibility proof form a model element `A`. This is the internal domain over which the paired graph will be considered: its members are precisely the smaller sets that the membership-recursive hypothesis can address once their ordinalness has been established.
 <!--zh-->
-序数 `α` 与其可构造性证明组成模型元素 `A`。它将作为考察成对图的内部定义域；其中的成员正是那些更小集合，只要建立其序数性，沿成员关系的递归假设便可处理它们。
+序数 `α` 与其可构造性证明组成模型元素 `A`。它将作为考察成对图的内部定义域；其中的元素正是那些更小集合，只要建立其序数性，沿成员关系的递归假设便可处理它们。
 <!--ja-->
 順序数 `α` とその構成可能性の証明を組にして、モデル要素 `A` を作る。これは順序対を値とするグラフを考える内部の定義域である。その要素は、順序数性を示せば所属に沿う再帰仮定を適用できる、より小さい集合にちょうど当たる。
 <!--/-->
@@ -1388,7 +1388,7 @@ The ordinal `α` and its constructibility proof form a model element `A`. This i
 <!--en-->
 Every member `c` of an ordinal `α` is itself an ordinal. This inherited ordinalness is essential because the recursive construction is defined only on constructible ordinals, not on arbitrary constructible members. No truncation is involved in obtaining this certificate.
 <!--zh-->
-序数 `α` 的每个成员 `c` 本身仍是序数。这项继承的序数性不可缺少，因为递归构造只定义在可构造序数上，而不是任意可构造成员上。取得这份序数性证明不涉及命题截断。
+序数 `α` 的每个元素 `c` 本身仍是序数。这项继承的序数性不可缺少，因为递归构造只定义在可构造序数上，而不是任意可构造元素上。取得这份序数性证明不涉及命题截断。
 <!--ja-->
 順序数 `α` の各要素 `c` はそれ自身も順序数である。この継承された順序数性は不可欠である。再帰的構成の定義域は任意の構成可能な要素ではなく、構成可能な順序数だからである。この順序数性の証明を得る際に命題的切り詰めは使わない。
 <!--/-->
@@ -1401,7 +1401,7 @@ Every member `c` of an ordinal `α` is itself an ordinal. This inherited ordinal
 <!--en-->
 For `c∈α`, the model element `c` already carries its constructibility proof, and ordinal membership supplies its ordinalness. These are exactly the inputs needed to apply the induction hypothesis. The result is the full bundle at `c`: both the exact table below `c` and a realizing relation at `c`.
 <!--zh-->
-对于 `c∈α`，模型元素 `c` 已携带其可构造性证明，而序数成员法则给出其序数性。这些正是应用归纳假设所需的输入。所得结果是 `c` 处的完整包，其中同时含有 `c` 以下的精确表和 `c` 处的关系实现集合。
+对于 `c∈α`，模型元素 `c` 已携带其可构造性证明，而序数元素法则给出其序数性。这些正是应用归纳假设所需的输入。所得结果是 `c` 处的完整包，其中同时含有 `c` 以下的精确表和 `c` 处的关系实现集合。
 <!--ja-->
 `c∈α` のとき、モデル要素 `c` はすでに構成可能性の証明をもち、順序数の要素であることから順序数性も得られる。これは帰納仮定を適用するために必要な入力そのものである。結果として、`c` より下の正確な表と `c` での関係の実現集合をともに含む、`c` での完全な束が得られる。
 <!--/-->
@@ -1469,7 +1469,7 @@ It remains to show that this candidate lies on the graph used by replacement. Be
 <!--en-->
 The exact specification of the lower table yields two of the three facts required by that argument: every recorded value below `c` realizes the appropriate relation, and no recorded pair has an index outside `c`. The remaining fact is completeness, namely that each member of `c` has some recorded value.
 <!--zh-->
-下方那张表的精确规格给出该论证所需三项事实中的两项：`c` 以下每个被记录的取值都实现相应关系，并且没有索引在 `c` 之外的有序对被记录。余下的是完备性，即 `c` 的每个成员处都有某个被记录的取值。
+下方那张表的精确规格给出该论证所需三项事实中的两项：`c` 以下每个被记录的取值都实现相应关系，并且没有索引在 `c` 之外的有序对被记录。余下的是完备性，即 `c` 的每个元素处都有某个被记录的取值。
 <!--ja-->
 下方の表の正確な仕様から、この議論に必要な三つの事実のうち二つが得られる。`c` より下で記録された各値は対応する関係を実現し、添字が `c` の外にある順序対は記録されない。残るのは完全性、すなわち `c` の各要素に何らかの記録値があることである。
 <!--/-->
@@ -1485,7 +1485,7 @@ The exact specification of the lower table yields two of the three facts require
 <!--en-->
 For a member `e` of `c`, transitivity of the ambient ordinal carries `e ∈ c ∈ α` to `e ∈ α`. The induction hypothesis therefore supplies the realized relation at `e`, and the exact table specification at `c` places the pair of `e` with that relation into the lower table. The witness is returned under propositional truncation, exactly as table completeness requires.
 <!--zh-->
-若 `e` 是 `c` 的成员，环境序数的传递性便把 `e ∈ c ∈ α` 推成 `e ∈ α`。于是归纳假设给出 `e` 处已实现的关系，而 `c` 处表的精确规格把 `e` 与该关系组成的有序对放入下方表中。这个见证置于命题截断之下返回，恰好符合表完备性的要求。
+若 `e` 是 `c` 的元素，环境序数的传递性便把 `e ∈ c ∈ α` 推成 `e ∈ α`。于是归纳假设给出 `e` 处已实现的关系，而 `c` 处表的精确规格把 `e` 与该关系组成的有序对放入下方表中。这个见证置于命题截断之下返回，恰好符合表完备性的要求。
 <!--ja-->
 `e` が `c` の要素なら、周囲の順序数の推移性により `e ∈ c ∈ α` から `e ∈ α` が従う。したがって帰納法の仮定は `e` における実現関係を与え、`c` における表の正確な仕様は、`e` とその関係との順序対を下方の表へ入れる。この証人は、表の完全性が要求するとおり、命題的切り詰めの中で返される。
 <!--/-->
@@ -1574,7 +1574,7 @@ For each `c ∈ α`, existence and uniqueness now describe a single point of the
 <!--en-->
 Replacement may therefore collect the paired graph values over the internal domain `α`. Its conclusion is a contractible type of a constructible set equipped with the exact membership specification for that image. In particular, it gives a uniquely specified image set; it does not assert that the members of that set form a contractible type.
 <!--zh-->
-于是替换可以在内部定义域 `α` 上收集成对图的取值。其结论是一个可缩类型，其中的元素由一个可构造集合及该图像的精确成员关系规格组成。因此得到的是具有唯一规格的图像集，并不是说这个集合的成员构成可缩类型。
+于是替换可以在内部定义域 `α` 上收集成对图的取值。其结论是一个可缩类型，其中的元素由一个可构造集合及该图像的精确成员关系规格组成。因此得到的是具有唯一规格的图像集，并不是说这个集合的元素构成可缩类型。
 <!--ja-->
 したがって置換公理は、内部の定義域 `α` 上で順序対グラフの値を集められる。その結論は、構成可能な集合と、その像についての正確な所属仕様とからなる可縮型である。つまり一意に指定された像集合が得られるのであって、その集合の要素が可縮型をなすという主張ではない。
 <!--/-->
@@ -1689,7 +1689,7 @@ Completeness is obtained pointwise. For each `c ∈ α`, the recursive value at 
 <!--en-->
 The table has now supplied the value correctness and completeness needed to read the constant form of the step condition at `α`. Separation applies that condition inside the previously constructed common bound. It returns the uniquely specified constructible subset whose members are exactly the bounded elements satisfying the condition; this subset, rather than the bound itself, is the candidate relation at `α`.
 <!--zh-->
-这张表现已给出在 `α` 处读取常元形式步进条件所需的取值正确性与完备性。分离公理在先前构造的共同界内应用该条件，得到具有唯一规格的可构造子集，其成员恰为界中满足该条件的元素。作为 `α` 处候选关系的是这个子集，而不是共同界本身。
+这张表现已给出在 `α` 处读取常元形式步进条件所需的取值正确性与完备性。分离公理在先前构造的共同界内应用该条件，得到具有唯一规格的可构造子集，其元素恰为界中满足该条件的元素。作为 `α` 处候选关系的是这个子集，而不是共同界本身。
 <!--ja-->
 この表から、`α` におけるステップ条件の定数形を読むために必要な、値の正しさと完全性が得られた。分出公理は、先に構成した共通の上界の中でその条件を適用する。その結果、上界に属して条件を満たす要素だけを正確にもつ、仕様によって一意な構成可能部分集合が得られる。`α` における関係の候補は共通の上界そのものではなく、この部分集合である。
 <!--/-->
@@ -1703,7 +1703,7 @@ The table has now supplied the value correctness and completeness needed to read
 <!--en-->
 To prove that the separated set realizes the intended class, first take one of its members. The separation specification yields both membership in the common bound and satisfaction of the constant condition; only the second component is needed in this direction. Adequacy of the condition converts that satisfaction into `Related α`, giving the membership-to-relation implication.
 <!--zh-->
-为证明分离所得集合实现预期的类，先取它的一个成员。分离规格同时给出该元素属于共同界并满足常元条件；这个方向只需第二分量。条件的充分性把该满足证明转换成 `Related α`，从而得到从成员关系到关系类的蕴含。
+为证明分离所得集合实现预期的类，先取它的一个元素。分离规格同时给出该元素属于共同界并满足常元条件；这个方向只需第二分量。条件的充分性把该满足证明转换成 `Related α`，从而得到从成员关系到关系类的蕴含。
 <!--ja-->
 分出された集合が意図したクラスを実現することを示すため、まずその要素を一つ取る。分出の仕様から、共通の上界への所属と定数条件の充足がともに得られるが、この向きで必要なのは後者だけである。条件の妥当性により、その充足は `Related α` へ変換され、所属から関係クラスへの含意が得られる。
 <!--/-->
@@ -1745,7 +1745,7 @@ For a layer index `α` equipped with both constructibility and ordinalness, the 
 <!--en-->
 The accompanying specification comes from the same bundle. It says exactly that membership in `relL` agrees with the class `Related α`: every member represents a related pair, and every related pair belongs. Later arguments can therefore reason from this equivalence without reopening the replacement and separation construction.
 <!--zh-->
-同行的规格来自同一个包。它精确断言：属于 `relL` 与满足类 `Related α` 相一致；每个成员都表示一个被关联的有序对，而每个被关联的有序对都属于其中。因此，后续论证可以直接使用这条等价，无须重新展开替换与分离的构造。
+同行的规格来自同一个包。它精确断言：属于 `relL` 与满足类 `Related α` 相一致；每个元素都表示一个被关联的有序对，而每个被关联的有序对都属于其中。因此，后续论证可以直接使用这条等价，无须重新展开替换与分离的构造。
 <!--ja-->
 それに伴う仕様も同じ束から得られる。この仕様は、`relL` への所属がクラス `Related α` と正確に一致すること、すなわち各要素が関係づけられた順序対を表し、関係づけられた各順序対がそこに属することを述べる。したがって後の議論では、置換と分出の構成を開き直さず、この同値を直接用いられる。
 <!--/-->
@@ -1758,7 +1758,7 @@ The accompanying specification comes from the same bundle. It says exactly that 
 <!--en-->
 ## The members are the pairs the order relates
 <!--zh-->
-## 成员就是那个序所关联的诸对
+## 元素就是那个序所关联的诸对
 <!--ja-->
 ## 要素は順序が関係づける順序対である
 <!--/-->
@@ -1766,7 +1766,7 @@ The accompanying specification comes from the same bundle. It says exactly that 
 <!--en-->
 For two members `a` and `b` of `Lset α`, the filling direction specializes the general realization lemma to `relL`. A host-level comparison by the already constructed strict well-order `orderAt α` therefore places the encoded ordered pair of their underlying sets in `relL`.
 <!--zh-->
-对 `Lset α` 的两个成员 `a` 与 `b`，填充方向把一般的实现引理专用于 `relL`。因此，已经构造好的严格良序 `orderAt α` 中的一条宿主层比较，会把二者底层集合组成的编码有序对放入 `relL`。
+对 `Lset α` 的两个元素 `a` 与 `b`，填充方向把一般的实现引理专用于 `relL`。因此，已经构造好的严格良序 `orderAt α` 中的一条宿主层比较，会把二者底层集合组成的编码有序对放入 `relL`。
 <!--ja-->
 `Lset α` の二要素 `a` と `b` について、埋める向きは一般の実現補題を `relL` に特殊化する。したがって、すでに構成されている狭義整列順序 `orderAt α` によるホスト側の比較から、二つの底の集合を符号化した順序対が `relL` に属することが従う。
 <!--/-->
@@ -1788,7 +1788,7 @@ For two members `a` and `b` of `Lset α`, the filling direction specializes the 
 <!--en-->
 The reading direction gives the converse for the same two layer members: membership of their encoded pair in `relL` recovers the host-level comparison in `orderAt α`. Together the two directions give a pointwise representation of the relation graph used by later minimality arguments. They neither construct a new comparison of names nor assert in the object language that this graph is a well-order.
 <!--zh-->
-读取方向对同一对层成员给出逆命题：二者编码有序对属于 `relL`，便可恢复 `orderAt α` 中的宿主层比较。两个方向合起来逐点表示这张关系图，供后续的最小性论证使用。它们既不构造新的名字比较，也不在对象语言中断言这张图是良序。
+读取方向对同一对层元素给出逆命题：二者编码有序对属于 `relL`，便可恢复 `orderAt α` 中的宿主层比较。两个方向合起来逐点表示这张关系图，供后续的最小性论证使用。它们既不构造新的名字比较，也不在对象语言中断言这张图是良序。
 <!--ja-->
 読む向きは、同じ二つの段階要素について逆を与える。二要素の符号化順序対が `relL` に属することから、`orderAt α` におけるホスト側の比較が復元される。二方向を合わせると、後の最小性の議論で用いる関係グラフが各要素対ごとに表現される。ここでは新たな名前の比較を構成せず、このグラフが整列順序であるという対象言語の主張も行わない。
 <!--/-->
@@ -1816,7 +1816,7 @@ The construction remains relative to the two adequate forms of the object-langua
 <!--zh-->
 ## 小结
 
-在可构造序数层索引 `α` 处，宿主类型论已经给出 `Lset α` 的成员上的严格良序 `orderAt α oα`。`Ordering` 通过命题截断把它的比较化为命题值谓词，`Related` 再把被关联端点的有序对组织成宿主层定义的类。三岐性只允许 `strict` 在端点已经指定时恢复比较；`IsRel`、`relL-fill` 与 `relL-rep` 随后逐点给出这项比较与实现集合之成员关系的精确对应。
+在可构造序数层索引 `α` 处，宿主类型论已经给出 `Lset α` 的元素上的严格良序 `orderAt α oα`。`Ordering` 通过命题截断把它的比较化为命题值谓词，`Related` 再把被关联端点的有序对组织成宿主层定义的类。三岐性只允许 `strict` 在端点已经指定时恢复比较；`IsRel`、`relL-fill` 与 `relL-rep` 随后逐点给出这项比较与实现集合之成员关系的精确对应。
 
 实现集合通过间接方式得到。逼近只在其定义域以下记录命题截断意义下存在的取值，而沿成员关系的归纳在不假设单值性的情况下，证明每个已记录取值都实现其自身实参处的类。比较成对图的纤维时，实现集合的外延唯一性才认同相互竞争的取值。`mereFunct` 把所得命题截断下的唯一存在转成可缩性，替换收集 `α` 以下的带索引条目，分离再从共同包含集中切出 `α` 处的关系。递归包同时携带完成的下方表与当前关系，而递归并不要求这个包是命题。
 

@@ -28,7 +28,7 @@ module L.Choice.InternalWellOrder {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 open import FOL.Syntax using ( Formula; var; con; _∈̇_; _≐_; _∧̇_; ∃̇_ )
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Coding {ℓ} using ( pr )
@@ -64,7 +64,7 @@ import FOL.Absoluteness
 At each constructible stage, `orderAt`{.Agda} already gives a host-level strict well-order of its members. The task here is to make the underlying comparison available to formulas interpreted in `L`: for each ordinal stage, we obtain a relation set whose ordered-pair members correspond in both directions to `relOf (orderAt α oα)`{.Agda}. This constructs no new well-order and proves no object-language formula saying that the relation is a well-order.
 <!--zh-->
 
-在每个可构造层，`orderAt`{.Agda} 已经给出其成员上的宿主层严格良序。本章的任务是让解释于 `L` 中的公式也能使用其底层比较：对每个序数层，得到一个关系集，使其中的有序对成员与 `relOf (orderAt α oα)`{.Agda} 逐对双向对应。这里既不构造新的良序，也不证明断言该关系为良序的对象语言公式。
+在每个可构造层，`orderAt`{.Agda} 已经给出其元素上的宿主层严格良序。本章的任务是让解释于 `L` 中的公式也能使用其底层比较：对每个序数层，得到一个关系集，使其中的有序对元素与 `relOf (orderAt α oα)`{.Agda} 逐对双向对应。这里既不构造新的良序，也不证明断言该关系为良序的对象语言公式。
 <!--ja-->
 
 各構成可能段階では、`orderAt`{.Agda} がその要素上のホスト側の狭義整列順序をすでに与えている。この章の課題は、その基礎となる比較を `L` で解釈される論理式からも使えるようにすることである。各順序数段階について、順序対の所属が `relOf (orderAt α oα)`{.Agda} と対ごとに両方向で対応する関係集合を得る。ここで新しい整列順序を構成することも、この関係が整列順序であると述べる対象言語の論理式を証明することもない。
@@ -83,7 +83,7 @@ The distinction between the two levels will guide the chapter. The well-order is
 <!--en-->
 To describe one comparison step internally, it suffices to combine variables and constants with membership, equality, conjunction, and existential quantification. The six existential binders introduced below are repeated uses of this one logical constructor.
 <!--zh-->
-要在内部描述一次比较步，只须用隶属、等词、合取与存在量化连接变元和常元。下文的六个存在绑定，是对同一个逻辑构造器的反复使用。
+要在内部描述一次比较步，只须用成员关系、等词、合取与存在量化连接变元和常元。下文的六个存在绑定，是对同一个逻辑构造器的反复使用。
 <!--ja-->
 一回の比較ステップを内部で記述するには、変数と定数を、所属・等号・連言・存在量化で結べば十分である。以下の六つの存在束縛は、同じ論理構成子を繰り返し用いたものである。
 <!--/-->
@@ -91,7 +91,7 @@ To describe one comparison step internally, it suffices to combine variables and
 <!--en-->
 The relation will be indexed by an ordinal stage. Its witnesses must therefore be recognized as constructible sets, and successor-stage membership must be related to definability over the preceding stage.
 <!--zh-->
-这个关系以序数层为指标。因此，它的见证必须被辨认为可构造集合，而后继层中的隶属必须与前一层上的可定义性联系起来。
+这个关系以序数层为指标。因此，它的见证必须被辨认为可构造集合，而后继层中的成员关系必须与前一层上的可定义性联系起来。
 <!--ja-->
 この関係は順序数段階を添字とする。そのため、証人は構成可能集合として同定され、後続段階への所属は直前の段階上での定義可能性と結び付けられなければならない。
 <!--/-->
@@ -99,7 +99,7 @@ The relation will be indexed by an ordinal stage. Its witnesses must therefore b
 <!--en-->
 The semantic target has two distinct levels. `orderAt δ od`{.Agda} is the host-level strict well-order on the members of `Lset δ`{.Agda}. For the equal-birth step used in its recursive description, `Under δ (stepOrder δ od) u v`{.Agda} records that `u` and `v` belong to `Lset (sucV δ)`{.Agda} and that the resulting members are related by `stepOrder δ od`{.Agda}. Least names over `Lset δ`{.Agda} connect this host-level step to the formula constructed below.
 <!--zh-->
-语义目标分属两个层面。`orderAt δ od`{.Agda} 是 `Lset δ`{.Agda} 的成员上的宿主层严格良序。为了描述其递归构造中的同生步进，`Under δ (stepOrder δ od) u v`{.Agda} 记录 `u`、`v` 属于 `Lset (sucV δ)`{.Agda}，并记录由此得到的两个成员满足 `stepOrder δ od`{.Agda}。`Lset δ`{.Agda} 上的最小名字把这项宿主层步进连接到下文构造的公式。
+语义目标分属两个层面。`orderAt δ od`{.Agda} 是 `Lset δ`{.Agda} 的元素上的宿主层严格良序。为了描述其递归构造中的同生步进，`Under δ (stepOrder δ od) u v`{.Agda} 记录 `u`、`v` 属于 `Lset (sucV δ)`{.Agda}，并记录由此得到的两个元素满足 `stepOrder δ od`{.Agda}。`Lset δ`{.Agda} 上的最小名字把这项宿主层步进连接到下文构造的公式。
 <!--ja-->
 意味論的な目標には二つの水準がある。`orderAt δ od`{.Agda} は、`Lset δ`{.Agda} の要素上のホスト側の狭義整列順序である。その再帰的記述で用いる同じ誕生段階のステップについて、`Under δ (stepOrder δ od) u v`{.Agda} は、`u` と `v` が `Lset (sucV δ)`{.Agda} に属することと、そこから得られる二要素が `stepOrder δ od`{.Agda} で関係づけられることを記録する。`Lset δ`{.Agda} 上の最小名が、このホスト側のステップを以下で構成する論理式へ結び付ける。
 <!--/-->
@@ -143,7 +143,7 @@ open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
 <!--en-->
 The comparison takes place among members of a successor stage. Presenting a stage by a small type lets the host well-order act on its members, while `sucV`{.Agda} records the successor ordinal used to locate the two compared objects.
 <!--zh-->
-比较发生在某个后继层的成员之间。把层呈现为小类型，使宿主良序能够作用于其成员；`sucV`{.Agda} 则记录定位两个被比较对象所用的后继序数。
+比较发生在某个后继层的元素之间。把层呈现为小类型，使宿主良序能够作用于其元素；`sucV`{.Agda} 则记录定位两个被比较对象所用的后继序数。
 <!--ja-->
 比較は後続段階の要素の間で行われる。段階を小さい型で表示することで、ホスト側の整列順序をその要素に作用させられる。`sucV`{.Agda} は、比較される二対象を位置付ける後続順序数を記録する。
 <!--/-->
@@ -164,7 +164,7 @@ From this point on, formulas are evaluated in the first-order structure carried 
 <!--/-->
 
 ```agda
-open hPropStructure 𝒮ʟ
+open hPropView 𝒮ʟ
 ```
 
 <!--en-->
@@ -205,7 +205,7 @@ private
 <!--en-->
 After all six witnesses have been bound, `StepAt`{.Agda} directly refers to five of them: the tower `tw`, the table relation `rl`, the code set `cs`, the code order `ro`, and the empty-alphabet code set `c0`. The definable-power-set witness `pw` is used by the surrounding membership clauses rather than passed to `StepAt`{.Agda}.
 <!--zh-->
-六个见证全部绑定后，`StepAt`{.Agda} 直接引用其中五个：塔 `tw`、表关系 `rl`、码集 `cs`、码序 `ro` 与空字母表码集 `c0`。可定义幂集见证 `pw` 用于外围的隶属子句，并不传给 `StepAt`{.Agda}。
+六个见证全部绑定后，`StepAt`{.Agda} 直接引用其中五个：塔 `tw`、表关系 `rl`、码集 `cs`、码序 `ro` 与空字母表码集 `c0`。可定义幂集见证 `pw` 用于外围的成员关系子句，并不传给 `StepAt`{.Agda}。
 <!--ja-->
 六つの証人をすべて束縛した後、`StepAt`{.Agda} はそのうち五つを直接参照する。塔 `tw`、表の関係 `rl`、コード集合 `cs`、コード順序 `ro`、空のアルファベットのコード集合 `c0` である。定義可能冪集合の証人 `pw` は周囲の所属条件で使われ、`StepAt`{.Agda} には渡されない。
 <!--/-->
@@ -242,7 +242,7 @@ The two nearest indices select `ro` and `c0`. They do not introduce further bind
 <!--en-->
 The six witnesses of `Stp d f u v`{.Agda} are introduced in dependency order. First comes a tower recognized at stage `d`; next comes its definable power set, whose membership clauses will certify that the objects at `u` and `v` are available for the successor-stage comparison.
 <!--zh-->
-`Stp d f u v`{.Agda} 的六个见证按依赖顺序引入。首先是被辨认为 `d` 所指层的塔；其次是它的可定义幂集，其中的隶属子句将证明 `u` 与 `v` 所指对象可以参加后继层比较。
+`Stp d f u v`{.Agda} 的六个见证按依赖顺序引入。首先是被辨认为 `d` 所指层的塔；其次是它的可定义幂集，其中的成员关系子句将证明 `u` 与 `v` 所指对象可以参加后继层比较。
 <!--ja-->
 `Stp d f u v`{.Agda} の六つの証人は、依存関係に従う順序で導入される。最初は `d` が指す段階の塔であり、次はその定義可能冪集合である。後者への所属条件が、`u` と `v` の指す対象を後続段階で比較できることを保証する。
 <!--/-->
@@ -319,7 +319,7 @@ module Reading {n : ℕ} (d f u v : Fin n) (γ : S ^ n)
 <!--en-->
 The host order is carried onto the presentation of the stage: the strict order of the members is available on the small index type.
 <!--zh-->
-宿主序被搬运到层的呈现上：成员的严格序可在小索引类型上取用。
+宿主序被搬运到层的呈现上：元素的严格序可在小索引类型上取用。
 <!--ja-->
 ホストの順序は、段階の提示の上に運ばれる。要素の狭義の順序が、小さな索引型の上で使えるのである。
 <!--/-->
@@ -344,7 +344,7 @@ A name for a set in `Lset (sucV δ)`{.Agda} is formed over `Lset δ`{.Agda} and 
 <!--en-->
 The semantic goal is the propositionally truncated `Under`{.Agda} statement. It contains both successor-stage memberships and the step comparison, but reading the existential formula establishes only that such evidence exists; it does not choose names or any of the six bound objects as data.
 <!--zh-->
-语义目标是经过命题截断的 `Under`{.Agda} 陈述。它同时包含两个后继层隶属事实与步进比较，但读取存在公式只会证明这类证据存在，并不会把名字或六个绑定对象中的任何一个选作资料。
+语义目标是经过命题截断的 `Under`{.Agda} 陈述。它同时包含两个后继层成员关系事实与步进比较，但读取存在公式只会证明这类证据存在，并不会把名字或六个绑定对象中的任何一个选作资料。
 <!--ja-->
 意味論的な目標は、命題的に切り詰められた `Under`{.Agda} の主張である。そこには二つの後続段階への所属とステップ比較が含まれるが、存在論理式を読むことで分かるのは、そのような証拠が存在することだけである。名前や六つの束縛対象をデータとして選ぶことはない。
 <!--/-->
@@ -433,7 +433,7 @@ The table-application clause says that `rl` is some value recorded at the decode
 <!--en-->
 The definable-power-set clause identifies `pw`, and the next two conjuncts place both compared objects in it. Once `tw` and `pw` have been identified, these memberships become membership in `Lset (sucV δ)`{.Agda}, supplying the two domain components required by `Under`{.Agda}.
 <!--zh-->
-可定义幂集子句辨认 `pw`，随后的两个合取项把两个被比较对象都放入其中。一旦 `tw` 与 `pw` 被确定，这两条隶属便转化为对 `Lset (sucV δ)`{.Agda} 的隶属，给出 `Under`{.Agda} 所需的两个定义域分量。
+可定义幂集子句辨认 `pw`，随后的两个合取项把两个被比较对象都放入其中。一旦 `tw` 与 `pw` 被确定，这两条成员关系便转化为对 `Lset (sucV δ)`{.Agda} 的成员关系，给出 `Under`{.Agda} 所需的两个定义域分量。
 <!--ja-->
 定義可能冪集合の条件が `pw` を同定し、続く二つの連言が比較対象をともにそこへ置く。`tw` と `pw` が同定されれば、これらの所属は `Lset (sucV δ)`{.Agda} への所属となり、`Under`{.Agda} が必要とする二つの領域成分を与える。
 <!--/-->
@@ -449,7 +449,7 @@ The definable-power-set clause identifies `pw`, and the next two conjuncts place
 <!--en-->
 After those memberships, the remaining payload begins with the truncated existence of the table value `rl`. The eventual target `Goal`{.Agda} is itself a proposition, so the proof may eliminate each truncation into that target without extracting a reusable choice of witness.
 <!--zh-->
-在两条隶属之后，剩余载荷从表值 `rl` 的截断存在开始。最终目标 `Goal`{.Agda} 本身是命题，因此证明可以把每层截断消去到这个目标中，而不会抽取出可重复使用的见证选择。
+在两条成员关系之后，剩余载荷从表值 `rl` 的截断存在开始。最终目标 `Goal`{.Agda} 本身是命题，因此证明可以把每层截断消去到这个目标中，而不会抽取出可重复使用的见证选择。
 <!--ja-->
 二つの所属の後、残るペイロードは表の値 `rl` の切り詰められた存在から始まる。最終目標 `Goal`{.Agda} 自体が命題なので、再利用できる証人の選択を取り出すことなく、各切り詰めをこの目標へ消去できる。
 <!--/-->
@@ -483,7 +483,7 @@ The outermost payload starts with a witness `tw` satisfying the stage graph. Ord
 <!--en-->
 Only five of the six bound elements enter `StepAt`{.Agda}; `pw` serves the two surrounding membership clauses. Accordingly, `Slots`{.Agda} identifies the tower and code set with their intended values, assumes that `rl` has the pairwise representation property `IsRel δ rl`{.Agda}, and fixes `ro` and `c0` to the two required constants. These facts are exactly what the earlier name-comparison adequacy theorem needs.
 <!--zh-->
-六个绑定元素中只有五个进入 `StepAt`{.Agda}；`pw` 用于外围的两项隶属子句。因此，`Slots`{.Agda} 把塔与码集认同为预期对象，假设 `rl` 具有逐对表示性质 `IsRel δ rl`{.Agda}，并把 `ro` 与 `c0` 固定为所需的两个常元。这些事实恰是先前名字比较充分性定理所需的条件。
+六个绑定元素中只有五个进入 `StepAt`{.Agda}；`pw` 用于外围的两项成员关系子句。因此，`Slots`{.Agda} 把塔与码集认同为预期对象，假设 `rl` 具有逐对表示性质 `IsRel δ rl`{.Agda}，并把 `ro` 与 `c0` 固定为所需的两个常元。这些事实恰是先前名字比较充分性定理所需的条件。
 <!--ja-->
 六つの束縛要素のうち `StepAt`{.Agda} に入るのは五つだけであり、`pw` はその外側にある二つの所属条件で使われる。そこで `Slots`{.Agda} は、塔と符号集合を意図した対象と同一視し、`rl` が対ごとの表現性 `IsRel δ rl`{.Agda} をもつと仮定し、`ro` と `c0` を必要な二つの定数に固定する。これらは、先に証明した名前比較の妥当性定理が必要とする条件そのものである。
 <!--/-->
@@ -682,7 +682,7 @@ The total reading must work for whatever six witnesses a satisfying assignment p
 <!--en-->
 The next hypotheses supply the second membership, the table application, and the code-set description. Crucially, the relation premise ranges over every `r` recorded by the table at `δ`, because in the reading direction the existential formula may have bound any such `rl`; the final equation shown here fixes `ro` to the canonical code order.
 <!--zh-->
-接下来的假设给出第二条隶属、序表应用与码集描述。关键在于，关系前提遍历序表在 `δ` 处记录的每个 `r`，因为在读取方向，存在公式可能绑定其中任意一个 `rl`；这里最后显示的等式把 `ro` 固定为典范码序。
+接下来的假设给出第二条成员关系、序表应用与码集描述。关键在于，关系前提遍历序表在 `δ` 处记录的每个 `r`，因为在读取方向，存在公式可能绑定其中任意一个 `rl`；这里最后显示的等式把 `ro` 固定为典范码序。
 <!--ja-->
 続く仮定は、第二の所属、順序表の適用、コード集合の記述を与える。特に、関係についての前提は、順序表が `δ` で記録するすべての `r` に及ぶ。読み出す向きでは、存在論理式がそのどの `rl` を束縛していてもよいからである。ここで最後に現れる等式は、`ro` を正準なコード順序に固定する。
 <!--/-->
@@ -740,7 +740,7 @@ The definable-subset identification says the bound set is the definable power se
 <!--en-->
 Membership in the successor stage is recovered by two transports: the first identifies the definable power set with the successor stage via the successor identity of the constructible layer, and the second rewrites along the identification of the bound set with that definable power set. Together they place the compared object inside `Lset (sucV δ)`.
 <!--zh-->
-后继层隶属由两次运输恢复：第一次沿可构造层后继恒等式认同可定义幂集与后继层，第二次沿被绑定集合认同为该可定义幂集的等式改写。二者共同把被比较对象放进后继层 `Lset (sucV δ)` 中。
+后继层成员关系由两次运输恢复：第一次沿可构造层后继恒等式认同可定义幂集与后继层，第二次沿被绑定集合认同为该可定义幂集的等式改写。二者共同把被比较对象放进后继层 `Lset (sucV δ)` 中。
 <!--ja-->
 後続の段階への所属は、二度の輸送によって復元される。最初の輸送が、構成可能な層の後続の恒等式を使って、定義可能冪集合と後続の段階を同一視する。二つ目の輸送が、束縛された集合がその定義可能冪集合と等しいという等式に沿って書き換える。二つ合わせて、比較される対象を後続の段階 `Lset (sucV δ)` の中に置く。
 <!--/-->
@@ -754,7 +754,7 @@ Membership in the successor stage is recovered by two transports: the first iden
 <!--en-->
 The first comparison candidate is the underlying set at slot `u`, presented as a member of the successor stage by the recovery lemma.
 <!--zh-->
-第一个比较候选是槽位 `u` 处的底层集合，经恢复引理呈现为后继段的成员。
+第一个比较候选是槽位 `u` 处的底层集合，经恢复引理呈现为后继段的元素。
 <!--ja-->
 最初の比較の候補は、枠 `u` の基礎の集合であり、復元の補題によって後続の段階の要素として提示される。
 <!--/-->
@@ -820,7 +820,7 @@ With the tower, stage relation, code set, and two fixed code objects now identif
 <!--en-->
 Inside the propositional truncation returned by the name adequacy theorem, suppose `t₁` and `t₂` are least names for the two compared sets and `t₁ ≺ₙ t₂`. The target `Under` contains more than the final comparison: it also records that both sets belong to `Lset (sucV δ)`. Those two membership components have already been established by `a` and `b`.
 <!--zh-->
-在名字充分性定理返回的命题截断内部，设 `t₁`、`t₂` 分别是两个被比较集合的最小名字，且 `t₁ ≺ₙ t₂`。目标 `Under` 不只含最终比较，还记录两个集合都属于 `Lset (sucV δ)`；这两项隶属已经由 `a` 与 `b` 建立。
+在名字充分性定理返回的命题截断内部，设 `t₁`、`t₂` 分别是两个被比较集合的最小名字，且 `t₁ ≺ₙ t₂`。目标 `Under` 不只含最终比较，还记录两个集合都属于 `Lset (sucV δ)`；这两项成员关系已经由 `a` 与 `b` 建立。
 <!--ja-->
 名前の妥当性定理が返す命題的切り詰めの内部で、`t₁` と `t₂` を比較される二つの集合の最小名とし、`t₁ ≺ₙ t₂` とする。目標の `Under` は最後の比較だけでなく、二つの集合がともに `Lset (sucV δ)` に属することも記録する。この二つの所属成分は、すでに `a` と `b` によって得られている。
 <!--/-->
@@ -836,7 +836,7 @@ Inside the propositional truncation returned by the name adequacy theorem, suppo
 <!--en-->
 The two outward least-name readings translate the local predicates back to `IsLeastName`. The theorem `stepAt-fill` then says that comparison of these least names entails the relation of `stepOrder δ od` between the represented new elements. Together with the memberships from the preceding group, this completes `Under`.
 <!--zh-->
-两条最小名字的向外读式把局部谓词还原为 `IsLeastName`。随后 `stepAt-fill` 说明，这两条最小名字之间的比较蕴含其所表示新元素之间的 `stepOrder δ od` 关系。再合并上一组的两项隶属，即得到完整的 `Under`。
+两条最小名字的向外读式把局部谓词还原为 `IsLeastName`。随后 `stepAt-fill` 说明，这两条最小名字之间的比较蕴含其所表示新元素之间的 `stepOrder δ od` 关系。再合并上一组的两项成员关系，即得到完整的 `Under`。
 <!--ja-->
 二つの最小名についての外向きの読みは、局所的な述語を `IsLeastName` へ戻す。続いて `stepAt-fill` は、これらの最小名の比較から、それらが表す新しい要素の間の `stepOrder δ od` 関係が従うことを示す。直前に得た二つの所属と合わせて、`Under` が完成する。
 <!--/-->
@@ -858,7 +858,7 @@ The two outward least-name readings translate the local predicates back to `IsLe
 <!--en-->
 For the converse direction, fix one actual table value `rl`, evidence that the table records it at `δ`, and evidence that it represents the required stage relation. Also fix the two successor-stage memberships carried by an `Under` comparison. Unlike the outward direction, this construction has a particular local table value available and can use it as the third existential witness of `Stp`.
 <!--zh-->
-反向论证固定一个实际表取值 `rl`，以及表在 `δ` 处记录它和它表示所需层关系的证据；同时固定一项 `Under` 比较携带的两条后继层隶属。与向外方向不同，这个构造手中已有一个具体的局部表取值，可以把它用作 `Stp` 的第三个存在见证。
+反向论证固定一个实际表取值 `rl`，以及表在 `δ` 处记录它和它表示所需层关系的证据；同时固定一项 `Under` 比较携带的两条后继层成员关系。与向外方向不同，这个构造手中已有一个具体的局部表取值，可以把它用作 `Stp` 的第三个存在见证。
 <!--ja-->
 逆向きの議論では、実際の表の値 `rl` と、それが表の `δ` に記録され、必要な段階関係を表すことの証拠を固定する。さらに、`Under` 比較が含む二つの後続段階への所属も固定する。外向きの場合と異なり、この構成では具体的な局所表の値が手元にあるため、それを `Stp` の三番目の存在証人として使える。
 <!--/-->
@@ -891,7 +891,7 @@ The packing argument uses the six witnesses in the order prescribed by `Stp`{.Ag
 <!--en-->
 The first comparison candidate is presented by its membership in the successor stage.
 <!--zh-->
-第一个比较候选由其在后继段中的隶属呈现。
+第一个比较候选由其在后继段中的成员关系呈现。
 <!--ja-->
 最初の比較の候補は、後続の段階での所属によって提示される。
 <!--/-->
@@ -973,7 +973,7 @@ The second witness is `powS δ od`{.Agda}, whose underlying set is the definable
 <!--en-->
 To fill the two membership conjuncts of `Stp`, the direction needed here is from the successor stage into the chosen definable-subset object. The identity `Lset-suc δ` rewrites membership in `Lset (sucV δ)` as membership in `𝒟ₒ (Lset δ)`, and `powS-fst` then rewrites that set as the underlying set of `powS δ od`.
 <!--zh-->
-为了填入 `Stp` 的两项隶属合取，这里需要的方向是从后继层进入选定的可定义子集对象。恒等式 `Lset-suc δ` 把 `Lset (sucV δ)` 中的隶属改写为 `𝒟ₒ (Lset δ)` 中的隶属，`powS-fst` 再把后者改写为 `powS δ od` 的底层集合。
+为了填入 `Stp` 的两项成员关系合取，这里需要的方向是从后继层进入选定的可定义子集对象。恒等式 `Lset-suc δ` 把 `Lset (sucV δ)` 中的成员关系改写为 `𝒟ₒ (Lset δ)` 中的成员关系，`powS-fst` 再把后者改写为 `powS δ od` 的底层集合。
 <!--ja-->
 `Stp` の二つの所属の連言を満たすため、ここで必要なのは後続段階から選ばれた定義可能部分集合の対象へ向かう向きである。等式 `Lset-suc δ` により、`Lset (sucV δ)` への所属を `𝒟ₒ (Lset δ)` への所属へ書き換え、さらに `powS-fst` により、それを `powS δ od` の基礎となる集合への所属へ書き換える。
 <!--/-->
@@ -1063,7 +1063,7 @@ The six object-language existentials are interpreted as six nested propositional
 <!--en-->
 The second witness is `powS δ od`{.Agda}, accompanied by its `DefAt`{.Agda} satisfaction and by the two memberships transported from the successor stage. The third witness is the supplied table value `rl`; its recorded-pair proof yields the required satisfaction of `appAt`{.Agda}. Thus the filling direction uses a particular relation value already provided by the caller rather than choosing one from the table.
 <!--zh-->
-第二个见证是 `powS δ od`{.Agda}，并附有它对 `DefAt`{.Agda} 的满足，以及从后继层运输来的两条隶属。第三个见证是给定的表取值 `rl`；它的有序对成员证明给出所需的 `appAt`{.Agda} 满足。因此，填充方向使用调用方已经给出的特定关系值，而不是从表中选取一个值。
+第二个见证是 `powS δ od`{.Agda}，并附有它对 `DefAt`{.Agda} 的满足，以及从后继层运输来的两条成员关系。第三个见证是给定的表取值 `rl`；它的有序对成员关系证明给出所需的 `appAt`{.Agda} 满足。因此，填充方向使用调用方已经给出的特定关系值，而不是从表中选取一个值。
 <!--ja-->
 第二の証人は `powS δ od`{.Agda} であり、`DefAt`{.Agda} の充足と、後続段階から輸送した二つの所属が付随する。第三の証人は与えられた表の値 `rl` であり、その順序対の所属証明から必要な `appAt`{.Agda} の充足が得られる。したがって、埋める向きでは、表から値を選ぶのではなく、呼び出し側がすでに与えた特定の関係値を使う。
 <!--/-->
@@ -1174,7 +1174,7 @@ Once all six witnesses and their conditions are locally available, `atAll` produ
 <!--en-->
 The inward reading consumes a specific table value with its membership and relation proof, together with the two membership proofs and the host-side comparison, and packs everything into the six-layer existential.
 <!--zh-->
-向内读法消耗特定表取值连同其隶属与关系证明，连同两条隶属证明与宿主侧比较，并把一切打包进六层存在量词。
+向内读法消耗特定表取值连同其成员关系与关系证明，连同两条成员关系证明与宿主侧比较，并把一切打包进六层存在量词。
 <!--ja-->
 内向きの読み出しは、特定の表の値と、その所属と関係の証明と、二つの所属の証明とホスト側の比較を消費して、すべてを六重の存在量化の中にまとめる。
 <!--/-->
@@ -1245,7 +1245,7 @@ open Ordered Stp stp-out stp-in public
 <!--en-->
 For a constructible set `a`, `stageBound`{.Agda} chooses an ordinal above both `ω` and the first stage at which `a` appears. Consequently `Lset boundOrd`{.Agda} is high enough to contain the members of `a` and the members of those members, which is the local domain needed by the later transversal argument. The chosen bound is sufficient for that use; it is not asserted to be the least or a uniquely determined bound for `a`.
 <!--zh-->
-对可构造集合 `a`，`stageBound`{.Agda} 选取一个同时高于 `ω` 与 `a` 首次出现之层的序数。因此，`Lset boundOrd`{.Agda} 足以容纳 `a` 的成员以及这些成员的成员，这正是后续横截论证所需的局部论域。所选界足以完成这项工作；本章不声称它是 `a` 的最小界或唯一确定的界。
+对可构造集合 `a`，`stageBound`{.Agda} 选取一个同时高于 `ω` 与 `a` 首次出现之层的序数。因此，`Lset boundOrd`{.Agda} 足以容纳 `a` 的元素以及这些元素的元素，这正是后续横截论证所需的局部论域。所选界足以完成这项工作；本章不声称它是 `a` 的最小界或唯一确定的界。
 <!--ja-->
 構成可能集合 `a` に対し、`stageBound`{.Agda} は `ω` と `a` が最初に現れる段階の両方より上にある順序数を選ぶ。したがって `Lset boundOrd`{.Agda} は、`a` の要素と、さらにそれらの要素を含むのに十分高く、後の横断集合の議論に必要な局所的な論域となる。選ばれた上界はこの目的には十分であるが、`a` に対する最小の上界または一意に定まる上界だとは主張しない。
 <!--/-->
@@ -1306,7 +1306,7 @@ The relation to be represented is the pre-existing host-side strict well-order `
 <!--en-->
 The table supplies that internal set as `relL` at the chosen ordinal. Thus `orderL` is an element of the model whose members are intended to be ordered pairs from the relation graph. It is not a new well-order construction and is not itself accompanied here by an internal satisfaction proof of the well-order axioms.
 <!--zh-->
-序表在所选序数处给出这个内部集合 `relL`。因此 `orderL` 是模型中的一个元素，其成员用来表示关系图中的有序对。它不是一项新的良序构造，本章也没有为它附上一份对象理论内部对良序公理的满足证明。
+序表在所选序数处给出这个内部集合 `relL`。因此 `orderL` 是模型中的一个元素，其元素用来表示关系图中的有序对。它不是一项新的良序构造，本章也没有为它附上一份对象理论内部对良序公理的满足证明。
 <!--ja-->
 表は、選ばれた順序数におけるこの内部集合を `relL` として与える。したがって `orderL` はモデルの要素であり、その要素は関係グラフの順序対を表す。これは新しい整列順序の構成ではなく、整列順序の公理を対象理論の内部で満たすという証明も、ここでは付与されない。
 <!--/-->

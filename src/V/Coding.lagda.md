@@ -17,7 +17,7 @@ open import Base.Prelude
 <!--en-->
 The chapter is stated at a fixed universe level `ℓ`{.Agda}: the hierarchy's own structure `𝒮ᵥ`{.Agda} is the carrier that the codes will live over, and its membership relation is the one being analyzed. The eventual coding instance uses truth values in `hProp (ℓ-suc ℓ)`, one level up.
 <!--zh-->
-本章在固定的宇宙层级 `ℓ`{.Agda} 上陈述：层级的结构 `𝒮ᵥ`{.Agda} 是码所寄居的载体，其隶属关系正是被分析的对象。最终的编码实例使用高一层级 `hProp (ℓ-suc ℓ)` 中的真值。
+本章在固定的宇宙层级 `ℓ`{.Agda} 上陈述：层级的结构 `𝒮ᵥ`{.Agda} 是码所寄居的载体，其成员关系正是被分析的对象。最终的编码实例使用高一层级 `hProp (ℓ-suc ℓ)` 中的真值。
 <!--ja-->
 この章は固定された宇宙レベル `ℓ`{.Agda} で述べられる。階層の構造 `𝒮ᵥ`{.Agda} が符号の載る台であり、その所属関係こそ分析の対象である。最終的な符号化インスタンスは、一つ上のレベル `hProp (ℓ-suc ℓ)` の真理値を使う。
 <!--/-->
@@ -27,7 +27,7 @@ module V.Coding {ℓ : Level} where
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 import FOL.Coding
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-irrefl )
 open import V.Model {ℓ} using ( self∈sucV; ∈sucV-inl )
@@ -40,9 +40,9 @@ The generic coding construction of FOL.Coding needs exactly two injective operat
 Both arguments face one constraint from the type theory. Small membership in a hierarchy set is propositionally truncated, so a case analysis on it may eliminate only into propositions. Equality in `V`{.Agda} is propositional because `V`{.Agda} is an h-set, and the path propositions built from such equalities are exactly the targets the reasoning below needs. Working at that level of discipline, every step stays proposition-valued and no witness is ever extracted from a truncation.
 <!--zh-->
 
-FOL.Coding 中的通用编码构造只需要载体上的两个单射操作：单射的配对，以及从自然数出发的单射映射。要为累积层级上的语法编码，二者都必须在集合中找到，而层级本身提供了它们。自然数方面，层级自身的 von Neumann 数码即可胜任。较小的数码属于较大的，因为每个数码都在自己的后继之内，而没有集合属于自身；于是经自然数三歧性比较的相异序号给出相异的集合。配对方面，Kuratowski 编码即可胜任：`a`{.Agda} 与 `b`{.Agda} 的对，是以单点集 `⁅ a ⁆s`{.Agda} 与无序对 `⁅ a , b ⁆`{.Agda} 为成员的那个集合。于是第一分量可作为公共元素还原，第二分量则作为另一个 (可能相等的) 元素还原。
+FOL.Coding 中的通用编码构造只需要载体上的两个单射操作：单射的配对，以及从自然数出发的单射映射。要为累积层级上的语法编码，二者都必须在集合中找到，而层级本身提供了它们。自然数方面，层级自身的 von Neumann 数码即可胜任。较小的数码属于较大的，因为每个数码都在自己的后继之内，而没有集合属于自身；于是经自然数三歧性比较的相异序号给出相异的集合。配对方面，Kuratowski 编码即可胜任：`a`{.Agda} 与 `b`{.Agda} 的对，是以单点集 `⁅ a ⁆s`{.Agda} 与无序对 `⁅ a , b ⁆`{.Agda} 为元素的那个集合。于是第一分量可作为公共元素还原，第二分量则作为另一个 (可能相等的) 元素还原。
 
-两个论证都受类型论的一条约束。层级集合中的小隶属是命题截断的，所以对它的分情形只能消去到命题。由于 `V`{.Agda} 是 h-集合，`V`{.Agda} 中的等式是命题性的，而由这些等式构成的路径命题恰好是下文推理所需的目标。在这一消去限制下，每一步都取值于命题，从不从截断中提取任何见证。
+两个论证都受类型论的一条约束。层级集合中的小成员关系是命题截断的，所以对它的分情形只能消去到命题。由于 `V`{.Agda} 是 h-集合，`V`{.Agda} 中的等式是命题性的，而由这些等式构成的路径命题恰好是下文推理所需的目标。在这一消去限制下，每一步都取值于命题，从不从截断中提取任何见证。
 <!--ja-->
 
 FOL.Coding の一般的な符号化構成が要求するのは、台の上の 2 つの単射操作、すなわち単射な対の操作と自然数からの単射写像だけである。累積階層の上の構文を符号化するには、この 2 つを集合のうちに見つけなければならず、階層自身がそれを供給する。自然数には von Neumann 数項がそのまま使える。各数項は自分の後続の内にあるので、小さい数項は大きい数項に属し、どの集合も自分自身には属しない。したがって、自然数の三分律で比較した異なる添字は異なる集合に写る。対には Kuratowski 符号化が使える。`a`{.Agda} と `b`{.Agda} の対とは、一元集合 `⁅ a ⁆s`{.Agda} と非順序対 `⁅ a , b ⁆`{.Agda} を元として持つ集合であり、第 1 成分は共通の元として、第 2 成分は (一致しうる) もう一方の元として復元できる。
@@ -55,7 +55,7 @@ FOL.Coding の一般的な符号化構成が要求するのは、台の上の 2 
 <!--en-->
 The numeral argument rests on two membership facts about successors in the hierarchy: a set always belongs to its own successor, and a member of a set belongs to that set's successor. Applied to the numerals, the first says `# n ∈ # (suc n)`{.Agda}, and the second says a member of `# n`{.Agda} survives into `# (suc n)`{.Agda}. The order on natural numbers then decides which numeral is smaller, with the trichotomy `m ≟ n`{.Agda} supplying the three cases the injectivity proof will separate.
 <!--zh-->
-数码的论证依赖层级中关于后继的两条隶属事实：一个集合总属于它自己的后继，而一个集合的成员属于该集合的后继。施于数码，第一条说 `# n ∈ # (suc n)`{.Agda}，第二条说 `# n`{.Agda} 的成员在 `# (suc n)`{.Agda} 中得以保留。自然数上的序随之判定哪个数码更小，三歧比较 `m ≟ n`{.Agda} 给出单射性证明将要分离的三种情形。
+数码的论证依赖层级中关于后继的两条成员关系事实：一个集合总属于它自己的后继，而一个集合的元素属于该集合的后继。施于数码，第一条说 `# n ∈ # (suc n)`{.Agda}，第二条说 `# n`{.Agda} 的元素在 `# (suc n)`{.Agda} 中得以保留。自然数上的序随之判定哪个数码更小，三歧比较 `m ≟ n`{.Agda} 给出单射性证明将要分离的三种情形。
 <!--ja-->
 数項の議論は、階層の後続に関する 2 つの所属事実に依存する。任意の集合は自分自身の後続に属し、集合の元はその後続にも属するというものである。数項に適用すると、第 1 の事実は `# n ∈ # (suc n)`{.Agda} を、第 2 の事実は `# n`{.Agda} の元が `# (suc n)`{.Agda} にも残ることを述べる。自然数の順序がどちらの数項が小さいかを決め、三分律の比較 `m ≟ n`{.Agda} が単射性証明が分ける 3 つの場合を与える。
 <!--/-->
@@ -67,7 +67,7 @@ open import Cubical.Data.Nat.Order using ( _<_; <-split; ¬-<-zero; _≟_; lt; e
 <!--en-->
 Here is the elimination restriction in its precise form. The small membership statement `⟨ x ∈ₛ s ⟩`{.Agda} is a proposition by truncation, so when a hypothesis gives a truncated disjunction of memberships, the eliminator must target a proposition. Because `V`{.Agda} is an h-set, certified by `setIsSet`{.Agda}, the path type `x ≡ y`{.Agda} between hierarchy sets is propositional; every case split below may therefore eliminate into such an equality path.
 <!--zh-->
-这一消去限制的精确形式如下。小隶属陈述 `⟨ x ∈ₛ s ⟩`{.Agda} 经截断后是命题，因此当假设给出隶属的截断析取时，消去的目标必须是命题。由于 `V`{.Agda} 是 h-集合 (`setIsSet`{.Agda} 所证)，层级集合之间的路径类型 `x ≡ y`{.Agda} 是命题性的，所以下文每个分情形都可以消去到这种等式路径。
+这一消去限制的精确形式如下。小成员关系陈述 `⟨ x ∈ₛ s ⟩`{.Agda} 经截断后是命题，因此当假设给出成员关系的截断析取时，消去的目标必须是命题。由于 `V`{.Agda} 是 h-集合 (`setIsSet`{.Agda} 所证)，层级集合之间的路径类型 `x ≡ y`{.Agda} 是命题性的，所以下文每个分情形都可以消去到这种等式路径。
 <!--ja-->
 この消去制限を正確に述べる。小さい所属の主張 `⟨ x ∈ₛ s ⟩`{.Agda} は切り詰めによって命題なので、仮定が所属の切り詰められた選言を与えるとき、消去の行き先は命題でなければならない。`V`{.Agda} は h-集合であり (`setIsSet`{.Agda} が証明する)、階層の集合の間のパス型 `x ≡ y`{.Agda} は命題的である。したがって以下のすべての場合分けはそのような等式パスへ消去できる。
 <!--/-->
@@ -79,7 +79,7 @@ open import Cubical.HITs.CumulativeHierarchy.Base using ( setIsSet )
 <!--en-->
 The two set constructions the Kuratowski code needs come with their membership classifications attached. For an unordered pair `⁅ a , b ⁆`{.Agda}, the classification `pairing-ax`{.Agda} says that `x`{.Agda} belongs to it merely when `x ≡ a`{.Agda} or `x ≡ b`{.Agda}, in the truncated sense. The singleton `⁅ a ⁆s`{.Agda} carries the analogous classification through the singleton package, and `SetPackage.classification`{.Agda} extracts these records. Every argument about the codes below is therefore stated as membership reasoning rather than as unfolding of nested braces.
 <!--zh-->
-Kuratowski 码所需的两个集合构造都自带隶属分类。对无序对 `⁅ a , b ⁆`{.Agda}，分类 `pairing-ax`{.Agda} 说：在截断的意义下，`x`{.Agda} 属于它仅仅当 `x ≡ a`{.Agda} 或 `x ≡ b`{.Agda}。单点集 `⁅ a ⁆s`{.Agda} 经单点集包带有类似的分类，`SetPackage.classification`{.Agda} 负责提取这些记录。于是下文关于码的每个论证都表述为成员关系推理，而非展开嵌套花括号。
+Kuratowski 码所需的两个集合构造都自带成员关系分类。对无序对 `⁅ a , b ⁆`{.Agda}，分类 `pairing-ax`{.Agda} 说：在截断的意义下，`x`{.Agda} 属于它仅仅当 `x ≡ a`{.Agda} 或 `x ≡ b`{.Agda}。单点集 `⁅ a ⁆s`{.Agda} 经单点集包带有类似的分类，`SetPackage.classification`{.Agda} 负责提取这些记录。于是下文关于码的每个论证都表述为成员关系推理，而非展开嵌套花括号。
 <!--ja-->
 Kuratowski 符号が必要とする 2 つの集合の構成には、所属の分類が付いている。非順序対 `⁅ a , b ⁆`{.Agda} については、分類 `pairing-ax`{.Agda} は、切り詰められた意味で `x ≡ a`{.Agda} または `x ≡ b`{.Agda} のときに限り `x`{.Agda} が属することを述べる。一元集合 `⁅ a ⁆s`{.Agda} は一元集合パッケージを通して同様の分類を持ち、`SetPackage.classification`{.Agda} がこれらのレコードを取り出す。したがって、以下の符号に関するすべての議論は、入れ子の中括弧を展開するのではなく、所属の推論として述べられる。
 <!--/-->
@@ -103,7 +103,7 @@ The numeral `# n`{.Agda}, written using `#_`{.Agda}, is the von Neumann ordinal 
 ```agda
 open InfinitySet using ( #_ )
 
-open hPropStructure 𝒮ᵥ
+open hPropView 𝒮ᵥ
 ```
 
 <!--en-->
@@ -113,7 +113,7 @@ The first alphabet is the numeral map, and its injectivity splits into two state
 <!--zh-->
 ## 数码两两相异
 
-第一个字母表是数码映射，其单射性分成两个命题。单调性说较小的数码属于较大的。归纳沿**较大的**那个序号进行，使每个归纳步都是句法上的后继，索引上不出现任何算术。后继一步按自然数三歧性分成严格更小的序号与相等的序号，各由一条关于后继的隶属事实解决；基例则是空洞的。单射性随之得出：若两个相异序号的码相同，单调性会把某个数码放进它自身，而隶属的无自环性禁止这一点。
+第一个字母表是数码映射，其单射性分成两个命题。单调性说较小的数码属于较大的。归纳沿**较大的**那个序号进行，使每个归纳步都是句法上的后继，索引上不出现任何算术。后继一步按自然数三歧性分成严格更小的序号与相等的序号，各由一条关于后继的成员关系事实解决；基例则是空洞的。单射性随之得出：若两个相异序号的码相同，单调性会把某个数码放进它自身，而成员关系的无自环性禁止这一点。
 <!--ja-->
 ## 数項は互いに異なる
 
@@ -123,7 +123,7 @@ The first alphabet is the numeral map, and its injectivity splits into two state
 <!--en-->
 The stepping stone `#⊆suc`{.Agda} says that any member of `# n`{.Agda} is also a member of the next numeral; it is exactly the successor fact that a member of a set belongs to that set's successor. In the base case of `#mono`{.Agda} there is nothing to prove, since no index is strictly below zero and the hypothesis `m < 0`{.Agda} is refuted outright.
 <!--zh-->
-垫脚石 `#⊆suc`{.Agda} 说：`# n`{.Agda} 的任何成员也是下一个数码的成员；这正是「集合的成员属于该集合的后继」这条后继事实。`#mono`{.Agda} 的基例无事可证，因为没有序号严格小于零，假设 `m < 0`{.Agda} 被直接驳倒。
+垫脚石 `#⊆suc`{.Agda} 说：`# n`{.Agda} 的任何元素也是下一个数码的元素；这正是「集合的元素属于该集合的后继」这条后继事实。`#mono`{.Agda} 的基例无事可证，因为没有序号严格小于零，假设 `m < 0`{.Agda} 被直接驳倒。
 <!--ja-->
 足場となる `#⊆suc`{.Agda} は、`# n`{.Agda} の任意の元が次の数項の元でもあることを述べる。これは「集合の元はその後続に属する」という後続の事実そのものである。`#mono`{.Agda} の基底の場合は証明すべきことがない。ゼロより真に小さい添字は存在せず、仮定 `m < 0`{.Agda} はそのまま反証される。
 <!--/-->
@@ -140,7 +140,7 @@ The stepping stone `#⊆suc`{.Agda} says that any member of `# n`{.Agda} is also
 <!--en-->
 In the successor step, `<-split`{.Agda} merely says `m < suc n`{.Agda} splits into `m < n`{.Agda} or `m ≡ n`{.Agda}. In the first branch the induction hypothesis gives `# m ∈ # n`{.Agda}, and `#⊆suc`{.Agda} promotes it into the successor. In the second branch the two numerals coincide, and a set belongs to its own successor, so transporting along the reversal of `m ≡ n`{.Agda} turns the membership `# n ∈ # (suc n)`{.Agda} into the one wanted.
 <!--zh-->
-在后继一步，`<-split`{.Agda} 只是说 `m < suc n`{.Agda} 分裂为 `m < n`{.Agda} 或 `m ≡ n`{.Agda}。第一支中归纳假设给出 `# m ∈ # n`{.Agda}，再由 `#⊆suc`{.Agda} 提升到后继。第二支中两个数码重合，而一个集合属于它自己的后继，于是沿 `m ≡ n`{.Agda} 的逆向传输把隶属 `# n ∈ # (suc n)`{.Agda} 变成所要的那一个。
+在后继一步，`<-split`{.Agda} 只是说 `m < suc n`{.Agda} 分裂为 `m < n`{.Agda} 或 `m ≡ n`{.Agda}。第一支中归纳假设给出 `# m ∈ # n`{.Agda}，再由 `#⊆suc`{.Agda} 提升到后继。第二支中两个数码重合，而一个集合属于它自己的后继，于是沿 `m ≡ n`{.Agda} 的逆向传输把成员关系 `# n ∈ # (suc n)`{.Agda} 变成所要的那一个。
 <!--ja-->
 後続のステップでは、`<-split`{.Agda} は `m < suc n`{.Agda} が `m < n`{.Agda} か `m ≡ n`{.Agda} に分かれると言うだけである。第 1 の枝では帰納仮定が `# m ∈ # n`{.Agda} を与え、`#⊆suc`{.Agda} がそれを後続へ持ち上げる。第 2 の枝では 2 つの数項が一致しており、集合は自分自身の後続に属するので、`m ≡ n`{.Agda} の逆向きの輸送によって所属 `# n ∈ # (suc n)`{.Agda} が求めるものに変わる。
 <!--/-->
@@ -154,7 +154,7 @@ In the successor step, `<-split`{.Agda} merely says `m < suc n`{.Agda} splits in
 <!--en-->
 Injectivity follows by trichotomy on the indices. Equal indices are the conclusion. If `m < n`{.Agda}, monotonicity gives `# m ∈ # n`{.Agda}, and the assumed equation `# m ≡ # n`{.Agda} transports this membership into `# n ∈ # n`{.Agda}, which membership irreflexivity forbids. The remaining case `n < m`{.Agda} is the mirror image, with the transport run in the other direction.
 <!--zh-->
-单射性由序号上的三歧得出。序号相等即是结论。若 `m < n`{.Agda}，单调性给出 `# m ∈ # n`{.Agda}，而假设的等式 `# m ≡ # n`{.Agda} 把这个隶属传输为 `# n ∈ # n`{.Agda}，这与隶属的无自环性矛盾。剩下的情形 `n < m`{.Agda} 是镜像，传输沿另一方向进行。
+单射性由序号上的三歧得出。序号相等即是结论。若 `m < n`{.Agda}，单调性给出 `# m ∈ # n`{.Agda}，而假设的等式 `# m ≡ # n`{.Agda} 把这个成员关系传输为 `# n ∈ # n`{.Agda}，这与成员关系的无自环性矛盾。剩下的情形 `n < m`{.Agda} 是镜像，传输沿另一方向进行。
 <!--ja-->
 単射性は添字の三分律から従う。添字が等しければそれが結論である。`m < n`{.Agda} なら単調性から `# m ∈ # n`{.Agda} が得られ、仮定の等式 `# m ≡ # n`{.Agda} がこの所属を `# n ∈ # n`{.Agda} へ輸送するが、所属の反射なし性がこれを禁じる。残りの `n < m`{.Agda} の場合は鏡像で、輸送は逆向きに行われる。
 <!--/-->
@@ -162,7 +162,7 @@ Injectivity follows by trichotomy on the indices. Equal indices are the conclusi
 <!--en-->
 The strictly-smaller case is the instructive one. The membership `# m ∈ # n`{.Agda} speaks about the numeral `# m`{.Agda}; rewriting its type along `# m ≡ # n`{.Agda} replaces that set by `# n`{.Agda} everywhere, producing an inhabitant of `# n ∈ # n`{.Agda}. Irreflexivity of membership consumes this inhabitant into an element of the empty type, so the case cannot arise.
 <!--zh-->
-严格更小的情形最具启发性。隶属 `# m ∈ # n`{.Agda} 说的是数码 `# m`{.Agda}；沿 `# m ≡ # n`{.Agda} 对其类型作重写后，那个集合处处被替换为 `# n`{.Agda}，得到 `# n ∈ # n`{.Agda} 的一个元素。隶属的无自环性把这个元素消去为空类型的元素，所以这种情形不可能出现。
+严格更小的情形最具启发性。成员关系 `# m ∈ # n`{.Agda} 说的是数码 `# m`{.Agda}；沿 `# m ≡ # n`{.Agda} 对其类型作重写后，那个集合处处被替换为 `# n`{.Agda}，得到 `# n ∈ # n`{.Agda} 的一个元素。成员关系的无自环性把这个元素消去为空类型的元素，所以这种情形不可能出现。
 <!--ja-->
 真に小さい場合が示唆的である。所属 `# m ∈ # n`{.Agda} は数項 `# m`{.Agda} について述べているが、`# m ≡ # n`{.Agda} に沿ってその型を書き換えると、その集合は至る所 `# n`{.Agda} に置き換えられ、`# n ∈ # n`{.Agda} の要素が得られる。所属の反射なし性はこの要素を空型の元へと送るので、この場合は生じえない。
 <!--/-->
@@ -198,7 +198,7 @@ The second injective alphabet is the Kuratowski pair: the code of `a` and `b` is
 <!--zh-->
 ## Kuratowski 配对
 
-第二个单射字母表是 Kuratowski 对：`a` 与 `b` 的码是以单点集 `⁅ a ⁆s`{.Agda} 与无序对 `⁅ a , b ⁆`{.Agda} 为成员的那个集合。注意区分记录了次序的外层有序对与不记录次序的内层无序对。单射性意为两个分量都能从码中还原，而这种还原完全由分类规格驱动：属于单点集等于等于其唯一的元素，属于无序对仅仅意味着等于两个分量之一。
+第二个单射字母表是 Kuratowski 对：`a` 与 `b` 的码是以单点集 `⁅ a ⁆s`{.Agda} 与无序对 `⁅ a , b ⁆`{.Agda} 为元素的那个集合。注意区分记录了次序的外层有序对与不记录次序的内层无序对。单射性意为两个分量都能从码中还原，而这种还原完全由分类规格驱动：属于单点集等于等于其唯一的元素，属于无序对仅仅意味着等于两个分量之一。
 <!--ja-->
 ## Kuratowski 対
 
@@ -208,7 +208,7 @@ The second injective alphabet is the Kuratowski pair: the code of `a` and `b` is
 <!--en-->
 The singleton classification is named once in both directions. `∈singl`{.Agda} says a member of `⁅ a ⁆s`{.Agda} must equal `a`{.Agda}, and `singl∈`{.Agda} says equality suffices to belong. Both are projections of the same classification record for the singleton package.
 <!--zh-->
-单点集分类在两个方向上各命名一次。`∈singl`{.Agda} 说 `⁅ a ⁆s`{.Agda} 的成员必等于 `a`{.Agda}，`singl∈`{.Agda} 说等式足以保证属于。二者都是单点集包同一分类记录的投影。
+单点集分类在两个方向上各命名一次。`∈singl`{.Agda} 说 `⁅ a ⁆s`{.Agda} 的元素必等于 `a`{.Agda}，`singl∈`{.Agda} 说等式足以保证属于。二者都是单点集包同一分类记录的投影。
 <!--ja-->
 一元集合の分類は両方向に一度だけ名前を与えられる。`∈singl`{.Agda} は `⁅ a ⁆s`{.Agda} の元が `a`{.Agda} と等しいことを、`singl∈`{.Agda} は等しければ属することを述べる。どちらも一元集合パッケージの同じ分類レコードの射影である。
 <!--/-->
@@ -225,7 +225,7 @@ private
 <!--en-->
 For unordered pairs, the classification has the shape of a truncated disjunction: a member of `⁅ a , b ⁆`{.Agda} is, merely, equal to `a` or to `b`. The two introduction lemmas supply the left and right disjuncts as truncated witnesses, so membership can be produced from either equality without choosing anything.
 <!--zh-->
-对无序对，分类呈截断析取的形状：`⁅ a , b ⁆`{.Agda} 的成员仅仅等于 `a` 或等于 `b`。两条引入引理分别以截断的见证提供左右析取支，于是任一等式都能产生成员，而无需选择任何东西。
+对无序对，分类呈截断析取的形状：`⁅ a , b ⁆`{.Agda} 的元素仅仅等于 `a` 或等于 `b`。两条引入引理分别以截断的见证提供左右析取支，于是任一等式都能产生元素，而无需选择任何东西。
 <!--ja-->
 非順序対については、分類は切り詰められた選言の形を持つ。`⁅ a , b ⁆`{.Agda} の元は、切り詰められた意味で `a` に等しいか `b` に等しい。2 つの導入補題は左右の選言支を切り詰められた証拠として供給するので、いずれかの等式から何も選ばずに所属を作れる。
 <!--/-->
@@ -243,7 +243,7 @@ For unordered pairs, the classification has the shape of a truncated disjunction
 <!--en-->
 A singleton determines its element: if `⁅ a ⁆s ≡ ⁅ c ⁆s`{.Agda}, transport the membership `a ∈ ⁅ a ⁆s`{.Agda} along this path and classify the result; it must equal `c`{.Agda}. The elimination is into the path proposition `a ≡ c`{.Agda}, which is allowed since `V`{.Agda} is an h-set.
 <!--zh-->
-单点集决定其元素：若 `⁅ a ⁆s ≡ ⁅ c ⁆s`{.Agda}，沿这条路径传输隶属 `a ∈ ⁅ a ⁆s`{.Agda} 并对结果分类，结果必等于 `c`{.Agda}。消去指向路径命题 `a ≡ c`{.Agda}，由于 `V`{.Agda} 是 h-集合，这是允许的。
+单点集决定其元素：若 `⁅ a ⁆s ≡ ⁅ c ⁆s`{.Agda}，沿这条路径传输成员关系 `a ∈ ⁅ a ⁆s`{.Agda} 并对结果分类，结果必等于 `c`{.Agda}。消去指向路径命题 `a ≡ c`{.Agda}，由于 `V`{.Agda} 是 h-集合，这是允许的。
 <!--ja-->
 一元集合はその元を決定する。`⁅ a ⁆s ≡ ⁅ c ⁆s`{.Agda} なら、所属 `a ∈ ⁅ a ⁆s`{.Agda} をこのパスに沿って輸送し、結果を分類すれば、それは `c`{.Agda} と等しくなければならない。消去はパス命題 `a ≡ c`{.Agda} へ向かい、`V`{.Agda} が h-集合なのでこれは許される。
 <!--/-->
@@ -261,7 +261,7 @@ A singleton determines its element: if `⁅ a ⁆s ≡ ⁅ c ⁆s`{.Agda}, trans
 <!--en-->
 A singleton that happens to equal an unordered pair forces both components down to its element. Each component belongs to the unordered pair merely, so transporting the membership across `sym q` and classifying yields a path from that component to `a`{.Agda}; both eliminations target the pair of path propositions `(c ≡ a) × (d ≡ a)`{.Agda}. This degenerate comparison is exactly the hard case of pair injectivity below.
 <!--zh-->
-若一个单点集恰好等于某个无序对，则无序对的两个分量都被压到该单点集的元素。每个分量仅仅属于该无序对，于是沿 `sym q` 传输其隶属再分类，得到从该分量到 `a`{.Agda} 的路径；两个消去都指向路径命题的对 `(c ≡ a) × (d ≡ a)`{.Agda}。这个退化比较正是下文配对单射性的难处所在。
+若一个单点集恰好等于某个无序对，则无序对的两个分量都被压到该单点集的元素。每个分量仅仅属于该无序对，于是沿 `sym q` 传输其成员关系再分类，得到从该分量到 `a`{.Agda} 的路径；两个消去都指向路径命题的对 `(c ≡ a) × (d ≡ a)`{.Agda}。这个退化比较正是下文配对单射性的难处所在。
 <!--ja-->
 一元集合がたまたま非順序対と等しいときは、非順序対の両成分がその一元集合の元へ押し下げられる。各成分は切り詰められた意味でその非順序対に属するので、所属を `sym q` の向きに輸送して分類すると、その成分から `a`{.Agda} へのパスが得られる。どちらの消去もパス命題の組 `(c ≡ a) × (d ≡ a)`{.Agda} をターゲットにする。この退化的な比較こそ、後の対の単射性の難所である。
 <!--/-->
@@ -276,7 +276,7 @@ A singleton that happens to equal an unordered pair forces both components down 
 <!--en-->
 The injectivity proof of the pair is now assembled from the four comparison lemmas. Given `p : pr a b ≡ pr c d`{.Agda}, the singleton part of the code is a member of both sides, so transporting its membership forward along `p` and classifying yields, merely, `⁅ a ⁆s ≡ ⁅ c ⁆s` or `⁅ a ⁆s ≡ ⁅ c , d ⁆`; the first disjunct gives `a ≡ c` immediately and the second through the reversal of `singl≡pair`. The unordered-pair part is harder because its membership alone may not determine the second component: when the code collapses, `⁅ a , b ⁆`{.Agda} has matched a singleton on the left or the right, and knowing which side it matched is not enough. So two truncated records are kept, one transported forward along `p` from membership of `⁅ a , b ⁆`{.Agda} in `pr a b`{.Agda}, and one transported backward along the reversal of `p` from membership of `⁅ c , d ⁆`{.Agda} in `pr c d`{.Agda}. The backward record supplies exactly the information the degenerate branches lack, and under the temporary hypothesis `a ≡ b`{.Agda}, the case where the whole code collapses to a singleton of singletons, it converts a recovered `a ≡ b`{.Agda} into `d ≡ b`{.Agda}. Every elimination of a truncated disjunction in this proof targets a proposition built from paths in the h-set `V`{.Agda}, so no witness is ever chosen.
 <!--zh-->
-配对的单射性证明现在由四条比较引理组装而成。给定 `p : pr a b ≡ pr c d`{.Agda}，码的单点集部分同时属于两侧，于是沿 `p` 向前传输其隶属再分类，仅仅得到 `⁅ a ⁆s ≡ ⁅ c ⁆s` 或 `⁅ a ⁆s ≡ ⁅ c , d ⁆`；第一支立即给出 `a ≡ c`，第二支经 `singl≡pair` 的逆向给出。无序对部分更难，因为仅凭其隶属未必能确定第二分量：当码退化时，`⁅ a , b ⁆`{.Agda} 在左或右与一个单点集相配，而知道它配的是哪一侧并不够。于是保留两条截断记录：一条是 `⁅ a , b ⁆`{.Agda} 在 `pr a b`{.Agda} 中的隶属沿 `p` 向前传输所得，另一条是 `⁅ c , d ⁆`{.Agda} 在 `pr c d`{.Agda} 中的隶属沿 `p` 的逆向传输所得。向后那条记录恰好补上退化分支所缺的信息；在临时假设 `a ≡ b`{.Agda} 之下，即整个码退化为「单点集的单点集」的情形，它把还原出的 `a ≡ b`{.Agda} 转换为 `d ≡ b`{.Agda}。本证明中对截断析取的每次消去都指向由 h-集合 `V`{.Agda} 中路径构成的命题，因此从不选出任何见证。
+配对的单射性证明现在由四条比较引理组装而成。给定 `p : pr a b ≡ pr c d`{.Agda}，码的单点集部分同时属于两侧，于是沿 `p` 向前传输其成员关系再分类，仅仅得到 `⁅ a ⁆s ≡ ⁅ c ⁆s` 或 `⁅ a ⁆s ≡ ⁅ c , d ⁆`；第一支立即给出 `a ≡ c`，第二支经 `singl≡pair` 的逆向给出。无序对部分更难，因为仅凭其成员关系未必能确定第二分量：当码退化时，`⁅ a , b ⁆`{.Agda} 在左或右与一个单点集相配，而知道它配的是哪一侧并不够。于是保留两条截断记录：一条是 `⁅ a , b ⁆`{.Agda} 在 `pr a b`{.Agda} 中的成员关系沿 `p` 向前传输所得，另一条是 `⁅ c , d ⁆`{.Agda} 在 `pr c d`{.Agda} 中的成员关系沿 `p` 的逆向传输所得。向后那条记录恰好补上退化分支所缺的信息；在临时假设 `a ≡ b`{.Agda} 之下，即整个码退化为「单点集的单点集」的情形，它把还原出的 `a ≡ b`{.Agda} 转换为 `d ≡ b`{.Agda}。本证明中对截断析取的每次消去都指向由 h-集合 `V`{.Agda} 中路径构成的命题，因此从不选出任何见证。
 <!--ja-->
 対の単射性の証明は、4 つの比較補題から組み上げられる。`p : pr a b ≡ pr c d`{.Agda} が与えられると、符号の一元集合の部分は両側に属するので、その所属を `p` に沿って前向きに輸送して分類すれば、切り詰められた意味で `⁅ a ⁆s ≡ ⁅ c ⁆s` か `⁅ a ⁆s ≡ ⁅ c , d ⁆` が得られる。第 1 の選言支は直ちに `a ≡ c` を与え、第 2 の選言支は `singl≡pair` の逆向きを通して与える。非順序対の部分はより難しく、所属だけでは第 2 成分が決まらないことがある。符号が潰れるとき、`⁅ a , b ⁆`{.Agda} は左か右で一元集合と一致するが、どちら側と一致したかを知るだけでは足りない。そこで 2 つの切り詰められた記録を取っておく。1 つは `⁅ a , b ⁆`{.Agda} が `pr a b`{.Agda} に属することから `p` に沿って前向きに輸送したもの、もう 1 つは `⁅ c , d ⁆`{.Agda} が `pr c d`{.Agda} に属することから `p` の逆向きに輸送したものである。後ろ向きの記録が、退化した枝に欠ける情報をまさに補う。一時的な仮定 `a ≡ b`{.Agda} のもと、すなわち符号全体が一元集合の一元集合に潰れる場合には、復元した `a ≡ b`{.Agda} を `d ≡ b`{.Agda} に変換する。この証明での切り詰められた選言の消去はすべて、h-集合 `V`{.Agda} のパスからできる命題をターゲットにするので、証拠が選び出されることはない。
 <!--/-->
@@ -284,7 +284,7 @@ The injectivity proof of the pair is now assembled from the four comparison lemm
 <!--en-->
 The code `pr a b`{.Agda} is the unordered pair whose two members are the singleton `⁅ a ⁆s`{.Agda} and the unordered pair `⁅ a , b ⁆`{.Agda}. The outer expression is the ordered Kuratowski code, and it should not be confused with its second ingredient: the inner `⁅ a , b ⁆`{.Agda} records no order, the whole code does. Injectivity is the claim that an equality of codes `pr a b ≡ pr c d` determines both inputs, that is, it yields paths `a ≡ c` and `b ≡ d`.
 <!--zh-->
-码 `pr a b`{.Agda} 是以单点集 `⁅ a ⁆s`{.Agda} 与无序对 `⁅ a , b ⁆`{.Agda} 为两个成员的无序对。外层表达式是有序的 Kuratowski 码，不要与它的第二个原料混淆：内层的 `⁅ a , b ⁆`{.Agda} 不记录次序，记录次序的是整个码。单射性是说码的等式 `pr a b ≡ pr c d` 决定两个输入，即给出路径 `a ≡ c` 与 `b ≡ d`。
+码 `pr a b`{.Agda} 是以单点集 `⁅ a ⁆s`{.Agda} 与无序对 `⁅ a , b ⁆`{.Agda} 为两个元素的无序对。外层表达式是有序的 Kuratowski 码，不要与它的第二个原料混淆：内层的 `⁅ a , b ⁆`{.Agda} 不记录次序，记录次序的是整个码。单射性是说码的等式 `pr a b ≡ pr c d` 决定两个输入，即给出路径 `a ≡ c` 与 `b ≡ d`。
 <!--ja-->
 符号 `pr a b`{.Agda} は、一元集合 `⁅ a ⁆s`{.Agda} と非順序対 `⁅ a , b ⁆`{.Agda} を 2 つの元として持つ非順序対である。外側の式が順序を記録する Kuratowski 符号であり、その 2 番目の材料である内側の `⁅ a , b ⁆`{.Agda} と混同しないでほしい。内側は順序を記録せず、順序を記録するのは符号全体である。単射性とは、符号の等式 `pr a b ≡ pr c d` が両方の入力を決定する、つまりパス `a ≡ c` と `b ≡ d` を与えるという主張である。
 <!--/-->
@@ -301,7 +301,7 @@ pr-inj {a} {b} {c} {d} p = a≡c , b≡d
 <!--en-->
 First component. The singleton part `⁅ a ⁆s`{.Agda} belongs to `pr a b`{.Agda} by its right disjunct. Transporting this membership along `p` and classifying gives, merely, `⁅ a ⁆s ≡ ⁅ c ⁆s` or `⁅ a ⁆s ≡ ⁅ c , d ⁆` (this is `H₁`). In the first disjunct `singl-inj` yields `a ≡ c` directly. In the second, the comparison `singl≡pair` forces `c ≡ a`, and its reversal is what is wanted. The truncated disjunction is eliminated into the path proposition `a ≡ c`{.Agda}, which is permitted since `V`{.Agda} is an h-set.
 <!--zh-->
-第一分量。单点集部分 `⁅ a ⁆s` 经其右析取支属于 `pr a b`{.Agda}。把这个隶属沿 `p` 传输再分类，仅仅得到 `⁅ a ⁆s ≡ ⁅ c ⁆s` 或 `⁅ a ⁆s ≡ ⁅ c , d ⁆` (这就是 `H₁`)。第一支由 `singl-inj` 直接给出 `a ≡ c`。第二支中比较 `singl≡pair` 迫使 `c ≡ a`，取其逆向即所求。截断析取消去到路径命题 `a ≡ c`{.Agda}，由于 `V`{.Agda} 是 h-集合，这是允许的。
+第一分量。单点集部分 `⁅ a ⁆s` 经其右析取支属于 `pr a b`{.Agda}。把这个成员关系沿 `p` 传输再分类，仅仅得到 `⁅ a ⁆s ≡ ⁅ c ⁆s` 或 `⁅ a ⁆s ≡ ⁅ c , d ⁆` (这就是 `H₁`)。第一支由 `singl-inj` 直接给出 `a ≡ c`。第二支中比较 `singl≡pair` 迫使 `c ≡ a`，取其逆向即所求。截断析取消去到路径命题 `a ≡ c`{.Agda}，由于 `V`{.Agda} 是 h-集合，这是允许的。
 <!--ja-->
 第 1 成分。一元集合の部分 `⁅ a ⁆s` は右の選言支によって `pr a b`{.Agda} に属するので、この所属を `p` に沿って輸送して分類すると、切り詰められた意味で `⁅ a ⁆s ≡ ⁅ c ⁆s` か `⁅ a ⁆s ≡ ⁅ c , d ⁆` が得られる (これが `H₁` である)。第 1 の選言支では `singl-inj` が直接 `a ≡ c` を与える。第 2 の選言支では比較 `singl≡pair` が `c ≡ a` を強制し、その逆向きが求めるものである。切り詰められた選言はパス命題 `a ≡ c`{.Agda} へ消去され、`V`{.Agda} が h-集合なのでこれは許される。
 <!--/-->
@@ -318,7 +318,7 @@ First component. The singleton part `⁅ a ⁆s`{.Agda} belongs to `pr a b`{.Agd
 <!--en-->
 Second component. Two truncated records are gathered. `H₂` comes from membership of the unordered-pair part in `pr a b`{.Agda}, transported forward along `p`: merely, `⁅ a , b ⁆`{.Agda} equals `⁅ c ⁆s` or `⁅ c , d ⁆`. `K` runs the same argument backwards, from membership of `⁅ c , d ⁆`{.Agda} in `pr c d`{.Agda} transported along `sym p`: merely, `⁅ c , d ⁆`{.Agda} equals `⁅ a ⁆s` or `⁅ a , b ⁆`. Both are needed because in the degenerate cases below each single record leaves a gap that only the other fills.
 <!--zh-->
-第二分量。这里收集两条截断的记录。`H₂` 来自无序对部分在 `pr a b`{.Agda} 中的成员，沿 `p` 向前传输：仅仅有 `⁅ a , b ⁆`{.Agda} 等于 `⁅ c ⁆s` 或 `⁅ c , d ⁆`。`K` 把同一论证反向运行，从 `⁅ c , d ⁆`{.Agda} 在 `pr c d`{.Agda} 中的成员沿 `sym p` 传输得到：仅仅有 `⁅ c , d ⁆`{.Agda} 等于 `⁅ a ⁆s` 或 `⁅ a , b ⁆`。两者都需要：在下文的退化情形中，每条单独的记录都留有缺口，只有另一条能补上。
+第二分量。这里收集两条截断的记录。`H₂` 来自无序对部分在 `pr a b`{.Agda} 中的元素，沿 `p` 向前传输：仅仅有 `⁅ a , b ⁆`{.Agda} 等于 `⁅ c ⁆s` 或 `⁅ c , d ⁆`。`K` 把同一论证反向运行，从 `⁅ c , d ⁆`{.Agda} 在 `pr c d`{.Agda} 中的元素沿 `sym p` 传输得到：仅仅有 `⁅ c , d ⁆`{.Agda} 等于 `⁅ a ⁆s` 或 `⁅ a , b ⁆`。两者都需要：在下文的退化情形中，每条单独的记录都留有缺口，只有另一条能补上。
 <!--ja-->
 第 2 成分。ここでは切り詰められた 2 つの記録を集める。`H₂` は非順序対の部分が `pr a b`{.Agda} に属することから来ており、`p` に沿って前向きに輸送すると、切り詰められた意味で `⁅ a , b ⁆`{.Agda} が `⁅ c ⁆s` か `⁅ c , d ⁆` に等しいことが分かる。`K` は同じ議論を逆向きに実行し、`⁅ c , d ⁆`{.Agda} が `pr c d`{.Agda} に属することから `sym p` に沿って輸送して、切り詰められた意味で `⁅ c , d ⁆`{.Agda} が `⁅ a ⁆s` か `⁅ a , b ⁆` に等しいことを得る。両方が必要なのは、後述の退化した場合では、1 つの記録だけでは残る隙間をもう 1 つの記録しか埋められないからである。
 <!--/-->
@@ -369,7 +369,7 @@ The main argument for `b ≡ d` runs through `H₂`. In its first disjunct, the 
 <!--en-->
 In the second disjunct of `H₂`, the two inner unordered pairs coincide, `⁅ a , b ⁆ ≡ ⁅ c , d ⁆`{.Agda}. Then `b`{.Agda} belongs to `⁅ c , d ⁆`{.Agda} merely, so classifying the membership of `b` gives `b ≡ c` or `b ≡ d`. The second alternative is already the goal; the first reduces to it through the same composition and helper as before.
 <!--zh-->
-在 `H₂` 的第二支中，两个内层无序对重合：`⁅ a , b ⁆ ≡ ⁅ c , d ⁆`{.Agda}。于是 `b`{.Agda} 仅仅属于 `⁅ c , d ⁆`{.Agda}，对 `b` 的成员作分类给出 `b ≡ c` 或 `b ≡ d`。第二种选择已是目标；第一种经与之前相同的复合和辅助引理也归结为它。
+在 `H₂` 的第二支中，两个内层无序对重合：`⁅ a , b ⁆ ≡ ⁅ c , d ⁆`{.Agda}。于是 `b`{.Agda} 仅仅属于 `⁅ c , d ⁆`{.Agda}，对 `b` 的元素作分类给出 `b ≡ c` 或 `b ≡ d`。第二种选择已是目标；第一种经与之前相同的复合和辅助引理也归结为它。
 <!--ja-->
 `H₂` の第 2 の選言支では、内側の 2 つの非順序対が一致する。`⁅ a , b ⁆ ≡ ⁅ c , d ⁆`{.Agda}。すると `b`{.Agda} は切り詰められた意味で `⁅ c , d ⁆`{.Agda} に属するので、`b` の所属を分類して `b ≡ c` か `b ≡ d` が得られる。後者はそのまま目標で、前者は前に示したのと同じ合成と補助補題を経て後者に帰着する。
 <!--/-->
@@ -401,19 +401,19 @@ The two branches combine into `b ≡ d`, completing `pr-inj`: both components of
 
 With both injective alphabets in hand, the generic coding construction of FOL.Coding can be applied to the hierarchy: an injective pairing and an injective numeral map are its two parameters. The resulting `VCode`{.Agda} assigns to terms and formulas over the hierarchy's carrier codes that are themselves sets of the hierarchy. It does not make every set a code; it gives set-valued codes for the coded syntax.
 
-Note the level: `VCode`{.Agda} is taken at `ℓ-suc ℓ`{.Agda}, the level at which the relations of the `ZFStructure`{.Agda} `𝒮ᵥ`{.Agda} take values. This universe index is a type-theoretic level, not a stage of the hierarchy.
+Note the level: `VCode`{.Agda} is taken at `ℓ-suc ℓ`{.Agda}, the level at which the relations of the `ZFStructureₕ`{.Agda} `𝒮ᵥ`{.Agda} take values. This universe index is a type-theoretic level, not a stage of the hierarchy.
 <!--zh-->
 ## 实例
 
 有了两个单射字母表，FOL.Coding 的通用编码构造即可施于层级：单射的配对与单射的数码映射是它的两个参数。得到的 `VCode`{.Agda} 给层级载体上的词项与公式指派本身仍是层级集合的码。它并不把每个集合都变成码；它为被编码的语法提供取值为集合的码。
 
-注意层级：`VCode`{.Agda} 取在 `ℓ-suc ℓ`{.Agda} 上，即`ZFStructure`{.Agda} `𝒮ᵥ`{.Agda} 的关系取值所在的层级。这个宇宙指标是类型论意义上的层级，不是层级的层。
+注意层级：`VCode`{.Agda} 取在 `ℓ-suc ℓ`{.Agda} 上，即`ZFStructureₕ`{.Agda} `𝒮ᵥ`{.Agda} 的关系取值所在的层级。这个宇宙指标是类型论意义上的层级，不是层级的层。
 <!--ja-->
 ## 具体化
 
 2 つの単射な字母がそろったので、FOL.Coding の一般的な符号化構成を階層に適用できる。単射な対の操作と単射な数項写像がその 2 つのパラメータである。得られる `VCode`{.Agda} は、階層の台の上の項と論理式に対して、それ自身が階層の集合である符号を割り当てる。すべての集合を符号にするのではなく、符号化された構文に対して集合値の符号を与えるものである。
 
-レベルに注意してほしい。`VCode`{.Agda} はレベル `ℓ-suc ℓ`{.Agda} で取られる。これは、`ZFStructure`{.Agda} `𝒮ᵥ`{.Agda} の関係が値を取るレベルである。この宇宙の指標は型理論のレベルであって、階層の段階ではない。
+レベルに注意してほしい。`VCode`{.Agda} はレベル `ℓ-suc ℓ`{.Agda} で取られる。これは、`ZFStructureₕ`{.Agda} `𝒮ᵥ`{.Agda} の関係が値を取るレベルである。この宇宙の指標は型理論のレベルであって、階層の段階ではない。
 <!--/-->
 
 <!--en-->
@@ -435,7 +435,7 @@ The two injective operations the generic coding needs were already available in 
 <!--zh-->
 ## 小结
 
-通用编码所需的两个单射操作原本就在层级之中。数码单射：`#-inj`{.Agda} 由单调性与隶属的无自环性、在自然数三歧性之下得出。Kuratowski 对单射：`pr-inj`{.Agda} 经单点集与无序对的分类规格还原两个分量。于是实例 `VCode`{.Agda} 在层级 `ℓ-suc ℓ`{.Agda} 上、且不带任何经典假设地供给了 FOL.Coding 的构造。层级集合上的词项与公式如今拥有本身是 `V`{.Agda} 中集合的码，`Codes`{.Agda} 关系可用于对它们推理。
+通用编码所需的两个单射操作原本就在层级之中。数码单射：`#-inj`{.Agda} 由单调性与成员关系的无自环性、在自然数三歧性之下得出。Kuratowski 对单射：`pr-inj`{.Agda} 经单点集与无序对的分类规格还原两个分量。于是实例 `VCode`{.Agda} 在层级 `ℓ-suc ℓ`{.Agda} 上、且不带任何经典假设地供给了 FOL.Coding 的构造。层级集合上的词项与公式如今拥有本身是 `V`{.Agda} 中集合的码，`Codes`{.Agda} 关系可用于对它们推理。
 <!--ja-->
 ## まとめ
 

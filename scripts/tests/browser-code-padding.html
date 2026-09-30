@@ -3,7 +3,7 @@
 <h1 id="status">RUNNING code padding checks</h1><pre id="report"></pre>
 <script>
 (async () => {
-  const results=[];
+  const results=[],headerChecks=[];
   for (const module of ['Base.Choice','Base.Impredicativity']) for (const width of [390,900]) {
     const frame=document.createElement('iframe');
     frame.style.cssText=`width:${width}px;height:600px;border:0;display:block`;
@@ -11,7 +11,21 @@
     frame.src='/zh/'+module+'.html?padding-regression=2';
     document.body.append(frame);await loaded;await frame.contentDocument.fonts.ready;
     const doc=frame.contentDocument, win=frame.contentWindow;
-    for(const fold of doc.querySelectorAll('.submodule-fold')) fold.open=true;
+    for(const fold of doc.querySelectorAll('.submodule-fold')) {
+      const heading=fold.querySelector(':scope > .submodule-fold-heading');
+      const pre=heading.querySelector('pre.Agda');
+      const button=pre.querySelector(':scope > .code-copy-inline');
+      if(!button) throw new Error('Missing declaration copy control');
+      for(const open of [false,true]) {
+        fold.open=open;
+        const box=pre.getBoundingClientRect(),control=button.getBoundingClientRect();
+        if(!box.height) continue;
+        const centered=Math.abs((control.top+control.bottom-box.top-box.bottom)/2)<1;
+        headerChecks.push({module,width,open,centered,
+          ok:centered&&control.top>=box.top&&control.bottom<=box.bottom});
+      }
+      fold.open=true;
+    }
     for(const pre of doc.querySelectorAll('article pre.Agda')) {
       if(pre.closest('.submodule-fold-heading')) continue;
       const content=pre.querySelector(':scope > .agda-code-content');
@@ -49,9 +63,9 @@
   const covered=results.some(r=>r.depth===1) && results.some(r=>r.depth===2)
     && ['QED','ordinary'].every(kind=>results.some(r=>r.depth>0 && r.kind===kind))
     && [390,900].every(width=>results.some(r=>r.width===width && r.code.startsWith('codedTruthIso P =')));
-  const pass=covered && results.every(r=>r.ok);
+  const pass=covered && results.every(r=>r.ok)&&headerChecks.length>0&&headerChecks.every(r=>r.ok);
   document.querySelector('#status').textContent=`${pass?'PASS':'FAIL'} ${results.filter(r=>r.ok).length}/${results.length} scroll-end checks; nested coverage=${covered}`;
-  document.querySelector('#report').textContent=JSON.stringify(results,null,2);
-  fetch('/results',{method:'POST',body:JSON.stringify({paddingRegression:true,pass,covered,results})});
+  document.querySelector('#report').textContent=JSON.stringify({results,headerChecks},null,2);
+  fetch('/results',{method:'POST',body:JSON.stringify({paddingRegression:true,pass,covered,results,headerChecks})});
 })().catch(error=>document.querySelector('#status').textContent='FAIL '+error.stack);
 </script></html>

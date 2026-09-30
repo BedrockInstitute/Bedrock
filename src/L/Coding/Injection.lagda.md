@@ -28,7 +28,7 @@ module L.Coding.Injection {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 open import FOL.Syntax using ( Formula; var; _≐_; _⇒̇_; ∀̇_ )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
@@ -43,7 +43,7 @@ open import V.Presentation {ℓ} using ( member; fiber; ↪-inj )
 Later cardinal arguments repeatedly move between two representations of an injection: a graph that a formula can quantify over, and an actual function between the small member types of sets. The gap between them is filled in three layers. The object language first needs a formula saying that the graph is injective, the mirror of the single-valuedness clause already available. Then, assuming single-valuedness and an exact domain, the graph can be read as a genuine function whose values remain elements of the constructible model. Finally that function transfers to the canonical small presentations of a stated domain and range. This chapter adds the injectivity formula and carries out both readback layers used by the Cantor-Bernstein and GCH constructions.
 <!--zh-->
 
-后续的基数论证反复在单射的两种表示之间往返：一种是公式可以量化的图，另一种是集合的小成员类型之间的实际函数。两者之间的缝隙分三层填补。对象语言首先需要一条表达图是单射的公式，它是已有单值性条款的对偶。其次，在单值性与恰当定义域的假设下，图可以读成一个真正的函数，取值仍是可构造模型的元素。最后，该函数可转移到指定定义域与值域的典范小呈现上。本章补上单射性公式，并完成 Cantor-Bernstein 与 GCH 构造所用的两层读回。
+后续的基数论证反复在单射的两种表示之间往返：一种是公式可以量化的图，另一种是集合的小元素类型之间的实际函数。两者之间的缝隙分三层填补。对象语言首先需要一条表达图是单射的公式，它是已有单值性条款的对偶。其次，在单值性与恰当定义域的假设下，图可以读成一个真正的函数，取值仍是可构造模型的元素。最后，该函数可转移到指定定义域与值域的典范小呈现上。本章补上单射性公式，并完成 Cantor-Bernstein 与 GCH 构造所用的两层读回。
 <!--ja-->
 
 後の基数論では、対象言語が量化できるグラフと、集合の小さな要素型の間の実際の単射という二つの表現を往復する。この溝は三層で埋める。まず対象言語には、グラフが単射であることを言う論理式、すでにある一価性の条項の鏡像が必要になる。次に、一価性とちょうどの定義域を仮定すれば、グラフは値が構成可能モデルの要素にとどまる本物の関数として読める。最後にその関数は、指定された定義域と値域の標準的な小さな提示へ移る。本章は単射性の論理式を加え、Cantor-Bernstein と GCH の構成が使う二段階の読み戻しを実行する。
@@ -62,7 +62,7 @@ Let `S` be the carrier of the constructible model. An element of `S` consists of
 <!--en-->
 The second readback layer needs the canonical presentation machinery: a set presented by an index type and an indexing map, with `member` turning an index into an explicit membership proof and `fiber` doing the converse by returning an actual index, not a truncated one. `Σ≡Prop` will reduce equality of dependent pairs to equality of first components when the second components are propositions, which is exactly how the fiber of images and the pairs of the model carrier are handled.
 <!--zh-->
-第二层读回需要典范呈现的工具：集合由索引类型与索引映射呈现，`member` 把索引变成显式的隶属证明，`fiber` 做相反的事，返回一个实际的索引而非截断的存在。`Σ≡Prop` 会在第二分量是命题时把依赖对的相等化归为第一分量的相等，像的原像与模型载体的对正是这样处理的。
+第二层读回需要典范呈现的工具：集合由索引类型与索引映射呈现，`member` 把索引变成显式的成员关系证明，`fiber` 做相反的事，返回一个实际的索引而非截断的存在。`Σ≡Prop` 会在第二分量是命题时把依赖对的相等化归为第一分量的相等，像的原像与模型载体的对正是这样处理的。
 <!--ja-->
 第二の読み戻しには標準的な提示の道具が必要である。集合はインデックス型とインデックス付けの写しで提示され、`member` はインデックスを明示的な所属証明に変え、`fiber` は逆に実際のインデックスを返す。切り詰められた存在ではない。`Σ≡Prop` は第二成分が命題のとき、依存対の等しさを第一成分の等しさへ帰着させる。像のファイバーも模型の台の対もこの仕方で扱われる。
 <!--/-->
@@ -82,7 +82,7 @@ Truth values here are propositions with their proofs of propositionhood, and the
 ```agda
 open import Cubical.HITs.CumulativeHierarchy.Base using ( _∈_ )
 
-open hPropStructure 𝒮ʟ using ( S )
+open hPropView 𝒮ʟ using ( S )
 ```
 
 <!--en-->
@@ -191,7 +191,7 @@ The path `at₂` is the same statement for the other clause: satisfaction of the
 <!--en-->
 The outward direction `injAt-out` starts from a proof that the formula holds at `γ` and two membership facts `Holds₀ x y` and `Holds₀ x' y`. Instantiating the three quantifiers yields a satisfaction proof of the implication body at the extended environment; the membership facts are then transported along the reverses of `at₁` and `at₂`, turning them into satisfaction proofs of the two antecedent clauses. The final `fst x ≡ fst x'` is read off inside the model's equality.
 <!--zh-->
-向外的方向 `injAt-out` 从公式在 `γ` 处成立的证明与两个隶属事实 `Holds₀ x y`、`Holds₀ x' y` 出发。把三个量词实例化，得到含取式体在扩张赋值处的满足证明；再把隶属事实沿 `at₁`、`at₂` 的反向运输，变成两条前件条款的满足证明。最后的 `fst x ≡ fst x'` 在模型的相等中读出。
+向外的方向 `injAt-out` 从公式在 `γ` 处成立的证明与两个成员关系事实 `Holds₀ x y`、`Holds₀ x' y` 出发。把三个量词实例化，得到含取式体在扩张赋值处的满足证明；再把成员关系事实沿 `at₁`、`at₂` 的反向运输，变成两条前件条款的满足证明。最后的 `fst x ≡ fst x'` 在模型的相等中读出。
 <!--ja-->
 外向きの `injAt-out` は、論理式が `γ` で成り立つ証明と二つの所属の事実 `Holds₀ x y`、`Holds₀ x' y` から出発する。三つの量化子を具体化すると、拡張された割り当てでの含意の本体の充足証明が得られ、所属の事実を `at₁` と `at₂` の逆向きに輸送して、二つの前件の条項の充足証明に変える。最後の `fst x ≡ fst x'` はモデルの等しさの中で読み取る。
 <!--/-->
@@ -208,7 +208,7 @@ The outward direction `injAt-out` starts from a proof that the formula holds at 
 <!--en-->
 The inward direction `injAt-in` runs the same transports forward: given the projected injectivity property as a hypothesis on `Holds₀`, it transports the two membership facts along `at₁` and `at₂` themselves to obtain satisfaction of the two antecedents, and the hypothesis then produces the equality the formula's conclusion asks for. Together the two directions say the formula is adequate for injectivity, not stronger and not weaker.
 <!--zh-->
-向内的方向 `injAt-in` 沿同样的路径正向运输：把投影的单射性质作为关于 `Holds₀` 的假设，沿 `at₁`、`at₂` 本身运输两个隶属事实，得到两条前件的满足，假设随后给出公式结论所需的等式。两个方向合起来说明：该公式对单射性是充分的，既不强也不弱。
+向内的方向 `injAt-in` 沿同样的路径正向运输：把投影的单射性质作为关于 `Holds₀` 的假设，沿 `at₁`、`at₂` 本身运输两个成员关系事实，得到两条前件的满足，假设随后给出公式结论所需的等式。两个方向合起来说明：该公式对单射性是充分的，既不强也不弱。
 <!--ja-->
 内向きの `injAt-in` は同じ輸送を順方向に行う。`Holds₀` についての射影された単射性を仮定として与えると、二つの所属の事実を `at₁` と `at₂` そのものに沿って輸送して二つの前件の充足を得、仮定が論理式の結論の求める等しさを出す。二つの方向を合わせて、この論理式が単射性に対して過不足なく妥当であることが分かる。
 <!--/-->
@@ -227,7 +227,7 @@ Assuming a graph is single-valued and has an exact domain, every element of the 
 <!--zh-->
 ## 提取一个取值于模型的单射
 
-假设图是单值的且有恰当定义域，定义域的每个元素在图中都有某个像，但那只是仅仅存在的像：定义域隶属给出的是命题截断，而非选定的见证。单值性改变了局面。它表明对一个固定的输入，「一个输出连同该对属于图的证明」构成的类型是命题，而截断的值总能消去到命题中。于是图给出一个真正的、取值在模型中的函数；再假设单射性，便得到真正的单射。这第一层读回把取值保留为载体的元素，是后续证明仍需对编码图作推理时使用的形式。
+假设图是单值的且有恰当定义域，定义域的每个元素在图中都有某个像，但那只是仅仅存在的像：定义域成员关系给出的是命题截断，而非选定的见证。单值性改变了局面。它表明对一个固定的输入，「一个输出连同该对属于图的证明」构成的类型是命题，而截断的值总能消去到命题中。于是图给出一个真正的、取值在模型中的函数；再假设单射性，便得到真正的单射。这第一层读回把取值保留为载体的元素，是后续证明仍需对编码图作推理时使用的形式。
 <!--ja-->
 ## モデルに値を取る単射を取り出す
 
@@ -260,7 +260,7 @@ module Extract (F D : S)
 <!--en-->
 `Holds x y` is the projected membership of the pair of underlying sets in the underlying graph. The fiber `Fib x` pairs an output `y` with such a proof; it is the type whose elements are candidate values of the graph at `x`, each carrying its own certificate that it really is a value.
 <!--zh-->
-`Holds x y` 是底层对属于底层图的投影隶属。原像 `Fib x` 把一个输出 `y` 与这样的证明配成一对；它的元素就是图在 `x` 处的候选值，每个候选都带着「它确实是取值」的证书。
+`Holds x y` 是底层对属于底层图的投影成员关系。原像 `Fib x` 把一个输出 `y` 与这样的证明配成一对；它的元素就是图在 `x` 处的候选值，每个候选都带着「它确实是取值」的证书。
 <!--ja-->
 `Holds x y` は、底の対が底のグラフに属すという射影された所属である。ファイバー `Fib x` は出力 `y` にこの証明を添えた組で、その要素はグラフが `x` で取る候補の値であり、それぞれが本当に値であることの証明書を伴う。
 <!--/-->
@@ -278,7 +278,7 @@ module Extract (F D : S)
 <!--en-->
 To prove `Fib x` proposition-valued, compare `(y,p)` and `(y′,q)`. Single-valuedness supplies the path `fst y ≡ fst y′`. The inner `Σ≡Prop` lifts this path to `y ≡ y′` because the second component of an element of `S`, its `isL` certificate, is a proposition. The outer `Σ≡Prop` then lifts that equality to the two elements of `Fib x` because graph-membership proofs are propositions. These are two distinct proof-irrelevance steps; neither says that equality of ambient sets follows merely from constructibility.
 <!--zh-->
-要证明 `Fib x` 是命题，比较 `(y,p)` 与 `(y′,q)`。单值性先给出路径 `fst y ≡ fst y′`。内层 `Σ≡Prop` 利用 `S` 元素的第二分量即 `isL` 证书为命题，把该路径提升为 `y ≡ y′`；外层 `Σ≡Prop` 再利用图隶属证明为命题，把这一相等提升为 `Fib x` 的两个元素相等。这是两个不同的证明无关性步骤，并不是说周遭集合的相等仅由可构造性推出。
+要证明 `Fib x` 是命题，比较 `(y,p)` 与 `(y′,q)`。单值性先给出路径 `fst y ≡ fst y′`。内层 `Σ≡Prop` 利用 `S` 元素的第二分量即 `isL` 证书为命题，把该路径提升为 `y ≡ y′`；外层 `Σ≡Prop` 再利用图成员关系证明为命题，把这一相等提升为 `Fib x` 的两个元素相等。这是两个不同的证明无关性步骤，并不是说周遭集合的相等仅由可构造性推出。
 <!--ja-->
 `Fib x` が命題であることを示すには、`(y,p)` と `(y′,q)` を比較する。一価性からまずパス `fst y ≡ fst y′` が得られる。内側の `Σ≡Prop` は、`S` の要素の第二成分である `isL` の証明が命題であることを使い、このパスを `y ≡ y′` へ持ち上げる。外側の `Σ≡Prop` は、グラフ所属の証明が命題であることを使い、その等しさを `Fib x` の二要素の等しさへ持ち上げる。これは別々の二つの証明無関係性の段階であり、周囲の集合の等しさが構成可能性だけから従うという意味ではない。
 <!--/-->
@@ -313,7 +313,7 @@ Because `Fib x` is a proposition, `toVal` can eliminate the truncated existence 
 <!--en-->
 The function `toFun` sends a domain entry to the output `y : S` in its unique fiber. It discards only the accompanying graph-membership proof; the output remains a model element and therefore retains its constructibility certificate. The theorem `toFun-graph` recovers exactly that discarded membership evidence as the second component of the fiber.
 <!--zh-->
-函数 `toFun` 把定义域元素送到其唯一原像中的输出 `y : S`。它只舍去随附的图隶属证明；输出仍是模型元素，因此保留其可构造性证书。定理 `toFun-graph` 恰把这份被舍去的隶属证据作为原像的第二分量取回。
+函数 `toFun` 把定义域元素送到其唯一原像中的输出 `y : S`。它只舍去随附的图成员关系证明；输出仍是模型元素，因此保留其可构造性证书。定理 `toFun-graph` 恰把这份被舍去的成员关系证据作为原像的第二分量取回。
 <!--ja-->
 関数 `toFun` は定義域の要素を、その一意なファイバーに含まれる出力 `y : S` へ送る。捨てるのは付随するグラフ所属の証明だけで、出力はモデルの要素のままなので構成可能性の証明書を保持する。定理 `toFun-graph` は、捨てた所属の証拠をファイバーの第二成分として取り出す。
 <!--/-->
@@ -364,7 +364,7 @@ The injection `toFun` acts on pairs of a model element and a membership proof, a
 <!--zh-->
 ## 限制到小载体
 
-函数 `toFun` 作用在「模型元素连同隶属证明」的对上，这样的载体无法用于基数计数。最后一步把两端都换成典范的小呈现：定义域换成 `D` 的索引类型，值域换成调用方提供的集合 `C` 的索引类型，调用方只需证明图的每个取值都落在 `C` 中。图的三个条款，单值性、恰当定义域与单射性，在此一并假设。呈现层的贡献在于显式性：因为典范嵌入有命题值的原像，属于 `D` 或 `C` 都能从索引读出，也能读回索引。
+函数 `toFun` 作用在「模型元素连同成员关系证明」的对上，这样的载体无法用于基数计数。最后一步把两端都换成典范的小呈现：定义域换成 `D` 的索引类型，值域换成调用方提供的集合 `C` 的索引类型，调用方只需证明图的每个取值都落在 `C` 中。图的三个条款，单值性、恰当定义域与单射性，在此一并假设。呈现层的贡献在于显式性：因为典范嵌入有命题值的原像，属于 `D` 或 `C` 都能从索引读出，也能读回索引。
 <!--ja-->
 ## 小さな台に制限する
 
@@ -395,7 +395,7 @@ module Small (F D C : S)
 <!--en-->
 Under the single-valuedness and exact-domain hypotheses, `Extract` supplies the unique graph value for each domain member. To compare this construction with the small presentation, `toS` turns an index `m` of the canonical presentation of `D` into a model element. The first component is the presented set itself; the second is its constructibility certificate, obtained by `isL-trans` from the explicit membership `member (fst D) m` and the certificate that `D` itself is constructible. Transitivity is exactly the principle needed: a member of a constructible set is constructible.
 <!--zh-->
-内层模块以 `F`、`D` 与前两个满足证明重新打开 Extract，于是上一节的所有构造都以带前缀的名字可用。接着 `toS` 把 `D` 的典范呈现的一个索引 `m` 变成模型元素。第一分量就是被呈现的集合本身；第二分量是其可构造性证书，由 `isL-trans` 从显式隶属 `member (fst D) m` 与 `D` 自身可构造的证书得出。传递性正是所需的原理：可构造集合的成员是可构造的。
+内层模块以 `F`、`D` 与前两个满足证明重新打开 Extract，于是上一节的所有构造都以带前缀的名字可用。接着 `toS` 把 `D` 的典范呈现的一个索引 `m` 变成模型元素。第一分量就是被呈现的集合本身；第二分量是其可构造性证书，由 `isL-trans` 从显式成员关系 `member (fst D) m` 与 `D` 自身可构造的证书得出。传递性正是所需的原理：可构造集合的元素是可构造的。
 <!--ja-->
 内側のモジュールは、`F` と `D` と先の二つの充足の証明で Extract を改めて開くので、前節の構成はすべて接頭辞付きの名前で使える。そして `toS` は `D` の標準的な提示のインデックス `m` を模型の要素に変える。第一成分は提示された集合そのものであり、第二成分はその構成可能性の証明書で、`isL-trans` により、明示的な所属 `member (fst D) m` と `D` 自身が構成可能である証明書から得られる。推移性はまさに必要な原理である。構成可能集合の要素は構成可能である。
 <!--/-->
@@ -411,7 +411,7 @@ Under the single-valuedness and exact-domain hypotheses, `Extract` supplies the 
 <!--en-->
 Each small index must also be seen as a member of the domain in Extract's sense, and `at` supplies that pair: the model element `toS m` together with the explicit membership proof `member (fst D) m`. Feeding `at m` to the graph through `E.toFun` produces a value, and the range hypothesis certifies that this value belongs to `C`. Because the membership `⟪ fst C ⟫↪ k ≡ fst (E.toFun (at m))` in the canonical presentation is a fiber of an embedding with proposition-valued fibers, `fiber` returns an actual index `k` together with a path, not merely the truncated existence of one.
 <!--zh-->
-每个小索引还须被看作 Extract 意义下定义域的成员，`at` 提供这一对：模型元素 `toS m` 连同显式隶属证明 `member (fst D) m`。把 `at m` 经 `E.toFun` 喂给图得到一个取值，取值假设证书化该值属于 `C`。由于典范呈现中的隶属 `⟪ fst C ⟫↪ k ≡ fst (E.toFun (at m))` 是具有命题值原像的嵌入的原像，`fiber` 返回的是实际的索引 `k` 连同一条路径，而非仅仅是截断的存在。
+每个小索引还须被看作 Extract 意义下定义域的元素，`at` 提供这一对：模型元素 `toS m` 连同显式成员关系证明 `member (fst D) m`。把 `at m` 经 `E.toFun` 喂给图得到一个取值，取值假设证书化该值属于 `C`。由于典范呈现中的成员关系 `⟪ fst C ⟫↪ k ≡ fst (E.toFun (at m))` 是具有命题值原像的嵌入的原像，`fiber` 返回的是实际的索引 `k` 连同一条路径，而非仅仅是截断的存在。
 <!--ja-->
 各小さなインデックスは、Extract の意味でも定義域の要素と見なされねばならず、`at` がその組を与える。模型の要素 `toS m` と明示的な所属の証明 `member (fst D) m` である。`at m` を `E.toFun` でグラフに通すと値が得られ、値域の仮定がこの値が `C` に属すことを証明する。標準的な提示での所属 `⟪ fst C ⟫↪ k ≡ fst (E.toFun (at m))` は、命題値のファイバーを持つ埋め込みのファイバーなので、`fiber` は切り詰められた存在ではなく、実際のインデックス `k` とパスの組を返す。
 <!--/-->
@@ -465,7 +465,7 @@ Injectivity of `small` is proved by routing an equality of indices back through 
 <!--zh-->
 ## 小结
 
-`injAt` 在模型内部表达编码图的单射性。单值性与恰当定义域使 `Extract.toFun` 能把图读成取值于 `L` 的函数；独立假设 `ij` 才给出 `Extract.toFun-inj`。加上指定的值域条件后，`Small.small` 把该单射转移到定义域和值域的典范小成员类型上。截断步骤使用像原像的唯一性，呈现步骤则使用嵌入原像为命题这一性质。
+`injAt` 在模型内部表达编码图的单射性。单值性与恰当定义域使 `Extract.toFun` 能把图读成取值于 `L` 的函数；独立假设 `ij` 才给出 `Extract.toFun-inj`。加上指定的值域条件后，`Small.small` 把该单射转移到定义域和值域的典范小元素类型上。截断步骤使用像原像的唯一性，呈现步骤则使用嵌入原像为命题这一性质。
 <!--ja-->
 ## まとめ
 

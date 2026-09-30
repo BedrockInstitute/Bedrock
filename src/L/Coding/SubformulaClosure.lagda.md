@@ -27,7 +27,7 @@ module L.Coding.SubformulaClosure {ℓ : Level} where
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 open import FOL.Syntax using ( Formula )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
@@ -65,7 +65,7 @@ open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( module InfinitySet )
 open InfinitySet using ( #_; sucV )
 
-open hPropStructure 𝒮ʟ using ( S )
+open hPropView 𝒮ʟ using ( S )
 
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
 open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
@@ -119,7 +119,7 @@ module _ {K : Type ℓ} (f : K → V ℓ) (h : (k : K) → ⟨ isL (f k) ⟩) wh
 is contained in `C`. This is exactly the information needed to recover the
 immediate subformula keys demanded by a constructor tag.
 <!--zh-->
-`Peel C` 表示 `C` 的每个成员都是某个公式的键，而且该公式自身的闭包包含于 `C`。这恰是根据构造子标签恢复所需直接子公式键的信息。
+`Peel C` 表示 `C` 的每个元素都是某个公式的键，而且该公式自身的闭包包含于 `C`。这恰是根据构造子标签恢复所需直接子公式键的信息。
 <!--ja-->
 `Peel C` は、`C` の各要素がある論理式の鍵であり、その論理式自身の閉包が `C` に含まれることを表す。これは構成子のタグが要求する直接の部分式の鍵を復元するために必要な情報そのものである。
 <!--/-->
@@ -132,7 +132,7 @@ keys, and `Peel`{.Agda} is what a characterization turns into. So the seven
 clauses are proved once, for any set that peels, and the closure is the first of
 the two instances rather than the subject.
 <!--zh-->
-把它单独陈述出来不是为了整洁。后面有一章从一层里切出一个码集，须为它证同一条封闭性，而那个集合不是任何东西的闭包；它手上有的是「其诸成员即诸键」这条刻画，而 `Peel`{.Agda} 正是一条刻画所化成的东西。故七条子句只证一次，对任何可剥开的集合成立，而闭包是那两个实例中的头一个，不是主角。
+把它单独陈述出来不是为了整洁。后面有一章从一层里切出一个码集，须为它证同一条封闭性，而那个集合不是任何东西的闭包；它手上有的是「其诸元素即诸键」这条刻画，而 `Peel`{.Agda} 正是一条刻画所化成的东西。故七条子句只证一次，对任何可剥开的集合成立，而闭包是那两个实例中的头一个，不是主角。
 <!--/-->
 
 ```agda
@@ -165,7 +165,7 @@ The truncation that peeling returns is eliminated straight away, which is allowe
 because what is being produced is a membership, or a pair of them, and membership
 is a proposition.
 <!--zh-->
-剥开所返回的那个截断当场消掉，这是允许的，因为要产出的是一条隶属、或一对隶属，而隶属是命题。
+剥开所返回的那个截断当场消掉，这是允许的，因为要产出的是一条成员关系、或一对成员关系，而成员关系是命题。
 <!--/-->
 
 <details open class="submodule-fold">

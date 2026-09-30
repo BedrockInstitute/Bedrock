@@ -28,7 +28,7 @@ module L.CantorBernstein {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 open import V.CantorBernstein {ℓ} (lowerLEM lem)
   using ( small-set; module MutualInj )
 open import L.Constructible {ℓ} using ( 𝒮ʟ )
@@ -43,9 +43,9 @@ Suppose two constructible sets admit coded injections in both directions. Their 
 The argument passes through two levels. A set of `L` carries an underlying set in the ambient cumulative hierarchy. Its members form an ordinary type, written `⟪ fst a ⟫`; coded injections belong to the object theory, whereas functions between these member types belong to the metatheory.
 <!--zh-->
 
-设两个可构造集合之间存在双向的编码单射，那么它们的成员类型之间仅仅存在一个双射。这是本章采用的 Cantor–Schröder–Bernstein 定理的内部形式：假设用 `L` 的语言表述，所得双射则比较这两个集合对应的普通类型。
+设两个可构造集合之间存在双向的编码单射，那么它们的元素类型之间仅仅存在一个双射。这是本章采用的 Cantor–Schröder–Bernstein 定理的内部形式：假设用 `L` 的语言表述，所得双射则比较这两个集合对应的普通类型。
 
-论证在两个层面之间进行。`L` 的集合带有外围累积层级中的底层集合，其成员组成普通类型 `⟪ fst a ⟫`。编码单射属于对象理论，而这些成员类型之间的函数属于元理论。
+论证在两个层面之间进行。`L` 的集合带有外围累积层级中的底层集合，其元素组成普通类型 `⟪ fst a ⟫`。编码单射属于对象理论，而这些元素类型之间的函数属于元理论。
 <!--ja-->
 
 二つの構成可能集合の間に、両方向の符号化された単射があるとする。このとき、それらの要素型の間には全単射が単に存在する。これが本章で用いる Cantor–Schröder–Bernstein の定理の内部版である。仮定は `L` の言語で述べられ、得られる全単射は二つの集合を提示する通常の型を比較する。
@@ -56,7 +56,7 @@ The argument passes through two levels. A set of `L` carries an underlying set i
 <!--en-->
 To apply the type-level theorem, each member type must be an h-set. The cumulative hierarchy already supplies this property: paths between two members carry no additional higher information. Thus `setPL` provides exactly the h-set certificate required for every presentation.
 <!--zh-->
-要使用类型层的定理，每个成员类型都必须是h-集合。累积层级已经保证这一性质：两个成员之间的路径不再含有更高层的额外信息。因此，`setPL` 为每个呈现给出所需的h-集合证书。
+要使用类型层的定理，每个元素类型都必须是h-集合。累积层级已经保证这一性质：两个元素之间的路径不再含有更高层的额外信息。因此，`setPL` 为每个呈现给出所需的h-集合证书。
 <!--ja-->
 型の定理を適用するには、各要素型がh-集合でなければならない。累積階層はすでにこの性質を備えており、二つの要素の間のパスにはそれ以上の高次情報がない。したがって `setPL` は、各提示に必要なh-集合の証明を与える。
 <!--/-->
@@ -72,14 +72,14 @@ An injection code consists of a constructible graph together with three satisfac
 ```agda
 open import Cubical.HITs.CumulativeHierarchy.Properties using ( ⟪_⟫ )
 
-open hPropStructure 𝒮ʟ using ( S )
+open hPropView 𝒮ʟ using ( S )
 setPL : (a : S) → isSet (⟪ fst a ⟫)
 ```
 
 <!--en-->
 The function `readL` performs this passage. Given a coded graph from `a` to `b`, it returns an actual function from the members of `a` to the members of `b`, together with a proof that equal outputs have equal inputs. The construction itself is supplied by the preceding analysis of coded injections.
 <!--zh-->
-函数 `readL` 完成这一转换。给定从 `a` 到 `b` 的编码图，它返回一个从 `a` 的成员到 `b` 的成员的实际函数，并证明输出相等必有输入相等。这一构造来自前面对编码单射的分析。
+函数 `readL` 完成这一转换。给定从 `a` 到 `b` 的编码图，它返回一个从 `a` 的元素到 `b` 的元素的实际函数，并证明输出相等必有输入相等。这一构造来自前面对编码单射的分析。
 <!--ja-->
 関数 `readL` がこの移行を行う。`a` から `b` への符号化されたグラフを受け取り、`a` の要素から `b` の要素への実際の関数と、出力が等しければ入力も等しいという証明を返す。この構成は、先に行った符号化単射の解析から得られる。
 <!--/-->
@@ -95,7 +95,7 @@ readL a b (F , sv , dm , ij , ran) = SM.small , SM.small-inj
 <!--en-->
 The abstract Cantor–Schröder–Bernstein argument can now be instantiated with constructible sets as objects, their member types as presentations, and coded graphs as injections. The h-set certificates and `readL` verify its two structural requirements. The same instantiation provides both a version for explicit witnesses and a version for merely existing witnesses.
 <!--zh-->
-现在可以把抽象的 Cantor–Schröder–Bernstein 论证应用于这一情形：对象取可构造集合，呈现取其成员类型，单射取编码图。h-集合证书与 `readL` 验证了所需的两项结构条件。同一次实例化既给出使用显式见证的版本，也给出仅仅假定见证存在的版本。
+现在可以把抽象的 Cantor–Schröder–Bernstein 论证应用于这一情形：对象取可构造集合，呈现取其元素类型，单射取编码图。h-集合证书与 `readL` 验证了所需的两项结构条件。同一次实例化既给出使用显式见证的版本，也给出仅仅假定见证存在的版本。
 <!--ja-->
 これで抽象的な Cantor–Schröder–Bernstein の議論を具体化できる。対象を構成可能集合、提示をその要素型、単射を符号化されたグラフとする。h-集合の証明と `readL` が、必要な二つの構造条件を満たす。同じ具体化から、明示的な証人を用いる版と、証人が単に存在する版の両方が得られる。
 <!--/-->

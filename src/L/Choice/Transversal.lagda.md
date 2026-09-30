@@ -28,7 +28,7 @@ module L.Choice.Transversal {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 open import FOL.Syntax using ( Formula; var; con; _∈̇_; _∧̇_; ¬̇_; ∃̇_ )
 import FOL.Semantics
 import FOL.ZFModel
@@ -51,7 +51,7 @@ This chapter proves the axiom of choice for `𝒮ʟ` by separating the least mem
 of every cell under a stage-bounded internal well-order and showing that the
 resulting set meets each pairwise-disjoint cell exactly once.
 <!--zh-->
-本章证明 `𝒮ʟ` 的选择公理：在循阶的内部良序下，从每一格分离出最小成员，并证明所得集合与每个两两不交的格恰交于一点。
+本章证明 `𝒮ʟ` 的选择公理：在循阶的内部良序下，从每一格分离出最小元素，并证明所得集合与每个两两不交的格恰交于一点。
 <!--ja-->
 本章では `𝒮ʟ` の選択公理を証明する。段階有界な内部の整列順序で各セルの最小要素を分出し、得られた集合が互いに素な各セルとちょうど一点で交わることを示す。
 <!--/-->
@@ -87,11 +87,11 @@ stated relative to a ZF model on this carrier, because the intersection it names
 is that model's derived operation; and the whole of that dependence is one
 transport along the intersection's specification.
 <!--zh-->
-本章证明选择公理在 `𝒮ʟ` 处的实例，采用模型 record 的**横截**形式：给定一个成员非空且两两不交的集合，则仅仅存在一个集合，与原集合的每个成员恰交于一点。
+本章证明选择公理在 `𝒮ʟ` 处的实例，采用模型 record 的**横截**形式：给定一个元素非空且两两不交的集合，则仅仅存在一个集合，与原集合的每个元素恰交于一点。
 
-论证与经典证法相同，只是其中最费力的那一步已经在此前完成：教科书把宇宙良序化，再取每一格中最小的成员。`L` 整体的良序是真类上的关系，本书从未构造过它；前几章构造出来的，是每个**层**上的良序，且是一致地构造的，并在每个序数处都作为模型的一个元素。这就够了，因为集合是小的：单个序数就能同时界住一个族、它的成员与它们的成员，而在该序数处的塔之内，选取不过是一次普通的极小元搜索。
+论证与经典证法相同，只是其中最费力的那一步已经在此前完成：教科书把宇宙良序化，再取每一格中最小的元素。`L` 整体的良序是真类上的关系，本书从未构造过它；前几章构造出来的，是每个**层**上的良序，且是一致地构造的，并在每个序数处都作为模型的一个元素。这就够了，因为集合是小的：单个序数就能同时界住一个族、它的元素与它们的元素，而在该序数处的塔之内，选取不过是一次普通的极小元搜索。
 
-于是本章只有四步。**上界**：层一章为该族给出的上界序数高于该族自身的层，因而高于它每个成员的每个成员。**那里的序**：取该序数处表中的关系，它是模型的一个元素，另有两条引理把对它的隶属与元层面的比较双向读通。**那条描述**：「该族的某个成员含有这个集合，且那个成员中没有任何东西排在它之前」，这是以那个序为常元的公式，本章的模型据它用分离得到一个集合。**计数**：该集合与每个成员恰交于一点，存在性来自极小元，唯一性来自两两不交；这正是两两不交假设的用途，也是全书唯一用到它的地方。
+于是本章只有四步。**上界**：层一章为该族给出的上界序数高于该族自身的层，因而高于它每个元素的每个元素。**那里的序**：取该序数处表中的关系，它是模型的一个元素，另有两条引理把对它的成员关系与元层面的比较双向读通。**那条描述**：「该族的某个元素含有这个集合，且那个元素中没有任何东西排在它之前」，这是以那个序为常元的公式，本章的模型据它用分离得到一个集合。**计数**：该集合与每个元素恰交于一点，存在性来自极小元，唯一性来自两两不交；这正是两两不交假设的用途，也是全书唯一用到它的地方。
 
 本章除四步之外还有一句观察。选择是相对于此载体上的一个 ZF 模型陈述的，因为它所点名的交是该模型的派生运算；而这份依赖的全部内容，就是沿交的规格作一次改写。
 <!--/-->
@@ -99,7 +99,7 @@ transport along the intersection's specification.
 ```agda
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 
-open hPropStructure 𝒮ʟ
+open hPropView 𝒮ʟ
 
 module ModelL = FOL.ZFModel 𝒮ʟ
 open ModelL using ( isZFModel )
@@ -120,7 +120,7 @@ open AbsL renaming ( _⊨ᵐ_ to _⊨_ )
 `Pick`{.Agda} is the one-variable formula saying that a point lies in a member
 of the family and has no predecessor there under the chosen relation.
 <!--zh-->
-`Pick`{.Agda} 是一条单自由变元公式，断言该点属于族的某个成员，且在选定关系下，该成员中没有点排在它之前。
+`Pick`{.Agda} 是一条单自由变元公式，断言该点属于族的某个元素，且在选定关系下，该元素中没有点排在它之前。
 <!--ja-->
 `Pick`{.Agda} は一自由変数の論理式であり、点が族のある要素に属し、選んだ関係の下でその中に先行する点がないことを述べる。
 <!--/-->
@@ -143,7 +143,7 @@ is nothing large to unfold. The seal stays, because it costs nothing and because
 a later reader of this description should not have to re-measure.
 <!--zh-->
 
-一条公式，一个自由变元，两个常元。它对一个集合 `z` 说：该族的某个成员含有 `z`，且那个成员中没有任何东西在那个序下排在 `z` 之前。应用原子直接把那个序当作常元。族也直接点名，因为它只出现在一条隶属原子之下。
+一条公式，一个自由变元，两个常元。它对一个集合 `z` 说：该族的某个元素含有 `z`，且那个元素中没有任何东西在那个序下排在 `z` 之前。应用原子直接把那个序当作常元。族也直接点名，因为它只出现在一条成员关系原子之下。
 
 该公式仍在构造之处封装，因为常元上的描述原则上应在定义处保持不透明。不过，这一选择在本章不影响检查时间：封装与不封装都需 2.3 秒。原因是此前较慢的描述内部含有已编码语法，在具体环境中求满足关系会正规化完整的层级描述；这里的公式只包含四个原子和一次应用，没有大型定义可展开。封装仍予保留，以维持统一接口，并避免后续使用者重新评估这一边界。
 <!--/-->
@@ -217,13 +217,13 @@ by trichotomy alone. The generic uniqueness theorem
 `isPropLeastOf`{.Agda} closes precisely this last comparison.
 <!--zh-->
 
-本模块固定下供应交运算的那个 ZF 模型、那个族，以及该族的两条假设。选择构造的层部分在该族自身处供应上界与序：`β`{.Agda} 是一个高于该族自身层的序数，从而高于它的成员及其成员，也高于诸名字所住的 `ω`；`W`{.Agda} 是 `β`{.Agda} 处塔的诸成员上的良序；而 `rel`{.Agda} 就是同一个序作为**模型的一个元素**，正是这一点才使它能在描述中被一个常元点名。
+本模块固定下供应交运算的那个 ZF 模型、那个族，以及该族的两条假设。选择构造的层部分在该族自身处供应上界与序：`β`{.Agda} 是一个高于该族自身层的序数，从而高于它的元素及其元素，也高于诸名字所住的 `ω`；`W`{.Agda} 是 `β`{.Agda} 处塔的诸元素上的良序；而 `rel`{.Agda} 就是同一个序作为**模型的一个元素**，正是这一点才使它能在描述中被一个常元点名。
 
-`Cell x`{.Agda} 是那些成员之上「是 `x` 的成员」这条谓词，而 `least`{.Agda} 把 `L.WellOrder.Base`{.Agda} 的泛型搜索施于它。同一搜索此前已用于有穷层序与名字选取，后面还用于 GCH 构造；它在此处的具体职责，是把层序变成每一格的一个选定代表。这正是借助排中律才能为横截集完成的选取。
+`Cell x`{.Agda} 是那些元素之上「是 `x` 的元素」这条谓词，而 `least`{.Agda} 把 `L.WellOrder.Base`{.Agda} 的泛型搜索施于它。同一搜索此前已用于有穷层序与名字选取，后面还用于 GCH 构造；它在此处的具体职责，是把层序变成每一格的一个选定代表。这正是借助排中律才能为横截集完成的选取。
 
-`pick-in`{.Agda} 与 `pick-out`{.Agda} 是那条描述的两条读式，而两者互不为对方的推论：一条由极小元造出一个满足关系，另一条由满足关系取出一个极小元，且各自都要把一个集合在它可被呈现的两种形态之间转换，即作为 `L` 的元素与作为 `β`{.Agda} 处塔的成员。两个截断载荷分别名为 `Two`{.Agda} 与 `Predecessor`{.Agda}，于是两条读式都不必把嵌套写开；否定式是唯一一处把截断消去到空类型的地方，而它是在一个具名辅助件里消去的。
+`pick-in`{.Agda} 与 `pick-out`{.Agda} 是那条描述的两条读式，而两者互不为对方的推论：一条由极小元造出一个满足关系，另一条由满足关系取出一个极小元，且各自都要把一个集合在它可被呈现的两种形态之间转换，即作为 `L` 的元素与作为 `β`{.Agda} 处塔的元素。两个截断载荷分别名为 `Two`{.Agda} 与 `Predecessor`{.Agda}，于是两条读式都不必把嵌套写开；否定式是唯一一处把截断消去到空类型的地方，而它是在一个具名辅助件里消去的。
 
-随后进行分离与计数。`transversalSet`{.Agda} 是模型中的分离，依照该描述施于 `β`{.Agda} 处的塔。`Cut`{.Agda} 固定族中的一个成员：交的收缩中心就是相应极小元；由 `pick-in`{.Agda}，它属于横截集，而极小性本身保证它属于该成员。唯一性在这里使用两两不交：交中的另一点满足描述，因而是族中某个成员的极小元，同时又属于当前成员；两个成员因此相交并相等，所以该点也是当前成员的极小元。极小元由三歧唯一，泛型定理 `isPropLeastOf`{.Agda} 完成最后这步比较。
+随后进行分离与计数。`transversalSet`{.Agda} 是模型中的分离，依照该描述施于 `β`{.Agda} 处的塔。`Cut`{.Agda} 固定族中的一个元素：交的收缩中心就是相应极小元；由 `pick-in`{.Agda}，它属于横截集，而极小性本身保证它属于该元素。唯一性在这里使用两两不交：交中的另一点满足描述，因而是族中某个元素的极小元，同时又属于当前元素；两个元素因此相交并相等，所以该点也是当前元素的极小元。极小元由三歧唯一，泛型定理 `isPropLeastOf`{.Agda} 完成最后这步比较。
 <!--/-->
 
 <details open class="submodule-fold">
@@ -485,7 +485,7 @@ hasChoiceL zf a inh disj = ∣ T.transversalSet , T.transversal ∣₁
 `Pick`{.Agda}, the bounded stage order, and separation together produce the
 transversal whose exact-one-point property supplies `hasChoiceL`{.Agda}.
 <!--zh-->
-`Pick`{.Agda}、循阶的层序与分离共同造出横截集；它与每个成员恰交于一点，这一性质给出 `hasChoiceL`{.Agda}。
+`Pick`{.Agda}、循阶的层序与分离共同造出横截集；它与每个元素恰交于一点，这一性质给出 `hasChoiceL`{.Agda}。
 <!--ja-->
 `Pick`{.Agda}、段階有界な順序、分出公理から横断集合が得られ、その各セルと一点だけで交わる性質が `hasChoiceL`{.Agda} を与える。
 <!--/-->
@@ -507,7 +507,7 @@ description carries no coded syntax. The seal stays, and the number is recorded
 so that the law keeps its true shape: it is about what a description **contains**,
 not about where it is read.
 <!--zh-->
-`Pick`{.Agda} 是那条描述：该族的某个成员含有这个集合，且那个成员中没有任何东西排在它之前。`pick-in`{.Agda} 与 `pick-out`{.Agda} 是它相对于「是某个成员的极小元」的两个方向的读式。`transversalSet`{.Agda} 是模型以它为据、用分离在该族上界序数处的塔上得到的集合；`transversal`{.Agda} 则算出它与每个成员之交：恰为一点，存在性来自那场极小元搜索，唯一性来自两两不交。`hasChoiceL`{.Agda} 就是模型的选择字段；有了它，前沿即告清空并被移除。
+`Pick`{.Agda} 是那条描述：该族的某个元素含有这个集合，且那个元素中没有任何东西排在它之前。`pick-in`{.Agda} 与 `pick-out`{.Agda} 是它相对于「是某个元素的极小元」的两个方向的读式。`transversalSet`{.Agda} 是模型以它为据、用分离在该族上界序数处的塔上得到的集合；`transversal`{.Agda} 则算出它与每个元素之交：恰为一点，存在性来自那场极小元搜索，唯一性来自两两不交。`hasChoiceL`{.Agda} 就是模型的选择字段；有了它，前沿即告清空并被移除。
 
 一次实测，结果是这条定律在此处没有发挥作用。读在常元上的描述要在被造出之处封印，这条定律在其被发现之处带来了九十九倍的差别；在此处则全无影响：封印与否都是 2.3 秒，因为这条描述不携带任何已编码的语法。封印仍然保留，那个数字也仍被记下，好让这条定律保持它本来的内容：它关乎一条描述**包含什么**，而不关乎它在哪里被读。
 <!--/-->

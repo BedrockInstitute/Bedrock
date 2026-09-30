@@ -28,7 +28,7 @@ module L.GCH.CondensationTransfer {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 open import FOL.Syntax using ( Formula; var; con; _∈̇_; _≐_; _∧̇_; ∃̇_ )
 open import FOL.Manipulation.ConstantMapping using ( mapFo; embed )
 import FOL.Semantics
@@ -66,7 +66,7 @@ The theorem is parameterized by excluded middle at `ℓ-suc ℓ`. That single cl
 <!--en-->
 The object language needs only membership, equality, conjunction, and unbounded existence for the two queries built below. Its constant alphabet changes as a formula moves between the ambient hierarchy, the stage, and the hull. The operation `mapFo` relabels existing constants, while `embed` regards a constant-free formula as a formula over a new constant alphabet. Neither operation changes the variable positions or logical structure of the formula.
 <!--zh-->
-下文两条查询只需对象语言中的隶属、相等、合取与无界存在量词。公式在外围层级、层与 Skolem 壳之间移动时，其常元字母表会随之改变。运算 `mapFo` 重标已有常元，而 `embed` 把一条无常元公式视为新常元字母表上的公式；两者都不改变公式的变元位置与逻辑结构。
+下文两条查询只需对象语言中的成员关系、相等、合取与无界存在量词。公式在外围层级、层与 Skolem 壳之间移动时，其常元字母表会随之改变。运算 `mapFo` 重标已有常元，而 `embed` 把一条无常元公式视为新常元字母表上的公式；两者都不改变公式的变元位置与逻辑结构。
 <!--ja-->
 以下で作る二つの問い合わせに必要なのは、対象言語の所属、等号、連言、非有界な存在量化だけである。論理式を周囲の階層、段階、Skolem 包の間で移すとき、その定数のアルファベットは変わる。`mapFo` は既存の定数を付け替え、`embed` は定数を含まない論理式を新しい定数アルファベット上の論理式とみなす。どちらも変数の位置や論理構造を変えない。
 <!--/-->
@@ -74,7 +74,7 @@ The object language needs only membership, equality, conjunction, and unbounded 
 <!--en-->
 The constructible hierarchy requires a persistent distinction between an ordinal index `d` and the stage `Lset d` that it indexes. A member of `Lset lam` is constructible when `lam` is ordinal. Conversely, if an ordinal `d` is a member of `Lset lam`, rank comparison places `d` in `lam`. The downward description `Lset-out` says only that a member of a stage merely comes from `𝒟ₒ (Lset c)` for some `c` in its index; it retains no chosen birth stage. Monotonicity then transports membership from `Lset β` to `Lset α` when the strict index relation `β ∈ α` is available.
 <!--zh-->
-可构造层级要求始终区分序数索引 `d` 与它所索引的层 `Lset d`。当 `lam` 是序数时，`Lset lam` 的成员都是可构造的。反过来，若序数 `d` 属于 `Lset lam`，则秩比较把 `d` 放入 `lam`。向下刻画 `Lset-out` 只说一层的成员仅仅来自某个 `c ∈ lam` 处的 `𝒟ₒ (Lset c)`，并不保留选定的出生层。若有严格的索引关系 `β ∈ α`，单调性再把 `Lset β` 中的成员搬到 `Lset α`。
+可构造层级要求始终区分序数索引 `d` 与它所索引的层 `Lset d`。当 `lam` 是序数时，`Lset lam` 的元素都是可构造的。反过来，若序数 `d` 属于 `Lset lam`，则秩比较把 `d` 放入 `lam`。向下刻画 `Lset-out` 只说一层的元素仅仅来自某个 `c ∈ lam` 处的 `𝒟ₒ (Lset c)`，并不保留选定的出生层。若有严格的索引关系 `β ∈ α`，单调性再把 `Lset β` 中的元素搬到 `Lset α`。
 <!--ja-->
 構成可能階層では、順序数の添字 `d` と、それが添字づける段階 `Lset d` を常に区別しなければならない。`lam` が順序数なら、`Lset lam` の要素は構成可能である。逆に、順序数 `d` が `Lset lam` に属するなら、階数の比較によって `d ∈ lam` が得られる。下向きの特徴づけ `Lset-out` が述べるのは、段階の要素が、ある `c ∈ lam` に対する `𝒟ₒ (Lset c)` から単に来るということだけであり、誕生段階を一つ選んで保持するわけではない。さらに、厳密な添字関係 `β ∈ α` があれば、単調性によって `Lset β` の要素を `Lset α` へ移せる。
 <!--/-->
@@ -90,7 +90,7 @@ The central formula is `levelFo(a,p,z)`. Its Δ₀ certificate allows bounded ab
 <!--en-->
 Finite vectors record the environments in which formulas are evaluated, while products combine the membership and equality facts used in the proof. Several existences in this chapter are propositionally truncated. The constructor `∣_∣₁` places an explicit local witness under truncation; `rec₁` and `map₁` may then use it only to produce another proposition. In particular, the local adequate indices supplied by superadequacy never become a globally chosen family.
 <!--zh-->
-有穷向量记录公式求值所用的环境，乘积则组合证明中需要的隶属事实与相等事实。本章有若干存在性处于命题截断之下。构造子 `∣_∣₁` 把一份显式的局部见证放入截断；`rec₁` 与 `map₁` 随后只能用它产生另一个命题。特别地，超充分性给出的局部充分索引不会变成一族全局选定的数据。
+有穷向量记录公式求值所用的环境，乘积则组合证明中需要的成员关系事实与相等事实。本章有若干存在性处于命题截断之下。构造子 `∣_∣₁` 把一份显式的局部见证放入截断；`rec₁` 与 `map₁` 随后只能用它产生另一个命题。特别地，超充分性给出的局部充分索引不会变成一族全局选定的数据。
 <!--ja-->
 有限ベクトルは論理式を評価する環境を記録し、積は証明で必要となる所属と等しさの事実を組み合わせる。この章に現れるいくつかの存在は、命題的切り詰めのもとにある。構成子 `∣_∣₁` は明示的な局所証人を切り詰めの中へ入れ、`rec₁` と `map₁` はそれを別の命題を得るためにだけ使う。とくに、強化された十分さが与える局所的な十分な添字が、大域的に選ばれた族になることはない。
 <!--/-->
@@ -98,7 +98,7 @@ Finite vectors record the environments in which formulas are evaluated, while pr
 <!--en-->
 The set-theoretic successor `sucV d` is the next ordinal index when `d` is ordinal, and it is also the index used by the successor-stage equation `Lset (sucV d) ≡ 𝒟ₒ (Lset d)`. These are related facts, but the successor index and the stage at that index remain different sets. The empty set appears separately because the hull construction requires a fallback member already present in the ambient index.
 <!--zh-->
-当 `d` 是序数时，集合论后继 `sucV d` 是下一个序数索引；后继层等式 `Lset (sucV d) ≡ 𝒟ₒ (Lset d)` 也使用这个索引。这两项事实彼此相关，但后继索引与该索引处的层仍是不同的集合。空集另行出现，是因为 Skolem 壳构造需要一个已经属于外围索引的回退成员。
+当 `d` 是序数时，集合论后继 `sucV d` 是下一个序数索引；后继层等式 `Lset (sucV d) ≡ 𝒟ₒ (Lset d)` 也使用这个索引。这两项事实彼此相关，但后继索引与该索引处的层仍是不同的集合。空集另行出现，是因为 Skolem 壳构造需要一个已经属于外围索引的回退元素。
 <!--ja-->
 `d` が順序数なら、集合論的後続 `sucV d` は次の順序数添字である。また、後続段階の等式 `Lset (sucV d) ≡ 𝒟ₒ (Lset d)` もこの添字を使う。この二つの事実は関係しているが、後続の添字と、その添字における段階は別の集合である。空集合が別に現れるのは、Skolem 包の構成が、周囲の添字にすでに属する予備の要素を必要とするためである。
 <!--/-->
@@ -112,13 +112,13 @@ open InfinitySet {ℓ} using ( sucV )
 <!--en-->
 Opening the proposition-valued hierarchy structure fixes the carrier `S` and the ambient membership notation `_∈ˢ_`. Brackets `⟨_⟩` expose the type of proofs carried by one of its truth values. Thus `d ∈ˢ lam`, membership in a constructible stage, and membership in the collapse image are ambient set-theoretic statements, distinct from the object-language atom `_∈̇_` used inside a formula.
 <!--zh-->
-打开取值为命题的层级结构后，载体 `S` 与外围隶属记号 `_∈ˢ_` 得到固定。尖括号 `⟨_⟩` 取出一个真值所承载的证明类型。因此，`d ∈ˢ lam`、可构造层中的隶属以及塌缩像中的隶属，都是外围集合论陈述，应与公式内部的对象语言原子 `_∈̇_` 区分。
+打开取值为命题的层级结构后，载体 `S` 与外围成员关系记号 `_∈ˢ_` 得到固定。尖括号 `⟨_⟩` 取出一个真值所承载的证明类型。因此，`d ∈ˢ lam`、可构造层中的成员关系以及塌缩像中的成员关系，都是外围集合论陈述，应与公式内部的对象语言原子 `_∈̇_` 区分。
 <!--ja-->
 命題値の階層構造を開くと、台 `S` と周囲の所属の記法 `_∈ˢ_` が定まる。山括弧 `⟨_⟩` は、その真理値が運ぶ証明の型を取り出す。したがって、`d ∈ˢ lam`、構成可能段階への所属、崩壊像への所属は周囲の集合論における主張であり、論理式の内部で使う対象言語の原子 `_∈̇_` とは区別される。
 <!--/-->
 
 ```agda
-open hPropStructure 𝒮ᵥ
+open hPropView 𝒮ᵥ
 ```
 
 <!--en-->
@@ -145,7 +145,7 @@ open SemVᵃ using ( _^_ )
 <!--en-->
 The formula `isOrd-at-p` uses only the middle slot of a three-entry environment. Its first conjunct says that `p` is transitive, and its second says that every member of `p` is transitive. The two functions displayed here unpack those bounded clauses into the two fields of `IsOrd p`. The neighbouring values `a` and `z` play no role in this lemma, and the lemma does not read the rest of `levelFo` or identify `a` with a constructible stage.
 <!--zh-->
-公式 `isOrd-at-p` 只使用三项环境的中间槽位。它的第一个合取支说明 `p` 传递，第二个合取支说明 `p` 的每个成员都传递。这里的两个函数把这两条有界子句拆成 `IsOrd p` 的两个字段。相邻的 `a` 与 `z` 在这条引理中不起作用；该引理既不读取 `levelFo` 的其余部分，也不把 `a` 认同为某个可构造层。
+公式 `isOrd-at-p` 只使用三项环境的中间槽位。它的第一个合取支说明 `p` 传递，第二个合取支说明 `p` 的每个元素都传递。这里的两个函数把这两条有界子句拆成 `IsOrd p` 的两个字段。相邻的 `a` 与 `z` 在这条引理中不起作用；该引理既不读取 `levelFo` 的其余部分，也不把 `a` 认同为某个可构造层。
 <!--ja-->
 論理式 `isOrd-at-p` は、三項環境の中央のスロットだけを使う。第一の連言支は `p` が推移的であることを述べ、第二の連言支は `p` の各要素が推移的であることを述べる。ここに示す二つの関数は、その二つの有界な節を `IsOrd p` の二つの成分へ展開する。隣の値 `a` と `z` はこの補題では何の役割も果たさない。また、この補題は `levelFo` の残りを読み取らず、`a` を構成可能段階と同一視することもない。
 <!--/-->
@@ -168,7 +168,7 @@ isOrd-at-p-out a p z h =
 <!--en-->
 Fix an ordinal `lam` and the ambient constructible stage `Lset lam` that contains the hull. The index is closed under set-theoretic successor, every generator in `X` belongs to this stage, and `∅ ∈ lam` supplies the default element needed in the hull construction. The last hypothesis in this first group is full elementarity: every formula, including formulas with unbounded quantifiers, has the same truth value in the hull and in the surrounding stage when its parameters come from the hull.
 <!--zh-->
-固定序数 `lam`，以及容纳 Skolem 壳的外围可构造层 `Lset lam`。该索引对集合论后继封闭，生成集 `X` 的每个成员都属于这一层，而 `∅ ∈ lam` 提供构造 Skolem 壳时所需的默认元素。这组假设的最后一项是完整初等性：只要参数来自 Skolem 壳，每条公式在壳中与外围层中便有相同真值，其中也包括带无界量词的公式。
+固定序数 `lam`，以及容纳 Skolem 壳的外围可构造层 `Lset lam`。该索引对集合论后继封闭，生成集 `X` 的每个元素都属于这一层，而 `∅ ∈ lam` 提供构造 Skolem 壳时所需的默认元素。这组假设的最后一项是完整初等性：只要参数来自 Skolem 壳，每条公式在壳中与外围层中便有相同真值，其中也包括带无界量词的公式。
 <!--ja-->
 順序数 `lam` と、Skolem 包を含む周囲の構成可能段階 `Lset lam` を固定する。この添字は集合論的後続について閉じ、生成集合 `X` の各要素はこの段階に属する。また `∅ ∈ lam` は、Skolem 包の構成に必要な既定の要素を与える。この最初の仮定群の最後は完全な初等性である。パラメータが包から取られるなら、非有界量化子を含む論理式も含め、すべての論理式は包と周囲の段階で同じ真理値をもつ。
 <!--/-->
@@ -192,7 +192,7 @@ module Condense (lam : S) (ordλ : IsOrd lam)
 <!--en-->
 Two further hypotheses provide local stages and constructible collapse values. `Superadequate lam` says that every `d ∈ lam` is merely contained in some adequate ordinal index `γ` with `γ ∈ lam`; propositional truncation retains neither a selected `γ` nor a least one. The hypothesis `pixL` is pointwise: each member of the collapse image is constructible. It does not yet say that the collapse image itself is a constructible set, much less identify that image with a particular stage.
 <!--zh-->
-另外两项假设分别提供局部层与可构造的塌缩值。`Superadequate lam` 说明：每个 `d ∈ lam` 仅仅包含于某个满足 `γ ∈ lam` 的充分序数索引 `γ`；命题截断既不保留选定的 `γ`，也不保留最小者。假设 `pixL` 是逐点的：塌缩像的每个成员都可构造。它尚未说明塌缩像本身是可构造集，更没有把该像认同为某个特定的层。
+另外两项假设分别提供局部层与可构造的塌缩值。`Superadequate lam` 说明：每个 `d ∈ lam` 仅仅包含于某个满足 `γ ∈ lam` 的充分序数索引 `γ`；命题截断既不保留选定的 `γ`，也不保留最小者。假设 `pixL` 是逐点的：塌缩像的每个元素都可构造。它尚未说明塌缩像本身是可构造集，更没有把该像认同为某个特定的层。
 <!--ja-->
 さらに二つの仮定が、局所的な段階と構成可能な崩壊値を与える。`Superadequate lam` は、各 `d ∈ lam` が、`γ ∈ lam` を満たすある十分な順序数添字 `γ` に単に含まれることを述べる。命題的切り詰めは、特定の `γ` も最小のものも保持しない。仮定 `pixL` は各点についての主張である。崩壊像の各要素が構成可能であると言うだけで、崩壊像そのものが構成可能な集合であることも、それを特定の段階と同一視することも、まだ述べていない。
 <!--/-->
@@ -200,7 +200,7 @@ Two further hypotheses provide local stages and constructible collapse values. `
 <!--en-->
 Three structures are now used together: the ambient structure on `Lset lam`, the structure whose carrier consists of hull members, and the transitive collapse image. A hull element carries both an underlying set and its proof of membership in `M`. Bounded formulas can be read between the first two structures and can be transported in either direction through the collapse; individual membership facts can also be pushed through the collapse. These Δ₀ interfaces will be used only after the unbounded existential queries have been handled by full elementarity.
 <!--zh-->
-下面同时使用三个结构：`Lset lam` 上的外围结构、以 Skolem 壳成员为载体的结构，以及传递的塌缩像。一个壳元素同时携带底层集合及其属于 `M` 的证明。有界公式可以在前两个结构之间读取，也可以沿塌缩双向搬运；单条成员关系同样可以推过塌缩。这些 Δ₀ 接口只在完整初等性处理完无界存在查询以后使用。
+下面同时使用三个结构：`Lset lam` 上的外围结构、以 Skolem 壳元素为载体的结构，以及传递的塌缩像。一个壳元素同时携带底层集合及其属于 `M` 的证明。有界公式可以在前两个结构之间读取，也可以沿塌缩双向搬运；单条成员关系同样可以推过塌缩。这些 Δ₀ 接口只在完整初等性处理完无界存在查询以后使用。
 <!--ja-->
 ここからは三つの構造を同時に使う。`Lset lam` 上の周囲の構造、Skolem 包の要素を台とする構造、そして推移的な崩壊像である。包の要素は、基礎となる集合と、それが `M` に属するという証明をともに携える。有界な論理式は最初の二つの構造の間で読め、崩壊を通して双方向に移せる。個々の所属の事実も崩壊の向こうへ送れる。これらの Δ₀ インターフェースを使うのは、完全な初等性によって非有界な存在問い合わせを処理した後だけである。
 <!--/-->
@@ -216,7 +216,7 @@ Three structures are now used together: the ambient structure on `Lset lam`, the
 <!--en-->
 The inclusion `Hull⊆L` is the basic bridge from a hull member to the ambient stage: if `x ∈ M`, then `x ∈ Lset lam`. This fact supplies the stage-membership evidence used by `A.inL`, and it will also turn each returned hull witness into a constructible set through `isLλ`. It is a pointwise inclusion of the hull in the stage, not a statement that the hull itself is an element of that stage.
 <!--zh-->
-包含 `Hull⊆L` 是从 Skolem 壳成员通往外围层的基本桥梁：若 `x ∈ M`，则 `x ∈ Lset lam`。这条事实提供 `A.inL` 所需的层隶属证据，稍后还会经由 `isLλ` 把壳中返回的每个见证转为可构造集。它是 Skolem 壳逐点包含于该层的陈述，并不说明壳本身是该层的元素。
+包含 `Hull⊆L` 是从 Skolem 壳元素通往外围层的基本桥梁：若 `x ∈ M`，则 `x ∈ Lset lam`。这条事实提供 `A.inL` 所需的层成员关系证据，稍后还会经由 `isLλ` 把壳中返回的每个见证转为可构造集。它是 Skolem 壳逐点包含于该层的陈述，并不说明壳本身是该层的元素。
 <!--ja-->
 包含 `Hull⊆L` は、Skolem 包の要素から周囲の段階へ渡る基本的な橋である。`x ∈ M` ならば `x ∈ Lset lam` が成り立つ。この事実は `A.inL` が必要とする段階への所属の証拠を与え、後では `isLλ` を通して、包から返された各証人を構成可能な集合にする。これは包が段階に各点で含まれるという主張であり、包そのものが段階の要素であるという主張ではない。
 <!--/-->
@@ -228,7 +228,7 @@ The inclusion `Hull⊆L` is the basic bridge from a hull member to the ambient s
 <!--en-->
 Let `M` denote the Skolem hull determined by the preceding data. Its members lie in `Lset lam` by `Hull⊆L`, but neither the constructibility of `M` as a whole nor any additional closure property follows from this notation. Every later use of the collapse will therefore keep the premise that its argument belongs to `M`.
 <!--zh-->
-以 `M` 表示由前述数据确定的 Skolem 壳。由 `Hull⊆L`，它的每个成员都属于 `Lset lam`；但这项记号本身既不说明整个 `M` 可构造，也不增添任何封闭性质。因此，后文每次使用塌缩时都会保留「其自变量属于 `M`」这一前提。
+以 `M` 表示由前述数据确定的 Skolem 壳。由 `Hull⊆L`，它的每个元素都属于 `Lset lam`；但这项记号本身既不说明整个 `M` 可构造，也不增添任何封闭性质。因此，后文每次使用塌缩时都会保留「其自变量属于 `M`」这一前提。
 <!--ja-->
 以上のデータから定まる Skolem 包を `M` と書く。`Hull⊆L` により、その各要素は `Lset lam` に属する。しかし、この記法だけから `M` 全体の構成可能性や新たな閉性が従うわけではない。したがって、以下で崩壊を使うたびに、その引数が `M` に属するという前提を保つ。
 <!--/-->
@@ -241,7 +241,7 @@ Let `M` denote the Skolem hull determined by the preceding data. Its members lie
 <!--en-->
 Let `π` be the Mostowski collapse map and let `πX` be its transitive image. On hull members, `π` preserves the membership relation and identifies bounded truths with their readings in the image. The problem is now to prove enough closure and covering for `πX` to show that this transitive set is exactly one stage `Lset β`.
 <!--zh-->
-以 `π` 表示 Mostowski 塌缩映射，以 `πX` 表示它的传递像。在 Skolem 壳成员上，`π` 保持成员关系，并把有界真值认同为它们在像中的读法。接下来的问题是为 `πX` 证明足够的层闭合性质与覆盖性质，从而说明这个传递集恰好是某一层 `Lset β`。
+以 `π` 表示 Mostowski 塌缩映射，以 `πX` 表示它的传递像。在 Skolem 壳元素上，`π` 保持成员关系，并把有界真值认同为它们在像中的读法。接下来的问题是为 `πX` 证明足够的层闭合性质与覆盖性质，从而说明这个传递集恰好是某一层 `Lset β`。
 <!--ja-->
 Mostowski 崩壊写像を `π`、その推移的な像を `πX` と書く。Skolem 包の要素上で、`π` は所属関係を保存し、有界な真理を像における読みに移す。ここからの課題は、`πX` に十分な段階の閉性と被覆の性質を示し、この推移的集合がちょうど一つの段階 `Lset β` であることを導くことである。
 <!--/-->
@@ -267,7 +267,7 @@ Because `lam` is ordinal, membership in `Lset lam` supplies constructibility. Th
 <!--en-->
 Two elementary membership lemmas now prepare witnesses for the ambient stage. First suppose `d ∈ lam`. Successor closure gives `sucV d ∈ lam`; the entire stage `Lset d` is an element of `Lset (sucV d)`; and `Lset-mono` transports that single element into `Lset lam`. The conclusion `Lset d ∈ Lset lam` is membership between sets, not the pointwise inclusion of one stage in another.
 <!--zh-->
-下面两条基本隶属引理为外围层准备见证。先设 `d ∈ lam`。后继封闭给出 `sucV d ∈ lam`；整个层 `Lset d` 作为一个元素属于 `Lset (sucV d)`；`Lset-mono` 再把这个元素搬入 `Lset lam`。结论 `Lset d ∈ Lset lam` 是集合之间的隶属关系，并非一层逐点包含于另一层。
+下面两条基本成员关系引理为外围层准备见证。先设 `d ∈ lam`。后继封闭给出 `sucV d ∈ lam`；整个层 `Lset d` 作为一个元素属于 `Lset (sucV d)`；`Lset-mono` 再把这个元素搬入 `Lset lam`。结论 `Lset d ∈ Lset lam` 是集合之间的成员关系，并非一层逐点包含于另一层。
 <!--ja-->
 次の二つの基本的な所属の補題が、周囲の段階に置く証人を準備する。まず `d ∈ lam` とする。後続についての閉性から `sucV d ∈ lam` が得られ、段階全体 `Lset d` は `Lset (sucV d)` の一つの要素であり、`Lset-mono` がその要素を `Lset lam` へ移す。結論 `Lset d ∈ Lset lam` は集合の間の所属であり、一つの段階が別の段階に各点で含まれるという意味ではない。
 <!--/-->
@@ -280,7 +280,7 @@ Two elementary membership lemmas now prepare witnesses for the ambient stage. Fi
 <!--en-->
 If `d` is also ordinal, then `ord∈Lset-suc` places the index `d` itself in `Lset (sucV d)`, and the same monotonicity step carries it into `Lset lam`. Together, the two lemmas provide two distinct stage elements, `d` and `Lset d`. Both are needed when the level formula is witnessed inside the ambient stage, and neither membership should be confused with the index relation `d ∈ lam` from which it was derived.
 <!--zh-->
-若 `d` 还是序数，则 `ord∈Lset-suc` 把索引 `d` 本身放入 `Lset (sucV d)`，再由同一次单调性搬运进入 `Lset lam`。两条引理合起来给出两个不同的层成员，即 `d` 与 `Lset d`。在外围层中见证层公式时，二者都要使用；它们的隶属都不能与推导起点的索引关系 `d ∈ lam` 混同。
+若 `d` 还是序数，则 `ord∈Lset-suc` 把索引 `d` 本身放入 `Lset (sucV d)`，再由同一次单调性搬运进入 `Lset lam`。两条引理合起来给出两个不同的层元素，即 `d` 与 `Lset d`。在外围层中见证层公式时，二者都要使用；它们的成员关系都不能与推导起点的索引关系 `d ∈ lam` 混同。
 <!--ja-->
 さらに `d` が順序数なら、`ord∈Lset-suc` は添字 `d` 自身を `Lset (sucV d)` に入れ、同じ単調性の一歩がそれを `Lset lam` へ移す。二つの補題を合わせると、`d` と `Lset d` という別々の段階要素が得られる。周囲の段階の内部で階層の論理式を証明するときには両方が必要であり、どちらの所属も、その出発点となった添字関係 `d ∈ lam` と混同してはならない。
 <!--/-->
@@ -294,7 +294,7 @@ If `d` is also ordinal, then `ord∈Lset-suc` places the index `d` itself in `Ls
 <!--en-->
 For a hull member `d`, ordinality can be sent through the collapse. `Amb.isOrdAt-in` expresses `IsOrd d` by the constant-free bounded formula `isOrdAt`; `Cy.push` transports that Δ₀ truth from the hull environment to the environment containing `π d`; and `Amb.isOrdAt-out` reads the result as `IsOrd (π d)`. The boundedness certificate controls this transfer, while the comparison embodied in `Cy.push` ultimately rests on the elementary hull inclusion and the collapse isomorphism.
 <!--zh-->
-对 Skolem 壳成员 `d`，序数性可以正向穿过塌缩。`Amb.isOrdAt-in` 用无常元有界公式 `isOrdAt` 表达 `IsOrd d`；`Cy.push` 把这个 Δ₀ 真值从壳环境搬到含有 `π d` 的环境；`Amb.isOrdAt-out` 再把结果读成 `IsOrd (π d)`。有界性证书控制这次搬运，而 `Cy.push` 所封装的比较最终依赖 Skolem 壳的初等包含与塌缩同构。
+对 Skolem 壳元素 `d`，序数性可以正向穿过塌缩。`Amb.isOrdAt-in` 用无常元有界公式 `isOrdAt` 表达 `IsOrd d`；`Cy.push` 把这个 Δ₀ 真值从壳环境搬到含有 `π d` 的环境；`Amb.isOrdAt-out` 再把结果读成 `IsOrd (π d)`。有界性证书控制这次搬运，而 `Cy.push` 所封装的比较最终依赖 Skolem 壳的初等包含与塌缩同构。
 <!--ja-->
 Skolem 包の要素 `d` について、順序数性を崩壊の向こうへ送れる。`Amb.isOrdAt-in` は、定数を含まない有界な論理式 `isOrdAt` によって `IsOrd d` を表す。`Cy.push` はこの Δ₀ の真理を包の環境から `π d` を含む環境へ移し、`Amb.isOrdAt-out` が結果を `IsOrd (π d)` として読み取る。有界性の証拠がこの移送を制御し、`Cy.push` がまとめている比較は、最終的には Skolem 包の初等的な包含と崩壊同型に基づく。
 <!--/-->
@@ -309,7 +309,7 @@ Skolem 包の要素 `d` について、順序数性を崩壊の向こうへ送�
 <!--en-->
 The same bounded description also travels backward. Starting from `IsOrd (π d)`, `Cy.pull` returns truth of `isOrdAt` at the original hull member, which is then read as `IsOrd d`. Hence the collapse preserves and reflects ordinality on members of `M`. This is a local equivalence with the hypothesis `d ∈ M`; it says nothing about the behaviour of `π` on arbitrary ambient sets.
 <!--zh-->
-同一条有界描述也能反向搬运。从 `IsOrd (π d)` 出发，`Cy.pull` 把 `isOrdAt` 的真值带回原来的 Skolem 壳成员，再读成 `IsOrd d`。因此，塌缩在 `M` 的成员上保持并反映序数性。这是带有假设 `d ∈ M` 的局部等价，并不说明 `π` 对任意外围集合如何作用。
+同一条有界描述也能反向搬运。从 `IsOrd (π d)` 出发，`Cy.pull` 把 `isOrdAt` 的真值带回原来的 Skolem 壳元素，再读成 `IsOrd d`。因此，塌缩在 `M` 的元素上保持并反映序数性。这是带有假设 `d ∈ M` 的局部等价，并不说明 `π` 对任意外围集合如何作用。
 <!--ja-->
 同じ有界な記述は逆向きにも移せる。`IsOrd (π d)` から出発すると、`Cy.pull` が `isOrdAt` の真理をもとの Skolem 包の要素へ戻し、それを `IsOrd d` として読み取れる。したがって、崩壊は `M` の要素について順序数性を保存し、反映する。これは仮定 `d ∈ M` のもとでの局所的な同値であり、任意の周囲の集合に対する `π` の振る舞いを述べるものではない。
 <!--/-->
@@ -388,7 +388,7 @@ hull elements as constants. Thus `sat` supplies exactly the embedded core
 needed by `stageA`; full elementarity will act only after the complete
 unbounded query has been assembled.
 <!--zh-->
-接下来必须把外围真值改写成 `Lset lam` 上的层结构中的真值，此时还没有进入 Skolem 壳。反向使用 `Cy.atL`，可在该层的三个已给成员处读取 Δ₀ 公式 `levelFo`。随后，路径 `embed-map` 把无内容的常元改名认同为 `embed levelFo`：`levelFo` 的常元域为空，尽管外围查询以 Skolem 壳元素为常元。这样，`sat` 恰好给出 `stageA` 所需的嵌入核心；完整初等性要等整个无界查询装配完毕后才会使用。
+接下来必须把外围真值改写成 `Lset lam` 上的层结构中的真值，此时还没有进入 Skolem 壳。反向使用 `Cy.atL`，可在该层的三个已给元素处读取 Δ₀ 公式 `levelFo`。随后，路径 `embed-map` 把无内容的常元改名认同为 `embed levelFo`：`levelFo` 的常元域为空，尽管外围查询以 Skolem 壳元素为常元。这样，`sat` 恰好给出 `stageA` 所需的嵌入核心；完整初等性要等整个无界查询装配完毕后才会使用。
 <!--ja-->
 次に、周囲での真理を `Lset lam` 上の段階構造での真理として表す。この時点ではまだ Skolem 包へ移していない。`Cy.atL` を逆向きに使うと、Δ₀ 論理式 `levelFo` を、その段階の三つの要素のもとで読める。続いてパス `embed-map` が、内容を持たない定数の改名を `embed levelFo` と同一視する。周囲の問い合わせは Skolem 包の要素を定数として使うが、`levelFo` 自身の定数域は空だからである。したがって `sat` は `stageA` が必要とする埋め込まれた核をちょうど与える。完全な初等性を使うのは、非有界な問い合わせ全体を組み立てた後である。
 <!--/-->
@@ -422,7 +422,7 @@ construct one external witness. Because `findP` contains no equation fixing
 its middle coordinate, the internal index later returned by elementarity may
 be a different `p′`.
 <!--zh-->
-引理 `stageP` 为这条成员查询准备外围见证。它从序数 `p`、包含 `p` 的充分层 `γ`、命名 `y` 的 Skolem 壳元素 `yM`，以及 `y ∈ Lset p` 出发。另有三条成员关系分别把 `p`、`Lset p` 与 `Lset γ` 放进 `Lset lam`，从而使三个存在见证都能在层结构中使用。这里的 `p` 只用于构造一份外围见证。由于 `findP` 没有用等式固定中间坐标，初等性稍后返回的内部索引可以是另一个 `p′`。
+引理 `stageP` 为这条元素查询准备外围见证。它从序数 `p`、包含 `p` 的充分层 `γ`、命名 `y` 的 Skolem 壳元素 `yM`，以及 `y ∈ Lset p` 出发。另有三条成员关系分别把 `p`、`Lset p` 与 `Lset γ` 放进 `Lset lam`，从而使三个存在见证都能在层结构中使用。这里的 `p` 只用于构造一份外围见证。由于 `findP` 没有用等式固定中间坐标，初等性稍后返回的内部索引可以是另一个 `p′`。
 <!--ja-->
 補題 `stageP` は、この所属の問い合わせに対する周囲の証人を準備する。順序数 `p`、`p` を含む十分な段階 `γ`、`y` を名づける Skolem 包の要素 `yM`、および `y ∈ Lset p` から始める。さらに三つの所属の仮定が `p`、`Lset p`、`Lset γ` をそれぞれ `Lset lam` に入れるので、三つの存在証人をすべて段階構造で使える。ここで `p` は、一つの外部証人を作るためだけに使われる。`findP` には中央の座標を固定する等式がないため、後で初等性が返す内部の添字は別の `p′` でもかまわない。
 <!--/-->
@@ -536,7 +536,7 @@ Once it is available, `sup d d∈λ` merely supplies an adequate stage above `d`
 the outer `rec₁` may use that truncated supply because its target
 `Witness d` is itself a proposition.
 <!--zh-->
-构造首先把 Skolem 壳成员 `d` 放进外围层：`Hull⊆L` 给出 `d ∈ Lset lam`。然而，超充分性接收的是序数 `lam` 的成员，而不是其可构造层的任意成员。下一步建立的局部事实 `d∈λ` 恰好跨过这道差别。得到它以后，`sup d d∈λ` 只在 `d` 之上给出一个充分层；由于目标 `Witness d` 本身是命题，外层 `rec₁` 可以使用这份被命题截断的供给。
+构造首先把 Skolem 壳元素 `d` 放进外围层：`Hull⊆L` 给出 `d ∈ Lset lam`。然而，超充分性接收的是序数 `lam` 的元素，而不是其可构造层的任意元素。下一步建立的局部事实 `d∈λ` 恰好跨过这道差别。得到它以后，`sup d d∈λ` 只在 `d` 之上给出一个充分层；由于目标 `Witness d` 本身是命题，外层 `rec₁` 可以使用这份被命题截断的供给。
 <!--ja-->
 構成はまず、Skolem 包の要素 `d` を周囲の段階へ入れる。`Hull⊆L` から `d ∈ Lset lam` が得られる。しかし強化された十分さが受け取るのは、構成可能段階の任意の要素ではなく、順序数 `lam` の要素である。次に示す局所的な事実 `d∈λ` が、まさにこの隔たりを埋める。それが得られると、`sup d d∈λ` は `d` より上の十分な段階を供給するだけである。行き先の `Witness d` 自体が命題なので、外側の `rec₁` はこの命題的に切り詰められた供給を利用できる。
 <!--/-->
@@ -575,7 +575,7 @@ element of the outer stage. Together with `d∈Lλ`, this prepares the two
 coordinates tied to `d`. Membership of the eventual bound `Lset γ` will be
 derived separately after superadequacy supplies `γ`.
 <!--zh-->
-现在，后继封闭把索引关系转成 `stageA` 所需的第二条层成员关系。由 `d ∈ lam`，前面的引理 `Lset∈Lλ` 给出 `Lset d ∈ Lset lam`，这里整个 `Lset d` 是外层的一个元素。它与 `d∈Lλ` 合起来备好与 `d` 有关的两个坐标。最终的界 `Lset γ` 的成员资格要等超充分性给出 `γ` 后另行推出。
+现在，后继封闭把索引关系转成 `stageA` 所需的第二条层成员关系。由 `d ∈ lam`，前面的引理 `Lset∈Lλ` 给出 `Lset d ∈ Lset lam`，这里整个 `Lset d` 是外层的一个元素。它与 `d∈Lλ` 合起来备好与 `d` 有关的两个坐标。最终的界 `Lset γ` 的成员关系事实要等超充分性给出 `γ` 后另行推出。
 <!--ja-->
 ここで後続についての閉性により、添字の関係を `stageA` が必要とする第二の段階所属へ変える。`d ∈ lam` から、先の補題 `Lset∈Lλ` は `Lset d ∈ Lset lam` を与える。このとき段階 `Lset d` 全体が、外側の段階の一つの要素として現れる。これと `d∈Lλ` を合わせると、`d` に関係する二つの座標が準備できる。最後の上界 `Lset γ` の所属は、強化された十分さが `γ` を供給した後で別に導く。
 <!--/-->
@@ -631,7 +631,7 @@ the equality argument passed to `stageA` is reflexivity. This packaging does
 not create a new representative or invoke the collapse; it presents the
 existing hull member in the language in which elementarity is stated.
 <!--zh-->
-固定索引查询所命名的常元必须是 Skolem 壳载体的元素，不能只是一个外围集合。把 `d` 与给定的 `d ∈ M` 证明配对，得到 `dM : A.SM`。它的底层集合依定义就是 `d`，所以传给 `stageA` 的等式证明是自反性。这次打包既不产生新的代表，也不调用塌缩；它只是把已有的 Skolem 壳成员呈现在初等性所使用的语言中。
+固定索引查询所命名的常元必须是 Skolem 壳载体的元素，不能只是一个外围集合。把 `d` 与给定的 `d ∈ M` 证明配对，得到 `dM : A.SM`。它的底层集合依定义就是 `d`，所以传给 `stageA` 的等式证明是自反性。这次打包既不产生新的代表，也不调用塌缩；它只是把已有的 Skolem 壳元素呈现在初等性所使用的语言中。
 <!--ja-->
 固定添字の問い合わせが名づける定数は、単なる周囲の集合ではなく、Skolem 包の台の要素でなければならない。`d` と、与えられた `d ∈ M` の証明を組にすると `dM : A.SM` が得られる。その基礎集合は定義により `d` そのものなので、`stageA` に渡す等式の証明は反射律である。この包装は新しい代表を作らず、崩壊も使わない。既存の Skolem 包の要素を、初等性が述べられている言語で提示するだけである。
 <!--/-->
@@ -671,7 +671,7 @@ untruncated branch into a bound in `M`, membership of the prescribed
 conversion will rely on soundness, not on uniqueness of the existential
 witnesses.
 <!--zh-->
-为了把 `findA` 的回答转成所需见证，先设它外面的两个坐标 `z` 与 `d′` 已在消去器中展开。最内层存在量词于是给出 Skolem 壳元素 `a`、嵌入核心在 `(a,d′,z)` 处的满足，以及等式 `fst d′ ≡ d`。辅助函数 `finishA` 把这个未截断的分支转换成三项数据：`M` 中的一个界、指定的 `Lset d` 对 `M` 的成员资格，以及 `(Lset d,d,fst z)` 处的外围满足。这次转换依赖可靠性，并不依赖存在见证的唯一性。
+为了把 `findA` 的回答转成所需见证，先设它外面的两个坐标 `z` 与 `d′` 已在消去器中展开。最内层存在量词于是给出 Skolem 壳元素 `a`、嵌入核心在 `(a,d′,z)` 处的满足，以及等式 `fst d′ ≡ d`。辅助函数 `finishA` 把这个未截断的分支转换成三项数据：`M` 中的一个界、指定的 `Lset d` 对 `M` 的成员关系事实，以及 `(Lset d,d,fst z)` 处的外围满足。这次转换依赖可靠性，并不依赖存在见证的唯一性。
 <!--ja-->
 `findA` の答えを必要な証人へ変えるため、外側の二つの座標 `z` と `d′` が除去子の中ですでに展開されたとする。すると最も内側の存在量化子は、Skolem 包の要素 `a`、`(a,d′,z)` での埋め込まれた核の充足、および等式 `fst d′ ≡ d` を与える。補助関数 `finishA` は、この切り詰められていない分岐を、`M` 内の上界、指定された `Lset d` の `M` への所属、および `(Lset d,d,fst z)` での周囲の充足へ変換する。この変換が使うのは健全性であり、存在証人の一意性ではない。
 <!--/-->
@@ -715,7 +715,7 @@ the ambient satisfaction `amb`, `level-sound` identifies
 `fst a` with `Lset (fst d′)`. Satisfaction alone would not justify this
 identification.
 <!--zh-->
-`levelFo` 的可靠性定理要求三个底层集合分别可构造。三者都是 Skolem 壳的成员，所以由 `Hull⊆L` 分别属于 `Lset lam`；又因为 `lam` 是序数，`isLλ` 把这三条成员关系转成所需的可构造性证明。将这些独立前提与外围满足 `amb` 一同交给 `level-sound`，便得到 `fst a` 与 `Lset (fst d′)` 的认同。仅有公式满足并不足以推出这项认同。
+`levelFo` 的可靠性定理要求三个底层集合分别可构造。三者都是 Skolem 壳的元素，所以由 `Hull⊆L` 分别属于 `Lset lam`；又因为 `lam` 是序数，`isLλ` 把这三条成员关系转成所需的可构造性证明。将这些独立前提与外围满足 `amb` 一同交给 `level-sound`，便得到 `fst a` 与 `Lset (fst d′)` 的认同。仅有公式满足并不足以推出这项认同。
 <!--ja-->
 `levelFo` の健全性定理は、三つの基礎集合がそれぞれ構成可能であることを要求する。三つとも Skolem 包の要素なので、`Hull⊆L` によりそれぞれ `Lset lam` に属する。さらに `lam` が順序数であるため、`isLλ` がこれら三つの所属を必要な構成可能性の証明へ変える。この別々の仮定と周囲での充足 `amb` を `level-sound` に渡すと、`fst a` は `Lset (fst d′)` と同一視される。公式の充足だけでは、この同一視を正当化できない。
 <!--/-->
@@ -835,7 +835,7 @@ We can now state the local compatibility between the collapse and constructible 
 <!--en-->
 After opening the witness locally, its hull-membership component for `Lset d` supplies the first conclusion unchanged. The other two pieces, a hull member `z` and satisfaction of `levelFo(Lset d,d,z)`, are retained for the equality. This division mirrors the two conclusions of `commute`: closure of the hull at the stage indexed by `d` comes directly from `Witness d`, whereas compatibility with the collapse still has to be proved from the bounded description of that stage.
 <!--zh-->
-在局部打开见证后，其中关于 `Lset d` 的壳成员资格原样给出第一个结论。其余两项数据，即壳成员 `z` 与 `levelFo(Lset d,d,z)` 的满足关系，则留给等式证明使用。这一区分正好对应 `commute` 的两个结论：Skolem 壳在由 `d` 索引的层处闭合，直接来自 `Witness d`；而该层与塌缩的相容性，仍须由这层的有界描述推出。
+在局部打开见证后，其中关于 `Lset d` 的壳成员关系事实原样给出第一个结论。其余两项数据，即壳元素 `z` 与 `levelFo(Lset d,d,z)` 的满足关系，则留给等式证明使用。这一区分正好对应 `commute` 的两个结论：Skolem 壳在由 `d` 索引的层处闭合，直接来自 `Witness d`；而该层与塌缩的相容性，仍须由这层的有界描述推出。
 <!--ja-->
 証人を局所的に開くと、`Lset d` が包に属するという成分が、最初の結論をそのまま与える。残る二つのデータ、包の要素 `z` と `levelFo(Lset d,d,z)` の充足は、等式の証明に使うために残す。この分担は `commute` の二つの結論に対応している。`d` が添字づける段階について Skolem 包が閉じていることは `Witness d` から直接得られるが、その段階と崩壊との整合性は、段階の有界な記述からさらに証明する必要がある。
 <!--/-->
@@ -851,7 +851,7 @@ After opening the witness locally, its hull-membership component for `Lset d` su
 <!--en-->
 The equality proof first transports the bounded description through the collapse. The environment consists of the three hull members `Lset d`, `d`, and `z`, together with their membership proofs. Since `levelFo` is Δ₀ and has no constants, `Cy.push` replaces every coordinate by its collapsed value and yields satisfaction of `levelFo(π (Lset d),π d,π z)`. This is the same local Δ₀ transport used earlier for ordinality, now applied to the three-variable description of a constructible stage.
 <!--zh-->
-等式证明首先把有界描述沿塌缩搬运。环境由三个 Skolem 壳成员 `Lset d`、`d`、`z` 及其成员资格证明组成。由于 `levelFo` 是无常元的 Δ₀ 公式，`Cy.push` 可把每个坐标换成其塌缩值，得到 `levelFo(π (Lset d),π d,π z)` 的满足关系。这与前文搬运序数性时使用的是同一种局部 Δ₀ 搬运，只是此处施用于描述可构造层的三变元公式。
+等式证明首先把有界描述沿塌缩搬运。环境由三个 Skolem 壳元素 `Lset d`、`d`、`z` 及其成员关系事实证明组成。由于 `levelFo` 是无常元的 Δ₀ 公式，`Cy.push` 可把每个坐标换成其塌缩值，得到 `levelFo(π (Lset d),π d,π z)` 的满足关系。这与前文搬运序数性时使用的是同一种局部 Δ₀ 搬运，只是此处施用于描述可构造层的三变元公式。
 <!--ja-->
 等式の証明では、まず有界な記述を崩壊の向こうへ移す。環境は、Skolem 包の三つの要素 `Lset d`、`d`、`z` と、それぞれの所属の証明からなる。`levelFo` は定数を含まない Δ₀ 論理式なので、`Cy.push` は各座標をその崩壊値で置き換え、`levelFo(π (Lset d),π d,π z)` の充足を与える。これは先に順序数性へ使ったのと同じ局所的な Δ₀ 移送を、今度は構成可能段階を記述する三変数の論理式へ適用したものである。
 <!--/-->
@@ -869,7 +869,7 @@ To read this transported formula by soundness, all three collapsed coordinates m
 
 The auxiliary value `π z` is needed to validate the description, but it does not occur in the resulting equality.
 <!--zh-->
-要用可靠性读取搬运后的公式，三个塌缩坐标都必须可构造。每个坐标都是某个 Skolem 壳成员的塌缩，故由 `πX-intro` 属于塌缩像；逐点假设 `pixL` 随即给出所需的可构造性证明。因此，可靠性可把第一个塌缩坐标认同为由第二个坐标索引的可构造层：
+要用可靠性读取搬运后的公式，三个塌缩坐标都必须可构造。每个坐标都是某个 Skolem 壳元素的塌缩，故由 `πX-intro` 属于塌缩像；逐点假设 `pixL` 随即给出所需的可构造性证明。因此，可靠性可把第一个塌缩坐标认同为由第二个坐标索引的可构造层：
 
 `π (Lset d) ≡ Lset (π d)`。
 
@@ -905,7 +905,7 @@ The transported satisfaction is the final premise of that soundness argument. It
 <!--en-->
 The first property required by the abstract condensation argument is closure at the image's own ordinals. Given an ordinal `δ` in the collapse image, `levelIn` must show that `Lset δ` also belongs to that image. The membership description `πX-member` provides, under propositional truncation, a hull member `d` with `π d ≡ δ`. Since the target is itself the membership proposition `Lset δ ∈ πX`, this truncated preimage may be opened locally.
 <!--zh-->
-抽象凝聚论证要求的第一项性质，是塌缩像在自身序数处的层闭合。给定塌缩像中的序数 `δ`，`levelIn` 必须证明 `Lset δ` 也属于该像。成员刻画 `πX-member` 在命题截断下给出一个 Skolem 壳成员 `d`，满足 `π d ≡ δ`。目标本身是成员命题 `Lset δ ∈ πX`，所以可以在局部打开这个带命题截断的原像。
+抽象凝聚论证要求的第一项性质，是塌缩像在自身序数处的层闭合。给定塌缩像中的序数 `δ`，`levelIn` 必须证明 `Lset δ` 也属于该像。成员关系刻画 `πX-member` 在命题截断下给出一个 Skolem 壳元素 `d`，满足 `π d ≡ δ`。目标本身是成员关系命题 `Lset δ ∈ πX`，所以可以在局部打开这个带命题截断的原像。
 <!--ja-->
 抽象的な凝縮の議論が要求する第一の性質は、崩壊像が自身の順序数に対応する段階について閉じていることである。崩壊像の順序数 `δ` が与えられたとき、`levelIn` は `Lset δ` もその像に属することを示さなければならない。要素の特徴づけ `πX-member` は、命題的切り詰めのもとで、`π d ≡ δ` を満たす Skolem 包の要素 `d` を与える。目標そのものが所属命題 `Lset δ ∈ πX` なので、この命題的に切り詰められた原像を局所的に開ける。
 <!--/-->
@@ -921,7 +921,7 @@ The first property required by the abstract condensation argument is closure at 
 <!--en-->
 Once such a preimage `d` is available, the desired image membership will come from `Lset d`. Indeed, `πX-intro` sends a proof that `Lset d` lies in the hull to a proof that `π (Lset d)` lies in the image. The final transport follows the compatibility equation `π (Lset d) ≡ Lset (π d)` and then applies `Lset` to the preimage equation `π d ≡ δ`. What remains is to justify that `d` is an ordinal and that `Lset d` lies in the hull.
 <!--zh-->
-取得这样的原像 `d` 后，所求的像成员资格将来自 `Lset d`。确实，若有 `Lset d` 属于 Skolem 壳的证明，`πX-intro` 就给出 `π (Lset d)` 属于塌缩像的证明。最后依次沿相容等式 `π (Lset d) ≡ Lset (π d)`，以及把 `Lset` 施于原像等式 `π d ≡ δ` 所得的等式作传输。余下要说明的是 `d` 为序数，并且 `Lset d` 属于壳。
+取得这样的原像 `d` 后，所求的像成员关系事实将来自 `Lset d`。确实，若有 `Lset d` 属于 Skolem 壳的证明，`πX-intro` 就给出 `π (Lset d)` 属于塌缩像的证明。最后依次沿相容等式 `π (Lset d) ≡ Lset (π d)`，以及把 `Lset` 施于原像等式 `π d ≡ δ` 所得的等式作传输。余下要说明的是 `d` 为序数，并且 `Lset d` 属于壳。
 <!--ja-->
 このような原像 `d` が得られれば、求める像への所属は `Lset d` から導ける。実際、`Lset d` が Skolem 包に属するという証明を `πX-intro` に渡すと、`π (Lset d)` が崩壊像に属するという証明が得られる。最後の輸送では、整合性の等式 `π (Lset d) ≡ Lset (π d)` に続いて、原像の等式 `π d ≡ δ` に `Lset` を施した等式を使う。残る課題は、`d` が順序数であり、`Lset d` が包に属することを示すことである。
 <!--/-->
@@ -937,7 +937,7 @@ Once such a preimage `d` is available, the desired image membership will come fr
 <!--en-->
 Ordinality is recovered before the compatibility lemma is used. Transporting the assumed `IsOrd δ` backward along `π d ≡ δ` gives `IsOrd (π d)`, and `ord-pull` reflects this fact through the collapse to `IsOrd d`. Notice the order of the argument: the preimage description alone says only that `d` is a hull member. Its ordinality comes from the ordinality of `δ` together with reflection for the bounded ordinal formula.
 <!--zh-->
-调用相容引理之前，先恢复原像的序数性。沿 `π d ≡ δ` 反向传输假设 `IsOrd δ`，得到 `IsOrd (π d)`；`ord-pull` 再把这项事实穿过塌缩反映为 `IsOrd d`。这里的论证次序不可省略：原像刻画本身只说明 `d` 是 Skolem 壳成员；它的序数性来自 `δ` 的序数性与有界序数公式的反映性。
+调用相容引理之前，先恢复原像的序数性。沿 `π d ≡ δ` 反向传输假设 `IsOrd δ`，得到 `IsOrd (π d)`；`ord-pull` 再把这项事实穿过塌缩反映为 `IsOrd d`。这里的论证次序不可省略：原像刻画本身只说明 `d` 是 Skolem 壳元素；它的序数性来自 `δ` 的序数性与有界序数公式的反映性。
 <!--ja-->
 整合性の補題を使う前に、原像の順序数性を復元する。仮定 `IsOrd δ` を `π d ≡ δ` に沿って逆向きに輸送すると `IsOrd (π d)` が得られ、`ord-pull` がこの事実を崩壊の手前へ反映して `IsOrd d` を与える。議論の順序に注意してほしい。原像の記述だけから分かるのは、`d` が Skolem 包の要素だということである。その順序数性は、`δ` の順序数性と、有界な順序数論理式に対する反映から得られる。
 <!--/-->
@@ -949,7 +949,7 @@ Ordinality is recovered before the compatibility lemma is used. Transporting the
 <!--en-->
 The hypotheses for `commute` are now complete. Its first component places `Lset d` in the hull, and its second gives `π (Lset d) ≡ Lset (π d)`. Composing the latter with `cong Lset e`, where `e : π d ≡ δ`, identifies this collapsed stage with `Lset δ`; transport then gives the required image membership. Hence the collapse image contains `Lset δ` for every ordinal `δ` that it contains. No closure claim is made for nonordinals or for ordinals outside the image.
 <!--zh-->
-此时 `commute` 的各项前提已经齐备。它的第一分量把 `Lset d` 放入 Skolem 壳，第二分量给出 `π (Lset d) ≡ Lset (π d)`。把后一个等式与 `cong Lset e` 复合，其中 `e : π d ≡ δ`，便把这个塌缩层认同为 `Lset δ`；再作传输即得所求的像成员资格。因此，塌缩像对其所含的每个序数 `δ` 都包含 `Lset δ`。这里没有对非序数或像外序数作闭合断言。
+此时 `commute` 的各项前提已经齐备。它的第一分量把 `Lset d` 放入 Skolem 壳，第二分量给出 `π (Lset d) ≡ Lset (π d)`。把后一个等式与 `cong Lset e` 复合，其中 `e : π d ≡ δ`，便把这个塌缩层认同为 `Lset δ`；再作传输即得所求的像成员关系事实。因此，塌缩像对其所含的每个序数 `δ` 都包含 `Lset δ`。这里没有对非序数或像外序数作闭合断言。
 <!--ja-->
 これで `commute` の仮定がすべて揃った。その第一成分は `Lset d` を Skolem 包に入れ、第二成分は `π (Lset d) ≡ Lset (π d)` を与える。後者を、`e : π d ≡ δ` に `Lset` を施した `cong Lset e` と合成すると、この崩壊された段階は `Lset δ` と同一視され、輸送によって求める像への所属が得られる。したがって、崩壊像が順序数 `δ` を含むなら `Lset δ` も含む。順序数でない集合や像の外の順序数について、閉性を主張しているわけではない。
 <!--/-->
@@ -962,7 +962,7 @@ The hypotheses for `commute` are now complete. Its first component places `Lset 
 <!--en-->
 The second property is covering. For every hull member `y`, it asks merely for an ordinal `γ` in the collapse image such that `π y ∈ Lset γ`. The ordinal, its membership in the image, and this level membership remain under one propositional truncation. Thus a covering stage exists for each `y`, but the theorem chooses no family of such stages and asserts neither minimality nor any comparison of their indices with `lam`.
 <!--zh-->
-第二项性质是覆盖。对每个 Skolem 壳成员 `y`，它只要求塌缩像中仅仅存在一个序数 `γ`，使 `π y ∈ Lset γ`。该序数、它属于塌缩像的证明以及这条层成员关系，都保留在同一个命题截断之下。因此，每个 `y` 都有覆盖层，但定理没有选出这样的一族层，也不断言其索引最小或与 `lam` 有任何大小关系。
+第二项性质是覆盖。对每个 Skolem 壳元素 `y`，它只要求塌缩像中仅仅存在一个序数 `γ`，使 `π y ∈ Lset γ`。该序数、它属于塌缩像的证明以及这条层成员关系，都保留在同一个命题截断之下。因此，每个 `y` 都有覆盖层，但定理没有选出这样的一族层，也不断言其索引最小或与 `lam` 有任何大小关系。
 <!--ja-->
 第二の性質は被覆である。Skolem 包の各要素 `y` に対して、`π y ∈ Lset γ` を満たす順序数 `γ` が崩壊像の中に単に存在することを求める。その順序数、像への所属、そしてこの段階への所属は、一つの命題的切り詰めのもとに保たれる。したがって各 `y` には被覆する段階が存在するが、そのような段階の族を選ぶことも、添字の最小性や `lam` との大小関係を主張することもない。
 <!--/-->
@@ -978,7 +978,7 @@ The second property is covering. For every hull member `y`, it asks merely for a
 <!--en-->
 The target `Goal` is itself a propositional truncation. This matters twice: the decomposition of `y` supplied by `Lset-out` and the adequate index supplied by superadequacy can both be used locally because their common destination is a proposition. Neither step fixes the final covering index. That index will instead come from the internal answer to the membership query `findP`.
 <!--zh-->
-目标 `Goal` 本身就是命题截断。这一点会使用两次：`Lset-out` 给出的 `y` 的分解，以及超充分性给出的充分索引，都能在局部使用，因为它们共同到达一个命题。两步都不固定最终的覆盖索引；该索引将来自成员查询 `findP` 的内部回答。
+目标 `Goal` 本身就是命题截断。这一点会使用两次：`Lset-out` 给出的 `y` 的分解，以及超充分性给出的充分索引，都能在局部使用，因为它们共同到达一个命题。两步都不固定最终的覆盖索引；该索引将来自元素查询 `findP` 的内部回答。
 <!--ja-->
 目標 `Goal` 自体が命題的切り詰めである。この点は二度使われる。`Lset-out` が与える `y` の分解と、強化された十分さが与える十分な添字は、共通の行き先が命題なので、ともに局所的に利用できる。どちらの段階でも最終的な被覆の添字は固定されない。その添字は、所属の問い合わせ `findP` に対する内部の答えから得られる。
 <!--/-->
@@ -990,7 +990,7 @@ The target `Goal` is itself a propositional truncation. This matters twice: the 
 <!--en-->
 The construction starts by locating `y` in the constructible hierarchy. Since every hull member lies in `Lset lam`, `Lset-out` yields, under propositional truncation, an index `c ∈ lam` such that `y` is a definable subset of `Lset c`. Set `p = sucV c`. After successor closure puts `p` back in `lam`, superadequacy supplies, again only under truncation, an adequate `γ ∈ lam` containing `p`. The prepared index `p` provides an external stage that contains `y`; it is not yet the index that the hull will return.
 <!--zh-->
-构造先在可构造层级中定位 `y`。每个 Skolem 壳成员都属于 `Lset lam`，所以 `Lset-out` 在命题截断下给出一个索引 `c ∈ lam`，使 `y` 是 `Lset c` 的可定义子集。令 `p = sucV c`。后继闭合把 `p` 放回 `lam` 后，超充分性再次仅在命题截断下给出一个包含 `p` 的充分索引 `γ ∈ lam`。预备的索引 `p` 提供一个含有 `y` 的外围层；它尚不是 Skolem 壳随后返回的索引。
+构造先在可构造层级中定位 `y`。每个 Skolem 壳元素都属于 `Lset lam`，所以 `Lset-out` 在命题截断下给出一个索引 `c ∈ lam`，使 `y` 是 `Lset c` 的可定义子集。令 `p = sucV c`。后继闭合把 `p` 放回 `lam` 后，超充分性再次仅在命题截断下给出一个包含 `p` 的充分索引 `γ ∈ lam`。预备的索引 `p` 提供一个含有 `y` 的外围层；它尚不是 Skolem 壳随后返回的索引。
 <!--ja-->
 構成は、まず構成可能階層の中で `y` の位置を定めることから始まる。Skolem 包の各要素は `Lset lam` に属するので、`Lset-out` は命題的切り詰めのもとで、`y` が `Lset c` の定義可能部分集合となる添字 `c ∈ lam` を与える。`p = sucV c` と置く。後続に関する閉性によって `p` を `lam` に戻すと、強化された十分さは、`p` を含む十分な添字 `γ ∈ lam` を、やはり切り詰めのもとで与える。準備した添字 `p` は `y` を含む外側の段階を用意するが、Skolem 包が後で返す添字そのものではない。
 <!--/-->
@@ -1061,7 +1061,7 @@ Opening the superadequacy witness locally gives an index `γ ∈ lam` with `p �
 <!--en-->
 Completeness at the adequate `γ` constructs an ambient answer to `findP` using the triple `(Lset p,p,Lset γ)`, and the previously proved membership places `y` in its first coordinate. The three required carrier memberships are supplied by `ord∈Lλ p`, `Lset∈Lλ p`, and `Lset∈Lλ γ`. Since `findP` contains unbounded existential quantifiers, the passage of this whole answer into the hull uses full elementarity. The result is an internal existential assertion that `yM` belongs to some correctly described stage.
 <!--zh-->
-在充分索引 `γ` 处，完备性以三元组 `(Lset p,p,Lset γ)` 构造 `findP` 的外围回答，而前一步所得的成员关系把 `y` 放入其第一坐标。所需的三项载体成员资格分别由 `ord∈Lλ p`、`Lset∈Lλ p` 与 `Lset∈Lλ γ` 给出。由于 `findP` 含有无界存在量词，把整个回答送入 Skolem 壳必须使用完整初等性。所得结论是一条内部存在断言：`yM` 属于某个被正确描述的层。
+在充分索引 `γ` 处，完备性以三元组 `(Lset p,p,Lset γ)` 构造 `findP` 的外围回答，而前一步所得的成员关系把 `y` 放入其第一坐标。所需的三项载体成员关系事实分别由 `ord∈Lλ p`、`Lset∈Lλ p` 与 `Lset∈Lλ γ` 给出。由于 `findP` 含有无界存在量词，把整个回答送入 Skolem 壳必须使用完整初等性。所得结论是一条内部存在断言：`yM` 属于某个被正确描述的层。
 <!--ja-->
 十分な添字 `γ` における完全性は、三つ組 `(Lset p,p,Lset γ)` を使って `findP` の周囲での答えを作り、先に得た所属が `y` をその第一座標に入れる。必要な三つの台への所属は、`ord∈Lλ p`、`Lset∈Lλ p`、`Lset∈Lλ γ` がそれぞれ与える。`findP` は非有界な存在量化を含むので、この答え全体を Skolem 包へ移すには完全な初等性を使う。その結果、`yM` が正しく記述されたある段階に属するという、包内部の存在主張が得られる。
 <!--/-->
@@ -1188,7 +1188,7 @@ The returned middle coordinate supplies exactly the data needed by the local com
 <!--en-->
 Both endpoints of `y∈Lp′` are hull members: `y∈M` gives the first, while `cm .fst` gives the second for `Lset p′`. The collapse therefore preserves this membership, producing `π y ∈ π (Lset p′)` through `member-push`. Substitution along `cm .snd` then changes the containing set to `Lset (π p′)`. Together with the preceding ordinal and image-membership proofs for `π p′`, this is the covering witness required by `finishP`.
 <!--zh-->
-关系 `y∈Lp′` 的两端都是壳成员：`y∈M` 给出 `y` 的壳成员资格，`cm .fst` 给出 `Lset p′` 的壳成员资格。于是 `member-push` 保持这条成员关系，得到 `π y ∈ π (Lset p′)`；再沿 `cm .snd` 替换右侧集合，便得到 `π y ∈ Lset (π p′)`。结合前面关于 `π p′` 的序数性与像中成员资格，这正是 `finishP` 所需的覆盖见证。
+关系 `y∈Lp′` 的两端都是壳元素：`y∈M` 给出 `y` 的壳成员关系事实，`cm .fst` 给出 `Lset p′` 的壳成员关系事实。于是 `member-push` 保持这条成员关系，得到 `π y ∈ π (Lset p′)`；再沿 `cm .snd` 替换右侧集合，便得到 `π y ∈ Lset (π p′)`。结合前面关于 `π p′` 的序数性与像中成员关系事实，这正是 `finishP` 所需的覆盖见证。
 <!--ja-->
 `y∈Lp′` の両端は包の要素である。`y` については `y∈M` が、`Lset p′` については `cm .fst` がその所属を与える。そこで `member-push` によりこの所属を崩壊の後へ移し、`π y ∈ π (Lset p′)` を得る。さらに `cm .snd` に沿って右辺の集合を置換すると、`π y ∈ Lset (π p′)` となる。先に示した `π p′` の順序数性と像への所属と合わせれば、これは `finishP` が求める覆いの証人である。
 <!--/-->
@@ -1202,7 +1202,7 @@ Both endpoints of `y∈Lp′` are hull members: `y∈M` gives the first, while `
 <!--en-->
 For fixed `z` and `a`, the last existential states merely that a suitable `u` exists. Every explicit answer determines the ordinal `π p′`, its membership in the collapse image, and the proof `π y ∈ Lset (π p′)` constructed above. Mapping this construction under propositional truncation preserves the existence of a covering ordinal without selecting a particular answer to the query.
 <!--zh-->
-固定 `z` 与 `a` 后，最后一个存在量词只断言某个合适的 `u` 仅仅存在。每份显式回答都确定上面构造出的序数 `π p′`、它对塌缩像的成员资格，以及证明 `π y ∈ Lset (π p′)`。在命题截断内部作这项映射，便保留覆盖序数的存在性，而不选定查询的某份特定回答。
+固定 `z` 与 `a` 后，最后一个存在量词只断言某个合适的 `u` 仅仅存在。每份显式回答都确定上面构造出的序数 `π p′`、它对塌缩像的成员关系事实，以及证明 `π y ∈ Lset (π p′)`。在命题截断内部作这项映射，便保留覆盖序数的存在性，而不选定查询的某份特定回答。
 <!--ja-->
 `z` と `a` を固定すると、最後の存在量化子は適切な `u` が単に存在することだけを述べる。明示的な各答えから、上で構成した順序数 `π p′`、その崩壊像への所属、および `π y ∈ Lset (π p′)` の証明が定まる。この構成を命題的切り詰めの内部で写すことにより、問い合わせへの特定の答えを選ぶことなく、被覆する順序数の存在を保てる。
 <!--/-->
@@ -1218,7 +1218,7 @@ For fixed `z` and `a`, the last existential states merely that a suitable `u` ex
 <!--en-->
 The two remaining existential layers obey the same restriction. After `z` is fixed, the middle witness `a` may be used because the destination `Goal` is a proposition; the enclosing elimination treats `z` in the same way. All three coordinates of the internal answer are therefore available only locally. The result proves a covering ordinal exists for each hull member, without producing a choice function of such ordinals.
 <!--zh-->
-余下两层存在量词服从同一限制。固定 `z` 后，可以使用中间见证 `a`，因为目标 `Goal` 是命题；外层消去以同样方式处理 `z`。因此，内部回答的三个坐标都只能在局部使用。所得结论证明每个 Skolem 壳成员都有覆盖序数，却不产生选择这类序数的函数。
+余下两层存在量词服从同一限制。固定 `z` 后，可以使用中间见证 `a`，因为目标 `Goal` 是命题；外层消去以同样方式处理 `z`。因此，内部回答的三个坐标都只能在局部使用。所得结论证明每个 Skolem 壳元素都有覆盖序数，却不产生选择这类序数的函数。
 <!--ja-->
 残る二つの存在の層も同じ制限に従う。`z` を固定した後、行き先 `Goal` が命題なので中央の証人 `a` を使える。外側の除去も同様に `z` を扱う。したがって内部の答えの三つの座標は、すべて局所的にだけ利用できる。結果は各 Skolem 包の要素に被覆する順序数が存在することを示すが、そのような順序数を選ぶ関数は作らない。
 <!--/-->
@@ -1233,7 +1233,7 @@ The two remaining existential layers obey the same restriction. After `z` is fix
 <!--en-->
 The two established properties now determine the collapse image. Let `β` be the set of its ordinal members. Transitivity of the image, together with the fact that members of ordinals are ordinal, makes `β` an ordinal. If `x ∈ πX`, covering places `x` in some `Lset γ` with the ordinal `γ ∈ πX`; hence `γ ∈ β`, and monotonicity gives `x ∈ Lset β`. Conversely, decompose `x ∈ Lset β` at some `δ ∈ β`. Applying covering to the image member `δ` yields an ordinal `γ ∈ β` with `δ ∈ γ`. Then `x ∈ Lset γ`, while `levelIn` places `Lset γ` in the transitive image, so `x ∈ πX`. Extensionality gives `πX ≡ Lset β`.
 <!--zh-->
-已经证明的两项性质现在确定塌缩像。令 `β` 为该像的序数成员所成的集合。像的传递性，加上序数成员的成员仍为序数这一事实，使 `β` 成为序数。若 `x ∈ πX`，覆盖性质把 `x` 放入某个 `Lset γ`，其中序数 `γ ∈ πX`；于是 `γ ∈ β`，单调性给出 `x ∈ Lset β`。反过来，把 `x ∈ Lset β` 分解到某个 `δ ∈ β` 处。对像中成员 `δ` 使用覆盖性质，得到序数 `γ ∈ β` 且 `δ ∈ γ`。于是 `x ∈ Lset γ`，而 `levelIn` 把 `Lset γ` 放进传递的塌缩像，故 `x ∈ πX`。外延性最终给出 `πX ≡ Lset β`。
+已经证明的两项性质现在确定塌缩像。令 `β` 为该像的序数元素所成的集合。像的传递性，加上序数元素的元素仍为序数这一事实，使 `β` 成为序数。若 `x ∈ πX`，覆盖性质把 `x` 放入某个 `Lset γ`，其中序数 `γ ∈ πX`；于是 `γ ∈ β`，单调性给出 `x ∈ Lset β`。反过来，把 `x ∈ Lset β` 分解到某个 `δ ∈ β` 处。对像中元素 `δ` 使用覆盖性质，得到序数 `γ ∈ β` 且 `δ ∈ γ`。于是 `x ∈ Lset γ`，而 `levelIn` 把 `Lset γ` 放进传递的塌缩像，故 `x ∈ πX`。外延性最终给出 `πX ≡ Lset β`。
 <!--ja-->
 ここまでで示した二つの性質が、崩壊像を決定する。その順序数要素全体の集合を `β` とする。像の推移性と、順序数の要素も順序数であることから、`β` は順序数である。`x ∈ πX` なら、被覆によって、順序数 `γ ∈ πX` を添字とするある `Lset γ` に `x` が属する。したがって `γ ∈ β` であり、単調性から `x ∈ Lset β` が従う。逆に `x ∈ Lset β` をある `δ ∈ β` のところで分解する。像の要素 `δ` に被覆を適用すると、`δ ∈ γ` を満たす順序数 `γ ∈ β` が得られる。すると `x ∈ Lset γ` であり、`levelIn` は `Lset γ` を推移的な崩壊像に入れるので、`x ∈ πX` である。外延性から `πX ≡ Lset β` が得られる。
 <!--/-->
@@ -1245,7 +1245,7 @@ The two established properties now determine the collapse image. Let `β` be the
 <!--en-->
 Thus there is an explicit set `β` with `IsOrd β` and `HS.C.πX ≡ Lset β`. The witness is not propositionally truncated: it is the set of ordinal members of the collapse image. This conclusion uses all the structural hypotheses of `Condense`, while its only classical parameter is `LEM (ℓ-suc ℓ)`. It makes no comparison between `β` and the outer index `lam`, and gives no cardinal estimate or injection; those require the additional constructions of later chapters.
 <!--zh-->
-于是得到显式集合 `β`，并有 `IsOrd β` 与 `HS.C.πX ≡ Lset β`。这个见证不在命题截断之下，因为它就是塌缩像的所有序数成员所成的集合。该结论使用 `Condense` 的全部结构性假设，而其唯一的经典参数是 `LEM (ℓ-suc ℓ)`。它不比较 `β` 与外层索引 `lam`，也不给出基数估计或单射；这些结论还需要后续章节中的附加构造。
+于是得到显式集合 `β`，并有 `IsOrd β` 与 `HS.C.πX ≡ Lset β`。这个见证不在命题截断之下，因为它就是塌缩像的所有序数元素所成的集合。该结论使用 `Condense` 的全部结构性假设，而其唯一的经典参数是 `LEM (ℓ-suc ℓ)`。它不比较 `β` 与外层索引 `lam`，也不给出基数估计或单射；这些结论还需要后续章节中的附加构造。
 <!--ja-->
 こうして、`IsOrd β` と `HS.C.πX ≡ Lset β` を満たす明示的な集合 `β` が得られる。この証人は命題的切り詰めの中にはない。崩壊像の順序数要素全体からなる集合そのものだからである。この結論は `Condense` の構造的な仮定をすべて使い、その古典的なパラメータは `LEM (ℓ-suc ℓ)` だけである。`β` と外側の添字 `lam` の比較、基数評価、単射は与えない。それらには後の章で導入する追加の構成が必要である。
 <!--/-->

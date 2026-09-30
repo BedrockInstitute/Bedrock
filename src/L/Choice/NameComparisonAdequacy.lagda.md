@@ -34,7 +34,7 @@ module L.Choice.NameComparisonAdequacy {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) w
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 open import FOL.Syntax using ( Formula )
 import FOL.Absoluteness
 open import FOL.Manipulation.ConstantMapping using ( mapFo; mapFo-comp; embed )
@@ -100,7 +100,7 @@ universe. The structure on `V` supplies the ambient interpretation. Its
 extensionality principle will later turn pointwise agreement of membership
 propositions into equality of the sets denoted by two presentations.
 <!--zh-->
-这次语义比较需要一套语法与两个紧密相关的结构。`Formula` 是共用的对象语言，而常元改名把公式搬过空常元域、载体成员与外围集合宇宙。`V` 上的结构给出外围解释；其外延性原理稍后把成员命题的逐点一致化为两种呈现所指称集合的相等。
+这次语义比较需要一套语法与两个紧密相关的结构。`Formula` 是共用的对象语言，而常元改名把公式搬过空常元域、载体元素与外围集合宇宙。`V` 上的结构给出外围解释；其外延性原理稍后把成员关系命题的逐点一致化为两种呈现所指称集合的相等。
 <!--ja-->
 この意味論的比較には、一つの構文と密接に関係する二つの構造が必要である。`Formula` は共通の対象言語であり、定数の改名によって、空の定数域、台の要素、外側の集合宇宙のあいだで論理式を移す。`V` 上の構造が外側の解釈を与え、その外延性は後に、所属命題の点ごとの一致を、二つの表示が指す集合の等しさへ変える。
 <!--/-->
@@ -129,7 +129,7 @@ its length, and `extAt` identifies a denotation by its members. The recovery
 module will be crucial in the reverse direction, because the environment-graph
 conditions determine each parameter value uniquely.
 <!--zh-->
-模型一侧的词汇先表达名字的数据，尚不从中恢复名字。`envOverAt` 断言一个候选集合是单值图，具有指定定义域，取值落在载体中，并且不含非对形式的冗余成员；其搬运引理允许沿槽位等式替换这三个指定集合。`consAtL` 描述环境如何添入候选成员，`domAt` 记录其长度，`extAt` 则由成员刻画指称。反向论证中，恢复模块至关重要，因为环境图的这些条件唯一决定每个参数值。
+模型一侧的词汇先表达名字的数据，尚不从中恢复名字。`envOverAt` 断言一个候选集合是单值图，具有指定定义域，取值落在载体中，并且不含非对形式的冗余元素；其搬运引理允许沿槽位等式替换这三个指定集合。`consAtL` 描述环境如何添入候选元素，`domAt` 记录其长度，`extAt` 则由成员关系刻画指称。反向论证中，恢复模块至关重要，因为环境图的这些条件唯一决定每个参数值。
 <!--ja-->
 モデル側の語彙は、まず名前のデータを表現し、まだ名前そのものを復元しない。`envOverAt` は、候補となる集合が、指定された定義域をもち、値が台に属し、対でない余分な要素を含まない一価グラフであることを述べる。その輸送補題により、これら三つの指定された集合をスロットの等式に沿って置き換えられる。`consAtL` は候補要素を環境へ加える方法を表し、`domAt` はその長さを記録し、`extAt` は要素によって指示対象を特徴づける。逆向きでは、環境グラフのこれらの条件が各パラメータ値を一意に定めるため、復元モジュールが決定的な役割を担う。
 <!--/-->
@@ -143,7 +143,7 @@ carrier's code set. Requiring that key to lie in `AllCodes` is essential: only a
 such a key do the graph readings force the recorded value to agree with actual
 satisfaction.
 <!--zh-->
-下一座桥说明载体层公式如何成为一致满足关系表中的一个取值。指名载体成员的常元被常元改名后进入模型，其赋值同时表示为环境与内部图，而公式由载体码集中的真实键寻址。要求该键属于 `AllCodes` 不可省略：只有在这样的键处，图的读式才迫使所记录的取值与实际满足关系一致。
+下一座桥说明载体层公式如何成为一致满足关系表中的一个取值。指名载体元素的常元被常元改名后进入模型，其赋值同时表示为环境与内部图，而公式由载体码集中的真实键寻址。要求该键属于 `AllCodes` 不可省略：只有在这样的键处，图的读式才迫使所记录的取值与实际满足关系一致。
 <!--ja-->
 次の橋は、台の上の論理式が統一充足関係表の値になる仕組みを説明する。台の要素を名指す定数はモデルへ定数改名され、その割り当ては環境と内部グラフの両方で表され、論理式は台のコード集合に属する真正な鍵で参照される。その鍵が `AllCodes` に属するという条件は欠かせない。そのような鍵で初めて、グラフの読みが記録値と実際の充足関係との一致を強制するからである。
 <!--/-->
@@ -186,7 +186,7 @@ for set extensionality. Finally, paths between proof-carrying carriers transport
 formula codes and satisfaction sets whose types depend on those carriers. The
 empty type handles the branches that these comparisons show to be impossible.
 <!--zh-->
-证明中反复出现三种表示转换。由 `Fin k` 索引的族被列表化为长度受索引的向量，也可以逐项读回。成员命题之间的逻辑等价被转成集合外延性所需的路径。最后，带证明载体之间的路径负责搬运类型依赖于载体的公式码与满足关系集。经这些比较判定为不可能的分支则由空类型消去。
+证明中反复出现三种表示转换。由 `Fin k` 索引的族被列表化为长度受索引的向量，也可以逐项读回。成员关系命题之间的逻辑等价被转成集合外延性所需的路径。最后，带证明载体之间的路径负责搬运类型依赖于载体的公式码与满足关系集。经这些比较判定为不可能的分支则由空类型消去。
 <!--ja-->
 証明では三種類の表示の変換を繰り返し用いる。`Fin k` で添字づけられた族を長さつきベクトルとして表にまとめ、各成分を再び読み取る。所属命題の論理的同値は、集合の外延性に必要なパスへ変換される。さらに、証明を伴う台の間のパスに沿って、型がその台に依存する論理式の符号と充足関係集合を輸送する。これらの比較によって不可能だと分かる分岐は空型から除去する。
 <!--/-->
@@ -206,7 +206,7 @@ and `∈-asFiber` recovers such an index from membership. Thus a uniquely
 determined entry of an environment can be recovered as data without turning a
 merely existing formula or name into chosen data.
 <!--zh-->
-命题截断精确记录反向读式的强度：它保留见证存在这一事实，却忘去见证是哪一个；当目标本身是命题时，才可从中消去。层级操作与这套纪律相辅相成：`⟪ A ⟫` 是索引集合 `A` 之成员的小类型，其嵌入把索引送到相应成员，而 `∈-asFiber` 从成员关系恢复这样的索引。因此，环境中由单值性唯一确定的条目可以作为数据恢复，却不能据此把仅仅存在的公式或名字变成选定的数据。这里用到的是命题截断，不是命题换级。
+命题截断精确记录反向读式的强度：它保留见证存在这一事实，却忘去见证是哪一个；当目标本身是命题时，才可从中消去。层级操作与这套纪律相辅相成：`⟪ A ⟫` 是索引集合 `A` 之元素的小类型，其嵌入把索引送到相应元素，而 `∈-asFiber` 从成员关系恢复这样的索引。因此，环境中由单值性唯一确定的条目可以作为数据恢复，却不能据此把仅仅存在的公式或名字变成选定的数据。这里用到的是命题截断，不是命题换级。
 <!--ja-->
 命題的切り詰めは、逆向きの読みがもつ強さを正確に記録する。証人が存在することは保つが、それがどの証人だったかは忘れ、除去できるのは行き先が命題である場合である。階層の操作はこの規律を補う。`⟪ A ⟫` は集合 `A` の要素を添字づける小さい型で、その埋め込みは添字を対応する要素へ送り、`∈-asFiber` は所属からそのような添字を復元する。したがって、一価性によって一意に定まる環境の成分はデータとして復元できるが、単に存在する論理式や名前を選択済みのデータへ変えることはできない。
 <!--/-->
@@ -250,7 +250,7 @@ sets through the structure.
 <!--/-->
 
 ```agda
-open hPropStructure 𝒮ʟ
+open hPropView 𝒮ʟ
 ```
 
 <!--en-->
@@ -261,7 +261,7 @@ therefore carries both an underlying set and its constructibility proof, while
 the established adequacy and absoluteness lemmas connect formula satisfaction
 with membership and equality of the underlying sets.
 <!--zh-->
-绝对性模块把 `V` 上的外围结构与以可构造集合为元素的结构联系起来。下文的记号 `γ ⊨ φ` 表示公式 `φ` 在这个可构造结构中于环境 `γ` 下得到满足。因此，`γ` 的每个条目同时携带底层集合及其可构造性证明，而既有的充分性与绝对性引理把公式满足关系接到这些底层集合的隶属与相等。
+绝对性模块把 `V` 上的外围结构与以可构造集合为元素的结构联系起来。下文的记号 `γ ⊨ φ` 表示公式 `φ` 在这个可构造结构中于环境 `γ` 下得到满足。因此，`γ` 的每个条目同时携带底层集合及其可构造性证明，而既有的充分性与绝对性引理把公式满足关系接到这些底层集合的成员关系与相等。
 <!--ja-->
 絶対性モジュールは、`V` 上の外側の構造と、構成可能集合を要素とする構造を結ぶ。以下の記法 `γ ⊨ φ` は、この構成可能な構造における環境 `γ` のもとでの充足関係を表す。したがって `γ` の各成分は、基礎となる集合とその構成可能性の証明をともにもち、既に得られた妥当性と絶対性の補題が、論理式の充足を基礎集合の所属および等しさに結び付ける。
 <!--/-->
@@ -287,7 +287,7 @@ is used when the denotation argument first binds a candidate member and then an
 extended environment, after which the original parameter-graph slot must still
 be found.
 <!--zh-->
-余下的私有索引记录外层槽位如何越过新量词。若公式先引入两个见证，再读取原有槽位，其 de Bruijn 索引就必须提升两次；`sh2` 恰执行这次移位。指称论证先绑定一个候选成员，再绑定扩张环境，此后仍须找到原来的参数图槽位，正是在这里使用它。
+余下的私有索引记录外层槽位如何越过新量词。若公式先引入两个见证，再读取原有槽位，其 de Bruijn 索引就必须提升两次；`sh2` 恰执行这次移位。指称论证先绑定一个候选元素，再绑定扩张环境，此后仍须找到原来的参数图槽位，正是在这里使用它。
 <!--ja-->
 残りの非公開添字は、外側のスロットが新しい量化子を越えてどのように残るかを記録する。論理式が二つの証人を導入してから元のスロットを参照するなら、de Bruijn 添字を二度持ち上げなければならない。`sh2` はまさにこの移動を行う。指示対象の議論で候補要素と拡張環境を順に束縛した後、元のパラメータ・グラフのスロットを参照するために使われる。
 <!--/-->
@@ -323,7 +323,7 @@ length, the formula key, and the table value at that key. `sh5` carries an outer
 slot across all five, allowing the graph clause to refer back to the original
 carrier.
 <!--zh-->
-经满足关系图读取指称时，会形成该论证使用的最深局部语境。原环境之前依次压入五个新值：候选成员、扩张环境、环境长度、公式键，以及该键处的表取值。`sh5` 把外层槽位越过这五项，使图条款仍能回指原来的载体。
+经满足关系图读取指称时，会形成该论证使用的最深局部语境。原环境之前依次压入五个新值：候选元素、扩张环境、环境长度、公式键，以及该键处的表取值。`sh5` 把外层槽位越过这五项，使图条款仍能回指原来的载体。
 <!--ja-->
 充足関係グラフを通して指示対象を読むと、この議論で最も深い局所文脈が生じる。元の環境の前には、候補要素、その拡張環境、環境の長さ、論理式の鍵、その鍵における表の値という五つの新しい値が置かれる。`sh5` は外側のスロットをこの五項すべての向こうへ運び、グラフの条件から元の台を参照できるようにする。
 <!--/-->
@@ -446,7 +446,7 @@ of the constructible structure, and `w` is a well-order of the small type
 proof-carrying element `Aʟ` because later formulas and transports depend on the
 model element, not merely on its first projection.
 <!--zh-->
-局部模块现在固定后续每次读式采用的数学环境。外围集合 `A` 配上 `pA` 后成为可构造结构的元素 `Aʟ`，而 `w` 是索引其成员的小类型 `⟪ A ⟫` 上的良序。涉及载体的槽位等式使用带证明的元素 `Aʟ`，因为后续公式与搬运依赖完整模型元素，并非只依赖其第一投影。
+局部模块现在固定后续每次读式采用的数学环境。外围集合 `A` 配上 `pA` 后成为可构造结构的元素 `Aʟ`，而 `w` 是索引其元素的小类型 `⟪ A ⟫` 上的良序。涉及载体的槽位等式使用带证明的元素 `Aʟ`，因为后续公式与搬运依赖完整模型元素，并非只依赖其第一投影。
 <!--ja-->
 ここで局所モジュールは、以後のすべての読みに共通する数学的設定を固定する。外側の集合 `A` は `pA` と組み合わされ、構成可能構造の要素 `Aʟ` となる。`w` は、その要素を添字づける小さい型 `⟪ A ⟫` 上の整列順序である。台に関するスロットの等式では、証明を伴う要素 `Aʟ` を使う。後の論理式と輸送が依存するのはモデル要素全体であり、その第一射影だけではないからである。
 <!--/-->
@@ -477,7 +477,7 @@ chapter proves that the slot descriptions recover precisely this comparison at
 the level of propositions, while retaining truncation and the stated
 minimality conditions.
 <!--zh-->
-打开 `Naming A w`，便固定充分性所要对照的元语言对象。一条名字是依值三元组：元数 `k`、具有 `suc k` 个变元位置的无参公式，以及恰由 `A` 的 `k` 个成员组成的向量。名字的码取自该公式，名字的指称则是该公式在这些参数下从 `A` 中界定出的子集。名字序先由 `limitOrder` 比较公式码，再按自然数序比较元数，最后在元数相等时按 `w` 对参数向量作字典序比较。本章余下部分将在命题层证明槽位描述恰好恢复这次比较，同时保留命题截断与所陈述的最小性条件。
+打开 `Naming A w`，便固定充分性所要对照的元语言对象。一条名字是依值三元组：元数 `k`、具有 `suc k` 个变元位置的无参公式，以及恰由 `A` 的 `k` 个元素组成的向量。名字的码取自该公式，名字的指称则是该公式在这些参数下从 `A` 中界定出的子集。名字序先由 `limitOrder` 比较公式码，再按自然数序比较元数，最后在元数相等时按 `w` 对参数向量作字典序比较。本章余下部分将在命题层证明槽位描述恰好恢复这次比较，同时保留命题截断与所陈述的最小性条件。
 <!--ja-->
 `Naming A w` を開くことで、妥当性の基準となるメタ言語の対象が固定される。名前は依存的な三つ組であり、アリティ `k`、`suc k` 個の変数位置をもつ無パラメータ論理式、`A` の要素をちょうど `k` 個並べたベクトルからなる。コードは論理式から得られ、指示対象は、そのパラメータのもとで論理式が `A` から切り出す部分集合である。名前の順序は、まず論理式コードを `limitOrder` で比較し、次にアリティを自然数の順序で比較し、長さが等しい場合にパラメータ・ベクトルを `w` によって辞書式に比較する。本章の残りは、スロットによる記述が命題の水準でこの比較を正確に復元することを、命題的切り詰めと所定の最小性条件を保ったまま証明する。
 <!--/-->
@@ -503,7 +503,7 @@ occurs downstream. When `InternalWellOrder` uses the result, the six bindings
 inside `StepAt`, two triples of name data, remain distinct from the six outer
 infrastructure witnesses of `Stp`.
 <!--zh-->
-固定可构造载体及其良序后，两套互补的接口便并列在一起。`Adequacy` 给出载体成员的嵌入、名字的参数族及比较模块 `Keys`；`Naming` 给出名字，以及名字的元数、无参公式、参数向量，还有由这些数据导出的码、扩张环境与指称。关系 `_≺ₙ_` 按三个键比较这样的名字。
+固定可构造载体及其良序后，两套互补的接口便并列在一起。`Adequacy` 给出载体元素的嵌入、名字的参数族及比较模块 `Keys`；`Naming` 给出名字，以及名字的元数、无参公式、参数向量，还有由这些数据导出的码、扩张环境与指称。关系 `_≺ₙ_` 按三个键比较这样的名字。
 
 这一区分也固定了本章结论的逻辑强度。`NameAt` 恰有四个概念性合取项，分别刻画骨架、元数、参数图与指称。充分性的填充方向从给定名字证明这四项，读取方向却只得到命题截断下名字的存在性。最小性稍后是恢复所得名字的一项性质，选出某个具体最小名字则发生在下游。`InternalWellOrder` 使用本章结论时，`StepAt` 内部的六个绑定是两组三项名字资料，与 `Stp` 外围的六个基础设施见证属于不同的环境。
 <!--ja-->
@@ -536,7 +536,7 @@ the graph of its embedded values, the numeral `# k`, and the carrier `A`, then
 single-valued, has exactly that finite domain, takes values in the carrier, and
 contains only ordered pairs.
 <!--zh-->
-参数向量首先要从元语言数据跨入对象语言环境。族 `g : Fin k → ⟪ A ⟫` 在 `k` 个序号中的每一处给出一个载体成员。若位置 `e`、`a`、`B` 依次持有这些成员嵌入后的图、数码 `# k` 与载体 `A`，则 `envOverAt e a B` 得到满足。它的四项条件分别说明该图单值、定义域恰为这个有穷数码、取值落在载体中，并且只含有序对。
+参数向量首先要从元语言数据跨入对象语言环境。族 `g : Fin k → ⟪ A ⟫` 在 `k` 个序号中的每一处给出一个载体元素。若位置 `e`、`a`、`B` 依次持有这些元素嵌入后的图、数码 `# k` 与载体 `A`，则 `envOverAt e a B` 得到满足。它的四项条件分别说明该图单值、定义域恰为这个有穷数码、取值落在载体中，并且只含有序对。
 <!--ja-->
 パラメータ・ベクトルは、まずメタ言語のデータから対象言語の環境へ移される。族 `g : Fin k → ⟪ A ⟫` は、`k` 個の各添字に台の要素を一つ与える。スロット `e`、`a`、`B` がそれぞれ、その要素を埋め込んだ値のグラフ、数項 `# k`、台 `A` を保持するなら、`envOverAt e a B` が充足される。その四条件は、グラフが一価であり、定義域がちょうどその有限な数項であり、値が台に属し、順序対以外の要素を含まないことを述べる。
 <!--/-->
@@ -613,7 +613,7 @@ carrier's membership fibre supplies the corresponding element of `⟪ A ⟫`
 without truncation. Applying `FinVec→Vec` to these elements produces
 `paramSeq-out`.
 <!--zh-->
-恢复出的族是真正的数据，因而可以列表化为长度为 `k` 的向量。这里并未借助选择来解除截断。对每个序号，定义域条件只给出某个条目的仅仅存在，但单值性使条目类型成为命题；因此，可以把命题截断消去到这个命题中，取得唯一条目。该条目的值属于 `A`，而载体的成员纤维无截断地给出 `⟪ A ⟫` 中相应的元素。对这些元素应用 `FinVec→Vec`，便得到 `paramSeq-out`。这里使用的是命题截断，不是命题换级。
+恢复出的族是真正的数据，因而可以列表化为长度为 `k` 的向量。这里并未借助选择来解除截断。对每个序号，定义域条件只给出某个条目的仅仅存在，但单值性使条目类型成为命题；因此，可以把命题截断消去到这个命题中，取得唯一条目。该条目的值属于 `A`，而载体的元素纤维无截断地给出 `⟪ A ⟫` 中相应的元素。对这些元素应用 `FinVec→Vec`，便得到 `paramSeq-out`。这里使用的是命题截断，不是命题换级。
 <!--ja-->
 復元された族は実際のデータなので、長さ `k` のベクトルに表としてまとめられる。ここで選択によって切り詰めを外しているわけではない。各添字について、定義域条件は成分の単なる存在しか与えないが、一価性により成分の型は命題になる。したがって、命題的切り詰めをその命題へ除去して、一意な成分を得られる。その値は `A` に属し、台の所属ファイバーが対応する `⟪ A ⟫` の要素を切り詰めなしで与える。これらの要素に `FinVec→Vec` を適用したものが `paramSeq-out` である。
 <!--/-->
@@ -633,7 +633,7 @@ an equality of graphs. Thus the recovered vector presents exactly the original
 environment set, including the absence of extraneous members guaranteed by the
 ordered-pair condition.
 <!--zh-->
-列表化改变了族的呈现方式，因而还要用图等式闭合这次往返。`R.recovers` 把位置 `e` 中的集合认作恢复所得有穷族的图。`FinVec→Vec` 的查取律再把列表化向量的每个条目认作相应的族值；函数外延性与 `env` 的同余把这些逐点路径提升为图的相等。因此，恢复所得向量精确呈现原环境集合，其中也没有「只由有序对构成」条件所排除的多余成员。
+列表化改变了族的呈现方式，因而还要用图等式闭合这次往返。`R.recovers` 把位置 `e` 中的集合认作恢复所得有穷族的图。`FinVec→Vec` 的查取律再把列表化向量的每个条目认作相应的族值；函数外延性与 `env` 的同余把这些逐点路径提升为图的相等。因此，恢复所得向量精确呈现原环境集合，其中也没有「只由有序对构成」条件所排除的多余元素。
 <!--ja-->
 表への変換は族の表示を変えるため、グラフの等しさによって往復を閉じる。`R.recovers` は、スロット `e` の集合を復元された有限族のグラフと同一視する。続いて `FinVec→Vec` の参照則が、表にしたベクトルの各成分を対応する族の値と同一視する。関数外延性と `env` の合同性により、これらの点ごとのパスはグラフの等しさへ持ち上がる。したがって、復元されたベクトルはもとの環境集合を正確に表示し、順序対条件が排除する余分な要素も含まない。
 <!--/-->
@@ -663,7 +663,7 @@ the parameter vector of `t`, then represent that extended assignment as an
 element of the model. The construction `envFor Aʟ` includes the required proof
 of constructibility, so `envAt t m` can occupy an object-language slot.
 <!--zh-->
-指称条款自身含有四个存在见证，它们不同于 `NameAt` 的四个概念性合取项。第一个见证由名字 `t` 与候选载体成员 `m` 构成：把 `m` 放到 `t` 的参数向量之前，再把这个扩张赋值表示成模型元素。构造 `envFor Aʟ` 同时携带所需的可构造性证明，因此 `envAt t m` 可以占据一个对象语言位置。
+指称条款自身含有四个存在见证，它们不同于 `NameAt` 的四个概念性合取项。第一个见证由名字 `t` 与候选载体元素 `m` 构成：把 `m` 放到 `t` 的参数向量之前，再把这个扩张赋值表示成模型元素。构造 `envFor Aʟ` 同时携带所需的可构造性证明，因此 `envAt t m` 可以占据一个对象语言位置。
 <!--ja-->
 指示対象の条件には、それ自身の四つの存在証人がある。これは `NameAt` の四つの概念的な連言項とは別である。第一の証人は、名前 `t` と候補となる台の要素 `m` から得られる環境である。`m` を `t` のパラメータ・ベクトルの先頭に置き、その拡張された割り当てをモデルの要素として表す。構成 `envFor Aʟ` は必要な構成可能性の証明も含むので、`envAt t m` は対象言語のスロットを占めることができる。
 <!--/-->
@@ -733,7 +733,7 @@ as a formula whose constant alphabet is the member type of `A`; no constant is
 actually introduced. `keyIn Aʟ` packages the resulting formula key as a
 constructible model element, giving `keyAt t`.
 <!--zh-->
-第三个见证是统一满足关系存放名字公式的键。由于 `formula t` 没有常元，`embed (formula t)` 只是把它看成常元字母表为 `A` 的成员类型的公式，并未实际引入任何常元。`keyIn Aʟ` 把所得公式键包装成可构造模型元素，得到 `keyAt t`。
+第三个见证是统一满足关系存放名字公式的键。由于 `formula t` 没有常元，`embed (formula t)` 只是把它看成常元字母表为 `A` 的元素类型的公式，并未实际引入任何常元。`keyIn Aʟ` 把所得公式键包装成可构造模型元素，得到 `keyAt t`。
 <!--ja-->
 第三の証人は、統一充足関係が名前の論理式を保存する鍵である。`formula t` は定数をもたないので、`embed (formula t)` はそれを `A` の要素型を定数アルファベットとする論理式として見直すだけで、実際に定数を導入しない。`keyIn Aʟ` は得られた論理式の鍵を構成可能なモデル要素として包み、`keyAt t` を与える。
 <!--/-->
@@ -750,7 +750,7 @@ underlying set. The equation `keyAt-fst` states precisely that
 membership and graph arguments use the abstract model element while reasoning
 about the concrete ordered-pair code supplied by `keyS`.
 <!--zh-->
-包装后的键与码集接口所用的键具有同一底层集合。等式 `keyAt-fst` 精确断言 `fst (keyAt t)` 等于 `fst (keyS Aʟ (embed (formula t)))`。因此，后续隶属与图的论证可以把抽象模型元素放入位置，同时用 `keyS` 给出的具体有序对码进行推理。
+包装后的键与码集接口所用的键具有同一底层集合。等式 `keyAt-fst` 精确断言 `fst (keyAt t)` 等于 `fst (keyS Aʟ (embed (formula t)))`。因此，后续成员关系与图的论证可以把抽象模型元素放入位置，同时用 `keyS` 给出的具体有序对码进行推理。
 <!--ja-->
 包まれた鍵とコード集合のインターフェースが使う鍵は、同じ基礎集合をもつ。等式 `keyAt-fst` は、`fst (keyAt t)` が `fst (keyS Aʟ (embed (formula t)))` に等しいことを正確に述べる。これにより、後の所属とグラフの議論では抽象的なモデル要素をスロットに置きながら、`keyS` が与える具体的な順序対コードについて推論できる。
 <!--/-->
@@ -769,7 +769,7 @@ behaviour away from the code domain is irrelevant. Thus `keyAt-∈` is what
 allows the table value at `keyAt t` to be read as satisfaction of the formula
 of `t`.
 <!--zh-->
-同一个键还被证明属于 `AllCodes Aʟ`。这项隶属是语义条件，并非多余的簿记：满足关系图只在真实公式键处必须具有预期取值，而它在码域之外如何取值并不重要。因此，正是 `keyAt-∈` 使表在 `keyAt t` 处的取值可以被读成名字 `t` 的公式之满足关系。
+同一个键还被证明属于 `AllCodes Aʟ`。这项成员关系是语义条件，并非多余的簿记：满足关系图只在真实公式键处必须具有预期取值，而它在码域之外如何取值并不重要。因此，正是 `keyAt-∈` 使表在 `keyAt t` 处的取值可以被读成名字 `t` 的公式之满足关系。
 <!--ja-->
 同じ鍵が `AllCodes Aʟ` に属することも証明される。この所属は意味論的な条件であり、余分な帳尻合わせではない。充足関係のグラフが意図した値をもつことを要求されるのは真正な論理式の鍵においてであり、コード領域の外での振る舞いは問題にされないからである。したがって、表の `keyAt t` における値を `t` の論理式の充足関係として読めるのは `keyAt-∈` による。
 <!--/-->
@@ -833,7 +833,7 @@ extensionality makes those functions equal, and the composition law for
 `mapFo` yields `sameEmbed χ`. This is a fact about the empty constant alphabet,
 not a claim that arbitrary relabeling leaves arbitrary formulas unchanged.
 <!--zh-->
-为了比较描述所造的键与表所用的键，先考察常元改名对无参公式的作用。公式 `χ` 的常元取自空类型。把它直接嵌入外围宇宙，与先嵌入载体、再把载体成员映入宇宙，所用的都是以空类型为定义域的函数。函数外延性使这两个函数相等，`mapFo` 的复合律随即给出 `sameEmbed χ`。这是关于空常元字母表的事实，并不是说任意公式经任意常元改名后都不变。
+为了比较描述所造的键与表所用的键，先考察常元改名对无参公式的作用。公式 `χ` 的常元取自空类型。把它直接嵌入外围宇宙，与先嵌入载体、再把载体元素映入宇宙，所用的都是以空类型为定义域的函数。函数外延性使这两个函数相等，`mapFo` 的复合律随即给出 `sameEmbed χ`。这是关于空常元字母表的事实，并不是说任意公式经任意常元改名后都不变。
 <!--ja-->
 記述が作る鍵と表が使う鍵を比較するため、まず無パラメータ論理式に対する定数の付け替えを調べる。論理式 `χ` の定数は空型から取られる。これを周囲の宇宙へ直接埋め込む場合と、いったん台へ埋め込んでから台の要素を宇宙へ写す場合に使う関数は、どちらも空型を定義域とする。関数外延性により両者は等しくなり、`mapFo` の合成則から `sameEmbed χ` が得られる。これは空の定数アルファベットについての事実であり、任意の論理式が任意の定数の付け替えで不変だという主張ではない。
 <!--/-->
@@ -926,7 +926,7 @@ to the ambient set `y`. The witness is propositionally truncated, but the goal
 `y ∈ A` is itself a proposition, so `rec₁` may use that witness without
 selecting or retaining an index.
 <!--zh-->
-在把指称隶属与对象语言条款相比较之前，先要知道 `denote t` 的每个成员都属于载体。属于这个指称，仅仅给出一个载体序号 `mm`，其扩张环境满足公式，并给出所表示的载体成员到外围集合 `y` 的一条路径。这个见证位于命题截断之下，但目标 `y ∈ A` 本身是命题，所以 `rec₁` 可以使用该见证，而不选出或保留某个序号。这里同样没有命题换级。
+在把指称成员关系与对象语言条款相比较之前，先要知道 `denote t` 的每个元素都属于载体。属于这个指称，仅仅给出一个载体序号 `mm`，其扩张环境满足公式，并给出所表示的载体元素到外围集合 `y` 的一条路径。这个见证位于命题截断之下，但目标 `y ∈ A` 本身是命题，所以 `rec₁` 可以使用该见证，而不选出或保留某个序号。这里同样没有命题换级。
 <!--ja-->
 指示対象への所属を対象言語の条件と比較する前に、`denote t` のすべての要素が台に属することを確かめる。この指示対象への所属は、その拡張環境が論理式を充足する台の添字 `mm` と、表された台の要素から周囲の集合 `y` へのパスが単に存在することを与える。この証人は命題的に切り詰められているが、目標 `y ∈ A` 自体が命題なので、`rec₁` は添字を選択して保持することなく、その証人を利用できる。
 <!--/-->
@@ -948,7 +948,7 @@ proves `y ∈ A`. The argument uses only the presentation of membership and the
 fact that its target is a proposition; it introduces neither a choice function
 nor a new classical step.
 <!--zh-->
-在获准的截断消去内部，恢复所得资料是一对 `p` 与一条等式 `q`。`p` 的第一分量是 `A` 的一个具体成员序号，因而典范的小隶属见证经 `∈∈ₛ` 转换后，证明其嵌入像属于 `A`。沿 `q` 搬运这项隶属，即得 `y ∈ A`。论证只使用成员关系的呈现，以及目标为命题这一事实；它既不引入选择函数，也不增加新的经典步骤。
+在获准的截断消去内部，恢复所得资料是一对 `p` 与一条等式 `q`。`p` 的第一分量是 `A` 的一个具体元素序号，因而典范的小成员关系见证经 `∈∈ₛ` 转换后，证明其嵌入像属于 `A`。沿 `q` 搬运这项成员关系，即得 `y ∈ A`。论证只使用成员关系的呈现，以及目标为命题这一事实；它既不引入选择函数，也不增加新的经典步骤。
 <!--ja-->
 許された切り詰めの除去の内部では、復元されたデータは対 `p` と等式 `q` である。`p` の第一成分は `A` の具体的な要素添字なので、標準的な小さい所属の証人を `∈∈ₛ` で変換すれば、その埋め込み像が `A` に属することが分かる。この所属を `q` に沿って輸送すると `y ∈ A` が得られる。ここで使うのは所属の表示と、行き先が命題であるという事実だけである。選択関数も新たな古典的推論も導入しない。
 <!--/-->
@@ -969,7 +969,7 @@ identify only underlying sets. The difference is forced by use: formulas below
 are typed over the member type of the model element in slot `B`, while code-set
 membership observes only the underlying sets in `C` and `C₀`.
 <!--zh-->
-模块 `Named` 现在固定若干位置，以便把 `NameAt` 的四项资料与一个元语言名字比较：载体 `B`、载体码集 `C`、空字母表码集 `C₀`、骨架 `s`、元数 `a`、参数图 `e` 及指称 `d`。载体等式 `qB` 是完整模型元素的相等，连同其可构造性证明；`qC` 与 `q₀` 则只认同底层集合。这一区别由后续用途决定：下面的公式以位置 `B` 中模型元素的成员类型为类型，而 `C` 与 `C₀` 中的码集隶属只考察底层集合。
+模块 `Named` 现在固定若干位置，以便把 `NameAt` 的四项资料与一个元语言名字比较：载体 `B`、载体码集 `C`、空字母表码集 `C₀`、骨架 `s`、元数 `a`、参数图 `e` 及指称 `d`。载体等式 `qB` 是完整模型元素的相等，连同其可构造性证明；`qC` 与 `q₀` 则只认同底层集合。这一区别由后续用途决定：下面的公式以位置 `B` 中模型元素的元素类型为类型，而 `C` 与 `C₀` 中的码集成员关系只考察底层集合。
 <!--ja-->
 モジュール `Named` はここで、`NameAt` の四つのデータをメタ言語の名前と比較するためのスロットを固定する。台 `B`、台のコード集合 `C`、空のアルファベットに対するコード集合 `C₀`、骨格 `s`、アリティ `a`、パラメータ・グラフ `e`、指示対象 `d` である。台についての等式 `qB` は構成可能性の証明を含むモデル要素全体の等しさであるが、`qC` と `q₀` は基礎集合だけを同一視する。この違いは用途から生じる。以下の論理式はスロット `B` にあるモデル要素の要素型の上で型づけられるが、`C` と `C₀` へのコード集合の所属が見るのは基礎集合だけである。
 <!--/-->
@@ -997,7 +997,7 @@ in a slot has the correct type before any semantic comparison is made; the
 carrier cannot be replaced merely by an equality of underlying sets after the
 fact.
 <!--zh-->
-缩写 `Fo` 把公式对载体的这项依赖单独列出。对模型元素 `X` 与元数 `j`，`Fo X j` 是常元取自小成员类型 `⟪ fst X ⟫` 的公式类型。因此，在位置所存载体上读取的公式，从语义比较开始之前就具有正确类型；事后只凭底层集合的相等，不能替换这一依值载体。
+缩写 `Fo` 把公式对载体的这项依赖单独列出。对模型元素 `X` 与元数 `j`，`Fo X j` 是常元取自小元素类型 `⟪ fst X ⟫` 的公式类型。因此，在位置所存载体上读取的公式，从语义比较开始之前就具有正确类型；事后只凭底层集合的相等，不能替换这一依值载体。
 <!--ja-->
 `Fo` は、論理式の台へのこの依存を切り出す。モデル要素 `X` とアリティ `j` に対して、`Fo X j` は、小さい要素型 `⟪ fst X ⟫` から定数を取る論理式の型である。したがって、スロットに保存された台の上で読む論理式は、意味論的な比較を始める前から正しい型をもつ。後になって基礎集合の等しさだけで、この依存する台を置き換えることはできない。
 <!--/-->
@@ -1017,7 +1017,7 @@ identifies the complete carrier elements. This slot-relative formula is the one
 whose key and satisfaction value can now be compared with the fixed-carrier
 constructions above.
 <!--zh-->
-对名字 `t`，先把无参公式 `formula t` 嵌入常元可取自固定载体 `A` 之成员的公式；原常元域为空，所以这一步没有增加实际参数。随后沿 `sym qB` 把它的类型从 `Fo Aʟ` 搬到 `Fo (lookup B γ)`，得到 `ψAt t`。这次搬运之所以成立，是因为 `qB` 认同完整的载体元素。至此，这条相对于位置的公式，其键与满足关系取值便可同上文固定载体上的构造比较。
+对名字 `t`，先把无参公式 `formula t` 嵌入常元可取自固定载体 `A` 之元素的公式；原常元域为空，所以这一步没有增加实际参数。随后沿 `sym qB` 把它的类型从 `Fo Aʟ` 搬到 `Fo (lookup B γ)`，得到 `ψAt t`。这次搬运之所以成立，是因为 `qB` 认同完整的载体元素。至此，这条相对于位置的公式，其键与满足关系取值便可同上文固定载体上的构造比较。
 <!--ja-->
 名前 `t` に対して、まず無パラメータ論理式 `formula t` を、固定した台 `A` の要素を定数として許す論理式へ埋め込む。もとの定数域は空なので、実際のパラメータは追加されない。次に、その型を `sym qB` に沿って `Fo Aʟ` から `Fo (lookup B γ)` へ輸送し、`ψAt t` を得る。この輸送が可能なのは、`qB` が台のモデル要素全体を同一視するからである。こうして得られたスロット相対的な論理式について、その鍵と充足関係の値を、上で作った固定台上の構成と比較できるようになる。
 <!--/-->
@@ -1138,7 +1138,7 @@ making an element of the restricted model carrier `NM.DA.SM`. The resulting
 vector `δp` has length `arity t` and is therefore the exact tail of the inner
 environment at which the name's formula will be evaluated.
 <!--zh-->
-名字的参数本来就属于小成员类型 `⟪ A ⟫`。逐项施用 `NM.DA.ι` 并非只保留这些索引，而是把每个索引所表示的集合与其属于 `A` 的证明配在一起，形成限制模型载体 `NM.DA.SM` 的元素。所得向量 `δp` 的长度为 `arity t`，因而恰是名字公式求值时所用内层环境的尾部。
+名字的参数本来就属于小元素类型 `⟪ A ⟫`。逐项施用 `NM.DA.ι` 并非只保留这些索引，而是把每个索引所表示的集合与其属于 `A` 的证明配在一起，形成限制模型载体 `NM.DA.SM` 的元素。所得向量 `δp` 的长度为 `arity t`，因而恰是名字公式求值时所用内层环境的尾部。
 <!--ja-->
 名前のパラメータは、すでに小さな要素型 `⟪ A ⟫` に属している。それぞれに `NM.DA.ι` を写す操作は、添字を保つだけではない。各添字が表す集合に、その集合が `A` に属する証明を組み合わせて、制限モデルの台 `NM.DA.SM` の要素にする。得られるベクトル `δp` の長さは `arity t` であり、名前の論理式を評価する内側の環境の尾部そのものである。
 <!--/-->
@@ -1213,7 +1213,7 @@ these witnesses. Five describe their shape and alignment; the sixth converts
 the assumed denotation membership into membership of the environment in the
 table value.
 <!--zh-->
-正向先给定一个实际成员 `m : ⟪ A ⟫`、一个与它表示同一底层集合的外围元素 `z`，以及该集合属于 `denote t` 的证明。随后按语义次序给出 `DenoteOf` 的四个见证：把 `m` 添到诸参数之前所得的环境、该环境的长度数码、公式键，以及表在该键处的取值。六项条件把这些见证连在一起。前五项说明它们的形状与对齐关系，第六项则把所设的指称成员资格转换成环境对表取值的成员资格。
+正向先给定一个实际元素 `m : ⟪ A ⟫`、一个与它表示同一底层集合的外围元素 `z`，以及该集合属于 `denote t` 的证明。随后按语义次序给出 `DenoteOf` 的四个见证：把 `m` 添到诸参数之前所得的环境、该环境的长度数码、公式键，以及表在该键处的取值。六项条件把这些见证连在一起。前五项说明它们的形状与对齐关系，第六项则把所设的指称成员关系事实转换成环境对表取值的成员关系事实。
 <!--ja-->
 順方向では、実際の要素 `m : ⟪ A ⟫`、それと同じ基礎集合を表す外側の要素 `z`、そしてその集合が `denote t` に属するという証明から始める。`DenoteOf` の四つの証人を意味の順に与える。すなわち、パラメータの前に `m` を加えた環境、その長さの数項、論理式の鍵、その鍵での表の値である。これらを結ぶ条件は六つある。最初の五つは形と対応を記述し、最後の一つが、仮定した表示への所属を、環境が表の値に属するという所属へ変換する。
 <!--/-->
@@ -1235,7 +1235,7 @@ graph. It then proves the object-language extension formula. This establishes
 that the formula will be evaluated with the candidate in its extra variable
 slot and the original parameters following it.
 <!--zh-->
-第一项条件说明，所选环境由候选成员添入参数环境而得。`consAtL` 的向内读式接收三条等式：`qd'` 给出原参数图，`sym qm` 认同位置 `z` 中的候选集合，`envAt-fst t m` 给出新构造的环境图。由此即可证明对象语言中的扩张公式。这保证公式求值时，额外的变元位置由候选成员占据，其后依次是原有参数。
+第一项条件说明，所选环境由候选元素添入参数环境而得。`consAtL` 的向内读式接收三条等式：`qd'` 给出原参数图，`sym qm` 认同位置 `z` 中的候选集合，`envAt-fst t m` 给出新构造的环境图。由此即可证明对象语言中的扩张公式。这保证公式求值时，额外的变元位置由候选元素占据，其后依次是原有参数。
 <!--ja-->
 第一の条件は、選んだ環境が候補の要素をパラメータ環境へ加えて得られることを述べる。`consAtL` の内向きの読みには、元のパラメータグラフを与える `qd'`、スロット `z` の候補集合を同一視する `sym qm`、新しく作った環境グラフを与える `envAt-fst t m` を渡す。すると対象言語の拡張論理式が証明される。これにより、論理式の余分な変数スロットには候補の要素が入り、その後に元のパラメータが続くことが保証される。
 <!--/-->
@@ -1255,7 +1255,7 @@ the underlying values of `environment t m` and a proof that each value is
 constructible. The latter follows from membership in the constructible carrier
 and transitivity of `L`.
 <!--zh-->
-第二项条件固定扩张环境的定义域。其长度为 `suc (arity t)`：一个位置留给候选成员，随后是 `arity t` 个参数位置。`domAt` 的向内充分性引理接收 `environment t m` 的底层取值，以及每个取值皆可构造的证明。后一事实来自这些值属于可构造载体，以及 `L` 的传递性。
+第二项条件固定扩张环境的定义域。其长度为 `suc (arity t)`：一个位置留给候选元素，随后是 `arity t` 个参数位置。`domAt` 的向内充分性引理接收 `environment t m` 的底层取值，以及每个取值皆可构造的证明。后一事实来自这些值属于可构造载体，以及 `L` 的传递性。
 <!--ja-->
 第二の条件は、拡張環境の定義域を定める。その長さは `suc (arity t)` である。候補の要素のための一つの位置に、`arity t` 個のパラメータ位置が続く。`domAt` の内向きの妥当性補題には、`environment t m` の基礎となる値と、それぞれの値が構成可能であることの証明を渡す。後者は、それらの値が構成可能な台に属することと、`L` の推移性から従う。
 <!--/-->
@@ -1293,7 +1293,7 @@ This hypothesis cannot be omitted. The satisfaction graph is forced to carry
 the semantic value of a formula at genuine code keys, whereas its behavior
 outside the code domain need not determine such a value.
 <!--zh-->
-第三项条件把所选键放入真正的码定义域。构造 `keyAt` 已经给出该键属于 `AllCodes Aʟ`；位置等式 `qC` 再把这一成员资格搬运到位置 `C` 所存的集合中。这项假设不可省略：满足关系图在真实公式键处必须给出公式的语义取值，而在码定义域之外，它的行为无须确定这样的取值。
+第三项条件把所选键放入真正的码定义域。构造 `keyAt` 已经给出该键属于 `AllCodes Aʟ`；位置等式 `qC` 再把这一成员关系事实搬运到位置 `C` 所存的集合中。这项假设不可省略：满足关系图在真实公式键处必须给出公式的语义取值，而在码定义域之外，它的行为无须确定这样的取值。
 <!--ja-->
 第三の条件は、選んだ鍵を真正な符号領域に置く。構成 `keyAt` はすでに、その鍵が `AllCodes Aʟ` に属することを与える。スロット等式 `qC` に沿ってこの所属を輸送すれば、スロット `C` に格納された集合への所属が得られる。この仮定は省けない。充足関係グラフが論理式の意味論的な値を与えることを強制されるのは真正な符号の鍵においてであり、符号領域の外での振る舞いはそのような値を定める必要がないからである。
 <!--/-->
@@ -1312,7 +1312,7 @@ hypothesis identifies the underlying set of `keyAt t` with the key of `ψAt t`
 at the slot carrier. This is exactly where `keyψ` carries the earlier key
 calculation across `qB`.
 <!--zh-->
-第五项条件说明，所选取值正是满足关系图在所选键处容许的取值。求值该图公式时，外围赋值之前已经依次压入五项：取值、键、长度数码、扩张环境与候选成员。第一条对齐假设把 `keyAt t` 的底层集合认同为位置载体处 `ψAt t` 的键；先前的 `keyψ` 正是在这里把键的计算沿 `qB` 搬过载体边界。
+第五项条件说明，所选取值正是满足关系图在所选键处容许的取值。求值该图公式时，外围赋值之前已经依次压入五项：取值、键、长度数码、扩张环境与候选元素。第一条对齐假设把 `keyAt t` 的底层集合认同为位置载体处 `ψAt t` 的键；先前的 `keyψ` 正是在这里把键的计算沿 `qB` 搬过载体边界。
 <!--ja-->
 第五の条件は、選んだ値が、選んだ鍵で充足関係グラフに許される値であることを述べる。グラフの論理式を評価するとき、外側の割り当ての前には、値、鍵、長さの数項、拡張環境、候補の要素という五項が順に置かれている。第一の対応条件は、`keyAt t` の基礎集合を、スロットの台における `ψAt t` の鍵と同一視する。先に示した `keyψ` は、まさにここで鍵の計算を `qB` に沿って台の境界の向こうへ運ぶ。
 <!--/-->
@@ -1355,7 +1355,7 @@ the member represented by `m` lies in `denote t`. The characterization
 `embed (formula t)` by `environment t m`. Thus denotation membership supplies
 exactly the semantic fact that the uniform table is designed to record.
 <!--zh-->
-第六项条件是决定性的成员关系：编码后的扩张环境必须属于所选的图取值。假设说由 `m` 表示的成员属于 `denote t`。刻画式 `NM.denote-mem t m` 把它化为内层满足关系，即 `environment t m` 满足 `embed (formula t)`。因此，指称成员资格恰好给出统一满足关系表所要记录的语义事实。
+第六项条件是决定性的成员关系：编码后的扩张环境必须属于所选的图取值。假设说由 `m` 表示的元素属于 `denote t`。刻画式 `NM.denote-mem t m` 把它化为内层满足关系，即 `environment t m` 满足 `embed (formula t)`。因此，指称成员关系事实恰好给出统一满足关系表所要记录的语义事实。
 <!--ja-->
 第六の条件は決定的な所属である。符号化された拡張環境は、選んだグラフの値に属さなければならない。仮定は、`m` が表す要素が `denote t` に属することを述べる。特徴づけ `NM.denote-mem t m` は、これを `environment t m` が `embed (formula t)` を内側で充足することへ変える。したがって表示への所属は、統一充足関係表が記録すべき意味論的な事実をちょうど与える。
 <!--/-->
@@ -1377,7 +1377,7 @@ sixth condition and completes `denote-fill`: all four witnesses and all six
 relations among them have been obtained from the data of `t` and the assumed
 membership in its denotation.
 <!--zh-->
-定律 `val-sat` 把这项内层满足关系认同为 `envAt t m` 属于表在 `keyAt t` 处的取值；此处证明从满足关系出发，所以反向读取该定律。随后沿 `valAt-val` 搬运，把显式的表取值替换成封印见证 `valAt t`。第六项条件由此得证，`denote-fill` 也随之完成：四个见证及其间的六项关系，全都来自名字 `t` 的数据与所设的指称成员资格。
+定律 `val-sat` 把这项内层满足关系认同为 `envAt t m` 属于表在 `keyAt t` 处的取值；此处证明从满足关系出发，所以反向读取该定律。随后沿 `valAt-val` 搬运，把显式的表取值替换成封印见证 `valAt t`。第六项条件由此得证，`denote-fill` 也随之完成：四个见证及其间的六项关系，全都来自名字 `t` 的数据与所设的指称成员关系事实。
 <!--ja-->
 法則 `val-sat` は、この内側の充足関係を、`envAt t m` が `keyAt t` における表の値に属することと同一視する。ここでは充足関係から始めるため、この法則を逆向きに読む。次に `valAt-val` に沿って輸送し、明示的な表の値を封印された証人 `valAt t` で置き換える。これで第六の条件が証明され、`denote-fill` が完成する。四つの証人とそれらを結ぶ六つの関係は、すべて名前 `t` のデータと、その指示対象への仮定された所属から得られた。
 <!--/-->
@@ -1399,7 +1399,7 @@ satisfaction of the embedded formula at `environment t m`. The remaining
 equalities successively identify the arbitrary environment, numeral, key, and
 value supplied by the payload.
 <!--zh-->
-反向设已经给出 `z` 处的一份显式 `DenoteOf` 载荷，即四个被绑定元素连同上述六项条件。目标是证明由 `z` 表示的成员 `m` 属于 `denote t`。按 `NM.denote-mem` 的反向读式，只需重建嵌入公式在 `environment t m` 处的内层满足关系。余下诸等式将依次识别载荷任意给出的环境、数码、键与取值。
+反向设已经给出 `z` 处的一份显式 `DenoteOf` 载荷，即四个被绑定元素连同上述六项条件。目标是证明由 `z` 表示的元素 `m` 属于 `denote t`。按 `NM.denote-mem` 的反向读式，只需重建嵌入公式在 `environment t m` 处的内层满足关系。余下诸等式将依次识别载荷任意给出的环境、数码、键与取值。
 <!--ja-->
 逆向きでは、`z` に対する明示的な `DenoteOf` の中身、すなわち四つの束縛された要素と先の六条件が与えられているとする。目標は、`z` が表す要素 `m` が `denote t` に属することである。`NM.denote-mem` を逆向きに読めば、埋め込まれた論理式が `environment t m` で内側の充足関係を満たすことを復元すれば十分である。残る等式は、中身が任意に与えた環境、数項、鍵、値を順に識別する。
 <!--/-->
@@ -1420,7 +1420,7 @@ exactly `envGraph Aʟ (environment t m)`. Thus the first existential witness is
 not merely some extension of the parameter graph: its graph is the canonical
 environment obtained by putting `m` before the parameters of `t`.
 <!--zh-->
-首先读取扩张条件。它的向外充分性定理比较原图 `qd'`、候选成员等式 `sym qm` 与满足证明 `hc`，由此推出任意见证 `c` 的底层集合恰为 `envGraph Aʟ (environment t m)`。因此，第一个存在见证不只是参数图的某个扩张；它正是把 `m` 放在名字 `t` 的诸参数之前所得典范环境的图。
+首先读取扩张条件。它的向外充分性定理比较原图 `qd'`、候选成员关系等式 `sym qm` 与满足证明 `hc`，由此推出任意见证 `c` 的底层集合恰为 `envGraph Aʟ (environment t m)`。因此，第一个存在见证不只是参数图的某个扩张；它正是把 `m` 放在名字 `t` 的诸参数之前所得典范环境的图。
 <!--ja-->
 まず拡張の条件を読む。その外向きの妥当性定理は、元のグラフ `qd'`、候補の要素を同一視する `sym qm`、充足証明 `hc` を比較する。その結果、任意に与えられた証人 `c` の基礎集合は、ちょうど `envGraph Aʟ (environment t m)` だと分かる。したがって、最初の存在証人はパラメータグラフの単なる何らかの拡張ではなく、`m` を名前 `t` のパラメータの前に置いて得る正準な環境のグラフである。
 <!--/-->
@@ -1477,7 +1477,7 @@ new key: the key has already been supplied by the `DenoteOf` payload and
 identified by `qkey'`. Its role is to put that key inside the domain where the
 uniform table and the satisfaction graph have their semantic specification.
 <!--zh-->
-成员条件 `hi` 说明这个已恢复的键属于位置 `C` 所存的集合。沿 `qC` 搬运后，它成为对 `AllCodes Aʟ` 的成员资格，即 `key∈`。这是一份成员证明，并非选择一个新键：该键早已由 `DenoteOf` 载荷给出，并经 `qkey'` 得到认同。它的作用是把这个键放入统一表与满足关系图具有语义规格的定义域中。
+成员关系条件 `hi` 说明这个已恢复的键属于位置 `C` 所存的集合。沿 `qC` 搬运后，它成为对 `AllCodes Aʟ` 的成员关系事实，即 `key∈`。这是一份成员关系证明，并非选择一个新键：该键早已由 `DenoteOf` 载荷给出，并经 `qkey'` 得到认同。它的作用是把这个键放入统一表与满足关系图具有语义规格的定义域中。
 <!--ja-->
 所属条件 `hi` は、復元された鍵がスロット `C` に格納された集合に属することを述べる。`qC` に沿って輸送すると、`AllCodes Aʟ` への所属 `key∈` が得られる。これは所属の証明であって、新しい鍵の選択ではない。鍵そのものはすでに `DenoteOf` の中身から与えられ、`qkey'` によって同一視されている。この証明の役割は、その鍵を、統一表と充足関係グラフの意味論的な仕様が成り立つ領域に置くことである。
 <!--/-->
@@ -1516,7 +1516,7 @@ uniform satisfaction table at the recovered code key. Transporting membership
 along that path therefore gives exactly the table membership required for the
 next semantic reading.
 <!--zh-->
-`DenoteOf` 的最后一个分量说，扩张环境 `c` 属于恢复出的取值 `v`。路径 `qval` 把这个取值认作统一满足表在恢复出的公式码键处的表值。沿该路径迁移隶属关系，便得到下一条语义读式所需的表隶属。
+`DenoteOf` 的最后一个分量说，扩张环境 `c` 属于恢复出的取值 `v`。路径 `qval` 把这个取值认作统一满足表在恢复出的公式码键处的表值。沿该路径迁移成员关系，便得到下一条语义读式所需的表成员关系。
 <!--ja-->
 `DenoteOf` の最後の成分は、拡張された環境 `c` が復元された値 `v` に属することを述べる。パス `qval` は、この値を復元された論理式符号のキーにおける一様充足表の値と同定する。このパスに沿って所属を移送すると、次の意味論的な読みに必要な表への所属が得られる。
 <!--/-->
@@ -1534,7 +1534,7 @@ environment. Thus `inner` states that `environment t m` satisfies the formula
 of `t`; the enclosing result then uses `denote-mem` in reverse to recover
 membership in `denote t`.
 <!--zh-->
-充分性等式 `val-sat` 随即把对该表值的隶属读作对嵌入公式的满足。它的假设以 `qkey'` 认定恢复出的键，并以 `qcg` 把 `c` 认作扩张环境的图。因此，`inner` 断言 `environment t m` 满足名字 `t` 的公式；外层结果再反向使用 `denote-mem`，得到对 `denote t` 的隶属。
+充分性等式 `val-sat` 随即把对该表值的成员关系读作对嵌入公式的满足。它的假设以 `qkey'` 认定恢复出的键，并以 `qcg` 把 `c` 认作扩张环境的图。因此，`inner` 断言 `environment t m` 满足名字 `t` 的公式；外层结果再反向使用 `denote-mem`，得到对 `denote t` 的成员关系。
 <!--ja-->
 妥当性の等式 `val-sat` は、この表の値への所属を埋め込まれた論理式の充足として読む。その仮定では、`qkey'` が復元されたキーを同定し、`qcg` が `c` を拡張された環境のグラフと同定する。したがって `inner` は、`environment t m` が名前 `t` の論理式を満たすことを述べる。外側の結果では、さらに `denote-mem` を逆向きに用いて `denote t` への所属を得る。
 <!--/-->
@@ -1554,7 +1554,7 @@ membership in the carrier slot and the full witness package `DenoteOf`. The
 first conclusion is transported from actual membership in `A` along the slot
 equation `qB`.
 <!--zh-->
-前面的读式以载体成员 `m` 为对象。引理 `member-fill` 把正向读式改写到任意可构造元素 `z` 上：若其底集属于 `denote t`，便可同时得到它对载体位置的隶属以及完整的见证组 `DenoteOf`。第一项结论先在集合 `A` 中取得，再沿位置等式 `qB` 迁移。
+前面的读式以载体元素 `m` 为对象。引理 `member-fill` 把正向读式改写到任意可构造元素 `z` 上：若其底集属于 `denote t`，便可同时得到它对载体位置的成员关系以及完整的见证组 `DenoteOf`。第一项结论先在集合 `A` 中取得，再沿位置等式 `qB` 迁移。
 <!--ja-->
 ここまでの読みは、台の元 `m` に対して述べられていた。補題 `member-fill` は順方向の読みを任意の構成可能な要素 `z` に言い換える。その台集合が `denote t` に属するなら、台のスロットへの所属と、証人の組 `DenoteOf` の両方が得られる。第一の結論は、集合 `A` への実際の所属から得た後、スロットの等式 `qB` に沿って移送される。
 <!--/-->
@@ -1575,7 +1575,7 @@ provides an `m : ⟪ A ⟫` together with the equation `⟪ A ⟫↪ m ≡ fst z
 ordinary dependent data, so no choice principle or truncation elimination is
 involved.
 <!--zh-->
-要应用成员层面的引理，必须先恢复 `z` 所表示的载体成员。包含引理 `denoteMem` 先把对指称的隶属变成对 `A` 的隶属。随后，隶属关系的纤维表示给出 `m : ⟪ A ⟫` 以及等式 `⟪ A ⟫↪ m ≡ fst z`；这是普通的依赖数据，不涉及选择原理或命题截断的消去。
+要应用元素层面的引理，必须先恢复 `z` 所表示的载体元素。包含引理 `denoteMem` 先把对指称的成员关系变成对 `A` 的成员关系。随后，成员关系的纤维表示给出 `m : ⟪ A ⟫` 以及等式 `⟪ A ⟫↪ m ≡ fst z`；这是普通的依赖数据，不涉及选择原理或命题截断的消去。
 <!--ja-->
 元に対する補題を適用するには、`z` が表す台の元をまず復元する必要がある。包含補題 `denoteMem` は、表示への所属を `A` への所属に変える。次に、所属のファイバー表示から `m : ⟪ A ⟫` と等式 `⟪ A ⟫↪ m ≡ fst z` が得られる。これは通常の依存データなので、選択原理も命題的切り詰めの除去も使わない。
 <!--/-->
@@ -1595,7 +1595,7 @@ earlier lemma `denote-read` turns that package into membership of the embedded
 member in `denote t`. Transport along the fibre equation changes this conclusion
 back into membership of `fst z`.
 <!--zh-->
-反向改写从 `z` 对载体位置的隶属以及一组 `DenoteOf` 数据出发。恢复出它所表示的载体成员之后，前面的引理 `denote-read` 把该数据组读成嵌入成员对 `denote t` 的隶属。最后沿纤维等式迁移，便得到 `fst z` 对该指称的隶属。
+反向改写从 `z` 对载体位置的成员关系以及一组 `DenoteOf` 数据出发。恢复出它所表示的载体元素之后，前面的引理 `denote-read` 把该数据组读成嵌入元素对 `denote t` 的成员关系。最后沿纤维等式迁移，便得到 `fst z` 对该指称的成员关系。
 <!--ja-->
 逆向きの言い換えは、`z` の台のスロットへの所属と `DenoteOf` の証人の組から始まる。`z` が表す台の元を復元した後、先の補題 `denote-read` はその証人の組を、埋め込まれた元の `denote t` への所属として読む。最後にファイバーの等式に沿って移送し、`fst z` の所属へ戻す。
 <!--/-->
@@ -1616,7 +1616,7 @@ produces `fst z ∈ A`; `∈-asFiber` then returns the corresponding member of
 every element of the model that satisfies the relevant membership hypothesis,
 not only to an element already presented in the small carrier type.
 <!--zh-->
-这里所需的纤维来自载体位置的隶属假设。等式 `qB` 把该位置的底集与 `A` 认同，所以迁移后先得到 `fst z ∈ A`；`∈-asFiber` 再给出 `⟪ A ⟫` 中对应的成员及其嵌入等式。因此，这两条成员引理适用于模型中满足相应隶属假设的每个元素，而不要求输入预先以小载体类型中的成员给出。
+这里所需的纤维来自载体位置的成员关系假设。等式 `qB` 把该位置的底集与 `A` 认同，所以迁移后先得到 `fst z ∈ A`；`∈-asFiber` 再给出 `⟪ A ⟫` 中对应的元素及其嵌入等式。因此，这两条成员关系引理适用于模型中满足相应成员关系假设的每个元素，而不要求输入预先以小载体类型中的元素给出。
 <!--ja-->
 ここで必要なファイバーは、台のスロットへの所属という仮定から得られる。等式 `qB` はそのスロットの台集合を `A` と同定するので、移送によってまず `fst z ∈ A` が得られる。続いて `∈-asFiber` が `⟪ A ⟫` の対応する元と、その埋め込みの等式を返す。したがって二つの補題は、小さな台の型の元としてあらかじめ与えられた場合だけでなく、必要な所属を満たすモデルの任意の要素に適用できる。
 <!--/-->
@@ -1680,7 +1680,7 @@ The arity conjunct requires only membership in `ω`. The canonical fact
 transports it to the value stored in the arity slot. No comparison relation is
 used in this part of the description.
 <!--zh-->
-元数合取项只要求对 `ω` 的隶属。典范事实 `#∈ω (arity t)` 给出该数码对 `ω` 的隶属，等式 `qa` 再把它迁移到元数位置所存的值上。这部分描述不使用任何比较关系。
+元数合取项只要求对 `ω` 的成员关系。典范事实 `#∈ω (arity t)` 给出该数码对 `ω` 的成员关系，等式 `qa` 再把它迁移到元数位置所存的值上。这部分描述不使用任何比较关系。
 <!--ja-->
 アリティの連言が要求するのは `ω` への所属だけである。標準的な事実 `#∈ω (arity t)` がその数項の `ω` への所属を与え、等式 `qa` がそれをアリティのスロットに格納された値へ移送する。この部分の記述では比較関係を使わない。
 <!--/-->
@@ -1714,7 +1714,7 @@ denotation slot. Transport along `qd` makes it a member of `denote t`.
 `Bt.member-fill` then supplies exactly the two parts of the denotation body:
 membership in the carrier slot and the witness package `DenoteOf`.
 <!--zh-->
-指称外延合取项的正向从指称位置的一个成员出发。沿 `qd` 迁移后，它成为 `denote t` 的成员。随后，`Bt.member-fill` 恰好给出指称公式体的两部分：对载体位置的隶属以及见证组 `DenoteOf`。
+指称外延合取项的正向从指称位置的一个元素出发。沿 `qd` 迁移后，它成为 `denote t` 的元素。随后，`Bt.member-fill` 恰好给出指称公式体的两部分：对载体位置的成员关系以及见证组 `DenoteOf`。
 <!--ja-->
 表示を外延的に特徴付ける連言の順方向は、表示のスロットの元から始まる。`qd` に沿って移送すると、その元は `denote t` の元になる。そこで `Bt.member-fill` が、表示の本体をなす二つの部分、すなわち台のスロットへの所属と証人の組 `DenoteOf` をちょうど与える。
 <!--/-->
@@ -1731,7 +1731,7 @@ Conversely, carrier membership together with `DenoteOf` is read by
 `qd` places the element back in the denotation slot. These two functions are
 the two directions required by the single extensional conjunct of `NameAt`.
 <!--zh-->
-反过来，`Bt.member-read` 把载体隶属与 `DenoteOf` 合在一起读作对 `denote t` 的隶属。再沿 `qd` 的逆向迁移，便把该元素放回指称位置。这两个函数正是 `NameAt` 中同一个外延合取项所需的两个方向。
+反过来，`Bt.member-read` 把载体成员关系与 `DenoteOf` 合在一起读作对 `denote t` 的成员关系。再沿 `qd` 的逆向迁移，便把该元素放回指称位置。这两个函数正是 `NameAt` 中同一个外延合取项所需的两个方向。
 <!--ja-->
 逆に、`Bt.member-read` は台への所属と `DenoteOf` を合わせて、`denote t` への所属として読む。さらに `qd` の逆向きに沿って移送すると、その要素は表示のスロットへ戻る。この二つの関数が、`NameAt` にある一つの外延的な連言に必要な二方向である。
 <!--/-->
@@ -1751,7 +1751,7 @@ natural number `k` and an equation identifying the arity slot with `# k`.
 `rec₁` may inspect that witness because the final result is itself a
 propositionally truncated type.
 <!--zh-->
-`NameAt` 的反向读式只返回「一个名字及其四条数据等式」的命题截断。元数合取项 `ha` 是对 `ω` 的隶属；其语义表示在命题截断下给出自然数 `k`，并给出把元数位置认作 `# k` 的等式。由于最终结果本身也是一个命题截断类型，`rec₁` 可以在构造该结果时使用这个见证。
+`NameAt` 的反向读式只返回「一个名字及其四条数据等式」的命题截断。元数合取项 `ha` 是对 `ω` 的成员关系；其语义表示在命题截断下给出自然数 `k`，并给出把元数位置认作 `# k` 的等式。由于最终结果本身也是一个命题截断类型，`rec₁` 可以在构造该结果时使用这个见证。
 <!--ja-->
 `NameAt` の逆方向の読みが返すのは、名前とその四つのデータの等式の命題的切り詰めだけである。アリティの連言 `ha` は `ω` への所属であり、その意味論的な表示は、命題的切り詰めのもとで自然数 `k` と、アリティのスロットを `# k` と同定する等式を与える。最終結果も命題的に切り詰められた型なので、`rec₁` はその結果を構成する範囲でこの証人を使える。
 <!--/-->
@@ -1824,7 +1824,7 @@ name and at its first three data equations `qs`, `qa`, and `qe`. The remaining
 component of `Data t` is therefore the set equality between the denotation slot
 and `denote t`. It will be proved by comparing their members in both directions.
 <!--zh-->
-局部模块 `Bt` 在恢复出的名字及其前三条数据等式 `qs`、`qa`、`qe` 处实例化指称公式体的读式。因此，`Data t` 尚缺的分量是指称位置与 `denote t` 之间的集合等式。下面通过双向比较两者的成员来证明它。
+局部模块 `Bt` 在恢复出的名字及其前三条数据等式 `qs`、`qa`、`qe` 处实例化指称公式体的读式。因此，`Data t` 尚缺的分量是指称位置与 `denote t` 之间的集合等式。下面通过双向比较两者的元素来证明它。
 <!--ja-->
 局所モジュール `Bt` は、復元された名前と、その最初の三つのデータの等式 `qs`、`qa`、`qe` において、表示の本体の読みを具体化する。したがって `Data t` に残る成分は、表示のスロットと `denote t` の間の集合の等式である。これは両者の元を二方向に比較して証明する。
 <!--/-->
@@ -1841,7 +1841,7 @@ gives carrier membership and a propositionally truncated `DenoteOf` witness.
 The target `y ∈ denote t` is a proposition, so `rec₁` may apply
 `Bt.member-read` to any representative of that witness.
 <!--zh-->
-先证正向包含。设 `y` 属于指称位置。该位置是模型元素，所以由 `L` 的传递性可知 `y` 可构造，从而能把它包装为 `z : S`。向外读取外延合取项 `hd`，得到载体隶属以及经过命题截断的 `DenoteOf` 见证。目标 `y ∈ denote t` 是命题，因此 `rec₁` 可以对该见证的任一代表应用 `Bt.member-read`。
+先证正向包含。设 `y` 属于指称位置。该位置是模型元素，所以由 `L` 的传递性可知 `y` 可构造，从而能把它包装为 `z : S`。向外读取外延合取项 `hd`，得到载体成员关系以及经过命题截断的 `DenoteOf` 见证。目标 `y ∈ denote t` 是命题，因此 `rec₁` 可以对该见证的任一代表应用 `Bt.member-read`。
 <!--ja-->
 まず順方向の包含を示す。`y` が表示のスロットに属するとする。そのスロットはモデルの要素なので、`L` の推移性から `y` は構成可能であり、`z : S` としてまとめられる。外延的な連言 `hd` を外向きに読むと、台への所属と、命題的に切り詰められた `DenoteOf` の証人が得られる。目標 `y ∈ denote t` は命題なので、`rec₁` によってその証人の各代表へ `Bt.member-read` を適用できる。
 <!--/-->
@@ -1862,7 +1862,7 @@ collected in `DenoteOf`. Those witnesses remain propositionally truncated, as
 required by the semantics of the existential quantifiers, and are consumed only
 inside the proposition-valued membership proof above.
 <!--zh-->
-`body` 经过两步语义读取而得。首先，`extAt-out` 把对指称位置的隶属变成对 `DenoteBody` 的满足；随后，`DenoteBody-out` 读出其中的载体合取项，以及汇集在 `DenoteOf` 中的四个存在见证。按照存在量词的语义，这些见证仍处于命题截断之下，并且只在上面的命题值隶属证明内部使用。
+`body` 经过两步语义读取而得。首先，`extAt-out` 把对指称位置的成员关系变成对 `DenoteBody` 的满足；随后，`DenoteBody-out` 读出其中的载体合取项，以及汇集在 `DenoteOf` 中的四个存在见证。按照存在量词的语义，这些见证仍处于命题截断之下，并且只在上面的命题值成员关系证明内部使用。
 <!--ja-->
 `body` は二段階の意味論的な読みから得られる。まず `extAt-out` が表示のスロットへの所属を `DenoteBody` の充足に変え、次に `DenoteBody-out` がその台についての連言と、`DenoteOf` にまとめられた四つの存在証人を取り出す。存在量化の意味論に従って、これらの証人は命題的に切り詰められたままであり、上の命題値をもつ所属の証明の中だけで使われる。
 <!--/-->
@@ -1880,7 +1880,7 @@ For the reverse inclusion, assume `y ∈ denote t`. The proof will first regard
 body at `z`. The introduction lemmas `DenoteBody-in` and `extAt-in` rebuild the
 body satisfaction and finally membership in the denotation slot.
 <!--zh-->
-反向包含从 `y ∈ denote t` 出发。证明先把 `y` 看作元素 `z : S`，再用 `Bt.member-fill` 构造 `z` 处的指称公式体。引入引理 `DenoteBody-in` 与 `extAt-in` 依次重建公式体的满足，最后得到对指称位置的隶属。
+反向包含从 `y ∈ denote t` 出发。证明先把 `y` 看作元素 `z : S`，再用 `Bt.member-fill` 构造 `z` 处的指称公式体。引入引理 `DenoteBody-in` 与 `extAt-in` 依次重建公式体的满足，最后得到对指称位置的成员关系。
 <!--ja-->
 逆方向の包含では `y ∈ denote t` を仮定する。証明はまず `y` を要素 `z : S` とみなし、次に `Bt.member-fill` を用いて `z` における表示の本体を構成する。導入補題 `DenoteBody-in` と `extAt-in` が、本体の充足と表示のスロットへの所属を順に組み立て直す。
 <!--/-->
@@ -1900,7 +1900,7 @@ constructible. With this `z`, `Bt.member-fill` produces carrier membership and
 an untruncated `DenoteOf` package. Hence the reverse inclusion does not need to
 eliminate any propositional truncation.
 <!--zh-->
-`z` 的可构造性来自两项已有事实：`denoteMem` 把 `denote t` 的每个成员放入 `A`，而 `pA` 说明 `A` 可构造。对于这个 `z`，`Bt.member-fill` 给出载体隶属和一组未截断的 `DenoteOf` 数据。因此，反向包含不需要消去任何命题截断。
+`z` 的可构造性来自两项已有事实：`denoteMem` 把 `denote t` 的每个元素放入 `A`，而 `pA` 说明 `A` 可构造。对于这个 `z`，`Bt.member-fill` 给出载体成员关系和一组未截断的 `DenoteOf` 数据。因此，反向包含不需要消去任何命题截断。
 <!--ja-->
 `z` の構成可能性は、すでに分かっている二つの包含関係から得られる。`denoteMem` は `denote t` の各要素を `A` に入れ、`pA` は `A` が構成可能であることを述べる。この `z` に対して、`Bt.member-fill` は台への所属と、切り詰められていない `DenoteOf` の証人の組を与える。したがって逆方向の包含では命題的切り詰めを除去する必要がない。
 <!--/-->
@@ -1918,7 +1918,7 @@ membership propositions for every set `y`. Since both sides are propositions,
 Extensionality for `V` then turns the pointwise membership equality into
 `fst (lookup d γ) ≡ denote t`, the fourth equation `qd`.
 <!--zh-->
-对于每个集合 `y`，函数 `fwd y` 与 `bwd y` 给出两个隶属命题之间的双向蕴涵。由于两边都是命题，`⇔toPath` 把这对蕴涵变成真值的相等。`V` 的外延性再把逐点的隶属相等变成 `fst (lookup d γ) ≡ denote t`，即第四条等式 `qd`。
+对于每个集合 `y`，函数 `fwd y` 与 `bwd y` 给出两个成员关系命题之间的双向蕴涵。由于两边都是命题，`⇔toPath` 把这对蕴涵变成真值的相等。`V` 的外延性再把逐点的成员关系相等变成 `fst (lookup d γ) ≡ denote t`，即第四条等式 `qd`。
 <!--ja-->
 各集合 `y` に対して、関数 `fwd y` と `bwd y` は二つの所属命題の間の両方向の含意を与える。両辺は命題なので、`⇔toPath` はこの二つの含意を真理値の等式に変える。さらに `V` の外延性が、点ごとの所属の等式を `fst (lookup d γ) ≡ denote t`、すなわち第四の等式 `qd` に変える。
 <!--/-->
@@ -2047,7 +2047,7 @@ arities second, and parameter vectors third. Only the first and third keys
 need relation sets in the object language; numeral membership expresses the
 arity comparison.
 <!--zh-->
-名字比较使用两个严格良序。记号 `_≺ˡ_` 表示公式码上的 `limitOrder`，`_≺ₚ_` 表示载体参数上给定的序 `w`。在 `_≺ₙ_` 中，先比较码，再比较元数，最后比较参数向量。只有第一键和第三键需要对象语言中的关系集；元数比较由数码隶属表达。
+名字比较使用两个严格良序。记号 `_≺ˡ_` 表示公式码上的 `limitOrder`，`_≺ₚ_` 表示载体参数上给定的序 `w`。在 `_≺ₙ_` 中，先比较码，再比较元数，最后比较参数向量。只有第一键和第三键需要对象语言中的关系集；元数比较由数码成员关系表达。
 <!--ja-->
 名前比較には二つの狭義整列順序が入る。記法 `_≺ˡ_` は論理式の符号上の`limitOrder` を表し、`_≺ₚ_` は台のパラメータ上に与えられた順序 `w` を表す。`_≺ₙ_` では符号、アリティ、パラメータベクトルの順に比較する。対象言語で関係集合を必要とするのは第一と第三のキーだけであり、アリティの比較は数項の所属で表される。
 <!--/-->
@@ -2064,7 +2064,7 @@ limits `u,v`, `Rrep` reads membership of the ordered pair in `Rs` as
 `Prep` and `Pfill` give the analogous two directions for carrier elements and
 `Ps`. These four representation laws are hypotheses of the adequacy result.
 <!--zh-->
-集合 `Rs` 与 `Ps` 在模型内部表示这两个序。对极限层元素 `u,v`，`Rrep`把有序对属于 `Rs` 读成 `u ≺ˡ v`，`Rfill` 则从该比较证明相应隶属。`Prep` 与 `Pfill` 对载体元素和 `Ps` 给出同样的两个方向。这四条表示律是充分性结果的假设。
+集合 `Rs` 与 `Ps` 在模型内部表示这两个序。对极限层元素 `u,v`，`Rrep`把有序对属于 `Rs` 读成 `u ≺ˡ v`，`Rfill` 则从该比较证明相应成员关系。`Prep` 与 `Pfill` 对载体元素和 `Ps` 给出同样的两个方向。这四条表示律是充分性结果的假设。
 <!--ja-->
 集合 `Rs` と `Ps` は、この二つの順序をモデル内部で表す。極限段階の要素`u,v` に対し、`Rrep` は順序対の `Rs` への所属を `u ≺ˡ v` と読み、`Rfill` はその比較から所属を証明する。`Prep` と `Pfill` は台の要素と`Ps` について同じ二方向を与える。この四つの表現法則が妥当性結果の仮定である。
 <!--/-->

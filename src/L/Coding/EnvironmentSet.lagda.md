@@ -28,7 +28,7 @@ module L.Coding.EnvironmentSet {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 open import FOL.Syntax using ( Formula; var; con; _≐_; _∧̇_; ∃̇_ )
 import FOL.Absoluteness
 import FOL.ZFModel
@@ -51,7 +51,7 @@ open import L.Coding.Expressions {ℓ} using ( numL )
 <!--en-->
 For a constructible set `B` and a natural number `n`, this chapter constructs an element `envSet n` of `L` whose members are exactly the length-`n` environments with values in `B`.
 <!--zh-->
-给定可构造集合 `B` 与自然数 `n`，本章构造 `L` 的元素 `envSet n`，其成员恰为取值于 `B` 的长度 `n` 环境。
+给定可构造集合 `B` 与自然数 `n`，本章构造 `L` 的元素 `envSet n`，其元素恰为取值于 `B` 的长度 `n` 环境。
 <!--ja-->
 構成可能集合 `B` と自然数 `n` に対し、本章は `L` の要素 `envSet n` を構成し、その要素がちょうど `B` に値を取る長さ `n` の環境であることを示す。
 <!--/-->
@@ -83,7 +83,7 @@ open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( module InfinitySet )
 open InfinitySet using ( #_ )
 
-open hPropStructure 𝒮ʟ
+open hPropView 𝒮ʟ
 
 module ModelL = FOL.ZFModel 𝒮ʟ
 
@@ -102,7 +102,7 @@ open AbsL renaming ( _⊨ᵐ_ to _⊨_ )
 <!--en-->
 `stageFor` finds one ordinal stage containing every member of any small family of constructible sets, providing the common ambient stage needed by separation.
 <!--zh-->
-`stageFor` 找到一个包含任意可构造集合小族所有成员的序数层，从而提供分离所需的共同外围层。
+`stageFor` 找到一个包含任意可构造集合小族所有元素的序数层，从而提供分离所需的共同外围层。
 <!--ja-->
 `stageFor` は構成可能集合からなる任意の小さい族の全要素を含む一つの順序数段階を見つけ、分出に必要な共通の周囲の段階を与える。
 <!--/-->
@@ -151,7 +151,7 @@ An environment over a set of `L` is a finite set of pairs of a numeral with a
 member, and a member of an element of `L` is an element of `L`, so the pairs are
 too and the stage lemma above closes it.
 <!--zh-->
-落在 `L` 的某集合之上的环境是由「数码与成员」之对组成的有穷集；而 `L` 之元素的成员仍是 `L` 的元素，故这些对也是，于是前一条层引理恰好适用于此。
+落在 `L` 的某集合之上的环境是由「数码与元素」之对组成的有穷集；而 `L` 之元素的元素仍是 `L` 的元素，故这些对也是，于是前一条层引理恰好适用于此。
 <!--/-->
 
 <details open class="submodule-fold">
@@ -210,7 +210,7 @@ module _ (B : S) where
 <!--en-->
 `envFo n` specializes `envOverAt` to the fixed length `n` and base set `B`; separation in the common stage defines `envSet n` and its membership equation.
 <!--zh-->
-`envFo n` 把 `envOverAt` 特化到固定长度 `n` 与基集合 `B`；在共同层中的分离定义 `envSet n` 及其成员等式。
+`envFo n` 把 `envOverAt` 特化到固定长度 `n` 与基集合 `B`；在共同层中的分离定义 `envSet n` 及其成员关系等式。
 <!--ja-->
 `envFo n` は `envOverAt` を固定された長さ `n` と基礎集合 `B` に特殊化し、共通の段階での分出が `envSet n` とその要素条件を定義する。
 <!--/-->
@@ -272,7 +272,7 @@ membership specification, which is `refl`{.Agda}; the domain is the only one tha
 does arithmetic, because saying the domain is the numeral `n` means saying that
 the indices below `n` are exactly the numerals below `n`.
 <!--zh-->
-四个合取项，而每一条都只是把那条描述对着「环境究竟是什么」读一遍。单值性与那两条包含关系直接由成员规格得出，而后者是 `refl`{.Agda}；只有定义域那一条需要算术，因为「定义域是数码 `n`」说的正是「`n` 以下的诸序号恰是 `n` 以下的诸数码」。
+四个合取项，而每一条都只是把那条描述对着「环境究竟是什么」读一遍。单值性与那两条包含关系直接由成员关系规格得出，而后者是 `refl`{.Agda}；只有定义域那一条需要算术，因为「定义域是数码 `n`」说的正是「`n` 以下的诸序号恰是 `n` 以下的诸数码」。
 <!--/-->
 
 <details open class="submodule-fold">
@@ -360,7 +360,7 @@ the indices below `n` are exactly the numerals below `n`.
 <!--en-->
 ## Recovering an environment from a member
 <!--zh-->
-## 从成员恢复环境
+## 从元素恢复环境
 <!--ja-->
 ## 要素から環境を復元する
 <!--/-->
@@ -368,7 +368,7 @@ the indices below `n` are exactly the numerals below `n`.
 <!--en-->
 Conversely, the four `envOverAt` clauses for a member `x` determine a function `g : Fin n → ⟪ B ⟫`, and extensionality identifies `x` with `envS g`.
 <!--zh-->
-反过来，成员 `x` 满足的四条 `envOverAt` 子句确定函数 `g : Fin n → ⟪ B ⟫`，外延性再把 `x` 与 `envS g` 等同起来。
+反过来，元素 `x` 满足的四条 `envOverAt` 子句确定函数 `g : Fin n → ⟪ B ⟫`，外延性再把 `x` 与 `envS g` 等同起来。
 <!--ja-->
 逆に、要素 `x` が満たす `envOverAt` の四条件から関数 `g : Fin n → ⟪ B ⟫` が定まり、外延性によって `x` と `envS g` が同一視される。
 <!--/-->
@@ -392,7 +392,7 @@ Extensionality completes the proof: one direction comes from the entries and
 the other from the pairs conjunct, which is the conjunct without which
 unwanted elements could enter.
 <!--zh-->
-另一个方向也是四条子句从环境中读出被绑定变元时所需的；另有七条子句以较弱的形式使用它：子句绑定自己的周遭集合，只断言其成员恰为这些环境，因此使用该子句时必须把这项描述识别为**这个**集合。两种用途来自同一个恢复过程。这也解释了为何环境和三个槽位作为参数给出，而不固定为特定对象：各子句可以把它们放在自身框架要求的位置。满足该描述的集合是一个函数图。恢复这个函数是四个合取项唯一需要共同作用之处：定义域条件说明长度以下的每个序号都有条目，单值性说明条目至多一个，所以「该条目存在」是**命题**，可以消去定义域条件给出的截断。随后由隶属关系取得索引；这里无需截断，因为集合自身索引的纤维本来就是不截断的。
+另一个方向也是四条子句从环境中读出被绑定变元时所需的；另有七条子句以较弱的形式使用它：子句绑定自己的周遭集合，只断言其元素恰为这些环境，因此使用该子句时必须把这项描述识别为**这个**集合。两种用途来自同一个恢复过程。这也解释了为何环境和三个槽位作为参数给出，而不固定为特定对象：各子句可以把它们放在自身框架要求的位置。满足该描述的集合是一个函数图。恢复这个函数是四个合取项唯一需要共同作用之处：定义域条件说明长度以下的每个序号都有条目，单值性说明条目至多一个，所以「该条目存在」是**命题**，可以消去定义域条件给出的截断。随后由成员关系取得索引；这里无需截断，因为集合自身索引的纤维本来就是不截断的。
 
 外延性补全证明：一个方向来自诸条目，另一个来自「由诸对构成」那一条，而若缺了那一条，不需要的元素就会混进来。
 <!--/-->
@@ -528,7 +528,7 @@ sufficient. The recovery is written the same way, with the description's two
 constant slots left as parameters constrained by equations rather than written in,
 so that nothing substitutes underneath a satisfaction at a concrete environment.
 <!--zh-->
-`envSet`{.Agda} 是诸负子句取补集所在的那个周遭集合，而它双向可读：`envSet-in`{.Agda} 把载体之上的每个环境放进去，`envSet-out`{.Agda} 从任一成员恢复出「它是其图」的那个函数。后者正是四条子句在从环境读出被绑变元时所要的，也是唯一需要那条描述的四个合取项协同上阵的一条。
+`envSet`{.Agda} 是诸负子句取补集所在的那个周遭集合，而它双向可读：`envSet-in`{.Agda} 把载体之上的每个环境放进去，`envSet-out`{.Agda} 从任一元素恢复出「它是其图」的那个函数。后者正是四条子句在从环境读出被绑变元时所要的，也是唯一需要那条描述的四个合取项协同上阵的一条。
 
 这里记录两次测量，第二次把本书已有的一条规则说得更精确。把环境固定为具体值后证明第四个合取项，**十分钟仍未完成**；先在环境为**变元**时证明同一引理，再将其应用，耗时则几乎无法测出。沿充分性等式替换满足关系时，替换必须发生在自变量仍是变元之处；若写在具体元素上，归一化会展开整套绝对性结果以及这些元素的可构造性证书。只在构造处封装证书仍不足以避免这一点。恢复部分采用同样的写法：那条描述的两个常元槽保留为由等式约束的参数，而不固定为具体对象，因此不会在具体环境的满足关系之下发生替换。
 <!--/-->

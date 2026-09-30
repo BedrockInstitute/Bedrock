@@ -28,7 +28,7 @@ module L.Choice.StageOrders {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-irrefl; ∈-induction; ∈-induction-compute )
 open import V.Model {ℓ} using ( self∈sucV )
 open import L.Constructible {ℓ}
@@ -49,7 +49,7 @@ open import L.WellOrder.Base {ℓ-suc ℓ}
 For each ordinal `γ`, this chapter constructs in the ambient type theory a strict well-order on the members of `Lset γ`. The construction has two nested parts. A set is first assigned the ordinal over which it is first definable; sets born at different ordinals are ordered by those ordinals, while sets born together are ordered by their least names over the common earlier stage. Membership induction then supplies these stage orders simultaneously. The result is a host-level order at each stage, not yet an internal relation of set theory and not a single well-order of all of `L`.
 <!--zh-->
 
-对每个序数 `γ`，本章在宿主类型论中构造 `Lset γ` 的成员上的严格良序。构造分为相互嵌套的两层。先为每个集合指定它最初成为可定义子集时所依据的序数；诞生序数不同的集合按诞生序数排序，同生的集合则按共同前层之上的最小名字排序。随后借隶属归纳同时得到各层的序。所得结果是每一层处的宿主层良序，还不是集合论内部的关系，也不是整个 `L` 上的单一良序。
+对每个序数 `γ`，本章在宿主类型论中构造 `Lset γ` 的元素上的严格良序。构造分为相互嵌套的两层。先为每个集合指定它最初成为可定义子集时所依据的序数；诞生序数不同的集合按诞生序数排序，同生的集合则按共同前层之上的最小名字排序。随后借成员关系归纳同时得到各层的序。所得结果是每一层处的宿主层良序，还不是集合论内部的关系，也不是整个 `L` 上的单一良序。
 <!--ja-->
 
 各順序数 `γ` に対して、この章では周囲の型理論において `Lset γ` の要素上の狭義整列順序を構成する。構成は二重になっている。まず各集合に、それが初めて定義可能な部分集合として現れるときの基礎となる順序数を割り当てる。誕生順序数が異なる集合はその順序数で比較し、同時に生まれた集合は共通の直前段階上の最小の名前で比較する。次に所属帰納法によって、各段階の順序を同時に得る。得られるのは各段階における周囲の型理論の整列順序であり、集合論内部の関係でも、`L` 全体の単一の整列順序でもない。
@@ -58,7 +58,7 @@ For each ordinal `γ`, this chapter constructs in the ambient type theory a stri
 <!--en-->
 The classical assumption is used at the point where a merely inhabited family of names is turned into its determined least member. For every index, `stepAt` is uniformly obtained from this least-name construction.
 <!--zh-->
-经典假设用于把仅仅非空的名字族变成其确定的最小成员。对每个指数，`stepAt` 都统一地由这个最小名字构造得到。
+经典假设用于把仅仅非空的名字族变成其确定的最小元素。对每个指数，`stepAt` 都统一地由这个最小名字构造得到。
 <!--ja-->
 古典的仮定は、単に非空である名前の族を、その確定した最小要素へ変える箇所で用いられる。どの添字に対しても、`stepAt` はこの最小名の構成から一様に得られる。
 <!--/-->
@@ -68,7 +68,7 @@ The classical assumption is used at the point where a merely inhabited family of
 <!--en-->
 The objects ordered here are members of the cumulative hierarchy as seen by the ambient type theory. Their membership proofs travel with them, but those proofs are propositions, so they do not create extra copies of an element. This distinction will matter when the same order is later described and represented inside `L`.
 <!--zh-->
-此处被排序的对象，是宿主类型论所见的累积层级成员。隶属证明随成员一同携带，但这些证明是命题，因而不会制造同一元素的额外副本。后文在 `L` 内描述并表示同一良序时，这一区分至关重要。
+此处被排序的对象，是宿主类型论所见的累积层级元素。成员关系证明随元素一同携带，但这些证明是命题，因而不会制造同一元素的额外副本。后文在 `L` 内描述并表示同一良序时，这一区分至关重要。
 <!--ja-->
 ここで順序づける対象は、周囲の型理論から見た累積階層の要素である。所属の証明も要素とともに運ばれるが、それらは命題なので、同じ要素の余分な複製を生じさせない。この区別は、のちに同じ順序を `L` の内部で記述し表現するときに重要になる。
 <!--/-->
@@ -84,7 +84,7 @@ To locate a set's birth, begin with the earliest ordinal stage containing it. Th
 <!--en-->
 Once a stage is well-ordered, its formulas and parameter lists form well-ordered names for the next stage. A successor-stage member may have many such names, so the construction selects the least one and compares members through these selected representatives. The relevant uniqueness belongs to the least representative, not to names in general.
 <!--zh-->
-一旦某层已有良序，其公式与参数列便组成下一层的良序名字。一个后继层成员可能有许多这样的名字，因此构造选取其中最小者，并借这些选定代表比较成员。这里的唯一性属于最小代表，而不属于一般的名字。
+一旦某层已有良序，其公式与参数列便组成下一层的良序名字。一个后继层元素可能有许多这样的名字，因此构造选取其中最小者，并借这些选定代表比较元素。这里的唯一性属于最小代表，而不属于一般的名字。
 <!--ja-->
 ある段階が整列順序づけられると、その論理式とパラメータ列は次の段階の整列順序づけられた名前をなす。後続段階の一つの要素が多くの名前をもつこともあるので、構成はその最小のものを選び、選ばれた代表を通して要素を比較する。ここで一意なのは最小代表であり、名前一般ではない。
 <!--/-->
@@ -92,7 +92,7 @@ Once a stage is well-ordered, its formulas and parameter lists form well-ordered
 <!--en-->
 Several changes of representation occur in this construction: from a presented index to the set it denotes, from a set to a member paired with its membership proof, and from a member to its least name. Each change is injective, so equality and strict comparison can be transported without identifying distinct elements.
 <!--zh-->
-本构造会数次改变表示：从呈现索引到它所表示的集合，从集合到集合与其隶属证明组成的成员，以及从成员到其最小名字。每次改变都是单射的，因此可以搬运相等与严格比较，而不会认同不同的元素。
+本构造会数次改变表示：从呈现索引到它所表示的集合，从集合到集合与其成员关系证明组成的元素，以及从元素到其最小名字。每次改变都是单射的，因此可以搬运相等与严格比较，而不会认同不同的元素。
 <!--ja-->
 この構成では表現を何度か変える。表示の添字からそれが表す集合へ、集合から所属証明を伴う要素へ、さらに要素からその最小名へと移る。どの変更も単射なので、異なる要素を同一視することなく等しさと狭義比較を移せる。
 <!--/-->
@@ -118,7 +118,7 @@ open import Cubical.HITs.CumulativeHierarchy.Properties
 <!--en-->
 A hierarchy set has both a small presentation type and an ambient membership type. The presentation map embeds the former into the latter. This bridge lets the construction use small parameters when forming names while retaining an order stated directly on the members of `Lset γ`.
 <!--zh-->
-层级中的集合既有小呈现类型，也有宿主隶属类型。呈现映射把前者嵌入后者。这座桥使构造能在形成名字时使用小参数，同时保留直接陈述在 `Lset γ` 成员上的序。
+层级中的集合既有小呈现类型，也有宿主成员关系类型。呈现映射把前者嵌入后者。这座桥使构造能在形成名字时使用小参数，同时保留直接陈述在 `Lset γ` 元素上的序。
 <!--ja-->
 階層の集合には、小さな表示型と周囲の所属型の両方がある。表示写像は前者を後者へ埋め込む。この橋により、名前を作るときには小さなパラメータを使いながら、`Lset γ` の要素上に直接述べられた順序を保てる。
 <!--/-->
@@ -133,13 +133,13 @@ open InfinitySet using ( sucV )
 <!--en-->
 From this point on, `S` denotes the ambient carrier of sets. Statements such as `x ∈ˢ Lset γ` are therefore external types expressing membership in a constructible stage; they are not yet formulas evaluated in the object theory.
 <!--zh-->
-从此处起，`S` 表示集合的宿主载体。因此，`x ∈ˢ Lset γ` 一类陈述是表达可构造层隶属关系的外部类型，还不是在对象理论中求值的公式。
+从此处起，`S` 表示集合的宿主载体。因此，`x ∈ˢ Lset γ` 一类陈述是表达可构造层成员关系的外部类型，还不是在对象理论中求值的公式。
 <!--ja-->
 ここから `S` は集合の周囲の台を表す。したがって `x ∈ˢ Lset γ` のような主張は、構成可能段階への所属を表す外部の型であり、まだ対象理論で評価される論理式ではない。
 <!--/-->
 
 ```agda
-open hPropStructure 𝒮ᵥ
+open hPropView 𝒮ᵥ
 ```
 
 <!--en-->
@@ -182,7 +182,7 @@ opaque
 <!--en-->
 The predecessor data in `theCarve x p` contain both a proof that the chosen predecessor is an ordinal and the equation identifying its successor with `stage x p`. The theorem `birth-ord` reads the former component, so `birth x p` may later be compared with other ordinals and used as an index for membership induction.
 <!--zh-->
-`theCarve x p` 给出的前驱数据同时包含两项：所取前驱是序数，以及它的后继等于 `stage x p`。定理 `birth-ord` 读出前一项，使 `birth x p` 随后可以与其他序数比较，也可以作为隶属归纳的指标。
+`theCarve x p` 给出的前驱数据同时包含两项：所取前驱是序数，以及它的后继等于 `stage x p`。定理 `birth-ord` 读出前一项，使 `birth x p` 随后可以与其他序数比较，也可以作为成员关系归纳的指标。
 <!--ja-->
 `theCarve x p` の先行者データには、選ばれた先行者が順序数であることの証明と、その後続を `stage x p` と同一視する等式の両方が含まれる。`birth-ord` は前者を読み出すので、後で `birth x p` を他の順序数と比較し、所属帰納法の添字として用いることができる。
 <!--/-->
@@ -210,7 +210,7 @@ The second projection gives the defining equation `sucV (birth x p) ≡ stage x 
 <!--en-->
 Because `x` belongs to its earliest stage and that stage is `sucV (birth x p)`, it belongs to the successor stage over its birth. This is precisely the membership needed to treat `x` as a definable subset of `Lset (birth x p)` and hence to assign it a name there.
 <!--zh-->
-因为 `x` 属于其最早层，而该层就是 `sucV (birth x p)`，所以 `x` 属于其诞生序数的后继层。正是这条隶属关系，使我们能把 `x` 看作 `Lset (birth x p)` 的可定义子集，并在那里为它指定名字。
+因为 `x` 属于其最早层，而该层就是 `sucV (birth x p)`，所以 `x` 属于其诞生序数的后继层。正是这条成员关系，使我们能把 `x` 看作 `Lset (birth x p)` 的可定义子集，并在那里为它指定名字。
 <!--ja-->
 `x` はその最も早い段階に属し、その段階は `sucV (birth x p)` なので、`x` は誕生順序数の後続段階に属する。この所属こそ、`x` を `Lset (birth x p)` の定義可能な部分集合と見なし、そこで名前を与えるために必要なものである。
 <!--/-->
@@ -224,7 +224,7 @@ birth-mem x p =
 <!--en-->
 The birth ordinal itself lies in its successor ordinal, and the predecessor equation transports this membership to `stage x p`. Consequently the earliest stage containing `x` also contains the ordinal over which `x` was formed.
 <!--zh-->
-诞生序数自身属于它的后继序数，前驱等式把这条隶属搬运到 `stage x p`。因此，最早包含 `x` 的层也包含 `x` 形成时所依据的序数。
+诞生序数自身属于它的后继序数，前驱等式把这条成员关系搬运到 `stage x p`。因此，最早包含 `x` 的层也包含 `x` 形成时所依据的序数。
 <!--ja-->
 誕生順序数自身はその後続順序数に属し、先行者の等式がこの所属を `stage x p` へ移す。したがって `x` を含む最も早い段階は、`x` が作られるときの基礎となった順序数も含む。
 <!--/-->
@@ -267,7 +267,7 @@ private
 <!--en-->
 If `γ` equals the earliest stage, `birth-stage` gives the desired membership directly after transport. If the earliest stage belongs to `γ`, transitivity of the ordinal `γ` combines `birth x p ∈ stage x p` with `stage x p ∈ γ`. These are the two possible noncontradictory cases.
 <!--zh-->
-若 `γ` 等于最早层，搬运 `birth-stage` 即直接得到所需隶属。若最早层属于 `γ`，则序数 `γ` 的传递性把 `birth x p ∈ stage x p` 与 `stage x p ∈ γ` 合成。它们是两个不导致矛盾的可能情形。
+若 `γ` 等于最早层，搬运 `birth-stage` 即直接得到所需成员关系。若最早层属于 `γ`，则序数 `γ` 的传递性把 `birth x p ∈ stage x p` 与 `stage x p ∈ γ` 合成。它们是两个不导致矛盾的可能情形。
 <!--ja-->
 `γ` が最初の段階に等しければ、`birth-stage` を移すことで求める所属が直ちに得られる。最初の段階が `γ` に属するなら、順序数 `γ` の推移性が `birth x p ∈ stage x p` と `stage x p ∈ γ` を合成する。これらが矛盾しない二つの可能な場合である。
 <!--/-->
@@ -281,7 +281,7 @@ If `γ` equals the earliest stage, `birth-stage` gives the desired membership di
 <!--en-->
 It follows that whenever `x` is a member of an ordinal stage `Lset γ`, its birth ordinal is a member of `γ`. The conclusion is strict. Later, when constructing the order at `γ`, this fact places every member's birth among the smaller ordinals for which the induction hypothesis has already supplied an order.
 <!--zh-->
-由此，只要 `x` 是序数层 `Lset γ` 的成员，它的诞生序数就属于 `γ`。这个结论是严格的。随后构造 `γ` 处的序时，该事实把每个成员的诞生序数置于更小的序数之中，而归纳假设已经为这些序数提供了层序。
+由此，只要 `x` 是序数层 `Lset γ` 的元素，它的诞生序数就属于 `γ`。这个结论是严格的。随后构造 `γ` 处的序时，该事实把每个元素的诞生序数置于更小的序数之中，而归纳假设已经为这些序数提供了层序。
 <!--ja-->
 したがって `x` が順序数段階 `Lset γ` の要素であれば、その誕生順序数は `γ` に属する。この結論は狭義である。のちに `γ` における順序を構成するとき、この事実によって各要素の誕生順序数は、帰納法の仮定がすでに順序を与えている小さい順序数の中に置かれる。
 <!--/-->
@@ -304,7 +304,7 @@ birth-in γ ordγ x p h =
 <!--en-->
 For an ambient set `A`, the type `Mem A` consists of a set together with evidence that it belongs to `A`. Carrying the evidence makes later order relations well-typed. Since membership is proposition-valued, two inhabitants with the same underlying set cannot differ merely because their membership evidence was obtained in different ways.
 <!--zh-->
-对宿主集合 `A`，类型 `Mem A` 的元素由一个集合及其属于 `A` 的证据组成。携带这份证据，使后面的序关系具有正确类型。由于隶属关系取值于命题，两个成员只要底层集合相同，就不会仅因隶属证据的取得方式不同而有所区别。
+对宿主集合 `A`，类型 `Mem A` 的元素由一个集合及其属于 `A` 的证据组成。携带这份证据，使后面的序关系具有正确类型。由于成员关系取值于命题，两个元素只要底层集合相同，就不会仅因成员关系证据的取得方式不同而有所区别。
 <!--ja-->
 周囲の集合 `A` に対し、型 `Mem A` の要素は、集合とそれが `A` に属することの証拠との対である。この証拠を伴わせることで、後の順序関係が正しく型づけられる。所属は命題値なので、基礎となる集合が同じ二つの要素が、所属の証拠の得方だけによって異なることはない。
 <!--/-->
@@ -317,7 +317,7 @@ Mem A = Σ[ x ∶ S ] ⟨ x ∈ˢ A ⟩
 <!--en-->
 Fix a strict well-order `w` on a type `A`. The next construction uses only the relation and laws contained in this structure, so it applies equally to name orders, stage-member orders, and their changes of representation.
 <!--zh-->
-固定类型 `A` 上的严格良序 `w`。接下来的构造只使用该结构所含的关系与定律，因此同样适用于名字序、层成员序及其不同表示之间的转换。
+固定类型 `A` 上的严格良序 `w`。接下来的构造只使用该结构所含的关系与定律，因此同样适用于名字序、层元素序及其不同表示之间的转换。
 <!--ja-->
 型 `A` 上の狭義整列順序 `w` を固定する。次の構成はこの構造に含まれる関係と法則だけを使うので、名前の順序、段階要素の順序、およびそれらの表現の変更に同じように適用できる。
 <!--/-->
@@ -446,7 +446,7 @@ Transitivity follows by composing comparisons of the three images in `C`, and th
 <!--en-->
 Every index in the small presentation `⟪ A ⟫` denotes an actual member of `A`. Pairing its image with this membership evidence gives a map from presentation indices into `Mem A`, the form on which stage orders are constructed.
 <!--zh-->
-小呈现 `⟪ A ⟫` 中的每个索引都表示 `A` 的一个实际成员。把其像与这份隶属证据配对，便得到从呈现索引到 `Mem A` 的映射，而层序正是在后一形式上构造的。
+小呈现 `⟪ A ⟫` 中的每个索引都表示 `A` 的一个实际元素。把其像与这份成员关系证据配对，便得到从呈现索引到 `Mem A` 的映射，而层序正是在后一形式上构造的。
 <!--ja-->
 小さな表示 `⟪ A ⟫` の各添字は `A` の実際の要素を指す。その像をこの所属の証拠と対にすることで、表示の添字から、段階順序が構成される形 `Mem A` への写像が得られる。
 <!--/-->
@@ -459,7 +459,7 @@ memOf A m = ∈∈ₛ {a = ⟪ A ⟫↪ m} {b = A} .snd (∈ₛ⟪ A ⟫↪ m)
 <!--en-->
 The function `carry` uses this map to pull an order on ambient member pairs back to the small presentation type. This is the direction required by the naming construction, whose parameter vectors range over `⟪ A ⟫`, while the family constructed later naturally orders `Mem A`.
 <!--zh-->
-函数 `carry` 沿这条映射，把宿主成员对上的序拉回到小呈现类型。这正是命名构造所需的方向：它的参数向量取自 `⟪ A ⟫`，而后文构造的层序自然作用于 `Mem A`。
+函数 `carry` 沿这条映射，把宿主元素对上的序拉回到小呈现类型。这正是命名构造所需的方向：它的参数向量取自 `⟪ A ⟫`，而后文构造的层序自然作用于 `Mem A`。
 <!--ja-->
 関数 `carry` はこの写像に沿って、周囲の要素対上の順序を小さな表示型へ引き戻す。これは名前の構成が必要とする向きである。そのパラメータ列は `⟪ A ⟫` から取られる一方、のちに構成する段階順序は自然に `Mem A` を順序づけるからである。
 <!--/-->
@@ -475,7 +475,7 @@ carry A w = pullOrder ⟪ A ⟫ (Mem A) w (λ m → ⟪ A ⟫↪ m , memOf A m) 
 <!--en-->
 The presentation map is an embedding, so equality of the resulting member pairs forces equality of their underlying presented elements and hence of the original indices. This verifies the injectivity needed by `pullOrder`; it does not assert that every arbitrary presentation of a member has been chosen.
 <!--zh-->
-呈现映射是嵌入，因此所得成员对相等会迫使其底层呈现元素相等，进而迫使原索引相等。这验证了 `pullOrder` 所需的单射性；它并未声称为每个成员选取了任意一种呈现。
+呈现映射是嵌入，因此所得元素对相等会迫使其底层呈现元素相等，进而迫使原索引相等。这验证了 `pullOrder` 所需的单射性；它并未声称为每个元素选取了任意一种呈现。
 <!--ja-->
 表示写像は埋め込みなので、得られた要素対が等しければ、その基礎となる表示要素が等しくなり、したがってもとの添字も等しくなる。これで `pullOrder` に必要な単射性が確認されるが、各要素について任意の表示を選んだと主張するものではない。
 <!--/-->
@@ -495,7 +495,7 @@ The presentation map is an embedding, so equality of the resulting member pairs 
 <!--en-->
 For a stage index `δ`, `New δ` is the type of all members of `Lset (sucV δ)`, each paired with its membership evidence. The name is convenient for the one-step construction, but it does not mean that every such member is born exactly at `δ`; older members may also persist into this successor stage.
 <!--zh-->
-对层指数 `δ`，`New δ` 是 `Lset (sucV δ)` 的全部成员所成的类型，每个成员都与其隶属证据配对。这个名字便于表述单步构造，但并不意味着每个这样的成员都恰好诞生于 `δ`；较早的成员也可能继续属于这个后继层。
+对层指数 `δ`，`New δ` 是 `Lset (sucV δ)` 的全部元素所成的类型，每个元素都与其成员关系证据配对。这个名字便于表述单步构造，但并不意味着每个这样的元素都恰好诞生于 `δ`；较早的元素也可能继续属于这个后继层。
 <!--ja-->
 段階の添字 `δ` に対し、`New δ` は `Lset (sucV δ)` のすべての要素を、それぞれ所属の証拠と対にした型である。この名前は一段階の構成を述べるのに便利だが、各要素がちょうど `δ` で生まれたという意味ではない。より早く生まれた要素もこの後続段階に残りうる。
 <!--/-->
@@ -508,7 +508,7 @@ New δ = Mem (Lset (sucV δ))
 <!--en-->
 Fix an index `δ` and a strict well-order on the small members of `Lset δ`. The naming construction can now compare names over this stage, because its parameter component is compared using precisely that supplied order. This gives the uniform local construction used at every index.
 <!--zh-->
-固定指数 `δ`，并固定 `Lset δ` 的小成员上的严格良序。此时命名构造可以比较这一层之上的名字，因为名字的参数部分恰按所给的序比较。这就给出用于每个指数处的统一局部构造。
+固定指数 `δ`，并固定 `Lset δ` 的小元素上的严格良序。此时命名构造可以比较这一层之上的名字，因为名字的参数部分恰按所给的序比较。这就给出用于每个指数处的统一局部构造。
 <!--ja-->
 添字 `δ` と `Lset δ` の小さな要素上の狭義整列順序を固定する。これで、この段階上の名前を比較できる。名前のパラメータ部分が、まさに与えられた順序によって比較されるからである。これが、どの添字でも用いられる一様な局所構成を与える。
 <!--/-->
@@ -541,7 +541,7 @@ A name denotes a set `x` when its semantic value is equal to `x`. Equality of hi
 <!--en-->
 For `a : New δ`, only the underlying set `a.fst` is named. Its membership evidence establishes that the set lies in the successor stage, but it is not part of the denotation equation and therefore cannot affect which name is least.
 <!--zh-->
-对 `a : New δ`，被命名的只有底层集合 `a.fst`。它的隶属证据证明该集合位于后继层，却不是指称等式的一部分，因而不会影响哪个名字最小。
+对 `a : New δ`，被命名的只有底层集合 `a.fst`。它的成员关系证据证明该集合位于后继层，却不是指称等式的一部分，因而不会影响哪个名字最小。
 <!--ja-->
 `a : New δ` に対して名前が付けられるのは、基礎となる集合 `a.fst` だけである。その所属の証拠は集合が後続段階にあることを示すが、指示の等式の一部ではなく、どの名前が最小であるかには影響しない。
 <!--/-->
@@ -555,7 +555,7 @@ For `a : New δ`, only the underlying set `a.fst` is named. Its membership evide
 <!--en-->
 Membership in `Lset (sucV δ)` is rewritten by the successor-stage equation as membership in the definable powerset over `Lset δ`. Name completeness then gives the propositional truncation of a pair consisting of a name and evidence that it denotes `a.fst`. At this point there is still no chosen name.
 <!--zh-->
-借后继层等式，把 `Lset (sucV δ)` 中的隶属改写为 `Lset δ` 上可定义幂集中的隶属。随后名字完备性给出一个二元组的命题截断，其中包含名字及其指称 `a.fst` 的证据。此时仍没有选定任何名字。
+借后继层等式，把 `Lset (sucV δ)` 中的成员关系改写为 `Lset δ` 上可定义幂集中的成员关系。随后名字完备性给出一个二元组的命题截断，其中包含名字及其指称 `a.fst` 的证据。此时仍没有选定任何名字。
 <!--ja-->
 `Lset (sucV δ)` への所属を、後続段階の等式によって `Lset δ` 上の定義可能冪集合への所属へ書き換える。すると名前の完全性から、名前とそれが `a.fst` を指示する証拠との対の命題的切り詰めが得られる。この時点では、まだ名前は一つも選ばれていない。
 <!--/-->
@@ -609,7 +609,7 @@ Leastness includes membership in the family being minimized. Hence the selected 
 <!--en-->
 If two successor-stage members have the same selected least name, applying denotation shows that their underlying sets are equal. Their membership components are propositions, so this equality lifts to equality of the member pairs. Thus selecting the least name defines an injection, even though denotation on all names need not be injective.
 <!--zh-->
-若两个后继层成员具有同一个选定的最小名字，对名字取指称便说明它们的底层集合相等。其隶属分量都是命题，所以该等式提升为成员对的相等。因此，选取最小名字定义了一个单射，尽管所有名字上的指称映射不必是单射。
+若两个后继层元素具有同一个选定的最小名字，对名字取指称便说明它们的底层集合相等。其成员关系分量都是命题，所以该等式提升为元素对的相等。因此，选取最小名字定义了一个单射，尽管所有名字上的指称映射不必是单射。
 <!--ja-->
 二つの後続段階の要素が同じ選ばれた最小名をもつなら、指示を適用することで基礎となる集合が等しいと分かる。所属成分は命題なので、この等しさは要素対の等しさへ持ち上がる。したがって最小名を選ぶ写像は単射であるが、すべての名前上の指示写像が単射である必要はない。
 <!--/-->
@@ -623,7 +623,7 @@ If two successor-stage members have the same selected least name, applying denot
 <!--en-->
 Pull the strict well-order of names back along this injection. Two members of `Lset (sucV δ)` are then compared by their selected least names. This is the sole construction used by the later `stepAt`: every `δ` follows this same least-name route.
 <!--zh-->
-沿这条单射拉回名字上的严格良序。于是，`Lset (sucV δ)` 的两个成员按各自选定的最小名字比较。后面的 `stepAt` 只使用这一种构造：每个 `δ` 都遵循同一条最小名字路线。
+沿这条单射拉回名字上的严格良序。于是，`Lset (sucV δ)` 的两个元素按各自选定的最小名字比较。后面的 `stepAt` 只使用这一种构造：每个 `δ` 都遵循同一条最小名字路线。
 <!--ja-->
 この単射に沿って名前の狭義整列順序を引き戻す。すると `Lset (sucV δ)` の二つの要素は、それぞれ選ばれた最小名によって比較される。後の `stepAt` が用いる構成はこれ一つだけであり、どの `δ` も同じ最小名による道をたどる。
 <!--/-->
@@ -649,7 +649,7 @@ Pull the strict well-order of names back along this injection. Two members of `L
 <!--en-->
 For each member `a : New δ`, the construction supplies a name together with `IsLeastName` evidence for its underlying set. Subsequent proofs can therefore reason with a least name without unfolding how the search found it or replacing propositional truncation by an arbitrary choice.
 <!--zh-->
-对每个成员 `a : New δ`，该构造给出一个名字，以及它对底层集合满足 `IsLeastName` 的证据。因此，后续证明可以直接使用最小名字推理，而无须展开搜索如何找到它，也无须把命题截断替换成任意选择。
+对每个元素 `a : New δ`，该构造给出一个名字，以及它对底层集合满足 `IsLeastName` 的证据。因此，后续证明可以直接使用最小名字推理，而无须展开搜索如何找到它，也无须把命题截断替换成任意选择。
 <!--ja-->
 各要素 `a : New δ` に対し、この構成は名前と、それが基礎となる集合について `IsLeastName` を満たす証拠を与える。したがって後続の証明は、探索がそれを見つけた方法を展開せず、命題的切り詰めを任意の選択に置き換えることもなく、最小名を用いて推論できる。
 <!--/-->
@@ -692,7 +692,7 @@ The comparison fact pins each candidate's least name: if `t₁` is a least name 
 <!--en-->
 For every ordinal `δ`, the step order is the single order `byName`: members of `Lset (sucV δ)` are compared through their uniquely determined least names over `Lset δ`. There is no separate finite-stage or limit-stage branch in this construction.
 <!--zh-->
-对每个序数 `δ`，步进序都是同一个 `byName`：`Lset (sucV δ)` 的成员通过它们在 `Lset δ` 上唯一确定的最小名字来比较。这个构造不另设有穷层支或极限层支。
+对每个序数 `δ`，步进序都是同一个 `byName`：`Lset (sucV δ)` 的元素通过它们在 `Lset δ` 上唯一确定的最小名字来比较。这个构造不另设有穷层支或极限层支。
 <!--ja-->
 どの順序数 `δ` に対しても、ステップ順序は一つの `byName` である。`Lset (sucV δ)` の要素は、`Lset δ` 上で一意に定まる最小の名前を通して比較される。この構成には、有限段階用や極限段階用の別の分岐はない。
 <!--/-->
@@ -706,7 +706,7 @@ For every ordinal `δ`, the step order is the single order `byName`: members of 
 <!--en-->
 The two bridge lemmas let us reason about `stepAt` through any representatives already proved least. For least names `t₁` and `t₂` of two members, comparison in `stepAt` and comparison of `t₁` with `t₂` determine one another. Hence later arguments need the specification of the selected names, not the particular search that produced them.
 <!--zh-->
-接下来的两条桥接引理使我们能借任意已证为最小的代表来推理 `stepAt`。若 `t₁` 与 `t₂` 分别是两个成员的最小名字，则 `stepAt` 中的成员比较与 `t₁`、`t₂` 的名字比较可以相互推出。因此，后文只需使用所选名字的规格，而不依赖产生它们的具体搜索过程。
+接下来的两条桥接引理使我们能借任意已证为最小的代表来推理 `stepAt`。若 `t₁` 与 `t₂` 分别是两个元素的最小名字，则 `stepAt` 中的元素比较与 `t₁`、`t₂` 的名字比较可以相互推出。因此，后文只需使用所选名字的规格，而不依赖产生它们的具体搜索过程。
 <!--ja-->
 次の二つの橋渡し補題により、すでに最小だと証明された任意の代表を通して `stepAt` を扱える。二つの要素の最小名をそれぞれ `t₁`、`t₂` とすれば、`stepAt` による要素の比較と `t₁`、`t₂` の名前としての比較は互いを決定する。したがって後の議論に必要なのは選ばれた名前の仕様であり、それを得た探索の具体的な過程ではない。
 <!--/-->
@@ -719,7 +719,7 @@ The two bridge lemmas let us reason about `stepAt` through any representatives a
 <!--en-->
 The filling reading says: if two names are least for their respective members, then the order of the names determines the order of the members. The proof transports the name comparison through the agreement between each pinned name and the computed minimum.
 <!--zh-->
-填充读法说：若两个名字分别是各自成员的最小名字，则名字的序决定成员的序。证明把名字比较沿每个被钉住的名字与算出最小值之间的相合运输。
+填充读法说：若两个名字分别是各自元素的最小名字，则名字的序决定元素的序。证明把名字比较沿每个被钉住的名字与算出最小值之间的相合运输。
 <!--ja-->
 充填の読み出しはこう言う。二つの名前がそれぞれの要素の最小の名前であれば、名前の順序が要素の順序を決める。証明は、ピン止めされた名前と計算された最小値の間の一致に沿って、名前の比較を運ぶ。
 <!--/-->
@@ -735,7 +735,7 @@ The filling reading says: if two names are least for their respective members, t
 <!--en-->
 The reading lemma says the converse: if the step order holds between two members, the least names of those members are ordered the same way.
 <!--zh-->
-读取引理说其反向：若步进序在两个成员间成立，则这些成员的最小名字也以同样方式排序。
+读取引理说其反向：若步进序在两个元素间成立，则这些元素的最小名字也以同样方式排序。
 <!--ja-->
 読み出しの補題はその逆を言う。ステップの順序が二つの要素の間で成立するならば、それらの要素の最小の名前も同じように順序づけられる。
 <!--/-->
@@ -761,7 +761,7 @@ The reading lemma says the converse: if the step order holds between two members
 <!--en-->
 The relation `Under δ v x y` records a comparison of the underlying sets `x` and `y` without fixing particular membership proofs in advance. It consists of two certificates placing them in `Lset (sucV δ)`, together with the comparison of the resulting members by `v`. This is an ordinary Sigma type, not a propositional truncation; only the membership certificates themselves are propositionally unique.
 <!--zh-->
-关系 `Under δ v x y` 记录底层集合 `x` 与 `y` 的比较，而不预先固定具体的隶属证明。它由两份把二者放入 `Lset (sucV δ)` 的证书，以及 `v` 对所得两个成员的比较组成。这是普通的 Sigma 类型，并非命题截断；只有其中的隶属证书因命题性而唯一。
+关系 `Under δ v x y` 记录底层集合 `x` 与 `y` 的比较，而不预先固定具体的成员关系证明。它由两份把二者放入 `Lset (sucV δ)` 的证书，以及 `v` 对所得两个元素的比较组成。这是普通的 Sigma 类型，并非命题截断；只有其中的成员关系证书因命题性而唯一。
 <!--ja-->
 関係 `Under δ v x y` は、特定の所属証明をあらかじめ固定せずに、基礎の集合 `x` と `y` の比較を記録する。二つを `Lset (sucV δ)` に置く証明と、それによって得られる要素を `v` で比較した証拠から成る。これは通常の Sigma 型であって命題的切り詰めではなく、命題的に一意なのは所属証明の部分である。
 <!--/-->
@@ -776,7 +776,7 @@ Under δ v x y = Σ[ hx ∶ ⟨ x ∈ˢ Lset (sucV δ) ⟩ ]
 <!--en-->
 Given any chosen membership certificates `hx` and `hy`, `under-at` reads an `Under` comparison at those presentations. The certificates stored by `Under` need not be the same terms as `hx` and `hy`; their equality follows from the propositionality of membership.
 <!--zh-->
-给定任意选定的隶属证书 `hx` 与 `hy`，`under-at` 在这两个呈现上读出一条 `Under` 比较。`Under` 所携带的证书不必与 `hx`、`hy` 是同一证明项；它们的相等来自隶属的命题性。
+给定任意选定的成员关系证书 `hx` 与 `hy`，`under-at` 在这两个呈现上读出一条 `Under` 比较。`Under` 所携带的证书不必与 `hx`、`hy` 是同一证明项；它们的相等来自成员关系的命题性。
 <!--ja-->
 任意に選んだ所属証明 `hx` と `hy` に対し、`under-at` はその提示で `Under` の比較を読み出す。`Under` が保持する証明は `hx` や `hy` と同じ項である必要はなく、それらの等しさは所属が命題であることから従う。
 <!--/-->
@@ -804,7 +804,7 @@ This certificate alignment is what makes `Under` useful in the recursive family.
 <!--en-->
 Fix an ordinal `γ`. To construct its stage order, assume recursively that every ordinal `δ ∈ γ` already carries a strict well-order on `Mem (Lset δ)`. The module `Family` turns precisely these smaller-stage orders into an order on the members of `Lset γ`.
 <!--zh-->
-固定一个序数 `γ`。为了构造这一层的序，递归地假定每个 `δ ∈ γ` 都已在 `Mem (Lset δ)` 上带有严格良序。模块 `Family` 恰用这些较小层的序构造 `Lset γ` 诸成员上的序。
+固定一个序数 `γ`。为了构造这一层的序，递归地假定每个 `δ ∈ γ` 都已在 `Mem (Lset δ)` 上带有严格良序。模块 `Family` 恰用这些较小层的序构造 `Lset γ` 诸元素上的序。
 <!--ja-->
 順序数 `γ` を固定する。この段階の順序を構成するため、各順序数 `δ ∈ γ` について `Mem (Lset δ)` 上の狭義整列順序がすでに得られていると再帰的に仮定する。モジュール `Family` は、まさにこれらの小さい段階の順序から `Lset γ` の要素上の順序を構成する。
 <!--/-->
@@ -852,7 +852,7 @@ Because `γ` is an ordinal, membership in `Lset γ` implies constructibility. Th
 <!--en-->
 Each layer member belongs to the successor of its own birth ordinal, by the membership reading of the birth construction.
 <!--zh-->
-每个层成员属于其自身诞生序数的后继，由诞生构造的隶属读式而来。
+每个层元素属于其自身诞生序数的后继，由诞生构造的成员关系读式而来。
 <!--ja-->
 層のそれぞれの要素は、自分自身の誕生の順序数の後続に属する。誕生の構成の所属の読み出しによるものである。
 <!--/-->
@@ -865,7 +865,7 @@ Each layer member belongs to the successor of its own birth ordinal, by the memb
 <!--en-->
 The birth of a member is packaged as a member of the ordinal index `γ`: the birth ordinal together with the proof that it lies below `γ`, which follows from the member being in the layer at `γ`.
 <!--zh-->
-成员的诞生被打包为序数索引 `γ` 的成员：诞生序数连同「它低于 `γ`」的证明，后者由成员属于 `γ` 处的层而来。
+元素的诞生被打包为序数索引 `γ` 的元素：诞生序数连同「它低于 `γ`」的证明，后者由元素属于 `γ` 处的层而来。
 <!--ja-->
 要素の誕生は、順序数の添字 `γ` の要素としてまとめられる。誕生の順序数と、それが `γ` より下にあるという証明である。後者は、要素が `γ` での層に属することから従う。
 <!--/-->
@@ -879,7 +879,7 @@ The birth of a member is packaged as a member of the ordinal index `γ`: the bir
 <!--en-->
 For `d : Mem γ`, the induction hypothesis supplies an order on the certified members of `Lset (d .fst)`. The operation `carry` moves it to the small presentation used by names, and `stepAt` then well-orders the certified members of `Lset (sucV (d .fst))` by their least names. This is the local order used for sets born over `d .fst`.
 <!--zh-->
-对 `d : Mem γ`，归纳假设给出 `Lset (d .fst)` 的带证书成员上的序。`carry` 把它搬到名字所用的小表示类型上，随后 `stepAt` 按最小名字良序化 `Lset (sucV (d .fst))` 的带证书成员。这就是比较诞生于 `d .fst` 之上的集合时所用的局部序。
+对 `d : Mem γ`，归纳假设给出 `Lset (d .fst)` 的带证书元素上的序。`carry` 把它搬到名字所用的小表示类型上，随后 `stepAt` 按最小名字良序化 `Lset (sucV (d .fst))` 的带证书元素。这就是比较诞生于 `d .fst` 之上的集合时所用的局部序。
 <!--ja-->
 `d : Mem γ` に対し、帰納の仮定は `Lset (d .fst)` の証明つき要素上の順序を与える。`carry` はそれを名前が用いる小さい表示型へ移し、続いて `stepAt` が最小の名前によって `Lset (sucV (d .fst))` の証明つき要素を整列する。これが `d .fst` 上で誕生した集合を比較する局所順序である。
 <!--/-->
@@ -920,7 +920,7 @@ The main relation is lexicographic. If the birth ordinal of `a` belongs to the b
 <!--en-->
 The packaging helper says that two members of the ordinal index with the same underlying ordinal are equal, using the propositionality of membership in the ordinal.
 <!--zh-->
-打包辅助说：底层序数相同的序数索引的两个成员相等，依据是序数中隶属的命题性。
+打包辅助说：底层序数相同的序数索引的两个元素相等，依据是序数中成员关系的命题性。
 <!--ja-->
 まとめの補助は、同じ基礎の順序数をもつ順序数の添字の二つの要素が等しいと言う。順序数の中の所属が命題だからである。
 <!--/-->
@@ -934,7 +934,7 @@ The packaging helper says that two members of the ordinal index with the same un
 <!--en-->
 Irreflexivity follows from the two meanings of the lexicographic relation. An early-birth witness for `a ≺ a` would make the ordinal `birth(a)` a member of itself. An equal-birth witness instead gives a local comparison of `a` with itself; its stored membership certificates may differ from `newIn a`, but `under-at` reads the comparison at the latter certificates so that local irreflexivity applies.
 <!--zh-->
-主序的非自反性分别来自字典序两支的含义。若 `a ≺ a` 由早生见证给出，就会使序数 `birth(a)` 属于自身。若它由同生见证给出，则得到 `a` 与自身的局部比较；其中保存的隶属证书可能不同于 `newIn a`，但 `under-at` 会在后一组证书处读出同一比较，于是可以应用局部序的非自反性。
+主序的非自反性分别来自字典序两支的含义。若 `a ≺ a` 由早生见证给出，就会使序数 `birth(a)` 属于自身。若它由同生见证给出，则得到 `a` 与自身的局部比较；其中保存的成员关系证书可能不同于 `newIn a`，但 `under-at` 会在后一组证书处读出同一比较，于是可以应用局部序的非自反性。
 <!--ja-->
 主順序の非反射性は、辞書式関係の二つの意味から従う。`a ≺ a` が早い誕生の証拠から得られたなら、順序数 `birth(a)` が自分自身に属することになる。同じ誕生の証拠から得られたなら、`a` とそれ自身との局所比較になる。そこに保存された所属証明は `newIn a` と異なりうるが、`under-at` が後者の証明で同じ比較を読み出すので、局所順序の非反射性を適用できる。
 <!--/-->
@@ -950,7 +950,7 @@ Irreflexivity follows from the two meanings of the lexicographic relation. An ea
 <!--en-->
 Only the membership certificates are replaced in this passage. Their propositionhood identifies the two presentations of `a`, while the local comparison proof is transported unchanged to the presentation at which the strict well-order forbids self-comparison.
 <!--zh-->
-这里更换的只有隶属证书。证书的命题性认同 `a` 的两种呈现，而局部比较证明则原样搬运到严格良序禁止自比较的那种呈现上。
+这里更换的只有成员关系证书。证书的命题性认同 `a` 的两种呈现，而局部比较证明则原样搬运到严格良序禁止自比较的那种呈现上。
 <!--ja-->
 ここで取り替えるのは所属証明だけである。その命題性によって `a` の二つの表示が同一視され、局所比較の証明は、狭義整列順序が自己比較を禁じる表示へそのまま輸送される。
 <!--/-->
@@ -963,7 +963,7 @@ Only the membership certificates are replaced in this passage. Their proposition
 <!--en-->
 Transitivity has four cases. In the early-early case, transitivity of the birth ordinals composes the two strict memberships. In the early-equal case, the equality transports the birth membership past the common birth ordinal.
 <!--zh-->
-传递性有四种情形。早早情形由诞生序数的传递性复合两条严格隶属；早等情形由等式把诞生隶属搬运过共同诞生序数。
+传递性有四种情形。早早情形由诞生序数的传递性复合两条严格成员关系；早等情形由等式把诞生成员关系搬运过共同诞生序数。
 <!--ja-->
 推移性には四つの場合がある。早い・早いの場合は、誕生の順序数の推移性が二つの厳密な所属を合成する。早い・等しいの場合は、等式が誕生の所属を共通の誕生の順序数の先へ運ぶ。
 <!--/-->
@@ -1073,9 +1073,9 @@ In the equal-birth case, the local step order at the common birth ordinal decide
 
 The alignment of the first certificate is the member's own successor membership.
 <!--zh-->
-等诞生情形中，共同诞生序数处的局部步进序决定比较。两个成员的证书被重新对齐到共同诞生序数。
+等诞生情形中，共同诞生序数处的局部步进序决定比较。两个元素的证书被重新对齐到共同诞生序数。
 
-第一条证书的对齐即该成员自身的后继隶属。
+第一条证书的对齐即该元素自身的后继成员关系。
 <!--ja-->
 等しい誕生の場合は、共通の誕生の順序数での局所のステップの順序が比較を決める。二つの要素の証明は、共通の誕生の順序数へと揃え直される。
 
@@ -1093,7 +1093,7 @@ The alignment of the first certificate is the member's own successor membership.
 <!--en-->
 The first set already belongs to the successor of its birth. Equality of births transports the corresponding certificate for the second set to that same successor layer, so the local trichotomy can compare both members in one carrier.
 <!--zh-->
-第一个集合本来就属于其诞生序数的后继层。诞生序数的相等把第二个集合的相应证书搬到同一个后继层，于是局部三歧可以在同一载体中比较两个成员。
+第一个集合本来就属于其诞生序数的后继层。诞生序数的相等把第二个集合的相应证书搬到同一个后继层，于是局部三歧可以在同一载体中比较两个元素。
 <!--ja-->
 第一の集合はもともと自分の誕生順序数の後続段階に属する。誕生順序数の等しさによって、第二の集合の対応する証明も同じ後続段階へ移されるので、局所的な三分性は一つの台の中で両者を比較できる。
 <!--/-->
@@ -1109,7 +1109,7 @@ The first set already belongs to the successor of its birth. Equality of births 
 <!--en-->
 Local trichotomy supplies comparison in either direction or equality of the two certified successor-stage members. In the equality case, equality of the underlying sets follows immediately; since membership in `Lset γ` is a proposition, that equality lifts to equality of the original members `a` and `b` of the stage.
 <!--zh-->
-局部三歧性给出两个带证书后继层成员的一个比较方向，或给出二者相等。相等情形立即推出底层集合相等；又因属于 `Lset γ` 是命题，这条等式提升为原层成员 `a` 与 `b` 的相等。
+局部三歧性给出两个带证书后继层元素的一个比较方向，或给出二者相等。相等情形立即推出底层集合相等；又因属于 `Lset γ` 是命题，这条等式提升为原层元素 `a` 与 `b` 的相等。
 <!--ja-->
 局所順序の三分性から、証明つきの二つの後続段階要素について、いずれかの向きの比較または等しさが得られる。等しい場合には基礎の集合の等しさが直ちに従い、`Lset γ` への所属は命題なので、その等しさは元の段階要素 `a` と `b` の等しさへ持ち上がる。
 <!--/-->
@@ -1138,7 +1138,7 @@ If the local trichotomy places `b` below `a`, the common-birth equality is reori
 <!--en-->
 Well-foundedness requires two coordinated descents. Fix a packaged birth ordinal `d`. The outer hypothesis supplies accessibility for members whose births are strictly below `d`, while an accessibility tree for `stepIn d` supplies the inner descent among members born at `d`. The role of `accInside` is to lift this inner tree to accessibility for the full lexicographic relation while retaining access to the outer hypothesis.
 <!--zh-->
-良基性需要两种相互配合的下降。固定一条打包诞生序数 `d`。外层假设为诞生严格低于 `d` 的成员提供可及性，而 `stepIn d` 的可及树处理同在 `d` 处诞生的成员之间的内层下降。`accInside` 的作用，是在保留外层假设可用的同时，把这棵内层树提升为主字典序下的可及性。
+良基性需要两种相互配合的下降。固定一条打包诞生序数 `d`。外层假设为诞生严格低于 `d` 的元素提供可及性，而 `stepIn d` 的可及树处理同在 `d` 处诞生的元素之间的内层下降。`accInside` 的作用，是在保留外层假设可用的同时，把这棵内层树提升为主字典序下的可及性。
 <!--ja-->
 整礎性には、連携する二つの降下が必要である。証明と組にされた誕生順序数 `d` を固定する。外側の仮定は、誕生が `d` より真に下にある要素の到達可能性を与え、`stepIn d` の到達可能性の木は、`d` で生まれた要素間の内側の降下を扱う。`accInside` の役割は、外側の仮定を使えるまま、この内側の木を主辞書式関係についての到達可能性へ持ち上げることである。
 <!--/-->
@@ -1154,7 +1154,7 @@ Well-foundedness requires two coordinated descents. Fix a packaged birth ordinal
 <!--en-->
 Assume that a local element `u` is accessible in `stepIn d`, and that a stage member `b` has birth `d` and the same underlying set as `u`. To prove `b` accessible for the main relation, consider an arbitrary predecessor `c ≺ b`. The definition of the main relation tells us which of the two descent resources applies to `c`.
 <!--zh-->
-设局部元素 `u` 在 `stepIn d` 中可及，并且层成员 `b` 的诞生为 `d`，其底层集合与 `u` 相同。要证明 `b` 对主关系可及，就考察任意前驱 `c ≺ b`。主关系的定义会指出应当对 `c` 使用两种下降资源中的哪一种。
+设局部元素 `u` 在 `stepIn d` 中可及，并且层元素 `b` 的诞生为 `d`，其底层集合与 `u` 相同。要证明 `b` 对主关系可及，就考察任意前驱 `c ≺ b`。主关系的定义会指出应当对 `c` 使用两种下降资源中的哪一种。
 <!--ja-->
 局所要素 `u` が `stepIn d` で到達可能であり、段階要素 `b` の誕生が `d` で、その基礎の集合が `u` と等しいとする。主関係について `b` が到達可能だと示すには、任意の先行元 `c ≺ b` を考える。主関係の定義から、`c` に二つの降下資源のどちらを使うべきかが分かる。
 <!--/-->
@@ -1186,7 +1186,7 @@ If `c` was compared with `b` by an earlier birth, its birth is strictly below `d
 <!--en-->
 In the equal-birth clause, equality of the underlying birth ordinals is first lifted to equality of their packaged members of `γ`. This permits the `UnderAt` comparison to be transported to the fixed index `d`; its first component then certifies that `c` belongs to the successor stage on which `stepIn d` is defined.
 <!--zh-->
-在同生子句中，先把底层诞生序数的相等提升为它们作为 `γ` 成员的打包相等。于是可以把 `UnderAt` 比较搬到固定指标 `d`；其第一分量随即证明 `c` 属于 `stepIn d` 所定义在的后继层。
+在同生子句中，先把底层诞生序数的相等提升为它们作为 `γ` 元素的打包相等。于是可以把 `UnderAt` 比较搬到固定指标 `d`；其第一分量随即证明 `c` 属于 `stepIn d` 所定义在的后继层。
 <!--ja-->
 同じ誕生の条項では、まず基礎となる誕生順序数の等しさを、それらを `γ` の要素として証明と組にしたものの等しさへ持ち上げる。これにより `UnderAt` の比較を固定した添字 `d` へ輸送でき、その第一成分から、`c` が `stepIn d` の定義域である後続段階に属することが分かる。
 <!--/-->
@@ -1218,7 +1218,7 @@ Reading the transported `UnderAt` witness with the aligned certificates gives a 
 <!--en-->
 The outer descent is membership induction on the birth ordinal. Its motive says that every stage member whose packaged birth is `(δ , i)` is accessible for the main relation. Consequently, at the induction step for `δ`, the hypothesis covers exactly the members whose births are packaged over ordinals strictly belonging to `δ`.
 <!--zh-->
-外层下降是对诞生序数作隶属归纳。其动机断言：每个打包诞生为 `(δ , i)` 的层成员都对主关系可及。因此在 `δ` 处的归纳步中，归纳假设恰好覆盖那些诞生序数严格属于 `δ` 的成员。
+外层下降是对诞生序数作成员关系归纳。其动机断言：每个打包诞生为 `(δ , i)` 的层元素都对主关系可及。因此在 `δ` 处的归纳步中，归纳假设恰好覆盖那些诞生序数严格属于 `δ` 的元素。
 <!--ja-->
 外側の降下は誕生順序数についての所属帰納法である。その動機は、証明と組にされた誕生が `(δ , i)` であるすべての段階要素が、主関係について到達可能だと述べる。したがって `δ` における帰納段階の仮定は、誕生順序数が真に `δ` に属する要素をちょうど覆う。
 <!--/-->
@@ -1234,7 +1234,7 @@ The outer descent is membership induction on the birth ordinal. Its motive says 
 <!--en-->
 At a fixed birth `δ`, the local strict well-order already makes the corresponding representative of `b` accessible. The outer step feeds this local accessibility and the hypotheses for all smaller births into `accInside`. This is where the inner descent is started inside the outer membership induction.
 <!--zh-->
-固定诞生序数 `δ` 后，局部严格良序已经保证 `b` 的相应代表可及。外层归纳步把这份局部可及性与所有更早诞生处的归纳假设一同交给 `accInside`。内层下降正是在外层隶属归纳的这一位置启动。
+固定诞生序数 `δ` 后，局部严格良序已经保证 `b` 的相应代表可及。外层归纳步把这份局部可及性与所有更早诞生处的归纳假设一同交给 `accInside`。内层下降正是在外层成员关系归纳的这一位置启动。
 <!--ja-->
 誕生順序数 `δ` を固定すると、局所的な狭義整列順序によって、対応する `b` の代表はすでに到達可能である。外側の帰納段階は、この局所的な到達可能性と、より早いすべての誕生に対する帰納仮定とを `accInside` に渡す。ここで外側の所属帰納法の内部に内側の降下が始まる。
 <!--/-->
@@ -1250,7 +1250,7 @@ At a fixed birth `δ`, the local strict well-order already makes the correspondi
 <!--en-->
 The equality `q` identifies the packaged birth of `b` with `(δ , i)`, so `birth-mem` can be transported to a certificate `hb` placing `b` in `Lset (sucV δ)`. For a smaller packaged birth `z`, its first component lies in `δ`; the outer induction hypothesis at that ordinal, together with `z`'s membership in `γ`, supplies accessibility for every member born at `z`.
 <!--zh-->
-等式 `q` 把 `b` 的打包诞生认同为 `(δ , i)`，因而可以搬运 `birth-mem`，得到把 `b` 放入 `Lset (sucV δ)` 的证书 `hb`。对更小的打包诞生 `z`，其第一分量属于 `δ`；在该序数处的外层归纳假设，连同 `z` 属于 `γ` 的证明，为每个诞生于 `z` 的成员给出可及性。
+等式 `q` 把 `b` 的打包诞生认同为 `(δ , i)`，因而可以搬运 `birth-mem`，得到把 `b` 放入 `Lset (sucV δ)` 的证书 `hb`。对更小的打包诞生 `z`，其第一分量属于 `δ`；在该序数处的外层归纳假设，连同 `z` 属于 `γ` 的证明，为每个诞生于 `z` 的元素给出可及性。
 <!--ja-->
 等式 `q` は、証明と組にされた `b` の誕生を `(δ , i)` と同一視する。そのため `birth-mem` を輸送して、`b` を `Lset (sucV δ)` に置く証明 `hb` を得られる。より小さい、証明と組にされた誕生 `z` については、その第一成分が `δ` に属する。その順序数における外側の帰納仮定と、`z` が `γ` に属することの証明から、`z` で生まれたすべての要素の到達可能性が得られる。
 <!--/-->
@@ -1266,7 +1266,7 @@ The equality `q` identifies the packaged birth of `b` with `(δ , i)`, so `birth
 <!--en-->
 Every member is therefore accessible for the main relation. The conclusion uses both layers: the outer membership induction handles a predecessor with an earlier birth, and at each fixed birth the accessibility tree of the local step order handles a predecessor with the same birth. Neither layer alone proves well-foundedness of the lexicographic order.
 <!--zh-->
-因此每个成员都对主关系可及。这个结论同时使用两层论证：外层隶属归纳处理诞生更早的前驱，而在每个固定诞生序数处，局部步进序的可及树处理同生前驱。缺少其中任何一层，都不足以证明该字典序良基。
+因此每个元素都对主关系可及。这个结论同时使用两层论证：外层成员关系归纳处理诞生更早的前驱，而在每个固定诞生序数处，局部步进序的可及树处理同生前驱。缺少其中任何一层，都不足以证明该字典序良基。
 <!--ja-->
 したがって、すべての要素は主関係について到達可能である。この結論には二つの層がともに必要である。外側の所属帰納法は誕生がより早い先行元を扱い、各誕生順序数を固定したところでは、局所ステップ順序の到達可能性の木が同じ誕生の先行元を扱う。どちらか一方だけでは、この辞書式順序の整礎性は示せない。
 <!--/-->
@@ -1310,7 +1310,7 @@ Transitivity and the two-level well-foundedness argument complete the order laws
 <!--en-->
 The function `famStep` packages this recursive step: at `γ`, it takes the orders already constructed at every member ordinal `δ ∈ γ` and returns the strict well-order of `Mem (Lset γ)` proved above. The same construction applies uniformly to every ordinal; it has no separate zero, successor, or limit clause.
 <!--zh-->
-函数 `famStep` 封装这次递归步：在 `γ` 处，它接收每个成员序数 `δ ∈ γ` 上已经构造的序，返回上文证明的 `Mem (Lset γ)` 上的严格良序。同一个构造统一适用于每个序数，并无另设的零、后继或极限分支。
+函数 `famStep` 封装这次递归步：在 `γ` 处，它接收每个元素序数 `δ ∈ γ` 上已经构造的序，返回上文证明的 `Mem (Lset γ)` 上的严格良序。同一个构造统一适用于每个序数，并无另设的零、后继或极限分支。
 <!--ja-->
 関数 `famStep` はこの再帰の一段をまとめる。`γ` において、各要素順序数 `δ ∈ γ` ですでに構成された順序を受け取り、上で証明した `Mem (Lset γ)` 上の狭義整列順序を返す。同じ構成がどの順序数にも一様に適用され、零、後続、極限の別々の節はない。
 <!--/-->
@@ -1324,7 +1324,7 @@ famStep = Family.famOrder
 <!--en-->
 Membership induction applies `famStep` simultaneously at all ordinal indices. The result `orderAt γ` is a host-level strict well-order on the certified members of the single stage `Lset γ`; it is neither an object-language relation nor one relation on all of `L`.
 <!--zh-->
-隶属归纳在所有序数索引处同时施用 `famStep`。所得 `orderAt γ` 是宿主层中单个层 `Lset γ` 的带证书成员上的严格良序；它既不是对象语言中的关系，也不是整个 `L` 上的一条关系。
+成员关系归纳在所有序数索引处同时施用 `famStep`。所得 `orderAt γ` 是宿主层中单个层 `Lset γ` 的带证书元素上的严格良序；它既不是对象语言中的关系，也不是整个 `L` 上的一条关系。
 <!--ja-->
 所属帰納法によって、すべての順序数添字で `famStep` を同時に適用する。得られる `orderAt γ` は、単一の段階 `Lset γ` の証明つき要素上にあるホスト側の狭義整列順序である。対象言語内の関係でも、`L` 全体の上の一つの関係でもない。
 <!--/-->
@@ -1338,7 +1338,7 @@ opaque
 <!--en-->
 The equation `orderAt-step` exposes one recursive layer: the order at `γ` is `famStep γ` applied to the previously constructed orders `orderAt δ` for `δ ∈ γ`. It permits later arguments to use the birth-first description without unfolding the entire membership recursion.
 <!--zh-->
-等式 `orderAt-step` 展开一层递归：`γ` 处的序就是把 `famStep γ` 施用于每个 `δ ∈ γ` 处先前构造的 `orderAt δ`。后文由此可以使用诞生优先的描述，而无须展开整个隶属递归。
+等式 `orderAt-step` 展开一层递归：`γ` 处的序就是把 `famStep γ` 施用于每个 `δ ∈ γ` 处先前构造的 `orderAt δ`。后文由此可以使用诞生优先的描述，而无须展开整个成员关系递归。
 <!--ja-->
 等式 `orderAt-step` は再帰を一段だけ開く。`γ` での順序は、各 `δ ∈ γ` ですでに構成された `orderAt δ` に `famStep γ` を適用したものである。これにより後の議論は、所属再帰全体を展開せずに誕生を先に比較する記述を使える。
 <!--/-->
@@ -1353,7 +1353,7 @@ opaque
 <!--en-->
 Finally, `stageOrder γ` presents the same stagewise order on the small index type `⟪ Lset γ ⟫`. The canonical embedding sends each index to its represented member with a membership certificate, and `carry` pulls `orderAt γ` back along this injection. This changes only the representation of the carrier, not the comparison being constructed.
 <!--zh-->
-最后，`stageOrder γ` 把同一条逐层序呈现在小索引类型 `⟪ Lset γ ⟫` 上。典范嵌入把每个索引送到它所表示的成员及其隶属证书，`carry` 再沿这条单射拉回 `orderAt γ`。这里改变的只是载体的表示，并未另造一种比较。
+最后，`stageOrder γ` 把同一条逐层序呈现在小索引类型 `⟪ Lset γ ⟫` 上。典范嵌入把每个索引送到它所表示的元素及其成员关系证书，`carry` 再沿这条单射拉回 `orderAt γ`。这里改变的只是载体的表示，并未另造一种比较。
 <!--ja-->
 最後に `stageOrder γ` は、同じ段階ごとの順序を小さい添字型 `⟪ Lset γ ⟫` 上に提示する。標準的な埋め込みは各添字を、それが表す要素と所属証明の組へ送り、`carry` はこの単射に沿って `orderAt γ` を引き戻す。変わるのは台の表示だけで、別の比較を構成するわけではない。
 <!--/-->
@@ -1370,7 +1370,7 @@ For every ordinal `γ`, `orderAt γ` is a host-level strict well-order on the ce
 <!--zh-->
 ## 小结
 
-对每个序数 `γ`，`orderAt γ` 是宿主层中 `Lset γ` 的带证书成员上的严格良序。它先比较各成员最早包含层的前驱；只有诞生序数相等时，才比较它们在共同前层之上唯一确定的最小名字。局部构造 `stepAt` 在每个指标处都只有这一种最小名字形式，而全局良基性证明把诞生序数的下降与局部名字序中的下降结合起来。此处尚未把该关系写成对象语言公式，也未把它构造成 `L` 中的集合；这些内部化步骤留给后续章节。
+对每个序数 `γ`，`orderAt γ` 是宿主层中 `Lset γ` 的带证书元素上的严格良序。它先比较各元素最早包含层的前驱；只有诞生序数相等时，才比较它们在共同前层之上唯一确定的最小名字。局部构造 `stepAt` 在每个指标处都只有这一种最小名字形式，而全局良基性证明把诞生序数的下降与局部名字序中的下降结合起来。此处尚未把该关系写成对象语言公式，也未把它构造成 `L` 中的集合；这些内部化步骤留给后续章节。
 <!--ja-->
 ## まとめ
 

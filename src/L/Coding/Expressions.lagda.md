@@ -27,7 +27,7 @@ module L.Coding.Expressions {ℓ : Level} where
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 open import FOL.Syntax
   using ( Term; Formula; var; con; _∈̇_; _≐_; _∧̇_; _⇒̇_; ∀̇_; ∃̇∈ )
 import FOL.Absoluteness
@@ -58,7 +58,7 @@ The same reader then specializes in several directions. Membership of an express
 
 本章把这件事一次做好：在由赋值槽位、可构造字面常元、数码与 Kuratowski 对组成的小表达式语言上建立一条结构读式，并证明其双向充分性。向外方向从满足判断出发，把三层截断存在消去到取值为命题的路径中，再将配对等式与递归的分量路径串联。向内方向为两个子表达式选定显式的内部元素，并取得它们共同的可构造容器，而不从任何截断中抽取选择。
 
-同一读式随后沿几个方向特化。表达式取值属于词项所指的隶属关系使用 `L` 的传递性：该周遭取值属于词项的可构造解释这一事实证明了取值可构造，故它能充当模型元素；这是一次真正的构造，与「截断只能消去到取值为命题的目标」这一限制不同。外延集合描述是一对普通的全称蕴含，外层没有截断；它刻画一个候选集合，而不构造它。元数标签识别器读取两层嵌套的配对：元数与「标签加载荷」之对。最后，后继公式与环境扩展公式经有界绝对性抬升，其转换立足于既有的传递模型设置，以及查值在投影下的相容性。本章以环境扩展公式收尾。
+同一读式随后沿几个方向特化。表达式取值属于词项所指的成员关系使用 `L` 的传递性：该周遭取值属于词项的可构造解释这一事实证明了取值可构造，故它能充当模型元素；这是一次真正的构造，与「截断只能消去到取值为命题的目标」这一限制不同。外延集合描述是一对普通的全称蕴含，外层没有截断；它刻画一个候选集合，而不构造它。元数标签识别器读取两层嵌套的配对：元数与「标签加载荷」之对。最后，后继公式与环境扩展公式经有界绝对性抬升，其转换立足于既有的传递模型设置，以及查值在投影下的相容性。本章以环境扩展公式收尾。
 <!--ja-->
 
 符号化された充足関係の再帰は、`L` の内部で「環境 `γ` は符号 `c` の論理式を充足するか」という形の問いを判定しなければならない。Kuratowski 対のような複合的な値を有界論理式で認識するには、証人自身が模型の要素でなければならない。成分 `u` と `v` をもつ対 `q` に対しては、`s` が `q` に属し、`u` と `v` が `s` に属する構成可能集合 `s` が要る。読みの論理式はこの三者を一度に束縛し、`v, u, s` に元の割り当てを続けた拡張割り当てのもとで二つの成分条件を評価する。元のスロットはずらしの下で保たれる。
@@ -81,7 +81,7 @@ Two sides of one distinction run through the chapter. Out in the hierarchy, the 
 <!--en-->
 An element of the constructible model is an ambient set together with a proof that it is constructible. Transitivity of `L` is what lets bounded witnesses move between the two sides: a member of a constructible set is itself constructible, by `isL-trans`, and so becomes an element of the model in its own right. Bounded absoluteness does the corresponding work for formulas. A Δ₀ formula about the hierarchy, all of whose constants name constructible sets, means the same inside `L`; the constant bounding recorded by the `BoundedFo` data is precisely the hypothesis this transfer needs. The successor and environment-extension formulas are already proved on the hierarchy side, and lifting them into the model is a matter of applying this transfer.
 <!--zh-->
-可构造模型的一个元素是「周遭集合连同它可构造的证明」。`L` 的传递性使有界见证能在两侧之间移动：由 `isL-trans`，可构造集合的成员本身可构造，因而自己就能充当模型元素。有界绝对性则为公式做相应的工作：一条关于层级、且所有常元都命名可构造集合的 Δ₀ 公式，在 `L` 内意义不变；`BoundedFo` 数据记录的常元有界性正是这一转换所需的前提。后继公式与环境扩展公式已在层级一侧证得，把它们抬入模型只需施用这一转换。
+可构造模型的一个元素是「周遭集合连同它可构造的证明」。`L` 的传递性使有界见证能在两侧之间移动：由 `isL-trans`，可构造集合的元素本身可构造，因而自己就能充当模型元素。有界绝对性则为公式做相应的工作：一条关于层级、且所有常元都命名可构造集合的 Δ₀ 公式，在 `L` 内意义不变；`BoundedFo` 数据记录的常元有界性正是这一转换所需的前提。后继公式与环境扩展公式已在层级一侧证得，把它们抬入模型只需施用这一转换。
 <!--ja-->
 構成可能模型の要素とは、周囲の集合に「それが構成可能である」という証明を添えたものである。`L` の推移性が、有界な証人が両側の間を移れるようにする。`isL-trans` により、構成可能集合の要素はそれ自身構成可能であり、したがってそれ自体が模型の要素になれる。有界絶対性は論理式について対応する仕事をする。階層についての、すべての定数が構成可能集合を名指す Δ₀ 論理式は、`L` の内部でも意味を変えない。`BoundedFo` データが記録する定数の有界性は、この転送が要る前提そのものである。後者と環境拡張の論理式はすでに階層の側で証明されており、模型への持ち上げはこの転送を適用することにほかならない。
 <!--/-->
@@ -117,7 +117,7 @@ The truth values at work are the propositions of `hProp` at level `ℓ-suc ℓ`,
 <!--/-->
 
 ```agda
-open hPropStructure 𝒮ʟ using ( S )
+open hPropView 𝒮ʟ using ( S )
 
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
 open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ ; ⟦_⟧ᵐ to ⟦_⟧ )
@@ -318,7 +318,7 @@ With the three witnesses in hand, the innermost formula is unfolded by the pair 
 <!--en-->
 The converse direction `into`{.Agda} builds an inhabitant of the satisfaction judgment from the bare equation. Slots and literals are immediate; the numeral case composes with the symmetry of `numeralL-fst`{.Agda}, reversing the direction of the earlier compatibility. In the pair case all three truncated layers must be supplied at once, and here nothing is extracted from a truncation: the witnesses are constructed outright. The internal elements `u` and `v` are chosen as `element a` and `element b` in the reindexed assignment, and `Container`{.Agda} and `container`{.Agda} use the adjusted path `e` to produce a constructible set `s` containing both, with all membership certificates. This is a use of transitivity of `L` in its own right, distinct from the proposition-valuedness that licensed the eliminations above: there truncation was consumed, here concrete elements are produced.
 <!--zh-->
-逆向的 `into`{.Agda} 从裸等式出发构造满足判断的一个证明。槽位与字面常元直接可得；数码情形与 `numeralL-fst`{.Agda} 的对称复合，调转了前述相容性的方向。配对情形须一次性给出全部三个截断层，而此处并非从截断中抽取任何东西：见证是直接构造的。内部元素 `u` 与 `v` 取为重标定赋值下的 `element a` 与 `element b`，而 `Container`{.Agda} 与 `container`{.Agda} 用调整后的路径 `e` 造出一个同时容纳两者的可构造集合 `s`，连同全部隶属证书。这是对 `L` 传递性的一次独立运用，与上文使消去得以合法的「取值为命题」是两回事：那里消去的是截断，这里产出的是具体的元素。
+逆向的 `into`{.Agda} 从裸等式出发构造满足判断的一个证明。槽位与字面常元直接可得；数码情形与 `numeralL-fst`{.Agda} 的对称复合，调转了前述相容性的方向。配对情形须一次性给出全部三个截断层，而此处并非从截断中抽取任何东西：见证是直接构造的。内部元素 `u` 与 `v` 取为重标定赋值下的 `element a` 与 `element b`，而 `Container`{.Agda} 与 `container`{.Agda} 用调整后的路径 `e` 造出一个同时容纳两者的可构造集合 `s`，连同全部成员关系证书。这是对 `L` 传递性的一次独立运用，与上文使消去得以合法的「取值为命题」是两回事：那里消去的是截断，这里产出的是具体的元素。
 <!--ja-->
 逆方向の `into`{.Agda} は、裸の等式から充足の判断の要素を構成する。スロットとリテラルは直接であり、数項の場合は `numeralL-fst`{.Agda} の対称と合成して、先の相容性の向きを逆にする。対の場合には三つの截断の層すべてを一度に供給しなければならないが、ここでは截断から何かを取り出すのではなく、証人をその場で構成する。内部の要素 `u` と `v` は再索引付けされた割り当てでの `element a` と `element b` として選ばれ、`Container`{.Agda} と `container`{.Agda} が調整済みの道 `e` を用いて、両方を収める構成可能な集合 `s` を、すべての所属の証明書とともに作る。これは `L` の推移性の独立した使用であり、上で消去を正当化した命題値の確認とは別物である。あちらは截断を消費し、こちらは具体的な要素を作り出す。
 <!--/-->
@@ -350,7 +350,7 @@ The pair formula asserts `s ∈ q`, `u ∈ s`, `v ∈ s`, and `q ≡ pr u v`; si
 | --- | --- | --- |
 | 0 | `v` | `b` 的内部元素 |
 | 1 | `u` | `a` 的内部元素 |
-| 2 | `s` | 中间集合，`q` 处条目的成员 |
+| 2 | `s` | 中间集合，`q` 处条目的元素 |
 | `i + 3` | 旧槽位 `i` | 原赋值，原样保留 |
 : 三个新增槽位排在原赋值之前，原槽位依次后移
 
@@ -396,7 +396,7 @@ The remaining local definitions record the arithmetic of the construction. `η` 
 <!--en-->
 The container is produced from the path `e`, and its first component is the desired constructible set `s`, the common intermediate through which both Kuratowski components are reached: `s` is a member of the entry at `q`, and `u` and `v` are members of `s`. Prepending `v`, then `u`, then `s` to `γ` yields the extended assignment `δ` of arity three more than the original. Every remaining ingredient of the inward construction is now an entry of `δ` rather than a free-standing element.
 <!--zh-->
-容器由路径 `e` 造出，其第一个分量正是所需的可构造集合 `s`，它是到达两个 Kuratowski 分量的公共中间体：`s` 是 `q` 处条目的成员，而 `u` 与 `v` 是 `s` 的成员。把 `v`、`u`、`s` 依次推到 `γ` 的最前，便得到比原来多元数三的扩展赋值 `δ`。此后内向构造所需的每个材料都不再是游离的元素，而是 `δ` 的一个条目。
+容器由路径 `e` 造出，其第一个分量正是所需的可构造集合 `s`，它是到达两个 Kuratowski 分量的公共中间体：`s` 是 `q` 处条目的元素，而 `u` 与 `v` 是 `s` 的元素。把 `v`、`u`、`s` 依次推到 `γ` 的最前，便得到比原来多元数三的扩展赋值 `δ`。此后内向构造所需的每个材料都不再是游离的元素，而是 `δ` 的一个条目。
 <!--ja-->
 コンテナは経路 `e` から作られ、その最初の成分がまさに求める構成可能な集合 `s` である。これは二つの Kuratowski 成分のどちらにも到達する共通の中間体であり、`s` はスロット `q` の項目の要素であり、`u` と `v` は `s` の要素である。`v`、`u`、`s` の順に `γ` の先頭へ付け加えると、元よりアリティが三だけ大きい拡張された割り当て `δ` が得られる。以後、内向きの構成に要る材料はどれも、遊離した要素ではなく `δ` の項目になる。
 <!--/-->
@@ -412,7 +412,7 @@ The container is produced from the path `e`, and its first component is the desi
 <!--en-->
 The two directions assemble into the advertised form. `adequate` states that the satisfaction judgment at `γ` equals, as a truth value, the packaged equation between the projected entry at `q` and the ambient denotation; `⇔toPath` converts the pair of implications `out` and `into` into that path. As the first application, `member e C` says that the value of `e` belongs to the denotation of the term `C`: it boundedly quantifies over a member of `C`'s interpretation and demands the expression reader at that member's extended assignment, with the expression shifted into the leading slot.
 <!--zh-->
-两个方向组装成所宣称的形状。`adequate` 陈述：在 `γ` 处的满足判断，作为一个真值，等于「`q` 处条目的投影」与「周遭所指」之间打包后的等式；`⇔toPath` 把 `out` 与 `into` 这对蕴含变成这条路径。作为第一个应用，`member e C` 说表达式 `e` 的取值属于词项 `C` 的所指：它对 `C` 所指的成员作有界量化，并要求在该成员扩展后的赋值处成立表达式读式，其中表达式被移入首位槽位。
+两个方向组装成所宣称的形状。`adequate` 陈述：在 `γ` 处的满足判断，作为一个真值，等于「`q` 处条目的投影」与「周遭所指」之间打包后的等式；`⇔toPath` 把 `out` 与 `into` 这对蕴含变成这条路径。作为第一个应用，`member e C` 说表达式 `e` 的取值属于词项 `C` 的所指：它对 `C` 所指的元素作有界量化，并要求在该元素扩展后的赋值处成立表达式读式，其中表达式被移入首位槽位。
 <!--ja-->
 二つの方向が、述べられた形に組み上がる。`adequate` は、`γ` での充足の判断が、真理値として、「スロット `q` の項目の射影」と「周囲の指示値」との、梱包された等式に等しいと述べる。`⇔toPath` が `out` と `into` の組の含意をこの経路に変える。最初の応用として、`member e C` は表現 `e` の値が項 `C` の指示に属すると述べる。`C` の解釈の要素について有界に量化し、その要素で拡張した割り当てのもとで、表現を先頭スロットへずらした読み出しを要求する。
 <!--/-->
@@ -429,7 +429,7 @@ The two directions assemble into the advertised form. `adequate` states that the
 <!--en-->
 The outward reader of `member` eliminates the truncated bounded existential and receives a member `x`, its membership proof `h`, and the proof `p` that `x`'s extended assignment satisfies the expression reader. Applying adequacy outward converts `p` into the equation `fst x ≡ value e ...`; transporting `h` along that equation turns membership of `fst x` into membership of the denoted value. The target is the membership proposition `value e ... ∈ fst (⟦ C ⟧ γ)`, whose second component supplies exactly the propositionhood required by `rec₁`.
 <!--zh-->
-`member` 的向外读式消去截断的有界存在，得到成员 `x`、其隶属证明 `h`，以及「`x` 的扩展赋值满足表达式读式」的证明 `p`。把充分性沿向外方向施于 `p`，得到等式 `fst x ≡ value e ...`；再沿这条等式搬运 `h`，便把 `fst x` 的隶属变成所指取值的隶属。目标正是隶属命题 `value e ... ∈ fst (⟦ C ⟧ γ)`，其第二分量给出 `rec₁` 所需的命题性证明。
+`member` 的向外读式消去截断的有界存在，得到元素 `x`、其成员关系证明 `h`，以及「`x` 的扩展赋值满足表达式读式」的证明 `p`。把充分性沿向外方向施于 `p`，得到等式 `fst x ≡ value e ...`；再沿这条等式搬运 `h`，便把 `fst x` 的成员关系变成所指取值的成员关系。目标正是成员关系命题 `value e ... ∈ fst (⟦ C ⟧ γ)`，其第二分量给出 `rec₁` 所需的命题性证明。
 <!--ja-->
 `member` の外向きの読みは、截断された有界存在を消去し、要素 `x`、その所属の証明 `h`、そして `x` で拡張した割り当てが表現の読みを満たす証明 `p` を受け取る。妥当性を外向きに `p` に適用すると等式 `fst x ≡ value e ...` が得られ、その等式に沿って `h` を輸送すれば、`fst x` の所属が表現の値の所属へ移る。対象は所属命題 `value e ... ∈ fst (⟦ C ⟧ γ)` であり、その第二成分が `rec₁` に必要な命題性の証明を与える。
 <!--/-->
@@ -446,7 +446,7 @@ The outward reader of `member` eliminates the truncated bounded existential and 
 <!--en-->
 The inward reader must exhibit the member, and the value of `e` itself serves, once it is made an element of the model. It is a member of `fst (⟦ C ⟧ γ)` by hypothesis, and the interpretation of the term is constructible, so transitivity of `L` hands over the constructibility certificate for the value: that is exactly what `isL-trans` does here. This use of transitivity is different in kind from the proposition-valued target restriction on truncation elimination: no truncation is in play, and what is produced is the explicit data that makes the ambient value a pair of itself and its certificate. With that, `x` is exactly such a pair, and the entry at the extended assignment projects to the value definitionally, so the recursive `into` receives the path `refl`.
 <!--zh-->
-向内读式必须给出那个成员，而表达式 `e` 的取值本身即可充当，只需先把它变成模型的元素。由前提它是 `fst (⟦ C ⟧ γ)` 的成员，而该词项的解释可构造，于是 `L` 的传递性给出该取值的可构造性证书：这正是 `isL-trans` 在此处所做的事。这里没有消去截断；证书与周遭取值组成显式的模型元素 `x`，作为有界存在的见证。扩展赋值处的首项按定义投影为该取值，故递归的 `into` 收到路径 `refl`。
+向内读式必须给出那个元素，而表达式 `e` 的取值本身即可充当，只需先把它变成模型的元素。由前提它是 `fst (⟦ C ⟧ γ)` 的元素，而该词项的解释可构造，于是 `L` 的传递性给出该取值的可构造性证书：这正是 `isL-trans` 在此处所做的事。这里没有消去截断；证书与周遭取值组成显式的模型元素 `x`，作为有界存在的见证。扩展赋值处的首项按定义投影为该取值，故递归的 `into` 收到路径 `refl`。
 <!--ja-->
 内向きの読みはその要素を示さねばならないが、表現 `e` の値そのものを模型の要素にすれば証人になる。前提によりそれは `fst (⟦ C ⟧ γ)` の要素であり、項の解釈は構成可能なので、`L` の推移性がその値の構成可能性の証明書を与える。ここで `isL-trans` がしているのはまさにそれである。截断の消去は行われない。証明書と周囲の値を組にした明示的な模型要素 `x` が、有界存在の証人になる。拡張された割り当ての先頭は定義によりその値へ射影されるので、帰納的な `into` は経路 `refl` を受け取る。
 <!--/-->
@@ -536,9 +536,9 @@ The reader of the previous section recognizes a value through its Kuratowski pai
 <!--zh-->
 ## 以外延给出集合
 
-上一节的结构读式经由 Kuratowski 配对层识别取值；而许多递归子句要说的却是「一个集合的成员是什么」。二者是同类陈述：模型中的一条一阶公式，读回周遭层级后，恰能指认槽位中的取值。本节构造外延形状。
+上一节的结构读式经由 Kuratowski 配对层识别取值；而许多递归子句要说的却是「一个集合的元素是什么」。二者是同类陈述：模型中的一条一阶公式，读回周遭层级后，恰能指认槽位中的取值。本节构造外延形状。
 
-`extAt`{.Agda} y φ 对槽位 `y`{.Agda} 中的集合断言：其成员恰为满足一元条件 `φ`{.Agda} 的对象。它的外层结构是两条无界全称量词经普通合取相连：一条从属于该集合推出 `φ`{.Agda}，一条反向。`extAt`{.Agda} 自身不引入新的命题截断，但参数 `φ`{.Agda} 是任意公式，内部可以含有自己的量词与截断存在。由于外层的证据只是普通的合取，它的两种读法就是该合取的两个投影，而它的引入也就是二者的有序对。这正是一条描述所需的强度：该公式刻画一个候选集合，对这样的集合是否存在不置一词；存在与否，属于日后给出该取值的构造的事。
+`extAt y φ`{.Agda} 对槽位 `y`{.Agda} 中的集合断言：其元素恰为满足一元条件 `φ`{.Agda} 的对象。它的外层结构是两条无界全称量词经普通合取相连：一条从属于该集合推出 `φ`{.Agda}，一条反向。`extAt`{.Agda} 自身不引入新的命题截断，但参数 `φ`{.Agda} 是任意公式，内部可以含有自己的量词与截断存在。由于外层的证据只是普通的合取，它的两种读法就是该合取的两个投影，而它的引入也就是二者的有序对。这正是一条描述所需的强度：该公式刻画一个候选集合，对这样的集合是否存在不置一词；存在与否，属于日后给出该取值的构造的事。
 <!--ja-->
 ## 外延によって集合を定める
 
@@ -550,7 +550,7 @@ The reader of the previous section recognizes a value through its Kuratowski pai
 <!--en-->
 The definition binds one fresh variable for the candidates and is the conjunction of two unbounded universal quantifiers: every member of the set in slot `y`{.Agda} satisfies `φ`{.Agda}, and every satisfier is a member. The outer connective is an ordinary conjunction and `extAt`{.Agda} wraps neither implication in truncation, but the condition `φ`{.Agda} is passed through as given and may be any formula, with quantifiers or truncated existentials inside. What `extAt`{.Agda} itself fixes is only the outer shape: a pair of implications under a quantifier, each side being a function on model elements and their satisfaction proofs. That is exactly why the formula can serve as a description: it constrains a value without ever asserting one.
 <!--zh-->
-该定义为候选者绑定一个新变元，整体是两条无界全称量词的合取：槽位 `y`{.Agda} 中集合的每个成员满足 `φ`{.Agda}，而每个满足者也属于该集合。外层的联结词是普通合取，`extAt`{.Agda} 不把任何一条蕴含包进截断，但条件 `φ`{.Agda} 按原样传入，可以是任何公式，内部含有量词或截断存在均可。`extAt`{.Agda} 自身固定的只是外层形状：量词之下的一对蕴含，每侧都是模型元素及其满足证明上的函数。这正是该公式得以充当描述的原因：它约束一个取值，却从不断言取值的存在。
+该定义为候选者绑定一个新变元，整体是两条无界全称量词的合取：槽位 `y`{.Agda} 中集合的每个元素满足 `φ`{.Agda}，而每个满足者也属于该集合。外层的联结词是普通合取，`extAt`{.Agda} 不把任何一条蕴含包进截断，但条件 `φ`{.Agda} 按原样传入，可以是任何公式，内部含有量词或截断存在均可。`extAt`{.Agda} 自身固定的只是外层形状：量词之下的一对蕴含，每侧都是模型元素及其满足证明上的函数。这正是该公式得以充当描述的原因：它约束一个取值，却从不断言取值的存在。
 <!--ja-->
 この定義は候補のための新しい変数を一つ束縛し、全体として二つの非有界な全称量化の連言である。すなわち、スロット `y`{.Agda} の集合のすべての要素が `φ`{.Agda} を満たすこと、そして `φ`{.Agda} を満たすすべてのものが要素であること。外側の結合子は普通の連言であり、`extAt`{.Agda} はどちらの含意も切り捨てで包まないが、条件 `φ`{.Agda} はそのまま渡され、量化子や切り捨てられた存在を内部に含む任意の論理式であって構わない。`extAt`{.Agda} 自体が確定するのは外側の形だけである。量化子の下にある二つの含意の対であり、各側は模型の要素とその充足の証明の上の関数である。これこそ、この論理式が記述として機能する理由である。値を束縛するだけで、値の存在を主張することはないのである。
 <!--/-->
@@ -593,7 +593,7 @@ The two readers are the two projections of the outer conjunction. From an inhabi
 <!--en-->
 Introduction runs the projections in reverse and is the ordered pair of the two implications, each supplied as a function. Hence `extAt-in-both`{.Agda}: a clause that can establish both directions of its condition satisfies the formula by pairing the two functions, with no further work at the outer level; any quantifier or truncation work happens inside `φ`{.Agda} and is discharged there. The statement is worth reading as it stands: it produces an inhabitant of a satisfaction judgment from two functions, and asserts nothing about the existence of a set whose members satisfy `φ`{.Agda}. Whether such a set is ever supplied is decided where the value is constructed, not here.
 <!--zh-->
-引入把两个投影反向运行，就是那两条蕴含的有序对，各以函数形式给出。于是有 `extAt-in-both`{.Agda}：一个能同时建立其条件两个方向的子句，只需把两个函数配成对，便满足这条公式，外层无须再做任何事；量词或截断的工作都发生在 `φ`{.Agda} 内部，并在那里完成。这条陈述本身值得细读：它从两个函数造出满足判断的一个证明，而对「成员满足 `φ`{.Agda} 的集合是否存在」不作任何断言。这样的集合是否真的被给出，由构造取值之处决定，与此处无关。
+引入把两个投影反向运行，就是那两条蕴含的有序对，各以函数形式给出。于是有 `extAt-in-both`{.Agda}：一个能同时建立其条件两个方向的子句，只需把两个函数配成对，便满足这条公式，外层无须再做任何事；量词或截断的工作都发生在 `φ`{.Agda} 内部，并在那里完成。这条陈述本身值得细读：它从两个函数造出满足判断的一个证明，而对「元素满足 `φ`{.Agda} 的集合是否存在」不作任何断言。这样的集合是否真的被给出，由构造取值之处决定，与此处无关。
 <!--ja-->
 導入は射影を逆向きに走らせるもので、二つの含意をそれぞれ関数として与えたときの順序対である。そこで `extAt-in-both`{.Agda} が成り立つ。条件の両方向をともに確立できる節は、二つの関数を対にするだけでこの論理式を充足し、外側の層ではそれ以上の仕事は要らない。量化子や切り捨てに伴う仕事はすべて `φ`{.Agda} の内部で起き、そこで片づけられる。この主張はそのまま読む価値がある。二つの関数から充足の判断の要素を作るのであって、`φ`{.Agda} を満たす要素をもつ集合の存在については何も主張しない。そのような集合が実際に供給されるかどうかは、値が構成される側で決まる事柄であり、ここではない。
 <!--/-->
@@ -852,7 +852,7 @@ A quantified body is evaluated after adjoining a value at the front of the curre
 <!--en-->
 `numL k`{.Agda} is defined here and proves the ambient numeral `# k`{.Agda} constructible. The internal numeral `numeralL k`{.Agda} already carries constructibility of its projection, and `numeralL-fst k`{.Agda} identifies that projection with `# k`{.Agda}; transporting the certificate along this path gives `⟨ isL (# k) ⟩`{.Agda}. The following private definitions provide `BoundedFo InL` data for the formulas used to recognize the empty tag, combining bounded shape with constructibility witnesses for any constants they contain. In particular, `sgl0At k`{.Agda} characterizes the set in slot `k`{.Agda} as `{∅}`: it has an empty member and every one of its members is empty. `bddSgl0` supplies that combined data; it is not a separate Δ₀ theorem.
 <!--zh-->
-`numL k`{.Agda} 在此定义，并证明周遭数码 `# k`{.Agda} 可构造。内部数码 `numeralL k`{.Agda} 已带有其投影可构造的证明，`numeralL-fst k`{.Agda} 把该投影与 `# k`{.Agda} 等同；沿此路径搬运证书，便得到 `⟨ isL (# k) ⟩`{.Agda}。随后的私有定义为识别空标签的公式提供 `BoundedFo InL` 数据：既记录有界形状，也为其中出现的常元给出可构造性见证。其中 `sgl0At k`{.Agda} 把槽位 `k`{.Agda} 中的集合刻画为 `{∅}`：它有一个空成员，并且每个成员都是空的。`bddSgl0` 给出这种组合数据，而不是一条独立的 Δ₀ 定理。
+`numL k`{.Agda} 在此定义，并证明周遭数码 `# k`{.Agda} 可构造。内部数码 `numeralL k`{.Agda} 已带有其投影可构造的证明，`numeralL-fst k`{.Agda} 把该投影与 `# k`{.Agda} 等同；沿此路径搬运证书，便得到 `⟨ isL (# k) ⟩`{.Agda}。随后的私有定义为识别空标签的公式提供 `BoundedFo InL` 数据：既记录有界形状，也为其中出现的常元给出可构造性见证。其中 `sgl0At k`{.Agda} 把槽位 `k`{.Agda} 中的集合刻画为 `{∅}`：它有一个空元素，并且每个元素都是空的。`bddSgl0` 给出这种组合数据，而不是一条独立的 Δ₀ 定理。
 <!--ja-->
 `numL k`{.Agda} はここで定義され、周囲の数項 `# k`{.Agda} が構成可能であることを示す。内部数項 `numeralL k`{.Agda} はその射影の構成可能性をすでに備え、`numeralL-fst k`{.Agda} がその射影を `# k`{.Agda} と同一視する。このパスに沿って証明を輸送すると `⟨ isL (# k) ⟩`{.Agda} が得られる。続く非公開の定義は、空のタグを認識する論理式について `BoundedFo InL` のデータを与える。これは有界な形と、現れる定数の構成可能性の証人を組み合わせたものである。特に `sgl0At k`{.Agda} はスロット `k`{.Agda} の集合を `{∅}` と特徴づける。空の要素をもち、すべての要素が空であるという条件である。`bddSgl0` はこの組み合わせたデータを与えるもので、独立な Δ₀ 定理ではない。
 <!--/-->
@@ -869,7 +869,7 @@ private
 <!--en-->
 `pair0At k j`{.Agda} characterizes the set in slot `k`{.Agda} as the unordered pair `{∅, W}`, where `W` is the value of the original assignment at slot `j`{.Agda}; under its inner binder that same value is addressed by `suc j`{.Agda}. It is not a Kuratowski pair of the two slot values. The formula `tag0At s x`{.Agda} then combines `sgl0At`{.Agda} and `pair0At`{.Agda}: its two distinguished members are `{∅}` and `{∅, W}`, so the set at `s`{.Agda} is the Kuratowski pair `pr ∅ W`. The certificates `bddPair0`{.Agda} and `bddTag0`{.Agda} supply `BoundedFo InL` data for these descriptions, including the required constructibility witnesses for constants.
 <!--zh-->
-`pair0At k j`{.Agda} 把槽位 `k`{.Agda} 中的集合刻画为无序对 `{∅, W}`，其中 `W` 是原赋值槽位 `j`{.Agda} 的取值；进入内部量词后，同一取值由 `suc j`{.Agda} 指向。它并不是两个槽位取值的 Kuratowski 对。`tag0At s x`{.Agda} 再组合 `sgl0At`{.Agda} 与 `pair0At`{.Agda}：两个指定成员分别是 `{∅}` 与 `{∅, W}`，所以槽位 `s`{.Agda} 中的集合就是 Kuratowski 对 `pr ∅ W`。`bddPair0`{.Agda} 与 `bddTag0`{.Agda} 为这些描述给出 `BoundedFo InL` 数据，其中包括所需的常元可构造性见证。
+`pair0At k j`{.Agda} 把槽位 `k`{.Agda} 中的集合刻画为无序对 `{∅, W}`，其中 `W` 是原赋值槽位 `j`{.Agda} 的取值；进入内部量词后，同一取值由 `suc j`{.Agda} 指向。它并不是两个槽位取值的 Kuratowski 对。`tag0At s x`{.Agda} 再组合 `sgl0At`{.Agda} 与 `pair0At`{.Agda}：两个指定元素分别是 `{∅}` 与 `{∅, W}`，所以槽位 `s`{.Agda} 中的集合就是 Kuratowski 对 `pr ∅ W`。`bddPair0`{.Agda} 与 `bddTag0`{.Agda} 为这些描述给出 `BoundedFo InL` 数据，其中包括所需的常元可构造性见证。
 <!--ja-->
 `pair0At k j`{.Agda} は、スロット `k`{.Agda} の集合を非順序対 `{∅, W}` と特徴づける。ここで `W` は元の割り当てのスロット `j`{.Agda} の値であり、内側の量化子に入ると同じ値を `suc j`{.Agda} が指す。二つのスロットの値からなる Kuratowski 対ではない。`tag0At s x`{.Agda} は `sgl0At`{.Agda} と `pair0At`{.Agda} を組み合わせる。指定された二要素が `{∅}` と `{∅, W}` なので、スロット `s`{.Agda} の集合は Kuratowski 対 `pr ∅ W` である。`bddPair0`{.Agda} と `bddTag0`{.Agda} は、これらの記述の `BoundedFo InL` データを与え、必要な定数の構成可能性の証人も含む。
 <!--/-->
@@ -904,7 +904,7 @@ The remainder of `bddTag0`{.Agda} pairs the singleton certificate, used for the 
 <!--en-->
 `bddCons`{.Agda} assembles everything the extension formula needs. Reading its three conjuncts: the extended graph holds an entry that is the empty-set tag over the value at `m`{.Agda}, the new leading entry, certified by `bddTag0`{.Agda} at the shifted slot; every entry of the old graph reappears with its key shifted to the successor, certified by `bddShift`{.Agda} two arities up; and the remaining conjunct repeats the same two certificates for the membership direction that reads back out of the extension. Each conjunct's certificate lives at the depth its quantifiers create, which is why the arities in the annotations grow to `suc (suc n)`{.Agda}.
 <!--zh-->
-`bddCons`{.Agda} 装配扩展公式所需的一切。按其三个合取项来读：扩展后的图持有一个条目，即架在 `m`{.Agda} 处之值上的空集标签，也就是新的首条目，由移位槽位处的 `bddTag0`{.Agda} 作证；旧图的每个条目带其后移的键重现，由高两个元数处的 `bddShift`{.Agda} 作证；其余合取项为从扩展中向外读出的隶属方向重复这两个证书。每个合取项的证书位于其量词所创造的深度，这正说明注记中的元数增长到 `suc (suc n)`{.Agda}。
+`bddCons`{.Agda} 装配扩展公式所需的一切。按其三个合取项来读：扩展后的图持有一个条目，即架在 `m`{.Agda} 处之值上的空集标签，也就是新的首条目，由移位槽位处的 `bddTag0`{.Agda} 作证；旧图的每个条目带其后移的键重现，由高两个元数处的 `bddShift`{.Agda} 作证；其余合取项为从扩展中向外读出的成员关系方向重复这两个证书。每个合取项的证书位于其量词所创造的深度，这正说明注记中的元数增长到 `suc (suc n)`{.Agda}。
 <!--ja-->
 `bddCons`{.Agda} は拡張の論理式が必要とするすべてを組み立てる。三つの連言を読むと、拡張されたグラフは `m`{.Agda} の値の上に載った空集合タグである項目、すなわち新しい先頭の項目を保持し、ずらしたスロットでの `bddTag0`{.Agda} が証明する。旧グラフの各項目は鍵を後者へずらして現れ、二つアリティが上の `bddShift`{.Agda} が証明する。残りの連言は、拡張の外へ読み出す所属の方向について同じ二つの証明書を繰り返す。各連言の証明書はその量化子が作る深さに置かれるため、注釈のアリティが `suc (suc n)`{.Agda} まで増えるのである。
 <!--/-->
@@ -987,11 +987,11 @@ This chapter built first-order formulas with which a satisfaction clause recogni
 
 ## 求一个词项的值，与两个原子
 
-一个词项是变元或常元，故求值码化词项的子句有两种情形：变元的取值是环境在其键处记录的东西，而常元的取值就是那个常元，在任何环境中都一样。两个原子随后求出两个词项码的值并在模型中比较所得，其一断言隶属，另一断言相等；它们的载荷是一对词项码，满足关系表在该处没有条目，这正是该子句自行构造查表、而不由框架代劳的原因。
+一个词项是变元或常元，故求值码化词项的子句有两种情形：变元的取值是环境在其键处记录的东西，而常元的取值就是那个常元，在任何环境中都一样。两个原子随后求出两个词项码的值并在模型中比较所得，其一断言成员关系，另一断言相等；它们的载荷是一对词项码，满足关系表在该处没有条目，这正是该子句自行构造查表、而不由框架代劳的原因。
 
 ## 有界量词
 
-有界量词的载荷是「词项码与公式码的对」。界由两情形的求值读式在环境中求值，主体的取值在高一个元数处读出，而被推入的取值同时限于载体与所得界中的元素。同时遍历载体与那个界并非冗余：参照语义是在载体上作量化、再以「属于那个界」设防，而一个界完全可以有落在载体之外的成员；只在那个界上作量化，就会索要表所没有的条目。
+有界量词的载荷是「词项码与公式码的对」。界由两情形的求值读式在环境中求值，主体的取值在高一个元数处读出，而被推入的取值同时限于载体与所得界中的元素。同时遍历载体与那个界并非冗余：参照语义是在载体上作量化、再以「属于那个界」设防，而一个界完全可以有落在载体之外的元素；只在那个界上作量化，就会索要表所没有的条目。
 
 ## 小结
 

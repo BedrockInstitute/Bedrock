@@ -28,7 +28,7 @@ module L.GCH.SkolemHull {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
 ```agda
-open import FOL.ZFStructure using ( ZFStructure; module hPropStructure; _↾_ )
+open import FOL.ZFStructure using ( ZFStructure; ZFStructureₕ; module hPropView; _↾_ )
 open import FOL.Syntax using
   ( Formula; Term; con; var; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊥̇
   ; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
@@ -64,7 +64,7 @@ open import L.Coding.CodeConstructibility {ℓ} using ( cup-out; cup-inl; cup-in
 This chapter builds the Skolem hull of a starting set inside a constructible stage, proves that the hull is elementary in the stage, collapses it onto a transitive set by a membership-preserving bijection, and records how satisfaction and bounded formulas travel across that collapse. The key distinction is that the hull itself is only a coded image; transitivity appears only after the Mostowski collapse.
 <!--zh-->
 
-本章在可构造层内对起始集合作 Skolem 壳，证明壳在层中初等，再经保持隶属的双射把它塌缩到传递集上，并整理满足关系与有界公式如何跨过这次塌缩。关键区别是：壳本身只是编码所得的像；传递性只在 Mostowski 塌缩之后出现。
+本章在可构造层内对起始集合作 Skolem 壳，证明壳在层中初等，再经保持成员关系的双射把它塌缩到传递集上，并整理满足关系与有界公式如何跨过这次塌缩。关键区别是：壳本身只是编码所得的像；传递性只在 Mostowski 塌缩之后出现。
 <!--ja-->
 
 本章は、構成可能段階の中の始集合の Skolem 包を作り、包が段階の中で初等的であることを示し、所属を保つ全単射によって推移的集合へ崩壊させ、充足関係と有界論理式が崩壊を越えてどう移るかを整理する。重要なのは、包そのものはコードで与えられた像にすぎず、推移性は Mostowski 崩壊の後に初めて得られる、という点である。
@@ -73,7 +73,7 @@ This chapter builds the Skolem hull of a starting set inside a constructible sta
 <!--en-->
 The chapter runs on classical logic, and the hypothesis enters here. The hull construction decides satisfiability of queries, the extensionality proof decides membership in both directions, and the elementarity transfer eliminates double negation; each of these steps consumes excluded middle.
 <!--zh-->
-本章依赖经典逻辑，假设在此引入。壳的构造要判定查询的可满足性，外延性证明要双向判定隶属，初等性移送要消去双重否定；这些步骤都在消耗排中律。
+本章依赖经典逻辑，假设在此引入。壳的构造要判定查询的可满足性，外延性证明要双向判定成员关系，初等性移送要消去双重否定；这些步骤都在消耗排中律。
 <!--ja-->
 本章は古典論理に依拠し、仮定はここで入る。包の構成は問いの充足可能性を判定し、外延性の証明は両方向で所属を判定し、初等性の移送は二重否定を除去する。これらの段階はどれも排中律を消費する。
 <!--/-->
@@ -90,7 +90,7 @@ open import Cubical.Data.Vec using ( _++_ )
 <!--en-->
 The object language is the book's first-order language: formulas built from terms by equality and membership, closed under the propositional connectives and under unbounded and bounded quantifiers. The predicate `Δ₀` singles out the formulas whose quantifiers are all bounded.
 <!--zh-->
-对象语言即本书的一阶语言：公式由项经等词与隶属构成，对命题联结词、非有界量词与有界量词封闭。谓词 `Δ₀` 挑出全部量词都有界的公式。
+对象语言即本书的一阶语言：公式由项经等词与成员关系构成，对命题联结词、非有界量词与有界量词封闭。谓词 `Δ₀` 挑出全部量词都有界的公式。
 <!--ja-->
 対象言語は本書の一階の言語である。論理式は項から等号と所属で作られ、命題の結合子、非有界と有界の量化子の下で閉じている。述語 `Δ₀` は、すべての量化子が有界である論理式を選び出す。
 <!--/-->
@@ -106,7 +106,7 @@ The predicate `Δ₀` is an inductive certificate following the structure of a f
 <!--en-->
 Parameter abstraction replaces constant occurrences by extra environment variables; constant mapping and relabelling change constant alphabets while preserving semantics; and `renameTm` renames variable slots along a context map, providing the weakening by `suc` used below. The ambient hierarchy is opened with its extensionality, the property that sets with the same members are equal.
 <!--zh-->
-参数抽象用额外的环境变元替换常元出现；常元映射与常元改名在保持语义的同时改变常元字母表；`renameTm` 则沿语境映射改名变元槽，由此得到下文以 `suc` 实现的弱化。外围层级连同其外延性一同打开，外延性即成员相同的集合相等。
+参数抽象用额外的环境变元替换常元出现；常元映射与常元改名在保持语义的同时改变常元字母表；`renameTm` 则沿语境映射改名变元槽，由此得到下文以 `suc` 实现的弱化。外围层级连同其外延性一同打开，外延性即元素相同的集合相等。
 <!--ja-->
 パラメータ抽象は定数の出現を追加の環境変数で置き換え、定数写像と定数改名は意味を保って定数アルファベットを変える。`renameTm` は文脈写像に沿って変数の位置を改名し、これにより以下で `suc` による弱化が得られる。周囲の階層は外延性とともに開かれる。同じ要素をもつ集合は等しい、という性質である。
 <!--/-->
@@ -114,7 +114,7 @@ Parameter abstraction replaces constant occurrences by extra environment variabl
 <!--en-->
 Presentations index the elements of a set by a small type with an embedding, and their fibers name presented elements. The collapse constructs a transitive image of any carrier `X`; extensionality of the restricted membership relation is needed later to make the collapse map injective on `X`. Δ₀ smallness separates a bounded-definable class into a set. The empty set belongs to every definability successor, and `Lset-suc` identifies the stage at a successor index with the definable powerset of the preceding stage.
 <!--zh-->
-呈现用一个带嵌入的小类型索引集合的元素，其纤维为被呈现元素命名。塌缩对任意载体 `X` 构造一个传递像；要使塌缩映射在 `X` 上单射，还需受限隶属关系满足外延性。Δ₀ 小性把有界可定义的类分离成集合。空集属于每个可定义性后继，而 `Lset-suc` 把后继指标处的层认同为前一层的可定义幂集。
+呈现用一个带嵌入的小类型索引集合的元素，其纤维为被呈现元素命名。塌缩对任意载体 `X` 构造一个传递像；要使塌缩映射在 `X` 上单射，还需受限成员关系满足外延性。Δ₀ 小性把有界可定义的类分离成集合。空集属于每个可定义性后继，而 `Lset-suc` 把后继指标处的层认同为前一层的可定义幂集。
 <!--ja-->
 提示は、埋め込みをもつ小さな型で集合の要素を索引づけ、その繊維が提示された要素を名指す。崩壊は任意の台 `X` から推移的な像を構成し、崩壊写像を `X` 上で単射にするために制限された所属関係の外延性を用いる。Δ₀ の小ささは、有界に定義できるクラスを集合へ分離する。空集合は各定義可能性後続に属し、`Lset-suc` は後続添字の段階を直前の段階の定義可能冪集合と同一視する。
 <!--/-->
@@ -122,7 +122,7 @@ Presentations index the elements of a set by a small type with an embedding, and
 <!--en-->
 The constructible stage `Lset α` is transitive and its construction is monotone in the index, so a larger index yields a larger stage. The ordinal facts used repeatedly in the hull argument are that members of ordinals are ordinals, that `ω` is an ordinal, that numerals belong to `ω`, and that the empty set is an ordinal.
 <!--zh-->
-可构造层 `Lset α` 是传递的，且其构造对指数单调，故更大的指数给出更大的层。壳论证中反复用到的序数事实有：序数的成员是序数、`ω` 是序数、数码属于 `ω`、空集是序数。
+可构造层 `Lset α` 是传递的，且其构造对指数单调，故更大的指数给出更大的层。壳论证中反复用到的序数事实有：序数的元素是序数、`ω` 是序数、数码属于 `ω`、空集是序数。
 <!--ja-->
 構成可能な段階 `Lset α` は推移的であり、その構成は指数について単調なので、より大きな指数はより大きな段階を与える。包の議論で繰り返し使う順序数の事実は、順序数の要素が順序数であること、`ω` が順序数であること、数項が `ω` に属すること、空集合が順序数であることである。
 <!--/-->
@@ -130,7 +130,7 @@ The constructible stage `Lset α` is transitive and its construction is monotone
 <!--en-->
 Well orders come with a least-element selector: from the truncated existence of some element satisfying a predicate, it returns an element that satisfies the predicate and is least in the well order. The rank characterization of stage membership and the stage orders restricted to a stage carrier feed this selector its inputs, and the coding of unions and singletons builds the finite starting sets used later.
 <!--zh-->
-良序自带最小元选择器：从「存在某元素满足谓词」的截断陈述出发，它返回一个满足谓词且在良序下最小的元素。层隶属的秩刻画与限制到层载体的层序为该选择器供给输入，而并与单点的编码则构造后文使用的有限起始集合。
+良序自带最小元选择器：从「存在某元素满足谓词」的截断陈述出发，它返回一个满足谓词且在良序下最小的元素。层成员关系的秩刻画与限制到层载体的层序为该选择器供给输入，而并与单点的编码则构造后文使用的有限起始集合。
 <!--ja-->
 整列順序には最小要素の選択子が伴う。述語を満たす要素の存在の切り詰められた主張から、述語を満たし整列順序で最小の要素を返す。段階の所属のランクによる特徴づけと、段階の台に制限した段階の順序がこの選択子に入力を供給し、和と単元を符号化する仕組みが、後で使う有限の始集合を作る。
 <!--/-->
@@ -146,7 +146,7 @@ The environments of this chapter are vectors of carrier elements, and the operat
 <!--en-->
 The empty type represents contradiction: `⊥*-rec` eliminates an inhabitant into any target, while `isProp⊥` allows a truncation to be eliminated when the target is contradiction. Satisfaction of existential formulas and membership in presented sets are expressed by propositional truncation, so they retain existence without choosing a witness.
 <!--zh-->
-空类型表示矛盾：`⊥*-rec` 可把其元素消去到任意目标，而 `isProp⊥` 使目标为矛盾时可以消去命题截断。存在公式的满足以及呈现集合中的隶属用命题截断表达，因而保留存在性而不选定见证。
+空类型表示矛盾：`⊥*-rec` 可把其元素消去到任意目标，而 `isProp⊥` 使目标为矛盾时可以消去命题截断。存在公式的满足以及呈现集合中的成员关系用命题截断表达，因而保留存在性而不选定见证。
 <!--ja-->
 空型は矛盾を表す。`⊥*-rec` はその要素から任意の目標へ消去し、`isProp⊥` は目標が矛盾であるとき命題的切り詰めの消去を可能にする。存在論理式の充足と提示された集合への所属は命題的切り詰めで表され、証人を選ばずに存在だけを保持する。
 <!--/-->
@@ -170,7 +170,7 @@ open InfinitySet using ( ω; sucV )
 <!--en-->
 The small membership relation `_∈ₛ_` and its bridge `∈∈ₛ` to the ambient membership `_∈ˢ_` connect the presented reading of a set with its reading inside the hierarchy: what a presentation records internally is exactly what holds in the universe.
 <!--zh-->
-小隶属关系 `_∈ₛ_` 及其与外围隶属 `_∈ˢ_` 之间的桥 `∈∈ₛ`，把一个集合的呈现读法与它在层级中的读法连接起来：呈现内部所记录的，恰是宇宙中成立的。
+小成员关系 `_∈ₛ_` 及其与外围成员关系 `_∈ˢ_` 之间的桥 `∈∈ₛ`，把一个集合的呈现读法与它在层级中的读法连接起来：呈现内部所记录的，恰是宇宙中成立的。
 <!--ja-->
 小さな所属の関係 `_∈ₛ_` と、周囲の所属 `_∈ˢ_` への橋 `∈∈ₛ` は、集合の提示された読みと、階層の中での読みをつなぐ。提示が内部的に記録することは、宇宙で成り立つことと同じである。
 <!--/-->
@@ -183,13 +183,13 @@ open import Cubical.HITs.CumulativeHierarchy.Properties
 <!--en-->
 Opening the ambient structure fixes the unqualified symbols for ambient equality and membership; restricted structures introduced below retain their own semantic interpretations.
 <!--zh-->
-打开外围结构后，无修饰的等号与隶属符号固定表示外围关系；下文的受限结构仍各有自己的语义解释。
+打开外围结构后，无修饰的等号与成员关系符号固定表示外围关系；下文的受限结构仍各有自己的语义解释。
 <!--ja-->
 周囲の構造を開くことで、修飾のない等号と所属の記号は周囲の関係を表す。一方、制限された各構造は固有の意味論的解釈をもつ。
 <!--/-->
 
 ```agda
-open hPropStructure 𝒮ᵥ
+open hPropView 𝒮ᵥ
 ```
 
 <!--en-->
@@ -203,7 +203,7 @@ open hPropStructure 𝒮ᵥ
 ```agda
 module SemV = FOL.Semantics 𝒮ᵥ using ( _^_; module At )
 open SemV using ( _^_ )
-module CS = hPropStructure 𝒮ʟ using ( S )
+module CS = hPropView 𝒮ʟ using ( S )
 module Cnt = FOL.Manipulation.ConstantOccurrences.ZeroOccurrences CS.S using ( erase; erase-inv )
 ```
 
@@ -223,7 +223,7 @@ module D0 = Δ₀Small {ℓc = ℓ-suc ℓ} {K = ⊥* {ℓ-suc ℓ}} (λ b → �
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module TermAlgebra (𝒮 : ZFStructure (ℓ-suc ℓ))
+module TermAlgebra (𝒮 : ZFStructureₕ (ℓ-suc ℓ))
                    (toSet : ZFStructure.S 𝒮 → V ℓ)
                    (wo : SWO (ZFStructure.S 𝒮))
                    (junk : ZFStructure.S 𝒮)
@@ -243,7 +243,7 @@ The remaining parameters are a default element `junk` and a family of base gener
 <!--en-->
 Only the unqualified Agda name `_∈ˢ_` is hidden from the parameter structure; satisfaction `_⊨₀_` still interprets atomic membership using `𝒮`. Renaming the carrier keeps the chapter's own references to the ambient carrier unambiguous.
 <!--zh-->
-这里只隐藏参数结构中未加限定的 Agda 名 `_∈ˢ_`；满足关系 `_⊨₀_` 仍用 `𝒮` 解释原子隶属。为载体改名，则使本章对外围载体的指称保持无歧义。
+这里只隐藏参数结构中未加限定的 Agda 名 `_∈ˢ_`；满足关系 `_⊨₀_` 仍用 `𝒮` 解释原子成员关系。为载体改名，则使本章对外围载体的指称保持无歧义。
 <!--ja-->
 ここで隠すのは引数構造の修飾されていない Agda 名 `_∈ˢ_` だけであり、充足関係 `_⊨₀_` の原子的所属は引き続き `𝒮` によって解釈される。台の名前を替えるのは、本章が周囲の台を指すときの曖昧さをなくすためである。
 <!--/-->
@@ -255,7 +255,7 @@ Only the unqualified Agda name `_∈ˢ_` is hidden from the parameter structure;
 <!--en-->
 Satisfaction for the term algebra is stated at the trivially empty constant domain: the formulas evaluated are exactly those built without constant symbols, the language of pure membership and equality, and satisfaction is proposition-valued. Every query and closure statement in this section uses this reading.
 <!--zh-->
-项代数的满足在平凡为空的常元域上陈述：被求值的公式恰是无常元符号构成的那些，即纯粹的隶属与相等语言，且满足取值于命题。本节的每条查询与闭合陈述都采用这一读法。
+项代数的满足在平凡为空的常元域上陈述：被求值的公式恰是无常元符号构成的那些，即纯粹的成员关系与相等语言，且满足取值于命题。本节的每条查询与闭合陈述都采用这一读法。
 <!--ja-->
 項代数の充足は、自明に空な定数領域のもとで述べられる。評価される論理式は、定数記号を使わずに作られたものだけで、純粋な所属と等号の言語であり、充足は命題値である。この節の各問いと閉包の主張は、すべてこの読みを用いる。
 <!--/-->
@@ -317,7 +317,7 @@ The search predicate is presented by the formula already stored in the query. It
 <!--en-->
 Given this truncated existence, `search` returns a least satisfying element for the particular strict well-order supplied as the parameter `wo`. Least is meant in that well order; it is not minimality with respect to membership, and not a comparison of ranks.
 <!--zh-->
-有了这条截断存在，`search` 就参数 `wo` 所供给的特定严格良序返回一个最小的满足元素。「最小」指该良序下的最小；它既不是关于隶属的极小，也不是秩的比较。
+有了这条截断存在，`search` 就参数 `wo` 所供给的特定严格良序返回一个最小的满足元素。「最小」指该良序下的最小；它既不是关于成员关系的极小，也不是秩的比较。
 <!--ja-->
 この切り詰められた存在が与えられれば、`search` は、引数 `wo` として渡された特定の狭義整列順序のもとで最小の充足要素を返す。最小とはその整列順序での最小のことであり、所属に関する極小でもランクの比較でもない。
 <!--/-->
@@ -406,7 +406,7 @@ Evaluating a code vector is the same as mapping the evaluation over it, proved b
 <!--en-->
 The hull is presented exactly as the hierarchy presents its sets: a code family together with a valuation. It is the image of the values of all codes, and the presentation may repeat elements, since different codes may evaluate alike. Membership in the hull is therefore only the truncated existence of a code, and nothing in this chapter claims that the hull is transitive or that it is the smallest closed set.
 <!--zh-->
-壳的呈现与层级呈现集合的方式相同：一个码族加一个赋值。它是全部码取值的像；由于不同码可能求值相同，呈现可以重复元素。因此壳中的隶属只是「存在某个码」的截断陈述，本章不主张壳传递，也不主张它是最小的闭合集合。
+壳的呈现与层级呈现集合的方式相同：一个码族加一个赋值。它是全部码取值的像；由于不同码可能求值相同，呈现可以重复元素。因此壳中的成员关系只是「存在某个码」的截断陈述，本章不主张壳传递，也不主张它是最小的闭合集合。
 <!--ja-->
 包の提示は、階層が集合を提示するのと同じ仕方である。コードの族と評価による。包はすべてのコードの値の像であり、異なるコードが同じ値に評価されうるので、提示は要素を重複して持ちえる。したがって包の中の所属は、コードの存在の切り詰められた主張にすぎず、包が推移的であることや、最小の閉じた集合であることは、本章では主張されない。
 <!--/-->
@@ -419,7 +419,7 @@ The hull is presented exactly as the hierarchy presents its sets: a code family 
 <!--en-->
 Membership in the presentation is direct: the value of any code is a member of the hull, witnessed by that very code.
 <!--zh-->
-呈现中的隶属是直接的：任何码的取值都是壳的成员，其见证正是该码本身。
+呈现中的成员关系是直接的：任何码的取值都是壳的元素，其见证正是该码本身。
 <!--ja-->
 提示の中の所属は直接である。どのコードの値も包の要素であり、その証人はそのコード自身である。
 <!--/-->
@@ -432,7 +432,7 @@ Membership in the presentation is direct: the value of any code is a member of t
 <!--en-->
 Thus every satisfiable coded query has a satisfying witness in the hull. The theorem asserts this closure property; it does not characterize all members of the hull as successful least witnesses.
 <!--zh-->
-于是每条可满足的编码查询都在壳中有满足的见证。该定理断言的正是这条闭合性质；它并不把壳的全部成员都刻画为成功的最小见证。
+于是每条可满足的编码查询都在壳中有满足的见证。该定理断言的正是这条闭合性质；它并不把壳的全部元素都刻画为成功的最小见证。
 <!--ja-->
 こうして、充足可能な符号化された問いはどれも、包の中に充足する証人をもつ。この定理が主張するのはこの閉包の性質であり、包のすべての要素を成功した最小の証人として特徴づけるものではない。
 <!--/-->
@@ -611,7 +611,7 @@ It need not identify `q` as the preimage of any previously chosen target witness
 <!--en-->
 The transfer module receives the map together with the atomic hypotheses. Atomic membership and equality are required to agree in both directions across `g`, so that membership and equality atoms become paths of propositions in the induction.
 <!--zh-->
-移送模块收取映射连同原子假设：原子隶属与相等必须沿 `g` 双向一致，如此归纳中的原子隶属与相等才能成为命题的路径。
+移送模块收取映射连同原子假设：原子成员关系与相等必须沿 `g` 双向一致，如此归纳中的原子成员关系与相等才能成为命题的路径。
 <!--ja-->
 移送のモジュールは、写像と原子的な仮定を受け取る。原子的な所属と等号には、`g` を越えた双方向の一致が必要である。そうして初めて、帰納の中の所属と等号のアトムが命題のパスになる。
 <!--/-->
@@ -701,7 +701,7 @@ The mapped weakened term, evaluated at an arbitrary target point `x` followed by
 <!--en-->
 Membership against a term is unchanged by the weakening, in the form the bounded clauses consume; and the next lemma states the side-condition transfer itself.
 <!--zh-->
-对项的隶属不受弱化影响，其形式恰为有界子句所消耗者；下一条引理陈述边条件的转移本身。
+对项的成员关系不受弱化影响，其形式恰为有界子句所消耗者；下一条引理陈述边条件的转移本身。
 <!--ja-->
 項に対する所属は弱めで変わらず、その形は有界の場合が消費するものである。次の補題が、副条件の移送そのものを述べる。
 <!--/-->
@@ -717,7 +717,7 @@ Membership against a term is unchanged by the weakening, in the form the bounded
 <!--en-->
 The side condition of a bounded quantifier transfers across the map. The chain starts by weakening in the source structure, then applies the atomic membership hypothesis at the shifted environment.
 <!--zh-->
-有界量词的边条件跨越映射转移。链条先在源结构中弱化，再在移位环境处应用原子的隶属假设。
+有界量词的边条件跨越映射转移。链条先在源结构中弱化，再在移位环境处应用原子的成员关系假设。
 <!--ja-->
 有界量化子の副条件は、写像を越えて移る。連鎖は、源の構造で弱めることから始まり、ずらした環境のもとで所属の原子的な仮定を適用する。
 <!--/-->
@@ -871,7 +871,7 @@ Forward states that if every inner point in the bound satisfies the matrix, then
 <!--en-->
 The witness principle is applied to the auxiliary formula, returning an inner point `q` whose image lies in the bound but refutes the matrix. The image's membership in the bound is transported back through the weakening and `memPath`, and agreement then lifts the inner satisfaction of the matrix to its image, contradicting the failure.
 <!--zh-->
-见证原理被施加于辅助公式，返回内部点 `q`：其像落在界内却反驳矩阵。像在界内的隶属经弱化与 `memPath` 搬回，一致再把内部对矩阵的满足提升到其像处，与失败相矛盾。
+见证原理被施加于辅助公式，返回内部点 `q`：其像落在界内却反驳矩阵。像在界内的成员关系经弱化与 `memPath` 搬回，一致再把内部对矩阵的满足提升到其像处，与失败相矛盾。
 <!--ja-->
 証人の原理を補助の論理式に施すと、内側の点 `q` が返る。その像は上界に属するが、行列を反証する。像の上界への所属は、弱めと `memPath` を通して運び戻され、一致が行列の内側での充足を像へ持ち上げて、失敗と矛盾する。
 <!--/-->
@@ -1034,7 +1034,7 @@ Transitivity lets bounded formulas be interpreted absolutely between `Lset α` a
 <!--en-->
 The stage carrier is the type of elements that belong to `Lset α`; every hull member and every stage reading below lives in this type.
 <!--zh-->
-层载体是属于 `Lset α` 的元素的类型；下文的每个壳成员与每次层读取都居于该类型。
+层载体是属于 `Lset α` 的元素的类型；下文的每个壳元素与每次层读取都居于该类型。
 <!--ja-->
 段階の台は、`Lset α` に属する要素の型である。以下のどの包の要素も、どの段階での読みも、この型の中にある。
 <!--/-->
@@ -1095,7 +1095,7 @@ The semantics of the substructure is the ambient semantics restricted to `M`: te
 <!--en-->
 The inclusion into the stage pairs each element of the carrier with its stage membership, supplied by the containment hypothesis.
 <!--zh-->
-到层的包含把载体的每个元素与其层隶属配对，后者由包含假设供给。
+到层的包含把载体的每个元素与其层成员关系配对，后者由包含假设供给。
 <!--ja-->
 段階への包含は、台の各要素をその段階での所属と対にする。これは包含の仮定が供給する。
 <!--/-->
@@ -1153,7 +1153,7 @@ Pointwise inclusion commutes with environment lookup; this is the variable case 
 <!--en-->
 Terms agree across the inclusion: a term of the carrier evaluates to the same underlying element whether read in the substructure or read mapped in the stage. Constants are fixed, variables follow the lookups. The transfer machinery is then instantiated at the two membership predicates.
 <!--zh-->
-项在包含两侧一致：载体的项无论在子结构中读取，还是映射后在层中读取，都求得同一底层元素。常元固定，变元随查找而定。移送机制随即在两个隶属谓词处实例化。
+项在包含两侧一致：载体的项无论在子结构中读取，还是映射后在层中读取，都求得同一底层元素。常元固定，变元随查找而定。移送机制随即在两个成员关系谓词处实例化。
 <!--ja-->
 項は包含の両側で一致する。台の項は、部分構造で読んでも、写して段階で読んでも、同じ底の要素に評価される。定数は固定的で、変数は参照に従う。そして移送の仕組みが、二つの所属の述語のもとで具体化される。
 <!--/-->
@@ -1217,7 +1217,7 @@ A starting set `X` is assumed to lie in the stage, and the index `α` is assumed
 <!--en-->
 The embedding of the starting set's presentation lands in the stage carrier: each index names a member of `X`, and the containment hypothesis certifies that this member lies in the stage `Lset α`.
 <!--zh-->
-起始集合呈现的嵌入落入层载体：每个索引指名 `X` 的一个成员，包含假设证明该成员属于层 `Lset α`。
+起始集合呈现的嵌入落入层载体：每个索引指名 `X` 的一个元素，包含假设证明该元素属于层 `Lset α`。
 <!--ja-->
 始集合の提示の埋め込みは、段階の台の中に着地する。各索引は `X` の要素を名指し、包含の仮定がその要素が段階 `Lset α` に属することを証明する。
 <!--/-->
@@ -1243,7 +1243,7 @@ The term algebra is instantiated at the restricted structure of the stage: its c
 <!--en-->
 The hull lies in the stage: every member is the value of some code, and every code value is a member of the stage `Lset α` by the term algebra's own typing. The proof eliminates the truncated presentation and transports along the identification.
 <!--zh-->
-壳位于层内：每个成员都是某个码的取值，而码的取值依项代数自身的类型都属于层 `Lset α`。证明消去截断的呈现，并沿该同一视搬运。
+壳位于层内：每个元素都是某个码的取值，而码的取值依项代数自身的类型都属于层 `Lset α`。证明消去截断的呈现，并沿该同一视搬运。
 <!--ja-->
 包は段階の中にある。すべての要素はあるコードの値であり、コードの値は項代数自身の型づけによって段階 `Lset α` の要素である。証明は切り詰められた提示を消去し、同一視に沿って輸送する。
 <!--/-->
@@ -1259,7 +1259,7 @@ The hull lies in the stage: every member is the value of some code, and every co
 <!--en-->
 Membership reads back only as truncated existence: a member of the hull is the value of some code, with no code selected. This is the honest form of the presentation, since different codes may evaluate alike.
 <!--zh-->
-隶属只能读回为截断的存在：壳的成员是某个码的取值，但没有选定哪个码。这是呈现的诚实形式，因为不同码可能求值相同。
+成员关系只能读回为截断的存在：壳的元素是某个码的取值，但没有选定哪个码。这是呈现的诚实形式，因为不同码可能求值相同。
 <!--ja-->
 所属は、切り詰められた存在としてしか読み戻せない。包の要素はあるコードの値であるが、コードは選ばれない。異なるコードが同じ値に評価しうるので、これが提示の正直な形である。
 <!--/-->
@@ -1273,7 +1273,7 @@ Membership reads back only as truncated existence: a member of the hull is the v
 <!--en-->
 In the other direction no truncation is needed: the value of every code is a member, by the presentation's own introduction rule.
 <!--zh-->
-另一方向无需截断：由呈现自身的引入规则，每个码的取值都是成员。
+另一方向无需截断：由呈现自身的引入规则，每个码的取值都是元素。
 <!--ja-->
 逆方向には切り詰めは要らない。提示自身の導入規則により、どのコードの値も要素である。
 <!--/-->
@@ -1286,7 +1286,7 @@ In the other direction no truncation is needed: the value of every code is a mem
 <!--en-->
 The starting set enters the hull member by member. A member `x` of `X` is presented by an index, and the fiber of the presentation at `x` returns that index.
 <!--zh-->
-起始集合逐成员进入壳。`X` 的成员 `x` 由一个索引呈现，呈现它在 `x` 处的纤维返回该索引。
+起始集合逐元素进入壳。`X` 的元素 `x` 由一个索引呈现，呈现它在 `x` 处的纤维返回该索引。
 <!--ja-->
 始集合は要素ごとに包に入る。`X` の要素 `x` は索引によって提示され、`x` における提示の繊維がその索引を返す。
 <!--/-->
@@ -1300,7 +1300,7 @@ The starting set enters the hull member by member. A member `x` of `X` is presen
 <!--en-->
 The fiber carries the identification of the presented element with `x`, which is the transport used to move memberships along.
 <!--zh-->
-纤维携带被呈现元素与 `x` 的同一视，这正是沿之搬运隶属的通道。
+纤维携带被呈现元素与 `x` 的同一视，这正是沿之搬运成员关系的通道。
 <!--ja-->
 繊維は、提示された要素を `x` と同一視するパスを運び、所属を運ぶときの道すじになる。
 <!--/-->
@@ -1313,7 +1313,7 @@ The fiber carries the identification of the presented element with `x`, which is
 <!--en-->
 The base code at that index evaluates to the presented element, hence to `x`; the transport lands membership of `x` in the hull.
 <!--zh-->
-该索引处的基码求值为被呈现元素，即 `x`；搬运把 `x` 在壳中的隶属落定。
+该索引处的基码求值为被呈现元素，即 `x`；搬运把 `x` 在壳中的成员关系落定。
 <!--ja-->
 その索引での基のコードは、提示された要素、すなわち `x` へ評価される。輸送によって、`x` の包の中の所属が着地する。
 <!--/-->
@@ -1352,7 +1352,7 @@ Assembled once, the containment of the starting set in the hull becomes a single
 <!--en-->
 To compare satisfaction before and after an isomorphism, fix sets `M`, `PM`, and a carrier map `p` from members of `M` to members of `PM`.
 <!--zh-->
-为比较同构前后的满足关系，固定集合 `M`、`PM`，以及把 `M` 的成员映到 `PM` 的成员的载体映射 `p`。
+为比较同构前后的满足关系，固定集合 `M`、`PM`，以及把 `M` 的元素映到 `PM` 的元素的载体映射 `p`。
 <!--ja-->
 同型の前後で充足関係を比較するため、集合 `M`、`PM` と、`M` の要素を `PM` の要素へ送る台の写像 `p` を固定する。
 <!--/-->
@@ -1379,7 +1379,7 @@ module IsoInv (M : S) (PM : S)
 <!--en-->
 Besides the closure condition `p∈`, the map `p` satisfies four hypotheses. `iso-fwd` preserves membership, `iso-bwd` reflects it, and the last two parameters state injectivity on `M` and surjectivity onto the target `PM`.
 <!--zh-->
-除封闭条件 `p∈` 外，映射 `p` 还满足四条假设。`iso-fwd` 保持隶属，`iso-bwd` 反映隶属，最后两个参数陈述 `M` 上的单射性与到目标 `PM` 上的满射性。
+除封闭条件 `p∈` 外，映射 `p` 还满足四条假设。`iso-fwd` 保持成员关系，`iso-bwd` 反映成员关系，最后两个参数陈述 `M` 上的单射性与到目标 `PM` 上的满射性。
 <!--ja-->
 閉性の条件 `p∈` に加えて、写像 `p` には四つの仮定を置く。`iso-fwd` は所属を保存し、`iso-bwd` は所属を反映し、最後の二つの引数は `M` 上の単射性と終域 `PM` への全射性を述べる。
 <!--/-->
@@ -1387,7 +1387,7 @@ Besides the closure condition `p∈`, the map `p` satisfies four hypotheses. `is
 <!--en-->
 The map `p` is injective on `M` and merely surjective onto `PM`. With preservation and reflection, these are exactly the data of a membership isomorphism between the two structures.
 <!--zh-->
-映射 `p` 在 `M` 上单射，且仅仅地满射到 `PM`。与保持、反映合在一起，这恰是两个结构之间隶属同构的全部数据。
+映射 `p` 在 `M` 上单射，且仅仅地满射到 `PM`。与保持、反映合在一起，这恰是两个结构之间成员关系同构的全部数据。
 <!--ja-->
 写像 `p` は `M` 上で単射であり、`PM` へ単に全射である。保存と反映と合わせて、これらはまさに二つの構造の間の所属の同型のデータである。
 <!--/-->
@@ -1395,7 +1395,7 @@ The map `p` is injective on `M` and merely surjective onto `PM`. With preservati
 <!--en-->
 The source carrier pairs each element of `M` with its membership proof, as in every restricted structure of the chapter.
 <!--zh-->
-源载体把 `M` 的每个元素与其隶属证明配对，与本章各受限结构相同。
+源载体把 `M` 的每个元素与其成员关系证明配对，与本章各受限结构相同。
 <!--ja-->
 源の台は、`M` の各要素とその所属の証明を対にする。本章のどの制限された構造とも同じである。
 <!--/-->
@@ -1408,7 +1408,7 @@ The source carrier pairs each element of `M` with its membership proof, as in ev
 <!--en-->
 The target carrier pairs each element of `PM` with its membership proof.
 <!--zh-->
-目标载体把 `PM` 的每个元素与其隶属证明配对。
+目标载体把 `PM` 的每个元素与其成员关系证明配对。
 <!--ja-->
 終域の台は、`PM` の各要素とその所属の証明を対にする。
 <!--/-->
@@ -1421,7 +1421,7 @@ The target carrier pairs each element of `PM` with its membership proof.
 <!--en-->
 The isomorphism lifts to the paired carriers: apply `p` to the underlying element and certify membership in the image.
 <!--zh-->
-同构提升到配对载体：对底层元素施加 `p`，并证明其在像中的隶属。
+同构提升到配对载体：对底层元素施加 `p`，并证明其在像中的成员关系。
 <!--ja-->
 同型は、対になった台へ持ち上がる。底の要素に `p` を施し、像の中での所属を証明するのである。
 <!--/-->
@@ -1476,7 +1476,7 @@ Surjectivity promotes to the paired carriers: every element of the target `PM` i
 <!--en-->
 The general satisfaction-transfer theorem now applies to the predicates of membership in `M` and `PM`; preservation and reflection supply its membership atom.
 <!--zh-->
-一般的满足关系移送定理现可施用于属于 `M` 与属于 `PM` 的谓词；隶属的保持与反映给出其隶属原子情形。
+一般的满足关系移送定理现可施用于属于 `M` 与属于 `PM` 的谓词；成员关系的保持与反映给出其成员关系原子情形。
 <!--ja-->
 一般の充足関係の移送定理を、`M` と `PM` への所属述語に適用できる。所属の保存と反映が、その所属原子式の場合を与える。
 <!--/-->
@@ -1504,7 +1504,7 @@ The map `p` is applied pointwise to environments, so lookups reduce one index at
 <!--en-->
 Terms agree under the map `p`: applying `p` to the value of a term of `M` equals evaluating the mapped term at the mapped environment. Constants are fixed; variables follow the lookups. The membership atoms can now be stated.
 <!--zh-->
-项在映射 `p` 下相一致：对 `M` 的项的值施加 `p`，等于在映射环境处求值映射后的项。常元固定，变元随查找而定。隶属原子由此可陈述。
+项在映射 `p` 下相一致：对 `M` 的项的值施加 `p`，等于在映射环境处求值映射后的项。常元固定，变元随查找而定。成员关系原子由此可陈述。
 <!--ja-->
 項は写像 `p` のもとで一致する。`M` の項の値に `p` を施すことは、写された項を写された環境で評価することと等しくなる。定数は固定的で、変数は参照に従う。所属の原子式がここで述べられる。
 <!--/-->
@@ -1520,7 +1520,7 @@ Terms agree under the map `p`: applying `p` to the value of a term of `M` equals
 <!--en-->
 Membership of atomic terms transfers in both directions: forward, the proof transports inner membership along the term equalities and then applies `iso-fwd`, the preservation of membership.
 <!--zh-->
-原子项的隶属双向转移：正向把内部隶属沿项等式搬运，再施加保持隶属的 `iso-fwd`。
+原子项的成员关系双向转移：正向把内部成员关系沿项等式搬运，再施加保持成员关系的 `iso-fwd`。
 <!--ja-->
 原子項の所属は両方向に移る。順方向は、内側の所属を項の等式に沿って運び、所属を保存する `iso-fwd` に渡す。
 <!--/-->
@@ -1536,7 +1536,7 @@ Membership of atomic terms transfers in both directions: forward, the proof tran
 <!--en-->
 The forward transport lands at membership after applying `p`; backward reflects that membership through the isomorphism, restoring the inner membership along the term equalities.
 <!--zh-->
-正向搬运落在施加 `p` 后的隶属上；反向经由同构反映该隶属，沿项等式恢复内部的隶属。
+正向搬运落在施加 `p` 后的成员关系上；反向经由同构反映该成员关系，沿项等式恢复内部的成员关系。
 <!--ja-->
 順方向の輸送は、`p` を施した後の所属に着地する。逆方向は、同型を通してその所属を反映し、項の等式に沿って内側の所属を復元する。
 <!--/-->
@@ -1552,7 +1552,7 @@ The forward transport lands at membership after applying `p`; backward reflects 
 <!--en-->
 The backward direction closes the membership clause: reflection through the isomorphism, guided by the term congruences, returns exactly the inner membership. The equality atom and the witness principle are handled by the remaining hypotheses.
 <!--zh-->
-反向闭合隶属子句：经同构、循项同余的反映，恰好返回内部的隶属。相等原子与见证原理由其余假设处理。
+反向闭合成员关系子句：经同构、循项同余的反映，恰好返回内部的成员关系。相等原子与见证原理由其余假设处理。
 <!--ja-->
 逆方向が所属の節を閉じる。項の等式に導かれた同型を通した反映が、内側の所属をちょうど返す。等号の原子式と証人の原理は、残りの仮定が扱う。
 <!--/-->
@@ -1652,7 +1652,7 @@ The agreement is recorded in two one-directional forms for later composition. Fo
 <!--en-->
 Backward returns outer satisfaction to inner satisfaction. The chapter then instantiates this invariance at the collapse of a set `X` with extensionality, opening the collapse with its membership isomorphism and its injectivity.
 <!--zh-->
-反向把外部的满足送回内部的满足。随后本章在有外延性的集合 `X` 的塌缩处实例化这一不变性，打开塌缩及其隶属同构与单射性。
+反向把外部的满足送回内部的满足。随后本章在有外延性的集合 `X` 的塌缩处实例化这一不变性，打开塌缩及其成员关系同构与单射性。
 <!--ja-->
 逆方向は、外側の充足を内側の充足へ戻す。本章は次に、外延性をもつ集合 `X` の崩壊のもとでこの不変性を具体化し、所属の同型と単射性を伴って崩壊を開く。
 <!--/-->
@@ -1680,7 +1680,7 @@ module CollapseIso (X : S) (Xext : isExt X) where
 <!--en-->
 Extensionality of `X` is exactly what the collapse needs: the restricted structure is injective, and the isomorphism between membership on `X` and membership on the collapse becomes available.
 <!--zh-->
-`X` 的外延性正是塌缩所需：限制后的结构单射，且 `X` 上隶属与塌缩像上隶属之间的同构随即可用。
+`X` 的外延性正是塌缩所需：限制后的结构单射，且 `X` 上成员关系与塌缩像上成员关系之间的同构随即可用。
 <!--ja-->
 `X` の外延性こそ、崩壊が必要とするものである。制限された構造は単射となり、`X` の上の所属と崩壊の像の上の所属の間の同型が使えるようになる。
 <!--/-->
@@ -1692,7 +1692,7 @@ Extensionality of `X` is exactly what the collapse needs: the restricted structu
 <!--en-->
 The target carrier is the collapse image `πX`; its points are precisely the collapse values of members of `X`.
 <!--zh-->
-目标载体是塌缩像 `πX`；它的点恰是 `X` 的成员之塌缩值。
+目标载体是塌缩像 `πX`；它的点恰是 `X` 的元素之塌缩值。
 <!--ja-->
 目標の台は崩壊像 `πX` であり、その点はちょうど `X` の要素の崩壊値である。
 <!--/-->
@@ -1718,7 +1718,7 @@ The map `p` sends each set to its Mostowski collapse value.
 <!--en-->
 Members of `X` land in the image, by the collapse's own introduction rule for the image.
 <!--zh-->
-`X` 的成员落入像中，这由塌缩对像自身的引入规则给出。
+`X` 的元素落入像中，这由塌缩对像自身的引入规则给出。
 <!--ja-->
 `X` の要素は像の中に着地する。これは、像に対する崩壊自身の導入規則によるものである。
 <!--/-->
@@ -1731,7 +1731,7 @@ Members of `X` land in the image, by the collapse's own introduction rule for th
 <!--en-->
 Membership is preserved forward along the collapse: if `y` is a member of `x` in `X`, then the collapse of `y` is a member of the collapse of `x`. This is the first component of the membership isomorphism.
 <!--zh-->
-隶属沿塌缩正向保持：若在 `X` 中 `y` 属于 `x`，则 `y` 的塌缩属于 `x` 的塌缩。这是隶属同构的第一个分量。
+成员关系沿塌缩正向保持：若在 `X` 中 `y` 属于 `x`，则 `y` 的塌缩属于 `x` 的塌缩。这是成员关系同构的第一个分量。
 <!--ja-->
 所属は崩壊に沿って順方向に保存される。`X` の中で `y` が `x` に属するなら、`y` の崩壊は `x` の崩壊に属する。これが所属の同型の第一成分である。
 <!--/-->
@@ -1745,7 +1745,7 @@ Membership is preserved forward along the collapse: if `y` is a member of `x` in
 <!--en-->
 Membership reflects backward as well: a collapsed membership can only have arisen from a genuine membership in `X`. The two directions together say the collapse is faithful on membership.
 <!--zh-->
-隶属也反向反映：塌缩后的隶属只能来自 `X` 中真实的隶属。两个方向合起来说明塌缩对隶属是忠实的。
+成员关系也反向反映：塌缩后的成员关系只能来自 `X` 中真实的成员关系。两个方向合起来说明塌缩对成员关系是忠实的。
 <!--ja-->
 所属は逆方向にも反映される。崩壊された所属は、`X` の中の本当の所属から生じたものに限る。二つの向き合わせて、崩壊が所属について忠実であることが言える。
 <!--/-->
@@ -1759,7 +1759,7 @@ Membership reflects backward as well: a collapsed membership can only have arise
 <!--en-->
 The collapse is injective on `X`: two members with equal collapses are equal. Faithfulness on membership plus injectivity are the two halves of the isomorphism on elements.
 <!--zh-->
-塌缩在 `X` 上单射：塌缩相等的两个成员相等。对隶属的忠实加上单射性，构成元素层面同构的两半。
+塌缩在 `X` 上单射：塌缩相等的两个元素相等。对成员关系的忠实加上单射性，构成元素层面同构的两半。
 <!--ja-->
 崩壊は `X` の上で単射である。崩壊が等しい二つの要素は等しい。所属への忠実さと単射性が、要素の上の同型の二つの半分である。
 <!--/-->
@@ -1773,7 +1773,7 @@ The collapse is injective on `X`: two members with equal collapses are equal. Fa
 <!--en-->
 Every point of the image comes from a member of `X`: surjectivity is truncated, so it asserts the existence of a preimage without choosing one, which is exactly the form the witness principle consumes.
 <!--zh-->
-像的每点都来自 `X` 的成员：满射是截断的，只主张原像存在而不选定它，这正是见证原理所消耗的形式。
+像的每点都来自 `X` 的元素：满射是截断的，只主张原像存在而不选定它，这正是见证原理所消耗的形式。
 <!--ja-->
 像のすべての点は `X` の要素から来る。全射は切り詰められており、証人を選ばずに逆像の存在を主張する。これがまさに、証人の原理が消費する形である。
 <!--/-->
@@ -1787,7 +1787,7 @@ Every point of the image comes from a member of `X`: surjectivity is truncated, 
 <!--en-->
 For the extensional set `X`, collapse preserves and reflects membership, is injective on `X`, and covers every point of `πX`.
 <!--zh-->
-对外延集合 `X`，塌缩保持并反映隶属，在 `X` 上单射，且覆盖 `πX` 的每个点。
+对外延集合 `X`，塌缩保持并反映成员关系，在 `X` 上单射，且覆盖 `πX` 的每个点。
 <!--ja-->
 外延的な集合 `X` では、崩壊は所属を保存かつ反映し、`X` 上で単射であり、`πX` のすべての点を覆う。
 <!--/-->
@@ -1843,7 +1843,7 @@ Applied to the Skolem hull inside `Lset α`, this reduces elementarity to the Ta
 <!--en-->
 The substructure machinery is instantiated at the hull, and its formulas receive an ambient reading. Every element of the hull's carrier has a code: the code exists by truncated presentation, and the identification of value with inclusion is promoted by the propositionhood of stage membership.
 <!--zh-->
-子结构机制在壳处实例化，其公式获得一个外围读法。壳载体的每个元素都有码：码由截断的呈现给出存在，而「取值等于包含」的同一视借层隶属的命题值性提升。
+子结构机制在壳处实例化，其公式获得一个外围读法。壳载体的每个元素都有码：码由截断的呈现给出存在，而「取值等于包含」的同一视借层成员关系的命题值性提升。
 <!--ja-->
 部分構造の仕組みは包のもとで具体化され、その論理式には周囲の読みが与えられる。包の台のすべての要素にはコードがある。コードは切り詰められた提示によって存在し、値と包含の同一視は、段階の所属の命題値性によって持ち上がる。
 <!--/-->
@@ -2039,7 +2039,7 @@ The search returns a least witness inside the hull, satisfying the abstracted bo
 <!--en-->
 The witness is read back into the carrier of the substructure: the underlying set is the hull, and the membership is the one just produced.
 <!--zh-->
-见证被读回子结构的载体：底层集合即壳，隶属即刚产出者。
+见证被读回子结构的载体：底层集合即壳，成员关系即刚产出者。
 <!--ja-->
 証人は、部分構造の台へ読み戻される。底の集合は包であり、所属は今産み出されたものである。
 <!--/-->
@@ -2054,7 +2054,7 @@ The witness is read back into the carrier of the substructure: the underlying se
 <!--en-->
 The inclusion of the witness into the stage is the witness itself: the two carriers differ only by the proposition-valued membership proof, which is identified by reflexivity.
 <!--zh-->
-见证到层的包含就是见证本身：两个载体只差命题值性的隶属证明，而它由自反性等同。
+见证到层的包含就是见证本身：两个载体只差命题值性的成员关系证明，而它由自反性等同。
 <!--ja-->
 証人の段階への包含は、証人そのものである。二つの台は、命題値の所属の証明だけが違い、それは反射性によって同一視される。
 <!--/-->
@@ -2149,7 +2149,7 @@ opaque
 <!--en-->
 Ordinality is expressed by a one-slot bounded formula saying that the parameter is transitive and that every member of it is transitive.
 <!--zh-->
-序数性由一个单空位有界公式表达：参数本身传递，且参数的每个成员也传递。
+序数性由一个单空位有界公式表达：参数本身传递，且参数的每个元素也传递。
 <!--ja-->
 順序数性は、一つの枠をもつ有界論理式によって、引数自身が推移的であり、そのすべての要素も推移的であることとして表される。
 <!--/-->
@@ -2163,7 +2163,7 @@ Ordinality is expressed by a one-slot bounded formula saying that the parameter 
 <!--en-->
 The `Δ₀` certificate follows the outer conjunction, then the two bounded quantifiers of the first clause and the three bounded quantifiers of the second, ending at membership atoms.
 <!--zh-->
-`Δ₀` 证书先穿过外层合取，再分别穿过第一子句的两个与第二子句的三个有界量词，最终落到隶属原子。
+`Δ₀` 证书先穿过外层合取，再分别穿过第一子句的两个与第二子句的三个有界量词，最终落到成员关系原子。
 <!--ja-->
 `Δ₀` の証拠は外側の連言を通り、第一の節の二つと第二の節の三つの有界量化子をたどって、所属の原子式に至る。
 <!--/-->
@@ -2199,7 +2199,7 @@ module Amb where
 <!--en-->
 Reading ordinality out of the formula unpacks the two bounded clauses into the two fields of the ordinal predicate: transitivity of the parameter, and transitivity of every member.
 <!--zh-->
-从公式读出序数性，即把两条有界子句拆成序数谓词的两个字段：参数的传递性，以及每个成员的传递性。
+从公式读出序数性，即把两条有界子句拆成序数谓词的两个字段：参数的传递性，以及每个元素的传递性。
 <!--ja-->
 論理式から順序数性を読み出すとは、二つの有界の節を、順序数の述語の二つの欄へ開くことである。引数の推移性と、すべての要素の推移性である。
 <!--/-->
@@ -2234,7 +2234,7 @@ isOrd-at-p : Formula (⊥* {ℓ-suc ℓ}) 3
 <!--en-->
 The three-slot formula's first conjunct says that every member of a member of the parameter is a member of the parameter: transitivity, read at the second slot.
 <!--zh-->
-三空位公式的第一个合取支说：参数的成员的成员都是参数的成员，即在第二空位处读取的传递性。
+三空位公式的第一个合取支说：参数的元素的元素都是参数的元素，即在第二空位处读取的传递性。
 <!--ja-->
 三つの枠をもつ論理式の最初の連言支は、引数の要素の要素が引数の要素であること、すなわち第二の枠で読まれる推移性を言う。
 <!--/-->
@@ -2250,7 +2250,7 @@ isOrd-at-p =
 <!--en-->
 The second conjunct says that each member `a` of the parameter is transitive: whenever `c ∈ b ∈ a`, one has `c ∈ a`.
 <!--zh-->
-第二个合取支说明参数的每个成员 `a` 都传递：若 `c ∈ b ∈ a`，则 `c ∈ a`。
+第二个合取支说明参数的每个元素 `a` 都传递：若 `c ∈ b ∈ a`，则 `c ∈ a`。
 <!--ja-->
 第二の連言支は、引数の各要素 `a` が推移的であること、すなわち `c ∈ b ∈ a` ならば `c ∈ a` であることを述べる。
 <!--/-->
@@ -2335,7 +2335,7 @@ module HullStage (lam : S) (ordλ : IsOrd lam)
 <!--en-->
 The frame receives a stage whose index admits successors of its members, a starting set contained in that stage, and the empty set's membership in the index.
 <!--zh-->
-框架收取：一个其指数容纳成员后继的层、包含于该层的起始集合，以及空集属于该指数。
+框架收取：一个其指数容纳元素后继的层、包含于该层的起始集合，以及空集属于该指数。
 <!--ja-->
 枠組みは、指数が要素の後続を認める段階、その段階に含まれる始集合、そして空集合の指数への所属を受け取る。
 <!--/-->
@@ -2383,7 +2383,7 @@ This set `M` is the carrier whose elementarity and Mostowski collapse enter the 
 <!--en-->
 For the hull `M`, let `π` be its Mostowski collapse and `πX` its image. Every collapsed hull point belongs to `πX`, every member of `πX` comes from a hull point, and `πX` is transitive. Moreover, the collapse fixes any transitive point of the hull.
 <!--zh-->
-对壳 `M`，令 `π` 为其 Mostowski 塌缩，`πX` 为塌缩像。每个塌缩后的壳中点都属于 `πX`，`πX` 的每个成员都来自壳中的一点，并且 `πX` 是传递的。此外，塌缩固定壳中的每个传递点。
+对壳 `M`，令 `π` 为其 Mostowski 塌缩，`πX` 为塌缩像。每个塌缩后的壳中点都属于 `πX`，`πX` 的每个元素都来自壳中的一点，并且 `πX` 是传递的。此外，塌缩固定壳中的每个传递点。
 <!--ja-->
 包 `M` に対し、その Mostowski 崩壊を `π`、崩壊像を `πX` とする。包の点を崩壊したものはすべて `πX` に属し、`πX` の各要素は包の点から得られ、`πX` は推移的である。さらに、包の推移的な点は崩壊によって固定される。
 <!--/-->
@@ -2396,7 +2396,7 @@ For the hull `M`, let `π` be its Mostowski collapse and `πX` its image. Every 
 <!--en-->
 The condensation argument assumes two properties of the image. First, if an ordinal `δ` belongs to the image, then so does the level `Lset δ`. Second, the collapse of every hull member belongs to some level whose ordinal index lies in the image. These closure and covering properties will identify the image with a single level of `L`.
 <!--zh-->
-凝聚论证对塌缩像作两项假设。第一，若序数 `δ` 属于该像，则层 `Lset δ` 也属于该像。第二，每个壳成员的塌缩都属于某个层，而该层的序数指数属于塌缩像。这两项闭合与覆盖性质将把塌缩像认同为 `L` 的一个层。
+凝聚论证对塌缩像作两项假设。第一，若序数 `δ` 属于该像，则层 `Lset δ` 也属于该像。第二，每个壳元素的塌缩都属于某个层，而该层的序数指数属于塌缩像。这两项闭合与覆盖性质将把塌缩像认同为 `L` 的一个层。
 <!--ja-->
 凝縮の議論では、崩壊像について二つの性質を仮定する。第一に、順序数 `δ` が像に属するなら、段階 `Lset δ` も像に属する。第二に、包の各要素の崩壊は、像に属する順序数を添字とするある段階に属する。この閉性と被覆の性質により、崩壊像を `L` の一つの段階と同定できる。
 <!--/-->
@@ -2444,7 +2444,7 @@ We call this ordinal part `β`; the following argument proves that it is itself 
 <!--en-->
 Membership in `β` is equivalent to membership in `πX` together with satisfaction of the constant-free ordinal formula when its free variable is assigned the member.
 <!--zh-->
-属于 `β`，等价于属于 `πX`，并且把该成员赋给自由变元后满足无常元的序数公式。
+属于 `β`，等价于属于 `πX`，并且把该元素赋给自由变元后满足无常元的序数公式。
 <!--ja-->
 `β` に属することは、`πX` に属し、さらにその要素を自由変数に割り当てたとき無定数の順序数公式を満たすことと同値である。
 <!--/-->
@@ -2457,7 +2457,7 @@ Membership in `β` is equivalent to membership in `πX` together with satisfacti
 <!--en-->
 The first projection of the equivalence shows every member of beta is a member of the collapse image.
 <!--zh-->
-定义等价的第一个投影表明：beta 的每个成员都是塌缩像的成员。
+定义等价的第一个投影表明：beta 的每个元素都是塌缩像的元素。
 <!--ja-->
 同値の第一の射影は、ベータのすべての要素が崩壊の像の要素であることを示す。
 <!--/-->
@@ -2483,7 +2483,7 @@ The second component converts satisfaction of this constant-free one-variable fo
 <!--en-->
 Conversely, an ordinal of the collapse image lies in beta: both defining components are supplied, membership and ordinality, and the defining equivalence transports them back inside.
 <!--zh-->
-反之，塌缩像的序数落入 beta：隶属与序数性两个定义分量一并提供，定义等价再把它们送回 beta 内部。
+反之，塌缩像的序数落入 beta：成员关系与序数性两个定义分量一并提供，定义等价再把它们送回 beta 内部。
 <!--ja-->
 逆に、崩壊の像の順序数はベータの中にある。所属と順序数性という定義の二つの成分が供給され、定義の同値がそれをベータの内部へ運び戻す。
 <!--/-->
@@ -2512,7 +2512,7 @@ To prove that `β` is an ordinal, we verify its two defining requirements. The f
 <!--en-->
 Transitivity uses the transitivity of the collapse image at the intermediate membership and reads the ordinality of the middle point from the ambient formula. The second field follows because every member of beta is an ordinal, hence transitive.
 <!--zh-->
-传递性在中间隶属处使用塌缩像的传递性，并从外围公式读取中间点的序数性；第二字段随之成立，因为 beta 的每个成员都是序数，故传递。
+传递性在中间成员关系处使用塌缩像的传递性，并从外围公式读取中间点的序数性；第二字段随之成立，因为 beta 的每个元素都是序数，故传递。
 <!--ja-->
 推移性は、中間の所属のもとで崩壊の像の推移性を使い、中間の点の順序数性を周囲の論理式から読む。第二の欄は、ベータのすべての要素が順序数、したがって推移的であることから従う。
 <!--/-->
@@ -2528,7 +2528,7 @@ Transitivity uses the transitivity of the collapse image at the intermediate mem
 <!--en-->
 The covering hypothesis lifts from hull members to collapse members. Since a collapse member is, merely, the collapse of a hull member, the cover of that hull member transports along the identification.
 <!--zh-->
-覆盖假设从壳成员提升到塌缩成员。由于塌缩成员仅仅是某个壳成员的塌缩，该壳成员的覆盖沿此同一视搬运。
+覆盖假设从壳元素提升到塌缩元素。由于塌缩元素仅仅是某个壳元素的塌缩，该壳元素的覆盖沿此同一视搬运。
 <!--ja-->
 覆いの仮定は、包の要素から崩壊の要素へ一度持ち上がる。崩壊の要素は、単に、包のある要素の崩壊なので、その要素の覆いが同一視に沿って運ばれる。
 <!--/-->
@@ -2544,7 +2544,7 @@ The covering hypothesis lifts from hull members to collapse members. Since a col
 <!--en-->
 The inversion is the collapse's own member description: a member of the image is, merely, the collapse of a hull member.
 <!--zh-->
-该求逆正是塌缩自身的成员描述：像的成员仅仅是某个壳成员的塌缩。
+该求逆正是塌缩自身的元素描述：像的元素仅仅是某个壳元素的塌缩。
 <!--ja-->
 逆にたどるのは、崩壊自身の要素の記述である。像の要素は、単に、包のある要素の崩壊である。
 <!--/-->
@@ -2576,7 +2576,7 @@ The cover transports along the equality of the collapse values. The lifted state
 <!--en-->
 The ordinality of delta is read off beta, and the conversion restates the covering conclusion in membership form: the level containing delta can be chosen to have its index inside beta.
 <!--zh-->
-delta 的序数性从 beta 读出；转换把覆盖结论改写为隶属形式：包含 delta 的层可取其指数落在 beta 内。
+delta 的序数性从 beta 读出；转换把覆盖结论改写为成员关系形式：包含 delta 的层可取其指数落在 beta 内。
 <!--ja-->
 delta の順序数性はベータから読まれ、変換は覆いの結論を所属の形で言い直す。delta を含む層は、その指数をベータの中に選べるのである。
 <!--/-->
@@ -2592,7 +2592,7 @@ delta の順序数性はベータから読まれ、変換は覆いの結論を�
 <!--en-->
 Because both `δ` and `γ` are ordinals, `δ ∈ Lset γ` implies `δ ∈ γ`; and because `γ` is an ordinal in `πX`, it belongs to `β`. The reverse inclusion is then stated: every member of the collapse lies in the level at beta.
 <!--zh-->
-由于 `δ` 与 `γ` 都是序数，`δ ∈ Lset γ` 推出 `δ ∈ γ`；又因 `γ` 是 `πX` 中的序数，所以 `γ ∈ β`。随后陈述反向包含：塌缩的每个成员都属于 beta 处的层。
+由于 `δ` 与 `γ` 都是序数，`δ ∈ Lset γ` 推出 `δ ∈ γ`；又因 `γ` 是 `πX` 中的序数，所以 `γ ∈ β`。随后陈述反向包含：塌缩的每个元素都属于 beta 处的层。
 <!--ja-->
 `δ` と `γ` はともに順序数なので、`δ ∈ Lset γ` から `δ ∈ γ` が従う。また `γ` は `πX` に属する順序数なので、`γ ∈ β` である。そして逆の包含が述べられる。崩壊のすべての要素は、ベータにおける層に属する。
 <!--/-->
@@ -2624,7 +2624,7 @@ The reverse inclusion holds because the level at beta contains every smaller lev
 <!--en-->
 The forward inclusion decomposes a member of the level at beta by the stage construction, and the limit step supplies a larger ordinal inside beta.
 <!--zh-->
-正向包含按层构造分解 beta 层的成员，而极限步供给 beta 内更大的序数。
+正向包含按层构造分解 beta 层的元素，而极限步供给 beta 内更大的序数。
 <!--ja-->
 順方向の包含は、ベータの層の要素を段階の構成で分解し、極限の一歩がベータの中のより大きな順序数を供給する。
 <!--/-->
@@ -2640,7 +2640,7 @@ The forward inclusion decomposes a member of the level at beta by the stage cons
 <!--en-->
 The lifting stage is stated: from an ordinal inside beta containing delta, produce the membership of `x` in the collapse.
 <!--zh-->
-陈述提升层：从 beta 内包含 delta 的序数，产出 `x` 在塌缩中的隶属。
+陈述提升层：从 beta 内包含 delta 的序数，产出 `x` 在塌缩中的成员关系。
 <!--ja-->
 持ち上げの段階が述べられる。ベータの中で delta を含む順序数から、崩壊の中での `x` の所属を産み出す。
 <!--/-->
@@ -2672,7 +2672,7 @@ The lifting composes two closures: the level at gamma contains x because x is de
 <!--en-->
 The first half of the extensionality argument moves each member through the bridge into the stage reading, applies the reverse inclusion, and returns through the bridge.
 <!--zh-->
-外延性论证的前一半让每个成员经桥进入层读法，应用反向包含，再经桥返回。
+外延性论证的前一半让每个元素经桥进入层读法，应用反向包含，再经桥返回。
 <!--ja-->
 外延性の議論の前半は、各要素を橋を通して段階の読みへ運び、逆の包含を適用し、橋を通って戻す。
 <!--/-->
@@ -2756,7 +2756,7 @@ The extra point belongs to the starting set through the right side of the union.
 <!--en-->
 Every member of the stage belongs to the starting set through the left side.
 <!--zh-->
-层的每个成员经左侧属于起始集合。
+层的每个元素经左侧属于起始集合。
 <!--ja-->
 段階のすべての要素は、左側を通して始集合に属する。
 <!--/-->
@@ -2769,7 +2769,7 @@ Every member of the stage belongs to the starting set through the left side.
 <!--en-->
 The singleton characterization says that every member of `{x}` is equal to `x`.
 <!--zh-->
-单点集的特征刻画说明，`{x}` 的每个成员都等于 `x`。
+单点集的特征刻画说明，`{x}` 的每个元素都等于 `x`。
 <!--ja-->
 単集合の特徴づけにより、`{x}` の各要素は `x` に等しくなる。
 <!--/-->
@@ -2796,7 +2796,7 @@ Consequently, membership in the starting set splits into two cases: a point belo
 <!--en-->
 The generator is contained in the ambient stage: a member on the stage side is transported by the monotonicity of the stage construction along the index inclusion.
 <!--zh-->
-生成集包含于外围层：层一侧的成员沿指数包含、由层构造的单调性搬运。
+生成集包含于外围层：层一侧的元素沿指数包含、由层构造的单调性搬运。
 <!--ja-->
 生成集は周囲の段階に含まれる。段階の側の要素は、指数の包含に沿って、段階の構成の単調性によって運ばれる。
 <!--/-->
@@ -2812,7 +2812,7 @@ The generator is contained in the ambient stage: a member on the stage side is t
 <!--en-->
 A member on the singleton side reduces to the extra point, whose stage membership was a hypothesis.
 <!--zh-->
-单点一侧的成员化归为额外点，而额外点的层隶属本是假设。
+单点一侧的元素化归为额外点，而额外点的层成员关系本是假设。
 <!--ja-->
 単元の側の要素は余分な点に帰着し、その段階への所属は仮定であった。
 <!--/-->
@@ -2824,7 +2824,7 @@ A member on the singleton side reduces to the extra point, whose stage membershi
 <!--en-->
 The generator is transitive. A member of a member on the stage side is in the stage by the layer's transitivity, and the left inclusion then places it in the generator.
 <!--zh-->
-生成集是传递的。若成员的成员位于层一侧，则由层的传递性它属于层，再由左包含把它放入生成集。
+生成集是传递的。若元素的元素位于层一侧，则由层的传递性它属于层，再由左包含把它放入生成集。
 <!--ja-->
 生成集は推移的である。段階の側の要素の要素は、層の推移性によって段階の中にあり、左の包含がそれを生成集の中に置く。
 <!--/-->
@@ -2840,7 +2840,7 @@ The generator is transitive. A member of a member on the stage side is in the st
 <!--en-->
 On the singleton side, the intermediate set is `x`; the hypothesis `x ⊆ Lset α` then places each of its members in the left side of the union.
 <!--zh-->
-在单点集一侧，中间集合就是 `x`；假设 `x ⊆ Lset α` 随即把它的每个成员放入并集的左侧。
+在单点集一侧，中间集合就是 `x`；假设 `x ⊆ Lset α` 随即把它的每个元素放入并集的左侧。
 <!--ja-->
 単集合側では中間の集合は `x` である。仮定 `x ⊆ Lset α` により、その各要素は合併の左側に入る。
 <!--/-->
@@ -2856,7 +2856,7 @@ On the singleton side, the intermediate set is `x`; the hypothesis `x ⊆ Lset �
 <!--en-->
 Infinity means not belonging to `ω`, and the trichotomy of ordinals decides the cases: membership in `ω` contradicts the hypothesis, equality with `ω` is witnessed by the numeral one, and `ω` below `α` places the numeral one inside `α` by transitivity.
 <!--zh-->
-无穷即不属于 `ω`，序数三分法分拆各情形：属于 `ω` 与假设矛盾；等于 `ω` 则由数码一见证隶属；`ω` 低于 `α` 则由传递性把数码一放入 `α` 之内。
+无穷即不属于 `ω`，序数三分法分拆各情形：属于 `ω` 与假设矛盾；等于 `ω` 则由数码一见证成员关系；`ω` 低于 `α` 则由传递性把数码一放入 `α` 之内。
 <!--ja-->
 無限とは `ω` に属さないことであり、順序数の三分法が場合を分ける。`ω` に属するなら仮定と矛盾し、`ω` と等しいなら数項一が所属の証人となり、`ω` が `α` より下なら `α` の推移性によって数項一がその中に入る。
 <!--/-->
@@ -2931,7 +2931,7 @@ The empty-set membership assumption ensures that the Skolem hull at `Lset α` ha
 <!--en-->
 Let `M` be the Skolem hull of `X` inside `Lset α`. Its inclusion into the stage is elementary. We compare formulas in the hull with their interpretations in the stage in order to prove that membership restricted to `M` is extensional.
 <!--zh-->
-令 `M` 为 `Lset α` 内由 `X` 生成的 Skolem 壳。它到该层的包含是初等的。为证明限制在 `M` 上的隶属关系具有外延性，我们比较壳中公式与其在该层中的解释。
+令 `M` 为 `Lset α` 内由 `X` 生成的 Skolem 壳。它到该层的包含是初等的。为证明限制在 `M` 上的成员关系具有外延性，我们比较壳中公式与其在该层中的解释。
 <!--ja-->
 `M` を、`Lset α` の内部で `X` から生成される Skolem 包とする。段階への包含は初等的である。`M` に制限した所属関係の外延性を示すため、包の中の論理式と段階での解釈を比較する。
 <!--/-->
@@ -2947,7 +2947,7 @@ Let `M` be the Skolem hull of `X` inside `Lset α`. Its inclusion into the stage
 <!--en-->
 The hull is named, and the symmetric difference of two sets is stated at the level of membership truths: a point lies in one side and provably not in the other.
 <!--zh-->
-壳被命名；两集合的对称差在隶属真值层面陈述：一个点在一侧之中，且可证不在另一侧之中。
+壳被命名；两集合的对称差在成员关系真值层面陈述：一个点在一侧之中，且可证不在另一侧之中。
 <!--ja-->
 包が名付けられ、二つの集合の対称差が所属の真値の水準で述べられる。ある点が一方に属し、他方には属さないと証明できる、という形である。
 <!--/-->
@@ -2979,7 +2979,7 @@ Unequal sets have a point in their symmetric difference, classically: the trunca
 <!--en-->
 If no point separated the sets, every membership truth would agree in both directions, and the universe's extensionality would force equality, contradicting the assumption.
 <!--zh-->
-若没有点区分这两个集合，则每个隶属真值都双向一致，宇宙的外延性将迫使二者相等，与假设矛盾。
+若没有点区分这两个集合，则每个成员关系真值都双向一致，宇宙的外延性将迫使二者相等，与假设矛盾。
 <!--ja-->
 もし二つの集合を区別する点がなければ、すべての所属命題が両方向で一致し、宇宙の外延性によって両者は等しくなり、仮定に矛盾する。
 <!--/-->
@@ -3013,7 +3013,7 @@ Both directions of the agreement are decided by excluded middle, and each failin
 <!--en-->
 The difference formula is the disjunction `(z ∈ x ∧ z ∉ y) ∨ (z ∈ y ∧ z ∉ x)`, with the two hull members occupying its constant slots.
 <!--zh-->
-差公式是析取式 `(z ∈ x ∧ z ∉ y) ∨ (z ∈ y ∧ z ∉ x)`，两个常元槽分别放入这两个壳成员。
+差公式是析取式 `(z ∈ x ∧ z ∉ y) ∨ (z ∈ y ∧ z ∉ x)`，两个常元槽分别放入这两个壳元素。
 <!--ja-->
 差の公式は選言 `(z ∈ x ∧ z ∉ y) ∨ (z ∈ y ∧ z ∉ x)` であり、二つの定数欄に二つの包の要素を入れる。
 <!--/-->
@@ -3045,7 +3045,7 @@ Existential satisfaction is truncated, so the distinguishing point is returned u
 <!--en-->
 In either branch, ambient membership supplies the positive conjunct, while the nonmembership proof is lifted to the negation required by formula semantics. Transitivity of the stage places the distinguishing point in its carrier.
 <!--zh-->
-在任一分支中，外围隶属给出肯定合取项，而不隶属证明被提升为公式语义所需的否定。层的传递性则把区分点放入该层载体。
+在任一分支中，外围成员关系给出肯定合取项，而不成员关系证明被提升为公式语义所需的否定。层的传递性则把区分点放入该层载体。
 <!--ja-->
 どちらの分岐でも、周囲での所属が肯定側の連言項を与え、不所属の証明を公式意味論が要求する否定へ持ち上げる。段階の推移性により、区別する点もその台に入る。
 <!--/-->
@@ -3061,7 +3061,7 @@ In either branch, ambient membership supplies the positive conjunct, while the n
 <!--en-->
 Pairing the distinguishing point with its stage membership makes it a witness in the stage carrier. To prove hull extensionality, assume first that every hull element belonging to `x` also belongs to `y`.
 <!--zh-->
-把区分点与其层隶属配对，便得到层载体中的见证。为证明壳的外延性，先假设壳中每个属于 `x` 的元素也属于 `y`。
+把区分点与其层成员关系配对，便得到层载体中的见证。为证明壳的外延性，先假设壳中每个属于 `x` 的元素也属于 `y`。
 <!--ja-->
 区別する点をその段階への所属と組にすると、段階の台における証人が得られる。包の外延性を示すため、まず包の各要素について、`x` に属するなら `y` にも属すると仮定する。
 <!--/-->
@@ -3093,7 +3093,7 @@ Assume conversely that every hull element belonging to `y` also belongs to `x`. 
 <!--en-->
 The two hull members are read as elements of the substructure carrier, ready to be plugged into the difference formula.
 <!--zh-->
-两个壳成员被读作子结构载体的元素，准备代入差公式。
+两个壳元素被读作子结构载体的元素，准备代入差公式。
 <!--ja-->
 二つの包の要素は、部分構造の台の要素として読まれ、差の論理式に代入する準備ができる。
 <!--/-->
@@ -3123,7 +3123,7 @@ The refutation eliminates the difference point. Elementarity converts the stage'
 <!--en-->
 Elementarity supplies a hull witness satisfying the difference formula. Eliminating its truncated disjunction reveals which of the two asymmetric membership statements holds.
 <!--zh-->
-初等性给出一个满足差公式的壳中见证。消去其截断的析取后，便得到两个非对称隶属陈述中成立的那个。
+初等性给出一个满足差公式的壳中见证。消去其截断的析取后，便得到两个非对称成员关系陈述中成立的那个。
 <!--ja-->
 初等性により、差の論理式を満たす包の中の証人が得られる。その切り詰められた選言を消去すると、二つの非対称な所属命題のどちらが成り立つかが得られる。
 <!--/-->
@@ -3139,7 +3139,7 @@ Elementarity supplies a hull witness satisfying the difference formula. Eliminat
 <!--en-->
 Either disjunct identifies the witness as a member of one hull member but not the other, and the corresponding agreement hypothesis contradicts the negation. This contradiction is exactly what extensionality of the hull requires.
 <!--zh-->
-无论哪个析取支，都会把见证认作一个壳成员的成员而非另一个的，相应的一致性假设与该否定矛盾。这一矛盾正是壳的外延性所需要的。
+无论哪个析取支，都会把见证认作一个壳元素的元素而非另一个的，相应的一致性假设与该否定矛盾。这一矛盾正是壳的外延性所需要的。
 <!--ja-->
 どちらの選言の枝でも、証人は一方の包の要素ではあって他方ではないとされ、対応する一致の仮定がその否定と矛盾する。この矛盾こそ、包の外延性が求めるものである。
 <!--/-->
@@ -3154,7 +3154,7 @@ Either disjunct identifies the witness as a member of one hull member but not th
 <!--en-->
 Extensionality of the hull is proved by classical contradiction. Since the universe of sets is an h-set, `x ≡ y` is a proposition, so excluded middle gives either an equality or a refutation of equality. In the second case, `refute` turns `x ≢ y` into a hull member belonging to exactly one of `x` and `y`, contradicting the two membership-agreement hypotheses; hence `x ≡ y`.
 <!--zh-->
-壳的外延性由经典反证法证明。由于集合的宇宙是 h-集合，`x ≡ y` 是命题，排中律因此给出相等或不相等。若 `x ≢ y`，`refute` 会在壳中找到一个只属于 `x`、`y` 之一的成员，这与两个隶属一致性前提矛盾；故 `x ≡ y`。
+壳的外延性由经典反证法证明。由于集合的宇宙是 h-集合，`x ≡ y` 是命题，排中律因此给出相等或不相等。若 `x ≢ y`，`refute` 会在壳中找到一个只属于 `x`、`y` 之一的元素，这与两个成员关系一致性前提矛盾；故 `x ≡ y`。
 <!--ja-->
 包の外延性は古典的な背理法で証明する。集合の宇宙は h-集合なので `x ≡ y` は命題であり、排中律から等しい場合と等しくない場合に分かれる。`x ≢ y` なら、`refute` は包の中に `x` と `y` の一方だけに属する要素を与え、二つの所属一致の仮定に矛盾する。したがって `x ≡ y` である。
 <!--/-->
@@ -3193,7 +3193,7 @@ The contradictory branch is eliminated by `bad`, completing extensionality of th
 <!--en-->
 To compare the collapse with the ambient universe, now fix a transitive set `U`. A constant-free Δ₀ formula evaluated at members of `U` has the same truth value in the restricted structure on `U` as in the ambient structure.
 <!--zh-->
-为比较塌缩与外围宇宙，现固定一个传递集 `U`。无常元的 Δ₀ 公式在 `U` 的成员处求值时，在 `U` 上的受限结构与外围结构中具有相同真值。
+为比较塌缩与外围宇宙，现固定一个传递集 `U`。无常元的 Δ₀ 公式在 `U` 的元素处求值时，在 `U` 上的受限结构与外围结构中具有相同真值。
 <!--ja-->
 崩壊と周囲の宇宙を比較するため、ここで推移的集合 `U` を固定する。定数を含まない Δ₀ 論理式を `U` の要素で評価すると、`U` 上の制限構造と周囲の構造で同じ真理値をもつ。
 <!--/-->
@@ -3329,7 +3329,7 @@ The comparison now involves three structures: the hull `M`, the stage `Lset lam`
 <!--en-->
 Membership is preserved by the collapse directly: the forward direction of the membership isomorphism is exactly the push needed for atomic membership.
 <!--zh-->
-隶属由塌缩直接保持：隶属同构的正向恰是原子隶属所需的推送。
+成员关系由塌缩直接保持：成员关系同构的正向恰是原子成员关系所需的推送。
 <!--ja-->
 所属は崩壊によって直接保存される。所属の同型の順方向が、原子的な所属に必要な押し出しにちょうど当たる。
 <!--/-->
@@ -3387,7 +3387,7 @@ For the hull's own carrier, the reading factors through elementarity: the embedd
 <!--en-->
 After stage absoluteness, only the environments must be compared. Including a hull member into `Lset lam` does not change its underlying set, so projecting the included environment gives the same vector of ambient sets as projecting the original environment.
 <!--zh-->
-经过层上的绝对性后，只需比较两个环境。把壳成员包含进 `Lset lam` 不改变其底层集合，因此先包含再投影所得的外围集合向量，等于直接投影原环境所得的向量。
+经过层上的绝对性后，只需比较两个环境。把壳元素包含进 `Lset lam` 不改变其底层集合，因此先包含再投影所得的外围集合向量，等于直接投影原环境所得的向量。
 <!--ja-->
 段階での絶対性の後に残るのは環境の比較だけである。包の要素を `Lset lam` に含めても基礎にある集合は変わらないので、包含してから射影した周囲の集合のベクトルは、元の環境を直接射影したものに等しい。
 <!--/-->
@@ -3403,7 +3403,7 @@ After stage absoluteness, only the environments must be compared. Including a hu
 <!--en-->
 This equality is immediate for the empty environment and is preserved when one entry is prepended. Hence, for a constant-free Δ₀ formula, ambient truth at an environment of hull members implies ambient truth at the environment of their collapse values.
 <!--zh-->
-该等式对空环境立即成立，并在环境前添加一个分量时保持。因此，对无常元 Δ₀ 公式，壳成员环境处的外围真值蕴含其塌缩值环境处的外围真值。
+该等式对空环境立即成立，并在环境前添加一个分量时保持。因此，对无常元 Δ₀ 公式，壳元素环境处的外围真值蕴含其塌缩值环境处的外围真值。
 <!--ja-->
 この等式は空の環境では直ちに成り立ち、環境の先頭に一つの成分を加えても保たれる。したがって、定数を含まない Δ₀ 論理式について、包の要素からなる環境での周囲の真理は、それらの崩壊値からなる環境での周囲の真理を導く。
 <!--/-->
@@ -3451,7 +3451,7 @@ For `pull`, ambient truth at the collapse values is moved backward along `atπ` 
 <!--en-->
 Together, `push` and `pull` show that for every constant-free Δ₀ formula and every finite environment of hull members, ambient satisfaction is unchanged when each entry is replaced by its collapse value. The separate lemma `member-push` gives the corresponding direct preservation statement for membership.
 <!--zh-->
-`push` 与 `pull` 合起来表明：对每条无常元 Δ₀ 公式及每个由壳成员组成的有限环境，把各分量换成其塌缩值不会改变外围满足。另一个引理 `member-push` 则直接给出隶属关系的相应保持性。
+`push` 与 `pull` 合起来表明：对每条无常元 Δ₀ 公式及每个由壳元素组成的有限环境，把各分量换成其塌缩值不会改变外围满足。另一个引理 `member-push` 则直接给出成员关系的相应保持性。
 <!--ja-->
 `push` と `pull` を合わせると、定数を含まない任意の Δ₀ 論理式と、包の要素からなる任意の有限環境について、各成分をその崩壊値に置き換えても周囲での充足は変わらない。別の補題 `member-push` は、所属について対応する保存を直接与える。
 <!--/-->

@@ -2126,7 +2126,7 @@ open import Cubical.Foundations.Powerset public
 <!--en-->
 A class also determines a host type of its members, `Σ[ x ∶ A ] (x ∈ᶜ M)`{.Agda}. Its elements pair an object `x` with evidence that it satisfies `M`; this is not a set representing `M` inside the object theory. If `A` is an h-set, the Cubical lemma `isSetΣSndProp`{.Agda} shows that this Σ-type is also an h-set, since the underlying type of each `M x`{.Agda} is a proposition. We expose the lemma as `isSetClass`{.Agda}.
 <!--zh-->
-类还确定了由其成员组成的宿主类型 `Σ[ x ∶ A ] (x ∈ᶜ M)`{.Agda}。其中的元素把对象 `x` 与它满足 `M` 的证据配成一对；这个类型不是对象理论中表示 `M` 的集合。若 `A` 是 h-集合，由于每个 `M x`{.Agda} 的底层类型都是命题，Cubical 的引理 `isSetΣSndProp`{.Agda} 保证这个 Σ 类型仍是 h-集合。本书将该引理公开为 `isSetClass`{.Agda}。
+类还确定了由其元素组成的宿主类型 `Σ[ x ∶ A ] (x ∈ᶜ M)`{.Agda}。其中的元素把对象 `x` 与它满足 `M` 的证据配成一对；这个类型不是对象理论中表示 `M` 的集合。若 `A` 是 h-集合，由于每个 `M x`{.Agda} 的底层类型都是命题，Cubical 的引理 `isSetΣSndProp`{.Agda} 保证这个 Σ 类型仍是 h-集合。本书将该引理公开为 `isSetClass`{.Agda}。
 <!--ja-->
 クラスからは、その元のホスト側の型 `Σ[ x ∶ A ] (x ∈ᶜ M)`{.Agda} も得られる。その元は対象 `x` と、それが `M` を満たす証拠の対であり、この型は対象理論の内部で `M` を表す集合ではない。`A` が h-集合なら、各 `M x`{.Agda} の基礎型は命題なので、Cubical の補題 `isSetΣSndProp`{.Agda} により、この Σ 型も h-集合となる。本書では、この補題を `isSetClass`{.Agda} と改名して公開する。
 <!--/-->

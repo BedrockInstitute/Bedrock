@@ -18,7 +18,7 @@ open import Base.Classical using ( LEM )
 <!--en-->
 The chapter works inside a fixed universe level ℓ, and everything that follows speaks about sets, membership, and stages of L at that level. We assume excluded middle at level ℓ-suc ℓ. Its sole mathematical use is ordinal trichotomy: for two ordinals, one of membership in either direction or equality is returned. Every later conclusion inherits this classicality through the two comparison lemmas built in the next section.
 <!--zh-->
-本章在一个固定的宇宙层级 ℓ 内工作，以下关于集合、隶属与 L 的层的全部论述都在这一层级上。我们假设层级 ℓ-suc ℓ 上的排中律。它在数学上的唯一用途是序数三歧：对两个序数，返回两个方向的隶属关系之一或相等这一情形。后文的所有结论都经下一节建立的两次比较引理继承这种经典性。
+本章在一个固定的宇宙层级 ℓ 内工作，以下关于集合、成员关系与 `L`{.Agda} 的层的全部论述都在这一层级上。我们假设层级 ℓ-suc ℓ 上的排中律。它在数学上的唯一用途是序数三歧：对两个序数，返回两个方向的成员关系之一或相等这一情形。后文的所有结论都经下一节建立的两次比较引理继承这种经典性。
 <!--ja-->
 本章は固定された宇宙レベル ℓ の内部で働き、集合・所属・L の段階に関するすべての議論はこのレベルで行われる。レベル ℓ-suc ℓ における排中律を仮定する。その数学的な用途は順序数の三分法だけである。二つの順序数に対し、いずれかの向きの所属または等号という場合を一つ返す。以降の結論はすべて、次節で組み立てる二つの比較補題を通じてこの古典性を受け継ぐ。
 <!--/-->
@@ -28,7 +28,7 @@ module L.Ordinal.Stages {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 open import FOL.Syntax using ( Formula; var; _∈̇_; _∧̇_; ∀̇∈ )
 open import FOL.LevyHierarchy using ( Δ₀; δ-∈; δ-∧; δ-∀∈ )
 open import FOL.Manipulation.ConstantMapping using ( mapFo )
@@ -56,13 +56,13 @@ The other direction says an ordinal cannot appear late: every member of `α` is 
 With both halves the ordinals of a stage are carved out of it by a single formula, "is an ordinal", which is Δ₀ because transitivity can be said with bounded quantifiers alone. So `α` is a definable subset of `Lset α`, and the definable-power-set clause for the successor stage then applies.
 <!--zh-->
 
-序数在可构造层级中的位置由隶属关系控制：它会在自身的后继层出现，却不会早于自身的秩出现。本章证明两个方向，并给出在层内部识别序数的有界公式。
+序数在可构造层级中的位置由成员关系控制：它会在自身的后继层出现，却不会早于自身的秩出现。本章证明两个方向，并给出在层内部识别序数的有界公式。
 
-关于塔还有一个问题悬而未决，而无穷公理正系于此：给定一层，到那时为止究竟出现了哪些序数？答案十分简洁。`Lset α` 中的序数恰是 `α` 的成员，故塔的索引与它的序数内容逐层一致，而序数首次现身于自身之后的那一层。
+关于塔还有一个问题悬而未决，而无穷公理正系于此：给定一层，到那时为止究竟出现了哪些序数？答案十分简洁。`Lset α` 中的序数恰是 `α` 的元素，故塔的索引与它的序数内容逐层一致，而序数首次现身于自身之后的那一层。
 
-两个方向都有实质难度。一个方向说序数不会提前现身：若它在 `Lset α` 中，则它是 `α` 的成员。这是较难的一半，要经过秩，而这正是这里需要秩构造的原因。`Lset α` 中的集合是某个更早层的可定义子集，依归纳其成员的秩低于那一层，故它自身的秩有界；而作为序数，它就是自身的秩。
+两个方向都有实质难度。一个方向说序数不会提前现身：若它在 `Lset α` 中，则它是 `α` 的元素。这是较难的一半，要经过秩，而这正是这里需要秩构造的原因。`Lset α` 中的集合是某个更早层的可定义子集，依归纳其元素的秩低于那一层，故它自身的秩有界；而作为序数，它就是自身的秩。
 
-另一个方向说明序数不会延迟出现：`α` 的每个成员都已经在 `Lset α` 中。这一半由直接归纳证明，所用陈述正是序数会在自身之后的层出现。这里没有循环：归纳假设为各个成员提供该陈述，而证明所需的也只有这些成员。
+另一个方向说明序数不会延迟出现：`α` 的每个元素都已经在 `Lset α` 中。这一半由直接归纳证明，所用陈述正是序数会在自身之后的层出现。这里没有循环：归纳假设为各个元素提供该陈述，而证明所需的也只有这些元素。
 
 两半齐备，一层中的序数便由单一公式「是序数」从中选出，该公式是 Δ₀ 的，因为传递性只用有界量词就能表述。于是 `α` 是 `Lset α` 的可定义子集，后继层的可定义幂集子句随即可以应用。
 <!--ja-->
@@ -83,7 +83,7 @@ With both halves the ordinals of a stage are carved out of it by a single formul
 <!--en-->
 Two kinds of vocabulary meet here. From the ambient hierarchy V come the basic moves: membership ∈ˢ on the set S, the von Neumann successor `sucV`, induction and irreflexivity along membership. From the constructible side come the stages `Lset α` themselves, the definable-subset layer `𝒟ₒ`, and the two directions `Lset-in` and `Lset-out` relating membership in a stage to membership in its definable power set. The chapter's statement lives entirely in this intersection: it asks where an ordinal sits among the `Lset α`.
 <!--zh-->
-这里交汇了两类词汇。来自环境层级 V 的是基本动作：集合 S 上的隶属 ∈ˢ、冯·诺伊曼后继 `sucV`、沿隶属的归纳法与隶属的非自反性。来自可构造一侧的是层 `Lset α` 本身、可定义子集层 `𝒟ₒ`，以及把某层中的隶属与它的可定义幂集中的隶属联系起来的两个方向 `Lset-in` 与 `Lset-out`。本章的陈述完全落在这个交集里：它问的是序数在各个 `Lset α` 之间的位置。
+这里交汇了两类词汇。来自环境层级 `V`{.Agda} 的是基本动作：集合 `S`{.Agda} 上的成员关系 ∈ˢ、冯·诺伊曼后继 `sucV`、沿成员关系的归纳法与成员关系的非自反性。来自可构造一侧的是层 `Lset α` 本身、可定义子集层 `𝒟ₒ`，以及把某层中的成员关系与它的可定义幂集中的成员关系联系起来的两个方向 `Lset-in` 与 `Lset-out`。本章的陈述完全落在这个交集里：它问的是序数在各个 `Lset α` 之间的位置。
 <!--ja-->
 ここで二種類の語彙が出会う。周囲の階層 V からは基本の操作が来る。集合 S 上の所属 ∈ˢ、フォン・ノイマンの後者 `sucV`、所属に沿った帰納法と所属の非反射性である。構成可能な側からは、段階 `Lset α` 自身、定義可能部分集合の層 `𝒟ₒ`、そして段階への所属とその定義可能冪集合への所属を結ぶ二方向 `Lset-in` と `Lset-out` が来る。本章の主張は完全にこの交わりの中にある。すなわち、順序数が `Lset α` の間のどこに位置するかを問うのである。
 <!--/-->
@@ -91,7 +91,7 @@ Two kinds of vocabulary meet here. From the ambient hierarchy V come the basic m
 <!--en-->
 Ordinals enter as the predicate `IsOrd`: a set is an ordinal exactly when it is transitive and all of its members are transitive. This is the von Neumann reading, where the ordinal α is the set of all smaller ordinals, so asking whether an ordinal has appeared at a stage is literally a membership question. Also from earlier chapters come `mem-ord` and `suc-ord`, the closure facts that a member of an ordinal is an ordinal and that the successor of an ordinal is an ordinal; they keep every stage index in the argument an honest ordinal.
 <!--zh-->
-序数以谓词 `IsOrd` 进入：一个集合是序数，当且仅当它是传递的且它的每个成员都是传递的。这是冯·诺伊曼式的读法，其中序数 α 就是所有更小序数的集合，因此问序数是否已在某层出现，字面上就是隶属问题。相应的闭包事实是 `mem-ord` 与 `suc-ord`：序数的成员是序数，序数的后继是序数。它们保证论证中的每层指标都是序数。
+序数以谓词 `IsOrd` 进入：一个集合是序数，当且仅当它是传递的且它的每个元素都是传递的。这是冯·诺伊曼式的读法，其中序数 α 就是所有更小序数的集合，因此问序数是否已在某层出现，字面上就是成员关系问题。相应的闭包事实是 `mem-ord` 与 `suc-ord`：序数的元素是序数，序数的后继是序数。它们保证论证中的每层指标都是序数。
 <!--ja-->
 順序数は述語 `IsOrd` として登場する。集合が順序数であるのは、それが伝播的であり、かつそのすべての要素が伝播的であるとき、そのときに限る。これはフォン・ノイマンの読み方で、順序数 α はより小さい順序数全体の集合なので、順序数がある段階に現れたかを問うことは文字どおり所属の問題である。さらに前の章からは `mem-ord` と `suc-ord` という閉包の事実、すなわち順序数の要素は順序数であり順序数の後者は順序数であることが来る。これにより議論中の各段階の添字が必ず真の順序数であることが保たれる。
 <!--/-->
@@ -107,7 +107,7 @@ The decision procedure behind everything is `ord-tri`: given two ordinals, each 
 <!--en-->
 The rank construction supplies three properties. For a set x, `rank x` is an ordinal collecting how deep x sits in the cumulative hierarchy; `rank-ord` certifies it is an ordinal, `rank-fix` identifies the rank of an ordinal with the ordinal itself, and `rank-upper` bounds the rank of a set from bounds on the ranks of its members. These are the facts needed for the harder direction.
 <!--zh-->
-秩构造提供如下三条性质。对集合 x，`rank x` 是一个序数，刻画 x 在累积层级中所处的深度；`rank-ord` 证明它是序数，`rank-fix` 把序数的秩等同于该序数本身，`rank-upper` 由各成员秩的上界给出该集合秩的上界。这三条正是较难方向所需的事实。
+秩构造提供如下三条性质。对集合 `x`{.Agda}，`rank x` 是一个序数，刻画 `x`{.Agda} 在累积层级中所处的深度；`rank-ord` 证明它是序数，`rank-fix` 把序数的秩等同于该序数本身，`rank-upper` 由各元素秩的上界给出该集合秩的上界。这三条正是较难方向所需的事实。
 <!--ja-->
 階数は、それを構築した章から入ってくる。集合 x に対して `rank x` は、累積階層の中で x がどの深さに位置するかを集めた順序数である。`rank-ord` がそれが順序数であることを証明し、`rank-fix` が順序数の階数をその順序数自身と同一視し、`rank-upper` がその要素の階数の上界からその集合の階数の上界を与える。この三つの事実こそ、本章の難しい方向が消費するすべてである。
 <!--/-->
@@ -121,7 +121,7 @@ open import Cubical.HITs.CumulativeHierarchy.Constructions
 <!--en-->
 To connect ambient membership with formulas over a stage, a set A has a chosen presentation ⟪ A ⟫, and `∈-asFiber` passes from membership in A to an index naming that member. Mutual inclusion gives equality through `extensionality`. Formula satisfaction is interpreted directly in `hProp`: each formula denotes an hProp. These identifications let the argument pass between sets, their indices and bounded formulas.
 <!--zh-->
-为了把外围隶属与层上的公式联系起来，集合 A 有一个选定的呈现 ⟪ A ⟫，`∈-asFiber` 把 A 中的成员转为指名该成员的指标。互相包含则通过 `extensionality` 给出集合相等。公式的满足解释直接在 `hProp` 中：每个公式表示一个 hProp。这些对应使论证可以在集合、其指标与有界公式之间转换。
+为了把外围成员关系与层上的公式联系起来，集合 `A`{.Agda} 有一个选定的呈现 `⟪ A ⟫`{.Agda}，`∈-asFiber` 把 `A`{.Agda} 中的元素转为指名该元素的指标。互相包含则通过 `extensionality` 给出集合相等。公式的满足解释直接在 `hProp` 中：每个公式表示一个 hProp。这些对应使论证可以在集合、其指标与有界公式之间转换。
 <!--ja-->
 周囲での所属と段階上の論理式を結ぶために、集合 A には選ばれた提示 ⟪ A ⟫ があり、`∈-asFiber` は A への所属から、その要素を指す添字を与える。相互包含からは `extensionality` によって集合の等号が得られる。論理式の充足は `hProp` で直接解釈され、各論理式が表す hProp である。これらの対応により、集合、その添字、有界論理式の間を行き来できる。
 <!--/-->
@@ -130,7 +130,7 @@ To connect ambient membership with formulas over a stage, a set A has a chosen p
   using ( module InfinitySet )
 open InfinitySet using ( sucV )
 
-open hPropStructure 𝒮ᵥ
+open hPropView 𝒮ᵥ
 ```
 
 <!--en-->
@@ -150,7 +150,7 @@ Trichotomy leaves exactly three mathematical possibilities. If a belongs to b, i
 <!--en-->
 Suppose a ⊆ b for sets a and b, and compare them by trichotomy. If a is a member of b, the first helper applies `∈sucV-inl`: a member of b is automatically a member of `sucV b`, since the successor is b together with its singleton. If a equals b, the second helper transports the fact `self∈sucV b`, that b belongs to its own successor, along the path a ≡ b. Two of the three cases are already closed.
 <!--zh-->
-设集合 a 与 b 满足 a ⊆ b，用三歧性比较二者。若 a 是 b 的成员，第一个辅助件调用 `∈sucV-inl`：b 的成员自动是 `sucV b` 的成员，因为后继是 b 连同它的单点集。若 a 等于 b，第二个辅助件沿路径 a ≡ b 传递事实 `self∈sucV b`，即 b 属于自身的后继。三种情形中两种已经关闭。
+设集合 `a`{.Agda} 与 `b`{.Agda} 满足 `a ⊆ b`{.Agda}，用三歧性比较二者。若 `a`{.Agda} 是 `b`{.Agda} 的元素，第一个辅助件调用 `∈sucV-inl`：`b`{.Agda} 的元素自动是 `sucV b` 的元素，因为后继是 `b`{.Agda} 连同它的单点集。若 `a`{.Agda} 等于 `b`{.Agda}，第二个辅助件沿路径 `a ≡ b`{.Agda} 传递事实 `self∈sucV b`，即 `b`{.Agda} 属于自身的后继。三种情形中两种已经关闭。
 <!--ja-->
 集合 a と b が a ⊆ b を満たすとし、三分性で両者を比較する。a が b の要素なら、最初の補題は `∈sucV-inl` を適用する。後者は b とその一元集合の合併なので、b の要素は自動的に `sucV b` の要素である。a が b と等しいなら、二番目の補題は、b が自身の後者に属するという事実 `self∈sucV b` をパス a ≡ b に沿って輸送する。三つの場合のうち二つはすでに閉じた。
 <!--/-->
@@ -207,7 +207,7 @@ Now suppose β ∈ α. Trichotomy compares sucV β with α, so either the succes
 <!--en-->
 The impossible case is discharged inside `overshoot`, whose premises are exactly the two facts that cannot hold at once: α belongs to `sucV β` while β belongs to the ordinal α. Unfolding a member of `sucV β` with `∈sucV-elim` gives two subcases: α ∈ β, or α = β. The elimination principle demands that the target be a proposition, and the empty type `⊥*` is one, so both branches may end in a contradiction.
 <!--zh-->
-不可能的情形在 `overshoot` 内部排除，它的前提恰是两个不能同时成立的事实：α 属于 `sucV β`，而 β 属于序数 α。用 `∈sucV-elim` 展开 `sucV β` 中成员的事实，得到两个子情形：α ∈ β，或 α = β。该消去原则要求目标是命题，而空类型 `⊥*` 正是命题，于是两个分支都可以终止于矛盾。
+不可能的情形在 `overshoot` 内部排除，它的前提恰是两个不能同时成立的事实：α 属于 `sucV β`，而 β 属于序数 α。用 `∈sucV-elim` 展开 `sucV β` 中元素的事实，得到两个子情形：α ∈ β，或 α = β。该消去原则要求目标是命题，而空类型 `⊥*` 正是命题，于是两个分支都可以终止于矛盾。
 <!--ja-->
 ありえない場合は `overshoot` の内部で排除される。その前提は同時には成り立たない二つの事実、すなわち α が `sucV β` に属し、しかも β が順序数 α に属するというものである。`∈sucV-elim` で `sucV β` の要素という事実を展開すると、α ∈ β か α = β の二つの場合が出る。この消去原理は目標が命題であることを要求するが、空型 `⊥*` はまさに命題なので、どちらの分岐も矛盾で終えることができる。
 <!--/-->
@@ -224,7 +224,7 @@ private
 <!--en-->
 In the first subcase we have the membership chain α ∈ β ∈ α. Transitivity of α, its first component `ordα .fst`, composes the chain to α ∈ α. In the second, α = β transports β ∈ α along the reversed path and again yields α ∈ α. Both contradict `∈-irrefl`, so the impossible third alternative entails the required conclusion `Out β α`.
 <!--zh-->
-第一个子情形给出隶属链 α ∈ β ∈ α。α 的传递性，即其第一分量 `ordα .fst`，将这条链复合为 α ∈ α。第二个子情形中，α = β 沿反向路径传递 β ∈ α，同样得到 α ∈ α。两者都与 `∈-irrefl` 矛盾，因此这个不可能的第三种情形推出所需结论 `Out β α`。
+第一个子情形给出成员关系链 α ∈ β ∈ α。α 的传递性，即其第一分量 `ordα .fst`，将这条链复合为 α ∈ α。第二个子情形中，α = β 沿反向路径传递 β ∈ α，同样得到 α ∈ α。两者都与 `∈-irrefl` 矛盾，因此这个不可能的第三种情形推出所需结论 `Out β α`。
 <!--ja-->
 最初の小場合では所属の鎖 α ∈ β ∈ α が得られる。α の推移性、すなわち第一成分 `ordα .fst` はこの鎖を合成して α ∈ α を与える。次の場合は α = β に沿って β ∈ α を逆向きに輸送し、やはり α ∈ α を得る。どちらも `∈-irrefl` に反するので、不可能な第三の場合から必要な結論 `Out β α` が従う。
 <!--/-->
@@ -241,7 +241,7 @@ suc∈or≡ : (β α : S) → IsOrd β → IsOrd α → ⟨ β ∈ˢ α ⟩
 <!--en-->
 The lemma proper now runs the trichotomy between `sucV β` and α, both certified ordinals, `sucV β` via `suc-ord`. The first two cases already have the required shape, membership or equality, and are returned directly.
 <!--zh-->
-引理本身接着在 `sucV β` 与 α 之间运行三歧性，二者都被证明为序数，`sucV β` 经 `suc-ord`。前两种情形已经具有所需形状，隶属或相等，直接返回即可。
+引理本身接着在 `sucV β` 与 α 之间运行三歧性，二者都被证明为序数，`sucV β` 经 `suc-ord`。前两种情形已经具有所需形状，成员关系或相等，直接返回即可。
 <!--ja-->
 本命の補題は、`sucV β` と α の間で三分性を回する。両者とも順序数であることが証明されており、`sucV β` は `suc-ord` によるものである。最初の二つの場合はすでに求められる形、所属か相等かを備えているので、そのまま返せる。
 <!--/-->
@@ -257,7 +257,7 @@ suc∈or≡ β α ordβ ordα β∈α = go (ord-tri (sucV β) (suc-ord ordβ) α
 <!--en-->
 The third case, α ∈ sucV β, is precisely the premise of `overshoot`, and feeding it the standing hypothesis β ∈ α closes the analysis. The conclusion `suc∈or≡` is the sharp form of "no overshoot": below α, the successor stages of members of α are never strictly beyond α.
 <!--zh-->
-第三种情形 α ∈ sucV β 恰是 `overshoot` 的前提，代入已有假设 β ∈ α 即完成分析。结论 `suc∈or≡` 是「不越头」的锐利形式：在 α 之下，α 各成员的后继层从不停留在严格超出 α 的位置。
+第三种情形 α ∈ sucV β 恰是 `overshoot` 的前提，代入已有假设 β ∈ α 即完成分析。结论 `suc∈or≡` 是「不越头」的锐利形式：在 α 之下，α 各元素的后继层从不停留在严格超出 α 的位置。
 <!--ja-->
 三つ目の場合 α ∈ sucV β はまさに `overshoot` の前提であり、仮定の β ∈ α を渡せば場合分けは閉じる。結論 `suc∈or≡` は「行き過ぎない」ことの鋭い形である。α の下では、α の要素の後者段階が α を厳しく超えることは決してない。
 <!--/-->
@@ -273,7 +273,7 @@ This is the bridge between the pointwise statement "β appears at sucV β" and t
 <!--zh-->
 而它所服务的累积引理则是：在自身后继层现身过的序数，在此后每层都已现身，其中「此后」指索引在其之上。
 
-这是「β 在 sucV β 现身」这一逐点陈述与「α 的每个成员都在 Lset α 中」这一层陈述之间的桥。给定 β ∈ α，后继 sucV β 或位于 α 内部、或与之重合，无论哪种情形，较小层中的隶属都会转化为 `Lset α` 中的隶属。
+这是「β 在 sucV β 现身」这一逐点陈述与「α 的每个元素都在 Lset α 中」这一层陈述之间的桥。给定 β ∈ α，后继 sucV β 或位于 α 内部、或与之重合，无论哪种情形，较小层中的成员关系都会转化为 `Lset α` 中的成员关系。
 <!--ja-->
 そしてこれが奉仕する先が累積の補題である。自身の後者段階に現れた順序数は、それより後のすべての段階に現れる。ここで「後」とは、添字がその順序数の上にあることを意味する。
 
@@ -283,7 +283,7 @@ This is the bridge between the pointwise statement "β appears at sucV β" and t
 <!--en-->
 The membership branch uses monotonicity of stages: `Lset-mono` says that if γ ∈ δ then `Lset γ` is included in `Lset δ`, so a member of the earlier stage is a member of the later one. Here γ = sucV β and δ = α, exactly the first case of `suc∈or≡`.
 <!--zh-->
-隶属分支使用层的单调性：`Lset-mono` 说若 γ ∈ δ 则 `Lset γ` 包含于 `Lset δ`，于是较早层的成员是较晚层的成员。此处 γ = sucV β、δ = α，恰是 `suc∈or≡` 的第一种情形。
+成员关系分支使用层的单调性：`Lset-mono` 说若 γ ∈ δ 则 `Lset γ` 包含于 `Lset δ`，于是较早层的元素是较晚层的元素。此处 γ = sucV β、δ = α，恰是 `suc∈or≡` 的第一种情形。
 <!--ja-->
 所属の場合は段階の単調性を使う。`Lset-mono` は、γ ∈ δ なら `Lset γ` が `Lset δ` に含まれることを述べるので、より早い段階の要素はより後の段階の要素である。ここでは γ = sucV β、δ = α で、まさに `suc∈or≡` の最初の場合である。
 <!--/-->
@@ -300,7 +300,7 @@ private
 <!--en-->
 The equality branch is the degenerate one: when sucV β is not strictly below but equal to α, membership in `Lset (sucV β)` is already membership in `Lset α`, and the transport along the path makes this literally so. The statement of `Lset-cumul` takes the two ordinal certificates and the appearance hypothesis, and dispatches on `suc∈or≡`.
 <!--zh-->
-相等分支是退化情形：当 sucV β 不严格在下而是等于 α 时，`Lset (sucV β)` 中的隶属已经是 `Lset α` 中的隶属，沿该路径的传递把这一点变成字面事实。`Lset-cumul` 的陈述取两个序数证书与现身假设，并按 `suc∈or≡` 分派。
+相等分支是退化情形：当 sucV β 不严格在下而是等于 α 时，`Lset (sucV β)` 中的成员关系已经是 `Lset α` 中的成员关系，沿该路径的传递把这一点变成字面事实。`Lset-cumul` 的陈述取两个序数证书与现身假设，并按 `suc∈or≡` 分派。
 <!--ja-->
 相等の場合は退化したものである。sucV β が厳密には下にない、つまり α と等しいときには、`Lset (sucV β)` への所属はすでに `Lset α` への所属であり、パスに沿った輸送がこれを文字どおりのものにする。`Lset-cumul` は二つの順序数の証明と出現の仮定を受け取り、`suc∈or≡` で場合分けをする。
 <!--/-->
@@ -340,9 +340,9 @@ One notational point about the induction: membership in a truncated existential 
 
 若一个集合属于 `Lset α`，其秩便以 `α` 为界。对于秩等于自身的序数，这说明它不能在更早层出现。
 
-这是较难的一半。沿层索引归纳：`Lset α` 中的集合落在某个 `β ∈ α` 的 `Lset β` 的可定义子集里，故它是 `Lset β` 的子集；于是依归纳假设它的每个成员的秩都在 `β` 中；故它自身的秩，即那些秩的后继之并，包含于 `β`；三歧比较给出它属于 `β` 的后继，从而属于 `α`。
+这是较难的一半。沿层索引归纳：`Lset α` 中的集合落在某个 `β ∈ α` 的 `Lset β` 的可定义子集里，故它是 `Lset β` 的子集；于是依归纳假设它的每个元素的秩都在 `β` 中；故它自身的秩，即那些秩的后继之并，包含于 `β`；三歧比较给出它属于 `β` 的后继，从而属于 `α`。
 
-关于归纳的一点记法说明：截断存在式中的成员关系本身也是截断的，归纳按截断形式 β ∈ᵗ α 陈述，而非按显式成员。目标是一个隶属陈述，因而是命题，所以用 `rec₁` 消去该截断是合法的。
+关于归纳的一点记法说明：截断存在式中的成员关系本身也是截断的，归纳按截断形式 β ∈ᵗ α 陈述，而非按显式元素。目标是一个成员关系陈述，因而是命题，所以用 `rec₁` 消去该截断是合法的。
 <!--ja-->
 ## 自身の階数より前に現れるものはない
 
@@ -356,7 +356,7 @@ One notational point about the induction: membership in a truncated existential 
 <!--en-->
 The statement quantifies over all ordinals α at once, and ∈-induction is applied to the whole predicate as a function of α, with the ordinal certificate carried along as an argument. The induction is on membership in α, so the inductive hypothesis at α speaks about members β of α, not about earlier stages by any list order.
 <!--zh-->
-陈述同时对所有序数 α 量化，∈-induction 施加于作为 α 之函数的整个谓词，序数证书作为参数一路携带。归纳是沿 α 上的隶属进行的，故在 α 处的归纳假设谈论的是 α 的成员 β，而不是按任何次序排列的「更早层」。
+陈述同时对所有序数 α 量化，∈-induction 施加于作为 α 之函数的整个谓词，序数证书作为参数一路携带。归纳是沿 α 上的成员关系进行的，故在 α 处的归纳假设谈论的是 α 的元素 β，而不是按任何次序排列的「更早层」。
 <!--ja-->
 主張はすべての順序数 α にわたって量化されており、∈-induction は α の関数としての述語全体に適用され、順序数の証明は引数として携行される。帰納は α への所属に沿って行われるので、α における帰納仮説が語るのは α の要素 β であって、何らかの順序による「より早い段階」ではない。
 <!--/-->
@@ -388,7 +388,7 @@ The key step exposes what x ∈ Lset α means: by `Lset-out`, x merely belongs t
 <!--en-->
 Inside the fiber, everything needed to run the induction hypothesis is recovered. The member β of the ordinal α is itself an ordinal by `mem-ord`, which is what lets the inductive hypothesis fire at β.
 <!--zh-->
-在纤维内部，运行归纳假设所需的一切都被恢复。序数 α 的成员 β 经 `mem-ord` 本身就是序数，正是这一点让归纳假设得以在 β 处启用。
+在纤维内部，运行归纳假设所需的一切都被恢复。序数 α 的元素 β 经 `mem-ord` 本身就是序数，正是这一点让归纳假设得以在 β 处启用。
 <!--ja-->
 繊維の内部では、帰納仮説を動かすのに必要なものがすべて取り戻される。順序数 α の要素 β は `mem-ord` によってそれ自身順序数であり、これこそが帰納仮説を β で発火させるものである。
 <!--/-->
@@ -404,7 +404,7 @@ Inside the fiber, everything needed to run the induction hypothesis is recovered
 <!--en-->
 Definability of x over `Lset β` means x is a subset of it: `𝒟ₒ-inv` unpacks the certificate and `DefOf.Def∋⊆A` turns it into the inclusion x ⊆ Lset β. Composing with the inductive hypothesis, every member y of x has rank in β. Then `rank-upper`, given exactly such bounds on member ranks, includes `rank x` itself into β.
 <!--zh-->
-x 在 `Lset β` 上的可定义性意味着 x 是它的子集：`𝒟ₒ-inv` 拆开证书，`DefOf.Def∋⊆A` 把它变成包含关系 x ⊆ Lset β。与归纳假设结合，x 的每个成员 y 的秩都在 β 中。随后 `rank-upper` 在恰有这些成员秩上界的前提下，把 `rank x` 本身包含进 β。
+`x`{.Agda} 在 `Lset β` 上的可定义性意味着 `x`{.Agda} 是它的子集：`𝒟ₒ-inv` 拆开证书，`DefOf.Def∋⊆A` 把它变成包含关系 `x ⊆ Lset β`{.Agda}。与归纳假设结合，`x`{.Agda} 的每个元素 `y`{.Agda} 的秩都在 β 中。随后 `rank-upper` 在恰有这些元素秩上界的前提下，把 `rank x` 本身包含进 β。
 <!--ja-->
 `Lset β` の上での x の定義可能性は、x がその部分集合であることを意味する。`𝒟ₒ-inv` が証明書をほどき、`DefOf.Def∋⊆A` がそれを包含 x ⊆ Lset β に変える。これを帰納仮説と組み合わせると、x の各要素 y の階数は β の中にある。そして `rank-upper` は、まさにこのような要素の階数の上界を与えられれば、`rank x` 自身を β に含める。
 <!--/-->
@@ -421,7 +421,7 @@ x 在 `Lset β` 上的可定义性意味着 x 是它的子集：`𝒟ₒ-inv` �
 <!--en-->
 What remains is to lift rank x ∈ sucV β into rank x ∈ α. Both rank x and β are ordinals, the former by `rank-ord`, and `⊆→∈suc` from the first section applies to their inclusion, placing rank x in the successor of β. The elimination `∈sucV-elim` then compares with the known β ∈ α: if rank x is a member of β, transitivity of α lifts the membership one step; if rank x equals β, the path transports β ∈ α directly. Either way the rank lands in α, completing the induction.
 <!--zh-->
-剩下的是把 rank x ∈ sucV β 提升为 rank x ∈ α。rank x 与 β 都是序数，前者由 `rank-ord` 保证，于是第一节建立的 `⊆→∈suc` 施于二者的包含关系，把 rank x 放进 β 的后继。随后 `∈sucV-elim` 与已知的 β ∈ α 比较：若 rank x 是 β 的成员，α 的传递性把隶属再推一步；若 rank x 等于 β，路径直接传递 β ∈ α。无论哪种情形，秩都落入 α，归纳完成。
+剩下的是把 `rank x ∈ sucV β`{.Agda} 提升为 `rank x ∈ α`{.Agda}。`rank x`{.Agda} 与 β 都是序数，前者由 `rank-ord` 保证，于是第一节建立的 `⊆→∈suc` 施于二者的包含关系，把 `rank x`{.Agda} 放进 β 的后继。随后 `∈sucV-elim` 与已知的 β ∈ α 比较：若 `rank x`{.Agda} 是 β 的元素，α 的传递性把成员关系再推一步；若 `rank x`{.Agda} 等于 β，路径直接传递 β ∈ α。无论哪种情形，秩都落入 α，归纳完成。
 <!--ja-->
 残るのは、rank x ∈ sucV β を rank x ∈ α へ持ち上げることである。rank x と β はどちらも順序数で、前者は `rank-ord` によるものなので、最初の節の `⊆→∈suc` が両者の包含に適用され、rank x は β の後者の中に置かれる。続いて `∈sucV-elim` が既知の β ∈ α と比較する。rank x が β の要素なら、α の伝播性が所属を一段押し上げ、rank x が β と等しいなら、パスが β ∈ α を直接輸送する。いずれの場合も階数は α に着地し、帰納は完成する。
 <!--/-->
@@ -437,7 +437,7 @@ What remains is to lift rank x ∈ sucV β into rank x ∈ α. Both rank x and �
 <!--en-->
 For an ordinal the conclusion simplifies, because rank fixes it: an ordinal in `Lset α` is a member of `α`. This is the lower bound of the chapter's characterization in its usable form.
 <!--zh-->
-对序数，结论更简单，因为秩完全确定它：`Lset α` 中的序数是 `α` 的成员。这就是本章刻画中以下界形式呈现的可用版本。
+对序数，结论更简单，因为秩完全确定它：`Lset α` 中的序数是 `α` 的元素。这就是本章刻画中以下界形式呈现的可用版本。
 <!--ja-->
 順序数に対しては結論が単純になる。階数は順序数を固定するからである。`Lset α` に属する順序数は `α` の要素である。これが本章の特徴付けの下界を、使える形にしたものである。
 <!--/-->
@@ -445,7 +445,7 @@ For an ordinal the conclusion simplifies, because rank fixes it: an ordinal in `
 <!--en-->
 The step is a transport: `rank-fix x ordx` gives the path rank x ≡ x, and substituting along it converts the rank bound rank x ∈ α into the membership x ∈ α. Note the direction, which the induction above guarantees: appearance in a stage forces membership in the index, not the converse.
 <!--zh-->
-这一步是一次传递：`rank-fix x ordx` 给出路径 rank x ≡ x，沿它替换即把秩上界 rank x ∈ α 转化为隶属 x ∈ α。注意方向，这正是上述归纳所保证的：在层中的现身强制对索引的隶属，而非相反。
+这一步是一次传递：`rank-fix x ordx` 给出路径 `rank x ≡ x`{.Agda}，沿它替换即把秩上界 `rank x ∈ α`{.Agda} 转化为成员关系 `x ∈ α`{.Agda}。注意方向，这正是上述归纳所保证的：在层中的现身强制对索引的成员关系，而非相反。
 <!--ja-->
 この一歩は輸送である。`rank-fix x ordx` がパス rank x ≡ x を与え、それに沿った代入が階数の上界 rank x ∈ α を所属 x ∈ α に変える。方向に注意してほしい。上の帰納法が保証するのは、段階への出現が添字への所属を強いるということで、その逆ではない。
 <!--/-->
@@ -468,9 +468,9 @@ The indices are de Bruijn: each bounded quantifier binds a fresh variable `0` an
 <!--zh-->
 ## 用有界量词表达序数性质
 
-一个集合是传递的，且其每个成员也都是传递的，这一性质可以用有界量词表达。因此，该公式在传递层与外围宇宙之间绝对地识别序数。
+一个集合是传递的，且其每个元素也都是传递的，这一性质可以用有界量词表达。因此，该公式在传递层与外围宇宙之间绝对地识别序数。
 
-这个谓词由两条子句构成，两条都已有界：集合传递，指其成员的成员也都是其成员；成员皆传递，指同一条性质在低一层成立。没有无界量词出现，故公式是 Δ₀；也没有常元出现，从而免去了一整套常元改名操作。
+这个谓词由两条子句构成，两条都已有界：集合传递，指其元素的元素也都是其元素；元素皆传递，指同一条性质在低一层成立。没有无界量词出现，故公式是 Δ₀；也没有常元出现，从而免去了一整套常元改名操作。
 
 索引采用 de Bruijn：每个有界量词约束一个新的变元 `0`，并把先前已有的变元向外推移一位，故两层约束之后，候选序数位于索引 2。
 <!--ja-->
@@ -486,7 +486,7 @@ The indices are de Bruijn: each bounded quantifier binds a fresh variable `0` an
 <!--en-->
 The first clause says transitivity. Its bounded quantifier ∀̇∈ ranges over members of the value bound one step out; reading the de Bruijn indices, after one binder the members live at index 0 and the candidate at index 1, and inside the second binder the atomic formula demands y ∈ x with y at 0 and x pushed to 2. The formula is polymorphic in the alphabet K of constants but uses none, so the same syntax serves every interpretation.
 <!--zh-->
-第一条子句说的是传递性。其有界量词 ∀̇∈ 在外一层所约束值的成员上取遍；按 de Bruijn 索引来读，第一层约束后成员位于索引 0、候选序数位于索引 1，而第二层约束内的原子公式要求 y ∈ x，y 在 0，x 被推到 2。公式对常元字母表 K 多态但不使用任何常元，故同一语法可服务于任何解释。
+第一条子句说的是传递性。其有界量词 ∀̇∈ 在外一层所约束值的元素上取遍；按 de Bruijn 索引来读，第一层约束后元素位于索引 0、候选序数位于索引 1，而第二层约束内的原子公式要求 `y ∈ x`{.Agda}，`y`{.Agda} 在 0，`x`{.Agda} 被推到 2。公式对常元字母表 `K`{.Agda} 多态但不使用任何常元，故同一语法可服务于任何解释。
 <!--ja-->
 最初の節は伝播性を述べる。その有界量化子 ∀̇∈ は、一段外で束縛された値の要素を渡る。de Bruijn 添字で読むと、一つの束縛子の後では要素は添字 0、候補は添字 1 にあり、二つ目の束縛子の内部では原子式が y ∈ x を要求し、y は 0、x は 2 へ押しやられている。論理式は定数のアルファベット K について多形であるがどの定数も使わないので、同じ構文があらゆる解釈に奉仕する。
 <!--/-->
@@ -502,7 +502,7 @@ The first clause says transitivity. Its bounded quantifier ∀̇∈ ranges over 
 <!--en-->
 The second clause stacks one more quantifier: a member x of the candidate, a member y of x, and a member z of y must land back in the candidate, which says each member of the candidate is transitive. Three binders later, the innermost variable is at 0 and the candidate at 3. The certificate `φ-ord-Δ₀` is built from the same three primitive certificates, δ-∈ for atomic membership, δ-∀∈ for bounded quantifiers, and δ-∧ for the conjunction, mirroring the formula's construction step by step.
 <!--zh-->
-第二条子句多叠一层量词：候选序数的成员 x、x 的成员 y、y 的成员 z 必须落回候选序数，这正说明候选序数的每个成员都是传递的。三层约束之后，最内层变元在索引 0，候选序数在索引 3。证书 `φ-ord-Δ₀` 由同样的三种基本证书拼成，原子隶属的 δ-∈、有界量词的 δ-∀∈ 与合取的 δ-∧，一步对一步地映照公式的构造。
+第二条子句多叠一层量词：候选序数的元素 `x`{.Agda}、`x`{.Agda} 的元素 `y`{.Agda}、`y`{.Agda} 的元素 `z`{.Agda} 必须落回候选序数，这正说明候选序数的每个元素都是传递的。三层约束之后，最内层变元在索引 0，候选序数在索引 3。证书 `φ-ord-Δ₀` 由同样的三种基本证书拼成，原子成员关系的 δ-∈、有界量词的 δ-∀∈ 与合取的 δ-∧，一步对一步地映照公式的构造。
 <!--ja-->
 二番目の節はもう一段量化子を重ねる。候補の要素 x、x の要素 y、y の要素 z は候補へ戻らねばならず、これは候補の各要素が伝播的であることを述べる。三つの束縛子の後では、最内の変数は 0、候補は 3 にある。証明書 `φ-ord-Δ₀` は同じ三種の基本的な証明書、原子式の所属に対する δ-∈、有界量化子に対する δ-∀∈、連言に対する δ-∧ から、論理式の構成に一歩ずつ対応して組み上げられる。
 <!--/-->
@@ -525,11 +525,11 @@ Cumulation needs, for each member of `α`, that it appears at its own successor 
 <!--zh-->
 ## 一层中的序数
 
-用有界序数公式作分离，恰好收集属于某一层的全部序数。其成员规格在内部与外围宇宙中都可使用。
+用有界序数公式作分离，恰好收集属于某一层的全部序数。其成员关系规格在内部与外围宇宙中都可使用。
 
-固定一层。利用传递层上的有界绝对性，公式在环境层级中的满足恰好展开成序数谓词的两条子句，故二者只需重排参数即可互换。于是它作分离所得的可定义子集就是 `α` 自身：其成员是该层的序数，故经秩那一半是 `α` 的成员；而 `α` 的成员是已经现身过的序数，经累积引理，它们满足该公式。
+固定一层。利用传递层上的有界绝对性，公式在环境层级中的满足恰好展开成序数谓词的两条子句，故二者只需重排参数即可互换。于是它作分离所得的可定义子集就是 `α` 自身：其元素是该层的序数，故经秩那一半是 `α` 的元素；而 `α` 的元素是已经现身过的序数，经累积引理，它们满足该公式。
 
-累积引理需要 `α` 的每个成员都在自身的后继层现身。这恰是本定理的结论本身，故在此把它作为假设引入，而下面的归纳正是给出这一假设的论证。
+累积引理需要 `α` 的每个元素都在自身的后继层现身。这恰是本定理的结论本身，故在此把它作为假设引入，而下面的归纳正是给出这一假设的论证。
 <!--ja-->
 ## 一つの段階に属する順序数
 
@@ -566,7 +566,7 @@ module OrdAt (α : S) (ordα : IsOrd α) where
 <!--en-->
 Members of A present themselves through the fiber ⟪ A ⟫: an index m names the element ⟪ A ⟫↪ m of A. The formula φ is our φ-ord instantiated at the carrier ⟪ A ⟫, so it has one free-variable slot, occupied by the environment ⟪ A ⟫↪ m ∷ []. Because φ has no constants, `mapFo DefA.ι φ` merely relabels through the constant interpretation ι, which for this formula changes nothing syntactically. The satisfaction sign ⊨ᵛ here is the ambient one, from the absoluteness refinement.
 <!--zh-->
-A 的成员通过纤维 ⟪ A ⟫ 自我呈现：指标 m 命名 A 中的元素 ⟪ A ⟫↪ m。公式 φ 是 φ-ord 在载体 ⟪ A ⟫ 上的实例，它有一个自由变元槽，由环境 ⟪ A ⟫↪ m ∷ [] 占据。由于 φ 不含常元，`mapFo DefA.ι φ` 只是经常元解释 ι 改名，就这条公式而言在语法上没有改变任何东西。此处的满足号 ⊨ᵛ 是绝对性细化所给的、外围层面的满足。
+`A`{.Agda} 的元素通过纤维 `⟪ A ⟫`{.Agda} 自我呈现：指标 `m`{.Agda} 命名 `A`{.Agda} 中的元素 `⟪ A ⟫↪ m`{.Agda}。公式 φ 是 φ-ord 在载体 `⟪ A ⟫`{.Agda} 上的实例，它有一个自由变元槽，由环境 `⟪ A ⟫↪ m ∷ []`{.Agda} 占据。由于 φ 不含常元，`mapFo DefA.ι φ` 只是经常元解释 ι 改名，就这条公式而言在语法上没有改变任何东西。此处的满足号 ⊨ᵛ 是绝对性细化所给的、外围层面的满足。
 <!--ja-->
 A の要素は繊維 ⟪ A ⟫ を通して現れる。添字 m が A の要素 ⟪ A ⟫↪ m を名指すのである。論理式 φ は φ-ord を台 ⟪ A ⟫ 上に実例化したもので、自由変数の枠を一つ持ち、環境 ⟪ A ⟫↪ m ∷ [] がそれを占める。φ は定数を含まないので、`mapFo DefA.ι φ` は定数の解釈 ι を通した改名にすぎず、この論理式については構文的には何も変えない。ここの充足記号 ⊨ᵛ は、絶対性の精緻化が与える周囲の充足である。
 <!--/-->
@@ -600,7 +600,7 @@ The first direction reads satisfaction into the ordinal predicate. The satisfact
 <!--en-->
 The second component is the second clause, with the quantifiers nested one deeper: for x ∈ B, y ∈ x and z ∈ y, the element z lands in B. That says precisely that every member x of B is itself transitive, so together with the first projection the satisfaction data is exactly an IsOrd certificate for B.
 <!--zh-->
-第二个分量是第二条子句，量词更深一层嵌套：对 x ∈ B、y ∈ x、z ∈ y，元素 z 落回 B。这恰好说明 B 的每个成员 x 自身都是传递的，于是连同第一个投影，满足数据恰是 B 的 IsOrd 证书。
+第二个分量是第二条子句，量词更深一层嵌套：对 `x ∈ B`{.Agda}、`y ∈ x`{.Agda}、`z ∈ y`{.Agda}，元素 `z`{.Agda} 落回 `B`{.Agda}。这恰好说明 `B`{.Agda} 的每个元素 `x`{.Agda} 自身都是传递的，于是连同第一个投影，满足数据恰是 `B`{.Agda} 的 IsOrd 证书。
 <!--ja-->
 第二成分は二番目の節で、量化子がもう一段深く入れ子になる。x ∈ B、y ∈ x、z ∈ y に対して要素 z は B へ戻る。これは B の各要素 x がそれ自身伝播的であることをまさに述べるので、第一射影と合わせて、充足のデータは B に対する IsOrd の証明にほかならない。
 <!--/-->
@@ -633,7 +633,7 @@ The converse direction assembles a satisfaction from an ordinal certificate. Its
 <!--en-->
 The second component must chain three memberships back into B, and the second clause of the IsOrd pair is exactly that chain. So satisfaction of φ and the ordinal predicate are interchangeable in both directions; the two formulations express the same mathematical condition. With this equivalence established, the main statement takes shape: the definable subset selected by φ equals α, proved by `extensionality` from two inclusions, and stated under the explicit hypothesis α⊆A that every member of α has already appeared in A.
 <!--zh-->
-第二个分量须把三个隶属串回 B，而 IsOrd 有序对的第二条子句正是这个串联条件。于是 φ 的满足与序数谓词在两个方向都可互换；二者表达同一数学条件。有了这一等价，主要陈述成形：φ 所选出的可定义子集等于 α，由 `extensionality` 经两个包含证明，并陈述于显式假设 α⊆A 之下，即 α 的每个成员已在 A 中现身。
+第二个分量须把三个成员关系串回 `B`{.Agda}，而 IsOrd 有序对的第二条子句正是这个串联条件。于是 φ 的满足与序数谓词在两个方向都可互换；二者表达同一数学条件。有了这一等价，主要陈述成形：φ 所选出的可定义子集等于 α，由 `extensionality` 经两个包含证明，并陈述于显式假设 `α⊆A`{.Agda} 之下，即 α 的每个元素已在 `A`{.Agda} 中现身。
 <!--ja-->
 第二成分は三つの所属を B へとつなげる必要があり、IsOrd の対の二番目の節はこの連鎖そのものである。したがって φ の充足と順序数述語は両方向で交換可能である。二つの表現は同じ数学的条件を述べている。この同値を得ると、主張が形を成する。φ が選ぶ定義可能部分集合は α に等しい、というもので、二つの包含から `extensionality` で証明され、α の各要素がすでに A に現れているという明示的な仮定 α⊆A のもとで述べられる。
 <!--/-->
@@ -650,7 +650,7 @@ The second component must chain three memberships back into B, and the second cl
 <!--en-->
 The inclusion from the definable subset to α is where the rank half of the chapter earns its keep. Membership in a definable subset unfolds by `∈∈ₛ` into a presentation-level fact, so sub₁ takes y with a proof that y belongs to `defSet φ` and must produce y ∈ α.
 <!--zh-->
-从可定义子集到 α 的包含，是本章秩那一半发挥作用的所在。可定义子集中的隶属经 `∈∈ₛ` 展开为呈现层面的事实，故 sub₁ 取一个 y 及「y 属于 `defSet φ`」的证明，须产出 y ∈ α。
+从可定义子集到 α 的包含，是本章秩那一半发挥作用的所在。可定义子集中的成员关系经 `∈∈ₛ` 展开为呈现层面的事实，故 sub₁ 取一个 `y`{.Agda} 及「`y`{.Agda} 属于 `defSet φ`」的证明，须产出 `y ∈ α`{.Agda}。
 <!--ja-->
 定義可能部分集合から α への包含は、本章の階数の方向が真価を発揮する場所である。定義可能部分集合への所属は `∈∈ₛ` によって提示のレベルの事実へ展開されるので、sub₁ は、y が `defSet φ` に単に (merely) 属するという証明とともに y を受け取り、y ∈ α を作り出さねばならない。
 <!--/-->
@@ -666,7 +666,7 @@ The inclusion from the definable subset to α is where the rank half of the chap
 <!--en-->
 Three conversions stack here. Membership of y in the definable subset yields membership in A by `defSet⊆A`, since the subset is contained in the stage. The chosen presentation turns this membership proof, via `∈-asFiber`, into an index m and a path q identifying y with the element named by m.
 <!--zh-->
-这里叠加了三次转换。y 属于可定义子集，由 `defSet⊆A` 得出 y 属于 A，因为子集包含于层。随后，选定的呈现通过 `∈-asFiber` 把这个隶属证明变成指标 m 与路径 q；该路径把 y 与 m 所指名的元素等同起来。
+这里叠加了三次转换。`y`{.Agda} 属于可定义子集，由 `defSet⊆A` 得出 `y`{.Agda} 属于 `A`{.Agda}，因为子集包含于层。随后，选定的呈现通过 `∈-asFiber` 把这个成员关系证明变成指标 `m`{.Agda} 与路径 `q`{.Agda}；该路径把 `y`{.Agda} 与 `m`{.Agda} 所指名的元素等同起来。
 <!--ja-->
 ここでは三つの変換が積み重なる。定義可能部分集合への y の所属は、部分集合が段階に含まれるため `defSet⊆A` によって A への所属を与える。次に繊維 `∈-asFiber` がその周囲の所属をその表示に置き換える。添字 m とパス q で、これらは単に (merely) 存在するにすぎない。
 <!--/-->
@@ -682,7 +682,7 @@ Three conversions stack here. Membership of y in the definable subset yields mem
 <!--en-->
 The path q transports membership from y to the presented element ⟪ A ⟫↪ m. Because φ is Δ₀ and A is transitive, `abs-defSet` identifies the hProp of membership in `defSet φ` with the hProp of ambient satisfaction of `mapFo ι φ` at the one-element environment. Substitution along these paths yields the required inhabitant sat; path transport itself imposes no propositionality condition.
 <!--zh-->
-路径 q 把 y 的隶属传递为所呈现元素 ⟪ A ⟫↪ m 的隶属。由于 φ 是 Δ₀ 且 A 传递，`abs-defSet` 等同了「该元素属于 `defSet φ`」与「`mapFo ι φ` 在单元环境处外围满足」这两个 hProp。沿这些路径替换便得到所需的 sat；路径传递本身不要求目标具有命题性。
+路径 `q`{.Agda} 把 `y`{.Agda} 的成员关系传递为所呈现元素 `⟪ A ⟫↪ m`{.Agda} 的成员关系。由于 φ 是 Δ₀ 且 `A`{.Agda} 传递，`abs-defSet` 等同了「该元素属于 `defSet φ`」与「`mapFo ι φ` 在单元环境处外围满足」这两个 hProp。沿这些路径替换便得到所需的 sat；路径传递本身不要求目标具有命题性。
 <!--ja-->
 パス q は y の所属を提示された要素 ⟪ A ⟫↪ m の所属へ輸送する。φ は Δ₀ で A は推移的なので、`abs-defSet` は `defSet φ` への所属という hProp と、一要素の環境における `mapFo ι φ` の周囲での充足という hProp を同一視する。これらのパスに沿った置換から必要な sat が得られる。パス輸送そのものは、対象が命題であることを要求しない。
 <!--/-->
@@ -698,7 +698,7 @@ The path q transports membership from y to the presented element ⟪ A ⟫↪ m.
 <!--en-->
 From sat, the implication `⊨ᵛ→ord` returns an IsOrd certificate for the presented element, and transporting along q turns it into one for y itself. Then `ord∈Lset→∈`, the rank half, places y inside α. So an arbitrary member of the definable subset is an ordinal of the stage, and the stage index contains it.
 <!--zh-->
-由 sat，蕴涵 `⊨ᵛ→ord` 返回所呈现元素的 IsOrd 证书，沿 q 传递后便得到 y 自身的证书。随后 `ord∈Lset→∈`，即秩那一半，把 y 放进 α。于是可定义子集的任意成员都是该层的序数，而层索引包含它。
+由 sat，蕴涵 `⊨ᵛ→ord` 返回所呈现元素的 IsOrd 证书，沿 `q`{.Agda} 传递后便得到 `y`{.Agda} 自身的证书。随后 `ord∈Lset→∈`，即秩那一半，把 `y`{.Agda} 放进 α。于是可定义子集的任意元素都是该层的序数，而层索引包含它。
 <!--ja-->
 sat から、含意 `⊨ᵛ→ord` が提示された要素の IsOrd 証明を返し、q に沿った輸送がそれを y 自身の証明に変える。次に `ord∈Lset→∈`、つまり階数の方向が、y を α の中に置く。よって定義可能部分集合の任意の要素はその段階の順序数であり、段階の添字がそれを含む。
 <!--/-->
@@ -715,7 +715,7 @@ sat から、含意 `⊨ᵛ→ord` が提示された要素の IsOrd 証明を�
 <!--en-->
 The reverse inclusion runs the same circuit backward. A member y of α arrives with its ordinal certificate already in hand, from `mem-ord`. The hypothesis α⊆A presents y inside the stage via a fiber m, q, and `ord→⊨ᵛ` gives ambient satisfaction of φ at that environment.
 <!--zh-->
-反向包含把同一回路倒着走。α 的成员 y 到手时已带着序数证书，由 `mem-ord` 给出。假设 α⊆A 经纤维 m、q 把 y 呈现在层内，`ord→⊨ᵛ` 便给出 φ 在该环境处的外围满足。
+反向包含把同一回路倒着走。α 的元素 `y`{.Agda} 到手时已带着序数证书，由 `mem-ord` 给出。假设 `α⊆A`{.Agda} 经纤维 `m`{.Agda}、`q`{.Agda} 把 `y`{.Agda} 呈现在层内，`ord→⊨ᵛ` 便给出 φ 在该环境处的外围满足。
 <!--ja-->
 逆向きの包含は、同じ回路を逆にたどる。α の要素 y は、`mem-ord` による順序数の証明をすでに手にした状態でやって来る。仮定 α⊆A が繊維 m、q を通して y を段階の内部に提示し、`ord→⊨ᵛ` がその環境における φ の周囲の充足を与える。
 <!--/-->
@@ -731,7 +731,7 @@ The reverse inclusion runs the same circuit backward. A member y of α arrives w
 <!--en-->
 Absoluteness now converts in the other direction: ambient satisfaction of the Δ₀ formula is membership of ⟪ A ⟫↪ m in `defSet φ`, and transporting along q lands the membership on y itself, inside the definable subset. No choice is made anywhere: each fiber m, q is used locally, on the very y that produced it.
 <!--zh-->
-绝对性现在朝另一方向换算：Δ₀ 公式的外围满足等于 ⟪ A ⟫↪ m 属于 `defSet φ`，沿 q 传递便把隶属落在 y 自身，即可定义子集之内。全程未做任何选择：每个纤维 m、q 都只在产生它的那个 y 上局部使用。
+绝对性现在朝另一方向换算：Δ₀ 公式的外围满足等于 `⟪ A ⟫↪ m`{.Agda} 属于 `defSet φ`，沿 `q`{.Agda} 传递便把成员关系落在 `y`{.Agda} 自身，即可定义子集之内。全程未做任何选择：每个纤维 `m`{.Agda}、`q`{.Agda} 都只在产生它的那个 `y`{.Agda} 上局部使用。
 <!--ja-->
 絶対性が今度は逆方向へ変換する。Δ₀ 論理式の周囲の充足は ⟪ A ⟫↪ m の `defSet φ` への所属であり、q に沿った輸送がその所属を y 自身の上に、定義可能部分集合の内部に着地させる。どの場所でも選択は行われない。各繊維 m、q は、それを生んだまさにその y の上で、局所的に使われるだけである。
 <!--/-->
@@ -770,7 +770,7 @@ The remaining gap is the inclusion `α ⊆ Lset α`, which the previous section 
 
 每个序数都是自身的可定义子集，由有界序数公式选出。因此 `α` 属于 `Lset α` 的可定义幂集，也就是后继层。
 
-剩下的缺口正是上一节不得不假设的包含关系 `α ⊆ Lset α`。它由对隶属关系的归纳填补：归纳假设陈述的是定理对 `α` 的每个成员 `β` 的情形，于是 `β` 出现在 `Lset (sucV β)` 中，再经第一节的累积引理被提升到 `Lset α` 中。一旦所有成员都累积进来，公式便从 `Lset α` 中分离出 `α`，而下一层定义中的并包含这一项。这里没有循环：归纳假设关心的是成员，而非 `α` 自身。
+剩下的缺口正是上一节不得不假设的包含关系 `α ⊆ Lset α`。它由对成员关系的归纳填补：归纳假设陈述的是定理对 `α` 的每个元素 `β` 的情形，于是 `β` 出现在 `Lset (sucV β)` 中，再经第一节的累积引理被提升到 `Lset α` 中。一旦所有元素都累积进来，公式便从 `Lset α` 中分离出 `α`，而下一层定义中的并包含这一项。这里没有循环：归纳假设关心的是元素，而非 `α` 自身。
 <!--ja-->
 ## 順序数は自身の後者段階に現れる
 
@@ -782,7 +782,7 @@ The remaining gap is the inclusion `α ⊆ Lset α`, which the previous section 
 <!--en-->
 Two small facts are packaged before the induction. The first is a one-way bridge from definable power set to stage: a certificate that `α` lies in `𝒟ₒ (Lset α)`, meaning `α` is a definable subset of `Lset α`, is exactly the data `Lset-in` needs, once combined with `self∈sucV α`, which says `α` belongs to its own successor. The second line begins the theorem itself, and the induction principle for membership is applied directly: the statement being proved by induction is the theorem, relativized to each ordinal.
 <!--zh-->
-归纳之前先打包两个小事实。其一是从可定义幂集到层的单向桥：一个说明 `α` 属于 `𝒟ₒ (Lset α)` 的证书，即 `α` 是 `Lset α` 的可定义子集，与 `self∈sucV α` (它说 `α` 属于自身的后继) 合在一起，恰是 `Lset-in` 所需的全部数据。第二行开始定理本身，直接应用对隶属关系的归纳原理：被归纳证明的陈述就是定理本身，相对化到每个序数上。
+归纳之前先打包两个小事实。其一是从可定义幂集到层的单向桥：一个说明 `α` 属于 `𝒟ₒ (Lset α)` 的证书，即 `α` 是 `Lset α` 的可定义子集，与 `self∈sucV α` (它说 `α` 属于自身的后继) 合在一起，恰是 `Lset-in` 所需的全部数据。第二行开始定理本身，直接应用对成员关系的归纳原理：被归纳证明的陈述就是定理本身，相对化到每个序数上。
 <!--ja-->
 帰納法の前に二つの小事実をまとめておく。一つ目は定義可能冪集合から段階への一方通行の橋である。`α` が `𝒟ₒ (Lset α)` に属する、すなわち `α` が `Lset α` の定義可能部分集合であるという証明は、`α` が自身の後者に属することを述べる `self∈sucV α` と合わせて、`Lset-in` が必要とするデータそのものである。二行目からは定理そのものが始まり、所属に関する帰納法の原理を直接適用する。帰納法で示される命題は、各順序数へ相対化された定理そのものだ。
 <!--/-->
@@ -799,7 +799,7 @@ ord∈Lset-suc = ∈-induction
 <!--en-->
 The induction step receives, for every member `β` of `α`, the theorem's conclusion at `β`, and must produce it at `α`. Since the previous section already reduced the goal to the single hypothesis `α ⊆ Lset α`, all the step does is assemble that inclusion and hand the result to the bridge lemma. Nothing about `α` beyond its ordinalhood and the induction hypothesis is used.
 <!--zh-->
-归纳步对 `α` 的每个成员 `β` 收到定理在 `β` 处的结论，并须给出在 `α` 处的结论。由于上一节已把目标化归为唯一的假设 `α ⊆ Lset α`，这一步要做的只是组装这个包含关系，并把结果交给桥引理。除了 `α` 是序数与归纳假设之外，别无所用。
+归纳步对 `α` 的每个元素 `β` 收到定理在 `β` 处的结论，并须给出在 `α` 处的结论。由于上一节已把目标化归为唯一的假设 `α ⊆ Lset α`，这一步要做的只是组装这个包含关系，并把结果交给桥引理。除了 `α` 是序数与归纳假设之外，别无所用。
 <!--ja-->
 帰納段は、`α` の各要素 `β` に対して定理の `β` における結論を受け取り、`α` における結論を組み立てなければならない。前節がすでに目標を唯一の仮定 `α ⊆ Lset α` に帰着させているため、この段がするのはその包含を組み立てて橋の補題に渡すことだけである。`α` が順序数であることと帰納法の仮定のほかには何も使わない。
 <!--/-->
@@ -815,7 +815,7 @@ The induction step receives, for every member `β` of `α`, the theorem's conclu
 <!--en-->
 The inclusion is built member-by-member. For each `β` in `α`, being a member of the ordinal `α` makes `β` an ordinal in its own right, and the induction hypothesis places it in `Lset (sucV β)`; the cumulation lemma of the first section, whose second comparison was designed for exactly this shape, then lifts it to `Lset α`. This is where the earlier comparison lemmas pay off: a single case split on whether `sucV β` lies in `α` or equals it covers every member at once.
 <!--zh-->
-包含关系逐个成员地组装。对 `α` 中的每个 `β`，作为序数 `α` 的成员使 `β` 自己也是序数，归纳假设把它放进 `Lset (sucV β)`；而第一节的累积引理，正是为其后继或落入 `α`、或与之相等这两种情形而设，随即把它提升到 `Lset α`。前面那两个比较引理在此兑现：一次分情形就同时覆盖了所有成员。
+包含关系逐个元素地组装。对 `α` 中的每个 `β`，作为序数 `α` 的元素使 `β` 自己也是序数，归纳假设把它放进 `Lset (sucV β)`；而第一节的累积引理，正是为其后继或落入 `α`、或与之相等这两种情形而设，随即把它提升到 `Lset α`。前面那两个比较引理在此兑现：一次分情形就同时覆盖了所有元素。
 <!--ja-->
 包含は要素ごとに組み立てられる。`α` の各 `β` に対し、順序数 `α` の要素であることで `β` 自身も順序数となり、帰納法の仮定がそれを `Lset (sucV β)` に置く。第一節の累積補題は、`sucV β` が `α` に属するか等しいかというちょうどこの形のために設計されたもので、それによって `β` は `Lset α` へ持ち上げられる。前の二つの比較補題がここで効いてくる。場合分けは一度で全要素を同時に扱う。
 <!--/-->
@@ -831,7 +831,7 @@ The inclusion is built member-by-member. For each `β` in `α`, being a member o
 <!--en-->
 With `α ⊆ Lset α` in hand, the previous section's conclusion applies verbatim: the definable subset of `Lset α` selected by `φ-ord` is `α` itself. The certificate is supplied merely, by truncation, since a member of `𝒟ₒ` needs only some defining formula and proof of agreement, and the pair of `φ-ord` with the extensionality argument from `OrdAt` is exactly such a witness. The bridge lemma then moves `α` into `Lset (sucV α)`, completing the induction and the theorem.
 <!--zh-->
-有了 `α ⊆ Lset α`，上一节的结论原样适用：由 `φ-ord` 从 `Lset α` 中选出的可定义子集正是 `α` 自身。证书以截断的方式仅仅给出，因为 `𝒟ₒ` 的成员只需要某个定义公式及一致性证明，而 `φ-ord` 与 `OrdAt` 中的外延性论证组成的对恰是这样的见证。桥引理随后把 `α` 移入 `Lset (sucV α)`，归纳与定理同时完成。
+有了 `α ⊆ Lset α`，上一节的结论原样适用：由 `φ-ord` 从 `Lset α` 中选出的可定义子集正是 `α` 自身。证书以截断的方式仅仅给出，因为 `𝒟ₒ` 的元素只需要某个定义公式及一致性证明，而 `φ-ord` 与 `OrdAt` 中的外延性论证组成的对恰是这样的见证。桥引理随后把 `α` 移入 `Lset (sucV α)`，归纳与定理同时完成。
 <!--ja-->
 `α ⊆ Lset α` が手に入れば、前節の結論がそのまま使える。`φ-ord` が `Lset α` から選び出す定義可能部分集合は `α` 自身である。証明は切り詰めによって単に与えられればよい。`𝒟ₒ` の要素は何らかの定義論理式と一致の証明を必要とするだけであり、`φ-ord` と `OrdAt` の外延性の議論の対がまさにそのような証拠になる。橋の補題が続いて `α` を `Lset (sucV α)` へ移し、帰納法と定理が同時に完成する。
 <!--/-->
@@ -853,7 +853,7 @@ Ordinals now have exact stage bounds: `α` appears in `Lset (sucV α)`, and appe
 
 序数现在具有准确的层界：`α` 出现在 `Lset (sucV α)` 中，而若它出现在 `Lset β` 中，则必有 `α ∈ β`。有界序数公式使后续内部论证能够使用这些事实。
 
-`ord∈Lset-suc`{.Agda} 说序数现身在自身之后的那一层中，`ord∈Lset→∈`{.Agda} 说它不会更早现身。二者合起来，`Lset α` 中的序数恰是 `α` 的成员。经由第一节那两次比较，本章是经典的，而它用到的其余一切都是构造性的。模块 `L.Stage` 将这一结果应用于 `ω`，从而完成无穷公理的证明。
+`ord∈Lset-suc`{.Agda} 说序数现身在自身之后的那一层中，`ord∈Lset→∈`{.Agda} 说它不会更早现身。二者合起来，`Lset α` 中的序数恰是 `α` 的元素。经由第一节那两次比较，本章是经典的，而它用到的其余一切都是构造性的。模块 `L.Stage` 将这一结果应用于 `ω`，从而完成无穷公理的证明。
 <!--ja-->
 ## まとめ
 

@@ -1056,7 +1056,7 @@ introduced_in = "FOL.Syntax"
 matching = "auto"
 forms_en = ["atomic formulas"]
 recap_en = "A formula formed directly by comparing two terms with membership or equality, before connectives or quantifiers are added."
-recap_zh = "直接用隶属或相等比较两个词项而形成的公式，尚未加入联结词或量词。"
+recap_zh = "直接用成员关系或相等比较两个词项而形成的公式，尚未加入联结词或量词。"
 recap_ja = "二つの項を所属または等号で直接比較した論理式。結合子や量化子はまだ加えていない。"
 notes = "The membership and equality constructors of Formula; Chinese 原子公式 is used in Fudan first-order logic notes, https://logic.fudan.edu.cn/doc/Course/2020/mathlogic/Lecture10h.pdf ."
 
@@ -1119,7 +1119,7 @@ introduced_in = "FOL.Syntax"
 matching = "auto"
 forms_en = ["bounded quantifiers"]
 recap_en = "A quantifier ranging over members of a set named by a term, rather than over every object."
-recap_zh = "只在某个词项所描述的集合的成员中量化，而非遍及所有对象的量词。"
+recap_zh = "只在某个词项所描述的集合的元素中量化，而非遍及所有对象的量词。"
 recap_ja = "すべての対象ではなく、項が表す集合の要素に範囲を限る量化子。"
 
 [[term]]
@@ -1723,7 +1723,7 @@ notes = "Owner-delegated ruling 2026-08-07 (T152/T153). ja 層 is the sheaf head
 [[term]]
 category = "Set theory"
 en = "membership formula"
-zh = "隶属公式"
+zh = "成员关系公式"
 ja = "帰属論理式"
 avoid = ["ja:所属式"]
 notes = "A formula expressing membership. Japanese is a composed label based on 帰属関係を表す論理式 in https://dspace.jaist.ac.jp/dspace/bitstream/10119/17662/5/paper.pdf . The shortened compound 帰属論理式 is editorial, not claimed verbatim. 所属 is valid ordinary membership prose; 所属式 remains an excluded rival label for this particular formula."
@@ -1944,6 +1944,6 @@ forms_en = ["isomorphism"]
 forms_zh = ["同构"]
 forms_ja = ["同型"]
 recap_en = "A bijection between the carriers that preserves and reflects the structure's relations; here the relation is membership."
-recap_zh = "载体之间保持并反映结构关系的双射；此处的关系是隶属。"
+recap_zh = "载体之间保持并反映结构关系的双射；此处的关系是成员关系。"
 recap_ja = "構造の関係を保存し反映する台の間の全単射。ここでの関係は所属である。"
 notes = "Release audit 2026-09-22 distinguishes relational Mostowski isomorphism from Cubical Agda's Iso record. Primary mathematical evidence: https://isa-afp.org/entries/Mostowski_Collapse.html and https://www.math.uni-bonn.de/people/koepke/Preprints/Simplified_constructibility_theory_minicourse_Helsinki.pdf . Japanese 同型 in the Mostowski context: https://www.forcing.nagoya/book_C92.pdf . Queries Mostowski collapse theorem isomorphism structures Hamkins, Mostowski 崩壊 同型 集合論 pdf, and Mostowski 塌缩 同构 关系 结构 pdf were checked. The qualified Chinese and Japanese labels compose the established structure/isomorphism terms rather than claiming a separately attested fixed phrase. Explicit matching disambiguates short forms from type-isomorphism; the chapter proves injectivity and preservation/reflection of membership, not a packaged Cubical Iso record."

@@ -13,7 +13,7 @@ module FOL.Manipulation.Relabelling where
 
 ```agda
 open import Base.Prelude
-open import FOL.ZFStructure using ( ZFStructure )
+open import FOL.ZFStructure using ( ZFStructure; ZFStructureₕ )
 open import FOL.Syntax using
   ( Term; con; var; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
 open import FOL.Manipulation.ConstantMapping using ( mapTm; mapFo; embed )
@@ -83,7 +83,7 @@ Fix a proposition-valued ZF structure `𝒮` with domain `S`, a relabelling `f :
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module _ {ℓ} (𝒮 : ZFStructure ℓ) where
+module _ {ℓ} (𝒮 : ZFStructureₕ ℓ) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -121,7 +121,7 @@ The atomic case already shows why the two readings must agree. Consider the form
 <!--en-->
 The satisfaction lemma `⊨-map` lifts this agreement from terms to formulas, as paths in the proposition universe: `(γ ⊨ mapFo f φ) ≡ (γ ⊨∘ φ)`. For the atomic case `t ∈̇ u`, the two term paths from `⟦⟧-map` are fed into the membership relation by `cong₂ _∈ˢ_`, producing the path between the two readings of the statement. Equality atoms work identically through `≈ˢ`.
 <!--zh-->
-满足引理 `⊨-map` 把这一一致从词项提升到公式，得到命题之间的路径：`(γ ⊨ mapFo f φ) ≡ (γ ⊨∘ φ)`。对原子情形 `t ∈̇ u`，来自 `⟦⟧-map` 的两条词项路径经 `cong₂ _∈ˢ_` 送入属于关系，产生该命题两种读法之间的路径。等号原子经 `≈ˢ` 完全同样地处理。
+满足引理 `⊨-map` 把这一一致从词项提升到公式，得到命题之间的路径：`(γ ⊨ mapFo f φ) ≡ (γ ⊨∘ φ)`。对原子情形 `t ∈̇ u`，来自 `⟦⟧-map` 的两条词项路径经 `cong₂ _∈ˢ_` 送入成员关系，产生该命题两种读法之间的路径。等号原子经 `≈ˢ` 完全同样地处理。
 <!--ja-->
 充足の補題 `⊨-map` はこの一致を項から論理式へ持ち上げ、命題の間の経路 `(γ ⊨ mapFo f φ) ≡ (γ ⊨∘ φ)` を与える。原子論理式 `t ∈̇ u` の場合は、`⟦⟧-map` からの二つの項の経路を `cong₂ _∈ˢ_` によって所属関係に入れ、この主張の二つの読み方の間の経路を作る。等号の原子も `≈ˢ` を通じてまったく同様に扱われる。
 <!--/-->

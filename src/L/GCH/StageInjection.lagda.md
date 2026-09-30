@@ -28,7 +28,7 @@ module L.GCH.StageInjection {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 open import FOL.Syntax using ( Formula; var; con; _∈̇_; _∧̇_ )
 open import FOL.Manipulation.Renaming using ( renameFo; module Sat )
 import FOL.Absoluteness
@@ -80,7 +80,7 @@ The proof repeatedly separates existence from choice. Classical reasoning suppli
 <!--en-->
 To turn the inverse collapse into an injection inside `L`, its graph must be expressed in the first-order language of the constructible structure. Only variables, constants, membership, and conjunction are needed. Formula renaming will exchange the two argument positions while preserving satisfaction, and the ambient cumulative hierarchy supplies the sets on which the collapse is computed.
 <!--zh-->
-要把逆塌缩变成 `L` 内部的单射，必须用可构造结构的一阶语言表达它的图。这里只需变元、常元、隶属与合取。公式改名会交换两个实参位置而保持满足关系，外围累积层级则提供计算塌缩所用的集合。
+要把逆塌缩变成 `L` 内部的单射，必须用可构造结构的一阶语言表达它的图。这里只需变元、常元、成员关系与合取。公式改名会交换两个实参位置而保持满足关系，外围累积层级则提供计算塌缩所用的集合。
 <!--ja-->
 逆崩壊を `L` の内部の単射にするには、そのグラフを構成可能構造の一階言語で表さなければならない。必要なのは変数、定数、所属、連言だけである。論理式の名前替えによって二つの引数位置を交換しても充足関係が保たれ、周囲の累積階層が崩壊を計算する集合を与える。
 <!--/-->
@@ -163,13 +163,13 @@ Propositional truncation appears at two decisive points. It lets the proof use t
 <!--en-->
 Membership written `_∈ˢ_` is membership in the ambient hierarchy structure `𝒮ᵥ`. It is used for statements about the hull, its collapse image, and ordinal indices before those sets are packaged as elements of the constructible structure.
 <!--zh-->
-记作 `_∈ˢ_` 的隶属是外围层级结构 `𝒮ᵥ` 中的隶属。壳、其塌缩像与序数指标尚未打包为可构造结构的元素时，关于它们的陈述都使用这种隶属。
+记作 `_∈ˢ_` 的成员关系是外围层级结构 `𝒮ᵥ` 中的成员关系。壳、其塌缩像与序数指标尚未打包为可构造结构的元素时，关于它们的陈述都使用这种成员关系。
 <!--ja-->
 `_∈ˢ_` と書く所属は、周囲の階層構造 `𝒮ᵥ` における所属である。包、その崩壊像、順序数の添字が構成可能構造の要素としてまとめられる前には、それらについての主張をこの所属で表す。
 <!--/-->
 
 ```agda
-open hPropStructure 𝒮ᵥ using ( _∈ˢ_ )
+open hPropView 𝒮ᵥ using ( _∈ˢ_ )
 ```
 
 <!--en-->
@@ -181,7 +181,7 @@ The type `S` is the carrier of the constructible structure: an element consists 
 <!--/-->
 
 ```agda
-open hPropStructure 𝒮ʟ using ( S )
+open hPropView 𝒮ʟ using ( S )
 ```
 
 <!--en-->
@@ -304,7 +304,7 @@ The accompanying proof that `β` is an ordinal makes `Lset β` a genuine ordinal
 <!--en-->
 The equality `ext : πX = Lset β` is the hinge between collapse theory and the constructible hierarchy. It converts membership in the collapse image into membership in the stage at `β`; later, once the collapse is shown to fix `δ`, this is exactly how `δ ∈ Lset β` will be obtained.
 <!--zh-->
-等式 `ext : πX = Lset β` 是塌缩理论与可构造层级之间的枢纽。它把塌缩像中的隶属转换为 `β` 处层中的隶属；稍后证明塌缩固定 `δ` 后，正是沿这条等式得到 `δ ∈ Lset β`。
+等式 `ext : πX = Lset β` 是塌缩理论与可构造层级之间的枢纽。它把塌缩像中的成员关系转换为 `β` 处层中的成员关系；稍后证明塌缩固定 `δ` 后，正是沿这条等式得到 `δ ∈ Lset β`。
 <!--ja-->
 等式 `ext : πX = Lset β` は、崩壊の理論と構成可能階層を結ぶ要である。これは崩壊像への所属を `β` の段階への所属に変換する。後で崩壊が `δ` を固定すると示した後、まさにこの等式によって `δ ∈ Lset β` が得られる。
 <!--/-->
@@ -343,7 +343,7 @@ The ordinal `β` itself is also constructible and is packaged as `βL`. Although
 <!--en-->
 An internal coded map must have a codomain in the carrier `S`, not merely an externally described class of hull members. The element `hullL` supplies that internal presentation of the hull together with its constructibility evidence.
 <!--zh-->
-内部编码映射的陪域必须是载体 `S` 的元素，不能只是外围描述的壳成员类。元素 `hullL` 给出壳在内部的这种呈现，并携带其可构造性证据。
+内部编码映射的陪域必须是载体 `S` 的元素，不能只是外围描述的壳元素类。元素 `hullL` 给出壳在内部的这种呈现，并携带其可构造性证据。
 <!--ja-->
 内部的に符号化された写像の終域は、外側で記述された包の要素の集まりではなく、台 `S` の要素でなければならない。`hullL` は、構成可能性の証拠とともに包の内部的な表示を与える。
 <!--/-->
@@ -356,7 +356,7 @@ An internal coded map must have a codomain in the carrier `S`, not merely an ext
 <!--en-->
 The equality `M≡` connects the two presentations of the hull. Collapse theorems speak about the ambient set `M`, whereas the internal graph speaks about the carrier element `hullL`; transporting along this equality lets the same membership evidence serve on both sides.
 <!--zh-->
-等式 `M≡` 连接壳的两种呈现。塌缩定理谈论外围集合 `M`，内部图则谈论载体元素 `hullL`；沿这条等式搬运后，同一份隶属证据即可用于两边。
+等式 `M≡` 连接壳的两种呈现。塌缩定理谈论外围集合 `M`，内部图则谈论载体元素 `hullL`；沿这条等式搬运后，同一份成员关系证据即可用于两边。
 <!--ja-->
 等式 `M≡` は、包の二つの表示を結ぶ。崩壊の定理は周囲の集合 `M` を扱い、内部のグラフは台の要素 `hullL` を扱う。この等式に沿って輸送することで、同じ所属の証拠を両方で使える。
 <!--/-->
@@ -369,7 +369,7 @@ The equality `M≡` connects the two presentations of the hull. Collapse theorem
 <!--en-->
 The hull frame proves that membership on `M` is extensional. This is the precise hypothesis needed to deduce that two members of the hull with the same collapse value are equal.
 <!--zh-->
-壳框架证明 `M` 上的隶属关系具有外延性。这正是从「壳的两个成员具有相同塌缩值」推出它们相等所需的假设。
+壳框架证明 `M` 上的成员关系具有外延性。这正是从「壳的两个元素具有相同塌缩值」推出它们相等所需的假设。
 <!--ja-->
 包の枠組みから、`M` 上の所属関係が外延的であることが分かる。これは、包の二つの要素が同じ崩壊値をもつなら等しいと結論するために必要な仮定である。
 <!--/-->
@@ -394,7 +394,7 @@ Applying the collapse injectivity theorem to this extensional hull yields `π-in
 <!--en-->
 A preimage of a collapse value `v` is an element `x` of the hull whose collapse equals the underlying set of `v`. The record is an untruncated dependent pair: both the preimage and its membership and its identification are carried explicitly.
 <!--zh-->
-塌缩值 `v` 的原像，是其塌缩等于 `v` 底层集的壳元素 `x`。该记录是未截断的依赖对：原像、其隶属及其同一视都被显式携带。
+塌缩值 `v` 的原像，是其塌缩等于 `v` 底层集的壳元素 `x`。该记录是未截断的依赖对：原像、其成员关系及其同一视都被显式携带。
 <!--ja-->
 崩壊の値 `v` の逆像とは、崩壊させたものが `v` の底の集合と等しくなるような、包の要素 `x` のことである。この記録は切り詰められていない依存対であり、逆像とその所属とその同一視を明示的に運ぶ。
 <!--/-->
@@ -448,7 +448,7 @@ Membership in `Lset β` gives only the propositionally truncated type of preimag
 <!--en-->
 The preimage is packaged as a constructible set: its constructibility is transported from the hull through the identification of the packaged hull with the hull itself. The function is defined only on members of the stage at `β`, with the hull as its codomain; it is the inverse of the collapse on its image, not a global inverse.
 <!--zh-->
-原像被打包为可构造集合：其可构造性经「打包壳等于壳」的同一视从壳搬运而来。该函数只定义在 `β` 处层的成员上，以壳为陪域；它是塌缩在其像上的逆，而非全局逆函数。
+原像被打包为可构造集合：其可构造性经「打包壳等于壳」的同一视从壳搬运而来。该函数只定义在 `β` 处层的元素上，以壳为陪域；它是塌缩在其像上的逆，而非全局逆函数。
 <!--ja-->
 逆像は構成可能な集合としてまとめられる。その構成可能性は、まとめられた包と包を同一視することを通して、包から運ばれる。この関数が定義されるのは `β` の段階の要素の上だけで、終域は包である。崩壊の像の上での逆であり、大域的な逆ではない。
 <!--/-->
@@ -518,7 +518,7 @@ The inverse-collapse graph is the conjunction: the preimage belongs to the hull,
 <!--en-->
 For a hull member `x` whose collapse is `v`, the actual pair `(v,x)` satisfies `piFo`. Constructibility of the hull is itself given through a propositional truncation, so the proof eliminates that truncation into the satisfaction statement, which is a proposition, and works at any constructible stage containing the hull.
 <!--zh-->
-若壳成员 `x` 的塌缩为 `v`，则实际的有序对 `(v,x)` 满足 `piFo`。壳的可构造性本身经命题截断给出，因此证明把该截断消去到命题性的满足陈述，并在任意包含该壳的可构造层中完成构造。
+若壳元素 `x` 的塌缩为 `v`，则实际的有序对 `(v,x)` 满足 `piFo`。壳的可构造性本身经命题截断给出，因此证明把该截断消去到命题性的满足陈述，并在任意包含该壳的可构造层中完成构造。
 <!--ja-->
 包の要素 `x` の崩壊が `v` なら、実際の対 `(v,x)` は `piFo` を満たす。包の構成可能性そのものが命題的切り詰めを通して与えられるため、その切り詰めを命題である充足の主張へ消去し、包を含む任意の構成可能段階で証明する。
 <!--/-->
@@ -534,7 +534,7 @@ For a hull member `x` whose collapse is `v`, the actual pair `(v,x)` satisfies `
 <!--en-->
 The read statement transports both slots: the collapse value is identified with the underlying set of `v`, and the hull member is identified with the underlying set of `x`.
 <!--zh-->
-读取陈述搬运两个槽：塌缩值与 `v` 的底层集同一视，壳成员与 `x` 的底层集同一视。
+读取陈述搬运两个槽：塌缩值与 `v` 的底层集同一视，壳元素与 `x` 的底层集同一视。
 <!--ja-->
 読みの主張は、二つの枠を運ぶ。崩壊の値は `v` の底の集合と同一視され、包の要素は `x` の底の集合と同一視される。
 <!--/-->
@@ -550,7 +550,7 @@ The read statement transports both slots: the collapse value is identified with 
 <!--en-->
 Given a constructible stage `Lset α` containing the hull, transitivity of the layer places each hull member `x` in that same stage. The lemma `good-at` then supplies a constructibility proof for `π x` together with a proof that the packaged collapse value and the packaged member satisfy `piFo`.
 <!--zh-->
-给定一个包含该壳的可构造层 `Lset α`，分层的传递性把每个壳成员 `x` 放入同一层。引理 `good-at` 随后给出 `π x` 的可构造性证明，并证明打包后的塌缩值与打包后的成员满足 `piFo`。
+给定一个包含该壳的可构造层 `Lset α`，分层的传递性把每个壳元素 `x` 放入同一层。引理 `good-at` 随后给出 `π x` 的可构造性证明，并证明打包后的塌缩值与打包后的元素满足 `piFo`。
 <!--ja-->
 包を含む構成可能段階 `Lset α` が与えられると、層の推移性によって各包の要素 `x` も同じ段階に入る。補題 `good-at` は、`π x` の構成可能性の証明と、まとめられた崩壊値と要素が `piFo` を満たすことの証明を与える。
 <!--/-->
@@ -676,7 +676,7 @@ module At (δL : S) (oδ : IsOrd (fst δL)) (δ∉ω : ⟨ fst δL ∈ˢ ω ⟩ 
 <!--en-->
 It is useful to separate the carrier element `δL` from its underlying ambient ordinal `δ = fst δL`. Set-theoretic successor, stage membership, and the collapse act on `δ`, while internal coded injections retain the packaged endpoint `δL`.
 <!--zh-->
-这里需要区分载体元素 `δL` 与其底层外围序数 `δ = fst δL`。集合论后继、层隶属与塌缩作用于 `δ`，内部编码单射的端点则仍使用打包后的 `δL`。
+这里需要区分载体元素 `δL` 与其底层外围序数 `δ = fst δL`。集合论后继、层成员关系与塌缩作用于 `δ`，内部编码单射的端点则仍使用打包后的 `δL`。
 <!--ja-->
 台の要素 `δL` と、その基礎となる周囲の順序数 `δ = fst δL` を区別すると見通しがよくなる。集合論的後続、段階への所属、崩壊は `δ` に作用し、内部的に符号化された単射の端点にはまとめられた `δL` を使う。
 <!--/-->
@@ -716,7 +716,7 @@ The least-stage construction always returns an ordinal index. Applied to the con
 <!--en-->
 The ordinal `δ` belongs to its own stage, which is the membership fact that anchors `δ` inside the constructible hierarchy.
 <!--zh-->
-序数 `δ` 属于自身所在的层，这正是把 `δ` 锚定在可构造层级内的隶属事实。
+序数 `δ` 属于自身所在的层，这正是把 `δ` 锚定在可构造层级内的成员关系事实。
 <!--ja-->
 順序数 `δ` はそれ自身の段階に属する。これが、`δ` を構成可能階層の中に位置づける所属の事実である。
 <!--/-->
@@ -755,7 +755,7 @@ Choose the strengthened adequate stage supplied above and denote its ordinal ind
 <!--en-->
 The chosen high index `λ` is an ordinal. Its transitivity will first carry `δ` through the comparison `δ ∈ α₀ ∈ λ`, and will then place every member of `δ+1` below `λ`.
 <!--zh-->
-所选高指标 `λ` 是序数。它的传递性先沿比较 `δ ∈ α₀ ∈ λ` 把 `δ` 放入 `λ`，随后又把 `δ+1` 的每个成员放到 `λ` 之下。
+所选高指标 `λ` 是序数。它的传递性先沿比较 `δ ∈ α₀ ∈ λ` 把 `δ` 放入 `λ`，随后又把 `δ+1` 的每个元素放到 `λ` 之下。
 <!--ja-->
 選ばれた高い添字 `λ` は順序数である。その推移性により、まず比較 `δ ∈ α₀ ∈ λ` から `δ ∈ λ` を得て、さらに `δ+1` の各要素を `λ` より下に置く。
 <!--/-->
@@ -781,7 +781,7 @@ Successor closure is the second property of the index used immediately below: fr
 <!--en-->
 Superadequacy says that above every member `d` of `λ` there merely exists an adequate stage `γ` that still belongs to `λ`. This supply of intermediate adequate stages provides the local reflection and closure used in counting and condensing the hull.
 <!--zh-->
-超充分性断言：对 `λ` 的每个成员 `d`，仅仅存在一个仍属于 `λ` 且位于 `d` 之上的充分层 `γ`。这些中间充分层提供计数并凝聚该壳时所需的局部反映与闭包。
+超充分性断言：对 `λ` 的每个元素 `d`，仅仅存在一个仍属于 `λ` 且位于 `d` 之上的充分层 `γ`。这些中间充分层提供计数并凝聚该壳时所需的局部反映与闭包。
 <!--ja-->
 強化された十分性は、`λ` の各要素 `d` の上に、なお `λ` に属する十分な段階 `γ` が単に存在することを述べる。このような中間の十分な段階が、包の計数と凝縮に必要な局所的な反映と閉性を与える。
 <!--/-->
@@ -820,7 +820,7 @@ Take the starting set to be the von Neumann successor `X = δ+1`. It contains `�
 <!--en-->
 Successor closure of the ordinal index now gives `X = δ+1 ∈ λ`. This is an ordinal comparison. The stronger-looking statement needed by the hull construction, that every member of `X` lies in `Lset λ`, is derived separately in the next step.
 <!--zh-->
-序数指标的后继封闭性现给出 `X = δ+1 ∈ λ`。这是一项序数比较。壳构造所需的另一项陈述，即 `X` 的每个成员都属于 `Lset λ`，将在下一步另行推出。
+序数指标的后继封闭性现给出 `X = δ+1 ∈ λ`。这是一项序数比较。壳构造所需的另一项陈述，即 `X` 的每个元素都属于 `Lset λ`，将在下一步另行推出。
 <!--ja-->
 順序数添字の後続についての閉性から、`X = δ+1 ∈ λ` が得られる。これは順序数の比較である。包の構成に必要な、`X` の各要素が `Lset λ` に属するという別の主張は、次の段階で導く。
 <!--/-->
@@ -937,7 +937,7 @@ Apply the general condensation construction to this hull. It supplies an ordinal
 <!--en-->
 For the remaining comparison, use three facts about this hull: its underlying set is `M`, every member of the start lies in `M`, and the collapse `π` maps `M` onto `Lβ` while fixing members of any transitive subset of `M`. Applied to the transitive start `δ+1`, these facts will place `δ` in `Lβ`.
 <!--zh-->
-余下的比较使用该壳的三项性质：其底层集合是 `M`，起点的每个成员都属于 `M`，而塌缩 `π` 把 `M` 映到 `Lβ`，并固定 `M` 的任一传递子集中的成员。把这些性质用于传递起点 `δ+1`，稍后便可把 `δ` 放入 `Lβ`。
+余下的比较使用该壳的三项性质：其底层集合是 `M`，起点的每个元素都属于 `M`，而塌缩 `π` 把 `M` 映到 `Lβ`，并固定 `M` 的任一传递子集中的元素。把这些性质用于传递起点 `δ+1`，稍后便可把 `δ` 放入 `Lβ`。
 <!--ja-->
 残る比較では、この包について三つの事実を使う。その基礎集合は `M` であり、始点の各要素は `M` に属し、崩壊 `π` は `M` を `Lβ` へ写すとともに、`M` の推移的部分集合の要素を固定する。これらを推移的な始点 `δ+1` に適用すると、`δ` を `Lβ` に置くことができる。
 <!--/-->
@@ -965,7 +965,7 @@ The ordinal `δ` belongs to its own successor, which is the starting set for the
 <!--en-->
 The ordinal `δ` therefore belongs to the hull, because the hull contains every member of the starting set.
 <!--zh-->
-因此序数 `δ` 属于壳，因为壳包含起点集的每个成员。
+因此序数 `δ` 属于壳，因为壳包含起点集的每个元素。
 <!--ja-->
 したがって、順序数 `δ` は包に属する。包が、始点の集合のすべての要素を含むからである。
 <!--/-->
@@ -978,7 +978,7 @@ The ordinal `δ` therefore belongs to the hull, because the hull contains every 
 <!--en-->
 The successor `X = δ+1` is transitive and is contained in the hull `M`. The collapse therefore fixes every member of `X`; since `δ ∈ X`, it follows in particular that `π(δ) = δ`.
 <!--zh-->
-后继 `X = δ+1` 是传递集，并且包含于壳 `M`。因此塌缩固定 `X` 的每个成员；特别地，由 `δ ∈ X` 可得 `π(δ) = δ`。
+后继 `X = δ+1` 是传递集，并且包含于壳 `M`。因此塌缩固定 `X` 的每个元素；特别地，由 `δ ∈ X` 可得 `π(δ) = δ`。
 <!--ja-->
 後続 `X = δ+1` は推移的で、包 `M` に含まれる。したがって崩壊は `X` の各要素を固定し、とくに `δ ∈ X` から `π(δ) = δ` が従う。
 <!--/-->

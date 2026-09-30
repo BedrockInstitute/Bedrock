@@ -28,7 +28,7 @@ module L.Recursion.Graph {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 open import FOL.Syntax using ( Formula; _∧̇_; ∃̇_ )
 open import FOL.Manipulation.Renaming using ( renameFo; module Sat )
 import FOL.Absoluteness
@@ -88,7 +88,7 @@ The formulas are interpreted in the constructible structure. The local satisfact
 <!--/-->
 
 ```agda
-open hPropStructure 𝒮ʟ
+open hPropView 𝒮ʟ
 
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
 open AbsL renaming ( _⊨ᵐ_ to _⊨_ )
@@ -139,7 +139,7 @@ The renaming map records how the two free variables of `φ` occur below the exis
 <!--en-->
 The formula conjoins two assertions under the existential quantifier. The first says that `e` codes the ordered pair of `p` and the quantified value; the second is the renamed copy of `φ`. Thus the syntax directly mirrors the mathematical description of a member of a function graph.
 <!--zh-->
-该公式在存在量词之下合取两个断言。第一项说明 `e` 编码 `p` 与被量化取值组成的有序对；第二项是改名后的 `φ`。因此，这段语法直接对应函数图成员的数学描述。
+该公式在存在量词之下合取两个断言。第一项说明 `e` 编码 `p` 与被量化取值组成的有序对；第二项是改名后的 `φ`。因此，这段语法直接对应函数图元素的数学描述。
 <!--ja-->
 この論理式は、存在量化子の下で二つの主張を連言する。第一は `e` が `p` と量化された値との順序対を符号化すること、第二は改名された `φ` である。したがって、この構文は関数グラフの要素の数学的記述をそのまま表す。
 <!--/-->
@@ -230,7 +230,7 @@ The recursion supplies a domain, its original graph formula, and contractibility
 <!--zh-->
 ## 定义域与取值
 
-递归给出定义域、原取值图公式，以及定义域每个成员处图取值纤维的可缩性。由此导出的取值记作 `fn`。局部谓词 `Mem x` 是 `fn` 所需的底层成员关系断言。
+递归给出定义域、原取值图公式，以及定义域每个元素处图取值纤维的可缩性。由此导出的取值记作 `fn`。局部谓词 `Mem x` 是 `fn` 所需的底层成员关系断言。
 <!--ja-->
 ## 定義域と値
 
@@ -249,7 +249,7 @@ The recursion supplies a domain, its original graph formula, and contractibility
 <!--en-->
 Membership in a set is proposition-valued, so `Mem x` is a proposition. Consequently, any two proofs that `x` belongs to the domain are equal. This proof irrelevance ensures that the value `fn x m` does not depend on the chosen membership certificate.
 <!--zh-->
-集合的成员关系取值于命题，因此 `Mem x` 是命题。于是，`x` 属于定义域的任意两份证明都相等。这一证明无关性保证取值 `fn x m` 不依赖所选的成员证书。
+集合的成员关系取值于命题，因此 `Mem x` 是命题。于是，`x` 属于定义域的任意两份证明都相等。这一证明无关性保证取值 `fn x m` 不依赖所选的成员关系证书。
 <!--ja-->
 集合への所属は命題値なので、`Mem x` は命題である。したがって、`x` が定義域に属することの任意の二つの証明は等しくなる。この証明無関係性により、値 `fn x m` は選んだ所属の証明に依存しない。
 <!--/-->
@@ -356,7 +356,7 @@ The dependent-pair contraction compares a candidate value together with its sati
 <!--en-->
 Replacement applied to this recursion forms the value range of its ordered-pair values. That range is the desired graph `F`. Thus `F` is an element of `L`, and every element placed in it is an ordered pair of a domain element with its recursively determined value.
 <!--zh-->
-把替换应用于这项递归，便形成其有序对取值的值域。这个值域就是所需的函数图 `F`。因此，`F` 是 `L` 的元素，其中放入的每个成员都是定义域元素与其递归确定取值组成的有序对。
+把替换应用于这项递归，便形成其有序对取值的值域。这个值域就是所需的函数图 `F`。因此，`F` 是 `L` 的元素，其中放入的每个元素都是定义域元素与其递归确定取值组成的有序对。
 <!--ja-->
 この再帰に置換を適用すると、順序対としての値の値域ができる。この値域が求める関数グラフ `F` である。したがって `F` は `L` の要素であり、そこに入る各要素は、定義域の要素と再帰で定まる値との順序対である。
 <!--/-->
@@ -462,7 +462,7 @@ If the ordered-pair code `pr(fst x,fst y)` belongs to `F`, the outward descripti
 <!--en-->
 The environment `γ = F ∷ dom ∷ []` assigns the two free variables used by the formulas for single-valuedness and domain. To prove single-valuedness, take two pairs in `F` with the same first coordinate `x`. Their fibers provide membership proofs `m` and `m'` and output equalities to `fn x m` and `fn x m'`. Proof irrelevance identifies the two function values, so the outputs are equal.
 <!--zh-->
-环境 `γ = F ∷ dom ∷ []` 为单值性公式与定义域公式的两个自由变元赋值。为证明单值性，取 `F` 中第一坐标同为 `x` 的两个有序对。相应纤维给出成员证明 `m`、`m'`，以及两个输出分别等于 `fn x m`、`fn x m'` 的等式。证明无关性使这两个函数值相等，因而两个输出相等。
+环境 `γ = F ∷ dom ∷ []` 为单值性公式与定义域公式的两个自由变元赋值。为证明单值性，取 `F` 中第一坐标同为 `x` 的两个有序对。相应纤维给出成员关系证明 `m`、`m'`，以及两个输出分别等于 `fn x m`、`fn x m'` 的等式。证明无关性使这两个函数值相等，因而两个输出相等。
 <!--ja-->
 環境 `γ = F ∷ dom ∷ []` は、単値性と定義域を表す論理式の二つの自由変数に値を割り当てる。単値性を示すため、第一座標が同じ `x` である二つの順序対が `F` に属するとする。それぞれのファイバーから所属の証明 `m`、`m'` と、二つの出力が `fn x m`、`fn x m'` に等しいことが得られる。証明無関係性により二つの関数値が等しくなり、したがって出力も等しくなる。
 <!--/-->

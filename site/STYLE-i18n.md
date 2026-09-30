@@ -74,7 +74,11 @@ The paragraphs must form a continuous explanation even when the code is hidden;
 the code supplies the corresponding formal expression. Do not turn each chunk
 into an independent annotation of imports, declarations or implementation steps.
 Explain Agda syntax where the learner needs it, without repeating language-setup
-lessons in every chapter. Read the complete module and the actual definitions of relevant
+lessons in every chapter. Forward references in the body must be fulfilled within
+the same chapter. Cross-chapter previews belong only in the closing recap and
+may point only to the immediately following chapter; remove vague promises of
+material to be explained later. Apply this rule in all three languages.
+Read the complete module and the actual definitions of relevant
 dependencies before writing; existing prose is not evidence that a mathematical
 claim is correct. Chapter introductions and local explanations should complement
 each other rather than repeat the same facts.
@@ -102,6 +106,14 @@ object-language symbols from a general mathematical or Agda `变量` and from a 
 called a `常量`. Do not rewrite `自变量`, `不变量`, or a numerical `常量` merely to
 make the character stems match. The reader glossary is authoritative for the
 registered compounds.
+
+For Chinese set-theoretic prose, use `成员关系` for the relation, `元素`
+for an object in a set or class, and `属于` as the verb in a statement.
+Use `成员关系命题` and `成员关系证明` for a membership proposition and its proof.
+Do not use `成员` as a rival object noun for `元素`.
+`成员关系` is this book's editorial choice for the relation name. The object
+noun `元素` and sentence verb `属于` follow the usage in
+[Tsinghua University Press's sets chapter](https://www.tup.com.cn/upload/books/yz/075970-01.pdf).
 
 Standalone definition, construction, lemma, theorem and corollary labels name the corresponding Agda declaration and
 contain no period: `**Lemma** (`name`{.Agda}) Text`, with `引理` or `補題` in the

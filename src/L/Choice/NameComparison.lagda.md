@@ -28,7 +28,7 @@ module L.Choice.NameComparison {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 open import FOL.Syntax using
   ( Formula; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
 import FOL.Absoluteness
@@ -95,7 +95,7 @@ The underlying language supplies universe levels, finite indices, vectors, and p
 <!--en-->
 The object language can speak about membership and equality, combine propositions, and quantify both over the whole carrier and over a set. Its semantics is read in a proposition-valued structure. Constant mappings connect three presentations needed later: genuinely parameter-free formulas, formulas over the empty alphabet, and the same syntax interpreted over a constructible carrier. Because these mappings preserve the formula, they will allow the code of a parameter-free skeleton to be recognized internally.
 <!--zh-->
-对象语言能够陈述隶属与相等，组合命题，并在整个载体或某个集合上量化；它的语义在取值为命题的结构中读取。常元映射连接后文所需的三种呈现：真正的无参公式、空字母表上的公式，以及在可构造载体上解释的同一语法。这些映射保持公式结构，因此后文可以在内部辨认一个无参骨架的码。
+对象语言能够陈述成员关系与相等，组合命题，并在整个载体或某个集合上量化；它的语义在取值为命题的结构中读取。常元映射连接后文所需的三种呈现：真正的无参公式、空字母表上的公式，以及在可构造载体上解释的同一语法。这些映射保持公式结构，因此后文可以在内部辨认一个无参骨架的码。
 <!--ja-->
 対象言語は所属と等号を述べ、命題を組み合わせ、台全体または一つの集合の上で量化できる。その意味論は命題値の構造で読み取られる。定数の写像は、後で必要となる三つの表示を結び付ける。すなわち、本当にパラメータをもたない論理式、空のアルファベット上の論理式、構成可能な台上で解釈された同じ構文である。これらの写像は論理式の構造を保つので、無パラメータ骨格の符号を内部で認識できるようになる。
 <!--/-->
@@ -103,7 +103,7 @@ The object language can speak about membership and equality, combine proposition
 <!--en-->
 Formula codes, ordered pairs, and numerals are themselves sets in the cumulative hierarchy. The constructible substructure supplies the carrier in which the formulas are read, while transitivity lets membership in a constructible code set provide the constructibility facts needed for its components. Injectivity of pair and numeral coding later recovers arities and skeleton codes from equal keys. The stages `Lset` provide the setting for the limit-stage code order.
 <!--zh-->
-公式码、有序对与数码本身都是累积层级中的集合。可构造子结构提供读取这些公式的载体；传递性则使码集中的隶属事实能够供给其分量所需的可构造性。配对编码与数码编码的单射性将在后文从相等的键中恢复元数与骨架码。诸 `Lset` 层为极限层码序提供背景。
+公式码、有序对与数码本身都是累积层级中的集合。可构造子结构提供读取这些公式的载体；传递性则使码集中的成员关系事实能够供给其分量所需的可构造性。配对编码与数码编码的单射性将在后文从相等的键中恢复元数与骨架码。诸 `Lset` 层为极限层码序提供背景。
 <!--ja-->
 論理式の符号、順序対、数項は、それ自身が累積階層の集合である。構成可能部分構造は論理式を読む台を与え、推移性は構成可能な符号集合への所属から、その成分に必要な構成可能性を与える。対の符号化と数項の符号化の単射性によって、後に等しいキーからアリティと骨格符号を復元できる。各 `Lset` 段階は極限段階の符号順序の舞台となる。
 <!--/-->
@@ -143,7 +143,7 @@ The environment tower and the tagged recursion data justify the satisfaction-gra
 <!--en-->
 The code of a name is a member of the limit stage and is compared by `limitOrder`. The third key comes from an arbitrary strict well-order on the carrier. Canonical naming has already combined these with natural-number arity into `_≺ₙ_`, proved that relation well-founded, and used it in `leastName`. Here the two non-numerical orders appear through relation slots with representation laws, so the chapter describes their comparison rather than reconstructing either order.
 <!--zh-->
-名字的码是极限层的成员，并由 `limitOrder` 比较。第三个键来自载体上任意给定的严格良序。典范命名理论已经把这两项与自然数元数组合成 `_≺ₙ_`，证明该关系良基，并在 `leastName` 中使用它。本章让两个非数值的序经带有表示律的关系槽位出现，因而只描述它们所决定的比较，而不重新构造其中任何一个序。
+名字的码是极限层的元素，并由 `limitOrder` 比较。第三个键来自载体上任意给定的严格良序。典范命名理论已经把这两项与自然数元数组合成 `_≺ₙ_`，证明该关系良基，并在 `leastName` 中使用它。本章让两个非数值的序经带有表示律的关系槽位出现，因而只描述它们所决定的比较，而不重新构造其中任何一个序。
 <!--ja-->
 名前の符号は極限段階の要素であり、`limitOrder` によって比較される。第三のキーは、台上に与えられた任意の狭義整列順序から来る。正準名の理論は、これらと自然数のアリティをすでに `_≺ₙ_` にまとめ、その関係の整礎性を証明し、`leastName` で用いている。本章では二つの非数値的な順序を、表示法則を伴う関係スロットによって受け取る。したがって、どちらの順序も再構成せず、それらによる比較を記述する。
 <!--/-->
@@ -151,7 +151,7 @@ The code of a name is a member of the limit stage and is compared by `limitOrder
 <!--en-->
 Natural-number order supplies the second comparison key: for numeral arities, membership of one numeral in another expresses strict inequality. Finite indices locate entries of parameter vectors and the earliest position at which two vectors differ. The adequacy argument later proves, by induction on their common length, that this first-difference description agrees with the recursive vector order used in `_≺ₙ_`.
 <!--zh-->
-自然数序供给第二个比较键：当元数表示为数码时，一个数码隶属于另一个数码正好表达严格小于。有穷指标用于定位参数向量的分量，以及两个向量最早出现差异的位置。后文的充分性论证对共同长度作归纳，证明这种「首次相异」描述与 `_≺ₙ_` 所用的递归向量序一致。
+自然数序供给第二个比较键：当元数表示为数码时，一个数码属于另一个数码正好表达严格小于。有穷指标用于定位参数向量的分量，以及两个向量最早出现差异的位置。后文的充分性论证对共同长度作归纳，证明这种「首次相异」描述与 `_≺ₙ_` 所用的递归向量序一致。
 <!--ja-->
 自然数の順序が第二の比較キーを与える。アリティが数項で表されるとき、一方の数項が他方に所属することは狭義の不等号を表す。有限添字は、パラメータベクトルの成分と、二つのベクトルが最初に異なる位置を指定する。後の妥当性の議論では、共通の長さに関する帰納法により、この最初の相違による記述が `_≺ₙ_` で使われる再帰的なベクトル順序と一致することを証明する。
 <!--/-->
@@ -173,7 +173,7 @@ The proof data follow the lexicographic shape. Dependent pairs carry a position 
 <!--en-->
 Existential and disjunctive satisfaction is propositionally truncated: it preserves that a witness exists while forgetting which witness was supplied. Consequently, outward readings such as those for formula codes and name comparison return truncated existence, and elimination is used only into propositions. This is propositional truncation; propositional resizing does not occur here. The cumulative hierarchy supplies set-valued membership and the extensional equality principles needed after such readings.
 <!--zh-->
-存在式与析取式的满足语义带有命题截断：它保留「见证存在」，却忘掉给出的是哪个见证。因此，从公式码或名字比较向外读取时，结论仍是经过命题截断的存在性，而消去也只进入命题。这里发生的是命题截断；命题换级并未在此出现。累积层级则供给集合值的隶属关系，以及这些读式之后所需的外延相等原则。
+存在式与析取式的满足语义带有命题截断：它保留「见证存在」，却忘掉给出的是哪个见证。因此，从公式码或名字比较向外读取时，结论仍是经过命题截断的存在性，而消去也只进入命题。这里发生的是命题截断；命题换级并未在此出现。累积层级则供给集合值的成员关系，以及这些读式之后所需的外延相等原则。
 <!--ja-->
 存在式と選言式の充足意味論は命題的に切り詰められている。証人が存在することは保つが、どの証人が与えられたかは忘れる。そのため、論理式の符号や名前比較を外向きに読むと、結論にも切り詰められた存在が残り、消去先は命題に限られる。ここで使われるのは命題的切り詰めであり、命題のリサイズではない。累積階層は集合値の所属関係と、その読みの後で必要となる外延的な等しさの原理を与える。
 <!--/-->
@@ -187,7 +187,7 @@ open import Cubical.HITs.CumulativeHierarchy.Properties
 <!--en-->
 Small members of a hierarchy set embed into the ambient hierarchy, and injectivity of that embedding later turns equality of represented parameters back into equality in the carrier. The empty set serves as the empty alphabet: it has no constants, so every map out of it is uniquely determined and a parameter-free formula keeps the same code under the required relabellings. The von Neumann numerals `# k`, their successor, and `ω` provide the internal arities used by environment domains and name comparison.
 <!--zh-->
-层级集合的小成员能够嵌入外围层级；该嵌入的单射性将在后文把已表示参数的相等恢复为载体中的相等。空集充当空字母表：它没有常元，因此从它出发的映射唯一确定，无参公式在所需的重标记下保持同一个码。冯·诺伊曼数码 `# k`、它们的后继与 `ω` 则提供环境定义域和名字比较所用的内部元数。
+层级集合的小元素能够嵌入外围层级；该嵌入的单射性将在后文把已表示参数的相等恢复为载体中的相等。空集充当空字母表：它没有常元，因此从它出发的映射唯一确定，无参公式在所需的重标记下保持同一个码。冯·诺伊曼数码 `# k`、它们的后继与 `ω` 则提供环境定义域和名字比较所用的内部元数。
 <!--ja-->
 階層集合の小さな要素は周囲の階層へ埋め込まれ、その埋め込みの単射性によって、後に表現されたパラメータの等しさから台の中での等しさを復元できる。空集合は空のアルファベットとして働く。定数がないので、そこから出る写像は一意に定まり、無パラメータ論理式は必要な付け替えの下で同じ符号を保つ。フォン・ノイマン数項 `# k`、その後者、そして `ω` が、環境の定義域と名前比較に使う内部のアリティを与える。
 <!--/-->
@@ -202,20 +202,20 @@ open InfinitySet using ( #_; ω; sucV )
 
 <!--en-->
 The formulas ahead are interpreted in the constructible universe. Opening
-`hPropStructure 𝒮ʟ` fixes their carrier `S`: an element is an ambient set
+`hPropView 𝒮ʟ` fixes their carrier `S`: an element is an ambient set
 together with evidence that it is constructible. It also brings the
 proposition-valued equality and membership relations of this structure into
 scope. Thus a free variable or constant ranges over constructible sets, while
 `⟨_⟩` exposes the type of evidence carried by an equality or membership
 proposition when a proof uses it.
 <!--zh-->
-下文的公式都解释在可构造宇宙中。打开 `hPropStructure 𝒮ʟ` 便固定了它们的载体 `S`：载体的一个元素是环境宇宙中的一个集合，连同它可构造的证据。这个操作也把该结构中取命题值的等词与隶属关系带入作用域。因此，自由变元与常元都在可构造集合中取值；证明需要使用某条等词或隶属命题的证据时，`⟨_⟩` 则取出该命题的底层类型。
+下文的公式都解释在可构造宇宙中。打开 `hPropView 𝒮ʟ` 便固定了它们的载体 `S`：载体的一个元素是环境宇宙中的一个集合，连同它可构造的证据。这个操作也把该结构中取命题值的等词与成员关系带入作用域。因此，自由变元与常元都在可构造集合中取值；证明需要使用某条等词或成员关系命题的证据时，`⟨_⟩` 则取出该命题的底层类型。
 <!--ja-->
-以下の論理式は構成可能宇宙で解釈される。`hPropStructure 𝒮ʟ` を開くことで、その台 `S` が定まる。台の要素は、周囲の宇宙にある集合と、それが構成可能であるという証拠の組である。また、この構造の命題値をとる等号関係と所属関係もスコープに入る。したがって自由変数と定数は構成可能集合の中を動き、証明で等号や所属の証拠が必要なときには、`⟨_⟩` がその命題の基礎型を取り出す。
+以下の論理式は構成可能宇宙で解釈される。`hPropView 𝒮ʟ` を開くことで、その台 `S` が定まる。台の要素は、周囲の宇宙にある集合と、それが構成可能であるという証拠の組である。また、この構造の命題値をとる等号関係と所属関係もスコープに入る。したがって自由変数と定数は構成可能集合の中を動き、証明で等号や所属の証拠が必要なときには、`⟨_⟩` がその命題の基礎型を取り出す。
 <!--/-->
 
 ```agda
-open hPropStructure 𝒮ʟ
+open hPropView 𝒮ʟ
 ```
 
 <!--en-->
@@ -230,7 +230,7 @@ that `F` holds inside `L` under the finite environment `γ`. This is the
 reading needed for formulas that `L` itself will use to recognize and compare
 names.
 <!--zh-->
-同一套句法有两种彼此相容的读法。这个绝对性实例从环境宇宙结构 `𝒮ᵥ` 出发，把它限制到传递类 `isL`。在外层读法中，一个可构造集合经其底层的环境集合来读取；在内层读法中，常元指称为它命名的那个可构造集合，而等词与隶属由限制后的结构解释。本章把内层满足关系改名为 `⊨`。因此，对 `γ : S ^ n`，判断 `γ ⊨ F` 表示公式 `F` 在 `L` 内部、有限环境 `γ` 下成立。这正是 `L` 自身识别并比较名字时所需的读法。
+同一套句法有两种彼此相容的读法。这个绝对性实例从环境宇宙结构 `𝒮ᵥ` 出发，把它限制到传递类 `isL`。在外层读法中，一个可构造集合经其底层的环境集合来读取；在内层读法中，常元指称为它命名的那个可构造集合，而等词与成员关系由限制后的结构解释。本章把内层满足关系改名为 `⊨`。因此，对 `γ : S ^ n`，判断 `γ ⊨ F` 表示公式 `F` 在 `L` 内部、有限环境 `γ` 下成立。这正是 `L` 自身识别并比较名字时所需的读法。
 <!--ja-->
 同じ構文には、互いに両立する二つの読み方がある。この絶対性の実例は、周囲の宇宙の構造 `𝒮ᵥ` から出発し、それを推移的クラス `isL` に制限する。外側の読みでは構成可能集合をその基礎にある周囲の集合として扱い、内側の読みでは定数がそれを名指す構成可能集合を表し、制限された構造が等号と所属を解釈する。本章では内側の充足関係を `⊨` と書く。したがって `γ : S ^ n` に対する判断 `γ ⊨ F` は、有限環境 `γ` のもとで `F` が `L` の内部に成り立つことを意味する。これは、`L` 自身が名前を識別して比較する論理式に必要な読み方である。
 <!--/-->
@@ -289,7 +289,7 @@ two values at that index, an earlier index, and their proposed common value,
 the original parameter environments are again five places away. `sh5`
 records the common index calculation for both formulas.
 <!--zh-->
-再有一层存在量词绑定与该键相配的取值 `v`，所以调用 `satGraphAt` 时，载体的位置已隔着五个新取值。这里的 `v` 是满足被编码公式的诸环境所成的集合，并不是真值；紧接着的隶属原子询问扩展环境是否属于这个集合。同一档移位还出现在 `LexAt` 中：依次绑定一个序号、两个环境在该处的取值、一个更早的序号，以及见证两边相符的共同取值后，原参数环境也恰好隔着五个位置。`sh5` 统一记录了两处的下标计算。
+再有一层存在量词绑定与该键相配的取值 `v`，所以调用 `satGraphAt` 时，载体的位置已隔着五个新取值。这里的 `v` 是满足被编码公式的诸环境所成的集合，并不是真值；紧接着的成员关系原子询问扩展环境是否属于这个集合。同一档移位还出现在 `LexAt` 中：依次绑定一个序号、两个环境在该处的取值、一个更早的序号，以及见证两边相符的共同取值后，原参数环境也恰好隔着五个位置。`sh5` 统一记录了两处的下标计算。
 <!--ja-->
 さらに一つの存在量化子が鍵に対応する値 `v` を束縛するため、`satGraphAt` を用いる時点では台が五つ先の位置にある。ここで `v` は符号化された論理式を充足する環境全体の集合であり、真理値ではない。続く所属原子は、拡張環境がその集合に属するかを問う。同じ移動は `LexAt` にも現れる。一つの添字、その位置で二つの環境から得られる値、より前の添字、そして両者の一致を証す共通の値を順に束縛すると、もとのパラメータ環境はやはり五つ先にある。`sh5` は両方の論理式に共通する添字計算を記録する。
 <!--/-->
@@ -317,7 +317,7 @@ They form one syntactic presentation of parameter-free formulas. Comparing it
 with the empty constant domain `⊥*` used by meta-level names amounts to
 relating two empty types.
 <!--zh-->
-空字母表是空集成员的小表示 `⟪ ∅ ⟫`。如果 `m` 是其中一个符号，那么嵌入 `⟪ ∅ ⟫↪` 会给出一个环境集合，而表示定律会断言这个集合属于 `∅`。定理 `∅-empty` 恰好排除了这种证据，由此得到 `noAlpha m`。所以，这个字母表上的公式不可能含有常元节点。它们给出了无参公式的一种句法呈现；要把它与元层面名字所用的空常元域 `⊥*` 联系起来，只须关联这两个空类型。
+空字母表是空集元素的小表示 `⟪ ∅ ⟫`。如果 `m` 是其中一个符号，那么嵌入 `⟪ ∅ ⟫↪` 会给出一个环境集合，而表示定律会断言这个集合属于 `∅`。定理 `∅-empty` 恰好排除了这种证据，由此得到 `noAlpha m`。所以，这个字母表上的公式不可能含有常元节点。它们给出了无参公式的一种句法呈现；要把它与元层面名字所用的空常元域 `⊥*` 联系起来，只须关联这两个空类型。
 <!--ja-->
 空のアルファベットは、空集合の要素の小さな表示 `⟪ ∅ ⟫` である。もし `m` がその記号の一つなら、埋め込み `⟪ ∅ ⟫↪` によって周囲の集合が得られ、表示の法則はそれが `∅` に属すると述べる。定理 `∅-empty` はまさにそのような証拠を否定するので、`noAlpha m` が従う。したがって、このアルファベット上の論理式は定数の節を含めない。これは無パラメータ論理式の一つの構文的表示である。メタ言語の名前が用いる空の定数域 `⊥*` と比較するには、この二つの空型を結び付ければ十分である。
 <!--/-->
@@ -379,7 +379,7 @@ out of an empty type. Function extensionality identifies those maps, and
 equality of the resulting universe-formulas themselves; applying the coding map
 to this equality will later give equality of their codes.
 <!--zh-->
-要在模型内部识别无参公式的码，首先必须联系「没有常元」的两种表示。以`⟪ ∅ ⟫` 为常元域的公式 `ψ`，其常元来自空集的成员；而 `mapFo ε ψ` 把同一份语法表示在空类型 `⊥*` 上。若假定空集有一个成员便会得到矛盾，所以映射 `ε`得以定义。于是，直接把 `ψ` 读入宇宙，与先沿 `ε` 改名再嵌入宇宙，两者的差别只在于从空类型出发的映射。函数外延性判定这些映射相等，`mapFo-comp` 再判定复合改名相等。因此，`sameCode` 首先证明所得宇宙公式本身相等；稍后对这条等式施用编码映射，便得到相应码的等式。
+要在模型内部识别无参公式的码，首先必须联系「没有常元」的两种表示。以`⟪ ∅ ⟫` 为常元域的公式 `ψ`，其常元来自空集的元素；而 `mapFo ε ψ` 把同一份语法表示在空类型 `⊥*` 上。若假定空集有一个元素便会得到矛盾，所以映射 `ε`得以定义。于是，直接把 `ψ` 读入宇宙，与先沿 `ε` 改名再嵌入宇宙，两者的差别只在于从空类型出发的映射。函数外延性判定这些映射相等，`mapFo-comp` 再判定复合改名相等。因此，`sameCode` 首先证明所得宇宙公式本身相等；稍后对这条等式施用编码映射，便得到相应码的等式。
 <!--ja-->
 モデルの内部で無パラメータ論理式のコードを認識するには、まず「定数を持たない」ことの二つの表し方を結び付ける必要がある。`⟪ ∅ ⟫` 上の論理式`ψ` では、定数域は空集合の要素の型である。一方、`mapFo ε ψ` は同じ構文を空型`⊥*` の上で表す。空集合の要素を仮定すれば矛盾が得られるため、写像 `ε`を定義できる。したがって、`ψ` を直接宇宙へ読む経路と、`ε` に沿って改名してから宇宙へ埋め込む経路の違いは、空型から出る写像の違いだけである。関数外延性がそれらの写像を同一視し、`mapFo-comp` が改名の合成を同一視する。このように `sameCode` は、まず得られる宇宙上の論理式そのものの等式を証明する。後でこの等式にコード化写像を適用すれば、対応するコードの等式が得られる。
 <!--/-->
@@ -447,7 +447,7 @@ with the direct universe embedding of `χ`; the latter code is precisely
 `freeCode-in`: the code set contains the arity-and-code key of every
 parameter-free formula.
 <!--zh-->
-现在可以证明码集桥接中较直接的一向。对任意无参 `k` 元公式 `χ`，先把它嵌入 `⟪ ∅ ⟫` 上，所得公式的键由 `key∈AllCodes` 属于 `AllCodes ∅ʟ`。这个键由数码 `# k` 与「经空字母表读入所得的嵌入公式之码」组成。等式 `sameCode'` 把该公式等同于 `χ` 直接嵌入宇宙所得的公式，而后者的码正是 `fst (limitCode χ)`。沿这条等式迁移隶属证明，便得到 `freeCode-in`：码集包含每条无参公式的「元数与码」之键。
+现在可以证明码集桥接中较直接的一向。对任意无参 `k` 元公式 `χ`，先把它嵌入 `⟪ ∅ ⟫` 上，所得公式的键由 `key∈AllCodes` 属于 `AllCodes ∅ʟ`。这个键由数码 `# k` 与「经空字母表读入所得的嵌入公式之码」组成。等式 `sameCode'` 把该公式等同于 `χ` 直接嵌入宇宙所得的公式，而后者的码正是 `fst (limitCode χ)`。沿这条等式迁移成员关系证明，便得到 `freeCode-in`：码集包含每条无参公式的「元数与码」之键。
 <!--ja-->
 これで、コード集合との橋の直接な向きを証明できる。無パラメータな `k` 項論理式 `χ` を `⟪ ∅ ⟫` 上へ埋め込むと、その論理式のキーは`key∈AllCodes` により `AllCodes ∅ʟ` に属する。このキーは、数項 `# k` と、埋め込まれた論理式を空のアルファベットを通して読んだコードとの対である。`sameCode'` はその論理式を `χ` の宇宙への直接の埋め込みと同一視し、後者のコードはちょうど `fst (limitCode χ)` である。この等式に沿って所属の証明を輸送すると `freeCode-in` が得られる。すなわち、コード集合はすべての無パラメータ論理式について、アリティとコードからなるキーを含む。
 <!--/-->
@@ -469,7 +469,7 @@ is already `pr (# k) c`; it remains to supply that constructibility proof. Once
 this is done, `map₁ read` transforms each possible decoded payload into the
 desired `k`-ary parameter-free payload without ever removing the truncation.
 <!--zh-->
-反向则设 `pr (# k) c` 属于 `AllCodes ∅ʟ`。消去定理 `AllCodes-out` 只在命题截断下解码一个成员，而且它接收的是 `S` 的元素，也就是一个集合连同其可构造性证明。所需输入的底层集合已经是 `pr (# k) c`，还须补上它的可构造性证明。完成这一步以后，`map₁ read` 会把命题截断中的每一份可能解码载荷变成所需的 `k` 元无参载荷，始终不消去命题截断。
+反向则设 `pr (# k) c` 属于 `AllCodes ∅ʟ`。消去定理 `AllCodes-out` 只在命题截断下解码一个元素，而且它接收的是 `S` 的元素，也就是一个集合连同其可构造性证明。所需输入的底层集合已经是 `pr (# k) c`，还须补上它的可构造性证明。完成这一步以后，`map₁ read` 会把命题截断中的每一份可能解码载荷变成所需的 `k` 元无参载荷，始终不消去命题截断。
 <!--ja-->
 逆向きでは、`pr (# k) c` が `AllCodes ∅ʟ` に属すると仮定する。除去定理`AllCodes-out` は、要素を命題的切り詰めの下でのみ復号し、入力には `S` の要素、すなわち集合とその構成可能性の証明を要求する。必要な入力の台集合はすでに `pr (# k) c` なので、残るのはその構成可能性の証明である。それが得られれば、`map₁ read` は切り詰められた各復号データを、求める `k` 項の無パラメータなデータへ変換する。この操作が命題的切り詰めを取り除くことはない。
 <!--/-->
@@ -566,7 +566,7 @@ one or two binders. At this stage the formula only describes membership in the
 set supplied at `C₀`; its parameter-free meaning will follow when that slot is
 identified with the code set for the empty alphabet.
 <!--zh-->
-码集把一条公式存放在由其元数与骨架组成的键之下。为了用一个隶属原子表达此事，`FreeAt` 先绑定元数位置之取值的后继，再绑定这个后继与骨架组成的对，最后询问该对是否属于码集位置。因此，用元语言记号看，它具有 `∃[ z ] ∃[ y ]` 的形状：`z` 是后继元数，`y` 是键。各次移位只记录穿过一层或两层绑定之后仍要读取哪个原位置。此时公式本身只描述对 `C₀` 所给集合的隶属；待该位置被认作空字母表的码集后，它才得到无参性的含义。
+码集把一条公式存放在由其元数与骨架组成的键之下。为了用一个成员关系原子表达此事，`FreeAt` 先绑定元数位置之取值的后继，再绑定这个后继与骨架组成的对，最后询问该对是否属于码集位置。因此，用元语言记号看，它具有 `∃[ z ] ∃[ y ]` 的形状：`z` 是后继元数，`y` 是键。各次移位只记录穿过一层或两层绑定之后仍要读取哪个原位置。此时公式本身只描述对 `C₀` 所给集合的成员关系；待该位置被认作空字母表的码集后，它才得到无参性的含义。
 <!--ja-->
 符号集合では、論理式はアリティと骨格からなるキーのもとに格納される。このことを一つの所属原子で表すため、`FreeAt` はまずアリティ位置の値の後続を束縛し、次にその後続と骨格との対を束縛して、最後にその対が符号集合位置に属するかを問う。したがってメタ言語の記法では `∃[ z ] ∃[ y ]` という形をもち、`z` が後続アリティ、`y` がキーである。各シフトは、一つまたは二つの束縛子の下から元のどの位置を参照するかを正確に記録する。この段階で論理式が述べるのは `C₀` に置かれた集合への所属だけである。その位置を空のアルファベットの符号集合と同定して初めて、無パラメータ性という意味が得られる。
 <!--/-->
@@ -609,7 +609,7 @@ numeral `# (suc k)`, then its pair with the skeleton. What remains is to verify
 the successor and pairing descriptions of these witnesses; the final atom is
 exactly the assumed membership.
 <!--zh-->
-正向构造从预期的键 `pr (# (suc k)) (fst (lookup s γ))` 已属于 `C₀` 位置上的集合这一假设出发。这个键恰好给出 `FreeAt` 所需的两个存在见证：先取数码 `# (suc k)`，再取它与骨架组成的对。余下工作只是核实这两个见证分别满足后继描述与配对描述；最末的原子正是起初假设的隶属。
+正向构造从预期的键 `pr (# (suc k)) (fst (lookup s γ))` 已属于 `C₀` 位置上的集合这一假设出发。这个键恰好给出 `FreeAt` 所需的两个存在见证：先取数码 `# (suc k)`，再取它与骨架组成的对。余下工作只是核实这两个见证分别满足后继描述与配对描述；最末的原子正是起初假设的成员关系。
 <!--ja-->
 順方向の構成では、意図したキー `pr (# (suc k)) (fst (lookup s γ))` がすでに `C₀` 位置の集合に属すると仮定する。このキーから `FreeAt` が要求する二つの存在証人が得られる。最初は数項 `# (suc k)`、次はそれと骨格との対である。残るのは、これらの証人がそれぞれ後続と対の記述を満たすことの確認だけであり、最後の原子は仮定した所属そのものである。
 <!--/-->
@@ -631,7 +631,7 @@ constructible set held at `C₀`; transitivity of `L` then makes the key itself
 constructible. These proofs justify using the numeral and the key as bound
 values, rather than adding any mathematical condition to `FreeAt`.
 <!--zh-->
-内部语言的存在见证是 `S` 的元素，因此其底层集合必须连同一份可构造性证明给出。第一个见证 `numAt` 的证明来自每个数码都属于 `L`。对于第二个见证 `keyAt`，隶属假设把该键放进 `C₀` 位置所持有的可构造集中，再由 `L` 的传递性得到键本身可构造。这两份证明只是使数码与键能够充当绑定取值，并未给 `FreeAt` 增添新的数学条件。
+内部语言的存在见证是 `S` 的元素，因此其底层集合必须连同一份可构造性证明给出。第一个见证 `numAt` 的证明来自每个数码都属于 `L`。对于第二个见证 `keyAt`，成员关系假设把该键放进 `C₀` 位置所持有的可构造集中，再由 `L` 的传递性得到键本身可构造。这两份证明只是使数码与键能够充当绑定取值，并未给 `FreeAt` 增添新的数学条件。
 <!--ja-->
 内部言語の存在証人は `S` の要素なので、その台となる集合には構成可能性の証明が伴わなければならない。第一の証人 `numAt` には、すべての数項が `L` に属することからこの証明が得られる。第二の証人 `keyAt` については、所属の仮定がキーを `C₀` 位置の構成可能集合に入れ、`L` の推移性がキー自身の構成可能性を与える。これらの証明は数項とキーを束縛値として使えるようにするものであり、`FreeAt` に新たな数学的条件を加えるものではない。
 <!--/-->
@@ -652,7 +652,7 @@ checks. For `hsuc`, the equality `qa` changes the value at the arity slot into
 two component slots; `keyAt` was defined to be precisely that pair. Hence the
 two semantic facts connect the chosen witnesses to the one membership atom.
 <!--zh-->
-两条辅助公式的充分性等式现在完成所需核实。对于 `hsuc`，等式 `qa` 把元数位置的取值换成 `# k`，而这个数码的后继就是 `# (suc k)`。对于 `hpr`，`prAtL` 的充分性把对该公式的满足化为「该取值等于两个分量位置所指定的有序对」；`keyAt` 的定义恰是这个对。因此，这两条语义事实把所选见证接到了最后那条隶属原子上。
+两条辅助公式的充分性等式现在完成所需核实。对于 `hsuc`，等式 `qa` 把元数位置的取值换成 `# k`，而这个数码的后继就是 `# (suc k)`。对于 `hpr`，`prAtL` 的充分性把对该公式的满足化为「该取值等于两个分量位置所指定的有序对」；`keyAt` 的定义恰是这个对。因此，这两条语义事实把所选见证接到了最后那条成员关系原子上。
 <!--ja-->
 二つの補助論理式に対する妥当性の等式が、必要な確認を行う。`hsuc` では、等式 `qa` によってアリティ位置の値を `# k` に置き換え、その数項の後続が `# (suc k)` であることを使う。`hpr` では、`prAtL` の妥当性により、充足関係は二つの成分位置が指定する順序対との等しさに帰着する。`keyAt` はまさにその対として定義されている。こうして二つの意味論的事実が、選んだ証人を最後の所属原子へ結び付ける。
 <!--/-->
@@ -673,7 +673,7 @@ contains the successor witness and a satisfaction of the inner existential;
 the latter still has its own propositional truncation and will be eliminated in
 turn.
 <!--zh-->
-反向读式从对 `FreeAt` 的满足关系中恢复隶属。存在公式的满足关系只在命题截断内给出见证，所以证明把外层截断消去到目标隶属命题中。外层存在量词的一个代表包含后继见证，以及对内层存在公式的满足关系；后者仍有自己的一层命题截断，随后还要再消去一次。
+反向读式从对 `FreeAt` 的满足关系中恢复成员关系。存在公式的满足关系只在命题截断内给出见证，所以证明把外层截断消去到目标成员关系命题中。外层存在量词的一个代表包含后继见证，以及对内层存在公式的满足关系；后者仍有自己的一层命题截断，随后还要再消去一次。
 <!--ja-->
 逆方向の読みは、`FreeAt` の充足関係から所属を取り出す。存在論理式の充足関係は証人を命題的切り詰めの内側でしか与えないため、証明は外側の切り詰めを目標の所属命題へ消去する。外側の存在量化の一つの代表は、後続の証人と内側の存在論理式の充足関係を含む。後者にはそれ自身の命題的切り詰めが残っており、次にもう一度消去される。
 <!--/-->
@@ -693,7 +693,7 @@ proposition because membership in a set is proposition-valued. That fact is
 the precise license required by each truncation eliminator; no choice of a
 distinguished existential witness is being made.
 <!--zh-->
-两次截断消去具有同一个余域，所以证明把它命名为 `Target`：预期的键属于 `C₀` 位置上的集合。该类型是命题，因为集合的隶属关系取命题值。正是这一事实允许两次使用截断消去；证明并没有从存在见证中选出一个特定代表。
+两次截断消去具有同一个余域，所以证明把它命名为 `Target`：预期的键属于 `C₀` 位置上的集合。该类型是命题，因为集合的成员关系取命题值。正是这一事实允许两次使用截断消去；证明并没有从存在见证中选出一个特定代表。
 <!--ja-->
 二回の切り詰め消去は同じ終域をもつので、証明はそれを `Target` と名付ける。その内容は、意図したキーが `C₀` 位置の集合に属することである。集合への所属は命題値なので、この型は命題である。この事実こそ各切り詰め消去を使うための根拠であり、存在証人から特定の代表を選んでいるわけではない。
 <!--/-->
@@ -732,7 +732,7 @@ component with `# (suc k)`. Consequently `y` is the intended key. Transporting
 the given membership of `y` along this equality proves membership of
 `pr (# (suc k)) (fst (lookup s γ))`, which is `Target`.
 <!--zh-->
-`prAtL` 的充分性把 `y` 的底层集合认作一个对，其第一分量是 `z` 的底层集合，第二分量是骨架。先用关于 `z` 的等式，再接上 `qa`，便把第一分量认作 `# (suc k)`。因此，`y` 正是预期的键。沿此等式迁移已知的 `y` 的隶属，就得到 `pr (# (suc k)) (fst (lookup s γ))` 的隶属，也就是 `Target`。
+`prAtL` 的充分性把 `y` 的底层集合认作一个对，其第一分量是 `z` 的底层集合，第二分量是骨架。先用关于 `z` 的等式，再接上 `qa`，便把第一分量认作 `# (suc k)`。因此，`y` 正是预期的键。沿此等式迁移已知的 `y` 的成员关系，就得到 `pr (# (suc k)) (fst (lookup s γ))` 的成员关系，也就是 `Target`。
 <!--ja-->
 `prAtL` の妥当性は、`y` の台となる集合を、第一成分が `z` の台となる集合、第二成分が骨格である対と同定する。`z` に関する等式に続けて `qa` を用いると、その第一成分は `# (suc k)` と同定される。したがって `y` は意図したキーである。与えられた `y` の所属をこの等式に沿って移送すれば、`pr (# (suc k)) (fst (lookup s γ))` の所属、すなわち `Target` が得られる。
 <!--/-->
@@ -792,7 +792,7 @@ with `# k`. Under these hypotheses, the membership characterized by
 `FreeAt-in` and `FreeAt-out` can be converted into an actual statement about
 parameter-free formulas of arity `suc k`.
 <!--zh-->
-接下来的读式把此前任意的两个位置具体化。等式 `q₀` 把 `C₀` 位置上的集合认作 `AllCodes ∅ʟ`，其元素是空字母表上诸公式的键；`qa` 则再次把元数取值认作 `# k`。在这两项假设下，`FreeAt-in` 与 `FreeAt-out` 所刻画的隶属便能转换为关于元数为 `suc k` 的无参公式的实际陈述。
+接下来的读式把此前任意的两个位置具体化。等式 `q₀` 把 `C₀` 位置上的集合认作 `AllCodes ∅ʟ`，其元素是空字母表上诸公式的键；`qa` 则再次把元数取值认作 `# k`。在这两项假设下，`FreeAt-in` 与 `FreeAt-out` 所刻画的成员关系便能转换为关于元数为 `suc k` 的无参公式的实际陈述。
 <!--ja-->
 続く二つの読みでは、それまで任意だった二つの位置を具体化する。等式 `q₀` は `C₀` 位置の集合を `AllCodes ∅ʟ` と同定する。その要素は空のアルファベット上の論理式のキーである。また `qa` は、アリティ値を再び `# k` と同定する。これらの仮定のもとで、`FreeAt-in` と `FreeAt-out` が特徴付けた所属を、アリティ `suc k` の無パラメータ論理式についての具体的な主張へ変換できる。
 <!--/-->
@@ -815,7 +815,7 @@ returns, under propositional truncation, a parameter-free formula `χ` of arity
 `suc k` whose limit-stage code is the value in the skeleton slot. This is the
 outward semantic reading of the one membership atom.
 <!--zh-->
-从对 `FreeAt` 的满足关系出发，`FreeAt-out` 得到该键属于 `C₀` 位置当前所持有的集合。沿 `q₀` 迁移后，这条隶属落入 `AllCodes ∅ʟ`。先前的解码引理 `freeCode-out` 随即在命题截断内给出一条元数为 `suc k` 的无参公式 `χ`，其极限层码正是骨架位置的取值。这就是那个隶属原子的向外语义读式。
+从对 `FreeAt` 的满足关系出发，`FreeAt-out` 得到该键属于 `C₀` 位置当前所持有的集合。沿 `q₀` 迁移后，这条成员关系落入 `AllCodes ∅ʟ`。先前的解码引理 `freeCode-out` 随即在命题截断内给出一条元数为 `suc k` 的无参公式 `χ`，其极限层码正是骨架位置的取值。这就是那个成员关系原子的向外语义读式。
 <!--ja-->
 `FreeAt` の充足関係から出発すると、`FreeAt-out` はキーが現在 `C₀` 位置に置かれた集合に属することを与える。`q₀` に沿って移送すると、この所属は `AllCodes ∅ʟ` への所属になる。先に証明した復号補題 `freeCode-out` は、アリティ `suc k` の無パラメータ論理式 `χ` で、その極限段階の符号が骨格位置の値であるものを、命題的切り詰めのもとで返す。これが一つの所属原子の外向きの意味論的な読みである。
 <!--/-->
@@ -837,7 +837,7 @@ proposition, `freeCode-out` introduces a truncated formula witness at the final
 decoding step. The result therefore asserts that such a formula exists without
 selecting one.
 <!--zh-->
-这里的元数是 `suc k`，因为定义子集所用的名字公式除了 `k` 个参数位置之外，还要留一个变元位置给候选元素。`codeFree-out` 中的公式见证仍处于命题截断内。`FreeAt-out` 可以把自己的绑定见证局部消去到隶属命题中，但最后的解码步骤 `freeCode-out` 又给出一个带命题截断的公式见证。因此，结论只断言这样的公式存在，并不从中选出一条公式。
+这里的元数是 `suc k`，因为定义子集所用的名字公式除了 `k` 个参数位置之外，还要留一个变元位置给候选元素。`codeFree-out` 中的公式见证仍处于命题截断内。`FreeAt-out` 可以把自己的绑定见证局部消去到成员关系命题中，但最后的解码步骤 `freeCode-out` 又给出一个带命题截断的公式见证。因此，结论只断言这样的公式存在，并不从中选出一条公式。
 <!--ja-->
 ここでアリティが `suc k` なのは、定義可能な部分集合の名前に使う論理式が、`k` 個のパラメータ位置に加えて、候補要素のための変数位置を一つ必要とするからである。`codeFree-out` が与える論理式の証人は、命題的に切り詰められたままである。`FreeAt-out` は所属が命題であるため自身の束縛された証人を局所的に消去できるが、最後の復号段階で `freeCode-out` が切り詰められた論理式の証人を与える。したがって結論は、そのような論理式の存在だけを述べ、特定の一つを選ばない。
 <!--/-->
@@ -856,7 +856,7 @@ skeleton slot. The lemma `freeCode-in` places the corresponding key in
 witnesses. This direction needs no truncated formula witness because `χ` is
 part of the input.
 <!--zh-->
-反过来，`codeFree-in` 从一条给定的元数为 `suc k` 的无参公式 `χ` 出发，并假设它的极限层码与骨架位置的取值相等。引理 `freeCode-in` 先把相应的键放入 `AllCodes ∅ʟ`；再沿码等式以及 `q₀` 的反向迁移，便把这条隶属移到实际的骨架位置与码集位置。最后，`FreeAt-in` 用两个存在见证包装所得隶属。这个方向无须产生带命题截断的公式见证，因为 `χ` 本来就是输入数据。
+反过来，`codeFree-in` 从一条给定的元数为 `suc k` 的无参公式 `χ` 出发，并假设它的极限层码与骨架位置的取值相等。引理 `freeCode-in` 先把相应的键放入 `AllCodes ∅ʟ`；再沿码等式以及 `q₀` 的反向迁移，便把这条成员关系移到实际的骨架位置与码集位置。最后，`FreeAt-in` 用两个存在见证包装所得成员关系。这个方向无须产生带命题截断的公式见证，因为 `χ` 本来就是输入数据。
 <!--ja-->
 逆に `codeFree-in` は、アリティ `suc k` の具体的な無パラメータ論理式 `χ` と、その極限段階の符号を骨格位置の値と同定する等式から始める。補題 `freeCode-in` は対応するキーを `AllCodes ∅ʟ` に入れる。次に符号の等式と `q₀` の逆向きに沿って移送すると、その所属は実際の骨格位置と符号集合位置に移る。最後に `FreeAt-in` が、得られた所属を二つの存在証人とともにまとめる。この方向では `χ` 自身が入力として与えられているため、命題的に切り詰められた論理式の証人を作る必要はない。
 <!--/-->
@@ -905,7 +905,7 @@ under propositional truncation because membership in a hierarchy set records
 only the mere existence of a generating entry. Thus `memberOf` exposes every
 possible index without choosing one.
 <!--zh-->
-先刻画集合编码图中的任意隶属。若 `g` 以 `Fin k` 为索引，并且`pr x y` 属于 `env g`，那么仅仅存在一个索引 `i`，使`x ≡ # (toℕ i)` 且 `y ≡ g i`。结果仍处于命题截断内，因为层级集合中的隶属只记录某个生成条目的仅仅存在。因此，`memberOf` 揭示所有可能的索引，却不从中选择一个。
+先刻画集合编码图中的任意成员关系。若 `g` 以 `Fin k` 为索引，并且`pr x y` 属于 `env g`，那么仅仅存在一个索引 `i`，使`x ≡ # (toℕ i)` 且 `y ≡ g i`。结果仍处于命题截断内，因为层级集合中的成员关系只记录某个生成条目的仅仅存在。因此，`memberOf` 揭示所有可能的索引，却不从中选择一个。
 <!--ja-->
 まず、集合として符号化されたグラフへの任意の所属を特徴づける。`g` が `Fin k` で添字づけられ、`pr x y` が `env g` に属するなら、`x ≡ # (toℕ i)` かつ `y ≡ g i` となる添字 `i` が単に存在する。階層の集合への所属が記録するのは、生成元となる項目の単なる存在だけなので、結果は命題的切り詰めのもとに留まる。したがって `memberOf` は可能な添字を明らかにするが、その一つを選び出しはしない。
 <!--/-->
@@ -926,7 +926,7 @@ first in the witness, so both component paths are reversed to obtain the
 orientation required by `memberOf`: from `x` and `y` to the numeral key and
 the value supplied by `g`.
 <!--zh-->
-隶属见证携带一条等式，把图中存放的条目与所查询的有序对联系起来。有序对构造子的单射性把这一条等式拆成两个分量各自的等式。见证中的等式先写存入的条目，故两个分量的路径都要反向，才能得到 `memberOf` 所需的方向：从 `x`、`y` 分别指向数码键与 `g` 给出的取值。
+成员关系见证携带一条等式，把图中存放的条目与所查询的有序对联系起来。有序对构造子的单射性把这一条等式拆成两个分量各自的等式。见证中的等式先写存入的条目，故两个分量的路径都要反向，才能得到 `memberOf` 所需的方向：从 `x`、`y` 分别指向数码键与 `g` 给出的取值。
 <!--ja-->
 所属の証人は、グラフに格納された項目と問い合わせた順序対との等式を含む。順序対の構成子の単射性により、この一つの等式は二つの成分の等式に分かれる。証人では格納された項目が先に書かれているため、両方の成分のパスを逆向きにして、`memberOf` が必要とする向きにする。すなわち、`x` と `y` から、それぞれ数項の鍵と `g` の与える値へ向かう等式である。
 <!--/-->
@@ -942,7 +942,7 @@ membership witness and the entry equation is reflexivity. Hence `memberOf`
 and `entryOf` give the two directions needed to recognize the horizontal
 coordinates of this finite graph.
 <!--zh-->
-反过来，每个给定索引都产生一个条目。对 `i : Fin k`，有序对`pr (# (toℕ i)) (g i)` 属于 `env g`；提升后的索引就是隶属见证，而条目等式由自反性给出。因此，`memberOf` 与 `entryOf` 提供识别这个有穷图之横坐标所需的两个方向。
+反过来，每个给定索引都产生一个条目。对 `i : Fin k`，有序对`pr (# (toℕ i)) (g i)` 属于 `env g`；提升后的索引就是成员关系见证，而条目等式由自反性给出。因此，`memberOf` 与 `entryOf` 提供识别这个有穷图之横坐标所需的两个方向。
 <!--ja-->
 逆に、指定された各添字は一つの項目を与える。`i : Fin k` に対して、順序対 `pr (# (toℕ i)) (g i)` は `env g` に属する。持ち上げられた添字が所属の証人となり、項目の等式は反射性である。こうして `memberOf` と `entryOf`は、この有限グラフの第一成分を認識するために必要な二つの向きを与える。
 <!--/-->
@@ -960,7 +960,7 @@ proposition `x ∈ # k`, so the outer propositional truncation may be eliminated
 into that goal. After fixing one representative `y`, it remains to recover an
 index from the graph membership and prove that its numeral belongs to `# k`.
 <!--zh-->
-定义域的正向包含从如下仅仅存在出发：存在一个模型元素 `y`，使`pr x (fst y)` 位于图中。目标是隶属命题 `x ∈ # k`，所以外层命题截断可以消去到这个目标中。固定其中一个代表 `y` 后，只须从图的隶属中恢复一个索引，并证明该索引的数码属于 `# k`。
+定义域的正向包含从如下仅仅存在出发：存在一个模型元素 `y`，使`pr x (fst y)` 位于图中。目标是成员关系命题 `x ∈ # k`，所以外层命题截断可以消去到这个目标中。固定其中一个代表 `y` 后，只须从图的成员关系中恢复一个索引，并证明该索引的数码属于 `# k`。
 <!--ja-->
 定義域の順向きの包含は、`pr x (fst y)` がグラフに入るようなモデルの元`y` が単に存在することから始まる。目標は所属命題 `x ∈ # k` なので、外側の命題的切り詰めをこの目標へ消去できる。代表 `y` を一つ固定した後は、グラフへの所属から添字を復元し、その数項が `# k` に属することを示せば十分である。
 <!--/-->
@@ -1000,7 +1000,7 @@ propositional truncation. Because `x ∈ # k` is a proposition, `rec₁` may fee
 each representative to `atIndex`. This closes the forward inclusion without
 extracting an index as ordinary data.
 <!--zh-->
-对图的隶属应用 `memberOf`，恰好得到所需的索引信息，但它仍在命题截断内。由于 `x ∈ # k` 是命题，`rec₁` 可以把每个代表交给 `atIndex`。正向包含由此完成，整个过程没有把某个索引提取成普通数据。
+对图的成员关系应用 `memberOf`，恰好得到所需的索引信息，但它仍在命题截断内。由于 `x ∈ # k` 是命题，`rec₁` 可以把每个代表交给 `atIndex`。正向包含由此完成，整个过程没有把某个索引提取成普通数据。
 <!--ja-->
 グラフへの所属に `memberOf` を適用すると、必要な添字の情報がちょうど得られるが、それはまだ命題的切り詰めのもとにある。`x ∈ # k` は命題なので、`rec₁` は各代表を `atIndex` に渡せる。これで添字を通常のデータとして取り出すことなく、順向きの包含が閉じる。
 <!--/-->
@@ -1103,7 +1103,7 @@ test element `x`, that membership in the proposed domain and membership in the
 numeral are the same proposition. The forward implication begins by reading
 domain membership through `domAt-in`.
 <!--zh-->
-设 `γ` 满足 `domAt e d`。为了证明 `d` 位置的底集就是 `# k`，`domAt-numeral` 对模型元素 `lookup d γ` 与 `(# k , numL k)` 应用 `L` 内部的外延性，再把所得等式投影到底集。因此，只须对每个可构造的测试元素 `x` 证明：属于候选定义域与属于该数码是同一个命题。正向蕴含先用 `domAt-in` 读取定义域隶属。
+设 `γ` 满足 `domAt e d`。为了证明 `d` 位置的底集就是 `# k`，`domAt-numeral` 对模型元素 `lookup d γ` 与 `(# k , numL k)` 应用 `L` 内部的外延性，再把所得等式投影到底集。因此，只须对每个可构造的测试元素 `x` 证明：属于候选定义域与属于该数码是同一个命题。正向蕴含先用 `domAt-in` 读取定义域成员关系。
 <!--ja-->
 `γ` が `domAt e d` を充足すると仮定する。スロット `d` の台集合が`# k` であることを示すため、`domAt-numeral` はモデルの元 `lookup d γ` と`(# k , numL k)` に `L` 内部の外延性を適用し、得られた等式を台集合へ射影する。したがって、構成可能な各試験要素 `x` について、定義域の候補への所属と数項への所属が同じ命題であることを示せば十分である。順向きの含意は、まず `domAt-in` によって定義域への所属を読み出す。
 <!--/-->
@@ -1125,7 +1125,7 @@ Conversely, `dom-from` turns `x ∈ # k` into the mere existence of an entry in
 truncation may be eliminated; the local function `put` handles each displayed
 entry.
 <!--zh-->
-在正向蕴含中，`domAt-in` 把 `d` 位置中的隶属化为如下仅仅存在：某个取值与`x` 配成的对位于 `e` 位置的集合中。沿 `qe` 迁移后，该条目落入 `env g`，`dom-into` 随即给出 `x ∈ # k`。反过来，`dom-from` 把 `x ∈ # k` 化为`env g` 中某个条目的仅仅存在。由于属于候选定义域是命题，可以消去这一截断；局部函数 `put` 处理每个呈现出来的条目。
+在正向蕴含中，`domAt-in` 把 `d` 位置中的成员关系化为如下仅仅存在：某个取值与`x` 配成的对位于 `e` 位置的集合中。沿 `qe` 迁移后，该条目落入 `env g`，`dom-into` 随即给出 `x ∈ # k`。反过来，`dom-from` 把 `x ∈ # k` 化为`env g` 中某个条目的仅仅存在。由于属于候选定义域是命题，可以消去这一截断；局部函数 `put` 处理每个呈现出来的条目。
 <!--ja-->
 順向きの含意では、`domAt-in` がスロット `d` への所属を、`x` と対をなしてスロット `e` の集合に入る値の単なる存在へ変える。`qe` に沿って輸送するとその項目は `env g` に入り、`dom-into` が `x ∈ # k` を与える。逆に、`dom-from` は `x ∈ # k` を `env g` の項目の単なる存在へ変える。定義域の候補への所属は命題なので、この切り詰めを消去できる。局所関数 `put` が、提示された各項目を処理する。
 <!--/-->
@@ -1146,7 +1146,7 @@ membership propositions at every `x`. Extensionality assembles those pointwise
 paths into the equality of the proposed domain with `# k`. The truncated graph
 witness is used only to prove membership, so no value is selected from it.
 <!--zh-->
-对一个呈现出来的条目，`put` 先沿 `qe` 的反向把其隶属搬回 `e` 位置所存的图，再由 `domAt-out` 得到它的第一分量属于 `d` 位置。于是，两条蕴含经`⇔toPath` 在每个 `x` 处形成两条隶属命题之间的路径；外延性把这些逐点路径组装成候选定义域与 `# k` 的相等。截断的图见证只用于证明隶属，并未从中选择任何取值。
+对一个呈现出来的条目，`put` 先沿 `qe` 的反向把其成员关系搬回 `e` 位置所存的图，再由 `domAt-out` 得到它的第一分量属于 `d` 位置。于是，两条蕴含经`⇔toPath` 在每个 `x` 处形成两条成员关系命题之间的路径；外延性把这些逐点路径组装成候选定义域与 `# k` 的相等。截断的图见证只用于证明成员关系，并未从中选择任何取值。
 <!--ja-->
 提示された一つの項目について、`put` はその所属を `qe` の逆向きに沿ってスロット `e` に格納されたグラフへ戻し、`domAt-out` によって第一成分のスロット `d` への所属を得る。こうして二つの含意は `⇔toPath` により、各 `x` で二つの所属命題の間のパスになる。外延性はそれらの点ごとのパスを、定義域の候補と `# k` との等式へ組み立てる。切り詰められたグラフの証人は所属を証明するためだけに用いられ、そこから値を選び出すことはない。
 <!--/-->
@@ -1208,7 +1208,7 @@ under propositional truncation, a value paired with `fst x` in `env g`; and
 transport along the inverse of `qe` returns that entry to slot `e`. These two
 directions complete `domAt-fill` without choosing a value from the finite graph.
 <!--zh-->
-反向蕴含沿同一路径倒行。先用 `qd` 把位置 `d` 中的隶属搬到 `# k` 中；`dom-from` 随后在命题截断内给出一个取值，使它与 `fst x` 配成的对属于 `env g`；最后沿 `qe` 的反向把该条目送回位置 `e`。两个方向由此完成 `domAt-fill`，过程中没有从有穷图中选出一个取值。
+反向蕴含沿同一路径倒行。先用 `qd` 把位置 `d` 中的成员关系搬到 `# k` 中；`dom-from` 随后在命题截断内给出一个取值，使它与 `fst x` 配成的对属于 `env g`；最后沿 `qe` 的反向把该条目送回位置 `e`。两个方向由此完成 `domAt-fill`，过程中没有从有穷图中选出一个取值。
 <!--ja-->
 逆向きの含意は、同じ道筋を反対にたどる。スロット `d` への所属を `qd` によって `# k` への所属へ移し、`dom-from` から、`fst x` と対をなして `env g` に入る値の単なる存在を得る。最後に `qe` の逆向きに沿って、その項目をスロット `e` へ戻す。これで `domAt-fill` の二方向がそろい、有限グラフから特定の値を選び出す必要はない。
 <!--/-->
@@ -1236,7 +1236,7 @@ supply the proposed key and value. The abbreviation `Bs = lookup B γ` keeps
 the proof uniform in all three slots. Formulas considered below therefore have
 constants indexed by the members of the underlying set `fst Bs`.
 <!--zh-->
-现在考察满足关系图在真实公式键处指派什么。固定周围环境 `γ`：位置 `B` 给出载体，`x` 与 `y` 则给出候选键和候选取值。缩写 `Bs = lookup B γ` 使随后证明对这三个位置保持统一。因此，以下公式的常元由底集 `fst Bs` 的成员索引。
+现在考察满足关系图在真实公式键处指派什么。固定周围环境 `γ`：位置 `B` 给出载体，`x` 与 `y` 则给出候选键和候选取值。缩写 `Bs = lookup B γ` 使随后证明对这三个位置保持统一。因此，以下公式的常元由底集 `fst Bs` 的元素索引。
 <!--ja-->
 次に、充足関係グラフが実際の論理式の鍵で何を割り当てるかを調べる。周囲の環境 `γ` を固定し、スロット `B` から台を、`x` と `y` から鍵と値の候補を受け取る。略記 `Bs = lookup B γ` により、以下の証明はこの三つのスロットについて一様に述べられる。ここで扱う論理式の定数は、台集合 `fst Bs` の要素によって添字づけられる。
 <!--/-->
@@ -1315,7 +1315,7 @@ elimination is into the membership proposition. The other direction uses
 `total` to give, merely, a table value for every key in the slot.
 `domAt-intro` combines these implications into `hdom φ`.
 <!--zh-->
-典范表的定义域恰是公式键所成的槽。一个方向从表条目出发，用 `inSlot` 证明其键属于 `slot Bs φ`；由于条目是在命题截断下取得的，这次消去落入隶属命题。另一个方向用 `total` 证明槽中的每个键都仅仅存在一个表取值。`domAt-intro` 把这两个蕴含组合成 `hdom φ`。
+典范表的定义域恰是公式键所成的槽。一个方向从表条目出发，用 `inSlot` 证明其键属于 `slot Bs φ`；由于条目是在命题截断下取得的，这次消去落入成员关系命题。另一个方向用 `total` 证明槽中的每个键都仅仅存在一个表取值。`domAt-intro` 把这两个蕴含组合成 `hdom φ`。
 <!--ja-->
 正準な表の定義域は、論理式の鍵からなるスロットと一致する。一方では表の項目から始め、`inSlot` によってその鍵を `slot Bs φ` に入れる。項目は命題的切り詰めのもとで得られるので、その消去先は所属命題である。他方では `total` を使い、スロット内の各鍵に表の値が単に存在することを示す。`domAt-intro` がこの二つの含意を `hdom φ` にまとめる。
 <!--/-->
@@ -1337,7 +1337,7 @@ The value is a set of satisfying environments, rather than a single truth
 value. `graphAt-value` proves the claim by supplying the canonical recursion
 witness to `graphAt-in`.
 <!--zh-->
-现在可以准确陈述正向读式。设 `ψ` 的常元取自 `fst Bs` 的成员。若位置 `x` 含有它的真实键 `keyS Bs ψ`，位置 `y` 含有翻译后的模型语言公式 `mapFo (asConst Bs) ψ` 的满足集合，那么 `satGraphAt B x y` 成立。这里的取值是满足该公式的环境所成的集合，并非单个真值。`graphAt-value` 向 `graphAt-in` 提供典范递归见证，从而证明这一结论。
+现在可以准确陈述正向读式。设 `ψ` 的常元取自 `fst Bs` 的元素。若位置 `x` 含有它的真实键 `keyS Bs ψ`，位置 `y` 含有翻译后的模型语言公式 `mapFo (asConst Bs) ψ` 的满足集合，那么 `satGraphAt B x y` 成立。这里的取值是满足该公式的环境所成的集合，并非单个真值。`graphAt-value` 向 `graphAt-in` 提供典范递归见证，从而证明这一结论。
 <!--ja-->
 これで順方向の読みを正確に述べられる。`ψ` を、定数が `fst Bs` の要素である論理式とする。スロット `x` が実際の鍵 `keyS Bs ψ` をもち、スロット `y` がモデル言語へ移した論理式 `mapFo (asConst Bs) ψ` の充足集合をもつなら、`satGraphAt B x y` が成り立つ。この値は論理式を充足する環境の集合であり、一つの真理値ではない。`graphAt-value` は正準な再帰の証人を `graphAt-in` に与えて、この主張を示す。
 <!--/-->
@@ -1422,7 +1422,7 @@ applies this constant map throughout the formula. The separate `keyBridge`
 used above ensures that direct coding before this translation and internal
 coding after it produce the same underlying key.
 <!--zh-->
-这里的 `φ` 是 `ψ` 在模型语言中的版本。`ψ` 的一个常元是底层载体的成员；`asConst Bs` 为它配上作为 `S` 中元素所需的可构造性证明，`mapFo` 再把这个常元映射施于整条公式。上文另行使用的 `keyBridge` 保证：翻译前直接编码与翻译后在模型内部编码所得的底层键相同。
+这里的 `φ` 是 `ψ` 在模型语言中的版本。`ψ` 的一个常元是底层载体的元素；`asConst Bs` 为它配上作为 `S` 中元素所需的可构造性证明，`mapFo` 再把这个常元映射施于整条公式。上文另行使用的 `keyBridge` 保证：翻译前直接编码与翻译后在模型内部编码所得的底层键相同。
 <!--ja-->
 ここで `φ` は `ψ` をモデル言語へ移したものである。`ψ` の定数は台集合の要素であり、`asConst Bs` はそれに、`S` の要素とみなすために必要な構成可能性の証明を添える。`mapFo` はこの定数写像を論理式全体に適用する。上で別に用いた `keyBridge` により、翻訳前に直接符号化した鍵と、翻訳後にモデル内部で符号化した鍵の台集合が一致する。
 <!--/-->
@@ -1462,7 +1462,7 @@ in `C`. The last fact follows by applying `domAt-out` to the displayed table
 entry `ha`. With that membership and the same entry, `SatSoundC.pinned` applies
 to `ψ` and forces its recorded value to be the canonical satisfaction set.
 <!--zh-->
-拆开一个图见证，可得候选表 `T`、码域 `C`、环境塔 `E`、载体 `b` 及其全部证明。这里的 `C` 不必是典范槽；关键在于它对子码闭合，`T` 满足打包后的表子句，而且真实键属于 `C`。最后一项由表条目 `ha` 经 `domAt-out` 得到。把这份键隶属与同一个表条目交给 `SatSoundC.pinned`，便可将 `ψ` 在表中记录的取值确定为典范满足集合。
+拆开一个图见证，可得候选表 `T`、码域 `C`、环境塔 `E`、载体 `b` 及其全部证明。这里的 `C` 不必是典范槽；关键在于它对子码闭合，`T` 满足打包后的表子句，而且真实键属于 `C`。最后一项由表条目 `ha` 经 `domAt-out` 得到。把这份键成员关系与同一个表条目交给 `SatSoundC.pinned`，便可将 `ψ` 在表中记录的取值确定为典范满足集合。
 <!--ja-->
 一つのグラフの証人をほどくと、表の候補 `T`、符号領域 `C`、環境の塔 `E`、台 `b`、およびそれらの証明が得られる。ここで `C` が正準なスロットである必要はない。必要なのは、`C` が子符号について閉じ、`T` がまとめられた表の節を充足し、実際の鍵が `C` に属することである。最後の所属は、提示された表の項目 `ha` に `domAt-out` を適用して得られる。この鍵の所属と同じ表の項目を `SatSoundC.pinned` に渡すと、`ψ` について表に記録された値が正準な充足集合に定まる。
 <!--/-->
@@ -1483,7 +1483,7 @@ into membership of `keyS Bs ψ` in `C`, and turns `ha` itself into an entry of
 exactly the required equality: at a genuine formula key, any value admitted by
 the graph is the satisfaction set of the translated formula.
 <!--zh-->
-钉定定理所需的两个前提起初都在周围环境的位置 `x` 处读取。沿 `qx` 搬运，一方面把由 `hd` 与 `ha` 得到的定义域隶属化为 `keyS Bs ψ` 属于 `C`，另一方面把 `ha` 本身化为 `T` 在该键与位置 `y` 所存取值处的条目。钉定定理随即交回所需相等：在真实公式键处，图所容许的任何取值都等于翻译后公式的满足集合。
+钉定定理所需的两个前提起初都在周围环境的位置 `x` 处读取。沿 `qx` 搬运，一方面把由 `hd` 与 `ha` 得到的定义域成员关系化为 `keyS Bs ψ` 属于 `C`，另一方面把 `ha` 本身化为 `T` 在该键与位置 `y` 所存取值处的条目。钉定定理随即交回所需相等：在真实公式键处，图所容许的任何取值都等于翻译后公式的满足集合。
 <!--ja-->
 固定の定理に必要な二つの前提は、初めは周囲の環境のスロット `x` で読まれる。`qx` に沿って輸送すると、`hd` と `ha` から得た定義域への所属は `keyS Bs ψ` が `C` に属するという所属になり、`ha` 自身は、その鍵とスロット `y` の値における `T` の項目になる。そこで固定の定理が必要な等式を返す。実際の論理式の鍵では、グラフが許すどの値も、翻訳された論理式の充足集合に一致する。
 <!--/-->
@@ -1535,7 +1535,7 @@ for the carrier `B` at that key, and the last membership says `c ∈ v`. When
 environment satisfies the skeleton rather than merely consulting the graph at
 an arbitrary key.
 <!--zh-->
-其余三个见证决定如何解释骨架。首先要求 `k` 是扩展环境 `c` 的定义域；接着要求 `key` 属于位置 `C` 中的码集，并等于 `k` 与骨架码 `s` 组成的对；最后，`v` 是满足关系图在载体 `B` 与该键处容许的取值，末尾的隶属断言则是 `c ∈ v`。当 `C` 填入载体的真实码集时，这些条件表达的是扩展环境满足骨架，而非仅在任意键处查询图。
+其余三个见证决定如何解释骨架。首先要求 `k` 是扩展环境 `c` 的定义域；接着要求 `key` 属于位置 `C` 中的码集，并等于 `k` 与骨架码 `s` 组成的对；最后，`v` 是满足关系图在载体 `B` 与该键处容许的取值，末尾的成员关系断言则是 `c ∈ v`。当 `C` 填入载体的真实码集时，这些条件表达的是扩展环境满足骨架，而非仅在任意键处查询图。
 <!--ja-->
 残る三つの証人は、骨格をどのように解釈するかを定める。まず `k` が拡張環境 `c` の定義域であることを要求する。次に `key` はスロット `C` の符号集合に属し、`k` と骨格の符号 `s` の対に等しくなければならない。最後に `v` は、台 `B` の充足関係グラフがその鍵で許す値であり、末尾の所属は `c ∈ v` を述べる。`C` に台の実際の符号集合が入ると、これらの条件は、任意の鍵でグラフを参照するだけではなく、拡張環境が骨格を充足することを表す。
 <!--/-->
@@ -1557,7 +1557,7 @@ successor is essential: a name with `a` parameters needs one further variable
 for the candidate member. The next conjunct requires `a` to be a member of the
 model's natural numbers.
 <!--zh-->
-元语言名字由元数、无参公式与参数向量组成。`NameAt` 分别以元数位置 `a`、骨架码位置 `s` 与环境位置 `e` 表示这三项，并以指称位置 `d` 记录由它们导出的集合。第一个合取项检查由 `a` 的后继与 `s` 组成的对是否属于空字母表码集。这里的后继不可省略：具有 `a` 个参数的名字还需要一个变元来放置候选成员。下一个合取项要求 `a` 属于模型的自然数之集。
+元语言名字由元数、无参公式与参数向量组成。`NameAt` 分别以元数位置 `a`、骨架码位置 `s` 与环境位置 `e` 表示这三项，并以指称位置 `d` 记录由它们导出的集合。第一个合取项检查由 `a` 的后继与 `s` 组成的对是否属于空字母表码集。这里的后继不可省略：具有 `a` 个参数的名字还需要一个变元来放置候选元素。下一个合取项要求 `a` 属于模型的自然数之集。
 <!--ja-->
 メタ言語の名前は、アリティ、無パラメータ論理式、パラメータベクトルからなる。`NameAt` はそれらをアリティのスロット `a`、骨格の符号のスロット `s`、環境のスロット `e` で表し、表示のスロット `d` にはそのデータから導かれる集合を記録する。最初の連言は、`a` の後続と `s` から作った対が空のアルファベットの符号集合に属することを確かめる。この後続は欠かせない。`a` 個のパラメータをもつ名前には、候補となる要素を置く変数がもう一つ必要だからである。次の連言は、`a` がモデルの自然数の集合に属することを要求する。
 <!--/-->
@@ -1625,7 +1625,7 @@ equation then identifies that key with the pair of `k` and `s`. The last two
 proofs say that `v` is the graph value at this key and that `c` belongs to
 `v`. Here `v` is a set of satisfying environments, not a Boolean truth value.
 <!--zh-->
-这份载荷严格沿着语义链展开。前两份满足证明分别断言 `c` 扩展旧环境，以及 `k` 是它的定义域。当 `C` 实例化为 `AllCodes B` 时，`key` 对 `C` 的隶属保证随后是在真实公式码处查询图。接着的显式等式把该键确定为 `k` 与 `s` 组成的对。末两份证明则断言 `v` 是图在该键处的取值，并且 `c` 属于 `v`。这里的 `v` 是满足该公式的环境之集，并非布尔真值。
+这份载荷严格沿着语义链展开。前两份满足证明分别断言 `c` 扩展旧环境，以及 `k` 是它的定义域。当 `C` 实例化为 `AllCodes B` 时，`key` 对 `C` 的成员关系保证随后是在真实公式码处查询图。接着的显式等式把该键确定为 `k` 与 `s` 组成的对。末两份证明则断言 `v` 是图在该键处的取值，并且 `c` 属于 `v`。这里的 `v` 是满足该公式的环境之集，并非布尔真值。
 <!--ja-->
 この中身は意味の連鎖をそのままたどる。最初の二つの充足の証明は、`c` がもとの環境を拡張することと、`k` がその定義域であることを述べる。`C` を `AllCodes B` で具体化すると、`key` が `C` に属するという条件により、続くグラフの参照が実際の論理式の符号で行われることが保証される。次の明示的な等式は、その鍵を `k` と `s` の対と同一視する。最後の二つの証明は、`v` がこの鍵でのグラフの値であり、`c` が `v` に属することを述べる。ここで `v` は充足する環境の集合であって、ブール値の真理値ではない。
 <!--/-->
@@ -1646,7 +1646,7 @@ proofs. The exception is the equation defining `key`: the pairing formula's
 adequacy path converts that set-theoretic equation into satisfaction of
 `prAtL`.
 <!--zh-->
-`DenoteBody-in` 把这份显式载荷变成对公式体的满足。载体隶属保留为最外层合取项，而见证 `c`、`k`、`key` 与 `v` 按四层存在绑定的同一次序引入。多数条件本来就以满足证明陈述。例外是定义 `key` 的等式：配对公式的充分性路径把这条集合论等式转换为对 `prAtL` 的满足。
+`DenoteBody-in` 把这份显式载荷变成对公式体的满足。载体成员关系保留为最外层合取项，而见证 `c`、`k`、`key` 与 `v` 按四层存在绑定的同一次序引入。多数条件本来就以满足证明陈述。例外是定义 `key` 的等式：配对公式的充分性路径把这条集合论等式转换为对 `prAtL` 的满足。
 <!--ja-->
 `DenoteBody-in` は、この明示的な中身を本体の充足へ変える。台への所属は外側の連言として残り、証人 `c`、`k`、`key`、`v` は四つの存在量化子と同じ順序で導入される。ほとんどの条件は、初めから充足の証明として述べられている。例外は `key` を定める等式である。対の論理式の妥当性を表すパスが、この集合論的な等式を `prAtL` の充足へ変換する。
 <!--/-->
@@ -1684,7 +1684,7 @@ propositional truncations. Each use of truncation elimination targets
 `∥ DenoteOf z ∥₁`, again a proposition, so the proof may transform each local
 choice of witnesses without selecting a tuple globally.
 <!--zh-->
-`DenoteBody-out` 在反向读取时保留同一边界。载体隶属位于所有存在量词之外，因此可以直接取得；四个见证则只能在嵌套的命题截断中显露。每次截断消去的目标都是 `∥ DenoteOf z ∥₁`，仍为一个命题，故证明可以变换每一份局部见证，却不会从中全局选出一个元组。
+`DenoteBody-out` 在反向读取时保留同一边界。载体成员关系位于所有存在量词之外，因此可以直接取得；四个见证则只能在嵌套的命题截断中显露。每次截断消去的目标都是 `∥ DenoteOf z ∥₁`，仍为一个命题，故证明可以变换每一份局部见证，却不会从中全局选出一个元组。
 <!--ja-->
 `DenoteBody-out` は、逆向きに読むときにも同じ境界を保つ。台への所属はすべての存在量化子の外側にあるので、直接取り出せる。しかし四つの証人は、入れ子になった命題的切り詰めの内側でしか現れない。切り詰めの消去先は毎回 `∥ DenoteOf z ∥₁` であり、これも命題である。そのため、各局所的な証人の組を変換することはできるが、一つの組を大域的に選ぶことはない。
 <!--/-->
@@ -1706,7 +1706,7 @@ innermost map then retains the graph and membership proofs with the witness
 `v`, and the surrounding eliminations rebuild the whole payload under one
 propositional truncation.
 <!--zh-->
-在键这一层，公式体给出对配对公式的满足，而 `DenoteOf` 要求解码后的等式 `fst key ≡ pr (fst k) (fst (lookup s γ))`。沿配对公式的充分性路径正向读取，恰好得到这条等式。最内层的映射随后把图证明与隶属证明连同见证 `v` 一并保留，外围的消去再于一层命题截断之下重建整份载荷。
+在键这一层，公式体给出对配对公式的满足，而 `DenoteOf` 要求解码后的等式 `fst key ≡ pr (fst k) (fst (lookup s γ))`。沿配对公式的充分性路径正向读取，恰好得到这条等式。最内层的映射随后把图证明与成员关系证明连同见证 `v` 一并保留，外围的消去再于一层命题截断之下重建整份载荷。
 <!--ja-->
 鍵の層では、本体は対の論理式の充足を与えるが、`DenoteOf` が要求するのは、復号された等式 `fst key ≡ pr (fst k) (fst (lookup s γ))` である。対の論理式の妥当性を表すパスを順方向に読むと、ちょうどこの等式が得られる。最も内側の写像は、証人 `v` とともにグラフの証明と所属の証明を保ち、外側の消去が中身全体を一つの命題的切り詰めの下で組み立て直す。
 <!--/-->
@@ -1759,7 +1759,7 @@ Recovering such data from an arbitrary satisfaction of `NameAt` is a separate
 adequacy argument, and its result in the following chapter remains under
 propositional truncation.
 <!--zh-->
-两个方向都对每个候选元素分别陈述，因为 `extAt` 通过逐点隶属表达集合相等。它们有意使用未截断的 `DenoteOf z`：本引理是一条引入规则，调用方要提供可用来构造公式体满足的具体数据。从 `NameAt` 的任意满足中恢复这些数据属于另一项充分性论证；下一章给出的恢复结果仍保留在命题截断之下。
+两个方向都对每个候选元素分别陈述，因为 `extAt` 通过逐点成员关系表达集合相等。它们有意使用未截断的 `DenoteOf z`：本引理是一条引入规则，调用方要提供可用来构造公式体满足的具体数据。从 `NameAt` 的任意满足中恢复这些数据属于另一项充分性论证；下一章给出的恢复结果仍保留在命题截断之下。
 <!--ja-->
 二つの方向は、どちらも候補ごとに述べられる。`extAt` が集合の等しさを点ごとの所属で表すからである。ここでは意図的に、切り詰められていない `DenoteOf z` を使う。この補題は導入規則なので、呼び出す側が本体の充足を組み立てるための具体的なデータを与える。`NameAt` の任意の充足からそのデータを復元する仕事は別の妥当性の議論に属し、次章で得られる復元結果も命題的切り詰めの下に残る。
 <!--/-->
@@ -1782,7 +1782,7 @@ the second input because its target, `z ∈ d`, is a proposition. Combining
 this extensional characterization with the first three inputs establishes the
 whole name formula.
 <!--zh-->
-证明把这两个方向交给 `extAt` 的引入规则。由 `z ∈ d`，第一向给出载体隶属与载荷，`DenoteBody-in` 再把它们转换为对公式体的满足。反过来，`DenoteBody-out` 把公式体的满足读成载体隶属与经过命题截断的载荷。由于目标 `z ∈ d` 是命题，可以消去该截断并应用第二份输入。把所得外延刻画与前三份输入组合起来，便得到整条名字公式的满足。
+证明把这两个方向交给 `extAt` 的引入规则。由 `z ∈ d`，第一向给出载体成员关系与载荷，`DenoteBody-in` 再把它们转换为对公式体的满足。反过来，`DenoteBody-out` 把公式体的满足读成载体成员关系与经过命题截断的载荷。由于目标 `z ∈ d` 是命题，可以消去该截断并应用第二份输入。把所得外延刻画与前三份输入组合起来，便得到整条名字公式的满足。
 <!--ja-->
 証明は、この二方向を `extAt` の導入規則へ渡す。`z ∈ d` からは、一方の入力が台への所属と中身を与え、`DenoteBody-in` がそれらを本体の充足へ変換する。逆に、本体の充足は `DenoteBody-out` によって、台への所属と命題的に切り詰められた中身として読まれる。目標の `z ∈ d` は命題なので、この切り詰めを消去してもう一方の入力を適用できる。こうして得た外延的な特徴づけを最初の三入力と組み合わせると、名前の論理式全体が充足される。
 <!--/-->
@@ -1851,7 +1851,7 @@ arity slot. When that slot contains the numeral for an arity, its members are
 exactly the numerals for smaller positions, so this bounded existential ranges
 over the possible indices without introducing a separate order on indices.
 <!--zh-->
-参数键要找两个参数环境首次相异的位置。`LexAt` 先绑定元数位置所持集合的一个成员 `i`。当该位置存放一个元数的数码时，它的成员恰是各个更小位置的数码；因此，这个有界存在量词已经遍历全部可能的序号，无须另行引入序号之序。
+参数键要找两个参数环境首次相异的位置。`LexAt` 先绑定元数位置所持集合的一个元素 `i`。当该位置存放一个元数的数码时，它的元素恰是各个更小位置的数码；因此，这个有界存在量词已经遍历全部可能的序号，无须另行引入序号之序。
 <!--ja-->
 パラメータの鍵は、二つのパラメータ環境が最初に異なる位置を求める。`LexAt` はまず、アリティのスロットにある集合の元 `i` を束縛する。そのスロットにアリティの数項が入っていれば、その元はちょうど、それより小さい位置を表す数項である。したがって、この有界存在量化子だけで可能な添字をすべて動かせ、添字のための別の順序は必要ない。
 <!--/-->
@@ -1964,7 +1964,7 @@ and `e₂` contain the pairs `(i,u)` and `(i,v)`. The third says that the pair
 for `appAt`; their decoded membership form will be recorded separately so that
 the two presentations can be related explicitly.
 <!--zh-->
-固定 `i`、`u`、`v` 后，`Inner i u v` 记录前三层存在绑定之后剩下的公式体。前两个分量说图 `e₁` 与 `e₂` 分别含有对 `(i,u)` 与 `(i,v)`；第三个分量说对 `(u,v)` 属于关系 `P`。这些分量仍是关于 `appAt` 的满足关系陈述；稍后另行记录它们解码后的隶属形态，便可显式联系这两种呈现。
+固定 `i`、`u`、`v` 后，`Inner i u v` 记录前三层存在绑定之后剩下的公式体。前两个分量说图 `e₁` 与 `e₂` 分别含有对 `(i,u)` 与 `(i,v)`；第三个分量说对 `(u,v)` 属于关系 `P`。这些分量仍是关于 `appAt` 的满足关系陈述；稍后另行记录它们解码后的成员关系形态，便可显式联系这两种呈现。
 <!--ja-->
 `i`、`u`、`v` を固定すると、`Inner i u v` は最初の三つの存在束縛子の後に残る本体を記録する。最初の二成分は、グラフ `e₁` と `e₂` がそれぞれ対 `(i,u)` と `(i,v)` を含むことを述べる。第三の成分は、対 `(u,v)` が関係 `P` に属すことを述べる。これらはまだ `appAt` の充足を表す主張である。二つの表示を明示的に結べるように、解読後の所属の形は別に記録する。
 <!--/-->
@@ -2005,7 +2005,7 @@ positions. This definition records only a common graph value. Equality of the
 corresponding meta-level parameters is derived later from the known environment
 graphs and the injectivity of the carrier embedding.
 <!--zh-->
-`Agrees i` 以两次应用解码后的形态陈述同一项相符：对每个 `j ∈ i`，仅仅存在一个元素 `x : S`，使 `j` 与 `x` 的底集组成的对同时属于图 `e₁` 与 `e₂`。当 `i` 是元数的数码时，它的成员恰好表示所有更早位置。这个定义只记录共同的图取值；相应元层参数的相等要到后面才从已知的环境图与载体嵌入的单射性导出。
+`Agrees i` 以两次应用解码后的形态陈述同一项相符：对每个 `j ∈ i`，仅仅存在一个元素 `x : S`，使 `j` 与 `x` 的底集组成的对同时属于图 `e₁` 与 `e₂`。当 `i` 是元数的数码时，它的元素恰好表示所有更早位置。这个定义只记录共同的图取值；相应元层参数的相等要到后面才从已知的环境图与载体嵌入的单射性导出。
 <!--ja-->
 `Agrees i` は、二つの適用を解読した形で同じ一致を述べる。各 `j ∈ i` について、`j` と `x` の底にある集合から作った対がグラフ `e₁` と `e₂` の両方に属すような元 `x : S` が単に存在する。`i` がアリティの数項なら、その元はちょうど先行する位置を表す。この定義が記録するのは共通のグラフ値だけである。対応するメタレベルのパラメータの等しさは、既知の環境グラフと台の埋め込みの単射性から後で導かれる。
 <!--/-->
@@ -2025,7 +2025,7 @@ parameter comparison at that position, and `Agrees i`. When the arity slot is
 a numeral and the two graph slots are parameter environments of that arity,
 these fields are exactly the data needed for a lexicographic first difference.
 <!--zh-->
-`Differs` 汇集首次相异见证的完整解码形态。它包含序号 `i`、取值 `u` 与 `v`、`i` 对元数位置所持集合的隶属、对 `(i,u)` 与 `(i,v)` 的两份图隶属、该位置上的严格参数比较，以及 `Agrees i`。当元数位置存放数码，且两个图位置存放该元数的参数环境时，这些字段恰好组成字典序首次相异所需的数据。
+`Differs` 汇集首次相异见证的完整解码形态。它包含序号 `i`、取值 `u` 与 `v`、`i` 对元数位置所持集合的成员关系、对 `(i,u)` 与 `(i,v)` 的两份图成员关系、该位置上的严格参数比较，以及 `Agrees i`。当元数位置存放数码，且两个图位置存放该元数的参数环境时，这些字段恰好组成字典序首次相异所需的数据。
 <!--ja-->
 `Differs` は、最初の相違を示す証人を解読した完全な形でまとめる。添字 `i`、値 `u` と `v`、アリティのスロットにある集合への `i` の所属、対 `(i,u)` と `(i,v)` のグラフへの所属、その位置での厳密なパラメータ比較、そして `Agrees i` が含まれる。アリティのスロットが数項で、二つのグラフのスロットがそのアリティのパラメータ環境なら、これらは辞書式の最初の相違に必要なデータそのものである。
 <!--/-->
@@ -2064,7 +2064,7 @@ satisfactions of `appAt`. Applying `appAt-adequate` to each turns them into the
 two graph memberships required by `Agrees`, while preserving the same witness
 `x`.
 <!--zh-->
-映射 `pack` 只把 `Inner` 的相符分量转换为 `Agrees`，前三个分量与这次局部转换无关。固定 `j ∈ i` 后，语义存在式的一个见证 `x` 带有两份对 `appAt` 的满足证明。分别应用 `appAt-adequate`，即可把它们变成 `Agrees` 所需的两份图隶属，同时保持同一个见证 `x`。
+映射 `pack` 只把 `Inner` 的相符分量转换为 `Agrees`，前三个分量与这次局部转换无关。固定 `j ∈ i` 后，语义存在式的一个见证 `x` 带有两份对 `appAt` 的满足证明。分别应用 `appAt-adequate`，即可把它们变成 `Agrees` 所需的两份图成员关系，同时保持同一个见证 `x`。
 <!--ja-->
 写像 `pack` が変換するのは、`Inner` の一致の成分だけである。最初の三成分は、この局所的な変換には使わない。`j ∈ i` を固定すると、意味論上の存在式の証人 `x` には、`appAt` を充足する二つの証明が伴う。それぞれに `appAt-adequate` を適用すれば、同じ証人 `x` を保ったまま、`Agrees` が要求する二つのグラフ所属が得られる。
 <!--/-->
@@ -2084,7 +2084,7 @@ same witness with two membership proofs. Since the target is again a truncated
 existence, no representative is extracted and no choice principle is used.
 Pointwise mapping is enough to obtain `Agrees i` for every earlier position.
 <!--zh-->
-这次转换在已有的命题截断之内完成。`map₁` 把每个可能的见证及其两份应用证明，映成同一个见证及其两份隶属证明。由于目标仍是经过命题截断的存在，过程中既不取出任何代表，也不使用选择原理。逐点映射便足以对每个更早位置得到 `Agrees i` 所需的结论。
+这次转换在已有的命题截断之内完成。`map₁` 把每个可能的见证及其两份应用证明，映成同一个见证及其两份成员关系证明。由于目标仍是经过命题截断的存在，过程中既不取出任何代表，也不使用选择原理。逐点映射便足以对每个更早位置得到 `Agrees i` 所需的结论。
 <!--ja-->
 この変換は、すでにある命題的切り詰めの内部で行われる。`map₁` は、可能な各証人と二つの適用の証明を、同じ証人と二つの所属の証明へ写す。目標も切り詰められた存在なので、代表を取り出す必要はなく、選択原理も使わない。各点で写すだけで、すべての先行する位置について `Agrees i` に必要な結論が得られる。
 <!--/-->
@@ -2103,7 +2103,7 @@ witness. For each representative `x`, it keeps that witness and prepares to
 turn the two graph memberships back into satisfactions of the two applications
 in `Body`.
 <!--zh-->
-`unpack` 给出满足原公式所需的反向转换。由 `Agrees i` 与一个位置 `j ∈ i`，它取得一份经过命题截断的共同取值见证。对其中每个可能的代表 `x`，它保留该见证，并把两份图隶属转换回 `Body` 中两次应用的满足证明。
+`unpack` 给出满足原公式所需的反向转换。由 `Agrees i` 与一个位置 `j ∈ i`，它取得一份经过命题截断的共同取值见证。对其中每个可能的代表 `x`，它保留该见证，并把两份图成员关系转换回 `Body` 中两次应用的满足证明。
 <!--ja-->
 `unpack` は、もとの論理式を充足するために必要な逆向きの変換を与える。`Agrees i` と位置 `j ∈ i` から、切り詰められた共通値の証人を受け取る。それぞれの代表 `x` をそのまま保ち、二つのグラフ所属を `Body` にある二つの適用の充足へ戻す。
 <!--/-->
@@ -2123,7 +2123,7 @@ the corresponding conjunct of `Body`. Again `map₁` keeps the construction
 inside the truncated existential, so `unpack` proves the required semantic
 existence without selecting a common value globally.
 <!--zh-->
-这里沿反方向使用同一些充分性路径。每份隶属证明都沿 `appAt-adequate` 的对称路径迁移，从而得到 `Body` 中相应的合取项。`map₁` 再次使整个构造留在经过命题截断的存在之内，所以 `unpack` 无须在全局选定共同取值，便能证明所需的语义存在。
+这里沿反方向使用同一些充分性路径。每份成员关系证明都沿 `appAt-adequate` 的对称路径迁移，从而得到 `Body` 中相应的合取项。`map₁` 再次使整个构造留在经过命题截断的存在之内，所以 `unpack` 无须在全局选定共同取值，便能证明所需的语义存在。
 <!--ja-->
 ここでは同じ妥当性のパスを逆向きに使う。各所属の証明を `appAt-adequate` の対称なパスに沿って輸送すると、`Body` の対応する連言が得られる。ここでも `map₁` によって構成全体が切り詰められた存在の内部に留まるため、`unpack` は共通の値を大域的に選ぶことなく、必要な意味論上の存在を証明できる。
 <!--/-->
@@ -2145,7 +2145,7 @@ transported backward along `appAt-adequate` to satisfy the applications for
 `e₁(i)=u` and `e₂(i)=v`. The remaining relation and agreement fields fit the
 same conjunction, with `unpack` supplying its bounded-universal component.
 <!--zh-->
-`LexAt-in` 从 `Differs` 中的明确数据出发。序号 `i` 与取值 `u`、`v` 分别成为有界存在量词及随后两层存在量词的见证，`hi` 则证明 `i` 确实落在界内。在扩张赋值 `γ₃ = v ∷ u ∷ i ∷ γ` 中，前两份图隶属沿 `appAt-adequate` 反向迁移，得到对 `e₁(i)=u` 与 `e₂(i)=v` 两次应用的满足证明。关系字段与相符字段随后进入同一个合取结构，其中有界全称分量由 `unpack` 给出。
+`LexAt-in` 从 `Differs` 中的明确数据出发。序号 `i` 与取值 `u`、`v` 分别成为有界存在量词及随后两层存在量词的见证，`hi` 则证明 `i` 确实落在界内。在扩张赋值 `γ₃ = v ∷ u ∷ i ∷ γ` 中，前两份图成员关系沿 `appAt-adequate` 反向迁移，得到对 `e₁(i)=u` 与 `e₂(i)=v` 两次应用的满足证明。关系字段与相符字段随后进入同一个合取结构，其中有界全称分量由 `unpack` 给出。
 <!--ja-->
 `LexAt-in` は、`Differs` にある明示的なデータから始める。添字 `i` と値 `u`、`v` は、有界存在量化子と、それに続く二つの存在量化子の証人になり、`hi` が `i` が限界内にあることを証明する。拡張された割り当て `γ₃ = v ∷ u ∷ i ∷ γ` では、最初の二つのグラフ所属を `appAt-adequate` に沿って逆向きに輸送し、`e₁(i)=u` と `e₂(i)=v` を表す二つの適用を充足させる。残る関係と一致のフィールドも同じ連言構造に入り、有界全称の成分は `unpack` が与える。
 <!--/-->
@@ -2208,7 +2208,7 @@ adequacy paths forward converts satisfaction of the applications into
 membership of `(i,u)` in `e₁` and membership of `(i,v)` in `e₂`. Thus the two
 values remain attached to the same index at which the formula found them.
 <!--zh-->
-`atValue` 的前半段恢复序号与两次图查取。界限证明 `hi` 已经具有 `Differs`要求的形态。正向读取两条充分性路径，便把两次应用的满足关系分别变成`(i,u)` 对 `e₁` 的隶属，以及 `(i,v)` 对 `e₂` 的隶属。因此，两个取值仍与公式找到它们时的同一个序号相联系。
+`atValue` 的前半段恢复序号与两次图查取。界限证明 `hi` 已经具有 `Differs`要求的形态。正向读取两条充分性路径，便把两次应用的满足关系分别变成`(i,u)` 对 `e₁` 的成员关系，以及 `(i,v)` 对 `e₂` 的成员关系。因此，两个取值仍与公式找到它们时的同一个序号相联系。
 <!--ja-->
 `atValue` の前半は、添字と二つのグラフ参照を復元する。境界の証明 `hi`は、すでに `Differs` が要求する形である。二つの妥当性のパスを順方向に読むと、適用についての充足関係は、`(i,u)` の `e₁` への所属と `(i,v)` の `e₂` への所属にそれぞれ変わる。したがって二つの値は、論理式がそれらを見つけた同じ添字に結び付いたままである。
 <!--/-->
@@ -2229,7 +2229,7 @@ graph memberships required by `Agrees i`. These pieces form one explicit
 `Differs` record inside `atValue`; the surrounding eliminations will retain
 only its propositional truncation.
 <!--zh-->
-第三次应用以同样方式解码，得到 `(u,v)` 对参数关系 `P` 的隶属。函数 `pack`把有界范围内以应用陈述的相符翻译成 `Agrees i` 所要求的两份图隶属，从而给出最后一个字段。这些数据在 `atValue` 内组成一份明确的 `Differs` 记录；外围的各次消去最终只保留它的命题截断。
+第三次应用以同样方式解码，得到 `(u,v)` 对参数关系 `P` 的成员关系。函数 `pack`把有界范围内以应用陈述的相符翻译成 `Agrees i` 所要求的两份图成员关系，从而给出最后一个字段。这些数据在 `atValue` 内组成一份明确的 `Differs` 记录；外围的各次消去最终只保留它的命题截断。
 <!--ja-->
 第三の適用も同じように復号され、`(u,v)` がパラメータ関係 `P` に属すことが得られる。関数 `pack` は、有界な範囲で適用の形を取っていた一致を`Agrees i` が要求する二つのグラフ所属へ翻訳し、最後の成分を与える。これらのデータは `atValue` の内部で明示的な `Differs` の記録をなすが、周囲の消去が最終的に保つのはその命題的切り詰めだけである。
 <!--/-->
@@ -2345,7 +2345,7 @@ supplies the first-difference evidence for the parameter key. The equalities
 are deliberately oriented as `s₂ = s₁` and `a₂ = a₁`, matching the later
 transport of the second name's data to the first name's types.
 <!--zh-->
-在骨架码相等的前提下，内层和类型首先给出元数比较 `a₁ ∈ a₂`。当这两个位置存放元数的数码时，这条隶属表示第一元数较小。若两元数转而相等，则由`Differs` 给出参数键的首次相异证据。两条等式特意取 `s₂ = s₁` 与`a₂ = a₁` 的方向，以配合后文把第二个名字的数据迁移到第一个名字的类型中。
+在骨架码相等的前提下，内层和类型首先给出元数比较 `a₁ ∈ a₂`。当这两个位置存放元数的数码时，这条成员关系表示第一元数较小。若两元数转而相等，则由`Differs` 给出参数键的首次相异证据。两条等式特意取 `s₂ = s₁` 与`a₂ = a₁` 的方向，以配合后文把第二个名字的数据迁移到第一个名字的类型中。
 <!--ja-->
 骨格の符号が等しい場合、内側の直和はまずアリティの比較 `a₁ ∈ a₂` を提示する。二つのスロットがアリティの数項を含むとき、この所属は第一のアリティのほうが小さいことを意味する。アリティも等しければ、`Differs` がパラメータの鍵について最初の相違の証拠を与える。二つの等しさは意図的に `s₂ = s₁` と`a₂ = a₁` の向きに置かれ、後で第二の名前のデータを第一の名前の型へ輸送する向きに合っている。
 <!--/-->
@@ -2364,7 +2364,7 @@ the arity membership enters the inner left disjunct. These are introduction
 steps only: the supplied branch evidence is packaged into the truncated
 semantics of each object-language disjunction.
 <!--zh-->
-`≺At-in` 把一份明确的 `Below` 数据翻译成对比较公式的满足关系。在码分支中，关系隶属沿 `appAt-adequate` 反向迁移，并作为最外层的左析取支引入。在元数分支中，码等式随最外层右析取支进入，而元数隶属进入内层左析取支。这里所做的全是引入：已给出的分支证据被包装进各对象语言析取带命题截断的语义中。
+`≺At-in` 把一份明确的 `Below` 数据翻译成对比较公式的满足关系。在码分支中，关系成员关系沿 `appAt-adequate` 反向迁移，并作为最外层的左析取支引入。在元数分支中，码等式随最外层右析取支进入，而元数成员关系进入内层左析取支。这里所做的全是引入：已给出的分支证据被包装进各对象语言析取带命题截断的语义中。
 <!--ja-->
 `≺At-in` は、明示的な `Below` のデータを比較の論理式の充足関係へ翻訳する。符号の枝では、関係への所属を `appAt-adequate` に沿って逆向きに輸送し、外側の左の選言として導入する。アリティの枝では、符号の等しさとともに外側の右の選言へ入り、アリティの所属を内側の左の選言へ入れる。ここで行うのは導入だけである。与えられた枝の証拠を、対象言語の各選言に伴う切り詰められた意味へ包む。
 <!--/-->
@@ -2422,7 +2422,7 @@ payload contains the arity equality `a₂ = a₁` and satisfaction of `LexAt`, s
 only the first-difference component remains to be decoded. The signature keeps
 these alternatives explicit while fixing the code equality shared by both.
 <!--zh-->
-在给定码等式后，`inner` 读取余下两个键。若取得元数隶属，便立即得到 `Below`的中间情形；否则，载荷包含元数等式 `a₂ = a₁` 以及对 `LexAt` 的满足关系，只剩首次相异分量尚待解码。函数签名把这两个选项明确列出，同时固定二者共同使用的码等式。
+在给定码等式后，`inner` 读取余下两个键。若取得元数成员关系，便立即得到 `Below`的中间情形；否则，载荷包含元数等式 `a₂ = a₁` 以及对 `LexAt` 的满足关系，只剩首次相异分量尚待解码。函数签名把这两个选项明确列出，同时固定二者共同使用的码等式。
 <!--ja-->
 符号の等しさが与えられると、`inner` は残る二つの鍵を読む。アリティの所属が得られれば、ただちに `Below` の中間の場合になる。もう一方の中身には、アリティの等しさ `a₂ = a₁` と `LexAt` の充足関係があり、復号すべきものは最初の相違の成分だけである。関数の型は、二つの場合に共通する符号の等しさを固定したまま、これらの選択肢を明示している。
 <!--/-->
@@ -3016,7 +3016,7 @@ the membership evidence and retains the underlying set in `V`. This canonical
 embedding is the common representation used when parameter values occur in
 environment graphs and in ordered pairs belonging to the represented relation.
 <!--zh-->
-参数是小载体 `⟪ A ⟫` 的元素，因而同时含有一个底层集合以及该集合属于 `A` 的证据。映射 `ix` 忘去这份隶属证据，只保留 `V` 中的底层集合。参数值出现在环境图中，或出现在表示参数序的关系所含有序对中时，都采用这个典范嵌入像。
+参数是小载体 `⟪ A ⟫` 的元素，因而同时含有一个底层集合以及该集合属于 `A` 的证据。映射 `ix` 忘去这份成员关系证据，只保留 `V` 中的底层集合。参数值出现在环境图中，或出现在表示参数序的关系所含有序对中时，都采用这个典范嵌入像。
 <!--ja-->
 パラメータは小さな台 `⟪ A ⟫` の要素なので、台となる集合と、それが `A` に属すことの証拠をともに含む。写像 `ix` はこの所属の証拠を忘れ、`V` 内の台となる集合だけを残す。パラメータの値を環境グラフに入れるときも、パラメータ順序を表す関係の順序対に入れるときも、この標準的な埋め込み像を用いる。
 <!--/-->
@@ -3088,7 +3088,7 @@ hypotheses. Under them, the three-key formula is adequate for any two
 constructible relation sets with these representations; neither relation is
 constructed here.
 <!--zh-->
-还须明确两个模型内关系集各自表示什么。对码而言，`Rrep` 把 `u` 与 `v` 的有序对属于 `Rs` 读为 `u ≺ˡ v`，`Rfill` 则从这项比较证明相应隶属。对参数而言，`Prep` 与 `Pfill` 同样在「两个 `ix` 像组成的有序对属于 `Ps`」与 `u ≺ₚ v` 之间给出两个方向。这四条表示律都是假设。在这些假设下，只要两个可构造关系集具有相应表示，三键公式便满足充分性；这里不构造其中任何一个关系。
+还须明确两个模型内关系集各自表示什么。对码而言，`Rrep` 把 `u` 与 `v` 的有序对属于 `Rs` 读为 `u ≺ˡ v`，`Rfill` 则从这项比较证明相应成员关系。对参数而言，`Prep` 与 `Pfill` 同样在「两个 `ix` 像组成的有序对属于 `Ps`」与 `u ≺ₚ v` 之间给出两个方向。这四条表示律都是假设。在这些假设下，只要两个可构造关系集具有相应表示，三键公式便满足充分性；这里不构造其中任何一个关系。
 <!--ja-->
 最後に、モデル内の二つの関係集合がそれぞれ何を表すべきかを定める。符号について、`Rrep` は `u` と `v` の順序対が `Rs` に属すことを `u ≺ˡ v` として読み、`Rfill` はこの比較からその所属を証明する。パラメータについても、`Prep` と `Pfill` が、二つの `ix` 像からなる順序対の `Ps` への所属と `u ≺ₚ v` の間の両方向を与える。これら四つの表示則は仮定である。この仮定の下で、対応する表示をもつ任意の二つの構成可能な関係集合について三つの鍵の論理式は妥当になる。どちらの関係もここでは構成しない。
 <!--/-->
@@ -3203,7 +3203,7 @@ identifies its second component with that graph's unique value. Since this
 value is `ix (pr₁ i)`, `at₁` recovers the equality
 `fst u ≡ ix (pr₁ i)`.
 <!--zh-->
-现在可以在一个确定序号处读取第一张图。假设以 `# (toℕ i)` 为键、以 `fst u` 为值的对属于槽位 `e₁` 中的集合。沿 `q₁` 搬运这项隶属，便把它放进 `env (pfam t₁)`；`lookup-spec` 再把其第二分量认定为该图在此处的唯一取值。这个取值就是 `ix (pr₁ i)`，故 `at₁` 恢复等式 `fst u ≡ ix (pr₁ i)`。
+现在可以在一个确定序号处读取第一张图。假设以 `# (toℕ i)` 为键、以 `fst u` 为值的对属于槽位 `e₁` 中的集合。沿 `q₁` 搬运这项成员关系，便把它放进 `env (pfam t₁)`；`lookup-spec` 再把其第二分量认定为该图在此处的唯一取值。这个取值就是 `ix (pr₁ i)`，故 `at₁` 恢复等式 `fst u ≡ ix (pr₁ i)`。
 <!--ja-->
 これで第一のグラフを特定の添字で読める。鍵が `# (toℕ i)`、値が `fst u` である対がスロット `e₁` の集合に属すとする。この所属を `q₁` に沿って輸送すると `env (pfam t₁)` への所属になり、`lookup-spec` が第二成分をそのグラフの当該位置における唯一の値と同一視する。その値は `ix (pr₁ i)` なので、`at₁` は等式 `fst u ≡ ix (pr₁ i)` を復元する。
 <!--/-->
@@ -3222,7 +3222,7 @@ along `q₂`; `lookup-spec` then yields `fst u ≡ ix (pr₂ i)`. Hence `at₁` 
 `at₂` give the functional consequence needed here: they identify every value
 found at a valid index with the particular parameter entry represented there.
 <!--zh-->
-第二张图以搬运后的族代替 `pfam t₁`，采用完全相同的读法。先沿 `q₂` 搬运键 `# (toℕ i)` 处那一有序对的隶属，再由 `lookup-spec` 得到 `fst u ≡ ix (pr₂ i)`。因此，`at₁` 与 `at₂` 给出这里所需的单值性结论：它们把每个有效序号处读出的值精确认定为那里所表示的参数条目。
+第二张图以搬运后的族代替 `pfam t₁`，采用完全相同的读法。先沿 `q₂` 搬运键 `# (toℕ i)` 处那一有序对的成员关系，再由 `lookup-spec` 得到 `fst u ≡ ix (pr₂ i)`。因此，`at₁` 与 `at₂` 给出这里所需的单值性结论：它们把每个有效序号处读出的值精确认定为那里所表示的参数条目。
 <!--ja-->
 第二のグラフも、`pfam t₁` の代わりに輸送後の族を用いて同じように読める。鍵 `# (toℕ i)` の対の所属をまず `q₂` に沿って輸送すると、`lookup-spec` によって `fst u ≡ ix (pr₂ i)` が得られる。したがって `at₁` と `at₂` は、ここで必要な一価性の帰結を与える。有効な添字で見つかった値を、そこで表される特定のパラメータ成分と正確に同一視するのである。
 <!--/-->
@@ -3242,7 +3242,7 @@ into membership in `env (pfam t₁)`. Transport along the reverse of `q₁` then
 places the same pair in the set actually stored at `e₁`. This is the witness
 `put₁ i`.
 <!--zh-->
-反向使用 `lookup-spec`，便得到第一张图的典范条目。自反性说明 `ix (pr₁ i)` 正是 `pfam t₁` 在 `i` 处规定的值；逆向读取查表等式，就把这项相等变成对 `env (pfam t₁)` 的隶属。再沿 `q₁` 的反向搬运，即可把同一个有序对放进槽位 `e₁` 实际持有的集合。这就是见证 `put₁ i`。
+反向使用 `lookup-spec`，便得到第一张图的典范条目。自反性说明 `ix (pr₁ i)` 正是 `pfam t₁` 在 `i` 处规定的值；逆向读取查表等式，就把这项相等变成对 `env (pfam t₁)` 的成员关系。再沿 `q₁` 的反向搬运，即可把同一个有序对放进槽位 `e₁` 实际持有的集合。这就是见证 `put₁ i`。
 <!--ja-->
 `lookup-spec` を逆向きに使うと、第一のグラフの標準的な項目が得られる。反射律により `ix (pr₁ i)` は `pfam t₁` が `i` で指定する値である。この参照の等式を逆向きに読むと、その等しさは `env (pfam t₁)` への所属になる。さらに `q₁` の逆向きに輸送すれば、同じ順序対がスロット `e₁` に実際に格納された集合へ入る。これが証人 `put₁ i` である。
 <!--/-->
@@ -3282,7 +3282,7 @@ constructibility proof `numL m`. It does not by itself assert that the numeral
 lies below an arity; that membership will be supplied separately from the
 finite-index bound.
 <!--zh-->
-`Lex` 使用的序号是一个有穷数，而 `Differs` 携带的序号必须是可构造模型的元素。辅助定义 `numAt` 跨过这道小边界：它把 von Neumann 数码 `# m` 与其可构造性证明 `numL m` 配成一对。它本身并不断言这个数码低于某个元数；相应的隶属稍后由有穷序号自带的界限另行给出。
+`Lex` 使用的序号是一个有穷数，而 `Differs` 携带的序号必须是可构造模型的元素。辅助定义 `numAt` 跨过这道小边界：它把 von Neumann 数码 `# m` 与其可构造性证明 `numL m` 配成一对。它本身并不断言这个数码低于某个元数；相应的成员关系稍后由有穷序号自带的界限另行给出。
 <!--ja-->
 `Lex` が使う添字は有限な自然数であるが、`Differs` が携える添字は構成可能モデルの要素でなければならない。補助定義 `numAt` はこの小さな隔たりを越え、von Neumann 数項 `# m` とその構成可能性の証明 `numL m` を組にする。ただし、これだけで数項があるアリティより下にあると主張するわけではない。その所属は、有限添字に備わる境界から別に与える。
 <!--/-->
@@ -3301,7 +3301,7 @@ finite index is smaller than its length, `#mono` turns `toℕ<n i` into
 membership of its numeral in the arity numeral; transport along `qa` places
 that membership in the arity slot.
 <!--zh-->
-正向翻译从 `Lex` 的一个元素取得有穷序号 `i`、该处的严格比较 `hlt`，以及每个更早序号处的相等 `agree`。所得 `Differs` 记录首先放入模型元素 `numAt (toℕ i)`，随后放入两个取值 `ixL (pr₁ i)` 与 `ixL (pr₂ i)`。有穷序号必小于其长度，故 `#mono` 把 `toℕ<n i` 化为该序号数码属于元数数码的证明；沿 `qa` 搬运以后，这项隶属便落在元数槽位中。
+正向翻译从 `Lex` 的一个元素取得有穷序号 `i`、该处的严格比较 `hlt`，以及每个更早序号处的相等 `agree`。所得 `Differs` 记录首先放入模型元素 `numAt (toℕ i)`，随后放入两个取值 `ixL (pr₁ i)` 与 `ixL (pr₂ i)`。有穷序号必小于其长度，故 `#mono` 把 `toℕ<n i` 化为该序号数码属于元数数码的证明；沿 `qa` 搬运以后，这项成员关系便落在元数槽位中。
 <!--ja-->
 順方向の翻訳では、`Lex` の要素から有限添字 `i`、その位置での狭義の比較 `hlt`、およびそれ以前の各添字での等しさ `agree` が得られる。`Differs` の記録にはまずモデルの要素 `numAt (toℕ i)` を置き、続いて二つの値 `ixL (pr₁ i)` と `ixL (pr₂ i)` を置く。有限添字はその長さより小さいので、`#mono` は `toℕ<n i` を、その添字の数項がアリティの数項に属すという証明へ変える。これを `qa` に沿って輸送すれば、アリティのスロットへの所属が得られる。
 <!--/-->
@@ -3323,7 +3323,7 @@ along the reverse of `qP` moves that membership to the relation set stored in
 slot `P`. Thus the three membership fields of `Differs` express exactly the two
 lookups and the strict parameter comparison.
 <!--zh-->
-接下来的字段证明相异序号处发生了什么。见证 `put₁ i` 与 `put₂ i` 把两个嵌入后的参数值分别放进对应的环境图。表示律 `Pfill` 把 `hlt : pr₁ i ≺ₚ pr₂ i` 化为这两个值组成的有序对属于 `Ps`；再沿 `qP` 的反向搬运，这项隶属便进入槽位 `P` 所持有的关系集。因此，`Differs` 的三项隶属字段恰好表达两次查取与参数的严格比较。
+接下来的字段证明相异序号处发生了什么。见证 `put₁ i` 与 `put₂ i` 把两个嵌入后的参数值分别放进对应的环境图。表示律 `Pfill` 把 `hlt : pr₁ i ≺ₚ pr₂ i` 化为这两个值组成的有序对属于 `Ps`；再沿 `qP` 的反向搬运，这项成员关系便进入槽位 `P` 所持有的关系集。因此，`Differs` 的三项成员关系字段恰好表达两次查取与参数的严格比较。
 <!--ja-->
 続く成分は、相違する添字で何が起きるかを証明する。証人 `put₁ i` と `put₂ i` は、二つの埋め込まれたパラメータ値をそれぞれの環境グラフに入れる。表示則 `Pfill` は `hlt : pr₁ i ≺ₚ pr₂ i` を、それらの順序対が `Ps` に属すという事実へ変える。さらに `qP` の逆向きに輸送すると、その所属はスロット `P` が持つ関係集合への所属になる。したがって `Differs` の三つの所属成分は、二つの参照とパラメータの狭義の比較を正確に表す。
 <!--/-->
@@ -3345,7 +3345,7 @@ for the two graphs at that earlier position. The truncation is preserved: the
 particular natural number recovered from numeral membership is never exposed
 outside the proposition required by `Agrees`.
 <!--zh-->
-还需构造所选序号以下的 `Agrees`。给定模型元素 `j` 及 `fst j ∈ # (toℕ i)`，数码消去定理在命题截断内说明：存在某个 `m < toℕ i`，使 `fst j` 等于 `# m`。把局部构造 `step` 映到这个结果上，就会在该较早位置为两张图给出一个共同取值。命题截断始终保留：从数码隶属中恢复的那个自然数不会暴露到 `Agrees` 所要求的命题之外。
+还需构造所选序号以下的 `Agrees`。给定模型元素 `j` 及 `fst j ∈ # (toℕ i)`，数码消去定理在命题截断内说明：存在某个 `m < toℕ i`，使 `fst j` 等于 `# m`。把局部构造 `step` 映到这个结果上，就会在该较早位置为两张图给出一个共同取值。命题截断始终保留：从数码成员关系中恢复的那个自然数不会暴露到 `Agrees` 所要求的命题之外。
 <!--ja-->
 残るのは、選んだ添字より前で `Agrees` を構成することである。モデルの要素 `j` と `fst j ∈ # (toℕ i)` が与えられると、数項の消去定理は、ある `m < toℕ i` について `fst j` が `# m` に等しいことを命題的切り詰めの中で示す。この結果に局所的な構成 `step` を写せば、その先行位置で二つのグラフに共通する値が得られる。切り詰めは保たれており、数項への所属から復元された特定の自然数が `Agrees` の求める命題の外へ現れることはない。
 <!--/-->
@@ -3367,7 +3367,7 @@ finite index, packaged as `ixL (pr₁ jx)`. For the first graph, `put₁ jx`
 already gives the required membership at the canonical numeral key; the
 equality of the two presentations of that key transports it to `fst j`.
 <!--zh-->
-函数 `step` 精确陈述共同取值的要求。由 `m < toℕ i` 与把 `fst j` 认作 `# m` 的等式出发，它必须返回一个模型元素 `x`，使以 `fst j` 为键、以 `fst x` 为值的对同时属于两张环境图。给出的取值是第一族在相应有穷序号处的条目，包装为 `ixL (pr₁ jx)`。对第一张图，`put₁ jx` 已经给出典范数码键处的所需隶属；沿这个键的两种表示之间的等式搬运，即可把它改写到 `fst j` 处。
+函数 `step` 精确陈述共同取值的要求。由 `m < toℕ i` 与把 `fst j` 认作 `# m` 的等式出发，它必须返回一个模型元素 `x`，使以 `fst j` 为键、以 `fst x` 为值的对同时属于两张环境图。给出的取值是第一族在相应有穷序号处的条目，包装为 `ixL (pr₁ jx)`。对第一张图，`put₁ jx` 已经给出典范数码键处的所需成员关系；沿这个键的两种表示之间的等式搬运，即可把它改写到 `fst j` 处。
 <!--ja-->
 関数 `step` は、共通の値という主張を正確に述べる。`m < toℕ i` と `fst j` を `# m` に同一視する等式から、鍵 `fst j` と値 `fst x` の対が両方の環境グラフに属すようなモデルの要素 `x` を返さなければならない。ここで与える値は、対応する有限添字における第一の族の成分であり、`ixL (pr₁ jx)` としてまとめられる。第一のグラフについては、`put₁ jx` が標準的な数項の鍵で必要な所属をすでに与えている。その鍵の二つの表示を結ぶ等式に沿って輸送すれば、鍵を `fst j` に書き換えられる。
 <!--/-->
@@ -3389,7 +3389,7 @@ equality changes its value from `ix (pr₂ jx)` to the shared value
 `i`, completing one result of `step` and therefore the `Agrees` field of
 `Differs`.
 <!--zh-->
-对第二张图，先前序号处的假设 `agree` 把 `pr₁ jx` 与 `pr₂ jx` 等同。沿这项等同的反向搬运 `put₂ jx`，便把其中的值从 `ix (pr₂ jx)` 改写为共同取值 `ix (pr₁ jx)`；再像前面那样搬运键，即得到 `fst j` 处的隶属。因此，在 `i` 以下的每个位置，两张图都含有同一个取值。这就完成了 `step` 的一个结果，进而完成 `Differs` 的 `Agrees` 字段。
+对第二张图，先前序号处的假设 `agree` 把 `pr₁ jx` 与 `pr₂ jx` 等同。沿这项等同的反向搬运 `put₂ jx`，便把其中的值从 `ix (pr₂ jx)` 改写为共同取值 `ix (pr₁ jx)`；再像前面那样搬运键，即得到 `fst j` 处的成员关系。因此，在 `i` 以下的每个位置，两张图都含有同一个取值。这就完成了 `step` 的一个结果，进而完成 `Differs` 的 `Agrees` 字段。
 <!--ja-->
 第二のグラフでは、先行添字についての仮定 `agree` が `pr₁ jx` と `pr₂ jx` を同一視する。この等しさの逆向きに `put₂ jx` を輸送すると、その値を `ix (pr₂ jx)` から共通の値 `ix (pr₁ jx)` へ書き換えられる。さらに先ほどと同じように鍵を輸送すれば、`fst j` での所属が得られる。したがって `i` より前のすべての位置で、二つのグラフはまったく同じ値を含む。これで `step` の一つの結果が完成し、ひいては `Differs` の `Agrees` 成分が得られる。
 <!--/-->
@@ -3409,7 +3409,7 @@ makes `m` a valid element `jx : Fin (arity t₁)`. Converting `jx` back to a
 natural number returns `m`; the path `qm` records this round trip and will let
 the graph memberships use their canonical numeral key.
 <!--zh-->
-剩下的认同关乎共同条目的键。由 `m < toℕ i`，再结合 `i` 本身小于`arity t₁`，传递性说明 `m` 给出一个合法元素 `jx : Fin (arity t₁)`。把`jx` 再转回自然数便得到 `m`；路径 `qm` 记录这次往返，使两项图隶属可以改写到各自的典范数码键上。
+剩下的认同关乎共同条目的键。由 `m < toℕ i`，再结合 `i` 本身小于`arity t₁`，传递性说明 `m` 给出一个合法元素 `jx : Fin (arity t₁)`。把`jx` 再转回自然数便得到 `m`；路径 `qm` 记录这次往返，使两项图成员关系可以改写到各自的典范数码键上。
 <!--ja-->
 残る同一視は、共通の項目の鍵に関するものである。`m < toℕ i` と、`i` 自身が`arity t₁` より小さいことから、推移性によって `m` は正当な要素`jx : Fin (arity t₁)` を定める。`jx` を自然数へ戻すと `m` が得られ、その往復を経路`qm` が記録する。この経路により、二つのグラフへの所属をそれぞれの標準的な数項の鍵で書ける。
 <!--/-->
@@ -3449,7 +3449,7 @@ number, and `map₁`
 performs the otherwise explicit reconstruction without removing that
 truncation.
 <!--zh-->
-反向桥从一份 `Differs` 记录出发，目标是恢复显式的首次相异。记录中的序号 `i` 属于元数数码，但数码隶属的消去定理只能在命题截断内恢复相应的较小自然数。因此，`lex-read` 返回 `Lex` 的命题截断：数码消去隐藏所选的自然数，`map₁` 则在不解除这层截断的前提下完成其余显式构造。
+反向桥从一份 `Differs` 记录出发，目标是恢复显式的首次相异。记录中的序号 `i` 属于元数数码，但数码成员关系的消去定理只能在命题截断内恢复相应的较小自然数。因此，`lex-read` 返回 `Lex` 的命题截断：数码消去隐藏所选的自然数，`map₁` 则在不解除这层截断的前提下完成其余显式构造。
 <!--ja-->
 逆向きの橋は `Differs` の記録から出発し、明示的な最初の相違を復元する。記録された添字 `i` はアリティの数項に属するが、数項への所属についての消去定理が対応する小さい自然数を復元するのは、命題的切り詰めの中だけである。そのため `lex-read` は `Lex` の命題的切り詰めを返す。数項の消去は選ばれた自然数を隠したままにし、`map₁` がその切り詰めを外さずに残りの明示的な構成を行う。
 <!--/-->
@@ -3491,7 +3491,7 @@ can be queried at the canonical key for `ι`. The lookup lemma `at₁` then
 identifies the recorded value `fst u` with the embedded first parameter
 `ix (pr₁ ι)`.
 <!--zh-->
-`m` 的界给出 `ι : Fin (arity t₁)`。和正向一样，数码往返把关于 `# m` 的等式改写为`qι : fst i ≡ # (toℕ ι)`，于是记录在第一张环境图中的隶属可以在 `ι` 的典范键处读取。查取引理`at₁` 随即把记录的值 `fst u` 认作第一个参数的嵌入像 `ix (pr₁ ι)`。
+`m` 的界给出 `ι : Fin (arity t₁)`。和正向一样，数码往返把关于 `# m` 的等式改写为`qι : fst i ≡ # (toℕ ι)`，于是记录在第一张环境图中的成员关系可以在 `ι` 的典范键处读取。查取引理`at₁` 随即把记录的值 `fst u` 认作第一个参数的嵌入像 `ix (pr₁ ι)`。
 <!--ja-->
 `m` の境界から `ι : Fin (arity t₁)` が得られる。順方向と同様に、数項との往復によって`# m` についての等式は `qι : fst i ≡ # (toℕ ι)` へ書き換えられる。したがって、第一の環境に記録された所属を`ι` の標準的な鍵で読める。参照の補題 `at₁` は、記録された値 `fst u` を第一のパラメータの埋め込み像`ix (pr₁ ι)` と同一視する。
 <!--/-->
@@ -3781,7 +3781,7 @@ in `Rs`. The equations for `R`, `s₁`, and `s₂` transport that membership to 
 three slots of the formula, and `≺At-in` places the resulting witness in the
 first branch of `≺At`.
 <!--zh-->
-正向定理现在依次处理一个名字先于另一个名字的三种缘由。在码支中，`Rfill` 把两个公式码在极限序下的严格比较化为其有序对属于 `Rs`。关于 `R`、`s₁` 与 `s₂` 的等同把这项隶属搬运到公式的三个槽位，`≺At-in` 再将所得见证放入 `≺At` 的第一支。
+正向定理现在依次处理一个名字先于另一个名字的三种缘由。在码支中，`Rfill` 把两个公式码在极限序下的严格比较化为其有序对属于 `Rs`。关于 `R`、`s₁` 与 `s₂` 的等同把这项成员关系搬运到公式的三个槽位，`≺At-in` 再将所得见证放入 `≺At` 的第一支。
 <!--ja-->
 順方向の定理は、一方の名前が他方に先行する三つの理由を順に扱う。符号の枝では、`Rfill` が二つの論理式符号の極限順序による狭義の比較を、それらの順序対が `Rs` に属するという事実へ変える。`R`、`s₁`、`s₂` に関する同一視でこの所属を論理式の三つのスロットへ輸送し、`≺At-in` が得られた証人を `≺At` の第一の枝へ入れる。
 <!--/-->
@@ -3802,7 +3802,7 @@ the two skeleton slots through `codeBack`. The strict inequality
 arity-slot equations then carry this membership to the formula. Thus the
 second key is used only after the first key has been shown equal.
 <!--zh-->
-在元数支中，码的等同先经 `codeBack` 给出两个骨架槽所需的等同。严格不等式 `arity t₁ < arity t₂` 由 von Neumann 数码律 `#mono` 化为隶属 `# (arity t₁) ∈ # (arity t₂)`，两项元数槽等同再把这项隶属搬运到公式中。因此，只有在第一个键已证相等之后，第二个键才参与比较。
+在元数支中，码的等同先经 `codeBack` 给出两个骨架槽所需的等同。严格不等式 `arity t₁ < arity t₂` 由 von Neumann 数码律 `#mono` 化为成员关系 `# (arity t₁) ∈ # (arity t₂)`，两项元数槽等同再把这项成员关系搬运到公式中。因此，只有在第一个键已证相等之后，第二个键才参与比较。
 <!--ja-->
 アリティの枝では、まず符号の等しさから `codeBack` を通じて二つの骨格スロットに必要な等しさを得る。狭義の不等式 `arity t₁ < arity t₂` は、von Neumann 数項の法則 `#mono` によって所属 `# (arity t₁) ∈ # (arity t₂)` へ変わり、二つのアリティスロットの同一視がこの所属を論理式へ輸送する。したがって第二の鍵が比較に使われるのは、第一の鍵の等しさが示された後だけである。
 <!--/-->
@@ -3848,7 +3848,7 @@ slot equations move the recorded pair membership back to `Rs`; `Rrep` then
 reads it as the strict limit-order comparison of the two genuine codes and
 supplies the first branch of the naming comparison.
 <!--zh-->
-反向定理保留对象语言析取与存在量词所携带的命题截断。因此，`≺At-out` 只能在截断内给出三种情形；目标本身是命题 `∥ t₁ ≺ₙ t₂ ∥₁`，故 `rec₁` 可以在其中作情形分析。在码支中，各槽位等同把公式记录的有序对隶属搬回 `Rs`，`Rrep` 再将它读成两个真实码在极限序下的严格比较，从而给出名字比较的第一支。
+反向定理保留对象语言析取与存在量词所携带的命题截断。因此，`≺At-out` 只能在截断内给出三种情形；目标本身是命题 `∥ t₁ ≺ₙ t₂ ∥₁`，故 `rec₁` 可以在其中作情形分析。在码支中，各槽位等同把公式记录的有序对成员关系搬回 `Rs`，`Rrep` 再将它读成两个真实码在极限序下的严格比较，从而给出名字比较的第一支。
 <!--ja-->
 逆向きの定理は、対象言語の選言と存在量化が伴う命題的切り詰めを保つ。したがって `≺At-out` が三つの場合を取り出すのは切り詰めの内側だけである。目標自身が命題 `∥ t₁ ≺ₙ t₂ ∥₁` なので、`rec₁` はその中で場合分けできる。符号の枝では、各スロットの同一視によって論理式に記録された順序対の所属を `Rs` へ戻し、`Rrep` がそれを二つの実際の符号の極限順序による狭義の比較として読む。これが名前比較の第一の枝を与える。
 <!--/-->
@@ -3870,7 +3870,7 @@ elimination converts that membership into `arity t₁ < arity t₂`, so equality
 at the first key and strict comparison at the second assemble the arity branch
 of `_≺ₙ_`.
 <!--zh-->
-在元数情形中，公式先给出第二个骨架槽等同于第一个；`codeSame` 把这条底层等同提升为两个码在 `Limit` 中的等同。另一项前提经元数槽等同搬运后，成为第一个元数数码属于第二个元数数码。数码消去把这项隶属化为 `arity t₁ < arity t₂`，于是第一个键的相等与第二个键的严格比较共同组成 `_≺ₙ_` 的元数支。
+在元数情形中，公式先给出第二个骨架槽等同于第一个；`codeSame` 把这条底层等同提升为两个码在 `Limit` 中的等同。另一项前提经元数槽等同搬运后，成为第一个元数数码属于第二个元数数码。数码消去把这项成员关系化为 `arity t₁ < arity t₂`，于是第一个键的相等与第二个键的严格比较共同组成 `_≺ₙ_` 的元数支。
 <!--ja-->
 アリティの場合、論理式はまず第二の骨格スロットが第一の骨格スロットに等しいと述べる。`codeSame` はこの台の等しさを、二つの符号の `Limit` における等しさへ持ち上げる。もう一つの前提は、アリティスロットの同一視で輸送すると、第一のアリティの数項が第二のアリティの数項に属するという事実になる。数項についての消去がこの所属を `arity t₁ < arity t₂` へ変えるので、第一の鍵の等しさと第二の鍵の狭義の比較から `_≺ₙ_` のアリティの枝が組み立てられる。
 <!--/-->

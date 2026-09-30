@@ -28,7 +28,7 @@ module L.Coding.CodeSet {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 open import FOL.Syntax using ( Formula; var; con; _∈̇_; _≐_; _∧̇_; ∃̇_ )
 open import FOL.Manipulation.ConstantMapping using ( mapFo )
 import FOL.Absoluteness
@@ -54,7 +54,7 @@ open import L.Coding.FormulaRecovery {ℓ} using ( keyOf-fst; module Decode )
 Using the closed code domain, this chapter separates one constructible set containing exactly the formula codes, across all arities, that carry the required shape and closure witnesses. Its membership theorems move between a code, its arity numeral, and the decoded formula.
 <!--zh-->
 
-本章利用封闭码定义域分离出一个可构造集合，其中恰好包含所有元数上携带所需形状与封闭见证的公式码。其隶属定理给出码、元数数码与解码公式三者之间的相互转换。
+本章利用封闭码定义域分离出一个可构造集合，其中恰好包含所有元数上携带所需形状与封闭见证的公式码。其成员关系定理给出码、元数数码与解码公式三者之间的相互转换。
 <!--ja-->
 
 閉じた符号の定義域を用いて、必要な形と閉性の証人を持つすべてのアリティの論理式の符号をちょうど含む、一つの構成可能集合を分出する。所属定理は、符号、アリティの数項、復号された論理式を相互に結ぶ。
@@ -68,7 +68,7 @@ open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( module InfinitySet )
 open InfinitySet using ( #_ )
 
-open hPropStructure 𝒮ʟ
+open hPropView 𝒮ʟ
 
 module ModelL = FOL.ZFModel 𝒮ʟ
 open ModelL using ( SetOf )
@@ -154,9 +154,9 @@ chain's projection equation turns it into the metalevel `# m`{.Agda} that
 `recover`{.Agda} takes as its arity argument. Neither direction needs induction;
 the numeral chapter already did that work.
 <!--zh-->
-表达它只需一个常元。`ωʟ`{.Agda} 是 `L` 的元素，其成员恰是诸数码，故「元数分量属于 `ωʟ`{.Agda}」**就是**那个条件，而且写法与第二个合取项已经在用的那种无界隶属相同。全式共有两个存在量词，分别约束元数与载荷，中间是对读式，再加上落在元数上的那条隶属。
+表达它只需一个常元。`ωʟ`{.Agda} 是 `L` 的元素，其元素恰是诸数码，故「元数分量属于 `ωʟ`{.Agda}」**就是**那个条件，而且写法与第二个合取项已经在用的那种无界成员关系相同。全式共有两个存在量词，分别约束元数与载荷，中间是对读式，再加上落在元数上的那条成员关系。
 
-从反方向读时，这一选择的作用才显现出来。`ω-specL`{.Agda} 是命题之间的等式而非蕴含，故 `ωʟ`{.Agda} 的成员**就是**一个被截断的自然数；与链的投影等式复合一次，就把它变成 `recover`{.Agda} 作为元数实参所接受的那个 `# m`{.Agda}。两个方向都不需要归纳；数码那一章已经完成了。
+从反方向读时，这一选择的作用才显现出来。`ω-specL`{.Agda} 是命题之间的等式而非蕴含，故 `ωʟ`{.Agda} 的元素**就是**一个被截断的自然数；与链的投影等式复合一次，就把它变成 `recover`{.Agda} 作为元数实参所接受的那个 `# m`{.Agda}。两个方向都不需要归纳；数码那一章已经完成了。
 <!--/-->
 
 ```agda
@@ -242,7 +242,7 @@ in its own right.
 <!--zh-->
 ## 超集与集合
 
-载体固定后，使用方会把它取为某一层。载体的成员构成字母表，正好提供编码章要求的两项参数：到层级的嵌入，以及该嵌入每个取值可构造的证明。后一项由 `L` 的传递性得到。相应的隶属关系单独命名，因为形状谓词直接以该关系为参数。
+载体固定后，使用方会把它取为某一层。载体的元素构成字母表，正好提供编码章要求的两项参数：到层级的嵌入，以及该嵌入每个取值可构造的证明。后一项由 `L` 的传递性得到。相应的成员关系单独命名，因为形状谓词直接以该关系为参数。
 <!--ja-->
 ## 上位集合と分出された集合
 
@@ -351,9 +351,9 @@ written out ran past 140 seconds without it and were killed there. This is the
 law the recursion's totality hypothesis recorded, met again in a different place:
 it is not about the graph, it is about `rec₁`{.Agda} at a concrete environment.
 <!--zh-->
-引入是其中不涉及额外内容的那一半。那个见证是子公式闭包，它的三个组成部分 `key∈closure`{.Agda}、`closureClosed`{.Agda} 与 `closureShaped`{.Agda} 各有一章专门处理，且都已完成。其中最后一条还多需要一件东西，即每个常元都是载体的成员；在这个字母表上，这正是当初据以定义字母表的那件事，沿那一位的等式搬过去即可。
+引入是其中不涉及额外内容的那一半。那个见证是子公式闭包，它的三个组成部分 `key∈closure`{.Agda}、`closureClosed`{.Agda} 与 `closureShaped`{.Agda} 各有一章专门处理，且都已完成。其中最后一条还多需要一件东西，即每个常元都是载体的元素；在这个字母表上，这正是当初据以定义字母表的那件事，沿那一位的等式搬过去即可。
 
-消去是另一半。它从一个成员出发，这个成员以某个已言明元数处的键的形式给出，这正是 `recover`{.Agda} 所要求的，也是第二个合取项无法直接提供的。载体那一位的等式把「属于那一位所持有的东西」变成「属于 `A`」，解码那条假设因此得以应用：`A` 的诸成员恰是 `⟪ A ⟫` 的像，依据是「一个集合由其自身诸成员所呈现」。读出那个存在量词，就得到一个既封闭又成形的集合。随后运行解码，其答案是载体之上、落在所给定的那个元数处的一条公式。
+消去是另一半。它从一个元素出发，这个元素以某个已言明元数处的键的形式给出，这正是 `recover`{.Agda} 所要求的，也是第二个合取项无法直接提供的。载体那一位的等式把「属于那一位所持有的东西」变成「属于 `A`」，解码那条假设因此得以应用：`A` 的诸元素恰是 `⟪ A ⟫` 的像，依据是「一个集合由其自身诸元素所呈现」。读出那个存在量词，就得到一个既封闭又成形的集合。随后运行解码，其答案是载体之上、落在所给定的那个元数处的一条公式。
 
 这两个方向都应用于由外层具名绑定构造的环境，其中载体由等式固定。引入方向为该绑定提供 `A`，并用 `refl`{.Agda} 证明等式；消去方向读出该绑定，再把其中的数据传给一般形式。**读取绑定之处必须显式写出载荷类型。** 若让类型检查器推断，载体处的截断载荷会成为一个元变元，表示尚未确定公式的满足关系。同样两行代码，显式写出类型时两秒完成，不写时超过 140 秒后终止。该现象来自具体环境处的 `rec₁`{.Agda}，与图本身无关。
 <!--/-->
@@ -471,7 +471,7 @@ exactly the keys of the formulas over the carrier, at every arity, by
 <!--zh-->
 ## 小结
 
-一个集合，一条谓词。`AllCodes`{.Agda} 是 `L` 的元素，凭 `AllCodes-out`{.Agda} 与 `AllCodes-in`{.Agda}，它的诸成员恰是载体之上诸公式在**每个**元数处的诸键。
+一个集合，一条谓词。`AllCodes`{.Agda} 是 `L` 的元素，凭 `AllCodes-out`{.Agda} 与 `AllCodes-in`{.Agda}，它的诸元素恰是载体之上诸公式在**每个**元数处的诸键。
 <!--ja-->
 ## まとめ
 

@@ -13,7 +13,7 @@ module FOL.Absoluteness where
 
 ```agda
 open import Base.Prelude
-open import FOL.ZFStructure using ( ZFStructure; Transitive; _↾_ )
+open import FOL.ZFStructure using ( ZFStructure; ZFStructureₕ; module hPropView; _↾_ )
 open import FOL.Syntax using ( Term; con; var; Formula; ∀̇∈; ∃̇∈ )
 open import FOL.LevyHierarchy using
   ( Δ₀; δ-∈; δ-≐; δ-∧; δ-∨; δ-⇒; δ-⊥; δ-∀∈; δ-∃∈
@@ -28,9 +28,9 @@ A formula is absolute when interpreting it in a transitive substructure gives th
 The chapter proves by induction that every Δ₀ formula has equal inner and outer truth values. Atomic formulas follow from agreement of term evaluation, connectives preserve the induction hypotheses, and transitivity is needed exactly when a bounded quantifier must turn an ambient member into an element of the substructure. The final results extend this equality to one-way laws: Σ₁ truth passes upward from the substructure, while Π₁ truth passes downward from the ambient structure.
 <!--zh-->
 
-若一条公式在传递子结构中的解释与在外围结构中的解释具有相同真值，就称它是绝对的。这里子结构的载体是 `𝒮 ↾ M`，其元素由一个外围元素及其属于类 `M` 的证据组成；外围解释则在用 `fst` 投影这些序对后使用同一套语法。传递性提供关键一步：若某个界属于 `M`，那么该界的每个成员也属于 `M`。
+若一条公式在传递子结构中的解释与在外围结构中的解释具有相同真值，就称它是绝对的。这里子结构的载体是 `𝒮 ↾ M`，其元素由一个外围元素及其属于类 `M` 的证据组成；外围解释则在用 `fst` 投影这些序对后使用同一套语法。传递性提供关键一步：若某个界属于 `M`，那么该界的每个元素也属于 `M`。
 
-本章通过归纳证明每条 Δ₀ 公式的内外真值相等。原子公式归结为词项求值的一致，联结词保持归纳假设，而有界量词必须把外围成员变成子结构元素时才需要传递性。最后再把这一等式推广为两个单向规律：Σ₁ 真值从子结构向上传递到外围结构，Π₁ 真值则从外围结构向下传递到子结构。
+本章通过归纳证明每条 Δ₀ 公式的内外真值相等。原子公式归结为词项求值的一致，联结词保持归纳假设，而有界量词必须把外围元素变成子结构元素时才需要传递性。最后再把这一等式推广为两个单向规律：Σ₁ 真值从子结构向上传递到外围结构，Π₁ 真值则从外围结构向下传递到子结构。
 <!--ja-->
 
 推移的部分構造で論理式を解釈した真理値が、周囲の構造で解釈した真理値と等しいとき、その論理式は絶対的である。ここで部分構造の台 `𝒮 ↾ M` の元は、周囲の元と、それがクラス `M` に属する証拠との対である。周囲での解釈には、それらの対を `fst` で射影したうえで同じ構文を使う。推移性が与える要点は、ある範囲が `M` に属すれば、その範囲の各要素も `M` に属するということである。
@@ -39,17 +39,17 @@ The chapter proves by induction that every Δ₀ formula has equal inner and out
 <!--/-->
 
 <!--en-->
-Structures here are proposition-valued: a `ZFStructure`{.Agda} has a carrier whose equality and membership take values in `hProp ℓ`, so a satisfaction statement is a proposition with an underlying type, and two satisfaction statements can be compared by path equality. Two further notions carry the mathematics. `Transitive`{.Agda} is the closure condition `y ∈ᵗ x → x ∈ᶜ M → y ∈ᶜ M`: a member of an element of `M` is again in `M`. And `_↾_`{.Agda} restricts a structure to a class, taking as its new carrier the pairs of an element with evidence that it lies in the class; what changes is what counts as an element, while the relations are inherited along the first projection.
+Structures here are proposition-valued: a `ZFStructureₕ`{.Agda} has a carrier whose equality and membership take values in `hProp ℓ`, so a satisfaction statement is a proposition with an underlying type, and two satisfaction statements can be compared by path equality. Two further notions carry the mathematics. `Transitive`{.Agda} is the closure condition `y ∈ᵗ x → x ∈ᶜ M → y ∈ᶜ M`: a member of an element of `M` is again in `M`. And `_↾_`{.Agda} restricts a structure to a class, taking as its new carrier the pairs of an element with evidence that it lies in the class; what changes is what counts as an element, while the relations are inherited along the first projection.
 <!--zh-->
-这里的结构是命题值的：`ZFStructure`{.Agda} 的载体带有取值于 `hProp ℓ` 的等词与成员关系，因此一条满足陈述是带有底层类型的命题，两条满足陈述可以用路径相等来比较。另有两个概念承载数学内容。其一是 `Transitive`{.Agda}，即闭合条件 `y ∈ᵗ x → x ∈ᶜ M → y ∈ᶜ M`：`M` 中元素的成员仍属于 `M`。其二是 `_↾_`{.Agda}，它把结构限制到一个类，新载体由「元素配上其属于该类的证据」的对组成；改变的是什么算作元素，而各关系沿第一投影继承。
+这里的结构是命题值的：`ZFStructureₕ`{.Agda} 的载体带有取值于 `hProp ℓ` 的等词与成员关系，因此一条满足陈述是带有底层类型的命题，两条满足陈述可以用路径相等来比较。另有两个概念承载数学内容。其一是 `Transitive`{.Agda}，即闭合条件 `y ∈ᵗ x → x ∈ᶜ M → y ∈ᶜ M`：`M` 中元素的元素仍属于 `M`。其二是 `_↾_`{.Agda}，它把结构限制到一个类，新载体由「元素配上其属于该类的证据」的对组成；改变的是什么算作元素，而各关系沿第一投影继承。
 <!--ja-->
-ここでの構造は命題値である。`ZFStructure`{.Agda} の台の等号と所属は `hProp ℓ` に値を取るので、充足の主張は基礎型をもつ命題になり、二つの充足の主張はパスとしての等しさで比較できる。数学的内容を担う概念がさらに二つある。第一は `Transitive`{.Agda} で、閉性の条件 `y ∈ᵗ x → x ∈ᶜ M → y ∈ᶜ M`、すなわち `M` の要素の要素も `M` に属することを述べる。第二は `_↾_`{.Agda} で、構造をクラスへ制限し、「要素と、それがクラスに属する証拠」の対を新しい台とする。変わるのは何を要素とみなすかだけで、関係は第一射影に沿って引き継がれる。
+ここでの構造は命題値である。`ZFStructureₕ`{.Agda} の台の等号と所属は `hProp ℓ` に値を取るので、充足の主張は基礎型をもつ命題になり、二つの充足の主張はパスとしての等しさで比較できる。数学的内容を担う概念がさらに二つある。第一は `Transitive`{.Agda} で、閉性の条件 `y ∈ᵗ x → x ∈ᶜ M → y ∈ᶜ M`、すなわち `M` の要素の要素も `M` に属することを述べる。第二は `_↾_`{.Agda} で、構造をクラスへ制限し、「要素と、それがクラスに属する証拠」の対を新しい台とする。変わるのは何を要素とみなすかだけで、関係は第一射影に沿って引き継がれる。
 <!--/-->
 
 <!--en-->
 On the syntactic side, formulas have constants `con` and variables `var` and the two bounded quantifiers `∀̇∈` and `∃̇∈`, whose range is the members of a term's value. The Lévy hierarchy enters through its inductive characterizations: `Δ₀`{.Agda} is the inductive class of formulas built from atomic membership and equality by the propositional connectives and the bounded quantifiers, with constructors named `δ-`. `Σ₁`{.Agda} and `Π₁`{.Agda} are built on top: either a Δ₀ formula, or an unbounded existential (respectively universal) whose matrix is again Σ₁ (respectively Π₁), witnessed by `σ-∃`{.Agda} and `π-∀`{.Agda}. These witnesses are exactly the induction data the absoluteness proof will consume.
 <!--zh-->
-句法方面，公式有常元 `con`、变元 `var`，以及两个有界量词 `∀̇∈` 与 `∃̇∈`，其范围是某词项取值的成员。Lévy 层谱以归纳刻画的方式进入：`Δ₀`{.Agda} 是由原子成员关系与等词出发、经命题联结词与有界量词生成的公式的归纳类，构造子名为 `δ-`。`Σ₁`{.Agda} 与 `Π₁`{.Agda} 建立其上：要么是一条 Δ₀ 公式，要么是一个无界存在 (相应地全称) 量词、其母式仍为 Σ₁ (相应地 Π₁)，由 `σ-∃`{.Agda} 与 `π-∀`{.Agda} 见证。这些见证正是绝对性证明将要消耗的归纳数据。
+句法方面，公式有常元 `con`、变元 `var`，以及两个有界量词 `∀̇∈` 与 `∃̇∈`，其范围是某词项取值的元素。Lévy 层谱以归纳刻画的方式进入：`Δ₀`{.Agda} 是由原子成员关系与等词出发、经命题联结词与有界量词生成的公式的归纳类，构造子名为 `δ-`。`Σ₁`{.Agda} 与 `Π₁`{.Agda} 建立其上：要么是一条 Δ₀ 公式，要么是一个无界存在 (相应地全称) 量词、其母式仍为 Σ₁ (相应地 Π₁)，由 `σ-∃`{.Agda} 与 `π-∀`{.Agda} 见证。这些见证正是绝对性证明将要消耗的归纳数据。
 <!--ja-->
 構文の側では、論理式には定数 `con` と変数 `var`、そして項の値の要素を範囲とする二つの有界量化子 `∀̇∈` と `∃̇∈` が現れる。Lévy 階層は帰納的特徴づけを通して登場する。`Δ₀`{.Agda} は、原始的な所属と等号から出発し、命題結合子と有界量化子で作られる論理式の帰納的な類であり、その構成子には `δ-` 系の名前が付いている。`Σ₁`{.Agda} と `Π₁`{.Agda} はその上に築かれる。Δ₀ 論理式であるか、無制限の存在 (それぞれ全称) 量化子を持ち母式が再び Σ₁ (それぞれ Π₁) であるかで、`σ-∃`{.Agda} と `π-∀`{.Agda} が証拠となる。これらの証拠こそ、絶対性の証明が消費する帰納のデータである。
 <!--/-->
@@ -69,7 +69,7 @@ Fix an ambient structure `𝒮` and a transitive class `M`; the inner world is t
 <!--zh-->
 ## 设置：一套语法，两套语义
 
-固定环境结构 `𝒮` 与传递类 `M`；内层世界是限制结构 `𝒮 ↾ M`，其载体 `SM` 由 `M` 的成员组成。语法取 `K := SM`：公式中的常元必须是 `M` 的成员，参数须满足的规则由类型强制保证。同一族公式于是得到**两套语义**：在外层 `𝒮` 中求值，常元经 `fst`{.Agda} 解释；在内层 `𝒮 ↾ M` 中求值，常元即其自身。相对化因此不是句法操作，而是同一泛型语义的两种读法；满足符号上的上标 `ᵛ` 与 `ᵐ` 读作「在哪里求值」。
+固定环境结构 `𝒮` 与传递类 `M`；内层世界是限制结构 `𝒮 ↾ M`，其载体 `SM` 由 `M` 的元素组成。语法取 `K := SM`：公式中的常元必须是 `M` 的元素，参数须满足的规则由类型强制保证。同一族公式于是得到**两套语义**：在外层 `𝒮` 中求值，常元经 `fst`{.Agda} 解释；在内层 `𝒮 ↾ M` 中求值，常元即其自身。相对化因此不是句法操作，而是同一泛型语义的两种读法；满足符号上的上标 `ᵛ` 与 `ᵐ` 读作「在哪里求值」。
 <!--ja-->
 ## 設定：一つの構文と二つの意味論
 
@@ -87,9 +87,9 @@ The section works under three fixed parameters: a structure `𝒮`, a class `M` 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module Single {ℓ} (𝒮 : ZFStructure ℓ)
+module Single {ℓ} (𝒮 : ZFStructureₕ ℓ)
               (M : ZFStructure.S 𝒮 → hProp ℓ)
-              (trans : Transitive 𝒮 M) where
+              (trans : hPropView.Transitive 𝒮 M) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -110,7 +110,7 @@ The carrier of the inner world is the Σ-type `SM`: a pair of an element of `S` 
   SM : Type ℓ
   SM = Σ[ x ∶ S ] (x ∈ᶜ M)
 
-  𝒮M : ZFStructure ℓ
+  𝒮M : ZFStructureₕ ℓ
   𝒮M = 𝒮 ↾ M
 
   module SemV = FOL.Semantics 𝒮
@@ -119,7 +119,7 @@ The carrier of the inner world is the Σ-type `SM`: a pair of an element of `S` 
 <!--en-->
 The outer reading uses the constant interpretation `ι := fst`{.Agda}: a constant naming a member of `M` denotes that member itself in `𝒮`. The fixed notation is `_⊨ᵛ_` for satisfaction in `𝒮` and `⟦_⟧ᵛ` for term values, and the environment notation `_^_` is available throughout.
 <!--zh-->
-外层读法采用常元解释 `ι := fst`{.Agda}：命名某个 `M` 成员的常元在 `𝒮` 中就指那个成员本身。固定记号为：`𝒮` 中的满足写作 `_⊨ᵛ_`，词项取值写作 `⟦_⟧ᵛ`；环境记号 `_^_` 在全章可用。
+外层读法采用常元解释 `ι := fst`{.Agda}：命名某个 `M` 元素的常元在 `𝒮` 中就指那个元素本身。固定记号为：`𝒮` 中的满足写作 `_⊨ᵛ_`，词项取值写作 `⟦_⟧ᵛ`；环境记号 `_^_` 在全章可用。
 <!--ja-->
 外側の読み方は定数解釈 `ι := fst`{.Agda} を用いる。`M` の要素を名指す定数は、`𝒮` の中ではその要素そのものを指す。記号は固定される。`𝒮` での充足は `_⊨ᵛ_`、項の値は `⟦_⟧ᵛ` と書き、環境の記法 `_^_` は章全体で使える。
 <!--/-->
@@ -192,7 +192,7 @@ Absoluteness for Δ₀ is proved by structural induction on the Δ₀ witness. T
 <!--zh-->
 ## 定理
 
-Δ₀ 的绝对性由对 Δ₀ 见证的结构归纳证明。原子与联结词情形只是记账：原子情形使用前节的词项引理，每个联结词由部分的真值算出整体的真值，因此部分相等会传递到整体相等。有界全称才是数学发生的地方。向外时，界的外层成员 `x` 必须重新包装成 `M` 的成员交给内层语义；由于界的取值属于 `M`，`x ∈ ⟦ t ⟧` 配上 `⟦ t ⟧ ∈ᶜ M` 经传递性正好给出 `x ∈ᶜ M`。反向只需投影。有界存在是对偶论证，在命题截断之下进行。当证明必须把裸的外层元素变成内层元素时才使用传递性：对有界全称是从内到外的方向，对有界存在则是从外到内的方向。
+Δ₀ 的绝对性由对 Δ₀ 见证的结构归纳证明。原子与联结词情形只是记账：原子情形使用前节的词项引理，每个联结词由部分的真值算出整体的真值，因此部分相等会传递到整体相等。有界全称才是数学发生的地方。向外时，界的外层元素 `x` 必须重新包装成 `M` 的元素交给内层语义；由于界的取值属于 `M`，`x ∈ ⟦ t ⟧` 配上 `⟦ t ⟧ ∈ᶜ M` 经传递性正好给出 `x ∈ᶜ M`。反向只需投影。有界存在是对偶论证，在命题截断之下进行。当证明必须把裸的外层元素变成内层元素时才使用传递性：对有界全称是从内到外的方向，对有界存在则是从外到内的方向。
 <!--ja-->
 ## Δ₀ 絶対性定理
 
@@ -250,7 +250,7 @@ For `∀̇∈`, both directions are packaged by `⇔toPath` into one path. Two a
 <!--en-->
 The forward direction takes an inner verifier `h` and must supply, for each outer `x` with `x ∈ˢ ⟦ t ⟧ᵛ (map fst δ)`, the body's outer truth. Here `x` is a bare element, not a member of `M`, so it must first be repackaged. The transport along `sym p` moves the membership evidence to the inner range `fst tm`, and then transitivity applies: `x ∈ fst tm` together with `fst tm ∈ᶜ M` gives `x ∈ᶜ M`, so `xm := x , trans hx' (snd tm)` is a legitimate inner element. Running `h` at `xm` gives the inner truth of the body, and the induction hypothesis `abs₀ d (xm ∷ δ)` transports it outward. This is the only step of the whole induction that consumes the hypothesis `trans`.
 <!--zh-->
-正向取内层的验证者 `h`，须对每个满足 `x ∈ˢ ⟦ t ⟧ᵛ (map fst δ)` 的外层 `x` 给出母式的外层真值。这里的 `x` 只是裸元素而非 `M` 的成员，必须先重新包装。沿 `sym p` 的传输把成员证据搬到内层范围 `fst tm`，随后传递性生效：`x ∈ fst tm` 配上 `fst tm ∈ᶜ M` 得到 `x ∈ᶜ M`，于是 `xm := x , trans hx' (snd tm)` 是合法的内层元素。在 `xm` 处运行 `h` 得到母式的内层真值，归纳假设 `abs₀ d (xm ∷ δ)` 再把它运到外层。整条归纳中唯有这一步使用前提 `trans`。
+正向取内层的验证者 `h`，须对每个满足 `x ∈ˢ ⟦ t ⟧ᵛ (map fst δ)` 的外层 `x` 给出母式的外层真值。这里的 `x` 只是裸元素而非 `M` 的元素，必须先重新包装。沿 `sym p` 的传输把成员关系证据搬到内层范围 `fst tm`，随后传递性生效：`x ∈ fst tm` 配上 `fst tm ∈ᶜ M` 得到 `x ∈ᶜ M`，于是 `xm := x , trans hx' (snd tm)` 是合法的内层元素。在 `xm` 处运行 `h` 得到母式的内层真值，归纳假设 `abs₀ d (xm ∷ δ)` 再把它运到外层。整条归纳中唯有这一步使用前提 `trans`。
 <!--ja-->
 順方向は内側の検証者 `h` を受け取り、`x ∈ˢ ⟦ t ⟧ᵛ (map fst δ)` を満たす各外側の `x` に対して母式の外側の真理値を与えなければならない。ここで `x` は `M` の要素ではなく素の要素なので、まず束ね直しが必要である。`sym p` に沿った輸送が所属の証拠を内側の範囲 `fst tm` へ移し、次いで推移性が働く。`x ∈ fst tm` と `fst tm ∈ᶜ M` から `x ∈ᶜ M` が得られ、したがって `xm := x , trans hx' (snd tm)` は正当な内側の要素である。`xm` で `h` を実行すると母式の内側の真理値が得られ、帰納仮定 `abs₀ d (xm ∷ δ)` がそれを外側へ運ぶ。帰納全体を通して前提 `trans` を消費するのは、この一段階だけである。
 <!--/-->
@@ -266,7 +266,7 @@ The forward direction takes an inner verifier `h` and must supply, for each oute
 <!--en-->
 The backward direction runs the other way: an outer verifier `g` quantifies over bare elements, while the inner clause expects a pair `xm` with its membership evidence attached. The projection `fst xm` is the outer element, and the term lemma transports its membership from `fst tm` to `⟦ t ⟧ᵛ (map fst δ)`, exactly the form `g` expects. Calling `g` yields outer truth, and `abs₀ d (xm ∷ δ)` transported along `sym` brings it back inside. This direction needs no transitivity: the pair `xm` arrives with its evidence attached.
 <!--zh-->
-反向沿另一方向进行：外层验证者 `g` 遍历裸元素，而内层子句期待一个自带成员证据的对 `xm`。投影 `fst xm` 是外层元素，词项引理把其成员关系从 `fst tm` 运到 `⟦ t ⟧ᵛ (map fst δ)`，恰是 `g` 期待的形式。调用 `g` 得到外层真值，`abs₀ d (xm ∷ δ)` 再沿 `sym` 运回内层。这一方向不需要传递性：对 `xm` 是带着证据到达的。
+反向沿另一方向进行：外层验证者 `g` 遍历裸元素，而内层子句期待一个自带成员关系证据的对 `xm`。投影 `fst xm` 是外层元素，词项引理把其成员关系从 `fst tm` 运到 `⟦ t ⟧ᵛ (map fst δ)`，恰是 `g` 期待的形式。调用 `g` 得到外层真值，`abs₀ d (xm ∷ δ)` 再沿 `sym` 运回内层。这一方向不需要传递性：对 `xm` 是带着证据到达的。
 <!--ja-->
 逆方向は逆向きに進む。外側の検証者 `g` は素の要素を走査し、内側の節は所属の証拠を伴う対 `xm` を期待する。射影 `fst xm` が外側の要素であり、項の補題がその所属を `fst tm` から `⟦ t ⟧ᵛ (map fst δ)` へ運ぶ。これはちょうど `g` が期待する形である。`g` を呼び出せば外側の真理値が得られ、`abs₀ d (xm ∷ δ)` を `sym` に沿って運ぶことで内側へ戻す。この方向に推移性は不要である。対 `xm` は証拠を伴って届くからである。
 <!--/-->
@@ -298,7 +298,7 @@ The existential case `∃̇∈` mirrors the universal one, with one structural d
 <!--en-->
 Forward, a truncated inner witness is a triple: an inner element `xm` in the range, its membership evidence, and the body's inner truth. The map sends it to `fst xm`, transports the membership outward along `p` into the shape `⟨ fst xm ∈ˢ ⟦ t ⟧ᵛ (map fst δ) ⟩`, and transports the body's truth outward through the induction hypothesis `abs₀ d (xm ∷ δ)`. The witness itself is used only inside the truncation, never extracted.
 <!--zh-->
-正向，截断下的内层见证是一个三元组：范围内的内层元素 `xm`、其成员证据、母式的内层真值。map 把它送到 `fst xm`，沿 `p` 把成员关系运到外层，成为 `⟨ fst xm ∈ˢ ⟦ t ⟧ᵛ (map fst δ) ⟩` 的形状，再经归纳假设 `abs₀ d (xm ∷ δ)` 把母式真值运到外层。见证本身只在截断之内使用，从不被提取。
+正向，截断下的内层见证是一个三元组：范围内的内层元素 `xm`、其成员关系证据、母式的内层真值。map 把它送到 `fst xm`，沿 `p` 把成员关系运到外层，成为 `⟨ fst xm ∈ˢ ⟦ t ⟧ᵛ (map fst δ) ⟩` 的形状，再经归纳假设 `abs₀ d (xm ∷ δ)` 把母式真值运到外层。见证本身只在截断之内使用，从不被提取。
 <!--ja-->
 順方向では、切断された内側の証拠は三つ組である。範囲内の内側の要素 `xm`、その所属の証拠、そして母式の内側の真理値である。map はこれを `fst xm` に送り、`p` に沿って所属を外側へ運んで `⟨ fst xm ∈ˢ ⟦ t ⟧ᵛ (map fst δ) ⟩` の形にし、さらに帰納仮定 `abs₀ d (xm ∷ δ)` を通して母式の真理値を外側へ運ぶ。証拠そのものが取り出されることはなく、切断の内側でだけ使われる。
 <!--/-->
@@ -380,7 +380,7 @@ The boundary is exact. Under transitivity, Δ₀ truth agrees between `𝒮 ↾ 
 <!--zh-->
 ## 小结
 
-边界是精确的。在传递性之下，Δ₀ 真值在 `𝒮 ↾ M` 与 `𝒮` 之间一致：`abs₀`{.Agda} 为每条 Δ₀ 见证给出真值的路径。有界全称从内层验证者走向界的任意外层成员时使用传递性；有界存在则在外层见证必须进入内层载体时使用它。在此基础上，`σ₁-up`{.Agda} 向上保持 Σ₁ 真值，`π₁-down`{.Agda} 向下保持 Π₁ 真值。反方向一般不能成立：任意外层存在见证未必属于 `M`，而内层全称验证者也没有说明 `M` 之外的外层元素。
+边界是精确的。在传递性之下，Δ₀ 真值在 `𝒮 ↾ M` 与 `𝒮` 之间一致：`abs₀`{.Agda} 为每条 Δ₀ 见证给出真值的路径。有界全称从内层验证者走向界的任意外层元素时使用传递性；有界存在则在外层见证必须进入内层载体时使用它。在此基础上，`σ₁-up`{.Agda} 向上保持 Σ₁ 真值，`π₁-down`{.Agda} 向下保持 Π₁ 真值。反方向一般不能成立：任意外层存在见证未必属于 `M`，而内层全称验证者也没有说明 `M` 之外的外层元素。
 <!--ja-->
 ## まとめ
 

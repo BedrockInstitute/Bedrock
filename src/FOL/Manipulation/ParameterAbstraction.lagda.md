@@ -13,7 +13,7 @@ module FOL.Manipulation.ParameterAbstraction where
 
 ```agda
 open import Base.Prelude
-open import FOL.ZFStructure using ( ZFStructure )
+open import FOL.ZFStructure using ( ZFStructure; ZFStructureₕ )
 open import FOL.Syntax using
   ( Term; con; var
   ; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
@@ -75,7 +75,7 @@ The whole construction is one structural pass over the formula. Its adequacy the
 <!--en-->
 Since every constant occurrence becomes a variable, the translated formula contains no constants at all: it lives over an alphabet with no inhabitants. The code uses the empty type `⊥*` as that alphabet. No interpretation of it is ever demanded, because there is nothing to interpret; the type only has to exist so the translated syntax has a well-formed carrier.
 <!--zh-->
-由于每次常元出现都成为变元，翻译后的公式完全不含常元：它定义在一个没有成员的字母表上。代码以空类型 `⊥*` 充当这个字母表。永远不会向它索要解释，因为无可解释之物；这个类型只需存在，使翻译后的语法有一个良构的载体。
+由于每次常元出现都成为变元，翻译后的公式完全不含常元：它定义在一个没有元素的字母表上。代码以空类型 `⊥*` 充当这个字母表。永远不会向它索要解释，因为无可解释之物；这个类型只需存在，使翻译后的语法有一个良构的载体。
 <!--ja-->
 定数の出現はすべて変数になるため、翻訳後の論理式には定数がまったく含まれない。つまり、元をひとつも持たないアルファベットの上にある。コードでは空の型 `⊥*` がこのアルファベットの役を担う。解釈すべきものがないので、この解釈が実際に要求されることはなく、型が存在して翻訳後の構文に well-formed な台を与えるだけで十分である。
 <!--/-->
@@ -237,7 +237,7 @@ Adequacy is the statement that the abstraction does not change meaning. It compa
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module _ {ℓ} (𝒮 : ZFStructure ℓ) where
+module _ {ℓ} (𝒮 : ZFStructureₕ ℓ) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -377,7 +377,7 @@ Then the twelve cases of the induction, ten formula cases here and the two term 
 <!--en-->
 The formula-level statement `⊨-place` has the same shape as the term lemma, with satisfaction in place of denotation: under the hypothesis `h` about the placed slots, `(γ ⊨ φ)` equals `((γ ++ σ) ⊨₀ placeFo φ θ)`. The representative atom is membership `t ∈̇ u`: satisfaction of an atom is a congruence of the two term values along the structure's membership, so the clause applies the term lemma to each operand, at the placements the traversal actually used.
 <!--zh-->
-公式层面的陈述 `⊨-place` 与词项引理形状相同，只是以满足关系取代取值：在关于诸安置位的假设 `h` 之下，`(γ ⊨ φ)` 等于 `((γ ++ σ) ⊨₀ placeFo φ θ)`。代表性的原子是属于关系 `t ∈̇ u`：原子的满足是两个词项取值沿结构所属关系的同余，故该子句在遍历实际使用的安置处对两个运算项各施词项引理。
+公式层面的陈述 `⊨-place` 与词项引理形状相同，只是以满足关系取代取值：在关于诸安置位的假设 `h` 之下，`(γ ⊨ φ)` 等于 `((γ ++ σ) ⊨₀ placeFo φ θ)`。代表性的原子是成员关系 `t ∈̇ u`：原子的满足是两个词项取值沿结构成员关系的同余，故该子句在遍历实际使用的安置处对两个运算项各施词项引理。
 <!--ja-->
 論理式レベルの主張 `⊨-place` は項の補題と同じ形をしている。表示の代わりに充足が現れる。配置された枠に関する仮定 `h` の下で、`(γ ⊨ φ)` は `((γ ++ σ) ⊨₀ placeFo φ θ)` に等しい。代表的な原子は所属 `t ∈̇ u` である。原子の充足は二つの項の値の、構造の所属関係に沿った合同なので、この節は走査が実際に用いた配置で各被演算子に項の補題を適用する。
 <!--/-->
@@ -566,7 +566,7 @@ One point of shape, and the reason the arity-one case is worth writing down: at 
 
 参数抽象把可定义子集背后的数据拆开列出：一条无参公式、一个有限参数向量，以及用于检验成员关系的变元。充分性表明，这种呈现与原带常元公式具有完全相同的外延。
 
-还有一处形状，也是元数一的情形值得单写的理由：在元数一处，扩张后的环境是 `x ∷ map ι p`，一个成员后接诸参数，而那正是本书别处每一个单条目环境的形状。
+还有一处形状，也是元数一的情形值得单写的理由：在元数一处，扩张后的环境是 `x ∷ map ι p`，一个元素后接诸参数，而那正是本书别处每一个单条目环境的形状。
 <!--ja-->
 ## 定義可能な部分集合とは何か
 
@@ -578,7 +578,7 @@ One point of shape, and the reason the arity-one case is worth writing down: at 
 <!--en-->
 For definable subsets of one variable, the corollary fixes the environment to `x ∷ []`: a formula of arity one is tested at the single member `x`, and the theorem gives the abstraction tested at `x` followed by the interpreted parameters. Because the statement is a path between propositions, the two readings of membership are interchangeable, and later chapters coding definable subsets may work with the parameter-free formula plus the parameter vector `map ι (constantsFo φ)` directly, without renaming constants or modifying the formula.
 <!--zh-->
-对一元可定义子集，这条推论把环境固定为 `x ∷ []`：元数为一的公式在唯一成员 `x` 处检验，定理给出抽象在 `x` 后接诸经解释参数处的检验。由于该陈述是命题之间的路径，两种对成员关系的读法可以互换；后续为可定义子集编码的章节可以直接使用无参公式加参数向量 `map ι (constantsFo φ)`，既无须重标常元，也无须改动公式。
+对一元可定义子集，这条推论把环境固定为 `x ∷ []`：元数为一的公式在唯一元素 `x` 处检验，定理给出抽象在 `x` 后接诸经解释参数处的检验。由于该陈述是命题之间的路径，两种对成员关系的读法可以互换；后续为可定义子集编码的章节可以直接使用无参公式加参数向量 `map ι (constantsFo φ)`，既无须重标常元，也无须改动公式。
 <!--ja-->
 一変数の定義可能な部分集合のために、この系は環境を `x ∷ []` と固定する。アリティ 1 の論理式はただ一つの要素 `x` で判定され、定理は `x` に解釈済みのパラメータを続けた環境での抽象化の判定を与える。この主張は命題の間の道の等式なので、所属の二つの読み方は取り替えて使える。定義可能な部分集合を符号化する後の章は、定数の改名も論理式の変更もせず、パラメータを持たない論理式とパラメータベクトル `map ι (constantsFo φ)` を直接扱って構わない。
 <!--/-->

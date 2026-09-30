@@ -112,7 +112,7 @@ Once we can refer to objects, we can write a claim about them. Such a written cl
 <!--en-->
 Before giving the construction rules, we set how an expression without parentheses is grouped. Membership and equality bind most tightly; then come the negation defined below, *and* and *or*, and finally *if … then …*. The last of these groups to the right: `φ ⇒̇ ψ ⇒̇ θ`{.Agda} is read as `φ ⇒̇ (ψ ⇒̇ θ)`{.Agda}. These **precedence** declarations affect how a formula is read, not which formulas can be built.
 <!--zh-->
-写公式时常省略括号，因此要先约定各记号如何结合。隶属和相等结合得最紧，其次是稍后定义的「非」，再是「并且」「或者」，最后是「如果……那么……」。最后一种向右结合，所以 `φ ⇒̇ ψ ⇒̇ θ`{.Agda} 读作 `φ ⇒̇ (ψ ⇒̇ θ)`{.Agda}。下面的**优先级**声明只影响公式的读法，不会增减可写出的公式。
+写公式时常省略括号，因此要先约定各记号如何结合。成员关系和相等结合得最紧，其次是稍后定义的「非」，再是「并且」「或者」，最后是「如果……那么……」。最后一种向右结合，所以 `φ ⇒̇ ψ ⇒̇ θ`{.Agda} 读作 `φ ⇒̇ (ψ ⇒̇ θ)`{.Agda}。下面的**优先级**声明只影响公式的读法，不会增减可写出的公式。
 <!--ja-->
 括弧を省いても読み違えないよう、先に結び付きの強さを決める。所属と等号が最も強く、次が後で定義する「でない」、その次が「かつ」「または」、最後が「もし…ならば…」である。最後の形は右側からまとまるので、`φ ⇒̇ ψ ⇒̇ θ`{.Agda} は `φ ⇒̇ (ψ ⇒̇ θ)`{.Agda} と読む。以下の**優先順位**宣言が変えるのは論理式の読み方であり、作れる論理式は変わらない。
 <!--/-->
@@ -127,7 +127,7 @@ infix  13 ¬̇_
 <!--en-->
 The small dot on `∈̇`{.Agda}, `∧̇`{.Agda} and the other logical signs distinguishes a *written claim* in this language from an Agda proposition about objects. For instance, `t ∈̇ u`{.Agda} records a claim about membership; it does not yet say that the objects referred to by `t`{.Agda} and `u`{.Agda} really stand in that relation. The meaning is supplied later.
 <!--zh-->
-`∈̇`{.Agda}、`∧̇`{.Agda} 等记号上的小点提醒我们：这里写的是对象语言中的陈述，不是直接在 Agda 中提出的命题。例如，`t ∈̇ u`{.Agda} 只是写下一条隶属陈述；`t`{.Agda}、`u`{.Agda} 究竟指什么，以及隶属关系是否成立，都还没有确定。
+`∈̇`{.Agda}、`∧̇`{.Agda} 等记号上的小点提醒我们：这里写的是对象语言中的陈述，不是直接在 Agda 中提出的命题。例如，`t ∈̇ u`{.Agda} 只是写下一条成员关系陈述；`t`{.Agda}、`u`{.Agda} 究竟指什么，以及成员关系是否成立，都还没有确定。
 <!--ja-->
 `∈̇`{.Agda} や `∧̇`{.Agda} などに付く点は、対象言語に*書かれた主張*を、Agda で対象について直接述べる命題と区別する。たとえば `t ∈̇ u`{.Agda} は所属を述べる形を記録するだけである。`t`{.Agda} と `u`{.Agda} が何を指し、その所属が成り立つかは、まだ決まっていない。
 <!--/-->
@@ -232,7 +232,7 @@ The constructors `∀̇∈`{.Agda} and `∃̇∈`{.Agda} say *for every member o
 <!--zh-->
 新增的 `0` 号位置对应这个量词的**[约束变元]{.term-intro #bound-variable}**；原有位置上的变元相对于它仍是**[自由变元]{.term-intro #free-variable}**，编号各向后挪一位。因此，量词内部的公式体属于 `Formula K (suc n)`{.Agda}，整条公式属于 `Formula K n`{.Agda}。公式体也可以不用新位置。这种只记录位置、不保存名字的方法叫作 **[de Bruijn 索引]{.term-intro #de-bruijn-indexing}**：无需为避免重名而更换变元名称，也写不出越过可用范围的引用。
 
-`∀̇∈`{.Agda} 和 `∃̇∈`{.Agda} 把量化范围限定在某个集合的成员中，用词项 `t`{.Agda} 指明这个集合。`t`{.Agda} 在新位置加入前就已写成，所以仍属于外层的 `Term K n`{.Agda}；只有量词后面的公式体使用扩展语境。这两种写法称为**[有界量词]{.term-intro #bounded-quantifier}**，各有独立的构造子，后文便能辨认只使用有界量词的公式。
+`∀̇∈`{.Agda} 和 `∃̇∈`{.Agda} 把量化范围限定在某个集合的元素中，用词项 `t`{.Agda} 指明这个集合。`t`{.Agda} 在新位置加入前就已写成，所以仍属于外层的 `Term K n`{.Agda}；只有量词后面的公式体使用扩展语境。这两种写法称为**[有界量词]{.term-intro #bounded-quantifier}**，各有独立的构造子，后文便能辨认只使用有界量词的公式。
 <!--ja-->
 新しい `0` 番の位置が、この量化子の**[束縛変数]{.term-intro #bound-variable}**に当たる。もとの位置にある変数は、この量化子から見れば**[自由変数]{.term-intro #free-variable}**のままで、番号だけが一つ後ろへずれる。したがって量化子の内側の論理式は `Formula K (suc n)`{.Agda} 型、全体は `Formula K n`{.Agda} 型になる。内側で新しい位置を使わなくてもよい。名前を保存せず、位置で参照を記録する方法が **[de Bruijn 添字]{.term-intro #de-bruijn-indexing}**である。名前の衝突を避けるための付け替えが要らず、使える範囲の外を参照する式も作れない。
 

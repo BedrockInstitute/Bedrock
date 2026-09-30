@@ -28,7 +28,7 @@ module L.Coding.SatisfactionTable {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 open import FOL.Syntax
   using ( Formula )
 open import V.Coding {ℓ} using ( pr; pr-inj; #-inj′ )
@@ -80,7 +80,7 @@ open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( module InfinitySet )
 open InfinitySet using ( #_ )
 
-open hPropStructure 𝒮ʟ using ( S )
+open hPropView 𝒮ʟ using ( S )
 ```
 
 <!--en-->
@@ -150,7 +150,7 @@ module _ (B : S) where
 <!--en-->
 The four inversion lemmas instantiate `tree-inv`: membership in a satisfaction table or slot identifies the subformula that contributed the member, while `slot-ent` and `ent-slot` move between an entry and its key.
 <!--zh-->
-四条反演引理都是 `tree-inv` 的实例：属于满足关系表或槽位会识别出贡献该成员的子公式，而 `slot-ent` 与 `ent-slot` 在条目及其键之间转换。
+四条反演引理都是 `tree-inv` 的实例：属于满足关系表或槽位会识别出贡献该元素的子公式，而 `slot-ent` 与 `ent-slot` 在条目及其键之间转换。
 <!--ja-->
 四つの反転補題は `tree-inv` の実例である。充足関係表またはスロットへの所属から、その要素を供給した部分式を特定し、`slot-ent` と `ent-slot` は項目とその鍵の間を移る。
 <!--/-->
@@ -160,7 +160,7 @@ Every member is one of the things gathered. That is the inversion the closure
 chapter proves, stated there against two collections at once, so the four
 readings below are four instantiations of it and no induction runs here.
 <!--zh-->
-每个成员都是被收集之物之一。那正是闭包那一章所证的求逆，且它在那里是对着两个收集同时陈述的，故下面四条读式是它的四次实例化，此处不跑归纳。
+每个元素都是被收集之物之一。那正是闭包那一章所证的求逆，且它在那里是对着两个收集同时陈述的，故下面四条读式是它的四次实例化，此处不跑归纳。
 <!--/-->
 
 <details open class="submodule-fold">

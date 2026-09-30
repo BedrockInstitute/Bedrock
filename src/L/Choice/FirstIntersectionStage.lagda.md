@@ -35,7 +35,7 @@ object rather than a mere existence, and the second guarantees that the
 material of a whole family of candidates lives inside one stage, so that the
 name comparison has a common arena.
 <!--zh-->
-本章为内部选择构造提供两样原料。第一是关于最小层的引理。当一条序数性质首次成立时，它在一个最小层处成立；该层是否为后继并非自动成立，因为性质可能在零序数处首次成立。本章证明论证所需的条件形式：若除最小层之外，一次雕出仅仅存在，即存在低于它的序数 `δ` 使性质在后继 `sucV δ` 处已经成立，则最小层是后继，且有唯一的前一层。第二样原料是一个上界序数：对可构造集合而言，存在一个序数，其层同时容纳该集合、它的成员、成员的成员，以及塔的极限层。
+本章为内部选择构造提供两样原料。第一是关于最小层的引理。当一条序数性质首次成立时，它在一个最小层处成立；该层是否为后继并非自动成立，因为性质可能在零序数处首次成立。本章证明论证所需的条件形式：若除最小层之外，一次雕出仅仅存在，即存在低于它的序数 `δ` 使性质在后继 `sucV δ` 处已经成立，则最小层是后继，且有唯一的前一层。第二样原料是一个上界序数：对可构造集合而言，存在一个序数，其层同时容纳该集合、它的元素、元素的元素，以及塔的极限层。
 
 这些材料服务于一把双钥匙的比较。首次出现在不同层的两个集合，仅凭各自的诞生序数比较，别无其他；只有首次出现在同一层的集合，才在该层之内按名字比较。第一样原料使每个诞生序数成为确定的对象，而非单纯的存在；第二样原料保证一整族候选者所需的材料都住进同一个层，从而名字的比较有共同的场地。
 <!--ja-->
@@ -49,7 +49,7 @@ module L.Choice.FirstIntersectionStage {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) w
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-irrefl )
 open import V.Model {ℓ} using ( ∈sucV-elim; self∈sucV )
 open import L.Constructible {ℓ}
@@ -79,7 +79,7 @@ tower lives, has irreflexive membership, so no ordinal contains itself, and its
 successors are understood: an ordinal sits inside its own successor, and a
 member of a successor is a member of the ordinal or the ordinal itself.
 <!--zh-->
-本章的问题是关于首次出现的。一个可构造集合会在某个时刻进入层之塔；塔所居于的环境层级具有非自反的隶属，故没有序数包含自身，而其后继的性质也已清楚：序数坐在自己的后继之内，后继的成员或是该序数的成员、或是该序数本身。
+本章的问题是关于首次出现的。一个可构造集合会在某个时刻进入层之塔；塔所居于的环境层级具有非自反的成员关系，故没有序数包含自身，而其后继的性质也已清楚：序数坐在自己的后继之内，后继的元素或是该序数的元素、或是该序数本身。
 <!--ja-->
 本章の問いは、はじめての出現についてのものである。構成可能な集合は、いつか塔に入る。塔の住む周囲の階層は反射しない所属をもち、だからどの順序数も自分自身を含まず、後者の性質も分かっている。順序数は自分の後者の中に坐り、後者の要素はその順序数の要素か、その順序数自身のどちらかである。
 <!--/-->
@@ -91,7 +91,7 @@ host. Ordinality `IsOrd`{.Agda} is itself a proposition; the tower has a layer
 relation, an outward decomposition, and monotonicity; and transitivity moves
 members across layers.
 <!--zh-->
-可构造一侧以塔 `Lset`{.Agda} 作答，塔由序数索引，序数是层级的集合，而非宿主的宇宙层级。序数性 `IsOrd`{.Agda} 本身是命题；塔有层关系、向外的分解与单调性；传递性则在层之间搬运成员。
+可构造一侧以塔 `Lset`{.Agda} 作答，塔由序数索引，序数是层级的集合，而非宿主的宇宙层级。序数性 `IsOrd`{.Agda} 本身是命题；塔有层关系、向外的分解与单调性；传递性则在层之间搬运元素。
 <!--ja-->
 構成可能の側は、塔 `Lset`{.Agda} で答える。塔は順序数で添字づけられ、順序数は階層の集合であり、ホストの宇宙レベルではない。順序数性 `IsOrd`{.Agda} はそれ自体命題であり、塔には層の関係、外向きの分解、単調性があり、推移性が層の間で要素を運ぶ。
 <!--/-->
@@ -106,7 +106,7 @@ have a common bound. And the successor identity says the next stage is exactly
 the definable subsets of the previous one, which is the step by which anything
 enters the tower at all.
 <!--zh-->
-论证依靠比较与层。把低于某层的序数与该层自身相比，正是判定该层是否越过一个后继的方法；序数的成员与序数的后继都仍是序数。每个可构造集合携带着它最早的序数，连同序数性与隶属交付，而极小性以反驳形式陈述。两个序数有共同上界。后继恒等式则说：下一层恰是上一层的可定义子集，这正是任何东西得以进入塔的那一步。
+论证依靠比较与层。把低于某层的序数与该层自身相比，正是判定该层是否越过一个后继的方法；序数的元素与序数的后继都仍是序数。每个可构造集合携带着它最早的序数，连同序数性与成员关系交付，而极小性以反驳形式陈述。两个序数有共同上界。后继恒等式则说：下一层恰是上一层的可定义子集，这正是任何东西得以进入塔的那一步。
 <!--ja-->
 議論を支えるのは、比較と段階である。段階の下の順序数を段階そのものと比べることが、その段階がある後者を行き過ぎていないかの判定である。順序数の要素も後者もまた順序数である。各構成可能集合はその最初の順序数を携え、順序数性と所属とともに渡され、極小性は反駁として述べられる。二つの順序数には共通の上界がある。そして後者の恒等式は、次の段階がちょうど前の段階の定義可能な部分集合であると言う。何ものかが塔に入るのは、まさにこの一歩によってである。
 <!--/-->
@@ -148,14 +148,14 @@ The hierarchy's infinity construction supplies both the von Neumann successor `s
 <!--/-->
 
 ```agda
-open hPropStructure 𝒮ᵥ
+open hPropView 𝒮ᵥ
 ```
 
 <!--en-->
 Structure membership `∈ˢ` is the relation in which ordinality, stages and
 minimality are all stated.
 <!--zh-->
-结构隶属 `∈ˢ` 是序数性、层与极小性共同陈述其中的关系。
+结构成员关系 `∈ˢ` 是序数性、层与极小性共同陈述其中的关系。
 <!--ja-->
 構造の所属 `∈ˢ` は、順序数性も段階も極小性もその中で述べられる関係である。
 <!--/-->
@@ -198,7 +198,7 @@ exactly `σ`. So the least stage is a successor, and the carved ordinal is its
 predecessor. Without the carve nothing follows: the property may hold first at
 the zero ordinal, below which no ordinal exists at all.
 <!--zh-->
-后继决定它所后继的东西，至少在序数之内如此。把一个候选前一层与另一个相比：各自属于对方的后继，故各自或是对方的成员、或与对方相等；而两个序数不能互为成员，否则传递性会使其一属于自身。于是「是给定序数的前一层」是命题，正是这一点使一个仅仅存在的前一层可以被读作一个确定的前一层。
+后继决定它所后继的东西，至少在序数之内如此。把一个候选前一层与另一个相比：各自属于对方的后继，故各自或是对方的元素、或与对方相等；而两个序数不能互为元素，否则传递性会使其一属于自身。于是「是给定序数的前一层」是命题，正是这一点使一个仅仅存在的前一层可以被读作一个确定的前一层。
 
 最小层凭什么有前一层？这需要两样输入，值得分开看。第一是最小层自身：性质在其中成立的序数 `σ`，其极小性以反驳形式陈述，即没有更小的序数拥有该性质。第二是 `σ` 处雕出的仅仅存在：`σ` 以下的某个序数 `δ`，其后续 `sucV δ` 处性质已经成立。有了雕出，极小性排除「后继仍严格在下」，而不越头的比较只剩一种情形：被雕出序数的后继恰是 `σ`。于是最小层是后继，而被雕出的序数就是它的前一层。没有雕出则推不出任何东西：性质可能恰在零序数处首次成立，而零以下根本没有序数。
 <!--ja-->
@@ -234,7 +234,7 @@ the membership around the two-step cycle back to `a` itself, contradicting
 irreflexivity. This two-step impossibility forbids two ordinals from
 containing each other.
 <!--zh-->
-没有序数能属于它自己的某个成员：传递性会把这条隶属沿两步循环搬回 `a` 自身，与非自反性矛盾。正是这个两步的不可能性，禁止两个序数互为成员。
+没有序数能属于它自己的某个元素：传递性会把这条成员关系沿两步循环搬回 `a` 自身，与非自反性矛盾。正是这个两步的不可能性，禁止两个序数互为元素。
 <!--ja-->
 どの順序数も、自分の要素である順序数の要素にはなれない。推移性がこの所属を二歩の循環で `a` 自身へ運び、非反射性と衝突するからである。この二歩の不可能性こそ、二つの順序数が互いを含むことを禁じるものである。
 <!--/-->
@@ -253,7 +253,7 @@ is a member of `δ'`; the conclusion must be `δ ≡ δ'`. If `δ'` were a membe
 `δ` itself, the two-step cycle would close; so `δ'` is `δ` itself, and the
 elimination returns exactly that.
 <!--zh-->
-隶属分支读作：`δ'` 属于 `δ` 的后继，且 `δ` 属于 `δ'`；结论必为 `δ ≡ δ'`。倘若 `δ'` 属于 `δ` 自身，两步循环便会闭合；故 `δ'` 就是 `δ` 自身，消去恰返回这一点。
+成员关系分支读作：`δ'` 属于 `δ` 的后继，且 `δ` 属于 `δ'`；结论必为 `δ ≡ δ'`。倘若 `δ'` 属于 `δ` 自身，两步循环便会闭合；故 `δ'` 就是 `δ` 自身，消去恰返回这一点。
 <!--ja-->
 所属の分岐はこう読む。`δ'` は `δ` の後者の要素であり、かつ `δ` は `δ'` の要素である。結論は `δ ≡ δ'` でなければならない。もし `δ'` が `δ` 自身の要素なら、二歩の循環が閉じてしまう。だから `δ'` は `δ` 自身であり、消去はまさにそれを返す。
 <!--/-->
@@ -273,7 +273,7 @@ Either `δ` is a member of `δ'`, in which case the membership branch closes the
 cycle and gives the equality, or `δ` already is `δ'`. A successor determines
 what it succeeds.
 <!--zh-->
-后继运算在序数上是单射的。由后继的等式，`δ` 属于 `sucV δ'`；消去给出两种读法。要么 `δ` 属于 `δ'`，此时隶属分支闭合循环并给出等式；要么 `δ` 本来就是 `δ'`。后继决定它所后继者。
+后继运算在序数上是单射的。由后继的等式，`δ` 属于 `sucV δ'`；消去给出两种读法。要么 `δ` 属于 `δ'`，此时成员关系分支闭合循环并给出等式；要么 `δ` 本来就是 `δ'`。后继决定它所后继者。
 <!--ja-->
 後者の演算は順序数の上で単射である。後者の等式から、`δ` は `sucV δ'` の要素である。消去は二つの読みを示す。`δ` が `δ'` の要素なら、所属の分岐が循環を閉じて等式を与え、さもなくば `δ` ははじめから `δ'` である。後者は、それの後者とするものを決める。
 <!--/-->
@@ -291,7 +291,7 @@ The two memberships feeding the elimination come from the standing fact that an
 ordinal sits inside its own successor, transported along the equation and its
 reverse.
 <!--zh-->
-喂给消去的两条隶属来自既有事实「序数坐在自己的后继之内」，沿等式及其反向运输而得。
+喂给消去的两条成员关系来自既有事实「序数坐在自己的后继之内」，沿等式及其反向运输而得。
 <!--ja-->
 消去に渡す二つの所属は、順序数が自分の後者の中に坐るという既存の事実から、等式とその逆向きに沿って輸送したものである。
 <!--/-->
@@ -408,7 +408,7 @@ pinning `sucV δ` to `σ` is the content of the case analysis.
 Ordinality of `δ` is inherited from the ordinal `σ`, members of ordinals
 being ordinals.
 <!--zh-->
-`δ` 的序数性承继自序数 `σ`，因为序数的成员是序数。
+`δ` 的序数性承继自序数 `σ`，因为序数的元素是序数。
 <!--ja-->
 `δ` の順序数性は順序数 `σ` から受け継がれる。順序数の要素は順序数だからである。
 <!--/-->
@@ -458,7 +458,7 @@ the tower: appearing at a stage is appearing inside a definable powerset of an
 earlier stage, and every definable powerset is a successor stage by the
 successor identity.
 <!--zh-->
-`carveAt` 从最小层的一个成员 `z` 造出雕出，配合的是这样一条观察：但凡 `z` 在某个后继层现身，性质便已在彼处成立。这正是进入塔之下降的形状：出现在某层，就是出现在某个更早层的可定义幂集之内，而由后继恒等式，每个可定义幂集都是一个后继层。
+`carveAt` 从最小层的一个元素 `z` 造出雕出，配合的是这样一条观察：但凡 `z` 在某个后继层现身，性质便已在彼处成立。这正是进入塔之下降的形状：出现在某层，就是出现在某个更早层的可定义幂集之内，而由后继恒等式，每个可定义幂集都是一个后继层。
 <!--ja-->
 `carveAt` は、最小の段階の要素 `z` から切り出しを作る。そこには、`z` がどこかの後者の段階で現れるなら、性質はすでにそこで成立するという観察が伴う。これは塔への下降の形そのものである。段階への出現とは、より前の段階の定義可能冪集合の内側への出現であり、後者の恒等式により、どの定義可能冪集合も後者の段階である。
 <!--/-->
@@ -479,7 +479,7 @@ inside the truncation only: the successor identity, read backwards, transports
 `z` from `𝒟ₒ (Lset δ)` into `Lset (sucV δ)`, the observation `k` fires at that
 successor, and the resulting carve is injected back into the truncation.
 <!--zh-->
-塔以截断的方式分解 `z` 的隶属：给出某个低于 `σ` 的层 `δ`，使 `z` 落在 `Lset δ` 的可定义幂集之内。映射只在截断内部进行：后继恒等式反向读取，把 `z` 从 `𝒟ₒ (Lset δ)` 搬到 `Lset (sucV δ)`，观察 `k` 在该后继处触发，所得的雕出被重新注入截断。
+塔以截断的方式分解 `z` 的成员关系：给出某个低于 `σ` 的层 `δ`，使 `z` 落在 `Lset δ` 的可定义幂集之内。映射只在截断内部进行：后继恒等式反向读取，把 `z` 从 `𝒟ₒ (Lset δ)` 搬到 `Lset (sucV δ)`，观察 `k` 在该后继处触发，所得的雕出被重新注入截断。
 <!--ja-->
 塔は `z` の所属を切り詰めた形で分解する。`σ` の下のある段階 `δ` で、`z` が `Lset δ` の定義可能冪集合の中にある、というものである。写像は切り詰めの内側だけで行われる。後者の恒等式を逆向きに読んで、`z` を `𝒟ₒ (Lset δ)` から `Lset (sucV δ)` へ運び、観察 `k` がその後者で発火し、できた切り出しが切り詰めへ注入し戻される。
 <!--/-->
@@ -496,7 +496,7 @@ successor, and the resulting carve is injected back into the truncation.
 This section turns stage transitivity and an ordinal bound into one level that
 contains a set's members, their members, and the limit level `ω`.
 <!--zh-->
-本节用层的传递性与序数上界，得到一个同时包含集合的成员、成员的成员以及极限层 `ω` 的层。
+本节用层的传递性与序数上界，得到一个同时包含集合的元素、元素的元素以及极限层 `ω` 的层。
 <!--ja-->
 この節では、段階の推移性と順序数の上界から、集合の要素、その要素の要素、そして極限段階 `ω` を同時に含む一つの層を得る。
 <!--/-->
@@ -517,9 +517,9 @@ lift `Lset ω`{.Agda} into `Lset β`{.Agda}; the parameters lie below the bound
 for the reason the next fact records: members of the set and members of those
 land in the same level.
 <!--zh-->
-构造还需要另一样东西：一个上界，而取得它不牵涉任何比较。层传递，故一个集合的层已经装着该集合的诸成员，以及其后它们的诸成员；最早的层与别的层无异，故它就够用。
+构造还需要另一样东西：一个上界，而取得它不牵涉任何比较。层传递，故一个集合的层已经装着该集合的诸元素，以及其后它们的诸元素；最早的层与别的层无异，故它就够用。
 
-还需确定一个包含塔的极限层的序数。前方的比较以对象语言书写，而各元数的无常元公式 `Formula ⊥* n`{.Agda} 的码都属于 `Lset ω`{.Agda}；这样的码可以带有自由变元，因此它们是公式，而非句子。后继层中一个成员的完整名字所说的多于它的码：它还要指名元数，以及取自更早层的参数向量。这里造出的界覆盖码，因为 `ω ∈ β` 加上单调性把 `Lset ω`{.Agda} 抬进 `Lset β`{.Agda}；参数低于界则另有原因，下一条事实记录的正是它：集合的成员与成员的成员落在同一层中。
+还需确定一个包含塔的极限层的序数。前方的比较以对象语言书写，而各元数的无常元公式 `Formula ⊥* n`{.Agda} 的码都属于 `Lset ω`{.Agda}；这样的码可以带有自由变元，因此它们是公式，而非句子。后继层中一个元素的完整名字所说的多于它的码：它还要指名元数，以及取自更早层的参数向量。这里造出的界覆盖码，因为 `ω ∈ β` 加上单调性把 `Lset ω`{.Agda} 抬进 `Lset β`{.Agda}；参数低于界则另有原因，下一条事实记录的正是它：集合的元素与元素的元素落在同一层中。
 <!--ja-->
 構成にはもう一つ、上界が要る。それを得るのに比較は関わらない。段階は推移的であり、集合の段階はすでにその要素を、その次にはその要素の要素を収めている。最初の段階も他の段階と同じ段階なので、それで足りる。
 
@@ -538,7 +538,7 @@ Stages are transitive, and the earliest stage of `a` is a stage. So a member
 `x` of `a` lies in the tower's level at `a`'s own stage: transitivity moves the
 membership from the set into the level that holds the set.
 <!--zh-->
-层传递，而 `a` 的最早层也是一个层。故 `a` 的成员 `x` 落在塔在 `a` 自身层处的层里：传递性把隶属从集合搬进容纳该集合的那一层。
+层传递，而 `a` 的最早层也是一个层。故 `a` 的元素 `x` 落在塔在 `a` 自身层处的层里：传递性把成员关系从集合搬进容纳该集合的那一层。
 <!--ja-->
 段階は推移的であり、`a` の最初の段階もまた段階である。だから `a` の要素 `x` は、塔の `a` 自身の段階での層の中にある。推移性が所属を、集合からその集合を収める層へ運ぶのである。
 <!--/-->
@@ -554,7 +554,7 @@ stage-below₂ a p x y y∈x x∈a =
 Transitivity applied twice reaches two levels down: a member of a member of
 `a` lies in the same level, because it lies in `x` and `x` lies in the level.
 <!--zh-->
-传递性应用两次即可下探两层：`a` 的成员的成员落在同一层里，因为它属于 `x`，而 `x` 属于那一层。
+传递性应用两次即可下探两层：`a` 的元素的元素落在同一层里，因为它属于 `x`，而 `x` 属于那一层。
 <!--ja-->
 推移性を二度適用すれば、二層下まで届く。`a` の要素の要素も同じ層の中にある。それは `x` に属し、`x` はその層に属するからである。
 <!--/-->
@@ -587,7 +587,7 @@ Monotonicity of the tower lifts the two-level fact from the earliest stage into
 the stage of the bounding ordinal. One level now holds `a`, its members, their
 members, and the formula codes the comparison reads.
 <!--zh-->
-塔的单调性把「下探两层」的事实从最早层提升到界序数的层。现在这一层同时容纳 `a`、它的成员、成员的成员，以及比较所要读取的公式码。
+塔的单调性把「下探两层」的事实从最早层提升到界序数的层。现在这一层同时容纳 `a`、它的元素、元素的元素，以及比较所要读取的公式码。
 <!--ja-->
 塔の単調性が、二層下の事実を最初の段階から、界順序数の段階へ引き上げる。今や一つの層が、`a` とその要素、その要素の要素、そして比較が読む論理式の符号を同時に収める。
 <!--/-->
@@ -615,7 +615,7 @@ set's own stage, hence above its members and theirs, and above the tower's
 limit level, where the formula codes live.
 
 <!--zh-->
-本章可复用的结果，是最小层为后继时的唯一前一层，以及足以承载选择构造的上界序数。最小层引理是带条件的，而条件正是它的内容。对以 `σ` 为最小层的某条序数性质而言，性质完全可能恰在零序数处首次成立，此时其下无可雕出之物。当 `σ` 处的雕出仅仅存在，即有低于 `σ` 的序数使其后继已具该性质时，`carveAt`{.Agda} 产出雕出，`predOf`{.Agda} 按 `isPropPredOf`{.Agda} 闭合截断，把它化为唯一的前一层；而 `ord-suc-inj`{.Agda} 正是「后继决定它所后继者」的理由。`stageBound`{.Agda} 给出上界序数：它在一个集合自身的层之上，从而在其成员及其成员之上，也在塔的极限层之上，而公式码恰在那里。
+本章可复用的结果，是最小层为后继时的唯一前一层，以及足以承载选择构造的上界序数。最小层引理是带条件的，而条件正是它的内容。对以 `σ` 为最小层的某条序数性质而言，性质完全可能恰在零序数处首次成立，此时其下无可雕出之物。当 `σ` 处的雕出仅仅存在，即有低于 `σ` 的序数使其后继已具该性质时，`carveAt`{.Agda} 产出雕出，`predOf`{.Agda} 按 `isPropPredOf`{.Agda} 闭合截断，把它化为唯一的前一层；而 `ord-suc-inj`{.Agda} 正是「后继决定它所后继者」的理由。`stageBound`{.Agda} 给出上界序数：它在一个集合自身的层之上，从而在其元素及其元素之上，也在塔的极限层之上，而公式码恰在那里。
 <!--ja-->
 本章の再利用可能な成果は、最小段階が後者である場合のその一意な直前の段階と、選択の構成を支えるのに十分な上界順序数である。最小段階の補題は条件付きであり、その条件こそが内容である。順序数の性質の最小の段階を `σ` とすると、性質は零順序数ではじめて成立してもよく、そのときは下に切り出すべきものが何もない。`σ` での切り出しが単に存在するならば、すなわち `σ` の下の順序数で、その後者がすでに性質をもつものがあれば、`carveAt`{.Agda} がそれを作り、`predOf`{.Agda} が `isPropPredOf`{.Agda} で切り詰めを閉じて、それを一意な直前の段階に変える。後者がその後者とするものを決める理由は `ord-suc-inj`{.Agda} である。`stageBound`{.Agda} が上界の順序数を供給する。それは集合自身の段階の上にあり、したがってその要素やそのまた要素の上にあり、塔の極限段階、すなわち論理式の符号が住む段階の上にもある。
 <!--/-->

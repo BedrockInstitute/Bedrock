@@ -33,7 +33,7 @@ module L.Choice.LimitStageOrder {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 open import FOL.Syntax using
   ( Formula; var; con; _∈̇_; _∧̇_; _∨̇_; ¬̇_; _⇒̇_; ∃̇_; ∀̇_; ∀̇∈ )
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
@@ -65,7 +65,7 @@ comparison, an object-language description of that comparison, and, once the
 finite-stage description has been supplied, a constructible set realizing the
 described relation.
 <!--zh-->
-`Lset ω`{.Agda} 的诸成员在外部已经带有严格良序。本章的问题是：怎样让 `L`内部的公式使用这个比较？答案要依次经过三种彼此有别的形态：元层面的比较、对象语言中对该比较的描述，以及在有穷层描述已经给出后实现该关系的可构造集合。
+`Lset ω`{.Agda} 的诸元素在外部已经带有严格良序。本章的问题是：怎样让 `L`内部的公式使用这个比较？答案要依次经过三种彼此有别的形态：元层面的比较、对象语言中对该比较的描述，以及在有穷层描述已经给出后实现该关系的可构造集合。
 <!--ja-->
 `Lset ω`{.Agda} の要素には、外側ですでに狭義整列順序が与えられている。ここでの問いは、その比較を `L` の内部の論理式からどのように使えるようにするかである。答えは三つの異なる形を順に通る。メタ水準の比較、その比較の対象言語による記述、そして有限段階の記述が与えられた後に、その関係を実現する構成可能集合である。
 <!--/-->
@@ -78,7 +78,7 @@ it to the separation and bounding results it uses. This hypothesis decides
 propositions when those constructions require it; it does not provide a choice
 function for an arbitrary family.
 <!--zh-->
-本章的全部构造都相对于层级 `ℓ-suc ℓ` 上一个显式的排中律实例。前文已用这条假设取得极限层成员首次出现的最小有穷层，本章还把同一实例传给所用的分离结果与取界结果。它在这些构造需要时判定命题，却不为任意集合族提供选择函数。
+本章的全部构造都相对于层级 `ℓ-suc ℓ` 上一个显式的排中律实例。前文已用这条假设取得极限层元素首次出现的最小有穷层，本章还把同一实例传给所用的分离结果与取界结果。它在这些构造需要时判定命题，却不为任意集合族提供选择函数。
 <!--ja-->
 この章のすべての構成は、レベル `ℓ-suc ℓ` における一つの明示的な排中律の実例に相対している。先の章では、この仮定から極限段階の要素が最初に現れる有限段階を得た。この章では、用いる分出と上界の結果にも同じ実例を渡す。この仮定は必要な箇所で命題を判定するが、任意の族に対する選択関数を与えない。
 <!--/-->
@@ -96,8 +96,8 @@ injective, while `#mono`{.Agda} turns `k < m` into membership of `# k`{.Agda}
 in `# m`{.Agda}. Thus set-theoretic membership can faithfully carry the strict
 comparison of finite indices.
 <!--zh-->
-对象语言必须描述比较，同时不把语法与它在层级中的意义混为一谈。公式使用变元、常元、隶属、联结词与量词；由于常元域就是可构造载体，一个常元已经指称某个确定的可构造集合。后文所需的两个基本检验由编码引理提供。有序对的等式决定两个分量，数码编码也是单射的，而 `#mono`{.Agda} 把 `k < m` 变为 `# k`{.Agda} 属于
-`# m`{.Agda}。因此，集合论隶属能够忠实承载有穷指标的严格比较。
+对象语言必须描述比较，同时不把语法与它在层级中的意义混为一谈。公式使用变元、常元、成员关系、联结词与量词；由于常元域就是可构造载体，一个常元已经指称某个确定的可构造集合。后文所需的两个基本检验由编码引理提供。有序对的等式决定两个分量，数码编码也是单射的，而 `#mono`{.Agda} 把 `k < m` 变为 `# k`{.Agda} 属于
+`# m`{.Agda}。因此，集合论成员关系能够忠实承载有穷指标的严格比较。
 <!--ja-->
 対象言語は、構文と階層における意味を混同せずに比較を記述しなければならない。論理式は変数、定数、所属、結合子、量化子を使う。定数領域は構成可能な台なので、定数はすでに特定の構成可能集合を指す。後で必要となる二つの基本的な判定は、符号化の補題から得られる。順序対の等式は二つの成分を決定し、数項の符号化も単射である。さらに `#mono`{.Agda} は `k < m` を、`# k`{.Agda} が `# m`{.Agda} に属するという事実へ移す。したがって集合論的所属は、有限添字の狭義比較を忠実に表せる。
 <!--/-->
@@ -112,7 +112,7 @@ limit stage is `Lset ω`{.Agda}; the numeral and ordinal facts keep these indice
 distinct from the stages they name. The packaged stages and the constant `ωʟ`{.Agda}
 then allow formulas to refer to this hierarchy from inside the structure.
 <!--zh-->
-这里采用的结构是可构造宇宙。其载体元素把一个集合与可构造性证据打包在一起，而传递性又为该集合的每个成员提供同类证据。这样，普通层级隶属中的见证便能进入对象语言的环境。特别地，`finiteStage n`{.Agda} 是 `Lset (# n)`{.Agda}，极限层则是
+这里采用的结构是可构造宇宙。其载体元素把一个集合与可构造性证据打包在一起，而传递性又为该集合的每个元素提供同类证据。这样，普通层级成员关系中的见证便能进入对象语言的环境。特别地，`finiteStage n`{.Agda} 是 `Lset (# n)`{.Agda}，极限层则是
 `Lset ω`{.Agda}；关于数码与序数的事实使这些指标始终区别于它们所指名的层。经过包装的层与常元 `ωʟ`{.Agda} 随后使公式能够从结构内部谈论这条层级。
 <!--ja-->
 ここで用いる構造は構成可能宇宙である。その台の要素は、集合と構成可能性の証拠をひとまとめにする。推移性により、その集合の各要素にも同じ種類の証拠が得られる。このため、通常の階層における所属の証人を対象言語の環境へ移せる。とくに、`finiteStage n`{.Agda} は `Lset (# n)`{.Agda} という段階であり、極限段階は
@@ -129,7 +129,7 @@ come with adequacy laws that translate satisfaction into the corresponding
 facts about sets. Together these tools separate the problem of finding a common
 domain from the problem of stating the exact relation on that domain.
 <!--zh-->
-三座桥把语义上的比较变成 `L` 的一个集合。首先，`smallDom`{.Agda} 把一个小族放进同一个可构造集合，却不声称这个界恰好等于该族的像。其次，分离从这样的界中精确取出满足一元公式的元素。最后，描述有序对、关系隶属与层级序列的编码公式都带有充分性定律，把满足关系翻译成相应的集合事实。这三件工具把寻找公共定义域与在该域上陈述精确关系这两个问题分开处理。
+三座桥把语义上的比较变成 `L` 的一个集合。首先，`smallDom`{.Agda} 把一个小族放进同一个可构造集合，却不声称这个界恰好等于该族的像。其次，分离从这样的界中精确取出满足一元公式的元素。最后，描述有序对、关系成员关系与层级序列的编码公式都带有充分性定律，把满足关系翻译成相应的集合事实。这三件工具把寻找公共定义域与在该域上陈述精确关系这两个问题分开处理。
 <!--ja-->
 三つの橋によって、意味論上の比較を `L` の集合へ変える。まず `smallDom`{.Agda} は、小さな族を一つの共通な構成可能集合に入れるが、その上界が族の像と一致するとは主張しない。次に分出は、その上界から一変数の論理式を満たす要素だけを正確に取り出す。最後に、順序対、関係への所属、階層列を記述する符号化論理式には、充足を対応する集合の事実へ移す妥当性の法則がある。これらにより、共通の領域を見つける問題と、その領域上で正確な関係を述べる問題を分けて扱える。
 <!--/-->
@@ -149,7 +149,7 @@ have exactly the form required by `Adequacy.Keys`{.Agda}.
 要表示的比较在外部已经定义。到了后继层，`before (suc n)`{.Agda} 用
 `before n`{.Agda} 排列更早的点，并在最先分歧处比较 `finiteStage n`{.Agda}
 的两个子集。`precedes R A x y`{.Agda} 的见证属于 `A`，属于 `y` 而不属于 `x`，并记录 `x` 与 `y` 在每个更早点处一致；该见证的存在带有命题截断。类型
-`Limit`{.Agda} 打包 `Lset ω`{.Agda} 的成员，而它们的最小出现层号构成
+`Limit`{.Agda} 打包 `Lset ω`{.Agda} 的元素，而它们的最小出现层号构成
 `limitOrder`{.Agda} 的主键；只有层号相同才调用相应的 `before`{.Agda} 比较。所得关系集的两个表示方向，形状正好符合 `Adequacy.Keys`{.Agda} 的要求。
 <!--ja-->
 表現すべき比較は、外側ですでに定義されている。後続段階では、`before (suc n)`{.Agda} が `before n`{.Agda} によってより前の点を並べ、`finiteStage n`{.Agda} の二つの部分集合を最初の相違で比較する。`precedes R A x y`{.Agda} の証人は `A` に属し、`y` に属して `x` には属さず、より前のすべての点で `x` と `y` が一致することを記録する。その存在は命題的に切り詰められている。型 `Limit`{.Agda} は `Lset ω`{.Agda} の要素を包装し、その最小出現段階が `limitOrder`{.Agda} の第一の鍵になる。対応する `before`{.Agda} の比較を使うのは、段階が等しい場合だけである。得られる関係集合の二つの表現方向は、`Adequacy.Keys`{.Agda} が要求する形に正確に一致する。
@@ -179,7 +179,7 @@ levels or endpoints. The accompanying `Lift`{.Agda} and `lower`{.Agda}
 operations only reconcile universe levels; they do not remove propositional
 truncation.
 <!--zh-->
-极限比较具有后文所需的字典序形状。第一支说第一个成员的层号更小；第二支说双方层号相同，并在共同层号处用 `before`{.Agda} 比较底层集合。自然数的三歧分析第一把键，`subst2`{.Agda} 则在等式识别出编码层号或端点时运输二元关系。与之相伴的
+极限比较具有后文所需的字典序形状。第一支说第一个元素的层号更小；第二支说双方层号相同，并在共同层号处用 `before`{.Agda} 比较底层集合。自然数的三歧分析第一把键，`subst2`{.Agda} 则在等式识别出编码层号或端点时运输二元关系。与之相伴的
 `Lift`{.Agda} 与 `lower`{.Agda} 只处理宇宙层级，其中 `lower` 对应命题换级；它们都不消除命题截断。
 <!--ja-->
 極限の比較は、後で必要となる辞書式の形をしている。第一の選択肢は、最初の要素のレベルが小さいことを述べる。第二の選択肢は、二つのレベルが一致し、その共通レベルの
@@ -220,8 +220,8 @@ the original member. Taking a product of two such fibers therefore indexes all
 ordered pairs of limit-stage members. The later set `pairsBound`{.Agda} will
 contain every one of these pairs; exactness will come only after separation.
 <!--zh-->
-为了应用取界引理，`Lset ω`{.Agda} 的成员需要一个小索引类型。纤维
-`⟪ Lset ω ⟫`{.Agda} 提供这种指标，而 `∈-asFiber`{.Agda} 把给定的成员证明变成一个指标，其像就是原来的成员。因此，两个这种纤维的积索引了极限层成员的所有有序对。后文的 `pairsBound`{.Agda} 会包含这些对中的每一个；精确性要到分离以后才得到。
+为了应用取界引理，`Lset ω`{.Agda} 的元素需要一个小索引类型。纤维
+`⟪ Lset ω ⟫`{.Agda} 提供这种指标，而 `∈-asFiber`{.Agda} 把给定的成员关系证明变成一个指标，其像就是原来的元素。因此，两个这种纤维的积索引了极限层元素的所有有序对。后文的 `pairsBound`{.Agda} 会包含这些对中的每一个；精确性要到分离以后才得到。
 <!--ja-->
 上界の補題を使うには、`Lset ω`{.Agda} の要素に小さな添字型が必要である。ファイバー `⟪ Lset ω ⟫`{.Agda} がその添字を与え、`∈-asFiber`{.Agda} は与えられた所属証明を、像が元の要素になる添字へ変える。したがって二つのファイバーの積は、極限段階の要素からなるすべての順序対を添字づける。後で作る
 `pairsBound`{.Agda} はこれらの対をすべて含むが、正確な関係が得られるのは分出の後である。
@@ -243,14 +243,14 @@ first two. Keeping these layers separate will prevent a formula that describes
 an order from being mistaken for a proof that its realizing set is internally
 well-ordered.
 <!--zh-->
-现在有三种隶属记号，各自承担不同角色。对载体元素，`x ∈ˢ y` 是可构造结构中取命题值的隶属；对底层的层级集合，`fst x ∈ fst y` 使用外围隶属；在公式内部，`_∈̇_`{.Agda}
-只是句法上的隶属原子。下一步引入的满足关系把第三种形式解释成前两种。分清这些层次，就不会把描述一个序的公式误当成「其实现集合在内部已被证明为良序」。
+现在有三种成员关系记号，各自承担不同角色。对载体元素，`x ∈ˢ y` 是可构造结构中取命题值的成员关系；对底层的层级集合，`fst x ∈ fst y` 使用外围成员关系；在公式内部，`_∈̇_`{.Agda}
+只是句法上的成员关系原子。下一步引入的满足关系把第三种形式解释成前两种。分清这些层次，就不会把描述一个序的公式误当成「其实现集合在内部已被证明为良序」。
 <!--ja-->
 ここでは三つの所属記号が別々の役割をもつ。台の要素に対する `x ∈ˢ y` は、構成可能構造の命題値の所属である。基礎となる階層の集合どうしでは、`fst x ∈ fst y` が周囲の所属を表す。論理式の内部では `_∈̇_`{.Agda} は所属を表す構文上の原子にすぎない。次に導入する充足判定が、第三の形に最初の二つの意味を与える。この層の区別により、順序を記述する論理式を、その実現集合が内部で整列順序をなすという証明と取り違えずに済む。
 <!--/-->
 
 ```agda
-open hPropStructure 𝒮ʟ
+open hPropView 𝒮ʟ
 ```
 
 <!--en-->
@@ -263,7 +263,7 @@ that a member of a constructible bound can again be packaged as a carrier
 element. Thus satisfaction supplies the precise bridge from an object-language
 formula to ordinary membership facts about its underlying sets.
 <!--zh-->
-判断 `_⊨_`{.Agda} 是把外围层级结构限制到可构造类后得到的内层满足关系。它的载体由集合及其可构造性证据组成，因此常元与量化取值都遍及可构造对象。原子隶属通过第一投影解释，而传递性保证可构造界的成员仍能包装成载体元素。于是，满足关系在对象语言公式与其底层集合的普通隶属事实之间给出精确的桥梁。
+判断 `_⊨_`{.Agda} 是把外围层级结构限制到可构造类后得到的内层满足关系。它的载体由集合及其可构造性证据组成，因此常元与量化取值都遍及可构造对象。原子成员关系通过第一投影解释，而传递性保证可构造界的元素仍能包装成载体元素。于是，满足关系在对象语言公式与其底层集合的普通成员关系事实之间给出精确的桥梁。
 <!--ja-->
 判定 `_⊨_`{.Agda} は、周囲の階層構造を構成可能クラスに制限して得られる内側の充足関係である。その台は集合と構成可能性の証拠からなるので、定数も量化される値も構成可能な対象を範囲とする。原子的所属は第一射影を通して解釈され、推移性により、構成可能な限界の要素を再び台の要素として包装できる。したがって充足は、対象言語の論理式から、その基礎集合についての通常の所属事実へ至る正確な橋になる。
 <!--/-->
@@ -283,7 +283,7 @@ inside `Described`{.Agda} a set `codeOrder`{.Agda} such that the ordered pair of
 `u` and `v` belongs to it exactly when `u ≺ˡ v`. The next chapter supplies the
 required finite-stage formula and thereby obtains the usable instance.
 <!--zh-->
-把 `limitOrder`{.Agda} 携带的比较记作 `_≺ˡ_`{.Agda}。它先按最小出现层号比较两个极限层成员；层号相同，再按共同有穷层中的最先分歧比较。接下来的目标是条件式的：假设有一条对象语言公式在预定定义域上表示每个有穷层的 `before`{.Agda} 关系，便在
+把 `limitOrder`{.Agda} 携带的比较记作 `_≺ˡ_`{.Agda}。它先按最小出现层号比较两个极限层元素；层号相同，再按共同有穷层中的最先分歧比较。接下来的目标是条件式的：假设有一条对象语言公式在预定定义域上表示每个有穷层的 `before`{.Agda} 关系，便在
 `Described`{.Agda} 内部构造集合 `codeOrder`{.Agda}，使 `u` 与 `v` 的有序对属于它当且仅当 `u ≺ˡ v`。下一章会给出所需的有穷层公式，从而得到可实际使用的实例。
 <!--ja-->
 `limitOrder`{.Agda} がもつ比較を `_≺ˡ_`{.Agda} と書く。二つの極限段階の要素を、まず最小出現レベルで比較し、それが一致するときは共通の有限段階における最初の相違で比較する。残る目標は条件つきである。各有限段階の `before`{.Agda} 関係を所定の領域で表現する対象言語の論理式が与えられたと仮定し、`Described`{.Agda} の内部で集合
@@ -341,7 +341,7 @@ the external level lemmas state membership in the underlying hierarchy set.
 Later proofs cross this equation whenever they move a membership fact between
 those views.
 <!--zh-->
-等式 `towerS-fst k`{.Agda} 把这个载体元素的底层集合认同为 `Lset (# k)`{.Agda}。它连接同一层的两种视角：公式接收包装后的元素 `towerS k`{.Agda}，外部层级引理则陈述底层层级集合中的隶属。后续证明在这两种视角之间运输成员事实时，都会经过这条等式。
+等式 `towerS-fst k`{.Agda} 把这个载体元素的底层集合认同为 `Lset (# k)`{.Agda}。它连接同一层的两种视角：公式接收包装后的元素 `towerS k`{.Agda}，外部层级引理则陈述底层层级集合中的成员关系。后续证明在这两种视角之间运输成员关系事实时，都会经过这条等式。
 <!--ja-->
 等式 `towerS-fst k`{.Agda} は、この台の要素の基礎集合を `Lset (# k)`{.Agda} と同一視する。同じ段階に対する二つの見方を結ぶ点である。論理式は包装された要素
 `towerS k`{.Agda} を受け取り、外側の階層の補題は基礎となる階層集合への所属を述べる。後の証明は、二つの見方の間で所属事実を運ぶたびにこの等式を通る。
@@ -451,7 +451,7 @@ the shifted occurrence of `x`. Semantically the universal clauses are function
 types; the nearby propositionally truncated decoding of numeral membership is
 used only with a propositional target and does not select a smaller index.
 <!--zh-->
-最小性遍及候选数码 `b` 的每个成员 `u`，而不只检查它的直接前驱。对每个在这样的`u` 处被描述出来的层，位置 `x` 的取值都不得属于该层。由于 `# k`{.Agda} 的成员恰是更小的数码，候选 `b = # k`{.Agda} 因而排除了从 `0` 到 `k-1` 的所有层。两个嵌套绑定解释了 `x` 的移位。语义上，这些全称子句是函数类型；附近对数码成员的命题截断解码只在命题目标下使用，并不会选定一个更小指标。
+最小性遍及候选数码 `b` 的每个元素 `u`，而不只检查它的直接前驱。对每个在这样的`u` 处被描述出来的层，位置 `x` 的取值都不得属于该层。由于 `# k`{.Agda} 的元素恰是更小的数码，候选 `b = # k`{.Agda} 因而排除了从 `0` 到 `k-1` 的所有层。两个嵌套绑定解释了 `x` 的移位。语义上，这些全称子句是函数类型；附近对数码元素的命题截断解码只在命题目标下使用，并不会选定一个更小指标。
 <!--ja-->
 最小性は、候補となる数項 `b` の直前の要素だけでなく、すべての要素 `u` にわたって表される。そのような `u` で記述される各段階に、位置 `x` の値は属してはならない。`# k`{.Agda} の要素はちょうど小さい数項なので、候補 `b = # k`{.Agda} は `0` から`k-1` までのすべての段階を排除する。二つの入れ子の束縛が `x` の位置の移動を説明する。意味論上、これらの全称節は関数型である。近くにある数項所属の命題的に切り詰められた復号は、命題を目標とするときだけ使われ、小さい添字を一つ選び出すことはない。
 <!--/-->
@@ -470,7 +470,7 @@ transported along `qk`, gives `aIn`{.Agda}: the underlying set of `a` belongs to
 and minimality facts needed to show that the formula recognizes the true level,
 and later to prove that any level recognized by the formula equals `# k`{.Agda}.
 <!--zh-->
-为证明 `LevelAt`{.Agda} 的两个读法，固定一个真实的极限层成员 `a`、一个自然数 `k`，以及把 `k` 认同为其最小出现层号的等式 `qk : level a ≡ k`。把
+为证明 `LevelAt`{.Agda} 的两个读法，固定一个真实的极限层元素 `a`、一个自然数 `k`，以及把 `k` 认同为其最小出现层号的等式 `qk : level a ≡ k`。把
 `levelData a`{.Agda} 的正面分量沿 `qk` 运输，便得到 `aIn`{.Agda}：`a` 的底层集合属于 `Lset (# k)`{.Agda}。负面分量则说，对任何 `m < k`，它不可能属于
 `Lset (# m)`{.Agda}。这恰是证明公式识别真实层号所需的存在性与最小性事实；随后还会用它们证明公式识别出的任何层号都等于 `# k`{.Agda}。
 <!--ja-->
@@ -553,7 +553,7 @@ a member of `b` omits it. The proof names these components `hω`{.Agda},
 `hex`{.Agda}, and `hmin`{.Agda} so that existence and minimality can be
 established separately.
 <!--zh-->
-向内读取时，设 `b` 表示数码 `# k`{.Agda}，而 `x` 表示 `a` 的底层集合。结论包含 `LevelAt`{.Agda} 的三个部分：`b` 的值属于 `ω`；`b` 处有一个层级取值包含 `x` 的值；由 `b` 的成员所索引的每个层级取值都不包含它。证明把这三部分分别命名为 `hω`{.Agda}、`hex`{.Agda} 与 `hmin`{.Agda}，从而分开建立存在性与最小性。
+向内读取时，设 `b` 表示数码 `# k`{.Agda}，而 `x` 表示 `a` 的底层集合。结论包含 `LevelAt`{.Agda} 的三个部分：`b` 的值属于 `ω`；`b` 处有一个层级取值包含 `x` 的值；由 `b` 的元素所索引的每个层级取值都不包含它。证明把这三部分分别命名为 `hω`{.Agda}、`hex`{.Agda} 与 `hmin`{.Agda}，从而分开建立存在性与最小性。
 <!--ja-->
 内向きの読みでは、`b` が数項 `# k`{.Agda} を表し、`x` が `a` の基礎集合を表すと仮定する。結論は `LevelAt`{.Agda} の三つの成分からなる。`b` の値が `ω` に属すること、`b` における階層の値が `x` の値を含むこと、そして `b` の各要素が添字づける階層の値はそれを含まないことである。証明はこれらを `hω`{.Agda}、`hex`{.Agda}、`hmin`{.Agda} と名付け、存在性と最小性を分けて示す。
 <!--/-->
@@ -574,7 +574,7 @@ of that equation gives the required membership. This transport connects a
 fact about the explicit numeral with the same fact about an environment
 position.
 <!--zh-->
-第一部分来自每个数码都属于 `ω` 这一基本事实。等式 `qb`{.Agda} 把位置 `b`所存的值与 `# k`{.Agda} 认同；沿该等式的反向运输 `#∈ω k`{.Agda}，便得到所需的成员证明。这次运输把关于显式数码的事实接到关于环境位置的同一事实上。
+第一部分来自每个数码都属于 `ω` 这一基本事实。等式 `qb`{.Agda} 把位置 `b`所存的值与 `# k`{.Agda} 认同；沿该等式的反向运输 `#∈ω k`{.Agda}，便得到所需的成员关系证明。这次运输把关于显式数码的事实接到关于环境位置的同一事实上。
 <!--ja-->
 第一の成分は、すべての数項が `ω` に属するという基本的事実から従う。等式 `qb`{.Agda} は位置 `b` に格納された値を `# k`{.Agda} と同一視する。そこで `#∈ω k`{.Agda} をこの等式の逆向きに運べば、必要な所属が得られる。この運搬は、明示された数項についての事実を、環境の位置についての同じ事実へ結び付ける。
 <!--/-->
@@ -591,7 +591,7 @@ that this witness is the hierarchy value at `b`. Its underlying set is
 the known membership `aIn`{.Agda} after the endpoint is aligned by `qx`{.Agda}.
 <!--zh-->
 对于存在部分，取包装后的有穷层 `towerS k`{.Agda} 为见证。引理
-`towerGraph`{.Agda} 借助 `qb`{.Agda} 证明这个见证就是 `b` 处的层级取值。由 `towerS-fst k`{.Agda}，其底层集合是 `Lset (# k)`{.Agda}，所以只需再用 `qx`{.Agda} 对齐端点，即可应用已知的成员事实 `aIn`{.Agda}。
+`towerGraph`{.Agda} 借助 `qb`{.Agda} 证明这个见证就是 `b` 处的层级取值。由 `towerS-fst k`{.Agda}，其底层集合是 `Lset (# k)`{.Agda}，所以只需再用 `qx`{.Agda} 对齐端点，即可应用已知的成员关系事实 `aIn`{.Agda}。
 <!--ja-->
 存在の成分には、包装された有限段階 `towerS k`{.Agda} を証人として選ぶ。補題 `towerGraph`{.Agda} は `qb`{.Agda} を用いて、この証人が `b` における階層の値であることを示す。その基礎集合は `towerS-fst k`{.Agda} によって `Lset (# k)`{.Agda} なので、残る課題は `qx`{.Agda} で端点をそろえた後の既知の所属 `aIn`{.Agda} である。
 <!--/-->
@@ -612,7 +612,7 @@ The fact `aIn`{.Agda} already says that the underlying set of `a` belongs to
 and completes the existential witness under propositional truncation.
 <!--zh-->
 事实 `aIn`{.Agda} 已经说明 `a` 的底层集合属于 `Lset (# k)`{.Agda}。沿
-`qx`{.Agda} 的反向运输，把其中的成员从 `a` 的底层集合改成 `x` 处的值。再与前面的投影运输合并，便证明了 `hm`{.Agda}，并在命题截断之下完成存在见证。
+`qx`{.Agda} 的反向运输，把其中的元素从 `a` 的底层集合改成 `x` 处的值。再与前面的投影运输合并，便证明了 `hm`{.Agda}，并在命题截断之下完成存在见证。
 <!--ja-->
 `aIn`{.Agda} はすでに、`a` の基礎集合が `Lset (# k)`{.Agda} に属することを述べている。これを `qx`{.Agda} の逆向きに運ぶと、所属する要素が `a` の基礎集合から `x` の位置の値へ変わる。先の射影に沿う運搬と合わせれば
 `hm`{.Agda} が得られ、命題的切り詰めの中の存在証人が完成する。
@@ -632,7 +632,7 @@ some `m < k`. The truncation may be eliminated because the target is the empty
 type, hence a proposition. The resulting contradiction is lifted only to meet
 the universe level of object-language negation.
 <!--zh-->
-这个有界全称表达全局最小性。给定 `b` 的值中的成员 `u`、一个在 `u` 处满足层级图的候选 `c`，以及一份声称 `x` 的值属于 `c` 的证明，目标是导出矛盾。用 `qb`{.Agda} 把 `u` 的成员身份改写到 `# k`{.Agda} 后，`∈#-elim`{.Agda} 在命题截断之下给出某个 `m < k`，使 `u` 等于 `# m`。由于目标是空类型，因而是命题，可以消去这个命题截断。所得矛盾只为匹配对象语言否定所在的宇宙层级而被抬升。
+这个有界全称表达全局最小性。给定 `b` 的值中的元素 `u`、一个在 `u` 处满足层级图的候选 `c`，以及一份声称 `x` 的值属于 `c` 的证明，目标是导出矛盾。用 `qb`{.Agda} 把 `u` 的元素身份改写到 `# k`{.Agda} 后，`∈#-elim`{.Agda} 在命题截断之下给出某个 `m < k`，使 `u` 等于 `# m`。由于目标是空类型，因而是命题，可以消去这个命题截断。所得矛盾只为匹配对象语言否定所在的宇宙层级而被抬升。
 <!--ja-->
 この有界全称は大域的な最小性を表す。`b` の値の要素 `u`、`u` において階層のグラフを満たす候補 `c`、および `x` の値が `c` に属するという仮定が与えられたとき、矛盾を導かなければならない。`qb`{.Agda} によって `u` の所属を `# k`{.Agda} への所属に書き換えると、`∈#-elim`{.Agda} は命題的切り詰めのもとで、ある `m < k` と `u = # m` を与える。目標は空の型で命題なので、この切り詰めは除去できる。得られた矛盾を持ち上げるのは、対象言語の否定が置かれた宇宙レベルに合わせるためだけである。
 <!--/-->
@@ -676,7 +676,7 @@ Now transport the alleged membership through the three identifications. First
 `fst a ∈ Lset (# m)`{.Agda}, precisely the statement that `aMin`{.Agda}
 rules out when `m < k`. Hence no finite stage indexed below `k` contains `a`.
 <!--zh-->
-现在沿三条认同运输那份假设的成员证明。先由 `qc`{.Agda} 把 `x` 的值放入
+现在沿三条认同运输那份假设的成员关系证明。先由 `qc`{.Agda} 把 `x` 的值放入
 `Lset (fst u)`{.Agda}，再由 `qx`{.Agda} 把该值替换为 `a` 的底层集合，最后由 `qu`{.Agda} 把 `fst u` 替换为 `# m`{.Agda}。所得结论是
 `fst a ∈ Lset (# m)`{.Agda}；当 `m < k` 时，这正是 `aMin`{.Agda} 所排除的陈述。因此，没有由小于 `k` 的数码索引的有穷层包含 `a`。
 <!--ja-->
@@ -702,7 +702,7 @@ truncation. The target is an equality in the cumulative hierarchy, and
 `setIsSet`{.Agda} shows that this equality type is a proposition, so the
 truncated numeral data may be eliminated into it.
 <!--zh-->
-向外读取时，假设 `LevelAt b x`{.Agda} 成立，并仍把 `x` 的值认同为固定成员`a` 的底层集合。目标是证明 `b` 处的候选正是真实数码 `# k`{.Agda}。候选属于 `ω` 只能在命题截断之下揭示其自然数索引。目标是累积层级中的一条等式，而 `setIsSet`{.Agda} 表明这个等式类型是命题，因此可以把截断的数码数据消去到其中。
+向外读取时，假设 `LevelAt b x`{.Agda} 成立，并仍把 `x` 的值认同为固定元素`a` 的底层集合。目标是证明 `b` 处的候选正是真实数码 `# k`{.Agda}。候选属于 `ω` 只能在命题截断之下揭示其自然数索引。目标是累积层级中的一条等式，而 `setIsSet`{.Agda} 表明这个等式类型是命题，因此可以把截断的数码数据消去到其中。
 <!--ja-->
 外向きの読みでは `LevelAt b x`{.Agda} を仮定し、引き続き `x` の値を固定した要素 `a` の基礎集合と同一視する。目標は、`b` にある候補が真の数項
 `# k`{.Agda} であると示すことである。候補が `ω` に属することから自然数の添字が得られるのは、命題的切り詰めのもとでだけである。目標は累積階層における等式であり、`setIsSet`{.Agda} によってその等式型は命題だと分かるため、切り詰められた数項データをそこへ除去できる。
@@ -752,8 +752,8 @@ symmetric direction of `towerS-fst k`{.Agda} replaces
 and the external minimal-level argument are thereby speaking about the same
 member of the same finite stage.
 <!--zh-->
-传给该最小性子句的最后一个实参，正是它即将反驳的正面成员证明。从
-`aIn`{.Agda} 出发，沿 `qx`{.Agda} 的反向把 `a` 的底层集合替换成 `x` 的值，再沿 `towerS-fst k`{.Agda} 的反向把 `Lset (# k)`{.Agda} 替换成其载体包装的底层集合。这样，公式与外部的最小层号论证便在谈论同一个有穷层中的同一个成员。
+传给该最小性子句的最后一个实参，正是它即将反驳的正面成员关系证明。从
+`aIn`{.Agda} 出发，沿 `qx`{.Agda} 的反向把 `a` 的底层集合替换成 `x` 的值，再沿 `towerS-fst k`{.Agda} 的反向把 `Lset (# k)`{.Agda} 替换成其载体包装的底层集合。这样，公式与外部的最小层号论证便在谈论同一个有穷层中的同一个元素。
 <!--ja-->
 この最小性の節に渡す最後の引数は、まさにこれから反証される正の所属である。`aIn`{.Agda} から始め、`qx`{.Agda} の逆向きによって `a` の基礎集合を `x` の値へ置き換え、さらに `towerS-fst k`{.Agda} の逆向きによって
 `Lset (# k)`{.Agda} をその台の包装の基礎集合へ置き換える。こうして論理式と外部の最小レベルの議論は、同じ有限段階の同じ要素について語る。
@@ -817,7 +817,7 @@ into the underlying set of `a`. Thus `a` occurs at stage `m`; together with
 `m < k`, this contradicts `aMin`{.Agda}. The candidate index is therefore not
 below the true level.
 <!--zh-->
-现在可以在具体的有穷层读取见证中保存的成员事实。沿 `qc`{.Agda} 运输后，它变成 `x` 的值属于 `Lset (# m)`{.Agda}；再沿 `qx`{.Agda} 运输，该值变成 `a`的底层集合。因此 `a` 已在第 `m` 个有穷层出现；结合 `m < k`，这与
+现在可以在具体的有穷层读取见证中保存的成员关系事实。沿 `qc`{.Agda} 运输后，它变成 `x` 的值属于 `Lset (# m)`{.Agda}；再沿 `qx`{.Agda} 运输，该值变成 `a`的底层集合。因此 `a` 已在第 `m` 个有穷层出现；结合 `m < k`，这与
 `aMin`{.Agda} 矛盾。故候选索引不可能低于真实层号。
 <!--ja-->
 証人に含まれる所属は、これで具体的な有限段階において読める。`qc`{.Agda} に沿って運ぶと `x` の値が `Lset (# m)`{.Agda} に属することになり、さらに `qx`{.Agda} に沿って運ぶとその値は `a` の基礎集合になる。したがって `a` は第 `m` 有限段階にすでに現れており、`m < k` と合わせると
@@ -838,7 +838,7 @@ natural-number comparison proves `lower j ≡ k`{.Agda}, applying the numeral
 map and composing equalities yields the required value
 `fst (lookup b γ) ≡ # k`{.Agda}.
 <!--zh-->
-还需认同从 `ω` 的成员身份中解码出的数码。一份显式解码数据包含`j : Lift ℕ`，以及从 `# (lower j)`{.Agda} 到 `b` 处之值的等式。反转该等式便得到 `qb`{.Agda}。一旦自然数比较证明 `lower j ≡ k`{.Agda}，对这条等式应用数码映射并作复合，就得到所需结论 `fst (lookup b γ) ≡ # k`{.Agda}。
+还需认同从 `ω` 的元素身份中解码出的数码。一份显式解码数据包含`j : Lift ℕ`，以及从 `# (lower j)`{.Agda} 到 `b` 处之值的等式。反转该等式便得到 `qb`{.Agda}。一旦自然数比较证明 `lower j ≡ k`{.Agda}，对这条等式应用数码映射并作复合，就得到所需结论 `fst (lookup b γ) ≡ # k`{.Agda}。
 <!--ja-->
 最後に、`ω` への所属から復号された数項を同定する。明示された復号データは`j : Lift ℕ` と、`# (lower j)`{.Agda} から `b` の値への等式を含む。その等式を逆にすると `qb`{.Agda} が得られる。自然数の比較から
 `lower j ≡ k`{.Agda} が得られれば、それに数項写像を施して等式を合成することで、必要な `fst (lookup b γ) ≡ # k`{.Agda} に到達する。
@@ -861,7 +861,7 @@ truth: the true least stage satisfies `LevelAt`{.Agda}, and any candidate
 reported by that formula for the fixed member `a` must be its true level.
 <!--zh-->
 自然数的三歧性恰好给出所需等式。`lower j < k` 的情形与
-`notBelow`{.Agda} 矛盾，`k < lower j` 的情形与 `notAbove`{.Agda} 矛盾；相等情形则原样返回其证明。因此，两条读式在真值层面互相对应：真实的最小有穷层满足 `LevelAt`{.Agda}，而该公式为固定成员 `a` 报告的任何候选都必是它的真实层号。
+`notBelow`{.Agda} 矛盾，`k < lower j` 的情形与 `notAbove`{.Agda} 矛盾；相等情形则原样返回其证明。因此，两条读式在真值层面互相对应：真实的最小有穷层满足 `LevelAt`{.Agda}，而该公式为固定元素 `a` 报告的任何候选都必是它的真实层号。
 <!--ja-->
 自然数の三分律が、必要な等式をちょうど与える。`lower j < k` の場合は
 `notBelow`{.Agda} に反し、`k < lower j` の場合は `notAbove`{.Agda} に反し、等しい場合はその証明をそのまま返す。したがって二つの読みは真理値の水準で対応する。真の最小有限段階は `LevelAt`{.Agda} を満たし、この論理式が固定された要素 `a` について報告する候補は、その真のレベルでなければならない。
@@ -896,7 +896,7 @@ certificate stored in `A` into a certificate that `z` is constructible.
 `memS`{.Agda} packages `z` with this inherited proof. It constructs an element
 of the dependent carrier, not a set-theoretic ordered pair.
 <!--zh-->
-要用公式比较集合，必须先把可构造载体的外部成员表示成语义载体 `S` 的元素。若 `A : S` 且 `z` 属于它的底层集合，可构造性的传递性就会把 `A` 中保存的证书化为 `z` 可构造的证书。`memS`{.Agda} 把 `z` 与这份继承来的证明包装起来。它构造的是依值载体的一个元素，不是集合论的有序对。
+要用公式比较集合，必须先把可构造载体的外部元素表示成语义载体 `S` 的元素。若 `A : S` 且 `z` 属于它的底层集合，可构造性的传递性就会把 `A` 中保存的证书化为 `z` 可构造的证书。`memS`{.Agda} 把 `z` 与这份继承来的证明包装起来。它构造的是依值载体的一个元素，不是集合论的有序对。
 <!--ja-->
 論理式で集合を比較するには、構成可能な台の外部の要素を、まず意味論的な台`S` の要素として提示しなければならない。`A : S` で、その基礎集合に `z`が属するなら、構成可能性の推移性により、`A` に格納された証明から `z` が構成可能であるという証明が得られる。`memS`{.Agda} は `z` をこの継承された証明とともに包装する。これは依存的な台の要素を作るのであって、集合論的な順序対を作るのではない。
 <!--/-->
@@ -932,7 +932,7 @@ relation already stored at `r` and a carrier stored at `A`. For the sets at
 deciding point the right-hand set has membership value one and the left-hand
 set has membership value zero, so `x` precedes `y`.
 <!--zh-->
-`PrecedesAt`{.Agda} 相对于已存于 `r` 的关系和已存于 `A` 的载体，表达一步最先分歧比较。对于 `x` 与 `y` 处的集合，它要求存在载体成员 `z`，使 `z` 属于`y` 而不属于 `x`。这个方向决定比较结果：在作出判定的点上，右侧集合的成员值为一，左侧集合的成员值为零，所以 `x` 先于 `y`。
+`PrecedesAt`{.Agda} 相对于已存于 `r` 的关系和已存于 `A` 的载体，表达一步最先分歧比较。对于 `x` 与 `y` 处的集合，它要求存在载体元素 `z`，使 `z` 属于`y` 而不属于 `x`。这个方向决定比较结果：在作出判定的点上，右侧集合的元素值为一，左侧集合的元素值为零，所以 `x` 先于 `y`。
 <!--ja-->
 `PrecedesAt`{.Agda} は、`r` に格納された関係と `A` に格納された台に相対して、最初の相違による比較の一段階を表す。`x` と `y` にある集合について、台の要素 `z` で、`y` には属するが `x` には属さないものを要求する。この向きが比較を決める。決定点では右側の集合の所属値が一、左側の集合の所属値が零なので、`x` が `y` に先立つ。
 <!--/-->
@@ -979,7 +979,7 @@ axiom for `R`{.Agda} is assumed: the formula represents the definition of one
 comparison step independently of any later proof that a particular relation
 is a well-order.
 <!--zh-->
-模块 `Precedes`{.Agda} 准确列出读取这条公式所需的数据。除四个位置及其环境外，它还固定一个元层关系 `R`{.Agda}。定律 `Rrep`{.Agda} 把集合论有序对属于 `r`处关系集的事实读成一个 `R`{.Agda} 事实，`Rfill`{.Agda} 则把这种事实写回成员关系。两条定律只需处理可构造端点，因为每个量化端点本来就在 `S` 中，而外部的载体成员可由 `memS`{.Agda} 包装。这里不假设 `R`{.Agda} 满足任何序公理；公式只表示一步比较的定义，不依赖后来对某个具体关系为良序的证明。
+模块 `Precedes`{.Agda} 准确列出读取这条公式所需的数据。除四个位置及其环境外，它还固定一个元层关系 `R`{.Agda}。定律 `Rrep`{.Agda} 把集合论有序对属于 `r`处关系集的事实读成一个 `R`{.Agda} 事实，`Rfill`{.Agda} 则把这种事实写回成员关系。两条定律只需处理可构造端点，因为每个量化端点本来就在 `S` 中，而外部的载体元素可由 `memS`{.Agda} 包装。这里不假设 `R`{.Agda} 满足任何序公理；公式只表示一步比较的定义，不依赖后来对某个具体关系为良序的证明。
 <!--ja-->
 モジュール `Precedes`{.Agda} は、この論理式を読むために必要なデータを正確に述べる。四つの位置と環境に加えて、メタレベルの関係 `R`{.Agda} を固定する。法則 `Rrep`{.Agda} は `r` にある関係集合への集合論的な順序対の所属を
 `R`{.Agda} の事実として読み、`Rfill`{.Agda} はその事実を所属へ書き戻す。これらの法則が構成可能な端点だけを扱えば十分なのは、量化された端点はすでに`S` に属し、外部の台の要素も `memS`{.Agda} で包装できるからである。ここでは
@@ -1021,7 +1021,7 @@ Write `xv` for the set denoted by the value at `x`. This lets the argument
 state membership in the left set without repeating the environment lookup in
 every clause.
 <!--zh-->
-用 `xv` 表示环境中 `x` 处取值所指的集合。这样便能直接陈述左侧集合中的隶属，而不必在每个子句中重复环境查找。
+用 `xv` 表示环境中 `x` 处取值所指的集合。这样便能直接陈述左侧集合中的成员关系，而不必在每个子句中重复环境查找。
 <!--ja-->
 環境の `x` にある値が表す集合を `xv` と書く。これにより、各節で環境からの参照を繰り返さずに、左側の集合への所属を述べられる。
 <!--/-->
@@ -1049,7 +1049,7 @@ fails to belong to the left one.
 <!--en-->
 Before the first disagreement, the two sets must give the same membership answer. `Both w` records precisely this equivalence: membership of `w` in `xv` implies membership in `yv`, and conversely.
 <!--zh-->
-在首个分歧点之前，两个集合必须对隶属给出相同答案。`Both w` 精确记录这一等价：`w` 属于 `xv` 蕴含它属于 `yv`，反向亦然。
+在首个分歧点之前，两个集合必须对成员关系给出相同答案。`Both w` 精确记录这一等价：`w` 属于 `xv` 蕴含它属于 `yv`，反向亦然。
 <!--ja-->
 最初の相違点より前では、二つの集合は所属について同じ答えを与えなければならない。`Both w` はこの同値を正確に記録し、`w` の `xv` への所属から `yv` への所属を導き、その逆も導く。
 <!--/-->
@@ -1077,7 +1077,7 @@ For a proposed disagreement witness `z`, `Agreeing z` examines every `w` in the 
 <!--en-->
 The witness itself must lie in the carrier and in `yv`, while being absent from `xv`; all base-earlier carrier members must satisfy the agreement condition. Thus this orientation says that `xv` precedes `yv`. No order laws for the supplied base relation are assumed here, so calling the disagreement earliest is justified only when that relation really is an order.
 <!--zh-->
-见证本身必须属于载体和 `yv`，但不属于 `xv`；载体中每个按基底关系更早的成员都必须满足一致条件。因此这个方向表示 `xv` 先于 `yv`。这里并未假设所给基底关系满足任何序律，所以只有当该关系确实是序时，才能称此见证为「最早」分歧。
+见证本身必须属于载体和 `yv`，但不属于 `xv`；载体中每个按基底关系更早的元素都必须满足一致条件。因此这个方向表示 `xv` 先于 `yv`。这里并未假设所给基底关系满足任何序律，所以只有当该关系确实是序时，才能称此见证为「最早」分歧。
 <!--ja-->
 証人自身は台と `yv` に属し、`xv` には属さなければならない。また、基礎関係でそれより前にある台の要素はすべて一致条件を満たす。したがって、この向きは `xv` が `yv` に先行することを表す。ここでは与えられた基礎関係に順序法則を仮定していないため、「最初」という読みは、その関係が実際に順序である場合に限って正当化される。
 <!--/-->
@@ -1108,7 +1108,7 @@ To read the formula outward, eliminate its propositionally truncated existential
 <!--en-->
 The underlying set of `z` supplies the host witness, and the first three fields already give its carrier membership and the directed disagreement. The remaining task is to prove agreement at an arbitrary host-level `w` that lies before it.
 <!--zh-->
-`z` 的底层集给出宿主层见证，前三个分量已经给出它的载体隶属与有向分歧。剩下的任务是在任意宿主层元素 `w` 被排在它之前时证明两边一致。
+`z` 的底层集给出宿主层见证，前三个分量已经给出它的载体成员关系与有向分歧。剩下的任务是在任意宿主层元素 `w` 被排在它之前时证明两边一致。
 <!--ja-->
 `z` の底の集合がホスト側の証人となり、最初の三つの成分が台への所属と向きづけられた相違をすでに与える。残る課題は、それより前にある任意のホスト側の要素 `w` で両側が一致することを示すことである。
 <!--/-->
@@ -1124,7 +1124,7 @@ The underlying set of `z` supplies the host witness, and the first three fields 
 <!--en-->
 Since `w` belongs to the constructible carrier, it inherits constructibility and can be packaged as a model element `wS`. Its projection equation transports the original carrier-membership proof to the form expected by the bounded object-language clause.
 <!--zh-->
-由于 `w` 属于可构造载体，它继承可构造性，因而可打包为模型元素 `wS`。其投影等式把原来的载体隶属证明搬运成对象语言有界子句所需的形式。
+由于 `w` 属于可构造载体，它继承可构造性，因而可打包为模型元素 `wS`。其投影等式把原来的载体成员关系证明搬运成对象语言有界子句所需的形式。
 <!--ja-->
 `w` は構成可能な台に属するので構成可能性を受け継ぎ、モデルの要素 `wS` としてまとめられる。その射影の等式に沿って、もとの台への所属の証明を、対象言語の有界な節が要求する形へ運ぶ。
 <!--/-->
@@ -1156,7 +1156,7 @@ The premise currently says `R w z` at the host level. After aligning `w` with `w
 <!--en-->
 Adequacy for `appAt` converts that pair-membership statement into satisfaction in the environment extended by `wS` and `z`. The object-language agreement hypothesis can now be applied.
 <!--zh-->
-`appAt` 的充分性把这个有序对隶属陈述变成在由 `wS` 与 `z` 延拓的环境中的满足。现在即可应用对象语言中的一致假设。
+`appAt` 的充分性把这个有序对成员关系陈述变成在由 `wS` 与 `z` 延拓的环境中的满足。现在即可应用对象语言中的一致假设。
 <!--ja-->
 `appAt` の妥当性により、この順序対の所属の主張は、`wS` と `z` で拡張した環境における充足へ変換される。これで対象言語の一致の仮定を適用できる。
 <!--/-->
@@ -1184,7 +1184,7 @@ The converse starts with the propositionally truncated witness in `precedes`. Be
 <!--en-->
 Unpack a host witness `z` together with its carrier membership, its membership in the right set, its exclusion from the left set, and its earlier-point agreement. Its carrier membership makes `z` constructible, so `zS` can serve as the formula’s quantified witness.
 <!--zh-->
-展开宿主层见证 `z`，连同它的载体隶属、右侧隶属、左侧排除以及在更早点处的一致。它属于载体，因而具有可构造性，所以 `zS` 可以充当公式的量化见证。
+展开宿主层见证 `z`，连同它的载体成员关系、右侧成员关系、左侧排除以及在更早点处的一致。它属于载体，因而具有可构造性，所以 `zS` 可以充当公式的量化见证。
 <!--ja-->
 ホスト側の証人 `z` を、台への所属、右側への所属、左側からの排除、より前の点での一致とともに取り出す。台への所属から `z` の構成可能性が得られるので、`zS` を論理式の量化された証人として使える。
 <!--/-->
@@ -1216,7 +1216,7 @@ The projection `fst zS` is equal to the original `z`. Transport along this equal
 <!--en-->
 The same projection equation transports membership in `yv` and nonmembership in `xv`. It remains to translate the formula’s relation premise back to `R`, so that the host agreement hypothesis can be used.
 <!--zh-->
-同一投影等式也搬运 `yv` 中的隶属和 `xv` 中的非隶属。还需把公式中的关系前提读回 `R`，才能使用宿主层的一致假设。
+同一投影等式也搬运 `yv` 中的成员关系和 `xv` 中的非成员关系。还需把公式中的关系前提读回 `R`，才能使用宿主层的一致假设。
 <!--ja-->
 同じ射影の等式に沿って、`yv` への所属と `xv` への非所属も運ぶ。あとは論理式の関係についての仮定を `R` へ読み戻せば、ホスト側の一致の仮定を使える。
 <!--/-->
@@ -1248,7 +1248,7 @@ Given a model element `w` in the carrier, adequacy for `appAt` first reads satis
 <!--en-->
 Now `Rrep` reads relation-set membership back as `R (fst w) zS`; transporting the second endpoint from `fst zS` to `z` supplies the premise expected by the original agreement proof. The two membership implications in `Both` follow.
 <!--zh-->
-现在 `Rrep` 把关系集隶属读回 `R (fst w) zS`；再把第二个端点从 `fst zS` 搬运到 `z`，便得到原一致证明所需的前提，从而取得 `Both` 中的两条隶属蕴含。
+现在 `Rrep` 把关系集成员关系读回 `R (fst w) zS`；再把第二个端点从 `fst zS` 搬运到 `z`，便得到原一致证明所需的前提，从而取得 `Both` 中的两条成员关系蕴含。
 <!--ja-->
 ここで `Rrep` は関係集合への所属を `R (fst w) zS` として読み戻す。第二の端点を `fst zS` から `z` へ運ぶと、もとの一致の証明が要求する仮定が得られ、`Both` の二つの所属の含意が従う。
 <!--/-->
@@ -1310,7 +1310,7 @@ To place a relation inside `L`, its related endpoints must be represented by an 
 <!--en-->
 The projection law for `prS` identifies its underlying set with the ambient ordered pair of the two underlying endpoints. Hence internal pair construction and external relation membership speak about the same set.
 <!--zh-->
-`prS` 的投影律把其底层集认同为两个底层端点的外围有序对。因此，内部配对构造与外部关系隶属谈论的是同一个集合。
+`prS` 的投影律把其底层集认同为两个底层端点的外围有序对。因此，内部配对构造与外部关系成员关系谈论的是同一个集合。
 <!--ja-->
 `prS` の射影則は、その底の集合を二つの端点の底の集合からなる周囲の順序対と同一視する。したがって、内部の対構成と外部の関係への所属は同じ集合について述べている。
 <!--/-->
@@ -1323,7 +1323,7 @@ The projection law for `prS` identifies its underlying set with the ambient orde
 <!--en-->
 Before separation can select the ordered pairs satisfying the comparison, all candidate pairs need one set-sized bound. Present `Lset ω` by its small fiber of members, package each presented member as constructible, and index pairs by the product of those two small fibers.
 <!--zh-->
-在分离选出满足比较的有序对之前，所有候选对需要一个集合大小的共同界。先用小纤维呈现 `Lset ω` 的成员，把每个呈现出的成员打包为可构造元素，再用两个小纤维的积为有序对编索引。
+在分离选出满足比较的有序对之前，所有候选对需要一个集合大小的共同界。先用小纤维呈现 `Lset ω` 的元素，把每个呈现出的元素打包为可构造元素，再用两个小纤维的积为有序对编索引。
 <!--ja-->
 分出によって比較を満たす順序対を選ぶ前に、候補となるすべての対を含む集合サイズの共通の上界が必要である。`Lset ω` の要素を小さなファイバーで表示し、各要素を構成可能なものとしてまとめ、その二つの小さなファイバーの積で順序対を添字づける。
 <!--/-->
@@ -1339,7 +1339,7 @@ pairsBound = d .fst , onPair
 <!--en-->
 Each presentation index really denotes a member of `Lset ω`. The membership bridge turns that presentation fact into ordinary membership, and membership in the stage supplies the constructibility proof used by the package `ixL`.
 <!--zh-->
-每个呈现索引确实指向 `Lset ω` 的一个成员。隶属桥把呈现事实变成通常的隶属，而属于该层又给出 `ixL` 打包所需的可构造性证明。
+每个呈现索引确实指向 `Lset ω` 的一个元素。成员关系桥把呈现事实变成通常的成员关系，而属于该层又给出 `ixL` 打包所需的可构造性证明。
 <!--ja-->
 各表示添字は実際に `Lset ω` の要素を表す。所属の橋は表示についての事実を通常の所属へ変え、その段階への所属から `ixL` がまとめるために必要な構成可能性の証明が得られる。
 <!--/-->
@@ -1365,7 +1365,7 @@ Applying `smallDom` to this small product produces a constructible set containin
 <!--en-->
 For arbitrary `u,v : Limit`, their underlying sets have presentation indices in the small fiber of `Lset ω`. The pair at those indices belongs to the bound, and the projection equations transport that membership to the ambient pair `pr (fst u) (fst v)`.
 <!--zh-->
-对任意 `u,v : Limit`，它们的底层集在 `Lset ω` 的小纤维中都有呈现索引。由这些索引形成的有序对属于共同界，再沿投影等式搬运，就得到外围有序对 `pr (fst u) (fst v)` 的隶属。
+对任意 `u,v : Limit`，它们的底层集在 `Lset ω` 的小纤维中都有呈现索引。由这些索引形成的有序对属于共同界，再沿投影等式搬运，就得到外围有序对 `pr (fst u) (fst v)` 的成员关系。
 <!--ja-->
 任意の `u,v : Limit` に対し、それぞれの底の集合は `Lset ω` の小さなファイバー内に表示添字を持つ。その添字から作った順序対は共通の上界に属し、射影の等式に沿って運ぶことで、周囲の順序対 `pr (fst u) (fst v)` の所属が得られる。
 <!--/-->
@@ -1381,7 +1381,7 @@ For arbitrary `u,v : Limit`, their underlying sets have presentation indices in 
 <!--en-->
 The two fiber witnesses recover exactly the presentation indices used above, together with equations identifying their displayed members with `fst u` and `fst v`. These equations are why the small presentation suffices for every actual limit-stage endpoint.
 <!--zh-->
-两条纤维见证恰好恢复上面使用的呈现索引，并附带把所呈现成员分别认同为 `fst u` 与 `fst v` 的等式。正因这些等式，小呈现才足以覆盖每个实际的极限层端点。
+两条纤维见证恰好恢复上面使用的呈现索引，并附带把所呈现元素分别认同为 `fst u` 与 `fst v` 的等式。正因这些等式，小呈现才足以覆盖每个实际的极限层端点。
 <!--ja-->
 二つのファイバーの証人は、上で使う表示添字と、そこで示される要素をそれぞれ `fst u`、`fst v` と同一視する等式を取り出す。この等式があるため、小さな表示で実際のすべての極限段階の端点を扱える。
 <!--/-->
@@ -1432,7 +1432,7 @@ eliminated only into contradiction.
 <!--en-->
 The defining property of `level a` places `fst a` in `finiteStage (level a)`. An equation `level a ≡ k` transports this membership to `finiteStage k`, providing exactly the stage boundary required when the finite comparison is invoked.
 <!--zh-->
-`level a` 的定义性质把 `fst a` 放在 `finiteStage (level a)` 中。等式 `level a ≡ k` 把这一隶属搬运到 `finiteStage k`，恰好给出调用有限层比较时所需的层边界。
+`level a` 的定义性质把 `fst a` 放在 `finiteStage (level a)` 中。等式 `level a ≡ k` 把这一成员关系搬运到 `finiteStage k`，恰好给出调用有限层比较时所需的层边界。
 <!--ja-->
 `level a` の定義的性質により、`fst a` は `finiteStage (level a)` に属する。等式 `level a ≡ k` に沿ってこの所属を `finiteStage k` へ運ぶと、有限段階の比較を使う際に必要な段階の境界がちょうど得られる。
 <!--/-->
@@ -1527,7 +1527,7 @@ indices `ku,kv` and equations to the true levels allow the proof to move
 cleanly between natural-number comparisons, numeral membership, and stage
 membership.
 <!--zh-->
-为证明这条公式的充分性，先固定环境中的两个位置 `x` 与 `y`，并把其取值分别认同为实际的 `u,v : Limit`。显式指数 `ku,kv` 及其与真实层号的等式，使证明能在自然数比较、数码隶属与层隶属之间清楚转换。
+为证明这条公式的充分性，先固定环境中的两个位置 `x` 与 `y`，并把其取值分别认同为实际的 `u,v : Limit`。显式指数 `ku,kv` 及其与真实层号的等式，使证明能在自然数比较、数码成员关系与层成员关系之间清楚转换。
 <!--ja-->
 この論理式の妥当性を示すため、環境の二つの位置 `x` と `y` を固定し、その値を実際の `u,v : Limit` と同一視する。明示された添字 `ku,kv` と真のレベルとの等式により、自然数の比較、数項の所属、段階への所属の間を明確に移れる。
 <!--/-->
@@ -1608,7 +1608,7 @@ Suppose `ku < kv`. Choose the genuine numerals `# ku` and `# kv`, packaged as mo
 <!--en-->
 Strict inequality of natural numbers gives `# ku ∈ # kv` by numeral monotonicity. Transporting along the projection equations of the two packaged numerals supplies the membership `fst (numS ku) ∈ fst (numS kv)` required by `Split`.
 <!--zh-->
-自然数的严格不等经数码单调性给出 `# ku ∈ # kv`。沿两个打包数码的投影等式搬运，就得到 `Split` 所需的隶属 `fst (numS ku) ∈ fst (numS kv)`。
+自然数的严格不等经数码单调性给出 `# ku ∈ # kv`。沿两个打包数码的投影等式搬运，就得到 `Split` 所需的成员关系 `fst (numS ku) ∈ fst (numS kv)`。
 <!--ja-->
 自然数の狭義不等式から、数項の単調性により `# ku ∈ # kv` が得られる。二つのまとめられた数項の射影等式に沿って運ぶと、`Split` が要求する所属 `fst (numS ku) ∈ fst (numS kv)` が得られる。
 <!--/-->
@@ -1657,7 +1657,7 @@ common value supplied for the numeral really denotes `# ku`.
 <!--en-->
 Finally, transport the given comparison from index `level u` to `ku` and align its two endpoints with the environment values. Together with the two stage-membership proofs, this satisfies every premise of `BeforeAt-in` and completes `Same (numS ku)`.
 <!--zh-->
-最后，把给定比较从指数 `level u` 搬运到 `ku`，并把它的两个端点与环境中的值对齐。连同两条层隶属证明，这满足 `BeforeAt-in` 的全部前提，从而完成 `Same (numS ku)`。
+最后，把给定比较从指数 `level u` 搬运到 `ku`，并把它的两个端点与环境中的值对齐。连同两条层成员关系证明，这满足 `BeforeAt-in` 的全部前提，从而完成 `Same (numS ku)`。
 <!--ja-->
 最後に、与えられた比較を添字 `level u` から `ku` へ運び、その二つの端点を環境の値とそろえる。二つの段階への所属の証明と合わせると、`BeforeAt-in` のすべての仮定が満たされ、`Same (numS ku)` が完成する。
 <!--/-->
@@ -1671,7 +1671,7 @@ Finally, transport the given comparison from index `level u` to `ku` and align i
 <!--en-->
 Reading a `Split c d` outward first identifies `c` with `# ku` and `d` with `# kv` by the two `LevelAt-out` lemmas. After transporting `c ∈ d` along those identifications, numeral membership eliminates to `ku < kv`, and the stored level equations turn this into `level u < level v`.
 <!--zh-->
-向外读取 `Split c d` 时，先由两条 `LevelAt-out` 引理把 `c` 认同为 `# ku`、把 `d` 认同为 `# kv`。沿这些认同搬运 `c ∈ d` 后，消去数码隶属便得到 `ku < kv`，再由保存的层号等式转成 `level u < level v`。
+向外读取 `Split c d` 时，先由两条 `LevelAt-out` 引理把 `c` 认同为 `# ku`、把 `d` 认同为 `# kv`。沿这些认同搬运 `c ∈ d` 后，消去数码成员关系便得到 `ku < kv`，再由保存的层号等式转成 `level u < level v`。
 <!--ja-->
 `Split c d` を外へ読むとき、まず二つの `LevelAt-out` の補題によって `c` を `# ku`、`d` を `# kv` と同一視する。これらの同一視に沿って `c ∈ d` を運び、数項の所属を消去すると `ku < kv` が得られる。保存されたレベルの等式により、これは `level u < level v` へ変わる。
 <!--/-->
@@ -1737,7 +1737,7 @@ lie in the same finite stage. The level membership of `u` supplies this fact at
 stage. The environment equations then identify those two sets with the values
 at `x` and `y`.
 <!--zh-->
-要使用假定的 `BeforeAt` 读取方向，必须先知道被比较的两个集合都属于同一个有穷层。`u` 的层号隶属给出它位于第 `ku` 层，新得到的层号等式则把 `v` 也放入这一层；环境等式再把这两个集合分别认作 `x` 与 `y` 处的取值。
+要使用假定的 `BeforeAt` 读取方向，必须先知道被比较的两个集合都属于同一个有穷层。`u` 的层号成员关系给出它位于第 `ku` 层，新得到的层号等式则把 `v` 也放入这一层；环境等式再把这两个集合分别认作 `x` 与 `y` 处的取值。
 <!--ja-->
 仮定された `BeforeAt` の読み取り方向を使うには、比較する二つの集合が同じ有限段階に属することが必要である。`u` の段階所属から `ku` における事実が得られ、新しく得た段階番号の等式によって `v` も同じ段階に置かれる。さらに環境の等式が、この二つの集合を `x` と `y` にある値に同定する。
 <!--/-->
@@ -1845,7 +1845,7 @@ The second external alternative already contains both ingredients needed at a co
 <!--en-->
 Reading `LimitOrdAt` starts from a propositionally truncated choice of its two branches, so the result is initially a propositionally truncated comparison. In the different-level branch, the two existential witnesses are read by `split-out`, which turns numeral membership back into strict inequality of the actual levels. That inequality is inserted into the first branch of the external limit comparison and kept under truncation.
 <!--zh-->
-读取 `LimitOrdAt` 时，两个分支的选择已经处在命题截断之中，所以最初只能得到命题截断的比较。在异层支中，两层存在见证由 `split-out` 读取；数码隶属由此还原为真实层号之间的严格不等式。所得不等式进入外部极限比较的第一支，并继续保留在命题截断内。
+读取 `LimitOrdAt` 时，两个分支的选择已经处在命题截断之中，所以最初只能得到命题截断的比较。在异层支中，两层存在见证由 `split-out` 读取；数码成员关系由此还原为真实层号之间的严格不等式。所得不等式进入外部极限比较的第一支，并继续保留在命题截断内。
 <!--ja-->
 `LimitOrdAt` の読み取りは、二つの枝の選択が命題的切り詰めの中にある状態から始まるため、最初に得られる比較も命題的切り詰められている。異なる段階の枝では、二つの存在証人を `split-out` で読み、数項の所属を実際の段階番号の狭義不等式へ戻す。その不等式を外部の極限比較の第一の枝に入れ、切り詰めの内側に保つ。
 <!--/-->
@@ -1874,7 +1874,7 @@ In the common-level branch, `same-out` returns equality of the actual levels tog
 <!--en-->
 The semantic disjunction separates the two mathematical cases before any witnesses are inspected. Its left side contains two nested existential levels and numeral membership; its right side contains one shared level and the finite-stage formula. This shape mirrors the level-primary, then within-level, comparison of the limit order.
 <!--zh-->
-语义析取先把两个数学情形分开，再处理各自的见证。左侧含有两层嵌套的层号存在见证与数码隶属，右侧则含有一个共同层号及有穷层公式。这一结构正对应极限序先比较层号、同层时再作层内比较的字典式次序。
+语义析取先把两个数学情形分开，再处理各自的见证。左侧含有两层嵌套的层号存在见证与数码成员关系，右侧则含有一个共同层号及有穷层公式。这一结构正对应极限序先比较层号、同层时再作层内比较的字典式次序。
 <!--ja-->
 意味論的な選言は、各証人を調べる前に二つの数学的場合を分ける。左側には入れ子になった二つの段階番号の存在証人と数項の所属があり、右側には一つの共通段階と有限段階の論理式がある。この形は、まず段階番号を比較し、同じなら段階内を比較する極限順序の辞書式構造に対応する。
 <!--/-->
@@ -1944,7 +1944,7 @@ Within an instance of `Described`, separation applies `Cond₀` to the common bo
 <!--en-->
 The separation specification is the usable characterization of membership: a candidate lies in `codeOrder` exactly when it lies in `pairsBound` and satisfies `Cond₀`. The bound alone may contain extra elements, so it supplies only set-sized containment. Exactness comes from the second conjunct, which identifies an ordered pair and verifies its limit comparison.
 <!--zh-->
-分离规格给出可直接使用的隶属刻画：一个候选元素属于 `codeOrder`，当且仅当它属于 `pairsBound` 并满足 `Cond₀`。公共界本身可能还含有额外元素，因此只负责给出集合大小的包容；精确性来自第二个合取项，它辨认有序对并验证相应的极限比较。
+分离规格给出可直接使用的成员关系刻画：一个候选元素属于 `codeOrder`，当且仅当它属于 `pairsBound` 并满足 `Cond₀`。公共界本身可能还含有额外元素，因此只负责给出集合大小的包容；精确性来自第二个合取项，它辨认有序对并验证相应的极限比较。
 <!--ja-->
 分出の仕様は、所属について直接使える特徴づけを与える。候補が `codeOrder` に属することは、それが `pairsBound` に属し、かつ `Cond₀` を満たすことと同値である。上界そのものは余分な要素を含み得るので、集合としての包含だけを与える。正確さを担うのは第二の連言であり、順序対を同定して対応する極限比較を検証する。
 <!--/-->
@@ -1986,7 +1986,7 @@ For fixed `z`, `c`, and `d`, `Inner` isolates the two facts required by the sepa
 <!--en-->
 Given actual components and the two facts in `Inner`, the separating condition is satisfied by placing those components under its nested existential quantifiers. Both existential witnesses are propositionally truncated, as object-language existence records only that suitable components occur. This is sufficient for separation because membership in the resulting set is itself a proposition.
 <!--zh-->
-给定实际分量以及 `Inner` 中的两个事实，只要把这些分量依次放入嵌套存在量词，就能满足分离条件。两个存在见证都处在命题截断中，因为对象语言的存在只记录合适分量确实存在。分离所得集合的隶属本身是命题，所以这些资料已经足够。
+给定实际分量以及 `Inner` 中的两个事实，只要把这些分量依次放入嵌套存在量词，就能满足分离条件。两个存在见证都处在命题截断中，因为对象语言的存在只记录合适分量确实存在。分离所得集合的成员关系本身是命题，所以这些资料已经足够。
 <!--ja-->
 実際の成分と `Inner` の二つの事実があれば、それらの成分を入れ子になった存在量化へ順に入れることで分出条件を満たせる。対象言語の存在は適切な成分があることだけを記録するため、二つの存在証人はいずれも命題的に切り詰められている。得られる集合への所属も命題なので、分出にはこれで十分である。
 <!--/-->
@@ -1999,7 +1999,7 @@ Given actual components and the two facts in `Inner`, the separating condition i
 <!--en-->
 Conversely, satisfaction of `Cond₀` already has the truncated nested shape recorded by `Outer`. The reading therefore preserves that evidence directly, without selecting either component. This small observation is what allows later membership proofs to unpack the separating condition while remaining entirely within propositionally truncated existence.
 <!--zh-->
-反过来，满足 `Cond₀` 的证据已经具有 `Outer` 所记录的截断嵌套结构，所以读取时可以直接保留这份证据，不必选择任何一个分量。借助这一点，后面的隶属证明可以展开分离条件，同时始终留在命题截断的存在之内。
+反过来，满足 `Cond₀` 的证据已经具有 `Outer` 所记录的截断嵌套结构，所以读取时可以直接保留这份证据，不必选择任何一个分量。借助这一点，后面的成员关系证明可以展开分离条件，同时始终留在命题截断的存在之内。
 <!--ja-->
 逆に、`Cond₀` の充足はすでに `Outer` が記録する切り詰められた入れ子の形をしている。そのため読み取りでは、どちらの成分も選ばずに証拠をそのまま保てる。この点により、後の所属の証明は、命題的切り詰められた存在の範囲にとどまったまま分出条件を展開できる。
 <!--/-->
@@ -2028,7 +2028,7 @@ The filling law begins with an external comparison `u ≺ˡ v` and aims to place
 <!--en-->
 The separation specification reduces the membership goal to two mathematical obligations. The model-coded pair must lie in the common bound, and `Cond₀` must hold with `limitEl u` and `limitEl v` as its two witnesses. Once these obligations are met, separation returns membership, which is then transported along the equality of the two pair presentations.
 <!--zh-->
-分离规格把隶属目标归约为两个数学义务。模型内编码对必须属于公共界，而 `Cond₀` 必须以 `limitEl u` 与 `limitEl v` 为两个见证成立。完成这两项后，分离规格给出隶属，再沿两个配对呈现之间的等式得到原目标。
+分离规格把成员关系目标归约为两个数学义务。模型内编码对必须属于公共界，而 `Cond₀` 必须以 `limitEl u` 与 `limitEl v` 为两个见证成立。完成这两项后，分离规格给出成员关系，再沿两个配对呈现之间的等式得到原目标。
 <!--ja-->
 分出の仕様により、所属の目標は二つの数学的な課題へ帰着する。モデル内で符号化された対が共通の上界に属することと、`limitEl u` と `limitEl v` を二つの証人として `Cond₀` が成り立つことである。これらを満たすと分出の仕様から所属が得られ、二つの対の表現を結ぶ等式に沿って元の目標へ移せる。
 <!--/-->
@@ -2118,7 +2118,7 @@ The reading law starts from membership of `pr (fst u) (fst v)` in `codeOrder`. S
 <!--en-->
 As in the filling direction, the model-coded pair is identified with the external pair of the two underlying sets. After membership is transferred to that presentation, `codeOrder-mem` exposes the two conjuncts of separation, and its second conjunct is satisfaction of `Cond₀`. The proof can ignore the bound conjunct from this point, because all endpoint information lies in the separating condition.
 <!--zh-->
-与填充方向相同，先把模型内编码对认作两个底层集合的外部有序对。把隶属转到这一呈现后，`codeOrder-mem` 展开分离的两个合取项，其中第二项正是满足 `Cond₀`。从此可以不再使用公共界合取项，因为端点及比较的全部信息都在分离条件中。
+与填充方向相同，先把模型内编码对认作两个底层集合的外部有序对。把成员关系转到这一呈现后，`codeOrder-mem` 展开分离的两个合取项，其中第二项正是满足 `Cond₀`。从此可以不再使用公共界合取项，因为端点及比较的全部信息都在分离条件中。
 <!--ja-->
 書き込み方向と同様に、モデル内で符号化された対を二つの台となる集合の外部の順序対と同定する。その表現へ所属を移すと、`codeOrder-mem` が分出の二つの連言を示し、第二の連言として `Cond₀` の充足が得られる。端点と比較の情報はすべて分出条件にあるので、ここから先は上界の連言を使う必要がない。
 <!--/-->
@@ -2134,7 +2134,7 @@ As in the filling direction, the model-coded pair is identified with the externa
 <!--en-->
 The given membership concerns the external pair, whereas the separating specification is applied to the model element produced by `prS`. Their underlying sets are equal by the pair-alignment equation, so membership transports to the model presentation. This change of presentation is essential before the object-language condition can be read in the environment carried by that model element.
 <!--zh-->
-已知隶属针对外部有序对，而分离规格要应用于 `prS` 产生的模型元素。配对对齐等式说明二者的底层集合相等，因此可以把隶属转到模型内呈现。只有完成这一步，才能在该模型元素所形成的环境中读取对象语言条件。
+已知成员关系针对外部有序对，而分离规格要应用于 `prS` 产生的模型元素。配对对齐等式说明二者的底层集合相等，因此可以把成员关系转到模型内呈现。只有完成这一步，才能在该模型元素所形成的环境中读取对象语言条件。
 <!--ja-->
 与えられた所属は外部の順序対についてのものであるが、分出の仕様は `prS` が作るモデル要素に適用される。対を対応づける等式により両者の台となる集合は等しいので、所属をモデル内の表現へ移せる。この表現の変更を行って初めて、そのモデル要素が作る環境で対象言語の条件を読み取れる。
 <!--/-->
@@ -2218,7 +2218,7 @@ parameters and the current `Described` instance for codes. This nested module
 is a reusable consequence of the representation theorem; the main construction
 does not depend on it.
 <!--zh-->
-`CodeKeys` 记录了在任意可构造载体 `A` 上进行名字比较时，使用这条条件式码关系的一种方式。除了 `A` 及其可构造性证明，它还固定 `A` 的小成员类型上的严格良序 `w`。名字比较的充分性结果于是可用 `w` 比较参数，并用当前 `Described` 实例比较码。这个嵌套模块是表示定理的一项可复用推论，主构造并不依赖它。
+`CodeKeys` 记录了在任意可构造载体 `A` 上进行名字比较时，使用这条条件式码关系的一种方式。除了 `A` 及其可构造性证明，它还固定 `A` 的小元素类型上的严格良序 `w`。名字比较的充分性结果于是可用 `w` 比较参数，并用当前 `Described` 实例比较码。这个嵌套模块是表示定理的一项可复用推论，主构造并不依赖它。
 <!--ja-->
 `CodeKeys` は、任意の構成可能な台 `A` 上の名前比較で、この条件つきのコード関係を利用する一つの方法を記録する。`A` とその構成可能性の証明に加えて、`A` の要素からなる小さい型上の狭義整列順序 `w` を固定する。名前比較の妥当性の結果は、パラメータには `w` を、コードには現在の `Described` の具体例を使える。この入れ子のモジュールは表現定理から得られる再利用可能な帰結であり、主要な構成はこれに依存しない。
 <!--/-->
@@ -2324,7 +2324,7 @@ from propositional truncation. `EarliestDisagreement` discharges the finite-stag
 hypotheses, but this chapter neither asserts an object-language well-ordering of
 `codeOrder`{.Agda} nor proves the Axiom of Choice.
 <!--zh-->
-`LevelAt`{.Agda} 认出给定极限层成员首次出现的有穷层所对应的数码，`PrecedesAt`{.Agda} 则相对于任意已经表示的基底关系，表示一次最先分歧比较。给定 `BeforeAt`{.Agda} 在规定边界内的双向读法后，`Described`{.Agda} 用 `LimitOrdAt`{.Agda} 组合异层比较与同层比较，为所有候选有序对取界，再由分离得到条件式关系集 `codeOrder`{.Agda}。对每个 `u,v : Limit`，填充律与读取律给出 `u ≺ˡ v` 和 `pr (fst u) (fst v)`{.Agda} 属于该集合之间的两个方向；读取方向使用 `strictLimit`{.Agda} 与既有严格良序，从命题截断恢复比较。`EarliestDisagreement` 兑现有穷层假设，但本章既不在对象语言中断言 `codeOrder`{.Agda} 是良序，也不证明选择公理。
+`LevelAt`{.Agda} 认出给定极限层元素首次出现的有穷层所对应的数码，`PrecedesAt`{.Agda} 则相对于任意已经表示的基底关系，表示一次最先分歧比较。给定 `BeforeAt`{.Agda} 在规定边界内的双向读法后，`Described`{.Agda} 用 `LimitOrdAt`{.Agda} 组合异层比较与同层比较，为所有候选有序对取界，再由分离得到条件式关系集 `codeOrder`{.Agda}。对每个 `u,v : Limit`，填充律与读取律给出 `u ≺ˡ v` 和 `pr (fst u) (fst v)`{.Agda} 属于该集合之间的两个方向；读取方向使用 `strictLimit`{.Agda} 与既有严格良序，从命题截断恢复比较。`EarliestDisagreement` 兑现有穷层假设，但本章既不在对象语言中断言 `codeOrder`{.Agda} 是良序，也不证明选择公理。
 <!--ja-->
 `LevelAt`{.Agda} は、与えられた極限段階の要素が最初に現れる有限段階を符号化する数項を同定し、`PrecedesAt`{.Agda} は、すでに表現された任意の基礎関係に相対して、最初の相違による一回の比較を表現する。所定の範囲における `BeforeAt`{.Agda} の双方向の読みが与えられると、`Described`{.Agda} は `LimitOrdAt`{.Agda} の中で異なる段階の比較と同じ段階の比較を組み合わせ、候補となるすべての順序対に上界を与え、分出によって条件つきの関係集合 `codeOrder`{.Agda} を得る。各 `u,v : Limit` に対し、書き込み則と読み取り則は、`u ≺ˡ v` と `pr (fst u) (fst v)`{.Agda} がその集合に属することの両方向を与える。読み取り方向では、`strictLimit`{.Agda} と既存の狭義整列順序を用いて、命題的切り詰めから比較を復元する。`EarliestDisagreement` が有限段階についての仮定を満たすが、この章は `codeOrder`{.Agda} が整列順序をなすことを対象言語で主張せず、選択公理も証明しない。
 <!--/-->

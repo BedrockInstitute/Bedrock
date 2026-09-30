@@ -28,7 +28,7 @@ module L.Coding.CodeDomainAdequacy {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 open import FOL.Syntax using
   ( Formula; Term; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇_; ∀̇_; ∃̇∈; ∀̇∈ )
 import FOL.Absoluteness
@@ -68,7 +68,7 @@ open import L.Ordinal {ℓ} using ( ∈#-elim )
 <!--en-->
 Internal reasoning about syntax begins with a set of formula keys inside `L`. This chapter compares such a candidate domain with the external formula grammar in two directions: every member merely decodes to a formula key, and every genuine formula key belongs to the domain. These claims concern code membership, not the truth or satisfaction of the encoded formulas.
 <!--zh-->
-关于语法的内部论证从 `L` 中的一组公式键开始。本章从两个方向比较候选码域与外部公式文法：域中每个成员都纯粹地可解码为某条公式的键，而每条真实公式的键都属于该域。这些结论只涉及码的隶属，不涉及被编码公式的真值或满足关系。
+关于语法的内部论证从 `L` 中的一组公式键开始。本章从两个方向比较候选码域与外部公式文法：域中每个元素都纯粹地可解码为某条公式的键，而每条真实公式的键都属于该域。这些结论只涉及码的成员关系，不涉及被编码公式的真值或满足关系。
 <!--ja-->
 構文についての内部的な議論は、`L` の中の論理式キーの集合から始まる。本章は、候補となる符号領域と外部の論理式文法を二方向に比較する。領域の各要素は、ある論理式のキーへ単に復号でき、すべての真正な論理式キーは領域に属する。これらは符号の所属についての主張であり、符号化された論理式の真理や充足についての主張ではない。
 <!--/-->
@@ -102,7 +102,7 @@ Formula keys are nested ordered pairs, so injectivity of pairing recovers their 
 <!--en-->
 The object language can express that a structurally assembled key belongs to a candidate domain. Ordered-pair expressions build the nested key, and their adequacy theorem identifies satisfaction of the resulting formula with membership of the corresponding host-level pair code.
 <!--zh-->
-对象语言能够表达按结构组装的键属于候选域。有序对表达式构造嵌套键，其充分性定理则把所得公式的满足与对应宿主层有序对码的隶属等同起来。
+对象语言能够表达按结构组装的键属于候选域。有序对表达式构造嵌套键，其充分性定理则把所得公式的满足与对应宿主层有序对码的成员关系等同起来。
 <!--ja-->
 対象言語では、構造に従って組み立てたキーが候補領域に属することを表現できる。順序対の式が入れ子のキーを構成し、その妥当性定理が、得られた論理式の充足と、対応するホスト側の対符号への所属とを同一視する。
 <!--/-->
@@ -130,7 +130,7 @@ Existential payload descriptions are propositionally truncated, sometimes throug
 <!--en-->
 The description `codesAt` has two complementary halves. `shapeAt` reads an existing domain member as one of the ten constructor shapes and, for composite codes, requires its immediate subkeys to remain in the domain. `closeAt` goes in the generating direction: legal terms and existing subkeys produce the corresponding new key.
 <!--zh-->
-描述 `codesAt` 有两个互补部分。`shapeAt` 把域中已有成员读成十种构造形状之一，并要求复合码的直接子键仍在域中。`closeAt` 沿生成方向陈述：合法词项与已有子键会产生相应的新键。
+描述 `codesAt` 有两个互补部分。`shapeAt` 把域中已有元素读成十种构造形状之一，并要求复合码的直接子键仍在域中。`closeAt` 沿生成方向陈述：合法词项与已有子键会产生相应的新键。
 <!--ja-->
 記述 `codesAt` には、相補的な二つの部分がある。`shapeAt` は領域の既存要素を十種類の構成子形のいずれかとして読み、複合符号では直下の部分キーも領域に残ることを要求する。`closeAt` は生成する向きの主張であり、正当な項と既存の部分キーから対応する新しいキーが得られる。
 <!--/-->
@@ -158,7 +158,7 @@ Decoding branches over disjoint constructor cases and often returns only a propo
 <!--en-->
 The cumulative hierarchy supplies set-valued ordered-pair codes, von Neumann numerals, and the successor operation on arities. Membership has a small fibre presentation, and equality of hierarchy sets is a proposition; these facts justify the truncated decompositions and their elimination into membership or equality claims.
 <!--zh-->
-累积层级提供集合值的有序对码、冯·诺伊曼数码以及元数的后继运算。隶属具有小纤维表示，而层级中集合的相等是命题；这些事实使截断分解及其到隶属或相等结论的消去成立。
+累积层级提供集合值的有序对码、冯·诺伊曼数码以及元数的后继运算。成员关系具有小纤维表示，而层级中集合的相等是命题；这些事实使截断分解及其到成员关系或相等结论的消去成立。
 <!--ja-->
 累積階層は、集合値の順序対符号、フォン・ノイマン数項、アリティの後続演算を与える。所属には小さなファイバー表示があり、階層の集合の等しさは命題である。これらの事実により、切り詰められた分解と、所属や等しさへのその消去が正当化される。
 <!--/-->
@@ -180,13 +180,13 @@ The carrier of the constructible structure is fixed as `S`, so every environment
 <!--/-->
 
 ```agda
-open hPropStructure 𝒮ʟ using ( S )
+open hPropView 𝒮ʟ using ( S )
 ```
 
 <!--en-->
 All code descriptions are interpreted in the first-order structure carried by `L`. Thus“this assembled key belongs to `C`”has both an object-language formulation and a host-level membership reading; the adequacy lemmas identify these two forms of the same assertion.
 <!--zh-->
-所有码描述都在 `L` 所承载的一阶结构中解释。因此，「这个组装出的键属于 `C`」既可以写成对象语言公式，也可以读作宿主层的隶属陈述；充分性引理把同一断言的这两种形式等同起来。
+所有码描述都在 `L` 所承载的一阶结构中解释。因此，「这个组装出的键属于 `C`」既可以写成对象语言公式，也可以读作宿主层的成员关系陈述；充分性引理把同一断言的这两种形式等同起来。
 <!--ja-->
 符号の記述はすべて、`L` が担う一階構造で解釈される。したがって、「組み立てたキーが `C` に属する」という主張には、対象言語の論理式としての形と、ホスト側の所属としての読みがある。妥当性補題は、同じ主張のこの二つの形を同一視する。
 <!--/-->
@@ -339,7 +339,7 @@ module _ {k : ℕ} (t ar w N0 N1 : Fin k) (δ : S ^ k)
 <!--en-->
 The outward reading eliminates the truncated disjunction of the object-language formula. In the constant branch, the existential recovers the second component of the pair, the numeral equation aligns the tag, and the membership travels into `IsTmV`; the result is the left branch of the truncated definition.
 <!--zh-->
-向外读法消去对象语言公式的截断析取。常元支中，存在量词恢复对的第二分量，数码等式对齐标签，隶属则进入 `IsTmV`；结果即截断定义的左支。
+向外读法消去对象语言公式的截断析取。常元支中，存在量词恢复对的第二分量，数码等式对齐标签，成员关系则进入 `IsTmV`；结果即截断定义的左支。
 <!--ja-->
 外向きの読み出しは、対象言語の論理式の切り詰められた選言を消去する。定数の分岐では、存在量化が対の第二成分を取り出し、数項の等式がタグを揃え、所属が `IsTmV` へ入る。結果は、切り詰められた定義の左の分岐である。
 <!--/-->
@@ -401,7 +401,7 @@ The variable branch fills the witness `i` under the existential at the numeral-o
 <!--en-->
 The predicate `keyUp C ar r` expresses one precise membership statement: the pair `(suc ar,r)` belongs to `C`. Its bounded existential presentation chooses an actual member of `C` and then exposes enough of that member to verify both its pair shape and the successor equation.
 <!--zh-->
-谓词 `keyUp C ar r` 精确表达一条隶属：有序对 `(suc ar,r)` 属于 `C`。它用有界存在量词选出 `C` 的一个实际成员，再逐层显露该成员，以验证其配对形状与后继等式。
+谓词 `keyUp C ar r` 精确表达一条成员关系：有序对 `(suc ar,r)` 属于 `C`。它用有界存在量词选出 `C` 的一个实际元素，再逐层显露该元素，以验证其配对形状与后继等式。
 <!--ja-->
 述語 `keyUp C ar r` は、一つの正確な所属、すなわち対 `(suc ar,r)` が `C` に属することを表す。その有界存在による表現は、`C` の実際の要素を選び、その要素を順に明らかにして、対の形と後続の等式の両方を確かめる。
 <!--/-->
@@ -424,7 +424,7 @@ module _ {k : ℕ} (C ar r : Fin k) (δ : S ^ k) where
 <!--en-->
 In the outward direction, the pair formula identifies the chosen member of `C` with `(ar',r)`, while the successor formula identifies `ar'` with `suc ar`. Transporting membership along these two equalities yields `(suc ar,r) ∈ C`. All truncated witnesses are eliminated only into this membership proposition.
 <!--zh-->
-向外读取时，配对公式把选出的 `C` 成员认作 `(ar',r)`，后继公式再把 `ar'` 认作 `suc ar`。沿这两条等式搬运隶属，便得到 `(suc ar,r) ∈ C`。所有截断见证都只消去到这条隶属命题中。
+向外读取时，配对公式把选出的 `C` 元素认作 `(ar',r)`，后继公式再把 `ar'` 认作 `suc ar`。沿这两条等式搬运成员关系，便得到 `(suc ar,r) ∈ C`。所有截断见证都只消去到这条成员关系命题中。
 <!--ja-->
 外向きには、対の論理式が選ばれた `C` の要素を `(ar',r)` と同一視し、後続の論理式が `ar'` を `suc ar` と同一視する。この二つの等式に沿って所属を移すと、`(suc ar,r) ∈ C` が得られる。切り詰められた証人はすべて、この所属命題へのみ消去される。
 <!--/-->
@@ -440,7 +440,7 @@ In the outward direction, the pair formula identifies the chosen member of `C` w
 <!--en-->
 The three bounded witnesses therefore serve only to certify the displayed member of `C`; after their truncations are eliminated, `keyUp-out` has exactly the ambient membership statement `(suc ar,r) ∈ C`.
 <!--zh-->
-因此，三层有界见证只用于证明所展示的对象确为 `C` 的成员；消去其截断后，`keyUp-out` 得到的恰是外围隶属陈述 `(suc ar,r) ∈ C`。
+因此，三层有界见证只用于证明所展示的对象确为 `C` 的元素；消去其截断后，`keyUp-out` 得到的恰是外围成员关系陈述 `(suc ar,r) ∈ C`。
 <!--ja-->
 したがって、三層の有界な証人は、表示された対象が `C` の要素であることを確かめるためだけに使われる。その切り詰めを消去した結果、`keyUp-out` は外部の所属 `(suc ar,r) ∈ C` をちょうど与える。
 <!--/-->
@@ -469,7 +469,7 @@ For the inward direction, start with `(suc ar,r) ∈ C`. Present the successor a
 <!--en-->
 Concretely, `ar'` represents `suc ar`, `c'` represents the member `(suc ar,r)` of `C`, and the containing set supplied with `c'` witnesses the bounded-membership chain used by the formula. Their underlying-set equations ensure that the internal witnesses denote the intended ambient pair.
 <!--zh-->
-具体地，`ar'` 表示 `suc ar`，`c'` 表示 `C` 的成员 `(suc ar,r)`，而与 `c'` 一同给出的包含集则见证公式所用的有界隶属链。它们的底层集合等式保证内部见证确实表示预期的外围有序对。
+具体地，`ar'` 表示 `suc ar`，`c'` 表示 `C` 的元素 `(suc ar,r)`，而与 `c'` 一同给出的包含集则见证公式所用的有界成员关系链。它们的底层集合等式保证内部见证确实表示预期的外围有序对。
 <!--ja-->
 具体的には、`ar'` が `suc ar` を表し、`c'` が `C` の要素 `(suc ar,r)` を表す。さらに `c'` とともに与えられる包含集合が、論理式で使う有界所属の鎖を証する。それぞれの基礎集合の等式により、内部の証人が意図した外部の対を表すことが保証される。
 <!--/-->
@@ -510,7 +510,7 @@ module _ {k : ℕ} (C ar N a : Fin k) (δ : S ^ k) where
 <!--en-->
 The outward reading of `unKey` states precisely that the nested key `(A,(N,a))` belongs to `C`. Adequacy of the ordered-pair expression turns object-language membership into this host-level set-membership statement.
 <!--zh-->
-`unKey` 的向外读法精确说明嵌套键 `(A,(N,a))` 属于 `C`。有序对表达式的充分性把对象语言中的隶属转换为这条宿主层集合隶属陈述。
+`unKey` 的向外读法精确说明嵌套键 `(A,(N,a))` 属于 `C`。有序对表达式的充分性把对象语言中的成员关系转换为这条宿主层集合成员关系陈述。
 <!--ja-->
 `unKey` の外向きの読みは、入れ子のキー `(A,(N,a))` が `C` に属することを正確に述べる。順序対の式の妥当性により、対象言語の所属は、ホスト側のこの集合所属へ変換される。
 <!--/-->
@@ -573,7 +573,7 @@ The two argument values form the ordered pair `P = (a,b)`. This pair is the payl
 <!--en-->
 The outward reading of `binKey` is precisely the membership `(A,(N,(a,b))) ∈ C`. It preserves the three logical levels of the encoding: arity, constructor tag, and the paired arguments.
 <!--zh-->
-`binKey` 的向外读法恰为隶属 `(A,(N,(a,b))) ∈ C`。它保持编码的三个逻辑层次：元数、构造子标签与成对实参。
+`binKey` 的向外读法恰为成员关系 `(A,(N,(a,b))) ∈ C`。它保持编码的三个逻辑层次：元数、构造子标签与成对实参。
 <!--ja-->
 `binKey` の外向きの読みは、所属 `(A,(N,(a,b))) ∈ C` にほかならない。この形は、アリティ、構成子タグ、対にした引数という符号化の三つの論理的な層を保つ。
 <!--/-->
@@ -586,7 +586,7 @@ The outward reading of `binKey` is precisely the membership `(A,(N,(a,b))) ∈ C
 <!--en-->
 The inward reading is its reverse, and the two together identify the formula statement with the set membership, as with every key clause.
 <!--zh-->
-向内读法是其反向；与每条键子句一样，二者把公式陈述与集合隶属等同。
+向内读法是其反向；与每条键子句一样，二者把公式陈述与集合成员关系等同。
 <!--ja-->
 内向きの読み出しはその逆向きであり、他のキーの条項と同じく、二者は論理式の主張と集合の所属を同一視する。
 <!--/-->
@@ -701,7 +701,7 @@ Write the bound-term code as `T=(Nx,x)` and the body code as `Av`. The term is c
 <!--en-->
 The bounded-key clause reads outward as `(A,(N,(T,Av))) ∈ C`. The innermost pair contains the bound-term code and the body code in that order; it is not itself a claim that either component is already legal.
 <!--zh-->
-有界键子句的向外读法是 `(A,(N,(T,Av))) ∈ C`。最内层有序对依次含界词项码与主体码；这条隶属本身并不断言任一分量已经合法。
+有界键子句的向外读法是 `(A,(N,(T,Av))) ∈ C`。最内层有序对依次含界词项码与主体码；这条成员关系本身并不断言任一分量已经合法。
 <!--ja-->
 有界キーの条件を外向きに読むと、`(A,(N,(T,Av))) ∈ C` となる。最も内側の対には、境界項の符号と本体の符号がこの順で入る。この所属だけでは、どちらの成分が正当であることもまだ主張しない。
 <!--/-->
@@ -714,7 +714,7 @@ The bounded-key clause reads outward as `(A,(N,(T,Av))) ∈ C`. The innermost pa
 <!--en-->
 Conversely, membership of `(A,(N,(T,Av)))` in `C` yields satisfaction of `bndKey`. Together the two readings establish only the structural membership equivalence; legality of `T` and successor-arity membership of `Av` are supplied by the surrounding payload predicate.
 <!--zh-->
-反过来，`(A,(N,(T,Av)))` 属于 `C` 可推出 `bndKey` 的满足。两条读法合起来只建立结构隶属的等价；`T` 的合法性与 `Av` 在后继元数处的隶属由外围载荷谓词另行给出。
+反过来，`(A,(N,(T,Av)))` 属于 `C` 可推出 `bndKey` 的满足。两条读法合起来只建立结构成员关系的等价；`T` 的合法性与 `Av` 在后继元数处的成员关系由外围载荷谓词另行给出。
 <!--ja-->
 逆に、`(A,(N,(T,Av)))` が `C` に属することから `bndKey` の充足が得られる。二方向の読みが確立するのは構造的な所属の同値だけである。`T` の正当性と、後続アリティにおける `Av` の所属は、周囲のペイロード述語が別に与える。
 <!--/-->
@@ -768,7 +768,7 @@ In each payload reading, `A` denotes the recorded arity and `R` the raw payload.
 <!--en-->
 Both sides of the comparison use the same underlying sets `Wv` and `Cv`. The syntactic payload formulas therefore describe term membership in `Wv` and subkey membership in `Cv`, exactly matching the parameters of the five ambient payload predicates.
 <!--zh-->
-比较的两侧使用相同的底层集合 `Wv` 与 `Cv`。因此，句法载荷公式所描述的 `Wv` 中词项隶属与 `Cv` 中子键隶属，恰好对应五个外围载荷谓词的参数。
+比较的两侧使用相同的底层集合 `Wv` 与 `Cv`。因此，句法载荷公式所描述的 `Wv` 中词项成员关系与 `Cv` 中子键成员关系，恰好对应五个外围载荷谓词的参数。
 <!--ja-->
 比較の両側では、同じ基礎集合 `Wv` と `Cv` を使う。したがって、構文的なペイロード論理式が述べる `Wv` への項の所属と `Cv` への部分キーの所属は、五つの外部ペイロード述語のパラメータと正確に一致する。
 <!--/-->
@@ -869,7 +869,7 @@ The second legality claim is inserted in the same way. The auxiliary environment
 <!--en-->
 Reading a binary payload outward yields payloads `a` and `b`, an equation `R ≡ pr a b`, and membership of both `pr A a` and `pr A b` in the code set. Adequacy of the two application atoms identifies those memberships in the extended environment.
 <!--zh-->
-向外读取二元载荷得到载荷 `a`、`b`、等式 `R ≡ pr a b`，以及 `pr A a` 与 `pr A b` 都属于码集的证明。两个应用原子的充分性在扩展环境中识别出这两份隶属关系。
+向外读取二元载荷得到载荷 `a`、`b`、等式 `R ≡ pr a b`，以及 `pr A a` 与 `pr A b` 都属于码集的证明。两个应用原子的充分性在扩展环境中识别出这两份成员关系。
 <!--ja-->
 二項ペイロードを外向きに読むと、ペイロード `a` と `b`、等式 `R ≡ pr a b`、および `pr A a` と `pr A b` がともに符号集合に属することが得られる。二つの適用原子式の妥当性が、拡張環境におけるこれらの所属を同定する。
 <!--/-->
@@ -1259,7 +1259,7 @@ The inward reader enters the disjunction at the witnessed tag, with the payload 
 <!--en-->
 The shape reader fixes three ambient sets: the candidate code set `C`, the constant alphabet `w`, and the tower `E` of arity-family pairs. Their underlying iterative sets are used respectively for code membership, legal constant terms, and witnesses `(ar,F)` belonging to the tower.
 <!--zh-->
-形状读式固定三个外围集合：候选码集 `C`、常元字母表 `w`，以及由「元数与族」对组成的塔 `E`。三者的底层迭代集合分别用于码的隶属、常元词项的合法性，以及属于该塔的见证 `(ar,F)`。
+形状读式固定三个外围集合：候选码集 `C`、常元字母表 `w`，以及由「元数与族」对组成的塔 `E`。三者的底层迭代集合分别用于码的成员关系、常元词项的合法性，以及属于该塔的见证 `(ar,F)`。
 <!--ja-->
 形の読みは三つの周囲の集合を固定する。候補となる符号集合 `C`、定数アルファベット `w`、そしてアリティと族の対からなる塔 `E` である。それぞれの基礎にある反復集合は、符号の所属、定数項の合法性、塔に属する証人 `(ar,F)` に用いられる。
 <!--/-->
@@ -1282,7 +1282,7 @@ module ShapeRead {m : ℕ} (C w E : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) (
 <!--en-->
 For a chosen member `c` and a tower witness `(ar,F)`, the remaining formula chooses a payload `p`, requires `c ≡ pr ar p`, and tests `p` against the ten possible tag shapes. Thus the nested witnesses expose the outer arity and the inner tagged payload separately.
 <!--zh-->
-对选定的成员 `c` 与塔中见证 `(ar,F)`，余下公式选择载荷 `p`，要求 `c ≡ pr ar p`，并按十种可能的标签形状检验 `p`。这样，嵌套见证分别显露外层元数与内层带标签载荷。
+对选定的元素 `c` 与塔中见证 `(ar,F)`，余下公式选择载荷 `p`，要求 `c ≡ pr ar p`，并按十种可能的标签形状检验 `p`。这样，嵌套见证分别显露外层元数与内层带标签载荷。
 <!--ja-->
 選ばれた要素 `c` と塔の証人 `(ar,F)` に対し、残りの論理式はペイロード `p` を選び、`c ≡ pr ar p` を要求し、十通りのタグ形に照らして `p` を検査する。このように、入れ子になった証人は外側のアリティと内側のタグ付きペイロードを別々に明らかにする。
 <!--/-->
@@ -1311,7 +1311,7 @@ For a chosen member `c` and a tower witness `(ar,F)`, the remaining formula choo
 <!--en-->
 For each `c` in the code set, outward reading first obtains a member `q` of `E`. Decomposing `q` gives `ar` and `F` with `q ≡ pr ar F`; the inner existential then gives `p` with `c ≡ pr ar p` and satisfaction of the ten-way payload formula.
 <!--zh-->
-对码集中的每个 `c`，向外读取先得到 `E` 的成员 `q`。分解 `q` 得到 `ar`、`F` 与等式 `q ≡ pr ar F`；内层存在量词再给出 `p`、等式 `c ≡ pr ar p`，以及十路载荷公式的满足。
+对码集中的每个 `c`，向外读取先得到 `E` 的元素 `q`。分解 `q` 得到 `ar`、`F` 与等式 `q ≡ pr ar F`；内层存在量词再给出 `p`、等式 `c ≡ pr ar p`，以及十路载荷公式的满足。
 <!--ja-->
 符号集合の各 `c` について、外向きの読みはまず `E` の要素 `q` を得る。`q` を分解すると `ar` と `F` および等式 `q ≡ pr ar F` が得られ、内側の存在量化からは `p`、等式 `c ≡ pr ar p`、十通りのペイロード論理式の充足が得られる。
 <!--/-->
@@ -1343,7 +1343,7 @@ The equation `q ≡ pr ar F` transports the known membership of `q` in `E` to me
 <!--en-->
 The original shape satisfaction is universally quantified over members of the code set. Applying it to `c` and its membership proof supplies the existential data consumed above, completing the construction of `Shaped (fst c)`.
 <!--zh-->
-原形状满足对码集成员作全称量化。把它应用于 `c` 及其隶属证明，就得到上面所消去的存在数据，从而构造出 `Shaped (fst c)`。
+原形状满足对码集元素作全称量化。把它应用于 `c` 及其成员关系证明，就得到上面所消去的存在数据，从而构造出 `Shaped (fst c)`。
 <!--ja-->
 元の形の充足は符号集合の要素について全称量化されている。これを `c` とその所属証明に適用すると、上で除去した存在データが得られ、`Shaped (fst c)` の構成が完了する。
 <!--/-->
@@ -1355,7 +1355,7 @@ The original shape satisfaction is universally quantified over members of the co
 <!--en-->
 For the inward direction, assume that every member `c` of the code set has truncated shape data. Eliminating that truncation yields `ar`, `F`, and `p`, together with membership of `pr ar F` in `E`, the equation for `c`, and `Key ar p`; the target is itself a proposition, so this elimination is valid.
 <!--zh-->
-在向内方向，假设码集的每个成员 `c` 都有截断的形状数据。消去这份截断便得到 `ar`、`F`、`p`，连同 `pr ar F` 属于 `E`、关于 `c` 的等式及 `Key ar p`；目标本身是命题，因此可以作此消去。
+在向内方向，假设码集的每个元素 `c` 都有截断的形状数据。消去这份截断便得到 `ar`、`F`、`p`，连同 `pr ar F` 属于 `E`、关于 `c` 的等式及 `Key ar p`；目标本身是命题，因此可以作此消去。
 <!--ja-->
 内向きの方向では、符号集合の各要素 `c` が切り詰められた形のデータをもつと仮定する。その切り詰めを除去すると、`ar`、`F`、`p` とともに、`pr ar F` の `E` への所属、`c` に関する等式、`Key ar p` が得られる。目標自体が命題なので、この除去は正当である。
 <!--/-->
@@ -1403,7 +1403,7 @@ The inner formula is filled with the arity-table data, and the ten-way disjuncti
 <!--en-->
 Applying the assumed shape assignment to `c` and its membership supplies precisely the truncated witnesses used by the inward construction. Together with the outward direction, this identifies satisfaction of the shape formula with the proposition `Shaped` for every member of the code set.
 <!--zh-->
-把所假设的形状赋值应用于 `c` 及其隶属，就恰好得到向内构造所用的截断见证。结合向外方向，这说明对码集的每个成员，形状公式的满足与命题 `Shaped` 相符。
+把所假设的形状赋值应用于 `c` 及其成员关系，就恰好得到向内构造所用的截断见证。结合向外方向，这说明对码集的每个元素，形状公式的满足与命题 `Shaped` 相符。
 <!--ja-->
 仮定した形の割り当てを `c` とその所属に適用すると、内向きの構成で用いる切り詰められた証人がちょうど得られる。外向きの方向と合わせると、符号集合の各要素について、形の論理式の充足が命題 `Shaped` と一致することが分かる。
 <!--/-->
@@ -1417,7 +1417,7 @@ Applying the assumed shape assignment to `c` and its membership supplies precise
 <!--en-->
 The closure clauses are interpreted after a tower member has been decomposed as `q ≡ pr ar F`. In the resulting four-entry extension, `A` is the fixed arity `ar`; the code set and constant alphabet remain available from the ambient environment, and the tag equations remain valid after the shift.
 <!--zh-->
-先把塔的一个成员分解为 `q ≡ pr ar F`，再解释各闭包子句。在所得的四条目扩展中，`A` 是固定元数 `ar`；码集与常元字母表仍从外围环境取得，标签等式在移位后仍然成立。
+先把塔的一个元素分解为 `q ≡ pr ar F`，再解释各闭包子句。在所得的四条目扩展中，`A` 是固定元数 `ar`；码集与常元字母表仍从外围环境取得，标签等式在移位后仍然成立。
 <!--ja-->
 塔の要素を `q ≡ pr ar F` と分解した後で、各閉性の節を解釈する。得られる四項目の拡張では、`A` は固定されたアリティ `ar` である。符号集合と定数アルファベットは周囲の環境から引き続き参照でき、タグ等式もシフト後に保たれる。
 <!--/-->
@@ -1469,7 +1469,7 @@ Outward reading of an atomic closure clause permits arbitrary `x` from the bound
 <!--en-->
 The membership is transported along the tag equations, which rename the three slots to the numerals of the three tags, since the clause is stated at the tagged slots but the key is spelled with the numerals.
 <!--zh-->
-该隶属沿三条标签等式传输：子句在带标签的槽位上陈述，而键则以三个标签的数码写出。
+该成员关系沿三条标签等式传输：子句在带标签的槽位上陈述，而键则以三个标签的数码写出。
 <!--ja-->
 この所属は、三つのタグの等式に沿って輸送される。節はタグつきのスロットで述べられる一方、鍵は三つのタグの数項で書かれるからである。
 <!--/-->
@@ -1499,7 +1499,7 @@ The inward direction rebuilds the clause: given the property for all pairs, it s
 <!--en-->
 The membership is transported into the tagged slots by the reversed renamings, and the introduction rule of the closure clause finishes the case.
 <!--zh-->
-隶属沿反向改名被传输进带标签的槽位，闭包子句的引入规则随之完成这一情形。
+成员关系沿反向改名被传输进带标签的槽位，闭包子句的引入规则随之完成这一情形。
 <!--ja-->
 所属は逆向きの改名に沿ってタグつきのスロットへ輸送され、閉包の節の導入規則がこの場合を閉じる。
 <!--/-->
@@ -1514,7 +1514,7 @@ The membership is transported into the tagged slots by the reversed renamings, a
 <!--en-->
 The binary closure clause ranges over two members `c₁` and `c₂` of the code set. The equations `fst c₁ ≡ pr A (fst a)` and `fst c₂ ≡ pr A (fst b)` expose their payloads `a` and `b` at the fixed arity `A`; the clause then places the binary key with payload `pr (fst a) (fst b)` back in the code set.
 <!--zh-->
-二元闭包子句量化码集中的两个成员 `c₁`、`c₂`。等式 `fst c₁ ≡ pr A (fst a)` 与 `fst c₂ ≡ pr A (fst b)` 显露它们在固定元数 `A` 处的载荷 `a`、`b`；子句随后断言以 `pr (fst a) (fst b)` 为载荷的二元键仍属于码集。
+二元闭包子句量化码集中的两个元素 `c₁`、`c₂`。等式 `fst c₁ ≡ pr A (fst a)` 与 `fst c₂ ≡ pr A (fst b)` 显露它们在固定元数 `A` 处的载荷 `a`、`b`；子句随后断言以 `pr (fst a) (fst b)` 为载荷的二元键仍属于码集。
 <!--ja-->
 二項の閉性の節は、符号集合の二つの要素 `c₁` と `c₂` を量化する。等式 `fst c₁ ≡ pr A (fst a)` と `fst c₂ ≡ pr A (fst b)` は、固定アリティ `A` におけるそれぞれのペイロード `a` と `b` を取り出す。すると、この節はペイロード `pr (fst a) (fst b)` をもつ二項キーが再び符号集合に属することを述べる。
 <!--/-->
@@ -1530,7 +1530,7 @@ The binary closure clause ranges over two members `c₁` and `c₂` of the code 
 <!--en-->
 The membership is transported along the tag renaming of the label, and the two nested universal layers are discharged by the elimination lemmas of the bounded quantifiers, each entry entering the inner clause through its own pairing container.
 <!--zh-->
-该隶属沿标签的改名传输，两层嵌套的全称则由有界量词的消去引理兑现：每个条目都经由自己的配对容器进入内层子句。
+该成员关系沿标签的改名传输，两层嵌套的全称则由有界量词的消去引理兑现：每个条目都经由自己的配对容器进入内层子句。
 <!--ja-->
 所属はタグの改名に沿って輸送され、二重に入れ子になった全称の層は有界量化子の消去の補題によって処理される。各項目はみずからの対の容器を通して内側の節に入る。
 <!--/-->
@@ -1592,7 +1592,7 @@ The inward direction for a binary closure clause starts from its mathematical cl
 <!--en-->
 Introducing the two quantified components extends the environment in the order prescribed by the formula. At the innermost implication, the assumed closure rule gives membership of the composite key; the tag equation `tg k` identifies its displayed tag with the numeral required by `binKey`.
 <!--zh-->
-依公式规定的次序引入两个量化分量，便得到相应的扩展环境。在最内层的蕴涵中，所假设的闭包规则给出复合键的隶属证明；标签等式 `tg k` 再把所展示的标签与 `binKey` 所要求的数码对齐。
+依公式规定的次序引入两个量化分量，便得到相应的扩展环境。在最内层的蕴涵中，所假设的闭包规则给出复合键的成员关系证明；标签等式 `tg k` 再把所展示的标签与 `binKey` 所要求的数码对齐。
 <!--ja-->
 二つの量化された成分を論理式が定める順に導入すると、対応する拡張環境が得られる。最も内側の含意では、仮定した閉包則から複合キーの所属が得られ、タグの等式 `tg k` が、表示されたタグを `binKey` の要求する数項に揃える。
 <!--/-->
@@ -1623,7 +1623,7 @@ For falsity there is no subordinate code to inspect. Reading its closure clause 
 <!--en-->
 Conversely, membership of the falsity key is transported back along the same equations to satisfy the closure clause. This case has no recursive premise: the zero payload completely determines the key.
 <!--zh-->
-反过来，假键的隶属证明沿同一组等式反向运输，便得到闭包子句的满足。这个情形没有递归前提，因为零载荷已经完全确定了该键。
+反过来，假键的成员关系证明沿同一组等式反向运输，便得到闭包子句的满足。这个情形没有递归前提，因为零载荷已经完全确定了该键。
 <!--ja-->
 逆に、偽のキーの所属を同じ等式に沿って反対向きに輸送すれば、閉包条項の充足が得られる。この場合には再帰的な前提がなく、零のペイロードだけでキーが完全に定まる。
 <!--/-->
@@ -1638,7 +1638,7 @@ Conversely, membership of the falsity key is transported back along the same equ
 <!--en-->
 The unbounded-quantifier clause is read outward with the quantified components explicit: given a subkey `c₁` of the domain, a presentation `c₁ = pr ar' a`, and the equation `ar' = sucV A`, the quantifier key at the current arity belongs to the domain. The three hypotheses are exactly the data of a predecessor slice member.
 <!--zh-->
-无界量词子句的向外读法把被量化的分量显式给出：给定域的子键 `c₁`、呈现 `c₁ = pr ar' a` 与等式 `ar' = sucV A`，当前元数处的量词键便属于该域。这三条假设恰是前驱切片成员的全部数据。
+无界量词子句的向外读法把被量化的分量显式给出：给定域的子键 `c₁`、呈现 `c₁ = pr ar' a` 与等式 `ar' = sucV A`，当前元数处的量词键便属于该域。这三条假设恰是前驱切片元素的全部数据。
 <!--ja-->
 非有界量化子の条項は、量化された成分を明示して外向きに読まれる。領域の下位キー `c₁`、その表示 `c₁ = pr ar' a`、そして等式 `ar' = sucV A` が与えられれば、現在のアリティでの量化子のキーが領域に属する。三つの仮定は、前者のスライスの要素のデータそのものである。
 <!--/-->
@@ -1654,7 +1654,7 @@ The unbounded-quantifier clause is read outward with the quantified components e
 <!--en-->
 The proof extends the environment by `a`, `ar'`, and the container, opens the implication with the successor equation, and reads the `unKey` membership in the eight-slot environment. Transport along the tag equation then gives membership for the numeral represented by tag `k`.
 <!--zh-->
-证明把 `a`、`ar'` 与容器加入环境，以后继等式进入蕴涵的结论，并在八槽环境中读取 `unKey` 的隶属。随后沿标签等式运输，得到由标签 `k` 所表示数码对应的隶属。
+证明把 `a`、`ar'` 与容器加入环境，以后继等式进入蕴涵的结论，并在八槽环境中读取 `unKey` 的成员关系。随后沿标签等式运输，得到由标签 `k` 所表示数码对应的成员关系。
 <!--ja-->
 証明では、`a`、`ar'`、コンテナを環境に加え、後続の等式を用いて含意の結論へ進み、八つのスロットをもつ環境で `unKey` の所属を読み取る。さらにタグの等式に沿って輸送し、タグ `k` が表す数項に対応する所属を得る。
 <!--/-->
@@ -1698,7 +1698,7 @@ For the inward direction, introduce the two quantified components of the clause.
 <!--en-->
 Apply the assumed closure rule to these data, then transport the resulting membership along the tag equation to obtain the `unKey` conclusion. This completes the inward reading of the unbounded-quantifier clause.
 <!--zh-->
-对这些数据应用所假设的闭包规则，再沿标签等式运输所得隶属，便得到 `unKey` 的结论。无界量词子句的向内读法由此完成。
+对这些数据应用所假设的闭包规则，再沿标签等式运输所得成员关系，便得到 `unKey` 的结论。无界量词子句的向内读法由此完成。
 <!--ja-->
 これらのデータに仮定した閉包則を適用し、得られた所属をタグの等式に沿って輸送すると、`unKey` の結論が得られる。これで、非有界量化子の条項を内向きに読む証明が完成する。
 <!--/-->
@@ -1774,7 +1774,7 @@ For the inward direction, assume the mathematical closure rule displayed in the 
 <!--en-->
 Introduce the quantified subkey data and the bounding term, then apply the assumed closure rule in the resulting environment. Transport along the two tag equations turns its conclusion into the membership required by `bndKey`, completing the inward reading of the bounded-quantifier clause.
 <!--zh-->
-先引入量化的子键数据与界词项，再在所得环境中应用所假设的闭包规则。沿两条标签等式运输其结论，便得到 `bndKey` 所要求的隶属，从而完成有界量词子句的向内读法。
+先引入量化的子键数据与界词项，再在所得环境中应用所假设的闭包规则。沿两条标签等式运输其结论，便得到 `bndKey` 所要求的成员关系，从而完成有界量词子句的向内读法。
 <!--ja-->
 量化された下位キーのデータと境界を表す項を導入し、得られた環境で仮定した閉包則を適用する。その結論を二つのタグ等式に沿って輸送すると、`bndKey` が要求する所属が得られ、有界量化子の条項を内向きに読む証明が完成する。
 <!--/-->
@@ -1792,7 +1792,7 @@ Introduce the quantified subkey data and the bounding term, then apply the assum
 <!--en-->
 ## Soundness: decoding every member
 <!--zh-->
-## 可靠性：解码每个成员
+## 可靠性：解码每个元素
 <!--ja-->
 ## 健全性：各要素の復号
 <!--/-->
@@ -1808,7 +1808,7 @@ To prove soundness, we now connect three descriptions already available: numeric
 <!--en-->
 The canonical code set provides both directions of this comparison: a member can be read as a formula key, and every formula has a canonical key. The remaining imports supply the witnesses for recorded arities and the fact that conjunctions of propositions are again propositions.
 <!--zh-->
-典范码集提供这种比较的两个方向：它的成员可以读作公式键，而每条公式也都有典范键。其余引入给出已记录元数的见证，以及两个命题的合取仍为命题这一事实。
+典范码集提供这种比较的两个方向：它的元素可以读作公式键，而每条公式也都有典范键。其余引入给出已记录元数的见证，以及两个命题的合取仍为命题这一事实。
 <!--ja-->
 標準的な符号集合は、この比較の両方向を与える。その要素は論理式キーとして読め、どの論理式にも標準的なキーがある。残りの導入からは、記録されたアリティの証人と、二つの命題の連言も命題であるという事実を得る。
 <!--/-->
@@ -1852,7 +1852,7 @@ Every payload condition `PayN n ar r` is a proposition. For tags zero through fo
 <!--en-->
 The remaining constructor tags use the same principle in the form appropriate to their payloads. Falsity has a unique zero payload; unbounded quantifiers require membership in `Cv`, which is proposition-valued; bounded quantifiers again use truncated existence.
 <!--zh-->
-其余构造标签也依各自的载荷使用同一原则。假的载荷唯一地等于零；无界量词要求属于 `Cv`，而隶属关系取值于命题；有界量词则再次使用截断存在。
+其余构造标签也依各自的载荷使用同一原则。假的载荷唯一地等于零；无界量词要求属于 `Cv`，而成员关系取值于命题；有界量词则再次使用截断存在。
 <!--ja-->
 残りの構成子タグでも、各ペイロードに応じた形で同じ原理を用いる。偽のペイロードは零に一意に等しく、非有界量化子は命題値をとる `Cv` への所属を要求し、有界量化子は再び切り詰められた存在を用いる。
 <!--/-->
@@ -1927,7 +1927,7 @@ tmWit ti Ni Ai env = rec₁ (snd (env ⊨ isTmAt ti Ni Ai))
 <!--en-->
 In the constant branch, `down` presents the witness `x` as an element of the working set `Wv`. Tag adequacy transports the pair equation, while the original membership proof supplies the other conjunct. The resulting evidence enters the left disjunct of the shape predicate.
 <!--zh-->
-常元支中，`down` 把见证 `x` 表示为工作集 `Wv` 的元素。标签充分性运输有序对等式，原有的隶属证明则给出另一个合取项；所得证据进入形状谓词的左析取支。
+常元支中，`down` 把见证 `x` 表示为工作集 `Wv` 的元素。标签充分性运输有序对等式，原有的成员关系证明则给出另一个合取项；所得证据进入形状谓词的左析取支。
 <!--ja-->
 定数の分岐では、`down` が証人 `x` を作業集合 `Wv` の要素として表示する。タグの妥当性が順序対の等式を輸送し、もとの所属証明がもう一方の連言肢を与える。得られた証拠は、形の述語の左の選言肢に入る。
 <!--/-->
@@ -1956,7 +1956,7 @@ The variable branch repeats the construction with the numeral slot presenting th
 <!--en-->
 We can now state soundness for a candidate domain `C`. Assume that the constant alphabet is the set `W`, that the ten tag slots contain the correct numerals, that every arity recorded in the environment set is a natural-number numeral, and that `C` satisfies the shape description. From these assumptions, every member of `C` will be recovered as a formula key.
 <!--zh-->
-现在可以陈述候选域 `C` 的可靠性。假设常元字母表是集合 `W`，十个标签槽包含正确的数码，环境集中记录的每个元数都是自然数数码，并且 `C` 满足形状描述。由这些假设，可以把 `C` 的每个成员恢复为公式键。
+现在可以陈述候选域 `C` 的可靠性。假设常元字母表是集合 `W`，十个标签槽包含正确的数码，环境集中记录的每个元数都是自然数数码，并且 `C` 满足形状描述。由这些假设，可以把 `C` 的每个元素恢复为公式键。
 <!--ja-->
 これで候補領域 `C` の健全性を述べられる。定数字母表が集合 `W` であり、十個のタグ枠に正しい数項が入り、環境集合に記録された各アリティが自然数の数項であり、`C` が形の記述を満たすと仮定する。これらの仮定から、`C` の各要素を論理式キーとして復元する。
 <!--/-->
@@ -1979,7 +1979,7 @@ module CodesSound {m : ℕ} (C w E : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) 
 <!--en-->
 Write `Cv` for the underlying set of the candidate domain and `CS` for its representative in the constructible structure, which packages that set with a proof of constructibility. Similarly, `Wv` and `Ev` denote the underlying working set and environment set. These abbreviations distinguish host-level sets used in membership statements from their packaged representatives in first-order environments.
 <!--zh-->
-记 `Cv` 为候选域的底层集合，记 `CS` 为它在可构造结构中的代表，其中把该集合与其可构造性证明打包在一起。类似地，`Wv` 与 `Ev` 分别表示工作集和环境集的底层集合。这些缩写区分隶属陈述所用的宿主层集合与一阶环境中所用的带证明代表。
+记 `Cv` 为候选域的底层集合，记 `CS` 为它在可构造结构中的代表，其中把该集合与其可构造性证明打包在一起。类似地，`Wv` 与 `Ev` 分别表示工作集和环境集的底层集合。这些缩写区分成员关系陈述所用的宿主层集合与一阶环境中所用的带证明代表。
 <!--ja-->
 `Cv` を候補領域の基礎となる集合、`CS` を構成可能性の証明とともにその集合をまとめた、構成可能構造内の表示と書く。同様に、`Wv` と `Ev` は作業集合と環境集合の基礎となる集合を表す。これらの略記により、所属の主張で使うホスト側の集合と、一階環境で使う証明つきの表示とを区別する。
 <!--/-->
@@ -2019,7 +2019,7 @@ The proof proceeds through auxiliary lemmas that recover the payload information
 <!--en-->
 For a chosen member `c`, the environment `δ' c` places the candidate domain and `c` before the original environment. This is the context in which the shape predicate for that member is interpreted.
 <!--zh-->
-对一个选定的成员 `c`，环境 `δ' c` 把候选域与 `c` 放在原环境之前。该成员的形状谓词正是在这个语境中解释的。
+对一个选定的元素 `c`，环境 `δ' c` 把候选域与 `c` 放在原环境之前。该元素的形状谓词正是在这个语境中解释的。
 <!--ja-->
 選んだ要素 `c` に対し、環境 `δ' c` は候補領域と `c` を元の環境の前に置く。その要素についての形の述語は、この環境で解釈される。
 <!--/-->
@@ -2032,7 +2032,7 @@ For a chosen member `c`, the environment `δ' c` places the candidate domain and
 <!--en-->
 The alignment lemma `at` is the core of soundness. From the shape satisfaction at a member `c`, it recovers a truncated shape witness, splits the pair equation against the target decomposition, and applies `keyAt` to move the payload to the numbered decomposition. The elimination is legitimate because payloads are propositions.
 <!--zh-->
-对齐引理 `at` 是可靠性的核心。由成员 `c` 处的形状满足，它恢复一个截断的形状见证，把对等式与目标分解相对齐，再应用 `keyAt` 把载荷搬到带编号的分解处。由于载荷是命题，这次消去是合法的。
+对齐引理 `at` 是可靠性的核心。由元素 `c` 处的形状满足，它恢复一个截断的形状见证，把对等式与目标分解相对齐，再应用 `keyAt` 把载荷搬到带编号的分解处。由于载荷是命题，这次消去是合法的。
 <!--ja-->
 揃えの補題 `at` が健全性の中心である。要素 `c` での形の充足から、切り詰められた形の証人を取り出し、対の等式を目標の分解と揃え、`keyAt` を適用してペイロードを番号つきの分解へ移す。ペイロードが命題なので、この消去は正当である。
 <!--/-->
@@ -2048,7 +2048,7 @@ The alignment lemma `at` is the core of soundness. From the shape satisfaction a
 <!--en-->
 The arity equation is transported last, since the shape witness and the target decomposition may present the arity by different sets. The source of the payload is the shape reading of the chapter's hypothesis at the member.
 <!--zh-->
-元数等式最后运输，因为形状见证与目标分解可能用不同的集合呈现元数。载荷的来源，是章假设在该成员处的形状读取。
+元数等式最后运输，因为形状见证与目标分解可能用不同的集合呈现元数。载荷的来源，是章假设在该元素处的形状读取。
 <!--ja-->
 アリティの等式は最後に輸送される。形の証人と目標の分解が、アリティを異なる集合で提示するかもしれないからである。ペイロードの源は、その要素での、章の仮定の形の読み出しである。
 <!--/-->
@@ -2077,7 +2077,7 @@ The binary extractor converts a binary payload into the two subkeys of the same 
 <!--en-->
 Pair injectivity splits the equation into the two component equations, and each subkey is transported into place. The source of the payload is the alignment lemma applied at the member with the numbered tag.
 <!--zh-->
-配对单射性把等式拆成两个分量等式，每个子键被运输到位。载荷的来源，是对该成员施用带编号标签的对齐引理。
+配对单射性把等式拆成两个分量等式，每个子键被运输到位。载荷的来源，是对该元素施用带编号标签的对齐引理。
 <!--ja-->
 対の単射性が等式を二つの成分の等式に分け、それぞれの下位キーが所定の位置へ運ばれる。ペイロードの源は、番号つきのタグでその要素に適用した揃えの補題である。
 <!--/-->
@@ -2092,7 +2092,7 @@ Pair injectivity splits the equation into the two component equations, and each 
 <!--en-->
 The bounded-quantifier extractor turns a bounded payload into membership of its body key at the successor arity. Its proof eliminates the truncated payload and transports the inner membership along the equation for the second component of the pair.
 <!--zh-->
-有界量词提取器把有界载荷转换为其主体键在后继元数处的隶属。证明消去截断的载荷，再沿有序对第二分量的等式运输内层隶属。
+有界量词提取器把有界载荷转换为其主体键在后继元数处的成员关系。证明消去截断的载荷，再沿有序对第二分量的等式运输内层成员关系。
 <!--ja-->
 有界量化子の抽出補題は、有界ペイロードから、その本体キーが後続アリティで属することを導く。証明では、切り詰められたペイロードを除去し、対の第二成分についての等式に沿って内側の所属を輸送する。
 <!--/-->
@@ -2108,7 +2108,7 @@ The bounded-quantifier extractor turns a bounded payload into membership of its 
 <!--en-->
 Once the bounded payload has been aligned with the displayed nested pair, its body component is exactly a key at the successor arity. Transporting this membership along the component equation proves the desired conclusion.
 <!--zh-->
-有界载荷与所展示的嵌套有序对对齐后，其中的主体分量恰好是后继元数处的键。沿相应的分量等式运输这份隶属证明，便得到所需结论。
+有界载荷与所展示的嵌套有序对对齐后，其中的主体分量恰好是后继元数处的键。沿相应的分量等式运输这份成员关系证明，便得到所需结论。
 <!--ja-->
 有界ペイロードを表示された入れ子の順序対に揃えると、その本体成分は後続アリティでのキーそのものである。対応する成分の等式に沿ってこの所属を輸送すれば、求める結論が得られる。
 <!--/-->
@@ -2152,7 +2152,7 @@ The same conclusion holds for quantifiers with the expected change of arity. An 
 <!--en-->
 It remains to recover the full shape of an arbitrary member `c'` of the candidate domain. The shape description gives a truncated decomposition, the environment hypothesis identifies its arity with a natural-number numeral, and `Key` identifies its tag and payload. The result remains truncated throughout.
 <!--zh-->
-还需恢复候选域任意成员 `c'` 的完整形状。形状描述给出一个截断分解，环境假设把其中的元数识别为自然数数码，而 `Key` 再识别其标签与载荷。整个恢复过程的结果始终保留在截断之内。
+还需恢复候选域任意元素 `c'` 的完整形状。形状描述给出一个截断分解，环境假设把其中的元数识别为自然数数码，而 `Key` 再识别其标签与载荷。整个恢复过程的结果始终保留在截断之内。
 <!--ja-->
 あとは、候補領域の任意の要素 `c'` の完全な形を復元する。形の記述が切り詰められた分解を与え、環境についての仮定がそのアリティを自然数の数項と同定し、`Key` がタグとペイロードを同定する。復元結果は全体を通して切り詰められたままである。
 <!--/-->
@@ -2228,7 +2228,7 @@ A binary payload merely asserts the existence of two components whose ordered pa
 <!--en-->
 Pair injectivity separates the payload equality into equations for its two components. Together with the arity presentation and the composite key equation, these equations place the two membership proofs in the four fields required by `BinWit`.
 <!--zh-->
-有序对编码的单射性把载荷等式拆成两个分量等式。它们与元数呈现及复合键等式一起，把两份隶属证明放入 `BinWit` 所要求的四个字段。
+有序对编码的单射性把载荷等式拆成两个分量等式。它们与元数呈现及复合键等式一起，把两份成员关系证明放入 `BinWit` 所要求的四个字段。
 <!--ja-->
 順序対符号化の単射性によって、ペイロードの等式は二つの成分の等式に分かれる。これらをアリティの表示と複合キーの等式に合わせると、二つの所属証明が `BinWit` の要求する四つの欄に収まる。
 <!--/-->
@@ -2288,7 +2288,7 @@ A bounded quantifier needs only its bounding term to be legal at the current ari
 <!--en-->
 Tag zero denotes membership. Its payload contains two legal term codes, so the binary helper supplies the leftmost branch of the shape formula with the recovered term evidence.
 <!--zh-->
-标签零表示隶属。其载荷包含两个合法词项码，因此二元辅助引理利用恢复出的词项证明，给出形状公式最左侧分支的见证。
+标签零表示成员关系。其载荷包含两个合法词项码，因此二元辅助引理利用恢复出的词项证明，给出形状公式最左侧分支的见证。
 <!--ja-->
 タグ 0 は所属を表す。そのペイロードには二つの正しい項符号が含まれるので、二項の補助補題が、復元した項の証拠を用いて形の論理式の最も左の分岐を証明する。
 <!--/-->
@@ -2368,7 +2368,7 @@ The two unbounded quantifiers are again uniform: their payload is the sub-key at
 <!--en-->
 The bounded universal adds the term layer: its payload contains a legal bounding term `t` besides the member `a`, and the witness uses the one-term reader `first` for that term, with `fstTm` naming the term slot of the bounded-key shape.
 <!--zh-->
-有界全称添加了词项层：其载荷除成员 `a` 外还包含合法的界限词项 `t`，见证对该词项使用单词项读式 `first`，并以 `fstTm` 指名有界键形状中的词项槽位。
+有界全称添加了词项层：其载荷除元素 `a` 外还包含合法的界限词项 `t`，见证对该词项使用单词项读式 `first`，并以 `fstTm` 指名有界键形状中的词项槽位。
 <!--ja-->
 有界の全称は項の層を加える。ペイロードには要素 `a` のほかに合法な境界の項 `t` が含まれ、証人はその項のために単項の読み `first` を使い、有界の鍵の形の項のスロットを `fstTm` が名指す。
 <!--/-->
@@ -2397,7 +2397,7 @@ The bounded existential has the same payload shape as the bounded universal, but
 <!--en-->
 The shape-soundness lemma now packages the construction member by member. For each `c` in the code set, `shaped-in` turns the witness just built into satisfaction of `shapedAt`; these are precisely the local shape facts needed when a code is decoded.
 <!--zh-->
-形状可靠性引理把上述构造逐成员汇集起来。对于码集中的每个 `c`，`shaped-in` 将刚构造的见证转化为 `shapedAt` 的满足证明；解码某个码时，所需的正是这种局部形状事实。
+形状可靠性引理把上述构造逐元素汇集起来。对于码集中的每个 `c`，`shaped-in` 将刚构造的见证转化为 `shapedAt` 的满足证明；解码某个码时，所需的正是这种局部形状事实。
 <!--ja-->
 形の健全性の補題は、以上の構成を要素ごとにまとめる。符号集合の各要素 `c` に対して、`shaped-in` は先ほど構成した証人を `shapedAt` の充足証明へ変換する。符号を復号するときに必要なのは、まさにこの局所的な形の事実である。
 <!--/-->
@@ -2410,7 +2410,7 @@ The shape-soundness lemma now packages the construction member by member. For ea
 <!--en-->
 The closure clause is proved for all seven non-atomic constructors at once. The three binary connectives are discharged by `binAt`, which reads the label's payload and extracts the two sub-codes' memberships through the injectivity of the pair coding.
 <!--zh-->
-闭包子句对全部七个非原子构造子一次证得。三个二元联结词由 `binAt` 处理：它读取该标签的载荷，并经配对编码的单射性提取两个子码的隶属。
+闭包子句对全部七个非原子构造子一次证得。三个二元联结词由 `binAt` 处理：它读取该标签的载荷，并经配对编码的单射性提取两个子码的成员关系。
 <!--ja-->
 閉包の節は、非原子の七つの構成子すべてに対して一度に証明される。三つの二項結合子は `binAt` で処理される。タグのペイロードを読み、対の符号化の単射性を通して二つの下位コードの所属を取り出すのである。
 <!--/-->
@@ -2441,7 +2441,7 @@ The two unbounded quantifiers are discharged by quoting the reader at the succes
 <!--en-->
 The decoding theorem is the chapter's first main result. Every member `c` of a code set satisfying the description yields, under propositional truncation, a natural number `k` and a formula `ψ` of arity `k`, with `fst c ≡ fst (keyS W ψ)`. Thus the theorem asserts existence of a matching formula key, without choosing a decoder or asserting uniqueness.
 <!--zh-->
-解码定理是本章的第一个主要结果。对于满足描述的码集中的每个成员 `c`，都可在命题截断下得到一个自然数 `k` 和一条元数为 `k` 的公式 `ψ`，并有 `fst c ≡ fst (keyS W ψ)`。因此，定理只断言相应公式键的存在，并未选定解码函数，也未断言唯一性。
+解码定理是本章的第一个主要结果。对于满足描述的码集中的每个元素 `c`，都可在命题截断下得到一个自然数 `k` 和一条元数为 `k` 的公式 `ψ`，并有 `fst c ≡ fst (keyS W ψ)`。因此，定理只断言相应公式键的存在，并未选定解码函数，也未断言唯一性。
 <!--ja-->
 復号定理は本章の最初の主要結果である。記述を満たす符号集合の各要素 `c` から、命題的切り詰めのもとで、自然数 `k`、アリティ `k` の論理式 `ψ`、および `fst c ≡ fst (keyS W ψ)` が得られる。したがって、この定理が主張するのは対応する論理式キーの存在であり、復号関数の選択や一意性ではない。
 <!--/-->
@@ -2473,7 +2473,7 @@ Start with the truncated shape data of `c`: an arity entry, a table, and a paylo
 <!--en-->
 The required shape data is precisely the result of applying `shape-out` to the assumed shape clause and the membership proof for `c`.
 <!--zh-->
-所需的形状数据，正是将 `shape-out` 用于已知的形状子句和 `c` 的隶属证明所得的结果。
+所需的形状数据，正是将 `shape-out` 用于已知的形状子句和 `c` 的成员关系证明所得的结果。
 <!--ja-->
 必要な形のデータは、仮定した形の節と `c` の所属証明に `shape-out` を適用して得られるものにほかならない。
 <!--/-->
@@ -2543,7 +2543,7 @@ Write `Cv` for the underlying set named by the code-domain slot. Completeness wi
 <!--en-->
 Every constant of the alphabet belongs to the alphabet slot: the identification of the two carriers is what transports the embedding's memberships into the environment.
 <!--zh-->
-字母表的每个常元都属于字母表槽位：两个载体的等同，正是把嵌入的隶属传输进环境的依据。
+字母表的每个常元都属于字母表槽位：两个载体的等同，正是把嵌入的成员关系传输进环境的依据。
 <!--ja-->
 アルファベットのすべての定数はアルファベットのスロットに属する。二つの台の同一視こそが、埋め込みの所属を環境の中へ輸送する根拠である。
 <!--/-->
@@ -2556,7 +2556,7 @@ Every constant of the alphabet belongs to the alphabet slot: the identification 
 <!--en-->
 An alphabet entry is represented internally by an element of the slot `w`. The operation `down` packages its ambient representative together with the membership proof established above, producing the corresponding element `ιS q : S`.
 <!--zh-->
-每个字母表条目都由槽位 `w` 的一个内部元素表示。`down` 把它的外围表示与上面得到的隶属证明打包起来，得到相应的元素 `ιS q : S`。
+每个字母表条目都由槽位 `w` 的一个内部元素表示。`down` 把它的外围表示与上面得到的成员关系证明打包起来，得到相应的元素 `ιS q : S`。
 <!--ja-->
 各アルファベット要素は、スロット `w` の内部要素によって表される。`down` はその外部表現と上で得た所属証明を組にし、対応する要素 `ιS q : S` を作る。
 <!--/-->
@@ -2620,7 +2620,7 @@ The closure reader is reopened at each numeral's own context, so every arity get
 <!--en-->
 Every variable index below `n` names a numeral below the numeral of `n`: the monotonicity of the von Neumann numerals is what lets a variable's index be recognized as a member of its arity's numeral.
 <!--zh-->
-低于 `n` 的每个变元索引都指名低于 `n` 之数码的一个数码：冯·诺伊曼数码的单调性使变元索引能被认作其元数数码的成员。
+低于 `n` 的每个变元索引都指名低于 `n` 之数码的一个数码：冯·诺伊曼数码的单调性使变元索引能被认作其元数数码的元素。
 <!--ja-->
 `n` 未満のすべての変数の添字は、`n` の数項より下の数項を名指す。フォン・ノイマンの数項の単調性によって、変数の添字がそのアリティの数項の要素として認められるのである。
 <!--/-->
@@ -2633,7 +2633,7 @@ Every variable index below `n` names a numeral below the numeral of `n`: the mon
 <!--en-->
 The structural induction begins with the four possible membership atoms. In each case, the atomic closure clause is instantiated at the fixed arity `n`. Its two term entries come independently from an alphabet constant or an arity variable, and the preceding lemmas provide the corresponding membership proofs.
 <!--zh-->
-结构归纳从成员关系原子的四种情形开始。每种情形都在固定元数 `n` 处实例化原子闭包子句；左右两个词项各自可以来自字母表常元或该元数下的变元，而前面的引理恰好提供相应的隶属证明。
+结构归纳从成员关系原子的四种情形开始。每种情形都在固定元数 `n` 处实例化原子闭包子句；左右两个词项各自可以来自字母表常元或该元数下的变元，而前面的引理恰好提供相应的成员关系证明。
 <!--ja-->
 構造帰納法は、所属原子式の四つの場合から始まる。各場合で、原子閉包条項を固定したアリティ `n` において具体化する。左右の項はそれぞれアルファベットの定数またはそのアリティの変数であり、直前の補題が対応する所属証明を与える。
 <!--/-->
@@ -2681,7 +2681,7 @@ Disjunction and implication use the same binary step at their respective tags, w
 <!--en-->
 The bounded universal has two closure arguments: the sub-key at the successor arity and the legal bounding term at the current arity. When the bound is a constant, the term entry comes from the alphabet embedding; when it is a variable, from the numeral membership.
 <!--zh-->
-有界全称有两条闭包论证：后继元数处的子键，以及当前元数处的合法界限词项。界限为常元时，词项条目来自字母表嵌入；界限为变元时，来自数码隶属。
+有界全称有两条闭包论证：后继元数处的子键，以及当前元数处的合法界限词项。界限为常元时，词项条目来自字母表嵌入；界限为变元时，来自数码成员关系。
 <!--ja-->
 有界の全称には二つの閉包の引数がある。後続のアリティの下位の鍵と、現在のアリティの合法な境界の項である。境界が定数のとき項の項目はアルファベットの埋め込みから、変数のときは数項の所属から来る。
 <!--/-->
@@ -2759,7 +2759,7 @@ Write `Cv`, `Wv`, and `Ev` for the underlying sets named by the code-domain, alp
 <!--en-->
 Suppose a set `Wv′` contains the representative of every alphabet entry. Then every term has a legal code over `Wv′`. A constant uses the supplied membership proof for its representative; a variable uses the fact that the numeral of its index belongs to the numeral of the arity. The result is propositionally truncated because term legality is used only as a property of the code.
 <!--zh-->
-假设集合 `Wv′` 含有每个字母表条目的表示，那么每个词项在 `Wv′` 上都有合法编码。常元使用其表示的给定隶属证明，变元使用索引数码属于元数数码这一事实。所得见证经过命题截断，因为这里仅把词项合法性当作编码的一项性质使用。
+假设集合 `Wv′` 含有每个字母表条目的表示，那么每个词项在 `Wv′` 上都有合法编码。常元使用其表示的给定成员关系证明，变元使用索引数码属于元数数码这一事实。所得见证经过命题截断，因为这里仅把词项合法性当作编码的一项性质使用。
 <!--ja-->
 集合 `Wv′` がすべてのアルファベット要素の表現を含むと仮定する。このとき、どの項も `Wv′` 上で正しい符号をもつ。定数ではその表現について与えられた所属証明を使い、変数では添字の数項がアリティの数項に属することを使う。ここでは項の適格性を符号の性質としてだけ用いるため、得られる証人は命題的に切り詰められている。
 <!--/-->
@@ -2786,7 +2786,7 @@ The constants of the alphabet belong to the environment's alphabet slot, transpo
 <!--en-->
 By definition of `AllCodes W`, the key of every formula over the alphabet belongs to it. Transporting this membership along `qC` places the same key in the set `Cv` named by the code slot.
 <!--zh-->
-依照 `AllCodes W` 的定义，字母表上每条公式的键都属于其中。沿 `qC` 传输这份隶属证明，便得到同一个键属于码槽位所指的集合 `Cv`。
+依照 `AllCodes W` 的定义，字母表上每条公式的键都属于其中。沿 `qC` 传输这份成员关系证明，便得到同一个键属于码槽位所指的集合 `Cv`。
 <!--ja-->
 `AllCodes W` の定義により、アルファベット上のすべての論理式キーはそこに属する。この所属証明を `qC` に沿って輸送すれば、同じキーが符号スロットの指す集合 `Cv` に属することが得られる。
 <!--/-->
@@ -2799,7 +2799,7 @@ By definition of `AllCodes W`, the key of every formula over the alphabet belong
 <!--en-->
 Likewise, the tower contains the canonical entry pairing the numeral `# n` with the environment set `envSet W n`. Transport along `qE` shows that this entry belongs to the arity set `Ev`.
 <!--zh-->
-同样，环境塔包含由数码 `# n` 与环境集 `envSet W n` 配成的典范条目。沿 `qE` 传输其隶属证明，便知该条目属于元数集合 `Ev`。
+同样，环境塔包含由数码 `# n` 与环境集 `envSet W n` 配成的典范条目。沿 `qE` 传输其成员关系证明，便知该条目属于元数集合 `Ev`。
 <!--ja-->
 同様に、環境塔には数項 `# n` と環境集合 `envSet W n` の対である正準な項目が含まれる。その所属証明を `qE` に沿って輸送すると、この項目がアリティ集合 `Ev` に属することが分かる。
 <!--/-->
@@ -2825,7 +2825,7 @@ The term reader is the alphabet instance of the general term legality just prove
 <!--en-->
 Every formula determines a legitimate key at its own arity. The proof proceeds by structural recursion: atomic formulas combine the legal codes of their two terms, while conjunction and disjunction combine the already established memberships of their two subformula keys.
 <!--zh-->
-每条公式都在自身元数处确定一个合法键。证明按公式结构递归进行：原子公式组合两个词项的合法编码，合取和析取则组合已经得到的两条子公式键的隶属证明。
+每条公式都在自身元数处确定一个合法键。证明按公式结构递归进行：原子公式组合两个词项的合法编码，合取和析取则组合已经得到的两条子公式键的成员关系证明。
 <!--ja-->
 各論理式は、それ自身のアリティにおける正しいキーを定める。証明は論理式の構造に沿って再帰する。原子式では二つの項の正しい符号を組み合わせ、連言と選言では、すでに得られた二つの部分式キーの所属証明を組み合わせる。
 <!--/-->
@@ -2869,7 +2869,7 @@ The bounded quantifiers pair the bounding term with the subformula key, completi
 <!--en-->
 The shape clause of the canonical instance follows: every member of `AllCodes W` decodes to a formula, whose arity-table pair belongs to the tower and whose payload is a legitimate key. The shape reader is fed this member by member.
 <!--zh-->
-典范实例的形状子句随之得出：`AllCodes W` 的每个成员都解码为一条公式，其「元数与表」对属于塔，其载荷是合法键。形状读式逐成员接收这些数据。
+典范实例的形状子句随之得出：`AllCodes W` 的每个元素都解码为一条公式，其「元数与表」对属于塔，其载荷是合法键。形状读式逐元素接收这些数据。
 <!--ja-->
 正準な実例の形の節が従う。`AllCodes W` のすべての要素は論理式へ復号され、そのアリティと表の対は塔に属し、ペイロードは合法な鍵である。形の読みはこのデータを要素ごとに受け取る。
 <!--/-->
@@ -2884,7 +2884,7 @@ The shape clause of the canonical instance follows: every member of `AllCodes W`
 <!--en-->
 The decoding helper fixes the arity explicitly. If a code-domain member `c` has underlying set `pr (# n) z`, then, under propositional truncation, there is a formula `ψ` of arity exactly `n` such that `z ≡ cd ψ`. The conclusion recovers the payload formula only after the outer numeral has fixed its arity.
 <!--zh-->
-解码辅助引理显式固定元数。若码域成员 `c` 的底层集合是 `pr (# n) z`，则在命题截断下存在一条元数恰为 `n` 的公式 `ψ`，满足 `z ≡ cd ψ`。也就是说，只有外层数码固定了元数之后，结论才恢复载荷所编码的公式。
+解码辅助引理显式固定元数。若码域元素 `c` 的底层集合是 `pr (# n) z`，则在命题截断下存在一条元数恰为 `n` 的公式 `ψ`，满足 `z ≡ cd ψ`。也就是说，只有外层数码固定了元数之后，结论才恢复载荷所编码的公式。
 <!--ja-->
 復号の補助補題はアリティを明示的に固定する。符号領域の要素 `c` の基底集合が `pr (# n) z` なら、命題的切り詰めのもとで、`z ≡ cd ψ` を満たすアリティがちょうど `n` の論理式 `ψ` が存在する。つまり、外側の数項によってアリティが固定されてから、ペイロードが符号化する論理式が復元される。
 <!--/-->
@@ -2900,7 +2900,7 @@ The decoding helper fixes the arity explicitly. If a code-domain member `c` has 
 <!--en-->
 The proof reads the member outward and aligns the two arities by the injectivity of the pair and of the numeral, transporting the formula along the arity equation. The equation of the coding is then reversed to identify the payload.
 <!--zh-->
-证明向外读出该成员，并用配对与数码的单射性对齐两个元数，沿元数等式传输公式。随后反向读取编码的等式以确定载荷。
+证明向外读出该元素，并用配对与数码的单射性对齐两个元数，沿元数等式传输公式。随后反向读取编码的等式以确定载荷。
 <!--ja-->
 証明は要素を外向きに読み、対と数項の単射性によって二つのアリティを整え、アリティの等式に沿って論理式を輸送する。ついで符号化の等式を逆向きに読んでペイロードを確定する。
 <!--/-->
@@ -2914,7 +2914,7 @@ The proof reads the member outward and aligns the two arities by the injectivity
 <!--en-->
 The term-decoding statement is parameterized by a bound set: every member of the bound decodes, up to truncation, to a term whose coding pairs the tag numeral with the member itself.
 <!--zh-->
-词项解码陈述由一个界集合参数化：界中的每个成员都 (至截断) 解码为一个词项，其编码把标签数码与该成员本身配对。
+词项解码陈述由一个界集合参数化：界中的每个元素都 (至截断) 解码为一个词项，其编码把标签数码与该元素本身配对。
 <!--ja-->
 項の復号の主張は、界の集合によってパラメータ化される。界のすべての要素は、切り詰めの範囲で、タグの数項とみずからを対にする符号をもつ項へ復号される。
 <!--/-->
@@ -2927,7 +2927,7 @@ The term-decoding statement is parameterized by a bound set: every member of the
 <!--en-->
 Constants decode through the fiber of the alphabet embedding: a member of the alphabet slot is the embedded image of some alphabet entry, and that entry is the constant wanted.
 <!--zh-->
-常元经字母表嵌入的纤维解码：字母表槽位的成员是某个字母表条目的嵌入像，而那个条目正是所求的常元。
+常元经字母表嵌入的纤维解码：字母表槽位的元素是某个字母表条目的嵌入像，而那个条目正是所求的常元。
 <!--ja-->
 定数はアルファベットの埋め込みのファイバーを通して復号される。アルファベットのスロットの要素はあるアルファベットの項目の埋め込まれた像であり、その項目こそが求める定数である。
 <!--/-->
@@ -2943,7 +2943,7 @@ Constants decode through the fiber of the alphabet embedding: a member of the al
 <!--en-->
 Variables decode through the numeral elimination: a member of the arity numeral is a natural number below `n`, which converts back into a valid index, and the coding equation is transported along the round trip.
 <!--zh-->
-变元经数码消去解码：元数数码的成员是低于 `n` 的自然数，可转换回合法索引，而编码等式沿该往返传输。
+变元经数码消去解码：元数数码的元素是低于 `n` 的自然数，可转换回合法索引，而编码等式沿该往返传输。
 <!--ja-->
 変数は数項の消去を通して復号される。アリティの数項の要素は `n` 未満の自然数であり、正しい添字へ変換し直せ、符号化の等式はその往復に沿って輸送される。
 <!--/-->
@@ -2994,7 +2994,7 @@ Within this fixed context, `CloseRead` turns satisfaction of each closure formul
 <!--en-->
 The helper `in-key` transports canonical membership along an equality. If `x` is equal to the underlying set of the key of a formula `ψ`, then the known membership of that canonical key in `Cv` yields `x ∈ Cv`.
 <!--zh-->
-辅助引理 `in-key` 沿等式传输典范键的隶属证明。若 `x` 等于某条公式 `ψ` 的键的底层集合，那么由该典范键已知属于 `Cv`，即可推出 `x ∈ Cv`。
+辅助引理 `in-key` 沿等式传输典范键的成员关系证明。若 `x` 等于某条公式 `ψ` 的键的底层集合，那么由该典范键已知属于 `Cv`，即可推出 `x ∈ Cv`。
 <!--ja-->
 補助補題 `in-key` は、等式に沿って正準なキーの所属証明を輸送する。`x` が論理式 `ψ` のキーの基底集合に等しければ、その正準なキーが `Cv` に属するという既知の事実から `x ∈ Cv` が得られる。
 <!--/-->
@@ -3033,7 +3033,7 @@ Similarly, `FoAt k z` is the Σ type of a formula `ψ` of arity `k` together wit
 <!--en-->
 The atomic closure clause is proved from the two term decodings. Given a decoding of the first coordinate's member and a decoding of the second coordinate's member, the atomic key is built from the two terms by the object-language constructor, and the coding equation identifies it with the named key.
 <!--zh-->
-原子闭包子句由两条词项解码证明。给定第一坐标成员的解码与第二坐标成员的解码，原子键由对象语言构造子从两个词项构造，而编码等式把它与被点名的键等同。
+原子闭包子句由两条词项解码证明。给定第一坐标元素的解码与第二坐标元素的解码，原子键由对象语言构造子从两个词项构造，而编码等式把它与被点名的键等同。
 <!--ja-->
 原子の閉包の節は、二つの項の復号から証明される。第一座標の要素の復号と第二座標の要素の復号が与えられれば、原子の鍵は対象言語の構成子によって二つの項から作られ、符号化の等式がそれを名指された鍵と同一視する。
 <!--/-->
@@ -3065,7 +3065,7 @@ Decode the two coordinates separately. The first yields a term `t` and its codin
 <!--en-->
 The set `G` is the candidate atomic key formed from the arity, the atomic tag, and the two coded coordinates. Because membership in `Cv` is a proposition, both truncated term decodings may be eliminated into this goal. Their coding equations identify `G` with the key of `op t u`, whose membership follows from `in-key`.
 <!--zh-->
-集合 `G` 是由元数、原子标签和两个已编码坐标组成的候选原子键。由于「属于 `Cv`」是命题，可以把两份经过截断的词项解码依次消去到这个目标中。它们的编码等式把 `G` 等同于公式 `op t u` 的键，而后者的隶属由 `in-key` 给出。
+集合 `G` 是由元数、原子标签和两个已编码坐标组成的候选原子键。由于「属于 `Cv`」是命题，可以把两份经过截断的词项解码依次消去到这个目标中。它们的编码等式把 `G` 等同于公式 `op t u` 的键，而后者的成员关系由 `in-key` 给出。
 <!--ja-->
 集合 `G` は、アリティ、原子式のタグ、符号化された二つの座標から作る候補の原子式キーである。`Cv` への所属は命題なので、切り詰められた二つの項の復号を順にこの目標へ消去できる。それぞれの符号化の等式により `G` は論理式 `op t u` のキーと同一視され、その所属は `in-key` から得られる。
 <!--/-->
@@ -3081,7 +3081,7 @@ The set `G` is the candidate atomic key formed from the arity, the atomic tag, a
 <!--en-->
 The final equality is assembled in three layers: `qa` aligns the outer arity, the two term-code equations align the paired payload, and the defining equation for `op` aligns the atomic tag. Transporting canonical membership along this equality completes the atomic closure proof.
 <!--zh-->
-最后的等式分三层拼合：`qa` 对齐外层元数，两条词项编码等式对齐成对载荷，而 `op` 的定义等式对齐原子标签。沿这条等式传输典范键的隶属证明，便完成原子闭包的证明。
+最后的等式分三层拼合：`qa` 对齐外层元数，两条词项编码等式对齐成对载荷，而 `op` 的定义等式对齐原子标签。沿这条等式传输典范键的成员关系证明，便完成原子闭包的证明。
 <!--ja-->
 最後の等式は三段階で組み立てる。`qa` が外側のアリティを揃え、二つの項の符号化等式が対になったペイロードを揃え、`op` の定義等式が原子タグを揃える。この等式に沿って正準なキーの所属証明を輸送すれば、原子閉包の証明が完了する。
 <!--/-->
@@ -3127,7 +3127,7 @@ The two applications of `decodeAt` yield, merely, formulas `ψ₁` and `ψ₂` w
 <!--en-->
 Eliminating the two truncated witnesses reduces the goal to genuine formulas `ψ₁` and `ψ₂`. Their code equations identify `G` with the key of `op ψ₁ ψ₂`, so the canonical membership proof `in-key` establishes the required binary closure clause.
 <!--zh-->
-依次消去两份截断见证后，只需处理实际的公式 `ψ₁` 与 `ψ₂`。它们的编码等式将 `G` 与 `op ψ₁ ψ₂` 的键同一视，因此典范隶属证明 `in-key` 给出所需的二元闭包子句。
+依次消去两份截断见证后，只需处理实际的公式 `ψ₁` 与 `ψ₂`。它们的编码等式将 `G` 与 `op ψ₁ ψ₂` 的键同一视，因此典范成员关系证明 `in-key` 给出所需的二元闭包子句。
 <!--ja-->
 切り詰められた二つの証人を順に除去すると、実際の論理式 `ψ₁` と `ψ₂` を扱えばよくなる。それぞれの符号の等式により `G` は `op ψ₁ ψ₂` のキーと同一視されるので、正準な所属証明 `in-key` から必要な二項閉包条項が得られる。
 <!--/-->
@@ -3184,7 +3184,7 @@ Binding one variable changes the arity of the body from `n` to `suc n`. The quan
 <!--en-->
 Let `G` be the key assembled from the outer arity, the quantifier tag, and the encoded body. After the truncated body has been recovered as `ψ₁`, its code equation identifies `G` with the key of `op ψ₁`; canonical membership then proves the quantifier closure clause.
 <!--zh-->
-令 `G` 为由外层元数、量词标签与主体编码组装出的键。截断的主体恢复为 `ψ₁` 后，其编码等式将 `G` 与 `op ψ₁` 的键同一视；典范隶属关系随即证明量词闭包子句。
+令 `G` 为由外层元数、量词标签与主体编码组装出的键。截断的主体恢复为 `ψ₁` 后，其编码等式将 `G` 与 `op ψ₁` 的键同一视；典范成员关系随即证明量词闭包子句。
 <!--ja-->
 外側のアリティ、量化子タグ、本体の符号から組み立てたキーを `G` とする。切り詰められた本体を `ψ₁` として復元すると、その符号の等式により `G` は `op ψ₁` のキーと同一視され、正準な所属証明から量化子の閉包条項が従う。
 <!--/-->
@@ -3228,7 +3228,7 @@ A bounded quantifier carries both a body of arity `suc n` and a bounding term of
 <!--en-->
 The term-decoding hypothesis recovers the bound from its membership proof, while `decodeAt` recovers the body from the successor-arity subkey. Both results are propositionally truncated, since the closure goal requires only membership of the completed key rather than chosen decoders.
 <!--zh-->
-词项解码假设由界的隶属证明恢复界词项，`decodeAt` 则由后继元数处的子键恢复主体。两项结果都受命题截断，因为闭包目标只要求完整键的隶属证明，并不要求选定全局解码结果。
+词项解码假设由界的成员关系证明恢复界词项，`decodeAt` 则由后继元数处的子键恢复主体。两项结果都受命题截断，因为闭包目标只要求完整键的成员关系证明，并不要求选定全局解码结果。
 <!--ja-->
 項の復号仮定は境界の所属証明から境界項を復元し、`decodeAt` は後続アリティの下位キーから本体を復元する。どちらの結果も命題的に切り詰められている。閉包の目標が要求するのは完成したキーの所属であって、復号結果を大域的に選ぶことではないからである。
 <!--/-->
@@ -3260,7 +3260,7 @@ The key `G` now has a nested payload: first the code of the bounding term, then 
 <!--en-->
 With the recovered term `t` and body `ψ₁`, their code equations identify `G` with the key of `op t ψ₁`. The canonical membership proof then supplies the bounded-quantifier clause, and the two truncation eliminations close in the reverse order in which their witnesses were introduced.
 <!--zh-->
-有了恢复出的词项 `t` 与主体 `ψ₁`，二者的编码等式便将 `G` 与 `op t ψ₁` 的键同一视。典范隶属证明由此给出有界量词子句，两层截断消去再按见证引入的相反次序收束。
+有了恢复出的词项 `t` 与主体 `ψ₁`，二者的编码等式便将 `G` 与 `op t ψ₁` 的键同一视。典范成员关系证明由此给出有界量词子句，两层截断消去再按见证引入的相反次序收束。
 <!--ja-->
 復元した項 `t` と本体 `ψ₁` が得られると、それぞれの符号の等式により `G` は `op t ψ₁` のキーと同一視される。正準な所属証明から有界量化子の条項が得られ、二つの切り詰めの除去は、証人を導入した順序とは逆に閉じられる。
 <!--/-->
@@ -3274,7 +3274,7 @@ With the recovered term `t` and body `ψ₁`, their code equations identify `G` 
 <!--en-->
 The single formula `Cl.all` packages eighteen closure clauses. Its first eight clauses concern the two atomic relations: for each relation, the left and right terms may independently be constants or variables. Constants are decoded through membership in `w`, while variables are decoded through membership of their indices in the arity numeral.
 <!--zh-->
-公式 `Cl.all` 将十八条闭包子句汇集在一起。开头八条处理两种原子关系：对于每种关系，左右两个词项都可以分别是常元或变元。常元通过其在 `w` 中的隶属关系解码，变元则通过其索引在元数数码中的隶属关系解码。
+公式 `Cl.all` 将十八条闭包子句汇集在一起。开头八条处理两种原子关系：对于每种关系，左右两个词项都可以分别是常元或变元。常元通过其在 `w` 中的成员关系解码，变元则通过其索引在元数数码中的成员关系解码。
 <!--ja-->
 一つの論理式 `Cl.all` は十八の閉包条項をまとめている。最初の八条項は二つの原子関係を扱う。各関係について、左右の項はそれぞれ独立に定数または変数である。定数は `w` への所属から復号され、変数は添字がアリティの数項に属することから復号される。
 <!--/-->
@@ -3356,7 +3356,7 @@ It remains to establish the closure clauses at every entry `q` of the environmen
 <!--en-->
 The canonical domain `AllCodes W` now satisfies both halves of `codesAt`: `shape` shows that each of its members has a recorded arity and one of the ten permitted payload shapes, while `close` shows that every key assembled from legal immediate constituents belongs to the domain. This is the adequacy of the code domain itself: its syntactic description contains exactly the genuine formula keys.
 <!--zh-->
-典范码域 `AllCodes W` 至此满足 `codesAt` 的两个部分：`shape` 表明每个成员都具有记录的元数和十种合法载荷形状之一，`close` 则表明由合法的直接组成部分组装出的每个键都属于该域。这一结论确立了码域本身的充分性：它的语法描述恰好收录所有真实的公式键。
+典范码域 `AllCodes W` 至此满足 `codesAt` 的两个部分：`shape` 表明每个元素都具有记录的元数和十种合法载荷形状之一，`close` 则表明由合法的直接组成部分组装出的每个键都属于该域。这一结论确立了码域本身的充分性：它的语法描述恰好收录所有真实的公式键。
 <!--ja-->
 これで正準な符号領域 `AllCodes W` は `codesAt` の両部分を満たす。`shape` は、各要素が記録されたアリティと十種類の正しいペイロード形のいずれかをもつことを示し、`close` は、正しい直接の構成要素から組み立てたすべてのキーが領域に属することを示す。ここで確立されたのは符号領域そのものの妥当性である。その構文的記述は、真正な論理式キーをちょうどすべて収めている。
 <!--/-->
@@ -3379,7 +3379,7 @@ The canonical domain `AllCodes W` now satisfies both halves of `codesAt`: `shape
 <!--en-->
 The two directions now coincide on the canonical domain. Soundness decodes each member of `AllCodes W` into a formula key at its recorded arity, while completeness places every genuine formula key back in that domain; `CodesHolds` verifies that the internal shape and closure description supports both conclusions.
 <!--zh-->
-两个方向在典范码域上汇合。可靠性把 `AllCodes W` 的每个成员解码为其记录元数处的公式键，完备性则把每个真实的公式键送回该码域；`CodesHolds` 证明内部的形状与封闭描述足以支撑这两个结论。
+两个方向在典范码域上汇合。可靠性把 `AllCodes W` 的每个元素解码为其记录元数处的公式键，完备性则把每个真实的公式键送回该码域；`CodesHolds` 证明内部的形状与封闭描述足以支撑这两个结论。
 <!--ja-->
 二つの方向は正準な符号領域の上で一致する。健全性は `AllCodes W` の各要素を記録されたアリティにおける論理式キーへ復号し、完全性はすべての真正な論理式キーをその領域へ戻す。`CodesHolds` は、内部の形と閉性の記述がこの二つの結論を支えることを示す。
 <!--/-->

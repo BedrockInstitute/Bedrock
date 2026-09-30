@@ -27,7 +27,7 @@ module L.Coding.FormulaRecovery {ℓ : Level} where
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 open import FOL.Syntax
   using ( Term; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
 open import FOL.Manipulation.ConstantMapping using ( mapTm; mapFo )
@@ -87,11 +87,11 @@ One step is `peel`{.Agda}, one descent is the previous chapter, and the ten
 cases collapse to six, because the ten tags have six shapes between them and
 what changes inside a shape is a tag and a constructor.
 <!--zh-->
-那条公式落在哪个字母表上，是整章的要害，而它在此处定案，而不在末尾。模型之上的公式会由同样六个框架还原出来，而对消费方毫无用处，因为它的索引类型是单个载体之上的诸公式。故目标在一个字母表上陈述，字母表是一个参数，而关于它的、形状谓词供不出的那一件事，即载体的诸成员就是字母表的像，作为一条假设摆在旁边。
+那条公式落在哪个字母表上，是整章的要害，而它在此处定案，而不在末尾。模型之上的公式会由同样六个框架还原出来，而对消费方毫无用处，因为它的索引类型是单个载体之上的诸公式。故目标在一个字母表上陈述，字母表是一个参数，而关于它的、形状谓词供不出的那一件事，即载体的诸元素就是字母表的像，作为一条假设摆在旁边。
 
 目标采用字母表自身的编码，这使各框架更短。在模型上，每个框架都必须先对应模型编码与层级编码，才能比较一个码和一个载荷；在字母表上，码本来就是层级的元素，因此不需要这层对应。
 
-此处**没有**证明的是「每个成员都是这样一个键」，而欠这笔账的是那个集合。形状把元数分量存在量化、且对它不加任何条件，故一个持有「第一分量不是数码的对」的集合同样满足两半，而本定理对它什么也没说。下一章所造的那个集合从外面把元数钉住，即在一个固定元数上被索引的族之内作分离，这正是不去要求那条谓词的原因。
+此处**没有**证明的是「每个元素都是这样一个键」，而欠这笔账的是那个集合。形状把元数分量存在量化、且对它不加任何条件，故一个持有「第一分量不是数码的对」的集合同样满足两半，而本定理对它什么也没说。下一章所造的那个集合从外面把元数钉住，即在一个固定元数上被索引的族之内作分离，这正是不去要求那条谓词的原因。
 
 递归跑在**码的秩**上，不跑在码上、也不跑在键上。不跑在码上，是因为成员关系不下降进 Kuratowski 的对；不跑在键上，是因为键在码旁边还带着元数，而「对的秩的算术」是一条没人证过的事实。把元数作为一个自然数在旁边带着、只对码下降，两者都不需要。
 
@@ -104,7 +104,7 @@ open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( module InfinitySet )
 open InfinitySet using ( #_; sucV )
 
-open hPropStructure 𝒮ʟ
+open hPropView 𝒮ʟ
 
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
 open AbsL renaming ( _⊨ᵐ_ to _⊨_ )

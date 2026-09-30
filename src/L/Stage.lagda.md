@@ -28,7 +28,7 @@ module L.Stage {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-induction )
 open import L.Constructible {ℓ} using ( IsOrd; isPropIsOrd; Lset; isL )
 open import L.Ordinal.Linear {ℓ} lem using ( ord-tri )
@@ -62,7 +62,7 @@ P σ を x ∈ Lset σ に特殊化すると `stage x hx` が得られる。付�
 <!--en-->
 Membership supplies both the strict order on ordinals and its well-founded induction principle. Constructibility supplies the predicate IsOrd, the stage family Lset and the assertion isL x that x occurs in some ordinal-indexed stage. Thus the same membership relation controls descent among candidate indices and, after specialization, membership of x in a stage.
 <!--zh-->
-隶属关系既给出序数上的严格序，也给出其良基归纳原理。可构造性一侧提供谓词 IsOrd、层族 Lset，以及断言 x 出现在某个序数索引层中的 isL x。因此，同一个隶属关系既控制候选索引之间的下降，也在特化后表达 x 属于某一层。
+成员关系既给出序数上的严格序，也给出其良基归纳原理。可构造性一侧提供谓词 IsOrd、层族 Lset，以及断言 `x`{.Agda} 出现在某个序数索引层中的 `isL x`{.Agda}。因此，同一个成员关系既控制候选索引之间的下降，也在特化后表达 `x`{.Agda} 属于某一层。
 <!--ja-->
 所属関係は、順序数上の狭義順序と、その整礎帰納の原理の両方を与える。構成可能性からは、述語 IsOrd、段階族 Lset、そして x がある順序数添字の段階に現れるという主張 isL x を得る。したがって同じ所属関係が候補添字の間の降下を制御し、特殊化後には x の段階への所属を表す。
 <!--/-->
@@ -84,7 +84,7 @@ A property P is a map into Ω, the type of hProps. Hence `⟨ P α ⟩` is its u
 <!--/-->
 
 ```agda
-open hPropStructure 𝒮ᵥ
+open hPropView 𝒮ᵥ
 ```
 
 <!--en-->
@@ -201,7 +201,7 @@ The result being a proposition, the starting ordinal may be given truncated, and
 <!--en-->
 The descent is organized as well-founded induction on membership, the principle `∈-induction` from the hierarchy chapter. Its step receives an ordinal α, its ordinalhood, a proof of P at α, and an induction hypothesis valid for every strictly smaller member β: provided β is again an ordinal satisfying P, the globally least P-witness obtained by starting the induction at β is already available. The step's only job is to decide, at α, whether the descent must continue or has arrived.
 <!--zh-->
-下降按成员关系上的良基归纳来组织，即层级章的原理 `∈-induction`。其步进收到的参数有：序数 α、其序数性、在 α 处的 P 的证明，以及对每个严格更小成员 β 可用的归纳假说：只要 β 又是满足 P 的序数，从 β 开始归纳所得的全局最小 P 见证便已在手。步进唯一的任务，就是在 α 处判定下降该继续还是已经抵达。
+下降按成员关系上的良基归纳来组织，即层级章的原理 `∈-induction`。其步进收到的参数有：序数 α、其序数性、在 α 处的 `P`{.Agda} 的证明，以及对每个严格更小元素 β 可用的归纳假说：只要 β 又是满足 `P`{.Agda} 的序数，从 β 开始归纳所得的全局最小 `P`{.Agda} 见证便已在手。步进唯一的任务，就是在 α 处判定下降该继续还是已经抵达。
 <!--ja-->
 降下は所属に関する整礎帰納として構成される。これが階層の章の原理 `∈-induction` である。そのステップは、順序数 α、その順序数性、α での P の証明、そしてすべての厳密に小さい要素 β に対して有効な帰納法の仮定を受け取る。β が再び P を満たす順序数であれば、β から帰納を始めて得られる大域的に最小の P の証人がすでに手にある、というものである。ステップの仕事はただひとつ、α において降下を続けるか、到着したかを判定することである。
 <!--/-->
@@ -287,7 +287,7 @@ The index is exposed through three stable facts rather than its recursive constr
 <!--en-->
 A constructibility certificate `⟨ isL x ⟩` is exactly the input form `leastOrd` expects: by the class's definition in the constructible chapter, an element of `isL x` is merely a pair of an ordinal σ, its ordinalhood, and a membership `x ∈ˢ Lset σ`. So the property `λ σ → x ∈ˢ Lset σ` satisfies the hypotheses of the descent, and `theEarliest` applies `leastOrd` to this property. Thus constructibility supplies exactly the truncated existence premise needed to obtain a least stage index.
 <!--zh-->
-可构造性证书 `⟨ isL x ⟩` 恰是 `leastOrd` 所期望的输入形式：按可构造章中类的定义，`isL x` 的一个元素仅仅是序数 σ、其序数性、以及隶属 `x ∈ˢ Lset σ` 的一个对。于是性质 `λ σ → x ∈ˢ Lset σ` 满足下降的假设，而 `theEarliest` 把 `leastOrd` 应用于这条性质。因此，可构造性恰好提供了取得最小层索引所需的截断存在前提。
+可构造性证书 `⟨ isL x ⟩` 恰是 `leastOrd` 所期望的输入形式：按可构造章中类的定义，`isL x` 的一个元素仅仅是序数 σ、其序数性、以及成员关系 `x ∈ˢ Lset σ` 的一个对。于是性质 `λ σ → x ∈ˢ Lset σ` 满足下降的假设，而 `theEarliest` 把 `leastOrd` 应用于这条性质。因此，可构造性恰好提供了取得最小层索引所需的截断存在前提。
 <!--ja-->
 構成可能性の証明書 `⟨ isL x ⟩` は、`leastOrd` が期待する入力の形そのものである。構成可能の章でのクラスの定義により、`isL x` の要素とは、順序数 σ とその順序数性と所属 `x ∈ˢ Lset σ` の対を単に切り詰めたものである。したがって性質 `λ σ → x ∈ˢ Lset σ` は降下の仮定を満たし、`theEarliest` はこの性質に `leastOrd` を適用する。したがって構成可能性は、最小段階の添字を得るために必要な切り捨てられた存在の前提をちょうど与える。
 <!--/-->
@@ -304,7 +304,7 @@ opaque
 <!--en-->
 The package `theEarliest x p` contains the least index together with its three proofs. The function `stage` projects the index and keeps its recursive construction opaque, so later arguments use its ordinalhood, membership and minimality. It is an ordinal-valued function of a constructible set and its witness; it is neither a universe level nor the rank function.
 <!--zh-->
-包 `theEarliest x p` 含有最小索引及其三项证明。函数 `stage` 投影出该索引，并保持其递归构造不透明，使后续论证使用序数性、层隶属与极小性。它以可构造集合及其见证为输入并返回序数；它既不是宇宙层级，也不是秩函数。
+包 `theEarliest x p` 含有最小索引及其三项证明。函数 `stage` 投影出该索引，并保持其递归构造不透明，使后续论证使用序数性、层成员关系与极小性。它以可构造集合及其见证为输入并返回序数；它既不是宇宙层级，也不是秩函数。
 <!--ja-->
 パッケージ `theEarliest x p` は、最小の添字と三つの証明を含む。関数 `stage` は添字を射影し、その再帰的構成を不透明に保つので、後の議論は順序数性、段階への所属、最小性を使う。これは構成可能集合とその証人から順序数を返す関数であり、宇宙レベルでも階数関数でもない。
 <!--/-->
@@ -321,7 +321,7 @@ opaque
 <!--en-->
 The three theorems are the interface, each a projection of the package. `stage-ord` states that the chosen index is an ordinal, so it can later be compared with other indices. `stage-mem` places `x` in the stage `Lset (stage x p)`{.Agda}, the membership fact established by the descent. `stage-earliest` recovers the minimality clause itself: no smaller ordinal σ has `x ∈ˢ Lset σ`. Together they say that `stage x p`{.Agda} is precisely the least index promised at the head of the chapter, reached by projection rather than by reopening the recursion.
 <!--zh-->
-这三条定理就是接口，每条都是该包的一个投影。`stage-ord` 说所选索引是序数，因而日后可以与其他索引比较。`stage-mem` 把 `x` 放进层 `Lset (stage x p)`{.Agda}，这正是下降所建立的隶属事实。`stage-earliest` 则取回极小性条款本身：没有更小的序数 σ 使 `x ∈ˢ Lset σ`。合起来，它们说 `stage x p`{.Agda} 恰是章首承诺的那个最小索引，只是经由投影、而非重新打开递归而得到。
+这三条定理就是接口，每条都是该包的一个投影。`stage-ord` 说所选索引是序数，因而日后可以与其他索引比较。`stage-mem` 把 `x` 放进层 `Lset (stage x p)`{.Agda}，这正是下降所建立的成员关系事实。`stage-earliest` 则取回极小性条款本身：没有更小的序数 σ 使 `x ∈ˢ Lset σ`。合起来，它们说 `stage x p`{.Agda} 恰是章首承诺的那个最小索引，只是经由投影、而非重新打开递归而得到。
 <!--ja-->
 三つの定理がインターフェースであり、どれもパッケージの射影である。`stage-ord` は選ばれた添字が順序数であることを述べ、したがって後に他の添字と比較できる。`stage-mem` は `x` を段階 `Lset (stage x p)`{.Agda} に属させる。これが降下によって示される所属の事実である。`stage-earliest` は最小性の条項そのものを取り戻す。より小さい順序数 σ で `x ∈ˢ Lset σ` となるものはない。合わせて、これらは `stage x p`{.Agda} が章の冒頭で約束された最小の添字にちょうど等しいことを、再帰を開き直すのではなく射影を通して述べている。
 <!--/-->

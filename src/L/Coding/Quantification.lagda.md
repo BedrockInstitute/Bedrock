@@ -27,7 +27,7 @@ module L.Coding.Quantification {ℓ : Level} where
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 open import FOL.Syntax using
   ( Formula; var; _∧̇_; _∨̇_; _⇒̇_; ∃̇∈; ∀̇∈ )
 open import FOL.LevyHierarchy using
@@ -75,7 +75,7 @@ open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( ⁅_,_⁆; ⁅_⁆s; module InfinitySet )
 open InfinitySet {ℓ} using ( sucV )
 
-open hPropStructure 𝒮ʟ using ( S )
+open hPropView 𝒮ʟ using ( S )
 
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _^_; _⊨ᵐ_ )
 open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )

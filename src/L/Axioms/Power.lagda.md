@@ -26,7 +26,7 @@ single `lem` reaches the proof through four routes: propositional resizing, the
 the reflection used by full Separation. No further classical assumption is
 introduced.
 <!--zh-->
-固定宇宙层级 `ℓ` 与唯一的假设 `lem : LEM (ℓ-suc ℓ)`。目标模型字段断言：对 `L` 中每个 `a`，恰有一个模型元素，其成员正是内部包含于 `a` 的模型元素。唯一性由宿主类型 `isContr` 打包；对象理论内容是幂集公理，而唯一性来自外延性。同一个 `lem` 经四条路径进入证明：命题换级、外围幂集所需的命题宇宙换级、典范层函数，以及完整分离所用的反射。这里没有引入其他经典假设。
+固定宇宙层级 `ℓ` 与唯一的假设 `lem : LEM (ℓ-suc ℓ)`。目标模型字段断言：对 `L` 中每个 `a`，恰有一个模型元素，其元素正是内部包含于 `a` 的模型元素。唯一性由宿主类型 `isContr` 打包；对象理论内容是幂集公理，而唯一性来自外延性。同一个 `lem` 经四条路径进入证明：命题换级、外围幂集所需的命题宇宙换级、典范层函数，以及完整分离所用的反射。这里没有引入其他经典假设。
 <!--ja-->
 宇宙レベル `ℓ` と、ただ一つの仮定 `lem : LEM (ℓ-suc ℓ)` を固定する。目標のモデルフィールドは、`L` の各 `a` に対して、`a` に内部的に含まれるモデル要素をちょうど要素とするモデル要素が一意に存在する、と述べる。一意性はホスト型 `isContr` にまとめられる。対象理論での内容は冪集合公理であり、その一意性は外延性から従う。同じ一つの `lem` が、命題リサイズ、周囲の冪集合のための小さな分類子、正準な段階の関数、完全な分出で用いる反映という四つの経路を通って証明に入る。別の古典的仮定は加わらない。
 <!--/-->
@@ -36,7 +36,7 @@ module L.Axioms.Power {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 open import FOL.Syntax using ( Formula; var; con; _∈̇_; ∀̇∈ )
 import FOL.Absoluteness
 import FOL.ZFModel
@@ -66,7 +66,7 @@ Separation inside `Lset β` to collect exactly the internally included model
 elements. The host-level construction provides the bound; the final set itself
 is produced inside the constructible model.
 <!--zh-->
-对可构造集 `a`，`L` 内的幂集究竟应当收集什么？模型的量词遍历其载体 `S`，所以所求幂集的成员是满足内部包含 `x ⊆ˢ a` 的可构造模型元素 `x`。外围层级能对底层集 `A = fst a` 构造幂集，但其成员条件遍历整个`V ℓ`，不附加可构造性要求。因此，这个外围幂集可以提供索引，却不能直接作为`L` 内的幂集返回。
+对可构造集 `a`，`L` 内的幂集究竟应当收集什么？模型的量词遍历其载体 `S`，所以所求幂集的元素是满足内部包含 `x ⊆ˢ a` 的可构造模型元素 `x`。外围层级能对底层集 `A = fst a` 构造幂集，但其成员关系条件遍历整个`V ℓ`，不附加可构造性要求。因此，这个外围幂集可以提供索引，却不能直接作为`L` 内的幂集返回。
 
 证明分三步进行。先由外围幂集取得全部候选者的小表现，再保留其中呈现可构造候选者的索引，并用同一个序数 `β` 界住它们的诸层；最后在 `Lset β` 中作分离，恰好收集内部包含于`a` 的模型元素。宿主层的构造负责给出上界；最终的集合本身则在可构造模型中形成。
 <!--ja-->
@@ -116,7 +116,7 @@ bounding lemma then places this small family of ordinal indices strictly below
 one ordinal. Although the stage function also proves minimality, this chapter
 uses only its ordinality and membership facts.
 <!--zh-->
-外围层级给出集合 `𝒫V A`，它包含 `A` 的每个外围子集，并带有相应的隶属规格。可构造层级给出诸层 `Lset α` 及其严格单调性：若 `α ∈ β`，早期层中的成员可提升到后期层。对每个可构造候选，层函数给出一个典范序数索引，其对应层包含该候选；上界引理再把这一小族序数索引严格界于同一个序数之下。层函数还证明最小性，但本章只使用序数性与层成员这两条事实。
+外围层级给出集合 `𝒫V A`，它包含 `A` 的每个外围子集，并带有相应的成员关系规格。可构造层级给出诸层 `Lset α` 及其严格单调性：若 `α ∈ β`，早期层中的元素可提升到后期层。对每个可构造候选，层函数给出一个典范序数索引，其对应层包含该候选；上界引理再把这一小族序数索引严格界于同一个序数之下。层函数还证明最小性，但本章只使用序数性与层元素这两条事实。
 <!--ja-->
 周囲の階層は、`A` の周囲でのすべての部分集合を含む集合 `𝒫V A` と、その所属の仕様を与える。構成可能階層は段階 `Lset α` とその厳密な単調性を与える。すなわち `α ∈ β` なら、前の段階への所属を後の段階へ持ち上げられる。各構成可能な候補には、段階の関数が、その候補を含む段階の正準な順序数添字を与える。上界補題は、この小さな順序数添字の族を一つの順序数の真に下へ収める。段階の関数は最小性も証明するが、本章で使うのは順序数性と段階への所属だけである。
 <!--/-->
@@ -147,7 +147,7 @@ and its original form, using the equivalence supplied by the resizing witness.
 At the end, propositional extensionality turns two implications into a path of
 truth values.
 <!--zh-->
-层级中的每个集合都有小表现：索引类型 `⟪P⟫` 与呈现其成员的嵌入 `⟪P⟫↪`。属于 `P` 被定义为该嵌入某个纤维的命题截断。由于此映射是嵌入，每个纤维本来就是命题，故 `∈-asFiber` 可以恢复索引及识别它的路径，而无须使用选择公理。换级见证提供类型等价，`equivFun` 与 `invEq` 让证明在降级命题与原命题之间往返。最后，命题外延性把两个方向的蕴含变成真值之间的路径。
+层级中的每个集合都有小表现：索引类型 `⟪P⟫` 与呈现其元素的嵌入 `⟪P⟫↪`。属于 `P` 被定义为该嵌入某个纤维的命题截断。由于此映射是嵌入，每个纤维本来就是命题，故 `∈-asFiber` 可以恢复索引及识别它的路径，而无须使用选择公理。换级见证提供类型等价，`equivFun` 与 `invEq` 让证明在降级命题与原命题之间往返。最后，命题外延性把两个方向的蕴含变成真值之间的路径。
 <!--ja-->
 階層の各集合は小さな表現を持つ。添字型 `⟪P⟫` と、その要素を呈示する埋め込み `⟪P⟫↪` である。`P` への所属は、この埋め込みのファイバーの命題的切り詰めとして定義される。写像が埋め込みなので各ファイバーはすでに命題であり、`∈-asFiber` は選択公理を使わずに添字とそれを特定するパスを復元できる。リサイズの証拠が与える型同値により、`equivFun` と `invEq` はリサイズされた命題と元の命題の間で証明を移す。最後には命題外延性が、二方向の含意を真理値の間のパスへ変える。
 <!--/-->
@@ -166,13 +166,13 @@ set. The parameter `ℓ` controls small presentation types such as `⟪P⟫`, wh
 `V ℓ`, the carrier `S`, and the structures' truth values live at `ℓ-suc ℓ`.
 Thus the smallness argument concerns the index type, not the model carrier.
 <!--zh-->
-打开 `𝒮ʟ` 后，下文无修饰的载体 `S` 与隶属关系都指可构造模型。`S` 的元素由一个可构造集合及其可构造性证据组成；`fst` 忘去证据，返回对应的外围集合。参数 `ℓ` 控制 `⟪P⟫` 一类小表现类型，而 `V ℓ`、载体 `S` 与两套结构的真值都位于 `ℓ-suc ℓ`。因此后面的大小问题针对索引类型，不针对模型载体。
+打开 `𝒮ʟ` 后，下文无修饰的载体 `S` 与成员关系都指可构造模型。`S` 的元素由一个可构造集合及其可构造性证据组成；`fst` 忘去证据，返回对应的外围集合。参数 `ℓ` 控制 `⟪P⟫` 一类小表现类型，而 `V ℓ`、载体 `S` 与两套结构的真值都位于 `ℓ-suc ℓ`。因此后面的大小问题针对索引类型，不针对模型载体。
 <!--ja-->
 `𝒮ʟ` を開くと、以下で修飾なしに書く台 `S` と所属関係は構成可能モデルのものになる。`S` の要素は、構成可能な集合とその構成可能性の証拠との対であり、`fst` は証拠を忘れて周囲の集合を返す。パラメータ `ℓ` は `⟪P⟫` のような小さな表現型のレベルを支配し、`V ℓ`、台 `S`、二つの構造の真理値は `ℓ-suc ℓ` に住む。したがって後の小ささの議論は添字型についてのものであり、モデルの台についてのものではない。
 <!--/-->
 
 ```agda
-open hPropStructure 𝒮ʟ
+open hPropView 𝒮ʟ
 ```
 
 <!--en-->
@@ -184,7 +184,7 @@ left side. When the left side is constructible, transitivity of `L` turns each
 of its ambient members into an element of `S`, and this supplies the precise
 bridge from internal inclusion to ambient inclusion used below.
 <!--zh-->
-两个模型接口给出记号相同而量化域不同的两种子集关系。在 `ModelL` 中，`x ⊆ˢ a` 量化 `S`，所以只检验可构造元素；在 `ModelV` 中，对应关系量化 `V ℓ` 中的每个集合。对任意左端而言，后一条件更强。若左端本身可构造，则 `L` 的传递性把它的每个外围成员变成 `S` 的元素，从而给出下文所用的精确桥梁：把内部包含提升为外围包含。
+两个模型接口给出记号相同而量化域不同的两种子集关系。在 `ModelL` 中，`x ⊆ˢ a` 量化 `S`，所以只检验可构造元素；在 `ModelV` 中，对应关系量化 `V ℓ` 中的每个集合。对任意左端而言，后一条件更强。若左端本身可构造，则 `L` 的传递性把它的每个外围元素变成 `S` 的元素，从而给出下文所用的精确桥梁：把内部包含提升为外围包含。
 <!--ja-->
 二つのモデルのインターフェースは、同じ記法を持ちながら量化域の異なる二つの部分集合関係を与える。`ModelL` の `x ⊆ˢ a` は `S` 上で量化するため、構成可能な要素だけを調べる。`ModelV` の対応する関係は `V ℓ` のすべての集合上で量化する。任意の左辺に対しては後者の方が強い条件である。左辺自身が構成可能なら、`L` の推移性によってその周囲での各要素を `S` の要素にでき、内部の包含から周囲の包含への、以下で必要となる正確な橋が得られる。
 <!--/-->
@@ -204,7 +204,7 @@ absoluteness module makes an outer reading available as well, but this chapter
 does not apply an absoluteness theorem. Its only satisfaction statement is the
 direct inner meaning of the bounded inclusion formula.
 <!--zh-->
-这里的记号 `_⊨_` 是载体 `S` 上公式的内层满足关系，公式在限制结构 `𝒮ʟ` 中求值。常元表示它所指名的模型元素，而限制结构的隶属关系在外围层级中读取这些元素的第一投影。同一模块也提供外层读法，但本章没有应用绝对性定理；此处唯一使用的满足陈述，只是有界包含公式在模型内部的直接含义。
+这里的记号 `_⊨_` 是载体 `S` 上公式的内层满足关系，公式在限制结构 `𝒮ʟ` 中求值。常元表示它所指名的模型元素，而限制结构的成员关系在外围层级中读取这些元素的第一投影。同一模块也提供外层读法，但本章没有应用绝对性定理；此处唯一使用的满足陈述，只是有界包含公式在模型内部的直接含义。
 <!--ja-->
 ここでの記法 `_⊨_` は、台 `S` 上の論理式を制限された構造 `𝒮ʟ` で評価する内側の充足関係である。定数はそれが名指すモデル要素を表し、制限された所属関係は、その第一射影を周囲の階層で読む。同じモジュールは外側の読み方も与えるが、本章では絶対性定理を適用しない。ここで使う充足の主張は、有界な包含論理式のモデル内部での直接の意味だけである。
 <!--/-->
@@ -258,7 +258,7 @@ proof later passes it to the general Separation interface.
 
 「对每个 `y ∈ x`，都有 `y ∈ a`」。
 
-`var zero` 的两次出现位于不同语境。有界全称量词之外的那个表示候选 `x`，量词主体中的那个表示新束缚的成员 `y`。常元域就是模型载体，所以 `con a` 可以直接指名 `a`。在环境 `x ∷ []` 中，有界全称的语义直接化归为 `x ⊆ˢ a`。这是内部包含，其中 `y` 只遍历可构造模型元素。该公式是 Δ₀，尽管后面的证明把它交给一般的分离接口。
+`var zero` 的两次出现位于不同语境。有界全称量词之外的那个表示候选 `x`，量词主体中的那个表示新束缚的元素 `y`。常元域就是模型载体，所以 `con a` 可以直接指名 `a`。在环境 `x ∷ []` 中，有界全称的语义直接化归为 `x ⊆ˢ a`。这是内部包含，其中 `y` 只遍历可构造模型元素。该公式是 Δ₀，尽管后面的证明把它交给一般的分离接口。
 <!--ja-->
 `a : S` に対して、論理式 `subFo a` は候補 `x` のための自由な枠を一つ持ち、
 
@@ -339,7 +339,7 @@ ordinal bounding lemma can quantify over it. `Ix` is only a host-level index
 type. It is neither an element of `L` nor a class defined by an object-language
 formula, and it will not become the final power set.
 <!--zh-->
-宿主类型 `Ix` 恰好索引外围幂集中的可构造成员。它的元素由两部分组成：一个索引 `m : ⟪P⟫`，呈现 `A` 的某个外围子集；以及该被呈现集合之降级后可构造性命题的证明。两个分量都属于目标层级，所以 `Ix : Type ℓ`，序数上界引理可以对它量化。`Ix` 只是宿主层的索引类型，既不是 `L` 的元素，也不是对象语言公式定义的类，更不会成为最终的幂集。
+宿主类型 `Ix` 恰好索引外围幂集中的可构造元素。它的元素由两部分组成：一个索引 `m : ⟪P⟫`，呈现 `A` 的某个外围子集；以及该被呈现集合之降级后可构造性命题的证明。两个分量都属于目标层级，所以 `Ix : Type ℓ`，序数上界引理可以对它量化。`Ix` 只是宿主层的索引类型，既不是 `L` 的元素，也不是对象语言公式定义的类，更不会成为最终的幂集。
 <!--ja-->
 ホスト型 `Ix` は、周囲の冪集合のうち構成可能な要素をちょうど添字づける。その要素は、`A` の周囲での部分集合を呈示する添字 `m : ⟪P⟫` と、呈示された集合についてリサイズされた構成可能性命題の証明との対である。両成分が小さいため `Ix : Type ℓ` となり、順序数の上界補題がその上で量化できる。`Ix` はホスト側の添字型にすぎない。`L` の要素でも、対象言語の論理式で定義されたクラスでもなく、最終的な冪集合にもならない。
 <!--/-->
@@ -435,7 +435,7 @@ This is strict membership of ordinal indices. Given
 membership to lift the presented set into `Lset β`. Ordinality and this strict
 bounding property are the two facts about `β` needed in the remainder.
 <!--zh-->
-证明 `oβ` 记录上界是序数。`b.snd` 的另一分量稍后写作 `b.snd.snd i`，它对每个 `i : Ix` 断言 `stg i ∈ β`。这是序数索引之间的严格隶属。给定 `stage-mem : presented-set ∈ Lset (stg i)`，`Lset-mono` 恰好利用这条隶属把被呈现集合提升到 `Lset β`。序数性与严格上界性质，就是后续对 `β` 所需的两项事实。
+证明 `oβ` 记录上界是序数。`b.snd` 的另一分量稍后写作 `b.snd.snd i`，它对每个 `i : Ix` 断言 `stg i ∈ β`。这是序数索引之间的严格成员关系。给定 `stage-mem : presented-set ∈ Lset (stg i)`，`Lset-mono` 恰好利用这条成员关系把被呈现集合提升到 `Lset β`。序数性与严格上界性质，就是后续对 `β` 所需的两项事实。
 <!--ja-->
 証明 `oβ` は、上界が順序数であることを記録する。`b.snd` のもう一つの成分は後で `b.snd.snd i` として使われ、各 `i : Ix` に対して `stg i ∈ β` を述べる。これは順序数添字の厳密な所属である。`stage-mem : presented-set ∈ Lset (stg i)` が与えられると、`Lset-mono` はまさにこの所属を用いて、呈示された集合を `Lset β` へ持ち上げる。順序数性とこの厳密な上界性が、以下で `β` について必要となる二つの事実である。
 <!--/-->
@@ -455,7 +455,7 @@ membership to `Lset β`. The final `subst` transports the result along the
 presenting path. The local definitions below justify the existence and
 properties of that particular `i`.
 <!--zh-->
-引理 `below` 陈述上界的关键覆盖性质：若 `x : S` 内部包含于 `a`，则其底层外围集合 `fst x` 属于 `Lset β`。证明先把 `fst x` 认同为 `P` 的某个小索引 `i : Ix` 所呈现的成员。由 `stage-mem`，该候选属于 `Lset (stg i)`；再由 `stg i ∈ β`，`Lset-mono` 把这条隶属提升到 `Lset β`。最后的 `subst` 沿呈现路径把结论搬到 `fst x`。下面的局部定义说明这个特定索引 `i` 为什么存在并具有所需性质。
+引理 `below` 陈述上界的关键覆盖性质：若 `x : S` 内部包含于 `a`，则其底层外围集合 `fst x` 属于 `Lset β`。证明先把 `fst x` 认同为 `P` 的某个小索引 `i : Ix` 所呈现的元素。由 `stage-mem`，该候选属于 `Lset (stg i)`；再由 `stg i ∈ β`，`Lset-mono` 把这条成员关系提升到 `Lset β`。最后的 `subst` 沿呈现路径把结论搬到 `fst x`。下面的局部定义说明这个特定索引 `i` 为什么存在并具有所需性质。
 <!--ja-->
 補題 `below` は上界の本質的な被覆性を述べる。`x : S` が `a` に内部的に含まれるなら、その底となる周囲の集合 `fst x` は `Lset β` に属する。証明ではまず、`fst x` を `P` の要素を呈示する適切な添字 `i : Ix` と同一視する。`stage-mem` により候補は `Lset (stg i)` に属し、`stg i ∈ β` に沿って `Lset-mono` を使えば、この所属を `Lset β` へ持ち上げられる。最後の `subst` は、呈示のパスに沿って結果を `fst x` へ運ぶ。以下の局所定義が、この特定の `i` の存在と必要な性質を示す。
 <!--/-->
@@ -480,7 +480,7 @@ returns an actual presentation index and a path `pa` identifying its image with
 `fst x`. This is elimination justified by uniqueness, not an application of
 Choice.
 <!--zh-->
-为取得索引，先把内部包含转成外围包含。任取外围成员 `v ∈ fst x`，可构造性的传递性从 `x.snd` 推出 `isL v`；于是对 `(v , proof)` 这个模型元素应用 `x⊆a`，便得 `v ∈ A`。因此 `fst x` 是 `A` 的外围子集，而 `Pow.power-spec` 的逆向把这条包含变成 `fst x ∈ P`。`P` 的隶属是表现纤维的命题截断，但表现映射是嵌入，所以该纤维本身是命题。因此，`∈-asFiber` 可以返回实际的表现索引及路径 `pa`，后者把其像认同为 `fst x`。这是由唯一性许可的截断消去，不是选择公理的应用。
+为取得索引，先把内部包含转成外围包含。任取外围元素 `v ∈ fst x`，可构造性的传递性从 `x.snd` 推出 `isL v`；于是对 `(v , proof)` 这个模型元素应用 `x⊆a`，便得 `v ∈ A`。因此 `fst x` 是 `A` 的外围子集，而 `Pow.power-spec` 的逆向把这条包含变成 `fst x ∈ P`。`P` 的成员关系是表现纤维的命题截断，但表现映射是嵌入，所以该纤维本身是命题。因此，`∈-asFiber` 可以返回实际的表现索引及路径 `pa`，后者把其像认同为 `fst x`。这是由唯一性许可的截断消去，不是选择公理的应用。
 <!--ja-->
 添字を得るため、まず内部の包含を周囲の包含へ変える。周囲での任意の要素 `v ∈ fst x` に対し、構成可能性の推移性は `x.snd` から `isL v` を導く。そこでモデル要素 `(v , proof)` に `x⊆a` を適用すると `v ∈ A` が得られる。したがって `fst x` は周囲で `A` の部分集合であり、`Pow.power-spec` の逆方向がこの包含を `fst x ∈ P` に変える。`P` への所属は表現のファイバーの命題的切り詰めであるが、表現写像は埋め込みなので、そのファイバー自体が命題である。よって `∈-asFiber` は実際の表現添字と、その像を `fst x` と同一視するパス `pa` を返せる。これは一意性によって許される切り詰めの除去であり、選択公理の適用ではない。
 <!--/-->
@@ -540,7 +540,7 @@ internal inclusion. The local equality `Q≡` provides that identification, and
 the outer `subst` transports the contractible package to the predicate required
 by the power-set field.
 <!--zh-->
-`hasPowerL` 的类型就是要证明的精确模型论陈述。它要求由实现者 `p : S` 组成的类型可缩，而对每个 `x : S`，`p` 的成员谓词都是 `x ⊆ˢ a`。此时外围集合 `P` 已完成它的作用：它提供了用于构造 `Bound.β a` 的索引族，却不出现在结论中。
+`hasPowerL` 的类型就是要证明的精确模型论陈述。它要求由实现者 `p : S` 组成的类型可缩，而对每个 `x : S`，`p` 的元素谓词都是 `x ⊆ˢ a`。此时外围集合 `P` 已完成它的作用：它提供了用于构造 `Bound.β a` 的索引族，却不出现在结论中。
 
 先把 `hasSeparationL` 应用于模型元素`LsetS (Bound.β a) (Bound.oβ a)`，就得到一个可缩的 `SetOf`，它实现的谓词看上去更强：`x` 属于该层，并且满足 `subFo a`。余下只须证这个谓词等于内部包含。局部等式 `Q≡`给出这个识别，最外层的 `subst` 再把可缩包运输到幂集字段所需的谓词上。
 <!--ja-->
@@ -581,9 +581,9 @@ resizing, Ω-resizing, the choice of a canonical stage from
 propositionally truncated constructibility, and the reflection used by full
 separation.
 <!--zh-->
-余下的等式比较分离切出的类与幂集字段要求的类。左端说 `x` 属于作为上界的层，并且 `x` 满足 `subFo a`；后一个满足命题化为内部包含 `x ⊆ˢ a`。正向证明因而舍去层成员这一分量。反向证明则由 `x ⊆ˢ a` 应用 `Bound.below` 补出该分量。命题外延性把两个方向的蕴含变成每个 `x` 处的路径，函数外延性再把这些路径合成为谓词等式 `Q≡`。最外层的 `subst` 沿这个等式运输分离所得的可缩实现者类型。`Q≡` 本身不使用集合外延性；分离所打包的一意性已经用过集合外延性。
+余下的等式比较分离切出的类与幂集字段要求的类。左端说 `x` 属于作为上界的层，并且 `x` 满足 `subFo a`；后一个满足命题化为内部包含 `x ⊆ˢ a`。正向证明因而舍去层元素这一分量。反向证明则由 `x ⊆ˢ a` 应用 `Bound.below` 补出该分量。命题外延性把两个方向的蕴含变成每个 `x` 处的路径，函数外延性再把这些路径合成为谓词等式 `Q≡`。最外层的 `subst` 沿这个等式运输分离所得的可缩实现者类型。`Q≡` 本身不使用集合外延性；分离所打包的一意性已经用过集合外延性。
 
-因此，`hasPowerL a` 以精确的模型论形式证明对象理论的幂集公理。它给出由元素 `p : S` 组成的可缩类型，并且对每个 `x : S`，成员命题 `x ∈ˢ p` 恰与内部陈述 `x ⊆ˢ a` 等价。`p` 与每个候选 `x` 都量化于可构造模型的载体。此前使用的宿主层幂集只提供候选者的小索引，并不是此处得到的集合。唯一的假设 `LEM (ℓ-suc ℓ)` 经命题换级、命题宇宙换级、从命题截断的可构造性中选出典范层，以及完整分离所用的反射，传递到这一构造。
+因此，`hasPowerL a` 以精确的模型论形式证明对象理论的幂集公理。它给出由元素 `p : S` 组成的可缩类型，并且对每个 `x : S`，成员关系命题 `x ∈ˢ p` 恰与内部陈述 `x ⊆ˢ a` 等价。`p` 与每个候选 `x` 都量化于可构造模型的载体。此前使用的宿主层幂集只提供候选者的小索引，并不是此处得到的集合。唯一的假设 `LEM (ℓ-suc ℓ)` 经命题换级、命题宇宙换级、从命题截断的可构造性中选出典范层，以及完整分离所用的反射，传递到这一构造。
 <!--ja-->
 残る等式は、分出によって切り出されたクラスと、冪集合フィールドが要求するクラスを比較する。左辺は、`x` が上界となる段階に属し、かつ `subFo a` を満たすと述べる。後半の充足命題は、内部の包含 `x ⊆ˢ a` に簡約される。したがって順方向の証明は、段階への所属を表す成分を捨てる。逆方向では、`x ⊆ˢ a` に `Bound.below` を適用してその成分を補う。命題外延性は二方向の含意を各 `x` におけるパスへ変え、関数外延性はそれらのパスを述語の等式 `Q≡` にまとめる。最外側の `subst` は、この等式に沿って、分出が与えた実現者の可縮な型を輸送する。`Q≡` 自体は集合の外延性を使わない。分出がまとめた一意性の中ですでに使われている。
 
@@ -620,7 +620,7 @@ The logical account is equally specific. The one assumption
 canonical stage construction, and formula reflection for full Separation. No
 form of Choice, the Replacement field, or condensation is used in this proof.
 <!--zh-->
-这个构造中的三种作用彼此分明：外围幂集提供小表现，宿主理论界住其可构造成员的诸层，内部分离则从该上界中切出所求集合。`L.Model` 把 `hasPowerL` 装入 `L⊨ZF` 的 `hasPower`字段，随后由这个 record 定义内部运算 `𝒫`。后续 GCH 论证使用此运算与规格`℩-spec (hasPower κ)`，在成员关系与内部包含之间往返；它们从不使用辅助的外围 `Pow.𝒫V`。
+这个构造中的三种作用彼此分明：外围幂集提供小表现，宿主理论界住其可构造元素的诸层，内部分离则从该上界中切出所求集合。`L.Model` 把 `hasPowerL` 装入 `L⊨ZF` 的 `hasPower`字段，随后由这个 record 定义内部运算 `𝒫`。后续 GCH 论证使用此运算与规格`℩-spec (hasPower κ)`，在成员关系与内部包含之间往返；它们从不使用辅助的外围 `Pow.𝒫V`。
 
 逻辑依赖也可以精确列清。唯一的假设 `LEM (ℓ-suc ℓ)` 分别支持命题宇宙换级、命题换级、典范层构造与完整分离所用的公式反射。本证明不使用任何形式的选择、替换字段或凝聚。
 <!--ja-->

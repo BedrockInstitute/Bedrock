@@ -28,7 +28,7 @@ module L.Coding.EnvironmentAgreement {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) whe
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
@@ -45,9 +45,9 @@ The satisfaction clauses need, inside `L`, a single set containing exactly the e
 Both readings rest on one object, the environment recovered from a member. The four internal clauses, single-valuedness, a numeral domain, values in the base, and pairs made of numerals and base members, say of a set that it is such a graph; from them the previous chapter recovered the assigning function and identified the set with the canonical graph of that function. Here every step reduces to running that recovery in one direction or the other, and to the transport lemma that carries a satisfaction of the environment clause between environments whose named slots agree.
 <!--zh-->
 
-满足关系的诸子句需要在 `L` 内部有一个集合，恰好收齐给定基集合上给定长度的全部环境。较早的章节分别给出了两项材料：按成员刻画这种集合的公式 `envSetAt`，以及上一章构造的集合 `envSet B m`。一个集合满足该描述，当且仅当其成员作为集合恰是基上长度 `m` 环境的图。本章证明这条描述与已构造的集合彼此一致，而一致有两个读法。凡被某个满足判断放到描述之集合槽位上的集合，其成员恰为已构造集合的成员；已构造的集合自身也满足该描述，于是绑定自己的基与长度的子句可以先把已构造的数据填入槽位，再引用这条描述。
+满足关系的诸子句需要在 `L` 内部有一个集合，恰好收齐给定基集合上给定长度的全部环境。较早的章节分别给出了两项材料：按成员关系刻画这种集合的公式 `envSetAt`，以及上一章构造的集合 `envSet B m`。一个集合满足该描述，当且仅当其元素作为集合恰是基上长度 `m` 环境的图。本章证明这条描述与已构造的集合彼此一致，而一致有两个读法。凡被某个满足判断放到描述之集合槽位上的集合，其元素恰为已构造集合的元素；已构造的集合自身也满足该描述，于是绑定自己的基与长度的子句可以先把已构造的数据填入槽位，再引用这条描述。
 
-两种读法都落在同一个对象上：从成员恢复出的环境。四条内部子句，单值性、以数码为定义域、取值落在基中、以及由数码与基中成员组成的对，说明一个集合正是这样的图；上一章由此恢复了那个赋值函数，并把该集合与其典范图等同起来。本章的每一步都归结为沿某个方向运行这一恢复，再加上一条搬运引理：当两个环境中被点名的槽位一致时，它把环境子句的满足关系从一个环境搬到另一个环境。
+两种读法都落在同一个对象上：从元素恢复出的环境。四条内部子句，单值性、以数码为定义域、取值落在基中、以及由数码与基中元素组成的对，说明一个集合正是这样的图；上一章由此恢复了那个赋值函数，并把该集合与其典范图等同起来。本章的每一步都归结为沿某个方向运行这一恢复，再加上一条搬运引理：当两个环境中被点名的槽位一致时，它把环境子句的满足关系从一个环境搬到另一个环境。
 <!--ja-->
 
 充足関係の節には、`L` の内部で、ある基礎集合の上の与えられた長さの環境をちょうどすべて集めた一つの集合が必要である。これまでの章は二つの材料を別々に与えた。要素によってそのような集合を特徴づける論理式 `envSetAt` と、前章で構成した集合 `envSet B m` である。ある集合がこの記述を満たすのは、その各要素が集合として、基礎の上の長さ `m` の環境のグラフであるとき、かつそのときである。本章は、記述と構成済みの集合が一致することを証明する。一致には二つの読み方がある。充足の判断によって記述の集合スロットに置かれた集合は、構成済みの集合とちょうど同じ要素を持ち、また構成済みの集合それ自体が記述を満たすので、自分の基礎と長さを束縛する節は、構成済みのデータでスロットを埋めてから記述を引用できる。
@@ -90,7 +90,7 @@ Two structures interpret the language, and the chapter moves between them. The a
 <!--en-->
 Two formulas and their readers do the chapter's work. The environment clause `envOverAt` says that the candidate graph is single-valued, has exactly the set in the named domain slot as its domain, takes values in the named base set, and contains only pairs drawn from those two sets; the transport lemma moves a satisfaction of this clause between environments whose named slots agree. The extensional description `envSetAt` says of a set that its members are exactly the environments, in the form of two universally quantified implications, and the three readers unpack those implications in either direction.
 <!--zh-->
-两条公式及其读式承担本章的工作。环境子句 `envOverAt` 说候选图是单值的，其定义域恰为指定定义域槽位中的集合，其取值属于指定基集合，且只含由这两个集合的成员组成的对；搬运引理则在被点名的槽位一致的环境之间移动这条子句的满足。外延描述 `envSetAt` 以两条全称蕴含的形式说：一个集合的成员恰好是那些环境；三条读式按任一方向拆开这两条蕴含。
+两条公式及其读式承担本章的工作。环境子句 `envOverAt` 说候选图是单值的，其定义域恰为指定定义域槽位中的集合，其取值属于指定基集合，且只含由这两个集合的元素组成的对；搬运引理则在被点名的槽位一致的环境之间移动这条子句的满足。外延描述 `envSetAt` 以两条全称蕴含的形式说：一个集合的元素恰好是那些环境；三条读式按任一方向拆开这两条蕴含。
 <!--ja-->
 二つの論理式とその読み方が本章の仕事を担う。環境の節 `envOverAt` は、候補のグラフが単値であり、その定義域が指定された定義域スロットの集合とちょうど一致し、値が指定された基礎集合に属し、その二つの集合の要素からなる対だけを含むことを述べ、輸送の補題は、名指されたスロットの一致する環境の間でこの節の充足を運ぶ。外延的な記述 `envSetAt` は、二つの全称含意の形で、ある集合の要素がちょうどそれらの環境であることを述べ、三つの読み方がこれらの含意をどちらの向きにもほどく。
 <!--/-->
@@ -98,7 +98,7 @@ Two formulas and their readers do the chapter's work. The environment clause `en
 <!--en-->
 From the previous chapter come the constructed set `envSet`, its two membership lemmas, the canonical graph element `envS`, the environment clause `envOver` satisfied at its own canonical environment, and the recovery module that reads an environment off the four clauses and identifies the set with that environment's graph.
 <!--zh-->
-来自上一章的有：已构造的集合 `envSet`、它的两条隶属引理、典范图元素 `envS`、在其自身典范环境处满足的环境子句 `envOver`，以及恢复模块，后者从四条子句读出一个环境，并把该集合与那个环境的图等同起来。
+来自上一章的有：已构造的集合 `envSet`、它的两条成员关系引理、典范图元素 `envS`、在其自身典范环境处满足的环境子句 `envOver`，以及恢复模块，后者从四条子句读出一个环境，并把该集合与那个环境的图等同起来。
 <!--ja-->
 前の章から来るのは、構成済みの集合 `envSet`、その二つの所属の補題、正準なグラフの要素 `envS`、みずからの正準な環境で満たされる環境の節 `envOver`、そして復元のモジュールである。復元のモジュールは四つの節から環境を読み取り、その集合をその環境のグラフと同一視する。
 <!--/-->
@@ -112,19 +112,19 @@ open InfinitySet using ( #_ )
 <!--en-->
 Decoding membership in an environment set into a representing environment returns only a truncated witness, while the target satisfaction and membership statements are propositions. The ambient numerals `# m` fill the length slots.
 <!--zh-->
-从环境集的隶属解码出表示它的环境时，只得到截断见证；目标中的满足与隶属陈述则都是命题。周遭数码 `# m` 填充长度槽位。
+从环境集的成员关系解码出表示它的环境时，只得到截断见证；目标中的满足与成员关系陈述则都是命题。周遭数码 `# m` 填充长度槽位。
 <!--ja-->
 環境の集合への所属からそれを表す環境を復号すると、切り詰められた証人だけが得られる。一方、目標となる充足と所属の主張はいずれも命題である。周囲の数項 `# m` が長さのスロットを埋める。
 <!--/-->
 
 ```agda
-open hPropStructure 𝒮ʟ
+open hPropView 𝒮ʟ
 ```
 
 <!--en-->
 Opening the inner structure fixes the satisfaction notation used throughout: members of its carrier, its membership, and satisfaction judgments read in `L`.
 <!--zh-->
-打开内层结构即固定全章使用的满足记号：其载体的成员、其隶属关系，以及在 `L` 中读出的满足判断。
+打开内层结构即固定全章使用的满足记号：其载体的元素、其成员关系，以及在 `L` 中读出的满足判断。
 <!--ja-->
 内側の構造を開くと、全章で使う充足の記法が固定される。その台の要素、その所属関係、そして `L` の中で読まれる充足の判断である。
 <!--/-->
@@ -147,9 +147,9 @@ The absoluteness module is instantiated over the transitive class of constructib
 
 The first module fixes a base set `B`, an environment `γ` of some length `k`, three of its slots, a length `m`, and two equations saying that the length slot is filled by the numeral of `m` and the base slot by `B`. Its hypothesis is that `γ` satisfies the description with the set slot at `Ei`. The conclusion is an agreement of members: the set named at `Ei` and the constructed `envSet B m` contain exactly the same sets.
 <!--zh-->
-## 从描述得到隶属关系
+## 从描述得到成员关系
 
-第一个模块固定基集合 `B`、某个长度 `k` 的环境 `γ`、它的三个槽位、一个长度 `m`，以及两条等式，后者说明长度槽位由 `m` 的数码填充、基槽位由 `B` 填充。其前提是 `γ` 满足以 `Ei` 为集合槽位的描述。结论是成员的一致：`Ei` 处所指名的集合与已构造的 `envSet B m` 恰好包含相同的集合。
+第一个模块固定基集合 `B`、某个长度 `k` 的环境 `γ`、它的三个槽位、一个长度 `m`，以及两条等式，后者说明长度槽位由 `m` 的数码填充、基槽位由 `B` 填充。其前提是 `γ` 满足以 `Ei` 为集合槽位的描述。结论是元素的一致：`Ei` 处所指名的集合与已构造的 `envSet B m` 恰好包含相同的集合。
 <!--ja-->
 ## 記述から所属関係へ
 
@@ -191,7 +191,7 @@ module Ambient (B : S) {k : ℕ} (γ : S ^ k) (Ei di bi : Fin k) (m : ℕ)
 <!--en-->
 The module gathers the data of one instance of the question. `B` is the base set, `γ` an environment of length `k`, and three of its slots are named: `Ei` holds the candidate set, `di` holds the numeral of the length, `bi` holds the base. The equations `qd` and `qb` say that these two slots really are filled by the numeral of `m` and by `B`, and `hE` says that `γ` satisfies the description with the set slot at `Ei`. Under these data, the set at `Ei` and `envSet B m` are shown to have the same members.
 <!--zh-->
-模块汇集了该问题一个实例的全部数据。`B` 是基集合，`γ` 是长度 `k` 的环境，其中三个槽位被点名：`Ei` 装着候选集合，`di` 装着长度的数码，`bi` 装着基。等式 `qd` 与 `qb` 说明这两个槽位确实由 `m` 的数码与 `B` 填充，而 `hE` 说明 `γ` 满足以 `Ei` 为集合槽位的描述。在这些数据之下，`Ei` 处的集合与 `envSet B m` 被证明具有相同的成员。
+模块汇集了该问题一个实例的全部数据。`B` 是基集合，`γ` 是长度 `k` 的环境，其中三个槽位被点名：`Ei` 装着候选集合，`di` 装着长度的数码，`bi` 装着基。等式 `qd` 与 `qb` 说明这两个槽位确实由 `m` 的数码与 `B` 填充，而 `hE` 说明 `γ` 满足以 `Ei` 为集合槽位的描述。在这些数据之下，`Ei` 处的集合与 `envSet B m` 被证明具有相同的元素。
 <!--ja-->
 モジュールは、この問いの一つの実例のデータを集める。`B` は基礎集合、`γ` は長さ `k` の環境で、三つのスロットに名前が付く。`Ei` が候補の集合を、`di` が長さの数項を、`bi` が基礎を収める。等式 `qd` と `qb` は、この二つのスロットが `m` の数項と `B` で埋められていることを述べ、`hE` は、`γ` が集合スロットを `Ei` に置いた記述を満たすことを述べる。このデータのもとで、`Ei` の指す集合と `envSet B m` が同じ要素をもつことが示される。
 <!--/-->
@@ -204,7 +204,7 @@ The module gathers the data of one instance of the question. `B` is the base set
 <!--en-->
 The first direction reads the slot set inward: any member of the set named at `Ei` is a member of the constructed `envSet B m`.
 <!--zh-->
-第一个方向把槽位集合向内读：`Ei` 处所指名集合的任何成员，都是已构造的 `envSet B m` 的成员。
+第一个方向把槽位集合向内读：`Ei` 处所指名集合的任何元素，都是已构造的 `envSet B m` 的元素。
 <!--ja-->
 最初の方向は、スロットの集合を内側へ読むものである。`Ei` の指す集合のどんな要素も、構成済みの `envSet B m` の要素である。
 <!--/-->
@@ -218,7 +218,7 @@ The first direction reads the slot set inward: any member of the set named at `E
 <!--en-->
 The proof reuses the recovery of the previous chapter, pointed at the member itself. The hypothesis says that `z` belongs to the set at `Ei`, so the description applies at `z`: the recovery reads off `z` an environment `g` whose canonical graph is, as a set, `z` itself. The constructed set contains the canonical graph of every such environment, and transporting along that identification puts the member `z` into `envSet B m`.
 <!--zh-->
-证明复用上一章的恢复过程，并把它对准这个成员本身。前提说 `z` 属于 `Ei` 处的集合，于是描述在 `z` 处适用：恢复过程从 `z` 读出一个环境 `g`，其典范图作为集合正是 `z` 自己。已构造的集合包含每个这样的环境的典范图，沿这条等同传输后，成员 `z` 便落入 `envSet B m`。
+证明复用上一章的恢复过程，并把它对准这个元素本身。前提说 `z` 属于 `Ei` 处的集合，于是描述在 `z` 处适用：恢复过程从 `z` 读出一个环境 `g`，其典范图作为集合正是 `z` 自己。已构造的集合包含每个这样的环境的典范图，沿这条等同传输后，元素 `z` 便落入 `envSet B m`。
 <!--ja-->
 証明は、前の章の復元をこの要素そのものに向けて再利用する。仮定は `z` が `Ei` の指す集合に属することを言うので、記述は `z` で適用できる。復元は `z` から環境 `g` を読み取り、その正準なグラフが集合として `z` 自身であると同定する。構成済みの集合はそのような環境の正準なグラフをすべて含むので、この同定に沿って輸送すれば、要素 `z` は `envSet B m` の中に入る。
 <!--/-->
@@ -232,7 +232,7 @@ The proof reuses the recovery of the previous chapter, pointed at the member its
 <!--en-->
 The recovery needs the four clauses to hold at `z`, and the description supplies exactly that: applied at the member `z`, it yields the environment clause over the environment extended by `z`, with the length and base slots shifted past the new entry.
 <!--zh-->
-恢复需要那四条子句在 `z` 处成立，而描述给出的恰是这件事：把它施用于成员 `z`，便得到在扩展了 `z` 的环境上的环境子句，长度与基的槽位则越过新条目相应后移。
+恢复需要那四条子句在 `z` 处成立，而描述给出的恰是这件事：把它施用于元素 `z`，便得到在扩展了 `z` 的环境上的环境子句，长度与基的槽位则越过新条目相应后移。
 <!--ja-->
 復元には、四つの節が `z` で成り立つことが要る。記述が与えるのはまさにこれである。要素 `z` に適用すれば、`z` で拡張した環境の上の環境の節が得られ、長さと基礎のスロットは新しい項目のぶんだけ後ろへずれる。
 <!--/-->
@@ -245,7 +245,7 @@ The recovery needs the four clauses to hold at `z`, and the description supplies
 <!--en-->
 The second direction reads outward: any member of the constructed `envSet B m` is a member of the set named at `Ei`.
 <!--zh-->
-第二个方向向外读：已构造的 `envSet B m` 的任何成员，都是 `Ei` 处所指名集合的成员。
+第二个方向向外读：已构造的 `envSet B m` 的任何元素，都是 `Ei` 处所指名集合的元素。
 <!--ja-->
 第二の方向は外向きに読むものである。構成済みの `envSet B m` のどんな要素も、`Ei` の指す集合の要素である。
 <!--/-->
@@ -258,7 +258,7 @@ The second direction reads outward: any member of the constructed `envSet B m` i
 <!--en-->
 Membership in the constructed set hands over a truncated witness: an environment `g` whose canonical graph is `z`. The goal, being a membership statement, is a proposition, so the truncation may be consumed, and the membership characterization of the previous chapter is what produces the witness.
 <!--zh-->
-已构造集合中的隶属交出一个截断的见证：一个环境 `g`，其典范图就是 `z`。目标是隶属陈述，因而是命题，截断因此可以消耗；而产出见证的，正是上一章的隶属刻画。
+已构造集合中的成员关系交出一个截断的见证：一个环境 `g`，其典范图就是 `z`。目标是成员关系陈述，因而是命题，截断因此可以消耗；而产出见证的，正是上一章的成员关系刻画。
 <!--ja-->
 構成済みの集合への所属は、切り詰められた証人を手渡す。それは環境 `g` であり、その正準なグラフが `z` である。目標は所属の主張、つまり命題なので、切り詰めは消去でき、証人を生み出すのは前の章の所属の特徴づけである。
 <!--/-->
@@ -288,7 +288,7 @@ The recovered environment satisfies the environment clause at its own canonical 
 <!--en-->
 The environment handed to the transport comes from the membership characterization of the constructed set, applied at the member `z` with which this direction began.
 <!--zh-->
-交给搬运的那个环境来自已构造集合的隶属刻画，施用于本方向出发时的那个成员 `z`。
+交给搬运的那个环境来自已构造集合的成员关系刻画，施用于本方向出发时的那个元素 `z`。
 <!--ja-->
 輸送に渡される環境は、構成済みの集合の所属の特徴づけから来る。この方向の出発点であった要素 `z` に適用されるのである。
 <!--/-->
@@ -300,7 +300,7 @@ The second module turns the agreement around and asks the producing question: do
 <!--zh-->
 ## 已构造的集合满足描述
 
-第二个模块把一致反过来，问的是产出方向：已构造的环境集自身满足这条描述吗？把它放在集合槽位、在另两个槽位放上 `m` 的数码与基之后，答案是肯定的；而这正是绑定自己的基与长度的子句在用已构造数据填充槽位时所需要的。证明沿与先前相同的两步运行，只是次序改由描述支配：已构造集合的每个成员都被证明满足逐成员子句，而每个满足该子句的集合也被证明是其成员。
+第二个模块把一致反过来，问的是产出方向：已构造的环境集自身满足这条描述吗？把它放在集合槽位、在另两个槽位放上 `m` 的数码与基之后，答案是肯定的；而这正是绑定自己的基与长度的子句在用已构造数据填充槽位时所需要的。证明沿与先前相同的两步运行，只是次序改由描述支配：已构造集合的每个元素都被证明满足逐元素子句，而每个满足该子句的集合也被证明是其元素。
 <!--ja-->
 ## 構成した集合が記述を満たすこと
 
@@ -356,7 +356,7 @@ The description is an extensional one: it says that the set at `Ei` contains exa
 <!--en-->
 The forward implication is the producing direction: every member of the constructed set satisfies the per-member clause over the extended environment.
 <!--zh-->
-向前蕴含是产出方向：已构造集合的每个成员都在扩展环境上满足逐成员子句。
+向前蕴含是产出方向：已构造集合的每个元素都在扩展环境上满足逐元素子句。
 <!--ja-->
 順方向の含意が生み出す方向である。構成済みの集合の各要素は、拡張された環境の上で要素ごとの節を満たす。
 <!--/-->
@@ -369,7 +369,7 @@ The forward implication is the producing direction: every member of the construc
 <!--en-->
 The membership `hz` is first re-pointed at the constructed set along the equation `qE`, and the membership lemma of the previous chapter then hands over a truncated environment. The goal on the other side is a proposition, being one clause of a satisfaction judgment, so the truncated witness can be taken apart.
 <!--zh-->
-隶属 `hz` 先沿等式 `qE` 被重新指到已构造的集合上，上一章的隶属引理随即交出一个截断的环境。另一侧的目标是满足判断的一条子句，因而是命题，截断的见证因此可以拆开。
+成员关系 `hz` 先沿等式 `qE` 被重新指到已构造的集合上，上一章的成员关系引理随即交出一个截断的环境。另一侧的目标是满足判断的一条子句，因而是命题，截断的见证因此可以拆开。
 <!--ja-->
 所属 `hz` は、まず等式 `qE` に沿って構成済みの集合へと指し直され、前の章の所属の補題が切り詰められた環境を手渡す。反対側の目標は充足の判断の一つの節、つまり命題なので、切り詰められた証人を分解できる。
 <!--/-->
@@ -382,7 +382,7 @@ The membership `hz` is first re-pointed at the constructed set along the equatio
 <!--en-->
 The environment clause of the recovered environment is transported, exactly as in the reading direction, from its canonical environment to the extended environment of the judgment: the graph is read as the member `z`, the numeral as the entry at `di`, the base as the entry at `bi`. What remains is the clause itself, which is what the forward implication owes.
 <!--zh-->
-恢复出的环境的环境子句被搬运，方式与读取方向完全相同：从其典范环境搬到判断的扩展环境上，图被读作成员 `z`，数码被读作 `di` 处的条目，基被读作 `bi` 处的条目。余下的就是那条子句本身，这正是向前蕴含所欠的东西。
+恢复出的环境的环境子句被搬运，方式与读取方向完全相同：从其典范环境搬到判断的扩展环境上，图被读作元素 `z`，数码被读作 `di` 处的条目，基被读作 `bi` 处的条目。余下的就是那条子句本身，这正是向前蕴含所欠的东西。
 <!--ja-->
 復元された環境の環境の節は、読み取りの方向とまったく同じやり方で輸送される。その正準な環境から判断の拡張された環境へ、グラフは要素 `z` と読み、数項は `di` の項目と読み、基礎は `bi` の項目と読まれる。残るのは節そのものであり、順方向の含意が負っているのはこれである。
 <!--/-->
@@ -394,7 +394,7 @@ The environment clause of the recovered environment is transported, exactly as i
 <!--en-->
 The environment handed to the transport comes from the membership characterization of the constructed set, with `qE` supplying the first step that reads the member as a member of `envSet B m`.
 <!--zh-->
-交给搬运的那个环境来自已构造集合的隶属刻画，而 `qE` 供给了第一步：把该成员读作 `envSet B m` 的成员。
+交给搬运的那个环境来自已构造集合的成员关系刻画，而 `qE` 供给了第一步：把该元素读作 `envSet B m` 的元素。
 <!--ja-->
 輸送に渡される環境は、構成済みの集合の所属の特徴付けから来る。`qE` が最初の一歩、すなわちその要素を `envSet B m` の要素として読み直す段階を供給する。
 <!--/-->
@@ -407,7 +407,7 @@ The environment handed to the transport comes from the membership characterizati
 <!--en-->
 The backward implication is the reading direction: whatever satisfies the per-member clause over the extended environment belongs to the set at `Ei`.
 <!--zh-->
-向后蕴含是读取方向：凡在扩展环境上满足逐成员子句者，都属于 `Ei` 处的集合。
+向后蕴含是读取方向：凡在扩展环境上满足逐元素子句者，都属于 `Ei` 处的集合。
 <!--ja-->
 逆方向の含意は読み取りの方向である。拡張された環境の上で要素ごとの節を満たすものは、すべて `Ei` の指す集合に属する。
 <!--/-->
@@ -424,7 +424,7 @@ The backward implication is the reading direction: whatever satisfies the per-me
 <!--en-->
 The clause at `z` is the recovery's input: the recovered environment's canonical graph agrees with `z` as a set, and the constructed set contains that graph. The first transport reads the recovered graph as `z`, so the membership lands in `envSet B m`; the second runs backward along `qE` and turns membership in `envSet B m` into membership in the set at `Ei`.
 <!--zh-->
-`z` 处的子句正是恢复的输入：恢复出的环境的典范图作为集合与 `z` 一致，而已构造的集合包含那个图。第一次传输把恢复出的图读作 `z`，使隶属落入 `envSet B m`；第二次沿 `qE` 反向进行，把对 `envSet B m` 的隶属变为对 `Ei` 处集合的隶属。
+`z` 处的子句正是恢复的输入：恢复出的环境的典范图作为集合与 `z` 一致，而已构造的集合包含那个图。第一次传输把恢复出的图读作 `z`，使成员关系落入 `envSet B m`；第二次沿 `qE` 反向进行，把对 `envSet B m` 的成员关系变为对 `Ei` 处集合的成员关系。
 <!--ja-->
 `z` での節は、復元の入力である。復元された環境の正準なグラフは集合として `z` と一致し、構成済みの集合はそのグラフを含む。最初の輸送が復元されたグラフを `z` と読み、所属を `envSet B m` の中に着地させ、二度目の輸送が `qE` に沿って逆に走り、`envSet B m` への所属を `Ei` の指す集合への所属へ変える。
 <!--/-->

@@ -28,7 +28,7 @@ module L.GCH.BoundedSubset {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV; regularityV )
 open import L.Constructible {ℓ}
   using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset; Lset-mono; Lset-layer; layer-trans )
@@ -56,7 +56,7 @@ open import L.GCH.HullCounting {ℓ} lem
 The bounded-subset theorem starts with an internal cardinal `κ` whose underlying set is an ordinal and does not belong to `ω`, together with an arbitrary constructible set `y` whose ambient members all lie in `κ`. Under propositional truncation, it gives a constructible ordinal `β` such that `y ∈ Lset β` and a coded injection `β ↪ κ` exists. It assumes no formula defining `y`, selects no least stage, and makes no uniform choice of `β` as `y` varies.
 <!--zh-->
 
-有界子集定理从如下数据出发：内部基数 `κ` 的底层集合是序数且不属于 `ω`，任意可构造集合 `y` 的每个外围成员都属于 `κ`。定理在命题截断下给出可构造序数 `β`，使 `y ∈ Lset β`，并存在编码单射 `β ↪ κ`。这里不假设 `y` 由某个公式定义，不选取最小层，也不随 `y` 统一选取 `β`。
+有界子集定理从如下数据出发：内部基数 `κ` 的底层集合是序数且不属于 `ω`，任意可构造集合 `y` 的每个外围元素都属于 `κ`。定理在命题截断下给出可构造序数 `β`，使 `y ∈ Lset β`，并存在编码单射 `β ↪ κ`。这里不假设 `y` 由某个公式定义，不选取最小层，也不随 `y` 统一选取 `β`。
 <!--ja-->
 
 有界部分集合定理では、台となる集合が順序数であり `ω` に属さない内部基数 `κ` と、周囲の各要素が `κ` に属する任意の構成可能集合 `y` を考える。命題的切り詰めのもとで、`y ∈ Lset β` を満たし、符号化された単射 `β ↪ κ` が存在するような構成可能順序数 `β` が得られる。`y` を定義する論理式は仮定せず、最小の段階も選ばず、`y` ごとに `β` を一様に選ぶこともない。
@@ -115,7 +115,7 @@ The size estimate begins with two elementary pieces. The stage `Lset κ` can be 
 <!--en-->
 Several equalities below are proved by comparing membership in both directions. The alternatives arising from union membership are propositionally truncated, but each target membership statement is a proposition, so those alternatives may be used locally without selecting a lasting branch.
 <!--zh-->
-下文若干相等通过双向比较成员关系来证明。并集隶属给出的分支带有命题截断，但每个目标隶属陈述本身都是命题，因此可以局部使用这些分支，而不必选定并保留某个分支。
+下文若干相等通过双向比较成员关系来证明。并集成员关系给出的分支带有命题截断，但每个目标成员关系陈述本身都是命题，因此可以局部使用这些分支，而不必选定并保留某个分支。
 <!--ja-->
 以下では、いくつかの等しさを、所属を両方向に比較して証明する。合併への所属から得られる場合分けは命題的に切り詰められているが、行き先となる所属の主張はいずれも命題である。したがって、どちらかの分岐を選んで保持することなく、その場合分けを局所的に利用できる。
 <!--/-->
@@ -150,13 +150,13 @@ Whenever an injection is asserted through `InjL`, its graph exists only under pr
 <!--en-->
 The subset premise is deliberately stated with ambient membership. Thus an arbitrary ambient set `z` may be tested for membership in `y` and then in `κ`; `z` is not required to arrive together with its own proof of constructibility.
 <!--zh-->
-子集前提刻意用外围隶属来陈述。因此可以对任意外围集合 `z` 检验它属于 `y`，继而推出它属于 `κ`；并不要求 `z` 一开始就附带自身的可构造性证明。
+子集前提刻意用外围成员关系来陈述。因此可以对任意外围集合 `z` 检验它属于 `y`，继而推出它属于 `κ`；并不要求 `z` 一开始就附带自身的可构造性证明。
 <!--ja-->
 部分集合の仮定は、意図的に周囲の所属を用いて述べられる。したがって、任意の周囲の集合 `z` について、`y` への所属から `κ` への所属を導ける。`z` 自身の構成可能性の証明が、初めから添えられている必要はない。
 <!--/-->
 
 ```agda
-open hPropStructure 𝒮ᵥ using ( _∈ˢ_ )
+open hPropView 𝒮ᵥ using ( _∈ˢ_ )
 ```
 
 <!--en-->
@@ -168,7 +168,7 @@ By contrast, `κ` and `y` are elements of the constructible carrier `S`: each pa
 <!--/-->
 
 ```agda
-open hPropStructure 𝒮ʟ using ( S )
+open hPropView 𝒮ʟ using ( S )
 ```
 
 <!--en-->
@@ -182,7 +182,7 @@ open hPropStructure 𝒮ʟ using ( S )
 <!--en-->
 Fix a constructible set `κ` whose underlying set is an ordinal, an internal cardinal, and not a member of `ω`. Also fix an arbitrary constructible set `y` and assume pointwise that every ambient member of `y` belongs to `κ`. These are the complete hypotheses: in particular, no definition of `y` by a formula or by finitely many parameters is assumed.
 <!--zh-->
-固定可构造集合 `κ`，假设其底层集合是序数、是内部基数且不属于 `ω`。再固定任意可构造集合 `y`，并逐点假设 `y` 的每个外围成员都属于 `κ`。这些就是全部前提；特别地，不假设 `y` 由公式或有限多个参数定义。
+固定可构造集合 `κ`，假设其底层集合是序数、是内部基数且不属于 `ω`。再固定任意可构造集合 `y`，并逐点假设 `y` 的每个外围元素都属于 `κ`。这些就是全部前提；特别地，不假设 `y` 由公式或有限多个参数定义。
 <!--ja-->
 台となる集合が順序数であり、内部の基数であり、`ω` の要素ではない構成可能集合 `κ` を固定する。さらに任意の構成可能集合 `y` を固定し、`y` の周囲の各要素が `κ` に属すると点ごとに仮定する。仮定はこれですべてである。とくに、`y` が論理式や有限個のパラメータで定義されるとは仮定しない。
 <!--/-->
@@ -226,7 +226,7 @@ The ordinal `κ` and the constructible stage indexed by it are different sets. W
 <!--en-->
 To place `κ` and `y` in one common stage, first form their unordered pair inside `L`. A stage containing this pair will contain both entries by transitivity, so one occurrence-stage construction suffices for the two objects.
 <!--zh-->
-为了把 `κ` 与 `y` 放进同一个层，先在 `L` 内形成二者的无序对。任何包含该对的传递层都会包含它的两个成员，因此只需一次出现层构造便能同时处理这两个对象。
+为了把 `κ` 与 `y` 放进同一个层，先在 `L` 内形成二者的无序对。任何包含该对的传递层都会包含它的两个元素，因此只需一次出现层构造便能同时处理这两个对象。
 <!--ja-->
 `κ` と `y` を一つの共通の段階へ入れるため、まず `L` の内部で両者の無順序対を作る。この対を含む推移的な段階は、その二つの要素も含むので、一度の出現段階の構成で両方を扱える。
 <!--/-->
@@ -266,7 +266,7 @@ The chosen stage index `α₀` is an ordinal. This matters because the next cons
 <!--en-->
 The cardinal `κ` belongs to `Lset α₀`. Indeed, `κ` is a member of the unordered pair, the pair belongs to `Lset α₀`, and this stage is transitive. This is stage membership, not yet the ordinal membership `κ ∈ α₀` used later.
 <!--zh-->
-基数 `κ` 属于 `Lset α₀`。这是因为 `κ` 是无序对的成员，该无序对属于 `Lset α₀`，而这一层是传递集。这里得到的是层隶属，尚不是后文所用的序数隶属 `κ ∈ α₀`。
+基数 `κ` 属于 `Lset α₀`。这是因为 `κ` 是无序对的元素，该无序对属于 `Lset α₀`，而这一层是传递集。这里得到的是层成员关系，尚不是后文所用的序数成员关系 `κ ∈ α₀`。
 <!--ja-->
 基数 `κ` は `Lset α₀` に属する。`κ` は無順序対の要素であり、その対は `Lset α₀` に属し、この段階は推移的だからである。ここで得たのは段階への所属であって、後で使う順序数への所属 `κ ∈ α₀` ではない。
 <!--/-->
@@ -280,7 +280,7 @@ The cardinal `κ` belongs to `Lset α₀`. Indeed, `κ` is a member of the unord
 <!--en-->
 The same transitivity argument places `y` in `Lset α₀` through the other member of the pair. Unlike `κ`, the set `y` is not assumed to be an ordinal, so this fact will be transported to `Lset lam` by stage monotonicity rather than converted into membership in `α₀`.
 <!--zh-->
-同一个传递性论证经无序对的另一成员把 `y` 放进 `Lset α₀`。与 `κ` 不同，并未假设 `y` 是序数，所以后文会用层的单调性把这一事实搬到 `Lset lam`，而不会把它转换成 `y ∈ α₀`。
+同一个传递性论证经无序对的另一元素把 `y` 放进 `Lset α₀`。与 `κ` 不同，并未假设 `y` 是序数，所以后文会用层的单调性把这一事实搬到 `Lset lam`，而不会把它转换成 `y ∈ α₀`。
 <!--ja-->
 同じ推移性の議論により、無順序対のもう一つの要素を通して `y` も `Lset α₀` に入る。`κ` と違い、`y` は順序数とは仮定されていない。したがって後では、この事実を段階の単調性によって `Lset lam` へ運び、`y ∈ α₀` へ変換することはしない。
 <!--/-->
@@ -320,7 +320,7 @@ Write this high ordinal as `lam`, corresponding to `λ` in the exposition. Its p
 <!--en-->
 The first retained fact is that `lam` is an ordinal. Consequently it is transitive, which will allow ordinal memberships below `lam` to be carried farther upward.
 <!--zh-->
-首先保留的事实是 `lam` 为序数。因此它是传递集，这使得 `lam` 以下的序数隶属可以继续向上传递。
+首先保留的事实是 `lam` 为序数。因此它是传递集，这使得 `lam` 以下的序数成员关系可以继续向上传递。
 <!--ja-->
 最初に保つ事実は、`lam` が順序数であることである。したがって `lam` は推移的であり、`lam` より下の順序数の所属をさらに上へ運べる。
 <!--/-->
@@ -385,7 +385,7 @@ For `y`, the required conclusion is instead membership in the stage `Lset lam`. 
 <!--en-->
 Every ambient member of `y` lies in `Lset κ`. Indeed, the subset hypothesis sends `z ∈ y` to `z ∈ κ`; since `κ` is an ordinal, such a `z` is itself an ordinal, lies in its successor stage, and hence lies in `Lset κ` by cumulativity. Thus `y ⊆ κ` supplies the stage inclusion needed to make the starting set transitive.
 <!--zh-->
-`y` 的每个外围成员都属于 `Lset κ`。子集前提先把 `z ∈ y` 送到 `z ∈ κ`；由于 `κ` 是序数，这样的 `z` 本身也是序数，属于自己的后继层，再由累积性得到 `z ∈ Lset κ`。因此，`y ⊆ κ` 给出了使起始集成为传递集所需的层包含关系。
+`y` 的每个外围元素都属于 `Lset κ`。子集前提先把 `z ∈ y` 送到 `z ∈ κ`；由于 `κ` 是序数，这样的 `z` 本身也是序数，属于自己的后继层，再由累积性得到 `z ∈ Lset κ`。因此，`y ⊆ κ` 给出了使起始集成为传递集所需的层包含关系。
 <!--ja-->
 `y` の周囲の各要素は `Lset κ` に属する。部分集合の仮定により `z ∈ y` から `z ∈ κ` が得られる。`κ` は順序数なので、このような `z` も順序数であり、自身の後続段階に属し、累積性によって `z ∈ Lset κ` となる。したがって `y ⊆ κ` から、出発集合を推移的にするために必要な段階への包含が得られる。
 <!--/-->
@@ -450,7 +450,7 @@ Call this internally constructed union `Xʟ`. It represents the same mathematica
 <!--en-->
 To identify `Xʟ` with `X`, compare their members in both directions. In the forward direction, membership in the internally coded union yields, under propositional truncation, either a member of `Lset κ` or a member of the coded singleton; both cases imply membership in `X`. The elimination is valid because membership in `X` is a proposition.
 <!--zh-->
-为了把 `Xʟ` 与 `X` 识别起来，双向比较二者的成员。正向中，属于内部编码并意味着在命题截断下分成两种情形：属于 `Lset κ`，或属于编码单点集；两种情形都推出属于 `X`。由于属于 `X` 是命题，这次消去是合法的。
+为了把 `Xʟ` 与 `X` 识别起来，双向比较二者的元素。正向中，属于内部编码并意味着在命题截断下分成两种情形：属于 `Lset κ`，或属于编码单点集；两种情形都推出属于 `X`。由于属于 `X` 是命题，这次消去是合法的。
 <!--ja-->
 `Xʟ` と `X` を同一視するため、両者の要素を二方向に比較する。順方向では、内部で符号化された合併への所属から、命題的切り詰めのもとで、`Lset κ` の要素である場合と、符号化された単元集合の要素である場合に分かれる。どちらからも `X` への所属が従う。`X` への所属は命題なので、この除去は正当である。
 <!--/-->
@@ -466,7 +466,7 @@ To identify `Xʟ` with `X`, compare their members in both directions. In the for
 <!--en-->
 In the stage case, the left inclusion places the member in `X`. The temporary packaging of `z` as constructible is justified by transitivity of `L`: since `z` belongs to the constructible set `Xʟ`, it is constructible as well.
 <!--zh-->
-在层这一分支中，左侧包含把该成员放入 `X`。把 `z` 暂时打包为可构造集合是由 `L` 的传递性保证的：既然 `z` 属于可构造集合 `Xʟ`，它自身也可构造。
+在层这一分支中，左侧包含把该元素放入 `X`。把 `z` 暂时打包为可构造集合是由 `L` 的传递性保证的：既然 `z` 属于可构造集合 `Xʟ`，它自身也可构造。
 <!--ja-->
 段階の側の場合、左の包含によって、その要素は `X` に入る。`z` を一時的に構成可能集合としてまとめられるのは、`L` の推移性による。`z` は構成可能集合 `Xʟ` の要素なので、`z` 自身も構成可能である。
 <!--/-->
@@ -482,7 +482,7 @@ In the stage case, the left inclusion places the member in `X`. The temporary pa
 <!--en-->
 In the singleton case, the coded member is equal to `y`, already known to belong to `X`. Conversely, membership in `X` splits, again only under propositional truncation, into the `Lset κ` side and the singleton side; the target membership in `Xʟ` is a proposition, so this second elimination is equally legitimate.
 <!--zh-->
-在单点分支中，编码成员等于已知属于 `X` 的 `y`。反向中，属于 `X` 同样只在命题截断下拆分为 `Lset κ` 一侧与单点一侧；目标「属于 `Xʟ`」是命题，因此第二次消去同样合法。
+在单点分支中，编码元素等于已知属于 `X` 的 `y`。反向中，属于 `X` 同样只在命题截断下拆分为 `Lset κ` 一侧与单点一侧；目标「属于 `Xʟ`」是命题，因此第二次消去同样合法。
 <!--ja-->
 単元集合の側では、符号化された要素は、すでに `X` に属すると分かっている `y` に等しくなる。逆方向では、`X` への所属が、やはり命題的切り詰めのもとで `Lset κ` の側と単元集合の側に分かれる。行き先である `Xʟ` への所属は命題なので、この二度目の除去も正当である。
 <!--/-->
@@ -498,7 +498,7 @@ In the singleton case, the coded member is equal to `y`, already known to belong
 <!--en-->
 The reverse cases enter the two summands of `Xʟ`. A member of `Lset κ` enters on the left, with constructibility inherited from that stage; a member of `{y}` is first identified with `y` and then enters through the coded singleton. Thus extensionality proves `fst Xʟ ≡ X` without retaining either truncated case split.
 <!--zh-->
-反向的两个分支分别进入 `Xʟ` 的两个并项。`Lset κ` 的成员从左侧进入，其可构造性由该层继承；`{y}` 的成员先与 `y` 识别，再从编码单点集一侧进入。因此外延性给出 `fst Xʟ ≡ X`，而不保留任何一次截断的分支选择。
+反向的两个分支分别进入 `Xʟ` 的两个并项。`Lset κ` 的元素从左侧进入，其可构造性由该层继承；`{y}` 的元素先与 `y` 识别，再从编码单点集一侧进入。因此外延性给出 `fst Xʟ ≡ X`，而不保留任何一次截断的分支选择。
 <!--ja-->
 逆方向の二つの場合は、`Xʟ` の二つの成分へそれぞれ入る。`Lset κ` の要素は、その段階から構成可能性を受け継いで左側に入り、`{y}` の要素は、まず `y` と同一視されてから、符号化された単元集合の側に入る。こうして外延性により `fst Xʟ ≡ X` が得られ、切り詰められた場合分けはどちらも保持されない。
 <!--/-->
@@ -618,7 +618,7 @@ We now use three aspects of this single hull construction: the hull `M`, the inc
 <!--en-->
 The set `y` belongs to the Skolem hull `M`: it was placed in the starting set `X`, and every member of `X` lies in the hull generated from `X`.
 <!--zh-->
-集合 `y` 属于 Skolem 壳 `M`：它已被放入起点集 `X`，而 `X` 的每个成员都属于由 `X` 生成的壳。
+集合 `y` 属于 Skolem 壳 `M`：它已被放入起点集 `X`，而 `X` 的每个元素都属于由 `X` 生成的壳。
 <!--ja-->
 集合 `y` は Skolem 包 `M` に属する。`y` は始点集合 `X` に入っており、`X` の各要素は `X` から生成された包に属するからである。
 <!--/-->
@@ -631,7 +631,7 @@ The set `y` belongs to the Skolem hull `M`: it was placed in the starting set `X
 <!--en-->
 The collapse fixes `y`: because the starting set `X` is transitive and contained in the hull, the collapse map acts as the identity on every member of `X`, and `y` is one of them.
 <!--zh-->
-塌缩固定 `y`：因为起点集 `X` 传递且包含于壳中，塌缩映射在 `X` 的每个成员上恒等，而 `y` 即为其中之一。
+塌缩固定 `y`：因为起点集 `X` 传递且包含于壳中，塌缩映射在 `X` 的每个元素上恒等，而 `y` 即为其中之一。
 <!--ja-->
 崩壊は `y` を固定する。始点の集合 `X` が推移的で包の中にあるため、崩壊の写像は `X` のすべての要素の上で恒等であり、`y` もその一つである。
 <!--/-->
@@ -660,7 +660,7 @@ The collapse image contains `π(y)`, since `y` belongs to the hull. Condensation
 <!--en-->
 The ordinal `β` injects into `κ` by a chain of three coded injections: the inclusion from `β` into the level `Lset β` by ordinal membership, the restricted inverse collapse from `Lset β` into the hull `M`, and the hull counting from `M` into `κ`. The chain gives a coded injection, not a bare ordinal comparison.
 <!--zh-->
-序数 `β` 经三条编码单射的链注入 `κ`：由序数隶属从 `β` 到层 `Lset β` 的包含、由受限逆塌缩从 `Lset β` 到壳 `M` 的单射、以及由壳计数从 `M` 到 `κ` 的单射。这条链给出的是编码单射，而非裸序数比较。
+序数 `β` 经三条编码单射的链注入 `κ`：由序数成员关系从 `β` 到层 `Lset β` 的包含、由受限逆塌缩从 `Lset β` 到壳 `M` 的单射、以及由壳计数从 `M` 到 `κ` 的单射。这条链给出的是编码单射，而非裸序数比较。
 <!--ja-->
 順序数 `β` は、三つの符号化された単射の鎖によって `κ` へ単射する。順序数の所属による `β` から `Lset β` への包含、制限された逆崩壊による `Lset β` から包 `M` への単射、そして包の計数による `M` から `κ` への単射である。この鎖が与えるのは符号化された単射であり、裸の順序数の比較ではない。
 <!--/-->

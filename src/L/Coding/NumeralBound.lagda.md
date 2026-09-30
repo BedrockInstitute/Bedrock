@@ -28,7 +28,7 @@ module L.Coding.NumeralBound {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import L.Constructible {ℓ} using ( IsOrd; Lset; Lset-mono )
 open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
@@ -60,7 +60,7 @@ Two presentations of a numeral must be kept apart. The ambient numeral `# k` is 
 <!--en-->
 The ambient numerals live in the cumulative hierarchy itself: `∅` is its empty set, `# k` is the finite von Neumann ordinal with k members, and `sucV` is the successor step a ↦ a ∪ {a}. Note that `# (suc k)` is definitionally `sucV (# k)`, so closing λ under `sucV` automatically covers every numeral after zero. The truth values here are propositions at level ℓ-suc ℓ, packaged directly in `hProp`, so each membership claim is a proposition.
 <!--zh-->
-周遭数码就生活在累积层级自身之中：`∅` 是其中的空集，`# k` 是有 k 个成员的有限冯·诺伊曼序数，`sucV` 是后继步骤 a ↦ a ∪ {a}。注意 `# (suc k)` 定义地就是 `sucV (# k)`，因此 λ 对 `sucV` 封闭就自动覆盖零之后的每个数码。这里的真值是层级 ℓ-suc ℓ 上的命题，直接打包在 `hProp` 中，所以每条隶属断言都是命题。
+周遭数码就生活在累积层级自身之中：`∅` 是其中的空集，`# k` 是有 k 个元素的有限冯·诺伊曼序数，`sucV` 是后继步骤 `λ a → a ∪ ⁅ a ⁆`{.Agda}。注意 `# (suc k)` 定义地就是 `sucV (# k)`，因此 λ 对 `sucV` 封闭就自动覆盖零之后的每个数码。这里的真值是层级 ℓ-suc ℓ 上的命题，直接打包在 `hProp` 中，所以每条成员关系断言都是命题。
 <!--ja-->
 周囲の数項は累積階層そのものの中に住んでいる。`∅` はその空集合、`# k` は要素を k 個持つ有限のフォン・ノイマン順序数、`sucV` は a ↦ a ∪ {a} という後者の操作である。`# (suc k)` は定義上 `sucV (# k)` に等しいので、λ が `sucV` について閉じていれば零以降のすべての数項が自動的に覆われる。ここでの真理値は `hProp` に直接まとめられたレベル ℓ-suc ℓ の命題であり、各所属の主張は命題である。
 <!--/-->
@@ -74,13 +74,13 @@ open InfinitySet using ( #_; sucV )
 <!--en-->
 All three memberships in the argument have different roles: `# k ∈ λ` places a finite ordinal below the index; `# k ∈ T (sucV (# k))` places it in its canonical successor stage; and `# k ∈ T λ` is the desired bound. Writing each as a proposition makes the induction and the later transport proof-irrelevant, but the implication between them still comes from the stated closure, ordinal-stage, and monotonicity hypotheses.
 <!--zh-->
-论证中的三种隶属各有作用：`# k ∈ λ` 把有穷序数置于指标之下；`# k ∈ T (sucV (# k))` 把它置于自身的后继层；`# k ∈ T λ` 才是所求的界。它们都作为命题陈述，因而归纳与后续搬运不依赖证明的选择；三者之间的推导仍分别依靠后继封闭、序数层性质与单调性假设。
+论证中的三种成员关系各有作用：`# k ∈ λ` 把有穷序数置于指标之下；`# k ∈ T (sucV (# k))` 把它置于自身的后继层；`# k ∈ T λ` 才是所求的界。它们都作为命题陈述，因而归纳与后续搬运不依赖证明的选择；三者之间的推导仍分别依靠后继封闭、序数层性质与单调性假设。
 <!--ja-->
 議論に現れる三つの所属は役割が異なる。`# k ∈ λ` は有限順序数を添字の下に置き、`# k ∈ T (sucV (# k))` はそれを自身の後者段階に置き、`# k ∈ T λ` が求める上界である。いずれも命題として述べられるため、帰納と後の輸送は証明の選び方に依存しないが、それらを結ぶ推論には後者閉包、順序数段階の性質、単調性の各仮定が必要である。
 <!--/-->
 
 ```agda
-open hPropStructure 𝒮ᵥ
+open hPropView 𝒮ᵥ
 ```
 
 <!--en-->
@@ -100,7 +100,7 @@ Let λ contain zero and be closed under successors. Induction puts every numeral
 <!--en-->
 The section works over the fixed carrier S with membership `⟨_∈ˢ_⟩`, an arbitrary map T on it, and two hypotheses about T. The first, `T-mono`, converts a membership of stage indices β ∈ α together with x ∈ T β into x ∈ T α. The second, `T-ord`, is the anchor: an ordinal δ belongs to T (sucV δ), the stage indexed by its own successor.
 <!--zh-->
-本节在固定载体 S 及其隶属 `⟨_∈ˢ_⟩` 上、其上的任意映射 T 以及关于 T 的两条假设来陈述。第一条 `T-mono` 把层指标的隶属 β ∈ α 连同 x ∈ T β 转换为 x ∈ T α。第二条 `T-ord` 是锚点：序数 δ 属于以其自身后继为指标的层 T (sucV δ)。
+本节在固定载体 `S`{.Agda} 及其成员关系 `⟨_∈ˢ_⟩` 上、其上的任意映射 `T`{.Agda} 以及关于 `T`{.Agda} 的两条假设来陈述。第一条 `T-mono` 把层指标的成员关系 β ∈ α 连同 `x ∈ T β`{.Agda} 转换为 `x ∈ T α`{.Agda}。第二条 `T-ord` 是锚点：序数 δ 属于以其自身后继为指标的层 `T (sucV δ)`{.Agda}。
 <!--ja-->
 本節は、所属 `⟨_∈ˢ_⟩` を備えた固定された台 S、その上の任意の写像 T、および T に関する二つの仮定に対して述べられる。第一の `T-mono` は、段階添字の所属 β ∈ α と x ∈ T β とから x ∈ T α を導く。第二の `T-ord` が錨である。順序数 δ は、その自身の後者を添字とする段階 T (sucV δ) に属する。
 <!--/-->
@@ -160,7 +160,7 @@ Membership in λ is an index-level statement; membership in the stage T λ is a 
 <!--en-->
 Two steps compose. First, T-ord at δ = # k, together with `numeral-ord k` certifying the numeral is an ordinal, places # k in T (sucV (# k)). Second, T-mono moves the membership from the index sucV (# k) up to the index λ: the needed premise # (suc k) ∈ λ is exactly #∈λ (suc k), and #∈λ (suc k) unfolds to sucV (# k) ∈ λ, precisely the membership of indices T-mono asks for. So the element # k ends in T λ, with the ordinal certificate doing real work in the first step.
 <!--zh-->
-两步复合而成。第一步，在 δ = # k 处使用 T-ord，并以 `numeral-ord k` 证明该数码是序数，把 # k 放进 T (sucV (# k))。第二步，T-mono 把隶属从指标 sucV (# k) 提升到指标 λ：所需前提 # (suc k) ∈ λ 正是 #∈λ (suc k)，而它展开后就是 sucV (# k) ∈ λ，恰好是 T-mono 要求的指标间隶属。于是元素 # k 落入 T λ，序数证书在第一步中发挥了实际作用。
+两步复合而成。第一步，在 δ = # k 处使用 `T-ord`{.Agda}，并以 `numeral-ord k` 证明该数码是序数，把 # k 放进 `T (sucV (# k))`{.Agda}。第二步，`T-mono`{.Agda} 把成员关系从指标 sucV (# k) 提升到指标 λ：所需前提 # (suc k) ∈ λ 正是 #∈λ (suc k)，而它展开后就是 sucV (# k) ∈ λ，恰好是 `T-mono`{.Agda} 要求的指标间成员关系。于是元素 # k 落入 `T λ`{.Agda}，序数证书在第一步中发挥了实际作用。
 <!--ja-->
 二つの段階が合成される。まず δ = # k に対して T-ord を用い、数項が順序数であることを `numeral-ord k` が証明していれば、# k は T (sucV (# k)) に入る。次に T-mono が所属を添字 sucV (# k) から添字 λ へ引き上げる。必要な前提 # (suc k) ∈ λ はまさに #∈λ (suc k) であり、それは sucV (# k) ∈ λ に展開され、T-mono が要求する添字間の所属に一致する。こうして要素 # k は T λ に収まり、最初の段階では順序数であることの証明が実質的な仕事を果たす。
 <!--/-->
@@ -180,7 +180,7 @@ Constructible stages are monotone, and each ordinal belongs to the stage indexed
 <!--zh-->
 ## 可构造层级中的数码
 
-可构造层具有单调性，每个序数也属于以后继为指标的层，因此一般的界适用于 L。我们还用模型内部的数码来表述这一隶属关系。
+可构造层具有单调性，每个序数也属于以后继为指标的层，因此一般的界适用于 `L`{.Agda}。我们还用模型内部的数码来表述这一成员关系。
 <!--ja-->
 ## 構成可能階層における数項
 
@@ -190,7 +190,7 @@ Constructible stages are monotone, and each ordinal belongs to the stage indexed
 <!--en-->
 Instantiating the abstraction only requires naming the witnesses. The family T becomes `Lset`, `Lset-mono` supplies monotonicity along membership of ordinal indices, and `ord∈Lset-suc` supplies the anchor that each ordinal sits in `Lset (sucV α)`. The theorem `ord∈Lset-suc` carries the classical assumption required for this specialization; the induction on numerals itself remains the elementary closure argument already given. The hypotheses about λ are passed through unchanged, so everything proved inside `BoundOver` about T λ becomes available about `Lset lam`.
 <!--zh-->
-把抽象实例化只需指名见证。层族 T 取为 `Lset`，`Lset-mono` 提供沿序数指标隶属的单调性，`ord∈Lset-suc` 提供锚点：每个序数属于 `Lset (sucV α)`。定理 `ord∈Lset-suc` 携带这一特化所需的经典假设；数码归纳本身仍是前面给出的初等封闭论证。关于 λ 的假设原样传入，因此 `BoundOver` 内部关于 T λ 证明的一切，对 `Lset lam` 都同样可用。
+把抽象实例化只需指名见证。层族 `T`{.Agda} 取为 `Lset`，`Lset-mono` 提供沿序数指标成员关系的单调性，`ord∈Lset-suc` 提供锚点：每个序数属于 `Lset (sucV α)`。定理 `ord∈Lset-suc` 携带这一特化所需的经典假设；数码归纳本身仍是前面给出的初等封闭论证。关于 λ 的假设原样传入，因此 `BoundOver` 内部关于 `T λ`{.Agda} 证明的一切，对 `Lset lam` 都同样可用。
 <!--ja-->
 抽象の実体化は、証人を指名するだけで済む。段階族 T には `Lset` を与え、`Lset-mono` が順序数添字の所属に沿う単調性を供給し、`ord∈Lset-suc` が「各順序数は `Lset (sucV α)` に属する」という錨を供給する。定理 `ord∈Lset-suc` がこの特殊化に必要な古典的仮定を担う。数項についての帰納そのものは、先に示した初等的な閉包の議論のままである。λ に関する仮定はそのまま渡されるので、`BoundOver` の内部で T λ について証明されたことはすべて `Lset lam` についても使える。
 <!--/-->
@@ -220,7 +220,7 @@ Inside the model, a numeral is not the ambient ordinal itself but a pair `numera
 <!--en-->
 The equation `numeralL-fst k` is a path `fst (numeralL k) ≡ # k` in the host theory. Transporting the membership family along this path turns the proof for # k into a proof for fst (numeralL k). Using `sym` orients the path from the established membership of `# k` to the desired membership of `fst (numeralL k)`, so `#∈Tλ k` becomes the required statement about the model numeral.
 <!--zh-->
-等式 `numeralL-fst k` 是宿主理论中的一条路径 `fst (numeralL k) ≡ # k`。沿这条路径搬运隶属类型族，即可把关于 # k 的隶属证明变为关于 fst (numeralL k) 的证明。使用 `sym` 把路径定向为：从已经证明的 `# k` 的隶属，得到所求的 `fst (numeralL k)` 的隶属；于是 `#∈Tλ k` 化为关于模型数码的陈述。
+等式 `numeralL-fst k` 是宿主理论中的一条路径 `fst (numeralL k) ≡ # k`。沿这条路径搬运成员关系类型族，即可把关于 # k 的成员关系证明变为关于 fst (numeralL k) 的证明。使用 `sym` 把路径定向为：从已经证明的 `# k` 的成员关系，得到所求的 `fst (numeralL k)` 的成员关系；于是 `#∈Tλ k` 化为关于模型数码的陈述。
 <!--ja-->
 等式 `numeralL-fst k` はホスト理論における経路 `fst (numeralL k) ≡ # k` である。この経路に沿って所属の型族を輸送すると、# k に関する証明が fst (numeralL k) に関する証明へ移る。`sym` は、既に得た `# k` の所属から、求める `fst (numeralL k)` の所属へ向かうようにパスを整える。これにより `#∈Tλ k` が模型の数項についての主張に変わる。
 <!--/-->

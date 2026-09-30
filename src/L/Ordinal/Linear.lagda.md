@@ -5,7 +5,7 @@
 <!--en-->
 # Ordinals are linearly ordered by membership
 <!--zh-->
-# 序数由隶属关系线性排序
+# 序数由成员关系线性排序
 <!--ja-->
 # 順序数は所属によって線形に順序付けられる
 <!--/-->
@@ -28,7 +28,7 @@ module L.Ordinal.Linear {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 import FOL.Semantics
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV; regularityV )
 open import L.Constructible {ℓ} using ( IsOrd )
@@ -67,7 +67,7 @@ open import Cubical.HITs.PropositionalTruncation using ( isPropPropTrunc )
 <!--en-->
 The proof works directly in the ambient hierarchy V rather than through the object language. The carrier and the structure membership `∈ˢ` come from the ZF structure packaged over `𝒮ᵥ`, so `⟨ x ∈ˢ A ⟩` is the underlying proposition of an `hProp` truth value. Two principles of V carry the mathematical weight: `extensionalV`, which converts a family of membership biconditionals into a path of equality, and `regularityV`, which makes membership well-founded and thus supports induction on it. The remaining import from the L-side, `mem-ord`, matters at every recursive call: it shows that any member of an ordinal is itself an ordinal, which is what lets the induction hypothesis apply below.
 <!--zh-->
-证明直接在环境层级 V 中进行，而不经由对象语言。载体与结构隶属 `∈ˢ` 来自打包在 `𝒮ᵥ` 上的 ZF 结构，因此 `⟨ x ∈ˢ A ⟩` 是一个 `hProp` 真值的底层命题。V 的两条原理承担数学重任：`extensionalV` 把一族成员关系的双向蕴含转换为相等的路径；`regularityV` 使隶属关系良基，从而支持其上的归纳。L 侧其余的导入 `mem-ord` 在每次递归调用处起作用：它表明序数的任何成员自身也是序数，这正是归纳假设能在下层使用的原因。
+证明直接在环境层级 `V`{.Agda} 中进行，而不经由对象语言。载体与结构成员关系 `∈ˢ` 来自打包在 `𝒮ᵥ` 上的 ZF 结构，因此 `⟨ x ∈ˢ A ⟩` 是一个 `hProp` 真值的底层命题。`V`{.Agda} 的两条原理承担数学重任：`extensionalV` 把一族成员关系的双向蕴含转换为相等的路径；`regularityV` 使成员关系良基，从而支持其上的归纳。`L`{.Agda} 侧其余的导入 `mem-ord` 在每次递归调用处起作用：它表明序数的任何元素自身也是序数，这正是归纳假设能在下层使用的原因。
 <!--ja-->
 証明は対象言語を経由せず、周囲の階層 V の中で直接行われる。台と構造の所属 `∈ˢ` は `𝒮ᵥ` の上にパッケージされた ZF 構造から来るので、`⟨ x ∈ˢ A ⟩` は `hProp` 真理値の基礎命題である。V の二つの原理が数学的な重みを担う。`extensionalV` は所属関係の双条件の族を等号のパスへ変え、`regularityV` は所属関係を整礎にしてその上の帰納を可能にする。L 側のもう一つの輸入 `mem-ord` は再帰呼び出しのたびに効く。順序数の任意の要素がそれ自身順序数であることを示すもので、これが帰納仮説を下の層で使えるようにする理由である。
 <!--/-->
@@ -75,7 +75,7 @@ The proof works directly in the ambient hierarchy V rather than through the obje
 <!--en-->
 The decision procedure returns which of three cases holds, so the return type is built from a three-way sum: membership on the left, equality in the middle, membership on the right. Also needed is the conversion from an iff to a path, which the extensionality argument will apply to each point of the carrier. The empty type plays the role of refutation throughout: to refute a proposition is to map it into something with no inhabitants.
 <!--zh-->
-判定程序要回答三种情形中哪一种成立，因此返回类型由三向和构造：左边是隶属关系，中间是相等，右边是隶属关系。还需要从双向蕴含到路径的转换，外延性论证将对载体的每一点使用它。空类型全程扮演反驳的角色：反驳一个命题，就是把它映入一个没有元素的类型。
+判定程序要回答三种情形中哪一种成立，因此返回类型由三向和构造：左边是成员关系，中间是相等，右边是成员关系。还需要从双向蕴含到路径的转换，外延性论证将对载体的每一点使用它。空类型全程扮演反驳的角色：反驳一个命题，就是把它映入一个没有元素的类型。
 <!--ja-->
 判定手続きは三つの場合のどれが成り立つかを返すので、返り値の型は三分岐の直和で組み立てる。左に所属、中央に等号、右に所属である。さらに必要なのは双条件からパスへの変換で、外延性の議論が台の各点に適用する。空型は全体を通して反証の役割を果たす。命題を反証するとは、それを元を持たない型へ写すことである。
 <!--/-->
@@ -87,13 +87,13 @@ import Cubical.Induction.WellFounded as WF
 <!--en-->
 Two final conventions are opened for the whole file. The direct operations on `hProp` supply the propositional connectives used inside membership statements, and the structure vocabulary fixes `S` as the carrier and `∈ˢ` as its membership, so the code reads as set theory rather than as logic plumbing. These conventions let the proof track membership, equality, and well-founded recursion for ordinal elements directly.
 <!--zh-->
-最后为整个文件打开两项约定。`hProp` 上的直接运算提供成员关系陈述所用的命题联结词，结构词汇把 `S` 固定为载体、`∈ˢ` 固定为其隶属关系，于是代码读起来是集合论而非逻辑管道。这些约定让后面的论证能直接追踪序数元素的隶属、相等与良基递归。
+最后为整个文件打开两项约定。`hProp` 上的直接运算提供成员关系陈述所用的命题联结词，结构词汇把 `S` 固定为载体、`∈ˢ` 固定为其成员关系，于是代码读起来是集合论而非逻辑管道。这些约定让后面的论证能直接追踪序数元素的成员关系、相等与良基递归。
 <!--ja-->
 最後に、ファイル全体に対して二つの約束を開く。`hProp` 上の直接の演算が所属の記述で使う命題結合子を供給し、構造の語彙は `S` を台、`∈ˢ` をその所属として固定する。これでコードは論理の配管ではなく集合論として読める。この設定に新しい数学はない。前の章々の順序数が階層 V と出会うインターフェースである。
 <!--/-->
 
 ```agda
-open hPropStructure 𝒮ᵥ
+open hPropView 𝒮ᵥ
 ```
 
 <!--en-->
@@ -103,7 +103,7 @@ The proof pivots on one relation: pointwise inclusion. If it holds both ways, ex
 <!--zh-->
 ## 包含，及其失败的见证
 
-证明围绕一个关系展开：逐点包含。若它双向成立，外延性使两个序数相等；若它在某一方向失败，排中律给出一个截断的反例成员；良基归纳与传递性再把这个反例转成严格比较。本小节固定这个关系及其打包方式。注意层级运算已经说明的事：包含住在 `Type (ℓ-suc ℓ)`，这正是所给排中律实例能判定它的那一层。
+证明围绕一个关系展开：逐点包含。若它双向成立，外延性使两个序数相等；若它在某一方向失败，排中律给出一个截断的反例元素；良基归纳与传递性再把这个反例转成严格比较。本小节固定这个关系及其打包方式。注意层级运算已经说明的事：包含住在 `Type (ℓ-suc ℓ)`，这正是所给排中律实例能判定它的那一层。
 <!--ja-->
 ## 包含と、その失敗を示す証人
 
@@ -113,7 +113,7 @@ The proof pivots on one relation: pointwise inclusion. If it holds both ways, ex
 <!--en-->
 Inclusion of `A` in `B` is not a primitive here but a defined notion: every member `x` of `A`, in the structure sense, must be a member of `B`. Each membership `x ∈ˢ A` is an `hProp` proposition, so the definition quantifies over the carrier `S` and over propositions at level `ℓ`, which places the whole relation in `Type (ℓ-suc ℓ)`. The matching hProp packaging attaches the propositionhood proof: a dependent function into a proposition is again a proposition, applied twice to the two nested function types. This matters because the excluded middle is decided per hProp, and it is exactly this packaged statement that the proof will hand to `lem`.
 <!--zh-->
-`A` 包含于 `B` 在这里不是初始概念而是定义出来的：`A` 的每个成员 `x`，在结构意义下，必须是 `B` 的成员。每个成员关系 `x ∈ˢ A` 是 `hProp` 中的命题，因此定义量化了载体 `S` 与 `ℓ` 层的命题，把整个关系放进 `Type (ℓ-suc ℓ)`。配套的 hProp 打包附上命题性的证明：到命题的依赖函数仍是命题，把这一点对两层嵌套的函数类型各用一次。这很重要，因为排中律是逐 hProp 判定的，而证明交给 `lem` 的正是这个打包后的陈述。
+`A` 包含于 `B` 在这里不是初始概念而是定义出来的：`A` 的每个元素 `x`，在结构意义下，必须是 `B` 的元素。每个成员关系 `x ∈ˢ A` 是 `hProp` 中的命题，因此定义量化了载体 `S` 与 `ℓ` 层的命题，把整个关系放进 `Type (ℓ-suc ℓ)`。配套的 hProp 打包附上命题性的证明：到命题的依赖函数仍是命题，把这一点对两层嵌套的函数类型各用一次。这很重要，因为排中律是逐 hProp 判定的，而证明交给 `lem` 的正是这个打包后的陈述。
 <!--ja-->
 `A` が `B` に含まれることはここでは原始概念ではなく定義された概念である。`A` の各要素 `x` は、構造の意味で、`B` の要素でなければならない。各所属 `x ∈ˢ A` は `hProp` の命題なので、この定義は台 `S` とレベル `ℓ` の命題を量化し、関係全体を `Type (ℓ-suc ℓ)` に置く。対応する hProp のパッケージングは命題性の証明を添える。命題への依存関数は再び命題であり、これを入れ子になった二つの関数型にそれぞれ適用する。これが重要なのは、排中律が hProp ごとに判定されるからであり、証明が `lem` に渡すのはまさにこのパッケージされた命題である。
 <!--/-->
@@ -143,7 +143,7 @@ ext-⊆ᵇ {A} {B} s₁ s₂ = extensionalV (λ x → ⇔toPath (s₁ x) (s₂ x
 <!--en-->
 Here is the one genuinely classical step. From a *failure* of inclusion the proof needs a member witnessing it, and passing from "not every member of `B` lies in `A`" to "some member does not" is not constructive. Excluded middle decides the existence statement directly: were there no such witness, then each member of `B` could be shown to lie in `A`, one decided membership at a time, contradicting the assumed failure. The witness that comes out remains propositionally truncated, and that is enough, because the only thing the trichotomy proof will do with it is eliminate it into a membership proposition.
 <!--zh-->
-这里是真正经典的那一步。从包含**失败**出发，证明需要一个见证它的成员，而从「`B` 的成员并非都含于 `A`」过渡到「某个成员不含于 `A`」不是构造性的。排中律直接判定那个存在陈述：若没有这样的见证，则可以逐个判定成员关系，证明 `B` 的每个成员终究含于 `A`，与假设的失败矛盾。得出的见证仍是命题截断的，而这已经足够，因为三歧证明对它唯一要做的事就是把它消去成一个成员关系命题。
+这里是真正经典的那一步。从包含**失败**出发，证明需要一个见证它的元素，而从「`B` 的元素并非都含于 `A`」过渡到「某个元素不含于 `A`」不是构造性的。排中律直接判定那个存在陈述：若没有这样的见证，则可以逐个判定成员关系，证明 `B` 的每个元素终究含于 `A`，与假设的失败矛盾。得出的见证仍是命题截断的，而这已经足够，因为三歧证明对它唯一要做的事就是把它消去成一个成员关系命题。
 <!--ja-->
 ここが本当に古典的な一段である。包含の**失敗**から出発して、証明はそれを証人する要素を必要とするが、「`B` の要素がすべて `A` に含まれるわけではない」から「ある要素は含まれない」への移行は構成的ではない。排中律がこの存在文を直接判定する。そのような証人が存在しないなら、所属を一つずつ判定しながら `B` の各要素がやはり `A` に含まれることを示せ、これは仮定された失敗に矛盾する。得られる証人は命題切り詰めされたままであるが、それで十分である。三分性の証明がこれにすることは、メンバーシップ命題への消去だけだからである。
 <!--/-->
@@ -151,7 +151,7 @@ Here is the one genuinely classical step. From a *failure* of inclusion the proo
 <!--en-->
 The statement is a conditional: if inclusion `A ⊆ᵇ B` is refutable, then a truncated witness exists, a member `a` of `A` with `a ∉ B`. The conclusion is deliberately an existence claim under `∥ ∥₁` rather than a chosen pair. The first classical move decides the truncated existence statement `Witness` itself. Note the level bookkeeping: the witness statement is an hProp at `ℓ-suc ℓ`, exactly where the module's `lem` applies, so no lifting is needed. In the positive branch the witness is already in hand; the interesting branch is the negative one.
 <!--zh-->
-陈述是条件式的：若包含 `A ⊆ᵇ B` 可被反驳，则存在一个截断的见证，即 `A` 的一个成员 `a` 使 `a ∉ B`。结论刻意写成 `∥ ∥₁` 下的存在陈述，而非选定的对。第一步经典动作是判定截断的存在陈述 `Witness` 本身。注意层级的记账：见证陈述是 `ℓ-suc ℓ` 处的 hProp，恰好是模块的 `lem` 适用的地方，因此无须抬升。正分支中见证已在手；有趣的是负分支。
+陈述是条件式的：若包含 `A ⊆ᵇ B` 可被反驳，则存在一个截断的见证，即 `A` 的一个元素 `a` 使 `a ∉ B`。结论刻意写成 `∥ ∥₁` 下的存在陈述，而非选定的对。第一步经典动作是判定截断的存在陈述 `Witness` 本身。注意层级的记账：见证陈述是 `ℓ-suc ℓ` 处的 hProp，恰好是模块的 `lem` 适用的地方，因此无须抬升。正分支中见证已在手；有趣的是负分支。
 <!--ja-->
 この主張は条件文である。包含 `A ⊆ᵇ B` が反証可能なら、切り詰められた証人、すなわち `a ∉ B` を満たす `A` の要素 `a` が存在する。結論は選ばれた対ではなく、意図的に `∥ ∥₁` の下の存在主張になっている。最初の古典的な動作は、切り詰められた存在文 `Witness` 自体を判定することである。レベルの計算に注意してほしい。証人の文は `ℓ-suc ℓ` の hProp であり、モジュールの `lem` が適用できるちょうどその場所にあるので、持ち上げは不要である。肯定的な分岐では証人はすでに手にあり、興味があるのは否定的な分岐である。
 <!--/-->
@@ -167,7 +167,7 @@ The statement is a conditional: if inclusion `A ⊆ᵇ B` is refutable, then a t
 <!--en-->
 Suppose `Witness` is refutable. Then the refutation of inclusion can itself be refuted: for arbitrary `x`, we decide the membership `x ∈ˢ B` separately, and on the negative branch assemble the witness `x` with `x ∈ˢ A` and the refutation of `x ∈ˢ B` into an inhabitant of `Witness`, contradicting the given refutation. So inclusion holds after all, and feeding it to the assumed refutation of inclusion yields the empty type. This is exactly the pattern announced above: the single global decision on `Witness` plus a pointwise decision on each `x ∈ˢ B` together convert "no witness exists" into "inclusion holds".
 <!--zh-->
-设 `Witness` 可被反驳。那么对包含的反驳本身也可被反驳：对任意的 `x`，单独判定成员关系 `x ∈ˢ B`；在负分支中，把成员 `x` 连同 `x ∈ˢ A` 与对 `x ∈ˢ B` 的反驳组装成 `Witness` 的一个元素，与所给反驳矛盾。于是包含终究成立，把它交给假设的对包含的反驳就得到空类型。这正是上面宣布的模式：对 `Witness` 的一次全局判定，加上对每个 `x ∈ˢ B` 的逐点判定，共同把「不存在见证」转化为「包含成立」。
+设 `Witness` 可被反驳。那么对包含的反驳本身也可被反驳：对任意的 `x`，单独判定成员关系 `x ∈ˢ B`；在负分支中，把元素 `x` 连同 `x ∈ˢ A` 与对 `x ∈ˢ B` 的反驳组装成 `Witness` 的一个元素，与所给反驳矛盾。于是包含终究成立，把它交给假设的对包含的反驳就得到空类型。这正是上面宣布的模式：对 `Witness` 的一次全局判定，加上对每个 `x ∈ˢ B` 的逐点判定，共同把「不存在见证」转化为「包含成立」。
 <!--ja-->
 `Witness` が反証可能だとする。すると包含の反証自身も反証できる。任意の `x` に対して所属 `x ∈ˢ B` を独立に判定し、否定的な分岐では要素 `x` を `x ∈ˢ A` と `x ∈ˢ B` の反証とともに `Witness` の元へ組み立てる。これは与えられた反証に矛盾する。したがって包含は結局成り立ち、それを仮定された包含の反証に渡せば空型が得られる。これはまさに上で述べたパターンである。`Witness` への一度の大域判定と、各 `x ∈ˢ B` への点ごとの判定が、「証人は存在しない」を「包含は成り立つ」へ変える。
 <!--/-->
@@ -216,7 +216,7 @@ Everything is now in place for the main theorem. The comparison is stated as a t
 <!--zh-->
 ## 三歧
 
-主要定理的准备工作已经齐备。比较写成三向和：或者 `A` 是 `B` 的成员，或者二者由一条路径相等，或者 `B` 是 `A` 的成员。证明对两个自变量各作一次良基归纳，使得在叶子处可以递归到任一序数的成员内部。两个包含 `A ⊆ᵇ B` 与 `B ⊆ᵇ A` 在每个叶子处由排中律判定；上一小节完成了其余工作。读者在情形分析中应当带上的方向记账是：`B ⊆ᵇ A` 失败产生一个属于 `B` 而不属于 `A` 的成员，结论是 `A ∈ˢ B`；`A ⊆ᵇ B` 失败产生一个属于 `A` 而不属于 `B` 的成员，结论是 `B ∈ˢ A`。
+主要定理的准备工作已经齐备。比较写成三向和：或者 `A` 是 `B` 的元素，或者二者由一条路径相等，或者 `B` 是 `A` 的元素。证明对两个自变量各作一次良基归纳，使得在叶子处可以递归到任一序数的元素内部。两个包含 `A ⊆ᵇ B` 与 `B ⊆ᵇ A` 在每个叶子处由排中律判定；上一小节完成了其余工作。读者在情形分析中应当带上的方向记账是：`B ⊆ᵇ A` 失败产生一个属于 `B` 而不属于 `A` 的元素，结论是 `A ∈ˢ B`；`A ⊆ᵇ B` 失败产生一个属于 `A` 而不属于 `B` 的元素，结论是 `B ∈ˢ A`。
 <!--ja-->
 ## 順序数の三分性
 
@@ -243,7 +243,7 @@ ord-tri = WF.WFI.induction regularityV {P = P} stepA
 <!--en-->
 The theorem's shape is a well-founded induction supplied by regularity. The predicate being proven, `P A`, says that `A` behaves correctly for every ordinal `B` it is compared with, taking the two ordinality certificates as hypotheses. Regularity thus provides induction on the first argument: to prove `P A`, it suffices to prove `P A'` for every member `A'` of `A`. This is the first of the two nested inductions; the second, on `B`, will appear inside the step.
 <!--zh-->
-定理的形状是正则公理供给的良基归纳。被证的谓词 `P A` 说的是：`A` 与任何与之比较的序数 `B` 都表现正确，并把两个序数性证明当作假设。于是正则公理给出对第一个自变量的归纳：要证 `P A`，只需对 `A` 的每个成员 `A'` 证 `P A'`。这是两层嵌套归纳中的第一层；第二层对 `B`，将出现在步内。
+定理的形状是正则公理供给的良基归纳。被证的谓词 `P A` 说的是：`A` 与任何与之比较的序数 `B` 都表现正确，并把两个序数性证明当作假设。于是正则公理给出对第一个自变量的归纳：要证 `P A`，只需对 `A` 的每个元素 `A'` 证 `P A'`。这是两层嵌套归纳中的第一层；第二层对 `B`，将出现在步内。
 <!--ja-->
 定理の形は、正則性公理が供給する整礎帰納である。証明される述語 `P A` は、比較される任意の順序数 `B` に対して `A` が正しく振る舞うこと、二つの順序数性の証明を仮定として取ることを述べる。これにより正則性は第一引数上の帰納を与える。`P A` を証明するには、`A` の各要素 `A'` について `P A'` を証明すれば十分である。これは入れ子になった二つの帰納の第一で、第二の `B` 上の帰納はステップの中に現れる。
 <!--/-->
@@ -260,7 +260,7 @@ The theorem's shape is a well-founded induction supplied by regularity. The pred
 <!--en-->
 The outer step receives the induction hypothesis for every member of `A` and immediately runs a second well-founded induction, this time on `B`, with its own predicate `λ B → IsOrd B → Tri A B`. At the inner leaf the two inclusions are decided by `lem` applied to the packaged propositions `⊆ᵇ-prop A B` and `⊆ᵇ-prop B A`. These two decisions begin the classical case analysis; the earlier helper also uses excluded middle to obtain a truncated counterexample from each failed inclusion.
 <!--zh-->
-外层步拿到 `A` 每个成员的归纳假设，随即运行第二个良基归纳，这次对 `B`，谓词是 `λ B → IsOrd B → Tri A B`。在内层归纳步中，两个包含由 `lem` 应用于打包命题 `⊆ᵇ-prop A B` 与 `⊆ᵇ-prop B A` 来判定。这两个判定开启经典的分情形；前面的辅助引理也使用排中律，把每个包含失败转成截断的反例。
+外层步拿到 `A` 每个元素的归纳假设，随即运行第二个良基归纳，这次对 `B`，谓词是 `λ B → IsOrd B → Tri A B`。在内层归纳步中，两个包含由 `lem` 应用于打包命题 `⊆ᵇ-prop A B` 与 `⊆ᵇ-prop B A` 来判定。这两个判定开启经典的分情形；前面的辅助引理也使用排中律，把每个包含失败转成截断的反例。
 <!--ja-->
 外側のステップは `A` の各要素に対する帰納仮説を受け取り、すぐに第二の整礎帰納を実行する。今度は `B` 上で、述語は `λ B → IsOrd B → Tri A B` である。内側の帰納ステップでは、二つの包含がパッケージされた命題 `⊆ᵇ-prop A B` と `⊆ᵇ-prop B A` に `lem` を適用して判定される。この二つの判定が古典的な場合分けを開始する。前の補題も排中律を使い、それぞれの包含の失敗から切り詰められた反例を得る。
 <!--/-->
@@ -276,7 +276,7 @@ The outer step receives the induction hypothesis for every member of `A` and imm
 <!--en-->
 The first failure case supposes `B ⊆ᵇ A` fails, so a member `b` of `B` outside `A` is merely known to exist. The helper `fromB` shows what one such explicit pair would give: since `b` is a member of the ordinal `B`, `mem-ord` certifies that `b` is itself an ordinal, and the inner induction hypothesis `IHB` may compare `A` with `b`. Its first outcome is `A ∈ˢ b`; ordinal transitivity, the first component of `IsOrd B`, then lifts this through `b ∈ˢ B` to `A ∈ˢ B`.
 <!--zh-->
-第一个失败情形假设 `B ⊆ᵇ A` 失败，于是仅仅存在 `B` 的一个不属于 `A` 的成员 `b`。辅助引理 `fromB` 表明这样一个显式的对能给出什么：由于 `b` 是序数 `B` 的成员，`mem-ord` 证明 `b` 自身是序数，内层归纳假设 `IHB` 便可比较 `A` 与 `b`。其第一种结果是 `A ∈ˢ b`；序数的传递性，即 `IsOrd B` 的第一个分量，再把它经由 `b ∈ˢ B` 提升为 `A ∈ˢ B`。
+第一个失败情形假设 `B ⊆ᵇ A` 失败，于是仅仅存在 `B` 的一个不属于 `A` 的元素 `b`。辅助引理 `fromB` 表明这样一个显式的对能给出什么：由于 `b` 是序数 `B` 的元素，`mem-ord` 证明 `b` 自身是序数，内层归纳假设 `IHB` 便可比较 `A` 与 `b`。其第一种结果是 `A ∈ˢ b`；序数的传递性，即 `IsOrd B` 的第一个分量，再把它经由 `b ∈ˢ B` 提升为 `A ∈ˢ B`。
 <!--ja-->
 最初の失敗の場合は `B ⊆ᵇ A` が失敗すると仮定し、`B` のうち `A` に属さない要素 `b` が単に存在するとしか分からない。補題 `fromB` は、そのような明示的な対が一つあれば何が得られるかを示す。`b` は順序数 `B` の要素なので、`mem-ord` が `b` 自身も順序数であることを証明し、内側の帰納仮説 `IHB` が `A` と `b` を比較できる。その第一の結果は `A ∈ˢ b` である。順序数の推移性、すなわち `IsOrd B` の第一成分が、これを `b ∈ˢ B` を経て `A ∈ˢ B` まで持ち上げる。
 <!--/-->
@@ -309,7 +309,7 @@ The other two outcomes of comparing `A` with `b` are handled in turn. If `A ≡ 
 <!--en-->
 The mirrored helper `fromA` covers the other failure: `A ⊆ᵇ B` fails, so some member `a` of `A` lies outside `B`. Now the outer induction hypothesis does the work, since it compares `A`'s members and is applied at `a`. If `a` turns out to be in `B`, the choice of `a` is contradicted; if `a ≡ B`, transport gives `B ∈ˢ A`; and if `B ∈ˢ a`, transitivity of `A` lifts it through `a ∈ˢ A`. Note the asymmetry the mirror introduces: the equality branch transports `a ∈ˢ A` along the path rather than reversing it, because this time the compared pair sits the other way round.
 <!--zh-->
-镜像的辅助引理 `fromA` 覆盖另一个失败：`A ⊆ᵇ B` 失败，于是 `A` 的某个成员 `a` 不在 `B` 内。此时由外层归纳假设承担工作，因为它比较 `A` 的成员，并在 `a` 处应用。若 `a` 结果属于 `B`，则与 `a` 的选取矛盾；若 `a ≡ B`，搬运给出 `B ∈ˢ A`；若 `B ∈ˢ a`，则 `A` 的传递性把它经由 `a ∈ˢ A` 提升。注意镜像引入的不对称：相等分支沿路径搬运 `a ∈ˢ A` 而非反向搬运，因为这次被比较的一对方向相反。
+镜像的辅助引理 `fromA` 覆盖另一个失败：`A ⊆ᵇ B` 失败，于是 `A` 的某个元素 `a` 不在 `B` 内。此时由外层归纳假设承担工作，因为它比较 `A` 的元素，并在 `a` 处应用。若 `a` 结果属于 `B`，则与 `a` 的选取矛盾；若 `a ≡ B`，搬运给出 `B ∈ˢ A`；若 `B ∈ˢ a`，则 `A` 的传递性把它经由 `a ∈ˢ A` 提升。注意镜像引入的不对称：相等分支沿路径搬运 `a ∈ˢ A` 而非反向搬运，因为这次被比较的一对方向相反。
 <!--ja-->
 鏡像の補題 `fromA` はもう一つの失敗を扱う。`A ⊆ᵇ B` が失敗すれば、`A` のある要素 `a` が `B` の外にある。今度は外側の帰納仮説が仕事をする。`A` の要素を比較するもので、`a` で適用される。`a` が結局 `B` に属するなら `a` の選択に矛盾し、`a ≡ B` なら輸送により `B ∈ˢ A` が得られ、`B ∈ˢ a` なら `A` の推移性がこれを `a ∈ˢ A` を経て持ち上げる。鏡像が持ち込む非対称に注意してほしい。等号の分岐はパスに沿って `a ∈ˢ A` を輸送するのであって逆向きにはしない、今回は比較される組の向きが逆だからである。
 <!--/-->
@@ -325,7 +325,7 @@ The mirrored helper `fromA` covers the other failure: `A ⊆ᵇ B` fails, so som
 <!--en-->
 With the two converters in hand, the four verdict combinations sort into the three answers. If both inclusions hold, mutual inclusion is equality by the previous subsection, and the middle answer is returned. If `A ⊆ᵇ B` holds but `B ⊆ᵇ A` fails, the truncated witness for the failure is eliminated with `rec₁`, which is legal precisely because the target `⟨ A ∈ˢ B ⟩` is a proposition, its propositionhood supplied by the second component of the membership hProp. The result is the left answer `A ∈ˢ B`: this is the branch where failure of `B ⊆ᵇ A` concludes that `A` belongs to `B`.
 <!--zh-->
-两个转换器在手后，四种判定组合归入三种答案。若两个包含都成立，由上一小节可知互相包含就是相等，返回中间答案。若 `A ⊆ᵇ B` 成立而 `B ⊆ᵇ A` 失败，则用 `rec₁` 消去该失败的截断见证，这之所以合法，恰恰因为目标 `⟨ A ∈ˢ B ⟩` 是命题，其命题性由成员 hProp 的第二个分量提供。结果是左侧答案 `A ∈ˢ B`：这正是 `B ⊆ᵇ A` 失败而结论为 `A` 属于 `B` 的分支。
+两个转换器在手后，四种判定组合归入三种答案。若两个包含都成立，由上一小节可知互相包含就是相等，返回中间答案。若 `A ⊆ᵇ B` 成立而 `B ⊆ᵇ A` 失败，则用 `rec₁` 消去该失败的截断见证，这之所以合法，恰恰因为目标 `⟨ A ∈ˢ B ⟩` 是命题，其命题性由元素 hProp 的第二个分量提供。结果是左侧答案 `A ∈ˢ B`：这正是 `B ⊆ᵇ A` 失败而结论为 `A` 属于 `B` 的分支。
 <!--ja-->
 二つの変換器が手にあれば、四つの判定の組み合わせは三つの答えに整理される。両方の包含が成り立てば、相互包含は等号であり、中央の答えが返る。`A ⊆ᵇ B` が成り立ち `B ⊆ᵇ A` が失敗する場合は、その失敗の切り詰められた証人を `rec₁` で消去する。これが正当なのは、目標 `⟨ A ∈ˢ B ⟩` が命題であり、その命題性が所属 hProp の第二成分から供給されるからである。結果は左の答え `A ∈ˢ B` である。`B ⊆ᵇ A` の失敗から `A` が `B` に属すると結論するのがこの分岐である。
 <!--/-->

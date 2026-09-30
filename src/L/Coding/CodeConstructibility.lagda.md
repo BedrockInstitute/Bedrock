@@ -27,7 +27,7 @@ module L.Coding.CodeConstructibility {ℓ : Level} where
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 open import FOL.Syntax
   using ( Term; con; var; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇
         ; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
@@ -45,7 +45,7 @@ open import V.Model {ℓ} using ( pair-singleton; pair-spec; union-spec )
 <!--en-->
 This chapter proves that term codes, formula codes, and finite environment graphs belong to `L`, then builds a constructible tree that gathers data over every subformula and characterizes its members.
 <!--zh-->
-本章证明词项编码、公式编码与有穷环境图属于 `L`，再构造一棵可构造的树，汇集每个子公式上的数据并刻画其成员。
+本章证明词项编码、公式编码与有穷环境图属于 `L`，再构造一棵可构造的树，汇集每个子公式上的数据并刻画其元素。
 <!--ja-->
 本章では項のコード、論理式のコード、有限環境のグラフが `L` に属することを証明し、さらに各部分式上のデータを集める構成可能な木を作って、その要素を特徴づける。
 <!--/-->
@@ -81,7 +81,7 @@ open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( ⁅_⁆s; ⁅_,_⁆; ⋃_; _∪_; module InfinitySet )
 open InfinitySet using ( #_; sucV )
 
-open hPropStructure 𝒮ʟ using ( S )
+open hPropView 𝒮ʟ using ( S )
 ```
 
 <!--en-->
@@ -107,7 +107,7 @@ Both are the same two steps: build the thing inside the model, then transport it
 <!--zh-->
 数码的可构造性同理，但这一结果早一章就已被用到，故其证明放在那一章。有序对可构造，因为模型有配对，而同一条等式又把它读回来；标签是左边放数码的对，故两者兼得。
 
-两者都是同样的两步：先在模型内部把它构造出来，再沿「读出来就是那个东西」这条等式把它的隶属关系搬过去。
+两者都是同样的两步：先在模型内部把它构造出来，再沿「读出来就是那个东西」这条等式把它的成员关系搬过去。
 <!--/-->
 
 ```agda
@@ -145,7 +145,7 @@ Then the formulas: ten clauses with no real content. Each constructor's code is 
 <!--zh-->
 先看词项。一个词项要么是变元，要么是常元，而两者正是词项所携带的两种标签：变元带它的索引数码，常元带它自己那个集合。因此，只要一个码所涉及的诸常元都可构造，这个码就可构造；本次归纳把这一点取作归纳假设，而不是假定根本没有常元。
 
-这份一般性多花一条子句，换来的是对诸参数的处理。常元取自某层成员的公式，其编码与无参公式的编码一样是 `L` 的集合；正是这一点，使下面的递归得以遍历可构造层级实际由之造出的那些公式。无参情形是空类型处的实例。
+这份一般性多花一条子句，换来的是对诸参数的处理。常元取自某层元素的公式，其编码与无参公式的编码一样是 `L` 的集合；正是这一点，使下面的递归得以遍历可构造层级实际由之造出的那些公式。无参情形是空类型处的实例。
 
 然后是诸公式：十条子句，没有实质内容。每个构造子的码都是「子码之对」「单个子码」或「数码」三者之一的标签，而前面三个基础结果覆盖这三种形状。归纳沿无参公式而非它的嵌入进行，这一步不增加任何论证，因为嵌入是一次常元改名，按定义与每个构造子交换。
 <!--/-->
@@ -208,7 +208,7 @@ replacement.
 <!--zh-->
 一个环境是一个有穷集：键是长度以下的诸数码，条目是诸对。事实上它**恰恰就是**那些对构成的有穷集，不差分毫，因为两者是同一个被抬升的索引类型的同一个像。说明这一点只需一行，而正是这一行使有穷族引理无须任何进一步论证便可施于环境。
 
-由此，落在某层之上的环境立刻是 `L` 的元素：它的条目是「数码与该层的成员」之对，而两者在一步之后都落在该层里。不必沿长度递归，也不必用替换。
+由此，落在某层之上的环境立刻是 `L` 的元素：它的条目是「数码与该层的元素」之对，而两者在一步之后都落在该层里。不必沿长度递归，也不必用替换。
 <!--/-->
 
 ```agda
@@ -247,7 +247,7 @@ Each shape comes twice over. Once on the underlying set, with the two lemmas tha
 <!--zh-->
 再来两种形状，而模型直接供给两者。单点集是一物与自身之对，二元并是那个对之并，故两者都是模型自身的运算，沿底集读出。
 
-每种形状都做两遍。一遍在底集上进行，配两条把单元集或二元并的成员读回来的引理；另一遍在模型自己的集合上进行，此时每一步都附带可构造性的证明，而同样那些引理经由「读出底集」那条等式重述一次。下面的递归在第二遍上进行，因此它造出的集合按构造就是 `L` 的元素，无须再作归纳。
+每种形状都做两遍。一遍在底集上进行，配两条把单元集或二元并的元素读回来的引理；另一遍在模型自己的集合上进行，此时每一步都附带可构造性的证明，而同样那些引理经由「读出底集」那条等式重述一次。下面的递归在第二遍上进行，因此它造出的集合按构造就是 `L` 的元素，无须再作归纳。
 <!--/-->
 
 ```agda
@@ -319,7 +319,7 @@ cupʟ-out a b x h = cup-out (fst a) (fst b) x
 <!--en-->
 `tree f φ` unions the value `f χ` over every subformula `χ` of `φ`; `tree-inv` describes any member by the subformula that contributed it, while `Parts` records the forward inclusions.
 <!--zh-->
-`tree f φ` 对 `φ` 的每个子公式 `χ` 合并其值 `f χ`；`tree-inv` 用贡献该成员的子公式描述任意成员，而 `Parts` 记录正向包含关系。
+`tree f φ` 对 `φ` 的每个子公式 `χ` 合并其值 `f χ`；`tree-inv` 用贡献该元素的子公式描述任意元素，而 `Parts` 记录正向包含关系。
 <!--ja-->
 `tree f φ` は `φ` の各部分式 `χ` に対する値 `f χ` を合併する。`tree-inv` は任意の要素を、それを供給した部分式によって記述し、`Parts` は順方向の包含を記録する。
 <!--/-->
@@ -338,7 +338,7 @@ direction needs, one for each shape a clause of the recursion produces.
 <!--zh-->
 沿十个构造子作一次递归，收集什么由参数给出。它为每条子公式收集一样东西：给它键，得到下一节那个子公式闭包；给它条目，得到后续某章那张可满足性表。两者需要的是同一次求逆，故那次求逆在此只证一次，再实例化两次。
 
-`Of`{.Agda} 说出这种集合的成员是什么：它是被收集之物之一，收集于某条子公式处，而那条子公式自己的集合包含于它所出自的那个集合之内。`tree-inv`{.Agda} 证明这一点，而 `Parts`{.Agda} 给出另一方向所需的诸隶属关系，递归的每条子句所产生的每种形状各一条。
+`Of`{.Agda} 说出这种集合的元素是什么：它是被收集之物之一，收集于某条子公式处，而那条子公式自己的集合包含于它所出自的那个集合之内。`tree-inv`{.Agda} 证明这一点，而 `Parts`{.Agda} 给出另一方向所需的诸成员关系，递归的每条子句所产生的每种形状各一条。
 <!--/-->
 
 <details open class="submodule-fold">
@@ -499,7 +499,7 @@ module _ {ℓ' : Level} {K : Type ℓ'} where
 <!--en-->
 Specializing the generic tree to formula keys produces `closure φ`, a constructible set containing the key of `φ` and the keys of all its subformulas, together with explicit membership maps for each constructor.
 <!--zh-->
-把通用树特化到公式键便得到 `closure φ`：这是一个可构造集合，包含 `φ` 的键及其所有子公式的键，并为每个构造子给出显式的成员映射。
+把通用树特化到公式键便得到 `closure φ`：这是一个可构造集合，包含 `φ` 的键及其所有子公式的键，并为每个构造子给出显式的元素映射。
 <!--ja-->
 一般の木を論理式の鍵に特殊化して `closure φ` を得る。これは `φ` の鍵と全部分式の鍵を含む構成可能集合であり、各構成子について明示的な要素写像を備える。
 <!--/-->
@@ -555,7 +555,7 @@ module _ {K : Type ℓ} (f : K → V ℓ) (h : (k : K) → ⟨ isL (f k) ⟩) wh
 <!--en-->
 The results place syntax codes, environments, and subformula-indexed collections inside `L`; the remaining lemmas turn closure membership back into a concrete subformula key for later bounded recursion.
 <!--zh-->
-这些结果把语法编码、环境及按子公式索引的汇集都放进 `L`；余下引理把闭包成员还原为具体的子公式键，供后面的有界递归使用。
+这些结果把语法编码、环境及按子公式索引的汇集都放进 `L`；余下引理把闭包元素还原为具体的子公式键，供后面的有界递归使用。
 <!--ja-->
 以上により、構文コード、環境、部分式で添字づけられた集まりが `L` に入る。残る補題は閉包の要素を具体的な部分式の鍵へ戻し、後の有界再帰に備える。
 <!--/-->
@@ -592,7 +592,7 @@ The set of all codes is still not an element of `L`, and is still not needed.
 <!--en-->
 `closure-inv` applies the generic tree inversion to show that every member of `closure φ` is the key of some subformula whose closure embeds into that of `φ`.
 <!--zh-->
-`closure-inv` 应用通用的树反演，证明 `closure φ` 的每个成员都是某个子公式的键，且该子公式的闭包嵌入 `φ` 的闭包。
+`closure-inv` 应用通用的树反演，证明 `closure φ` 的每个元素都是某个子公式的键，且该子公式的闭包嵌入 `φ` 的闭包。
 <!--ja-->
 `closure-inv` は一般の木の反転を適用し、`closure φ` の各要素が、閉包から `φ` の閉包への包含をもつある部分式の鍵であることを示す。
 <!--/-->

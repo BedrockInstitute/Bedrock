@@ -28,7 +28,7 @@ module L.GCH.LeastWitnessMap {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 open import FOL.Syntax using ( Formula; var; con; _∈̇_; _∧̇_; ¬̇_; ∀̇∈ )
 open import FOL.Manipulation.Renaming using ( renameFo; module Sat )
 import FOL.Semantics
@@ -60,7 +60,7 @@ Suppose that, for each input `x ∈ X`, we know only under propositional truncat
 <!--en-->
 Classical logic enters through the fixed excluded-middle hypothesis, which already underlies the canonical stage order. At the actual least-element search, it has a precise role: during well-founded descent it decides whether a smaller satisfying stage member merely exists. Propositional truncation is eliminated only into the total type of least witnesses, after that type has been proved to be a proposition; this gives no general way to extract arbitrary witnesses.
 <!--zh-->
-经典逻辑经由固定的排中律假设进入，而层上的典范序本身已经依赖这一假设。在实际搜索最小元时，它承担一个明确职责：沿良基序下降的每一步，判定是否仅仅存在一个更小且满足谓词的层成员。命题截断只在「最小见证的总类型」已经证明为命题之后消去到该类型；这并不提供从任意命题截断中抽取见证的一般方法。
+经典逻辑经由固定的排中律假设进入，而层上的典范序本身已经依赖这一假设。在实际搜索最小元时，它承担一个明确职责：沿良基序下降的每一步，判定是否仅仅存在一个更小且满足谓词的层元素。命题截断只在「最小见证的总类型」已经证明为命题之后消去到该类型；这并不提供从任意命题截断中抽取见证的一般方法。
 <!--ja-->
 古典論理は、固定した排中律の仮定を通して入る。段階上の正準な順序も、すでにこの仮定に依存している。実際の最小要素の探索での役割は明確である。整礎的に降下する各段階で、条件を満たすより小さい段階の要素が単に存在するかを判定する。命題的切り詰めを除去する先は、最小の証人からなる全体型が命題であると示した後の、その型だけである。任意の切り詰めから証人を取り出す一般的方法が得られるわけではない。
 <!--/-->
@@ -70,7 +70,7 @@ Classical logic enters through the fixed excluded-middle hypothesis, which alrea
 <!--en-->
 The desired graph must be expressed in the first-order language of sets. Besides saying that `P(w,x)` holds, its formula must say that `w` lies in the chosen stage and that no smaller member of that stage also satisfies `P`. A bounded universal quantifier expresses the latter condition, while renaming lets the original two-variable formula keep its meaning after the smaller candidate is inserted into the environment.
 <!--zh-->
-所需的图必须用集合论的一阶对象语言表达。除了断言 `P(w,x)` 成立，其公式还须断言 `w` 位于选定层中，并且该层中没有更小的成员也满足 `P`。后一个条件由有界全称量词表达；把更小候选插入环境后，改名使原二元公式仍保持原义。
+所需的图必须用集合论的一阶对象语言表达。除了断言 `P(w,x)` 成立，其公式还须断言 `w` 位于选定层中，并且该层中没有更小的元素也满足 `P`。后一个条件由有界全称量词表达；把更小候选插入环境后，改名使原二元公式仍保持原义。
 <!--ja-->
 求めるグラフは、集合論の一階対象言語で表さなければならない。`P(w,x)` が成り立つことに加えて、`w` が選んだ段階に属し、その段階には `P` を満たすより小さい要素がないことも論理式で述べる必要がある。後者は有界の全称量化子で表し、より小さい候補を環境へ挿入した後も、名前替えによってもとの二変数論理式の意味を保つ。
 <!--/-->
@@ -106,13 +106,13 @@ open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
 <!--en-->
 The carrier `S` packages an ambient set together with a proof that it is constructible. Inputs and candidates can therefore occupy entries of a satisfaction environment, while the packaged stage `Lγ` and order relation `Rγ` can occur as constants in formulas. First projection returns the underlying sets needed for membership and ordered-pair coding.
 <!--zh-->
-载体 `S` 把外围集合与其可构造性证明打包在一起。因此，输入与候选可以占据满足环境中的各项，而打包后的层 `Lγ` 与序关系 `Rγ` 可以作为公式常元出现。第一投影则取回隶属关系与有序对编码所需的底层集合。
+载体 `S` 把外围集合与其可构造性证明打包在一起。因此，输入与候选可以占据满足环境中的各项，而打包后的层 `Lγ` 与序关系 `Rγ` 可以作为公式常元出现。第一投影则取回成员关系与有序对编码所需的底层集合。
 <!--ja-->
 台 `S` は、周囲の集合と、それが構成可能であるという証明を組にする。したがって入力と候補は充足環境の項目となり、包まれた段階 `Lγ` と順序関係 `Rγ` は論理式の定数として現れる。第一射影によって、所属と順序対の符号化に必要な底の集合を取り出せる。
 <!--/-->
 
 ```agda
-open hPropStructure 𝒮ʟ using ( S )
+open hPropView 𝒮ʟ using ( S )
 ```
 
 <!--en-->
@@ -172,7 +172,7 @@ Two constructible sets with equal underlying sets are equal, by the propositionh
 <!--en-->
 ## Selecting the least satisfying member
 <!--zh-->
-## 选取最小的满足成员
+## 选取最小的满足元素
 <!--ja-->
 ## 条件を満たす最小の要素を選ぶ
 <!--/-->
@@ -212,7 +212,7 @@ The ambient stage `Lset γ` is packaged as an element `Lγ` of the constructible
 <!--en-->
 The equation `Lγ-fst` exposes the underlying set of this opaque package as `Lset γ`. Later membership proofs cross this equation when moving between the host-level stage and the constant used by the formula.
 <!--zh-->
-等式 `Lγ-fst` 把这个不透明包的底层集合显式认同为 `Lset γ`。后文在宿主层的层与公式所用常元之间转换时，隶属证明都沿这条等式搬运。
+等式 `Lγ-fst` 把这个不透明包的底层集合显式认同为 `Lset γ`。后文在宿主层的层与公式所用常元之间转换时，成员关系证明都沿这条等式搬运。
 <!--ja-->
 等式 `Lγ-fst` は、この不透明な包みの底の集合を `Lset γ` と同一視する。後でホスト側の段階と論理式が使う定数との間を移るとき、所属の証明はこの等式に沿って輸送される。
 <!--/-->
@@ -251,7 +251,7 @@ The internal implementation of the stage order is a constructible set of coded p
 <!--en-->
 The predicate `Mem x` records the restriction on inputs: it is evidence that `x ∈ X`. It imposes no condition on witness candidates, whose separate carrier is the set of members of `Lset γ` introduced next.
 <!--zh-->
-谓词 `Mem x` 记录对输入的约束，即 `x ∈ X` 的证据。它不对见证候选施加条件；候选的另一载体将在下一步定义为 `Lset γ` 的成员类型。
+谓词 `Mem x` 记录对输入的约束，即 `x ∈ X` 的证据。它不对见证候选施加条件；候选的另一载体将在下一步定义为 `Lset γ` 的元素类型。
 <!--ja-->
 述語 `Mem x` は入力への制約、すなわち `x ∈ X` の証拠を記録する。証人候補には条件を課さない。候補の別の台は、次に `Lset γ` の要素の型として定める。
 <!--/-->
@@ -264,7 +264,7 @@ The predicate `Mem x` records the restriction on inputs: it is evidence that `x 
 <!--en-->
 The order `orderAt γ oγ` acts on stage members rather than on arbitrary elements of `S`. The subtype `Mγ` builds the bound `c ∈ Lset γ` into every object being compared, so least-element search cannot range outside the fixed candidate stage.
 <!--zh-->
-序 `orderAt γ oγ` 作用于层成员，而非 `S` 的任意元素。子类型 `Mγ` 把界 `c ∈ Lset γ` 内置于每个被比较的对象中，因此最小元搜索不可能越出固定的候选层。
+序 `orderAt γ oγ` 作用于层元素，而非 `S` 的任意元素。子类型 `Mγ` 把界 `c ∈ Lset γ` 内置于每个被比较的对象中，因此最小元搜索不可能越出固定的候选层。
 <!--ja-->
 順序 `orderAt γ oγ` が作用するのは段階の要素であり、`S` の任意の要素ではない。部分型 `Mγ` は、比較される各対象に境界 `c ∈ Lset γ` を組み込むので、最小要素の探索が固定された候補の段階の外へ出ることはない。
 <!--/-->
@@ -278,7 +278,7 @@ The order `orderAt γ oγ` acts on stage members rather than on arbitrary elemen
 <!--en-->
 An element of `Mγ` contains an underlying set together with its membership in `Lset γ`. Every member of a constructible stage is constructible, so `memS` can promote that underlying set to the carrier `S`; the original membership proof remains available as the stage bound on the candidate.
 <!--zh-->
-`Mγ` 的元素包含一个底层集合及其属于 `Lset γ` 的证明。可构造层的每个成员都是可构造的，因此 `memS` 能把该底层集合提升到载体 `S`；原有的隶属证明仍保留为候选的层界。
+`Mγ` 的元素包含一个底层集合及其属于 `Lset γ` 的证明。可构造层的每个元素都是可构造的，因此 `memS` 能把该底层集合提升到载体 `S`；原有的成员关系证明仍保留为候选的层界。
 <!--ja-->
 `Mγ` の要素は、底の集合と、その集合が `Lset γ` に属するという証明を含む。構成可能な段階の各要素は構成可能なので、`memS` はその底の集合を台 `S` へ移せる。もとの所属の証明は、候補に対する段階の境界としてそのまま残る。
 <!--/-->
@@ -304,7 +304,7 @@ The predicate at a candidate and an input is the object-language satisfaction of
 <!--en-->
 The predicate `Good x` transfers the original relation to the carrier ordered by `orderAt γ oγ`: a stage member is good exactly when its associated element of `S` satisfies `P` with input `x`. Consequently the forthcoming search orders candidates from `Lset γ`; it does not order the inputs in `X` or restrict candidates to `X`.
 <!--zh-->
-谓词 `Good x` 把原关系转到 `orderAt γ oγ` 所排序的载体上：一个层成员是合格候选，恰当其对应的 `S` 元素与输入 `x` 一同满足 `P`。因此，接下来的搜索排序的是 `Lset γ` 中的候选；它既不排序 `X` 中的输入，也不把候选限制到 `X` 中。
+谓词 `Good x` 把原关系转到 `orderAt γ oγ` 所排序的载体上：一个层元素是合格候选，恰当其对应的 `S` 元素与输入 `x` 一同满足 `P`。因此，接下来的搜索排序的是 `Lset γ` 中的候选；它既不排序 `X` 中的输入，也不把候选限制到 `X` 中。
 <!--ja-->
 述語 `Good x` は、もとの関係を `orderAt γ oγ` が整列する台へ移す。段階の要素が良い候補であるのは、それに対応する `S` の要素が入力 `x` とともに `P` を満たすとき、ちょうどそのときである。したがって後の探索が並べるのは `Lset γ` の候補であり、`X` の入力を並べたり、候補を `X` に制限したりはしない。
 <!--/-->
@@ -317,7 +317,7 @@ The predicate `Good x` transfers the original relation to the carrier ordered by
 <!--en-->
 For each fixed input, the formula-facing form of this predicate uses the original binary formula `P`. A stage member supplies the first environment entry through `memS`, while the fixed input supplies the second. The checked reading is reflexive, so the package adds no new mathematical assumption; it exposes the syntax already present in `Good`.
 <!--zh-->
-对每个固定输入，这个谓词面向公式的形式使用原有二元公式 `P`。层成员经 `memS` 供给环境的第一项，固定输入供给第二项。经过检查的读取是自反的，所以这个包不增加任何数学假设，只把 `Good` 中已有的句法显露出来。
+对每个固定输入，这个谓词面向公式的形式使用原有二元公式 `P`。层元素经 `memS` 供给环境的第一项，固定输入供给第二项。经过检查的读取是自反的，所以这个包不增加任何数学假设，只把 `Good` 中已有的句法显露出来。
 <!--ja-->
 固定した各入力について、この述語の論理式に面する形は、もとの二項論理式 `P` を使う。段階の要素が `memS` を通して環境の第一成分を、固定入力が第二成分を与える。検査済みの読みは反射的なので、このパッケージは新しい数学的仮定を加えず、`Good` にすでにある構文を露出させるだけである。
 <!--/-->
@@ -330,7 +330,7 @@ For each fixed input, the formula-facing form of this predicate uses the origina
 <!--en-->
 The same underlying set may arrive with two proofs that it is constructible. Since constructibility is a proposition, `S≡` identifies the two packaged elements of `S`; transporting satisfaction along that path shows that the repackaged stage member satisfies the same instance of `P` as the original witness.
 <!--zh-->
-同一个底层集合可能连同两份不同的可构造性证明出现。由于可构造性是命题，`S≡` 认同这两个打包后的 `S` 元素；沿所得路径搬运满足证明，便知重打包的层成员与原见证满足同一个 `P` 实例。
+同一个底层集合可能连同两份不同的可构造性证明出现。由于可构造性是命题，`S≡` 认同这两个打包后的 `S` 元素；沿所得路径搬运满足证明，便知重打包的层元素与原见证满足同一个 `P` 实例。
 <!--ja-->
 同じ底の集合が、構成可能性の二つの証明を伴って現れることがある。構成可能性は命題なので、`S≡` は二つの包まれた `S` の要素を同一視する。得られたパスに沿って充足の証明を輸送すれば、組み直した段階の要素が、もとの証人と同じ `P` の実例を満たすと分かる。
 <!--/-->
@@ -359,7 +359,7 @@ Selection is performed after fixing an input `x` and evidence `m : x ∈ X`. The
 <!--en-->
 For the fixed input, the hypothesis is mapped into the type of good stage members. This changes only the representation of each possible witness: the resulting nonemptiness remains propositionally truncated, so no particular starting member has yet been chosen.
 <!--zh-->
-对固定输入，假设被映到「满足条件的层成员」这一类型中。这一步只改变每个可能见证的表示；所得非空性仍带有命题截断，因此尚未选定任何特定起始成员。
+对固定输入，假设被映到「满足条件的层元素」这一类型中。这一步只改变每个可能见证的表示；所得非空性仍带有命题截断，因此尚未选定任何特定起始元素。
 <!--ja-->
 固定した入力について、仮定を条件を満たす段階の要素の型へ写す。ここで変わるのは各候補の表現だけである。得られる非空性は命題的切り詰めの中にとどまり、特定の出発要素はまだ選ばれていない。
 <!--/-->
@@ -373,7 +373,7 @@ For the fixed input, the hypothesis is mapped into the type of good stage member
 <!--en-->
 Now `leastOfFormula` descends through `orderAt γ oγ` and returns an actual least good member. Its input `definedGood x` carries the object formula, environment, and reading theorem for the predicate being searched. This is the exceptional elimination step: excluded middle decides whether descent can continue, and propositional truncation may be eliminated because the total type of a least element together with its leastness proof has already been shown to be a proposition. Neither fact alone would justify extracting an arbitrary witness from `nonempty`.
 <!--zh-->
-此时 `leastOfFormula` 沿 `orderAt γ oγ` 下降，并返回一个实际的最小合格成员。它的输入 `definedGood x` 携带被搜索谓词的对象语言公式、环境与读取定理。这是特殊的消去步骤：排中律判定下降能否继续；而命题截断之所以可被消去，是因为「最小元连同其最小性证明的总类型」已经证明为命题。仅凭其中任一事实，都不足以从 `nonempty` 中抽取任意见证。
+此时 `leastOfFormula` 沿 `orderAt γ oγ` 下降，并返回一个实际的最小合格元素。它的输入 `definedGood x` 携带被搜索谓词的对象语言公式、环境与读取定理。这是特殊的消去步骤：排中律判定下降能否继续；而命题截断之所以可被消去，是因为「最小元连同其最小性证明的总类型」已经证明为命题。仅凭其中任一事实，都不足以从 `nonempty` 中抽取任意见证。
 <!--ja-->
 ここで `leastOfFormula` は `orderAt γ oγ` に沿って降下し、条件を満たす実際の最小要素を返す。その入力 `definedGood x` は、探索される述語の対象言語の論理式、環境、読み取り定理を運ぶ。これは特別な除去の段階である。排中律が降下を続けられるかを判定し、最小要素とその最小性の証明からなる全体型がすでに命題だと示されているため、命題的切り詰めを除去できる。どちらか一方だけでは、`nonempty` から任意の証人を取り出すことは正当化されない。
 <!--/-->
@@ -387,7 +387,7 @@ Now `leastOfFormula` descends through `orderAt γ oγ` and returns an actual lea
 <!--en-->
 The result of the search retains the proof that the selected member is good. Thus the passage from mere existence to an actual least element does not lose the original predicate.
 <!--zh-->
-搜索结果保留被选成员是合格候选的证明。因此，从仅仅存在走到实际最小元的过程中，原谓词并未丢失。
+搜索结果保留被选元素是合格候选的证明。因此，从仅仅存在走到实际最小元的过程中，原谓词并未丢失。
 <!--ja-->
 探索の結果には、選ばれた要素が良い候補であるという証明も残る。したがって、単なる存在から実際の最小要素へ進んでも、もとの述語は失われない。
 <!--/-->
@@ -400,7 +400,7 @@ The result of the search retains the proof that the selected member is good. Thu
 <!--en-->
 Its companion clause gives the exact relative leastness needed later: any other good member of this same stage is forbidden from lying strictly below the selected one in `orderAt γ oγ`.
 <!--zh-->
-与之配套的子句给出后文所需的精确相对最小性：同一层中的任何其他合格成员，都不可能在 `orderAt γ oγ` 中严格低于被选者。
+与之配套的子句给出后文所需的精确相对最小性：同一层中的任何其他合格元素，都不可能在 `orderAt γ oγ` 中严格低于被选者。
 <!--ja-->
 対になる条項は、後で必要となる正確な相対的最小性を与える。同じ段階の他の良い要素が、`orderAt γ oγ` において選ばれた要素より真に小さくなることはない。
 <!--/-->
@@ -413,7 +413,7 @@ Its companion clause gives the exact relative leastness needed later: any other 
 <!--en-->
 The order compares objects in `Mγ`, whereas satisfaction environments contain objects of `S`. Repackaging the chosen member as `e` crosses this interface without changing its underlying set.
 <!--zh-->
-层序比较的是 `Mγ` 中的对象，而满足环境容纳的是 `S` 中的对象。把被选成员重打包为 `e`，便在不改变底层集合的前提下跨过这道接口。
+层序比较的是 `Mγ` 中的对象，而满足环境容纳的是 `S` 中的对象。把被选元素重打包为 `e`，便在不改变底层集合的前提下跨过这道接口。
 <!--ja-->
 段階の順序が比較するのは `Mγ` の対象であるが、充足環境に入るのは `S` の対象である。選ばれた要素を `e` として包み直すことで、底の集合を変えずにこの境界を越える。
 <!--/-->
@@ -439,7 +439,7 @@ Because goodness was defined through this same repackaging, the selected element
 <!--en-->
 The membership component carried by the selected stage member also proves `e ∈ Lset γ`. Predicate satisfaction and the stage bound are therefore obtained from the same least candidate.
 <!--zh-->
-被选层成员携带的隶属分量同时证明 `e ∈ Lset γ`。因此，谓词满足与层界来自同一个最小候选。
+被选层元素携带的成员关系分量同时证明 `e ∈ Lset γ`。因此，谓词满足与层界来自同一个最小候选。
 <!--ja-->
 選ばれた段階の要素がもつ所属の成分は、同時に `e ∈ Lset γ` を証明する。したがって、述語の充足と段階の境界は同じ最小候補から得られる。
 <!--/-->
@@ -493,7 +493,7 @@ The same value lies in `Lset γ`. This separate range statement will later place
 <!--en-->
 To state leastness in terms that can also be expressed inside `L`, assume that a competitor `w'` is recorded below `fn(x)` by the internal relation `Rγ`. The reading lemma `relL-rep` converts this coded entry into the host-level comparison used by `orderAt γ oγ`, where the minimality of the selected member refutes it. The conclusion excludes only satisfying competitors in `Lset γ` and only with respect to this fixed order.
 <!--zh-->
-为了用也能在 `L` 内表达的方式陈述最小性，设内部关系 `Rγ` 记录了竞争者 `w'` 低于 `fn(x)`。读出引理 `relL-rep` 把这一编码条目转成 `orderAt γ oγ` 所用的宿主层比较，而被选成员的最小性将其反驳。结论只排除 `Lset γ` 中满足谓词的竞争者，且只相对于这条固定的序。
+为了用也能在 `L` 内表达的方式陈述最小性，设内部关系 `Rγ` 记录了竞争者 `w'` 低于 `fn(x)`。读出引理 `relL-rep` 把这一编码条目转成 `orderAt γ oγ` 所用的宿主层比较，而被选元素的最小性将其反驳。结论只排除 `Lset γ` 中满足谓词的竞争者，且只相对于这条固定的序。
 <!--ja-->
 `L` の内部でも表せる形で最小性を述べるため、比較候補 `w'` が `fn(x)` より小さいことを内部関係 `Rγ` が記録していると仮定する。読み出し補題 `relL-rep` は、この符号化された項目を `orderAt γ oγ` が使うホスト側の比較へ移し、選ばれた要素の最小性がそれを反駁する。結論が排除するのは `Lset γ` にある充足候補だけであり、しかもこの固定された順序に関してだけである。
 <!--/-->
@@ -508,7 +508,7 @@ To state leastness in terms that can also be expressed inside `L`, assume that a
 <!--en-->
 The host-level specification `TWit w x` combines the three facts that the graph formula must express: `P(w,x)`, membership of `w` in the fixed stage, and the absence of a stage member satisfying `P` strictly below `w` in `orderAt γ oγ`. This is a specification of a graph value, before the graph is collected as an internal table.
 <!--zh-->
-宿主层规格 `TWit w x` 合并图公式必须表达的三项事实：`P(w,x)`、`w` 属于固定层，以及在 `orderAt γ oγ` 中不存在严格低于 `w` 且满足 `P` 的层成员。这是图取值的规格，此时图尚未被收集为内部表。
+宿主层规格 `TWit w x` 合并图公式必须表达的三项事实：`P(w,x)`、`w` 属于固定层，以及在 `orderAt γ oγ` 中不存在严格低于 `w` 且满足 `P` 的层元素。这是图取值的规格，此时图尚未被收集为内部表。
 <!--ja-->
 ホスト側の仕様 `TWit w x` は、グラフ論理式が表すべき三つの事実をまとめる。すなわち `P(w,x)`、`w` が固定された段階に属すること、そして `orderAt γ oγ` において `w` より真に小さく `P` を満たす段階の要素がないことである。これはグラフの値の仕様であり、この時点ではグラフはまだ内部の表として集められていない。
 <!--/-->
@@ -552,7 +552,7 @@ Uniqueness is proved only among candidates satisfying the complete `TWit` specif
 <!--en-->
 If the alternative candidate were strictly below the selected one, leastness would be contradicted; if the two stage members coincided, their underlying sets would be equal.
 <!--zh-->
-若替代候选严格低于被选者，则与最小性矛盾；若两个层成员重合，则其底层集相等。
+若替代候选严格低于被选者，则与最小性矛盾；若两个层元素重合，则其底层集相等。
 <!--ja-->
 代替の候補が選ばれたものより真に下なら、最小性と矛盾する。二つの段階の要素が一致すれば、底の集合が等しくなる。
 <!--/-->
@@ -639,7 +639,7 @@ Compatibility with renaming now identifies the two readings of `P`: evaluating `
 <!--en-->
 The full graph formula conjoins the original predicate with stage membership and the leastness clause: a value is recorded exactly when it satisfies the predicate, lies in the fixed stage, and is least among stage members that do.
 <!--zh-->
-完整图公式把原谓词与层隶属、最小性子句合取：一个值被记录，恰当它满足谓词、位于固定层中、且在该层满足谓词的成员中最小。
+完整图公式把原谓词与层成员关系、最小性子句合取：一个值被记录，恰当它满足谓词、位于固定层中、且在该层满足谓词的元素中最小。
 <!--ja-->
 完全なグラフの論理式は、もとの述語に、段階への所属と最小性の節を連言する。値が記録されるのは、述語を充足し、固定された段階に属し、そしてそうする段階の要素の中で最小のとき、ちょうどそのときである。
 <!--/-->
@@ -652,7 +652,7 @@ The full graph formula conjoins the original predicate with stage membership and
 <!--en-->
 Reading `fo` outward recovers the three parts of the semantic specification: `P(w,x)`, membership `w ∈ Lset γ`, and the absence of a satisfying member of that stage recorded below `w` by the internal order. The formula `fo` itself does not contain the condition `x ∈ X`; that restriction is imposed when `fo` is used as the graph formula of `Dmap`. Thus `X` controls the inputs on which a value must be defined, while `Lset γ` controls the candidates compared for that input.
 <!--zh-->
-向外读取 `fo`，可恢复语义规格的三部分：`P(w,x)`、隶属 `w ∈ Lset γ`，以及该层中没有满足谓词且被内部序记录为低于 `w` 的成员。公式 `fo` 本身不含条件 `x ∈ X`；这一限制在 `fo` 被用作 `Dmap` 的图公式时施加。因此，`X` 控制哪些输入必须取得值，而 `Lset γ` 控制为该输入参与比较的候选。
+向外读取 `fo`，可恢复语义规格的三部分：`P(w,x)`、成员关系 `w ∈ Lset γ`，以及该层中没有满足谓词且被内部序记录为低于 `w` 的元素。公式 `fo` 本身不含条件 `x ∈ X`；这一限制在 `fo` 被用作 `Dmap` 的图公式时施加。因此，`X` 控制哪些输入必须取得值，而 `Lset γ` 控制为该输入参与比较的候选。
 <!--ja-->
 `fo` を外向きに読むと、意味論的な仕様の三部分が得られる。すなわち `P(w,x)`、所属 `w ∈ Lset γ`、そして同じ段階に、条件を満たし、内部順序によって `w` より小さいと記録される要素がないことである。論理式 `fo` 自体は条件 `x ∈ X` を含まない。この制限は、`fo` を `Dmap` のグラフ論理式として使うときに課される。したがって `X` は値を定めるべき入力を制御し、`Lset γ` はその入力について比較される候補を制御する。
 <!--/-->
@@ -710,7 +710,7 @@ Renaming and application adequacy put those two assumptions into the forms expec
 <!--en-->
 This exact correspondence makes the selection definable. The map has input set `X` and codomain `Lγ`: for each proof that `x ∈ X`, its value is `fn x m`, and the earlier level-membership theorem places that value in `Lγ`. The graph formula is read in the environment `(value,input)`, so its first variable denotes the selected witness and its second variable denotes the input.
 <!--zh-->
-这一精确对应使该选取成为可定义映射。映射的输入集是 `X`，陪域是 `Lγ`：对每个 `x ∈ X` 的证明，其取值为 `fn x m`，而先前的层隶属定理把该值置于 `Lγ` 中。图公式在环境 `(取值,输入)` 中读取，因此第一个变元表示选出的见证，第二个变元表示输入。
+这一精确对应使该选取成为可定义映射。映射的输入集是 `X`，陪域是 `Lγ`：对每个 `x ∈ X` 的证明，其取值为 `fn x m`，而先前的层成员关系定理把该值置于 `Lγ` 中。图公式在环境 `(取值,输入)` 中读取，因此第一个变元表示选出的见证，第二个变元表示输入。
 <!--ja-->
 この正確な対応により、選択は定義可能な写像になる。入力集合は `X`、終域は `Lγ` である。`x ∈ X` の各証明に対する値は `fn x m` であり、先に示した段階への所属によって、その値は `Lγ` に入る。グラフ論理式は環境 `(値,入力)` で読まれるので、第一変数が選ばれた証人を、第二変数が入力を表す。
 <!--/-->
@@ -739,7 +739,7 @@ At the selected value, the three facts already proved supply a proof of `fo`: th
 <!--en-->
 Once a formula defines one value for every input in `X`, replacement can collect those values inside `L`. Applied to `Dmap`, the graph construction provides a constructible set of ordered pairs together with the two directions needed to use its membership relation.
 <!--zh-->
-一旦一条公式为 `X` 中每个输入定义唯一取值，替换便能在 `L` 内收集这些取值。把图构造用于 `Dmap`，可得到由有序对组成的可构造集，以及使用其隶属关系所需的两个方向。
+一旦一条公式为 `X` 中每个输入定义唯一取值，替换便能在 `L` 内收集这些取值。把图构造用于 `Dmap`，可得到由有序对组成的可构造集，以及使用其成员关系所需的两个方向。
 <!--ja-->
 一つの論理式が `X` の各入力にただ一つの値を定めれば、置換によってそれらの値を `L` の内部に集められる。グラフの構成を `Dmap` に適用すると、順序対からなる構成可能集合と、その所属関係を利用するための二方向の読みが得られる。
 <!--/-->
@@ -764,7 +764,7 @@ Call this collected set `T`. Its entries are ordered pairs `(x,fn(x))`, with the
 <!--en-->
 For every `x ∈ X`, the table contains the pair `(x,fn(x))`. Hence later arguments may refer to the choices through membership in one constructible set, rather than making a separate choice from the merely inhabited family for each input.
 <!--zh-->
-对每个 `x ∈ X`，表都包含有序对 `(x,fn(x))`。因此，后续论证可以通过同一个可构造集的隶属关系引用这些选择，而无须对每个输入分别从仅仅非空的族中作选择。
+对每个 `x ∈ X`，表都包含有序对 `(x,fn(x))`。因此，后续论证可以通过同一个可构造集的成员关系引用这些选择，而无须对每个输入分别从仅仅非空的族中作选择。
 <!--ja-->
 各 `x ∈ X` について、表は順序対 `(x,fn(x))` を含む。したがって後の議論では、入力ごとに単に非空な族から別々に選ぶのではなく、一つの構成可能集合への所属を通して、これらの選択を参照できる。
 <!--/-->
@@ -777,7 +777,7 @@ For every `x ∈ X`, the table contains the pair `(x,fn(x))`. Hence later argume
 <!--en-->
 Conversely, an entry `(x,w) ∈ T` yields evidence `x ∈ X` and equality of the underlying set of `w` with that of the selected value `fn(x)`. Table membership does not return the leastness proof itself. In `HullCounting`, this table is used to synchronize choices that were previously available only under propositional truncation. When an injection is needed, a separate reverse-functionality hypothesis for the underlying relation proves that a fixed related candidate cannot correspond to two different inputs; injectivity is not a consequence of least selection alone.
 <!--zh-->
-反过来，条目 `(x,w) ∈ T` 给出证据 `x ∈ X`，并给出 `w` 的底层集合与被选取值 `fn(x)` 的底层集合相等。表隶属本身不返回最小性证明。在 `HullCounting` 中，这张表用于同步此前只在命题截断下可得的诸选择。需要单射时，还须另有底层关系的反向函数性假设，证明一个固定的相关候选不能对应两个不同输入；单射性并不单由最小选取得出。
+反过来，条目 `(x,w) ∈ T` 给出证据 `x ∈ X`，并给出 `w` 的底层集合与被选取值 `fn(x)` 的底层集合相等。表成员关系本身不返回最小性证明。在 `HullCounting` 中，这张表用于同步此前只在命题截断下可得的诸选择。需要单射时，还须另有底层关系的反向函数性假设，证明一个固定的相关候选不能对应两个不同输入；单射性并不单由最小选取得出。
 <!--ja-->
 逆に、項目 `(x,w) ∈ T` からは、証拠 `x ∈ X` と、`w` の底の集合が選ばれた値 `fn(x)` の底の集合に等しいことが得られる。表への所属そのものは、最小性の証明を返さない。`HullCounting` では、この表を使って、それまでは命題的切り詰めのもとでしか得られなかった選択をそろえる。単射が必要な場合には、基礎となる関係について逆向きの関数性を別に仮定し、一つの関係する候補が異なる二つの入力に対応しないことを示す。単射性は最小選択だけから従うものではない。
 <!--/-->

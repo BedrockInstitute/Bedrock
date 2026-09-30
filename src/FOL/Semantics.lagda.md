@@ -11,19 +11,19 @@
 <!--/-->
 
 ```agda
-open import FOL.ZFStructure using ( ZFStructure )
+open import FOL.ZFStructure using ( ZFStructure; ZFStructureₕ )
 ```
 
 <!--en-->
-Fix a structure `𝒮 : ZFStructure ℓ`{.Agda}. Its carrier and its equality and membership relations give the interpretation in which the constructions below take place.
+Fix a structure `𝒮 : ZFStructureₕ ℓ`{.Agda}. Its carrier and its equality and membership relations give the interpretation in which the constructions below take place.
 <!--zh-->
-固定结构 `𝒮 : ZFStructure ℓ`{.Agda}。下文的构造以其载体、等词与隶属关系为解释。
+固定结构 `𝒮 : ZFStructureₕ ℓ`{.Agda}。下文的构造以其载体、等词与成员关系为解释。
 <!--ja-->
-構造 `𝒮 : ZFStructure ℓ`{.Agda} を固定する。以下の構成は、その台と等号・所属関係による解釈のもとで行う。
+構造 `𝒮 : ZFStructureₕ ℓ`{.Agda} を固定する。以下の構成は、その台と等号・所属関係による解釈のもとで行う。
 <!--/-->
 
 ```agda
-module FOL.Semantics {ℓ} (𝒮 : ZFStructure ℓ) where
+module FOL.Semantics {ℓ} (𝒮 : ZFStructureₕ ℓ) where
 ```
 
 ```agda
@@ -46,11 +46,11 @@ The object language consists of symbols and rules for combining them, and so far
 <!--/-->
 
 <!--en-->
-Fix a structure `𝒮 : ZFStructure ℓ`{.Agda}, the model-theoretic data of the preceding chapter: a carrier `S` that is an h-set, together with an equality `≈ˢ` and a membership `∈ˢ`, each sending two carrier elements to a proposition in `hProp ℓ`{.Agda}. The interpretation of every formula will land in this same proposition universe, so a claim about sets becomes, quite literally, a proposition with proofs as its inhabitants. Nothing beyond these fields is used. The record `ZFStructure` itself contains no set-theoretic axioms, and defining the semantics requires none.
+Fix a structure `𝒮 : ZFStructureₕ ℓ`{.Agda}, the model-theoretic data of the preceding chapter: a carrier `S` that is an h-set, together with an equality `≈ˢ` and a membership `∈ˢ`, each sending two carrier elements to a proposition in `hProp ℓ`{.Agda}. The interpretation of every formula will land in this same proposition universe, so a claim about sets becomes, quite literally, a proposition with proofs as its inhabitants. Nothing beyond these fields is used. The record `ZFStructure` itself contains no set-theoretic axioms, and defining the semantics requires none.
 <!--zh-->
-固定一个结构 `𝒮 : ZFStructure ℓ`{.Agda}，即上一章的模型论数据：一个作为 h-集合的载体 `S`，加上等词 `≈ˢ` 与隶属 `∈ˢ`，二者都把两个载体元素送到 `hProp ℓ`{.Agda} 中的一个命题。每条公式的解释都将落在这个命题宇宙之中，于是关于集合的陈述实实在在地成为一个命题，其元素就是证明。除了这些字段之外，不再使用结构的其他内容。`ZFStructure` 这个 record 本身不含集合论公理，定义语义也不需要任何集合论公理。
+固定一个结构 `𝒮 : ZFStructureₕ ℓ`{.Agda}，即上一章的模型论数据：一个作为 h-集合的载体 `S`，加上等词 `≈ˢ` 与成员关系 `∈ˢ`，二者都把两个载体元素送到 `hProp ℓ`{.Agda} 中的一个命题。每条公式的解释都将落在这个命题宇宙之中，于是关于集合的陈述实实在在地成为一个命题，其元素就是证明。除了这些字段之外，不再使用结构的其他内容。`ZFStructure` 这个 record 本身不含集合论公理，定义语义也不需要任何集合论公理。
 <!--ja-->
-一つの構造 `𝒮 : ZFStructure ℓ`{.Agda} を固定する。これは前章のモデル論的データ、すなわち h-集合である台 `S` と、二つの台の要素を `hProp ℓ`{.Agda} の命題に送る等号 `≈ˢ` と所属 `∈ˢ` である。すべての論理式の解釈はこの同じ命題の宇宙に着地する。したがって集合についての主張は、文字どおり、証明を要素として持つ命題になる。これらのフィールド以外に、構造の内容は使わない。`ZFStructure` というレコード自体は集合論の公理を含まず、意味論の定義にも集合論の公理は要らない。
+一つの構造 `𝒮 : ZFStructureₕ ℓ`{.Agda} を固定する。これは前章のモデル論的データ、すなわち h-集合である台 `S` と、二つの台の要素を `hProp ℓ`{.Agda} の命題に送る等号 `≈ˢ` と所属 `∈ˢ` である。すべての論理式の解釈はこの同じ命題の宇宙に着地する。したがって集合についての主張は、文字どおり、証明を要素として持つ命題になる。これらのフィールド以外に、構造の内容は使わない。`ZFStructure` というレコード自体は集合論の公理を含まず、意味論の定義にも集合論の公理は要らない。
 <!--/-->
 
 ```agda
@@ -60,7 +60,7 @@ open ZFStructure 𝒮
 <!--en-->
 The fields of the record are now in scope under their own names: `S` for the carrier, `∈ˢ` and `≈ˢ` for the relations, so `x ∈ˢ y` reads as the structure's membership proposition about `x` and `y`. The constructors of the object language are in scope as well, and each kind of symbol has a clear partner on the semantic side. A constant symbol needs a carrier element, fixed once by a function from the constant domain to `S`. A variable position needs a value that may change from use to use; an environment supplies it. An atomic formula needs one of the two relations. A connective or a quantifier needs no set theory at all: the logical operations on propositions from the Prelude, `⊓`, `⊔`, `⇒`, `∀[ x ] P x` and `∃[ x ] P x`, take their places. Interpretation is compositional: the meaning of a term or formula is determined from its constructor and the meanings of its immediate parts.
 <!--zh-->
-record 的字段如今以自己的名字进入作用域：`S` 是载体，`∈ˢ` 与 `≈ˢ` 是两个关系，于是 `x ∈ˢ y` 读作结构关于 `x`、`y` 的隶属命题。对象语言的构造子也在作用域内，每一类符号在语义一侧都有明确的对应物。常元符号需要一个载体元素，由从常元域到 `S` 的函数一次固定。变元位置需要一个可随使用变化的取值，由环境供给。原子公式需要两个关系之一。联结词与量词则完全不需要集合论：《基础词汇》中命题上的逻辑运算 `⊓`、`⊔`、`⇒`、`∀[ x ] P x`、`∃[ x ] P x` 在此就位。解释遵循组合原则：词项或公式的意义由它的构造子及其直接组成部分的意义共同确定。
+record 的字段如今以自己的名字进入作用域：`S` 是载体，`∈ˢ` 与 `≈ˢ` 是两个关系，于是 `x ∈ˢ y` 读作结构关于 `x`、`y` 的成员关系命题。对象语言的构造子也在作用域内，每一类符号在语义一侧都有明确的对应物。常元符号需要一个载体元素，由从常元域到 `S` 的函数一次固定。变元位置需要一个可随使用变化的取值，由环境供给。原子公式需要两个关系之一。联结词与量词则完全不需要集合论：《基础词汇》中命题上的逻辑运算 `⊓`、`⊔`、`⇒`、`∀[ x ] P x`、`∃[ x ] P x` 在此就位。解释遵循组合原则：词项或公式的意义由它的构造子及其直接组成部分的意义共同确定。
 <!--ja-->
 レコードのフィールドは今や固有の名前でスコープに入っている。`S` が台を、`∈ˢ` と `≈ˢ` が二つの関係を表し、したがって `x ∈ˢ y` は `x` と `y` についての構造の所属命題と読む。対象言語の構成子もスコープにあり、各種の記号には意味論の側に明確な対応物がある。定数記号には台の要素が一つ必要であり、定数域から `S` への関数によって一度に固定される。変数の位置には、使用のたびに変わりうる値が必要で、それを供給するのが環境である。原子論理式には二つの関係のいずれかが必要である。結合子と量化子には集合論はまったく要らず、「基礎語彙」の命題上の論理演算 `⊓`、`⊔`、`⇒`、`∀[ x ] P x`、`∃[ x ] P x` がそこに収まる。解釈は合成的である。項や論理式の意味は、その構成子と、直接の構成部分の意味から定まる。
 <!--/-->
@@ -115,7 +115,7 @@ Fix a constant domain `K` and an interpretation `ι : K → S`. At this fixed in
 <!--zh-->
 解释与环境回答的是两个不同的问题。常元 `con k` 指称 `ι k`，与供给哪个环境无关；变元 `var i` 指称 `lookup i γ`，与固定哪个解释无关。因此，环境只在变元这一情形参与词项求值，常元符号的含义始终由 `ι` 固定。这两个情形穷尽了词项求值。
 
-固定常元域 `K` 与解释 `ι : K → S`。在这个固定解释下，词项求值把词项和环境送到 `S` 的元素，满足关系则把公式和环境送到命题。满足关系按公式结构递归定义：原子式使用结构的两个关系，联结词使用《基础词汇》中的命题运算，假使用空命题，量词遍及载体。在有界量词中，界限的指称决定被量化元素须满足的成员条件。
+固定常元域 `K` 与解释 `ι : K → S`。在这个固定解释下，词项求值把词项和环境送到 `S` 的元素，满足关系则把公式和环境送到命题。满足关系按公式结构递归定义：原子式使用结构的两个关系，联结词使用《基础词汇》中的命题运算，假使用空命题，量词遍及载体。在有界量词中，界限的指称决定被量化元素须满足的成员关系条件。
 <!--ja-->
 解釈と環境は、互いに異なる二つの問いに答える。定数 `con k` はどの環境を与えても `ι k` を表示し、変数 `var i` はどの解釈を固定しても `lookup i γ` を表示する。したがって環境が項の評価に関わるのは変数の場合だけで、定数記号の意味はつねに `ι` が固定する。この二つの場合で項の評価は尽くされる。
 
@@ -151,7 +151,7 @@ Two definitions carry the section, and their types say what they are. Evaluation
 <!--en-->
 An atomic membership evaluates its two terms and hands them to the structure: the claim becomes the structure's membership proposition about the two denotations. The equality atom does the same with `≈ˢ`. Here, at last, the dotted symbol means something: `∈̇` is read as `∈ˢ`, one layer down from the syntax. The propositional clauses stay entirely on the host side. Conjunction is interpreted by `⊓`, disjunction by `⊔`, implication by `⇒`, each an operation on propositions. A proof of a conjunction is a pair of proofs; a proof of an implication is a function turning a proof of the antecedent into a proof of the consequent. These three clauses use no set theory at all; they are the propositional logic of the host, applied to the propositions denoted by the subformulas.
 <!--zh-->
-原子的隶属先对两个词项求值，再把它们交给结构：该断言成为结构关于两个指称的隶属命题。相等原子对 `≈ˢ` 如法炮制。在此，带点的符号终于有了含义：`∈̇` 被读作 `∈ˢ`，比语法低一层。三条命题子句则完全留在宿主一侧：合取由 `⊓` 解释，析取由 `⊔` 解释，蕴涵由 `⇒` 解释，每个都是命题上的运算。合取的证明是一对证明；蕴涵的证明是一个函数，把前件的证明变成后件的证明。这三条子句完全不用集合论，它们是宿主的命题逻辑，施于子公式所指的命题。
+原子的成员关系先对两个词项求值，再把它们交给结构：该断言成为结构关于两个指称的成员关系命题。相等原子对 `≈ˢ` 如法炮制。在此，带点的符号终于有了含义：`∈̇` 被读作 `∈ˢ`，比语法低一层。三条命题子句则完全留在宿主一侧：合取由 `⊓` 解释，析取由 `⊔` 解释，蕴涵由 `⇒` 解释，每个都是命题上的运算。合取的证明是一对证明；蕴涵的证明是一个函数，把前件的证明变成后件的证明。这三条子句完全不用集合论，它们是宿主的命题逻辑，施于子公式所指的命题。
 <!--ja-->
 原子的な所属は二つの項を評価し、それらを構造に渡す。主張は、二つの表示についての構造の所属命題になる。等号の原子は `≈ˢ` について同様である。ここで、点付きの記号がついに意味を持つ。`∈̇` は `∈ˢ` として読まれ、構文より一つ下の層に降りる。命題的な三つの節は完全にホストの側にとどまる。連言は `⊓` で、選言は `⊔` で、含意は `⇒` で解釈され、いずれも命題上の演算である。連言の証明は証明の対であり、含意の証明は前件の証明を後件の証明へ変える関数である。この三つの節に集合論はまったく現れず、ホストの命題論理が部分公式の表示する命題に施されるだけである。
 <!--/-->
@@ -171,7 +171,7 @@ The bounded forms add one ingredient: membership in the denotation of the bound.
 <!--zh-->
 假不需要任何环境：`⊥̇` 被读作空命题 `⊥`。量词是载体最终登场之处。无界的 `∃̇ φ` 表达对载体的存在量化：即 `S` 的某个元素 `x` 使公式体在扩展环境 `x ∷ γ` 下成立的那个命题。它的对偶 `∀̇ φ` 表达全称量化，其证明是一个函数，为每个 `x : S` 指派公式体在 `x ∷ γ` 下的证明。在公式体内部，位置 `zero` 持有候选元素 `x`，而 `γ` 的各分量已移到后继位置；外层公式中自由的变元从尾部读取。由命题截断，存在量化只记录这样的元素存在，并不把该元素作为数据携带。
 
-有界形式增加一个成分：属于界限指称的成员资格。`∀̇∈ t φ` 要求属于 `⟦ t ⟧ γ` 蕴涵公式体，于是 `⟦ t ⟧ γ` 的每个成员都满足 `φ`；`∃̇∈ t φ` 寻求一个既是成员又满足公式体的元素。注意各环境用在哪里：界限 `t` 位于新绑定之外，在原有的 `γ` 中求值；只有公式体面对扩展 `x ∷ γ`。这两条子句正是「`t` 的每个成员都满足 `φ`」与「`t` 的某个成员满足 `φ`」这两种读法的语义内容。
+有界形式增加一个成分：属于界限指称的成员关系事实。`∀̇∈ t φ` 要求属于 `⟦ t ⟧ γ` 蕴涵公式体，于是 `⟦ t ⟧ γ` 的每个元素都满足 `φ`；`∃̇∈ t φ` 寻求一个既是元素又满足公式体的元素。注意各环境用在哪里：界限 `t` 位于新绑定之外，在原有的 `γ` 中求值；只有公式体面对扩展 `x ∷ γ`。这两条子句正是「`t` 的每个元素都满足 `φ`」与「`t` 的某个元素满足 `φ`」这两种读法的语义内容。
 <!--ja-->
 偽には環境は不要である。`⊥̇` は空命題 `⊥` として読まれる。量化子は、台がついに登場する場所である。非有界の `∃̇ φ` は台の上の存在量化を表す。すなわち、`S` のある要素 `x` が拡張環境 `x ∷ γ` のもとで本体を成立させる、という命題である。対になる `∀̇ φ` は全称量化を表し、その証明は各 `x : S` に `x ∷ γ` のもとでの本体の証明を割り当てる関数である。本体の内側では位置 `zero` が候補 `x` を保持し、`γ` の成分は後続の位置へ移っている。外側の論理式で自由だった変数は末尾から読まれる。命題的切り詰めにより、存在量化はそのような要素が存在することを記録するだけで、要素そのものをデータとして運ばない。
 
@@ -232,7 +232,7 @@ decideSatisfaction ι lem γ φ = lem (At._⊨_ _ ι γ φ)
 <!--en-->
 The two atomic specializations make common model-facing decisions equally explicit. Their formulas contain no constants: the two carrier arguments occupy the first and second variable slots, and satisfaction computes directly to the structure's membership or equality proposition.
 <!--zh-->
-两个原子特化使常见的面向模型判定同样明确。它们的公式不含常元：两个载体实参占据第一、第二变元槽，而满足关系直接计算为结构的隶属或等词命题。
+两个原子特化使常见的面向模型判定同样明确。它们的公式不含常元：两个载体实参占据第一、第二变元槽，而满足关系直接计算为结构的成员关系或等词命题。
 <!--ja-->
 二つの原子的な特殊化により、モデルに面するよく使う判定も同様に明示される。論理式は定数を含まず、二つの台の引数が第一・第二の変数枠を占め、充足は構造の所属または等号の命題へ直接計算される。
 <!--/-->
@@ -264,7 +264,7 @@ Meaning is compositional. A term denotes a carrier element, determined by the co
 <!--zh-->
 ## 小结
 
-语义按组成方式给出。词项指称一个载体元素，由常元解释与环境共同确定。元数为 `n` 的公式确定一个 `S ^ n → hProp ℓ`{.Agda} 型的函数，无论它是否用尽每个可用位置。原子式查询结构的两个关系；联结词应用宿主的命题运算；量词让一个置于最前的新位置遍及载体，有界形式则在扩展之外检验属于界限指称的成员资格，在扩展之内解释公式体。每条子句都是结构递归的一步。`FormulaPredicate` 把宿主谓词连同这份句法与语义呈现一起打包。整个构造使用载体 `S` 以及关系 `∈ˢ`、`≈ˢ`，不使用证明 `isSetS`，也不使用任何集合论公理。
+语义按组成方式给出。词项指称一个载体元素，由常元解释与环境共同确定。元数为 `n` 的公式确定一个 `S ^ n → hProp ℓ`{.Agda} 型的函数，无论它是否用尽每个可用位置。原子式查询结构的两个关系；联结词应用宿主的命题运算；量词让一个置于最前的新位置遍及载体，有界形式则在扩展之外检验属于界限指称的成员关系事实，在扩展之内解释公式体。每条子句都是结构递归的一步。`FormulaPredicate` 把宿主谓词连同这份句法与语义呈现一起打包。整个构造使用载体 `S` 以及关系 `∈ˢ`、`≈ˢ`，不使用证明 `isSetS`，也不使用任何集合论公理。
 <!--ja-->
 ## まとめ
 

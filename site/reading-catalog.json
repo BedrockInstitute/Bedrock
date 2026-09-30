@@ -406,7 +406,7 @@
         "zh": "结构",
         "ja": "構造"
       },
-      "human_reviewed": false
+      "human_reviewed": true
     },
     {
       "id": "FOL.Semantics",
@@ -792,7 +792,7 @@
       "id": "L.Ordinal.Linear",
       "title": {
         "en": "Ordinals are linearly ordered by membership",
-        "zh": "序数由隶属关系线性排序",
+        "zh": "序数由成员关系线性排序",
         "ja": "順序数は所属によって線形に順序付けられる"
       },
       "stage": {
@@ -802,7 +802,7 @@
       },
       "description": {
         "en": "Ordinals are linearly ordered by membership",
-        "zh": "序数由隶属关系线性排序",
+        "zh": "序数由成员关系线性排序",
         "ja": "順序数は所属によって線形に順序付けられる"
       },
       "human_reviewed": false
@@ -1685,7 +1685,7 @@
       "id": "L.Choice.CanonicalNames",
       "title": {
         "en": "Canonical names for successor-stage members",
-        "zh": "后继层成员的典范名字",
+        "zh": "后继层元素的典范名字",
         "ja": "後者段階の要素の正準な名前"
       },
       "stage": {
@@ -1695,7 +1695,7 @@
       },
       "description": {
         "en": "Canonical names for successor-stage members",
-        "zh": "后继层成员的典范名字",
+        "zh": "后继层元素的典范名字",
         "ja": "後者段階の要素の正準な名前"
       },
       "human_reviewed": false

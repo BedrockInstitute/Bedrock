@@ -28,7 +28,7 @@ module L.GCH.CardinalSquareLaw {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 open import FOL.Syntax
   using ( Formula; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; ¬̇_; ∃̇_ )
 import FOL.Absoluteness
@@ -67,7 +67,7 @@ open import L.InjectionComposition {ℓ} lem public using ( module Relation )
 For an infinite cardinal `κ` of `L`, the set of ordered pairs of members of `κ` injects into `κ` itself, by an internal coded injection. This chapter builds that injection. The route runs through the Gödel order on pairs: the order is written as a formula of the first-order object language, read off at the ordinal `κ` as the external Gödel order, and collapsed to an order type that the counting lemmas compare with `κ`. The chapter works at a fixed universe level `ℓ`, under excluded middle at the next level, the one classical assumption on which the ordinal comparisons below depend.
 <!--zh-->
 
-对 `L` 中的无穷基数 `κ`，其成员的有序对所成之集可经 `L` 内部的编码单射注入 `κ` 自身。本章构造这个单射。路线经由对上的 Gödel 序：把这条序写成第一阶对象语言的公式，在序数 `κ` 处读作外部的 Gödel 序，再塌缩到序型，由计数引理与 `κ` 比较。本章在固定的宇宙层级 `ℓ` 上工作，使用高一层的排中律，即下文所有序数比较所依赖的唯一经典假设。
+对 `L` 中的无穷基数 `κ`，其元素的有序对所成之集可经 `L` 内部的编码单射注入 `κ` 自身。本章构造这个单射。路线经由对上的 Gödel 序：把这条序写成第一阶对象语言的公式，在序数 `κ` 处读作外部的 Gödel 序，再塌缩到序型，由计数引理与 `κ` 比较。本章在固定的宇宙层级 `ℓ` 上工作，使用高一层的排中律，即下文所有序数比较所依赖的唯一经典假设。
 <!--ja-->
 
 `L` の無限基数 `κ` に対し、その要素の順序対からなる集合は、`L` の内部での符号化された単射によって `κ` 自身へ注入される。本章はこの単射を構成する。道筋は対の上の Gödel 順序を経由する。順序を一階の対象言語の論理式として書き下し、順序数 `κ` のところで外部の Gödel 順序として読み、崩壊によって順序型へ落とし、計数の補題によって `κ` と比較する。本章は固定された宇宙レベル `ℓ` の上で、一つ上のレベルの排中律、すなわち以下の順序数の比較が依存する唯一の古典的仮定のもとで進む。
@@ -76,7 +76,7 @@ For an infinite cardinal `κ` of `L`, the set of ordered pairs of members of `κ
 <!--en-->
 The construction is not constructive throughout, and the reason lies in the mathematics rather than in the formalism. To order the pairs of an ordinal one must decide, for two ordinals `a` and `b`, whether `a` belongs to `b`; and every classical decision of this chapter is an instance of that single question. The module therefore receives excluded middle at level `ℓ-suc ℓ` as explicit data, the level of the membership propositions being decided.
 <!--zh-->
-这一构造并非处处构造性的，其原因在数学而不在形式化。要为序数的有序对排序，就必须对两个序数 `a` 与 `b` 判定 `a` 是否属于 `b`；本章的每个经典判定都是这同一个问题的实例。模块因此以显式数据接收层级 `ℓ-suc ℓ` 上的排中律，那正是被判定隶属命题所在的层级。
+这一构造并非处处构造性的，其原因在数学而不在形式化。要为序数的有序对排序，就必须对两个序数 `a` 与 `b` 判定 `a` 是否属于 `b`；本章的每个经典判定都是这同一个问题的实例。模块因此以显式数据接收层级 `ℓ-suc ℓ` 上的排中律，那正是被判定成员关系命题所在的层级。
 <!--ja-->
 この構成がすべて構成的なわけではなく、その理由は形式化ではなく数学にある。順序数の対を順序づけるには、二つの順序数 `a` と `b` について `a` が `b` に属するかを判定しなければならない。本章の古典的な判定はどれもこの一つの問いの実例である。そこでモジュールは、レベル `ℓ-suc ℓ` の排中律を明示的なデータとして受け取る。判定される所属の命題の住むレベルである。
 <!--/-->
@@ -92,7 +92,7 @@ The module parameter fixes that instance once, and every classical step of the c
 <!--en-->
 The order to be internalized is written in the first-order object language: formulas built from membership and equality atoms by the connectives, negation and the unbounded existential, interpreted over the ambient hierarchy. Two facts of the hierarchy stand beside it, and both are used to end arguments: membership is well-founded, so ordinals admit induction along `∈`, and no set belongs to itself, so impossible comparisons can be refuted outright.
 <!--zh-->
-将被内在化的序用一阶对象语言写出：由隶属与相等两种原子经联结词、否定和无界存在量词生成的公式，在外围层级上解释。层级自身还有两条事实伴随其侧，二者都用于收束论证：隶属是良基的，故序数允许沿 `∈` 作归纳；并且没有集合属于自身，故不可能的比较可被直接反驳。
+将被内在化的序用一阶对象语言写出：由成员关系与相等两种原子经联结词、否定和无界存在量词生成的公式，在外围层级上解释。层级自身还有两条事实伴随其侧，二者都用于收束论证：成员关系是良基的，故序数允许沿 `∈` 作归纳；并且没有集合属于自身，故不可能的比较可被直接反驳。
 <!--ja-->
 内在化される順序は、一階の対象言語で書かれる。所属と等しさ (等号) の原子式から、結合子、否定、非有界の存在量化子によって作られる論理式であり、周囲の階層の上で解釈される。階層の二つの事実がその傍らにあり、どちらも議論を閉じるために使われる。所属は整礎であり、順序数は `∈` に沿った帰納を許し、またどの集合も自分自身に属さないため、あり得ない比較はそのまま反証できる。
 <!--/-->
@@ -100,7 +100,7 @@ The order to be internalized is written in the first-order object language: form
 <!--en-->
 Reading the coordinates of a coded pair, and counting with them, rests on three facts. The successor operation on ordinals is injective, so equal successors have equal predecessors. Every member of an ordinal is named by an index of its small presentation, the naming is injective, and a member of a constructible set is itself constructible. And the ordered pair `pr` is injective in both coordinates, so a coded pair determines its two entries.
 <!--zh-->
-读取编码对的坐标并以其计数，依赖三个事实。序数的后继运算是单射的，故相等的后继有相同的前驱。序数的每个成员都由其小呈现的一个索引指名，该命名单射，且可构造集的成员自身可构造。有序对 `pr` 在两个坐标上都是单射的，故编码对确定其两个分量。
+读取编码对的坐标并以其计数，依赖三个事实。序数的后继运算是单射的，故相等的后继有相同的前驱。序数的每个元素都由其小呈现的一个索引指名，该命名单射，且可构造集的元素自身可构造。有序对 `pr` 在两个坐标上都是单射的，故编码对确定其两个分量。
 <!--ja-->
 符号化された対の座標を読み、それで計数するには、三つの事実が要る。順序数の後続演算は単射であり、等しい後続は等しい先行者をもつ。順序数の各要素は小さな提示の添字によって名指され、その名指しは単射で、構成可能な集合の要素はそれ自身構成可能である。そして順序対 `pr` は両座標で単射であり、符号化された対はその二つの成分を確定する。
 <!--/-->
@@ -108,7 +108,7 @@ Reading the coordinates of a coded pair, and counting with them, rests on three 
 <!--en-->
 On the constructible side, the inner structure `𝒮ʟ` restricts the hierarchy to the transitive class of constructible sets. The ordinal facts used throughout are closure facts: members of ordinals are ordinals, successors of ordinals are ordinals, the members of `ω` are ordinals, and any two ordinals are comparable by trichotomy. Beside them stands the external Gödel order on pairs, the order this chapter internalizes.
 <!--zh-->
-在可构造一侧，内层结构 `𝒮ʟ` 把层级限制到可构造集这个传递类。全章使用的序数事实都是封闭性事实：序数的成员是序数，序数的后继是序数，`ω` 的成员是序数，且任意两个序数经三歧性可比。与它们并列的，是本章所要内在化的、对上的外部 Gödel 序。
+在可构造一侧，内层结构 `𝒮ʟ` 把层级限制到可构造集这个传递类。全章使用的序数事实都是封闭性事实：序数的元素是序数，序数的后继是序数，`ω` 的元素是序数，且任意两个序数经三歧性可比。与它们并列的，是本章所要内在化的、对上的外部 Gödel 序。
 <!--ja-->
 構成可能な側では、内側の構造 `𝒮ʟ` が階層を構成可能な集合という推移的クラスに制限する。全体を通して使う順序数の事実は閉性の事実である。順序数の要素は順序数であり、順序数の後続は順序数であり、`ω` の要素は順序数であり、任意の二つの順序数は三分法によって比較できる。その傍らには、対の上の外部の Gödel 順序、すなわち本章が内在化する順序がある。
 <!--/-->
@@ -148,7 +148,7 @@ A comparison of two coded pairs carries six dependent witnesses: four coordinate
 <!--en-->
 The coordinates of a coded pair are members of the underlying set of `κ`, read through the small presentation of that set. Beside the presentation stand the ambient membership, the empty set with its emptiness proof, and `ω` with the successor operation, the notions in which the two coordinates are compared and counted.
 <!--zh-->
-编码对的坐标是 `κ` 底层集合的成员，须借助该集合的小呈现读取。与呈现并列的还有外围隶属、带空虚性证明的空集，以及 `ω` 与后继运算，坐标的比较与计数正是在这些概念中进行。
+编码对的坐标是 `κ` 底层集合的元素，须借助该集合的小呈现读取。与呈现并列的还有外围成员关系、带空虚性证明的空集，以及 `ω` 与后继运算，坐标的比较与计数正是在这些概念中进行。
 <!--ja-->
 符号化された対の座標は、`κ` の基底集合の要素であり、その集合の小さな提示を通して読まれる。提示の傍らには、周囲の所属、空虚性の証明を伴う空集合、そして `ω` と後続の演算があり、座標の比較と計数はこれらの概念の中で行われる。
 <!--/-->
@@ -177,15 +177,15 @@ import Cubical.Induction.WellFounded as WF
 <!--en-->
 Two carriers are named and kept apart. The ambient carrier carries the hierarchy's own membership; the inner carrier `S` consists of the constructible sets, each an ambient set with its constructibility proof, and its membership is the ambient membership read on the underlying sets.
 <!--zh-->
-两个载体被命名并保持区分。外围载体承载层级自身的隶属；内层载体 `S` 由可构造集组成，每个元素是一个外围集合连同其可构造性证明，其隶属就是在外围集合上读取的外围隶属。
+两个载体被命名并保持区分。外围载体承载层级自身的成员关系；内层载体 `S` 由可构造集组成，每个元素是一个外围集合连同其可构造性证明，其成员关系就是在外围集合上读取的外围成员关系。
 <!--ja-->
 二つの台が名指され、区別して保たれる。周囲の台は階層本来の所属を運び、内側の台 `S` は構成可能な集合からなり、各要素は周囲の集合とその構成可能性の証明の対であり、その所属は基底の集合の上で読んだ周囲の所属である。
 <!--/-->
 
 ```agda
-open hPropStructure 𝒮ᵥ using ( _∈ˢ_ )
-module SV = hPropStructure 𝒮ᵥ using ()
-module SL = hPropStructure 𝒮ʟ using (S; _∈ˢ_)
+open hPropView 𝒮ᵥ using ( _∈ˢ_ )
+module SV = hPropView 𝒮ᵥ using ()
+module SL = hPropView 𝒮ʟ using (S; _∈ˢ_)
 open SL using ( S )
 ```
 
@@ -250,7 +250,7 @@ private module Product (K : S) = Relation K K
 <!--en-->
 The describing condition of the product says that both coordinates are members of `K`. Its host reading is the ambient membership of the two projections in the underlying set of `K`, and both directions of the reading are supplied.
 <!--zh-->
-乘积的描述条件说：两个坐标都是 `K` 的成员。其在宿主一侧的读法，是两个投影在 `K` 的底层集合中的外围隶属，且该读法的两个方向都已给出。
+乘积的描述条件说：两个坐标都是 `K` 的元素。其在宿主一侧的读法，是两个投影在 `K` 的底层集合中的外围成员关系，且该读法的两个方向都已给出。
 <!--ja-->
 積の記述の条件は、二つの座標がともに `K` の要素であることを述べる。ホスト側の読みは、二つの射影の `K` の基底集合への周囲の所属であり、その読みの両方向が与えられる。
 <!--/-->
@@ -264,7 +264,7 @@ The describing condition of the product says that both coordinates are members o
 <!--en-->
 `prodL K` is therefore the set of the ordered pairs of two members of `K`, separated inside `L` from the stage that bounds them.
 <!--zh-->
-于是 `prodL K` 就是由 `K` 的两个成员组成的有序对之集，在 `L` 内部从约束它们的层中分离而来。
+于是 `prodL K` 就是由 `K` 的两个元素组成的有序对之集，在 `L` 内部从约束它们的层中分离而来。
 <!--ja-->
 したがって `prodL K` は、`K` の二つの要素からなる順序対の集合であり、`L` の内部でそれらを抑える段階から分出されたものである。
 <!--/-->
@@ -277,7 +277,7 @@ prodL = Product.rel
 <!--en-->
 Membership in the product is characterized by a truncated existence: some two members `a` and `b` of `K` with the member equal to their ordered pair. The truncation records exactly what the condition asserts, that witnesses exist, and at this point nothing distinguishes one pair of witnesses from another; removing it becomes possible only after the uniqueness of the witnesses has been proved.
 <!--zh-->
-乘积中的隶属由一条截断的存在陈述刻画：存在 `K` 的两个成员 `a` 与 `b`，使该成员等于它们的有序对。截断如实记录条件所断言的内容，即见证存在，而在此处没有任何东西能区分一对见证与另一对；只有先证明见证唯一，才谈得上消去截断。
+乘积中的成员关系由一条截断的存在陈述刻画：存在 `K` 的两个元素 `a` 与 `b`，使该元素等于它们的有序对。截断如实记录条件所断言的内容，即见证存在，而在此处没有任何东西能区分一对见证与另一对；只有先证明见证唯一，才谈得上消去截断。
 <!--ja-->
 積への所属は、切り詰められた存在によって特徴づけられる。`K` の二つの要素 `a` と `b` があって、その要素がそれらの順序対に等しい、と。切り詰めは、条件が証人の存在を主張する以上のことを記録しない。この段階では、ある証人の対を別の対と区別する何ものもなく、切り詰めを取り除くことは、証人の一意性が証明された後にはじめて可能になる。
 <!--/-->
@@ -292,7 +292,7 @@ InProd K e = ∥ Σ[ a ∶ S ] Σ[ b ∶ S ]
 <!--en-->
 Inward, the ordered pair of any two members of `K` belongs to `prodL K`; this is the separated relation's own introduction rule.
 <!--zh-->
-向内：`K` 的任意两个成员的有序对属于 `prodL K`；这正是那条被分离关系自身的引入规则。
+向内：`K` 的任意两个元素的有序对属于 `prodL K`；这正是那条被分离关系自身的引入规则。
 <!--ja-->
 内向きには、`K` の任意の二つの要素の順序対が `prodL K` に属する。これは分出された関係そのものの導入規則である。
 <!--/-->
@@ -306,7 +306,7 @@ prodL-in K a b ma mb = Product.into K a b ma mb (ma , mb)
 <!--en-->
 Outward, a member of `prodL K` comes, in truncated form, from two members of `K` and the pair equation. Against the small presentation of `K` the stronger, untruncated statement is available: every member of the product is the ordered pair of the elements named by two indices of `K`.
 <!--zh-->
-向外：`prodL K` 的成员以截断的形式来自 `K` 的两个成员与那条对等式。对照 `K` 的小呈现，更强而不截断的陈述也可用：乘积的每个成员都是 `K` 的两个索引所指名元素组成的有序对。
+向外：`prodL K` 的元素以截断的形式来自 `K` 的两个元素与那条对等式。对照 `K` 的小呈现，更强而不截断的陈述也可用：乘积的每个元素都是 `K` 的两个索引所指名元素组成的有序对。
 <!--ja-->
 外向きには、`prodL K` の要素は、切り詰められた形で `K` の二つの要素と対の等式から来る。`K` の小さな提示に対しては、切り詰めのないより強い主張も使える。積のすべての要素は、`K` の二つの添字が名指す要素の順序対なのである。
 <!--/-->
@@ -322,7 +322,7 @@ prodL-fst : (K e : S) → ⟨ fst e ∈ˢ fst (prodL K) ⟩
 <!--en-->
 The proof converts the truncated witnesses into the fibers of `K`'s indexing, and repairs the pair equation along the fibers' own identifications, which say that each member of `K` is exactly the set its index names.
 <!--zh-->
-证明把截断的见证转换为 `K` 的索引的纤维，并沿纤维自身的等同，即「`K` 的每个成员恰是其索引所指名的集合」，修复那条对等式。
+证明把截断的见证转换为 `K` 的索引的纤维，并沿纤维自身的等同，即「`K` 的每个元素恰是其索引所指名的集合」，修复那条对等式。
 <!--ja-->
 証明は、切り詰められた証人を `K` の索引のファイバーへ変換し、対の等式をファイバー自身の同定に沿って修復する。その同定は、`K` の各要素がまさにその索引の名指す集合であることを述べる。
 <!--/-->
@@ -449,7 +449,7 @@ ordAt m n a b c d =
 <!--en-->
 Putting the pieces together, `Lt p q` says that `p` and `q` are coded pairs, of members `a`, `b` and of members `c`, `d`, whose maxima `m` and `n` satisfy the maximum conditions and whose comparison satisfies the Gödel condition. The six witnesses are recorded under truncation: the conditions assert that witnesses exist, and the classical case analysis selects among the alternatives only afterwards.
 <!--zh-->
-把各部分合起来，`Lt p q` 说：`p` 与 `q` 是编码对，分别由成员 `a`、`b` 与成员 `c`、`d` 组成，其最大值 `m` 与 `n` 满足最大值条件，其比较满足 Gödel 条件。六个见证在截断之下记录：这些条件只断言见证存在，而经典情形分析是随后才在诸选项间作出选择。
+把各部分合起来，`Lt p q` 说：`p` 与 `q` 是编码对，分别由元素 `a`、`b` 与元素 `c`、`d` 组成，其最大值 `m` 与 `n` 满足最大值条件，其比较满足 Gödel 条件。六个见证在截断之下记录：这些条件只断言见证存在，而经典情形分析是随后才在诸选项间作出选择。
 <!--ja-->
 部品を合わせると、`Lt p q` は次のように述べる。`p` と `q` は符号化された対であり、それぞれ要素 `a`、`b` と要素 `c`、`d` からなり、その最大値 `m` と `n` は最大値の条件を満たし、その比較は Gödel の条件を満たす、と。六つの証人は切り詰めの下に記録される。条件が主張するのは証人の存在だけであり、古典的な場合分けが選択肢の中から選ぶのはその後である。
 <!--/-->
@@ -665,7 +665,7 @@ The six witnesses are re-entered as the nested existential witnesses, with the p
 <!--en-->
 The two maximum data are mapped back, this time lifted into the object level's guarded atoms, and the order datum closes the formula. The Gödel module then packages the order for a set `P`: its describing condition requires both coordinates to be members of `P` and relates them by the order formula.
 <!--zh-->
-两份最大值数据被映射回去，这次提升为对象层带守卫的原子，序数据随之封闭整条公式。Gödel 模块随后为集合 `P` 打包这条序：其描述条件要求两个坐标都是 `P` 的成员，并以序公式关联它们。
+两份最大值数据被映射回去，这次提升为对象层带守卫的原子，序数据随之封闭整条公式。Gödel 模块随后为集合 `P` 打包这条序：其描述条件要求两个坐标都是 `P` 的元素，并以序公式关联它们。
 <!--ja-->
 二つの最大値のデータは今度は対象レベルの守られた原子へ持ち上げて写され、順序のデータが論理式を閉じる。Gödel のモジュールはついで、集合 `P` のためのこの順序をまとめる。その記述の条件は、二つの座標がともに `P` の要素であることを要求し、順序の論理式で両者を結ぶ。
 <!--/-->
@@ -680,7 +680,7 @@ private module Godel (P : S) = Relation P P
 <!--en-->
 The host reading adds membership in `P` on both sides, conjoined with the order relation, and the two directions quote the outward and inward lemmas at the slots the two binders occupy: the first coordinate in the outer slot, the second in the inner one.
 <!--zh-->
-宿主读法在两侧加上对 `P` 的隶属，与序关系合取；两个方向在两个约束子所占的槽位处引用向外与向内引理：第一坐标在外层槽位，第二坐标在内层槽位。
+宿主读法在两侧加上对 `P` 的成员关系，与序关系合取；两个方向在两个约束子所占的槽位处引用向外与向内引理：第一坐标在外层槽位，第二坐标在内层槽位。
 <!--ja-->
 ホスト側の読みは、両側に `P` への所属を加え、順序の関係と連言する。二つの方向は、二つの束縛子の占めるスロットで、外向きと内向きの補題を引用する。第一座標が外側のスロット、第二座標が内側のスロットである。
 <!--/-->
@@ -694,7 +694,7 @@ The host reading adds membership in `P` on both sides, conjoined with the order 
 <!--en-->
 `godel P` is that separated relation: inside `L`, the set of the ordered pairs of members of `P` that compare below one another in the Gödel order.
 <!--zh-->
-`godel P` 就是那条被分离的关系：在 `L` 内部，由 `P` 的成员组成的、在 Gödel 序下相互低于的有序对之集。
+`godel P` 就是那条被分离的关系：在 `L` 内部，由 `P` 的元素组成的、在 Gödel 序下相互低于的有序对之集。
 <!--ja-->
 `godel P` がその分出された関係である。`L` の内部における、`P` の要素からなる順序対のうち、Gödel 順序で互いに下にあるものの集合である。
 <!--/-->
@@ -707,7 +707,7 @@ godel = Godel.rel
 <!--en-->
 Inward: for two members `p` and `q` of `P` with `p` below `q`, their ordered pair belongs to `godel P`.
 <!--zh-->
-向内：对 `P` 的两个成员 `p`、`q`，若 `p` 低于 `q`，则它们的有序对属于 `godel P`。
+向内：对 `P` 的两个元素 `p`、`q`，若 `p` 低于 `q`，则它们的有序对属于 `godel P`。
 <!--ja-->
 内向きには、`P` の二つの要素 `p` と `q` について、`p` が `q` より下なら、その順序対は `godel P` に属する。
 <!--/-->
@@ -721,7 +721,7 @@ godel-in P p q mp mq l = Godel.into P p q mp mq (mp , mq , l)
 <!--en-->
 Outward: a member of `godel P` comes with both members and the order data between them.
 <!--zh-->
-向外：`godel P` 的成员带有两个成员及其间的序数据。
+向外：`godel P` 的元素带有两个元素及其间的序数据。
 <!--ja-->
 外向きには、`godel P` の要素には二つの要素とその間の順序のデータが伴う。
 <!--/-->
@@ -772,7 +772,7 @@ module Order (κ : S) (oκ : IsOrd (fst κ)) where
 <!--en-->
 `↑` names the members of `K` ambiently, through the small presentation's embedding: each index denotes the ordinal it presents.
 <!--zh-->
-`↑` 借助小呈现的嵌入，在外围点名 `K` 的成员：每个索引指称它所呈现的那个序数。
+`↑` 借助小呈现的嵌入，在外围点名 `K` 的元素：每个索引指称它所呈现的那个序数。
 <!--ja-->
 `↑` は、小さな提示の埋め込みを通して、`K` の要素を周囲で名指す。各添字はそれが提示する順序数を指すのである。
 <!--/-->
@@ -785,7 +785,7 @@ module Order (κ : S) (oκ : IsOrd (fst κ)) where
 <!--en-->
 An index `m : ⟪ K ⟫` names the ambient set `↑ m`, together with a proof that it belongs to `κ`. Since constructibility is inherited by members, `upK m` packages that named ordinal as an element of `L`.
 <!--zh-->
-索引 `m : ⟪ K ⟫` 指名外围集合 `↑ m`，并带有它属于 `κ` 的证明。可构造性向成员传递，因此 `upK m` 把这个被指名的序数打包为 `L` 的元素。
+索引 `m : ⟪ K ⟫` 指名外围集合 `↑ m`，并带有它属于 `κ` 的证明。可构造性向元素传递，因此 `upK m` 把这个被指名的序数打包为 `L` 的元素。
 <!--ja-->
 添字 `m : ⟪ K ⟫` は周囲の集合 `↑ m` を名指し、それが `κ` に属する証明を伴う。構成可能性は要素へ受け継がれるので、`upK m` はこの名指された順序数を `L` の要素としてまとめる。
 <!--/-->
@@ -811,7 +811,7 @@ The carrier of the order to be compared is `Pair`, the type of two indices of `�
 <!--en-->
 On the coordinates themselves stands the coordinate order `≺₁`, quoted from the external square-law development: ordinals below `κ` compare strictly by membership of the ambient sets they name.
 <!--zh-->
-坐标自身之上立着坐标序 `≺₁`，引自外部的平方律构造：低于 `κ` 的序数按其所指名外围集合之间的隶属作严格比较。
+坐标自身之上立着坐标序 `≺₁`，引自外部的平方律构造：低于 `κ` 的序数按其所指名外围集合之间的成员关系作严格比较。
 <!--ja-->
 座標そのものの上には座標の順序 `≺₁` が立っている。外部の平方律の構成から引用されたもので、`κ` より下の順序数を、それらが名指す周囲の集合どうしの所属によって狭義に比較する。
 <!--/-->
@@ -850,7 +850,7 @@ The maximum operation `maxOrd` returns, for two ordinals below `κ`, the larger 
 <!--en-->
 Two small facts prepare the comparison between the two sides. First, every member of the ordinal `κ` is itself an ordinal, so the named ordinals carry ordinality certificates. Second, `max-out` states that the internal maximum condition, read at elements whose underlying sets name `a'` and `b'`, forces the internal maximum to be exactly the host maximum of `a'` and `b'`; the proof proceeds by the trichotomy data of the host order.
 <!--zh-->
-两个小事实为两侧的比较做准备。其一，序数 `κ` 的每个成员自身也是序数，故被点名的序数携带序数性证书。其二，`max-out` 陈述：在底层集合指名 `a'` 与 `b'` 的元素处读取的内部最大值条件，迫使内部最大值恰为 `a'` 与 `b'` 的宿主最大值；证明按宿主序的三歧数据展开。
+两个小事实为两侧的比较做准备。其一，序数 `κ` 的每个元素自身也是序数，故被点名的序数携带序数性证书。其二，`max-out` 陈述：在底层集合指名 `a'` 与 `b'` 的元素处读取的内部最大值条件，迫使内部最大值恰为 `a'` 与 `b'` 的宿主最大值；证明按宿主序的三歧数据展开。
 <!--ja-->
 二つの小さな事実が、両側の比較の準備をする。第一に、順序数 `κ` の各要素はそれ自身順序数であり、名指された順序数は順序数性の証明を帯ぶ。第二に、`max-out` は、基底の集合が `a'` と `b'` を名指す要素の上で読んだ内部の最大値の条件が、内部の最大値をちょうど `a'` と `b'` のホストの最大値に強いることを述べる。証明はホストの順序の三分法のデータに沿って進む。
 <!--/-->
@@ -882,7 +882,7 @@ The case function fixes the shape of that argument: the host trichotomy splits i
 <!--en-->
 In the below case the affirmation composes the equation of `m` with `b` and the naming of `b`, giving the host maximum. Its refutation branch is impossible: the membership it refutes is exactly the trichotomy's witness, transported through the two namings.
 <!--zh-->
-低于情形中，肯定分支把 `m` 与 `b` 的等式同 `b` 的命名复合，给出宿主最大值。其反驳分支不可能：它所反驳的隶属恰是三歧的见证，只须经两次命名传输即得。
+低于情形中，肯定分支把 `m` 与 `b` 的等式同 `b` 的命名复合，给出宿主最大值。其反驳分支不可能：它所反驳的成员关系恰是三歧的见证，只须经两次命名传输即得。
 <!--ja-->
 下の場合、肯定の分枝は `m` と `b` の等式に `b` の名指しを合成してホストの最大値を与える。その反証の分枝は不可能である。反証されている所属は、まさに三分法の証人であり、二つの名指しを通して輸送されるだけだからである。
 <!--/-->
@@ -898,7 +898,7 @@ In the below case the affirmation composes the equation of `m` with `b` and the 
 <!--en-->
 In the equal case an affirmation would place `a` inside `b` while the host declares them equal, contradicting the irreflexivity of membership at the named ordinal `b`; the refutation branch then names the maximum as `a`, transported along the naming of `a`.
 <!--zh-->
-相等情形中，肯定分支会断言 `a` 属于 `b`，而宿主宣布二者相等，这与被点名序数 `b` 处隶属的非自反性矛盾；反驳分支随即把最大值命名为 `a`，并沿 `a` 的命名传输。
+相等情形中，肯定分支会断言 `a` 属于 `b`，而宿主宣布二者相等，这与被点名序数 `b` 处成员关系的非自反性矛盾；反驳分支随即把最大值命名为 `a`，并沿 `a` 的命名传输。
 <!--ja-->
 等しい場合、肯定の分枝は `a` が `b` の内側にあると置くが、ホストは両者を等しいと宣言しており、名指された順序数 `b` における所属の非反射性と矛盾する。反証の分枝は、最大値を `a` と名指し、`a` の名指しに沿って輸送する。
 <!--/-->
@@ -943,7 +943,7 @@ The converse `max-in` writes the host maximum into the internal predicate: for e
 <!--en-->
 Its three cases are immediate from the host comparison: below gives the affirmation with the equation definitional, equality refutes membership by irreflexivity, and above refutes it through the coordinate's own ordinality. The same block defines `code`, the ambient ordered pair of the two named ordinals of a host pair.
 <!--zh-->
-其三种情形由宿主比较直接得出：低于给出肯定分支且等式定义性成立；相等以非自反性反驳隶属；高于则借该坐标自身的序数性反驳。同一块中还定义了 `code`，即宿主对的两个被点名序数的外围有序对。
+其三种情形由宿主比较直接得出：低于给出肯定分支且等式定义性成立；相等以非自反性反驳成员关系；高于则借该坐标自身的序数性反驳。同一块中还定义了 `code`，即宿主对的两个被点名序数的外围有序对。
 <!--ja-->
 その三つの場合はホストの比較から直ちに従う。下では肯定の分枝に等式が定義的に付随し、等しい場合は非反射性によって所属が退けられ、上ではその座標自身の順序数性を通して退けられる。同じブロックでは `code`、すなわちホストの対の二つの名指された順序数の周囲の順序対が定義される。
 <!--/-->
@@ -1035,7 +1035,7 @@ The equation `en` supplies the same identification for the second pair, so `OrdI
 <!--en-->
 The inner lemma transfers the coordinate comparison. An ambient membership between the named first coordinates becomes membership in the host order, transported along the identifications of the two namings.
 <!--zh-->
-内层引理传递坐标比较：被点名第一坐标之间的外围隶属，沿两次命名的等同传输后，变成宿主序中的低于关系。
+内层引理传递坐标比较：被点名第一坐标之间的外围成员关系，沿两次命名的等同传输后，变成宿主序中的低于关系。
 <!--ja-->
 内側の補題は座標の比較を移送する。名指された第一座標の間の周囲の所属は、二つの名指しの同定に沿って輸送されると、ホストの順序での下関係になる。
 <!--/-->
@@ -1063,7 +1063,7 @@ The equality case transfers as well: an equality of the named sets, cycled throu
 <!--en-->
 If the first maximum belongs to the second, transporting this membership along `em` and `en` gives the first, strict-maximum branch of `p ≺ₚ q`, contradicting `nk`.
 <!--zh-->
-若第一个最大值属于第二个，沿 `em` 与 `en` 传输这份隶属，便得到 `p ≺ₚ q` 的严格最大值分支，与 `nk` 矛盾。
+若第一个最大值属于第二个，沿 `em` 与 `en` 传输这份成员关系，便得到 `p ≺ₚ q` 的严格最大值分支，与 `nk` 矛盾。
 <!--ja-->
 第一の最大値が第二の最大値に属するなら、この所属を `em` と `en` に沿って輸送すると `p ≺ₚ q` の最大値が真に小さい枝が得られ、`nk` と矛盾する。
 <!--/-->
@@ -1139,7 +1139,7 @@ The converse `≺→lt` writes the host comparison into the object language. Its
 <!--en-->
 The order datum is read case by case: strict membership passes through untouched, and the two equality cases are transported along the naming of the maxima and the naming of the coordinates respectively.
 <!--zh-->
-序数据按情形逐条读取：严格隶属原样通过；两种相等情形分别沿最大值的命名与坐标的命名传输。
+序数据按情形逐条读取：严格成员关系原样通过；两种相等情形分别沿最大值的命名与坐标的命名传输。
 <!--ja-->
 順序のデータは場合ごとに読まれる。狭義の所属はそのまま通り、相等の二つの場合は、最大値の名指しおよび座標の名指しに沿ってそれぞれ輸送される。
 <!--/-->
@@ -1170,7 +1170,7 @@ If `x < y`, transitivity with `y < z` gives `x < z`; if `x = y`, the given compa
 <!--en-->
 The companion lemma turns `x ≤ y` and `y = y'` into membership of `x` in the successor of `y'`. In the strict case, `x ∈ y'` gives successor membership directly; in the equality case, identifying `x` with `y'` reduces the claim to `y'` belonging to its own successor.
 <!--zh-->
-配套引理由 `x ≤ y` 与 `y = y'` 得出 `x` 属于 `y'` 的后继。严格情形中，`x ∈ y'` 直接给出后继隶属；相等情形中，把 `x` 与 `y'` 等同后，目标化为 `y'` 属于自身后继。
+配套引理由 `x ≤ y` 与 `y = y'` 得出 `x` 属于 `y'` 的后继。严格情形中，`x ∈ y'` 直接给出后继成员关系；相等情形中，把 `x` 与 `y'` 等同后，目标化为 `y'` 属于自身后继。
 <!--ja-->
 対になる補題は、`x ≤ y` と `y = y'` から、`x` が `y'` の後続に属することを導く。狭義の場合は `x ∈ y'` から後続への所属が直接従う。等しい場合は `x` を `y'` と同一視すると、主張は `y'` が自身の後続に属することへ帰着する。
 <!--/-->
@@ -1202,7 +1202,7 @@ The segment lemmas now read off the order. If a pair `r` is below a pair `p`, th
 <!--en-->
 In the equal-max case the first coordinate is at most the shared maximum and the two maxima are identified, so membership in the successor follows from the self-membership of the maximum in its own successor.
 <!--zh-->
-最大值相等的情形中，第一坐标至多为共同的最大值，而两个最大值被等同，故隶属由「最大值属于自身后继」得出。
+最大值相等的情形中，第一坐标至多为共同的最大值，而两个最大值被等同，故成员关系由「最大值属于自身后继」得出。
 <!--ja-->
 最大値が等しい場合は、第一座標は共有された最大値を超えず、二つの最大値は同一視されるので、所属は最大値がみずからの後続に属することから従う。
 <!--/-->
@@ -1264,7 +1264,7 @@ These bounds control every predecessor segment of the Gödel order. Together wit
 <!--en-->
 The set to be collapsed onto an order type is `P`, the product: the ordered pairs of members of the ordinal `κ`, already separated inside `L`.
 <!--zh-->
-将要被塌缩成序型的集合是 `P`，即乘积：序数 `κ` 的成员的有序对之集，已在 `L` 内部分离而来。
+将要被塌缩成序型的集合是 `P`，即乘积：序数 `κ` 的元素的有序对之集，已在 `L` 内部分离而来。
 <!--ja-->
 順序型へ崩壊される集合は `P`、すなわち積である。順序数 `κ` の要素の順序対の集合であり、すでに `L` の内部で分出されている。
 <!--/-->
@@ -1277,7 +1277,7 @@ The set to be collapsed onto an order type is `P`, the product: the ordered pair
 <!--en-->
 The relation of the collapse is `R`, the Gödel order on that product: two members of `P` stand related exactly when the first compares below the second.
 <!--zh-->
-塌缩所用关系是 `R`，即该乘积上的 Gödel 序：`P` 的两个成员恰好在其一低于另一个时相关。
+塌缩所用关系是 `R`，即该乘积上的 Gödel 序：`P` 的两个元素恰好在其一低于另一个时相关。
 <!--ja-->
 崩壊に用いられる関係は `R`、つまりその積の上の Gödel 順序である。`P` の二つの要素は、一方が他方より下で比較されるときに限り関係づけられる。
 <!--/-->
@@ -1290,7 +1290,7 @@ The relation of the collapse is `R`, the Gödel order on that product: two membe
 <!--en-->
 For the Gödel relation this follows directly: whenever `y R x`, both `y` and `x` are members of the product.
 <!--zh-->
-对 Gödel 关系这可直接读出：只要 `y R x`，`y` 与 `x` 都是该乘积的成员。
+对 Gödel 关系这可直接读出：只要 `y R x`，`y` 与 `x` 都是该乘积的元素。
 <!--ja-->
 Gödel 関係では直接従う。`y R x` なら、`y` と `x` はともにその積の要素である。
 <!--/-->
@@ -1303,7 +1303,7 @@ Gödel 関係では直接従う。`y R x` なら、`y` と `x` はともにそ�
 <!--en-->
 The order-type machinery is instantiated once and for this product. Its domain is an index set for the collapse, and `φ` reads off, for each index, the host pair that the corresponding member of the product presents: the two coordinates are recovered untruncated by the presentation reader of the product.
 <!--zh-->
-序型机制针对这个乘积一次性实例化。其定义域是塌缩的一个索引集，而 `φ` 为每个索引读出乘积中相应成员所呈现的宿主对：两个坐标由乘积的呈现读式无截断地恢复。
+序型机制针对这个乘积一次性实例化。其定义域是塌缩的一个索引集，而 `φ` 为每个索引读出乘积中相应元素所呈现的宿主对：两个坐标由乘积的呈现读式无截断地恢复。
 <!--ja-->
 順序型の仕組みはこの積のために一度実例化される。その定義域は崩壊の添字集合であり、`φ` は各添字に対して、積の対応する要素が提示するホストの対を読み取る。二つの座標は積の提示の読みによって切り詰めなしで回収される。
 <!--/-->
@@ -1470,7 +1470,7 @@ incl : (a b : V ℓ) → ((z : V ℓ) → ⟨ z ∈ˢ a ⟩ → ⟨ z ∈ˢ b �
 <!--en-->
 The counting lemmas begin on the ambient side. An inclusion of two ambient sets acts on the small presentations: each index of the subset names a member of the larger set, and the member's own fiber in the larger presentation names the corresponding index.
 <!--zh-->
-计数引理从外围一侧开始。两个外围集合之间的包含作用于小呈现：子集的每个索引指名较大集合的一个成员，而该成员在较大呈现中的纤维则指名相应的索引。
+计数引理从外围一侧开始。两个外围集合之间的包含作用于小呈现：子集的每个索引指名较大集合的一个元素，而该元素在较大呈现中的纤维则指名相应的索引。
 <!--ja-->
 計数の補題は周囲の側から始まる。二つの周囲の集合の間の包含は小さな提示の上で働く。部分集合の各添字は大きい集合の要素を名指し、その要素の大きい提示におけるファイバーが対応する添字を名指す。
 <!--/-->
@@ -1486,7 +1486,7 @@ incl a b sub = ι , ι-inj
 <!--en-->
 The induced map on indices is injective: if two indices of the subset name members that the larger presentation indexes identically, the equality of the namings forces an equality of the named members, and the subset's own injectivity returns the equality of indices.
 <!--zh-->
-诱导出的索引映射是单射的：若子集的两个索引所指名的成员在较大呈现中被同一索引指名，则命名的等式迫使被指名成员相等，而子集自身的单射性返回索引的相等。
+诱导出的索引映射是单射的：若子集的两个索引所指名的元素在较大呈现中被同一索引指名，则命名的等式迫使被指名元素相等，而子集自身的单射性返回索引的相等。
 <!--ja-->
 誘導された添字の写しは単射である。部分集合の二つの添字が名指す要素が大きい提示で同じ添字によって名指されるなら、名指しの等式が名指された要素の等式を強制し、部分集合みずからの単射性が添字の等式を返す。
 <!--/-->
@@ -1518,7 +1518,7 @@ A coded injection in `L` can be read externally: its graph conditions determine 
 <!--en-->
 Containment of `ω` follows from trichotomy at the ordinal `a`: `a` cannot belong to `ω` by the infinity hypothesis; `a` equal to `ω` transports the membership; and `ω` inside `a` transfers every membership by transitivity.
 <!--zh-->
-`ω` 的包含由序数 `a` 处的三歧性得出：由无穷性假设 `a` 不属于 `ω`；`a` 等于 `ω` 时传输该隶属；`ω` 在 `a` 之内时由传递性转发每一份隶属。
+`ω` 的包含由序数 `a` 处的三歧性得出：由无穷性假设 `a` 不属于 `ω`；`a` 等于 `ω` 时传输该成员关系；`ω` 在 `a` 之内时由传递性转发每一份成员关系。
 <!--ja-->
 `ω` の包含は、順序数 `a` での三分法から従う。無限性の仮定により `a` は `ω` に属せず、`a` が `ω` に等しいときは所属が輸送され、`ω` が `a` の内側にあるときは推移性がすべての所属を中継する。
 <!--/-->
@@ -1534,7 +1534,7 @@ Containment of `ω` follows from trichotomy at the ordinal `a`: `a` cannot belon
 <!--en-->
 Its last case is transitivity applied to `z ∈ ω` and `ω ∈ a`. With containment in hand, the second counting fact is the exclusion: an infinite ordinal admits no internal injection into a member of `ω`, that is, into a finite ordinal.
 <!--zh-->
-其最后一种情形是把传递性施于 `z ∈ ω` 与 `ω ∈ a`。包含到手之后，第二条计数事实是排除：无穷序数不容许到 `ω` 之成员 (即有限序数) 的内部单射。
+其最后一种情形是把传递性施于 `z ∈ ω` 与 `ω ∈ a`。包含到手之后，第二条计数事实是排除：无穷序数不容许到 `ω` 之元素 (即有限序数) 的内部单射。
 <!--ja-->
 その最後の場合は、`z ∈ ω` と `ω ∈ a` に推移性を適用するものである。包含を手にすると、第二の計数の事実は排除となる。無限の順序数は、`ω` の要素、すなわち有限の順序数への内部の単射を許さない。
 <!--/-->
@@ -1628,7 +1628,7 @@ The extraction module reads the actual function out of the graph: `toFun` comput
 <!--en-->
 Two predicates describe the objects in play. `Mem p` says that `p` is a member of the product `prodL a`; `Comp p` says that `p` decomposes into two members `x` and `y` of `a` whose ordered pair is exactly the underlying set of `p`.
 <!--zh-->
-两个谓词刻画所涉对象。`Mem p` 说 `p` 是乘积 `prodL a` 的成员；`Comp p` 说 `p` 可分解为 `a` 的两个成员 `x` 与 `y`，且其有序对恰是 `p` 的底层集合。
+两个谓词刻画所涉对象。`Mem p` 说 `p` 是乘积 `prodL a` 的元素；`Comp p` 说 `p` 可分解为 `a` 的两个元素 `x` 与 `y`，且其有序对恰是 `p` 的底层集合。
 <!--ja-->
 二つの述語が対象を記述する。`Mem p` は `p` が積 `prodL a` の要素であることを、`Comp p` は `p` が `a` の二つの要素 `x` と `y` に分解され、その順序対が `p` の基底集合に等しいことを述べる。
 <!--/-->
@@ -1644,7 +1644,7 @@ Two predicates describe the objects in play. `Mem p` says that `p` is a member o
 <!--en-->
 The components of a product member are unique, and `isPropComp` proves it. The first projections are identified by the injectivity of the ordered pair; the second projections are then compared in the inner lemma.
 <!--zh-->
-乘积成员的分量唯一，`isPropComp` 证明这一点。第一投影由有序对的单射性等同；第二投影随后在内层引理中比较。
+乘积元素的分量唯一，`isPropComp` 证明这一点。第一投影由有序对的单射性等同；第二投影随后在内层引理中比较。
 <!--ja-->
 積の要素の成分は一意であり、`isPropComp` がそれを証明する。第一射影は順序対の単射性によって同一視され、第二射影は内側の補題で比較される。
 <!--/-->
@@ -1660,7 +1660,7 @@ The components of a product member are unique, and `isPropComp` proves it. The f
 <!--en-->
 The inner lemma compares the second components: two candidates `y` and `y'` paired with the same first coordinate are equal, because the pair equation identifies their underlying sets with the same set, and the constructibility and membership components are propositions.
 <!--zh-->
-内层引理比较第二分量：与同一第一坐标配对的两个候选 `y` 与 `y'` 相等，因为对等式把它们的底层集合与同一个集合等同，而可构造性与隶属分量都是命题。
+内层引理比较第二分量：与同一第一坐标配对的两个候选 `y` 与 `y'` 相等，因为对等式把它们的底层集合与同一个集合等同，而可构造性与成员关系分量都是命题。
 <!--ja-->
 内側の補題は第二成分を比較する。同じ第一座標と対にされた候補 `y` と `y'` は等しくなる。対の等式がそれらの基底集合を同じ集合と同一視し、構成可能性と所属の成分は命題だからである。
 <!--/-->
@@ -1688,7 +1688,7 @@ The last component is discharged by the equality of underlying sets, and the uni
 <!--en-->
 The reader `comp` turns the truncated membership of the product into an honest decomposition, and the uniqueness just proved is what licenses the elimination. The value map `val` then computes, at each member `x` of `a`, the element that the coded injection `F` assigns to it.
 <!--zh-->
-读式 `comp` 把乘积的截断隶属变成真实的分解，而刚刚证明的唯一性正是这一消去的许可。取值映射 `val` 随后在 `a` 的每个成员 `x` 处计算编码单射 `F` 指派给它的元素。
+读式 `comp` 把乘积的截断成员关系变成真实的分解，而刚刚证明的唯一性正是这一消去的许可。取值映射 `val` 随后在 `a` 的每个元素 `x` 处计算编码单射 `F` 指派给它的元素。
 <!--ja-->
 読み `comp` は、積の切り詰められた所属を実際の分解へ変える。その消去を許すのは、証明されたばかりの一意性である。そして値の写像 `val` が、`a` の各要素 `x` に対して、符号化された単射 `F` が割り当てる要素を計算する。
 <!--/-->
@@ -1704,7 +1704,7 @@ The reader `comp` turns the truncated membership of the product into an honest d
 <!--en-->
 The graph lemma certifies that the computed value is paired with its input inside the graph: the ordered pair of `x` and `val x` belongs to `F`. This is the record of the assignment, kept for every member of `a`.
 <!--zh-->
-图引理证明：计算出的取值与其输入在图中配对，即 `x` 与 `val x` 的有序对属于 `F`。这就是赋值的记录，对 `a` 的每个成员都予保留。
+图引理证明：计算出的取值与其输入在图中配对，即 `x` 与 `val x` 的有序对属于 `F`。这就是赋值的记录，对 `a` 的每个元素都予保留。
 <!--ja-->
 グラフの補題は、計算された値が入力とともにグラフの内部で対にされることを証明する。すなわち `x` と `val x` の順序対が `F` に属するのである。この割り当ての記録は `a` のすべての要素について保たれる。
 <!--/-->
@@ -1718,7 +1718,7 @@ The graph lemma certifies that the computed value is paired with its input insid
 <!--en-->
 The injectivity lemma transfers the graph's injectivity to the computed values: if two members of `a` receive values with equal underlying sets, the members themselves are equal. This is what will make the lifted map on pairs injective.
 <!--zh-->
-单射性引理把图的单射性转移到计算出的取值上：若 `a` 的两个成员被指派的取值有相同的底层集合，则这两个成员本身相等。这正是使对上的提升映射成为单射的关键。
+单射性引理把图的单射性转移到计算出的取值上：若 `a` 的两个元素被指派的取值有相同的底层集合，则这两个元素本身相等。这正是使对上的提升映射成为单射的关键。
 <!--ja-->
 単射性の補題は、グラフの単射性を計算された値へ移す。`a` の二つの要素に割り当てられた値の基底集合が等しければ、要素そのものも等しいのである。これが、対の上の持ち上げられた写像を単射にする鍵である。
 <!--/-->
@@ -1732,7 +1732,7 @@ The injectivity lemma transfers the graph's injectivity to the computed values: 
 <!--en-->
 The lifted map `fn` acts on a member of the product by applying `F` coordinatewise: the internal ordered pair of the image of the first coordinate and the image of the second.
 <!--zh-->
-提升映射 `fn` 作用于乘积成员的方式是按坐标施用 `F`：即第一坐标的像与第二坐标的像组成的内部有序对。
+提升映射 `fn` 作用于乘积元素的方式是按坐标施用 `F`：即第一坐标的像与第二坐标的像组成的内部有序对。
 <!--ja-->
 持ち上げられた写像 `fn` は、積の要素に座標ごとに `F` を適用する。第一座標の像と第二座標の像の内部の順序対である。
 <!--/-->
@@ -1746,7 +1746,7 @@ The lifted map `fn` acts on a member of the product by applying `F` coordinatewi
 <!--en-->
 The image lands in the product over `b`: both component values are members of `b` by the range clause, so their internal pair belongs to `prodL b`. The identification of the internal and ambient pairs is transported along its own first-projection lemma.
 <!--zh-->
-像落入 `b` 之上的乘积：由值域子句，两个分量取值都是 `b` 的成员，故其内部对属于 `prodL b`。内部对与外围对的等同则沿其第一投影引理传输。
+像落入 `b` 之上的乘积：由值域子句，两个分量取值都是 `b` 的元素，故其内部对属于 `prodL b`。内部对与外围对的等同则沿其第一投影引理传输。
 <!--ja-->
 像は `b` の上の積の中に収まる。値域の節により二つの成分の値はともに `b` の要素であり、したがってその内部の対は `prodL b` に属する。内部の対と周囲の対の同一視は、みずからの第一射影の補題に沿って輸送される。
 <!--/-->
@@ -1762,7 +1762,7 @@ The image lands in the product over `b`: both component values are members of `b
 <!--en-->
 A decomposition of `p` supplies coordinates `x,y` together with proofs `x ∈ a` and `y ∈ a`. These membership proofs are part of the data because `val` is defined only on members of `a`.
 <!--zh-->
-`p` 的分解给出坐标 `x,y`，并同时给出 `x ∈ a` 与 `y ∈ a` 的证明。这些隶属证明是数据的一部分，因为 `val` 只在 `a` 的成员上定义。
+`p` 的分解给出坐标 `x,y`，并同时给出 `x ∈ a` 与 `y ∈ a` 的证明。这些成员关系证明是数据的一部分，因为 `val` 只在 `a` 的元素上定义。
 <!--ja-->
 `p` の分解は座標 `x,y` と、`x ∈ a` および `y ∈ a` の証明を同時に与える。`val` は `a` の要素についてのみ定義されるため、これらの所属証明もデータの一部である。
 <!--/-->
@@ -1864,7 +1864,7 @@ The second adequacy lemma does the same for `q`, against the witnesses `x'` and 
 <!--en-->
 The third adequacy lemma reads the first application atom: satisfaction in `L` is identified with the ambient membership of the pair of the two first coordinates in the graph of `F`.
 <!--zh-->
-第三条充分性引理读取第一个应用原子：其在 `L` 中的满足，被等同于两个第一坐标组成的对在 `F` 图中的外围隶属。
+第三条充分性引理读取第一个应用原子：其在 `L` 中的满足，被等同于两个第一坐标组成的对在 `F` 图中的外围成员关系。
 <!--ja-->
 三つ目の妥当性の補題は第一の適用の原子を読む。`L` での充足は、二つの第一座標の対の `F` のグラフへの周囲の所属と同一視される。
 <!--/-->
@@ -1878,7 +1878,7 @@ The third adequacy lemma reads the first application atom: satisfaction in `L` i
 <!--en-->
 The fourth does the same for the second coordinates, completing the translation of all four atoms into ordinary statements about members of sets.
 <!--zh-->
-第四条对第二坐标做同样的事，四个原子由此全部翻译为关于集合成员的普通陈述。
+第四条对第二坐标做同样的事，四个原子由此全部翻译为关于集合元素的普通陈述。
 <!--ja-->
 四つ目は第二座標に対して同じことをし、四つの原子のすべてが、集合の要素についての通常の主張へ翻訳される。
 <!--/-->
@@ -1908,7 +1908,7 @@ The outward direction consumes the four nested existentials in turn and assemble
 <!--en-->
 Each atom is transported along its own adequacy path, so the chain records ordinary equations and ordinary memberships rather than satisfaction judgments.
 <!--zh-->
-每个原子都沿其自身的充分性路径传输，因此链所记录的是普通的等式与普通的隶属，而非满足判断。
+每个原子都沿其自身的充分性路径传输，因此链所记录的是普通的等式与普通的成员关系，而非满足判断。
 <!--ja-->
 各原子はみずからの妥当性のパスに沿って輸送されるため、連鎖が記録するのは充足の判断ではなく、通常の等式と通常の所属である。
 <!--/-->
@@ -1967,7 +1967,7 @@ Uniqueness says that the graph formula determines the value: any `q` paired with
 <!--en-->
 The four components of the member `p` are named once, as in the image lemma, so the uniqueness computation can refer to them directly.
 <!--zh-->
-成员 `p` 的四个分量像在像引理中那样一次性命名，使唯一性的计算可以直接引用它们。
+元素 `p` 的四个分量像在像引理中那样一次性命名，使唯一性的计算可以直接引用它们。
 <!--ja-->
 要素 `p` の四つの成分には、像の補題と同じように一度名前が与えられ、一意性の計算がそれらを直接参照できる。
 <!--/-->
@@ -2013,7 +2013,7 @@ The injectivity of the ordered pair splits the pair equation into two: the under
 <!--en-->
 The two graph memberships are then read through the single-valuedness of `F`: an entry paired with `x₁`, once `x₁` is known to name `x`, must agree with the recorded value `val x mx` on its first projection.
 <!--zh-->
-两条图隶属随后经 `F` 的单值性读出：一旦知道 `x₁` 指名 `x`，与 `x₁` 配对的条目在其第一投影上必与已记录的取值 `val x mx` 一致。
+两条图成员关系随后经 `F` 的单值性读出：一旦知道 `x₁` 指名 `x`，与 `x₁` 配对的条目在其第一投影上必与已记录的取值 `val x mx` 一致。
 <!--ja-->
 二つのグラフへの所属は、`F` の単値性を通して読まれる。`x₁` が `x` を名指すことが分かれば、`x₁` と対にされた項目の第一射影は、記録された値 `val x mx` と一致せざるを得ない。
 <!--/-->
@@ -2029,7 +2029,7 @@ The two graph memberships are then read through the single-valuedness of `F`: an
 <!--en-->
 The second coordinate is treated identically, with its own membership and its own recorded value.
 <!--zh-->
-第二坐标以完全相同的方式处理，使用它自己的隶属与它自己被记录的取值。
+第二坐标以完全相同的方式处理，使用它自己的成员关系与它自己被记录的取值。
 <!--ja-->
 第二座標もまったく同じように扱われ、みずからの所属と、みずからに記録された値が用いられる。
 <!--/-->
@@ -2041,7 +2041,7 @@ The second coordinate is treated identically, with its own membership and its ow
 <!--en-->
 Thus `mapFo` defines the coordinatewise image `fn`: every product member has that graph value, and `into` places the value in `prodL b`.
 <!--zh-->
-因此 `mapFo` 定义逐坐标像 `fn`：每个乘积成员都具有这一图取值，而 `into` 把该取值置于 `prodL b` 中。
+因此 `mapFo` 定义逐坐标像 `fn`：每个乘积元素都具有这一图取值，而 `into` 把该取值置于 `prodL b` 中。
 <!--ja-->
 したがって `mapFo` は座標ごとの像 `fn` を定義する。各積要素はこのグラフ値をもち、`into` がその値を `prodL b` に入れる。
 <!--/-->
@@ -2057,7 +2057,7 @@ Thus `mapFo` defines the coordinatewise image `fn`: every product member has tha
 <!--en-->
 The defining clause is the chain, instantiated at the canonical image of `p`: the two values, the pair equation of the product member, and the two graph lemmas certify that the graph holds of the image and its input.
 <!--zh-->
-定义子句就是那条链，在 `p` 的典范像处实例化：两个取值、乘积成员的对等式，以及两条图引理，共同证明图对像及其输入成立。
+定义子句就是那条链，在 `p` 的典范像处实例化：两个取值、乘积元素的对等式，以及两条图引理，共同证明图对像及其输入成立。
 <!--ja-->
 定義の節は連鎖であり、`p` の正準な像のところで実例化される。二つの値、積の要素の対の等式、そして二つのグラフの補題が、グラフが像とその入力について成り立つことを証明する。
 <!--/-->
@@ -2086,7 +2086,7 @@ The uniqueness theorem shows that no second graph value is possible, so the form
 <!--en-->
 Injectivity of the lifted map is proved directly. Two product members whose images agree as underlying sets must themselves agree, and the proof reassembles each member from its components.
 <!--zh-->
-提升映射的单射性被直接证明：若两个乘积成员的像作为底层集合相等，则这两个成员本身相等。证明把每个成员从其分量重新组装。
+提升映射的单射性被直接证明：若两个乘积元素的像作为底层集合相等，则这两个元素本身相等。证明把每个元素从其分量重新组装。
 <!--ja-->
 持ち上げられた写像の単射性は直接証明される。像が基底集合として等しい二つの積の要素は、それ自身も等しくなければならない。証明は各要素をその成分から組み立て直す。
 <!--/-->
@@ -2102,7 +2102,7 @@ Injectivity of the lifted map is proved directly. Two product members whose imag
 <!--en-->
 The components of both members are named once, so the two decompositions can be compared coordinate by coordinate.
 <!--zh-->
-两个成员的分量各一次性命名，使两份分解可以逐坐标比较。
+两个元素的分量各一次性命名，使两份分解可以逐坐标比较。
 <!--ja-->
 二つの要素の成分にはそれぞれ一度名前が与えられ、二つの分解を座標ごとに比較できる。
 <!--/-->
@@ -2203,7 +2203,7 @@ module Shift (mL : S) (om : IsOrd (fst mL)) (m∉ω : ⟨ fst mL ∈ˢ ω ⟩ �
 <!--en-->
 Write `m` for the underlying ordinal of `mL`. Membership and finiteness decisions concern this set, while `mL` retains the evidence that it is an element of `L`.
 <!--zh-->
-记 `mL` 的底层序数为 `m`。隶属与有限性判定针对这个集合，而 `mL` 保留它属于 `L` 的证据。
+记 `mL` 的底层序数为 `m`。成员关系与有限性判定针对这个集合，而 `mL` 保留它属于 `L` 的证据。
 <!--ja-->
 `mL` の基底にある順序数を `m` と書く。所属と有限性の判定はこの集合について行い、`mL` はそれが `L` の要素である証拠を保持する。
 <!--/-->
@@ -2217,7 +2217,7 @@ Write `m` for the underlying ordinal of `mL`. Membership and finiteness decision
 <!--en-->
 The domain of the shift is the internal successor `D = sucʟ mL`: the successor of the ordinal inside `L`, which contains both the members of `m` and `m` itself.
 <!--zh-->
-移位的定义域是内部后继 `D = sucʟ mL`：即 `L` 内该序数的后继，它既包含 `m` 的成员，也包含 `m` 自身。
+移位的定义域是内部后继 `D = sucʟ mL`：即 `L` 内该序数的后继，它既包含 `m` 的元素，也包含 `m` 自身。
 <!--ja-->
 移し変えの定義域は内部の後続 `D = sucʟ mL` である。`L` の内部での順序数の後続であり、`m` の要素と `m` 自身の両方を含む。
 <!--/-->
@@ -2243,7 +2243,7 @@ Equality of two elements of `L` is equality of their underlying sets, since the 
 <!--en-->
 Since `m` is infinite, every member of `ω` belongs to `m`; the containment is quoted from the counting facts and is the reason the successor of a finite member stays inside `m`.
 <!--zh-->
-由于 `m` 无穷，`ω` 的每个成员都属于 `m`；这一包含引自计数事实，也正是有限成员的后继得以留在 `m` 内的原因。
+由于 `m` 无穷，`ω` 的每个元素都属于 `m`；这一包含引自计数事实，也正是有限元素的后继得以留在 `m` 内的原因。
 <!--ja-->
 `m` は無限なので、`ω` のすべての要素は `m` に属する。この包含は計数の事実から引用されたもので、有限の要素の後続が `m` の内側にとどまる理由でもある。
 <!--/-->
@@ -2256,7 +2256,7 @@ Since `m` is infinite, every member of `ω` belongs to `m`; the containment is q
 <!--en-->
 Membership in the shift's domain is stated, and the first decision is defined: an element is either a member of `ω` or the membership is refuted. This is an explicit decision delivered by excluded middle.
 <!--zh-->
-先陈述移位定义域中的隶属，并定义第一个判定：元素要么属于 `ω`，要么该隶属被反驳。这是由排中律给出的显式判定。
+先陈述移位定义域中的成员关系，并定义第一个判定：元素要么属于 `ω`，要么该成员关系被反驳。这是由排中律给出的显式判定。
 <!--ja-->
 移し変えの定義域への所属を述べ、最初の判定を定義する。要素は `ω` に属するか、その所属が反証されるかのいずれかである。これは排中律が与える明示的な判定である。
 <!--/-->
@@ -2271,7 +2271,7 @@ Membership in the shift's domain is stated, and the first decision is defined: a
 <!--en-->
 The second decision separates the members of the successor: an element of `sucʟ mL` is either a member of `m` or equal to `m`, which is exactly what membership in a successor means.
 <!--zh-->
-第二个判定区分后继的成员：`sucʟ mL` 的元素要么属于 `m`，要么等于 `m`，这正是「属于后继」的含义。
+第二个判定区分后继的元素：`sucʟ mL` 的元素要么属于 `m`，要么等于 `m`，这正是「属于后继」的含义。
 <!--ja-->
 第二の判定は後続の要素を分ける。`sucʟ mL` の要素は `m` に属するか `m` と等しいかであり、これが後続への所属の意味そのものである。
 <!--/-->
@@ -2284,7 +2284,7 @@ The second decision separates the members of the successor: an element of `sucʟ
 <!--en-->
 The first decision is an instance of excluded middle, applied to the membership proposition of `x` in `ω`.
 <!--zh-->
-第一个判定是排中律的一个实例，施用于 `x` 属于 `ω` 这条隶属命题。
+第一个判定是排中律的一个实例，施用于 `x` 属于 `ω` 这条成员关系命题。
 <!--ja-->
 最初の判定は排中律の一つの実例であり、`x` の `ω` への所属の命題に適用される。
 <!--/-->
@@ -2297,7 +2297,7 @@ The first decision is an instance of excluded middle, applied to the membership 
 <!--en-->
 The second decision is also an instance of excluded middle, refined by the successor's elimination: a member of `sucʟ mL` is either a member of `m` or equal to `m`, so a refuted membership leaves only equality.
 <!--zh-->
-第二个判定同样是排中律的实例，并经后继的消去细化：`sucʟ mL` 的成员要么属于 `m`、要么等于 `m`，于是隶属被反驳后就只剩相等。
+第二个判定同样是排中律的实例，并经后继的消去细化：`sucʟ mL` 的元素要么属于 `m`、要么等于 `m`，于是成员关系被反驳后就只剩相等。
 <!--ja-->
 第二の判定も排中律の実例であり、後続の消去によって洗練される。`sucʟ mL` の要素は `m` に属するか `m` と等しいかであり、所属が反証されれば等しいことだけが残る。
 <!--/-->
@@ -2313,7 +2313,7 @@ The second decision is also an instance of excluded middle, refined by the succe
 <!--en-->
 In the refuted case the elimination consumes the truncated membership in the successor, and the two outcomes are exclusive: an element cannot both belong to `m` and equal `m`, since that would make `m` a member of itself, refuted by the irreflexivity of membership.
 <!--zh-->
-在被反驳的情形中，消去消耗后继中的截断隶属；而两种结果互斥：一个元素不能既属于 `m` 又等于 `m`，否则 `m` 将属于自身，这被隶属的非自反性所反驳。
+在被反驳的情形中，消去消耗后继中的截断成员关系；而两种结果互斥：一个元素不能既属于 `m` 又等于 `m`，否则 `m` 将属于自身，这被成员关系的非自反性所反驳。
 <!--ja-->
 反証された場合では、消去が後続の切り詰められた所属を消費する。二つの結果は排他的である。ある要素が `m` に属し、かつ `m` に等しいことはあり得ない。それは `m` がみずからに属することになり、所属の非反射性によって退けられるからである。
 <!--/-->
@@ -2328,7 +2328,7 @@ In the refuted case the elimination consumes the truncated membership in the suc
 <!--en-->
 The finite and top cases cannot overlap. If `x` belongs to `ω` and equals `m`, transporting its membership along that equality would put `m` in `ω`, contrary to the hypothesis that `m` is infinite.
 <!--zh-->
-有限情形与顶端情形不能重合。若 `x` 属于 `ω` 且等于 `m`，沿该等式搬运其隶属关系便会得到 `m ∈ ω`，与 `m` 无穷的假设矛盾。
+有限情形与顶端情形不能重合。若 `x` 属于 `ω` 且等于 `m`，沿该等式搬运其成员关系便会得到 `m ∈ ω`，与 `m` 无穷的假设矛盾。
 <!--ja-->
 有限の場合と頂点の場合は重ならない。`x` が `ω` に属し、しかも `m` に等しいなら、その等しさに沿って所属を移送することで `m ∈ ω` が得られ、`m` が無限であるという仮定に反する。
 <!--/-->
@@ -2341,7 +2341,7 @@ The finite and top cases cannot overlap. If `x` belongs to `ω` and equals `m`, 
 <!--en-->
 A successor can never be empty. Indeed, `a` belongs to `sucV a`; if `sucV a = ∅`, transporting this membership would produce an element of the empty set.
 <!--zh-->
-后继绝不可能是空集。事实上，`a` 属于 `sucV a`；若 `sucV a = ∅`，沿该等式搬运这一隶属关系便会得到空集的一个元素。
+后继绝不可能是空集。事实上，`a` 属于 `sucV a`；若 `sucV a = ∅`，沿该等式搬运这一成员关系便会得到空集的一个元素。
 <!--ja-->
 後続が空集合になることはない。実際、`a` は `sucV a` に属する。もし `sucV a = ∅` なら、この所属を等しさに沿って移送することで、空集合の要素が得られてしまう。
 <!--/-->
@@ -2355,7 +2355,7 @@ A successor can never be empty. Indeed, `a` belongs to `sucV a`; if `sucV a = �
 <!--en-->
 The three cases now define the value of the shift. A finite member is sent to its internal successor; a non-finite member of `m` is sent to itself; and the top element `m` is sent to the empty set of `L`. These are precisely the three alternatives the decisions distinguish.
 <!--zh-->
-三种情形现在定义移位的取值。有限成员被送到其内部后继；`m` 的非有限成员被送到自身；而顶端元素 `m` 被送到 `L` 的空集。这正是两个判定所区分的三种选择。
+三种情形现在定义移位的取值。有限元素被送到其内部后继；`m` 的非有限元素被送到自身；而顶端元素 `m` 被送到 `L` 的空集。这正是两个判定所区分的三种选择。
 <!--ja-->
 三つの場合が、移し変えの値を定義する。有限の要素はみずからの内部の後続へ送られ、`m` の非有限の要素はみずからへ送られ、頂点の要素 `m` は `L` の空集合へ送られる。これらは、二つの判定が区別する三つの選択肢にほかならない。
 <!--/-->
@@ -2370,7 +2370,7 @@ The three cases now define the value of the shift. A finite member is sent to it
 <!--en-->
 The value is guaranteed to lie in `m`. For a finite member, its successor is a member of `ω` by the limit property, and `ω` is contained in `m`; for a member of `m` the membership is the decision itself; and the empty set is a member of `ω`, hence of `m`.
 <!--zh-->
-取值保证落在 `m` 中。对有限成员，其后继由 `ω` 的极限性质成为 `ω` 的成员，而 `ω` 包含于 `m`；对 `m` 的成员，隶属就是那个判定本身；空集则是 `ω` 的成员，因而也是 `m` 的成员。
+取值保证落在 `m` 中。对有限元素，其后继由 `ω` 的极限性质成为 `ω` 的元素，而 `ω` 包含于 `m`；对 `m` 的元素，成员关系就是那个判定本身；空集则是 `ω` 的元素，因而也是 `m` 的元素。
 <!--ja-->
 値は `m` の中に収まることが保証される。有限の要素については、その後続が極限の性質によって `ω` の要素となり、`ω` は `m` に含まれる。`m` の要素については、所属がその判定そのものであり、空集合は `ω` の、したがって `m` の要素である。
 <!--/-->
@@ -2386,7 +2386,7 @@ The value is guaranteed to lie in `m`. For a finite member, its successor is a m
 <!--en-->
 The witness type for the graph formula is declared: either `x` is finite and `y` is its successor, or `x` is not finite, lies in `m`, and `y` equals `x`, or `x` equals the top `m` and `y` is empty. The three alternatives are truncated, and each carries its own memberships and equations.
 <!--zh-->
-图公式的见证类型在此声明：要么 `x` 有限且 `y` 是其后继；要么 `x` 非有限、属于 `m` 且 `y` 等于 `x`；要么 `x` 等于顶端 `m` 且 `y` 为空。三种选择被截断，各自携带自己的隶属与等式。
+图公式的见证类型在此声明：要么 `x` 有限且 `y` 是其后继；要么 `x` 非有限、属于 `m` 且 `y` 等于 `x`；要么 `x` 等于顶端 `m` 且 `y` 为空。三种选择被截断，各自携带自己的成员关系与等式。
 <!--ja-->
 グラフの論理式の証人の型が宣言される。`x` が有限で `y` はその後続、`x` が非有限で `m` に属し `y` は `x` に等しい、あるいは `x` が頂点 `m` に等しく `y` は空である、の三つの選択肢である。三つは切り詰めの下にあり、それぞれがみずからの所属と等式を運ぶ。
 <!--/-->
@@ -2417,7 +2417,7 @@ The graph formula is stated in the object language, and its first disjunct says 
 <!--en-->
 The two guarded alternatives inside complete the second and third disjuncts: a non-finite member of `m` is paired with itself, and the top element is paired with the empty set of `L`.
 <!--zh-->
-其内两条受守卫的选项补全第二、第三析取支：`m` 的非有限成员与自身配对，顶端元素与 `L` 的空集配对。
+其内两条受守卫的选项补全第二、第三析取支：`m` 的非有限元素与自身配对，顶端元素与 `L` 的空集配对。
 <!--ja-->
 その内側の二つの守られた選択肢が第二と第三の選言肢を完成させる。`m` の非有限の要素はみずからと対にされ、頂点の要素は `L` の空集合と対にされる。
 <!--/-->
@@ -2471,7 +2471,7 @@ The third disjunct carries only the two equations of the top case, so its transl
 <!--en-->
 The three inward lemmas rebuild the formula from each kind of witness. For a finite member, the successor equation is transported back along the adequacy into the first disjunct.
 <!--zh-->
-三条向内引理从每种见证重建公式。对有限成员，后继等式沿充分性反方向传输，进入第一个析取支。
+三条向内引理从每种见证重建公式。对有限元素，后继等式沿充分性反方向传输，进入第一个析取支。
 <!--ja-->
 三つの内向きの補題が、それぞれの証人から論理式を組み立て直す。有限の要素では、後続の等式が妥当性に沿って逆向きに輸送され、第一の選言肢に入る。
 <!--/-->
@@ -2484,7 +2484,7 @@ The three inward lemmas rebuild the formula from each kind of witness. For a fin
 <!--en-->
 For a non-finite member of `m`, the refutation of `x ∈ ω` is lifted into the object-level negation. Together with `x ∈ m` and `y = x`, it supplies the middle disjunct.
 <!--zh-->
-对 `m` 的非有限成员，`x ∈ ω` 的反驳被提升为对象层的否定；它与 `x ∈ m` 和 `y = x` 一起构成中间析取支。
+对 `m` 的非有限元素，`x ∈ ω` 的反驳被提升为对象层的否定；它与 `x ∈ m` 和 `y = x` 一起构成中间析取支。
 <!--ja-->
 `m` の非有限な要素については、`x ∈ ω` の反証を対象レベルの否定へ持ち上げる。これを `x ∈ m` および `y = x` と合わせると、中間の選言肢が得られる。
 <!--/-->
@@ -2572,7 +2572,7 @@ The case function receives the unpacked alternatives together with the chosen de
 <!--en-->
 The next five clauses compare the chosen finite or non-finite member case with a graph witness. A finite choice contradicts either the middle witness's refutation or the top equation; a non-finite member choice contradicts a finite witness, agrees with a middle witness by its equation, and excludes a top witness because a member of `m` cannot equal `m`.
 <!--zh-->
-接下来的五个子句把已选定的有限情形或非有限成员情形与图见证比较。有限选择分别与中间见证中的反驳或顶端等式矛盾；非有限成员选择与有限见证矛盾，凭中间见证的等式与其中间值一致，并由 `m` 的成员不可能等于 `m` 排除顶端见证。
+接下来的五个子句把已选定的有限情形或非有限元素情形与图见证比较。有限选择分别与中间见证中的反驳或顶端等式矛盾；非有限元素选择与有限见证矛盾，凭中间见证的等式与其中间值一致，并由 `m` 的元素不可能等于 `m` 排除顶端见证。
 <!--ja-->
 続く五つの節では、選ばれた有限の場合または非有限な要素の場合を、グラフの証人と照合する。有限という選択は、中間の証人に含まれる反証とも頂点の等式とも矛盾する。非有限な要素という選択は、有限の証人とは矛盾し、中間の証人とはその等式によって一致し、`m` の要素は `m` 自身に等しくなれないことから頂点の証人を排除する。
 <!--/-->
@@ -2588,7 +2588,7 @@ The next five clauses compare the chosen finite or non-finite member case with a
 <!--en-->
 If the chosen input is the top element, a finite witness contradicts its non-finiteness, and a middle witness contradicts the fact that an element of `m` cannot equal `m`. A top witness gives the required equality directly from its empty-value equation.
 <!--zh-->
-若选定的输入是顶端元素，则有限见证与其非有限性矛盾，中间见证则与 `m` 的成员不可能等于 `m` 相矛盾。顶端见证由其空值等式直接给出所需相等。
+若选定的输入是顶端元素，则有限见证与其非有限性矛盾，中间见证则与 `m` 的元素不可能等于 `m` 相矛盾。顶端见证由其空值等式直接给出所需相等。
 <!--ja-->
 選ばれた入力が頂点なら、有限の証人はその非有限性と矛盾し、中間の証人は `m` の要素が `m` 自身に等しくなれないことと矛盾する。頂点の証人からは、空集合を値とする等式によって必要な等しさが直接得られる。
 <!--/-->
@@ -2647,7 +2647,7 @@ Injectivity is proved by comparing the cases for two inputs. If both are finite,
 <!--en-->
 A finite input cannot share its shifted value with a non-finite member: that equality would put the latter's value, and hence the latter itself, in `ω`. Nor can it share its value with the top input, because that would equate a successor with the empty set.
 <!--zh-->
-有限输入不可能与非有限成员取得相同的移位值：该等式会使后者的值、也就是后者本身属于 `ω`。它也不可能与顶端输入取得相同的值，因为这会令一个后继等于空集。
+有限输入不可能与非有限元素取得相同的移位值：该等式会使后者的值、也就是后者本身属于 `ω`。它也不可能与顶端输入取得相同的值，因为这会令一个后继等于空集。
 <!--ja-->
 有限な入力が非有限な要素と同じシフト値をもつことはない。その等しさから、後者の値、したがって後者自身が `ω` に属することになるからである。頂点の入力とも値を共有できない。そうすると後続が空集合に等しくなってしまう。
 <!--/-->
@@ -2663,7 +2663,7 @@ A finite input cannot share its shifted value with a non-finite member: that equ
 <!--en-->
 The reverse finite/non-finite case gives the same contradiction. Two non-finite members with equal values are equal immediately, while a non-finite member cannot share the top value: equality with the empty set would make it a member of `ω`.
 <!--zh-->
-有限与非有限次序相反的情形给出同样的矛盾。两个非有限成员若取值相等，便立即相等；非有限成员则不可能与顶端取得同一个值，因为等于空集会使它属于 `ω`。
+有限与非有限次序相反的情形给出同样的矛盾。两个非有限元素若取值相等，便立即相等；非有限元素则不可能与顶端取得同一个值，因为等于空集会使它属于 `ω`。
 <!--ja-->
 有限と非有限の順序を逆にした場合も、同じ矛盾になる。二つの非有限な要素は、値が等しければ直ちに等しくなる。一方、非有限な要素は頂点と同じ値をもてない。空集合に等しければ `ω` に属することになるからである。
 <!--/-->
@@ -2679,7 +2679,7 @@ The reverse finite/non-finite case gives the same contradiction. Two non-finite 
 <!--en-->
 For a top input, equality with a finite value would again make a successor empty, and equality with a non-finite member's value would make that member equal to the empty set and hence finite. If both inputs are top, their equations with `m` identify them. Thus the shift is internally injective.
 <!--zh-->
-对顶端输入而言，与有限输入的值相等会再次令后继成为空集；与非有限成员的值相等则会令该成员等于空集，因而成为有限序数。若两个输入都是顶端，它们各自与 `m` 的等式便认同二者。因此该移位在 `L` 内部是单射。
+对顶端输入而言，与有限输入的值相等会再次令后继成为空集；与非有限元素的值相等则会令该元素等于空集，因而成为有限序数。若两个输入都是顶端，它们各自与 `m` 的等式便认同二者。因此该移位在 `L` 内部是单射。
 <!--ja-->
 頂点の入力について、有限な入力の値と等しければ後続が空集合になり、非有限な要素の値と等しければその要素が空集合、したがって有限な順序数になってしまう。両方の入力が頂点なら、それぞれを `m` と結ぶ等式から両者が等しいと分かる。したがって、このシフトは `L` の内部で単射である。
 <!--/-->
@@ -2695,7 +2695,7 @@ For a top input, equality with a finite value would again make a successor empty
 <!--en-->
 The definable shift and the preceding case analysis give the coded injection `sucʟ mL ↪ mL`. We will also use the elementary fact that two members of a set represented by the same fiber index are equal: applying the presentation map to the index equality recovers equality of the represented members.
 <!--zh-->
-可定义移位与前面的分类讨论共同给出编码单射 `sucʟ mL ↪ mL`。还要用到一个基本事实：若一个集合的两个成员由同一个纤维索引表示，则它们相等；将呈现映射作用于索引等式，便恢复出所表示成员的相等。
+可定义移位与前面的分类讨论共同给出编码单射 `sucʟ mL ↪ mL`。还要用到一个基本事实：若一个集合的两个元素由同一个纤维索引表示，则它们相等；将呈现映射作用于索引等式，便恢复出所表示元素的相等。
 <!--ja-->
 定義可能なシフトと先の分類により、符号化された単射 `sucʟ mL ↪ mL` が得られる。さらに、ある集合の二つの要素が同じファイバー添字で表されるなら両者は等しい、という基本的な事実を用いる。添字の等しさに提示写像を作用させると、表された要素の等しさが復元される。
 <!--/-->
@@ -2715,7 +2715,7 @@ opaque
 <!--en-->
 For each constructible infinite ordinal `a` that is an internal cardinal, the induction goal is a coded injection from its Cartesian square `a × a` back into `a`. Packaging the statement as `Goal a` lets membership induction apply it uniformly below `a`.
 <!--zh-->
-对每个可构造的无穷序数 `a`，若它还是内部基数，归纳目标便是从其笛卡尔平方 `a × a` 回到 `a` 的编码单射。将该命题包装为 `Goal a`，即可在隶属归纳中对 `a` 以下的对象统一使用它。
+对每个可构造的无穷序数 `a`，若它还是内部基数，归纳目标便是从其笛卡尔平方 `a × a` 回到 `a` 的编码单射。将该命题包装为 `Goal a`，即可在成员关系归纳中对 `a` 以下的对象统一使用它。
 <!--ja-->
 構成可能な無限順序数 `a` が内部の基数でもあるとき、帰納目標はその直積平方 `a × a` から `a` への符号化された単射である。この主張を `Goal a` としてまとめることで、所属に関する帰納法を `a` より下の対象へ一様に適用できる。
 <!--/-->
@@ -2729,7 +2729,7 @@ Goal a = (la : ⟨ isL a ⟩) → IsOrd a → IsCardinalL (a , la)
 <!--en-->
 The induction step receives the set `a`, the induction hypothesis for every member of `a`, and the four hypotheses: constructibility, ordinality, internal cardinality, and infinity. The cardinality hypothesis is the exclusion of internal injections of `κ` into its own members, the form in which the collapse counting will be used.
 <!--zh-->
-归纳步接收集合 `a`、对 `a` 每个成员的归纳假设，以及四条假设：可构造性、序数性、内部基数性与无穷性。基数性假设排除「`κ` 内部单射入其自身成员」，这正是塌缩计数所要使用的形式。
+归纳步接收集合 `a`、对 `a` 每个元素的归纳假设，以及四条假设：可构造性、序数性、内部基数性与无穷性。基数性假设排除「`κ` 内部单射入其自身元素」，这正是塌缩计数所要使用的形式。
 <!--ja-->
 帰納の段階は、集合 `a`、`a` の各要素に対する帰納仮定、そして四つの仮定を受け取る。構成可能性、順序数性、内部の基数性、無限性である。基数性の仮定は、`κ` がみずからの要素へ内部的に単射することを排除するもので、崩壊の計数が用いる形そのものである。
 <!--/-->
@@ -2789,7 +2789,7 @@ Since the ordinal `a` is not finite, it contains every finite ordinal. We also n
 <!--en-->
 Because `m` is a member of the ordinal `a`, it is itself an ordinal. Its constructibility follows from membership in the constructible set `a`, so `m` determines an element `mL` of the internal universe.
 <!--zh-->
-由于 `m` 是序数 `a` 的成员，`m` 本身也是序数。又因 `m` 属于可构造集合 `a`，它也是可构造的，因而确定内部论域中的元素 `mL`。
+由于 `m` 是序数 `a` 的元素，`m` 本身也是序数。又因 `m` 属于可构造集合 `a`，它也是可构造的，因而确定内部论域中的元素 `mL`。
 <!--ja-->
 `m` は順序数 `a` の要素なので、それ自身も順序数である。また、構成可能集合 `a` に属することから `m` も構成可能であり、内部の論域の要素 `mL` を定める。
 <!--/-->
@@ -2804,7 +2804,7 @@ Because `m` is a member of the ordinal `a`, it is itself an ordinal. Its constru
 <!--en-->
 Apply trichotomy to `sucV m` and `a`. The first case is exactly the desired membership. If `sucV m = a`, comparing `m` with `ω` splits the contradiction into the finite case and the two infinite cases handled next.
 <!--zh-->
-对 `sucV m` 与 `a` 应用三歧性。第一种情形正是所需的隶属关系。若 `sucV m = a`，再比较 `m` 与 `ω`，便把矛盾分成有限情形和接下来处理的两种无穷情形。
+对 `sucV m` 与 `a` 应用三歧性。第一种情形正是所需的成员关系。若 `sucV m = a`，再比较 `m` 与 `ω`，便把矛盾分成有限情形和接下来处理的两种无穷情形。
 <!--ja-->
 `sucV m` と `a` に三分法を適用する。第一の場合は、求める所属そのものである。`sucV m = a` なら、さらに `m` と `ω` を比較することで、矛盾を有限の場合と、続いて扱う二つの無限の場合に分ける。
 <!--/-->
@@ -2820,7 +2820,7 @@ Apply trichotomy to `sucV m` and `a`. The first case is exactly the desired memb
 <!--en-->
 If `m` were a member of `ω`, its successor would also be a member of `ω`, putting the cardinal `a` inside `ω` against the infinity hypothesis. If instead `m` equals `ω` or contains it, the internal cardinality of `a`, applied at the member `m`, would refute the shift injection `sucʟ mL ↪ mL`, an internal injection into a member of the cardinal.
 <!--zh-->
-若 `m` 属于 `ω`，则其后继也属于 `ω`，从而把基数 `a` 放进 `ω`，与无穷性假设矛盾。若 `m` 等于 `ω` 或包含 `ω`，则在成员 `m` 处施用 `a` 的内部基数性，便会反驳移位单射 `sucʟ mL ↪ mL`，后者是到该基数某个成员的内部单射。
+若 `m` 属于 `ω`，则其后继也属于 `ω`，从而把基数 `a` 放进 `ω`，与无穷性假设矛盾。若 `m` 等于 `ω` 或包含 `ω`，则在元素 `m` 处施用 `a` 的内部基数性，便会反驳移位单射 `sucʟ mL ↪ mL`，后者是到该基数某个元素的内部单射。
 <!--ja-->
 `m` が `ω` の要素なら、その後続も `ω` の要素となり、基数 `a` が `ω` の内側に入って無限性の仮定と矛盾する。`m` が `ω` に等しいか `ω` を含む場合は、要素 `m` のところで `a` の内部の基数性を適用すると、移し変えの単射 `sucʟ mL ↪ mL`、すなわち基数のある要素への内部の単射が退けられる。
 <!--/-->
@@ -2836,7 +2836,7 @@ If `m` were a member of `ω`, its successor would also be a member of `ω`, putt
 <!--en-->
 The local non-finiteness is read off the same trichotomy: if `m` equalled `ω`, the assumed membership would place `ω` inside itself; if `ω` belonged to `m`, transitivity would again place `ω` inside itself. Both contradict the irreflexivity of membership.
 <!--zh-->
-局部非有限性由同一三歧性读出：若 `m` 等于 `ω`，所假设的隶属会把 `ω` 放进其自身；若 `ω` 属于 `m`，传递性同样会把 `ω` 放进其自身。两者都与隶属的非自反性矛盾。
+局部非有限性由同一三歧性读出：若 `m` 等于 `ω`，所假设的成员关系会把 `ω` 放进其自身；若 `ω` 属于 `m`，传递性同样会把 `ω` 放进其自身。两者都与成员关系的非自反性矛盾。
 <!--ja-->
 局所的な非有限性は、同じ三分法から読み取られる。`m` が `ω` に等しいなら、仮定された所属が `ω` をみずからの内側に置き、`ω` が `m` に属するなら、推移性が再び `ω` をみずからの内側に置く。どちらも所属の非反射性と矛盾する。
 <!--/-->
@@ -2916,7 +2916,7 @@ The injection composes three injections. The product injection lifts `γ ↪ μ`
 <!--en-->
 The representative `μ` also lies below `a`. If `μ ∈ γ`, transitivity carries it through `γ ∈ a`; if `μ = γ`, membership transports directly. The remaining comparison `γ ∈ μ` is impossible, because the inclusion `μ ⊆ γ` would then give `γ ∈ γ`.
 <!--zh-->
-代表 `μ` 同样位于 `a` 以下。若 `μ ∈ γ`，传递性结合 `γ ∈ a` 即得 `μ ∈ a`；若 `μ = γ`，直接搬运隶属关系即可。余下的比较 `γ ∈ μ` 不可能成立，因为包含关系 `μ ⊆ γ` 会由此给出 `γ ∈ γ`。
+代表 `μ` 同样位于 `a` 以下。若 `μ ∈ γ`，传递性结合 `γ ∈ a` 即得 `μ ∈ a`；若 `μ = γ`，直接搬运成员关系即可。余下的比较 `γ ∈ μ` 不可能成立，因为包含关系 `μ ⊆ γ` 会由此给出 `γ ∈ γ`。
 <!--ja-->
 代表 `μ` も `a` より下にある。`μ ∈ γ` なら、`γ ∈ a` と推移性から `μ ∈ a` が従う。`μ = γ` なら、所属をその等しさに沿って移送する。残る `γ ∈ μ` は不可能である。包含 `μ ⊆ γ` によって `γ ∈ γ` が導かれるからである。
 <!--/-->
@@ -2962,7 +2962,7 @@ Segments are unique: two predecessors of `p` with equal collapse values are equa
 <!--en-->
 Every member of a collapse value determines its segment, by the outward reading of the collapse and the uniqueness just proved. The maximum of a pair is then named: the larger of its two coordinates in the host order.
 <!--zh-->
-塌缩值的每个成员都由塌缩的外向读法与刚证明的唯一性确定其节段。随后给出对的 maximum：其两个坐标在宿主序中的较大者。
+塌缩值的每个元素都由塌缩的外向读法与刚证明的唯一性确定其节段。随后给出对的 maximum：其两个坐标在宿主序中的较大者。
 <!--ja-->
 崩壊の値のすべての要素は、崩壊の外向きの読みと証明されたばかりの一意性によって、その節を確定する。ついで対の最大値が名指される。その二つの座標のホストの順序における大きい方である。
 <!--/-->
@@ -3130,7 +3130,7 @@ Because `mV p ∈ ω`, the maximum is an ordinal, and its successor `g` is an or
 <!--en-->
 The refutation assumes that `ω` is contained in the collapse value. Then every index of `ω` names a segment of `col p`: the containment places the named member inside the collapse, and the segment lemma recovers the predecessor.
 <!--zh-->
-反驳假设 `ω` 包含于塌缩值。于是 `ω` 的每个索引都指名 `col p` 的一个节段：包含关系把被指名的成员放进塌缩之内，而节段引理恢复出相应的前驱。
+反驳假设 `ω` 包含于塌缩值。于是 `ω` 的每个索引都指名 `col p` 的一个节段：包含关系把被指名的元素放进塌缩之内，而节段引理恢复出相应的前驱。
 <!--ja-->
 反証は、`ω` が崩壊の値に含まれると仮定する。すると `ω` のすべての添字が `col p` の節を名指す。包含が名指された要素を崩壊の内側に置き、節の補題が先行者を復元するのである。
 <!--/-->
@@ -3208,7 +3208,7 @@ Assume that, for every `r ≺ p`, both coordinates represented by `φ r` belong 
 <!--en-->
 Every member `x` of the collapse value determines its segment: the truncated membership is eliminated, since segments are unique, and yields a predecessor `r` whose collapse value is the underlying set of `x`.
 <!--zh-->
-塌缩值的每个成员 `x` 都确定其节段：由于节段唯一，截断的隶属被消去，给出一个前驱 `r`，其塌缩值正是 `x` 的底层集合。
+塌缩值的每个元素 `x` 都确定其节段：由于节段唯一，截断的成员关系被消去，给出一个前驱 `r`，其塌缩值正是 `x` 的底层集合。
 <!--ja-->
 崩壊の値のすべての要素 `x` はみずからの節を確定する。節は一意なので、切り詰められた所属は消去され、崩壊の値が `x` の基底集合である先行者 `r` が得られる。
 <!--/-->
@@ -3238,7 +3238,7 @@ For the predecessor selected from `x ∈ C.col p`, the presentation equation ide
 <!--en-->
 The bound `bsnd` supplies the second coordinate membership. Together the two bounds place the represented ordered pair in `g × g`, completing the required codomain proof.
 <!--zh-->
-`bsnd` 给出第二坐标的隶属关系。两条界合在一起，把所表示的有序对放入 `g × g`，从而完成所需的陪域证明。
+`bsnd` 给出第二坐标的成员关系。两条界合在一起，把所表示的有序对放入 `g × g`，从而完成所需的陪域证明。
 <!--ja-->
 `bsnd` が第二座標の所属を与える。二つの上界を合わせると、表された順序対が `g × g` に属することが分かり、必要な終域の証明が完成する。
 <!--/-->
@@ -3250,7 +3250,7 @@ The bound `bsnd` supplies the second coordinate membership. Together the two bou
 <!--en-->
 Consequently, collapse on the initial segment below `p` has a definable inverse into `prodL g`: each member of `C.col p` returns to its unique predecessor, and distinct collapse values return to distinct pairs. This gives an internal injection `C.colʟ p ↪ prodL g`. The main induction now aims to prove `C.col p ∈ a` for every `p`, beginning with trichotomy for its maximum coordinate.
 <!--zh-->
-因此，`p` 以下初始段上的塌缩具有一个到 `prodL g` 的可定义逆映射：`C.col p` 的每个成员都回到其唯一前驱，不同的塌缩值则回到不同的对。由此得到内部单射 `C.colʟ p ↪ prodL g`。主归纳现在要对每个 `p` 证明 `C.col p ∈ a`，首先对它的最大坐标应用三歧性。
+因此，`p` 以下初始段上的塌缩具有一个到 `prodL g` 的可定义逆映射：`C.col p` 的每个元素都回到其唯一前驱，不同的塌缩值则回到不同的对。由此得到内部单射 `C.colʟ p ↪ prodL g`。主归纳现在要对每个 `p` 证明 `C.col p ∈ a`，首先对它的最大坐标应用三歧性。
 <!--ja-->
 したがって、`p` より下の始切片上の崩壊には `prodL g` への定義可能な逆写像がある。`C.col p` の各要素は一意な先行者へ戻り、異なる崩壊値は異なる対へ戻る。これにより、内部の単射 `C.colʟ p ↪ prodL g` が得られる。主帰納では、各 `p` について `C.col p ∈ a` を示す。まず、その最大座標に三分法を適用する。
 <!--/-->
@@ -3286,7 +3286,7 @@ If the maximum of the pair is finite, the collapse value is finite by the finite
 <!--en-->
 In the infinite branch, suppose for contradiction that `mV p ∈ ω`. If `mV p = ω`, transporting this membership gives `ω ∈ ω`. If instead `ω ∈ mV p`, transitivity of `ω` combines the two memberships to give `ω ∈ ω` again. Irreflexivity rules out both alternatives, so `mV p` is not finite.
 <!--zh-->
-在无穷分支中，反设 `mV p ∈ ω`。若 `mV p = ω`，沿该等式搬运此隶属关系便得到 `ω ∈ ω`；若 `ω ∈ mV p`，则 `ω` 的传递性把这两条隶属关系合成，再次得到 `ω ∈ ω`。非自反性排除两种选择，故 `mV p` 不是有限序数。
+在无穷分支中，反设 `mV p ∈ ω`。若 `mV p = ω`，沿该等式搬运此成员关系便得到 `ω ∈ ω`；若 `ω ∈ mV p`，则 `ω` 的传递性把这两条成员关系合成，再次得到 `ω ∈ ω`。非自反性排除两种选择，故 `mV p` 不是有限序数。
 <!--ja-->
 無限の場合に `mV p ∈ ω` と仮定して矛盾を導く。`mV p = ω` なら、この所属を等しさに沿って移送すると `ω ∈ ω` が得られる。一方 `ω ∈ mV p` なら、`ω` の推移性で二つの所属を合成すると、やはり `ω ∈ ω` が得られる。非反射性が両方を排除するので、`mV p` は有限順序数ではない。
 <!--/-->
@@ -3302,7 +3302,7 @@ In the infinite branch, suppose for contradiction that `mV p ∈ ω`. If `mV p =
 <!--en-->
 The carrier `g` is the successor of the maximum, and is an ordinal because the maximum is a member of the ordinal `κ`; the ordinal is then packaged as an element `gL` of `L`.
 <!--zh-->
-载体 `g` 是最大值的后继，由于最大值是序数 `κ` 的成员，故 `g` 是序数；随后该序数被打包为 `L` 的元素 `gL`。
+载体 `g` 是最大值的后继，由于最大值是序数 `κ` 的元素，故 `g` 是序数；随后该序数被打包为 `L` 的元素 `gL`。
 <!--ja-->
 台 `g` は最大値の後続であり、最大値が順序数 `κ` の要素であるため `g` も順序数である。ついでこの順序数は `L` の要素 `gL` としてまとめられる。
 <!--/-->
@@ -3318,7 +3318,7 @@ The carrier `g` is the successor of the maximum, and is an ordinal because the m
 <!--en-->
 The carrier belongs to `a` by the successor closure proved above, and it is infinite: if `g` belonged to `ω`, then the maximum, being a member of `g`, would belong to `ω` by transitivity, contradicting the infiniteness just established.
 <!--zh-->
-载体由前证的后继封闭性属于 `a`，且它是无穷的：若 `g` 属于 `ω`，则作为 `g` 成员的最大值经传递性也属于 `ω`，与刚才确立的无穷性矛盾。
+载体由前证的后继封闭性属于 `a`，且它是无穷的：若 `g` 属于 `ω`，则作为 `g` 元素的最大值经传递性也属于 `ω`，与刚才确立的无穷性矛盾。
 <!--ja-->
 台は、上で証明した後続の閉性によって `a` に属し、さらに無限である。`g` が `ω` に属すれば、`g` の要素である最大値も推移性によって `ω` に属することになり、確立されたばかりの無限性と矛盾する。
 <!--/-->
@@ -3362,7 +3362,7 @@ Compose the inverse-collapse injection with `prod-into gL` to obtain `C.colʟ p 
 <!--en-->
 If the cardinal were contained in the collapse value, composing that inclusion with the injection into `gL` would inject `κ` into its own member `gL`, contradicting the internal cardinality of `κ`. The trichotomy between the collapse value and `a` therefore leaves only direct membership.
 <!--zh-->
-若基数包含于塌缩值，则把该包含与到 `gL` 的单射复合，将使 `κ` 单射入其自身成员 `gL`，与 `κ` 的内部基数性矛盾。于是塌缩值与 `a` 的三歧性只剩直接隶属一种情形。
+若基数包含于塌缩值，则把该包含与到 `gL` 的单射复合，将使 `κ` 单射入其自身元素 `gL`，与 `κ` 的内部基数性矛盾。于是塌缩值与 `a` 的三歧性只剩直接成员关系一种情形。
 <!--ja-->
 基数が崩壊の値に含まれるなら、その包含と `gL` への単射を合成することで、`κ` がみずからの要素 `gL` へ単射することになり、`κ` の内部の基数性と矛盾する。したがって崩壊の値と `a` の三分法に残るのは直接の所属だけである。
 <!--/-->
@@ -3378,7 +3378,7 @@ If the cardinal were contained in the collapse value, composing that inclusion w
 <!--en-->
 The product first injects into the collapse order type `C.otL`. Every member `z` of this order type is equal to `C.col b` for some `b : OT.Dom`, and `colIn b` places that collapse value in `a`; hence `C.otL ⊆ κ`. Composing the first injection with the coded inclusion gives the required internal injection `prodL κ ↪ κ`.
 <!--zh-->
-乘积先单射入塌缩序型 `C.otL`。该序型的每个成员 `z` 都等于某个 `b : OT.Dom` 的 `C.col b`，而 `colIn b` 把这个塌缩值放入 `a`；因此 `C.otL ⊆ κ`。把第一个单射与这一编码包含复合，便得到所需的内部单射 `prodL κ ↪ κ`。
+乘积先单射入塌缩序型 `C.otL`。该序型的每个元素 `z` 都等于某个 `b : OT.Dom` 的 `C.col b`，而 `colIn b` 把这个塌缩值放入 `a`；因此 `C.otL ⊆ κ`。把第一个单射与这一编码包含复合，便得到所需的内部单射 `prodL κ ↪ κ`。
 <!--ja-->
 まず積を崩壊の順序型 `C.otL` へ単射する。この順序型の各要素 `z` は、ある `b : OT.Dom` に対する `C.col b` と等しく、`colIn b` によってその崩壊値は `a` に属する。したがって `C.otL ⊆ κ` である。最初の単射と、この符号化された包含を合成すると、必要な内部の単射 `prodL κ ↪ κ` が得られる。
 <!--/-->
@@ -3396,7 +3396,7 @@ The product first injects into the collapse order type `C.otL`. Every member `z`
 <!--en-->
 Membership well-founded induction now proves the square law. Given an ordinal `κ` that is an internal cardinal and satisfies `ω ∈ κ`, the induction step constructed above yields an internal injection `prodL κ ↪ κ` once the required proof that `κ` is not finite is supplied.
 <!--zh-->
-现在由隶属关系上的良基归纳证明平方律。给定一个作为内部基数并满足 `ω ∈ κ` 的序数 `κ`，只要补上 `κ` 不是有限序数的证明，上面构造的归纳步骤就给出内部单射 `prodL κ ↪ κ`。
+现在由成员关系上的良基归纳证明平方律。给定一个作为内部基数并满足 `ω ∈ κ` 的序数 `κ`，只要补上 `κ` 不是有限序数的证明，上面构造的归纳步骤就给出内部单射 `prodL κ ↪ κ`。
 <!--ja-->
 これで所属関係に関する整礎帰納法から平方則が得られる。内部の基数であり `ω ∈ κ` を満たす順序数 `κ` に対し、`κ` が有限順序数ではないことを示せば、上で構成した帰納段階から内部の単射 `prodL κ ↪ κ` が得られる。
 <!--/-->

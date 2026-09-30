@@ -28,7 +28,7 @@ module L.GCH.HullCounting {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 open import FOL.Syntax
   using ( Formula; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; ¬̇_; ∃̇_ )
 import FOL.Absoluteness
@@ -81,7 +81,7 @@ Closing a small set under definable least witnesses should preserve an infinite 
 <!--en-->
 Excluded middle supplies local decisions such as whether a member of a union lies in its left summand. Classical reasoning enters through one explicit hypothesis, so the resulting bound records exactly that assumption.
 <!--zh-->
-排中律提供局部判定，例如并的一个成员是否属于左侧分支。经典推理只通过一条显式假设进入，因此所得的界准确记录这一假设。
+排中律提供局部判定，例如并的一个元素是否属于左侧分支。经典推理只通过一条显式假设进入，因此所得的界准确记录这一假设。
 <!--ja-->
 排中律は、和集合の要素が左側に属するかどうかなどの局所的な判定を与える。古典的推論は一つの明示的な仮定として入り、得られる上界はその仮定を正確に記録する。
 <!--/-->
@@ -96,7 +96,7 @@ open import Cubical.Data.Nat using ( znots; snotz )
 <!--en-->
 Coded graphs are expressed in the first-order language of equality and membership. Conjunction, disjunction, negation, and existential quantification describe their cases, while satisfaction is interpreted over the ambient cumulative hierarchy.
 <!--zh-->
-编码图用带相等与隶属的一阶语言表示。合取、析取、否定与存在量化描述各个情形，而满足关系则在外围累积层级中解释。
+编码图用带相等与成员关系的一阶语言表示。合取、析取、否定与存在量化描述各个情形，而满足关系则在外围累积层级中解释。
 <!--ja-->
 符号化されたグラフは、等号と所属をもつ一階言語で表す。連言、選言、否定、存在量化によって場合を記述し、充足関係は周囲の累積階層で解釈する。
 <!--/-->
@@ -104,7 +104,7 @@ Coded graphs are expressed in the first-order language of equality and membershi
 <!--en-->
 The argument moves between ordinal stages and their constructible members. Transitivity keeps members inside `L`, while ordinal membership and stage cumulativity place each object in a stage large enough for definable selection.
 <!--zh-->
-论证在序数层与其中的可构造成员之间往返。传递性保证成员仍在 `L` 中，而序数隶属与层的累积性把每个对象放入足以进行可定义选择的层。
+论证在序数层与其中的可构造元素之间往返。传递性保证元素仍在 `L` 中，而序数成员关系与层的累积性把每个对象放入足以进行可定义选择的层。
 <!--ja-->
 議論では順序数段階とその構成可能な要素との間を行き来する。推移性により要素も `L` にとどまり、順序数の所属と段階の累積性により、各対象を定義可能な選択に十分大きい段階へ入れられる。
 <!--/-->
@@ -164,7 +164,7 @@ import Cubical.Induction.WellFounded as WF
 <!--en-->
 When both arguments of a graph are identified by equalities, two-place transport moves a graph-membership proof across both identifications at once. Thus equality replacement remains compatible with the coded relation.
 <!--zh-->
-当图的两个参数都由等式认同时，二元搬运可同时沿两条等式移动图的隶属证明。因此，等式替换与编码关系保持相容。
+当图的两个参数都由等式认同时，二元搬运可同时沿两条等式移动图的成员关系证明。因此，等式替换与编码关系保持相容。
 <!--ja-->
 グラフの二つの引数がそれぞれ等しさで同一視されるとき、二項の移送によってグラフへの所属証明を両方の同一視に沿って一度に移せる。したがって等しさによる置換は符号化された関係と両立する。
 <!--/-->
@@ -212,7 +212,7 @@ For ambient sets, `x ∈ˢ y` is the proposition that `x` belongs to `y`. The do
 <!--/-->
 
 ```agda
-open hPropStructure 𝒮ᵥ using ( _∈ˢ_ )
+open hPropView 𝒮ᵥ using ( _∈ˢ_ )
 ```
 
 <!--en-->
@@ -224,14 +224,14 @@ Write `S` for the carrier of the constructible model. Its elements are ambient s
 <!--/-->
 
 ```agda
-module SL = hPropStructure 𝒮ʟ using ( S )
+module SL = hPropView 𝒮ʟ using ( S )
 open SL using ( S )
 ```
 
 <!--en-->
 A formula with constructible constants can be evaluated inside `L` and projected to the ambient hierarchy. Transitivity makes the two readings agree, so an internally proved graph statement can be used as ordinary membership between underlying sets.
 <!--zh-->
-带可构造常元的公式可以在 `L` 内部求值，也可以投影到外围层级。传递性使两种读法一致，因此内部证明的图陈述可作为底层集合之间的普通隶属来使用。
+带可构造常元的公式可以在 `L` 内部求值，也可以投影到外围层级。传递性使两种读法一致，因此内部证明的图陈述可作为底层集合之间的普通成员关系来使用。
 <!--ja-->
 構成可能な定数をもつ論理式は `L` の内部で評価でき、周囲の階層へも射影できる。推移性により二つの読み方は一致するので、内部で証明したグラフの主張を底集合間の通常の所属として使える。
 <!--/-->
@@ -357,7 +357,7 @@ Slot seven is the last, and the eight indices cover every variable position used
 <!--en-->
 An ordinal is contained in its own stage: each member of an ordinal is itself an ordinal, and the cumulative construction places every member of the ordinal into the stage indexed by that ordinal.
 <!--zh-->
-序数包含于其自身的层：序数的每个成员自身是序数，而累积构造把序数的每个成员放进该序数所索引的层。
+序数包含于其自身的层：序数的每个元素自身是序数，而累积构造把序数的每个元素放进该序数所索引的层。
 <!--ja-->
 順序数はその自身の段階に含まれる。順序数の各要素はそれ自身順序数であり、累積的な構成が、順序数のすべての要素をその順序数が索引づける段階の中に置く。
 <!--/-->
@@ -385,7 +385,7 @@ Since `z ∈ α` and `α` is an ordinal, `z` is itself an ordinal. This places `
 <!--en-->
 Fix constructible sets `D₁` and `D₂`. Their internal binary union is the common domain for combining two injections; its membership principle gives both inclusions and a truncated case split.
 <!--zh-->
-固定可构造集合 `D₁` 与 `D₂`。它们的内部二元并是合并两个单射时的共同定义域；其隶属原理给出两条包含和一个截断的情形拆分。
+固定可构造集合 `D₁` 与 `D₂`。它们的内部二元并是合并两个单射时的共同定义域；其成员关系原理给出两条包含和一个截断的情形拆分。
 <!--ja-->
 構成可能集合 `D₁` と `D₂` を固定する。それらの内部の二項和集合は二つの単射をまとめる共通の定義域であり、その所属原理から二つの包含と切り詰められた場合分けが得られる。
 <!--/-->
@@ -414,7 +414,7 @@ The union is the internal union of the two sets.
 <!--en-->
 Left members are included by the left rule of the union.
 <!--zh-->
-左侧的成员由并的左规则包含进来。
+左侧的元素由并的左规则包含进来。
 <!--ja-->
 左側の要素は、和の左の規則によって含められる。
 <!--/-->
@@ -427,7 +427,7 @@ Left members are included by the left rule of the union.
 <!--en-->
 Right members are included symmetrically.
 <!--zh-->
-右侧的成员对称地包含进来。
+右侧的元素对称地包含进来。
 <!--ja-->
 右側の要素は対称的に含められる。
 <!--/-->
@@ -440,7 +440,7 @@ Right members are included symmetrically.
 <!--en-->
 If `z ∈ D₁ ∪ D₂`, then it merely belongs to the left side or the right side. The disjunction is propositionally truncated because membership retains that some presentation index names `z`, but not which index supplied it.
 <!--zh-->
-若 `z ∈ D₁ ∪ D₂`，则仅能断言它属于左侧或右侧。这个析取经过命题截断，因为隶属关系保留某个呈现索引指名 `z` 这一事实，却不保留具体索引。
+若 `z ∈ D₁ ∪ D₂`，则仅能断言它属于左侧或右侧。这个析取经过命题截断，因为成员关系保留某个呈现索引指名 `z` 这一事实，却不保留具体索引。
 <!--ja-->
 `z ∈ D₁ ∪ D₂` なら、`z` が左側または右側に属することだけが得られる。この選言は命題的に切り詰められている。所属は、ある提示添字が `z` を名指すことを保つが、具体的な添字は保たないからである。
 <!--/-->
@@ -472,7 +472,7 @@ module TagUnion (κ : S) (0∈κ : ⟨ # 0 ∈ fst κ ⟩) (1∈κ : ⟨ # 1 ∈
 <!--en-->
 Write `D = D₁ ∪ D₂`. A member of either summand belongs to `D`, and every member of `D` yields a truncated proof that it comes from one of the two summands.
 <!--zh-->
-记 `D = D₁ ∪ D₂`。任一分支的成员都属于 `D`，而 `D` 的每个成员都给出一条截断证明，说明它来自两个分支之一。
+记 `D = D₁ ∪ D₂`。任一分支的元素都属于 `D`，而 `D` 的每个元素都给出一条截断证明，说明它来自两个分支之一。
 <!--ja-->
 `D = D₁ ∪ D₂` と書く。どちらか一方の集合の要素は `D` に属し、`D` の各要素からは、二つの集合のいずれかに由来するという切り詰められた証明が得られる。
 <!--/-->
@@ -523,7 +523,7 @@ Membership in the left domain is decidable by excluded middle, and the decision 
 <!--en-->
 Excluded middle decides, for every member of the union, whether it came from the left domain.
 <!--zh-->
-排中律对并的每个成员判定其是否来自左定义域。
+排中律对并的每个成员关系判定其是否来自左定义域。
 <!--ja-->
 排中律は、和のすべての要素が左の定義域から来たかどうかを判定する。
 <!--/-->
@@ -536,7 +536,7 @@ Excluded middle decides, for every member of the union, whether it came from the
 <!--en-->
 A member outside the left domain must lie in the right domain: the union membership splits into the two sides, and the left side contradicts the assumed failure.
 <!--zh-->
-不在左定义域的成员必在右定义域：并中的隶属拆成两侧，而左侧与所设的失败矛盾。
+不在左定义域的元素必在右定义域：并中的成员关系拆成两侧，而左侧与所设的失败矛盾。
 <!--ja-->
 左の定義域に属さない要素は、右の定義域に属する。和の中の所属は二つの側に分かれ、左側は仮定された失敗と矛盾する。
 <!--/-->
@@ -605,7 +605,7 @@ In the right branch, `z ∉ D₁`, and there merely exists `v` with `(z,v) ∈ E
 <!--en-->
 The graph is written as a two-slot formula: membership in `D₁` conjoined with an existential over the first code, or the negation of that membership conjoined with an existential over the second code. Inside the existential, the injected value and the tag equation are atoms of the coding.
 <!--zh-->
-图写作二空位公式：属于 `D₁` 与对第一个码的存在量化合取，或该隶属的否定与对第二个码的存在量化合取。存在量词之内，被单射的值与标签等式都是编码的原子。
+图写作二空位公式：属于 `D₁` 与对第一个码的存在量化合取，或该成员关系的否定与对第二个码的存在量化合取。存在量词之内，被单射的值与标签等式都是编码的原子。
 <!--ja-->
 グラフは二つの枠をもつ論理式として書かれる。`D₁` への所属と最初の符号の上の存在量化の連言、あるいはその所属の否定と第二の符号の上の存在量化の連言である。存在量化子の内側では、単射された値とタグの等式が符号化のアトムである。
 <!--/-->
@@ -620,7 +620,7 @@ The graph is written as a two-slot formula: membership in `D₁` conjoined with 
 <!--en-->
 Reading the two coding atoms uses their adequacy lemmas: satisfaction of the application atom becomes a membership `Holds E z v`, and satisfaction of the tag atom becomes the equation between `y` and the tagged pair.
 <!--zh-->
-读取两个编码原子使用其充分性引理：应用原子的满足变成隶属 `Holds E z v`，标记原子的满足变成 `y` 与带标签对的等式。
+读取两个编码原子使用其充分性引理：应用原子的满足变成成员关系 `Holds E z v`，标记原子的满足变成 `y` 与带标签对的等式。
 <!--ja-->
 二つの符号化のアトムを読むには、その妥当性の補題を使う。適用のアトムの充足は所属 `Holds E z v` になり、タグのアトムの充足は、`y` とタグ付きの対との等式になる。
 <!--/-->
@@ -636,7 +636,7 @@ Reading the two coding atoms uses their adequacy lemmas: satisfaction of the app
 <!--en-->
 After transport along the two adequacy equivalences, the satisfaction witnesses become the components required by `Wit`: graph membership `Holds E z v` and the equality identifying `y` with the pair tagged by `k`.
 <!--zh-->
-沿两条充分性等价搬运后，满足见证恰好变成 `Wit` 所需的分量：图隶属 `Holds E z v`，以及把 `y` 认同为带标签 `k` 之对的等式。
+沿两条充分性等价搬运后，满足见证恰好变成 `Wit` 所需的分量：图成员关系 `Holds E z v`，以及把 `y` 认同为带标签 `k` 之对的等式。
 <!--ja-->
 二つの妥当性の同値に沿って移送すると、充足の証人は `Wit` が要求する成分、すなわちグラフ所属 `Holds E z v` と、`y` をタグ `k` の付いた対と同一視する等しさになる。
 <!--/-->
@@ -693,7 +693,7 @@ Reading a satisfaction proof of `fo` proceeds by its two disjuncts. The left yie
 <!--en-->
 The inward reading of the graph turns the host-side witness into satisfaction, case by case. In the left case the membership and the truncated entry are transported through the adequacy equations of the application and tag codings; the right case does the same after lifting the refutation of membership into the object-language negation.
 <!--zh-->
-图的向内读法逐情形把宿主侧见证转成满足。左支中，隶属与截断条目沿应用编码与标签编码的充分性等式运输；右支先把「不属于 `D₁`」的反驳提升为对象语言否定，再做同样处理。
+图的向内读法逐情形把宿主侧见证转成满足。左支中，成员关系与截断条目沿应用编码与标签编码的充分性等式运输；右支先把「不属于 `D₁`」的反驳提升为对象语言否定，再做同样处理。
 <!--ja-->
 グラフの内向きの読み出しは、ホスト側の証人を場合ごとに充足へ変える。左の場合は、所属と切り詰められた項目を、適用とタグの符号化の妥当性の等式に沿って運び、右の場合は、所属しないことの反駁を対象言語の否定へ持ち上げてから同じことをする。
 <!--/-->
@@ -767,7 +767,7 @@ The second range clause completes the data extracted from the two injection code
 <!--en-->
 The witness is constructed from the two cases for a member. If `z ∈ D₁`, its value uses the function extracted from `E₁`; otherwise it uses the function extracted from `E₂` at the resulting member of `D₂`. In either case the extraction supplies both the graph entry and the equation identifying the tagged pair with the chosen value.
 <!--zh-->
-见证按成员的两种情形构造。若 `z ∈ D₁`，取值使用从 `E₁` 提取的函数；否则，先得到 `z ∈ D₂`，再使用从 `E₂` 提取的函数。两种情形中，提取过程都同时给出图条目，以及把带标签的对认同为所选取值的等式。
+见证按元素的两种情形构造。若 `z ∈ D₁`，取值使用从 `E₁` 提取的函数；否则，先得到 `z ∈ D₂`，再使用从 `E₂` 提取的函数。两种情形中，提取过程都同时给出图条目，以及把带标签的对认同为所选取值的等式。
 <!--ja-->
 証人は要素についての二つの場合から構成する。`z ∈ D₁` なら `E₁` から取り出した関数の値を使い、そうでなければ、そこから得られる `z ∈ D₂` に対して `E₂` から取り出した関数の値を使う。どちらの場合も、取り出しによりグラフの項目と、タグ付きの対を選んだ値と同一視する等式の両方が得られる。
 <!--/-->
@@ -799,7 +799,7 @@ Uniqueness in the left case composes three equations: the entry's second compone
 <!--en-->
 The mixed cases are refuted outright: a member inside `D₁` cannot carry a witness recorded off `D₁`, and conversely. The right-right case is then handled exactly as the left, with `E₂`, the tag `1`, and the off-set function value.
 <!--zh-->
-交叉情形被直接反驳：属于 `D₁` 的成员不可能带有在 `D₁` 之外记录的见证，反之亦然。随后右右情形完全按左支处理，只是换用 `E₂`、标签 `1` 与偏离集合的函数值。
+交叉情形被直接反驳：属于 `D₁` 的元素不可能带有在 `D₁` 之外记录的见证，反之亦然。随后右右情形完全按左支处理，只是换用 `E₂`、标签 `1` 与偏离集合的函数值。
 <!--ja-->
 交差する場合はそのまま反駁される。`D₁` の中の要素が、`D₁` の外で記録された証人をもつことはできず、逆もまた然りである。右と右の場合は、`E₂` とタグ `1`、そして外れた要素での関数の値を使って、左とまったく同じように処理される。
 <!--/-->
@@ -843,7 +843,7 @@ The value lands in the internal product: the pair of the numeral `0` or `1` with
 <!--en-->
 The right case supplies the range fact from `E₂` and the numeral `1`, completing the membership of both tagged values in the product.
 <!--zh-->
-右支由 `E₂` 与数码 `1` 供给范围事实，完成两个带标签取值在乘积中的成员资格。
+右支由 `E₂` 与数码 `1` 供给范围事实，完成两个带标签取值在乘积中的成员关系事实。
 <!--ja-->
 右の場合は `E₂` と数項 `1` から範囲の事実を供給し、タグつきの値がどちらも直積の中にあることが揃う。
 <!--/-->
@@ -978,7 +978,7 @@ tag-union κ h0 h1 D₁ D₂ = rec2 squash₁
 <!--en-->
 The least-predecessor construction is stated generically. It takes an ordinal `γ`, a relation `G`, a domain `D`, and a set `P` of predecessors bounded by the stage `γ`, such that every member of `D` merely has some `G`-predecessor in `P`; the task is to choose one canonically.
 <!--zh-->
-最小前驱构造以一般形式陈述。它取序数 `γ`、关系 `G`、定义域 `D`，以及被层 `γ` 界住的前驱集 `P`，使得 `D` 的每个成员都「仅仅存在」某个 `P` 中的 `G` 前驱；任务在于典范地选取一个。
+最小前驱构造以一般形式陈述。它取序数 `γ`、关系 `G`、定义域 `D`，以及被层 `γ` 界住的前驱集 `P`，使得 `D` 的每个元素都「仅仅存在」某个 `P` 中的 `G` 前驱；任务在于典范地选取一个。
 <!--ja-->
 最小の前者の構成は、一般的な形で述べられる。順序数 `γ`、関係 `G`、定義域 `D`、そして段階 `γ` で抑えられた前者の集合 `P` を受け取り、`D` のすべての要素が `P` の中に `G` の前者を「単に」もつとする。課題は、その一つを正準に選ぶことである。
 <!--/-->
@@ -997,7 +997,7 @@ module LeastPre (γ : V ℓ) (oγ : IsOrd γ) (G D P : S)
 <!--en-->
 Membership in the domain is recorded as a type, so that the argument can carry it alongside the elements.
 <!--zh-->
-定义域的隶属被记录为一个类型，使论证能把它与元素并肩携带。
+定义域的成员关系被记录为一个类型，使论证能把它与元素并肩携带。
 <!--ja-->
 定義域への所属は型として記録され、議論が要素とともにそれを運べるようにする。
 <!--/-->
@@ -1024,7 +1024,7 @@ The graph formula is the application clause of the constant `G`: holding at a pa
 <!--en-->
 The existence hypothesis is moved to the common stage without choosing a predecessor globally. Each truncated predecessor lies in `P`, hence in `Lset γ`, and the adequacy equation turns its relation membership into satisfaction of the graph formula.
 <!--zh-->
-存在性假设被移到共同的层中，而没有全局选取前驱。每个截断地存在的前驱先属于 `P`，因而属于 `Lset γ`；充分性等式再把它的关系成员资格转成图公式的满足。
+存在性假设被移到共同的层中，而没有全局选取前驱。每个截断地存在的前驱先属于 `P`，因而属于 `Lset γ`；充分性等式再把它的关系成员关系事实转成图公式的满足。
 <!--ja-->
 存在仮定を共通の段階へ移すが、前者を大域的に選ぶことはしない。切り詰めのもとで存在する各前者は `P` に属し、したがって `Lset γ` に属する。さらに妥当性の等式が、その関係への所属をグラフ論理式の充足へ変える。
 <!--/-->
@@ -1052,7 +1052,7 @@ The original truncated existence supplies the witness that the transport consume
 <!--en-->
 The stage-order construction now selects, for every member of the domain, the least `G`-predecessor in `Lset γ`. It also supplies a definable graph and the membership readings that identify each input with its selected value.
 <!--zh-->
-层序构造现在为定义域的每个成员选取 `Lset γ` 中最小的 `G` 前驱。它还给出一个可定义图，以及把每个输入同其所选取值对应起来的成员读式。
+层序构造现在为定义域的每个元素选取 `Lset γ` 中最小的 `G` 前驱。它还给出一个可定义图，以及把每个输入同其所选取值对应起来的元素读式。
 <!--ja-->
 段階順序による構成は、定義域の各要素に対して `Lset γ` にある最小の `G` 前者を選ぶ。また、定義可能なグラフと、各入力をその選ばれた値に対応させる所属の読み出しも与える。
 <!--/-->
@@ -1103,7 +1103,7 @@ The definable map is recorded with codomain `P`, the membership of the value bei
 <!--en-->
 The graph of the least-predecessor function is an element of `L`, as the stage machinery returns it with its membership description.
 <!--zh-->
-最小前驱函数的图是 `L` 的元素，层机制连同其隶属描述一并返回。
+最小前驱函数的图是 `L` 的元素，层机制连同其成员关系描述一并返回。
 <!--ja-->
 最小の前者の関数のグラフは `L` の要素であり、段階の機構がその所属の記述とともに返す。
 <!--/-->
@@ -1193,7 +1193,7 @@ The injectivity is packaged into a coded injection from the domain into the pred
 <!--en-->
 The point construction handles an at-most-singleton domain. Given only `0 ∈ κ`, it sends every member of the singleton generated by `a` to the zeroth numeral and obtains a coded injection into `κ`.
 <!--zh-->
-点构造处理一个至多含一个元素的定义域。只需给定 `0 ∈ κ`，它便把由 `a` 生成的单点集的每个成员送到第零个数码，并得到一条到 `κ` 的编码单射。
+点构造处理一个至多含一个元素的定义域。只需给定 `0 ∈ κ`，它便把由 `a` 生成的单点集的每个元素送到第零个数码，并得到一条到 `κ` 的编码单射。
 <!--ja-->
 点の構成は、高々一要素の定義域を扱う。`0 ∈ κ` だけを仮定し、`a` から作った単集合の各要素を零番の数項へ送り、`κ` への符号化された単射を得る。
 <!--/-->
@@ -1209,7 +1209,7 @@ module Point (κ : S) (0∈κ : ⟨ # 0 ∈ fst κ ⟩) (a : S) where
 <!--en-->
 Let `Y` be the constructible singleton generated by `a`. The argument will use only its membership introduction and elimination laws.
 <!--zh-->
-令 `Y` 为由 `a` 生成的可构造单点集。论证只使用它的成员引入律与消去律。
+令 `Y` 为由 `a` 生成的可构造单点集。论证只使用它的元素引入律与消去律。
 <!--ja-->
 `Y` を `a` から作られる構成可能な単集合とする。議論で使うのは、その所属の導入則と除去則だけである。
 <!--/-->
@@ -1222,7 +1222,7 @@ Let `Y` be the constructible singleton generated by `a`. The argument will use o
 <!--en-->
 The member `a` belongs to its own singleton, by the introduction reading of the singleton construction.
 <!--zh-->
-成员 `a` 属于它自己的单点集，由单点构造的引入读式给出。
+元素 `a` 属于它自己的单点集，由单点构造的引入读式给出。
 <!--ja-->
 要素 `a` はそれ自身の単集合に属する。一元集合の構成の導入の読み出しによるものである。
 <!--/-->
@@ -1235,7 +1235,7 @@ The member `a` belongs to its own singleton, by the introduction reading of the 
 <!--en-->
 The elimination reading says the singleton contains nothing else: any member has `a` as its underlying set.
 <!--zh-->
-消去读式说明单点集不含其他：任何成员的底层集合都是 `a`。
+消去读式说明单点集不含其他：任何元素的底层集合都是 `a`。
 <!--ja-->
 消去の読み出しは、単集合がそれ以外を含まないと言う。どの要素も、基礎の集合は `a` である。
 <!--/-->
@@ -1261,7 +1261,7 @@ The graph is described by the atomic formula with two free slots that equates th
 <!--en-->
 The definable map sends the unique input to the zeroth numeral; the codomain membership is the standing fact `0∈κ`.
 <!--zh-->
-可定义映射把唯一的输入送到第零个数码；陪域隶属即既有事实 `0∈κ`。
+可定义映射把唯一的输入送到第零个数码；陪域成员关系即既有事实 `0∈κ`。
 <!--ja-->
 定義可能な写像は、ただ一つの入力を零番の数項へ送る。余域への所属は、既存の事実 `0∈κ` である。
 <!--/-->
@@ -1277,7 +1277,7 @@ The definable map sends the unique input to the zeroth numeral; the codomain mem
 <!--en-->
 The graph holds definitionally, since the atomic sentence equates the numeral with itself; uniqueness holds because both members of the singleton present the same underlying set.
 <!--zh-->
-图由定义成立，因为原子句把数码与其自身等同；唯一性成立，因为单点集的两个成员呈现同一底层集合。
+图由定义成立，因为原子句把数码与其自身等同；唯一性成立，因为单点集的两个元素呈现同一底层集合。
 <!--ja-->
 グラフは定義どおりに成立する。原子文が数項をそれ自身と等置するからである。一意性は、単集合の二つの要素が同じ基礎の集合を提示することから成立する。
 <!--/-->
@@ -1389,7 +1389,7 @@ For a least witness, the accompanying data recover a natural length, a finite as
 <!--en-->
 The finite iterates come with introduction and elimination rules, and every iterate lies in the full hull. The full hull itself is contained in `Lset lam`; these inclusions keep every set used by the counting construction inside the fixed ambient stage.
 <!--zh-->
-有限迭代带有成员引入律与消去律，并且每个迭代都包含于整个壳。整个壳又包含于 `Lset lam`；这些包含关系保证计数构造所用的集合始终位于固定的外围层中。
+有限迭代带有元素引入律与消去律，并且每个迭代都包含于整个壳。整个壳又包含于 `Lset lam`；这些包含关系保证计数构造所用的集合始终位于固定的外围层中。
 <!--ja-->
 有限反復には所属の導入則と除去則があり、各反復は包全体に含まれる。さらに包全体は `Lset lam` に含まれる。これらの包含により、計数構成で使う各集合は固定した周囲の段階内に保たれる。
 <!--/-->
@@ -1461,7 +1461,7 @@ For one closure step, fix a constructible `Z` contained in `Lset lam` and an act
 <!--en-->
 `ΦZ = Φ Z` is one closure step. Its membership description has three branches: an old member of `Z`, the empty-set fallback, or a least witness determined by a formula key and a finite parameter environment over `Z`.
 <!--zh-->
-`ΦZ = Φ Z` 是一次闭包步。其成员描述有三个分支：`Z` 的旧成员、空集后备项，或由公式键与 `Z` 上的有限参数环境确定的最小见证。
+`ΦZ = Φ Z` 是一次闭包步。其元素描述有三个分支：`Z` 的旧元素、空集后备项，或由公式键与 `Z` 上的有限参数环境确定的最小见证。
 <!--ja-->
 `ΦZ = Φ Z` は一回の閉包である。その所属の記述には三つの枝がある。`Z` の既存の要素、空集合という予備の場合、または論理式の鍵と `Z` 上の有限なパラメータ環境によって定まる最小証人である。
 <!--/-->
@@ -1474,7 +1474,7 @@ For one closure step, fix a constructible `Z` contained in `Lset lam` and an act
 <!--en-->
 The new part is separated first: `D₂` collects the members of `ΦZ` that are not members of `Z`. Separation inside `L` keeps the new part constructible.
 <!--zh-->
-先分离出新的部分：`D₂` 收集 `ΦZ` 中不属于 `Z` 的成员。`L` 内部的分离保证新部分可构造。
+先分离出新的部分：`D₂` 收集 `ΦZ` 中不属于 `Z` 的元素。`L` 内部的分离保证新部分可构造。
 <!--ja-->
 新しい部分をまず分出する。`D₂` は `ΦZ` のうち `Z` に属さない要素を集める。`L` の内部の分出により、新しい部分も構成可能である。
 <!--/-->
@@ -1488,7 +1488,7 @@ The new part is separated first: `D₂` collects the members of `ΦZ` that are n
 <!--en-->
 Its membership specification says exactly what separation computed: belonging to `D₂` is belonging to `ΦZ` together with the refutation of belonging to `Z`.
 <!--zh-->
-其隶属规格恰说出分离所计算的内容：属于 `D₂`，就是属于 `ΦZ` 并且不属于 `Z`。
+其成员关系规格恰说出分离所计算的内容：属于 `D₂`，就是属于 `ΦZ` 并且不属于 `Z`。
 <!--ja-->
 その所属の仕様は、分出が計算した内容を正確に述べる。`D₂` への所属とは、`ΦZ` への所属と `Z` への所属の否定を合わせたものである。
 <!--/-->
@@ -1502,7 +1502,7 @@ Its membership specification says exactly what separation computed: belonging to
 <!--en-->
 The introduction rule lifts the refutation of membership into the object level, so an element of `ΦZ` together with a proof that it is not in `Z` enters `D₂`.
 <!--zh-->
-引入规则把隶属的反驳提升到对象层，于是 `ΦZ` 的元素连同「它不属于 `Z`」的证明即可进入 `D₂`。
+引入规则把成员关系的反驳提升到对象层，于是 `ΦZ` 的元素连同「它不属于 `Z`」的证明即可进入 `D₂`。
 <!--ja-->
 導入規則は所属の反証を対象レベルへ持ち上げる。したがって `ΦZ` の要素と、それが `Z` に属さないことの証明が揃えば `D₂` に入れる。
 <!--/-->
@@ -1516,7 +1516,7 @@ The introduction rule lifts the refutation of membership into the object level, 
 <!--en-->
 The elimination rule unpacks membership in `D₂` through the specification, and lowers the object-level refutation back to an ordinary implication.
 <!--zh-->
-消去规则经该规格拆开 `D₂` 的隶属，并把对象层的反驳降回普通的蕴涵。
+消去规则经该规格拆开 `D₂` 的成员关系，并把对象层的反驳降回普通的蕴涵。
 <!--ja-->
 消去の規則は、仕様を通して `D₂` の所属を展開し、対象レベルの反証を通常の含意へと降ろす。
 <!--/-->
@@ -1641,7 +1641,7 @@ Introduction requires membership in `D₂` and a refutation of equality with the
 <!--en-->
 Elimination returns membership in `D₂` and the refutation, lowered from the object level.
 <!--zh-->
-消去返回 `D₂` 的隶属与那条反驳，后者已从对象层降下。
+消去返回 `D₂` 的成员关系与那条反驳，后者已从对象层降下。
 <!--ja-->
 消去は `D₂` への所属と、対象レベルから降ろされた反証を返す。
 <!--/-->
@@ -1671,7 +1671,7 @@ Two unions provide the bounds needed later. `U₁` contains `Z` and the genuinel
 <!--en-->
 The closure step is covered by the first union. Each member `z` of `ΦZ` either belongs to `Z` or does not, decided by excluded middle; in both cases `z` is constructible, because `ΦZ` is.
 <!--zh-->
-闭包步骤被第一个并覆盖。`ΦZ` 的每个成员 `z` 要么属于 `Z` 要么不属于，由排中律判定；两种情形下 `z` 都可构造，因为 `ΦZ` 可构造。
+闭包步骤被第一个并覆盖。`ΦZ` 的每个元素 `z` 要么属于 `Z` 要么不属于，由排中律判定；两种情形下 `z` 都可构造，因为 `ΦZ` 可构造。
 <!--ja-->
 閉包の段階は第一の和集合で覆われる。`ΦZ` の各要素 `z` は `Z` に属するか属さないかが排中律で決まり、いずれの場合も `ΦZ` が構成可能なので `z` も構成可能である。
 <!--/-->
@@ -1687,7 +1687,7 @@ The closure step is covered by the first union. Each member `z` of `ΦZ` either 
 <!--en-->
 The two cases enter `U₁` through its two union inclusions. A member already in `Z` uses the first inclusion; otherwise `D₂-in` first proves that it belongs to the new part, after which the second inclusion applies.
 <!--zh-->
-两种情形分别经并集的两条包含映入 `U₁`。已经属于 `Z` 的成员使用第一条包含；否则先由 `D₂-in` 证明它属于新增部分，再使用第二条包含。
+两种情形分别经并集的两条包含映入 `U₁`。已经属于 `Z` 的元素使用第一条包含；否则先由 `D₂-in` 证明它属于新增部分，再使用第二条包含。
 <!--ja-->
 二つの場合は、和集合への二つの包含によって `U₁` に入る。すでに `Z` に属する要素には第一の包含を使い、そうでなければ `D₂-in` で新しい部分への所属を示してから第二の包含を使う。
 <!--/-->
@@ -1731,7 +1731,7 @@ An element equal to the empty set enters through `D∅`; an element distinct fro
 <!--en-->
 Every member of `D∅` equals `∅`, although `D∅` itself may be empty. Since the numeral `0` belongs to `κ`, inclusion coding therefore gives `D∅ ↪ κ` inside `L`.
 <!--zh-->
-`D∅` 的每个成员都等于 `∅`，但 `D∅` 本身可能为空。由于数码 `0` 属于 `κ`，包含编码因而在 `L` 内给出 `D∅ ↪ κ`。
+`D∅` 的每个元素都等于 `∅`，但 `D∅` 本身可能为空。由于数码 `0` 属于 `κ`，包含编码因而在 `L` 内给出 `D∅ ↪ κ`。
 <!--ja-->
 `D∅` の各要素は `∅` に等しいが、`D∅` 自体は空であるかもしれない。数項 `0` が `κ` に属するので、包含の符号化から `L` の内部で `D∅ ↪ κ` が得られる。
 <!--/-->
@@ -1746,7 +1746,7 @@ Every member of `D∅` equals `∅`, although `D∅` itself may be empty. Since 
 <!--en-->
 A second union prepares the coding of witnesses: `U₂` joins the elements born by stage `ω` with the finite sequences of members of `Z`.
 <!--zh-->
-第二个并为见证的编码做准备：`U₂` 连接「诞生于层 `ω` 的元素」与「`Z` 成员的有穷序列」。
+第二个并为见证的编码做准备：`U₂` 连接「诞生于层 `ω` 的元素」与「`Z` 元素的有穷序列」。
 <!--ja-->
 第二の和集合が証人の符号化の準備をする。`U₂` は、段階 `ω` で生まれる要素と、`Z` の要素の有限列をつなぐ。
 <!--/-->
@@ -1990,7 +1990,7 @@ The relation is total on `Dw` only in the truncated sense: every `z ∈ Dw` mere
 <!--en-->
 Two of them are already excluded by the separators: `z` cannot be an old member of `Z`, nor the empty set. What remains is the witness case, read through the outward lemma of the witness formula.
 <!--zh-->
-其中两种已被分离器排除：`z` 不能是 `Z` 的旧成员，也不能是空集。剩下的就是见证情形，经见证公式的外向引理读取。
+其中两种已被分离器排除：`z` 不能是 `Z` 的旧元素，也不能是空集。剩下的就是见证情形，经见证公式的外向引理读取。
 <!--ja-->
 そのうちの二つはすでに分出によって排除されている。`z` は `Z` の古い要素でも空集合でもあり得ない。残るのは証人の場合であり、証人の論理式の外向きの補題を通して読まれる。
 <!--/-->
@@ -2006,7 +2006,7 @@ Two of them are already excluded by the separators: `z` cannot be an old member 
 <!--en-->
 The witness branch supplies an environment `e`, a key `s`, and a least witness. Its data lemma then gives a natural length `n`, a meta-level assignment `g : Fin n → ⟪Z⟫`, an equation identifying `e` with the encoded environment of `g`, and the membership `s ∈ Lset ω`.
 <!--zh-->
-见证分支给出环境 `e`、键 `s` 与一个最小见证。其数据引理随后给出自然数长度 `n`、元层赋值 `g : Fin n → ⟪Z⟫`、把 `e` 认同为 `g` 的编码环境的等式，以及成员资格 `s ∈ Lset ω`。
+见证分支给出环境 `e`、键 `s` 与一个最小见证。其数据引理随后给出自然数长度 `n`、元层赋值 `g : Fin n → ⟪Z⟫`、把 `e` 认同为 `g` 的编码环境的等式，以及成员关系事实 `s ∈ Lset ω`。
 <!--ja-->
 証人の枝は、環境 `e`、鍵 `s`、最小証人を与える。そのデータ補題から、自然数の長さ `n`、メタレベルの割り当て `g : Fin n → ⟪Z⟫`、`e` を `g` の符号化された環境と同一視する等式、そして `s ∈ Lset ω` が得られる。
 <!--/-->
@@ -2132,7 +2132,7 @@ That stage is indexed by an ordinal, which is what the counting lemma requires o
 <!--en-->
 The pool is contained in its birth stage, by the transitivity of the stages: a member of a set born at `γG` belongs to `Lset γG`.
 <!--zh-->
-池包含于其诞生层，由层的传递性得出：诞生于 `γG` 的集合的成员属于 `Lset γG`。
+池包含于其诞生层，由层的传递性得出：诞生于 `γG` 的集合的元素属于 `Lset γG`。
 <!--ja-->
 池はその誕生の段階に含まれる。段階の推移性によるものである。`γG` で生まれた集合の要素は `Lset γG` に属する。
 <!--/-->
@@ -2213,7 +2213,7 @@ Composing the two injections gives the count of the genuinely new witnesses: eve
 <!--en-->
 The new part `D₂` is included in `D∅ ∪ Dw`. Here `D∅` contains precisely the new members equal to the empty set and may itself be empty, while `Dw` contains the nonempty witness members. Their two counts are tagged into `κ × κ` and folded by `pairκ`, giving `D₂ ↪ κ`.
 <!--zh-->
-新部分 `D₂` 包含于 `D∅ ∪ Dw`。其中 `D∅` 恰含等于空集的新成员，并且自身可能为空；`Dw` 则含非空的见证成员。两部分的计数加标签后进入 `κ × κ`，再由 `pairκ` 折叠，得到 `D₂ ↪ κ`。
+新部分 `D₂` 包含于 `D∅ ∪ Dw`。其中 `D∅` 恰含等于空集的新元素，并且自身可能为空；`Dw` 则含非空的见证元素。两部分的计数加标签后进入 `κ × κ`，再由 `pairκ` 折叠，得到 `D₂ ↪ κ`。
 <!--ja-->
 新しい部分 `D₂` は `D∅ ∪ Dw` に含まれる。`D∅` は空集合に等しい新しい要素だけを含み、それ自身が空の場合もある。`Dw` は空でない証人の要素を含む。二つの数え上げにタグを付けて `κ × κ` へ入れ、`pairκ` で折りたたすと `D₂ ↪ κ` が得られる。
 <!--/-->
@@ -2227,7 +2227,7 @@ The new part `D₂` is included in `D∅ ∪ Dw`. Here `D∅` contains precisely
 <!--en-->
 Every member of `ΦZ` lies in `Z ∪ D₂`. The given graph `E` counts `Z`, while the preceding construction counts `D₂`; tagging these injections gives a map into `κ × κ`, and `pairκ` completes the injection `ΦZ ↪ κ`.
 <!--zh-->
-`ΦZ` 的每个成员都属于 `Z ∪ D₂`。给定图 `E` 计数 `Z`，前面的构造计数 `D₂`；给两条单射加标签可得到到 `κ × κ` 的映射，再由 `pairκ` 完成单射 `ΦZ ↪ κ`。
+`ΦZ` 的每个元素都属于 `Z ∪ D₂`。给定图 `E` 计数 `Z`，前面的构造计数 `D₂`；给两条单射加标签可得到到 `κ × κ` 的映射，再由 `pairκ` 完成单射 `ΦZ ↪ κ`。
 <!--ja-->
 `ΦZ` の各要素は `Z ∪ D₂` に属する。与えられたグラフ `E` が `Z` を数え、先の構成が `D₂` を数える。この二つの単射にタグを付けて `κ × κ` へ写し、`pairκ` と合成すると `ΦZ ↪ κ` が得られる。
 <!--/-->
@@ -2257,7 +2257,7 @@ Every member of `ΦZ` lies in `Z ∪ D₂`. The given graph `E` counts `Z`, whil
 <!--en-->
 Every member of every finite closure iterate lies in the ambient stage `Lset lam`: this follows from the iterates being contained in the hull, whose members all lie in the stage.
 <!--zh-->
-每个有限闭包迭代的成员都位于外围层 `Lset lam` 中：这由诸迭代包含于壳、而壳的成员都在该层中得出。
+每个有限闭包迭代的元素都位于外围层 `Lset lam` 中：这由诸迭代包含于壳、而壳的元素都在该层中得出。
 <!--ja-->
 有限閉包の各反復の要素は、すべて周囲の段階 `Lset lam` の中にある。これは、反復が包に含まれ、包の要素がすべて段階の中にあることから従う。
 <!--/-->
@@ -2384,7 +2384,7 @@ A code at a smaller stage becomes a code at the common stage: the iterate's codi
 <!--en-->
 The transport pairs the code with its membership in the larger stage, leaving the code itself untouched; only the stage witness moves.
 <!--zh-->
-该搬运把码与其在更大层中的隶属配对，码本身不动；移动的只是层见证。
+该搬运把码与其在更大层中的成员关系配对，码本身不动；移动的只是层见证。
 <!--ja-->
 この輸送は、コードをそのより大きな段階での所属と対にする。コード自体はそのままで、動くのは段階の証人だけである。
 <!--/-->
@@ -2436,7 +2436,7 @@ The iterates themselves are collected into one constructible set: `Iter` pairs e
 <!--en-->
 Each pair of a numeral and its iterate is a member, by the iterated-set introduction.
 <!--zh-->
-由迭代集合的引入规则，每对「数码与其迭代」都是成员。
+由迭代集合的引入规则，每对「数码与其迭代」都是元素。
 <!--ja-->
 反復集合の導入により、数項とその反復の各対は要素になる。
 <!--/-->
@@ -2449,7 +2449,7 @@ Each pair of a numeral and its iterate is a member, by the iterated-set introduc
 <!--en-->
 Conversely, every member is, merely, such a pair, so membership in `Iter` identifies exactly the counted iterates and nothing else.
 <!--zh-->
-反过来，每个成员都仅仅是这样的对，因此 `Iter` 中的隶属恰指认被计数的迭代，别无其他。
+反过来，每个元素都仅仅是这样的对，因此 `Iter` 中的成员关系恰指认被计数的迭代，别无其他。
 <!--ja-->
 逆に、すべての要素は、単に、そのような対である。したがって `Iter` の中の所属は、数え上げられた反復だけを指認し、それ以外は何も指認しない。
 <!--/-->
@@ -2505,7 +2505,7 @@ Reading the table body back uses the adequacy of the application atom and the re
 <!--en-->
 Conversely, a `TabWit F n` witness supplies satisfaction of `tabBody`. Stage membership is transported to membership in `Lγ`, and the iterate relation and injection code are converted back through the adequacy of application and the injection formula.
 <!--zh-->
-反过来，`TabWit F n` 见证给出 `tabBody` 的满足。层隶属被搬运为属于 `Lγ`，而迭代关系与单射码则经应用公式和单射公式的充分性反向转换。
+反过来，`TabWit F n` 见证给出 `tabBody` 的满足。层成员关系被搬运为属于 `Lγ`，而迭代关系与单射码则经应用公式和单射公式的充分性反向转换。
 <!--ja-->
 逆に、`TabWit F n` の証人から `tabBody` の充足が得られる。段階への所属を `Lγ` への所属へ移送し、反復関係と単射符号を、適用論理式と単射論理式の妥当性によって逆向きに変換する。
 <!--/-->
@@ -2521,7 +2521,7 @@ Conversely, a `TabWit F n` witness supplies satisfaction of `tabBody`. Stage mem
 <!--en-->
 The relation defined by `tabBody` is collected as a constructible subset of `Lγ × ω`. Its members are pairs `(F,n)` satisfying the table witness condition; separation may use `tabBody` even though its displayed existential is unbounded, because the available separation principle is full separation.
 <!--zh-->
-`tabBody` 所定义的关系被收集为 `Lγ × ω` 的一个可构造子集。其成员是满足表见证条件的对 `(F,n)`；尽管 `tabBody` 中显示的存在量词无界，仍可用它进行分离，因为这里采用的是完整分离。
+`tabBody` 所定义的关系被收集为 `Lγ × ω` 的一个可构造子集。其元素是满足表见证条件的对 `(F,n)`；尽管 `tabBody` 中显示的存在量词无界，仍可用它进行分离，因为这里采用的是完整分离。
 <!--ja-->
 `tabBody` が定める関係を、`Lγ × ω` の構成可能な部分集合として集める。その要素は表の証人条件を満たす対 `(F,n)` である。`tabBody` に現れる存在量化子は非有界であるが、ここで使えるのは完全な分出なので、この論理式で分出できる。
 <!--/-->
@@ -2661,7 +2661,7 @@ For every `n ∈ ω`, the ordered pair `(n,eS(n))` belongs to `Te`. Thus `Te` re
 <!--en-->
 Conversely, if `(n,F) ∈ Te`, then `n ∈ ω` and the underlying set of `F` equals that of the selected entry `eS(n)`. The membership proof of `n ∈ ω` is proposition-valued, so it does not create additional table values.
 <!--zh-->
-反过来，若 `(n,F) ∈ Te`，则 `n ∈ ω`，且 `F` 的底层集合等于所选条目 `eS(n)` 的底层集合。`n ∈ ω` 的隶属证明是命题值的，因此不会产生额外的表值。
+反过来，若 `(n,F) ∈ Te`，则 `n ∈ ω`，且 `F` 的底层集合等于所选条目 `eS(n)` 的底层集合。`n ∈ ω` 的成员关系证明是命题值的，因此不会产生额外的表值。
 <!--ja-->
 逆に、`(n,F) ∈ Te` なら `n ∈ ω` であり、`F` の底集合は選ばれた項目 `eS(n)` の底集合に等しくなる。`n ∈ ω` の所属証明は命題値なので、それによって別の表の値が生じることはない。
 <!--/-->
@@ -2705,7 +2705,7 @@ For the canonical numeral of a natural number `k`, the truncation is eliminated.
 <!--en-->
 The recorded iterate is identified first: a member of the iterate set is, merely, a pair whose numeral component and iterate component can both be read off, and the pairing equations identify the recorded iterate.
 <!--zh-->
-先确定被记录的迭代：迭代集合的成员仅仅是这样的对，其数码分量与迭代分量都可读出，而配对等式识别出被记录的迭代。
+先确定被记录的迭代：迭代集合的元素仅仅是这样的对，其数码分量与迭代分量都可读出，而配对等式识别出被记录的迭代。
 <!--ja-->
 まず、記録された反復が特定される。反復の集合の要素は、単に、数項の成分と反復の成分の両方を読み取れる対であり、対の等式が記録された反復を特定する。
 <!--/-->
@@ -2737,7 +2737,7 @@ The numeral equation forces `k'` to be `k`, and the code is transported along th
 <!--en-->
 `FinWit p z` merely records an internal numeral `n ∈ ω`, a value `v`, and a table entry `F`. Its equations say `p=(n,v)`, `Te(n)=F`, and `F(z)=v`. Thus `p`, rather than `F`, is the pair code used to count `z`.
 <!--zh-->
-`FinWit p z` 仅仅记录内部数码 `n ∈ ω`、值 `v` 与表条目 `F`。其中的等式和图隶属表示 `p=(n,v)`、`Te(n)=F` 以及 `F(z)=v`。因此，用于计数 `z` 的对码是 `p`，而不是 `F`。
+`FinWit p z` 仅仅记录内部数码 `n ∈ ω`、值 `v` 与表条目 `F`。其中的等式和图成员关系表示 `p=(n,v)`、`Te(n)=F` 以及 `F(z)=v`。因此，用于计数 `z` 的对码是 `p`，而不是 `F`。
 <!--ja-->
 `FinWit p z` は、内部の数項 `n ∈ ω`、値 `v`、表の項目 `F` を単に記録する。その等式とグラフ所属は `p=(n,v)`、`Te(n)=F`、`F(z)=v` を表す。したがって `z` を数えるための対の符号は `F` ではなく `p` である。
 <!--/-->
@@ -2781,7 +2781,7 @@ Filling the two atoms uses their adequacy lemmas, so a witness record produces t
 <!--en-->
 Reading the two atoms uses the same adequacy lemmas in the forward direction, recovering the table satisfaction and the graph membership.
 <!--zh-->
-读取两个原子沿正向使用同样的充分性引理，恢复表满足与图隶属。
+读取两个原子沿正向使用同样的充分性引理，恢复表满足与图成员关系。
 <!--ja-->
 二つのアトムを読むには、同じ妥当性の補題を順方向に使う。これで表の充足とグラフの所属が回復する。
 <!--/-->
@@ -2827,7 +2827,7 @@ Given `p=(n,v)`, `n ∈ ω`, `Te(n)=F`, and `F(z)=v`, the three witnesses `n`, `
 <!--en-->
 To read `nv₃`, first eliminate the truncated witness for `n`, then the truncated witness for `v`. For fixed `n` and `v`, `Inner n v` retains the pairing atom, membership `n ∈ ω`, and a third truncated existence of an entry `F` satisfying `inner₆`.
 <!--zh-->
-读取 `nv₃` 时，先消去 `n` 的截断见证，再消去 `v` 的截断见证。固定 `n` 与 `v` 后，`Inner n v` 保留配对原子、隶属关系 `n ∈ ω`，以及满足 `inner₆` 的条目 `F` 的第三层截断存在。
+读取 `nv₃` 时，先消去 `n` 的截断见证，再消去 `v` 的截断见证。固定 `n` 与 `v` 后，`Inner n v` 保留配对原子、成员关系 `n ∈ ω`，以及满足 `inner₆` 的条目 `F` 的第三层截断存在。
 <!--ja-->
 `nv₃` を読むには、まず `n` の切り詰められた証人を除去し、次に `v` の切り詰められた証人を除去する。`n` と `v` を固定すると、`Inner n v` は対の原子式、所属 `n ∈ ω`、そして `inner₆` を満たす項目 `F` の三つ目の切り詰められた存在を保持する。
 <!--/-->
@@ -2903,7 +2903,7 @@ The separated set is named `Gf` and is the constructible carrier of the final gr
 <!--en-->
 To introduce membership in `Gf`, take `p ∈ prodL κ`, `z ∈ hullL`, an internal natural `n ∈ ω`, a value `v`, and a table entry `F`. An equation `p = (n,v)`, together with the graph memberships saying that `Te` records `F` at `n` and `F` records `v` at `z`, supplies exactly the witness required by the defining relation.
 <!--zh-->
-要引入 `Gf` 中的隶属，取 `p ∈ prodL κ`、`z ∈ hullL`、内部自然数 `n ∈ ω`、值 `v` 与表项 `F`。等式 `p = (n,v)`，连同表示 `Te` 在 `n` 处记录 `F`、`F` 在 `z` 处记录 `v` 的两条图隶属，恰好给出定义关系所需的见证。
+要引入 `Gf` 中的成员关系，取 `p ∈ prodL κ`、`z ∈ hullL`、内部自然数 `n ∈ ω`、值 `v` 与表项 `F`。等式 `p = (n,v)`，连同表示 `Te` 在 `n` 处记录 `F`、`F` 在 `z` 处记录 `v` 的两条图成员关系，恰好给出定义关系所需的见证。
 <!--ja-->
 `Gf` への所属を導入するには、`p ∈ prodL κ`、`z ∈ hullL`、内部自然数 `n ∈ ω`、値 `v`、表の項目 `F` を取る。等式 `p = (n,v)` と、`Te` が `n` で `F` を記録し、`F` が `z` で `v` を記録するという二つのグラフ所属が、定義関係に必要な証人をちょうど与える。
 <!--/-->
@@ -2918,7 +2918,7 @@ To introduce membership in `Gf`, take `p ∈ prodL κ`, `z ∈ hullL`, an intern
 <!--en-->
 Conversely, `Gf-out` turns a graph membership into the propositionally truncated record `FinWit p z`. This record may be eliminated when proving proposition-valued consequences, such as membership in a set or equality of sets.
 <!--zh-->
-反过来，`Gf-out` 把一条图隶属化为命题截断的记录 `FinWit p z`。在证明集合隶属或集合相等等命题值结论时，可以消去这份记录的截断。
+反过来，`Gf-out` 把一条图成员关系化为命题截断的记录 `FinWit p z`。在证明集合成员关系或集合相等等命题值结论时，可以消去这份记录的截断。
 <!--ja-->
 逆に、`Gf-out` はグラフへの所属を、命題的に切り詰められた記録 `FinWit p z` に変える。この記録の切り詰めは、集合への所属や集合の等しさのような命題値の結論を示すときに消去できる。
 <!--/-->
@@ -2975,7 +2975,7 @@ Applying this argument to the truncated record returned by `Gf-out` proves `inP�
 <!--en-->
 Every hull member merely has a related code. The characterization of the iterate union places `z` in some finite stage `hullStep n`. For the selected graph `F = eS (# n)`, the exact code `e-code n` has domain `hullStep n`; its totality clause therefore gives, merely, a value `v` with `F(z)=v`.
 <!--zh-->
-每个壳成员都纯粹地存在一个与之相关的码。迭代并的刻画把 `z` 放入某个有限阶段 `hullStep n`。对选定的图 `F = eS (# n)`，精确陈述 `e-code n` 以 `hullStep n` 为定义域；因此其全域性条款纯粹地给出一个满足 `F(z)=v` 的值 `v`。
+每个壳元素都纯粹地存在一个与之相关的码。迭代并的刻画把 `z` 放入某个有限阶段 `hullStep n`。对选定的图 `F = eS (# n)`，精确陈述 `e-code n` 以 `hullStep n` 为定义域；因此其全域性条款纯粹地给出一个满足 `F(z)=v` 的值 `v`。
 <!--ja-->
 包の各要素には、それと関係する符号が単に存在する。反復の合併の特徴づけにより、`z` はある有限段階 `hullStep n` に属する。選ばれたグラフ `F = eS (# n)` について、`e-code n` はその定義域が `hullStep n` であることを正確に述べる。したがって、その全域性条件から、`F(z)=v` を満たす値 `v` が単に得られる。
 <!--/-->
@@ -2991,7 +2991,7 @@ Every hull member merely has a related code. The characterization of the iterate
 <!--en-->
 The totality clause of `e-code n` supplies the value `v` together with the graph membership `F(z)=v`. Pairing the canonical numeral `# n` with this value produces the candidate code `p = (# n,v)`.
 <!--zh-->
-`e-code n` 的全域性条款给出值 `v`，以及图隶属 `F(z)=v`。把标准数码 `# n` 与该值配对，便得到候选码 `p = (# n,v)`。
+`e-code n` 的全域性条款给出值 `v`，以及图成员关系 `F(z)=v`。把标准数码 `# n` 与该值配对，便得到候选码 `p = (# n,v)`。
 <!--ja-->
 `e-code n` の全域性条件は、値 `v` とグラフ所属 `F(z)=v` を与える。標準数項 `# n` とこの値を対にすると、候補となる符号 `p = (# n,v)` が得られる。
 <!--/-->
@@ -3007,7 +3007,7 @@ The totality clause of `e-code n` supplies the value `v` together with the graph
 <!--en-->
 The introduction assembles the whole record: the pair lies in the product by the numeral membership and the code's range clause, and the graph relates it to `z` by the table's own membership.
 <!--zh-->
-引入规则组装整个记录：该对因数码隶属与码的值域条款而属于乘积，而图凭表自身的隶属把它与 `z` 关联。
+引入规则组装整个记录：该对因数码成员关系与码的值域条款而属于乘积，而图凭表自身的成员关系把它与 `z` 关联。
 <!--ja-->
 導入は記録の全体を組み立てる。対は、数項の所属とコードの値域の条項によって積の中にあり、表自身の所属によって `z` と関係付けられる。
 <!--/-->
@@ -3022,7 +3022,7 @@ The introduction assembles the whole record: the pair lies in the product by the
 <!--en-->
 The functionality needed for least-preimage selection runs from a candidate code back to the hull: if the same `p` is related to both `z` and `z'`, then `z = z'`. This property makes the selected map from hull members to their least codes injective. Both relation witnesses are truncated records, and they can be eliminated here because equality of sets is a proposition.
 <!--zh-->
-最小原像选取所需的函数性从候选码指回壳：若同一个 `p` 同时关联 `z` 与 `z'`，则 `z = z'`。这一性质使从壳成员到其最小码的选取映射成为单射。两份关系见证都是截断记录，而此处的目标是集合相等这一命题，故可消去它们的截断。
+最小原像选取所需的函数性从候选码指回壳：若同一个 `p` 同时关联 `z` 与 `z'`，则 `z = z'`。这一性质使从壳元素到其最小码的选取映射成为单射。两份关系见证都是截断记录，而此处的目标是集合相等这一命题，故可消去它们的截断。
 <!--ja-->
 最小逆像の選択に必要な関数性は、候補となる符号から包へ向かう。同じ `p` が `z` と `z'` の両方に関係するなら、`z = z'` である。この性質により、包の要素をその最小符号へ送る選択写像は単射になる。二つの関係の証人はいずれも切り詰められた記録であるが、ここでの目標は集合の等しさという命題なので、その切り詰めを消去できる。
 <!--/-->
@@ -3038,7 +3038,7 @@ The functionality needed for least-preimage selection runs from a candidate code
 <!--en-->
 Unpacking the two records gives `n,v,F` and `n',v',F'`. Each record contains one pair equation, respectively `p=(n,v)` and `p=(n',v')`, together with three facts: its index belongs to `ω`, the table records its entry at that index, and the entry records the displayed value at the corresponding hull member.
 <!--zh-->
-展开两份记录，分别得到 `n,v,F` 与 `n',v',F'`。每份记录都含一条配对等式，即 `p=(n,v)` 或 `p=(n',v')`，并含三项事实：索引属于 `ω`、表在该索引处记录相应表项，以及该表项在对应壳成员处记录所示的值。
+展开两份记录，分别得到 `n,v,F` 与 `n',v',F'`。每份记录都含一条配对等式，即 `p=(n,v)` 或 `p=(n',v')`，并含三项事实：索引属于 `ω`、表在该索引处记录相应表项，以及该表项在对应壳元素处记录所示的值。
 <!--ja-->
 二つの記録を展開すると、`n,v,F` と `n',v',F'` がそれぞれ得られる。各記録は一つの対の等式、すなわち `p=(n,v)` または `p=(n',v')` と、三つの事実を含む。その添字が `ω` に属すること、表がその添字で対応する項目を記録すること、そしてその項目が対応する包の要素で表示された値を記録することである。
 <!--/-->
@@ -3054,7 +3054,7 @@ Unpacking the two records gives `n,v,F` and `n',v',F'`. Each record contains one
 <!--en-->
 The two pair equations first give `n=n'` and `v=v'`. The table readings then align `F` and `F'` with the same selected entry `eS n m`. The witness `e-wit n m` supplies an iterate `Zn` and an injection code for this entry. After transporting both graph memberships to that common entry, and the second value along `v'=v`, the injectivity clause yields `z=z'`.
 <!--zh-->
-两条配对等式先给出 `n=n'` 与 `v=v'`。随后，表的读法把 `F`、`F'` 与同一个选定表项 `eS n m` 对齐。见证 `e-wit n m` 为该表项给出一个迭代 `Zn` 及相应的单射码。把两条图隶属都搬运到这一共同表项，并把第二个值沿 `v'=v` 搬运后，单射性条款便给出 `z=z'`。
+两条配对等式先给出 `n=n'` 与 `v=v'`。随后，表的读法把 `F`、`F'` 与同一个选定表项 `eS n m` 对齐。见证 `e-wit n m` 为该表项给出一个迭代 `Zn` 及相应的单射码。把两条图成员关系都搬运到这一共同表项，并把第二个值沿 `v'=v` 搬运后，单射性条款便给出 `z=z'`。
 <!--ja-->
 二つの対の等式から、まず `n=n'` と `v=v'` が得られる。次に、表の読みが `F` と `F'` を同じ選択項目 `eS n m` にそろえる。証人 `e-wit n m` は、この項目について、ある反復 `Zn` とその単射符号を与える。二つのグラフ所属をこの共通の項目へ移し、さらに第二の値を `v'=v` に沿って移すと、単射性条件から `z=z'` が従う。
 <!--/-->
@@ -3086,7 +3086,7 @@ Injectivity of the ordered pair splits the identification into the numeral and t
 <!--en-->
 The two pairs, numeral together with ω-membership, are equal because ω-membership is propositional and the numeral equation is an equality of underlying sets.
 <!--zh-->
-两对「数码连同 `ω` 隶属」相等，因为 `ω` 隶属是命题，而数码等式是底层集合的等式。
+两对「数码连同 `ω` 成员关系」相等，因为 `ω` 成员关系是命题，而数码等式是底层集合的等式。
 <!--ja-->
 数項と `ω` への所属の二つの対は等しくなる。`ω` への所属が命題であり、数項の等式が底の集合の等式だからである。
 <!--/-->
@@ -3099,7 +3099,7 @@ The two pairs, numeral together with ω-membership, are equal because ω-members
 <!--en-->
 Transporting the table reading for `F'` along the equality of the two internal-natural indices identifies `F'` with the selected entry `eS n m`. Together with the corresponding reading for `F`, this puts both graph memberships in the same injection graph.
 <!--zh-->
-把 `F'` 的表读法沿两个内部自然数索引的相等搬运，便把 `F'` 与选定表项 `eS n m` 同一视。再结合 `F` 的相应读法，两条图隶属就落在同一个单射图中。
+把 `F'` 的表读法沿两个内部自然数索引的相等搬运，便把 `F'` 与选定表项 `eS n m` 同一视。再结合 `F` 的相应读法，两条图成员关系就落在同一个单射图中。
 <!--ja-->
 `F'` に対する表の読みを二つの内部自然数の添字の等しさに沿って移すと、`F'` は選択項目 `eS n m` と同一視される。`F` に対する対応する読みと合わせると、二つのグラフ所属は同じ単射グラフの中に置かれる。
 <!--/-->
@@ -3138,7 +3138,7 @@ That stage is an ordinal, as every stage is.
 <!--en-->
 The set `prodL κ` belongs to `Lset γf` by the defining property of its stage. Since `Lset γf` is transitive, every member of `prodL κ` also belongs to `Lset γf`; hence `prodL κ ⊆ Lset γf`.
 <!--zh-->
-由其阶段的定义性质，集合 `prodL κ` 属于 `Lset γf`。由于 `Lset γf` 是传递集，`prodL κ` 的每个成员也都属于 `Lset γf`；故 `prodL κ ⊆ Lset γf`。
+由其阶段的定义性质，集合 `prodL κ` 属于 `Lset γf`。由于 `Lset γf` 是传递集，`prodL κ` 的每个元素也都属于 `Lset γf`；故 `prodL κ ⊆ Lset γf`。
 <!--ja-->
 段階の定義的性質により、集合 `prodL κ` は `Lset γf` に属する。`Lset γf` は推移的なので、`prodL κ` の各要素も `Lset γf` に属する。したがって `prodL κ ⊆ Lset γf` である。
 <!--/-->
@@ -3152,7 +3152,7 @@ The set `prodL κ` belongs to `Lset γf` by the defining property of its stage. 
 <!--en-->
 For each `z ∈ hullL`, choose the stage-order-least `p ∈ prodL κ` with `Gf(p,z)`. The three required facts are exactly those proved above: every related `p` lies in `prodL κ`, this carrier is contained in `Lset γf`, and every hull member merely has a related `p`. Since `funct-fin` says that one `p` cannot be related to two different hull members, the resulting least-preimage map is an internal coded injection `hullL ↪ prodL κ`.
 <!--zh-->
-对每个 `z ∈ hullL`，选取满足 `Gf(p,z)` 的阶段序最小元 `p ∈ prodL κ`。所需的三项事实恰为上文所得：每个相关的 `p` 都属于 `prodL κ`，该载体包含于 `Lset γf`，且每个壳成员都纯粹地存在一个相关的 `p`。由于 `funct-fin` 说明同一个 `p` 不会关联两个不同的壳成员，所得最小原像映射便是内部编码单射 `hullL ↪ prodL κ`。
+对每个 `z ∈ hullL`，选取满足 `Gf(p,z)` 的阶段序最小元 `p ∈ prodL κ`。所需的三项事实恰为上文所得：每个相关的 `p` 都属于 `prodL κ`，该载体包含于 `Lset γf`，且每个壳元素都纯粹地存在一个相关的 `p`。由于 `funct-fin` 说明同一个 `p` 不会关联两个不同的壳元素，所得最小原像映射便是内部编码单射 `hullL ↪ prodL κ`。
 <!--ja-->
 各 `z ∈ hullL` に対し、`Gf(p,z)` を満たす `p ∈ prodL κ` のうち、段階順序で最小のものを選ぶ。必要な三つの事実は、上で示したものである。関係する各 `p` は `prodL κ` に属し、この台は `Lset γf` に含まれ、各包の要素には関係する `p` が単に存在する。`funct-fin` により、一つの `p` が異なる二つの包の要素に関係することはないので、得られる最小逆像写像は内部で符号化された単射 `hullL ↪ prodL κ` になる。
 <!--/-->
@@ -3164,7 +3164,7 @@ For each `z ∈ hullL`, choose the stage-order-least `p ∈ prodL κ` with `Gf(p
 <!--en-->
 The least-preimage construction gives a coded injection from the hull into `prodL κ`, and the square law gives a coded injection from `prodL κ` into `κ`. Their composition proves the propositionally truncated statement `InjL hullL κ`. This is an internal coded injection; it asserts neither surjectivity nor equality of cardinals, and it makes no claim about a collapse image. Thus the constructible hull has distinct internal `κ`-codes for all of its members.
 <!--zh-->
-最小原像构造给出从壳到 `prodL κ` 的编码单射，平方法则给出从 `prodL κ` 到 `κ` 的编码单射。二者复合便证明命题截断的陈述 `InjL hullL κ`。这是内部编码单射；它既不断言满射或基数相等，也不涉及任何塌缩像。因此，构造壳的所有成员在内部都有彼此不同的 `κ`-码。
+最小原像构造给出从壳到 `prodL κ` 的编码单射，平方法则给出从 `prodL κ` 到 `κ` 的编码单射。二者复合便证明命题截断的陈述 `InjL hullL κ`。这是内部编码单射；它既不断言满射或基数相等，也不涉及任何塌缩像。因此，构造壳的所有元素在内部都有彼此不同的 `κ`-码。
 <!--ja-->
 最小逆像の構成は包から `prodL κ` への符号化された単射を与え、平方則は `prodL κ` から `κ` への符号化された単射を与える。両者を合成すると、命題的に切り詰められた主張 `InjL hullL κ` が得られる。これは内部で符号化された単射であり、全射も基数の等しさも主張せず、崩壊像についても何も述べない。したがって、構成可能包のすべての要素には、内部で互いに異なる `κ` の符号がある。
 <!--/-->

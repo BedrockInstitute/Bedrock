@@ -28,7 +28,7 @@ module L.GCH.AdequateStages {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 open import FOL.Syntax using ( ⊤̇ )
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Model {ℓ} using ( union-family-in; union-family-out )
@@ -50,7 +50,7 @@ open import L.Coding.SatisfactionGraphSet {ℓ} lem using ( module SatGraph )
 The internal descriptions used by condensation require four witness sets to be present together. This chapter defines when an ordinal index is adequate, constructs such an index `γ` above any given ordinal, and then constructs an index `λ` whose members are locally covered by smaller adequate indices. The corresponding constructible stages are `Lset γ` and `Lset λ`. Here adequate is a term of this book for a four-part closure condition tailored to the GCH argument, not the classical notion of an admissible ordinal.
 <!--zh-->
 
-凝聚所用的内部描述要求四个见证集合同时出现。本章定义序数指标何时充分，在任意给定序数之上构造这样的指标 `γ`，再构造指标 `λ`，使它的每个成员都在某个更小的充分指标中得到局部覆盖。相应的可构造层分别是 `Lset γ` 与 `Lset λ`。充分层是本书为 GCH 论证所需四项闭合条件所定的术语，并非通常所谓容许序数。
+凝聚所用的内部描述要求四个见证集合同时出现。本章定义序数指标何时充分，在任意给定序数之上构造这样的指标 `γ`，再构造指标 `λ`，使它的每个元素都在某个更小的充分指标中得到局部覆盖。相应的可构造层分别是 `Lset γ` 与 `Lset λ`。充分层是本书为 GCH 论证所需四项闭合条件所定的术语，并非通常所谓容许序数。
 <!--ja-->
 
 凝縮で用いる内部記述には、四つの証人集合が同時に存在する必要がある。この章では、順序数添字が十分であるための条件を定め、任意の順序数より上にその条件を満たす添字 `γ` を構成する。さらに、各要素がより小さい十分な添字によって局所的に覆われる添字 `λ` を構成する。対応する構成可能段階は `Lset γ` と `Lset λ` である。十分な段階は、GCH の議論に合わせた四項目の閉包条件を表す本書固有の用語であり、通常の admissible 順序数ではない。
@@ -77,7 +77,7 @@ The construction takes place in the ambient cumulative hierarchy `V ℓ`. Its ob
 <!--en-->
 To place a constructible witness in a later stage, first take its birth-stage index, then bound that ordinal index, and finally use monotonicity of `Lset`. Separate ordinal facts ensure that members of an ordinal, their successors, and the common bounds used along the way are still ordinals. Thus the bounding argument acts on indices, while its conclusion places witness sets inside a stage.
 <!--zh-->
-要把一个可构造见证放入更后的层，先取它的诞生层索引，再约束这个序数指标，最后使用 `Lset` 的单调性。另一些序数事实保证序数的成员、这些成员的后继以及途中使用的公共界仍是序数。因此，取界论证作用于指标，而其结论则把见证集合放进一层之内。
+要把一个可构造见证放入更后的层，先取它的诞生层索引，再约束这个序数指标，最后使用 `Lset` 的单调性。另一些序数事实保证序数的元素、这些元素的后继以及途中使用的公共界仍是序数。因此，取界论证作用于指标，而其结论则把见证集合放进一层之内。
 <!--ja-->
 構成可能な証人を後の段階に入れるには、まずその誕生段階の添字を取り、その順序数添字を上から抑え、最後に `Lset` の単調性を使う。別の順序数に関する事実により、順序数の要素、その後続、そして途中で使う共通上界も順序数であることが保証される。したがって上界の議論が扱うのは添字であり、その結論によって証人集合が一つの段階に入る。
 <!--/-->
@@ -93,7 +93,7 @@ For a fixed ordinal index `c`, the later hierarchy description needs four constr
 <!--en-->
 Membership assertions and the witness conditions built from them are propositions. This matters when an element of a union yields only propositionally truncated information about which member of the family contains it: such information may be eliminated into a proposition, without choosing and retaining a particular index.
 <!--zh-->
-隶属断言以及由它们组成的见证条件都是命题。这一点在处理并集元素时至关重要：从并集隶属只能命题截断地知道该元素落在哪个族成员中；这些信息可以消去到一个命题中，却不能借此选定并保留某个特定指标。
+成员关系断言以及由它们组成的见证条件都是命题。这一点在处理并集元素时至关重要：从并集成员关系只能命题截断地知道该元素落在哪个族元素中；这些信息可以消去到一个命题中，却不能借此选定并保留某个特定指标。
 <!--ja-->
 所属の主張と、それらから組み立てる証人条件はいずれも命題である。このことは、合併の要素から、それを含む族の要素について命題的に切り詰められた情報しか得られない場面で重要である。その情報は命題へ消去できるが、特定の添字を選んで保持することはできない。
 <!--/-->
@@ -105,7 +105,7 @@ open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; sett )
 <!--en-->
 Every set in the cumulative hierarchy has a small presentation: a small index type maps onto its elements. This presentation permits the next bounding construction to range over all members of an ordinal. In the other direction, membership in a family union exposes a family index only under propositional truncation, a distinction used essentially in the countable-chain arguments below.
 <!--zh-->
-累积层级中的每个集合都有一个小呈现：一个小索引类型映到它的全部元素。借助这个呈现，下一步取界可以遍历一个序数的所有成员。反过来，从属于集合族之并只能在命题截断下得到族的索引；这一差别是下文可数链论证的关键。
+累积层级中的每个集合都有一个小呈现：一个小索引类型映到它的全部元素。借助这个呈现，下一步取界可以遍历一个序数的所有元素。反过来，从属于集合族之并只能在命题截断下得到族的索引；这一差别是下文可数链论证的关键。
 <!--ja-->
 累積階層の各集合には小さな提示があり、小さな添字型からそのすべての要素への写像が与えられる。この提示により、次の上界構成は順序数の全要素にわたって動ける。逆に、族の合併への所属から族の添字が得られるのは命題的切り詰めの中だけである。この違いが、以下の可算鎖の議論で本質的に使われる。
 <!--/-->
@@ -121,13 +121,13 @@ open InfinitySet {ℓ} using ( sucV; ω )
 <!--en-->
 We read ambient membership `x ∈ y` through its proposition of witnesses `⟨ x ∈ y ⟩`. This is membership in `V ℓ`; it should not be confused with membership in the constructible carrier introduced next.
 <!--zh-->
-我们通过见证命题 `⟨ x ∈ y ⟩` 读取外围隶属 `x ∈ y`。这是 `V ℓ` 中的隶属，不应与下一步引入的可构造载体内部隶属混同。
+我们通过见证命题 `⟨ x ∈ y ⟩` 读取外围成员关系 `x ∈ y`。这是 `V ℓ` 中的成员关系，不应与下一步引入的可构造载体内部成员关系混同。
 <!--ja-->
 周囲の所属 `x ∈ y` を、その証人の命題 `⟨ x ∈ y ⟩` として読む。これは `V ℓ` における所属であり、次に導入する構成可能な台の内部の所属とは区別しなければならない。
 <!--/-->
 
 ```agda
-open hPropStructure 𝒮ᵥ
+open hPropView 𝒮ᵥ
 ```
 
 <!--en-->
@@ -139,7 +139,7 @@ An element of the constructible carrier `CS.S` packages an ambient set together 
 <!--/-->
 
 ```agda
-module CS = hPropStructure 𝒮ʟ using (S)
+module CS = hPropView 𝒮ʟ using (S)
 ```
 
 <!--en-->
@@ -265,7 +265,7 @@ Witnesses K c = (oc : IsOrd c)
 <!--en-->
 The fourth membership completes the witness predicate: the environment tower belongs to the same container.
 <!--zh-->
-第四个隶属补全见证谓词：环境塔也属于同一容器。
+第四个成员关系补全见证谓词：环境塔也属于同一容器。
 <!--ja-->
 四つ目の所属が証人の述語を完成させる。環境の塔も同じ容器の中にある。
 <!--/-->
@@ -277,7 +277,7 @@ The fourth membership completes the witness predicate: the environment tower bel
 <!--en-->
 The witness predicate is a proposition. For each possible proof that `c` is an ordinal, its conclusion is a product of four membership propositions; a dependent function whose values are propositions is again a proposition. This propositionhood later permits elimination from a propositionally truncated chain index directly into `Witnesses`, without selecting that index as data.
 <!--zh-->
-见证谓词是命题。对 `c` 为序数的每份可能证明，其结论都是四个隶属命题的积；取值均为命题的依赖函数仍是命题。这一命题性使后文能够把命题截断的链索引直接消去到 `Witnesses`，而不把该索引选作数据。
+见证谓词是命题。对 `c` 为序数的每份可能证明，其结论都是四个成员关系命题的积；取值均为命题的依赖函数仍是命题。这一命题性使后文能够把命题截断的链索引直接消去到 `Witnesses`，而不把该索引选作数据。
 <!--ja-->
 証人述語は命題である。`c` が順序数であることの各証明に対し、その結論は四つの所属命題の積である。また、値がすべて命題である依存関数も命題である。この命題性により、後では命題的に切り詰められた鎖の添字から `Witnesses` へ直接消去でき、その添字をデータとして選ぶ必要がない。
 <!--/-->
@@ -309,7 +309,7 @@ Adequate γ =
 <!--en-->
 The last clause is where the two levels of the construction meet. Its argument `c ∈ γ` is a membership fact about ordinal indices, while its conclusion places the four sets associated with `c` inside the constructible stage `Lset γ`.
 <!--zh-->
-最后一条正是两种层次相接之处。前提 `c ∈ γ` 是序数指标之间的隶属事实，结论则把与 `c` 相关的四个集合放进可构造层 `Lset γ`。
+最后一条正是两种层次相接之处。前提 `c ∈ γ` 是序数指标之间的成员关系事实，结论则把与 `c` 相关的四个集合放进可构造层 `Lset γ`。
 <!--ja-->
 最後の条項で、この構成の二つの層面が結びつく。前提 `c ∈ γ` は順序数添字どうしの所属であり、結論は `c` に結びつく四つの集合を構成可能段階 `Lset γ` に入れる。
 <!--/-->
@@ -321,7 +321,7 @@ The last clause is where the two levels of the construction meet. Its argument `
 <!--en-->
 The four fields are named for the arguments ahead: ordinalness, successor closure, membership of the infinite ordinal, and the witness clause.
 <!--zh-->
-四个字段为后文论证命名：序数性、后继封闭、无穷序数的隶属，以及见证子句。
+四个字段为后文论证命名：序数性、后继封闭、无穷序数的成员关系，以及见证子句。
 <!--ja-->
 四つの欄が、これからの議論のために名付けられる。順序数性・後続の閉性・無限順序数の所属・そして証人の節である。
 <!--/-->
@@ -354,7 +354,7 @@ module Adequate (γ : V ℓ) (ad : Adequate γ) where
 <!--en-->
 To take bounds over all members of a set `α`, use its small presentation `⟪ α ⟫`. The map `ι α` sends each presentation index to the ambient set it names. At this point `α` need not be described by the notation itself as an ordinal; ordinality enters when the construction proves that each named member is an ordinal.
 <!--zh-->
-为了对集合 `α` 的全体成员取界，使用它的小呈现 `⟪ α ⟫`。映射 `ι α` 把每个呈现索引送到它所指名的外围集合。此处这套记号本身并不要求 `α` 是序数；序数性将在构造证明每个被指名成员都是序数时进入。
+为了对集合 `α` 的全体元素取界，使用它的小呈现 `⟪ α ⟫`。映射 `ι α` 把每个呈现索引送到它所指名的外围集合。此处这套记号本身并不要求 `α` 是序数；序数性将在构造证明每个被指名元素都是序数时进入。
 <!--ja-->
 集合 `α` のすべての要素にわたって上界を取るため、その小さな提示 `⟪ α ⟫` を使う。写像 `ι α` は、各提示添字を、それが名指す周囲の集合へ送る。この記法自体は、この時点で `α` を順序数とは仮定しない。順序数性は、名指された各要素が順序数であることを構成が示す段階で用いられる。
 <!--/-->
@@ -368,7 +368,7 @@ private
 <!--en-->
 Every presented index names a member of the ordinal, through the bridge between the small and ambient membership relations.
 <!--zh-->
-每个被呈现索引经由小隶属与外围隶属之间的桥，指名该序数的一个成员。
+每个被呈现索引经由小成员关系与外围成员关系之间的桥，指名该序数的一个元素。
 <!--ja-->
 提示された索引はどれも、小さな所属と周囲の所属の橋を通して、順序数の一つの要素を名指す。
 <!--/-->
@@ -381,7 +381,7 @@ Every presented index names a member of the ordinal, through the bridge between 
 <!--en-->
 The transitivity of an ordinal is packaged once: two chained memberships inside the ordinal collapse into a single membership in it.
 <!--zh-->
-序数的传递性被打包一次：序数内两条链式隶属坍缩为对该序数的一次隶属。
+序数的传递性被打包一次：序数内两条链式成员关系坍缩为对该序数的一次成员关系。
 <!--ja-->
 順序数の推移性は一度だけまとめられる。順序数の内側でつらなった二つの所属は、その順序数への一つの所属になる。
 <!--/-->
@@ -394,7 +394,7 @@ The transitivity of an ordinal is packaged once: two chained memberships inside 
 <!--en-->
 Starting from an ordinal index `α`, one bounding step will construct a larger ordinal index `β`. The step pays all obligations generated by members of `α`: their successors and the birth-stage indices of their four witness sets. It does not yet claim that `β` is adequate, because it has not paid the corresponding obligations for new members of `β`.
 <!--zh-->
-从序数指标 `α` 出发，一步取界将构造一个更大的序数指标 `β`。这一步履行由 `α` 的成员产生的全部义务：它们的后继，以及它们四个见证集合的诞生层索引。此时尚不能断言 `β` 已经充分，因为对 `β` 中新增成员的相应义务还没有履行。
+从序数指标 `α` 出发，一步取界将构造一个更大的序数指标 `β`。这一步履行由 `α` 的元素产生的全部义务：它们的后继，以及它们四个见证集合的诞生层索引。此时尚不能断言 `β` 已经充分，因为对 `β` 中新增元素的相应义务还没有履行。
 <!--ja-->
 順序数添字 `α` から出発し、一回の上界構成で、より大きな順序数添字 `β` を作る。この一回で、`α` の要素から生じるすべての要請、すなわちそれらの後続と、四つの証人集合の誕生段階の添字を満たす。しかし、`β` に新たに加わった要素について同じ要請をまだ満たしていないので、この時点で `β` が十分であるとは主張しない。
 <!--/-->
@@ -410,7 +410,7 @@ module Bound1 (α : V ℓ) (oα : IsOrd α) where
 <!--en-->
 Every packaged constructible set `s : CS.S` has a birth-stage index `stage (fst s) (snd s)`. The auxiliary expression records this operation in the context of a presented member of `α`; the resulting index depends on the witness set `s`, while the surrounding arguments keep track of the member for which that witness was built.
 <!--zh-->
-每个打包后的可构造集合 `s : CS.S` 都有诞生层索引 `stage (fst s) (snd s)`。这个辅助表达式在 `α` 的一个被呈现成员的语境中记录该运算；所得指标取决于见证集合 `s`，而外围参数则记录这个见证是为哪个成员构造的。
+每个打包后的可构造集合 `s : CS.S` 都有诞生层索引 `stage (fst s) (snd s)`。这个辅助表达式在 `α` 的一个被呈现元素的语境中记录该运算；所得指标取决于见证集合 `s`，而外围参数则记录这个见证是为哪个元素构造的。
 <!--ja-->
 まとめられた各構成可能集合 `s : CS.S` には、誕生段階の添字 `stage (fst s) (snd s)` がある。この補助式は、`α` の提示された一要素という文脈の中で、この操作を記録する。得られる添字は証人集合 `s` に依存し、周囲の引数は、その証人がどの要素について作られたかを記録する。
 <!--/-->
@@ -424,7 +424,7 @@ Every packaged constructible set `s : CS.S` has a birth-stage index `stage (fst 
 <!--en-->
 Every presented member of `α` is an ordinal, since members of ordinals are ordinals.
 <!--zh-->
-`α` 的每个被呈现成员都是序数，因为序数的成员是序数。
+`α` 的每个被呈现元素都是序数，因为序数的元素是序数。
 <!--ja-->
 `α` の提示されたすべての要素は順序数である。順序数の要素は順序数だからである。
 <!--/-->
@@ -463,7 +463,7 @@ The birth-stage index `st f m` is an ordinal. This follows from the general theo
 <!--en-->
 Five strict common bounds are taken. The first four bound the birth-stage indices of the hierarchy table, code set, satisfaction graph, and environment tower for every presented member of `α`. The fifth bounds the ordinal successors `sucV (ι α m)` themselves. These are bounds among ordinal indices; the fifth family is not a family of birth stages.
 <!--zh-->
-这里取五个严格公共界。前四个分别约束 `α` 的每个被呈现成员所对应的层级表、码集、满足图与环境塔的诞生层索引；第五个直接约束各序数后继 `sucV (ι α m)`。这些都是序数指标之间的界；第五族并不是一族诞生层。
+这里取五个严格公共界。前四个分别约束 `α` 的每个被呈现元素所对应的层级表、码集、满足图与环境塔的诞生层索引；第五个直接约束各序数后继 `sucV (ι α m)`。这些都是序数指标之间的界；第五族并不是一族诞生层。
 <!--ja-->
 ここで五つの厳密な共通上界を取る。最初の四つは、`α` の提示された各要素について、階層表、符号集合、充足グラフ、環境の塔の誕生段階の添字をそれぞれ上から抑える。五つ目は、順序数の後続 `sucV (ι α m)` 自身を上から抑える。これらは順序数添字の間の上界であり、五つ目の族は誕生段階の族ではない。
 <!--/-->
@@ -479,7 +479,7 @@ Five strict common bounds are taken. The first four bound the birth-stage indice
 <!--en-->
 A sixth strict bound contains both the starting index `α` and `ω`. Binary bounds then combine the six obligations: `b7` joins the first two witness bounds, `b8` joins the other two, `b9` joins the successor bound with the bound for `α` and `ω`, and `b10` joins the four witness bounds. No least bound is asserted; these operations merely provide strict common bounds with the required membership proofs.
 <!--zh-->
-第六个严格界同时包含起始指标 `α` 与 `ω`。随后用二元界合并六项义务：`b7` 合并前两个见证界，`b8` 合并另外两个见证界，`b9` 合并后继界与 `α`、`ω` 的公共界，`b10` 则合并四个见证界。这里不声称所得界最小；这些运算只给出严格公共界及所需的隶属证明。
+第六个严格界同时包含起始指标 `α` 与 `ω`。随后用二元界合并六项义务：`b7` 合并前两个见证界，`b8` 合并另外两个见证界，`b9` 合并后继界与 `α`、`ω` 的公共界，`b10` 则合并四个见证界。这里不声称所得界最小；这些运算只给出严格公共界及所需的成员关系证明。
 <!--ja-->
 六つ目の厳密な上界は、出発点の添字 `α` と `ω` の両方を含む。次に二項上界で六つの要請をまとめる。`b7` は最初の二つの証人上界を、`b8` は残る二つを、`b9` は後続の上界と `α` および `ω` の上界を、`b10` は四つの証人上界をそれぞれまとめる。最小の上界であるとは主張しない。これらの操作が与えるのは、必要な所属証明を伴う厳密な共通上界である。
 <!--/-->
@@ -549,7 +549,7 @@ The two partial bounds feeding the last combination lie below the final bound.
 <!--en-->
 Because `β` is transitive, strict membership can be propagated down the bound tree. From `b9 ∈ β` one obtains both the successor bound `b5 ∈ β` and the joint bound `b6 ∈ β` for `α` and `ω`; from `b10 ∈ β` one first obtains `b7 ∈ β`.
 <!--zh-->
-因为 `β` 具有传递性，严格隶属可以沿取界树向下传播。从 `b9 ∈ β` 可分别得到后继界 `b5 ∈ β`，以及 `α` 与 `ω` 的公共界 `b6 ∈ β`；从 `b10 ∈ β` 则先得到 `b7 ∈ β`。
+因为 `β` 具有传递性，严格成员关系可以沿取界树向下传播。从 `b9 ∈ β` 可分别得到后继界 `b5 ∈ β`，以及 `α` 与 `ω` 的公共界 `b6 ∈ β`；从 `b10 ∈ β` 则先得到 `b7 ∈ β`。
 <!--ja-->
 `β` は推移的なので、厳密な所属を上界の木に沿って下へ伝えられる。`b9 ∈ β` から、後続の上界 `b5 ∈ β` と、`α` および `ω` の共通上界 `b6 ∈ β` が得られる。また `b10 ∈ β` から、まず `b7 ∈ β` が得られる。
 <!--/-->
@@ -597,7 +597,7 @@ The second and third witness bounds, `b2` and `b3`, are obtained from the two br
 <!--en-->
 The last descent through the witness branch gives `b4 ∈ β`. At this point each of the four birth-stage bounds has been related to the common ordinal index `β`.
 <!--zh-->
-沿见证分支的最后一次下降给出 `b4 ∈ β`。至此，四个诞生层之界都已与公共序数指标 `β` 建立严格隶属关系。
+沿见证分支的最后一次下降给出 `b4 ∈ β`。至此，四个诞生层之界都已与公共序数指标 `β` 建立严格成员关系。
 <!--ja-->
 証人側の枝を最後に一段下ると `b4 ∈ β` が得られる。これで、四つの誕生段階の上界すべてが、共通の順序数添字 `β` に厳密に属することが分かった。
 <!--/-->
@@ -635,7 +635,7 @@ The same branch preserves `ω`: its membership in `b6`, followed by `b6 ∈ β`,
 <!--en-->
 If `x ∈ α`, the presentation fibre supplies an index `m` with `ι α m ≡ x`. The fifth common bound contains `sucV (ι α m)`, and its membership in `β` follows through `b5 ∈ β`; substitution along the fibre equality then yields `sucV x ∈ β`. Thus this step proves successor closure only for members of `α`, as required of one bounding step.
 <!--zh-->
-若 `x ∈ α`，呈现纤维便给出索引 `m` 及等式 `ι α m ≡ x`。第五个公共界包含 `sucV (ι α m)`，再经 `b5 ∈ β` 得到它属于 `β`；最后沿纤维等式作替换，便有 `sucV x ∈ β`。因此，这一步只对 `α` 的成员证明后继闭合，恰好符合一步取界的任务。
+若 `x ∈ α`，呈现纤维便给出索引 `m` 及等式 `ι α m ≡ x`。第五个公共界包含 `sucV (ι α m)`，再经 `b5 ∈ β` 得到它属于 `β`；最后沿纤维等式作替换，便有 `sucV x ∈ β`。因此，这一步只对 `α` 的成员关系证明后继闭合，恰好符合一步取界的任务。
 <!--ja-->
 `x ∈ α` ならば、提示のファイバーから、`ι α m ≡ x` を満たす添字 `m` が得られる。五つ目の共通上界は `sucV (ι α m)` を含み、`b5 ∈ β` を経て、それが `β` に属することが分かる。最後にファイバーの等式に沿って置換し、`sucV x ∈ β` を得る。したがって、この一回の構成が示す後続閉包は `α` の要素に対するものだけであり、一回の上界構成に必要な結論と正確に一致する。
 <!--/-->
@@ -651,7 +651,7 @@ If `x ∈ α`, the presentation fibre supplies an index `m` with `ι α m ≡ x`
 <!--en-->
 The fibre is recovered from the ambient membership proof by `∈-asFiber`. Here the conclusion is an actual dependent pair, rather than merely a propositionally truncated existence: the small presentation uses an embedding, so the fibre identifying the presentation index of `x` is proposition-valued.
 <!--zh-->
-`∈-asFiber` 从外围隶属证明恢复这个纤维。这里的结论是一个实际的依值对，而不只是命题截断的存在：小呈现使用嵌入，所以识别 `x` 的呈现索引之纤维取值于命题。
+`∈-asFiber` 从外围成员关系证明恢复这个纤维。这里的结论是一个实际的依值对，而不只是命题截断的存在：小呈现使用嵌入，所以识别 `x` 的呈现索引之纤维取值于命题。
 <!--ja-->
 `∈-asFiber` は、周囲の所属の証明からこのファイバーを復元する。ここで得られるのは実際の依存対であり、命題的に切り詰められた存在だけではない。小さな提示は埋め込みを使うため、`x` の提示添字を同定するファイバーは命題値だからである。
 <!--/-->
@@ -675,7 +675,7 @@ The common ordinal bound `β` has already been arranged to dominate the birth-st
 <!--en-->
 Fix one of the four witness constructions `f` and an index `m` presenting a member of `α`. Its value is born in `Lset (st f m)`; the recorded bound `b.fst` strictly contains this birth index, and the final bound `β` strictly contains `b.fst`. The landing lemma packages the resulting membership in `Lset β`.
 <!--zh-->
-固定四类见证构造之一 `f`，并取一个呈现 `α` 的成员的索引 `m`。相应见证出生于 `Lset (st f m)`；记录的界 `b.fst` 严格包含这个出生指标，而最终界 `β` 又严格包含 `b.fst`。安放引理把由此得到的 `Lset β` 中的隶属关系封装起来。
+固定四类见证构造之一 `f`，并取一个呈现 `α` 的元素的索引 `m`。相应见证出生于 `Lset (st f m)`；记录的界 `b.fst` 严格包含这个出生指标，而最终界 `β` 又严格包含 `b.fst`。安放引理把由此得到的 `Lset β` 中的成员关系封装起来。
 <!--ja-->
 四つの証人構成の一つ `f` と、`α` の要素を呈示する添字 `m` を固定する。対応する証人は `Lset (st f m)` に現れ、その出生添字は記録された上界 `b.fst` に属し、さらに `b.fst` は最終上界 `β` に属する。着地の補題は、ここから得られる `Lset β` への所属をまとめる。
 <!--/-->
@@ -691,7 +691,7 @@ Fix one of the four witness constructions `f` and an index `m` presenting a memb
 <!--en-->
 The inner use of `Lset-mono` moves the witness from `Lset (st f m)` to `Lset (b.fst)`. The outer use then moves it from `Lset (b.fst)` to `Lset β`; both moves follow from strict membership between the corresponding ordinal indices.
 <!--zh-->
-内层的 `Lset-mono` 把见证从 `Lset (st f m)` 搬到 `Lset (b.fst)`，外层的应用再把它搬到 `Lset β`。两步分别依据相应序数指标之间的严格隶属关系。
+内层的 `Lset-mono` 把见证从 `Lset (st f m)` 搬到 `Lset (b.fst)`，外层的应用再把它搬到 `Lset β`。两步分别依据相应序数指标之间的严格成员关系。
 <!--ja-->
 内側の `Lset-mono` は証人を `Lset (st f m)` から `Lset (b.fst)` へ運び、外側の適用がさらに `Lset β` へ運ぶ。どちらの移動も、対応する順序数添字どうしの厳密な所属に基づく。
 <!--/-->
@@ -705,7 +705,7 @@ The inner use of `Lset-mono` moves the witness from `Lset (st f m)` to `Lset (b.
 <!--en-->
 For the member presented by `m`, the proof first lands the hierarchy table and the formula-code set in `Lset β`. The caller may supply any proof `o : IsOrd (ι α m)`; since ordinality is a proposition, it can be identified with the proof `oc m` used to construct the witnesses.
 <!--zh-->
-对由 `m` 呈现的成员，证明先把层级表与公式码集合放入 `Lset β`。调用者可以给出任意证明 `o : IsOrd (ι α m)`；由于序数性是命题，它可与构造见证时使用的证明 `oc m` 认同。
+对由 `m` 呈现的元素，证明先把层级表与公式码集合放入 `Lset β`。调用者可以给出任意证明 `o : IsOrd (ι α m)`；由于序数性是命题，它可与构造见证时使用的证明 `oc m` 认同。
 <!--ja-->
 `m` が呈示する要素について、まず階層表と論理式コードの集合を `Lset β` に入れる。呼び出し側は任意の証明 `o : IsOrd (ι α m)` を与えられるが、順序数性は命題なので、証人の構成に用いた `oc m` と同一視できる。
 <!--/-->
@@ -721,7 +721,7 @@ For the member presented by `m`, the proof first lands the hierarchy table and t
 <!--en-->
 The same argument completes the code-set membership and places the satisfaction graph and the environment tower in `Lset β`. Thus all four components of `Witnesses (Lset β) (ι α m)` are obtained with no dependence on a particular proof of ordinality.
 <!--zh-->
-同一论证完成码集合的隶属证明，并把满足关系图与环境塔放入 `Lset β`。于是得到 `Witnesses (Lset β) (ι α m)` 的全部四个分量，而且结果不依赖某一份特定的序数性证明。
+同一论证完成码集合的成员关系证明，并把满足关系图与环境塔放入 `Lset β`。于是得到 `Witnesses (Lset β) (ι α m)` 的全部四个分量，而且结果不依赖某一份特定的序数性证明。
 <!--ja-->
 同じ議論でコード集合の所属を完成し、充足関係のグラフと環境の塔も `Lset β` に入れる。これで `Witnesses (Lset β) (ι α m)` の四成分がすべて得られ、その結果は特定の順序数性証明に依存しない。
 <!--/-->
@@ -737,7 +737,7 @@ The same argument completes the code-set membership and places the satisfaction 
 <!--en-->
 A membership proof `c ∈ α` has an actual presentation fibre: it yields an index `m` together with an equality `ι α m ≡ c`. Transporting `witAt m` along that equality gives the four witnesses for the abstractly named member `c`; this step does not eliminate a propositional truncation or make a choice.
 <!--zh-->
-一份成员证明 `c ∈ α` 带有实际的呈现纤维：它给出索引 `m` 以及等式 `ι α m ≡ c`。沿该等式搬运 `witAt m`，便得到抽象指定的成员 `c` 的四个见证；这一步既不消去命题截断，也不作选择。
+一份成员关系证明 `c ∈ α` 带有实际的呈现纤维：它给出索引 `m` 以及等式 `ι α m ≡ c`。沿该等式搬运 `witAt m`，便得到抽象指定的元素 `c` 的四个见证；这一步既不消去命题截断，也不作选择。
 <!--ja-->
 所属の証明 `c ∈ α` からは実際の提示ファイバーが得られ、添字 `m` と等式 `ι α m ≡ c` が取り出される。その等式に沿って `witAt m` を輸送すれば、抽象的に指定された要素 `c` の四つの証人が得られる。ここでは命題的切り詰めの除去も選択も行わない。
 <!--/-->
@@ -811,7 +811,7 @@ The set-theoretic union of any family of ordinals is again an ordinal. Applying 
 <!--en-->
 The inward reading admits every member of every chain entry into the union.
 <!--zh-->
-向内读式把链中每一项的每个成员都纳入并。
+向内读式把链中每一项的每个元素都纳入并。
 <!--ja-->
 内向きの読み出しが、列のそれぞれの項目のすべての要素を、合併の中に受け入れる。
 <!--/-->
@@ -824,7 +824,7 @@ The inward reading admits every member of every chain entry into the union.
 <!--en-->
 The outward reading recovers, under truncation, a chain entry containing any given member of the union. The truncated index is consumed only into propositions.
 <!--zh-->
-向外读法在截断下恢复包含并中任一给定成员的链项。截断索引仅被消耗到命题。
+向外读法在截断下恢复包含并中任一给定元素的链项。截断索引仅被消耗到命题。
 <!--ja-->
 外向きの読み出しは、切り詰めのもとで、合併の任意の要素を含む列の項目を復元する。切り詰められた添字は、命題の中だけで消費される。
 <!--/-->
@@ -856,7 +856,7 @@ module Above (p : V ℓ) (op : IsOrd p) where
 <!--en-->
 The initial bound is an ordinal that strictly contains both the starting ordinal `p` and the ordinal `ω`. This immediately supplies the two memberships that must survive into the final union.
 <!--zh-->
-初始界是一个同时严格包含起始序数 `p` 与序数 `ω` 的序数。这直接给出随后要保留到最终并中的两条隶属关系。
+初始界是一个同时严格包含起始序数 `p` 与序数 `ω` 的序数。这直接给出随后要保留到最终并中的两条成员关系。
 <!--ja-->
 最初の上界は、出発順序数 `p` と順序数 `ω` の両方を厳密に含む順序数である。これにより、最終的な合併まで保つべき二つの所属が直ちに得られる。
 <!--/-->
@@ -869,7 +869,7 @@ The initial bound is an ordinal that strictly contains both the starting ordinal
 <!--en-->
 The zeroth ordinal is the initial common bound. Each later ordinal applies `Bound1` to its predecessor, so obligations arising from members of `ch n` are fulfilled in `ch (suc n)`; a single step is not claimed to be adequate for all of its own members.
 <!--zh-->
-第零个序数是初始公共界。此后每个序数都对前一项应用 `Bound1`，因此由 `ch n` 的成员产生的义务会在 `ch (suc n)` 中得到满足；这里并未声称单独一步已对其自身所有成员充分。
+第零个序数是初始公共界。此后每个序数都对前一项应用 `Bound1`，因此由 `ch n` 的元素产生的义务会在 `ch (suc n)` 中得到满足；这里并未声称单独一步已对其自身所有元素充分。
 <!--ja-->
 第零の順序数は最初の共通上界である。その後は各順序数を直前の項に `Bound1` を適用して作るので、`ch n` の要素から生じる義務は `ch (suc n)` で満たされる。一回の構成だけで、その結果自身の全要素について十分になるとは主張していない。
 <!--/-->
@@ -883,7 +883,7 @@ The zeroth ordinal is the initial common bound. Each later ordinal applies `Boun
 <!--en-->
 We now apply the preceding union construction to these ordinal indices. Its inward map will insert known memberships into the union, while its outward map will locate an arbitrary member only under propositional truncation.
 <!--zh-->
-现在把前面的并构造应用于这些序数指标。其向内映射把已知成员关系送入并，其向外映射则只能在命题截断下定位包含任意给定成员的某一项。
+现在把前面的并构造应用于这些序数指标。其向内映射把已知成员关系送入并，其向外映射则只能在命题截断下定位包含任意给定元素的某一项。
 <!--ja-->
 ここで、先の合併構成をこれらの順序数添字に適用する。内向きの写像は既知の所属を合併へ送り、外向きの写像は任意の要素を含む項を命題的切り詰めのもとでのみ位置づける。
 <!--/-->
@@ -895,7 +895,7 @@ We now apply the preceding union construction to these ordinal indices. Its inwa
 <!--en-->
 Let `γ` be this union of ordinal indices. The one-step delay is now absorbed by the union: any member found at one entry has its successor and four witness sets handled by a later entry. The witnesses ultimately have to lie in `Lset γ`, not in the index `γ` itself.
 <!--zh-->
-令 `γ` 为这些序数指标之并。取并吸收了一步延迟：任何在某一项中出现的成员，其后继与四个见证都会由后续项处理。最终，见证必须属于 `Lset γ`，而不是属于指标 `γ` 本身。
+令 `γ` 为这些序数指标之并。取并吸收了一步延迟：任何在某一项中出现的元素，其后继与四个见证都会由后续项处理。最终，见证必须属于 `Lset γ`，而不是属于指标 `γ` 本身。
 <!--ja-->
 これらの順序数添字の合併を `γ` とする。一段階の遅れは合併によって吸収される。ある項に現れた要素について、その後者と四つの証人集合は後の項で処理される。最終的に証人が属すべき先は添字 `γ` 自身ではなく、`Lset γ` である。
 <!--/-->
@@ -921,7 +921,7 @@ Because every `ch n` is an ordinal, their set-theoretic union `γ` is an ordinal
 <!--en-->
 Each chain entry is strictly below its successor entry, by the membership clause of the one-step bound.
 <!--zh-->
-链的每项严格低于其后继项，由一步取界的隶属子句而来。
+链的每项严格低于其后继项，由一步取界的成员关系子句而来。
 <!--ja-->
 列のそれぞれの項目は、その後続の項目より厳密に下にある。一段階の上界の所属の条項によるものである。
 <!--/-->
@@ -935,7 +935,7 @@ Each chain entry is strictly below its successor entry, by the membership clause
 <!--en-->
 To put the ordinal index `ch n` itself into the union `γ`, use its strict membership in `ch (suc n)` and then include every member of `ch (suc n)` in the union. This fact later provides the index comparison needed for monotonicity of `Lset`.
 <!--zh-->
-要把序数指标 `ch n` 本身放入并 `γ`，先用它严格属于 `ch (suc n)`，再把 `ch (suc n)` 的每个成员纳入并。这个事实稍后提供应用 `Lset` 单调性所需的指标比较。
+要把序数指标 `ch n` 本身放入并 `γ`，先用它严格属于 `ch (suc n)`，再把 `ch (suc n)` 的每个元素纳入并。这个事实稍后提供应用 `Lset` 单调性所需的指标比较。
 <!--ja-->
 順序数添字 `ch n` 自身を合併 `γ` に入れるには、まず `ch n ∈ ch (suc n)` を使い、ついで `ch (suc n)` の各要素を合併へ入れる。この事実が、後で `Lset` の単調性に必要な添字の比較を与える。
 <!--/-->
@@ -948,7 +948,7 @@ To put the ordinal index `ch n` itself into the union `γ`, use its strict membe
 <!--en-->
 The base bound already contains `p`. Since the base is the zeroth entry of the family, the inward union map preserves this membership and yields `p ∈ γ`.
 <!--zh-->
-基础界已经包含 `p`。它是该序列的第零项，所以并的向内映射保留这条隶属关系，得到 `p ∈ γ`。
+基础界已经包含 `p`。它是该序列的第零项，所以并的向内映射保留这条成员关系，得到 `p ∈ γ`。
 <!--ja-->
 基底の上界はすでに `p` を含む。これは列の第零項なので、合併の内向きの写像がこの所属を保ち、`p ∈ γ` を与える。
 <!--/-->
@@ -961,7 +961,7 @@ The base bound already contains `p`. Since the base is the zeroth entry of the f
 <!--en-->
 The same inward map carries `ω ∈ ch 0` to `ω ∈ γ`. This supplies the specific membership field required by `Adequate γ`.
 <!--zh-->
-同一个向内映射把 `ω ∈ ch 0` 送为 `ω ∈ γ`。这给出 `Adequate γ` 所要求的那项具体隶属事实。
+同一个向内映射把 `ω ∈ ch 0` 送为 `ω ∈ γ`。这给出 `Adequate γ` 所要求的那项具体成员关系事实。
 <!--ja-->
 同じ内向きの写像が `ω ∈ ch 0` を `ω ∈ γ` へ送る。これが `Adequate γ` に必要な所属の成分である。
 <!--/-->
@@ -1115,7 +1115,7 @@ From an adequate ordinal index `ch n`, another application of `adequate-above` p
 <!--en-->
 Apply the union construction to this sequence of adequate ordinal indices. As before, membership in the union can be localized to an entry only under propositional truncation.
 <!--zh-->
-把并构造应用于这个充分序数指标序列。与前面一样，并中的成员只能在命题截断下局部化到某一项。
+把并构造应用于这个充分序数指标序列。与前面一样，并中的元素只能在命题截断下局部化到某一项。
 <!--ja-->
 この十分な順序数添字の列に合併構成を適用する。先ほどと同様、合併の要素をある項に位置づけられるのは命題的切り詰めのもとだけである。
 <!--/-->
@@ -1153,7 +1153,7 @@ The set-theoretic union `λ` is an ordinal because all entries `ch n` are ordina
 <!--en-->
 Each chain entry is strictly below its successor, by the strict membership produced by `adequate-above`.
 <!--zh-->
-链的每项严格低于其后继，由 `adequate-above` 产出的严格隶属而来。
+链的每项严格低于其后继，由 `adequate-above` 产出的严格成员关系而来。
 <!--ja-->
 列のそれぞれの項目は、その後続の項目より厳密に下にある。`adequate-above` が産出する厳密な所属によるものである。
 <!--/-->
@@ -1167,7 +1167,7 @@ Each chain entry is strictly below its successor, by the strict membership produ
 <!--en-->
 Since `ch n ∈ ch (suc n)`, the inward map for the union shows `ch n ∈ λ`. Thus every adequate index in the sequence is itself available as a member of the final ordinal index `λ`.
 <!--zh-->
-由 `ch n ∈ ch (suc n)`，并的向内映射给出 `ch n ∈ λ`。因此序列中的每个充分指标本身都是最终序数指标 `λ` 的成员。
+由 `ch n ∈ ch (suc n)`，并的向内映射给出 `ch n ∈ λ`。因此序列中的每个充分指标本身都是最终序数指标 `λ` 的元素。
 <!--ja-->
 `ch n ∈ ch (suc n)` なので、合併の内向きの写像から `ch n ∈ λ` が得られる。したがって、列にある各十分な添字自身が最終的な順序数添字 `λ` の要素として利用できる。
 <!--/-->
@@ -1193,7 +1193,7 @@ The zeroth adequate index strictly contains `α`, and it is one of the sets form
 <!--en-->
 Given `x ∈ λ`, the outward map supplies only the propositionally truncated existence of an `n` with `x ∈ ch n`. In each branch, adequacy of that entry gives `sucV x ∈ ch n`, and the inward map yields `sucV x ∈ λ`. Since the target is a membership proposition, the result may be eliminated from the truncation without retaining `n`.
 <!--zh-->
-给定 `x ∈ λ`，向外映射只给出命题截断的存在性：某个 `n` 满足 `x ∈ ch n`。在每个分支中，该项的充分性给出 `sucV x ∈ ch n`，向内映射继而给出 `sucV x ∈ λ`。目标是一个隶属命题，所以可以从命题截断中消去结果，而不保留 `n`。
+给定 `x ∈ λ`，向外映射只给出命题截断的存在性：某个 `n` 满足 `x ∈ ch n`。在每个分支中，该项的充分性给出 `sucV x ∈ ch n`，向内映射继而给出 `sucV x ∈ λ`。目标是一个成员关系命题，所以可以从命题截断中消去结果，而不保留 `n`。
 <!--ja-->
 `x ∈ λ` が与えられると、外向きの写像が与えるのは `x ∈ ch n` を満たす `n` の命題的に切り詰められた存在だけである。各分岐では、その項の妥当性から `sucV x ∈ ch n` が得られ、内向きの写像が `sucV x ∈ λ` を与える。目標は所属命題なので、`n` を保持せずに結果を命題的切り詰めから除去できる。
 <!--/-->
@@ -1282,7 +1282,7 @@ For `d ∈ λ`, the outward map gives only the propositionally truncated existen
 <!--en-->
 The exported theorem returns an explicit ordinal index `λ` above `α`, together with proofs of `Adequate λ` and `Superadequate λ`. Although `λ` itself is available as data, the local adequate indices promised for its members remain under propositional truncation; no least local index or global family of choices is produced.
 <!--zh-->
-导出的定理显式返回严格位于 `α` 之上的序数指标 `λ`，并附带 `Adequate λ` 与 `Superadequate λ` 的证明。虽然 `λ` 本身是可用的数据，但为其各成员保证的局部充分指标仍处于命题截断下；构造没有给出最小局部指标，也没有给出全局选择族。
+导出的定理显式返回严格位于 `α` 之上的序数指标 `λ`，并附带 `Adequate λ` 与 `Superadequate λ` 的证明。虽然 `λ` 本身是可用的数据，但为其各元素保证的局部充分指标仍处于命题截断下；构造没有给出最小局部指标，也没有给出全局选择族。
 <!--ja-->
 公開される定理は、`α` を厳密に含む順序数添字 `λ` を明示的に返し、`Adequate λ` と `Superadequate λ` の証明を添える。`λ` 自身はデータとして使えるが、その各要素に保証される局所的な十分な添字は命題的切り詰めのもとにある。最小の局所添字も大域的な選択族も得られない。
 <!--/-->

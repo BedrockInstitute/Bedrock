@@ -28,7 +28,7 @@ module L.Choice.FiniteStageOrders {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 import FOL.Semantics
 open import FOL.Syntax using ( var; _∈̇_ )
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV )
@@ -57,11 +57,11 @@ The limit-stage construction does not require a compatibility theorem for the fi
 
 本章证明每个以数码为索引的层都是有穷的，并以最先分歧赋予其良序；随后结合层号与局部序来良序化极限层。
 
-先前的选择构造为一个族的每一格定位了该格首次拥有成员的层，并证明了它是一个后继。于是该格中恰在那里现身的每个成员，都是同一个集合的可定义子集：一个写在单一层之上的名字。尚缺的是**比较**这些名字的办法，而本章要在塔的底部造出的正是这种比较。
+先前的选择构造为一个族的每一格定位了该格首次拥有元素的层，并证明了它是一个后继。于是该格中恰在那里现身的每个元素，都是同一个集合的可定义子集：一个写在单一层之上的名字。尚缺的是**比较**这些名字的办法，而本章要在塔的底部造出的正是这种比较。
 
-本章依赖两个论断。第一，凡以数码为索引的层都是有穷的，其确切含义见下文：它附带一份有穷的集合清单，清单包含它的全部成员。第二，有穷层带有一个良序：比较两个成员时，看它们最先在何处出现分歧，并把较大的位置判给含有该处的那一个。
+本章依赖两个论断。第一，凡以数码为索引的层都是有穷的，其确切含义见下文：它附带一份有穷的集合清单，清单包含它的全部元素。第二，有穷层带有一个良序：比较两个元素时，看它们最先在何处出现分歧，并把较大的位置判给含有该处的那一个。
 
-第二个论断才是数学内容所在，它本质上是关于**有穷**集合的论断。若把同一构造用于自然数的子集，就会出现无穷下降：先是全体自然数，然后是从一开始的全体，再是从二开始的全体，如此下去，每一步删去尚存者中最先的那一个，因而严格落到更低处。构造本身并不排除这种情形；在有穷基底上，只有有穷多个子集，因此寻找最小成员的过程会终止。下文据此证明良基性：一份有穷清单加上一个线序，可以为任何非空性质给出最小成员，方法是逐项检查清单，并在每一步保留截至该处最小的候选；而「每个非空性质都有最小成员」在经典意义下就是良基性。
+第二个论断才是数学内容所在，它本质上是关于**有穷**集合的论断。若把同一构造用于自然数的子集，就会出现无穷下降：先是全体自然数，然后是从一开始的全体，再是从二开始的全体，如此下去，每一步删去尚存者中最先的那一个，因而严格落到更低处。构造本身并不排除这种情形；在有穷基底上，只有有穷多个子集，因此寻找最小元素的过程会终止。下文据此证明良基性：一份有穷清单加上一个线序，可以为任何非空性质给出最小元素，方法是逐项检查清单，并在每一步保留截至该处最小的候选；而「每个非空性质都有最小元素」在经典意义下就是良基性。
 
 有穷性能沿塔逐层推广，是因为有穷集合的可定义子集就是它的全部子集，而带清单的集合只有有穷多个子集，清单上的每个位向量对应其中一个。于是一层的清单给出下一层的清单，递归便足以推进整个构造。
 
@@ -134,7 +134,7 @@ open import Cubical.Induction.WellFounded
 <!--en-->
 For a set `x` in the cumulative hierarchy, `⟪ x ⟫` is its small presentation type and `⟪ x ⟫↪` embeds that type into the hierarchy. The equivalence `∈∈ₛ` relates presentation membership to hierarchy membership, while `∈-asFiber` recovers an index and its identifying path from a membership proof. The empty set supplies stage zero, and the von Neumann numerals `# n` with their limit `ω` index the finite stages and their limit.
 <!--zh-->
-对累积层级中的集合 `x`，`⟪ x ⟫` 是它的小呈现类型，`⟪ x ⟫↪` 把该类型嵌入层级。等价 `∈∈ₛ` 联系呈现中的成员关系与层级成员关系，`∈-asFiber` 则从成员证明恢复索引及其等同路径。空集给出第零层，冯·诺伊曼数码 `# n` 及其极限 `ω` 用来索引诸有穷层与极限。
+对累积层级中的集合 `x`，`⟪ x ⟫` 是它的小呈现类型，`⟪ x ⟫↪` 把该类型嵌入层级。等价 `∈∈ₛ` 联系呈现中的成员关系与层级成员关系，`∈-asFiber` 则从成员关系证明恢复索引及其等同路径。空集给出第零层，冯·诺伊曼数码 `# n` 及其极限 `ω` 用来索引诸有穷层与极限。
 <!--ja-->
 累積階層の集合 `x` に対し、`⟪ x ⟫` はその小さな表示型であり、`⟪ x ⟫↪` はその型を階層へ埋め込む。同値 `∈∈ₛ` は表示上の所属と階層の所属を結び、`∈-asFiber` は所属証明から添字とその同一視のパスを取り出す。空集合が零段階を与え、フォン・ノイマン数項 `# n` とその極限 `ω` が有限段階と極限の添字になる。
 <!--/-->
@@ -149,7 +149,7 @@ open import Cubical.HITs.CumulativeHierarchy.Constructions
 <!--en-->
 Membership statements below are proposition-valued. Thus `⟨ x ∈ˢ A ⟩` is the type of evidence that `x` belongs to `A`; tallies use this form both to certify each listed entry and to state that every member is represented.
 <!--zh-->
-下文的隶属陈述取命题为值。因此，`⟨ x ∈ˢ A ⟩` 是 `x` 属于 `A` 的证据类型；点名册用这一形式证明每个列出项确实属于集合，并陈述每个成员都被表示。
+下文的成员关系陈述取命题为值。因此，`⟨ x ∈ˢ A ⟩` 是 `x` 属于 `A` 的证据类型；点名册用这一形式证明每个列出项确实属于集合，并陈述每个元素都被表示。
 <!--ja-->
 以下の所属命題は命題に値を取る。したがって `⟨ x ∈ˢ A ⟩` は `x` が `A` に属する証拠の型であり、数え上げはこの形を、各項の所属の証明と全要素が表現されるという主張の双方に用いる。
 <!--/-->
@@ -157,7 +157,7 @@ Membership statements below are proposition-valued. Thus `⟨ x ∈ˢ A ⟩` is 
 ```agda
 open InfinitySet using ( #_; ω )
 
-open hPropStructure 𝒮ᵥ
+open hPropView 𝒮ᵥ
 ```
 
 <!--en-->
@@ -171,9 +171,9 @@ Repetitions and undecidable equality cause no difficulty. A scan may revisit the
 <!--zh-->
 ## 点名册
 
-`Tally`{.Agda} 用一个有穷索引族呈现集合的每个成员，允许重复，也不要求单射性或可判定相等。
+`Tally`{.Agda} 用一个有穷索引族呈现集合的每个元素，允许重复，也不要求单射性或可判定相等。
 
-有穷性以**点名册**的形式引入：取一个数和一个由相应多个集合组成的族，族中的每个集合都属于 `A`，并要求「`A` 的每个成员都仅仅等于其中某一个」。`onto` 表示该族列出了 `A` 的所有成员。
+有穷性以**点名册**的形式引入：取一个数和一个由相应多个集合组成的族，族中的每个集合都属于 `A`，并要求「`A` 的每个元素都仅仅等于其中某一个」。`onto` 表示该族列出了 `A` 的所有元素。
 
 重复与不可判定的相等都不造成困难。扫描可以再次遇到同一元素，位向量也按位置记录取舍，即使两个位置名指同一集合亦然。因此，这种刻意保持较弱的有穷性概念能在下一层的构造中保持下去。
 <!--ja-->
@@ -409,7 +409,7 @@ A small example shows the interaction with repetitions. Take a family with a rep
 <!--zh-->
 ## 选出一个子族
 
-`select`{.Agda} 按布尔掩码筛选一个有穷族，其成员引理则把选中的条目与标为真的位置对应起来。
+`select`{.Agda} 按布尔掩码筛选一个有穷族，其成员关系引理则把选中的条目与标为真的位置对应起来。
 
 `select` 把掩码作用到一个族上：它保留那些位为 `true` 的条目，并把它们重新组成一个族，同时给出该族的长度。长度是**由递归产生**的，这正是关键：无须计数，也不需要任何算术把答案与掩码联系起来。
 
@@ -529,7 +529,7 @@ The second subcase repeats the shift bookkeeping, now with the head present: the
 <!--en-->
 The converse specification, `select-in`, says every marked entry is selected: an original position `i` whose bit is `true` has a selected position `j` whose entry is `f i`. Again the claim is explicit data, an actual `j` together with a path. Nothing is truncated in either direction, which is what lets the later membership arguments pass real witnesses across the selection.
 <!--zh-->
-反向规格 `select-in` 说每个被标记的条目都被选中：位为 `true` 的原始位置 `i` 拥有一个被选位置 `j`，其条目为 `f i`。同样，这一主张是显式的数据，即一个真实的 `j` 连同一条路径。两个方向都不带截断，这正是后文关于成员性的论证能在选取两侧传递真实见证的原因。
+反向规格 `select-in` 说每个被标记的条目都被选中：位为 `true` 的原始位置 `i` 拥有一个被选位置 `j`，其条目为 `f i`。同样，这一主张是显式的数据，即一个真实的 `j` 连同一条路径。两个方向都不带截断，这正是后文关于成员关系的论证能在选取两侧传递真实见证的原因。
 <!--ja-->
 逆の仕様 `select-in` は、印づけられた項目はすべて選ばれることを述べる。ビットが `true` であるもとの位置 `i` には、項目が `f i` である選ばれた位置 `j` が対応する。ここでも主張は明示的なデータ、実際の `j` と経路である。どちらの向きも切断を含まないことが、後の所属の議論で選択の両側に実際の証人を渡せる理由である。
 <!--/-->
@@ -620,7 +620,7 @@ This conversion is one concrete use of excluded middle in the tally construction
 
 排中律给出的是一次判定，而掩码需要的是一位，故须把二者衔接起来。判定作为实参显式传入，而不是在定义内部求解：正是这一点使两条来回引理能靠对它作模式匹配来证明；真值本身也显式给出，使来回规格以预期命题为参数。
 
-这一转换是排中律在点名册构造中的一个具体用途：判定一条成员命题，再把答案记录为一位。
+这一转换是排中律在点名册构造中的一个具体用途：判定一条成员关系命题，再把答案记录为一位。
 <!--ja-->
 ## 真理値を一ビットに決定する
 
@@ -671,7 +671,7 @@ Finiteness travels up the tower through this section. Fix an ordinal `σ` and a 
 <!--zh-->
 ## 已清点层的可定义子集
 
-有穷性经由本节沿塔逐级传递。固定序数 `σ` 和层 `Lset σ` 的一份点名册，目标是给出 `𝒟ₒ (Lset σ)` (该层可定义子集的全体) 的点名册。已知点名册的每个条目都是该层的成员，因而在该层的小成员类型中有相应的元素；掩码指明保留哪些元素，`part` 把保留的元素张成有穷集。按基本公理一章的 `finSet∈𝒟ₒ`，这样张成的集合是该层的可定义子集，由「等于这些条目之一」的有穷析取定义。反过来，该层的任何可定义子集 `x` 也能被恢复：按每个点名册条目是否属于 `x` 的可判定成员关系加以标记，该掩码张成的集合恰是 `x`，其中包含关系 `𝒟ₒ∋⊆` 保证 `x` 的每个成员本就被点名册列出。于是 `maskCount size` 个掩码仅仅覆盖全部可定义子集，而这正是 `Tally` 所要求的。
+有穷性经由本节沿塔逐级传递。固定序数 `σ` 和层 `Lset σ` 的一份点名册，目标是给出 `𝒟ₒ (Lset σ)` (该层可定义子集的全体) 的点名册。已知点名册的每个条目都是该层的元素，因而在该层的小元素类型中有相应的元素；掩码指明保留哪些元素，`part` 把保留的元素张成有穷集。按基本公理一章的 `finSet∈𝒟ₒ`，这样张成的集合是该层的可定义子集，由「等于这些条目之一」的有穷析取定义。反过来，该层的任何可定义子集 `x` 也能被恢复：按每个点名册条目是否属于 `x` 的可判定成员关系加以标记，该掩码张成的集合恰是 `x`，其中包含关系 `𝒟ₒ∋⊆` 保证 `x` 的每个元素本就被点名册列出。于是 `maskCount size` 个掩码仅仅覆盖全部可定义子集，而这正是 `Tally` 所要求的。
 <!--ja-->
 ## 数え上げられた段階の定義可能部分集合
 
@@ -681,7 +681,7 @@ Finiteness travels up the tower through this section. Fix an ordinal `σ` and a 
 <!--en-->
 A member of `Lset σ` lives in the stage as a set, but `finSet` needs a name in the small member type `⟪ Lset σ ⟫`. The embedding `⟪ Lset σ ⟫↪` reads such a name as a set. Membership is presented as a truncated fiber, but this embedding has proposition-valued fibers, so `∈-asFiber` may eliminate the truncation and return an explicit name together with its path to `item i`. The definitions `index i` and `index-eq i` are the two projections of that fiber element. This does not choose an index from an arbitrary finite tally fiber, whose repetitions need not be proposition-valued.
 <!--zh-->
-`Lset σ` 的成员作为集合处在该层中，但 `finSet` 需要小成员类型 `⟪ Lset σ ⟫` 中的名字；嵌入 `⟪ Lset σ ⟫↪` 把这种名字读成集合。成员关系呈现为截断原像，不过这个嵌入的原像取值为命题，所以 `∈-asFiber` 可以消去截断，返回一个显式名字及其等同于 `item i` 的路径。`index i` 与 `index-eq i` 正是该原像元素的两个投影。这并非从任意点名册原像中选取索引，因为允许重复的点名册原像未必是命题。
+`Lset σ` 的元素作为集合处在该层中，但 `finSet` 需要小元素类型 `⟪ Lset σ ⟫` 中的名字；嵌入 `⟪ Lset σ ⟫↪` 把这种名字读成集合。成员关系呈现为截断原像，不过这个嵌入的原像取值为命题，所以 `∈-asFiber` 可以消去截断，返回一个显式名字及其等同于 `item i` 的路径。`index i` 与 `index-eq i` 正是该原像元素的两个投影。这并非从任意点名册原像中选取索引，因为允许重复的点名册原像未必是命题。
 <!--ja-->
 `Lset σ` の要素は集合としてその段階にあるが、`finSet` には小さな要素型 `⟪ Lset σ ⟫` の名前が必要である。埋め込み `⟪ Lset σ ⟫↪` はその名前を集合として読む。所属は切り詰められたファイバーとして提示されるが、この埋め込みのファイバーは命題なので、`∈-asFiber` は切り詰めを消去し、明示的な名前と、それが `item i` に等しいというパスを返せる。`index i` と `index-eq i` は、このファイバー要素の二つの射影である。重複を許す有限な数え上げの任意のファイバーから添字を選ぶこととは異なり、そちらのファイバーは命題とは限らない。
 <!--/-->
@@ -723,7 +723,7 @@ The second component of the same fiber is the path `index-eq i`, recording that 
 <!--en-->
 `part` is the spanned set: it reads each selected name through the embedding and forms the finite set of the results, landing in the type `S` of sets. Because a finite family of members of `Lset σ` spans a definable subset of that stage, `part-def` obtains the certificate `⟨ part v ∈ˢ 𝒟ₒ (Lset σ) ⟩` directly from `finSet∈𝒟ₒ`, with no further work. The first specification then reads membership backwards: if `y` lies in `part v`, then merely there is a tally position whose bit is `true` and whose entry equals `y`.
 <!--zh-->
-`part` 就是张成的集合：它把每个被选元素经嵌入读出，并取所得结果的有穷集，落在集合类型 `S` 中。由于 `Lset σ` 成员的有穷族张成该层的可定义子集，`part-def` 直接由 `finSet∈𝒟ₒ` 得到证书 `⟨ part v ∈ˢ 𝒟ₒ (Lset σ) ⟩`，无须额外工作。第一条规格从反方向读成员关系：若 `y` 属于 `part v`，则仅仅存在某个点名册位置，其位为 `true` 且其条目等于 `y`。
+`part` 就是张成的集合：它把每个被选元素经嵌入读出，并取所得结果的有穷集，落在集合类型 `S` 中。由于 `Lset σ` 元素的有穷族张成该层的可定义子集，`part-def` 直接由 `finSet∈𝒟ₒ` 得到证书 `⟨ part v ∈ˢ 𝒟ₒ (Lset σ) ⟩`，无须额外工作。第一条规格从反方向读成员关系：若 `y` 属于 `part v`，则仅仅存在某个点名册位置，其位为 `true` 且其条目等于 `y`。
 <!--ja-->
 `part` は張り合わせた集合である。選ばれた各名前を埋め込みを通して読み出し、その結果の有限集合を作り、集合の型 `S` に着地する。`Lset σ` の要素からなる有限族はその段階の定義可能部分集合を張るので、`part-def` は `finSet∈𝒟ₒ` から証明書 `⟨ part v ∈ˢ 𝒟ₒ (Lset σ) ⟩` を追加の仕事なしに得る。最初の仕様は所属を逆向きに読む。`y` が `part v` に属するなら、ビットが `true` でありその項目が `y` に等しい数え上げの位置が、単に存在するということである。
 <!--/-->
@@ -790,7 +790,7 @@ The opposite specification runs forward. If the bit at position `i` is `true`, t
 <!--en-->
 Since membership in the spanned set is stated for the embedded name while the goal concerns the entry `item i`, the two are connected by the path `path` below, and `subst` moves the membership certificate along it. The auxiliary `ins` holds the slot that `select-in` produces: a position in the chosen family whose entry equals `index i`.
 <!--zh-->
-由于张成集中的成员关系是针对嵌入元素陈述的，而目标针对条目 `item i`，两者要靠下文的路径 `path` 连接，并用 `subst` 沿该路径搬移成员证书。辅助的 `ins` 保存 `select-in` 给出的槽位：被选族中的一个位置，其条目等于 `index i`。
+由于张成集中的成员关系是针对嵌入元素陈述的，而目标针对条目 `item i`，两者要靠下文的路径 `path` 连接，并用 `subst` 沿该路径搬移成员关系证书。辅助的 `ins` 保存 `select-in` 给出的槽位：被选族中的一个位置，其条目等于 `index i`。
 <!--ja-->
 張り合わせた集合における所属は埋め込まれた名前について述べられているのに対し、目標は項目 `item i` に関するので、両者は下の経路 `path` で結ばれ、`subst` がその経路に沿って所属の証明を移す。補助の `ins` は `select-in` が生み出す枠を保持する。選ばれた族の中で、その項目が `index i` に等しい位置である。
 <!--/-->
@@ -825,7 +825,7 @@ The remaining path `path` concatenates the slot's equality with `index-eq i`, so
 <!--en-->
 Membership in a set of the hierarchy is a proposition, so extensionality `extensionalV` reduces the claimed equality `part (maskOf x) ≡ x` to a pointwise equivalence of membership statements; `⇔toPath` assembles the two directions into the path. The forward direction shows every member of the spanned set lies in `x`.
 <!--zh-->
-层次中集合的成员关系是命题，因此外延性 `extensionalV` 把所断言的等式 `part (maskOf x) ≡ x` 归约为逐点的成员关系等价；`⇔toPath` 把两个方向组装成路径。正向表明张成集的每个成员都属于 `x`。
+层次中集合的成员关系是命题，因此外延性 `extensionalV` 把所断言的等式 `part (maskOf x) ≡ x` 归约为逐点的成员关系等价；`⇔toPath` 把两个方向组装成路径。正向表明张成集的每个元素都属于 `x`。
 <!--ja-->
 階層の集合における所属は命題なので、外延性 `extensionalV` は主張された等式 `part (maskOf x) ≡ x` を、所属の主張の各点ごとの同値へと帰着させる。`⇔toPath` が二つの方向を経路へと組み立てる。順方向は、張り合わせた集合の各要素が `x` に属することを示す。
 <!--/-->
@@ -857,7 +857,7 @@ The hypothesis of the forward direction is itself merely an existence: some mark
 <!--en-->
 The backward direction starts from membership of `y` in `x` and must produce membership in the spanned set. Since that target is again a proposition, its truncated hypothesis can be eliminated. Here the hypothesis comes from the tally's coverage: `x` is a definable subset of the stage, and `𝒟ₒ∋⊆` says every member of a definable subset of `Lset σ` is a member of `Lset σ` itself, so the tally's `onto` merely lists `y` as some entry `item i`.
 <!--zh-->
-反向从 `y` 属于 `x` 出发，须产生张成集中的成员关系。由于该目标又是命题，其截断的前提可以消去。这里的前提来自点名册的覆盖：`x` 是该层的可定义子集，而 `𝒟ₒ∋⊆` 说 `Lset σ` 的可定义子集的每个成员都是 `Lset σ` 自身的成员，因此点名册的 `onto` 单纯地把 `y` 列为某个条目 `item i`。
+反向从 `y` 属于 `x` 出发，须产生张成集中的成员关系。由于该目标又是命题，其截断的前提可以消去。这里的前提来自点名册的覆盖：`x` 是该层的可定义子集，而 `𝒟ₒ∋⊆` 说 `Lset σ` 的可定义子集的每个元素都是 `Lset σ` 自身的元素，因此点名册的 `onto` 单纯地把 `y` 列为某个条目 `item i`。
 <!--ja-->
 逆方向は `y` の `x` への所属から出発し、張り合わせた集合への所属を生み出さねばならない。この目標も再び命題なので、その截断された仮定は消去できる。ここでの仮定は数え上げの被覆から来る。`x` は段階の定義可能部分集合であり、`𝒟ₒ∋⊆` は `Lset σ` の定義可能部分集合の各要素が `Lset σ` 自身の要素でもあると言うので、数え上げの `onto` が `y` をある項目 `item i` として単に列挙する。
 <!--/-->
@@ -1265,7 +1265,7 @@ This section defines the order that finite stages will carry. Fix a set `A` and 
 <!--zh-->
 ## 最先的分歧
 
-本节定义有穷层将要携带的序。固定一个集合 `A` 与集合之上的一个关系 `R`，后者读作 `A` 的诸成员上的一个序。`A` 的两个子集，按它们在何处分歧来比较。「`x` 先于 `y`」的见证，是 `A` 的一个成员 `z`，它属于 `y` 而不属于 `x`，且 `x` 与 `y` 在 `z` 之下**一致**，意即 `A` 中被 `R` 排在 `z` 之前的每个成员，属于其中之一当且仅当属于另一个。倒过来读：`z` 就是最先的分歧点，而它属于 `y`。关系 `precedes R A` 是这类见证的截断存在；非自反性立刻成立，且完全不需要任何前提：`x` 对自己的见证会既属于 `x` 又不属于 `x`。后文证明在关于基底序的前提下得到三歧与传递，并用有穷性得到良基性。
+本节定义有穷层将要携带的序。固定一个集合 `A` 与集合之上的一个关系 `R`，后者读作 `A` 的诸元素上的一个序。`A` 的两个子集，按它们在何处分歧来比较。「`x` 先于 `y`」的见证，是 `A` 的一个元素 `z`，它属于 `y` 而不属于 `x`，且 `x` 与 `y` 在 `z` 之下**一致**，意即 `A` 中被 `R` 排在 `z` 之前的每个元素，属于其中之一当且仅当属于另一个。倒过来读：`z` 就是最先的分歧点，而它属于 `y`。关系 `precedes R A` 是这类见证的截断存在；非自反性立刻成立，且完全不需要任何前提：`x` 对自己的见证会既属于 `x` 又不属于 `x`。后文证明在关于基底序的前提下得到三歧与传递，并用有穷性得到良基性。
 <!--ja-->
 ## 最初の相違
 
@@ -1275,7 +1275,7 @@ This section defines the order that finite stages will carry. Fix a set `A` and 
 <!--en-->
 The two ingredients are stated separately. `Agrees R A x y z` says that membership in `x` and in `y` coincides for every member `w` of `A` that `R` places before `z`, in both directions. `Witness R A x y z` then assembles the full witness: `z` lies in `A`, it belongs to `y`, it does not belong to `x`, and agreement holds below it. The direction of the membership clauses is what decides which side wins the comparison.
 <!--zh-->
-两个成分分别陈述。`Agrees R A x y z` 说：对 `A` 中被 `R` 排在 `z` 之前的每个成员 `w`，属于 `x` 与属于 `y` 双向重合。`Witness R A x y z` 随后组装完整见证：`z` 属于 `A`，属于 `y`，不属于 `x`，且其下方一致成立。正是成员条款的方向决定了比较中哪一方胜出。
+两个成分分别陈述。`Agrees R A x y z` 说：对 `A` 中被 `R` 排在 `z` 之前的每个元素 `w`，属于 `x` 与属于 `y` 双向重合。`Witness R A x y z` 随后组装完整见证：`z` 属于 `A`，属于 `y`，不属于 `x`，且其下方一致成立。正是元素条款的方向决定了比较中哪一方胜出。
 <!--ja-->
 二つの材料は別々に述べられる。`Agrees R A x y z` は、`R` が `z` の前に置く `A` の各要素 `w` について、`x` への所属と `y` への所属が双方向に一致することを言う。`Witness R A x y z` は続いて完全な証人を組み立てる。`z` は `A` に属し、`y` に属し、`x` には属さず、その下で一致が成り立つ、ということである。所属条項の向きこそが、比較でどちらが勝つかを決める。
 <!--/-->
@@ -1312,7 +1312,7 @@ Transitivity and trichotomy of the earliest-disagreement order do need hypothese
 
 Transitivity is a comparison of two witnesses. If `x` comes before `y` at `p` and `y` comes before `z` at `q`, then `p` and `q` cannot be equal, since `p` belongs to `y` and `q` does not; and whichever of the two is smaller witnesses that `x` comes before `z`. Both branches check the same two things: that the smaller point is on the right side, and that the agreement below it composes.
 <!--zh-->
-最先分歧序的传递性与三歧确实需要关于基底序的前提，而二者所需不同，故一并收进一个模块。其参数是 `R` 在 `A` 诸成员上的三歧与传递，以及 `R` 在那些成员上的最小元原则；在塔中，这些都来自下面那一层。
+最先分歧序的传递性与三歧确实需要关于基底序的前提，而二者所需不同，故一并收进一个模块。其参数是 `R` 在 `A` 诸元素上的三歧与传递，以及 `R` 在那些元素上的最小元原则；在塔中，这些都来自下面那一层。
 
 传递性是两个见证之间的比较。若 `x` 在 `p` 处先于 `y`，`y` 在 `q` 处先于 `z`，则 `p` 与 `q` 不可能相等，因为 `p` 属于 `y` 而 `q` 不属于；而二者中较小的那个就见证了 `x` 先于 `z`。两支要核对的是同样的两件事：较小的那一点方向正确，以及它之下的一致性可以复合。
 <!--ja-->
@@ -1324,7 +1324,7 @@ Transitivity is a comparison of two witnesses. If `x` comes before `y` at `p` an
 <!--en-->
 The module collects the three premises the earliest-disagreement order will inherit. `baseTri` and `baseTrans` say that `R` restricted to members of `A` is trichotomous and transitive, and `baseLeast` is the smallest-element principle over `A`: from a merely inhabited property of members of `A` it returns an element satisfying it that no smaller member of `A` satisfies. Note the shape of the conclusion: it is explicit data, not a truncation, since the caller needs the actual least element.
 <!--zh-->
-该模块收集最先分歧序将要继承的三条前提。`baseTri` 与 `baseTrans` 说 `R` 限制在 `A` 的成员上时三歧且传递，`baseLeast` 是 `A` 上的最小元原则：从「`A` 成员的某个性质单纯非空」出发，它给出一个满足该性质、且没有更小的 `A` 成员也满足的元素。注意结论的形状：它是显式数据而非截断，因为调用方需要真实的极小元。
+该模块收集最先分歧序将要继承的三条前提。`baseTri` 与 `baseTrans` 说 `R` 限制在 `A` 的元素上时三歧且传递，`baseLeast` 是 `A` 上的最小元原则：从「`A` 元素的某个性质单纯非空」出发，它给出一个满足该性质、且没有更小的 `A` 元素也满足的元素。注意结论的形状：它是显式数据而非截断，因为调用方需要真实的极小元。
 <!--ja-->
 このモジュールは、最初の相違の順序が受け継ぐ三つの前提を集める。`baseTri` と `baseTrans` は、`A` の要素に制限した `R` が三岐かつ推移的であると言い、`baseLeast` は `A` の上の最小要素原理である。`A` の要素のある性質が単に非空であることから、その性質を満たし、より小さい `A` の要素がどれも満たさない要素を返す。結論の形に注意してほしい。呼び出し側が実際の最小要素を必要とするので、截断ではなく明示的なデータである。
 <!--/-->
@@ -1360,7 +1360,7 @@ The statement of transitivity takes the two hypotheses exactly as `precedes` pro
 <!--en-->
 With both witnesses exposed, `both` receives the full data: a point `p` witnessing `x` before `y`, with its membership clauses `agp`, and a point `q` witnessing `y` before `z`, with `agq`. The comparison of the two base points is delegated to the base trichotomy, and the auxiliary `decide` analyses its three outcomes.
 <!--zh-->
-两个见证都暴露后，`both` 接收完整数据：见证 `x` 先于 `y` 的点 `p` 及其成员条款 `agp`，以及见证 `y` 先于 `z` 的点 `q` 及其 `agq`。两个基底点的比较交给基底三歧，辅助函数 `decide` 分析其三种结果。
+两个见证都暴露后，`both` 接收完整数据：见证 `x` 先于 `y` 的点 `p` 及其元素条款 `agp`，以及见证 `y` 先于 `z` 的点 `q` 及其 `agq`。两个基底点的比较交给基底三歧，辅助函数 `decide` 分析其三种结果。
 <!--ja-->
 両方の証人が現れたところで、`both` は完全なデータを受け取る。`x` が `y` に先行することの証人である点 `p` とその所属条項 `agp`、そして `y` が `z` に先行することの証人である点 `q` とその `agq` である。二つの基底点の比較は基底の三岐性に委ねられ、補助の `decide` がその三通りの結果を分析する。
 <!--/-->
@@ -1392,7 +1392,7 @@ If `p` is strictly below `q`, it keeps the role of witness for `x` before `z`. I
 <!--en-->
 Agreement below `p` is composed clause by clause. To show `w ∈ x` implies `w ∈ z`: `agp` lifts `w ∈ x` to `w ∈ y`, then `agq` lifts membership in `y` up to `z`, using base transitivity to know that `w` lies below `q` as well. The backward clause is symmetric, running `z` down to `y` and then to `x`. The equality case cannot occur: `p` belongs to `y` while `q` does not, so transporting membership along the path `p ≡ q` yields a contradiction.
 <!--zh-->
-`p` 之下的一致性逐条款复合。要证 `w ∈ x` 蕴含 `w ∈ z`：`agp` 把 `w ∈ x` 提升为 `w ∈ y`，再用 `agq` 把对 `y` 的成员提升到 `z`，其中用基底传递性保证 `w` 也位于 `q` 之下。反向条款对称，把 `z` 降到 `y` 再降到 `x`。相等情形不可能出现：`p` 属于 `y` 而 `q` 不属于，沿路径 `p ≡ q` 传输成员关系即得矛盾。
+`p` 之下的一致性逐条款复合。要证 `w ∈ x` 蕴含 `w ∈ z`：`agp` 把 `w ∈ x` 提升为 `w ∈ y`，再用 `agq` 把对 `y` 的元素提升到 `z`，其中用基底传递性保证 `w` 也位于 `q` 之下。反向条款对称，把 `z` 降到 `y` 再降到 `x`。相等情形不可能出现：`p` 属于 `y` 而 `q` 不属于，沿路径 `p ≡ q` 传输成员关系即得矛盾。
 <!--ja-->
 `p` の下での一致は条項ごとに合成される。`w ∈ x` が `w ∈ z` を導くことを示すには、`agp` が `w ∈ x` を `w ∈ y` に引き上げ、続いて `agq` が `y` への所属を `z` まで引き上げる。その際、基底の推移性によって `w` が `q` の下にもあることを使う。逆向きの条項は対称で、`z` を `y` へ、さらに `x` へと下ろす。等しい場合は起こりえない。`p` は `y` に属し `q` は属さないので、経路 `p ≡ q` に沿って所属を輸送すれば矛盾が得られる。
 <!--/-->
@@ -1408,7 +1408,7 @@ Agreement below `p` is composed clause by clause. To show `w ∈ x` implies `w �
 <!--en-->
 If instead `q` is strictly below `p`, the roles swap: `q` witnesses `x` before `z`. Its clauses about `y` and `z` carry over, but membership in `x` and agreement must be established. For membership, `agp` read at the point `q` transports membership of `q` in `x` down to membership in `y`, contradicting `q ∉ y`; the auxiliary `q∉x` packages this refutation.
 <!--zh-->
-若改为 `q` 严格小于 `p`，角色对调：由 `q` 见证 `x` 先于 `z`。它关于 `y` 与 `z` 的条款照旧，但须确立对 `x` 的成员与一致性。关于成员，在点 `q` 处读 `agp`，把 `q` 对 `x` 的成员传输为对 `y` 的成员，与 `q ∉ y` 矛盾；辅助函数 `q∉x` 把这一反驳打包。
+若改为 `q` 严格小于 `p`，角色对调：由 `q` 见证 `x` 先于 `z`。它关于 `y` 与 `z` 的条款照旧，但须确立对 `x` 的元素与一致性。关于元素，在点 `q` 处读 `agp`，把 `q` 对 `x` 的元素传输为对 `y` 的元素，与 `q ∉ y` 矛盾；辅助函数 `q∉x` 把这一反驳打包。
 <!--ja-->
 逆に `q` が `p` より狭義に小さければ、役割が入れ替わり、`q` が `x` の `z` への先行を証明する。`y` と `z` に関する条項はそのまま引き継げるが、`x` への所属と一致を確立せねばならない。所属については、点 `q` で `agp` を読むと `q` の `x` への所属が `y` への所属へと輸送され、`q ∉ y` と矛盾する。補助の `q∉x` がこの反駁をまとめる。
 <!--/-->
@@ -1424,7 +1424,7 @@ If instead `q` is strictly below `p`, the roles swap: `q` witnesses `x` before `
 <!--en-->
 Agreement below `q` composes in the mirrored order: membership in `x` is pushed down to `y` by `agp`, using base transitivity with `q ≺ p` to place `w` below `p`, and `agq` then carries it up to `z`; the backward clause descends `z` to `y` first and then to `x`. With both asymmetric cases handled, and equality refuted, transitivity is complete.
 <!--zh-->
-`q` 之下的一致性以镜像顺序复合：先用 `agp` 借助 `q ≺ p` 的基底传递性把 `w` 置于 `p` 之下，从而把对 `x` 的成员下推到 `y`，`agq` 再把它上提到 `z`；反向条款先把 `z` 降到 `y`，再降到 `x`。两个不对称情形都已处理、相等已被驳倒，传递性就此完成。
+`q` 之下的一致性以镜像顺序复合：先用 `agp` 借助 `q ≺ p` 的基底传递性把 `w` 置于 `p` 之下，从而把对 `x` 的元素下推到 `y`，`agq` 再把它上提到 `z`；反向条款先把 `z` 降到 `y`，再降到 `x`。两个不对称情形都已处理、相等已被驳倒，传递性就此完成。
 <!--ja-->
 `q` の下での一致は鏡像の順で合成される。まず `agp` が `q ≺ p` と基底の推移性によって `w` を `p` の下に置き、`x` への所属を `y` へと押し下げ、続いて `agq` がそれを `z` まで引き上げる。逆向きの条項はまず `z` を `y` へ、さらに `x` へと下ろす。二つの非対称な場合が処理され、等しい場合は反駁されたので、推移性が完成する。
 <!--/-->
@@ -1468,7 +1468,7 @@ The statement takes the two subsets `x` and `y` of `A` not as certificates of de
 <!--en-->
 Two truncations organise the question. The predicate `Apart w` says, merely, that `w` distinguishes the two subsets, in either direction: it belongs to one and not the other. The truncated type `Some` says, merely, that some member of `A` is apart. Both are wrapped with `squash₁`, so both are propositions rather than data; that is exactly what licenses deciding them by excluded middle, and later, eliminating a refutation of `Some` into contradiction.
 <!--zh-->
-两条截断组织了这个问题。谓词 `Apart w` 仅仅说 `w` 区分了这两个子集，方向不限：它属于其一而不属于另一。截断类型 `Some` 仅仅说 `A` 的某个成员是分歧点。二者都配以 `squash₁`，因而都是命题而非数据；这正是可以用排中律判定它们、随后又能把 `Some` 的反驳消去成矛盾的依据。
+两条截断组织了这个问题。谓词 `Apart w` 仅仅说 `w` 区分了这两个子集，方向不限：它属于其一而不属于另一。截断类型 `Some` 仅仅说 `A` 的某个元素是分歧点。二者都配以 `squash₁`，因而都是命题而非数据；这正是可以用排中律判定它们、随后又能把 `Some` 的反驳消去成矛盾的依据。
 <!--ja-->
 二つの截断がこの問いを組織する。述語 `Apart w` は、`w` が二つの部分集合を区別すること、向きは問わず、片方には属しもう片方には属さないことを、単に主張する。截断型 `Some` は、`A` のある要素が相違点であることを単に主張する。どちらも `squash₁` を添え、命題であってデータではない。これこそが、排中律による判定、さらに `Some` の反駁を矛盾への除去を正当化する。
 <!--/-->
@@ -1484,7 +1484,7 @@ Two truncations organise the question. The predicate `Apart w` says, merely, tha
 <!--en-->
 The helper `agree` converts absence of disagreement into agreement, one direction at a time. Its hypothesis `na` refutes `Apart w`, and its conclusion is the two inclusion clauses of membership equivalence at `w`. The conversion from a negative statement to the required membership implication is a double-negation-elimination step.
 <!--zh-->
-辅助引理 `agree` 把「无分歧」转成「一致」，一次一个方向。前提 `na` 反驳 `Apart w`，结论是 `w` 处成员等价的两条包含子句。证明只有这里需要从否定性陈述造出成员蕴含，而它实际上是化了装的双重否定消去。
+辅助引理 `agree` 把「无分歧」转成「一致」，一次一个方向。前提 `na` 反驳 `Apart w`，结论是 `w` 处元素等价的两条包含子句。证明只有这里需要从否定性陈述造出元素蕴含，而它实际上是化了装的双重否定消去。
 <!--ja-->
 補題 `agree` は「相違の不在」を「一致」へ変える。一度に一方向ずつである。前提 `na` は `Apart w` を反駁し、結論は `w` における所属同値の二つの包含節である。証明が否定形の命題から所属蕴含を作り出す必要があるのはここだけで、それは実質的に二重否定の除去となる。
 <!--/-->
@@ -1500,7 +1500,7 @@ The helper `agree` converts absence of disagreement into agreement, one directio
 <!--en-->
 For the forward clause, suppose `w ∈ˢ x` and ask excluded middle about `w ∈ˢ y`. If it holds, we are done. If its refutation `nh` is produced, then `w` is apart after all, witnessed by the left disjunct `wx , nh`; packaging that witness into the truncation and handing it to `na` yields a contradiction, from which `⊥*-rec` produces any desired element, here the missing membership proof. The target `⊥*` is a proposition, so eliminating the truncated `Apart w` into it is legitimate.
 <!--zh-->
-前向子句：设 `w ∈ˢ x`，对 `w ∈ˢ y` 用排中律发问。若成立即完成。若得到反驳 `nh`，那么 `w` 其实是分歧点，左析取支 `wx , nh` 就是见证；把该见证装入截断交给 `na` 便得矛盾，`⊥*-rec` 再从矛盾产出所需元素，这里就是缺失的成员证明。目标 `⊥*` 是命题，故把截断的 `Apart w` 消去到它是正当的。
+前向子句：设 `w ∈ˢ x`，对 `w ∈ˢ y` 用排中律发问。若成立即完成。若得到反驳 `nh`，那么 `w` 其实是分歧点，左析取支 `wx , nh` 就是见证；把该见证装入截断交给 `na` 便得矛盾，`⊥*-rec` 再从矛盾产出所需元素，这里就是缺失的成员关系证明。目标 `⊥*` 是命题，故把截断的 `Apart w` 消去到它是正当的。
 <!--ja-->
 前向きの節では、`w ∈ˢ x` を仮定し、`w ∈ˢ y` について排中律を問う。成り立てばそれで足りる。反駁 `nh` が得られたなら、実は `w` は相違点であり、左の選択肢 `wx , nh` がその証人である。この証人を截断に包んで `na` に渡せば矛盾が得られ、`⊥*-rec` がそこから所望の要素、ここでは欠けた所属の証明を作る。目標 `⊥*` は命題なので、截断された `Apart w` をそこへ除去するのは正当である。
 <!--/-->
@@ -1532,7 +1532,7 @@ The backward clause is the mirror image. Assuming `w ∈ˢ y`, excluded middle d
 <!--en-->
 Now suppose `Some` is refuted, so no member of `A` is apart. The helper `nApart` packages this as a pointwise refutation of `Apart`, and `same` will use it at every `w` to prove the sets equal. The premise that the refuted witness lies in `A` is discharged next, and the membership equivalence of `agree` then applies at each point.
 <!--zh-->
-现在设 `Some` 被反驳，即 `A` 中没有分歧点。辅助引理 `nApart` 把这一点包装成对 `Apart` 的逐点反驳，`same` 将在每处 `w` 使用它来证明两集合相等。被反驳的见证落在 `A` 中这一前提在下一步了结，随后 `agree` 的成员等价即可在每点使用。
+现在设 `Some` 被反驳，即 `A` 中没有分歧点。辅助引理 `nApart` 把这一点包装成对 `Apart` 的逐点反驳，`same` 将在每处 `w` 使用它来证明两集合相等。被反驳的见证落在 `A` 中这一前提在下一步了结，随后 `agree` 的元素等价即可在每点使用。
 <!--ja-->
 次に `Some` が反駁されたとする。つまり `A` の中に相違点はない。補題 `nApart` はこれを `Apart` の各点での反駁として包み、`same` はすべての `w` でそれを用いて二つの集合の相等を証明する。反駁された証人が `A` に属するという前提は次で処理され、その後 `agree` の所属同値が各点で適用できる。
 <!--/-->
@@ -1580,7 +1580,7 @@ At each `w`, the two clauses of `agree w (nApart w)` assert membership in `x` if
 <!--en-->
 In the other branch, `Some` holds: some member of `A` is apart. The smallest-element principle `baseLeast`, available for the base order `R` on the members of `A`, is applied to the predicate `Apart`, and it returns an explicit record `found`, not a truncated existence: a point `m` in `A`, apart, with nothing apart below it in the `R` order. This explicitness is what lets the least apart point be used as a witness later.
 <!--zh-->
-另一支中 `Some` 成立：`A` 的某个成员是分歧点。把最小元原则 `baseLeast` (对 `A` 的成员上的基底序 `R` 可用) 作用于谓词 `Apart`，它返回显式的记录 `found`，而非截断的存在陈述：一个点 `m`，在 `A` 中、分歧，且在 `R` 序之下其下方再无分歧点。正是这种显式性，使得最小分歧点此后能被用作见证。
+另一支中 `Some` 成立：`A` 的某个元素是分歧点。把最小元原则 `baseLeast` (对 `A` 的元素上的基底序 `R` 可用) 作用于谓词 `Apart`，它返回显式的记录 `found`，而非截断的存在陈述：一个点 `m`，在 `A` 中、分歧，且在 `R` 序之下其下方再无分歧点。正是这种显式性，使得最小分歧点此后能被用作见证。
 <!--ja-->
 もう一方の分岐では `Some` が成立する。つまり `A` のある要素が相違点である。`A` の要素上の基底順序 `R` に対して使える最小要素原理 `baseLeast` を述語 `Apart` に適用すると、截断された存在ではなく明示的なレコード `found` が返る。`A` に属し相違している点 `m` で、`R` 順序の下ではそれより下に相違点がない。この明示性こそが、最小の相違点を後に証人として使える理由である。
 <!--/-->
@@ -1644,7 +1644,7 @@ If `m` does belong to `x`, then `m` witnesses that `y` comes before `x`: it lies
 <!--en-->
 Agreement below `m` also swaps sides for free. For each `w` below `m`, `belowM` refutes `Apart w`, so `agree w` applies and gives membership equivalence in both directions; the pair is merely written in the reversed order, producing `Agrees R A y x m` from an agreement originally oriented from `x` to `y`. Together with `m∈A`, `mx` and `m∉y`, this is a complete `Witness` that `y` precedes `x`, delivered inside the truncation by `gt`.
 <!--zh-->
-`m` 之下的一致性也免费换边。对 `m` 之下的每个 `w`，`belowM` 反驳 `Apart w`，故 `agree w` 适用，给出双向的成员等价；这里只是把二元组按相反次序写出，把原本从 `x` 到 `y` 取向的一致性变成 `Agrees R A y x m`。与 `m∈A`、`mx`、`m∉y` 合起来，这是一份完整的 `Witness`，见证 `y` 先于 `x`，由 `gt` 装入截断交付。
+`m` 之下的一致性也免费换边。对 `m` 之下的每个 `w`，`belowM` 反驳 `Apart w`，故 `agree w` 适用，给出双向的元素等价；这里只是把二元组按相反次序写出，把原本从 `x` 到 `y` 取向的一致性变成 `Agrees R A y x m`。与 `m∈A`、`mx`、`m∉y` 合起来，这是一份完整的 `Witness`，见证 `y` 先于 `x`，由 `gt` 装入截断交付。
 <!--ja-->
 `m` より下での一致も、向きの交換がただで手に入る。`m` より下の各 `w` に対し `belowM` が `Apart w` を反駁するので `agree w` が適用でき、両方向の所属同値が得られる。組を逆向きに書き並べるだけで、元は `x` から `y` へ向いていた一致から `Agrees R A y x m` が作られる。`m∈A`、`mx`、`m∉y` と合わせて、これは `y` が `x` に先立つことの完全な `Witness` であり、`gt` が截断の中で渡す。
 <!--/-->
@@ -1660,7 +1660,7 @@ Agreement below `m` also swaps sides for free. For each `w` below `m`, `belowM` 
 <!--en-->
 The mirrored branch assumes instead that `m` does not belong to `x`, and produces the `lt` witness that `x` precedes `y`. Extracting `m ∈ˢ y` from `apartM` is another truncated case analysis: the left disjunct would assert `m ∈ˢ x`, refuted by `nmx`, so only the right disjunct survives and it carries the membership outright. Agreement below `m` needs no reversal this time, since the witness is oriented from `x` to `y` exactly as `agree` produces it. With both symmetric branches in place, the trichotomy of `precedes` is complete, and the local order on a stage is a linear order on its members, pending well-foundedness.
 <!--zh-->
-镜像的一支改设 `m` 不属于 `x`，产出 `x` 先于 `y` 的 `lt` 见证。从 `apartM` 提取 `m ∈ˢ y` 又是一次截断情形分析：左支会断言 `m ∈ˢ x`，被 `nmx` 反驳，故只有右支存活，而它直接带有该成员关系。这次 `m` 之下的一致性无须换向，因为见证的取向恰与 `agree` 的产出一致。两个对称分支齐备后，`precedes` 的三歧完成，一层上的局部序便是其成员上的线序，只待良基性。
+镜像的一支改设 `m` 不属于 `x`，产出 `x` 先于 `y` 的 `lt` 见证。从 `apartM` 提取 `m ∈ˢ y` 又是一次截断情形分析：左支会断言 `m ∈ˢ x`，被 `nmx` 反驳，故只有右支存活，而它直接带有该成员关系。这次 `m` 之下的一致性无须换向，因为见证的取向恰与 `agree` 的产出一致。两个对称分支齐备后，`precedes` 的三歧完成，一层上的局部序便是其元素上的线序，只待良基性。
 <!--ja-->
 鏡像の分岐は、代わりに `m` が `x` に属さないと仮定し、`x` が `y` に先立つことの `lt` の証人を作る。`apartM` から `m ∈ˢ y` を取り出すのもまた截断の場合分けである。左の選言肢は `m ∈ˢ x` を主張することになり `nmx` が反駁するので、右の選言肢だけが生き残り、それは所属をそのまま帯びている。今回 `m` より下の一致は向きの交換を要しない。証人の向きが `agree` の作るものと一致しているからである。対称な二つの分岐がそろい、`precedes` の三分法が完成し、段階上の局所順序は整礎性を残して要素上の線順序となる。
 <!--/-->
@@ -1703,7 +1703,7 @@ no comparison at all.
 <!--en-->
 The definition begins with a small piece of plumbing for the three-way judgment. `Tri-map` acts on a `Tri` by applying one function in each alternative; the three clauses are its computation rules. It will convert the trichotomy proved about two sets into the trichotomy needed about two points of a stage, which differ only by carrying membership proofs.
 <!--zh-->
-定义从三分判断的一件小工具开始。`Tri-map` 对 `Tri` 逐支作用：每个备选支各应用一个函数；三条子句就是它的计算规则。它将把「关于两个集合证明的三歧」转换为「关于一层的两个点所需的三歧」，二者只差是否附带成员证明。
+定义从三分判断的一件小工具开始。`Tri-map` 对 `Tri` 逐支作用：每个备选支各应用一个函数；三条子句就是它的计算规则。它将把「关于两个集合证明的三歧」转换为「关于一层的两个点所需的三歧」，二者只差是否附带成员关系证明。
 <!--ja-->
 定義は、三分の判断のための小さな道具から始まる。`Tri-map` は `Tri` の選言肢ごとに関数を一つ適用するものであり、三つの節がその計算規則である。これは、二つの集合について証明された三分法を、段階の二つの点について必要な三分法へ変換するのに使われる。両者は所属の証明を帯びるかどうかだけが違う。
 <!--/-->
@@ -1719,7 +1719,7 @@ Tri-map f g h (lt a) = lt (f a)
 <!--en-->
 The stages indexed by numerals are named: `finiteStage n` is the stage `Lset (# n)`. The relation `before` is then a recursion on the index. At zero it is the falsity truth value, so no pair is ever related. At a successor it is `precedes` applied to the previous stage: the base set over which membership is compared is the stage `n` itself, and the base order along which the earliest disagreement is sought is `before n`, the order the recursion built one step down.
 <!--zh-->
-以数码为索引的层在此命名：`finiteStage n` 即层 `Lset (# n)`。关系 `before` 随后是对索引的递归。零处它取假真值，任何一对都不会被关系到。后继处它是对前一层使用 `precedes`：比较隶属关系的基底集合就是层 `n` 本身，而寻找最先分歧所沿的基底序是 `before n`，即递归在下一层造出的那个序。
+以数码为索引的层在此命名：`finiteStage n` 即层 `Lset (# n)`。关系 `before` 随后是对索引的递归。零处它取假真值，任何一对都不会被关系到。后继处它是对前一层使用 `precedes`：比较成员关系的基底集合就是层 `n` 本身，而寻找最先分歧所沿的基底序是 `before n`，即递归在下一层造出的那个序。
 <!--ja-->
 数項で添字づけられた段階に名が与えられる。`finiteStage n` は段階 `Lset (# n)` である。関係 `before` は続いて添字上の再帰である。零では偽の真理値が取られ、いかなる対も関係されない。後者では `precedes` を一つ下の段階に適用したものである。所属を比較する基底集合は段階 `n` そのもの、最初の相違点を探す際にたどる基底順序は一段下で再帰が作った `before n` である。
 <!--/-->
@@ -1754,7 +1754,7 @@ before-irrefl (suc n) x h = precedes-irrefl (before n) (finiteStage n) x h
 <!--en-->
 The base case's emptiness is recorded separately as `zero-empty`: no set is a member of the stage zero. Reading a membership certificate out of `Lset (# zero)` produces, merely, some stage `δ` with `δ` a member of the numeral zero and `x` a definable subset of `Lset δ`; the numeral zero has no members, and `∅-empty` turns any alleged member into a contradiction. The elimination of the truncation is legitimate because the target `⊥*` is a proposition.
 <!--zh-->
-基例的空性单独记录为 `zero-empty`：没有集合是第零层的成员。从 `Lset (# zero)` 读出成员证书，仅仅给出某一层 `δ`，使 `δ` 属于数码零且 `x` 是 `Lset δ` 的可定义子集；数码零没有成员，`∅-empty` 把任何所谓的成员变成矛盾。由于目标 `⊥*` 是命题，消去该截断是正当的。
+基例的空性单独记录为 `zero-empty`：没有集合是第零层的元素。从 `Lset (# zero)` 读出成员关系证书，仅仅给出某一层 `δ`，使 `δ` 属于数码零且 `x` 是 `Lset δ` 的可定义子集；数码零没有元素，`∅-empty` 把任何所谓的元素变成矛盾。由于目标 `⊥*` 是命题，消去该截断是正当的。
 <!--ja-->
 基底の場合の空性は `zero-empty` として別に記録される。段階零の要素となる集合はない。`Lset (# zero)` から所属の証明書を読み出すと、単に、`δ` が数項零の要素で `x` が `Lset δ` の定義可能部分集合であるようなある段階 `δ` が得られるだけである。数項零に要素はなく、`∅-empty` がいかなる所属の主張も矛盾へ変える。目標 `⊥*` が命題であるため、この截断の除去は正当である。
 <!--/-->
@@ -1776,7 +1776,7 @@ proposition, so two points are equal as soon as their sets are; that is all the
 work involved in passing between the statements about sets and the bundle, whose
 carrier must be a type.
 <!--zh-->
-递归必须携带的数据只有一份对成员的清点、三歧与传递：非自反性在每层都自动成立，而良基性只在用到之处当场推出，不必随身携带。层的一个点是一个集合连同它的隶属证明；由于隶属是命题，两个点只要集合相等就相等。在「关于集合的陈述」与「载体必须是类型的那个束」之间往返时，需要做的全部工作就在于此。
+递归必须携带的数据只有一份对元素的清点、三歧与传递：非自反性在每层都自动成立，而良基性只在用到之处当场推出，不必随身携带。层的一个点是一个集合连同它的成员关系证明；由于成员关系是命题，两个点只要集合相等就相等。在「关于集合的陈述」与「载体必须是类型的那个束」之间往返时，需要做的全部工作就在于此。
 <!--ja-->
 再帰が運ぶべきデータは、要素の数え上げ、三分法、推移性の三つだけであり、それ以外には何もない。非反射性はすべての段階で自動的に成立し、整礎性は使う箇所でその場で導出されるので、運ぶ必要はない。段階の点とは集合にその所属の証明を添えたものであり、所属は命題なので、二つの点は集合が等しければただちに等しい。「集合についての述定」と「台が型でなければならない束」との間を行き来するのに必要な作業は、これだけである。
 <!--/-->
@@ -1784,7 +1784,7 @@ carrier must be a type.
 <!--en-->
 The search machinery of the earlier section works over a type, so a member of a stage is packaged as a `Point`: a set together with its membership certificate in `finiteStage n`. The relation `Below` reads `before n` at the underlying sets. Since membership is a proposition, two points with the same set are already equal; this one fact does all the work of moving between statements about sets and statements about points.
 <!--zh-->
-前节的搜索机制作用在类型上，故层的一个成员被包装成 `Point`：一个集合连同它在 `finiteStage n` 中的成员证书。关系 `Below` 在底层集合处读取 `before n`。由于隶属是命题，集合相同的两个点已然相等；这一个事实承担了「关于集合的陈述」与「关于点的陈述」之间往返的全部工作。
+前节的搜索机制作用在类型上，故层的一个元素被包装成 `Point`：一个集合连同它在 `finiteStage n` 中的成员关系证书。关系 `Below` 在底层集合处读取 `before n`。由于成员关系是命题，集合相同的两个点已然相等；这一个事实承担了「关于集合的陈述」与「关于点的陈述」之间往返的全部工作。
 <!--ja-->
 前節の探索機構は型の上で働くので、段階の要素は `Point` として包まれる。すなわち、集合に `finiteStage n` への所属の証明書を添えたものである。関係 `Below` は根底の集合で `before n` を読む。所属は命題なので、同じ集合を持つ二つの点ははじめから等しい。この一事実が、「集合についての述定」と「点についての述定」との間の行き来のすべての作業を担う。
 <!--/-->
@@ -1802,7 +1802,7 @@ record StageOrder (n : ℕ) : Type (ℓ-suc ℓ) where
 <!--en-->
 The induction at stage `n` retains exactly the facts needed for the successor: a tally of `finiteStage n`, trichotomy of `before n` for members of that stage, and transitivity of `before n` on arbitrary sets. Irreflexivity follows uniformly from earliest disagreement, while well-foundedness is recovered from the tally whenever the local order is used.
 <!--zh-->
-层 `n` 的归纳恰好保留后继步所需的事实：`finiteStage n` 的点名册、`before n` 对该层成员的三歧性，以及 `before n` 对任意集合的传递性。非自反性由最先分歧统一推出；局部序需要良基性时，则从点名册重新得到。
+层 `n` 的归纳恰好保留后继步所需的事实：`finiteStage n` 的点名册、`before n` 对该层元素的三歧性，以及 `before n` 对任意集合的传递性。非自反性由最先分歧统一推出；局部序需要良基性时，则从点名册重新得到。
 <!--ja-->
 段階 `n` の帰納は、後者の一歩に必要な事実だけを保つ。すなわち `finiteStage n` の数え上げ、その段階の要素に対する `before n` の三岐性、そして任意の集合に対する `before n` の推移性である。非反射性は最初の相違から一様に従い、局所順序の整礎性は必要なときに数え上げから得られる。
 <!--/-->
@@ -1842,7 +1842,7 @@ module Ordered (n : ℕ) (r : StageOrder n) where
 <!--en-->
 The tally is lifted from sets to points by pairing each entry with its own membership proof, giving `points`. The coverage statement `covers` is then `onto` transported through this pairing: given a point, `onto` merely provides an index whose entry has the same set, and `Σ≡Prop` upgrades the equality of sets to an equality of points. Coverage remains truncated, as it was for the tally itself.
 <!--zh-->
-点名册由集合提升到点：把每个条目配上它自己的成员证明，得到 `points`。覆盖陈述 `covers` 随后是 `onto` 经这一配对的搬运：给定一个点，`onto` 仅仅提供一个索引，其条目具有相同的集合，`Σ≡Prop` 再把集合的等式升级为点的等式。覆盖仍然是截断的，与点名册本身一样。
+点名册由集合提升到点：把每个条目配上它自己的成员关系证明，得到 `points`。覆盖陈述 `covers` 随后是 `onto` 经这一配对的搬运：给定一个点，`onto` 仅仅提供一个索引，其条目具有相同的集合，`Σ≡Prop` 再把集合的等式升级为点的等式。覆盖仍然是截断的，与点名册本身一样。
 <!--ja-->
 数え上げは、各項にそれ自身の所属の証明を対にすることで、集合から点へ引き上げられ `points` となる。被覆の述定 `covers` は、この対を通して `onto` を運んだものである。点が与えられれば、`onto` は同じ集合を持つ項の添字を単に提供し、`Σ≡Prop` が集合の等式を点の等式へ引き上げる。被覆は数え上げ自身と同様、截断されたままである。
 <!--/-->
@@ -1894,7 +1894,7 @@ These facts determine a strict well-order on the points of `finiteStage n`: the 
 <!--en-->
 The last lemma packages least elements in the shape the next stage needs. `leastMem` takes a predicate `P` on sets that is merely satisfied by some member of the stage, and returns an explicit member `m` satisfying `P`, together with leastness in the `before n` order: no member `b` of the stage satisfying `P` lies strictly below `m`. Nothing here is truncated except the hypothesis.
 <!--zh-->
-最后一条引理以下一层所需的形状包装最小元。`leastMem` 取集合上的一个谓词 `P`，它仅仅被该层的某个成员满足，并返回显式的满足 `P` 的成员 `m`，连同 `before n` 序下的最小性：该层中满足 `P` 的成员 `b` 没有严格低于 `m` 的。除前提外，这里没有任何截断。
+最后一条引理以下一层所需的形状包装最小元。`leastMem` 取集合上的一个谓词 `P`，它仅仅被该层的某个元素满足，并返回显式的满足 `P` 的元素 `m`，连同 `before n` 序下的最小性：该层中满足 `P` 的元素 `b` 没有严格低于 `m` 的。除前提外，这里没有任何截断。
 <!--ja-->
 最後の補題は、最小要素を次の段階が必要とする形に包む。`leastMem` は、段階のある要素に単に満たされる集合上の述語 `P` を受け取り、`P` を満たす明示的な要素 `m` を、`before n` 順序での最小性、すなわち `P` を満たす段階の要素 `b` で `m` より真に下にあるものが存在しないこととともに返す。前提を除けば、ここに截断はない。
 <!--/-->
@@ -1953,7 +1953,7 @@ The recursion starts with the empty tally and vacuous order laws at stage zero. 
 <!--en-->
 The base case assembles a record whose three fields are the three small facts just displayed. The tally `empty` has size zero: the index type `Fin zero` is empty, so the entry and membership fields are given by the absurd pattern, functions from no possible arguments. There is nothing to list at stage zero, and that is the whole content of the tally.
 <!--zh-->
-基例把三个字段装配成一个记录，三者正是刚建立的三件小事。点名册 `empty` 的长度为零：索引类型 `Fin zero` 为空，故条目与成员字段都用荒谬模式给出，即从无可能实参出发的函数。第零层没有可列的东西，这就是该点名册的全部内容。
+基例把三个字段装配成一个记录，三者正是刚建立的三件小事。点名册 `empty` 的长度为零：索引类型 `Fin zero` 为空，故条目与元素字段都用荒谬模式给出，即从无可能实参出发的函数。第零层没有可列的东西，这就是该点名册的全部内容。
 <!--ja-->
 基底の場合、三つの欄を一つのレコードに組み立てる。それらはまさに今示した三つの小さな事実である。数え上げ `empty` のサイズは零である。添字型 `Fin zero` は空なので、項と所属の欄は荒謬パターン、すなわち与えられない引数に対する関数で与えられる。段階零には列挙すべきものがなく、それがこの数え上げの内容のすべてである。
 <!--/-->
@@ -1969,7 +1969,7 @@ stageOrder 0 = record { tally = empty ; tri = triZero ; trans = transZero }
 <!--en-->
 The remaining fields of the zero-stage tally have the same source. Its membership certificate for any listed item is impossible because there is no index, while coverage of the stage follows from `zero-empty`: a supposed member of `finiteStage zero` yields a contradiction. Thus `empty` really enumerates the empty stage in both directions.
 <!--zh-->
-第零层点名册的其余字段来自同一个事实。任何被列条目的成员证书都不可能出现，因为根本没有索引；而层的覆盖则由 `zero-empty` 给出：假设 `finiteStage zero` 有成员便导出矛盾。因此，`empty` 在两个方向上都确实枚举了空层。
+第零层点名册的其余字段来自同一个事实。任何被列条目的成员关系证书都不可能出现，因为根本没有索引；而层的覆盖则由 `zero-empty` 给出：假设 `finiteStage zero` 有元素便导出矛盾。因此，`empty` 在两个方向上都确实枚举了空层。
 <!--ja-->
 零段階の数え上げの残る欄も、同じ事実から得られる。添字が存在しないため、列挙された項の所属証明は生じようがなく、段階の被覆は `zero-empty` から従う。`finiteStage zero` の要素を仮定すれば矛盾が得られるからである。したがって `empty` は両方向で空の段階を正確に列挙している。
 <!--/-->
@@ -1985,7 +1985,7 @@ The remaining fields of the zero-stage tally have the same source. Its membershi
 <!--en-->
 The two order fields are vacuous. Trichotomy at zero receives membership certificates for `x` and `y`, but no such certificates exist, so `zero-empty` extracts a contradiction from the first and discharges the goal. Transitivity at zero receives a hypothesis of type `before zero x y`, which by the computation rule of `before` is the falsity truth value, and `⊥*-rec` eliminates it. Empty premises make empty conclusions; no property of the empty order is used beyond its being empty.
 <!--zh-->
-两条序字段都是空洞的。零处的三歧收到 `x` 与 `y` 的成员证书，但这样的证书不存在，`zero-empty` 从第一个提取矛盾并了结目标。零处的传递收到类型为 `before zero x y` 的前提，按 `before` 的计算规则它是假真值，由 `⊥*-rec` 消去。空前提给出空结论；除「这个序是空的」之外，没有使用空序的任何性质。
+两条序字段都是空洞的。零处的三歧收到 `x` 与 `y` 的成员关系证书，但这样的证书不存在，`zero-empty` 从第一个提取矛盾并了结目标。零处的传递收到类型为 `before zero x y` 的前提，按 `before` 的计算规则它是假真值，由 `⊥*-rec` 消去。空前提给出空结论；除「这个序是空的」之外，没有使用空序的任何性质。
 <!--ja-->
 二つの順序の欄は空虚である。零での三分法は `x` と `y` の所属の証明書を受け取るが、そのような証明書は存在しないので、`zero-empty` が一つ目から矛盾を取り出して目標を処理する。零での推移性は型が `before zero x y` である前提を受け取るが、`before` の計算規則によりそれは偽の真理値であり、`⊥*-rec` が除去する。空の前提が空の結論を作る。この順序が空であること以外に、空の順序の性質は使われない。
 <!--/-->
@@ -2001,7 +2001,7 @@ The two order fields are vacuous. Trichotomy at zero receives membership certifi
 <!--en-->
 The successor step needs three mathematical inputs from stage `n`: its least-element principle, the trichotomy and transitivity of `before n`, and a tally of its members. The first two make earliest disagreement a strict comparison on subsets of that stage, while the tally enumerates those subsets through Boolean masks. Together they provide exactly the tally and order laws required at stage `suc n`.
 <!--zh-->
-后继步需要层 `n` 的三类数学输入：其最小元原理、`before n` 的三歧与传递性，以及其成员的一份点名册。前两类使最先分歧成为该层诸子集上的严格比较，点名册则通过布尔掩码枚举这些子集；三者共同给出层 `suc n` 所需的点名册与序律。
+后继步需要层 `n` 的三类数学输入：其最小元原理、`before n` 的三歧与传递性，以及其元素的一份点名册。前两类使最先分歧成为该层诸子集上的严格比较，点名册则通过布尔掩码枚举这些子集；三者共同给出层 `suc n` 所需的点名册与序律。
 <!--ja-->
 後者の一歩が段階 `n` から必要とする数学的入力は、その最小要素原理、`before n` の三岐性と推移性、そして要素の数え上げである。前二者により最初の相違はその段階の部分集合上の狭義比較となり、数え上げはブールマスクを通してそれらの部分集合を列挙する。これらが段階 `suc n` に必要な数え上げと順序法則を与える。
 <!--/-->
@@ -2017,7 +2017,7 @@ stageOrder (suc n) = record { tally = raised ; tri = triSuc ; trans = transSuc }
 <!--en-->
 The identification `step` is the path `Lset-suc (# n)`, stating that the stage after `n` is the definable power set of stage `n`. The new tally `raised` keeps the size and the items of the power tally, so it enumerates the same definable subsets; what changes is only where the membership certificates are read, which is where `step` enters.
 <!--zh-->
-认同 `step` 是路径 `Lset-suc (# n)`，它断言 `n` 的后继层就是层 `n` 的可定义幂集。新点名册 `raised` 保留幂集点名册的长度与条目，因此枚举的是同样的可定义子集；改变的只是成员证书从何处读取，这正是 `step` 进入之处。
+认同 `step` 是路径 `Lset-suc (# n)`，它断言 `n` 的后继层就是层 `n` 的可定义幂集。新点名册 `raised` 保留幂集点名册的长度与条目，因此枚举的是同样的可定义子集；改变的只是成员关系证书从何处读取，这正是 `step` 进入之处。
 <!--ja-->
 同一視 `step` はパス `Lset-suc (# n)` であり、`n` の後者の段階が段階 `n` の定義可能冪集合であると述べる。新しい数え上げ `raised` は冪数え上げのサイズと項をそのまま保つので、列挙するのは同じ定義可能部分集合である。変わるのは所属の証明書をどこから読むかだけであり、そこに `step` が現れる。
 <!--/-->
@@ -2034,7 +2034,7 @@ The identification `step` is the path `Lset-suc (# n)`, stating that the stage a
 <!--en-->
 The `inside` field transports each membership certificate from the definable power set to the successor stage along the reverse of `step`, since the certificate proves membership in the power set but the tally claims membership in `Lset (# suc n)`. Symmetrically, `onto` takes a membership certificate in the successor stage and transports it forward along `step` before calling the power tally's coverage. In both directions the transport acts on a membership statement and nothing else.
 <!--zh-->
-`inside` 字段把每份成员证书沿 `step` 的逆向从可定义幂集传输到后继层，因为证书证明的是在幂集中的成员关系，而点名册声称的是在 `Lset (# suc n)` 中的成员关系。对称地，`onto` 取后继层的成员证书，先沿 `step` 向前传输，再调用幂集点名册的覆盖。两个方向的传输都只作用于一句成员陈述，别无其他。
+`inside` 字段把每份成员关系证书沿 `step` 的逆向从可定义幂集传输到后继层，因为证书证明的是在幂集中的成员关系，而点名册声称的是在 `Lset (# suc n)` 中的成员关系。对称地，`onto` 取后继层的成员关系证书，先沿 `step` 向前传输，再调用幂集点名册的覆盖。两个方向的传输都只作用于一句成员关系陈述，别无其他。
 <!--ja-->
 `inside` の欄は、各所属の証明書を `step` の逆向きに沿って定義可能冪集合から後者の段階へ輸送する。証明書が証明するのは冪集合への所属であり、数え上げが主張するのは `Lset (# suc n)` への所属だからである。対称的に、`onto` は後者の段階への所属の証明書を受け取り、`step` に沿って前向きに輸送してから冪数え上げの被覆を呼ぶ。どちらの向きでも輸送は一句の所属の述定にだけ働く。
 <!--/-->
@@ -2050,7 +2050,7 @@ The `inside` field transports each membership certificate from the definable pow
 <!--en-->
 The auxiliary `members` extracts the inclusion hypothesis that `precedes-tri` asks for. A definable subset of stage `n` has all of its members in stage `n`; this is `𝒟ₒ∋⊆`, read backwards from a membership in the definable power set. The transport along `step` moves the certificate for `x` into the power set first, and what results is a function: for every member `w` of `x`, a certificate that `w` lies in stage `n`.
 <!--zh-->
-辅助引理 `members` 提取 `precedes-tri` 所要求的包含前提。层 `n` 的可定义子集的成员都在层 `n` 中；这就是 `𝒟ₒ∋⊆`，从可定义幂集中的成员关系反向读出。先沿 `step` 把 `x` 的证书传输进幂集，所得是一个函数：对 `x` 的每个成员 `w`，给出 `w` 落在层 `n` 中的证书。
+辅助引理 `members` 提取 `precedes-tri` 所要求的包含前提。层 `n` 的可定义子集的元素都在层 `n` 中；这就是 `𝒟ₒ∋⊆`，从可定义幂集中的成员关系反向读出。先沿 `step` 把 `x` 的证书传输进幂集，所得是一个函数：对 `x` 的每个元素 `w`，给出 `w` 落在层 `n` 中的证书。
 <!--ja-->
 補題 `members` は、`precedes-tri` が要求する包含の前提を取り出す。段階 `n` の定義可能部分集合の要素はすべて段階 `n` にある。それが `𝒟ₒ∋⊆` であり、定義可能冪集合への所属から逆向きに読むものである。まず `step` に沿って `x` の証明書を冪集合へ輸送すれば、得られるものは関数である。`x` の各要素 `w` に対し、`w` が段階 `n` にあることの証明書を与える。
 <!--/-->
@@ -2090,9 +2090,9 @@ A member of `Lset ω` appears at some numeral-indexed finite stage. Among its st
 <!--zh-->
 ## 极限层
 
-`Lset ω`{.Agda} 的每个成员取得其最小有穷层号；先比较层号、再比较局部层序，便得到极限层良序。
+`Lset ω`{.Agda} 的每个元素取得其最小有穷层号；先比较层号、再比较局部层序，便得到极限层良序。
 
-`Lset ω` 的成员会出现在某个由数码索引的有穷层。在它出现的诸层中，自然数的最小元搜索给出最小者，称为该元素的**层号**。后文组织不同层号之间的下降时，还会再次使用自然数的良基性。
+`Lset ω` 的元素会出现在某个由数码索引的有穷层。在它出现的诸层中，自然数的最小元搜索给出最小者，称为该元素的**层号**。后文组织不同层号之间的下降时，还会再次使用自然数的良基性。
 <!--ja-->
 ## 極限段階
 
@@ -2104,7 +2104,7 @@ A member of `Lset ω` appears at some numeral-indexed finite stage. Among its st
 <!--en-->
 The limit's members are packaged as `Limit`, a set together with a membership certificate in `Lset ω`. The lemma `inSome` converts such a certificate into a truncated statement that the set appears at some finite stage. Reading the certificate out of the limit stage produces, merely, some `δ` in `ω` with the set a definable subset of `Lset δ`; the outer elimination is into a truncated type, which is a proposition, so it is legitimate.
 <!--zh-->
-极限的成员被包装成 `Limit`：一个集合连同它在 `Lset ω` 中的成员证书。引理 `inSome` 把这样的证书转换成一句截断的陈述：该集合出现在某个有穷层。从极限层读出证书，仅仅给出某个属于 `ω` 的 `δ`，使该集合是 `Lset δ` 的可定义子集；外层消去的目标是截断类型，而截断类型是命题，故消去正当。
+极限的元素被包装成 `Limit`：一个集合连同它在 `Lset ω` 中的成员关系证书。引理 `inSome` 把这样的证书转换成一句截断的陈述：该集合出现在某个有穷层。从极限层读出证书，仅仅给出某个属于 `ω` 的 `δ`，使该集合是 `Lset δ` 的可定义子集；外层消去的目标是截断类型，而截断类型是命题，故消去正当。
 <!--ja-->
 極限の要素は `Limit` として包まれる。すなわち集合に `Lset ω` への所属の証明書を添えたものである。補題 `inSome` はそのような証明書を、その集合がある有限段階に現れるという截断された述定へ変換する。極限段階から証明書を読み出すと、`ω` に属しその集合が `Lset δ` の定義可能部分集合であるようなある `δ` が単に得られるだけである。外側の除去の目標は截断型であり、それは命題なので除去は正当である。
 <!--/-->
@@ -2121,7 +2121,7 @@ inSome x h = rec₁ squash₁ atStage (Lset-out ω x h)
 <!--en-->
 It remains to identify the index `δ` below `ω`. Membership `δ ∈ ω` is the truncated assertion that `δ` equals a numeral `# (lower k)` for some lifted natural number `k`. After opening that truncated numeral witness with `map₁`, the path rewrites the definable-subset certificate for `𝒟ₒ (Lset δ)` to one over `Lset (# lower k)`; `Lset-suc` then places `x` in `finiteStage (suc (lower k))`. This proves appearance at a finite stage without confusing the index `ω` with the stage `Lset ω`.
 <!--zh-->
-还需识别 `ω` 以下的索引 `δ`。隶属 `δ ∈ ω` 是一条截断陈述：存在提升后的自然数 `k`，使 `δ` 等于数码 `# (lower k)`。用 `map₁` 在截断内取得该数码见证后，路径把关于 `𝒟ₒ (Lset δ)` 的可定义子集证书改写到 `Lset (# lower k)` 上；再由 `Lset-suc` 把 `x` 放入 `finiteStage (suc (lower k))`。这证明了元素出现在有穷层，同时没有混淆索引 `ω` 与层 `Lset ω`。
+还需识别 `ω` 以下的索引 `δ`。成员关系 `δ ∈ ω` 是一条截断陈述：存在提升后的自然数 `k`，使 `δ` 等于数码 `# (lower k)`。用 `map₁` 在截断内取得该数码见证后，路径把关于 `𝒟ₒ (Lset δ)` 的可定义子集证书改写到 `Lset (# lower k)` 上；再由 `Lset-suc` 把 `x` 放入 `finiteStage (suc (lower k))`。这证明了元素出现在有穷层，同时没有混淆索引 `ω` 与层 `Lset ω`。
 <!--ja-->
 残るのは `ω` より下の添字 `δ` を同定することである。所属 `δ ∈ ω` は、持ち上げられた自然数 `k` が存在して `δ` が数項 `# (lower k)` に等しいという切断された主張である。`map₁` により切断の内部でこの数項の証人を用いると、パスが `𝒟ₒ (Lset δ)` に関する定義可能部分集合の証明を `Lset (# lower k)` 上のものへ書き換え、`Lset-suc` が `x` を `finiteStage (suc (lower k))` に置く。これにより、添字 `ω` と段階 `Lset ω` を混同せずに有限段階での出現が示される。
 <!--/-->
@@ -2154,7 +2154,7 @@ levelData : (a : Limit)
 <!--en-->
 `levelData` is where the truncated existence meets the formula-facing least-element theorem. The predicate `m ↦ a .fst ∈ˢ finiteStage m` is presented by the atomic membership formula, with `a.fst` and `finiteStage m` in its two environment slots. Applying the natural-number order and the truncated witness `inSome` returns an explicit numeral together with `IsLeast` data: the stage at that numeral contains the set, and no smaller numeral has that property. The level is therefore the least stage of appearance, not an arbitrary stage selected from the truncation.
 <!--zh-->
-`levelData` 正是截断存在与面向公式的最小元定理相遇之处。谓词 `m ↦ a .fst ∈ˢ finiteStage m` 由原子隶属公式呈现，`a.fst` 与 `finiteStage m` 分居环境的两个槽位。把自然数序与截断见证 `inSome` 交给搜索，便返回一个显式数码连同 `IsLeast` 数据：该数码处的层含有该集合，且更小的数码都没有该性质。因此层号是最小的出现层，而非从截断中任意选出的层。
+`levelData` 正是截断存在与面向公式的最小元定理相遇之处。谓词 `m ↦ a .fst ∈ˢ finiteStage m` 由原子成员关系公式呈现，`a.fst` 与 `finiteStage m` 分居环境的两个槽位。把自然数序与截断见证 `inSome` 交给搜索，便返回一个显式数码连同 `IsLeast` 数据：该数码处的层含有该集合，且更小的数码都没有该性质。因此层号是最小的出现层，而非从截断中任意选出的层。
 <!--ja-->
 `levelData` は、截断された存在と論理式に面する最小要素定理が出会う箇所である。述語 `m ↦ a .fst ∈ˢ finiteStage m` は原子的な所属の論理式で表示され、`a.fst` と `finiteStage m` が環境の二つの枠を占める。自然数順序と截断された証人 `inSome` を探索へ渡すと、明示的な数項と `IsLeast` のデータが返る。その数項の段階は集合を含み、より小さい数項ではその性質は成り立たない。したがってレベルは最小の出現段階であり、截断から任意に選ばれた段階ではない。
 <!--/-->
@@ -2177,7 +2177,7 @@ level-in : (a : Limit) → ⟨ a .fst ∈ˢ finiteStage (level a) ⟩
 <!--en-->
 The two projections have convenient names: `level a` is the least numeral at which the underlying set appears, and `level-in a` is the membership certificate at that stage. Everything the limit order needs about a member's floor is now available as data, and the next section builds the order out of exactly these two ingredients.
 <!--zh-->
-两个投影有方便的名字：`level a` 是底层集合出现的最小数码，`level-in a` 是该层处的成员证书。极限序所需的关于成员「楼层」的一切现在都已是数据，下一节将恰好用这两个材料构造那个序。
+两个投影有方便的名字：`level a` 是底层集合出现的最小数码，`level-in a` 是该层处的成员关系证书。极限序所需的关于元素「楼层」的一切现在都已是数据，下一节将恰好用这两个材料构造那个序。
 <!--ja-->
 二つの射影には扱いやすい名が付いている。`level a` は根底の集合が現れる最小の数項であり、`level-in a` はその段階での所属の証明書である。要素の「階」について整列順序が必要とするものはすべてデータとして手に入り、次の節はまさにこの二つの材料から順序を組み立てる。
 <!--/-->
@@ -2191,7 +2191,7 @@ The order on the limit takes the level as the primary key: a member of a lower l
 
 Irreflexivity and transitivity are case analyses on that alternative, with the level equations moving the stage-order facts to the level where they are needed. Trichotomy compares levels first and defers to the stage only when they agree.
 <!--zh-->
-极限上的序先按层号比较：层号较低的成员在前，同层的两个成员则按该层自己的序比较。第二支处理层号相等的情形，其方向使得第二个成员可以在第一个成员的层上读出；正因如此，定义中不出现任何跨层的转换。
+极限上的序先按层号比较：层号较低的元素在前，同层的两个元素则按该层自己的序比较。第二支处理层号相等的情形，其方向使得第二个元素可以在第一个元素的层上读出；正因如此，定义中不出现任何跨层的转换。
 
 非自反与传递是对那一支的分情形，层号等式的情形直接使用相应层上的层序事实。三歧先比较层号，仅当层号相同时才由层序判定。
 <!--ja-->
@@ -2286,7 +2286,7 @@ Trichotomy first decides `level a ≟ level b`. Unequal levels immediately give 
 <!--en-->
 The local trichotomy is repackaged into the limit relation with the equality in the required direction. A local result `a before b` returns the right branch of `a ≺ b` with `sym p : level b ≡ level a`; a local result `b before a` returns the right branch of `b ≺ a` with `p`, transporting the before-proof to stage `level b`. Equality of underlying sets lifts to equality in `Limit` because its membership component is propositional.
 <!--zh-->
-局部三歧按极限关系所需的方向重新打包。若局部结果是 `a before b`，就在 `a ≺ b` 的同层支中返回 `sym p : level b ≡ level a`；若结果是 `b before a`，就在 `b ≺ a` 的同层支中返回 `p`，并把 before 证明传输到层 `level b`。底层集合相等可提升为 `Limit` 中的相等，因为成员证明分量是命题。
+局部三歧按极限关系所需的方向重新打包。若局部结果是 `a before b`，就在 `a ≺ b` 的同层支中返回 `sym p : level b ≡ level a`；若结果是 `b before a`，就在 `b ≺ a` 的同层支中返回 `p`，并把 before 证明传输到层 `level b`。底层集合相等可提升为 `Limit` 中的相等，因为成员关系证明分量是命题。
 <!--ja-->
 局所的な三岐性を、極限関係が要求する等式の向きで包み直す。局所結果が `a before b` なら、`a ≺ b` の同レベル分岐に `sym p : level b ≡ level a` を返す。`b before a` なら、`b ≺ a` の同レベル分岐に `p` を返し、before の証明を段階 `level b` へ輸送する。基底集合の等式は、所属証明の成分が命題なので `Limit` の等式へ持ち上がる。
 <!--/-->
@@ -2358,7 +2358,7 @@ Discharging `step` splits by the branch of the hypothesis `c ≺ b`. In the left
 <!--en-->
 The right branch needs its bookkeeping made explicit. First `qc` composes the two level equations, `sym qb` with `q`, to certify that `level c ≡ k`; this is what lets `c` be seen at stage `k` at all. Then `pc` packages `c`'s underlying set with its membership in stage `k`, the membership being obtained by transporting `level-in c` along `qc`. A `Point k` is a set together with such a certificate, so this one construction moves the argument from the limit back into the finite stage where the inner order lives.
 <!--zh-->
-右支的簿记需要显式写出。首先 `qc` 复合两条层号等式，即 `sym qb` 与 `q`，证明 `level c ≡ k`；正是这一点使 `c` 能被放到层 `k` 中看。然后 `pc` 把 `c` 的底层集合与它在层 `k` 中的隶属打包在一起，该隶属由 `level-in c` 沿 `qc` 传输得到。`Point k` 就是一个集合连同这样的证书，所以这一个构造把论证从极限带回内层序所在的有穷层。
+右支的簿记需要显式写出。首先 `qc` 复合两条层号等式，即 `sym qb` 与 `q`，证明 `level c ≡ k`；正是这一点使 `c` 能被放到层 `k` 中看。然后 `pc` 把 `c` 的底层集合与它在层 `k` 中的成员关系打包在一起，该成员关系由 `level-in c` 沿 `qc` 传输得到。`Point k` 就是一个集合连同这样的证书，所以这一个构造把论证从极限带回内层序所在的有穷层。
 <!--ja-->
 右の枝の簿記は明示的に書き出す必要がある。まず `qc` は二つのレベルの等式 `sym qb` と `q` を合成し、`level c ≡ k` を証明する。`c` を段階 `k` で見られるようにするのはまさにこの等式である。次に `pc` は `c` の基底集合と、段階 `k` での所属を一つにまとめる。所属は `level-in c` を `qc` に沿って輸送して得る。`Point k` とは集合にこうした証書を添えたものなので、この一つの構成が議論を極限から、内側の順序の住む有限段階へと引き戻す。
 <!--/-->
@@ -2407,7 +2407,7 @@ The outer induction is well-founded induction on the natural-number level. Its h
 <!--en-->
 The body of `outer` reduces its goal to the inner lemma. It first forms `here`, the point of stage `k` corresponding to `b`, built exactly like `pc` above; then `Ordered.wellFounded k (stageOrder k) here` supplies the accessibility of that point inside stage `k`'s order, and `accInside` takes it from there, with the remaining two arguments being the level equation `q` and the reflexive identification of `b`'s set with `here`'s. The final statement `limit-wf` says every member of the limit is accessible, obtained by instantiating the level induction at `level a` with the trivial equation `refl`.
 <!--zh-->
-`outer` 的主体把目标化归到内层引理。它先造出 `here`，即与 `b` 对应的层 `k` 的点，其造法与上面的 `pc` 完全相同；然后 `Ordered.wellFounded k (stageOrder k) here` 提供该点在层 `k` 序中的可及性，`accInside` 便由此接手，其余两个实参是层号等式 `q` 以及把 `b` 的底层集合与 `here` 的认同起来的自反等式。最后的陈述 `limit-wf` 说极限的每个成员都可及，做法是在层号 `level a` 处以平凡等式 `refl` 实例化层号归纳。
+`outer` 的主体把目标化归到内层引理。它先造出 `here`，即与 `b` 对应的层 `k` 的点，其造法与上面的 `pc` 完全相同；然后 `Ordered.wellFounded k (stageOrder k) here` 提供该点在层 `k` 序中的可及性，`accInside` 便由此接手，其余两个实参是层号等式 `q` 以及把 `b` 的底层集合与 `here` 的认同起来的自反等式。最后的陈述 `limit-wf` 说极限的每个元素都可及，做法是在层号 `level a` 处以平凡等式 `refl` 实例化层号归纳。
 <!--ja-->
 `outer` の本体は目標を内側の補題へ帰着させる。まず `b` に対応する段階 `k` の点 `here` を作る。その作り方は上の `pc` とまったく同じである。次に `Ordered.wellFounded k (stageOrder k) here` がその点の段階 `k` の順序における accessibility を供給し、`accInside` がそこから引き受ける。残る二つの実引数はレベルの等式 `q` と、`b` の基底集合を `here` のそれと同一視する自反射的な等式である。最後の主張 `limit-wf` は極限のすべての要素が accessible であることを言い、レベルの帰納を `level a` で自明な等式 `refl` とともに具体化して得られる。
 <!--/-->
@@ -2441,7 +2441,7 @@ limitOrder = record
 <!--en-->
 Thus `limitOrder` is a strict well-order on the members of `Lset ω`: levels are the primary key, and elements with the same least level are compared by that finite stage’s order. Its least-element operation can therefore select from any merely inhabited proposition-valued family on the limit stage.
 <!--zh-->
-因此，`limitOrder` 是 `Lset ω` 诸成员上的严格良序：层号是主键，最小层号相同的元素由该有穷层的序比较。于是，它的最小元运算可从极限层上任意仅仅非空的命题值族中作出选取。
+因此，`limitOrder` 是 `Lset ω` 诸元素上的严格良序：层号是主键，最小层号相同的元素由该有穷层的序比较。于是，它的最小元运算可从极限层上任意仅仅非空的命题值族中作出选取。
 <!--ja-->
 したがって `limitOrder` は `Lset ω` の要素上の狭義整列順序である。レベルを第一のキーとし、最小レベルが等しい要素はその有限段階の順序で比較する。その最小要素演算により、極限段階上の単に非空な命題値族から選択できる。
 <!--/-->
@@ -2465,11 +2465,11 @@ Finite tallies climb through definable powersets, support the well-founded earli
 
 有穷点名册沿可定义幂集上升，支撑每个数码层处良基的最先分歧序，并最终给出 `Lset ω`{.Agda} 上的 `limitOrder`{.Agda}。
 
-`Tally`{.Agda} 就是本章拥有的全部有穷性：一个命中每个成员的有穷族，既不要求单射，也不要求可判定的相等。`PowerStep.powerTally`{.Agda} 把它抬到可定义幂集上，办法是枚举点名册上的位向量，并指出已清点层的每个子集都可定义；`stageOrder`{.Agda} 随后沿诸数码跑完这一步，于是每个有穷层都有一份点名册。
+`Tally`{.Agda} 就是本章拥有的全部有穷性：一个命中每个元素的有穷族，既不要求单射，也不要求可判定的相等。`PowerStep.powerTally`{.Agda} 把它抬到可定义幂集上，办法是枚举点名册上的位向量，并指出已清点层的每个子集都可定义；`stageOrder`{.Agda} 随后沿诸数码跑完这一步，于是每个有穷层都有一份点名册。
 
 `precedes`{.Agda} 在两个子集最先分歧之处比较它们。它的非自反性直接由定义推出，传递性由比较两个见证得到，三歧则由排中律连同基底的最小元得到。良基性并不单由这条比较的定义推出；在这里，它经由 `Search`{.Agda} 从点名册得到。自然数子集上的下降链例子说明了为何有穷层这一假设不可省略。
 
-`limitOrder`{.Agda} 是 `Lset ω`{.Agda} 诸成员上的一个严格良序，以层号为主键，层内则用各有穷层自己的序。面向模型的选取把它与 `leastOfFormula`{.Agda} 组合使用：被搜索的性质由对象语言公式、环境与经过检查的读取定理给出，所得最小成员因而是典范的。
+`limitOrder`{.Agda} 是 `Lset ω`{.Agda} 诸元素上的一个严格良序，以层号为主键，层内则用各有穷层自己的序。面向模型的选取把它与 `leastOfFormula`{.Agda} 组合使用：被搜索的性质由对象语言公式、环境与经过检查的读取定理给出，所得最小元素因而是典范的。
 <!--ja-->
 ## まとめ
 

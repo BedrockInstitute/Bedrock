@@ -28,7 +28,7 @@ module L.Axioms.Basic {ℓ : Level} where
 
 ```agda
 open import FOL.Syntax using ( Formula; var; con; _≐_; _∈̇_; _∨̇_; ⊤̇; ⊥̇; ∃̇∈ )
-open import FOL.ZFStructure using ( ↾-reflects; module hPropStructure )
+open import FOL.ZFStructure using ( ↾-reflects; module hPropView )
 import FOL.ZFModel
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV; regularityV )
 open import V.Model {ℓ}
@@ -56,7 +56,7 @@ This method constructs the empty set, unordered pairs, and unions inside `L`. Ex
 
 闭包引理 `defSet→isL` 完成这一过程。给定序数 `σ`，若仅仅存在一条外延为 `x` 的一元公式，`𝒟ₒ-intro` 便认出 `x` 是 `Lset σ` 的可定义子集，`𝒟ₒ→isL` 再把它放入 `L`。恒等式 `Lset (sucV σ) ≡ 𝒟ₒ (Lset σ)` 说明了层计算：下一层恰由当前层的可定义子集组成。打包后的集合 `LsetS` 与 `𝒟ₒS` 把这两个集合给成载体 `S` 的元素。
 
-本章以此在 `L` 中构造空集、无序对与并。外延性利用传递性，把关于可构造成员的一致性推广到所有周遭成员；正则公理则递归限制层级的可及性证明。若两个输入需要公共层，`bound2` 会给出共同的严格上界，而无须比较原来的两层。
+本章以此在 `L` 中构造空集、无序对与并。外延性利用传递性，把关于可构造元素的一致性推广到所有周遭元素；正则公理则递归限制层级的可及性证明。若两个输入需要公共层，`bound2` 会给出共同的严格上界，而无须比较原来的两层。
 <!--ja-->
 
 集合を作る演算を構成可能宇宙へ移すには、どうすればよいであろうか。集合が `L` に属するとは、ある順序数段階 `Lset σ` の定義可能部分集合として表示できることである。本章では、必要な入力を含む一つの順序数段階を見つけ、その段階上で目的の集合を外延にもつ論理式を書き、周囲の階層で外延的な等式を証明する、という方法を繰り返す。
@@ -76,7 +76,7 @@ open import Cubical.Foundations.Prelude using ( isPropIsContr )
 <!--en-->
 The defining step of the closure pattern is expressed in a first-order language. Its formulas sit over a structure's small index type, with equality and membership as the atomic predicates, and with disjunction and bounded existential quantification available; these are the operations used to form definable subsets. Two ambient facts about passing from a structure to a substructure will matter: a path between two elements of a restriction is already a path between their underlying sets, and that is the direction the inherited axioms will exploit.
 <!--zh-->
-闭包模式的刻出步骤在一阶语言中进行。它的公式以某结构的小索引类型为载体，原子谓词是相等与隶属，并备有析取与有界存在量词；这正是可定义性算子所用的构造。关于从结构过渡到子结构，有两条周遭集合层级的事实将发挥作用：限制中两个元素之间的路径已经是其底层集合之间的路径，而继承来的公理要利用的正是这一方向。
+闭包模式的刻出步骤在一阶语言中进行。它的公式以某结构的小索引类型为载体，原子谓词是相等与成员关系，并备有析取与有界存在量词；这正是可定义性算子所用的构造。关于从结构过渡到子结构，有两条周遭集合层级的事实将发挥作用：限制中两个元素之间的路径已经是其底层集合之间的路径，而继承来的公理要利用的正是这一方向。
 <!--ja-->
 閉包パターンの切り出しのステップは一階の言語の中で行われる。その論理式は構造の小さな添字型の上にあり、等式と所属が原子的な述語で、選言と有界存在量化が使える。これがまさに定義可能性の演算子が消費するものである。構造から部分構造への移行について、後で効いてくる周囲の事実が二つある。制限の中の二つの要素の間のパスは、すでに基底の集合の間のパスであり、継承される公理が利用するのはこの向きである。
 <!--/-->
@@ -84,7 +84,7 @@ The defining step of the closure pattern is expressed in a first-order language.
 <!--en-->
 Each construction to be lifted already satisfies its membership law in the ambient hierarchy: the empty set has no members, every member of an unordered pair is one of its two entries, and union has its exact two-way classification. These ambient laws, proved once in the hierarchy, serve as the standards against which the formulas carved below are checked by extensionality; they are inherited, not re-derived. Two further ambient facts enter the computations: membership in the successor `sucV σ` splits into members of `σ` and `σ` itself, and the singleton is identified with the pair `⁅ x , x ⁆`. The Kuratowski code `pr` of an ordered pair will have its stage placement computed from unordered pairs.
 <!--zh-->
-待提升的每个构造在周遭集合层级中已满足其成员律：空集没有成员，无序对的每个成员是两个条目之一，并集有精确的双向刻画。这些周遭定律在层级中证明一次，便充当下文公式以外延性接受检验的标准；它们被继承，而非重证。计算中还要用到两条周遭集合层级的事实：属于后继 `sucV σ` 可分成「属于 `σ`」与「就是 `σ`」两种情形，而单点集与对 `⁅ x , x ⁆` 被指认等同。有序对的 Kuratowski 码 `pr` 落在哪个层，将由无序对计算得出。
+待提升的每个构造在周遭集合层级中已满足其元素律：空集没有元素，无序对的每个元素是两个条目之一，并集有精确的双向刻画。这些周遭定律在层级中证明一次，便充当下文公式以外延性接受检验的标准；它们被继承，而非重证。计算中还要用到两条周遭集合层级的事实：属于后继 `sucV σ` 可分成「属于 `σ`」与「就是 `σ`」两种情形，而单点集与对 `⁅ x , x ⁆` 被指认等同。有序对的 Kuratowski 码 `pr` 落在哪个层，将由无序对计算得出。
 <!--ja-->
 持ち上げる対象となる各構成は、周囲の階層ですでに所属の法則を満たしている。空集合は元をひとつももたず、非順序対のすべての元は二つの項のいずれかであり、和集合は正確な双方向の特徴づけをもつ。これらの周囲の法則は階層で一度証明され、後で切り出される論理式を外延性で検査するときの基準となる。再証明されるのではなく、継承されるのである。計算にはさらに二つの周囲の事実が入る。後者 `sucV σ` への所属は「`σ` の要素である」場合と「`σ` そのものである」場合に分かれること、そして一元集合が対 `⁅ x , x ⁆` と同一視されることである。順序対のクラトフスキー符号 `pr` がどの段階に置かれるかは、非順序対から計算される。
 <!--/-->
@@ -92,7 +92,7 @@ Each construction to be lifted already satisfies its membership law in the ambie
 <!--en-->
 On the constructible side, `Lset` indexes stages by sets, `IsOrd` records which indices are ordinals, and `isL` is the class of constructible sets, transitive by `isL-trans`. The definable powerset of a stage is `𝒟ₒ`; `𝒟ₒ-intro` recognizes a definable subset from a formula and an extensional equation, and `Lset-in`, `Lset-out`, `Lset⊆𝒟ₒ`, `Lset-mono` and `Lset→isL` let membership in a stage be converted, carried upward along a larger stage, and read as a constructibility certificate. Stage transitivity is `layer-trans`.
 <!--zh-->
-可构造一侧提供层体系。`Lset` 以集合为索引给出各层，`IsOrd` 是序数性证书，`isL` 是可构造集的类，`isL-trans` 使其传递。层的可定义幂集是 `𝒟ₒ`；`𝒟ₒ-intro` 从一条公式加一条外延等式识别出可定义子集，而 `Lset-in`、`Lset-out`、`Lset⊆𝒟ₒ`、`Lset-mono` 与 `Lset→isL` 让层中的隶属得以转换、沿更大的层向上搬运、并被读成可构造性证书。层的传递性是 `layer-trans`。
+可构造一侧提供层体系。`Lset` 以集合为索引给出各层，`IsOrd` 是序数性证书，`isL` 是可构造集的类，`isL-trans` 使其传递。层的可定义幂集是 `𝒟ₒ`；`𝒟ₒ-intro` 从一条公式加一条外延等式识别出可定义子集，而 `Lset-in`、`Lset-out`、`Lset⊆𝒟ₒ`、`Lset-mono` 与 `Lset→isL` 让层中的成员关系得以转换、沿更大的层向上搬运、并被读成可构造性证书。层的传递性是 `layer-trans`。
 <!--ja-->
 構成可能な側は、塔とその簿記を供給する。`Lset` は集合を添字として段階を与え、`IsOrd` は順序数性の証明書、`isL` は構成可能集合のクラスで、`isL-trans` により推移的である。段階の定義可能冪集合は `𝒟ₒ` である。`𝒟ₒ-intro` が論理式と外延的な等式から定義可能部分集合を認識し、`Lset-in`、`Lset-out`、`Lset⊆𝒟ₒ`、`Lset-mono`、`Lset→isL` は段階への所属の変換、より大きな段階に沿った持ち上げ、構成可能性の証明書としての読み替えを可能にする。段階の推移性は `layer-trans` である。
 <!--/-->
@@ -112,7 +112,7 @@ open import Cubical.Induction.WellFounded using ( Acc; acc; WellFounded )
 <!--en-->
 Membership in the ambient hierarchy is proposition-valued, but the presentation embedding has propositional fibers. Consequently `∈-asFiber` converts a given membership proof into an actual index of the small presentation together with a path back to the member. Thus from `⟨ x ∈ Lset σ ⟩` one obtains `m : ⟪ Lset σ ⟫` with `⟪ Lset σ ⟫↪ m ≡ x`, allowing the formula to name that member by a constant. The output is data because the corresponding fiber is itself a proposition; there is no additional outer truncation to eliminate at this step.
 <!--zh-->
-周遭集合层级中的隶属取值于命题，而呈现嵌入的纤维也是命题。因此，`∈-asFiber` 能把给定的隶属证明转换成小呈现中的实际索引，连同回到该成员的路径。具体地，从 `⟨ x ∈ Lset σ ⟩` 得到 `m : ⟪ Lset σ ⟫` 与 `⟪ Lset σ ⟫↪ m ≡ x`，公式因而能用常元指名该成员。这里直接得到数据，是因为相应纤维自身为命题；这一步没有另一个外层截断需要消去。
+周遭集合层级中的成员关系取值于命题，而呈现嵌入的纤维也是命题。因此，`∈-asFiber` 能把给定的成员关系证明转换成小呈现中的实际索引，连同回到该元素的路径。具体地，从 `⟨ x ∈ Lset σ ⟩` 得到 `m : ⟪ Lset σ ⟫` 与 `⟪ Lset σ ⟫↪ m ≡ x`，公式因而能用常元指名该元素。这里直接得到数据，是因为相应纤维自身为命题；这一步没有另一个外层截断需要消去。
 <!--ja-->
 周囲の階層の所属は命題値であり、提示の埋め込みのファイバーも命題である。そのため `∈-asFiber` は、与えられた所属の証明を小さな提示の実際の添字と、その要素へ戻るパスに変換する。すなわち `⟨ x ∈ Lset σ ⟩` から `m : ⟪ Lset σ ⟫` と `⟪ Lset σ ⟫↪ m ≡ x` が得られ、論理式はこの要素を定数で名指せる。対応するファイバー自体が命題なのでデータを直接得られるのであり、この段階で消去すべき別の外側の切り詰めはない。
 <!--/-->
@@ -127,7 +127,7 @@ open import Cubical.HITs.CumulativeHierarchy.Constructions
 <!--en-->
 The ambient sets this chapter needs come with their exact membership characterizations: `∅-empty` for the empty set, `pairing-ax` for the unordered pair `⁅_,_⁆` and its singleton variant, and `union-ax` and `⋃_` for the union. These are the hierarchy's own classification results, and they supply both directions of each membership law, so the definable subsets carved below can be checked against them by extensionality. The successor operation `sucV` supplies the next stage's index.
 <!--zh-->
-本章所需的周遭集合都带有精确的隶属刻画：空集配 `∅-empty`，无序对 `⁅_,_⁆` 及其单点变体配 `pairing-ax`，并配 `union-ax` 与 `⋃_`。这些是层级自己的分类结果，给出每条成员律的两个方向，故下文刻出的可定义子集可以对照它们以外延性检验。后继运算 `sucV` 给出下一层的索引。
+本章所需的周遭集合都带有精确的成员关系刻画：空集配 `∅-empty`，无序对 `⁅_,_⁆` 及其单点变体配 `pairing-ax`，并配 `union-ax` 与 `⋃_`。这些是层级自己的分类结果，给出每条元素律的两个方向，故下文刻出的可定义子集可以对照它们以外延性检验。后继运算 `sucV` 给出下一层的索引。
 <!--ja-->
 本章で必要な周囲の集合は、それぞれ正確な所属の特徴づけを伴う。空集合には `∅-empty`、非順序対 `⁅_,_⁆` とその一元の変種には `pairing-ax`、和集合には `union-ax` と `⋃_` である。これらは階層そのものの分類結果であり、所属の法則の両方向を与えるので、後で切り出される定義可能部分集合は、これらと突き合わせて外延性で検査できる。後者演算 `sucV` が次の段階の添字を供給する。
 <!--/-->
@@ -137,7 +137,7 @@ The ambient sets this chapter needs come with their exact membership characteriz
         ; module InfinitySet )
 open InfinitySet using ( sucV )
 
-open hPropStructure 𝒮ʟ
+open hPropView 𝒮ʟ
 ```
 
 <!--en-->
@@ -160,7 +160,7 @@ The stage `Lset (sucV σ)` is a union indexed by `δ ∈ sucV σ`. Since `σ ∈
 <!--zh-->
 ## 可定义子集是可构造的
 
-层 `Lset (sucV σ)` 是以 `δ ∈ sucV σ` 为指标的一族集合的并。由于 `σ ∈ sucV σ`，集合 `𝒟ₒ (Lset σ)` 是其中一个被并集合，所以它的每个元素都属于 `Lset (sucV σ)`。若 `σ` 是序数，其后继也是序数，这条层隶属便给出 `isL` 证书。
+层 `Lset (sucV σ)` 是以 `δ ∈ sucV σ` 为指标的一族集合的并。由于 `σ ∈ sucV σ`，集合 `𝒟ₒ (Lset σ)` 是其中一个被并集合，所以它的每个元素都属于 `Lset (sucV σ)`。若 `σ` 是序数，其后继也是序数，这条层成员关系便给出 `isL` 证书。
 <!--ja-->
 ## 定義可能部分集合は構成可能である
 
@@ -170,7 +170,7 @@ The stage `Lset (sucV σ)` is a union indexed by `δ ∈ sucV σ`. Since `σ ∈
 <!--en-->
 The lemma `𝒟ₒ→isL` takes an ordinal `σ` with its ordinality certificate `oσ`, a set `x`, and a proof that `x` belongs to the definable power set of the stage at `σ`; it concludes that `x` is constructible. The proof places `x` one level up. Because `σ` is a member of its own successor `sucV σ`, the inclusion `Lset-in` carries membership in `𝒟ₒ (Lset σ)` into membership in the stage `Lset (sucV σ)`, whose index is an ordinal by `suc-ord oσ`. One application of `Lset→isL` then converts that stage membership into the certificate `isL x`. The truncated hypothesis is used as given: it is passed straight into `Lset-in`, whose conclusion is truncated in the same way, so no witness of constructibility is ever extracted or chosen.
 <!--zh-->
-引理 `𝒟ₒ→isL` 接收一个序数 `σ` 及其序数性证书 `oσ`、一个集合 `x`、以及「`x` 属于 `σ` 处层的可定义幂集」的证明，结论是 `x` 可构造。证明把 `x` 抬高一级。由于 `σ` 属于自身的后继 `sucV σ`，包含关系 `Lset-in` 把「属于 `𝒟ₒ (Lset σ)`」变成「属于层 `Lset (sucV σ)`」，而该层的索引经 `suc-ord oσ` 是序数。再用一次 `Lset→isL`，就把这条层隶属转成证书 `isL x`。那条截断的假设按原样使用：它被直接送入 `Lset-in`，而后者的结论以同样方式截断，因此全程没有提取或选定任何可构造性见证。
+引理 `𝒟ₒ→isL` 接收一个序数 `σ` 及其序数性证书 `oσ`、一个集合 `x`、以及「`x` 属于 `σ` 处层的可定义幂集」的证明，结论是 `x` 可构造。证明把 `x` 抬高一级。由于 `σ` 属于自身的后继 `sucV σ`，包含关系 `Lset-in` 把「属于 `𝒟ₒ (Lset σ)`」变成「属于层 `Lset (sucV σ)`」，而该层的索引经 `suc-ord oσ` 是序数。再用一次 `Lset→isL`，就把这条层成员关系转成证书 `isL x`。那条截断的假设按原样使用：它被直接送入 `Lset-in`，而后者的结论以同样方式截断，因此全程没有提取或选定任何可构造性见证。
 <!--ja-->
 補題 `𝒟ₒ→isL` は、順序数 `σ` とその順序数性の証明書 `oσ`、集合 `x`、そして「`x` が `σ` での段階の定義可能冪集合に属する」証明を受け取り、`x` が構成可能であると結論する。証明は `x` を一段引き上げる。`σ` は自身の後者 `sucV σ` の要素でもあるので、包含 `Lset-in` は「`𝒟ₒ (Lset σ)` への所属」を「段階 `Lset (sucV σ)` への所属」へ変える。この段階の添字は `suc-ord oσ` により順序数である。そのうえで `Lset→isL` を一度適用すれば、この段階への所属が証明書 `isL x` に変わる。切り詰められた仮定はそのまま使われる。仮定は `Lset-in` に直接渡され、その結論も同じ形で切り詰められているため、構成可能性の証人が取り出されたり選ばれたりすることはない。
 <!--/-->
@@ -192,7 +192,7 @@ Composing the closure lemma with the recognition principle for the operator give
 <!--en-->
 The hypothesis of `defSet→isL` is a truncated existential: merely some formula `φ` of arity one over the stage's members satisfies `defSet (Lset σ) φ ≡ x`. The recognition principle `𝒟ₒ-intro` turns exactly such data into membership of `x` in `𝒟ₒ (Lset σ)`. That membership is a proposition, so eliminating the truncation into it is legitimate and no formula is ever chosen; the one-line composition with `𝒟ₒ→isL` then delivers `isL x`. The shape of the displayed certificate, an ordinal stage, a defining formula, and an extensional equation, is the pattern the rest of the chapter instantiates.
 <!--zh-->
-`defSet→isL` 的假设是一个截断的存在式：仅仅是存在一条以该层成员为载体、元数为 1 的公式 `φ`，满足 `defSet (Lset σ) φ ≡ x`。识别原则 `𝒟ₒ-intro` 恰好把这样的数据转换成 `x` 属于 `𝒟ₒ (Lset σ)` 的成员关系。该隶属是命题，故向它消去截断是合法的，任何公式都从未被选定；与 `𝒟ₒ→isL` 的一行复合随即给出 `isL x`。这份证书的形状，序数层、定义公式、外延等式，正是本章余下部分反复实例化的模式。
+`defSet→isL` 的假设是一个截断的存在式：仅仅是存在一条以该层元素为载体、元数为 1 的公式 `φ`，满足 `defSet (Lset σ) φ ≡ x`。识别原则 `𝒟ₒ-intro` 恰好把这样的数据转换成 `x` 属于 `𝒟ₒ (Lset σ)` 的成员关系。该成员关系是命题，故向它消去截断是合法的，任何公式都从未被选定；与 `𝒟ₒ→isL` 的一行复合随即给出 `isL x`。这份证书的形状，序数层、定义公式、外延等式，正是本章余下部分反复实例化的模式。
 <!--ja-->
 `defSet→isL` の仮定は切り詰められた存在式である。すなわち、段階の要素の上のアリティ 1 の論理式 `φ` で `defSet (Lset σ) φ ≡ x` を満たすものが、単に存在するということである。認識の原理 `𝒟ₒ-intro` はまさにこのようなデータを「`x` が `𝒟ₒ (Lset σ)` に属する」という所属へ変える。この所属は命題なので、そこへの切り詰めの除去は正当であり、論理式が選ばれることはない。`𝒟ₒ→isL` との一行の合成がただちに `isL x` を与える。順序数の段階、定義する論理式、外延的な等式、というこの証明書の形こそ、本章の残りが実例化するパターンである。
 <!--/-->
@@ -215,7 +215,7 @@ The zeroth instance of the pattern is the stage itself. The formula "true" defin
 <!--en-->
 The proof of `isL-Lset` is a direct instance of `𝒟ₒ→isL` at `x = Lset β`. The witness formula is the constant-true formula `⊤̇`, and `defSet⊤≡A` identifies its extension with the whole of the carrier set, here the stage `Lset β` itself. Wrapping the pair of formula and equation in a single truncation gives a member of `𝒟ₒ (Lset β)`, and the closure lemma lifts it to `⟨ isL (Lset β) ⟩`. Nothing about the stage's internal structure is inspected; only the ordinality of `β` enters, through `suc-ord`.
 <!--zh-->
-`isL-Lset` 的证明是在 `x = Lset β` 处对 `𝒟ₒ→isL` 的直接实例化。见证公式是常真公式 `⊤̇`，而 `defSet⊤≡A` 把它的外延等同于载体集合的全体，在这里就是层 `Lset β` 自身。把公式与等式组成的对包进一次截断，便得到 `𝒟ₒ (Lset β)` 的一个成员；闭包引理再把它提升为 `⟨ isL (Lset β) ⟩`。证明没有检视层的任何内部结构；唯一进入论证的是 `β` 的序数性，经由 `suc-ord`。
+`isL-Lset` 的证明是在 `x = Lset β` 处对 `𝒟ₒ→isL` 的直接实例化。见证公式是常真公式 `⊤̇`，而 `defSet⊤≡A` 把它的外延等同于载体集合的全体，在这里就是层 `Lset β` 自身。把公式与等式组成的对包进一次截断，便得到 `𝒟ₒ (Lset β)` 的一个元素；闭包引理再把它提升为 `⟨ isL (Lset β) ⟩`。证明没有检视层的任何内部结构；唯一进入论证的是 `β` 的序数性，经由 `suc-ord`。
 <!--ja-->
 `isL-Lset` の証明は `x = Lset β` における `𝒟ₒ→isL` の直接の実例である。証人となる論理式は定数真の論理式 `⊤̇` であり、`defSet⊤≡A` がその外延を台の集合の全体、ここでは段階 `Lset β` 自身と同一視する。論理式と等式の組を一度の切り詰めに包めば `𝒟ₒ (Lset β)` の要素が得られ、閉包の補題がそれを `⟨ isL (Lset β) ⟩` へ引き上げる。証明は段階の内部構造を一切調べず、論に入るのは `suc-ord` を通しての `β` の順序数性だけである。
 <!--/-->
@@ -250,7 +250,7 @@ With the identity in hand, constructibility of the definable power set follows a
 <!--zh-->
 ## 后继层
 
-塔的步进是可定义幂集；在后继索引处，步进就是全部：`Lset (sucV σ)` 恰是 `𝒟ₒ (Lset σ)`。这条恒等式作为两个包含来证明。其一，`σ` 属于自身的后继，所以 `𝒟ₒ (Lset σ)` 是被并集合之一，其每个元素都属于下一层。其二，`Lset (sucV σ)` 的成员属于某个 `δ ∈ sucV σ` 对应的 `𝒟ₒ (Lset δ)`；若 `δ` 是 `σ` 的成员，该集合已在 `Lset σ` 中，因而是它的可定义子集；若 `δ` 就是 `σ`，结论直接成立。两个方向都不使用相对化，也不需要算子的单调性；这里没有 `σ` 的序数性假设。
+塔的步进是可定义幂集；在后继索引处，步进就是全部：`Lset (sucV σ)` 恰是 `𝒟ₒ (Lset σ)`。这条恒等式作为两个包含来证明。其一，`σ` 属于自身的后继，所以 `𝒟ₒ (Lset σ)` 是被并集合之一，其每个元素都属于下一层。其二，`Lset (sucV σ)` 的元素属于某个 `δ ∈ sucV σ` 对应的 `𝒟ₒ (Lset δ)`；若 `δ` 是 `σ` 的元素，该集合已在 `Lset σ` 中，因而是它的可定义子集；若 `δ` 就是 `σ`，结论直接成立。两个方向都不使用相对化，也不需要算子的单调性；这里没有 `σ` 的序数性假设。
 
 有了这条恒等式，可定义幂集的可构造性随之立得：层在下一层可构造，而层的可定义幂集正是那下一层。
 <!--ja-->
@@ -264,7 +264,7 @@ With the identity in hand, constructibility of the definable power set follows a
 <!--en-->
 The two sets are compared by ambient extensionality, which reduces the path to a pair of inclusions. The harder inclusion needs a bridge lemma: from a member `x` of the next stage, merely some earlier stage's definable power set contains `x`, with the witness `δ` a member of `sucV σ`. Since the members of `sucV σ` are, by its construction, either members of `σ` or `σ` itself, the witness is exactly the information the argument can case on.
 <!--zh-->
-两个集合用周遭集合层级的外延性比较，路径化归为一对包含关系。较难的方向需要一条桥引理：从下一层的成员 `x` 出发，仅仅是存在某个更早层的可定义幂集包含 `x`，其见证 `δ` 是 `sucV σ` 的成员。按 `sucV σ` 的构造，其成员要么是 `σ` 的成员，要么是 `σ` 自身，故这个见证正是论证可以分情况处理的信息。
+两个集合用周遭集合层级的外延性比较，路径化归为一对包含关系。较难的方向需要一条桥引理：从下一层的元素 `x` 出发，仅仅是存在某个更早层的可定义幂集包含 `x`，其见证 `δ` 是 `sucV σ` 的元素。按 `sucV σ` 的构造，其元素要么是 `σ` 的元素，要么是 `σ` 自身，故这个见证正是论证可以分情况处理的信息。
 <!--ja-->
 二つの集合は周囲の外延性によって比較され、パスは一対の包含へ帰着する。より難しい包含には橋渡しの補題が要る。次の段階の要素 `x` から、ある前の段階の定義可能冪集合が `x` を含むことが単に成り立ち、その証人 `δ` は `sucV σ` の要素である。`sucV σ` の構成により、その要素は `σ` の要素か `σ` 自身のどちらかなので、この証人はまさに議論が場合分けできる情報である。
 <!--/-->
@@ -280,7 +280,7 @@ Lset-suc σ = extensionality (Lset (sucV σ)) (𝒟ₒ (Lset σ)) (sub₁ , sub�
 <!--en-->
 The elimination of the witness uses exactly that dichotomy. `∈sucV-elim` takes the proof that `δ` lies in `sucV σ` and two branches. In the first branch `δ` is a member of `σ`, so `Lset-in` places `x` inside `Lset σ`, and the lemma `Lset⊆𝒟ₒ` says that every member of a stage is one of its definable subsets, lifting `x` into `𝒟ₒ (Lset σ)`. In the second branch `δ` is `σ` itself, and `subst` transports the given membership across the path `δ ≡ σ`, changing the index of the stage. The whole target `x ∈ 𝒟ₒ (Lset σ)` is a proposition, which is what allows the truncated witness to be eliminated here at all.
 <!--zh-->
-对见证的消去恰好使用这条二分法。`∈sucV-elim` 取「`δ` 落在 `sucV σ` 中」的证明与两个分支。第一个分支里 `δ` 是 `σ` 的成员，于是 `Lset-in` 把 `x` 放进 `Lset σ`，而引理 `Lset⊆𝒟ₒ` 说层的每个成员都是它的可定义子集之一，把 `x` 抬进 `𝒟ₒ (Lset σ)`。第二个分支里 `δ` 就是 `σ` 自身，`subst` 沿路径 `δ ≡ σ` 搬运已有的隶属，改换层的索引。整个目标 `x ∈ 𝒟ₒ (Lset σ)` 是命题，这正是截断的见证在此得以消去的前提。
+对见证的消去恰好使用这条二分法。`∈sucV-elim` 取「`δ` 落在 `sucV σ` 中」的证明与两个分支。第一个分支里 `δ` 是 `σ` 的元素，于是 `Lset-in` 把 `x` 放进 `Lset σ`，而引理 `Lset⊆𝒟ₒ` 说层的每个元素都是它的可定义子集之一，把 `x` 抬进 `𝒟ₒ (Lset σ)`。第二个分支里 `δ` 就是 `σ` 自身，`subst` 沿路径 `δ ≡ σ` 搬运已有的成员关系，改换层的索引。整个目标 `x ∈ 𝒟ₒ (Lset σ)` 是命题，这正是截断的见证在此得以消去的前提。
 <!--ja-->
 証人の消去は、まさにこの二分法を使う。`∈sucV-elim` は「`δ` が `sucV σ` に属する」証明と二つの分岐を受け取る。第一の分岐では `δ` は `σ` の要素なので、`Lset-in` が `x` を `Lset σ` の内側に置き、補題 `Lset⊆𝒟ₒ` は段階のすべての要素がその定義可能部分集合の一つであると言うので、`x` は `𝒟ₒ (Lset σ)` へ引き上げられる。第二の分岐では `δ` は `σ` 自身であり、`subst` が与えられた所属をパス `δ ≡ σ` に沿って輸送し、段階の添字を付け替える。目標全体 `x ∈ 𝒟ₒ (Lset σ)` が命題であることこそ、切り詰められた証人をここで除去できる前提である。
 <!--/-->
@@ -296,7 +296,7 @@ The elimination of the witness uses exactly that dichotomy. `∈sucV-elim` takes
 <!--en-->
 The first inclusion applies the bridge in its forward direction. A structural member of `Lset (sucV σ)` is converted by `∈∈ₛ` into membership in the surrounding hierarchy, the stage characterization `Lset-out` returns the truncated earlier-stage witness, and `fromEarlier` maps it into `𝒟ₒ (Lset σ)`; the elimination lands in the proposition `x ∈ 𝒟ₒ (Lset σ)`, which is what licenses discarding the choice of `δ`. The reverse inclusion needs only that `σ` belongs to its own successor: after `∈∈ₛ` converts the structural membership into the ambient form, `Lset-in` with the witness `self∈sucV σ` places any member of `𝒟ₒ (Lset σ)` directly into the stage at `sucV σ`. The two inclusions assemble into the identity as a path.
 <!--zh-->
-第一个包含正向使用这条桥。`Lset (sucV σ)` 的结构成员经 `∈∈ₛ` 转成周遭成员关系，层刻画 `Lset-out` 返回截断的更早层见证，`fromEarlier` 再把它映入 `𝒟ₒ (Lset σ)`；消去的目标是命题 `x ∈ 𝒟ₒ (Lset σ)`，这正是丢弃 `δ` 的选择得以合法的依据。反向包含只需 `σ` 属于自身的后继：经 `∈∈ₛ` 把结构成员关系转成周遭形式后，带见证 `self∈sucV σ` 的 `Lset-in` 把 `𝒟ₒ (Lset σ)` 的任何成员直接放进 `sucV σ` 处的层。两个包含合起来，便得到作为路径的恒等式。
+第一个包含正向使用这条桥。`Lset (sucV σ)` 的结构元素经 `∈∈ₛ` 转成周遭成员关系，层刻画 `Lset-out` 返回截断的更早层见证，`fromEarlier` 再把它映入 `𝒟ₒ (Lset σ)`；消去的目标是命题 `x ∈ 𝒟ₒ (Lset σ)`，这正是丢弃 `δ` 的选择得以合法的依据。反向包含只需 `σ` 属于自身的后继：经 `∈∈ₛ` 把结构成员关系转成周遭形式后，带见证 `self∈sucV σ` 的 `Lset-in` 把 `𝒟ₒ (Lset σ)` 的任何元素直接放进 `sucV σ` 处的层。两个包含合起来，便得到作为路径的恒等式。
 <!--ja-->
 第一の包含はこの橋を順向きに使う。`Lset (sucV σ)` の構造的な要素は `∈∈ₛ` によって周囲の所属へ変換され、段階の特徴づけ `Lset-out` が切り詰められた前段階の証人を返し、`fromEarlier` がそれを `𝒟ₒ (Lset σ)` へ写す。消去の着地点は命題 `x ∈ 𝒟ₒ (Lset σ)` であり、`δ` の選択を捨ててよい根拠はこれである。逆向きの包含には、`σ` が自身の後者に属することだけが要る。`∈∈ₛ` で構造的な所属を周囲の形へ変換したのち、証人 `self∈sucV σ` とともに `Lset-in` を適用すれば、`𝒟ₒ (Lset σ)` の任意の要素が `sucV σ` での段階に直接入る。二つの包含を合わせれば、パスとしての恒等式が得られる。
 <!--/-->
@@ -370,9 +370,9 @@ The whole content is one induction identifying satisfaction of the disjunction w
 <!--zh-->
 ## 有穷族
 
-闭包模式在有穷族上最容易看清。固定一层 `Lset σ` 与它的 `n` 个成员组成的族。它们的像是集合 `finSet n h`，而「等于这一个」的有穷析取恰好从该层中刻出这个像：长度为零时公式取假，此后每个长度多比较一个常元与自由变元。族中的成员可以重复，不同位置可以指名同一个集合。
+闭包模式在有穷族上最容易看清。固定一层 `Lset σ` 与它的 `n` 个元素组成的族。它们的像是集合 `finSet n h`，而「等于这一个」的有穷析取恰好从该层中刻出这个像：长度为零时公式取假，此后每个长度多比较一个常元与自由变元。族中的元素可以重复，不同位置可以指名同一个集合。
 
-全部内容是一次归纳，它把析取的满足与被该族命中等同起来，两个方向都对着被指名成员的嵌入代表陈述。两个方向就位后，一次周遭集合层级的外延性证出 `defSet≡`，即「可定义子集恰是该像」的等式；`finSet∈𝒟ₒ` 把该像记录为 `𝒟ₒ (Lset σ)` 的成员，而 `finSetL` 从「族中每个成员都落在该层」的假设出发，经闭包引理 `defSet→isL`，给出证书 `isL (finSet n h)`。
+全部内容是一次归纳，它把析取的满足与被该族命中等同起来，两个方向都对着被指名元素的嵌入代表陈述。两个方向就位后，一次周遭集合层级的外延性证出 `defSet≡`，即「可定义子集恰是该像」的等式；`finSet∈𝒟ₒ` 把该像记录为 `𝒟ₒ (Lset σ)` 的元素，而 `finSetL` 从「族中每个元素都落在该层」的假设出发，经闭包引理 `defSet→isL`，给出证书 `isL (finSet n h)`。
 <!--ja-->
 ## 有限族
 
@@ -401,7 +401,7 @@ finSet-in n h y = map₁ (λ { (i , q) → lift i , q })
 <!--en-->
 The reverse membership lemma `finSet-out` is the same map read backwards, from a lifted index back down to `Fin n`. The definability work then happens at an ordinal stage `σ`: working inside `DefOf (Lset σ)` fixes the alphabet of constants to be the small index type `⟪ Lset σ ⟫` of that stage, so a member of the stage can be named by a constant, and the definable subsets at issue are those carved from `Lset σ`.
 <!--zh-->
-反向成员引理 `finSet-out` 是同一映射倒过来读，从提升后的索引降回 `Fin n`。随后可定义性的工作在序数层 `σ` 上进行：在 `DefOf (Lset σ)` 内部工作，把常元的字母表定为该层的小索引类型 `⟪ Lset σ ⟫`，于是层的成员可用常元命名，而所论的可定义子集就是从 `Lset σ` 中刻出的那些。
+反向成员关系引理 `finSet-out` 是同一映射倒过来读，从提升后的索引降回 `Fin n`。随后可定义性的工作在序数层 `σ` 上进行：在 `DefOf (Lset σ)` 内部工作，把常元的字母表定为该层的小索引类型 `⟪ Lset σ ⟫`，于是层的元素可用常元命名，而所论的可定义子集就是从 `Lset σ` 中刻出的那些。
 <!--ja-->
 逆向きの所属の補題 `finSet-out` は、同じ写像を逆に読んだもので、持ち上げられた添字から `Fin n` へ降りる。つづいて定義可能性の作業は順序数の段階 `σ` で行われる。`DefOf (Lset σ)` の内側で作業すると、定数のアルファベットはその段階の小さな添字型 `⟪ Lset σ ⟫` に確定し、段階の要素は定数で名指せる。問題になる定義可能部分集合は、`Lset σ` から切り出されるものである。
 <!--/-->
@@ -427,7 +427,7 @@ module FinOf (σ : V ℓ) (oσ : IsOrd σ) where
 <!--en-->
 The formula is the finite disjunction of equalities. At length zero there is nothing to be equal to, so the formula is falsity; at the successor of a length, the free variable is compared against the constant naming the first family member, and the remaining members are handled by the recursive call with the family shifted. The arity is one throughout: a single free-variable slot serves the whole disjunction, and the function `g` need not be injective, distinct positions may name the same member.
 <!--zh-->
-公式是等式的有穷析取。长度为零时无可等同之物，故公式取假；长度为后继时，自由变元与指名族首成员的常元比较，其余成员由族平移后的递归调用处理。元数始终为一：整个析取共用一个自由变元槽，而函数 `g` 无须单射，不同位置可以指名同一个成员。
+公式是等式的有穷析取。长度为零时无可等同之物，故公式取假；长度为后继时，自由变元与指名族首元素的常元比较，其余元素由族平移后的递归调用处理。元数始终为一：整个析取共用一个自由变元槽，而函数 `g` 无须单射，不同位置可以指名同一个元素。
 <!--ja-->
 論理式は等式の有限論理和である。長さ零では等しい相手がいないので論理式は偽となり、長さが後者のときは自由変数を族の最初の要素を名指す定数と比較し、残りの要素は族をずらした再帰呼び出しに委ねる。アリティは全体を通して一である。一つの自由変数のスロットが論理和全体に使われ、関数 `g` は単射である必要はなく、異なる位置が同じ要素を名指してもかまわない。
 <!--/-->
@@ -444,7 +444,7 @@ The formula is the finite disjunction of equalities. At length zero there is not
 <!--en-->
 The bridge statement `Hits` says that the member named by the environment is merely hit by the family, with the path written against the embedded representative `⟪ Lset σ ⟫↪ (g i)` of the named member. The two directions connect satisfaction of the disjunction, which is what the definable subset sees, with being hit by the family, which is what the image set sees.
 <!--zh-->
-桥陈述 `Hits` 说：赋值所指名的成员仅仅被该族命中，其中路径是对照被指名成员的嵌入代表 `⟪ Lset σ ⟫↪ (g i)` 书写的。两个方向连接的是：可定义子集所看见的「析取被满足」，与像集合所看见的「被族命中」。
+桥陈述 `Hits` 说：赋值所指名的元素仅仅被该族命中，其中路径是对照被指名元素的嵌入代表 `⟪ Lset σ ⟫↪ (g i)` 书写的。两个方向连接的是：可定义子集所看见的「析取被满足」，与像集合所看见的「被族命中」。
 <!--ja-->
 橋渡しの主張 `Hits` は、環境で名指された要素が族に単に命中することを言う。パスは名指された要素の埋め込まれた代表 `⟪ Lset σ ⟫↪ (g i)` に対して書かれる。二つの方向は、定義可能部分集合が見る「論理和の充足」と、像の集合が見る「族への命中」とを結ぶ。
 <!--/-->
@@ -493,7 +493,7 @@ The reverse direction turns a hit into satisfaction, again by recursion on the l
 <!--en-->
 At a successor length, the hit is a truncated pair whose index is either `zero` or a successor `suc i`. In the first case the path identifies the member with the first constant, and the left disjunct of the formula is satisfied. In the second, the recursive call applied to the shifted family produces satisfaction of the tail disjunction, which becomes the right disjunct. Both cases return their answer inside a truncation, so the proof never depends on which index a hit happened to carry.
 <!--zh-->
-长度为后继时，命中是截断的对，其索引要么是 `zero`，要么是后继 `suc i`。第一种情形中，路径把成员与第一个常元等同，公式的左析取支得到满足。第二种情形中，对平移后族施用递归调用得到尾部析取的满足，它成为右析取支。两种情形都在截断内返回答案，故证明从不依赖于命中恰好携带的是哪个索引。
+长度为后继时，命中是截断的对，其索引要么是 `zero`，要么是后继 `suc i`。第一种情形中，路径把元素与第一个常元等同，公式的左析取支得到满足。第二种情形中，对平移后族施用递归调用得到尾部析取的满足，它成为右析取支。两种情形都在截断内返回答案，故证明从不依赖于命中恰好携带的是哪个索引。
 <!--ja-->
 長さが後者のとき、命中は添字が `zero` であるか後者 `suc i` であるかのいずれかである切り詰められた対である。最初の場合、パスが要素を最初の定数と同一視し、論理式の左の選言肢が充足される。第二の場合、ずらした族に対する再帰呼び出しが尾部の論理和の充足を生み、それが右の選言肢になる。どちらの場合も答えは切り詰めの内部で返されるので、証明が命中のもつ添字に依存することはない。
 <!--/-->
@@ -509,7 +509,7 @@ At a successor length, the hit is a truncated pair whose index is either `zero` 
 <!--en-->
 The two directions of the bridge are exactly the two inclusions that the identity `defSet≡` needs. It is proved by ambient extensionality, which reduces the path of sets to a pair of inclusions, and the image set is abbreviated `F`. It remains to translate between membership in the structured presentation and membership in the surrounding hierarchy.
 <!--zh-->
-桥的两个方向恰好是恒等式 `defSet≡` 所需的两条包含。证明用的是周遭集合层级的外延性：集合的路径化归为一对包含，而像集合以缩写 `F` 记之。剩下的工作只是在结构成员记号与周遭成员记号之间做簿记。
+桥的两个方向恰好是恒等式 `defSet≡` 所需的两条包含。证明用的是周遭集合层级的外延性：集合的路径化归为一对包含，而像集合以缩写 `F` 记之。剩下的工作只是在结构元素记号与周遭元素记号之间做簿记。
 <!--ja-->
 橋の二つの方向は、恒等式 `defSet≡` が必要とする二つの包含にちょうど一致する。証明は周囲の外延性によるもので、集合のパスは一対の包含へ帰着し、像の集合には略称 `F` が使われる。残りの作業は、構造的な所属の記法と周囲の所属の記法のあいだの簿記である。
 <!--/-->
@@ -525,7 +525,7 @@ The two directions of the bridge are exactly the two inclusions that the identit
 <!--en-->
 The first inclusion starts from a structural member `y` of the definable subset. The conversion `∈∈ₛ` turns it into ambient membership, whose reading lemma supplies the truncated defining data: an environment `m` with a satisfaction certificate, together with a path `q` identifying `y` with the member named by `m`. The goal being proved at that point is the proposition `⟨ y ∈ F ⟩`, which is what licenses eliminating the truncation.
 <!--zh-->
-第一个包含从可定义子集的结构成员 `y` 出发。转换 `∈∈ₛ` 把它变成周遭成员关系，其读法引理给出截断的定义数据：赋值 `m` 连同满足证书，以及强迫 `y` 等于 `m` 所指名成员的路径 `q`。此处要证的目标是命题 `⟨ y ∈ F ⟩`，这正是消去截断得以合法的依据。
+第一个包含从可定义子集的结构元素 `y` 出发。转换 `∈∈ₛ` 把它变成周遭成员关系，其读法引理给出截断的定义数据：赋值 `m` 连同满足证书，以及强迫 `y` 等于 `m` 所指名元素的路径 `q`。此处要证的目标是命题 `⟨ y ∈ F ⟩`，这正是消去截断得以合法的依据。
 <!--ja-->
 第一の包含は、定義可能部分集合の構造的な要素 `y` から始まる。変換 `∈∈ₛ` がそれを周囲の所属へ変え、その読み取り補題が切り詰められた定義データを与える。すなわち充足の証明書を伴う環境 `m` と、`y` を `m` の名指す要素と同一視するパス `q` である。この時点で証明すべき目標は命題 `⟨ y ∈ F ⟩` であり、これが切り詰めの除去を正当化する。
 <!--/-->
@@ -541,7 +541,7 @@ The first inclusion starts from a structural member `y` of the definable subset.
 <!--en-->
 The satisfaction certificate is converted, by the computation rule `defSet-mem` for membership in a definable subset, into a satisfaction of the disjunction at the environment `m`. The bridge lemma `sat→hits` then produces a hit, and `finSet-in` reads the hit as membership of the embedded element in the image. The transport along `q` finally relocates that membership from the named member to `y` itself.
 <!--zh-->
-满足证书经可定义子集成员关系的计算规则 `defSet-mem` 转换，得到析取在赋值 `m` 处的一次满足。桥引理 `sat→hits` 随之产出一次命中，`finSet-in` 把命中读成嵌入元素在像中的成员关系。最后沿 `q` 的搬移把这条成员关系从被指名的成员移到 `y` 自身。
+满足证书经可定义子集成员关系的计算规则 `defSet-mem` 转换，得到析取在赋值 `m` 处的一次满足。桥引理 `sat→hits` 随之产出一次命中，`finSet-in` 把命中读成嵌入元素在像中的成员关系。最后沿 `q` 的搬移把这条成员关系从被指名的元素移到 `y` 自身。
 <!--ja-->
 充足の証明書は、定義可能部分集合への所属の計算規則 `defSet-mem` によって、環境 `m` での論理和の充足へ変換される。橋渡しの補題 `sat→hits` が命中を生み、`finSet-in` がその命中を、埋め込まれた要素の像への所属として読む。最後に `q` に沿った輸送が、その所属を名指された要素から `y` 自身へ移す。
 <!--/-->
@@ -573,7 +573,7 @@ The reverse inclusion starts from `y ∈ F`. The elimination rule `finSet-out` m
 <!--en-->
 The satisfaction is read, through the membership reading of `defSet` used in reverse, as structural membership of the embedded `g i` in the definable subset, and the transport along the hit's path moves it onto `y`. With both inclusions assembled, `defSet≡` states the equality as a path of sets: the subset carved by the finite disjunction is the image of the family, repetitions in the family included, since equal members are named by several constants without affecting the image.
 <!--zh-->
-满足经反向使用 `defSet` 的隶属读法，被读成嵌入的 `g i` 在可定义子集中的结构成员关系，再沿命中路径的搬移把它落到 `y` 上。两条包含合起来，`defSet≡` 便作为集合的路径陈述这一相等：由有穷析取刻出的子集就是该族的像，族中的重复也在其内，因为相同的成员由多个常元名指，并不影响像。
+满足经反向使用 `defSet` 的成员关系读法，被读成嵌入的 `g i` 在可定义子集中的结构成员关系，再沿命中路径的搬移把它落到 `y` 上。两条包含合起来，`defSet≡` 便作为集合的路径陈述这一相等：由有穷析取刻出的子集就是该族的像，族中的重复也在其内，因为相同的元素由多个常元名指，并不影响像。
 <!--ja-->
 充足は `defSet` の所属の読みを逆向きに用いて、埋め込まれた `g i` の定義可能部分集合への構造的な所属として読まれ、命中のパスに沿った輸送がそれを `y` へ移す。二つの包含を組み合わせれば、`defSet≡` は集合としてのパスでこの等式を述べる。有限論理和が切り出す部分集合は族の像であり、族に繰り返しがあっても同様である。同じ要素が複数の定数で名指されても像は変わらないからである。
 <!--/-->
@@ -590,7 +590,7 @@ The satisfaction is read, through the membership reading of `defSet` used in rev
 <!--en-->
 Two packaging steps finish the section. First, `finSet∈𝒟ₒ` supplies the disjunction and the identity just proved to `𝒟ₒ-intro`, recording the image set as a member of the definable power set of the stage; the certificate is truncated, so the particular formula is not part of the data retained. Second, `finSetL` starts from a family of arbitrary sets, each of which is given as lying in the stage by a membership proof. For each member, `∈-asFiber` converts that membership proof into an index of the stage's presentation together with a path back to the member; collecting these paths and rewriting the image set along them by `cong (finSet n) (funExt qg)` identifies it with the embedded family that `defSet≡` speaks about. The closure lemma `defSet→isL` then delivers the constructibility of `finSet n h`.
 <!--zh-->
-本节以两步收尾。第一步，`finSet∈𝒟ₒ` 把刚才证明的析取与等式交给 `𝒟ₒ-intro`，把像集合记录为该层可定义幂集的一个成员；这一可定义性证书是截断的，故被保留的数据中不含特定公式。第二步，`finSetL` 从一个由任意集合组成的族出发，并给定每个成员属于该层的证明。对每个成员，`∈-asFiber` 给出层呈现的索引以及回到该成员的路径；用 `cong (finSet n) (funExt qg)` 沿这些路径改写像集合，便把它与 `defSet≡` 所谈论的嵌入族等同起来。闭包引理 `defSet→isL` 随即给出 `finSet n h` 的可构造性。
+本节以两步收尾。第一步，`finSet∈𝒟ₒ` 把刚才证明的析取与等式交给 `𝒟ₒ-intro`，把像集合记录为该层可定义幂集的一个元素；这一可定义性证书是截断的，故被保留的数据中不含特定公式。第二步，`finSetL` 从一个由任意集合组成的族出发，并给定每个元素属于该层的证明。对每个元素，`∈-asFiber` 给出层呈现的索引以及回到该元素的路径；用 `cong (finSet n) (funExt qg)` 沿这些路径改写像集合，便把它与 `defSet≡` 所谈论的嵌入族等同起来。闭包引理 `defSet→isL` 随即给出 `finSet n h` 的可构造性。
 <!--ja-->
 この節は二段階で結ばれる。第一に、`finSet∈𝒟ₒ` は今証明した論理式と等式を `𝒟ₒ-intro` に渡し、像の集合を段階の定義可能冪集合の要素として記録する。この定義可能性の証明書は切り詰められているため、保持されるデータに特定の論理式は含まれない。第二に、`finSetL` は任意の集合の族と、各要素がこの段階に属する証明から出発する。各要素に対して `∈-asFiber` が段階の提示の添字と要素へのパスを与え、`cong (finSet n) (funExt qg)` でそれらのパスに沿って像の集合を書き換えると、`defSet≡` が扱う埋め込まれた族と同一視できる。閉包の補題 `defSet→isL` が `finSet n h` の構成可能性を与える。
 <!--/-->
@@ -607,7 +607,7 @@ Two packaging steps finish the section. First, `finSet∈𝒟ₒ` supplies the d
 <!--en-->
 The hypothesis `hσ i` states merely that `h i` lies in the stage. Membership in a hierarchy set is a truncated fiber of the embedding `⟪ Lset σ ⟫↪`, and because that map is an embedding its fiber types are propositions, so eliminating the truncation into a fiber type is legitimate and `∈-asFiber` performs exactly that conversion. Thus `g i` is a chosen index whose embedded element has the path `qg i` back to `h i`. The certificate handed to `defSet→isL` pairs the finite disjunction in the representatives `g` with `defSet≡ n g` followed by the rewriting `funExt qg`, carrying the identification from the embedded family `finSet n (λ i → ⟪ Lset σ ⟫↪ (g i))` to the original family `finSet n h`.
 <!--zh-->
-假设 `hσ i` 只是陈述 `h i` 属于该层。对一个层级集合的隶属是嵌入映射 `⟪ Lset σ ⟫↪` 的纤维的截断，而该映射是嵌入，其纤维类型是命题，故向纤维类型消去截断是合法的，`∈-asFiber` 做的正是这一转换。于是 `g i` 是被选出的索引，其嵌入后的元素有路径 `qg i` 回到 `h i`。交给 `defSet→isL` 的证书把关于代表元 `g` 的有穷析取与 `defSet≡ n g` 配对，再接上改写 `funExt qg`，把这条等同从嵌入后的族 `finSet n (λ i → ⟪ Lset σ ⟫↪ (g i))` 搬到原先的族 `finSet n h` 上。
+假设 `hσ i` 只是陈述 `h i` 属于该层。对一个层级集合的成员关系是嵌入映射 `⟪ Lset σ ⟫↪` 的纤维的截断，而该映射是嵌入，其纤维类型是命题，故向纤维类型消去截断是合法的，`∈-asFiber` 做的正是这一转换。于是 `g i` 是被选出的索引，其嵌入后的元素有路径 `qg i` 回到 `h i`。交给 `defSet→isL` 的证书把关于代表元 `g` 的有穷析取与 `defSet≡ n g` 配对，再接上改写 `funExt qg`，把这条等同从嵌入后的族 `finSet n (λ i → ⟪ Lset σ ⟫↪ (g i))` 搬到原先的族 `finSet n h` 上。
 <!--ja-->
 仮定 `hσ i` は、`h i` がこの段階に属することを切り詰められた形で述べるにすぎない。階層の集合への所属は埋め込み `⟪ Lset σ ⟫↪` のファイバーの切り詰めであり、この写像は埋め込みなのでファイバーの型は命題である。したがってファイバーの型への切り詰めの除去は正当であり、`∈-asFiber` がまさにその変換を行う。ゆえに `g i` は選ばれた添字であり、その埋め込まれた元から `h i` へのパスが `qg i` である。`defSet→isL` に渡す証明書は、代表元 `g` に対する有限論理和と `defSet≡ n g` を組にし、さらに書き換え `funExt qg` を続けることで、埋め込まれた族 `finSet n (λ i → ⟪ Lset σ ⟫↪ (g i))` についての同一視を元の族 `finSet n h` へと運ぶ。
 <!--/-->
@@ -645,7 +645,7 @@ Each constructible set has a stage of its own, given merely by its truncated cer
 <!--en-->
 The statement takes two constructible sets as truncated certificates: `⟨ isL x ⟩` and `⟨ isL y ⟩` say merely that each lies in `L`, without naming a stage. The conclusion is likewise truncated, so the two certificates are eliminated only into a truncated existence statement, and no stage is ever chosen for the outside world. Locally the target content is packaged as `Bound`: an ordinal `σ`, its ordinality, and the two memberships in `Lset σ`.
 <!--zh-->
-这条陈述把两个可构造集合当作截断的证书接收：`⟨ isL x ⟩` 与 `⟨ isL y ⟩` 只是说各自落在 `L` 中，并不点名某一层。结论同样是截断的，因此那两份证书只被消去到一条截断的存在陈述中，从未向外部世界选出任何层。局部的目标内容被打包为 `Bound`：一个序数 `σ`、它的序数性，以及 `Lset σ` 中的两条隶属。
+这条陈述把两个可构造集合当作截断的证书接收：`⟨ isL x ⟩` 与 `⟨ isL y ⟩` 只是说各自落在 `L` 中，并不点名某一层。结论同样是截断的，因此那两份证书只被消去到一条截断的存在陈述中，从未向外部世界选出任何层。局部的目标内容被打包为 `Bound`：一个序数 `σ`、它的序数性，以及 `Lset σ` 中的两条成员关系。
 <!--ja-->
 この定理は二つの構成可能集合を切り詰められた証明書として受け取る。`⟨ isL x ⟩` と `⟨ isL y ⟩` は、それぞれが `L` に属することを述べるだけで、段階を名指ししない。結論も同様に切り詰められているため、この二つの証明書は切り詰められた存在の主張の中へしか除去されず、外部に向かって段階が選ばれることはない。局所的には、目標の内容は `Bound` にまとめられている。すなわち順序数 `σ`、その順序数性、そして `Lset σ` への二つの所属である。
 <!--/-->
@@ -661,7 +661,7 @@ isL-directed x y px py = rec2 squash₁ go px py
 <!--en-->
 The two truncations are eliminated at once by `rec2`, whose target is the truncation `∥ Bound ∥₁`. Its working part `go` receives the explicit data that the certificates conceal: a stage `α`, ordinal, with `x` in `Lset α`, and a stage `β`, ordinal, with `y` in `Lset β`. Merging them is not a comparison of sizes; `bound2 α β oα oβ` returns a single ordinal bound that contains both `α` and `β`, together with its ordinality and the two memberships.
 <!--zh-->
-两条截断由 `rec2` 一次消去，其目标是截断 `∥ Bound ∥₁`。干活的分支 `go` 接收证书所隐藏的显式数据：序数层 `α` 且 `x` 属于 `Lset α`，以及序数层 `β` 且 `y` 属于 `Lset β`。合并它们并不是在比较大小；`bound2 α β oα oβ` 返回一个同时包含 `α` 与 `β` 的序数上界，连同它的序数性和两条隶属。
+两条截断由 `rec2` 一次消去，其目标是截断 `∥ Bound ∥₁`。干活的分支 `go` 接收证书所隐藏的显式数据：序数层 `α` 且 `x` 属于 `Lset α`，以及序数层 `β` 且 `y` 属于 `Lset β`。合并它们并不是在比较大小；`bound2 α β oα oβ` 返回一个同时包含 `α` 与 `β` 的序数上界，连同它的序数性和两条成员关系。
 <!--ja-->
 二つの切り詰めは `rec2` によって一度に除去される。その目標は切り詰め `∥ Bound ∥₁` である。実際に働く部分 `go` が受け取るのは、証明書が隠している明示的なデータ、すなわち順序数である段階 `α` と `x ∈ Lset α`、および順序数である段階 `β` と `y ∈ Lset β` である。両者を併合することは大きさの比較ではない。`bound2 α β oα oβ` は `α` と `β` の両方を含む単一の順序数上界を、その順序数性と二つの所属とともに返す。
 <!--/-->
@@ -677,7 +677,7 @@ The two truncations are eliminated at once by `rec2`, whose target is the trunca
 <!--en-->
 The bound comes with memberships `α ∈ σ₀` and `β ∈ σ₀`, so monotonicity `Lset-mono` lifts `x ∈ Lset α` into the stage `Lset σ₀` at the bound, and likewise for `y` from `β`. Wrapping the assembled triple in `∣_∣₁` completes `go`, and with it the whole statement: any two constructible sets merely have a common ordinal stage. This is what the pairing field will consume, since it needs both arguments visible at one stage.
 <!--zh-->
-上界自带 `α ∈ σ₀` 与 `β ∈ σ₀` 两条隶属，于是单调性 `Lset-mono` 把 `x ∈ Lset α` 抬进上界处的层 `Lset σ₀`；对来自 `β` 的 `y` 同理。把拼好的三元组用 `∣_∣₁` 包起来便完成 `go`，也随之完成整条陈述：任意两个可构造集合「仅仅存在」一个公共的序数层。配对字段要消费的正是它，因为配对需要两个实参在同一层上可见。
+上界自带 `α ∈ σ₀` 与 `β ∈ σ₀` 两条成员关系，于是单调性 `Lset-mono` 把 `x ∈ Lset α` 抬进上界处的层 `Lset σ₀`；对来自 `β` 的 `y` 同理。把拼好的三元组用 `∣_∣₁` 包起来便完成 `go`，也随之完成整条陈述：任意两个可构造集合「仅仅存在」一个公共的序数层。配对字段要消费的正是它，因为配对需要两个实参在同一层上可见。
 <!--ja-->
 上界には `α ∈ σ₀` と `β ∈ σ₀` という所属が付いてくるので、単調性 `Lset-mono` は `x ∈ Lset α` を上界の段階 `Lset σ₀` へ引き上げる。`β` からの `y` についても同様である。組み立てた三つ組を `∣_∣₁` で包めば `go` が完成し、それとともに定理全体、すなわち任意の二つの構成可能集合が共通の順序数段階を「単に存在する」という形でもつことが示される。対のフィールドは、二つの実引数が同じ段階で見えることを必要とするので、消費するのはまさにこれである。
 <!--/-->
@@ -694,7 +694,7 @@ Extensionality and regularity both restrict from the ambient hierarchy, but by d
 <!--zh-->
 ## 继承来的两条公理
 
-外延性与正则公理都从周遭集合层级限制而来，但论证不同。对外延性，`isL-trans` 把任一可构造集合的周遭成员变成载体元素，从而可以应用关于载体成员的一致性假设；周遭集合层级的外延性随后等同底层集合，限制反射再给出载体路径。正则公理不使用 `isL-trans`：只需把周遭可及性递归地限制到已经自带可构造性证书的对子上。
+外延性与正则公理都从周遭集合层级限制而来，但论证不同。对外延性，`isL-trans` 把任一可构造集合的周遭元素变成载体元素，从而可以应用关于载体元素的一致性假设；周遭集合层级的外延性随后等同底层集合，限制反射再给出载体路径。正则公理不使用 `isL-trans`：只需把周遭可及性递归地限制到已经自带可构造性证书的对子上。
 <!--ja-->
 ## 継承される二つの公理
 
@@ -704,7 +704,7 @@ Extensionality and regularity both restrict from the ambient hierarchy, but by d
 <!--en-->
 Extensionality inside `L` has the shape: if two carrier elements agree on membership at every carrier element, they are equal as paths. The proof reduces to the underlying hierarchy. The carrier consists of pairs of a set with a constructibility certificate, and `↾-reflects` is the principle that such pairs are determined by their first projections: a path between the underlying sets `fst a` and `fst b` already gives a path `a ≡ b`. Everything therefore rests on producing that underlying path, which `extensionalV` supplies given `vwise`.
 <!--zh-->
-`L` 内部的外延性形状是：若载体的两个元素在每个载体元素处的隶属一致，它们就作为路径相等。证明被化归到底层层级。载体由「集合加可构造性证书」的对组成，而 `↾-reflects` 是一条原理：这样的对由其第一投影决定，底层集合 `fst a` 与 `fst b` 之间的路径已经给出路径 `a ≡ b`。于是全部工作归结为制造那条底层路径，它在 `vwise` 的前提下由 `extensionalV` 提供。
+`L` 内部的外延性形状是：若载体的两个元素在每个载体元素处的成员关系一致，它们就作为路径相等。证明被化归到底层层级。载体由「集合加可构造性证书」的对组成，而 `↾-reflects` 是一条原理：这样的对由其第一投影决定，底层集合 `fst a` 与 `fst b` 之间的路径已经给出路径 `a ≡ b`。于是全部工作归结为制造那条底层路径，它在 `vwise` 的前提下由 `extensionalV` 提供。
 <!--ja-->
 `L` の内部での外延性の形はこうである。台の二つの元がすべての台の元について所属が一致するなら、それらはパスとして等しい。証明は基底の階層へ帰着する。台は集合と構成可能性の証明書の対からなり、`↾-reflects` はそのような対が第一射影で決まるという原理である。基底の集合 `fst a` と `fst b` の間のパスがあれば、すでにパス `a ≡ b` が得られる。したがって仕事のすべてはその基底のパスを作ることにあり、`vwise` を前提に `extensionalV` がそれを供給する。
 <!--/-->
@@ -720,7 +720,7 @@ extensionalL {a} {b} h =
 <!--en-->
 The hypothesis `h` only speaks about carrier elements, that is, about constructible pairs. To extend it to an arbitrary `v` of the hierarchy, transitivity does the work: from `v ∈ fst a` and the certificate carried by `a`, `isL-trans` yields that `v` is itself constructible; pairing that certificate with `v` presents it as a carrier element, and `h` at that element gives a path of restricted memberships. Transporting `v∈a` along that path lands in `⟨ v ∈ fst b ⟩`, so `fwd` is a plain implication. Joining the two implications with `⇔toPath` yields the pointwise path of ambient membership that `extensionalV` demands.
 <!--zh-->
-假设 `h` 只谈及载体元素，即可构造的对。要把它扩展到层级中任意的 `v`，出力的是传递性：由 `v ∈ fst a` 与 `a` 所携带的证书，`isL-trans` 得出 `v` 自身可构造；把该证书与 `v` 配成对，就把 `v` 呈现为载体元素，`h` 在该元素处给出限制成员关系的路径。沿这条路径搬移 `v∈a` 便落在 `⟨ v ∈ fst b ⟩`，故 `fwd` 是一个普通的蕴涵。用 `⇔toPath` 把两个方向的蕴涵合成路径，便得到 `extensionalV` 所要求的周遭隶属的逐点路径。
+假设 `h` 只谈及载体元素，即可构造的对。要把它扩展到层级中任意的 `v`，出力的是传递性：由 `v ∈ fst a` 与 `a` 所携带的证书，`isL-trans` 得出 `v` 自身可构造；把该证书与 `v` 配成对，就把 `v` 呈现为载体元素，`h` 在该元素处给出限制成员关系的路径。沿这条路径搬移 `v∈a` 便落在 `⟨ v ∈ fst b ⟩`，故 `fwd` 是一个普通的蕴涵。用 `⇔toPath` 把两个方向的蕴涵合成路径，便得到 `extensionalV` 所要求的周遭成员关系的逐点路径。
 <!--ja-->
 仮定 `h` が語るのは台の元、つまり構成可能な対についてだけである。これを階層の任意の `v` に拡張するために働くのが推移性である。`v ∈ fst a` と `a` の携える証明書から、`isL-trans` が `v` 自身の構成可能性を導く。その証明書を `v` と対にすれば `v` が台の元として提示され、その元での `h` が制限された所属のパスを与える。このパスに沿って `v∈a` を輸送すれば `⟨ v ∈ fst b ⟩` に着くので、`fwd` は普通の含意である。二つの含意を `⇔toPath` でパスにまとめれば、`extensionalV` が要求する周囲の所属の各点パスが得られる。
 <!--/-->
@@ -747,13 +747,13 @@ The backward direction is the same argument read from `b`, with `sym` because `h
 regularityL : WellFounded _∈ᵗ_
 regularityL (v , p) = accL v (regularityV v) p
   where
-  module Vmem = hPropStructure 𝒮ᵥ
+  module Vmem = hPropView 𝒮ᵥ
 ```
 
 <!--en-->
 The lifting is a recursion on the ambient accessibility data. If `u` is accessible, then by definition every ambient member `y` of `u` is accessible, and the clause `rec` packages exactly that. A member `(y , r)` of the restricted element `(u , q)` projects to an ambient member `y` of `u`, so `accL` may recurse on `rec y y∈` and attach the certificate `r` to the result. The restricted membership `y ∈ᵗ (u , q)` is inherited solely from the underlying relation `y ∈ u`; the certificate `r` belongs to the predecessor carrier element `(y , r)`, rather than to the membership proof. Thus accessibility transfers member by member along the underlying set.
 <!--zh-->
-这次抬升是对周遭可及性数据的一次递归。若 `u` 可及，则依定义 `u` 的每个周遭成员 `y` 都可及，子句 `rec` 打包的正是这一点。限制元素 `(u , q)` 的成员 `(y , r)` 投影为 `u` 的周遭成员 `y`，故 `accL` 可以对 `rec y y∈` 递归，并把证书 `r` 附到结果上。限制的成员关系 `y ∈ᵗ (u , q)` 只沿用底层关系 `y ∈ u`；证书 `r` 属于前驱载体元素 `(y , r)`，并不是成员证明的一部分。因此，可及性沿底层集合逐成员转移。
+这次抬升是对周遭可及性数据的一次递归。若 `u` 可及，则依定义 `u` 的每个周遭元素 `y` 都可及，子句 `rec` 打包的正是这一点。限制元素 `(u , q)` 的元素 `(y , r)` 投影为 `u` 的周遭元素 `y`，故 `accL` 可以对 `rec y y∈` 递归，并把证书 `r` 附到结果上。限制的成员关系 `y ∈ᵗ (u , q)` 只沿用底层关系 `y ∈ u`；证书 `r` 属于前驱载体元素 `(y , r)`，并不是成员关系证明的一部分。因此，可及性沿底层集合逐元素转移。
 <!--ja-->
 この持ち上げは、周囲の可到達性データに対する再帰である。`u` が可到達なら、定義により `u` のすべての周囲の元 `y` も可到達であり、句 `rec` はまさにそれをまとめている。制限された元 `(u , q)` の元 `(y , r)` は `u` の周囲の元 `y` へ射影されるので、`accL` は `rec y y∈` について再帰し、結果に証明書 `r` を付けて返せる。制限された所属 `y ∈ᵗ (u , q)` は基底の関係 `y ∈ u` だけを継承する。証明書 `r` は前駆の台の要素 `(y , r)` に属し、所属証明の一部ではない。したがって、可到達性は基底の集合に沿って元ごとに移る。
 <!--/-->
@@ -772,7 +772,7 @@ The argument is the extensionality of the carrier applied to realizers. Two sets
 <!--zh-->
 ## 由外延性得到唯一性
 
-`uniqueL`{.Agda} 从外延性导出唯一性：实现固定成员规格的集合是唯一的，因此后文尚未完成的公理字段只须给出一个「仅仅存在」的见证。
+`uniqueL`{.Agda} 从外延性导出唯一性：实现固定成员关系规格的集合是唯一的，因此后文尚未完成的公理字段只须给出一个「仅仅存在」的见证。
 
 论证是把载体的外延性用在实现者上。实现同一谓词 `Q` 的两个集合，在每个载体元素处取同一真值，即 `Q x`，故 `extensionalL` 把它们等同。此处所需的唯一性形式是收缩性，而收缩性是命题；这恰好使「仅仅存在的实现者」能够被转换为收缩性数据本身。
 <!--ja-->
@@ -786,7 +786,7 @@ The argument is the extensionality of the carrier applied to realizers. Two sets
 <!--en-->
 Uniqueness of a realizer is contractibility data: a center, namely any realizing set, together with a path from the center to every realizing set. The path-producing part is `extensionalL`, since two realizing sets carry the same membership specification and hence coincide; the assembly of center and paths is `setOf-unique` applied to `extensionalL`. The second statement passes from mere existence: `rec₁` may eliminate the truncated hypothesis because its target `isContr (SetOf Q)` is a proposition, and returns the same contractibility data. From here on, each remaining axiom field is proved by exhibiting one witness, supplied truncated.
 <!--zh-->
-实现者的唯一性是收缩性数据：一个中心，即任一实现该规格的集合，以及从中心到任一实现集合的路径。给出路径的部分是 `extensionalL`，因为两个实现集合携带同一成员规格，因而重合；中心与路径的组装则是对 `extensionalL` 应用 `setOf-unique`。第二条陈述从仅仅存在出发：`rec₁` 之所以能消去截断的假设，是因为其目标 `isContr (SetOf Q)` 是命题，并返回同样的收缩性数据。从这里起，余下每条公理字段都通过展示一个见证、且以截断形式给出，来完成证明。
+实现者的唯一性是收缩性数据：一个中心，即任一实现该规格的集合，以及从中心到任一实现集合的路径。给出路径的部分是 `extensionalL`，因为两个实现集合携带同一成员关系规格，因而重合；中心与路径的组装则是对 `extensionalL` 应用 `setOf-unique`。第二条陈述从仅仅存在出发：`rec₁` 之所以能消去截断的假设，是因为其目标 `isContr (SetOf Q)` 是命题，并返回同样的收缩性数据。从这里起，余下每条公理字段都通过展示一个见证、且以截断形式给出，来完成证明。
 <!--ja-->
 実現者の一意性は収縮性のデータである。すなわち中心、これは仕様を実現する任意の集合であり、および中心から任意の実現集合へのパスである。パスを生む部分は `extensionalL` である。実現する二つの集合は同じ所属の仕様を携えるので一致する。中心とパスの組み立ては、`extensionalL` に対する `setOf-unique` の適用である。第二の定理は単なる存在から出発する。仮定の切り詰めを `rec₁` で除去できるのは、その目標 `isContr (SetOf Q)` が命題だからで、返るのは同じ収縮性のデータである。以後、残りの各公理フィールドは、証人を一つ、切り詰められた形で提示するだけで証明される。
 <!--/-->
@@ -808,9 +808,9 @@ The falsehood of the object language carves nothing out of any stage: a member o
 <!--zh-->
 ## 空集
 
-对象语言中的假公式把周遭空集定义为可定义子集，而 `hasEmptyL`{.Agda} 封装其可构造性与空成员规格。
+对象语言中的假公式把周遭空集定义为可定义子集，而 `hasEmptyL`{.Agda} 封装其可构造性与空成员关系规格。
 
-对象语言的假在任何层中都定义不出元素：`defSet ⊥̇` 的成员会在其索引处包含一个假的证明。因此，`defSet ⊥̇` 经外延性等于空集，从而空集可构造。它的规格来自层级，因为 `L` 中的隶属就是层级中的隶属；而上一节的唯一性原理把这个见证变成模型所要求的收缩性数据。
+对象语言的假在任何层中都定义不出元素：`defSet ⊥̇` 的元素会在其索引处包含一个假的证明。因此，`defSet ⊥̇` 经外延性等于空集，从而空集可构造。它的规格来自层级，因为 `L` 中的成员关系就是层级中的成员关系；而上一节的唯一性原理把这个见证变成模型所要求的收缩性数据。
 <!--ja-->
 ## 空集合
 
@@ -838,7 +838,7 @@ The empty set is the first constructed set, and it needs no bounding at all: the
 <!--en-->
 The equation is one extensionality against the ambient empty set, in two inclusions. The first is the substantive direction: a member `y` of the definable subset comes, by the reading lemma for `defSet`, as a truncated pair of an index `m` and a satisfaction proof `h` for `⊥̇`. Satisfaction of falsity is an empty host type, so `⊥*-rec h` refutes any such member. Since inclusion is stated as a proposition-valued statement, eliminating the truncation into it is legitimate.
 <!--zh-->
-这条等式是对照周遭空集的一次外延，分两个包含方向。第一向是有实质内容的方向：可定义子集的成员 `y`，经 `defSet` 的读法引理，呈现为索引 `m` 与 `⊥̇` 的满足证明 `h` 组成的截断对。假在对象语言中的满足是空的宿主类型，故 `⊥*-rec h` 反驳任何这样的成员。由于包含关系以命题值陈述，向它消去截断是合法的。
+这条等式是对照周遭空集的一次外延，分两个包含方向。第一向是有实质内容的方向：可定义子集的元素 `y`，经 `defSet` 的读法引理，呈现为索引 `m` 与 `⊥̇` 的满足证明 `h` 组成的截断对。假在对象语言中的满足是空的宿主类型，故 `⊥*-rec h` 反驳任何这样的元素。由于包含关系以命题值陈述，向它消去截断是合法的。
 <!--ja-->
 この等式は、周囲の空集合に対する一回の外延性で、二つの包含からなる。最初の向きが実質のある方向である。定義可能部分集合の元 `y` は、`defSet` の読み取り補題により、添字 `m` と `⊥̇` の充足の証明 `h` からなる切り詰められた対として現れる。偽の充足は空のホスト型なので、`⊥*-rec h` がそのような元を一切否定する。包含が命題値の主張として述べられているため、そこへの切り詰めの除去は正当である。
 <!--/-->
@@ -854,7 +854,7 @@ The equation is one extensionality against the ambient empty set, in two inclusi
 <!--en-->
 The second inclusion is vacuous: `∅-empty` turns any would-be member of the ambient empty set directly into a refutation. With both directions in hand, `defSet ⊥̇` and `∅` are equal as sets, and `∅∈𝒟ₒ` records that the empty set is a definable subset of an arbitrary stage. The closure lemma then applies one last time, at the stage `∅` itself, whose ordinality is the lemma `∅-ord`: the empty set is constructible, one successor above itself.
 <!--zh-->
-第二向是空洞的：`∅-empty` 把周遭空集的任何候选成员直接变成反驳。两个方向齐备后，`defSet ⊥̇` 与 `∅` 作为集合相等，`∅∈𝒟ₒ` 于是记录下空集是任意层的可定义子集。闭包引理随后最后再施展一次，就在层 `∅` 自身处，其序数性由引理 `∅-ord` 提供：空集可构造，位于其自身之上一个后继。
+第二向是空洞的：`∅-empty` 把周遭空集的任何候选元素直接变成反驳。两个方向齐备后，`defSet ⊥̇` 与 `∅` 作为集合相等，`∅∈𝒟ₒ` 于是记录下空集是任意层的可定义子集。闭包引理随后最后再施展一次，就在层 `∅` 自身处，其序数性由引理 `∅-ord` 提供：空集可构造，位于其自身之上一个后继。
 <!--ja-->
 第二の包含は空虚である。`∅-empty` は周囲の空集合の候補となる元を直接的に反証へ変える。両方向が揃えば、`defSet ⊥̇` と `∅` は集合として等しく、`∅∈𝒟ₒ` は空集合が任意の段階の定義可能部分集合であることを記録する。そこから閉包の補題が最後にもう一度だけ働き、今度は段階 `∅` そのもので、その順序数性は補題 `∅-ord` が供給する。空集合は、それ自身の一段上で構成可能なのである。
 <!--/-->
@@ -871,7 +871,7 @@ The second inclusion is vacuous: `∅-empty` turns any would-be member of the am
 <!--en-->
 Packaging mirrors the underlying set: `∅ʟ` is the pair of `∅` with its constructibility certificate, an element of the carrier `S`. The model's existence statement requires a unique set with no members. The witness offered is `∅ʟ` together with the specification taken from the hierarchy, `empty-spec` read at the underlying set of any candidate; uniqueness then follows by `uniqueL`. This is the first field, and the pattern of the next two is already visible in it: bound, carve, close.
 <!--zh-->
-打包方式照应底层集合：`∅ʟ` 是 `∅` 连同其可构造性证书组成的对，是载体 `S` 的一个元素。模型的存在性要求「没有成员的集合唯一存在」。所给出的见证是 `∅ʟ`，连同从层级取来的规格，即对任何候选集合的底层集合读取 `empty-spec`；唯一性则由 `uniqueL` 得到。这是第一条字段，而下两条构造的模式在它身上已经可见：找界、刻出、收尾。
+打包方式照应底层集合：`∅ʟ` 是 `∅` 连同其可构造性证书组成的对，是载体 `S` 的一个元素。模型的存在性要求「没有元素的集合唯一存在」。所给出的见证是 `∅ʟ`，连同从层级取来的规格，即对任何候选集合的底层集合读取 `empty-spec`；唯一性则由 `uniqueL` 得到。这是第一条字段，而下两条构造的模式在它身上已经可见：找界、刻出、收尾。
 <!--ja-->
 パッケージ化は基底の集合に対応している。`∅ʟ` は `∅` とその構成可能性の証明書の対であり、台 `S` の元である。モデルの存在主張は、元をひとつももたない集合が一意に存在することを要求する。提示される証人は `∅ʟ` であり、仕様は階層から取られたもので、候補となる集合の基底の集合で `empty-spec` を読んだものである。一意性は `uniqueL` によって従う。これが最初のフィールドであり、次の二つの構成の型がすでにここに見えている。すなわち、上界を定め、切り出し、締めくくる、という型である。
 <!--/-->
@@ -897,9 +897,9 @@ Ordinality is not asked for, exactly as the successor identity does not ask for 
 <!--zh-->
 ## 受层界住的配对
 
-对同一层的两个成员，一条含两个常元的析取公式把其无序对定义为该可定义子集；派生的结果把单点集安置在高一层处，把 Kuratowski 有序对码安置在高两层处。
+对同一层的两个元素，一条含两个常元的析取公式把其无序对定义为该可定义子集；派生的结果把单点集安置在高一层处，把 Kuratowski 有序对码安置在高两层处。
 
-一层的两个成员，其无序对是该层的可定义子集：二者各是某个索引的 `⟪ Lset σ ⟫↪`，而点名那两个索引的公式恰好定义出这个对。验证它要对照层级自己的配对公理做一次双向外延：可定义子集的成员满足那个析取，故是二者之一；而二者各自满足它，故是成员。
+一层的两个元素，其无序对是该层的可定义子集：二者各是某个索引的 `⟪ Lset σ ⟫↪`，而点名那两个索引的公式恰好定义出这个对。验证它要对照层级自己的配对公理做一次双向外延：可定义子集的元素满足那个析取，故是二者之一；而二者各自满足它，故是元素。
 
 论证里没有一处关乎模型，说的是塔本身的一条事实，故照这样陈述：Kuratowski 编码下的有序对嵌套了两层无序对，因此落在其条目之上两层处。
 
@@ -935,7 +935,7 @@ pair∈𝒟ₒ σ x y x∈ y∈ = 𝒟ₒ-intro (Lset σ) ⁅ x , y ⁆ ∣ φ ,
 <!--en-->
 The formula must name constants drawn from the small presentation `⟪ Lset σ ⟫` of the stage. Applying `∈-asFiber` to the two membership proofs gives actual indices `mₓ` and `mᵧ`, together with paths `qₓ : ⟪ Lset σ ⟫↪ mₓ ≡ x` and `qᵧ : ⟪ Lset σ ⟫↪ mᵧ ≡ y`. This direct recovery is available because the presentation embedding has propositional fibers; the membership hypotheses are not treated as an outer truncation here.
 <!--zh-->
-公式必须以层的小呈现 `⟪ Lset σ ⟫` 中的元素为常元。对两条隶属证明应用 `∈-asFiber`，得到实际索引 `mₓ`、`mᵧ`，以及路径 `qₓ : ⟪ Lset σ ⟫↪ mₓ ≡ x` 与 `qᵧ : ⟪ Lset σ ⟫↪ mᵧ ≡ y`。呈现嵌入的纤维是命题，所以这里可以直接恢复这些数据；论证没有把隶属假设当作另一个外层截断。
+公式必须以层的小呈现 `⟪ Lset σ ⟫` 中的元素为常元。对两条成员关系证明应用 `∈-asFiber`，得到实际索引 `mₓ`、`mᵧ`，以及路径 `qₓ : ⟪ Lset σ ⟫↪ mₓ ≡ x` 与 `qᵧ : ⟪ Lset σ ⟫↪ mᵧ ≡ y`。呈现嵌入的纤维是命题，所以这里可以直接恢复这些数据；论证没有把成员关系假设当作另一个外层截断。
 <!--ja-->
 論理式は段階の小さな提示 `⟪ Lset σ ⟫` から定数を取る必要がある。二つの所属の証明に `∈-asFiber` を適用すると、実際の添字 `mₓ`、`mᵧ` と、パス `qₓ : ⟪ Lset σ ⟫↪ mₓ ≡ x`、`qᵧ : ⟪ Lset σ ⟫↪ mᵧ ≡ y` が得られる。提示の埋め込みのファイバーが命題なので、このデータを直接復元できる。ここでは所属の仮定を別の外側の切り詰めとして扱わない。
 <!--/-->
@@ -985,7 +985,7 @@ The first half of the identification is one extensionality, from the definable s
 <!--en-->
 A member `w` of the definable subset is presented, by the reading lemma, as a truncated pair of an index `m` and a satisfaction proof for φ at the environment naming `m`. The satisfaction of a disjunction of equalities records, merely, that the element named by `m` equals one of the two constants. That truncated disjunction is exactly the hypothesis the hierarchy's pairing characterization requires in its right-to-left direction, so `pairing-ax` places the embedded element `⟪ Lset σ ⟫↪ m` inside the pair of embedded representatives. The transport along the path `q` identifying `w` with the embedded index then finishes the inclusion.
 <!--zh-->
-可定义子集的成员 `w`，经读法引理，呈现为索引 `m` 与「在点名 `m` 的赋值下 φ 的满足证明」组成的截断对。等式析取的满足只是记录：`m` 所名指的元素等于两个常元之一。而这条截断析取恰好是层级的配对刻画在从右到左方向所需的假设，于是 `pairing-ax` 把嵌入元素 `⟪ Lset σ ⟫↪ m` 放进嵌入代表元组成的对中。再沿把 `w` 与嵌入索引等同的路径 `q` 做搬移，包含即告完成。
+可定义子集的元素 `w`，经读法引理，呈现为索引 `m` 与「在点名 `m` 的赋值下 φ 的满足证明」组成的截断对。等式析取的满足只是记录：`m` 所名指的元素等于两个常元之一。而这条截断析取恰好是层级的配对刻画在从右到左方向所需的假设，于是 `pairing-ax` 把嵌入元素 `⟪ Lset σ ⟫↪ m` 放进嵌入代表元组成的对中。再沿把 `w` 与嵌入索引等同的路径 `q` 做搬移，包含即告完成。
 <!--ja-->
 定義可能部分集合の元 `w` は、読み取り補題によって、添字 `m` と「`m` を名指す環境での φ の充足の証明」からなる切り詰められた対として現れる。等式の論理和の充足が記録するのは、`m` の名指す要素が二つの定数のいずれかに等しいこと、単にそれだけである。この切り詰められた論理和は、階層の対の特徴づけが右から左の向きで必要とする仮定にちょうど一致するので、`pairing-ax` は埋め込まれた要素 `⟪ Lset σ ⟫↪ m` を埋め込まれた代表元の対の中に置く。そのうえで、`w` を埋め込まれた添字と同一視するパス `q` に沿った輸送が包含を仕上げる。
 <!--/-->
@@ -1001,7 +1001,7 @@ A member `w` of the definable subset is presented, by the reading lemma, as a tr
 <!--en-->
 The reverse inclusion reads the hierarchy's pairing characterization in its other direction. A member `w` of the pair of embedded representatives is, merely, equal to one of the two entries. Each of the two branches supplies the same helper with the corresponding representative: knowing which representative `w` equals, one shows `w` satisfies φ at that representative's constant, and is therefore a member of the definable subset.
 <!--zh-->
-反向包含把层级的配对刻画按另一方向读取。嵌入代表元之对的成员 `w`，仅仅是等于两个条目之一。两个分支各自把相应的代表元交给同一个辅助引理：既然知道 `w` 等于哪个代表元，就能证明 `w` 在该代表元的常元处满足 φ，因而是可定义子集的成员。
+反向包含把层级的配对刻画按另一方向读取。嵌入代表元之对的元素 `w`，仅仅是等于两个条目之一。两个分支各自把相应的代表元交给同一个辅助引理：既然知道 `w` 等于哪个代表元，就能证明 `w` 在该代表元的常元处满足 φ，因而是可定义子集的元素。
 <!--ja-->
 逆の包含は、階層の対の特徴づけをもう一方の向きで読む。埋め込まれた代表元の対の元 `w` は、二つの項のいずれかに単に等しいことが分かる。二つの分岐はそれぞれ、対応する代表元を同じ補助補題に渡す。`w` がどちらの代表元に等しいかが分かれば、`w` がその代表元の定数のところで φ を充足し、したがって定義可能部分集合の元であることを示せる。
 <!--/-->
@@ -1017,7 +1017,7 @@ The reverse inclusion reads the hierarchy's pairing characterization in its othe
 <!--en-->
 The helper `memOf` takes a representative `mᵢ`, a satisfaction proof for φ at the constant naming `mᵢ`, and a path identifying `w` with the embedded element of `mᵢ`. The membership reading of `defSet` turns satisfaction at the constant into membership of the embedded element in the definable subset; transporting along the path, in the direction `sym p`, moves that membership to `w`. With both inclusions proved, the extensionality yields the equation with the pair of embedded representatives, and the congruence step under `⁅_,_⁆` rewrites that pair into `⁅ x , y ⁆` along the paths `qₓ` and `qᵧ`.
 <!--zh-->
-辅助引理 `memOf` 接收一个代表元 `mᵢ`、φ 在名指 `mᵢ` 的常元处的满足证明，以及把 `w` 与 `mᵢ` 的嵌入元素等同的路径。`defSet` 的隶属读法把在常元处的满足转成嵌入元素在可定义子集中的隶属；沿路径 (方向为 `sym p`) 搬移，就把这条隶属搬到 `w` 上。两个包含证毕后，外延性给出与嵌入代表元之对的等式，再对构造子 `⁅_,_⁆` 应用 `cong₂`，沿路径 `qₓ` 与 `qᵧ` 把那个对改写成 `⁅ x , y ⁆`。
+辅助引理 `memOf` 接收一个代表元 `mᵢ`、φ 在名指 `mᵢ` 的常元处的满足证明，以及把 `w` 与 `mᵢ` 的嵌入元素等同的路径。`defSet` 的成员关系读法把在常元处的满足转成嵌入元素在可定义子集中的成员关系；沿路径 (方向为 `sym p`) 搬移，就把这条成员关系搬到 `w` 上。两个包含证毕后，外延性给出与嵌入代表元之对的等式，再对构造子 `⁅_,_⁆` 应用 `cong₂`，沿路径 `qₓ` 与 `qᵧ` 把那个对改写成 `⁅ x , y ⁆`。
 <!--ja-->
 補助補題 `memOf` は、代表元 `mᵢ`、`mᵢ` を名指す定数のところでの φ の充足の証明、そして `w` を `mᵢ` の埋め込まれた要素と同一視するパスを受け取る。`defSet` の所属の読みは、定数のところでの充足を、埋め込まれた要素の定義可能部分集合への所属に変える。パスに沿った輸送 (向きは `sym p`) がその所属を `w` へ移す。両方の包含が証明されれば、外延性が埋め込まれた代表元の対との等式を与え、つづく構成子 `⁅_,_⁆` への `cong₂` の適用の一歩が、パス `qₓ` と `qᵧ` に沿ってその対を `⁅ x , y ⁆` へ書き換える。
 <!--/-->
@@ -1033,7 +1033,7 @@ The helper `memOf` takes a representative `mᵢ`, a satisfaction proof for φ at
 <!--en-->
 The first derived result converts the definability statement into membership in a stage. The successor identity proved earlier in this chapter says that `Lset (sucV σ)` is exactly `𝒟ₒ (Lset σ)`, so transporting the conclusion of `pair∈𝒟ₒ` along that identity, in the direction `sym`, yields `⟨ ⁅ x , y ⁆ ∈ Lset (sucV σ) ⟩`: the unordered pair of two members of a stage is contained in the displayed next-stage bound.
 <!--zh-->
-第一条派生结果把可定义性陈述转成对某一层的隶属。本章前文证明的后继恒等式说 `Lset (sucV σ)` 恰是 `𝒟ₒ (Lset σ)`，故沿该恒等式 (方向取 `sym`) 搬移 `pair∈𝒟ₒ` 的结论，便得 `⟨ ⁅ x , y ⁆ ∈ Lset (sucV σ) ⟩`：一层两个成员的无序对由此得到的上界是下一层。
+第一条派生结果把可定义性陈述转成对某一层的成员关系。本章前文证明的后继恒等式说 `Lset (sucV σ)` 恰是 `𝒟ₒ (Lset σ)`，故沿该恒等式 (方向取 `sym`) 搬移 `pair∈𝒟ₒ` 的结论，便得 `⟨ ⁅ x , y ⁆ ∈ Lset (sucV σ) ⟩`：一层两个元素的无序对由此得到的上界是下一层。
 <!--ja-->
 最初の派生結果は、定義可能性の主張を段階への所属に変えるものである。この章の前の方で証明した後者の恒等式によれば `Lset (sucV σ)` はちょうど `𝒟ₒ (Lset σ)` なので、その恒等式に沿って (向きは `sym`)`pair∈𝒟ₒ` の結論を輸送すれば `⟨ ⁅ x , y ⁆ ∈ Lset (sucV σ) ⟩` が得られる。すなわち、一つの段階の二つの要素の非順序対は、ここで示された次段階を上界としてもつ。
 <!--/-->
@@ -1050,7 +1050,7 @@ pair∈Lset-suc σ x y x∈ y∈ =
 <!--en-->
 The singleton is the degenerate case. Applying the pair placement to `x` twice gives the pair `⁅ x , x ⁆` in the next stage, and the hierarchy's identification `pair-singleton` of `⁅ x , x ⁆` with `⁅ x ⁆s` transports that membership onto the singleton `⁅ x ⁆s`.
 <!--zh-->
-单点集是退化情形。把配对安置对 `x` 施用两次，得到下一层中的 `⁅ x , x ⁆`；层级把 `⁅ x , x ⁆` 等同于 `⁅ x ⁆s` 的 `pair-singleton` 再把这条隶属搬到单点集 `⁅ x ⁆s` 上。
+单点集是退化情形。把配对安置对 `x` 施用两次，得到下一层中的 `⁅ x , x ⁆`；层级把 `⁅ x , x ⁆` 等同于 `⁅ x ⁆s` 的 `pair-singleton` 再把这条成员关系搬到单点集 `⁅ x ⁆s` 上。
 <!--ja-->
 一元集合は退化した場合である。対の配置を `x` に二度適用すれば、次の段階に対 `⁅ x , x ⁆` が得られ、`⁅ x , x ⁆` を `⁅ x ⁆s` と同一視する階層の `pair-singleton` がその所属を一元集合 `⁅ x ⁆s` へ輸送する。
 <!--/-->
@@ -1126,7 +1126,7 @@ module PairOf (a b : S) where
 <!--en-->
 The witness is the ambient unordered pair of the underlying sets, packaged with its constructibility certificate. That certificate comes from the bounded construction: the pair of two members of `Lset σ` is a definable subset there, and the lemma `𝒟ₒ→isL` lifts a definable subset of an ordinal stage into `L`. The specification is the hierarchy's own classification of the unordered pair, `pair-spec`, read at the underlying sets; restricted membership is ambient membership on carriers, so the model's reading of the field coincides with the hierarchy's classification.
 <!--zh-->
-见证是底层集合的周遭无序对，连同其可构造性证书打包。该证书来自有界构造：`Lset σ` 两个成员的对是那里的可定义子集，而引理 `𝒟ₒ→isL` 把序数层的可定义子集抬进 `L`。规格是层级自己对无序对的分类 `pair-spec`，在底层集合处读取；限制载体上的隶属就是周遭隶属，故模型对该字段的解读与层级的分类一致。
+见证是底层集合的周遭无序对，连同其可构造性证书打包。该证书来自有界构造：`Lset σ` 两个元素的对是那里的可定义子集，而引理 `𝒟ₒ→isL` 把序数层的可定义子集抬进 `L`。规格是层级自己对无序对的分类 `pair-spec`，在底层集合处读取；限制载体上的成员关系就是周遭成员关系，故模型对该字段的解读与层级的分类一致。
 <!--ja-->
 証人は基底の集合の周囲の非順序対であり、その構成可能性の証明書とともにまとめられる。証明書は有界な構成から来る。`Lset σ` の二つの要素の対はそこの定義可能部分集合であり、補題 `𝒟ₒ→isL` が順序数段階の定義可能部分集合を `L` へ引き上げる。仕様は、非順序対に対する階層そのものの分類 `pair-spec` を基底の集合で読んだものである。制限された台での所属は周囲の所属であるから、モデルによるこのフィールドの読みは階層の分類と一致する。
 <!--/-->
@@ -1142,7 +1142,7 @@ The witness is the ambient unordered pair of the underlying sets, packaged with 
 <!--en-->
 The construction is not yet the field: it needs a stage, and only its mere existence is available. `build` eliminates the truncation from `isL-directed` with `rec₁`, whose target `∥ SetOf Q ∥₁` is itself truncated, so the two certificates of constructibility for `a` and `b` may be opened just far enough to read off the common stage and the two memberships, and `mkPair` runs there. No stage is chosen for the outside world.
 <!--zh-->
-这个构造还不是那条字段：它需要一层，而手头只有其「仅仅存在」。`build` 用 `rec₁` 消去 `isL-directed` 的截断，其目标 `∥ SetOf Q ∥₁` 本身就是截断的，因此可以把 `a` 与 `b` 的两份可构造性证书打开到恰好读出公共层与两条隶属的程度，然后在该处运行 `mkPair`。全程没有向外部世界选定任何层。
+这个构造还不是那条字段：它需要一层，而手头只有其「仅仅存在」。`build` 用 `rec₁` 消去 `isL-directed` 的截断，其目标 `∥ SetOf Q ∥₁` 本身就是截断的，因此可以把 `a` 与 `b` 的两份可构造性证书打开到恰好读出公共层与两条成员关系的程度，然后在该处运行 `mkPair`。全程没有向外部世界选定任何层。
 <!--ja-->
 この構成はまだフィールドではない。段階が必要であるが、手もとにあるのはその単なる存在だけである。`build` は `rec₁` で `isL-directed` の切り詰めを除去する。その目標 `∥ SetOf Q ∥₁` 自身が切り詰められているので、`a` と `b` の二つの構成可能性の証明書を、共通段階と二つの所属が読み取れるところまで開けばよく、そこで `mkPair` が対を構成する。外部に向かって段階が選ばれることはない。
 <!--/-->
@@ -1162,7 +1162,7 @@ hasPairL : (a b : S) → isContr (SetOf (λ x → (x ≈ˢ a) ⊔ (x ≈ˢ b)))
 <!--en-->
 The field `hasPairL` asks for contractibility of the type of realizers: a canonical realizer together with a path from it to every other realizer. The truncated common-stage bound is eliminated only into the truncated existence `∥ SetOf Q ∥₁`; within that elimination, `mkPair` constructs a realizer from the stage and its two membership proofs. Then `mere→uniqueL`, using `uniqueL` and extensionality, turns mere existence plus uniqueness into an explicit center of contraction. Thus the proof makes no arbitrary choice of a common stage, while its final result does contain the definite canonical realizer required by `isContr`.
 <!--zh-->
-字段 `hasPairL` 要求实现者类型具有收缩性：给出一个典范实现者，以及从中心到任一实现者的路径。公共层的截断上界只被消去到截断存在 `∥ SetOf Q ∥₁` 中；在该消去内部，`mkPair` 由层及两条隶属证明构造实现者。随后 `mere→uniqueL` 借助 `uniqueL` 与外延性，把仅仅存在与唯一性合成为明确的收缩中心。因此，证明不任意选择公共层，而最终结果确实含有 `isContr` 所要求的明确典范实现者。
+字段 `hasPairL` 要求实现者类型具有收缩性：给出一个典范实现者，以及从中心到任一实现者的路径。公共层的截断上界只被消去到截断存在 `∥ SetOf Q ∥₁` 中；在该消去内部，`mkPair` 由层及两条成员关系证明构造实现者。随后 `mere→uniqueL` 借助 `uniqueL` 与外延性，把仅仅存在与唯一性合成为明确的收缩中心。因此，证明不任意选择公共层，而最终结果确实含有 `isContr` 所要求的明确典范实现者。
 <!--ja-->
 フィールド `hasPairL` が要求するのは、実現者の型の可縮性、すなわち標準的な実現者と、中心から任意の実現者へのパスである。切り詰められた共通段階の上界は、切り詰められた存在 `∥ SetOf Q ∥₁` の中へだけ除去され、その内部で `mkPair` が段階と二つの所属証明から実現者を構成する。つぎに `mere→uniqueL` は `uniqueL` と外延性を用い、単なる存在と一意性から明示的な可縮中心を得る。したがって共通段階を恣意的に選ぶ必要はないが、最終結果には `isContr` が要求する明確な標準的実現者が含まれる。
 <!--/-->
@@ -1180,9 +1180,9 @@ The extensional equation is proved by two inclusions. One direction reads the fo
 <!--zh-->
 ## 并
 
-并不需要寻找上界：一个装着实参的层就足够了。由于层 `Lset σ` 是传递的，`fst a` 的成员的每个成员也仍在该层中，于是有界存在公式「实参的某个成员以我为成员」恰好刻出周遭并 `⋃ (fst a)`。
+并不需要寻找上界：一个装着实参的层就足够了。由于层 `Lset σ` 是传递的，`fst a` 的元素的每个元素也仍在该层中，于是有界存在公式「实参的某个元素以我为元素」恰好刻出周遭并 `⋃ (fst a)`。
 
-外延等式由两个包含方向证明。一个方向读出公式的满足：一个见证 `v` 使 `y` 属于 `v`，恰好是层级的并刻画所要求的输入。另一个方向从并刻画出发，必须先把中间成员 `v` 拉进层，而这正是层传递性所做的，施用两次。最后的规格比较两个量词：可构造条件只对载体见证量化，而层级的并律对全部 `V` 量化，`isL-trans` 在两个方向上把这两个范围等同起来。并就位之后，本章已证明五条公理：外延、正则、空集、配对与并。
+外延等式由两个包含方向证明。一个方向读出公式的满足：一个见证 `v` 使 `y` 属于 `v`，恰好是层级的并刻画所要求的输入。另一个方向从并刻画出发，必须先把中间元素 `v` 拉进层，而这正是层传递性所做的，施用两次。最后的规格比较两个量词：可构造条件只对载体见证量化，而层级的并律对全部 `V` 量化，`isL-trans` 在两个方向上把这两个范围等同起来。并就位之后，本章已证明五条公理：外延、正则、空集、配对与并。
 <!--ja-->
 ## 和集合の公理
 
@@ -1194,7 +1194,7 @@ The extensional equation is proved by two inclusions. One direction reads the fo
 <!--en-->
 The membership condition `Q` is an indexed disjunction inside the model's truth values: `x` realizes the union when, for some `y` that is a member of `a`, `x` is a member of `y`. The construction `mkUnion` carries a single hypothesis, that one ordinal stage `σ` contains the underlying set of `a`. There is no second argument to house, so unlike pairing no bounding ordinal is needed; the stage that `a` itself already has is enough.
 <!--zh-->
-成员条件 `Q` 是模型真值内部的一条带索引析取：若存在属于 `a` 的某个 `y` 使 `x` 属于 `y`，则 `x` 实现这个并。构造 `mkUnion` 只带一条假设：某个序数层 `σ` 装下 `a` 的底层集合。这里没有第二个实参需要安置，因此与配对不同，无须任何上界序数；`a` 本已有的那一层便够了。
+成员关系条件 `Q` 是模型真值内部的一条带索引析取：若存在属于 `a` 的某个 `y` 使 `x` 属于 `y`，则 `x` 实现这个并。构造 `mkUnion` 只带一条假设：某个序数层 `σ` 装下 `a` 的底层集合。这里没有第二个实参需要安置，因此与配对不同，无须任何上界序数；`a` 本已有的那一层便够了。
 <!--ja-->
 所属の条件 `Q` は、モデルの真理値の内部での添字つき論理和である。`a` の要素であるある `y` について `x` が `y` の要素であるとき、`x` はこの和集合を実現する。構成 `mkUnion` が仮定するのは一つだけ、ある順序数段階 `σ` が `a` の基底の集合を含むことである。収容すべき第二の引数はないので、対の場合と違って上界順序数は不要であり、`a` がすでにもつ段階そのもので足りる。
 <!--/-->
@@ -1218,7 +1218,7 @@ module UnionOf (a : S) where
 <!--en-->
 At the stage `Lset σ`, formulas range over its small presentation. Its transitivity, obtained from `Lset-layer σ` and `layer-trans`, says that a member of a member of the stage lies in the stage again. Applying `∈-asFiber` to the given membership of `fst a` produces the representative `mₐ` and path `qₐ : ⟪ Lset σ ⟫↪ mₐ ≡ fst a`; as above, this is direct fiber data rather than elimination of an outer truncation.
 <!--zh-->
-在层 `Lset σ` 上，公式跑遍该层的小呈现。由 `Lset-layer σ` 与 `layer-trans` 得到的传递性说明：层成员的成员仍属于该层。对给定的 `fst a` 层隶属应用 `∈-asFiber`，得到代表元 `mₐ` 与路径 `qₐ : ⟪ Lset σ ⟫↪ mₐ ≡ fst a`；与上文相同，这是直接取得的纤维数据，并非对外层截断作消去。
+在层 `Lset σ` 上，公式跑遍该层的小呈现。由 `Lset-layer σ` 与 `layer-trans` 得到的传递性说明：层元素的元素仍属于该层。对给定的 `fst a` 层成员关系应用 `∈-asFiber`，得到代表元 `mₐ` 与路径 `qₐ : ⟪ Lset σ ⟫↪ mₐ ≡ fst a`；与上文相同，这是直接取得的纤维数据，并非对外层截断作消去。
 <!--ja-->
 段階 `Lset σ` では、論理式はその小さな提示の上を動く。`Lset-layer σ` と `layer-trans` から得られる推移性は、段階の要素の要素が再びその段階に属することを述べる。与えられた `fst a` の段階への所属に `∈-asFiber` を適用すると、代表元 `mₐ` とパス `qₐ : ⟪ Lset σ ⟫↪ mₐ ≡ fst a` が得られる。上と同様、これは外側の切り詰めを消去した結果ではなく、直接得られるファイバーのデータである。
 <!--/-->
@@ -1234,7 +1234,7 @@ At the stage `Lset σ`, formulas range over its small presentation. Its transiti
 <!--en-->
 The formula has one free-variable slot and is a bounded existential: the variable ranges over the members of the constant `mₐ`, that is, over the members of `a` as presented inside the stage, and the matrix says that the bound variable has the outer variable as a member. Since the bound variable occupies the first slot inside the quantifier body, the outer variable sits in the successor slot. The claimed extension is the ambient union `⋃ (fst a)`, and the equation `defSet≡` is one extensionality, split into two inclusions.
 <!--zh-->
-公式有一个自由变元槽，是一个有界存在：变元跑遍常元 `mₐ` 的成员，也就是在层内呈现的 `a` 的成员；母式说，约束变元以外部变元为成员。由于约束变元在量词母式中占据第一个槽，外部变元落在后继槽上。被断言的外延是周遭并 `⋃ (fst a)`，等式 `defSet≡` 是一次外延性，分为两个包含。
+公式有一个自由变元槽，是一个有界存在：变元跑遍常元 `mₐ` 的元素，也就是在层内呈现的 `a` 的元素；母式说，约束变元以外部变元为元素。由于约束变元在量词母式中占据第一个槽，外部变元落在后继槽上。被断言的外延是周遭并 `⋃ (fst a)`，等式 `defSet≡` 是一次外延性，分为两个包含。
 <!--ja-->
 論理式は自由変数のスロットを一つもつ有界存在である。変数は定数 `mₐ` の要素、すなわち段階の内部で提示された `a` の要素の上を渡り、母式は束縛変数が外側の変数を要素にもつと述べる。束縛変数が量化子の本体の中で第一のスロットを占めるため、外側の変数は後者のスロットに置かれる。外延として主張されるのは周囲の和集合 `⋃ (fst a)` であり、等式 `defSet≡` は一回の外延性で、二つの包含に分かれる。
 <!--/-->
@@ -1252,7 +1252,7 @@ The formula has one free-variable slot and is a bounded existential: the variabl
 <!--en-->
 The first inclusion says: everything satisfying the formula lies in the ambient union. A member `y` of the definable subset arrives, by the reading lemma for `defSet`, as a truncated pair of an index `m` and a satisfaction proof, together with a path `q` identifying `y` with the embedded element `⟪ Lset σ ⟫↪ m`. The satisfaction hypothesis names members by their indices, so it can only be consumed for the embedded element; transporting along `q` moves the goal from `y` to that element, and the elimination into the proposition `y ∈ₛ ⋃ (fst a)` is what keeps the whole step legitimate.
 <!--zh-->
-第一个包含说：凡满足公式者，都在周遭并中。可定义子集的成员 `y`，经 `defSet` 的读法引理，呈现为索引 `m` 与满足证明组成的截断对，连同把 `y` 与嵌入元素 `⟪ Lset σ ⟫↪ m` 等同的路径 `q`。满足假设是按索引来名指成员的，所以它只能用于嵌入元素；沿 `q` 的搬移把目标从 `y` 移到那个元素，而向命题 `y ∈ₛ ⋃ (fst a)` 的消去保证整步合法。
+第一个包含说：凡满足公式者，都在周遭并中。可定义子集的元素 `y`，经 `defSet` 的读法引理，呈现为索引 `m` 与满足证明组成的截断对，连同把 `y` 与嵌入元素 `⟪ Lset σ ⟫↪ m` 等同的路径 `q`。满足假设是按索引来名指元素的，所以它只能用于嵌入元素；沿 `q` 的搬移把目标从 `y` 移到那个元素，而向命题 `y ∈ₛ ⋃ (fst a)` 的消去保证整步合法。
 <!--ja-->
 最初の包含は、論理式を充足するものはすべて周囲の和集合にある、と言う。定義可能部分集合の元 `y` は、`defSet` の読み取り補題によって、添字 `m` と充足の証明からなる切り詰められた対として、`y` を埋め込まれた要素 `⟪ Lset σ ⟫↪ m` と同一視するパス `q` とともに届く。充足の仮定は要素を添字で名指すので、それを消費できるのは埋め込まれた要素に対してだけである。`q` に沿った輸送が目標を `y` からその要素へ移し、命題 `y ∈ₛ ⋃ (fst a)` への消去がこの一歩全体を正当に保つ。
 <!--/-->
@@ -1268,7 +1268,7 @@ The first inclusion says: everything satisfying the formula lies in the ambient 
 <!--en-->
 The satisfaction proof for the bounded existential yields, merely, a witness `v` from the range together with the two matrix memberships: `fst v` is a member of the embedded `mₐ`, and the embedded `m` is a member of `fst v`. These are exactly the two memberships the hierarchy's union classification requires in its introduction direction: to place `⟪ Lset σ ⟫↪ m` inside `⋃ (fst a)` it suffices to exhibit some member of `fst a` having it as a member.
 <!--zh-->
-有界存在的满足证明仅仅给出一个来自范围的见证 `v`，连同母式的两条隶属：`fst v` 属于嵌入的 `mₐ`，而嵌入的 `m` 属于 `fst v`。这两条恰好是层级的并刻画在进入方向所需的输入：要把 `⟪ Lset σ ⟫↪ m` 放进 `⋃ (fst a)`，只须出示 `fst a` 的某个成员以它为成员。
+有界存在的满足证明仅仅给出一个来自范围的见证 `v`，连同母式的两条成员关系：`fst v` 属于嵌入的 `mₐ`，而嵌入的 `m` 属于 `fst v`。这两条恰好是层级的并刻画在进入方向所需的输入：要把 `⟪ Lset σ ⟫↪ m` 放进 `⋃ (fst a)`，只须出示 `fst a` 的某个元素以它为元素。
 <!--ja-->
 有界存在の充足の証明は、範囲からの証人 `v` を、母式の二つの所属とともに単に与える。すなわち `fst v` が埋め込まれた `mₐ` の要素であり、埋め込まれた `m` が `fst v` の要素であることである。この二つこそ、階層の和集合の分類が導入の向きで消費する入力である。`⟪ Lset σ ⟫↪ m` を `⋃ (fst a)` の中に置くには、それを要素にもつ `fst a` の要素を一つ示せば足りる。
 <!--/-->
@@ -1284,7 +1284,7 @@ The satisfaction proof for the bounded existential yields, merely, a witness `v`
 <!--en-->
 The two matrix memberships, however, speak the restricted presentation's language and must become ambient ones. `∈∈ₛ` performs the conversion, and the path `qₐ` already in hand rewrites the range from the embedded `mₐ` to `fst a`, so the witness `fst v` is presented as a member of `fst a`; the second conjunct is used as it stands, since it is already a membership of the embedded `m` in `fst v`. With both memberships in ambient form, the union classification applies and the first inclusion closes.
 <!--zh-->
-但母式的两条隶属说的是限制呈现的语言，必须变成周遭隶属。`∈∈ₛ` 执行转换，而已有的路径 `qₐ` 把范围从嵌入的 `mₐ` 改写为 `fst a`，于是见证 `fst v` 被呈现为 `fst a` 的成员；第二个合取肢按原样使用，因为它本来就是嵌入的 `m` 对 `fst v` 的隶属。两条隶属都成为周遭形式后，并刻画随即适用，第一个包含合拢。
+但母式的两条成员关系说的是限制呈现的语言，必须变成周遭成员关系。`∈∈ₛ` 执行转换，而已有的路径 `qₐ` 把范围从嵌入的 `mₐ` 改写为 `fst a`，于是见证 `fst v` 被呈现为 `fst a` 的元素；第二个合取肢按原样使用，因为它本来就是嵌入的 `m` 对 `fst v` 的成员关系。两条成员关系都成为周遭形式后，并刻画随即适用，第一个包含合拢。
 <!--ja-->
 しかし母式の二つの所属は制限された提示の言葉で語っており、周囲の所属へ変えねばならない。変換は `∈∈ₛ` が行い、すでに手もとのパス `qₐ` が範囲を埋め込まれた `mₐ` から `fst a` へ書き換えるので、証人 `fst v` は `fst a` の要素として提示される。第二の項はそのまま使える。それは埋め込まれた `m` の `fst v` への所属としてすでに成っているからである。両方の所属が周囲の形になれば和集合の分類が適用され、最初の包含が閉じる。
 <!--/-->
@@ -1300,7 +1300,7 @@ The two matrix memberships, however, speak the restricted presentation's languag
 <!--en-->
 The reverse inclusion reads the same classification in its other direction: membership of `y` in the ambient union is, merely, a member `v` of `fst a` with `y` a member of `v`. The helper `member` must then exhibit `y` inside the definable subset for this particular `v`. This is the half where the stage hypothesis does the work, because nothing so far guarantees that the intermediate `v` is visible in the stage at all.
 <!--zh-->
-反向包含把同一条刻画按另一方向读取：`y` 在周遭并中的隶属，仅仅是 `fst a` 的某个成员 `v` 以 `y` 为成员。辅助引理 `member` 随后必须对这个特定的 `v` 把 `y` 展示在可定义子集中。这一半正是层假设出力的地方，因为到此为止，没有任何东西保证那个中间的 `v` 在层中可见。
+反向包含把同一条刻画按另一方向读取：`y` 在周遭并中的成员关系，仅仅是 `fst a` 的某个元素 `v` 以 `y` 为元素。辅助引理 `member` 随后必须对这个特定的 `v` 把 `y` 展示在可定义子集中。这一半正是层假设出力的地方，因为到此为止，没有任何东西保证那个中间的 `v` 在层中可见。
 <!--ja-->
 逆の包含は、同じ分類のもう一方の向きを読む。周囲の和集合への `y` の所属とは、単に、`fst a` のある要素 `v` が `y` を要素にもつことである。補助補題 `member` は、この特定の `v` に対して `y` を定義可能部分集合の中に示さねばならない。ここで段階の仮定が働く。これまでのところ、途中の `v` が段階で見えることを保証するものは何もないからである。
 <!--/-->
@@ -1316,7 +1316,7 @@ The reverse inclusion reads the same classification in its other direction: memb
 <!--en-->
 The helper first converts `y` into a representative `m'` of the stage with its identifying path `q'`, and uses the membership reading of `defSet` backward: satisfaction of φ at the constant naming `m'` becomes membership of the embedded `m'`, and the transport along `q'` moves that membership to `y`. All that remains is the satisfaction proof `sat`, which is assembled from the two memberships `v ∈ₛ fst a` and `y ∈ₛ v`: transitivity of the stage, applied through `Atrans`, certifies first that `v` lies in `Lset σ` and then that `y` does as well, and the two conjuncts are transported to the embedded presentation along the paths `sym qₐ` and `sym q'`.
 <!--zh-->
-辅助引理先把 `y` 转成层的一个代表元 `m'`，连同其等同路径 `q'`，并把 `defSet` 的隶属读法反着用：在名指 `m'` 的常元处的 φ 满足变成嵌入 `m'` 的隶属，沿 `q'` 的搬移再把这条隶属搬到 `y` 上。剩下的只是满足证明 `sat`，它由两条隶属 `v ∈ₛ fst a` 与 `y ∈ₛ v` 组装：经由 `Atrans` 施用层传递性，先证 `v` 落在 `Lset σ` 中，再证 `y` 也如此，两个合取肢则沿路径 `sym qₐ` 与 `sym q'` 被搬到嵌入呈现上。
+辅助引理先把 `y` 转成层的一个代表元 `m'`，连同其等同路径 `q'`，并把 `defSet` 的成员关系读法反着用：在名指 `m'` 的常元处的 φ 满足变成嵌入 `m'` 的成员关系，沿 `q'` 的搬移再把这条成员关系搬到 `y` 上。剩下的只是满足证明 `sat`，它由两条成员关系 `v ∈ₛ fst a` 与 `y ∈ₛ v` 组装：经由 `Atrans` 施用层传递性，先证 `v` 落在 `Lset σ` 中，再证 `y` 也如此，两个合取肢则沿路径 `sym qₐ` 与 `sym q'` 被搬到嵌入呈现上。
 <!--ja-->
 補助補題はまず `y` を段階の代表元 `m'` と、その同一視のパス `q'` に変換し、`defSet` の所属の読みを逆向きに用いる。`m'` を名指す定数のところでの φ の充足は埋め込まれた `m'` の所属となり、`q'` に沿った輸送がその所属を `y` へ移す。残るは充足の証明 `sat` で、これは二つの所属 `v ∈ₛ fst a` と `y ∈ₛ v` から組み立てられる。`Atrans` を通して段階の推移性を適用すれば、まず `v` が `Lset σ` にあり、ついで `y` もそうであることが証明され、二つの項はパス `sym qₐ` と `sym q'` に沿って埋め込まれた提示へ輸送される。
 <!--/-->
@@ -1332,7 +1332,7 @@ The helper first converts `y` into a representative `m'` of the stage with its i
 <!--en-->
 This block is where the stage hypothesis earns its keep, and it is the one step pairing did not need. The two ambient memberships are first read back out of their structural form by `∈∈ₛ`: `v` is a member of the underlying set of `a`, and `y` is a member of `v`. Transitivity of the stage is then applied twice. Since `fst a` lies in `Lset σ` and the stage is transitive, its member `v` lies in `Lset σ` too; applying the same reasoning to the membership of `y` in `v` certifies `y` itself as a member of the stage. So a member of a member of `a` is pulled into the stage, which is precisely what lets the formula's quantifier see it.
 <!--zh-->
-这一块正是层假设出力之处，也是配对所不需要的一步。先用 `∈∈ₛ` 把两条周遭隶属从结构形式读出：`v` 是 `a` 底层集合的成员，`y` 是 `v` 的成员。然后对层的传递性施用两次：既然 `fst a` 落在 `Lset σ` 中而层传递，其成员 `v` 也落在 `Lset σ` 中；对 `y` 属于 `v` 这条隶属再施同一推理，便证得 `y` 自身是层的成员。于是 `a` 的成员的成员被拉进层，这恰好让公式的量词能够看到它。
+这一块正是层假设出力之处，也是配对所不需要的一步。先用 `∈∈ₛ` 把两条周遭成员关系从结构形式读出：`v` 是 `a` 底层集合的元素，`y` 是 `v` 的元素。然后对层的传递性施用两次：既然 `fst a` 落在 `Lset σ` 中而层传递，其元素 `v` 也落在 `Lset σ` 中；对 `y` 属于 `v` 这条成员关系再施同一推理，便证得 `y` 自身是层的元素。于是 `a` 的元素的元素被拉进层，这恰好让公式的量词能够看到它。
 <!--ja-->
 ここが段階の仮定が働く場所であり、対の構成には要らなかった一手である。まず `∈∈ₛ` によって二つの周囲の所属を構造的な形から読み出す。`v` は `a` の基底の集合の要素、`y` は `v` の要素である。次に段階の推移性を二度適用する。`fst a` が `Lset σ` にあり段階が推移的である以上、その要素 `v` も `Lset σ` にあり、`v` への `y` の所属に同じ推論を適用すれば、`y` 自身も段階の要素であると証明される。こうして `a` の要素の要素が段階へ引き込まれ、論理式の量化子がそれを見えるようにするのはまさにこのためである。
 <!--/-->
@@ -1348,7 +1348,7 @@ This block is where the stage hypothesis earns its keep, and it is the one step 
 <!--en-->
 With `y` certified to lie in the stage, the fiber conversion `∈-asFiber` supplies the representative `m'` and its identifying path `q'` from the embedded element back to `y`. The satisfaction proof for φ at that representative is then assembled inside the truncation: the witness is the pair of `v` together with its own membership `v∈A` in the stage, and the two matrix conjuncts are transported to the embedded presentation, `v` into the embedded `mₐ` along `sym qₐ` and the embedded `m'` into `v` along `sym q'`. This is exactly the data the bounded existential asks for.
 <!--zh-->
-`y` 落在层的证书到手后，纤维转换 `∈-asFiber` 给出代表元 `m'` 及其从嵌入元素回到 `y` 的等同路径 `q'`。随后在截断内组装 φ 在该代表元处的满足证明：见证是 `v` 连同它自身在层中的隶属 `v∈A` 组成的对，而两条母式合取肢被搬到嵌入呈现处，`v` 沿 `sym qₐ` 进入嵌入的 `mₐ`，嵌入的 `m'` 沿 `sym q'` 进入 `v`。这恰好就是有界存在所要求的数据。
+`y` 落在层的证书到手后，纤维转换 `∈-asFiber` 给出代表元 `m'` 及其从嵌入元素回到 `y` 的等同路径 `q'`。随后在截断内组装 φ 在该代表元处的满足证明：见证是 `v` 连同它自身在层中的成员关系 `v∈A` 组成的对，而两条母式合取肢被搬到嵌入呈现处，`v` 沿 `sym qₐ` 进入嵌入的 `mₐ`，嵌入的 `m'` 沿 `sym q'` 进入 `v`。这恰好就是有界存在所要求的数据。
 <!--ja-->
 `y` が段階にあるという証明書が手に入れば、ファイバー変換 `∈-asFiber` が代表元 `m'` と、埋め込まれた要素から `y` への同一視のパス `q'` を供給する。次に、この代表元のところでの φ の充足の証明を切り詰めの内部で組み立てる。証人は段階への所属 `v∈A` を伴う `v` の対であり、母式の二つの項は埋め込まれた提示へ輸送される。`v` は `sym qₐ` に沿って埋め込まれた `mₐ` へ、埋め込まれた `m'` は `sym q'` に沿って `v` へ入る。これが有界存在が要求するデータにちょうど一致する。
 <!--/-->
@@ -1364,7 +1364,7 @@ With `y` certified to lie in the stage, the fiber conversion `∈-asFiber` suppl
 <!--en-->
 The two inclusions assemble into the equation `defSet≡`, and the recognition principle `𝒟ₒ-intro` turns formula and equation into membership of `⋃ (fst a)` in `𝒟ₒ (Lset σ)`. One application of the closure lemma `𝒟ₒ→isL` finishes the construction: since `σ` is an ordinal, a definable subset of `Lset σ` is constructible, so `⋃ (fst a)` enters `L` packaged as a carrier element together with its certificate. This packaging is what the next block classifies.
 <!--zh-->
-两个包含组装成等式 `defSet≡`，识别原则 `𝒟ₒ-intro` 把公式与等式转换为 `⋃ (fst a)` 在 `𝒟ₒ (Lset σ)` 中的隶属。再对闭包引理 `𝒟ₒ→isL` 施用一次便完成构造：既然 `σ` 是序数，`Lset σ` 的可定义子集就可构造，于是 `⋃ (fst a)` 连同其证书被打包成载体元素进入 `L`。下一块将对该打包给出刻画。
+两个包含组装成等式 `defSet≡`，识别原则 `𝒟ₒ-intro` 把公式与等式转换为 `⋃ (fst a)` 在 `𝒟ₒ (Lset σ)` 中的成员关系。再对闭包引理 `𝒟ₒ→isL` 施用一次便完成构造：既然 `σ` 是序数，`Lset σ` 的可定义子集就可构造，于是 `⋃ (fst a)` 连同其证书被打包成载体元素进入 `L`。下一块将对该打包给出刻画。
 <!--ja-->
 二つの包含は等式 `defSet≡` に組み上げられ、認識の原理 `𝒟ₒ-intro` が論理式と等式を `⋃ (fst a)` の `𝒟ₒ (Lset σ)` への所属に変える。閉包の補題 `𝒟ₒ→isL` を一度適用すれば構成は完成である。`σ` が順序数である以上、`Lset σ` の定義可能部分集合は構成可能であり、`⋃ (fst a)` は証明書とともに台の要素として `L` に入る。次のブロックはこの包みを分類する。
 <!--/-->
@@ -1382,7 +1382,7 @@ The two inclusions assemble into the equation `defSet≡`, and the recognition p
 <!--en-->
 The specification is a path of truth values, and it is composed from two pieces. The hierarchy's own union law `union-spec` classifies membership of `fst z` in the ambient union as an indexed disjunction over all of the hierarchy: some `y` in `fst a` with `fst z` in `y`. What remains is to turn that ambient indexed disjunction into `Q z`, which quantifies over the carrier `S`, that is, over constructible witnesses only. The two quantifier ranges differ, and the bridge of the next block identifies the two truncated disjunctions.
 <!--zh-->
-规格是一条真值路径，由两块复合而成。层级自己的并律 `union-spec` 把 `fst z` 在周遭并中的隶属分类为跑遍整个层级的带索引析取：存在 `fst a` 中的 `y` 使 `fst z` 属于 `y`。剩下要做的是把这条周遭的带索引析取转成 `Q z`，后者对载体 `S` 量化，也就是只对可构造的见证量化。两个量化范围不同，下一块的桥将把这两条截断的析取等同起来。
+规格是一条真值路径，由两块复合而成。层级自己的并律 `union-spec` 把 `fst z` 在周遭并中的成员关系分类为跑遍整个层级的带索引析取：存在 `fst a` 中的 `y` 使 `fst z` 属于 `y`。剩下要做的是把这条周遭的带索引析取转成 `Q z`，后者对载体 `S` 量化，也就是只对可构造的见证量化。两个量化范围不同，下一块的桥将把这两条截断的析取等同起来。
 <!--ja-->
 仕様は真理値のパスであり、二つの部品の合成である。階層そのものの和集合の法則 `union-spec` は、周囲の和集合への `fst z` の所属を、階層全体を渡る添字つき論理和として分類する。すなわち `fst a` のある `y` が `fst z` を要素にもつ、というものである。残る仕事は、この周囲の添字つき論理和を `Q z` に変えることである。`Q z` は台 `S` の上、つまり構成可能な証人だけの上で量化する。二つの量化の範囲は異なっており、次のブロックの橋渡しがこの二つの切り詰められた論理和を同一視する。
 <!--/-->
@@ -1399,7 +1399,7 @@ The specification is a path of truth values, and it is composed from two pieces.
 <!--en-->
 The bridge is a pair of maps between the two truncated disjunctions, joined into a path by `⇔toPath`. Forward: an ambient witness `y` with its two memberships gains a constructibility certificate, precisely because `y` is a member of `fst a`, whose own certificate `a .snd` is in hand; transitivity of the class, here `isL-trans` applied to the membership of `y` and the certificate of `a`, certifies `y` itself, so the witness may be presented as a carrier element while keeping the memberships. Backward: a carrier witness is projected down to its underlying set, discarding the certificate but keeping the memberships. Neither direction inspects how the truth values are built; both act on abstract Ω values. With the bridge in place, `spec` is the composite path, and the union field of the model is thereby supplied.
 <!--zh-->
-桥是这两条截断析取之间的一对映射，由 `⇔toPath` 接成路径。正向：带两条隶属的周遭见证 `y` 获得一份可构造性证书，依据恰恰是 `y` 属于 `fst a`，而 `a` 自身的证书 `a .snd` 就在手边；类的传递性在此处即 `isL-trans` 施于「`y` 的隶属」与「`a` 的证书」，证得 `y` 自身可构造，于是该见证可以被呈现为载体元素而不丢失隶属。反向：载体见证被投影回其底层集合，丢掉证书但保留隶属。两个方向都不检视真值是如何构造的，都作用于抽象的 Ω 值。桥就位后，`spec` 便是复合路径，模型的并字段由此得证。
+桥是这两条截断析取之间的一对映射，由 `⇔toPath` 接成路径。正向：带两条成员关系的周遭见证 `y` 获得一份可构造性证书，依据恰恰是 `y` 属于 `fst a`，而 `a` 自身的证书 `a .snd` 就在手边；类的传递性在此处即 `isL-trans` 施于「`y` 的成员关系」与「`a` 的证书」，证得 `y` 自身可构造，于是该见证可以被呈现为载体元素而不丢失成员关系。反向：载体见证被投影回其底层集合，丢掉证书但保留成员关系。两个方向都不检视真值是如何构造的，都作用于抽象的 Ω 值。桥就位后，`spec` 便是复合路径，模型的并字段由此得证。
 <!--ja-->
 橋渡しは、二つの切り詰められた論理和の間の一対の写像であり、`⇔toPath` によってパスに結ばれる。前向きには、二つの所属を伴う周囲の証人 `y` が構成可能性の証明書を得る。根拠はまさに `y` が `fst a` の要素であることで、`a` 自身の証明書 `a .snd` が手もとにある。クラスの推移性、ここでは「`y` の所属」と「`a` の証明書」に適用される `isL-trans` が `y` 自身を証明するので、証人は所属を保ったまま台の要素として提示できる。後向きには、台の証人はその基底の集合へ射影され、証明書は捨てられるが所属は保たれる。どちらの向きも真理値の作られ方を覗かず、抽象的な Ω の値に作用する。橋が整えば `spec` は合成パスとなり、モデルの和集合のフィールドがここに供給される。
 <!--/-->
@@ -1438,7 +1438,7 @@ This chapter supplies five axioms for the constructible universe. Extensionality
 <!--zh-->
 ## 小结
 
-本章为可构造宇宙供给五条公理。外延公理与正则公理是继承来的：外延性用传递性处理周遭成员，而正则公理直接限制周遭可及性；而一旦载体内部有了外延性，余下每条公理都化归为出示一个见证，因为实现固定隶属条件的集合是唯一的。空集、配对与并是构造出来的：各由一条公式从单一层中刻出；两个实参须会合时，所需的层由上界序数提供。并的规格还第二次展示了传递性的作用：周遭并中的隶属见证，其可构造性证书恰由 `isL-trans` 给出，正是它把模型的限制见证与周遭并的全部见证等同起来。与公理并行，本章还记录了关于塔自身的相应安置事实：`pair∈Lset-suc`{.Agda} 把一层的两个成员的无序对放进下一层，`sgl∈Lset-suc`{.Agda} 放单点集，`pr∈Lset-suc`{.Agda} 把有序对放到高两层处；这正是以有序对写成的任何东西得以安置在某一层上的原因。
+本章为可构造宇宙供给五条公理。外延公理与正则公理是继承来的：外延性用传递性处理周遭元素，而正则公理直接限制周遭可及性；而一旦载体内部有了外延性，余下每条公理都化归为出示一个见证，因为实现固定成员关系条件的集合是唯一的。空集、配对与并是构造出来的：各由一条公式从单一层中刻出；两个实参须会合时，所需的层由上界序数提供。并的规格还第二次展示了传递性的作用：周遭并中的成员关系见证，其可构造性证书恰由 `isL-trans` 给出，正是它把模型的限制见证与周遭并的全部见证等同起来。与公理并行，本章还记录了关于塔自身的相应安置事实：`pair∈Lset-suc`{.Agda} 把一层的两个元素的无序对放进下一层，`sgl∈Lset-suc`{.Agda} 放单点集，`pr∈Lset-suc`{.Agda} 把有序对放到高两层处；这正是以有序对写成的任何东西得以安置在某一层上的原因。
 <!--ja-->
 ## まとめ
 

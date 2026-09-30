@@ -28,7 +28,7 @@ module L.GCH.OmegaRecursion {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 open import FOL.Syntax
   using ( Formula; var; con; _∈̇_; _≐_; _∧̇_; _⇒̇_; ∃̇_; ∀̇_ )
 open import FOL.Manipulation.Renaming using ( renameFo; module Sat )
@@ -54,7 +54,7 @@ open import L.Coding.Expressions {ℓ} using ( sucAtL; sucAtL-adequate; numL )
 A definable step on constructible sets and a starting point determine, by recursion on the host natural numbers, a sequence of finite iterates. This chapter represents each iterate inside `L`: finite correct tables establish existence and uniqueness at the internal numerals, replacement gathers their values and their indexed graph, and union forms the set containing every member reached at a finite stage.
 <!--zh-->
 
-可构造集合上的可定义步骤与一个起点，通过宿主自然数上的递归确定一列有限次迭代。本章在 `L` 内表示每次迭代：有限的正确表证明内部数码处取值的存在性与唯一性，替换收集这些值及其带索引的图，并集则组成包含每个有限阶段所得成员的集合。
+可构造集合上的可定义步骤与一个起点，通过宿主自然数上的递归确定一列有限次迭代。本章在 `L` 内表示每次迭代：有限的正确表证明内部数码处取值的存在性与唯一性，替换收集这些值及其带索引的图，并集则组成包含每个有限阶段所得元素的集合。
 <!--ja-->
 
 構成可能集合上の定義可能な操作と始点から、ホスト側の自然数に関する再帰によって有限反復の列が定まる。本章では各反復を `L` の内部で表す。有限な正しい表によって内部の数項における値の存在と一意性を示し、置換によって値と添字付きグラフを集め、和集合によって有限段階で得られるすべての要素を含む集合を作る。
@@ -79,7 +79,7 @@ The description of the iteration is written in the object language, whose formul
 <!--en-->
 The ambient hierarchy supplies membership and the numerals, ordered pairs have injective components, and the constructible structure carries the stage machinery with its transitivity and monotonicity.
 <!--zh-->
-外围层级供给隶属与数码，有序对的分量可单射恢复，可构造结构承载层机制及其传递性与单调性。
+外围层级供给成员关系与数码，有序对的分量可单射恢复，可构造结构承载层机制及其传递性与单调性。
 <!--ja-->
 周囲の階層が所属と数項を供給し、順序対の成分は単射に復元でき、構成可能な構造が段階の仕組みとその推移性・単調性を運ぶ。
 <!--/-->
@@ -142,13 +142,13 @@ open InfinitySet {ℓ} using ( sucV; #_ )
 <!--en-->
 The constructible carrier is opened with its membership, since every iterate is an element of `L`.
 <!--zh-->
-可构造载体连同其隶属被打开，因为每次迭代都是 `L` 的元素。
+可构造载体连同其成员关系被打开，因为每次迭代都是 `L` 的元素。
 <!--ja-->
 構成可能な台がその所属とともに開かれる。それぞれの反復は `L` の要素だからである。
 <!--/-->
 
 ```agda
-open hPropStructure 𝒮ʟ using ( S; _∈ˢ_ )
+open hPropView 𝒮ʟ using ( S; _∈ˢ_ )
 ```
 
 <!--en-->
@@ -245,7 +245,7 @@ pairʟ-in a b y k = subst (λ w → ⟨ fst y ∈ w ⟩) (sym (pairʟ-fst a b))
 <!--en-->
 To place `y` in the internal union of `A`, it suffices to exhibit a particular constructible set `B` with `B ∈ A` and `y ∈ B`. The two memberships form the usual witness for membership in a union and are transported through the underlying-set equation for `unionʟ A`.
 <!--zh-->
-要把 `y` 放入 `A` 的内部并，只需给出一个明确的可构造集合 `B`，满足 `B ∈ A` 且 `y ∈ B`。这两条隶属构成并集隶属的通常见证，再沿 `unionʟ A` 的底层集合等式搬运。
+要把 `y` 放入 `A` 的内部并，只需给出一个明确的可构造集合 `B`，满足 `B ∈ A` 且 `y ∈ B`。这两条成员关系构成并集成员关系的通常见证，再沿 `unionʟ A` 的底层集合等式搬运。
 <!--ja-->
 `y` を `A` の内部和集合に入れるには、`B ∈ A` かつ `y ∈ B` を満たす具体的な構成可能集合 `B` を示せば十分である。この二つの所属が和集合への所属の通常の証人となり、`unionʟ A` の台集合に関する等式に沿って輸送される。
 <!--/-->
@@ -259,7 +259,7 @@ unionʟ-in A y B hB hy = subst (λ w → ⟨ fst y ∈ w ⟩) (sym (unionʟ-fst 
 <!--en-->
 Membership in a union yields, merely, an intermediate set containing the element; the intermediate set is an ambient element, without a constructibility proof of its own.
 <!--zh-->
-并中的隶属仅仅给出包含该元素的某个中间集合；中间集合是外围元素，自身不带可构造性证明。
+并中的成员关系仅仅给出包含该元素的某个中间集合；中间集合是外围元素，自身不带可构造性证明。
 <!--ja-->
 和の中の所属からは、その要素を含む中間の集合が単に得られる。中間の集合は周囲の要素であり、それ自身の構成可能性の証明は持たない。
 <!--/-->
@@ -397,7 +397,7 @@ Reading the zero clause applies it at the numeral zero and transports the applic
 <!--en-->
 Conversely, a host-level proof of the zero clause fills the object-language formula. The quantified set `z` is rewritten along the premise `z = nn 0`, and the graph membership at zero is transported into the application atom before the clause identifies its value with `a`.
 <!--zh-->
-反过来，宿主层的零点子句可填入对象语言公式。先沿前提 `z = nn 0` 改写被量化集合 `z`，再把零点处的图隶属搬入应用原子，最后由该子句把其值认同为 `a`。
+反过来，宿主层的零点子句可填入对象语言公式。先沿前提 `z = nn 0` 改写被量化集合 `z`，再把零点处的图成员关系搬入应用原子，最后由该子句把其值认同为 `a`。
 <!--ja-->
 逆に、ホスト側のゼロの節から対象言語の論理式を満たせる。量化された集合 `z` を前提 `z = nn 0` に沿って書き換え、ゼロにおけるグラフへの所属を適用のアトムへ輸送してから、その値を `a` と同一視する。
 <!--/-->
@@ -503,7 +503,7 @@ Reading the successor clause transports the two application atoms against their 
 <!--en-->
 The last premise recognizes `x'` as the set-theoretic successor of `x`. Together with the two table memberships, it is exactly the hypothesis needed to compare adjacent rows, so the semantic reading yields the step relation between their values.
 <!--zh-->
-最后一项前提将 `x'` 认作 `x` 的集合论后继。它与两条表隶属关系合在一起，恰好构成比较相邻两行所需的假设，因此语义读法给出两行取值之间的步进关系。
+最后一项前提将 `x'` 认作 `x` 的集合论后继。它与两条表成员关系合在一起，恰好构成比较相邻两行所需的假设，因此语义读法给出两行取值之间的步进关系。
 <!--ja-->
 最後の前提は、`x'` が `x` の集合論的な後者であることを表す。二つの表所属と合わせると、これは隣接する行を比較するためにちょうど必要な仮定となり、意味論的な読みから二つの値の間のステップ関係が得られる。
 <!--/-->
@@ -571,7 +571,7 @@ The existential conclusion is exactly a truncated existence of a recorded value.
 <!--en-->
 Reading the downward formula preserves the existential as a propositional truncation. It maps each hidden witness value and its application atom to the corresponding host-level graph membership, without selecting a witness outside the truncation.
 <!--zh-->
-读取向下公式时，存在量词仍保留为命题截断。证明把截断中的每个见证值及其应用原子映到相应的宿主层图隶属，而不从截断外部选取见证。
+读取向下公式时，存在量词仍保留为命题截断。证明把截断中的每个见证值及其应用原子映到相应的宿主层图成员关系，而不从截断外部选取见证。
 <!--ja-->
 下向きの論理式を読むとき、存在量化子は命題的切り詰めのまま保たれる。切り詰めの内部にある各証人の値と適用のアトムを、対応するホスト側のグラフ所属へ写し、切り詰めの外で証人を選ぶことはしない。
 <!--/-->
@@ -814,7 +814,7 @@ The bound is itself an ordinal, as required for it to index a constructible leve
 <!--en-->
 Each entry belongs to the constructible level indexed by the common bound. Indeed, its own stage contains it, and monotonicity of `Lset` carries that membership along the comparison supplied by `boundingOrd`.
 <!--zh-->
-每个条目都属于公共上界所索引的可构造层。具体而言，条目属于其自身的层，而 `Lset` 的单调性沿 `boundingOrd` 给出的序数比较将该隶属关系送入公共层。
+每个条目都属于公共上界所索引的可构造层。具体而言，条目属于其自身的层，而 `Lset` 的单调性沿 `boundingOrd` 给出的序数比较将该成员关系送入公共层。
 <!--ja-->
 各項目は、共通の上界を添字とする構成可能階層に属する。実際、項目はまずそれ自身の段階に属し、`Lset` の単調性によって、`boundingOrd` が与える順序数の比較に沿って共通の段階へ移される。
 <!--/-->
@@ -859,7 +859,7 @@ If `k ≤ n`, the canonical entry `(nn k, it k)` occurs in `Fn n`. Thus the tabl
 <!--en-->
 The outward reading decomposes any member into a bounded index and its iterate value, both recovered under truncation.
 <!--zh-->
-向外读法把任何成员分解为有界索引及其迭代取值，均在截断下恢复。
+向外读法把任何元素分解为有界索引及其迭代取值，均在截断下恢复。
 <!--ja-->
 外向きの読み出しは、すべての要素を、有界な添字とその反復の値へ分解する。どちらも切り詰めの下で復元される。
 <!--/-->
@@ -1097,7 +1097,7 @@ For a displayed representation `nn k ≡ q`, take `it k` as the centre of the fi
 <!--en-->
 The general Replacement construction associated with `valR` now provides a set containing its values, together with exact membership rules. These rules will connect the internally collected set with the host-defined sequence `it`.
 <!--zh-->
-与 `valR` 关联的一般替换构造现在给出一个收集其取值的集合，并附带精确的隶属规则。这些规则将内部收集所得的集合与宿主侧定义的序列 `it` 联系起来。
+与 `valR` 关联的一般替换构造现在给出一个收集其取值的集合，并附带精确的成员关系规则。这些规则将内部收集所得的集合与宿主侧定义的序列 `it` 联系起来。
 <!--ja-->
 `valR` に付随する一般の置換構成から、その値を集めた集合と、正確な所属規則が得られる。これらの規則によって、内部で集めた集合と、ホスト側で定義した列 `it` とが結び付く。
 <!--/-->
@@ -1122,7 +1122,7 @@ The set `values` is the Replacement image of `ωʟ` under the relation `itFo`: i
 <!--en-->
 Every host-defined iterate belongs to this value set. At the internal numeral `nn n`, membership follows from `nn n ∈ ωʟ` together with the finite-table witness `it-graph n`.
 <!--zh-->
-每个宿主侧定义的迭代都属于这个取值集合。在内部数码 `nn n` 处，`nn n ∈ ωʟ` 与有限表见证 `it-graph n` 共同给出该隶属关系。
+每个宿主侧定义的迭代都属于这个取值集合。在内部数码 `nn n` 处，`nn n ∈ ωʟ` 与有限表见证 `it-graph n` 共同给出该成员关系。
 <!--ja-->
 ホスト側で定義した各反復は、この値の集合に属する。内部の数項 `nn n` について、`nn n ∈ ωʟ` と有限表による証明 `it-graph n` を合わせることで、この所属が得られる。
 <!--/-->
@@ -1135,7 +1135,7 @@ Every host-defined iterate belongs to this value set. At the internal numeral `n
 <!--en-->
 Every member of the value domain is, merely, some iterate value: the outward reading recovers the numeral representation and the iteration formula satisfaction, and the uniqueness lemma identifies the value.
 <!--zh-->
-值域的每个成员仅是某次迭代的取值：向外读法恢复数码表示与迭代公式满足，唯一性引理认同取值。
+值域的每个元素仅是某次迭代的取值：向外读法恢复数码表示与迭代公式满足，唯一性引理认同取值。
 <!--ja-->
 値の領域のすべての要素は、単に、なんらかの反復の値である。外向きの読み出しが数項の表示と反復の論理式の充足を復元し、一意性の補題が値を同定する。
 <!--/-->
@@ -1164,7 +1164,7 @@ The union of the value domain is a set of `L`, formed by the model's union opera
 <!--en-->
 Every member of a finite iterate belongs to `iterUnion`: first `values-in` places that iterate itself in `values`, and then the defining membership rule for union places each of its members in the union. Notice that this proves `it n ⊆ iterUnion`, rather than that `it n` itself is a member of `iterUnion`.
 <!--zh-->
-每次有限迭代的所有成员都属于 `iterUnion`：先由 `values-in` 将该迭代本身放入 `values`，再由并的隶属规则将它的每个成员放入并中。这里证明的是 `it n ⊆ iterUnion`，并非 `it n` 本身属于 `iterUnion`。
+每次有限迭代的所有元素都属于 `iterUnion`：先由 `values-in` 将该迭代本身放入 `values`，再由并的成员关系规则将它的每个元素放入并中。这里证明的是 `it n ⊆ iterUnion`，并非 `it n` 本身属于 `iterUnion`。
 <!--ja-->
 各有限反復のすべての要素は `iterUnion` に属する。まず `values-in` により反復そのものが `values` に入り、次に和集合の所属規則により、その各要素が和集合に入る。ここで示されるのは `it n ⊆ iterUnion` であり、`it n` 自身が `iterUnion` の要素だということではない。
 <!--/-->
@@ -1177,7 +1177,7 @@ Every member of a finite iterate belongs to `iterUnion`: first `values-in` place
 <!--en-->
 Every member of the union merely lies in some finite iterate. The proof eliminates the union membership to find the intermediate set, packages it as constructible, and reads it through the value domain's outward reading.
 <!--zh-->
-并的每个成员仅属于某次有限迭代。证明消去并的隶属以找到中间集合，将其打包为可构造，再经值域向外读法读取。
+并的每个元素仅属于某次有限迭代。证明消去并的成员关系以找到中间集合，将其打包为可构造，再经值域向外读法读取。
 <!--ja-->
 合併のすべての要素は、単に、ある有限の反復の中にある。証明は、合併の所属を消去して中間の集合を見つけ、それを構成可能として包み、値の領域の外向きの読み出しで読む。
 <!--/-->
@@ -1238,7 +1238,7 @@ The function graph collects the ordered pairs of numerals and iterate values.
 <!--en-->
 Every canonical pair is a member of the graph, transported along the uniqueness of the replacement value.
 <!--zh-->
-每条正準对都是图的成员，沿替换取值的唯一性运输。
+每条正準对都是图的元素，沿替换取值的唯一性运输。
 <!--ja-->
 それぞれの正準な対は、グラフの要素である。置換の値の一意性に沿って運ばれる。
 <!--/-->
@@ -1252,7 +1252,7 @@ Every canonical pair is a member of the graph, transported along the uniqueness 
 <!--en-->
 Conversely, every graph member is merely equal to a canonical pair `(# n, it n)` for some natural number `n`. The source supplied by the general graph rule and its numeral representation both remain under propositional truncation, and value uniqueness identifies the second component without exposing `n` outside that truncation.
 <!--zh-->
-反过来，图的每个成员都仅仅等于某个自然数 `n` 对应的正準有序对 `(# n, it n)`。一般图规则给出的源及其数码表示始终留在命题截断之下，而取值唯一性认同第二分量，却不会把 `n` 暴露到截断之外。
+反过来，图的每个元素都仅仅等于某个自然数 `n` 对应的正準有序对 `(# n, it n)`。一般图规则给出的源及其数码表示始终留在命题截断之下，而取值唯一性认同第二分量，却不会把 `n` 暴露到截断之外。
 <!--ja-->
 逆に、グラフの各要素は、ある自然数 `n` に対する標準的な対 `(# n, it n)` に単に等しい。一般のグラフ規則から得られる始域の要素とその数項表示は、どちらも命題的切り詰めの内側に保たれる。値の一意性により第二成分を同一視できるが、`n` が切り詰めの外へ取り出されることはない。
 <!--/-->
@@ -1268,7 +1268,7 @@ Conversely, every graph member is merely equal to a canonical pair `(# n, it n)`
 <!--en-->
 The outward membership rule for the general graph first supplies a source `q ∈ ωʟ` and the encoded pair involving its unique value. Decoding `q` as a numeral and using value uniqueness turns this into the stated canonical pair, while the natural-number index remains under propositional truncation.
 <!--zh-->
-一般函数图的向外隶属规则先给出一个源 `q ∈ ωʟ`，以及由它的唯一取值组成的编码有序对。将 `q` 解码为数码并使用取值唯一性，便得到所述正準有序对；自然数指标始终留在命题截断之下。
+一般函数图的向外成员关系规则先给出一个源 `q ∈ ωʟ`，以及由它的唯一取值组成的编码有序对。将 `q` 解码为数码并使用取值唯一性，便得到所述正準有序对；自然数指标始终留在命题截断之下。
 <!--ja-->
 一般の関数グラフの外向き所属規則から、まず始域の要素 `q ∈ ωʟ` と、その一意な値を含む符号化された対が得られる。`q` を数項として復号し、値の一意性を使えば、主張された標準的な対になる。自然数の添字は最後まで命題的切り詰めの内側に保たれる。
 <!--/-->
@@ -1296,7 +1296,7 @@ The growth module is parameterized by the hypothesis that each set is contained 
 <!--en-->
 The growth hypothesis gives one-way containment between adjacent iterates: every member of `it n` also belongs to `it (suc n)`. No reverse containment, fixed-point property, or closure of `iterUnion` under `step` follows from this statement.
 <!--zh-->
-增长假设给出相邻迭代之间的单向包含：`it n` 的每个成员也属于 `it (suc n)`。该结论不蕴含反向包含、不动点性质，也不蕴含 `iterUnion` 对 `step` 封闭。
+增长假设给出相邻迭代之间的单向包含：`it n` 的每个元素也属于 `it (suc n)`。该结论不蕴含反向包含、不动点性质，也不蕴含 `iterUnion` 对 `step` 封闭。
 <!--ja-->
 成長の仮定から、隣り合う反復の間の一方向の包含が得られる。すなわち `it n` の各要素は `it (suc n)` にも属する。この主張から逆向きの包含、不動点性、あるいは `iterUnion` の `step` による閉性は導かれない。
 <!--/-->

@@ -28,7 +28,7 @@ module L.Choice.StageOrderAdequacy {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 open import FOL.Syntax using
   ( Formula; Term; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; ¬̇_; ∃̇_ )
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
@@ -86,7 +86,7 @@ Classical reasoning enters through one explicit hypothesis, `lem`{.Agda}. It wil
 <!--en-->
 The translation uses only the object language's ordinary atoms and connectives. Membership states that a proposed witness lies in a stage or code set, equality identifies two represented objects, and existential quantification hides the auxiliary sets needed by the description. Later proofs interpret these formulas in the constructible structure and compare the resulting propositions with their meta-language counterparts.
 <!--zh-->
-这次翻译只使用对象语言的普通原子与联结词。隶属原子陈述候选见证属于某层或码集，相等原子认同两个被表示的对象，而存在量词隐藏描述所需的辅助集合。后文的证明会在可构造结构中解释这些公式，再把所得命题与相应的元语言命题比较。
+这次翻译只使用对象语言的普通原子与联结词。成员关系原子陈述候选见证属于某层或码集，相等原子认同两个被表示的对象，而存在量词隐藏描述所需的辅助集合。后文的证明会在可构造结构中解释这些公式，再把所得命题与相应的元语言命题比较。
 <!--ja-->
 この翻訳で使うのは、対象言語の通常の原子式と結合子だけである。所属の原子式は候補となる証人が段階やコード集合に属することを述べ、等号の原子式は表現された二つの対象を同一視し、存在量化は記述に必要な補助集合を隠する。後の証明では、これらの論理式を構成可能な構造で解釈し、得られた命題を対応するメタ言語の命題と比較する。
 <!--/-->
@@ -94,7 +94,7 @@ The translation uses only the object language's ordinary atoms and connectives. 
 <!--en-->
 The relevant geometry of the hierarchy is simple. Ordinals linearly order the stages, membership between ordinal indices makes the tower monotone, and the successor of an ordinal separates a stage from its next definable-power-set stage. These facts will let us identify a proposed birth ordinal by comparing its successor with the least stage at which the set appears.
 <!--zh-->
-这里所需的层级几何很简单。序数线性排列各层，序数指标之间的隶属使塔保持单调，而一个序数的后继把该层与下一可定义幂集层分开。借助这些事实，我们可以比较候选诞生序数的后继与集合首次出现的层，从而认定该候选序数。
+这里所需的层级几何很简单。序数线性排列各层，序数指标之间的成员关系使塔保持单调，而一个序数的后继把该层与下一可定义幂集层分开。借助这些事实，我们可以比较候选诞生序数的后继与集合首次出现的层，从而认定该候选序数。
 <!--ja-->
 ここで必要な階層の姿は単純である。順序数は各段階を線形に並べ、順序数の添字どうしの所属は塔を単調にし、ある順序数の後続はその段階と次の定義可能冪の段階を分ける。これらの事実により、候補となる誕生順序数の後続を、集合が初めて現れる段階と比較して、その候補を同定できる。
 <!--/-->
@@ -102,7 +102,7 @@ The relevant geometry of the hierarchy is simple. Ordinals linearly order the st
 <!--en-->
 For a constructible set `x`, its least containing stage is a successor, and `birth x`{.Agda} is the ordinal immediately below it. Consequently `x` is absent from `Lset (birth x)` but present in `Lset (sucV (birth x))`, which is the definable power set of the former stage. The formula `BirthAt`{.Agda} will express these two membership facts; leastness itself remains a meta-language theorem.
 <!--zh-->
-对可构造集合 `x`，包含它的最早层是一个后继层，而 `birth x`{.Agda} 是紧邻其下的序数。因此，`x` 不属于 `Lset (birth x)`，却属于 `Lset (sucV (birth x))`，后者正是前一层的可定义幂集。公式 `BirthAt`{.Agda} 将表达这两条隶属事实；最小性本身仍来自元语言定理。
+对可构造集合 `x`，包含它的最早层是一个后继层，而 `birth x`{.Agda} 是紧邻其下的序数。因此，`x` 不属于 `Lset (birth x)`，却属于 `Lset (sucV (birth x))`，后者正是前一层的可定义幂集。公式 `BirthAt`{.Agda} 将表达这两条成员关系事实；最小性本身仍来自元语言定理。
 <!--ja-->
 構成可能集合 `x` を含む最初の段階は後続段階であり、`birth x`{.Agda} はその直前の順序数である。したがって `x` は `Lset (birth x)` には属さず、前者の定義可能冪である `Lset (sucV (birth x))` には属する。論理式 `BirthAt`{.Agda} が表すのはこの二つの所属事実であり、最小性そのものはメタ言語の定理から得られる。
 <!--/-->
@@ -110,7 +110,7 @@ For a constructible set `x`, its least containing stage is a successor, and `bir
 <!--en-->
 The existing stage order compares two members lexicographically by birth. An earlier birth decides the comparison immediately; equal births defer to the local order on the new elements of that stage. The later formula mirrors precisely this one unfolding equation, so its adequacy concerns the relation already carried by `orderAt`{.Agda}, not the construction of that order.
 <!--zh-->
-既有的层序按诞生层对两个成员作字典式比较。较早的诞生层立即决定比较；诞生层相等时，比较交给该层新生元素上的局部序。后面的公式将精确对应这一次展开方程，因此其充分性只关乎 `orderAt`{.Agda} 已经携带的关系，并不关乎该序的构造。
+既有的层序按诞生层对两个元素作字典式比较。较早的诞生层立即决定比较；诞生层相等时，比较交给该层新生元素上的局部序。后面的公式将精确对应这一次展开方程，因此其充分性只关乎 `orderAt`{.Agda} 已经携带的关系，并不关乎该序的构造。
 <!--ja-->
 既存の段階順序は、二つの要素を誕生段階によって辞書式に比較する。誕生が早ければ比較はそこで決まり、誕生が等しければ、その段階の新しい要素上の局所順序に委ねられる。後で作る論理式は、この一回の展開方程式だけを正確に写す。したがって、その妥当性が対象とするのは `orderAt`{.Agda} がすでに備える関係であり、順序の構成ではない。
 <!--/-->
@@ -134,7 +134,7 @@ The final target is a relation represented as a set of ordered pairs in `L`. A t
 <!--en-->
 An element of the represented relation is read as a code `pr u v`{.Agda}. Adequacy therefore has two tasks: recover some compared members `u` and `v` from such a pair code, and prove that their stage-order comparison holds; conversely, a known comparison must put the corresponding pair code into the represented set. The existence involved here is propositionally truncated, so it does not select a canonical decomposition.
 <!--zh-->
-被表示关系的一个元素读作编码 `pr u v`{.Agda}。因此，充分性有两个方向：从这种对码恢复某些被比较成员 `u`、`v` 并证明其层序比较成立；反过来，从一次已知比较把相应对码放入被表示集合。这里的存在经过命题截断，因而不会选出规范的分解。
+被表示关系的一个元素读作编码 `pr u v`{.Agda}。因此，充分性有两个方向：从这种对码恢复某些被比较元素 `u`、`v` 并证明其层序比较成立；反过来，从一次已知比较把相应对码放入被表示集合。这里的存在经过命题截断，因而不会选出规范的分解。
 <!--ja-->
 表現された関係の要素は、コード `pr u v`{.Agda} として読まれる。したがって妥当性には二つの向きがある。このような対のコードから比較される要素 `u` と `v` を何らかの形で取り出し、その段階順序による比較を示す向きと、既知の比較から対応する対のコードを表現集合に入れる向きである。ここでの存在は命題的切り詰めを受けているため、標準的な分解を選ばない。
 <!--/-->
@@ -176,13 +176,13 @@ open InfinitySet using ( sucV; #_ )
 <!--en-->
 Formulas will be interpreted in the constructible structure `𝒮ʟ`{.Agda}. Their meanings are therefore proposition-valued: satisfaction records whether a described membership, equality, or existence holds inside `L`, while the proofs comparing those meanings live in the surrounding Cubical Agda metatheory.
 <!--zh-->
-这些公式将在可构造结构 `𝒮ʟ`{.Agda} 中解释，所以其含义取值于命题：满足关系记录被描述的隶属、相等或存在是否在 `L` 内成立，而比较这些含义的证明则生活在外围的 Cubical Agda 元理论中。
+这些公式将在可构造结构 `𝒮ʟ`{.Agda} 中解释，所以其含义取值于命题：满足关系记录被描述的成员关系、相等或存在是否在 `L` 内成立，而比较这些含义的证明则生活在外围的 Cubical Agda 元理论中。
 <!--ja-->
 論理式は構成可能な構造 `𝒮ʟ`{.Agda} で解釈されるため、その意味は命題値である。充足は、記述された所属・等号・存在が `L` の内部で成り立つかを記録し、それらの意味を比較する証明は、周囲の Cubical Agda のメタ理論に属する。
 <!--/-->
 
 ```agda
-open hPropStructure 𝒮ʟ
+open hPropView 𝒮ʟ
 ```
 
 <!--en-->
@@ -382,7 +382,7 @@ The element `z` carries both its underlying set and evidence that it belongs to 
 <!--en-->
 The inner record collects a definable power set value `d` over the candidate stage `c`, together with satisfaction of the power-set description and the membership of the parameter in `d`.
 <!--zh-->
-内层记录收集候选层 `c` 之上的可定义幂集值 `d`，连同幂集描述的满足，以及参数属于 `d` 的隶属。
+内层记录收集候选层 `c` 之上的可定义幂集值 `d`，连同幂集描述的满足，以及参数属于 `d` 的成员关系。
 <!--ja-->
 内側の記録は、候補の段階 `c` の上の定義可能冪の値 `d` と、冪の記述の充足、そして引数が `d` に属することを集める。
 <!--/-->
@@ -426,7 +426,7 @@ The key semantic lemma assumes that `β` is an ordinal and that `x` lies in `�
 <!--en-->
 Using `Lset-suc`{.Agda}, membership in `𝒟ₒ (Lset β)` becomes membership in `Lset (sucV β)`. This says that the least stage containing `x` occurs no later than the successor of `β`; the proof must still rule out every earlier possibility.
 <!--zh-->
-借助 `Lset-suc`{.Agda}，`𝒟ₒ (Lset β)` 中的隶属转化为 `Lset (sucV β)` 中的隶属。这说明包含 `x` 的最早层不晚于 `β` 的后继；证明还必须排除所有更早的可能。
+借助 `Lset-suc`{.Agda}，`𝒟ₒ (Lset β)` 中的成员关系转化为 `Lset (sucV β)` 中的成员关系。这说明包含 `x` 的最早层不晚于 `β` 的后继；证明还必须排除所有更早的可能。
 <!--ja-->
 `Lset-suc`{.Agda} により、`𝒟ₒ (Lset β)` への所属は `Lset (sucV β)` への所属に変わる。これは `x` を含む最初の段階が `β` の後続より後ではないことを意味するが、さらに早い可能性をすべて排除する必要がある。
 <!--/-->
@@ -441,7 +441,7 @@ Using `Lset-suc`{.Agda}, membership in `𝒟ₒ (Lset β)` becomes membership in
 <!--en-->
 Suppose the least stage of `x` belonged to `sucV β`. Membership in a successor ordinal splits into two cases: that stage belongs to `β`, or it equals `β`. In either case, monotonicity or direct transport would put `x` in `Lset β`, contradicting the assumed nonmembership.
 <!--zh-->
-假设 `x` 的最早层属于 `sucV β`。后继序数中的隶属分成两种情形：该层属于 `β`，或该层等于 `β`。前一种由单调性、后一种由直接搬运，都会推出 `x` 属于 `Lset β`，与所假设的非隶属矛盾。
+假设 `x` 的最早层属于 `sucV β`。后继序数中的成员关系分成两种情形：该层属于 `β`，或该层等于 `β`。前一种由单调性、后一种由直接搬运，都会推出 `x` 属于 `Lset β`，与所假设的非成员关系矛盾。
 <!--ja-->
 `x` の最初の段階が `sucV β` に属すると仮定する。後続順序数への所属は、その段階が `β` に属する場合と `β` に等しい場合に分かれる。前者では単調性により、後者では直接の輸送により、どちらも `x` が `Lset β` に属することになり、仮定した非所属に反する。
 <!--/-->
@@ -473,7 +473,7 @@ If `stage x ∈ β`, monotonicity carries the known membership of `x` in `Lset (
 <!--en-->
 In the equality case, `stage x ≡ β` transports the known membership `x ∈ Lset (stage x)` to `x ∈ Lset β`. This is the second contradiction needed to show that the least stage cannot occur at or below `β`.
 <!--zh-->
-在相等情形中，`stage x ≡ β` 把已知的隶属 `x ∈ Lset (stage x)` 搬运成 `x ∈ Lset β`。这是证明最早层不可能位于 `β` 或其下所需的第二个矛盾。
+在相等情形中，`stage x ≡ β` 把已知的成员关系 `x ∈ Lset (stage x)` 搬运成 `x ∈ Lset β`。这是证明最早层不可能位于 `β` 或其下所需的第二个矛盾。
 <!--ja-->
 等しい場合には、`stage x ≡ β` に沿って既知の所属 `x ∈ Lset (stage x)` を `x ∈ Lset β` へ輸送する。これが、最初の段階が `β` 以下にはありえないことを示すための第二の矛盾である。
 <!--/-->
@@ -606,7 +606,7 @@ The stage graph at the raised index holds because the packaged stage is the stag
 <!--en-->
 If `x` belonged to `Lset β`, then after replacing `β` by `birth x`{.Agda}, it would occur at a stage strictly below `stage x = sucV (birth x)`{.Agda}. This contradicts `stage-earliest`{.Agda}, and supplies the negative membership required by `BirthAt`{.Agda}.
 <!--zh-->
-若 `x` 属于 `Lset β`，把 `β` 换成 `birth x`{.Agda} 后，它就会出现在严格低于 `stage x = sucV (birth x)`{.Agda} 的层。这与 `stage-earliest`{.Agda} 矛盾，从而给出 `BirthAt`{.Agda} 所需的非隶属。
+若 `x` 属于 `Lset β`，把 `β` 换成 `birth x`{.Agda} 后，它就会出现在严格低于 `stage x = sucV (birth x)`{.Agda} 的层。这与 `stage-earliest`{.Agda} 矛盾，从而给出 `BirthAt`{.Agda} 所需的非成员关系。
 <!--ja-->
 もし `x` が `Lset β` に属するなら、`β` を `birth x`{.Agda} で置き換えることで、`x` は `stage x = sucV (birth x)`{.Agda} より真に低い段階ですでに現れることになる。これは `stage-earliest`{.Agda} に反し、`BirthAt`{.Agda} が要求する非所属を与える。
 <!--/-->
@@ -638,7 +638,7 @@ The stage equation for `DefAt` identifies its satisfaction proposition with equa
 <!--en-->
 Finally, `birth-mem`{.Agda} places `x` in `Lset (sucV (birth x))`. Replacing the proposed ordinal by the birth ordinal, using `Lset-suc`{.Agda}, and then using the projection equation for the packaged power set transports this membership to the second witness. Together with the outward reading, this proves that `BirthAt`{.Agda} describes the birth ordinal exactly whenever the candidate slot is assumed ordinal; it adds neither internal ordinality nor canonical existential witnesses.
 <!--zh-->
-最后，`birth-mem`{.Agda} 把 `x` 放入 `Lset (sucV (birth x))`。先把候选序数换成诞生序数，再使用 `Lset-suc`{.Agda}，最后使用打包可定义幂集的投影等式，就把这条隶属搬运到第二个见证中。结合向外读式，这证明了在候选槽位被假设为序数时，`BirthAt`{.Agda} 精确描述诞生序数；它既不在内部添加序数性，也不给出规范的存在见证。
+最后，`birth-mem`{.Agda} 把 `x` 放入 `Lset (sucV (birth x))`。先把候选序数换成诞生序数，再使用 `Lset-suc`{.Agda}，最后使用打包可定义幂集的投影等式，就把这条成员关系搬运到第二个见证中。结合向外读式，这证明了在候选槽位被假设为序数时，`BirthAt`{.Agda} 精确描述诞生序数；它既不在内部添加序数性，也不给出规范的存在见证。
 <!--ja-->
 最後に、`birth-mem`{.Agda} は `x` を `Lset (sucV (birth x))` に入れる。候補順序数を誕生順序数で置き換え、`Lset-suc`{.Agda} を使い、さらに包装された定義可能冪の射影方程式を使うことで、この所属を第二の証人へ輸送する。外向きの読みと合わせると、候補スロットが順序数であると仮定した場合に `BirthAt`{.Agda} が誕生順序数を正確に記述することが分かる。内部で順序数性を加えることも、標準的な存在証人を与えることもない。
 <!--/-->
@@ -767,7 +767,7 @@ The witness-reading elimination recovers the formula and the code equation at th
 <!--en-->
 `CodesAt c w` does not construct a code set. Through `extAt`, it describes the set already occupying slot `c`: an element belongs to that set exactly when it is the key of some finite-arity formula over the carrier in slot `w`. This determines the slot value extensionally as `AllCodes A`, while every formula witness used in the membership reading remains propositionally truncated.
 <!--zh-->
-`CodesAt c w` 并不构造码集。它借助 `extAt` 描述已经占据槽位 `c` 的集合：一个元素属于该集合，当且仅当它是槽位 `w` 所持载体上某个有限元数公式的键。这样便在外延意义上把槽位取值确定为 `AllCodes A`，而隶属读式所用的每个公式见证仍处于命题截断之下。
+`CodesAt c w` 并不构造码集。它借助 `extAt` 描述已经占据槽位 `c` 的集合：一个元素属于该集合，当且仅当它是槽位 `w` 所持载体上某个有限元数公式的键。这样便在外延意义上把槽位取值确定为 `AllCodes A`，而成员关系读式所用的每个公式见证仍处于命题截断之下。
 <!--ja-->
 `CodesAt c w` は符号集合を構成するのではない。`extAt` を通して、すでにスロット `c` にある集合を記述する。その集合に属する要素は、スロット `w` の台上の、ある有限アリティの論理式のキーであり、またそのときに限る。これによりスロットの値は外延的に `AllCodes A` と定まるが、所属の読みで用いる論理式の証人はすべて命題的に切り詰められたままである。
 <!--/-->
@@ -803,7 +803,7 @@ module _ (A : S) {n : ℕ} (c w : Fin n) (γ : S ^ n)
 <!--en-->
 For the first inclusion, `codeAnyAt-out` turns membership in the described slot into the propositionally truncated assertion that the element is a formula key. `AllCodes-in` turns precisely that assertion into membership in the fixed meta-language set `AllCodes A`; no particular decoding is selected.
 <!--zh-->
-对第一项包含，`codeAnyAt-out` 把描述槽位中的隶属读成「该元素是某条公式之键」的命题截断。`AllCodes-in` 恰把这项断言化为对固定元语言集合 `AllCodes A` 的隶属，并不选出某个特定解码。
+对第一项包含，`codeAnyAt-out` 把描述槽位中的成员关系读成「该元素是某条公式之键」的命题截断。`AllCodes-in` 恰把这项断言化为对固定元语言集合 `AllCodes A` 的成员关系，并不选出某个特定解码。
 <!--ja-->
 第一の包含では、`codeAnyAt-out` が、記述されたスロットへの所属を「その要素はある論理式のキーである」という命題的切り詰めへ読み替える。`AllCodes-in` はまさにこの主張を、固定されたメタ言語の集合 `AllCodes A` への所属へ変える。特定の復号が選ばれることはない。
 <!--/-->
@@ -819,7 +819,7 @@ For the first inclusion, `codeAnyAt-out` turns membership in the described slot 
 <!--en-->
 For the reverse inclusion, membership in `AllCodes A` gives only the propositional truncation of an arity and a formula whose key is the given element. Since satisfaction of the per-code formula is itself a proposition, the proof may eliminate that truncation there and apply `codeAnyAt-in`. No distinguished decoding is extracted.
 <!--zh-->
-为证明反向包含，`AllCodes A` 中的隶属只给出一个元数与一条公式的命题截断，并说明给定元素是该公式的键。逐码公式的满足本身是命题，所以证明可以在此处消去该截断并应用 `codeAnyAt-in`，但不会提取出一份指定的解码。
+为证明反向包含，`AllCodes A` 中的成员关系只给出一个元数与一条公式的命题截断，并说明给定元素是该公式的键。逐码公式的满足本身是命题，所以证明可以在此处消去该截断并应用 `codeAnyAt-in`，但不会提取出一份指定的解码。
 <!--ja-->
 逆向きの包含では、`AllCodes A` への所属から得られるのは、与えられた要素をキーにもつアリティと論理式の命題的切り詰めだけである。符号ごとの論理式の充足は命題なので、そこで切り詰めを除去して `codeAnyAt-in` を適用できる。ただし、特定の復号が取り出されるわけではない。
 <!--/-->
@@ -835,7 +835,7 @@ For the reverse inclusion, membership in `AllCodes A` gives only the proposition
 <!--en-->
 Conversely, suppose the value in slot `c` is equal to `AllCodes A`. To prove `CodesAt`, it remains to establish the two membership implications required by the extension formula: a member of the slot satisfies the per-code predicate, and anything satisfying that predicate belongs to the slot.
 <!--zh-->
-反过来，设槽位 `c` 的取值等于 `AllCodes A`。要证明 `CodesAt`，只需给出外延公式要求的两条隶属蕴含：槽位中的成员满足逐码谓词，而满足该谓词的对象属于槽位。
+反过来，设槽位 `c` 的取值等于 `AllCodes A`。要证明 `CodesAt`，只需给出外延公式要求的两条成员关系蕴含：槽位中的元素满足逐码谓词，而满足该谓词的对象属于槽位。
 <!--ja-->
 逆に、スロット `c` の値が `AllCodes A` に等しいとする。`CodesAt` を示すには、外延を述べる論理式が要求する二つの所属の含意を示せば十分である。すなわち、スロットの要素は符号ごとの述語を満たし、その述語を満たすものはスロットに属する。
 <!--/-->
@@ -851,7 +851,7 @@ Conversely, suppose the value in slot `c` is equal to `AllCodes A`. To prove `Co
 <!--en-->
 For the first implication, the equality of sets turns slot membership into membership in `AllCodes A`. The latter supplies a formula witness only under propositional truncation, which may be eliminated into the proposition expressing satisfaction of `isCodeAnyAt`.
 <!--zh-->
-对第一条蕴含，集合等式把槽位隶属化为 `AllCodes A` 中的隶属。后者只在命题截断下给出公式见证；由于目标是 `isCodeAnyAt` 的满足命题，可以把截断消去到这个目标中。
+对第一条蕴含，集合等式把槽位成员关系化为 `AllCodes A` 中的成员关系。后者只在命题截断下给出公式见证；由于目标是 `isCodeAnyAt` 的满足命题，可以把截断消去到这个目标中。
 <!--ja-->
 第一の含意では、集合の等式によってスロットへの所属を `AllCodes A` への所属へ移す。そこから論理式の証人が得られるのは命題的切り詰めのもとだけであるが、目標は `isCodeAnyAt` の充足という命題なので、その目標へ切り詰めを除去できる。
 <!--/-->
@@ -891,7 +891,7 @@ For the converse implication, `codeAnyAt-out` turns satisfaction into the trunca
 <!--en-->
 At an ordinal `δ`, the already constructed order `orderAt δ` compares members of `Lset δ`. Transporting that order to the small carrier expected by the naming construction lets `stepAt δ` build the local strict well-order `stepOrder δ` on `New δ`, the members of `Lset (sucV δ)`.
 <!--zh-->
-在序数 `δ` 处，前章已经构造的 `orderAt δ` 比较 `Lset δ` 的成员。把该序搬到命名构造所需的小载体后，`stepAt δ` 据此在 `New δ`，即 `Lset (sucV δ)` 的成员上构造局部严格良序 `stepOrder δ`。
+在序数 `δ` 处，前章已经构造的 `orderAt δ` 比较 `Lset δ` 的元素。把该序搬到命名构造所需的小载体后，`stepAt δ` 据此在 `New δ`，即 `Lset (sucV δ)` 的元素上构造局部严格良序 `stepOrder δ`。
 <!--ja-->
 順序数 `δ` では、前章ですでに構成された `orderAt δ` が `Lset δ` の要素を比較する。その順序を名前の構成が要求する小さい台へ移すことで、`stepAt δ` は `New δ`、すなわち `Lset (sucV δ)` の要素上に局所的な狭義整列順序 `stepOrder δ` を作る。
 <!--/-->
@@ -936,7 +936,7 @@ bornIn α oα x p h = reach (suc∈or≡ (birth x p) α (birth-ord x p) oα h)
 <!--en-->
 The two alternatives supplied by `suc∈or≡` finish the argument. If the successor birth belongs to `α`, monotonicity carries `birth-mem` up to `Lset α`; if it equals `α`, transport along the equality gives the same membership directly.
 <!--zh-->
-`suc∈or≡` 给出的两种情形完成了论证。若诞生序数的后继属于 `α`，单调性把 `birth-mem` 推到 `Lset α`；若该后继等于 `α`，沿等式搬运即可直接得到同一隶属。
+`suc∈or≡` 给出的两种情形完成了论证。若诞生序数的后继属于 `α`，单调性把 `birth-mem` 推到 `Lset α`；若该后继等于 `α`，沿等式搬运即可直接得到同一成员关系。
 <!--ja-->
 `suc∈or≡` が与える二つの場合で議論は完了する。誕生順序数の後続が `α` に属するなら、単調性によって `birth-mem` を `Lset α` まで運べる。その後続が `α` に等しいなら、等式に沿う輸送によって同じ所属が直接得られる。
 <!--/-->
@@ -950,7 +950,7 @@ The two alternatives supplied by `suc∈or≡` finish the argument. If the succe
 <!--en-->
 Now fix an ambient ordinal `α`. Every member of `Lset α` has a birth ordinal below `α`, so the earlier-stage orders needed by the recursive equation for `orderAt α` are available at exactly the required indices. This lets us state the equation as a direct comparison of the two members' births.
 <!--zh-->
-现在固定环境序数 `α`。`Lset α` 的每个成员都有一个低于 `α` 的诞生序数，因此 `orderAt α` 的递归方程所需的较早层序恰在相应指标处可用。于是，我们可以把该方程直接表成两个成员的诞生层比较。
+现在固定环境序数 `α`。`Lset α` 的每个元素都有一个低于 `α` 的诞生序数，因此 `orderAt α` 的递归方程所需的较早层序恰在相应指标处可用。于是，我们可以把该方程直接表成两个元素的诞生层比较。
 <!--ja-->
 周囲の順序数 `α` を固定する。`Lset α` の各要素は `α` より下の誕生順序数をもつので、`orderAt α` の再帰方程式が必要とする前段階の順序は、ちょうど必要な添字で利用できる。これにより、その方程式を二つの要素の誕生段階の比較として直接述べられる。
 <!--/-->
@@ -970,7 +970,7 @@ module _ (α : V ℓ) (oα : IsOrd α) where
 <!--en-->
 Every layer member is constructible, by the layer's constructibility and transitivity along membership.
 <!--zh-->
-每个层成员可构造，由层的可构造性与沿隶属的传递性而来。
+每个层元素可构造，由层的可构造性与沿成员关系的传递性而来。
 <!--ja-->
 層のすべての要素は構成可能である。層の構成可能性と、所属に沿う推移性によるものである。
 <!--/-->
@@ -983,7 +983,7 @@ Every layer member is constructible, by the layer's constructibility and transit
 <!--en-->
 Because every member `a` of `Lset α` is constructible, it has a birth ordinal. We write this ordinal as `bornOf a`; it will be the primary key when the order at `α` is unfolded.
 <!--zh-->
-由于 `Lset α` 的每个成员 `a` 都可构造，它都有诞生序数。把这个序数记为 `bornOf a`；展开 `α` 处的序时，它将作为第一比较键。
+由于 `Lset α` 的每个元素 `a` 都可构造，它都有诞生序数。把这个序数记为 `bornOf a`；展开 `α` 处的序时，它将作为第一比较键。
 <!--ja-->
 `Lset α` の各要素 `a` は構成可能なので、誕生順序数をもつ。この順序数を `bornOf a` と書く。これは `α` での順序を展開するときの第一の比較キーになる。
 <!--/-->
@@ -996,7 +996,7 @@ Because every member `a` of `Lset α` is constructible, it has a birth ordinal. 
 <!--en-->
 The fact `bornOf a ∈ α` has two roles. It confirms that the birth ordinal is available as an earlier index in the unfolding of `orderAt α`, and later it lets `bornIn` recover `a` as a member of the ambient stage from an object-language birth description.
 <!--zh-->
-事实 `bornOf a ∈ α` 有两项作用。它先确认该诞生序数可在展开 `orderAt α` 时充当较早指标；随后又使 `bornIn` 能从对象语言的诞生描述恢复 `a` 对环境层的隶属。
+事实 `bornOf a ∈ α` 有两项作用。它先确认该诞生序数可在展开 `orderAt α` 时充当较早指标；随后又使 `bornIn` 能从对象语言的诞生描述恢复 `a` 对环境层的成员关系。
 <!--ja-->
 `bornOf a ∈ α` という事実には二つの役割がある。まず、`orderAt α` の展開で誕生順序数を前段階の添字として使えることを保証する。さらに後では、対象言語による誕生の記述から、`bornIn` によって `a` の周囲の段階への所属を回復できる。
 <!--/-->
@@ -1025,7 +1025,7 @@ The unfolding equation is the connection point of the chapter. It says: the orde
 <!--en-->
 The proof uses `orderAt-step` to expose one layer of the membership recursion and then applies congruence to its underlying relation. It therefore derives the two-case equation from the order constructed in the previous chapter; it does not construct or reprove that strict well-order here.
 <!--zh-->
-证明用 `orderAt-step` 展开一层隶属递归，再对其底层关系应用同余。因此，这个两分等式来自前章已经构造的序；此处既不重新构造也不重新证明该严格良序。
+证明用 `orderAt-step` 展开一层成员关系递归，再对其底层关系应用同余。因此，这个两分等式来自前章已经构造的序；此处既不重新构造也不重新证明该严格良序。
 <!--ja-->
 証明は `orderAt-step` で所属再帰を一段だけ開き、その基礎にある関係へ合同性を適用する。したがって、この二場合の等式は前章で構成済みの順序から導かれる。ここでその狭義整列順序を構成し直したり、証明し直したりはしない。
 <!--/-->
@@ -1041,7 +1041,7 @@ The proof uses `orderAt-step` to expose one layer of the membership recursion an
 <!--en-->
 The member-to-carrier wrapper packages each layer member as a carrier element, so that the formula environment can hold it.
 <!--zh-->
-成员到载体的包装把每个层成员打包为载体元素，使公式环境能容纳它。
+元素到载体的包装把每个层元素打包为载体元素，使公式环境能容纳它。
 <!--ja-->
 要素から台への包みが、層のそれぞれの要素を台の要素としてまとめ、論理式の環境がそれを収められるようにする。
 <!--/-->
@@ -1097,7 +1097,7 @@ The first-projection equation confirms the packaging preserves the birth ordinal
 <!--en-->
 The birth equation confirms the packaged birth matches the computed birth of the packaged member.
 <!--zh-->
-诞生等式确认打包的诞生与打包成员的计算诞生一致。
+诞生等式确认打包的诞生与打包元素的计算诞生一致。
 <!--ja-->
 誕生の等式が、まとめられた誕生が、まとめられた要素の計算された誕生と一致することを確認する。
 <!--/-->
@@ -1211,7 +1211,7 @@ The four newly bound objects are the compared sets `u,v` and their candidate bir
 <!--en-->
 The next two clauses require both candidate births to belong to the stage denoted by `tb`. The final disjunction reproduces the birth-first rule: either `du ∈ dv`, or `dv ≡ du` and the supplied step formula compares `u` with `v` at that common carrier. No object-membership relation between `u` and `v` is asserted here.
 <!--zh-->
-接下来的两项要求两个候选诞生层都属于词项 `tb` 所指称的阶段。最后的析取复现诞生层优先规则：要么 `du ∈ dv`，要么 `dv ≡ du` 且外部给出的步进公式在这个共同载体处比较 `u` 与 `v`。这里没有断言 `u` 与 `v` 之间的集合隶属关系。
+接下来的两项要求两个候选诞生层都属于词项 `tb` 所指称的阶段。最后的析取复现诞生层优先规则：要么 `du ∈ dv`，要么 `dv ≡ du` 且外部给出的步进公式在这个共同载体处比较 `u` 与 `v`。这里没有断言 `u` 与 `v` 之间的集合成员关系。
 <!--ja-->
 次の二つの条項は、誕生段階の二つの候補がともに項 `tb` の表す段階に属することを要求する。最後の選言は誕生段階優先の規則を再現する。すなわち、`du ∈ dv` であるか、または `dv ≡ du` であり、与えられたステップ論理式がその共通の台で `u` と `v` を比較する。ここでは `u` と `v` の間の集合所属を主張していない。
 <!--/-->
@@ -1339,7 +1339,7 @@ The deep satisfaction type reads the ordered body at the four-slot environment b
 <!--en-->
 The two readings use the same defining equation of `CondCore` in opposite directions. Outward, the four existential bindings are decoded into a pair and two birth candidates; inward, an existing `Related` comparison supplies those bindings. The equal-birth branch is the only point where the assumed readings of `Stp` enter.
 <!--zh-->
-两条读式以相反方向使用 `CondCore` 的同一个定义方程。向外时，四个存在绑定被读成一对成员及两个候选诞生层；向内时，一项已有的 `Related` 比较提供这些绑定。只有同生分支会用到对 `Stp` 的两条假设读式。
+两条读式以相反方向使用 `CondCore` 的同一个定义方程。向外时，四个存在绑定被读成一对元素及两个候选诞生层；向内时，一项已有的 `Related` 比较提供这些绑定。只有同生分支会用到对 `Stp` 的两条假设读式。
 <!--ja-->
 二つの読みは、`CondCore` の同じ定義方程式を逆向きに使う。外向きには、四つの存在束縛を一対の要素と二つの誕生段階の候補として読む。内向きには、すでにある `Related` の比較からそれらの束縛を与える。`Stp` について仮定した読みを使うのは、誕生段階が等しい枝だけである。
 <!--/-->
@@ -1414,7 +1414,7 @@ Adequacy of the pairing formula identifies the set in slot `z` with `pr (fst u) 
 <!--en-->
 The membership of the first birth stage in the ordinal is transported along the shift of environments: the shifted and unshifted readings of the birth stage agree on the underlying set.
 <!--zh-->
-第一个诞生层在序数中的隶属沿环境移位搬运：诞生层的移位读法与非移位读法在底层集合上一致。
+第一个诞生层在序数中的成员关系沿环境移位搬运：诞生层的移位读法与非移位读法在底层集合上一致。
 <!--ja-->
 第一の誕生段階の順序数への所属は、環境のずらしに沿って運ばれる。誕生段階のずらした読みとずらさない読みは、底の集合について一致するのである。
 <!--/-->
@@ -1440,7 +1440,7 @@ The second birth stage is transported by the same shift, so both birth stages ar
 <!--en-->
 The first birth stage is an ordinal: it belongs to the ordinal, and members of ordinals are ordinals.
 <!--zh-->
-第一个诞生层是序数：它属于该序数，而序数的成员是序数。
+第一个诞生层是序数：它属于该序数，而序数的元素是序数。
 <!--ja-->
 第一の誕生段階は順序数である。順序数の中にあり、順序数の要素は順序数だからである。
 <!--/-->
@@ -1492,7 +1492,7 @@ The same reading applies to the second birth stage and the second object.
 <!--en-->
 The first object can now be regarded as a member of `Lset α`. Its constructibility evidence is already carried by `u`; the new fact is membership in the ambient level, obtained from `bornIn` because the identified birth ordinal belongs to `α`.
 <!--zh-->
-现在可以把第一个对象视为 `Lset α` 的成员。其可构造性证据已由 `u` 携带；新增的事实是它属于环境层，而这由 `bornIn` 从「已经认出的诞生序数属于 `α`」推出。
+现在可以把第一个对象视为 `Lset α` 的元素。其可构造性证据已由 `u` 携带；新增的事实是它属于环境层，而这由 `bornIn` 从「已经认出的诞生序数属于 `α`」推出。
 <!--ja-->
 これで最初の対象を `Lset α` の要素とみなせる。構成可能性の証拠はすでに `u` が持っており、新たに得るのは周囲の段階への所属である。これは、同定された誕生順序数が `α` に属することから `bornIn` によって従う。
 <!--/-->
@@ -1520,7 +1520,7 @@ The second object is packaged identically.
 <!--en-->
 The packaged member `a` carries the same underlying set as `u`, although its constructibility proof was obtained through stage membership. Proof irrelevance for that evidence, expressed by `birth-proof`, shows that its computed birth agrees with the birth computed from `u`; composing with `qu` identifies it with the recorded stage `du`.
 <!--zh-->
-打包成员 `a` 与 `u` 有相同的底层集合，但其可构造性证明来自层隶属。`birth-proof` 表达这份证据的证明无关性，说明从 `a` 算出的诞生层与从 `u` 算出的诞生层相同；再与 `qu` 复合，便把它认同为记录的层 `du`。
+打包元素 `a` 与 `u` 有相同的底层集合，但其可构造性证明来自层成员关系。`birth-proof` 表达这份证据的证明无关性，说明从 `a` 算出的诞生层与从 `u` 算出的诞生层相同；再与 `qu` 复合，便把它认同为记录的层 `du`。
 <!--ja-->
 まとめられた要素 `a` と `u` の底の集合は同じであるが、`a` の構成可能性の証明は段階への所属から得られている。`birth-proof` はこの証拠についての証明無関係性を表し、`a` から計算した誕生と `u` から計算した誕生が一致することを示す。さらに `qu` と合成すると、記録された段階 `du` と同一視できる。
 <!--/-->
@@ -1591,7 +1591,7 @@ In the equal-birth branch, `OrdBody` supplies satisfaction of the abstract formu
 <!--en-->
 Given an `Under` comparison at the recorded common birth, the proof must align it with the birth attached to the packaged member `a`. Once aligned, it supplies the equal-birth branch of `order-unfold`; the resulting `orderAt` comparison is then represented by `Related`.
 <!--zh-->
-给定记录的公共诞生层处的一项 `Under` 比较，证明还须把它与打包成员 `a` 所带的诞生层对齐。对齐之后，它给出 `order-unfold` 的同生分支；所得 `orderAt` 比较再由 `Related` 表示。
+给定记录的公共诞生层处的一项 `Under` 比较，证明还须把它与打包元素 `a` 所带的诞生层对齐。对齐之后，它给出 `order-unfold` 的同生分支；所得 `orderAt` 比较再由 `Related` 表示。
 <!--ja-->
 記録された共通の誕生段階での `Under` の比較が与えられたら、それを、まとめられた要素 `a` に付随する誕生段階とそろえる必要がある。そろえた比較は `order-unfold` の同じ誕生の枝を与え、得られた `orderAt` の比較が `Related` によって表される。
 <!--/-->
@@ -1621,7 +1621,7 @@ The alignment uses the equality `qa` between the two carrier ordinals. `stepMove
 <!--en-->
 For the inward direction, `Related α z` contains an ordinalness proof and, under propositional truncation, two members `a,c` of `Lset α`, an equation saying that `z` is their coded pair, and their `Ordering` comparison. `Pairs` names precisely this payload so that it can be eliminated only into the satisfaction proposition being constructed.
 <!--zh-->
-在向内方向，`Related α z` 包含一份序数性证明，以及命题截断下的如下数据：`Lset α` 的两个成员 `a,c`、说明 `z` 是二者编码有序对的等式，以及二者的 `Ordering` 比较。`Pairs` 恰为这份载荷取名，使它只能被消去到正在构造的满足命题中。
+在向内方向，`Related α z` 包含一份序数性证明，以及命题截断下的如下数据：`Lset α` 的两个元素 `a,c`、说明 `z` 是二者编码有序对的等式，以及二者的 `Ordering` 比较。`Pairs` 恰为这份载荷取名，使它只能被消去到正在构造的满足命题中。
 <!--ja-->
 内向きでは、`Related α z` は順序数性の証明と、命題的切り詰めのもとに置かれた次のデータを含む。`Lset α` の二つの要素 `a,c`、`z` がそれらの符号化された順序対であるという等式、そして両者の `Ordering` による比較である。`Pairs` はこのペイロードに名前を付け、構成中の充足命題への除去だけを行えるようにする。
 <!--/-->
@@ -1636,7 +1636,7 @@ For the inward direction, `Related α z` contains an ordinalness proof and, unde
 <!--en-->
 The inward reading eliminates the truncated contents of `Related` into satisfaction of `CondCore`. Once an ordinalness proof and a represented pair are available locally, `atRel` reconstructs the four existential witnesses and the birth-first comparison; no global choice of a represented pair is produced.
 <!--zh-->
-向内读式把 `Related` 的截断内容消去到 `CondCore` 的满足命题中。局部取得序数性证明与一对被表示的成员后，`atRel` 重建四个存在见证及诞生层优先比较；证明不会产出对表示成员的全局选择。
+向内读式把 `Related` 的截断内容消去到 `CondCore` 的满足命题中。局部取得序数性证明与一对被表示的元素后，`atRel` 重建四个存在见证及诞生层优先比较；证明不会产出对表示元素的全局选择。
 <!--ja-->
 内向きの読みは、`Related` の切り詰められた内容を `CondCore` の充足へ除去する。順序数性の証明と表された要素の対が局所的に得られると、`atRel` が四つの存在証人と誕生段階優先の比較を組み立てる。表す要素の対を大域的に選ぶものではない。
 <!--/-->
@@ -1652,7 +1652,7 @@ The inward reading eliminates the truncated contents of `Related` into satisfact
 <!--en-->
 The ambient ordinalness `oα` is already a hypothesis of the whole reading. Here the local proof instead extracts the constructibility component `pα` from the value of the stage term, then asks the table for a value at the first member's birth. Because the target is a satisfaction proposition, the merely existing table value can be eliminated into it.
 <!--zh-->
-环境序数性 `oα` 已是整条读式的假设。此处的局部证明从层词项的取值中取出的是可构造性分量 `pα`，随后向表索取第一个成员诞生层处的一个取值。由于目标是满足命题，表值的仅仅存在可以消去到其中。
+环境序数性 `oα` 已是整条读式的假设。此处的局部证明从层词项的取值中取出的是可构造性分量 `pα`，随后向表索取第一个元素诞生层处的一个取值。由于目标是满足命题，表值的仅仅存在可以消去到其中。
 <!--ja-->
 周囲の順序数性 `oα` は、読み全体の仮定としてすでに与えられている。ここで局所的に取り出すのは、段階を表す項の値がもつ構成可能性の成分 `pα` である。その後、最初の要素の誕生段階における値を表に求める。目標は充足という命題なので、表の値の単なる存在をそこへ除去できる。
 <!--/-->
@@ -1680,7 +1680,7 @@ Every term is interpreted in the structure `𝒮ʟ`, whose elements pair an unde
 <!--en-->
 The witnesses for `CondCore` are now chosen locally: `u,v` package the two stage members as elements of `𝒮ʟ`, and `du,dv` package their actual birth ordinals. These are witnesses for this proof of a proposition, not canonical choices exported from `Related`.
 <!--zh-->
-现在局部给出 `CondCore` 的见证：`u,v` 把两个层成员封装为 `𝒮ʟ` 的元素，`du,dv` 则封装它们真正的诞生序数。它们只是这次命题证明所用的见证，并非从 `Related` 导出的规范选择。
+现在局部给出 `CondCore` 的见证：`u,v` 把两个层元素封装为 `𝒮ʟ` 的元素，`du,dv` 则封装它们真正的诞生序数。它们只是这次命题证明所用的见证，并非从 `Related` 导出的规范选择。
 <!--ja-->
 ここで `CondCore` の証人を局所的に与える。`u,v` は二つの段階要素を `𝒮ʟ` の要素としてまとめ、`du,dv` はそれぞれの実際の誕生順序数をまとめる。これらはこの命題の証明に使う証人であり、`Related` から取り出される標準的な選択ではない。
 <!--/-->
@@ -1696,7 +1696,7 @@ The witnesses for `CondCore` are now chosen locally: `u,v` package the two stage
 <!--en-->
 For every member of `Lset α`, its true birth ordinal lies below `α`. Since the first projection of `bornS` is that ordinal, the same membership statement holds for the value placed in slot `du`; this is the form inspected by the object-language clause.
 <!--zh-->
-`Lset α` 的每个成员，其真正诞生序数都低于 `α`。由于 `bornS` 的第一投影就是该序数，同一隶属陈述也适用于放入槽位 `du` 的值；对象语言子句读取的正是这个形式。
+`Lset α` 的每个元素，其真正诞生序数都低于 `α`。由于 `bornS` 的第一投影就是该序数，同一成员关系陈述也适用于放入槽位 `du` 的值；对象语言子句读取的正是这个形式。
 <!--ja-->
 `Lset α` の各要素について、その真の誕生順序数は `α` より下にある。`bornS` の第一射影はその順序数なので、同じ所属の主張がスロット `du` に置かれた値についても成り立つ。対象言語の条項が調べるのはこの形である。
 <!--/-->
@@ -1710,7 +1710,7 @@ For every member of `Lset α`, its true birth ordinal lies below `α`. Since the
 <!--en-->
 The birth stage of the second member belongs to the ordinal by the same transport.
 <!--zh-->
-第二个成员的诞生层经同样搬运属于该序数。
+第二个元素的诞生层经同样搬运属于该序数。
 <!--ja-->
 第二の要素の誕生段階も、同じ輸送によって順序数の中にある。
 <!--/-->
@@ -1854,7 +1854,7 @@ The endpoint transports use the exposed underlying-set equations for `memS`. The
 <!--en-->
 `Entries` provides a merely existing table value `r` at the first birth, and `Values` proves that any such recorded value realizes `IsRel`. For each local payload, `atValue` constructs satisfaction of `CondCore` by inserting the two members and their two births. The table value is passed specifically to `stp-in` in the equal-birth branch; it is not made into a globally chosen value.
 <!--zh-->
-`Entries` 在第一个诞生层处给出一个仅仅存在的表值 `r`，而 `Values` 证明任一这样的记录值都实现 `IsRel`。对每份局部载荷，`atValue` 插入两个成员及其两个诞生层，构造 `CondCore` 的满足。同生分支把该表值专门传给 `stp-in`；它不会成为全局选定的取值。
+`Entries` 在第一个诞生层处给出一个仅仅存在的表值 `r`，而 `Values` 证明任一这样的记录值都实现 `IsRel`。对每份局部载荷，`atValue` 插入两个元素及其两个诞生层，构造 `CondCore` 的满足。同生分支把该表值专门传给 `stp-in`；它不会成为全局选定的取值。
 <!--ja-->
 `Entries` は最初の誕生段階における表の値 `r` の単なる存在を与え、`Values` はそのように記録されたどの値も `IsRel` を実現すると示す。各局所ペイロードについて、`atValue` は二つの要素と二つの誕生段階を挿入し、`CondCore` の充足を構成する。同じ誕生の枝では、この表の値をその場で `stp-in` に渡すが、大域的に選ばれた値にはしない。
 <!--/-->
@@ -1870,7 +1870,7 @@ The endpoint transports use the exposed underlying-set equations for `memS`. The
 <!--en-->
 Inside `OrdBody`, four new binders lie in front of the original environment, so the stage term appears as `tm4 tb`. The shift equation proves that this raised term still denotes `α`; it therefore transports the known membership of the first birth into the exact form required by the object-language clause.
 <!--zh-->
-在 `OrdBody` 内，原环境之前增加了四个绑定，故层词项写成 `tm4 tb`。移位等式证明这个提升后的词项仍指称 `α`，于是把第一诞生层的已知隶属搬成对象语言子句所需的确切形式。
+在 `OrdBody` 内，原环境之前增加了四个绑定，故层词项写成 `tm4 tb`。移位等式证明这个提升后的词项仍指称 `α`，于是把第一诞生层的已知成员关系搬成对象语言子句所需的确切形式。
 <!--ja-->
 `OrdBody` の内部では、もとの環境の前に四つの束縛が加わるため、段階を表す項は `tm4 tb` となる。シフトの等式により、この持ち上げられた項も `α` を表すことが分かり、第一の誕生段階について既知の所属を対象言語の条項が要求する形へ輸送できる。
 <!--/-->
@@ -1912,7 +1912,7 @@ The remaining clause must reproduce the same two branches obtained from `order-u
 <!--en-->
 In the earlier-birth branch, the exposed equations for `bornS` rewrite the meta-language membership between the true births as membership between `du` and `dv`. The result is injected into the left side of the object-language disjunction, whose satisfaction is propositionally truncated.
 <!--zh-->
-在诞生更早分支中，`bornS` 的外显等式把真正诞生层之间的元语言隶属改写为 `du` 与 `dv` 之间的隶属。所得证明进入对象语言析取的左支，而该析取的满足经过命题截断。
+在诞生更早分支中，`bornS` 的外显等式把真正诞生层之间的元语言成员关系改写为 `du` 与 `dv` 之间的成员关系。所得证明进入对象语言析取的左支，而该析取的满足经过命题截断。
 <!--ja-->
 誕生がより早い枝では、`bornS` について公開された等式により、実際の誕生どうしのメタ言語での所属を `du` と `dv` の所属へ書き換える。その証明を対象言語の選言の左側へ入れる。この選言の充足は命題的に切り詰められている。
 <!--/-->
@@ -1928,7 +1928,7 @@ In the earlier-birth branch, the exposed equations for `bornS` rewrite the meta-
 <!--en-->
 In the equal-birth branch, the birth equality is rewritten to an equality between `dv` and `du`. The inward adequacy hypothesis `stp-in` then uses the particular recorded value `r`, its table membership, its `IsRel` proof, and the transported `Under` comparison to fill the local step formula. This is precisely the direction in which a concrete local table value is available.
 <!--zh-->
-在同生分支中，诞生层等式被改写为 `dv` 与 `du` 之间的等式。随后，向内充分性假设 `stp-in` 使用这个特定的记录值 `r`、它在表中的隶属、它的 `IsRel` 证明，以及搬运后的 `Under` 比较，填入局部步进公式。正是在这一方向上，证明手中有一个具体的局部表值。
+在同生分支中，诞生层等式被改写为 `dv` 与 `du` 之间的等式。随后，向内充分性假设 `stp-in` 使用这个特定的记录值 `r`、它在表中的成员关系、它的 `IsRel` 证明，以及搬运后的 `Under` 比较，填入局部步进公式。正是在这一方向上，证明手中有一个具体的局部表值。
 <!--ja-->
 誕生が等しい枝では、誕生の等式を `dv` と `du` の等式へ書き換える。次に、内向きの妥当性の仮定 `stp-in` が、特定の記録値 `r`、その表への所属、`IsRel` の証明、輸送された `Under` の比較を使って局所ステップ論理式を満たす。具体的な局所表の値が手元にあるのは、まさにこの向きである。
 <!--/-->
@@ -1958,7 +1958,7 @@ Applying this two-branch translation to `cmp` completes the comparison clause of
 <!--en-->
 The pair-level assembly eliminates the truncated existence of the second member: for each candidate `c` related to `a`, the local assembly produces the satisfaction of the core clause.
 <!--zh-->
-对级组装消去第二个成员的截断存在：对与 `a` 关联的每个候选 `c`，局部组装产出核心子句的满足。
+对级组装消去第二个元素的截断存在：对与 `a` 关联的每个候选 `c`，局部组装产出核心子句的满足。
 <!--ja-->
 対の水準の組み立ては、第二の要素の切り詰められた存在を消去する。`a` と関係づけられるそれぞれの候補 `c` に対して、局所の組み立てが核心の節の充足を産み出す。
 <!--/-->

@@ -28,7 +28,7 @@ module L.Axioms.Infinity {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 import FOL.ZFModel
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL )
 open import L.Ordinal {ℓ} using ( suc-ord; ω-ord )
@@ -42,7 +42,7 @@ open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
 Inside `L`, the constructively defined chain `numeralL`{.Agda} provides one internal numeral for each natural number. A chain of separate sets is not yet an infinite set: the axiom of infinity asks for one constructible set whose members are exactly the numerals. This chapter exhibits that set and, in the same stroke, identifies the classical dependency used to place the candidate set in the constructible hierarchy: knowing at which stage of the constructible hierarchy an ordinal such as ω appears is a comparison of ordinals, the imported stage theorem receives the module parameter `lem` because its proof uses that comparison.
 <!--zh-->
 
-`L` 内构造性定义的数码链 `numeralL`{.Agda} 为每个自然数给出一个内部数码。但一条由各自分离的集合组成的链还不是无穷集合：无穷公理要求一个可构造集合，其成员恰为诸数码。本章给出这个集合，并顺带指出把候选集合放进可构造层级时所用的经典依赖：所导入的层定理依赖序数比较，因此以模块参数 `lem` 为参数。
+`L` 内构造性定义的数码链 `numeralL`{.Agda} 为每个自然数给出一个内部数码。但一条由各自分离的集合组成的链还不是无穷集合：无穷公理要求一个可构造集合，其元素恰为诸数码。本章给出这个集合，并顺带指出把候选集合放进可构造层级时所用的经典依赖：所导入的层定理依赖序数比较，因此以模块参数 `lem` 为参数。
 <!--ja-->
 
 `L` の内部で構成的に定義された数項列 `numeralL`{.Agda} は、各自然数に一つの内部数項を与える。しかし、互いに別々の集合からなる数項列は、まだ無限集合ではない。無限公理が求めるのは、要素が数項ちょうどである一つの構成可能集合である。この章ではその集合を示し、あわせて候補の集合を構成可能階層へ置くために用いる古典的依存関係を明らかにする。ω のような順序数が構成可能階層のどの段階に現れるかを知ることは順序数の比較であり、インポートされた段階定理はその比較を用いるため、モジュールパラメータ `lem` を受け取る。
@@ -53,7 +53,7 @@ Inside `L`, the constructively defined chain `numeralL`{.Agda} provides one inte
 <!--en-->
 The ambient hierarchy supplies `ω` and its successor `sucV`, while `numeralL-fst` relates each internal numeral to the corresponding member of `ω`. The stage theorem `ord∈Lset-suc`, instantiated with `lem`, places an ordinal at its successor stage. This is the sole point at which the proof below invokes a result parameterized by excluded middle.
 <!--zh-->
-周遭集合层级提供 `ω` 与后继 `sucV`，而 `numeralL-fst` 把每个内部数码同 `ω` 的相应成员联系起来。以 `lem` 实例化的层定理 `ord∈Lset-suc` 把序数置于其后继层。下述证明只在这里调用以排中律为参数的结果。
+周遭集合层级提供 `ω` 与后继 `sucV`，而 `numeralL-fst` 把每个内部数码同 `ω` 的相应元素联系起来。以 `lem` 实例化的层定理 `ord∈Lset-suc` 把序数置于其后继层。下述证明只在这里调用以排中律为参数的结果。
 <!--ja-->
 周囲の集合階層は `ω` と後者 `sucV` を与え、`numeralL-fst` は各内部数項を `ω` の対応する要素に結びつける。`lem` で具体化した段階定理 `ord∈Lset-suc` は、順序数をその後者段階に置く。以下の証明が排中律をパラメータとする結果を用いるのはこの箇所である。
 <!--/-->
@@ -79,7 +79,7 @@ open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( module InfinitySet )
 open InfinitySet using ( sucV; ω )
 
-open hPropStructure 𝒮ʟ
+open hPropView 𝒮ʟ
 ```
 
 <!--en-->
@@ -102,7 +102,7 @@ The ambient `ω`, whose members are the library numerals, is the natural candida
 <!--zh-->
 ## 收集这条链
 
-周遭集合 `ω` 的成员是库中的数码，因此它是自然的候选。其可构造性证明把 `ord∈Lset-suc` 应用于 `ω`；这条导入的层定理以模块参数 `lem` 实例化。数码链及其成员规格的定义本身不调用该参数。
+周遭集合 `ω` 的元素是库中的数码，因此它是自然的候选。其可构造性证明把 `ord∈Lset-suc` 应用于 `ω`；这条导入的层定理以模块参数 `lem` 实例化。数码链及其成员关系规格的定义本身不调用该参数。
 <!--ja-->
 ## 数項列を集合に集める
 
@@ -112,7 +112,7 @@ The ambient `ω`, whose members are the library numerals, is the natural candida
 <!--en-->
 The statement `ω∈L` has the truncated form prescribed by the definition of `isL`. A witness before truncation is the stage `sucV ω`: `ω-ord` says that `ω` is an ordinal, `suc-ord` says that `sucV ω` is again an ordinal, and `ord∈Lset-suc` places `ω` at that stage. The element `ωʟ` pairs the ambient set `ω` with this constructibility proof, so `x ∈ˢ ωʟ` is membership in its underlying ambient set.
 <!--zh-->
-命题 `ω∈L` 具有 `isL` 定义所规定的截断形式。截断前的一个见证是层 `sucV ω`：`ω-ord` 说明 `ω` 是序数，`suc-ord` 说明其冯·诺伊曼后继 `sucV ω` 仍是序数，而 `ord∈Lset-suc` 把 `ω` 置于该层。元素 `ωʟ` 把周遭集合 `ω` 与这一可构造性证明配对，因此 `x ∈ˢ ωʟ` 就是对其底层周遭集合的属于关系。
+命题 `ω∈L` 具有 `isL` 定义所规定的截断形式。截断前的一个见证是层 `sucV ω`：`ω-ord` 说明 `ω` 是序数，`suc-ord` 说明其冯·诺伊曼后继 `sucV ω` 仍是序数，而 `ord∈Lset-suc` 把 `ω` 置于该层。元素 `ωʟ` 把周遭集合 `ω` 与这一可构造性证明配对，因此 `x ∈ˢ ωʟ` 就是对其底层周遭集合的成员关系。
 <!--ja-->
 命題 `ω∈L` は、`isL` の定義が定める切り詰められた形を取る。切り詰める前の証人の一つは段階 `sucV ω` である。`ω-ord` は `ω` が順序数であることを、`suc-ord` はそのフォン・ノイマン後者 `sucV ω` も順序数であることを述べ、`ord∈Lset-suc` が `ω` をその段階に置く。要素 `ωʟ` は周囲の集合 `ω` とこの構成可能性の証明を組にするので、`x ∈ˢ ωʟ` はその基礎にある周囲の集合への所属である。
 <!--/-->
@@ -128,7 +128,7 @@ The statement `ω∈L` has the truncated form prescribed by the definition of `i
 <!--en-->
 It remains to verify that the members of `ωʟ` are exactly the internal numerals. The class `isNumeralL` says of an element `x` that it is structurally equal to the chain's `n`-th link for some natural number `n`; as an indexed disjunction it merely asserts that some index works, without choosing one. The specification `ω-specL` then proves that membership in `ωʟ` and `isNumeralL` agree pointwise as truth values, and `hasInfinityL` promotes the realizer to the contractibility the axiom field requires. Both directions of the specification run through the same two ingredients: the ambient characterization of membership in `ω`, and the chain's projection equation `numeralL-fst`.
 <!--zh-->
-余下的工作是核实 `ωʟ` 的成员恰是内部数码。类 `isNumeralL` 对元素 `x` 说：存在某个自然数 `n`，使 `x` 结构上等于链的第 `n` 节；作为索引析取，它仅仅断言某个下标可行，而不选定任何一个。规格 `ω-specL` 接着证明，属于 `ωʟ` 与 `isNumeralL` 作为真值逐点一致；`hasInfinityL` 再把这个实现者提升为公理字段所要求的可缩性。规格的两个方向都经过同样两件素材：`ω` 中属于关系的周遭刻画，以及链的投影方程 `numeralL-fst`。
+余下的工作是核实 `ωʟ` 的元素恰是内部数码。类 `isNumeralL` 对元素 `x` 说：存在某个自然数 `n`，使 `x` 结构上等于链的第 `n` 节；作为索引析取，它仅仅断言某个下标可行，而不选定任何一个。规格 `ω-specL` 接着证明，属于 `ωʟ` 与 `isNumeralL` 作为真值逐点一致；`hasInfinityL` 再把这个实现者提升为公理字段所要求的可缩性。规格的两个方向都经过同样两件素材：`ω` 中成员关系的周遭刻画，以及链的投影方程 `numeralL-fst`。
 <!--ja-->
 残る作業は、`ωʟ` の要素が内部の数項ちょうどであることを確かめることである。クラス `isNumeralL` は要素 `x` について、ある自然数 `n` に対して `x` が数項列の第 `n` 項と構造的に等しいと述べる。索引付き選言として、これはどれかの添字が機能することを単に主張するのであって、ひとつを選ぶことはしない。仕様 `ω-specL` は次に、`ωʟ` への所属と `isNumeralL` が真理値として各点で一致することを証明し、`hasInfinityL` がこの実現者を、公理フィールドが要求する可縮性へ持ち上げる。仕様の両方向は、同じ二つの素材、すなわち `ω` への所属の周囲での特徴づけと、数項列の射影方程式 `numeralL-fst` を通る。
 <!--/-->
@@ -153,7 +153,7 @@ isNumeralL x = ∃[ n ∶ Lift {ℓ-zero} {ℓ-suc ℓ} ℕ ] x ≈ˢ numeralL (
 <!--en-->
 Each direction maps witnesses while they remain inside propositional truncation. Forward, write the lifted index as `k : Lift ℕ` and set `n = lower k`. Ambient membership in `ω` supplies `p : # n ≡ fst x`; then `sym p ∙ sym (numeralL-fst n)` proves `x ≈ˢ numeralL n`. Backward, from `q : fst x ≡ fst (numeralL n)`, the path `sym (q ∙ numeralL-fst n) : # n ≡ fst x` gives the required ambient membership witness. Thus `ωʟ` has exactly the internal numerals as members. Finally, `uniqueL` makes the explicit realizer `(ωʟ , ω-specL)` the center of a contraction and gives a path from that center to every other realizer, proving `SetOf isNumeralL` contractible.
 <!--zh-->
-两个方向都在命题截断内部映射见证。正向把提升后的下标写成 `k : Lift ℕ`，并令 `n = lower k`。`ω` 中的周遭属于关系给出 `p : # n ≡ fst x`，于是 `sym p ∙ sym (numeralL-fst n)` 证明 `x ≈ˢ numeralL n`。反向从 `q : fst x ≡ fst (numeralL n)` 构造路径 `sym (q ∙ numeralL-fst n) : # n ≡ fst x`，得到所需的周遭属于见证。因此 `ωʟ` 的成员恰为内部数码。最后，`uniqueL` 以显式实现者 `(ωʟ , ω-specL)` 为可缩中心，并给出从该中心到任意其他实现者的路径，从而证明 `SetOf isNumeralL` 可缩。
+两个方向都在命题截断内部映射见证。正向把提升后的下标写成 `k : Lift ℕ`，并令 `n = lower k`。`ω` 中的周遭成员关系给出 `p : # n ≡ fst x`，于是 `sym p ∙ sym (numeralL-fst n)` 证明 `x ≈ˢ numeralL n`。反向从 `q : fst x ≡ fst (numeralL n)` 构造路径 `sym (q ∙ numeralL-fst n) : # n ≡ fst x`，得到所需的周遭属于见证。因此 `ωʟ` 的元素恰为内部数码。最后，`uniqueL` 以显式实现者 `(ωʟ , ω-specL)` 为可缩中心，并给出从该中心到任意其他实现者的路径，从而证明 `SetOf isNumeralL` 可缩。
 <!--ja-->
 両方向とも、証人を命題的切り詰めの内部に保ったまま写す。順方向では、持ち上げられた添字を `k : Lift ℕ` とし、`n = lower k` と置く。`ω` への周囲の所属から `p : # n ≡ fst x` が得られ、`sym p ∙ sym (numeralL-fst n)` が `x ≈ˢ numeralL n` を証明する。逆方向では、`q : fst x ≡ fst (numeralL n)` からパス `sym (q ∙ numeralL-fst n) : # n ≡ fst x` を作り、必要な周囲の所属の証人を得る。したがって `ωʟ` の要素は内部数項ちょうどである。最後に `uniqueL` は明示的な実現者 `(ωʟ , ω-specL)` を可縮性の中心とし、その中心から任意の他の実現者へのパスを与えて、`SetOf isNumeralL` が可縮であることを証明する。
 <!--/-->
@@ -174,7 +174,7 @@ The constructible set `ωʟ` collects exactly the chain `numeralL`{.Agda}. The e
 <!--zh-->
 ## 小结
 
-可构造集合 `ωʟ` 恰好收集数码链 `numeralL`{.Agda}。显式实现者与外延唯一性给出无穷字段所要求的可缩性。证明在确立 `ω` 的可构造性时通过 `ord∈Lset-suc` 使用排中律参数；成员规格本身则由上述两个投影路径得到。
+可构造集合 `ωʟ` 恰好收集数码链 `numeralL`{.Agda}。显式实现者与外延唯一性给出无穷字段所要求的可缩性。证明在确立 `ω` 的可构造性时通过 `ord∈Lset-suc` 使用排中律参数；成员关系规格本身则由上述两个投影路径得到。
 <!--ja-->
 ## まとめ
 

@@ -28,7 +28,7 @@ module L.Model {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 import FOL.ZFModel
 open import L.Constructible {ℓ} using ( 𝒮ʟ )
 open import L.Axioms.Basic {ℓ}
@@ -83,7 +83,7 @@ The model structure collects twelve verified clauses. Extensionality, regularity
 <!--/-->
 
 ```agda
-open hPropStructure 𝒮ʟ
+open hPropView 𝒮ʟ
 
 module ModelL = FOL.ZFModel 𝒮ʟ
 open ModelL using ( isZFModel; isZFCModel )
@@ -94,7 +94,7 @@ L⊨ZF = record
 <!--en-->
 The first five fields state the elementary structural and set-forming principles. Each field receives a theorem already proved for the same membership structure, so their conclusions share one interpretation of sets, membership, and formulas.
 <!--zh-->
-记录的前五个字段陈述基本的结构性质与集合构造原理。每个字段都填入此前对同一成员结构证明的定理，因而它们对集合、成员关系与公式采用同一种解释。
+记录的前五个字段陈述基本的结构性质与集合构造原理。每个字段都填入此前对同一成员关系结构证明的定理，因而它们对集合、成员关系与公式采用同一种解释。
 <!--ja-->
 レコードの最初の五つの欄は、基本的な構造上の性質と集合形成原理を述べる。各欄には同じ所属構造について証明された定理が入り、集合、所属、論理式はすべて同じ解釈を共有する。
 <!--/-->

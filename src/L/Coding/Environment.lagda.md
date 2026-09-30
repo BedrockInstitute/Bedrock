@@ -51,7 +51,7 @@ The second concern is extension. When satisfaction descends under a quantifier, 
 
 这一编码的设计目标是图中的查值精确。由于键的一侧由数码构成，而数码是单射的，坐在键 `i` 处的那个对的第二分量恰为 `i` 处的值，别无他物。这条函数性命题是本章的主引理。
 
-第二个关注点是扩张。当满足关系下降到量词之下时，新值被放在索引零处，每个旧索引上移一位；在键的一侧，这恰是 von Neumann 后继。故本章构造若干有界公式，仅凭隶属说出：一个索引是另一个的后继；一个对是把另一个的键移位后得到的；以及最终，一个集合是扩张后赋值的图。每一条都以充分性命题的形式证明：公式的满足是一条真值路径，通向关于集合的相应外部事实，而所涉的图都靠外延性逐成员比较，从不从截断的隶属数据中挑选见证。
+第二个关注点是扩张。当满足关系下降到量词之下时，新值被放在索引零处，每个旧索引上移一位；在键的一侧，这恰是 von Neumann 后继。故本章构造若干有界公式，仅凭成员关系说出：一个索引是另一个的后继；一个对是把另一个的键移位后得到的；以及最终，一个集合是扩张后赋值的图。每一条都以充分性命题的形式证明：公式的满足是一条真值路径，通向关于集合的相应外部事实，而所涉的图都靠外延性逐元素比较，从不从截断的成员关系数据中挑选见证。
 <!--ja-->
 
 一階言語の充足の各節は変数の値について語るが、量化できるのは集合の上だけである。したがって充足関係を集合論の内部で計算するには、変数割当てそのものが先に集合にならなければならない。本章はこの符号化を行う。すなわち、変数の添字から `V ℓ` の集合への関数という有限な割当てを、そのグラフ、つまり「添字の数項とそこでの値」の対の集合として表す。
@@ -71,7 +71,7 @@ open import Cubical.Data.FinData using ( inj-toℕ )
 <!--en-->
 The chapter works inside the bounded fragment of the first-order language: a Δ₀ formula is one whose every quantifier is bounded by a variable of the environment, so its satisfaction under an assignment depends only on membership in the exhibited bounding sets. Two host-level facts do the mathematical work of the encoding. The Kuratowski pair `pr` is injective, so a pair determines its components; and the numerals `# n` are injective, so a numeral determines its index. Between them, these two injections are what make the graph of an assignment behave like the graph of a function.
 <!--zh-->
-本章在一阶语言的有界片段内工作：Δ₀ 公式指每个量词都以环境中的某个变元为界，故其满足只依赖于已给出的界定集合中的隶属。编码在数学上依赖两条宿主层事实：Kuratowski 对 `pr` 是单射的，故一个对决定其分量；数码 `# n` 是单射的，故一个数码决定其序号。这两条单射性合在一起，使一个赋值的图表现出函数图的行为。
+本章在一阶语言的有界片段内工作：Δ₀ 公式指每个量词都以环境中的某个变元为界，故其满足只依赖于已给出的界定集合中的成员关系。编码在数学上依赖两条宿主层事实：Kuratowski 对 `pr` 是单射的，故一个对决定其分量；数码 `# n` 是单射的，故一个数码决定其序号。这两条单射性合在一起，使一个赋值的图表现出函数图的行为。
 <!--ja-->
 本章は一階言語の有界な断片の中で作業する。Δ₀ 論理式とは、すべての量化子が環境の変数によって有界化されている論理式であり、その充足は提示された界定集合への所属のみに依存する。符号化の数学的な仕事を担うのは、ホスト側の二つの事実である。Kuratowski 対 `pr` が単射であること、すなわち対がその成分を決めること。そして数項 `# n` が単射であること、すなわち数項がその添字を決めることである。この二つの単射性が合わさって、割当てのグラフに関数のグラフとしての振る舞いを与える。
 <!--/-->
@@ -87,7 +87,7 @@ The bounded reader `prAt`, proved adequate in the chapter on pair formulas, says
 <!--en-->
 Membership in a set of the hierarchy is a proposition, so a proof that some entry of the graph is related to a given pair is always a *merely exists*: it records that a witness exists without providing it as ordinary data. Eliminating such a truncation is legitimate only into a proposition-valued target, and no chosen witness can be recovered from it globally. Whenever two propositions are identified in this chapter, the identification is built by `⇔toPath`, which turns an if-and-only-if into a path between truth values; that is the shape every adequacy lemma here takes.
 <!--zh-->
-层级中集合的隶属是一个命题，因此「图中某个条目与给定的对相关」的证明总是**仅仅存在**：它记录见证存在，却不把它当作普通数据提供。这种截断只能消除到取值为命题的目标中，且无法由此整体恢复出一个被选定的见证。本章凡辨认两个命题为同一，都经 `⇔toPath` 完成，它把一个当且仅当变成真值之间的路径；这里的每条充分性引理都是这个形状。
+层级中集合的成员关系是一个命题，因此「图中某个条目与给定的对相关」的证明总是**仅仅存在**：它记录见证存在，却不把它当作普通数据提供。这种截断只能消除到取值为命题的目标中，且无法由此整体恢复出一个被选定的见证。本章凡辨认两个命题为同一，都经 `⇔toPath` 完成，它把一个当且仅当变成真值之间的路径；这里的每条充分性引理都是这个形状。
 <!--ja-->
 階層の集合への所属は命題であるため、「グラフのある項目が与えられた対と関係する」という証明は常に「単に存在する」という形をとる。証人が存在することは記録されるが、通常のデータとして与えられるわけではない。この切り捨てを消除できるのは命題値の対象へのみであり、そこから全体として選ばれた証人を取り戻すことはできない。本章で二つの命題が同一視されるときは、常に `⇔toPath` によって行われる。これは同値を真理値の間のパスに変えるもので、ここにある各妥当性補題はみなこの形をしている。
 <!--/-->
@@ -95,7 +95,7 @@ Membership in a set of the hierarchy is a proposition, so a proof that some entr
 <!--en-->
 The ambient universe is the cubical cumulative hierarchy. A set is introduced as `sett A f`, an index type together with a family of elements, and its membership relation is truncated like any other membership in this setting. The principle `extensionality` says that two sets with the same members are equal as paths. This is the tool by which encoded graphs will be compared: to show that one candidate graph equals another, one proves, for each element, that membership in the first is a path of truth values away from membership in the second.
 <!--zh-->
-背景宇宙是 cubical 累积层级。集合以 `sett A f` 引入，即一个索引类型配一个元素族，其隶属关系与该设定中其他隶属一样是截断的。外延性原理断言：成员相同的两个集合作为路径相等。这正是比较编码图所用的工具：要证明一个候选图等于另一个，只需对每个元素证明，属于前者的命题与属于后者的命题相差一条真值路径。
+背景宇宙是 cubical 累积层级。集合以 `sett A f` 引入，即一个索引类型配一个元素族，其成员关系与该设定中其他成员关系一样是截断的。外延性原理断言：元素相同的两个集合作为路径相等。这正是比较编码图所用的工具：要证明一个候选图等于另一个，只需对每个元素证明，属于前者的命题与属于后者的命题相差一条真值路径。
 <!--ja-->
 背景となる宇宙は cubical 累積階層である。集合は `sett A f` として導入される。これは索引型と要素の族の組であり、その所属関係はこの設定における他の所属と同様に切り捨てられる。外延性の原理は、同じ要素を持つ二つの集合がパスとして等しいと述べる。符号化されたグラフの比較はまさにこの道具によって行われる。ある候補グラフが別のグラフに等しいことを示すには、各要素について、一方への所属という命題が他方への所属という命題と真理値のパス一本分しか違わないことを証明すればよいのである。
 <!--/-->
@@ -147,7 +147,7 @@ Membership in `env g` is truncated, as all hierarchy membership is; the point of
 
 赋值 `g : Fin n → V ℓ` 成为集合 `env g`，其在索引 `i` 的键处的条目是数码 `# (toℕ i)` 与值 `g i` 的有序对。本节证明使这一表示可用的命题：`lookup-spec` 把「键 `i` 处的对属于 `env g`」等同于「该对的第二分量等于 `g i`」这一命题。
 
-与其他层级隶属一样，`env g` 中的隶属是截断的；`lookup-spec` 的要点在于：这截断的纤维数据仍然精确地决定取值。
+与其他层级成员关系一样，`env g` 中的成员关系是截断的；`lookup-spec` 的要点在于：这截断的纤维数据仍然精确地决定取值。
 <!--ja-->
 ## 環境のグラフと参照
 
@@ -157,7 +157,7 @@ Membership in `env g` is truncated, as all hierarchy membership is; the point of
 <!--en-->
 The gathering is an instance of the set constructor `sett`, which takes an index type and a family of elements. The finite index type `Fin n` lives below level `ℓ`, so it is lifted first; `Lift` adjusts only the universe, and `lower` recovers the index. Each index `li` then contributes one entry, the pair of the numeral for its index with the value of `g` there. The entries themselves are ordinary data; it is only membership in the resulting set that is truncated. The index is turned into a key `# (toℕ i)` rather than used directly, because the formula language must be able to talk about keys, and what formulas talk about are sets, here the numerals.
 <!--zh-->
-这一汇集是集合构造子 `sett` 的实例，它取一个索引类型与一个元素族。有穷索引类型 `Fin n` 层级低于 `ℓ`，故先提升；`Lift` 只调整宇宙，`lower` 取回索引。于是每个索引 `li` 贡献一个条目，即其序号的数码与 `g` 在该处的值配成的对。条目本身是普通数据；被截断的只是最终集合中的隶属。索引之所以换成键 `# (toℕ i)` 而非直接使用，是因为公式语言必须能够谈论键，而公式所谈论的是集合，在这里就是数码。
+这一汇集是集合构造子 `sett` 的实例，它取一个索引类型与一个元素族。有穷索引类型 `Fin n` 层级低于 `ℓ`，故先提升；`Lift` 只调整宇宙，`lower` 取回索引。于是每个索引 `li` 贡献一个条目，即其序号的数码与 `g` 在该处的值配成的对。条目本身是普通数据；被截断的只是最终集合中的成员关系。索引之所以换成键 `# (toℕ i)` 而非直接使用，是因为公式语言必须能够谈论键，而公式所谈论的是集合，在这里就是数码。
 <!--ja-->
 この集め方は集合の構成子 `sett` のインスタンスであり、索引型と要素の族を受け取る。有限な索引型 `Fin n` はレベル `ℓ` より下に住むので、先に持ち上げる。`Lift` は宇宙を調整するだけであり、`lower` が索引を取り戻す。そして各索引 `li` は一つの項目、すなわちその添字の数項と `g` のそこでの値の対に寄与する。項目そのものは通常のデータであり、切り捨てられるのは結果の集合への所属だけである。索引をそのまま使わず鍵 `# (toℕ i)` に変えるのは、論理式言語が鍵について語えなければならず、論理式が語る対象は集合、ここでは数項だからである。
 <!--/-->
@@ -173,7 +173,7 @@ The graph is *functional*: a pair belongs to `env g` at key `i` exactly when its
 
 The argument reads off the three layers of the key. The witnessing entry is a Kuratowski pair, and the pair is injective, so its key equals the key asked about. The keys are numerals, and numerals are injective, so the underlying indices agree as natural numbers. Finally `Fin n` embeds in the naturals, so the two indices are the same index, and the value component says it holds `g i`. The reverse direction simply exhibits the entry at `i` itself.
 <!--zh-->
-这个图是**函数性的**：一个对属于 `env g` 在键 `i` 处，恰当其第二分量为值 `g i`。这是关于隶属的外延陈述，也正是这个编码不只可定义、而且可用于查值的原因。
+这个图是**函数性的**：一个对属于 `env g` 在键 `i` 处，恰当其第二分量为值 `g i`。这是关于成员关系的外延陈述，也正是这个编码不只可定义、而且可用于查值的原因。
 
 论证沿着键的三个层次展开。作证的条目是一个 Kuratowski 对，而对是单射的，故其键等于所问的键。键是数码，数码是单射的，故底层的序号作为自然数相等。最后 `Fin n` 嵌入自然数，故两个序号是同一个索引，值分量便说明那里放着 `g i`。反向只需展示 `i` 处的条目本身。
 <!--ja-->
@@ -241,7 +241,7 @@ The extension of an environment shifts every index up by one, and on numerals th
 
 有界公式 `sucAt i j` 表示 `j` 处的值是 `i` 处的值的 von Neumann 后继；`sucAt-adequate` 证明该公式在环境下的满足恰好就是这两个值的相等。
 
-环境的扩张把每个序号上移一位，而在数码上这一移位就是 von Neumann 后继。因此要下降到约束之下的证书机制，必须能说出「这个序号是那个的后继」。语言中没有后继符号，故该关系只用隶属来说，分三条子句：小者属于大者；属于小者的一切都属大者；而属于大者的一切仅仅属于小者或与之相等。
+环境的扩张把每个序号上移一位，而在数码上这一移位就是 von Neumann 后继。因此要下降到约束之下的证书机制，必须能说出「这个序号是那个的后继」。语言中没有后继符号，故该关系只用成员关系来说，分三条子句：小者属于大者；属于小者的一切都属大者；而属于大者的一切仅仅属于小者或与之相等。
 <!--ja-->
 ## 後者となる添字を認識する
 
@@ -253,7 +253,7 @@ The extension of an environment shifts every index up by one, and on numerals th
 <!--en-->
 Three bounded clauses do it: the smaller set belongs to the larger; membership in the smaller transfers into the larger; and membership in the larger is merely classified, as belonging to the smaller or being the smaller itself. The bounded quantifiers bind `var zero`, and inside a quantifier body every other variable is read at its shifted slot, so `var (suc i)` in the body refers to the value that `var i` had before descending. The second and third clauses say exactly that the larger set has no members beyond those of the smaller together with the smaller itself, which is the extensional content of being its successor. Boundedness is recorded separately by `Δ₀-sucAt`: conjunction, bounded universal quantification, and the leaves, membership and equality, all preserve Δ₀.
 <!--zh-->
-三条有界子句即可做到：小者属于大者；小者中的隶属可转移到大者中；而大者中的隶属只被**仅仅**分类，为属于小者或等于小者。有界量词约束 `var zero`，量词体内的其余变元按移位后的槽位读取，故体内的 `var (suc i)` 指的正是下降前 `var i` 的值。第二、三条子句恰说明：大者除小者的成员与小者自身之外别无成员，这正是「是其后继」的外延内容。有界性由 `Δ₀-sucAt` 单独记录：合取、有界全称量词，以及叶子的隶属与相等，都保持 Δ₀。
+三条有界子句即可做到：小者属于大者；小者中的成员关系可转移到大者中；而大者中的成员关系只被**仅仅**分类，为属于小者或等于小者。有界量词约束 `var zero`，量词体内的其余变元按移位后的槽位读取，故体内的 `var (suc i)` 指的正是下降前 `var i` 的值。第二、三条子句恰说明：大者除小者的元素与小者自身之外别无元素，这正是「是其后继」的外延内容。有界性由 `Δ₀-sucAt` 单独记录：合取、有界全称量词，以及叶子的成员关系与相等，都保持 Δ₀。
 <!--ja-->
 三つの有界な条件でそれができる。小さい方が大きい方に属すること、小さい方への所属が大きい方へ移ること、そして大きい方への所属は切り捨てられた形で分類され、小さい方に属するか小さい方と等しいかのいずれかであることである。有界量化子は `var zero` を束縛し、量化子の本体では他の変数はずらしたスロットで読まれるため、本体の `var (suc i)` は降りる前の `var i` の値を指す。第二と第三の節は、大きい方が小さい方の要素と小さい方自身のほかに要素を持たないことを、まさに述べており、これがその後者であることの外延的な内容である。有界性は `Δ₀-sucAt` によって別途記録される。連言、有界な全称量化、そして葉にあたる所属と等式は、いずれも Δ₀ を保つ。
 <!--/-->
@@ -287,7 +287,7 @@ private
 <!--en-->
 The forward lemma takes the three clauses as hypotheses, now at the level of sets: `I` is a member of `J`, membership in `I` transfers into `J`, and every member of `J` is merely in `I` or equal to `I`. Its conclusion is a path `J ≡ sucV I`, a genuine equality of sets, not merely a biconditional of memberships.
 <!--zh-->
-正向引理把三条子句作为假设，落在集合层面：`I` 属于 `J`；`I` 中的隶属可转移到 `J` 中；`J` 的每个成员**仅仅**属于 `I` 或等于 `I`。结论是路径 `J ≡ sucV I`，即集合的真正相等，而非隶属间的双条件。
+正向引理把三条子句作为假设，落在集合层面：`I` 属于 `J`；`I` 中的成员关系可转移到 `J` 中；`J` 的每个元素**仅仅**属于 `I` 或等于 `I`。结论是路径 `J ≡ sucV I`，即集合的真正相等，而非成员关系间的双条件。
 <!--ja-->
 順方向の補題は、三つの節を仮定として、今度は集合のレベルで取る。`I` が `J` に属すること、`I` への所属が `J` へ移ること、そして `J` の各要素は切り捨てられた形で `I` に属するか `I` と等しいかのいずれかであることである。結論はパス `J ≡ sucV I` であり、所属同士の双条件ではなく集合の本当の等式である。
 <!--/-->
@@ -303,7 +303,7 @@ The forward lemma takes the three clauses as hypotheses, now at the level of set
 <!--en-->
 The equality is produced by extensionality, split into two inclusions. The first inclusion sends each member of `J` across. The classification hypothesis yields a truncated disjunction, and both disjuncts are eliminated into the proposition-valued membership in `sucV I`: in the left case the member transfers through the union clause of the successor, in the right case the member is `I` itself, which belongs to `sucV I` as its own top element.
 <!--zh-->
-相等由外延性产生，拆成两个包含。第一个包含把 `J` 的每个成员送过去：分类假设给出一个截断的析取，两个析取支都被消入「属于 `sucV I`」这一取值为命题的目标。左支的成员经后继的并集分支转移；右支的成员就是 `I` 本身，它作为自身的顶端元素属于 `sucV I`。
+相等由外延性产生，拆成两个包含。第一个包含把 `J` 的每个元素送过去：分类假设给出一个截断的析取，两个析取支都被消入「属于 `sucV I`」这一取值为命题的目标。左支的元素经后继的并集分支转移；右支的元素就是 `I` 本身，它作为自身的顶端元素属于 `sucV I`。
 <!--ja-->
 等式は外延性によって作られ、二つの包含に分けられる。第一の包含は `J` の各要素を送る。分類の仮定は切り捨てられた選言を与え、各選言肢は「`sucV I` に属する」という命題値の対象へと消去される。左の場合、要素は後者の合併の枝を通して移り、右の場合、要素は `I` 自身であり、それは自分自身を頂点要素として `sucV I` に属する。
 <!--/-->
@@ -319,7 +319,7 @@ The equality is produced by extensionality, split into two inclusions. The first
 <!--en-->
 The second inclusion reads members of `sucV I` back into `J`. Membership in a successor is classified by an eliminator with two cases, and this is where the truncation of the classification hypothesis is discharged: the eliminator's target is the proposition `z ∈ J`, so case analysis on the truncated classification is legitimate. The two cases use the two clauses already in hand, transferring the member from `I` or rewriting it to `I`.
 <!--zh-->
-第二个包含把 `sucV I` 的成员读回 `J`。属于后继这一事实由带两个分支的消去器分类，分类假设的截断正是在此处被消费：消去器的目标是命题 `z ∈ J`，故对截断分类作情形分析是合法的。两个分支各自使用已有的子句：把成员从 `I` 中转移过来，或把它改写成 `I`。
+第二个包含把 `sucV I` 的元素读回 `J`。属于后继这一事实由带两个分支的消去器分类，分类假设的截断正是在此处被消费：消去器的目标是命题 `z ∈ J`，故对截断分类作情形分析是合法的。两个分支各自使用已有的子句：把元素从 `I` 中转移过来，或把它改写成 `I`。
 <!--ja-->
 第二の包含は `sucV I` の要素を `J` の方へ読み戻す。後者への所属は二つの場合を持つ消去子によって分類され、分類の仮定の切り捨てがここで消費される。消去子の対象が命題 `z ∈ J` であるため、切り捨てられた分類についての場合分けが正当化される。二つの場合は、すでに手元にある節をそれぞれ使い、要素を `I` から移すか、`I` へと書き換える。
 <!--/-->
@@ -335,7 +335,7 @@ The second inclusion reads members of `sucV I` back into `J`. Membership in a su
 <!--en-->
 The converse lemma `suc-intro` runs the characterization in the opposite direction. Given `J ≡ sucV I`, it transports the first two successor-membership facts to `J`. For the third clause it transports a member of `J` to `sucV I` and applies the successor-membership eliminator, whose result is already the required truncated classification. Thus this direction does not consume an assumed truncated classification.
 <!--zh-->
-逆命题 `suc-intro` 把刻画沿反方向运行。给定 `J ≡ sucV I`，前两条子句由后继集合的隶属事实搬运到 `J` 得到。第三条先把 `J` 的成员搬到 `sucV I`，再用后继隶属的消去器，直接得到所需的截断分类。因此这一方向并不消除一条作为假设给出的截断分类。
+逆命题 `suc-intro` 把刻画沿反方向运行。给定 `J ≡ sucV I`，前两条子句由后继集合的成员关系事实搬运到 `J` 得到。第三条先把 `J` 的元素搬到 `sucV I`，再用后继成员关系的消去器，直接得到所需的截断分类。因此这一方向并不消除一条作为假设给出的截断分类。
 <!--ja-->
 逆の補題 `suc-intro` は特徴づけを逆向きに用いる。`J ≡ sucV I` が与えられると、最初の二条件は後者集合についての所属の事実を `J` へ輸送して得られる。第三条件では `J` の要素を `sucV I` へ輸送し、後者への所属の消去子を適用して、必要な切り捨てられた分類を直接得る。したがってこの方向は、仮定として与えられた切り捨てられた分類を消去するものではない。
 <!--/-->
@@ -352,7 +352,7 @@ The converse lemma `suc-intro` runs the characterization in the opposite directi
 <!--en-->
 Each clause is produced by transporting a membership fact about `sucV I` along the assumed path, in whichever direction lands it at `J`. The first clause transports the fact that `I` belongs to its own successor; the second transports the transfer rule `∈sucV-inl` member by member.
 <!--zh-->
-每条子句都是把关于 `sucV I` 的隶属事实沿已给路径搬运得到，方向以使事实落在 `J` 上为准。第一条搬运「`I` 属于自己的后继」这一事实；第二条逐成员搬运转移规则 `∈sucV-inl`。
+每条子句都是把关于 `sucV I` 的成员关系事实沿已给路径搬运得到，方向以使事实落在 `J` 上为准。第一条搬运「`I` 属于自己的后继」这一事实；第二条逐元素搬运转移规则 `∈sucV-inl`。
 <!--ja-->
 各条件は、`sucV I` に関する所属の事実を仮定されたパスに沿って輸送することで作られる。向きは、事実が `J` の側に着くように選ぶ。第一の条件は「`I` が自身の後者に属する」という事実を輸送し、第二の条件は移行規則 `∈sucV-inl` を要素ごとに輸送する。
 <!--/-->
@@ -368,7 +368,7 @@ Each clause is produced by transporting a membership fact about `sucV I` along t
 <!--en-->
 The third clause is the classification of the members of `J`, and its target is the truncated disjunction itself. The successor eliminator is applied with that truncation as the elimination target, so each of its two cases is met by simply re-truncating the corresponding branch. With all three clauses assembled, the adequacy statement takes the same shape as `lookup-spec`: satisfaction of `sucAt i j` under `γ` is the proposition that the value at `j` equals the von Neumann successor of the value at `i`.
 <!--zh-->
-第三条子句是对 `J` 成员的分类，其目标正是那个截断析取本身。后继消去器以该截断为消除目标而施用，于是它的两个分支情形各由重新截断相应分支来回应。三条子句齐备后，充分性陈述取得与 `lookup-spec` 相同的形状：`γ` 满足 `sucAt i j` 这一命题，就是「`j` 处的值等于 `i` 处的值的 von Neumann 后继」。
+第三条子句是对 `J` 元素的分类，其目标正是那个截断析取本身。后继消去器以该截断为消除目标而施用，于是它的两个分支情形各由重新截断相应分支来回应。三条子句齐备后，充分性陈述取得与 `lookup-spec` 相同的形状：`γ` 满足 `sucAt i j` 这一命题，就是「`j` 处的值等于 `i` 处的值的 von Neumann 后继」。
 <!--ja-->
 第三の条件は `J` の要素の分類であり、その対象は切り捨てられた選言そのものである。後者の消去子はこの切り捨てを消除の対象として適用されるので、二つの分岐はいずれも、対応する枝を切り捨て直すだけで応えられる。三つの条件がそろえば、妥当性の主張は `lookup-spec` と同じ形を取る。`γ` が `sucAt i j` を充足するという命題とは、`j` での値が `i` での値の von Neumann 後者と等しいことである。
 <!--/-->
@@ -407,7 +407,7 @@ Extending an environment does not only insert a new entry at key zero; it renumb
 
 `shiftPairAt p' p` 识别如下情形：把 `p` 处有序对的数码键换成其 von Neumann 后继、值保持不变，便得到 `p'` 处的有序对。
 
-扩张环境不只是在零键处插入一个新条目，它还给旧条目重新编号：原来键为 `# i` 的条目变为键为 `# (suc i)`。本节把这一重编号的单步分离出来，给它一个有界的描述。由于一个有界量词只能约束集合的一个成员，而一个 Kuratowski 对的条目一次只给出索引与值之一，公式便依次运行五层有界量词，同时持有两个条目、各自的索引以及共享的值。其主体随后是配对读式一章的两条 Kuratowski 读式，加上上一节的后继读式，合起来恰好说明：两个条目共享一个值，而两个键相差一个后继步。
+扩张环境不只是在零键处插入一个新条目，它还给旧条目重新编号：原来键为 `# i` 的条目变为键为 `# (suc i)`。本节把这一重编号的单步分离出来，给它一个有界的描述。由于一个有界量词只能约束集合的一个元素，而一个 Kuratowski 对的条目一次只给出索引与值之一，公式便依次运行五层有界量词，同时持有两个条目、各自的索引以及共享的值。其主体随后是配对读式一章的两条 Kuratowski 读式，加上上一节的后继读式，合起来恰好说明：两个条目共享一个值，而两个键相差一个后继步。
 <!--ja-->
 ## 一つの項目をずらす
 
@@ -582,7 +582,7 @@ The innermost elimination reaches the three satisfaction proofs, and with them t
 <!--en-->
 The backward direction runs on introduction instead of analysis. Given an index, a value, and the two equations identifying the slots with the corresponding pairs, a satisfaction proof must be produced, and everything it needs is ordinary set construction: the entry sets are built with the pairing operation, and their memberships follow from the component introduction rules.
 <!--zh-->
-反向依靠引入而非分析。给定一个索引、一个值，以及把两个槽位与相应配对等同的两条等式，需要产出一条满足证明；它所需的每件东西都是普通的集合构造：条目集合用配对运算造出，其隶属由分量引入规则给出。
+反向依靠引入而非分析。给定一个索引、一个值，以及把两个槽位与相应配对等同的两条等式，需要产出一条满足证明；它所需的每件东西都是普通的集合构造：条目集合用配对运算造出，其成员关系由分量引入规则给出。
 <!--ja-->
 逆方向は分析ではなく導入で進む。添字、値、そして二つのスロットを対応する対と同一視する等式が与えられれば、充足の証明を作らねばならない。そこで必要なものはすべて通常の集合の構成である。項目の集合は対の操作で作られ、その所属は成分の導入規則から従う。
 <!--/-->
@@ -599,7 +599,7 @@ The backward direction runs on introduction instead of analysis. Given an index,
 <!--en-->
 The first witness for the outer existential is the pair `⁅ i , v ⁆` itself. It belongs to the set at slot `p` because the assumed equation identifies that set with `pr i v`, and by the component introduction rule the unordered pair `⁅ i , v ⁆` sits inside its own Kuratowski encoding; transporting along the equation moves the membership to the right side. Opening the pair then needs no work: its index witness is `i` and its value witness is `v`, each supplied by one of the two component rules.
 <!--zh-->
-最外层存在的第一个见证就是对 `⁅ i , v ⁆` 本身。它属于槽位 `p` 处的集合，因为假定的等式把该集合等同于 `pr i v`，而由分量引入规则，无序对 `⁅ i , v ⁆` 就在其自身的 Kuratowski 编码之内；沿等式搬运即把隶属移到正确的位置。随后打开这个对无需任何工作：索引见证是 `i`，值见证是 `v`，各由一条分量规则给出。
+最外层存在的第一个见证就是对 `⁅ i , v ⁆` 本身。它属于槽位 `p` 处的集合，因为假定的等式把该集合等同于 `pr i v`，而由分量引入规则，无序对 `⁅ i , v ⁆` 就在其自身的 Kuratowski 编码之内；沿等式搬运即把成员关系移到正确的位置。随后打开这个对无需任何工作：索引见证是 `i`，值见证是 `v`，各由一条分量规则给出。
 <!--ja-->
 最外層の存在に対する最初の証人は、対 `⁅ i , v ⁆` そのものである。仮定の等式がスロット `p` の集合を `pr i v` と同一視し、成分の導入規則により非順序対 `⁅ i , v ⁆` はそれ自身の Kuratowski 符号化の内側にあるので、これはその集合に属する。等式に沿って輸送すれば所属が正しい側に移る。次に対を開くのに仕事は要らない。添字の証人は `i`、値の証人は `v` であり、それぞれ一つの成分規則が与える。
 <!--/-->
@@ -714,9 +714,9 @@ The metalevel work converts the satisfaction reading of these formulas, phrased 
 <!--zh-->
 ## 编码空条目
 
-扩张后的环境的第零个新条目是带标签 `# 0` 的 Kuratowski 对，而 `# 0` 按定义就是空集。本节构造的读式识别这样的对，但只通过标签的数学性质提到它：一个成员是空的，这可用进入否定式公式的有界量化表达，无需任何常元。三条公式 `sgl0At`、`pair0At` 与 `tag0At` 分别说：一个集合是空集的单点集，是空集与给定集合的无序对，以及是由前两者装配的带标签对。
+扩张后的环境的第零个新条目是带标签 `# 0` 的 Kuratowski 对，而 `# 0` 按定义就是空集。本节构造的读式识别这样的对，但只通过标签的数学性质提到它：一个元素是空的，这可用进入否定式公式的有界量化表达，无需任何常元。三条公式 `sgl0At`、`pair0At` 与 `tag0At` 分别说：一个集合是空集的单点集，是空集与给定集合的无序对，以及是由前两者装配的带标签对。
 
-元层工作把这些公式的满足读式，即以谓词 `Empty'` (说一个集合没有成员) 表述的版本，转换为配对读式一章中 `prChar-fwd` 与 `prChar-bwd` 已接受的形状，在那里空集是直接点名的。由于没有成员的集合按外延性等于 `∅`，两种表述描述的是同一数学内容；充分性引理 `tag0At-adequate` 把标签读式的满足等同于「带标签的集合等于 `pr ∅` 作用于第二槽位之值」这条等式。
+元层工作把这些公式的满足读式，即以谓词 `Empty'` (说一个集合没有元素) 表述的版本，转换为配对读式一章中 `prChar-fwd` 与 `prChar-bwd` 已接受的形状，在那里空集是直接点名的。由于没有元素的集合按外延性等于 `∅`，两种表述描述的是同一数学内容；充分性引理 `tag0At-adequate` 把标签读式的满足等同于「带标签的集合等于 `pr ∅` 作用于第二槽位之值」这条等式。
 <!--ja-->
 ## 空の項目を符号化する
 
@@ -728,7 +728,7 @@ The metalevel work converts the satisfaction reading of these formulas, phrased 
 <!--en-->
 The first reader describes the singleton `{∅}` without naming the empty set. `sgl0At k` conjoins two bounded clauses about the value at `k`: merely some member satisfies the body `∀̇∈ (var zero) ⊥̇`, and every member does. Under the bounded quantifier, the body `⊥̇` holds exactly when the bound member has no members of its own, so each clause says its subject is empty. The existential clause is what allows the value to be inhabited at all; without it, the condition would also be satisfied by the empty set itself. Together the two clauses say that the value at `k` has a member and all its members are empty, which pins it down extensionally as `{∅}`.
 <!--zh-->
-第一条读式在不点名空集的情况下描述单点集 `{∅}`。`sgl0At k` 对 `k` 处的值合取两条有界子句：仅仅有一个成员满足主体 `∀̇∈ (var zero) ⊥̇`，且每个成员都满足。在有界量词之下，主体 `⊥̇` 恰在被量化的成员自身没有成员时成立，故每条子句都说其主语是空的。存在子句保证该值确实非空；没有它，空集自身也会满足该条件。两条子句合起来说：`k` 处的值有成员，且其成员全为空集，这在外延上把它确定为 `{∅}`。
+第一条读式在不点名空集的情况下描述单点集 `{∅}`。`sgl0At k` 对 `k` 处的值合取两条有界子句：仅仅有一个元素满足主体 `∀̇∈ (var zero) ⊥̇`，且每个元素都满足。在有界量词之下，主体 `⊥̇` 恰在被量化的元素自身没有元素时成立，故每条子句都说其主语是空的。存在子句保证该值确实非空；没有它，空集自身也会满足该条件。两条子句合起来说：`k` 处的值有元素，且其元素全为空集，这在外延上把它确定为 `{∅}`。
 <!--ja-->
 最初の読み取りは、空集合を名指しすることなく一元集合 `{∅}` を記述する。`sgl0At k` は `k` の値について二つの有界な節を連言する。すなわち、本体 `∀̇∈ (var zero) ⊥̇` を満たす要素が命題的に一つあることと、すべての要素がそれを満たすことである。有界な量化子の下では、本体 `⊥̇` は量化された要素が自身の要素を持たないとき、そのときに限って成り立つので、各節はその主語が空であると言っている。存在の節があるおかげで値が非空であることが保証される。これがなければ、空集合自身も条件を満たしてしまう。二つの節を合わせると、`k` の値は要素を持ち、その要素がすべて空集合であり、これは外延的にちょうど `{∅}` である。
 <!--/-->
@@ -745,7 +745,7 @@ pair0At k j = (∃̇∈ (var k) (∀̇∈ (var zero) ⊥̇))
 <!--en-->
 The second reader `pair0At k j` describes the unordered pair `{∅, W}`, where `W` is the value at slot `j` of the original assignment; under the new binder it is addressed by `suc j`. Its three clauses are: the value at `k` merely has an empty member; the value at `j` belongs to it; and every member of it merely is empty or equals `W`. The first clause is the same empty-member existence the singleton reader used, and the third is the pair classification with the first component fixed at `∅`. The third formula `tag0At s x` combines the two readers: the value at `s` merely has a member satisfying the empty singleton clause, merely has one satisfying the empty pair clause, and every member merely satisfies one or the other.
 <!--zh-->
-第二条读式 `pair0At k j` 描述无序对 `{∅, W}`，其中 `W` 是原赋值槽位 `j` 处的值；进入新绑定后由 `suc j` 指向同一取值。它的三条子句是：`k` 处的值仅仅有一个空成员；`j` 处的值属于它；它的每个成员仅仅是空的或等于 `W`。第一子句正是单点集读式用过的那个空成员存在，第三子句是把第一分量固定为 `∅` 的配对分类。第三条公式 `tag0At s x` 把两条读式合并：`s` 处的值仅仅有一个成员满足空单点集子句，仅仅有一个成员满足空对子句，且每个成员仅仅满足其一。
+第二条读式 `pair0At k j` 描述无序对 `{∅, W}`，其中 `W` 是原赋值槽位 `j` 处的值；进入新绑定后由 `suc j` 指向同一取值。它的三条子句是：`k` 处的值仅仅有一个空元素；`j` 处的值属于它；它的每个元素仅仅是空的或等于 `W`。第一子句正是单点集读式用过的那个空元素存在，第三子句是把第一分量固定为 `∅` 的配对分类。第三条公式 `tag0At s x` 把两条读式合并：`s` 处的值仅仅有一个元素满足空单点集子句，仅仅有一个元素满足空对子句，且每个元素仅仅满足其一。
 <!--ja-->
 第二の読み取り `pair0At k j` は非順序対 `{∅, W}` を記述する。ここで `W` は元の割り当てのスロット `j` の値であり、新しい束縛子の内側では `suc j` が同じ値を指す。三つの節は、`k` の値に空な要素が命題的に存在すること、`j` の値がそれに属すること、そしてそのすべての要素が命題的に空であるか `W` と等しいか、である。第一の節は単集合の読み取りが使ったのと同じ空要素の存在であり、第三の節は第一成分を `∅` に固定した対の分類である。第三の論理式 `tag0At s x` はこの二つの読み取りを組み合わせる。`s` の値は空単集合の節を満たす要素を命題的に持ち、空対の節を満たす要素を命題的に持ち、そのすべての要素は命題的にいずれかを満たす。
 <!--/-->
@@ -762,7 +762,7 @@ tag0At s x = (∃̇∈ (var s) (sgl0At zero))
 <!--en-->
 On the metalevel side, emptiness is expressed by the private predicate `Empty' z`, a function that takes any member `y` of `z` and returns an inhabitant of the empty type `⊥*`. This function expresses that `z` has no members: any alleged membership produces a term of `⊥*`, and `⊥*` is the empty type. It is distinct from the object-language falsity formula `⊥̇`, which is syntax. The first lemma, `empty'→∅`, is the bridge to the named empty set: any set of which `Empty'` holds equals `∅`.
 <!--zh-->
-在元层一侧，空性由私有谓词 `Empty' z` 表达：它是一个函数，取 `z` 的任意成员 `y`，返回空类型 `⊥*` 的一个元素。这个函数表达 `z` 没有成员：任何声称的隶属都会产生空类型 `⊥*` 的元素。它不同于对象语言中的否定式公式 `⊥̇`，后者是语法。第一条引理 `empty'→∅` 是通向被点名的空集的桥梁：凡使 `Empty'` 成立的集合都等于 `∅`。
+在元层一侧，空性由私有谓词 `Empty' z` 表达：它是一个函数，取 `z` 的任意元素 `y`，返回空类型 `⊥*` 的一个元素。这个函数表达 `z` 没有元素：任何声称的成员关系都会产生空类型 `⊥*` 的元素。它不同于对象语言中的否定式公式 `⊥̇`，后者是语法。第一条引理 `empty'→∅` 是通向被点名的空集的桥梁：凡使 `Empty'` 成立的集合都等于 `∅`。
 <!--ja-->
 メタレベルでは、空性は private な述語 `Empty' z` で表される。これは `z` への任意の所属から空の型 `⊥*` の要素を導く関数であり、`z` が要素を持たないことを表す。空の型なのは `⊥*` であり、`Empty' z` はその型へ至る関数型である。対象言語の偽の論理式 `⊥̇` は構文なので、これとは区別される。最初の補題 `empty'→∅` が、名指しされた空集合への橋となる。`Empty'` が成り立つ集合はすべて `∅` と等しい、というものである。
 <!--/-->
@@ -780,7 +780,7 @@ private
 <!--en-->
 The proof of the bridge is extensionality with both directions vacuous. To show each `y` belongs to `z` exactly when it belongs to `∅`, suppose `y` belonged to `z`: applying `Empty' z` to that membership yields an inhabitant of the empty type, from which anything follows, in particular membership in `∅`. In the other direction, `∅-empty` refutes any membership in `∅`, and from that refutation membership in `z` follows as well. The converse bridge `∅→empty'` needs only the defining path: a membership of `z` transported along `e : z ≡ ∅` lands in `∅`, where `∅-empty` again contradicts it. Thus `Empty' z` and `z ≡ ∅` are interchangeable.
 <!--zh-->
-这座桥的证明是外延性，且两个方向都是空洞的。为证每个 `y` 属于 `z` 恰当其属于 `∅`：设 `y` 属于 `z`，把 `Empty' z` 施于该隶属便得空类型的一个元素，由此可得任何结论，特别是属于 `∅`。另一方向上，`∅-empty` 反驳任何属于 `∅` 的隶属，而由这个反驳同样可得属于 `z`。反向的桥 `∅→empty'` 只需定义性路径：把 `z` 的一个隶属沿 `e : z ≡ ∅` 搬运落入 `∅`，在那里 `∅-empty` 再次给出矛盾。于是 `Empty' z` 与 `z ≡ ∅` 可以互换。
+这座桥的证明是外延性，且两个方向都是空洞的。为证每个 `y` 属于 `z` 恰当其属于 `∅`：设 `y` 属于 `z`，把 `Empty' z` 施于该成员关系便得空类型的一个元素，由此可得任何结论，特别是属于 `∅`。另一方向上，`∅-empty` 反驳任何属于 `∅` 的成员关系，而由这个反驳同样可得属于 `z`。反向的桥 `∅→empty'` 只需定义性路径：把 `z` 的一个成员关系沿 `e : z ≡ ∅` 搬运落入 `∅`，在那里 `∅-empty` 再次给出矛盾。于是 `Empty' z` 与 `z ≡ ∅` 可以互换。
 <!--ja-->
 この橋の証明は外延性であり、どちらの向きも空虚に成り立つ。各 `y` が `z` に属することと `∅` に属することがちょうど一致することを示すには、`y` が `z` に属すると仮定する。その所属に `Empty' z` を適用すれば空の型の住人が得られ、そこから何でも、特に `∅` への所属が従う。逆の向きでは、`∅-empty` が `∅` へのあらゆる所属を反駁し、その反駁から同じく `z` への所属が従う。逆向きの橋 `∅→empty'` は定義的なパスだけで足りる。`z` への所属を `e : z ≡ ∅` に沿って輸送すれば `∅` の中に落ち、そこで再び `∅-empty` が矛盾を与える。こうして `Empty' z` と `z ≡ ∅` は取り替え可能である。
 <!--/-->
@@ -797,7 +797,7 @@ The proof of the bridge is extensionality with both directions vacuous. To show 
 <!--en-->
 The satisfaction of the two readers, once unfolded, takes the shape of two metalevel packages. `EmptySgl w` consists of a truncated existence of a member of `w` that is empty, and an untruncated universal clause demanding that every member is empty. `EmptyPair W w` keeps the truncated empty-member existence and replaces the rest by a membership of `W` in `w` together with a truncated classification: every member is merely empty or equals `W`. The truncations sit exactly where the bounded existentials and the truncated disjunction of the formulas put them; in particular no chosen pair decomposition is ever extracted.
 <!--zh-->
-两条读式的满足展开后，呈两个元层包裹的形状。`EmptySgl w` 由「`w` 有一个空成员」的截断存在，加上非截断的全称子句「每个成员都是空的」组成。`EmptyPair W w` 保留截断的空成员存在，把其余换成 `W` 属于 `w`，加上截断的分类：每个成员仅仅是空的或等于 `W`。截断的位置恰是公式的有界存在量词与截断析取所放置之处；特别地，任何时候都不会取出一个被选定的对分解。
+两条读式的满足展开后，呈两个元层包裹的形状。`EmptySgl w` 由「`w` 有一个空元素」的截断存在，加上非截断的全称子句「每个元素都是空的」组成。`EmptyPair W w` 保留截断的空元素存在，把其余换成 `W` 属于 `w`，加上截断的分类：每个元素仅仅是空的或等于 `W`。截断的位置恰是公式的有界存在量词与截断析取所放置之处；特别地，任何时候都不会取出一个被选定的对分解。
 <!--ja-->
 二つの読み取りの充足を展開すると、二つのメタレベルの包みの形になる。`EmptySgl w` は、「`w` の空な要素が存在する」という切り詰められた存在と、「すべての要素が空である」という切り詰められていない全称の節からなる。`EmptyPair W w` は切り詰められた空要素の存在を保ち、残りを `W` の `w` への所属と、切り詰められた分類、すなわちすべての要素が命題的に空であるか `W` と等しいか、に置き換える。切り詰めの位置は、論理式の有界存在量化子と切り詰められた選言が置いた場所とまさに一致する。特に、選ばれた対の分解が取り出されることは決してない。
 <!--/-->
@@ -814,7 +814,7 @@ The satisfaction of the two readers, once unfolded, takes the shape of two metal
 <!--en-->
 The counterpart packages name the empty set outright. `SglOf∅ w` states that `∅` belongs to `w` and every member of `w` equals `∅`, with no truncation since the witness is given. `PairOf∅ W w` states that `∅` and `W` belong to `w` and every member is merely `∅` or `W`; the classification stays truncated, matching the unordered-pair membership of the hierarchy, from which one does not get to choose a side. These are exactly the shapes the pair characterization of the pair-reader chapter consumes, with its first component instantiated at `∅`, so the whole remaining task is to pass between the two phrasings of the same membership facts.
 <!--zh-->
-对应的包裹直接点名空集。`SglOf∅ w` 断言 `∅` 属于 `w` 且 `w` 的每个成员都等于 `∅`，因见证已给出而无需截断。`PairOf∅ W w` 断言 `∅` 与 `W` 属于 `w` 且每个成员仅仅是 `∅` 或 `W`；分类保持截断，与层级的无序对隶属一致，从那里并不能选出在哪一侧。这些恰是配对读式一章的配对刻画所消耗的形状，只是第一分量取在 `∅`，于是剩下的全部任务就是在同一隶属事实的两种表述之间往返。
+对应的包裹直接点名空集。`SglOf∅ w` 断言 `∅` 属于 `w` 且 `w` 的每个元素都等于 `∅`，因见证已给出而无需截断。`PairOf∅ W w` 断言 `∅` 与 `W` 属于 `w` 且每个元素仅仅是 `∅` 或 `W`；分类保持截断，与层级的无序对成员关系一致，从那里并不能选出在哪一侧。这些恰是配对读式一章的配对刻画所消耗的形状，只是第一分量取在 `∅`，于是剩下的全部任务就是在同一成员关系事实的两种表述之间往返。
 <!--ja-->
 対応する包みは空集合を直接名指しする。`SglOf∅ w` は、`∅` が `w` に属し `w` のすべての要素が `∅` と等しいと主張する。証人が与えられているため、切り詰めは不要である。`PairOf∅ W w` は、`∅` と `W` が `w` に属し、すべての要素が命題的に `∅` か `W` であると主張する。分類は切り詰められたままであり、階層の非順序対の所属と一致する。そこからどちらの側かを選び取ることはできない。これらはまさに、対読み取りの章の対の特徴づけが受け取る形であり、第一成分を `∅` に具体化したものである。したがって残る仕事のすべては、同じ所属の事実の二つの表現の間を行き来することである。
 <!--/-->
@@ -832,7 +832,7 @@ The counterpart packages name the empty set outright. `SglOf∅ w` states that `
 <!--en-->
 The forward conversion turns the truncated existence of an empty member into the plain fact that `∅` belongs to `w`. Membership in a set of the hierarchy is a proposition, so eliminating the truncation into `⟨ ∅ ∈ w ⟩` is legitimate. Inside, an explicitly given witness `z`, with a membership proof and a proof of `Empty' z`, is first identified with `∅` by the previous lemma; its membership in `w` then transports along that path to a membership of `∅`. The rest of `EmptySgl w` converts wholesale: the untruncated universal clause hands back `Empty' z` for each member `z` of `w`, and the same lemma rewrites that into `z ≡ ∅`.
 <!--zh-->
-正向转换把「存在一个空成员」的截断陈述变成直接的事实：`∅` 属于 `w`。层级中集合的隶属是一个命题，故把截断消除到 `⟨ ∅ ∈ w ⟩` 是合法的。在内部，显式给出的见证 `z` 带有隶属证明与 `Empty' z` 的证明，先由前一条引理把它与 `∅` 等同，其隶属便沿该路径搬运成 `∅` 的隶属。`EmptySgl w` 的其余部分随之整体转换：非截断的全称子句对 `w` 的每个成员 `z` 给出 `Empty' z`，同一引理再把它改写为 `z ≡ ∅`。
+正向转换把「存在一个空元素」的截断陈述变成直接的事实：`∅` 属于 `w`。层级中集合的成员关系是一个命题，故把截断消除到 `⟨ ∅ ∈ w ⟩` 是合法的。在内部，显式给出的见证 `z` 带有成员关系证明与 `Empty' z` 的证明，先由前一条引理把它与 `∅` 等同，其成员关系便沿该路径搬运成 `∅` 的成员关系。`EmptySgl w` 的其余部分随之整体转换：非截断的全称子句对 `w` 的每个元素 `z` 给出 `Empty' z`，同一引理再把它改写为 `z ≡ ∅`。
 <!--ja-->
 順方向の変換は、空な要素の存在という切り捨てられた主張を、`∅` が `w` に属するという普通の事実へ変える。階層の集合への所属は命題なので、切り詰めを `⟨ ∅ ∈ w ⟩` へ消除するのは正当である。内部では、所属の証明と `Empty' z` の証明を伴って明示的に与えられた証人 `z` を、まず前の補題で `∅` と同一視し、その所属をこのパスに沿って輸送して `∅` の所属にする。`EmptySgl w` の残りの部分はそのまま変換される。切り詰められていない全称の節は `w` の各要素 `z` に対して `Empty' z` を与え、同じ補題がそれを `z ≡ ∅` に書き換える。
 <!--/-->
@@ -849,7 +849,7 @@ The forward conversion turns the truncated existence of an empty member into the
 <!--en-->
 The pair case follows the same plan. `EmptyPair→PairOf∅` reuses the empty-member conversion for the first component, keeps the membership of `W` unchanged, and rewrites the classification member by member: a truncated statement that each member is empty or equals `W` maps to the corresponding truncated statement with `Empty'` replaced by equality with `∅`. The result is exactly the `∅`-based classification, and the truncation is preserved throughout rather than resolved into a chosen side.
 <!--zh-->
-有序对情形沿用同一方案。`EmptyPair→PairOf∅` 对第一分量复用空成员转换，`W` 的隶属保持不变，并逐成员改写分类：把「每个成员是空的或等于 `W`」的截断陈述，映射为把 `Empty'` 换成「等于 `∅`」后的对应截断陈述。结果恰是以 `∅` 为基准的分类，且截断全程保留，并未被解析为选定的某一边。
+有序对情形沿用同一方案。`EmptyPair→PairOf∅` 对第一分量复用空元素转换，`W` 的成员关系保持不变，并逐元素改写分类：把「每个元素是空的或等于 `W`」的截断陈述，映射为把 `Empty'` 换成「等于 `∅`」后的对应截断陈述。结果恰是以 `∅` 为基准的分类，且截断全程保留，并未被解析为选定的某一边。
 <!--ja-->
 対の場合も同じ計画に従う。`EmptyPair→PairOf∅` は第一成分に空要素の変換を再利用し、`W` の所属はそのまま保ち、分類を要素ごとに書き換える。すなわち、各要素が空であるか `W` と等しいかという切り捨てられた主張を、`Empty'` を `∅` との等しさに置き換えた対応する切り捨てられた主張へ写すのである。結果はまさに `∅` を基準とする分類であり、切り詰めは選ばれた側に解決されることなく全体を通じて保たれる。
 <!--/-->
@@ -866,7 +866,7 @@ The pair case follows the same plan. `EmptyPair→PairOf∅` reuses the empty-me
 <!--en-->
 The converse direction needs no witness at all, since the empty set is named from the start. `SglOf∅→EmptySgl` produces the truncated witness directly: `∅` belongs to `w` by assumption, and it is empty by the converse lemma applied to the definitional path `∅ ≡ ∅`. The universal clause converts by the same lemma in the other direction. `PairOf∅→EmptyPair` keeps that witness, carries the membership of `W` over unchanged, and rewrites the classification clause pointwise.
 <!--zh-->
-反方向完全不需要寻找见证，因为空集从一开始就被点名。`SglOf∅→EmptySgl` 直接产出截断见证：`∅` 按假定属于 `w`，而由沿定义性路径 `∅ ≡ ∅` 应用反向引理知它是空的。全称子句由同一引理朝另一方向转换。`PairOf∅→EmptyPair` 保留该见证，原样继承 `W` 的隶属，并逐点改写分类子句。
+反方向完全不需要寻找见证，因为空集从一开始就被点名。`SglOf∅→EmptySgl` 直接产出截断见证：`∅` 按假定属于 `w`，而由沿定义性路径 `∅ ≡ ∅` 应用反向引理知它是空的。全称子句由同一引理朝另一方向转换。`PairOf∅→EmptyPair` 保留该见证，原样继承 `W` 的成员关系，并逐点改写分类子句。
 <!--ja-->
 逆方向では証人を探す必要はまったくない。空集合が最初から名指しされているからである。`SglOf∅→EmptySgl` は切り詰められた証人を直接作る。`∅` は仮定により `w` に属し、定義的なパス `∅ ≡ ∅` に逆向きの補題を適用すれば空であることが分かる。全称の節は同じ補題を逆の向きで変換する。`PairOf∅→EmptyPair` はこの証人を保ち、`W` の所属をそのまま引き継ぎ、分類の節を各点で書き換える。
 <!--/-->
@@ -883,7 +883,7 @@ The converse direction needs no witness at all, since the empty set is named fro
 <!--en-->
 In that pair conversion, the classification runs in the opposite direction: a member known merely to be `∅` or `W` becomes one that is empty or equals `W`, using `∅→empty'` on the first branch and nothing on the second. The section then abstracts the pattern both directions share. `PairWitness P R Q` packages the three clauses that a Kuratowski-pair characterization reads off a set `Q`: a truncated existence of a member of `Q` carrying `P`, the same for `R`, and a truncated dichotomy assigning to every member of `Q` one of `P` or `R`.
 <!--zh-->
-在这条有序对转换中，分类沿反方向运行：仅已知为 `∅` 或 `W` 的成员变成「空的或等于 `W`」的成员，第一分支用 `∅→empty'`，第二分支无需改动。本节随后抽象出两个方向共享的模式。`PairWitness P R Q` 打包了从集合 `Q` 读出 Kuratowski 对刻画所需的三条子句：`Q` 的某个携带 `P` 的成员的截断存在，对 `R` 同样，以及给 `Q` 的每个成员指派 `P` 或 `R` 之一的截断二分。
+在这条有序对转换中，分类沿反方向运行：仅已知为 `∅` 或 `W` 的元素变成「空的或等于 `W`」的元素，第一分支用 `∅→empty'`，第二分支无需改动。本节随后抽象出两个方向共享的模式。`PairWitness P R Q` 打包了从集合 `Q` 读出 Kuratowski 对刻画所需的三条子句：`Q` 的某个携带 `P` 的元素的截断存在，对 `R` 同样，以及给 `Q` 的每个元素指派 `P` 或 `R` 之一的截断二分。
 <!--ja-->
 この対の変換では、分類が逆向きに走る。`∅` か `W` であると命題的に分かっている要素を、空であるか `W` と等しいかの要素へ変える。第一の分岐には `∅→empty'` を使い、第二の分岐はそのままで構わない。続いてこの節は、両方向が共有するパターンを抽象化する。`PairWitness P R Q` は、Kuratowski 対の特徴づけが集合 `Q` から読み取る三つの節を束ねる。すなわち、`P` を持つ `Q` の要素の切り詰められた存在、`R` についても同様、そして `Q` のすべての要素に `P` か `R` のいずれかを割り当てる切り詰められた二分法である。
 <!--/-->
@@ -984,7 +984,7 @@ tag0At-adequate s x γ = ⇔toPath
 <!--en-->
 The proof composes the two lemmas of this section in each direction. Unfolding the satisfaction of the conjunction and the three bounded quantifiers turns the left side into exactly the truncated existence of an empty singleton member, the truncated existence of an empty pair member, and the truncated classification, which is what `prChar∅-fwd` consumes. Backwards, the path `e` goes to `prChar∅-bwd`, whose output the semantics reassembles into satisfaction. Neither direction inspects how any set was built; emptiness is handled entirely through the equivalence between `Empty'` and equality with `∅`.
 <!--zh-->
-证明在两个方向各复合本节的两条引理。展开合取与三个有界量词的满足关系后，左边恰变成空单点集成员的截断存在、空对成员的截断存在与截断分类，这正是 `prChar∅-fwd` 所消耗的内容。反向则把路径 `e` 交给 `prChar∅-bwd`，其输出由语义重新组装为满足关系。两个方向都不检查任何集合是如何构造的；空性完全通过 `Empty'` 与「等于 `∅`」之间的等价来处理。
+证明在两个方向各复合本节的两条引理。展开合取与三个有界量词的满足关系后，左边恰变成空单点集元素的截断存在、空对元素的截断存在与截断分类，这正是 `prChar∅-fwd` 所消耗的内容。反向则把路径 `e` 交给 `prChar∅-bwd`，其输出由语义重新组装为满足关系。两个方向都不检查任何集合是如何构造的；空性完全通过 `Empty'` 与「等于 `∅`」之间的等价来处理。
 <!--ja-->
 証明は両方向でこの節の二つの補題を合成する。連言と三つの有界量子の充足を展開すると、左辺はちょうど、空単集合の要素の切り詰められた存在、空対の要素の切り詰められた存在、そして切り詰められた分類になる。これは `prChar∅-fwd` が受け取るものである。逆方向ではパス `e` が `prChar∅-bwd` に渡され、その出力は意味論が充足へと組み立て直す。どちらの向きも集合の構成方法を検査せず、空性はすべて `Empty'` と `∅` との等しいことの間の同値を通じて処理される。
 <!--/-->
@@ -1005,7 +1005,7 @@ The formula has three clauses: an entry of the new set carries the empty tag and
 
 向赋值前置一个值同时做两件事：新值落在索引零处，而每个旧序号上移一位。本节证明一条有界公式 `consAt` 恰好在编码图上表达这一变换，并且其充分性针对**编码后的**环境成立。
 
-公式有三条子句：新集合的一个条目带有空标签与新值；旧图的每个条目都出现在新图中并已移位；新图的每个条目要么是那条新条目，要么是某个旧条目的移位。充分性陈述并不是说该公式仅以某种类似 cons 的方式把两个集合联系起来。在给定函数 `g` 与「旧槽位等于图 `env g`」这一假设后，它得出从新槽位到图 `env (cons M g)` 的路径。等式两侧都是层级中的集合，故证明是外延的：逐成员证明两个包含。一个方向用本章各读式对新集合的每个成员分类；另一方向按键逐个走遍 `cons M g` 的图。在索引处相符是定义性的，因为 `suc k` 的数码就是 `k` 的数码的后继。
+公式有三条子句：新集合的一个条目带有空标签与新值；旧图的每个条目都出现在新图中并已移位；新图的每个条目要么是那条新条目，要么是某个旧条目的移位。充分性陈述并不是说该公式仅以某种类似 cons 的方式把两个集合联系起来。在给定函数 `g` 与「旧槽位等于图 `env g`」这一假设后，它得出从新槽位到图 `env (cons M g)` 的路径。等式两侧都是层级中的集合，故证明是外延的：逐成员关系证明两个包含。一个方向用本章各读式对新集合的每个元素分类；另一方向按键逐个走遍 `cons M g` 的图。在索引处相符是定义性的，因为 `suc k` 的数码就是 `k` 的数码的后继。
 <!--ja-->
 ## 環境を拡張する
 
@@ -1034,7 +1034,7 @@ consAt e' m e =
 <!--en-->
 The three clauses of `consAt` mirror the three defining equations of `cons`. Read under `γ`: the value at `e'` merely has a member satisfying the tagged-pair reader `tag0At zero (suc m)`, so it holds an entry whose tag is empty and whose second component is the value at `m`; every entry of the value at `e` merely has a shift inside the value at `e'`, said by `shiftPairAt` with the old entry in the later slot; and every entry of the value at `e'` merely is that tagged zero entry or the shift of an entry of the value at `e`. Each subformula is built from bounded quantifiers, equations and the two earlier readers, so the checker certifies the whole conjunction as Δ₀, recorded once and for all by `Δ₀-consAt`.
 <!--zh-->
-`consAt` 的三条子句与 `cons` 的三个定义等式一一对应。在 `γ` 下读：`e'` 处的值仅仅有一个成员满足带标签对读式 `tag0At zero (suc m)`，即它持有一个标签为空、第二分量为 `m` 处之值的条目；`e` 处之值的每个条目仅仅在 `e'` 处之值中有一个移位，由 `shiftPairAt` 表述且旧条目放在靠后的槽位；而 `e'` 处之值的每个条目仅仅是那条带标签的零条目，或 `e` 处之值某条目的移位。每条子公式都由有界量词、等式与前面两条读式构成，故检查器把整个合取认证为 Δ₀，由 `Δ₀-consAt` 一次性记录。
+`consAt` 的三条子句与 `cons` 的三个定义等式一一对应。在 `γ` 下读：`e'` 处的值仅仅有一个元素满足带标签对读式 `tag0At zero (suc m)`，即它持有一个标签为空、第二分量为 `m` 处之值的条目；`e` 处之值的每个条目仅仅在 `e'` 处之值中有一个移位，由 `shiftPairAt` 表述且旧条目放在靠后的槽位；而 `e'` 处之值的每个条目仅仅是那条带标签的零条目，或 `e` 处之值某条目的移位。每条子公式都由有界量词、等式与前面两条读式构成，故检查器把整个合取认证为 Δ₀，由 `Δ₀-consAt` 一次性记录。
 <!--ja-->
 `consAt` の三つの節は `cons` の三つの定義等式と対応する。`γ` の下で読むと、`e'` の値はタグ付き対の読み取り `tag0At zero (suc m)` を満たす要素を命題的に一つ持ち、すなわちタグが空で第二成分が `m` の値である項目を保持する。`e` の値の各項目は、`e'` の値の中に自分のずらしが命題的に存在し、これは `shiftPairAt` で、旧項目を後ろのスロットに置いて述べられる。そして `e'` の値のすべての項目は、命題的に、そのタグ付き 0 項目であるか `e` の値の項目のずらしである。各部分式は有界量化子、等式、そして前の二つの読み取りから構成されるので、検査器は連言全体を Δ₀ として証明し、`Δ₀-consAt` が一度だけこれを記録する。
 <!--/-->
@@ -1101,7 +1101,7 @@ The auxiliary `shift-path` records the renumbering arithmetic once: if two encod
 <!--en-->
 The forward inclusion takes the third clause of the formula and turns it into a genuine membership statement. Its hypothesis says: every member `y` of `E'` merely either satisfies the tagged zero reader in the environment extended by `y`, or satisfies the bounded existential whose witness is an entry of `E` shifting to `y`. The goal is that `y` belongs to `env G'`, the graph of the extended assignment. Note the shape of the hypothesis: it is the truncated disjunction exactly as the bounded universal quantifier of the formula produces it.
 <!--zh-->
-正向包含取公式的第三条子句，把它变成真正的隶属陈述。其假设说：`E'` 的每个成员 `y`，仅仅或者在扩张了 `y` 的环境中满足带标签零读式，或者满足一个有界存在式，其见证是 `E` 中移位到 `y` 的条目。目标是 `y` 属于 `env G'`，即扩张后赋值的图。注意假设的形状：它恰如公式的有界全称量词所产出的那个截断析取。
+正向包含取公式的第三条子句，把它变成真正的成员关系陈述。其假设说：`E'` 的每个元素 `y`，仅仅或者在扩张了 `y` 的环境中满足带标签零读式，或者满足一个有界存在式，其见证是 `E` 中移位到 `y` 的条目。目标是 `y` 属于 `env G'`，即扩张后赋值的图。注意假设的形状：它恰如公式的有界全称量词所产出的那个截断析取。
 <!--ja-->
 順方向の包含は、論理式の第三の節を受け取り、それを本物の所属の主張に変える。その仮定は、`E'` の各要素 `y` が、命題的に、`y` を追加した環境でタグ付き 0 の読み取りを満たすか、あるいは `E` の要素で `y` へとずらされるものを証人とする有界存在を満たすかのいずれかである、と言う。目標は `y` が拡張後の割当てのグラフ `env G'` に属することである。仮定の形に注意してほしい。これは論理式の有界全称量化子が生むのとまさに同じ、切り詰められた選言である。
 <!--/-->
@@ -1134,7 +1134,7 @@ The truncated disjunction can be eliminated only into a proposition-valued targe
 <!--en-->
 In the first branch, the member `y` satisfies `tag0At zero (suc m)` in `y ∷ γ`, and the adequacy lemma for that reader converts the satisfaction into the path `y ≡ pr ∅ M`: the value in slot zero is `y` itself, and the original value at slot `m` is still addressed by `suc m` under the new binder. Reversing this path gives `pr ∅ M ≡ y`, which is exactly the entry of `env G'` at key zero, since `G' zero` computes to `M` and the numeral of zero computes to the empty set. The witness is therefore `lift zero` with that path.
 <!--zh-->
-第一分支中，成员 `y` 在 `y ∷ γ` 中满足 `tag0At zero (suc m)`，该读式的充分性引理把满足转换为路径 `y ≡ pr ∅ M`：槽位零处的值就是 `y` 本身，而新绑定之下的 `suc m` 仍指向原赋值槽位 `m` 的取值。反转这条路径得 `pr ∅ M ≡ y`，恰是 `env G'` 在键零处的条目，因为 `G' zero` 化归为 `M`，零的数码化归为空集。于是见证就是 `lift zero` 配上该路径。
+第一分支中，元素 `y` 在 `y ∷ γ` 中满足 `tag0At zero (suc m)`，该读式的充分性引理把满足转换为路径 `y ≡ pr ∅ M`：槽位零处的值就是 `y` 本身，而新绑定之下的 `suc m` 仍指向原赋值槽位 `m` 的取值。反转这条路径得 `pr ∅ M ≡ y`，恰是 `env G'` 在键零处的条目，因为 `G' zero` 化归为 `M`，零的数码化归为空集。于是见证就是 `lift zero` 配上该路径。
 <!--ja-->
 第一の分岐では、要素 `y` が `y ∷ γ` の中で `tag0At zero (suc m)` を満たし、この読み取りの妥当性補題が充足をパス `y ≡ pr ∅ M` に変換する。スロット 0 の値は `y` そのものであり、新しい束縛子の内側で `suc m` は元の割り当てのスロット `m` の値を指す。このパスを逆向きにすれば `pr ∅ M ≡ y` が得られ、これは鍵 0 における `env G'` の項目そのものである。`G' zero` は `M` に、0 の数項は空集合に計算されるからである。したがって証人はこのパスを伴う `lift zero` である。
 <!--/-->
@@ -1166,7 +1166,7 @@ The second branch is the shift case, and it opens three nested truncations in tu
 <!--en-->
 In the shift case, once the index `i` and value `v` behind the old entry are explicit, the membership in `env G'` is assembled from what the graph of the extended assignment holds. Its entry at the successor of the old key carries the old value, so the required witness is the index `suc (lower li)` together with a path from that entry to `y`. The path is composed from three equations: the old entry equals the pair `pr i v`, shifting both keys by the von Neumann successor turns it into the pair with the shifted key and the same value, and the entry of `env G'` at that key equals `y`. What the composition records is exactly the mathematical content of the case: the new key is the successor of the old one and the value is preserved.
 <!--zh-->
-在移位情形中，一旦旧条目背后的索引 `i` 与值 `v` 显式可得，`env G'` 中的隶属便可由扩张后赋值的图直接拼出。图在后继键处的条目携带旧值，故所需的见证是索引 `suc (lower li)` 连同从该条目到 `y` 的一条路径。这条路径由三个等式复合：旧条目等于对 `pr i v`；把两侧的键都换成 von Neumann 后继后，它变成带后继键、值不变的对；而 `env G'` 在该键处的条目等于 `y`。这一复合记录的正是该情形的数学内容：新键是旧键的后继，且值保持不变。
+在移位情形中，一旦旧条目背后的索引 `i` 与值 `v` 显式可得，`env G'` 中的成员关系便可由扩张后赋值的图直接拼出。图在后继键处的条目携带旧值，故所需的见证是索引 `suc (lower li)` 连同从该条目到 `y` 的一条路径。这条路径由三个等式复合：旧条目等于对 `pr i v`；把两侧的键都换成 von Neumann 后继后，它变成带后继键、值不变的对；而 `env G'` 在该键处的条目等于 `y`。这一复合记录的正是该情形的数学内容：新键是旧键的后继，且值保持不变。
 <!--ja-->
 ずらしの場合では、古い項目の背後にある添字 `i` と値 `v` が明示できれば、`env G'` への所属は拡張後の割当てのグラフが持つ項目から直接組み立てられる。グラフは後続の鍵の位置で古い値を担うので、必要な証人は添字 `suc (lower li)` と、その項目から `y` へのパスである。このパスは三つの等式の合成である。古い項目が対 `pr i v` に等しいこと、両側の鍵を von Neumann 後者に置き換えると同じ値を持つずらされた鍵の対になること、そして `env G'` のその鍵での項目が `y` に等しいことである。この合成が記録しているのはまさにこの場合の数学的内容、すなわち新しい鍵が古い鍵の後者であり値が保たれるということである。
 <!--/-->
@@ -1183,7 +1183,7 @@ In the shift case, once the index `i` and value `v` behind the old entry are exp
 <!--en-->
 One step of the shift case remains. The entry `p` was found as a member of `E`, but the graph membership the argument needs sits in `env g`, and the hypothesis `E ≡ env g` transports the membership across. Inside the graph, the lookup lemma of the first section identifies the value stored at the key for the index the witness names. With this the first inclusion is complete: every member of the new set merely lands in the graph of the extended assignment.
 <!--zh-->
-移位情形还剩一步。条目 `p` 是作为 `E` 的成员找到的，而论证所需的图隶属在 `env g` 中，假设 `E ≡ env g` 把这条隶属沿路径搬运过去。在图内部，第一节证明的查值引理辨认出见证所指索引的键处存放的值。至此第一个包含完成：新集合的每个成员仅仅落入扩张后赋值的图。
+移位情形还剩一步。条目 `p` 是作为 `E` 的元素找到的，而论证所需的图成员关系在 `env g` 中，假设 `E ≡ env g` 把这条成员关系沿路径搬运过去。在图内部，第一节证明的查值引理辨认出见证所指索引的键处存放的值。至此第一个包含完成：新集合的每个元素仅仅落入扩张后赋值的图。
 <!--ja-->
 ずらしの場合にはもう一歩残っている。項目 `p` は `E` の要素として見つかったが、議論が必要とするグラフへの所属は `env g` の中にあり、仮定 `E ≡ env g` がこの所属をパスに沿って輸送する。グラフの内部では、最初の節で証明した参照の補題が、証人の指す添字の鍵に格納された値を特定する。これで第一の包含は完成である。新しい集合のすべての要素が命題的に拡張後の割当てのグラフに落ちる。
 <!--/-->
@@ -1199,7 +1199,7 @@ One step of the shift case remains. The entry `p` was found as a member of `E`, 
 <!--en-->
 The reverse inclusion must show that every member of the graph of the extended assignment belongs to the new set. Membership in a graph is truncated fiber data: an index of the graph together with a path saying that the entry at that index equals the given element. So a member `y` is read off with its index and entry path, and the proof then splits on the index, because the two defining equations of `cons` produce exactly two kinds of entries: the new one at index zero and the shifted old ones at successor indices.
 <!--zh-->
-反向包含要证明：扩张后赋值的图的每个成员都属于新集合。图中的隶属是截断的纤维数据：一个图索引，加上说该索引处条目等于给定元素的路径。于是成员 `y` 连同它的索引与条目路径一起被读出，随后证明对索引分情形，因为 `cons` 的两条定义等式恰好产出两类条目：索引零处的新条目，以及各后继索引处的移位旧条目。
+反向包含要证明：扩张后赋值的图的每个元素都属于新集合。图中的成员关系是截断的纤维数据：一个图索引，加上说该索引处条目等于给定元素的路径。于是元素 `y` 连同它的索引与条目路径一起被读出，随后证明对索引分情形，因为 `cons` 的两条定义等式恰好产出两类条目：索引零处的新条目，以及各后继索引处的移位旧条目。
 <!--ja-->
 逆向きの包含は、拡張後の割当てのグラフのすべての要素が新しい集合に属することを示さねばならない。グラフへの所属は切り詰められたファイバーのデータ、すなわちグラフの添字と、その添字の項目が与えられた要素に等しいというパスからなる。したがって要素 `y` はその添字と項目のパスとともに読み取られ、その後、証明は添字について場合分けして進む。`cons` の二つの定義等式が生むのはちょうど二種類の項目、添字 0 の新しい項目と、後続の添字にあるずらされた古い項目だからである。
 <!--/-->
@@ -1215,7 +1215,7 @@ The reverse inclusion must show that every member of the graph of the extended a
 <!--en-->
 In the zero case the entry equation computes to the statement that the entry with the empty tag and the value `M` equals `y`. The first clause of the formula supplies, merely, a member `q` of the new set whose tagged entry is the pair of the empty tag and `M`; its adequacy lemma turns the satisfaction into exactly that equality. Chaining the two paths gives `q ≡ y`, and transporting the membership of `q` along it yields the membership of `y` in the new set. Nothing about `q` beyond this equation is used, so the truncated witness inside the first clause is eliminated only into a proposition, as required. The successor case runs the argument the other way: the entry equation now names an old entry of `g`, and the second clause of the formula must produce its shift inside the new set.
 <!--zh-->
-零键情形中，条目等式按定义化归为「带空标签、值为 `M` 的条目等于 `y`」。公式的第一条子句仅仅给出新集合的一个成员 `q`，其带标签条目是空标签与 `M` 配成的对；它的充分性引理把满足关系变成恰好那条等式。把两条路径链接起来得 `q ≡ y`，沿它搬运 `q` 的隶属便得 `y` 在新集合中的隶属。除这条等式外并未使用 `q` 的任何信息，故第一条子句内部的截断见证只被消除进一个命题，恰如所需。后继情形则反向运行该论证：条目等式此时点名了 `g` 的一个旧条目，而公式的第二条子句必须在新集合中产出它的移位。
+零键情形中，条目等式按定义化归为「带空标签、值为 `M` 的条目等于 `y`」。公式的第一条子句仅仅给出新集合的一个元素 `q`，其带标签条目是空标签与 `M` 配成的对；它的充分性引理把满足关系变成恰好那条等式。把两条路径链接起来得 `q ≡ y`，沿它搬运 `q` 的成员关系便得 `y` 在新集合中的成员关系。除这条等式外并未使用 `q` 的任何信息，故第一条子句内部的截断见证只被消除进一个命题，恰如所需。后继情形则反向运行该论证：条目等式此时点名了 `g` 的一个旧条目，而公式的第二条子句必须在新集合中产出它的移位。
 <!--ja-->
 0 の場合、項目の等式は定義計算により「空のタグと値 `M` を持つ項目が `y` に等しい」という主張に帰着する。論理式の第一の節は、新しい集合の要素 `q` で、そのタグ付き項目が空のタグと `M` の対であるものを命題的に与え、その妥当性補題が充足をちょうどその等式に変える。二つのパスを連結すれば `q ≡ y` となり、これに沿って `q` の所属を輸送すれば新しい集合への `y` の所属が得られる。この等式以外に `q` についての情報は使われないため、第一の節の内部の切り詰められた証人は、求められているとおり、命題の中へのみ消去される。後続の場合は議論を逆向きに走らせる。項目の等式が今や `g` の古い項目を名指しし、論理式の第二の節がそのずらしを新しい集合の中に生み出さねばならないのである。
 <!--/-->
@@ -1231,7 +1231,7 @@ In the zero case the entry equation computes to the statement that the entry wit
 <!--en-->
 In the successor case, the shift clause of the formula yields an index `i`, a value `v`, and two equations: the old entry equals the pair `pr i v`, and the candidate equals the shifted pair `pr (sucV i) v`. The goal is a path from the candidate to the member `y`, and the fiber equation provides the shifted graph entry at the successor key, which equals `y`. Since the numeral of the successor index is the successor of the numeral, replacing both keys of the pair `pr i v` by their successors lands exactly on that graph entry. The three equations compose into the required path, and transporting the candidate's membership along it closes the case.
 <!--zh-->
-后继情形中，公式的移位子句给出索引 `i`、值 `v` 以及两条等式：旧条目等于对 `pr i v`，候选者等于移位后的对 `pr (sucV i) v`。目标是得到从候选者到成员 `y` 的路径，而纤维等式提供后继键处的移位图条目，它等于 `y`。由于后继索引的数码是原数码的后继，把对 `pr i v` 的两个键都换成各自后继后，恰好落在那个图条目上。三条等式复合成所需的路径，沿它搬运候选者的隶属即闭合此情形。
+后继情形中，公式的移位子句给出索引 `i`、值 `v` 以及两条等式：旧条目等于对 `pr i v`，候选者等于移位后的对 `pr (sucV i) v`。目标是得到从候选者到元素 `y` 的路径，而纤维等式提供后继键处的移位图条目，它等于 `y`。由于后继索引的数码是原数码的后继，把对 `pr i v` 的两个键都换成各自后继后，恰好落在那个图条目上。三条等式复合成所需的路径，沿它搬运候选者的成员关系即闭合此情形。
 <!--ja-->
 後続の場合、論理式のずらしの節は添字 `i`、値 `v`、そして二つの等式を与える。古い項目が対 `pr i v` に等しいことと、候補がずらされた対 `pr (sucV i) v` に等しいことである。目標は候補から要素 `y` へのパスであり、ファイバーの等式は後続の鍵にあるずらされたグラフの項目を提供し、それは `y` に等しくなる。後続の添字の数項は元の数項の後者なので、対 `pr i v` の両方の鍵をそれぞれの後者に置き換えると、ちょうどそのグラフの項目に着地する。三つの等式が合成されて必要なパスとなり、これに沿って候補の所属を輸送すればこの場合が閉じる。
 <!--/-->
@@ -1247,7 +1247,7 @@ In the successor case, the shift clause of the formula yields an index `i`, a va
 <!--en-->
 One input was still missing. The shift clause is a satisfaction statement evaluated in an environment whose second slot must hold the old entry `pr (# (toℕ i₀)) (g i₀)` itself, and the second clause of the formula supplies the corresponding membership. This is where the lookup lemma is spent: at the key for `i₀` the graph of `g` holds exactly `g i₀`, and the canonical fiber consisting of the index and `refl` witnesses that membership. Transporting it along the hypothesis that the old set equals the graph of `g` turns it into membership in the encoded environment.
 <!--zh-->
-还差一个输入。移位子句是一条满足陈述，它所在环境的第二槽必须真的存放旧条目 `pr (# (toℕ i₀)) (g i₀)` 本身，而公式的第二条子句提供相应的隶属。查值引理正是在此处被使用：在 `i₀` 的键处，`g` 的图恰好存放 `g i₀`，由索引与 `refl` 组成的典范纤维见证这条隶属。沿「旧集合等于 `g` 的图」这条假设搬运，便把它变成编码环境中的隶属。
+还差一个输入。移位子句是一条满足陈述，它所在环境的第二槽必须真的存放旧条目 `pr (# (toℕ i₀)) (g i₀)` 本身，而公式的第二条子句提供相应的成员关系。查值引理正是在此处被使用：在 `i₀` 的键处，`g` 的图恰好存放 `g i₀`，由索引与 `refl` 组成的典范纤维见证这条成员关系。沿「旧集合等于 `g` 的图」这条假设搬运，便把它变成编码环境中的成员关系。
 <!--ja-->
 まだ一つ入力が欠けていた。ずらしの節は充足の主張であり、その評価に使われる環境の第 2 スロットには、古い項目 `pr (# (toℕ i₀)) (g i₀)` そのものが入っていなければならない。この対応する所属を論理式の第二の節が供給する。参照の補題が使われるのはまさにここである。`i₀` の鍵の位置で `g` のグラフはちょうど `g i₀` を保持し、添字と `refl` からなる正準なファイバーがその所属を証する。これを「古い集合は `g` のグラフに等しい」という仮定に沿って輸送すれば、符号化された環境への所属になる。
 <!--/-->
@@ -1263,7 +1263,7 @@ One input was still missing. The shift clause is a satisfaction statement evalua
 <!--en-->
 With both inclusions established, the forward direction of the adequacy lemma is a single appeal to extensionality of the cumulative hierarchy: two sets with the same members are equal. The three clauses of the formula supply, for each element `y`, the two directions of the membership comparison: from a member of the new set into the graph of the extended assignment, and back. Read in this direction, satisfaction of the formula is converted into an equality of encoded graphs. The remaining direction of the lemma constructs the satisfaction from such an equality.
 <!--zh-->
-两个包含都建立之后，充分性引理的正向只需一次引用累积层级的外延性：成员相同的两个集合相等。公式的三条子句对每个元素 `y` 给出隶属比较的两个方向：从新集合的成员到扩张后赋值的图，再从图回到新集合。沿这个方向读，公式的满足被转换成编码图之间的相等。引理剩下的方向则从这样的相等构造满足关系。
+两个包含都建立之后，充分性引理的正向只需一次引用累积层级的外延性：元素相同的两个集合相等。公式的三条子句对每个元素 `y` 给出成员关系比较的两个方向：从新集合的元素到扩张后赋值的图，再从图回到新集合。沿这个方向读，公式的满足被转换成编码图之间的相等。引理剩下的方向则从这样的相等构造满足关系。
 <!--ja-->
 両方の包含が確立されれば、妥当性補題の順方向は累積階層の外延性への一度の訴えで済む。同じ元を持つ二つの集合は等しいからである。論理式の三つの節が、各要素 `y` に対して所属の比較の二方向を与える。新しい集合の要素から拡張後の割当てのグラフへ、そしてグラフから新しい集合へ、という方向である。この方向に読めば、論理式の充足は符号化されたグラフの間の等式へと変換される。補題の残りの方向は、そのような等式から充足を構成する。
 <!--/-->
@@ -1280,7 +1280,7 @@ With both inclusions established, the forward direction of the adequacy lemma is
 <!--en-->
 The backward direction starts from a path identifying the new set with the graph of the extended assignment and builds the three satisfaction clauses directly. The first clause exhibits the entry at key zero: membership in the graph at index zero holds by the defining equation of `cons`, and the assumed path transfers it to membership in the new set. The tagged-entry clause then holds outright, since the entry with the empty tag and the value `M` is by construction the pair `pr ∅ M`, and the numeral of zero is the empty set.
 <!--zh-->
-反向从把新集合与扩张后赋值的图等同起来的那条路径出发，直接构造三条满足子句。第一条给出键零处的条目：按 `cons` 的定义等式，图在索引零处的隶属成立，而假定的路径把它转移到新集合中的隶属。带标签条目的子句随后直接成立，因为带空标签、值为 `M` 的条目按构造就是对 `pr ∅ M`，而零的数码就是空集。
+反向从把新集合与扩张后赋值的图等同起来的那条路径出发，直接构造三条满足子句。第一条给出键零处的条目：按 `cons` 的定义等式，图在索引零处的成员关系成立，而假定的路径把它转移到新集合中的成员关系。带标签条目的子句随后直接成立，因为带空标签、值为 `M` 的条目按构造就是对 `pr ∅ M`，而零的数码就是空集。
 <!--ja-->
 逆方向は、新しい集合を拡張後の割当てのグラフと同一視するパスから出発し、三つの充足の節を直接構成する。第一の節は鍵 0 の項目を示す。`cons` の定義等式によりグラフの添字 0 での所属は成り立ち、仮定のパスがそれを新しい集合への所属へ移す。タグ付き項目の節はそのまま成り立つ。空のタグと値 `M` を持つ項目は構成上対 `pr ∅ M` であり、0 の数項は空集合だからである。
 <!--/-->
@@ -1296,7 +1296,7 @@ The backward direction starts from a path identifying the new set with the graph
 <!--en-->
 The second clause must produce, for every member of the old environment, its shifted counterpart inside the new set. The member's membership transports along the hypothesis to the graph of `g`, where the lookup lemma reads off an index and the equation identifying the entry with the member. The shifted entry is then the pair with the successor numeral as key and the same value; its membership in the new set again comes from the graph of the extended assignment, at the successor index, transferred through the assumed path. What remains is the satisfaction certificate for the shift formula itself.
 <!--zh-->
-第二条子句要对旧环境的每个成员给出它在新集合中的移位对应物。该成员的隶属沿假设搬运到 `g` 的图中，在那里查值引理读出一个索引以及把条目与该成员等同的等式。移位后的条目于是是以后继数码为键、值不变的对；它在新集合中的隶属同样来自扩张后赋值的图，位于后继索引处，再经假定的路径转移。剩下的只是移位公式本身的满足证书。
+第二条子句要对旧环境的每个元素给出它在新集合中的移位对应物。该元素的成员关系沿假设搬运到 `g` 的图中，在那里查值引理读出一个索引以及把条目与该元素等同的等式。移位后的条目于是是以后继数码为键、值不变的对；它在新集合中的成员关系同样来自扩张后赋值的图，位于后继索引处，再经假定的路径转移。剩下的只是移位公式本身的满足证书。
 <!--ja-->
 第二の節は、古い環境の各要素に対して、新しい集合の内側へそのずらされた対応物を生産しなければならない。その要素の所属は仮定に沿って `g` のグラフへ輸送され、そこで参照の補題が添字と、項目をその要素と同一視する等式を読み取る。ずらされた項目は、後続の数項を鍵とし値を保つ対である。新しい集合へのその所属も同様に、拡張後の割当てのグラフの後続の添字で成り立ち、仮定のパスを通して移される。残るのはずらしの論理式そのものの充足の証明である。
 <!--/-->
@@ -1312,7 +1312,7 @@ The second clause must produce, for every member of the old environment, its shi
 <!--en-->
 The certificate is produced by running the shift adequacy lemma backwards. Its reading of the formula asks for an index, a value, and two equations: one identifying the old entry with the pair at the index found by lookup, and one saying that the shifted pair is the shifted entry itself, which holds by computation. Because the adequacy statement is an equality of propositions, transporting `refl` along it yields the required satisfaction, and the second clause of the formula is complete for this member.
 <!--zh-->
-该证书靠反向运行移位的充分性引理得到。引理对公式的解读要求一个索引、一个值和两条等式：一条把旧条目与查值所得索引处的对等同；另一条说移位后的对就是移位后的条目本身，这一点按计算成立。由于充分性陈述是命题之间的相等，沿它搬运 `refl` 便得所需的满足，公式的第二条子句对该成员宣告完成。
+该证书靠反向运行移位的充分性引理得到。引理对公式的解读要求一个索引、一个值和两条等式：一条把旧条目与查值所得索引处的对等同；另一条说移位后的对就是移位后的条目本身，这一点按计算成立。由于充分性陈述是命题之间的相等，沿它搬运 `refl` 便得所需的满足，公式的第二条子句对该元素宣告完成。
 <!--ja-->
 この証明は、ずらしの妥当性補題を逆向きに走らせることで得られる。補題による論理式の読みは、添字、値、そして二つの等式を要求する。一方は古い項目を、参照が見つけた添字の位置の対と同一視し、もう一方はずらされた対がずらされた項目そのものであると言う。これは計算によって成り立つ。妥当性の主張は命題の間の等式なので、それに沿って `refl` を輸送すれば必要な充足が得られ、この要素に対して論理式の第二の節が完成する。
 <!--/-->
@@ -1328,7 +1328,7 @@ The certificate is produced by running the shift adequacy lemma backwards. Its r
 <!--en-->
 The third clause is the classification clause: every member of the new environment must satisfy one of the two tagged clauses, merely. To use it, a member `p'` of `E'` is first transported along the path `e'eq` into membership in the encoded graph `env G'`, which is truncated fiber data: an index `j` and the equation `pr (# (toℕ j)) (G' j) ≡ p'` saying that the entry at that key is `p'`. The proof now splits on the index, because the consed graph has exactly two kinds of entries, one for each equation defining `cons`. Since the goal is a truncated disjunction of two propositions, each case may return its clause under the corresponding disjunct, and the truncation wraps the case distinction.
 <!--zh-->
-第三条子句是分类子句：新环境的每个成员都必须**仅仅**满足两条带标签子句之一。为使用它，先把 `E'` 的成员 `p'` 沿路径 `e'eq` 搬运为编码图 `env G'` 中的隶属，那是截断的纤维数据：一个索引 `j`，以及说该键处条目等于 `p'` 的等式 `pr (# (toℕ j)) (G' j) ≡ p'`。随后按索引分情形，因为 cons 后的图恰有两类条目，对应定义 `cons` 的两条等式。由于目标是一个由两个命题组成的截断析取，每个情形都可以在相应析取支下给出自己的子句，而截断把情形划分包裹起来。
+第三条子句是分类子句：新环境的每个元素都必须**仅仅**满足两条带标签子句之一。为使用它，先把 `E'` 的元素 `p'` 沿路径 `e'eq` 搬运为编码图 `env G'` 中的成员关系，那是截断的纤维数据：一个索引 `j`，以及说该键处条目等于 `p'` 的等式 `pr (# (toℕ j)) (G' j) ≡ p'`。随后按索引分情形，因为 cons 后的图恰有两类条目，对应定义 `cons` 的两条等式。由于目标是一个由两个命题组成的截断析取，每个情形都可以在相应析取支下给出自己的子句，而截断把情形划分包裹起来。
 <!--ja-->
 第三の節は分類の節である。新しい環境のすべての要素が、タグ付きの二つの節のいずれかを命題的に満たさねばならない。これを使うには、まず `E'` の要素 `p'` をパス `e'eq` に沿って符号化グラフ `env G'` への所属へ輸送する。これは切り捨てられたファイバーデータ、すなわちインデックス `j` と、その鍵の項目が `p'` に等しいという等式 `pr (# (toℕ j)) (G' j) ≡ p'` である。続いてインデックスで場合分けする。cons 後のグラフの項目は、`cons` を定義する二つの等式に対応して、ちょうど二種類あるからである。目標は二つの命題からなる切り捨てられた選言なので、各場合は対応する選言肢の下で自らの節を返すことができ、切り捨てが場合分けを包み込む。
 <!--/-->
@@ -1360,7 +1360,7 @@ At index zero the entry of `G'` is the new one: the equation is `pr (# 0) M ≡ 
 <!--en-->
 At a successor index, the entry of `G'` is a shifted old entry, and the right disjunct must certify this with the shift formula. The fiber the shift formula asks for has five components, of which the index-as-set and the value slot are straightforward. The old entry slot needs `pr (# (toℕ i₀)) (g i₀)` to be a member of the old environment, which follows from `lookup-spec`: at index `i₀` of `env g`, the entry at that key is the pair with value `g i₀`, and this membership is transported along `hE` into membership in `E`. The shifted entry slot is filled by the numeral-keyed entry `pr (# (toℕ i₀)) (g i₀)` itself, which by `eq` equals `p'`, up to orientation.
 <!--zh-->
-后继索引处，`G'` 的条目是一个移位后的旧条目，右边的析取支必须用移位公式给出证书。移位公式要求的纤维有五个分量，其中「作为集合的索引」与值槽是直接的。旧条目槽需要 `pr (# (toℕ i₀)) (g i₀)` 属于旧环境，这由 `lookup-spec` 得到：在 `env g` 的索引 `i₀` 处，该键的条目正是以 `g i₀` 为值的对，再沿 `hE` 搬运即得 `E` 中的隶属。移位条目槽由以数码为键的条目 `pr (# (toℕ i₀)) (g i₀)` 本身填入，按 `eq` 它等于 `p'` (方向待调整)。
+后继索引处，`G'` 的条目是一个移位后的旧条目，右边的析取支必须用移位公式给出证书。移位公式要求的纤维有五个分量，其中「作为集合的索引」与值槽是直接的。旧条目槽需要 `pr (# (toℕ i₀)) (g i₀)` 属于旧环境，这由 `lookup-spec` 得到：在 `env g` 的索引 `i₀` 处，该键的条目正是以 `g i₀` 为值的对，再沿 `hE` 搬运即得 `E` 中的成员关系。移位条目槽由以数码为键的条目 `pr (# (toℕ i₀)) (g i₀)` 本身填入，按 `eq` 它等于 `p'` (方向待调整)。
 <!--ja-->
 後続インデックスでは、`G'` の項目はずらされた旧項目であり、右の選言肢は shift 式による証明を与えねばならない。shift 式が要求するファイバーは五つの成分を持ち、そのうち集合としてのインデックスと値のスロットは直接である。旧項目のスロットは `pr (# (toℕ i₀)) (g i₀)` が旧環境に属することを必要とするが、これは `lookup-spec` から従う。`env g` のインデックス `i₀` では、その鍵の項目が値 `g i₀` を持つ対であり、これを `hE` に沿って輸送すれば `E` への所属になる。ずらした項目のスロットは、数項を鍵とする項目 `pr (# (toℕ i₀)) (g i₀)` そのもので埋められ、`eq` により (向きを除けば)`p'` と等しくなる。
 <!--/-->
@@ -1397,7 +1397,7 @@ The encoding itself is `env`, which stores an assignment as the graph of numeral
 
 本章把满足关系子句所需的两种环境操作化为关于集合的陈述：查出一个值，以及在量词之下扩张赋值。
 
-编码本身是 `env`，它把赋值存成以数码为键的对的图，而 `lookup-spec` 证明该图是函数性的：一个对在键 `i` 处属于图，恰在其值为 `g i` 时成立。在运算一侧，`sucAt` 用语言所能表达的三条隶属子句刻画一个集合的 von Neumann 后继，`shiftPairAt` 识别单个重编号的条目。`consAt` 把这些装配成整个变换：在旧槽位等于 `g` 的图的假设下，公式的满足就是新槽位与 `cons M g` 的图的相等，其证明由两个包含经集合外延性比较而成，截断的见证只被消除进命题。
+编码本身是 `env`，它把赋值存成以数码为键的对的图，而 `lookup-spec` 证明该图是函数性的：一个对在键 `i` 处属于图，恰在其值为 `g i` 时成立。在运算一侧，`sucAt` 用语言所能表达的三条成员关系子句刻画一个集合的 von Neumann 后继，`shiftPairAt` 识别单个重编号的条目。`consAt` 把这些装配成整个变换：在旧槽位等于 `g` 的图的假设下，公式的满足就是新槽位与 `cons M g` 的图的相等，其证明由两个包含经集合外延性比较而成，截断的见证只被消除进命题。
 <!--ja-->
 ## まとめ
 

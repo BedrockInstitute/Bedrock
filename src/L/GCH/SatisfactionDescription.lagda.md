@@ -28,7 +28,7 @@ module L.GCH.SatisfactionDescription {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) whe
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 open import FOL.Syntax using
   ( Formula; _∧̇_ )
 open import FOL.LevyHierarchy using ( Δ₀; δ-∧ )
@@ -85,7 +85,7 @@ The final description is built by conjoining three formulas. Its syntactic goal 
 <!--en-->
 Three kinds of encoded data must agree. Formula keys belong to the canonical set `AllCodes W`; an arity `k` points to the environment set `envSet W k`; and ordered pairs package keys with their semantic values. Membership in `AllCodes W` reveals a formula key only under propositional truncation, a boundary that every later decoding step preserves.
 <!--zh-->
-三类编码数据必须彼此一致。公式键属于典范集合 `AllCodes W`；元数 `k` 指向环境集 `envSet W k`；有序对则把键与其语义值包装在一起。`AllCodes W` 的成员只能在命题截断下显露为某个公式键，后面的每一步解码都保留这一边界。
+三类编码数据必须彼此一致。公式键属于典范集合 `AllCodes W`；元数 `k` 指向环境集 `envSet W k`；有序对则把键与其语义值包装在一起。`AllCodes W` 的元素只能在命题截断下显露为某个公式键，后面的每一步解码都保留这一边界。
 <!--ja-->
 三種類の符号化データが互いに整合しなければならない。論理式の鍵は正準集合 `AllCodes W` に属し、アリティ `k` は環境集合 `envSet W k` を指し、順序対は鍵とその意味論的な値をまとめる。`AllCodes W` の要素が論理式の鍵であることは命題的切り詰めのもとでしか得られず、後の復号もこの境界を保つ。
 <!--/-->
@@ -145,7 +145,7 @@ Write `S` for the carrier of the constructible structure. An element of `S` cons
 <!--/-->
 
 ```agda
-open hPropStructure 𝒮ʟ using ( S )
+open hPropView 𝒮ʟ using ( S )
 ```
 
 <!--en-->
@@ -195,7 +195,7 @@ module SatSound {m : ℕ} (T w C E : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) 
 <!--en-->
 Let `Tv`, `Cv`, and `Ev` denote the underlying sets presented by the candidate table, code domain, and environment tower. The clause semantics supplies the bridge from bounded formulas about these sets to the ambient membership and equality facts needed by the structural argument.
 <!--zh-->
-用 `Tv`、`Cv`、`Ev` 表示候选表、码域与环境塔所呈现的底层集合。子句语义提供一座桥，把关于这些集合的有界公式转换为结构论证所需的外围隶属与等式事实。
+用 `Tv`、`Cv`、`Ev` 表示候选表、码域与环境塔所呈现的底层集合。子句语义提供一座桥，把关于这些集合的有界公式转换为结构论证所需的外围成员关系与等式事实。
 <!--ja-->
 候補の表、コード領域、環境の塔が表す底の集合を、それぞれ `Tv`、`Cv`、`Ev` と書く。節の意味論は、これらの集合についての有界論理式を、構造的な議論に必要な周囲の所属と等しさへ結ぶ橋を与える。
 <!--/-->
@@ -240,7 +240,7 @@ The hypothesis `hT` consists of totality, the on-domain condition, and the ten c
 <!--en-->
 The two domain conditions have complementary forms. Totality gives, for every `c` in `Cv`, merely some `y` with `pr c y` in `Tv`. The on-domain condition starts from an arbitrary member `e` of `Tv` and, again under propositional truncation, decomposes it as `pr c y` with `c` in `Cv`. Neither condition chooses values or pair components globally, and neither alone makes the table single-valued.
 <!--zh-->
-两条定义域条件具有互补的形式。全定义性对 `Cv` 中每个 `c` 仅给出经命题截断的存在性：有某个 `y` 使 `pr c y` 属于 `Tv`。定义域条件则从 `Tv` 的任意成员 `e` 出发，同样在命题截断下把它分解为 `pr c y`，并给出 `c` 属于 `Cv`。两者都不在全局选定取值或配对分量，单凭其中任何一条也不能使该表成为单值关系。
+两条定义域条件具有互补的形式。全定义性对 `Cv` 中每个 `c` 仅给出经命题截断的存在性：有某个 `y` 使 `pr c y` 属于 `Tv`。定义域条件则从 `Tv` 的任意元素 `e` 出发，同样在命题截断下把它分解为 `pr c y`，并给出 `c` 属于 `Cv`。两者都不在全局选定取值或配对分量，单凭其中任何一条也不能使该表成为单值关系。
 <!--ja-->
 二つの領域条件は互いを補う形をしている。全域性は、`Cv` の各 `c` に対し、`pr c y` が `Tv` に属するような `y` が存在することを、命題的切り詰めのもとで与える。領域条件は `Tv` の任意の要素 `e` から始め、再び命題的切り詰めのもとで、`e` を `pr c y` と分解し、`c` が `Cv` に属することを与える。どちらも値や対の成分を大域的に選ばず、またどちら一方だけで表が一価の関係になるわけでもない。
 <!--/-->
@@ -279,7 +279,7 @@ The pinning predicate says: whenever a value `y` is paired with the key of `ψ` 
 <!--en-->
 The proof proceeds by structural recursion on `ψ`. Closure of `Cv` supplies the keys of the immediate subformulas, and totality supplies their table values only under propositional truncation. The recursive hypotheses pin those child values; the matching constructor clause then gives the same extensional condition as the semantic recursion, so extensionality pins the parent value. The fact `CC.key-in ψ` supplies the candidate-domain membership needed to start this argument at the key of `ψ`.
 <!--zh-->
-证明对 `ψ` 作结构递归。`Cv` 的封闭性给出直接子公式的键，全定义性则只在命题截断下给出这些键处的表取值。递归假设钉扎这些子取值；相应的构造子子句随后给出与语义递归相同的外延条件，因此外延性钉扎父公式的取值。事实 `CC.key-in ψ` 则提供从 `ψ` 的键开始这项论证所需的候选码域隶属。
+证明对 `ψ` 作结构递归。`Cv` 的封闭性给出直接子公式的键，全定义性则只在命题截断下给出这些键处的表取值。递归假设钉扎这些子取值；相应的构造子子句随后给出与语义递归相同的外延条件，因此外延性钉扎父公式的取值。事实 `CC.key-in ψ` 则提供从 `ψ` 的键开始这项论证所需的候选码域成员关系。
 <!--ja-->
 証明は `ψ` の構造再帰によって進む。`Cv` の閉性が直接の部分論理式の鍵を与え、全域性がその鍵での表の値を命題的切り詰めのもとでのみ与える。再帰的な仮定はそれらの子の値を固定し、対応する構成子の節は意味論的再帰と同じ外延条件を与える。そのため、外延性によって親の値が固定される。`CC.key-in ψ` は、`ψ` の鍵でこの議論を始めるために必要な、候補の符号領域への所属を与える。
 <!--/-->
@@ -292,7 +292,7 @@ The proof proceeds by structural recursion on `ψ`. Closure of `Cv` supplies the
 <!--en-->
 Every member of the candidate code domain belongs to the canonical code set. The candidate-key reader reveals an arity, a formula, and a key equation only under propositional truncation. Since the desired canonical membership is a proposition, the witness may be eliminated there and membership transported along its equation; no formula is selected by this argument.
 <!--zh-->
-候选码域的每个成员都属于典范码集。候选键读式只在命题截断下显露元数、公式与键等式。由于目标的典范隶属是命题，可以把见证消去到该目标，并沿等式搬运隶属；这一论证没有选定公式。
+候选码域的每个元素都属于典范码集。候选键读式只在命题截断下显露元数、公式与键等式。由于目标的典范成员关系是命题，可以把见证消去到该目标，并沿等式搬运成员关系；这一论证没有选定公式。
 <!--ja-->
 候補のコード領域の各要素は正準なコード集合に属する。候補の鍵の読みからアリティ、論理式、鍵の等式が得られるのは、命題的切り詰めのもとだけである。目標である正準集合への所属は命題なので、そこへ証人を消去し、その等式に沿って所属を運べる。この議論は論理式を選ばない。
 <!--/-->
@@ -307,7 +307,7 @@ Every member of the candidate code domain belongs to the canonical code set. The
 <!--en-->
 Conversely, every member of the canonical code set belongs to `Cv`. Canonical membership supplies a formula-key presentation under propositional truncation, and code-domain completeness inserts that key into the candidate domain. Again the witness is used only to prove membership, rather than to define a decoder.
 <!--zh-->
-反过来，典范码集的每个成员都属于 `Cv`。典范隶属在命题截断下给出公式键的呈现，码域完备性再把该键插入候选域。这里仍只用见证证明隶属，而不据此定义解码器。
+反过来，典范码集的每个元素都属于 `Cv`。典范成员关系在命题截断下给出公式键的呈现，码域完备性再把该键插入候选域。这里仍只用见证证明成员关系，而不据此定义解码器。
 <!--ja-->
 逆に、正準なコード集合の各要素は `Cv` に属する。正準集合への所属は、命題的切り詰めのもとで論理式の鍵としての表示を与え、コード領域の完全性がその鍵を候補領域に入れる。ここでも証人は所属を証明するためだけに使われ、復号器の定義には使われない。
 <!--/-->
@@ -322,7 +322,7 @@ Conversely, every member of the canonical code set belongs to `Cv`. Canonical me
 <!--en-->
 The outward tower reading concerns an entry already presented as `pr n F`. Under propositional truncation it yields a natural number `k` with `n = # k` and `F = envSet W k`. It neither chooses `k` globally nor claims that this lemma alone supplies a coded-pair presentation for an arbitrary member of `Ev`.
 <!--zh-->
-环境塔的向外读式只处理已经呈现为 `pr n F` 的条目。它在命题截断下给出自然数 `k`，使 `n = # k` 且 `F = envSet W k`。它既不全局选定 `k`，也不声称仅凭本引理就能把 `Ev` 的任意成员呈现为编码对。
+环境塔的向外读式只处理已经呈现为 `pr n F` 的条目。它在命题截断下给出自然数 `k`，使 `n = # k` 且 `F = envSet W k`。它既不全局选定 `k`，也不声称仅凭本引理就能把 `Ev` 的任意元素呈现为编码对。
 <!--ja-->
 塔の外向きの読みが扱うのは、すでに `pr n F` として表された項目である。命題的切り詰めのもとで自然数 `k` が得られ、`n = # k` かつ `F = envSet W k` となる。`k` を大域的に選ぶことも、この補題だけで `Ev` の任意の要素に符号化された対としての表示を与えることもない。
 <!--/-->
@@ -336,7 +336,7 @@ The outward tower reading concerns an entry already presented as `pr n F`. Under
 <!--en-->
 The inward tower reading supplies the complementary fact without propositional truncation: for each given natural number `k`, the standard entry `pr (# k) (envSet W k)` belongs to `Ev`. Together with the previous reading, this controls standard encoded entries in both directions without asserting a chosen arity for every arbitrary tower member.
 <!--zh-->
-环境塔的向内读式给出互补事实，而且无需命题截断：对每个给定的自然数 `k`，标准条目 `pr (# k) (envSet W k)` 都属于 `Ev`。它与上一条读式共同双向控制标准编码条目，但不主张为塔的每个任意成员选定元数。
+环境塔的向内读式给出互补事实，而且无需命题截断：对每个给定的自然数 `k`，标准条目 `pr (# k) (envSet W k)` 都属于 `Ev`。它与上一条读式共同双向控制标准编码条目，但不主张为塔的每个任意元素选定元数。
 <!--ja-->
 塔の内向きの読みは、命題的切り詰めを伴わずに補完的な事実を与える。与えられた各自然数 `k` について、標準的な項目 `pr (# k) (envSet W k)` は `Ev` に属する。前の読みと合わせて標準的な符号化項目を双方向に制御するが、塔の任意の要素ごとにアリティを選ぶとは主張しない。
 <!--/-->
@@ -349,7 +349,7 @@ The inward tower reading supplies the complementary fact without propositional t
 <!--en-->
 The table reading is the heart of the soundness direction. It is stated only for members already presented as the ordered pair of `x` and `y`; arbitrary members of the candidate table are not covered by this lemma.
 <!--zh-->
-表的读取是可靠性方向的核心。它只对已经呈现为 `x` 与 `y` 的有序对的成员陈述；候选表的任意成员不在本引理覆盖范围内。
+表的读取是可靠性方向的核心。它只对已经呈现为 `x` 与 `y` 的有序对的成员关系陈述；候选表的任意元素不在本引理覆盖范围内。
 <!--ja-->
 表の読みは、健全性の方向の中心である。それは、`x` と `y` の順序対としてすでに提示された要素に対してだけ述べられる。候補の表の任意の要素は、この補題の範囲ではない。
 <!--/-->
@@ -381,7 +381,7 @@ The pairing equation splits into the first components of the two sides, and the 
 <!--en-->
 Pinning identifies the recorded value with the recursive satisfaction set, and `val-at` identifies that set with the functional table value at the same key. The conclusion contains canonical code-set membership together with an equality of underlying sets. Although it is not propositionally truncated, it can be obtained from the truncated decoding because the entire dependent pair is itself a proposition; it is not computational decoding.
 <!--zh-->
-钉扎先把被记录值与递归满足集认同，`val-at` 再把该集合与同一键处的函数表取值认同。结论由典范码集隶属及底层集合等式组成。虽然它本身没有命题截断，但整个依赖对本身是命题，所以可以从命题截断下的解码中得到；这并不是计算性的解码。
+钉扎先把被记录值与递归满足集认同，`val-at` 再把该集合与同一键处的函数表取值认同。结论由典范码集成员关系及底层集合等式组成。虽然它本身没有命题截断，但整个依赖对本身是命题，所以可以从命题截断下的解码中得到；这并不是计算性的解码。
 <!--ja-->
 固定によって記録された値を再帰的な充足集合と同一視し、`val-at` によってその集合を同じ鍵における関数的な表の値と同一視する。結論は、正準なコード集合への所属と底の集合の等しさからなる。結論自体は命題的切り詰められていないが、依存対全体が命題なので、命題的切り詰められた復号から得られる。これは計算的な復号ではない。
 <!--/-->
@@ -396,7 +396,7 @@ Pinning identifies the recorded value with the recursive satisfaction set, and `
 <!--en-->
 For the converse table reading, begin with a specified canonical code `x`. Its membership in `AllCodes W` gives, under propositional truncation, a formula `ψ` whose key is `x`. Totality then gives, again under propositional truncation, some candidate value recorded at that formula key.
 <!--zh-->
-为得到表的反向读式，从一个指定的典范码 `x` 出发。它在 `AllCodes W` 中的隶属在命题截断下给出公式 `ψ`，其键就是 `x`。全域性随后再次在命题截断下给出该公式键处记录的某个候选值。
+为得到表的反向读式，从一个指定的典范码 `x` 出发。它在 `AllCodes W` 中的成员关系在命题截断下给出公式 `ψ`，其键就是 `x`。全域性随后再次在命题截断下给出该公式键处记录的某个候选值。
 <!--ja-->
 表の逆向きの読みでは、指定された正準コード `x` から始める。`AllCodes W` への所属により、命題的切り詰めのもとで、鍵が `x` である論理式 `ψ` が得られる。次に全域性から、再び命題的切り詰めのもとで、その論理式の鍵に記録された候補の値が得られる。
 <!--/-->
@@ -412,7 +412,7 @@ For the converse table reading, begin with a specified canonical code `x`. Its m
 <!--en-->
 The candidate value is pinned to the recursive satisfaction set, and the value lemma aligns it with the functional table value; the membership is then transported along the equation of the ordered pairs. Both eliminations land in the table membership, which is a proposition.
 <!--zh-->
-候选值被钉扎到递归满足集，值引理把它与函数表值对齐；隶属随即沿有序对等式搬运。两次消去都落在表隶属这一命题上。
+候选值被钉扎到递归满足集，值引理把它与函数表值对齐；成员关系随即沿有序对等式搬运。两次消去都落在表成员关系这一命题上。
 <!--ja-->
 候補の値は、再帰的な充足の集合に固定され、値の補題がそれを関数的な表の値と整列させる。そして所属が、順序対の等式に沿って運ばれる。どちらの消去も、命題である表の所属に着地する。
 <!--/-->
@@ -460,7 +460,7 @@ module SatHolds {m : ℕ} (T w C E : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) 
 <!--en-->
 Write `Tv` and `Cv` for the underlying sets in the table and code-domain slots. The alignments `qT` and `qC` transport their membership facts to the genuine graph and the canonical code set. Consequently, a presented table pair can be read with the graph lemmas, whereas a code is decoded only under propositional truncation. Every equality below still compares underlying hierarchy sets.
 <!--zh-->
-记表槽与码域槽中的底层集合为 `Tv` 与 `Cv`。对齐 `qT` 与 `qC` 把它们的隶属事实分别搬运到真实图与典范码集中。因此，已呈现的表配对可以用真实图的读式处理，而公式码的解码仍只在命题截断下成立。下面每条等式依然只比较底层层级集合。
+记表槽与码域槽中的底层集合为 `Tv` 与 `Cv`。对齐 `qT` 与 `qC` 把它们的成员关系事实分别搬运到真实图与典范码集中。因此，已呈现的表配对可以用真实图的读式处理，而公式码的解码仍只在命题截断下成立。下面每条等式依然只比较底层层级集合。
 <!--ja-->
 表と符号領域のスロットにある基礎集合を `Tv` と `Cv` と書く。同定 `qT` と `qC` は、それらの所属事実をそれぞれ実際のグラフと正準な符号集合へ運ぶ。したがって、すでに対の形で提示された表の要素はグラフの読みによって扱えるが、符号の復号は命題的切り詰めのもとでのみ得られる。以下の等式はすべて、引き続き階層の基礎集合を比較する。
 <!--/-->
@@ -491,7 +491,7 @@ A table value at a code identified with a formula key equals the recursive satis
 <!--en-->
 If a code-domain member is presented as `pr (# n) z`, transporting it into `AllCodes W` permits decoding under propositional truncation: some formula `ψ : Formula Ab n` has payload `z`. This gives neither a chosen formula nor uniqueness of decoding, and therefore does not define a decoding function.
 <!--zh-->
-若码域成员呈现为 `pr (# n) z`，把它搬入 `AllCodes W` 后便可在命题截断下解码：存在某条公式 `ψ : Formula Ab n`，其载荷为 `z`。这里既没有选定公式，也没有解码唯一性，因而没有定义出解码函数。
+若码域元素呈现为 `pr (# n) z`，把它搬入 `AllCodes W` 后便可在命题截断下解码：存在某条公式 `ψ : Formula Ab n`，其载荷为 `z`。这里既没有选定公式，也没有解码唯一性，因而没有定义出解码函数。
 <!--ja-->
 コード領域の要素が `pr (# n) z` として表されているなら、それを `AllCodes W` へ運ぶことで、命題的切り詰めのもとで復号できる。すなわち、ペイロードが `z` である論理式 `ψ : Formula Ab n` が存在する。論理式は選ばれず、復号の一意性も得られないので、復号関数は定義されない。
 <!--/-->
@@ -520,7 +520,7 @@ For a candidate code `c`, alignment with the canonical code set makes `c` a vali
 <!--en-->
 The real graph also supplies the required shape of arbitrary table members. Under propositional truncation, every such member is an encoded pair of some code and its graph value, and that code belongs to `Cv`. This is an existence-only decomposition; it does not choose components for each member.
 <!--zh-->
-真实图还给出任意表成员所需的形状。在命题截断下，每个这样的成员都是某个码与其图取值组成的编码对，而且该码属于 `Cv`。这只是存在性的分解，并没有为每个成员选定分量。
+真实图还给出任意表元素所需的形状。在命题截断下，每个这样的元素都是某个码与其图取值组成的编码对，而且该码属于 `Cv`。这只是存在性的分解，并没有为每个元素选定分量。
 <!--ja-->
 実際のグラフは、任意の表の要素に必要な形も与える。命題的切り詰めのもとで、その各要素は、あるコードとそのグラフの値からなる符号化された対であり、そのコードは `Cv` に属する。これは存在だけを述べる分解であり、各要素の成分を選ぶものではない。
 <!--/-->
@@ -644,7 +644,7 @@ module SatRead {m : ℕ} (T w C E : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) (
 <!--en-->
 For codes, the two directions compare membership with `AllCodes W`. For tower entries, they read or insert standard pairs `pr (# k) (envSet W k)`. For table entries, they compare a presented pair with the functional table value at a canonical code. Keeping these three conclusion shapes distinct prevents a stronger, unsupported uniqueness claim.
 <!--zh-->
-对码而言，两个方向比较其与 `AllCodes W` 的隶属。对塔条目而言，两个方向读取或插入标准有序对 `pr (# k) (envSet W k)`。对表项而言，它们把一个已呈现的有序对与典范码处的函数表取值比较。保持这三类结论的形状彼此有别，可以避免无依据的更强唯一性主张。
+对码而言，两个方向比较其与 `AllCodes W` 的成员关系。对塔条目而言，两个方向读取或插入标准有序对 `pr (# k) (envSet W k)`。对表项而言，它们把一个已呈现的有序对与典范码处的函数表取值比较。保持这三类结论的形状彼此有别，可以避免无依据的更强唯一性主张。
 <!--ja-->
 コードについては、二方向の読みが `AllCodes W` への所属を比較する。塔の項目については、標準的な対 `pr (# k) (envSet W k)` を読んだり挿入したりする。表の項目については、提示された対を正準コードにおける関数的な表の値と比較する。この三種類の結論を区別しておくことで、根拠のない強い一意性の主張を避けられる。
 <!--/-->

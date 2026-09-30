@@ -28,7 +28,7 @@ module L.GCH.DefinablePowerSetDescription {ℓ : Level} (lem : LEM (ℓ-suc ℓ)
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 open import FOL.Syntax using ( Formula; var; _∈̇_; _∧̇_; _⇒̇_; ∃̇∈; ∀̇∈ )
 open import FOL.LevyHierarchy using ( Δ₀; checkΔ₀ )
 open import FOL.Manipulation.ConstantMapping using ( mapFo )
@@ -73,7 +73,7 @@ The construction uses excluded middle as the book's single explicit classical hy
 <!--en-->
 The object-language description is deliberately bounded. It is assembled from membership atoms, conjunction, implication, and bounded existential and universal quantifiers; `checkΔ₀` will later verify this syntactic shape. Constant mapping is needed when an externally given formula is compared with its interpretation in the coded satisfaction construction.
 <!--zh-->
-对象语言中的描述刻意保持有界。它只由隶属原子式、合取、蕴涵、有界存在量词与有界全称量词组成；稍后 `checkΔ₀` 将核验这一句法形状。把外部给定的公式与编码满足构造中的解释相比较时，还需要常元映射。
+对象语言中的描述刻意保持有界。它只由成员关系原子式、合取、蕴涵、有界存在量词与有界全称量词组成；稍后 `checkΔ₀` 将核验这一句法形状。把外部给定的公式与编码满足构造中的解释相比较时，还需要常元映射。
 <!--ja-->
 対象言語での記述は、意図的に有界に保つ。所属原子式、連言、含意、有界存在量化子、有界全称量化子だけから組み立て、後で `checkΔ₀` がこの構文上の形を検査する。外から与えた論理式を、符号化された充足構成での解釈と比較する際には、定数の写像も用いる。
 <!--/-->
@@ -81,7 +81,7 @@ The object-language description is deliberately bounded. It is assembled from me
 <!--en-->
 The intended output is `𝒟ₒ W`: the set of subsets of `W` definable in the restricted structure over `W`, with parameters from `W`. Extensionality will identify a candidate output with this set once both membership directions have been proved, while ordered-pair codes represent environments, formula keys, and table entries.
 <!--zh-->
-预期输出是 `𝒟ₒ W`：在 `W` 上的受限结构中、允许使用 `W` 中参数而可定义的子集所成的集合。证明两个隶属方向后，外延性将候选输出与这个集合等同；有序对编码则用来表示环境、公式键与表条目。
+预期输出是 `𝒟ₒ W`：在 `W` 上的受限结构中、允许使用 `W` 中参数而可定义的子集所成的集合。证明两个成员关系方向后，外延性将候选输出与这个集合等同；有序对编码则用来表示环境、公式键与表条目。
 <!--ja-->
 意図する出力は `𝒟ₒ W`、すなわち `W` 上の制限構造で `W` の要素をパラメータとして定義できる部分集合の集まりである。二つの所属方向を証明すれば、外延性によって候補の出力をこの集合と同一視できる。順序対の符号は、環境、論理式の鍵、表の項目を表す。
 <!--/-->
@@ -113,7 +113,7 @@ The ten distinguished slots are interpreted as the numerals zero through nine by
 <!--en-->
 An environment is represented by a finite vector of constructible sets. Products combine the two membership conditions that define a slice, and their propositionhood ensures that truncated witnesses may be eliminated into these conditions without introducing a choice.
 <!--zh-->
-环境由可构造集合组成的有限向量表示。积类型合并定义切出关系的两个隶属条件，而这些条件的命题性保证可以把截断见证消去到其中，而不引入选择。
+环境由可构造集合组成的有限向量表示。积类型合并定义切出关系的两个成员关系条件，而这些条件的命题性保证可以把截断见证消去到其中，而不引入选择。
 <!--ja-->
 環境は構成可能集合からなる有限ベクトルで表す。積は切り出し関係を定める二つの所属条件を組み合わせる。それらが命題であるため、選択を導入することなく、切り詰められた証人をその条件へ消去できる。
 <!--/-->
@@ -121,7 +121,7 @@ An environment is represented by a finite vector of constructible sets. Products
 <!--en-->
 The proofs repeatedly turn pointwise equivalences of membership into equalities of sets. Membership is proposition-valued, so a merely existing code, formula, or presentation can be eliminated while proving either membership direction; `∈-asFiber` then recovers a presentation index when an ambient member must be read as an element of a carrier.
 <!--zh-->
-证明会反复把逐点的隶属等价转成集合相等。隶属是命题值的，因此在证明任一隶属方向时，可以消去仅仅存在的码、公式或表示；当外围成员需要作为载体元素读取时，`∈-asFiber` 再恢复其呈现索引。
+证明会反复把逐点的成员关系等价转成集合相等。成员关系是命题值的，因此在证明任一成员关系方向时，可以消去仅仅存在的码、公式或表示；当外围元素需要作为载体元素读取时，`∈-asFiber` 再恢复其呈现索引。
 <!--ja-->
 証明では、点ごとの所属の同値を集合の等しさへ繰り返し変換する。所属は命題値なので、どちらの所属方向を示すときにも、単に存在する符号・論理式・表示を消去できる。周囲の集合の要素を台の要素として読む必要があるときは、`∈-asFiber` が表示の添字を復元する。
 <!--/-->
@@ -153,13 +153,13 @@ Write `S` for the carrier of constructible sets. An element of `S` consists of a
 <!--/-->
 
 ```agda
-open hPropStructure 𝒮ʟ using ( S )
+open hPropView 𝒮ʟ using ( S )
 ```
 
 <!--en-->
 We write `γ ⊨ φ` for satisfaction of an object-language formula at a finite environment of constructible sets. The absoluteness result behind this notation lets the later semantic argument compare that internal reading with ordinary membership in the surrounding cumulative hierarchy.
 <!--zh-->
-以 `γ ⊨ φ` 表示对象语言公式在一个可构造集合有限环境处的满足。该记号背后的绝对性结果使后面的语义论证能把这种内部读法与周遭累积层级中的通常隶属相比较。
+以 `γ ⊨ φ` 表示对象语言公式在一个可构造集合有限环境处的满足。该记号背后的绝对性结果使后面的语义论证能把这种内部读法与周遭累积层级中的通常成员关系相比较。
 <!--ja-->
 構成可能集合の有限環境で対象言語の論理式が充足されることを `γ ⊨ φ` と書く。この記法の背後にある絶対性によって、後の意味論的な議論では、この内部の読みを周囲の累積階層における通常の所属と比較できる。
 <!--/-->
@@ -172,7 +172,7 @@ open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
 <!--en-->
 A singleton environment is described by two bounded clauses over one slot: every member of the coded set `e` is the ordered pair of the tag zero and the value `z`, and some member of `e` is that pair. The universal clause excludes all other members, and the existential clause excludes the empty set.
 <!--zh-->
-单点环境由一个槽位上的两条有界子句描述：编码集合 `e` 的每个成员都是「标签零与值 `z` 的有序对」，且 `e` 中存在一个成员等于该对。全称子句排除所有其他成员，存在子句排除空集。
+单点环境由一个槽位上的两条有界子句描述：编码集合 `e` 的每个元素都是「标签零与值 `z` 的有序对」，且 `e` 中存在一个元素等于该对。全称子句排除所有其他元素，存在子句排除空集。
 <!--ja-->
 単項環境は、一つの枠の上の二つの有界の節で記述される。符号化された集合 `e` のすべての要素が、タグ 0 と値 `z` の順序対であり、`e` の中にその対に等しい要素が存在する、というものである。全称の節がほかのすべての要素を排除し、存在の節が空集合を排除する。
 <!--/-->
@@ -185,7 +185,7 @@ singleOf e N0 z = ∀̇∈ (var e) (prAtL i0 (sh 1 N0) (sh 1 z)) ∧̇ ∃̇∈ 
 <!--en-->
 The definable-subset clause has two conjuncts. The first says every member of the coded set `x` lies in `w` and has its one-entry environment inside the value `y`. The second says every member `z` of `w` whose one-entry environment lies in `y` belongs to `x`. Together they say exactly that `x` is cut out of `w` by the value `y`.
 <!--zh-->
-可定义子集子句有两个合取支。第一支说编码集合 `x` 的每个成员都属于 `w`，且其单条目环境落在值 `y` 中。第二支说 `w` 的每个成员 `z`，只要其单条目环境落在 `y` 中，就属于 `x`。两者合起来恰好说明 `x` 是由值 `y` 从 `w` 中切出的。
+可定义子集子句有两个合取支。第一支说编码集合 `x` 的每个元素都属于 `w`，且其单条目环境落在值 `y` 中。第二支说 `w` 的每个元素 `z`，只要其单条目环境落在 `y` 中，就属于 `x`。两者合起来恰好说明 `x` 是由值 `y` 从 `w` 中切出的。
 <!--ja-->
 定義可能部分集合の節には二つの連言肢がある。第一は、符号化された集合 `x` のすべての要素が `w` に属し、その一項環境が値 `y` に属することを述べる。第二は、`w` の要素 `z` のうち、その一項環境が `y` に属するものはすべて `x` に属することを述べる。合わせると、`x` が値 `y` によって `w` から切り出されることが分かる。
 <!--/-->
@@ -200,7 +200,7 @@ definesB x w y N0 =
 <!--en-->
 The membership clause ranges over members of the proposed value. For each member it merely asks for an element `c` of the proposed domain `C` shaped as a pair with tag one, together with a table entry pairing `c` with a value `y` that cuts the member out of `w`. At this stage `c` is only key-shaped: only the later hypothesis `satAt` permits it to be decoded as the key of an actual formula.
 <!--zh-->
-隶属子句遍历候选值的成员。对每个成员，它只要求候选域 `C` 中有一个形如「标签一与某个第二分量之对」的元素 `c`，并有一个表条目把 `c` 与值 `y` 配对，而 `y` 从 `w` 中切出该成员。此时 `c` 仅具有键的形状；只有稍后加入 `satAt` 假设，才能把它解码为真实公式的键。
+成员关系子句遍历候选值的元素。对每个元素，它只要求候选域 `C` 中有一个形如「标签一与某个第二分量之对」的元素 `c`，并有一个表条目把 `c` 与值 `y` 配对，而 `y` 从 `w` 中切出该元素。此时 `c` 仅具有键的形状；只有稍后加入 `satAt` 假设，才能把它解码为真实公式的键。
 <!--ja-->
 所属の節は候補の値の要素を走る。各要素について要求するのは、候補領域 `C` にタグ 1 との対の形をした要素 `c` があり、表の項目が `c` と値 `y` を対にし、その `y` が当の要素を `w` から切り出すことだけである。この段階の `c` は鍵の形をしているにすぎない。後で `satAt` を仮定して初めて、実際の論理式の鍵として復号できる。
 <!--/-->
@@ -215,7 +215,7 @@ memAt v w T C N =
 <!--en-->
 The covering clause runs in the converse direction. Whenever an element `c` of `C` has the shape of a tag-one key, it requires merely a table value `y` at `c` and a member `x` of the proposed output cut out by `y`. Thus it covers every key-shaped element of the proposed domain; identifying these with all actual arity-one formula keys again depends on `satAt`.
 <!--zh-->
-覆盖子句给出反向条件。只要 `C` 的元素 `c` 具有标签一之键的形状，它便仅仅要求 `c` 处有表值 `y`，并且候选输出中有一个由 `y` 切出的成员 `x`。因此它覆盖候选域中每个具有这种形状的元素；要把这些元素认同为全部真实的元数一公式键，仍须依赖 `satAt`。
+覆盖子句给出反向条件。只要 `C` 的元素 `c` 具有标签一之键的形状，它便仅仅要求 `c` 处有表值 `y`，并且候选输出中有一个由 `y` 切出的元素 `x`。因此它覆盖候选域中每个具有这种形状的元素；要把这些元素认同为全部真实的元数一公式键，仍须依赖 `satAt`。
 <!--ja-->
 被覆の節は逆向きの条件を与える。`C` の要素 `c` がタグ 1 の鍵の形をもつなら、`c` での表の値 `y` と、`y` によって切り出される候補出力の要素 `x` が単に存在することを要求する。したがって候補領域の鍵形の要素をすべて覆うが、それらを実際のアリティ 1 の論理式の鍵すべてと同一視するには、やはり `satAt` が必要である。
 <!--/-->
@@ -230,7 +230,7 @@ allAt v w T C N =
 <!--en-->
 The formula `defAt` conjoins the membership and covering clauses. By itself it only relates the proposed output to the proposed code domain and table; combined with correct `Tags` and `satAt` data, the two clauses become the two inclusions proving that the output is `𝒟ₒ W`.
 <!--zh-->
-公式 `defAt` 合取隶属子句与覆盖子句。它单独只把候选输出同候选码域及表联系起来；与正确的 `Tags` 和 `satAt` 数据结合后，两条子句才成为证明输出等于 `𝒟ₒ W` 的两个包含方向。
+公式 `defAt` 合取成员关系子句与覆盖子句。它单独只把候选输出同候选码域及表联系起来；与正确的 `Tags` 和 `satAt` 数据结合后，两条子句才成为证明输出等于 `𝒟ₒ W` 的两个包含方向。
 <!--ja-->
 論理式 `defAt` は、所属の節と被覆の節を連言で結ぶ。それだけでは候補出力を候補のコード領域と表に関係づけるにすぎない。正しい `Tags` と `satAt` のデータを合わせると、二つの節が、出力は `𝒟ₒ W` であることを示す二つの包含になる。
 <!--/-->
@@ -257,7 +257,7 @@ opaque
 <!--en-->
 The Δ₀ certificate is produced by the structural checker: the formula uses only variables, membership, conjunction, implication, and bounded quantifiers. It certifies the shape of the formula, not the correctness of the description.
 <!--zh-->
-Δ₀ 证书由结构性检查器产出：该公式只用变元、隶属、合取、蕴涵与有界量词。它证明的是公式的形状，而非描述的正确性。
+Δ₀ 证书由结构性检查器产出：该公式只用变元、成员关系、合取、蕴涵与有界量词。它证明的是公式的形状，而非描述的正确性。
 <!--ja-->
 Δ₀ の証拠は、構造的な検査によって産み出される。論理式が使うのは、変数・所属・連言・含意・有界の量化子だけである。証明されるのは論理式の形であって、記述の正しさではない。
 <!--/-->
@@ -320,7 +320,7 @@ module _ {j : ℕ} (e N0 z : Fin j) (δ : S ^ j) (q0 : fst (lookup N0 δ) ≡ # 
 <!--en-->
 Reading the singleton clause yields the equality of the coded set with the standard singleton environment of the value. Forward: every member of the coded set is the ordered pair of the numeral zero and the value, transported through the adequacy of the pairing atom.
 <!--zh-->
-读取单点子句得到「编码集合等于值的标准单点环境」。正向：编码集合的每个成员都是「数码零与值」的有序对，经配对原子的充分性搬运。
+读取单点子句得到「编码集合等于值的标准单点环境」。正向：编码集合的每个元素都是「数码零与值」的有序对，经配对原子的充分性搬运。
 <!--ja-->
 単項の節の読みから、符号化された集合が値の正準な単項環境と等しいことが得られる。順方向では、符号化された集合のすべての要素が、数項ゼロと値の順序対であり、対のアトムの妥当性に沿って運ばれる。
 <!--/-->
@@ -336,7 +336,7 @@ Reading the singleton clause yields the equality of the coded set with the stand
 <!--en-->
 For the reverse inclusion, begin with a member of the standard one-entry environment. The existential conjunct supplies some member of the coded set, and its pairing equation, together with the known zero tag, identifies that member with the one already given. Transporting its membership along this equality puts the original member in the coded set.
 <!--zh-->
-证明反向包含时，从标准单条目环境的一个成员出发。存在合取支给出编码集合的某个成员；它的配对等式与已知的零标签一起，把这个成员认同为起初给定的成员。沿此等式搬运隶属证明，便得到原成员属于编码集合。
+证明反向包含时，从标准单条目环境的一个元素出发。存在合取支给出编码集合的某个元素；它的配对等式与已知的零标签一起，把这个元素认同为起初给定的元素。沿此等式搬运成员关系证明，便得到原元素属于编码集合。
 <!--ja-->
 逆向きの包含では、正準な一項環境の要素から始める。存在側の連言肢が符号化された集合のある要素を与え、その対の等式と既知のタグ 0 によって、その要素を最初に与えた要素と同一視できる。この等式に沿って所属を移送すれば、元の要素が符号化された集合に属することが得られる。
 <!--/-->
@@ -352,7 +352,7 @@ For the reverse inclusion, begin with a member of the standard one-entry environ
 <!--en-->
 A member of `envOne Z` is the ordered pair `pr (# 0) Z`. Rewriting the tag slot as the numeral zero therefore identifies this member with the ordered pair required by `singleOf`; it does not identify the member with `Z` itself.
 <!--zh-->
-`envOne Z` 的成员是有序对 `pr (# 0) Z`。因此，把标签槽改写为数码零后，这个成员便与 `singleOf` 所要求的有序对认同；它并不与 `Z` 本身认同。
+`envOne Z` 的元素是有序对 `pr (# 0) Z`。因此，把标签槽改写为数码零后，这个元素便与 `singleOf` 所要求的有序对认同；它并不与 `Z` 本身认同。
 <!--ja-->
 `envOne Z` の要素は順序対 `pr (# 0) Z` である。したがってタグの枠を数項 0 に書き換えると、この要素は `singleOf` が要求する順序対と同一視される。要素そのものが `Z` と同一視されるわけではない。
 <!--/-->
@@ -367,7 +367,7 @@ A member of `envOne Z` is the ordered pair `pr (# 0) Z`. Rewriting the tag slot 
 <!--en-->
 Conversely, assume the coded set equals the standard one-entry environment. Its unique index is zero, so every member has the required ordered-pair form; impossible successor indices close the remaining cases. The canonical zero entry supplies the bounded existential witness, and transport along the assumed equality supplies its membership.
 <!--zh-->
-反过来，假设编码集合等于标准单条目环境。该环境唯一的索引是零，所以每个成员都具有所需的有序对形式；其余后继索引情形由不可能性排除。典范的零号条目提供有界存在见证，沿所给等式搬运则提供它的隶属证明。
+反过来，假设编码集合等于标准单条目环境。该环境唯一的索引是零，所以每个元素都具有所需的有序对形式；其余后继索引情形由不可能性排除。典范的零号条目提供有界存在见证，沿所给等式搬运则提供它的成员关系证明。
 <!--ja-->
 逆に、符号化された集合が正準な一項環境に等しいと仮定する。その環境の唯一の添字は 0 なので、各要素は必要な順序対の形をもち、残る後者添字の場合は不可能性で閉じる。正準な 0 番の項目が有界存在の証人を与え、仮定した等式に沿う移送がその所属を与える。
 <!--/-->
@@ -383,7 +383,7 @@ Conversely, assume the coded set equals the standard one-entry environment. Its 
 <!--en-->
 The member is named, its membership is transported, and the existential witness pairs the zero numeral with the value, transported against the tag equation.
 <!--zh-->
-该成员被命名，其隶属被搬运，而存在见证把零数码与值配对，并逆着标签等式搬运。
+该元素被命名，其成员关系被搬运，而存在见证把零数码与值配对，并逆着标签等式搬运。
 <!--ja-->
 要素に名前が与えられ、その所属が運ばれる。そして存在の証人は、ゼロの数項と値の対を、タグの等式に逆らってまとめる。
 <!--/-->
@@ -399,7 +399,7 @@ The member is named, its membership is transported, and the existential witness 
 <!--en-->
 The named member is the presentation, inside the coded set, of the pair of the zero numeral and the value.
 <!--zh-->
-被命名的成员是「零数码与值的对」在编码集合内的呈现。
+被命名的元素是「零数码与值的对」在编码集合内的呈现。
 <!--ja-->
 名前のついた要素は、数項ゼロと値の対の、符号化された集合の中での提示である。
 <!--/-->
@@ -413,7 +413,7 @@ The named member is the presentation, inside the coded set, of the pair of the z
 <!--en-->
 The cut relation between a set `X`, a carrier `Wv`, and a value `Y` is a pair of pointwise directions: every member of `X` lies in `Wv` with its singleton environment in `Y`, and every member of `Wv` whose singleton environment lies in `Y` belongs to `X`. The quantification is over constructible sets, so the relation is stated on the constructible carrier.
 <!--zh-->
-集合 `X`、载体 `Wv` 与值 `Y` 之间的切割关系是逐点双向的：`X` 的每个成员都属于 `Wv` 且其单点环境在 `Y` 中；而 `Wv` 中单点环境落在 `Y` 的每个成员都属于 `X`。量化遍历可构造集合，因此该关系在可构造载体上陈述。
+集合 `X`、载体 `Wv` 与值 `Y` 之间的切割关系是逐点双向的：`X` 的每个元素都属于 `Wv` 且其单点环境在 `Y` 中；而 `Wv` 中单点环境落在 `Y` 的每个元素都属于 `X`。量化遍历可构造集合，因此该关系在可构造载体上陈述。
 <!--ja-->
 集合 `X`・台 `Wv`・値 `Y` の間の切り出しの関係は、各点での双方向である。`X` のすべての要素は `Wv` に属しその単項環境が `Y` の中にあり、`Wv` の要素のうちその単項環境が `Y` の中にあるものはすべて `X` に属する。量化は構成可能な集合の上を行われるので、この関係は構成可能な台の上で述べられる。
 <!--/-->
@@ -450,7 +450,7 @@ module _ {j : ℕ} (x w y N0 : Fin j) (δ : S ^ j) (q0 : fst (lookup N0 δ) ≡ 
 <!--en-->
 Because `Y` is a constructible set, any proof that a one-entry environment belongs to `Y` can be converted into a carrier representative of that environment. This presentation is what permits the bounded existential in `definesB` to range over an actual member of `Y`.
 <!--zh-->
-由于 `Y` 是可构造集合，单条目环境属于 `Y` 的任何证明都能转换为该环境的一个载体表示。正是这个呈现使 `definesB` 中的有界存在量词能够在 `Y` 的实际成员上取值。
+由于 `Y` 是可构造集合，单条目环境属于 `Y` 的任何证明都能转换为该环境的一个载体表示。正是这个呈现使 `definesB` 中的有界存在量词能够在 `Y` 的实际元素上取值。
 <!--ja-->
 `Y` は構成可能集合なので、一項環境が `Y` に属するという証明から、その環境を表す台の要素を得られる。この表示があるため、`definesB` の有界存在量化子は `Y` の実際の要素を証人にできる。
 <!--/-->
@@ -462,7 +462,7 @@ Because `Y` is a constructible set, any proof that a one-entry environment belon
 <!--en-->
 Reading the existential of the singleton clause converts it into membership of the standard singleton environment in the value: the witness is a member of the value, and the singleton clause identifies the coded entry with the standard environment of the index.
 <!--zh-->
-读取单点子句的存在量化，将其转换为标准单点环境在值中的隶属：见证是值的成员，而单点子句把编码条目认同为该索引的标准环境。
+读取单点子句的存在量化，将其转换为标准单点环境在值中的成员关系：见证是值的元素，而单点子句把编码条目认同为该索引的标准环境。
 <!--ja-->
 単項の節の存在量化を読むと、それが、正準な単項環境の値の中での所属に変換される。証人は値の要素であり、単項の節が、符号化された項目をその索引の正準な環境と同一視する。
 <!--/-->
@@ -489,7 +489,7 @@ Filling the existential is the converse: the standard singleton environment is p
 <!--en-->
 Reading the definable-subset clause produces the two directions of the cut relation. The first conjunct gives, for each member of `X`, its membership in `Wv` and membership of its one-entry environment in `Y`; the second converts these two facts back into membership in `X`.
 <!--zh-->
-读取可定义子集子句便得到切割关系的两个方向。第一个合取支对 `X` 的每个成员给出它属于 `Wv`，以及其单条目环境属于 `Y`；第二个合取支把这两个事实转换回该成员属于 `X`。
+读取可定义子集子句便得到切割关系的两个方向。第一个合取支对 `X` 的每个元素给出它属于 `Wv`，以及其单条目环境属于 `Y`；第二个合取支把这两个事实转换回该元素属于 `X`。
 <!--ja-->
 定義可能部分集合の節を読むと、切り出し関係の二つの方向が得られる。第一の連言肢は、`X` の各要素が `Wv` に属し、その一項環境が `Y` に属することを与える。第二の連言肢は、この二つの事実から `X` への所属を戻す。
 <!--/-->
@@ -548,7 +548,7 @@ module Read {m : ℕ} (v w T C : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) (tg 
 <!--en-->
 The code domain's underlying set and the numeral behind the tag one are named, since the membership clause selects codes shaped as the pair of the tag one and a second component.
 <!--zh-->
-码域的底层集与标签一背后的数码被命名，因为隶属子句选取的码形如「标签一与第二分量」之对。
+码域的底层集与标签一背后的数码被命名，因为成员关系子句选取的码形如「标签一与第二分量」之对。
 <!--ja-->
 コードの定義域の底の集合と、タグ一の背後にある数項が名付けられる。所属の節が選ぶのは、タグ一と第二成分の対の形のコードだからである。
 <!--/-->
@@ -561,7 +561,7 @@ The code domain's underlying set and the numeral behind the tag one are named, s
 <!--en-->
 Reading the membership clause yields, for each member of the proposed value, a truncated record: a code in the domain, split as the pair of the tag one and a component, a table entry pairing that code with a value, and the cut relation between the member and that value. The record exists under truncation; no code or value is chosen.
 <!--zh-->
-读取隶属子句对拟议值的每个成员给出截断记录：码域中的一个码 (拆为标签一与某分量之对)、把该码与某值配对的表条目，以及该成员与该值之间的切割关系。记录在截断下存在；不选定任何码或值。
+读取成员关系子句对拟议值的每个元素给出截断记录：码域中的一个码 (拆为标签一与某分量之对)、把该码与某值配对的表条目，以及该元素与该值之间的切割关系。记录在截断下存在；不选定任何码或值。
 <!--ja-->
 所属の節の読みは、提案された値の各要素に対して、切り詰められた記録を与える。定義域の中の、タグ一とある成分の対として分解される符号、その符号をある値と対にする表の項目、そしてその要素と値の間の切り出しの関係である。記録は切り詰めのもとで存在し、符号や値は選ばれない。
 <!--/-->
@@ -577,7 +577,7 @@ Reading the membership clause yields, for each member of the proposed value, a t
 <!--en-->
 To read the membership clause, first expose the key-shaped member `c` of the proposed code domain and then the table entry pairing `c` with a value `y`. The pairing specifications turn the encoded second components into the semantic equations displayed in the result, while the tag equation changes the formal tag into the actual numeral one.
 <!--zh-->
-读取隶属子句时，先取得候选码域中具有键形状的成员 `c`，再取得把 `c` 与值 `y` 配对的表条目。配对规格把编码的第二分量转成结果中所示的语义等式，而标签等式把形式标签改写为真正的数码一。
+读取成员关系子句时，先取得候选码域中具有键形状的元素 `c`，再取得把 `c` 与值 `y` 配对的表条目。配对规格把编码的第二分量转成结果中所示的语义等式，而标签等式把形式标签改写为真正的数码一。
 <!--ja-->
 所属の節を読むには、まず候補の符号領域から鍵の形をした要素 `c` を取り出し、次に `c` と値 `y` を対にする表の項目を取り出す。対の仕様が符号化された第二成分を結果に現れる意味論的な等式へ変え、タグの等式が形式的なタグを実際の数項 1 へ書き換える。
 <!--/-->
@@ -593,7 +593,7 @@ To read the membership clause, first expose the key-shaped member `c` of the pro
 <!--en-->
 The innermost existential is read through `definesB-out`, which produces the cut relation between the member and the value `y` of the table entry.
 <!--zh-->
-最内层存在经 `definesB-out` 读取，产出该成员与表条目之值 `y` 之间的切割关系。
+最内层存在经 `definesB-out` 读取，产出该元素与表条目之值 `y` 之间的切割关系。
 <!--ja-->
 最も内側の存在は、`definesB-out` を通して読まれ、要素と表の項目の値 `y` の間の切り出しの関係を産み出す。
 <!--/-->
@@ -609,7 +609,7 @@ The innermost existential is read through `definesB-out`, which produces the cut
 <!--en-->
 Filling the membership clause is the converse construction: it takes the function producing truncated records for each member and assembles the satisfaction of the clause.
 <!--zh-->
-填充隶属子句是反向构造：它收取为每个成员产出截断记录的函数，并组装子句的满足。
+填充成员关系子句是反向构造：它收取为每个元素产出截断记录的函数，并组装子句的满足。
 <!--ja-->
 所属の節の埋めは逆の構成である。各要素に対して切り詰められた記録を産み出す関数を受け取り、節の充足を組み立てる。
 <!--/-->
@@ -625,7 +625,7 @@ Filling the membership clause is the converse construction: it takes the functio
 <!--en-->
 Conversely, suppose such a truncated semantic record is given for each member of the proposed output. The equation `c = pr (# 1) p` supplies the arity-one shape required by the bounded formula, and membership of `pr(c,y)` in the table supplies a bounded representative for the table entry.
 <!--zh-->
-反过来，设候选输出的每个成员都带有这样一个截断的语义记录。等式 `c = pr (# 1) p` 给出有界公式所需的元数一形状，而 `pr(c,y)` 属于表的证明为表条目提供一个有界表示。
+反过来，设候选输出的每个元素都带有这样一个截断的语义记录。等式 `c = pr (# 1) p` 给出有界公式所需的元数一形状，而 `pr(c,y)` 属于表的证明为表条目提供一个有界表示。
 <!--ja-->
 逆に、候補出力の各要素に対して、このような切り詰められた意味論的記録が与えられているとする。等式 `c = pr (# 1) p` は有界論理式が要求するアリティ一の形を与え、`pr(c,y)` の表への所属は表の項目の有界な表示を与える。
 <!--/-->
@@ -657,7 +657,7 @@ The seven-slot environment is then assembled, and the cut relation is translated
 <!--en-->
 After the key shape, table entry, and cut condition have been encoded, the outer bounded quantifier applies this truncated package to the original member of the proposed output. Hence the semantic record is sufficient to reconstruct satisfaction of the whole membership clause.
 <!--zh-->
-键的形状、表条目与切出条件编码完毕后，外层有界量词把这个截断整体用于候选输出的原成员。因此，这个语义记录足以重建整个隶属子句的满足。
+键的形状、表条目与切出条件编码完毕后，外层有界量词把这个截断整体用于候选输出的原元素。因此，这个语义记录足以重建整个成员关系子句的满足。
 <!--ja-->
 鍵の形、表の項目、切り出し条件を符号化した後、外側の有界量化子が、この切り詰められたまとまりを候補出力の元の要素に適用する。したがって、この意味論的記録から所属の節全体の充足を再構成できる。
 <!--/-->
@@ -686,7 +686,7 @@ Reading the covering clause takes a code `c` that splits as the pair of the tag 
 <!--en-->
 The proof eliminates the table entry and the three-slot existential, and the definable-subset reading produces the cut relation between the member and the table value.
 <!--zh-->
-证明消去表条目与三槽存在量化，而可定义子句读取产出成员与表值之间的切割关系。
+证明消去表条目与三槽存在量化，而可定义子句读取产出元素与表值之间的切割关系。
 <!--ja-->
 証明は、表の項目と三つの枠の存在量化を消去する。そして定義可能な部分集合の節の読みが、要素と表の値の間の切り出しの関係を産み出す。
 <!--/-->
@@ -702,7 +702,7 @@ The proof eliminates the table entry and the three-slot existential, and the def
 <!--en-->
 For the converse construction, fix a member `c` of the code domain and inspect any presentation of it as `pr (# 1) p`. The semantic coverage hypothesis then provides, under propositional truncation, a table value and the subset that this value cuts out; these witnesses fill the bounded conclusion for that presentation.
 <!--zh-->
-为作反向构造，固定码域的成员 `c`，并考察它作为 `pr (# 1) p` 的任一呈现。语义覆盖假设随后在命题截断下给出一个表取值及由该取值切出的子集；这些见证填入该呈现所需的有界结论。
+为作反向构造，固定码域的元素 `c`，并考察它作为 `pr (# 1) p` 的任一呈现。语义覆盖假设随后在命题截断下给出一个表取值及由该取值切出的子集；这些见证填入该呈现所需的有界结论。
 <!--ja-->
 逆向きの構成では、符号領域の要素 `c` を固定し、それが `pr (# 1) p` として表される場合を調べる。意味論的な覆いの仮定は、命題的切り詰めの下で表の値と、その値が切り出す部分集合を与える。これらの証人が、その表示に対する有界な結論を満たす。
 <!--/-->
@@ -732,7 +732,7 @@ The equation using the formal tag is converted to the required arity-one equatio
 <!--en-->
 Filling the coverage clause therefore ranges over every member of the proposed code domain that is presented with arity-one key shape. For each such presentation, the semantic hypothesis supplies a table value, a cut-out member of the proposed output, and their memberships, all under propositional truncation. No claim that these are genuine formula keys is made until `satAt` is added later.
 <!--zh-->
-因此，填充覆盖子句时遍历候选码域中每个被呈现为元数一键形状的成员。对每个这样的呈现，语义假设在命题截断下给出表取值、候选输出中由它切出的成员及二者的隶属。直到后文加入 `satAt`，这里都不声称这些成员是真正的公式键。
+因此，填充覆盖子句时遍历候选码域中每个被呈现为元数一键形状的元素。对每个这样的呈现，语义假设在命题截断下给出表取值、候选输出中由它切出的元素及二者的成员关系。直到后文加入 `satAt`，这里都不声称这些元素是真正的公式键。
 <!--ja-->
 したがって覆いの節を満たす際には、候補の符号領域の要素のうち、アリティ一の鍵の形で表示されたものをすべて扱う。その各表示に対し、意味論的な仮定が命題的切り詰めの下で、表の値、それが切り出す候補出力の要素、および両者の所属を与える。後で `satAt` を加えるまでは、これらが実際の論理式の鍵であるとは主張しない。
 <!--/-->
@@ -748,7 +748,7 @@ Filling the coverage clause therefore ranges over every member of the proposed c
 <!--en-->
 The innermost bounded existential now receives the sliced set `x` together with its membership in the value set and the `Cuts` evidence just encoded by `definesB`. This completes the converse translation: semantic witnesses for a table entry and its slice yield satisfaction of the membership clause, while all existential data remain propositionally truncated.
 <!--zh-->
-最内层的有界存在量词现在以切出的集合 `x` 为见证，并同时接收 `x` 属于取值集合的证明以及刚由 `definesB` 编码的 `Cuts` 证据。这便完成反向翻译：表条目及其所切子集的语义见证给出隶属子句的满足，而所有存在数据仍保留在命题截断中。
+最内层的有界存在量词现在以切出的集合 `x` 为见证，并同时接收 `x` 属于取值集合的证明以及刚由 `definesB` 编码的 `Cuts` 证据。这便完成反向翻译：表条目及其所切子集的语义见证给出成员关系子句的满足，而所有存在数据仍保留在命题截断中。
 <!--ja-->
 最も内側の有界存在量化子には、切り出された集合 `x` と、`x` が値の集合に属する証明、さらに `definesB` で符号化したばかりの `Cuts` の証拠が渡される。これで逆向きの翻訳が完成する。表の項目とそれが切り出す部分集合についての意味論的な証人から所属の条項の充足が得られ、存在データはすべて命題的切り詰めの中に保たれる。
 <!--/-->
@@ -827,7 +827,7 @@ Two earlier readers supply the needed bridge. `SatRead` identifies the advertise
 <!--en-->
 Write `Tv` and `Cv` for the underlying sets occupying the table and code slots. The point of `satAt` is precisely that membership in these advertised sets can now be converted to, and reconstructed from, membership in the genuine satisfaction table and code domain.
 <!--zh-->
-记表槽与码槽所指称的底层集合为 `Tv` 与 `Cv`。`satAt` 的作用正在于：如今可以在这些描述集合中的隶属与真正满足关系表、码域中的隶属之间来回转换。
+记表槽与码槽所指称的底层集合为 `Tv` 与 `Cv`。`satAt` 的作用正在于：如今可以在这些描述集合中的成员关系与真正满足关系表、码域中的成员关系之间来回转换。
 <!--ja-->
 表の枠と符号の枠が表す基礎の集合を、それぞれ `Tv` と `Cv` と書く。`satAt` の役割はまさに、これら記述された集合への所属と、実際の充足関係表および符号領域への所属とを相互に変換できるようにすることである。
 <!--/-->
@@ -867,7 +867,7 @@ The table-value lemma says that the value recorded at the key of a formula equal
 <!--en-->
 The central bridge concerns one formula at a time. If `Cuts` says that `x` consists exactly of those members of `W` whose one-variable environments lie in the satisfaction set of `ψ`, then `x` is equal to the particular definable subset `DA.defSet ψ`. Extensionality proves this equality in both membership directions.
 <!--zh-->
-核心桥梁逐条处理公式。若 `Cuts` 说明 `x` 恰由 `W` 中那些其单变元环境属于 `ψ` 的满足集合的元素组成，那么 `x` 就等于这个特定的可定义子集 `DA.defSet ψ`。外延性通过两个隶属方向证明此等式。
+核心桥梁逐条处理公式。若 `Cuts` 说明 `x` 恰由 `W` 中那些其单变元环境属于 `ψ` 的满足集合的元素组成，那么 `x` 就等于这个特定的可定义子集 `DA.defSet ψ`。外延性通过两个成员关系方向证明此等式。
 <!--ja-->
 中心となる橋は論理式を一つずつ扱う。`Cuts` が、`x` は `W` の要素のうち、その一変数環境が `ψ` の充足集合に属するものからちょうど成ると述べるなら、`x` は特定の定義可能部分集合 `DA.defSet ψ` に等しくなる。この等式は、所属の両方向を示して外延性から得られる。
 <!--/-->
@@ -915,7 +915,7 @@ For the other direction, begin with `z ∈ x`. The outward half of `Cuts` gives 
 <!--en-->
 Transport the environment membership along that presentation path and apply `defSet-Sat` in reverse. This proves that the representative belongs to `DA.defSet ψ`; transporting back along the same path proves `z ∈ DA.defSet ψ` and completes the extensional equality.
 <!--zh-->
-沿该呈现路径运输环境隶属，再反向应用 `defSet-Sat`，便证明对应表示属于 `DA.defSet ψ`；沿同一路径运回后得到 `z ∈ DA.defSet ψ`，从而完成外延等式。
+沿该呈现路径运输环境成员关系，再反向应用 `defSet-Sat`，便证明对应表示属于 `DA.defSet ψ`；沿同一路径运回后得到 `z ∈ DA.defSet ψ`，从而完成外延等式。
 <!--ja-->
 その表示のパスに沿って環境の所属を移し、`defSet-Sat` を逆向きに適用する。これにより表示が `DA.defSet ψ` に属することが分かり、同じパスに沿って戻せば `z ∈ DA.defSet ψ` が得られて、外延的な等式が完成する。
 <!--/-->
@@ -929,7 +929,7 @@ Transport the environment membership along that presentation path and apply `def
 <!--en-->
 Conversely, suppose `DA.defSet ψ` is already known to equal `x`. To reconstruct `Cuts`, take a member of `x`, rewrite it as a member of `DA.defSet ψ`, and unpack definable-set membership. This yields both its presentation as an element of `W` and the corresponding one-variable environment's membership in the satisfaction set.
 <!--zh-->
-反过来，设已知 `DA.defSet ψ` 等于 `x`。为重建 `Cuts`，先取 `x` 的一个成员，把它改写为 `DA.defSet ψ` 的成员，再展开可定义子集的隶属。由此同时得到它作为 `W` 中元素的表示，以及相应单变元环境属于满足集合的证明。
+反过来，设已知 `DA.defSet ψ` 等于 `x`。为重建 `Cuts`，先取 `x` 的一个元素，把它改写为 `DA.defSet ψ` 的元素，再展开可定义子集的成员关系。由此同时得到它作为 `W` 中元素的表示，以及相应单变元环境属于满足集合的证明。
 <!--ja-->
 逆に、`DA.defSet ψ` がすでに `x` に等しいとする。`Cuts` を再構成するには、`x` の要素を `DA.defSet ψ` の要素へ書き換え、定義可能部分集合への所属を展開する。すると、その集合を `W` の要素として表すデータと、対応する一変数環境が充足集合に属する証明が同時に得られる。
 <!--/-->
@@ -945,7 +945,7 @@ Conversely, suppose `DA.defSet ψ` is already known to equal `x`. To reconstruct
 <!--en-->
 Unpacking that membership gives a representative in `W` and, through `defSet-Sat`, the required satisfaction-set membership of its one-variable environment. The equality between the representative and the original member transports both conclusions back to the member of `x`.
 <!--zh-->
-展开这一隶属，得到 `W` 中的一个表示，并经 `defSet-Sat` 得到其单变元环境属于所需满足集合。表示与原成员之间的等式把这两个结论都运输回 `x` 的该成员。
+展开这一成员关系，得到 `W` 中的一个表示，并经 `defSet-Sat` 得到其单变元环境属于所需满足集合。表示与原元素之间的等式把这两个结论都运输回 `x` 的该元素。
 <!--ja-->
 この所属を展開すると、`W` の中の表示と、`defSet-Sat` を通じて、その一変数環境が必要な充足集合に属することが得られる。表示と元の要素との等式に沿って、二つの結論をどちらも `x` のその要素へ戻す。
 <!--/-->
@@ -961,7 +961,7 @@ Unpacking that membership gives a representative in `W` and, through `defSet-Sat
 <!--en-->
 For the inward half of `Cuts`, start with a presented member of `W` whose one-variable environment satisfies `ψ`. The satisfaction bridge turns this into membership in `DA.defSet ψ`; the assumed equality `DA.defSet ψ = fst x` then places the member in `x`.
 <!--zh-->
-为证明 `Cuts` 的向内一半，从 `W` 中一个已呈现的成员出发，并假定其单变元环境满足 `ψ`。满足桥梁把它转成属于 `DA.defSet ψ`，再由假定的等式 `DA.defSet ψ = fst x` 把该成员放入 `x`。
+为证明 `Cuts` 的向内一半，从 `W` 中一个已呈现的元素出发，并假定其单变元环境满足 `ψ`。满足桥梁把它转成属于 `DA.defSet ψ`，再由假定的等式 `DA.defSet ψ = fst x` 把该元素放入 `x`。
 <!--ja-->
 `Cuts` の内向きの半分では、`W` の表示された要素から始め、その一変数環境が `ψ` を満たすと仮定する。充足の橋がこれを `DA.defSet ψ` への所属に変え、仮定した等式 `DA.defSet ψ = fst x` がその要素を `x` に入れる。
 <!--/-->
@@ -977,7 +977,7 @@ For the inward half of `Cuts`, start with a presented member of `W` whose one-va
 <!--en-->
 The final transports only reconcile the chosen presentation of the member with its underlying set. Thus `cut≡` and `cuts-of` together identify the `Cuts` predicate for `ψ` with equality to the single definable subset `DA.defSet ψ`; neither direction asserts uniqueness of a defining formula.
 <!--zh-->
-最后的运输只是在所选成员表示与其底层集合之间作对齐。因此，`cut≡` 与 `cuts-of` 合起来把 `ψ` 的 `Cuts` 谓词同「等于单个可定义子集 `DA.defSet ψ`」对应起来；两个方向都没有断言定义公式唯一。
+最后的运输只是在所选元素表示与其底层集合之间作对齐。因此，`cut≡` 与 `cuts-of` 合起来把 `ψ` 的 `Cuts` 谓词同「等于单个可定义子集 `DA.defSet ψ`」对应起来；两个方向都没有断言定义公式唯一。
 <!--ja-->
 最後の輸送は、選んだ要素の表示とその基礎の集合を揃えるだけである。したがって `cut≡` と `cuts-of` を合わせると、`ψ` に対する `Cuts` 述語は、一つの定義可能部分集合 `DA.defSet ψ` との等しさに対応する。どちらの向きも定義論理式の一意性を主張しない。
 <!--/-->
@@ -1005,7 +1005,7 @@ Soundness can now be stated accurately. Under the standing identification of the
 <!--en-->
 For the forward inclusion, the membership clause supplies, under propositional truncation, a key-shaped code, a satisfaction-table entry, and the condition describing the subset cut out by that entry. After `satAt` identifies the proposed code domain with the genuine one, `decodeAll` yields merely an arity-one formula whose code has the required second component. The table-value lemma then identifies the entry's value with that formula's satisfaction set.
 <!--zh-->
-对正向包含，隶属子句在命题截断下给出一个具有键形状的码、一个满足关系表条目，以及描述该条目所切子集的条件。`satAt` 把候选码域同真正码域对齐后，`decodeAll` 仅仅给出一条元数一公式，其编码具有所需的第二分量。表取值引理再把该条目的取值认同为这条公式的满足集合。
+对正向包含，成员关系子句在命题截断下给出一个具有键形状的码、一个满足关系表条目，以及描述该条目所切子集的条件。`satAt` 把候选码域同真正码域对齐后，`decodeAll` 仅仅给出一条元数一公式，其编码具有所需的第二分量。表取值引理再把该条目的取值认同为这条公式的满足集合。
 <!--ja-->
 順方向の包含では、所属の節が命題的切り詰めの下で、鍵の形をした符号、充足関係表の項目、その項目が切り出す部分集合を記述する条件を与える。`satAt` が候補の符号領域を実際のものと対応させた後、`decodeAll` は、符号が必要な第二成分をもつアリティ一の論理式が単に存在することだけを与える。続いて表の値の補題が、その項目の値をこの論理式の充足集合と同一視する。
 <!--/-->
@@ -1037,7 +1037,7 @@ The `Cuts` fact is transported along the table-value identification to the satis
 <!--en-->
 The value slot is presented as a carrier element for reading the outward direction of the membership clause.
 <!--zh-->
-取值槽被呈现为载体元素，以供隶属子句向外方向读取。
+取值槽被呈现为载体元素，以供成员关系子句向外方向读取。
 <!--ja-->
 値の枠は、所属の条項の外向きの読み出しのために、台の要素として提示される。
 <!--/-->
@@ -1049,7 +1049,7 @@ The value slot is presented as a carrier element for reading the outward directi
 <!--en-->
 For the reverse inclusion, membership in `𝒟ₒ (fst W)` yields only a propositionally truncated formula `ψ` together with an equality `DA.defSet ψ = x`. Inside elimination into the membership proposition, the coverage half of `defAt` provides a table value and a set `x'` in the value slot for the key built from this temporary witness `ψ`.
 <!--zh-->
-对反向包含，属于 `𝒟ₒ (fst W)` 只给出命题截断下的一条公式 `ψ` 及等式 `DA.defSet ψ = x`。在消去到隶属命题的过程中，`defAt` 的覆盖部分针对由这个临时见证 `ψ` 构造的键，给出一个表取值以及取值槽中的集合 `x'`。
+对反向包含，属于 `𝒟ₒ (fst W)` 只给出命题截断下的一条公式 `ψ` 及等式 `DA.defSet ψ = x`。在消去到成员关系命题的过程中，`defAt` 的覆盖部分针对由这个临时见证 `ψ` 构造的键，给出一个表取值以及取值槽中的集合 `x'`。
 <!--ja-->
 逆向きの包含では、`𝒟ₒ (fst W)` への所属から得られるのは、命題的に切り詰められた論理式 `ψ` と等式 `DA.defSet ψ = x` だけである。所属命題への消去の内部で、`defAt` の覆いの側が、この一時的な証人 `ψ` から作った鍵に対し、表の値と、値の枠に属する集合 `x'` を与える。
 <!--/-->
@@ -1094,7 +1094,7 @@ Completeness runs the same equivalence backwards. Still assuming the working-set
 <!--en-->
 Each formula's table entry is selected from the already-defined recursion table, which guarantees both the membership in the table and the identification with the explicit satisfaction set.
 <!--zh-->
-每条公式的表条目从已定义的递归表中选取，后者同时保证表中的隶属与显式满足集的认同。
+每条公式的表条目从已定义的递归表中选取，后者同时保证表中的成员关系与显式满足集的认同。
 <!--ja-->
 それぞれの論理式の表の項目は、すでに定義された再帰の表から選ばれる。その表は、表の中での所属と、明示的な充足集合との同定の両方を保証する。
 <!--/-->
@@ -1109,7 +1109,7 @@ Each formula's table entry is selected from the already-defined recursion table,
 <!--en-->
 For the membership conjunct, a member of the value slot is transported into `𝒟ₒ (fst W)` and then unpacked by `𝒟ₒ-inv`. The defining formula exists only under propositional truncation. Within that truncation, its formula key, the corresponding table entry, and the required `Cuts` evidence are assembled; no defining formula is selected globally or retained as canonical data.
 <!--zh-->
-对隶属合取项，先把取值槽的成员运输到 `𝒟ₒ (fst W)`，再由 `𝒟ₒ-inv` 展开。定义公式只在命题截断下存在。在该截断内部，证明组装它的公式键、相应表条目和所需的 `Cuts` 证据；整个过程没有全局选取定义公式，也没有把某条公式保留为规范数据。
+对成员关系合取项，先把取值槽的元素运输到 `𝒟ₒ (fst W)`，再由 `𝒟ₒ-inv` 展开。定义公式只在命题截断下存在。在该截断内部，证明组装它的公式键、相应表条目和所需的 `Cuts` 证据；整个过程没有全局选取定义公式，也没有把某条公式保留为规范数据。
 <!--ja-->
 所属の連言項では、値の枠の要素を `𝒟ₒ (fst W)` へ移し、`𝒟ₒ-inv` で展開する。定義論理式は命題的切り詰めの下でのみ存在する。その内部で論理式の鍵、対応する表の項目、必要な `Cuts` の証拠を組み立てるが、定義論理式を大域的に選んだり、標準的なデータとして保持したりはしない。
 <!--/-->
@@ -1125,7 +1125,7 @@ For the membership conjunct, a member of the value slot is transported into `�
 <!--en-->
 The chosen table value is the value already determined by the recursive satisfaction table for this formula key. Transporting `cuts-of` along its equality with the explicit satisfaction set supplies the slice evidence. This use of a temporary formula witness stays inside `map₁`, so the resulting membership witness remains propositionally truncated.
 <!--zh-->
-所用表取值是递归满足关系表已为该公式键确定的取值。沿它与显式满足集合的等式运输 `cuts-of`，便得到切出证据。这个临时公式见证始终留在 `map₁` 内，因此所得隶属见证仍受命题截断。
+所用表取值是递归满足关系表已为该公式键确定的取值。沿它与显式满足集合的等式运输 `cuts-of`，便得到切出证据。这个临时公式见证始终留在 `map₁` 内，因此所得成员关系见证仍受命题截断。
 <!--ja-->
 ここで用いる表の値は、再帰的な充足関係表がこの論理式の鍵に対してすでに定めた値である。その値と明示的な充足集合との等式に沿って `cuts-of` を移せば、切り出しの証拠が得られる。この一時的な論理式の証人は終始 `map₁` の内部にあり、得られる所属の証人も命題的に切り詰められたままである。
 <!--/-->
@@ -1172,7 +1172,7 @@ For a given arity-one key, decoding supplies merely a formula `ψ` whose code is
 <!--en-->
 The satisfaction table supplies the value attached to the decoded formula key, while `cuts-of` proves that this value cuts out exactly `DA.defSet ψ`. Together with the membership just obtained, these data satisfy the coverage clause. Because `decodeAll` is propositionally truncated and is eliminated only into that proposition-valued clause, the construction records existence without retaining a decoded formula.
 <!--zh-->
-满足关系表给出解码公式键所对应的取值，而 `cuts-of` 证明该取值从工作集中切出的恰是 `DA.defSet ψ`。连同刚得到的隶属，这些数据满足覆盖子句。由于 `decodeAll` 的结果受命题截断，且只被消去到这个命题值子句中，构造只记录存在性，并不保留解码所得的公式。
+满足关系表给出解码公式键所对应的取值，而 `cuts-of` 证明该取值从工作集中切出的恰是 `DA.defSet ψ`。连同刚得到的成员关系，这些数据满足覆盖子句。由于 `decodeAll` 的结果受命题截断，且只被消去到这个命题值子句中，构造只记录存在性，并不保留解码所得的公式。
 <!--ja-->
 充足関係表は、復号された論理式の鍵に対応する値を与え、`cuts-of` は、その値が作業集合からちょうど `DA.defSet ψ` を切り出すことを示す。先ほど得た所属と合わせれば、これらのデータは覆いの条項を満たす。`decodeAll` の結果は命題的に切り詰められ、この命題値の条項にだけ消去されるので、構成は存在だけを記録し、復号された論理式を保持しない。
 <!--/-->
@@ -1203,7 +1203,7 @@ def-sound v w T C E N γ W qw tg hs = DefRead.def-sound v w T C E N γ W qw tg h
 <!--en-->
 The exported completeness direction has the same hypotheses and reverses the implication: equality with `𝒟ₒ (fst W)` reconstructs satisfaction of `defAt`. Together the two theorems characterize the definable-subset collection without choosing a representative formula for each member and without identifying it with the full internal power set.
 <!--zh-->
-导出的完备性方向具有相同前提，并反转上述蕴含：与 `𝒟ₒ (fst W)` 的相等可重建 `defAt` 的满足。两条定理合起来刻画可定义子集的集合，既不为每个成员选取代表公式，也不把它等同于完整的内部幂集。
+导出的完备性方向具有相同前提，并反转上述蕴含：与 `𝒟ₒ (fst W)` 的相等可重建 `defAt` 的满足。两条定理合起来刻画可定义子集的集合，既不为每个元素选取代表公式，也不把它等同于完整的内部幂集。
 <!--ja-->
 公開される完全性の向きは同じ仮定をもち、含意を逆にする。`𝒟ₒ (fst W)` との等しさから `defAt` の充足が再構成される。二つの定理を合わせると、各要素の代表論理式を選ぶことも、完全な内部冪集合と同一視することもなく、定義可能部分集合の集まりが特徴づけられる。
 <!--/-->

@@ -28,7 +28,7 @@ module L.GCH.OrderType {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 open import FOL.Syntax
   using ( Formula; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ∃̇_; ∀̇_ )
 import FOL.Absoluteness
@@ -57,7 +57,7 @@ open import L.Recursion.Graph {ℓ} lem public using ( module PairFo )
 A well-founded relation coded in `L` can be collapsed after its members are presented by a small type. Transitivity then makes every individual collapse value an ordinal and hence an element of `L`. This chapter collects those values into the exact range `otL` and separately collects the graph `colTable`; it does not package an ordinality theorem for `otL`. Only after trichotomy is added does the graph become a coded injection from the original domain into that range.
 <!--zh-->
 
-把 `L` 中编码的关系成员表示为小类型后，便可对良基关系作塌缩。传递性进一步保证每个塌缩值都是序数，因而属于 `L`。本章把这些值收集成精确值域 `otL`，并另行收集图 `colTable`；本章没有封装 `otL` 的序数性定理。只有再加入三歧性之后，这张图才成为从原定义域到该值域的编码单射。
+把 `L` 中编码的关系元素表示为小类型后，便可对良基关系作塌缩。传递性进一步保证每个塌缩值都是序数，因而属于 `L`。本章把这些值收集成精确值域 `otL`，并另行收集图 `colTable`；本章没有封装 `otL` 的序数性定理。只有再加入三歧性之后，这张图才成为从原定义域到该值域的编码单射。
 <!--ja-->
 
 `L` で符号化された関係の要素を小さな型で表示すれば、整礎関係を崩壊できる。さらに推移性があれば、個々の崩壊値は順序数となり、したがって `L` の要素になる。本章はそれらの値を正確な値域 `otL` に集め、グラフ `colTable` を別に集めるが、`otL` の順序数性を定理としてまとめてはいない。三分法を追加して初めて、このグラフは元の領域からその値域への符号化された単射になる。
@@ -74,7 +74,7 @@ The classical assumption is explicit because one later existence proof must deci
 <!--en-->
 The collapse will be recognized by formulas of the first-order language of sets. Ordered-pair membership and equality provide the atomic tests, while conjunction, disjunction, implication, negation, and the unbounded quantifiers express the table conditions. Apparent restrictions such as“for every predecessor”are written by placing the relation atom in an implication, rather than by using a bounded-quantifier constructor.
 <!--zh-->
-塌缩将由集合论一阶语言中的公式识别。有序对的隶属与相等提供原子检验，合取、析取、蕴含、否定及无界量词则表达表的各项条件。「对每个前驱」这类看似受限的量化，通过把关系原子放在蕴含前件中表达，而不是使用有界量词构造子。
+塌缩将由集合论一阶语言中的公式识别。有序对的成员关系与相等提供原子检验，合取、析取、蕴含、否定及无界量词则表达表的各项条件。「对每个前驱」这类看似受限的量化，通过把关系原子放在蕴含前件中表达，而不是使用有界量词构造子。
 <!--ja-->
 崩壊は集合論の一階言語の論理式によって特徴づけられる。順序対の所属と等号が原子的な判定を与え、連言、選言、含意、否定、および非有界量化子が表の条件を表す。「すべての先行者について」のような制限は、関係の原子論理式を含意の前件に置いて表し、有界量化子の構成子は使わない。
 <!--/-->
@@ -82,7 +82,7 @@ The collapse will be recognized by formulas of the first-order language of sets.
 <!--en-->
 Two representations must agree throughout the construction. Members of `D` are handled through a small presentation so that well-founded recursion is available, whereas graph entries remain sets encoded as ordered pairs in the cumulative hierarchy. Injectivity of the presentation and of ordered-pair coding lets later proofs return from these representations to the original members and coordinates.
 <!--zh-->
-整个构造必须协调两种表示。为了进行良基递归，`D` 的成员通过一个小表示来处理；图的条目则仍是累积层级中编码为有序对的集合。表示与有序对编码的单射性，使后文能够从这些表示返回原成员和两个坐标。
+整个构造必须协调两种表示。为了进行良基递归，`D` 的元素通过一个小表示来处理；图的条目则仍是累积层级中编码为有序对的集合。表示与有序对编码的单射性，使后文能够从这些表示返回原元素和两个坐标。
 <!--ja-->
 構成の全体を通して、二つの表示を対応させる必要がある。整礎再帰を使うために `D` の要素は小さな表示を通して扱い、グラフの項目は累積階層の中で順序対として符号化された集合のまま扱う。表示と順序対符号化の単射性により、後の証明でこれらの表示から元の要素と二つの座標へ戻れる。
 <!--/-->
@@ -106,7 +106,7 @@ There are two distinct goals for the collected graph. First it must represent th
 <!--en-->
 The later uniqueness argument repeatedly compares constructible sets by their members. Extensionality turns pointwise equivalence of membership into equality of the underlying sets, and proposition-valued evidence makes equality of the paired constructible objects proof-irrelevant. This is also what permits truncated case analyses to end in equalities without extracting permanent choices.
 <!--zh-->
-后文的唯一性论证反复通过成员来比较可构造集合。外延性把逐点的隶属等价化为底层集合的相等，而取值为命题的证据使配对而成的可构造对象之相等不依赖具体证明。这也允许命题截断下的分情形以相等为目标结束，而不抽取固定选择。
+后文的唯一性论证反复通过元素来比较可构造集合。外延性把逐点的成员关系等价化为底层集合的相等，而取值为命题的证据使配对而成的可构造对象之相等不依赖具体证明。这也允许命题截断下的分情形以相等为目标结束，而不抽取固定选择。
 <!--ja-->
 後の一意性証明では、構成可能な集合をその要素によって繰り返し比較する。外延性は所属の点ごとの同値を基礎集合の等しさに変え、命題値の証拠によって、対として作られた構成可能な対象の等しさは証明の取り方に依存しない。そのため、切り詰められた場合分けから恒久的な選択を取り出さずに、等しさを結論できる。
 <!--/-->
@@ -114,7 +114,7 @@ The later uniqueness argument repeatedly compares constructible sets by their me
 <!--en-->
 The cumulative hierarchy supplies both the ambient sets and a small presentation of each set's members. Thus an element of `D` can be viewed either as an ambient set or as a small index, and membership transports the necessary constructibility evidence between the two views. The successor operation on hierarchy sets will later locate an ordinal collapse value at the stage following that ordinal.
 <!--zh-->
-累积层级同时提供外围集合及其成员的小表示。因此，`D` 的一个元素既可视为外围集合，也可视为小索引；隶属关系在两种视角之间传递所需的可构造性证据。层级集合上的后继运算稍后用于把序数塌缩值定位到该序数的后继层。
+累积层级同时提供外围集合及其元素的小表示。因此，`D` 的一个元素既可视为外围集合，也可视为小索引；成员关系在两种视角之间传递所需的可构造性证据。层级集合上的后继运算稍后用于把序数塌缩值定位到该序数的后继层。
 <!--ja-->
 累積階層は、周囲の集合と、その各集合の要素の小さな表示を同時に与える。したがって `D` の要素は、周囲の集合としても小さな添字としても見ることができ、所属によって二つの見方の間で必要な構成可能性の証拠を渡せる。階層の集合に対する後続操作は、後で順序数である崩壊値をその順序数の次の段階に位置付けるために使われる。
 <!--/-->
@@ -142,13 +142,13 @@ open import Cubical.Induction.WellFounded using ( WellFounded )
 <!--en-->
 Write `S` for the carrier of the constructible structure. Its structure membership `_∈ˢ_` expresses membership between elements of `L`; it is distinct from the small membership `_∈ₛ_` used below to read the presentation of an ambient hierarchy set.
 <!--zh-->
-以 `S` 表示可构造结构的载体。结构隶属 `_∈ˢ_` 表达 `L` 的元素之间的隶属；它不同于下文用于读取外围层级集合之表示的小隶属 `_∈ₛ_`。
+以 `S` 表示可构造结构的载体。结构成员关系 `_∈ˢ_` 表达 `L` 的元素之间的成员关系；它不同于下文用于读取外围层级集合之表示的小成员关系 `_∈ₛ_`。
 <!--ja-->
 構成可能構造の台を `S` と書く。構造の所属 `_∈ˢ_` は `L` の要素間の所属を表し、後で周囲の階層にある集合の表示を読むために使う小さな所属 `_∈ₛ_` とは異なる。
 <!--/-->
 
 ```agda
-open hPropStructure 𝒮ʟ using ( S; _∈ˢ_ )
+open hPropView 𝒮ʟ using ( S; _∈ˢ_ )
 ```
 
 <!--en-->
@@ -211,7 +211,7 @@ module Collapse (D R : S)
 <!--en-->
 Membership in `D` is stated as a one-place predicate on the carrier.
 <!--zh-->
-`D` 中的隶属被陈述为载体上的一元谓词。
+`D` 中的成员关系被陈述为载体上的一元谓词。
 <!--ja-->
 `D` への所属は、台の上の一項の述語として述べられる。
 <!--/-->
@@ -224,7 +224,7 @@ Membership in `D` is stated as a one-place predicate on the carrier.
 <!--en-->
 This predicate is a proposition, since it is membership in the underlying set of a presented set. Propositionhood here matters later: a construction may depend on a membership proof without thereby carrying choice data.
 <!--zh-->
-该谓词是命题，因为它是被呈现集合的底层集合中的隶属。这一命题性后文有用：某构造可以依赖于隶属证明，而不因此携带任何选择数据。
+该谓词是命题，因为它是被呈现集合的底层集合中的成员关系。这一命题性后文有用：某构造可以依赖于成员关系证明，而不因此携带任何选择数据。
 <!--ja-->
 この述語は命題である。提示された集合の底の集合への所属だからである。この命題性は後で重要になる。ある構成が所属の証明に依存しても、それで選択のデータを運ぶことはないのである。
 <!--/-->
@@ -237,7 +237,7 @@ This predicate is a proposition, since it is membership in the underlying set of
 <!--en-->
 The members of `D` are presented by a small type, the index type of the presentation.
 <!--zh-->
-`D` 的成员由一个小类型呈现；这个小类型就是该呈现的索引类型。
+`D` 的元素由一个小类型呈现；这个小类型就是该呈现的索引类型。
 <!--ja-->
 `D` の要素は、小さな型、すなわち提示の添字型によって提示される。
 <!--/-->
@@ -263,7 +263,7 @@ The presentation embeds its indices into the ambient hierarchy.
 <!--en-->
 An index is turned back into a constructible set: the embedded member is paired with a constructibility proof transported along the membership of `D`, using the transitivity of constructibility.
 <!--zh-->
-索引被转回可构造集合：嵌入的成员与沿 `D` 的隶属、由可构造性传递性搬运而来的可构造性证明配对。
+索引被转回可构造集合：嵌入的元素与沿 `D` 的成员关系、由可构造性传递性搬运而来的可构造性证明配对。
 <!--ja-->
 索引は構成可能な集合へ戻される。埋め込まれた要素には、`D` への所属に沿って、構成可能性の推移性によって運ばれた構成可能性の証明が対にされる。
 <!--/-->
@@ -276,7 +276,7 @@ An index is turned back into a constructible set: the embedded member is paired 
 <!--en-->
 The rebuilt constructible set is a member of `D`, by the presentation's own membership record.
 <!--zh-->
-重建出的可构造集合是 `D` 的成员，这由呈现自身的隶属记录给出。
+重建出的可构造集合是 `D` 的元素，这由呈现自身的成员关系记录给出。
 <!--ja-->
 作り直された構成可能な集合は `D` の要素である。これは、提示自身の所属の記録によるものである。
 <!--/-->
@@ -289,7 +289,7 @@ The rebuilt constructible set is a member of `D`, by the presentation's own memb
 <!--en-->
 The presentation has no duplicate indices: equality of two embedded members forces equality of their indices. This will later identify the index recovered from the known member `up b` with `b` itself, so that the collected graph contains the expected pair `(↪ b, col b)`. Injectivity of the collapse is a different result and will require trichotomy.
 <!--zh-->
-该表示没有重复索引：两个嵌入成员相等会迫使其索引相等。后文从已知成员 `up b` 恢复索引时，这一点把恢复所得索引认同为 `b` 本身，从而证明收集所得的图含有预期的对 `(↪ b, col b)`。塌缩函数的单射性是另一项结论，并且需要三歧性。
+该表示没有重复索引：两个嵌入元素相等会迫使其索引相等。后文从已知元素 `up b` 恢复索引时，这一点把恢复所得索引认同为 `b` 本身，从而证明收集所得的图含有预期的对 `(↪ b, col b)`。塌缩函数的单射性是另一项结论，并且需要三歧性。
 <!--ja-->
 この表示には重複する添字がない。埋め込まれた二つの要素が等しければ、その添字も等しくなる。後で既知の要素 `up b` から添字を復元するとき、復元された添字を `b` 自身と同一視できるため、集めたグラフが期待する対 `(↪ b, col b)` を含むことが分かる。崩壊関数の単射性は別の結果であり、三分法を必要とする。
 <!--/-->
@@ -302,7 +302,7 @@ The presentation has no duplicate indices: equality of two embedded members forc
 <!--en-->
 Conversely, a member of `D` together with its membership proof recovers a presenting index, by taking the fiber of the presentation at that member.
 <!--zh-->
-反过来，`D` 的成员连同其隶属证明，通过取呈现在该成员处的纤维，恢复出一个呈现索引。
+反过来，`D` 的元素连同其成员关系证明，通过取呈现在该元素处的纤维，恢复出一个呈现索引。
 <!--ja-->
 逆に、`D` の要素とその所属の証明からは、提示のその要素における繊維を取ることで、提示の索引が復元される。
 <!--/-->
@@ -315,7 +315,7 @@ Conversely, a member of `D` together with its membership proof recovers a presen
 <!--en-->
 The recovered index presents exactly the given member: the fiber carries the identification of the embedded index with the member.
 <!--zh-->
-恢复出的索引恰好呈现所给的成员：纤维携带嵌入索引与该成员的同一视。
+恢复出的索引恰好呈现所给的元素：纤维携带嵌入索引与该元素的同一视。
 <!--ja-->
 復元された索引は、与えられた要素をちょうど提示する。繊維が、埋め込まれた索引とその要素の同一視を運ぶからである。
 <!--/-->
@@ -328,7 +328,7 @@ The recovered index presents exactly the given member: the fiber carries the ide
 <!--en-->
 The code `R` induces a relation on the small presentation: `a ≺ b` means that the ordered pair of the represented members `↪ a` and `↪ b` belongs to `R`. This is the relation on which well-founded recursion runs. The two lemmas below connect it in both directions with `Holds R (up a) (up b)` on constructible sets.
 <!--zh-->
-码 `R` 在小表示上诱导一条关系：`a ≺ b` 表示由被表示成员 `↪ a` 与 `↪ b` 组成的有序对属于 `R`。良基递归正沿这条关系进行。下面两条引理把它与可构造集合上的 `Holds R (up a) (up b)` 双向连接起来。
+码 `R` 在小表示上诱导一条关系：`a ≺ b` 表示由被表示元素 `↪ a` 与 `↪ b` 组成的有序对属于 `R`。良基递归正沿这条关系进行。下面两条引理把它与可构造集合上的 `Holds R (up a) (up b)` 双向连接起来。
 <!--ja-->
 符号 `R` は小さな表示の上に関係を誘導する。`a ≺ b` とは、表示された要素 `↪ a` と `↪ b` の順序対が `R` に属することである。整礎再帰はこの関係に沿って進む。続く二つの補題が、この関係を構成可能集合上の `Holds R (up a) (up b)` と両方向に結び付ける。
 <!--/-->
@@ -342,7 +342,7 @@ The code `R` induces a relation on the small presentation: `a ≺ b` means that 
 <!--en-->
 For fixed indices `a` and `b`, the relation type `a ≺ b` is a proposition because it is a membership statement in a hierarchy set. Thus the relation records only whether the edge exists, not additional data carried by a particular proof. This propositionhood does not itself decide the edge; excluded middle is invoked later only where such a decision is needed.
 <!--zh-->
-对固定索引 `a` 与 `b`，关系类型 `a ≺ b` 是命题，因为它陈述一个层级集合中的隶属。因此，这条关系只记录边是否存在，不包含由某个特定证明携带的额外数据。这项命题性本身并不判定边是否存在；只有后文真正需要这种判定时才使用排中律。
+对固定索引 `a` 与 `b`，关系类型 `a ≺ b` 是命题，因为它陈述一个层级集合中的成员关系。因此，这条关系只记录边是否存在，不包含由某个特定证明携带的额外数据。这项命题性本身并不判定边是否存在；只有后文真正需要这种判定时才使用排中律。
 <!--ja-->
 添字 `a` と `b` を固定すると、関係の型 `a ≺ b` は階層内の集合への所属を述べる命題である。したがって、この関係が記録するのは辺の有無だけであり、特定の証明が担う追加のデータではない。この命題性だけでは辺の有無を判定できず、その判定が実際に必要となる後の箇所で初めて排中律を使う。
 <!--/-->
@@ -355,7 +355,7 @@ For fixed indices `a` and `b`, the relation type `a ≺ b` is a proposition beca
 <!--en-->
 Membership in the coded relation yields the small relation: the ordered pair recorded in `L` is recognized by the bridge between the two membership relations.
 <!--zh-->
-编码关系中的隶属给出小关系：`L` 中记录的有序对由两种隶属关系之间的桥识别。
+编码关系中的成员关系给出小关系：`L` 中记录的有序对由两种成员关系之间的桥识别。
 <!--ja-->
 符号化された関係の中の所属は、小さな関係を与える。`L` の中に記録された順序対が、二つの所属の関係をつなぐ橋によって認められるのである。
 <!--/-->
@@ -398,7 +398,7 @@ Well-foundedness of `_≺_` supplies the recursion and induction by which `col` 
 <!--en-->
 The Mostowski construction now defines `col p` as the set of values `col r` for predecessors `r ≺ p`. Its computation rule `col-eq` identifies the recursive value with this explicit predecessor image. The membership lemmas give `col r ∈ col p` from a specified predecessor and, conversely, only a propositionally truncated predecessor from an arbitrary member; `col-ord` proves each individual `col p` is an ordinal.
 <!--zh-->
-Mostowski 构造把 `col p` 定义为所有前驱 `r ≺ p` 的取值 `col r` 所成的集合。计算律 `col-eq` 把递归取值与这一显式前驱像认同。隶属引理从指定前驱得到 `col r ∈ col p`；反过来，从任意成员只得到命题截断下的前驱存在。`col-ord` 则证明每个单独的 `col p` 都是序数。
+Mostowski 构造把 `col p` 定义为所有前驱 `r ≺ p` 的取值 `col r` 所成的集合。计算律 `col-eq` 把递归取值与这一显式前驱像认同。成员关系引理从指定前驱得到 `col r ∈ col p`；反过来，从任意元素只得到命题截断下的前驱存在。`col-ord` 则证明每个单独的 `col p` 都是序数。
 <!--ja-->
 Mostowski の構成は、`col p` を先行者 `r ≺ p` の値 `col r` からなる集合として定める。計算規則 `col-eq` は、再帰的な値をこの明示的な先行者像と同一視する。所属の補題は、指定された先行者から `col r ∈ col p` を与えるが、逆に任意の要素から得る先行者は命題的に切り詰められた存在にとどまる。`col-ord` は個々の `col p` が順序数であることを証明する。
 <!--/-->
@@ -465,7 +465,7 @@ Complete F R x = (y : S) → Holds R y x → ∥ Σ[ u ∶ S ] Holds F y u ∥�
 <!--en-->
 The predicate `Src F R x w` says that `w` occurs as a value recorded by `F` at some `R`-predecessor of `x`. Both the predecessor and its table entry remain under propositional truncation, since later reasoning uses only the resulting membership fact.
 <!--zh-->
-谓词 `Src F R x w` 表示：`F` 在 `x` 的某个 `R` 前驱处把 `w` 记录为取值。该前驱及其表项都留在命题截断之下，因为后文只使用由此得到的隶属事实。
+谓词 `Src F R x w` 表示：`F` 在 `x` 的某个 `R` 前驱处把 `w` 记录为取值。该前驱及其表项都留在命题截断之下，因为后文只使用由此得到的成员关系事实。
 <!--ja-->
 述語 `Src F R x w` は、`x` のある `R`-先行者において `F` が `w` を値として記録することを表す。その先行者と表項目はともに命題的切り詰めの中にとどまる。後の議論が使うのは、そこから得られる所属の事実だけだからである。
 <!--/-->
@@ -478,7 +478,7 @@ Src F R x w = ∥ Σ[ y ∶ S ] (Holds R y x × Holds F y w) ∥₁
 <!--en-->
 A value `v` is correct for `x` when its members are exactly the source values: membership in `v` yields a source, and every source is a member. The two directions together say that `v` is the set of recorded predecessor values, read purely through membership.
 <!--zh-->
-值 `v` 对 `x` 是正确的，当其成员恰为来源值：`v` 中的隶属给出一个来源，而每个来源都是成员。两个方向合起来说：`v` 就是所记录的前驱值之集，完全通过隶属读取。
+值 `v` 对 `x` 是正确的，当其元素恰为来源值：`v` 中的成员关系给出一个来源，而每个来源都是元素。两个方向合起来说：`v` 就是所记录的前驱值之集，完全通过成员关系读取。
 <!--ja-->
 値 `v` が `x` に対して正しいのは、その要素がちょうど源となる値であるときである。`v` の中の所属から源が得られ、すべての源が要素である。二つの方向合わせて、`v` が記録された先行者の値の集合であることを、所属だけを通して言っている。
 <!--/-->
@@ -607,7 +607,7 @@ The semantic existential is already propositionally truncated. The map defining 
 <!--en-->
 The graph membership of the predecessor closes the reading.
 <!--zh-->
-前驱的图隶属闭合该读取。
+前驱的图成员关系闭合该读取。
 <!--ja-->
 先行者のグラフへの所属が、読みを閉じる。
 <!--/-->
@@ -647,7 +647,7 @@ The graph atom is written last, completing the fill.
 <!--en-->
 The formula `valueAt f R x v` quantifies over an arbitrary set `w` and states both implications between `w ∈ v` and `srcAt f R x w`. Thus it expresses the extensional characterization of `v`: its members are exactly the values recorded at predecessors of `x`. The definition unfolds `srcAt` so that this characterization is presented as one first-order formula.
 <!--zh-->
-公式 `valueAt f R x v` 对任意集合 `w` 量化，并同时陈述 `w ∈ v` 与 `srcAt f R x w` 之间的两个方向。因此，它给出 `v` 的外延刻画：`v` 的成员恰是 `x` 的各前驱处所记录的取值。定义展开 `srcAt`，使这一刻画成为一条完整的一阶公式。
+公式 `valueAt f R x v` 对任意集合 `w` 量化，并同时陈述 `w ∈ v` 与 `srcAt f R x w` 之间的两个方向。因此，它给出 `v` 的外延刻画：`v` 的元素恰是 `x` 的各前驱处所记录的取值。定义展开 `srcAt`，使这一刻画成为一条完整的一阶公式。
 <!--ja-->
 論理式 `valueAt f R x v` は任意の集合 `w` を量化し、`w ∈ v` と `srcAt f R x w` の間の二つの含意をともに述べる。したがって、`v` を外延的に特徴づけている。つまり `v` の要素は、`x` の先行者で記録された値にちょうど一致する。定義では `srcAt` を展開し、この特徴づけを一つの一階論理式として表す。
 <!--/-->
@@ -675,7 +675,7 @@ The biconditional is the conjunction of its two directions, with the source form
 <!--en-->
 Reading `valueAt` outward instantiates its universal quantifier at each `w`. The forward implication first turns membership in `v` into satisfaction of the source formula, and `src-out` then reads that satisfaction as `Src F R x w`, giving the forward half of `ValueIs`.
 <!--zh-->
-向外读取 `valueAt` 时，要在每个 `w` 处实例化其全称量词。正向蕴含先把 `v` 中的隶属转换为来源公式的满足，`src-out` 再把这份满足读成 `Src F R x w`，从而得到 `ValueIs` 的正向一半。
+向外读取 `valueAt` 时，要在每个 `w` 处实例化其全称量词。正向蕴含先把 `v` 中的成员关系转换为来源公式的满足，`src-out` 再把这份满足读成 `Src F R x w`，从而得到 `ValueIs` 的正向一半。
 <!--ja-->
 `valueAt` を外向きに読むとき、その全称量化子を各 `w` で具体化する。前向きの含意はまず `v` への所属を出所の論理式の充足へ変え、次に `src-out` がその充足を `Src F R x w` として読む。これにより `ValueIs` の前向きの半分が得られる。
 <!--/-->
@@ -703,7 +703,7 @@ The backward direction is read symmetrically, through the source filling. Thus t
 <!--en-->
 To prove the forward implication of `valueAt`, take a member `w` of the proposed value `v`. The host-level value equation says, merely, that `w` already occurs as the value of some `R`-predecessor of `x`. Reading that source statement inward supplies the existential witness required by the object-language formula in the environment extended by `w`.
 <!--zh-->
-为证明 `valueAt` 的正向蕴含，取候选取值 `v` 的一个成员 `w`。宿主级取值方程说，在命题截断下，`w` 已经作为 `x` 的某个 `R` 前驱之取值出现。把这条来源陈述向内读取，便在以 `w` 扩展的环境中给出对象语言公式所需的存在见证。
+为证明 `valueAt` 的正向蕴含，取候选取值 `v` 的一个元素 `w`。宿主级取值方程说，在命题截断下，`w` 已经作为 `x` 的某个 `R` 前驱之取值出现。把这条来源陈述向内读取，便在以 `w` 扩展的环境中给出对象语言公式所需的存在见证。
 <!--ja-->
 `valueAt` の前向きの含意を示すため、候補となる値 `v` の要素 `w` を取る。ホストレベルの値の方程式は、`w` が `x` のある `R`-先行者で記録された値として単に現れることを述べる。この出所の主張を内向きに読むと、`w` で拡張した環境において、対象言語の論理式が求める存在証人が得られる。
 <!--/-->
@@ -747,7 +747,7 @@ opaque
 <!--en-->
 Those two conditions separate existence from the value equation. Completeness says that every `R`-predecessor of `x` has some entry in the table, while the value clause says that the members of `v` are exactly the values appearing at those predecessor entries. The formula imposes no domain condition beyond entries already present in the table.
 <!--zh-->
-这两项条件把存在性与取值方程分开。完备性说，`x` 的每个 `R` 前驱在表中都有某个表项；取值子句则说，`v` 的成员恰是这些前驱表项处出现的取值。除此以外，公式并不规定表的定义域。
+这两项条件把存在性与取值方程分开。完备性说，`x` 的每个 `R` 前驱在表中都有某个表项；取值子句则说，`v` 的元素恰是这些前驱表项处出现的取值。除此以外，公式并不规定表的定义域。
 <!--ja-->
 二つの条件は、存在と値の方程式を分けて述べる。完全性は `x` の各 `R`-先行者に表の項目があることを述べ、値の条項は `v` の要素がそれらの先行者で記録された値とちょうど一致することを述べる。この論理式は、表にすでに現れる項目以外について定義域を指定しない。
 <!--/-->
@@ -760,7 +760,7 @@ Those two conditions separate existence from the value equation. Completeness sa
 <!--en-->
 To read the formula outward, begin with an actual table entry `(x,v)`. Adequacy of `appAt` turns its membership proof into the antecedent required by the formula. Instantiating the two quantifiers at `x` and `v` then yields completeness at `x` and the corresponding value equation; this line reads the completeness half back into the host-level predicate.
 <!--zh-->
-向外读取公式时，先取表中一个实际表项 `(x,v)`。`appAt` 的充分性把它的隶属证明转换为公式前件所需的证明。在 `x` 与 `v` 处实例化两层量词后，便得到 `x` 处的完备性及相应的取值方程；本行把其中的完备性一半读回宿主级谓词。
+向外读取公式时，先取表中一个实际表项 `(x,v)`。`appAt` 的充分性把它的成员关系证明转换为公式前件所需的证明。在 `x` 与 `v` 处实例化两层量词后，便得到 `x` 处的完备性及相应的取值方程；本行把其中的完备性一半读回宿主级谓词。
 <!--ja-->
 論理式を外向きに読むには、まず表の実際の項目 `(x,v)` を取る。`appAt` の妥当性によって、その所属証明は論理式の前件へ移される。二つの量化子を `x` と `v` で具体化すると、`x` での完全性と対応する値の方程式が得られ、この行では完全性の側をホストレベルの述語へ読み戻す。
 <!--/-->
@@ -954,7 +954,7 @@ The domain representation and its coded relation now provide the common setting 
 <!--en-->
 If `q` is a member of `D`, decoding its membership proof gives an index `toDom q mq`. Re-embedding that index has the same underlying iterative set as `q` by `toDom-val`; since the constructibility component of `S` is proposition-valued, equality of the underlying sets upgrades to equality in `S`.
 <!--zh-->
-若 `q` 是 `D` 的成员，对其成员证明解码便得到索引 `toDom q mq`。由 `toDom-val`，把该索引重新嵌入后所得元素与 `q` 具有相同的底层迭代集合；又因 `S` 的可构造性分量为命题，底层集合的相等可提升为 `S` 中的相等。
+若 `q` 是 `D` 的元素，对其成员关系证明解码便得到索引 `toDom q mq`。由 `toDom-val`，把该索引重新嵌入后所得元素与 `q` 具有相同的底层迭代集合；又因 `S` 的可构造性分量为命题，底层集合的相等可提升为 `S` 中的相等。
 <!--ja-->
 `q` が `D` の要素なら、その所属証明を復号して添字 `toDom q mq` を得る。`toDom-val` により、この添字を埋め戻したものと `q` は同じ基礎の反復的集合をもつ。さらに `S` の構成可能性の成分は命題なので、基礎の集合の等しさから `S` における等しさが従う。
 <!--/-->
@@ -998,7 +998,7 @@ The module now assumes that the small relation is well-founded and transitive. W
 <!--en-->
 With these two hypotheses, the Mostowski recursion assigns to each `a` the set `col a` of collapse values of its predecessors. Its introduction and elimination lemmas characterize membership in that set, and `col-ord` proves that each individual `col a` is an ordinal. This statement concerns the pointwise collapse values, not yet the set `otL` collected later.
 <!--zh-->
-在这两项假设下，Mostowski 递归为每个 `a` 指派集合 `col a`，其成员是诸前驱的塌缩值。相应的引入与消去引理刻画该集合的隶属，而 `col-ord` 证明每个单独的 `col a` 都是序数。这里说的是逐点塌缩值，尚不是稍后收集得到的集合 `otL`。
+在这两项假设下，Mostowski 递归为每个 `a` 指派集合 `col a`，其元素是诸前驱的塌缩值。相应的引入与消去引理刻画该集合的成员关系，而 `col-ord` 证明每个单独的 `col a` 都是序数。这里说的是逐点塌缩值，尚不是稍后收集得到的集合 `otL`。
 <!--ja-->
 この二つの仮定のもとで、Mostowski 再帰は各 `a` に、その先行者の崩壊値からなる集合 `col a` を割り当てる。導入と除去の補題がその集合への所属を特徴づけ、`col-ord` は個々の `col a` が順序数であることを示す。ここでの主張は各点の崩壊値についてであり、後で集める集合 `otL` についてではない。
 <!--/-->
@@ -1023,7 +1023,7 @@ Well-foundedness rules out a loop `a ≺ a`. In the induction step, such a loop 
 <!--en-->
 The uniqueness statement is conditional on an entry being present: if a correct table `F` records `v` at the genuine domain point `up a`, then the underlying set of `v` equals `col a`. It does not claim that every correct table contains an entry at every member of `D`. The proof proceeds by well-founded induction on `a`, with the displayed equality as its motive.
 <!--zh-->
-此处的唯一性陈述以表项已经存在为条件：若正确表 `F` 在真实定义域点 `up a` 记录取值 `v`，则 `v` 的底层集合等于 `col a`。它并不声称每张正确表在 `D` 的每个成员处都有表项。证明对 `a` 作良基归纳，并以所示等式为归纳谓词。
+此处的唯一性陈述以表项已经存在为条件：若正确表 `F` 在真实定义域点 `up a` 记录取值 `v`，则 `v` 的底层集合等于 `col a`。它并不声称每张正确表在 `D` 的每个元素处都有表项。证明对 `a` 作良基归纳，并以所示等式为归纳谓词。
 <!--ja-->
 ここでの一意性は、項目が存在することを条件とする。正しい表 `F` が実際の定義域の点 `up a` で値 `v` を記録するなら、`v` の基礎の集合は `col a` に等しくなる。すべての正しい表が `D` の全要素で項目をもつとは主張していない。証明は `a` に関する整礎帰納で進み、表示された等式を帰納的述語とする。
 <!--/-->
@@ -1055,7 +1055,7 @@ The proof reduces to a pointwise equivalence: `w` belongs to the recorded value 
 <!--en-->
 The correctness of the entry at `a` has two complementary consequences. The preceding `cmp` supplies table entries for all predecessors, while `val` identifies membership in `v` with occurrence as a predecessor value. The two directions of the coming extensionality argument use these consequences in opposite orders.
 <!--zh-->
-`a` 处表项的正确性有两项互补后果。前面的 `cmp` 为所有前驱提供表项，而 `val` 把对 `v` 的隶属与作为某个前驱取值出现相互认同。接下来的外延性论证在两个方向中以相反次序使用这两项事实。
+`a` 处表项的正确性有两项互补后果。前面的 `cmp` 为所有前驱提供表项，而 `val` 把对 `v` 的成员关系与作为某个前驱取值出现相互认同。接下来的外延性论证在两个方向中以相反次序使用这两项事实。
 <!--ja-->
 `a` での項目の正しさには、相補的な二つの帰結がある。先の `cmp` はすべての先行者に表の項目を与え、`val` は `v` への所属と先行者の値として現れることを同定する。続く外延性の議論の二方向では、この二つを逆の順で用いる。
 <!--/-->
@@ -1068,7 +1068,7 @@ The correctness of the entry at `a` has two complementary consequences. The prec
 <!--en-->
 For the first inclusion, let `w` be a member of the recorded value `v`. Since `v` is constructible, membership makes `w` constructible as well, so it can be packaged as the carrier element `wS`. The forward half of `val` then gives, under propositional truncation, an `R`-predecessor `y` of `a` at which the table records `wS`.
 <!--zh-->
-为证第一向包含，取被记录取值 `v` 的成员 `w`。由于 `v` 可构造，成员关系也使 `w` 可构造，故可将其打包为载体元素 `wS`。随后，`val` 的正向一半在命题截断下给出 `a` 的某个 `R` 前驱 `y`，表在该处记录 `wS`。
+为证第一向包含，取被记录取值 `v` 的元素 `w`。由于 `v` 可构造，成员关系也使 `w` 可构造，故可将其打包为载体元素 `wS`。随后，`val` 的正向一半在命题截断下给出 `a` 的某个 `R` 前驱 `y`，表在该处记录 `wS`。
 <!--ja-->
 第一の包含を示すため、記録された値 `v` の要素 `w` を取る。`v` は構成可能であり、その要素 `w` も構成可能なので、台の要素 `wS` として組にできる。すると `val` の前向きの半分から、`a` のある `R`-先行者 `y` で表が `wS` を記録することが、命題的切り詰めのもとで得られる。
 <!--/-->
@@ -1100,7 +1100,7 @@ The source entry is converted into the two facts needed: the relation between th
 <!--en-->
 The internal index `b` is recovered by descending along the membership, and the relation entry is transported to the internal form `b ≺ a`. The equation `e` records the identification of `w` with the collapse of `b`, to be proved next.
 <!--zh-->
-内部索引 `b` 由隶属下降而恢复，关系条目被运输为内部形式 `b ≺ a`。等式 `e` 记录 `w` 与 `b` 的塌缩的认同，下一步证明。
+内部索引 `b` 由成员关系下降而恢复，关系条目被运输为内部形式 `b ≺ a`。等式 `e` 记录 `w` 与 `b` 的塌缩的认同，下一步证明。
 <!--ja-->
 内部の添字 `b` は所属を下降して復元され、関係の項目は内部の形 `b ≺ a` へ運ばれる。等式 `e` が、`w` と `b` の崩壊の同定を記録する。これは次に証明される。
 <!--/-->
@@ -1160,7 +1160,7 @@ For the predecessor `r` supplied by `col-out`, completeness of the entry at `a` 
 <!--en-->
 The reverse half of the value equation turns a source witness into membership in `v`. Here that witness uses the predecessor `up r`, its relation to `up a`, and the table entry with value `u`; the induction hypothesis identifies `u` with `col r`, and the equation `col r ≡ w` transports the entry so that its value is `w`.
 <!--zh-->
-取值方程的反向一半把来源见证转换为对 `v` 的隶属。这里的来源见证由前驱 `up r`、它与 `up a` 的关系，以及取值为 `u` 的表项组成；归纳假设把 `u` 认同为 `col r`，再由等式 `col r ≡ w` 运输该表项，使其取值成为 `w`。
+取值方程的反向一半把来源见证转换为对 `v` 的成员关系。这里的来源见证由前驱 `up r`、它与 `up a` 的关系，以及取值为 `u` 的表项组成；归纳假设把 `u` 认同为 `col r`，再由等式 `col r ≡ w` 运输该表项，使其取值成为 `w`。
 <!--ja-->
 値の方程式の逆向きの半分は、出所の証人から `v` への所属を導く。ここでの証人は、先行者 `up r`、それと `up a` の関係、および値 `u` をもつ表の項目からなる。帰納仮定が `u` を `col r` と同定し、さらに等式 `col r ≡ w` に沿って項目を輸送することで、その値を `w` にする。
 <!--/-->
@@ -1172,7 +1172,7 @@ The reverse half of the value equation turns a source witness into membership in
 <!--en-->
 Now suppose `q` is genuinely a member of `D` and `v` satisfies the local collapse formula at `q`. The formula supplies only a propositionally truncated correct table containing `(q,v)`, but the desired set equality is a proposition, so the truncation can be eliminated. After transporting the entry from `q` to its decoded representative, `correct-val` identifies `fst v` with `col (toDom q mq)`.
 <!--zh-->
-现设 `q` 确为 `D` 的成员，且 `v` 在 `q` 处满足局部塌缩公式。该公式只在命题截断下给出一张含有 `(q,v)` 的正确表；但所求集合等式是命题，故可以消去此截断。把表项从 `q` 运输到其解码表示后，`correct-val` 便把 `fst v` 认同为 `col (toDom q mq)`。
+现设 `q` 确为 `D` 的元素，且 `v` 在 `q` 处满足局部塌缩公式。该公式只在命题截断下给出一张含有 `(q,v)` 的正确表；但所求集合等式是命题，故可以消去此截断。把表项从 `q` 运输到其解码表示后，`correct-val` 便把 `fst v` 认同为 `col (toDom q mq)`。
 <!--ja-->
 ここで `q` が実際に `D` の要素であり、`v` が `q` で局所的な崩壊の論理式を満たすとする。論理式から得られるのは、`(q,v)` を含む正しい表が単に存在することだけであるが、求める集合の等式は命題なので切り詰めを除去できる。項目を `q` から復号された表示へ輸送すると、`correct-val` によって `fst v` は `col (toDom q mq)` と同定される。
 <!--/-->
@@ -1298,7 +1298,7 @@ Reading `ψ` outward preserves the truncation of its disjunction. In the predece
 <!--en-->
 To obtain that host-level refutation, assume `q R a`. The inward reading of the pair expression turns this assumption into satisfaction of the membership atom, which the object-language negation rules out. The equality identifying `z` with the default entry already has the required host-level form and is retained unchanged.
 <!--zh-->
-为得到这份宿主级反驳，暂设 `q R a`。对表达式的向内读法把该假设转换为隶属原子式的满足，而对象语言否定排除了这种满足。把 `z` 认同为默认表项的等式已经具有所需的宿主级形式，故原样保留。
+为得到这份宿主级反驳，暂设 `q R a`。对表达式的向内读法把该假设转换为成员关系原子式的满足，而对象语言否定排除了这种满足。把 `z` 认同为默认表项的等式已经具有所需的宿主级形式，故原样保留。
 <!--ja-->
 このホストレベルの反証を得るため、`q R a` と仮定する。対の式を内向きに読むと、この仮定は所属原子式の充足へ移るが、対象言語の否定がそれを排除する。`z` を既定の項目と同定する等式はすでに必要なホストレベルの形なので、そのまま保たれる。
 <!--/-->
@@ -1338,7 +1338,7 @@ The right branch lifts the host-side refutation into the object language and car
 <!--en-->
 The helper `b≺a-of` decodes the host-side relation membership into the internal comparison: if `q` relates to `a`, then the internal index of `q` is below `a`. The decoding is by descending along the membership to recover the index.
 <!--zh-->
-辅助事实 `b≺a-of` 把宿主侧关系隶属解码为内部比较：若 `q` 与 `a` 有关系，则 `q` 的内部索引低于 `a`。解码方式是沿隶属下降以恢复索引。
+辅助事实 `b≺a-of` 把宿主侧关系成员关系解码为内部比较：若 `q` 与 `a` 有关系，则 `q` 的内部索引低于 `a`。解码方式是沿成员关系下降以恢复索引。
 <!--ja-->
 補助の `b≺a-of` は、ホスト側の関係の所属を、内部の比較へ復号する。`q` が `a` と関係するなら、`q` の内部の添字は `a` より下である。復号は、所属を下降して添字を取り出すことによって行われる。
 <!--/-->
@@ -1433,7 +1433,7 @@ For a competing witness in the left branch, `colFo-val` identifies its second co
 <!--en-->
 The refuted-membership case closes the uniqueness argument. The default entry `ea` satisfies `ψ`. Reading any competing witness outward either produces a positive membership, contradicting `nh`, or gives the default-branch equality `fst z' ≡ fst ea`. In the latter case, propositionality of constructibility lifts this equality of underlying sets to the required equality `z' ≡ ea` in `S`.
 <!--zh-->
-否定隶属的情形闭合了唯一性论证。默认条目 `ea` 满足 `ψ`。向外读取任意竞争见证时，要么得到一条与 `nh` 矛盾的肯定隶属，要么由默认支得到 `fst z' ≡ fst ea`。在后一种情形中，可构造性证明的命题性把这条底层集合的等式提升为 `S` 中所需的等式 `z' ≡ ea`。
+否定成员关系的情形闭合了唯一性论证。默认条目 `ea` 满足 `ψ`。向外读取任意竞争见证时，要么得到一条与 `nh` 矛盾的肯定成员关系，要么由默认支得到 `fst z' ≡ fst ea`。在后一种情形中，可构造性证明的命题性把这条底层集合的等式提升为 `S` 中所需的等式 `z' ≡ ea`。
 <!--ja-->
 所属を否定する場合が一意性の議論を閉じる。既定の項目 `ea` は `ψ` を満たす。別の証人を外向きに読むと、`nh` と矛盾する肯定的な所属が得られるか、既定の分岐から `fst z' ≡ fst ea` が得られる。後者では、構成可能性の証明が命題であることにより、基礎集合のこの等式が `S` で必要な等式 `z' ≡ ea` へ持ち上がる。
 <!--/-->
@@ -1518,7 +1518,7 @@ In the strict case, the body contains the relation witness `b ≺ a` and the ind
 <!--en-->
 Conversely, membership in `Fa` merely yields an index `b` with `b ≺ a` or `b ≡ a`, together with an equality identifying the member with `pr(↪ b,col b)`. The index remains under propositional truncation, so this result does not choose a representative.
 <!--zh-->
-反过来，属于 `Fa` 仅仅给出一个满足 `b ≺ a` 或 `b ≡ a` 的索引 `b`，以及把该成员等同于 `pr(↪ b,col b)` 的等式。索引仍处于命题截断之下，因此这个结论没有选定一个代表元。
+反过来，属于 `Fa` 仅仅给出一个满足 `b ≺ a` 或 `b ≡ a` 的索引 `b`，以及把该元素等同于 `pr(↪ b,col b)` 的等式。索引仍处于命题截断之下，因此这个结论没有选定一个代表元。
 <!--ja-->
 逆に、`Fa` への所属からは、`b ≺ a` または `b ≡ a` を満たす添字 `b` と、その要素を `pr(↪ b,col b)` と同一視する等式が単に得られる。添字は命題的切り詰めの中にあるため、この結論は代表を選ばない。
 <!--/-->
@@ -1653,7 +1653,7 @@ Suppose the chosen entry is represented by `b ≤ a`, so that `x` presents `b` a
 <!--en-->
 The central conversion takes a coded predecessor `y R x` to a strict comparison in `Dom`. The entry representation identifies `fst x` with the represented member `↪ b`, rather than identifying the carrier element `x` with the external index `b`. After `Rsub` places `y` in `D`, `toDom` recovers the index that can be compared with `b`.
 <!--zh-->
-这里的关键转换，是把编码关系中的前驱 `y R x` 化为 `Dom` 中的严格比较。条目的表示把 `fst x` 与被表示成员 `↪ b` 等同，并不把载体元素 `x` 与外围索引 `b` 等同。`Rsub` 先证明 `y` 属于 `D`，随后 `toDom` 才恢复出可与 `b` 比较的索引。
+这里的关键转换，是把编码关系中的前驱 `y R x` 化为 `Dom` 中的严格比较。条目的表示把 `fst x` 与被表示元素 `↪ b` 等同，并不把载体元素 `x` 与外围索引 `b` 等同。`Rsub` 先证明 `y` 属于 `D`，随后 `toDom` 才恢复出可与 `b` 比较的索引。
 <!--ja-->
 ここで中心となる変換は、符号化された先行者 `y R x` を `Dom` 上の狭義比較へ移すことである。項目の表示が同一視するのは `fst x` と表示された要素 `↪ b` であり、台の要素 `x` と外部の添字 `b` ではない。`Rsub` がまず `y` を `D` に入れ、その後で `toDom` が `b` と比較できる添字を復元する。
 <!--/-->
@@ -1740,7 +1740,7 @@ For the forward half of `ValueIs`, rewrite `w ∈ v` as `fst w ∈ col b`. The o
 <!--en-->
 The two memberships are transported along the equation of the index and the strict comparison, placing both the relation and the table membership at the named predecessor.
 <!--zh-->
-两条隶属沿索引的等式与严格比较传输，把关系与表的隶属都落在被点名的前驱处。
+两条成员关系沿索引的等式与严格比较传输，把关系与表的成员关系都落在被点名的前驱处。
 <!--ja-->
 二つの所属は添字の等式と狭義の比較に沿って輸送され、関係と表の所属の両方が名指された先行者のところに置かれる。
 <!--/-->
@@ -1825,7 +1825,7 @@ Well-founded induction now proves the collapse formula at every `a : Dom`. The i
 <!--en-->
 For `q : S` with `mq : Mem q`, the preceding induction gives the formula at the canonical representative `up (toDom q mq)`. The round-trip equality `up-toDom q mq` identifies that representative with `q`, and `colFo-at` transports satisfaction to the original member of `D`.
 <!--zh-->
-给定 `q : S` 与 `mq : Mem q`，前面的归纳先在典范表示 `up (toDom q mq)` 处给出公式。往返等式 `up-toDom q mq` 把该表示与 `q` 等同，`colFo-at` 再把满足证明运输到 `D` 的这个原成员处。
+给定 `q : S` 与 `mq : Mem q`，前面的归纳先在典范表示 `up (toDom q mq)` 处给出公式。往返等式 `up-toDom q mq` 把该表示与 `q` 等同，`colFo-at` 再把满足证明运输到 `D` 的这个原元素处。
 <!--ja-->
 `q : S` と `mq : Mem q` に対して、直前の帰納はまず正準な表示 `up (toDom q mq)` で論理式を与える。往復の等式 `up-toDom q mq` がその表示を `q` と同一視し、`colFo-at` が充足証明を `D` のもとの要素へ輸送する。
 <!--/-->
@@ -1838,7 +1838,7 @@ For `q : S` with `mq : Mem q`, the preceding induction gives the formula at the 
 <!--en-->
 The recursion `otR` uses `D` as its domain and `CF.colFo` as its value relation. At a member `q ∈ D`, its chosen value is the collapse at the small index `toDom q mq`; the preceding approximation proves that this value satisfies the formula at `q`.
 <!--zh-->
-递归 `otR` 以 `D` 为定义域，以 `CF.colFo` 为取值关系。对成员 `q ∈ D`，选定的取值是小索引 `toDom q mq` 处的塌缩值；前面的逼近结果证明这个取值在 `q` 处满足公式。
+递归 `otR` 以 `D` 为定义域，以 `CF.colFo` 为取值关系。对元素 `q ∈ D`，选定的取值是小索引 `toDom q mq` 处的塌缩值；前面的逼近结果证明这个取值在 `q` 处满足公式。
 <!--ja-->
 再帰 `otR` は `D` を定義域、`CF.colFo` を値関係とする。要素 `q ∈ D` で選ばれる値は、小さい添字 `toDom q mq` での崩壊値である。直前の近似により、この値が `q` で論理式を満たすことが示される。
 <!--/-->
@@ -1868,7 +1868,7 @@ The `funct` field must make the fiber of values satisfying `CF.colFo` at each `q
 <!--en-->
 The generic replacement construction `Of` now turns this functional recursion into its value table. It provides both directions of the membership characterization: values satisfying the recursion enter the table, and every table member comes from some input in `D` with the required formula witness.
 <!--zh-->
-通用的替换构造 `Of` 现在把这项函数性递归变成它的取值表，并给出成员关系刻画的两个方向：满足递归关系的取值进入该表，而表的每个成员都来自 `D` 中某个输入，并带有所需的公式见证。
+通用的替换构造 `Of` 现在把这项函数性递归变成它的取值表，并给出成员关系刻画的两个方向：满足递归关系的取值进入该表，而表的每个元素都来自 `D` 中某个输入，并带有所需的公式见证。
 <!--ja-->
 一般の置換構成 `Of` は、この関数的な再帰をその値の表へ変える。また所属の特徴づけを両方向に与える。再帰関係を満たす値は表に入り、表の各要素は、必要な論理式の証拠を伴う `D` のある入力から生じる。
 <!--/-->
@@ -1906,7 +1906,7 @@ For each `b : Dom`, the approximation proves that `colʟ b` is a value of `otR` 
 <!--en-->
 Conversely, every `y ∈ fst otL` merely has an index `b : Dom` with `col b ≡ y`. The result deliberately retains propositional truncation, so it describes the exact range without choosing a preimage for every member.
 <!--zh-->
-反过来，每个 `y ∈ fst otL` 仅仅具有某个索引 `b : Dom`，满足 `col b ≡ y`。结论特意保留命题截断，因此它刻画了精确值域，却没有为每个成员选定一个原像。
+反过来，每个 `y ∈ fst otL` 仅仅具有某个索引 `b : Dom`，满足 `col b ≡ y`。结论特意保留命题截断，因此它刻画了精确值域，却没有为每个元素选定一个原像。
 <!--ja-->
 逆に、各 `y ∈ fst otL` について、`col b ≡ y` を満たす添字 `b : Dom` が単に存在する。結論には意図的に命題的切り詰めが残されているため、各要素の原像を選ぶことなく正確な値域を記述している。
 <!--/-->
@@ -1946,7 +1946,7 @@ Applying the recursion-graph construction to `otR` collects ordered pairs rather
 <!--en-->
 `colTable` is the graph set constructed from `otR` inside `L`. Its canonical entry at `b : Dom` is `pr(↪ b,col b)`: the stored input is the represented member `↪ b` of `D`, while `b` itself remains an index in the external small presentation.
 <!--zh-->
-`colTable` 是在 `L` 内由 `otR` 构造出的函数图集合。对 `b : Dom`，其典范条目是 `pr(↪ b,col b)`：表中存储的输入是 `D` 的被表示成员 `↪ b`，而 `b` 本身仍是外围小表示中的索引。
+`colTable` 是在 `L` 内由 `otR` 构造出的函数图集合。对 `b : Dom`，其典范条目是 `pr(↪ b,col b)`：表中存储的输入是 `D` 的被表示元素 `↪ b`，而 `b` 本身仍是外围小表示中的索引。
 <!--ja-->
 `colTable` は、`L` の内部で `otR` から構成されたグラフの集合である。`b : Dom` における正準な項目は `pr(↪ b,col b)` である。表に保存される入力は `D` の表示された要素 `↪ b` であり、`b` 自体は外部の小さな表示に属する添字のままである。
 <!--/-->
@@ -1973,7 +1973,7 @@ At the canonical representative `up b`, the recursion graph initially records th
 <!--en-->
 Conversely, `colTable-out` says that any member `y` of the graph is merely equal in its underlying set to `pr(↪ b,col b)` for some `b : Dom`. The index remains under propositional truncation, so this outward reading characterizes the graph without selecting a representing index for each member.
 <!--zh-->
-反过来，`colTable-out` 说明：对函数图的任意成员 `y`，仅仅存在某个 `b : Dom`，使 `fst y ≡ pr(↪ b,col b)`。该索引仍处于命题截断之下，因此这项向外读法只刻画函数图，并未为每个成员选定一个表示索引。
+反过来，`colTable-out` 说明：对函数图的任意元素 `y`，仅仅存在某个 `b : Dom`，使 `fst y ≡ pr(↪ b,col b)`。该索引仍处于命题截断之下，因此这项向外读法只刻画函数图，并未为每个元素选定一个表示索引。
 <!--ja-->
 逆に `colTable-out` は、グラフの任意の要素 `y` について、ある `b : Dom` に対する `fst y ≡ pr(↪ b,col b)` が単に成り立つと述べる。その添字は命題的切り詰めの中にあるため、この外向きの読みはグラフを特徴づけるが、各要素を表示する添字を選ばない。
 <!--/-->
@@ -1988,7 +1988,7 @@ Conversely, `colTable-out` says that any member `y` of the graph is merely equal
 <!--en-->
 The fiber predicate says that a member `v` paired with `x` is the collapse value of the index that `x` presents, with the presentation membership as data.
 <!--zh-->
-纤维谓词说：与 `x` 配对的成员 `v` 是 `x` 所呈现索引的塌缩值，并以呈现隶属为数据。
+纤维谓词说：与 `x` 配对的元素 `v` 是 `x` 所呈现索引的塌缩值，并以呈现成员关系为数据。
 <!--ja-->
 ファイバーの述語は、`x` と対にされる要素 `v` が `x` の提示する添字の崩壊の値であることを述べ、提示の所属をデータとして伴う。
 <!--/-->
@@ -2058,7 +2058,7 @@ module Code (D R : S)
 <!--en-->
 The small presentation `Dom`, its coded relation `_≺_`, and the conversions between members of `D` and their indices are the same ones used above. The coding argument will build on that collapse construction rather than introduce a second relation.
 <!--zh-->
-这里沿用上文的小表示 `Dom`、其编码关系 `_≺_`，以及 `D` 的成员与索引之间的转换。接下来的编码论证建立在同一塌缩构造上，并不引入第二条关系。
+这里沿用上文的小表示 `Dom`、其编码关系 `_≺_`，以及 `D` 的元素与索引之间的转换。接下来的编码论证建立在同一塌缩构造上，并不引入第二条关系。
 <!--ja-->
 ここでも、先に用いた小さい表示 `Dom`、その符号化された関係 `_≺_`、および `D` の要素と添字との間の変換を使う。以下の符号化の議論は同じ崩壊構成に基づき、別の関係を導入しない。
 <!--/-->
@@ -2125,7 +2125,7 @@ The first condition is single-valuedness: if `colTable` contains pairs with the 
 <!--en-->
 The domain condition is an equivalence: an input has some value in `colTable` exactly when it belongs to `D`. Thus it includes both exclusion of entries outside `D` and totality on every member of `D`; the existential value in the latter direction remains propositionally truncated.
 <!--zh-->
-定义域条件是一条等价：一个输入在 `colTable` 中具有某个取值，当且仅当它属于 `D`。因此，它既排除定义域外的条目，也断言 `D` 的每个成员都有取值；后一个方向中的存在取值仍保留命题截断。
+定义域条件是一条等价：一个输入在 `colTable` 中具有某个取值，当且仅当它属于 `D`。因此，它既排除定义域外的条目，也断言 `D` 的每个元素都有取值；后一个方向中的存在取值仍保留命题截断。
 <!--ja-->
 定義域条件は同値である。ある入力が `colTable` で何らかの値をもつことと、その入力が `D` に属することとは同値である。したがって、この条件は `D` の外の項を排除すると同時に、`D` の各要素上での全域性も述べる。後者の方向での値の存在は命題的に切り詰められたままである。
 <!--/-->
@@ -2164,7 +2164,7 @@ The collapse table is already total and single-valued on `D`, and its values alr
 <!--en-->
 To prove that `col` is injective, fix `a` and `b` with `col a ≡ col b` and split their trichotomy. The equality case is already the desired conclusion. Each strict case instead turns a genuine membership between the two collapse values into self-membership after transport along their equality, so it suffices to refute that impossible membership.
 <!--zh-->
-为证明 `col` 单射，固定满足 `col a ≡ col b` 的 `a` 与 `b`，并按二者的三歧性分类。相等情形已经给出所需结论。两个严格情形则各自把两个塌缩值之间真实成立的隶属关系沿该等式搬运成自隶属，故只需反驳这一不可能的隶属关系。
+为证明 `col` 单射，固定满足 `col a ≡ col b` 的 `a` 与 `b`，并按二者的三歧性分类。相等情形已经给出所需结论。两个严格情形则各自把两个塌缩值之间真实成立的成员关系沿该等式搬运成自成员关系，故只需反驳这一不可能的成员关系。
 <!--ja-->
 `col` の単射性を示すため、`col a ≡ col b` を満たす `a` と `b` を固定し、両者の三分法で場合分けする。等しい場合は、それ自体が求める結論である。二つの狭義の場合には、崩壊値の間に実際に成り立つ所属を、その等しさに沿って自己所属へ移せるので、この不可能な所属を反駁すれば十分である。
 <!--/-->
@@ -2251,7 +2251,7 @@ The converse construction is intentionally local to chosen source and target set
 <!--en-->
 Membership in the source set is recorded as a type, so that the argument can carry it alongside each element being mapped.
 <!--zh-->
-源集的隶属被记录为类型，使论证能把它与被映射的每个元素并肩携带。
+源集的成员关系被记录为类型，使论证能把它与被映射的每个元素并肩携带。
 <!--ja-->
 源の集合への所属は型として記録され、議論が、写す各要素とともにそれを運べるようにする。
 <!--/-->
@@ -2264,7 +2264,7 @@ Membership in the source set is recorded as a type, so that the argument can car
 <!--en-->
 For `x ∈ X`, let `b` be the collapse preimage selected by `pre`. The inverse function returns `up b`, the constructible carrier element whose underlying set is the represented member `↪ b` of the original domain. The proof argument `mx` is needed because the selected preimage may depend on the evidence that `x` lies in the chosen source.
 <!--zh-->
-对 `x ∈ X`，令 `b` 为 `pre` 选出的塌缩原像。逆函数返回 `up b`，即底层集合为原定义域中被表示成员 `↪ b` 的可构造载体元素。这里需要证明参数 `mx`，因为所选原像可以依赖于 `x` 属于指定源集的证据。
+对 `x ∈ X`，令 `b` 为 `pre` 选出的塌缩原像。逆函数返回 `up b`，即底层集合为原定义域中被表示元素 `↪ b` 的可构造载体元素。这里需要证明参数 `mx`，因为所选原像可以依赖于 `x` 属于指定源集的证据。
 <!--ja-->
 `x ∈ X` に対し、`b` を `pre` が選んだ崩壊の原像とする。逆関数は `up b`、すなわち元の定義域で表示された要素 `↪ b` を基礎集合にもつ構成可能な台の要素を返す。選ばれる原像は `x` が指定された始域に属する証拠に依存しうるため、証明引数 `mx` が必要である。
 <!--/-->
@@ -2291,7 +2291,7 @@ The defining formula reads the existing table in the converse direction. In the 
 <!--en-->
 The adequacy equation identifies the satisfaction of the swapped graph formula with the membership of the pair in the collapse table, so both readings of the table can be used interchangeably.
 <!--zh-->
-充分性等式把交换后图公式的满足等同于该对在塌缩表中的隶属，使表的两种读法可互换。
+充分性等式把交换后图公式的满足等同于该对在塌缩表中的成员关系，使表的两种读法可互换。
 <!--ja-->
 妥当性の等式が、入れ替えたグラフの論理式の充足を、崩壊の表での対の所属と同一視する。だから表の二つの読み出しは相互に代用できる。
 <!--/-->
@@ -2332,7 +2332,7 @@ The first projection of `f` is the membership proof `my : Mem y`. It is the evid
 <!--en-->
 These ingredients form a `DefinableMap` from `X` to `Y`. Its external function is `fn`, and `bound` supplies the codomain field. For the defining clause, start with `colTable-in b` for the selected preimage `b`; substitute `col b ≡ fst x` in the output coordinate, then use `at` in the reverse direction to turn the resulting table membership into satisfaction of the converse graph formula.
 <!--zh-->
-这些材料组成一项从 `X` 到 `Y` 的 `DefinableMap`。其外围函数是 `fn`，而 `bound` 提供陪域字段。为证明定义子句，先对所选原像 `b` 使用 `colTable-in b`；再沿 `col b ≡ fst x` 替换输出坐标，最后反向使用 `at`，把所得表隶属关系变成反向图公式的满足证明。
+这些材料组成一项从 `X` 到 `Y` 的 `DefinableMap`。其外围函数是 `fn`，而 `bound` 提供陪域字段。为证明定义子句，先对所选原像 `b` 使用 `colTable-in b`；再沿 `col b ≡ fst x` 替换输出坐标，最后反向使用 `at`，把所得表成员关系变成反向图公式的满足证明。
 <!--ja-->
 これらの材料から、`X` から `Y` への `DefinableMap` を作る。その外部関数は `fn` であり、`bound` が終域のフィールドを与える。定義の条項では、選んだ原像 `b` に対する `colTable-in b` から始める。出力の座標を `col b ≡ fst x` に沿って置き換え、最後に `at` を逆向きに使って、得られた表への所属を逆向きのグラフ論理式の充足へ変える。
 <!--/-->
@@ -2376,7 +2376,7 @@ The inverse function is injective for a direct reason. If `fn x mx` and `fn x' m
 <!--en-->
 Applying the general definable-injection construction to `M` and `inj` packages the restricted converse as `InjL X Y`, a propositionally truncated existence claim for a coded injection. Its scope is exactly the supplied data: every member of `X` has a chosen collapse preimage, and the represented original input lies in `Y`. It supplies neither an unconditional inverse on all of `otL` nor a bijection record.
 <!--zh-->
-把一般的可定义单射构造应用于 `M` 与 `inj`，便把这项受限反向映射封装为 `InjL X Y`，即编码单射存在性的命题截断陈述。它的范围恰由所给数据限定：`X` 的每个成员都有一个选定的塌缩原像，并且所表示的原输入属于 `Y`。它既不提供整个 `otL` 上的无条件逆映射，也不提供双射记录。
+把一般的可定义单射构造应用于 `M` 与 `inj`，便把这项受限反向映射封装为 `InjL X Y`，即编码单射存在性的命题截断陈述。它的范围恰由所给数据限定：`X` 的每个元素都有一个选定的塌缩原像，并且所表示的原输入属于 `Y`。它既不提供整个 `otL` 上的无条件逆映射，也不提供双射记录。
 <!--ja-->
 一般の定義可能単射の構成を `M` と `inj` に適用すると、この制限された逆向きの写像が `InjL X Y`、すなわち符号化された単射の存在を命題的に切り詰めた主張としてまとめられる。その範囲は与えたデータによって正確に限られている。`X` の各要素には選ばれた崩壊の原像があり、表示された元の入力は `Y` に属する。これは `otL` 全体に対する無条件の逆写像も、全単射のレコードも与えない。
 <!--/-->

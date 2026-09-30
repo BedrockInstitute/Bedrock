@@ -145,6 +145,32 @@ document.addEventListener('DOMContentLoaded',async()=>{
   check('Prelude import modal aligns its section heading (offset '+importOffset.toFixed(1)+'px, scroll '+preludeScroller.scrollTop.toFixed(1)+'/'+(preludeScroller.scrollHeight-preludeScroller.clientHeight).toFixed(1)+', overflow '+getComputedStyle(preludeScroller).overflowY+', modal '+modalPreludeDoc.documentElement.classList.contains('definition-modal-document')+', heading '+importSection.textContent.trim()+')',Math.abs(importOffset)<3);
   check('Prelude import keeps definition identity for enter-page',document.querySelector('.definition-modal-jump').hash==='#'+natZero);
   document.querySelector('.definition-modal-close').click();
+  for(const name of ['Σ[]-syntax','Σ[∶]-syntax','∀[]-syntax','∀[∶]-syntax','∃[]-syntax','∃[∶]-syntax']) {
+    const declaration=[...preludeDoc.querySelectorAll('a[data-introduction-section]')]
+      .find(a=>a.dataset.name===name);
+    check(name+' has a compiler declaration and introductory section',!!declaration);
+    const prose=[...preludeDoc.querySelectorAll('p .Agda a[data-type]')]
+      .find(a=>a.dataset.name===name&&a.textContent!==name);
+    check(name+' notation is automatically linked in prose with its own type',
+      !!prose&&prose.dataset.type==='Base.Prelude#'+declaration.id);
+    const link=prose.cloneNode(true);link.classList.add('type-definition-link');fixture.appendChild(link);link.click();
+    const frame=await until(()=>document.querySelector('.definition-modal-frame.is-ready'));
+    const doc=frame.contentDocument;await doc.fonts.ready;await delay(350);
+    const heading=doc.getElementById(declaration.dataset.introductionSection);
+    const sticky=doc.getElementById('section-sticky'),scroller=doc.getElementById('main-content');
+    const top=sticky?sticky.getBoundingClientRect().bottom:scroller.getBoundingClientRect().top;
+    const offset=heading.getBoundingClientRect().top-top;
+    check(name+' opens at its introductory heading: '+heading.textContent.trim()+' ('+offset.toFixed(1)+'px)',Math.abs(offset)<3);
+    check(name+' retains declaration identity',document.querySelector('.definition-modal-jump').hash==='#'+declaration.id);
+    document.querySelector('.definition-modal-close').click();link.remove();
+  }
+  const sigmaDisplay=preludeDoc.querySelector('.single-line-code a[data-name="Σ[∶]-syntax"]');
+  const structureDoc=new DOMParser().parseFromString(await (await fetch('/zh/FOL.ZFStructure.html')).text(),'text/html');
+  const sigmaFormal=[...structureDoc.querySelectorAll('pre.Agda a[data-name="Σ[∶]-syntax"]')].find(a=>a.textContent==='Σ[');
+  check('single-line and formal syntax share the same definition and hover',!!sigmaDisplay&&!!sigmaFormal&&
+    sigmaDisplay.getAttribute('href')===sigmaFormal.getAttribute('href')&&sigmaDisplay.dataset.type===sigmaFormal.dataset.type);
+  check('record in structure prose uses keyword hover help',
+    structureDoc.querySelectorAll('p code.Agda [data-hover-help="record"]').length===3);
   const external=document.createElement('a');external.className='type-definition-link';
   external.href='/zh/Cubical.Core.Primitives.html#6245';external.dataset.name='Σ-syntax';fixture.appendChild(external);
   external.click();

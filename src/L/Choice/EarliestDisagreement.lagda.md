@@ -28,7 +28,7 @@ module L.Choice.EarliestDisagreement {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) whe
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 open import FOL.Syntax using
   ( Formula; var; con; _∈̇_; _≐_; _∧̇_; ¬̇_; ∃̇_; ∀̇∈; ∃̇∈ )
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
@@ -87,7 +87,7 @@ We shall describe relations by first-order formulas over the cumulative hierarch
 <!--en-->
 The finite stage at `n` is `Lset (# n)`, where `# n` is the von Neumann numeral inside the hierarchy. Its ordinal and constructibility proofs let us treat both the stage and each of its members as objects of the model of `L`.
 <!--zh-->
-第 `n` 个有穷层是 `Lset (# n)`，其中 `# n` 是层级内的冯·诺伊曼数码。关于它的序数性与可构造性的证明，使我们能把该层及其每个成员都视为 `L` 模型中的对象。
+第 `n` 个有穷层是 `Lset (# n)`，其中 `# n` 是层级内的冯·诺伊曼数码。关于它的序数性与可构造性的证明，使我们能把该层及其每个元素都视为 `L` 模型中的对象。
 <!--ja-->
 第 `n` 有限段階は `Lset (# n)` であり、`# n` は階層内のフォン・ノイマン数項である。その順序数性と構成可能性により、この段階とその各要素を `L` のモデルの対象として扱える。
 <!--/-->
@@ -103,7 +103,7 @@ Two set-forming operations play different roles. Separation cuts each single-sta
 <!--en-->
 The mathematical recurrence is already fixed: `before zero` is empty, and `before (suc n)` compares members of the next finite stage by their earliest disagreement over `finiteStage n`, using `before n` for earlier points. `PrecedesAt` expresses that successor step in the object language, while `RecShape` will organize its finite approximations.
 <!--zh-->
-数学递归已经确定：`before zero` 为空；`before (suc n)` 用 `before n` 排列较早的点，并在 `finiteStage n` 上按最早分歧比较下一有穷层的成员。`PrecedesAt` 在对象语言中表达这个后继步，`RecShape` 则组织它的有穷逼近。
+数学递归已经确定：`before zero` 为空；`before (suc n)` 用 `before n` 排列较早的点，并在 `finiteStage n` 上按最早分歧比较下一有穷层的元素。`PrecedesAt` 在对象语言中表达这个后继步，`RecShape` 则组织它的有穷逼近。
 <!--ja-->
 数学的な再帰はすでに定まっている。`before zero` は空であり、`before (suc n)` は `before n` で先行する点を順序づけ、`finiteStage n` 上の最初の相違によって次の有限段階の要素を比較する。`PrecedesAt` はこの後続段階を対象言語で表し、`RecShape` はその有限近似を組織する。
 <!--/-->
@@ -146,7 +146,7 @@ open import Cubical.Data.FinData.Properties using ( toℕ<n; enum; toℕ∘enum 
 <!--en-->
 Several witnesses below are available only under propositional truncation. Such a witness certifies existence without selecting canonical data; it may be eliminated when the target is a proposition, such as membership, `before`, or equality of sets in `V`.
 <!--zh-->
-下文若干见证只能在命题截断下取得。这种见证只保证存在，并不选出规范资料；只有当目标是命题时才能消去，例如隶属、`before`，或 `V` 中集合的等式。
+下文若干见证只能在命题截断下取得。这种见证只保证存在，并不选出规范资料；只有当目标是命题时才能消去，例如成员关系、`before`，或 `V` 中集合的等式。
 <!--ja-->
 以下では、いくつかの証人は命題的切り詰めの下でだけ得られる。この証人は存在を保証するが、標準的なデータを選び出さない。所属、`before`、または `V` における集合の等式のように、目標が命題である場合に消去できる。
 <!--/-->
@@ -158,7 +158,7 @@ open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 <!--en-->
 A set is accessed through a presentation of its members. This presentation lets us range over all members of a finite stage and construct their ordered pairs, while the internal `ω` supplies the eventual domain of the whole family.
 <!--zh-->
-集合通过其成员的呈现来访问。借助这种呈现，我们可以遍历有穷层的所有成员并构造它们的有序对；内部 `ω` 则提供整个族最终的定义域。
+集合通过其元素的呈现来访问。借助这种呈现，我们可以遍历有穷层的所有元素并构造它们的有序对；内部 `ω` 则提供整个族最终的定义域。
 <!--ja-->
 集合には、その要素の表示を通してアクセスする。この表示により、有限段階の全要素を走って順序対を構成でき、内部の `ω` は最終的な族全体の定義域を与える。
 <!--/-->
@@ -180,7 +180,7 @@ From now on formulas are interpreted in the proposition-valued structure carried
 <!--/-->
 
 ```agda
-open hPropStructure 𝒮ʟ
+open hPropView 𝒮ʟ
 ```
 
 <!--en-->
@@ -331,7 +331,7 @@ The first component of `memS A z h` is still the original set `z`; the additiona
 <!--en-->
 For model elements `a` and `b`, `prS a b` forms their ordered pair inside `L`. Relation sets below will contain objects of precisely this form.
 <!--zh-->
-对模型元素 `a` 与 `b`，`prS a b` 在 `L` 内构造它们的有序对。下文的关系集合正以这种对象为成员。
+对模型元素 `a` 与 `b`，`prS a b` 在 `L` 内构造它们的有序对。下文的关系集合正以这种对象为元素。
 <!--ja-->
 モデル要素 `a` と `b` に対し、`prS a b` はそれらの順序対を `L` の内部で作る。以下の関係集合は、まさにこの形の対象を要素にもつ。
 <!--/-->
@@ -344,7 +344,7 @@ For model elements `a` and `b`, `prS a b` forms their ordered pair inside `L`. R
 <!--en-->
 Forgetting the constructibility evidence recovers the ordinary ordered pair `pr (fst a) (fst b)`. This equation connects internal membership statements with the relation `before` on underlying sets.
 <!--zh-->
-忘掉可构造性证明后，就恢复普通有序对 `pr (fst a) (fst b)`。这条等式把内部隶属断言与底层集合上的关系 `before` 联系起来。
+忘掉可构造性证明后，就恢复普通有序对 `pr (fst a) (fst b)`。这条等式把内部成员关系断言与底层集合上的关系 `before` 联系起来。
 <!--ja-->
 構成可能性の証明を忘れると、通常の順序対 `pr (fst a) (fst b)` が得られる。この等式が、内部の所属命題を基礎となる集合上の関係 `before` に結びつける。
 <!--/-->
@@ -357,7 +357,7 @@ Forgetting the constructibility evidence recovers the ordinary ordered pair `pr 
 <!--en-->
 In particular, every member `x` of `finiteStage n` can be lifted to the carrier `S`. The stage itself supplies the constructibility proof required for this lift.
 <!--zh-->
-特别地，`finiteStage n` 的每个成员 `x` 都能提升到载体 `S`；该层本身提供这项提升所需的可构造性证明。
+特别地，`finiteStage n` 的每个元素 `x` 都能提升到载体 `S`；该层本身提供这项提升所需的可构造性证明。
 <!--ja-->
 特に、`finiteStage n` の各要素 `x` は台 `S` に持ち上げられる。その段階自身が、この持ち上げに必要な構成可能性の証明を与える。
 <!--/-->
@@ -394,7 +394,7 @@ pairsAt n = d .fst , onPair
 <!--en-->
 A presented member of the finite stage already comes with its membership proof. The map `ixL` attaches the resulting constructibility proof, turning each presented member into an element of `S`.
 <!--zh-->
-有穷层中被呈现的成员已经携带自己的隶属证明。映射 `ixL` 再附上由此得到的可构造性证明，把每个被呈现成员变成 `S` 的元素。
+有穷层中被呈现的元素已经携带自己的成员关系证明。映射 `ixL` 再附上由此得到的可构造性证明，把每个被呈现元素变成 `S` 的元素。
 <!--ja-->
 有限段階の表示された要素には、その所属証明がすでに付いている。写像 `ixL` は、そこから得られる構成可能性証明を添え、各要素を `S` の要素にする。
 <!--/-->
@@ -410,7 +410,7 @@ A presented member of the finite stage already comes with its membership proof. 
 <!--en-->
 The product of the two presentations indexes every pair of stage members. Applying `smallDom` to their internal ordered pairs places this entire indexed family inside one constructible set `D`.
 <!--zh-->
-两个呈现的乘积索引了该层成员的每一对。对这些内部有序对应用 `smallDom`，便把整个索引族放入同一个可构造集合 `D` 中。
+两个呈现的乘积索引了该层元素的每一对。对这些内部有序对应用 `smallDom`，便把整个索引族放入同一个可构造集合 `D` 中。
 <!--ja-->
 二つの表示の積は、段階の要素からなるすべての対を添字づける。それらの内部順序対に `smallDom` を適用すると、この添字族全体が一つの構成可能集合 `D` に収まる。
 <!--/-->
@@ -425,7 +425,7 @@ The product of the two presentations indexes every pair of stage members. Applyi
 <!--en-->
 Given arbitrary `u,v ∈ finiteStage n`, their membership proofs locate presentation indices `fu` and `fv`. The bound contains the pair at those indices, and transport along the recovered component equalities yields membership of `pr u v` itself.
 <!--zh-->
-给定任意 `u,v ∈ finiteStage n`，它们的隶属证明给出呈现索引 `fu` 与 `fv`。该界包含这两个索引处的有序对，再沿恢复出的分量等式运输，便得到 `pr u v` 本身属于该界。
+给定任意 `u,v ∈ finiteStage n`，它们的成员关系证明给出呈现索引 `fu` 与 `fv`。该界包含这两个索引处的有序对，再沿恢复出的分量等式运输，便得到 `pr u v` 本身属于该界。
 <!--ja-->
 任意の `u,v ∈ finiteStage n` に対し、その所属証明から表示の添字 `fu` と `fv` が得られる。上界はその添字位置の順序対を含み、復元した成分の等式に沿って移送すれば、`pr u v` 自身の所属が得られる。
 <!--/-->
@@ -441,7 +441,7 @@ Given arbitrary `u,v ∈ finiteStage n`, their membership proofs locate presenta
 <!--en-->
 The two fibers `fu` and `fv` record exactly the presentation indices and the equalities identifying their represented members with `u` and `v`.
 <!--zh-->
-两个纤维 `fu` 与 `fv` 恰好记录呈现索引，以及把相应被呈现成员认同为 `u`、`v` 的等式。
+两个纤维 `fu` 与 `fv` 恰好记录呈现索引，以及把相应被呈现元素认同为 `u`、`v` 的等式。
 <!--ja-->
 二つのファイバー `fu` と `fv` は、表示の添字と、そこで表された要素をそれぞれ `u`、`v` と同定する等式を正確に記録する。
 <!--/-->
@@ -528,7 +528,7 @@ The remaining conjunct identifies the candidate with the ordered pair of the two
 <!--en-->
 Now define the representing sets recursively. At zero the relation is empty; at a successor, separation begins with the bound containing all pairs from the larger finite stage.
 <!--zh-->
-现在递归定义表示关系的集合。零处关系为空；在后继处，分离从包含较大有穷层全部成员对的界开始。
+现在递归定义表示关系的集合。零处关系为空；在后继处，分离从包含较大有穷层全部元素对的界开始。
 <!--ja-->
 ここで表現集合を再帰的に定義する。ゼロでは関係は空であり、後続では大きい方の有限段階の全要素対を含む上界から分出を始める。
 <!--/-->
@@ -556,7 +556,7 @@ From that bound, `RelCond (relAt n) (stageS n) (stageS (suc n))` selects exactly
 <!--en-->
 The equation `relAt-zero` records the base case explicitly, so a purported member of the zero-stage relation can later be reduced to membership in the empty set.
 <!--zh-->
-等式 `relAt-zero` 显式记录基例，使得以后能把所谓零层关系成员化为对空集的隶属，从而排除它。
+等式 `relAt-zero` 显式记录基例，使得以后能把所谓零层关系元素化为对空集的成员关系，从而排除它。
 <!--ja-->
 等式 `relAt-zero` は基底の場合を明示する。これにより、ゼロ段階の関係に属するとされる要素を、後で空集合への所属へ帰着できる。
 <!--/-->
@@ -585,7 +585,7 @@ For a successor stage, membership in `relAt (suc n)` has two parts: the candidat
 <!--en-->
 This equivalence is the exact specification supplied by separation. Later proofs use it in both directions, either extracting the formula from membership or assembling membership from a bound proof and a formula proof.
 <!--zh-->
-这条等价正是分离所给出的精确刻画。后续证明会双向使用它：或从隶属中取出公式，或由界证明与公式证明合成隶属。
+这条等价正是分离所给出的精确刻画。后续证明会双向使用它：或从成员关系中取出公式，或由界证明与公式证明合成成员关系。
 <!--ja-->
 この同値は分出が与える正確な仕様である。後の証明では、所属から論理式を取り出す向きと、上界の証明と論理式の証明から所属を組み立てる向きの両方で用いる。
 <!--/-->
@@ -598,7 +598,7 @@ This equivalence is the exact specification supplied by separation. Later proofs
 <!--en-->
 The predicate `Rel n a b` abbreviates membership of the ordered pair `pr a b` in the representing set `relAt n`. The next representation lemmas will show, for stage members, that this predicate is equivalent to `before n a b`.
 <!--zh-->
-谓词 `Rel n a b` 是有序对 `pr a b` 属于表示集合 `relAt n` 的缩写。接下来的表示引理将证明，对该层成员而言，这一谓词等价于 `before n a b`。
+谓词 `Rel n a b` 是有序对 `pr a b` 属于表示集合 `relAt n` 的缩写。接下来的表示引理将证明，对该层元素而言，这一谓词等价于 `before n a b`。
 <!--ja-->
 述語 `Rel n a b` は、順序対 `pr a b` が表現集合 `relAt n` に属することの略記である。続く表現補題は、段階の要素について、この述語が `before n a b` と同値であることを示す。
 <!--/-->
@@ -642,7 +642,7 @@ The remaining positions `s3` and `s4` locate the previous relation and the coded
 <!--en-->
 To recognize an arbitrary member of the relation set, we must recover its two components. `RelOf k zv` therefore asks for `x,y` in `finiteStage k`, an equation identifying `zv` with their ordered pair, and a proof that `before k x y` holds. This witness type contains chosen components, so it is not itself a proposition.
 <!--zh-->
-要辨认关系集的任意成员，必须恢复它的两个分量。因此，`RelOf k zv` 要求给出 `finiteStage k` 中的 `x,y`、把 `zv` 认同为其有序对的等式，以及 `before k x y` 成立的证明。这个见证类型包含选定的分量，故其本身不一定是命题。
+要辨认关系集的任意元素，必须恢复它的两个分量。因此，`RelOf k zv` 要求给出 `finiteStage k` 中的 `x,y`、把 `zv` 认同为其有序对的等式，以及 `before k x y` 成立的证明。这个见证类型包含选定的分量，故其本身不一定是命题。
 <!--ja-->
 関係集合の任意の要素を同定するには、その二つの成分を復元する必要がある。そこで `RelOf k zv` は、`finiteStage k` に属する `x,y`、`zv` をその順序対と同定する等式、そして `before k x y` の証明を要求する。この証人型は選ばれた成分を含むので、それ自体は命題とは限らない。
 <!--/-->
@@ -658,7 +658,7 @@ RelOf k zv = Σ[ x ∶ S ] Σ[ y ∶ S ]
 <!--en-->
 Membership in `relAt k` determines such components only under propositional truncation: the relation records that a suitable presentation exists, without choosing one canonically. In the reverse direction, explicit components and their comparison suffice to insert the pair into the relation.
 <!--zh-->
-从 `relAt k` 的隶属关系只能在命题截断下得到这样的分量：关系只记录合适的呈现存在，并不规范地选定一份呈现。反过来，显式给出的分量及其比较足以把该有序对写入关系。
+从 `relAt k` 的成员关系只能在命题截断下得到这样的分量：关系只记录合适的呈现存在，并不规范地选定一份呈现。反过来，显式给出的分量及其比较足以把该有序对写入关系。
 <!--ja-->
 `relAt k` への所属からこのような成分が得られるのは命題的切り詰めの下だけである。関係は適切な表示の存在を記録するが、その一つを標準的に選ばない。逆向きには、明示された成分とその比較から順序対を関係へ書き込める。
 <!--/-->
@@ -671,7 +671,7 @@ relAt-in  : (k : ℕ) (zv : V ℓ) → RelOf k zv → ⟨ zv ∈ fst (relAt k) �
 <!--en-->
 The base case reflects `before zero`: since `relAt zero` is empty, a supposed member yields a contradiction. At a successor, membership first exposes the separated condition, whose existential witnesses are available only through propositional truncation.
 <!--zh-->
-基例反映 `before zero`：`relAt zero` 为空，所以假定的成员会导出矛盾。在后继情形，隶属首先给出分离条件，而其中的存在见证只能经命题截断使用。
+基例反映 `before zero`：`relAt zero` 为空，所以假定的元素会导出矛盾。在后继情形，成员关系首先给出分离条件，而其中的存在见证只能经命题截断使用。
 <!--ja-->
 基底の場合は `before zero` を反映する。`relAt zero` は空なので、要素があると仮定すれば矛盾が得られる。後続の場合、所属からまず分出条件が得られ、その存在証人は命題的切り詰めを通してのみ利用できる。
 <!--/-->
@@ -703,7 +703,7 @@ Opening the truncated witnesses reveals a candidate predecessor relation, its fi
 <!--en-->
 The underlying set `zv` is packaged as an element of `L` using its membership in `relAt (suc n)`. This permits the object-language separation condition to be evaluated at the very member being analyzed.
 <!--zh-->
-由 `zv ∈ relAt (suc n)` 及 `L` 的传递性，可以把底层集合 `zv` 封装成 `L` 的元素。这样便能在当前分析的这个成员上解释对象语言的分离条件。
+由 `zv ∈ relAt (suc n)` 及 `L` 的传递性，可以把底层集合 `zv` 封装成 `L` 的元素。这样便能在当前分析的这个元素上解释对象语言的分离条件。
 <!--ja-->
 `zv ∈ relAt (suc n)` と `L` の推移性により、基礎集合 `zv` を `L` の要素として包める。これによって、いま調べている要素そのものにおいて対象言語の分出条件を解釈できる。
 <!--/-->
@@ -716,7 +716,7 @@ The underlying set `zv` is packaged as an element of `L` using its membership in
 <!--en-->
 The defining property of separation turns the assumed membership into satisfaction of `RelCond`. Thus the rest of the argument may reason from the mathematical content of the condition rather than merely from membership in the bounded set of pairs.
 <!--zh-->
-分离的定义性质把所假定的隶属转成 `RelCond` 的满足关系。因此，后续论证可以使用该条件的数学内容，而不只停留在属于有界对集这一事实上。
+分离的定义性质把所假定的成员关系转成 `RelCond` 的满足关系。因此，后续论证可以使用该条件的数学内容，而不只停留在属于有界对集这一事实上。
 <!--ja-->
 分出の定義的性質により、仮定した所属は `RelCond` の充足へ変わる。したがって以後は、有界な順序対集合への所属だけでなく、その条件の数学的内容を用いて議論できる。
 <!--/-->
@@ -730,7 +730,7 @@ The defining property of separation turns the assumed membership into satisfacti
 <!--en-->
 For proposed components `x,y`, the remaining body says two things: the analyzed member is their ordered pair, and `x` precedes `y` by earliest disagreement over the preceding stage. The second statement still uses the relation represented by `r`, since the surrounding witness must identify that relation with `relAt n`.
 <!--zh-->
-对候选分量 `x,y`，剩余公式体陈述两件事：当前分析的成员是它们的有序对，并且 `x` 在前一层上按最早分歧先于 `y`。第二项仍使用 `r` 所表示的关系，因为外围见证还须把该关系认同为 `relAt n`。
+对候选分量 `x,y`，剩余公式体陈述两件事：当前分析的元素是它们的有序对，并且 `x` 在前一层上按最早分歧先于 `y`。第二项仍使用 `r` 所表示的关系，因为外围见证还须把该关系认同为 `relAt n`。
 <!--ja-->
 候補の成分 `x,y` について、残る本体は二つのことを述べる。調べている要素がその順序対であることと、直前の段階上の最初の相違によって `x` が `y` に先行することである。後者はまだ `r` が表す関係を使う。その関係を `relAt n` と同定することは、外側の証人が担う。
 <!--/-->
@@ -758,7 +758,7 @@ After `x` has been chosen from the successor stage, `AtY` records the remaining 
 <!--en-->
 Once all witnesses are present, the stage equations place both components in `finiteStage (suc n)`. It remains to identify the analyzed member with their ordered pair and to translate the comparison based on the represented relation into `before (suc n)`; the next lemmas perform these two translations.
 <!--zh-->
-所有见证齐备后，层等式把两个分量都放入 `finiteStage (suc n)`。余下工作是把当前成员认同为其有序对，并把依据所表示关系作出的比较转成 `before (suc n)`；随后两部分分别完成这两种转换。
+所有见证齐备后，层等式把两个分量都放入 `finiteStage (suc n)`。余下工作是把当前元素认同为其有序对，并把依据所表示关系作出的比较转成 `before (suc n)`；随后两部分分别完成这两种转换。
 <!--ja-->
 すべての証人がそろうと、段階の等式によって二成分はいずれも `finiteStage (suc n)` に属する。残るのは、調べている要素をその順序対と同定し、表された関係による比較を `before (suc n)` へ移すことである。続く補題がこの二つの変換を行う。
 <!--/-->
@@ -831,7 +831,7 @@ Reading `PrecedesAt` yields a `precedes` comparison over the stage supplied by t
 <!--en-->
 Inside the agreement clause, every use of the base relation must be converted from `before n` to membership in `relAt n`. The inductive inward lemma performs that conversion, and `precedes-map` then yields exactly the successor relation `before (suc n)`.
 <!--zh-->
-在一致性子句内部，每次使用基底关系时，都必须把 `before n` 转为 `relAt n` 中的隶属。归纳得到的写入引理完成这一转换，随后 `precedes-map` 恰好给出后继关系 `before (suc n)`。
+在一致性子句内部，每次使用基底关系时，都必须把 `before n` 转为 `relAt n` 中的成员关系。归纳得到的写入引理完成这一转换，随后 `precedes-map` 恰好给出后继关系 `before (suc n)`。
 <!--ja-->
 一致の節の内部では、基底関係を使うたびに `before n` から `relAt n` への所属へ変換する必要がある。帰納的に得た書き込み補題がこの変換を行い、`precedes-map` からちょうど後続の関係 `before (suc n)` が得られる。
 <!--/-->
@@ -847,7 +847,7 @@ Inside the agreement clause, every use of the base relation must be converted fr
 <!--en-->
 The adequacy of the pair formula identifies the packaged member with `pr (fst x) (fst y)`. Composing this equation with the packaging equation returns the required equality for the original `zv`.
 <!--zh-->
-配对公式的充分性把封装后的成员认同为 `pr (fst x) (fst y)`。再与封装等式复合，便得到原始 `zv` 所需的等式。
+配对公式的充分性把封装后的元素认同为 `pr (fst x) (fst y)`。再与封装等式复合，便得到原始 `zv` 所需的等式。
 <!--ja-->
 順序対の論理式の妥当性により、包まれた要素は `pr (fst x) (fst y)` と同定される。この等式を包装の等式と合成すると、元の `zv` に必要な等式が得られる。
 <!--/-->
@@ -876,7 +876,7 @@ relAt-in (suc n) zv (x , (y , (x∈ , (y∈ , (qq , hb))))) =
 <!--en-->
 The two stage-membership assumptions place the ordered pair inside `pairsAt (suc n)`. This is the bounding half of separation: only pairs of members of the finite stage can enter `relAt (suc n)`.
 <!--zh-->
-两个层隶属假设把该有序对放入 `pairsAt (suc n)`。这是分离所需的界：只有有穷层成员组成的对才可能进入 `relAt (suc n)`。
+两个层成员关系假设把该有序对放入 `pairsAt (suc n)`。这是分离所需的界：只有有穷层元素组成的对才可能进入 `relAt (suc n)`。
 <!--ja-->
 二つの段階所属の仮定から、その順序対は `pairsAt (suc n)` に入る。これは分出に必要な境界であり、有限段階の要素からなる対だけが `relAt (suc n)` に入り得る。
 <!--/-->
@@ -952,7 +952,7 @@ The converted host comparison now satisfies the hypotheses of `PrecedesAt-in`. I
 <!--en-->
 The pair-recognition formula is satisfied because the candidate member was built as `prS x y`. Its adequacy equation connects the internal construction with the underlying ordered pair required by the formula.
 <!--zh-->
-候选成员本就是 `prS x y`，因此满足配对识别公式。其充分性等式把这一内部构造连接到公式所要求的底层有序对。
+候选元素本就是 `prS x y`，因此满足配对识别公式。其充分性等式把这一内部构造连接到公式所要求的底层有序对。
 <!--ja-->
 候補の要素は `prS x y` として構成されているため、順序対を認識する論理式を満たす。その妥当性の等式が、内部の構成を論理式の要求する基礎の順序対へ結び付ける。
 <!--/-->
@@ -967,7 +967,7 @@ The pair-recognition formula is satisfied because the candidate member was built
 <!--en-->
 The presentation equation for `stageS (suc n)` transports each known member of `finiteStage (suc n)` into the stage object used by the formula. No additional closure property is required.
 <!--zh-->
-`stageS (suc n)` 的呈现等式把 `finiteStage (suc n)` 的每个已知成员搬运到公式使用的层对象中。这里不需要额外的闭包性质。
+`stageS (suc n)` 的呈现等式把 `finiteStage (suc n)` 的每个已知元素搬运到公式使用的层对象中。这里不需要额外的闭包性质。
 <!--ja-->
 `stageS (suc n)` の表示等式により、`finiteStage (suc n)` の既知の各要素を論理式が用いる段階対象へ輸送できる。追加の閉包性は必要ない。
 <!--/-->
@@ -1028,7 +1028,7 @@ If the recovered presentation uses components `p,q`, equality of its ordered pai
 <!--en-->
 Conversely, stage membership of `u,v` and a proof of `before n u v` form an explicit `RelOf` witness for `pr u v`. The inward lemma then records that pair in `relAt n`, completing the pointwise representation in the other direction.
 <!--zh-->
-反过来，`u,v` 的层隶属与 `before n u v` 的证明组成 `pr u v` 的显式 `RelOf` 见证。写入引理随后把该对记录进 `relAt n`，完成逐对表示的另一个方向。
+反过来，`u,v` 的层成员关系与 `before n u v` 的证明组成 `pr u v` 的显式 `RelOf` 见证。写入引理随后把该对记录进 `relAt n`，完成逐对表示的另一个方向。
 <!--ja-->
 逆に、`u,v` の段階所属と `before n u v` の証明から、`pr u v` に対する明示的な `RelOf` の証人が得られる。書き込み補題がその対を `relAt n` に記録し、対ごとの表示の逆方向が完成する。
 <!--/-->
@@ -1065,7 +1065,7 @@ Held r a b = pr a b ∈ fst r
 <!--en-->
 One recursive step first seeks an `∈`-maximal member `c` of the current index. When that index is the successor numeral `# (suc n)`, this member is its predecessor `# n`; at zero no such member exists. Consequently the relation defined by the step has no members at zero, without requiring a separate base formula.
 <!--zh-->
-一次递归步骤先寻找当前索引的一个 `∈`-极大成员 `c`。当该索引是后继数码 `# (suc n)` 时，这个成员就是其前驱 `# n`；在零处则不存在这样的成员。因此，该步骤所定义的关系在零处没有成员，而无须另写基例公式。
+一次递归步骤先寻找当前索引的一个 `∈`-极大元素 `c`。当该索引是后继数码 `# (suc n)` 时，这个元素就是其前驱 `# n`；在零处则不存在这样的元素。因此，该步骤所定义的关系在零处没有元素，而无须另写基例公式。
 <!--ja-->
 一回の再帰ステップでは、まず現在の添字の `∈` に関する最大要素 `c` を探する。その添字が後続数項 `# (suc n)` なら、この要素は直前の数項 `# n` である。零ではそのような要素が存在しないため、別の基底論理式を置かなくても、ステップが定める関係には要素がない。
 <!--/-->
@@ -1112,7 +1112,7 @@ The innermost clauses require the candidate entry to be the ordered pair of thos
 <!--en-->
 `StepOf` is the meta-level meaning of this formula. It chooses four model elements: a candidate maximal member `c` of the current index, the relation value `r` recorded there, and the endpoints `x,y`; the candidate entry `zv` is already an argument of the predicate. Only after the current index is identified with a numeral will `c` be identified with its predecessor numeral.
 <!--zh-->
-`StepOf` 是该公式在元层面的含义。它选择四个模型元素：当前索引的候选极大成员 `c`、在那里记录的关系值 `r`，以及端点 `x,y`；候选条目 `zv` 已经是谓词的参数。只有在当前索引被认同为数码后，`c` 才会被认同为它的前驱数码。
+`StepOf` 是该公式在元层面的含义。它选择四个模型元素：当前索引的候选极大元素 `c`、在那里记录的关系值 `r`，以及端点 `x,y`；候选条目 `zv` 已经是谓词的参数。只有在当前索引被认同为数码后，`c` 才会被认同为它的前驱数码。
 <!--ja-->
 `StepOf` はこの論理式のメタレベルでの意味である。現在の添字の最大要素となる候補 `c`、そこで記録された関係値 `r`、端点 `x,y` という四つのモデル要素を選ぶ。候補となる項目 `zv` は、すでに述語の引数である。現在の添字が数項と同定されて初めて、`c` はその直前の数項と同定される。
 <!--/-->
@@ -1195,7 +1195,7 @@ For a fixed first endpoint `x`, `AtY` packages the remaining endpoint `y`, its m
 <!--en-->
 `MaxOf c` expresses maximality in the membership order: if `d` also belongs to the current index, then `c ∈ d` is impossible. Together with `c` belonging to the index, this makes `c` membership-maximal. For a successor numeral it is the predecessor, while at zero the membership premise for `c` already has no witness.
 <!--zh-->
-`MaxOf c` 用隶属序表达极大性：若 `d` 也属于当前索引，则 `c ∈ d` 不可能成立。再结合 `c` 属于该索引，便知 `c` 是隶属序下的极大元。对后继数码而言，它就是前驱；在零处，`c` 的隶属前提本身已经没有见证。
+`MaxOf c` 用成员关系序表达极大性：若 `d` 也属于当前索引，则 `c ∈ d` 不可能成立。再结合 `c` 属于该索引，便知 `c` 是成员关系序下的极大元。对后继数码而言，它就是前驱；在零处，`c` 的成员关系前提本身已经没有见证。
 <!--ja-->
 `MaxOf c` は所属順序での最大性を表す。`d` も現在の添字に属するなら、`c ∈ d` は不可能である。`c` 自身が添字に属することと合わせると、`c` は所属順序で最大になる。後続数項では直前の数項であり、零では `c` の所属という前提の時点ですでに証人がない。
 <!--/-->
@@ -1209,7 +1209,7 @@ For a fixed first endpoint `x`, `AtY` packages the remaining endpoint `y`, its m
 <!--en-->
 To turn the formula's witnesses into `StepOf`, the conversion assumes the membership and maximality of `c`, the approximation entry `(c,r)`, equations identifying the predecessor and current stages, and membership of `x` in the current stage. A final `AtY` witness supplies `y` and the two inner facts.
 <!--zh-->
-为了把公式见证转成 `StepOf`，该转换假设 `c` 的隶属与极大性、逼近条目 `(c,r)`、认同前一层与当前层的等式，以及 `x` 属于当前层。最后一份 `AtY` 见证供应 `y` 与两项内层事实。
+为了把公式见证转成 `StepOf`，该转换假设 `c` 的成员关系与极大性、逼近条目 `(c,r)`、认同前一层与当前层的等式，以及 `x` 属于当前层。最后一份 `AtY` 见证供应 `y` 与两项内层事实。
 <!--ja-->
 論理式の証人を `StepOf` へ変換するため、`c` の所属と最大性、近似の項目 `(c,r)`、直前および現在の段階を同定する等式、そして `x` の現在の段階への所属を仮定する。最後の `AtY` の証人が `y` と二つの内側の事実を与える。
 <!--/-->
@@ -1225,7 +1225,7 @@ To turn the formula's witnesses into `StepOf`, the conversion assumes the member
 <!--en-->
 The stage equation converts the formula's memberships of `x,y` into memberships in `Lset (lookup b γ)`, as required by `StepOf`. The pair equation and the host-level `precedes` comparison are then supplied by the two adequacy arguments below.
 <!--zh-->
-层等式把公式中 `x,y` 的隶属转换成 `Lset (lookup b γ)` 中的隶属，正好符合 `StepOf` 的要求。配对等式与宿主层 `precedes` 比较随后由下面两项充分性论证给出。
+层等式把公式中 `x,y` 的成员关系转换成 `Lset (lookup b γ)` 中的成员关系，正好符合 `StepOf` 的要求。配对等式与宿主层 `precedes` 比较随后由下面两项充分性论证给出。
 <!--ja-->
 段階の等式は、論理式における `x,y` の所属を `Lset (lookup b γ)` への所属へ変換し、`StepOf` の要求に合わせる。順序対の等式とホスト側の `precedes` 比較は、続く二つの妥当性の議論から得られる。
 <!--/-->
@@ -1285,7 +1285,7 @@ Adequacy of `prAtL` identifies the value denoted by `z` with the ordered pair of
 <!--en-->
 After the first endpoint `x` is exposed, the remaining endpoint is still known only to exist propositionally. `AtX` records exactly this intermediate state: stage membership of `x` together with a propositionally truncated `AtY` witness.
 <!--zh-->
-第一个端点 `x` 已经显露后，余下端点仍只在命题意义下存在。`AtX` 正好记录这一中间状态：`x` 的层隶属，以及经过命题截断的 `AtY` 见证。
+第一个端点 `x` 已经显露后，余下端点仍只在命题意义下存在。`AtX` 正好记录这一中间状态：`x` 的层成员关系，以及经过命题截断的 `AtY` 见证。
 <!--ja-->
 第一の端点 `x` を取り出した後も、残る端点は命題的に存在することしか分からない。`AtX` はこの中間状態、すなわち `x` の段階所属と命題的に切り詰められた `AtY` の証人を記録する。
 <!--/-->
@@ -1432,7 +1432,7 @@ The next outer witness is the relation stored by the approximation at `c`. `AtR`
 <!--en-->
 The adequacy of `appAt` converts its satisfaction judgment into the ambient membership statement for the ordered pair `(c,r)`. With this table entry available, the truncated `AtA` continuation may be eliminated into the truncated semantic step.
 <!--zh-->
-`appAt` 的充分性把它的满足判断转换成有序对 `(c,r)` 的周遭隶属陈述。有了这个表中条目，就可以把命题截断的 `AtA` 后续数据消去到命题截断的语义步进中。
+`appAt` 的充分性把它的满足判断转换成有序对 `(c,r)` 的周遭成员关系陈述。有了这个表中条目，就可以把命题截断的 `AtA` 后续数据消去到命题截断的语义步进中。
 <!--ja-->
 `appAt` の妥当性は、その充足判断を順序対 `(c,r)` についての周囲の所属命題へ変換する。この表の項目が得られると、命題的に切り詰められた `AtA` の続きから、命題的に切り詰められた意味論的ステップへ除去できる。
 <!--/-->
@@ -1460,7 +1460,7 @@ Concretely, the recovered fact is `pr (fst c) (fst r) ∈ fst (lookup f γ)`. Th
 <!--en-->
 At the outermost layer, `AtC` chooses a member `c` of the ordinal index and asserts that no member `d` of that index lies strictly above it, in the sense `c ∈ d`. Thus `c` is a membership-maximal element of the index. When the index is later identified with a nonzero von Neumann numeral, this condition identifies its predecessor; the remaining truncated component supplies the relation and stage data.
 <!--zh-->
-在最外层，`AtC` 选取序数索引的一个成员 `c`，并断言该索引中不存在满足 `c ∈ d` 的成员 `d`。因此 `c` 是该索引在隶属关系下的极大元。当后文把索引识别为一个非零冯·诺伊曼数码时，这个条件将识别出它的前驱；余下的命题截断分量则提供关系与层的数据。
+在最外层，`AtC` 选取序数索引的一个元素 `c`，并断言该索引中不存在满足 `c ∈ d` 的元素 `d`。因此 `c` 是该索引在成员关系下的极大元。当后文把索引识别为一个非零冯·诺伊曼数码时，这个条件将识别出它的前驱；余下的命题截断分量则提供关系与层的数据。
 <!--ja-->
 最も外側で、`AtC` は順序数添字の要素 `c` を選び、その添字には `c ∈ d` を満たす要素 `d` がないと主張する。したがって `c` は所属関係に関する添字の極大要素である。後で添字が非零のフォン・ノイマン数項と同定されると、この条件がその直前の数項を同定する。残る命題的に切り詰められた成分は、関係と段階のデータを供給する。
 <!--/-->
@@ -1519,7 +1519,7 @@ Starting from satisfaction of `RelBodyAt`, the outer existential yields only the
 <!--en-->
 Conversely, an explicit `StepOf` witness already contains `c`, the relation `r`, the compared objects `x,y`, their stage memberships, the ordered-pair equality, and the predecessor comparison. `RelBody-in` rebuilds the two intermediate stages and places all of this data into the nested formula. Its existential clauses are propositionally truncated, so the result asserts satisfaction rather than preserving a canonical tuple of internal witnesses.
 <!--zh-->
-反过来，一个显式的 `StepOf` 见证已经包含 `c`、关系 `r`、被比较的对象 `x,y`、它们的层隶属、有序对等式与前驱层比较。`RelBody-in` 重建两个中间层，并把这些数据逐一填入嵌套公式。公式的存在子句经过命题截断，因此结论断言公式得到满足，而不保留一组规范的内部见证。
+反过来，一个显式的 `StepOf` 见证已经包含 `c`、关系 `r`、被比较的对象 `x,y`、它们的层成员关系、有序对等式与前驱层比较。`RelBody-in` 重建两个中间层，并把这些数据逐一填入嵌套公式。公式的存在子句经过命题截断，因此结论断言公式得到满足，而不保留一组规范的内部见证。
 <!--ja-->
 逆に、明示的な `StepOf` の証人は、`c`、関係 `r`、比較される対象 `x,y`、それらの段階への所属、順序対の等式、直前の段階での比較をすでに含む。`RelBody-in` は二つの中間段階を再構成し、このデータを入れ子の論理式へ入れる。存在節は命題的に切り詰められるため、結論は充足を主張するが、内部の証人からなる標準的な組を保存しない。
 <!--/-->
@@ -1535,7 +1535,7 @@ Conversely, an explicit `StepOf` witness already contains `c`, the relation `r`,
 <!--en-->
 The first reconstructed fact is that `c` is an ordinal. Every member of an ordinal is an ordinal, so this follows from `c ∈ fst (lookup b γ)` and the ordinalness assumption on that set. It is precisely what is needed to form the constructible stage indexed by `c`.
 <!--zh-->
-首先要重建的事实是 `c` 为序数。序数的每个成员仍是序数，因此，这由 `c ∈ fst (lookup b γ)` 以及该集合的序数性假设得出；它也正是构造由 `c` 索引的可构造层所需的条件。
+首先要重建的事实是 `c` 为序数。序数的每个元素仍是序数，因此，这由 `c ∈ fst (lookup b γ)` 以及该集合的序数性假设得出；它也正是构造由 `c` 索引的可构造层所需的条件。
 <!--ja-->
 最初に再構成する事実は、`c` が順序数だということである。順序数の各要素は順序数なので、これは `c ∈ fst (lookup b γ)` とその集合の順序数性から従う。また、`c` を添字とする構成可能段階を作るためにちょうど必要な条件でもある。
 <!--/-->
@@ -1562,7 +1562,7 @@ Using this ordinalness, `LsetS` packages `Lset (fst c)` as an element `A` of the
 <!--en-->
 The assumed ordinalness of the current index similarly packages `Lset (fst (lookup b γ))` as `A'`. This second stage supplies the bound containing both objects whose ordered pair is to become a member of the current relation.
 <!--zh-->
-当前索引的序数性假设同样把 `Lset (fst (lookup b γ))` 打包为 `A'`。第二个层提供集合界，容纳有序对将要成为当前关系成员的两个对象。
+当前索引的序数性假设同样把 `Lset (fst (lookup b γ))` 打包为 `A'`。第二个层提供集合界，容纳有序对将要成为当前关系元素的两个对象。
 <!--ja-->
 現在の添字について仮定した順序数性から、同様に `Lset (fst (lookup b γ))` を `A'` としてまとめる。この二つ目の段階が、順序対として現在の関係の要素になる二対象を含む集合の上界を与える。
 <!--/-->
@@ -1643,7 +1643,7 @@ The equality in `StepOf` identifies the candidate value denoted by `z` with the 
 <!--en-->
 It remains to translate the predecessor-stage comparison. The instance of `Precedes` interprets the base relation as `Held r`, namely membership of the ordered pair in `r`. Both representation maps are identities because this interpretation is already exactly the membership proposition expected by the object-language application formula.
 <!--zh-->
-最后还须翻译前驱层上的比较。这里的 `Precedes` 实例把基底关系解释为 `Held r`，也就是有序对属于 `r`。由于这一解释已经与对象语言应用公式所要求的隶属命题完全相同，两个表示映射都取恒等函数。
+最后还须翻译前驱层上的比较。这里的 `Precedes` 实例把基底关系解释为 `Held r`，也就是有序对属于 `r`。由于这一解释已经与对象语言应用公式所要求的成员关系命题完全相同，两个表示映射都取恒等函数。
 <!--ja-->
 残るのは、直前の段階における比較の翻訳である。ここでの `Precedes` のインスタンスは基底関係を `Held r`、すなわち順序対が `r` に属するという命題として解釈する。この解釈は対象言語の適用論理式が求める所属命題とすでに同じなので、二つの表現写像はいずれも恒等関数である。
 <!--/-->
@@ -1690,7 +1690,7 @@ The body classifies a single candidate ordered pair. A relation value must colle
 <!--en-->
 `RelStepAt v b f` says that the set denoted by `v` has exactly the elements satisfying `RelBodyAt`, with the candidate bound as the new variable at position zero and the indices `b,f` shifted beneath that binder. Thus it gives both inclusions: every member of the candidate relation realizes a semantic step, and every object realizing such a step belongs to the relation.
 <!--zh-->
-`RelStepAt v b f` 断言 `v` 所指集合的成员恰好是满足 `RelBodyAt` 的对象，其中候选者绑定为新引入的零号变元，索引 `b,f` 则在该绑定之下相应移位。因此它同时给出两个包含方向：候选关系的每个成员都实现一个语义步骤，而每个实现这种步骤的对象都属于该关系。
+`RelStepAt v b f` 断言 `v` 所指集合的元素恰好是满足 `RelBodyAt` 的对象，其中候选者绑定为新引入的零号变元，索引 `b,f` 则在该绑定之下相应移位。因此它同时给出两个包含方向：候选关系的每个元素都实现一个语义步骤，而每个实现这种步骤的对象都属于该关系。
 <!--ja-->
 `RelStepAt v b f` は、`v` が指す集合の要素が `RelBodyAt` を満たす対象とちょうど一致することを述べる。候補は新しい零番の変数に束縛され、添字 `b,f` はその束縛子の下で移動する。したがって二つの包含が得られる。候補関係の各要素は意味論的ステップを実現し、そのようなステップを実現する各対象は候補関係に属する。
 <!--/-->
@@ -1726,7 +1726,7 @@ module _ {n : ℕ} (v b f : Fin n) (γ : S ^ n)
 <!--en-->
 The forward inclusion takes a member `w` of the set denoted by `v`, reads the body formula at `w`, and obtains `∥ StepOf b f γ (fst w) ∥₁`. The result is truncated because the body discovers its predecessor, stored relation, and compared components through existential quantifiers.
 <!--zh-->
-正向包含从 `v` 所指集合的一个成员 `w` 出发，在 `w` 处读出主体公式，并得到 `∥ StepOf b f γ (fst w) ∥₁`。结果经过命题截断，因为主体通过存在量词找出前驱、所记录的关系与被比较的分量。
+正向包含从 `v` 所指集合的一个元素 `w` 出发，在 `w` 处读出主体公式，并得到 `∥ StepOf b f γ (fst w) ∥₁`。结果经过命题截断，因为主体通过存在量词找出前驱、所记录的关系与被比较的分量。
 <!--ja-->
 順向きの包含は、`v` が指す集合の要素 `w` から出発し、`w` における本体の論理式を読み、`∥ StepOf b f γ (fst w) ∥₁` を得る。本体は存在量化によって直前の添字、記録された関係、比較される成分を見つけるため、結果は命題的に切り詰められている。
 <!--/-->
@@ -1756,7 +1756,7 @@ The reverse inclusion starts with an explicit semantic step for `w`. `RelBody-in
 <!--en-->
 The introduction principle states the exact converse. To prove `RelStepAt`, it suffices to provide a truncated step for every member of the proposed relation and a membership proof for every explicit step witness. These two functions are the two extensional inclusions.
 <!--zh-->
-引入原理陈述了精确的逆命题。要证明 `RelStepAt`，只须对拟议关系的每个成员给出一个命题截断的步进，并对每个显式步进见证给出一个隶属证明。这两个函数正是外延性的两个包含方向。
+引入原理陈述了精确的逆命题。要证明 `RelStepAt`，只须对拟议关系的每个元素给出一个命题截断的步进，并对每个显式步进见证给出一个成员关系证明。这两个函数正是外延性的两个包含方向。
 <!--ja-->
 導入原理はその正確な逆を述べる。`RelStepAt` を証明するには、候補関係の各要素に対して命題的に切り詰められたステップを与え、各明示的ステップ証人に対して所属を証明すれば十分である。この二つの関数が外延性の二つの包含である。
 <!--/-->
@@ -1772,7 +1772,7 @@ The introduction principle states the exact converse. To prove `RelStepAt`, it s
 <!--en-->
 For the first inclusion, each truncated step is mapped through `RelBody-in` and eliminated into the propositional satisfaction judgment. For the second, `RelBody-out` produces a truncated step, which is eliminated into the propositional membership judgment before applying the supplied reverse function. Truncation is removed only because both targets are propositions.
 <!--zh-->
-对第一个包含方向，每个命题截断的步进先经 `RelBody-in` 映射，再消去到作为命题的满足判断中。对第二个方向，`RelBody-out` 产生一个命题截断的步进；在应用给定的反向函数之前，它被消去到作为命题的隶属判断中。这里能够消去命题截断，仅仅因为两个目标都是命题。
+对第一个包含方向，每个命题截断的步进先经 `RelBody-in` 映射，再消去到作为命题的满足判断中。对第二个方向，`RelBody-out` 产生一个命题截断的步进；在应用给定的反向函数之前，它被消去到作为命题的成员关系判断中。这里能够消去命题截断，仅仅因为两个目标都是命题。
 <!--ja-->
 第一の包含では、命題的に切り詰められた各ステップを `RelBody-in` で写し、命題である充足判断へ除去する。第二の包含では、`RelBody-out` が命題的に切り詰められたステップを生み、それを与えられた逆向きの関数に渡して、命題である所属判断へ除去する。命題的切り詰めを除去できるのは、どちらの目標も命題だからである。
 <!--/-->
@@ -1862,7 +1862,7 @@ Entries g k = (m : ℕ) → m < k → ⟨ pr (# m) (fst (relAt m)) ∈ fst g ⟩
 <!--en-->
 Any comparison `before k x y` forces `k` to be a successor. At zero the relation is empty, so a comparison gives a contradiction; at `suc m` the predecessor `m` and the required equality are immediate. This small lemma will let an element of `relAt k` be turned back into the predecessor data required by `StepOf`.
 <!--zh-->
-任何比较 `before k x y` 都迫使 `k` 为后继数。在零处该关系为空，因此比较会导出矛盾；在 `suc m` 处，前驱 `m` 与所需等式立即可得。这个小引理稍后把 `relAt k` 的成员转换回 `StepOf` 所需的前驱数据。
+任何比较 `before k x y` 都迫使 `k` 为后继数。在零处该关系为空，因此比较会导出矛盾；在 `suc m` 处，前驱 `m` 与所需等式立即可得。这个小引理稍后把 `relAt k` 的元素转换回 `StepOf` 所需的前驱数据。
 <!--ja-->
 比較 `before k x y` が成り立つなら、`k` は後続数である。零では関係が空なので比較から矛盾が従い、`suc m` では直前の数 `m` と必要な等式がただちに得られる。この補題により、後で `relAt k` の要素を `StepOf` が必要とする直前の数のデータへ戻せる。
 <!--/-->
@@ -1876,7 +1876,7 @@ before-suc (suc m) x y h = m , refl
 <!--en-->
 Fix a candidate relation denoted by `v`, an index denoted by `b`, and a table denoted by `f`. The equation `qb` identifies the index with the numeral `# k`, while `vals` and `ents` assert that the table is correct and complete below `k`. Under these hypotheses the semantic step at the index can be compared exactly with membership in `relAt k`.
 <!--zh-->
-固定 `v` 所指的候选关系、`b` 所指的索引与 `f` 所指的表。等式 `qb` 把索引认同为数码 `# k`，而 `vals` 与 `ents` 断言该表在 `k` 以下正确且完备。在这些假设下，索引处的语义步骤可以与 `relAt k` 中的隶属精确比较。
+固定 `v` 所指的候选关系、`b` 所指的索引与 `f` 所指的表。等式 `qb` 把索引认同为数码 `# k`，而 `vals` 与 `ents` 断言该表在 `k` 以下正确且完备。在这些假设下，索引处的语义步骤可以与 `relAt k` 中的成员关系精确比较。
 <!--ja-->
 `v` が指す候補関係、`b` が指す添字、`f` が指す表を固定する。等式 `qb` は添字を数項 `# k` と同定し、`vals` と `ents` は表が `k` より下で正しく完全であることを主張する。これらの仮定のもとで、添字における意味論的ステップを `relAt k` への所属と正確に比較できる。
 <!--/-->
@@ -1911,7 +1911,7 @@ The numeral `# k` is an ordinal. Transporting this fact against `qb : fst (looku
 <!--en-->
 Consider an explicit `StepOf` witness for a candidate value `x`. Its maximal element `c` belongs to the index, and `qb` turns this into `fst c ∈ # k`. Numeral membership elimination recovers, under propositional truncation, a natural number `m < k` together with `fst c ≡ # m`; elimination is valid here because the desired membership `x ∈ relAt k` is a proposition.
 <!--zh-->
-考虑候选取值 `x` 的一个显式 `StepOf` 见证。其中的极大元 `c` 属于该索引，`qb` 把这一点转化为 `fst c ∈ # k`。数码隶属的消去在命题截断下恢复一个自然数 `m < k` 与等式 `fst c ≡ # m`；这里可以消去命题截断，因为目标隶属 `x ∈ relAt k` 是命题。
+考虑候选取值 `x` 的一个显式 `StepOf` 见证。其中的极大元 `c` 属于该索引，`qb` 把这一点转化为 `fst c ∈ # k`。数码成员关系的消去在命题截断下恢复一个自然数 `m < k` 与等式 `fst c ≡ # m`；这里可以消去命题截断，因为目标成员关系 `x ∈ relAt k` 是命题。
 <!--ja-->
 候補値 `x` に対する明示的な `StepOf` の証人を考える。その極大要素 `c` は添字に属し、`qb` によって `fst c ∈ # k` と読み替えられる。数項への所属を除去すると、命題的切り詰めのもとで自然数 `m < k` と等式 `fst c ≡ # m` が復元される。ここで切り詰めを除去できるのは、目標の所属 `x ∈ relAt k` が命題だからである。
 <!--/-->
@@ -1927,7 +1927,7 @@ Consider an explicit `StepOf` witness for a candidate value `x`. Its maximal ele
 <!--en-->
 For such an `m`, membership in `relAt k` is proved by its introduction lemma. The required `RelOf k x` witness uses the same components `xx` and `yy`, their memberships in `finiteStage k`, the equality identifying `x` with their ordered pair, and a comparison `before k xx yy`. The remaining work is therefore to show that the maximal `c` really corresponds to the immediate predecessor of `k` and to translate the recorded comparison accordingly.
 <!--zh-->
-对这样一个 `m`，可用 `relAt k` 的引入引理证明所需隶属。相应的 `RelOf k x` 见证沿用分量 `xx` 与 `yy`，并需要它们属于 `finiteStage k`、`x` 与其有序对的等式，以及比较 `before k xx yy`。余下工作因而是证明极大元 `c` 确实对应 `k` 的直接前驱，并据此翻译表中记录的比较。
+对这样一个 `m`，可用 `relAt k` 的引入引理证明所需成员关系。相应的 `RelOf k x` 见证沿用分量 `xx` 与 `yy`，并需要它们属于 `finiteStage k`、`x` 与其有序对的等式，以及比较 `before k xx yy`。余下工作因而是证明极大元 `c` 确实对应 `k` 的直接前驱，并据此翻译表中记录的比较。
 <!--ja-->
 このような `m` に対しては、`relAt k` の導入補題により必要な所属を証明する。対応する `RelOf k x` の証人は、同じ成分 `xx` と `yy`、それらの `finiteStage k` への所属、`x` をその順序対と同定する等式、そして比較 `before k xx yy` を用いる。したがって残る仕事は、極大要素 `c` が実際に `k` の直前の数に対応することを示し、それに従って表に記録された比較を翻訳することである。
 <!--/-->
@@ -1943,7 +1943,7 @@ For such an `m`, membership in `relAt k` is proved by its introduction lemma. Th
 <!--en-->
 Since `c` is coded by `# m`, its being maximal among the members of `# k` should force `k = suc m`. Trichotomy compares `suc m` with `k`: the equality case gives the desired equation, while each strict case contradicts information already available about `m`, `k`, and maximality.
 <!--zh-->
-由于 `c` 由 `# m` 编码，而它又是 `# k` 的成员中的极大元，应有 `k = suc m`。三歧性比较 `suc m` 与 `k`：相等情形给出所需等式，两个严格不等情形则分别与已有的 `m`、`k` 关系或极大性矛盾。
+由于 `c` 由 `# m` 编码，而它又是 `# k` 的元素中的极大元，应有 `k = suc m`。三歧性比较 `suc m` 与 `k`：相等情形给出所需等式，两个严格不等情形则分别与已有的 `m`、`k` 关系或极大性矛盾。
 <!--ja-->
 `c` は `# m` によって符号化され、しかも `# k` の要素の中で極大なので、`k = suc m` でなければならない。三分律で `suc m` と `k` を比較すると、等しい場合には求める等式が得られ、二つの狭義不等号の場合は、それぞれ既知の `m` と `k` の関係または極大性に矛盾する。
 <!--/-->
@@ -1959,7 +1959,7 @@ Since `c` is coded by `# m`, its being maximal among the members of `# k` should
 <!--en-->
 If `suc m < k`, then the numeral `#(suc m)` is itself a member of `# k`. Since `c = # m`, we also have `c ∈ #(suc m)`. These two membership facts exhibit a member of the index strictly above `c`, contradicting the maximality clause.
 <!--zh-->
-若 `suc m < k`，则数码 `#(suc m)` 本身属于 `# k`。又因 `c = # m`，还有 `c ∈ #(suc m)`。这两个隶属事实在索引中给出了一个严格位于 `c` 之上的成员，与极大性子句矛盾。
+若 `suc m < k`，则数码 `#(suc m)` 本身属于 `# k`。又因 `c = # m`，还有 `c ∈ #(suc m)`。这两个成员关系事实在索引中给出了一个严格位于 `c` 之上的元素，与极大性子句矛盾。
 <!--ja-->
 もし `suc m < k` なら、数項 `#(suc m)` 自身が `# k` に属する。また `c = # m` なので、`c ∈ #(suc m)` でもある。この二つの所属は、添字の中に `c` より真に大きい要素があることを示し、極大性の節に矛盾する。
 <!--/-->
@@ -1990,7 +1990,7 @@ If instead `k < suc m`, removing the successors yields `k ≤ m`, which is incom
 <!--en-->
 The step witness already places `xx` in `Lset (fst (lookup b γ))`. Transport along `qb` identifies this set with `Lset (# k)`, which is `finiteStage k`, and therefore supplies the first stage-membership component required by `RelOf k x`.
 <!--zh-->
-步进见证已经给出 `xx` 属于 `Lset (fst (lookup b γ))`。沿 `qb` 搬运，把这个集合识别为 `Lset (# k)`，也就是 `finiteStage k`，从而得到 `RelOf k x` 所需的第一个层隶属分量。
+步进见证已经给出 `xx` 属于 `Lset (fst (lookup b γ))`。沿 `qb` 搬运，把这个集合识别为 `Lset (# k)`，也就是 `finiteStage k`，从而得到 `RelOf k x` 所需的第一个层成员关系分量。
 <!--ja-->
 ステップの証人はすでに、`xx` が `Lset (fst (lookup b γ))` に属することを与えている。`qb` に沿って輸送すると、この集合は `Lset (# k)`、すなわち `finiteStage k` と同定され、`RelOf k x` が必要とする第一の段階所属の成分が得られる。
 <!--/-->
@@ -2003,7 +2003,7 @@ The step witness already places `xx` in `Lset (fst (lookup b γ))`. Transport al
 <!--en-->
 Both endpoints of the pair must lie in the stage indexed by `k`. For the second endpoint, the equation identifying the bound with `# k` changes membership in `Lset (fst (lookup b γ))` into membership in `finiteStage k`.
 <!--zh-->
-有序对的两个端点都必须属于由 `k` 索引的层。对于第二个端点，界等于 `# k` 的等式把 `Lset (fst (lookup b γ))` 中的隶属关系化为 `finiteStage k` 中的隶属关系。
+有序对的两个端点都必须属于由 `k` 索引的层。对于第二个端点，界等于 `# k` 的等式把 `Lset (fst (lookup b γ))` 中的成员关系化为 `finiteStage k` 中的成员关系。
 <!--ja-->
 順序対の二つの端点は、いずれも `k` で添字づけられた段階に属さなければならない。第二の端点については、上界を `# k` と同一視する等式により、`Lset (fst (lookup b γ))` への所属を `finiteStage k` への所属に移す。
 <!--/-->
@@ -2046,7 +2046,7 @@ The step witness initially compares the endpoints over `Lset (fst c)` using the 
 <!--en-->
 To obtain the recursive comparison, `precedes-map` replaces the base relation `Rel m` by `before m`. Its hypothesis runs in the reverse direction, from `before m` to membership in `relAt m`, because the base relation occurs in the premise of the agreement condition. Thus the result is `before (suc m)`, and the equation `k ≡ suc m` finally yields `before k`.
 <!--zh-->
-为了得到递归比较，`precedes-map` 把基底关系 `Rel m` 换成 `before m`。由于基底关系出现在一致性条件的前件中，它所需的假设方向相反，即从 `before m` 走向 `relAt m` 中的隶属。因此先得到 `before (suc m)`，再由等式 `k ≡ suc m` 得到 `before k`。
+为了得到递归比较，`precedes-map` 把基底关系 `Rel m` 换成 `before m`。由于基底关系出现在一致性条件的前件中，它所需的假设方向相反，即从 `before m` 走向 `relAt m` 中的成员关系。因此先得到 `before (suc m)`，再由等式 `k ≡ suc m` 得到 `before k`。
 <!--ja-->
 再帰的な比較を得るため、`precedes-map` は基底関係 `Rel m` を `before m` に置き換える。基底関係は一致条件の前提に現れるため、必要な仮定の向きは逆であり、`before m` から `relAt m` への所属へ進む。こうしてまず `before (suc m)` が得られ、等式 `k ≡ suc m` から `before k` が従う。
 <!--/-->
@@ -2061,7 +2061,7 @@ To obtain the recursive comparison, `precedes-map` replaces the base relation `R
 <!--en-->
 For the converse direction, a member described by `RelOf k` must be turned into a semantic step witness. The two endpoints are already present; the remaining task is to recover the predecessor index, its relation entry, and the assertion that this predecessor is the maximal member of the bound.
 <!--zh-->
-在反方向上，要把由 `RelOf k` 描述的成员化为语义步进见证。两个端点已经给出；余下的任务是恢复前驱索引及其关系表项，并证明此前驱是界中的极大成员。
+在反方向上，要把由 `RelOf k` 描述的元素化为语义步进见证。两个端点已经给出；余下的任务是恢复前驱索引及其关系表项，并证明此前驱是界中的极大元素。
 <!--ja-->
 逆方向では、`RelOf k` で記述された要素を意味論的なステップの証人へ変換する。二つの端点はすでに与えられており、残る仕事は前者の添字とその関係の項目を復元し、その前者が上界の最大要素であることを示すことである。
 <!--/-->
@@ -2116,7 +2116,7 @@ Since `k` is `suc m`, the predecessor satisfies `m < k`. This bound permits the 
 <!--en-->
 The numeral representing the predecessor must be a member of the bound stored in `b`. The inequality `m < k` gives `# m ∈ # k`; the equations for `numS m` and the bound transport this membership to the required form.
 <!--zh-->
-表示前驱的数码必须属于 `b` 中保存的界。不等式 `m < k` 给出 `# m ∈ # k`；关于 `numS m` 与界的等式再把这项隶属关系化为所需形式。
+表示前驱的数码必须属于 `b` 中保存的界。不等式 `m < k` 给出 `# m ∈ # k`；关于 `numS m` 与界的等式再把这项成员关系化为所需形式。
 <!--ja-->
 前者を表す数項は、`b` に保存された上界の要素でなければならない。不等式 `m < k` から `# m ∈ # k` が得られ、`numS m` と上界についての等式がこの所属を必要な形へ移す。
 <!--/-->
@@ -2130,7 +2130,7 @@ The numeral representing the predecessor must be a member of the bound stored in
 <!--en-->
 It remains to show that `# m` is maximal among the members of `# k`. Given `d ∈ # k` and `# m ∈ d`, numeral elimination presents `d` merely as some `# j` with `j < k`; the two memberships would then force both `m < j` and `j ≤ m`.
 <!--zh-->
-还需证明 `# m` 是 `# k` 的成员中的极大者。给定 `d ∈ # k` 与 `# m ∈ d`，数码消去只在命题截断中把 `d` 表成某个满足 `j < k` 的 `# j`；这两项隶属将同时迫使 `m < j` 与 `j ≤ m`。
+还需证明 `# m` 是 `# k` 的元素中的极大者。给定 `d ∈ # k` 与 `# m ∈ d`，数码消去只在命题截断中把 `d` 表成某个满足 `j < k` 的 `# j`；这两项成员关系将同时迫使 `m < j` 与 `j ≤ m`。
 <!--ja-->
 さらに、`# m` が `# k` の要素のうち最大であることを示す必要がある。`d ∈ # k` と `# m ∈ d` が与えられると、数項の消去は命題的切り詰めの中で `d` を `j < k` を満たすある `# j` として表す。この二つの所属から `m < j` と `j ≤ m` が同時に従う。
 <!--/-->
@@ -2162,7 +2162,7 @@ In a branch where `d ≡ # j`, membership of `d` in `# k = # (suc m)` gives `j �
 <!--en-->
 The derivation of `m < j` uses the exact correspondence between membership of von Neumann numerals and strict order. The equalities for `numS m` and `d ≡ # j` first rewrite the assumed membership into `# m ∈ # j`, after which numeral membership can be decoded.
 <!--zh-->
-`m < j` 的推导使用冯·诺伊曼数码的隶属关系与严格序之间的准确对应。关于 `numS m` 的等式和 `d ≡ # j` 先把假设的隶属改写为 `# m ∈ # j`，随后即可解码数码隶属。
+`m < j` 的推导使用冯·诺伊曼数码的成员关系与严格序之间的准确对应。关于 `numS m` 的等式和 `d ≡ # j` 先把假设的成员关系改写为 `# m ∈ # j`，随后即可解码数码成员关系。
 <!--ja-->
 `m < j` の導出には、フォン・ノイマン数項の所属と狭義順序との正確な対応を用いる。`numS m` の等式と `d ≡ # j` により、仮定された所属をまず `# m ∈ # j` に書き換え、その後で数項の所属を復号する。
 <!--/-->
@@ -2215,7 +2215,7 @@ The same transport places the second endpoint in the stage determined by the bou
 <!--en-->
 The comparison stored in `RelOf k` is first rewritten along `k ≡ suc m`, exposing the recursive clause `precedes (before m) (finiteStage m)`. To express the semantic step, its base relation must then be changed from `before m` to membership in `relAt m`.
 <!--zh-->
-`RelOf k` 中保存的比较先沿 `k ≡ suc m` 改写，从而显出递归子句 `precedes (before m) (finiteStage m)`。为了得到语义步进，还须把其基底关系从 `before m` 换成 `relAt m` 中的隶属。
+`RelOf k` 中保存的比较先沿 `k ≡ suc m` 改写，从而显出递归子句 `precedes (before m) (finiteStage m)`。为了得到语义步进，还须把其基底关系从 `before m` 换成 `relAt m` 中的成员关系。
 <!--ja-->
 `RelOf k` に保存された比較をまず `k ≡ suc m` に沿って書き換え、再帰節 `precedes (before m) (finiteStage m)` を現す。意味論的なステップを得るには、さらにその基底関係を `before m` から `relAt m` への所属へ置き換えなければならない。
 <!--/-->
@@ -2231,7 +2231,7 @@ The comparison stored in `RelOf k` is first rewritten along `k ≡ suc m`, expos
 <!--en-->
 Here `precedes-map` uses `relAt-rep`, whose direction is from membership in `relAt m` back to `before m`; contravariance in the agreement premise then produces a comparison based on `Rel m`. Finally the numeral equation rewrites the stage as `Lset (fst (numS m))`, giving the last field of `StepOf`.
 <!--zh-->
-这里，`precedes-map` 使用方向从 `relAt m` 中的隶属回到 `before m` 的 `relAt-rep`；一致性前件中的反变性于是给出以 `Rel m` 为基底的比较。最后，数码等式把该层改写为 `Lset (fst (numS m))`，从而得到 `StepOf` 的最后一个字段。
+这里，`precedes-map` 使用方向从 `relAt m` 中的成员关系回到 `before m` 的 `relAt-rep`；一致性前件中的反变性于是给出以 `Rel m` 为基底的比较。最后，数码等式把该层改写为 `Lset (fst (numS m))`，从而得到 `StepOf` 的最后一个字段。
 <!--ja-->
 ここで `precedes-map` は、`relAt m` への所属から `before m` へ戻る向きの `relAt-rep` を用いる。一致条件の前提における反変性により、`Rel m` を基底とする比較が得られる。最後に数項の等式で段階を `Lset (fst (numS m))` に書き換え、`StepOf` の最後の欄を得る。
 <!--/-->
@@ -2244,7 +2244,7 @@ Here `precedes-map` uses `relAt-rep`, whose direction is from membership in `rel
 <!--en-->
 The lemma `step-rel` proves that any set satisfying the step formula at index `k` equals `relAt k`. Extensionality reduces this set equality to two membership implications. In the forward implication, `RelStep-out` yields a propositionally truncated step witness, and `into` sends any such witness to membership in `relAt k`.
 <!--zh-->
-引理 `step-rel` 证明：在索引 `k` 处满足步进公式的任意集合都等于 `relAt k`。外延性把这个集合等式化为两个隶属蕴涵。在正向蕴涵中，`RelStep-out` 给出命题截断的步进见证，而 `into` 把其中任意见证送到 `relAt k` 的隶属关系。
+引理 `step-rel` 证明：在索引 `k` 处满足步进公式的任意集合都等于 `relAt k`。外延性把这个集合等式化为两个成员关系蕴涵。在正向蕴涵中，`RelStep-out` 给出命题截断的步进见证，而 `into` 把其中任意见证送到 `relAt k` 的成员关系。
 <!--ja-->
 補題 `step-rel` は、添字 `k` でステップ論理式を満たす任意の集合が `relAt k` に等しいことを示す。外延性により、この集合の等式は二つの所属の含意に帰着する。順方向では、`RelStep-out` が命題的に切り詰められたステップの証人を与え、`into` がその任意の証人を `relAt k` への所属へ送る。
 <!--/-->
@@ -2260,7 +2260,7 @@ The lemma `step-rel` proves that any set satisfying the step formula at index `k
 <!--en-->
 The truncation may be eliminated here because membership in `relAt k` is a proposition. No particular predecessor or pair witness is selected; only the fact that the original member belongs to the realized relation is retained.
 <!--zh-->
-这里可以消去命题截断，因为属于 `relAt k` 是一个命题。证明并不选择特定的前驱或有序对见证，只保留原成员属于已实现关系这一事实。
+这里可以消去命题截断，因为属于 `relAt k` 是一个命题。证明并不选择特定的前驱或有序对见证，只保留原元素属于已实现关系这一事实。
 <!--ja-->
 ここでは `relAt k` への所属が命題なので、命題的切り詰めを除去できる。特定の前者や順序対の証人を選ぶことはなく、もとの要素が実現された関係に属するという事実だけを保つ。
 <!--/-->
@@ -2272,7 +2272,7 @@ The truncation may be eliminated here because membership in `relAt k` is a propo
 <!--en-->
 For the reverse membership implication, `relAt-out` gives a propositionally truncated `RelOf k` description of the member. The map `from` reconstructs a `StepOf` witness, and `RelStep-back` then places the member in the set satisfying the step formula.
 <!--zh-->
-对于反向的隶属蕴涵，`relAt-out` 给出该成员的命题截断的 `RelOf k` 描述。映射 `from` 据此重建 `StepOf` 见证，随后 `RelStep-back` 把该成员放入满足步进公式的集合。
+对于反向的成员关系蕴涵，`relAt-out` 给出该元素的命题截断的 `RelOf k` 描述。映射 `from` 据此重建 `StepOf` 见证，随后 `RelStep-back` 把该元素放入满足步进公式的集合。
 <!--ja-->
 逆向きの所属の含意では、`relAt-out` がその要素について命題的に切り詰められた `RelOf k` の記述を与える。写像 `from` がそこから `StepOf` の証人を復元し、`RelStep-back` がその要素をステップ論理式を満たす集合へ入れる。
 <!--/-->
@@ -2287,7 +2287,7 @@ For the reverse membership implication, `relAt-out` gives a propositionally trun
 <!--en-->
 For each constructible element, the two implications give an equivalence between its two membership propositions. Propositional extensionality turns that equivalence into a path, and set extensionality assembles the pointwise paths into the required equality of underlying sets.
 <!--zh-->
-对于每个可构造元素，两个蕴涵给出两项隶属命题之间的等价。命题外延性把该等价化为路径，集合外延性再把这些逐点路径装配成所需的底层集合等式。
+对于每个可构造元素，两个蕴涵给出两项成员关系命题之间的等价。命题外延性把该等价化为路径，集合外延性再把这些逐点路径装配成所需的底层集合等式。
 <!--ja-->
 各構成可能な要素について、二つの含意は二つの所属命題の間の同値を与える。命題外延性がその同値をパスに変え、集合の外延性が各点のパスを必要な台集合の等式にまとめる。
 <!--/-->
@@ -2300,7 +2300,7 @@ For each constructible element, the two implications give an equivalence between
 <!--en-->
 The converse lemma `rel-step` starts from an equality between the proposed value and `relAt k` and proves the step formula. The introduction rule asks for both membership directions. For the first, `toStep` will associate a propositionally truncated semantic step with every member of the proposed value.
 <!--zh-->
-反向引理 `rel-step` 从候选取值与 `relAt k` 的等式出发，证明步进公式。引入规则要求给出两个隶属方向；在第一个方向中，`toStep` 要为候选取值的每个成员配上一个命题截断的语义步进。
+反向引理 `rel-step` 从候选取值与 `relAt k` 的等式出发，证明步进公式。引入规则要求给出两个成员关系方向；在第一个方向中，`toStep` 要为候选取值的每个元素配上一个命题截断的语义步进。
 <!--ja-->
 逆向きの補題 `rel-step` は、候補となる値と `relAt k` の等式から出発してステップ論理式を示す。導入規則には所属の二方向が必要である。第一の方向では、`toStep` が候補の値の各要素に、命題的に切り詰められた意味論的ステップを対応させる。
 <!--/-->
@@ -2316,7 +2316,7 @@ The converse lemma `rel-step` starts from an equality between the proposed value
 <!--en-->
 The equality first transports a candidate member into `relAt k`. The outward representation of `relAt k` supplies only a propositionally truncated `RelOf k` record, and `map₁ from` preserves that truncation while converting its possible inhabitants into step witnesses.
 <!--zh-->
-该等式先把候选成员运入 `relAt k`。`relAt k` 的向外表示只给出命题截断的 `RelOf k` 记录，而 `map₁ from` 在把其中可能的元素化为步进见证时保留这层命题截断。
+该等式先把候选元素运入 `relAt k`。`relAt k` 的向外表示只给出命题截断的 `RelOf k` 记录，而 `map₁ from` 在把其中可能的元素化为步进见证时保留这层命题截断。
 <!--ja-->
 この等式により、まず候補の要素を `relAt k` へ移す。`relAt k` の外向きの表現が与えるのは、命題的に切り詰められた `RelOf k` の記録だけであり、`map₁ from` はその切り詰めを保ったまま、あり得る要素をステップの証人へ変換する。
 <!--/-->
@@ -2328,7 +2328,7 @@ The equality first transports a candidate member into `relAt k`. The outward rep
 <!--en-->
 The second membership direction starts with an explicit `StepOf` witness. The map `into` proves membership in `relAt k`, and the inverse orientation of the assumed equality transports this membership back to the proposed value.
 <!--zh-->
-第二个隶属方向从显式的 `StepOf` 见证开始。映射 `into` 证明其属于 `relAt k`，再沿所设等式的反方向把这项隶属运回候选取值。
+第二个成员关系方向从显式的 `StepOf` 见证开始。映射 `into` 证明其属于 `relAt k`，再沿所设等式的反方向把这项成员关系运回候选取值。
 <!--ja-->
 第二の所属の向きは、明示的な `StepOf` の証人から始まる。写像 `into` が `relAt k` への所属を示し、仮定した等式の逆向きに沿って、その所属を候補の値へ戻す。
 <!--/-->
@@ -2383,7 +2383,7 @@ entryOf f a γ k qa h j hj vs =
 <!--en-->
 The domain argument is justified by `j < k`: numeral monotonicity gives `# j ∈ # k`, and the equations for `numS j` and the bound put that membership into the form expected by `ApproxAt-value`. The result asserts that some recorded value exists under propositional truncation; it does not choose a particular value.
 <!--zh-->
-定义域论证来自 `j < k`：数码的单调性给出 `# j ∈ # k`，关于 `numS j` 与界的等式再把这项隶属化为 `ApproxAt-value` 所需的形式。所得结论只在命题截断下断言某个记录取值存在，并不选定一个具体取值。
+定义域论证来自 `j < k`：数码的单调性给出 `# j ∈ # k`，关于 `numS j` 与界的等式再把这项成员关系化为 `ApproxAt-value` 所需的形式。所得结论只在命题截断下断言某个记录取值存在，并不选定一个具体取值。
 <!--ja-->
 定義域についての論証は `j < k` に基づく。数項の単調性から `# j ∈ # k` が得られ、`numS j` と上界の等式によって、その所属を `ApproxAt-value` が要求する形へ移す。結論は、命題的切り詰めのもとで何らかの記録値が存在すると述べるだけであり、特定の値を選ばない。
 <!--/-->
@@ -2399,7 +2399,7 @@ The domain argument is justified by `j < k`: numeral monotonicity gives `# j ∈
 <!--en-->
 Within such a value branch, the numeral equation first normalizes the recorded pair to the form `(# j , u)`. The correctness hypothesis gives `fst u ≡ fst (relAt j)`, and substitution in the second coordinate converts the recorded membership into membership of the standard pair.
 <!--zh-->
-在这样的取值分支中，数码等式先把记录的对规范为 `(# j , u)`。正确性假设给出 `fst u ≡ fst (relAt j)`，再在第二分量中作替换，就把原表项的隶属化为标准对的隶属。
+在这样的取值分支中，数码等式先把记录的对规范为 `(# j , u)`。正确性假设给出 `fst u ≡ fst (relAt j)`，再在第二分量中作替换，就把原表项的成员关系化为标准对的成员关系。
 <!--ja-->
 そのような値の分岐では、数項の等式により、記録された対をまず `(# j , u)` の形に整える。正しさの仮定から `fst u ≡ fst (relAt j)` が得られ、第二成分を置換することで、記録された所属を標準的な対の所属へ変換する。
 <!--/-->
@@ -2586,7 +2586,7 @@ The other input to `step-rel` is completeness of that same approximation below `
 <!--en-->
 To prepare the finite family used below for collection by `finSet`, first place all its members in a common constructible stage. More generally, `smallStage` applies ordinal bounding to the individual stages of any small family `g : X → S` and returns an ordinal `σ` such that every `fst (g x)` belongs to `Lset σ`.
 <!--zh-->
-为了用 `finSet` 收集下文的有限族，先要把它的所有成员放入同一个可构造层。更一般地，`smallStage` 对任意小族 `g : X → S` 的各个所在层作序数界定，得到序数 `σ`，使每个 `fst (g x)` 都属于 `Lset σ`。
+为了用 `finSet` 收集下文的有限族，先要把它的所有元素放入同一个可构造层。更一般地，`smallStage` 对任意小族 `g : X → S` 的各个所在层作序数界定，得到序数 `σ`，使每个 `fst (g x)` 都属于 `Lset σ`。
 <!--ja-->
 以下で使う有限族を `finSet` で集めるには、まずその全要素を共通の構成可能段階に置く。より一般に、`smallStage` は任意の小さな族 `g : X → S` の各要素が属する段階に順序数の上界を取り、すべての `fst (g x)` が `Lset σ` に属するような順序数 `σ` を返す。
 <!--/-->
@@ -2602,7 +2602,7 @@ smallStage X g = bd .fst , (bd .snd .fst , mem)
 <!--en-->
 Each `g x` already belongs to the constructible stage at which it is born. The bounding ordinal lies above every such birth stage, so monotonicity of `Lset` transports each membership into the common stage `Lset σ`.
 <!--zh-->
-每个 `g x` 已经属于其诞生层。所取的界序数位于每个诞生层之上，因此 `Lset` 的单调性把每项隶属关系运入公共层 `Lset σ`。
+每个 `g x` 已经属于其诞生层。所取的界序数位于每个诞生层之上，因此 `Lset` 的单调性把每项成员关系运入公共层 `Lset σ`。
 <!--ja-->
 各 `g x` はすでに自身の生成段階に属している。上界となる順序数はそれらすべての生成段階より上にあるので、`Lset` の単調性によって各所属を共通の段階 `Lset σ` へ移せる。
 <!--/-->
@@ -2676,7 +2676,7 @@ opaque
 <!--en-->
 The projection equation exposes the underlying set of `approxSet k` as exactly that `finSet`. Subsequent membership lemmas can therefore use the introduction and elimination rules for finite sets to show that its entries are precisely the pairs `(# j , relAt j)` with `j < k`.
 <!--zh-->
-投影等式表明，`approxSet k` 的底层集合恰好就是这个 `finSet`。因此，后续成员引理可以使用有限集的引入与消去规则，证明其表项恰为满足 `j < k` 的各对 `(# j , relAt j)`。
+投影等式表明，`approxSet k` 的底层集合恰好就是这个 `finSet`。因此，后续成员关系引理可以使用有限集的引入与消去规则，证明其表项恰为满足 `j < k` 的各对 `(# j , relAt j)`。
 <!--ja-->
 射影の等式により、`approxSet k` の台集合がまさにこの `finSet` であることが分かる。したがって後続の所属補題では、有限集合の導入規則と除去規則を用いて、その項目がちょうど `j < k` を満たす対 `(# j , relAt j)` であることを示せる。
 <!--/-->
@@ -2705,7 +2705,7 @@ approx-mem-in k j hj =
 <!--en-->
 The inequality supplies `enum j hj : Fin k`. The equation `famEq` identifies the corresponding member of the finite family with the desired ordered pair, and `finSet-in` inserts it into the set built by `finSet` and certified in `L` by `finSetL`.
 <!--zh-->
-不等式给出 `enum j hj : Fin k`。等式 `famEq` 把有限族中相应的成员认同为所需的有序对，`finSet-in` 再把它写入由 `finSet` 构造并由 `finSetL` 证明属于 `L` 的集合。
+不等式给出 `enum j hj : Fin k`。等式 `famEq` 把有限族中相应的元素认同为所需的有序对，`finSet-in` 再把它写入由 `finSet` 构造并由 `finSetL` 证明属于 `L` 的集合。
 <!--ja-->
 不等式から `enum j hj : Fin k` が得られる。等式 `famEq` は有限族の対応する要素を求める順序対と同一視し、`finSet-in` はそれを `finSet` で構成され `finSetL` により `L` に属すると保証された集合へ書き込む。
 <!--/-->
@@ -2721,7 +2721,7 @@ The inequality supplies `enum j hj : Fin k`. The equation `famEq` identifies the
 <!--en-->
 Conversely, membership in `approxSet k` yields only a propositionally truncated assertion that the member is an intended entry indexed by some `j < k`. Thus the lemma describes exactly which pairs occur without choosing a canonical index witness.
 <!--zh-->
-反过来，属于 `approxSet k` 只给出一个经过命题截断的断言：该成员是由某个 `j < k` 索引的预期条目。因此，这条引理精确刻画了其中出现的有序对，却不选择规范的索引见证。
+反过来，属于 `approxSet k` 只给出一个经过命题截断的断言：该元素是由某个 `j < k` 索引的预期条目。因此，这条引理精确刻画了其中出现的有序对，却不选择规范的索引见证。
 <!--ja-->
 逆に、`approxSet k` への所属から得られるのは、その要素がある `j < k` で添字付けられた意図どおりの項目であるという命題的切り詰めだけである。したがって、この補題は現れる順序対を正確に記述するが、標準的な添字の証人を選ぶものではない。
 <!--/-->
@@ -2737,7 +2737,7 @@ approx-mem-out k y h = map₁ named
 <!--en-->
 An enumerated index `i : Fin k` is sent to the natural number `toℕ i`, together with `toℕ<n i`. Reversing the membership equation and composing it with `famEq` gives the required equality from the original member to the standard pair.
 <!--zh-->
-枚举索引 `i : Fin k` 被送到自然数 `toℕ i`，并同时带有 `toℕ<n i`。把成员等式反向后与 `famEq` 复合，便得到从原成员到标准有序对的所需等式。
+枚举索引 `i : Fin k` 被送到自然数 `toℕ i`，并同时带有 `toℕ<n i`。把成员关系等式反向后与 `famEq` 复合，便得到从原元素到标准有序对的所需等式。
 <!--ja-->
 列挙された添字 `i : Fin k` を自然数 `toℕ i` に移し、同時に `toℕ<n i` を得る。所属から得た等式を逆向きにして `famEq` と合成すると、元の要素から標準的な順序対への必要な等式が得られる。
 <!--/-->
@@ -2753,7 +2753,7 @@ approxVals : (k : ℕ) → Values (approxSet k) k
 <!--en-->
 This membership description proves value correctness. If an entry with first component `# m` occurs below `k`, then its second component is the underlying set of `relAt m`; the propositionally truncated index may be eliminated because equality between sets in `V` is itself a proposition.
 <!--zh-->
-上述成员刻画给出取值正确性。若首分量为 `# m` 的条目出现在 `k` 以下，则其第二分量就是 `relAt m` 的底层集合；由于 `V` 中集合之间的相等本身是命题，可以消去索引外层的命题截断。
+上述成员关系刻画给出取值正确性。若首分量为 `# m` 的条目出现在 `k` 以下，则其第二分量就是 `relAt m` 的底层集合；由于 `V` 中集合之间的相等本身是命题，可以消去索引外层的命题截断。
 <!--ja-->
 この所属の記述から値の正しさが従う。第一成分が `# m` の項目が `k` より下に現れるなら、その第二成分は `relAt m` の台となる集合である。`V` の集合どうしの等しさは命題なので、添字を包む命題的切り詰めを除去できる。
 <!--/-->
@@ -2782,7 +2782,7 @@ Injectivity of ordered pairing separates the equality into its two components. I
 <!--en-->
 The complementary property is entry completeness: for every `m < k`, the standard pair `(# m, relAt m)` is present. It follows immediately from the finite-set membership lemma above.
 <!--zh-->
-与取值正确性相配的是条目完备性：对每个 `m < k`，标准有序对 `(# m, relAt m)` 都在表中。这直接来自上面的有限集成员引理。
+与取值正确性相配的是条目完备性：对每个 `m < k`，标准有序对 `(# m, relAt m)` 都在表中。这直接来自上面的有限集成员关系引理。
 <!--ja-->
 値の正しさと対になるのが項目の完全性である。各 `m < k` について、標準的な順序対 `(# m, relAt m)` が表に含まれる。これは上の有限集合の所属補題から直ちに従う。
 <!--/-->
@@ -2818,7 +2818,7 @@ module _ (k : ℕ) {n : ℕ} (f a : Fin n) (γ : S ^ n)
 <!--en-->
 The domain condition has two directions. A first component occurring in the table must belong to `# k`, and every member of `# k` must occur as the first component of some table entry. The existential assertion about a second component is interpreted with propositional truncation.
 <!--zh-->
-定义域条件包含两个方向。表中出现的首分量必须属于 `# k`，而 `# k` 的每个成员都必须作为某个表条目的首分量出现。关于第二分量的存在断言按命题截断解释。
+定义域条件包含两个方向。表中出现的首分量必须属于 `# k`，而 `# k` 的每个元素都必须作为某个表条目的首分量出现。关于第二分量的存在断言按命题截断解释。
 <!--ja-->
 定義域の条件には二つの向きがある。表に現れる第一成分は `# k` に属さなければならず、`# k` の各要素は何らかの表項目の第一成分として現れなければならない。第二成分についての存在主張は命題的切り詰めとして解釈される。
 <!--/-->
@@ -3063,7 +3063,7 @@ private
 <!--en-->
 For any formula `φ` proved equal to the paired recursion graph, `famBuild` returns a constructible set `h` with two precise properties. Every standard pair belongs to `h`, and any member of `h` whose first component is known to be `# k` has second component equal to `relAt k`.
 <!--zh-->
-对任何已证明等于成对递归图的公式 `φ`，`famBuild` 都返回一个可构造集合 `h`，并带有两条精确性质。每个标准有序对都属于 `h`；而 `h` 中任何首分量已知为 `# k` 的成员，其第二分量都等于 `relAt k`。
+对任何已证明等于成对递归图的公式 `φ`，`famBuild` 都返回一个可构造集合 `h`，并带有两条精确性质。每个标准有序对都属于 `h`；而 `h` 中任何首分量已知为 `# k` 的元素，其第二分量都等于 `relAt k`。
 <!--ja-->
 対にした再帰グラフと等しいことが証明された任意の論理式 `φ` に対し、`famBuild` は二つの正確な性質をもつ構成可能集合 `h` を返す。各標準的な順序対は `h` に属し、第一成分が `# k` と分かっている `h` の任意の要素の第二成分は `relAt k` に等しい。
 <!--/-->
@@ -3198,7 +3198,7 @@ The final equality compares the underlying ordered pair with the packaged constr
 <!--en-->
 Replacement over `ωʟ` now yields a contractible type of constructible sets whose members are exactly the outputs `y` for which there merely exists `c ∈ ωʟ` satisfying `φ`. Contractibility makes the resulting set unique; the existential numeral data remains propositionally truncated.
 <!--zh-->
-现在沿 `ωʟ` 使用替换，得到一个收缩类型，其中的可构造集合恰好以这些 `y` 为成员：只需经过命题截断地存在 `c ∈ ωʟ`，使 `φ` 成立。收缩性保证所得集合唯一，而存在的数码数据仍处于命题截断之中。
+现在沿 `ωʟ` 使用替换，得到一个收缩类型，其中的可构造集合恰好以这些 `y` 为元素：只需经过命题截断地存在 `c ∈ ωʟ`，使 `φ` 成立。收缩性保证所得集合唯一，而存在的数码数据仍处于命题截断之中。
 <!--ja-->
 ここで `ωʟ` 上の置換により、ある `c ∈ ωʟ` が存在して `φ` を満たすという命題的切り詰めが成り立つ出力 `y` を、ちょうど要素とする構成可能集合の可縮な型を得る。可縮性は得られる集合を一意にするが、存在する数項のデータは命題的切り詰めのままである。
 <!--/-->
@@ -3314,7 +3314,7 @@ The replacement specification yields, propositionally truncated, an internal nat
 <!--en-->
 Reading the paired graph yields, again under propositional truncation, a relation value `z`, an equation identifying the packaged member with the pair `(d,z)`, and a proof that `z` satisfies the recursion graph at `d`. Equality of sets is propositional, so this truncation can also be eliminated.
 <!--zh-->
-读取成对图再次在命题截断下给出一个关系取值 `z`、把封装成员认同为有序对 `(d,z)` 的等式，以及 `z` 在 `d` 处满足递归图的证明。集合相等是命题，因此这层截断同样可以消去。
+读取成对图再次在命题截断下给出一个关系取值 `z`、把封装元素认同为有序对 `(d,z)` 的等式，以及 `z` 在 `d` 处满足递归图的证明。集合相等是命题，因此这层截断同样可以消去。
 <!--ja-->
 対にしたグラフを読むと、再び命題的切り詰めの下で、関係の値 `z`、包装された要素を順序対 `(d,z)` と同一視する等式、そして `z` が `d` における再帰グラフを満たす証明が得られる。集合の等しさは命題なので、この切り詰めも除去できる。
 <!--/-->
@@ -3373,7 +3373,7 @@ opaque
 <!--en-->
 For each natural number `k`, the internal graph `beforeFam` contains the ordered pair of the numeral `# k` with the realized relation `relAt k`. This is the forward membership law for the family: it inserts the already known numeral and relation directly, without choosing a numeral decoder from a propositional truncation.
 <!--zh-->
-对每个自然数 `k`，内部图 `beforeFam` 都包含数码 `# k` 与已实现关系 `relAt k` 组成的有序对。这是该族的正向隶属律：它直接写入已经给定的数码与关系，并不从命题截断中选择数码解码见证。
+对每个自然数 `k`，内部图 `beforeFam` 都包含数码 `# k` 与已实现关系 `relAt k` 组成的有序对。这是该族的正向成员关系律：它直接写入已经给定的数码与关系，并不从命题截断中选择数码解码见证。
 <!--ja-->
 各自然数 `k` について、内部グラフ `beforeFam` は、数項 `# k` と実現された関係 `relAt k` の順序対を含む。これはこの族への正向きの所属則である。すでに与えられた数項と関係を直接書き込むので、命題的切り詰めから数項の復号の証人を選ぶ必要はない。
 <!--/-->
@@ -3409,7 +3409,7 @@ Conversely, suppose an entry of `beforeFam` has first component equal to `# k`. 
 <!--en-->
 The formula `BeforeAt b x y` asks for a relation `r` in two steps. First, `appC` says that the constant family `beforeFam` assigns `r` to the value denoted by `b`. Then `appAt` says that `r` contains the ordered pair of the objects denoted by `x` and `y`. The next theorem assumes that the value at `b` is the numeral `# m` and identifies this internal statement with `before m` under the precise stage hypotheses stated below.
 <!--zh-->
-公式 `BeforeAt b x y` 分两步寻找关系 `r`。首先，`appC` 断言常元族 `beforeFam` 在 `b` 所指的值处取值为 `r`；随后，`appAt` 断言 `r` 包含 `x` 与 `y` 所指对象组成的有序对。下一条定理假设 `b` 所指的值为数码 `# m`，并在下文明确列出的层隶属条件下，把这一内部陈述认同为 `before m`。
+公式 `BeforeAt b x y` 分两步寻找关系 `r`。首先，`appC` 断言常元族 `beforeFam` 在 `b` 所指的值处取值为 `r`；随后，`appAt` 断言 `r` 包含 `x` 与 `y` 所指对象组成的有序对。下一条定理假设 `b` 所指的值为数码 `# m`，并在下文明确列出的层成员关系条件下，把这一内部陈述认同为 `before m`。
 <!--ja-->
 論理式 `BeforeAt b x y` は、二段の主張によって関係 `r` を求める。まず `appC` が、定数である族 `beforeFam` は `b` が指す値に `r` を割り当てると述べる。次に `appAt` が、`r` は `x` と `y` の指す対象の順序対を含むと述べる。続く定理では、`b` における値が数項 `# m` であると仮定し、以下に明記する段階所属の仮定のもとで、この内部の主張を `before m` と同定する。
 <!--/-->
@@ -3424,7 +3424,7 @@ opaque
 <!--en-->
 Fix an environment and a natural number `m`. The equation for `b` says that its value is the numeral `# m`, while the two membership hypotheses place the values denoted by `x` and `y` in `finiteStage m`. These assumptions connect the three variables to one finite-stage comparison; the adequacy theorem is stated only in this restricted context.
 <!--zh-->
-固定一个环境与自然数 `m`。关于 `b` 的等式说明其值是数码 `# m`，另两条隶属假设则把 `x` 与 `y` 所指的值放入 `finiteStage m`。这些假设把三个变元联系到同一个有限层比较；充分性定理只在这一受限语境中陈述。
+固定一个环境与自然数 `m`。关于 `b` 的等式说明其值是数码 `# m`，另两条成员关系假设则把 `x` 与 `y` 所指的值放入 `finiteStage m`。这些假设把三个变元联系到同一个有限层比较；充分性定理只在这一受限语境中陈述。
 <!--ja-->
 環境と自然数 `m` を固定する。`b` についての等式は、その値が数項 `# m` であることを述べ、二つの所属の仮定は `x` と `y` が指す値を `finiteStage m` に置く。これらの仮定によって三つの変数が一つの有限段階での比較に結びつき、妥当性定理はこの制限された文脈でのみ述べられる。
 <!--/-->
@@ -3475,7 +3475,7 @@ To read a satisfying assignment, temporarily expose the data hidden by the exist
 <!--en-->
 From any explicit package of this form, the two application adequacy laws recover ordinary set membership. The family law identifies the underlying set of `r` with that of `relAt m`; after transporting the pair membership along this equality, `relAt-rep` reads it back as `before m`. The two finite-stage membership hypotheses are exactly what permits this final representation step.
 <!--zh-->
-从任意一份这样的显式数据包出发，两条应用充分性律把公式满足读成通常的集合隶属。族的规律把 `r` 的底层集合识别为 `relAt m` 的底层集合；沿此等式运输有序对的隶属后，`relAt-rep` 再把它读回 `before m`。最后这一步恰好需要前述两条有限层隶属假设。
+从任意一份这样的显式数据包出发，两条应用充分性律把公式满足读成通常的集合成员关系。族的规律把 `r` 的底层集合识别为 `relAt m` 的底层集合；沿此等式运输有序对的成员关系后，`relAt-rep` 再把它读回 `before m`。最后这一步恰好需要前述两条有限层成员关系假设。
 <!--ja-->
 この形の明示的な組から、二つの適用の妥当性則によって、論理式の充足を通常の集合所属へ読み替える。族についての法則は `r` の台となる集合を `relAt m` の台となる集合と同一視する。この等式に沿って順序対の所属を移送すると、`relAt-rep` がそれを `before m` へ読み戻す。最後の表現の段階で、先の二つの有限段階への所属の仮定がちょうど必要になる。
 <!--/-->
@@ -3491,7 +3491,7 @@ From any explicit package of this form, the two application adequacy laws recove
 <!--en-->
 The first application fact says internally that `beforeFam` takes the value `r` at the entry stored in `b`. Its adequacy law turns this into the external membership statement that the pair consisting of that entry and `r` belongs to `beforeFam`.
 <!--zh-->
-第一条应用事实在内部断言：`beforeFam` 在 `b` 所存条目处取值为 `r`。它的充分性律把这条陈述化为外部隶属事实，即该条目与 `r` 组成的有序对属于 `beforeFam`。
+第一条应用事实在内部断言：`beforeFam` 在 `b` 所存条目处取值为 `r`。它的充分性律把这条陈述化为外部成员关系事实，即该条目与 `r` 组成的有序对属于 `beforeFam`。
 <!--ja-->
 第一の適用の事実は、`beforeFam` が `b` に格納された項で値 `r` を取ることを内部的に述べている。その妥当性則により、当該の項と `r` の順序対が `beforeFam` に属するという外部の所属命題へ移る。
 <!--/-->
@@ -3546,7 +3546,7 @@ For the outward direction, satisfaction of the existential gives only a proposit
 <!--en-->
 For the inward direction, a proof of `before m` supplies the relation membership needed for the formula. We exhibit `relAt m` as a suitable relation, prove the two application facts, and then place the whole package under propositional truncation, as required by the existential semantics. This is a constructed witness for this direction, not a canonical witness recovered from a truncation.
 <!--zh-->
-在向内方向中，`before m` 的证明提供公式所需的关系隶属。我们取 `relAt m` 作为合适的关系，证明两条应用事实，再按存在量词的语义把整份数据包置于命题截断之下。这是为该方向构造的见证，并非从某个命题截断中恢复出的规范见证。
+在向内方向中，`before m` 的证明提供公式所需的关系成员关系。我们取 `relAt m` 作为合适的关系，证明两条应用事实，再按存在量词的语义把整份数据包置于命题截断之下。这是为该方向构造的见证，并非从某个命题截断中恢复出的规范见证。
 <!--ja-->
 内向きの方向では、`before m` の証明から論理式に必要な関係所属が得られる。適切な関係として `relAt m` を提示し、二つの適用の事実を証明した後、存在量化の意味論に従って組全体を命題的切り詰めの中に入れる。これはこの方向のために構成した証人であり、切り詰めから復元した標準的な証人ではない。
 <!--/-->
@@ -3577,7 +3577,7 @@ The family application follows from the known entry `(# m, relAt m)` in `beforeF
 <!--en-->
 The second application fact comes from `relAt-fill`: the two stage-membership hypotheses and the assumed `before m` comparison place the pair of the values at `x,y` in `relAt m`. Reading application adequacy in the reverse direction turns that membership into satisfaction of `appAt`.
 <!--zh-->
-第二条应用事实来自 `relAt-fill`：两条有限层隶属假设与给定的 `before m` 比较共同说明，`x,y` 处两个值组成的有序对属于 `relAt m`。反向读取应用的充分性，便把这条隶属转成 `appAt` 的满足。
+第二条应用事实来自 `relAt-fill`：两条有限层成员关系假设与给定的 `before m` 比较共同说明，`x,y` 处两个值组成的有序对属于 `relAt m`。反向读取应用的充分性，便把这条成员关系转成 `appAt` 的满足。
 <!--ja-->
 第二の適用の事実は `relAt-fill` から得られる。二つの有限段階への所属の仮定と、仮定された `before m` の比較により、`x,y` での値の順序対が `relAt m` に属する。適用の妥当性を逆向きに読むことで、この所属を `appAt` の充足へ変える。
 <!--/-->
@@ -3614,7 +3614,7 @@ private module CodeOrder = Described BeforeAt BeforeAt-in BeforeAt-out
 <!--en-->
 The outcome is the relation set `codeOrder` together with two representation laws. `codeOrder-fill` turns a meta-level `limitOrder` comparison into membership in this set, and `codeOrder-rep` reads such membership back. Later name comparison uses these three results for comparing codes; the comparison of parameters is supplied separately.
 <!--zh-->
-所得结论是关系集 `codeOrder` 及其两条表示律。`codeOrder-fill` 把元层面的 `limitOrder` 比较转成这个集合中的隶属，`codeOrder-rep` 则把这种隶属读回。后续的名字比较用这三项结果比较码，而参数的比较关系另行提供。
+所得结论是关系集 `codeOrder` 及其两条表示律。`codeOrder-fill` 把元层面的 `limitOrder` 比较转成这个集合中的成员关系，`codeOrder-rep` 则把这种成员关系读回。后续的名字比较用这三项结果比较码，而参数的比较关系另行提供。
 <!--ja-->
 ここで得られるのは、関係集合 `codeOrder` と二つの表現則である。`codeOrder-fill` はメタレベルの `limitOrder` の比較をこの集合への所属に変え、`codeOrder-rep` はその所属を読み戻す。後の名前比較では、この三つの結果をコードの比較に使い、パラメータの比較関係は別に与える。
 <!--/-->
@@ -3630,7 +3630,7 @@ For every natural number `n`, the set `relAt n` in `L` represents `before n` on 
 <!--zh-->
 ## 小结
 
-对每个自然数 `n`，`L` 中的集合 `relAt n` 都在 `finiteStage n` 的成员上表示 `before n`。递归图验证这些取值，只有最后沿 `ωʟ` 把整族收集为 `beforeFam` 时才使用替换；有限逼近使用的是 `finSet` 与 `finSetL`。若 `b` 所指的值是 `# m`，且 `x,y` 所指的值属于 `finiteStage m`，则 `BeforeAt b x y` 等价于用 `before m` 比较这两个值。实例化 `Described` 后得到 `codeOrder`、`codeOrder-fill` 与 `codeOrder-rep`，它们将在后续供应码的比较关系，而本章尚不比较名字，也不证明最终的内部良序。
+对每个自然数 `n`，`L` 中的集合 `relAt n` 都在 `finiteStage n` 的元素上表示 `before n`。递归图验证这些取值，只有最后沿 `ωʟ` 把整族收集为 `beforeFam` 时才使用替换；有限逼近使用的是 `finSet` 与 `finSetL`。若 `b` 所指的值是 `# m`，且 `x,y` 所指的值属于 `finiteStage m`，则 `BeforeAt b x y` 等价于用 `before m` 比较这两个值。实例化 `Described` 后得到 `codeOrder`、`codeOrder-fill` 与 `codeOrder-rep`，它们将在后续供应码的比较关系，而本章尚不比较名字，也不证明最终的内部良序。
 <!--ja-->
 ## まとめ
 

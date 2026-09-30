@@ -28,7 +28,7 @@ module L.ExistentialReflection {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 open import FOL.Syntax using ( Formula; ∃̇_ )
 import FOL.Semantics
 import FOL.Absoluteness
@@ -87,7 +87,7 @@ open import Cubical.HITs.CumulativeHierarchy.Properties
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( ∅; ⋃_ )
 
-open hPropStructure 𝒮ʟ using ( S )
+open hPropView 𝒮ʟ using ( S )
 
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
 open AbsL renaming ( _⊨ᵐ_ to _⊨_ )
@@ -104,7 +104,7 @@ vector over one.
 <!--zh-->
 ## 取自一层的环境
 
-参数取自层的索引集，索引元组则给出环境：层的一个元素经塔的隶属判据成为类模型的一个元素。正是这一点使下面的界层引理得以适用：诸元组构成周遭大小的类型，因为它正是其上的向量。
+参数取自层的索引集，索引元组则给出环境：层的一个元素经塔的成员关系判据成为类模型的一个元素。正是这一点使下面的界层引理得以适用：诸元组构成周遭大小的类型，因为它正是其上的向量。
 <!--ja-->
 ## 環境を一つの段階から取る
 

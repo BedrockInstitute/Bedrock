@@ -20,7 +20,7 @@ async function load(url){
 document.querySelector('#origin').onclick=()=>load('/zh/index.html#milestones');
 document.querySelector('#chapter').onclick=()=>load('/zh/Base.Impredicativity.html');
 document.querySelector('#tap').onclick=()=>{
- const w=frame.contentWindow,a=w.document.querySelector('#milestones a[data-type="V.Hierarchy#9153"]');
+ const w=frame.contentWindow,a=w.document.querySelector('#milestones a[data-type^="V.Hierarchy#"][data-name="𝒮ᵥ"]');
  if(!a)return;
  a.dispatchEvent(new w.PointerEvent('pointerdown',{bubbles:true,pointerType:'touch'}));a.click();
 };
@@ -38,7 +38,7 @@ document.querySelector('#run').onclick=async()=>{
   await load('/zh/index.html#milestones');
   await until(()=>readerReady(frame.contentWindow));
   let w=frame.contentWindow,d=w.document;
-  const v=d.querySelector('#milestones a[data-type="V.Hierarchy#9153"]');
+  const v=d.querySelector('#milestones a[data-type^="V.Hierarchy#"][data-name="𝒮ᵥ"]');
   tap(w,v);
   check(d.querySelector('.name-hover-popup')&&!d.querySelector('.definition-modal'),'first V tap immediately shows a hover, not a modal');
   tap(w,d.body);await pause(700);
@@ -81,6 +81,23 @@ document.querySelector('#run').onclick=async()=>{
     check(!d.querySelector('.definition-modal'),'projection field tap opens hover, not a modal');
     tap(w,d.body);
   }
+  await load('/zh/Base.Prelude.html');
+  await until(()=>readerReady(frame.contentWindow));
+  w=frame.contentWindow;d=w.document;
+  const syntax=d.querySelector('.single-line-code a[data-name="Σ[∶]-syntax"]');
+  check(!!syntax,'displayed binding notation has a semantic link');
+  tap(w,syntax);await until(()=>d.querySelector('.name-hover-popup:not([aria-busy]) .type-definition-link'));
+  check(!d.querySelector('.definition-modal'),'touching syntax first opens its hover');
+  tap(w,d.querySelector('.name-hover-popup .type-definition-link'));
+  await until(()=>d.querySelector('.definition-modal-frame.is-ready'));
+  const syntaxDoc=d.querySelector('.definition-modal-frame').contentDocument;
+  const syntaxTarget=syntaxDoc.getElementById(new URL(syntax.href).hash.slice(1));
+  const syntaxHeading=syntaxDoc.getElementById(syntaxTarget.dataset.introductionSection);
+  await syntaxDoc.fonts.ready;await pause(350);
+  const syntaxTop=(syntaxDoc.getElementById('section-sticky')||syntaxDoc.getElementById('main-content')).getBoundingClientRect();
+  check(syntaxHeading&&Math.abs(syntaxHeading.getBoundingClientRect().top-syntaxTop.bottom)<3,
+    'mobile syntax inspection begins at its introductory subsection');
+  d.querySelector('.definition-modal-close').click();
   await load('/zh/Base.Impredicativity.html');
   await until(()=>readerReady(frame.contentWindow));
   w=frame.contentWindow;d=w.document;

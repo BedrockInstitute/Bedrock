@@ -27,7 +27,7 @@ module L.Coding.SatisfactionClauses {ℓ : Level} where
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 open import FOL.Syntax using
   ( Formula; Term; var; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊤̇; ⊥̇; ∃̇∈; ∀̇∈ )
 open import FOL.LevyHierarchy using ( checkΔ₀; Δ₀ )
@@ -55,7 +55,7 @@ The object language cannot invoke the host language's recursion on formulas. It 
 <!--en-->
 A formula with `j` free slots is interpreted after those slots receive elements of the constructible carrier. Membership, equality, the propositional connectives, and bounded quantifiers are enough to state every clause below. The final Δ₀ witness will concern this object-language syntax; it will not by itself interpret the clauses or provide any of their witnesses.
 <!--zh-->
-带有 `j` 个自由槽的公式，要在这些槽取得可构造载体中的元素后才得到解释。隶属、相等、命题联结词与有界量词足以表述下文全部子句。末尾的 Δ₀ 见证只涉及这种对象语言构文；它本身既不解释子句，也不给出子句中的任何见证。
+带有 `j` 个自由槽的公式，要在这些槽取得可构造载体中的元素后才得到解释。成员关系、相等、命题联结词与有界量词足以表述下文全部子句。末尾的 Δ₀ 见证只涉及这种对象语言构文；它本身既不解释子句，也不给出子句中的任何见证。
 <!--ja-->
 `j` 個の自由な枠をもつ論理式は、それらの枠に構成可能な台の元を入れてから解釈される。所属、等号、命題結合子、有界量化子だけで、以下のすべての節を述べられる。最後の Δ₀ の証人が扱うのは、この対象言語の構文である。それだけで節を解釈したり、節に現れる証人を与えたりするものではない。
 <!--/-->
@@ -63,7 +63,7 @@ A formula with `j` free slots is interpreted after those slots receive elements 
 <!--en-->
 The candidate relation is expressed through coded ordered pairs. Three shapes organize the chapter: an environment-tower entry pairs an arity `ar` with an environment set `F`; a formula key pairs the same arity with a tagged payload; and a member of `T` pairs that key with a candidate value set. Bounded pair readers expose these components, while the successor and cons predicates describe the arity increase and the extension of an encoded environment.
 <!--zh-->
-候选关系借助编码有序对来表达。全章由三种形状组织：环境塔条目把元数 `ar` 与环境集 `F` 配对；公式键把同一元数与带标签的载荷配对；`T` 的成员再把该键与候选值集配对。有界配对读式暴露这些分量，而后继谓词与 cons 谓词分别描述元数提升和编码环境的延拓。
+候选关系借助编码有序对来表达。全章由三种形状组织：环境塔条目把元数 `ar` 与环境集 `F` 配对；公式键把同一元数与带标签的载荷配对；`T` 的元素再把该键与候选值集配对。有界配对读式暴露这些分量，而后继谓词与 cons 谓词分别描述元数提升和编码环境的延拓。
 <!--ja-->
 候補関係は符号化された順序対によって表される。本章を組織する形は三つある。環境の塔の要素はアリティ `ar` と環境集合 `F` を対にし、論理式の鍵は同じアリティとタグ付きペイロードを対にし、`T` の要素はその鍵と候補値集合をさらに対にする。有界な対の読みがこれらの成分を取り出し、後続と cons の述語がそれぞれアリティの増加と符号化環境の拡張を記述する。
 <!--/-->
@@ -85,7 +85,7 @@ All object-language variables range over `S`, the carrier of the constructible s
 <!--/-->
 
 ```agda
-open hPropStructure 𝒮ʟ using ( S )
+open hPropView 𝒮ʟ using ( S )
 ```
 
 <!--en-->
@@ -99,7 +99,7 @@ open hPropStructure 𝒮ʟ using ( S )
 <!--en-->
 The first reusable idea is an exact extension condition. For a proposed set `y`, a reference set `F`, and a property `φ`, the first half of `extB` says that every member of `y` lies in `F` and satisfies `φ`; hence it gives one inclusion. The second half says that every member of `F` satisfying `φ` lies in `y`, giving the reverse inclusion. Thus `extB` characterizes `y` as the subset of `F` cut out by `φ`, but it neither constructs such a set nor asserts that one exists.
 <!--zh-->
-第一个可复用思想是精确的外延条件。给定候选集 `y`、参照集 `F` 与性质 `φ`，`extB` 的前半部说 `y` 的每个成员都属于 `F` 且满足 `φ`，因而给出一个包含方向；后半部说 `F` 中每个满足 `φ` 的成员都属于 `y`，给出反向包含。因此，`extB` 把 `y` 外延刻画为 `F` 中由 `φ` 截出的子集，但既不构造这个集合，也不断言它存在。
+第一个可复用思想是精确的外延条件。给定候选集 `y`、参照集 `F` 与性质 `φ`，`extB` 的前半部说 `y` 的每个元素都属于 `F` 且满足 `φ`，因而给出一个包含方向；后半部说 `F` 中每个满足 `φ` 的元素都属于 `y`，给出反向包含。因此，`extB` 把 `y` 外延刻画为 `F` 中由 `φ` 截出的子集，但既不构造这个集合，也不断言它存在。
 <!--ja-->
 最初の再利用可能な考えは、正確な外延条件である。候補集合 `y`、基準集合 `F`、性質 `φ` に対し、`extB` の前半は `y` の各要素が `F` に属して `φ` を満たすと述べ、一方の包含を与える。後半は、`F` のうち `φ` を満たすすべての要素が `y` に属すと述べ、逆の包含を与える。したがって `extB` は `y` を、`F` の中で `φ` が切り出す部分集合として外延的に特徴づけるが、その集合を構成せず、存在も主張しない。
 <!--/-->
@@ -232,7 +232,7 @@ A bounded quantifier must also evaluate its bound term. For the universal case, 
 <!--en-->
 Atomic formulas do not recurse through formula children. Their payload consists of two term codes, so the atomic body merely asks, under propositional truncation, for two values `v,x ∈ w` validated by `tmIs`, and then tests the chosen atomic relation on them. Membership uses `v ∈ x`, while equality compares `v` and `x`; the term values come directly from the constant or variable shape rather than from entries of `T`.
 <!--zh-->
-原子公式不对子公式作递归。它的载荷由两个词项码组成，因此原子主体只在命题截断下要求存在两个由 `tmIs` 验证的值 `v,x ∈ w`，再在其上检验指定的原子关系。隶属情形使用 `v ∈ x`，相等情形比较 `v` 与 `x`；词项值直接来自常元或变元码形状，而不是来自 `T` 的条目。
+原子公式不对子公式作递归。它的载荷由两个词项码组成，因此原子主体只在命题截断下要求存在两个由 `tmIs` 验证的值 `v,x ∈ w`，再在其上检验指定的原子关系。成员关系情形使用 `v ∈ x`，相等情形比较 `v` 与 `x`；词项值直接来自常元或变元码形状，而不是来自 `T` 的条目。
 <!--ja-->
 原子論理式は子論理式を再帰的に参照しない。そのペイロードは二つの項の符号からなるので、原子の本体は、`tmIs` で検証される二つの値 `v,x ∈ w` が命題的に切り詰められて存在することを求め、その上で指定された原子関係を検査する。所属の場合は `v ∈ x` を使い、等号の場合は `v` と `x` を比較する。項の値は `T` の要素からではなく、定数または変数の符号形から直接得られる。
 <!--/-->
@@ -247,7 +247,7 @@ Atomic formulas do not recurse through formula children. Their payload consists 
 <!--en-->
 Falsity gives the simplest extension equation. Its property is impossible, so the forward inclusion says that the candidate value `yc` has no members. The reverse inclusion is immediate because no member of `F` can satisfy falsity. Thus the clause characterizes `yc` as empty without constructing an empty value or a table entry.
 <!--zh-->
-假命题给出最简单的外延方程。它的性质不可能成立，所以正向包含说明候选值 `yc` 没有成员；反向包含则因 `F` 中没有成员能满足假命题而立即成立。因此，这条子句把 `yc` 刻画为空，却不构造空值或表条目。
+假命题给出最简单的外延方程。它的性质不可能成立，所以正向包含说明候选值 `yc` 没有元素；反向包含则因 `F` 中没有元素能满足假命题而立即成立。因此，这条子句把 `yc` 刻画为空，却不构造空值或表条目。
 <!--ja-->
 偽は最も単純な外延方程式を与える。その性質は成り立ちえないので、順方向の包含は候補値 `yc` に要素がないことを述べる。逆方向の包含は、`F` の要素が偽を満たすことはないため直ちに成り立つ。こうしてこの節は `yc` を空集合として特徴づけるが、空の値や表要素を構成しない。
 <!--/-->
@@ -314,7 +314,7 @@ For an atomic payload, the pair reader exposes the two term codes and `extB` app
 <!--en-->
 The first four tags state four exact truth conditions. Once the tag slots have been calibrated by `Tags`, tag 0 is the membership atom: if `v` and `x` are the respective values of the first and second terms, it requires `v ∈ x`. Tag 1 is the equality atom and requires `v = x`. Tags 2 and 3 combine the same-arity child assertions `z ∈ ya` and `z ∈ yb` by conjunction and disjunction, respectively. Before that calibration, these are clauses selected by the corresponding tag slots, not claims that the slots already contain the standard numerals.
 <!--zh-->
-前四个标签给出四种精确真值条件。在 `Tags` 校准标签槽之后，标签 0 是隶属原子：若 `v` 与 `x` 分别是第一、第二个词项的值，则要求 `v ∈ x`。标签 1 是相等原子，要求 `v = x`。标签 2、3 分别用合取与析取组合两个同元数子公式的断言 `z ∈ ya` 与 `z ∈ yb`。在校准之前，这些只是由相应标签槽选出的子句，不能据此断言槽中已经放置标准数码。
+前四个标签给出四种精确真值条件。在 `Tags` 校准标签槽之后，标签 0 是成员关系原子：若 `v` 与 `x` 分别是第一、第二个词项的值，则要求 `v ∈ x`。标签 1 是相等原子，要求 `v = x`。标签 2、3 分别用合取与析取组合两个同元数子公式的断言 `z ∈ ya` 与 `z ∈ yb`。在校准之前，这些只是由相应标签槽选出的子句，不能据此断言槽中已经放置标准数码。
 <!--ja-->
 最初の四つのタグは、四つの正確な真理条件を述べる。タグの枠が `Tags` によって校正されると、タグ 0 は所属原子になる。`v` と `x` がそれぞれ第一、第二の項の値なら、必要な条件は `v ∈ x` である。タグ 1 は等号原子で、`v = x` を要求する。タグ 2 と 3 は、同じアリティの子に関する二つの主張 `z ∈ ya` と `z ∈ yb` を、それぞれ連言と選言で結ぶ。校正より前には、これらは対応するタグの枠によって選ばれる節にすぎず、その枠に標準の数項がすでに入っているとはいえない。
 <!--/-->
@@ -396,7 +396,7 @@ For a fixed `k`, the clause follows a precise chain. It considers every `q ∈ E
 <!--en-->
 The two domain conditions supply the existence that the universal local clauses lack. `total` says that for every `c ∈ C`, there merely exists a `yc` with `(c,yc) ∈ T`; both the table member and its pair decomposition remain under propositional truncation. Conversely, `onC` says that every `e ∈ T` merely decomposes as `(c,yc)` with `c ∈ C`. Together they identify the first-projection domain of `T` with `C`, but they provide no choice function and do not make `T` single-valued.
 <!--zh-->
-两条定义域条件补充全称局部子句本身没有给出的存在性。`total` 说：对于每个 `c ∈ C`，命题截断地存在 `yc`，使 `(c,yc) ∈ T`；表成员及其配对分解都留在命题截断内。反过来，`onC` 说每个 `e ∈ T` 都命题截断地分解为 `(c,yc)`，且 `c ∈ C`。二者合起来把 `T` 的第一投影定义域确定为 `C`，但不给出选择函数，也不使 `T` 成为单值关系。
+两条定义域条件补充全称局部子句本身没有给出的存在性。`total` 说：对于每个 `c ∈ C`，命题截断地存在 `yc`，使 `(c,yc) ∈ T`；表元素及其配对分解都留在命题截断内。反过来，`onC` 说每个 `e ∈ T` 都命题截断地分解为 `(c,yc)`，且 `c ∈ C`。二者合起来把 `T` 的第一投影定义域确定为 `C`，但不给出选择函数，也不使 `T` 成为单值关系。
 <!--ja-->
 二つの領域条件は、全称的な局所節だけでは得られない存在を補う。`total` は、各 `c ∈ C` について、`(c,yc) ∈ T` となる `yc` が命題的に切り詰められて存在すると述べる。表要素もその対分解も切り詰めの内部に残る。逆に `onC` は、すべての `e ∈ T` が、`c ∈ C` である `(c,yc)` として命題的に切り詰められて分解されると述べる。二条件を合わせると `T` の第一射影の領域は `C` になるが、選択関数は得られず、`T` が単値になることもない。
 <!--/-->
@@ -425,7 +425,7 @@ The ten local clauses are gathered by one finite conjunction. The argument `9` m
 <!--en-->
 The formula `tableAt` now conjoins three demands: truncated totality over `C`, the restriction of every table member to a key in `C`, and all ten constructor clauses. This is a local bounded specification for a candidate relation. It does not prove that `C` is closed under child codes, that `E` is the intended environment tower, that the tags are standard, that values are unique, or that the candidate is a canonical satisfaction table. Later chapters separately supply the tower and code descriptions, tag calibration, semantic bridges, and pinning arguments needed to relate suitable candidates to canonical data.
 <!--zh-->
-公式 `tableAt` 现在合取三项要求：在 `C` 上经过命题截断的全定义性、每个表成员的键都属于 `C` 的限制，以及全部十条构造子子句。这是一条关于候选关系的局部有界规格。它不证明 `C` 对子公式码封闭，不证明 `E` 是预期的环境塔，不校准标签，不证明取值唯一，也不把候选关系认同为典范满足关系表。后续章节会分别给出环境塔与码域描述、标签校准、语义桥接和钉扎论证，从而把适当候选对象与典范数据联系起来。
+公式 `tableAt` 现在合取三项要求：在 `C` 上经过命题截断的全定义性、每个表元素的键都属于 `C` 的限制，以及全部十条构造子子句。这是一条关于候选关系的局部有界规格。它不证明 `C` 对子公式码封闭，不证明 `E` 是预期的环境塔，不校准标签，不证明取值唯一，也不把候选关系认同为典范满足关系表。后续章节会分别给出环境塔与码域描述、标签校准、语义桥接和钉扎论证，从而把适当候选对象与典范数据联系起来。
 <!--ja-->
 論理式 `tableAt` は三つの要求を連言する。`C` 上の命題的に切り詰められた全域性、各表要素の鍵が `C` に属するという制限、そして十個すべての構成子の節である。これは候補関係に対する局所的で有界な仕様である。`C` が子の符号について閉じていること、`E` が意図された環境の塔であること、タグが標準的であること、値が一意であること、候補が正準な充足関係表であることは証明しない。後の章が、環境の塔と符号領域の記述、タグの校正、意味論的な橋渡し、固定の議論をそれぞれ与え、適切な候補を正準なデータへ結び付ける。
 <!--/-->

@@ -28,7 +28,7 @@ module L.GCH.HierarchyDescription {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 open import FOL.Syntax using ( Formula; var; _∈̇_; _∧̇_; ⊤̇; ⊥̇; ∃̇∈; ∀̇∈ )
 open import FOL.LevyHierarchy using ( Δ₀; checkΔ₀; δ-∧; δ-∃∈ )
 open import FOL.Manipulation.ConstantOccurrences using ( countFo )
@@ -86,7 +86,7 @@ open import Cubical.Data.FinData using ( weakenFin )
 <!--en-->
 The object language needs only membership, conjunction, truth, falsity, and bounded quantifiers. These constructors admit structural Δ₀ witnesses. Later, proving that no constants occur allows the constant domain to be changed to the empty alphabet, making the final three-variable formula parameter-free without removing its free variables.
 <!--zh-->
-这里的对象语言只需要隶属、合取、真、假与有界量词；这些构造子都具有结构性的 Δ₀ 见证。稍后证明公式不含常元，便可把常元域改为空字母表，使最终的三变元公式成为无参公式，同时保留其自由变元。
+这里的对象语言只需要成员关系、合取、真、假与有界量词；这些构造子都具有结构性的 Δ₀ 见证。稍后证明公式不含常元，便可把常元域改为空字母表，使最终的三变元公式成为无参公式，同时保留其自由变元。
 <!--ja-->
 ここで対象言語に必要なのは、所属、連言、真、偽、有界量化子だけである。これらの構成子には構造に沿った Δ₀ の証人がある。後で定数が現れないことを示せば、定数域を空のアルファベットへ変えられる。こうして自由変数を残したまま、最終的な三変数の論理式をパラメータなしにする。
 <!--/-->
@@ -94,7 +94,7 @@ The object language needs only membership, conjunction, truth, falsity, and boun
 <!--en-->
 A bounded formula can be read both inside the constructible carrier and in the ambient cumulative hierarchy. Δ₀ absoluteness identifies those readings. Membership induction will validate table rows from lower rows, while extensionality will turn the two resulting membership implications into equality of stages.
 <!--zh-->
-同一条有界公式既可在可构造载体内部读取，也可在外围累积层级中读取；Δ₀ 绝对性认同这两种读法。隶属归纳将由更低的表行验证当前表行，外延性则把由此得到的两个隶属蕴含化为层的相等。
+同一条有界公式既可在可构造载体内部读取，也可在外围累积层级中读取；Δ₀ 绝对性认同这两种读法。成员关系归纳将由更低的表行验证当前表行，外延性则把由此得到的两个成员关系蕴含化为层的相等。
 <!--ja-->
 同じ有界論理式は、構成可能な台の内部でも、周囲の累積階層でも読める。Δ₀ 絶対性がこの二つの読みを同定する。所属帰納法は、より下の行から現在の表の行を検証し、外延性は、そこから得られる二つの所属の含意を段階の等しさへ変える。
 <!--/-->
@@ -102,7 +102,7 @@ A bounded formula can be read both inside the constructible carrier and in the a
 <!--en-->
 The stage `Lset b` is assembled from the definable power sets of earlier stages: its members come from some `𝒟ₒ (Lset c)` with `c ∈ b`, and each such contribution lies in `Lset b`. The inward and outward membership rules express these two directions; ordinal facts ensure that the indices used later really are stage indices.
 <!--zh-->
-层 `Lset b` 由此前各层的可定义幂集组装而成：它的每个成员都来自某个满足 `c ∈ b` 的 `𝒟ₒ (Lset c)`，而每一份这样的贡献都属于 `Lset b`。向内与向外的隶属规则表达这两个方向；序数事实则保证后文使用的索引确实是层索引。
+层 `Lset b` 由此前各层的可定义幂集组装而成：它的每个元素都来自某个满足 `c ∈ b` 的 `𝒟ₒ (Lset c)`，而每一份这样的贡献都属于 `Lset b`。向内与向外的成员关系规则表达这两个方向；序数事实则保证后文使用的索引确实是层索引。
 <!--ja-->
 段階 `Lset b` は、それ以前の段階の定義可能冪集合から組み立てられる。その各要素は、ある `c ∈ b` に対する `𝒟ₒ (Lset c)` から来ており、そのような寄与はすべて `Lset b` に属する。所属についての内向きと外向きの規則がこの二方向を表し、順序数の事実が、後で使う添字が実際に段階の添字であることを保証する。
 <!--/-->
@@ -150,7 +150,7 @@ An environment is a finite vector of constructible sets. Introducing a bounded w
 <!--en-->
 Existential satisfaction retains only propositional truncation: it records that suitable data exist and forgets which data were used. Every later elimination therefore targets a proposition. In particular, membership is proposition-valued and equality of cumulative-hierarchy sets is a proposition, so the two conclusions needed in the proof are legitimate targets.
 <!--zh-->
-存在公式的满足只保留命题截断：它记录合适的数据存在，却忘去具体用了哪一份数据。因此后文每次消去都以命题为目标。这里隶属取命题值，而累积层级中集合的相等也是命题，所以证明所需的这两类结论都可作为合法目标。
+存在公式的满足只保留命题截断：它记录合适的数据存在，却忘去具体用了哪一份数据。因此后文每次消去都以命题为目标。这里成员关系取命题值，而累积层级中集合的相等也是命题，所以证明所需的这两类结论都可作为合法目标。
 <!--ja-->
 存在論理式の充足が保つのは命題的切り詰めだけである。適切なデータが存在することを記録し、どのデータを使ったかは忘れる。したがって、後で切り詰めを除去するときの行き先は常に命題である。ここでは所属が命題値であり、累積階層の集合の等しさも命題なので、証明で必要な二種類の結論はいずれも正当な行き先になる。
 <!--/-->
@@ -162,7 +162,7 @@ open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 <!--en-->
 The ten finite tags are represented by the von Neumann numerals inside the hierarchy. Zero is the empty set, each following tag is obtained by set-theoretic successor, and all ten lie in `ω`. Membership readers connect these ambient sets with their presentations as elements of the constructible carrier.
 <!--zh-->
-十个有限标签由层级内部的 von Neumann 数码表示。零是空集，之后每个标签由集合论后继得到，而且十个数码都属于 `ω`。隶属读式把这些外围集合与它们作为可构造载体元素的呈现连接起来。
+十个有限标签由层级内部的 von Neumann 数码表示。零是空集，之后每个标签由集合论后继得到，而且十个数码都属于 `ω`。成员关系读式把这些外围集合与它们作为可构造载体元素的呈现连接起来。
 <!--ja-->
 十個の有限なタグは、階層内部の von Neumann 数項で表される。零は空集合であり、後の各タグは集合論的な後続によって得られ、十個すべてが `ω` に属する。所属の読みは、これらの周囲の集合を、構成可能な台の要素としての表示と結びつける。
 <!--/-->
@@ -182,7 +182,7 @@ Write `S` for the carrier of the constructible model. Its elements present ambie
 <!--/-->
 
 ```agda
-open hPropStructure 𝒮ʟ using ( S )
+open hPropView 𝒮ʟ using ( S )
 ```
 
 <!--en-->
@@ -217,7 +217,7 @@ defIn w z N body =
 <!--en-->
 The inward inclusion `intoAt` says that each `x ∈ v` is accounted for by an earlier stage index `c ∈ b`: some pair-shaped member of `f` records a value `w` at `c`, and `x` belongs to the definable power set of `w`. In bounded notation its outer shape is `∀[ x ∈ v ] ∃[ c ∈ b ] ...`; the remaining bounded witnesses expose the row and the data used to recognize that power set.
 <!--zh-->
-内向包含式 `intoAt` 说，每个 `x ∈ v` 都由某个更早的层索引 `c ∈ b` 说明：`f` 中有一个有序对形的成员在 `c` 处记录取值 `w`，而 `x` 属于 `w` 的可定义幂集。其外层有界形状是 `∀[ x ∈ v ] ∃[ c ∈ b ] ...`；余下的有界见证展开该表行以及识别这个幂集所需的数据。
+内向包含式 `intoAt` 说，每个 `x ∈ v` 都由某个更早的层索引 `c ∈ b` 说明：`f` 中有一个有序对形的元素在 `c` 处记录取值 `w`，而 `x` 属于 `w` 的可定义幂集。其外层有界形状是 `∀[ x ∈ v ] ∃[ c ∈ b ] ...`；余下的有界见证展开该表行以及识别这个幂集所需的数据。
 <!--ja-->
 内向きの包含を表す `intoAt` は、各 `x ∈ v` が、それ以前の段階の添字 `c ∈ b` によって説明されることを述べる。すなわち、`f` の順序対の形をしたある要素が `c` で値 `w` を記録し、`x` は `w` の定義可能冪集合に属する。外側の有界な形は `∀[ x ∈ v ] ∃[ c ∈ b ] ...` であり、残りの有界な証人が、その行と冪集合を認識するためのデータを展開する。
 <!--/-->
@@ -232,7 +232,7 @@ intoAt v b f z N =
 <!--en-->
 The reverse inclusion `overAt` ranges over `c ∈ b` and over members of `f` that are presented as pairs `(c,w)`. For each such presentation, every element of the definable power set of `w` must belong to `v`. The clause says nothing about a member of `f` that has no such pair presentation, so it must not be read as excluding arbitrary junk from the whole candidate table.
 <!--zh-->
-反向包含式 `overAt` 遍历 `c ∈ b`，并遍历 `f` 中可呈现为有序对 `(c,w)` 的成员。对每个这样的呈现，`w` 的可定义幂集的每个成员都必须属于 `v`。该子句不讨论 `f` 中无法如此呈现的成员，因此不能把它读成从整个候选表中排除了任意垃圾成员。
+反向包含式 `overAt` 遍历 `c ∈ b`，并遍历 `f` 中可呈现为有序对 `(c,w)` 的元素。对每个这样的呈现，`w` 的可定义幂集的每个元素都必须属于 `v`。该子句不讨论 `f` 中无法如此呈现的元素，因此不能把它读成从整个候选表中排除了任意垃圾元素。
 <!--ja-->
 逆向きの包含を表す `overAt` は、`c ∈ b` と、対 `(c,w)` として提示される `f` の要素を動く。そのような提示ごとに、`w` の定義可能冪集合のすべての要素が `v` に属することを要求する。この節は、そのような対として提示されない `f` の要素については何も述べないため、候補表全体から任意の余分な要素を排除するものとは読めない。
 <!--/-->
@@ -247,7 +247,7 @@ overAt v b f z N =
 <!--en-->
 The conjunction `stepAt` combines the two inclusions. Relative to the pair rows recorded below `b`, `intoAt` says that `v` has no additional members, while `overAt` says that none of the definable-power-set contributions is missing. Correct table values are a separate hypothesis of the later read lemma.
 <!--zh-->
-合取式 `stepAt` 合并这两个包含。相对于 `b` 以下记录的有序对表行，`intoAt` 说明 `v` 没有额外成员，`overAt` 则说明可定义幂集的贡献一项不缺。表中取值的正确性是后续读引理另行要求的假设。
+合取式 `stepAt` 合并这两个包含。相对于 `b` 以下记录的有序对表行，`intoAt` 说明 `v` 没有额外元素，`overAt` 则说明可定义幂集的贡献一项不缺。表中取值的正确性是后续读引理另行要求的假设。
 <!--ja-->
 連言 `stepAt` は二つの包含をまとめる。`b` より下に記録された対の行に相対して、`intoAt` は `v` に余分な要素がないことを述べ、`overAt` は定義可能冪集合からの寄与が一つも欠けないことを述べる。表の値が正しいことは、後の読み補題が別に要求する仮定である。
 <!--/-->
@@ -260,7 +260,7 @@ stepAt v b f z N = intoAt v b f z N ∧̇ overAt v b f z N
 <!--en-->
 The first half of `approxAt` gives coverage: every `c ∈ b` has some pair-shaped entry in `f`. The second half tests `stepAt w c f z N` whenever a member of `f` is presented as a pair `(c,w)`. It does not say that every member of `f` is a pair or that every recorded first component lies below `b`. Accordingly, `approx-out` will recover exactly `Values f b × Entries f b`, not equality with the entire hierarchy graph and not a global no-junk property.
 <!--zh-->
-`approxAt` 的前半给出覆盖性：每个 `c ∈ b` 在 `f` 中都有某个有序对形的表项。后半则在 `f` 的一个成员被呈现为 `(c,w)` 时检验 `stepAt w c f z N`。它并未断言 `f` 的每个成员都是有序对，也未断言每个被记录的第一分量都低于 `b`。因此，`approx-out` 恰好恢复 `Values f b × Entries f b`，既不恢复与整个层级图的相等，也不恢复全局的无垃圾性质。
+`approxAt` 的前半给出覆盖性：每个 `c ∈ b` 在 `f` 中都有某个有序对形的表项。后半则在 `f` 的一个元素被呈现为 `(c,w)` 时检验 `stepAt w c f z N`。它并未断言 `f` 的每个元素都是有序对，也未断言每个被记录的第一分量都低于 `b`。因此，`approx-out` 恰好恢复 `Values f b × Entries f b`，既不恢复与整个层级图的相等，也不恢复全局的无垃圾性质。
 <!--ja-->
 `approxAt` の前半は被覆を与える。すべての `c ∈ b` について、`f` に順序対の形をした何らかの項目がある。後半は、`f` の要素が対 `(c,w)` として提示されたときに `stepAt w c f z N` を検査する。`f` の各要素が対であることも、記録された各第一成分が `b` より下にあることも述べない。したがって `approx-out` が復元するのは正確に `Values f b × Entries f b` であり、表全体と階層グラフとの等しさでも、大域的に余分な要素がないという性質でもない。
 <!--/-->
@@ -288,7 +288,7 @@ hierAt a p f z N = approxAt f p z N ∧̇ stepAt a p f z N
 <!--en-->
 The tag clause pins the ten slots to the numerals: the first slot has no members, so it is the empty set.
 <!--zh-->
-标签子句把十个槽位钉在数码上：第一个槽位没有成员，故它是空集。
+标签子句把十个槽位钉在数码上：第一个槽位没有元素，故它是空集。
 <!--ja-->
 タグの節は、十の枠を数項に固定する。最初の枠には要素がないので、それは空集合である。
 <!--/-->
@@ -340,7 +340,7 @@ module PinsRead {m : ℕ} (N : Fin 10 → Fin m) (γ : S ^ m) where
 <!--en-->
 Reading the tag clause first shows that the first slot is empty: it has no members.
 <!--zh-->
-读取标签子句先证第一个槽位为空：它没有成员。
+读取标签子句先证第一个槽位为空：它没有元素。
 <!--ja-->
 タグの節の読みは、まず最初の枠が空であることを示す。要素をもたないのである。
 <!--/-->
@@ -356,7 +356,7 @@ Reading the tag clause first shows that the first slot is empty: it has no membe
 <!--en-->
 Emptiness is an extensionality argument in both directions: any member of the first slot would contradict the falsity clause, and the empty set has no members to begin with.
 <!--zh-->
-空性是双向的外延性论证：第一个槽位的任何成员都会与假值子句矛盾，而空集本无成员。
+空性是双向的外延性论证：第一个槽位的任何元素都会与假值子句矛盾，而空集本无元素。
 <!--ja-->
 空であることは、両方向の外延性の議論である。最初の枠のどんな要素も偽の節と矛盾し、そもそも空集合には要素がない。
 <!--/-->
@@ -458,7 +458,7 @@ The sole remaining case of `Fin 10` is the ninth successor of zero, and it retur
 <!--en-->
 For the converse direction, suppose the slots already satisfy `Tags γ N`. A purported member of the zero slot transports along its tag equality to a member of the empty set and is therefore impossible. The same tag equalities then provide the data from which the nine successor clauses are filled.
 <!--zh-->
-反过来，设这些槽位已经满足 `Tags γ N`。零槽位的任意假定成员都可沿标签等式搬运为空集的成员，因而不可能存在；同一组标签等式随后供给填入九条后继子句所需的数据。
+反过来，设这些槽位已经满足 `Tags γ N`。零槽位的任意假定元素都可沿标签等式搬运为空集的元素，因而不可能存在；同一组标签等式随后供给填入九条后继子句所需的数据。
 <!--ja-->
 逆向きには、スロットがすでに `Tags γ N` を満たすとする。零のスロットの要素と仮定されたものは、タグの等式に沿って空集合の要素へ移されるため、存在できない。同じタグの等式が、九つの後続の節を埋めるためのデータも与える。
 <!--/-->
@@ -573,7 +573,7 @@ Conversely, proving `defIn` from semantic data requires explicit genuine witness
 <!--en-->
 For the inward reading, `sat-complete` first proves that the genuine satisfaction table, code set, and environment tower satisfy `satAt`. Using that proof and the supplied equality for `d`, `def-complete` proves the definable-power-set clause. The given body proof completes the conjunction, after which the four witnesses and their memberships are introduced under the nested propositional truncations.
 <!--zh-->
-在向内读法中，`sat-complete` 先证明真实的满足关系表、码集与环境塔满足 `satAt`。`def-complete` 再使用这一证明和给定的 `d` 的等式，证明可定义幂集子句。给定的主体证明补全合取，随后四个见证及其隶属证明被依次引入嵌套的命题截断中。
+在向内读法中，`sat-complete` 先证明真实的满足关系表、码集与环境塔满足 `satAt`。`def-complete` 再使用这一证明和给定的 `d` 的等式，证明可定义幂集子句。给定的主体证明补全合取，随后四个见证及其成员关系证明被依次引入嵌套的命题截断中。
 <!--ja-->
 内向きの読みでは、まず `sat-complete` が、真正な充足関係表、符号集合、環境の塔が `satAt` を満たすことを示す。次に `def-complete` が、その証明と与えられた `d` の等式を使って、定義可能冪集合の節を示す。与えられた本体の証明で連言が完成し、その後、四つの証人とそれぞれの所属証明が、入れ子の命題的切り詰めの中へ順に導入される。
 <!--/-->
@@ -654,7 +654,7 @@ Let `Zv` denote the underlying common bound. It controls where the auxiliary sat
 <!--en-->
 In the inward body, `d` is the definable power set recognized by `defIn`, and `x` is the member introduced by the outer bounded universal over `v`. The atomic body says `x ∈ d`. Once the recorded value `w` is identified with `Lset c`, this becomes membership in `𝒟ₒ (Lset c)` for some `c ∈ b`.
 <!--zh-->
-在内向主体中，`d` 是由 `defIn` 识别的可定义幂集，而 `x` 是外层对 `v` 的有界全称量词引入的成员。原子主体陈述 `x ∈ d`。一旦把记录值 `w` 认同为 `Lset c`，这就成为对某个 `c ∈ b` 的 `𝒟ₒ (Lset c)` 的隶属。
+在内向主体中，`d` 是由 `defIn` 识别的可定义幂集，而 `x` 是外层对 `v` 的有界全称量词引入的元素。原子主体陈述 `x ∈ d`。一旦把记录值 `w` 认同为 `Lset c`，这就成为对某个 `c ∈ b` 的 `𝒟ₒ (Lset c)` 的成员关系。
 <!--ja-->
 内向きの本体では、`d` は `defIn` が認識する定義可能冪集合であり、`x` は外側の `v` 上の有界全称量化子が導入した要素である。原子論理式の本体は `x ∈ d` を述べる。記録された値 `w` を `Lset c` と同定すれば、これはある `c ∈ b` に対する `𝒟ₒ (Lset c)` への所属になる。
 <!--/-->
@@ -667,7 +667,7 @@ In the inward body, `d` is the definable power set recognized by `defIn`, and `x
 <!--en-->
 The `over` body is a definable-power-set description whose inner formula says that every member of the described set belongs to the proposed next value. This gives the reverse inclusion needed for the union equality.
 <!--zh-->
-`over` 主体是一条可定义幂集描述，其内层公式断言，被描述集合的每个成员都属于拟议的下一取值。这给出并集等式所需的反向包含。
+`over` 主体是一条可定义幂集描述，其内层公式断言，被描述集合的每个元素都属于拟议的下一取值。这给出并集等式所需的反向包含。
 <!--ja-->
 `over` の本体は定義可能冪集合の記述であり、その内側の論理式は、記述された集合のすべての要素が候補となる次の値に属することを述べる。これは合併の等式に必要な逆向きの包含を与える。
 <!--/-->
@@ -680,7 +680,7 @@ The `over` body is a definable-power-set description whose inner formula says th
 <!--en-->
 The read lemma for one step assumes separately that every pair row below `Bv` has the correct value (`Values`) and that every index below `Bv` has its canonical row (`Entries`). Under precisely these two hypotheses, the two halves of `stepAt` give opposite membership implications, and extensionality yields `Vv = Lset Bv`. These assumptions control the relevant pair rows only; they do not exclude unrelated members of the candidate table.
 <!--zh-->
-单步读引理另行假设：`Bv` 以下每条有序对表行都具有正确取值 (`Values`)，并且 `Bv` 以下每个索引都有其正準表行 (`Entries`)。恰在这两个假设下，`stepAt` 的两半给出相反方向的隶属蕴含，外延性遂得到 `Vv = Lset Bv`。这些假设只约束相关的有序对表行，并不排除候选表中无关的成员。
+单步读引理另行假设：`Bv` 以下每条有序对表行都具有正确取值 (`Values`)，并且 `Bv` 以下每个索引都有其正準表行 (`Entries`)。恰在这两个假设下，`stepAt` 的两半给出相反方向的成员关系蕴含，外延性遂得到 `Vv = Lset Bv`。这些假设只约束相关的有序对表行，并不排除候选表中无关的元素。
 <!--ja-->
 一段階の読み補題は、`Bv` より下の各対の行が正しい値をもつこと (`Values`) と、`Bv` より下の各添字に正準な行があること (`Entries`) を別々に仮定する。ちょうどこの二つの仮定のもとで、`stepAt` の二つの部分が反対向きの所属の含意を与え、外延性から `Vv = Lset Bv` が得られる。これらの仮定が制約するのは関係する対の行だけであり、候補表の無関係な要素を排除するものではない。
 <!--/-->
@@ -712,7 +712,7 @@ For the forward inclusion, `intoAt` supplies a stage index `c ∈ Bv`, a pair ro
 <!--en-->
 The nested existential readers preserve truncation at every stage. First `sndEx-out` recovers merely a second component `w` from the pair-shaped table entry; then `defIn-out` recovers merely the auxiliary data and the equality identifying `d` with the definable power set of `w`. Each truncation is eliminated directly into the membership proposition `x ∈ Lset Bv`.
 <!--zh-->
-嵌套存在式的各层读取都保持命题截断。`sndEx-out` 先从有序对形的表项中仅仅恢复第二分量 `w`，`defIn-out` 再仅仅恢复辅助数据，以及把 `d` 认同为 `w` 的可定义幂集的等式。每一层截断都直接消去到隶属命题 `x ∈ Lset Bv`。
+嵌套存在式的各层读取都保持命题截断。`sndEx-out` 先从有序对形的表项中仅仅恢复第二分量 `w`，`defIn-out` 再仅仅恢复辅助数据，以及把 `d` 认同为 `w` 的可定义幂集的等式。每一层截断都直接消去到成员关系命题 `x ∈ Lset Bv`。
 <!--ja-->
 入れ子の存在形を読む各段階で、命題的切り詰めは保たれる。まず `sndEx-out` が、対の形をした表の項目から第二成分 `w` が単に存在することを復元し、次に `defIn-out` が、補助データと、`d` を `w` の定義可能冪集合と同定する等式が単に存在することを復元する。各切り詰めは、所属命題 `x ∈ Lset Bv` へ直接除去される。
 <!--/-->
@@ -728,7 +728,7 @@ The nested existential readers preserve truncation at every stage. First `sndEx-
 <!--en-->
 The proof begins with an ambient member `x ∈ Vv`, but the formula is interpreted over the constructible carrier `S`. The operation `down` uses that membership to present `x` as a carrier element `xS`; placing `xS` at the front of the environment makes the newly bound slot denote the same underlying set `x`.
 <!--zh-->
-证明从外围成员 `x ∈ Vv` 出发，但公式是在可构造载体 `S` 上解释的。运算 `down` 利用这一隶属证明把 `x` 呈现为载体元素 `xS`；再把 `xS` 放到环境前端，便使新约束的槽位表示同一个底层集合 `x`。
+证明从外围元素 `x ∈ Vv` 出发，但公式是在可构造载体 `S` 上解释的。运算 `down` 利用这一成员关系证明把 `x` 呈现为载体元素 `xS`；再把 `xS` 放到环境前端，便使新约束的槽位表示同一个底层集合 `x`。
 <!--ja-->
 証明は周囲の要素 `x ∈ Vv` から始まるが、論理式は構成可能な台 `S` の上で解釈される。演算 `down` はこの所属証明を使って `x` を台の要素 `xS` として提示する。`xS` を環境の先頭に置くと、新しく束縛されたスロットは同じ底集合 `x` を表す。
 <!--/-->
@@ -741,7 +741,7 @@ The proof begins with an ambient member `x ∈ Vv`, but the formula is interpret
 <!--en-->
 The backward direction of `step-out` sends a member of the genuine stage `Lset Bv` into the proposed value `Vv`. It eliminates the truncated stage decomposition of `Lset Bv`, reducing the claim to an earlier stage `δ` whose definable power set contains `x`.
 <!--zh-->
-`step-out` 的反向包含把真实层 `Lset Bv` 的成员送入拟议取值 `Vv`。它消去 `Lset Bv` 的截断层分解，把目标化归为更早层 `δ`，其中 `x` 属于该层的可定义幂集。
+`step-out` 的反向包含把真实层 `Lset Bv` 的元素送入拟议取值 `Vv`。它消去 `Lset Bv` 的截断层分解，把目标化归为更早层 `δ`，其中 `x` 属于该层的可定义幂集。
 <!--ja-->
 `step-out` の逆向きの包含は、実際の段階 `Lset Bv` の要素を候補の値 `Vv` に入れる。これは `Lset Bv` の切り詰められた段階分解を消去し、`x` がその定義可能冪集合に属するような、より前の段階 `δ` についての主張へ帰着させる。
 <!--/-->
@@ -773,7 +773,7 @@ Once `Lset-out` has exhibited an earlier index `δ`, completeness supplies the c
 <!--en-->
 The two named objects are the coded argument and the coded pair: both are presented by descending along their membership proofs into carrier elements.
 <!--zh-->
-两个被命名的对象是编码实参与编码对：二者都沿其隶属证明下降而呈现为载体元素。
+两个被命名的对象是编码实参与编码对：二者都沿其成员关系证明下降而呈现为载体元素。
 <!--ja-->
 名づけられる二つの対象は、符号化された引数と符号化された対である。どちらも、所属の証明を下降して台の要素として提示される。
 <!--/-->
@@ -802,7 +802,7 @@ The value `w` of the row is read from the pair presentation, and is the componen
 <!--en-->
 The inward direction of the step clause requires five hypotheses: ordinality of the bound, the identification of the proposed value with the stage at the bound, correctness and completeness of the table at the bound, and a supply function placing every auxiliary witness for each member of the bound inside the witness bound. The proof splits into the two conjuncts.
 <!--zh-->
-步进子句的向内方向需要五条假设：界的序数性、拟议取值与界处层的等同、表在界处的正确性与完备性，以及把界的每个成员所需的辅助见证放进见证界的供给函数。证明分为两个合取项。
+步进子句的向内方向需要五条假设：界的序数性、拟议取值与界处层的等同、表在界处的正确性与完备性，以及把界的每个元素所需的辅助见证放进见证界的供给函数。证明分为两个合取项。
 <!--ja-->
 ステップの条項の内向きの方向には、五つの仮定が要る。界の順序数性、提案された値と界での段階の同定、界での表の正しさと完備さ、そして界の各要素のための補助の証人を証人の界の中に置く供給関数である。証明は二つの連言項に分かれる。
 <!--/-->
@@ -818,7 +818,7 @@ The inward direction of the step clause requires five hypotheses: ordinality of 
 <!--en-->
 The `into` conjunct reads outward from a member `x` of the proposed value: the truncated decomposition of the stage at the bound names an earlier ordinal and a definable-power-set membership, which the existence introduction fills into the two bounded quantifiers.
 <!--zh-->
-`into` 合取项从拟议取值的成员 `x` 向外读取：界处层的截断分解名指更早序数与可定义幂集隶属，存在引入把它们填入两个有界量词。
+`into` 合取项从拟议取值的元素 `x` 向外读取：界处层的截断分解名指更早序数与可定义幂集成员关系，存在引入把它们填入两个有界量词。
 <!--ja-->
 `into` の連言項は、提案された値の要素 `x` から外向きに読まれる。界での段階の切り詰められた分解が、より前の順序数と定義可能冪集合への所属を名指し、存在の導入がそれを二つの有界量化子に満たす。
 <!--/-->
@@ -850,7 +850,7 @@ The nested bounded existentials are filled without extracting data from proposit
 <!--en-->
 The three carrier elements have different sources. The membership `δ ∈ Bv` presents the earlier index as `c`; membership of the canonical pair in the table presents that pair as `q`; and ordinality of `δ` lets `LsetS` present the stage `Lset δ` as `w`. Keeping these sources distinct matters when the bounded witnesses are assembled.
 <!--zh-->
-三个载体元素有不同的来源。隶属 `δ ∈ Bv` 把更早的索引呈现为 `c`；典范对属于表的证明把该对呈现为 `q`；而 `δ` 的序数性使 `LsetS` 能把层 `Lset δ` 呈现为 `w`。组装有界见证时，必须区分这三种来源。
+三个载体元素有不同的来源。成员关系 `δ ∈ Bv` 把更早的索引呈现为 `c`；典范对属于表的证明把该对呈现为 `q`；而 `δ` 的序数性使 `LsetS` 能把层 `Lset δ` 呈现为 `w`。组装有界见证时，必须区分这三种来源。
 <!--ja-->
 三つの台の要素は、それぞれ異なる根拠から得られる。所属 `δ ∈ Bv` はより前の添字を `c` として提示し、正準な対が表に属するという証明はその対を `q` として提示し、`δ` の順序数性によって `LsetS` は段階 `Lset δ` を `w` として提示できる。有界な証人を組み立てる際には、これらの由来を区別することが大切である。
 <!--/-->
@@ -882,7 +882,7 @@ Here `w` is the genuine stage `Lset δ` in the constructible carrier. Applying t
 <!--en-->
 The four bounded objects are the genuine satisfaction table, code set, environment tower, and `Lset (sucV δ)`. The supply hypothesis proves that each lies in `Zv`, while reflexivity identifies the first three with the structures expected by the descriptions. Finally `Lset-suc δ` identifies the fourth with `𝒟ₒ (Lset δ)`, so the original membership of `x` can be transported into the formula body.
 <!--zh-->
-四个有界对象分别是真实的满足关系表、码集、环境塔与 `Lset (sucV δ)`。供给假设证明它们都属于 `Zv`，前三个对象则由自反等式同描述所要求的结构对齐。最后，`Lset-suc δ` 把第四个对象同认于 `𝒟ₒ (Lset δ)`，于是 `x` 原有的隶属可被运输到公式体中。
+四个有界对象分别是真实的满足关系表、码集、环境塔与 `Lset (sucV δ)`。供给假设证明它们都属于 `Zv`，前三个对象则由自反等式同描述所要求的结构对齐。最后，`Lset-suc δ` 把第四个对象同认于 `𝒟ₒ (Lset δ)`，于是 `x` 原有的成员关系可被运输到公式体中。
 <!--ja-->
 四つの有界な対象は、実際の充足関係表、符号集合、環境の塔、そして `Lset (sucV δ)` である。供給の仮定はそれぞれが `Zv` に属することを証明し、最初の三つは反射律によって記述が要求する構造と一致する。最後に `Lset-suc δ` が四つ目を `𝒟ₒ (Lset δ)` と同一視するので、もとの `x` の所属を論理式の本体へ移せる。
 <!--/-->
@@ -896,7 +896,7 @@ The four bounded objects are the genuine satisfaction table, code set, environme
 <!--en-->
 For the `over` conjunct, fix `c ∈ Bv`, a member `q` of the table, and a presentation of `q` as the pair `(c,w)`. Correctness then identifies `w` with `Lset c`. The remaining task is uniform in `y`: every `y ∈ 𝒟ₒ w` must belong to the proposed value `Vv`. This is the second inclusion needed to identify the proposed value with the stage at `Bv`.
 <!--zh-->
-证明 `over` 合取项时，固定 `c ∈ Bv`、表的成员 `q`，以及把 `q` 呈现为有序对 `(c,w)` 的方式。正确性随即把 `w` 同认于 `Lset c`。余下目标对 `y` 一致：每个 `y ∈ 𝒟ₒ w` 都必须属于拟议取值 `Vv`。这正是把拟议取值同认于 `Bv` 处层所需的第二个包含关系。
+证明 `over` 合取项时，固定 `c ∈ Bv`、表的元素 `q`，以及把 `q` 呈现为有序对 `(c,w)` 的方式。正确性随即把 `w` 同认于 `Lset c`。余下目标对 `y` 一致：每个 `y ∈ 𝒟ₒ w` 都必须属于拟议取值 `Vv`。这正是把拟议取值同认于 `Bv` 处层所需的第二个包含关系。
 <!--ja-->
 `over` の連言を示すため、`c ∈ Bv`、表の要素 `q`、そして `q` を対 `(c,w)` として提示する仕方を固定する。すると正しさにより `w` は `Lset c` と同一視される。残る目標は `y` について一様である。すべての `y ∈ 𝒟ₒ w` が候補の値 `Vv` に属さなければならない。これは候補の値を `Bv` における段階と同一視するために必要な第二の包含である。
 <!--/-->
@@ -982,7 +982,7 @@ The step body is the step clause at the four shifted slots.
 <!--en-->
 The outward reading of the approximation clause produces correctness and completeness of the table at the bound. The predicate `P` records what must be proved about each argument: that its recorded value is the stage at the argument. Note carefully what is and is not claimed: the result is exactly `Values` and `Entries`; it does not say that the table contains no non-pair members or no entries whose first component lies outside the bound.
 <!--zh-->
-逼近子句的向外读法产出表在界处的正确性与完备性。谓词 `P` 记录对每个实参须证之事：其被记录取值是该实参处的层。请仔细注意所证与所未证：结果恰为 `Values` 与 `Entries`；它不说表中没有非对成员、也没有第一分量落在界外的条目。
+逼近子句的向外读法产出表在界处的正确性与完备性。谓词 `P` 记录对每个实参须证之事：其被记录取值是该实参处的层。请仔细注意所证与所未证：结果恰为 `Values` 与 `Entries`；它不说表中没有非对元素、也没有第一分量落在界外的条目。
 <!--ja-->
 近似の条項の外向きの読み出しは、界での表の正しさと完備さを作る。述語 `P` は、それぞれの入力について証明すべきことを記録する。記録された値がその入力での段階であること。結果が正確に `Values` と `Entries` であることに注意してほしい。表が対でない要素や、界の外を第一成分とする項目を含まないとは述べていない。
 <!--/-->
@@ -998,7 +998,7 @@ The outward reading of the approximation clause produces correctness and complet
 <!--en-->
 Coverage says that for each `c ∈ Bv` there merely exists a table member that presents a pair with first component `c`. Reading that pair exposes a value `w` and maps the original membership proof to the canonical pair notation `pr c w`. The result remains propositionally truncated, so `entryOf` supplies existence for later propositional reasoning without choosing a value globally.
 <!--zh-->
-覆盖子句说：对每个 `c ∈ Bv`，仅命题截断地存在一个表成员，它呈现为第一分量是 `c` 的有序对。读取这个对会显出取值 `w`，并把原隶属证明运输到典范记号 `pr c w` 上。结果仍受命题截断，因此 `entryOf` 只为后续命题推理提供存在性，并不在全局选出一个取值。
+覆盖子句说：对每个 `c ∈ Bv`，仅命题截断地存在一个表元素，它呈现为第一分量是 `c` 的有序对。读取这个对会显出取值 `w`，并把原成员关系证明运输到典范记号 `pr c w` 上。结果仍受命题截断，因此 `entryOf` 只为后续命题推理提供存在性，并不在全局选出一个取值。
 <!--ja-->
 被覆の節は、各 `c ∈ Bv` に対して、第一成分が `c` である対を提示する表の要素が命題的に切り詰められた意味で存在すると述べる。その対を読むと値 `w` が現れ、もとの所属の証明は正準な記法 `pr c w` へ移される。結果は命題的に切り詰められたままなので、`entryOf` は後の命題的推論に存在を与えるが、値を大域的に選ぶことはない。
 <!--/-->
@@ -1014,7 +1014,7 @@ Coverage says that for each `c ∈ Bv` there merely exists a table member that p
 <!--en-->
 The induction step validates an arbitrary recorded pair `(c,w)` with `c ∈ Bv`. Its membership proof lets the second approximation clause supply `stepAt w c`; the induction hypothesis gives correctness at every argument below `c`, and coverage will give the matching canonical entries there. `StepRead.step-out` can then conclude that the recorded value is exactly `Lset c`.
 <!--zh-->
-归纳步验证任意一条满足 `c ∈ Bv` 的被记录对 `(c,w)`。它的隶属证明使逼近的第二子句给出 `stepAt w c`；归纳假设提供 `c` 以下每个实参处的正确性，覆盖子句则将在这些位置提供相应的典范条目。于是 `StepRead.step-out` 可断定，被记录取值恰为 `Lset c`。
+归纳步验证任意一条满足 `c ∈ Bv` 的被记录对 `(c,w)`。它的成员关系证明使逼近的第二子句给出 `stepAt w c`；归纳假设提供 `c` 以下每个实参处的正确性，覆盖子句则将在这些位置提供相应的典范条目。于是 `StepRead.step-out` 可断定，被记录取值恰为 `Lset c`。
 <!--ja-->
 帰納段階では、`c ∈ Bv` を満たす任意の記録された対 `(c,w)` を検証する。その所属の証明から近似の第二の節が `stepAt w c` を与え、帰納の仮定が `c` より下の各入力での正しさを与える。さらに被覆の節がそこで対応する正準な項目を与える。したがって `StepRead.step-out` は、記録された値がちょうど `Lset c` であると結論できる。
 <!--/-->
@@ -1030,7 +1030,7 @@ The induction step validates an arbitrary recorded pair `(c,w)` with `c ∈ Bv`.
 <!--en-->
 The proof now presents the relevant sets inside the constructible carrier. The membership `c ∈ Bv` yields the carrier element `cS`, and the assumed membership of `pr c (fst w)` in the table yields `q`. The value `w` is already a carrier element supplied to the induction predicate; the next environment places these three presentations in the slots expected by the step formula.
 <!--zh-->
-证明现在把有关集合呈现在可构造载体中。隶属 `c ∈ Bv` 给出载体元素 `cS`，而 `pr c (fst w)` 属于表的假设给出 `q`。取值 `w` 已经是归纳谓词所接收的载体元素；接下来的环境把这三个呈现放入步进公式所要求的槽位。
+证明现在把有关集合呈现在可构造载体中。成员关系 `c ∈ Bv` 给出载体元素 `cS`，而 `pr c (fst w)` 属于表的假设给出 `q`。取值 `w` 已经是归纳谓词所接收的载体元素；接下来的环境把这三个呈现放入步进公式所要求的槽位。
 <!--ja-->
 ここで関係する集合を構成可能な台の中に提示する。所属 `c ∈ Bv` から台の要素 `cS` が得られ、`pr c (fst w)` が表に属するという仮定から `q` が得られる。値 `w` はすでに帰納述語へ渡された台の要素である。次の環境は、この三つの提示をステップの論理式が要求する枠に置く。
 <!--/-->
@@ -1077,7 +1077,7 @@ Completeness at smaller arguments is recovered by the same restriction: for each
 <!--en-->
 Correctness below `Bv` is obtained by ambient membership induction on the underlying argument `c`. The predicate `P c` is conditional on `c ∈ Bv`; this membership both restricts the theorem to the required bound and, through ordinality of `Bv`, makes every smaller argument eligible for the induction hypothesis. Applying the induction result to an arbitrary recorded value gives `Values`.
 <!--zh-->
-`Bv` 以下的正确性通过在外围累积层级中对底层实参 `c` 作隶属归纳而得。谓词 `P c` 以 `c ∈ Bv` 为条件；这项隶属既把定理限制在所需界内，又借助 `Bv` 的序数性，使每个更小实参都可使用归纳假设。把归纳结论施于任意被记录取值，便得到 `Values`。
+`Bv` 以下的正确性通过在外围累积层级中对底层实参 `c` 作成员关系归纳而得。谓词 `P c` 以 `c ∈ Bv` 为条件；这项成员关系既把定理限制在所需界内，又借助 `Bv` 的序数性，使每个更小实参都可使用归纳假设。把归纳结论施于任意被记录取值，便得到 `Values`。
 <!--ja-->
 `Bv` より下での正しさは、基礎にある入力 `c` に対する周囲の所属帰納によって得られる。述語 `P c` は `c ∈ Bv` を条件とする。この所属は定理を必要な界に制限すると同時に、`Bv` の順序数性を通じて、より小さい各入力に帰納の仮定を適用できるようにする。帰納の結論を任意の記録された値に適用すると `Values` が得られる。
 <!--/-->
@@ -1163,7 +1163,7 @@ The domain conjunct is proved by presenting the stage at each argument below the
 <!--en-->
 The canonical pair is presented by descending along its membership proof into the carrier.
 <!--zh-->
-正準对沿其隶属证明下降而呈现为载体元素。
+正準对沿其成员关系证明下降而呈现为载体元素。
 <!--ja-->
 正準な対は、所属の証明を下降して台の要素として提示される。
 <!--/-->
@@ -1176,7 +1176,7 @@ The canonical pair is presented by descending along its membership proof into th
 <!--en-->
 The second approximation conjunct must be proved for every member `q` of the table and every presentation of `q` as a pair `(c,w)`. Under such a presentation, the exact hierarchy specification yields both `c ∈ Bv` and `w ≡ Lset c`. These facts prepare a proof of the step formula at `c`. No claim is made here that an arbitrary member of the candidate table has such a pair presentation.
 <!--zh-->
-逼近的第二合取项须对表的每个成员 `q`，以及把 `q` 呈现为有序对 `(c,w)` 的每种方式成立。在这样的呈现下，精确的层级规格同时给出 `c ∈ Bv` 与 `w ≡ Lset c`，从而可在 `c` 处证明步进公式。这里并未断言候选表的任意成员都具有这种有序对呈现。
+逼近的第二合取项须对表的每个元素 `q`，以及把 `q` 呈现为有序对 `(c,w)` 的每种方式成立。在这样的呈现下，精确的层级规格同时给出 `c ∈ Bv` 与 `w ≡ Lset c`，从而可在 `c` 处证明步进公式。这里并未断言候选表的任意元素都具有这种有序对呈现。
 <!--ja-->
 近似の第二の連言は、表の各要素 `q` と、`q` を対 `(c,w)` として提示する各方法について示す必要がある。そのような提示のもとでは、階層の厳密な仕様から `c ∈ Bv` と `w ≡ Lset c` の両方が得られ、`c` におけるステップの論理式を証明する準備が整う。ここでは、候補の表の任意の要素がそのような対の提示をもつとは主張していない。
 <!--/-->
@@ -1577,7 +1577,7 @@ Erasure also preserves the Δ₀ witness. It changes only the unavailable consta
 <!--en-->
 Semantically, one wrapped layer is a propositionally truncated bounded witness. If every member `x` of the bound that satisfies the body yields `P`, then `unwrap` eliminates that truncated existence into `P`. The declaration `P : hProp` supplies precisely the proposition condition required by this elimination.
 <!--zh-->
-在语义上，一层包裹是一份受命题截断的有界见证。若界中的每个成员 `x` 只要满足主体就能推出 `P`，则 `unwrap` 可把这项受截断的存在消去到 `P` 中。声明 `P : hProp` 恰好提供这种消去所要求的命题条件。
+在语义上，一层包裹是一份受命题截断的有界见证。若界中的每个元素 `x` 只要满足主体就能推出 `P`，则 `unwrap` 可把这项受截断的存在消去到 `P` 中。声明 `P : hProp` 恰好提供这种消去所要求的命题条件。
 <!--ja-->
 意味論的には、一層の包みは命題的に切り詰められた有界の証人である。境界の要素 `x` が本体を満たすたびに `P` が得られるなら、`unwrap` はその切り詰められた存在を `P` へ除去する。`P : hProp` という宣言が、この除去に必要な命題性をちょうど与える。
 <!--/-->
@@ -1592,7 +1592,7 @@ Semantically, one wrapped layer is a propositionally truncated bounded witness. 
 <!--en-->
 `wrap-in` builds the bounded existential from a named member and the body's satisfaction at its extension, the introduction rule of the bounded existential quantifier.
 <!--zh-->
-`wrap-in` 由一个被点名的成员及其扩展处的主体满足构造有界存在，即有界存在量词的引入规则。
+`wrap-in` 由一个被点名的元素及其扩展处的主体满足构造有界存在，即有界存在量词的引入规则。
 <!--ja-->
 `wrap-in` は、名指された要素とその拡張での本体の充足から、有界の存在量化を組み立てる。有界の存在量化子の導入規則である。
 <!--/-->
@@ -1671,7 +1671,7 @@ The final equality in this path concerns the interpretation of constants. Becaus
 <!--en-->
 The outward ordinal reader unpacks the two clauses of the ordinality atom into the transitivity of the underlying set of `p` and the transitivity of each of its members, with every entry lowered through the presentation of `p`.
 <!--zh-->
-向外序数读取把序数性原子的两个子句展开为：`p` 的底层集合的传递性，以及其每个成员的传递性；所有条目都经 `p` 的呈现降下。
+向外序数读取把序数性原子的两个子句展开为：`p` 的底层集合的传递性，以及其每个元素的传递性；所有条目都经 `p` 的呈现降下。
 <!--ja-->
 外向きの順序数の読みは、順序数性の原子の二つの節を、`p` の基底集合の推移性とその各要素の推移性へと展開する。すべての項目は `p` の提示を通して降ろされる。
 <!--/-->
@@ -1687,7 +1687,7 @@ ord-out a p z h =
 <!--en-->
 For the second ordinality clause, take `x ∈ p`, `y ∈ x`, and `u ∈ y`. Lowering all three memberships into the constructible carrier lets the formula's second conjunct conclude `u ∈ x`. This is exactly the transitivity of each member `x` of `p`, and together with the first clause it yields `IsOrd p`.
 <!--zh-->
-对序数性的第二个子句，取 `x ∈ p`、`y ∈ x` 与 `u ∈ y`。把这三层隶属都降入可构造载体后，公式的第二个合取项推出 `u ∈ x`。这恰是 `p` 的每个成员 `x` 的传递性；连同第一个子句便得到 `IsOrd p`。
+对序数性的第二个子句，取 `x ∈ p`、`y ∈ x` 与 `u ∈ y`。把这三层成员关系都降入可构造载体后，公式的第二个合取项推出 `u ∈ x`。这恰是 `p` 的每个元素 `x` 的传递性；连同第一个子句便得到 `IsOrd p`。
 <!--ja-->
 順序数性の第二の条項では、`x ∈ p`、`y ∈ x`、`u ∈ y` を取る。この三段の所属を構成可能な台へ降ろすと、論理式の第二の連言項から `u ∈ x` が得られる。これは `p` の各要素 `x` の推移性そのものであり、第一の条項と合わせて `IsOrd p` が得られる。
 <!--/-->
@@ -1736,7 +1736,7 @@ private module Sound where
 <!--en-->
 The finish lemma separates the two conjuncts of `inner`. The pins reader turns the first into the ten numeral equalities required by the hierarchy reader. From the approximation in the second conjunct, `hier-sound` recovers only `Values × Entries`, which is enough to read the final step as `a = Lset p` once the ordinality of `p` is supplied. This does not assert that the hidden table has no malformed members or entries outside `p`.
 <!--zh-->
-`finish` 引理分开读取 `inner` 的两个合取项。pins 读引理把第一项化为层级读引理所需的十条数码等式。对于第二项中的逼近，`hier-sound` 只恢复 `Values × Entries`；再给出 `p` 的序数性后，这已足以把最后一步读成 `a = Lset p`。这里并未断言隐藏表不含畸形成员，也未断言其中没有基点落在 `p` 之外的条目。
+`finish` 引理分开读取 `inner` 的两个合取项。pins 读引理把第一项化为层级读引理所需的十条数码等式。对于第二项中的逼近，`hier-sound` 只恢复 `Values × Entries`；再给出 `p` 的序数性后，这已足以把最后一步读成 `a = Lset p`。这里并未断言隐藏表不含畸形元素，也未断言其中没有基点落在 `p` 之外的条目。
 <!--ja-->
 `finish` 補題は `inner` の二つの連言項を分けて読む。pins の読み補題は第一項を、階層の読み補題が必要とする十個の数項の等式へ変える。第二項の近似から `hier-sound` が復元するのは `Values × Entries` だけであるが、`p` の順序数性が与えられれば、それで最後のステップを `a = Lset p` と読むには十分である。ここでは、隠れた表に不正な形の要素がないことも、`p` の外を第一成分とする項目がないことも主張していない。
 <!--/-->
@@ -1894,7 +1894,7 @@ private module Complete (lam : V ℓ) (ad : Adequate lam) (p : V ℓ) (op : IsOr
 <!--en-->
 Transitivity of the adequate stage `lam` is extracted from its ordinality: two nested memberships compose into one.
 <!--zh-->
-充分层 `lam` 的传递性由其序数性提取：两个嵌套的隶属复合为一个。
+充分层 `lam` 的传递性由其序数性提取：两个嵌套的成员关系复合为一个。
 <!--ja-->
 十分な段階 `lam` の推移性は、その順序数性から取り出される。入れ子になった二つの所属が一つに合成される。
 <!--/-->
@@ -1946,7 +1946,7 @@ Set `K = Lset lam`. This is the common bounding set represented by the third fre
 <!--en-->
 If `c ∈ lam`, successor closure gives `sucV c ∈ lam`. The standard successor-stage fact places `Lset c` in `Lset (sucV c)`, and monotonicity along `sucV c ∈ lam` then lifts this membership to `Lset c ∈ K`. Later the same lemma is applied to `sucV c`, using successor closure once more, to put `Lset (sucV c)` in `K`; that is the definable-power-set witness needed for the row at `c`.
 <!--zh-->
-若 `c ∈ lam`，后继封闭给出 `sucV c ∈ lam`。标准的后继层事实把 `Lset c` 放入 `Lset (sucV c)`，再沿 `sucV c ∈ lam` 使用单调性，便把这条隶属提升为 `Lset c ∈ K`。稍后把同一引理应用于 `sucV c`，并再用一次后继封闭，即可得到 `Lset (sucV c) ∈ K`；这才是在 `c` 行所需的可定义幂集见证。
+若 `c ∈ lam`，后继封闭给出 `sucV c ∈ lam`。标准的后继层事实把 `Lset c` 放入 `Lset (sucV c)`，再沿 `sucV c ∈ lam` 使用单调性，便把这条成员关系提升为 `Lset c ∈ K`。稍后把同一引理应用于 `sucV c`，并再用一次后继封闭，即可得到 `Lset (sucV c) ∈ K`；这才是在 `c` 行所需的可定义幂集见证。
 <!--ja-->
 `c ∈ lam` なら、後者閉包から `sucV c ∈ lam` が得られる。後者段階についての標準的な事実により `Lset c ∈ Lset (sucV c)` となり、さらに `sucV c ∈ lam` に沿う単調性によって、この所属を `Lset c ∈ K` へ持ち上げられる。後では同じ補題を `sucV c` に適用し、後者閉包をもう一度用いて `Lset (sucV c) ∈ K` を得る。これが `c` の行に必要な定義可能冪集合の証人である。
 <!--/-->
@@ -2046,7 +2046,7 @@ The final case verifies the tenth tag slot, at index nine, as the numeral `9`. A
 <!--en-->
 For each member `c` of the ordinal `p`, the supply lemma places four objects in `K`: the satisfaction graph, the code set, the environment tower, and the next level `Lset (sucV c)`. The chain `c ∈ p ∈ lam` and the transitivity of `lam` first place `c` in `lam`, making the adequacy witnesses available.
 <!--zh-->
-对序数 `p` 的每个成员 `c`，供给引理把四个对象放入 `K`：满足图、码集、环境塔与下一层 `Lset (sucV c)`。链 `c ∈ p ∈ lam` 与 `lam` 的传递性先把 `c` 放入 `lam`，从而使充分性见证可用。
+对序数 `p` 的每个元素 `c`，供给引理把四个对象放入 `K`：满足图、码集、环境塔与下一层 `Lset (sucV c)`。链 `c ∈ p ∈ lam` 与 `lam` 的传递性先把 `c` 放入 `lam`，从而使充分性见证可用。
 <!--ja-->
 順序数 `p` の各要素 `c` に対して、供給の補題は四つの対象、すなわち充足のグラフ、コードの集合、環境の塔、次の段階 `Lset (sucV c)` を `K` に入れる。連鎖 `c ∈ p ∈ lam` と `lam` の推移性によって、まず `c` が `lam` に属することが分かり、妥当性の証人を使えるようになる。
 <!--/-->
@@ -2062,7 +2062,7 @@ For each member `c` of the ordinal `p`, the supply lemma places four objects in 
 <!--en-->
 The witness for each `c` is read from the adequacy data, closing the supply for every member of the ordinal.
 <!--zh-->
-每个 `c` 的见证从充分性数据读取，为该序数的每个成员完成供给。
+每个 `c` 的见证从充分性数据读取，为该序数的每个元素完成供给。
 <!--ja-->
 それぞれの `c` の証人は妥当性のデータから読まれ、順序数のすべての要素のための供給が閉じられる。
 <!--/-->
@@ -2088,7 +2088,7 @@ The inner formula now holds at `E`. The pins writer supplies its numeral conjunc
 <!--en-->
 The adequacy witness at `p` places the underlying set of the genuine hierarchy table `F` in the common bound `K`. This supplies the membership proof needed to introduce `F` as the outermost bounded witness.
 <!--zh-->
-`p` 处的充分性见证把真实层级表 `F` 的底层集合放入公共界集 `K`。这给出把 `F` 引入为最外层有界见证所需的隶属证明。
+`p` 处的充分性见证把真实层级表 `F` 的底层集合放入公共界集 `K`。这给出把 `F` 引入为最外层有界见证所需的成员关系证明。
 <!--ja-->
 `p` における妥当性の証人は、実際の階層表 `F` の基礎集合を共通の境界集合 `K` に入れる。これにより、`F` を最も外側の有界な証人として導入するために必要な所属の証拠が得られる。
 <!--/-->
@@ -2117,7 +2117,7 @@ It remains to hide the table and numeral data behind the eleven bounded existent
 <!--en-->
 The same introduction rule inserts the numerals `7` through `3`. Their membership proofs all come from `num∈K`, so every quantifier is witnessed inside `K = Lset lam`; no witness is taken from an unbounded ambient search.
 <!--zh-->
-同一条引入规则继续插入数码 `7` 至 `3`。它们的隶属证明全都来自 `num∈K`，所以每个量词的见证都位于 `K = Lset lam` 内；这里没有从无界的周遭搜索中取得见证。
+同一条引入规则继续插入数码 `7` 至 `3`。它们的成员关系证明全都来自 `num∈K`，所以每个量词的见证都位于 `K = Lset lam` 内；这里没有从无界的周遭搜索中取得见证。
 <!--ja-->
 同じ導入規則によって数項 `7` から `3` までを挿入する。それらの所属証明はすべて `num∈K` から得られるので、各量化子の証人は `K = Lset lam` の内部にある。周囲で非有界な探索を行って証人を得ているわけではない。
 <!--/-->

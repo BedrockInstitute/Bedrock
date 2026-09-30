@@ -28,7 +28,7 @@ module L.Ordinal.SquareLaw {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; regularityV; ∈-irrefl )
 open import V.Model {ℓ} using ( ω-specV; numeralV; numeralV≡# )
 open import V.Presentation {ℓ} using ( member; fiber; ↪-inj )
@@ -47,9 +47,9 @@ This chapter supplies three concrete orders and conversions used by later counti
 The first construction compares two indices of an ordinal by membership of the ordinal elements they name; ordinal trichotomy and regularity turn that comparison into a strict well-order on the index type. The second grades a pair of indices by the maximum of its coordinates under that order and orders pairs sharing a maximum coordinate lexicographically; trichotomy, irreflexivity and transitivity are proved directly, and well-foundedness comes from nesting the descent inside two levels of the lexicographic product. The third reads each member of the infinite ordinal ω as a numeral and converts indices of the finite ordinal # n to and from `Fin n`. It then reduces a precise obstruction to the finite pigeonhole principle: a type that contains injective images of finite types of every size cannot itself inject into the square of a fixed finite type.
 <!--zh-->
 
-本章为后续计数论证提供三项具体工具：序数指标上的隶属良序、指标对上的 Gödel 序，以及有穷序数成员与 `Fin` 之间的对应。
+本章为后续计数论证提供三项具体工具：序数指标上的成员关系良序、指标对上的 Gödel 序，以及有穷序数元素与 `Fin` 之间的对应。
 
-第一个构造通过指标所指名的序数元素之间的隶属关系来比较两个指标；序数的三歧性与正则公理把这个比较变成指标类型上的严格良序。第二个构造用该序下坐标的最大值为指标对分级，并对共享最大坐标的对按字典序排列；三歧性、非自反性与传递性直接证明，而良基性则通过把下降嵌入两层字典序乘积得到。第三个构造把无穷序数 ω 的每个成员读作数码，并在有穷序数 # n 的指标与 `Fin n` 之间作双向转换。随后它把一个准确的不可能性归约为有穷鸽笼原理：若一个类型容纳任意大小的有穷类型的单射像，它就不能单射到某个固定有穷类型的平方中。
+第一个构造通过指标所指名的序数元素之间的成员关系来比较两个指标；序数的三歧性与正则公理把这个比较变成指标类型上的严格良序。第二个构造用该序下坐标的最大值为指标对分级，并对共享最大坐标的对按字典序排列；三歧性、非自反性与传递性直接证明，而良基性则通过把下降嵌入两层字典序乘积得到。第三个构造把无穷序数 ω 的每个元素读作数码，并在有穷序数 `# n`{.Agda} 的指标与 `Fin n` 之间作双向转换。随后它把一个准确的不可能性归约为有穷鸽笼原理：若一个类型容纳任意大小的有穷类型的单射像，它就不能单射到某个固定有穷类型的平方中。
 <!--ja-->
 
 本章では後の計数に使う三つの具体的な道具を与える。順序数の添字上の所属整列順序、添字の対上の Gödel 順序、有限順序数の要素と `Fin` の対応である。
@@ -67,7 +67,7 @@ open import Cubical.Data.Nat using ( _·_ )
 <!--en-->
 The mathematical setting is the cumulative hierarchy V, whose sets form a type S and whose membership is truncated existence of an index. Each set a carries a chosen small presentation: an index type ⟪ a ⟫ and an embedding ⟪ a ⟫↪ whose image is a. Reasoning about members of a thus becomes reasoning about indices, and the injectivity of the embedding identifies indices naming the same element. The constructions below treat an arbitrary ordinal α with the certificate IsOrd α: a transitive set all of whose members are transitive, in the von Neumann sense.
 <!--zh-->
-数学背景是累积层级 V：其集合构成一个类型 S，隶属是「存在某个指标」的截断陈述。每个集合 a 自带一份选定的小呈现：指标类型 ⟪ a ⟫ 与嵌入 ⟪ a ⟫↪，后者的像正是 a。于是讨论 a 的成员就变成讨论指标，而嵌入的单射性把指名同一元素的指标等同起来。下面的构造处理带证书 IsOrd α 的任意序数 α：von Neumann 意义下传递集且成员皆传递的集合。
+数学背景是累积层级 `V`{.Agda}：其集合构成一个类型 `S`{.Agda}，成员关系是「存在某个指标」的截断陈述。每个集合 `a`{.Agda} 自带一份选定的小呈现：指标类型 `⟪ a ⟫`{.Agda} 与嵌入 `⟪ a ⟫↪`{.Agda}，后者的像正是 `a`{.Agda}。于是讨论 `a`{.Agda} 的元素就变成讨论指标，而嵌入的单射性把指名同一元素的指标等同起来。下面的构造处理带证书 IsOrd α 的任意序数 α：von Neumann 意义下传递集且元素皆传递的集合。
 <!--ja-->
 数学的な舞台は累積階層 V である。そこでは集合が型 S をなし、所属は「ある添字の存在」という切り詰められた言明として表される。各集合 a には選ばれた小さな提示が伴う。添字型 ⟪ a ⟫ と埋め込み ⟪ a ⟫↪ であり、その像こそが a である。したがって a の要素について論じることは添字について論じることになり、埋め込みの単射性が同じ要素を指す添字を同一視する。以下の構成は、IsOrd α の証明書をもつ任意の順序数 α を扱う。これは von Neumann の意味で、推移的であり、その要素もすべて推移的である集合のことである。
 <!--/-->
@@ -75,7 +75,7 @@ The mathematical setting is the cumulative hierarchy V, whose sets form a type S
 <!--en-->
 A strict well-order combines four properties of one relation: any two points are trichotomically comparable, no point lies strictly below itself, strict comparison is transitive, and every descending chain is well founded. Natural numbers provide the model example. The explicitly host-level operation `HostLeast.leastOf` uses this structure and excluded middle to select a least witness from a merely inhabited proposition-valued family; later, ordinal trichotomy supplies the same three-way comparison for members of an ordinal.
 <!--zh-->
-严格良序把同一关系的四项性质结合起来：任意两点可作三歧比较，没有点严格小于自身，严格比较具有传递性，并且每条递降链都是良基的。自然数给出典型例子。明确属于宿主层的运算 `HostLeast.leastOf` 利用这一结构与排中律，从仅仅有元素的命题值族中选出最小见证；稍后，序数三歧为序数成员提供同样的三向比较。
+严格良序把同一关系的四项性质结合起来：任意两点可作三歧比较，没有点严格小于自身，严格比较具有传递性，并且每条递降链都是良基的。自然数给出典型例子。明确属于宿主层的运算 `HostLeast.leastOf` 利用这一结构与排中律，从仅仅有元素的命题值族中选出最小见证；稍后，序数三歧为序数元素提供同样的三向比较。
 <!--ja-->
 狭義整列順序は、一つの関係について四つの性質をまとめる。任意の二点が三分法で比較でき、どの点も自分自身より真に小さくなく、狭義比較が推移的で、すべての降下が整礎である。自然数がその基本例である。明示的にホスト側の演算である `HostLeast.leastOf` はこの構造と排中律を使い、単に要素が存在する命題値族から最小の証人を選ぶ。後では、順序数の三分法が順序数の要素に同じ三方向の比較を与える。
 <!--/-->
@@ -83,7 +83,7 @@ A strict well-order combines four properties of one relation: any two points are
 <!--en-->
 The logical vocabulary matches the shape of the statements to be proved. Refutations are functions into the empty type; membership proofs are inhabitants of truncated propositions; a three-way comparison is a sum of its cases, rendered by inl and inr. Paths between pairs and between records are handled by the standard lemmas Σ≡Prop and ΣPathP, which build a path into a dependent pair from paths of the components when the relevant component types are propositions.
 <!--zh-->
-逻辑词汇与待证陈述的形状相配。反驳是映到空类型的函数；隶属证明是截断命题的居民；三路比较是其各情形的和，由 inl 与 inr 标注。序对之间与记录之间的路径由标准引理 Σ≡Prop 与 ΣPathP 处理：当相关分支类型是命题时，它们从分量的路径构造出进入依赖对的路径。
+逻辑词汇与待证陈述的形状相配。反驳是映到空类型的函数；成员关系证明是截断命题的居民；三路比较是其各情形的和，由 inl 与 inr 标注。序对之间与记录之间的路径由标准引理 Σ≡Prop 与 ΣPathP 处理：当相关分支类型是命题时，它们从分量的路径构造出进入依赖对的路径。
 <!--ja-->
 論理の語彙は、証明すべき言明の形に合わせて選ばれている。反証は空型への関数であり、所属の証明は切り詰められた命題の住人であり、三路の比較はその場合の直和で、inl と inr で印づけられる。対やレコードの間のパスは標準補題 Σ≡Prop と ΣPathP で扱う。関係する成分の型が命題であるとき、成分のパスから依存対へのパスを組み立てるものである。
 <!--/-->
@@ -106,7 +106,7 @@ open import Cubical.Foundations.Equiv using ( retEq )
 <!--en-->
 For each set a, the presentation map ⟪ a ⟫↪ turns an index into the member it names. Its fiber over # k therefore contains exactly the indices naming that numeral. When k < n, numeral monotonicity places # k inside # n, and choosing the corresponding fiber point defines the conversion from Fin n into the index type of the finite ordinal. The reverse conversion will use least search, because an arbitrary index does not arrive with its numeral label.
 <!--zh-->
-对每个集合 a，呈现映射 ⟪ a ⟫↪ 把指标送到它所指名的成员，因此它在 # k 上的原像恰由指名该数码的指标组成。当 k < n 时，数码的单调性把 # k 置于 # n 内，选取相应原像中的点便定义了从 Fin n 到有穷序数指标类型的转换。反向转换将使用最小元搜索，因为任意指标并不自带其数码标号。
+对每个集合 `a`{.Agda}，呈现映射 `⟪ a ⟫↪`{.Agda} 把指标送到它所指名的元素，因此它在 # k 上的原像恰由指名该数码的指标组成。当 `k < n`{.Agda} 时，数码的单调性把 # k 置于 `# n`{.Agda} 内，选取相应原像中的点便定义了从 `Fin n`{.Agda} 到有穷序数指标类型的转换。反向转换将使用最小元搜索，因为任意指标并不自带其数码标号。
 <!--ja-->
 各集合 a について、提示写像 ⟪ a ⟫↪ は添字を、それが指す要素へ送る。したがって # k 上の繊維は、まさにその数項を指す添字からなる。k < n なら数項の単調性により # k は # n の中に入り、対応する繊維の点を選ぶことで Fin n から有限順序数の添字型への変換が定まる。逆向きには最小要素の探索を使う。任意の添字には数項のラベルが初めから付いていないからである。
 <!--/-->
@@ -130,7 +130,7 @@ Well-foundedness is carried by the accessibility predicate: Acc R x holds when e
 open InfinitySet using ( #_; ω )
 open import Cubical.Induction.WellFounded using ( Acc; acc; WellFounded )
 
-open hPropStructure 𝒮ᵥ
+open hPropView 𝒮ᵥ
 ```
 
 <!--en-->
@@ -247,9 +247,9 @@ An ordinal α is a transitive set whose members are all transitive, and its memb
 
 Two distinctions make the transport honest. First, an index m is not itself a set of the hierarchy; the element it names is ⟪ α ⟫↪ m, and all comparisons happen at the level of these named elements, with injectivity of the embedding recovering index equality from element equality. Second, each named element is itself an ordinal, a consequence of transitivity of α, and this is what licenses transitivity and the classical trichotomy at every index. The result is the strict well-order ordSWO on ⟪ α ⟫, the base instance on which the Gödel pair order of the next section is graded.
 <!--zh-->
-## 序数指标上的隶属序
+## 序数指标上的成员关系序
 
-序数 α 是传递集且成员皆传递，其成员按隶属线性有序；经典输入 `ord-tri` 使这个序三歧。但后续章节的计数论证需要的不是成员本身上的序，而是 α 的固定呈现的指标上的序：小类型 ⟪ α ⟫，其嵌入 ⟪ α ⟫↪ 的像正是 α。本节把隶属序从成员搬运到指标上。
+序数 α 是传递集且元素皆传递，其元素按成员关系线性有序；经典输入 `ord-tri` 使这个序三歧。但后续章节的计数论证需要的不是元素本身上的序，而是 α 的固定呈现的指标上的序：小类型 ⟪ α ⟫，其嵌入 ⟪ α ⟫↪ 的像正是 α。本节把成员关系序从元素搬运到指标上。
 
 两个区分使这个搬运忠实。其一，指标 m 本身不是层级中的集合；它所指名的元素是 ⟪ α ⟫↪ m，一切比较都发生在这些被指名的元素层面，而嵌入的单射性从元素相等恢复指标相等。其二，每个被指名的元素本身也是序数，这是 α 的传递性的推论，正是它允许在每个指标处使用传递性与经典三歧。结果是 ⟪ α ⟫ 上的严格良序 ordSWO，即下一节 Gödel 对序据以分级的基底实例。
 <!--ja-->
@@ -263,7 +263,7 @@ Two distinctions make the transport honest. First, an index m is not itself a se
 <!--en-->
 The relation ≺₁ on indices is defined by membership of the named elements: m ≺₁ n holds exactly when ⟪ α ⟫↪ m is a member of ⟪ α ⟫↪ n in the structure's membership proposition. Everything else in the section reads this definition. The first supporting fact is that each named element is itself an ordinal: since α is transitive and the index m names a member of α, the certificate mem-ord applied to the membership proof member α m yields IsOrd of the named element. This certificate ord-inord is used three more times below.
 <!--zh-->
-指标上的关系 ≺₁ 由被指名元素间的隶属定义：m ≺₁ n 成立，当且仅当 ⟪ α ⟫↪ m 按结构的隶属命题是 ⟪ α ⟫↪ n 的成员。本节其余内容都围绕这个定义展开。第一个支撑事实是：每个被指名元素本身也是序数。由于 α 传递而指标 m 指名 α 的一个成员，把证书 mem-ord 应用于隶属证明 member α m 便得到被指名元素的 IsOrd。这个证书 ord-inord 在下文还要再用三次。
+指标上的关系 ≺₁ 由被指名元素间的成员关系定义：`m ≺₁ n`{.Agda} 成立，当且仅当 `⟪ α ⟫↪ m`{.Agda} 按结构的成员关系命题是 `⟪ α ⟫↪ n`{.Agda} 的元素。本节其余内容都围绕这个定义展开。第一个支撑事实是：每个被指名元素本身也是序数。由于 α 传递而指标 `m`{.Agda} 指名 α 的一个元素，把证书 mem-ord 应用于成员关系证明 `member α m`{.Agda} 便得到被指名元素的 IsOrd。这个证书 ord-inord 在下文还要再用三次。
 <!--ja-->
 添字上の関係 ≺₁ は、指名された要素どうしの所属によって定義される。m ≺₁ n が成り立つのは、構造の所属命題において ⟪ α ⟫↪ m が ⟪ α ⟫↪ n の要素であるとき、そのときに限る。この節の残りはすべてこの定義を読む。最初の支えとなる事実は、指名された各要素もまた順序数であることである。α が推移的で添字 m が α の要素を指すので、所属の証明 member α m に証明書 mem-ord を適用すれば、指名された要素の IsOrd が得られる。この証明書 ord-inord はこの後さらに三回使われる。
 <!--/-->
@@ -287,7 +287,7 @@ module _ (α : S) (oα : IsOrd α) where
 <!--en-->
 Trichotomy on indices comes from trichotomy of the named elements. The classical theorem ord-tri compares two ordinal members, returning either a proof that the first is a member of the second, a path of element equality, or a proof in the other direction, packed as a sum. The auxiliary go matches these three cases: the two membership branches become lt and gt directly, since ≺₁ was defined as membership of named elements.
 <!--zh-->
-指标的三歧来自被指名元素的三歧。经典定理 ord-tri 比较两个序数成员，返回和类型：第一个是第二个的成员的证明、元素相等的路径，或相反方向的证明。辅助函数 go 匹配这三种情形：两个隶属分支直接成为 lt 与 gt，因为 ≺₁ 正是定义为被指名元素间的隶属。
+指标的三歧来自被指名元素的三歧。经典定理 ord-tri 比较两个序数元素，返回和类型：第一个是第二个的元素的证明、元素相等的路径，或相反方向的证明。辅助函数 go 匹配这三种情形：两个成员关系分支直接成为 lt 与 gt，因为 ≺₁ 正是定义为被指名元素间的成员关系。
 <!--ja-->
 添字の三分法は、指名された要素の三分法から来る。古典的な定理 ord-tri は二つの順序数要素を比較し、直和を返す。第一が第二の要素であることの証明、要素の等式のパス、あるいは逆方向の証明である。補助の go はこの三つの場合を対応づける。所属の二つの枝はそのまま lt と gt になる。≺₁ は指名された要素どうしの所属として定義されているからである。
 <!--/-->
@@ -320,7 +320,7 @@ The equality branch is the only place the presentation is used essentially. Ordi
 <!--en-->
 Irreflexivity and transitivity are inherited from the named elements. No set is a member of itself, so m ≺₁ m refutes itself. For transitivity, m ≺₁ n and n ≺₁ k are both membership facts about ⟪ α ⟫↪ k, an ordinal by ord-inord, and the first component of the IsOrd certificate asserts transitivity of membership among the members of an ordinal, so it chains the two facts directly. Accessibility transfers the same way: if every member of the named element ⟪ α ⟫↪ m is accessible under membership, then every ≺₁-predecessor n of m names a member, so its certificate can be fed the membership fact for the index n, and acc₁ returns the accessibility of m under ≺₁.
 <!--zh-->
-非自反性与传递性从被指名元素继承。没有集合属于自身，故 m ≺₁ m 自我反驳。对传递性，m ≺₁ n 与 n ≺₁ k 都是关于 ⟪ α ⟫↪ k 的隶属事实，而由 ord-inord 它是序数；IsOrd 证书的第一个分量断言序数成员间隶属的传递性，因此直接把两个事实串联。可及性同样搬运：若被指名元素 ⟪ α ⟫↪ m 的每个成员在隶属下可及，则 m 的每个 ≺₁-前驱 n 指名一个成员，把指标 n 的隶属事实喂给其证书，acc₁ 便返回 m 在 ≺₁ 下的可及性。
+非自反性与传递性从被指名元素继承。没有集合属于自身，故 `m ≺₁ m`{.Agda} 自我反驳。对传递性，`m ≺₁ n`{.Agda} 与 `n ≺₁ k`{.Agda} 都是关于 ⟪ α ⟫↪ k 的成员关系事实，而由 ord-inord 它是序数；IsOrd 证书的第一个分量断言序数元素间成员关系的传递性，因此直接把两个事实串联。可及性同样搬运：若被指名元素 `⟪ α ⟫↪ m`{.Agda} 的每个元素在成员关系下可及，则 `m`{.Agda} 的每个 ≺₁-前驱 `n`{.Agda} 指名一个元素，把指标 `n`{.Agda} 的成员关系事实喂给其证书，acc₁ 便返回 `m`{.Agda} 在 ≺₁ 下的可及性。
 <!--ja-->
 非反射性と推移性は、指名された要素から引き継がれる。自分自身に属する集合はないので、m ≺₁ m は自己反証する。推移性については、m ≺₁ n と n ≺₁ k はどちらも ⟪ α ⟫↪ k についての所属の事実であり、ord-inord によりこれは順序数である。IsOrd の証明書の最初の成分は、順序数の要素どうしの所属の推移性を主張するので、二つの事実を直接つなぐ。到達可能性も同じように運ばれる。指名された要素 ⟪ α ⟫↪ m の各要素が所属のもとで到達可能なら、m の各 ≺×-ではなく ≺₁-先行者 n はある要素を指すので、添字 n に対する所属の事実をその証明書に渡せば、acc₁ が ≺₁ のもとでの m の到達可能性を返す。
 <!--/-->
@@ -338,7 +338,7 @@ Irreflexivity and transitivity are inherited from the named elements. No set is 
 <!--en-->
 Well-foundedness of ≺₁ is now one step away: regularity on the ambient hierarchy hands an accessibility certificate for membership to every set, so every named element ⟪ α ⟫↪ m is accessible, and acc₁ lifts that to accessibility of the index m. This is wf₁, the well-foundedness the search in the finite section will reuse. The record ordSWO then packages the relation with its four laws into the interface SWO, the same five fields the natural-number instance of the strict well-order chapter supplies.
 <!--zh-->
-≺₁ 的良基性只差一步：环境层级上的正则公理把隶属下的可及性证书交给每个集合，故每个被指名元素 ⟪ α ⟫↪ m 可及，而 acc₁ 把它提升为指标 m 的可及性。这就是 wf₁，有穷一节的搜索将复用的良基性。随后记录 ordSWO 把关系与其四条定律打包进接口 SWO，与严格良序一章的自然数实例供给的是同样的五个字段。
+≺₁ 的良基性只差一步：环境层级上的正则公理把成员关系下的可及性证书交给每个集合，故每个被指名元素 `⟪ α ⟫↪ m`{.Agda} 可及，而 acc₁ 把它提升为指标 `m`{.Agda} 的可及性。这就是 wf₁，有穷一节的搜索将复用的良基性。随后记录 ordSWO 把关系与其四条定律打包进接口 SWO，与严格良序一章的自然数实例供给的是同样的五个字段。
 <!--ja-->
 ≺₁ の整礎性まであと一歩である。周囲の階層での正則性が、所属のもとでの到達可能性の証明書をすべての集合に渡すので、指名された要素 ⟪ α ⟫↪ m はそれぞれ到達可能であり、acc₁ がそれを添字 m の到達可能性へと持ち上げる。これが wf₁ であり、有限の節の探索が再利用する整礎性である。そしてレコード ordSWO が関係とその四つの法則をインターフェース SWO にまとめる。狭義整列順序の章の自然数の実例が供給するのと同じ五つのフィールドである。
 <!--/-->
@@ -737,7 +737,7 @@ Every member of `ω` is a numeral, but membership in `ω` is a truncated stateme
 <!--zh-->
 ## 在有穷序数与 `Fin` 之间转换
 
-`ω` 的每个成员都是数码，但 `ω` 的成员资格是截断命题，只能给出数码标号「仅仅存在」。而在有穷序数 `# n` 内部情况更好：命题「该指标表示 `# k` 且 `k < n`」是一个 `hProp`，排中律因此适用，最小元搜索会返回一个被选出的最小标号。这个标号就是转换 `toFin : ⟪ # n ⟫ → Fin n`，而 `#mono` 提供的纤维给出返回之路。
+`ω` 的每个元素都是数码，但 `ω` 的成员关系事实是截断命题，只能给出数码标号「仅仅存在」。而在有穷序数 `# n` 内部情况更好：命题「该指标表示 `# k` 且 `k < n`」是一个 `hProp`，排中律因此适用，最小元搜索会返回一个被选出的最小标号。这个标号就是转换 `toFin : ⟪ # n ⟫ → Fin n`，而 `#mono` 提供的纤维给出返回之路。
 <!--ja-->
 ## 有限順序数と `Fin` の間を移る
 
@@ -839,7 +839,7 @@ toFin の単射性は、ラベルの一致という仮定に沿って二つの�
 <!--en-->
 The reverse direction starts from `#mono`, which witnesses that `# k` is a member of `# n` whenever `k < n`. Since the index type `⟪ # n ⟫` presents the members of `# n`, that membership comes with a fiber: an index whose represented element is `# k`, together with a certificate of exactly the shape that `fromFin-spec` records. So `fromFin n (k , k<n)` is the first component of this fiber, chosen by the presentation rather than by least search.
 <!--zh-->
-反方向从 `#mono` 出发：只要 `k < n`，它就见证 `# k` 是 `# n` 的成员。由于指标类型 `⟪ # n ⟫` 呈现 `# n` 的成员，这个成员资格附带一个纤维：一个所表示元素为 `# k` 的指标，连同恰为 fromFin-spec 所记录形状的证书。于是 `fromFin n (k , k<n)` 就是这个纤维的第一分量，由呈现方式选定，而非由最小元搜索选定。
+反方向从 `#mono` 出发：只要 `k < n`，它就见证 `# k` 是 `# n` 的元素。由于指标类型 `⟪ # n ⟫` 呈现 `# n` 的元素，这个成员关系事实附带一个纤维：一个所表示元素为 `# k` 的指标，连同恰为 fromFin-spec 所记录形状的证书。于是 `fromFin n (k , k<n)` 就是这个纤维的第一分量，由呈现方式选定，而非由最小元搜索选定。
 <!--ja-->
 逆方向は `#mono` から始まる。`k < n` ならば `# k` が `# n` の要素であることを `#mono` が証明する。添字型 `⟪ # n ⟫` は `# n` の要素を提示するので、この所属には繊維が付随する。すなわち、表された要素が `# k` である添字と、fromFin-spec が記録するのとまったく同じ形の証明書である。したがって `fromFin n (k , k<n)` はこの繊維の第一成分であり、最小探索ではなく提示の仕方によって選ばれる。
 <!--/-->

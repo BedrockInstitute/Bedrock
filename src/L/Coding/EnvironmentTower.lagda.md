@@ -28,7 +28,7 @@ module L.Coding.EnvironmentTower {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 open import FOL.Syntax using
   ( Formula; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; ⊥̇; ∃̇_; ∃̇∈; ∀̇∈ )
 open import FOL.LevyHierarchy using ( checkΔ₀; Δ₀ )
@@ -77,7 +77,7 @@ The construction is carried out in cubical type theory and uses excluded middle 
 <!--en-->
 Two descriptions of the tower will coexist. The first is an external construction of a set in `L`; the second is a formula in the object language of set theory. Membership, equality, conjunction, disjunction, and bounded quantification form that formula, while the Lévy-hierarchy checker will certify that it is Δ₀.
 <!--zh-->
-本章会同时使用环境塔的两种描述。第一种是在外围构造 `L` 中的一个集合，第二种是集合论对象语言中的公式。该公式由隶属、相等、合取、析取与有界量化组成，Lévy 层级检查器则会认证它属于 Δ₀。
+本章会同时使用环境塔的两种描述。第一种是在外围构造 `L` 中的一个集合，第二种是集合论对象语言中的公式。该公式由成员关系、相等、合取、析取与有界量化组成，Lévy 层级检查器则会认证它属于 Δ₀。
 <!--ja-->
 本章では、環境の塔について二つの記述を併用する。一つは `L` の集合を外側から構成する記述であり、もう一つは集合論の対象言語における論理式である。後者は所属、等号、連言、選言、有界量化から組み立てられ、Lévy 階層の検査器によって Δ₀ であることが認証される。
 <!--/-->
@@ -85,7 +85,7 @@ Two descriptions of the tower will coexist. The first is an external constructio
 <!--en-->
 The proof later reads a tower entry downward to a predecessor. Membership induction in the cumulative hierarchy justifies this descent, and extensionality identifies environment sets once their members agree. Injectivity of the coded ordered pair then recovers the numeral and environment-set components separately.
 <!--zh-->
-稍后的证明会把环境塔条目向下读到前驱。累积层级中的隶属归纳保证这种下降良基，而外延性在成员相同时识别两个环境集。码化有序对的单射性继而分别恢复数码分量与环境集分量。
+稍后的证明会把环境塔条目向下读到前驱。累积层级中的成员关系归纳保证这种下降良基，而外延性在元素相同时识别两个环境集。码化有序对的单射性继而分别恢复数码分量与环境集分量。
 <!--ja-->
 後の証明では、塔の項目を先行項目へ向かって下向きに読む。累積階層の所属帰納がこの降下の整礎性を保証し、外延性が、同じ要素をもつ環境集合を同定する。さらに符号化順序対の単射性によって、数項成分と環境集合成分を別々に復元できる。
 <!--/-->
@@ -117,7 +117,7 @@ An environment-set formula determines a set only extensionally. Its agreement th
 <!--en-->
 The internal set `ωʟ` connects an object-language arity with an external natural number. Reading one of its members yields, under propositional truncation, a natural number and an identification with the corresponding constructible numeral. It therefore establishes that some arity exists without choosing one globally for every member.
 <!--zh-->
-内部集合 `ωʟ` 把对象语言中的元数与外围自然数联系起来。读取其成员时，会在命题截断下得到一个自然数，以及该成员与相应可构造数码的同一视。因此，这一读法只确定某个元数存在，并不为每个成员全局选出一个元数。
+内部集合 `ωʟ` 把对象语言中的元数与外围自然数联系起来。读取其元素时，会在命题截断下得到一个自然数，以及该元素与相应可构造数码的同一视。因此，这一读法只确定某个元数存在，并不为每个元素全局选出一个元数。
 <!--ja-->
 内部集合 `ωʟ` は、対象言語のアリティを外側の自然数と結ぶ。その要素を読むと、命題的切り詰めのもとで、自然数と対応する構成可能な数項との同一視が得られる。したがって、何らかのアリティが存在することは分かるが、各要素に対するアリティを大域的に選ぶことはできない。
 <!--/-->
@@ -133,7 +133,7 @@ Finite vectors represent the environments in which formulas are interpreted, whi
 <!--en-->
 Many semantic witnesses in this chapter live under propositional truncation. Such a witness may be used when the target is itself a proposition, as happens for membership, satisfaction, and equality between hierarchy sets, but it cannot be projected into a globally chosen arity or environment. Propositional extensionality and the empty type support the corresponding equality and impossibility arguments.
 <!--zh-->
-本章许多语义见证都位于命题截断之下。若目标本身是命题，例如隶属、满足关系或层级集合之间的相等，便可以使用这种见证；但不能从中投影出全局选定的元数或环境。命题外延性与空类型分别支持相应的相等和不可能性论证。
+本章许多语义见证都位于命题截断之下。若目标本身是命题，例如成员关系、满足关系或层级集合之间的相等，便可以使用这种见证；但不能从中投影出全局选定的元数或环境。命题外延性与空类型分别支持相应的相等和不可能性论证。
 <!--ja-->
 本章の意味論的な証人の多くは、命題的切り詰めのもとにある。所属、充足、階層の集合どうしの等しさのように、目標自身が命題である場合にはその証人を使えるが、そこから大域的に選ばれたアリティや環境を射影することはできない。命題外延性と空型は、それぞれ対応する等式と不可能性の議論を支える。
 <!--/-->
@@ -145,7 +145,7 @@ open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
 <!--en-->
 A set in the cumulative hierarchy comes with a small presentation of its members. Passing between membership and the corresponding fibre lets the proof turn an arbitrary member of `W` into a presentation index. The same hierarchy supplies the von Neumann numerals `# n` and their successor operation `sucV`.
 <!--zh-->
-累积层级中的集合带有其成员的小呈现。在隶属与相应纤维之间转换，使证明能够把 `W` 的任意成员变成一个呈现索引。同一层级还提供冯·诺伊曼数码 `# n` 及其后继运算 `sucV`。
+累积层级中的集合带有其元素的小呈现。在成员关系与相应纤维之间转换，使证明能够把 `W` 的任意元素变成一个呈现索引。同一层级还提供冯·诺伊曼数码 `# n` 及其后继运算 `sucV`。
 <!--ja-->
 累積階層の集合には、その要素の小さな表示が伴う。所属と対応するファイバーの間を移ることで、`W` の任意の要素を表示の添字へ変換できる。同じ階層は、フォン・ノイマン数項 `# n` とその後続演算 `sucV` も与える。
 <!--/-->
@@ -166,13 +166,13 @@ Write `S` for the type of constructible sets. An element of `S` consists of an u
 <!--/-->
 
 ```agda
-open hPropStructure 𝒮ʟ using ( S )
+open hPropView 𝒮ʟ using ( S )
 ```
 
 <!--en-->
 Formula satisfaction is interpreted over vectors of constructible sets. Transitivity of `L` connects this internal interpretation with the ambient cumulative hierarchy, so the same underlying membership facts can support both the object-language formulas and the external construction.
 <!--zh-->
-公式的满足关系在可构造集合向量上解释。`L` 的传递性把这种内部解释与外围累积层级联系起来，因此，同一批底层隶属事实既能支撑对象语言公式，也能支撑外围构造。
+公式的满足关系在可构造集合向量上解释。`L` 的传递性把这种内部解释与外围累积层级联系起来，因此，同一批底层成员关系事实既能支撑对象语言公式，也能支撑外围构造。
 <!--ja-->
 論理式の充足は、構成可能集合のベクトルの上で解釈される。`L` の推移性がこの内部解釈を周囲の累積階層と結ぶため、同じ基礎的な所属の事実を、対象言語の論理式と外側の構成の両方に用いることができる。
 <!--/-->
@@ -201,7 +201,7 @@ With that interpretation fixed, the first task is to collect all arity-indexed e
 <!--en-->
 The tower module fixes the carrier `W` whose members are the values environments may take. Its `n`-th entry is the coded ordered pair of the constructible numeral `n` and the set of all environments of length `n`: the first component records the length, the second collects all environments of exactly that length.
 <!--zh-->
-塔模块固定载体 `W`，环境的取值即其成员。其第 `n` 个条目是「可构造数码 `n` 与长度为 `n` 的全体环境之集」的编码有序对：第一分量记录长度，第二分量收集恰该长度的所有环境。
+塔模块固定载体 `W`，环境的取值即其元素。其第 `n` 个条目是「可构造数码 `n` 与长度为 `n` 的全体环境之集」的编码有序对：第一分量记录长度，第二分量收集恰该长度的所有环境。
 <!--ja-->
 塔のモジュールは、環境が値を取る台 `W` を固定する。その第 `n` 項目は、構成可能な数項 `n` と、長さ `n` のすべての環境の集合との、符号化された順序対である。第一成分が長さを記録し、第二成分がちょうどその長さのすべての環境を集める。
 <!--/-->
@@ -252,7 +252,7 @@ The separating formula decomposes a candidate into an arity and an environment s
 <!--en-->
 The tower is carved by separation out of the container and kept opaque, so later arguments use it only through its membership specification.
 <!--zh-->
-塔由容器上的分离刻出并保持不透明，后文论证只通过其隶属规格使用它。
+塔由容器上的分离刻出并保持不透明，后文论证只通过其成员关系规格使用它。
 <!--ja-->
 塔は、容器の上の分出によって刻まれ、不透明に保たれる。後の議論は、所属の仕様を通してだけそれを使うのである。
 <!--/-->
@@ -266,7 +266,7 @@ The tower is carved by separation out of the container and kept opaque, so later
 <!--en-->
 The membership specification is exported: membership in the tower is membership in the container conjoined with satisfaction of the separating formula.
 <!--zh-->
-隶属规格被导出：塔中的隶属即容器中的隶属且满足分离公式。
+成员关系规格被导出：塔中的成员关系即容器中的成员关系且满足分离公式。
 <!--ja-->
 所属の仕様が輸出される。塔の中の所属とは、容器の中の所属と、分出の論理式の充足の連言である。
 <!--/-->
@@ -295,7 +295,7 @@ The key ingredient is that each environment set satisfies its own external descr
 <!--en-->
 Every standard entry therefore belongs to the tower: the container membership is supplied by the bounding record, and the separating formula is satisfied by the truncated witness built from the carrier, the numeral, and the environment set.
 <!--zh-->
-于是每个标准条目都属于塔：容器隶属由界定记录供给，分离公式由载体、数码与环境集构成的截断见证满足。
+于是每个标准条目都属于塔：容器成员关系由界定记录供给，分离公式由载体、数码与环境集构成的截断见证满足。
 <!--ja-->
 したがって、すべての正準な項目は塔の中にある。容器への所属は界定の記録から供給され、分出の論理式は、台・数項・環境集合から作られた切り詰められた証人によって充足される。
 <!--/-->
@@ -311,7 +311,7 @@ Every standard entry therefore belongs to the tower: the container membership is
 <!--en-->
 The witness tree nests the carrier, the constructible numeral, and the environment set, and each level transports its own component: the ordered pair is recognized through the pairing projection law, the numeral membership through the internal `ω` reading, and the description by the ingredient above.
 <!--zh-->
-见证树嵌套载体、可构造数码与环境集，每一层各自搬运其分量：有序对经配对投影法则被识别，数码隶属经内部 `ω` 读法识别，而描述由上述材料满足。
+见证树嵌套载体、可构造数码与环境集，每一层各自搬运其分量：有序对经配对投影法则被识别，数码成员关系经内部 `ω` 读法识别，而描述由上述材料满足。
 <!--ja-->
 証人の木は、台・構成可能な数項・環境集合を入れ子にし、それぞれの層が自分の成分を運ぶ。順序対は対の射影の法則で認められ、数項の所属は内部の `ω` の読みで、記述は上の材料によって充足される。
 <!--/-->
@@ -341,7 +341,7 @@ The standard entry is then restated in ambient normal form: the coded pair of th
 <!--en-->
 Conversely, membership in the constructed tower can be read out: every member is merely the coded pair of a numeral and the environment set of that length. The natural number and the equality are returned under propositional truncation, so this result records existence without defining a choice of arity for every member. The proof first unfolds the membership specification and retains its separating-formula component.
 <!--zh-->
-反之，可以读出所构造环境塔的成员：每个成员仅仅是某个数码与相应长度环境集的码化有序对。自然数及其等式位于命题截断之下，因此该结论只记录存在性，并未为每个成员定义一个元数选择。证明先展开隶属规格，再取出其中满足分离公式的分量。
+反之，可以读出所构造环境塔的元素：每个元素仅仅是某个数码与相应长度环境集的码化有序对。自然数及其等式位于命题截断之下，因此该结论只记录存在性，并未为每个元素定义一个元数选择。证明先展开成员关系规格，再取出其中满足分离公式的分量。
 <!--ja-->
 逆に、構成した環境の塔の所属を読み出せる。各要素は、ある数項とその長さの環境集合との符号化された順序対であることが命題的切り詰めのもとで得られる。自然数と等式は命題的切り詰めの内側にあるため、この結果は存在を記録するだけで、各要素のアリティを選ぶ関数を定めない。証明はまず所属の仕様を展開し、分出論理式を満たす成分を取り出す。
 <!--/-->
@@ -357,7 +357,7 @@ Conversely, membership in the constructed tower can be read out: every member is
 <!--en-->
 The target type makes that boundary explicit: it is the propositional truncation of a natural number `n` together with an equality from the member’s underlying set to the standard pair `pr (# n) (fst (envSet W n))`.
 <!--zh-->
-目标类型明确表达这一边界：它是命题截断，其中仅仅存在自然数 `n`，并有从该成员的底层集合到标准有序对 `pr (# n) (fst (envSet W n))` 的等式。
+目标类型明确表达这一边界：它是命题截断，其中仅仅存在自然数 `n`，并有从该元素的底层集合到标准有序对 `pr (# n) (fst (envSet W n))` 的等式。
 <!--ja-->
 目標の型はこの境界を明示する。自然数 `n` と、要素の台集合から標準的な順序対 `pr (# n) (fst (envSet W n))` への等式との組を命題的に切り詰めた型である。
 <!--/-->
@@ -417,7 +417,7 @@ The third elimination names the environment set and exposes the four conjuncts: 
 <!--en-->
 The ordered-pair reader recovers the equality from the member to the coded pair of the arity and the described set. Membership of the arity in the internal `ω` then yields, under propositional truncation, an ordinary natural number whose constructible numeral has the same underlying set.
 <!--zh-->
-有序对读取器恢复从该成员到「元数与所描述集合的码化有序对」的等式。随后，元数属于内部 `ω` 这一事实在命题截断之下给出一个普通自然数，其可构造数码具有相同的底层集合。
+有序对读取器恢复从该元素到「元数与所描述集合的码化有序对」的等式。随后，元数属于内部 `ω` 这一事实在命题截断之下给出一个普通自然数，其可构造数码具有相同的底层集合。
 <!--ja-->
 順序対の読み取りにより、要素からアリティと記述された集合との符号化された順序対への等式が得られる。次に、アリティが内部の `ω` に属することから、同じ台集合をもつ構成可能な数項に対応する通常の自然数が、命題的切り詰めのもとで得られる。
 <!--/-->
@@ -449,7 +449,7 @@ The numeral identification aligns the recorded arity with the constructible nume
 <!--en-->
 The agreement module supplies both directions of membership between the described set and the constructed environment set, and extensionality inside `L` converts these two directions into an equality of underlying sets.
 <!--zh-->
-一致模块供给被描述集与实际环境集之间隶属的两个方向；`L` 内的外延性把这两个方向转换为底层集合的等式。
+一致模块供给被描述集与实际环境集之间成员关系的两个方向；`L` 内的外延性把这两个方向转换为底层集合的等式。
 <!--ja-->
 一致のモジュールは、記述された集合と実際に構成された環境集合の間の所属の両方向を供給する。そして `L` の内部の外延性が、この二つの方向を、底の集合の等式に変える。
 <!--/-->
@@ -473,7 +473,7 @@ The agreement module supplies both directions of membership between the describe
 <!--en-->
 The emptiness predicate says that a set has no members at all, by a bounded universal over its members.
 <!--zh-->
-空性谓词说一个集合全无成员，由对其成员的有界全称表达。
+空性谓词说一个集合全无元素，由对其元素的有界全称表达。
 <!--ja-->
 空性の述語は、集合がまったく要素をもたないことを、その要素の上の有界の全称で言う。
 <!--/-->
@@ -486,7 +486,7 @@ emptyAll x = ∀̇∈ (var x) ⊥̇
 <!--en-->
 The singleton-of-empty clause has two conjuncts: the set contains an empty member, and every member of it is empty. Both are needed: the first is an existence clause, and without it the predicate would also hold of the empty set itself.
 <!--zh-->
-空集单点子句有两个合取支：该集合含有一个空成员，且其每个成员都是空的。两者都需要：第一个是存在子句，没有它该谓词也会对空集自身成立。
+空集单点子句有两个合取支：该集合含有一个空元素，且其每个元素都是空的。两者都需要：第一个是存在子句，没有它该谓词也会对空集自身成立。
 <!--ja-->
 空集合の単元の節には二つの連言支がある。その集合が空の要素を一つ含むことと、そのすべての要素が空であることである。両方が要る。最初のものは存在の条項であり、これがなければ、この述語は空集合自身についても成り立ってしまう。
 <!--/-->
@@ -499,7 +499,7 @@ sglEmpty F = ∃̇∈ (var F) (emptyAll i0) ∧̇ ∀̇∈ (var F) (emptyAll i0)
 <!--en-->
 The cons-image clause gives both inclusions needed for equality. Every member of the proposed successor set must merely be a cons of some carrier element onto some member of the predecessor set. Conversely, for every predecessor environment and every carrier element, a corresponding cons extension must merely occur in the successor set. Together these conditions say that the successor set has exactly the cons extensions and no additional members.
 <!--zh-->
-cons 像子句给出集合相等所需的两个包含方向。所提议后继集的每个成员都必须仅仅是某个载体元素接到某个前驱集成员之前所得的 cons；反过来，对每个前驱环境与每个载体元素，相应的 cons 扩展都必须仅仅出现于后继集中。两项合起来说明后继集恰含这些 cons 扩展而无额外成员。
+cons 像子句给出集合相等所需的两个包含方向。所提议后继集的每个元素都必须仅仅是某个载体元素接到某个前驱集元素之前所得的 cons；反过来，对每个前驱环境与每个载体元素，相应的 cons 扩展都必须仅仅出现于后继集中。两项合起来说明后继集恰含这些 cons 扩展而无额外元素。
 <!--ja-->
 cons 像の節は、集合の等しさに必要な二方向の包含を与える。候補となる後続集合の各要素は、ある台の要素をある前段の環境に cons して得られるものでなければならない。逆に、各前段の環境と各台の要素に対して、対応する cons 拡張が後続集合に存在しなければならない。両条件を合わせると、後続集合はそれらの cons 拡張だけをちょうど含む。
 <!--/-->
@@ -542,7 +542,7 @@ The upward clause exists over the tower: some entry of the tower satisfies the u
 <!--en-->
 The downward clause is a disjunction: the entry equals the base entry with an empty environment set, or some tower entry is a predecessor whose cons image is the current one. This is what supports the membership-induction reading below.
 <!--zh-->
-向下子句是一个析取：条目等于带空环境集的基条目，或塔中某条目是其 cons 像为当前条目的前驱。这正是下文隶属归纳读法所依赖的。
+向下子句是一个析取：条目等于带空环境集的基条目，或塔中某条目是其 cons 像为当前条目的前驱。这正是下文成员关系归纳读法所依赖的。
 <!--ja-->
 下向きの節は選言である。その項目が、空の環境集合をもつ基底の項目と等しいか、あるいは、塔のある項目が、その cons の像が現在の項目である先行者であるかのどちらかである。これが、後の所属帰納の読みを支える。
 <!--/-->
@@ -557,7 +557,7 @@ The downward clause is a disjunction: the entry equals the base entry with an em
 <!--en-->
 The full formula conjoins three bounded conditions on coded ordered-pair entries: a base pair occurs in `E`; every member of `E` that is read through the pair interface has an upward successor; and every such pair is either a base pair or has a predecessor. Thus `towerAt` controls the coded ordered-pair entries used by the later readers. It does not by itself exclude arbitrary non-pair members of `E`, nor does this chapter derive equality of an arbitrary satisfying `E` with the constructed `Tower.tower W`.
 <!--zh-->
-完整公式合取了关于码化有序对条目的三个有界条件：`E` 中出现一个基准对；`E` 中每个经有序对接口读出的成员都有向上的后继；每个这样的对要么是基准对，要么具有前驱。因此，`towerAt` 控制的是后文读取器所使用的码化有序对条目。它本身不排除 `E` 中任意的非有序对成员，本章也没有由任意 `E` 满足该公式推出它等于所构造的 `Tower.tower W`。
+完整公式合取了关于码化有序对条目的三个有界条件：`E` 中出现一个基准对；`E` 中每个经有序对接口读出的元素都有向上的后继；每个这样的对要么是基准对，要么具有前驱。因此，`towerAt` 控制的是后文读取器所使用的码化有序对条目。它本身不排除 `E` 中任意的非有序对元素，本章也没有由任意 `E` 满足该公式推出它等于所构造的 `Tower.tower W`。
 <!--ja-->
 完全な論理式は、符号化された順序対の項目について三つの有界な条件を連言する。基底の対が `E` に存在すること、`E` のうち順序対のインターフェースを通して読まれる各要素に上向きの後続があること、そしてそのような各対が基底の対であるか前段をもつことである。したがって、`towerAt` が制御するのは、後の読み取りで用いる符号化された順序対の項目である。それだけでは `E` の任意の非順序対要素を排除せず、本章は、この論理式を満たす任意の `E` が構成した `Tower.tower W` と等しいことも導かない。
 <!--/-->
@@ -616,7 +616,7 @@ module EnvFacts (W : S) where
 <!--en-->
 Every presented index names a member of `W`: the small membership bridge runs from the presentation into the underlying set.
 <!--zh-->
-每个被呈现索引指名 `W` 的一个成员：小隶属桥从呈现通入底层集合。
+每个被呈现索引指名 `W` 的一个元素：小成员关系桥从呈现通入底层集合。
 <!--ja-->
 提示された索引はどれも `W` の要素を名指す。小さな所属の橋が、提示から底の集合の中へ続くのである。
 <!--/-->
@@ -642,7 +642,7 @@ There is exactly one index of length zero, and it is recognized because a functi
 <!--en-->
 A set with no members equals the zero-length environment graph, by extensionality: neither side has a member, since the zero-length index has no cases.
 <!--zh-->
-无成员的集合等于零长环境图，由外延性：两侧都没有成员，因为零长索引没有情形。
+无元素的集合等于零长环境图，由外延性：两侧都没有元素，因为零长索引没有情形。
 <!--ja-->
 要素をもたない集合は、長さゼロの環境のグラフと等しくなる。外延性による。長さゼロの索引には場合がないので、どちらの側にも要素はないのである。
 <!--/-->
@@ -657,7 +657,7 @@ A set with no members equals the zero-length environment graph, by extensionalit
 <!--en-->
 Conversely, every environment graph of length zero has no members: the index has no cases, so the pair that would encode a member cannot be formed.
 <!--zh-->
-反过来，长度为零的每个环境图都没有成员：索引没有情形，故编码成员所需的对无法形成。
+反过来，长度为零的每个环境图都没有元素：索引没有情形，故编码元素所需的对无法形成。
 <!--ja-->
 逆に、長さゼロのどの環境のグラフも要素をもたない。索引に場合がないので、要素を符号化する対が作れないのである。
 <!--/-->
@@ -670,7 +670,7 @@ Conversely, every environment graph of length zero has no members: the index has
 <!--en-->
 Reading the zero-length environment set out: every member is a set with no members. The proof eliminates the truncated presentation and applies the previous fact.
 <!--zh-->
-读出零长环境集：其每个成员都是无成员的集合。证明消去截断的呈现并应用前述事实。
+读出零长环境集：其每个元素都是无元素的集合。证明消去截断的呈现并应用前述事实。
 <!--ja-->
 長さゼロの環境集合を読み出すと、そのすべての要素は要素をもたない集合である。証明は、切り詰められた提示を消去して、前の事実を適用する。
 <!--/-->
@@ -686,7 +686,7 @@ Reading the zero-length environment set out: every member is a set with no membe
 <!--en-->
 Filling the zero-length environment set uses the empty set: it is transported into the presentation, and the empty graph is recognized from its no-members proof.
 <!--zh-->
-填充零长环境集使用空集：它被搬运进呈现，而空图由其无成员证明被识别。
+填充零长环境集使用空集：它被搬运进呈现，而空图由其无成员关系证明被识别。
 <!--ja-->
 長さゼロの環境集合の埋めは空集合を使う。それは提示の中へ運ばれ、空のグラフはその要素がないことの証明によって認められる。
 <!--/-->
@@ -713,7 +713,7 @@ The environment coding agrees with cons at the function level: prepending a carr
 <!--en-->
 Every carrier element extends every environment of length `k` to an environment of length `suc k`: the new member of `W` is presented by an index, and the extended function is inserted into the successor environment set.
 <!--zh-->
-`W` 的每个成员把每个长度为 `k` 的环境延拓为长度 `suc k` 的环境：`W` 的新成员由一个索引呈现，延拓后的函数被插入后继环境集。
+`W` 的每个元素把每个长度为 `k` 的环境延拓为长度 `suc k` 的环境：`W` 的新元素由一个索引呈现，延拓后的函数被插入后继环境集。
 <!--ja-->
 台 `W` のすべての要素は、長さ `k` のどの環境も、長さ `suc k` の環境へ延長する。`W` の新しい要素は索引で提示され、延長された関数が、後続の環境集合の中に挿入される。
 <!--/-->
@@ -729,7 +729,7 @@ Every carrier element extends every environment of length `k` to an environment 
 <!--en-->
 The presenting index is recovered from the membership through the fiber of the presentation, so the coding uses the actual presenting index of `x`.
 <!--zh-->
-呈现索引经呈现在该成员处的纤维恢复，因此编码使用的是 `x` 的实际呈现索引。
+呈现索引经呈现在该元素处的纤维恢复，因此编码使用的是 `x` 的实际呈现索引。
 <!--ja-->
 提示の索引は、その要素における提示の繊維を通して復元されるので、符号化は `x` の実際の提示の索引を使う。
 <!--/-->
@@ -774,7 +774,7 @@ A successor environment splits at the function level into a head and a tail. If 
 <!--en-->
 The outward reading of a successor environment recovers its head and tail only under propositional truncation. For each member `e'` of `envSet W (suc k)`, there merely exist a presentation index `q` naming a member `ι q` of `W`, a tail index `g : Ix W k`, and an equality identifying the underlying set of `e'` with the coded graph of their cons function.
 <!--zh-->
-后继环境的向外读法只在命题截断下恢复其头部与尾部。对 `envSet W (suc k)` 的每个成员 `e'`，仅仅存在一个呈现索引 `q`、一个尾部索引 `g : Ix W k` 及一条等式，其中 `q` 指名 `W` 的成员 `ι q`，而该等式把 `e'` 的底层集合识别为二者 cons 函数的码化图。
+后继环境的向外读法只在命题截断下恢复其头部与尾部。对 `envSet W (suc k)` 的每个元素 `e'`，仅仅存在一个呈现索引 `q`、一个尾部索引 `g : Ix W k` 及一条等式，其中 `q` 指名 `W` 的元素 `ι q`，而该等式把 `e'` 的底层集合识别为二者 cons 函数的码化图。
 <!--ja-->
 後続環境の外向きの読み出しが先頭と尾部を復元するのは、命題的切り詰めのもとでだけである。`envSet W (suc k)` の各要素 `e'` に対して、`W` の要素 `ι q` を名指す表示添字 `q`、尾部の添字 `g : Ix W k`、および `e'` の基礎の集合を両者の cons 関数の符号化グラフと同定する等式が単に存在する。
 <!--/-->
@@ -790,7 +790,7 @@ The outward reading of a successor environment recovers its head and tail only u
 <!--en-->
 The membership proof is consumed by the outward reading of the environment set, which supplies the truncated index; the equation of the graph then composes with the splitting lemma to produce the cons equation.
 <!--zh-->
-隶属证明被环境集的向外读法消耗，后者供给截断的索引；图的等式再与拆分引理复合，产出 cons 等式。
+成员关系证明被环境集的向外读法消耗，后者供给截断的索引；图的等式再与拆分引理复合，产出 cons 等式。
 <!--ja-->
 所属の証明は、環境の集合の外向きの読み出しに消費され、切り詰められた添字を供給する。グラフの等式は、分かちの補題と合成されて、cons の等式を作る。
 <!--/-->
@@ -847,7 +847,7 @@ The embedding of the carrier into the hierarchy is named once, so that every car
 <!--en-->
 For each `q` in the carrier of `W`, the presentation map places `ι q` in the underlying set of `W`. The proof reads membership from the fibre supplied by the canonical presentation of that set.
 <!--zh-->
-对 `W` 载体中的每个 `q`，呈现映射都把 `ι q` 放入 `W` 的底层集合。证明从该集合的典范呈现所给出的 fibre 中读出隶属。
+对 `W` 载体中的每个 `q`，呈现映射都把 `ι q` 放入 `W` 的底层集合。证明从该集合的典范呈现所给出的 fibre 中读出成员关系。
 <!--ja-->
 `W` の台の各 `q` に対して、提示写像は `ι q` を `W` の基礎の集合に入れる。証明は、その集合の標準的な提示が与えるファイバーから所属を読み取る。
 <!--/-->
@@ -862,9 +862,9 @@ The outward reading of the cons-image clause says: if the base set equals the st
 
 The forward direction reads a member `z` of the candidate successor set through the cons-image clause.
 <!--zh-->
-cons 像子句的向外读法说：若基集等于 `k` 处的层环境集，则满足 cons 像子句的集合等于后继层环境集。证明以外延性比较成员于两个方向。
+cons 像子句的向外读法说：若基集等于 `k` 处的层环境集，则满足 cons 像子句的集合等于后继层环境集。证明以外延性比较元素于两个方向。
 
-向前方向经 cons 像子句读取候选后继集的成员 `z`。
+向前方向经 cons 像子句读取候选后继集的元素 `z`。
 <!--ja-->
 cons の像の条項の外向きの読み出しはこう言う。基底の集合が `k` での段階の環境の集合に等しいなら、cons の像の条項を満たす集合は、後続の段階の環境の集合に等しい、と。証明は、二方向で要素を比較する外延性である。
 
@@ -898,7 +898,7 @@ The clause supplies a carrier element `x` and a coded environment entry `e` and 
 <!--en-->
 In the forward inclusion, the first half of the cons-image clause supplies a head `x`, a tail environment `e`, and satisfaction of the coded cons relation. Reading `e` in the actual base environment set yields a tail index under propositional truncation. Adequacy of `consAtL` then identifies `z` with the semantic cons graph, and `envSuc-in` places that graph in `envSet W (suc k)`. Every truncation is eliminated into this membership proposition.
 <!--zh-->
-在向前包含中，cons 像子句的前半部给出头部 `x`、尾环境 `e`，以及码化 cons 关系的满足。把 `e` 作为真实基环境集的成员读取，会在命题截断下得到一个尾部索引。随后，`consAtL` 的充分性把 `z` 与语义上的 cons 图识别，`envSuc-in` 再把该图放入 `envSet W (suc k)`。每个截断都只消去到这个隶属命题中。
+在向前包含中，cons 像子句的前半部给出头部 `x`、尾环境 `e`，以及码化 cons 关系的满足。把 `e` 作为真实基环境集的元素读取，会在命题截断下得到一个尾部索引。随后，`consAtL` 的充分性把 `z` 与语义上的 cons 图识别，`envSuc-in` 再把该图放入 `envSet W (suc k)`。每个截断都只消去到这个成员关系命题中。
 <!--ja-->
 前向きの包含では、cons 像の条項の前半が、先頭 `x`、尾部の環境 `e`、および符号化された cons 関係の充足を与える。`e` を実際の基底環境集合の要素として読むと、命題的切り詰めのもとで尾部の添字が得られる。次に `consAtL` の妥当性が `z` を意味論的な cons グラフと同定し、`envSuc-in` がそのグラフを `envSet W (suc k)` に入れる。どの切り詰めも、この所属命題にだけ除去される。
 <!--/-->
@@ -927,7 +927,7 @@ The membership proof for `z` in the candidate successor set supplies a construct
 <!--en-->
 For the reverse inclusion, take a member `z` of the actual successor environment set. Its successor decomposition merely supplies a head `q`, a tail index `g`, and an equation identifying `z` with their cons environment. The second half of the cons-image clause then merely supplies a corresponding member `e'` of the candidate successor set.
 <!--zh-->
-为证明反向包含，取真实后继环境集的成员 `z`。其后继分解仅仅给出头部 `q`、尾部索引 `g`，以及把 `z` 认同为二者 cons 环境的等式。cons 像子句的后半部随后仅仅给出候选后继集中的相应成员 `e'`。
+为证明反向包含，取真实后继环境集的元素 `z`。其后继分解仅仅给出头部 `q`、尾部索引 `g`，以及把 `z` 认同为二者 cons 环境的等式。cons 像子句的后半部随后仅仅给出候选后继集中的相应元素 `e'`。
 <!--ja-->
 逆向きの包含を示すため、実際の後続環境集合の要素 `z` を取る。その後続分解は、先頭 `q`、尾部の添字 `g`、および `z` を両者の cons 環境と同定する等式が単に存在することを与える。次に cons の像の条項の後半から、候補の後続集合の対応する要素 `e'` が単に存在することを得る。
 <!--/-->
@@ -943,7 +943,7 @@ For the reverse inclusion, take a member `z` of the actual successor environment
 <!--en-->
 The adequacy of `consAtL` identifies the object-language cons relation supplied by the clause with the same coded cons graph used in the semantic decomposition. Composing this equation with the decomposition equation identifies `e'` with `z`, so membership of `e'` transports to membership of `z`.
 <!--zh-->
-`consAtL` 的充分性把子句所给出的对象语言 cons 关系认同为语义分解中使用的同一码化 cons 图。将该等式与分解等式复合，便认同 `e'` 与 `z`，从而可把 `e'` 的隶属运输为 `z` 的隶属。
+`consAtL` 的充分性把子句所给出的对象语言 cons 关系认同为语义分解中使用的同一码化 cons 图。将该等式与分解等式复合，便认同 `e'` 与 `z`，从而可把 `e'` 的成员关系运输为 `z` 的成员关系。
 <!--ja-->
 `consAtL` の妥当性により、条項が与える対象言語の cons 関係は、意味論的な分解で使われたものと同じ符号化 cons グラフに同定される。この等式を分解の等式と合成すると `e'` と `z` が同定されるので、`e'` の所属を `z` の所属へ移せる。
 <!--/-->
@@ -959,7 +959,7 @@ The adequacy of `consAtL` identifies the object-language cons relation supplied 
 <!--en-->
 The two propositional truncations are eliminated only into the membership proposition being proved. The element `zS` presents `z` inside the constructible carrier, while `xS` will similarly present the recovered head.
 <!--zh-->
-两个命题截断都只被消去到正在证明的隶属命题中。`zS` 在可构造载体内呈现 `z`，而 `xS` 将以同样方式呈现恢复出的头部。
+两个命题截断都只被消去到正在证明的成员关系命题中。`zS` 在可构造载体内呈现 `z`，而 `xS` 将以同样方式呈现恢复出的头部。
 <!--ja-->
 二つの命題截断はいずれも、証明中の所属命題にだけ消去される。`zS` は `z` を構成可能な台の中で提示し、`xS` は復元された先頭を同様に提示する。
 <!--/-->
@@ -1005,9 +1005,9 @@ The first direction of the inward reading says that every member of the candidat
 
 The truncated decomposition of the member is consumed to name the head and the tail.
 <!--zh-->
-向内读法的第一方向说，候选后继集的每个成员都满足一个有界存在式：存在头部元素与来自基集的环境，其 cons 扩展即该成员。
+向内读法的第一方向说，候选后继集的每个元素都满足一个有界存在式：存在头部元素与来自基集的环境，其 cons 扩展即该元素。
 
-成员的截断分解被消耗以名指头部与尾部。
+元素的截断分解被消耗以名指头部与尾部。
 <!--ja-->
 内向きの読み出しの最初の方向は、候補の後続の集合のすべての要素が有界の存在量化子を満たすと言う。先頭の要素と、基底の集合からの環境が存在し、その cons の拡張がその要素になる、というものである。要素の切り詰められた分解を消費して、先頭と尾部を名指す。
 <!--/-->
@@ -1023,7 +1023,7 @@ The truncated decomposition of the member is consumed to name the head and the t
 <!--en-->
 The head is carried into the carrier, the tail is presented as an element of the base set by the base-set membership identification, and the cons adequacy transports the cons equation into the object language.
 <!--zh-->
-头部被载入载体，尾部经基集隶属认同呈现为基集元素，而 cons 充分性把 cons 等式运入对象语言。
+头部被载入载体，尾部经基集成员关系认同呈现为基集元素，而 cons 充分性把 cons 等式运入对象语言。
 <!--ja-->
 先頭は台の中へ載せられ、尾部は基底の集合への所属の同定によって基底の集合の要素として提示され、cons の妥当性が cons の等式を対象言語の中へ運ぶ。
 <!--/-->
@@ -1041,7 +1041,7 @@ The second clause starts with a member `e` of the base set and a member `x` of t
 
 The outward reading of the base environment set merely supplies the tail index `g`; the semantic cons introduction then places the resulting graph in the actual successor environment set.
 <!--zh-->
-第二个子句从基集成员 `e` 与字母表集成员 `x` 出发。它只需给出候选后继集中的一个成员，使其码化图由把 `x` 接到 `e` 所表示的环境之前得到。
+第二个子句从基集元素 `e` 与字母表集元素 `x` 出发。它只需给出候选后继集中的一个元素，使其码化图由把 `x` 接到 `e` 所表示的环境之前得到。
 
 基环境集的向外读法仅仅给出尾部索引 `g`；语义上的 cons 引入随后把所得图放入真实后继环境集。
 <!--ja-->
@@ -1061,7 +1061,7 @@ The outward reading of the base environment set merely supplies the tail index `
 <!--en-->
 The constructed environment is presented as an element of the successor stage environment set by descending along the membership supplied by the cons introduction. The cons adequacy transports the satisfaction of the cons clause into the object language.
 <!--zh-->
-构造出的环境沿 cons 引理供给的隶属下降而呈现为后继层环境集的元素。cons 充分性把 cons 子句的满足运入对象语言。
+构造出的环境沿 cons 引理供给的成员关系下降而呈现为后继层环境集的元素。cons 充分性把 cons 子句的满足运入对象语言。
 <!--ja-->
 作られた環境は、cons の導入が供給する所属を下降して、後続の段階の環境の集合の要素として提示される。cons の妥当性が、cons の条項の充足を対象言語の中へ運ぶ。
 <!--/-->
@@ -1134,7 +1134,7 @@ The outward reading says that a set satisfying the single-empty-set clause has t
 
 The first named object is the underlying set of the candidate, and the `none` helper extracts a refutation from the bounded clause.
 <!--zh-->
-单点空集子句的向外读法说：满足该子句的集合与零层环境集具有相同底层集合。证明以外延性在两个方向比较成员。
+单点空集子句的向外读法说：满足该子句的集合与零层环境集具有相同底层集合。证明以外延性在两个方向比较元素。
 
 第一个被命名的对象是候选的底层集合，而 `none` 辅助式从有界子句提取反驳。
 <!--ja-->
@@ -1154,7 +1154,7 @@ The first named object is the underlying set of the candidate, and the `none` he
 <!--en-->
 The `none` helper feeds a carrier presentation of a member into the bounded clause, which returns the empty type, confirming that the presented set has no members.
 <!--zh-->
-`none` 辅助式把成员的载体呈现喂给有界子句，后者返回空类型，确认所呈现集合无成员。
+`none` 辅助式把元素的载体呈现喂给有界子句，后者返回空类型，确认所呈现集合无元素。
 <!--ja-->
 `none` の補助は、要素の台の提示を有界の条項に渡す。条項は空型を返し、提示された集合に要素がないことを確かめる。
 <!--/-->
@@ -1166,7 +1166,7 @@ The `none` helper feeds a carrier presentation of a member into the bounded clau
 <!--en-->
 Forward: a member of the candidate set is presented, the bounded clause refutes every member of it, so it has no members; the zero-stage introduction then admits it as a member of the zero-stage environment set.
 <!--zh-->
-向前：候选集的成员被呈现，有界子句反驳其每个成员，故它无成员；零层引入随后接纳它为零层环境集的成员。
+向前：候选集的元素被呈现，有界子句反驳其每个元素，故它无元素；零层引入随后接纳它为零层环境集的元素。
 <!--ja-->
 前向き：候補の集合の要素が提示され、有界の条項がそのすべての要素を反駁するので、要素をもたない。零の段階の導入が、それを零の段階の環境の集合の要素として受け入れる。
 <!--/-->
@@ -1179,7 +1179,7 @@ Forward: a member of the candidate set is presented, the bounded clause refutes 
 <!--en-->
 Backward: a member of the zero-stage environment set is presented, and its truncated index is consumed. Both the indexed environment and the member itself are shown to have no members, so they are equal by extensionality of the hierarchy.
 <!--zh-->
-向后：零层环境集的成员被呈现，其截断索引被消耗。被索引的环境与该成员本身均被证明无成员，故由层级外延性二者相等。
+向后：零层环境集的元素被呈现，其截断索引被消耗。被索引的环境与该元素本身均被证明无元素，故由层级外延性二者相等。
 <!--ja-->
 後ろ向き：零の段階の環境の集合の要素が提示され、その切り詰められた添字が消費される。添字づけられた環境とその要素の両方が要素をもたないことが示されるので、階層の外延性によって両者は等しくなる。
 <!--/-->
@@ -1195,7 +1195,7 @@ Backward: a member of the zero-stage environment set is presented, and its trunc
 <!--en-->
 The transported membership closes the backward direction, and the existence clause completes the proof by confirming the candidate is nonempty.
 <!--zh-->
-被运输的隶属闭合向后方向，而存在子句确认候选集非空，证明完成。
+被运输的成员关系闭合向后方向，而存在子句确认候选集非空，证明完成。
 <!--ja-->
 運ばれた所属が後ろ向きの方向を閉じ、存在の条項が、候補が空でないことを確かめて、証明を完成させる。
 <!--/-->
@@ -1208,7 +1208,7 @@ The transported membership closes the backward direction, and the existence clau
 <!--en-->
 For the inward reading, choose the empty environment `e0`. The existential half is satisfied because `e0` belongs to the zero-stage environment set and has no members. The universal half follows because every member of that environment set has no members. Transport along the assumed equality replaces the actual zero-stage set by the candidate set in both halves.
 <!--zh-->
-为证明向内读式，选择空环境 `e0`。存在项成立，因为 `e0` 属于零层环境集且没有成员。全称项成立，因为该环境集的每个成员都没有成员。沿假设的等式运输，便在两项中都以候选集替代真实零层集。
+为证明向内读式，选择空环境 `e0`。存在项成立，因为 `e0` 属于零层环境集且没有元素。全称项成立，因为该环境集的每个元素都没有元素。沿假设的等式运输，便在两项中都以候选集替代真实零层集。
 <!--ja-->
 内向きの読み出しでは、空の環境 `e0` を選ぶ。`e0` は零段階の環境集合に属し、要素をもたないので、存在の側が成り立つ。また、その環境集合のどの要素も要素をもたないので、全称の側も成り立つ。仮定された等式に沿って移送することで、両方に現れる実際の零段階集合を候補集合に置き換える。
 <!--/-->
@@ -1292,7 +1292,7 @@ The outward reading of tower entries is proved by membership induction on the fi
 
 The step function splits on the downward-decomposition clause of the tower formula.
 <!--zh-->
-塔条目的向外读法由编码对第一分量的集合隶属归纳证明。动机说：对层级中每个元素 `nv`，若某条目的第一分量等于 `nv` 且该条目属于候选塔，则该条目分解为自然数元数连同其环境集。这是对层级隶属关系的良基归纳，而非对自然数的普通归纳。
+塔条目的向外读法由编码对第一分量的集合成员关系归纳证明。动机说：对层级中每个元素 `nv`，若某条目的第一分量等于 `nv` 且该条目属于候选塔，则该条目分解为自然数元数连同其环境集。这是对层级成员关系的良基归纳，而非对自然数的普通归纳。
 
 步进函数按塔公式的向下分解子句分裂。
 <!--ja-->
@@ -1312,7 +1312,7 @@ The step function splits on the downward-decomposition clause of the tower formu
 <!--en-->
 The step of the membership induction splits on the downward-decomposition clause of the tower formula, which says that the pair either is the base entry or has a predecessor entry.
 <!--zh-->
-隶属归纳的步进按塔公式的向下分解子句分裂：该对或是基项，或有一前驱条目。
+成员关系归纳的步进按塔公式的向下分解子句分裂：该对或是基项，或有一前驱条目。
 <!--ja-->
 所属の帰納のステップは、塔の論理式の下向きの分解の条項で場合分けする。その対が基底の項目であるか、前の項目をもつかである。
 <!--/-->
@@ -1328,7 +1328,7 @@ The step of the membership induction splits on the downward-decomposition clause
 <!--en-->
 The membership proof for the candidate pair supplies a constructible representative `pS : S`. Its container exposes the numeral and environment-set components through bounded quantification, and the four-slot environment places those components beside the pair and the surrounding chapter environment.
 <!--zh-->
-候选有序对的隶属证明给出一个可构造代表 `pS : S`。其容器通过有界量化暴露数码分量与环境集分量，四槽环境则把这些分量连同该有序对放在本章外围环境之前。
+候选有序对的成员关系证明给出一个可构造代表 `pS : S`。其容器通过有界量化暴露数码分量与环境集分量，四槽环境则把这些分量连同该有序对放在本章外围环境之前。
 <!--ja-->
 候補の順序対の所属証明から、構成可能な代表 `pS : S` が得られる。その容器は、有界量化を通して数項成分と環境集合成分を公開し、四つのスロットからなる環境は、それらの成分と順序対を本章の外側の環境の前に置く。
 <!--/-->
@@ -1381,7 +1381,7 @@ The ordinality comparison says the candidate numeral is the von Neumann successo
 <!--en-->
 The predecessor numeral lies in the candidate numeral because every set lies in its von Neumann successor; transport along the successor equation makes this the strict descent required by membership induction. Applying the induction hypothesis recovers an arity `k` and the stage `envSet W k`.
 <!--zh-->
-前驱数码属于候选数码，因为每个集合都属于其冯·诺伊曼后继；沿后继等式运输后，这正是隶属归纳所需的严格下降。应用归纳假设即可恢复元数 `k` 与层 `envSet W k`。
+前驱数码属于候选数码，因为每个集合都属于其冯·诺伊曼后继；沿后继等式运输后，这正是成员关系归纳所需的严格下降。应用归纳假设即可恢复元数 `k` 与层 `envSet W k`。
 <!--ja-->
 前の数項は、そのフォン・ノイマン後続に属し、後続の等式に沿って移送すると、所属に関する帰納法に必要な真の下降が得られる。帰納仮定を適用すれば、アリティ `k` と段階 `envSet W k` が復元される。
 <!--/-->
@@ -1397,7 +1397,7 @@ The predecessor numeral lies in the candidate numeral because every set lies in 
 <!--en-->
 The recovered arity is mapped to its successor, and the cons-image outward reading transports the base environment set to the successor environment set. The induction hypothesis is applied at the predecessor, whose membership is transported along the tower equation.
 <!--zh-->
-恢复的元数被映到其后继，cons 像向外读法把基层环境集运到后继层环境集。归纳假设施于前驱，其隶属沿塔等式运输。
+恢复的元数被映到其后继，cons 像向外读法把基层环境集运到后继层环境集。归纳假设施于前驱，其成员关系沿塔等式运输。
 <!--ja-->
 復元されたアリティはその後続へ写され、cons の像の外向きの読み出しが、基底の環境の集合を後続のものへ運ぶ。帰納の仮定は、塔の等式に沿って所属が運ばれる前の要素で適用される。
 <!--/-->
@@ -1413,7 +1413,7 @@ The recovered arity is mapped to its successor, and the cons-image outward readi
 <!--en-->
 The inward reading is proved by ordinary induction on the external natural number `k`. At zero, the base clause merely supplies a tower member together with its second component. Reading `sglEmpty` identifies that component with `envSet W 0`, while the alignment `N0 = # 0` identifies the first component; transport along the resulting pair equation yields the standard zero entry.
 <!--zh-->
-向内读式对外围自然数 `k` 作普通归纳。在零步，基项子句仅仅给出一个塔成员及其第二分量。读取 `sglEmpty` 将该分量认同为 `envSet W 0`，而对齐式 `N0 = # 0` 认同其第一分量；沿所得有序对等式运输，即得标准零条目。
+向内读式对外围自然数 `k` 作普通归纳。在零步，基项子句仅仅给出一个塔元素及其第二分量。读取 `sglEmpty` 将该分量认同为 `envSet W 0`，而对齐式 `N0 = # 0` 认同其第一分量；沿所得有序对等式运输，即得标准零条目。
 <!--ja-->
 内向きの読み出しは、外部の自然数 `k` に関する通常の帰納法で証明する。零の場合、基底の条項から塔の要素とその第二成分が単に存在することを得る。`sglEmpty` を読むと第二成分が `envSet W 0` に同定され、整合条件 `N0 = # 0` によって第一成分も同定される。得られた順序対の等式に沿って移送すれば、標準的な零番目の項目が得られる。
 <!--/-->
@@ -1429,7 +1429,7 @@ The inward reading is proved by ordinary induction on the external natural numbe
 <!--en-->
 After the zero case closes, the successor step applies the upward-closure clause to the already constructed standard entry at `k`. That clause merely supplies a new tower member together with a numeral satisfying the successor formula and an environment set satisfying the cons-image formula.
 <!--zh-->
-零步闭合后，后继步骤把向上闭合子句应用于已经构造出的第 `k` 个标准条目。该子句仅仅给出一个新的塔成员，以及满足后继公式的数码和满足 cons 像公式的环境集。
+零步闭合后，后继步骤把向上闭合子句应用于已经构造出的第 `k` 个标准条目。该子句仅仅给出一个新的塔元素，以及满足后继公式的数码和满足 cons 像公式的环境集。
 <!--ja-->
 零の場合を終えると、後続の場合では、すでに構成した第 `k` 標準項目に上向き閉包の条項を適用する。この条項から、新しい塔の要素と、後続の論理式を満たす数項、および cons の像の論理式を満たす環境集合が単に存在することを得る。
 <!--/-->
@@ -1461,7 +1461,7 @@ The successor formula determines the new first component from the old numeral, a
 <!--en-->
 The induction hypothesis first supplies membership of the standard entry at `k`. Applying upward closure to that entry merely produces a successor entry together with its two component formulas. Their outward readings identify the components with `# (suc k)` and `envSet W (suc k)`, so transport along the resulting coded-pair equality proves membership of the standard successor entry.
 <!--zh-->
-归纳假设先给出第 `k` 个标准条目的隶属证明。把向上闭合应用于该条目，仅仅得到一个后继条目及其两个分量公式。向外读取这两个公式，会把相应分量识别为 `# (suc k)` 与 `envSet W (suc k)`；沿所得码化有序对等式运输，便证明标准后继条目属于塔。
+归纳假设先给出第 `k` 个标准条目的成员关系证明。把向上闭合应用于该条目，仅仅得到一个后继条目及其两个分量公式。向外读取这两个公式，会把相应分量识别为 `# (suc k)` 与 `envSet W (suc k)`；沿所得码化有序对等式运输，便证明标准后继条目属于塔。
 <!--ja-->
 帰納仮定はまず、第 `k` 標準項目の所属を与える。その項目に上向き閉包を適用すると、後続項目とその二つの成分を記述する論理式が、命題的切り詰めのもとで得られる。それらを外向きに読むと、各成分が `# (suc k)` と `envSet W (suc k)` に同定されるので、得られた符号化順序対の等式に沿って移送すれば、標準的な後続項目の所属が証明される。
 <!--/-->
@@ -1531,7 +1531,7 @@ Every standard entry belongs to the candidate tower, by transporting the real to
 <!--en-->
 Each standard entry is presented as a carrier element by descending along its membership in the candidate tower.
 <!--zh-->
-每条标准条目沿其在候选塔中的隶属下降而呈现为载体元素。
+每条标准条目沿其在候选塔中的成员关系下降而呈现为载体元素。
 <!--ja-->
 それぞれの正準な項目は、候補の塔の中での所属を下降して、台の要素として提示される。
 <!--/-->
@@ -1544,7 +1544,7 @@ Each standard entry is presented as a carrier element by descending along its me
 <!--en-->
 Every member of the candidate tower is read as a standard entry, by transporting the membership into the real tower and applying the tower's outward reading.
 <!--zh-->
-候选塔的每个成员都被读作标准条目，方法是把隶属运入真实塔并应用塔的向外读法。
+候选塔的每个元素都被读作标准条目，方法是把成员关系运入真实塔并应用塔的向外读法。
 <!--ja-->
 候補の塔のすべての要素は、正準な項目として読まれる。所属を実際の塔の中へ運び、塔の外向きの読み出しを適用することによるものである。
 <!--/-->
@@ -1557,7 +1557,7 @@ Every member of the candidate tower is read as a standard entry, by transporting
 <!--en-->
 The tower-holding conclusion is the triple of clauses: the base clause, the upward-closure clause, and the downward-decomposition clause. The base clause is proved by presenting the zero-th standard entry and its membership.
 <!--zh-->
-塔持有结论是三个子句的三元组：基项子句、向上闭合子句与向下分解子句。基项子句的证明：呈现第零条标准条目及其隶属。
+塔持有结论是三个子句的三元组：基项子句、向上闭合子句与向下分解子句。基项子句的证明：呈现第零条标准条目及其成员关系。
 <!--ja-->
 塔を保持する結論は、三つの条項の組である。基底の条項、上向きの閉じの条項、そして下向きの分解の条項である。基底の条項は、零番目の正準な項目とその所属を提示することで証明される。
 <!--/-->
@@ -1573,7 +1573,7 @@ The tower-holding conclusion is the triple of clauses: the base clause, the upwa
 <!--en-->
 The zero-th entry is filled with its numeral equation, its membership, and the single-empty-set inward reading applied to the presented environment. The numeral equation is transported from the candidate zero-numeral slot.
 <!--zh-->
-第零条目以其数码等式、其隶属以及施于所呈现环境的单点空集向内读式填充。数码等式从候选零数码槽运输而来。
+第零条目以其数码等式、其成员关系以及施于所呈现环境的单点空集向内读式填充。数码等式从候选零数码槽运输而来。
 <!--ja-->
 零番目の項目は、その数項の等式と所属と、提示された環境に適用した一つの空集合の条項の内向きの読み出しで満たされる。数項の等式は、候補の零の数項の枠から運ばれる。
 <!--/-->
@@ -1696,7 +1696,7 @@ For the successor case, `entryS j` supplies the canonical predecessor entry in `
 <!--en-->
 Eliminating the truncated result of `read` into the satisfaction proposition completes downward decomposition for every member of the real tower. Together with the base and upward clauses, this proves `towerAt E w N0` whenever `E`, `w`, and `N0` are aligned with `Tower.tower W`, `W`, and `# 0`. The conclusion establishes the bounded description for the real tower while retaining the coded ordered-pair boundary of the formula.
 <!--zh-->
-把 `read` 的截断结果消去到满足命题中，便对真实环境塔的每个成员完成向下分解。结合基项与向上闭合子句可知：只要 `E`、`w`、`N0` 分别与 `Tower.tower W`、`W`、`# 0` 对齐，`towerAt E w N0` 就得到满足。该结论证明真实环境塔满足其有界描述，同时保留公式只控制码化有序对接口这一边界。
+把 `read` 的截断结果消去到满足命题中，便对真实环境塔的每个元素完成向下分解。结合基项与向上闭合子句可知：只要 `E`、`w`、`N0` 分别与 `Tower.tower W`、`W`、`# 0` 对齐，`towerAt E w N0` 就得到满足。该结论证明真实环境塔满足其有界描述，同时保留公式只控制码化有序对接口这一边界。
 <!--ja-->
 `read` の切り詰められた結果を充足命題へ除去すると、実際の塔のすべての要素について下向き分解が完成する。基底と上向き閉包の条項を合わせれば、`E`、`w`、`N0` がそれぞれ `Tower.tower W`、`W`、`# 0` と同定されるとき、`towerAt E w N0` が充足される。この結論は、論理式が符号化順序対のインターフェースだけを制御するという境界を保ったまま、実際の塔が有界記述を満たすことを示す。
 <!--/-->
@@ -1714,7 +1714,7 @@ The environment tower now has both forms needed later: an actual constructible s
 <!--zh-->
 ## 回顾
 
-环境塔现在具备后文所需的两种形式：一方面，它是一个实际的可构造集合，其成员恰为标准有序对 `(# n, envSet W n)`；另一方面，它有一条 Δ₀ 公式，可逐个相邻元数读取和生成这些码化有序对条目。两个方向使用不同的归纳：读取条目时以隶属归纳排除无穷下降，生成全部标准条目时则对自然数作普通归纳。恢复出的元数与分解始终留在命题截断之下，而该公式不对任意候选集合中可能存在的非有序对成员作出断言。
+环境塔现在具备后文所需的两种形式：一方面，它是一个实际的可构造集合，其元素恰为标准有序对 `(# n, envSet W n)`；另一方面，它有一条 Δ₀ 公式，可逐个相邻元数读取和生成这些码化有序对条目。两个方向使用不同的归纳：读取条目时以成员关系归纳排除无穷下降，生成全部标准条目时则对自然数作普通归纳。恢复出的元数与分解始终留在命题截断之下，而该公式不对任意候选集合中可能存在的非有序对元素作出断言。
 <!--ja-->
 ## まとめ
 

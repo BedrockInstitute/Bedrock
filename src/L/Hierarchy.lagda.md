@@ -28,7 +28,7 @@ module L.Hierarchy {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 open import FOL.Syntax using ( Formula )
 import FOL.Absoluteness
 import FOL.ZFModel
@@ -56,7 +56,7 @@ functional and exact, then collected into a constructible set whose members are
 precisely the earlier stages.
 <!--zh-->
 
-`L` 内的一阶图记录外部的可构造层级，直至给定序数。表中的值与外部层级逐一对照，被证明具有函数性且精确；随后这些对被收集成一个可构造集合，其成员恰是此前各层。
+`L` 内的一阶图记录外部的可构造层级，直至给定序数。表中的值与外部层级逐一对照，被证明具有函数性且精确；随后这些对被收集成一个可构造集合，其元素恰是此前各层。
 <!--ja-->
 
 `L` 内の一階のグラフは、指定した順序数までの外部の構成可能階層を記録する。表の値を外部の塔と照らして関数的かつ正確であると示し、そののち、これらの対を、それより前の段階をちょうど要素とする構成可能集合へ集める。
@@ -73,7 +73,7 @@ Correct and complete tables are exactly what the step condition of the graph
 reads and what it can be written from, so the pair of lemmas connecting the
 step with the tower serves both elimination and introduction.
 <!--zh-->
-本章构造内部层级。对层级中的序数 `α`，`hierL`{.Agda} 在 `α` 处是 `L` 的一个元素，其成员恰是有序对「低于 `α` 的序数 `β` 与塔在该处的取值 `Lset β`」。全章重复同一个模式。**表**是有序对之集；说它在集合 `B` 上**正确**，指它在 `B` 以下记录的每个取值都是元层面的塔在那里的取值；说它**完备**，指它在以下的每个实参处都记录了取值。正确且完备的表，恰是图的步进条件所读出的内容，也恰是步进条件据以写下的内容；因此连接步进与塔的那对引理同时服务于消去与引入。
+本章构造内部层级。对层级中的序数 `α`，`hierL`{.Agda} 在 `α` 处是 `L` 的一个元素，其元素恰是有序对「低于 `α` 的序数 `β` 与塔在该处的取值 `Lset β`」。全章重复同一个模式。**表**是有序对之集；说它在集合 `B` 上**正确**，指它在 `B` 以下记录的每个取值都是元层面的塔在那里的取值；说它**完备**，指它在以下的每个实参处都记录了取值。正确且完备的表，恰是图的步进条件所读出的内容，也恰是步进条件据以写下的内容；因此连接步进与塔的那对引理同时服务于消去与引入。
 <!--ja-->
 本章は内部の階層を構成する。階層の順序数 `α` に対し、`hierL`{.Agda} の `α` での値は `L` の要素であり、その要素は「`α` の下の順序数 `β` と塔の値 `Lset β`」の順序対ちょうどである。一つのパターンが章全体で繰り返される。**表**とは順序対の集合であり、集合 `B` の下で記録する値がすべてメタレベルの塔のそこでの値であるとき、`B` の上で**正しい**と言い、その下のすべての入力で値を記録しているとき**完備**と言う。正しくて完備な表こそ、グラフのステップ条件が読むものであり、そこから書き下せるものでもある。だからステップと塔を結ぶ補題の組が、消去と導入の両方に仕える。
 <!--/-->
@@ -95,7 +95,7 @@ use; the constructible structure `𝒮ʟ`{.Agda} contributes the carrier `S`, wh
 elements are sets of the hierarchy together with a proof that they are
 constructible, so every carrier element `x` has an underlying set `fst x`.
 <!--zh-->
-这里有两个结构。环境层级贡献其结构 `𝒮ᵥ`{.Agda}，本章将使用它的隶属归纳与外延性；可构造结构 `𝒮ʟ`{.Agda} 贡献载体 `S`，其元素是层级中的集合连同「其可构造」的证明，故每个载体元素 `x` 都有底层集合 `fst x`。
+这里有两个结构。环境层级贡献其结构 `𝒮ᵥ`{.Agda}，本章将使用它的成员关系归纳与外延性；可构造结构 `𝒮ʟ`{.Agda} 贡献载体 `S`，其元素是层级中的集合连同「其可构造」的证明，故每个载体元素 `x` 都有底层集合 `fst x`。
 <!--ja-->
 ここでは二つの構造が現れる。周囲の階層はその構造 `𝒮ᵥ`{.Agda} を与え、本章はその所属の帰納と外延性を用いる。構成可能な構造 `𝒮ʟ`{.Agda} は台 `S` を与える。その要素は、階層の集合に「それが構成可能である」証明を添えたものであり、だから各台の要素 `x` には基礎の集合 `fst x` がある。
 <!--/-->
@@ -106,7 +106,7 @@ membership, extensionality of sets, and the ordered pair `pr`{.Agda} with the
 injectivity that recovers its components. The pair lives at the level of the
 hierarchy, which is where the recorded entries of a table live too.
 <!--zh-->
-层级给出全章使用的三件工具：沿隶属的归纳、集合的外延性，以及有序对 `pr`{.Agda} 连同找回其分量的单射性。这个对住在层级那一层，而表的被记录条目也住在那里。
+层级给出全章使用的三件工具：沿成员关系的归纳、集合的外延性，以及有序对 `pr`{.Agda} 连同找回其分量的单射性。这个对住在层级那一层，而表的被记录条目也住在那里。
 <!--ja-->
 階層は、章を通して使う三つの道具を与える。所属に沿う帰納、集合の外延性、そして順序対 `pr`{.Agda} と、その成分を取り戻す単射性である。この対は階層のレベルにあり、表の記録された項目も同じレベルにある。
 <!--/-->
@@ -120,7 +120,7 @@ constructibility is carried along membership. The tower is indexed by
 ordinals, which are sets of the hierarchy, never by universe levels, which are
 size indices of types.
 <!--zh-->
-可构造一侧给出塔 `Lset`{.Agda}，它把层级的一个序数送到该处的可构造层；可定义幂集 `𝒟ₒ`{.Agda}；两条隶属读式 `Lset-in`{.Agda} 与 `Lset-out`{.Agda}；序数性 `IsOrd`{.Agda}；以及「可构造性沿隶属传递」这一事实。塔由序数索引，序数是层级的集合；从不由宇宙层级索引，后者是类型的大小指标。
+可构造一侧给出塔 `Lset`{.Agda}，它把层级的一个序数送到该处的可构造层；可定义幂集 `𝒟ₒ`{.Agda}；两条成员关系读式 `Lset-in`{.Agda} 与 `Lset-out`{.Agda}；序数性 `IsOrd`{.Agda}；以及「可构造性沿成员关系传递」这一事实。塔由序数索引，序数是层级的集合；从不由宇宙层级索引，后者是类型的大小指标。
 <!--ja-->
 構成可能の側からは、塔 `Lset`{.Agda} が来る。これは階層の順序数を、そこでの構成可能段階へ送る。ほかに、定義可能冪集合 `𝒟ₒ`{.Agda}、二つの所属の読み `Lset-in`{.Agda} と `Lset-out`{.Agda}、順序数性 `IsOrd`{.Agda}、そして「構成可能性が所属に沿って伝わる」事実である。塔の添字は順序数、すなわち階層の集合であり、型の大きさの添字である宇宙レベルでは決してない。
 <!--/-->
@@ -132,7 +132,7 @@ definable powerset of a constructible set is constructible; and replacement is
 available inside `L`, in a form that accepts a value known only to exist
 uniquely.
 <!--zh-->
-另有三件事实支撑全章：序数的成员是序数；一个层可以呈现为 `L` 的元素，记作 `LsetS`{.Agda}，且可构造集合的可定义幂集仍可构造；以及 `L` 内部可用替换，其形式接受「仅知唯一存在」的取值。
+另有三件事实支撑全章：序数的元素是序数；一个层可以呈现为 `L` 的元素，记作 `LsetS`{.Agda}，且可构造集合的可定义幂集仍可构造；以及 `L` 内部可用替换，其形式接受「仅知唯一存在」的取值。
 <!--ja-->
 さらに三つの事実が章を支える。順序数の要素は順序数であること。段階は `L` の要素として提示でき、それを `LsetS`{.Agda} と書き、構成可能集合の定義可能冪集合はまた構成可能であること。そして `L` の内部では置換が使え、その形は「一意に存在するとだけ分かっている値」を受け入れるものである。
 <!--/-->
@@ -164,7 +164,7 @@ injection and elimination, the fact that a pair with a propositional second
 component is equal when its first components are, and the conversion of a
 pointwise equivalence of memberships into a path of sets.
 <!--zh-->
-命题机制是常用的那一套：截断的存在、其注入与消去、「第二分量为命题的序对在第一分量相等时即相等」，以及把隶属的逐点等价转成集合路径的操作。
+命题机制是常用的那一套：截断的存在、其注入与消去、「第二分量为命题的序对在第一分量相等时即相等」，以及把成员关系的逐点等价转成集合路径的操作。
 <!--ja-->
 命題の機構はいつものものである。切り詰められた存在、その注入と消去、第二成分が命題である対が第一成分の等しさで等しくなること、そして所属の各点での同値を集合のパスへ変える操作である。
 <!--/-->
@@ -174,7 +174,7 @@ The hierarchy itself appears as a type: its elements are the sets the chapter
 tabulates, its membership is the relation the three conditions speak about,
 and its h-setness makes equality of two tabulated sets a proposition.
 <!--zh-->
-层级自身以类型的身份出现：其元素正是本章制表的对象，其隶属是三个条件所谈论的关系，而其 h-集合性使两个被制表集合的相等成为命题。
+层级自身以类型的身份出现：其元素正是本章制表的对象，其成员关系是三个条件所谈论的关系，而其 h-集合性使两个被制表集合的相等成为命题。
 <!--ja-->
 階層そのものが型として現れる。その要素は本章が表にする集合であり、その所属は三つの条件が語る関係であり、その h-集合性により、表にされた二つの集合の等しさは命題になる。
 <!--/-->
@@ -195,7 +195,7 @@ axioms.
 <!--/-->
 
 ```agda
-open hPropStructure 𝒮ʟ
+open hPropView 𝒮ʟ
 
 module ModelL = FOL.ZFModel 𝒮ʟ
 open ModelL using ( SetOf )
@@ -266,7 +266,7 @@ Correctness is a statement about recorded entries. If the pair of an argument
 of the hierarchy; the table `h` is a carrier element, and `fst h` is the set it
 presents.
 <!--zh-->
-正确性是关于被记录条目的陈述。若「`B` 以下的实参 `c` 与某个 `z` 组成的对」是表的一条目，则 `z` 就是塔在 `c` 处的取值。隶属 `fst c ∈ B` 是层级中的隶属，因为 `B` 是层级的集合；表 `h` 是载体元素，`fst h` 是它呈现的那个集合。
+正确性是关于被记录条目的陈述。若「`B` 以下的实参 `c` 与某个 `z` 组成的对」是表的一条目，则 `z` 就是塔在 `c` 处的取值。成员关系 `fst c ∈ B` 是层级中的成员关系，因为 `B` 是层级的集合；表 `h` 是载体元素，`fst h` 是它呈现的那个集合。
 <!--ja-->
 正しさは、記録された項目についての主張である。`B` の下の入力 `c` とある `z` の対が表の項目なら、`z` は塔の `c` での値である。所属 `fst c ∈ B` は階層での所属である。`B` が階層の集合だからである。表 `h` は台の要素であり、`fst h` がそれが提示する集合である。
 <!--/-->
@@ -323,7 +323,7 @@ a step witness, and `above` turns a step witness into a member of the tower.
 <!--zh-->
 ## 与外部层级对照的步骤
 
-本节把上一章的步进条件与塔连接起来。实参 `b` 处的步进，沿 `b` 以下的诸实参 `c` 与在其处记录的诸取值 `w`，收集 `w` 的可定义幂集的成员。塔在 `b` 处收集的成员与之相同，只是把被记录的 `w` 换成 `Lset c`。三个私有事实为对照做准备：`ok` 解除旁条件 `PowOK`{.Agda}，`below` 把塔的一次分解变成步进见证，`above` 把步进见证变成塔的成员。
+本节把上一章的步进条件与塔连接起来。实参 `b` 处的步进，沿 `b` 以下的诸实参 `c` 与在其处记录的诸取值 `w`，收集 `w` 的可定义幂集的元素。塔在 `b` 处收集的元素与之相同，只是把被记录的 `w` 换成 `Lset c`。三个私有事实为对照做准备：`ok` 解除旁条件 `PowOK`{.Agda}，`below` 把塔的一次分解变成步进见证，`above` 把步进见证变成塔的元素。
 <!--ja-->
 ## 外部の階層と照らすステップ
 
@@ -405,7 +405,7 @@ transport lines the two facts up on the same value.
 stage at some `δ` below `b`. The witness must name an argument below the
 argument and a recorded value whose powerset contains `z`.
 <!--zh-->
-`below` 把塔的一次分解变成步进见证。塔在 `b` 处分解它的每个成员：成员 `z` 坐在某个 `δ` (`b` 以下) 处的层的可定义幂集里。见证须指名一个低于实参的实参，以及一个其幂集含有 `z` 的被记录取值。
+`below` 把塔的一次分解变成步进见证。塔在 `b` 处分解它的每个元素：元素 `z` 坐在某个 `δ` (`b` 以下) 处的层的可定义幂集里。见证须指名一个低于实参的实参，以及一个其幂集含有 `z` 的被记录取值。
 <!--ja-->
 `below` は塔の分解をステップの証人に変える。`b` での塔は各要素を分解する。要素 `z` は、`b` の下のある `δ` での段階の定義可能冪集合に坐っている。証人が名指すべきは、入力の下の入力と、その冪集合が `z` を含むような記録された値である。
 <!--/-->
@@ -440,7 +440,7 @@ follows from that of `b`, members of ordinals being ordinals; and `δ` is
 constructible because it belongs to the constructible set underlying the
 argument. The carrier element `d` packages the set with that certificate.
 <!--zh-->
-两个簿记事实完成构造。`δ` 的序数性由 `b` 的序数性而来，因为序数的成员是序数；`δ` 可构造，因为它属于实参底层那个可构造集合。载体元素 `d` 把集合与这份证书打包在一起。
+两个簿记事实完成构造。`δ` 的序数性由 `b` 的序数性而来，因为序数的元素是序数；`δ` 可构造，因为它属于实参底层那个可构造集合。载体元素 `d` 把集合与这份证书打包在一起。
 <!--ja-->
 二つの簿記の事実が構成を完成させる。`δ` の順序数性は `b` の順序数性から従う。順序数の要素は順序数だからである。そして `δ` は構成可能である。入力の基礎にある構成可能集合に属するからである。台の要素 `d` は、集合とこの証明書をひとまとめにする。
 <!--/-->
@@ -455,7 +455,7 @@ argument. The carrier element `d` packages the set with that certificate.
 witness names an argument `c` below the argument, a recorded value `w` there,
 and a membership of `z` in the definable powerset of `w`.
 <!--zh-->
-`above` 是镜像：步进见证把一个成员放进塔里。见证指名低于实参的实参 `c`、其处被记录的取值 `w`，以及 `z` 属于 `w` 之可定义幂集的成员资格。
+`above` 是镜像：步进见证把一个元素放进塔里。见证指名低于实参的实参 `c`、其处被记录的取值 `w`，以及 `z` 属于 `w` 之可定义幂集的成员关系事实。
 <!--ja-->
 `above` は鏡像である。ステップの証人が要素を塔の中へ置く。証人が名指すのは、入力の下の入力 `c`、そこで記録された値 `w`、そして `z` が `w` の定義可能冪集合に属することである。
 <!--/-->
@@ -505,7 +505,7 @@ Two sets of the hierarchy with the same members are equal, and this is
 extensionality of the ambient hierarchy. The proof exhibits the pointwise
 equivalence `pt` and lets extensionality assemble the path.
 <!--zh-->
-层级中成员相同的两个集合相等，这是环境层级的外延性。证明给出逐点等价 `pt`，把路径的组装交给外延性。
+层级中元素相同的两个集合相等，这是环境层级的外延性。证明给出逐点等价 `pt`，把路径的组装交给外延性。
 <!--ja-->
 階層の、同じ要素をもつ二つの集合は等しく、これが周囲の階層の外延性である。証明は各点の同値 `pt` を示し、パスの組み立てを外延性に任せる。
 <!--/-->
@@ -523,7 +523,7 @@ witness, because the step condition is satisfied; the witness is eliminated
 into the proposition that `x` belongs to the tower, and `above` proves that
 proposition from the witness.
 <!--zh-->
-向前方向：被记录取值的成员 `x` 给出一个步进见证，因为步进条件成立；该见证被消去到「`x` 属于塔」这条命题中，而 `above` 由见证证明这条命题。
+向前方向：被记录取值的元素 `x` 给出一个步进见证，因为步进条件成立；该见证被消去到「`x` 属于塔」这条命题中，而 `above` 由见证证明这条命题。
 <!--ja-->
 前向き：記録された値の要素 `x` は、ステップ条件が成立しているのでステップの証人を与える。証人は「`x` が塔に属する」という命題へ消去され、`above` が証人からその命題を証明する。
 <!--/-->
@@ -538,7 +538,7 @@ proposition from the witness.
 To apply `above`, `x` is needed as a carrier element; its constructibility
 follows from that of the recorded value, since `x` is a member of it.
 <!--zh-->
-要应用 `above`，须把 `x` 视为载体元素；其可构造性由被记录取值的可构造性而来，因为 `x` 是它的成员。
+要应用 `above`，须把 `x` 视为载体元素；其可构造性由被记录取值的可构造性而来，因为 `x` 是它的元素。
 <!--ja-->
 `above` を適用するには、`x` を台の要素として必要とする。その構成可能性は、記録された値の構成可能性から従う。`x` はその要素だからである。
 <!--/-->
@@ -556,7 +556,7 @@ stage below the argument whose definable powerset contains it. The
 decomposition is eliminated into the proposition that `x` belongs to the
 recorded value.
 <!--zh-->
-向后方向：塔分解它的每个成员 `x`，给出低于实参的一个层，其可定义幂集含有 `x`。该分解被消去到「`x` 属于被记录取值」这条命题中。
+向后方向：塔分解它的每个元素 `x`，给出低于实参的一个层，其可定义幂集含有 `x`。该分解被消去到「`x` 属于被记录取值」这条命题中。
 <!--ja-->
 後ろ向き：塔は各要素 `x` を分解し、その定義可能冪集合が `x` を含むような、入力の下の段階を示す。分解は「`x` が記録された値に属する」という命題へ消去される。
 <!--/-->
@@ -589,7 +589,7 @@ The decomposition is converted into a step witness by `below`, and the
 backward reading of the step condition, `StepAt-back`, turns the witness into
 membership in the recorded value.
 <!--zh-->
-分解经 `below` 变成步进见证，而步进条件的向后读式 `StepAt-back` 把见证变成对被记录取值的隶属。
+分解经 `below` 变成步进见证，而步进条件的向后读式 `StepAt-back` 把见证变成对被记录取值的成员关系。
 <!--ja-->
 分解は `below` によってステップの証人に変えられ、ステップ条件の後ろ向きの読み `StepAt-back` が、証人を記録された値への所属に変える。
 <!--/-->
@@ -604,7 +604,7 @@ For each member, membership in the recorded value and membership in the tower
 are the same proposition; the two directions give the equivalence, and
 extensionality promotes it member by member to the equality of sets.
 <!--zh-->
-对每个成员而言，属于被记录取值与属于塔是同一命题；两个方向给出等价，外延性再逐成员把它提升为集合的相等。
+对每个元素而言，属于被记录取值与属于塔是同一命题；两个方向给出等价，外延性再逐元素把它提升为集合的相等。
 <!--ja-->
 各要素について、記録された値への所属と塔への所属は同じ命題である。二つの方向が同値を与え、外延性がそれを要素ごとに集合の等しさへ引き上げる。
 <!--/-->
@@ -637,7 +637,7 @@ The step condition is introduced from its two directions, existence of a
 witness for each member and soundness of every witness, with `ok` supplying
 the side condition once for both.
 <!--zh-->
-步进条件由它的两个方向引入：每个成员都有见证，且每个见证都可靠；旁条件由 `ok` 一并供给。
+步进条件由它的两个方向引入：每个元素都有见证，且每个见证都可靠；旁条件由 `ok` 一并供给。
 <!--ja-->
 ステップ条件は、その二方向から導入される。各要素への証人の存在と、すべての証人の健全性である。横条件は `ok` が両方のために一度に供給する。
 <!--/-->
@@ -654,7 +654,7 @@ A member `z` of the recorded value is first transported into the tower along
 the identification `q`, then decomposed by the tower, and `below` converts the
 decomposition into a witness, which only has to exist.
 <!--zh-->
-被记录取值的成员 `z` 先沿同认 `q` 运入塔中，再由塔分解，而 `below` 把分解变成见证；见证只需存在即可。
+被记录取值的元素 `z` 先沿同认 `q` 运入塔中，再由塔分解，而 `below` 把分解变成见证；见证只需存在即可。
 <!--ja-->
 記録された値の要素 `z` は、まず同定 `q` に沿って塔へ運ばれ、塔によって分解される。`below` がその分解を証人に変える。証人は存在すれば十分である。
 <!--/-->
@@ -705,7 +705,7 @@ therefore has a value there; and the induction hypothesis identifies it with the
 tower's. That value is produced only merely, which is enough, because what is
 being proved of it is a membership.
 <!--zh-->
-归纳的步进就是 `step-Lset`{.Agda} 施于被记录的那个取值。实参以下的正确性**就是**归纳假设，一字不差。实参以下的完备性则是逼近的取值子句被花掉之处：比这个实参更低的实参落在逼近的定义域以下，因为定义域是序数、而序数传递；逼近于是在那里有取值；而归纳假设把它与塔的取值认同。那个取值只是「仅仅」被拿出来的，而这已经够了，因为要对它证的是一条隶属关系。
+归纳的步进就是 `step-Lset`{.Agda} 施于被记录的那个取值。实参以下的正确性**就是**归纳假设，一字不差。实参以下的完备性则是逼近的取值子句被花掉之处：比这个实参更低的实参落在逼近的定义域以下，因为定义域是序数、而序数传递；逼近于是在那里有取值；而归纳假设把它与塔的取值认同。那个取值只是「仅仅」被拿出来的，而这已经够了，因为要对它证的是一条成员关系。
 <!--ja-->
 帰納のステップは、記録された値に対する `step-Lset`{.Agda} である。入力の下での正しさは、そのまま逐語的に帰納の仮定である。入力の下での完備さを使うのが、近似の値の条項を費やす場所である。この入力より下の入力は近似の定義域の下にもある。定義域は順序数であり、順序数は推移的だからである。だから近似はそこで値を持ち、帰納の仮定がそれを塔の値と同一視する。その値は「単に」取り出されるだけで十分である。それについて証明するのは一つの所属だからである。
 <!--/-->
@@ -732,7 +732,7 @@ is constructible is carried because the table's entries are carrier elements,
 whose first components are constructible sets; the induction will supply it
 from membership in an ordinal.
 <!--zh-->
-动机 `Value u` 说：对可构造的 `u`，表中第一分量为 `u` 的每条记录都记录塔在 `u` 处的取值。「`u` 可构造」这一前提之所以被携带，是因为表的条目是载体元素，其第一分量是可构造集合；归纳将从某个序数中的隶属供给这一前提。
+动机 `Value u` 说：对可构造的 `u`，表中第一分量为 `u` 的每条记录都记录塔在 `u` 处的取值。「`u` 可构造」这一前提之所以被携带，是因为表的条目是载体元素，其第一分量是可构造集合；归纳将从某个序数中的成员关系供给这一前提。
 <!--ja-->
 動機 `Value u` はこう言う。構成可能な `u` に対し、表の、第一成分が `u` である項目はすべて、塔の `u` での値を記録している、と。「`u` が構成可能」という前提が帯びられるのは、表の項目が台の要素で、その第一成分が構成可能集合だからである。帰納は、順序数への所属からこの前提を供給する。
 <!--/-->
@@ -750,7 +750,7 @@ recorded value is in question. Membership induction is available in the
 hierarchy directly: to prove the motive of `u`, prove it of every member of
 `u`. The ordinality hypothesis on `a` is consumed inside the induction step.
 <!--zh-->
-定理对 `x` 的底层集合作归纳，`x` 正是所问其被记录取值的那个实参。隶属归纳在层级中直接可用：要证 `u` 的动机，就证 `u` 的每个成员的动机。关于 `a` 的序数性假设将在归纳步内被消耗。
+定理对 `x` 的底层集合作归纳，`x` 正是所问其被记录取值的那个实参。成员关系归纳在层级中直接可用：要证 `u` 的动机，就证 `u` 的每个元素的动机。关于 `a` 的序数性假设将在归纳步内被消耗。
 <!--ja-->
 定理は、`x` の基礎の集合の上で帰納を実行する。`x` は、記録された値が問題になっている入力である。所属に沿う帰納は階層で直接使える。`u` の動機を証明するには、`u` のすべての要素の動機を証明する。`a` についての順序数性の仮定は、帰納のステップの内側で消費される。
 <!--/-->
@@ -802,7 +802,7 @@ step at all.
 Ordinality of `u` follows from ordinality of `a`, since `u` is a member of
 `a`; this is what the step will need about the argument it stands at.
 <!--zh-->
-`u` 的序数性由 `a` 的序数性而来，因为 `u` 是 `a` 的成员；这正是该步所需要的关于其所处实参的全部。
+`u` 的序数性由 `a` 的序数性而来，因为 `u` 是 `a` 的元素；这正是该步所需要的关于其所处实参的全部。
 <!--ja-->
 `u` の順序数性は `a` の順序数性から従う。`u` は `a` の要素だからである。ステップがその立つ入力について必要とするのは、これである。
 <!--/-->
@@ -818,7 +818,7 @@ a member `c` of `u`, a recorded pair with first component `c` records the
 tower at `c`. The constructibility of `c` arrives with the induction, which
 supplies it from membership.
 <!--zh-->
-`u` 以下的正确性就是归纳假设，按原样使用：对 `u` 的成员 `c`，第一分量为 `c` 的被记录对所记录的是塔在 `c` 处的取值。`c` 的可构造性随归纳而来，归纳由隶属供给它。
+`u` 以下的正确性就是归纳假设，按原样使用：对 `u` 的元素 `c`，第一分量为 `c` 的被记录对所记录的是塔在 `c` 处的取值。`c` 的可构造性随归纳而来，归纳由成员关系供给它。
 <!--ja-->
 `u` の下での正しさは、そのまま逐語的に帰納の仮定である。`u` の要素 `c` に対し、第一成分が `c` である記録された対は、`c` での塔を記録する。`c` の構成可能性は帰納とともに届く。帰納が所属からそれを供給するからである。
 <!--/-->
@@ -1266,7 +1266,7 @@ and the form its two readings consume.
 <!--zh-->
 ## 内部层级
 
-`Recorded`{.Agda} 为内部层级在 `α` 处要收集的类命名：底层集合低于 `α` 的实参 `c`，连同塔在 `c` 处的取值组成的对，此外别无他物。`IsHier`{.Agda} 说模型的某个集合逐成员地实现这个类：对每个载体元素 `z`，属于该集合恰当 `z` 呈现为这样的对。这条陈述的两个方向都有使用。`HierOf`{.Agda} 把实现集合连同其规格收为一对；构造所建造的是这个形式，两条读式所消费的也是这个形式。
+`Recorded`{.Agda} 为内部层级在 `α` 处要收集的类命名：底层集合低于 `α` 的实参 `c`，连同塔在 `c` 处的取值组成的对，此外别无他物。`IsHier`{.Agda} 说模型的某个集合逐元素地实现这个类：对每个载体元素 `z`，属于该集合恰当 `z` 呈现为这样的对。这条陈述的两个方向都有使用。`HierOf`{.Agda} 把实现集合连同其规格收为一对；构造所建造的是这个形式，两条读式所消费的也是这个形式。
 <!--ja-->
 ## 内部の階層
 
@@ -1291,9 +1291,9 @@ Ordinality of each argument comes from `mem-ord`{.Agda}, and the functionality
 requirement is met through `mereFunct`{.Agda}, because the value at an argument
 is a construction.
 <!--zh-->
-两条读式都针对一个由其规格抵达的**变元**实现集合，这样即将到来的构造就可以把它们应用于自己正在建造的集合。向外读取时，对某个成员应用层级配对的单射性：实现集合的一条目指名低于 `B` 的实参与塔在该处的取值。向内写入时，把正準对呈现为模型的元素，这由模型自身的配对给出；它还需要实参的序数性，否则根本无法指称塔在该处的取值。
+两条读式都针对一个由其规格抵达的**变元**实现集合，这样即将到来的构造就可以把它们应用于自己正在建造的集合。向外读取时，对某个元素应用层级配对的单射性：实现集合的一条目指名低于 `B` 的实参与塔在该处的取值。向内写入时，把正準对呈现为模型的元素，这由模型自身的配对给出；它还需要实参的序数性，否则根本无法指称塔在该处的取值。
 
-然后是构造，在序数上作一次沿成员的归纳。在 `α` 处，成对的那个图在以下的每个实参上都是函数性的：归纳假设给出直到那个实参为止的层级，`graph-table`{.Agda} 把它变成对塔之图的满足，而 `Lset-only`{.Agda} 说别的东西都不满足它。替换把这些对收集成模型的一个集合。每个实参的序数性取自 `mem-ord`{.Agda}；函数性要求由 `mereFunct`{.Agda} 满足，因为某个实参处的取值是一个构造。
+然后是构造，在序数上作一次沿元素的归纳。在 `α` 处，成对的那个图在以下的每个实参上都是函数性的：归纳假设给出直到那个实参为止的层级，`graph-table`{.Agda} 把它变成对塔之图的满足，而 `Lset-only`{.Agda} 说别的东西都不满足它。替换把这些对收集成模型的一个集合。每个实参的序数性取自 `mem-ord`{.Agda}；函数性要求由 `mereFunct`{.Agda} 满足，因为某个实参处的取值是一个构造。
 <!--ja-->
 二つの読み出しは、仕様を通して届く**変数**の実現集合の上に立つ。これから作る構成が、自分の作っている集合にそれを適用できるようにするためである。外向きの読みは、階層の対の単射性をある要素に適用する。実現集合の項目は、`B` の下の入力と塔のそこでの値を名指す。内向きの読みは、正準な対をモデルの要素として示す。これはモデル自身の対の構成が与えるが、入力の順序数性も要る。それがなければ、塔のそこでの値をそもそも名指せないからである。
 
@@ -1329,7 +1329,7 @@ the same proposition. Neither direction is dropped, because each is used:
 membership without recordedness would let strangers in, recordedness without
 membership would leave pairs out.
 <!--zh-->
-`IsHier B h` 说 `h` 所呈现的集合逐成员地实现被记录的类：在每个 `z` 处，属于该集合与被记录是同一命题。两个方向都不丢弃，因为各有其用：只有隶属而无被记录，会放进陌生者；只有被记录而无隶属，会漏掉应有的对。
+`IsHier B h` 说 `h` 所呈现的集合逐元素地实现被记录的类：在每个 `z` 处，属于该集合与被记录是同一命题。两个方向都不丢弃，因为各有其用：只有成员关系而无被记录，会放进陌生者；只有被记录而无成员关系，会漏掉应有的对。
 <!--ja-->
 `IsHier B h` は、`h` が提示する集合が、記録されたクラスを要素ごとに実現することを言う。各 `z` で、集合への所属と記録されていることは同じ命題である。どちらの方向も捨てられない。それぞれに使い道があるからである。所属だけがあればよしとすると、よそ者が入る。記録だけがあればよしとすると、あるべき対が抜け落ちる。
 <!--/-->
@@ -1377,7 +1377,7 @@ Reading out: if the pair of `c` and `z` is a member of the realizing set, then
 `c` lies below `B` and `z` is the tower at `c`. Both conclusions follow from
 the specification applied at the member.
 <!--zh-->
-向外读：若 `c` 与 `z` 组成的对是实现集合的成员，则 `c` 低于 `B`，且 `z` 是塔在 `c` 处的取值。两个结论都由规格施加于该成员而来。
+向外读：若 `c` 与 `z` 组成的对是实现集合的元素，则 `c` 低于 `B`，且 `z` 是塔在 `c` 处的取值。两个结论都由规格施加于该元素而来。
 <!--ja-->
 外向きの読みである。`c` と `z` の対が実現集合の要素なら、`c` は `B` の下にあり、`z` は塔の `c` での値である。どちらの結論も、その要素に仕様を適用したことから従う。
 <!--/-->
@@ -1395,7 +1395,7 @@ recorded proposition, which is a truncated existence; the target of the
 elimination is a pair of propositions, hence a proposition, so the witness may
 be consumed here.
 <!--zh-->
-该成员的隶属沿规格被运进被记录命题，而那是一条截断的存在；消去的目标是一对命题构成的命题，因此可以在这里消耗见证。
+该元素的成员关系沿规格被运进被记录命题，而那是一条截断的存在；消去的目标是一对命题构成的命题，因此可以在这里消耗见证。
 <!--ja-->
 その要素の所属は、仕様に沿って記録の命題へ運ばれる。それは切り詰められた存在である。消去の対象は命題の対、したがって命題なので、証人をここで消費してかまわない。
 <!--/-->
@@ -1411,7 +1411,7 @@ The member itself must be named as a carrier element: the ordered pair of the
 underlying sets is constructible, because it belongs to the constructible set
 presented by `h`.
 <!--zh-->
-成员自身也须被命名为载体元素：底层集合的有序对可构造，因为它属于 `h` 所呈现的可构造集合。
+元素自身也须被命名为载体元素：底层集合的有序对可构造，因为它属于 `h` 所呈现的可构造集合。
 <!--ja-->
 その要素自身も、台の要素として名指す必要がある。基礎の集合の順序対は構成可能である。`h` が提示する構成可能集合に属するからである。
 <!--/-->
@@ -1432,7 +1432,7 @@ membership into `c` being below `B`, and the second components identify `z`
 with the tower at `d`, which the first identification turns into the tower at
 `c`.
 <!--zh-->
-被记录命题给出低于 `B` 的 `d`，且该成员等于 `d` 与塔在 `d` 处取值组成的对。层级配对的单射性拆开这条等式：第一分量的等同把 `c` 同认于 `d`，从而把隶属搬成「`c` 低于 `B`」；第二分量的等同把 `z` 同认于塔在 `d` 处的取值，再经第一等同变成塔在 `c` 处的取值。
+被记录命题给出低于 `B` 的 `d`，且该元素等于 `d` 与塔在 `d` 处取值组成的对。层级配对的单射性拆开这条等式：第一分量的等同把 `c` 同认于 `d`，从而把成员关系搬成「`c` 低于 `B`」；第二分量的等同把 `z` 同认于塔在 `d` 处的取值，再经第一等同变成塔在 `c` 处的取值。
 <!--ja-->
 記録された命題は、`B` の下の `d` と、その要素が「`d` と塔の `d` での値」の対に等しいことを示す。階層の対の単射性がこの等式を分解する。第一成分の同定は `c` を `d` と同一視し、所属を「`c` が `B` の下にある」ことへ移す。第二成分の同定は `z` を塔の `d` での値と同一視し、最初の同定がそれを塔の `c` での値へ変える。
 <!--/-->
@@ -1451,7 +1451,7 @@ Reading in: the canonical entry, the model's own pair of `c` with the tower at
 canonical pair is a witness of the recorded proposition with `c` itself as the
 argument, and the entry equals the model's pair by its defining reading.
 <!--zh-->
-向内读：典范条目，即模型自身的「`c` 与塔在 `c` 处取值」之对，是成员。规格说被记录的类被实现，而典范对正是被记录命题的见证 (以 `c` 本身为实参)；条目与模型之对相等，则由该对的定义读式给出。
+向内读：典范条目，即模型自身的「`c` 与塔在 `c` 处取值」之对，是元素。规格说被记录的类被实现，而典范对正是被记录命题的见证 (以 `c` 本身为实参)；条目与模型之对相等，则由该对的定义读式给出。
 <!--ja-->
 内向きの読みである。正準な項目、すなわちモデル自身の「`c` と塔の `c` での値」の対は、要素である。仕様は、記録されたクラスが実現されると言い、典型的な対は `c` 自身を入力とする記録の命題の証人である。そして項目がモデルの対と等しいことは、その対の定義の読みから得られる。
 <!--/-->
@@ -1508,7 +1508,7 @@ certificates, and the induction hypothesis: the hierarchy is already built at
 every member of `α`. It must return the hierarchy at `α` with its
 specification.
 <!--zh-->
-步进接收句子及其等式、序数 `α`、它的两张证书，以及归纳假设：`α` 的每个成员处的层级均已建成。它须返回 `α` 处的层级及其规格。
+步进接收句子及其等式、序数 `α`、它的两张证书，以及归纳假设：`α` 的每个元素处的层级均已建成。它须返回 `α` 处的层级及其规格。
 <!--ja-->
 ステップは、文とその等式、順序数 `α`、その二つの証明書、そして帰納の仮定を受け取る。`α` のすべての要素で階層はすでに作られている。ステップは、`α` での階層とその仕様を返さねばならない。
 <!--/-->
@@ -1563,7 +1563,7 @@ This is where the induction hypothesis is spent: it hands over the hierarchy at
 `graph-table`{.Agda} asks for. The environment carries the value, a fresh slot
 for the graph's own quantifier, and the argument.
 <!--zh-->
-塔之图在为 `α` 的成员 `c` 所记录的取值处成立。归纳假设正是在此被花掉：它交出 `c` 处的层级，那是实参 `c` 上一张正确且完备的表，恰是 `graph-table`{.Agda} 所要的。环境中载着取值、给图自身量词留的新槽，以及实参。
+塔之图在为 `α` 的元素 `c` 所记录的取值处成立。归纳假设正是在此被花掉：它交出 `c` 处的层级，那是实参 `c` 上一张正确且完备的表，恰是 `graph-table`{.Agda} 所要的。环境中载着取值、给图自身量词留的新槽，以及实参。
 <!--ja-->
 塔のグラフは、`α` の要素 `c` のために記録された値で成立する。帰納の仮定を費やすのはここである。仮定は `c` での階層、すなわち入力 `c` の上で正しくて完備な表を渡す。これは `graph-table`{.Agda} が求めるものそのものである。環境には、値と、グラフ自身の量化子のための新しい枠と、入力が載る。
 <!--/-->
@@ -1727,7 +1727,7 @@ specification compares, member by member, membership in the collected set with
 being a recorded pair; both directions of the comparison are proved separately
 and joined into the pointwise equivalence.
 <!--zh-->
-余下的是验证：收集所得的集合确实实现被记录的类。规格逐成员比较「属于收集集合」与「是被记录的对」；比较的两个方向分别证明，再合并为逐点等价。
+余下的是验证：收集所得的集合确实实现被记录的类。规格逐元素比较「属于收集集合」与「是被记录的对」；比较的两个方向分别证明，再合并为逐点等价。
 <!--ja-->
 残るのは、集められた集合が記録されたクラスを実現することの確認である。仕様は、要素ごとに、収集された集合への所属と、記録された対であることとを比較する。比較の両方向を別々に証明し、各点の同値へ組み合わせる。
 <!--/-->
@@ -1743,7 +1743,7 @@ Reading the collected membership out: the replacement specification turns it
 into a member `c` of `α` whose value at `c` satisfies the pair graph. The
 elimination is legitimate because the recorded class is a proposition.
 <!--zh-->
-把收集集合的隶属向外读：替换的规格把它变成 `α` 的一个成员 `c`，其取值在 `c` 处满足有序对图。消去是合法的，因为被记录的类是命题。
+把收集集合的成员关系向外读：替换的规格把它变成 `α` 的一个元素 `c`，其取值在 `c` 处满足有序对图。消去是合法的，因为被记录的类是命题。
 <!--ja-->
 収集された集合への所属を外へ読み出す。置換の仕様がそれを、`α` の要素 `c` で、`c` での値が順序対のグラフを満たすという形に変える。消去が正当なのは、記録されたクラスが命題だからである。
 <!--/-->
@@ -1829,7 +1829,7 @@ which is to say: the model now contains, for each of its ordinals, a set whose
 members are exactly the pairs of an ordinal below it with the tower's value
 there.
 <!--zh-->
-某个序数处的内部层级，就是归纳所得的实现集合，呈现为 `L` 的元素。它对每个可构造序数都存在；也就是说：模型如今为它的每个序数准备了一个集合，其成员恰是「低于该序数的序数与塔在该处取值」组成的有序对。
+某个序数处的内部层级，就是归纳所得的实现集合，呈现为 `L` 的元素。它对每个可构造序数都存在；也就是说：模型如今为它的每个序数准备了一个集合，其元素恰是「低于该序数的序数与塔在该处取值」组成的有序对。
 <!--ja-->
 ある順序数での内部の階層とは、帰納が作る実現集合を `L` の要素として提示したものである。それは構成可能な順序数ごとに存在する。つまり、モデルは今や、自分の各順序数に対して、「その順序数の下の順序数と塔のそこでの値」の順序対をちょうど要素とする集合を含むのである。
 <!--/-->
@@ -1949,7 +1949,7 @@ constructible ordinal, and its specification is exactly the membership
 equivalence proved by the induction. The two facts together say that the tower
 is recorded inside the model, at every stage, with nothing besides.
 <!--zh-->
-实参处的内部层级之所以存在，是因为实参是可构造序数；其规格恰是归纳所证明的隶属等价。两件事合起来说：塔在每一个层处都被记录在模型内部，且此外无他。
+实参处的内部层级之所以存在，是因为实参是可构造序数；其规格恰是归纳所证明的成员关系等价。两件事合起来说：塔在每一个层处都被记录在模型内部，且此外无他。
 <!--ja-->
 入力での内部の階層が存在するのは、入力が構成可能な順序数だからである。そしてその仕様は、帰納が証明した所属の同値そのものである。この二つの事実を合わせれば、塔がすべての段階で、モデルの内部に、ほかには何も伴わずに記録されていると言える。
 <!--/-->
@@ -1973,7 +1973,7 @@ index the tower.
 <!--zh-->
 ## 小结
 
-`approx-val`{.Agda} 通过对实参作一次沿成员归纳，证明逼近记录的每个取值都等于元层面的塔在相应实参处的取值；这里不需要任何单值性假设。在同一个实参处记录的两个取值相等，可由它直接读出。`Lset-only`{.Agda} 与 `Lset-defines`{.Agda} 给出图与塔之间的两个方向，而后者用于构造 `hierL`{.Agda}。`hierL`{.Agda} 是某个序数处的内部层级，是 `L` 的一个元素；其成员恰是「低于该序数的序数与塔在该处取值」组成的有序对。其规格是归纳所证明的隶属等价。
+`approx-val`{.Agda} 通过对实参作一次沿成员关系归纳，证明逼近记录的每个取值都等于元层面的塔在相应实参处的取值；这里不需要任何单值性假设。在同一个实参处记录的两个取值相等，可由它直接读出。`Lset-only`{.Agda} 与 `Lset-defines`{.Agda} 给出图与塔之间的两个方向，而后者用于构造 `hierL`{.Agda}。`hierL`{.Agda} 是某个序数处的内部层级，是 `L` 的一个元素；其元素恰是「低于该序数的序数与塔在该处取值」组成的有序对。其规格是归纳所证明的成员关系等价。
 
 此处制表的层由序数索引，序数是层级的集合；宿主的宇宙层级是类型的大小指标，从不为塔索引。
 <!--ja-->

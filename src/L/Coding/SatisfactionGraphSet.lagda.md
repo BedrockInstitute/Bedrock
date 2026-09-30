@@ -28,7 +28,7 @@ module L.Coding.SatisfactionGraphSet {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) whe
 ```
 
 ```agda
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropView )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Coding {ℓ} using ( pr )
@@ -45,7 +45,7 @@ open import L.Recursion.Graph {ℓ} lem using () renaming ( module Graph to MapG
 Let `W` be a constructible set, used both as the alphabet from which formula constants are drawn and as the range of values allowed in environments. The uniform satisfaction construction assigns to every code in `AllCodes W` the set of environments satisfying the coded formula. This chapter proves that the assignment itself has a graph inside `L`: a set whose members are precisely the ordered pairs of a formula code and its satisfaction set. The mathematical step is an instance of replacement. The uniform graph formula has a unique value over every code, so its image over the set `AllCodes W` can be collected as a set.
 <!--zh-->
 
-设 `W` 是一个可构造集合，它既充当公式常元取值的字母表，也充当环境中各项的取值范围。统一满足关系构造为 `AllCodes W` 中的每个公式码指派一个集合，即满足该码所编码公式的所有环境。本章证明，这一指派本身在 `L` 内具有图：存在一个集合，其成员恰好是公式码与相应满足关系集组成的有序对。数学上的关键是替换公理。统一的图公式在每个公式码上都有唯一取值，因此它在集合 `AllCodes W` 上的像可以收集成集合。
+设 `W` 是一个可构造集合，它既充当公式常元取值的字母表，也充当环境中各项的取值范围。统一满足关系构造为 `AllCodes W` 中的每个公式码指派一个集合，即满足该码所编码公式的所有环境。本章证明，这一指派本身在 `L` 内具有图：存在一个集合，其元素恰好是公式码与相应满足关系集组成的有序对。数学上的关键是替换公理。统一的图公式在每个公式码上都有唯一取值，因此它在集合 `AllCodes W` 上的像可以收集成集合。
 <!--ja-->
 
 `W` を構成可能集合とし、論理式の定数が値を取るアルファベットと、環境の各成分が値を取る範囲の両方に用いる。一様な充足関係の構成は、`AllCodes W` の各論理式符号に、その論理式を満たす環境の集合を割り当てる。本章では、この割り当て自身が `L` の内部にグラフを持つことを証明する。その要素は、論理式符号と対応する充足集合の順序対である。数学的な要点は置換公理である。一様なグラフ論理式は各符号の上で一意な値を持つので、集合 `AllCodes W` 上の像を一つの集合に集められる。
@@ -70,7 +70,7 @@ The domain `AllCodes W` is the constructible set of well-formed formula codes ov
 <!--en-->
 Membership in the cumulative hierarchy is truncated existence, so the final description of an arbitrary graph member is truncated as well. The carrier `S` is that of the constructible structure `𝒮ʟ`; each of its elements consists of an ambient set together with a certificate of constructibility.
 <!--zh-->
-累积层级中的成员关系表达截断的存在，因此任意图成员的最终刻画也采用截断形式。论域 `S` 来自可构造结构 `𝒮ʟ`；它的每个元素都由外围集合及其可构造性证书组成。
+累积层级中的成员关系表达截断的存在，因此任意图元素的最终刻画也采用截断形式。论域 `S` 来自可构造结构 `𝒮ʟ`；它的每个元素都由外围集合及其可构造性证书组成。
 <!--ja-->
 累積階層の所属は切り詰められた存在を表すため、任意のグラフ要素の最終的な特徴づけも切り詰められた形になる。論域 `S` は構成可能構造 `𝒮ʟ` のもので、その各要素は周囲の集合と構成可能性の証明からなる。
 <!--/-->
@@ -78,7 +78,7 @@ Membership in the cumulative hierarchy is truncated existence, so the final desc
 ```agda
 open import Cubical.HITs.CumulativeHierarchy.Base using ( _∈_ )
 
-open hPropStructure 𝒮ʟ using ( S )
+open hPropView 𝒮ʟ using ( S )
 ```
 
 <!--en-->
@@ -97,7 +97,7 @@ open AbsSF using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
 <!--en-->
 For the fixed `W`, both parameters of the uniform construction are instantiated by this same set, so the code alphabet and the range of environment values are both `W`. `Table.graph W W` is one binary formula describing the value relation uniformly over all members of `AllCodes W`, and `Table.val W W x mx` is its unique value at the particular code `x`.
 <!--zh-->
-对固定的 `W`，统一构造的两个参数都取这个集合，因此编码字母表与环境取值范围都是 `W`。`Table.graph W W` 是一条统一适用于 `AllCodes W` 全体成员的二元公式，用来描述取值关系；`Table.val W W x mx` 则是它在特定公式码 `x` 处的唯一取值。
+对固定的 `W`，统一构造的两个参数都取这个集合，因此编码字母表与环境取值范围都是 `W`。`Table.graph W W` 是一条统一适用于 `AllCodes W` 全体元素的二元公式，用来描述取值关系；`Table.val W W x mx` 则是它在特定公式码 `x` 处的唯一取值。
 <!--ja-->
 固定した `W` に対し、一様な構成の二つのパラメータをこの同じ集合で具体化する。したがって、符号のアルファベットと環境の値域はいずれも `W` である。`Table.graph W W` は `AllCodes W` のすべての要素に一様に適用される二項論理式であり、値の関係を記述する。`Table.val W W x mx` は、特定の符号 `x` におけるその一意な値である。
 <!--/-->
@@ -113,7 +113,7 @@ module SatGraph (W : S) where
 <!--en-->
 For a code `x` with membership certificate `mx`, write this unique value as `valOf x mx`. The equation `valOf≡` identifies it definitionally with `Table.val W W x mx`. The notation isolates the mathematical function whose graph is to be collected: a domain member is sent to its satisfaction set.
 <!--zh-->
-给定公式码 `x` 及其成员证书 `mx`，把这个唯一取值记作 `valOf x mx`。等式 `valOf≡` 在定义上把它识别为 `Table.val W W x mx`。这个记号单独标出将要收集其图的数学函数：每个定义域成员被送到相应的满足关系集。
+给定公式码 `x` 及其成员关系证书 `mx`，把这个唯一取值记作 `valOf x mx`。等式 `valOf≡` 在定义上把它识别为 `Table.val W W x mx`。这个记号单独标出将要收集其图的数学函数：每个定义域元素被送到相应的满足关系集。
 <!--ja-->
 論理式符号 `x` とその所属証明 `mx` に対し、この一意な値を `valOf x mx` と書く。等式 `valOf≡` は、それを定義上 `Table.val W W x mx` と同一視する。この記法により、グラフを集める対象の数学的な関数、すなわち定義域の要素をその充足集合へ送る関数が明確になる。
 <!--/-->
@@ -221,7 +221,7 @@ Conversely, suppose an ordered pair `pr (fst x) (fst y)` belongs to `pairs`. The
 <!--en-->
 An arbitrary member of `pairs` need not arrive already displayed as an ordered pair. The general image theorem therefore yields only a truncated description: merely, there are a code `x`, a membership certificate `mx`, and an equality exhibiting the member as the pair of `x` and its value. This is precisely `pairs-shape`; the truncation is inherited from membership in the replacement image.
 <!--zh-->
-`pairs` 的任意成员未必已经以有序对的形式给出。因此，一般的像定理只产生截断的刻画：仅仅存在公式码 `x`、成员证书 `mx` 以及一个等式，把该成员呈现为 `x` 与其取值组成的有序对。这正是 `pairs-shape`；其中的截断来自替换像的成员关系。
+`pairs` 的任意元素未必已经以有序对的形式给出。因此，一般的像定理只产生截断的刻画：仅仅存在公式码 `x`、成员关系证书 `mx` 以及一个等式，把该元素呈现为 `x` 与其取值组成的有序对。这正是 `pairs-shape`；其中的截断来自替换像的成员关系。
 <!--ja-->
 `pairs` の任意の要素が、最初から順序対として表示されているとは限らない。そのため、一般の像定理が与える特徴づけは切り詰められている。すなわち、論理式符号 `x`、所属証明 `mx`、その要素を `x` と値の順序対として表示する等式が単に存在する。これが `pairs-shape` であり、切り詰めは置換像への所属から受け継がれる。
 <!--/-->
@@ -237,7 +237,7 @@ An arbitrary member of `pairs` need not arrive already displayed as an ordered p
 <!--en-->
 The set `pairs` is therefore the internal graph of uniform satisfaction for formulas whose constants and environments range over `W`. Existence and uniqueness of the uniform value make the relation functional; replacement turns that relation into a set of `L`; and the three membership theorems characterize the set both for displayed pairs and for arbitrary members.
 <!--zh-->
-因此，`pairs` 是统一满足关系的内部图，其中公式常元与环境取值都取自 `W`。统一取值的存在唯一性使关系成为函数；替换把这个关系化为 `L` 中的集合；三条成员定理则分别针对已经呈现的有序对和任意成员刻画这个集合。
+因此，`pairs` 是统一满足关系的内部图，其中公式常元与环境取值都取自 `W`。统一取值的存在唯一性使关系成为函数；替换把这个关系化为 `L` 中的集合；三条元素定理则分别针对已经呈现的有序对和任意成员关系刻画这个集合。
 <!--ja-->
 したがって `pairs` は、論理式の定数と環境の値がともに `W` から取られる一様な充足関係の内部グラフである。一様な値の存在と一意性が関係を関数的にし、置換がその関係を `L` の集合にし、三つの所属定理が、表示された順序対と任意の要素の両方についてこの集合を特徴づける。
 <!--/-->

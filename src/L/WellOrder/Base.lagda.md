@@ -34,7 +34,7 @@ module L.WellOrder.Base {ℓₚ : Level} where
 
 ```agda
 open import Base.Classical using ( LEM )
-open import FOL.ZFStructure using ( ZFStructure )
+open import FOL.ZFStructure using ( ZFStructure; ZFStructureₕ )
 import FOL.Semantics as Semantics
 ```
 
@@ -295,7 +295,7 @@ The theorem `hostLeastOf` is the unrestricted host-level utility: its predicate 
 <!--/-->
 
 ```agda
-  leastOfFormula : ∀ {ℓs ℓk} {𝒮 : ZFStructure ℓs}
+  leastOfFormula : ∀ {ℓs ℓk} {𝒮 : ZFStructureₕ ℓs}
       {K : Type ℓk} {ι : K → ZFStructure.S 𝒮}
       {P : A → hProp ℓs} → Semantics.FormulaPredicate 𝒮 A K ι P
       → LEM (ℓ-max ℓc (ℓ-max ℓₚ ℓs))

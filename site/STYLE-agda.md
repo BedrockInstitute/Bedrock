@@ -193,6 +193,21 @@ High-frequency concept too long for signatures?
   → only entries in the registered abbreviation list.
 ```
 
+`ZFStructureₕ` is the named hProp specialization of the sole `ZFStructure`
+record: its subscript means `Ω = hProp ℓ`. Keep both names in
+`FOL.ZFStructure`; use `ZFStructure` for record fields and `ZFStructureₕ`
+for proposition-valued type signatures. Do not duplicate the record or its
+projection namespace for this specialization.
+
+`hPropView 𝒮` fixes an existing `ZFStructureₕ` value, re-exports its
+`ZFStructure` fields and supplies the Type-valued membership `_∈ᵗ_`
+and the proposition-valued class predicate `Transitive`.
+Keep the type alias outside this instance-dependent view.
+Carrier restriction `_↾_` and `↾-reflects` remain at module scope and work
+for arbitrary truth-value types. Their class-selection predicate remains
+proposition-valued at the carrier level; it is distinct from the truth-value
+type of the structure's relations.
+
 **Three naming rules that the decision tree does not decide.** This file is
 their canonical home. A name says what the thing
 IS, never how it was built. An implicit argument that no reader can infer is

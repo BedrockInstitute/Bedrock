@@ -12,19 +12,19 @@
 
 ```agda
 open import Base.Prelude
-open import FOL.ZFStructure using ( ZFStructure )
+open import FOL.ZFStructure using ( ZFStructure; ZFStructureₕ )
 ```
 
 <!--en-->
-To encode syntax as sets, two operations on the carrier would suffice on their own, but injectivity is what makes decoding possible: if two pieces of syntax received the same set, the coding could not be inverted. This chapter therefore works over a structure `𝒮`{.Agda} of type `ZFStructure`{.Agda}, whose equality and membership take values in `hProp ℓ`, and takes the encoding data as explicit module parameters. Every definition below is stated for an arbitrary structure with such data; the cumulative hierarchy will supply an instance in a later chapter.
+To encode syntax as sets, two operations on the carrier would suffice on their own, but injectivity is what makes decoding possible: if two pieces of syntax received the same set, the coding could not be inverted. This chapter therefore works over a structure `𝒮`{.Agda} of type `ZFStructureₕ`{.Agda}, whose equality and membership take values in `hProp ℓ`, and takes the encoding data as explicit module parameters. Every definition below is stated for an arbitrary structure with such data; the cumulative hierarchy will supply an instance in a later chapter.
 <!--zh-->
-要把语法编码为集合，载体上的两个操作本身就够了，但真正让「解码」成为可能的是单射性：若两段语法得到同一个集合，编码就无法还原。因此本章在一个 `ZFStructure`{.Agda} 结构 `𝒮`{.Agda} 中工作；其等词与隶属关系取值于 `hProp ℓ`，编码所需的数据则取作显式的模块参数。下面每个定义都对任意一个带这类数据的结构成立；累积层级会在后面的章节中给出实例。
+要把语法编码为集合，载体上的两个操作本身就够了，但真正让「解码」成为可能的是单射性：若两段语法得到同一个集合，编码就无法还原。因此本章在一个 `ZFStructureₕ`{.Agda} 结构 `𝒮`{.Agda} 中工作；其等词与成员关系取值于 `hProp ℓ`，编码所需的数据则取作显式的模块参数。下面每个定义都对任意一个带这类数据的结构成立；累积层级会在后面的章节中给出实例。
 <!--ja-->
-構文を集合として符号化するには、台の上の 2 つの操作があれば足りるが、復号を可能にするのは単射性である。もし 2 つの構文が同じ集合に対応してしまったら、符号化を逆にたどれない。そこで本章は、等号と所属が `hProp ℓ` に値を取る `ZFStructure`{.Agda}、すなわち構造 `𝒮`{.Agda} のもとで作業し、符号化に必要なデータを明示的なモジュール引数として取る。以下の定義はすべて、そのようなデータを持つ任意の構造に対して述べられ、累積階層が後の章で実例を供給する。
+構文を集合として符号化するには、台の上の 2 つの操作があれば足りるが、復号を可能にするのは単射性である。もし 2 つの構文が同じ集合に対応してしまったら、符号化を逆にたどれない。そこで本章は、等号と所属が `hProp ℓ` に値を取る `ZFStructureₕ`{.Agda}、すなわち構造 `𝒮`{.Agda} のもとで作業し、符号化に必要なデータを明示的なモジュール引数として取る。以下の定義はすべて、そのようなデータを持つ任意の構造に対して述べられ、累積階層が後の章で実例を供給する。
 <!--/-->
 
 ```agda
-module FOL.Coding {ℓ} (𝒮 : ZFStructure ℓ)
+module FOL.Coding {ℓ} (𝒮 : ZFStructureₕ ℓ)
   (pr       : ZFStructure.S 𝒮 → ZFStructure.S 𝒮 → ZFStructure.S 𝒮)
   (pr-inj   : ∀ {a b c d} → pr a b ≡ pr c d → (a ≡ c) × (b ≡ d))
   (encℕ     : ℕ → ZFStructure.S 𝒮)
@@ -47,7 +47,7 @@ The construction assumes an injective pairing operation and an injective map fro
 
 模型只能对其载体中的元素量化，而词项与公式起初存在于外部的类型论中。为了让模型内部能够使用语法，本章给每个词项和公式指派一个载体元素。一个码是带标签的对：数字标签识别最外层构造子，载荷保存各直接组成部分的码。集合常元已经属于载体，因此可以直接充当载荷。
 
-构造假设有一个单射配对运算和一个从自然数出发的单射；这两个条件保证带标签对的两部分都能恢复。本章先证明词项编码为单射，再为公式的十个构造子定义编码。它还通过 `CodesT`{.Agda} 与 `Codes`{.Agda} 给出关系式编码的常元与隶属情形。最后，由标签索引的构造子形状描述支撑如下证明：同一元数的公式若码相等，则公式相等。
+构造假设有一个单射配对运算和一个从自然数出发的单射；这两个条件保证带标签对的两部分都能恢复。本章先证明词项编码为单射，再为公式的十个构造子定义编码。它还通过 `CodesT`{.Agda} 与 `Codes`{.Agda} 给出关系式编码的常元与成员关系情形。最后，由标签索引的构造子形状描述支撑如下证明：同一元数的公式若码相等，则公式相等。
 <!--ja-->
 
 モデルが量化できるのは台の元だけであるが、項と論理式は初め、外側の型理論にある。構文をモデルの内部で利用できるように、本章では各項と論理式に台の元を割り当てる。符号はタグ付きの対であり、数のタグが最外側の構成子を識別し、ペイロードが直下の部分の符号を保持する。集合定数はすでに台に属するので、そのままペイロードにできる。
@@ -190,7 +190,7 @@ Then formulas: ten constructors, ten tags. Binary constructors pair the two sub-
 <!--en-->
 Formulas use the same tagged-pair scheme, with tags `0` through `4` on the five binary constructors. A membership atom `t ∈̇ u` codes as tag `0` paired with the pair of the two term codes, and equality likewise at tag `1`; each connective pairs the codes of its two immediate subformulas. Compare this with terms: there the payload was a bare set or a numeral, here it may itself be a built-up code, so the whole structure of a formula nests inside payloads. The recursion happens on the host inductive types `Term`{.Agda} and `Formula`{.Agda}, never on the sets themselves.
 <!--zh-->
-公式沿用同样的带标签对方案，五个二元构造子分得标签 `0` 到 `4`。隶属原子式 `t ∈̇ u` 以标签 `0` 配上两个词项码组成的对来编码，相等式同样在标签 `1`；每个联结词把两条直接子公式的码配成对。与词项对比：那里的载荷是裸集合或数字，而这里的载荷本身可以是由码搭建的复合物，公式的整个结构就这样嵌套在载荷之中。递归发生在宿主的归纳类型 `Term`{.Agda} 与 `Formula`{.Agda} 上，从不在集合自身上进行。
+公式沿用同样的带标签对方案，五个二元构造子分得标签 `0` 到 `4`。成员关系原子式 `t ∈̇ u` 以标签 `0` 配上两个词项码组成的对来编码，相等式同样在标签 `1`；每个联结词把两条直接子公式的码配成对。与词项对比：那里的载荷是裸集合或数字，而这里的载荷本身可以是由码搭建的复合物，公式的整个结构就这样嵌套在载荷之中。递归发生在宿主的归纳类型 `Term`{.Agda} 与 `Formula`{.Agda} 上，从不在集合自身上进行。
 <!--ja-->
 論理式も同じタグ付き対の方式を使う。5 つの 2 項構成子にタグ `0` から `4` までを割り当てる。所属の原子式 `t ∈̇ u` はタグ `0` に 2 つの項の符号の対を組み合わせて符号化され、等号も同様にタグ `1` である。各結合子は 2 つの直接の部分論理式の符号を対にする。項と比べると、あちらのペイロードは生の集合か数であったが、こちらではペイロード自身が組み上がった符号であり得るので、論理式の構造全体がペイロードの中にネスティングする。再帰はホストの帰納型 `Term`{.Agda} と `Formula`{.Agda} の上で起こり、集合の上では決して起こらない。
 <!--/-->
@@ -238,7 +238,7 @@ The module next records the first cases of a relational presentation of coding. 
 <!--zh-->
 ## 编码关系
 
-模块接着记录编码的关系式表述的首批情形。`CodesT s t` 把集合与词项关联，`Codes s φ` 把集合与公式关联。本文件中，前者包含常元情形，后者包含隶属情形。
+模块接着记录编码的关系式表述的首批情形。`CodesT s t` 把集合与词项关联，`Codes s φ` 把集合与公式关联。本文件中，前者包含常元情形，后者包含成员关系情形。
 <!--ja-->
 ## 符号化関係
 
@@ -248,7 +248,7 @@ The module next records the first cases of a relational presentation of coding. 
 <!--en-->
 `CodesT`{.Agda} has the constructor `c-con`, which relates the code `mkTag 0 x` to the constant `con x`. The constructor `c-∈` of `Codes`{.Agda} takes derivations for the two term codes and relates their paired payload under tag `0` to the membership formula. These declarations cover exactly the cases shown here; the formula-code injectivity proof below proceeds directly from `⌜_⌝`.
 <!--zh-->
-`CodesT`{.Agda} 的构造子 `c-con` 把码 `mkTag 0 x` 与常元 `con x` 关联起来。`Codes`{.Agda} 的构造子 `c-∈` 接受两个词项码的推导，把标签 `0` 下由二者组成的载荷与隶属公式关联起来。这些声明只覆盖此处列出的情形；下文的公式码单射性证明直接从 `⌜_⌝` 出发。
+`CodesT`{.Agda} 的构造子 `c-con` 把码 `mkTag 0 x` 与常元 `con x` 关联起来。`Codes`{.Agda} 的构造子 `c-∈` 接受两个词项码的推导，把标签 `0` 下由二者组成的载荷与成员关系公式关联起来。这些声明只覆盖此处列出的情形；下文的公式码单射性证明直接从 `⌜_⌝` 出发。
 <!--ja-->
 `CodesT`{.Agda} の構成子 `c-con` は、符号 `mkTag 0 x` を定数 `con x` に関係づける。`Codes`{.Agda} の構成子 `c-∈` は二つの項の符号についての導出を受け取り、タグ `0` のもとで対にしたペイロードを所属論理式に関係づける。これらの宣言が扱うのは、ここに示された場合だけである。後の論理式符号の単射性は `⌜_⌝` から直接証明される。
 <!--/-->
@@ -279,7 +279,7 @@ Two formulas of the same arity with the same code are equal. Rather than compare
 <!--en-->
 The section is a proof by tag separation. Its first ingredient, `tagOf`, extracts the constructor index of a formula as a natural number, using the same numbering that `⌜_⌝` used to build codes: membership `0`, equality `1`, conjunction `2`, disjunction `3`. So `⌜_⌝` builds the tag into a set while `tagOf` reads it back out, and the section works because these two numberings agree.
 <!--zh-->
-本节是一个按标签分离的证明。第一个材料 `tagOf` 把公式的构造子序号作为自然数读出，编号与 `⌜_⌝` 构造码时用的完全相同：隶属 `0`，相等 `1`，合取 `2`，析取 `3`。于是 `⌜_⌝` 把标签构造进集合，`tagOf` 又把标签读出来；本节之所以成立，正是因为这两套编号彼此一致。
+本节是一个按标签分离的证明。第一个材料 `tagOf` 把公式的构造子序号作为自然数读出，编号与 `⌜_⌝` 构造码时用的完全相同：成员关系 `0`，相等 `1`，合取 `2`，析取 `3`。于是 `⌜_⌝` 把标签构造进集合，`tagOf` 又把标签读出来；本节之所以成立，正是因为这两套编号彼此一致。
 <!--ja-->
 この節はタグの分離による証明である。最初の材料 `tagOf` は、論理式の構成子の番号を自然数として読み取る。番号付けは `⌜_⌝` が符号を作るときに使ったものと同じで、所属 `0`、等号 `1`、論理積 `2`、論理和 `3` である。つまり `⌜_⌝` がタグを集合の中に組み込み、`tagOf` がそれを取り出す。この節が成り立つのは、2 つの番号付けが一致しているからである。
 <!--/-->
@@ -311,7 +311,7 @@ tagOf (∀̇∈ t a) = 8
 <!--en-->
 The second ingredient, `payOf`, extracts the payload the same way: for membership and equality it is the pair of the two term codes, and for conjunction the pair of the two subformula codes. Each clause is the payload component of the matching clause of `⌜_⌝`, so reading a code with `tagOf` and `payOf` recovers exactly the data `⌜_⌝` put in.
 <!--zh-->
-第二个材料 `payOf` 以同样方式抽出载荷：隶属与相等是两个词项码的对，合取是两条子公式码的对。每条子句都是 `⌜_⌝` 对应子句的载荷分量，因此用 `tagOf` 与 `payOf` 读一个码，恰好还原出 `⌜_⌝` 放进去的数据。
+第二个材料 `payOf` 以同样方式抽出载荷：成员关系与相等是两个词项码的对，合取是两条子公式码的对。每条子句都是 `⌜_⌝` 对应子句的载荷分量，因此用 `tagOf` 与 `payOf` 读一个码，恰好还原出 `⌜_⌝` 放进去的数据。
 <!--ja-->
 2 つ目の材料 `payOf` は同じ方法でペイロードを取り出す。所属と等号では 2 つの項の符号の対、論理積では 2 つの部分論理式の符号の対である。各節は `⌜_⌝` の対応する節のペイロード成分そのものなので、`tagOf` と `payOf` で符号を読めば、`⌜_⌝` が入れたデータがちょうど復元される。
 <!--/-->
@@ -476,7 +476,7 @@ private
 <!--en-->
 The membership clause shows the whole mechanics, so it deserves a slow reading. The match presents `ψ` as `t' ∈̇ u'` up to a path `q : ψ ≡ (t' ∈̇ u')`, but the hypothesis `p` only equates the payloads of `φ` and of `ψ`, not of `t' ∈̇ u'`. Composing `p` with `cong payOf q` transports the equation along `q`, producing `pr ⌜ t ⌝ᵗ ⌜ u ⌝ᵗ ≡ pr ⌜ t' ⌝ᵗ ⌜ u' ⌝ᵗ`, which `pr-inj` splits into equations of the term codes. Each goes through the already-proven `⌜⌝ᵗ-inj`, `cong₂ _∈̇_` rebuilds the constructor on both sides, and `sym q` retargets the right-hand side from `t' ∈̇ u'` to `ψ`. The equality clause repeats this word for word with `_≐_`.
 <!--zh-->
-隶属子句展示了全部机制，值得细读。匹配把 `ψ` 呈现为差一条路径 `q : ψ ≡ (t' ∈̇ u')` 的 `t' ∈̇ u'`，而假设 `p` 只给出 `φ` 与 `ψ` 的载荷相等，并非 `t' ∈̇ u'` 的载荷。把 `p` 与 `cong payOf q` 复合，等式便沿 `q` 转移，得到 `pr ⌜ t ⌝ᵗ ⌜ u ⌝ᵗ ≡ pr ⌜ t' ⌝ᵗ ⌜ u' ⌝ᵗ`，`pr-inj` 再把它拆成词项码的等式。每条等式经已证的 `⌜⌝ᵗ-inj` 处理，`cong₂ _∈̇_` 在两侧重新装上构造子，末尾的 `sym q` 把右端从 `t' ∈̇ u'` 换回 `ψ`。相等子句把这一切换成 `_≐_` 逐字重演。
+成员关系子句展示了全部机制，值得细读。匹配把 `ψ` 呈现为差一条路径 `q : ψ ≡ (t' ∈̇ u')` 的 `t' ∈̇ u'`，而假设 `p` 只给出 `φ` 与 `ψ` 的载荷相等，并非 `t' ∈̇ u'` 的载荷。把 `p` 与 `cong payOf q` 复合，等式便沿 `q` 转移，得到 `pr ⌜ t ⌝ᵗ ⌜ u ⌝ᵗ ≡ pr ⌜ t' ⌝ᵗ ⌜ u' ⌝ᵗ`，`pr-inj` 再把它拆成词项码的等式。每条等式经已证的 `⌜⌝ᵗ-inj` 处理，`cong₂ _∈̇_` 在两侧重新装上构造子，末尾的 `sym q` 把右端从 `t' ∈̇ u'` 换回 `ψ`。相等子句把这一切换成 `_≐_` 逐字重演。
 <!--ja-->
 所属の節に仕組みの全体が表れているので、ゆっくり読む価値がある。適合は `ψ` を道 `q : ψ ≡ (t' ∈̇ u')` のもとで `t' ∈̇ u'` として提示するが、仮定 `p` が等しいと言うのは `φ` と `ψ` のペイロードであって、`t' ∈̇ u'` のペイロードではない。`p` に `cong payOf q` を合成すると、等式が `q` に沿って輸送され、`pr ⌜ t ⌝ᵗ ⌜ u ⌝ᵗ ≡ pr ⌜ t' ⌝ᵗ ⌜ u' ⌝ᵗ` が得られる。`pr-inj` がこれを項の符号の等式に分解し、それぞれはすでに証明済みの `⌜⌝ᵗ-inj` を通る。`cong₂ _∈̇_` が両辺に構成子を組み立て直し、最後の `sym q` が右辺を `t' ∈̇ u'` から `ψ` へ向け直す。等号の節はこれを `_≐_` に替えてそのまま繰り返す。
 <!--/-->
@@ -574,7 +574,7 @@ Terms and formulas now have codes in `S`: `⌜_⌝`{.Agda} attaches a constructo
 <!--zh-->
 ## 小结
 
-词项与公式如今都有 `S` 中的码：`⌜_⌝`{.Agda} 把构造子标签附到各部分的码上，常元则以其底层集合作为载荷。本文件记录关系式编码的常元情形与隶属情形，随后证明在固定元数下一个码至多决定一条公式。整个构造只以单射配对和自然数的单射为参数。
+词项与公式如今都有 `S` 中的码：`⌜_⌝`{.Agda} 把构造子标签附到各部分的码上，常元则以其底层集合作为载荷。本文件记录关系式编码的常元情形与成员关系情形，随后证明在固定元数下一个码至多决定一条公式。整个构造只以单射配对和自然数的单射为参数。
 <!--ja-->
 ## まとめ
 
