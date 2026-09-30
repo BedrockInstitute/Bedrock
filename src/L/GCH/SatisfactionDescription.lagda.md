@@ -181,7 +181,7 @@ For soundness, fix candidate sets `T`, `C`, and `E`, a working set `W`, ten nume
 <summary class="submodule-fold-heading">
 ```agda
 module SatSound {m : ℕ} (T w C E : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) (W : S)
-  (qw : fst (lookup w γ) ≡ fst W) (tg : Tags γ N)
+  (qw : (lookup w γ) .fst ≡ W .fst) (tg : Tags γ N)
   (hE : ⟨ γ ⊨ towerAt E w (N f0) ⟩) (hC : ⟨ γ ⊨ codesAt C w E N ⟩)
   (hT : ⟨ γ ⊨ tableAt T w C E N ⟩) where
 ```
@@ -203,9 +203,9 @@ Let `Tv`, `Cv`, and `Ev` denote the underlying sets presented by the candidate t
 ```agda
   open Bridge W
   private
-    Tv = fst (lookup T γ)
-    Cv = fst (lookup C γ)
-    Ev = fst (lookup E γ)
+    Tv = (lookup T γ) .fst
+    Cv = (lookup C γ) .fst
+    Ev = (lookup E γ) .fst
 ```
 
 <!--en-->
@@ -218,7 +218,7 @@ Suppose an entry of `Ev` is already presented as the encoded pair of `n` and `F`
 
 ```agda
     module TR = TowerRead E w (N f0) γ W qw (tg f0) hE
-    arity : (n F : S) → ⟨ pr (fst n) (fst F) ∈ Ev ⟩ → ∥ Σ[ k ∶ ℕ ] (fst n ≡ # k) ∥₁
+    arity : (n F : S) → ⟨ pr (n .fst) (F .fst) ∈ Ev ⟩ → ∥ Σ[ k ∶ ℕ ] (n .fst ≡ # k) ∥₁
     arity n F q∈ = map₁ (λ { (k , (qk , _)) → k , qk }) (TR.entry-out n F q∈)
     module CS = CodesSound C w E N γ W qw tg arity (hC .fst)
     module CC = CodesComplete C w E N γ W qw tg TR.entry-in (hC .snd)
@@ -259,7 +259,7 @@ Apply totality to the genuine key of a formula `a`, using the fact that code-dom
 <!--/-->
 
 ```agda
-    sub : ∀ {n} (a : Formula Ab n) → ∥ Σ[ ya ∶ S ] ⟨ pr (fst (keyS W a)) (fst ya) ∈ Tv ⟩ ∥₁
+    sub : ∀ {n} (a : Formula Ab n) → ∥ Σ[ ya ∶ S ] ⟨ pr ((keyS W a) .fst) (ya .fst) ∈ Tv ⟩ ∥₁
     sub a = Fr.total-out hTot (keyS W a) (CC.key-in a)
 ```
 
@@ -273,7 +273,7 @@ The pinning predicate says: whenever a value `y` is paired with the key of `ψ` 
 
 ```agda
   Pinned : ∀ {n} (ψ : Formula Ab n) → Type (ℓ-suc ℓ)
-  Pinned ψ = (y : S) → ⟨ pr (fst (keyS W ψ)) (fst y) ∈ Tv ⟩ → fst y ≡ fst (SatW ψ)
+  Pinned ψ = (y : S) → ⟨ pr ((keyS W ψ) .fst) (y .fst) ∈ Tv ⟩ → y .fst ≡ (SatW ψ) .fst
 ```
 
 <!--en-->
@@ -298,9 +298,9 @@ Every member of the candidate code domain belongs to the canonical code set. The
 <!--/-->
 
 ```agda
-  C-out : (c : S) → ⟨ fst c ∈ Cv ⟩ → ⟨ fst c ∈ fst (AllCodes W) ⟩
-  C-out c c∈ = rec₁ (snd (fst c ∈ fst (AllCodes W)))
-    (λ { (k , ψ , e) → subst (λ u → ⟨ u ∈ fst (AllCodes W) ⟩) (sym e) (key∈AllCodes W ψ) })
+  C-out : (c : S) → ⟨ c .fst ∈ Cv ⟩ → ⟨ c .fst ∈ (AllCodes W) .fst ⟩
+  C-out c c∈ = rec₁ ((c .fst ∈ (AllCodes W) .fst) .snd)
+    (λ { (k , ψ , e) → subst (λ u → ⟨ u ∈ (AllCodes W) .fst ⟩) (sym e) (key∈AllCodes W ψ) })
     (CS.key-out c c∈)
 ```
 
@@ -313,8 +313,8 @@ Conversely, every member of the canonical code set belongs to `Cv`. Canonical me
 <!--/-->
 
 ```agda
-  C-in : (c : S) → ⟨ fst c ∈ fst (AllCodes W) ⟩ → ⟨ fst c ∈ Cv ⟩
-  C-in c c∈ = rec₁ (snd (fst c ∈ Cv))
+  C-in : (c : S) → ⟨ c .fst ∈ (AllCodes W) .fst ⟩ → ⟨ c .fst ∈ Cv ⟩
+  C-in c c∈ = rec₁ ((c .fst ∈ Cv) .snd)
     (λ { (k , ψ , e) → subst (λ u → ⟨ u ∈ Cv ⟩) (sym e) (CC.key-in ψ) })
     (AllCodes-out W c c∈)
 ```
@@ -328,8 +328,8 @@ The outward tower reading concerns an entry already presented as `pr n F`. Under
 <!--/-->
 
 ```agda
-  E-out : (n F : S) → ⟨ pr (fst n) (fst F) ∈ Ev ⟩
-        → ∥ Σ[ k ∶ ℕ ] ((fst n ≡ # k) × (fst F ≡ fst (envSet W k))) ∥₁
+  E-out : (n F : S) → ⟨ pr (n .fst) (F .fst) ∈ Ev ⟩
+        → ∥ Σ[ k ∶ ℕ ] ((n .fst ≡ # k) × (F .fst ≡ (envSet W k) .fst)) ∥₁
   E-out = TR.entry-out
 ```
 
@@ -342,7 +342,7 @@ The inward tower reading supplies the complementary fact without propositional t
 <!--/-->
 
 ```agda
-  E-in : (k : ℕ) → ⟨ pr (# k) (fst (envSet W k)) ∈ Ev ⟩
+  E-in : (k : ℕ) → ⟨ pr (# k) ((envSet W k) .fst) ∈ Ev ⟩
   E-in = TR.entry-in
 ```
 
@@ -355,10 +355,10 @@ The table reading is the heart of the soundness direction. It is stated only for
 <!--/-->
 
 ```agda
-  T-out : (x y : S) → ⟨ pr (fst x) (fst y) ∈ Tv ⟩
-        → Σ[ mx ∶ ⟨ fst x ∈ fst (AllCodes W) ⟩ ] (fst y ≡ fst (Table.val W W x mx))
-  T-out x y h = rec₁ (isPropΣ (snd (fst x ∈ fst (AllCodes W))) (λ mx → setIsSet _ _))
-    (λ { (c , yc , (ee , c∈)) → rec₁ (isPropΣ (snd (fst x ∈ fst (AllCodes W))) (λ mx → setIsSet _ _))
+  T-out : (x y : S) → ⟨ pr (x .fst) (y .fst) ∈ Tv ⟩
+        → Σ[ mx ∶ ⟨ x .fst ∈ (AllCodes W) .fst ⟩ ] (y .fst ≡ (Table.val W W x mx) .fst)
+  T-out x y h = rec₁ (isPropΣ ((x .fst ∈ (AllCodes W) .fst) .snd) (λ mx → setIsSet _ _))
+    (λ { (c , yc , (ee , c∈)) → rec₁ (isPropΣ ((x .fst ∈ (AllCodes W) .fst) .snd) (λ mx → setIsSet _ _))
       (λ { (k , ψ , e) →
 ```
 
@@ -372,10 +372,10 @@ The pairing equation splits into the first components of the two sides, and the 
 
 ```agda
         let q = pr-inj ee
-            qx : fst x ≡ fst (keyS W ψ)
+            qx : x .fst ≡ (keyS W ψ) .fst
             qx = q .fst ∙ e
-            mx : ⟨ fst x ∈ fst (AllCodes W) ⟩
-            mx = subst (λ u → ⟨ u ∈ fst (AllCodes W) ⟩) (sym qx) (key∈AllCodes W ψ)
+            mx : ⟨ x .fst ∈ (AllCodes W) .fst ⟩
+            mx = subst (λ u → ⟨ u ∈ (AllCodes W) .fst ⟩) (sym qx) (key∈AllCodes W ψ)
 ```
 
 <!--en-->
@@ -387,10 +387,10 @@ Pinning identifies the recorded value with the recursive satisfaction set, and `
 <!--/-->
 
 ```agda
-        in mx , ( pinned ψ y (subst (λ u → ⟨ u ∈ Tv ⟩) (cong (λ a → pr a (fst y)) qx) h)
-                ∙ sym (cong fst (val-at W W ψ x mx qx)) ) })
+        in mx , ( pinned ψ y (subst (λ u → ⟨ u ∈ Tv ⟩) (cong (λ a → pr a (y .fst)) qx) h)
+                ∙ sym (cong (λ p → p .fst) (val-at W W ψ x mx qx)) ) })
       (CS.key-out c c∈) })
-    (Fr.onC-out hOn (down (lookup T γ) (pr (fst x) (fst y)) h) h)
+    (Fr.onC-out hOn (down (lookup T γ) (pr (x .fst) (y .fst)) h) h)
 ```
 
 <!--en-->
@@ -402,9 +402,9 @@ For the converse table reading, begin with a specified canonical code `x`. Its m
 <!--/-->
 
 ```agda
-  T-in : (x : S) (mx : ⟨ fst x ∈ fst (AllCodes W) ⟩) → ⟨ pr (fst x) (fst (Table.val W W x mx)) ∈ Tv ⟩
-  T-in x mx = rec₁ (snd (pr (fst x) (fst (Table.val W W x mx)) ∈ Tv))
-    (λ { (k , ψ , e) → rec₁ (snd (pr (fst x) (fst (Table.val W W x mx)) ∈ Tv))
+  T-in : (x : S) (mx : ⟨ x .fst ∈ (AllCodes W) .fst ⟩) → ⟨ pr (x .fst) ((Table.val W W x mx) .fst) ∈ Tv ⟩
+  T-in x mx = rec₁ ((pr (x .fst) ((Table.val W W x mx) .fst) ∈ Tv) .snd)
+    (λ { (k , ψ , e) → rec₁ ((pr (x .fst) ((Table.val W W x mx) .fst) ∈ Tv) .snd)
       (λ { (y , my) →
         subst (λ u → ⟨ u ∈ Tv ⟩)
 ```
@@ -418,7 +418,7 @@ The candidate value is pinned to the recursive satisfaction set, and the value l
 <!--/-->
 
 ```agda
-          (cong₂ pr (sym e) (pinned ψ y my ∙ sym (cong fst (val-at W W ψ x mx e))))
+          (cong₂ pr (sym e) (pinned ψ y my ∙ sym (cong (λ p → p .fst) (val-at W W ψ x mx e))))
           my })
       (sub ψ) })
     (AllCodes-out W x mx)
@@ -446,8 +446,8 @@ Completeness starts from concrete semantic objects rather than an arbitrary cand
 <summary class="submodule-fold-heading">
 ```agda
 module SatHolds {m : ℕ} (T w C E : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) (W : S)
-  (qw : fst (lookup w γ) ≡ fst W) (qT : fst (lookup T γ) ≡ fst (SatGraph.pairs W))
-  (qC : fst (lookup C γ) ≡ fst (AllCodes W)) (qE : fst (lookup E γ) ≡ fst (Tower.tower W))
+  (qw : (lookup w γ) .fst ≡ W .fst) (qT : (lookup T γ) .fst ≡ (SatGraph.pairs W) .fst)
+  (qC : (lookup C γ) .fst ≡ (AllCodes W) .fst) (qE : (lookup E γ) .fst ≡ (Tower.tower W) .fst)
   (tg : Tags γ N) where
 ```
 </summary>
@@ -468,8 +468,8 @@ Write `Tv` and `Cv` for the underlying sets in the table and code-domain slots. 
 ```agda
   open Bridge W
   private
-    Tv = fst (lookup T γ)
-    Cv = fst (lookup C γ)
+    Tv = (lookup T γ) .fst
+    Cv = (lookup C γ) .fst
 ```
 
 <!--en-->
@@ -481,11 +481,11 @@ A table value at a code identified with a formula key equals the recursive satis
 <!--/-->
 
 ```agda
-    val≡ : ∀ {n} (ψ : Formula Ab n) (c yc : S) → fst c ≡ fst (keyS W ψ)
-         → ⟨ pr (fst c) (fst yc) ∈ Tv ⟩ → fst yc ≡ fst (SatW ψ)
+    val≡ : ∀ {n} (ψ : Formula Ab n) (c yc : S) → c .fst ≡ (keyS W ψ) .fst
+         → ⟨ pr (c .fst) (yc .fst) ∈ Tv ⟩ → yc .fst ≡ (SatW ψ) .fst
     val≡ ψ c yc qc h =
-      let p = SatGraph.pairs-out W c yc (subst (λ u → ⟨ pr (fst c) (fst yc) ∈ u ⟩) qT h)
-      in p .snd ∙ cong fst (SatGraph.valOf≡ W c (p .fst)) ∙ cong fst (val-at W W ψ c (p .fst) qc)
+      let p = SatGraph.pairs-out W c yc (subst (λ u → ⟨ pr (c .fst) (yc .fst) ∈ u ⟩) qT h)
+      in p .snd ∙ cong (λ p → p .fst) (SatGraph.valOf≡ W c (p .fst)) ∙ cong (λ p → p .fst) (val-at W W ψ c (p .fst) qc)
 ```
 
 <!--en-->
@@ -497,9 +497,9 @@ If a code-domain member is presented as `pr (# n) z`, transporting it into `AllC
 <!--/-->
 
 ```agda
-    decode : (c : S) → ⟨ fst c ∈ Cv ⟩ → (n : ℕ) (z : V ℓ) → fst c ≡ pr (# n) z
+    decode : (c : S) → ⟨ c .fst ∈ Cv ⟩ → (n : ℕ) (z : V ℓ) → c .fst ≡ pr (# n) z
            → ∥ Σ[ ψ ∶ Formula Ab n ] (z ≡ cd ψ) ∥₁
-    decode c c∈ = Match.decodeAll W c (subst (λ u → ⟨ fst c ∈ u ⟩) qC c∈)
+    decode c c∈ = Match.decodeAll W c (subst (λ u → ⟨ c .fst ∈ u ⟩) qC c∈)
 ```
 
 <!--en-->
@@ -511,10 +511,10 @@ For a candidate code `c`, alignment with the canonical code set makes `c` a vali
 <!--/-->
 
 ```agda
-    tot : (c : S) → ⟨ fst c ∈ Cv ⟩ → ∥ Σ[ yc ∶ S ] ⟨ pr (fst c) (fst yc) ∈ Tv ⟩ ∥₁
+    tot : (c : S) → ⟨ c .fst ∈ Cv ⟩ → ∥ Σ[ yc ∶ S ] ⟨ pr (c .fst) (yc .fst) ∈ Tv ⟩ ∥₁
     tot c c∈ =
-      let mx = subst (λ u → ⟨ fst c ∈ u ⟩) qC c∈
-      in ∣ SatGraph.valOf W c mx , subst (λ u → ⟨ pr (fst c) (fst (SatGraph.valOf W c mx)) ∈ u ⟩) (sym qT) (SatGraph.pairs-in W c mx) ∣₁
+      let mx = subst (λ u → ⟨ c .fst ∈ u ⟩) qC c∈
+      in ∣ SatGraph.valOf W c mx , subst (λ u → ⟨ pr (c .fst) ((SatGraph.valOf W c mx) .fst) ∈ u ⟩) (sym qT) (SatGraph.pairs-in W c mx) ∣₁
 ```
 
 <!--en-->
@@ -526,11 +526,11 @@ The real graph also supplies the required shape of arbitrary table members. Unde
 <!--/-->
 
 ```agda
-    onc : (e : S) → ⟨ fst e ∈ Tv ⟩
-        → ∥ Σ[ c ∶ S ] Σ[ yc ∶ S ] ((fst e ≡ pr (fst c) (fst yc)) × ⟨ fst c ∈ Cv ⟩) ∥₁
+    onc : (e : S) → ⟨ e .fst ∈ Tv ⟩
+        → ∥ Σ[ c ∶ S ] Σ[ yc ∶ S ] ((e .fst ≡ pr (c .fst) (yc .fst)) × ⟨ c .fst ∈ Cv ⟩) ∥₁
     onc e e∈ = map₁
-      (λ { (x , mx , ee) → x , SatGraph.valOf W x mx , (ee , subst (λ u → ⟨ fst x ∈ u ⟩) (sym qC) mx) })
-      (SatGraph.pairs-shape W e (subst (λ u → ⟨ fst e ∈ u ⟩) qT e∈))
+      (λ { (x , mx , ee) → x , SatGraph.valOf W x mx , (ee , subst (λ u → ⟨ x .fst ∈ u ⟩) (sym qC) mx) })
+      (SatGraph.pairs-shape W e (subst (λ u → ⟨ e .fst ∈ u ⟩) qT e∈))
 ```
 
 <!--en-->
@@ -631,7 +631,7 @@ Conversely, proofs of those three descriptions combine to establish `satAt`. The
 <summary class="submodule-fold-heading">
 ```agda
 module SatRead {m : ℕ} (T w C E : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) (W : S)
-  (qw : fst (lookup w γ) ≡ fst W) (tg : Tags γ N) (h : ⟨ γ ⊨ satAt T w C E N ⟩) where
+  (qw : (lookup w γ) .fst ≡ W .fst) (tg : Tags γ N) (h : ⟨ γ ⊨ satAt T w C E N ⟩) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -665,10 +665,10 @@ The converse theorem assumes that the four slots already present the intended ob
 
 ```agda
 sat-complete : ∀ {m} (T w C E : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) (W : S)
-             → fst (lookup w γ) ≡ fst W
-             → fst (lookup T γ) ≡ fst (SatGraph.pairs W)
-             → fst (lookup C γ) ≡ fst (AllCodes W)
-             → fst (lookup E γ) ≡ fst (Tower.tower W)
+             → (lookup w γ) .fst ≡ W .fst
+             → (lookup T γ) .fst ≡ (SatGraph.pairs W) .fst
+             → (lookup C γ) .fst ≡ (AllCodes W) .fst
+             → (lookup E γ) .fst ≡ (Tower.tower W) .fst
 ```
 
 <!--en-->

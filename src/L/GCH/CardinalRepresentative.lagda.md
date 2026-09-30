@@ -116,9 +116,9 @@ Given an ordinal `α`, the theorem merely asserts the existence of `μ` with fiv
 
 ```agda
 cardOf :
-    (α : SL.S) → IsOrd (fst α)
+    (α : SL.S) → IsOrd (α .fst)
   → ∥ Σ[ μ ∶ SL.S ]
-       ( IsOrd (fst μ) × IsCardinalL μ
+       ( IsOrd (μ .fst) × IsCardinalL μ
 ```
 
 <!--en-->
@@ -130,7 +130,7 @@ The final witness is assembled from the representative `μ` and the five proofs 
 <!--/-->
 
 ```agda
-       × ((z : SV.S) → ⟨ z ∈ˢ fst μ ⟩ → ⟨ z ∈ˢ fst α ⟩)
+       × ((z : SV.S) → ⟨ z ∈ˢ μ .fst ⟩ → ⟨ z ∈ˢ α .fst ⟩)
        × InjL α μ × InjL μ α ) ∥₁
 ```
 
@@ -158,7 +158,7 @@ Let `T` be the successor of the underlying ordinal `α`. The successor is again 
 
 ```agda
   T : SV.S
-  T = sucV (fst α)
+  T = sucV (α .fst)
 
   oT : IsOrd T
   oT = suc-ord oα
@@ -229,7 +229,7 @@ The index naming `α` is good: its represented member equals `α`, and the ident
   least = leastOfFormula LC.w definedGood lem nonempty
 
   m : ⟪ T ⟫
-  m = fst least
+  m = least .fst
 ```
 
 <!--en-->
@@ -244,7 +244,7 @@ Apply the formula-facing least-element search to the well-order `w` and `defined
   μ : SL.S
   μ = upL m
 
-  μ∈T : ⟨ fst μ ∈ˢ T ⟩
+  μ∈T : ⟨ μ .fst ∈ˢ T ⟩
   μ∈T = member T m
 ```
 
@@ -257,8 +257,8 @@ Lift the chosen index `m` to the constructible carrier and call the result `μ`.
 <!--/-->
 
 ```agda
-  oμ : IsOrd (fst μ)
-  oμ = mem-ord {A = T} oT (fst μ) μ∈T
+  oμ : IsOrd (μ .fst)
+  oμ = mem-ord {A = T} oT (μ .fst) μ∈T
 ```
 
 <!--en-->
@@ -271,7 +271,7 @@ The presentation theorem gives `μ ∈ T`. Since `T` is an ordinal, every member
 
 ```agda
   α↪μ : InjL α μ
-  α↪μ = fst (snd least)
+  α↪μ = (least .snd) .fst
 ```
 
 <!--en-->
@@ -284,10 +284,10 @@ Goodness of the least index is now stated directly as the formula-defined propos
 
 ```agda
   cardμ : IsCardinalL μ
-  cardμ δ δ∈μ μ↪δ = snd (snd least) b bGood b<m
+  cardμ δ δ∈μ μ↪δ = (least .snd) .snd b bGood b<m
     where
-    δ∈T : ⟨ fst δ ∈ˢ T ⟩
-    δ∈T = oT .fst {x = fst μ} {y = fst δ} δ∈μ μ∈T
+    δ∈T : ⟨ δ .fst ∈ˢ T ⟩
+    δ∈T = oT .fst {x = μ .fst} {y = δ .fst} δ∈μ μ∈T
 ```
 
 <!--en-->
@@ -301,7 +301,7 @@ To prove that `μ` is a cardinal, suppose a member `δ ∈ μ` admitted an inter
 ```agda
     b : ⟪ T ⟫
     b = fiber T δ∈T .fst
-    bδ : ⟪ T ⟫↪ b ≡ fst δ
+    bδ : ⟪ T ⟫↪ b ≡ δ .fst
 ```
 
 <!--en-->
@@ -315,7 +315,7 @@ The fibre theorem gives both the index `b` and the equality identifying its repr
 ```agda
     bδ = fiber T δ∈T .snd
     bS : upL b ≡ δ
-    bS = Σ≡Prop (λ x → snd (isL x)) bδ
+    bS = Σ≡Prop (λ x → (isL x) .snd) bδ
     bGood : ⟨ Good b ⟩
     bGood = subst (InjL α) (sym bS) (injl-trans α μ δ α↪μ μ↪δ)
 ```
@@ -329,9 +329,9 @@ The index `b` is good: compose `α ↪ μ` with the assumed `μ ↪ δ`, and use
 <!--/-->
 
 ```agda
-    b<m : SWO._<∙_ LC.w b m
+    b<m : let module W = SWO LC.w in b W.<∙ m
     b<m = transport (λ i → sym (LC.w-lt b m) i)
-            (subst (λ z → ⟨ z ∈ˢ fst μ ⟩) (sym bδ) δ∈μ)
+            (subst (λ z → ⟨ z ∈ˢ μ .fst ⟩) (sym bδ) δ∈μ)
 ```
 
 <!--en-->
@@ -343,10 +343,10 @@ Moreover `b < m`. The relation of `w` is membership between represented ordinals
 <!--/-->
 
 ```agda
-  μ⊆α : (z : SV.S) → ⟨ z ∈ˢ fst μ ⟩ → ⟨ z ∈ˢ fst α ⟩
-  μ⊆α = go (ord-tri (fst μ) oμ (fst α) oα)
+  μ⊆α : (z : SV.S) → ⟨ z ∈ˢ μ .fst ⟩ → ⟨ z ∈ˢ α .fst ⟩
+  μ⊆α = go (ord-tri (μ .fst) oμ (α .fst) oα)
     where
-    go : Tri (fst μ) (fst α) → (z : SV.S) → ⟨ z ∈ˢ fst μ ⟩ → ⟨ z ∈ˢ fst α ⟩
+    go : Tri (μ .fst) (α .fst) → (z : SV.S) → ⟨ z ∈ˢ μ .fst ⟩ → ⟨ z ∈ˢ α .fst ⟩
 ```
 
 <!--en-->
@@ -372,9 +372,9 @@ The third case `α ∈ μ` contradicts minimality. The index naming `α` is good
 
 ```agda
     go (inr (inr α∈μ)) z z∈μ =
-      ⊥₀-rec (snd (snd least) LC.self selfGood
+      ⊥₀-rec ((least .snd) .snd LC.self selfGood
         (transport (λ i → sym (LC.w-lt LC.self m) i)
-          (subst (λ v → ⟨ v ∈ˢ fst μ ⟩) (sym LC.self-eq) α∈μ)))
+          (subst (λ v → ⟨ v ∈ˢ μ .fst ⟩) (sym LC.self-eq) α∈μ)))
 ```
 
 <!--en-->

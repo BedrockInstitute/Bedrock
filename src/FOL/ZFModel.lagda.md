@@ -219,6 +219,7 @@ The definition uses the direct `hProp` quantifier `∀[ x ] P x`, to conjoin the
 <!--/-->
 
 ```agda
+infix 20 _⊆ˢ_
 _⊆ˢ_ : S → S → hProp ℓ
 a ⊆ˢ b = ∀[ x ∶ S ] (x ∈ˢ a) ⇒ (x ∈ˢ b)
 ```
@@ -230,10 +231,6 @@ The notation `a ⊆ˢ b` will be used inside the power-set axiom and in later ar
 <!--ja-->
 記号 `a ⊆ˢ b` は冪集合の公理と後の議論で用いる。所属、等号、部分集合を同時に含む式が一意に読めるよう、ここで優先順位を定める。
 <!--/-->
-
-```agda
-infix 20 _⊆ˢ_
-```
 
 <!--en-->
 ## The axioms, as a record

@@ -380,7 +380,7 @@ The key step exposes what x ∈ Lset α means: by `Lset-out`, x merely belongs t
 ```agda
        → (∀ β → β ∈ᵗ α → IsOrd β → (x : S) → ⟨ x ∈ˢ Lset β ⟩ → ⟨ rank x ∈ˢ β ⟩)
        → IsOrd α → (x : S) → ⟨ x ∈ˢ Lset α ⟩ → ⟨ rank x ∈ˢ α ⟩
-  step α IH ordα x x∈Lα = rec₁ (snd (rank x ∈ˢ α)) fromStage (Lset-out α x x∈Lα)
+  step α IH ordα x x∈Lα = rec₁ ((rank x ∈ˢ α) .snd) fromStage (Lset-out α x x∈Lα)
     where
     fromStage : Σ[ β ∶ S ] (⟨ β ∈ˢ α ⟩ × ⟨ x ∈ˢ 𝒟ₒ (Lset β) ⟩) → ⟨ rank x ∈ˢ α ⟩
 ```
@@ -428,7 +428,7 @@ What remains is to lift rank x ∈ sucV β into rank x ∈ α. Both rank x and �
 
 ```agda
       rankx∈α : ⟨ rank x ∈ˢ α ⟩
-      rankx∈α = ∈sucV-elim {A = β} {x = rank x} (snd (rank x ∈ˢ α))
+      rankx∈α = ∈sucV-elim {A = β} {x = rank x} ((rank x ∈ˢ α) .snd)
         (⊆→∈suc (rank x) β (rank-ord x) ordβ rankx⊆β)
         (λ rx∈β → ordα .fst rx∈β β∈α)
         (λ rx≡β → subst (λ w → ⟨ w ∈ˢ α ⟩) (sym rx≡β) β∈α)

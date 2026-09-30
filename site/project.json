@@ -134,6 +134,9 @@
     }
   ],
   "agda_policy": {
+    "postfix_projections": ["fst", "snd"],
+    "infix_applications": true,
+    "fixity_before_definition": true,
     "options": [
       "--cubical",
       "--safe",

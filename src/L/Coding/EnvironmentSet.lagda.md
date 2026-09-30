@@ -117,17 +117,17 @@ of the model.
 
 ```agda
 stageFor : (X : Type ℓ) (f : X → S)
-         → Σ[ β ∶ V ℓ ] (IsOrd β × ((x : X) → ⟨ fst (f x) ∈ Lset β ⟩))
+         → Σ[ β ∶ V ℓ ] (IsOrd β × ((x : X) → ⟨ (f x) .fst ∈ Lset β ⟩))
 stageFor X f = β , (oβ , mem)
   where
-  b = boundingOrd X (λ x → stage (fst (f x)) (f x .snd))
-        (λ x → stage-ord (fst (f x)) (f x .snd))
+  b = boundingOrd X (λ x → stage ((f x) .fst) (f x .snd))
+        (λ x → stage-ord ((f x) .fst) (f x .snd))
   β = b .fst
   oβ : IsOrd β
   oβ = b .snd .fst
-  mem : (x : X) → ⟨ fst (f x) ∈ Lset β ⟩
-  mem x = Lset-mono {α = β} {β = stage (fst (f x)) (f x .snd)} (b .snd .snd x)
-            (stage-mem (fst (f x)) (f x .snd))
+  mem : (x : X) → ⟨ (f x) .fst ∈ Lset β ⟩
+  mem x = Lset-mono {α = β} {β = stage ((f x) .fst) (f x .snd)} (b .snd .snd x)
+            (stage-mem ((f x) .fst) (f x .snd))
 ```
 
 <!--en-->
@@ -164,23 +164,23 @@ module _ (B : S) where
 
 ```agda
   private
-    ix : ⟪ fst B ⟫ → S
-    ix m = ⟪ fst B ⟫↪ m
-         , isL-trans (∈∈ₛ {a = ⟪ fst B ⟫↪ m} {b = fst B} .snd (∈ₛ⟪ fst B ⟫↪ m))
-             (snd B)
+    ix : ⟪ B .fst ⟫ → S
+    ix m = ⟪ B .fst ⟫↪ m
+         , isL-trans (∈∈ₛ {a = ⟪ B .fst ⟫↪ m} {b = B .fst} .snd (∈ₛ⟪ B .fst ⟫↪ m))
+             (B .snd)
 
   Ix : ℕ → Type ℓ
-  Ix n = Fin n → ⟪ fst B ⟫
+  Ix n = Fin n → ⟪ B .fst ⟫
 
   opaque
-    envSL : {n : ℕ} (g : Ix n) → ⟨ isL (env (λ i → fst (ix (g i)))) ⟩
-    envSL {n} g = envL β oβ (λ i → fst (ix (g i))) mem
+    envSL : {n : ℕ} (g : Ix n) → ⟨ isL (env (λ i → (ix (g i)) .fst)) ⟩
+    envSL {n} g = envL β oβ (λ i → (ix (g i)) .fst) mem
       where
       pairs : Lift {ℓ-zero} {ℓ} (Fin n) → S
       pairs i = prʟ (numeralL (toℕ (lower i))) (ix (g (lower i)))
 
       sf : Σ[ b ∶ V ℓ ] (IsOrd b
-         × ((i : Lift {ℓ-zero} {ℓ} (Fin n)) → ⟨ fst (pairs i) ∈ Lset b ⟩))
+         × ((i : Lift {ℓ-zero} {ℓ} (Fin n)) → ⟨ (pairs i) .fst ∈ Lset b ⟩))
       sf = stageFor (Lift {ℓ-zero} {ℓ} (Fin n)) pairs
 
       β : V ℓ
@@ -189,14 +189,14 @@ module _ (B : S) where
       oβ : IsOrd β
       oβ = sf .snd .fst
 
-      mem : (i : Fin n) → ⟨ pr (# (toℕ i)) (fst (ix (g i))) ∈ Lset β ⟩
+      mem : (i : Fin n) → ⟨ pr (# (toℕ i)) ((ix (g i)) .fst) ∈ Lset β ⟩
       mem i = subst (λ w → ⟨ w ∈ Lset β ⟩)
         (prʟ-fst (numeralL (toℕ i)) (ix (g i))
           ∙ cong₂ pr (numeralL-fst (toℕ i)) refl)
         (sf .snd .snd (lift i))
 
   envS : {n : ℕ} → Ix n → S
-  envS g = env (λ i → fst (ix (g i))) , envSL g
+  envS g = env (λ i → (ix (g i)) .fst) , envSL g
 ```
 
 <!--en-->
@@ -234,7 +234,7 @@ description as the chapter wrote it, which is worth more than saving them.
                  ∧̇ envOverAt (suc (suc zero)) (suc zero) zero) ))
 
   private
-    sf : (n : ℕ) → Σ[ β ∶ V ℓ ] (IsOrd β × ((g : Ix n) → ⟨ fst (envS g) ∈ Lset β ⟩))
+    sf : (n : ℕ) → Σ[ β ∶ V ℓ ] (IsOrd β × ((g : Ix n) → ⟨ (envS g) .fst ∈ Lset β ⟩))
     sf n = stageFor (Ix n) envS
 
     amb : (n : ℕ) → S
@@ -285,15 +285,15 @@ the indices below `n` are exactly the numerals below `n`.
 
 ```agda
     private
-      out : (s : V ℓ) → ⟨ s ∈ fst (envS g) ⟩
-          → ∥ (Σ[ i ∶ Fin n ] (pr (# (toℕ i)) (fst (ix (g i))) ≡ s)) ∥₁
+      out : (s : V ℓ) → ⟨ s ∈ (envS g) .fst ⟩
+          → ∥ (Σ[ i ∶ Fin n ] (pr (# (toℕ i)) ((ix (g i)) .fst) ≡ s)) ∥₁
       out s = map₁ (λ { (li , e) → lower li , e })
 
-      into : (i : Fin n) → ⟨ pr (# (toℕ i)) (fst (ix (g i))) ∈ fst (envS g) ⟩
+      into : (i : Fin n) → ⟨ pr (# (toℕ i)) ((ix (g i)) .fst) ∈ (envS g) .fst ⟩
       into i = ∣ lift i , refl ∣₁
 
-      val∈ : (i : Fin n) → ⟨ fst (ix (g i)) ∈ fst B ⟩
-      val∈ i = ∈∈ₛ {a = ⟪ fst B ⟫↪ (g i)} {b = fst B} .snd (∈ₛ⟪ fst B ⟫↪ (g i))
+      val∈ : (i : Fin n) → ⟨ (ix (g i)) .fst ∈ B .fst ⟩
+      val∈ i = ∈∈ₛ {a = ⟪ B .fst ⟫↪ (g i)} {b = B .fst} .snd (∈ₛ⟪ B .fst ⟫↪ (g i))
 
       δ : S ^ 3
       δ = B ∷ nn n ∷ envS g ∷ []
@@ -306,40 +306,40 @@ the indices below `n` are exactly the numerals below `n`.
       where
       sv : ⟨ δ ⊨ svAt E ⟩
       sv = svAt-in E δ (λ x y y' p q →
-        rec₁ (setIsSet (fst y) (fst y'))
-          (λ { (i , ei) → rec₁ (setIsSet (fst y) (fst y'))
+        rec₁ (setIsSet (y .fst) (y' .fst))
+          (λ { (i , ei) → rec₁ (setIsSet (y .fst) (y' .fst))
             (λ { (j , ej) → sym (pr-inj ei .snd)
-               ∙ cong (λ k → fst (ix (g k)))
+               ∙ cong (λ k → (ix (g k)) .fst)
                    (inj-toℕ (#-inj′ (pr-inj ei .fst ∙ sym (pr-inj ej .fst))))
                ∙ pr-inj ej .snd })
-            (out (pr (fst x) (fst y')) q) })
-          (out (pr (fst x) (fst y)) p))
+            (out (pr (x .fst) (y' .fst)) q) })
+          (out (pr (x .fst) (y .fst)) p))
 
       dom : ⟨ δ ⊨ domAt E (suc zero) ⟩
       dom x = fwd , bwd
         where
-        fwd : ⟨ (x ∷ δ) ⊨ inDomAt (suc E) zero ⟩ → ⟨ fst x ∈ (# n) ⟩
-        fwd hd = rec₁ (snd (fst x ∈ (# n)))
-          (λ { (y , p) → rec₁ (snd (fst x ∈ (# n)))
+        fwd : ⟨ (x ∷ δ) ⊨ inDomAt (suc E) zero ⟩ → ⟨ x .fst ∈ (# n) ⟩
+        fwd hd = rec₁ ((x .fst ∈ (# n)) .snd)
+          (λ { (y , p) → rec₁ ((x .fst ∈ (# n)) .snd)
             (λ { (i , ei) → subst (λ w → ⟨ w ∈ (# n) ⟩) (pr-inj ei .fst)
                    (#mono (toℕ i) n (toℕ<n i)) })
-            (out (pr (fst x) (fst y)) p) })
+            (out (pr (x .fst) (y .fst)) p) })
           (subst ⟨_⟩ (inDomAt-adequate (suc E) zero (x ∷ δ)) hd)
 
-        bwd : ⟨ fst x ∈ (# n) ⟩ → ⟨ (x ∷ δ) ⊨ inDomAt (suc E) zero ⟩
+        bwd : ⟨ x .fst ∈ (# n) ⟩ → ⟨ (x ∷ δ) ⊨ inDomAt (suc E) zero ⟩
         bwd hx = subst ⟨_⟩ (sym (inDomAt-adequate (suc E) zero (x ∷ δ)))
           (map₁
             (λ { (m , m<n , e) →
               ix (g (fromℕ' n m m<n))
-              , subst (λ w → ⟨ pr w (fst (ix (g (fromℕ' n m m<n))))
-                                 ∈ fst (envS g) ⟩)
+              , subst (λ w → ⟨ pr w ((ix (g (fromℕ' n m m<n))) .fst)
+                                 ∈ (envS g) .fst ⟩)
                   (cong #_ (toFromId' n m m<n) ∙ sym e) (into (fromℕ' n m m<n)) })
-            (∈#-elim n (fst x) hx))
+            (∈#-elim n (x .fst) hx))
 
       vals : ⟨ δ ⊨ valuesInAt E zero ⟩
-      vals x y hp = rec₁ (snd (fst y ∈ fst B))
-        (λ { (i , ei) → subst (λ w → ⟨ w ∈ fst B ⟩) (pr-inj ei .snd) (val∈ i) })
-        (out (pr (fst x) (fst y))
+      vals x y hp = rec₁ ((y .fst ∈ B .fst) .snd)
+        (λ { (i , ei) → subst (λ w → ⟨ w ∈ B .fst ⟩) (pr-inj ei .snd) (val∈ i) })
+        (out (pr (x .fst) (y .fst))
           (subst ⟨_⟩ (appAt-adequate (suc (suc E)) (suc zero) zero (y ∷ x ∷ δ))
             hp))
 
@@ -349,7 +349,7 @@ the indices below `n` are exactly the numerals below `n`.
           (λ { (i , ei) → nn (toℕ i)
              , ( ix (g i)
                , ( #mono (toℕ i) n (toℕ<n i) , (val∈ i , sym ei) ) ) })
-          (out (fst s) s∈))
+          (out (s .fst) s∈))
 
     envSetIn : ⟨ (envS g ∷ []) ⊨ envFo n ⟩
     envSetIn = ∣ nn n , ∣ B , (refl , (refl , envOver)) ∣₁ ∣₁
@@ -401,7 +401,7 @@ unwanted elements could enter.
 <summary class="submodule-fold-heading">
 ```agda
   module Recover (n : ℕ) {k : ℕ} (γ : S ^ k) (Ei di bi : Fin k)
-    (qd : fst (lookup di γ) ≡ # n) (qb : fst (lookup bi γ) ≡ fst B)
+    (qd : (lookup di γ) .fst ≡ # n) (qb : (lookup bi γ) .fst ≡ B .fst)
     (h : ⟨ γ ⊨ envOverAt Ei di bi ⟩)
     where
 ```
@@ -414,12 +414,12 @@ unwanted elements could enter.
       e = lookup Ei γ
 
       Entry : Fin n → Type (ℓ-suc ℓ)
-      Entry i = Σ[ y ∶ S ] ⟨ pr (# (toℕ i)) (fst y) ∈ fst e ⟩
+      Entry i = Σ[ y ∶ S ] ⟨ pr (# (toℕ i)) (y .fst) ∈ e .fst ⟩
 
       isPropEntry : (i : Fin n) → isProp (Entry i)
       isPropEntry i (y , p) (y' , p') =
-        Σ≡Prop (λ w → snd (pr (# (toℕ i)) (fst w) ∈ fst e))
-          (Σ≡Prop (λ v → snd (isL v))
+        Σ≡Prop (λ w → (pr (# (toℕ i)) (w .fst) ∈ e .fst) .snd)
+          (Σ≡Prop (λ v → (isL v) .snd)
             (svAt-out Ei γ (envOver-sv Ei di bi γ h)
               (nn (toℕ i)) y y' p p'))
 
@@ -429,9 +429,9 @@ unwanted elements could enter.
           (nn (toℕ i)) (subst (λ z → ⟨ (# (toℕ i)) ∈ z ⟩) (sym qd)
             (#mono (toℕ i) n (toℕ<n i))))
 
-      fib : (i : Fin n) → Σ[ m ∶ ⟪ fst B ⟫ ] (⟪ fst B ⟫↪ m ≡ fst (entry i .fst))
-      fib i = ∈-asFiber {a = fst (entry i .fst)} {b = fst B}
-        (subst (λ z → ⟨ fst (entry i .fst) ∈ z ⟩) qb
+      fib : (i : Fin n) → Σ[ m ∶ ⟪ B .fst ⟫ ] (⟪ B .fst ⟫↪ m ≡ (entry i .fst) .fst)
+      fib i = ∈-asFiber {a = (entry i .fst) .fst} {b = B .fst}
+        (subst (λ z → ⟨ (entry i .fst) .fst ∈ z ⟩) qb
           (valuesInAt-out Ei bi γ (envOver-values Ei di bi γ h)
             (nn (toℕ i)) (entry i .fst) (entry i .snd)))
 
@@ -439,36 +439,36 @@ unwanted elements could enter.
     g i = fib i .fst
 
     private
-      val≡ : (i : Fin n) → fst (ix (g i)) ≡ fst (entry i .fst)
+      val≡ : (i : Fin n) → (ix (g i)) .fst ≡ (entry i .fst) .fst
       val≡ i = fib i .snd
 
-      fwd : (w : V ℓ) → ⟨ w ∈ fst (envS g) ⟩ → ⟨ w ∈ fst e ⟩
-      fwd w = rec₁ (snd (w ∈ fst e))
-        (λ { (li , q) → subst (λ z → ⟨ z ∈ fst e ⟩)
+      fwd : (w : V ℓ) → ⟨ w ∈ (envS g) .fst ⟩ → ⟨ w ∈ e .fst ⟩
+      fwd w = rec₁ ((w ∈ e .fst) .snd)
+        (λ { (li , q) → subst (λ z → ⟨ z ∈ e .fst ⟩)
                (cong (pr (# (toℕ (lower li)))) (sym (val≡ (lower li))) ∙ q)
                (entry (lower li) .snd) })
 
-      bwd : (w : V ℓ) → ⟨ w ∈ fst e ⟩ → ⟨ w ∈ fst (envS g) ⟩
+      bwd : (w : V ℓ) → ⟨ w ∈ e .fst ⟩ → ⟨ w ∈ (envS g) .fst ⟩
       bwd w hw = rec₁ squash₁
         (λ { (u , (v , (u∈ , (v∈ , eq)))) → rec₁ squash₁
           (λ { (m , (m<n , um)) →
             let i = fromℕ' n m m<n
-                iu : # (toℕ i) ≡ fst u
+                iu : # (toℕ i) ≡ u .fst
                 iu = cong #_ (toFromId' n m m<n) ∙ sym um
-                hv : ⟨ pr (# (toℕ i)) (fst v) ∈ fst e ⟩
-                hv = subst (λ z → ⟨ z ∈ fst e ⟩)
-                       (eq ∙ cong (λ z → pr z (fst v)) (sym iu)) hw
-                same : fst v ≡ fst (entry i .fst)
+                hv : ⟨ pr (# (toℕ i)) (v .fst) ∈ e .fst ⟩
+                hv = subst (λ z → ⟨ z ∈ e .fst ⟩)
+                       (eq ∙ cong (λ z → pr z (v .fst)) (sym iu)) hw
+                same : v .fst ≡ (entry i .fst) .fst
                 same = svAt-out Ei γ (envOver-sv Ei di bi γ h)
                          (nn (toℕ i)) v (entry i .fst) hv (entry i .snd)
             in ∣ lift i , cong (pr (# (toℕ i))) (val≡ i ∙ sym same)
-                        ∙ cong (λ z → pr z (fst v)) iu ∙ sym eq ∣₁ })
-          (∈#-elim n (fst u) (subst (λ z → ⟨ fst u ∈ z ⟩) qd u∈)) })
+                        ∙ cong (λ z → pr z (v .fst)) iu ∙ sym eq ∣₁ })
+          (∈#-elim n (u .fst) (subst (λ z → ⟨ u .fst ∈ z ⟩) qd u∈)) })
         (pairsIn-out Ei di bi γ
           (envOver-pairs Ei di bi γ h)
-          (w , isL-trans {x = fst e} {y = w} hw (snd e)) hw)
+          (w , isL-trans {x = e .fst} {y = w} hw (e .snd)) hw)
 
-    recovers : fst e ≡ fst (envS g)
+    recovers : e .fst ≡ (envS g) .fst
     recovers = extensionalV (λ w → ⇔toPath (bwd w) (fwd w))
 ```
 </div>
@@ -479,7 +479,7 @@ unwanted elements could enter.
     (sf n .snd .snd g , envSetIn g)
 
   envSet-out : (n : ℕ) (x : S) → ⟨ x ∈ˢ envSet n ⟩
-             → ∥ (Σ[ g ∶ Ix n ] (fst x ≡ fst (envS g))) ∥₁
+             → ∥ (Σ[ g ∶ Ix n ] (x .fst ≡ (envS g) .fst)) ∥₁
   envSet-out n x hx = rec₁ squash₁
     (λ { (d , hd) → map₁
       (λ { (b , (qd , (qb , hov))) →

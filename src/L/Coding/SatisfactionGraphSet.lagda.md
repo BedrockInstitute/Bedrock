@@ -120,10 +120,10 @@ For a code `x` with membership certificate `mx`, write this unique value as `val
 
 ```agda
   opaque
-    valOf : (x : S) → ⟨ fst x ∈ fst (AllCodes W) ⟩ → S
+    valOf : (x : S) → ⟨ x .fst ∈ (AllCodes W) .fst ⟩ → S
     valOf x mx = Table.val W W x mx
 
-    valOf≡ : (x : S) (mx : ⟨ fst x ∈ fst (AllCodes W) ⟩) → valOf x mx ≡ Table.val W W x mx
+    valOf≡ : (x : S) (mx : ⟨ x .fst ∈ (AllCodes W) .fst ⟩) → valOf x mx ≡ Table.val W W x mx
     valOf≡ x mx = refl
 ```
 
@@ -152,10 +152,10 @@ Two facts make `gr` functional. Existence says that `gr` holds of the table valu
 <!--/-->
 
 ```agda
-      defines' : (x : S) (mx : ⟨ fst x ∈ fst (AllCodes W) ⟩) → ⟨ (valOf x mx ∷ x ∷ []) ⊨ gr ⟩
+      defines' : (x : S) (mx : ⟨ x .fst ∈ (AllCodes W) .fst ⟩) → ⟨ (valOf x mx ∷ x ∷ []) ⊨ gr ⟩
       defines' x mx = Table.funct W W x mx .fst .snd
 
-      only' : (x : S) (mx : ⟨ fst x ∈ fst (AllCodes W) ⟩) (y : S) → ⟨ (y ∷ x ∷ []) ⊨ gr ⟩ → y ≡ valOf x mx
+      only' : (x : S) (mx : ⟨ x .fst ∈ (AllCodes W) .fst ⟩) (y : S) → ⟨ (y ∷ x ∷ []) ⊨ gr ⟩ → y ≡ valOf x mx
       only' x mx y h = sym (Table.val-uniq W W x mx y h)
 ```
 
@@ -172,15 +172,15 @@ For each code, the type of solutions to `gr` is contractible. Its centre is the 
     M = record
       { dom = AllCodes W ; graph = gr
       ; funct = λ x mx → (valOf x mx , defines' x mx)
-          , λ { (y , h) → Σ≡Prop (λ w → snd ((w ∷ x ∷ []) ⊨ gr)) (sym (only' x mx y h)) } }
+          , λ { (y , h) → Σ≡Prop (λ w → ((w ∷ x ∷ []) ⊨ gr) .snd) (sym (only' x mx y h)) } }
 ```
 
 <!--en-->
-Replacement now applies to the functional relation `gr` over the constructible set `AllCodes W`. It collects the ordered pairs `pr (fst x) (fst (valOf x mx))` into a constructible set, denoted `pairs`. Thus the graph is internal to `L`: both its domain and every value are constructible, and replacement forms their pair relation as one set.
+Replacement now applies to the functional relation `gr` over the constructible set `AllCodes W`. It collects the ordered pairs `pr (x .fst) ((valOf x mx) .fst)` into a constructible set, denoted `pairs`. Thus the graph is internal to `L`: both its domain and every value are constructible, and replacement forms their pair relation as one set.
 <!--zh-->
-现在可以对可构造集合 `AllCodes W` 上的函数关系 `gr` 应用替换。它把有序对 `pr (fst x) (fst (valOf x mx))` 收集成可构造集合，记作 `pairs`。因此这张图位于 `L` 内部：定义域及每个取值都是可构造的，替换把它们的配对关系组成一个集合。
+现在可以对可构造集合 `AllCodes W` 上的函数关系 `gr` 应用替换。它把有序对 `pr (x .fst) ((valOf x mx) .fst)` 收集成可构造集合，记作 `pairs`。因此这张图位于 `L` 内部：定义域及每个取值都是可构造的，替换把它们的配对关系组成一个集合。
 <!--ja-->
-これで、構成可能集合 `AllCodes W` 上の関数的関係 `gr` に置換を適用できる。順序対 `pr (fst x) (fst (valOf x mx))` が一つの構成可能集合に集められ、これを `pairs` と書く。したがってグラフは `L` の内部にある。定義域と各値が構成可能であり、置換がそれらの対関係を一つの集合にするからである。
+これで、構成可能集合 `AllCodes W` 上の関数的関係 `gr` に置換を適用できる。順序対 `pr (x .fst) ((valOf x mx) .fst)` が一つの構成可能集合に集められ、これを `pairs` と書く。したがってグラフは `L` の内部にある。定義域と各値が構成可能であり、置換がそれらの対関係を一つの集合にするからである。
 <!--/-->
 
 ```agda
@@ -200,21 +200,21 @@ Every code in `AllCodes W` contributes its graph pair. Concretely, `pairs-in` pr
 <!--/-->
 
 ```agda
-    pairs-in : (x : S) (mx : ⟨ fst x ∈ fst (AllCodes W) ⟩) → ⟨ pr (fst x) (fst (valOf x mx)) ∈ fst pairs ⟩
+    pairs-in : (x : S) (mx : ⟨ x .fst ∈ (AllCodes W) .fst ⟩) → ⟨ pr (x .fst) ((valOf x mx) .fst) ∈ pairs .fst ⟩
     pairs-in = G.F-in
 ```
 
 <!--en-->
-Conversely, suppose an ordered pair `pr (fst x) (fst y)` belongs to `pairs`. The fibre of the replacement image is proposition-valued, so its truncated witness may be eliminated into the dependent pair stating that `x` is in `AllCodes W` and that `y` equals the unique value there. This is the untruncated conclusion of `pairs-out`.
+Conversely, suppose an ordered pair `pr (x .fst) (y .fst)` belongs to `pairs`. The fibre of the replacement image is proposition-valued, so its truncated witness may be eliminated into the dependent pair stating that `x` is in `AllCodes W` and that `y` equals the unique value there. This is the untruncated conclusion of `pairs-out`.
 <!--zh-->
-反过来，假设有序对 `pr (fst x) (fst y)` 属于 `pairs`。替换像的纤维取值于命题，因此可以把截断见证消去到这样一个依值对：`x` 属于 `AllCodes W`，并且 `y` 等于该处的唯一取值。这就是 `pairs-out` 给出的未截断结论。
+反过来，假设有序对 `pr (x .fst) (y .fst)` 属于 `pairs`。替换像的纤维取值于命题，因此可以把截断见证消去到这样一个依值对：`x` 属于 `AllCodes W`，并且 `y` 等于该处的唯一取值。这就是 `pairs-out` 给出的未截断结论。
 <!--ja-->
-逆に、順序対 `pr (fst x) (fst y)` が `pairs` に属すると仮定する。置換像のファイバーは命題値なので、切り詰められた証人を、`x` が `AllCodes W` に属し、`y` がそこでの一意な値に等しいことを述べる依存対へ消去できる。これが `pairs-out` の切り詰めなしの結論である。
+逆に、順序対 `pr (x .fst) (y .fst)` が `pairs` に属すると仮定する。置換像のファイバーは命題値なので、切り詰められた証人を、`x` が `AllCodes W` に属し、`y` がそこでの一意な値に等しいことを述べる依存対へ消去できる。これが `pairs-out` の切り詰めなしの結論である。
 <!--/-->
 
 ```agda
-    pairs-out : (x y : S) → ⟨ pr (fst x) (fst y) ∈ fst pairs ⟩
-              → Σ[ mx ∶ ⟨ fst x ∈ fst (AllCodes W) ⟩ ] (fst y ≡ fst (valOf x mx))
+    pairs-out : (x y : S) → ⟨ pr (x .fst) (y .fst) ∈ pairs .fst ⟩
+              → Σ[ mx ∶ ⟨ x .fst ∈ (AllCodes W) .fst ⟩ ] (y .fst ≡ (valOf x mx) .fst)
     pairs-out = G.pair-out
 ```
 
@@ -227,9 +227,9 @@ An arbitrary member of `pairs` need not arrive already displayed as an ordered p
 <!--/-->
 
 ```agda
-    pairs-shape : (e : S) → ⟨ fst e ∈ fst pairs ⟩
-                → ∥ Σ[ x ∶ S ] Σ[ mx ∶ ⟨ fst x ∈ fst (AllCodes W) ⟩ ] (fst e ≡ pr (fst x) (fst (valOf x mx))) ∥₁
-    pairs-shape e h = MapGraph.F-out M (fst e) h
+    pairs-shape : (e : S) → ⟨ e .fst ∈ pairs .fst ⟩
+                → ∥ Σ[ x ∶ S ] Σ[ mx ∶ ⟨ x .fst ∈ (AllCodes W) .fst ⟩ ] (e .fst ≡ pr (x .fst) ((valOf x mx) .fst)) ∥₁
+    pairs-shape e h = MapGraph.F-out M (e .fst) h
 ```
 </div>
 </details>

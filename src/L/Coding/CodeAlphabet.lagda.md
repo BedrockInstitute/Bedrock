@@ -66,11 +66,11 @@ The object-language syntax is generic in its alphabet. A type `Formula K n` of f
 <!--/-->
 
 <!--en-->
-Two distinctions organize the construction. First, a member of a set of the hierarchy is presented by an abstract index `q` in `⟪ a ⟫`, and the embedding `⟪ a ⟫↪` sends that index to the set it designates; the index is a name, the value `⟪ a ⟫↪ q` is the denotation in `V ℓ`, and the two roles are kept apart. Second, `W` is not an arbitrary set but an element of the carrier `S` of the constructible structure, so it comes with an underlying set `fst W` of the hierarchy and a constructibility certificate; this is what licenses reading its members as parameters of a language about constructible sets. The alphabet will be `⟪ fst W ⟫` itself, and the next section assembles these pieces into the codes `ct` and `cd`.
+Two distinctions organize the construction. First, a member of a set of the hierarchy is presented by an abstract index `q` in `⟪ a ⟫`, and the embedding `⟪ a ⟫↪` sends that index to the set it designates; the index is a name, the value `⟪ a ⟫↪ q` is the denotation in `V ℓ`, and the two roles are kept apart. Second, `W` is not an arbitrary set but an element of the carrier `S` of the constructible structure, so it comes with an underlying set `W .fst` of the hierarchy and a constructibility certificate; this is what licenses reading its members as parameters of a language about constructible sets. The alphabet will be `⟪ W .fst ⟫` itself, and the next section assembles these pieces into the codes `ct` and `cd`.
 <!--zh-->
-两个区分组织了整个构造。其一，层级的集合的元素由 `⟪ a ⟫` 中的抽象索引 `q` 呈现，嵌入 `⟪ a ⟫↪` 把该索引送到它所指称的集合；索引是名字，值 `⟪ a ⟫↪ q` 是它在 `V ℓ` 中的指称，两种角色始终分开。其二，`W` 不是任意集合，而是可构造结构载体 `S` 的元素，因而带有层级中的底层集合 `fst W` 与可构造性证书；正是这一点使我们能把它的元素读作关于可构造集合的语言的参数。字母表将取为 `⟪ fst W ⟫` 本身，下一节把这些部件装配成码 `ct` 与 `cd`。
+两个区分组织了整个构造。其一，层级的集合的元素由 `⟪ a ⟫` 中的抽象索引 `q` 呈现，嵌入 `⟪ a ⟫↪` 把该索引送到它所指称的集合；索引是名字，值 `⟪ a ⟫↪ q` 是它在 `V ℓ` 中的指称，两种角色始终分开。其二，`W` 不是任意集合，而是可构造结构载体 `S` 的元素，因而带有层级中的底层集合 `W .fst` 与可构造性证书；正是这一点使我们能把它的元素读作关于可构造集合的语言的参数。字母表将取为 `⟪ W .fst ⟫` 本身，下一节把这些部件装配成码 `ct` 与 `cd`。
 <!--ja-->
-二つの区別が構成を組織する。第一に、階層の集合の要素は `⟪ a ⟫` の抽象的なインデックス `q` によって提示され、埋め込み `⟪ a ⟫↪` はそのインデックスを指された集合へ送る。インデックスは名前であり、値 `⟪ a ⟫↪ q` は `V ℓ` における指示対象であり、この二つの役割は終始区別される。第二に、`W` は任意の集合ではなく、構成可能な構造の台 `S` の要素なので、階層における台集合 `fst W` と構成可能性の証拠を伴う。まさにこのおかげで、その要素を構成可能集合についての言語のパラメータとして読むことができる。アルファベットは `⟪ fst W ⟫` そのものにとられ、次の節でこれらの部品が符号 `ct` と `cd` へと組み上げられる。
+二つの区別が構成を組織する。第一に、階層の集合の要素は `⟪ a ⟫` の抽象的なインデックス `q` によって提示され、埋め込み `⟪ a ⟫↪` はそのインデックスを指された集合へ送る。インデックスは名前であり、値 `⟪ a ⟫↪ q` は `V ℓ` における指示対象であり、この二つの役割は終始区別される。第二に、`W` は任意の集合ではなく、構成可能な構造の台 `S` の要素なので、階層における台集合 `W .fst` と構成可能性の証拠を伴う。まさにこのおかげで、その要素を構成可能集合についての言語のパラメータとして読むことができる。アルファベットは `⟪ W .fst ⟫` そのものにとられ、次の節でこれらの部品が符号 `ct` と `cd` へと組み上げられる。
 <!--/-->
 
 ```agda
@@ -96,11 +96,11 @@ The section fixes a constructible set `W` as an element of the carrier `S` and a
 <!--/-->
 
 <!--en-->
-An element `W : S` packages a set of the hierarchy with structure data; `fst W` is its underlying set. The type `Ab` is then `⟪ fst W ⟫`, the type of indices for members of that set, and `ι` is the embedding `⟪ fst W ⟫↪` that sends each index to the member it designates inside `V ℓ`. So an inhabitant of `Ab` is exactly an available constant symbol, and `ι` computes its denotation as a set.
+An element `W : S` packages a set of the hierarchy with structure data; `W .fst` is its underlying set. The type `Ab` is then `⟪ W .fst ⟫`, the type of indices for members of that set, and `ι` is the embedding `⟪ W .fst ⟫↪` that sends each index to the member it designates inside `V ℓ`. So an inhabitant of `Ab` is exactly an available constant symbol, and `ι` computes its denotation as a set.
 <!--zh-->
-元素 `W : S` 把层级中的一个集合与结构数据打包在一起；`fst W` 是其底层集合。于是 `Ab` 就是 `⟪ fst W ⟫`，即该集合元素的索引类型，而 `ι` 是嵌入 `⟪ fst W ⟫↪`，把每个索引送到它在 `V ℓ` 中所指称的元素。因此 `Ab` 的元素恰好就是一个可用常元符号，`ι` 则算出它作为集合的指称。
+元素 `W : S` 把层级中的一个集合与结构数据打包在一起；`W .fst` 是其底层集合。于是 `Ab` 就是 `⟪ W .fst ⟫`，即该集合元素的索引类型，而 `ι` 是嵌入 `⟪ W .fst ⟫↪`，把每个索引送到它在 `V ℓ` 中所指称的元素。因此 `Ab` 的元素恰好就是一个可用常元符号，`ι` 则算出它作为集合的指称。
 <!--ja-->
-要素 `W : S` は、階層のある集合を構造のデータとともに束ねたものである。`fst W` がその台集合になる。したがって `Ab` は `⟪ fst W ⟫`、つまりその集合の要素へのインデックスの型であり、`ι` は埋め込み `⟪ fst W ⟫↪` で、各インデックスを `V ℓ` 内の指された要素へ送る。つまり `Ab` の要素こそが利用可能な定数記号であり、`ι` は集合としてのその指示対象を計算する。
+要素 `W : S` は、階層のある集合を構造のデータとともに束ねたものである。`W .fst` がその台集合になる。したがって `Ab` は `⟪ W .fst ⟫`、つまりその集合の要素へのインデックスの型であり、`ι` は埋め込み `⟪ W .fst ⟫↪` で、各インデックスを `V ℓ` 内の指された要素へ送る。つまり `Ab` の要素こそが利用可能な定数記号であり、`ι` は集合としてのその指示対象を計算する。
 <!--/-->
 
 <details open class="submodule-fold">
@@ -113,23 +113,23 @@ module Alphabet (W : S) where
 
 ```agda
   Ab : Type ℓ
-  Ab = ⟪ fst W ⟫
+  Ab = ⟪ W .fst ⟫
 
   ι : Ab → V ℓ
-  ι = ⟪ fst W ⟫↪
+  ι = ⟪ W .fst ⟫↪
 ```
 
 <!--en-->
-The membership certificate `ι∈` says that for every constant symbol `q`, the set `ι q` genuinely is a member of `fst W`; it is read off from the library's equivalence between membership and the classified membership relation `∈ₛ`. With the alphabet in place, `cd` and `ct` are now almost forced: `mapFo ι` and `mapTm ι` rewrite a formula or term by replacing each constant `con q` with `con (ι q)`, and the brackets `⌜_⌝` and `⌜_⌝ᵗ` from the hierarchy coding then package the result as a set. The logical skeleton of the formula survives the relabeling untouched, which is exactly why the coding can be reused.
+The membership certificate `ι∈` says that for every constant symbol `q`, the set `ι q` genuinely is a member of `W .fst`; it is read off from the library's equivalence between membership and the classified membership relation `∈ₛ`. With the alphabet in place, `cd` and `ct` are now almost forced: `mapFo ι` and `mapTm ι` rewrite a formula or term by replacing each constant `con q` with `con (ι q)`, and the brackets `⌜_⌝` and `⌜_⌝ᵗ` from the hierarchy coding then package the result as a set. The logical skeleton of the formula survives the relabeling untouched, which is exactly why the coding can be reused.
 <!--zh-->
-成员关系证书 `ι∈` 说明：对每个常元符号 `q`，集合 `ι q` 确实是 `fst W` 的元素；它由库中成员关系与带分类的成员关系 `∈ₛ` 之间的等价直接读出。字母表就位后，`cd` 与 `ct` 几乎是被逼出来的：`mapFo ι` 与 `mapTm ι` 把每处常元 `con q` 替换为 `con (ι q)` 来改写公式或词项，随后层级编码的括号 `⌜_⌝` 与 `⌜_⌝ᵗ` 把所得结果打包为集合。改标后公式的逻辑骨架原样保留，这正是能够复用该编码的原因。
+成员关系证书 `ι∈` 说明：对每个常元符号 `q`，集合 `ι q` 确实是 `W .fst` 的元素；它由库中成员关系与带分类的成员关系 `∈ₛ` 之间的等价直接读出。字母表就位后，`cd` 与 `ct` 几乎是被逼出来的：`mapFo ι` 与 `mapTm ι` 把每处常元 `con q` 替换为 `con (ι q)` 来改写公式或词项，随后层级编码的括号 `⌜_⌝` 与 `⌜_⌝ᵗ` 把所得结果打包为集合。改标后公式的逻辑骨架原样保留，这正是能够复用该编码的原因。
 <!--ja-->
-所属の証拠 `ι∈` は、各定数記号 `q` に対して集合 `ι q` が実際に `fst W` の要素であることを述べる。これは、所属関係と分類つきの所属関係 `∈ₛ` との間のライブラリの同値からそのまま読み取れる。アルファベットが整うと、`cd` と `ct` はほとんど自動的に決まる。`mapFo ι` と `mapTm ι` が各定数 `con q` を `con (ι q)` に置き換えて論理式や項を書き換え、階層符号化の括弧 `⌜_⌝` と `⌜_⌝ᵗ` がその結果を集合としてまとめるのである。書き換えの後も論理式の論理的な骨格はそのまま保たれるので、既存の符号化をそのまま再利用できる。
+所属の証拠 `ι∈` は、各定数記号 `q` に対して集合 `ι q` が実際に `W .fst` の要素であることを述べる。これは、所属関係と分類つきの所属関係 `∈ₛ` との間のライブラリの同値からそのまま読み取れる。アルファベットが整うと、`cd` と `ct` はほとんど自動的に決まる。`mapFo ι` と `mapTm ι` が各定数 `con q` を `con (ι q)` に置き換えて論理式や項を書き換え、階層符号化の括弧 `⌜_⌝` と `⌜_⌝ᵗ` がその結果を集合としてまとめるのである。書き換えの後も論理式の論理的な骨格はそのまま保たれるので、既存の符号化をそのまま再利用できる。
 <!--/-->
 
 ```agda
-  ι∈ : (q : Ab) → ⟨ ι q ∈ fst W ⟩
-  ι∈ q = ∈∈ₛ {a = ι q} {b = fst W} .snd (∈ₛ⟪ fst W ⟫↪ q)
+  ι∈ : (q : Ab) → ⟨ ι q ∈ W .fst ⟩
+  ι∈ q = ∈∈ₛ {a = ι q} {b = W .fst} .snd (∈ₛ⟪ W .fst ⟫↪ q)
 
   cd : ∀ {n} → Formula Ab n → V ℓ
   cd ψ = VCode.⌜ mapFo ι ψ ⌝

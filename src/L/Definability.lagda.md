@@ -158,7 +158,7 @@ The constant interpretation `ι` is then just the equivalence `e` read as a func
 
 ```agda
         (Σ-cong-equiv-snd (λ v →
-          propBiimpl→Equiv (snd (v ∈ₛ A)) (snd (v ∈ˢ A))
+          propBiimpl→Equiv ((v ∈ₛ A) .snd) ((v ∈ˢ A) .snd)
             (∈∈ₛ {a = v} {b = A} .snd) (∈∈ₛ {a = v} {b = A} .fst)))
 
   ι : ⟪ A ⟫ → Σ[ x ∶ S ] (x ∈ᶜ M)
@@ -239,7 +239,7 @@ The first specification says each `defSet φ` is contained in `A`. A member of `
 
 ```agda
   defSet⊆A : (φ : Formula ⟪ A ⟫ 1) (y : S) → ⟨ y ∈ˢ defSet φ ⟩ → ⟨ y ∈ˢ A ⟩
-  defSet⊆A φ y = rec₁ (snd (y ∈ˢ A)) λ { ((m , _) , q) →
+  defSet⊆A φ y = rec₁ ((y ∈ˢ A) .snd) λ { ((m , _) , q) →
     subst (λ v → ⟨ v ∈ˢ A ⟩) q
           (∈∈ₛ {a = ⟪ A ⟫↪ m} {b = A} .snd (∈ₛ⟪ A ⟫↪ m)) }
 
@@ -275,7 +275,7 @@ The forward direction unpacks what membership merely gives: an index `(m' , h)`,
     where
     decode = ⊨ᵐ-small φ (ι m ∷ [])
     fwd : ⟨ ⟪ A ⟫↪ m ∈ˢ defSet φ ⟩ → ⟨ (ι m ∷ []) ⊨ᵐ φ ⟩
-    fwd = rec₁ (snd ((ι m ∷ []) ⊨ᵐ φ)) λ { ((m' , h) , q) →
+    fwd = rec₁ (((ι m ∷ []) ⊨ᵐ φ) .snd) λ { ((m' , h) , q) →
       invEq (decode .snd) (subst (λ k → ⟨ smallSat φ k ⟩) (⟪⟫↪-inj q) h) }
 ```
 
@@ -365,7 +365,7 @@ The dual containment `Def∋⊆A` says every element of `Def A` is a subset of `
 
 ```agda
   Def∋⊆A : (x : S) → ⟨ x ∈ˢ Def ⟩ → (y : S) → ⟨ y ∈ˢ x ⟩ → ⟨ y ∈ˢ A ⟩
-  Def∋⊆A x = rec₁ (isPropΠ λ y → isPropΠ λ _ → snd (y ∈ˢ A))
+  Def∋⊆A x = rec₁ (isPropΠ λ y → isPropΠ λ _ → (y ∈ˢ A) .snd)
     (λ { (φ , q) y y∈x → defSet⊆A φ y (subst (λ s → ⟨ y ∈ˢ s ⟩) (sym q) y∈x) })
 ```
 
@@ -433,7 +433,7 @@ The forward inclusion eliminates the truncated index of `y ∈ˢ defSet (atom m�
 <!--/-->
 
 ```agda
-      sub₁ y y∈ₛ = rec₁ (snd (y ∈ₛ ⟪ A ⟫↪ mₐ))
+      sub₁ y y∈ₛ = rec₁ ((y ∈ₛ ⟪ A ⟫↪ mₐ) .snd)
         (λ { ((m , h) , q) →
           subst (λ v → ⟨ v ∈ₛ ⟪ A ⟫↪ mₐ ⟩) q
             (∈∈ₛ {a = ⟪ A ⟫↪ m} {b = ⟪ A ⟫↪ mₐ} .fst

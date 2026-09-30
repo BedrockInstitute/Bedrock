@@ -349,7 +349,7 @@ Reading the tag clause first shows that the first slot is empty: it has no membe
   pins-out : ⟨ γ ⊨ pins N ⟩ → Tags γ N
   pins-out (h0 , hs) = go
     where
-    q0 : fst (lookup (N f0) γ) ≡ # 0
+    q0 : (lookup (N f0) γ) .fst ≡ # 0
     q0 = extensionalV (λ y → ⇔toPath
 ```
 
@@ -375,8 +375,8 @@ The auxiliary lemma `up` advances one link of the numeral chain. If slot `i` den
 <!--/-->
 
 ```agda
-    up : (i j : Fin m) (k : ℕ) → ⟨ γ ⊨ sucAtL i j ⟩ → fst (lookup i γ) ≡ # k
-       → fst (lookup j γ) ≡ # (suc k)
+    up : (i j : Fin m) (k : ℕ) → ⟨ γ ⊨ sucAtL i j ⟩ → (lookup i γ) .fst ≡ # k
+       → (lookup j γ) .fst ≡ # (suc k)
     up i j k h q = suc-out i j γ h ∙ cong sucV q
 ```
 
@@ -466,8 +466,8 @@ For the converse direction, suppose the slots already satisfy `Tags γ N`. A pur
 ```agda
   pins-in : Tags γ N → ⟨ γ ⊨ pins N ⟩
   pins-in tg =
-      (λ x x∈ → ⊥₀-rec (∅-empty (fst x) (∈∈ₛ {a = fst x} {b = ∅} .fst
-                  (subst (λ u → ⟨ fst x ∈ u ⟩) (tg f0) x∈))))
+      (λ x x∈ → ⊥₀-rec (∅-empty (x .fst) (∈∈ₛ {a = x .fst} {b = ∅} .fst
+                  (subst (λ u → ⟨ x .fst ∈ u ⟩) (tg f0) x∈))))
     , ( st f0 f1 refl , ( st f1 f2 refl , ( st f2 f3 refl , ( st f3 f4 refl , ( st f4 f5 refl , ( st f5 f6 refl
 ```
 
@@ -507,8 +507,8 @@ module DefInRead {k : ℕ} (w z : Fin k) (N : Fin 10 → Fin k) (body : Formula 
 
 ```agda
   private
-    Wv = fst (lookup w δ)
-    Zv = fst (lookup z δ)
+    Wv = (lookup w δ) .fst
+    Zv = (lookup z δ) .fst
 ```
 
 <!--en-->
@@ -535,7 +535,7 @@ Reading `defIn` preserves the propositional truncation around four witnesses `T`
 ```agda
   defIn-out : ⟨ δ ⊨ defIn w z N body ⟩
             → ∥ Σ[ T ∶ S ] Σ[ C ∶ S ] Σ[ E ∶ S ] Σ[ d ∶ S ]
-                (⟨ fst d ∈ Zv ⟩ × ((fst d ≡ 𝒟ₒ Wv) × ⟨ δ4 T C E d ⊨ body ⟩)) ∥₁
+                (⟨ d .fst ∈ Zv ⟩ × ((d .fst ≡ 𝒟ₒ Wv) × ⟨ δ4 T C E d ⊨ body ⟩)) ∥₁
   defIn-out = rec₁ squash₁ (λ { (T , (T∈ , h1)) → rec₁ squash₁ (λ { (C , (C∈ , h2)) →
     rec₁ squash₁ (λ { (E , (E∈ , h3)) → map₁ (λ { (d , (d∈ , (hs , (hd , hb)))) →
 ```
@@ -563,10 +563,10 @@ Conversely, proving `defIn` from semantic data requires explicit genuine witness
 <!--/-->
 
 ```agda
-  defIn-in : (W : S) → Wv ≡ fst W → (T C E d : S)
-           → ⟨ fst T ∈ Zv ⟩ → ⟨ fst C ∈ Zv ⟩ → ⟨ fst E ∈ Zv ⟩ → ⟨ fst d ∈ Zv ⟩
-           → fst T ≡ fst (SatGraph.pairs W) → fst C ≡ fst (AllCodes W) → fst E ≡ fst (Tower.tower W)
-           → fst d ≡ 𝒟ₒ (fst W) → ⟨ δ4 T C E d ⊨ body ⟩ → ⟨ δ ⊨ defIn w z N body ⟩
+  defIn-in : (W : S) → Wv ≡ W .fst → (T C E d : S)
+           → ⟨ T .fst ∈ Zv ⟩ → ⟨ C .fst ∈ Zv ⟩ → ⟨ E .fst ∈ Zv ⟩ → ⟨ d .fst ∈ Zv ⟩
+           → T .fst ≡ (SatGraph.pairs W) .fst → C .fst ≡ (AllCodes W) .fst → E .fst ≡ (Tower.tower W) .fst
+           → d .fst ≡ 𝒟ₒ (W .fst) → ⟨ δ4 T C E d ⊨ body ⟩ → ⟨ δ ⊨ defIn w z N body ⟩
   defIn-in W qw T C E d T∈ C∈ E∈ d∈ qT qC qE qd hb =
 ```
 
@@ -599,9 +599,9 @@ The predicate `Supply` says that, for an ordinal `c`, all four witnesses needed 
 ```agda
 Supply : (Zv : V ℓ) (c : V ℓ) → IsOrd c → Type (ℓ-suc ℓ)
 Supply Zv c oc =
-    ⟨ fst (SatGraph.pairs (LsetS c oc)) ∈ Zv ⟩
-  × ( ⟨ fst (AllCodes (LsetS c oc)) ∈ Zv ⟩
-  × ( ⟨ fst (Tower.tower (LsetS c oc)) ∈ Zv ⟩
+    ⟨ (SatGraph.pairs (LsetS c oc)) .fst ∈ Zv ⟩
+  × ( ⟨ (AllCodes (LsetS c oc)) .fst ∈ Zv ⟩
+  × ( ⟨ (Tower.tower (LsetS c oc)) .fst ∈ Zv ⟩
 ```
 
 <!--en-->
@@ -634,9 +634,9 @@ module StepRead {m : ℕ} (v b f z : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) 
 
 ```agda
   private
-    Vv = fst (lookup v γ)
-    Bv = fst (lookup b γ)
-    Fv = fst (lookup f γ)
+    Vv = (lookup v γ) .fst
+    Bv = (lookup b γ) .fst
+    Fv = (lookup f γ) .fst
 ```
 
 <!--en-->
@@ -648,7 +648,7 @@ Let `Zv` denote the underlying common bound. It controls where the auxiliary sat
 <!--/-->
 
 ```agda
-    Zv = fst (lookup z γ)
+    Zv = (lookup z γ) .fst
 ```
 
 <!--en-->
@@ -690,7 +690,7 @@ The read lemma for one step assumes separately that every pair row below `Bv` ha
   step-out (hi , ho) vals ents = extensionalV (λ x → ⇔toPath (fwd x) (bwd x))
     where
     fwd : (x : V ℓ) → ⟨ x ∈ Vv ⟩ → ⟨ x ∈ Lset Bv ⟩
-    fwd x x∈ = rec₁ (snd (x ∈ Lset Bv)) (λ { (c , (c∈ , h1)) → rec₁ (snd (x ∈ Lset Bv))
+    fwd x x∈ = rec₁ ((x ∈ Lset Bv) .snd) (λ { (c , (c∈ , h1)) → rec₁ ((x ∈ Lset Bv) .snd)
 ```
 
 <!--en-->
@@ -702,9 +702,9 @@ For the forward inclusion, `intoAt` supplies a stage index `c ∈ Bv`, a pair ro
 <!--/-->
 
 ```agda
-      (λ { (q , (q∈ , h2)) → rec₁ (snd (x ∈ Lset Bv)) (λ { (w , s , (eq , h3)) →
-        rec₁ (snd (x ∈ Lset Bv)) (λ { (T , C , E , d , (d∈ , (qd , hx))) →
-          Lset-in Bv (fst c) x c∈
+      (λ { (q , (q∈ , h2)) → rec₁ ((x ∈ Lset Bv) .snd) (λ { (w , s , (eq , h3)) →
+        rec₁ ((x ∈ Lset Bv) .snd) (λ { (T , C , E , d , (d∈ , (qd , hx))) →
+          Lset-in Bv (c .fst) x c∈
             (subst (λ u → ⟨ x ∈ u ⟩)
               (qd ∙ cong 𝒟ₒ (vals c w c∈ (subst (λ u → ⟨ u ∈ Fv ⟩) eq q∈))) hx) })
 ```
@@ -748,10 +748,10 @@ The backward direction of `step-out` sends a member of the genuine stage `Lset B
 
 ```agda
     bwd : (x : V ℓ) → ⟨ x ∈ Lset Bv ⟩ → ⟨ x ∈ Vv ⟩
-    bwd x x∈ = rec₁ (snd (x ∈ Vv)) put (Lset-out Bv x x∈)
+    bwd x x∈ = rec₁ ((x ∈ Vv) .snd) put (Lset-out Bv x x∈)
       where
       put : Σ[ δ ∶ V ℓ ] (⟨ δ ∈ Bv ⟩ × ⟨ x ∈ 𝒟ₒ (Lset δ) ⟩) → ⟨ x ∈ Vv ⟩
-      put (δ , (δ∈ , xD)) = rec₁ (snd (x ∈ Vv))
+      put (δ , (δ∈ , xD)) = rec₁ ((x ∈ Vv) .snd)
 ```
 
 <!--en-->
@@ -825,9 +825,9 @@ The `into` conjunct reads outward from a member `x` of the proposed value: the t
 
 ```agda
     into : ⟨ γ ⊨ intoAt v b f z N ⟩
-    into x x∈ = rec₁ squash₁ put (Lset-out Bv (fst x) (subst (λ u → ⟨ fst x ∈ u ⟩) vq x∈))
+    into x x∈ = rec₁ squash₁ put (Lset-out Bv (x .fst) (subst (λ u → ⟨ x .fst ∈ u ⟩) vq x∈))
       where
-      put : Σ[ δ ∶ V ℓ ] (⟨ δ ∈ Bv ⟩ × ⟨ fst x ∈ 𝒟ₒ (Lset δ) ⟩)
+      put : Σ[ δ ∶ V ℓ ] (⟨ δ ∈ Bv ⟩ × ⟨ x .fst ∈ 𝒟ₒ (Lset δ) ⟩)
           → ⟨ (x ∷ γ) ⊨ ∃̇∈ (var (sh 1 b)) (∃̇∈ (var (sh 2 f)) (sndEx i0 i1 intoBody)) ⟩
 ```
 
@@ -890,7 +890,7 @@ The four bounded objects are the genuine satisfaction table, code set, environme
 ```agda
                (SatGraph.pairs w) (AllCodes w) (Tower.tower w) (LsetS (sucV δ) (suc-ord oδ))
                (s .fst) (s .snd .fst) (s .snd .snd .fst) (s .snd .snd .snd) refl refl refl (Lset-suc δ)
-               (subst (λ u → ⟨ fst x ∈ u ⟩) (sym (Lset-suc δ)) xD)
+               (subst (λ u → ⟨ x .fst ∈ u ⟩) (sym (Lset-suc δ)) xD)
 ```
 
 <!--en-->
@@ -904,9 +904,9 @@ For the `over` conjunct, fix `c ∈ Bv`, a member `q` of the table, and a presen
 ```agda
     over : ⟨ γ ⊨ overAt v b f z N ⟩
     over c c∈ q q∈ = sndAll-in i0 i1 overBody (q ∷ c ∷ γ) (λ w s s∈ w∈ e →
-      let wq : fst w ≡ Lset (fst c)
+      let wq : w .fst ≡ Lset (c .fst)
           wq = vals c w c∈ (subst (λ u → ⟨ u ∈ Fv ⟩) e q∈)
-          oc : IsOrd (fst c)
+          oc : IsOrd (c .fst)
 ```
 
 <!--en-->
@@ -918,10 +918,10 @@ Ordinality of `c` is inherited from the bound; the stage is presented as a carri
 <!--/-->
 
 ```agda
-          oc = mem-ord {A = Bv} ob (fst c) c∈
+          oc = mem-ord {A = Bv} ob (c .fst) c∈
           W : S
-          W = LsetS (fst c) oc
-          s' = sup (fst c) oc c∈
+          W = LsetS (c .fst) oc
+          s' = sup (c .fst) oc c∈
       in DefInRead.defIn-in i0 (sh 4 z) (shN 4 N) (∀̇∈ (var i0) (var i0 ∈̇ var (sh 9 v)))
 ```
 
@@ -935,10 +935,10 @@ The supply at `c` bounds the genuine satisfaction table, code set, environment t
 
 ```agda
            (w ∷ s ∷ q ∷ c ∷ γ) tg W wq
-           (SatGraph.pairs W) (AllCodes W) (Tower.tower W) (LsetS (sucV (fst c)) (suc-ord oc))
-           (s' .fst) (s' .snd .fst) (s' .snd .snd .fst) (s' .snd .snd .snd) refl refl refl (Lset-suc (fst c))
-           (λ y y∈d → subst (λ u → ⟨ fst y ∈ u ⟩) (sym vq)
-             (Lset-in Bv (fst c) (fst y) c∈ (subst (λ u → ⟨ fst y ∈ u ⟩) (Lset-suc (fst c)) y∈d))))
+           (SatGraph.pairs W) (AllCodes W) (Tower.tower W) (LsetS (sucV (c .fst)) (suc-ord oc))
+           (s' .fst) (s' .snd .fst) (s' .snd .snd .fst) (s' .snd .snd .snd) refl refl refl (Lset-suc (c .fst))
+           (λ y y∈d → subst (λ u → ⟨ y .fst ∈ u ⟩) (sym vq)
+             (Lset-in Bv (c .fst) (y .fst) c∈ (subst (λ u → ⟨ y .fst ∈ u ⟩) (Lset-suc (c .fst)) y∈d))))
 ```
 </div>
 </details>
@@ -961,9 +961,9 @@ module ApproxRead {m : ℕ} (f b z : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) 
 
 ```agda
   private
-    Fv = fst (lookup f γ)
-    Bv = fst (lookup b γ)
-    Zv = fst (lookup z γ)
+    Fv = (lookup f γ) .fst
+    Bv = (lookup b γ) .fst
+    Zv = (lookup z γ) .fst
 ```
 
 <!--en-->
@@ -992,7 +992,7 @@ The outward reading of the approximation clause produces correctness and complet
   approx-out (hd , hs) ob = vals , ents
     where
     P : V ℓ → Type (ℓ-suc ℓ)
-    P c = ⟨ c ∈ Bv ⟩ → (w : S) → ⟨ pr c (fst w) ∈ Fv ⟩ → fst w ≡ Lset c
+    P c = ⟨ c ∈ Bv ⟩ → (w : S) → ⟨ pr c (w .fst) ∈ Fv ⟩ → w .fst ≡ Lset c
 ```
 
 <!--en-->
@@ -1004,7 +1004,7 @@ Coverage says that for each `c ∈ Bv` there merely exists a table member that p
 <!--/-->
 
 ```agda
-    entryOf : (c : S) → ⟨ fst c ∈ Bv ⟩ → ∥ Σ[ w ∶ S ] ⟨ pr (fst c) (fst w) ∈ Fv ⟩ ∥₁
+    entryOf : (c : S) → ⟨ c .fst ∈ Bv ⟩ → ∥ Σ[ w ∶ S ] ⟨ pr (c .fst) (w .fst) ∈ Fv ⟩ ∥₁
     entryOf c c∈ = rec₁ squash₁
       (λ { (q , (q∈ , h)) → map₁ (λ { (w , s , (e , _)) → w , subst (λ u → ⟨ u ∈ Fv ⟩) e q∈ })
                               (sndEx-out i0 i1 ⊤̇ (q ∷ c ∷ γ) h) })
@@ -1028,18 +1028,18 @@ The induction step validates an arbitrary recorded pair `(c,w)` with `c ∈ Bv`.
 ```
 
 <!--en-->
-The proof now presents the relevant sets inside the constructible carrier. The membership `c ∈ Bv` yields the carrier element `cS`, and the assumed membership of `pr c (fst w)` in the table yields `q`. The value `w` is already a carrier element supplied to the induction predicate; the next environment places these three presentations in the slots expected by the step formula.
+The proof now presents the relevant sets inside the constructible carrier. The membership `c ∈ Bv` yields the carrier element `cS`, and the assumed membership of `pr c (w .fst)` in the table yields `q`. The value `w` is already a carrier element supplied to the induction predicate; the next environment places these three presentations in the slots expected by the step formula.
 <!--zh-->
-证明现在把有关集合呈现在可构造载体中。成员关系 `c ∈ Bv` 给出载体元素 `cS`，而 `pr c (fst w)` 属于表的假设给出 `q`。取值 `w` 已经是归纳谓词所接收的载体元素；接下来的环境把这三个呈现放入步进公式所要求的槽位。
+证明现在把有关集合呈现在可构造载体中。成员关系 `c ∈ Bv` 给出载体元素 `cS`，而 `pr c (w .fst)` 属于表的假设给出 `q`。取值 `w` 已经是归纳谓词所接收的载体元素；接下来的环境把这三个呈现放入步进公式所要求的槽位。
 <!--ja-->
-ここで関係する集合を構成可能な台の中に提示する。所属 `c ∈ Bv` から台の要素 `cS` が得られ、`pr c (fst w)` が表に属するという仮定から `q` が得られる。値 `w` はすでに帰納述語へ渡された台の要素である。次の環境は、この三つの提示をステップの論理式が要求する枠に置く。
+ここで関係する集合を構成可能な台の中に提示する。所属 `c ∈ Bv` から台の要素 `cS` が得られ、`pr c (w .fst)` が表に属するという仮定から `q` が得られる。値 `w` はすでに帰納述語へ渡された台の要素である。次の環境は、この三つの提示をステップの論理式が要求する枠に置く。
 <!--/-->
 
 ```agda
       cS : S
       cS = down (lookup b γ) c c∈
       q : S
-      q = down (lookup f γ) (pr c (fst w)) rec
+      q = down (lookup f γ) (pr c (w .fst)) rec
       env : S ^ (4 + m)
 ```
 
@@ -1053,10 +1053,10 @@ The extended environment assembles the four slots for the step reading. Ordinali
 
 ```agda
       env = w ∷ cS ∷ container q cS w refl .fst ∷ q ∷ γ
-      in' : (y : S) → ⟨ fst y ∈ c ⟩ → ⟨ fst y ∈ Bv ⟩
-      in' y y∈ = ob .fst {x = c} {y = fst y} y∈ c∈
+      in' : (y : S) → ⟨ y .fst ∈ c ⟩ → ⟨ y .fst ∈ Bv ⟩
+      in' y y∈ = ob .fst {x = c} {y = y .fst} y∈ c∈
       vals' : Values (lookup f γ) c
-      vals' y w' y∈ rec' = IH (fst y) y∈ (in' y y∈) w' rec'
+      vals' y w' y∈ rec' = IH (y .fst) y∈ (in' y y∈) w' rec'
 ```
 
 <!--en-->
@@ -1069,8 +1069,8 @@ Completeness at smaller arguments is recovered by the same restriction: for each
 
 ```agda
       ents' : Entries (lookup f γ) c
-      ents' y y∈ = rec₁ (snd (pr (fst y) (Lset (fst y)) ∈ Fv))
-        (λ { (w' , rec') → subst (λ u → ⟨ pr (fst y) u ∈ Fv ⟩) (IH (fst y) y∈ (in' y y∈) w' rec') rec' })
+      ents' y y∈ = rec₁ ((pr (y .fst) (Lset (y .fst)) ∈ Fv) .snd)
+        (λ { (w' , rec') → subst (λ u → ⟨ pr (y .fst) u ∈ Fv ⟩) (IH (y .fst) y∈ (in' y y∈) w' rec') rec' })
         (entryOf y (in' y y∈))
 ```
 
@@ -1084,7 +1084,7 @@ Correctness below `Bv` is obtained by ambient membership induction on the underl
 
 ```agda
     vals : Values (lookup f γ) Bv
-    vals c w c∈ rec = ∈-induction {P = P} step (fst c) c∈ w rec
+    vals c w c∈ rec = ∈-induction {P = P} step (c .fst) c∈ w rec
 ```
 
 <!--en-->
@@ -1097,8 +1097,8 @@ Completeness at the bound composes the truncated entry with the correctness just
 
 ```agda
     ents : Entries (lookup f γ) Bv
-    ents c c∈ = rec₁ (snd (pr (fst c) (Lset (fst c)) ∈ Fv))
-      (λ { (w , rec) → subst (λ u → ⟨ pr (fst c) u ∈ Fv ⟩) (vals c w c∈ rec) rec })
+    ents c c∈ = rec₁ ((pr (c .fst) (Lset (c .fst)) ∈ Fv) .snd)
+      (λ { (w , rec) → subst (λ u → ⟨ pr (c .fst) u ∈ Fv ⟩) (vals c w c∈ rec) rec })
       (entryOf c c∈)
 ```
 
@@ -1127,7 +1127,7 @@ The outward reading of the hierarchy specification says that every recorded pair
 <!--/-->
 
 ```agda
-    hout : (c w : S) → ⟨ pr (fst c) (fst w) ∈ Fv ⟩ → ⟨ fst c ∈ Bv ⟩ × (fst w ≡ Lset (fst c))
+    hout : (c w : S) → ⟨ pr (c .fst) (w .fst) ∈ Fv ⟩ → ⟨ c .fst ∈ Bv ⟩ × (w .fst ≡ Lset (c .fst))
     hout = hier-out Bv ob (lookup f γ) sp
 ```
 
@@ -1140,7 +1140,7 @@ The inward reading says that every canonical pair below the bound is recorded.
 <!--/-->
 
 ```agda
-    hin : (c : S) → ⟨ fst c ∈ Bv ⟩ → ⟨ pr (fst c) (Lset (fst c)) ∈ Fv ⟩
+    hin : (c : S) → ⟨ c .fst ∈ Bv ⟩ → ⟨ pr (c .fst) (Lset (c .fst)) ∈ Fv ⟩
     hin = hier-in Bv ob (lookup f γ) sp
 ```
 
@@ -1157,7 +1157,7 @@ The domain conjunct is proved by presenting the stage at each argument below the
     dom c c∈ = ∣ q , ( hin c c∈ , fillSnd i0 (q ∷ c ∷ γ) c w refl ⊤̇ (λ z → z) i1 refl ) ∣₁
       where
       w : S
-      w = LsetS (fst c) (mem-ord {A = Bv} ob (fst c) c∈)
+      w = LsetS (c .fst) (mem-ord {A = Bv} ob (c .fst) c∈)
 ```
 
 <!--en-->
@@ -1170,7 +1170,7 @@ The canonical pair is presented by descending along its membership proof into th
 
 ```agda
       q : S
-      q = down (lookup f γ) (pr (fst c) (Lset (fst c))) (hin c c∈)
+      q = down (lookup f γ) (pr (c .fst) (Lset (c .fst))) (hin c c∈)
 ```
 
 <!--en-->
@@ -1184,9 +1184,9 @@ The second approximation conjunct must be proved for every member `q` of the tab
 ```agda
     steps : ⟨ γ ⊨ ∀̇∈ (var f) (bothAll i0 stepBody) ⟩
     steps q q∈ = bothAll-in i0 stepBody (q ∷ γ) (λ c w s s∈ c∈s w∈s e →
-      let rec : ⟨ pr (fst c) (fst w) ∈ Fv ⟩
+      let rec : ⟨ pr (c .fst) (w .fst) ∈ Fv ⟩
           rec = subst (λ u → ⟨ u ∈ Fv ⟩) e q∈
-          c∈ : ⟨ fst c ∈ Bv ⟩
+          c∈ : ⟨ c .fst ∈ Bv ⟩
 ```
 
 <!--en-->
@@ -1199,8 +1199,8 @@ The argument is below the bound by the outward hierarchy reading; ordinality is 
 
 ```agda
           c∈ = hout c w rec .fst
-          oc : IsOrd (fst c)
-          oc = mem-ord {A = Bv} ob (fst c) c∈
+          oc : IsOrd (c .fst)
+          oc = mem-ord {A = Bv} ob (c .fst) c∈
       in StepRead.step-in i0 i1 (sh 4 f) (sh 4 z) (shN 4 N) (w ∷ c ∷ s ∷ q ∷ γ) tg oc (hout c w rec .snd)
            (λ d w' d∈ rec' → hout d w' rec' .snd)
 ```
@@ -1214,8 +1214,8 @@ Below the current argument `c`, completeness comes from `hier-in`: transitivity 
 <!--/-->
 
 ```agda
-           (λ d d∈ → hin d (ob .fst {x = fst c} {y = fst d} d∈ c∈))
-           (λ d od d∈ → sup d od (ob .fst {x = fst c} {y = d} d∈ c∈)))
+           (λ d d∈ → hin d (ob .fst {x = c .fst} {y = d .fst} d∈ c∈))
+           (λ d od d∈ → sup d od (ob .fst {x = c .fst} {y = d} d∈ c∈)))
 ```
 </div>
 </details>
@@ -1238,9 +1238,9 @@ module HierRead {m : ℕ} (a p f z : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) 
 
 ```agda
   private
-    Av = fst (lookup a γ)
-    Pv = fst (lookup p γ)
-    Zv = fst (lookup z γ)
+    Av = (lookup a γ) .fst
+    Pv = (lookup p γ) .fst
+    Zv = (lookup z γ) .fst
 ```
 
 <!--en-->
@@ -1584,9 +1584,9 @@ Semantically, one wrapped layer is a propositionally truncated bounded witness. 
 
 ```agda
   unwrap : {n : ℕ} (φ : Formula S (suc (suc n))) (γ : S ^ (suc n)) {P : hProp (ℓ-suc ℓ)}
-         → ((x : S) → ⟨ fst x ∈ fst (lookup (lastFin {n}) γ) ⟩ → ⟨ (x ∷ γ) ⊨ φ ⟩ → ⟨ P ⟩)
+         → ((x : S) → ⟨ x .fst ∈ (lookup (lastFin {n}) γ) .fst ⟩ → ⟨ (x ∷ γ) ⊨ φ ⟩ → ⟨ P ⟩)
          → ⟨ γ ⊨ wrap {n} φ ⟩ → ⟨ P ⟩
-  unwrap φ γ {P} k h = rec₁ (snd P) (λ { (x , xz , hx) → k x xz hx }) h
+  unwrap φ γ {P} k h = rec₁ ⟨ P ⟩isProp (λ { (x , xz , hx) → k x xz hx }) h
 ```
 
 <!--en-->
@@ -1599,7 +1599,7 @@ Semantically, one wrapped layer is a propositionally truncated bounded witness. 
 
 ```agda
   wrap-in : {n : ℕ} (φ : Formula S (suc (suc n))) (γ : S ^ (suc n)) (x : S)
-          → ⟨ fst x ∈ fst (lookup (lastFin {n}) γ) ⟩ → ⟨ (x ∷ γ) ⊨ φ ⟩ → ⟨ γ ⊨ wrap {n} φ ⟩
+          → ⟨ x .fst ∈ (lookup (lastFin {n}) γ) .fst ⟩ → ⟨ (x ∷ γ) ⊨ φ ⟩ → ⟨ γ ⊨ wrap {n} φ ⟩
   wrap-in φ γ x m h = ∣ x , (m , h) ∣₁
 ```
 </div>
@@ -1649,10 +1649,10 @@ The reading lemma composes three paths for any constant-free Δ₀ formula: Δ�
 
 ```agda
 read : {n : ℕ} {φ : Formula (⊥* {ℓ-suc ℓ}) n} → Δ₀ φ → (δ : S ^ n)
-     → (δ ⊨ embed φ) ≡ (map fst δ ⊨ₚ φ)
+     → (δ ⊨ embed φ) ≡ (map (λ p → p .fst) δ ⊨ₚ φ)
 read {n} {φ} dφ δ =
     AbsL.abs₀ (mapΔ₀ ⊥*-rec dφ) δ
-  ∙ embed-⊨ 𝒮ᵥ {K = S} fst φ (map fst δ)
+  ∙ embed-⊨ 𝒮ᵥ {K = S} (λ p → p .fst) φ (map (λ p → p .fst) δ)
 ```
 
 <!--en-->
@@ -1664,7 +1664,7 @@ The final equality in this path concerns the interpretation of constants. Becaus
 <!--/-->
 
 ```agda
-  ∙ cong (λ ι → SemVᵃ.At._⊨_ (⊥* {ℓ-suc ℓ}) ι (map fst δ) φ)
+  ∙ cong (λ ι → let module I = SemVᵃ.At (⊥* {ℓ-suc ℓ}) ι in map (λ p → p .fst) δ I.⊨ φ)
          (funExt (λ b → ⊥*-rec b))
 ```
 
@@ -1677,7 +1677,7 @@ The outward ordinal reader unpacks the two clauses of the ordinality atom into t
 <!--/-->
 
 ```agda
-ord-out : (a p z : S) → ⟨ (a ∷ p ∷ z ∷ []) ⊨ embed isOrd-at-p ⟩ → IsOrd (fst p)
+ord-out : (a p z : S) → ⟨ (a ∷ p ∷ z ∷ []) ⊨ embed isOrd-at-p ⟩ → IsOrd (p .fst)
 ord-out a p z h =
     ( λ {x} {y} y∈x x∈p → h .fst (down p x x∈p) x∈p (down (down p x x∈p) y y∈x) y∈x )
   , ( λ x x∈p {y} {u} u∈y y∈x →
@@ -1705,10 +1705,10 @@ The inward ordinal reader builds the two clauses from the ordinality certificate
 <!--/-->
 
 ```agda
-ord-in : (a p z : S) → IsOrd (fst p) → ⟨ (a ∷ p ∷ z ∷ []) ⊨ embed isOrd-at-p ⟩
+ord-in : (a p z : S) → IsOrd (p .fst) → ⟨ (a ∷ p ∷ z ∷ []) ⊨ embed isOrd-at-p ⟩
 ord-in a p z op =
-    (λ x x∈p y y∈x → op .fst {x = fst x} {y = fst y} y∈x x∈p)
-  , (λ x x∈p y y∈x u u∈y → op .snd (fst x) x∈p {x = fst y} {y = fst u} u∈y y∈x)
+    (λ x x∈p y y∈x → op .fst {x = x .fst} {y = y .fst} y∈x x∈p)
+  , (λ x x∈p y y∈x u u∈y → op .snd (x .fst) x∈p {x = y .fst} {y = u .fst} u∈y y∈x)
 ```
 
 <!--en-->
@@ -1742,8 +1742,8 @@ The finish lemma separates the two conjuncts of `inner`. The pins reader turns t
 <!--/-->
 
 ```agda
-  finish : (γ : S ^ 14) → ⟨ γ ⊨ inner ⟩ → IsOrd (fst (lookup pp γ))
-         → fst (lookup aa γ) ≡ Lset (fst (lookup pp γ))
+  finish : (γ : S ^ 14) → ⟨ γ ⊨ inner ⟩ → IsOrd ((lookup pp γ) .fst)
+         → (lookup aa γ) .fst ≡ Lset ((lookup pp γ) .fst)
   finish γ h op = HierRead.hier-sound aa pp ff zz N14 γ tg (inner-out γ h .snd) op
     where
     tg : Tags γ N14
@@ -1770,11 +1770,11 @@ The internal soundness lemma begins with three elements `a`, `p`, and `z` of the
 <!--/-->
 
 ```agda
-  sound-L : (a p z : S) → ⟨ (a ∷ p ∷ z ∷ []) ⊨ embed levelFo ⟩ → fst a ≡ Lset (fst p)
+  sound-L : (a p z : S) → ⟨ (a ∷ p ∷ z ∷ []) ⊨ embed levelFo ⟩ → a .fst ≡ Lset (p .fst)
   sound-L a p z (ho , hφ) =
     go (subst (λ ψ → ⟨ (a ∷ p ∷ z ∷ []) ⊨ ψ ⟩) (Cnt.erase-inv three count-three) hφ)
     where
-    ordp : IsOrd (fst p)
+    ordp : IsOrd (p .fst)
 ```
 
 <!--en-->
@@ -1799,7 +1799,7 @@ The equality to be retained is made into the proposition `G`. Sets in the cumula
 
 ```agda
     G : hProp (ℓ-suc ℓ)
-    G = (fst a ≡ Lset (fst p)) , setIsSet (fst a) (Lset (fst p))
+    G = (a .fst ≡ Lset (p .fst)) , setIsSet (a .fst) (Lset (p .fst))
 ```
 
 <!--en-->
@@ -2094,7 +2094,7 @@ The adequacy witness at `p` places the underlying set of the genuine hierarchy t
 <!--/-->
 
 ```agda
-  FK : ⟨ fst F ∈ K ⟩
+  FK : ⟨ F .fst ∈ K ⟩
   FK = wit p p∈λ op .fst
 ```
 

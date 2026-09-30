@@ -151,16 +151,16 @@ Every adequacy statement of this chapter compares a satisfaction judgment at an 
 <!--/-->
 
 <!--en-->
-The proof is a recursion on the position `i`. At position `zero`, both sides reduce to the head of the list: `lookup zero (x ∷ γ)` is `x`, `map fst` of the cons is the cons of the projections, and the two first projections of `x` agree definitionally, hence `refl`. At a successor position, both lookups advance one entry and the recursive call finishes the argument. Nothing here uses constructibility; the lemma holds for any environment of pairs.
+The proof is a recursion on the position `i`. At position `zero`, both sides reduce to the head of the list: `lookup zero (x ∷ γ)` is `x`, `map (λ p → p .fst)` of the cons is the cons of the projections, and the two first projections of `x` agree definitionally, hence `refl`. At a successor position, both lookups advance one entry and the recursive call finishes the argument. Nothing here uses constructibility; the lemma holds for any environment of pairs.
 <!--zh-->
-证明对位置 `i` 作递归。在位置 `zero`，两边都化归到表头：`lookup zero (x ∷ γ)` 就是 `x`，cons 的 `map fst` 是诸投影的 cons，而 `x` 的两次取首分量按定义相等，故得 `refl`。在后继位置，两次查表各前进一项，递归调用完成论证。这里没有用到可构造性；该引理对任何由对构成的环境都成立。
+证明对位置 `i` 作递归。在位置 `zero`，两边都化归到表头：`lookup zero (x ∷ γ)` 就是 `x`，cons 的 `map (λ p → p .fst)` 是诸投影的 cons，而 `x` 的两次取首分量按定义相等，故得 `refl`。在后继位置，两次查表各前进一项，递归调用完成论证。这里没有用到可构造性；该引理对任何由对构成的环境都成立。
 <!--ja-->
-証明は位置 `i` に対する再帰である。位置 `zero` では両辺ともリストの先頭に簡約される。`lookup zero (x ∷ γ)` は `x` であり、cons の `map fst` は射影の cons であり、`x` の二度の第一射影は定義的に等しいので `refl` が得られる。後続の位置では、二つの参照がともに一項目進み、再帰呼び出しが議論を完成させる。ここで構成可能性はまったく使われず、この補題は対からなる任意の環境に対して成り立つ。
+証明は位置 `i` に対する再帰である。位置 `zero` では両辺ともリストの先頭に簡約される。`lookup zero (x ∷ γ)` は `x` であり、cons の `map (λ p → p .fst)` は射影の cons であり、`x` の二度の第一射影は定義的に等しいので `refl` が得られる。後続の位置では、二つの参照がともに一項目進み、再帰呼び出しが議論を完成させる。ここで構成可能性はまったく使われず、この補題は対からなる任意の環境に対して成り立つ。
 <!--/-->
 
 ```agda
 lookup-fst : ∀ {n} (i : Fin n) (γ : S ^ n)
-           → lookup i (map fst γ) ≡ fst (lookup i γ)
+           → lookup i (map (λ p → p .fst) γ) ≡ (lookup i γ) .fst
 lookup-fst zero    (x ∷ γ) = refl
 lookup-fst (suc i) (x ∷ γ) = lookup-fst i γ
 ```
@@ -207,7 +207,7 @@ The adequacy statement equates, by a single path, satisfaction of the reader in 
 ```agda
 prAtL-adequate : ∀ {n} (q u v : Fin n) (γ : S ^ n)
   → (γ ⊨ prAtL q u v)
-  ≡ PairIs (fst (lookup q γ)) (pr (fst (lookup u γ)) (fst (lookup v γ)))
+  ≡ PairIs ((lookup q γ) .fst) (pr ((lookup u γ) .fst) ((lookup v γ) .fst))
 prAtL-adequate q u v γ =
     transferFo (prAt q u v) _ (Δ₀-prAt q u v) γ
 ```
@@ -221,7 +221,7 @@ The proof composes three paths and introduces nothing new. The transfer lemma fi
 <!--/-->
 
 ```agda
-  ∙ prAt-adequate q u v (map fst γ)
+  ∙ prAt-adequate q u v (map (λ p → p .fst) γ)
   ∙ cong₂ PairIs (lookup-fst q γ)
       (cong₂ pr (lookup-fst u γ) (lookup-fst v γ))
 ```
@@ -272,11 +272,11 @@ The adequacy statement names the ingredients. Here `a` and `b` are the projected
 <!--/-->
 
 ```agda
-    ≡ (pr (fst (lookup x γ)) (fst (lookup y γ)) ∈ fst (⟦ F ⟧ γ))
+    ≡ (pr ((lookup x γ) .fst) ((lookup y γ) .fst) ∈ (⟦ F ⟧ γ) .fst)
   appTerm-adequate F x y γ = ⇔toPath fwd bwd
     where
-    a = fst (lookup x γ)
-    b = fst (lookup y γ)
+    a = (lookup x γ) .fst
+    b = (lookup y γ) .fst
 ```
 
 <!--en-->
@@ -290,25 +290,25 @@ The auxiliary `read` unpacks one existential fiber. Given an element `z` of the 
 ```agda
     G = ⟦ F ⟧ γ
 
-    read : (z : S) → ⟨ (z ∷ γ) ⊨ prAtL zero (suc x) (suc y) ⟩ → fst z ≡ pr a b
+    read : (z : S) → ⟨ (z ∷ γ) ⊨ prAtL zero (suc x) (suc y) ⟩ → z .fst ≡ pr a b
     read z h = subst ⟨_⟩ (prAtL-adequate zero (suc x) (suc y) (z ∷ γ)) h
 
-    fwd : ⟨ γ ⊨ appTerm F x y ⟩ → ⟨ pr a b ∈ fst G ⟩
-    fwd = rec₁ (snd (pr a b ∈ fst G))
+    fwd : ⟨ γ ⊨ appTerm F x y ⟩ → ⟨ pr a b ∈ G .fst ⟩
+    fwd = rec₁ ((pr a b ∈ G .fst) .snd)
 ```
 
 <!--en-->
-The backward direction is where the constructible model enters. From a bare membership proof `⟨ pr a b ∈ fst G ⟩` one must produce a proof of the truncated existential, and its first component cannot be the set `pr a b` itself, which is a set of the hierarchy and not an element of `S`. The witness is built in the next lines; the displayed branch packages the membership with a reader proof obtained by transporting `refl` backwards through the adequacy path, which is legitimate because the underlying set of the witness is definitionally `pr a b`.
+The backward direction is where the constructible model enters. From a bare membership proof `⟨ pr a b ∈ G .fst ⟩` one must produce a proof of the truncated existential, and its first component cannot be the set `pr a b` itself, which is a set of the hierarchy and not an element of `S`. The witness is built in the next lines; the displayed branch packages the membership with a reader proof obtained by transporting `refl` backwards through the adequacy path, which is legitimate because the underlying set of the witness is definitionally `pr a b`.
 <!--zh-->
-反方向才是可构造模型登场之处。从一条赤裸的成员关系证明 `⟨ pr a b ∈ fst G ⟩` 出发，必须给出截断存在的一个证明，而其第一个分量不能是集合 `pr a b` 本身：那是层级中的集合，不是 `S` 的元素。见证将在随后几行构造；这里展示的分支把成员关系与一份读式证明打包，后者是把 `refl` 沿充分性路径反方向传输得到的，之所以合法，是因为见证的底层集合按定义就是 `pr a b`。
+反方向才是可构造模型登场之处。从一条赤裸的成员关系证明 `⟨ pr a b ∈ G .fst ⟩` 出发，必须给出截断存在的一个证明，而其第一个分量不能是集合 `pr a b` 本身：那是层级中的集合，不是 `S` 的元素。见证将在随后几行构造；这里展示的分支把成员关系与一份读式证明打包，后者是把 `refl` 沿充分性路径反方向传输得到的，之所以合法，是因为见证的底层集合按定义就是 `pr a b`。
 <!--ja-->
-逆方向こそ、構成可能モデルが登場する場面である。裸の所属の証明 `⟨ pr a b ∈ fst G ⟩` から、切り詰められた存在量化の住人を与えなければならないが、その第一成分は集合 `pr a b` そのものではいけない。それは階層の集合であって `S` の要素ではないからである。証人は次の行で作られる。ここに示された分岐は、所属と読解式の証明を一つに包む。後者の証明は `refl` を妥当性のパスを逆向きに輸送して得られるもので、証人の底にある集合が定義的に `pr a b` であるため、これで構わない。
+逆方向こそ、構成可能モデルが登場する場面である。裸の所属の証明 `⟨ pr a b ∈ G .fst ⟩` から、切り詰められた存在量化の住人を与えなければならないが、その第一成分は集合 `pr a b` そのものではいけない。それは階層の集合であって `S` の要素ではないからである。証人は次の行で作られる。ここに示された分岐は、所属と読解式の証明を一つに包む。後者の証明は `refl` を妥当性のパスを逆向きに輸送して得られるもので、証人の底にある集合が定義的に `pr a b` であるため、これで構わない。
 <!--/-->
 
 ```agda
-      (λ { (z , (z∈G , h)) → subst (λ w → ⟨ w ∈ fst G ⟩) (read z h) z∈G })
+      (λ { (z , (z∈G , h)) → subst (λ w → ⟨ w ∈ G .fst ⟩) (read z h) z∈G })
 
-    bwd : ⟨ pr a b ∈ fst G ⟩ → ⟨ γ ⊨ appTerm F x y ⟩
+    bwd : ⟨ pr a b ∈ G .fst ⟩ → ⟨ γ ⊨ appTerm F x y ⟩
     bwd h = ∣ zS , (h , subst ⟨_⟩
         (sym (prAtL-adequate zero (suc x) (suc y) (zS ∷ γ))) refl) ∣₁
       where
@@ -324,7 +324,7 @@ The witness is the one genuinely model-specific construction of this section. To
 
 ```agda
       zS : S
-      zS = pr a b , isL-trans {x = fst G} {y = pr a b} h (G .snd)
+      zS = pr a b , isL-trans {x = G .fst} {y = pr a b} h (G .snd)
 
 appAt : ∀ {n} → Fin n → Fin n → Fin n → Formula S n
 appAt f = appTerm (var f)
@@ -333,33 +333,33 @@ appAt-adequate : ∀ {n} (f x y : Fin n) (γ : S ^ n)
 ```
 
 <!--en-->
-This specialization matters because the remaining graph predicates refer to their graph through an assignment slot. After projection, every such occurrence has the uniform form `pr (fst x) (fst y) ∈ fst (lookup f γ)`, so the later single-valuedness and domain arguments can use one membership statement throughout.
+This specialization matters because the remaining graph predicates refer to their graph through an assignment slot. After projection, every such occurrence has the uniform form `pr (x .fst) (y .fst) ∈ (lookup f γ) .fst`, so the later single-valuedness and domain arguments can use one membership statement throughout.
 <!--zh-->
-这一特化使后面的图谓词都能通过赋值槽位引用其图。投影后，每次引用统一写成 `pr (fst x) (fst y) ∈ fst (lookup f γ)`，因此单值性与定义域论证可以始终使用同一种成员关系陈述。
+这一特化使后面的图谓词都能通过赋值槽位引用其图。投影后，每次引用统一写成 `pr (x .fst) (y .fst) ∈ (lookup f γ) .fst`，因此单值性与定义域论证可以始终使用同一种成员关系陈述。
 <!--ja-->
-この特殊化により、後のグラフ述語は割り当てのスロットを通してグラフを参照できる。射影後の各出現は一様に `pr (fst x) (fst y) ∈ fst (lookup f γ)` となるので、一価性と定義域の議論では同じ所属の形を一貫して使える。
+この特殊化により、後のグラフ述語は割り当てのスロットを通してグラフを参照できる。射影後の各出現は一様に `pr (x .fst) (y .fst) ∈ (lookup f γ) .fst` となるので、一価性と定義域の議論では同じ所属の形を一貫して使える。
 <!--/-->
 
 ```agda
   → (γ ⊨ appAt f x y)
-  ≡ (pr (fst (lookup x γ)) (fst (lookup y γ)) ∈ fst (lookup f γ))
+  ≡ (pr ((lookup x γ) .fst) ((lookup y γ) .fst) ∈ (lookup f γ) .fst)
 appAt-adequate f = appTerm-adequate (var f)
 ```
 
 <!--en-->
-The graph being read need not sit in a variable slot; it may be a fixed element of the model named directly. The constant term `con F` is exactly that, and the adequacy statement simplifies accordingly: since the constant is interpreted as the element `F` itself, the right-hand side is membership in `fst F`, with no reference to the environment for the graph.
+The graph being read need not sit in a variable slot; it may be a fixed element of the model named directly. The constant term `con F` is exactly that, and the adequacy statement simplifies accordingly: since the constant is interpreted as the element `F` itself, the right-hand side is membership in `F .fst`, with no reference to the environment for the graph.
 <!--zh-->
-被读的图不必落在变元槽位中；它也可以是模型的一个固定元素，被直接命名。常元词项 `con F` 正是如此，而充分性陈述随之简化：由于常元被解释为元素 `F` 本身，右边就是属于 `fst F` 的成员关系，完全不再涉及环境中关于图的项。
+被读的图不必落在变元槽位中；它也可以是模型的一个固定元素，被直接命名。常元词项 `con F` 正是如此，而充分性陈述随之简化：由于常元被解释为元素 `F` 本身，右边就是属于 `F .fst` 的成员关系，完全不再涉及环境中关于图的项。
 <!--ja-->
-読む対象となるグラフは、変数のスロットにある必要はなく、模型の固定された要素として直接名指されても構わない。定数の項 `con F` はまさにそれであり、妥当性の主張はそれに応じて簡単になる。定数は要素 `F` そのものとして解釈されるので、右辺は `fst F` への所属となり、グラフのための環境の項目にはまったく触れない。
+読む対象となるグラフは、変数のスロットにある必要はなく、模型の固定された要素として直接名指されても構わない。定数の項 `con F` はまさにそれであり、妥当性の主張はそれに応じて簡単になる。定数は要素 `F` そのものとして解釈されるので、右辺は `F .fst` への所属となり、グラフのための環境の項目にはまったく触れない。
 <!--/-->
 
 <!--en-->
-The definition instantiates the shared reader at `con F`. Because the constant is interpreted as itself, the bounded existential ranges directly over the members of `fst F`, and the adequacy statement records exactly that: satisfaction is a path to the membership of the projected pair of the two argument values in `fst F`. The membership on the right is ambient membership after projection; the existential on the left still quantifies over elements of the model.
+The definition instantiates the shared reader at `con F`. Because the constant is interpreted as itself, the bounded existential ranges directly over the members of `F .fst`, and the adequacy statement records exactly that: satisfaction is a path to the membership of the projected pair of the two argument values in `F .fst`. The membership on the right is ambient membership after projection; the existential on the left still quantifies over elements of the model.
 <!--zh-->
-定义在 `con F` 处实例化共用读式。由于常元被解释为它自身，有界存在直接遍历 `fst F` 的元素，充分性陈述也如实记录这一点：满足关系是一条通往「两个论元值的投影对属于 `fst F`」的路径。右边的成员关系是投影后的周遭成员关系；左边的存在量词仍在模型的元素上取值。
+定义在 `con F` 处实例化共用读式。由于常元被解释为它自身，有界存在直接遍历 `F .fst` 的元素，充分性陈述也如实记录这一点：满足关系是一条通往「两个论元值的投影对属于 `F .fst`」的路径。右边的成员关系是投影后的周遭成员关系；左边的存在量词仍在模型的元素上取值。
 <!--ja-->
-定義は共通の読解式を `con F` で実例化する。定数はそれ自身として解釈されるため、有界な存在量化は `fst F` の要素を直接渡る。妥当性の主張はまさにそれを記録する。充足は、二つの引数の値の射影された対が `fst F` に属することへのパスである。右辺の所属は射影後の周囲の所属であり、左辺の存在量化子は依然として模型の要素の上を渡る。
+定義は共通の読解式を `con F` で実例化する。定数はそれ自身として解釈されるため、有界な存在量化は `F .fst` の要素を直接渡る。妥当性の主張はまさにそれを記録する。充足は、二つの引数の値の射影された対が `F .fst` に属することへのパスである。右辺の所属は射影後の周囲の所属であり、左辺の存在量化子は依然として模型の要素の上を渡る。
 <!--/-->
 
 ```agda
@@ -368,7 +368,7 @@ appC F = appTerm (con F)
 
 appC-adequate : ∀ {n} (F : S) (x y : Fin n) (γ : S ^ n)
   → (γ ⊨ appC F x y)
-  ≡ (pr (fst (lookup x γ)) (fst (lookup y γ)) ∈ fst F)
+  ≡ (pr ((lookup x γ) .fst) ((lookup y γ) .fst) ∈ F .fst)
 ```
 
 <!--en-->
@@ -438,7 +438,7 @@ module _ {n : ℕ} (f : Fin n) (γ : S ^ n) where
 ```agda
   private
     Holds : S → S → Type (ℓ-suc ℓ)
-    Holds x y = ⟨ pr (fst x) (fst y) ∈ fst (lookup f γ) ⟩
+    Holds x y = ⟨ pr (x .fst) (y .fst) ∈ (lookup f γ) .fst ⟩
 
     at : (x y y' : S)
 ```
@@ -453,7 +453,7 @@ Each helper is an instance of the application adequacy at the environment extend
 
 ```agda
        → ((y' ∷ y ∷ x ∷ γ) ⊨ appAt (suc (suc (suc f))) (suc (suc zero)) (suc zero))
-       ≡ (pr (fst x) (fst y) ∈ fst (lookup f γ))
+       ≡ (pr (x .fst) (y .fst) ∈ (lookup f γ) .fst)
     at x y y' = appAt-adequate (suc (suc (suc f))) (suc (suc zero)) (suc zero)
                   (y' ∷ y ∷ x ∷ γ)
 
@@ -461,16 +461,16 @@ Each helper is an instance of the application adequacy at the environment extend
 ```
 
 <!--en-->
-Reading the object-language claim outward gives the usable conclusion. Given satisfaction of `svAt f`, the quantifiers supply the implication for arbitrary elements `x`, `y`, `y'` of the model; feeding it the two memberships `Holds x y` and `Holds x y'`, each first transported from its external form into the satisfaction the quantifiers expect, yields the equality `fst y ≡ fst y'` of the two underlying values. Note that the conclusion is an equality of projected sets, while the value equalities between `y` and `y'` as elements of the model are not claimed.
+Reading the object-language claim outward gives the usable conclusion. Given satisfaction of `svAt f`, the quantifiers supply the implication for arbitrary elements `x`, `y`, `y'` of the model; feeding it the two memberships `Holds x y` and `Holds x y'`, each first transported from its external form into the satisfaction the quantifiers expect, yields the equality `y .fst ≡ y' .fst` of the two underlying values. Note that the conclusion is an equality of projected sets, while the value equalities between `y` and `y'` as elements of the model are not claimed.
 <!--zh-->
-把对象语言的断言向外读，得到可用的结论。给定 `svAt f` 的满足关系，量词为模型的任意元素 `x`、`y`、`y'` 提供那条蕴含；把两条成员关系 `Holds x y` 与 `Holds x y'` 各自先从外部形式传输到量词所期望的满足形式再喂入，便得到两个底层值相等的 `fst y ≡ fst y'`。注意结论是投影后集合的相等，而 `y` 与 `y'` 作为模型元素之间的相等并未被断言。
+把对象语言的断言向外读，得到可用的结论。给定 `svAt f` 的满足关系，量词为模型的任意元素 `x`、`y`、`y'` 提供那条蕴含；把两条成员关系 `Holds x y` 与 `Holds x y'` 各自先从外部形式传输到量词所期望的满足形式再喂入，便得到两个底层值相等的 `y .fst ≡ y' .fst`。注意结论是投影后集合的相等，而 `y` 与 `y'` 作为模型元素之间的相等并未被断言。
 <!--ja-->
-対象言語の主張を外へ読み出すと、使える結論が得られる。`svAt f` の充足が与えられれば、量化子は模型の任意の要素 `x`、`y`、`y'` に対してその含意を供給する。二つの所属 `Holds x y` と `Holds x y'` を、それぞれ外部の形から量化子が期待する充足の形へ輸送して渡せば、二つの底にある値の等式 `fst y ≡ fst y'` が得られる。結論が射影後の集合の等式であり、模型の要素としての `y` と `y'` の等式は主張されていないことに注意してほしい。
+対象言語の主張を外へ読み出すと、使える結論が得られる。`svAt f` の充足が与えられれば、量化子は模型の任意の要素 `x`、`y`、`y'` に対してその含意を供給する。二つの所属 `Holds x y` と `Holds x y'` を、それぞれ外部の形から量化子が期待する充足の形へ輸送して渡せば、二つの底にある値の等式 `y .fst ≡ y' .fst` が得られる。結論が射影後の集合の等式であり、模型の要素としての `y` と `y'` の等式は主張されていないことに注意してほしい。
 <!--/-->
 
 ```agda
         → ((y' ∷ y ∷ x ∷ γ) ⊨ appAt (suc (suc (suc f))) (suc (suc zero)) zero)
-        ≡ (pr (fst x) (fst y') ∈ fst (lookup f γ))
+        ≡ (pr (x .fst) (y' .fst) ∈ (lookup f γ) .fst)
     at' x y y' = appAt-adequate (suc (suc (suc f))) (suc (suc zero)) zero
                    (y' ∷ y ∷ x ∷ γ)
 
@@ -486,20 +486,20 @@ The converse builds satisfaction rather than extracting it. A function taking an
 <!--/-->
 
 ```agda
-           → (x y y' : S) → Holds x y → Holds x y' → fst y ≡ fst y'
+           → (x y y' : S) → Holds x y → Holds x y' → y .fst ≡ y' .fst
   svAt-out h x y y' p q = h x y y'
     (subst ⟨_⟩ (sym (at x y y')) p) (subst ⟨_⟩ (sym (at' x y y')) q)
 
-  svAt-in : ((x y y' : S) → Holds x y → Holds x y' → fst y ≡ fst y')
+  svAt-in : ((x y y' : S) → Holds x y → Holds x y' → y .fst ≡ y' .fst)
           → ⟨ γ ⊨ svAt f ⟩
 ```
 
 <!--en-->
-The introduction direction `svAt-in` mirrors the extraction, with the transports pointing the other way: each external membership is carried forward along the adequacy path into the satisfaction the implications expect, and the three quantifiers then apply the function `h`. Both directions keep the whole statement at the level of underlying sets: the conclusion is an equality of the projected values `fst y` and `fst y'`, and the memberships supplied are about projected pairs. Nothing here asserts that every argument has a value, or that the graph is inhabited; those are separate questions settled by the domain condition.
+The introduction direction `svAt-in` mirrors the extraction, with the transports pointing the other way: each external membership is carried forward along the adequacy path into the satisfaction the implications expect, and the three quantifiers then apply the function `h`. Both directions keep the whole statement at the level of underlying sets: the conclusion is an equality of the projected values `y .fst` and `y' .fst`, and the memberships supplied are about projected pairs. Nothing here asserts that every argument has a value, or that the graph is inhabited; those are separate questions settled by the domain condition.
 <!--zh-->
-引入方向 `svAt-in` 是消去的镜像，只是传输方向相反：每条外部成员关系沿充分性路径正向传输为各蕴含所期望的满足形式，然后三个全称量词施用函数 `h`。两个方向都把整个陈述保持在底层集合的层面：结论是投影值 `fst y` 与 `fst y'` 的相等，所供给的成员关系也针对投影后的对。这里没有断言每个论元都有取值，也没有断言图非空；那是下一节定义域条件的事。
+引入方向 `svAt-in` 是消去的镜像，只是传输方向相反：每条外部成员关系沿充分性路径正向传输为各蕴含所期望的满足形式，然后三个全称量词施用函数 `h`。两个方向都把整个陈述保持在底层集合的层面：结论是投影值 `y .fst` 与 `y' .fst` 的相等，所供给的成员关系也针对投影后的对。这里没有断言每个论元都有取值，也没有断言图非空；那是下一节定义域条件的事。
 <!--ja-->
-導入の方向 `svAt-in` は除去の鏡像で、輸送の向きが逆である。外部の所属をそれぞれ妥当性の経路に沿って順方向へ、含意が期待する充足の形へ運び、三つの全称量化子が関数 `h` を適用する。どちらの方向でも、主張全体が底にある集合の水準に保たれる。結論は射影された値 `fst y` と `fst y'` の等しさであり、供給される所属も射影された対についてのものである。ここでは、すべての引数が値を持つことも、グラフが空でないことも主張しない。それは次節の定義域の条件に委ねられている。
+導入の方向 `svAt-in` は除去の鏡像で、輸送の向きが逆である。外部の所属をそれぞれ妥当性の経路に沿って順方向へ、含意が期待する充足の形へ運び、三つの全称量化子が関数 `h` を適用する。どちらの方向でも、主張全体が底にある集合の水準に保たれる。結論は射影された値 `y .fst` と `y' .fst` の等しさであり、供給される所属も射影された対についてのものである。ここでは、すべての引数が値を持つことも、グラフが空でないことも主張しない。それは次節の定義域の条件に委ねられている。
 <!--/-->
 
 ```agda
@@ -543,7 +543,7 @@ inDomAt f x = ∃̇ (appAt (suc f) (suc x) zero)
 
 inDomAt-adequate : ∀ {n} (f x : Fin n) (γ : S ^ n)
   → (γ ⊨ inDomAt f x)
-  ≡ (∃[ y ∶ S ] (pr (fst (lookup x γ)) (fst y) ∈ fst (lookup f γ)))
+  ≡ (∃[ y ∶ S ] (pr ((lookup x γ) .fst) (y .fst) ∈ (lookup f γ) .fst))
 ```
 
 <!--en-->
@@ -583,7 +583,7 @@ module _ {n : ℕ} (f d : Fin n) (γ : S ^ n) where
   private
     step : (x : S)
          → ((x ∷ γ) ⊨ inDomAt (suc f) zero)
-         ≡ (∃[ y ∶ S ] (pr (fst x) (fst y) ∈ fst (lookup f γ)))
+         ≡ (∃[ y ∶ S ] (pr (x .fst) (y .fst) ∈ (lookup f γ) .fst))
 ```
 
 <!--en-->
@@ -598,8 +598,8 @@ The extraction `domAt-out` consumes an entry and yields domain membership. Given
     step x = inDomAt-adequate (suc f) zero (x ∷ γ)
 
   domAt-out : ⟨ γ ⊨ domAt f d ⟩ → (x y : S)
-            → ⟨ pr (fst x) (fst y) ∈ fst (lookup f γ) ⟩
-            → ⟨ fst x ∈ fst (lookup d γ) ⟩
+            → ⟨ pr (x .fst) (y .fst) ∈ (lookup f γ) .fst ⟩
+            → ⟨ x .fst ∈ (lookup d γ) .fst ⟩
   domAt-out h x y p = h x .fst (subst ⟨_⟩ (sym (step x)) ∣ y , p ∣₁)
 ```
 
@@ -612,12 +612,12 @@ The extraction `domAt-in` runs the other way, and keeps the truncation. Domain m
 <!--/-->
 
 ```agda
-  domAt-in : ⟨ γ ⊨ domAt f d ⟩ → (x : S) → ⟨ fst x ∈ fst (lookup d γ) ⟩
-           → ∥ (Σ[ y ∶ S ] ⟨ pr (fst x) (fst y) ∈ fst (lookup f γ) ⟩) ∥₁
+  domAt-in : ⟨ γ ⊨ domAt f d ⟩ → (x : S) → ⟨ x .fst ∈ (lookup d γ) .fst ⟩
+           → ∥ (Σ[ y ∶ S ] ⟨ pr (x .fst) (y .fst) ∈ (lookup f γ) .fst ⟩) ∥₁
   domAt-in h x m = subst ⟨_⟩ (step x) (h x .snd m)
 
   domAt-intro : ((x : S)
-                 → (⟨ ∃[ y ∶ S ] (pr (fst x) (fst y) ∈ fst (lookup f γ)) ⟩
+                 → (⟨ ∃[ y ∶ S ] (pr (x .fst) (y .fst) ∈ (lookup f γ) .fst) ⟩
 ```
 
 <!--en-->
@@ -629,9 +629,9 @@ The introduction direction packages the two implications pointwise. The hypothes
 <!--/-->
 
 ```agda
-                    → ⟨ fst x ∈ fst (lookup d γ) ⟩)
-                 × (⟨ fst x ∈ fst (lookup d γ) ⟩
-                    → ⟨ ∃[ y ∶ S ] (pr (fst x) (fst y) ∈ fst (lookup f γ)) ⟩))
+                    → ⟨ x .fst ∈ (lookup d γ) .fst ⟩)
+                 × (⟨ x .fst ∈ (lookup d γ) .fst ⟩
+                    → ⟨ ∃[ y ∶ S ] (pr (x .fst) (y .fst) ∈ (lookup f γ) .fst) ⟩))
               → ⟨ γ ⊨ domAt f d ⟩
   domAt-intro g x = (λ h → g x .fst (subst ⟨_⟩ (step x) h))
 ```
@@ -676,21 +676,21 @@ The Kuratowski coding inside the model mirrors the ambient definition term by te
 prʟ : S → S → S
 prʟ a b = pairʟ (pairʟ a a) (pairʟ a b)
 
-prʟ-fst : (a b : S) → fst (prʟ a b) ≡ pr (fst a) (fst b)
+prʟ-fst : (a b : S) → (prʟ a b) .fst ≡ pr (a .fst) (b .fst)
 prʟ-fst a b =
     pairʟ-fst (pairʟ a a) (pairʟ a b)
 ```
 
 <!--en-->
-The projection equation unfolds the same recursion in `V`. The outer projection gives the pair of the two projections; the first component projects to the unordered pair of `fst a` with itself, which the hierarchy's identity `pair-singleton` collapses to the singleton of `fst a`. The result is the promised identification: reading the model's pair through the underlying set yields exactly `pr (fst a) (fst b)`. This equation is the hinge of the next section, since every tag-and-pair code will be projected through it.
+The projection equation unfolds the same recursion in `V`. The outer projection gives the pair of the two projections; the first component projects to the unordered pair of `a .fst` with itself, which the hierarchy's identity `pair-singleton` collapses to the singleton of `a .fst`. The result is the promised identification: reading the model's pair through the underlying set yields exactly `pr (a .fst) (b .fst)`. This equation is the hinge of the next section, since every tag-and-pair code will be projected through it.
 <!--zh-->
-投影等式在 `V` 中展开同一递归。外层投影给出两个投影的对；第一分量投影为 `fst a` 与自身的无序对，而层级的恒等式 `pair-singleton` 把它塌缩为 `fst a` 的单点集。结果正是所允诺的等同：沿底层集合读出模型的对，恰好得到 `pr (fst a) (fst b)`。这条等式是下一节的关键，因为每个「标签加对」的码都将经由它投影。
+投影等式在 `V` 中展开同一递归。外层投影给出两个投影的对；第一分量投影为 `a .fst` 与自身的无序对，而层级的恒等式 `pair-singleton` 把它塌缩为 `a .fst` 的单点集。结果正是所允诺的等同：沿底层集合读出模型的对，恰好得到 `pr (a .fst) (b .fst)`。这条等式是下一节的关键，因为每个「标签加对」的码都将经由它投影。
 <!--ja-->
-射影の等式は、同じ再帰を `V` の中で展開する。外側の射影は二つの射影の対を与え、第一成分は `fst a` とそれ自身の非順序対へ射影され、階層の等式 `pair-singleton` がそれを `fst a` の単集合へ畳む。得られるのは約束された同一視である。モデルの対を底にある集合を通して読めば、ちょうど `pr (fst a) (fst b)` が得られる。この等式が次節の要になる。タグと対から成るすべての符号がこれを通して射影されるからである。
+射影の等式は、同じ再帰を `V` の中で展開する。外側の射影は二つの射影の対を与え、第一成分は `a .fst` とそれ自身の非順序対へ射影され、階層の等式 `pair-singleton` がそれを `a .fst` の単集合へ畳む。得られるのは約束された同一視である。モデルの対を底にある集合を通して読めば、ちょうど `pr (a .fst) (b .fst)` が得られる。この等式が次節の要になる。タグと対から成るすべての符号がこれを通して射影されるからである。
 <!--/-->
 
 ```agda
-  ∙ cong₂ ⁅_,_⁆ (pairʟ-fst a a ∙ pair-singleton (fst a)) (pairʟ-fst a b)
+  ∙ cong₂ ⁅_,_⁆ (pairʟ-fst a a ∙ pair-singleton (a .fst)) (pairʟ-fst a b)
 ```
 
 <!--en-->
@@ -724,8 +724,8 @@ Injectivity of `prʟ` follows the same route as its projection: if the pairs of 
 ```agda
 prʟ-inj : {a b c d : S} → prʟ a b ≡ prʟ c d → (a ≡ c) × (b ≡ d)
 prʟ-inj {a} {b} {c} {d} e =
-    Σ≡Prop (λ v → snd (isL v)) (pr-inj q .fst)
-  , Σ≡Prop (λ v → snd (isL v)) (pr-inj q .snd)
+    Σ≡Prop (λ v → (isL v) .snd) (pr-inj q .fst)
+  , Σ≡Prop (λ v → (isL v) .snd) (pr-inj q .snd)
   where
 ```
 
@@ -738,12 +738,12 @@ The path of ambient pair equalities is assembled from the three available equati
 <!--/-->
 
 ```agda
-  q : pr (fst a) (fst b) ≡ pr (fst c) (fst d)
-  q = sym (prʟ-fst a b) ∙ cong fst e ∙ prʟ-fst c d
+  q : pr (a .fst) (b .fst) ≡ pr (c .fst) (d .fst)
+  q = sym (prʟ-fst a b) ∙ cong (λ p → p .fst) e ∙ prʟ-fst c d
 
 numeralL-inj : {j k : ℕ} → numeralL j ≡ numeralL k → j ≡ k
 numeralL-inj {j} {k} e =
-  #-inj′ (sym (numeralL-fst j) ∙ cong fst e ∙ numeralL-fst k)
+  #-inj′ (sym (numeralL-fst j) ∙ cong (λ p → p .fst) e ∙ numeralL-fst k)
 ```
 
 <!--en-->
@@ -757,26 +757,26 @@ With the two injectivities in hand, the generic coding scheme instantiates at th
 ```agda
 module LCode = FOL.Coding {ℓ-suc ℓ} 𝒮ʟ prʟ prʟ-inj numeralL numeralL-inj
 
-tagBridge : (k : ℕ) (x : S) → fst (LCode.mkTag k x) ≡ VCode.mkTag k (fst x)
+tagBridge : (k : ℕ) (x : S) → (LCode.mkTag k x) .fst ≡ VCode.mkTag k (x .fst)
 tagBridge k x = prʟ-fst (numeralL k) x ∙ cong₂ pr (numeralL-fst k) refl
 
-codeBridgeTm : ∀ {n} (t : Term S n) → fst LCode.⌜ t ⌝ᵗ ≡ VCode.⌜ mapTm fst t ⌝ᵗ
+codeBridgeTm : ∀ {n} (t : Term S n) → (LCode.⌜ t ⌝ᵗ) .fst ≡ VCode.⌜ mapTm (λ p → p .fst) t ⌝ᵗ
 codeBridgeTm (con c) = tagBridge 0 c
 ```
 
 <!--en-->
-For terms the recursion has two cases. A constant is coded as the tag 0 applied to itself, so the bridge is `tagBridge 0` at that constant. A variable is coded as the tag 1 applied to the numeral of its index, and the extra congruence step moves the projection equation of that numeral under the tag, since `mapTm fst` has replaced the variable constant by its projection. The formula recursion starts the same way: membership pairs its two terms, with the tag 0 here marking the membership constructor of the ambient coding, and the payload path is `prʟ-fst` followed by congruence over the two term bridges.
+For terms the recursion has two cases. A constant is coded as the tag 0 applied to itself, so the bridge is `tagBridge 0` at that constant. A variable is coded as the tag 1 applied to the numeral of its index, and the extra congruence step moves the projection equation of that numeral under the tag, since `mapTm (λ p → p .fst)` has replaced the variable constant by its projection. The formula recursion starts the same way: membership pairs its two terms, with the tag 0 here marking the membership constructor of the ambient coding, and the payload path is `prʟ-fst` followed by congruence over the two term bridges.
 <!--zh-->
-词项的递归只有两种情形。常元被编码为标签 0 作用于其自身，故桥就是在该常元处的 `tagBridge 0`。变元被编码为标签 1 作用于其下标的数码，而额外那步同余把该数码的投影等式移到标签之下，因为 `mapTm fst` 已把变元常元换成它的投影。公式的递归同样开头：成员关系把两个词项配成对，这里的标签 0 标记环境编码中的成员关系构造子，载荷路径是 `prʟ-fst` 再接对两条词项桥的同余。
+词项的递归只有两种情形。常元被编码为标签 0 作用于其自身，故桥就是在该常元处的 `tagBridge 0`。变元被编码为标签 1 作用于其下标的数码，而额外那步同余把该数码的投影等式移到标签之下，因为 `mapTm (λ p → p .fst)` 已把变元常元换成它的投影。公式的递归同样开头：成员关系把两个词项配成对，这里的标签 0 标记环境编码中的成员关系构造子，载荷路径是 `prʟ-fst` 再接对两条词项桥的同余。
 <!--ja-->
-項の再帰には二つの場合しかない。定数はタグ 0 をそれ自身に施したものとして符号化されるので、橋はその定数での `tagBridge 0` である。変数はタグ 1 をその添字の数項に施したものとして符号化され、追加の合同の段階が、数項の射影等式をタグの下へ移す。`mapTm fst` が変数の定数をその射影に置き換えたからである。論理式の再帰も同じように始まる。所属は二つの項を対にし、ここでのタグ 0 は周囲の符号化における所属の構成子を示し、本体のパスは `prʟ-fst` に二つの項の橋に対する合同が続く。
+項の再帰には二つの場合しかない。定数はタグ 0 をそれ自身に施したものとして符号化されるので、橋はその定数での `tagBridge 0` である。変数はタグ 1 をその添字の数項に施したものとして符号化され、追加の合同の段階が、数項の射影等式をタグの下へ移す。`mapTm (λ p → p .fst)` が変数の定数をその射影に置き換えたからである。論理式の再帰も同じように始まる。所属は二つの項を対にし、ここでのタグ 0 は周囲の符号化における所属の構成子を示し、本体のパスは `prʟ-fst` に二つの項の橋に対する合同が続く。
 <!--/-->
 
 ```agda
 codeBridgeTm (var i) =
   tagBridge 1 (numeralL (toℕ i)) ∙ cong (VCode.mkTag 1) (numeralL-fst (toℕ i))
 
-codeBridge : ∀ {n} (φ : Formula S n) → fst LCode.⌜ φ ⌝ ≡ VCode.⌜ mapFo fst φ ⌝
+codeBridge : ∀ {n} (φ : Formula S n) → (LCode.⌜ φ ⌝) .fst ≡ VCode.⌜ mapFo (λ p → p .fst) φ ⌝
 codeBridge (t ∈̇ u) = tagBridge 0 _ ∙ cong (VCode.mkTag 0)
   (prʟ-fst _ _ ∙ cong₂ pr (codeBridgeTm t) (codeBridgeTm u))
 ```
@@ -875,8 +875,8 @@ Reading the clause out is one direction, and it is direct. Given a pair with fir
 <!--/-->
 
 ```agda
-               → ⟨ pr (fst x) (fst y) ∈ fst (lookup f γ) ⟩
-               → ⟨ fst y ∈ fst (lookup B γ) ⟩
+               → ⟨ pr (x .fst) (y .fst) ∈ (lookup f γ) .fst ⟩
+               → ⟨ y .fst ∈ (lookup B γ) .fst ⟩
 valuesInAt-out f B γ h x y p = h x y
   (subst ⟨_⟩ (sym (appAt-adequate (suc (suc f)) (suc zero) zero (y ∷ x ∷ γ))) p)
 
@@ -897,7 +897,7 @@ pairsInAt e d B =
     (prAtL (suc (suc zero)) (suc zero) zero)))
 
 pairsIn-out : ∀ {n} (e d B : Fin n) (γ : S ^ n) → ⟨ γ ⊨ pairsInAt e d B ⟩
-            → (s : S) → ⟨ fst s ∈ fst (lookup e γ) ⟩
+            → (s : S) → ⟨ s .fst ∈ (lookup e γ) .fst ⟩
 ```
 
 <!--en-->
@@ -910,18 +910,18 @@ The extraction from the pairs clause keeps the shape of satisfaction: the conclu
 
 ```agda
             → ∥ (Σ[ u ∶ S ] (Σ[ v ∶ S ]
-                  (⟨ fst u ∈ fst (lookup d γ) ⟩
-                   × (⟨ fst v ∈ fst (lookup B γ) ⟩
-                      × (fst s ≡ pr (fst u) (fst v)))))) ∥₁
+                  (⟨ u .fst ∈ (lookup d γ) .fst ⟩
+                   × (⟨ v .fst ∈ (lookup B γ) .fst ⟩
+                      × (s .fst ≡ pr (u .fst) (v .fst)))))) ∥₁
 pairsIn-out e d B γ h s s∈ = rec₁ squash₁
 ```
 
 <!--en-->
-The proof peels the two bounded existentials inside the truncation. Elimination of propositional truncation is legitimate here because the target is again a proposition, the truncation of a Sigma type, so nothing is chosen globally: each branch transforms its own witnesses. The inner step is the same transport seen throughout this chapter: `prAtL-adequate` turns the body's satisfaction into the path `fst s ≡ pr (fst u) (fst v)`, with the environment extended by v, u, s in binder order.
+The proof peels the two bounded existentials inside the truncation. Elimination of propositional truncation is legitimate here because the target is again a proposition, the truncation of a Sigma type, so nothing is chosen globally: each branch transforms its own witnesses. The inner step is the same transport seen throughout this chapter: `prAtL-adequate` turns the body's satisfaction into the path `s .fst ≡ pr (u .fst) (v .fst)`, with the environment extended by v, u, s in binder order.
 <!--zh-->
-证明在截断之内剥去两层有界存在。这里消去命题截断是合法的，因为目标仍是命题，即一个 Σ 型的截断；所以并未全局地选取任何东西，每个分支只变换自己的见证。内层一步是本章反复出现的同一替换：`prAtL-adequate` 把主体的满足变成路径 `fst s ≡ pr (fst u) (fst v)`，环境按约束子的次序扩展为 v、u、s。
+证明在截断之内剥去两层有界存在。这里消去命题截断是合法的，因为目标仍是命题，即一个 Σ 型的截断；所以并未全局地选取任何东西，每个分支只变换自己的见证。内层一步是本章反复出现的同一替换：`prAtL-adequate` 把主体的满足变成路径 `s .fst ≡ pr (u .fst) (v .fst)`，环境按约束子的次序扩展为 v、u、s。
 <!--ja-->
-証明は、截断の内側で二つの有界存在を剥がす。命題的截断の消去がここで正当なのは、目標が再び命題、すなわち Σ 型の截断だからである。したがって何かを大域的に選ぶのではなく、各分岐が自分の証拠を変換するだけである。内側の一歩は本章で繰り返し現れたのと同じ輸送である。`prAtL-adequate` が本体の充足を経路 `fst s ≡ pr (fst u) (fst v)` に変え、環境は束縛子の順に v、u、s を加えて伸ばす。
+証明は、截断の内側で二つの有界存在を剥がす。命題的截断の消去がここで正当なのは、目標が再び命題、すなわち Σ 型の截断だからである。したがって何かを大域的に選ぶのではなく、各分岐が自分の証拠を変換するだけである。内側の一歩は本章で繰り返し現れたのと同じ輸送である。`prAtL-adequate` が本体の充足を経路 `s .fst ≡ pr (u .fst) (v .fst)` に変え、環境は束縛子の順に v、u、s を加えて伸ばす。
 <!--/-->
 
 ```agda
@@ -942,10 +942,10 @@ The reverse direction takes the per-member statement as a hypothesis. For every 
 
 ```agda
 pairsIn-in : ∀ {n} (e d B : Fin n) (γ : S ^ n)
-           → ((s : S) → ⟨ fst s ∈ fst (lookup e γ) ⟩
+           → ((s : S) → ⟨ s .fst ∈ (lookup e γ) .fst ⟩
               → ∥ (Σ[ u ∶ S ] (Σ[ v ∶ S ]
-                    (⟨ fst u ∈ fst (lookup d γ) ⟩
-                     × (⟨ fst v ∈ fst (lookup B γ) ⟩
+                    (⟨ u .fst ∈ (lookup d γ) .fst ⟩
+                     × (⟨ v .fst ∈ (lookup B γ) .fst ⟩
 ```
 
 <!--en-->
@@ -957,7 +957,7 @@ The construction transforms the truncated data of the hypothesis directly into s
 <!--/-->
 
 ```agda
-                        × (fst s ≡ pr (fst u) (fst v)))))) ∥₁)
+                        × (s .fst ≡ pr (u .fst) (v .fst)))))) ∥₁)
            → ⟨ γ ⊨ pairsInAt e d B ⟩
 pairsIn-in e d B γ k s s∈ = map₁
   (λ { (u , (v , (u∈ , (v∈ , eq)))) → u , (u∈ , ∣ v , (v∈ , subst ⟨_⟩
@@ -1044,8 +1044,8 @@ The transfer theorem needs the introduction direction of the value restriction, 
 
 ```agda
 valuesInAt-in : ∀ {n} (f B : Fin n) (γ : S ^ n)
-              → ((x y : S) → ⟨ pr (fst x) (fst y) ∈ fst (lookup f γ) ⟩
-                 → ⟨ fst y ∈ fst (lookup B γ) ⟩)
+              → ((x y : S) → ⟨ pr (x .fst) (y .fst) ∈ (lookup f γ) .fst ⟩
+                 → ⟨ y .fst ∈ (lookup B γ) .fst ⟩)
               → ⟨ γ ⊨ valuesInAt f B ⟩
 valuesInAt-in f B γ k x y hp = k x y
 ```
@@ -1063,8 +1063,8 @@ The theorem compares two assignments γ and γ', possibly of different arities, 
 
 envOverAt-transport : ∀ {n n'} (γ : S ^ n) (γ' : S ^ n')
                       (e d B : Fin n) (e' d' B' : Fin n')
-                    → fst (lookup e γ) ≡ fst (lookup e' γ')
-                    → fst (lookup d γ) ≡ fst (lookup d' γ')
+                    → (lookup e γ) .fst ≡ (lookup e' γ') .fst
+                    → (lookup d γ) .fst ≡ (lookup d' γ') .fst
 ```
 
 <!--en-->
@@ -1076,7 +1076,7 @@ Single-valuedness transfers by composing the extraction lemma at γ with the int
 <!--/-->
 
 ```agda
-                    → fst (lookup B γ) ≡ fst (lookup B' γ')
+                    → (lookup B γ) .fst ≡ (lookup B' γ') .fst
                     → ⟨ γ ⊨ envOverAt e d B ⟩ → ⟨ γ' ⊨ envOverAt e' d' B' ⟩
 envOverAt-transport γ γ' e d B e' d' B' qe qd qb h =
     svAt-in e' γ' (λ x y y' p q →
@@ -1094,8 +1094,8 @@ The domain clause transfers through the introduction lemma for `domAt`, supplyin
 ```agda
         (subst ⟨_⟩ (sym (at x y)) p) (subst ⟨_⟩ (sym (at x y')) q))
   , ( domAt-intro e' d' γ'
-      (λ x → (λ m → subst (λ w → ⟨ fst x ∈ w ⟩) qd
-                (rec₁ (snd (fst x ∈ fst (lookup d γ)))
+      (λ x → (λ m → subst (λ w → ⟨ x .fst ∈ w ⟩) qd
+                (rec₁ ((x .fst ∈ (lookup d γ) .fst) .snd)
                   (λ { (y , p) → domAt-out e d γ (envOver-dom e d B γ h) x y
 ```
 
@@ -1112,7 +1112,7 @@ The second implication reads in the opposite direction: membership in the domain
                   m))
             , (λ hx → map₁ (λ { (y , p) → y , subst ⟨_⟩ (at x y) p })
                 (domAt-in e d γ (envOver-dom e d B γ h) x
-                  (subst (λ w → ⟨ fst x ∈ w ⟩) (sym qd) hx))))
+                  (subst (λ w → ⟨ x .fst ∈ w ⟩) (sym qd) hx))))
 ```
 
 <!--en-->
@@ -1125,25 +1125,25 @@ For the value restriction, begin with a pair membership in the new projected gra
 
 ```agda
     , ( valuesInAt-in e' B' γ'
-        (λ x y p → subst (λ w → ⟨ fst y ∈ w ⟩) qb
+        (λ x y p → subst (λ w → ⟨ y .fst ∈ w ⟩) qb
           (valuesInAt-out e B γ (envOver-values e d B γ h) x y
             (subst ⟨_⟩ (sym (at x y)) p)))
       , pairsIn-in e' d' B' γ'
 ```
 
 <!--en-->
-The pairs clause is the last to move, and the transports stay inside the truncation. Reading the clause out at γ gives, merely, witnesses u and v with their memberships in the projected d and B and the pair equation. The two memberships are carried to d' and B' by qd and qb respectively, while the equation `fst s ≡ pr (fst u) (fst v)` needs no transport at all: it speaks about underlying sets, and the hypotheses say exactly that those agree, so it is the same equation on both sides.
+The pairs clause is the last to move, and the transports stay inside the truncation. Reading the clause out at γ gives, merely, witnesses u and v with their memberships in the projected `d`{.Agda} and `B`{.Agda} and the pair equation. The two memberships are carried to `d`{.Agda}' and `B`{.Agda}' by qd and qb respectively, while the equation `s .fst ≡ pr (u .fst) (v .fst)` needs no transport at all: it speaks about underlying sets, and the hypotheses say exactly that those agree, so it is the same equation on both sides.
 <!--zh-->
-诸对一条最后迁移，而各次传输都留在截断之内。在 γ 处读出该条，仅仅是得到见证 u 与 v、二者对投影后 `d`{.Agda} 与 `B`{.Agda} 的成员关系，以及对的等式。两条成员关系分别由 qd 与 qb 搬到 `d'` 与 `B'`，而等式 `fst s ≡ pr (fst u) (fst v)` 完全无需传输：它谈的是底层集合，前提恰好说这些集合一致，故这条等式在两侧是同一条。
+诸对一条最后迁移，而各次传输都留在截断之内。在 γ 处读出该条，仅仅是得到见证 u 与 v、二者对投影后 `d`{.Agda} 与 `B`{.Agda} 的成员关系，以及对的等式。两条成员关系分别由 qd 与 qb 搬到 `d'` 与 `B'`，而等式 `s .fst ≡ pr (u .fst) (v .fst)` 完全无需传输：它谈的是底层集合，前提恰好说这些集合一致，故这条等式在两侧是同一条。
 <!--ja-->
-対の条項が最後に移り、輸送はすべて切り詰めの内側にとどまる。γ で条項を読み出すと、証拠 u と v、射影された d と B へのそれぞれの所属、そして対の等式が単に存在するとして得られる。二つの所属は qd と qb によってそれぞれ `d'` と `B'` へ運ばれる。一方、等式 `fst s ≡ pr (fst u) (fst v)` には輸送がまったく要らない。これは底にある集合についての主張であり、前提はまさにそれらが一致することを言っているので、等式は両側で同一である。
+対の条項が最後に移り、輸送はすべて切り詰めの内側にとどまる。γ で条項を読み出すと、証拠 u と v、射影された `d`{.Agda} と `B`{.Agda} へのそれぞれの所属、そして対の等式が単に存在するとして得られる。二つの所属は qd と qb によってそれぞれ `d'` と `B'` へ運ばれる。一方、等式 `s .fst ≡ pr (u .fst) (v .fst)` には輸送がまったく要らない。これは底にある集合についての主張であり、前提はまさにそれらが一致することを言っているので、等式は両側で同一である。
 <!--/-->
 
 ```agda
         (λ s s∈ → map₁
           (λ { (u , (v , (u∈ , (v∈ , eq)))) →
-            u , (v , ( subst (λ w → ⟨ fst u ∈ w ⟩) qd u∈
-                     , ( subst (λ w → ⟨ fst v ∈ w ⟩) qb v∈ , eq ) )) })
+            u , (v , ( subst (λ w → ⟨ u .fst ∈ w ⟩) qd u∈
+                     , ( subst (λ w → ⟨ v .fst ∈ w ⟩) qb v∈ , eq ) )) })
           (pairsIn-out e d B γ (envOver-pairs e d B γ h) s
 ```
 
@@ -1156,58 +1156,58 @@ The remaining ingredient is the path `at`: for each x and y, the path identifyin
 <!--/-->
 
 ```agda
-            (subst (λ w → ⟨ fst s ∈ w ⟩) (sym qe) s∈))) ) )
+            (subst (λ w → ⟨ s .fst ∈ w ⟩) (sym qe) s∈))) ) )
   where
-  at : (x y : S) → (pr (fst x) (fst y) ∈ fst (lookup e γ))
-                 ≡ (pr (fst x) (fst y) ∈ fst (lookup e' γ'))
-  at x y = cong (λ w → pr (fst x) (fst y) ∈ w) qe
+  at : (x y : S) → (pr (x .fst) (y .fst) ∈ (lookup e γ) .fst)
+                 ≡ (pr (x .fst) (y .fst) ∈ (lookup e' γ') .fst)
+  at x y = cong (λ w → pr (x .fst) (y .fst) ∈ w) qe
 ```
 
 <!--en-->
 ## A container for pair components
 
-Reading a pair-shaped code exposes its two components, and it is convenient to have both available as members of a single constructible set. The candidate is forced by the mathematics: if `fst x` is the ordered pair of `fst u` and `fst v`, then the unordered pair `⁅ fst u , fst v ⁆` is a member of `fst x`, hence itself constructible by transitivity of `L`, and both components are members of it. The section records exactly this witness together with the three membership facts, as a type `Container x u v` and a construction `container` producing it from the path `fst x ≡ pr (fst u) (fst v)`.
+Reading a pair-shaped code exposes its two components, and it is convenient to have both available as members of a single constructible set. The candidate is forced by the mathematics: if `x .fst` is the ordered pair of `u .fst` and `v .fst`, then the unordered pair `⁅ (λ p → p .fst) u , (λ p → p .fst) v ⁆` is a member of `x .fst`, hence itself constructible by transitivity of `L`, and both components are members of it. The section records exactly this witness together with the three membership facts, as a type `Container x u v` and a construction `container` producing it from the path `x .fst ≡ pr (u .fst) (v .fst)`.
 <!--zh-->
 ## 容纳配对分量
 
-读取配对形状的码会暴露它的两个分量，而把二者同时呈现为**同一个**可构造集合的元素会带来方便。候选对象由数学本身决定：若 `fst x` 是 `fst u` 与 `fst v` 的有序对，则无序对 `⁅ fst u , fst v ⁆` 属于 `fst x`，故由 `L` 的传递性它自身可构造，且两个分量都是它的元素。本节记录的正是这个见证连同三条成员关系事实：一个类型 `Container x u v`，以及从路径 `fst x ≡ pr (fst u) (fst v)` 造出它的构造 `container`。
+读取配对形状的码会暴露它的两个分量，而把二者同时呈现为**同一个**可构造集合的元素会带来方便。候选对象由数学本身决定：若 `x .fst` 是 `u .fst` 与 `v .fst` 的有序对，则无序对 `⁅ (λ p → p .fst) u , (λ p → p .fst) v ⁆` 属于 `x .fst`，故由 `L` 的传递性它自身可构造，且两个分量都是它的元素。本节记录的正是这个见证连同三条成员关系事实：一个类型 `Container x u v`，以及从路径 `x .fst ≡ pr (u .fst) (v .fst)` 造出它的构造 `container`。
 <!--ja-->
 ## 対の成分を収める集合
 
-対の形をした符号を読むと二つの成分が現れるが、両方を**ひとつの**構成可能集合の要素として持ち出せると便利である。候補は数学そのものが決める。`fst x` が `fst u` と `fst v` の順序対なら、非順序対 `⁅ fst u , fst v ⁆` は `fst x` に属するので、`L` の推移性によりそれ自身構成可能であり、しかも二つの成分はどちらもその要素である。この節が記録するのは、まさにこの証拠と三つの所属の事実、すなわち型 `Container x u v` と、経路 `fst x ≡ pr (fst u) (fst v)` からそれを造る構成 `container` である。
+対の形をした符号を読むと二つの成分が現れるが、両方を**ひとつの**構成可能集合の要素として持ち出せると便利である。候補は数学そのものが決める。`x .fst` が `u .fst` と `v .fst` の順序対なら、非順序対 `⁅ (λ p → p .fst) u , (λ p → p .fst) v ⁆` は `x .fst` に属するので、`L` の推移性によりそれ自身構成可能であり、しかも二つの成分はどちらもその要素である。この節が記録するのは、まさにこの証拠と三つの所属の事実、すなわち型 `Container x u v` と、経路 `x .fst ≡ pr (u .fst) (v .fst)` からそれを造る構成 `container` である。
 <!--/-->
 
 <!--en-->
-The type packages one element `s` of the model with three ambient membership facts, all stated after projection: the underlying set of `s` is a member of `fst x`, and the underlying sets of `u` and `v` are members of `fst s`. No claim is made beyond these; in particular nothing asserts that `s` is the least such set. The construction `container` takes the hypothesis that `fst x` equals `pr (fst u) (fst v)` and returns the witness with its three certificates in one package.
+The type packages one element `s` of the model with three ambient membership facts, all stated after projection: the underlying set of `s` is a member of `x .fst`, and the underlying sets of `u` and `v` are members of `s .fst`. No claim is made beyond these; in particular nothing asserts that `s` is the least such set. The construction `container` takes the hypothesis that `x .fst` equals `pr (u .fst) (v .fst)` and returns the witness with its three certificates in one package.
 <!--zh-->
-该类型把模型的一个元素 `s` 与三条周遭成员关系事实打包，全部在投影后陈述：`s` 的底集属于 `fst x`，而 `u`、`v` 的底集都属于 `fst s`。除此之外不作任何断言；特别地，它并不声称 `s` 是具有此性质的极小集合。构造 `container` 以「`fst x` 等于 `pr (fst u) (fst v)`」为前提，把见证连同三份证书一并返回。
+该类型把模型的一个元素 `s` 与三条周遭成员关系事实打包，全部在投影后陈述：`s` 的底集属于 `x .fst`，而 `u`、`v` 的底集都属于 `s .fst`。除此之外不作任何断言；特别地，它并不声称 `s` 是具有此性质的极小集合。构造 `container` 以「`x .fst` 等于 `pr (u .fst) (v .fst)`」为前提，把见证连同三份证书一并返回。
 <!--ja-->
-この型は、モデルの要素 `s` に三つの周囲の所属の事実を、すべて射影後に述べる形でまとめる。`s` の底集合が `fst x` に属し、`u` と `v` の底集合がともに `fst s` に属するというものである。それ以外の主張はなく、とりわけ `s` がこの性質を持つ極小の集合であるとは言わない。構成 `container` は「`fst x` が `pr (fst u) (fst v)` に等しい」という仮定を受け取り、証拠と三つの証明書をひとまとめにして返す。
+この型は、モデルの要素 `s` に三つの周囲の所属の事実を、すべて射影後に述べる形でまとめる。`s` の底集合が `x .fst` に属し、`u` と `v` の底集合がともに `s .fst` に属するというものである。それ以外の主張はなく、とりわけ `s` がこの性質を持つ極小の集合であるとは言わない。構成 `container` は「`x .fst` が `pr (u .fst) (v .fst)` に等しい」という仮定を受け取り、証拠と三つの証明書をひとまとめにして返す。
 <!--/-->
 
 ```agda
 Container : (x u v : S) → Type (ℓ-suc ℓ)
-Container x u v = Σ[ s ∶ S ] (⟨ fst s ∈ fst x ⟩ × (⟨ fst u ∈ fst s ⟩ × ⟨ fst v ∈ fst s ⟩))
+Container x u v = Σ[ s ∶ S ] (⟨ s .fst ∈ x .fst ⟩ × (⟨ u .fst ∈ s .fst ⟩ × ⟨ v .fst ∈ s .fst ⟩))
 
 opaque
-  container : (x u v : S) → fst x ≡ pr (fst u) (fst v) → Container x u v
+  container : (x u v : S) → x .fst ≡ pr (u .fst) (v .fst) → Container x u v
   container x u v e = s , (s∈ , (∈pair-introL refl , ∈pair-introR refl))
 ```
 
 <!--en-->
-The witness is the unordered pair of the two underlying sets. As one member of the outer unordered pair in the Kuratowski encoding, it belongs to `pr (fst u) (fst v)` by the introduction rule at the reflexive path, and transporting along the hypothesis `e` moves that membership into membership in `fst x`. This is precisely the input transitivity of `L` consumes: since the unordered pair is a member of a constructible set, `isL-trans` yields it as an element of `S`, certificate included. The two remaining memberships, of `fst u` and `fst v` in it, are the two introduction rules at reflexive paths.
+The witness is the unordered pair of the two underlying sets. As one member of the outer unordered pair in the Kuratowski encoding, it belongs to `pr (u .fst) (v .fst)` by the introduction rule at the reflexive path, and transporting along the hypothesis `e` moves that membership into membership in `x .fst`. This is precisely the input transitivity of `L` consumes: since the unordered pair is a member of a constructible set, `isL-trans` yields it as an element of `S`, certificate included. The two remaining memberships, of `u .fst` and `v .fst` in it, are the two introduction rules at reflexive paths.
 <!--zh-->
-见证就是两个底集的无序对。作为 Kuratowski 编码之外层无序对的一个元素，它在自反路径上的引入规则下属于 `pr (fst u) (fst v)`，沿前提 `e` 传输后便成为对 `fst x` 的成员关系。而这恰是 `L` 传递性所消费的输入：既然该无序对属于一个可构造集合，`isL-trans` 便把它连同证书一起作为 `S` 的元素给出。余下的两条成员关系，即 `fst u` 与 `fst v` 属于它，则由自反路径上的两条引入规则给出。
+见证就是两个底集的无序对。作为 Kuratowski 编码之外层无序对的一个元素，它在自反路径上的引入规则下属于 `pr (u .fst) (v .fst)`，沿前提 `e` 传输后便成为对 `x .fst` 的成员关系。而这恰是 `L` 传递性所消费的输入：既然该无序对属于一个可构造集合，`isL-trans` 便把它连同证书一起作为 `S` 的元素给出。余下的两条成员关系，即 `u .fst` 与 `v .fst` 属于它，则由自反路径上的两条引入规则给出。
 <!--ja-->
-証拠は、二つの底集合の非順序対である。Kuratowski 符号の外側の非順序対の一要素として、反射経路での導入規則により `pr (fst u) (fst v)` に属し、仮定 `e` に沿って輸送すれば `fst x` への所属になる。これこそ `L` の推移性が受け取る入力である。非順序対が構成可能な集合に属する以上、`isL-trans` はそれを証明書込みで `S` の要素として与える。残る二つの所属、すなわち `fst u` と `fst v` がそれに属することは、反射経路での二つの導入規則による。
+証拠は、二つの底集合の非順序対である。Kuratowski 符号の外側の非順序対の一要素として、反射経路での導入規則により `pr (u .fst) (v .fst)` に属し、仮定 `e` に沿って輸送すれば `x .fst` への所属になる。これこそ `L` の推移性が受け取る入力である。非順序対が構成可能な集合に属する以上、`isL-trans` はそれを証明書込みで `S` の要素として与える。残る二つの所属、すなわち `u .fst` と `v .fst` がそれに属することは、反射経路での二つの導入規則による。
 <!--/-->
 
 ```agda
     where
-    s∈ : ⟨ ⁅ fst u , fst v ⁆ ∈ fst x ⟩
-    s∈ = subst (λ w → ⟨ ⁅ fst u , fst v ⁆ ∈ w ⟩) (sym e) (∈pair-introR refl)
+    s∈ : ⟨ ⁅ u .fst , v .fst ⁆ ∈ x .fst ⟩
+    s∈ = subst (λ w → ⟨ ⁅ u .fst , v .fst ⁆ ∈ w ⟩) (sym e) (∈pair-introR refl)
     s : S
-    s = ⁅ fst u , fst v ⁆ , isL-trans s∈ (snd x)
+    s = ⁅ u .fst , v .fst ⁆ , isL-trans s∈ (x .snd)
 ```
 
 <!--en-->

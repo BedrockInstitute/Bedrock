@@ -245,7 +245,7 @@ Although `birth` receives a proof `p` that `x` is constructible, its value conta
 
 ```agda
 birth-proof : (x : S) (p q : ⟨ isL x ⟩) → birth x p ≡ birth x q
-birth-proof x p q = cong (birth x) (snd (isL x) p q)
+birth-proof x p q = cong (birth x) ((isL x) .snd p q)
 ```
 
 <!--en-->
@@ -466,10 +466,12 @@ The function `carry` uses this map to pull an order on ambient member pairs back
 
 ```agda
 carry : (A : S) → SWO (Mem A) → SWO ⟪ A ⟫
-carry A w = pullOrder ⟪ A ⟫ (Mem A) w (λ m → ⟪ A ⟫↪ m , memOf A m) inj
+carry A w = pullOrder ⟪ A ⟫ (Mem A) w member inj
   where
+  member : ⟪ A ⟫ → Mem A
+  member m = ⟪ A ⟫↪ m , memOf A m
   inj : (u v : ⟪ A ⟫)
-      → _≡_ {A = Mem A} (⟪ A ⟫↪ u , memOf A u) (⟪ A ⟫↪ v , memOf A v) → u ≡ v
+      → member u ≡ member v → u ≡ v
 ```
 
 <!--en-->
@@ -481,7 +483,7 @@ The presentation map is an embedding, so equality of the resulting member pairs 
 <!--/-->
 
 ```agda
-  inj u v q = isEmbedding→Inj isEmb⟪ A ⟫↪ u v (cong fst q)
+  inj u v q = isEmbedding→Inj isEmb⟪ A ⟫↪ u v (cong (λ p → p .fst) q)
 ```
 
 <!--en-->
@@ -577,7 +579,7 @@ The name order is a strict well-order, so a merely inhabited family of denoting 
 ```agda
     leastOfNew : (a : New δ)
                → Σ[ n ∶ NM.Name ] IsLeast NM.nameOrder (denotes a) n
-    leastOfNew a = NM.leastName (fst a) (hasName a)
+    leastOfNew a = NM.leastName (a .fst) (hasName a)
 ```
 
 <!--en-->
@@ -616,7 +618,7 @@ If two successor-stage members have the same selected least name, applying denot
 
 ```agda
     nameInj : (u v : New δ) → theName u ≡ theName v → u ≡ v
-    nameInj u v q = Σ≡Prop (λ x → snd (x ∈ˢ Lset (sucV δ)))
+    nameInj u v q = Σ≡Prop (λ x → (x ∈ˢ Lset (sucV δ)) .snd)
       (sym (theName-denote u) ∙ cong NM.denote q ∙ theName-denote v)
 ```
 
@@ -655,22 +657,22 @@ For each member `a : New δ`, the construction supplies a name together with `Is
 <!--/-->
 
 ```agda
-  leastNameOf : (a : New δ) → Σ[ t ∶ NM.Name ] IsLeastName t (fst a)
+  leastNameOf : (a : New δ) → Σ[ t ∶ NM.Name ] IsLeastName t (a .fst)
   leastNameOf a = leastOfNew a
 ```
 
 <!--en-->
-Suppose `t` is any name satisfying `IsLeastName t (fst c)`. Both `(theName c, leastOfNew c .snd)` and `(t,h)` are least witnesses for the same denotation predicate. The total type of such least witnesses is a proposition: trichotomy rules out either name being strictly below the other and forces the names to be equal. Projecting that equality yields `theName c ≡ t`. Thus the least name is unique, while the set may still have many nonleast names.
+Suppose `t` is any name satisfying `IsLeastName t (c .fst)`. Both `(theName c, leastOfNew c .snd)` and `(t,h)` are least witnesses for the same denotation predicate. The total type of such least witnesses is a proposition: trichotomy rules out either name being strictly below the other and forces the names to be equal. Projecting that equality yields `theName c ≡ t`. Thus the least name is unique, while the set may still have many nonleast names.
 <!--zh-->
-设 `t` 是满足 `IsLeastName t (fst c)` 的任意名字。`(theName c, leastOfNew c .snd)` 与 `(t,h)` 都是同一指称谓词的最小见证。这类最小见证的总类型是命题：三歧性排除任一名字严格小于另一个的两种情形，并迫使两个名字相等。投影该等式便得到 `theName c ≡ t`。因此唯一的是最小名字，而该集合仍可能有许多非最小名字。
+设 `t` 是满足 `IsLeastName t (c .fst)` 的任意名字。`(theName c, leastOfNew c .snd)` 与 `(t,h)` 都是同一指称谓词的最小见证。这类最小见证的总类型是命题：三歧性排除任一名字严格小于另一个的两种情形，并迫使两个名字相等。投影该等式便得到 `theName c ≡ t`。因此唯一的是最小名字，而该集合仍可能有许多非最小名字。
 <!--ja-->
-`t` が `IsLeastName t (fst c)` を満たす任意の名前であるとする。`(theName c, leastOfNew c .snd)` と `(t,h)` は、同じ指示述語に対する最小証人である。このような最小証人の全体型は命題である。三分性が、一方の名前が他方より真に小さい二つの場合を排除し、二つの名前の等しさを強制する。その等しさを射影すれば `theName c ≡ t` を得る。したがって一意なのは最小名であり、その集合はなお多くの最小でない名前をもちうる。
+`t` が `IsLeastName t (c .fst)` を満たす任意の名前であるとする。`(theName c, leastOfNew c .snd)` と `(t,h)` は、同じ指示述語に対する最小証人である。このような最小証人の全体型は命題である。三分性が、一方の名前が他方より真に小さい二つの場合を排除し、二つの名前の等しさを強制する。その等しさを射影すれば `theName c ≡ t` を得る。したがって一意なのは最小名であり、その集合はなお多くの最小でない名前をもちうる。
 <!--/-->
 
 ```agda
   private
-    pin : (c : New δ) (t : NM.Name) → IsLeastName t (fst c) → theName c ≡ t
-    pin c t h = cong fst
+    pin : (c : New δ) (t : NM.Name) → IsLeastName t (c .fst) → theName c ≡ t
+    pin c t h = cong (λ p → p .fst)
       (isPropLeastOf NM.nameOrder (denotes c) (leastOfNew c) (t , h))
 ```
 
@@ -684,8 +686,8 @@ The comparison fact pins each candidate's least name: if `t₁` is a least name 
 
 ```agda
     byName-least : (a b : New δ) (t₁ t₂ : NM.Name)
-                 → IsLeastName t₁ (fst a) → IsLeastName t₂ (fst b)
-                 → relOf byName a b ≡ NM._≺ₙ_ t₁ t₂
+                 → IsLeastName t₁ (a .fst) → IsLeastName t₂ (b .fst)
+                 → relOf byName a b ≡ (t₁ NM.≺ₙ t₂)
     byName-least a b t₁ t₂ h₁ h₂ = cong₂ NM._≺ₙ_ (pin a t₁ h₁) (pin b t₂ h₂)
 ```
 
@@ -726,8 +728,8 @@ The filling reading says: if two names are least for their respective members, t
 
 ```agda
     stepAt-fill : (a b : New δ) (t₁ t₂ : NM.Name)
-                → IsLeastName t₁ (fst a) → IsLeastName t₂ (fst b)
-                → NM._≺ₙ_ t₁ t₂ → relOf stepAt a b
+                → IsLeastName t₁ (a .fst) → IsLeastName t₂ (b .fst)
+                → t₁ NM.≺ₙ t₂ → relOf stepAt a b
     stepAt-fill a b t₁ t₂ h₁ h₂ =
       transport (sym (byName-least a b t₁ t₂ h₁ h₂))
 ```
@@ -742,8 +744,8 @@ The reading lemma says the converse: if the step order holds between two members
 
 ```agda
     stepAt-read : (a b : New δ) (t₁ t₂ : NM.Name)
-                → IsLeastName t₁ (fst a) → IsLeastName t₂ (fst b)
-                → relOf stepAt a b → NM._≺ₙ_ t₁ t₂
+                → IsLeastName t₁ (a .fst) → IsLeastName t₂ (b .fst)
+                → relOf stepAt a b → t₁ NM.≺ₙ t₂
     stepAt-read a b t₁ t₂ h₁ h₂ =
       transport (byName-least a b t₁ t₂ h₁ h₂)
 ```
@@ -798,7 +800,7 @@ This certificate alignment is what makes `Under` useful in the recursive family.
 <!--/-->
 
 ```agda
-    (snd (x ∈ˢ Lset (sucV δ)) kx hx) (snd (y ∈ˢ Lset (sucV δ)) ky hy) h
+    ((x ∈ˢ Lset (sucV δ)) .snd kx hx) ((y ∈ˢ Lset (sucV δ)) .snd ky hy) h
 ```
 
 <!--en-->
@@ -928,7 +930,7 @@ The packaging helper says that two members of the ordinal index with the same un
 ```agda
   private
     packBirth : (d z : Mem γ) → d .fst ≡ z .fst → d ≡ z
-    packBirth d z = Σ≡Prop (λ v → snd (v ∈ˢ γ))
+    packBirth d z = Σ≡Prop (λ v → (v ∈ˢ γ) .snd)
 ```
 
 <!--en-->
@@ -1118,7 +1120,7 @@ Local trichotomy supplies comparison in either direction or equality of the two 
                       (relOf (stepIn (bornAt a)) (b .fst , hb) (a .fst , ha))
                 → Tri (a ≺ b) (a ≡ b) (b ≺ a)
         bySteps (lt h) = lt (inr (same , (ha , hb , h)))
-        bySteps (eq q) = eq (Σ≡Prop (λ v → snd (v ∈ˢ Lset γ)) (cong fst q))
+        bySteps (eq q) = eq (Σ≡Prop (λ v → (v ∈ˢ Lset γ) .snd) (cong (λ p → p .fst) q))
         bySteps (gt h) = gt (inr (sym same
 ```
 
@@ -1176,7 +1178,7 @@ If `c` was compared with `b` by an earlier birth, its birth is strictly below `d
 <!--/-->
 
 ```agda
-        (subst (λ v → ⟨ bornAt c .fst ∈ˢ v ⟩) (cong fst q) h) c refl
+        (subst (λ v → ⟨ bornAt c .fst ∈ˢ v ⟩) (cong (λ p → p .fst) q) h) c refl
       step c (inr (eb , v)) =
         accInside d ih (c .fst , hc) (r (c .fst , hc) below) c qc refl
         where
@@ -1192,7 +1194,7 @@ In the equal-birth clause, equality of the underlying birth ordinals is first li
 <!--/-->
 
 ```agda
-        qc = packBirth (bornAt c) d (sym eb ∙ cong fst q)
+        qc = packBirth (bornAt c) d (sym eb ∙ cong (λ p → p .fst) q)
         moved : UnderAt d c b
         moved = subst (λ z → UnderAt z c b) qc v
         hc : ⟨ c .fst ∈ˢ Lset (sucV (d .fst)) ⟩
@@ -1210,7 +1212,7 @@ Reading the transported `UnderAt` witness with the aligned certificates gives a 
 ```agda
         below : relOf (stepIn d) (c .fst , hc) u
         below = subst (λ z → relOf (stepIn d) (c .fst , hc) z)
-          (Σ≡Prop (λ x → snd (x ∈ˢ Lset (sucV (d .fst)))) qu)
+          (Σ≡Prop (λ x → (x ∈ˢ Lset (sucV (d .fst))) .snd) qu)
           (under-at (d .fst) (stepIn d) (c .fst) (b .fst)
             hc (moved .snd .fst) moved)
 ```

@@ -63,6 +63,7 @@ Why supply an equality relation instead of using Agda's path equality `x ≡ y`{
 ```agda
 record ZFStructure (ℓ : Level) {ℓΩ : Level} (Ω : Type ℓΩ)
   : Type (ℓ-max (ℓ-suc ℓ) ℓΩ) where
+  infix 20 _≈ˢ_ _∈ˢ_
   field
     S         : Type ℓ
     isSetS    : isSet S
@@ -78,8 +79,6 @@ The remaining fields give a truth value for each ordered pair of carrier element
 
 ```agda
     _≈ˢ_ _∈ˢ_ : S → S → Ω
-
-  infix 20 _≈ˢ_ _∈ˢ_
 ```
 
 <!--en-->
@@ -115,14 +114,6 @@ For a `ZFStructureₕ`{.Agda}, the field `x ∈ˢ y`{.Agda} returns an `hProp`{.
 `ZFStructureₕ`{.Agda} では、フィールド `x ∈ˢ y`{.Agda} は `hProp`{.Agda}、すなわち命題とその証明無関係性を返す。その命題の証明を関数の引数として使うには、基礎となる型 `⟨ x ∈ˢ y ⟩`{.Agda} を取り出す。部分モジュール `hPropView`{.Agda} は構造 `𝒮` を固定し、この型を `x ∈ᵗ y`{.Agda} と書けるようにする。
 <!--/-->
 
-<!--en-->
-Opening `ZFStructure 𝒮` inside the submodule makes its fields available as `S`, `∈ˢ`{.Agda}, and so on. The new notation will not change which memberships hold; it only exposes the type of their proofs.
-<!--zh-->
-在子模块内打开 `ZFStructure 𝒮`，便可直接使用结构的字段 `S`、`∈ˢ`{.Agda} 等。新记号只取出命题的底层类型，不改变成员关系的含义。
-<!--ja-->
-部分モジュール内で `ZFStructure 𝒮` を開くと、`S` や `∈ˢ`{.Agda} などのフィールドをそのまま使える。新しい記法は、どの所属が成り立つかを変えず、命題の証明の型を取り出すだけである。
-<!--/-->
-
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
@@ -130,6 +121,18 @@ module hPropView {ℓ} (𝒮 : ZFStructureₕ ℓ) where
 ```
 </summary>
 <div class="submodule-fold-content">
+
+<!--en-->
+We first open `ZFStructure 𝒮`{.Agda} with `public`, so that `hPropView`{.Agda} "inherits" all the fields of `ZFStructure`{.Agda} at `𝒮`. They are available inside the submodule and re-exported to modules that open this view; no new structure is created.
+<!--zh-->
+先用 `public` 打开 `ZFStructure 𝒮`{.Agda}，使 `hPropView`{.Agda}「继承」`ZFStructure`{.Agda} 在 `𝒮` 上的所有字段。这些字段既可在子模块内直接使用，也会一并提供给打开此视图的模块；这里并没有新建结构。
+<!--ja-->
+まず `public` を付けて `ZFStructure 𝒮`{.Agda} を開き、`hPropView`{.Agda} が `𝒮` における `ZFStructure`{.Agda} の全フィールドを「継承」するようにする。これらのフィールドは部分モジュール内で使えるだけでなく、このビューを開くモジュールにも公開される。新しい構造を作るわけではない。
+<!--/-->
+
+```agda
+  open ZFStructure 𝒮 public
+```
 
 <!--en-->
 An inhabitant of `y ∈ᵗ x`{.Agda} is a proof that `y` belongs to `x` in this structure. The left argument is the member, just as for `∈ˢ`{.Agda}; we give the two notations the same binding strength.
@@ -148,11 +151,9 @@ An inhabitant of `y ∈ᵗ x`{.Agda} is a proof that `y` belongs to `x` in this 
 <!--/-->
 
 ```agda
-  open ZFStructure 𝒮 public
-
+  infix 20 _∈ᵗ_
   _∈ᵗ_ : S → S → Type ℓ
   x ∈ᵗ y = ⟨ x ∈ˢ y ⟩
-  infix 20 _∈ᵗ_
 ```
 
 <!--en-->
@@ -240,15 +241,15 @@ To make the variables range over only the elements selected by `M`, we need a ne
 <!--/-->
 
 <!--en-->
-Restriction does not require transitivity or proposition-valued relations: the structure may use any truth-value type `Ω`. Only the predicate selecting carrier elements must be proposition-valued. We open the carrier projection at module scope so that `S 𝒮`{.Agda} denotes the carrier of `𝒮` in the signatures below.
+Restriction does not require transitivity or proposition-valued relations: the structure may use any truth-value type `Ω`. Only the predicate selecting carrier elements must be proposition-valued. We open the carrier-related field projections at module scope, leaving the two relations to be opened at a fixed structure where needed. Unlike the opening inside `hPropView`{.Agda}, this does not fix a structure: each projection takes it as an argument, as in `S 𝒮`{.Agda}. Here `𝒮` plays the role of a subscript on `S` in mathematical notation, specifying whose carrier we mean; in Agda it is an ordinary function argument.
 <!--zh-->
-限制结构不要求类具有传递性，也不要求原结构的关系取命题值：真值类型 `Ω` 可以任意选择，只有筛选载体元素的谓词需要取命题值。下面在本模块中打开载体投影，在后续签名中用 `S 𝒮`{.Agda} 表示结构 `𝒮` 的载体。
+限制结构不要求类具有传递性，也不要求原结构的关系取命题值：真值类型 `Ω` 可以任意选择，只有筛选载体元素的谓词需要取命题值。下面在本模块中打开载体相关的字段投影，两个关系则留到使用时再针对具体结构打开。与 `hPropView`{.Agda} 内的打开方式不同，这里不固定结构，而是在使用各投影时传入结构，例如用 `S 𝒮`{.Agda} 取得 `𝒮` 的载体。其中，`𝒮` 的作用相当于数学记号中 `S` 的下标，指明这是哪个结构的载体；在 Agda 中，它仍是普通的函数实参。
 <!--ja-->
-構造の制限には、クラスの推移性も、関係が命題に値を取るという条件も要らない。真理値の型 `Ω` は任意であり、台の元を選ぶ述語だけが命題値であればよい。以下では台の射影をモジュールのスコープで開き、シグネチャ中の `S 𝒮`{.Agda} で構造 `𝒮` の台を表す。
+構造の制限には、クラスの推移性も、関係が命題に値を取るという条件も要らない。真理値の型 `Ω` は任意であり、台の元を選ぶ述語だけが命題値であればよい。以下では台に関するフィールドの射影をモジュールのスコープで開き、二つの関係は使う場所で構造を固定して開く。`hPropView`{.Agda} の内部とは異なり、構造は固定せず、`S 𝒮`{.Agda} のように各射影へ構造を引数として渡す。ここで `𝒮` は、数学の記法で `S` に付ける添字に相当し、どの構造の台かを指定する。ただし Agda では通常の関数の引数である。
 <!--/-->
 
 ```agda
-open ZFStructure using ( S )
+open ZFStructure hiding ( _≈ˢ_; _∈ˢ_ )
 ```
 
 <!--en-->
@@ -260,27 +261,26 @@ open ZFStructure using ( S )
 <!--/-->
 
 ```agda
+infixl 21 _↾_
 _↾_ : ∀ {ℓ ℓΩ} {Ω : Type ℓΩ} (𝒮 : ZFStructure ℓ Ω)
     → (S 𝒮 → hProp ℓ) → ZFStructure ℓ Ω
 _↾_ {ℓ} 𝒮 M = record
   { S      = Σ[ x ∶ S 𝒮 ] (x ∈ᶜ M)
-  ; isSetS = isSetClass isSetS (λ x → ⟨ M x ⟩isProp)
+  ; isSetS = isSetClass (isSetS 𝒮) (λ x → ⟨ M x ⟩isProp)
 ```
 
 <!--en-->
-How should the two relations act on these pairs? For restricted elements `a` and `b`, apply the old relations to their first projections: `fst a ≈ˢ fst b`{.Agda} and `fst a ∈ˢ fst b`{.Agda}. The proofs stored in the second components certify that the elements lie in `M`; they do not alter the truth values of equality or membership. Thus the relation fields are pulled back from `𝒮` along `fst`{.Agda}.
+How should the two relations act on these pairs? For restricted elements `a` and `b`, apply the relations of `𝒮` to their first projections: `a .fst ≈ˢ b .fst`{.Agda} and `a .fst ∈ˢ b .fst`{.Agda}. We open just these two relations locally in the definition below. The proofs stored in the second components certify that the elements lie in `M`; they do not alter the truth values of equality or membership. Thus the relation fields are pulled back from `𝒮` along `fst`{.Agda}.
 <!--zh-->
-新载体上的两种关系怎样定义？给定其中的元素 `a`、`b`，先取出各自的第一分量，再应用原来的关系，得到 `fst a ≈ˢ fst b`{.Agda} 与 `fst a ∈ˢ fst b`{.Agda}。第二分量只证明第一分量属于 `M`，不影响这两种关系的真值。也就是说，新关系是原关系沿第一投影 `fst`{.Agda} 的拉回。
+新载体上的两种关系怎样定义？给定其中的元素 `a`、`b`，先取出各自的第一分量，再应用 `𝒮` 的关系，得到 `a .fst ≈ˢ b .fst`{.Agda} 与 `a .fst ∈ˢ b .fst`{.Agda}。下面的定义只在局部打开原结构的这两个关系。第二分量只证明第一分量属于 `M`，不影响这两种关系的真值。也就是说，新关系是原关系沿第一投影 `fst`{.Agda} 的拉回。
 <!--ja-->
-新しい台の上で二つの関係をどう定めるか。制限された元 `a`、`b` の第一射影に元の関係を適用し、`fst a ≈ˢ fst b`{.Agda} と `fst a ∈ˢ fst b`{.Agda} を得る。第二成分の証拠は元が `M` に属することを保証するだけで、等号や所属の真理値を変えない。つまり二つの関係を `fst`{.Agda} に沿って `𝒮` から引き戻す。
+新しい台の上で二つの関係をどう定めるか。制限された元 `a`、`b` の第一射影に `𝒮` の関係を適用し、`a .fst ≈ˢ b .fst`{.Agda} と `a .fst ∈ˢ b .fst`{.Agda} を得る。以下の定義では、元の構造のこの二つの関係だけを局所的に開く。第二成分の証拠は元が `M` に属することを保証するだけで、等号や所属の真理値を変えない。つまり二つの関係を `fst`{.Agda} に沿って `𝒮` から引き戻す。
 <!--/-->
 
 ```agda
-  ; _≈ˢ_   = λ a b → fst a ≈ˢ fst b
-  ; _∈ˢ_   = λ a b → fst a ∈ˢ fst b }
-  where open ZFStructure 𝒮 using ( isSetS; _≈ˢ_; _∈ˢ_ )
-
-infixl 21 _↾_
+  ; _≈ˢ_   = λ a b → a .fst ≈ˢ b .fst
+  ; _∈ˢ_   = λ a b → a .fst ∈ˢ b .fst }
+  where open ZFStructure 𝒮 using ( _≈ˢ_; _∈ˢ_ )
 ```
 
 <!--en-->
@@ -292,11 +292,11 @@ The relations use only the first components. Does equality of the dependent pair
 <!--/-->
 
 <!--en-->
-**Lemma** (`↾-reflects`{.Agda}) For `a` and `b` in the restricted carrier, a path `fst a ≡ fst b`{.Agda} determines a path `a ≡ b`{.Agda}.
+**Lemma** (`↾-reflects`{.Agda}) For `a` and `b` in the restricted carrier, a path `a .fst ≡ b .fst`{.Agda} determines a path `a ≡ b`{.Agda}.
 <!--zh-->
-**引理** (`↾-reflects`{.Agda}) 给定限制结构的载体元素 `a`、`b`，由路径 `fst a ≡ fst b`{.Agda} 可得路径 `a ≡ b`{.Agda}。
+**引理** (`↾-reflects`{.Agda}) 给定限制结构的载体元素 `a`、`b`，由路径 `a .fst ≡ b .fst`{.Agda} 可得路径 `a ≡ b`{.Agda}。
 <!--ja-->
-**補題** (`↾-reflects`{.Agda}) 制限された台の `a`、`b` について、パス `fst a ≡ fst b`{.Agda} からパス `a ≡ b`{.Agda} が定まる。
+**補題** (`↾-reflects`{.Agda}) 制限された台の `a`、`b` について、パス `a .fst ≡ b .fst`{.Agda} からパス `a ≡ b`{.Agda} が定まる。
 <!--/-->
 
 <!--en-->
@@ -310,16 +310,16 @@ The relations use only the first components. Does equality of the dependent pair
 ```agda
 ↾-reflects : ∀ {ℓ ℓΩ} {Ω : Type ℓΩ} {𝒮 : ZFStructure ℓ Ω}
              {M : S 𝒮 → hProp ℓ} {a b : S (𝒮 ↾ M)}
-           → fst a ≡ fst b → a ≡ b
+           → a .fst ≡ b .fst → a ≡ b
 ↾-reflects {M = M} = Σ≡Prop (λ x → ⟨ M x ⟩isProp)
 ```
 
 <!--en-->
-The converse needs no special lemma: applying `fst`{.Agda} to a path `a ≡ b`{.Agda} gives `fst a ≡ fst b`{.Agda}.
+The converse needs no special lemma: applying `fst`{.Agda} to a path `a ≡ b`{.Agda} gives `a .fst ≡ b .fst`{.Agda}.
 <!--zh-->
-反方向更直接：将 `fst`{.Agda} 作用于路径 `a ≡ b`{.Agda}，就得到 `fst a ≡ fst b`{.Agda}，无需另设引理。
+反方向更直接：将 `fst`{.Agda} 作用于路径 `a ≡ b`{.Agda}，就得到 `a .fst ≡ b .fst`{.Agda}，无需另设引理。
 <!--ja-->
-逆向きに特別な補題は要らない。パス `a ≡ b`{.Agda} に `fst`{.Agda} を作用させれば `fst a ≡ fst b`{.Agda} が得られる。
+逆向きに特別な補題は要らない。パス `a ≡ b`{.Agda} に `fst`{.Agda} を作用させれば `a .fst ≡ b .fst`{.Agda} が得られる。
 <!--/-->
 
 <!--en-->

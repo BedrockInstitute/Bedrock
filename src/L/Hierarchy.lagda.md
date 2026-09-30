@@ -93,11 +93,11 @@ Two structures are in play. The ambient hierarchy contributes its structure
 `𝒮ᵥ`{.Agda}, whose membership induction and extensionality the chapter will
 use; the constructible structure `𝒮ʟ`{.Agda} contributes the carrier `S`, whose
 elements are sets of the hierarchy together with a proof that they are
-constructible, so every carrier element `x` has an underlying set `fst x`.
+constructible, so every carrier element `x` has an underlying set `x .fst`.
 <!--zh-->
-这里有两个结构。环境层级贡献其结构 `𝒮ᵥ`{.Agda}，本章将使用它的成员关系归纳与外延性；可构造结构 `𝒮ʟ`{.Agda} 贡献载体 `S`，其元素是层级中的集合连同「其可构造」的证明，故每个载体元素 `x` 都有底层集合 `fst x`。
+这里有两个结构。环境层级贡献其结构 `𝒮ᵥ`{.Agda}，本章将使用它的成员关系归纳与外延性；可构造结构 `𝒮ʟ`{.Agda} 贡献载体 `S`，其元素是层级中的集合连同「其可构造」的证明，故每个载体元素 `x` 都有底层集合 `x .fst`。
 <!--ja-->
-ここでは二つの構造が現れる。周囲の階層はその構造 `𝒮ᵥ`{.Agda} を与え、本章はその所属の帰納と外延性を用いる。構成可能な構造 `𝒮ʟ`{.Agda} は台 `S` を与える。その要素は、階層の集合に「それが構成可能である」証明を添えたものであり、だから各台の要素 `x` には基礎の集合 `fst x` がある。
+ここでは二つの構造が現れる。周囲の階層はその構造 `𝒮ᵥ`{.Agda} を与え、本章はその所属の帰納と外延性を用いる。構成可能な構造 `𝒮ʟ`{.Agda} は台 `S` を与える。その要素は、階層の集合に「それが構成可能である」証明を添えたものであり、だから各台の要素 `x` には基礎の集合 `x .fst` がある。
 <!--/-->
 
 <!--en-->
@@ -255,25 +255,25 @@ requires that nothing outside `B` is recorded at all.
 
 ```agda
 Values : S → V ℓ → Type (ℓ-suc ℓ)
-Values h B = (c z : S) → ⟨ fst c ∈ B ⟩
-           → ⟨ pr (fst c) (fst z) ∈ fst h ⟩ → fst z ≡ Lset (fst c)
+Values h B = (c z : S) → ⟨ c .fst ∈ B ⟩
+           → ⟨ pr (c .fst) (z .fst) ∈ h .fst ⟩ → z .fst ≡ Lset (c .fst)
 ```
 
 <!--en-->
 Correctness is a statement about recorded entries. If the pair of an argument
 `c` below `B` with some `z` is an entry of the table, then `z` is the tower at
-`c`. The membership `fst c ∈ B` is membership in the hierarchy, `B` being a set
-of the hierarchy; the table `h` is a carrier element, and `fst h` is the set it
+`c`. The membership `c .fst ∈ B` is membership in the hierarchy, `B` being a set
+of the hierarchy; the table `h` is a carrier element, and `h .fst` is the set it
 presents.
 <!--zh-->
-正确性是关于被记录条目的陈述。若「`B` 以下的实参 `c` 与某个 `z` 组成的对」是表的一条目，则 `z` 就是塔在 `c` 处的取值。成员关系 `fst c ∈ B` 是层级中的成员关系，因为 `B` 是层级的集合；表 `h` 是载体元素，`fst h` 是它呈现的那个集合。
+正确性是关于被记录条目的陈述。若「`B` 以下的实参 `c` 与某个 `z` 组成的对」是表的一条目，则 `z` 就是塔在 `c` 处的取值。成员关系 `c .fst ∈ B` 是层级中的成员关系，因为 `B` 是层级的集合；表 `h` 是载体元素，`h .fst` 是它呈现的那个集合。
 <!--ja-->
-正しさは、記録された項目についての主張である。`B` の下の入力 `c` とある `z` の対が表の項目なら、`z` は塔の `c` での値である。所属 `fst c ∈ B` は階層での所属である。`B` が階層の集合だからである。表 `h` は台の要素であり、`fst h` がそれが提示する集合である。
+正しさは、記録された項目についての主張である。`B` の下の入力 `c` とある `z` の対が表の項目なら、`z` は塔の `c` での値である。所属 `c .fst ∈ B` は階層での所属である。`B` が階層の集合だからである。表 `h` は台の要素であり、`h .fst` がそれが提示する集合である。
 <!--/-->
 
 ```agda
 Entries : S → V ℓ → Type (ℓ-suc ℓ)
-Entries h B = (c : S) → ⟨ fst c ∈ B ⟩ → ⟨ pr (fst c) (Lset (fst c)) ∈ fst h ⟩
+Entries h B = (c : S) → ⟨ c .fst ∈ B ⟩ → ⟨ pr (c .fst) (Lset (c .fst)) ∈ h .fst ⟩
 ```
 
 <!--en-->
@@ -289,7 +289,7 @@ below `B`, exactly the canonical entries and nothing distorted.
 
 ```agda
 Domain : S → V ℓ → Type (ℓ-suc ℓ)
-Domain h B = (c z : S) → ⟨ pr (fst c) (fst z) ∈ fst h ⟩ → ⟨ fst c ∈ B ⟩
+Domain h B = (c z : S) → ⟨ pr (c .fst) (z .fst) ∈ h .fst ⟩ → ⟨ c .fst ∈ B ⟩
 ```
 
 <!--en-->
@@ -352,7 +352,7 @@ environment `γ` of carrier elements.
 <!--/-->
 
 ```agda
-    ok : IsOrd (fst (lookup b γ)) → Values (lookup f γ) (fst (lookup b γ))
+    ok : IsOrd ((lookup b γ) .fst) → Values (lookup f γ) ((lookup b γ) .fst)
        → PowOK b f γ
 ```
 
@@ -377,7 +377,7 @@ the model, which transitivity of the class supplies.
 ```agda
     ok ob vals c z rec = subst (λ u → ⟨ isL (𝒟ₒ u) ⟩)
       (sym (vals c z (rec .fst) (rec .snd)))
-      (isL-𝒟ₒ (fst c) (mem-ord {A = fst (lookup b γ)} ob (fst c) (rec .fst)))
+      (isL-𝒟ₒ (c .fst) (mem-ord {A = (lookup b γ) .fst} ob (c .fst) (rec .fst)))
 ```
 
 <!--en-->
@@ -393,9 +393,9 @@ transport lines the two facts up on the same value.
 <!--/-->
 
 ```agda
-    below : IsOrd (fst (lookup b γ)) → Entries (lookup f γ) (fst (lookup b γ))
+    below : IsOrd ((lookup b γ) .fst) → Entries (lookup f γ) ((lookup b γ) .fst)
           → (z : S)
-          → Σ[ δ ∶ V ℓ ] (⟨ δ ∈ fst (lookup b γ) ⟩ × ⟨ fst z ∈ 𝒟ₒ (Lset δ) ⟩)
+          → Σ[ δ ∶ V ℓ ] (⟨ δ ∈ (lookup b γ) .fst ⟩ × ⟨ z .fst ∈ 𝒟ₒ (Lset δ) ⟩)
           → StepOf b f γ z
 ```
 
@@ -429,9 +429,9 @@ definable powerset by the decomposition.
 ```agda
       where
       oδ : IsOrd δ
-      oδ = mem-ord {A = fst (lookup b γ)} ob δ δ∈
+      oδ = mem-ord {A = (lookup b γ) .fst} ob δ δ∈
       d : S
-      d = δ , isL-trans {x = fst (lookup b γ)} {y = δ} δ∈ (lookup b γ .snd)
+      d = δ , isL-trans {x = (lookup b γ) .fst} {y = δ} δ∈ (lookup b γ .snd)
 ```
 
 <!--en-->
@@ -446,8 +446,8 @@ argument. The carrier element `d` packages the set with that certificate.
 <!--/-->
 
 ```agda
-    above : Values (lookup f γ) (fst (lookup b γ)) → (z : S) → StepOf b f γ z
-          → ⟨ fst z ∈ Lset (fst (lookup b γ)) ⟩
+    above : Values (lookup f γ) ((lookup b γ) .fst) → (z : S) → StepOf b f γ z
+          → ⟨ z .fst ∈ Lset ((lookup b γ) .fst) ⟩
 ```
 
 <!--en-->
@@ -462,8 +462,8 @@ and a membership of `z` in the definable powerset of `w`.
 
 ```agda
     above vals z (c , (w , (rec , hz))) =
-      Lset-in (fst (lookup b γ)) (fst c) (fst z) (rec .fst)
-        (subst (λ u → ⟨ fst z ∈ 𝒟ₒ u ⟩) (vals c w (rec .fst) (rec .snd)) hz)
+      Lset-in ((lookup b γ) .fst) (c .fst) (z .fst) (rec .fst)
+        (subst (λ u → ⟨ z .fst ∈ 𝒟ₒ u ⟩) (vals c w (rec .fst) (rec .snd)) hz)
 ```
 
 <!--en-->
@@ -478,10 +478,10 @@ witness.
 <!--/-->
 
 ```agda
-  step-Lset : ⟨ γ ⊨ StepAt v b f ⟩ → IsOrd (fst (lookup b γ))
-            → Values (lookup f γ) (fst (lookup b γ))
-            → Entries (lookup f γ) (fst (lookup b γ))
-            → fst (lookup v γ) ≡ Lset (fst (lookup b γ))
+  step-Lset : ⟨ γ ⊨ StepAt v b f ⟩ → IsOrd ((lookup b γ) .fst)
+            → Values (lookup f γ) ((lookup b γ) .fst)
+            → Entries (lookup f γ) ((lookup b γ) .fst)
+            → (lookup v γ) .fst ≡ Lset ((lookup b γ) .fst)
 ```
 
 <!--en-->
@@ -496,7 +496,7 @@ then the value recorded at the value slot is the tower at the argument.
 
 ```agda
   step-Lset h ob vals ents =
-    extensionalV {a = fst (lookup v γ)} {b = Lset (fst (lookup b γ))} pt
+    extensionalV {a = (lookup v γ) .fst} {b = Lset ((lookup b γ) .fst)} pt
     where
 ```
 
@@ -511,9 +511,9 @@ equivalence `pt` and lets extensionality assemble the path.
 <!--/-->
 
 ```agda
-    fwd : (x : V ℓ) → ⟨ x ∈ fst (lookup v γ) ⟩
-        → ⟨ x ∈ Lset (fst (lookup b γ)) ⟩
-    fwd x hx = rec₁ (snd (x ∈ Lset (fst (lookup b γ)))) (above vals z)
+    fwd : (x : V ℓ) → ⟨ x ∈ (lookup v γ) .fst ⟩
+        → ⟨ x ∈ Lset ((lookup b γ) .fst) ⟩
+    fwd x hx = rec₁ ((x ∈ Lset ((lookup b γ) .fst)) .snd) (above vals z)
       (StepAt-out v b f γ h (ok ob vals) z hx)
 ```
 
@@ -531,7 +531,7 @@ proposition from the witness.
 ```agda
       where
       z : S
-      z = x , isL-trans {x = fst (lookup v γ)} {y = x} hx (lookup v γ .snd)
+      z = x , isL-trans {x = (lookup v γ) .fst} {y = x} hx (lookup v γ .snd)
 ```
 
 <!--en-->
@@ -544,10 +544,10 @@ follows from that of the recorded value, since `x` is a member of it.
 <!--/-->
 
 ```agda
-    bwd : (x : V ℓ) → ⟨ x ∈ Lset (fst (lookup b γ)) ⟩
-        → ⟨ x ∈ fst (lookup v γ) ⟩
-    bwd x hx = rec₁ (snd (x ∈ fst (lookup v γ))) put
-      (Lset-out (fst (lookup b γ)) x hx)
+    bwd : (x : V ℓ) → ⟨ x ∈ Lset ((lookup b γ) .fst) ⟩
+        → ⟨ x ∈ (lookup v γ) .fst ⟩
+    bwd x hx = rec₁ ((x ∈ (lookup v γ) .fst) .snd) put
+      (Lset-out ((lookup b γ) .fst) x hx)
 ```
 
 <!--en-->
@@ -564,8 +564,8 @@ recorded value.
 ```agda
       where
       z : S
-      z = x , isL-trans {x = Lset (fst (lookup b γ))} {y = x} hx
-                (LsetS (fst (lookup b γ)) ob .snd)
+      z = x , isL-trans {x = Lset ((lookup b γ) .fst)} {y = x} hx
+                (LsetS ((lookup b γ) .fst) ob .snd)
 ```
 
 <!--en-->
@@ -579,8 +579,8 @@ ordinality `ob`.
 <!--/-->
 
 ```agda
-      put : Σ[ δ ∶ V ℓ ] (⟨ δ ∈ fst (lookup b γ) ⟩ × ⟨ x ∈ 𝒟ₒ (Lset δ) ⟩)
-          → ⟨ x ∈ fst (lookup v γ) ⟩
+      put : Σ[ δ ∶ V ℓ ] (⟨ δ ∈ (lookup b γ) .fst ⟩ × ⟨ x ∈ 𝒟ₒ (Lset δ) ⟩)
+          → ⟨ x ∈ (lookup v γ) .fst ⟩
       put s = StepAt-back v b f γ h (ok ob vals) z (below ob ents z s)
 ```
 
@@ -595,7 +595,7 @@ membership in the recorded value.
 <!--/-->
 
 ```agda
-    pt : (x : V ℓ) → (x ∈ fst (lookup v γ)) ≡ (x ∈ Lset (fst (lookup b γ)))
+    pt : (x : V ℓ) → (x ∈ (lookup v γ) .fst) ≡ (x ∈ Lset ((lookup b γ) .fst))
     pt x = ⇔toPath (fwd x) (bwd x)
 ```
 
@@ -610,10 +610,10 @@ extensionality promotes it member by member to the equality of sets.
 <!--/-->
 
 ```agda
-  step-table : IsOrd (fst (lookup b γ))
-             → Values (lookup f γ) (fst (lookup b γ))
-             → Entries (lookup f γ) (fst (lookup b γ))
-             → fst (lookup v γ) ≡ Lset (fst (lookup b γ))
+  step-table : IsOrd ((lookup b γ) .fst)
+             → Values (lookup f γ) ((lookup b γ) .fst)
+             → Entries (lookup f γ) ((lookup b γ) .fst)
+             → (lookup v γ) .fst ≡ Lset ((lookup b γ) .fst)
              → ⟨ γ ⊨ StepAt v b f ⟩
 ```
 
@@ -643,10 +643,10 @@ the side condition once for both.
 <!--/-->
 
 ```agda
-    into : (z : S) → ⟨ fst z ∈ fst (lookup v γ) ⟩ → ∥ StepOf b f γ z ∥₁
+    into : (z : S) → ⟨ z .fst ∈ (lookup v γ) .fst ⟩ → ∥ StepOf b f γ z ∥₁
     into z hz = map₁ (below ob ents z)
-      (Lset-out (fst (lookup b γ)) (fst z)
-        (subst (λ u → ⟨ fst z ∈ u ⟩) q hz))
+      (Lset-out ((lookup b γ) .fst) (z .fst)
+        (subst (λ u → ⟨ z .fst ∈ u ⟩) q hz))
 ```
 
 <!--en-->
@@ -660,8 +660,8 @@ decomposition into a witness, which only has to exist.
 <!--/-->
 
 ```agda
-    back : (z : S) → StepOf b f γ z → ⟨ fst z ∈ fst (lookup v γ) ⟩
-    back z s = subst (λ u → ⟨ fst z ∈ u ⟩) (sym q) (above vals z s)
+    back : (z : S) → StepOf b f γ z → ⟨ z .fst ∈ (lookup v γ) .fst ⟩
+    back z s = subst (λ u → ⟨ z .fst ∈ u ⟩) (sym q) (above vals z s)
 ```
 </div>
 </details>
@@ -722,7 +722,7 @@ module _ {n : ℕ} (f a : Fin n) (γ : S ^ n) where
   private
     Value : V ℓ → Type (ℓ-suc ℓ)
     Value u = ⟨ isL u ⟩ → (z : S)
-            → ⟨ pr u (fst z) ∈ fst (lookup f γ) ⟩ → fst z ≡ Lset u
+            → ⟨ pr u (z .fst) ∈ (lookup f γ) .fst ⟩ → z .fst ≡ Lset u
 ```
 
 <!--en-->
@@ -738,10 +738,10 @@ from membership in an ordinal.
 <!--/-->
 
 ```agda
-  approx-val : ⟨ γ ⊨ ApproxAt f a ⟩ → IsOrd (fst (lookup a γ))
-             → (x z : S) → ⟨ pr (fst x) (fst z) ∈ fst (lookup f γ) ⟩
-             → fst z ≡ Lset (fst x)
-  approx-val h oa x = ∈-induction {P = Value} go (fst x) (snd x)
+  approx-val : ⟨ γ ⊨ ApproxAt f a ⟩ → IsOrd ((lookup a γ) .fst)
+             → (x z : S) → ⟨ pr (x .fst) (z .fst) ∈ (lookup f γ) .fst ⟩
+             → z .fst ≡ Lset (x .fst)
+  approx-val h oa x = ∈-induction {P = Value} go (x .fst) (x .snd)
 ```
 
 <!--en-->
@@ -778,7 +778,7 @@ the tower at `u`.
       where
       d : S
       d = u , hu
-      u∈a : ⟨ u ∈ fst (lookup a γ) ⟩
+      u∈a : ⟨ u ∈ (lookup a γ) .fst ⟩
       u∈a = ApproxAt-dom f a γ h d z p
 ```
 
@@ -795,7 +795,7 @@ step at all.
 
 ```agda
       ou : IsOrd u
-      ou = mem-ord {A = fst (lookup a γ)} oa u u∈a
+      ou = mem-ord {A = (lookup a γ) .fst} oa u u∈a
 ```
 
 <!--en-->
@@ -809,7 +809,7 @@ Ordinality of `u` follows from ordinality of `a`, since `u` is a member of
 
 ```agda
       vals : Values (lookup f γ) u
-      vals c y c∈ q = IH (fst c) c∈ (snd c) y q
+      vals c y c∈ q = IH (c .fst) c∈ (c .snd) y q
 ```
 
 <!--en-->
@@ -826,8 +826,8 @@ supplies it from membership.
 ```agda
       ents : Entries (lookup f γ) u
       ents c c∈ = rec₁
-        (snd (pr (fst c) (Lset (fst c)) ∈ fst (lookup f γ))) named
-        (ApproxAt-value f a γ h c (oa .fst {x = u} {y = fst c} c∈ u∈a))
+        ((pr (c .fst) (Lset (c .fst)) ∈ (lookup f γ) .fst) .snd) named
+        (ApproxAt-value f a γ h c (oa .fst {x = u} {y = c .fst} c∈ u∈a))
 ```
 
 <!--en-->
@@ -843,10 +843,10 @@ elimination targets the proposition that the canonical entry is recorded.
 
 ```agda
         where
-        named : Σ[ y ∶ S ] ⟨ pr (fst c) (fst y) ∈ fst (lookup f γ) ⟩
-              → ⟨ pr (fst c) (Lset (fst c)) ∈ fst (lookup f γ) ⟩
-        named (y , q) = subst (λ t → ⟨ pr (fst c) t ∈ fst (lookup f γ) ⟩)
-          (IH (fst c) c∈ (snd c) y q) q
+        named : Σ[ y ∶ S ] ⟨ pr (c .fst) (y .fst) ∈ (lookup f γ) .fst ⟩
+              → ⟨ pr (c .fst) (Lset (c .fst)) ∈ (lookup f γ) .fst ⟩
+        named (y , q) = subst (λ t → ⟨ pr (c .fst) t ∈ (lookup f γ) .fst ⟩)
+          (IH (c .fst) c∈ (c .snd) y q) q
 ```
 </div>
 </details>
@@ -903,8 +903,8 @@ module _ {n : ℕ} (w b : Fin n) (γ : S ^ n) where
 <div class="submodule-fold-content">
 
 ```agda
-  Lset-only : ⟨ γ ⊨ LsetGraphAt w b ⟩ → IsOrd (fst (lookup b γ))
-            → fst (lookup w γ) ≡ Lset (fst (lookup b γ))
+  Lset-only : ⟨ γ ⊨ LsetGraphAt w b ⟩ → IsOrd ((lookup b γ) .fst)
+            → (lookup w γ) .fst ≡ Lset ((lookup b γ) .fst)
 ```
 
 <!--en-->
@@ -919,7 +919,7 @@ value is the tower. Nothing about the graph is assumed beyond its holding.
 
 ```agda
   Lset-only h ob = rec₁
-    (setIsSet (fst (lookup w γ)) (Lset (fst (lookup b γ)))) read
+    (setIsSet ((lookup w γ) .fst) (Lset ((lookup b γ) .fst))) read
     (LsetGraph-out w b γ h)
     where
 ```
@@ -936,7 +936,7 @@ is only ever needed inside that proposition.
 <!--/-->
 
 ```agda
-    read : GraphOf w b γ → fst (lookup w γ) ≡ Lset (fst (lookup b γ))
+    read : GraphOf w b γ → (lookup w γ) .fst ≡ Lset ((lookup b γ) .fst)
     read (f , (ha , hs)) =
       step-Lset (suc w) (suc b) zero (f ∷ γ) hs ob vals ents
 ```
@@ -954,7 +954,7 @@ while the value and the argument have moved up one place each.
 
 ```agda
       where
-      vals : Values f (fst (lookup b γ))
+      vals : Values f ((lookup b γ) .fst)
       vals c z _ p = approx-val zero (suc b) (f ∷ γ) ha ob c z p
 ```
 
@@ -969,8 +969,8 @@ argument is the tower there.
 <!--/-->
 
 ```agda
-      ents : Entries f (fst (lookup b γ))
-      ents c c∈ = rec₁ (snd (pr (fst c) (Lset (fst c)) ∈ fst f)) named
+      ents : Entries f ((lookup b γ) .fst)
+      ents c c∈ = rec₁ ((pr (c .fst) (Lset (c .fst)) ∈ f .fst) .snd) named
         (ApproxAt-value zero (suc b) (f ∷ γ) ha c c∈)
 ```
 
@@ -986,9 +986,9 @@ that the canonical entry is recorded, so the missing witness is never needed.
 
 ```agda
         where
-        named : Σ[ y ∶ S ] ⟨ pr (fst c) (fst y) ∈ fst f ⟩
-              → ⟨ pr (fst c) (Lset (fst c)) ∈ fst f ⟩
-        named (y , q) = subst (λ t → ⟨ pr (fst c) t ∈ fst f ⟩)
+        named : Σ[ y ∶ S ] ⟨ pr (c .fst) (y .fst) ∈ f .fst ⟩
+              → ⟨ pr (c .fst) (Lset (c .fst)) ∈ f .fst ⟩
+        named (y , q) = subst (λ t → ⟨ pr (c .fst) t ∈ f .fst ⟩)
           (approx-val zero (suc b) (f ∷ γ) ha ob c y q) q
 ```
 </div>
@@ -1056,10 +1056,10 @@ module _ {n : ℕ} (w b : Fin n) (γ : S ^ n) where
 <div class="submodule-fold-content">
 
 ```agda
-  graph-table : (h : S) → IsOrd (fst (lookup b γ))
-              → Values h (fst (lookup b γ)) → Entries h (fst (lookup b γ))
-              → Domain h (fst (lookup b γ))
-              → fst (lookup w γ) ≡ Lset (fst (lookup b γ))
+  graph-table : (h : S) → IsOrd ((lookup b γ) .fst)
+              → Values h ((lookup b γ) .fst) → Entries h ((lookup b γ) .fst)
+              → Domain h ((lookup b γ) .fst)
+              → (lookup w γ) .fst ≡ Lset ((lookup b γ) .fst)
 ```
 
 <!--en-->
@@ -1091,10 +1091,10 @@ and the identification with the tower are exactly the hypotheses in hand.
 
 ```agda
     onDom : (c : S)
-          → (⟨ ∃[ y ∶ S ] pr (fst c) (fst y) ∈ fst h ⟩
-             → ⟨ fst c ∈ fst (lookup b γ) ⟩)
-          × (⟨ fst c ∈ fst (lookup b γ) ⟩
-             → ⟨ ∃[ y ∶ S ] pr (fst c) (fst y) ∈ fst h ⟩)
+          → (⟨ ∃[ y ∶ S ] pr (c .fst) (y .fst) ∈ h .fst ⟩
+             → ⟨ c .fst ∈ (lookup b γ) .fst ⟩)
+          × (⟨ c .fst ∈ (lookup b γ) .fst ⟩
+             → ⟨ ∃[ y ∶ S ] pr (c .fst) (y .fst) ∈ h .fst ⟩)
 ```
 
 <!--en-->
@@ -1109,8 +1109,8 @@ since the approximation's domain condition reads them in opposite orders.
 <!--/-->
 
 ```agda
-    onDom c = (λ hy → rec₁ (snd (fst c ∈ fst (lookup b γ))) named hy)
-            , (λ c∈ → ∣ LsetS (fst c) (mem-ord {A = fst (lookup b γ)} ob (fst c) c∈)
+    onDom c = (λ hy → rec₁ ((c .fst ∈ (lookup b γ) .fst) .snd) named hy)
+            , (λ c∈ → ∣ LsetS (c .fst) (mem-ord {A = (lookup b γ) .fst} ob (c .fst) c∈)
                      , ents c c∈ ∣₁)
 ```
 
@@ -1128,8 +1128,8 @@ puts `c` below the argument.
 
 ```agda
       where
-      named : Σ[ y ∶ S ] ⟨ pr (fst c) (fst y) ∈ fst h ⟩
-            → ⟨ fst c ∈ fst (lookup b γ) ⟩
+      named : Σ[ y ∶ S ] ⟨ pr (c .fst) (y .fst) ∈ h .fst ⟩
+            → ⟨ c .fst ∈ (lookup b γ) .fst ⟩
       named (y , p) = dom c y p
 ```
 
@@ -1144,7 +1144,7 @@ one application of the table's third condition.
 <!--/-->
 
 ```agda
-    onStep : (c y : S) → ⟨ pr (fst c) (fst y) ∈ fst h ⟩
+    onStep : (c y : S) → ⟨ pr (c .fst) (y .fst) ∈ h .fst ⟩
            → ⟨ (y ∷ c ∷ h ∷ γ) ⊨ StepAt zero (suc zero) (suc (suc zero)) ⟩
     onStep c y p = step-table zero (suc zero) (suc (suc zero)) (y ∷ c ∷ h ∷ γ)
       oc vals' ents' (vals c y c∈ p)
@@ -1155,19 +1155,19 @@ The step conjunct is proved at each recorded pair `(c, y)`. In the environment
 extended by the value `y`, the argument `c` and the table `h`, the step
 condition relates the value slot to the argument slot through the table slot;
 `step-table` at `c` establishes exactly that, with the identification
-`fst y ≡ Lset (fst c)` supplied by correctness at the recorded pair.
+`y .fst ≡ Lset (c .fst)` supplied by correctness at the recorded pair.
 <!--zh-->
-步进合取项在每条被记录的对 `(c, y)` 处证明。在加入取值 `y`、实参 `c` 与表 `h` 的扩展环境中，步进条件经由表槽把取值槽与实参槽联系起来；施于 `c` 的 `step-table` 恰好建立这一点，而所需的同认 `fst y ≡ Lset (fst c)` 由正确性在该被记录对处供给。
+步进合取项在每条被记录的对 `(c, y)` 处证明。在加入取值 `y`、实参 `c` 与表 `h` 的扩展环境中，步进条件经由表槽把取值槽与实参槽联系起来；施于 `c` 的 `step-table` 恰好建立这一点，而所需的同认 `y .fst ≡ Lset (c .fst)` 由正确性在该被记录对处供给。
 <!--ja-->
-ステップの連言は、記録されたそれぞれの組 `(c, y)` で証明される。値 `y`、入力 `c`、表 `h` を追加した環境の中で、ステップ条件は表の枠を通して値の枠と入力の枠を結ぶ。`c` に対する `step-table` がまさにこれを確立し、同定 `fst y ≡ Lset (fst c)` は記録された組での正しさが供給する。
+ステップの連言は、記録されたそれぞれの組 `(c, y)` で証明される。値 `y`、入力 `c`、表 `h` を追加した環境の中で、ステップ条件は表の枠を通して値の枠と入力の枠を結ぶ。`c` に対する `step-table` がまさにこれを確立し、同定 `y .fst ≡ Lset (c .fst)` は記録された組での正しさが供給する。
 <!--/-->
 
 ```agda
       where
-      c∈ : ⟨ fst c ∈ fst (lookup b γ) ⟩
+      c∈ : ⟨ c .fst ∈ (lookup b γ) .fst ⟩
       c∈ = dom c y p
-      oc : IsOrd (fst c)
-      oc = mem-ord {A = fst (lookup b γ)} ob (fst c) c∈
+      oc : IsOrd (c .fst)
+      oc = mem-ord {A = (lookup b γ) .fst} ob (c .fst) c∈
 ```
 
 <!--en-->
@@ -1181,10 +1181,10 @@ ordinality of the argument.
 <!--/-->
 
 ```agda
-      vals' : Values h (fst c)
+      vals' : Values h (c .fst)
       vals' e t _ r = vals e t (dom e t r) r
-      ents' : Entries h (fst c)
-      ents' e e∈ = ents e (ob .fst {x = fst c} {y = fst e} e∈ c∈)
+      ents' : Entries h (c .fst)
+      ents' e e∈ = ents e (ob .fst {x = c .fst} {y = e .fst} e∈ c∈)
 ```
 
 <!--en-->
@@ -1302,24 +1302,24 @@ is a construction.
 
 ```agda
 Recorded : V ℓ → V ℓ → hProp (ℓ-suc ℓ)
-Recorded B z = ∃[ c ∶ S ] (fst c ∈ B)
-  ⊓ ((z ≡ pr (fst c) (Lset (fst c))) , setIsSet z (pr (fst c) (Lset (fst c))))
+Recorded B z = ∃[ c ∶ S ] (c .fst ∈ B)
+  ⊓ ((z ≡ pr (c .fst) (Lset (c .fst))) , setIsSet z (pr (c .fst) (Lset (c .fst))))
 ```
 
 <!--en-->
 `Recorded B z` is a proposition, and it says: for some carrier element `c`
 whose underlying set lies below `B`, the underlying set of `z` is the ordered
-pair of `fst c` with the tower's value at `c`. The equality of two h-sets is
+pair of `c .fst` with the tower's value at `c`. The equality of two h-sets is
 itself a proposition, so the join is a join of propositions.
 <!--zh-->
-`Recorded B z` 是一个命题，它说：存在某个载体元素 `c`，其底层集合低于 `B`，使得 `z` 的底层集合是 `fst c` 与塔在 `c` 处取值的有序对。两个 h-集合的相等本身就是命题，因此这是一个命题上的析取聚合。
+`Recorded B z` 是一个命题，它说：存在某个载体元素 `c`，其底层集合低于 `B`，使得 `z` 的底层集合是 `c .fst` 与塔在 `c` 处取值的有序对。两个 h-集合的相等本身就是命题，因此这是一个命题上的析取聚合。
 <!--ja-->
-`Recorded B z` は命題であり、こう言う。基礎の集合が `B` の下にある台の要素 `c` のうち何かに対して、`z` の基礎の集合は `fst c` と塔の `c` での値の順序対である、と。二つの h-集合の等しさはそれ自体命題なので、これは命題の上での選言の集まりである。
+`Recorded B z` は命題であり、こう言う。基礎の集合が `B` の下にある台の要素 `c` のうち何かに対して、`z` の基礎の集合は `c .fst` と塔の `c` での値の順序対である、と。二つの h-集合の等しさはそれ自体命題なので、これは命題の上での選言の集まりである。
 <!--/-->
 
 ```agda
 IsHier : V ℓ → S → Type (ℓ-suc (ℓ-suc ℓ))
-IsHier B h = (z : S) → (fst z ∈ fst h) ≡ Recorded B (fst z)
+IsHier B h = (z : S) → (z .fst ∈ h .fst) ≡ Recorded B (z .fst)
 ```
 
 <!--en-->
@@ -1368,8 +1368,8 @@ is building, at whatever stage the induction currently stands.
 <!--/-->
 
 ```agda
-  hier-out : (c z : S) → ⟨ pr (fst c) (fst z) ∈ fst h ⟩
-           → ⟨ fst c ∈ B ⟩ × (fst z ≡ Lset (fst c))
+  hier-out : (c z : S) → ⟨ pr (c .fst) (z .fst) ∈ h .fst ⟩
+           → ⟨ c .fst ∈ B ⟩ × (z .fst ≡ Lset (c .fst))
 ```
 
 <!--en-->
@@ -1384,7 +1384,7 @@ the specification applied at the member.
 
 ```agda
   hier-out c z p = rec₁
-    (isProp× (snd (fst c ∈ B)) (setIsSet (fst z) (Lset (fst c)))) read
+    (isProp× ((c .fst ∈ B) .snd) (setIsSet (z .fst) (Lset (c .fst)))) read
     (subst ⟨_⟩ (sp k) p)
     where
 ```
@@ -1402,8 +1402,8 @@ be consumed here.
 
 ```agda
     k : S
-    k = pr (fst c) (fst z)
-      , isL-trans {x = fst h} {y = pr (fst c) (fst z)} p (h .snd)
+    k = pr (c .fst) (z .fst)
+      , isL-trans {x = h .fst} {y = pr (c .fst) (z .fst)} p (h .snd)
 ```
 
 <!--en-->
@@ -1417,9 +1417,9 @@ presented by `h`.
 <!--/-->
 
 ```agda
-    read : Σ[ d ∶ S ] (⟨ fst d ∈ B ⟩
-             × (pr (fst c) (fst z) ≡ pr (fst d) (Lset (fst d))))
-         → ⟨ fst c ∈ B ⟩ × (fst z ≡ Lset (fst c))
+    read : Σ[ d ∶ S ] (⟨ d .fst ∈ B ⟩
+             × (pr (c .fst) (z .fst) ≡ pr (d .fst) (Lset (d .fst))))
+         → ⟨ c .fst ∈ B ⟩ × (z .fst ≡ Lset (c .fst))
     read (d , (d∈ , eq)) =
         subst (λ t → ⟨ t ∈ B ⟩) (sym (pr-inj eq .fst)) d∈
 ```
@@ -1440,9 +1440,9 @@ with the tower at `d`, which the first identification turns into the tower at
 ```agda
       , (pr-inj eq .snd ∙ cong Lset (sym (pr-inj eq .fst)))
 
-  hier-in : (c : S) → ⟨ fst c ∈ B ⟩ → ⟨ pr (fst c) (Lset (fst c)) ∈ fst h ⟩
-  hier-in c c∈ = subst (λ t → ⟨ t ∈ fst h ⟩) (prʟ-fst c (LsetS (fst c) oc))
-    (subst ⟨_⟩ (sym (sp k)) ∣ c , (c∈ , prʟ-fst c (LsetS (fst c) oc)) ∣₁)
+  hier-in : (c : S) → ⟨ c .fst ∈ B ⟩ → ⟨ pr (c .fst) (Lset (c .fst)) ∈ h .fst ⟩
+  hier-in c c∈ = subst (λ t → ⟨ t ∈ h .fst ⟩) (prʟ-fst c (LsetS (c .fst) oc))
+    (subst ⟨_⟩ (sym (sp k)) ∣ c , (c∈ , prʟ-fst c (LsetS (c .fst) oc)) ∣₁)
 ```
 
 <!--en-->
@@ -1458,10 +1458,10 @@ argument, and the entry equals the model's pair by its defining reading.
 
 ```agda
     where
-    oc : IsOrd (fst c)
-    oc = mem-ord {A = B} oB (fst c) c∈
+    oc : IsOrd (c .fst)
+    oc = mem-ord {A = B} oB (c .fst) c∈
     k : S
-    k = prʟ c (LsetS (fst c) oc)
+    k = prʟ c (LsetS (c .fst) oc)
 ```
 </div>
 </details>
@@ -1531,10 +1531,10 @@ form in which replacement consumes a domain.
 <!--/-->
 
 ```agda
-      value : (c : S) → ⟨ fst c ∈ α ⟩ → S
-      value c c∈ = LsetS (fst c) (mem-ord {A = α} oα (fst c) c∈)
+      value : (c : S) → ⟨ c .fst ∈ α ⟩ → S
+      value c c∈ = LsetS (c .fst) (mem-ord {A = α} oα (c .fst) c∈)
 
-      entry : (c : S) → ⟨ fst c ∈ α ⟩ → S
+      entry : (c : S) → ⟨ c .fst ∈ α ⟩ → S
       entry c c∈ = prʟ c (value c c∈)
 ```
 
@@ -1550,7 +1550,7 @@ pair of `c` with its value, the form the recorded class asks for.
 <!--/-->
 
 ```agda
-      below : (c : S) (c∈ : ⟨ fst c ∈ α ⟩) (k : S)
+      below : (c : S) (c∈ : ⟨ c .fst ∈ α ⟩) (k : S)
             → ⟨ (value c c∈ ∷ k ∷ c ∷ []) ⊨ LsetGraphAt zero (suc (suc zero)) ⟩
       below c c∈ k = graph-table zero (suc (suc zero)) (value c c∈ ∷ k ∷ c ∷ [])
         (hc .fst) oc
@@ -1569,9 +1569,9 @@ for the graph's own quantifier, and the argument.
 <!--/-->
 
 ```agda
-        (λ d z _ p → hier-out (fst c) oc (hc .fst) (hc .snd) d z p .snd)
-        (hier-in (fst c) oc (hc .fst) (hc .snd))
-        (λ d z p → hier-out (fst c) oc (hc .fst) (hc .snd) d z p .fst)
+        (λ d z _ p → hier-out (c .fst) oc (hc .fst) (hc .snd) d z p .snd)
+        (hier-in (c .fst) oc (hc .fst) (hc .snd))
+        (λ d z p → hier-out (c .fst) oc (hc .fst) (hc .snd) d z p .fst)
         refl
 ```
 
@@ -1588,10 +1588,10 @@ else is recorded. The last argument, `refl`, is the pair graph's own equation.
 
 ```agda
         where
-        oc : IsOrd (fst c)
-        oc = mem-ord {A = α} oα (fst c) c∈
-        hc : HierOf (fst c)
-        hc = IH (fst c) c∈ (snd c) oc
+        oc : IsOrd (c .fst)
+        oc = mem-ord {A = α} oα (c .fst) c∈
+        hc : HierOf (c .fst)
+        hc = IH (c .fst) c∈ (c .snd) oc
 ```
 
 <!--en-->
@@ -1616,7 +1616,7 @@ merely-existence the graph statement asserts.
 <!--/-->
 
 ```agda
-      holds : (c : S) (c∈ : ⟨ fst c ∈ α ⟩)
+      holds : (c : S) (c∈ : ⟨ c .fst ∈ α ⟩)
             → ⟨ (entry c c∈ ∷ c ∷ []) ⊨ φ ⟩
       holds c c∈ = PairGraph-in zero (suc zero) (entry c c∈ ∷ c ∷ []) φ qφ
         (value c c∈) (prʟ-fst c (value c c∈)) (below c c∈ (entry c c∈))
@@ -1634,7 +1634,7 @@ the two entries, and the equation is the composition of these paths.
 <!--/-->
 
 ```agda
-      only : (c : S) (c∈ : ⟨ fst c ∈ α ⟩) (k : S)
+      only : (c : S) (c∈ : ⟨ c .fst ∈ α ⟩) (k : S)
            → ⟨ (k ∷ c ∷ []) ⊨ φ ⟩ → k ≡ entry c c∈
       only c c∈ k h = rec₁ (isSetS k (entry c c∈)) read
         (PairGraph-out zero (suc zero) (k ∷ c ∷ []) φ qφ h)
@@ -1653,7 +1653,7 @@ once their underlying sets are, which is what `Σ≡Prop` reduces the goal to.
 ```agda
         where
         read : PairOf zero (suc zero) (k ∷ c ∷ []) φ qφ → k ≡ entry c c∈
-        read (z , (q , hg)) = Σ≡Prop (λ t → snd (isL t))
+        read (z , (q , hg)) = Σ≡Prop (λ t → (isL t) .snd)
           ( q
 ```
 
@@ -1668,9 +1668,9 @@ canonical entry and the argument, with ordinality of `c` from that of `α`.
 <!--/-->
 
 ```agda
-          ∙ cong (pr (fst c))
+          ∙ cong (pr (c .fst))
               (Lset-only zero (suc (suc zero)) (z ∷ k ∷ c ∷ []) hg
-                (mem-ord {A = α} oα (fst c) c∈))
+                (mem-ord {A = α} oα (c .fst) c∈))
           ∙ sym (prʟ-fst c (value c c∈)) )
 ```
 
@@ -1733,7 +1733,7 @@ and joined into the pointwise equivalence.
 <!--/-->
 
 ```agda
-        toRec : ⟨ fst z ∈ fst (r .fst .fst) ⟩ → ⟨ Recorded α (fst z) ⟩
+        toRec : ⟨ z .fst ∈ (r .fst .fst) .fst ⟩ → ⟨ Recorded α (z .fst) ⟩
         toRec hz = rec₁ squash₁ conv (subst ⟨_⟩ (r .fst .snd z) hz)
           where
 ```
@@ -1749,9 +1749,9 @@ elimination is legitimate because the recorded class is a proposition.
 <!--/-->
 
 ```agda
-          conv : Σ[ c ∶ S ] (⟨ fst c ∈ α ⟩ × ⟨ (z ∷ c ∷ []) ⊨ φ ⟩)
-               → ⟨ Recorded α (fst z) ⟩
-          conv (c , (c∈ , hp)) = ∣ c , (c∈ , cong fst (only c c∈ z hp)
+          conv : Σ[ c ∶ S ] (⟨ c .fst ∈ α ⟩ × ⟨ (z ∷ c ∷ []) ⊨ φ ⟩)
+               → ⟨ Recorded α (z .fst) ⟩
+          conv (c , (c∈ , hp)) = ∣ c , (c∈ , cong (λ p → p .fst) (only c c∈ z hp)
                                             ∙ prʟ-fst c (value c c∈)) ∣₁
 ```
 
@@ -1766,7 +1766,7 @@ entry, and the canonical entry equals the model's pair of `c` with the tower at
 <!--/-->
 
 ```agda
-        fromRec : ⟨ Recorded α (fst z) ⟩ → ⟨ fst z ∈ fst (r .fst .fst) ⟩
+        fromRec : ⟨ Recorded α (z .fst) ⟩ → ⟨ z .fst ∈ (r .fst .fst) .fst ⟩
         fromRec hz = subst ⟨_⟩ (sym (r .fst .snd z)) (map₁ conv hz)
           where
 ```
@@ -1782,9 +1782,9 @@ argument, and the collected set contains it.
 <!--/-->
 
 ```agda
-          conv : Σ[ c ∶ S ] (⟨ fst c ∈ α ⟩
-                   × (fst z ≡ pr (fst c) (Lset (fst c))))
-               → Σ[ c ∶ S ] (⟨ fst c ∈ α ⟩ × ⟨ (z ∷ c ∷ []) ⊨ φ ⟩)
+          conv : Σ[ c ∶ S ] (⟨ c .fst ∈ α ⟩
+                   × (z .fst ≡ pr (c .fst) (Lset (c .fst))))
+               → Σ[ c ∶ S ] (⟨ c .fst ∈ α ⟩ × ⟨ (z ∷ c ∷ []) ⊨ φ ⟩)
 ```
 
 <!--en-->
@@ -1802,7 +1802,7 @@ pair becomes satisfaction of the pair graph at it.
             , subst (λ t → ⟨ (t ∷ c ∷ []) ⊨ φ ⟩) (sym zeq) (holds c c∈))
             where
             zeq : z ≡ entry c c∈
-            zeq = Σ≡Prop (λ t → snd (isL t))
+            zeq = Σ≡Prop (λ t → (isL t) .snd)
 ```
 
 <!--en-->
@@ -1882,8 +1882,8 @@ module _ {n : ℕ} (w b : Fin n) (γ : S ^ n) where
 <div class="submodule-fold-content">
 
 ```agda
-  Lset-defines : IsOrd (fst (lookup b γ))
-               → fst (lookup w γ) ≡ Lset (fst (lookup b γ))
+  Lset-defines : IsOrd ((lookup b γ) .fst)
+               → (lookup w γ) .fst ≡ Lset ((lookup b γ) .fst)
                → ⟨ γ ⊨ LsetGraphAt w b ⟩
 ```
 
@@ -1901,9 +1901,9 @@ them.
 
 ```agda
   Lset-defines ob q = graph-table w b γ H ob
-    (λ c z _ p → hier-out (fst (lookup b γ)) ob H sp c z p .snd)
-    (hier-in (fst (lookup b γ)) ob H sp)
-    (λ c z p → hier-out (fst (lookup b γ)) ob H sp c z p .fst)
+    (λ c z _ p → hier-out ((lookup b γ) .fst) ob H sp c z p .snd)
+    (hier-in ((lookup b γ) .fst) ob H sp)
+    (λ c z p → hier-out ((lookup b γ) .fst) ob H sp c z p .fst)
     q
 ```
 
@@ -1936,9 +1936,9 @@ inputs are exactly what `graph-table`{.Agda} consumes.
 ```agda
     where
     H : S
-    H = hierL (fst (lookup b γ)) (lookup b γ .snd) ob
-    sp : IsHier (fst (lookup b γ)) H
-    sp = hierL-spec (fst (lookup b γ)) (lookup b γ .snd) ob
+    H = hierL ((lookup b γ) .fst) (lookup b γ .snd) ob
+    sp : IsHier ((lookup b γ) .fst) H
+    sp = hierL-spec ((lookup b γ) .fst) (lookup b γ .snd) ob
 ```
 </div>
 </details>

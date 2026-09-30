@@ -145,11 +145,11 @@ The successor `sucV A` adds `A` itself as a member. A member of `sucV A` is eith
 <!--/-->
 
 <!--en-->
-Transitivity of `sucV A` must show `y ∈ˢ sucV A` from `y ∈ˢ x` and `x ∈ˢ sucV A`. The eliminator consumes `x∈suc`, and the proof obligation it hands to each branch is again a membership in `sucV A`, so the propositionality argument `snd (y ∈ˢ sucV A)` is supplied as the target.
+Transitivity of `sucV A` must show `y ∈ˢ sucV A` from `y ∈ˢ x` and `x ∈ˢ sucV A`. The eliminator consumes `x∈suc`, and the proof obligation it hands to each branch is again a membership in `sucV A`, so the propositionality argument `(y ∈ˢ sucV A) .snd` is supplied as the target.
 <!--zh-->
-`sucV A` 的传递性要从「`y ∈ˢ x` (就 `A` 内部的项而言) 与 `x ∈ˢ sucV A`」推出 `y ∈ˢ sucV A`。消去子消耗 `x∈suc`，它交给每个分支的证明义务又是一个对 `sucV A` 的成员关系，因此以命题性论证 `snd (y ∈ˢ sucV A)` 作为目标。
+`sucV A` 的传递性要从「`y ∈ˢ x` (就 `A` 内部的项而言) 与 `x ∈ˢ sucV A`」推出 `y ∈ˢ sucV A`。消去子消耗 `x∈suc`，它交给每个分支的证明义务又是一个对 `sucV A` 的成员关系，因此以命题性论证 `(y ∈ˢ sucV A) .snd` 作为目标。
 <!--ja-->
-`sucV A` の推移性は、`y ∈ˢ x` と `x ∈ˢ sucV A` から `y ∈ˢ sucV A` を出さねばならない。消去子が `x∈suc` を消費し、各分岐に渡す証明義務は再び `sucV A` への所属であるため、命題性の証明 `snd (y ∈ˢ sucV A)` を目標として渡す。
+`sucV A` の推移性は、`y ∈ˢ x` と `x ∈ˢ sucV A` から `y ∈ˢ sucV A` を出さねばならない。消去子が `x∈suc` を消費し、各分岐に渡す証明義務は再び `sucV A` への所属であるため、命題性の証明 `(y ∈ˢ sucV A) .snd` を目標として渡す。
 <!--/-->
 
 ```agda
@@ -157,7 +157,7 @@ suc-ord : ∀ {A} → IsOrd A → IsOrd (sucV A)
 suc-ord {A} (Atr , Amem) = trans-sucV , mem-sucV
   where
   trans-sucV : isTransV (sucV A)
-  trans-sucV {x} {y} y∈x x∈suc = ∈sucV-elim (snd (y ∈ˢ sucV A)) x∈suc
+  trans-sucV {x} {y} y∈x x∈suc = ∈sucV-elim ((y ∈ˢ sucV A) .snd) x∈suc
 ```
 
 <!--en-->
@@ -304,7 +304,7 @@ The result packages three pieces of data: the bound β, a proof that β is an or
 bound2 : (σ₁ σ₂ : S) → IsOrd σ₁ → IsOrd σ₂
        → Σ[ β ∶ S ] (IsOrd β × ⟨ σ₁ ∈ˢ β ⟩ × ⟨ σ₂ ∈ˢ β ⟩)
 bound2 σ₁ σ₂ o₁ o₂ =
-  fst r , (r .snd .fst , r .snd .snd (lift true) , r .snd .snd (lift false))
+  r .fst , (r .snd .fst , r .snd .snd (lift true) , r .snd .snd (lift false))
   where
 ```
 
@@ -430,7 +430,7 @@ The next statement is downward closure for numerals, phrased directly as members
 numeral-mem : (k : ℕ) (y : S) → ⟨ y ∈ˢ (# k) ⟩ → ⟨ y ∈ˢ ω ⟩
 numeral-mem 0 y y∈ =
   ⊥₀-rec (∅-empty y (∈∈ₛ {a = y} {b = ∅} .fst y∈))
-numeral-mem (suc k) y y∈ = ∈sucV-elim (snd (y ∈ˢ ω)) y∈
+numeral-mem (suc k) y y∈ = ∈sucV-elim ((y ∈ˢ ω) .snd) y∈
   (λ y∈#k → numeral-mem k y y∈#k)
 ```
 
@@ -475,7 +475,7 @@ For each member `x` of `ω`, `ω-mem-ord x x∈ω` proves `IsOrd x`; its first c
 <!--/-->
 
 ```agda
-  trans-ω {x} {y} y∈x x∈ω = rec₁ (snd (y ∈ˢ ω))
+  trans-ω {x} {y} y∈x x∈ω = rec₁ ((y ∈ˢ ω) .snd)
     (λ { (k , #k≡x) →
       numeral-mem (lower k) y (subst (λ w → ⟨ y ∈ˢ w ⟩) (sym #k≡x) y∈x) })
     x∈ω

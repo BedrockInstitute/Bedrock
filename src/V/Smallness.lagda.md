@@ -149,7 +149,7 @@ The first lemma packages the small membership relation as a smallness witness. T
 ```agda
 small-∈ : (a b : S) → hasSize ℓ (a ∈ˢ b)
 small-∈ a b = (a ∈ₛ b) ,
-  propBiimpl→Equiv (snd (a ∈ˢ b)) (snd (a ∈ₛ b))
+  propBiimpl→Equiv ((a ∈ˢ b) .snd) ((a ∈ₛ b) .snd)
     (∈∈ₛ {a = a} {b = b} .fst) (∈∈ₛ {a = a} {b = b} .snd)
 
 small-≡ : (a b : S) → hasSize ℓ (a ≈ˢ b)
@@ -232,7 +232,7 @@ Negation is the one case where the compressed proposition alone does not determi
 
 ```agda
 small¬ {P} (P' , eP) = (¬ P') ,
-  propBiimpl→Equiv (snd (¬ P)) (snd (¬ P'))
+  propBiimpl→Equiv ((¬ P) .snd) ((¬ P') .snd)
     (λ np p' → np (invEq eP p'))
     (λ np' p → np' (equivFun eP p))
 
@@ -249,7 +249,7 @@ The two constants close the section. Truth is small because both sides are inhab
 
 ```agda
 small⊤ = ⊤ ,
-  propBiimpl→Equiv (⊤ .snd) (snd (⊤ {ℓ}))
+  propBiimpl→Equiv (⊤ .snd) ((⊤ {ℓ}) .snd)
     (λ _ → tt*) (λ _ → tt*)
 
 small⊥ : hasSize ℓ (⊥ {ℓ = ℓ-suc ℓ})
@@ -300,7 +300,7 @@ The universal bounded quantifier states: for every member `x` of `a`, the propos
 small-∀∈ : (a : S) {B : S → hProp (ℓ-suc ℓ)}
          → (∀ x → hasSize ℓ (B x))
          → hasSize ℓ (∀[ x ∶ S ] (x ∈ˢ a) ⇒ B x)
-small-∀∈ a {B} sm = Qsm , propBiimpl→Equiv (snd big) (snd Qsm) fwd bwd
+small-∀∈ a {B} sm = Qsm , propBiimpl→Equiv (big .snd) (Qsm .snd) fwd bwd
   where
 ```
 
@@ -348,7 +348,7 @@ The existential bounded quantifier states: some member `x` of `a` has `B x`. Its
 small-∃∈ : (a : S) {B : S → hProp (ℓ-suc ℓ)}
          → (∀ x → hasSize ℓ (B x))
          → hasSize ℓ (∃[ x ∶ S ] (x ∈ˢ a) ⊓ B x)
-small-∃∈ a {B} sm = Qsm , propBiimpl→Equiv (snd big) (snd Qsm) fwd bwd
+small-∃∈ a {B} sm = Qsm , propBiimpl→Equiv (big .snd) (Qsm .snd) fwd bwd
   where
 ```
 
@@ -688,17 +688,17 @@ Two abbreviations fix notation. `SM` names the restricted carrier itself, and `�
 ```
 
 <!--en-->
-The theorem's statement is deliberately parallel to `Δ₀-small`: for every formula `φ` of any arity `n` and every environment `δ : SM ^ n` of restricted elements, the truth value `δ ⊨ᵐ φ` is small. There is no inductive witness in sight, because none is needed: the induction here is on the formula itself, and the essential smallness of the carrier replaces the Δ₀ restriction. The two atom cases evaluate the terms inside the world, obtaining restricted elements, and apply the atomic smallness lemmas to their first projections: the world's membership `(fst xm) ∈ˢ (fst ym)` is exactly a proposition of the ambient structure, already known small.
+The theorem's statement is deliberately parallel to `Δ₀-small`: for every formula `φ` of any arity `n` and every environment `δ : SM ^ n` of restricted elements, the truth value `δ ⊨ᵐ φ` is small. There is no inductive witness in sight, because none is needed: the induction here is on the formula itself, and the essential smallness of the carrier replaces the Δ₀ restriction. The two atom cases evaluate the terms inside the world, obtaining restricted elements, and apply the atomic smallness lemmas to their first projections: the world's membership `(xm .fst) ∈ˢ (ym .fst)` is exactly a proposition of the ambient structure, already known small.
 <!--zh-->
-定理的陈述刻意与 `Δ₀-small` 平行：对任意元数 `n` 的公式 `φ` 与任意限制元素环境 `δ : SM ^ n`，真值 `δ ⊨ᵐ φ` 有目标层级中的等价代表。这里看不到任何归纳见证，因为不需要：此处的归纳直接针对公式，载体本质小这一条件取代了 Δ₀ 限制。两个原子情形在世界内求值词项，得到限制元素，再对其第一投影应用原子的 `hasSize` 引理：世界内的成员关系 `(fst xm) ∈ˢ (fst ym)` 恰是环境结构的命题，其 `hasSize` 见证已知。
+定理的陈述刻意与 `Δ₀-small` 平行：对任意元数 `n` 的公式 `φ` 与任意限制元素环境 `δ : SM ^ n`，真值 `δ ⊨ᵐ φ` 有目标层级中的等价代表。这里看不到任何归纳见证，因为不需要：此处的归纳直接针对公式，载体本质小这一条件取代了 Δ₀ 限制。两个原子情形在世界内求值词项，得到限制元素，再对其第一投影应用原子的 `hasSize` 引理：世界内的成员关系 `(xm .fst) ∈ˢ (ym .fst)` 恰是环境结构的命题，其 `hasSize` 见证已知。
 <!--ja-->
-定理の主張は、意図的に `Δ₀-small` と並行している。任意のアリティ `n` の論理式 `φ` と、制限された要素の任意の環境 `δ : SM ^ n` に対して、真理値 `δ ⊨ᵐ φ` は小さい。ここに帰納的な証人は姿を見せない。必要ないからである。ここの帰納法は論理式そのものに対して行われ、台の本質的な小ささが Δ₀ の制限の代わりをする。原子の二つの場合は、世界の中で項を評価して制限された要素を得て、その第一射影に原子的な小ささの補題を適用する。世界の中の所属 `(fst xm) ∈ˢ (fst ym)` は、周囲の構造の命題そのものであり、その小ささはすでに知られている。
+定理の主張は、意図的に `Δ₀-small` と並行している。任意のアリティ `n` の論理式 `φ` と、制限された要素の任意の環境 `δ : SM ^ n` に対して、真理値 `δ ⊨ᵐ φ` は小さい。ここに帰納的な証人は姿を見せない。必要ないからである。ここの帰納法は論理式そのものに対して行われ、台の本質的な小ささが Δ₀ の制限の代わりをする。原子の二つの場合は、世界の中で項を評価して制限された要素を得て、その第一射影に原子的な小ささの補題を適用する。世界の中の所属 `(xm .fst) ∈ˢ (ym .fst)` は、周囲の構造の命題そのものであり、その小ささはすでに知られている。
 <!--/-->
 
 ```agda
   ⊨ᵐ-small : ∀ {n} (φ : Formula K n) (δ : SM ^ n) → hasSize ℓ (δ ⊨ᵐ φ)
-  ⊨ᵐ-small (t ∈̇ u)  δ = small-∈ (fst (⟦ t ⟧ᵐ δ)) (fst (⟦ u ⟧ᵐ δ))
-  ⊨ᵐ-small (t ≐ u)  δ = small-≡ (fst (⟦ t ⟧ᵐ δ)) (fst (⟦ u ⟧ᵐ δ))
+  ⊨ᵐ-small (t ∈̇ u)  δ = small-∈ ((⟦ t ⟧ᵐ δ) .fst) ((⟦ u ⟧ᵐ δ) .fst)
+  ⊨ᵐ-small (t ≐ u)  δ = small-≡ ((⟦ t ⟧ᵐ δ) .fst) ((⟦ u ⟧ᵐ δ) .fst)
   ⊨ᵐ-small (φ ∧̇ ψ)  δ =
     small⊓ {P = δ ⊨ᵐ φ} {Q = δ ⊨ᵐ ψ} (⊨ᵐ-small φ δ) (⊨ᵐ-small ψ δ)
 ```
@@ -736,19 +736,19 @@ Now the quantifiers, where the two world lemmas enter. The unbounded existential
 ```
 
 <!--en-->
-The bounded quantifiers combine the two sources of smallness in one case each. For `∀̇∈ t φ`, the truth value is an implication, bounded over the restricted carrier: `∀[ xm ] (fst xm ∈ˢ ⟦ t ⟧ᵐ δ) ⇒ ((xm ∷ δ) ⊨ᵐ φ)`. Smallness of the antecedent comes from the atomic lemma, smallness of the consequent from the induction hypothesis, and `small⇒` assembles the implication; the whole statement is then small by `small-∀` along `e`. The interesting detail is the first projection `fst xm`: boundedness is a statement about the underlying set of the restricted element, since the membership relation of the world is the pullback of `V`'s.
+The bounded quantifiers combine the two sources of smallness in one case each. For `∀̇∈ t φ`, the truth value is an implication, bounded over the restricted carrier: `∀[ xm ] (xm .fst ∈ˢ ⟦ t ⟧ᵐ δ) ⇒ ((xm ∷ δ) ⊨ᵐ φ)`. Smallness of the antecedent comes from the atomic lemma, smallness of the consequent from the induction hypothesis, and `small⇒` assembles the implication; the whole statement is then small by `small-∀` along `e`. The interesting detail is the first projection `xm .fst`: boundedness is a statement about the underlying set of the restricted element, since the membership relation of the world is the pullback of `V`'s.
 <!--zh-->
-有界量词在每个情形中把两种 `hasSize` 见证的来源合并。对 `∀̇∈ t φ`，真值是限制载体上有界的蕴涵：`∀[ xm ] (fst xm ∈ˢ ⟦ t ⟧ᵐ δ) ⇒ ((xm ∷ δ) ⊨ᵐ φ)`。前件的 `hasSize` 见证来自原子引理，后件的 `hasSize` 见证来自归纳假设，`small⇒` 组装蕴涵；整个陈述再经 `small-∀` 沿 `e` 而小。有趣的细节是第一投影 `fst xm`：有界性是关于限制元素底层集合的陈述，因为世界的成员关系本就是 `V` 的拉回。
+有界量词在每个情形中把两种 `hasSize` 见证的来源合并。对 `∀̇∈ t φ`，真值是限制载体上有界的蕴涵：`∀[ xm ] (xm .fst ∈ˢ ⟦ t ⟧ᵐ δ) ⇒ ((xm ∷ δ) ⊨ᵐ φ)`。前件的 `hasSize` 见证来自原子引理，后件的 `hasSize` 见证来自归纳假设，`small⇒` 组装蕴涵；整个陈述再经 `small-∀` 沿 `e` 而小。有趣的细节是第一投影 `xm .fst`：有界性是关于限制元素底层集合的陈述，因为世界的成员关系本就是 `V` 的拉回。
 <!--ja-->
-有界量化子は、それぞれの場合で小ささの二つの源泉を結合する。`∀̇∈ t φ` の真理値は、制限された台の上で有界な含意 `∀[ xm ] (fst xm ∈ˢ ⟦ t ⟧ᵐ δ) ⇒ ((xm ∷ δ) ⊨ᵐ φ)` である。前件の小ささは原子的な補題から、後件の小ささは帰納法の仮定から得られ、`small⇒` が含意を組み立てる。主張全体は、さらに `e` に沿う `small-∀` によって小さくなる。興味深い細部は第一射影 `fst xm` である。有界性は、制限された要素の基礎となる集合についての主張である。世界の所属関係は `V` のそれの引き戻しだからである。
+有界量化子は、それぞれの場合で小ささの二つの源泉を結合する。`∀̇∈ t φ` の真理値は、制限された台の上で有界な含意 `∀[ xm ] (xm .fst ∈ˢ ⟦ t ⟧ᵐ δ) ⇒ ((xm ∷ δ) ⊨ᵐ φ)` である。前件の小ささは原子的な補題から、後件の小ささは帰納法の仮定から得られ、`small⇒` が含意を組み立てる。主張全体は、さらに `e` に沿う `small-∀` によって小さくなる。興味深い細部は第一射影 `xm .fst` である。有界性は、制限された要素の基礎となる集合についての主張である。世界の所属関係は `V` のそれの引き戻しだからである。
 <!--/-->
 
 ```agda
-    small-∀ e {B = λ xm → (fst xm ∈ˢ fst (⟦ t ⟧ᵐ δ)) ⇒ ((xm ∷ δ) ⊨ᵐ φ)} (λ xm →
-      small⇒ {P = fst xm ∈ˢ fst (⟦ t ⟧ᵐ δ)} {Q = (xm ∷ δ) ⊨ᵐ φ}
-        (small-∈ (fst xm) (fst (⟦ t ⟧ᵐ δ))) (⊨ᵐ-small φ (xm ∷ δ)))
+    small-∀ e {B = λ xm → (xm .fst ∈ˢ (⟦ t ⟧ᵐ δ) .fst) ⇒ ((xm ∷ δ) ⊨ᵐ φ)} (λ xm →
+      small⇒ {P = xm .fst ∈ˢ (⟦ t ⟧ᵐ δ) .fst} {Q = (xm ∷ δ) ⊨ᵐ φ}
+        (small-∈ (xm .fst) ((⟦ t ⟧ᵐ δ) .fst)) (⊨ᵐ-small φ (xm ∷ δ)))
   ⊨ᵐ-small (∃̇∈ t φ) δ =
-    small-∃ e {B = λ xm → (fst xm ∈ˢ fst (⟦ t ⟧ᵐ δ)) ⊓ ((xm ∷ δ) ⊨ᵐ φ)} (λ xm →
+    small-∃ e {B = λ xm → (xm .fst ∈ˢ (⟦ t ⟧ᵐ δ) .fst) ⊓ ((xm ∷ δ) ⊨ᵐ φ)} (λ xm →
 ```
 
 <!--en-->
@@ -760,8 +760,8 @@ The existential bounded case is the dual composition: the truth value pairs boun
 <!--/-->
 
 ```agda
-      small⊓ {P = fst xm ∈ˢ fst (⟦ t ⟧ᵐ δ)} {Q = (xm ∷ δ) ⊨ᵐ φ}
-        (small-∈ (fst xm) (fst (⟦ t ⟧ᵐ δ))) (⊨ᵐ-small φ (xm ∷ δ)))
+      small⊓ {P = xm .fst ∈ˢ (⟦ t ⟧ᵐ δ) .fst} {Q = (xm ∷ δ) ⊨ᵐ φ}
+        (small-∈ (xm .fst) ((⟦ t ⟧ᵐ δ) .fst)) (⊨ᵐ-small φ (xm ∷ δ)))
 ```
 </div>
 </details>

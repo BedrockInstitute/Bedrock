@@ -218,15 +218,15 @@ Inside the model, a numeral is not the ambient ordinal itself but a pair `numera
 <!--/-->
 
 <!--en-->
-The equation `numeralL-fst k` is a path `fst (numeralL k) ≡ # k` in the host theory. Transporting the membership family along this path turns the proof for # k into a proof for fst (numeralL k). Using `sym` orients the path from the established membership of `# k` to the desired membership of `fst (numeralL k)`, so `#∈Tλ k` becomes the required statement about the model numeral.
+The equation `numeralL-fst k` is a path `(numeralL k) .fst ≡ # k` in the host theory. Transporting the membership family along this path turns the proof for # k into a proof for fst (numeralL k). Using `sym` orients the path from the established membership of `# k` to the desired membership of `(numeralL k) .fst`, so `#∈Tλ k` becomes the required statement about the model numeral.
 <!--zh-->
-等式 `numeralL-fst k` 是宿主理论中的一条路径 `fst (numeralL k) ≡ # k`。沿这条路径搬运成员关系类型族，即可把关于 # k 的成员关系证明变为关于 fst (numeralL k) 的证明。使用 `sym` 把路径定向为：从已经证明的 `# k` 的成员关系，得到所求的 `fst (numeralL k)` 的成员关系；于是 `#∈Tλ k` 化为关于模型数码的陈述。
+等式 `numeralL-fst k` 是宿主理论中的一条路径 `(numeralL k) .fst ≡ # k`。沿这条路径搬运成员关系类型族，即可把关于 # k 的成员关系证明变为关于 fst (numeralL k) 的证明。使用 `sym` 把路径定向为：从已经证明的 `# k` 的成员关系，得到所求的 `(numeralL k) .fst` 的成员关系；于是 `#∈Tλ k` 化为关于模型数码的陈述。
 <!--ja-->
-等式 `numeralL-fst k` はホスト理論における経路 `fst (numeralL k) ≡ # k` である。この経路に沿って所属の型族を輸送すると、# k に関する証明が fst (numeralL k) に関する証明へ移る。`sym` は、既に得た `# k` の所属から、求める `fst (numeralL k)` の所属へ向かうようにパスを整える。これにより `#∈Tλ k` が模型の数項についての主張に変わる。
+等式 `numeralL-fst k` はホスト理論における経路 `(numeralL k) .fst ≡ # k` である。この経路に沿って所属の型族を輸送すると、# k に関する証明が fst (numeralL k) に関する証明へ移る。`sym` は、既に得た `# k` の所属から、求める `(numeralL k) .fst` の所属へ向かうようにパスを整える。これにより `#∈Tλ k` が模型の数項についての主張に変わる。
 <!--/-->
 
 ```agda
-  num∈λ : (k : ℕ) → ⟨ fst (numeralL k) ∈ˢ Lset lam ⟩
+  num∈λ : (k : ℕ) → ⟨ (numeralL k) .fst ∈ˢ Lset lam ⟩
   num∈λ k = subst (λ w → ⟨ w ∈ˢ Lset lam ⟩) (sym (numeralL-fst k)) (#∈Tλ k)
 ```
 </div>

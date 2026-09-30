@@ -186,7 +186,7 @@ Applying `isSetClass`{.Agda} to the hierarchy and constructibility predicate mak
 
 ```agda
 isSetS : isSet S
-isSetS = isSetClass setIsSet (λ v → snd (isL v))
+isSetS = isSetClass setIsSet (λ v → (isL v) .snd)
 ```
 
 <!--en-->
@@ -198,8 +198,8 @@ Equal underlying sets make equal constructible sets, by the propositionhood of t
 <!--/-->
 
 ```agda
-S≡ : {x y : S} → fst x ≡ fst y → x ≡ y
-S≡ = Σ≡Prop (λ v → snd (isL v))
+S≡ : {x y : S} → x .fst ≡ y .fst → x ≡ y
+S≡ = Σ≡Prop (λ v → (isL v) .snd)
 ```
 
 <!--en-->
@@ -212,7 +212,7 @@ A coded graph records the input first and the value second: `Holds F x y` means 
 
 ```agda
 Holds : S → S → S → Type (ℓ-suc ℓ)
-Holds F x y = ⟨ pr (fst x) (fst y) ∈ fst F ⟩
+Holds F x y = ⟨ pr (x .fst) (y .fst) ∈ F .fst ⟩
 ```
 
 <!--en-->
@@ -237,9 +237,9 @@ An element enters the internal unordered pair `pairʟ a b` once its underlying s
 <!--/-->
 
 ```agda
-pairʟ-in : (a b y : S) → (fst y ≡ fst a) ⊎ (fst y ≡ fst b) → ⟨ y ∈ˢ pairʟ a b ⟩
-pairʟ-in a b y k = subst (λ w → ⟨ fst y ∈ w ⟩) (sym (pairʟ-fst a b))
-  (subst ⟨_⟩ (sym (pair-spec (fst a) (fst b) (fst y))) ∣ k ∣₁)
+pairʟ-in : (a b y : S) → (y .fst ≡ a .fst) ⊎ (y .fst ≡ b .fst) → ⟨ y ∈ˢ pairʟ a b ⟩
+pairʟ-in a b y k = subst (λ w → ⟨ y .fst ∈ w ⟩) (sym (pairʟ-fst a b))
+  (subst ⟨_⟩ (sym (pair-spec (a .fst) (b .fst) (y .fst))) ∣ k ∣₁)
 ```
 
 <!--en-->
@@ -251,9 +251,9 @@ To place `y` in the internal union of `A`, it suffices to exhibit a particular c
 <!--/-->
 
 ```agda
-unionʟ-in : (A y B : S) → ⟨ fst B ∈ fst A ⟩ → ⟨ fst y ∈ fst B ⟩ → ⟨ y ∈ˢ unionʟ A ⟩
-unionʟ-in A y B hB hy = subst (λ w → ⟨ fst y ∈ w ⟩) (sym (unionʟ-fst A))
-  (subst ⟨_⟩ (sym (union-spec (fst A) (fst y))) ∣ fst B , (hB , hy) ∣₁)
+unionʟ-in : (A y B : S) → ⟨ B .fst ∈ A .fst ⟩ → ⟨ y .fst ∈ B .fst ⟩ → ⟨ y ∈ˢ unionʟ A ⟩
+unionʟ-in A y B hB hy = subst (λ w → ⟨ y .fst ∈ w ⟩) (sym (unionʟ-fst A))
+  (subst ⟨_⟩ (sym (union-spec (A .fst) (y .fst))) ∣ B .fst , (hB , hy) ∣₁)
 ```
 
 <!--en-->
@@ -266,9 +266,9 @@ Membership in a union yields, merely, an intermediate set containing the element
 
 ```agda
 unionʟ-out : (A y : S) → ⟨ y ∈ˢ unionʟ A ⟩
-           → ∥ Σ[ B ∶ V ℓ ] (⟨ B ∈ fst A ⟩ × ⟨ fst y ∈ B ⟩) ∥₁
-unionʟ-out A y h = subst ⟨_⟩ (union-spec (fst A) (fst y))
-  (subst (λ w → ⟨ fst y ∈ w ⟩) (unionʟ-fst A) h)
+           → ∥ Σ[ B ∶ V ℓ ] (⟨ B ∈ A .fst ⟩ × ⟨ y .fst ∈ B ⟩) ∥₁
+unionʟ-out A y h = subst ⟨_⟩ (union-spec (A .fst) (y .fst))
+  (subst (λ w → ⟨ y .fst ∈ w ⟩) (unionʟ-fst A) h)
 ```
 
 <!--en-->
@@ -321,7 +321,7 @@ The zero clause says that every value recorded at the zeroth numeral has the sam
 
 ```agda
   Zero : S → Type (ℓ-suc ℓ)
-  Zero F = (v : S) → Holds F (nn 0) v → fst v ≡ fst a
+  Zero F = (v : S) → Holds F (nn 0) v → v .fst ≡ a .fst
 ```
 
 <!--en-->
@@ -335,7 +335,7 @@ The successor clause says that whenever the table records both `(x, v)` and `(x'
 ```agda
   Step : S → Type (ℓ-suc ℓ)
   Step F = (x v x' v' : S) → Holds F x v → Holds F x' v'
-         → fst x' ≡ sucV (fst x) → ⟨ (v' ∷ v ∷ []) ⊨ stepFo ⟩
+         → x' .fst ≡ sucV (x .fst) → ⟨ (v' ∷ v ∷ []) ⊨ stepFo ⟩
 ```
 
 <!--en-->
@@ -348,7 +348,7 @@ The downward clause says that below every recorded entry, a recorded value exist
 
 ```agda
   Down : S → Type (ℓ-suc ℓ)
-  Down F = (x' v' x : S) → Holds F x' v' → ⟨ fst x ∈ fst x' ⟩
+  Down F = (x' v' x : S) → Holds F x' v' → ⟨ x .fst ∈ x' .fst ⟩
          → ∥ Σ[ v ∶ S ] Holds F x v ∥₁
 ```
 
@@ -405,7 +405,7 @@ Conversely, a host-level proof of the zero clause fills the object-language form
 ```agda
     zero-in : ∀ {n} (f : Fin n) (γ : S ^ n) → Zero (lookup f γ) → ⟨ γ ⊨ zeroAt f ⟩
     zero-in f γ h z ez v hv = h v
-      (subst (λ t → ⟨ pr t (fst v) ∈ fst (lookup f γ) ⟩) ez
+      (subst (λ t → ⟨ pr t (v .fst) ∈ (lookup f γ) .fst ⟩) ez
         (subst ⟨_⟩ (appAt-adequate (suc (suc f)) (suc zero) zero (v ∷ z ∷ γ)) hv))
 ```
 
@@ -707,10 +707,10 @@ The uniqueness lemma begins by cases on the iterate index: at zero, the zero cla
 
 ```agda
   corr-val : (F : S) → Correct F → (k : ℕ) (v : S)
-           → Holds F (nn k) v → fst v ≡ fst (it k)
+           → Holds F (nn k) v → v .fst ≡ (it k) .fst
   corr-val F (z , (s , d)) 0    v h = z v h
   corr-val F (z , (s , d)) (suc k) v h =
-    rec₁ (setIsSet (fst v) (fst (it (suc k)))) read
+    rec₁ (setIsSet (v .fst) ((it (suc k)) .fst)) read
 ```
 
 <!--en-->
@@ -724,8 +724,8 @@ At a successor index, `Down` supplies, under propositional truncation, a value r
 ```agda
       (d (nn (suc k)) v (nn k) h (self∈sucV (# k)))
     where
-    read : Σ[ u ∶ S ] Holds F (nn k) u → fst v ≡ fst (it (suc k))
-    read (u , hu) = cong fst (only (it k) v
+    read : Σ[ u ∶ S ] Holds F (nn k) u → v .fst ≡ (it (suc k)) .fst
+    read (u , hu) = cong (λ p → p .fst) (only (it k) v
       (subst (λ t → ⟨ (v ∷ t ∷ []) ⊨ stepFo ⟩)
 ```
 
@@ -751,8 +751,8 @@ The value at a canonical numeral is unique: any satisfaction of the iteration fo
 <!--/-->
 
 ```agda
-  itFo-val : (k : ℕ) (v : S) → ⟨ (v ∷ nn k ∷ []) ⊨ itFo ⟩ → fst v ≡ fst (it k)
-  itFo-val k v h = rec₁ (setIsSet (fst v) (fst (it k)))
+  itFo-val : (k : ℕ) (v : S) → ⟨ (v ∷ nn k ∷ []) ⊨ itFo ⟩ → v .fst ≡ (it k) .fst
+  itFo-val k v h = rec₁ (setIsSet (v .fst) ((it k) .fst))
     (λ { (F , (hc , hv)) → corr-val F hc k v hv }) (itFo-out v (nn k) h)
 ```
 
@@ -781,8 +781,8 @@ The bounding ordinal for all entry stages is assembled by the bounding lemma app
 ```agda
   private
     entryStages = boundingOrd (Lift {ℓ-zero} {ℓ} ℕ)
-      (λ k → stage (fst (e (lower k))) (e (lower k) .snd))
-      (λ k → stage-ord (fst (e (lower k))) (e (lower k) .snd))
+      (λ k → stage ((e (lower k)) .fst) (e (lower k) .snd))
+      (λ k → stage-ord ((e (lower k)) .fst) (e (lower k) .snd))
 ```
 
 <!--en-->
@@ -820,9 +820,9 @@ Each entry belongs to the constructible level indexed by the common bound. Indee
 <!--/-->
 
 ```agda
-    entry-in-bound : (k : ℕ) → ⟨ fst (e k) ∈ Lset entryBound ⟩
+    entry-in-bound : (k : ℕ) → ⟨ (e k) .fst ∈ Lset entryBound ⟩
     entry-in-bound k = Lset-mono (entryStages .snd .snd (lift k))
-      (stage-mem (fst (e k)) (e k .snd))
+      (stage-mem ((e k) .fst) (e k .snd))
 ```
 
 <!--en-->
@@ -835,9 +835,9 @@ For a fixed `n`, the table `Fn n` is the finite set of entry pairs with indices 
 
 ```agda
   Fn : ℕ → S
-  Fn n = finSet (suc n) (λ i → fst (e (toℕ i))) ,
+  Fn n = finSet (suc n) (λ i → (e (toℕ i)) .fst) ,
     FinOf.finSetL entryBound entryBound-ord
-      (suc n) (λ i → fst (e (toℕ i))) (λ i → entry-in-bound (toℕ i))
+      (suc n) (λ i → (e (toℕ i)) .fst) (λ i → entry-in-bound (toℕ i))
 ```
 
 <!--en-->
@@ -850,10 +850,10 @@ If `k ≤ n`, the canonical entry `(nn k, it k)` occurs in `Fn n`. Thus the tabl
 
 ```agda
   Fn-in : (n k : ℕ) → k ≤ n → Holds (Fn n) (nn k) (it k)
-  Fn-in n k p = subst (λ w → ⟨ w ∈ fst (Fn n) ⟩) (prʟ-fst (nn k) (it k))
-    (finSet-in (suc n) (λ i → fst (e (toℕ i))) (fst (e k))
+  Fn-in n k p = subst (λ w → ⟨ w ∈ (Fn n) .fst ⟩) (prʟ-fst (nn k) (it k))
+    (finSet-in (suc n) (λ i → (e (toℕ i)) .fst) ((e k) .fst)
       ∣ fromℕ' (suc n) k (suc-≤-suc p)
-      , cong (λ j → fst (e j)) (toFromId' (suc n) k (suc-≤-suc p)) ∣₁)
+      , cong (λ j → (e j) .fst) (toFromId' (suc n) k (suc-≤-suc p)) ∣₁)
 ```
 
 <!--en-->
@@ -866,10 +866,10 @@ The outward reading decomposes any member into a bounded index and its iterate v
 
 ```agda
   Fn-out : (n : ℕ) (y : S) → ⟨ y ∈ˢ Fn n ⟩
-         → ∥ Σ[ k ∶ ℕ ] ((k ≤ n) × (fst y ≡ pr (# k) (fst (it k)))) ∥₁
+         → ∥ Σ[ k ∶ ℕ ] ((k ≤ n) × (y .fst ≡ pr (# k) ((it k) .fst))) ∥₁
   Fn-out n y h = map₁ (λ { (i , q) → toℕ i
     , (pred-≤-pred (toℕ<n i) , sym q ∙ prʟ-fst (nn (toℕ i)) (it (toℕ i))) })
-    (finSet-out (suc n) (λ i → fst (e (toℕ i))) (fst y) h)
+    (finSet-out (suc n) (λ i → (e (toℕ i)) .fst) (y .fst) h)
 ```
 
 <!--en-->
@@ -882,9 +882,9 @@ The pair reading decomposes any entry of the finite table into a bounded index a
 
 ```agda
   Fn-pair : (n : ℕ) (x v : S) → Holds (Fn n) x v
-          → ∥ Σ[ k ∶ ℕ ] ((k ≤ n) × ((fst x ≡ # k) × (fst v ≡ fst (it k)))) ∥₁
+          → ∥ Σ[ k ∶ ℕ ] ((k ≤ n) × ((x .fst ≡ # k) × (v .fst ≡ (it k) .fst))) ∥₁
   Fn-pair n x v h = map₁ (λ { (k , (p , q)) → k , (p , pr-inj (sym (prʟ-fst x v) ∙ q)) })
-    (Fn-out n (prʟ x v) (subst (λ w → ⟨ w ∈ fst (Fn n) ⟩) (sym (prʟ-fst x v)) h))
+    (Fn-out n (prʟ x v) (subst (λ w → ⟨ w ∈ (Fn n) .fst ⟩) (sym (prʟ-fst x v)) h))
 ```
 
 <!--en-->
@@ -900,7 +900,7 @@ The finite table is correct: the three clauses are assembled from the pair readi
   Fn-correct n = zeroC , (stepC , downC)
     where
     zeroC : Zero (Fn n)
-    zeroC v h = rec₁ (setIsSet (fst v) (fst a))
+    zeroC v h = rec₁ (setIsSet (v .fst) (a .fst))
 ```
 
 <!--en-->
@@ -912,7 +912,7 @@ For the zero clause, reading an entry at `nn 0` yields some index `k` whose nume
 <!--/-->
 
 ```agda
-      (λ { (k , (_ , (ex , ev))) → ev ∙ cong (λ j → fst (it j)) (sym (#-inj 0 k ex)) })
+      (λ { (k , (_ , (ex , ev))) → ev ∙ cong (λ j → (it j) .fst) (sym (#-inj 0 k ex)) })
       (Fn-pair n (nn 0) v h)
 ```
 
@@ -926,9 +926,9 @@ For the step clause, read the two table entries under propositional truncation. 
 
 ```agda
     stepC : Step (Fn n)
-    stepC x v x' v' hxv hx'v' s = rec₁ (snd ((v' ∷ v ∷ []) ⊨ stepFo)) outer (Fn-pair n x v hxv)
+    stepC x v x' v' hxv hx'v' s = rec₁ (((v' ∷ v ∷ []) ⊨ stepFo) .snd) outer (Fn-pair n x v hxv)
       where
-      outer : Σ[ k ∶ ℕ ] ((k ≤ n) × ((fst x ≡ # k) × (fst v ≡ fst (it k))))
+      outer : Σ[ k ∶ ℕ ] ((k ≤ n) × ((x .fst ≡ # k) × (v .fst ≡ (it k) .fst)))
             → ⟨ (v' ∷ v ∷ []) ⊨ stepFo ⟩
 ```
 
@@ -941,9 +941,9 @@ After the first reading has exposed `k`, the second exposes an index `k'` for th
 <!--/-->
 
 ```agda
-      outer (k , (_ , (ex , ev))) = rec₁ (snd ((v' ∷ v ∷ []) ⊨ stepFo)) inner (Fn-pair n x' v' hx'v')
+      outer (k , (_ , (ex , ev))) = rec₁ (((v' ∷ v ∷ []) ⊨ stepFo) .snd) inner (Fn-pair n x' v' hx'v')
         where
-        inner : Σ[ k' ∶ ℕ ] ((k' ≤ n) × ((fst x' ≡ # k') × (fst v' ≡ fst (it k'))))
+        inner : Σ[ k' ∶ ℕ ] ((k' ≤ n) × ((x' .fst ≡ # k') × (v' .fst ≡ (it k') .fst)))
               → ⟨ (v' ∷ v ∷ []) ⊨ stepFo ⟩
         inner (k' , (_ , (ex' , ev'))) =
 ```
@@ -958,7 +958,7 @@ The two table readings identify `v` with `it k` and `v'` with `it k'`. The succe
 
 ```agda
           subst2 (λ p q → ⟨ (p ∷ q ∷ []) ⊨ stepFo ⟩)
-            (S≡ (sym (ev' ∙ cong (λ j → fst (it j)) k'≡)))
+            (S≡ (sym (ev' ∙ cong (λ j → (it j) .fst) k'≡)))
             (S≡ (sym ev))
             (defines (it k))
           where
@@ -989,7 +989,7 @@ The downward clause is proved by eliminating the truncated pair reading and find
     downC : Down (Fn n)
     downC x' v' x h m = rec₁ squash₁ outer (Fn-pair n x' v' h)
       where
-      outer : Σ[ k' ∶ ℕ ] ((k' ≤ n) × ((fst x' ≡ # k') × (fst v' ≡ fst (it k'))))
+      outer : Σ[ k' ∶ ℕ ] ((k' ≤ n) × ((x' .fst ≡ # k') × (v' .fst ≡ (it k') .fst)))
             → ∥ Σ[ v ∶ S ] Holds (Fn n) x v ∥₁
 ```
 
@@ -1004,9 +1004,9 @@ The smaller index's entry is produced by the inward reading of the finite table,
 ```agda
       outer (k' , (p' , (ex' , _))) = map₁
         (λ { (j , (j< , ej)) → it j
-           , subst (λ t → ⟨ pr t (fst (it j)) ∈ fst (Fn n) ⟩) (sym ej)
+           , subst (λ t → ⟨ pr t ((it j) .fst) ∈ (Fn n) .fst ⟩) (sym ej)
                (Fn-in n j (≤-trans (<-weaken j<) p')) })
-        (∈#-elim k' (fst x) (subst (λ w → ⟨ fst x ∈ w ⟩) ex' m))
+        (∈#-elim k' (x .fst) (subst (λ w → ⟨ x .fst ∈ w ⟩) ex' m))
 ```
 
 <!--en-->
@@ -1128,7 +1128,7 @@ Every host-defined iterate belongs to this value set. At the internal numeral `n
 <!--/-->
 
 ```agda
-  values-in : (n : ℕ) → ⟨ fst (it n) ∈ fst values ⟩
+  values-in : (n : ℕ) → ⟨ (it n) .fst ∈ values .fst ⟩
   values-in n = VR.table-in (nn n) (it n) (#∈ω n) (it-graph n)
 ```
 
@@ -1141,7 +1141,7 @@ Every member of the value domain is, merely, some iterate value: the outward rea
 <!--/-->
 
 ```agda
-  values-out : (y : S) → ⟨ y ∈ˢ values ⟩ → ∥ Σ[ n ∶ ℕ ] (fst y ≡ fst (it n)) ∥₁
+  values-out : (y : S) → ⟨ y ∈ˢ values ⟩ → ∥ Σ[ n ∶ ℕ ] (y .fst ≡ (it n) .fst) ∥₁
   values-out y hy = rec₁ squash₁
     (λ { (q , (q∈ , h)) → map₁
       (λ { (k , eq) → k , itFo-val k y (itFo-at y (sym eq) h) }) (ω-num q q∈) })
@@ -1170,7 +1170,7 @@ Every member of a finite iterate belongs to `iterUnion`: first `values-in` place
 <!--/-->
 
 ```agda
-  iterUnion-in : (n : ℕ) (z : S) → ⟨ fst z ∈ fst (it n) ⟩ → ⟨ z ∈ˢ iterUnion ⟩
+  iterUnion-in : (n : ℕ) (z : S) → ⟨ z .fst ∈ (it n) .fst ⟩ → ⟨ z ∈ˢ iterUnion ⟩
   iterUnion-in n z hz = unionʟ-in values z (it n) (values-in n) hz
 ```
 
@@ -1183,11 +1183,11 @@ Every member of the union merely lies in some finite iterate. The proof eliminat
 <!--/-->
 
 ```agda
-  iterUnion-out : (z : S) → ⟨ z ∈ˢ iterUnion ⟩ → ∥ Σ[ n ∶ ℕ ] ⟨ fst z ∈ fst (it n) ⟩ ∥₁
+  iterUnion-out : (z : S) → ⟨ z ∈ˢ iterUnion ⟩ → ∥ Σ[ n ∶ ℕ ] ⟨ z .fst ∈ (it n) .fst ⟩ ∥₁
   iterUnion-out z h = rec₁ squash₁
     (λ { (B , (hB , hz)) → map₁
-      (λ { (n , eB) → n , subst (λ w → ⟨ fst z ∈ w ⟩) eB hz })
-      (values-out (B , isL-trans {x = fst values} {y = B} hB (snd values)) hB) })
+      (λ { (n , eB) → n , subst (λ w → ⟨ z .fst ∈ w ⟩) eB hz })
+      (values-out (B , isL-trans {x = values .fst} {y = B} hB (values .snd)) hB) })
 ```
 
 <!--en-->
@@ -1244,8 +1244,8 @@ Every canonical pair is a member of the graph, transported along the uniqueness 
 <!--/-->
 
 ```agda
-  iter-in : (n : ℕ) → ⟨ pr (# n) (fst (it n)) ∈ fst iter ⟩
-  iter-in n = subst (λ v → ⟨ pr (# n) (fst v) ∈ fst iter ⟩)
+  iter-in : (n : ℕ) → ⟨ pr (# n) ((it n) .fst) ∈ iter .fst ⟩
+  iter-in n = subst (λ v → ⟨ pr (# n) (v .fst) ∈ iter .fst ⟩)
     (VR.val-uniq (nn n) (#∈ω n) (it n) (it-graph n)) (TR.F-in (nn n) (#∈ω n))
 ```
 
@@ -1258,11 +1258,11 @@ Conversely, every graph member is merely equal to a canonical pair `(# n, it n)`
 <!--/-->
 
 ```agda
-  iter-out : (y : S) → ⟨ y ∈ˢ iter ⟩ → ∥ Σ[ n ∶ ℕ ] (fst y ≡ pr (# n) (fst (it n))) ∥₁
+  iter-out : (y : S) → ⟨ y ∈ˢ iter ⟩ → ∥ Σ[ n ∶ ℕ ] (y .fst ≡ pr (# n) ((it n) .fst)) ∥₁
   iter-out y hy = rec₁ squash₁
     (λ { (q , q∈ , e) → map₁ (λ { (k , eq) → k
-      , e ∙ cong₂ pr (cong fst (sym eq))
-        (cong fst (VR.val-uniq q q∈ (it k) (itFo-at (it k) eq (it-graph k)))) }) (ω-num q q∈) })
+      , e ∙ cong₂ pr (cong (λ p → p .fst) (sym eq))
+        (cong (λ p → p .fst) (VR.val-uniq q q∈ (it k) (itFo-at (it k) eq (it-graph k)))) }) (ω-num q q∈) })
 ```
 
 <!--en-->
@@ -1274,7 +1274,7 @@ The outward membership rule for the general graph first supplies a source `q ∈
 <!--/-->
 
 ```agda
-    (TR.F-out (fst y) hy)
+    (TR.F-out (y .fst) hy)
 ```
 
 <!--en-->
@@ -1288,7 +1288,7 @@ The growth module is parameterized by the hypothesis that each set is contained 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-  module Closure (grows : (x z : S) → ⟨ fst z ∈ fst x ⟩ → ⟨ fst z ∈ fst (step x) ⟩) where
+  module Closure (grows : (x z : S) → ⟨ z .fst ∈ x .fst ⟩ → ⟨ z .fst ∈ (step x) .fst ⟩) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -1302,7 +1302,7 @@ The growth hypothesis gives one-way containment between adjacent iterates: every
 <!--/-->
 
 ```agda
-    it-mono : (n : ℕ) (z : S) → ⟨ fst z ∈ fst (it n) ⟩ → ⟨ fst z ∈ fst (it (suc n)) ⟩
+    it-mono : (n : ℕ) (z : S) → ⟨ z .fst ∈ (it n) .fst ⟩ → ⟨ z .fst ∈ (it (suc n)) .fst ⟩
     it-mono n z = grows (it n) z
 ```
 
@@ -1315,7 +1315,7 @@ Iterating the adjacent containment `k` times proves `it n ⊆ it (k + n)`. The i
 <!--/-->
 
 ```agda
-    it-up : (n k : ℕ) (z : S) → ⟨ fst z ∈ fst (it n) ⟩ → ⟨ fst z ∈ fst (it (k + n)) ⟩
+    it-up : (n k : ℕ) (z : S) → ⟨ z .fst ∈ (it n) .fst ⟩ → ⟨ z .fst ∈ (it (k + n)) .fst ⟩
     it-up n 0    z h = h
     it-up n (suc k) z h = it-mono (k + n) z (it-up n k z h)
 ```

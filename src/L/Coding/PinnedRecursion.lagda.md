@@ -209,8 +209,8 @@ module _ (A : S) where
 <div class="submodule-fold-content">
 
 ```agda
-  keyBridge : ∀ {n} (ψ : Formula ⟪ fst A ⟫ n)
-            → fst (keyS A ψ) ≡ fst (keyʟ (mapFo (asConst A) ψ))
+  keyBridge : ∀ {n} (ψ : Formula ⟪ A .fst ⟫ n)
+            → (keyS A ψ) .fst ≡ (keyʟ (mapFo (asConst A) ψ)) .fst
   keyBridge {n} ψ =
       cong (pr (# n))
 ```
@@ -224,9 +224,9 @@ The proof aligns the syntax-code component first: relabelling the constants and 
 <!--/-->
 
 ```agda
-        ( cong (λ χ → VCode.⌜ χ ⌝) (sym (mapFo-comp (asConst A) fst ψ))
+        ( cong (λ χ → VCode.⌜ χ ⌝) (sym (mapFo-comp (asConst A) (λ p → p .fst) ψ))
         ∙ sym (codeBridge (mapFo (asConst A) ψ)) )
-    ∙ cong (λ w → pr w (fst LCode.⌜ mapFo (asConst A) ψ ⌝))
+    ∙ cong (λ w → pr w ((LCode.⌜ mapFo (asConst A) ψ ⌝) .fst))
         (sym (numeralL-fst n))
     ∙ sym (prʟ-fst (numeralL n) LCode.⌜ mapFo (asConst A) ψ ⌝)
 ```
@@ -367,7 +367,7 @@ Now suppose `c` belongs to the canonical code set and is presented as the pair o
 <!--/-->
 
 ```agda
-  decodeAll : (c : S) → ⟨ fst c ∈ fst (AllCodes W) ⟩ → (n : ℕ) (z : V ℓ) → fst c ≡ pr (# n) z
+  decodeAll : (c : S) → ⟨ c .fst ∈ (AllCodes W) .fst ⟩ → (n : ℕ) (z : V ℓ) → c .fst ≡ pr (# n) z
             → ∥ Σ[ ψ ∶ Formula Ab n ] (z ≡ cd ψ) ∥₁
   decodeAll c c∈ n z e = map₁
     (λ { (n₁ , ψ₁ , e₁) →
@@ -410,7 +410,7 @@ The soundness argument is local to an arbitrary code domain `C`. Besides a propo
 <summary class="submodule-fold-heading">
 ```agda
 module SatSoundC {m : ℕ} (T w C E : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) (W : S)
-  (qw : fst (lookup w γ) ≡ fst W) (tg : Tags γ N)
+  (qw : (lookup w γ) .fst ≡ W .fst) (tg : Tags γ N)
   (hE : ⟨ γ ⊨ towerAt E w (N f0) ⟩) (hcl : ⟨ γ ⊨ closedAt C ⟩)
   (hT : ⟨ γ ⊨ tableAt T w C E N ⟩) where
 ```
@@ -432,9 +432,9 @@ Write `Tv`, `Cv`, and `Ev` for the underlying hierarchy sets stored in the table
 ```agda
   open Bridge W
   private
-    Tv = fst (lookup T γ)
-    Cv = fst (lookup C γ)
-    Ev = fst (lookup E γ)
+    Tv = (lookup T γ) .fst
+    Cv = (lookup C γ) .fst
+    Ev = (lookup E γ) .fst
 ```
 
 <!--en-->
@@ -446,7 +446,7 @@ Let `Wv` denote the underlying hierarchy set of the carrier `W`. Quantifier brid
 <!--/-->
 
 ```agda
-    Wv = fst W
+    Wv = W .fst
 ```
 
 <!--en-->
@@ -503,14 +503,14 @@ The case module packages the data of one induction step: a formula, its tag, its
 <summary class="submodule-fold-heading">
 ```agda
     module Case {n : ℕ} (ψ : Formula Ab n) (k : Fin 10) (rS : S)
-      (ep : cd ψ ≡ pr (# (toℕ k)) (fst rS)) (c∈ : ⟨ fst (keyS W ψ) ∈ Cv ⟩)
-      (y : S) (mem : ⟨ pr (fst (keyS W ψ)) (fst y) ∈ Tv ⟩) where
+      (ep : cd ψ ≡ pr (# (toℕ k)) (rS .fst)) (c∈ : ⟨ (keyS W ψ) .fst ∈ Cv ⟩)
+      (y : S) (mem : ⟨ pr ((keyS W ψ) .fst) (y .fst) ∈ Tv ⟩) where
 ```
 </summary>
 <div class="submodule-fold-content">
 
 ```agda
-      q∈ : ⟨ pr (# n) (fst (envSet W n)) ∈ Ev ⟩
+      q∈ : ⟨ pr (# n) ((envSet W n) .fst) ∈ Ev ⟩
       q∈ = TR.entry-in n
 ```
 
@@ -523,8 +523,8 @@ The formula code is initially written with the canonical numeral `# k`; the tag 
 <!--/-->
 
 ```agda
-      ep' : fst (codeS W ψ) ≡ pr (fst (lookup (N k) γ)) (fst rS)
-      ep' = ep ∙ cong (λ a → pr a (fst rS)) (sym (tg k))
+      ep' : (codeS W ψ) .fst ≡ pr ((lookup (N k) γ) .fst) (rS .fst)
+      ep' = ep ∙ cong (λ a → pr a (rS .fst)) (sym (tg k))
       δ12 : S ^ (12 + m)
       δ12 = Fr.At.δ12 (nn n) (envSet W n) (keyS W ψ) (codeS W ψ) rS y q∈ refl k ep' mem
       rel : ⟨ δ12 ⊨ R.relN (toℕ k) ⟩
@@ -554,8 +554,8 @@ If a child formula key belongs to `Cv`, table totality gives only the propositio
 <!--/-->
 
 ```agda
-    sub : ∀ {n} (a : Formula Ab n) → ⟨ fst (keyS W a) ∈ Cv ⟩
-        → ∥ Σ[ ya ∶ S ] ⟨ pr (fst (keyS W a)) (fst ya) ∈ Tv ⟩ ∥₁
+    sub : ∀ {n} (a : Formula Ab n) → ⟨ (keyS W a) .fst ∈ Cv ⟩
+        → ∥ Σ[ ya ∶ S ] ⟨ pr ((keyS W a) .fst) (ya .fst) ∈ Tv ⟩ ∥₁
     sub a a∈ = Fr.total-out hTot (keyS W a) a∈
 ```
 
@@ -569,8 +569,8 @@ The central predicate is conditional. If the key of `ψ` lies in the code domain
 
 ```agda
   Pinned : ∀ {n} (ψ : Formula Ab n) → Type (ℓ-suc ℓ)
-  Pinned ψ = ⟨ fst (keyS W ψ) ∈ Cv ⟩
-           → (y : S) → ⟨ pr (fst (keyS W ψ)) (fst y) ∈ Tv ⟩ → fst y ≡ fst (SatW ψ)
+  Pinned ψ = ⟨ (keyS W ψ) .fst ∈ Cv ⟩
+           → (y : S) → ⟨ pr ((keyS W ψ) .fst) (y .fst) ∈ Tv ⟩ → y .fst ≡ (SatW ψ) .fst
 ```
 
 <!--en-->
@@ -623,19 +623,19 @@ The bridge is formulated for an environment containing the two child values at n
 <!--/-->
 
 ```agda
-                      → fst (lookup ya env) ≡ fst (SatW a) → fst (lookup yb env) ≡ fst (SatW b)
-                      → ExtFact (fst (SatW (opA a b))) (fst (envSet W n))
+                      → (lookup ya env) .fst ≡ (SatW a) .fst → (lookup yb env) .fst ≡ (SatW b) .fst
+                      → ExtFact ((SatW (opA a b)) .fst) ((envSet W n) .fst)
                           (λ z → ⟨ (z ∷ env) ⊨ op (var i0 ∈̇ var (suc ya)) (var i0 ∈̇ var (suc yb)) ⟩))
-            → (cl2 : ⟨ fst (keyS W (opA a b)) ∈ Cv ⟩
-                   → ⟨ fst (keyS W a) ∈ Cv ⟩ × ⟨ fst (keyS W b) ∈ Cv ⟩)
+            → (cl2 : ⟨ (keyS W (opA a b)) .fst ∈ Cv ⟩
+                   → ⟨ (keyS W a) .fst ∈ Cv ⟩ × ⟨ (keyS W b) .fst ∈ Cv ⟩)
 ```
 
 <!--en-->
-To prove the compound is pinned, the proof eliminates the propositionally truncated left value, right value, and binary-relation witness. Every elimination ends in the equality `fst y ≡ fst (SatW (opA a b))`. Since `V` is an h-set, this equality is a proposition, so the eliminations reveal no permanent choice of child values or frame data.
+To prove the compound is pinned, the proof eliminates the propositionally truncated left value, right value, and binary-relation witness. Every elimination ends in the equality `y .fst ≡ (SatW (opA a b)) .fst`. Since `V` is an h-set, this equality is a proposition, so the eliminations reveal no permanent choice of child values or frame data.
 <!--zh-->
-为证明复合公式被钉扎，证明依次消去经命题截断的左子值、右子值与二元关系见证。每次消去的最终目标都是等式 `fst y ≡ fst (SatW (opA a b))`。由于 `V` 是 h-集合，该等式是命题，所以这些消去不会留下对子值或框架数据的固定选择。
+为证明复合公式被钉扎，证明依次消去经命题截断的左子值、右子值与二元关系见证。每次消去的最终目标都是等式 `y .fst ≡ (SatW (opA a b)) .fst`。由于 `V` 是 h-集合，该等式是命题，所以这些消去不会留下对子值或框架数据的固定选择。
 <!--ja-->
-複合論理式が固定されることを示すため、命題的切り詰めされた左の値、右の値、二項関係の証人を順に消去する。どの消去も、最終的には等式 `fst y ≡ fst (SatW (opA a b))` を目標とする。`V` は h-集合なのでこの等式は命題であり、消去によって子の値や枠のデータの恒久的な選択が残ることはない。
+複合論理式が固定されることを示すため、命題的切り詰めされた左の値、右の値、二項関係の証人を順に消去する。どの消去も、最終的には等式 `y .fst ≡ (SatW (opA a b)) .fst` を目標とする。`V` は h-集合なのでこの等式は命題であり、消去によって子の値や枠のデータの恒久的な選択が残ることはない。
 <!--/-->
 
 ```agda
@@ -715,10 +715,10 @@ The carrier coordinate remains in the original ambient environment and is reache
 <!--/-->
 
 ```agda
-                     → fst (lookup wi env) ≡ Wv → fst (lookup yai env) ≡ fst (SatW a)
-                     → ExtFact (fst (SatW (qA a))) (fst (envSet W n))
+                     → (lookup wi env) .fst ≡ Wv → (lookup yai env) .fst ≡ (SatW a) .fst
+                     → ExtFact ((SatW (qA a)) .fst) ((envSet W n) .fst)
                          (λ z → ⟨ (z ∷ env) ⊨ q (var (suc wi)) (∃̇∈ (var (suc (suc yai))) (consAtL i0 i1 i2)) ⟩))
-           → (cl1 : ⟨ fst (keyS W (qA a)) ∈ Cv ⟩ → ⟨ fst (keyS W a) ∈ Cv ⟩)
+           → (cl1 : ⟨ (keyS W (qA a)) .fst ∈ Cv ⟩ → ⟨ (keyS W a) .fst ∈ Cv ⟩)
            → Pinned a → Pinned (qA a)
 ```
 
@@ -809,10 +809,10 @@ The bridge identifies the recursively defined satisfaction set of the bounded fo
 
 ```agda
              (bridge : ∀ {j} (env : S ^ j) (wi ti yai N0i N1i : Fin j)
-                     → fst (lookup wi env) ≡ Wv → fst (lookup ti env) ≡ ct t → fst (lookup yai env) ≡ fst (SatW a)
-                     → fst (lookup N0i env) ≡ # 0 → fst (lookup N1i env) ≡ # 1
-                     → ExtFact (fst (SatW (qA t a))) (fst (envSet W n)) (λ z → ⟨ (z ∷ env) ⊨ body wi ti yai N0i N1i ⟩))
-           → (cl1 : ⟨ fst (keyS W (qA t a)) ∈ Cv ⟩ → ⟨ fst (keyS W a) ∈ Cv ⟩)
+                     → (lookup wi env) .fst ≡ Wv → (lookup ti env) .fst ≡ ct t → (lookup yai env) .fst ≡ (SatW a) .fst
+                     → (lookup N0i env) .fst ≡ # 0 → (lookup N1i env) .fst ≡ # 1
+                     → ExtFact ((SatW (qA t a)) .fst) ((envSet W n) .fst) (λ z → ⟨ (z ∷ env) ⊨ body wi ti yai N0i N1i ⟩))
+           → (cl1 : ⟨ (keyS W (qA t a)) .fst ∈ Cv ⟩ → ⟨ (keyS W a) .fst ∈ Cv ⟩)
 ```
 
 <!--en-->
@@ -844,7 +844,7 @@ After the clause witnesses have been read, the proof forms the extended environm
                 P : S → Type (ℓ-suc ℓ)
                 P z = ⟨ (z ∷ env) ⊨ R.bqBody q c ⟩
             in ext-unique y (SatW (qA t a)) (envSet W n) P ext
-                 (subst (λ φ → ExtFact (fst (SatW (qA t a))) (fst (envSet W n)) (λ z → ⟨ (z ∷ env) ⊨ φ ⟩))
+                 (subst (λ φ → ExtFact ((SatW (qA t a)) .fst) ((envSet W n) .fst) (λ z → ⟨ (z ∷ env) ⊨ φ ⟩))
 ```
 
 <!--en-->
@@ -904,9 +904,9 @@ The bridge parameter states the extension fact for the atomic formula: the satis
 <!--/-->
 
 ```agda
-                       → fst (lookup wi env) ≡ Wv → fst (lookup ti env) ≡ ct t → fst (lookup ui env) ≡ ct u
-                       → fst (lookup N0i env) ≡ # 0 → fst (lookup N1i env) ≡ # 1
-                       → ExtFact (fst (SatW (opA t u))) (fst (envSet W n)) (λ z → ⟨ (z ∷ env) ⊨ atomEx wi ti ui N0i N1i rel ⟩))
+                       → (lookup wi env) .fst ≡ Wv → (lookup ti env) .fst ≡ ct t → (lookup ui env) .fst ≡ ct u
+                       → (lookup N0i env) .fst ≡ # 0 → (lookup N1i env) .fst ≡ # 1
+                       → ExtFact ((SatW (opA t u)) .fst) ((envSet W n) .fst) (λ z → ⟨ (z ∷ env) ⊨ atomEx wi ti ui N0i N1i rel ⟩))
              → Pinned (opA t u)
     atomCase {n} opA k t u code rel relIs bridge c∈ y mem =
 ```
@@ -969,7 +969,7 @@ For the membership atom, satisfaction at the displayed environment is definition
 
 ```agda
     memAgree : ∀ {j} (env : S ^ j) (z v x : S)
-             → (⟨ (x ∷ v ∷ z ∷ env) ⊨ var i1 ∈̇ var i0 ⟩ → ⟨ fst v ∈ fst x ⟩) × (⟨ fst v ∈ fst x ⟩ → ⟨ (x ∷ v ∷ z ∷ env) ⊨ var i1 ∈̇ var i0 ⟩)
+             → (⟨ (x ∷ v ∷ z ∷ env) ⊨ var i1 ∈̇ var i0 ⟩ → ⟨ v .fst ∈ x .fst ⟩) × (⟨ v .fst ∈ x .fst ⟩ → ⟨ (x ∷ v ∷ z ∷ env) ⊨ var i1 ∈̇ var i0 ⟩)
     memAgree env z v x = (λ h → h) , (λ h → h)
 ```
 
@@ -983,7 +983,7 @@ The equality agreement says the same for the equality atom: the object-language 
 
 ```agda
     eqAgree : ∀ {j} (env : S ^ j) (z v x : S)
-            → (⟨ (x ∷ v ∷ z ∷ env) ⊨ var i1 ≐ var i0 ⟩ → fst v ≡ fst x) × ((fst v ≡ fst x) → ⟨ (x ∷ v ∷ z ∷ env) ⊨ var i1 ≐ var i0 ⟩)
+            → (⟨ (x ∷ v ∷ z ∷ env) ⊨ var i1 ≐ var i0 ⟩ → v .fst ≡ x .fst) × ((v .fst ≡ x .fst) → ⟨ (x ∷ v ∷ z ∷ env) ⊨ var i1 ≐ var i0 ⟩)
     eqAgree env z v x = (λ h → h) , (λ h → h)
 ```
 
@@ -998,7 +998,7 @@ The closure lemma for binary connectives reads the downward closure from the sha
 ```agda
     clSame : (n k : ℕ) → ⟨ γ ⊨ binShapeAt C k (bothSameAt C) ⟩
            → (ψ a b : Formula Ab n) → cd ψ ≡ pr (# k) (pr (cd a) (cd b))
-           → ⟨ fst (keyS W ψ) ∈ Cv ⟩ → ⟨ fst (keyS W a) ∈ Cv ⟩ × ⟨ fst (keyS W b) ∈ Cv ⟩
+           → ⟨ (keyS W ψ) .fst ∈ Cv ⟩ → ⟨ (keyS W a) .fst ∈ Cv ⟩ × ⟨ (keyS W b) .fst ∈ Cv ⟩
     clSame n k h ψ a b e c∈ =
       binSameClosed-out C k γ h (keyS W ψ) (nn n) (codeS W a) (codeS W b) c∈ (cong (pr (# n)) e)
 ```
@@ -1015,7 +1015,7 @@ The next form of the binary closure lemma fixes the two child formulas before th
     clBin : (n k : ℕ) (a b : Formula Ab n)
           → ⟨ γ ⊨ binShapeAt C k (bothSameAt C) ⟩
           → (ψ : Formula Ab n) → cd ψ ≡ pr (# k) (pr (cd a) (cd b))
-          → ⟨ fst (keyS W ψ) ∈ Cv ⟩ → ⟨ fst (keyS W a) ∈ Cv ⟩ × ⟨ fst (keyS W b) ∈ Cv ⟩
+          → ⟨ (keyS W ψ) .fst ∈ Cv ⟩ → ⟨ (keyS W a) .fst ∈ Cv ⟩ × ⟨ (keyS W b) .fst ∈ Cv ⟩
     clBin n k a b h ψ e = clSame n k h ψ a b e
 ```
 
@@ -1030,7 +1030,7 @@ For an unbounded quantifier, closure follows the sole formula component of the c
 ```agda
     clQu : (n k : ℕ) (a : Formula Ab (suc n)) (ψ : Formula Ab n)
          → ⟨ γ ⊨ unShapeAt C k (oneSuccAt C) ⟩ → cd ψ ≡ pr (# k) (cd a)
-         → ⟨ fst (keyS W ψ) ∈ Cv ⟩ → ⟨ fst (keyS W a) ∈ Cv ⟩
+         → ⟨ (keyS W ψ) .fst ∈ Cv ⟩ → ⟨ (keyS W a) .fst ∈ Cv ⟩
     clQu n k a ψ h e c∈ =
       unSuccClosed-out C k γ h (keyS W ψ) (nn n) (codeS W a) c∈ (cong (pr (# n)) e)
 ```
@@ -1046,7 +1046,7 @@ For a bounded quantifier, the payload contains a term code first and a body-form
 ```agda
     clBq : (n k : ℕ) (t : Term Ab n) (a : Formula Ab (suc n)) (ψ : Formula Ab n)
          → ⟨ γ ⊨ binShapeAt C k (succSndAt C) ⟩ → cd ψ ≡ pr (# k) (pr (ct t) (cd a))
-         → ⟨ fst (keyS W ψ) ∈ Cv ⟩ → ⟨ fst (keyS W a) ∈ Cv ⟩
+         → ⟨ (keyS W ψ) .fst ∈ Cv ⟩ → ⟨ (keyS W a) .fst ∈ Cv ⟩
     clBq n k t a ψ h e c∈ =
       binSuccClosed-out C k γ h (keyS W ψ) (nn n) tS (codeS W a) c∈ (cong (pr (# n)) e)
 ```
@@ -1189,16 +1189,16 @@ Fix the table, carrier, code-domain, and environment-tower slots in one environm
 <summary class="submodule-fold-heading">
 ```agda
   module SatHoldsC {m : ℕ} (T w C E : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m)
-    (qw : fst (lookup w γ) ≡ fst W) (tg : Tags γ N)
+    (qw : (lookup w γ) .fst ≡ W .fst) (tg : Tags γ N)
     (hE : ⟨ γ ⊨ towerAt E w (N f0) ⟩)
-    (val≡ : ∀ {n} (ψ : Formula Ab n) (c yc : S) → fst c ≡ fst (keyS W ψ)
-          → ⟨ pr (fst c) (fst yc) ∈ fst (lookup T γ) ⟩ → fst yc ≡ fst (SatW ψ))
-    (decode : (c : S) → ⟨ fst c ∈ fst (lookup C γ) ⟩ → (n : ℕ) (z : V ℓ)
-            → fst c ≡ pr (# n) z → ∥ Σ[ ψ ∶ Formula Ab n ] (z ≡ cd ψ) ∥₁)
-    (tot : (c : S) → ⟨ fst c ∈ fst (lookup C γ) ⟩
-         → ∥ Σ[ yc ∶ S ] ⟨ pr (fst c) (fst yc) ∈ fst (lookup T γ) ⟩ ∥₁)
-    (onc : (e : S) → ⟨ fst e ∈ fst (lookup T γ) ⟩
-         → ∥ Σ[ c ∶ S ] Σ[ yc ∶ S ] ((fst e ≡ pr (fst c) (fst yc)) × ⟨ fst c ∈ fst (lookup C γ) ⟩) ∥₁)
+    (val≡ : ∀ {n} (ψ : Formula Ab n) (c yc : S) → c .fst ≡ (keyS W ψ) .fst
+          → ⟨ pr (c .fst) (yc .fst) ∈ (lookup T γ) .fst ⟩ → yc .fst ≡ (SatW ψ) .fst)
+    (decode : (c : S) → ⟨ c .fst ∈ (lookup C γ) .fst ⟩ → (n : ℕ) (z : V ℓ)
+            → c .fst ≡ pr (# n) z → ∥ Σ[ ψ ∶ Formula Ab n ] (z ≡ cd ψ) ∥₁)
+    (tot : (c : S) → ⟨ c .fst ∈ (lookup C γ) .fst ⟩
+         → ∥ Σ[ yc ∶ S ] ⟨ pr (c .fst) (yc .fst) ∈ (lookup T γ) .fst ⟩ ∥₁)
+    (onc : (e : S) → ⟨ e .fst ∈ (lookup T γ) .fst ⟩
+         → ∥ Σ[ c ∶ S ] Σ[ yc ∶ S ] ((e .fst ≡ pr (c .fst) (yc .fst)) × ⟨ c .fst ∈ (lookup C γ) .fst ⟩) ∥₁)
     where
 ```
 </summary>
@@ -1222,8 +1222,8 @@ The final assumption finishes the domain condition by requiring every represente
 
 ```agda
     private
-      Tv = fst (lookup T γ)
-      Cv = fst (lookup C γ)
+      Tv = (lookup T γ) .fst
+      Cv = (lookup C γ) .fst
 ```
 
 <!--en-->
@@ -1235,8 +1235,8 @@ We also name the underlying environment-tower set and the carrier. The frame, cl
 <!--/-->
 
 ```agda
-      Ev = fst (lookup E γ)
-      Wv = fst W
+      Ev = (lookup E γ) .fst
+      Wv = W .fst
       module Fr = Frame T w C E N γ tg
       module Cl = Clause T w C E N
       module R = Rel T w N
@@ -1252,7 +1252,7 @@ We also name the underlying environment-tower set and the carrier. The frame, cl
 
 ```agda
       Arity : (ar F : S) → Type (ℓ-suc ℓ)
-      Arity ar F = ∥ Σ[ n ∶ ℕ ] ((fst ar ≡ # n) × (fst F ≡ fst (envSet W n))) ∥₁
+      Arity ar F = ∥ Σ[ n ∶ ℕ ] ((ar .fst ≡ # n) × (F .fst ≡ (envSet W n) .fst)) ∥₁
 ```
 
 <!--en-->
@@ -1264,7 +1264,7 @@ To obtain such arity evidence, present an element `q` of the environment tower a
 <!--/-->
 
 ```agda
-      arity : (q ar F : S) → ⟨ fst q ∈ Ev ⟩ → fst q ≡ pr (fst ar) (fst F) → Arity ar F
+      arity : (q ar F : S) → ⟨ q .fst ∈ Ev ⟩ → q .fst ≡ pr (ar .fst) (F .fst) → Arity ar F
       module TR = TowerRead E w (N f0) γ W qw (tg f0) hE
 ```
 
@@ -1318,8 +1318,8 @@ Each constructor clause is tested on the same twelve-object configuration. The f
       record Args (k : Fin 10) : Type (ℓ-suc ℓ) where
         field
           q ar F s c p s1 r s2 e yc s3 : S
-          q∈ : ⟨ fst q ∈ Ev ⟩
-          eq : fst q ≡ pr (fst ar) (fst F)
+          q∈ : ⟨ q .fst ∈ Ev ⟩
+          eq : q .fst ≡ pr (ar .fst) (F .fst)
 ```
 
 <!--en-->
@@ -1331,11 +1331,11 @@ The remaining fields state the relations that make those objects one coherent fr
 <!--/-->
 
 ```agda
-          c∈ : ⟨ fst c ∈ Cv ⟩
-          ec : fst c ≡ pr (fst ar) (fst p)
-          ep : fst p ≡ pr (# (toℕ k)) (fst r)
-          e∈ : ⟨ fst e ∈ Tv ⟩
-          ee : fst e ≡ pr (fst c) (fst yc)
+          c∈ : ⟨ c .fst ∈ Cv ⟩
+          ec : c .fst ≡ pr (ar .fst) (p .fst)
+          ep : p .fst ≡ pr (# (toℕ k)) (r .fst)
+          e∈ : ⟨ e .fst ∈ Tv ⟩
+          ee : e .fst ≡ pr (c .fst) (yc .fst)
 ```
 
 <!--en-->
@@ -1399,21 +1399,21 @@ This goal is proposition-valued because satisfaction of any formula in the struc
 
 ```agda
         isPropGoal : isProp Goal
-        isPropGoal = snd (frame ⊨ R.relN (toℕ k))
+        isPropGoal = (frame ⊨ R.relN (toℕ k)) .snd
 ```
 
 <!--en-->
-The transfer lemma is the key move: given the arity equation, the environment-set equation, the formula-code equation `fst p ≡ cd ψ`, and an extension fact for the satisfaction set of `ψ`, it produces the corresponding extension fact for the table value at the frame. The three equations align the frame's arity, environment set, and formula-code object with those of the recursive satisfaction set.
+The transfer lemma is the key move: given the arity equation, the environment-set equation, the formula-code equation `p .fst ≡ cd ψ`, and an extension fact for the satisfaction set of `ψ`, it produces the corresponding extension fact for the table value at the frame. The three equations align the frame's arity, environment set, and formula-code object with those of the recursive satisfaction set.
 <!--zh-->
-转移引理是关键步骤：给定元数等式、环境集等式、公式码等式 `fst p ≡ cd ψ`，以及 `ψ` 的满足关系集合之外延事实，它便产出框架处表取值的相应外延事实。这三条等式分别把框架中的元数、环境集与公式码对象同递归满足关系集合所用的数据对齐。
+转移引理是关键步骤：给定元数等式、环境集等式、公式码等式 `p .fst ≡ cd ψ`，以及 `ψ` 的满足关系集合之外延事实，它便产出框架处表取值的相应外延事实。这三条等式分别把框架中的元数、环境集与公式码对象同递归满足关系集合所用的数据对齐。
 <!--ja-->
-移行の補題が重要なステップである。アリティの等式、環境集合の等式、論理式符号の等式 `fst p ≡ cd ψ`、そして `ψ` の充足関係集合についての外延事実が与えられると、枠にある表の値について対応する外延事実を作る。この三つの等式は、枠のアリティ、環境集合、論理式符号の対象を、再帰的な充足関係集合が用いるデータにそろえる。
+移行の補題が重要なステップである。アリティの等式、環境集合の等式、論理式符号の等式 `p .fst ≡ cd ψ`、そして `ψ` の充足関係集合についての外延事実が与えられると、枠にある表の値について対応する外延事実を作る。この三つの等式は、枠のアリティ、環境集合、論理式符号の対象を、再帰的な充足関係集合が用いるデータにそろえる。
 <!--/-->
 
 ```agda
-        transfer : (n : ℕ) (ψ : Formula Ab n) → fst ar ≡ # n → fst F ≡ fst (envSet W n)
-                 → fst p ≡ cd ψ → {j : ℕ} (env : S ^ j) (φ : Formula S (1 + j))
-                 → ExtFact (fst (SatW ψ)) (fst (envSet W n)) (λ z → ⟨ (z ∷ env) ⊨ φ ⟩)
+        transfer : (n : ℕ) (ψ : Formula Ab n) → ar .fst ≡ # n → F .fst ≡ (envSet W n) .fst
+                 → p .fst ≡ cd ψ → {j : ℕ} (env : S ^ j) (φ : Formula S (1 + j))
+                 → ExtFact ((SatW ψ) .fst) ((envSet W n) .fst) (λ z → ⟨ (z ∷ env) ⊨ φ ⟩)
                  → RR.Ext env φ
         transfer n ψ qa qF qp env φ ext =
 ```
@@ -1440,9 +1440,9 @@ The sub-value lemma applies the value-agreement hypothesis at a child entry of t
 <!--/-->
 
 ```agda
-        subVal : (n : ℕ) (a : Formula Ab n) (c₁ ya e₁ : S) → fst ar ≡ # n
-               → ⟨ fst e₁ ∈ Tv ⟩ → fst e₁ ≡ pr (fst c₁) (fst ya) → fst c₁ ≡ pr (fst ar) (cd a)
-               → fst ya ≡ fst (SatW a)
+        subVal : (n : ℕ) (a : Formula Ab n) (c₁ ya e₁ : S) → ar .fst ≡ # n
+               → ⟨ e₁ .fst ∈ Tv ⟩ → e₁ .fst ≡ pr (c₁ .fst) (ya .fst) → c₁ .fst ≡ pr (ar .fst) (cd a)
+               → ya .fst ≡ (SatW a) .fst
         subVal n a c₁ ya e₁ qa e₁∈ ee₁ e₁' =
           val≡ a c₁ ya (e₁' ∙ cong (λ v → pr v (cd a)) qa) (subst (λ u → ⟨ u ∈ Tv ⟩) ee₁ e₁∈)
 ```
@@ -1456,9 +1456,9 @@ For a quantified body, the child key has successor arity. The additional equatio
 <!--/-->
 
 ```agda
-        subValS : (n : ℕ) (a : Formula Ab (suc n)) (c₁ ya e₁ ar' : S) → fst ar ≡ # n
-                → ⟨ fst e₁ ∈ Tv ⟩ → fst e₁ ≡ pr (fst c₁) (fst ya) → fst c₁ ≡ pr (fst ar') (cd a) → fst ar' ≡ sucV (fst ar)
-                → fst ya ≡ fst (SatW a)
+        subValS : (n : ℕ) (a : Formula Ab (suc n)) (c₁ ya e₁ ar' : S) → ar .fst ≡ # n
+                → ⟨ e₁ .fst ∈ Tv ⟩ → e₁ .fst ≡ pr (c₁ .fst) (ya .fst) → c₁ .fst ≡ pr (ar' .fst) (cd a) → ar' .fst ≡ sucV (ar .fst)
+                → ya .fst ≡ (SatW a) .fst
         subValS n a c₁ ya e₁ ar' qa e₁∈ ee₁ e₁' es =
           val≡ a c₁ ya (e₁' ∙ cong (λ v → pr v (cd a)) (es ∙ cong sucV qa)) (subst (λ u → ⟨ u ∈ Tv ⟩) ee₁ e₁∈)
 ```
@@ -1473,8 +1473,8 @@ The data type collects the decoded arity, environment set, formula, and tag matc
 
 ```agda
         Data : Type (ℓ-suc ℓ)
-        Data = Σ[ n ∶ ℕ ] ((fst ar ≡ # n) × ((fst F ≡ fst (envSet W n))
-                 × (Σ[ ψ ∶ Formula Ab n ] ((fst p ≡ cd ψ) × MatchN (toℕ k) ψ (fst r)))))
+        Data = Σ[ n ∶ ℕ ] ((ar .fst ≡ # n) × ((F .fst ≡ (envSet W n) .fst)
+                 × (Σ[ ψ ∶ Formula Ab n ] ((p .fst ≡ cd ψ) × MatchN (toℕ k) ψ (r .fst)))))
 ```
 
 <!--en-->
@@ -1489,8 +1489,8 @@ The evidence in `data'` remains under propositional truncation throughout. First
         data' : ∥ Data ∥₁
         data' = rec₁ squash₁
           (λ { (n , (qa , qF)) → map₁
-            (λ { (ψ , qp) → n , (qa , qF , ψ , (qp , matchAt ψ (toℕ k) (fst r) (sym qp ∙ ep))) })
-            (decode c c∈ n (fst p) (ec ∙ cong (λ v → pr v (fst p)) qa)) })
+            (λ { (ψ , qp) → n , (qa , qF , ψ , (qp , matchAt ψ (toℕ k) (r .fst) (sym qp ∙ ep))) })
+            (decode c c∈ n (p .fst) (ec ∙ cong (λ v → pr v (p .fst)) qa)) })
 ```
 
 <!--en-->
@@ -1517,8 +1517,8 @@ For any binary constructor, the two child entries are first identified with the 
         module BinFill (op : ∀ {j} → Formula S j → Formula S j → Formula S j)
           (opA : ∀ {j} → Formula Ab j → Formula Ab j → Formula Ab j)
           (bridge : ∀ {n} (a b : Formula Ab n) {j : ℕ} (env : S ^ j) (ya yb : Fin j)
-                  → fst (lookup ya env) ≡ fst (SatW a) → fst (lookup yb env) ≡ fst (SatW b)
-                  → ExtFact (fst (SatW (opA a b))) (fst (envSet W n))
+                  → (lookup ya env) .fst ≡ (SatW a) .fst → (lookup yb env) .fst ≡ (SatW b) .fst
+                  → ExtFact ((SatW (opA a b)) .fst) ((envSet W n) .fst)
 ```
 
 <!--en-->
@@ -1542,11 +1542,11 @@ The payload equation says that the frame's payload is the pair of the two child 
 <!--/-->
 
 ```agda
-          go : (n : ℕ) (a b ψ : Formula Ab n) → fst ar ≡ # n → fst F ≡ fst (envSet W n)
-             → fst p ≡ cd ψ → ψ ≡ opA a b → fst r ≡ pr (cd a) (cd b) → ⟨ frame ⊨ R.binRel op ⟩
+          go : (n : ℕ) (a b ψ : Formula Ab n) → ar .fst ≡ # n → F .fst ≡ (envSet W n) .fst
+             → p .fst ≡ cd ψ → ψ ≡ opA a b → r .fst ≡ pr (cd a) (cd b) → ⟨ frame ⊨ R.binRel op ⟩
           go n a b ψ qa qF qp qψ qr = RR.bin-in op (λ a' b' s' c₁ ya s₁ e₁ c₂ yb s₂ e₂ er e₁∈ ee₁ e₁' e₂∈ ee₂ e₂' →
             let q' = pr-inj (sym er ∙ qr)
-                ya≡ = subVal n a c₁ ya e₁ qa e₁∈ ee₁ (e₁' ∙ cong (pr (fst ar)) (q' .fst))
+                ya≡ = subVal n a c₁ ya e₁ qa e₁∈ ee₁ (e₁' ∙ cong (pr (ar .fst)) (q' .fst))
 ```
 
 <!--en-->
@@ -1558,7 +1558,7 @@ These two child equalities are placed in the same extended environment as the co
 <!--/-->
 
 ```agda
-                yb≡ = subVal n b c₂ yb e₂ qa e₂∈ ee₂ (e₂' ∙ cong (pr (fst ar)) (q' .snd))
+                yb≡ = subVal n b c₂ yb e₂ qa e₂∈ ee₂ (e₂' ∙ cong (pr (ar .fst)) (q' .snd))
                 env = yb ∷ c₂ ∷ s₂ ∷ e₂ ∷ ya ∷ c₁ ∷ s₁ ∷ e₁ ∷ b' ∷ a' ∷ s' ∷ frame
             in transfer n (opA a b) qa qF (qp ∙ cong cd qψ) env (R.binBody op)
                  (bridge a b env i4 i0 ya≡ yb≡))
@@ -1576,8 +1576,8 @@ For an unbounded quantified formula, the recursive child has successor arity, wh
         module QuFill (q' : ∀ {j} → Term S j → Formula S (suc j) → Formula S j)
           (qA : ∀ {j} → Formula Ab (suc j) → Formula Ab j)
           (bridge : ∀ {n} (a : Formula Ab (suc n)) {j : ℕ} (env : S ^ j) (wi yai : Fin j)
-                  → fst (lookup wi env) ≡ Wv → fst (lookup yai env) ≡ fst (SatW a)
-                  → ExtFact (fst (SatW (qA a))) (fst (envSet W n))
+                  → (lookup wi env) .fst ≡ Wv → (lookup yai env) .fst ≡ (SatW a) .fst
+                  → ExtFact ((SatW (qA a)) .fst) ((envSet W n) .fst)
 ```
 
 <!--en-->
@@ -1601,10 +1601,10 @@ The decoded formula has arity `n`, whereas its quantified body has arity `suc n`
 <!--/-->
 
 ```agda
-          go : (n : ℕ) (a : Formula Ab (suc n)) (ψ : Formula Ab n) → fst ar ≡ # n → fst F ≡ fst (envSet W n)
-             → fst p ≡ cd ψ → ψ ≡ qA a → fst r ≡ cd a → ⟨ frame ⊨ R.quRel q' ⟩
+          go : (n : ℕ) (a : Formula Ab (suc n)) (ψ : Formula Ab n) → ar .fst ≡ # n → F .fst ≡ (envSet W n) .fst
+             → p .fst ≡ cd ψ → ψ ≡ qA a → r .fst ≡ cd a → ⟨ frame ⊨ R.quRel q' ⟩
           go n a ψ qa qF qp qψ qr = RR.qu-in q' (λ c₁ ya ar' s' s'' e' e'∈ ee₁ e₁' es →
-            let ya≡ = subValS n a c₁ ya e' ar' qa e'∈ ee₁ (e₁' ∙ cong (pr (fst ar')) qr) es
+            let ya≡ = subValS n a c₁ ya e' ar' qa e'∈ ee₁ (e₁' ∙ cong (pr (ar' .fst)) qr) es
                 env = ar' ∷ s'' ∷ ya ∷ c₁ ∷ s' ∷ e' ∷ frame
 ```
 
@@ -1650,7 +1650,7 @@ The equation `bodyIs` identifies the generic clause body with its three bounded 
                   ≡ q' (var (suc wi)) (c' (tmIs (suc (suc ti)) i1 i0 (suc (suc N0i)) (suc (suc N1i)))
                       (q' (var (suc (suc wi))) (c' (var i0 ∈̇ var i1) (∃̇∈ (var (suc (suc (suc yai)))) (consAtL i0 i1 i3))))))
           (bridge : ∀ {n} (t : Term Ab n) (a : Formula Ab (suc n)) {j : ℕ} (env : S ^ j) (wi ti yai N0i N1i : Fin j)
-                  → fst (lookup wi env) ≡ Wv → fst (lookup ti env) ≡ ct t → fst (lookup yai env) ≡ fst (SatW a)
+                  → (lookup wi env) .fst ≡ Wv → (lookup ti env) .fst ≡ ct t → (lookup yai env) .fst ≡ (SatW a) .fst
 ```
 
 <!--en-->
@@ -1662,8 +1662,8 @@ The bridge assumes five equalities locating, in one environment, the carrier, th
 <!--/-->
 
 ```agda
-                  → fst (lookup N0i env) ≡ # 0 → fst (lookup N1i env) ≡ # 1
-                  → ExtFact (fst (SatW (qA t a))) (fst (envSet W n)) (λ z → ⟨ (z ∷ env) ⊨ body wi ti yai N0i N1i ⟩)) where
+                  → (lookup N0i env) .fst ≡ # 0 → (lookup N1i env) .fst ≡ # 1
+                  → ExtFact ((SatW (qA t a)) .fst) ((envSet W n) .fst) (λ z → ⟨ (z ∷ env) ⊨ body wi ti yai N0i N1i ⟩)) where
 ```
 
 <!--en-->
@@ -1675,11 +1675,11 @@ Pair injectivity separates the bounded payload into its term-code component and 
 <!--/-->
 
 ```agda
-          go : (n : ℕ) (t : Term Ab n) (a : Formula Ab (suc n)) (ψ : Formula Ab n) → fst ar ≡ # n → fst F ≡ fst (envSet W n)
-             → fst p ≡ cd ψ → ψ ≡ qA t a → fst r ≡ pr (ct t) (cd a) → ⟨ frame ⊨ R.bqRel q' c' ⟩
+          go : (n : ℕ) (t : Term Ab n) (a : Formula Ab (suc n)) (ψ : Formula Ab n) → ar .fst ≡ # n → F .fst ≡ (envSet W n) .fst
+             → p .fst ≡ cd ψ → ψ ≡ qA t a → r .fst ≡ pr (ct t) (cd a) → ⟨ frame ⊨ R.bqRel q' c' ⟩
           go n t a ψ qa qF qp qψ qr = RR.bq-in q' c' (λ t' a' s' c₁ ya ar' s₁ s'' e' er e'∈ ee₁ e₁' es →
             let q'' = pr-inj (sym er ∙ qr)
-                ya≡ = subValS n a c₁ ya e' ar' qa e'∈ ee₁ (e₁' ∙ cong (pr (fst ar')) (q'' .snd)) es
+                ya≡ = subValS n a c₁ ya e' ar' qa e'∈ ee₁ (e₁' ∙ cong (pr (ar' .fst)) (q'' .snd)) es
 ```
 
 <!--en-->
@@ -1693,7 +1693,7 @@ The concrete bridge proves the extension fact in the canonical bounded-quantifie
 ```agda
                 env = ar' ∷ s'' ∷ ya ∷ c₁ ∷ s₁ ∷ e' ∷ a' ∷ t' ∷ s' ∷ frame
             in transfer n (qA t a) qa qF (qp ∙ cong cd qψ) env (R.bqBody q' c')
-                   (subst (λ φ → ExtFact (fst (SatW (qA t a))) (fst (envSet W n)) (λ z → ⟨ (z ∷ env) ⊨ φ ⟩))
+                   (subst (λ φ → ExtFact ((SatW (qA t a)) .fst) ((envSet W n) .fst) (λ z → ⟨ (z ∷ env) ⊨ φ ⟩))
                      (bodyIs (sh 21 w) i7 i2 (sh 21 (N f0)) (sh 21 (N f1)))
                      (bridge t a env (sh 21 w) i7 i2 (sh 21 (N f0)) (sh 21 (N f1)) qw (q'' .fst) ya≡ (tg f0) (tg f1))))
 ```
@@ -1709,9 +1709,9 @@ An atomic formula has two term codes but no recursive formula child. Its generic
 ```agda
         module AtomFill (opA : ∀ {j} → Term Ab j → Term Ab j → Formula Ab j) (rel : Formula S (18 + m))
           (bridge : ∀ {n} (t u : Term Ab n) (env : S ^ (15 + m)) (wi ti ui N0i N1i : Fin (15 + m))
-                  → fst (lookup wi env) ≡ Wv → fst (lookup ti env) ≡ ct t → fst (lookup ui env) ≡ ct u
-                  → fst (lookup N0i env) ≡ # 0 → fst (lookup N1i env) ≡ # 1
-                  → ExtFact (fst (SatW (opA t u))) (fst (envSet W n)) (λ z → ⟨ (z ∷ env) ⊨ atomEx wi ti ui N0i N1i rel ⟩)) where
+                  → (lookup wi env) .fst ≡ Wv → (lookup ti env) .fst ≡ ct t → (lookup ui env) .fst ≡ ct u
+                  → (lookup N0i env) .fst ≡ # 0 → (lookup N1i env) .fst ≡ # 1
+                  → ExtFact ((SatW (opA t u)) .fst) ((envSet W n) .fst) (λ z → ⟨ (z ∷ env) ⊨ atomEx wi ti ui N0i N1i rel ⟩)) where
 ```
 
 <!--en-->
@@ -1723,8 +1723,8 @@ The payload equation is again a pair equation, now separating the codes of the t
 <!--/-->
 
 ```agda
-          go : (n : ℕ) (t u : Term Ab n) (ψ : Formula Ab n) → fst ar ≡ # n → fst F ≡ fst (envSet W n)
-             → fst p ≡ cd ψ → ψ ≡ opA t u → fst r ≡ pr (ct t) (ct u) → ⟨ frame ⊨ R.atomRel rel ⟩
+          go : (n : ℕ) (t u : Term Ab n) (ψ : Formula Ab n) → ar .fst ≡ # n → F .fst ≡ (envSet W n) .fst
+             → p .fst ≡ cd ψ → ψ ≡ opA t u → r .fst ≡ pr (ct t) (ct u) → ⟨ frame ⊨ R.atomRel rel ⟩
           go n t u ψ qa qF qp qψ qr = RR.atom-in rel (λ t' u' s' er →
             let q' = pr-inj (sym er ∙ qr)
                 env = u' ∷ t' ∷ s' ∷ frame
@@ -1752,8 +1752,8 @@ Bottom has neither term data nor a formula child. Its bridge says directly that 
 <!--/-->
 
 ```agda
-        botGo : (n : ℕ) (ψ : Formula Ab n) → fst ar ≡ # n → fst F ≡ fst (envSet W n)
-              → fst p ≡ cd ψ → ψ ≡ ⊥̇ → ⟨ frame ⊨ R.botRel ⟩
+        botGo : (n : ℕ) (ψ : Formula Ab n) → ar .fst ≡ # n → F .fst ≡ (envSet W n) .fst
+              → p .fst ≡ cd ψ → ψ ≡ ⊥̇ → ⟨ frame ⊨ R.botRel ⟩
         botGo n ψ qa qF qp qψ = extB-in i0 i8 ⊥̇ frame
           (transfer n ⊥̇ qa qF (qp ∙ cong cd qψ) frame ⊥̇ (botBridge n frame))
 ```
@@ -1949,8 +1949,8 @@ If `x` belongs to the slot generated by `ψ`, then, under propositional truncati
 
 ```agda
   slotAb : ∀ {n} (ψ : Formula Ab n) (x : V ℓ)
-         → ⟨ x ∈ fst (slot W (toS ψ)) ⟩
-         → ∥ Σ[ m ∶ ℕ ] Σ[ χ ∶ Formula Ab m ] (x ≡ fst (keyS W χ)) ∥₁
+         → ⟨ x ∈ (slot W (toS ψ)) .fst ⟩
+         → ∥ Σ[ m ∶ ℕ ] Σ[ χ ∶ Formula Ab m ] (x ≡ (keyS W χ) .fst) ∥₁
   slotAb ψ x h = map₁
     (λ { (m , χ , e , _) → m , χ , (e ∙ sym (keyBridge W χ)) })
 ```
@@ -1964,7 +1964,7 @@ The local equality `mapped ψ` first rewrites the concrete slot as the generic t
 <!--/-->
 
 ```agda
-    (tree-inv key key ψ x (subst (λ y → ⟨ x ∈ fst y ⟩) (mapped ψ) h))
+    (tree-inv key key ψ x (subst (λ y → ⟨ x ∈ y .fst ⟩) (mapped ψ) h))
     where
     key : ∀ {n} → Formula Ab n → S
     key χ = keyʟ (toS χ)
@@ -2026,10 +2026,10 @@ The bounded universal and existential cases also contribute only the formula bod
 <summary class="submodule-fold-heading">
 ```agda
   module SlotHolds {m : ℕ} (T w C E : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m)
-    (qw : fst (lookup w γ) ≡ fst W) (tg : Tags γ N)
+    (qw : (lookup w γ) .fst ≡ W .fst) (tg : Tags γ N)
     (hE : ⟨ γ ⊨ towerAt E w (N f0) ⟩) {n0 : ℕ} (ψ0 : Formula Ab n0)
-    (qT : fst (lookup T γ) ≡ fst (satTable W (toS ψ0)))
-    (qC : fst (lookup C γ) ≡ fst (slot W (toS ψ0))) where
+    (qT : (lookup T γ) .fst ≡ (satTable W (toS ψ0)) .fst)
+    (qC : (lookup C γ) .fst ≡ (slot W (toS ψ0)) .fst) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -2044,36 +2044,36 @@ Only two underlying sets are abbreviated: `Tv` is the relation stored at the tab
 
 ```agda
     private
-      Tv = fst (lookup T γ)
-      Cv = fst (lookup C γ)
+      Tv = (lookup T γ) .fst
+      Cv = (lookup C γ) .fst
 ```
 
 <!--en-->
-Suppose `c` has the same underlying set as the key of a formula `ψ`, and `(c,yc)` is represented in `Tv`. Rewriting by `keyBridge` and `qT` turns this into an entry of the canonical table generated by `ψ0`; `entry-out` then proves `fst yc ≡ fst (SatW ψ)`. This pins a supplied value at a genuine formula key, but does not assert that such an entry exists.
+Suppose `c` has the same underlying set as the key of a formula `ψ`, and `(c,yc)` is represented in `Tv`. Rewriting by `keyBridge` and `qT` turns this into an entry of the canonical table generated by `ψ0`; `entry-out` then proves `yc .fst ≡ (SatW ψ) .fst`. This pins a supplied value at a genuine formula key, but does not assert that such an entry exists.
 <!--zh-->
-设 `c` 的底层集合等于公式 `ψ` 的键，且 `(c,yc)` 在 `Tv` 中被表示。沿 `keyBridge` 与 `qT` 改写后，它成为 `ψ0` 生成的典范表中的一个条目；`entry-out` 因而证明 `fst yc ≡ fst (SatW ψ)`。该结论固定了真实公式键处一个已经给出的取值，却不宣称这样的条目必然存在。
+设 `c` 的底层集合等于公式 `ψ` 的键，且 `(c,yc)` 在 `Tv` 中被表示。沿 `keyBridge` 与 `qT` 改写后，它成为 `ψ0` 生成的典范表中的一个条目；`entry-out` 因而证明 `yc .fst ≡ (SatW ψ) .fst`。该结论固定了真实公式键处一个已经给出的取值，却不宣称这样的条目必然存在。
 <!--ja-->
-`c` の底集合が論理式 `ψ` の鍵に等しく、`(c,yc)` が `Tv` に表されているとする。`keyBridge` と `qT` に沿って書き換えると、これは `ψ0` の生成する正準な表の項目になり、`entry-out` によって `fst yc ≡ fst (SatW ψ)` が得られる。この結論は正しい論理式の鍵において、すでに与えられた値を固定するが、そのような項目の存在を主張するものではない。
+`c` の底集合が論理式 `ψ` の鍵に等しく、`(c,yc)` が `Tv` に表されているとする。`keyBridge` と `qT` に沿って書き換えると、これは `ψ0` の生成する正準な表の項目になり、`entry-out` によって `yc .fst ≡ (SatW ψ) .fst` が得られる。この結論は正しい論理式の鍵において、すでに与えられた値を固定するが、そのような項目の存在を主張するものではない。
 <!--/-->
 
 ```agda
-      val≡ : ∀ {n} (ψ : Formula Ab n) (c yc : S) → fst c ≡ fst (keyS W ψ)
-           → ⟨ pr (fst c) (fst yc) ∈ Tv ⟩ → fst yc ≡ fst (SatW ψ)
-      val≡ ψ c yc qc h = entry-out W (toS ψ0) (toS ψ) (fst yc)
-        (subst2 (λ u v → ⟨ pr u (fst yc) ∈ v ⟩) (qc ∙ keyBridge W ψ) qT h)
+      val≡ : ∀ {n} (ψ : Formula Ab n) (c yc : S) → c .fst ≡ (keyS W ψ) .fst
+           → ⟨ pr (c .fst) (yc .fst) ∈ Tv ⟩ → yc .fst ≡ (SatW ψ) .fst
+      val≡ ψ c yc qc h = entry-out W (toS ψ0) (toS ψ) (yc .fst)
+        (subst2 (λ u v → ⟨ pr u (yc .fst) ∈ v ⟩) (qc ∙ keyBridge W ψ) qT h)
 ```
 
 <!--en-->
-Decoding starts with both membership `c ∈ Cv` and a specified arity presentation `fst c ≡ pr (# n) z`. After transporting membership through `qC`, `slotAb` gives, under propositional truncation, some formula at some arity whose key is `c`. The remaining work must show that this hidden arity is exactly `n` and that its formula code is exactly `z`.
+Decoding starts with both membership `c ∈ Cv` and a specified arity presentation `c .fst ≡ pr (# n) z`. After transporting membership through `qC`, `slotAb` gives, under propositional truncation, some formula at some arity whose key is `c`. The remaining work must show that this hidden arity is exactly `n` and that its formula code is exactly `z`.
 <!--zh-->
-解码同时从成员关系 `c ∈ Cv` 与指定的元数表示 `fst c ≡ pr (# n) z` 出发。沿 `qC` 搬运成员关系后，`slotAb` 在命题截断下给出某个元数处的一条公式，其键为 `c`。余下工作必须证明这个被隐藏的元数恰为 `n`，且该公式码恰为 `z`。
+解码同时从成员关系 `c ∈ Cv` 与指定的元数表示 `c .fst ≡ pr (# n) z` 出发。沿 `qC` 搬运成员关系后，`slotAb` 在命题截断下给出某个元数处的一条公式，其键为 `c`。余下工作必须证明这个被隐藏的元数恰为 `n`，且该公式码恰为 `z`。
 <!--ja-->
-復号は、所属 `c ∈ Cv` と、指定されたアリティ表示 `fst c ≡ pr (# n) z` の両方から始まる。所属を `qC` に沿って運ぶと、`slotAb` は、あるアリティの論理式でその鍵が `c` であるものを命題的切り詰めの下で与える。残る仕事は、この隠されたアリティがちょうど `n` であり、その論理式の符号がちょうど `z` であることを示すことである。
+復号は、所属 `c ∈ Cv` と、指定されたアリティ表示 `c .fst ≡ pr (# n) z` の両方から始まる。所属を `qC` に沿って運ぶと、`slotAb` は、あるアリティの論理式でその鍵が `c` であるものを命題的切り詰めの下で与える。残る仕事は、この隠されたアリティがちょうど `n` であり、その論理式の符号がちょうど `z` であることを示すことである。
 <!--/-->
 
 ```agda
-      decode : (c : S) → ⟨ fst c ∈ Cv ⟩ → (n : ℕ) (z : V ℓ)
-             → fst c ≡ pr (# n) z → ∥ Σ[ ψ ∶ Formula Ab n ] (z ≡ cd ψ) ∥₁
+      decode : (c : S) → ⟨ c .fst ∈ Cv ⟩ → (n : ℕ) (z : V ℓ)
+             → c .fst ≡ pr (# n) z → ∥ Σ[ ψ ∶ Formula Ab n ] (z ≡ cd ψ) ∥₁
       decode c c∈ n z e = map₁
         (λ { (n₁ , ψ₁ , e₁) →
           let q = pr-inj (sym e₁ ∙ e)
@@ -2090,7 +2090,7 @@ The two equations for `c` give an equality between pairs. Pair injectivity compa
 ```agda
               nq = #-inj′ (q .fst)
           in subst (Formula Ab) nq ψ₁ , (sym (q .snd) ∙ sym (cd-subst nq ψ₁)) })
-        (slotAb ψ0 (fst c) (subst (λ u → ⟨ fst c ∈ u ⟩) qC c∈))
+        (slotAb ψ0 (c .fst) (subst (λ u → ⟨ c .fst ∈ u ⟩) qC c∈))
 ```
 
 <!--en-->
@@ -2102,23 +2102,23 @@ For each `c ∈ Cv`, transport by `qC` places `c` in the canonical slot, where `
 <!--/-->
 
 ```agda
-      tot : (c : S) → ⟨ fst c ∈ Cv ⟩ → ∥ Σ[ yc ∶ S ] ⟨ pr (fst c) (fst yc) ∈ Tv ⟩ ∥₁
+      tot : (c : S) → ⟨ c .fst ∈ Cv ⟩ → ∥ Σ[ yc ∶ S ] ⟨ pr (c .fst) (yc .fst) ∈ Tv ⟩ ∥₁
       tot c c∈ = map₁
-        (λ { (y , h) → y , subst (λ u → ⟨ pr (fst c) (fst y) ∈ u ⟩) (sym qT) h })
-        (slotTotal W (toS ψ0) (fst c) (subst (λ u → ⟨ fst c ∈ u ⟩) qC c∈))
+        (λ { (y , h) → y , subst (λ u → ⟨ pr (c .fst) (y .fst) ∈ u ⟩) (sym qT) h })
+        (slotTotal W (toS ψ0) (c .fst) (subst (λ u → ⟨ c .fst ∈ u ⟩) qC c∈))
 ```
 
 <!--en-->
-For a member `e` of `Tv`, the equation `qT` first transports its membership to the canonical satisfaction table. The inversion `ent-slot` then yields, under propositional truncation, an arity `m`, a formula `χ`, and an equality between `fst e` and the underlying set of the canonical entry contributed by `χ`. Composing that equality with `prʟ-fst` gives `fst e ≡ pr (fst (keyʟ χ)) (fst (Sat W χ))`.
+For a member `e` of `Tv`, the equation `qT` first transports its membership to the canonical satisfaction table. The inversion `ent-slot` then yields, under propositional truncation, an arity `m`, a formula `χ`, and an equality between `e .fst` and the underlying set of the canonical entry contributed by `χ`. Composing that equality with `prʟ-fst` gives `e .fst ≡ pr ((keyʟ χ) .fst) ((Sat W χ) .fst)`.
 <!--zh-->
-对于 `Tv` 的元素 `e`，等式 `qT` 先把其成员关系搬到典范满足关系表。求逆引理 `ent-slot` 随后在命题截断下给出元数 `m`、公式 `χ`，以及 `fst e` 与 `χ` 所贡献典范条目的底层集合之间的等式。再把这条等式与 `prʟ-fst` 复合，便得到 `fst e ≡ pr (fst (keyʟ χ)) (fst (Sat W χ))`。
+对于 `Tv` 的元素 `e`，等式 `qT` 先把其成员关系搬到典范满足关系表。求逆引理 `ent-slot` 随后在命题截断下给出元数 `m`、公式 `χ`，以及 `e .fst` 与 `χ` 所贡献典范条目的底层集合之间的等式。再把这条等式与 `prʟ-fst` 复合，便得到 `e .fst ≡ pr ((keyʟ χ) .fst) ((Sat W χ) .fst)`。
 <!--ja-->
-`Tv` の要素 `e` について、等式 `qT` はまずその所属を正準な充足関係表へ移す。次に `ent-slot` は、命題的切り詰めの下で、アリティ `m`、論理式 `χ`、および `fst e` と `χ` が供給した正準な項目の底集合との等式を返す。この等式を `prʟ-fst` と合成すると、`fst e ≡ pr (fst (keyʟ χ)) (fst (Sat W χ))` が得られる。
+`Tv` の要素 `e` について、等式 `qT` はまずその所属を正準な充足関係表へ移す。次に `ent-slot` は、命題的切り詰めの下で、アリティ `m`、論理式 `χ`、および `e .fst` と `χ` が供給した正準な項目の底集合との等式を返す。この等式を `prʟ-fst` と合成すると、`e .fst ≡ pr ((keyʟ χ) .fst) ((Sat W χ) .fst)` が得られる。
 <!--/-->
 
 ```agda
-      onc : (e : S) → ⟨ fst e ∈ Tv ⟩
-          → ∥ Σ[ c ∶ S ] Σ[ yc ∶ S ] ((fst e ≡ pr (fst c) (fst yc)) × ⟨ fst c ∈ Cv ⟩) ∥₁
+      onc : (e : S) → ⟨ e .fst ∈ Tv ⟩
+          → ∥ Σ[ c ∶ S ] Σ[ yc ∶ S ] ((e .fst ≡ pr (c .fst) (yc .fst)) × ⟨ c .fst ∈ Cv ⟩) ∥₁
       onc e e∈ = map₁
         (λ { (m , χ , (q , _)) →
           let ee = q ∙ prʟ-fst (keyʟ χ) (Sat W χ)
@@ -2133,10 +2133,10 @@ Inside that truncated witness, take `c = keyʟ χ` and `yc = Sat W χ`. The equa
 <!--/-->
 
 ```agda
-          in keyʟ χ , Sat W χ , (ee , subst (λ u → ⟨ fst (keyʟ χ) ∈ u ⟩) (sym qC)
-               (inSlot W (toS ψ0) (fst (keyʟ χ)) (fst (Sat W χ))
+          in keyʟ χ , Sat W χ , (ee , subst (λ u → ⟨ (keyʟ χ) .fst ∈ u ⟩) (sym qC)
+               (inSlot W (toS ψ0) ((keyʟ χ) .fst) ((Sat W χ) .fst)
                  (subst2 (λ u v → ⟨ u ∈ v ⟩) ee qT e∈))) })
-        (ent-slot W (toS ψ0) (fst e) (subst (λ u → ⟨ fst e ∈ u ⟩) qT e∈))
+        (ent-slot W (toS ψ0) (e .fst) (subst (λ u → ⟨ e .fst ∈ u ⟩) qT e∈))
 ```
 
 <!--en-->

@@ -117,11 +117,11 @@ The carrier of the inner world is the Σ-type `SM`: a pair of an element of `S` 
 ```
 
 <!--en-->
-The outer reading uses the constant interpretation `ι := fst`{.Agda}: a constant naming a member of `M` denotes that member itself in `𝒮`. The fixed notation is `_⊨ᵛ_` for satisfaction in `𝒮` and `⟦_⟧ᵛ` for term values, and the environment notation `_^_` is available throughout.
+The outer reading uses the constant interpretation `ι := (λ p → p .fst)`{.Agda}: a constant naming a member of `M` denotes that member itself in `𝒮`. The fixed notation is `_⊨ᵛ_` for satisfaction in `𝒮` and `⟦_⟧ᵛ` for term values, and the environment notation `_^_` is available throughout.
 <!--zh-->
-外层读法采用常元解释 `ι := fst`{.Agda}：命名某个 `M` 元素的常元在 `𝒮` 中就指那个元素本身。固定记号为：`𝒮` 中的满足写作 `_⊨ᵛ_`，词项取值写作 `⟦_⟧ᵛ`；环境记号 `_^_` 在全章可用。
+外层读法采用常元解释 `ι := (λ p → p .fst)`{.Agda}：命名某个 `M` 元素的常元在 `𝒮` 中就指那个元素本身。固定记号为：`𝒮` 中的满足写作 `_⊨ᵛ_`，词项取值写作 `⟦_⟧ᵛ`；环境记号 `_^_` 在全章可用。
 <!--ja-->
-外側の読み方は定数解釈 `ι := fst`{.Agda} を用いる。`M` の要素を名指す定数は、`𝒮` の中ではその要素そのものを指す。記号は固定される。`𝒮` での充足は `_⊨ᵛ_`、項の値は `⟦_⟧ᵛ` と書き、環境の記法 `_^_` は章全体で使える。
+外側の読み方は定数解釈 `ι := (λ p → p .fst)`{.Agda} を用いる。`M` の要素を名指す定数は、`𝒮` の中ではその要素そのものを指す。記号は固定される。`𝒮` での充足は `_⊨ᵛ_`、項の値は `⟦_⟧ᵛ` と書き、環境の記法 `_^_` は章全体で使える。
 <!--/-->
 
 ```agda
@@ -129,17 +129,17 @@ The outer reading uses the constant interpretation `ι := fst`{.Agda}: a constan
 
   open SemV using ( _^_ ) public
 
-  open module V = SemV.At SM fst public
+  open module V = SemV.At SM (λ p → p .fst) public
     renaming ( _⊨_ to _⊨ᵛ_ ; ⟦_⟧ to ⟦_⟧ᵛ )
   open module Mse = SemM.At SM id public
 ```
 
 <!--en-->
-The inner reading uses `ι := id`{.Agda}: inside `𝒮 ↾ M`, a constant is the pair it names, and the relations of the restriction read off that pair's first projection. Hence an inner atomic statement `xm ∈ˢ ym` means exactly `fst xm ∈ˢ fst ym` in `𝒮`, which is why the two satisfaction relations can be compared at all. The notation is `_⊨ᵐ_` and `⟦_⟧ᵐ`, so each formula can be read both as `δ ⊨ᵐ φ` (inside) and as `(map fst δ) ⊨ᵛ φ` (outside).
+The inner reading uses `ι := id`{.Agda}: inside `𝒮 ↾ M`, a constant is the pair it names, and the relations of the restriction read off that pair's first projection. Hence an inner atomic statement `xm ∈ˢ ym` means exactly `xm .fst ∈ˢ ym .fst` in `𝒮`, which is why the two satisfaction relations can be compared at all. The notation is `_⊨ᵐ_` and `⟦_⟧ᵐ`, so each formula can be read both as `δ ⊨ᵐ φ` (inside) and as `(map (λ p → p .fst) δ) ⊨ᵛ φ` (outside).
 <!--zh-->
-内层读法采用 `ι := id`{.Agda}：在 `𝒮 ↾ M` 中，常元就是它所命名的对，而限制结构的关系读出该对的第一投影。于是内层的原子命题 `xm ∈ˢ ym` 恰好意味着 `𝒮` 中的 `fst xm ∈ˢ fst ym`，这正是两条满足关系能够比较的原因。记号为 `_⊨ᵐ_` 与 `⟦_⟧ᵐ`，因此每条公式既可读作内层的 `δ ⊨ᵐ φ`，也可读作外层的 `(map fst δ) ⊨ᵛ φ`。
+内层读法采用 `ι := id`{.Agda}：在 `𝒮 ↾ M` 中，常元就是它所命名的对，而限制结构的关系读出该对的第一投影。于是内层的原子命题 `xm ∈ˢ ym` 恰好意味着 `𝒮` 中的 `xm .fst ∈ˢ ym .fst`，这正是两条满足关系能够比较的原因。记号为 `_⊨ᵐ_` 与 `⟦_⟧ᵐ`，因此每条公式既可读作内层的 `δ ⊨ᵐ φ`，也可读作外层的 `(map (λ p → p .fst) δ) ⊨ᵛ φ`。
 <!--ja-->
-内側の読み方は `ι := id`{.Agda} を用いる。`𝒮 ↾ M` の中では定数はそれが名指す対そのものであり、制限の関係はその対の第一射影を読み取る。したがって、内側の原子的な主張 `xm ∈ˢ ym` は、`𝒮` ではちょうど `fst xm ∈ˢ fst ym` を意味する。これが二つの充足関係を比較できる理由である。記号は `_⊨ᵐ_` と `⟦_⟧ᵐ` となり、各論理式は内側の `δ ⊨ᵐ φ` としても外側の `(map fst δ) ⊨ᵛ φ` としても読める。
+内側の読み方は `ι := id`{.Agda} を用いる。`𝒮 ↾ M` の中では定数はそれが名指す対そのものであり、制限の関係はその対の第一射影を読み取る。したがって、内側の原子的な主張 `xm ∈ˢ ym` は、`𝒮` ではちょうど `xm .fst ∈ˢ ym .fst` を意味する。これが二つの充足関係を比較できる理由である。記号は `_⊨ᵐ_` と `⟦_⟧ᵐ` となり、各論理式は内側の `δ ⊨ᵐ φ` としても外側の `(map (λ p → p .fst) δ) ⊨ᵛ φ` としても読める。
 <!--/-->
 
 ```agda
@@ -147,11 +147,11 @@ The inner reading uses `ι := id`{.Agda}: inside `𝒮 ↾ M`, a constant is the
 ```
 
 <!--en-->
-The two worlds differ only in how environments are read: an inner environment `δ : SM ^ n` names outer values through `fst`{.Agda}, so `map fst δ` is the corresponding outer environment. Two lemmas connect the term evaluation on the two sides. A constant evaluates to its own first projection on both sides, and a variable is a lookup in both worlds, so the dictionary is settled at the atoms.
+The two worlds differ only in how environments are read: an inner environment `δ : SM ^ n` names outer values through `fst`{.Agda}, so `map (λ p → p .fst) δ` is the corresponding outer environment. Two lemmas connect the term evaluation on the two sides. A constant evaluates to its own first projection on both sides, and a variable is a lookup in both worlds, so the dictionary is settled at the atoms.
 <!--zh-->
-两个世界的差别只在环境的读法：内层环境 `δ : SM ^ n` 经 `fst`{.Agda} 给出外层的取值，`map fst δ` 就是相应的外层环境。两条引理连接两侧的词项求值。常元在两侧都取自己的第一投影为值，变元在两个世界都只是一次查表，因此词典问题在原子层面就已解决。
+两个世界的差别只在环境的读法：内层环境 `δ : SM ^ n` 经 `fst`{.Agda} 给出外层的取值，`map (λ p → p .fst) δ` 就是相应的外层环境。两条引理连接两侧的词项求值。常元在两侧都取自己的第一投影为值，变元在两个世界都只是一次查表，因此词典问题在原子层面就已解决。
 <!--ja-->
-二つの世界の違いは環境の読み方にだけある。内側の環境 `δ : SM ^ n` は `fst`{.Agda} を通して外側の値を名指すので、`map fst δ` が対応する外側の環境である。二つの補題が両側の項の評価を結ぶ。定数はどちらの側でも自分の第一射影を値とし、変数はどちらの世界でも一回の参照にすぎない。したがって辞書の問題は原子の段階で解決される。
+二つの世界の違いは環境の読み方にだけある。内側の環境 `δ : SM ^ n` は `fst`{.Agda} を通して外側の値を名指すので、`map (λ p → p .fst) δ` が対応する外側の環境である。二つの補題が両側の項の評価を結ぶ。定数はどちらの側でも自分の第一射影を値とし、変数はどちらの世界でも一回の参照にすぎない。したがって辞書の問題は原子の段階で解決される。
 <!--/-->
 
 <!--en-->
@@ -165,22 +165,22 @@ The first lemma commutes lookup with projection, pointwise along the vector: rea
 ```agda
   private
     lookup-fst : ∀ {n} (i : Fin n) (δ : SM ^ n)
-               → lookup i (map fst δ) ≡ fst (lookup i δ)
+               → lookup i (map (λ p → p .fst) δ) ≡ (lookup i δ) .fst
     lookup-fst zero    (m ∷ δ) = refl
     lookup-fst (suc i) (m ∷ δ) = lookup-fst i δ
 ```
 
 <!--en-->
-The second lemma lifts this to terms: evaluating a term in the inner world and projecting gives its outer value under the projected environment. For a constant, both sides compute to `fst m` by the respective interpretations `id` and `fst`, so `refl` suffices. For a variable, the outer value is a lookup into `map fst δ`, which the first lemma rewrites into the projection of the inner lookup; `sym` places the equation in the required direction. Any term is built from these two cases, so the dictionary is complete.
+The second lemma lifts this to terms: evaluating a term in the inner world and projecting gives its outer value under the projected environment. For a constant, both sides compute to `m .fst` by the respective interpretations `id` and `fst`, so `refl` suffices. For a variable, the outer value is a lookup into `map (λ p → p .fst) δ`, which the first lemma rewrites into the projection of the inner lookup; `sym` places the equation in the required direction. Any term is built from these two cases, so the dictionary is complete.
 <!--zh-->
-第二条引理把这一点提升到词项：在内层求值再投影，等于在投影后的环境中求值。常元情形，两侧按各自的解释 `id` 与 `fst` 都计算到 `fst m`，`refl` 即可。变元情形，外层值是对 `map fst δ` 的查表，第一条引理把它改写为内层查表的投影；`sym` 把等式摆到所需方向。任何词项都由这两种情形生成，词典于是完备。
+第二条引理把这一点提升到词项：在内层求值再投影，等于在投影后的环境中求值。常元情形，两侧按各自的解释 `id` 与 `fst` 都计算到 `m .fst`，`refl` 即可。变元情形，外层值是对 `map (λ p → p .fst) δ` 的查表，第一条引理把它改写为内层查表的投影；`sym` 把等式摆到所需方向。任何词项都由这两种情形生成，词典于是完备。
 <!--ja-->
-二つ目の補題はこれを項へ持ち上げる。内側で項を評価してから射影したものは、射影後の環境での外側の値に等しい。定数の場合は、それぞれの解釈 `id` と `fst` により両辺とも `fst m` に計算され、`refl` で足りる。変数の場合は、外側の値が `map fst δ` への参照であり、最初の補題がそれを内側の参照の射影へ書き換える。`sym` は等式を必要な向きに置くためのものである。すべての項はこの二つの場合から作られるので、辞書はこれで完結である。
+二つ目の補題はこれを項へ持ち上げる。内側で項を評価してから射影したものは、射影後の環境での外側の値に等しい。定数の場合は、それぞれの解釈 `id` と `fst` により両辺とも `m .fst` に計算され、`refl` で足りる。変数の場合は、外側の値が `map (λ p → p .fst) δ` への参照であり、最初の補題がそれを内側の参照の射影へ書き換える。`sym` は等式を必要な向きに置くためのものである。すべての項はこの二つの場合から作られるので、辞書はこれで完結である。
 <!--/-->
 
 ```agda
     ⟦⟧-fst : ∀ {n} (t : Term SM n) (δ : SM ^ n)
-           → fst (⟦ t ⟧ᵐ δ) ≡ ⟦ t ⟧ᵛ (map fst δ)
+           → (⟦ t ⟧ᵐ δ) .fst ≡ ⟦ t ⟧ᵛ (map (λ p → p .fst) δ)
     ⟦⟧-fst (con m) δ = refl
     ⟦⟧-fst (var i) δ = sym (lookup-fst i δ)
 ```
@@ -209,7 +209,7 @@ The statement is a path of truth values, not a mere implication: for every Δ₀
 
 ```agda
   abs₀ : ∀ {n} {φ : Formula SM n} → Δ₀ φ → (δ : SM ^ n)
-       → (δ ⊨ᵐ φ) ≡ ((map fst δ) ⊨ᵛ φ)
+       → (δ ⊨ᵐ φ) ≡ ((map (λ p → p .fst) δ) ⊨ᵛ φ)
   abs₀ (δ-∈ {t = t} {u}) δ = cong₂ _∈ˢ_ (⟦⟧-fst t δ) (⟦⟧-fst u δ)
   abs₀ (δ-≐ {t = t} {u}) δ = cong₂ _≈ˢ_ (⟦⟧-fst t δ) (⟦⟧-fst u δ)
   abs₀ (δ-∧ d e) δ = cong₂ _⊓_ (abs₀ d δ) (abs₀ e δ)
@@ -232,49 +232,49 @@ Absurdity needs no work: `δ-⊥` gives `⊥` on both sides, so the required pat
 ```
 
 <!--en-->
-For `∀̇∈`, both directions are packaged by `⇔toPath` into one path. Two abbreviations are set up first: `tm` is the inner value of the bounding term, and `p` is the term lemma `fst tm ≡ ⟦ t ⟧ᵛ (map fst δ)` specialized to it, the bridge between the inner range (a pair) and the outer range (its first projection).
+For `∀̇∈`, both directions are packaged by `⇔toPath` into one path. Two abbreviations are set up first: `tm` is the inner value of the bounding term, and `p` is the term lemma `tm .fst ≡ ⟦ t ⟧ᵛ (map (λ p → p .fst) δ)` specialized to it, the bridge between the inner range (a pair) and the outer range (its first projection).
 <!--zh-->
-对 `∀̇∈`，两个方向由 `⇔toPath` 打包成一条路径。先做两个缩写：`tm` 是界定词项的内层取值，`p` 是词项引理 `fst tm ≡ ⟦ t ⟧ᵛ (map fst δ)` 在其上的特化，即内层范围 (一个对) 与外层范围 (其第一投影) 之间的桥。
+对 `∀̇∈`，两个方向由 `⇔toPath` 打包成一条路径。先做两个缩写：`tm` 是界定词项的内层取值，`p` 是词项引理 `tm .fst ≡ ⟦ t ⟧ᵛ (map (λ p → p .fst) δ)` 在其上的特化，即内层范围 (一个对) 与外层范围 (其第一投影) 之间的桥。
 <!--ja-->
-`∀̇∈` では、両方向が `⇔toPath` によって一つのパスにまとめられる。まず二つの略記を用意する。`tm` は範囲を定める項の内側での値で、`p` は項の補題 `fst tm ≡ ⟦ t ⟧ᵛ (map fst δ)` をそれに特化したものであり、内側の範囲 (対) と外側の範囲 (その第一射影) を結ぶ橋である。
+`∀̇∈` では、両方向が `⇔toPath` によって一つのパスにまとめられる。まず二つの略記を用意する。`tm` は範囲を定める項の内側での値で、`p` は項の補題 `tm .fst ≡ ⟦ t ⟧ᵛ (map (λ p → p .fst) δ)` をそれに特化したものであり、内側の範囲 (対) と外側の範囲 (その第一射影) を結ぶ橋である。
 <!--/-->
 
 ```agda
     tm : SM
     tm = ⟦ t ⟧ᵐ δ
-    p : fst tm ≡ ⟦ t ⟧ᵛ (map fst δ)
+    p : tm .fst ≡ ⟦ t ⟧ᵛ (map (λ p → p .fst) δ)
     p = ⟦⟧-fst t δ
-    fwd : ⟨ δ ⊨ᵐ (∀̇∈ t φ) ⟩ → ⟨ (map fst δ) ⊨ᵛ (∀̇∈ t φ) ⟩
+    fwd : ⟨ δ ⊨ᵐ (∀̇∈ t φ) ⟩ → ⟨ (map (λ p → p .fst) δ) ⊨ᵛ (∀̇∈ t φ) ⟩
 ```
 
 <!--en-->
-The forward direction takes an inner verifier `h` and must supply, for each outer `x` with `x ∈ˢ ⟦ t ⟧ᵛ (map fst δ)`, the body's outer truth. Here `x` is a bare element, not a member of `M`, so it must first be repackaged. The transport along `sym p` moves the membership evidence to the inner range `fst tm`, and then transitivity applies: `x ∈ fst tm` together with `fst tm ∈ᶜ M` gives `x ∈ᶜ M`, so `xm := x , trans hx' (snd tm)` is a legitimate inner element. Running `h` at `xm` gives the inner truth of the body, and the induction hypothesis `abs₀ d (xm ∷ δ)` transports it outward. This is the only step of the whole induction that consumes the hypothesis `trans`.
+The forward direction takes an inner verifier `h` and must supply, for each outer `x` with `x ∈ˢ ⟦ t ⟧ᵛ (map (λ p → p .fst) δ)`, the body's outer truth. Here `x` is a bare element, not a member of `M`, so it must first be repackaged. The transport along `sym p` moves the membership evidence to the inner range `tm .fst`, and then transitivity applies: `x ∈ tm .fst` together with `tm .fst ∈ᶜ M` gives `x ∈ᶜ M`, so `xm := x , trans hx' (tm .snd)` is a legitimate inner element. Running `h` at `xm` gives the inner truth of the body, and the induction hypothesis `abs₀ d (xm ∷ δ)` transports it outward. This is the only step of the whole induction that consumes the hypothesis `trans`.
 <!--zh-->
-正向取内层的验证者 `h`，须对每个满足 `x ∈ˢ ⟦ t ⟧ᵛ (map fst δ)` 的外层 `x` 给出母式的外层真值。这里的 `x` 只是裸元素而非 `M` 的元素，必须先重新包装。沿 `sym p` 的传输把成员关系证据搬到内层范围 `fst tm`，随后传递性生效：`x ∈ fst tm` 配上 `fst tm ∈ᶜ M` 得到 `x ∈ᶜ M`，于是 `xm := x , trans hx' (snd tm)` 是合法的内层元素。在 `xm` 处运行 `h` 得到母式的内层真值，归纳假设 `abs₀ d (xm ∷ δ)` 再把它运到外层。整条归纳中唯有这一步使用前提 `trans`。
+正向取内层的验证者 `h`，须对每个满足 `x ∈ˢ ⟦ t ⟧ᵛ (map (λ p → p .fst) δ)` 的外层 `x` 给出母式的外层真值。这里的 `x` 只是裸元素而非 `M` 的元素，必须先重新包装。沿 `sym p` 的传输把成员关系证据搬到内层范围 `tm .fst`，随后传递性生效：`x ∈ tm .fst` 配上 `tm .fst ∈ᶜ M` 得到 `x ∈ᶜ M`，于是 `xm := x , trans hx' (tm .snd)` 是合法的内层元素。在 `xm` 处运行 `h` 得到母式的内层真值，归纳假设 `abs₀ d (xm ∷ δ)` 再把它运到外层。整条归纳中唯有这一步使用前提 `trans`。
 <!--ja-->
-順方向は内側の検証者 `h` を受け取り、`x ∈ˢ ⟦ t ⟧ᵛ (map fst δ)` を満たす各外側の `x` に対して母式の外側の真理値を与えなければならない。ここで `x` は `M` の要素ではなく素の要素なので、まず束ね直しが必要である。`sym p` に沿った輸送が所属の証拠を内側の範囲 `fst tm` へ移し、次いで推移性が働く。`x ∈ fst tm` と `fst tm ∈ᶜ M` から `x ∈ᶜ M` が得られ、したがって `xm := x , trans hx' (snd tm)` は正当な内側の要素である。`xm` で `h` を実行すると母式の内側の真理値が得られ、帰納仮定 `abs₀ d (xm ∷ δ)` がそれを外側へ運ぶ。帰納全体を通して前提 `trans` を消費するのは、この一段階だけである。
+順方向は内側の検証者 `h` を受け取り、`x ∈ˢ ⟦ t ⟧ᵛ (map (λ p → p .fst) δ)` を満たす各外側の `x` に対して母式の外側の真理値を与えなければならない。ここで `x` は `M` の要素ではなく素の要素なので、まず束ね直しが必要である。`sym p` に沿った輸送が所属の証拠を内側の範囲 `tm .fst` へ移し、次いで推移性が働く。`x ∈ tm .fst` と `tm .fst ∈ᶜ M` から `x ∈ᶜ M` が得られ、したがって `xm := x , trans hx' (tm .snd)` は正当な内側の要素である。`xm` で `h` を実行すると母式の内側の真理値が得られ、帰納仮定 `abs₀ d (xm ∷ δ)` がそれを外側へ運ぶ。帰納全体を通して前提 `trans` を消費するのは、この一段階だけである。
 <!--/-->
 
 ```agda
     fwd h x hx =
       let hx' = subst (λ s → ⟨ x ∈ˢ s ⟩) (sym p) hx
-          xm  = x , trans hx' (snd tm)
+          xm  = x , trans hx' (tm .snd)
       in subst ⟨_⟩ (abs₀ d (xm ∷ δ)) (h xm hx')
-    bwd : ⟨ (map fst δ) ⊨ᵛ (∀̇∈ t φ) ⟩ → ⟨ δ ⊨ᵐ (∀̇∈ t φ) ⟩
+    bwd : ⟨ (map (λ p → p .fst) δ) ⊨ᵛ (∀̇∈ t φ) ⟩ → ⟨ δ ⊨ᵐ (∀̇∈ t φ) ⟩
 ```
 
 <!--en-->
-The backward direction runs the other way: an outer verifier `g` quantifies over bare elements, while the inner clause expects a pair `xm` with its membership evidence attached. The projection `fst xm` is the outer element, and the term lemma transports its membership from `fst tm` to `⟦ t ⟧ᵛ (map fst δ)`, exactly the form `g` expects. Calling `g` yields outer truth, and `abs₀ d (xm ∷ δ)` transported along `sym` brings it back inside. This direction needs no transitivity: the pair `xm` arrives with its evidence attached.
+The backward direction runs the other way: an outer verifier `g` quantifies over bare elements, while the inner clause expects a pair `xm` with its membership evidence attached. The projection `xm .fst` is the outer element, and the term lemma transports its membership from `tm .fst` to `⟦ t ⟧ᵛ (map (λ p → p .fst) δ)`, exactly the form `g` expects. Calling `g` yields outer truth, and `abs₀ d (xm ∷ δ)` transported along `sym` brings it back inside. This direction needs no transitivity: the pair `xm` arrives with its evidence attached.
 <!--zh-->
-反向沿另一方向进行：外层验证者 `g` 遍历裸元素，而内层子句期待一个自带成员关系证据的对 `xm`。投影 `fst xm` 是外层元素，词项引理把其成员关系从 `fst tm` 运到 `⟦ t ⟧ᵛ (map fst δ)`，恰是 `g` 期待的形式。调用 `g` 得到外层真值，`abs₀ d (xm ∷ δ)` 再沿 `sym` 运回内层。这一方向不需要传递性：对 `xm` 是带着证据到达的。
+反向沿另一方向进行：外层验证者 `g` 遍历裸元素，而内层子句期待一个自带成员关系证据的对 `xm`。投影 `xm .fst` 是外层元素，词项引理把其成员关系从 `tm .fst` 运到 `⟦ t ⟧ᵛ (map (λ p → p .fst) δ)`，恰是 `g` 期待的形式。调用 `g` 得到外层真值，`abs₀ d (xm ∷ δ)` 再沿 `sym` 运回内层。这一方向不需要传递性：对 `xm` 是带着证据到达的。
 <!--ja-->
-逆方向は逆向きに進む。外側の検証者 `g` は素の要素を走査し、内側の節は所属の証拠を伴う対 `xm` を期待する。射影 `fst xm` が外側の要素であり、項の補題がその所属を `fst tm` から `⟦ t ⟧ᵛ (map fst δ)` へ運ぶ。これはちょうど `g` が期待する形である。`g` を呼び出せば外側の真理値が得られ、`abs₀ d (xm ∷ δ)` を `sym` に沿って運ぶことで内側へ戻す。この方向に推移性は不要である。対 `xm` は証拠を伴って届くからである。
+逆方向は逆向きに進む。外側の検証者 `g` は素の要素を走査し、内側の節は所属の証拠を伴う対 `xm` を期待する。射影 `xm .fst` が外側の要素であり、項の補題がその所属を `tm .fst` から `⟦ t ⟧ᵛ (map (λ p → p .fst) δ)` へ運ぶ。これはちょうど `g` が期待する形である。`g` を呼び出せば外側の真理値が得られ、`abs₀ d (xm ∷ δ)` を `sym` に沿って運ぶことで内側へ戻す。この方向に推移性は不要である。対 `xm` は証拠を伴って届くからである。
 <!--/-->
 
 ```agda
     bwd g xm hxm =
       subst ⟨_⟩ (sym (abs₀ d (xm ∷ δ)))
-            (g (fst xm) (subst (λ s → ⟨ fst xm ∈ˢ s ⟩) p hxm))
+            (g (xm .fst) (subst (λ s → ⟨ xm .fst ∈ˢ s ⟩) p hxm))
   abs₀ (δ-∃∈ {t = t} {φ = φ} d) δ = ⇔toPath fwd bwd
     where
 ```
@@ -290,25 +290,25 @@ The existential case `∃̇∈` mirrors the universal one, with one structural d
 ```agda
     tm : SM
     tm = ⟦ t ⟧ᵐ δ
-    p : fst tm ≡ ⟦ t ⟧ᵛ (map fst δ)
+    p : tm .fst ≡ ⟦ t ⟧ᵛ (map (λ p → p .fst) δ)
     p = ⟦⟧-fst t δ
-    fwd : ⟨ δ ⊨ᵐ (∃̇∈ t φ) ⟩ → ⟨ (map fst δ) ⊨ᵛ (∃̇∈ t φ) ⟩
+    fwd : ⟨ δ ⊨ᵐ (∃̇∈ t φ) ⟩ → ⟨ (map (λ p → p .fst) δ) ⊨ᵛ (∃̇∈ t φ) ⟩
 ```
 
 <!--en-->
-Forward, a truncated inner witness is a triple: an inner element `xm` in the range, its membership evidence, and the body's inner truth. The map sends it to `fst xm`, transports the membership outward along `p` into the shape `⟨ fst xm ∈ˢ ⟦ t ⟧ᵛ (map fst δ) ⟩`, and transports the body's truth outward through the induction hypothesis `abs₀ d (xm ∷ δ)`. The witness itself is used only inside the truncation, never extracted.
+Forward, a truncated inner witness is a triple: an inner element `xm` in the range, its membership evidence, and the body's inner truth. The map sends it to `xm .fst`, transports the membership outward along `p` into the shape `⟨ xm .fst ∈ˢ ⟦ t ⟧ᵛ (map (λ p → p .fst) δ) ⟩`, and transports the body's truth outward through the induction hypothesis `abs₀ d (xm ∷ δ)`. The witness itself is used only inside the truncation, never extracted.
 <!--zh-->
-正向，截断下的内层见证是一个三元组：范围内的内层元素 `xm`、其成员关系证据、母式的内层真值。map 把它送到 `fst xm`，沿 `p` 把成员关系运到外层，成为 `⟨ fst xm ∈ˢ ⟦ t ⟧ᵛ (map fst δ) ⟩` 的形状，再经归纳假设 `abs₀ d (xm ∷ δ)` 把母式真值运到外层。见证本身只在截断之内使用，从不被提取。
+正向，截断下的内层见证是一个三元组：范围内的内层元素 `xm`、其成员关系证据、母式的内层真值。map 把它送到 `xm .fst`，沿 `p` 把成员关系运到外层，成为 `⟨ xm .fst ∈ˢ ⟦ t ⟧ᵛ (map (λ p → p .fst) δ) ⟩` 的形状，再经归纳假设 `abs₀ d (xm ∷ δ)` 把母式真值运到外层。见证本身只在截断之内使用，从不被提取。
 <!--ja-->
-順方向では、切断された内側の証拠は三つ組である。範囲内の内側の要素 `xm`、その所属の証拠、そして母式の内側の真理値である。map はこれを `fst xm` に送り、`p` に沿って所属を外側へ運んで `⟨ fst xm ∈ˢ ⟦ t ⟧ᵛ (map fst δ) ⟩` の形にし、さらに帰納仮定 `abs₀ d (xm ∷ δ)` を通して母式の真理値を外側へ運ぶ。証拠そのものが取り出されることはなく、切断の内側でだけ使われる。
+順方向では、切断された内側の証拠は三つ組である。範囲内の内側の要素 `xm`、その所属の証拠、そして母式の内側の真理値である。map はこれを `xm .fst` に送り、`p` に沿って所属を外側へ運んで `⟨ xm .fst ∈ˢ ⟦ t ⟧ᵛ (map (λ p → p .fst) δ) ⟩` の形にし、さらに帰納仮定 `abs₀ d (xm ∷ δ)` を通して母式の真理値を外側へ運ぶ。証拠そのものが取り出されることはなく、切断の内側でだけ使われる。
 <!--/-->
 
 ```agda
     fwd = map₁ λ { (xm , hxm , hφ) →
-            fst xm
-          , subst (λ s → ⟨ fst xm ∈ˢ s ⟩) p hxm
+            xm .fst
+          , subst (λ s → ⟨ xm .fst ∈ˢ s ⟩) p hxm
           , subst ⟨_⟩ (abs₀ d (xm ∷ δ)) hφ }
-    bwd : ⟨ (map fst δ) ⊨ᵛ (∃̇∈ t φ) ⟩ → ⟨ δ ⊨ᵐ (∃̇∈ t φ) ⟩
+    bwd : ⟨ (map (λ p → p .fst) δ) ⊨ᵛ (∃̇∈ t φ) ⟩ → ⟨ δ ⊨ᵐ (∃̇∈ t φ) ⟩
 ```
 
 <!--en-->
@@ -322,7 +322,7 @@ Backward, an outer witness is a triple of a bare element `x`, its membership in 
 ```agda
     bwd = map₁ λ { (x , hx , hφ) →
             let hx' = subst (λ s → ⟨ x ∈ˢ s ⟩) (sym p) hx
-                xm  = x , trans hx' (snd tm)
+                xm  = x , trans hx' (tm .snd)
             in xm , hx' , subst ⟨_⟩ (sym (abs₀ d (xm ∷ δ))) hφ }
 ```
 
@@ -341,34 +341,34 @@ Beyond Δ₀, absoluteness becomes one-directional, and the directions are dual:
 <!--/-->
 
 <!--en-->
-In the Δ₀ base case, `abs₀ d δ` is a path between the inner and outer truth values, so `subst` carries a proof of the inner truth value along that path. No propositional truncation is introduced in this base case. The Σ₁ case `σ-∃` is an unbounded existential over the carrier, and its satisfaction is a truncated join, so `map₁` acts on a truncated pair: an inner witness `xm` with the body's inner truth `h` is sent to the outer element `fst xm`, and the recursive call `σ₁-up s (xm ∷ δ) h` extends the environment with the full pair, keeping the witness inside until the base case discards the wrapper.
+In the Δ₀ base case, `abs₀ d δ` is a path between the inner and outer truth values, so `subst` carries a proof of the inner truth value along that path. No propositional truncation is introduced in this base case. The Σ₁ case `σ-∃` is an unbounded existential over the carrier, and its satisfaction is a truncated join, so `map₁` acts on a truncated pair: an inner witness `xm` with the body's inner truth `h` is sent to the outer element `xm .fst`, and the recursive call `σ₁-up s (xm ∷ δ) h` extends the environment with the full pair, keeping the witness inside until the base case discards the wrapper.
 <!--zh-->
-在 Δ₀ 基础情形中，`abs₀ d δ` 是内外真值之间的路径，`subst` 沿这条路径把内层真值的证明传输到外层。这个基础情形本身不引入命题截断。Σ₁ 情形 `σ-∃` 是载体上的无界存在，其满足是命题截断下的上确界，因此 `map₁` 作用于截断的对：内层见证 `xm` 配上母式的内层真值 `h`，被送到外层元素 `fst xm`，而递归调用 `σ₁-up s (xm ∷ δ) h` 用完整的对扩展环境，让见证在内层保留到基础情形丢弃包装为止。
+在 Δ₀ 基础情形中，`abs₀ d δ` 是内外真值之间的路径，`subst` 沿这条路径把内层真值的证明传输到外层。这个基础情形本身不引入命题截断。Σ₁ 情形 `σ-∃` 是载体上的无界存在，其满足是命题截断下的上确界，因此 `map₁` 作用于截断的对：内层见证 `xm` 配上母式的内层真值 `h`，被送到外层元素 `xm .fst`，而递归调用 `σ₁-up s (xm ∷ δ) h` 用完整的对扩展环境，让见证在内层保留到基础情形丢弃包装为止。
 <!--ja-->
-Δ₀ の基底の場合、`abs₀ d δ` は内側と外側の真理値を結ぶパスであり、`subst` は内側の真理値の証明をそのパスに沿って外側へ輸送する。この基底の場合そのものは命題的切り詰めを導入しない。Σ₁ の場合 `σ-∃` は台の上の無制限の存在量化であり、その充足は命題的切り詰めのもとでの上限なので、`map₁` が切断された対に作用する。内側の証拠 `xm` と母式の内側の真理値 `h` の対は、外側の要素 `fst xm` に送られ、再帰呼び出し `σ₁-up s (xm ∷ δ) h` は対全体で環境を拡張して、基底の場合が包みを捨てるまで証拠を内側に保つ。
+Δ₀ の基底の場合、`abs₀ d δ` は内側と外側の真理値を結ぶパスであり、`subst` は内側の真理値の証明をそのパスに沿って外側へ輸送する。この基底の場合そのものは命題的切り詰めを導入しない。Σ₁ の場合 `σ-∃` は台の上の無制限の存在量化であり、その充足は命題的切り詰めのもとでの上限なので、`map₁` が切断された対に作用する。内側の証拠 `xm` と母式の内側の真理値 `h` の対は、外側の要素 `xm .fst` に送られ、再帰呼び出し `σ₁-up s (xm ∷ δ) h` は対全体で環境を拡張して、基底の場合が包みを捨てるまで証拠を内側に保つ。
 <!--/-->
 
 ```agda
   σ₁-up : ∀ {n} {φ : Formula SM n} → Σ₁ φ → (δ : SM ^ n)
-        → ⟨ δ ⊨ᵐ φ ⟩ → ⟨ (map fst δ) ⊨ᵛ φ ⟩
+        → ⟨ δ ⊨ᵐ φ ⟩ → ⟨ (map (λ p → p .fst) δ) ⊨ᵛ φ ⟩
   σ₁-up (σ-Δ₀ d) δ = subst ⟨_⟩ (abs₀ d δ)
-  σ₁-up (σ-∃ s)  δ = map₁ λ { (xm , h) → fst xm , σ₁-up s (xm ∷ δ) h }
+  σ₁-up (σ-∃ s)  δ = map₁ λ { (xm , h) → xm .fst , σ₁-up s (xm ∷ δ) h }
 
   π₁-down : ∀ {n} {φ : Formula SM n} → Π₁ φ → (δ : SM ^ n)
 ```
 
 <!--en-->
-The downward law is its mirror. The Δ₀ case transports along `sym (abs₀ d δ)`, and the Π₁ case `π-∀` is an unbounded universal: given an outer verifier `h`, it is instantiated at `fst xm` for each inner element `xm`, and the recursive call proves the body at the extended environment. No truncation appears here, since satisfaction of a universal is a meet, the greatest truth value below all the per-element contributions, and it is verified explicitly by giving the verifier; and the unbounded steps use no transitivity, because unbounded quantifiers range over the whole carrier, where the pair construction and the projection are already available.
+The downward law is its mirror. The Δ₀ case transports along `sym (abs₀ d δ)`, and the Π₁ case `π-∀` is an unbounded universal: given an outer verifier `h`, it is instantiated at `xm .fst` for each inner element `xm`, and the recursive call proves the body at the extended environment. No truncation appears here, since satisfaction of a universal is a meet, the greatest truth value below all the per-element contributions, and it is verified explicitly by giving the verifier; and the unbounded steps use no transitivity, because unbounded quantifiers range over the whole carrier, where the pair construction and the projection are already available.
 <!--zh-->
-向下律是它的镜像。Δ₀ 情形沿 `sym (abs₀ d δ)` 传输；Π₁ 情形 `π-∀` 是无界全称：给定外层验证者 `h`，对每个内层元素 `xm` 在 `fst xm` 处实例化，递归调用在扩展后的环境中证明母式。这里不出现截断，因为全称的满足是一个下确界，即低于所有逐元素贡献的最大真值，直接给出验证者即可显式验证；无界步骤不使用传递性，因为无界量词遍历整个载体，在那里对构造与投影本就可用。
+向下律是它的镜像。Δ₀ 情形沿 `sym (abs₀ d δ)` 传输；Π₁ 情形 `π-∀` 是无界全称：给定外层验证者 `h`，对每个内层元素 `xm` 在 `xm .fst` 处实例化，递归调用在扩展后的环境中证明母式。这里不出现截断，因为全称的满足是一个下确界，即低于所有逐元素贡献的最大真值，直接给出验证者即可显式验证；无界步骤不使用传递性，因为无界量词遍历整个载体，在那里对构造与投影本就可用。
 <!--ja-->
-下向きの法則はその鏡像である。Δ₀ の場合は `sym (abs₀ d δ)` に沿って輸送し、Π₁ の場合 `π-∀` は無制限の全称量化である。外側の検証者 `h` が与えられると、各内側の要素 `xm` に対して `fst xm` でインスタンス化し、再帰呼び出しが拡張された環境で母式を証明する。ここに切断は現れない。全称の充足は下限、すなわち要素ごとの寄与すべての下にある最大の真理値であり、検証者を直接与えることで明示的に検証できるからである。そして無制限の段階に推移性は使われない。無制限の量化子は台全体を走査し、そこでは対の構成と射影がはじめから使えるからである。
+下向きの法則はその鏡像である。Δ₀ の場合は `sym (abs₀ d δ)` に沿って輸送し、Π₁ の場合 `π-∀` は無制限の全称量化である。外側の検証者 `h` が与えられると、各内側の要素 `xm` に対して `xm .fst` でインスタンス化し、再帰呼び出しが拡張された環境で母式を証明する。ここに切断は現れない。全称の充足は下限、すなわち要素ごとの寄与すべての下にある最大の真理値であり、検証者を直接与えることで明示的に検証できるからである。そして無制限の段階に推移性は使われない。無制限の量化子は台全体を走査し、そこでは対の構成と射影がはじめから使えるからである。
 <!--/-->
 
 ```agda
-          → ⟨ (map fst δ) ⊨ᵛ φ ⟩ → ⟨ δ ⊨ᵐ φ ⟩
+          → ⟨ (map (λ p → p .fst) δ) ⊨ᵛ φ ⟩ → ⟨ δ ⊨ᵐ φ ⟩
   π₁-down (π-Δ₀ d) δ = subst ⟨_⟩ (sym (abs₀ d δ))
-  π₁-down (π-∀ s)  δ h xm = π₁-down s (xm ∷ δ) (h (fst xm))
+  π₁-down (π-∀ s)  δ h xm = π₁-down s (xm ∷ δ) (h (xm .fst))
 ```
 </div>
 </details>

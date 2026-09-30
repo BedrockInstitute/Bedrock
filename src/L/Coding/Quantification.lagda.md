@@ -113,22 +113,22 @@ i3 : ∀ {j} → Fin (4 + j)
 i3 = suc i2
 
 pr-out : ∀ {m} (q u v : Fin m) (γ : S ^ m) → ⟨ γ ⊨ prAtL q u v ⟩
-       → fst (lookup q γ) ≡ pr (fst (lookup u γ)) (fst (lookup v γ))
+       → (lookup q γ) .fst ≡ pr ((lookup u γ) .fst) ((lookup v γ) .fst)
 pr-out q u v γ h = subst ⟨_⟩ (prAtL-adequate q u v γ) h
 
 pr-in : ∀ {m} (q u v : Fin m) (γ : S ^ m)
-      → fst (lookup q γ) ≡ pr (fst (lookup u γ)) (fst (lookup v γ))
+      → (lookup q γ) .fst ≡ pr ((lookup u γ) .fst) ((lookup v γ) .fst)
       → ⟨ γ ⊨ prAtL q u v ⟩
 pr-in q u v γ e = subst ⟨_⟩ (sym (prAtL-adequate q u v γ)) e
 
-down : (x : S) (y : V ℓ) → ⟨ y ∈ fst x ⟩ → S
-down x y h = y , isL-trans {x = fst x} {y = y} h (snd x)
+down : (x : S) (y : V ℓ) → ⟨ y ∈ x .fst ⟩ → S
+down x y h = y , isL-trans {x = x .fst} {y = y} h (x .snd)
 ```
 
 The components of a pair held as an element of L, as elements of L.
 
 ```agda
-fstS sndS : (x : S) (u v : V ℓ) → fst x ≡ pr u v → S
+fstS sndS : (x : S) (u v : V ℓ) → x .fst ≡ pr u v → S
 fstS x u v e = down (down x ⁅ u , v ⁆ (subst (λ z → ⟨ ⁅ u , v ⁆ ∈ z ⟩) (sym e) (∈pair-introR {u = ⁅ u ⁆s} {v = ⁅ u , v ⁆} refl))) u (∈pair-introL {u = u} {v = v} refl)
 sndS x u v e = down (down x ⁅ u , v ⁆ (subst (λ z → ⟨ ⁅ u , v ⁆ ∈ z ⟩) (sym e) (∈pair-introR {u = ⁅ u ⁆s} {v = ⁅ u , v ⁆} refl))) v (∈pair-introR {u = u} {v = v} refl)
 ```
@@ -277,11 +277,11 @@ The successor reader, both ways, at a variable environment.
 
 ```agda
 suc-out : ∀ {m} (i j : Fin m) (γ : S ^ m) → ⟨ γ ⊨ sucAtL i j ⟩
-        → fst (lookup j γ) ≡ sucV (fst (lookup i γ))
+        → (lookup j γ) .fst ≡ sucV ((lookup i γ) .fst)
 suc-out i j γ h = subst ⟨_⟩ (sucAtL-adequate i j γ) h
 
 suc-in : ∀ {m} (i j : Fin m) (γ : S ^ m)
-       → fst (lookup j γ) ≡ sucV (fst (lookup i γ)) → ⟨ γ ⊨ sucAtL i j ⟩
+       → (lookup j γ) .fst ≡ sucV ((lookup i γ) .fst) → ⟨ γ ⊨ sucAtL i j ⟩
 suc-in i j γ e = subst ⟨_⟩ (sym (sucAtL-adequate i j γ)) e
 ```
 
@@ -353,8 +353,8 @@ module _ {m : ℕ} (x u : Fin m) (body : Formula S (2 + m)) (γ : S ^ m) where
 
 ```agda
   private
-    X = fst (lookup x γ)
-    U = fst (lookup u γ)
+    X = (lookup x γ) .fst
+    U = (lookup u γ) .fst
 ```
 
 <!--en-->
@@ -380,21 +380,21 @@ Out: the witness's second component is pinned by pair injectivity.
 
 ```agda
   sndEx-out : ⟨ γ ⊨ sndEx x u body ⟩
-            → ∥ Σ[ v ∶ S ] Σ[ s ∶ S ] ((X ≡ pr U (fst v)) × ⟨ (v ∷ s ∷ γ) ⊨ body ⟩) ∥₁
+            → ∥ Σ[ v ∶ S ] Σ[ s ∶ S ] ((X ≡ pr U (v .fst)) × ⟨ (v ∷ s ∷ γ) ⊨ body ⟩) ∥₁
   sndEx-out = rec₁ squash₁ (λ { (s , (s∈ , h)) → map₁
     (λ { (v , (v∈ , (e , hb))) → v , s , (pr-out (sh 2 x) (sh 2 u) i0 (v ∷ s ∷ γ) e , hb) })
     h })
 
-  sndEx-in : (v s : S) → ⟨ fst s ∈ X ⟩ → ⟨ fst v ∈ fst s ⟩ → X ≡ pr U (fst v)
+  sndEx-in : (v s : S) → ⟨ s .fst ∈ X ⟩ → ⟨ v .fst ∈ s .fst ⟩ → X ≡ pr U (v .fst)
            → ⟨ (v ∷ s ∷ γ) ⊨ body ⟩ → ⟨ γ ⊨ sndEx x u body ⟩
   sndEx-in v s s∈ v∈ e hb = ∣ s , (s∈ , ∣ v , (v∈ , (pr-in (sh 2 x) (sh 2 u) i0 (v ∷ s ∷ γ) e , hb)) ∣₁) ∣₁
 
   sndAll-out : ⟨ γ ⊨ sndAll x u body ⟩
-             → (v s : S) → ⟨ fst s ∈ X ⟩ → ⟨ fst v ∈ fst s ⟩ → X ≡ pr U (fst v)
+             → (v s : S) → ⟨ s .fst ∈ X ⟩ → ⟨ v .fst ∈ s .fst ⟩ → X ≡ pr U (v .fst)
              → ⟨ (v ∷ s ∷ γ) ⊨ body ⟩
   sndAll-out h v s s∈ v∈ e = h s s∈ v v∈ (pr-in (sh 2 x) (sh 2 u) i0 (v ∷ s ∷ γ) e)
 
-  sndAll-in : ((v s : S) → ⟨ fst s ∈ X ⟩ → ⟨ fst v ∈ fst s ⟩ → X ≡ pr U (fst v)
+  sndAll-in : ((v s : S) → ⟨ s .fst ∈ X ⟩ → ⟨ v .fst ∈ s .fst ⟩ → X ≡ pr U (v .fst)
                → ⟨ (v ∷ s ∷ γ) ⊨ body ⟩)
             → ⟨ γ ⊨ sndAll x u body ⟩
   sndAll-in k s s∈ v v∈ e = k v s s∈ v∈ (pr-out (sh 2 x) (sh 2 u) i0 (v ∷ s ∷ γ) e)
@@ -412,29 +412,29 @@ module _ {m : ℕ} (x : Fin m) (body : Formula S (3 + m)) (γ : S ^ m) where
 
 ```agda
   private
-    X = fst (lookup x γ)
+    X = (lookup x γ) .fst
 
   bothEx-out : ⟨ γ ⊨ bothEx x body ⟩
              → ∥ Σ[ u ∶ S ] Σ[ v ∶ S ] Σ[ s ∶ S ]
-                 ((X ≡ pr (fst u) (fst v)) × ⟨ (v ∷ u ∷ s ∷ γ) ⊨ body ⟩) ∥₁
+                 ((X ≡ pr (u .fst) (v .fst)) × ⟨ (v ∷ u ∷ s ∷ γ) ⊨ body ⟩) ∥₁
   bothEx-out = rec₁ squash₁ (λ { (s , (s∈ , h)) → rec₁ squash₁
     (λ { (u , (u∈ , h')) → map₁
       (λ { (v , (v∈ , (e , hb))) → u , v , s , (pr-out (sh 3 x) i1 i0 (v ∷ u ∷ s ∷ γ) e , hb) })
       h' })
     h })
 
-  bothEx-in : (u v s : S) → ⟨ fst s ∈ X ⟩ → ⟨ fst u ∈ fst s ⟩ → ⟨ fst v ∈ fst s ⟩
-            → X ≡ pr (fst u) (fst v) → ⟨ (v ∷ u ∷ s ∷ γ) ⊨ body ⟩ → ⟨ γ ⊨ bothEx x body ⟩
+  bothEx-in : (u v s : S) → ⟨ s .fst ∈ X ⟩ → ⟨ u .fst ∈ s .fst ⟩ → ⟨ v .fst ∈ s .fst ⟩
+            → X ≡ pr (u .fst) (v .fst) → ⟨ (v ∷ u ∷ s ∷ γ) ⊨ body ⟩ → ⟨ γ ⊨ bothEx x body ⟩
   bothEx-in u v s s∈ u∈ v∈ e hb =
     ∣ s , (s∈ , ∣ u , (u∈ , ∣ v , (v∈ , (pr-in (sh 3 x) i1 i0 (v ∷ u ∷ s ∷ γ) e , hb)) ∣₁) ∣₁) ∣₁
 
   bothAll-out : ⟨ γ ⊨ bothAll x body ⟩
-              → (u v s : S) → ⟨ fst s ∈ X ⟩ → ⟨ fst u ∈ fst s ⟩ → ⟨ fst v ∈ fst s ⟩
-              → X ≡ pr (fst u) (fst v) → ⟨ (v ∷ u ∷ s ∷ γ) ⊨ body ⟩
+              → (u v s : S) → ⟨ s .fst ∈ X ⟩ → ⟨ u .fst ∈ s .fst ⟩ → ⟨ v .fst ∈ s .fst ⟩
+              → X ≡ pr (u .fst) (v .fst) → ⟨ (v ∷ u ∷ s ∷ γ) ⊨ body ⟩
   bothAll-out h u v s s∈ u∈ v∈ e = h s s∈ u u∈ v v∈ (pr-in (sh 3 x) i1 i0 (v ∷ u ∷ s ∷ γ) e)
 
-  bothAll-in : ((u v s : S) → ⟨ fst s ∈ X ⟩ → ⟨ fst u ∈ fst s ⟩ → ⟨ fst v ∈ fst s ⟩
-                → X ≡ pr (fst u) (fst v) → ⟨ (v ∷ u ∷ s ∷ γ) ⊨ body ⟩)
+  bothAll-in : ((u v s : S) → ⟨ s .fst ∈ X ⟩ → ⟨ u .fst ∈ s .fst ⟩ → ⟨ v .fst ∈ s .fst ⟩
+                → X ≡ pr (u .fst) (v .fst) → ⟨ (v ∷ u ∷ s ∷ γ) ⊨ body ⟩)
              → ⟨ γ ⊨ bothAll x body ⟩
   bothAll-in k s s∈ u u∈ v v∈ e = k u v s s∈ u∈ v∈ (pr-out (sh 3 x) i1 i0 (v ∷ u ∷ s ∷ γ) e)
 ```
@@ -466,7 +466,7 @@ elements, fills any of the four.
 <summary class="submodule-fold-heading">
 ```agda
 module _ {m : ℕ} (x : Fin m) (γ : S ^ m) (u v : S)
-         (e : fst (lookup x γ) ≡ pr (fst u) (fst v)) where
+         (e : (lookup x γ) .fst ≡ pr (u .fst) (v .fst)) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -476,19 +476,19 @@ module _ {m : ℕ} (x : Fin m) (γ : S ^ m) (u v : S)
     c = container (lookup x γ) u v e
 
   fillSnd : (body : Formula S (2 + m)) → ⟨ (v ∷ c .fst ∷ γ) ⊨ body ⟩
-          → (ui : Fin m) → fst (lookup ui γ) ≡ fst u → ⟨ γ ⊨ sndEx x ui body ⟩
+          → (ui : Fin m) → (lookup ui γ) .fst ≡ u .fst → ⟨ γ ⊨ sndEx x ui body ⟩
   fillSnd body hb ui qu = sndEx-in x ui body γ v (c .fst) (c .snd .fst) (c .snd .snd .snd)
-    (e ∙ cong (λ w → pr w (fst v)) (sym qu)) hb
+    (e ∙ cong (λ w → pr w (v .fst)) (sym qu)) hb
 
   fillBoth : (body : Formula S (3 + m)) → ⟨ (v ∷ u ∷ c .fst ∷ γ) ⊨ body ⟩
            → ⟨ γ ⊨ bothEx x body ⟩
   fillBoth body hb = bothEx-in x body γ u v (c .fst) (c .snd .fst) (c .snd .snd .fst)
     (c .snd .snd .snd) e hb
 
-  useSnd : (body : Formula S (2 + m)) (ui : Fin m) → fst (lookup ui γ) ≡ fst u
+  useSnd : (body : Formula S (2 + m)) (ui : Fin m) → (lookup ui γ) .fst ≡ u .fst
          → ⟨ γ ⊨ sndAll x ui body ⟩ → ⟨ (v ∷ c .fst ∷ γ) ⊨ body ⟩
   useSnd body ui qu h = sndAll-out x ui body γ h v (c .fst) (c .snd .fst) (c .snd .snd .snd)
-    (e ∙ cong (λ w → pr w (fst v)) (sym qu))
+    (e ∙ cong (λ w → pr w (v .fst)) (sym qu))
 
   useBoth : (body : Formula S (3 + m)) → ⟨ γ ⊨ bothAll x body ⟩
           → ⟨ (v ∷ u ∷ c .fst ∷ γ) ⊨ body ⟩

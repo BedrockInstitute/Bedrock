@@ -175,14 +175,14 @@ open import Cubical.HITs.CumulativeHierarchy.Properties
 
 <!--en-->
 The proposition-valued structure on `L` has carrier `S`. An
-element `x : S` is a dependent pair consisting of an ambient set `fst x` and a
-proof `snd x` that this set is constructible. Thus `S` is the carrier type of
+element `x : S` is a dependent pair consisting of an ambient set `x .fst` and a
+proof `x .snd` that this set is constructible. Thus `S` is the carrier type of
 the model, not a set called `L`; its equality and membership are read from the
 underlying sets and take values in `hProp`.
 <!--zh-->
-`L` 上的命题值结构以 `S` 为模型载体。元素 `x : S` 是一个依值对，由外围集合 `fst x` 与证明该集合可构造的 `snd x` 组成。因此，`S` 是模型的载体类型，并不是一个名为 `L` 的集合；其相等与成员关系从底层集合读取，并取值于 `hProp`。
+`L` 上的命题值结构以 `S` 为模型载体。元素 `x : S` 是一个依值对，由外围集合 `x .fst` 与证明该集合可构造的 `x .snd` 组成。因此，`S` 是模型的载体类型，并不是一个名为 `L` 的集合；其相等与成员关系从底层集合读取，并取值于 `hProp`。
 <!--ja-->
-`L` 上の命題値構造の台を `S` とする。要素 `x : S` は、周囲の集合 `fst x` と、その集合が構成可能であることの証明 `snd x` からなる依存対である。したがって `S` はモデルの台の型であり、`L` という名の集合ではない。その等しさと所属は基礎にある集合から読み取られ、`hProp` に値を取る。
+`L` 上の命題値構造の台を `S` とする。要素 `x : S` は、周囲の集合 `x .fst` と、その集合が構成可能であることの証明 `x .snd` からなる依存対である。したがって `S` はモデルの台の型であり、`L` という名の集合ではない。その等しさと所属は基礎にある集合から読み取られ、`hProp` に値を取る。
 <!--/-->
 
 ```agda
@@ -314,12 +314,12 @@ to `a`. This evidence is part of the input expected by the contractible-fibre
 hypothesis, so a bare `x : S` would not suffice. Since `S` already lives at the
 successor universe level, `Mem` is too large to serve directly as the small
 index type required by `boundingOrd`. The canonical small presentation of the
-underlying set `fst a` provides a small way to enumerate the source members
+underlying set `a .fst` provides a small way to enumerate the source members
 needed for the bound.
 <!--zh-->
-类型 `Mem` 把一个源元素与它属于 `a` 的证据包装在一起。可缩纤维假设要求这份证据作为输入，所以只有一个裸的 `x : S` 并不足够。由于 `S` 已经位于后继宇宙层级，`Mem` 太大，不能直接充当 `boundingOrd` 所需的小索引类型。底层集合 `fst a` 的典范小呈现提供一种小规模的枚举方式，列出构造上界所需的源元素。
+类型 `Mem` 把一个源元素与它属于 `a` 的证据包装在一起。可缩纤维假设要求这份证据作为输入，所以只有一个裸的 `x : S` 并不足够。由于 `S` 已经位于后继宇宙层级，`Mem` 太大，不能直接充当 `boundingOrd` 所需的小索引类型。底层集合 `a .fst` 的典范小呈现提供一种小规模的枚举方式，列出构造上界所需的源元素。
 <!--ja-->
-型 `Mem` は、始域の要素と、それが `a` に属するという証拠を組にする。可縮なファイバーについての仮定はこの証拠を入力として要求するので、単なる `x : S` だけでは足りない。`S` はすでに後続宇宙レベルにあるため、`Mem` は `boundingOrd` が要求する小さな添字型として直接使うには大きすぎる。基礎にある集合 `fst a` の正準な小さな提示は、上界の構成に必要な始域の要素を小さな型で列挙する。
+型 `Mem` は、始域の要素と、それが `a` に属するという証拠を組にする。可縮なファイバーについての仮定はこの証拠を入力として要求するので、単なる `x : S` だけでは足りない。`S` はすでに後続宇宙レベルにあるため、`Mem` は `boundingOrd` が要求する小さな添字型として直接使うには大きすぎる。基礎にある集合 `a .fst` の正準な小さな提示は、上界の構成に必要な始域の要素を小さな型で列挙する。
 <!--/-->
 
 ```agda
@@ -378,26 +378,26 @@ it does not say that values arising from different sources are distinct.
 
 ```agda
   img-uniq : (p : Mem) (y : S) → ⟨ R (p .fst) y ⟩ → img p ≡ y
-  img-uniq p y h = cong fst (fc (p .fst) (p .snd) .snd (y , h))
+  img-uniq p y h = cong (λ p → p .fst) (fc (p .fst) (p .snd) .snd (y , h))
 ```
 
 <!--en-->
 To obtain a small indexing family, `memS` starts with an index
-`m : ⟪ fst a ⟫`. Its represented set is known to belong to `fst a`. Since `a`
+`m : ⟪ a .fst ⟫`. Its represented set is known to belong to `a .fst`. Since `a`
 is constructible and the constructible class is transitive, that represented
 set is constructible as well, so it can be paired with its certificate to form
 an element of `S`. Together with the original membership proof this gives an
 element of `Mem`, to which `img` and the fibre hypothesis may be applied.
 <!--zh-->
-为得到小索引族，`memS` 从索引 `m : ⟪ fst a ⟫` 出发。该索引所呈现的集合已知属于 `fst a`。由于 `a` 可构造且可构造类传递，这个呈现值也可构造，因而能与其证书配成 `S` 的元素；再加上原有的成员关系证明，就得到 `Mem` 的元素，可以对它应用 `img` 与纤维假设。
+为得到小索引族，`memS` 从索引 `m : ⟪ a .fst ⟫` 出发。该索引所呈现的集合已知属于 `a .fst`。由于 `a` 可构造且可构造类传递，这个呈现值也可构造，因而能与其证书配成 `S` 的元素；再加上原有的成员关系证明，就得到 `Mem` 的元素，可以对它应用 `img` 与纤维假设。
 <!--ja-->
-小さな添字の族を得るために、`memS` は添字 `m : ⟪ fst a ⟫` から始める。この添字が提示する集合は `fst a` に属する。`a` は構成可能であり、構成可能クラスは推移的なので、この提示された集合も構成可能である。したがって、その集合と証明を組にして `S` の要素を作れる。さらに元の所属の証明を加えると `Mem` の要素となり、`img` とファイバーについての仮定を適用できる。
+小さな添字の族を得るために、`memS` は添字 `m : ⟪ a .fst ⟫` から始める。この添字が提示する集合は `a .fst` に属する。`a` は構成可能であり、構成可能クラスは推移的なので、この提示された集合も構成可能である。したがって、その集合と証明を組にして `S` の要素を作れる。さらに元の所属の証明を加えると `Mem` の要素となり、`img` とファイバーについての仮定を適用できる。
 <!--/-->
 
 ```agda
   private
-    memS : ⟪ fst a ⟫ → Mem
-    memS m = (⟪ fst a ⟫↪ m
+    memS : ⟪ a .fst ⟫ → Mem
+    memS m = (⟪ a .fst ⟫↪ m
              , isL-trans fm∈fa (a .snd)) , fm∈fa
       where
 ```
@@ -417,12 +417,12 @@ it to be packaged as a constructible model element.
 <!--/-->
 
 ```agda
-      fm∈fa : ⟨ ⟪ fst a ⟫↪ m ∈ fst a ⟩
-      fm∈fa = ∈∈ₛ {a = ⟪ fst a ⟫↪ m} {b = fst a} .snd (∈ₛ⟪ fst a ⟫↪ m)
+      fm∈fa : ⟨ ⟪ a .fst ⟫↪ m ∈ a .fst ⟩
+      fm∈fa = ∈∈ₛ {a = ⟪ a .fst ⟫↪ m} {b = a .fst} .snd (∈ₛ⟪ a .fst ⟫↪ m)
 ```
 
 <!--en-->
-The source can now be traversed through the small type `⟪ fst a ⟫`. For each
+The source can now be traversed through the small type `⟪ a .fst ⟫`. For each
 index `m`, take the least stage index containing the selected value
 `img (memS m)` and supply its ordinality by `stage-ord`. The constructive
 operation `boundingOrd` returns one ordinal strictly above all these indices.
@@ -431,15 +431,15 @@ needed for the common-bound argument, although it is also provided by the canoni
 `boundingOrd` still returns an ordinal bound, without asserting that the image
 is inhabited.
 <!--zh-->
-现在可以沿小类型 `⟪ fst a ⟫` 遍历源集合。对每个索引 `m`，取包含选定值 `img (memS m)` 的最早层索引，并以 `stage-ord` 给出其序数性。构造性的运算 `boundingOrd` 返回一个严格高于所有这些索引的序数。共同上界论证使用 `stage-ord` 与 `stage-mem` 所给的事实，而不需要最小性，尽管典范的 `stage` 指派也提供了最小性。若 `a` 为空，索引族也为空，`boundingOrd` 仍返回一个序数上界，却不因此断言像非空。
+现在可以沿小类型 `⟪ a .fst ⟫` 遍历源集合。对每个索引 `m`，取包含选定值 `img (memS m)` 的最早层索引，并以 `stage-ord` 给出其序数性。构造性的运算 `boundingOrd` 返回一个严格高于所有这些索引的序数。共同上界论证使用 `stage-ord` 与 `stage-mem` 所给的事实，而不需要最小性，尽管典范的 `stage` 指派也提供了最小性。若 `a` 为空，索引族也为空，`boundingOrd` 仍返回一个序数上界，却不因此断言像非空。
 <!--ja-->
-これで、小さな型 `⟪ fst a ⟫` を通して始集合を走査できる。各添字 `m` について、選ばれた値 `img (memS m)` を含む最小の段階の添字を取り、その順序数性を `stage-ord` で与える。構成的な操作 `boundingOrd` は、これらすべての添字より真に上にある一つの順序数を返す。共通上界の議論が使うのは `stage-ord` と `stage-mem` が与える事実であり、最小性は必要ない。ただし、標準的な `stage` の割り当てから最小性も得られる。`a` が空なら添字の族も空であるが、`boundingOrd` はそれでも順序数上界を返し、像に要素があるとは主張しない。
+これで、小さな型 `⟪ a .fst ⟫` を通して始集合を走査できる。各添字 `m` について、選ばれた値 `img (memS m)` を含む最小の段階の添字を取り、その順序数性を `stage-ord` で与える。構成的な操作 `boundingOrd` は、これらすべての添字より真に上にある一つの順序数を返す。共通上界の議論が使うのは `stage-ord` と `stage-mem` が与える事実であり、最小性は必要ない。ただし、標準的な `stage` の割り当てから最小性も得られる。`a` が空なら添字の族も空であるが、`boundingOrd` はそれでも順序数上界を返し、像に要素があるとは主張しない。
 <!--/-->
 
 ```agda
-    bImg = boundingOrd ⟪ fst a ⟫
-      (λ m → stage (fst (img (memS m))) (img (memS m) .snd))
-      (λ m → stage-ord (fst (img (memS m))) (img (memS m) .snd))
+    bImg = boundingOrd ⟪ a .fst ⟫
+      (λ m → stage ((img (memS m)) .fst) (img (memS m) .snd))
+      (λ m → stage-ord ((img (memS m)) .fst) (img (memS m) .snd))
 ```
 
 <!--en-->
@@ -498,33 +498,33 @@ transport introduce no further classical principle.
 
 ```agda
   range∈βimg : (x : S) → ⟨ x ∈ˢ a ⟩ → (y : S) → ⟨ R x y ⟩
-              → ⟨ fst y ∈ Lset βimg ⟩
-  range∈βimg x x∈a y h = subst (λ w → ⟨ fst w ∈ Lset βimg ⟩) image≡y
-    (Lset-mono {α = βimg} {β = stage (fst (img (memS m))) (img (memS m) .snd)}
-      (bImg .snd .snd m) (stage-mem (fst (img (memS m))) (img (memS m) .snd)))
+              → ⟨ y .fst ∈ Lset βimg ⟩
+  range∈βimg x x∈a y h = subst (λ w → ⟨ w .fst ∈ Lset βimg ⟩) image≡y
+    (Lset-mono {α = βimg} {β = stage ((img (memS m)) .fst) (img (memS m) .snd)}
+      (bImg .snd .snd m) (stage-mem ((img (memS m)) .fst) (img (memS m) .snd)))
 ```
 
 <!--en-->
 The membership fibre supplies both data needed to compare the arbitrary source
 with the small presentation. Its first projection is an index `m` of the
-presentation of `fst a`; this is data already contained in membership, rather
+presentation of `a .fst`; this is data already contained in membership, rather
 than a choice from a merely inhabited collection. Its second projection is an
-equality between the set presented by `m` and `fst x`. The lemma `Σ≡Prop` lifts
+equality between the set presented by `m` and `x .fst`. The lemma `Σ≡Prop` lifts
 that equality to `memS m .fst ≡ x`, because the second component `isL` of a
 model element is proposition-valued and hence cannot distinguish two packages
 with the same underlying set.
 <!--zh-->
-成员关系纤维同时给出比较任意源元素与小表现所需的两项数据。第一投影是 `fst a` 的表现中的索引 `m`；它本来就包含在这份成员关系证明中，并非从一个仅知非空的集合中作选择。第二投影给出 `m` 所呈现的集合与 `fst x` 之间的等式。由于模型元素的第二分量 `isL` 是命题值的，不能区分底层集合相同的两个包裹，`Σ≡Prop` 把这条底层等式提升为 `memS m .fst ≡ x`。
+成员关系纤维同时给出比较任意源元素与小表现所需的两项数据。第一投影是 `a .fst` 的表现中的索引 `m`；它本来就包含在这份成员关系证明中，并非从一个仅知非空的集合中作选择。第二投影给出 `m` 所呈现的集合与 `x .fst` 之间的等式。由于模型元素的第二分量 `isL` 是命题值的，不能区分底层集合相同的两个包裹，`Σ≡Prop` 把这条底层等式提升为 `memS m .fst ≡ x`。
 <!--ja-->
-所属のファイバーは、任意の始点と小さい表示を比較するための二つのデータを同時に与える。第一射影は `fst a` の表示の添字 `m` である。これは単に要素が存在する集まりから選んだものではなく、所属の証明そのものに含まれるデータである。第二射影は、`m` が表示する集合と `fst x` との等式を与える。モデル要素の第二成分 `isL` は命題値であり、同じ基礎集合をもつ二つの組を区別しないため、`Σ≡Prop`はこの基礎集合の等式を `memS m .fst ≡ x` へ持ち上げる。
+所属のファイバーは、任意の始点と小さい表示を比較するための二つのデータを同時に与える。第一射影は `a .fst` の表示の添字 `m` である。これは単に要素が存在する集まりから選んだものではなく、所属の証明そのものに含まれるデータである。第二射影は、`m` が表示する集合と `x .fst` との等式を与える。モデル要素の第二成分 `isL` は命題値であり、同じ基礎集合をもつ二つの組を区別しないため、`Σ≡Prop`はこの基礎集合の等式を `memS m .fst ≡ x` へ持ち上げる。
 <!--/-->
 
 ```agda
     where
-    m = ∈-asFiber {a = fst x} {b = fst a} x∈a .fst
+    m = ∈-asFiber {a = x .fst} {b = a .fst} x∈a .fst
     q : memS m .fst ≡ x
-    q = Σ≡Prop (λ z → snd (isL z))
-      (∈-asFiber {a = fst x} {b = fst a} x∈a .snd)
+    q = Σ≡Prop (λ z → (isL z) .snd)
+      (∈-asFiber {a = x .fst} {b = a .fst} x∈a .snd)
 ```
 
 <!--en-->
@@ -618,42 +618,42 @@ bridge below.
 ```
 
 <!--en-->
-The predicate `Below c` says only that the underlying set `fst c` belongs to
+The predicate `Below c` says only that the underlying set `c .fst` belongs to
 `Lset σ`. Its role is to certify the constants occurring in a term or formula:
 `BoundedFo Below φ` contains one such certificate for every constant of `φ`.
 It says nothing about free-variable assignments or quantified witnesses. The
 separate `cover` hypothesis of `carveAt` will later control which satisfying
 values lie in the stage.
 <!--zh-->
-谓词 `Below c` 只表示底层集合 `fst c` 属于 `Lset σ`。它用于证明词项或公式中出现的常元有界：`BoundedFo Below φ` 为 `φ` 的每个常元保存这样一份证书。它不约束自由变元的赋值，也不约束量词见证；稍后 `carveAt` 的另一个假设 `cover`才负责保证满足者落在该层中。
+谓词 `Below c` 只表示底层集合 `c .fst` 属于 `Lset σ`。它用于证明词项或公式中出现的常元有界：`BoundedFo Below φ` 为 `φ` 的每个常元保存这样一份证书。它不约束自由变元的赋值，也不约束量词见证；稍后 `carveAt` 的另一个假设 `cover`才负责保证满足者落在该层中。
 <!--ja-->
-述語 `Below c` は、基礎集合 `fst c` が `Lset σ` に属することだけを表す。その役割は項や論理式に現れる定数を証明することであり、`BoundedFo Below φ` は`φ` の各定数についてこの証明を保持する。自由変数への付値や量化された証人を制約するものではない。充足する値が段階内にあることは、後で `carveAt` の別の仮定 `cover` が保証する。
+述語 `Below c` は、基礎集合 `c .fst` が `Lset σ` に属することだけを表す。その役割は項や論理式に現れる定数を証明することであり、`BoundedFo Below φ` は`φ` の各定数についてこの証明を保持する。自由変数への付値や量化された証人を制約するものではない。充足する値が段階内にあることは、後で `carveAt` の別の仮定 `cover` が保証する。
 <!--/-->
 
 ```agda
   Below : S → Type (ℓ-suc ℓ)
-  Below c = ⟨ fst c ∈ Lset σ ⟩
+  Below c = ⟨ c .fst ∈ Lset σ ⟩
 ```
 
 <!--en-->
 The relabelling `RL` turns each model constant satisfying `Below` into an index
 of the small presentation `⟪ Lset σ ⟫`. Its semantic maps are `fst`, from model
 elements to underlying sets, and `⟪ Lset σ ⟫↪`, from presentation indices to
-the sets they name. For a proof that `fst c ∈ Lset σ`, `∈-asFiber` returns
-both the required index and the equality saying that this index names `fst c`.
+the sets they name. For a proof that `c .fst ∈ Lset σ`, `∈-asFiber` returns
+both the required index and the equality saying that this index names `c .fst`.
 These two projections establish the commuting triangle needed for correct
 relabelling.
 <!--zh-->
-重标 `RL` 把每个满足 `Below` 的模型常元变成小表现 `⟪ Lset σ ⟫` 的一个索引。它的两条语义映射分别是从模型元素取底层集合的 `fst`，以及从表现索引取其所指集合的 `⟪ Lset σ ⟫↪`。给定 `fst c ∈ Lset σ` 的证明，`∈-asFiber` 同时返回所需索引和「该索引确实指名 `fst c`」的等式。这两个投影建立正确重标所需的交换三角形。
+重标 `RL` 把每个满足 `Below` 的模型常元变成小表现 `⟪ Lset σ ⟫` 的一个索引。它的两条语义映射分别是从模型元素取底层集合的 `fst`，以及从表现索引取其所指集合的 `⟪ Lset σ ⟫↪`。给定 `c .fst ∈ Lset σ` 的证明，`∈-asFiber` 同时返回所需索引和「该索引确实指名 `c .fst`」的等式。这两个投影建立正确重标所需的交换三角形。
 <!--ja-->
-付け替え `RL` は、`Below` を満たす各モデル定数を、小さい表示 `⟪ Lset σ ⟫` の添字へ変える。意味論側の二つの写像は、モデル要素から基礎集合を取る `fst` と、表示の添字からそれが指す集合を取る `⟪ Lset σ ⟫↪` である。`fst c ∈ Lset σ` の証明に対して、`∈-asFiber` は必要な添字と、その添字が実際に `fst c` を指すという等式を同時に返す。この二つの射影が、正しい付け替えに必要な可換三角形を与える。
+付け替え `RL` は、`Below` を満たす各モデル定数を、小さい表示 `⟪ Lset σ ⟫` の添字へ変える。意味論側の二つの写像は、モデル要素から基礎集合を取る `fst` と、表示の添字からそれが指す集合を取る `⟪ Lset σ ⟫↪` である。`c .fst ∈ Lset σ` の証明に対して、`∈-asFiber` は必要な添字と、その添字が実際に `c .fst` を指すという等式を同時に返す。この二つの射影が、正しい付け替えに必要な可換三角形を与える。
 <!--/-->
 
 ```agda
   module RL = Relabel {K = S} {K' = ⟪ Lset σ ⟫} {W = V ℓ}
-                fst ⟪ Lset σ ⟫↪ Below
-                (λ c p → ∈-asFiber {a = fst c} {b = Lset σ} p .fst)
-                (λ c p → ∈-asFiber {a = fst c} {b = Lset σ} p .snd)
+                (λ p → p .fst) ⟪ Lset σ ⟫↪ Below
+                (λ c p → ∈-asFiber {a = c .fst} {b = Lset σ} p .fst)
+                (λ c p → ∈-asFiber {a = c .fst} {b = Lset σ} p .snd)
 ```
 
 <!--en-->
@@ -694,7 +694,7 @@ equality derived from the commuting triangle in `RL`.
 <!--/-->
 
 ```agda
-      ⊨-map 𝒮ᵥ DefC.ι fst (RL.liftFo φ h)
+      ⊨-map 𝒮ᵥ DefC.ι (λ p → p .fst) (RL.liftFo φ h)
         (⟪ Lset σ ⟫↪ m ∷ [])
     ∙ sym (⊨-map 𝒮ᵥ ⟪ Lset σ ⟫↪ id (RL.liftFo φ h)
              (⟪ Lset σ ⟫↪ m ∷ []))
@@ -716,7 +716,7 @@ later arguments may transport evidence in either direction.
 <!--/-->
 
 ```agda
-    ∙ ⊨-map 𝒮ᵥ fst id φ (⟪ Lset σ ⟫↪ m ∷ [])
+    ∙ ⊨-map 𝒮ᵥ (λ p → p .fst) id φ (⟪ Lset σ ⟫↪ m ∷ [])
     ∙ sym (abs₀ dφ ((⟪ Lset σ ⟫↪ m , xL) ∷ []))
 ```
 
@@ -864,23 +864,23 @@ allows an arbitrary satisfying model element to be represented there.
 
 <!--en-->
 Satisfaction is insensitive to the proof component carried by a model element.
-An equality `fst u ≡ fst v` of underlying sets lifts through `Σ≡Prop` to an
+An equality `u .fst ≡ v .fst` of underlying sets lifts through `Σ≡Prop` to an
 equality `u ≡ v`, because `isL x` is a proposition for every `x`; satisfaction
 then transports along the resulting equality of one-element environments. The
 argument does not inspect `dφ`, so this transport is mathematically valid for an
 arbitrary formula. The `Δ₀` parameter remains in the statement although the proof does not use it, and no use of excluded middle occurs in the proof.
 <!--zh-->
-满足关系不受模型元素所携证明分量的影响。由于每个 `isL x` 都是命题，底层集合的等式 `fst u ≡ fst v` 经 `Σ≡Prop` 提升为 `u ≡ v`，随后满足证明沿所得单元素环境等式运输。证明体并不查看 `dφ`，所以这条运输在数学上对任意公式都成立；`Δ₀` 参数仍保留在陈述中，尽管证明并未使用它；证明也没有使用排中律。
+满足关系不受模型元素所携证明分量的影响。由于每个 `isL x` 都是命题，底层集合的等式 `u .fst ≡ v .fst` 经 `Σ≡Prop` 提升为 `u ≡ v`，随后满足证明沿所得单元素环境等式运输。证明体并不查看 `dφ`，所以这条运输在数学上对任意公式都成立；`Δ₀` 参数仍保留在陈述中，尽管证明并未使用它；证明也没有使用排中律。
 <!--ja-->
-充足は、モデル要素が携える証明成分には依存しない。各 `isL x` は命題なので、基礎集合の等式 `fst u ≡ fst v` は `Σ≡Prop` により `u ≡ v` へ持ち上がり、充足の証明は得られた一要素環境の等式に沿って輸送される。証明本体は `dφ` を参照しないため、この輸送は数学的には任意の論理式について成り立つ。`Δ₀` の引数は証明で使われないまま文に残っており、証明は排中律も使わない。
+充足は、モデル要素が携える証明成分には依存しない。各 `isL x` は命題なので、基礎集合の等式 `u .fst ≡ v .fst` は `Σ≡Prop` により `u ≡ v` へ持ち上がり、充足の証明は得られた一要素環境の等式に沿って輸送される。証明本体は `dφ` を参照しないため、この輸送は数学的には任意の論理式について成り立つ。`Δ₀` の引数は証明で使われないまま文に残っており、証明は排中律も使わない。
 <!--/-->
 
 ```agda
   opaque
-    ⊨-transport : (φ : Formula S 1) (dφ : Δ₀ φ) (u v : S) → fst u ≡ fst v
+    ⊨-transport : (φ : Formula S 1) (dφ : Δ₀ φ) (u v : S) → u .fst ≡ v .fst
                 → ⟨ (u ∷ []) ⊨ φ ⟩ → ⟨ (v ∷ []) ⊨ φ ⟩
     ⊨-transport φ dφ u v p =
-      subst (λ z → ⟨ (z ∷ []) ⊨ φ ⟩) (Σ≡Prop (λ x → snd (isL x)) p)
+      subst (λ z → ⟨ (z ∷ []) ⊨ φ ⟩) (Σ≡Prop (λ x → (isL x) .snd) p)
 ```
 
 <!--en-->
@@ -929,7 +929,7 @@ uniqueness of the realizing set.
 
 ```agda
   carveAt : (χ : Formula S 1) (hχ : BoundedFo Below χ) (dχ : Δ₀ χ)
-            (cover : (z : S) → ⟨ (z ∷ []) ⊨ χ ⟩ → ⟨ fst z ∈ Lset σ ⟩)
+            (cover : (z : S) → ⟨ (z ∷ []) ⊨ χ ⟩ → ⟨ z .fst ∈ Lset σ ⟩)
           → isContr (SetOf (λ z → (z ∷ []) ⊨ χ))
   carveAt χ hχ dχ cover = uniqueL (λ z → (z ∷ []) ⊨ χ) (replElt , spec)
     where
@@ -958,16 +958,16 @@ constructible realizer; its exact extension is established separately by `spec`.
 The specification is a path between membership in `replElt` and satisfaction
 of `χ`, for every model element `z`. The forward implication starts with
 `z ∈ˢ replElt`. Since the underlying set of `replElt` is the carved set,
-`carve⊆` places `fst z` in `Lset σ`; the canonical presentation then supplies
+`carve⊆` places `z .fst` in `Lset σ`; the canonical presentation then supplies
 an index `m` naming that set. After transporting carved membership to the
 presented representative, `imageOut` yields satisfaction there, and
 `⊨-transport` moves it along the underlying-set equality back to `z`.
 The cover hypothesis is unnecessary in this direction because carved membership
 already provides the required stage bound.
 <!--zh-->
-规格对每个模型元素 `z` 给出「`z` 属于 `replElt`」与「`z` 满足 `χ`」之间的路径。正向蕴含从 `z ∈ˢ replElt` 开始。由于 `replElt` 的底层集合就是刻出集合，`carve⊆`把 `fst z` 放入 `Lset σ`，规范表现于是给出指名该集合的索引 `m`。将刻出集合的成员关系证明运输到被呈现代表后，`imageOut` 给出该处的满足证明，`⊨-transport` 再沿底层集合等式把它搬回 `z`。这个方向无需覆盖假设，因为刻出集合的成员关系已经给出所需的层界。
+规格对每个模型元素 `z` 给出「`z` 属于 `replElt`」与「`z` 满足 `χ`」之间的路径。正向蕴含从 `z ∈ˢ replElt` 开始。由于 `replElt` 的底层集合就是刻出集合，`carve⊆`把 `z .fst` 放入 `Lset σ`，规范表现于是给出指名该集合的索引 `m`。将刻出集合的成员关系证明运输到被呈现代表后，`imageOut` 给出该处的满足证明，`⊨-transport` 再沿底层集合等式把它搬回 `z`。这个方向无需覆盖假设，因为刻出集合的成员关系已经给出所需的层界。
 <!--ja-->
-仕様は各モデル要素 `z` について、`z` が `replElt` に属することと、`z` が `χ` を満たすこととの間のパスを与える。順向きの含意は `z ∈ˢ replElt` から始まる。`replElt` の基礎集合は切り出された集合なので、`carve⊆` が `fst z` を `Lset σ` に入れ、標準的な表示がその集合を指す添字 `m` を与える。切り出された集合への所属を表示された代表へ輸送すると、`imageOut` がそこでの充足を与え、`⊨-transport` が基礎集合の等式に沿ってそれを `z` へ戻す。この向きでは所属自体から必要な段階の境界が得られるため、被覆仮定は使わない。
+仕様は各モデル要素 `z` について、`z` が `replElt` に属することと、`z` が `χ` を満たすこととの間のパスを与える。順向きの含意は `z ∈ˢ replElt` から始まる。`replElt` の基礎集合は切り出された集合なので、`carve⊆` が `z .fst` を `Lset σ` に入れ、標準的な表示がその集合を指す添字 `m` を与える。切り出された集合への所属を表示された代表へ輸送すると、`imageOut` がそこでの充足を与え、`⊨-transport` が基礎集合の等式に沿ってそれを `z` へ戻す。この向きでは所属自体から必要な段階の境界が得られるため、被覆仮定は使わない。
 <!--/-->
 
 ```agda
@@ -982,22 +982,22 @@ already provides the required stage bound.
 The local data make the passage to the canonical presentation explicit.
 First `fz∈Lσ` follows from containment of the carved set. Applying `∈-asFiber`
 to this membership gives an index `m : ⟪ Lset σ ⟫` and a path
-`q : ⟪ Lset σ ⟫↪ m ≡ fst z`. These are the two projections of one membership
+`q : ⟪ Lset σ ⟫↪ m ≡ z .fst`. These are the two projections of one membership
 fibre, so no choice principle is involved. The path `q` will be used in opposite
 directions: first to move carved membership to the presented set, and then to
 move satisfaction from the packaged representative back to `z`.
 <!--zh-->
-这些局部数据把通往规范表现的步骤明确写出。首先，`fz∈Lσ` 来自刻出集合对该层的包含。把 `∈-asFiber` 施于这份成员关系证明，得到索引 `m : ⟪ Lset σ ⟫` 与路径`q : ⟪ Lset σ ⟫↪ m ≡ fst z`。二者是同一个成员关系纤维的两个投影，所以这里不涉及任何选择原则。路径 `q` 将沿相反方向使用两次：先把刻出集合的成员关系证明移到被呈现集合，再把打包代表处的满足证明搬回 `z`。
+这些局部数据把通往规范表现的步骤明确写出。首先，`fz∈Lσ` 来自刻出集合对该层的包含。把 `∈-asFiber` 施于这份成员关系证明，得到索引 `m : ⟪ Lset σ ⟫` 与路径`q : ⟪ Lset σ ⟫↪ m ≡ z .fst`。二者是同一个成员关系纤维的两个投影，所以这里不涉及任何选择原则。路径 `q` 将沿相反方向使用两次：先把刻出集合的成员关系证明移到被呈现集合，再把打包代表处的满足证明搬回 `z`。
 <!--ja-->
-これらの局所データは、標準的な表示へ移る過程を明示する。まず `fz∈Lσ` は、切り出された集合が段階に含まれることから従う。この所属に `∈-asFiber` を適用すると、添字 `m : ⟪ Lset σ ⟫` とパス `q : ⟪ Lset σ ⟫↪ m ≡ fst z` が得られる。両者は一つの所属ファイバーの二つの射影なので、選択原理は使われない。パス `q`は互いに逆の向きに使われる。まず切り出された集合への所属を表示された集合へ移し、次に組にした代表での充足を `z` へ戻す。
+これらの局所データは、標準的な表示へ移る過程を明示する。まず `fz∈Lσ` は、切り出された集合が段階に含まれることから従う。この所属に `∈-asFiber` を適用すると、添字 `m : ⟪ Lset σ ⟫` とパス `q : ⟪ Lset σ ⟫↪ m ≡ z .fst` が得られる。両者は一つの所属ファイバーの二つの射影なので、選択原理は使われない。パス `q`は互いに逆の向きに使われる。まず切り出された集合への所属を表示された集合へ移し、次に組にした代表での充足を `z` へ戻す。
 <!--/-->
 
 ```agda
         where
-        fz∈Lσ = carve⊆ (RL.liftFo χ hχ) (fst z) z∈
-        m = ∈-asFiber {a = fst z} {b = Lset σ} fz∈Lσ .fst
-        q : ⟪ Lset σ ⟫↪ m ≡ fst z
-        q = ∈-asFiber {a = fst z} {b = Lset σ} fz∈Lσ .snd
+        fz∈Lσ = carve⊆ (RL.liftFo χ hχ) (z .fst) z∈
+        m = ∈-asFiber {a = z .fst} {b = Lset σ} fz∈Lσ .fst
+        q : ⟪ Lset σ ⟫↪ m ≡ z .fst
+        q = ∈-asFiber {a = z .fst} {b = Lset σ} fz∈Lσ .snd
 ```
 
 <!--en-->
@@ -1034,7 +1034,7 @@ the stage membership then recovers the index of a canonical representative.
       bwd qz = subst (λ w → ⟨ w ∈ carve (RL.liftFo χ hχ) ⟩) q m∈
         where
         fz∈Lσ = cover z qz
-        m = ∈-asFiber {a = fst z} {b = Lset σ} fz∈Lσ .fst
+        m = ∈-asFiber {a = z .fst} {b = Lset σ} fz∈Lσ .fst
 ```
 
 <!--en-->
@@ -1050,8 +1050,8 @@ instead of the original.
 <!--/-->
 
 ```agda
-        q : ⟪ Lset σ ⟫↪ m ≡ fst z
-        q = ∈-asFiber {a = fst z} {b = Lset σ} fz∈Lσ .snd
+        q : ⟪ Lset σ ⟫↪ m ≡ z .fst
+        q = ∈-asFiber {a = z .fst} {b = Lset σ} fz∈Lσ .snd
         xL = memberIsL m
         satz : ⟨ ((⟪ Lset σ ⟫↪ m , xL) ∷ []) ⊨ χ ⟩
         satz = ⊨-transport χ dχ z (⟪ Lset σ ⟫↪ m , xL) (sym q) qz
@@ -1089,7 +1089,7 @@ contractible realization that the model field's separation asks for.
 <!--/-->
 
 ```agda
-  separateAt : (a : S) (fa∈σ : ⟨ fst a ∈ Lset σ ⟩)
+  separateAt : (a : S) (fa∈σ : ⟨ a .fst ∈ Lset σ ⟩)
                (φ : Formula S 1) (h : BoundedFo Below φ) (dφ : Δ₀ φ)
              → isContr (SetOf (λ x → (x ∈ˢ a) ⊓ ((x ∷ []) ⊨ φ)))
   separateAt a fa∈σ φ h dφ =
@@ -1110,7 +1110,7 @@ under the stage within which the subset is being carved.
 <!--/-->
 
 ```agda
-      (λ z q → layer-trans (Lset-layer σ) {x = fst a} {y = fst z} (q .fst) fa∈σ)
+      (λ z q → layer-trans (Lset-layer σ) {x = a .fst} {y = z .fst} (q .fst) fa∈σ)
 ```
 </div>
 </details>
@@ -1133,7 +1133,7 @@ To compare bounds chosen independently, the stage condition is parameterized by 
 
 ```agda
 Below′ : V ℓ → S → Type (ℓ-suc ℓ)
-Below′ σ c = ⟨ fst c ∈ Lset σ ⟩
+Below′ σ c = ⟨ c .fst ∈ Lset σ ⟩
 ```
 
 <!--en-->
@@ -1153,7 +1153,7 @@ liftTmTo : {σ β : V ℓ} → ⟨ σ ∈ β ⟩ → ∀ {n} (t : Term S n)
          → BoundedTm (Below′ σ) t → BoundedTm (Below′ β) t
 liftTmTo {σ} {β} σ∈β t h =
   BoundedTm-mono {P = Below′ σ} {Q = Below′ β}
-    (λ (c : S) h' → Lset-mono {α = β} {β = σ} σ∈β {x = fst c} h') t h
+    (λ (c : S) h' → Lset-mono {α = β} {β = σ} σ∈β {x = c .fst} h') t h
 ```
 
 <!--en-->
@@ -1172,7 +1172,7 @@ liftFoTo : {σ β : V ℓ} → ⟨ σ ∈ β ⟩ → ∀ {n} (φ : Formula S n)
          → BoundedFo (Below′ σ) φ → BoundedFo (Below′ β) φ
 liftFoTo {σ} {β} σ∈β φ h =
   BoundedFo-mono {P = Below′ σ} {Q = Below′ β}
-    (λ (c : S) h' → Lset-mono {α = β} {β = σ} σ∈β {x = fst c} h') φ h
+    (λ (c : S) h' → Lset-mono {α = β} {β = σ} σ∈β {x = c .fst} h') φ h
 ```
 
 <!--en-->
@@ -1187,8 +1187,8 @@ ordinality of that index and the membership of the constant in its layer. A vari
 
 ```agda
 mkBoundedTm : ∀ {n} (t : Term S n) → Σ[ σ ∶ V ℓ ] (IsOrd σ × BoundedTm (Below′ σ) t)
-mkBoundedTm (con c) = stage (fst c) (c .snd)
-                    , (stage-ord (fst c) (c .snd) , stage-mem (fst c) (c .snd))
+mkBoundedTm (con c) = stage (c .fst) (c .snd)
+                    , (stage-ord (c .fst) (c .snd) , stage-mem (c .fst) (c .snd))
 mkBoundedTm (var i) = ∅ , (∅-ord , _)
 ```
 
@@ -1338,8 +1338,8 @@ The stage is computed from two bounds. The search just constructed bounds the co
 <!--/-->
 
 ```agda
-  sa = stage (fst a) (a .snd)
-  bb = bound2 (rφ .fst) sa (rφ .snd .fst) (stage-ord (fst a) (a .snd))
+  sa = stage (a .fst) (a .snd)
+  bb = bound2 (rφ .fst) sa (rφ .snd .fst) (stage-ord (a .fst) (a .snd))
   σ  = bb .fst
   oσ = bb .snd .fst
   h  = liftFoTo {σ = rφ .fst} {β = σ} (bb .snd .snd .fst) φ (rφ .snd .snd)
@@ -1356,8 +1356,8 @@ stage. This supplies the covering hypothesis of the fixed-stage theorem. It foll
 <!--/-->
 
 ```agda
-  fa∈σ : ⟨ fst a ∈ Lset σ ⟩
-  fa∈σ = Lset-mono {α = σ} {β = sa} (bb .snd .snd .snd) (stage-mem (fst a) (a .snd))
+  fa∈σ : ⟨ a .fst ∈ Lset σ ⟩
+  fa∈σ = Lset-mono {α = σ} {β = sa} (bb .snd .snd .snd) (stage-mem (a .fst) (a .snd))
 ```
 
 <!--en-->
@@ -1460,7 +1460,7 @@ anywhere.
   Q≡ = funExt (λ y → ⇔toPath (into y) (λ p → p .snd))
     where
     into : (y : S) → ⟨ ReplImage a φ y ⟩ → ⟨ BoundedImage y ⟩
-    into y = rec₁ (snd (BoundedImage y)) λ { (x , (x∈a , h)) →
+    into y = rec₁ ((BoundedImage y) .snd) λ { (x , (x∈a , h)) →
 ```
 
 <!--en-->

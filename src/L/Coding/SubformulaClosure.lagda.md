@@ -171,7 +171,7 @@ is a proposition.
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-  module _ (D : S) (peel : Peel (fst D)) where
+  module _ (D : S) (peel : Peel (D .fst)) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -179,16 +179,16 @@ is a proposition.
 ```agda
     private
       C : V ℓ
-      C = fst D
+      C = D .fst
 
       viaKey : (k : ℕ) (c : S) (ar p : V ℓ)
-             → ⟨ fst c ∈ C ⟩ → fst c ≡ pr ar (pr (# k) p)
+             → ⟨ c .fst ∈ C ⟩ → c .fst ≡ pr ar (pr (# k) p)
              → (T : Type (ℓ-suc ℓ)) → isProp T
              → (Concl f h C k ar p → T) → T
       viaKey k c ar p c∈ sh T pT g = rec₁ pT
         (λ { (m , ψ , q , incl) →
           g (byTag f h C ψ k ar p incl (sym q ∙ sh)) })
-        (peel (fst c) c∈)
+        (peel (c .fst) c∈)
 
       same : ∀ {m} (γ : S ^ m) (k : ℕ)
            → ((ar a b : V ℓ) → Concl f h C k ar (pr a b)
@@ -196,26 +196,26 @@ is a proposition.
            → ⟨ (D ∷ γ) ⊨ binShapeAt zero k (bothSameAt zero) ⟩
       same γ k use = binSameClosed-in zero k (D ∷ γ)
         (λ c ar a b c∈ sh →
-          viaKey k c (fst ar) (pr (fst a) (fst b)) c∈ sh _
-            (isProp× (snd (pr (fst ar) (fst a) ∈ C))
-                     (snd (pr (fst ar) (fst b) ∈ C)))
-            (use (fst ar) (fst a) (fst b)))
+          viaKey k c (ar .fst) (pr (a .fst) (b .fst)) c∈ sh _
+            (isProp× ((pr (ar .fst) (a .fst) ∈ C) .snd)
+                     ((pr (ar .fst) (b .fst) ∈ C) .snd))
+            (use (ar .fst) (a .fst) (b .fst)))
 
       one : ∀ {m} (γ : S ^ m) (k : ℕ)
           → ((ar a : V ℓ) → Concl f h C k ar a → ⟨ pr ar a ∈ C ⟩)
           → ⟨ (D ∷ γ) ⊨ unShapeAt zero k (oneSameAt zero) ⟩
       one γ k use = unSameClosed-in zero k (D ∷ γ)
         (λ c ar a c∈ sh →
-          viaKey k c (fst ar) (fst a) c∈ sh _
-            (snd (pr (fst ar) (fst a) ∈ C)) (use (fst ar) (fst a)))
+          viaKey k c (ar .fst) (a .fst) c∈ sh _
+            ((pr (ar .fst) (a .fst) ∈ C) .snd) (use (ar .fst) (a .fst)))
 
       up : ∀ {m} (γ : S ^ m) (k : ℕ)
          → ((ar a : V ℓ) → Concl f h C k ar a → ⟨ pr (sucV ar) a ∈ C ⟩)
          → ⟨ (D ∷ γ) ⊨ unShapeAt zero k (oneSuccAt zero) ⟩
       up γ k use = unSuccClosed-in zero k (D ∷ γ)
         (λ c ar a c∈ sh →
-          viaKey k c (fst ar) (fst a) c∈ sh _
-            (snd (pr (sucV (fst ar)) (fst a) ∈ C)) (use (fst ar) (fst a)))
+          viaKey k c (ar .fst) (a .fst) c∈ sh _
+            ((pr (sucV (ar .fst)) (a .fst) ∈ C) .snd) (use (ar .fst) (a .fst)))
 
       sndUp : ∀ {m} (γ : S ^ m) (k : ℕ)
             → ((ar a b : V ℓ) → Concl f h C k ar (pr a b)
@@ -223,9 +223,9 @@ is a proposition.
             → ⟨ (D ∷ γ) ⊨ binShapeAt zero k (succSndAt zero) ⟩
       sndUp γ k use = binSuccClosed-in zero k (D ∷ γ)
         (λ c ar a b c∈ sh →
-          viaKey k c (fst ar) (pr (fst a) (fst b)) c∈ sh _
-            (snd (pr (sucV (fst ar)) (fst b) ∈ C))
-            (use (fst ar) (fst a) (fst b)))
+          viaKey k c (ar .fst) (pr (a .fst) (b .fst)) c∈ sh _
+            ((pr (sucV (ar .fst)) (b .fst) ∈ C) .snd)
+            (use (ar .fst) (a .fst) (b .fst)))
 ```
 
 <!--en-->

@@ -358,7 +358,7 @@ The recovered index still has to become membership in the image, and this is the
 
 ```agda
       in mf .fst
-       , cong fst (fc (⟪ a ⟫↪ (mf .fst)) (memb a (mf .fst)) .snd (y , hφ')) }
+       , cong (λ p → p .fst) (fc (⟪ a ⟫↪ (mf .fst)) (memb a (mf .fst)) .snd (y , hφ')) }
 ```
 </div>
 </details>
@@ -608,7 +608,7 @@ Forward, the membership in the chain is first transported to membership in `# (s
 
 ```agda
     fwd z∈ = ∈sucV-elim {A = # n} {x = z}
-      (snd ((z ∈ˢ a n) ⊔ (z ≈ˢ a n)))
+      (((z ∈ˢ a n) ⊔ (z ≈ˢ a n)) .snd)
       (subst (λ w → ⟨ z ∈ˢ w ⟩) (q (suc n)) z∈)
       (λ z∈#n → ∣ inl (subst (λ w → ⟨ z ∈ˢ w ⟩) (sym (q n)) z∈#n) ∣₁)
       (λ z≡#n → ∣ inr (z≡#n ∙ sym (q n)) ∣₁)
@@ -624,7 +624,7 @@ Backward has two truncated cases to handle, so the eliminator runs into the memb
 
 ```agda
     bwd : ⟨ (z ∈ˢ a n) ⊔ (z ≈ˢ a n) ⟩ → ⟨ z ∈ˢ a (suc n) ⟩
-    bwd = rec₁ (snd (z ∈ˢ a (suc n)))
+    bwd = rec₁ ((z ∈ˢ a (suc n)) .snd)
       (λ { (inl z∈n) → subst (λ w → ⟨ z ∈ˢ w ⟩) (sym (q (suc n)))
              (∈sucV-inl {A = # n} (subst (λ w → ⟨ z ∈ˢ w ⟩) (q n) z∈n))
          ; (inr z≡n) → subst (λ w → ⟨ z ∈ˢ w ⟩) (sym (q (suc n)))
@@ -1072,7 +1072,7 @@ The second fact turns a uniqueness argument into contractibility data. For a cla
 ```agda
                       → isContr (Σ[ z ∶ S ] (z ∈ᶜ P))
   isContrΣ-fromCenter {P} z₀ p₀ u =
-    (z₀ , p₀) , λ w → Σ≡Prop (λ v → snd (P v)) (u (w .fst) (w .snd))
+    (z₀ , p₀) , λ w → Σ≡Prop (λ v → (P v) .snd) (u (w .fst) (w .snd))
 ```
 
 <details open class="submodule-fold">

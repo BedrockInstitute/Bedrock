@@ -101,11 +101,11 @@ The final GCH statement asks for a successor cardinal together with coded inject
 <!--/-->
 
 <!--en-->
-The bounded search is made small by using the presentation of the ordinal `sucV (fst θ)`. Its indices represent the members of `sucV (fst θ)`, hence ordinals no larger than `θ`; `ω` is used separately to express that the cardinal under study is not finite. When two constructible pairs have equal underlying sets, propositionhood of constructibility lifts that equality to the pairs themselves.
+The bounded search is made small by using the presentation of the ordinal `sucV (θ .fst)`. Its indices represent the members of `sucV (θ .fst)`, hence ordinals no larger than `θ`; `ω` is used separately to express that the cardinal under study is not finite. When two constructible pairs have equal underlying sets, propositionhood of constructibility lifts that equality to the pairs themselves.
 <!--zh-->
-有界搜索通过序数 `sucV (fst θ)` 的小呈现变成一个小类型。其索引表示 `sucV (fst θ)` 的元素，也就是不大于 `θ` 的序数；`ω` 则另用于表达所研究的基数不是有限序数。若两个可构造对的底层集合相等，可构造性的命题性会把这一相等提升为这两个配对的相等。
+有界搜索通过序数 `sucV (θ .fst)` 的小呈现变成一个小类型。其索引表示 `sucV (θ .fst)` 的元素，也就是不大于 `θ` 的序数；`ω` 则另用于表达所研究的基数不是有限序数。若两个可构造对的底层集合相等，可构造性的命题性会把这一相等提升为这两个配对的相等。
 <!--ja-->
-有界探索には、順序数 `sucV (fst θ)` の小さな提示を使う。その添字は `sucV (fst θ)` の要素、すなわち `θ` 以下の順序数を表す。一方、`ω` は考察する基数が有限順序数でないことを表すために使う。二つの構成可能な対の底の集合が等しいとき、構成可能性が命題であることにより、その等しさを対そのものの等しさへ持ち上げられる。
+有界探索には、順序数 `sucV (θ .fst)` の小さな提示を使う。その添字は `sucV (θ .fst)` の要素、すなわち `θ` 以下の順序数を表す。一方、`ω` は考察する基数が有限順序数でないことを表すために使う。二つの構成可能な対の底の集合が等しいとき、構成可能性が命題であることにより、その等しさを対そのものの等しさへ持ち上げられる。
 <!--/-->
 
 ```agda
@@ -190,8 +190,8 @@ The first interface says what it means for a stage to be counted: for every pair
 ```agda
 StageCountedCoded : Type (ℓ-suc ℓ)
 StageCountedCoded =
-    (δ Lδ : SL.S) → IsOrd (fst δ) → (⟨ fst δ ∈ˢ ω ⟩ → ⊥₀)
-  → fst Lδ ≡ Lset (fst δ) → InjL Lδ δ
+    (δ Lδ : SL.S) → IsOrd (δ .fst) → (⟨ δ .fst ∈ˢ ω ⟩ → ⊥₀)
+  → Lδ .fst ≡ Lset (δ .fst) → InjL Lδ δ
 ```
 
 <!--en-->
@@ -205,8 +205,8 @@ The second interface states the bounded-subset theorem. For an ordinal internal 
 ```agda
 InternalBoundedSubset : Type (ℓ-suc ℓ)
 InternalBoundedSubset =
-    (κ : SL.S) → IsOrd (fst κ) → IsCardinalL κ → (⟨ fst κ ∈ˢ ω ⟩ → ⊥₀)
-  → (y : SL.S) → ((z : SV.S) → ⟨ z ∈ˢ fst y ⟩ → ⟨ z ∈ˢ fst κ ⟩)
+    (κ : SL.S) → IsOrd (κ .fst) → IsCardinalL κ → (⟨ κ .fst ∈ˢ ω ⟩ → ⊥₀)
+  → (y : SL.S) → ((z : SV.S) → ⟨ z ∈ˢ y .fst ⟩ → ⟨ z ∈ˢ κ .fst ⟩)
   → ∥ Σ[ β ∶ SL.S ]
 ```
 
@@ -219,7 +219,7 @@ The produced record contains the ordinality of `β`, the landing of `y` in the s
 <!--/-->
 
 ```agda
-       (IsOrd (fst β) × ⟨ fst y ∈ˢ Lset (fst β) ⟩ × InjL β κ) ∥₁
+       (IsOrd (β .fst) × ⟨ y .fst ∈ˢ Lset (β .fst) ⟩ × InjL β κ) ∥₁
 ```
 
 <!--en-->
@@ -233,7 +233,7 @@ The third interface is a conditional reverse comparison: given that the internal
 ```agda
 SuccIntoPower : ModelL.isZFModel → Type (ℓ-suc ℓ)
 SuccIntoPower zf =
-    (κ δ : SL.S) → (⟨ fst κ ∈ˢ ω ⟩ → ⊥₀) → SuccCardL δ κ
+    (κ δ : SL.S) → (⟨ κ .fst ∈ˢ ω ⟩ → ⊥₀) → SuccCardL δ κ
   → InjL (𝒫 κ) δ → InjL δ (𝒫 κ)
   where open ModelL.isZFModel zf using ( 𝒫 )
 ```
@@ -249,8 +249,8 @@ The fourth interface states the mere existence of a successor cardinal: for ever
 ```agda
 SuccCardExists : Type (ℓ-suc ℓ)
 SuccCardExists =
-    (κ : SL.S) → IsOrd (fst κ) → IsCardinalL κ
-  → (⟨ fst κ ∈ˢ ω ⟩ → ⊥₀)
+    (κ : SL.S) → IsOrd (κ .fst) → IsCardinalL κ
+  → (⟨ κ .fst ∈ˢ ω ⟩ → ⊥₀)
   → ∥ Σ[ δ ∶ SL.S ] SuccCardL δ κ ∥₁
 ```
 
@@ -273,19 +273,19 @@ The reduction module fixes an ordinal internal cardinal `θ` strictly above `κ`
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module Reduce (κ : SL.S) (oκ : IsOrd (fst κ))
-              (θ : SL.S) (oθ : IsOrd (fst θ))
-              (cθ : IsCardinalL θ) (κ∈θ : ⟨ fst κ ∈ˢ fst θ ⟩) where
+module Reduce (κ : SL.S) (oκ : IsOrd (κ .fst))
+              (θ : SL.S) (oθ : IsOrd (θ .fst))
+              (cθ : IsCardinalL θ) (κ∈θ : ⟨ κ .fst ∈ˢ θ .fst ⟩) where
 ```
 </summary>
 <div class="submodule-fold-content">
 
 <!--en-->
-The earlier cardinal machinery supplies a map `up` from indices in the small presentation of the ordinal `sucV (fst θ)` to constructible sets. It also supplies an index `self` that presents `θ` itself and an equation `self-eq` identifying the underlying set of `up self` with `θ`. Thus the known cardinal `θ` occurs among the candidates of the bounded search.
+The earlier cardinal machinery supplies a map `up` from indices in the small presentation of the ordinal `sucV (θ .fst)` to constructible sets. It also supplies an index `self` that presents `θ` itself and an equation `self-eq` identifying the underlying set of `up self` with `θ`. Thus the known cardinal `θ` occurs among the candidates of the bounded search.
 <!--zh-->
-此前的基数机制提供映射 `up`，把序数 `sucV (fst θ)` 的小呈现中的索引送到可构造集合。它还提供呈现 `θ` 自身的索引 `self`，以及把 `up self` 的底层集合与 `θ` 认同起来的等式 `self-eq`。因此，已知的基数 `θ` 确实出现在有界搜索的候选者中。
+此前的基数机制提供映射 `up`，把序数 `sucV (θ .fst)` 的小呈现中的索引送到可构造集合。它还提供呈现 `θ` 自身的索引 `self`，以及把 `up self` 的底层集合与 `θ` 认同起来的等式 `self-eq`。因此，已知的基数 `θ` 确实出现在有界搜索的候选者中。
 <!--ja-->
-先の基数の仕組みは、順序数 `sucV (fst θ)` の小さな提示の添字から構成可能な集合への写像 `up` を与える。さらに、`θ` 自身を提示する添字 `self` と、`up self` の底の集合を `θ` と同一視する等式 `self-eq` も与える。したがって、既知の基数 `θ` は有界探索の候補に実際に含まれる。
+先の基数の仕組みは、順序数 `sucV (θ .fst)` の小さな提示の添字から構成可能な集合への写像 `up` を与える。さらに、`θ` 自身を提示する添字 `self` と、`up self` の底の集合を `θ` と同一視する等式 `self-eq` も与える。したがって、既知の基数 `θ` は有界探索の候補に実際に含まれる。
 <!--/-->
 
 ```agda
@@ -293,30 +293,30 @@ The earlier cardinal machinery supplies a map `up` from indices in the small pre
 ```
 
 <!--en-->
-The search space is the small presentation of the ordinal successor `sucV (fst θ)`. It is a presentation of an ordinal, not a constructible stage `Lset (fst θ)`.
+The search space is the small presentation of the ordinal successor `sucV (θ .fst)`. It is a presentation of an ordinal, not a constructible stage `Lset (θ .fst)`.
 <!--zh-->
-搜索空间是序数后继 `sucV (fst θ)` 的小呈现。这里呈现的是一个序数，而不是可构造层 `Lset (fst θ)`。
+搜索空间是序数后继 `sucV (θ .fst)` 的小呈现。这里呈现的是一个序数，而不是可构造层 `Lset (θ .fst)`。
 <!--ja-->
-探索空間は、順序数としての後続 `sucV (fst θ)` の小さな提示である。ここで提示しているのは順序数であって、構成可能な段階 `Lset (fst θ)` ではない。
+探索空間は、順序数としての後続 `sucV (θ .fst)` の小さな提示である。ここで提示しているのは順序数であって、構成可能な段階 `Lset (θ .fst)` ではない。
 <!--/-->
 
 ```agda
   A : Type ℓ
-  A = ⟪ sucV (fst θ) ⟫
+  A = ⟪ sucV (θ .fst) ⟫
 ```
 
 <!--en-->
-Membership on the ordinal `sucV (fst θ)` induces a strict well-order on this presentation. That well-order makes it possible to search the small candidate family for a least member.
+Membership on the ordinal `sucV (θ .fst)` induces a strict well-order on this presentation. That well-order makes it possible to search the small candidate family for a least member.
 <!--zh-->
-序数 `sucV (fst θ)` 上的成员关系在这一呈现上诱导出严格良序。借助该良序，证明可以在这个小候选族中寻找最小元。
+序数 `sucV (θ .fst)` 上的成员关系在这一呈现上诱导出严格良序。借助该良序，证明可以在这个小候选族中寻找最小元。
 <!--ja-->
-順序数 `sucV (fst θ)` 上の所属関係は、この提示に厳密な整列順序を誘導する。この整列順序により、小さな候補族の中で最小要素を探索できる。
+順序数 `sucV (θ .fst)` 上の所属関係は、この提示に厳密な整列順序を誘導する。この整列順序により、小さな候補族の中で最小要素を探索できる。
 <!--/-->
 
 ```agda
   opaque
     w : SWO A
-    w = ordSWO (sucV (fst θ)) (suc-ord oθ)
+    w = ordSWO (sucV (θ .fst)) (suc-ord oθ)
 ```
 
 <!--en-->
@@ -330,8 +330,8 @@ For presentation indices `m` and `n`, the induced relation `m < n` holds exactly
 ```agda
   opaque
     unfolding w
-    w-lt : (m n : A) → SWO._<∙_ w m n
-         ≡ ⟨ ⟪ sucV (fst θ) ⟫↪ m ∈ˢ ⟪ sucV (fst θ) ⟫↪ n ⟩
+    w-lt : (m n : A) → let module W = SWO w in (m W.<∙ n)
+         ≡ ⟨ ⟪ sucV (θ .fst) ⟫↪ m ∈ˢ ⟪ sucV (θ .fst) ⟫↪ n ⟩
     w-lt m n = refl
 ```
 
@@ -350,17 +350,17 @@ Internal cardinality is a proposition. Indeed, `IsCardinalL x` says, for every c
 ```
 
 <!--en-->
-The candidate predicate asks two things of an index: the constructible set it presents is an internal cardinal, and `κ` belongs to it. Ordinality need not be stored in the predicate, because every presented set is a member of the ordinal `sucV (fst θ)` and is therefore itself an ordinal. The package `definedGood` presents the conjunction by `cardinalAt zero ∧̇ (var one ∈̇ var zero)`. Its environment places the candidate before `κ`, and the two directions of `CardinalAt` give the checked reading of the non-atomic conjunct.
+The candidate predicate asks two things of an index: the constructible set it presents is an internal cardinal, and `κ` belongs to it. Ordinality need not be stored in the predicate, because every presented set is a member of the ordinal `sucV (θ .fst)` and is therefore itself an ordinal. The package `definedGood` presents the conjunction by `cardinalAt zero ∧̇ (var one ∈̇ var zero)`. Its environment places the candidate before `κ`, and the two directions of `CardinalAt` give the checked reading of the non-atomic conjunct.
 <!--zh-->
-候选谓词向索引要求两件事：其呈现的可构造集合是内部基数，并且 `κ` 属于它。谓词无需另存序数性，因为每个被呈现的集合都是序数 `sucV (fst θ)` 的元素，因而自身就是序数。包 `definedGood` 用 `cardinalAt zero ∧̇ (var one ∈̇ var zero)` 呈现这个合取；其环境把候选者放在 `κ` 之前，而 `CardinalAt` 的两个方向为非原子合取支给出经过检查的读取。
+候选谓词向索引要求两件事：其呈现的可构造集合是内部基数，并且 `κ` 属于它。谓词无需另存序数性，因为每个被呈现的集合都是序数 `sucV (θ .fst)` 的元素，因而自身就是序数。包 `definedGood` 用 `cardinalAt zero ∧̇ (var one ∈̇ var zero)` 呈现这个合取；其环境把候选者放在 `κ` 之前，而 `CardinalAt` 的两个方向为非原子合取支给出经过检查的读取。
 <!--ja-->
-候補述語は、添字に二つの条件を課す。その添字が提示する構成可能な集合が内部基数であることと、`κ` がその集合に属することである。順序数性を述語に別途保存する必要はない。提示される各集合は順序数 `sucV (fst θ)` の要素なので、それ自身も順序数だからである。パッケージ `definedGood` はこの連言を `cardinalAt zero ∧̇ (var one ∈̇ var zero)` で表す。その環境では候補が `κ` より前に置かれ、`CardinalAt` の二方向が非原子的な連言肢の検査済みの読みを与える。
+候補述語は、添字に二つの条件を課す。その添字が提示する構成可能な集合が内部基数であることと、`κ` がその集合に属することである。順序数性を述語に別途保存する必要はない。提示される各集合は順序数 `sucV (θ .fst)` の要素なので、それ自身も順序数だからである。パッケージ `definedGood` はこの連言を `cardinalAt zero ∧̇ (var one ∈̇ var zero)` で表す。その環境では候補が `κ` より前に置かれ、`CardinalAt` の二方向が非原子的な連言肢の検査済みの読みを与える。
 <!--/-->
 
 ```agda
   Good : A → hProp (ℓ-suc ℓ)
-  Good b = (IsCardinalL (up b) × ⟨ fst κ ∈ˢ fst (up b) ⟩)
-         , isProp× (isPropIsCardinalL (up b)) (snd (fst κ ∈ˢ fst (up b)))
+  Good b = (IsCardinalL (up b) × ⟨ κ .fst ∈ˢ (up b) .fst ⟩)
+         , isProp× (isPropIsCardinalL (up b)) ((κ .fst ∈ˢ (up b) .fst) .snd)
 
   definedGood : FOL.Semantics.FormulaPredicate 𝒮ʟ A SL.S id Good
   definedGood = FOL.Semantics.presented 2
@@ -380,7 +380,7 @@ The index presenting `θ` itself presents a constructible set whose underlying s
 
 ```agda
   upSelf : up self ≡ θ
-  upSelf = Σ≡Prop (λ x → snd (isL x)) self-eq
+  upSelf = Σ≡Prop (λ x → (isL x) .snd) self-eq
 ```
 
 <!--en-->
@@ -394,7 +394,7 @@ The candidate class is nonempty: the index presenting `θ` is a candidate, carry
 ```agda
   nonempty : ∥ Σ[ b ∶ A ] ⟨ Good b ⟩ ∥₁
   nonempty = ∣ self
-            , subst (λ z → IsCardinalL z × ⟨ fst κ ∈ˢ fst z ⟩)
+            , subst (λ z → IsCardinalL z × ⟨ κ .fst ∈ˢ z .fst ⟩)
                 (sym upSelf) (cθ , κ∈θ) ∣₁
 ```
 
@@ -421,20 +421,20 @@ Name the constructible set presented by the least candidate `δ`. The following 
 
 ```agda
   δ : SL.S
-  δ = up (fst least)
+  δ = up (least .fst)
 ```
 
 <!--en-->
-By the presentation's membership record, the underlying set of `δ` belongs to the ordinal `sucV (fst θ)`. Thus the construction proves only `fst δ ∈ sucV (fst θ)`, which places `δ` at or below `θ`; it does not assert `fst δ ∈ fst θ`.
+By the presentation's membership record, the underlying set of `δ` belongs to the ordinal `sucV (θ .fst)`. Thus the construction proves only `δ .fst ∈ sucV (θ .fst)`, which places `δ` at or below `θ`; it does not assert `δ .fst ∈ θ .fst`.
 <!--zh-->
-由呈现所附的成员关系记录，`δ` 的底层集合属于序数 `sucV (fst θ)`。因此这里证明的只是 `fst δ ∈ sucV (fst θ)`，即 `δ` 不大于 `θ`；并没有断言 `fst δ ∈ fst θ`。
+由呈现所附的成员关系记录，`δ` 的底层集合属于序数 `sucV (θ .fst)`。因此这里证明的只是 `δ .fst ∈ sucV (θ .fst)`，即 `δ` 不大于 `θ`；并没有断言 `δ .fst ∈ θ .fst`。
 <!--ja-->
-提示に付随する所属の記録により、`δ` の底の集合は順序数 `sucV (fst θ)` に属する。したがって、ここで示されるのは `fst δ ∈ sucV (fst θ)`、すなわち `δ` が `θ` 以下であることだけであり、`fst δ ∈ fst θ` を主張してはいない。
+提示に付随する所属の記録により、`δ` の底の集合は順序数 `sucV (θ .fst)` に属する。したがって、ここで示されるのは `δ .fst ∈ sucV (θ .fst)`、すなわち `δ` が `θ` 以下であることだけであり、`δ .fst ∈ θ .fst` を主張してはいない。
 <!--/-->
 
 ```agda
-  δ∈sθ : ⟨ fst δ ∈ˢ sucV (fst θ) ⟩
-  δ∈sθ = member (sucV (fst θ)) (fst least)
+  δ∈sθ : ⟨ δ .fst ∈ˢ sucV (θ .fst) ⟩
+  δ∈sθ = member (sucV (θ .fst)) (least .fst)
 ```
 
 <!--en-->
@@ -446,8 +446,8 @@ The underlying set of `δ` is an ordinal, because it is a member of the ordinal 
 <!--/-->
 
 ```agda
-  oδ : IsOrd (fst δ)
-  oδ = mem-ord {A = sucV (fst θ)} (suc-ord oθ) (fst δ) δ∈sθ
+  oδ : IsOrd (δ .fst)
+  oδ = mem-ord {A = sucV (θ .fst)} (suc-ord oθ) (δ .fst) δ∈sθ
 ```
 
 <!--en-->
@@ -460,7 +460,7 @@ The least candidate is an internal cardinal, read off the candidate record.
 
 ```agda
   cδ : IsCardinalL δ
-  cδ = fst (fst (snd least))
+  cδ = ((least .snd) .fst) .fst
 ```
 
 <!--en-->
@@ -472,8 +472,8 @@ The given cardinal lies below the least candidate, also read off the candidate r
 <!--/-->
 
 ```agda
-  κ∈δ : ⟨ fst κ ∈ˢ fst δ ⟩
-  κ∈δ = snd (fst (snd least))
+  κ∈δ : ⟨ κ .fst ∈ˢ δ .fst ⟩
+  κ∈δ = ((least .snd) .fst) .snd
 ```
 
 <!--en-->
@@ -485,8 +485,8 @@ Leastness says that no earlier index of the search space is a candidate.
 <!--/-->
 
 ```agda
-  δ-min : (b : A) → ⟨ Good b ⟩ → (SWO._<∙_ w b (fst least) → ⊥₀)
-  δ-min = snd (snd least)
+  δ-min : (b : A) → ⟨ Good b ⟩ → let module W = SWO w in (b W.<∙ least .fst → ⊥₀)
+  δ-min = (least .snd) .snd
 ```
 
 <!--en-->
@@ -498,10 +498,10 @@ Global leastness is stated as a containment: for every ordinal internal cardinal
 <!--/-->
 
 ```agda
-  leastness : (c : SL.S) → IsOrd (fst c) → IsCardinalL c
-            → ⟨ fst κ ∈ˢ fst c ⟩
-            → (x : SL.S) → ⟨ fst x ∈ˢ fst δ ⟩ → ⟨ fst x ∈ˢ fst c ⟩
-  leastness c oc cc κ∈c = go (ord-tri (fst δ) oδ (fst c) oc)
+  leastness : (c : SL.S) → IsOrd (c .fst) → IsCardinalL c
+            → ⟨ κ .fst ∈ˢ c .fst ⟩
+            → (x : SL.S) → ⟨ x .fst ∈ˢ δ .fst ⟩ → ⟨ x .fst ∈ˢ c .fst ⟩
+  leastness c oc cc κ∈c = go (ord-tri (δ .fst) oδ (c .fst) oc)
     where
 ```
 
@@ -514,27 +514,27 @@ The three trichotomy cases are handled directly: if `δ` lies below `c`, the tra
 <!--/-->
 
 ```agda
-    go : Tri (fst δ) (fst c)
-       → (x : SL.S) → ⟨ fst x ∈ˢ fst δ ⟩ → ⟨ fst x ∈ˢ fst c ⟩
+    go : Tri (δ .fst) (c .fst)
+       → (x : SL.S) → ⟨ x .fst ∈ˢ δ .fst ⟩ → ⟨ x .fst ∈ˢ c .fst ⟩
     go (inl δ∈c)       x x∈δ = oc .fst x∈δ δ∈c
-    go (inr (inl e))   x x∈δ = subst (λ v → ⟨ fst x ∈ˢ v ⟩) e x∈δ
+    go (inr (inl e))   x x∈δ = subst (λ v → ⟨ x .fst ∈ˢ v ⟩) e x∈δ
     go (inr (inr c∈δ)) x x∈δ = ⊥₀-rec (δ-min b bGood b<δ)
 ```
 
 <!--en-->
-In the remaining case, `c ∈ δ`. Since `fst δ ∈ sucV (fst θ)` and the ordinal `sucV (fst θ)` is transitive, it follows that `fst c ∈ sucV (fst θ)`. Only this contradictory branch needs to pull the competing cardinal back into the bounded search space; no prior bound on an arbitrary competitor was assumed.
+In the remaining case, `c ∈ δ`. Since `δ .fst ∈ sucV (θ .fst)` and the ordinal `sucV (θ .fst)` is transitive, it follows that `c .fst ∈ sucV (θ .fst)`. Only this contradictory branch needs to pull the competing cardinal back into the bounded search space; no prior bound on an arbitrary competitor was assumed.
 <!--zh-->
-在余下的情形中有 `c ∈ δ`。由 `fst δ ∈ sucV (fst θ)` 及序数 `sucV (fst θ)` 的传递性，可得 `fst c ∈ sucV (fst θ)`。只有这个反证分支才需要把竞争基数拉回有界搜索空间；证明并未预先假设任意竞争者都受 `θ` 限制。
+在余下的情形中有 `c ∈ δ`。由 `δ .fst ∈ sucV (θ .fst)` 及序数 `sucV (θ .fst)` 的传递性，可得 `c .fst ∈ sucV (θ .fst)`。只有这个反证分支才需要把竞争基数拉回有界搜索空间；证明并未预先假设任意竞争者都受 `θ` 限制。
 <!--ja-->
-残る場合には `c ∈ δ` である。`fst δ ∈ sucV (fst θ)` であり、順序数 `sucV (fst θ)` は推移的なので、`fst c ∈ sucV (fst θ)` が従う。競合する基数を有界探索へ引き戻す必要があるのは、この矛盾を導く枝だけである。任意の競合者があらかじめ `θ` で抑えられているとは仮定していない。
+残る場合には `c ∈ δ` である。`δ .fst ∈ sucV (θ .fst)` であり、順序数 `sucV (θ .fst)` は推移的なので、`c .fst ∈ sucV (θ .fst)` が従う。競合する基数を有界探索へ引き戻す必要があるのは、この矛盾を導く枝だけである。任意の競合者があらかじめ `θ` で抑えられているとは仮定していない。
 <!--/-->
 
 ```agda
       where
-      c∈sθ : ⟨ fst c ∈ˢ sucV (fst θ) ⟩
+      c∈sθ : ⟨ c .fst ∈ˢ sucV (θ .fst) ⟩
       c∈sθ = suc-ord oθ .fst c∈δ δ∈sθ
       b : A
-      b = fiber (sucV (fst θ)) c∈sθ .fst
+      b = fiber (sucV (θ .fst)) c∈sθ .fst
 ```
 
 <!--en-->
@@ -546,10 +546,10 @@ The recovered index presents exactly `c`, and the constructible set it presents 
 <!--/-->
 
 ```agda
-      be : ⟪ sucV (fst θ) ⟫↪ b ≡ fst c
-      be = fiber (sucV (fst θ)) c∈sθ .snd
+      be : ⟪ sucV (θ .fst) ⟫↪ b ≡ c .fst
+      be = fiber (sucV (θ .fst)) c∈sθ .snd
       upb : up b ≡ c
-      upb = Σ≡Prop (λ v → snd (isL v)) be
+      upb = Σ≡Prop (λ v → (isL v) .snd) be
       bGood : ⟨ Good b ⟩
 ```
 
@@ -562,21 +562,21 @@ The membership of `c` below `δ` is then converted into the strict order of the 
 <!--/-->
 
 ```agda
-      bGood = subst (λ z → IsCardinalL z × ⟨ fst κ ∈ˢ fst z ⟩)
+      bGood = subst (λ z → IsCardinalL z × ⟨ κ .fst ∈ˢ z .fst ⟩)
                 (sym upb) (cc , κ∈c)
-      b<δ : SWO._<∙_ w b (fst least)
-      b<δ = transport (λ i → sym (w-lt b (fst least)) i)
-              (subst (λ v → ⟨ v ∈ˢ fst δ ⟩) (sym be) c∈δ)
+      b<δ : let module W = SWO w in b W.<∙ least .fst
+      b<δ = transport (λ i → sym (w-lt b (least .fst)) i)
+              (subst (λ v → ⟨ v ∈ˢ δ .fst ⟩) (sym be) c∈δ)
 ```
 </div>
 </details>
 
 <!--en-->
-`CardAboveL` supplies only the propositionally truncated existence of some ordinal internal cardinal `θ` with `κ ∈ θ`; it supplies no leastness and does not select `θ`. The proof maps each local witness through `Reduce`, where minimization occurs inside the presentation of `sucV (fst θ)`. The resulting successor cardinal therefore remains under propositional truncation.
+`CardAboveL` supplies only the propositionally truncated existence of some ordinal internal cardinal `θ` with `κ ∈ θ`; it supplies no leastness and does not select `θ`. The proof maps each local witness through `Reduce`, where minimization occurs inside the presentation of `sucV (θ .fst)`. The resulting successor cardinal therefore remains under propositional truncation.
 <!--zh-->
-`CardAboveL` 只在命题截断下给出某个序数内部基数 `θ`，满足 `κ ∈ θ`；它既不提供最小性，也不选定 `θ`。证明把每个局部见证送入 `Reduce`，并在那里于 `sucV (fst θ)` 的呈现中完成极小化。因此，所得后继基数仍处在命题截断之下。
+`CardAboveL` 只在命题截断下给出某个序数内部基数 `θ`，满足 `κ ∈ θ`；它既不提供最小性，也不选定 `θ`。证明把每个局部见证送入 `Reduce`，并在那里于 `sucV (θ .fst)` 的呈现中完成极小化。因此，所得后继基数仍处在命题截断之下。
 <!--ja-->
-`CardAboveL` が与えるのは、`κ ∈ θ` を満たす何らかの内部順序数基数 `θ` の命題的に切り詰められた存在だけである。最小性は与えず、`θ` も選ばない。証明は各局所的な証人を `Reduce` へ写し、そこで `sucV (fst θ)` の提示の内部における最小化を行う。したがって、得られる後続基数も命題的切り詰めの内側に留まる。
+`CardAboveL` が与えるのは、`κ ∈ θ` を満たす何らかの内部順序数基数 `θ` の命題的に切り詰められた存在だけである。最小性は与えず、`θ` も選ばない。証明は各局所的な証人を `Reduce` へ写し、そこで `sucV (θ .fst)` の提示の内部における最小化を行う。したがって、得られる後続基数も命題的切り詰めの内側に留まる。
 <!--/-->
 
 ```agda
@@ -584,7 +584,7 @@ succCardExists : SuccCardExists
 succCardExists κ oκ cκ κ∉ω = map₁ build (CardAboveL κ oκ cκ κ∉ω)
   where
   build : Σ[ θ ∶ SL.S ]
-            (IsOrd (fst θ) × IsCardinalL θ × ⟨ fst κ ∈ˢ fst θ ⟩)
+            (IsOrd (θ .fst) × IsCardinalL θ × ⟨ κ .fst ∈ˢ θ .fst ⟩)
 ```
 
 <!--en-->
@@ -618,8 +618,8 @@ A stage whose index is an ordinal is constructible, by the axiom relating stages
 <!--/-->
 
 ```agda
-stage-is-L : (δ : SL.S) → IsOrd (fst δ) → ⟨ isL (Lset (fst δ)) ⟩
-stage-is-L δ ordδ = isL-Lset (fst δ) ordδ
+stage-is-L : (δ : SL.S) → IsOrd (δ .fst) → ⟨ isL (Lset (δ .fst)) ⟩
+stage-is-L δ ordδ = isL-Lset (δ .fst) ordδ
 ```
 
 <!--en-->
@@ -633,9 +633,9 @@ The bridging predicate for the power set states its content: for two constructib
 ```agda
 zStrongest : ModelL.isZFModel → Type (ℓ-suc ℓ)
 zStrongest zf =
-    (κ y : SL.S) → IsOrd (fst κ) → ⟨ fst y ∈ˢ fst (𝒫 κ) ⟩
-  → (z : SV.S) → ⟨ z ∈ˢ fst y ⟩
-  → (⟨ isL z ⟩ × ⟨ z ∈ˢ fst κ ⟩ × IsOrd z)
+    (κ y : SL.S) → IsOrd (κ .fst) → ⟨ y .fst ∈ˢ (𝒫 κ) .fst ⟩
+  → (z : SV.S) → ⟨ z ∈ˢ y .fst ⟩
+  → (⟨ isL z ⟩ × ⟨ z ∈ˢ κ .fst ⟩ × IsOrd z)
 ```
 
 <!--en-->
@@ -660,7 +660,7 @@ The subtle point is a change of domains. Power-set membership yields a subset st
 
 ```agda
 z-strongest : (zf : ModelL.isZFModel) → zStrongest zf
-z-strongest zf κ y ordκ y∈𝒫κ z z∈y = isLz , z∈κ , mem-ord {A = fst κ} ordκ z z∈κ
+z-strongest zf κ y ordκ y∈𝒫κ z z∈y = isLz , z∈κ , mem-ord {A = κ .fst} ordκ z z∈κ
   where
   open ModelL.isZFModel zf using ( 𝒫; hasPower )
 ```
@@ -675,7 +675,7 @@ The constructibility of `z` follows by transitivity: `z` belongs to the construc
 
 ```agda
   isLz : ⟨ isL z ⟩
-  isLz = isL-trans z∈y (snd y)
+  isLz = isL-trans z∈y (y .snd)
 ```
 
 <!--en-->
@@ -700,7 +700,7 @@ The internal subset relation is then applied to the pair of `z` and its construc
 <!--/-->
 
 ```agda
-  z∈κ : ⟨ z ∈ˢ fst κ ⟩
+  z∈κ : ⟨ z ∈ˢ κ .fst ⟩
   z∈κ = y⊆κ (z , isLz) z∈y
 ```
 
@@ -723,9 +723,9 @@ The landing lemma is stated for the model, the bounded-subset interface, and a f
 ```agda
 stage-landing :
     (zf : ModelL.isZFModel) → InternalBoundedSubset
-  → (κ : SL.S) → IsOrd (fst κ) → IsCardinalL κ → (⟨ fst κ ∈ˢ ω ⟩ → ⊥₀)
+  → (κ : SL.S) → IsOrd (κ .fst) → IsCardinalL κ → (⟨ κ .fst ∈ˢ ω ⟩ → ⊥₀)
   → (δ : SL.S) → SuccCardL δ κ
-  → (y : SL.S) → ⟨ fst y ∈ˢ fst (ModelL.isZFModel.𝒫 zf κ) ⟩
+  → (y : SL.S) → ⟨ y .fst ∈ˢ (ModelL.isZFModel.𝒫 zf κ) .fst ⟩
 ```
 
 <!--en-->
@@ -737,11 +737,11 @@ For each fixed `y`, the bounded-subset theorem returns a suitable stage index `�
 <!--/-->
 
 ```agda
-  → ⟨ fst y ∈ˢ Lset (fst δ) ⟩
+  → ⟨ y .fst ∈ˢ Lset (δ .fst) ⟩
 stage-landing zf ibs κ ordκ cardκ κ∉ω δ (ordδ , cardδ , κ∈δ , _) y y∈𝒫κ =
-  rec₁ (snd (fst y ∈ˢ Lset (fst δ))) place (ibs κ ordκ cardκ κ∉ω y y⊆κ)
+  rec₁ ((y .fst ∈ˢ Lset (δ .fst)) .snd) place (ibs κ ordκ cardκ κ∉ω y y⊆κ)
   where
-  y⊆κ : (z : SV.S) → ⟨ z ∈ˢ fst y ⟩ → ⟨ z ∈ˢ fst κ ⟩
+  y⊆κ : (z : SV.S) → ⟨ z ∈ˢ y .fst ⟩ → ⟨ z ∈ˢ κ .fst ⟩
 ```
 
 <!--en-->
@@ -779,9 +779,9 @@ For the fixed subset `y`, the bounded-subset estimate supplies, under propositio
 
 ```agda
   place : Σ[ β ∶ SL.S ]
-            (IsOrd (fst β) × ⟨ fst y ∈ˢ Lset (fst β) ⟩ × InjL β κ)
-        → ⟨ fst y ∈ˢ Lset (fst δ) ⟩
-  place (β , ordβ , y∈Lβ , β↪κ) = go (ord-tri (fst β) ordβ (fst δ) ordδ)
+            (IsOrd (β .fst) × ⟨ y .fst ∈ˢ Lset (β .fst) ⟩ × InjL β κ)
+        → ⟨ y .fst ∈ˢ Lset (δ .fst) ⟩
+  place (β , ordβ , y∈Lβ , β↪κ) = go (ord-tri (β .fst) ordβ (δ .fst) ordδ)
     where
 ```
 
@@ -794,7 +794,7 @@ If `β` lies below `δ`, monotonicity of the tower directly places the member at
 <!--/-->
 
 ```agda
-    go : Tri (fst β) (fst δ) → ⟨ fst y ∈ˢ Lset (fst δ) ⟩
+    go : Tri (β .fst) (δ .fst) → ⟨ y .fst ∈ˢ Lset (δ .fst) ⟩
     go (inl β∈δ)       = Lset-mono β∈δ y∈Lβ
     go (inr (inl e))   = ⊥₀-rec (no-δ↪κ (subst (λ b → InjL b κ) β≡δ β↪κ))
       where
@@ -810,11 +810,11 @@ In the equality branch, equality of the underlying sets lifts to equality of the
 <!--/-->
 
 ```agda
-      β≡δ = Σ≡Prop (λ x → snd (isL x)) e
+      β≡δ = Σ≡Prop (λ x → (isL x) .snd) e
     go (inr (inr δ∈β)) = ⊥₀-rec (no-δ↪κ
       (injl-trans δ β κ (inclusion-coded δ β δ⊆β) β↪κ))
       where
-      δ⊆β : (z : SV.S) → ⟨ z ∈ˢ fst δ ⟩ → ⟨ z ∈ˢ fst β ⟩
+      δ⊆β : (z : SV.S) → ⟨ z ∈ˢ δ .fst ⟩ → ⟨ z ∈ˢ β .fst ⟩
 ```
 
 <!--en-->
@@ -848,7 +848,7 @@ The power-set comparison now follows from the chain `𝒫κ ↪ Lset δ ↪ δ`.
 ```agda
 power-into-succ :
     (zf : ModelL.isZFModel) → StageCountedCoded → InternalBoundedSubset
-  → (κ : SL.S) → IsOrd (fst κ) → IsCardinalL κ → (⟨ fst κ ∈ˢ ω ⟩ → ⊥₀)
+  → (κ : SL.S) → IsOrd (κ .fst) → IsCardinalL κ → (⟨ κ .fst ∈ˢ ω ⟩ → ⊥₀)
   → (δ : SL.S) → SuccCardL δ κ
   → InjL (ModelL.isZFModel.𝒫 zf κ) δ
 ```
@@ -879,7 +879,7 @@ The stage at `δ` is presented as an element of `L` by pairing the stage set wit
 
 ```agda
   Lδ : SL.S
-  Lδ = Lset (fst δ) , stage-is-L δ ordδ
+  Lδ = Lset (δ .fst) , stage-is-L δ ordδ
 ```
 
 <!--en-->
@@ -891,8 +891,8 @@ The successor cardinal `δ` lies outside `ω`: if it were inside, the membership
 <!--/-->
 
 ```agda
-  δ∉ω : ⟨ fst δ ∈ˢ ω ⟩ → ⊥₀
-  δ∉ω δ∈ω = κ∉ω (ω-ord .fst {x = fst δ} {y = fst κ} κ∈δ δ∈ω)
+  δ∉ω : ⟨ δ .fst ∈ˢ ω ⟩ → ⊥₀
+  δ∉ω δ∈ω = κ∉ω (ω-ord .fst {x = δ .fst} {y = κ .fst} κ∈δ δ∈ω)
 ```
 
 <!--en-->
@@ -904,9 +904,9 @@ Every member of the power set is landed inside `Lset δ` by the landing lemma, w
 <!--/-->
 
 ```agda
-  into : (z : SV.S) → ⟨ z ∈ˢ fst (𝒫 κ) ⟩ → ⟨ z ∈ˢ fst Lδ ⟩
+  into : (z : SV.S) → ⟨ z ∈ˢ (𝒫 κ) .fst ⟩ → ⟨ z ∈ˢ Lδ .fst ⟩
   into z z∈ =
-    stage-landing zf ibs κ ordκ cardκ κ∉ω δ sc (z , isL-trans z∈ (snd (𝒫 κ))) z∈
+    stage-landing zf ibs κ ordκ cardκ κ∉ω δ sc (z , isL-trans z∈ ((𝒫 κ) .snd)) z∈
 ```
 
 <!--en-->

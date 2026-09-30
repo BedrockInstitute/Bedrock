@@ -198,8 +198,8 @@ An element of `SL.S` consists of an underlying set and a proof of constructibili
 <!--/-->
 
 ```agda
-S≡ : {x y : SL.S} → fst x ≡ fst y → x ≡ y
-S≡ = Σ≡Prop (λ v → snd (isL v))
+S≡ : {x y : SL.S} → x .fst ≡ y .fst → x ≡ y
+S≡ = Σ≡Prop (λ v → (isL v) .snd)
 ```
 
 <!--en-->
@@ -221,8 +221,8 @@ The first construction converts pointwise internal containment into membership i
 ```agda
 into-power :
     (zf : ModelL.isZFModel) (κ y : SL.S)
-  → ((z : SL.S) → ⟨ fst z ∈ˢ fst y ⟩ → ⟨ fst z ∈ˢ fst κ ⟩)
-  → ⟨ fst y ∈ˢ fst (ModelL.isZFModel.𝒫 zf κ) ⟩
+  → ((z : SL.S) → ⟨ z .fst ∈ˢ y .fst ⟩ → ⟨ z .fst ∈ˢ κ .fst ⟩)
+  → ⟨ y .fst ∈ˢ (ModelL.isZFModel.𝒫 zf κ) .fst ⟩
 into-power zf κ y sub =
 ```
 
@@ -313,7 +313,7 @@ The range clause of the coding says that every value recorded by the graph belon
 <!--/-->
 
 ```agda
-    ranF : (x y : SL.S) → Holds F x y → ⟨ fst y ∈ fst κ ⟩
+    ranF : (x y : SL.S) → Holds F x y → ⟨ y .fst ∈ κ .fst ⟩
     ranF = code .snd .snd .snd
 ```
 
@@ -326,7 +326,7 @@ The totality clause says that every member of `𝒫 κ` has some value under `F`
 <!--/-->
 
 ```agda
-    valF : (x : SL.S) → ⟨ fst x ∈ fst (𝒫 κ) ⟩
+    valF : (x : SL.S) → ⟨ x .fst ∈ (𝒫 κ) .fst ⟩
          → ∥ Σ[ y ∶ SL.S ] Holds F x y ∥₁
     valF = domAt-in zero (suc zero) γF (code .snd .fst)
 ```
@@ -340,7 +340,7 @@ The injectivity clause recovers the input from the value: two members with the s
 <!--/-->
 
 ```agda
-    injF : (y x x' : SL.S) → Holds F x y → Holds F x' y → fst x ≡ fst x'
+    injF : (y x x' : SL.S) → Holds F x y → Holds F x' y → x .fst ≡ x' .fst
     injF = injAt-out zero γF (code .snd .snd .fst)
 ```
 
@@ -354,8 +354,8 @@ The diagonal predicate says, merely, that some member `A` of the power set has i
 
 ```agda
     Diagonal : SL.S → Type (ℓ-suc ℓ)
-    Diagonal ξ = ∥ Σ[ A ∶ SL.S ] ( ⟨ fst A ∈ fst (𝒫 κ) ⟩ × Holds F A ξ
-                                 × (⟨ fst ξ ∈ fst A ⟩ → ⊥₀) ) ∥₁
+    Diagonal ξ = ∥ Σ[ A ∶ SL.S ] ( ⟨ A .fst ∈ (𝒫 κ) .fst ⟩ × Holds F A ξ
+                                 × (⟨ ξ .fst ∈ A .fst ⟩ → ⊥₀) ) ∥₁
 ```
 
 <!--en-->
@@ -411,8 +411,8 @@ Conversely, a chosen `A ∈ 𝒫 κ`, a graph fact `Holds F A ξ`, and a proof t
 <!--/-->
 
 ```agda
-      φD-in : (ξ A : SL.S) → ⟨ fst A ∈ fst (𝒫 κ) ⟩ → Holds F A ξ
-            → (⟨ fst ξ ∈ fst A ⟩ → ⊥₀) → ⟨ (ξ ∷ []) ⊨ φD ⟩
+      φD-in : (ξ A : SL.S) → ⟨ A .fst ∈ (𝒫 κ) .fst ⟩ → Holds F A ξ
+            → (⟨ ξ .fst ∈ A .fst ⟩ → ⊥₀) → ⟨ (ξ ∷ []) ⊨ φD ⟩
       φD-in ξ A mA h n =
         ∣ A , (mA , (transport (sym (a1 ξ A)) h , (λ k → lift (n k)))) ∣₁
 ```
@@ -427,7 +427,7 @@ The diagonal set is separated out of `κ` by the bounded formula.
 
 ```agda
     D₀ : SL.S
-    D₀ = fst (fst (hasSeparationL κ φD))
+    D₀ = ((hasSeparationL κ φD) .fst) .fst
 ```
 
 <!--en-->
@@ -440,7 +440,7 @@ Its membership specification is the separation's own reading: membership in the 
 
 ```agda
     D₀-spec : (ξ : SL.S) → (ξ SL.∈ˢ D₀) ≡ ((ξ SL.∈ˢ κ) ⊓ ((ξ ∷ []) ⊨ φD))
-    D₀-spec = snd (fst (hasSeparationL κ φD))
+    D₀-spec = ((hasSeparationL κ φD) .fst) .snd
 ```
 
 <!--en-->
@@ -452,8 +452,8 @@ The diagonal set is a member of the internal power set: the pointwise reading pr
 <!--/-->
 
 ```agda
-    D₀∈𝒫κ : ⟨ fst D₀ ∈ fst (𝒫 κ) ⟩
-    D₀∈𝒫κ = into-power zf κ D₀ (λ z h → fst (subst ⟨_⟩ (D₀-spec z) h))
+    D₀∈𝒫κ : ⟨ D₀ .fst ∈ (𝒫 κ) .fst ⟩
+    D₀∈𝒫κ = into-power zf κ D₀ (λ z h → (subst ⟨_⟩ (D₀-spec z) h) .fst)
 ```
 
 <!--en-->
@@ -479,11 +479,11 @@ Assume `ξ ∈ D₀`. The diagonal formula then supplies, under truncation, a se
 <!--/-->
 
 ```agda
-      out : ⟨ fst ξ ∈ fst D₀ ⟩ → ⊥₀
+      out : ⟨ ξ .fst ∈ D₀ .fst ⟩ → ⊥₀
       out hm = rec₁ isProp⊥
         (λ { (A , _ , hA , n) →
-          n (subst (λ w → ⟨ fst ξ ∈ w ⟩) (injF ξ D₀ A h₀ hA) hm) })
-        (φD-out ξ (snd (subst ⟨_⟩ (D₀-spec ξ) hm)))
+          n (subst (λ w → ⟨ ξ .fst ∈ w ⟩) (injF ξ D₀ A h₀ hA) hm) })
+        (φD-out ξ ((subst ⟨_⟩ (D₀-spec ξ) hm) .snd))
 ```
 
 <!--en-->
@@ -495,7 +495,7 @@ The converse direction uses that refutation as data. The range clause gives `ξ 
 <!--/-->
 
 ```agda
-      inside : ⟨ fst ξ ∈ fst D₀ ⟩
+      inside : ⟨ ξ .fst ∈ D₀ .fst ⟩
       inside = subst ⟨_⟩ (sym (D₀-spec ξ))
         (ranF D₀ ξ h₀ , φD-in ξ D₀ D₀∈𝒫κ h₀ out)
 ```
@@ -579,7 +579,7 @@ The ordinality of the successor is the first component of its record.
 <!--/-->
 
 ```agda
-  ordδ : IsOrd (fst δ)
+  ordδ : IsOrd (δ .fst)
   ordδ = sc .fst
 ```
 
@@ -618,7 +618,7 @@ The range clause of the coding says every value lands in the successor.
 <!--/-->
 
 ```agda
-  ranG : (x y : SL.S) → Holds G x y → ⟨ fst y ∈ fst δ ⟩
+  ranG : (x y : SL.S) → Holds G x y → ⟨ y .fst ∈ δ .fst ⟩
   ranG = code .snd .snd .snd
 ```
 
@@ -631,7 +631,7 @@ Single-valuedness concerns one fixed input: if `G` records both `G(x)=y` and `G(
 <!--/-->
 
 ```agda
-  svG : (x y y' : SL.S) → Holds G x y → Holds G x y' → fst y ≡ fst y'
+  svG : (x y y' : SL.S) → Holds G x y → Holds G x y' → y .fst ≡ y' .fst
   svG = svAt-out zero γG (code .fst)
 ```
 
@@ -644,7 +644,7 @@ Totality gives a propositionally truncated value witness for every `x ∈ P`. It
 <!--/-->
 
 ```agda
-  valG : (x : SL.S) → ⟨ fst x ∈ fst P ⟩ → ∥ Σ[ y ∶ SL.S ] Holds G x y ∥₁
+  valG : (x : SL.S) → ⟨ x .fst ∈ P .fst ⟩ → ∥ Σ[ y ∶ SL.S ] Holds G x y ∥₁
   valG = domAt-in zero (suc zero) γG (code .snd .fst)
 ```
 
@@ -657,7 +657,7 @@ The injectivity clause for the coded injection `G` recovers a source member from
 <!--/-->
 
 ```agda
-  injG : (y x x' : SL.S) → Holds G x y → Holds G x' y → fst x ≡ fst x'
+  injG : (y x x' : SL.S) → Holds G x y → Holds G x' y → x .fst ≡ x' .fst
   injG = injAt-out zero γG (code .snd .snd .fst)
 ```
 
@@ -672,7 +672,7 @@ For a fixed input `x`, any two graph values of `G` must coincide by single-value
 ```agda
   isPropVal : (x : SL.S) → isProp (Σ[ y ∶ SL.S ] Holds G x y)
   isPropVal x (y , h) (y' , h') =
-    Σ≡Prop (λ w → snd (pr (fst x) (fst w) ∈ fst G)) (S≡ (svG x y y' h h'))
+    Σ≡Prop (λ w → (pr (x .fst) (w .fst) ∈ G .fst) .snd) (S≡ (svG x y y' h h'))
 ```
 
 <!--en-->
@@ -684,7 +684,7 @@ The domain clause initially supplies a value of `G` only under propositional tru
 <!--/-->
 
 ```agda
-  val : (x : SL.S) → ⟨ fst x ∈ fst P ⟩ → Σ[ y ∶ SL.S ] Holds G x y
+  val : (x : SL.S) → ⟨ x .fst ∈ P .fst ⟩ → Σ[ y ∶ SL.S ] Holds G x y
   val x m = rec₁ (isPropVal x) (λ z → z) (valG x m)
 ```
 
@@ -699,8 +699,8 @@ Define `a` to precede `b` when they both belong to `P` and there merely exist gr
 ```agda
   Read : SL.S → SL.S → Type (ℓ-suc ℓ)
   Read a b = ∥ Σ[ x ∶ SL.S ] Σ[ y ∶ SL.S ]
-               ( ⟨ fst a ∈ fst P ⟩ × ⟨ fst b ∈ fst P ⟩
-               × Holds G a x × Holds G b y × ⟨ fst x ∈ fst y ⟩ ) ∥₁
+               ( ⟨ a .fst ∈ P .fst ⟩ × ⟨ b .fst ∈ P .fst ⟩
+               × Holds G a x × Holds G b y × ⟨ x .fst ∈ y .fst ⟩ ) ∥₁
 ```
 
 <!--en-->
@@ -801,7 +801,7 @@ The inward reading transports each host-side fact back through the reversed adeq
 
 ```agda
       fill : (a b p : SL.S) → Read a b → ⟨ (b ∷ a ∷ p ∷ []) ⊨ φR ⟩
-      fill a b p = rec₁ (snd ((b ∷ a ∷ p ∷ []) ⊨ φR))
+      fill a b p = rec₁ (((b ∷ a ∷ p ∷ []) ⊨ φR) .snd)
         (λ { (x , y , ma , mb , ha , hb , hxy) → ma , mb , ∣ x , ∣ y
           , transport (sym (b1 p a b x y)) ha
           , transport (sym (b2 p a b x y)) hb , hxy ∣₁ ∣₁ })
@@ -854,8 +854,8 @@ The inward reading constructs the relation entry from the two endpoint membershi
 <!--/-->
 
 ```agda
-  R-in : (a b x y : SL.S) → ⟨ fst a ∈ fst P ⟩ → ⟨ fst b ∈ fst P ⟩
-       → Holds G a x → Holds G b y → ⟨ fst x ∈ fst y ⟩ → Holds R a b
+  R-in : (a b x y : SL.S) → ⟨ a .fst ∈ P .fst ⟩ → ⟨ b .fst ∈ P .fst ⟩
+       → Holds G a x → Holds G b y → ⟨ x .fst ∈ y .fst ⟩ → Holds R a b
   R-in a b x y ma mb ha hb hxy = Pullback.into a b ma mb ∣ x , y , ma , mb , ha , hb , hxy ∣₁
 ```
 
@@ -869,9 +869,9 @@ Every entry of the coded relation has endpoints in `P`. The proof reads its trun
 
 ```agda
   Rsub : (a b : SL.S) → Holds R a b
-       → ⟨ fst a ∈ fst P ⟩ × ⟨ fst b ∈ fst P ⟩
+       → ⟨ a .fst ∈ P .fst ⟩ × ⟨ b .fst ∈ P .fst ⟩
   Rsub a b h = rec₁
-    (isProp× (snd (fst a ∈ fst P)) (snd (fst b ∈ fst P)))
+    (isProp× ((a .fst ∈ P .fst) .snd) ((b .fst ∈ P .fst) .snd))
     (λ { (_ , _ , ma , mb , _) → ma , mb })
 ```
 
@@ -911,7 +911,7 @@ For an index `b` in this domain, let `v b` be the unique value that `G` assigns 
 
 ```agda
   v : OT.Dom → SL.S
-  v b = fst (val (OT.up b) (OT.up-mem b))
+  v b = (val (OT.up b) (OT.up-mem b)) .fst
 ```
 
 <!--en-->
@@ -924,7 +924,7 @@ The second component of the chosen value records the corresponding graph fact `H
 
 ```agda
   v-holds : (b : OT.Dom) → Holds G (OT.up b) (v b)
-  v-holds b = snd (val (OT.up b) (OT.up-mem b))
+  v-holds b = (val (OT.up b) (OT.up-mem b)) .snd
 ```
 
 <!--en-->
@@ -936,7 +936,7 @@ Every value of `G` belongs to the successor cardinal `δ`, by the range clause o
 <!--/-->
 
 ```agda
-  v∈δ : (b : OT.Dom) → ⟨ fst (v b) ∈ fst δ ⟩
+  v∈δ : (b : OT.Dom) → ⟨ (v b) .fst ∈ δ .fst ⟩
   v∈δ b = ranG (OT.up b) (v b) (v-holds b)
 ```
 
@@ -949,8 +949,8 @@ Each `G`-value is an ordinal, inherited from the ordinality of `δ`.
 <!--/-->
 
 ```agda
-  ord-v : (b : OT.Dom) → IsOrd (fst (v b))
-  ord-v b = mem-ord {A = fst δ} ordδ (fst (v b)) (v∈δ b)
+  ord-v : (b : OT.Dom) → IsOrd ((v b) .fst)
+  ord-v b = mem-ord {A = δ .fst} ordδ ((v b) .fst) (v∈δ b)
 ```
 
 <!--en-->
@@ -962,8 +962,8 @@ The forward comparison turns a predecessor step in the pulled-back relation into
 <!--/-->
 
 ```agda
-  ≺-fwd : (a b : OT.Dom) → a OT.≺ b → ⟨ fst (v a) ∈ fst (v b) ⟩
-  ≺-fwd a b k = rec₁ (snd (fst (v a) ∈ fst (v b)))
+  ≺-fwd : (a b : OT.Dom) → a OT.≺ b → ⟨ (v a) .fst ∈ (v b) .fst ⟩
+  ≺-fwd a b k = rec₁ (((v a) .fst ∈ (v b) .fst) .snd)
     (λ { (x , y , _ , _ , ha , hb , hxy) →
       subst2 (λ s t → ⟨ s ∈ t ⟩)
         (svG (OT.up a) x (v a) ha (v-holds a))
@@ -991,7 +991,7 @@ The backward comparison constructs the pulled-back relation from the membership 
 <!--/-->
 
 ```agda
-  ≺-bwd : (a b : OT.Dom) → ⟨ fst (v a) ∈ fst (v b) ⟩ → a OT.≺ b
+  ≺-bwd : (a b : OT.Dom) → ⟨ (v a) .fst ∈ (v b) .fst ⟩ → a OT.≺ b
   ≺-bwd a b h = OT.≺-in a b
     (R-in (OT.up a) (OT.up b) (v a) (v b)
       (OT.up-mem a) (OT.up-mem b) (v-holds a) (v-holds b) h)
@@ -1008,7 +1008,7 @@ To prove well-foundedness, fix a hierarchy element `u` and consider every domain
 ```agda
   private
     Pacc : V ℓ → Type (ℓ-suc ℓ)
-    Pacc u = (b : OT.Dom) → fst (v b) ≡ u → Acc OT._≺_ b
+    Pacc u = (b : OT.Dom) → (v b) .fst ≡ u → Acc OT._≺_ b
 ```
 
 <!--en-->
@@ -1022,7 +1022,7 @@ The induction step constructs accessibility for a predecessor whose representati
 ```agda
     accStep : (u : V ℓ) → (∀ u' → ⟨ u' ∈ˢ u ⟩ → Pacc u') → Pacc u
     accStep u IH b e = acc (λ a k →
-      IH (fst (v a)) (subst (λ w → ⟨ fst (v a) ∈ˢ w ⟩) e (≺-fwd a b k))
+      IH ((v a) .fst) (subst (λ w → ⟨ (v a) .fst ∈ˢ w ⟩) e (≺-fwd a b k))
          a refl)
 ```
 
@@ -1049,7 +1049,7 @@ Well-foundedness of the pulled-back order is assembled from the accessibility at
 
 ```agda
   wf : WellFounded OT._≺_
-  wf b = accAt (fst (v b)) b refl
+  wf b = accAt ((v b) .fst) b refl
 ```
 
 <!--en-->
@@ -1063,7 +1063,7 @@ Transitivity of the pulled-back order composes the two forward comparisons throu
 ```agda
   ≺-trans : {a b c : OT.Dom} → a OT.≺ b → b OT.≺ c → a OT.≺ c
   ≺-trans {a} {b} {c} k k' = ≺-bwd a c
-    (ordδ .snd (fst (v c)) (v∈δ c) (≺-fwd a b k) (≺-fwd b c k'))
+    (ordδ .snd ((v c) .fst) (v∈δ c) (≺-fwd a b k) (≺-fwd b c k'))
 ```
 
 <!--en-->
@@ -1076,9 +1076,9 @@ Trichotomy of the pulled-back order is transported from ordinal trichotomy for t
 
 ```agda
   tri : (a b : OT.Dom) → (a OT.≺ b) ⊎ ((a ≡ b) ⊎ (b OT.≺ a))
-  tri a b = go (ord-tri (fst (v a)) (ord-v a) (fst (v b)) (ord-v b))
+  tri a b = go (ord-tri ((v a) .fst) (ord-v a) ((v b) .fst) (ord-v b))
     where
-    go : Tri (fst (v a)) (fst (v b))
+    go : Tri ((v a) .fst) ((v b) .fst)
        → (a OT.≺ b) ⊎ ((a ≡ b) ⊎ (b OT.≺ a))
 ```
 
@@ -1094,7 +1094,7 @@ The strict-below case produces the pulled-back comparison directly. The equal ca
     go (inl h)       = inl (≺-bwd a b h)
     go (inr (inl e)) = inr (inl (OT.Dom≡
       (injG (v a) (OT.up a) (OT.up b) (v-holds a)
-        (subst (λ w → ⟨ pr (OT.↪ b) w ∈ fst G ⟩) (sym e) (v-holds b)))))
+        (subst (λ w → ⟨ pr (OT.↪ b) w ∈ G .fst ⟩) (sym e) (v-holds b)))))
     go (inr (inr h)) = inr (inr (≺-bwd b a h))
 ```
 
@@ -1135,10 +1135,10 @@ To prove that the collapse image is an ordinal, one must show both that the imag
 <!--/-->
 
 ```agda
-  ot-ord : IsOrd (fst C.otL)
+  ot-ord : IsOrd (C.otL .fst)
   ot-ord = tr , mem
     where
-    mem : (x : V ℓ) → ⟨ x ∈ˢ fst C.otL ⟩ → isTransV x
+    mem : (x : V ℓ) → ⟨ x ∈ˢ C.otL .fst ⟩ → isTransV x
     mem x h = rec₁ (isPropIsTransV x)
 ```
 
@@ -1164,11 +1164,11 @@ It remains to show that the image itself is transitive. Given `y∈x` and `x∈o
 <!--/-->
 
 ```agda
-    tr : isTransV (fst C.otL)
+    tr : isTransV (C.otL .fst)
     tr {x} {y} y∈x x∈ot =
-      rec₁ (snd (y ∈ˢ fst C.otL)) outer (C.otL-out x x∈ot)
+      rec₁ ((y ∈ˢ C.otL .fst) .snd) outer (C.otL-out x x∈ot)
       where
-      outer : Σ[ b ∶ OT.Dom ] (C.col b ≡ x) → ⟨ y ∈ˢ fst C.otL ⟩
+      outer : Σ[ b ∶ OT.Dom ] (C.col b ≡ x) → ⟨ y ∈ˢ C.otL .fst ⟩
 ```
 
 <!--en-->
@@ -1180,11 +1180,11 @@ After replacing `x` by `col b`, the collapse equation for membership in `col b` 
 <!--/-->
 
 ```agda
-      outer (b , e) = rec₁ (snd (y ∈ˢ fst C.otL)) inner
+      outer (b , e) = rec₁ ((y ∈ˢ C.otL .fst) .snd) inner
         (C.col-out b y (subst (λ w → ⟨ y ∈ˢ w ⟩) (sym e) y∈x))
         where
         inner : Σ[ r ∶ OT.Dom ] ((r OT.≺ b) × (C.col r ≡ y))
-              → ⟨ y ∈ˢ fst C.otL ⟩
+              → ⟨ y ∈ˢ C.otL .fst ⟩
 ```
 
 <!--en-->
@@ -1197,7 +1197,7 @@ The predecessor's collapse is transported to `y` along its equation, completing 
 
 ```agda
         inner (r , _ , e2) =
-          subst (λ w → ⟨ w ∈ˢ fst C.otL ⟩) e2 (C.otL-in r)
+          subst (λ w → ⟨ w ∈ˢ C.otL .fst ⟩) e2 (C.otL-in r)
 ```
 
 <!--en-->
@@ -1236,7 +1236,7 @@ Membership `w∈otL` supplies a preimage index only under propositional truncati
 <!--/-->
 
 ```agda
-  fib : (w : V ℓ) → ⟨ w ∈ˢ fst C.otL ⟩ → Fib w
+  fib : (w : V ℓ) → ⟨ w ∈ˢ C.otL .fst ⟩ → Fib w
   fib w h = rec₁ (isPropFib w) (λ z → z) (C.otL-out w h)
 ```
 
@@ -1257,8 +1257,8 @@ The unique preimage just obtained lets the collapse table be read in reverse on 
 <div class="submodule-fold-content">
 
 ```agda
-    open I.Inverse C.otL P (λ w mw → fib (fst w) mw)
-      (λ w mw → OT.up-mem (fib (fst w) mw .fst)) public
+    open I.Inverse C.otL P (λ w mw → fib (w .fst) mw)
+      (λ w mw → OT.up-mem (fib (w .fst) mw .fst)) public
       using ( fn; graph; at; only; M; inj; injL ) renaming ( SourceMem to Mem )
 ```
 </div>
@@ -1274,9 +1274,9 @@ Let `μ` denote the collapse ordinal `otL`. Ordinal trichotomy compares `μ` wit
 
 ```agda
   result : InjL δ P
-  result = go (ord-tri (fst C.otL) ot-ord (fst δ) ordδ)
+  result = go (ord-tri (C.otL .fst) ot-ord (δ .fst) ordδ)
     where
-    from-sub : ((z : SV.S) → ⟨ z ∈ˢ fst δ ⟩ → ⟨ z ∈ˢ fst C.otL ⟩)
+    from-sub : ((z : SV.S) → ⟨ z ∈ˢ δ .fst ⟩ → ⟨ z ∈ˢ C.otL .fst ⟩)
              → InjL δ P
 ```
 
@@ -1302,7 +1302,7 @@ Trichotomy first considers `μ∈δ`. In this branch, `below-succ-injects` appli
 <!--/-->
 
 ```agda
-    go : Tri (fst C.otL) (fst δ) → InjL δ P
+    go : Tri (C.otL .fst) (δ .fst) → InjL δ P
     go (inl ot∈δ)       = ⊥₀-rec (Cantor.no-inj zf κ
       (injl-trans P C.otL κ power-into-ot
         (below-succ-injects κ δ sc C.otL ot-ord ot∈δ)))

@@ -225,12 +225,12 @@ applications of two readers rather than ten copies of the same unnesting.
 ```agda
 BinWit : ∀ {n} → ℕ → Formula S (4 + n) → S ^ n → S → Type (ℓ-suc ℓ)
 BinWit k rel γ c = Σ[ N ∶ S ] (Σ[ a ∶ S ] (Σ[ b ∶ S ]
-  ((fst c ≡ pr (fst N) (pr (# k) (pr (fst a) (fst b))))
+  ((c .fst ≡ pr (N .fst) (pr (# k) (pr (a .fst) (b .fst))))
    × ⟨ (b ∷ a ∷ N ∷ c ∷ γ) ⊨ rel ⟩)))
 
 UnWit : ∀ {n} → ℕ → Formula S (3 + n) → S ^ n → S → Type (ℓ-suc ℓ)
 UnWit k rel γ c = Σ[ N ∶ S ] (Σ[ a ∶ S ]
-  ((fst c ≡ pr (fst N) (pr (# k) (fst a))) × ⟨ (a ∷ N ∷ c ∷ γ) ⊨ rel ⟩))
+  ((c .fst ≡ pr (N .fst) (pr (# k) (a .fst))) × ⟨ (a ∷ N ∷ c ∷ γ) ⊨ rel ⟩))
 
 binForm-out : ∀ {n} (k : ℕ) (rel : Formula S (4 + n)) (γ : S ^ n) (c : S)
             → ⟨ (c ∷ γ) ⊨ binForm k rel ⟩ → ∥ BinWit k rel γ c ∥₁
@@ -342,7 +342,7 @@ which of the ten shapes that member has.
 shaped-in : ∀ {n} (C A : Fin n) (γ : S ^ n)
           → ((c : S) → ⟨ c ∈ˢ lookup C γ ⟩ → ∥ ShapeWit A γ c ∥₁)
           → ⟨ γ ⊨ shapedAt C A ⟩
-shaped-in C A γ g c c∈ = rec₁ (snd ((c ∷ γ) ⊨ shapes A)) fill (g c c∈)
+shaped-in C A γ g c c∈ = rec₁ (((c ∷ γ) ⊨ shapes A) .snd) fill (g c c∈)
   where
   fill : ShapeWit A γ c → ⟨ (c ∷ γ) ⊨ shapes A ⟩
   fill =
@@ -414,33 +414,33 @@ module _ {K : Type ℓ} (f : K → V ℓ) where
   TmWit n x = Σ[ t ∶ Term K n ] (VCode.⌜ mapTm f t ⌝ᵗ ≡ x)
 
   Onto : ∀ {m} → Fin m → S ^ m → Type (ℓ-suc ℓ)
-  Onto A γ = (y : V ℓ) → ⟨ y ∈ fst (lookup A γ) ⟩ → ∥ Σ[ c ∶ K ] (f c ≡ y) ∥₁
+  Onto A γ = (y : V ℓ) → ⟨ y ∈ (lookup A γ) .fst ⟩ → ∥ Σ[ c ∶ K ] (f c ≡ y) ∥₁
 
   tmCon : ∀ {m} (t N A : Fin m) (γ : S ^ m) (n : ℕ) → Onto A γ
         → ⟨ γ ⊨ ∃̇ (tagAtL (suc t) 0 zero ∧̇ (var zero ∈̇ var (suc A))) ⟩
-        → ∥ TmWit n (fst (lookup t γ)) ∥₁
+        → ∥ TmWit n ((lookup t γ) .fst) ∥₁
   tmCon t N A γ n onto = rec₁ squash₁
     (λ { (y , (hy , y∈)) → map₁
          (λ { (c , qc) → con c
             , ( cong (VCode.mkTag 0) qc ∙ sym
                 (subst ⟨_⟩ (tagAtL-adequate (suc t) 0 zero (y ∷ γ)) hy) ) })
-         (onto (fst y) y∈) })
+         (onto (y .fst) y∈) })
 
   tmVar : ∀ {m} (t N A : Fin m) (γ : S ^ m) (n : ℕ)
-        → fst (lookup N γ) ≡ # n
+        → (lookup N γ) .fst ≡ # n
         → ⟨ γ ⊨ ∃̇ (tagAtL (suc t) 1 zero ∧̇ (var zero ∈̇ var (suc N))) ⟩
-        → ∥ TmWit n (fst (lookup t γ)) ∥₁
+        → ∥ TmWit n ((lookup t γ) .fst) ∥₁
   tmVar t N A γ n qN = rec₁ squash₁
     (λ { (z , (hz , z∈)) → map₁
          (λ { (j , (j<n , ez)) →
            var (fromℕ' n j j<n)
            , ( cong (VCode.mkTag 1) (cong #_ (toFromId' n j j<n) ∙ sym ez)
              ∙ sym (subst ⟨_⟩ (tagAtL-adequate (suc t) 1 zero (z ∷ γ)) hz) ) })
-         (∈#-elim n (fst z) (subst (λ w → ⟨ fst z ∈ w ⟩) qN z∈)) })
+         (∈#-elim n (z .fst) (subst (λ w → ⟨ z .fst ∈ w ⟩) qN z∈)) })
 
   isTmAt-decode : ∀ {m} (t N A : Fin m) (γ : S ^ m) (n : ℕ)
-                → fst (lookup N γ) ≡ # n → Onto A γ
-                → ⟨ γ ⊨ isTmAt t N A ⟩ → ∥ TmWit n (fst (lookup t γ)) ∥₁
+                → (lookup N γ) .fst ≡ # n → Onto A γ
+                → ⟨ γ ⊨ isTmAt t N A ⟩ → ∥ TmWit n ((lookup t γ) .fst) ∥₁
   isTmAt-decode t N A γ n qN onto = rec₁ squash₁
     (λ { (inl h) → tmCon t N A γ n onto h
        ; (inr h) → tmVar t N A γ n qN h })
@@ -482,9 +482,9 @@ module _ {K : Type ℓ} (f : K → V ℓ) (h : (k : K) → ⟨ isL (f k) ⟩) wh
 
 ```agda
   isTmAt-in : ∀ {m} (t N A : Fin m) (γ : S ^ m) (n : ℕ)
-            → fst (lookup N γ) ≡ # n
-            → ((c : K) → ⟨ f c ∈ fst (lookup A γ) ⟩)
-            → TmWit f n (fst (lookup t γ)) → ⟨ γ ⊨ isTmAt t N A ⟩
+            → (lookup N γ) .fst ≡ # n
+            → ((c : K) → ⟨ f c ∈ (lookup A γ) .fst ⟩)
+            → TmWit f n ((lookup t γ) .fst) → ⟨ γ ⊨ isTmAt t N A ⟩
   isTmAt-in t N A γ n qN into (con c , e) = ∣ inl ∣ y
     , ( subst ⟨_⟩ (sym (tagAtL-adequate (suc t) 0 zero (y ∷ γ))) (sym e)
       , into c ) ∣₁ ∣₁
@@ -494,7 +494,7 @@ module _ {K : Type ℓ} (f : K → V ℓ) (h : (k : K) → ⟨ isL (f k) ⟩) wh
   isTmAt-in t N A γ n qN into (var i , e) = ∣ inr ∣ z
     , ( subst ⟨_⟩ (sym (tagAtL-adequate (suc t) 1 zero (z ∷ γ)))
           (sym e ∙ cong (VCode.mkTag 1) (sym (numeralL-fst (toℕ i))))
-      , subst (λ w → ⟨ fst z ∈ w ⟩) (sym qN)
+      , subst (λ w → ⟨ z .fst ∈ w ⟩) (sym qN)
           (subst (λ w → ⟨ w ∈ (# n) ⟩) (sym (numeralL-fst (toℕ i)))
             (#mono (toℕ i) n (toℕ<n i))) ) ∣₁ ∣₁
     where
@@ -541,22 +541,22 @@ module Peel {m : ℕ} (C A : Fin m) (γ : S ^ m)
 ```agda
   private
     D : V ℓ
-    D = fst (lookup C γ)
+    D = (lookup C γ) .fst
 
   BinSame BinSucc : ℕ → S → Type (ℓ-suc ℓ)
   BinSame k c = Σ[ N ∶ S ] (Σ[ a ∶ S ] (Σ[ b ∶ S ]
-    ((fst c ≡ pr (fst N) (pr (# k) (pr (fst a) (fst b))))
-     × (⟨ pr (fst N) (fst a) ∈ D ⟩ × ⟨ pr (fst N) (fst b) ∈ D ⟩))))
+    ((c .fst ≡ pr (N .fst) (pr (# k) (pr (a .fst) (b .fst))))
+     × (⟨ pr (N .fst) (a .fst) ∈ D ⟩ × ⟨ pr (N .fst) (b .fst) ∈ D ⟩))))
   BinSucc k c = Σ[ N ∶ S ] (Σ[ a ∶ S ] (Σ[ b ∶ S ]
-    ((fst c ≡ pr (fst N) (pr (# k) (pr (fst a) (fst b))))
+    ((c .fst ≡ pr (N .fst) (pr (# k) (pr (a .fst) (b .fst))))
      × (⟨ (a ∷ N ∷ c ∷ γ) ⊨ isTmAt zero (suc zero) (suc (suc (suc A))) ⟩
-        × ⟨ pr (sucV (fst N)) (fst b) ∈ D ⟩))))
+        × ⟨ pr (sucV (N .fst)) (b .fst) ∈ D ⟩))))
 
   UnSame UnSucc : ℕ → S → Type (ℓ-suc ℓ)
   UnSame k c = Σ[ N ∶ S ] (Σ[ a ∶ S ]
-    ((fst c ≡ pr (fst N) (pr (# k) (fst a))) × ⟨ pr (fst N) (fst a) ∈ D ⟩))
+    ((c .fst ≡ pr (N .fst) (pr (# k) (a .fst))) × ⟨ pr (N .fst) (a .fst) ∈ D ⟩))
   UnSucc k c = Σ[ N ∶ S ] (Σ[ a ∶ S ]
-    ((fst c ≡ pr (fst N) (pr (# k) (fst a))) × ⟨ pr (sucV (fst N)) (fst a) ∈ D ⟩))
+    ((c .fst ≡ pr (N .fst) (pr (# k) (a .fst))) × ⟨ pr (sucV (N .fst)) (a .fst) ∈ D ⟩))
 
   PeelWit : S → Type (ℓ-suc ℓ)
   PeelWit c =
@@ -669,15 +669,15 @@ module _ {K : Type ℓ} (f : K → V ℓ) (h : (k : K) → ⟨ isL (f k) ⟩) wh
     nn : ℕ → S
     nn n = # n , numL n
 
-    tw : ∀ {n} (t : Term K n) → TmWit f n (fst (ct t))
+    tw : ∀ {n} (t : Term K n) → TmWit f n ((ct t) .fst)
     tw t = t , refl
 
   closureShaped : ∀ {n m} (φ : Formula K n) (A : Fin m) (γ : S ^ m)
-                → ((k : K) → ⟨ f k ∈ fst (lookup A γ) ⟩)
+                → ((k : K) → ⟨ f k ∈ (lookup A γ) .fst ⟩)
                 → ⟨ (clo f h φ ∷ γ) ⊨ shapedAt zero (suc A) ⟩
   closureShaped φ A γ into = shaped-in zero (suc A) (clo f h φ ∷ γ)
     (λ c c∈ → map₁ (λ { (_ , ψ , q , _) → go ψ c q })
-      (closure-inv f h φ (fst c) c∈))
+      (closure-inv f h φ (c .fst) c∈))
     where
     tm1 : ∀ {k} (t : Term K k) (b c : S)
         → ⟨ (b ∷ ct t ∷ nn k ∷ c ∷ clo f h φ ∷ γ)
@@ -695,7 +695,7 @@ module _ {K : Type ℓ} (f : K → V ℓ) (h : (k : K) → ⟨ isL (f k) ⟩) wh
       (suc (suc (suc (suc (suc A)))))
       (ct u ∷ a ∷ nn k ∷ c ∷ clo f h φ ∷ γ) k refl into (tw u)
 
-    go : ∀ {k} (ψ : Formula K k) (c : S) → fst c ≡ key f h ψ
+    go : ∀ {k} (ψ : Formula K k) (c : S) → c .fst ≡ key f h ψ
        → ShapeWit (suc A) (clo f h φ ∷ γ) c
     go {k} (t ∈̇ u) c q =
       inl (nn k , (ct t , (ct u , (q , (tm1 t (ct u) c , tm0 u (ct t) c)))))

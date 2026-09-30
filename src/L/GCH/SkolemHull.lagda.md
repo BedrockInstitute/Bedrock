@@ -708,9 +708,9 @@ Membership against a term is unchanged by the weakening, in the form the bounded
 
 ```agda
       memRen : {n : ℕ} (t : Term SA n) (x : SB) (δ : SA ^ n)
-             → (fst x ∈ˢ fst (⟦ mapTm g (renameTm suc t) ⟧ᴮ (x ∷ map g δ)))
-             ≡ (fst x ∈ˢ fst (⟦ mapTm g t ⟧ᴮ (map g δ)))
-      memRen t x δ = cong (λ s → fst x ∈ˢ fst s) (renG t x δ)
+             → (x .fst ∈ˢ (⟦ mapTm g (renameTm suc t) ⟧ᴮ (x ∷ map g δ)) .fst)
+             ≡ (x .fst ∈ˢ (⟦ mapTm g t ⟧ᴮ (map g δ)) .fst)
+      memRen t x δ = cong (λ s → x .fst ∈ˢ s .fst) (renG t x δ)
       memPath : {n : ℕ} (t : Term SA n) (q : SA) (δ : SA ^ n)
 ```
 
@@ -723,10 +723,10 @@ The side condition of a bounded quantifier transfers across the map. The chain s
 <!--/-->
 
 ```agda
-              → (fst q ∈ˢ fst (⟦ t ⟧ᴬ δ))
-              ≡ (fst (g q) ∈ˢ fst (⟦ mapTm g t ⟧ᴮ (map g δ)))
+              → (q .fst ∈ˢ (⟦ t ⟧ᴬ δ) .fst)
+              ≡ ((g q) .fst ∈ˢ (⟦ mapTm g t ⟧ᴮ (map g δ)) .fst)
       memPath {n} t q δ =
-        cong (λ s → fst q ∈ˢ fst s) (sym (renA t q δ))
+        cong (λ s → q .fst ∈ˢ s .fst) (sym (renA t q δ))
         ∙ at∈ (suc n) (var zero) (renameTm suc t) (q ∷ δ)
 ```
 
@@ -797,7 +797,7 @@ Forward eliminates the truncation of the inner witness and maps the witness; bac
 <!--/-->
 
 ```agda
-      fwd = rec₁ (snd (map g δ ⊨ᴮ mapFo g (∃̇ ψ)))
+      fwd = rec₁ ((map g δ ⊨ᴮ mapFo g (∃̇ ψ)) .snd)
         (λ { (q , hq) → ∣ g q , subst ⟨_⟩ (agree (suc n) ψ (q ∷ δ)) hq ∣₁ })
       bwd : ⟨ map g δ ⊨ᴮ mapFo g (∃̇ ψ) ⟩ → ⟨ δ ⊨ᴬ (∃̇ ψ) ⟩
       bwd h = map₁ (λ { (q , hq) →
@@ -861,8 +861,8 @@ Forward states that if every inner point in the bound satisfies the matrix, then
 <!--/-->
 
 ```agda
-      fwd : ((q : SA) → ⟨ fst q ∈ˢ fst (⟦ t ⟧ᴬ δ) ⟩ → ⟨ (q ∷ δ) ⊨ᴬ ψ ⟩)
-          → (x : SB) → ⟨ fst x ∈ˢ fst (⟦ mapTm g t ⟧ᴮ (map g δ)) ⟩
+      fwd : ((q : SA) → ⟨ q .fst ∈ˢ (⟦ t ⟧ᴬ δ) .fst ⟩ → ⟨ (q ∷ δ) ⊨ᴬ ψ ⟩)
+          → (x : SB) → ⟨ x .fst ∈ˢ (⟦ mapTm g t ⟧ᴮ (map g δ)) .fst ⟩
           → ⟨ (x ∷ map g δ) ⊨ᴮ mapFo g ψ ⟩
       fwd h x hx =
         dne ((x ∷ map g δ) ⊨ᴮ mapFo g ψ) λ nx →
@@ -894,9 +894,9 @@ The auxiliary application closes with the witness record, whose second component
 
 ```agda
             , (λ yes → lift (nx yes))) ∣₁)
-      bwd : ((x : SB) → ⟨ fst x ∈ˢ fst (⟦ mapTm g t ⟧ᴮ (map g δ)) ⟩
+      bwd : ((x : SB) → ⟨ x .fst ∈ˢ (⟦ mapTm g t ⟧ᴮ (map g δ)) .fst ⟩
                    → ⟨ (x ∷ map g δ) ⊨ᴮ mapFo g ψ ⟩)
-          → (q : SA) → ⟨ fst q ∈ˢ fst (⟦ t ⟧ᴬ δ) ⟩ → ⟨ (q ∷ δ) ⊨ᴬ ψ ⟩
+          → (q : SA) → ⟨ q .fst ∈ˢ (⟦ t ⟧ᴬ δ) .fst ⟩ → ⟨ (q ∷ δ) ⊨ᴬ ψ ⟩
       bwd h q hq =
 ```
 
@@ -926,8 +926,8 @@ The auxiliary matrix is the side condition conjoined with the matrix, and forwar
 
 ```agda
       mat = (var zero ∈̇ renameTm suc t) ∧̇ ψ
-      fwd : ∥ Σ[ q ∶ SA ] (⟨ fst q ∈ˢ fst (⟦ t ⟧ᴬ δ) ⟩ × ⟨ (q ∷ δ) ⊨ᴬ ψ ⟩) ∥₁
-          → ∥ Σ[ x ∶ SB ] (⟨ fst x ∈ˢ fst (⟦ mapTm g t ⟧ᴮ (map g δ)) ⟩
+      fwd : ∥ Σ[ q ∶ SA ] (⟨ q .fst ∈ˢ (⟦ t ⟧ᴬ δ) .fst ⟩ × ⟨ (q ∷ δ) ⊨ᴬ ψ ⟩) ∥₁
+          → ∥ Σ[ x ∶ SB ] (⟨ x .fst ∈ˢ (⟦ mapTm g t ⟧ᴮ (map g δ)) .fst ⟩
                         × ⟨ (x ∷ map g δ) ⊨ᴮ mapFo g ψ ⟩) ∥₁
       fwd = map₁ (λ { (q , hq , hψ) →
 ```
@@ -943,9 +943,9 @@ The two components are transported separately: the side condition by `memPath` a
 ```agda
         g q , (subst ⟨_⟩ (memPath t q δ) hq ,
                subst ⟨_⟩ (agree (suc n) ψ (q ∷ δ)) hψ) })
-      bwd : ∥ Σ[ x ∶ SB ] (⟨ fst x ∈ˢ fst (⟦ mapTm g t ⟧ᴮ (map g δ)) ⟩
+      bwd : ∥ Σ[ x ∶ SB ] (⟨ x .fst ∈ˢ (⟦ mapTm g t ⟧ᴮ (map g δ)) .fst ⟩
                         × ⟨ (x ∷ map g δ) ⊨ᴮ mapFo g ψ ⟩) ∥₁
-          → ∥ Σ[ q ∶ SA ] (⟨ fst q ∈ˢ fst (⟦ t ⟧ᴬ δ) ⟩ × ⟨ (q ∷ δ) ⊨ᴬ ψ ⟩) ∥₁
+          → ∥ Σ[ q ∶ SA ] (⟨ q .fst ∈ˢ (⟦ t ⟧ᴬ δ) .fst ⟩ × ⟨ (q ∷ δ) ⊨ᴬ ψ ⟩) ∥₁
 ```
 
 <!--en-->
@@ -1102,7 +1102,7 @@ The inclusion into the stage pairs each element of the carrier with its stage me
 
 ```agda
     inL : SM → SL
-    inL c = fst c , M⊆L (fst c) (snd c)
+    inL c = c .fst , M⊆L (c .fst) (c .snd)
 ```
 
 <!--en-->
@@ -1160,9 +1160,9 @@ Terms agree across the inclusion: a term of the carrier evaluates to the same un
 
 ```agda
       tm-agree : (n : ℕ) (t : Term SM n) (δ : SM ^ n)
-               → fst (⟦ t ⟧ᵐ δ) ≡ fst (AbsL.⟦ mapTm inL t ⟧ᵐ (map inL δ))
+               → (⟦ t ⟧ᵐ δ) .fst ≡ (AbsL.⟦ mapTm inL t ⟧ᵐ (map inL δ)) .fst
       tm-agree n (con c) δ = refl
-      tm-agree n (var i) δ = sym (cong fst (lookup-inL i δ))
+      tm-agree n (var i) δ = sym (cong (λ p → p .fst) (lookup-inL i δ))
     module Tr = SatTransfer (λ x → x ∈ˢ M) (λ x → x ∈ˢ Lset α)
 ```
 
@@ -1236,7 +1236,7 @@ The term algebra is instantiated at the restricted structure of the stage: its c
 <!--/-->
 
 ```agda
-    module T = TermAlgebra AbsL.𝒮M fst wL (∅ , ∅∈Lsetα) {K = ⟪ X ⟫} inStg
+    module T = TermAlgebra AbsL.𝒮M (λ p → p .fst) wL (∅ , ∅∈Lsetα) {K = ⟪ X ⟫} inStg
     open T using ( Code; base; val; Hull; inHull )
 ```
 
@@ -1250,10 +1250,10 @@ The hull lies in the stage: every member is the value of some code, and every co
 
 ```agda
     Hull⊆L : (x : S) → ⟨ x ∈ˢ Hull ⟩ → ⟨ x ∈ˢ Lset α ⟩
-    Hull⊆L x x∈H = rec₁ (snd (x ∈ˢ Lset α)) go x∈H
+    Hull⊆L x x∈H = rec₁ ((x ∈ˢ Lset α) .snd) go x∈H
       where
-      go : Σ[ c ∶ Code ] (fst (val c) ≡ x) → ⟨ x ∈ˢ Lset α ⟩
-      go (c , q) = subst (λ z → ⟨ z ∈ˢ Lset α ⟩) q (snd (val c))
+      go : Σ[ c ∶ Code ] ((val c) .fst ≡ x) → ⟨ x ∈ˢ Lset α ⟩
+      go (c , q) = subst (λ z → ⟨ z ∈ˢ Lset α ⟩) q ((val c) .snd)
 ```
 
 <!--en-->
@@ -1266,7 +1266,7 @@ Membership reads back only as truncated existence: a member of the hull is the v
 
 ```agda
     hull-member : (x : S) → ⟨ x ∈ˢ Hull ⟩
-                → ∥ Σ[ c ∶ Code ] (fst (val c) ≡ x) ∥₁
+                → ∥ Σ[ c ∶ Code ] ((val c) .fst ≡ x) ∥₁
     hull-member x x∈H = x∈H
 ```
 
@@ -1279,7 +1279,7 @@ In the other direction no truncation is needed: the value of every code is a mem
 <!--/-->
 
 ```agda
-    val-in-Hull : (c : Code) → ⟨ fst (val c) ∈ˢ Hull ⟩
+    val-in-Hull : (c : Code) → ⟨ (val c) .fst ∈ˢ Hull ⟩
     val-in-Hull c = inHull c
 ```
 
@@ -1428,7 +1428,7 @@ The isomorphism lifts to the paired carriers: apply `p` to the underlying elemen
 
 ```agda
   g : SM → SPM
-  g m = p (fst m) , p∈ (fst m) (snd m)
+  g m = p (m .fst) , p∈ (m .fst) (m .snd)
 ```
 
 <!--en-->
@@ -1496,7 +1496,7 @@ The map `p` is applied pointwise to environments, so lookups reduce one index at
 ```agda
   private
     lookup-g : {n : ℕ} (i : Fin n) (δ : SM ^ n)
-             → p (fst (lookup i δ)) ≡ fst (lookup i (map g δ))
+             → p ((lookup i δ) .fst) ≡ (lookup i (map g δ)) .fst
     lookup-g zero (m ∷ δ) = refl
     lookup-g (suc i) (m ∷ δ) = lookup-g i δ
 ```
@@ -1511,7 +1511,7 @@ Terms agree under the map `p`: applying `p` to the value of a term of `M` equals
 
 ```agda
     tm-agree : {n : ℕ} (t : Term SM n) (δ : SM ^ n)
-             → p (fst (⟦ t ⟧ᵐ δ)) ≡ fst (⟦ mapTm g t ⟧ᵖᵐ (map g δ))
+             → p ((⟦ t ⟧ᵐ δ) .fst) ≡ (⟦ mapTm g t ⟧ᵖᵐ (map g δ)) .fst
     tm-agree (con m) δ = refl
     tm-agree (var i) δ = lookup-g i δ
     at∈ : (n : ℕ) (t u : Term SM n) (δ : SM ^ n)
@@ -1528,9 +1528,9 @@ Membership of atomic terms transfers in both directions: forward, the proof tran
 ```agda
         → (δ ⊨ᵐ (t ∈̇ u)) ≡ (map g δ ⊨ᵖᵐ mapFo g (t ∈̇ u))
     at∈ n t u δ = ⇔toPath
-      (λ h → subst (λ z → ⟨ fst (⟦ mapTm g t ⟧ᵖᵐ (map g δ)) ∈ˢ z ⟩) (tm-agree u δ)
-        (subst (λ z → ⟨ z ∈ˢ p (fst (⟦ u ⟧ᵐ δ)) ⟩) (tm-agree t δ)
-          (iso-fwd (fst (⟦ u ⟧ᵐ δ)) (fst (⟦ t ⟧ᵐ δ)) (snd (⟦ u ⟧ᵐ δ))
+      (λ h → subst (λ z → ⟨ (⟦ mapTm g t ⟧ᵖᵐ (map g δ)) .fst ∈ˢ z ⟩) (tm-agree u δ)
+        (subst (λ z → ⟨ z ∈ˢ p ((⟦ u ⟧ᵐ δ) .fst) ⟩) (tm-agree t δ)
+          (iso-fwd ((⟦ u ⟧ᵐ δ) .fst) ((⟦ t ⟧ᵐ δ) .fst) ((⟦ u ⟧ᵐ δ) .snd)
 ```
 
 <!--en-->
@@ -1542,11 +1542,11 @@ The forward transport lands at membership after applying `p`; backward reflects 
 <!--/-->
 
 ```agda
-            (snd (⟦ t ⟧ᵐ δ)) h)))
-      (λ h → iso-bwd (fst (⟦ u ⟧ᵐ δ)) (fst (⟦ t ⟧ᵐ δ)) (snd (⟦ u ⟧ᵐ δ))
-        (snd (⟦ t ⟧ᵐ δ))
-        (subst (λ z → ⟨ p (fst (⟦ t ⟧ᵐ δ)) ∈ˢ z ⟩) (sym (tm-agree u δ))
-          (subst (λ z → ⟨ z ∈ˢ fst (⟦ mapTm g u ⟧ᵖᵐ (map g δ)) ⟩)
+            ((⟦ t ⟧ᵐ δ) .snd) h)))
+      (λ h → iso-bwd ((⟦ u ⟧ᵐ δ) .fst) ((⟦ t ⟧ᵐ δ) .fst) ((⟦ u ⟧ᵐ δ) .snd)
+        ((⟦ t ⟧ᵐ δ) .snd)
+        (subst (λ z → ⟨ p ((⟦ t ⟧ᵐ δ) .fst) ∈ˢ z ⟩) (sym (tm-agree u δ))
+          (subst (λ z → ⟨ z ∈ˢ (⟦ mapTm g u ⟧ᵖᵐ (map g δ)) .fst ⟩)
 ```
 
 <!--en-->
@@ -1573,8 +1573,8 @@ Equality of atomic terms transfers by applying the collapse to both sides of the
     at≐ : (n : ℕ) (t u : Term SM n) (δ : SM ^ n)
         → (δ ⊨ᵐ (t ≐ u)) ≡ (map g δ ⊨ᵖᵐ mapFo g (t ≐ u))
     at≐ n t u δ = ⇔toPath
-      (λ h → subst (λ z → z ≡ fst (⟦ mapTm g u ⟧ᵖᵐ (map g δ))) (tm-agree t δ)
-        (subst (λ z → p (fst (⟦ t ⟧ᵐ δ)) ≡ z) (tm-agree u δ) (cong p h)))
+      (λ h → subst (λ z → z ≡ (⟦ mapTm g u ⟧ᵖᵐ (map g δ)) .fst) (tm-agree t δ)
+        (subst (λ z → p ((⟦ t ⟧ᵐ δ) .fst) ≡ z) (tm-agree u δ) (cong p h)))
 ```
 
 <!--en-->
@@ -1586,10 +1586,10 @@ The backward direction is where injectivity earns its place: the collapsed sides
 <!--/-->
 
 ```agda
-      (λ h → p-inj (fst (⟦ t ⟧ᵐ δ)) (fst (⟦ u ⟧ᵐ δ)) (snd (⟦ t ⟧ᵐ δ))
-        (snd (⟦ u ⟧ᵐ δ))
-        (subst (λ z → z ≡ p (fst (⟦ u ⟧ᵐ δ))) (sym (tm-agree t δ))
-          (subst (λ z → fst (⟦ mapTm g t ⟧ᵖᵐ (map g δ)) ≡ z)
+      (λ h → p-inj ((⟦ t ⟧ᵐ δ) .fst) ((⟦ u ⟧ᵐ δ) .fst) ((⟦ t ⟧ᵐ δ) .snd)
+        ((⟦ u ⟧ᵐ δ) .snd)
+        (subst (λ z → z ≡ p ((⟦ u ⟧ᵐ δ) .fst)) (sym (tm-agree t δ))
+          (subst (λ z → (⟦ mapTm g t ⟧ᵖᵐ (map g δ)) .fst ≡ z)
             (sym (tm-agree u δ)) h)))
 ```
 
@@ -1853,7 +1853,7 @@ The substructure machinery is instantiated at the hull, and its formulas receive
   module Mse = A.SemM.At A.SM id using ( _⊨_ )
   codeOf : (q : A.SM) → ∥ Σ[ c ∶ H.T.Code ] (H.T.val c ≡ A.inL q) ∥₁
   codeOf q = map₁ (λ { (c , e) → c , Σ≡Prop (λ z → ⟨ z ∈ˢ Lset α ⟩isProp) e })
-    (H.hull-member (fst q) (snd q))
+    (H.hull-member (q .fst) (q .snd))
 ```
 
 <!--en-->
@@ -2030,7 +2030,7 @@ The search returns a least witness inside the hull, satisfying the abstracted bo
 
 ```agda
       finish : Σ[ a ∶ ASt.SL ]
-                 ( ⟨ fst a ∈ˢ M ⟩
+                 ( ⟨ a .fst ∈ˢ M ⟩
                  × ⟨ (a ∷ H.T.vals ds) H.T.⊨₀ bodyFo ⟩ )
              → Σ[ q ∶ A.SM ]
                  ⟨ (A.inL q ∷ map A.inL δ) ASt.AbsL.⊨ᵐ (mapFo A.inL ψ) ⟩
@@ -2048,7 +2048,7 @@ The witness is read back into the carrier of the substructure: the underlying se
       finish (a , a∈H , ha) = q , sat
         where
         q : A.SM
-        q = fst a , a∈H
+        q = a .fst , a∈H
 ```
 
 <!--en-->
@@ -2601,7 +2601,7 @@ Because both `δ` and `γ` are ordinals, `δ ∈ Lset γ` implies `δ ∈ γ`; a
       go (γ , oγ , γ∈πX , δ∈Lγ) =
         γ , oγ , ord∈Lset→∈ γ oγ δ oδ δ∈Lγ , ord∈β γ γ∈πX oγ
     πX⊆Lβ : (x : S) → ⟨ x ∈ˢ C.πX ⟩ → ⟨ x ∈ˢ Lset β ⟩
-    πX⊆Lβ x x∈πX = rec₁ (snd (x ∈ˢ Lset β)) go (covered x x∈πX)
+    πX⊆Lβ x x∈πX = rec₁ ((x ∈ˢ Lset β) .snd) go (covered x x∈πX)
       where
 ```
 
@@ -2630,11 +2630,11 @@ The forward inclusion decomposes a member of the level at beta by the stage cons
 <!--/-->
 
 ```agda
-    Lβ⊆πX x x∈Lβ = rec₁ (snd (x ∈ˢ C.πX)) go (Lset-out β x x∈Lβ)
+    Lβ⊆πX x x∈Lβ = rec₁ ((x ∈ˢ C.πX) .snd) go (Lset-out β x x∈Lβ)
       where
       go : Σ[ δ ∶ S ] (⟨ δ ∈ˢ β ⟩ × ⟨ x ∈ˢ 𝒟ₒ (Lset δ) ⟩)
          → ⟨ x ∈ˢ C.πX ⟩
-      go (δ , δ∈β , x∈𝒟ₒδ) = rec₁ (snd (x ∈ˢ C.πX)) liftStage (β-succ δ δ∈β)
+      go (δ , δ∈β , x∈𝒟ₒδ) = rec₁ ((x ∈ˢ C.πX) .snd) liftStage (β-succ δ δ∈β)
 ```
 
 <!--en-->
@@ -2803,7 +2803,7 @@ The generator is contained in the ambient stage: a member on the stage side is t
 
 ```agda
   X⊆Lλ : (z : S) → ⟨ z ∈ˢ X ⟩ → ⟨ z ∈ˢ Lset lam ⟩
-  X⊆Lλ z z∈X = rec₁ (snd (z ∈ˢ Lset lam)) go (X-mem z z∈X)
+  X⊆Lλ z z∈X = rec₁ ((z ∈ˢ Lset lam) .snd) go (X-mem z z∈X)
     where
     go : (⟨ z ∈ˢ Lset α ⟩ ⊎ ⟨ z ∈ˢ ⁅ x ⁆s ⟩) → ⟨ z ∈ˢ Lset lam ⟩
     go (inl z∈Lα) = Lset-mono {α = lam} {β = α} α∈λ z∈Lα
@@ -2831,7 +2831,7 @@ The generator is transitive. A member of a member on the stage side is in the st
 
 ```agda
   Xtr : isTransV X
-  Xtr {x = a} {y = b} b∈a a∈X = rec₁ (snd (b ∈ˢ X)) go (X-mem a a∈X)
+  Xtr {x = a} {y = b} b∈a a∈X = rec₁ ((b ∈ˢ X) .snd) go (X-mem a a∈X)
     where
     go : (⟨ a ∈ˢ Lset α ⟩ ⊎ ⟨ a ∈ˢ ⁅ x ⁆s ⟩) → ⟨ b ∈ˢ X ⟩
     go (inl a∈Lα) = Lα∈X b (layer-trans (Lset-layer α) b∈a a∈Lα)
@@ -3133,7 +3133,7 @@ Elementarity supplies a hull witness satisfying the difference formula. Eliminat
       inside : Σ[ b ∶ A.SM ] ⟨ (b ∷ []) Mse.⊨ φ xS yS ⟩ → ⊥₀
       inside (b , q) = rec₁ isProp⊥ cases q
         where
-        cases : (⟨ fst b ∈ˢ x ⟩ × (⟨ fst b ∈ˢ y ⟩ → Lift ⊥₀))
+        cases : (⟨ b .fst ∈ˢ x ⟩ × (⟨ b .fst ∈ˢ y ⟩ → Lift ⊥₀))
 ```
 
 <!--en-->
@@ -3145,10 +3145,10 @@ Either disjunct identifies the witness as a member of one hull member but not th
 <!--/-->
 
 ```agda
-              ⊎ (⟨ fst b ∈ˢ y ⟩ × (⟨ fst b ∈ˢ x ⟩ → Lift ⊥₀))
+              ⊎ (⟨ b .fst ∈ˢ y ⟩ × (⟨ b .fst ∈ˢ x ⟩ → Lift ⊥₀))
               → ⊥₀
-        cases (inl (bx , nby)) = lower (nby (ag1 (fst b) (snd b) bx))
-        cases (inr (by , nbx)) = lower (nbx (ag2 (fst b) (snd b) by))
+        cases (inl (bx , nby)) = lower (nby (ag1 (b .fst) (b .snd) bx))
+        cases (inr (by , nbx)) = lower (nbx (ag2 (b .fst) (b .snd) by))
 ```
 
 <!--en-->
@@ -3228,10 +3228,10 @@ For a constant-free Δ₀ formula `φ`, `read` first regards `embed φ` as a for
 
 ```agda
   read : {n : ℕ} {φ : Formula (⊥* {ℓ-suc ℓ}) n} → Δ₀ φ → (δ : Ab.SM ^ n)
-       → (δ Ab.⊨ᵐ embed φ) ≡ (map fst δ ⊨ₚ φ)
+       → (δ Ab.⊨ᵐ embed φ) ≡ (map (λ p → p .fst) δ ⊨ₚ φ)
   read {n} {φ} dφ δ =
       Ab.abs₀ (mapΔ₀ ⊥*-rec dφ) δ
-    ∙ embed-⊨ 𝒮ᵥ {K = Ab.SM} fst φ (map fst δ)
+    ∙ embed-⊨ 𝒮ᵥ {K = Ab.SM} (λ p → p .fst) φ (map (λ p → p .fst) δ)
 ```
 
 <!--en-->
@@ -3243,7 +3243,7 @@ The final path uses function extensionality: because the constant domain is empt
 <!--/-->
 
 ```agda
-    ∙ cong (λ ι → SemV.At._⊨_ (⊥* {ℓ-suc ℓ}) ι (map fst δ) φ)
+    ∙ cong (λ ι → let module I = SemV.At (⊥* {ℓ-suc ℓ}) ι in map (λ p → p .fst) δ I.⊨ φ)
            (funExt (λ b → ⊥*-rec b))
 ```
 </div>
@@ -3350,7 +3350,7 @@ Because `Lset lam` is transitive, every constant-free Δ₀ formula has equal re
 
 ```agda
     atL : {n : ℕ} {φ : Formula (⊥* {ℓ-suc ℓ}) n} → Δ₀ φ → (δ : ASt.SL ^ n)
-        → (δ ASt.AbsL.⊨ᵐ embed φ) ≡ (map fst δ ⊨ₚ φ)
+        → (δ ASt.AbsL.⊨ᵐ embed φ) ≡ (map (λ p → p .fst) δ ⊨ₚ φ)
     atL dφ δ = TL.read dφ δ
 ```
 
@@ -3364,7 +3364,7 @@ The collapse image `πX` is also transitive, so the same agreement holds there f
 
 ```agda
     atπ : {n : ℕ} {φ : Formula (⊥* {ℓ-suc ℓ}) n} → Δ₀ φ → (δ : Tπ.Ab.SM ^ n)
-        → (δ Tπ.Ab.⊨ᵐ embed φ) ≡ (map fst δ ⊨ₚ φ)
+        → (δ Tπ.Ab.⊨ᵐ embed φ) ≡ (map (λ p → p .fst) δ ⊨ₚ φ)
     atπ dφ δ = Tπ.read dφ δ
 ```
 
@@ -3378,7 +3378,7 @@ For the hull's own carrier, the reading factors through elementarity: the embedd
 
 ```agda
     atM : {n : ℕ} {φ : Formula (⊥* {ℓ-suc ℓ}) n} → Δ₀ φ → (δ : A.SM ^ n)
-        → (δ CIso.I.⊨ᵐ embed φ) ≡ (map fst δ ⊨ₚ φ)
+        → (δ CIso.I.⊨ᵐ embed φ) ≡ (map (λ p → p .fst) δ ⊨ₚ φ)
     atM {n} {φ} dφ δ =
         elem n (embed φ) δ
       ∙ cong (λ ψ → map A.inL δ ASt.AbsL.⊨ᵐ ψ) (embed-map A.inL φ)
@@ -3397,7 +3397,7 @@ After stage absoluteness, only the environments must be compared. Including a hu
       ∙ cong (λ γ → γ ⊨ₚ φ) (map-inL-fst δ)
       where
       map-inL-fst : {m : ℕ} (γ : A.SM ^ m)
-                  → map fst (map A.inL γ) ≡ map fst γ
+                  → map (λ p → p .fst) (map A.inL γ) ≡ map (λ p → p .fst) γ
 ```
 
 <!--en-->
@@ -3410,10 +3410,10 @@ This equality is immediate for the empty environment and is preserved when one e
 
 ```agda
       map-inL-fst [] = refl
-      map-inL-fst (q ∷ γ) = cong (fst q ∷_) (map-inL-fst γ)
+      map-inL-fst (q ∷ γ) = cong (q .fst ∷_) (map-inL-fst γ)
     push : {n : ℕ} {φ : Formula (⊥* {ℓ-suc ℓ}) n} → Δ₀ φ → (δ : A.SM ^ n)
-         → ⟨ map fst δ ⊨ₚ φ ⟩
-         → ⟨ map fst (map CIso.I.g δ) ⊨ₚ φ ⟩
+         → ⟨ map (λ p → p .fst) δ ⊨ₚ φ ⟩
+         → ⟨ map (λ p → p .fst) (map CIso.I.g δ) ⊨ₚ φ ⟩
 ```
 
 <!--en-->
@@ -3442,8 +3442,8 @@ For `pull`, ambient truth at the collapse values is moved backward along `atπ` 
 
 ```agda
     pull : {n : ℕ} {φ : Formula (⊥* {ℓ-suc ℓ}) n} → Δ₀ φ → (δ : A.SM ^ n)
-         → ⟨ map fst (map CIso.I.g δ) ⊨ₚ φ ⟩
-         → ⟨ map fst δ ⊨ₚ φ ⟩
+         → ⟨ map (λ p → p .fst) (map CIso.I.g δ) ⊨ₚ φ ⟩
+         → ⟨ map (λ p → p .fst) δ ⊨ₚ φ ⟩
     pull {n} {φ} dφ δ h =
       subst ⟨_⟩ (atM dφ δ)
 ```

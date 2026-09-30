@@ -146,16 +146,16 @@ InL c = ⟨ isL c ⟩
 ```
 
 <!--en-->
-The partial constant map is fixed point by point. A source constant is read in the common world `V ℓ` by `id`, since it already is a set there; a target constant, an element of the carrier `S`, is read by `fst`. The partial assignment sends each admissible `c` with evidence `p : InL c` to the pair `c , p`, and the triangle condition asks that `fst (c , p)` be `c`, which holds by `refl`. So the only correctness obligation is discharged by computation, and the data of `L` that entered was the evidence `p` alone.
+The partial constant map is fixed point by point. A source constant is read in the common world `V ℓ` by `id`, since it already is a set there; a target constant, an element of the carrier `S`, is read by `fst`. The partial assignment sends each admissible `c` with evidence `p : InL c` to the pair `c , p`, and the triangle condition asks that `(c , p) .fst` be `c`, which holds by `refl`. So the only correctness obligation is discharged by computation, and the data of `L` that entered was the evidence `p` alone.
 <!--zh-->
-部分常元映射被逐点固定。源常元已在共同世界 `V ℓ` 中是集合，经 `id` 读取；目标常元是载体 `S` 的元素，经 `fst` 读取。部分赋值把每个带证据 `p : InL c` 的合格常元 `c` 送到对 `c , p`，三角条件要求 `fst (c , p)` 就是 `c`，由 `refl` 成立。于是唯一正确性义务由计算消解，而 `L` 进入的全部数据只是那份证据 `p`。
+部分常元映射被逐点固定。源常元已在共同世界 `V ℓ` 中是集合，经 `id` 读取；目标常元是载体 `S` 的元素，经 `fst` 读取。部分赋值把每个带证据 `p : InL c` 的合格常元 `c` 送到对 `c , p`，三角条件要求 `(c , p) .fst` 就是 `c`，由 `refl` 成立。于是唯一正确性义务由计算消解，而 `L` 进入的全部数据只是那份证据 `p`。
 <!--ja-->
-部分的な定数写像は点ごとに固定される。源の定数は、すでに共通の世界 `V ℓ` の中で集合であるため `id` で読まれ、先の定数、つまり台 `S` の要素は `fst` で読まれる。部分的な割り当ては、証拠 `p : InL c` を伴う各適格な定数 `c` を対 `c , p` へ送る。三角条件は `fst (c , p)` が `c` であることを要求し、これは `refl` で成り立つ。したがって唯一の正しさの義務は計算によって果たされ、`L` から入ってきたデータは証拠 `p` だけだったことになる。
+部分的な定数写像は点ごとに固定される。源の定数は、すでに共通の世界 `V ℓ` の中で集合であるため `id` で読まれ、先の定数、つまり台 `S` の要素は `fst` で読まれる。部分的な割り当ては、証拠 `p : InL c` を伴う各適格な定数 `c` を対 `c , p` へ送る。三角条件は `(c , p) .fst` が `c` であることを要求し、これは `refl` で成り立つ。したがって唯一の正しさの義務は計算によって果たされ、`L` から入ってきたデータは証拠 `p` だけだったことになる。
 <!--/-->
 
 ```agda
 module ToL = Relabel {K = V ℓ} {K' = S} {W = V ℓ}
-  id fst InL (λ c p → c , p) (λ c p → refl)
+  id (λ p → p .fst) InL (λ c p → c , p) (λ c p → refl)
 ```
 
 <!--en-->
@@ -191,43 +191,43 @@ One step of that bookkeeping deserves a remark. The identity relabelling in the 
 <!--/-->
 
 <!--en-->
-The statement equates two satisfaction judgments that a priori live in different worlds. On the left, the environment `γ` consists of elements of `S`, each a set with a constructibility proof, and `γ ⊨ liftFo φ h` is satisfaction inside `L`, of the formula whose constants have been relabelled into `L`. On the right, the same environment is projected entrywise by `map fst`, and the original formula `φ` is evaluated in the ambient hierarchy. Both sides are propositions in the same `hProp`, so the claimed agreement is a single path, not an implication.
+The statement equates two satisfaction judgments that a priori live in different worlds. On the left, the environment `γ` consists of elements of `S`, each a set with a constructibility proof, and `γ ⊨ liftFo φ h` is satisfaction inside `L`, of the formula whose constants have been relabelled into `L`. On the right, the same environment is projected entrywise by `map (λ p → p .fst)`, and the original formula `φ` is evaluated in the ambient hierarchy. Both sides are propositions in the same `hProp`, so the claimed agreement is a single path, not an implication.
 <!--zh-->
-陈述等式的是两条先验地处于不同世界中的满足判断。左边，环境 `γ` 由 `S` 的元素组成，每个元素是带可构造性证明的集合，`γ ⊨ liftFo φ h` 是常元已被改名进 `L` 的公式在 `L` 内的满足。右边，同一环境被 `map fst` 逐项投影，原公式 `φ` 在外围层级中求值。两边都是同一个 `hProp` 中的命题，因此所断言的一致是一条路径，而非蕴涵。
+陈述等式的是两条先验地处于不同世界中的满足判断。左边，环境 `γ` 由 `S` 的元素组成，每个元素是带可构造性证明的集合，`γ ⊨ liftFo φ h` 是常元已被改名进 `L` 的公式在 `L` 内的满足。右边，同一环境被 `map (λ p → p .fst)` 逐项投影，原公式 `φ` 在外围层级中求值。两边都是同一个 `hProp` 中的命题，因此所断言的一致是一条路径，而非蕴涵。
 <!--ja-->
-この主張が等しいと置くのは、先験的には異なる世界に住む二つの充足の判断である。左辺では環境 `γ` は `S` の要素、すなわち構成可能性の証明を伴う集合からなり、`γ ⊨ liftFo φ h` は定数が `L` へと改名された論理式の `L` 内での充足である。右辺では同じ環境が `map fst` で項ごとに射影され、元の論理式 `φ` が周囲の階層の中で評価される。両辺とも同じ `hProp` の命題なので、主張される一致は単一のパスであって、含意ではない。
+この主張が等しいと置くのは、先験的には異なる世界に住む二つの充足の判断である。左辺では環境 `γ` は `S` の要素、すなわち構成可能性の証明を伴う集合からなり、`γ ⊨ liftFo φ h` は定数が `L` へと改名された論理式の `L` 内での充足である。右辺では同じ環境が `map (λ p → p .fst)` で項ごとに射影され、元の論理式 `φ` が周囲の階層の中で評価される。両辺とも同じ `hProp` の命題なので、主張される一致は単一のパスであって、含意ではない。
 <!--/-->
 
 ```agda
 transferFo : ∀ {n} (φ : Formula (V ℓ) n) (h : BoundedFo InL φ) → Δ₀ φ
-           → (γ : S ^ n) → (γ ⊨ liftFo φ h) ≡ ((map fst γ) ⊨v φ)
+           → (γ : S ^ n) → (γ ⊨ liftFo φ h) ≡ ((map (λ p → p .fst) γ) ⊨v φ)
 ```
 
 <!--en-->
-The first step changes the interpretation structure and leaves the syntax alone. Absoluteness is applied with the inner Δ₀ witness `Δ₀-liftFo h dφ`, and it rewrites satisfaction of the lifted formula in `L` into satisfaction of the same formula in the hierarchy, at the projected environment. The second step is the relabelling theorem `⊨-map` at `f = fst`, which handles the interpretation of the constants of the lifted formula and of the environment variables under the projection: the formula says the same thing when its constants and its environment entries are both read through `fst`. The two steps agree with how the inner world was built, and `sym` presents the second in the direction the chain needs.
+The first step changes the interpretation structure and leaves the syntax alone. Absoluteness is applied with the inner Δ₀ witness `Δ₀-liftFo h dφ`, and it rewrites satisfaction of the lifted formula in `L` into satisfaction of the same formula in the hierarchy, at the projected environment. The second step is the relabelling theorem `⊨-map` at `f = (λ p → p .fst)`, which handles the interpretation of the constants of the lifted formula and of the environment variables under the projection: the formula says the same thing when its constants and its environment entries are both read through `fst`. The two steps agree with how the inner world was built, and `sym` presents the second in the direction the chain needs.
 <!--zh-->
-第一步更换解释结构而语法不动。绝对性以内层 Δ₀ 见证 `Δ₀-liftFo h dφ` 施用，把抬升后公式在 `L` 中的满足，改写为同一公式在层级中、于投影后环境下的满足。第二步是取 `f = fst` 的改名定理 `⊨-map`，它处理抬升后公式的常元与环境变元在投影之下的解释：当常元与环境分量都经 `fst` 读取时，这条公式所说的东西不变。两步都与内层世界的构造方式一致，`sym` 再把第二步摆成链条所需的方向。
+第一步更换解释结构而语法不动。绝对性以内层 Δ₀ 见证 `Δ₀-liftFo h dφ` 施用，把抬升后公式在 `L` 中的满足，改写为同一公式在层级中、于投影后环境下的满足。第二步是取 `f = (λ p → p .fst)` 的改名定理 `⊨-map`，它处理抬升后公式的常元与环境变元在投影之下的解释：当常元与环境分量都经 `fst` 读取时，这条公式所说的东西不变。两步都与内层世界的构造方式一致，`sym` 再把第二步摆成链条所需的方向。
 <!--ja-->
-第一段階は解釈する構造を取り替えるだけで、構文はそのままである。絶対性は、内側の Δ₀ の証拠 `Δ₀-liftFo h dφ` とともに適用され、持ち上げられた論理式の `L` における充足を、同じ論理式の、射影後の環境での階層における充足へ書き換える。第二段階は `f = fst` とした改名の定理 `⊨-map` で、持ち上げられた論理式の定数と環境の変数の、射影の下での解釈を処理する。定数と環境の各成分を `fst` を通して読んでも、この論理式の述べることは変わらないのである。二つの段階は内側の世界の作られ方と一致し、`sym` が第二を連鎖に必要な向きで提示する。
+第一段階は解釈する構造を取り替えるだけで、構文はそのままである。絶対性は、内側の Δ₀ の証拠 `Δ₀-liftFo h dφ` とともに適用され、持ち上げられた論理式の `L` における充足を、同じ論理式の、射影後の環境での階層における充足へ書き換える。第二段階は `f = (λ p → p .fst)` とした改名の定理 `⊨-map` で、持ち上げられた論理式の定数と環境の変数の、射影の下での解釈を処理する。定数と環境の各成分を `fst` を通して読んでも、この論理式の述べることは変わらないのである。二つの段階は内側の世界の作られ方と一致し、`sym` が第二を連鎖に必要な向きで提示する。
 <!--/-->
 
 ```agda
 transferFo φ h dφ γ =
     abs₀ (Δ₀-liftFo h dφ) γ
-  ∙ sym (⊨-map 𝒮ᵥ fst id (liftFo φ h) (map fst γ))
+  ∙ sym (⊨-map 𝒮ᵥ (λ p → p .fst) id (liftFo φ h) (map (λ p → p .fst) γ))
 ```
 
 <!--en-->
-The remaining two steps involve the constants, and together they say that relabelling changed nothing. The correctness law `liftFo-correct` gives a syntactic path `mapFo fst (liftFo φ h) ≡ mapFo id φ`: pushing the relabelled formula into the world along `fst` yields the original pushed along `id`, because the triangle condition held at each constant. Congruence then moves this path under the fixed environment and satisfaction symbol. Finally `⊨-map` with `f = id` says a formula and its identity image mean the same, closing the chain: inner satisfaction in `L` equals ambient satisfaction of `φ`.
+The remaining two steps involve the constants, and together they say that relabelling changed nothing. The correctness law `liftFo-correct` gives a syntactic path `mapFo (liftFo φ h) .fst ≡ mapFo id φ`: pushing the relabelled formula into the world along `fst` yields the original pushed along `id`, because the triangle condition held at each constant. Congruence then moves this path under the fixed environment and satisfaction symbol. Finally `⊨-map` with `f = id` says a formula and its identity image mean the same, closing the chain: inner satisfaction in `L` equals ambient satisfaction of `φ`.
 <!--zh-->
-剩下两步才涉及常元，合起来断言改名什么也没改。正确性规律 `liftFo-correct` 给出语法层面的路径 `mapFo fst (liftFo φ h) ≡ mapFo id φ`：把改名后的公式沿 `fst` 推进世界，与把原公式沿 `id` 推进去所得相同，因为三角条件在每个常元处都成立。同余再让这条路径在固定环境与满足符号下移动。最后 `⊨-map` 取 `f = id`，断言公式与其恒等像含义相同，链条就此闭合：`L` 中的内层满足等于 `φ` 的外围满足。
+剩下两步才涉及常元，合起来断言改名什么也没改。正确性规律 `liftFo-correct` 给出语法层面的路径 `mapFo (liftFo φ h) .fst ≡ mapFo id φ`：把改名后的公式沿 `fst` 推进世界，与把原公式沿 `id` 推进去所得相同，因为三角条件在每个常元处都成立。同余再让这条路径在固定环境与满足符号下移动。最后 `⊨-map` 取 `f = id`，断言公式与其恒等像含义相同，链条就此闭合：`L` 中的内层满足等于 `φ` 的外围满足。
 <!--ja-->
-残りの二段階が定数に関わり、合わせて改名が何も変えていないことを述べる。正しさの法則 `liftFo-correct` は構文の水準のパス `mapFo fst (liftFo φ h) ≡ mapFo id φ` を与える。三角条件が各定数で成り立っていたため、改名後の論理式を `fst` に沿って世界へ押し込んだものは、元の論理式を `id` に沿って押し込んだものと同じになる。続いて合同が、このパスを固定された環境と充足の記号の下へ動かす。最後に `f = id` の `⊨-map` が、論理式とその恒等像が同じ意味を持つと述べ、連鎖は閉じる。`L` の内側の充足は `φ` の周囲の充足に等しいのである。
+残りの二段階が定数に関わり、合わせて改名が何も変えていないことを述べる。正しさの法則 `liftFo-correct` は構文の水準のパス `mapFo (liftFo φ h) .fst ≡ mapFo id φ` を与える。三角条件が各定数で成り立っていたため、改名後の論理式を `fst` に沿って世界へ押し込んだものは、元の論理式を `id` に沿って押し込んだものと同じになる。続いて合同が、このパスを固定された環境と充足の記号の下へ動かす。最後に `f = id` の `⊨-map` が、論理式とその恒等像が同じ意味を持つと述べ、連鎖は閉じる。`L` の内側の充足は `φ` の周囲の充足に等しいのである。
 <!--/-->
 
 ```agda
-  ∙ cong (λ ψ → (map fst γ) ⊨v ψ) (ToL.liftFo-correct φ h)
-  ∙ ⊨-map 𝒮ᵥ id id φ (map fst γ)
+  ∙ cong (λ ψ → (map (λ p → p .fst) γ) ⊨v ψ) (ToL.liftFo-correct φ h)
+  ∙ ⊨-map 𝒮ᵥ id id φ (map (λ p → p .fst) γ)
 ```
 
 <!--en-->

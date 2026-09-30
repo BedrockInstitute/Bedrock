@@ -251,7 +251,7 @@ open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
 
 ```agda
 Holds : S → S → S → Type (ℓ-suc ℓ)
-Holds F x y = ⟨ pr (fst x) (fst y) ∈ fst F ⟩
+Holds F x y = ⟨ pr (x .fst) (y .fst) ∈ F .fst ⟩
 ```
 
 <!--en-->
@@ -276,8 +276,8 @@ If two elements of `S` have equal underlying sets, then the elements themselves 
 <!--/-->
 
 ```agda
-S≡ : {x y : S} → fst x ≡ fst y → x ≡ y
-S≡ = Σ≡Prop (λ v → snd (isL v))
+S≡ : {x y : S} → x .fst ≡ y .fst → x ≡ y
+S≡ = Σ≡Prop (λ v → (isL v) .snd)
 ```
 
 <!--en-->
@@ -290,7 +290,7 @@ The carrier `S` is an h-set by `isSetClass`{.Agda}, applied to the cumulative hi
 
 ```agda
 isSetS : isSet S
-isSetS = isSetClass setIsSet (λ v → snd (isL v))
+isSetS = isSetClass setIsSet (λ v → (isL v) .snd)
 ```
 
 <!--en-->
@@ -420,8 +420,8 @@ Left members are included by the left rule of the union.
 <!--/-->
 
 ```agda
-  in₁ : (z : S) → ⟨ fst z ∈ fst D₁ ⟩ → ⟨ fst z ∈ fst D ⟩
-  in₁ z = cupʟ-inl D₁ D₂ (fst z)
+  in₁ : (z : S) → ⟨ z .fst ∈ D₁ .fst ⟩ → ⟨ z .fst ∈ D .fst ⟩
+  in₁ z = cupʟ-inl D₁ D₂ (z .fst)
 ```
 
 <!--en-->
@@ -433,8 +433,8 @@ Right members are included symmetrically.
 <!--/-->
 
 ```agda
-  in₂ : (z : S) → ⟨ fst z ∈ fst D₂ ⟩ → ⟨ fst z ∈ fst D ⟩
-  in₂ z = cupʟ-inr D₁ D₂ (fst z)
+  in₂ : (z : S) → ⟨ z .fst ∈ D₂ .fst ⟩ → ⟨ z .fst ∈ D .fst ⟩
+  in₂ z = cupʟ-inr D₁ D₂ (z .fst)
 ```
 
 <!--en-->
@@ -446,8 +446,8 @@ If `z ∈ D₁ ∪ D₂`, then it merely belongs to the left side or the right s
 <!--/-->
 
 ```agda
-  out : (z : S) → ⟨ fst z ∈ fst D ⟩ → ∥ ⟨ fst z ∈ fst D₁ ⟩ ⊎ ⟨ fst z ∈ fst D₂ ⟩ ∥₁
-  out z = cupʟ-out D₁ D₂ (fst z)
+  out : (z : S) → ⟨ z .fst ∈ D .fst ⟩ → ∥ ⟨ z .fst ∈ D₁ .fst ⟩ ⊎ ⟨ z .fst ∈ D₂ .fst ⟩ ∥₁
+  out z = cupʟ-out D₁ D₂ (z .fst)
 ```
 </div>
 </details>
@@ -463,7 +463,7 @@ Let `κ` be a constructible set containing the tags `0` and `1`, and let `E₁` 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module TagUnion (κ : S) (0∈κ : ⟨ # 0 ∈ fst κ ⟩) (1∈κ : ⟨ # 1 ∈ fst κ ⟩)
+module TagUnion (κ : S) (0∈κ : ⟨ # 0 ∈ κ .fst ⟩) (1∈κ : ⟨ # 1 ∈ κ .fst ⟩)
                 (D₁ D₂ E₁ E₂ : S) (c₁ : InjCode E₁ D₁ κ) (c₂ : InjCode E₂ D₂ κ) where
 ```
 </summary>
@@ -490,8 +490,8 @@ Each coded injection extracts its underlying function together with the proof th
 <!--/-->
 
 ```agda
-  module X₁ = Extract E₁ D₁ (fst c₁) (fst (snd c₁)) using ( toFun; toFun-graph )
-  module X₂ = Extract E₂ D₂ (fst c₂) (fst (snd c₂)) using ( toFun; toFun-graph )
+  module X₁ = Extract E₁ D₁ (c₁ .fst) ((c₁ .snd) .fst) using ( toFun; toFun-graph )
+  module X₂ = Extract E₂ D₂ (c₂ .fst) ((c₂ .snd) .fst) using ( toFun; toFun-graph )
 ```
 
 <!--en-->
@@ -504,7 +504,7 @@ Each coded injection extracts its underlying function together with the proof th
 
 ```agda
   Mem : S → Type (ℓ-suc ℓ)
-  Mem z = ⟨ fst z ∈ fst D ⟩
+  Mem z = ⟨ z .fst ∈ D .fst ⟩
 ```
 
 <!--en-->
@@ -517,7 +517,7 @@ Membership in the left domain is decidable by excluded middle, and the decision 
 
 ```agda
   Case : S → Type (ℓ-suc ℓ)
-  Case z = Dec ⟨ fst z ∈ fst D₁ ⟩
+  Case z = Dec ⟨ z .fst ∈ D₁ .fst ⟩
 ```
 
 <!--en-->
@@ -530,7 +530,7 @@ Excluded middle decides, for every member of the union, whether it came from the
 
 ```agda
   decide : (z : S) → Case z
-  decide z = FOL.Semantics.decideMembership 𝒮ᵥ lem (fst z) (fst D₁)
+  decide z = FOL.Semantics.decideMembership 𝒮ᵥ lem (z .fst) (D₁ .fst)
 ```
 
 <!--en-->
@@ -542,8 +542,8 @@ A member outside the left domain must lie in the right domain: the union members
 <!--/-->
 
 ```agda
-  off : (z : S) → Mem z → (⟨ fst z ∈ fst D₁ ⟩ → ⊥₀) → ⟨ fst z ∈ fst D₂ ⟩
-  off z m nmem = rec₁ (snd (fst z ∈ fst D₂))
+  off : (z : S) → Mem z → (⟨ z .fst ∈ D₁ .fst ⟩ → ⊥₀) → ⟨ z .fst ∈ D₂ .fst ⟩
+  off z m nmem = rec₁ ((z .fst ∈ D₂ .fst) .snd)
     (λ { (inl h) → ⊥₀-rec (nmem h) ; (inr h) → h }) (out z m)
 ```
 
@@ -585,9 +585,9 @@ The ambient meaning `Wit y z` has two branches. In the left branch, `z ∈ D₁`
 ```agda
   Wit : (y z : S) → Type (ℓ-suc ℓ)
   Wit y z =
-      (⟨ fst z ∈ fst D₁ ⟩
-        × ∥ Σ[ v ∶ S ] (Holds E₁ z v × (fst y ≡ pr (# 0) (fst v))) ∥₁)
-    ⊎ ((⟨ fst z ∈ fst D₁ ⟩ → ⊥₀)
+      (⟨ z .fst ∈ D₁ .fst ⟩
+        × ∥ Σ[ v ∶ S ] (Holds E₁ z v × (y .fst ≡ pr (# 0) (v .fst))) ∥₁)
+    ⊎ ((⟨ z .fst ∈ D₁ .fst ⟩ → ⊥₀)
 ```
 
 <!--en-->
@@ -599,7 +599,7 @@ In the right branch, `z ∉ D₁`, and there merely exists `v` with `(z,v) ∈ E
 <!--/-->
 
 ```agda
-        × ∥ Σ[ v ∶ S ] (Holds E₂ z v × (fst y ≡ pr (# 1) (fst v))) ∥₁)
+        × ∥ Σ[ v ∶ S ] (Holds E₂ z v × (y .fst ≡ pr (# 1) (v .fst))) ∥₁)
 ```
 
 <!--en-->
@@ -629,7 +629,7 @@ Reading the two coding atoms uses their adequacy lemmas: satisfaction of the app
     private
       rd : (E : S) (k : ℕ) (y z v : S)
          → ⟨ (v ∷ y ∷ z ∷ []) ⊨ appC E i2 i0 ⟩ → ⟨ (v ∷ y ∷ z ∷ []) ⊨ tagAtL i1 k i0 ⟩
-         → Holds E z v × (fst y ≡ pr (# k) (fst v))
+         → Holds E z v × (y .fst ≡ pr (# k) (v .fst))
       rd E k y z v ha ht =
 ```
 
@@ -656,7 +656,7 @@ Conversely, from `Holds E z v` and the underlying equality `y = (k,v)`, transpor
 
 ```agda
       wr : (E : S) (k : ℕ) (y z v : S)
-         → Holds E z v → fst y ≡ pr (# k) (fst v)
+         → Holds E z v → y .fst ≡ pr (# k) (v .fst)
          → ⟨ (v ∷ y ∷ z ∷ []) ⊨ appC E i2 i0 ⟩ × ⟨ (v ∷ y ∷ z ∷ []) ⊨ tagAtL i1 k i0 ⟩
       wr E k y z v ha ht =
           subst ⟨_⟩ (sym (appC-adequate E i2 i0 (v ∷ y ∷ z ∷ []))) ha
@@ -728,10 +728,10 @@ Each coded relation is single-valued: two entries with the same first component 
 
 ```agda
   private
-    sv₁ : (x y y' : S) → Holds E₁ x y → Holds E₁ x y' → fst y ≡ fst y'
-    sv₁ = svAt-out zero (E₁ ∷ D₁ ∷ []) (fst c₁)
-    sv₂ : (x y y' : S) → Holds E₂ x y → Holds E₂ x y' → fst y ≡ fst y'
-    sv₂ = svAt-out zero (E₂ ∷ D₂ ∷ []) (fst c₂)
+    sv₁ : (x y y' : S) → Holds E₁ x y → Holds E₁ x y' → y .fst ≡ y' .fst
+    sv₁ = svAt-out zero (E₁ ∷ D₁ ∷ []) (c₁ .fst)
+    sv₂ : (x y y' : S) → Holds E₂ x y → Holds E₂ x y' → y .fst ≡ y' .fst
+    sv₂ = svAt-out zero (E₂ ∷ D₂ ∷ []) (c₂ .fst)
 ```
 
 <!--en-->
@@ -743,11 +743,11 @@ Each coded relation is also injective: two entries with the same second componen
 <!--/-->
 
 ```agda
-    ij₁ : (y x x' : S) → Holds E₁ x y → Holds E₁ x' y → fst x ≡ fst x'
-    ij₁ = injAt-out zero (E₁ ∷ D₁ ∷ []) (fst (snd (snd c₁)))
-    ij₂ : (y x x' : S) → Holds E₂ x y → Holds E₂ x' y → fst x ≡ fst x'
-    ij₂ = injAt-out zero (E₂ ∷ D₂ ∷ []) (fst (snd (snd c₂)))
-    ran₁ : (x y : S) → Holds E₁ x y → ⟨ fst y ∈ fst κ ⟩
+    ij₁ : (y x x' : S) → Holds E₁ x y → Holds E₁ x' y → x .fst ≡ x' .fst
+    ij₁ = injAt-out zero (E₁ ∷ D₁ ∷ []) (((c₁ .snd) .snd) .fst)
+    ij₂ : (y x x' : S) → Holds E₂ x y → Holds E₂ x' y → x .fst ≡ x' .fst
+    ij₂ = injAt-out zero (E₂ ∷ D₂ ∷ []) (((c₂ .snd) .snd) .fst)
+    ran₁ : (x y : S) → Holds E₁ x y → ⟨ y .fst ∈ κ .fst ⟩
 ```
 
 <!--en-->
@@ -759,9 +759,9 @@ The second range clause completes the data extracted from the two injection code
 <!--/-->
 
 ```agda
-    ran₁ = snd (snd (snd c₁))
-    ran₂ : (x y : S) → Holds E₂ x y → ⟨ fst y ∈ fst κ ⟩
-    ran₂ = snd (snd (snd c₂))
+    ran₁ = ((c₁ .snd) .snd) .snd
+    ran₂ : (x y : S) → Holds E₂ x y → ⟨ y .fst ∈ κ .fst ⟩
+    ran₂ = ((c₂ .snd) .snd) .snd
 ```
 
 <!--en-->
@@ -789,7 +789,7 @@ Uniqueness in the left case composes three equations: the entry's second compone
 <!--/-->
 
 ```agda
-  only : (z : S) (m : Mem z) (c : Case z) (y : S) → Wit y z → fst y ≡ fst (val z m c)
+  only : (z : S) (m : Mem z) (c : Case z) (y : S) → Wit y z → y .fst ≡ (val z m c) .fst
   only z m (yes h) y (inl (_ , hv)) = rec₁ (setIsSet _ _)
     (λ { (v , (hg , hy)) →
        hy ∙ cong (pr (# 0)) (sv₁ z v (X₁.toFun (z , h)) hg (X₁.toFun-graph (z , h)))
@@ -833,10 +833,10 @@ The value lands in the internal product: the pair of the numeral `0` or `1` with
 <!--/-->
 
 ```agda
-  into : (z : S) (m : Mem z) (c : Case z) → ⟨ fst (val z m c) ∈ˢ fst (prodL κ) ⟩
-  into z m (yes h) = subst (λ w → ⟨ w ∈ˢ fst (prodL κ) ⟩) (sym (prʟ-fst (nn 0) (X₁.toFun (z , h))))
+  into : (z : S) (m : Mem z) (c : Case z) → ⟨ (val z m c) .fst ∈ˢ (prodL κ) .fst ⟩
+  into z m (yes h) = subst (λ w → ⟨ w ∈ˢ (prodL κ) .fst ⟩) (sym (prʟ-fst (nn 0) (X₁.toFun (z , h))))
     (prodL-in κ (nn 0) (X₁.toFun (z , h)) 0∈κ (ran₁ z (X₁.toFun (z , h)) (X₁.toFun-graph (z , h))))
-  into z m (no nmem) = subst (λ w → ⟨ w ∈ˢ fst (prodL κ) ⟩) (sym (prʟ-fst (nn 1) (X₂.toFun (z , off z m nmem))))
+  into z m (no nmem) = subst (λ w → ⟨ w ∈ˢ (prodL κ) .fst ⟩) (sym (prʟ-fst (nn 1) (X₂.toFun (z , off z m nmem))))
     (prodL-in κ (nn 1) (X₂.toFun (z , off z m nmem)) 1∈κ
 ```
 
@@ -890,10 +890,10 @@ Injectivity of the tagged map is proved by comparing the decided cases of two in
 <!--/-->
 
 ```agda
-  inj : (z : S) (m : Mem z) (z' : S) (m' : Mem z') → fst (fn z m) ≡ fst (fn z' m') → fst z ≡ fst z'
+  inj : (z : S) (m : Mem z) (z' : S) (m' : Mem z') → (fn z m) .fst ≡ (fn z' m') .fst → z .fst ≡ z' .fst
   inj z m z' m' = go (decide z) (decide z')
     where
-    go : (c : Case z) (c' : Case z') → fst (val z m c) ≡ fst (val z' m' c') → fst z ≡ fst z'
+    go : (c : Case z) (c' : Case z') → (val z m c) .fst ≡ (val z' m' c') .fst → z .fst ≡ z' .fst
     go (yes h) (yes h') q = ij₁ (X₁.toFun (z , h)) z z' (X₁.toFun-graph (z , h))
 ```
 
@@ -906,11 +906,11 @@ In the same-tag case, the pair equation is inverted by `pr-inj`: the tags agree,
 <!--/-->
 
 ```agda
-      (subst (λ w → ⟨ pr (fst z') w ∈ fst E₁ ⟩) (sym (snd p)) (X₁.toFun-graph (z' , h')))
+      (subst (λ w → ⟨ pr (z' .fst) w ∈ E₁ .fst ⟩) (sym (p .snd)) (X₁.toFun-graph (z' , h')))
       where
-      p : (# 0 ≡ # 0) × (fst (X₁.toFun (z , h)) ≡ fst (X₁.toFun (z' , h')))
+      p : (# 0 ≡ # 0) × ((X₁.toFun (z , h)) .fst ≡ (X₁.toFun (z' , h')) .fst)
       p = pr-inj (sym (prʟ-fst (nn 0) (X₁.toFun (z , h))) ∙ q ∙ prʟ-fst (nn 0) (X₁.toFun (z' , h')))
-    go (yes h) (no nmem') q = ⊥₀-rec (znots (#-inj 0 1 (fst
+    go (yes h) (no nmem') q = ⊥₀-rec (znots (#-inj 0 1 (
 ```
 
 <!--en-->
@@ -922,11 +922,11 @@ The mixed-tag cases are impossible: equality of the two values would force the n
 <!--/-->
 
 ```agda
-      (pr-inj (sym (prʟ-fst (nn 0) (X₁.toFun (z , h))) ∙ q ∙ prʟ-fst (nn 1) (X₂.toFun (z' , off z' m' nmem')))))))
-    go (no nmem) (yes h') q = ⊥₀-rec (snotz (#-inj 1 0 (fst
-      (pr-inj (sym (prʟ-fst (nn 1) (X₂.toFun (z , off z m nmem))) ∙ q ∙ prʟ-fst (nn 0) (X₁.toFun (z' , h')))))))
+      (pr-inj (sym (prʟ-fst (nn 0) (X₁.toFun (z , h))) ∙ q ∙ prʟ-fst (nn 1) (X₂.toFun (z' , off z' m' nmem')))) .fst)))
+    go (no nmem) (yes h') q = ⊥₀-rec (snotz (#-inj 1 0 (
+      (pr-inj (sym (prʟ-fst (nn 1) (X₂.toFun (z , off z m nmem))) ∙ q ∙ prʟ-fst (nn 0) (X₁.toFun (z' , h')))) .fst)))
     go (no nmem) (no nmem') q = ij₂ (X₂.toFun (z , off z m nmem)) z z' (X₂.toFun-graph (z , off z m nmem))
-      (subst (λ w → ⟨ pr (fst z') w ∈ fst E₂ ⟩) (sym (snd p)) (X₂.toFun-graph (z' , off z' m' nmem')))
+      (subst (λ w → ⟨ pr (z' .fst) w ∈ E₂ .fst ⟩) (sym (p .snd)) (X₂.toFun-graph (z' , off z' m' nmem')))
 ```
 
 <!--en-->
@@ -939,7 +939,7 @@ The pair equation for the right-right case splits into the agreement of the tags
 
 ```agda
       where
-      p : (# 1 ≡ # 1) × (fst (X₂.toFun (z , off z m nmem)) ≡ fst (X₂.toFun (z' , off z' m' nmem')))
+      p : (# 1 ≡ # 1) × ((X₂.toFun (z , off z m nmem)) .fst ≡ (X₂.toFun (z' , off z' m' nmem')) .fst)
       p = pr-inj (sym (prʟ-fst (nn 1) (X₂.toFun (z , off z m nmem))) ∙ q
                   ∙ prʟ-fst (nn 1) (X₂.toFun (z' , off z' m' nmem')))
 ```
@@ -968,7 +968,7 @@ The two premises expose their injection graphs only under propositional truncati
 <!--/-->
 
 ```agda
-tag-union : (κ : S) → ⟨ # 0 ∈ fst κ ⟩ → ⟨ # 1 ∈ fst κ ⟩
+tag-union : (κ : S) → ⟨ # 0 ∈ κ .fst ⟩ → ⟨ # 1 ∈ κ .fst ⟩
           → (D₁ D₂ : S) → InjL D₁ κ → InjL D₂ κ
           → InjL (unionʟ (pairʟ D₁ D₂)) (prodL κ)
 tag-union κ h0 h1 D₁ D₂ = rec2 squash₁
@@ -987,9 +987,9 @@ The least-predecessor construction is stated generically. It takes an ordinal `�
 <summary class="submodule-fold-heading">
 ```agda
 module LeastPre (γ : V ℓ) (oγ : IsOrd γ) (G D P : S)
-  (inP : (p z : S) → Holds G p z → ⟨ fst p ∈ fst P ⟩)
-  (P⊆L : (p : S) → ⟨ fst p ∈ fst P ⟩ → ⟨ fst p ∈ Lset γ ⟩)
-  (have : (z : S) → ⟨ fst z ∈ fst D ⟩ → ∥ Σ[ p ∶ S ] Holds G p z ∥₁) where
+  (inP : (p z : S) → Holds G p z → ⟨ p .fst ∈ P .fst ⟩)
+  (P⊆L : (p : S) → ⟨ p .fst ∈ P .fst ⟩ → ⟨ p .fst ∈ Lset γ ⟩)
+  (have : (z : S) → ⟨ z .fst ∈ D .fst ⟩ → ∥ Σ[ p ∶ S ] Holds G p z ∥₁) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -1004,7 +1004,7 @@ Membership in the domain is recorded as a type, so that the argument can carry i
 
 ```agda
   Mem : S → Type (ℓ-suc ℓ)
-  Mem z = ⟨ fst z ∈ fst D ⟩
+  Mem z = ⟨ z .fst ∈ D .fst ⟩
 ```
 
 <!--en-->
@@ -1031,7 +1031,7 @@ The existence hypothesis is moved to the common stage without choosing a predece
 
 ```agda
     have-γ : (z : S) → Mem z
-           → ∥ Σ[ p ∶ S ] (⟨ fst p ∈ Lset γ ⟩ × ⟨ (p ∷ z ∷ []) ⊨ graphFo ⟩) ∥₁
+           → ∥ Σ[ p ∶ S ] (⟨ p .fst ∈ Lset γ ⟩ × ⟨ (p ∷ z ∷ []) ⊨ graphFo ⟩) ∥₁
     have-γ z m = map₁
       (λ { (p , h) → p , P⊆L p (inP p z h)
                        , subst ⟨_⟩ (sym (appC-adequate G i0 i1 (p ∷ z ∷ []))) h })
@@ -1122,7 +1122,7 @@ The inward reading exhibits the pair of an input with its selected value as an e
 <!--/-->
 
 ```agda
-  T-in : (z : S) (m : Mem z) → ⟨ pr (fst z) (fst (fn z m)) ∈ fst T ⟩
+  T-in : (z : S) (m : Mem z) → ⟨ pr (z .fst) ((fn z m) .fst) ∈ T .fst ⟩
   T-in = Ls.T-in
 ```
 
@@ -1135,8 +1135,8 @@ The outward reading recovers, from every entry, the input together with the equa
 <!--/-->
 
 ```agda
-  T-out : (z e : S) → ⟨ pr (fst z) (fst e) ∈ fst T ⟩
-        → Σ[ m ∶ Mem z ] (fst e ≡ fst (fn z m))
+  T-out : (z e : S) → ⟨ pr (z .fst) (e .fst) ∈ T .fst ⟩
+        → Σ[ m ∶ Mem z ] (e .fst ≡ (fn z m) .fst)
   T-out = Ls.T-out
 ```
 
@@ -1152,7 +1152,7 @@ Under the additional hypothesis that the relation is functional, the least-prede
 <summary class="submodule-fold-heading">
 ```agda
   module Functional
-    (funct : (p z z' : S) → Holds G p z → Holds G p z' → fst z ≡ fst z') where
+    (funct : (p z z' : S) → Holds G p z → Holds G p z' → z .fst ≡ z' .fst) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -1167,9 +1167,9 @@ If two inputs share a value, the value satisfies the relation at both inputs; th
 
 ```agda
     inj : (z : S) (m : Mem z) (z' : S) (m' : Mem z')
-        → fst (fn z m) ≡ fst (fn z' m') → fst z ≡ fst z'
+        → (fn z m) .fst ≡ (fn z' m') .fst → z .fst ≡ z' .fst
     inj z m z' m' q = funct (fn z m) z z' (fn-holds z m)
-      (subst (λ w → ⟨ pr w (fst z') ∈ fst G ⟩) (sym q) (fn-holds z' m'))
+      (subst (λ w → ⟨ pr w (z' .fst) ∈ G .fst ⟩) (sym q) (fn-holds z' m'))
 ```
 
 <!--en-->
@@ -1201,7 +1201,7 @@ The point construction handles an at-most-singleton domain. Given only `0 ∈ κ
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module Point (κ : S) (0∈κ : ⟨ # 0 ∈ fst κ ⟩) (a : S) where
+module Point (κ : S) (0∈κ : ⟨ # 0 ∈ κ .fst ⟩) (a : S) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -1228,8 +1228,8 @@ The member `a` belongs to its own singleton, by the introduction reading of the 
 <!--/-->
 
 ```agda
-  Y-in : ⟨ fst a ∈ fst Y ⟩
-  Y-in = sglʟ-in a (fst a) refl
+  Y-in : ⟨ a .fst ∈ Y .fst ⟩
+  Y-in = sglʟ-in a (a .fst) refl
 ```
 
 <!--en-->
@@ -1241,8 +1241,8 @@ The elimination reading says the singleton contains nothing else: any member has
 <!--/-->
 
 ```agda
-  Y-out : (z : S) → ⟨ fst z ∈ fst Y ⟩ → fst z ≡ fst a
-  Y-out z = sglʟ-out a (fst z)
+  Y-out : (z : S) → ⟨ z .fst ∈ Y .fst ⟩ → z .fst ≡ a .fst
+  Y-out z = sglʟ-out a (z .fst)
 ```
 
 <!--en-->
@@ -1296,8 +1296,8 @@ Injectivity composes the two outward readings: both inputs present the same unde
 <!--/-->
 
 ```agda
-  inj : (z : S) (m : ⟨ fst z ∈ fst Y ⟩) (z' : S) (m' : ⟨ fst z' ∈ fst Y ⟩)
-      → fst (nn 0) ≡ fst (nn 0) → fst z ≡ fst z'
+  inj : (z : S) (m : ⟨ z .fst ∈ Y .fst ⟩) (z' : S) (m' : ⟨ z' .fst ∈ Y .fst ⟩)
+      → (nn 0) .fst ≡ (nn 0) .fst → z .fst ≡ z' .fst
   inj z m z' m' _ = Y-out z m ∙ sym (Y-out z' m')
 ```
 
@@ -1342,7 +1342,7 @@ module Count (lam : V ℓ) (ordλ : IsOrd lam)
   (elem : Frame.A.Elementary lam ordλ succλ X X⊆L ∅∈λ)
   (sup : Superadequate lam)
   (X-isL : ⟨ isL X ⟩)
-  (κ : S) (oκ : IsOrd (fst κ)) (cκ : IsCardinalL κ) (κ∉ω : ⟨ fst κ ∈ˢ ω ⟩ → ⊥₀)
+  (κ : S) (oκ : IsOrd (κ .fst)) (cκ : IsCardinalL κ) (κ∉ω : ⟨ κ .fst ∈ˢ ω ⟩ → ⊥₀)
   (base : InjL (X , X-isL) κ) where
 ```
 </summary>
@@ -1410,8 +1410,8 @@ Because `κ` is an ordinal and does not belong to `ω`, it contains every finite
 <!--/-->
 
 ```agda
-  num∈κ : (k : ℕ) → ⟨ # k ∈ fst κ ⟩
-  num∈κ k = ω⊆ (fst κ) oκ κ∉ω (# k) (#∈ω k)
+  num∈κ : (k : ℕ) → ⟨ # k ∈ κ .fst ⟩
+  num∈κ k = ω⊆ (κ .fst) oκ κ∉ω (# k) (#∈ω k)
 ```
 
 <!--en-->
@@ -1424,7 +1424,7 @@ The infinite-cardinal square argument gives the coded injection `pairκ : InjL (
 
 ```agda
   pairκ : InjL (prodL κ) κ
-  pairκ = WF.WFI.induction regularityV {P = Goal} Step.result (fst κ) (snd κ) oκ cκ κ∉ω
+  pairκ = WF.WFI.induction regularityV {P = Goal} Step.result (κ .fst) (κ .snd) oκ cκ κ∉ω
 ```
 
 <!--en-->
@@ -1438,7 +1438,7 @@ The stage `Lω = Lset ω` injects into `κ` by composition. Limit-stage counting
 ```agda
   Lω↪κ : InjL Lω κ
   Lω↪κ = injl-trans Lω ωʟ κ limit-stage-counted
-    (inclusion-coded ωʟ κ (λ z hz → ω⊆ (fst κ) oκ κ∉ω z hz))
+    (inclusion-coded ωʟ κ (λ z hz → ω⊆ (κ .fst) oκ κ∉ω z hz))
 ```
 
 <!--en-->
@@ -1452,7 +1452,7 @@ For one closure step, fix a constructible `Z` contained in `Lset lam` and an act
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-  module OneStep (Z : S) (Z⊆ : (z : V ℓ) → ⟨ z ∈ˢ fst Z ⟩ → ⟨ z ∈ˢ Lset lam ⟩)
+  module OneStep (Z : S) (Z⊆ : (z : V ℓ) → ⟨ z ∈ˢ Z .fst ⟩ → ⟨ z ∈ˢ Lset lam ⟩)
                  (E : S) (cE : InjCode E Z κ) where
 ```
 </summary>
@@ -1494,8 +1494,8 @@ Its membership specification says exactly what separation computed: belonging to
 <!--/-->
 
 ```agda
-      D₂-spec : (z : S) → (fst z ∈ fst D₂)
-              ≡ ((fst z ∈ fst ΦZ) ⊓ ((z ∷ []) ⊨ ¬̇ (var i0 ∈̇ con Z)))
+      D₂-spec : (z : S) → (z .fst ∈ D₂ .fst)
+              ≡ ((z .fst ∈ ΦZ .fst) ⊓ ((z ∷ []) ⊨ ¬̇ (var i0 ∈̇ con Z)))
       D₂-spec z = hasSeparationL ΦZ (¬̇ (var i0 ∈̇ con Z)) .fst .snd z
 ```
 
@@ -1509,7 +1509,7 @@ The introduction rule lifts the refutation of membership into the object level, 
 
 ```agda
     opaque
-      D₂-in : (z : S) → ⟨ fst z ∈ fst ΦZ ⟩ → (⟨ fst z ∈ fst Z ⟩ → ⊥₀) → ⟨ fst z ∈ fst D₂ ⟩
+      D₂-in : (z : S) → ⟨ z .fst ∈ ΦZ .fst ⟩ → (⟨ z .fst ∈ Z .fst ⟩ → ⊥₀) → ⟨ z .fst ∈ D₂ .fst ⟩
       D₂-in z h nmem = subst ⟨_⟩ (sym (D₂-spec z)) (h , λ z∈ → lift (nmem z∈))
 ```
 
@@ -1522,10 +1522,10 @@ The elimination rule unpacks membership in `D₂` through the specification, and
 <!--/-->
 
 ```agda
-      D₂-out : (z : S) → ⟨ fst z ∈ fst D₂ ⟩ → ⟨ fst z ∈ fst ΦZ ⟩ × (⟨ fst z ∈ fst Z ⟩ → ⊥₀)
+      D₂-out : (z : S) → ⟨ z .fst ∈ D₂ .fst ⟩ → ⟨ z .fst ∈ ΦZ .fst ⟩ × (⟨ z .fst ∈ Z .fst ⟩ → ⊥₀)
       D₂-out z h = r .fst , λ z∈ → lower (r .snd z∈)
         where
-        r : ⟨ fst z ∈ fst ΦZ ⟩
+        r : ⟨ z .fst ∈ ΦZ .fst ⟩
           × ⟨ (z ∷ []) ⊨ ¬̇ (var i0 ∈̇ con Z) ⟩
 ```
 
@@ -1564,8 +1564,8 @@ Its specification is the same two-fold pattern: membership in `D₂` together wi
 <!--/-->
 
 ```agda
-      D∅-spec : (z : S) → (fst z ∈ fst D∅)
-              ≡ ((fst z ∈ fst D₂) ⊓ ((z ∷ []) ⊨ var i0 ≐ con ∅ʟ))
+      D∅-spec : (z : S) → (z .fst ∈ D∅ .fst)
+              ≡ ((z .fst ∈ D₂ .fst) ⊓ ((z ∷ []) ⊨ var i0 ≐ con ∅ʟ))
       D∅-spec z = hasSeparationL D₂ (var i0 ≐ con ∅ʟ) .fst .snd z
 ```
 
@@ -1579,7 +1579,7 @@ An element of `D₂` that equals the empty set enters `D∅` with both data.
 
 ```agda
     opaque
-      D∅-in : (z : S) → ⟨ fst z ∈ fst D₂ ⟩ → fst z ≡ ∅ → ⟨ fst z ∈ fst D∅ ⟩
+      D∅-in : (z : S) → ⟨ z .fst ∈ D₂ .fst ⟩ → z .fst ≡ ∅ → ⟨ z .fst ∈ D∅ .fst ⟩
       D∅-in z h e = subst ⟨_⟩ (sym (D∅-spec z)) (h , e)
 ```
 
@@ -1592,7 +1592,7 @@ Its elimination is the specification read directly: membership in `D₂` and the
 <!--/-->
 
 ```agda
-      D∅-out : (z : S) → ⟨ fst z ∈ fst D∅ ⟩ → ⟨ fst z ∈ fst D₂ ⟩ × (fst z ≡ ∅)
+      D∅-out : (z : S) → ⟨ z .fst ∈ D∅ .fst ⟩ → ⟨ z .fst ∈ D₂ .fst ⟩ × (z .fst ≡ ∅)
       D∅-out z h = subst ⟨_⟩ (D∅-spec z) h
 ```
 
@@ -1619,8 +1619,8 @@ Its specification mirrors the previous one, with the negated equation in place o
 <!--/-->
 
 ```agda
-      Dw-spec : (z : S) → (fst z ∈ fst Dw)
-              ≡ ((fst z ∈ fst D₂) ⊓ ((z ∷ []) ⊨ ¬̇ (var i0 ≐ con ∅ʟ)))
+      Dw-spec : (z : S) → (z .fst ∈ Dw .fst)
+              ≡ ((z .fst ∈ D₂ .fst) ⊓ ((z ∷ []) ⊨ ¬̇ (var i0 ≐ con ∅ʟ)))
       Dw-spec z = hasSeparationL D₂ (¬̇ (var i0 ≐ con ∅ʟ)) .fst .snd z
 ```
 
@@ -1634,7 +1634,7 @@ Introduction requires membership in `D₂` and a refutation of equality with the
 
 ```agda
     opaque
-      Dw-in : (z : S) → ⟨ fst z ∈ fst D₂ ⟩ → (fst z ≡ ∅ → ⊥₀) → ⟨ fst z ∈ fst Dw ⟩
+      Dw-in : (z : S) → ⟨ z .fst ∈ D₂ .fst ⟩ → (z .fst ≡ ∅ → ⊥₀) → ⟨ z .fst ∈ Dw .fst ⟩
       Dw-in z h ne = subst ⟨_⟩ (sym (Dw-spec z)) (h , λ q → lift (ne q))
 ```
 
@@ -1647,10 +1647,10 @@ Elimination returns membership in `D₂` and the refutation, lowered from the ob
 <!--/-->
 
 ```agda
-      Dw-out : (z : S) → ⟨ fst z ∈ fst Dw ⟩ → ⟨ fst z ∈ fst D₂ ⟩ × (fst z ≡ ∅ → ⊥₀)
+      Dw-out : (z : S) → ⟨ z .fst ∈ Dw .fst ⟩ → ⟨ z .fst ∈ D₂ .fst ⟩ × (z .fst ≡ ∅ → ⊥₀)
       Dw-out z h = r .fst , λ q → lower (r .snd q)
         where
-        r : ⟨ fst z ∈ fst D₂ ⟩
+        r : ⟨ z .fst ∈ D₂ .fst ⟩
           × ⟨ (z ∷ []) ⊨ ¬̇ (var i0 ≐ con ∅ʟ) ⟩
 ```
 
@@ -1677,11 +1677,11 @@ The closure step is covered by the first union. Each member `z` of `ΦZ` either 
 <!--/-->
 
 ```agda
-    ΦZ⊆ : (z : V ℓ) → ⟨ z ∈ˢ fst ΦZ ⟩ → ⟨ z ∈ˢ fst U₁.D ⟩
-    ΦZ⊆ z h = go (FOL.Semantics.decideMembership 𝒮ᵥ lem z (fst Z))
+    ΦZ⊆ : (z : V ℓ) → ⟨ z ∈ˢ ΦZ .fst ⟩ → ⟨ z ∈ˢ U₁.D .fst ⟩
+    ΦZ⊆ z h = go (FOL.Semantics.decideMembership 𝒮ᵥ lem z (Z .fst))
       where
       zS : S
-      zS = z , isL-trans {x = fst ΦZ} {y = z} h (snd ΦZ)
+      zS = z , isL-trans {x = ΦZ .fst} {y = z} h (ΦZ .snd)
 ```
 
 <!--en-->
@@ -1693,7 +1693,7 @@ The two cases enter `U₁` through its two union inclusions. A member already in
 <!--/-->
 
 ```agda
-      go : Dec ⟨ z ∈ fst Z ⟩ → ⟨ z ∈ fst U₁.D ⟩
+      go : Dec ⟨ z ∈ Z .fst ⟩ → ⟨ z ∈ U₁.D .fst ⟩
       go (yes hz) = U₁.in₁ zS hz
       go (no nz) = U₁.in₂ zS (D₂-in zS h nz)
 ```
@@ -1707,11 +1707,11 @@ The new part is covered by the second union, by the same excluded-middle argumen
 <!--/-->
 
 ```agda
-    D₂⊆ : (z : V ℓ) → ⟨ z ∈ˢ fst D₂ ⟩ → ⟨ z ∈ˢ fst U₃.D ⟩
+    D₂⊆ : (z : V ℓ) → ⟨ z ∈ˢ D₂ .fst ⟩ → ⟨ z ∈ˢ U₃.D .fst ⟩
     D₂⊆ z h = go (FOL.Semantics.decideEquality 𝒮ᵥ lem z ∅)
       where
       zS : S
-      zS = z , isL-trans {x = fst D₂} {y = z} h (snd D₂)
+      zS = z , isL-trans {x = D₂ .fst} {y = z} h (D₂ .snd)
 ```
 
 <!--en-->
@@ -1723,7 +1723,7 @@ An element equal to the empty set enters through `D∅`; an element distinct fro
 <!--/-->
 
 ```agda
-      go : Dec (z ≡ ∅) → ⟨ z ∈ fst U₃.D ⟩
+      go : Dec (z ≡ ∅) → ⟨ z ∈ U₃.D .fst ⟩
       go (yes e) = U₃.in₁ zS (D∅-in zS h e)
       go (no ne) = U₃.in₂ zS (Dw-in zS h ne)
 ```
@@ -1739,8 +1739,8 @@ Every member of `D∅` equals `∅`, although `D∅` itself may be empty. Since 
 ```agda
     D∅↪κ : InjL D∅ κ
     D∅↪κ = inclusion-coded D∅ κ
-      (λ z hz → subst (λ w → ⟨ w ∈ fst κ ⟩)
-        (sym (D∅-out (z , isL-trans {x = fst D∅} {y = z} hz (snd D∅)) hz .snd)) (num∈κ 0))
+      (λ z hz → subst (λ w → ⟨ w ∈ κ .fst ⟩)
+        (sym (D∅-out (z , isL-trans {x = D∅ .fst} {y = z} hz (D∅ .snd)) hz .snd)) (num∈κ 0))
 ```
 
 <!--en-->
@@ -1825,7 +1825,7 @@ The relation to be counted is propositionally truncated. `GW p z` says merely th
 ```agda
     GW : (p z : S) → Type (ℓ-suc ℓ)
     GW p z = ∥ Σ[ s ∶ S ] Σ[ e ∶ S ]
-               ((fst p ≡ pr (fst s) (fst e)) × B.LeastWitness Z e s z) ∥₁
+               ((p .fst ≡ pr (s .fst) (e .fst)) × B.LeastWitness Z e s z) ∥₁
 ```
 
 <!--en-->
@@ -1851,7 +1851,7 @@ Inward: given the pair equation and a least witness, the two witnesses are enter
 <!--/-->
 
 ```agda
-      se₃-in : (z p q s e : S) → fst p ≡ pr (fst s) (fst e)
+      se₃-in : (z p q s e : S) → p .fst ≡ pr (s .fst) (e .fst)
              → B.LeastWitness Z e s z → ⟨ (z ∷ p ∷ q ∷ []) ⊨ se₃ ⟩
       se₃-in z p q s e qp h =
         ∣ s , ∣ e , ( subst ⟨_⟩ (sym (prAtL-adequate i3 i1 i0 (e ∷ s ∷ z ∷ p ∷ q ∷ []))) qp
@@ -1912,9 +1912,9 @@ Bounded separation constructs a relation `G` inside `L` whose entries are ordere
 
 ```agda
     private module WitnessGraph = Relation PB Dw ((var i1 ∈̇ con PB) ∧̇ se₃)
-              (λ p z → (fst p ∈ fst PB) ⊓ (GW p z , squash₁))
+              (λ p z → (p .fst ∈ PB .fst) ⊓ (GW p z , squash₁))
               (λ p z q h → h .fst , se₃-out z p q (h .snd))
-              (λ p z q h → h .fst , rec₁ (snd ((z ∷ p ∷ q ∷ []) ⊨ se₃))
+              (λ p z q h → h .fst , rec₁ (((z ∷ p ∷ q ∷ []) ⊨ se₃) .snd)
 ```
 
 <!--en-->
@@ -1951,8 +1951,8 @@ Inward: a code `p` in `PB` that, together with `z`, names a least witness throug
 <!--/-->
 
 ```agda
-    G-in : (p z : S) → ⟨ fst p ∈ fst PB ⟩ → ⟨ fst z ∈ fst Dw ⟩
-         → (s e : S) → fst p ≡ pr (fst s) (fst e)
+    G-in : (p z : S) → ⟨ p .fst ∈ PB .fst ⟩ → ⟨ z .fst ∈ Dw .fst ⟩
+         → (s e : S) → p .fst ≡ pr (s .fst) (e .fst)
          → B.LeastWitness Z e s z → Holds G p z
     G-in p z hp hz s e qp h =
       WitnessGraph.into p z hp hz (hp , ∣ s , e , qp , h ∣₁)
@@ -1967,7 +1967,7 @@ Conversely, `Holds G p z` yields both `p ∈ PB` and the propositionally truncat
 <!--/-->
 
 ```agda
-    G-out : (p z : S) → Holds G p z → ⟨ fst p ∈ fst PB ⟩ × GW p z
+    G-out : (p z : S) → Holds G p z → ⟨ p .fst ∈ PB .fst ⟩ × GW p z
     G-out = WitnessGraph.pair-out
 ```
 
@@ -1980,7 +1980,7 @@ The relation is total on `Dw` only in the truncated sense: every `z ∈ Dw` mere
 <!--/-->
 
 ```agda
-    have : (z : S) → ⟨ fst z ∈ fst Dw ⟩ → ∥ Σ[ p ∶ S ] Holds G p z ∥₁
+    have : (z : S) → ⟨ z .fst ∈ Dw .fst ⟩ → ∥ Σ[ p ∶ S ] Holds G p z ∥₁
     have z hz = rec₁ squash₁ body (B.Φ-out Z z (D₂-out z (Dw-out z hz .fst) .fst))
       where
       body : B.Body Z z → ∥ Σ[ p ∶ S ] Holds G p z ∥₁
@@ -2028,10 +2028,10 @@ The code `p` is the internal pair of the key and the environment. Its membership
 <!--/-->
 
 ```agda
-                (subst (λ w → ⟨ w ∈ fst PB ⟩) (sym (prʟ-fst s e))
+                (subst (λ w → ⟨ w ∈ PB .fst ⟩) (sym (prʟ-fst s e))
                   (prodL-in U₂.D s e (U₂.in₁ s hs)
                     (U₂.in₂ e (seqL-in Z n e
-                      (subst (λ w → ⟨ w ∈ˢ fst (envSet Z n) ⟩) (sym qe) (envSet-in Z g))))))
+                      (subst (λ w → ⟨ w ∈ˢ (envSet Z n) .fst ⟩) (sym qe) (envSet-in Z g))))))
                 hz s e (prʟ-fst s e) hw'
 ```
 
@@ -2052,11 +2052,11 @@ The required functionality has the reverse orientation needed for counting: if o
 <!--/-->
 
 ```agda
-    funct : (p z z' : S) → Holds G p z → Holds G p z' → fst z ≡ fst z'
-    funct p z z' h h' = rec2 (setIsSet (fst z) (fst z')) read (G-out p z h .snd) (G-out p z' h' .snd)
+    funct : (p z z' : S) → Holds G p z → Holds G p z' → z .fst ≡ z' .fst
+    funct p z z' h h' = rec2 (setIsSet (z .fst) (z' .fst)) read (G-out p z h .snd) (G-out p z' h' .snd)
       where
       read : Σ[ s ∶ S ] Σ[ e ∶ S ]
-               ((fst p ≡ pr (fst s) (fst e)) × B.LeastWitness Z e s z)
+               ((p .fst ≡ pr (s .fst) (e .fst)) × B.LeastWitness Z e s z)
 ```
 
 <!--en-->
@@ -2069,8 +2069,8 @@ Both relations are read outward, each returning a key, an environment, the pair 
 
 ```agda
            → Σ[ s₂ ∶ S ] Σ[ e₂ ∶ S ]
-               ((fst p ≡ pr (fst s₂) (fst e₂)) × B.LeastWitness Z e₂ s₂ z')
-           → fst z ≡ fst z'
+               ((p .fst ≡ pr (s₂ .fst) (e₂ .fst)) × B.LeastWitness Z e₂ s₂ z')
+           → z .fst ≡ z' .fst
       read (s , e , q , hw) (s₂ , e₂ , q₂ , hw₂) =
         B.leastWitness-unique Z e s z z' hw hw₂'
 ```
@@ -2085,22 +2085,22 @@ Both readings express the same fixed `p` as `(s,e)` and `(s₂,e₂)`. Injectivi
 
 ```agda
         where
-        ee : (fst s₂ ≡ fst s) × (fst e₂ ≡ fst e)
+        ee : (s₂ .fst ≡ s .fst) × (e₂ .fst ≡ e .fst)
         ee = pr-inj (sym q₂ ∙ q)
         hw₂' : B.LeastWitness Z e s z'
         hw₂' = subst2 (λ e' s' → B.LeastWitness Z e' s' z')
 ```
 
 <!--en-->
-After transporting the second least-witness proof along those identifications, both proofs concern the same key and environment. Least-witness uniqueness then gives `fst z ≡ fst z'`.
+After transporting the second least-witness proof along those identifications, both proofs concern the same key and environment. Least-witness uniqueness then gives `z .fst ≡ z' .fst`.
 <!--zh-->
-沿这些等同运输第二份最小见证证明后，两份证明便针对同一个键与环境。最小见证唯一性于是给出 `fst z ≡ fst z'`。
+沿这些等同运输第二份最小见证证明后，两份证明便针对同一个键与环境。最小见证唯一性于是给出 `z .fst ≡ z' .fst`。
 <!--ja-->
-それらの同一視に沿って二つ目の最小証人の証明を輸送すると、二つの証明は同じ鍵と環境に関するものになる。そこで最小証人の一意性から `fst z ≡ fst z'` が得られる。
+それらの同一視に沿って二つ目の最小証人の証明を輸送すると、二つの証明は同じ鍵と環境に関するものになる。そこで最小証人の一意性から `z .fst ≡ z' .fst` が得られる。
 <!--/-->
 
 ```agda
-          (S≡ {x = e₂} {y = e} (snd ee)) (S≡ {x = s₂} {y = s} (fst ee)) hw₂
+          (S≡ {x = e₂} {y = e} (ee .snd)) (S≡ {x = s₂} {y = s} (ee .fst)) hw₂
 ```
 
 <!--en-->
@@ -2113,7 +2113,7 @@ The code pool has a birth stage: `γG` is the stage at which `PB` appears in the
 
 ```agda
     γG : V ℓ
-    γG = stage (fst PB) (snd PB)
+    γG = stage (PB .fst) (PB .snd)
 ```
 
 <!--en-->
@@ -2126,7 +2126,7 @@ That stage is indexed by an ordinal, which is what the counting lemma requires o
 
 ```agda
     oγG : IsOrd γG
-    oγG = stage-ord (fst PB) (snd PB)
+    oγG = stage-ord (PB .fst) (PB .snd)
 ```
 
 <!--en-->
@@ -2138,8 +2138,8 @@ The pool is contained in its birth stage, by the transitivity of the stages: a m
 <!--/-->
 
 ```agda
-    PB⊆Lγ : (p : S) → ⟨ fst p ∈ fst PB ⟩ → ⟨ fst p ∈ Lset γG ⟩
-    PB⊆Lγ p hp = layer-trans (Lset-layer γG) {x = fst PB} {y = fst p} hp (stage-mem (fst PB) (snd PB))
+    PB⊆Lγ : (p : S) → ⟨ p .fst ∈ PB .fst ⟩ → ⟨ p .fst ∈ Lset γG ⟩
+    PB⊆Lγ p hp = layer-trans (Lset-layer γG) {x = PB .fst} {y = p .fst} hp (stage-mem (PB .fst) (PB .snd))
 ```
 
 <!--en-->
@@ -2249,7 +2249,7 @@ Every member of `ΦZ` lies in `Z ∪ D₂`. The given graph `E` counts `Z`, whil
 <!--/-->
 
 ```agda
-  step-count : (Z : S) → ((z : V ℓ) → ⟨ z ∈ˢ fst Z ⟩ → ⟨ z ∈ˢ Lset lam ⟩)
+  step-count : (Z : S) → ((z : V ℓ) → ⟨ z ∈ˢ Z .fst ⟩ → ⟨ z ∈ˢ Lset lam ⟩)
              → InjL Z κ → InjL (B.Φ Z) κ
   step-count Z Z⊆ = rec₁ squash₁ (λ { (E , cE) → OneStep.result Z Z⊆ E cE })
 ```
@@ -2263,7 +2263,7 @@ Every member of every finite closure iterate lies in the ambient stage `Lset lam
 <!--/-->
 
 ```agda
-  iter⊆L : (n : ℕ) (z : V ℓ) → ⟨ z ∈ˢ fst (hullStep n) ⟩ → ⟨ z ∈ˢ Lset lam ⟩
+  iter⊆L : (n : ℕ) (z : V ℓ) → ⟨ z ∈ˢ (hullStep n) .fst ⟩ → ⟨ z ∈ˢ Lset lam ⟩
   iter⊆L n z hz = HSH.Hull⊆L z (Cn.hullStep⊆Hull n z hz)
 ```
 
@@ -2291,7 +2291,7 @@ Natural-number induction gives a separate internal injection for every finite it
 
 ```agda
   HoldsAt : ℕ → V ℓ → hProp (ℓ-suc ℓ)
-  HoldsAt n σ = ∥ Σ[ F ∶ S ] (⟨ fst F ∈ Lset σ ⟩ × InjCode F (hullStep n) κ) ∥₁ , squash₁
+  HoldsAt n σ = ∥ Σ[ F ∶ S ] (⟨ F .fst ∈ Lset σ ⟩ × InjCode F (hullStep n) κ) ∥₁ , squash₁
 ```
 
 <!--en-->
@@ -2320,8 +2320,8 @@ Given a graph `F` coding `hullStep n ↪ κ`, the canonical stage containing `F`
 
 ```agda
       from (F , code) = leastOrd (HoldsAt n)
-        ∣ stage (fst F) (snd F) , stage-ord (fst F) (snd F)
-        , ∣ F , stage-mem (fst F) (snd F) , code ∣₁ ∣₁
+        ∣ stage (F .fst) (F .snd) , stage-ord (F .fst) (F .snd)
+        , ∣ F , stage-mem (F .fst) (F .snd) , code ∣₁ ∣₁
 ```
 
 <!--en-->
@@ -2377,8 +2377,8 @@ A code at a smaller stage becomes a code at the common stage: the iterate's codi
   code-at-γ : (n : ℕ) → ⟨ HoldsAt n γ ⟩
   code-at-γ n = map₁ raise (ls n .snd .snd .fst)
     where
-    raise : Σ[ F ∶ S ] (⟨ fst F ∈ Lset (ls n .fst) ⟩ × InjCode F (hullStep n) κ)
-          → Σ[ F ∶ S ] (⟨ fst F ∈ Lset γ ⟩ × InjCode F (hullStep n) κ)
+    raise : Σ[ F ∶ S ] (⟨ F .fst ∈ Lset (ls n .fst) ⟩ × InjCode F (hullStep n) κ)
+          → Σ[ F ∶ S ] (⟨ F .fst ∈ Lset γ ⟩ × InjCode F (hullStep n) κ)
 ```
 
 <!--en-->
@@ -2416,7 +2416,7 @@ Its underlying set is the stage `Lset γ`, definitionally.
 <!--/-->
 
 ```agda
-    Lγ-fst : fst Lγ ≡ Lset γ
+    Lγ-fst : Lγ .fst ≡ Lset γ
     Lγ-fst = refl
 ```
 
@@ -2442,7 +2442,7 @@ Each pair of a numeral and its iterate is a member, by the iterated-set introduc
 <!--/-->
 
 ```agda
-    Iter-in : (n : ℕ) → ⟨ pr (# n) (fst (hullStep n)) ∈ fst Iter ⟩
+    Iter-in : (n : ℕ) → ⟨ pr (# n) ((hullStep n) .fst) ∈ Iter .fst ⟩
     Iter-in = It.iter-in
 ```
 
@@ -2455,7 +2455,7 @@ Conversely, every member is, merely, such a pair, so membership in `Iter` identi
 <!--/-->
 
 ```agda
-    Iter-out : (y : S) → ⟨ fst y ∈ fst Iter ⟩ → ∥ Σ[ n ∶ ℕ ] (fst y ≡ pr (# n) (fst (hullStep n))) ∥₁
+    Iter-out : (y : S) → ⟨ y .fst ∈ Iter .fst ⟩ → ∥ Σ[ n ∶ ℕ ] (y .fst ≡ pr (# n) ((hullStep n) .fst)) ∥₁
     Iter-out = It.iter-out
 ```
 
@@ -2469,7 +2469,7 @@ A table witness for a constructible code `F` at an internal numeral `n` consists
 
 ```agda
   TabWit : (F n : S) → Type (ℓ-suc ℓ)
-  TabWit F n = ⟨ fst F ∈ Lset γ ⟩ × ∥ Σ[ Zn ∶ S ] (Holds Iter n Zn × InjCode F Zn κ) ∥₁
+  TabWit F n = ⟨ F .fst ∈ Lset γ ⟩ × ∥ Σ[ Zn ∶ S ] (Holds Iter n Zn × InjCode F Zn κ) ∥₁
 ```
 
 <!--en-->
@@ -2496,7 +2496,7 @@ Reading the table body back uses the adequacy of the application atom and the re
 
 ```agda
     tab-read : (F n q : S) → ⟨ (n ∷ F ∷ q ∷ []) ⊨ tabBody ⟩ → TabWit F n
-    tab-read F n q (hF , h) = subst (λ w → ⟨ fst F ∈ w ⟩) Lγ-fst hF
+    tab-read F n q (hF , h) = subst (λ w → ⟨ F .fst ∈ w ⟩) Lγ-fst hF
       , map₁ (λ { (Zn , hI , hc) → Zn
           , subst ⟨_⟩ (appC-adequate Iter i1 i0 (Zn ∷ n ∷ F ∷ q ∷ [])) hI
           , InjFo.read κ i2 i0 (Zn ∷ n ∷ F ∷ q ∷ []) hc }) h
@@ -2512,7 +2512,7 @@ Conversely, a `TabWit F n` witness supplies satisfaction of `tabBody`. Stage mem
 
 ```agda
     tab-fill : (F n q : S) → TabWit F n → ⟨ (n ∷ F ∷ q ∷ []) ⊨ tabBody ⟩
-    tab-fill F n q (hF , h) = subst (λ w → ⟨ fst F ∈ w ⟩) (sym Lγ-fst) hF
+    tab-fill F n q (hF , h) = subst (λ w → ⟨ F .fst ∈ w ⟩) (sym Lγ-fst) hF
       , map₁ (λ { (Zn , hI , hc) → Zn
           , subst ⟨_⟩ (sym (appC-adequate Iter i1 i0 (Zn ∷ n ∷ F ∷ q ∷ []))) hI
           , InjFo.fill κ i2 i0 (Zn ∷ n ∷ F ∷ q ∷ []) hc }) h
@@ -2528,7 +2528,7 @@ The relation defined by `tabBody` is collected as a constructible subset of `Lγ
 
 ```agda
   private module TableGraph = Relation Lγ ωʟ tabBody
-            (λ F n → TabWit F n , isProp× (snd (fst F ∈ Lset γ)) squash₁) tab-read tab-fill
+            (λ F n → TabWit F n , isProp× ((F .fst ∈ Lset γ) .snd) squash₁) tab-read tab-fill
 ```
 
 <!--en-->
@@ -2553,10 +2553,10 @@ If `F ∈ Lset γ`, `n ∈ ω`, `Iter(n,Zn)`, and `F` codes `Zn ↪ κ`, then th
 <!--/-->
 
 ```agda
-  Gt-in : (F n Zn : S) → ⟨ fst F ∈ Lset γ ⟩ → ⟨ fst n ∈ fst ωʟ ⟩
+  Gt-in : (F n Zn : S) → ⟨ F .fst ∈ Lset γ ⟩ → ⟨ n .fst ∈ ωʟ .fst ⟩
         → Holds Iter n Zn → InjCode F Zn κ → Holds Gt F n
   Gt-in F n Zn hF hn hI code = TableGraph.into F n
-    (subst (λ w → ⟨ fst F ∈ w ⟩) (sym Lγ-fst) hF) hn (hF , ∣ Zn , hI , code ∣₁)
+    (subst (λ w → ⟨ F .fst ∈ w ⟩) (sym Lγ-fst) hF) hn (hF , ∣ Zn , hI , code ∣₁)
 ```
 
 <!--en-->
@@ -2581,7 +2581,7 @@ Every internal numeral in `ω` carries an entry: the iterate it records is some 
 <!--/-->
 
 ```agda
-  have-code : (n : S) → ⟨ fst n ∈ fst ωʟ ⟩ → ∥ Σ[ F ∶ S ] Holds Gt F n ∥₁
+  have-code : (n : S) → ⟨ n .fst ∈ ωʟ .fst ⟩ → ∥ Σ[ F ∶ S ] Holds Gt F n ∥₁
   have-code n hn = rec₁ squash₁ at (It.ω-num n hn)
     where
     at : It.Num n → ∥ Σ[ F ∶ S ] Holds Gt F n ∥₁
@@ -2599,7 +2599,7 @@ The code is then introduced into the table: the iterate identification is transp
 ```agda
       (λ { (F , hF , code) → F
          , Gt-in F n (hullStep k) hF hn
-             (subst (λ w → ⟨ pr w (fst (hullStep k)) ∈ fst Iter ⟩) (cong fst qk) (Iter-in k)) code })
+             (subst (λ w → ⟨ pr w ((hullStep k) .fst) ∈ Iter .fst ⟩) (cong (λ p → p .fst) qk) (Iter-in k)) code })
       (code-at-γ k)
 ```
 
@@ -2613,8 +2613,8 @@ Apply least-preimage selection to `Gt` with domain `ω` and code bound `Lγ`. Fo
 
 ```agda
   module Tb = LeastPre γ oγ Gt ωʟ Lγ
-    (λ F n h → subst (λ w → ⟨ fst F ∈ w ⟩) (sym Lγ-fst) (Gt-out F n h .fst))
-    (λ F hF → subst (λ w → ⟨ fst F ∈ w ⟩) Lγ-fst hF)
+    (λ F n h → subst (λ w → ⟨ F .fst ∈ w ⟩) (sym Lγ-fst) (Gt-out F n h .fst))
+    (λ F hF → subst (λ w → ⟨ F .fst ∈ w ⟩) Lγ-fst hF)
     have-code
     using ( T; fn; T-in; T-out; fn-holds )
 ```
@@ -2641,7 +2641,7 @@ The least-entry function assigns to each internal numeral in `ω` the least tabl
 <!--/-->
 
 ```agda
-  eS : (n : S) → ⟨ fst n ∈ fst ωʟ ⟩ → S
+  eS : (n : S) → ⟨ n .fst ∈ ωʟ .fst ⟩ → S
   eS = Tb.fn
 ```
 
@@ -2654,7 +2654,7 @@ For every `n ∈ ω`, the ordered pair `(n,eS(n))` belongs to `Te`. Thus `Te` re
 <!--/-->
 
 ```agda
-  Te-in : (n : S) (m : ⟨ fst n ∈ fst ωʟ ⟩) → ⟨ pr (fst n) (fst (eS n m)) ∈ fst Te ⟩
+  Te-in : (n : S) (m : ⟨ n .fst ∈ ωʟ .fst ⟩) → ⟨ pr (n .fst) ((eS n m) .fst) ∈ Te .fst ⟩
   Te-in = Tb.T-in
 ```
 
@@ -2667,8 +2667,8 @@ Conversely, if `(n,F) ∈ Te`, then `n ∈ ω` and the underlying set of `F` equ
 <!--/-->
 
 ```agda
-  Te-out : (n F : S) → ⟨ pr (fst n) (fst F) ∈ fst Te ⟩
-         → Σ[ m ∶ ⟨ fst n ∈ fst ωʟ ⟩ ] (fst F ≡ fst (eS n m))
+  Te-out : (n F : S) → ⟨ pr (n .fst) (F .fst) ∈ Te .fst ⟩
+         → Σ[ m ∶ ⟨ n .fst ∈ ωʟ .fst ⟩ ] (F .fst ≡ (eS n m) .fst)
   Te-out = Tb.T-out
 ```
 
@@ -2681,7 +2681,7 @@ The selected entry `eS(n)` satisfies the second component of `TabWit`: merely so
 <!--/-->
 
 ```agda
-  e-wit : (n : S) (m : ⟨ fst n ∈ fst ωʟ ⟩)
+  e-wit : (n : S) (m : ⟨ n .fst ∈ ωʟ .fst ⟩)
         → ∥ Σ[ Zn ∶ S ] (Holds Iter n Zn × InjCode (eS n m) Zn κ) ∥₁
   e-wit n m = Gt-out (eS n m) n (Tb.fn-holds n m) .snd
 ```
@@ -2713,9 +2713,9 @@ The recorded iterate is identified first: a member of the iterate set is, merely
 ```agda
     read : Σ[ Zn ∶ S ] (Holds Iter (nn k) Zn × InjCode F Zn κ) → InjCode F (hullStep k) κ
     read (Zn , hI , code) = rec₁ (isPropInjCode F (hullStep k) κ) at
-      (Iter-out (prʟ (nn k) Zn) (subst (λ w → ⟨ w ∈ fst Iter ⟩) (sym (prʟ-fst (nn k) Zn)) hI))
+      (Iter-out (prʟ (nn k) Zn) (subst (λ w → ⟨ w ∈ Iter .fst ⟩) (sym (prʟ-fst (nn k) Zn)) hI))
       where
-      at : Σ[ k' ∶ ℕ ] (fst (prʟ (nn k) Zn) ≡ pr (# k') (fst (hullStep k'))) → InjCode F (hullStep k) κ
+      at : Σ[ k' ∶ ℕ ] ((prʟ (nn k) Zn) .fst ≡ pr (# k') ((hullStep k') .fst)) → InjCode F (hullStep k) κ
 ```
 
 <!--en-->
@@ -2728,9 +2728,9 @@ The numeral equation forces `k'` to be `k`, and the code is transported along th
 
 ```agda
       at (k' , q) = injcode-resp F F Zn (hullStep k) κ refl
-        (snd ee ∙ cong (λ j → fst (hullStep j)) (sym (#-inj k k' (fst ee)))) code
+        (ee .snd ∙ cong (λ j → (hullStep j) .fst) (sym (#-inj k k' (ee .fst)))) code
         where
-        ee : (# k ≡ # k') × (fst Zn ≡ fst (hullStep k'))
+        ee : (# k ≡ # k') × (Zn .fst ≡ (hullStep k') .fst)
         ee = pr-inj (sym (prʟ-fst (nn k) Zn) ∙ q)
 ```
 
@@ -2745,7 +2745,7 @@ The numeral equation forces `k'` to be `k`, and the code is transported along th
 ```agda
   FinWit : (p z : S) → Type (ℓ-suc ℓ)
   FinWit p z = ∥ Σ[ n ∶ S ] Σ[ v ∶ S ] Σ[ F ∶ S ]
-      ((fst p ≡ pr (fst n) (fst v)) × ⟨ fst n ∈ fst ωʟ ⟩ × Holds Te n F × Holds F z v) ∥₁
+      ((p .fst ≡ pr (n .fst) (v .fst)) × ⟨ n .fst ∈ ωʟ .fst ⟩ × Holds Te n F × Holds F z v) ∥₁
 ```
 
 <!--en-->
@@ -2817,7 +2817,7 @@ Given `p=(n,v)`, `n ∈ ω`, `Te(n)=F`, and `F(z)=v`, the three witnesses `n`, `
 <!--/-->
 
 ```agda
-    nv₃-in : (z p q n v F : S) → fst p ≡ pr (fst n) (fst v) → ⟨ fst n ∈ fst ωʟ ⟩
+    nv₃-in : (z p q n v F : S) → p .fst ≡ pr (n .fst) (v .fst) → ⟨ n .fst ∈ ωʟ .fst ⟩
            → Holds Te n F → Holds F z v → ⟨ (z ∷ p ∷ q ∷ []) ⊨ nv₃ ⟩
     nv₃-in z p q n v F qp hn ht hv =
       ∣ n , ∣ v , ( subst ⟨_⟩ (sym (prAtL-adequate i3 i1 i0 (v ∷ n ∷ z ∷ p ∷ q ∷ []))) qp
@@ -2849,7 +2849,7 @@ The innermost truncated existence supplies the table entry `F`, not the value `v
 <!--/-->
 
 ```agda
-                × ( ⟨ fst n ∈ fst ωʟ ⟩ × ∥ Σ[ F ∶ S ] ⟨ (F ∷ v ∷ n ∷ z ∷ p ∷ q ∷ []) ⊨ inner₆ ⟩ ∥₁ )
+                × ( ⟨ n .fst ∈ ωʟ .fst ⟩ × ∥ Σ[ F ∶ S ] ⟨ (F ∷ v ∷ n ∷ z ∷ p ∷ q ∷ []) ⊨ inner₆ ⟩ ∥₁ )
       at₃ : (n v : S) → Inner n v → FinWit p z
       at₃ n v (qp , (hn , h)) = map₁
         (λ { (F , hi) → n , v , F
@@ -2883,7 +2883,7 @@ The final relation is obtained by separation inside the Cartesian product of `pr
 ```agda
   private module FinalGraph = Relation (prodL κ) hullL nv₃ (λ p z → FinWit p z , squash₁)
             (λ p z q → nv₃-out z p q)
-            (λ p z q → rec₁ (snd ((z ∷ p ∷ q ∷ []) ⊨ nv₃))
+            (λ p z q → rec₁ (((z ∷ p ∷ q ∷ []) ⊨ nv₃) .snd)
               (λ { (n , v , F , qp , hn , ht , hv) → nv₃-in z p q n v F qp hn ht hv }))
 ```
 
@@ -2909,8 +2909,8 @@ To introduce membership in `Gf`, take `p ∈ prodL κ`, `z ∈ hullL`, an intern
 <!--/-->
 
 ```agda
-  Gf-in : (p z n v F : S) → ⟨ fst p ∈ fst (prodL κ) ⟩ → ⟨ fst z ∈ fst hullL ⟩
-        → fst p ≡ pr (fst n) (fst v) → ⟨ fst n ∈ fst ωʟ ⟩ → Holds Te n F → Holds F z v
+  Gf-in : (p z n v F : S) → ⟨ p .fst ∈ (prodL κ) .fst ⟩ → ⟨ z .fst ∈ hullL .fst ⟩
+        → p .fst ≡ pr (n .fst) (v .fst) → ⟨ n .fst ∈ ωʟ .fst ⟩ → Holds Te n F → Holds F z v
         → Holds Gf p z
   Gf-in p z n v F hp hz qp hn ht hv = FinalGraph.into p z hp hz ∣ n , v , F , qp , hn , ht , hv ∣₁
 ```
@@ -2937,10 +2937,10 @@ Every value recorded by a table entry lies in `κ`. From `Te(n,F)`, the table re
 <!--/-->
 
 ```agda
-  entry-ran : (n F z v : S) → Holds Te n F → Holds F z v → ⟨ fst v ∈ fst κ ⟩
-  entry-ran n F z v ht hv = rec₁ (snd (fst v ∈ fst κ))
-    (λ { (Zn , _ , code) → snd (snd (snd code)) z v
-          (subst (λ w → ⟨ pr (fst z) (fst v) ∈ w ⟩) (Te-out n F ht .snd) hv) })
+  entry-ran : (n F z v : S) → Holds Te n F → Holds F z v → ⟨ v .fst ∈ κ .fst ⟩
+  entry-ran n F z v ht hv = rec₁ ((v .fst ∈ κ .fst) .snd)
+    (λ { (Zn , _ , code) → ((code .snd) .snd) .snd z v
+          (subst (λ w → ⟨ pr (z .fst) (v .fst) ∈ w ⟩) (Te-out n F ht .snd) hv) })
     (e-wit n (Te-out n F ht .fst))
 ```
 
@@ -2953,11 +2953,11 @@ Every first component related by `Gf` belongs to `prodL κ`. A record for such a
 <!--/-->
 
 ```agda
-  inPκ : (p z : S) → Holds Gf p z → ⟨ fst p ∈ fst (prodL κ) ⟩
-  inPκ p z h = rec₁ (snd (fst p ∈ fst (prodL κ)))
+  inPκ : (p z : S) → Holds Gf p z → ⟨ p .fst ∈ (prodL κ) .fst ⟩
+  inPκ p z h = rec₁ ((p .fst ∈ (prodL κ) .fst) .snd)
     (λ { (n , v , F , (qp , hn , ht , hv)) →
-       subst (λ w → ⟨ w ∈ fst (prodL κ) ⟩) (sym qp)
-         (prodL-in κ n v (ω⊆ (fst κ) oκ κ∉ω (fst n) hn) (entry-ran n F z v ht hv)) })
+       subst (λ w → ⟨ w ∈ (prodL κ) .fst ⟩) (sym qp)
+         (prodL-in κ n v (ω⊆ (κ .fst) oκ κ∉ω (n .fst) hn) (entry-ran n F z v ht hv)) })
 ```
 
 <!--en-->
@@ -2981,11 +2981,11 @@ Every hull member merely has a related code. The characterization of the iterate
 <!--/-->
 
 ```agda
-  have-fin : (z : S) → ⟨ fst z ∈ fst hullL ⟩ → ∥ Σ[ p ∶ S ] Holds Gf p z ∥₁
+  have-fin : (z : S) → ⟨ z .fst ∈ hullL .fst ⟩ → ∥ Σ[ p ∶ S ] Holds Gf p z ∥₁
   have-fin z hz = rec₁ squash₁ at (It.iterUnion-out z hz)
     where
-    at : Σ[ n ∶ ℕ ] ⟨ fst z ∈ fst (hullStep n) ⟩ → ∥ Σ[ p ∶ S ] Holds Gf p z ∥₁
-    at (n , hn) = map₁ val (domAt-in zero (suc zero) (F ∷ hullStep n ∷ []) (fst (snd (e-code n))) z hn)
+    at : Σ[ n ∶ ℕ ] ⟨ z .fst ∈ (hullStep n) .fst ⟩ → ∥ Σ[ p ∶ S ] Holds Gf p z ∥₁
+    at (n , hn) = map₁ val (domAt-in zero (suc zero) (F ∷ hullStep n ∷ []) (((e-code n) .snd) .fst) z hn)
 ```
 
 <!--en-->
@@ -3014,8 +3014,8 @@ The introduction assembles the whole record: the pair lies in the product by the
 
 ```agda
         , Gf-in (prʟ (nn n) v) z (nn n) v F
-            (subst (λ w → ⟨ w ∈ fst (prodL κ) ⟩) (sym (prʟ-fst (nn n) v))
-              (prodL-in κ (nn n) v (num∈κ n) (snd (snd (snd (e-code n))) z v hv)))
+            (subst (λ w → ⟨ w ∈ (prodL κ) .fst ⟩) (sym (prʟ-fst (nn n) v))
+              (prodL-in κ (nn n) v (num∈κ n) ((((e-code n) .snd) .snd) .snd z v hv)))
             hz (prʟ-fst (nn n) v) (#∈ω n) (Te-in (nn n) (#∈ω n)) hv
 ```
 
@@ -3028,11 +3028,11 @@ The functionality needed for least-preimage selection runs from a candidate code
 <!--/-->
 
 ```agda
-  funct-fin : (p z z' : S) → Holds Gf p z → Holds Gf p z' → fst z ≡ fst z'
-  funct-fin p z z' h h' = rec2 (setIsSet (fst z) (fst z')) read (Gf-out p z h) (Gf-out p z' h')
+  funct-fin : (p z z' : S) → Holds Gf p z → Holds Gf p z' → z .fst ≡ z' .fst
+  funct-fin p z z' h h' = rec2 (setIsSet (z .fst) (z' .fst)) read (Gf-out p z h) (Gf-out p z' h')
     where
     read : Σ[ n ∶ S ] Σ[ v ∶ S ] Σ[ F ∶ S ]
-             ((fst p ≡ pr (fst n) (fst v)) × ⟨ fst n ∈ fst ωʟ ⟩ × Holds Te n F × Holds F z v)
+             ((p .fst ≡ pr (n .fst) (v .fst)) × ⟨ n .fst ∈ ωʟ .fst ⟩ × Holds Te n F × Holds F z v)
 ```
 
 <!--en-->
@@ -3045,10 +3045,10 @@ Unpacking the two records gives `n,v,F` and `n',v',F'`. Each record contains one
 
 ```agda
          → Σ[ n' ∶ S ] Σ[ v' ∶ S ] Σ[ F' ∶ S ]
-             ((fst p ≡ pr (fst n') (fst v')) × ⟨ fst n' ∈ fst ωʟ ⟩ × Holds Te n' F' × Holds F' z' v')
-         → fst z ≡ fst z'
+             ((p .fst ≡ pr (n' .fst) (v' .fst)) × ⟨ n' .fst ∈ ωʟ .fst ⟩ × Holds Te n' F' × Holds F' z' v')
+         → z .fst ≡ z' .fst
     read (n , v , F , (qp , hn , ht , hv)) (n' , v' , F' , (qp' , hn' , ht' , hv')) =
-      rec₁ (setIsSet (fst z) (fst z'))
+      rec₁ (setIsSet (z .fst) (z' .fst))
 ```
 
 <!--en-->
@@ -3061,9 +3061,9 @@ The two pair equations first give `n=n'` and `v=v'`. The table readings then ali
 
 ```agda
         (λ { (Zn , _ , code) →
-           injAt-out zero (eS n m ∷ Zn ∷ []) (fst (snd (snd code))) v z z'
-             (subst (λ w → ⟨ pr (fst z) (fst v) ∈ w ⟩) (Te-out n F ht .snd) hv)
-             (subst2 (λ u w → ⟨ pr (fst z') u ∈ w ⟩) (sym (snd ee)) qF hv') })
+           injAt-out zero (eS n m ∷ Zn ∷ []) (((code .snd) .snd) .fst) v z z'
+             (subst (λ w → ⟨ pr (z .fst) (v .fst) ∈ w ⟩) (Te-out n F ht .snd) hv)
+             (subst2 (λ u w → ⟨ pr (z' .fst) u ∈ w ⟩) (sym (ee .snd)) qF hv') })
         (e-wit n m)
 ```
 
@@ -3077,9 +3077,9 @@ Injectivity of the ordered pair splits the identification into the numeral and t
 
 ```agda
       where
-      ee : (fst n ≡ fst n') × (fst v ≡ fst v')
+      ee : (n .fst ≡ n' .fst) × (v .fst ≡ v' .fst)
       ee = pr-inj (sym qp ∙ qp')
-      m : ⟨ fst n ∈ fst ωʟ ⟩
+      m : ⟨ n .fst ∈ ωʟ .fst ⟩
       m = Te-out n F ht .fst
 ```
 
@@ -3092,8 +3092,13 @@ The two pairs, numeral together with ω-membership, are equal because ω-members
 <!--/-->
 
 ```agda
-      pth : _≡_ {A = Σ[ c ∶ S ] ⟨ fst c ∈ fst ωʟ ⟩} (n' , Te-out n' F' ht' .fst) (n , m)
-      pth = Σ≡Prop (λ c → snd (fst c ∈ fst ωʟ)) (S≡ {x = n'} {y = n} (sym (fst ee)))
+      pth : let
+        left : Σ[ c ∶ S ] ⟨ c .fst ∈ ωʟ .fst ⟩
+        left = n' , Te-out n' F' ht' .fst
+        right : Σ[ c ∶ S ] ⟨ c .fst ∈ ωʟ .fst ⟩
+        right = n , m
+        in left ≡ right
+      pth = Σ≡Prop (λ c → (c .fst ∈ ωʟ .fst) .snd) (S≡ {x = n'} {y = n} (sym (ee .fst)))
 ```
 
 <!--en-->
@@ -3105,8 +3110,8 @@ Transporting the table reading for `F'` along the equality of the two internal-n
 <!--/-->
 
 ```agda
-      qF : fst F' ≡ fst (eS n m)
-      qF = Te-out n' F' ht' .snd ∙ (λ i → fst (eS (fst (pth i)) (snd (pth i))))
+      qF : F' .fst ≡ (eS n m) .fst
+      qF = Te-out n' F' ht' .snd ∙ (λ i → (eS ((pth i) .fst) ((pth i) .snd)) .fst)
 ```
 
 <!--en-->
@@ -3119,7 +3124,7 @@ Let `γf` be the ordinal stage assigned to the constructible set `prodL κ`. It 
 
 ```agda
   γf : V ℓ
-  γf = stage (fst (prodL κ)) (snd (prodL κ))
+  γf = stage ((prodL κ) .fst) ((prodL κ) .snd)
 ```
 
 <!--en-->
@@ -3132,7 +3137,7 @@ That stage is an ordinal, as every stage is.
 
 ```agda
   oγf : IsOrd γf
-  oγf = stage-ord (fst (prodL κ)) (snd (prodL κ))
+  oγf = stage-ord ((prodL κ) .fst) ((prodL κ) .snd)
 ```
 
 <!--en-->
@@ -3144,9 +3149,9 @@ The set `prodL κ` belongs to `Lset γf` by the defining property of its stage. 
 <!--/-->
 
 ```agda
-  prodκ⊆Lγ : (p : S) → ⟨ fst p ∈ fst (prodL κ) ⟩ → ⟨ fst p ∈ Lset γf ⟩
+  prodκ⊆Lγ : (p : S) → ⟨ p .fst ∈ (prodL κ) .fst ⟩ → ⟨ p .fst ∈ Lset γf ⟩
   prodκ⊆Lγ p hp =
-    layer-trans (Lset-layer γf) {x = fst (prodL κ)} {y = fst p} hp (stage-mem (fst (prodL κ)) (snd (prodL κ)))
+    layer-trans (Lset-layer γf) {x = (prodL κ) .fst} {y = p .fst} hp (stage-mem ((prodL κ) .fst) ((prodL κ) .snd))
 ```
 
 <!--en-->

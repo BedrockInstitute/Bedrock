@@ -382,12 +382,12 @@ environment lies there.
     transβ = layer-trans (Lset-layer β)
 
     lookupInLayer : ∀ {m} (i : Fin m) (γ : S ^ m) → Below β γ
-                  → ⟨ fst (lookup i γ) ∈ Lset β ⟩
+                  → ⟨ (lookup i γ) .fst ∈ Lset β ⟩
     lookupInLayer zero    (a ∷ γ) (ha , _)  = ha
     lookupInLayer (suc i) (a ∷ γ) (_  , hγ) = lookupInLayer i γ hγ
 
     tmInLayer : ∀ {m} (t : Term S m) (γ : S ^ m) → Below β γ
-              → BoundedTm (Below′ β) t → ⟨ fst (⟦ t ⟧ γ) ∈ Lset β ⟩
+              → BoundedTm (Below′ β) t → ⟨ (⟦ t ⟧ γ) .fst ∈ Lset β ⟩
     tmInLayer (con c) γ _  h = h
     tmInLayer (var i) γ bγ _ = lookupInLayer i γ bγ
 ```
@@ -469,10 +469,10 @@ it is the only place.
         decide : Dec ⟨ (x ∷ γ) ⊨ χ ⟩
                → ⟨ (x ∷ γ) ⊨ χ ⟩
         decide (yes sat) = sat
-        decide (no nsat) = rec₁ (snd ((x ∷ γ) ⊨ χ)) collide
+        decide (no nsat) = rec₁ (((x ∷ γ) ⊨ χ) .snd) collide
           (cl γ bγ ∣ x , (λ sat → lift (nsat sat)) ∣₁)
           where
-          collide : Σ[ q ∶ S ] (⟨ fst q ∈ Lset β ⟩ × ⟨ (q ∷ γ) ⊨ (¬̇ χ) ⟩)
+          collide : Σ[ q ∶ S ] (⟨ q .fst ∈ Lset β ⟩ × ⟨ (q ∷ γ) ⊨ (¬̇ χ) ⟩)
                   → ⟨ (x ∷ γ) ⊨ χ ⟩
           collide (q , (fq∈ , refute)) = ⊥₀-rec
             (lower (refute (subst ⟨_⟩
@@ -496,7 +496,7 @@ it is the only place.
     reflect∀ χ (closureOf (¬̇ χ) (λ N → an N .fst)) (λ N → an N .snd) bd γ bγ
   reflectFo (∀̇∈ t χ) an bd γ bγ = ⇔toPath fwd bwd
     where
-    tInβ : ⟨ fst (⟦ t ⟧ γ) ∈ Lset β ⟩
+    tInβ : ⟨ (⟦ t ⟧ γ) .fst ∈ Lset β ⟩
     tInβ = tmInLayer t γ bγ (bd .fst)
     fwd : ⟨ γ ⊨ (∀̇∈ t χ) ⟩ → ⟨ γ ⊨ᴬ (∀̇∈ t χ) ⟩
     fwd h x x∈t = subst ⟨_⟩
@@ -506,7 +506,7 @@ it is the only place.
       (sym (reflectFo χ an (bd .snd) (x ∷ γ) (transβ x∈t tInβ , bγ))) (h x x∈t)
   reflectFo (∃̇∈ t χ) an bd γ bγ = ⇔toPath fwd bwd
     where
-    tInβ : ⟨ fst (⟦ t ⟧ γ) ∈ Lset β ⟩
+    tInβ : ⟨ (⟦ t ⟧ γ) .fst ∈ Lset β ⟩
     tInβ = tmInLayer t γ bγ (bd .fst)
     fwd : ⟨ γ ⊨ (∃̇∈ t χ) ⟩ → ⟨ γ ⊨ᴬ (∃̇∈ t χ) ⟩
     fwd = map₁ (λ { (x , (x∈t , h)) → x , (x∈t , subst ⟨_⟩

@@ -612,7 +612,7 @@ isL : S → hProp (ℓ-suc ℓ)
 isL x = ∃[ α ∶ S ] ((IsOrd α , isPropIsOrd α) ⊓ (x ∈ˢ Lset α))
 
 isL-trans : Transitive isL
-isL-trans {x} {y} y∈x x∈L = rec₁ (snd (isL y))
+isL-trans {x} {y} y∈x x∈L = rec₁ ((isL y) .snd)
   (λ { (α , (ordα , x∈Lα)) →
 ```
 

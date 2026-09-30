@@ -306,15 +306,15 @@ The first semantic calculation concerns `singleOf`. Fix the coded set `E` and va
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module _ {j : ℕ} (e N0 z : Fin j) (δ : S ^ j) (q0 : fst (lookup N0 δ) ≡ # 0) where
+module _ {j : ℕ} (e N0 z : Fin j) (δ : S ^ j) (q0 : (lookup N0 δ) .fst ≡ # 0) where
 ```
 </summary>
 <div class="submodule-fold-content">
 
 ```agda
   private
-    E = fst (lookup e δ)
-    Z = fst (lookup z δ)
+    E = (lookup e δ) .fst
+    Z = (lookup z δ) .fst
 ```
 
 <!--en-->
@@ -344,8 +344,8 @@ For the reverse inclusion, begin with a member of the standard one-entry environ
 ```agda
                                  ∙ cong (λ a → pr a Z) q0) ∣₁
     bwd : (y : V ℓ) → ⟨ y ∈ envOne Z ⟩ → ⟨ y ∈ E ⟩
-    bwd y = rec₁ (snd (y ∈ E))
-      (λ { (lift zero , qy) → rec₁ (snd (y ∈ E))
+    bwd y = rec₁ ((y ∈ E) .snd)
+      (λ { (lift zero , qy) → rec₁ ((y ∈ E) .snd)
         (λ { (y' , (y'∈ , hy')) →
 ```
 
@@ -376,7 +376,7 @@ Conversely, assume the coded set equals the standard one-entry environment. Its 
   singleOf-in : E ≡ envOne Z → ⟨ δ ⊨ singleOf e N0 z ⟩
   singleOf-in q =
       (λ y hy → pr-in i0 (sh 1 N0) (sh 1 z) (y ∷ δ)
-         (rec₁ (setIsSet (fst y) (pr (fst (lookup N0 δ)) Z))
+         (rec₁ (setIsSet (y .fst) (pr ((lookup N0 δ) .fst) Z))
            (λ { (lift zero , qy) → sym qy ∙ cong (λ a → pr a Z) (sym q0) ; (lift (suc ()) , _) })
 ```
 
@@ -389,7 +389,7 @@ The member is named, its membership is transported, and the existential witness 
 <!--/-->
 
 ```agda
-           (subst (λ u → ⟨ fst y ∈ u ⟩) q hy)))
+           (subst (λ u → ⟨ y .fst ∈ u ⟩) q hy)))
     , ∣ yS , ( subst (λ u → ⟨ pr (# 0) Z ∈ u ⟩) (sym q) ∣ lift zero , refl ∣₁
              , pr-in i0 (sh 1 N0) (sh 1 z) (yS ∷ δ) (cong (λ a → pr a Z) (sym q0)) ) ∣₁
     where
@@ -420,8 +420,8 @@ The cut relation between a set `X`, a carrier `Wv`, and a value `Y` is a pair of
 
 ```agda
 Cuts : (X Wv Y : V ℓ) → Type (ℓ-suc ℓ)
-Cuts X Wv Y = ((z : S) → ⟨ fst z ∈ X ⟩ → ⟨ fst z ∈ Wv ⟩ × ⟨ envOne (fst z) ∈ Y ⟩)
-            × ((z : S) → ⟨ fst z ∈ Wv ⟩ → ⟨ envOne (fst z) ∈ Y ⟩ → ⟨ fst z ∈ X ⟩)
+Cuts X Wv Y = ((z : S) → ⟨ z .fst ∈ X ⟩ → ⟨ z .fst ∈ Wv ⟩ × ⟨ envOne (z .fst) ∈ Y ⟩)
+            × ((z : S) → ⟨ z .fst ∈ Wv ⟩ → ⟨ envOne (z .fst) ∈ Y ⟩ → ⟨ z .fst ∈ X ⟩)
 ```
 
 <!--en-->
@@ -435,16 +435,16 @@ To compare the object-language clause with the mathematical cut relation, fix th
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module _ {j : ℕ} (x w y N0 : Fin j) (δ : S ^ j) (q0 : fst (lookup N0 δ) ≡ # 0) where
+module _ {j : ℕ} (x w y N0 : Fin j) (δ : S ^ j) (q0 : (lookup N0 δ) .fst ≡ # 0) where
 ```
 </summary>
 <div class="submodule-fold-content">
 
 ```agda
   private
-    X = fst (lookup x δ)
-    Wv = fst (lookup w δ)
-    Y = fst (lookup y δ)
+    X = (lookup x δ) .fst
+    Wv = (lookup w δ) .fst
+    Y = (lookup y δ) .fst
 ```
 
 <!--en-->
@@ -468,8 +468,8 @@ Reading the existential of the singleton clause converts it into membership of t
 <!--/-->
 
 ```agda
-    one-out : (z : S) → ⟨ (z ∷ δ) ⊨ ∃̇∈ (var (sh 1 y)) (singleOf i0 (sh 2 N0) i1) ⟩ → ⟨ envOne (fst z) ∈ Y ⟩
-    one-out z = rec₁ (snd (envOne (fst z) ∈ Y))
+    one-out : (z : S) → ⟨ (z ∷ δ) ⊨ ∃̇∈ (var (sh 1 y)) (singleOf i0 (sh 2 N0) i1) ⟩ → ⟨ envOne (z .fst) ∈ Y ⟩
+    one-out z = rec₁ ((envOne (z .fst) ∈ Y) .snd)
       (λ { (e , (e∈ , he)) → subst (λ u → ⟨ u ∈ Y ⟩) (singleOf-out i0 (sh 2 N0) i1 (e ∷ z ∷ δ) q0 he) e∈ })
 ```
 
@@ -482,8 +482,8 @@ Filling the existential is the converse: the standard singleton environment is p
 <!--/-->
 
 ```agda
-    one-in : (z : S) → ⟨ envOne (fst z) ∈ Y ⟩ → ⟨ (z ∷ δ) ⊨ ∃̇∈ (var (sh 1 y)) (singleOf i0 (sh 2 N0) i1) ⟩
-    one-in z h = ∣ down YS (envOne (fst z)) h , (h , singleOf-in i0 (sh 2 N0) i1 (down YS (envOne (fst z)) h ∷ z ∷ δ) q0 refl) ∣₁
+    one-in : (z : S) → ⟨ envOne (z .fst) ∈ Y ⟩ → ⟨ (z ∷ δ) ⊨ ∃̇∈ (var (sh 1 y)) (singleOf i0 (sh 2 N0) i1) ⟩
+    one-in z h = ∣ down YS (envOne (z .fst)) h , (h , singleOf-in i0 (sh 2 N0) i1 (down YS (envOne (z .fst)) h ∷ z ∷ δ) q0 refl) ∣₁
 ```
 
 <!--en-->
@@ -540,9 +540,9 @@ module Read {m : ℕ} (v w T C : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) (tg 
 
 ```agda
   private
-    Vv = fst (lookup v γ)
-    Wv = fst (lookup w γ)
-    Tv = fst (lookup T γ)
+    Vv = (lookup v γ) .fst
+    Wv = (lookup w γ) .fst
+    Tv = (lookup T γ) .fst
 ```
 
 <!--en-->
@@ -554,8 +554,8 @@ The code domain's underlying set and the numeral behind the tag one are named, s
 <!--/-->
 
 ```agda
-    Cv = fst (lookup C γ)
-    N1v = fst (lookup (N f1) γ)
+    Cv = (lookup C γ) .fst
+    N1v = (lookup (N f1) γ) .fst
 ```
 
 <!--en-->
@@ -567,9 +567,9 @@ Reading the membership clause yields, for each member of the proposed value, a t
 <!--/-->
 
 ```agda
-  mem-out : ⟨ γ ⊨ memAt v w T C N ⟩ → (x : S) → ⟨ fst x ∈ Vv ⟩
+  mem-out : ⟨ γ ⊨ memAt v w T C N ⟩ → (x : S) → ⟨ x .fst ∈ Vv ⟩
           → ∥ Σ[ c ∶ S ] Σ[ p ∶ S ] Σ[ y ∶ S ]
-              (⟨ fst c ∈ Cv ⟩ × ((fst c ≡ pr (# 1) (fst p)) × (⟨ pr (fst c) (fst y) ∈ Tv ⟩ × Cuts (fst x) Wv (fst y)))) ∥₁
+              (⟨ c .fst ∈ Cv ⟩ × ((c .fst ≡ pr (# 1) (p .fst)) × (⟨ pr (c .fst) (y .fst) ∈ Tv ⟩ × Cuts (x .fst) Wv (y .fst)))) ∥₁
   mem-out h x x∈ = rec₁ squash₁
     (λ { (c , (c∈ , hc)) → rec₁ squash₁
 ```
@@ -586,7 +586,7 @@ To read the membership clause, first expose the key-shaped member `c` of the pro
       (λ { (p , s , (ec , he)) → rec₁ squash₁
         (λ { (e , (e∈ , hy)) → map₁
           (λ { (y , s' , (ee , hd)) →
-            c , p , y , ( c∈ , ( ec ∙ cong (λ a → pr a (fst p)) (tg f1)
+            c , p , y , ( c∈ , ( ec ∙ cong (λ a → pr a (p .fst)) (tg f1)
                         , ( subst (λ u → ⟨ u ∈ Tv ⟩) ee e∈
 ```
 
@@ -615,9 +615,9 @@ Filling the membership clause is the converse construction: it takes the functio
 <!--/-->
 
 ```agda
-  mem-in : ((x : S) → ⟨ fst x ∈ Vv ⟩
+  mem-in : ((x : S) → ⟨ x .fst ∈ Vv ⟩
             → ∥ Σ[ c ∶ S ] Σ[ p ∶ S ] Σ[ y ∶ S ]
-                (⟨ fst c ∈ Cv ⟩ × ((fst c ≡ pr (# 1) (fst p)) × (⟨ pr (fst c) (fst y) ∈ Tv ⟩ × Cuts (fst x) Wv (fst y)))) ∥₁)
+                (⟨ c .fst ∈ Cv ⟩ × ((c .fst ≡ pr (# 1) (p .fst)) × (⟨ pr (c .fst) (y .fst) ∈ Tv ⟩ × Cuts (x .fst) Wv (y .fst)))) ∥₁)
          → ⟨ γ ⊨ memAt v w T C N ⟩
   mem-in g x x∈ = map₁
 ```
@@ -632,10 +632,10 @@ Conversely, suppose such a truncated semantic record is given for each member of
 
 ```agda
     (λ { (c , p , y , (c∈ , (ec , (e∈ , cuts)))) →
-      let ec' : fst c ≡ pr N1v (fst p)
-          ec' = ec ∙ cong (λ a → pr a (fst p)) (sym (tg f1))
+      let ec' : c .fst ≡ pr N1v (p .fst)
+          ec' = ec ∙ cong (λ a → pr a (p .fst)) (sym (tg f1))
           δ4 = p ∷ container c (lookup (N f1) γ) p ec' .fst ∷ c ∷ x ∷ γ
-          eS = down (lookup T γ) (pr (fst c) (fst y)) e∈
+          eS = down (lookup T γ) (pr (c .fst) (y .fst)) e∈
 ```
 
 <!--en-->
@@ -676,8 +676,8 @@ Reading the covering clause takes a code `c` that splits as the pair of the tag 
 <!--/-->
 
 ```agda
-  all-out : ⟨ γ ⊨ allAt v w T C N ⟩ → (c p : S) → ⟨ fst c ∈ Cv ⟩ → fst c ≡ pr (# 1) (fst p)
-          → ∥ Σ[ y ∶ S ] Σ[ x ∶ S ] (⟨ pr (fst c) (fst y) ∈ Tv ⟩ × (⟨ fst x ∈ Vv ⟩ × Cuts (fst x) Wv (fst y))) ∥₁
+  all-out : ⟨ γ ⊨ allAt v w T C N ⟩ → (c p : S) → ⟨ c .fst ∈ Cv ⟩ → c .fst ≡ pr (# 1) (p .fst)
+          → ∥ Σ[ y ∶ S ] Σ[ x ∶ S ] (⟨ pr (c .fst) (y .fst) ∈ Tv ⟩ × (⟨ x .fst ∈ Vv ⟩ × Cuts (x .fst) Wv (y .fst))) ∥₁
   all-out h c p c∈ ec = rec₁ squash₁
     (λ { (e , (e∈ , hy)) → rec₁ squash₁
       (λ { (y , s' , (ee , hx)) → map₁
@@ -712,7 +712,7 @@ For the converse construction, fix a member `c` of the code domain and inspect a
       (∃̇∈ (var (sh 3 T)) (sndEx i0 i3 (∃̇∈ (var (sh 6 v)) (definesB i0 (sh 7 w) i1 (sh 7 (N f0))))))
       (sh 1 (N f1)) refl (h c c∈))
     where
-    ec' : fst c ≡ pr N1v (fst p)
+    ec' : c .fst ≡ pr N1v (p .fst)
 ```
 
 <!--en-->
@@ -724,7 +724,7 @@ The equation using the formal tag is converted to the required arity-one equatio
 <!--/-->
 
 ```agda
-    ec' = ec ∙ cong (λ a → pr a (fst p)) (sym (tg f1))
+    ec' = ec ∙ cong (λ a → pr a (p .fst)) (sym (tg f1))
     δ3 : S ^ (3 + m)
     δ3 = p ∷ container c (lookup (N f1) γ) p ec' .fst ∷ c ∷ γ
 ```
@@ -738,8 +738,8 @@ Filling the coverage clause therefore ranges over every member of the proposed c
 <!--/-->
 
 ```agda
-  all-in : ((c p : S) → ⟨ fst c ∈ Cv ⟩ → fst c ≡ pr (# 1) (fst p)
-            → ∥ Σ[ y ∶ S ] Σ[ x ∶ S ] (⟨ pr (fst c) (fst y) ∈ Tv ⟩ × (⟨ fst x ∈ Vv ⟩ × Cuts (fst x) Wv (fst y))) ∥₁)
+  all-in : ((c p : S) → ⟨ c .fst ∈ Cv ⟩ → c .fst ≡ pr (# 1) (p .fst)
+            → ∥ Σ[ y ∶ S ] Σ[ x ∶ S ] (⟨ pr (c .fst) (y .fst) ∈ Tv ⟩ × (⟨ x .fst ∈ Vv ⟩ × Cuts (x .fst) Wv (y .fst))) ∥₁)
          → ⟨ γ ⊨ allAt v w T C N ⟩
   all-in g c c∈ = sndAll-in' (λ p s s∈ p∈ ec →
     map₁ (λ { (y , x , (e∈ , (x∈ , cuts))) →
@@ -754,11 +754,11 @@ The innermost bounded existential now receives the sliced set `x` together with 
 <!--/-->
 
 ```agda
-      let eS = down (lookup T γ) (pr (fst c) (fst y)) e∈
+      let eS = down (lookup T γ) (pr (c .fst) (y .fst)) e∈
           δ6 = y ∷ container eS c y refl .fst ∷ eS ∷ p ∷ s ∷ c ∷ γ
       in eS , ( e∈ , fillSnd i0 (eS ∷ p ∷ s ∷ c ∷ γ) c y refl (∃̇∈ (var (sh 6 v)) (definesB i0 (sh 7 w) i1 (sh 7 (N f0))))
                        ∣ x , (x∈ , definesB-in i0 (sh 7 w) i1 (sh 7 (N f0)) (x ∷ δ6) (tg f0) cuts) ∣₁ i3 refl ) })
-      (g c p c∈ (ec ∙ cong (λ a → pr a (fst p)) (tg f1))))
+      (g c p c∈ (ec ∙ cong (λ a → pr a (p .fst)) (tg f1))))
 ```
 
 <!--en-->
@@ -797,7 +797,7 @@ We can now compare the bounded description with the actual definability operatio
 <summary class="submodule-fold-heading">
 ```agda
 module DefRead {m : ℕ} (v w T C E : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) (W : S)
-  (qw : fst (lookup w γ) ≡ fst W) (tg : Tags γ N) (hs : ⟨ γ ⊨ satAt T w C E N ⟩) where
+  (qw : (lookup w γ) .fst ≡ W .fst) (tg : Tags γ N) (hs : ⟨ γ ⊨ satAt T w C E N ⟩) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -808,20 +808,20 @@ module DefRead {m : ℕ} (v w T C E : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m)
 ```
 
 <!--en-->
-Two earlier readers supply the needed bridge. `SatRead` identifies the advertised code domain and table with the real codes and satisfaction values over `W`; `Read` turns `defAt` into its two semantic slice conditions. `DefOf (fst W)` then interprets each decoded arity-one formula as one subset of `W`.
+Two earlier readers supply the needed bridge. `SatRead` identifies the advertised code domain and table with the real codes and satisfaction values over `W`; `Read` turns `defAt` into its two semantic slice conditions. `DefOf (W .fst)` then interprets each decoded arity-one formula as one subset of `W`.
 <!--zh-->
-前面的两个读取器提供所需桥梁。`SatRead` 把描述中的码域和表与 `W` 上真正的码及满足取值对齐；`Read` 把 `defAt` 读成两个语义切出条件。随后 `DefOf (fst W)` 把每条解码得到的元数一公式解释为 `W` 的一个子集。
+前面的两个读取器提供所需桥梁。`SatRead` 把描述中的码域和表与 `W` 上真正的码及满足取值对齐；`Read` 把 `defAt` 读成两个语义切出条件。随后 `DefOf (W .fst)` 把每条解码得到的元数一公式解释为 `W` 的一个子集。
 <!--ja-->
-先に得た二つの読み出しが必要な橋を与える。`SatRead` は、記述された符号領域と表を、`W` 上の実際の符号と充足値に対応させる。`Read` は `defAt` を二つの意味論的な切り出し条件として読む。その上で `DefOf (fst W)` が、復号されたアリティ一の各論理式を `W` の一つの部分集合として解釈する。
+先に得た二つの読み出しが必要な橋を与える。`SatRead` は、記述された符号領域と表を、`W` 上の実際の符号と充足値に対応させる。`Read` は `defAt` を二つの意味論的な切り出し条件として読む。その上で `DefOf (W .fst)` が、復号されたアリティ一の各論理式を `W` の一つの部分集合として解釈する。
 <!--/-->
 
 ```agda
   private module SR = SatRead T w C E N γ W qw tg hs
   private module RD = Read v w T C N γ tg
-  private module DA = DefOf (fst W)
+  private module DA = DefOf (W .fst)
   private
-    Vv = fst (lookup v γ)
-    Wv = fst (lookup w γ)
+    Vv = (lookup v γ) .fst
+    Wv = (lookup w γ) .fst
 ```
 
 <!--en-->
@@ -833,8 +833,8 @@ Write `Tv` and `Cv` for the underlying sets occupying the table and code slots. 
 <!--/-->
 
 ```agda
-    Tv = fst (lookup T γ)
-    Cv = fst (lookup C γ)
+    Tv = (lookup T γ) .fst
+    Cv = (lookup C γ) .fst
 ```
 
 <!--en-->
@@ -859,9 +859,9 @@ The table-value lemma says that the value recorded at the key of a formula equal
 <!--/-->
 
 ```agda
-    valOf : (ψ : Formula Ab 1) (c y : S) → fst c ≡ fst (keyS W ψ) → ⟨ pr (fst c) (fst y) ∈ Tv ⟩
-          → fst y ≡ fst (Sat W (toS ψ))
-    valOf ψ c y qc h = SR.T-out c y h .snd ∙ cong fst (val-at W W ψ c (SR.T-out c y h .fst) qc)
+    valOf : (ψ : Formula Ab 1) (c y : S) → c .fst ≡ (keyS W ψ) .fst → ⟨ pr (c .fst) (y .fst) ∈ Tv ⟩
+          → y .fst ≡ (Sat W (toS ψ)) .fst
+    valOf ψ c y qc h = SR.T-out c y h .snd ∙ cong (λ p → p .fst) (val-at W W ψ c (SR.T-out c y h .fst) qc)
 ```
 
 <!--en-->
@@ -873,11 +873,11 @@ The central bridge concerns one formula at a time. If `Cuts` says that `x` consi
 <!--/-->
 
 ```agda
-    cut≡ : (ψ : Formula Ab 1) (x : S) → Cuts (fst x) Wv (fst (Sat W (toS ψ))) → DA.defSet ψ ≡ fst x
+    cut≡ : (ψ : Formula Ab 1) (x : S) → Cuts (x .fst) Wv ((Sat W (toS ψ)) .fst) → DA.defSet ψ ≡ x .fst
     cut≡ ψ x (o , i) = extensionalV (λ z → ⇔toPath (fwd z) (bwd z))
       where
-      fwd : (z : V ℓ) → ⟨ z ∈ DA.defSet ψ ⟩ → ⟨ z ∈ fst x ⟩
-      fwd z = rec₁ (snd (z ∈ fst x))
+      fwd : (z : V ℓ) → ⟨ z ∈ DA.defSet ψ ⟩ → ⟨ z ∈ x .fst ⟩
+      fwd z = rec₁ ((z ∈ x .fst) .snd)
 ```
 
 <!--en-->
@@ -890,9 +890,9 @@ For the first direction, membership in `DA.defSet ψ` supplies, under propositio
 
 ```agda
         (λ { ((q , hq) , e) →
-          i (down W z (subst (λ u → ⟨ u ∈ fst W ⟩) e (ι∈ q)))
-            (subst (λ u → ⟨ z ∈ u ⟩) (sym qw) (subst (λ u → ⟨ u ∈ fst W ⟩) e (ι∈ q)))
-            (subst (λ u → ⟨ envOne u ∈ fst (Sat W (toS ψ)) ⟩) e
+          i (down W z (subst (λ u → ⟨ u ∈ W .fst ⟩) e (ι∈ q)))
+            (subst (λ u → ⟨ z ∈ u ⟩) (sym qw) (subst (λ u → ⟨ u ∈ W .fst ⟩) e (ι∈ q)))
+            (subst (λ u → ⟨ envOne u ∈ (Sat W (toS ψ)) .fst ⟩) e
               (subst ⟨_⟩ (defSet-Sat W ψ q) ∣ (q , hq) , refl ∣₁)) })
 ```
 
@@ -905,11 +905,11 @@ For the other direction, begin with `z ∈ x`. The outward half of `Cuts` gives 
 <!--/-->
 
 ```agda
-      bwd : (z : V ℓ) → ⟨ z ∈ fst x ⟩ → ⟨ z ∈ DA.defSet ψ ⟩
+      bwd : (z : V ℓ) → ⟨ z ∈ x .fst ⟩ → ⟨ z ∈ DA.defSet ψ ⟩
       bwd z hz =
         let zS = down x z hz
             zW = subst (λ u → ⟨ z ∈ u ⟩) qw (o zS hz .fst)
-            fib = ∈-asFiber {a = z} {b = fst W} zW
+            fib = ∈-asFiber {a = z} {b = W .fst} zW
 ```
 
 <!--en-->
@@ -923,7 +923,7 @@ Transport the environment membership along that presentation path and apply `def
 ```agda
         in subst (λ u → ⟨ u ∈ DA.defSet ψ ⟩) (fib .snd)
              (subst ⟨_⟩ (sym (defSet-Sat W ψ (fib .fst)))
-               (subst (λ u → ⟨ envOne u ∈ fst (Sat W (toS ψ)) ⟩) (sym (fib .snd)) (o zS hz .snd)))
+               (subst (λ u → ⟨ envOne u ∈ (Sat W (toS ψ)) .fst ⟩) (sym (fib .snd)) (o zS hz .snd)))
 ```
 
 <!--en-->
@@ -935,11 +935,11 @@ Conversely, suppose `DA.defSet ψ` is already known to equal `x`. To reconstruct
 <!--/-->
 
 ```agda
-    cuts-of : (ψ : Formula Ab 1) (x : S) → DA.defSet ψ ≡ fst x → Cuts (fst x) Wv (fst (Sat W (toS ψ)))
+    cuts-of : (ψ : Formula Ab 1) (x : S) → DA.defSet ψ ≡ x .fst → Cuts (x .fst) Wv ((Sat W (toS ψ)) .fst)
     cuts-of ψ x e = o , i
       where
-      o : (z : S) → ⟨ fst z ∈ fst x ⟩ → ⟨ fst z ∈ Wv ⟩ × ⟨ envOne (fst z) ∈ fst (Sat W (toS ψ)) ⟩
-      o z hz = rec₁ (isProp× (snd (fst z ∈ Wv)) (snd (envOne (fst z) ∈ fst (Sat W (toS ψ)))))
+      o : (z : S) → ⟨ z .fst ∈ x .fst ⟩ → ⟨ z .fst ∈ Wv ⟩ × ⟨ envOne (z .fst) ∈ (Sat W (toS ψ)) .fst ⟩
+      o z hz = rec₁ (isProp× ((z .fst ∈ Wv) .snd) ((envOne (z .fst) ∈ (Sat W (toS ψ)) .fst) .snd))
 ```
 
 <!--en-->
@@ -952,24 +952,24 @@ Unpacking that membership gives a representative in `W` and, through `defSet-Sat
 
 ```agda
         (λ { ((q , hq) , eq) →
-            subst (λ u → ⟨ fst z ∈ u ⟩) (sym qw) (subst (λ u → ⟨ u ∈ fst W ⟩) eq (ι∈ q))
-          , subst (λ u → ⟨ envOne u ∈ fst (Sat W (toS ψ)) ⟩) eq (subst ⟨_⟩ (defSet-Sat W ψ q) ∣ (q , hq) , refl ∣₁) })
-        (subst (λ u → ⟨ fst z ∈ u ⟩) (sym e) hz)
-      i : (z : S) → ⟨ fst z ∈ Wv ⟩ → ⟨ envOne (fst z) ∈ fst (Sat W (toS ψ)) ⟩ → ⟨ fst z ∈ fst x ⟩
+            subst (λ u → ⟨ z .fst ∈ u ⟩) (sym qw) (subst (λ u → ⟨ u ∈ W .fst ⟩) eq (ι∈ q))
+          , subst (λ u → ⟨ envOne u ∈ (Sat W (toS ψ)) .fst ⟩) eq (subst ⟨_⟩ (defSet-Sat W ψ q) ∣ (q , hq) , refl ∣₁) })
+        (subst (λ u → ⟨ z .fst ∈ u ⟩) (sym e) hz)
+      i : (z : S) → ⟨ z .fst ∈ Wv ⟩ → ⟨ envOne (z .fst) ∈ (Sat W (toS ψ)) .fst ⟩ → ⟨ z .fst ∈ x .fst ⟩
 ```
 
 <!--en-->
-For the inward half of `Cuts`, start with a presented member of `W` whose one-variable environment satisfies `ψ`. The satisfaction bridge turns this into membership in `DA.defSet ψ`; the assumed equality `DA.defSet ψ = fst x` then places the member in `x`.
+For the inward half of `Cuts`, start with a presented member of `W` whose one-variable environment satisfies `ψ`. The satisfaction bridge turns this into membership in `DA.defSet ψ`; the assumed equality `DA.defSet ψ = x .fst` then places the member in `x`.
 <!--zh-->
-为证明 `Cuts` 的向内一半，从 `W` 中一个已呈现的元素出发，并假定其单变元环境满足 `ψ`。满足桥梁把它转成属于 `DA.defSet ψ`，再由假定的等式 `DA.defSet ψ = fst x` 把该元素放入 `x`。
+为证明 `Cuts` 的向内一半，从 `W` 中一个已呈现的元素出发，并假定其单变元环境满足 `ψ`。满足桥梁把它转成属于 `DA.defSet ψ`，再由假定的等式 `DA.defSet ψ = x .fst` 把该元素放入 `x`。
 <!--ja-->
-`Cuts` の内向きの半分では、`W` の表示された要素から始め、その一変数環境が `ψ` を満たすと仮定する。充足の橋がこれを `DA.defSet ψ` への所属に変え、仮定した等式 `DA.defSet ψ = fst x` がその要素を `x` に入れる。
+`Cuts` の内向きの半分では、`W` の表示された要素から始め、その一変数環境が `ψ` を満たすと仮定する。充足の橋がこれを `DA.defSet ψ` への所属に変え、仮定した等式 `DA.defSet ψ = x .fst` がその要素を `x` に入れる。
 <!--/-->
 
 ```agda
       i z hw he =
-        let fib = ∈-asFiber {a = fst z} {b = fst W} (subst (λ u → ⟨ fst z ∈ u ⟩) qw hw)
-        in subst (λ u → ⟨ fst z ∈ u ⟩) e
+        let fib = ∈-asFiber {a = z .fst} {b = W .fst} (subst (λ u → ⟨ z .fst ∈ u ⟩) qw hw)
+        in subst (λ u → ⟨ z .fst ∈ u ⟩) e
              (subst (λ u → ⟨ u ∈ DA.defSet ψ ⟩) (fib .snd)
                (subst ⟨_⟩ (sym (defSet-Sat W ψ (fib .fst)))
 ```
@@ -983,19 +983,19 @@ The final transports only reconcile the chosen presentation of the member with i
 <!--/-->
 
 ```agda
-                 (subst (λ u → ⟨ envOne u ∈ fst (Sat W (toS ψ)) ⟩) (sym (fib .snd)) he)))
+                 (subst (λ u → ⟨ envOne u ∈ (Sat W (toS ψ)) .fst ⟩) (sym (fib .snd)) he)))
 ```
 
 <!--en-->
-Soundness can now be stated accurately. Under the standing identification of the working-set slot with `W`, the correct numeral tags, and the `satAt` certification of the code set and satisfaction table, satisfaction of `defAt` forces the value slot to be exactly `𝒟ₒ (fst W)`. Here `𝒟ₒ` collects the subsets of `W` definable by first-order formulas with parameters from `W`; it is not the full internal power set.
+Soundness can now be stated accurately. Under the standing identification of the working-set slot with `W`, the correct numeral tags, and the `satAt` certification of the code set and satisfaction table, satisfaction of `defAt` forces the value slot to be exactly `𝒟ₒ (W .fst)`. Here `𝒟ₒ` collects the subsets of `W` definable by first-order formulas with parameters from `W`; it is not the full internal power set.
 <!--zh-->
-现在可以准确陈述可靠性。在工作集槽与 `W` 已对齐、数码标签正确且 `satAt` 已校准码集和满足关系表的背景下，`defAt` 的满足迫使取值槽恰等于 `𝒟ₒ (fst W)`。这里的 `𝒟ₒ` 收集由允许取 `W` 中参数的一阶公式定义出的 `W` 的子集，并非完整的内部幂集。
+现在可以准确陈述可靠性。在工作集槽与 `W` 已对齐、数码标签正确且 `satAt` 已校准码集和满足关系表的背景下，`defAt` 的满足迫使取值槽恰等于 `𝒟ₒ (W .fst)`。这里的 `𝒟ₒ` 收集由允许取 `W` 中参数的一阶公式定义出的 `W` 的子集，并非完整的内部幂集。
 <!--ja-->
-これで健全性を正確に述べられる。作業集合の枠が `W` と同一視され、数を表すタグが正しく、`satAt` が符号集合と充足関係表を正しく保証しているという前提の下で、`defAt` の充足は値の枠をちょうど `𝒟ₒ (fst W)` に定める。ここで `𝒟ₒ` が集めるのは、`W` の要素をパラメータに使える一階論理式で定義される `W` の部分集合であり、完全な内部冪集合ではない。
+これで健全性を正確に述べられる。作業集合の枠が `W` と同一視され、数を表すタグが正しく、`satAt` が符号集合と充足関係表を正しく保証しているという前提の下で、`defAt` の充足は値の枠をちょうど `𝒟ₒ (W .fst)` に定める。ここで `𝒟ₒ` が集めるのは、`W` の要素をパラメータに使える一階論理式で定義される `W` の部分集合であり、完全な内部冪集合ではない。
 <!--/-->
 
 ```agda
-  def-sound : ⟨ γ ⊨ defAt v w T C N ⟩ → Vv ≡ 𝒟ₒ (fst W)
+  def-sound : ⟨ γ ⊨ defAt v w T C N ⟩ → Vv ≡ 𝒟ₒ (W .fst)
   def-sound hd = extensionalV (λ x → ⇔toPath (fwd x) (bwd x))
     where
     hm = defAt-out v w T C N γ hd .fst
@@ -1011,11 +1011,11 @@ For the forward inclusion, the membership clause supplies, under propositional t
 <!--/-->
 
 ```agda
-    fwd : (x : V ℓ) → ⟨ x ∈ Vv ⟩ → ⟨ x ∈ 𝒟ₒ (fst W) ⟩
-    fwd x hx = rec₁ (snd (x ∈ 𝒟ₒ (fst W)))
-      (λ { (c , p , y , (c∈ , (ec , (e∈ , cuts)))) → rec₁ (snd (x ∈ 𝒟ₒ (fst W)))
+    fwd : (x : V ℓ) → ⟨ x ∈ Vv ⟩ → ⟨ x ∈ 𝒟ₒ (W .fst) ⟩
+    fwd x hx = rec₁ ((x ∈ 𝒟ₒ (W .fst)) .snd)
+      (λ { (c , p , y , (c∈ , (ec , (e∈ , cuts)))) → rec₁ ((x ∈ 𝒟ₒ (W .fst)) .snd)
         (λ { (ψ , qp) →
-          𝒟ₒ-intro (fst W) x ∣ ψ , cut≡ ψ xS
+          𝒟ₒ-intro (W .fst) x ∣ ψ , cut≡ ψ xS
 ```
 
 <!--en-->
@@ -1028,7 +1028,7 @@ The `Cuts` fact is transported along the table-value identification to the satis
 
 ```agda
             (subst (λ u → Cuts x Wv u) (valOf ψ c y (ec ∙ cong (pr (# 1)) qp) e∈) cuts) ∣₁ })
-        (decodeAll c (SR.C-out c c∈) 1 (fst p) ec) })
+        (decodeAll c (SR.C-out c c∈) 1 (p .fst) ec) })
       (RD.mem-out hm xS hx)
       where
       xS : S
@@ -1047,17 +1047,17 @@ The value slot is presented as a carrier element for reading the outward directi
 ```
 
 <!--en-->
-For the reverse inclusion, membership in `𝒟ₒ (fst W)` yields only a propositionally truncated formula `ψ` together with an equality `DA.defSet ψ = x`. Inside elimination into the membership proposition, the coverage half of `defAt` provides a table value and a set `x'` in the value slot for the key built from this temporary witness `ψ`.
+For the reverse inclusion, membership in `𝒟ₒ (W .fst)` yields only a propositionally truncated formula `ψ` together with an equality `DA.defSet ψ = x`. Inside elimination into the membership proposition, the coverage half of `defAt` provides a table value and a set `x'` in the value slot for the key built from this temporary witness `ψ`.
 <!--zh-->
-对反向包含，属于 `𝒟ₒ (fst W)` 只给出命题截断下的一条公式 `ψ` 及等式 `DA.defSet ψ = x`。在消去到成员关系命题的过程中，`defAt` 的覆盖部分针对由这个临时见证 `ψ` 构造的键，给出一个表取值以及取值槽中的集合 `x'`。
+对反向包含，属于 `𝒟ₒ (W .fst)` 只给出命题截断下的一条公式 `ψ` 及等式 `DA.defSet ψ = x`。在消去到成员关系命题的过程中，`defAt` 的覆盖部分针对由这个临时见证 `ψ` 构造的键，给出一个表取值以及取值槽中的集合 `x'`。
 <!--ja-->
-逆向きの包含では、`𝒟ₒ (fst W)` への所属から得られるのは、命題的に切り詰められた論理式 `ψ` と等式 `DA.defSet ψ = x` だけである。所属命題への消去の内部で、`defAt` の覆いの側が、この一時的な証人 `ψ` から作った鍵に対し、表の値と、値の枠に属する集合 `x'` を与える。
+逆向きの包含では、`𝒟ₒ (W .fst)` への所属から得られるのは、命題的に切り詰められた論理式 `ψ` と等式 `DA.defSet ψ = x` だけである。所属命題への消去の内部で、`defAt` の覆いの側が、この一時的な証人 `ψ` から作った鍵に対し、表の値と、値の枠に属する集合 `x'` を与える。
 <!--/-->
 
 ```agda
-    bwd : (x : V ℓ) → ⟨ x ∈ 𝒟ₒ (fst W) ⟩ → ⟨ x ∈ Vv ⟩
-    bwd x hx = rec₁ (snd (x ∈ Vv))
-      (λ { (ψ , e) → rec₁ (snd (x ∈ Vv))
+    bwd : (x : V ℓ) → ⟨ x ∈ 𝒟ₒ (W .fst) ⟩ → ⟨ x ∈ Vv ⟩
+    bwd x hx = rec₁ ((x ∈ Vv) .snd)
+      (λ { (ψ , e) → rec₁ ((x ∈ Vv) .snd)
         (λ { (y , x' , (e∈ , (x'∈ , cuts))) →
           subst (λ u → ⟨ u ∈ Vv ⟩)
 ```
@@ -1071,22 +1071,22 @@ The slice equality is transported along the table-value identification to recove
 <!--/-->
 
 ```agda
-            (sym (cut≡ ψ x' (subst (λ u → Cuts (fst x') Wv u) (valOf ψ (keyS W ψ) y refl e∈) cuts)) ∙ e)
+            (sym (cut≡ ψ x' (subst (λ u → Cuts (x' .fst) Wv u) (valOf ψ (keyS W ψ) y refl e∈) cuts)) ∙ e)
             x'∈ })
         (RD.all-out ha (keyS W ψ) (sndS (keyS W ψ) (# 1) (cd ψ) refl) (SR.C-in (keyS W ψ) (key∈AllCodes W ψ)) refl) })
-      (𝒟ₒ-inv (fst W) x hx)
+      (𝒟ₒ-inv (W .fst) x hx)
 ```
 
 <!--en-->
-Completeness runs the same equivalence backwards. Still assuming the working-set identification, correct tags, and `satAt`, an equality between the value slot and `𝒟ₒ (fst W)` suffices to satisfy `defAt`. The two conjuncts respectively show that every listed set has a defining formula and that every arity-one formula contributes its definable subset.
+Completeness runs the same equivalence backwards. Still assuming the working-set identification, correct tags, and `satAt`, an equality between the value slot and `𝒟ₒ (W .fst)` suffices to satisfy `defAt`. The two conjuncts respectively show that every listed set has a defining formula and that every arity-one formula contributes its definable subset.
 <!--zh-->
-完备性把同一等价关系反向使用。在仍假定工作集已对齐、标签正确且 `satAt` 成立时，取值槽与 `𝒟ₒ (fst W)` 的相等足以构造 `defAt` 的满足。两个合取项分别说明：列出的每个集合都有定义公式，而每条元数一公式所定义的子集都会出现。
+完备性把同一等价关系反向使用。在仍假定工作集已对齐、标签正确且 `satAt` 成立时，取值槽与 `𝒟ₒ (W .fst)` 的相等足以构造 `defAt` 的满足。两个合取项分别说明：列出的每个集合都有定义公式，而每条元数一公式所定义的子集都会出现。
 <!--ja-->
-完全性は同じ同値関係を逆向きにたどる。作業集合の同一視、正しいタグ、`satAt` を引き続き仮定すると、値の枠と `𝒟ₒ (fst W)` との等式から `defAt` の充足を構成できる。二つの連言項はそれぞれ、列挙された各集合に定義論理式があることと、アリティ一の各論理式が定める部分集合が必ず現れることを示す。
+完全性は同じ同値関係を逆向きにたどる。作業集合の同一視、正しいタグ、`satAt` を引き続き仮定すると、値の枠と `𝒟ₒ (W .fst)` との等式から `defAt` の充足を構成できる。二つの連言項はそれぞれ、列挙された各集合に定義論理式があることと、アリティ一の各論理式が定める部分集合が必ず現れることを示す。
 <!--/-->
 
 ```agda
-  def-complete : Vv ≡ 𝒟ₒ (fst W) → ⟨ γ ⊨ defAt v w T C N ⟩
+  def-complete : Vv ≡ 𝒟ₒ (W .fst) → ⟨ γ ⊨ defAt v w T C N ⟩
   def-complete qv = defAt-in v w T C N γ mem all
     where
 ```
@@ -1100,18 +1100,18 @@ Each formula's table entry is selected from the already-defined recursion table,
 <!--/-->
 
 ```agda
-    entry : (ψ : Formula Ab 1) → Σ[ y ∶ S ] (⟨ pr (fst (keyS W ψ)) (fst y) ∈ Tv ⟩ × (fst y ≡ fst (Sat W (toS ψ))))
+    entry : (ψ : Formula Ab 1) → Σ[ y ∶ S ] (⟨ pr ((keyS W ψ) .fst) (y .fst) ∈ Tv ⟩ × (y .fst ≡ (Sat W (toS ψ)) .fst))
     entry ψ = Table.val W W (keyS W ψ) (key∈AllCodes W ψ)
             , ( SR.T-in (keyS W ψ) (key∈AllCodes W ψ)
-              , cong fst (val-at W W ψ (keyS W ψ) (key∈AllCodes W ψ) refl) )
+              , cong (λ p → p .fst) (val-at W W ψ (keyS W ψ) (key∈AllCodes W ψ) refl) )
 ```
 
 <!--en-->
-For the membership conjunct, a member of the value slot is transported into `𝒟ₒ (fst W)` and then unpacked by `𝒟ₒ-inv`. The defining formula exists only under propositional truncation. Within that truncation, its formula key, the corresponding table entry, and the required `Cuts` evidence are assembled; no defining formula is selected globally or retained as canonical data.
+For the membership conjunct, a member of the value slot is transported into `𝒟ₒ (W .fst)` and then unpacked by `𝒟ₒ-inv`. The defining formula exists only under propositional truncation. Within that truncation, its formula key, the corresponding table entry, and the required `Cuts` evidence are assembled; no defining formula is selected globally or retained as canonical data.
 <!--zh-->
-对成员关系合取项，先把取值槽的元素运输到 `𝒟ₒ (fst W)`，再由 `𝒟ₒ-inv` 展开。定义公式只在命题截断下存在。在该截断内部，证明组装它的公式键、相应表条目和所需的 `Cuts` 证据；整个过程没有全局选取定义公式，也没有把某条公式保留为规范数据。
+对成员关系合取项，先把取值槽的元素运输到 `𝒟ₒ (W .fst)`，再由 `𝒟ₒ-inv` 展开。定义公式只在命题截断下存在。在该截断内部，证明组装它的公式键、相应表条目和所需的 `Cuts` 证据；整个过程没有全局选取定义公式，也没有把某条公式保留为规范数据。
 <!--ja-->
-所属の連言項では、値の枠の要素を `𝒟ₒ (fst W)` へ移し、`𝒟ₒ-inv` で展開する。定義論理式は命題的切り詰めの下でのみ存在する。その内部で論理式の鍵、対応する表の項目、必要な `Cuts` の証拠を組み立てるが、定義論理式を大域的に選んだり、標準的なデータとして保持したりはしない。
+所属の連言項では、値の枠の要素を `𝒟ₒ (W .fst)` へ移し、`𝒟ₒ-inv` で展開する。定義論理式は命題的切り詰めの下でのみ存在する。その内部で論理式の鍵、対応する表の項目、必要な `Cuts` の証拠を組み立てるが、定義論理式を大域的に選んだり、標準的なデータとして保持したりはしない。
 <!--/-->
 
 ```agda
@@ -1133,8 +1133,8 @@ The chosen table value is the value already determined by the recursive satisfac
 ```agda
           , ( refl
             , ( entry ψ .snd .fst
-              , subst (λ u → Cuts (fst x) Wv u) (sym (entry ψ .snd .snd)) (cuts-of ψ x e) ) ) ) })
-      (𝒟ₒ-inv (fst W) (fst x) (subst (λ u → ⟨ fst x ∈ u ⟩) qv x∈)))
+              , subst (λ u → Cuts (x .fst) Wv u) (sym (entry ψ .snd .snd)) (cuts-of ψ x e) ) ) ) })
+      (𝒟ₒ-inv (W .fst) (x .fst) (subst (λ u → ⟨ x .fst ∈ u ⟩) qv x∈)))
 ```
 
 <!--en-->
@@ -1149,24 +1149,24 @@ The coverage conjunct is proved for every arity-one key in the code domain, with
     all : ⟨ γ ⊨ allAt v w T C N ⟩
     all = RD.all-in (λ c p c∈ ec → map₁
       (λ { (ψ , qp) →
-        let qc : fst c ≡ fst (keyS W ψ)
+        let qc : c .fst ≡ (keyS W ψ) .fst
             qc = ec ∙ cong (pr (# 1)) qp
 ```
 
 <!--en-->
-For a given arity-one key, decoding supplies merely a formula `ψ` whose code is the key's second component. Its definable subset `DA.defSet ψ` belongs to `𝒟ₒ (fst W)` by introduction, and the assumed equality transports this membership into the value slot. Decoding does not choose a unique or canonical formula.
+For a given arity-one key, decoding supplies merely a formula `ψ` whose code is the key's second component. Its definable subset `DA.defSet ψ` belongs to `𝒟ₒ (W .fst)` by introduction, and the assumed equality transports this membership into the value slot. Decoding does not choose a unique or canonical formula.
 <!--zh-->
-对给定的元数一键，解码仅仅给出一条公式 `ψ`，其编码是该键的第二分量。由引入规则，可定义子集 `DA.defSet ψ` 属于 `𝒟ₒ (fst W)`；再沿假定的等式运输，便得到它属于取值槽。解码并未选出唯一或规范的公式。
+对给定的元数一键，解码仅仅给出一条公式 `ψ`，其编码是该键的第二分量。由引入规则，可定义子集 `DA.defSet ψ` 属于 `𝒟ₒ (W .fst)`；再沿假定的等式运输，便得到它属于取值槽。解码并未选出唯一或规范的公式。
 <!--ja-->
-与えられたアリティ一の鍵に対し、復号は、その第二成分を符号にもつ論理式 `ψ` が単に存在することだけを与える。定義可能部分集合 `DA.defSet ψ` は導入によって `𝒟ₒ (fst W)` に属し、仮定した等式に沿う輸送で値の枠に入る。復号は一意な論理式や標準的な論理式を選ばない。
+与えられたアリティ一の鍵に対し、復号は、その第二成分を符号にもつ論理式 `ψ` が単に存在することだけを与える。定義可能部分集合 `DA.defSet ψ` は導入によって `𝒟ₒ (W .fst)` に属し、仮定した等式に沿う輸送で値の枠に入る。復号は一意な論理式や標準的な論理式を選ばない。
 <!--/-->
 
 ```agda
             xS : S
             xS = down (lookup v γ) (DA.defSet ψ)
-                   (subst (λ u → ⟨ DA.defSet ψ ∈ u ⟩) (sym qv) (𝒟ₒ-intro (fst W) (DA.defSet ψ) ∣ ψ , refl ∣₁))
+                   (subst (λ u → ⟨ DA.defSet ψ ∈ u ⟩) (sym qv) (𝒟ₒ-intro (W .fst) (DA.defSet ψ) ∣ ψ , refl ∣₁))
         in entry ψ .fst , xS
-         , ( subst (λ u → ⟨ pr u (fst (entry ψ .fst)) ∈ Tv ⟩) (sym qc) (entry ψ .snd .fst)
+         , ( subst (λ u → ⟨ pr u ((entry ψ .fst) .fst) ∈ Tv ⟩) (sym qc) (entry ψ .snd .fst)
 ```
 
 <!--en-->
@@ -1178,39 +1178,39 @@ The satisfaction table supplies the value attached to the decoded formula key, w
 <!--/-->
 
 ```agda
-           , ( subst (λ u → ⟨ DA.defSet ψ ∈ u ⟩) (sym qv) (𝒟ₒ-intro (fst W) (DA.defSet ψ) ∣ ψ , refl ∣₁)
+           , ( subst (λ u → ⟨ DA.defSet ψ ∈ u ⟩) (sym qv) (𝒟ₒ-intro (W .fst) (DA.defSet ψ) ∣ ψ , refl ∣₁)
              , subst (λ u → Cuts (DA.defSet ψ) Wv u) (sym (entry ψ .snd .snd)) (cuts-of ψ xS refl) ) ) })
-      (decodeAll c (SR.C-out c c∈) 1 (fst p) ec))
+      (decodeAll c (SR.C-out c c∈) 1 (p .fst) ec))
 ```
 </div>
 </details>
 
 <!--en-->
-The exported soundness direction exposes the exact interface used later: once the working-set slot denotes `W`, `Tags` fixes the numeral slots, and `satAt` validates the code and satisfaction data, `defAt` implies equality with `𝒟ₒ (fst W)`. Thus the bounded formula receives its intended meaning only in this calibrated background.
+The exported soundness direction exposes the exact interface used later: once the working-set slot denotes `W`, `Tags` fixes the numeral slots, and `satAt` validates the code and satisfaction data, `defAt` implies equality with `𝒟ₒ (W .fst)`. Thus the bounded formula receives its intended meaning only in this calibrated background.
 <!--zh-->
-导出的可靠性方向给出后文实际使用的精确接口：一旦工作集槽指称 `W`、`Tags` 固定数码槽且 `satAt` 校准码与满足数据，`defAt` 就推出与 `𝒟ₒ (fst W)` 相等。因此，这条有界公式只有在这一已校准背景中才具有预期语义。
+导出的可靠性方向给出后文实际使用的精确接口：一旦工作集槽指称 `W`、`Tags` 固定数码槽且 `satAt` 校准码与满足数据，`defAt` 就推出与 `𝒟ₒ (W .fst)` 相等。因此，这条有界公式只有在这一已校准背景中才具有预期语义。
 <!--ja-->
-公開される健全性の向きは、後で実際に使う正確なインターフェースを示す。作業集合の枠が `W` を表し、`Tags` が数の枠を固定し、`satAt` が符号と充足のデータを保証すれば、`defAt` から `𝒟ₒ (fst W)` との等しさが従う。したがって、この有界論理式が意図した意味をもつのは、このように整えられた背景の中である。
+公開される健全性の向きは、後で実際に使う正確なインターフェースを示す。作業集合の枠が `W` を表し、`Tags` が数の枠を固定し、`satAt` が符号と充足のデータを保証すれば、`defAt` から `𝒟ₒ (W .fst)` との等しさが従う。したがって、この有界論理式が意図した意味をもつのは、このように整えられた背景の中である。
 <!--/-->
 
 ```agda
 def-sound : ∀ {m} (v w T C E : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) (W : S)
-          → fst (lookup w γ) ≡ fst W → Tags γ N → ⟨ γ ⊨ satAt T w C E N ⟩
-          → ⟨ γ ⊨ defAt v w T C N ⟩ → fst (lookup v γ) ≡ 𝒟ₒ (fst W)
+          → (lookup w γ) .fst ≡ W .fst → Tags γ N → ⟨ γ ⊨ satAt T w C E N ⟩
+          → ⟨ γ ⊨ defAt v w T C N ⟩ → (lookup v γ) .fst ≡ 𝒟ₒ (W .fst)
 def-sound v w T C E N γ W qw tg hs = DefRead.def-sound v w T C E N γ W qw tg hs
 ```
 
 <!--en-->
-The exported completeness direction has the same hypotheses and reverses the implication: equality with `𝒟ₒ (fst W)` reconstructs satisfaction of `defAt`. Together the two theorems characterize the definable-subset collection without choosing a representative formula for each member and without identifying it with the full internal power set.
+The exported completeness direction has the same hypotheses and reverses the implication: equality with `𝒟ₒ (W .fst)` reconstructs satisfaction of `defAt`. Together the two theorems characterize the definable-subset collection without choosing a representative formula for each member and without identifying it with the full internal power set.
 <!--zh-->
-导出的完备性方向具有相同前提，并反转上述蕴含：与 `𝒟ₒ (fst W)` 的相等可重建 `defAt` 的满足。两条定理合起来刻画可定义子集的集合，既不为每个元素选取代表公式，也不把它等同于完整的内部幂集。
+导出的完备性方向具有相同前提，并反转上述蕴含：与 `𝒟ₒ (W .fst)` 的相等可重建 `defAt` 的满足。两条定理合起来刻画可定义子集的集合，既不为每个元素选取代表公式，也不把它等同于完整的内部幂集。
 <!--ja-->
-公開される完全性の向きは同じ仮定をもち、含意を逆にする。`𝒟ₒ (fst W)` との等しさから `defAt` の充足が再構成される。二つの定理を合わせると、各要素の代表論理式を選ぶことも、完全な内部冪集合と同一視することもなく、定義可能部分集合の集まりが特徴づけられる。
+公開される完全性の向きは同じ仮定をもち、含意を逆にする。`𝒟ₒ (W .fst)` との等しさから `defAt` の充足が再構成される。二つの定理を合わせると、各要素の代表論理式を選ぶことも、完全な内部冪集合と同一視することもなく、定義可能部分集合の集まりが特徴づけられる。
 <!--/-->
 
 ```agda
 def-complete : ∀ {m} (v w T C E : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) (W : S)
-             → fst (lookup w γ) ≡ fst W → Tags γ N → ⟨ γ ⊨ satAt T w C E N ⟩
-             → fst (lookup v γ) ≡ 𝒟ₒ (fst W) → ⟨ γ ⊨ defAt v w T C N ⟩
+             → (lookup w γ) .fst ≡ W .fst → Tags γ N → ⟨ γ ⊨ satAt T w C E N ⟩
+             → (lookup v γ) .fst ≡ 𝒟ₒ (W .fst) → ⟨ γ ⊨ defAt v w T C N ⟩
 def-complete v w T C E N γ W qw tg hs = DefRead.def-complete v w T C E N γ W qw tg hs
 ```

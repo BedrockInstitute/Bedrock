@@ -28,6 +28,11 @@ Report-only checks (prose is lint-prose.py's business; STYLE-agda.md is the law)
                     blank or whitespace-only line before the closing fence
   I [private-module] private and its first module declaration share one line,
                     including aliases and declarations separated by prose
+  J [postfix-projection] configured projections use postfix notation
+  K [infix-application] binary operators use infix application, not their
+                    underscore-bearing prefix names with two explicit operands
+  L [fixity-order]  infix/infixl/infixr precedes the name's first declaration;
+                    intervening prose and declarations are allowed
 
 Exemptions:
   - The designated hub modules (BARE_OPEN_HUBS: curated re-export preludes,

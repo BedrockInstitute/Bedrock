@@ -344,7 +344,7 @@ The lemma `stageA` builds the ambient witness that elementarity will later pull 
 
 ```agda
   stageA : (d γ : S) (od : IsOrd d) (adγ : Adequate γ) (d∈γ : ⟨ d ∈ˢ γ ⟩)
-         → (dM : A.SM) → fst dM ≡ d
+         → (dM : A.SM) → dM .fst ≡ d
          → ⟨ d ∈ˢ Lset lam ⟩ → ⟨ Lset d ∈ˢ Lset lam ⟩ → ⟨ Lset γ ∈ˢ Lset lam ⟩
          → ⟨ [] HS.ASt.AbsL.⊨ᵐ mapFo A.inL (findA dM) ⟩
   stageA d γ od adγ d∈γ dM ed d∈ Ld∈ Lγ∈ =
@@ -429,7 +429,7 @@ be a different `p′`.
 
 ```agda
   stageP : (y p γ : S) (op : IsOrd p) (adγ : Adequate γ) (p∈γ : ⟨ p ∈ˢ γ ⟩)
-         → (yM : A.SM) → fst yM ≡ y → ⟨ y ∈ˢ Lset p ⟩
+         → (yM : A.SM) → yM .fst ≡ y → ⟨ y ∈ˢ Lset p ⟩
          → ⟨ p ∈ˢ Lset lam ⟩ → ⟨ Lset p ∈ˢ Lset lam ⟩ → ⟨ Lset γ ∈ˢ Lset lam ⟩
          → ⟨ [] HS.ASt.AbsL.⊨ᵐ mapFo A.inL (findP yM) ⟩
   stageP y p γ op adγ p∈γ yM ey y∈Lp p∈ Lp∈ Lγ∈ =
@@ -490,20 +490,20 @@ the surrounding hull query. The result is the first conjunct required by
 
 <!--en-->
 The remaining conjunct says that the interpretation of `yM` belongs to
-`Lset p`. Its underlying set is `fst yM`, and the path `ey : fst yM ≡ y`
+`Lset p`. Its underlying set is `yM .fst`, and the path `ey : yM .fst ≡ y`
 allows the given membership `y ∈ Lset p` to be transported backward to that
 interpretation. This small rewrite is what places the fixed point into the
 query while leaving the index unfixed. When elementarity later returns a
 triple `(u,p′,z)`, the retained conclusion will be `y ∈ u`, with no equation
 between `p′` and the present `p`.
 <!--zh-->
-余下的合取支断言 `yM` 的解释属于 `Lset p`。它的底层集合是 `fst yM`，而路径 `ey : fst yM ≡ y` 可把给定的成员关系 `y ∈ Lset p` 反向搬到这个解释上。正是这次小改写把指定的点放进查询，同时不固定索引。初等性稍后返回三元组 `(u,p′,z)` 时，保留下来的结论将是 `y ∈ u`，并没有 `p′` 与此处 `p` 之间的等式。
+余下的合取支断言 `yM` 的解释属于 `Lset p`。它的底层集合是 `yM .fst`，而路径 `ey : yM .fst ≡ y` 可把给定的成员关系 `y ∈ Lset p` 反向搬到这个解释上。正是这次小改写把指定的点放进查询，同时不固定索引。初等性稍后返回三元组 `(u,p′,z)` 时，保留下来的结论将是 `y ∈ u`，并没有 `p′` 与此处 `p` 之间的等式。
 <!--ja-->
-残る連言支は、`yM` の解釈が `Lset p` に属することを述べる。その基礎集合は `fst yM` であり、パス `ey : fst yM ≡ y` によって、与えられた所属 `y ∈ Lset p` を逆向きにその解釈へ移せる。この小さな書き換えが、添字を固定せずに指定された点を問い合わせへ入れる。後で初等性が三つ組 `(u,p′,z)` を返すとき、保持される結論は `y ∈ u` であり、`p′` と現在の `p` の間の等式はない。
+残る連言支は、`yM` の解釈が `Lset p` に属することを述べる。その基礎集合は `yM .fst` であり、パス `ey : yM .fst ≡ y` によって、与えられた所属 `y ∈ Lset p` を逆向きにその解釈へ移せる。この小さな書き換えが、添字を固定せずに指定された点を問い合わせへ入れる。後で初等性が三つ組 `(u,p′,z)` を返すとき、保持される結論は `y ∈ u` であり、`p′` と現在の `p` の間の等式はない。
 <!--/-->
 
 ```agda
-    mem : ⟨ fst (A.inL yM) ∈ˢ Lset p ⟩
+    mem : ⟨ (A.inL yM) .fst ∈ˢ Lset p ⟩
     mem = subst (λ w → ⟨ w ∈ˢ Lset p ⟩) (sym ey) y∈Lp
 ```
 
@@ -665,22 +665,22 @@ from `Cy.atL`, which was used only on the Δ₀ core `levelFo`. The result
 To turn an answer to `findA` into the desired witness, suppose its outer two
 coordinates `z` and `d′` have been exposed. The innermost existential then
 provides a hull element `a`, satisfaction of the embedded core at
-`(a,d′,z)`, and the equation `fst d′ ≡ d`. The helper `finishA` converts this
+`(a,d′,z)`, and the equation `d′ .fst ≡ d`. The helper `finishA` converts this
 untruncated branch into a bound in `M`, membership of the prescribed
 `Lset d` in `M`, and ambient satisfaction at `(Lset d,d,fst z)`. The
 conversion will rely on soundness, not on uniqueness of the existential
 witnesses.
 <!--zh-->
-为了把 `findA` 的回答转成所需见证，先设它外面的两个坐标 `z` 与 `d′` 已在消去器中展开。最内层存在量词于是给出 Skolem 壳元素 `a`、嵌入核心在 `(a,d′,z)` 处的满足，以及等式 `fst d′ ≡ d`。辅助函数 `finishA` 把这个未截断的分支转换成三项数据：`M` 中的一个界、指定的 `Lset d` 对 `M` 的成员关系事实，以及 `(Lset d,d,fst z)` 处的外围满足。这次转换依赖可靠性，并不依赖存在见证的唯一性。
+为了把 `findA` 的回答转成所需见证，先设它外面的两个坐标 `z` 与 `d′` 已在消去器中展开。最内层存在量词于是给出 Skolem 壳元素 `a`、嵌入核心在 `(a,d′,z)` 处的满足，以及等式 `d′ .fst ≡ d`。辅助函数 `finishA` 把这个未截断的分支转换成三项数据：`M` 中的一个界、指定的 `Lset d` 对 `M` 的成员关系事实，以及 `(Lset d,d,fst z)` 处的外围满足。这次转换依赖可靠性，并不依赖存在见证的唯一性。
 <!--ja-->
-`findA` の答えを必要な証人へ変えるため、外側の二つの座標 `z` と `d′` が除去子の中ですでに展開されたとする。すると最も内側の存在量化子は、Skolem 包の要素 `a`、`(a,d′,z)` での埋め込まれた核の充足、および等式 `fst d′ ≡ d` を与える。補助関数 `finishA` は、この切り詰められていない分岐を、`M` 内の上界、指定された `Lset d` の `M` への所属、および `(Lset d,d,fst z)` での周囲の充足へ変換する。この変換が使うのは健全性であり、存在証人の一意性ではない。
+`findA` の答えを必要な証人へ変えるため、外側の二つの座標 `z` と `d′` が除去子の中ですでに展開されたとする。すると最も内側の存在量化子は、Skolem 包の要素 `a`、`(a,d′,z)` での埋め込まれた核の充足、および等式 `d′ .fst ≡ d` を与える。補助関数 `finishA` は、この切り詰められていない分岐を、`M` 内の上界、指定された `Lset d` の `M` への所属、および `(Lset d,d,fst z)` での周囲の充足へ変換する。この変換が使うのは健全性であり、存在証人の一意性ではない。
 <!--/-->
 
 ```agda
       finishA : (z d' : A.SM)
               → Σ[ a ∶ A.SM ]
                   ( ⟨ (a ∷ d' ∷ z ∷ []) Mse.⊨ embed levelFo ⟩
-                  × (fst d' ≡ d) )
+                  × (d' .fst ≡ d) )
               → Σ[ w ∶ S ] ( ⟨ w ∈ˢ M ⟩ × ⟨ Lset d ∈ˢ M ⟩
 ```
 
@@ -688,21 +688,21 @@ witnesses.
 The embedded core is first read back in the ambient hierarchy. Because
 `levelFo` is Δ₀, the bounded comparison `Cy.atM` identifies its satisfaction in the hull structure
 at `(a,d′,z)` with ambient satisfaction at the underlying sets
-`(fst a,fst d′,fst z)`. This bounded step acts only on the core
+`(a,fst .fst d′,fst z)`. This bounded step acts only on the core
 already obtained after the existential witnesses were exposed. It does not
 eliminate the unbounded query or by itself identify the first coordinate as
 a constructible stage.
 <!--zh-->
-首先把嵌入核心读回外围层级。由于 `levelFo` 是 Δ₀，有界比较 `Cy.atM` 把它在 Skolem 壳结构中于 `(a,d′,z)` 处的满足，认同为它在底层集合 `(fst a,fst d′,fst z)` 处的外围满足。这次有界步骤只作用于存在见证已经展开后取得的核心；它既不消去无界查询，也不会独自把第一坐标认同为可构造层。
+首先把嵌入核心读回外围层级。由于 `levelFo` 是 Δ₀，有界比较 `Cy.atM` 把它在 Skolem 壳结构中于 `(a,d′,z)` 处的满足，认同为它在底层集合 `(a,fst .fst d′,fst z)` 处的外围满足。这次有界步骤只作用于存在见证已经展开后取得的核心；它既不消去无界查询，也不会独自把第一坐标认同为可构造层。
 <!--ja-->
-まず、埋め込まれた核を周囲の階層で読み直す。`levelFo` は Δ₀ なので、有界な比較 `Cy.atM` は Skolem 包の構造における `(a,d′,z)` での充足を、基礎集合 `(fst a,fst d′,fst z)` での周囲の充足と同一視する。この有界な一歩は、存在証人を展開した後に得られた核だけに作用する。非有界な問い合わせを除去するものでも、それだけで第一の座標を構成可能段階と同一視するものでもない。
+まず、埋め込まれた核を周囲の階層で読み直す。`levelFo` は Δ₀ なので、有界な比較 `Cy.atM` は Skolem 包の構造における `(a,d′,z)` での充足を、基礎集合 `(a,fst .fst d′,fst z)` での周囲の充足と同一視する。この有界な一歩は、存在証人を展開した後に得られた核だけに作用する。非有界な問い合わせを除去するものでも、それだけで第一の座標を構成可能段階と同一視するものでもない。
 <!--/-->
 
 ```agda
                            × ⟨ (Lset d ∷ d ∷ w ∷ []) ⊨ₚ levelFo ⟩ )
-      finishA z d' (a , sat , ed) = fst z , snd z , Ld∈M , amb'
+      finishA z d' (a , sat , ed) = z .fst , z .snd , Ld∈M , amb'
         where
-        amb : ⟨ (fst a ∷ fst d' ∷ fst z ∷ []) ⊨ₚ levelFo ⟩
+        amb : ⟨ (a .fst ∷ d' .fst ∷ z .fst ∷ []) ⊨ₚ levelFo ⟩
         amb = subst ⟨_⟩ (Cy.atM Δ₀-levelFo (a ∷ d' ∷ z ∷ [])) sat
 ```
 
@@ -712,34 +712,34 @@ constructible. Each is a member of the hull, hence belongs to `Lset lam` by
 `Hull⊆L`; since `lam` is ordinal, `isLλ` turns those three memberships into
 the required constructibility proofs. With these separate hypotheses and
 the ambient satisfaction `amb`, `level-sound` identifies
-`fst a` with `Lset (fst d′)`. Satisfaction alone would not justify this
+`a .fst` with `Lset (d′ .fst)`. Satisfaction alone would not justify this
 identification.
 <!--zh-->
-`levelFo` 的可靠性定理要求三个底层集合分别可构造。三者都是 Skolem 壳的元素，所以由 `Hull⊆L` 分别属于 `Lset lam`；又因为 `lam` 是序数，`isLλ` 把这三条成员关系转成所需的可构造性证明。将这些独立前提与外围满足 `amb` 一同交给 `level-sound`，便得到 `fst a` 与 `Lset (fst d′)` 的认同。仅有公式满足并不足以推出这项认同。
+`levelFo` 的可靠性定理要求三个底层集合分别可构造。三者都是 Skolem 壳的元素，所以由 `Hull⊆L` 分别属于 `Lset lam`；又因为 `lam` 是序数，`isLλ` 把这三条成员关系转成所需的可构造性证明。将这些独立前提与外围满足 `amb` 一同交给 `level-sound`，便得到 `a .fst` 与 `Lset (d′ .fst)` 的认同。仅有公式满足并不足以推出这项认同。
 <!--ja-->
-`levelFo` の健全性定理は、三つの基礎集合がそれぞれ構成可能であることを要求する。三つとも Skolem 包の要素なので、`Hull⊆L` によりそれぞれ `Lset lam` に属する。さらに `lam` が順序数であるため、`isLλ` がこれら三つの所属を必要な構成可能性の証明へ変える。この別々の仮定と周囲での充足 `amb` を `level-sound` に渡すと、`fst a` は `Lset (fst d′)` と同一視される。公式の充足だけでは、この同一視を正当化できない。
+`levelFo` の健全性定理は、三つの基礎集合がそれぞれ構成可能であることを要求する。三つとも Skolem 包の要素なので、`Hull⊆L` によりそれぞれ `Lset lam` に属する。さらに `lam` が順序数であるため、`isLλ` がこれら三つの所属を必要な構成可能性の証明へ変える。この別々の仮定と周囲での充足 `amb` を `level-sound` に渡すと、`a .fst` は `Lset (d′ .fst)` と同一視される。公式の充足だけでは、この同一視を正当化できない。
 <!--/-->
 
 ```agda
-        ea : fst a ≡ Lset d
-        ea = level-sound (fst a) (fst d') (fst z)
-               (isLλ (fst a) (Hull⊆L (fst a) (snd a)))
-               (isLλ (fst d') (Hull⊆L (fst d') (snd d')))
-               (isLλ (fst z) (Hull⊆L (fst z) (snd z))) amb
+        ea : a .fst ≡ Lset d
+        ea = level-sound (a .fst) (d' .fst) (z .fst)
+               (isLλ (a .fst) (Hull⊆L (a .fst) (a .snd)))
+               (isLλ (d' .fst) (Hull⊆L (d' .fst) (d' .snd)))
+               (isLλ (z .fst) (Hull⊆L (z .fst) (z .snd))) amb
 ```
 
 <!--en-->
 The equality conjunct of `findA` now does the work for which it was designed.
-Soundness gave `fst a ≡ Lset (fst d′)`, and applying `Lset` to
-`ed : fst d′ ≡ d` gives `Lset (fst d′) ≡ Lset d`. Composing the two paths
-yields `ea : fst a ≡ Lset d`. Thus the returned first coordinate is the
+Soundness gave `a .fst ≡ Lset (d′ .fst)`, and applying `Lset` to
+`ed : d′ .fst ≡ d` gives `Lset (d′ .fst) ≡ Lset d`. Composing the two paths
+yields `ea : a .fst ≡ Lset d`. Thus the returned first coordinate is the
 stage at the original prescribed index. Without the equality conjunct, the
 same soundness argument would identify it only as the stage at some returned
 index.
 <!--zh-->
-现在，`findA` 的等式合取支兑现了它的用途。可靠性已经给出 `fst a ≡ Lset (fst d′)`；把 `Lset` 作用于 `ed : fst d′ ≡ d`，又得到 `Lset (fst d′) ≡ Lset d`。复合两条路径便得 `ea : fst a ≡ Lset d`。因此，返回的第一坐标正是原先指定索引处的层。若没有这个等式合取支，同样的可靠性论证只能把它认同为某个返回索引处的层。
+现在，`findA` 的等式合取支兑现了它的用途。可靠性已经给出 `a .fst ≡ Lset (d′ .fst)`；把 `Lset` 作用于 `ed : d′ .fst ≡ d`，又得到 `Lset (d′ .fst) ≡ Lset d`。复合两条路径便得 `ea : a .fst ≡ Lset d`。因此，返回的第一坐标正是原先指定索引处的层。若没有这个等式合取支，同样的可靠性论证只能把它认同为某个返回索引处的层。
 <!--ja-->
-ここで `findA` の等式の連言支が、意図された役割を果たす。健全性から `fst a ≡ Lset (fst d′)` が得られ、`ed : fst d′ ≡ d` に `Lset` を作用させると `Lset (fst d′) ≡ Lset d` が得られる。二つのパスを合成すれば `ea : fst a ≡ Lset d` である。したがって、返された第一の座標は、もともと指定した添字での段階である。この等式の連言支がなければ、同じ健全性の議論から分かるのは、返された何らかの添字での段階だということだけである。
+ここで `findA` の等式の連言支が、意図された役割を果たす。健全性から `a .fst ≡ Lset (d′ .fst)` が得られ、`ed : d′ .fst ≡ d` に `Lset` を作用させると `Lset (d′ .fst) ≡ Lset d` が得られる。二つのパスを合成すれば `ea : a .fst ≡ Lset d` である。したがって、返された第一の座標は、もともと指定した添字での段階である。この等式の連言支がなければ、同じ健全性の議論から分かるのは、返された何らかの添字での段階だということだけである。
 <!--/-->
 
 ```agda
@@ -747,7 +747,7 @@ index.
 ```
 
 <!--en-->
-The returned coordinate `a` already carries `snd a`, its membership in the
+The returned coordinate `a` already carries `a .snd`, its membership in the
 hull. Transporting that proposition along `ea` yields
 `Lset d ∈ M`. This is the closure fact sought for the prescribed hull
 ordinal `d`. It is derived from the hypothesis `sup`, full elementarity, bounded
@@ -755,34 +755,34 @@ absoluteness, and soundness of the level description; no additional closure
 axiom for `M` is assumed, and the Mostowski collapse has not yet entered this
 part of the argument.
 <!--zh-->
-返回的坐标 `a` 已经带有 `snd a`，即它属于 Skolem 壳的证明。沿 `ea` 搬运这个命题，得到 `Lset d ∈ M`。这就是对指定 Skolem 壳序数 `d` 所需的闭合事实。它由超充分性、完整初等性、有界绝对性与层描述的可靠性共同推出，并未为 `M` 另设闭合公理；这部分论证也尚未使用 Mostowski 塌缩。
+返回的坐标 `a` 已经带有 `a .snd`，即它属于 Skolem 壳的证明。沿 `ea` 搬运这个命题，得到 `Lset d ∈ M`。这就是对指定 Skolem 壳序数 `d` 所需的闭合事实。它由超充分性、完整初等性、有界绝对性与层描述的可靠性共同推出，并未为 `M` 另设闭合公理；这部分论证也尚未使用 Mostowski 塌缩。
 <!--ja-->
-返された座標 `a` は、Skolem 包への所属 `snd a` をすでに伴っている。この命題を `ea` に沿って移すと `Lset d ∈ M` が得られる。これが、指定された Skolem 包の順序数 `d` に対して求めていた閉性である。これは、強化された十分さ、完全な初等性、有界絶対性、および段階の記述の健全性から導かれる。`M` に対する別の閉性公理を仮定しておらず、この部分の議論では Mostowski 崩壊もまだ使っていない。
+返された座標 `a` は、Skolem 包への所属 `a .snd` をすでに伴っている。この命題を `ea` に沿って移すと `Lset d ∈ M` が得られる。これが、指定された Skolem 包の順序数 `d` に対して求めていた閉性である。これは、強化された十分さ、完全な初等性、有界絶対性、および段階の記述の健全性から導かれる。`M` に対する別の閉性公理を仮定しておらず、この部分の議論では Mostowski 崩壊もまだ使っていない。
 <!--/-->
 
 ```agda
         Ld∈M : ⟨ Lset d ∈ˢ M ⟩
-        Ld∈M = subst (λ w → ⟨ w ∈ˢ M ⟩) ea (snd a)
+        Ld∈M = subst (λ w → ⟨ w ∈ˢ M ⟩) ea (a .snd)
 ```
 
 <!--en-->
 The witness package also retains a correctly oriented copy of the level
 description. Starting with ambient satisfaction at
-`(fst a,fst d′,fst z)`, transport the middle coordinate along `ed` and the
+`(a,fst .fst d′,fst z)`, transport the middle coordinate along `ed` and the
 first coordinate along `ea`. The result is satisfaction at
 `(Lset d,d,fst z)`, exactly the third field of `Witness d`. Together with
-`snd z` and the newly obtained `Lset d ∈ M`, it forms the untruncated branch
+`z .snd` and the newly obtained `Lset d ∈ M`, it forms the untruncated branch
 that will be placed back under propositional truncation.
 <!--zh-->
-见证包还要保留一份方向正确的层描述。从 `(fst a,fst d′,fst z)` 处的外围满足出发，先沿 `ed` 搬运中间坐标，再沿 `ea` 搬运第一坐标，得到 `(Lset d,d,fst z)` 处的满足，恰是 `Witness d` 的第三个字段。它与 `snd z` 以及刚得到的 `Lset d ∈ M` 合在一起，形成一个未截断分支，随后再放回命题截断之下。
+见证包还要保留一份方向正确的层描述。从 `(a,fst .fst d′,fst z)` 处的外围满足出发，先沿 `ed` 搬运中间坐标，再沿 `ea` 搬运第一坐标，得到 `(Lset d,d,fst z)` 处的满足，恰是 `Witness d` 的第三个字段。它与 `z .snd` 以及刚得到的 `Lset d ∈ M` 合在一起，形成一个未截断分支，随后再放回命题截断之下。
 <!--ja-->
-証人の包みには、向きの整った段階の記述も残す必要がある。`(fst a,fst d′,fst z)` での周囲の充足から始め、中央の座標を `ed` に沿って移し、第一の座標を `ea` に沿って移す。すると `(Lset d,d,fst z)` での充足が得られ、これはちょうど `Witness d` の第三のフィールドである。これを `snd z` および新しく得た `Lset d ∈ M` と合わせると、切り詰められていない一つの分岐ができ、後で命題的切り詰めの中へ戻される。
+証人の包みには、向きの整った段階の記述も残す必要がある。`(a,fst .fst d′,fst z)` での周囲の充足から始め、中央の座標を `ed` に沿って移し、第一の座標を `ea` に沿って移す。すると `(Lset d,d,fst z)` での充足が得られ、これはちょうど `Witness d` の第三のフィールドである。これを `z .snd` および新しく得た `Lset d ∈ M` と合わせると、切り詰められていない一つの分岐ができ、後で命題的切り詰めの中へ戻される。
 <!--/-->
 
 ```agda
-        amb' : ⟨ (Lset d ∷ d ∷ fst z ∷ []) ⊨ₚ levelFo ⟩
-        amb' = subst (λ v → ⟨ (v ∷ d ∷ fst z ∷ []) ⊨ₚ levelFo ⟩) ea
-          (subst (λ p → ⟨ (fst a ∷ p ∷ fst z ∷ []) ⊨ₚ levelFo ⟩) ed amb)
+        amb' : ⟨ (Lset d ∷ d ∷ z .fst ∷ []) ⊨ₚ levelFo ⟩
+        amb' = subst (λ v → ⟨ (v ∷ d ∷ z .fst ∷ []) ⊨ₚ levelFo ⟩) ea
+          (subst (λ p → ⟨ (a .fst ∷ p ∷ z .fst ∷ []) ⊨ₚ levelFo ⟩) ed amb)
 ```
 
 <!--en-->
@@ -828,7 +828,7 @@ We can now state the local compatibility between the collapse and constructible 
   commute : (d : S) → IsOrd d → (d∈M : ⟨ d ∈ˢ M ⟩)
           → ⟨ Lset d ∈ˢ M ⟩ × (π (Lset d) ≡ Lset (π d))
   commute d od d∈M =
-    rec₁ (isProp× (snd (Lset d ∈ˢ M)) (isSetS (π (Lset d)) (Lset (π d))))
+    rec₁ (isProp× ((Lset d ∈ˢ M) .snd) (isSetS (π (Lset d)) (Lset (π d))))
            go (witness d od d∈M)
 ```
 
@@ -913,7 +913,7 @@ The first property required by the abstract condensation argument is closure at 
 ```agda
   levelIn : (δ : S) → IsOrd δ → ⟨ δ ∈ˢ HS.C.πX ⟩ → ⟨ Lset δ ∈ˢ HS.C.πX ⟩
   levelIn δ oδ δ∈πX =
-    rec₁ (snd (Lset δ ∈ˢ HS.C.πX)) go (HS.C.πX-member δ δ∈πX)
+    rec₁ ((Lset δ ∈ˢ HS.C.πX) .snd) go (HS.C.πX-member δ δ∈πX)
     where
     go : Σ[ d ∶ S ] (⟨ d ∈ˢ M ⟩ × (π d ≡ δ)) → ⟨ Lset δ ∈ˢ HS.C.πX ⟩
 ```
@@ -1074,18 +1074,18 @@ Completeness at the adequate `γ` constructs an ambient answer to `findP` using 
 ```
 
 <!--en-->
-Opening the internal assertion locally gives three hull elements `u`, `a`, and `z`. Their underlying sets satisfy `levelFo(fst u,fst a,fst z)`, and the same answer records `y ∈ fst u`. From these facts one must obtain an ordinal in the collapse image whose level contains `π y`. The construction may form an explicit dependent sum for each local answer, but that sum is immediately returned beneath propositional truncation, so no covering index escapes as chosen data.
+Opening the internal assertion locally gives three hull elements `u`, `a`, and `z`. Their underlying sets satisfy `levelFo(u,fst .fst a,fst z)`, and the same answer records `y ∈ u .fst`. From these facts one must obtain an ordinal in the collapse image whose level contains `π y`. The construction may form an explicit dependent sum for each local answer, but that sum is immediately returned beneath propositional truncation, so no covering index escapes as chosen data.
 <!--zh-->
-在局部打开内部断言，得到三个 Skolem 壳元素 `u`、`a`、`z`。它们的底层集合满足 `levelFo(fst u,fst a,fst z)`，同一回答还记录 `y ∈ fst u`。现在要由这些事实取得塌缩像中的一个序数，使其所索引的层包含 `π y`。构造可以为每份局部回答形成显式依值和，但这份依值和立即被送回命题截断之下，所以覆盖索引不会作为选定数据逸出。
+在局部打开内部断言，得到三个 Skolem 壳元素 `u`、`a`、`z`。它们的底层集合满足 `levelFo(u,fst .fst a,fst z)`，同一回答还记录 `y ∈ u .fst`。现在要由这些事实取得塌缩像中的一个序数，使其所索引的层包含 `π y`。构造可以为每份局部回答形成显式依值和，但这份依值和立即被送回命题截断之下，所以覆盖索引不会作为选定数据逸出。
 <!--ja-->
-内部の主張を局所的に開くと、Skolem 包の三つの要素 `u`、`a`、`z` が得られる。それらの基礎集合は `levelFo(fst u,fst a,fst z)` を満たし、同じ答えは `y ∈ fst u` も記録している。ここから、崩壊像に属し、その段階が `π y` を含む順序数を得なければならない。局所的な各答えから明示的な依存和を作れるが、その和はただちに命題的切り詰めのもとへ戻されるので、被覆の添字が選択済みのデータとして外へ出ることはない。
+内部の主張を局所的に開くと、Skolem 包の三つの要素 `u`、`a`、`z` が得られる。それらの基礎集合は `levelFo(u,fst .fst a,fst z)` を満たし、同じ答えは `y ∈ u .fst` も記録している。ここから、崩壊像に属し、その段階が `π y` を含む順序数を得なければならない。局所的な各答えから明示的な依存和を作れるが、その和はただちに命題的切り詰めのもとへ戻されるので、被覆の添字が選択済みのデータとして外へ出ることはない。
 <!--/-->
 
 ```agda
         finishP : (z a : A.SM)
                 → Σ[ u ∶ A.SM ]
                     ( ⟨ (u ∷ a ∷ z ∷ []) Mse.⊨ embed levelFo ⟩
-                    × ⟨ y ∈ˢ fst u ⟩ )
+                    × ⟨ y ∈ˢ u .fst ⟩ )
                 → Σ[ β ∶ S ] (IsOrd β × ⟨ β ∈ˢ HS.C.πX ⟩
 ```
 
@@ -1100,17 +1100,17 @@ The output witness is chosen locally as `β = π p′`, where `p′` is the unde
 ```agda
                               × ⟨ π y ∈ˢ Lset β ⟩)
         finishP z a (u , sat , y∈u) =
-          π p′ , ord-push p′ (snd a) op′ , HS.C.πX-intro p′ (snd a) , πy∈
+          π p′ , ord-push p′ (a .snd) op′ , HS.C.πX-intro p′ (a .snd) , πy∈
           where
-          amb : ⟨ (fst u ∷ fst a ∷ fst z ∷ []) ⊨ₚ levelFo ⟩
+          amb : ⟨ (u .fst ∷ a .fst ∷ z .fst ∷ []) ⊨ₚ levelFo ⟩
 ```
 
 <!--en-->
-The internal satisfaction proof concerns `embed levelFo` in the hull structure. Because its core `levelFo` is Δ₀, `Cy.atM` reads that proof as ambient satisfaction of `levelFo` at the same three underlying sets `(fst u,fst a,fst z)`. No coordinate is collapsed in this step. Its role is to leave the internal semantics of the hull and recover an ambient statement to which `isOrd-at-p-out` and `level-sound` can be applied.
+The internal satisfaction proof concerns `embed levelFo` in the hull structure. Because its core `levelFo` is Δ₀, `Cy.atM` reads that proof as ambient satisfaction of `levelFo` at the same three underlying sets `(u,fst .fst a,fst z)`. No coordinate is collapsed in this step. Its role is to leave the internal semantics of the hull and recover an ambient statement to which `isOrd-at-p-out` and `level-sound` can be applied.
 <!--zh-->
-内部满足关系证明讨论的是壳结构中的 `embed levelFo`。由于其核心 `levelFo` 是 Δ₀ 公式，`Cy.atM` 把这项证明读成 `levelFo` 在同三个底层集合 `(fst u,fst a,fst z)` 处的外围满足关系。此步没有塌缩任何坐标；它的作用是离开 Skolem 壳的内部语义，恢复一条可供 `isOrd-at-p-out` 与 `level-sound` 使用的外围陈述。
+内部满足关系证明讨论的是壳结构中的 `embed levelFo`。由于其核心 `levelFo` 是 Δ₀ 公式，`Cy.atM` 把这项证明读成 `levelFo` 在同三个底层集合 `(u,fst .fst a,fst z)` 处的外围满足关系。此步没有塌缩任何坐标；它的作用是离开 Skolem 壳的内部语义，恢复一条可供 `isOrd-at-p-out` 与 `level-sound` 使用的外围陈述。
 <!--ja-->
-内部の充足の証明が扱うのは、包の構造における `embed levelFo` である。その核 `levelFo` は Δ₀ 論理式なので、`Cy.atM` はこの証明を、同じ三つの基礎集合 `(fst u,fst a,fst z)` における `levelFo` の周囲での充足として読む。この段階では、どの座標も崩壊されない。その役割は、Skolem 包の内部意味論を離れ、`isOrd-at-p-out` と `level-sound` を適用できる周囲での主張を取り戻すことである。
+内部の充足の証明が扱うのは、包の構造における `embed levelFo` である。その核 `levelFo` は Δ₀ 論理式なので、`Cy.atM` はこの証明を、同じ三つの基礎集合 `(u,fst .fst a,fst z)` における `levelFo` の周囲での充足として読む。この段階では、どの座標も崩壊されない。その役割は、Skolem 包の内部意味論を離れ、`isOrd-at-p-out` と `level-sound` を適用できる周囲での主張を取り戻すことである。
 <!--/-->
 
 ```agda
@@ -1118,16 +1118,16 @@ The internal satisfaction proof concerns `embed levelFo` in the hull structure. 
 ```
 
 <!--en-->
-Let `p′ = fst a` be the middle coordinate returned inside the hull. It need not equal the externally prepared successor `p = sucV c`. The external triple established that `findP yM` was satisfiable, but `findP` fixes only the membership of `yM` in its first coordinate; it contains no equation fixing the middle coordinate. Full elementarity therefore supplies merely some internal index `p′` under propositional truncation, and the remainder of the proof uses this returned index.
+Let `p′ = a .fst` be the middle coordinate returned inside the hull. It need not equal the externally prepared successor `p = sucV c`. The external triple established that `findP yM` was satisfiable, but `findP` fixes only the membership of `yM` in its first coordinate; it contains no equation fixing the middle coordinate. Full elementarity therefore supplies merely some internal index `p′` under propositional truncation, and the remainder of the proof uses this returned index.
 <!--zh-->
-令 `p′ = fst a` 为 Skolem 壳内部返回的中间坐标。它不必等于外围预备的后继 `p = sucV c`。外围三元组证明 `findP yM` 可满足，但 `findP` 只固定 `yM` 对第一坐标的成员关系，其中没有固定中间坐标的等式。因此，完整初等性只在命题截断下给出某个内部索引 `p′`，余下证明使用的是这个返回的索引。
+令 `p′ = a .fst` 为 Skolem 壳内部返回的中间坐标。它不必等于外围预备的后继 `p = sucV c`。外围三元组证明 `findP yM` 可满足，但 `findP` 只固定 `yM` 对第一坐标的成员关系，其中没有固定中间坐标的等式。因此，完整初等性只在命题截断下给出某个内部索引 `p′`，余下证明使用的是这个返回的索引。
 <!--ja-->
-Skolem 包の内部で返された中央の座標を `p′ = fst a` とする。これは、周囲で準備した後続 `p = sucV c` と等しい必要がない。周囲の三つ組は `findP yM` が充足可能であることを示したが、`findP` が固定するのは `yM` の第一座標への所属だけであり、中央の座標を固定する等式は含まない。したがって完全な初等性が命題的切り詰めのもとで与えるのは、ある内部添字 `p′` にすぎず、残りの証明はこの返された添字を使う。
+Skolem 包の内部で返された中央の座標を `p′ = a .fst` とする。これは、周囲で準備した後続 `p = sucV c` と等しい必要がない。周囲の三つ組は `findP yM` が充足可能であることを示したが、`findP` が固定するのは `yM` の第一座標への所属だけであり、中央の座標を固定する等式は含まない。したがって完全な初等性が命題的切り詰めのもとで与えるのは、ある内部添字 `p′` にすぎず、残りの証明はこの返された添字を使う。
 <!--/-->
 
 ```agda
           p′ : S
-          p′ = fst a
+          p′ = a .fst
 ```
 
 <!--en-->
@@ -1140,31 +1140,31 @@ The returned index is nevertheless known to be ordinal. The ambient satisfaction
 
 ```agda
           op′ : IsOrd p′
-          op′ = isOrd-at-p-out (fst u) p′ (fst z) (amb .fst)
+          op′ = isOrd-at-p-out (u .fst) p′ (z .fst) (amb .fst)
 ```
 
 <!--en-->
-Soundness now identifies the first coordinate of the internal answer. Since `u`, `a`, and `z` are hull elements, `Hull⊆L` places their underlying sets in `Lset lam`, and `isLλ` proves each one constructible. Together with `amb`, these three premises give `fst u ≡ Lset p′`. Thus the recorded fact `y ∈ fst u` can be transported to `y ∈ Lset p′`. The auxiliary bound `fst z` need not be unique, and no equality between `p′` and the prepared `p` is used; soundness determines the stage value solely from the returned ordinal index.
+Soundness now identifies the first coordinate of the internal answer. Since `u`, `a`, and `z` are hull elements, `Hull⊆L` places their underlying sets in `Lset lam`, and `isLλ` proves each one constructible. Together with `amb`, these three premises give `u .fst ≡ Lset p′`. Thus the recorded fact `y ∈ u .fst` can be transported to `y ∈ Lset p′`. The auxiliary bound `z .fst` need not be unique, and no equality between `p′` and the prepared `p` is used; soundness determines the stage value solely from the returned ordinal index.
 <!--zh-->
-现在由可靠性识别内部回答的第一坐标。由于 `u`、`a`、`z` 都是 Skolem 壳元素，`Hull⊆L` 把它们的底层集合放入 `Lset lam`，`isLλ` 再分别证明三者可构造。结合 `amb`，这三个前提给出 `fst u ≡ Lset p′`。因此，回答中记录的 `y ∈ fst u` 可以传输为 `y ∈ Lset p′`。辅助界 `fst z` 不必唯一，证明也没有使用 `p′` 与预备索引 `p` 之间的等式；可靠性只凭返回的序数索引确定层的取值。
+现在由可靠性识别内部回答的第一坐标。由于 `u`、`a`、`z` 都是 Skolem 壳元素，`Hull⊆L` 把它们的底层集合放入 `Lset lam`，`isLλ` 再分别证明三者可构造。结合 `amb`，这三个前提给出 `u .fst ≡ Lset p′`。因此，回答中记录的 `y ∈ u .fst` 可以传输为 `y ∈ Lset p′`。辅助界 `z .fst` 不必唯一，证明也没有使用 `p′` 与预备索引 `p` 之间的等式；可靠性只凭返回的序数索引确定层的取值。
 <!--ja-->
-ここで健全性により、内部の答えの第一座標を特定する。`u`、`a`、`z` はいずれも Skolem 包の要素なので、`Hull⊆L` はそれらの基礎にある集合を `Lset lam` に入れ、`isLλ` がそれぞれの構成可能性を証明する。これら三つの前提を `amb` と合わせると、`fst u ≡ Lset p′` が得られる。したがって、答えに記録された `y ∈ fst u` を `y ∈ Lset p′` へ輸送できる。補助的な上界 `fst z` は一意である必要がなく、`p′` と準備した `p` の間の等式も使わない。健全性は、返された順序数の添字だけから段階の値を定める。
+ここで健全性により、内部の答えの第一座標を特定する。`u`、`a`、`z` はいずれも Skolem 包の要素なので、`Hull⊆L` はそれらの基礎にある集合を `Lset lam` に入れ、`isLλ` がそれぞれの構成可能性を証明する。これら三つの前提を `amb` と合わせると、`u .fst ≡ Lset p′` が得られる。したがって、答えに記録された `y ∈ u .fst` を `y ∈ Lset p′` へ輸送できる。補助的な上界 `z .fst` は一意である必要がなく、`p′` と準備した `p` の間の等式も使わない。健全性は、返された順序数の添字だけから段階の値を定める。
 <!--/-->
 
 ```agda
-          u≡ : fst u ≡ Lset p′
-          u≡ = level-sound (fst u) p′ (fst z)
-                 (isLλ (fst u) (Hull⊆L (fst u) (snd u)))
-                 (isLλ p′ (Hull⊆L p′ (snd a)))
-                 (isLλ (fst z) (Hull⊆L (fst z) (snd z))) amb
+          u≡ : u .fst ≡ Lset p′
+          u≡ = level-sound (u .fst) p′ (z .fst)
+                 (isLλ (u .fst) (Hull⊆L (u .fst) (u .snd)))
+                 (isLλ p′ (Hull⊆L p′ (a .snd)))
+                 (isLλ (z .fst) (Hull⊆L (z .fst) (z .snd))) amb
 ```
 
 <!--en-->
-The returned level value `fst u` is identified with `Lset p′` by `u≡`. Transporting the recorded membership `y∈u` along this equality therefore gives `y ∈ Lset p′`. This step uses only substitution in the set being joined; it does not impose any relation between the returned index `p′` and the previously prepared index `p`.
+The returned level value `u .fst` is identified with `Lset p′` by `u≡`. Transporting the recorded membership `y∈u` along this equality therefore gives `y ∈ Lset p′`. This step uses only substitution in the set being joined; it does not impose any relation between the returned index `p′` and the previously prepared index `p`.
 <!--zh-->
-可靠性等式 `u≡` 把返回的层值 `fst u` 认同为 `Lset p′`。沿这条等式搬运已取得的成员关系 `y∈u`，便得到 `y ∈ Lset p′`。这里仅替换成员关系右侧的集合，并未在返回指标 `p′` 与先前预备的指标 `p` 之间建立任何关系。
+可靠性等式 `u≡` 把返回的层值 `u .fst` 认同为 `Lset p′`。沿这条等式搬运已取得的成员关系 `y∈u`，便得到 `y ∈ Lset p′`。这里仅替换成员关系右侧的集合，并未在返回指标 `p′` 与先前预备的指标 `p` 之间建立任何关系。
 <!--ja-->
-健全性から得た等式 `u≡` は、返された段階の値 `fst u` を `Lset p′` と同一視する。この等式に沿って、すでに得られた所属 `y∈u` を移せば、`y ∈ Lset p′` が従う。ここで行うのは所属の右辺にある集合の置換だけであり、返された添字 `p′` と先に用意した添字 `p` の間には何の関係も課していない。
+健全性から得た等式 `u≡` は、返された段階の値 `u .fst` を `Lset p′` と同一視する。この等式に沿って、すでに得られた所属 `y∈u` を移せば、`y ∈ Lset p′` が従う。ここで行うのは所属の右辺にある集合の置換だけであり、返された添字 `p′` と先に用意した添字 `p` の間には何の関係も課していない。
 <!--/-->
 
 ```agda
@@ -1173,16 +1173,16 @@ The returned level value `fst u` is identified with `Lset p′` by `u≡`. Trans
 ```
 
 <!--en-->
-The returned middle coordinate supplies exactly the data needed by the local commutation theorem. Its underlying set is `p′`; `op′` proves that this set is an ordinal, and `snd a` proves that it belongs to the hull. Hence `commute p′ op′ (snd a)` yields both `Lset p′ ∈ M` and the equation `π (Lset p′) ≡ Lset (π p′)`. The theorem is local to ordinals in the hull, which is precisely the situation established here.
+The returned middle coordinate supplies exactly the data needed by the local commutation theorem. Its underlying set is `p′`; `op′` proves that this set is an ordinal, and `a .snd` proves that it belongs to the hull. Hence `commute p′ op′ (a .snd)` yields both `Lset p′ ∈ M` and the equation `π (Lset p′) ≡ Lset (π p′)`. The theorem is local to ordinals in the hull, which is precisely the situation established here.
 <!--zh-->
-返回的中间坐标恰好给出局部交换定理所需的数据。它的底层集合是 `p′`，`op′` 证明该集合是序数，`snd a` 证明它属于壳。因此，`commute p′ op′ (snd a)` 同时给出 `Lset p′ ∈ M` 与等式 `π (Lset p′) ≡ Lset (π p′)`。该定理只针对壳中的序数，而这里已经满足这一适用条件。
+返回的中间坐标恰好给出局部交换定理所需的数据。它的底层集合是 `p′`，`op′` 证明该集合是序数，`a .snd` 证明它属于壳。因此，`commute p′ op′ (a .snd)` 同时给出 `Lset p′ ∈ M` 与等式 `π (Lset p′) ≡ Lset (π p′)`。该定理只针对壳中的序数，而这里已经满足这一适用条件。
 <!--ja-->
-返された中央の座標は、局所的な交換定理に必要なデータをちょうど与える。その基礎集合が `p′` であり、`op′` はそれが順序数であることを、`snd a` はそれが包に属することを示す。したがって `commute p′ op′ (snd a)` から、`Lset p′ ∈ M` と等式 `π (Lset p′) ≡ Lset (π p′)` の両方が得られる。この定理は包の中の順序数に対する局所的な主張であり、ここではその条件が満たされている。
+返された中央の座標は、局所的な交換定理に必要なデータをちょうど与える。その基礎集合が `p′` であり、`op′` はそれが順序数であることを、`a .snd` はそれが包に属することを示す。したがって `commute p′ op′ (a .snd)` から、`Lset p′ ∈ M` と等式 `π (Lset p′) ≡ Lset (π p′)` の両方が得られる。この定理は包の中の順序数に対する局所的な主張であり、ここではその条件が満たされている。
 <!--/-->
 
 ```agda
           cm : ⟨ Lset p′ ∈ˢ M ⟩ × (π (Lset p′) ≡ Lset (π p′))
-          cm = commute p′ op′ (snd a)
+          cm = commute p′ op′ (a .snd)
 ```
 
 <!--en-->

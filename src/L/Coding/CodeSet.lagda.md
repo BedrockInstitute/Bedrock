@@ -110,13 +110,13 @@ keyArityAtL c k = ∃̇ (tagAtL (suc c) k zero)
 
 keyArityAtL-out : ∀ {n} (c : Fin n) (k : ℕ) (γ : S ^ n)
                 → ⟨ γ ⊨ keyArityAtL c k ⟩
-                → ∥ (Σ[ z ∶ S ] (fst (lookup c γ) ≡ pr (# k) (fst z))) ∥₁
+                → ∥ (Σ[ z ∶ S ] ((lookup c γ) .fst ≡ pr (# k) (z .fst))) ∥₁
 keyArityAtL-out c k γ = map₁
   (λ { (z , hz) →
     z , subst ⟨_⟩ (tagAtL-adequate (suc c) k zero (z ∷ γ)) hz })
 
 keyArityAtL-in : ∀ {n} (c : Fin n) (k : ℕ) (γ : S ^ n) (z : S)
-               → fst (lookup c γ) ≡ pr (# k) (fst z)
+               → (lookup c γ) .fst ≡ pr (# k) (z .fst)
                → ⟨ γ ⊨ keyArityAtL c k ⟩
 keyArityAtL-in c k γ z e =
   ∣ z , subst ⟨_⟩ (sym (tagAtL-adequate (suc c) k zero (z ∷ γ))) e ∣₁
@@ -167,22 +167,22 @@ arityNumAtL c = ∃̇ (∃̇ (prAtL (suc (suc c)) (suc zero) zero
 arityNumAtL-out : ∀ {n} (c : Fin n) (γ : S ^ n)
                 → ⟨ γ ⊨ arityNumAtL c ⟩
                 → ∥ (Σ[ m ∶ ℕ ] Σ[ z ∶ S ]
-                      (fst (lookup c γ) ≡ pr (# m) (fst z))) ∥₁
+                      ((lookup c γ) .fst ≡ pr (# m) (z .fst))) ∥₁
 arityNumAtL-out c γ = rec₁ squash₁ (λ { (ar , h) →
   rec₁ squash₁ (λ { (z , (hp , hω)) → map₁
     (λ { (m , qm) → lower m , z
        , ( subst ⟨_⟩
              (prAtL-adequate (suc (suc c)) (suc zero) zero (z ∷ ar ∷ γ)) hp
-         ∙ cong (λ w → pr w (fst z)) (qm ∙ numeralL-fst (lower m)) ) })
+         ∙ cong (λ w → pr w (z .fst)) (qm ∙ numeralL-fst (lower m)) ) })
     (subst ⟨_⟩ (ω-specL ar) hω) }) h })
 
 arityNumAtL-in : ∀ {n} (c : Fin n) (γ : S ^ n) (m : ℕ) (z : S)
-               → fst (lookup c γ) ≡ pr (# m) (fst z)
+               → (lookup c γ) .fst ≡ pr (# m) (z .fst)
                → ⟨ γ ⊨ arityNumAtL c ⟩
 arityNumAtL-in c γ m z e = ∣ numeralL m , ∣ z
   , ( subst ⟨_⟩ (sym (prAtL-adequate (suc (suc c)) (suc zero) zero
         (z ∷ numeralL m ∷ γ)))
-        (e ∙ cong (λ w → pr w (fst z)) (sym (numeralL-fst m)))
+        (e ∙ cong (λ w → pr w (z .fst)) (sym (numeralL-fst m)))
     , subst ⟨_⟩ (sym (ω-specL (numeralL m))) ∣ lift m , refl ∣₁ ) ∣₁ ∣₁
 ```
 
@@ -278,25 +278,25 @@ module _ (A : S) where
 
 ```agda
   private
-    ι : ⟪ fst A ⟫ → V ℓ
-    ι = ⟪ fst A ⟫↪
+    ι : ⟪ A .fst ⟫ → V ℓ
+    ι = ⟪ A .fst ⟫↪
 
-    ι∈ : (m : ⟪ fst A ⟫) → ⟨ ι m ∈ fst A ⟩
-    ι∈ m = ∈∈ₛ {a = ι m} {b = fst A} .snd (∈ₛ⟪ fst A ⟫↪ m)
+    ι∈ : (m : ⟪ A .fst ⟫) → ⟨ ι m ∈ A .fst ⟩
+    ι∈ m = ∈∈ₛ {a = ι m} {b = A .fst} .snd (∈ₛ⟪ A .fst ⟫↪ m)
 
-    ιL : (m : ⟪ fst A ⟫) → ⟨ isL (ι m) ⟩
-    ιL m = isL-trans {x = fst A} {y = ι m} (ι∈ m) (A .snd)
+    ιL : (m : ⟪ A .fst ⟫) → ⟨ isL (ι m) ⟩
+    ιL m = isL-trans {x = A .fst} {y = ι m} (ι∈ m) (A .snd)
 
-  codeS : ∀ {n} → Formula ⟪ fst A ⟫ n → S
+  codeS : ∀ {n} → Formula ⟪ A .fst ⟫ n → S
   codeS φ = VCode.⌜ mapFo ι φ ⌝ , codeL ι ιL φ
 
-  keyS : ∀ {n} → Formula ⟪ fst A ⟫ n → S
+  keyS : ∀ {n} → Formula ⟪ A .fst ⟫ n → S
   keyS φ = key ι ιL φ , keyL ι ιL φ
 
   private
-    smallAny : Σ[ d ∶ S ] ((p : Σ[ n ∶ ℕ ] Formula ⟪ fst A ⟫ n)
-                          → ⟨ keyS (snd p) ∈ˢ d ⟩)
-    smallAny = smallDom (Σ[ n ∶ ℕ ] Formula ⟪ fst A ⟫ n) (λ p → keyS (snd p))
+    smallAny : Σ[ d ∶ S ] ((p : Σ[ n ∶ ℕ ] Formula ⟪ A .fst ⟫ n)
+                          → ⟨ keyS (p .snd) ∈ˢ d ⟩)
+    smallAny = smallDom (Σ[ n ∶ ℕ ] Formula ⟪ A .fst ⟫ n) (λ p → keyS (p .snd))
 
     sepAny : isContr
       (SetOf (λ x → (x ∈ˢ smallAny .fst) ⊓ ((x ∷ []) ⊨ isCodeAny A)))
@@ -359,31 +359,31 @@ it is not about the graph, it is about `rec₁`{.Agda} at a concrete environment
 <!--/-->
 
 ```agda
-  witnessAt-in : ∀ {n k} (b c : Fin n) (γ : S ^ n) (φ : Formula ⟪ fst A ⟫ k)
-               → fst (lookup b γ) ≡ fst A
-               → fst (lookup c γ) ≡ fst (keyS φ)
+  witnessAt-in : ∀ {n k} (b c : Fin n) (γ : S ^ n) (φ : Formula ⟪ A .fst ⟫ k)
+               → (lookup b γ) .fst ≡ A .fst
+               → (lookup c γ) .fst ≡ (keyS φ) .fst
                → ⟨ γ ⊨ hasWitnessAt b c ⟩
   witnessAt-in b c γ φ qb qc = ∣ clo ι ιL φ
-    , ( subst (λ w → ⟨ w ∈ fst (clo ι ιL φ) ⟩) (sym qc) (key∈closure ι ιL φ)
+    , ( subst (λ w → ⟨ w ∈ (clo ι ιL φ) .fst ⟩) (sym qc) (key∈closure ι ιL φ)
       , ( closureClosed ι ιL φ γ
         , closureShaped ι ιL φ b γ
             (λ m → subst (λ w → ⟨ ι m ∈ w ⟩) (sym qb) (ι∈ m)) ) ) ∣₁
 
   witnessAt-out : ∀ {n} (b c : Fin n) (γ : S ^ n)
-                → fst (lookup b γ) ≡ fst A
+                → (lookup b γ) .fst ≡ A .fst
                 → ⟨ γ ⊨ hasWitnessAt b c ⟩
-                → (k : ℕ) (z : S) → fst (lookup c γ) ≡ pr (# k) (fst z)
-                → ∥ (Σ[ ψ ∶ Formula ⟪ fst A ⟫ k ]
-                      (fst (lookup c γ) ≡ fst (keyS ψ))) ∥₁
+                → (k : ℕ) (z : S) → (lookup c γ) .fst ≡ pr (# k) (z .fst)
+                → ∥ (Σ[ ψ ∶ Formula ⟪ A .fst ⟫ k ]
+                      ((lookup c γ) .fst ≡ (keyS ψ) .fst)) ∥₁
   witnessAt-out b c γ qb hw k z qz = rec₁ squash₁ viaSlot hw
     where
     Target : Type (ℓ-suc ℓ)
-    Target = ∥ (Σ[ ψ ∶ Formula ⟪ fst A ⟫ k ]
-                 (fst (lookup c γ) ≡ fst (keyS ψ))) ∥₁
+    Target = ∥ (Σ[ ψ ∶ Formula ⟪ A .fst ⟫ k ]
+                 ((lookup c γ) .fst ≡ (keyS ψ) .fst)) ∥₁
 
-    onto : (y : V ℓ) → ⟨ y ∈ fst (lookup b γ) ⟩
-         → ∥ Σ[ m ∶ ⟪ fst A ⟫ ] (ι m ≡ y) ∥₁
-    onto y y∈ = ∣ ∈-asFiber {a = y} {b = fst A}
+    onto : (y : V ℓ) → ⟨ y ∈ (lookup b γ) .fst ⟩
+         → ∥ Σ[ m ∶ ⟪ A .fst ⟫ ] (ι m ≡ y) ∥₁
+    onto y y∈ = ∣ ∈-asFiber {a = y} {b = A .fst}
       (subst (λ w → ⟨ y ∈ w ⟩) qb y∈) ∣₁
 
     viaSlot : Σ[ C ∶ S ] ⟨ (C ∷ γ) ⊨ ((var (suc c) ∈̇ var zero)
@@ -392,22 +392,22 @@ it is not about the graph, it is about `rec₁`{.Agda} at a concrete environment
     viaSlot (C , (x∈C , (hcl , hsh))) = map₁
       (λ { (ψ , qψ) → ψ , (qz ∙ cong (pr (# k)) (sym qψ)) })
       (Decode.recover ι zero (suc b) (C ∷ γ) onto hcl hsh k z
-        (subst (λ w → ⟨ w ∈ fst C ⟩) (qz ∙ sym (keyOf-fst k z)) x∈C))
+        (subst (λ w → ⟨ w ∈ C .fst ⟩) (qz ∙ sym (keyOf-fst k z)) x∈C))
 
   private
-    witness-in : ∀ {n} (φ : Formula ⟪ fst A ⟫ n)
+    witness-in : ∀ {n} (φ : Formula ⟪ A .fst ⟫ n)
                → ⟨ (keyS φ ∷ []) ⊨ hasWitness A ⟩
     witness-in φ = ∣ A , ( refl
       , witnessAt-in zero (suc zero) (A ∷ keyS φ ∷ []) φ refl refl ) ∣₁
 
     witness-out : (x : S) → ⟨ (x ∷ []) ⊨ hasWitness A ⟩
-                → (k : ℕ) (z : S) → fst x ≡ pr (# k) (fst z)
-                → ∥ (Σ[ ψ ∶ Formula ⟪ fst A ⟫ k ] (fst x ≡ fst (keyS ψ))) ∥₁
+                → (k : ℕ) (z : S) → x .fst ≡ pr (# k) (z .fst)
+                → ∥ (Σ[ ψ ∶ Formula ⟪ A .fst ⟫ k ] (x .fst ≡ (keyS ψ) .fst)) ∥₁
     witness-out x hw k z qz = rec₁ squash₁ viaCarrier hw
       where
       viaCarrier : Σ[ B ∶ S ] ⟨ (B ∷ x ∷ [])
                      ⊨ ((var zero ≐ con A) ∧̇ hasWitnessAt zero (suc zero)) ⟩
-                 → ∥ (Σ[ ψ ∶ Formula ⟪ fst A ⟫ k ] (fst x ≡ fst (keyS ψ))) ∥₁
+                 → ∥ (Σ[ ψ ∶ Formula ⟪ A .fst ⟫ k ] (x .fst ≡ (keyS ψ) .fst)) ∥₁
       viaCarrier (B , (qB , hB)) =
         witnessAt-out zero (suc zero) (B ∷ x ∷ []) qB hB k z qz
 ```
@@ -432,14 +432,14 @@ not contain it.
 ```agda
   IsKeyOverAny : S → hProp (ℓ-suc ℓ)
   IsKeyOverAny x =
-    ∥ (Σ[ n ∶ ℕ ] Σ[ ψ ∶ Formula ⟪ fst A ⟫ n ] (fst x ≡ fst (keyS ψ))) ∥₁
+    ∥ (Σ[ n ∶ ℕ ] Σ[ ψ ∶ Formula ⟪ A .fst ⟫ n ] (x .fst ≡ (keyS ψ) .fst)) ∥₁
     , squash₁
 
   opaque
     AllCodes : S
     AllCodes = sepAny .fst .fst
 
-    key∈AllCodes : ∀ {n} (φ : Formula ⟪ fst A ⟫ n) → ⟨ keyS φ ∈ˢ AllCodes ⟩
+    key∈AllCodes : ∀ {n} (φ : Formula ⟪ A .fst ⟫ n) → ⟨ keyS φ ∈ˢ AllCodes ⟩
     key∈AllCodes {n} φ = subst ⟨_⟩ (sym (sepAny .fst .snd (keyS φ)))
       ( smallAny .snd (n , φ)
       , ( arityNumAtL-in zero (keyS φ ∷ []) n (codeS φ) refl
@@ -455,9 +455,9 @@ not contain it.
       sat = subst ⟨_⟩ (sepAny .fst .snd x) x∈ .snd
 
   AllCodes-in : (x : S) → ⟨ IsKeyOverAny x ⟩ → ⟨ x ∈ˢ AllCodes ⟩
-  AllCodes-in x = rec₁ (snd (x ∈ˢ AllCodes))
+  AllCodes-in x = rec₁ ((x ∈ˢ AllCodes) .snd)
     (λ { (n , ψ , q) →
-      subst (λ w → ⟨ w ∈ fst AllCodes ⟩) (sym q) (key∈AllCodes ψ) })
+      subst (λ w → ⟨ w ∈ AllCodes .fst ⟩) (sym q) (key∈AllCodes ψ) })
 ```
 </div>
 </details>

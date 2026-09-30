@@ -160,7 +160,7 @@ The one structural fact promised in the lead is now proved: if x is bad, so is g
 
 ```agda
   gf-closed : {x : A} → ⟨ C x ⟩ → ⟨ C (g (f x)) ⟩
-  gf-closed {x} = rec₁ (snd (C (g (f x)))) go
+  gf-closed {x} = rec₁ ((C (g (f x))) .snd) go
     where
     go : Σ[ n ∶ ℕ ] ⟨ Cₙ n x ⟩ → ⟨ C (g (f x)) ⟩
     go (n , cx) = c-in {x = g (f x)} {n = suc n} ∣ f x , x , (refl , (refl , cx)) ∣₁
@@ -339,7 +339,7 @@ The final lemma answers an objection to the whole design: h was defined relative
   h-cons x (yes cx) (yes cx') = refl
   h-cons x (yes cx) (no nCx') = ⊥₀-rec (nCx' cx)
   h-cons x (no nCx) (yes cx) = ⊥₀-rec (nCx cx)
-  h-cons x (no nCx) (no nCx') = cong fst (fiberG-prop x (fiberG x (notC→imG nCx)) (fiberG x (notC→imG nCx')))
+  h-cons x (no nCx) (no nCx') = cong (λ p → p .fst) (fiberG-prop x (fiberG x (notC→imG nCx)) (fiberG x (notC→imG nCx')))
 ```
 
 <!--en-->

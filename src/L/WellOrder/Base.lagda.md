@@ -206,7 +206,7 @@ Both components of `IsLeast P a`{.Agda} are propositions: the first by the certi
 <!--/-->
 
 ```agda
-  isPropIsLeast P a = isProp× (snd (P a)) (isPropΠ λ b → isPropΠ λ _ → isProp→ isProp⊥)
+  isPropIsLeast P a = isProp× ((P a) .snd) (isPropΠ λ b → isPropΠ λ _ → isProp→ isProp⊥)
 
   isPropLeastOf : {ℓ'' : Level} (P : A → hProp ℓ'')
                 → isProp (Σ[ a ∶ A ] IsLeast P a)

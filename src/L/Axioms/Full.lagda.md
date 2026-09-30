@@ -364,8 +364,8 @@ being enlarged afterwards.
 
 ```agda
   where
-  sa  = stage (fst a) (a .snd)
-  R   = mkReflect φ sa (stage-ord (fst a) (a .snd))
+  sa  = stage (a .fst) (a .snd)
+  R   = mkReflect φ sa (stage-ord (a .fst) (a .snd))
   β   = R .fst
   oβ  = R .snd .fst
 ```
@@ -389,34 +389,34 @@ rather than used only as an ambient set.
 
 <!--en-->
 The parameter now lies in the reflection stage. `stage-mem` gives
-`fst a ∈ Lset sa`, while the reflection data give the strict ordinal membership
+`a .fst ∈ Lset sa`, while the reflection data give the strict ordinal membership
 `sa ∈ β`. Monotonicity of the constructible hierarchy combines them to obtain
-`fa∈β : fst a ∈ Lset β`. This does not identify `a` with an ordinal: `sa` and
-`β` are indices, whereas `fst a` is the set being placed in the higher stage.
+`fa∈β : a .fst ∈ Lset β`. This does not identify `a` with an ordinal: `sa` and
+`β` are indices, whereas `a .fst` is the set being placed in the higher stage.
 <!--zh-->
-现在可把参数放入反射层。`stage-mem` 给出 `fst a ∈ Lset sa`，而反射数据给出严格的序数成员关系 `sa ∈ β`。可构造层级的单调性把二者合成，得到 `fa∈β : fst a ∈ Lset β`。这并未把 `a` 与序数认同：`sa` 和 `β` 是指标，`fst a` 才是被放入更高层的集合。
+现在可把参数放入反射层。`stage-mem` 给出 `a .fst ∈ Lset sa`，而反射数据给出严格的序数成员关系 `sa ∈ β`。可构造层级的单调性把二者合成，得到 `fa∈β : a .fst ∈ Lset β`。这并未把 `a` 与序数认同：`sa` 和 `β` 是指标，`a .fst` 才是被放入更高层的集合。
 <!--ja-->
-これでパラメータを反映段階へ入れられる。`stage-mem` は `fst a ∈ Lset sa` を与え、反映のデータは順序数の厳密な所属 `sa ∈ β` を与える。構成可能階層の単調性により、この二つから `fa∈β : fst a ∈ Lset β` が得られる。ここで `a` を順序数と同一視してはいない。`sa` と `β` は添字であり、`fst a` は上の段階へ入れられる集合である。
+これでパラメータを反映段階へ入れられる。`stage-mem` は `a .fst ∈ Lset sa` を与え、反映のデータは順序数の厳密な所属 `sa ∈ β` を与える。構成可能階層の単調性により、この二つから `fa∈β : a .fst ∈ Lset β` が得られる。ここで `a` を順序数と同一視してはいない。`sa` と `β` は添字であり、`a .fst` は上の段階へ入れられる集合である。
 <!--/-->
 
 ```agda
-  fa∈β : ⟨ fst a ∈ Lset β ⟩
+  fa∈β : ⟨ a .fst ∈ Lset β ⟩
   fa∈β = Lset-mono {α = β} {β = sa} (R .snd .snd .fst)
-           (stage-mem (fst a) (a .snd))
+           (stage-mem (a .fst) (a .snd))
 ```
 
 <!--en-->
 Reflection is available only for environments whose entries lie in
 `Lset β`, so the membership conjunct in separation does essential work. Given
-`x ∈ˢ a`, transitivity combines this fact with `fa∈β` to put `fst x` in
+`x ∈ˢ a`, transitivity combines this fact with `fa∈β` to put `x .fst` in
 `Lset β`; `_` supplies the vacuous condition for the empty tail of the
 one-entry environment. The reflection component of `R` then gives `bridge`, a
 path from satisfaction of `φ` at `x` to satisfaction of its relativization.
 No comparison is asserted for arbitrary `x : S` outside `a`.
 <!--zh-->
-反射只适用于条目落在 `Lset β` 中的环境，因此分离谓词中的元素合取项不可缺少。给定 `x ∈ˢ a`，传递性把该事实与 `fa∈β` 合起来，得到 `fst x ∈ Lset β`；`_` 则给出单元素环境空尾部的平凡条件。于是，`R` 的反射分量给出 `bridge`，即 `φ` 在 `x` 处的满足关系与其相对化的满足关系之间的路径。对于 `a` 外的任意 `x : S`，这里不作比较。
+反射只适用于条目落在 `Lset β` 中的环境，因此分离谓词中的元素合取项不可缺少。给定 `x ∈ˢ a`，传递性把该事实与 `fa∈β` 合起来，得到 `x .fst ∈ Lset β`；`_` 则给出单元素环境空尾部的平凡条件。于是，`R` 的反射分量给出 `bridge`，即 `φ` 在 `x` 处的满足关系与其相对化的满足关系之间的路径。对于 `a` 外的任意 `x : S`，这里不作比较。
 <!--ja-->
-反映を適用できるのは、成分が `Lset β` に属する環境だけなので、分出公理の述語にある所属の連言が本質的な役割を果たす。`x ∈ˢ a` が与えられると、推移性によりこの事実と `fa∈β` から `fst x ∈ Lset β` が得られ、`_` が一成分環境の空の末尾に対する自明な条件を与える。そこで `R` の反映成分を使うと、`x` における `φ` の充足関係から、その相対化の充足関係へのパス `bridge` が得られる。`a` の外にある任意の `x : S` については、比較を主張しない。
+反映を適用できるのは、成分が `Lset β` に属する環境だけなので、分出公理の述語にある所属の連言が本質的な役割を果たす。`x ∈ˢ a` が与えられると、推移性によりこの事実と `fa∈β` から `x .fst ∈ Lset β` が得られ、`_` が一成分環境の空の末尾に対する自明な条件を与える。そこで `R` の反映成分を使うと、`x` における `φ` の充足関係から、その相対化の充足関係へのパス `bridge` が得られる。`a` の外にある任意の `x : S` については、比較を主張しない。
 <!--/-->
 
 ```agda
@@ -460,7 +460,7 @@ For every `x ∈ˢ a`, the hypothesis makes the dependent sum of related values
 `Σ y , (y ∷ x ∷ []) ⊨ φ` contractible. Its centre supplies a value and its
 contraction identifies every related value with that centre, so this step uses
 no host-level axiom of choice. `FunctionalImage` ranges over the small
-presentation `⟪ fst a ⟫`; for each small index it takes the least stage of the
+presentation `⟪ a .fst ⟫`; for each small index it takes the least stage of the
 corresponding centre, and `boundingOrd` bounds all those stages by one ordinal
 `βimg`. Given an arbitrary member `x ∈ˢ a`, `∈-asFiber` returns a small index
 whose represented value is equal to the underlying set of `x`. That path moves
@@ -469,9 +469,9 @@ identifies its chosen centre with every related `y` and transports the common
 stage bound along that equality. The least-stage operation in this construction
 still depends on `lem`, although no choice axiom is used.
 <!--zh-->
-对每个 `x ∈ˢ a`，假设都使相关值的依值和 `Σ y , (y ∷ x ∷ []) ⊨ φ` 可缩。其中心给出一个值，收缩则把每个相关值与该中心认同，所以这一步不使用宿主层选择公理。`FunctionalImage` 遍历小表示 `⟪ fst a ⟫`；它为每个小指标所表示元素的中心取最早层，再由 `boundingOrd` 用一个序数 `βimg` 界住所有这些层。给定任意元素 `x ∈ˢ a`，`∈-asFiber` 返回一个小指标，以及该指标的表示值与 `x` 的底层集合相等的路径。沿此路径可把关系搬到该指标所表示的源，再由可缩性把所选中心与每个相关的 `y` 认同，并沿这一相等搬运公共层界。这一构造中的最早层操作仍依赖 `lem`，但不使用选择公理。
+对每个 `x ∈ˢ a`，假设都使相关值的依值和 `Σ y , (y ∷ x ∷ []) ⊨ φ` 可缩。其中心给出一个值，收缩则把每个相关值与该中心认同，所以这一步不使用宿主层选择公理。`FunctionalImage` 遍历小表示 `⟪ a .fst ⟫`；它为每个小指标所表示元素的中心取最早层，再由 `boundingOrd` 用一个序数 `βimg` 界住所有这些层。给定任意元素 `x ∈ˢ a`，`∈-asFiber` 返回一个小指标，以及该指标的表示值与 `x` 的底层集合相等的路径。沿此路径可把关系搬到该指标所表示的源，再由可缩性把所选中心与每个相关的 `y` 认同，并沿这一相等搬运公共层界。这一构造中的最早层操作仍依赖 `lem`，但不使用选择公理。
 <!--ja-->
-各 `x ∈ˢ a` に対し、仮定は関係する値の依存和 `Σ y , (y ∷ x ∷ []) ⊨ φ` を可縮にする。その中心が一つの値を与え、収縮が関係するすべての値を中心と同一視するので、この段階ではホスト側の選択公理を使わない。`FunctionalImage` は小さな表示 `⟪ fst a ⟫` にわたる。各小さな添字が表す要素について中心の最小段階を取り、`boundingOrd` がそれらすべてを一つの順序数 `βimg` で上から抑える。任意の `x ∈ˢ a` が与えられると、`∈-asFiber` は小さな添字と、その表示値が `x` の基礎にある集合に等しいというパスを返す。そのパスに沿って関係を添字が表す始域の要素へ移し、可縮性によって選ばれた中心を関係する各 `y` と同一視し、その等しさに沿って共通の段階上界を移す。この構成の最小段階を求める操作は依然として `lem` に依存するが、選択公理は使わない。
+各 `x ∈ˢ a` に対し、仮定は関係する値の依存和 `Σ y , (y ∷ x ∷ []) ⊨ φ` を可縮にする。その中心が一つの値を与え、収縮が関係するすべての値を中心と同一視するので、この段階ではホスト側の選択公理を使わない。`FunctionalImage` は小さな表示 `⟪ a .fst ⟫` にわたる。各小さな添字が表す要素について中心の最小段階を取り、`boundingOrd` がそれらすべてを一つの順序数 `βimg` で上から抑える。任意の `x ∈ˢ a` が与えられると、`∈-asFiber` は小さな添字と、その表示値が `x` の基礎にある集合に等しいというパスを返す。そのパスに沿って関係を添字が表す始域の要素へ移し、可縮性によって選ばれた中心を関係する各 `y` と同一視し、その等しさに沿って共通の段階上界を移す。この構成の最小段階を求める操作は依然として `lem` に依存するが、選択公理は使わない。
 <!--/-->
 
 <details open class="submodule-fold">
@@ -625,12 +625,12 @@ The equality `Q≡` is obtained pointwise. For each candidate `y`, `into y` and
 these paths into equality of predicates. The forward implication begins with a
 propositionally truncated source. `rec₁` may inspect such a witness here
 because its target is the proposition underlying `BoundedImage y`, as certified
-by `snd (BoundedImage y)`. The witness is used only within that propositional
+by `(BoundedImage y) .snd`. The witness is used only within that propositional
 target and cannot be returned as untruncated data.
 <!--zh-->
-相等 `Q≡` 由逐点论证得到。对每个候选者 `y`，`into y` 与 `out y` 给出 `Image y` 和 `BoundedImage y` 之间的两个方向；`⇔toPath` 把它们化为命题值之间的路径，`funExt` 再把这些逐点路径合成谓词的相等。正向从经过命题截断的源开始。此处 `rec₁` 可以考察这样的见证，因为它的目标是 `BoundedImage y` 的底层命题，`snd (BoundedImage y)` 正是对此的证明。见证只在这个命题目标内部使用，不能作为未截断的数据返回。
+相等 `Q≡` 由逐点论证得到。对每个候选者 `y`，`into y` 与 `out y` 给出 `Image y` 和 `BoundedImage y` 之间的两个方向；`⇔toPath` 把它们化为命题值之间的路径，`funExt` 再把这些逐点路径合成谓词的相等。正向从经过命题截断的源开始。此处 `rec₁` 可以考察这样的见证，因为它的目标是 `BoundedImage y` 的底层命题，`(BoundedImage y) .snd` 正是对此的证明。见证只在这个命题目标内部使用，不能作为未截断的数据返回。
 <!--ja-->
-等式 `Q≡` は各点での議論から得られる。候補 `y` ごとに、`into y` と `out y` が `Image y` と `BoundedImage y` の間の二つの含意を与える。`⇔toPath` はそれらを命題値の間のパスにし、`funExt` は各点のパスを述語の等式へまとめる。順方向は、命題的切り詰めを受けた始域の要素から始まる。ここで `rec₁` がその証人を調べられるのは、行き先が `BoundedImage y` の基礎にある命題だからであり、`snd (BoundedImage y)` がまさにそのことを証明する。証人はこの命題の中でだけ使われ、切り詰められていないデータとして返されることはない。
+等式 `Q≡` は各点での議論から得られる。候補 `y` ごとに、`into y` と `out y` が `Image y` と `BoundedImage y` の間の二つの含意を与える。`⇔toPath` はそれらを命題値の間のパスにし、`funExt` は各点のパスを述語の等式へまとめる。順方向は、命題的切り詰めを受けた始域の要素から始まる。ここで `rec₁` がその証人を調べられるのは、行き先が `BoundedImage y` の基礎にある命題だからであり、`(BoundedImage y) .snd` がまさにそのことを証明する。証人はこの命題の中でだけ使われ、切り詰められていないデータとして返されることはない。
 <!--/-->
 
 ```agda
@@ -638,7 +638,7 @@ target and cannot be returned as untruncated data.
     Q≡ = funExt (λ y → ⇔toPath (into y) (out y))
       where
       into : (y : S) → ⟨ Image y ⟩ → ⟨ BoundedImage y ⟩
-      into y = rec₁ (snd (BoundedImage y)) λ { (x , (x∈a , h)) →
+      into y = rec₁ ((BoundedImage y) .snd) λ { (x , (x∈a , h)) →
 ```
 
 <!--en-->

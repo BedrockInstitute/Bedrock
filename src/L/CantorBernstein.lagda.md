@@ -40,17 +40,17 @@ open import L.Coding.Injection {ℓ} lem using ( module Small )
 
 Suppose two constructible sets admit coded injections in both directions. Their member types then admit a bijection, merely as an existence statement. This is the internal form of the Cantor–Schröder–Bernstein theorem used here: the hypotheses are expressed in the language of `L`, while the resulting bijection compares the ordinary types presenting the two sets.
 
-The argument passes through two levels. A set of `L` carries an underlying set in the ambient cumulative hierarchy. Its members form an ordinary type, written `⟪ fst a ⟫`; coded injections belong to the object theory, whereas functions between these member types belong to the metatheory.
+The argument passes through two levels. A set of `L` carries an underlying set in the ambient cumulative hierarchy. Its members form an ordinary type, written `⟪ a .fst ⟫`; coded injections belong to the object theory, whereas functions between these member types belong to the metatheory.
 <!--zh-->
 
 设两个可构造集合之间存在双向的编码单射，那么它们的元素类型之间仅仅存在一个双射。这是本章采用的 Cantor–Schröder–Bernstein 定理的内部形式：假设用 `L` 的语言表述，所得双射则比较这两个集合对应的普通类型。
 
-论证在两个层面之间进行。`L` 的集合带有外围累积层级中的底层集合，其元素组成普通类型 `⟪ fst a ⟫`。编码单射属于对象理论，而这些元素类型之间的函数属于元理论。
+论证在两个层面之间进行。`L` 的集合带有外围累积层级中的底层集合，其元素组成普通类型 `⟪ a .fst ⟫`。编码单射属于对象理论，而这些元素类型之间的函数属于元理论。
 <!--ja-->
 
 二つの構成可能集合の間に、両方向の符号化された単射があるとする。このとき、それらの要素型の間には全単射が単に存在する。これが本章で用いる Cantor–Schröder–Bernstein の定理の内部版である。仮定は `L` の言語で述べられ、得られる全単射は二つの集合を提示する通常の型を比較する。
 
-議論は二つの層にまたがる。`L` の集合は周囲の累積階層に基礎となる集合をもち、その要素は通常の型 `⟪ fst a ⟫` をなす。符号化された単射は対象理論に属し、これらの要素型の間の関数はメタ理論に属する。
+議論は二つの層にまたがる。`L` の集合は周囲の累積階層に基礎となる集合をもち、その要素は通常の型 `⟪ a .fst ⟫` をなす。符号化された単射は対象理論に属し、これらの要素型の間の関数はメタ理論に属する。
 <!--/-->
 
 <!--en-->
@@ -73,7 +73,7 @@ An injection code consists of a constructible graph together with three satisfac
 open import Cubical.HITs.CumulativeHierarchy.Properties using ( ⟪_⟫ )
 
 open hPropView 𝒮ʟ using ( S )
-setPL : (a : S) → isSet (⟪ fst a ⟫)
+setPL : (a : S) → isSet (⟪ a .fst ⟫)
 ```
 
 <!--en-->
@@ -85,10 +85,10 @@ The function `readL` performs this passage. Given a coded graph from `a` to `b`,
 <!--/-->
 
 ```agda
-setPL a = small-set (fst a)
+setPL a = small-set (a .fst)
 readL : (a b : S) → Σ[ F ∶ S ] InjCode F a b
-      → Σ[ f ∶ (⟪ fst a ⟫ → ⟪ fst b ⟫) ]
-          ((x y : ⟪ fst a ⟫) → f x ≡ f y → x ≡ y)
+      → Σ[ f ∶ (⟪ a .fst ⟫ → ⟪ b .fst ⟫) ]
+          ((x y : ⟪ a .fst ⟫) → f x ≡ f y → x ≡ y)
 readL a b (F , sv , dm , ij , ran) = SM.small , SM.small-inj
 ```
 
@@ -104,7 +104,7 @@ The abstract Cantor–Schröder–Bernstein argument can now be instantiated wit
   where
   module SM = Small F a b sv dm ij ran
 
-module MutualInjL = MutualInj S (λ a → ⟪ fst a ⟫)
+module MutualInjL = MutualInj S (λ a → ⟪ a .fst ⟫)
   (λ a b → Σ[ F ∶ S ] InjCode F a b) setPL readL
 mutual-inj→bijection : (a b : S) → InjL a b → InjL b a
 ```
@@ -118,8 +118,8 @@ The public theorem uses the second form because `InjL` records only the proposit
 <!--/-->
 
 ```agda
-  → ∥ Σ[ h ∶ (⟪ fst a ⟫ → ⟪ fst b ⟫) ]
-       (((x y : ⟪ fst a ⟫) → h x ≡ h y → x ≡ y)
-     × ((y : ⟪ fst b ⟫) → ∥ Σ[ x ∶ ⟪ fst a ⟫ ] (h x ≡ y) ∥₁)) ∥₁
+  → ∥ Σ[ h ∶ (⟪ a .fst ⟫ → ⟪ b .fst ⟫) ]
+       (((x y : ⟪ a .fst ⟫) → h x ≡ h y → x ≡ y)
+     × ((y : ⟪ b .fst ⟫) → ∥ Σ[ x ∶ ⟪ a .fst ⟫ ] (h x ≡ y) ∥₁)) ∥₁
 mutual-inj→bijection = MutualInjL.∃bijection
 ```

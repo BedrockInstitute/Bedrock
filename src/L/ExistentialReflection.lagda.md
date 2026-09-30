@@ -134,7 +134,7 @@ LsetEnv σ oσ (m ∷ ms) = LsetElt σ oσ m ∷ LsetEnv σ oσ ms
 
 Below : (σ : V ℓ) {k : ℕ} → S ^ k → Type (ℓ-suc ℓ)
 Below σ []      = ⊤*
-Below σ (p ∷ ρ) = ⟨ fst p ∈ Lset σ ⟩ × Below σ ρ
+Below σ (p ∷ ρ) = ⟨ p .fst ∈ Lset σ ⟩ × Below σ ρ
 
 Below-mono : {σ τ : V ℓ} → ⟨ σ ∈ τ ⟩ → {k : ℕ} {ρ : S ^ k}
            → Below σ ρ → Below τ ρ
@@ -145,9 +145,9 @@ Below-mono σ∈τ {ρ = p ∷ ρ} (h , hs) =
 indexEnv : (σ : V ℓ) (oσ : IsOrd σ) {k : ℕ} (ρ : S ^ k) → Below σ ρ
          → Σ[ ms ∶ ⟪ Lset σ ⟫ ^ k ] (LsetEnv σ oσ ms ≡ ρ)
 indexEnv σ oσ []      _        = [] , refl
-indexEnv σ oσ (p ∷ ρ) (h , hs) = (m ∷ fst rest) , cong₂ _∷_ eltEq (snd rest)
+indexEnv σ oσ (p ∷ ρ) (h , hs) = (m ∷ rest .fst) , cong₂ _∷_ eltEq (rest .snd)
   where
-  fib = ∈-asFiber {a = fst p} {b = Lset σ} h
+  fib = ∈-asFiber {a = p .fst} {b = Lset σ} h
   m   = fib .fst
   eltEq : LsetElt σ oσ m ≡ p
   eltEq = Σ≡Prop (λ x → ⟨ isL x ⟩isProp) (fib .snd)
@@ -193,7 +193,7 @@ satExDecision : {k : ℕ} (ψ : Formula S (suc k)) (ρ : S ^ k)
 satExDecision ψ ρ = FOL.Semantics.decideSatisfaction 𝒮ʟ id lem ρ (∃̇ ψ)
 
 Wit : {k : ℕ} (ψ : Formula S (suc k)) (ρ : S ^ k) → V ℓ → hProp (ℓ-suc ℓ)
-Wit ψ ρ σ = ∃[ q ∶ S ] ((fst q ∈ Lset σ) ⊓ Sat ψ ρ q)
+Wit ψ ρ σ = ∃[ q ∶ S ] ((q .fst ∈ Lset σ) ⊓ Sat ψ ρ q)
 
 witnessed : {k : ℕ} (ψ : Formula S (suc k)) (ρ : S ^ k) → ⟨ SatEx ψ ρ ⟩
           → ∥ (Σ[ α ∶ V ℓ ] (IsOrd α × ⟨ Wit ψ ρ α ⟩)) ∥₁
@@ -352,9 +352,9 @@ tuple merges all of them, and monotonicity carries the earlier entries up.
   localize []      _        = ∣ zero , tt* ∣₁
   localize (p ∷ ρ) (h , hs) = rec₁ squash₁
     (λ { (N , h') → map₁ (merge N h') (localize ρ hs) })
-    (localize₁ (fst p) h)
+    (localize₁ (p .fst) h)
     where
-    merge : (N : ℕ) → ⟨ fst p ∈ Lset (G N) ⟩
+    merge : (N : ℕ) → ⟨ p .fst ∈ Lset (G N) ⟩
           → Σ[ M ∶ ℕ ] Below (G M) ρ
           → Σ[ M ∶ ℕ ] Below (G M) (p ∷ ρ)
     merge N h' (M , hs') = suc (M + N)
@@ -363,7 +363,7 @@ tuple merges all of them, and monotonicity carries the earlier entries up.
                         (reach M N)) hs' )
 
   land : (q : S) (σ τ : V ℓ)
-       → ⟨ fst q ∈ Lset σ ⟩ → ⟨ σ ∈ τ ⟩ → ⟨ τ ∈ top ⟩ → ⟨ fst q ∈ Lset top ⟩
+       → ⟨ q .fst ∈ Lset σ ⟩ → ⟨ σ ∈ τ ⟩ → ⟨ τ ∈ top ⟩ → ⟨ q .fst ∈ Lset top ⟩
   land q σ τ fq∈σ σ∈τ τ∈top =
     Lset-mono {α = top} {β = τ} τ∈top (Lset-mono {α = τ} {β = σ} σ∈τ fq∈σ)
 ```
@@ -421,8 +421,8 @@ monotonicity, and the equation transported back.
         e = idx .snd
         satₘ : ⟨ SatEx ψ ρₘ ⟩
         satₘ = subst (λ r → ⟨ SatEx ψ r ⟩) (sym e) sat
-        found : Σ[ q ∶ S ] (⟨ fst q ∈ Lset (pickStage ψ ρₘ) ⟩ × ⟨ Sat ψ ρₘ q ⟩)
-              → Σ[ q ∶ S ] (⟨ fst q ∈ Lset top ⟩ × ⟨ Sat ψ ρ q ⟩)
+        found : Σ[ q ∶ S ] (⟨ q .fst ∈ Lset (pickStage ψ ρₘ) ⟩ × ⟨ Sat ψ ρₘ q ⟩)
+              → Σ[ q ∶ S ] (⟨ q .fst ∈ Lset top ⟩ × ⟨ Sat ψ ρ q ⟩)
         found (q , (fq∈pick , satq)) = q
           , ( land q (pickStage ψ ρₘ) (G (suc N))
                 fq∈pick (answers N (idx .fst)) (G∈top (suc N))

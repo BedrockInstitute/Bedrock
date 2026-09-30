@@ -943,7 +943,7 @@ The backward theorem `prChar∅-bwd` mirrors this: from the path `Q ≡ pr ∅ W
   → ∥ Σ[ w ∶ V ℓ ] (⟨ w ∈ Q ⟩ × EmptyPair W w) ∥₁
   → ((y : V ℓ) → ⟨ y ∈ Q ⟩ → ∥ EmptySgl y ⊎ EmptyPair W y ∥₁)
   → Q ≡ pr ∅ W
-prChar∅-fwd Q W h₁ h₂ h₃ = prChar-fwd Q ∅ W (fst h) (fst (snd h)) (snd (snd h))
+prChar∅-fwd Q W h₁ h₂ h₃ = prChar-fwd Q ∅ W (h .fst) ((h .snd) .fst) ((h .snd) .snd)
   where
 ```
 
@@ -1095,7 +1095,7 @@ The auxiliary `shift-path` records the renumbering arithmetic once: if two encod
   G' = cons M g
 
   shift-path : {a b x y : V ℓ} → pr a x ≡ pr b y → pr (sucV a) x ≡ pr (sucV b) y
-  shift-path {a} {b} {x} {y} e = cong₂ (λ a b → pr (sucV a) b) (fst p) (snd p)
+  shift-path {a} {b} {x} {y} e = cong₂ (λ a b → pr (sucV a) b) (p .fst) (p .snd)
 ```
 
 <!--en-->

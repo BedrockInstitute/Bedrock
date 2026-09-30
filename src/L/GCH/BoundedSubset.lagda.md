@@ -190,9 +190,9 @@ Fix a constructible set `κ` whose underlying set is an ordinal, an internal car
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module At (κ : S) (oκ : IsOrd (fst κ)) (cκ : IsCardinalL κ)
-          (κ∉ω : ⟨ fst κ ∈ˢ ω ⟩ → ⊥₀)
-          (y : S) (y⊆κ : (z : V ℓ) → ⟨ z ∈ˢ fst y ⟩ → ⟨ z ∈ˢ fst κ ⟩) where
+module At (κ : S) (oκ : IsOrd (κ .fst)) (cκ : IsCardinalL κ)
+          (κ∉ω : ⟨ κ .fst ∈ˢ ω ⟩ → ⊥₀)
+          (y : S) (y⊆κ : (z : V ℓ) → ⟨ z ∈ˢ y .fst ⟩ → ⟨ z ∈ˢ κ .fst ⟩) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -206,8 +206,8 @@ The assumptions that `κ` is an ordinal and `κ ∉ ω` imply `ω ⊆ κ`. Since
 <!--/-->
 
 ```agda
-  num∈κ : (k : ℕ) → ⟨ # k ∈ fst κ ⟩
-  num∈κ k = ω⊆ (fst κ) oκ κ∉ω (# k) (#∈ω k)
+  num∈κ : (k : ℕ) → ⟨ # k ∈ κ .fst ⟩
+  num∈κ k = ω⊆ (κ .fst) oκ κ∉ω (# k) (#∈ω k)
 ```
 
 <!--en-->
@@ -220,7 +220,7 @@ The ordinal `κ` and the constructible stage indexed by it are different sets. W
 
 ```agda
   Lκ : S
-  Lκ = LsetS (fst κ) oκ
+  Lκ = LsetS (κ .fst) oκ
 ```
 
 <!--en-->
@@ -247,7 +247,7 @@ Choose an ordinal stage index `α₀` at whose stage the pair occurs. This is a 
 
 ```agda
     α₀ : V ℓ
-    α₀ = stage (fst P₀) (snd P₀)
+    α₀ = stage (P₀ .fst) (P₀ .snd)
 ```
 
 <!--en-->
@@ -260,7 +260,7 @@ The chosen stage index `α₀` is an ordinal. This matters because the next cons
 
 ```agda
     oα₀ : IsOrd α₀
-    oα₀ = stage-ord (fst P₀) (snd P₀)
+    oα₀ = stage-ord (P₀ .fst) (P₀ .snd)
 ```
 
 <!--en-->
@@ -272,9 +272,9 @@ The cardinal `κ` belongs to `Lset α₀`. Indeed, `κ` is a member of the unord
 <!--/-->
 
 ```agda
-    κ∈Lα₀ : ⟨ fst κ ∈ˢ Lset α₀ ⟩
-    κ∈Lα₀ = layer-trans (Lset-layer α₀) {x = fst P₀} {y = fst κ}
-      (pairʟ-in κ y κ (inl refl)) (stage-mem (fst P₀) (snd P₀))
+    κ∈Lα₀ : ⟨ κ .fst ∈ˢ Lset α₀ ⟩
+    κ∈Lα₀ = layer-trans (Lset-layer α₀) {x = P₀ .fst} {y = κ .fst}
+      (pairʟ-in κ y κ (inl refl)) (stage-mem (P₀ .fst) (P₀ .snd))
 ```
 
 <!--en-->
@@ -286,9 +286,9 @@ The same transitivity argument places `y` in `Lset α₀` through the other memb
 <!--/-->
 
 ```agda
-    y∈Lα₀ : ⟨ fst y ∈ˢ Lset α₀ ⟩
-    y∈Lα₀ = layer-trans (Lset-layer α₀) {x = fst P₀} {y = fst y}
-      (pairʟ-in κ y y (inr refl)) (stage-mem (fst P₀) (snd P₀))
+    y∈Lα₀ : ⟨ y .fst ∈ˢ Lset α₀ ⟩
+    y∈Lα₀ = layer-trans (Lset-layer α₀) {x = P₀ .fst} {y = y .fst}
+      (pairʟ-in κ y y (inr refl)) (stage-mem (P₀ .fst) (P₀ .snd))
 ```
 
 <!--en-->
@@ -365,8 +365,8 @@ The cardinal `κ` belongs to the ordinal index `lam`. Because both `κ` and `α�
 <!--/-->
 
 ```agda
-    κ∈λ : ⟨ fst κ ∈ˢ lam ⟩
-    κ∈λ = ordλ .fst (ord∈Lset→∈ α₀ oα₀ (fst κ) oκ κ∈Lα₀) (sa .snd .snd .fst)
+    κ∈λ : ⟨ κ .fst ∈ˢ lam ⟩
+    κ∈λ = ordλ .fst (ord∈Lset→∈ α₀ oα₀ (κ .fst) oκ κ∈Lα₀) (sa .snd .snd .fst)
 ```
 
 <!--en-->
@@ -378,7 +378,7 @@ For `y`, the required conclusion is instead membership in the stage `Lset lam`. 
 <!--/-->
 
 ```agda
-    y∈Lλ : ⟨ fst y ∈ˢ Lset lam ⟩
+    y∈Lλ : ⟨ y .fst ∈ˢ Lset lam ⟩
     y∈Lλ = Lset-mono {α = lam} {β = α₀} (sa .snd .snd .fst) y∈Lα₀
 ```
 
@@ -391,8 +391,8 @@ Every ambient member of `y` lies in `Lset κ`. Indeed, the subset hypothesis sen
 <!--/-->
 
 ```agda
-  y⊆Lκ : (z : V ℓ) → ⟨ z ∈ˢ fst y ⟩ → ⟨ z ∈ˢ Lset (fst κ) ⟩
-  y⊆Lκ z hz = ord⊆Lset (fst κ) oκ z (y⊆κ z hz)
+  y⊆Lκ : (z : V ℓ) → ⟨ z ∈ˢ y .fst ⟩ → ⟨ z ∈ˢ Lset (κ .fst) ⟩
+  y⊆Lκ z hz = ord⊆Lset (κ .fst) oκ z (y⊆κ z hz)
 ```
 
 <!--en-->
@@ -404,7 +404,7 @@ Form the starting set `X = Lset κ ∪ {y}` inside `Lset lam`. It contains `y` a
 <!--/-->
 
 ```agda
-  module UK = UnionKit (fst κ) lam (fst y) oκ ordλ κ∈λ y⊆Lκ y∈Lλ κ∉ω
+  module UK = UnionKit (κ .fst) lam (y .fst) oκ ordλ κ∈λ y⊆Lκ y∈Lλ κ∉ω
     using ( X; X⊆Lλ; ∅∈λ; Lα∈X; x∈X; X-mem; sgl≡; Xtr )
 ```
 
@@ -456,11 +456,11 @@ To identify `Xʟ` with `X`, compare their members in both directions. In the for
 <!--/-->
 
 ```agda
-  Xʟ-eq : fst Xʟ ≡ X
-  Xʟ-eq = extensionalV {a = fst Xʟ} {b = X} (λ z → ⇔toPath (fwd z) (bwd z))
+  Xʟ-eq : Xʟ .fst ≡ X
+  Xʟ-eq = extensionalV {a = Xʟ .fst} {b = X} (λ z → ⇔toPath (fwd z) (bwd z))
     where
-    fwd : (z : V ℓ) → ⟨ z ∈ˢ fst Xʟ ⟩ → ⟨ z ∈ˢ X ⟩
-    fwd z h = rec₁ (snd (z ∈ˢ X)) go (U.out zS h)
+    fwd : (z : V ℓ) → ⟨ z ∈ˢ Xʟ .fst ⟩ → ⟨ z ∈ˢ X ⟩
+    fwd z h = rec₁ ((z ∈ˢ X) .snd) go (U.out zS h)
 ```
 
 <!--en-->
@@ -474,8 +474,8 @@ In the stage case, the left inclusion places the member in `X`. The temporary pa
 ```agda
       where
       zS : S
-      zS = z , isL-trans {x = fst Xʟ} {y = z} h (snd Xʟ)
-      go : ⟨ z ∈ˢ Lset (fst κ) ⟩ ⊎ ⟨ z ∈ˢ fst Pt.Y ⟩ → ⟨ z ∈ˢ X ⟩
+      zS = z , isL-trans {x = Xʟ .fst} {y = z} h (Xʟ .snd)
+      go : ⟨ z ∈ˢ Lset (κ .fst) ⟩ ⊎ ⟨ z ∈ˢ Pt.Y .fst ⟩ → ⟨ z ∈ˢ X ⟩
       go (inl hz) = UK.Lα∈X z hz
 ```
 
@@ -489,23 +489,23 @@ In the singleton case, the coded member is equal to `y`, already known to belong
 
 ```agda
       go (inr hz) = subst (λ w → ⟨ w ∈ˢ X ⟩) (sym (Pt.Y-out zS hz)) UK.x∈X
-    bwd : (z : V ℓ) → ⟨ z ∈ˢ X ⟩ → ⟨ z ∈ˢ fst Xʟ ⟩
-    bwd z h = rec₁ (snd (z ∈ˢ fst Xʟ)) go (UK.X-mem z h)
+    bwd : (z : V ℓ) → ⟨ z ∈ˢ X ⟩ → ⟨ z ∈ˢ Xʟ .fst ⟩
+    bwd z h = rec₁ ((z ∈ˢ Xʟ .fst) .snd) go (UK.X-mem z h)
       where
-      go : ⟨ z ∈ˢ Lset (fst κ) ⟩ ⊎ ⟨ z ∈ˢ ⁅ fst y ⁆s ⟩ → ⟨ z ∈ˢ fst Xʟ ⟩
+      go : ⟨ z ∈ˢ Lset (κ .fst) ⟩ ⊎ ⟨ z ∈ˢ ⁅ y .fst ⁆s ⟩ → ⟨ z ∈ˢ Xʟ .fst ⟩
 ```
 
 <!--en-->
-The reverse cases enter the two summands of `Xʟ`. A member of `Lset κ` enters on the left, with constructibility inherited from that stage; a member of `{y}` is first identified with `y` and then enters through the coded singleton. Thus extensionality proves `fst Xʟ ≡ X` without retaining either truncated case split.
+The reverse cases enter the two summands of `Xʟ`. A member of `Lset κ` enters on the left, with constructibility inherited from that stage; a member of `{y}` is first identified with `y` and then enters through the coded singleton. Thus extensionality proves `Xʟ .fst ≡ X` without retaining either truncated case split.
 <!--zh-->
-反向的两个分支分别进入 `Xʟ` 的两个并项。`Lset κ` 的元素从左侧进入，其可构造性由该层继承；`{y}` 的元素先与 `y` 识别，再从编码单点集一侧进入。因此外延性给出 `fst Xʟ ≡ X`，而不保留任何一次截断的分支选择。
+反向的两个分支分别进入 `Xʟ` 的两个并项。`Lset κ` 的元素从左侧进入，其可构造性由该层继承；`{y}` 的元素先与 `y` 识别，再从编码单点集一侧进入。因此外延性给出 `Xʟ .fst ≡ X`，而不保留任何一次截断的分支选择。
 <!--ja-->
-逆方向の二つの場合は、`Xʟ` の二つの成分へそれぞれ入る。`Lset κ` の要素は、その段階から構成可能性を受け継いで左側に入り、`{y}` の要素は、まず `y` と同一視されてから、符号化された単元集合の側に入る。こうして外延性により `fst Xʟ ≡ X` が得られ、切り詰められた場合分けはどちらも保持されない。
+逆方向の二つの場合は、`Xʟ` の二つの成分へそれぞれ入る。`Lset κ` の要素は、その段階から構成可能性を受け継いで左側に入り、`{y}` の要素は、まず `y` と同一視されてから、符号化された単元集合の側に入る。こうして外延性により `Xʟ .fst ≡ X` が得られ、切り詰められた場合分けはどちらも保持されない。
 <!--/-->
 
 ```agda
-      go (inl hz) = U.in₁ (z , isL-trans {x = Lset (fst κ)} {y = z} hz (snd Lκ)) hz
-      go (inr hz) = subst (λ w → ⟨ w ∈ˢ fst Xʟ ⟩) (sym (UK.sgl≡ z hz)) (U.in₂ y Pt.Y-in)
+      go (inl hz) = U.in₁ (z , isL-trans {x = Lset (κ .fst)} {y = z} hz (Lκ .snd)) hz
+      go (inr hz) = subst (λ w → ⟨ w ∈ˢ Xʟ .fst ⟩) (sym (UK.sgl≡ z hz)) (U.in₂ y Pt.Y-in)
 ```
 
 <!--en-->
@@ -518,7 +518,7 @@ The starting set is constructible, since the internal copy is constructible and 
 
 ```agda
   X-isL : ⟨ isL X ⟩
-  X-isL = subst (λ w → ⟨ isL w ⟩) Xʟ-eq (snd Xʟ)
+  X-isL = subst (λ w → ⟨ isL w ⟩) Xʟ-eq (Xʟ .snd)
 ```
 
 <!--en-->
@@ -544,15 +544,15 @@ The infinite-cardinal square law gives the propositionally truncated existence o
 
 ```agda
   pairκ : InjL (prodL κ) κ
-  pairκ = WF.WFI.induction regularityV {P = Goal} Step.result (fst κ) (snd κ) oκ cκ κ∉ω
+  pairκ = WF.WFI.induction regularityV {P = Goal} Step.result (κ .fst) (κ .snd) oκ cκ κ∉ω
 ```
 
 <!--en-->
-The two component injections feed the tagged-union construction, giving a coded injection `Xʟ ↪ κ × κ`: tags `#0` and `#1` distinguish the stage part from the singleton part. Composing with the square-law injection gives `Xʟ ↪ κ`, and transport along `fst Xʟ ≡ X` changes the domain to the constructible package `XS`. The result is the required coded injection `X ↪ κ`, still under propositional truncation.
+The two component injections feed the tagged-union construction, giving a coded injection `Xʟ ↪ κ × κ`: tags `#0` and `#1` distinguish the stage part from the singleton part. Composing with the square-law injection gives `Xʟ ↪ κ`, and transport along `Xʟ .fst ≡ X` changes the domain to the constructible package `XS`. The result is the required coded injection `X ↪ κ`, still under propositional truncation.
 <!--zh-->
-两条分量单射输入带标签并的构造，得到编码单射 `Xʟ ↪ κ × κ`：标签 `#0` 与 `#1` 区分层部分和单点集部分。再与平方律给出的单射复合，得到 `Xʟ ↪ κ`；最后沿 `fst Xʟ ≡ X` 搬运定义域，把它换成可构造包装 `XS`。所得正是需要的编码单射 `X ↪ κ`，并且仍处于命题截断下。
+两条分量单射输入带标签并的构造，得到编码单射 `Xʟ ↪ κ × κ`：标签 `#0` 与 `#1` 区分层部分和单点集部分。再与平方律给出的单射复合，得到 `Xʟ ↪ κ`；最后沿 `Xʟ .fst ≡ X` 搬运定义域，把它换成可构造包装 `XS`。所得正是需要的编码单射 `X ↪ κ`，并且仍处于命题截断下。
 <!--ja-->
-二つの成分の単射をタグ付き合併の構成に入れると、符号化された単射 `Xʟ ↪ κ × κ` が得られる。タグ `#0` と `#1` が、段階の側と単元集合の側を区別する。これを平方法則の単射と合成して `Xʟ ↪ κ` を得た後、`fst Xʟ ≡ X` に沿って定義域を構成可能な包装 `XS` へ移す。こうして必要な符号化された単射 `X ↪ κ` が、引き続き命題的切り詰めのもとで得られる。
+二つの成分の単射をタグ付き合併の構成に入れると、符号化された単射 `Xʟ ↪ κ × κ` が得られる。タグ `#0` と `#1` が、段階の側と単元集合の側を区別する。これを平方法則の単射と合成して `Xʟ ↪ κ` を得た後、`Xʟ .fst ≡ X` に沿って定義域を構成可能な包装 `XS` へ移す。こうして必要な符号化された単射 `X ↪ κ` が、引き続き命題的切り詰めのもとで得られる。
 <!--/-->
 
 ```agda
@@ -624,8 +624,8 @@ The set `y` belongs to the Skolem hull `M`: it was placed in the starting set `X
 <!--/-->
 
 ```agda
-  y∈M : ⟨ fst y ∈ˢ HS.M ⟩
-  y∈M = HSH.X⊆M (fst y) UK.x∈X
+  y∈M : ⟨ y .fst ∈ˢ HS.M ⟩
+  y∈M = HSH.X⊆M (y .fst) UK.x∈X
 ```
 
 <!--en-->
@@ -637,10 +637,10 @@ The collapse fixes `y`: because the starting set `X` is transitive and contained
 <!--/-->
 
 ```agda
-  πy : HSC.π (fst y) ≡ fst y
+  πy : HSC.π (y .fst) ≡ y .fst
   πy = HSC.fixes X
     (λ a a∈ₛX → ∈∈ₛ {a = a} {b = HS.M} .fst (HSH.X⊆M a (∈∈ₛ {a = a} {b = X} .snd a∈ₛX)))
-    UK.Xtr (fst y) UK.x∈X
+    UK.Xtr (y .fst) UK.x∈X
 ```
 
 <!--en-->
@@ -652,9 +652,9 @@ The collapse image contains `π(y)`, since `y` belongs to the hull. Condensation
 <!--/-->
 
 ```agda
-  y∈Lβ : ⟨ fst y ∈ˢ Lset St.β ⟩
+  y∈Lβ : ⟨ y .fst ∈ˢ Lset St.β ⟩
   y∈Lβ = subst (λ w → ⟨ w ∈ˢ Lset St.β ⟩) πy
-    (subst (λ w → ⟨ HSC.π (fst y) ∈ˢ w ⟩) St.ext (HSC.πX-intro (fst y) y∈M))
+    (subst (λ w → ⟨ HSC.π (y .fst) ∈ˢ w ⟩) St.ext (HSC.πX-intro (y .fst) y∈M))
 ```
 
 <!--en-->
@@ -681,7 +681,7 @@ The local witness now packages the constructible ordinal `β`, its ordinality, t
 <!--/-->
 
 ```agda
-  result : Σ[ b ∶ S ] (IsOrd (fst b) × ⟨ fst y ∈ˢ Lset (fst b) ⟩ × InjL b κ)
+  result : Σ[ b ∶ S ] (IsOrd (b .fst) × ⟨ y .fst ∈ˢ Lset (b .fst) ⟩ × InjL b κ)
   result = St.βL , St.oβ , y∈Lβ , β↪κ
 ```
 </div>

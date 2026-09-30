@@ -305,7 +305,7 @@ The reading module fixes the four slots, the environment, and the ordinalness of
 <summary class="submodule-fold-heading">
 ```agda
 module Reading {n : ℕ} (d f u v : Fin n) (γ : S ^ n)
-               (od : IsOrd (fst (lookup d γ))) where
+               (od : IsOrd ((lookup d γ) .fst)) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -313,7 +313,7 @@ module Reading {n : ℕ} (d f u v : Fin n) (γ : S ^ n)
 ```agda
   private
     δ : V ℓ
-    δ = fst (lookup d γ)
+    δ = (lookup d γ) .fst
 ```
 
 <!--en-->
@@ -351,7 +351,7 @@ The semantic goal is the propositionally truncated `Under`{.Agda} statement. It 
 
 ```agda
     Goal : Type (ℓ-suc ℓ)
-    Goal = ∥ Under δ (stepOrder δ od) (fst (lookup u γ)) (fst (lookup v γ)) ∥₁
+    Goal = ∥ Under δ (stepOrder δ od) ((lookup u γ) .fst) ((lookup v γ) .fst) ∥₁
 ```
 
 <!--en-->
@@ -442,8 +442,8 @@ The definable-power-set clause identifies `pw`, and the next two conjuncts place
     Two : (tw pw : S) → Type (ℓ-suc ℓ)
     Two tw pw =
         ⟨ (pw ∷ tw ∷ γ) ⊨ DefAt zero (suc zero) ⟩
-      × ( ⟨ fst (lookup u γ) ∈ fst pw ⟩
-        × ( ⟨ fst (lookup v γ) ∈ fst pw ⟩
+      × ( ⟨ (lookup u γ) .fst ∈ pw .fst ⟩
+        × ( ⟨ (lookup v γ) .fst ∈ pw .fst ⟩
 ```
 
 <!--en-->
@@ -492,11 +492,11 @@ Only five of the six bound elements enter `StepAt`{.Agda}; `pw` serves the two s
 <summary class="submodule-fold-heading">
 ```agda
   module Slots (tw pw rl cs ro c0 : S)
-               (qtw : fst tw ≡ Lset δ)
+               (qtw : tw .fst ≡ Lset δ)
                (hrel : IsRel δ rl)
-               (qcs : fst cs ≡ fst (AllCodes (LsetS δ od)))
-               (qro : fst ro ≡ fst codeOrder)
-               (qc0 : fst c0 ≡ fst (AllCodes ∅ʟ)) where
+               (qcs : cs .fst ≡ (AllCodes (LsetS δ od)) .fst)
+               (qro : ro .fst ≡ codeOrder .fst)
+               (qc0 : c0 .fst ≡ (AllCodes ∅ʟ) .fst) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -510,7 +510,7 @@ Inside the alignment, the naming adequacy is instantiated at the stage, and its 
 <!--/-->
 
 ```agda
-    private module A6 = At (Lset δ) (snd (LsetS δ od)) ordW
+    private module A6 = At (Lset δ) ((LsetS δ od) .snd) ordW
     private module L6 = A6.Least codeOrder rl codeOrder-rep codeOrder-fill
                           (ixRel-rep δ od rl hrel) (ixRel-fill δ od rl hrel)
 ```
@@ -526,7 +526,7 @@ With those certifications, the name-comparison theorem is instantiated in the fu
 ```agda
     private module St = L6.Step iOrd iRel iTow iCod iNil (sh6 u) (sh6 v)
               (c0 ∷ ro ∷ cs ∷ rl ∷ pw ∷ tw ∷ γ)
-              qro refl (Σ≡Prop (λ x → snd (isL x)) qtw) qcs qc0
+              qro refl (Σ≡Prop (λ x → (isL x) .snd) qtw) qcs qc0
 ```
 
 <!--en-->
@@ -565,7 +565,7 @@ The exported predicate `IsLeastName`{.Agda} and the adequacy theorem state the i
 
 ```agda
     leastFst-in : (t : NM.Name)
-                → IsLeastName δ ordW t (fst (lookup u γ)) → LeastFst t
+                → IsLeastName δ ordW t ((lookup u γ) .fst) → LeastFst t
     leastFst-in t (q , mn) = sym q , λ t' q' → mn t' (sym q')
 ```
 
@@ -579,7 +579,7 @@ The second object's conversion is identical in form. It changes only the orienta
 
 ```agda
     leastSnd-in : (t : NM.Name)
-                → IsLeastName δ ordW t (fst (lookup v γ)) → LeastSnd t
+                → IsLeastName δ ordW t ((lookup v γ) .fst) → LeastSnd t
     leastSnd-in t (q , mn) = sym q , λ t' q' → mn t' (sym q')
 ```
 
@@ -593,7 +593,7 @@ In the reading direction, the same symmetry recovers `IsLeastName`{.Agda} for th
 
 ```agda
     leastFst-out : (t : NM.Name)
-                 → LeastFst t → IsLeastName δ ordW t (fst (lookup u γ))
+                 → LeastFst t → IsLeastName δ ordW t ((lookup u γ) .fst)
     leastFst-out t (q , mn) = sym q , λ t' q' → mn t' (sym q')
 ```
 
@@ -607,7 +607,7 @@ The second least-name predicate is read back in the same way, leaving two ordina
 
 ```agda
     leastSnd-out : (t : NM.Name)
-                 → LeastSnd t → IsLeastName δ ordW t (fst (lookup v γ))
+                 → LeastSnd t → IsLeastName δ ordW t ((lookup v γ) .fst)
     leastSnd-out t (q , mn) = sym q , λ t' q' → mn t' (sym q')
 ```
 
@@ -633,7 +633,7 @@ In the inward direction, the local least-name facts for `t₁` and `t₂`, toget
 <!--/-->
 
 ```agda
-      holds-in : (t₁ t₂ : NM.Name) → LeastFst t₁ → LeastSnd t₂ → NM._≺ₙ_ t₁ t₂
+      holds-in : (t₁ t₂ : NM.Name) → LeastFst t₁ → LeastSnd t₂ → t₁ NM.≺ₙ t₂
                → StepHolds tw pw rl cs ro c0
       holds-in = St.StepAt-fill
 ```
@@ -649,7 +649,7 @@ Conversely, reading the innermost satisfaction yields, under propositional trunc
 ```agda
       holds-out : StepHolds tw pw rl cs ro c0
                 → ∥ Σ[ t₁ ∶ NM.Name ] Σ[ t₂ ∶ NM.Name ]
-                      (LeastFst t₁ × (LeastSnd t₂ × NM._≺ₙ_ t₁ t₂)) ∥₁
+                      (LeastFst t₁ × (LeastSnd t₂ × (t₁ NM.≺ₙ t₂))) ∥₁
       holds-out = St.StepAt-read
 ```
 </div>
@@ -676,7 +676,7 @@ The total reading must work for whatever six witnesses a satisfying assignment p
     atAll : (tw pw rl cs ro c0 : S)
           → ⟨ (tw ∷ γ) ⊨ LsetGraphAt zero (suc d) ⟩
           → ⟨ (pw ∷ tw ∷ γ) ⊨ DefAt zero (suc zero) ⟩
-          → ⟨ fst (lookup u γ) ∈ fst pw ⟩
+          → ⟨ (lookup u γ) .fst ∈ pw .fst ⟩
 ```
 
 <!--en-->
@@ -688,11 +688,11 @@ The next hypotheses supply the second membership, the table application, and the
 <!--/-->
 
 ```agda
-          → ⟨ fst (lookup v γ) ∈ fst pw ⟩
+          → ⟨ (lookup v γ) .fst ∈ pw .fst ⟩
           → ⟨ (rl ∷ pw ∷ tw ∷ γ) ⊨ appAt (sh3 f) (sh3 d) zero ⟩
           → ⟨ (cs ∷ rl ∷ pw ∷ tw ∷ γ) ⊨ CodesAt zero (sh3 zero) ⟩
-          → ((r : S) → ⟨ pr δ (fst r) ∈ fst (lookup f γ) ⟩ → IsRel δ r)
-          → fst ro ≡ fst codeOrder
+          → ((r : S) → ⟨ pr δ (r .fst) ∈ (lookup f γ) .fst ⟩ → IsRel δ r)
+          → ro .fst ≡ codeOrder .fst
 ```
 
 <!--en-->
@@ -704,7 +704,7 @@ The outward argument has now reached the innermost condition. Once the six exist
 <!--/-->
 
 ```agda
-          → fst c0 ≡ fst (AllCodes ∅ʟ)
+          → c0 .fst ≡ (AllCodes ∅ʟ) .fst
           → StepHolds tw pw rl cs ro c0 → Goal
     atAll tw pw rl cs ro c0 hg hdef hu hv happ hcs vals qro qc0 hstep =
       map₁ atNames (K.holds-out hstep)
@@ -720,7 +720,7 @@ The tower identification equation says the tower bound in the formula equals the
 <!--/-->
 
 ```agda
-      qtw : fst tw ≡ Lset δ
+      qtw : tw .fst ≡ Lset δ
       qtw = Lset-only zero (suc d) (tw ∷ γ) hg od
 ```
 
@@ -733,7 +733,7 @@ The definable-subset identification says the bound set is the definable power se
 <!--/-->
 
 ```agda
-      qpw : fst pw ≡ 𝒟ₒ (Lset δ)
+      qpw : pw .fst ≡ 𝒟ₒ (Lset δ)
       qpw = subst ⟨_⟩ (DefAt-stage δ od zero (suc zero) (pw ∷ tw ∷ γ) qtw) hdef
 ```
 
@@ -746,7 +746,7 @@ Membership in the successor stage is recovered by two transports: the first iden
 <!--/-->
 
 ```agda
-      inSuc : (x : V ℓ) → ⟨ x ∈ fst pw ⟩ → ⟨ x ∈ Lset (sucV δ) ⟩
+      inSuc : (x : V ℓ) → ⟨ x ∈ pw .fst ⟩ → ⟨ x ∈ Lset (sucV δ) ⟩
       inSuc x h = subst (λ z → ⟨ x ∈ z ⟩) (sym (Lset-suc δ))
         (subst (λ z → ⟨ x ∈ z ⟩) qpw h)
 ```
@@ -761,7 +761,7 @@ The first comparison candidate is the underlying set at slot `u`, presented as a
 
 ```agda
       a : New δ
-      a = fst (lookup u γ) , inSuc (fst (lookup u γ)) hu
+      a = (lookup u γ) .fst , inSuc ((lookup u γ) .fst) hu
 ```
 
 <!--en-->
@@ -774,7 +774,7 @@ The second comparison candidate is the underlying set at slot `v`, similarly pre
 
 ```agda
       b : New δ
-      b = fst (lookup v γ) , inSuc (fst (lookup v γ)) hv
+      b = (lookup v γ) .fst , inSuc ((lookup v γ) .fst) hv
 ```
 
 <!--en-->
@@ -800,8 +800,8 @@ The outward reading of the code-set description identifies `cs` with `AllCodes (
 <!--/-->
 
 ```agda
-      qcs : fst cs ≡ fst (AllCodes (LsetS δ od))
-      qcs = cong fst (CodesAt-out (LsetS δ od) zero (sh3 zero)
+      qcs : cs .fst ≡ (AllCodes (LsetS δ od)) .fst
+      qcs = cong (λ p → p .fst) (CodesAt-out (LsetS δ od) zero (sh3 zero)
               (cs ∷ rl ∷ pw ∷ tw ∷ γ) qtw hcs)
 ```
 
@@ -827,8 +827,8 @@ Inside the propositional truncation returned by the name adequacy theorem, suppo
 
 ```agda
       atNames : Σ[ t₁ ∶ NM.Name ] Σ[ t₂ ∶ NM.Name ]
-                  ( K.LeastFst t₁ × ( K.LeastSnd t₂ × NM._≺ₙ_ t₁ t₂ ) )
-              → Under δ (stepOrder δ od) (fst (lookup u γ)) (fst (lookup v γ))
+                  ( K.LeastFst t₁ × ( K.LeastSnd t₂ × (t₁ NM.≺ₙ t₂) ) )
+              → Under δ (stepOrder δ od) ((lookup u γ) .fst) ((lookup v γ) .fst)
       atNames (t₁ , (t₂ , (l₁ , (l₂ , lt)))) =
           a .snd
 ```
@@ -866,10 +866,10 @@ For the converse direction, fix one actual table value `rl`, evidence that the t
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-  module Pack (rl : S) (hpr : ⟨ pr δ (fst rl) ∈ fst (lookup f γ) ⟩)
+  module Pack (rl : S) (hpr : ⟨ pr δ (rl .fst) ∈ (lookup f γ) .fst ⟩)
               (hrel : IsRel δ rl)
-              (hx : ⟨ fst (lookup u γ) ∈ Lset (sucV δ) ⟩)
-              (hy : ⟨ fst (lookup v γ) ∈ Lset (sucV δ) ⟩)
+              (hx : ⟨ (lookup u γ) .fst ∈ Lset (sucV δ) ⟩)
+              (hy : ⟨ (lookup v γ) .fst ∈ Lset (sucV δ) ⟩)
               where
 ```
 </summary>
@@ -899,7 +899,7 @@ The first comparison candidate is presented by its membership in the successor s
 ```agda
     private
       a : New δ
-      a = fst (lookup u γ) , hx
+      a = (lookup u γ) .fst , hx
 ```
 
 <!--en-->
@@ -912,7 +912,7 @@ The second comparison candidate is similarly presented.
 
 ```agda
       b : New δ
-      b = fst (lookup v γ) , hy
+      b = (lookup v γ) .fst , hy
 ```
 
 <!--en-->
@@ -924,7 +924,7 @@ Every new element has a least name relative to the fixed host-side well-order `o
 <!--/-->
 
 ```agda
-      n₁ : Σ[ t ∶ NM.Name ] IsLeastName δ ordW t (fst (lookup u γ))
+      n₁ : Σ[ t ∶ NM.Name ] IsLeastName δ ordW t ((lookup u γ) .fst)
       n₁ = leastNameOf δ ordW a
 ```
 
@@ -937,7 +937,7 @@ The same theorem supplies a least name for the second candidate. These two local
 <!--/-->
 
 ```agda
-      n₂ : Σ[ t ∶ NM.Name ] IsLeastName δ ordW t (fst (lookup v γ))
+      n₂ : Σ[ t ∶ NM.Name ] IsLeastName δ ordW t ((lookup v γ) .fst)
       n₂ = leastNameOf δ ordW b
 ```
 
@@ -979,7 +979,7 @@ To fill the two membership conjuncts of `Stp`, the direction needed here is from
 <!--/-->
 
 ```agda
-      inPow : (x : V ℓ) → ⟨ x ∈ Lset (sucV δ) ⟩ → ⟨ x ∈ fst (powS δ od) ⟩
+      inPow : (x : V ℓ) → ⟨ x ∈ Lset (sucV δ) ⟩ → ⟨ x ∈ (powS δ od) .fst ⟩
       inPow x h = subst (λ z → ⟨ x ∈ z ⟩) (sym (powS-fst δ od))
         (subst (λ z → ⟨ x ∈ z ⟩) (Lset-suc δ) h)
 ```
@@ -1070,8 +1070,8 @@ The second witness is `powS δ od`{.Agda}, accompanied by its `DefAt`{.Agda} sat
 
 ```agda
           , ( hdef
-            , ( inPow (fst (lookup u γ)) hx
-              , ( inPow (fst (lookup v γ)) hy
+            , ( inPow ((lookup u γ) .fst) hx
+              , ( inPow ((lookup v γ) .fst) hy
                 , ∣ rl
                   , ( happ
 ```
@@ -1136,7 +1136,7 @@ For the outward reading, assume every value recorded by the table at `δ` repres
 <!--/-->
 
 ```agda
-    read : ((r : S) → ⟨ pr δ (fst r) ∈ fst (lookup f γ) ⟩ → IsRel δ r)
+    read : ((r : S) → ⟨ pr δ (r .fst) ∈ (lookup f γ) .fst ⟩ → IsRel δ r)
          → ⟨ γ ⊨ Stp d f u v ⟩ → Goal
     read vals = rec₁ squash₁
       (λ { (tw , (hg , hpw)) → rec₁ squash₁
@@ -1180,8 +1180,8 @@ The inward reading consumes a specific table value with its membership and relat
 <!--/-->
 
 ```agda
-    fill : (r : S) → ⟨ pr δ (fst r) ∈ fst (lookup f γ) ⟩ → IsRel δ r
-         → Under δ (stepOrder δ od) (fst (lookup u γ)) (fst (lookup v γ))
+    fill : (r : S) → ⟨ pr δ (r .fst) ∈ (lookup f γ) .fst ⟩ → IsRel δ r
+         → Under δ (stepOrder δ od) ((lookup u γ) .fst) ((lookup v γ) .fst)
          → ⟨ γ ⊨ Stp d f u v ⟩
     fill r hpr hrel (hx , (hy , cmp)) = Pack.packAll r hpr hrel hx hy cmp
 ```
@@ -1317,16 +1317,16 @@ The table supplies that internal set as `relL` at the chosen ordinal. Thus `orde
 ```
 
 <!--en-->
-The forward representation lemma takes a host-side comparison `relOf boundOrder x y` and inserts the encoded ordered pair `pr (fst x) (fst y)` into `orderL`. It establishes one direction of the pairwise correspondence between the existing `SWO` relation and its internal graph.
+The forward representation lemma takes a host-side comparison `relOf boundOrder x y` and inserts the encoded ordered pair `pr (x .fst) (y .fst)` into `orderL`. It establishes one direction of the pairwise correspondence between the existing `SWO` relation and its internal graph.
 <!--zh-->
-正向表示引理从宿主层比较 `relOf boundOrder x y` 出发，把编码有序对 `pr (fst x) (fst y)` 放入 `orderL`。这建立已有 `SWO` 关系与其内部关系图之间逐对对应的一个方向。
+正向表示引理从宿主层比较 `relOf boundOrder x y` 出发，把编码有序对 `pr (x .fst) (y .fst)` 放入 `orderL`。这建立已有 `SWO` 关系与其内部关系图之间逐对对应的一个方向。
 <!--ja-->
-順方向の表現補題は、ホスト側の比較 `relOf boundOrder x y` から、符号化された順序対 `pr (fst x) (fst y)` を `orderL` に入れる。これにより、既存の `SWO` の関係とその内部グラフとの要素ごとの対応の一方向が得られる。
+順方向の表現補題は、ホスト側の比較 `relOf boundOrder x y` から、符号化された順序対 `pr (x .fst) (y .fst)` を `orderL` に入れる。これにより、既存の `SWO` の関係とその内部グラフとの要素ごとの対応の一方向が得られる。
 <!--/-->
 
 ```agda
   orderL-fill : (x y : Mem (Lset boundOrd)) → relOf boundOrder x y
-              → ⟨ pr (fst x) (fst y) ∈ fst orderL ⟩
+              → ⟨ pr (x .fst) (y .fst) ∈ orderL .fst ⟩
   orderL-fill = relL-fill boundOrd boundOrd-isL boundOrd-ord
 ```
 
@@ -1340,7 +1340,7 @@ Conversely, membership of the encoded pair in `orderL` recovers the host-side co
 
 ```agda
   orderL-rep : (x y : Mem (Lset boundOrd))
-             → ⟨ pr (fst x) (fst y) ∈ fst orderL ⟩ → relOf boundOrder x y
+             → ⟨ pr (x .fst) (y .fst) ∈ orderL .fst ⟩ → relOf boundOrder x y
   orderL-rep = relL-rep boundOrd boundOrd-isL boundOrd-ord
 ```
 </div>

@@ -27,6 +27,7 @@ FIXTURES = {
     '/mathematical-notation-regression': 'browser-mathematical-notation.html',
 }
 OUTCROP_FIXTURES = {
+    '/projection-regression': ROOT / 'outcrop/tests/browser-projections.html',
     '/ask-ai-regression': ROOT / 'outcrop/tests/browser-ask-ai.html',
 }
 

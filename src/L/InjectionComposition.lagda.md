@@ -224,7 +224,7 @@ The reader states the bound's purpose directly: each member of the family, read 
 <!--/-->
 
 ```agda
-    below : (i : I) → ⟨ fst (g i) ∈ fst bnd ⟩
+    below : (i : I) → ⟨ (g i) .fst ∈ bnd .fst ⟩
     below = smallDom I g .snd
 ```
 </div>
@@ -254,7 +254,7 @@ A fact about `ω` itself, at the strength the membership predicate supports: a m
 
 ```agda
 ω-limit : (γ : V ℓ) → ⟨ γ ∈ ω ⟩ → ⟨ sucV γ ∈ ω ⟩
-ω-limit γ γ∈ω = rec₁ (snd (sucV γ ∈ ω)) go (ω-mem→numeral γ γ∈ω)
+ω-limit γ γ∈ω = rec₁ ((sucV γ ∈ ω) .snd) go (ω-mem→numeral γ γ∈ω)
   where
   go : Σ[ n ∶ ℕ ] (γ ≡ # n) → ⟨ sucV γ ∈ ω ⟩
   go (n , p) = subst (λ w → ⟨ sucV w ∈ ω ⟩) (sym p) (#∈ω (suc n))
@@ -440,7 +440,7 @@ module PairBound (D C : S) where
 
 ```agda
   Ix : Type ℓ
-  Ix = ⟪ fst D ⟫ × ⟪ fst C ⟫
+  Ix = ⟪ D .fst ⟫ × ⟪ C .fst ⟫
 ```
 
 <!--en-->
@@ -453,11 +453,11 @@ Each presentation index is realized as an element of the carrier: the presented 
 
 ```agda
   private
-    toD : ⟪ fst D ⟫ → S
-    toD m = ⟪ fst D ⟫↪ m
-          , isL-trans {x = fst D} {y = ⟪ fst D ⟫↪ m} (member (fst D) m) (snd D)
+    toD : ⟪ D .fst ⟫ → S
+    toD m = ⟪ D .fst ⟫↪ m
+          , isL-trans {x = D .fst} {y = ⟪ D .fst ⟫↪ m} (member (D .fst) m) (D .snd)
 
-    toC : ⟪ fst C ⟫ → S
+    toC : ⟪ C .fst ⟫ → S
 ```
 
 <!--en-->
@@ -469,8 +469,8 @@ One L-element per index, on each side.
 <!--/-->
 
 ```agda
-    toC k = ⟪ fst C ⟫↪ k
-          , isL-trans {x = fst C} {y = ⟪ fst C ⟫↪ k} (member (fst C) k) (snd C)
+    toC k = ⟪ C .fst ⟫↪ k
+          , isL-trans {x = C .fst} {y = ⟪ C .fst ⟫↪ k} (member (C .fst) k) (C .snd)
 ```
 
 <!--en-->
@@ -510,9 +510,9 @@ The reader extends the bound beyond presentations: for arbitrary elements `x` of
 <!--/-->
 
 ```agda
-  below : (x z : S) → ⟨ fst x ∈ fst D ⟩ → ⟨ fst z ∈ fst C ⟩
-        → ⟨ pr (fst x) (fst z) ∈ fst bnd ⟩
-  below x z mx mz = subst (λ w → ⟨ w ∈ fst bnd ⟩) pa (SB.below i)
+  below : (x z : S) → ⟨ x .fst ∈ D .fst ⟩ → ⟨ z .fst ∈ C .fst ⟩
+        → ⟨ pr (x .fst) (z .fst) ∈ bnd .fst ⟩
+  below x z mx mz = subst (λ w → ⟨ w ∈ bnd .fst ⟩) pa (SB.below i)
     where
 ```
 
@@ -525,10 +525,10 @@ Since `D` and `C` are presented, each of the two elements has a fiber: an index 
 <!--/-->
 
 ```agda
-    fD : Σ[ m ∶ ⟪ fst D ⟫ ] (⟪ fst D ⟫↪ m ≡ fst x)
-    fD = fiber (fst D) mx
-    fC : Σ[ k ∶ ⟪ fst C ⟫ ] (⟪ fst C ⟫↪ k ≡ fst z)
-    fC = fiber (fst C) mz
+    fD : Σ[ m ∶ ⟪ D .fst ⟫ ] (⟪ D .fst ⟫↪ m ≡ x .fst)
+    fD = fiber (D .fst) mx
+    fC : Σ[ k ∶ ⟪ C .fst ⟫ ] (⟪ C .fst ⟫↪ k ≡ z .fst)
+    fC = fiber (C .fst) mz
 ```
 
 <!--en-->
@@ -542,7 +542,7 @@ The two indices form one index of the bound's family, whose value is the coded p
 ```agda
     i : Ix
     i = fD .fst , fC .fst
-    pa : fst (pw i) ≡ pr (fst x) (fst z)
+    pa : (pw i) .fst ≡ pr (x .fst) (z .fst)
     pa = prʟ-fst (toD (fD .fst)) (toC (fC .fst))
        ∙ cong₂ pr (fD .snd) (fC .snd)
 ```
@@ -593,8 +593,8 @@ The backward reading turns membership into truncated data about a pair. A member
 <!--/-->
 
 ```agda
-    out : (e : S) → ⟨ fst e ∈ fst rel ⟩
-        → ∥ Σ[ x ∶ S ] Σ[ y ∶ S ] ((fst e ≡ pr (fst x) (fst y)) × ⟨ P x y ⟩) ∥₁
+    out : (e : S) → ⟨ e .fst ∈ rel .fst ⟩
+        → ∥ Σ[ x ∶ S ] Σ[ y ∶ S ] ((e .fst ≡ pr (x .fst) (y .fst)) × ⟨ P x y ⟩) ∥₁
     out e h = rec₁ squash₁ (λ { (x , hx) → map₁
       (λ { (y , q , hy) → x , y
          , subst ⟨_⟩ (prAtL-adequate (suc (suc zero)) (suc zero) zero (y ∷ x ∷ e ∷ [])) q
@@ -622,11 +622,11 @@ The forward direction builds membership from the predicate.
 <!--/-->
 
 ```agda
-    into : (x y : S) → ⟨ fst x ∈ fst D ⟩ → ⟨ fst y ∈ fst C ⟩ → ⟨ P x y ⟩
-         → ⟨ pr (fst x) (fst y) ∈ fst rel ⟩
-    into x y mx my h = subst (λ w → ⟨ w ∈ fst rel ⟩) (prʟ-fst x y)
+    into : (x y : S) → ⟨ x .fst ∈ D .fst ⟩ → ⟨ y .fst ∈ C .fst ⟩ → ⟨ P x y ⟩
+         → ⟨ pr (x .fst) (y .fst) ∈ rel .fst ⟩
+    into x y mx my h = subst (λ w → ⟨ w ∈ rel .fst ⟩) (prʟ-fst x y)
       (subst ⟨_⟩ (sym (hasSeparationL (PairBound.bnd D C) fo .fst .snd (prʟ x y)))
-        ( subst (λ w → ⟨ w ∈ fst (PairBound.bnd D C) ⟩) (sym (prʟ-fst x y))
+        ( subst (λ w → ⟨ w ∈ (PairBound.bnd D C) .fst ⟩) (sym (prʟ-fst x y))
 ```
 
 <!--en-->
@@ -654,11 +654,11 @@ For the genuine coded pair of `x` and `y`, the backward reading sharpens to an u
 <!--/-->
 
 ```agda
-  pair-out : (x y : S) → ⟨ pr (fst x) (fst y) ∈ fst rel ⟩ → ⟨ P x y ⟩
-  pair-out x y h = rec₁ (snd (P x y))
+  pair-out : (x y : S) → ⟨ pr (x .fst) (y .fst) ∈ rel .fst ⟩ → ⟨ P x y ⟩
+  pair-out x y h = rec₁ ((P x y) .snd)
     (λ { (x' , y' , q , h') →
       subst2 (λ a b → ⟨ P a b ⟩)
-        (Σ≡Prop (λ v → snd (isL v)) (sym (pr-inj (sym (prʟ-fst x y) ∙ q) .fst)))
+        (Σ≡Prop (λ v → (isL v) .snd) (sym (pr-inj (sym (prʟ-fst x y) ∙ q) .fst)))
 ```
 
 <!--en-->
@@ -670,8 +670,8 @@ Its witness presents `e` as the coded pair of some `x'` and `y'`; injectivity of
 <!--/-->
 
 ```agda
-        (Σ≡Prop (λ v → snd (isL v)) (sym (pr-inj (sym (prʟ-fst x y) ∙ q) .snd))) h' })
-    (out (prʟ x y) (subst (λ w → ⟨ w ∈ fst rel ⟩) (sym (prʟ-fst x y)) h))
+        (Σ≡Prop (λ v → (isL v) .snd) (sym (pr-inj (sym (prʟ-fst x y) ∙ q) .snd))) h' })
+    (out (prʟ x y) (subst (λ w → ⟨ w ∈ rel .fst ⟩) (sym (prʟ-fst x y)) h))
 ```
 </div>
 </details>
@@ -697,13 +697,13 @@ module Comp (D E C F H : S)
             (svF : ⟨ (F ∷ D ∷ []) ⊨ svAt zero ⟩)
             (dmF : ⟨ (F ∷ D ∷ []) ⊨ domAt zero (suc zero) ⟩)
             (ijF : ⟨ (F ∷ D ∷ []) ⊨ injAt zero ⟩)
-            (ranF : (x y : S) → ⟨ pr (fst x) (fst y) ∈ fst F ⟩
-                  → ⟨ fst y ∈ fst E ⟩)
+            (ranF : (x y : S) → ⟨ pr (x .fst) (y .fst) ∈ F .fst ⟩
+                  → ⟨ y .fst ∈ E .fst ⟩)
             (svH : ⟨ (H ∷ E ∷ []) ⊨ svAt zero ⟩)
             (dmH : ⟨ (H ∷ E ∷ []) ⊨ domAt zero (suc zero) ⟩)
             (ijH : ⟨ (H ∷ E ∷ []) ⊨ injAt zero ⟩)
-            (ranH : (y z : S) → ⟨ pr (fst y) (fst z) ∈ fst H ⟩
-                  → ⟨ fst z ∈ fst C ⟩) where
+            (ranH : (y z : S) → ⟨ pr (y .fst) (z .fst) ∈ H .fst ⟩
+                  → ⟨ z .fst ∈ C .fst ⟩) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -752,8 +752,8 @@ The linking relation says: `x` and `z` are related when the object language can 
 ```agda
   private
     Chain : S → S → Type (ℓ-suc ℓ)
-    Chain x z = ∥ Σ[ y ∶ S ] (⟨ pr (fst x) (fst y) ∈ fst F ⟩
-                             × ⟨ pr (fst y) (fst z) ∈ fst H ⟩) ∥₁
+    Chain x z = ∥ Σ[ y ∶ S ] (⟨ pr (x .fst) (y .fst) ∈ F .fst ⟩
+                             × ⟨ pr (y .fst) (z .fst) ∈ H .fst ⟩) ∥₁
 ```
 
 <!--en-->
@@ -824,9 +824,9 @@ The composite graph is the separated relation itself.
   K : S
   K = Composite.rel
 
-  K-out : (x z : S) → ⟨ pr (fst x) (fst z) ∈ fst K ⟩
-        → ∥ Σ[ y ∶ S ] (⟨ pr (fst x) (fst y) ∈ fst F ⟩
-                      × ⟨ pr (fst y) (fst z) ∈ fst H ⟩) ∥₁
+  K-out : (x z : S) → ⟨ pr (x .fst) (z .fst) ∈ K .fst ⟩
+        → ∥ Σ[ y ∶ S ] (⟨ pr (x .fst) (y .fst) ∈ F .fst ⟩
+                      × ⟨ pr (y .fst) (z .fst) ∈ H .fst ⟩) ∥₁
 ```
 
 <!--en-->
@@ -850,9 +850,9 @@ The forward reading is the composition law: given an intermediate `y` with the t
 <!--/-->
 
 ```agda
-  K-in : (x y z : S) → ⟨ fst x ∈ fst D ⟩ → ⟨ fst z ∈ fst C ⟩
-       → ⟨ pr (fst x) (fst y) ∈ fst F ⟩ → ⟨ pr (fst y) (fst z) ∈ fst H ⟩
-       → ⟨ pr (fst x) (fst z) ∈ fst K ⟩
+  K-in : (x y z : S) → ⟨ x .fst ∈ D .fst ⟩ → ⟨ z .fst ∈ C .fst ⟩
+       → ⟨ pr (x .fst) (y .fst) ∈ F .fst ⟩ → ⟨ pr (y .fst) (z .fst) ∈ H .fst ⟩
+       → ⟨ pr (x .fst) (z .fst) ∈ K .fst ⟩
   K-in x y z mx mz hf hh = Composite.into x z mx mz ∣ y , hf , hh ∣₁
 ```
 
@@ -881,8 +881,8 @@ Suppose the composite pairs `x` with two values `y` and `y'`. Unwrapping both tr
 
 ```agda
   svK = svAt-in zero γK (λ x y y' p q →
-    rec₁ (setIsSet (fst y) (fst y'))
-      (λ { (w , (hf , hh)) → rec₁ (setIsSet (fst y) (fst y'))
+    rec₁ (setIsSet (y .fst) (y' .fst))
+      (λ { (w , (hf , hh)) → rec₁ (setIsSet (y .fst) (y' .fst))
         (λ { (w' , (hf' , hh')) →
           svAt-out zero γH svH w y y' hh
 ```
@@ -896,7 +896,7 @@ Single-valuedness of the first graph identifies `w` and `w'`; the identification
 <!--/-->
 
 ```agda
-            (subst (λ t → ⟨ pr t (fst y') ∈ fst H ⟩)
+            (subst (λ t → ⟨ pr t (y' .fst) ∈ H .fst ⟩)
               (sym (svAt-out zero γF svF x w w' hf hf')) hh') })
         (K-out x y' q) })
       (K-out x y p))
@@ -924,8 +924,8 @@ Suppose `y` receives both `x` and `x'` under the composite. The two truncated li
 
 ```agda
   ijK = injAt-in zero γK (λ y x x' p q →
-    rec₁ (setIsSet (fst x) (fst x'))
-      (λ { (w , (hf , hh)) → rec₁ (setIsSet (fst x) (fst x'))
+    rec₁ (setIsSet (x .fst) (x' .fst))
+      (λ { (w , (hf , hh)) → rec₁ (setIsSet (x .fst) (x' .fst))
         (λ { (w' , (hf' , hh')) →
           injAt-out zero γF ijF w x x' hf
 ```
@@ -939,7 +939,7 @@ Injectivity of the second graph at the common value `y` identifies `w` and `w'`;
 <!--/-->
 
 ```agda
-            (subst (λ t → ⟨ pr (fst x') t ∈ fst F ⟩)
+            (subst (λ t → ⟨ pr (x' .fst) t ∈ F .fst ⟩)
               (sym (injAt-out zero γH ijH y w w' hh hh')) hf') })
         (K-out x' y q) })
       (K-out x y p))
@@ -968,10 +968,10 @@ One direction eliminates the first graph's domain condition directly.
 
 ```agda
     where
-    fwd : (x : S) → ⟨ ∃[ y ∶ S ] (pr (fst x) (fst y) ∈ fst K) ⟩
-        → ⟨ fst x ∈ fst D ⟩
-    fwd x = rec₁ (snd (fst x ∈ fst D))
-      (λ { (y , p) → rec₁ (snd (fst x ∈ fst D))
+    fwd : (x : S) → ⟨ ∃[ y ∶ S ] (pr (x .fst) (y .fst) ∈ K .fst) ⟩
+        → ⟨ x .fst ∈ D .fst ⟩
+    fwd x = rec₁ ((x .fst ∈ D .fst) .snd)
+      (λ { (y , p) → rec₁ ((x .fst ∈ D .fst) .snd)
 ```
 
 <!--en-->
@@ -996,8 +996,8 @@ The other direction chains the two introductions. Given `x` in `D`, the first gr
 <!--/-->
 
 ```agda
-    bwd : (x : S) → ⟨ fst x ∈ fst D ⟩
-        → ⟨ ∃[ y ∶ S ] (pr (fst x) (fst y) ∈ fst K) ⟩
+    bwd : (x : S) → ⟨ x .fst ∈ D .fst ⟩
+        → ⟨ ∃[ y ∶ S ] (pr (x .fst) (y .fst) ∈ K .fst) ⟩
     bwd x mx = rec₁ squash₁
       (λ { (w , hf) → rec₁ squash₁
         (λ { (z , hh) → ∣ z , K-in x w z mx (ranH w z hh) hf hh ∣₁ })
@@ -1025,8 +1025,8 @@ The range condition is the second graph's range clause applied at the intermedia
 <!--/-->
 
 ```agda
-  ranK : (x z : S) → ⟨ pr (fst x) (fst z) ∈ fst K ⟩ → ⟨ fst z ∈ fst C ⟩
-  ranK x z h = rec₁ (snd (fst z ∈ fst C))
+  ranK : (x z : S) → ⟨ pr (x .fst) (z .fst) ∈ K .fst ⟩ → ⟨ z .fst ∈ C .fst ⟩
+  ranK x z h = rec₁ ((z .fst ∈ C .fst) .snd)
     (λ { (w , (_ , hh)) → ranH w z hh }) (K-out x z h)
 ```
 
@@ -1062,7 +1062,7 @@ An inclusion needs no new construction: when `D` is contained in `C`, the identi
 <summary class="submodule-fold-heading">
 ```agda
 module InclGraph (D C : S)
-                 (sub : (z : V ℓ) → ⟨ z ∈ fst D ⟩ → ⟨ z ∈ fst C ⟩) where
+                 (sub : (z : V ℓ) → ⟨ z ∈ D .fst ⟩ → ⟨ z ∈ C .fst ⟩) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -1092,7 +1092,7 @@ element to itself, and the pointwise inclusion certifies that every value lands 
 <!--/-->
 
 ```agda
-      ; into = λ x mx → sub (fst x) mx
+      ; into = λ x mx → sub (x .fst) mx
 ```
 
 <!--en-->
@@ -1106,7 +1106,7 @@ The graph formula is equality between the two slots, and that it holds of the fu
 ```agda
       ; graph = var zero ≐ var (suc zero)
       ; defines = λ _ _ → refl
-      ; only = λ _ _ _ h → Σ≡Prop (λ w → snd (isL w)) h }
+      ; only = λ _ _ _ h → Σ≡Prop (λ w → (isL w) .snd) h }
 ```
 
 <!--en-->
@@ -1164,7 +1164,7 @@ The induced function is named `incl`, and its route matters. An index of `D`'s p
 
 ```agda
   opaque
-    incl : ⟪ fst D ⟫ → ⟪ fst C ⟫
+    incl : ⟪ D .fst ⟫ → ⟪ C .fst ⟫
     incl = Sm.small
 ```
 </div>
@@ -1186,7 +1186,7 @@ The constructions so far produce graphs; the internal injection relation asks on
 
 ```agda
 inclusion-coded : (a b : S)
-                → ((z : V ℓ) → ⟨ z ∈ fst a ⟩ → ⟨ z ∈ fst b ⟩)
+                → ((z : V ℓ) → ⟨ z ∈ a .fst ⟩ → ⟨ z ∈ b .fst ⟩)
                 → InjL a b
 inclusion-coded a b sub = ∣ I.G , I.code ∣₁
   where module I = InclGraph a b sub
@@ -1246,8 +1246,8 @@ The principal instance starts from a member `D` of an ordinal `C`. The only assu
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module OrdIncl (C : S) (oC : IsOrd (fst C))
-               (D : S) (D∈C : ⟨ fst D ∈ fst C ⟩) where
+module OrdIncl (C : S) (oC : IsOrd (C .fst))
+               (D : S) (D∈C : ⟨ D .fst ∈ C .fst ⟩) where
 ```
 </summary>
 <div class="submodule-fold-content">

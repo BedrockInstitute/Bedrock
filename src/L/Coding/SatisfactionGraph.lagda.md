@@ -437,15 +437,15 @@ The host-level type `GraphWitOn`{.Agda} flattens the same information into five 
 private
   GraphWitOn : ∀ {n} → S → Fin n → Fin n → S ^ n → Type (ℓ-suc ℓ)
   GraphWitOn W x y γ =
-    Σ[ ν ∶ (Fin 10 → S) ] (Σ[ E ∶ S ] (Σ[ C ∶ S ] (Σ[ T ∶ S ] (Σ[ b ∶ S ] ((fst b ≡ fst W) × (Tags (ev ν E C T b γ) NN × (⟨ (ev ν E C T b γ) ⊨ towerAt Ei Bi (NN f0) ⟩ × (⟨ (ev ν E C T b γ) ⊨ closedAt Ci ⟩ × (⟨ (ev ν E C T b γ) ⊨ domAt Ti Ci ⟩ × (⟨ pr (fst (lookup x γ)) (fst (lookup y γ)) ∈ fst T ⟩ × ⟨ (ev ν E C T b γ) ⊨ tableAt Ti Bi Ci Ei NN ⟩))))))))))
+    Σ[ ν ∶ (Fin 10 → S) ] (Σ[ E ∶ S ] (Σ[ C ∶ S ] (Σ[ T ∶ S ] (Σ[ b ∶ S ] ((b .fst ≡ W .fst) × (Tags (ev ν E C T b γ) NN × (⟨ (ev ν E C T b γ) ⊨ towerAt Ei Bi (NN f0) ⟩ × (⟨ (ev ν E C T b γ) ⊨ closedAt Ci ⟩ × (⟨ (ev ν E C T b γ) ⊨ domAt Ti Ci ⟩ × (⟨ pr ((lookup x γ) .fst) ((lookup y γ) .fst) ∈ T .fst ⟩ × ⟨ (ev ν E C T b γ) ⊨ tableAt Ti Bi Ci Ei NN ⟩))))))))))
 ```
 
 <!--en-->
-To compare satisfaction of `satGraphOn` with the flat record, fix the pin, its reference `W`, the query positions, and the outer environment. Every field of the record except the carrier equation already has a fixed interpretation among the frame's conjuncts. The only extra hypothesis is therefore a reading `rd` for the pin. The inward implication turns an equality `fst b ≡ fst W` into satisfaction of `pin`; the outward implication reads satisfaction of `pin` back as that equality.
+To compare satisfaction of `satGraphOn` with the flat record, fix the pin, its reference `W`, the query positions, and the outer environment. Every field of the record except the carrier equation already has a fixed interpretation among the frame's conjuncts. The only extra hypothesis is therefore a reading `rd` for the pin. The inward implication turns an equality `b .fst ≡ W .fst` into satisfaction of `pin`; the outward implication reads satisfaction of `pin` back as that equality.
 <!--zh-->
-为了比较 `satGraphOn` 的满足与平坦记录，先固定 pin、它所参照的 `W`、两个查询位置及外围环境。除载体等式外，记录中的每个字段都已经在框架的合取项中有固定解释。因此，唯一额外需要的假设是 pin 的读法 `rd`：内向蕴含把等式 `fst b ≡ fst W` 变成 `pin` 的满足，外向蕴含则把 `pin` 的满足读回该等式。
+为了比较 `satGraphOn` 的满足与平坦记录，先固定 pin、它所参照的 `W`、两个查询位置及外围环境。除载体等式外，记录中的每个字段都已经在框架的合取项中有固定解释。因此，唯一额外需要的假设是 pin 的读法 `rd`：内向蕴含把等式 `b .fst ≡ W .fst` 变成 `pin` 的满足，外向蕴含则把 `pin` 的满足读回该等式。
 <!--ja-->
-`satGraphOn` の充足と平坦な記録を比較するため、pin、その参照 `W`、二つの問い合わせ位置、外側の環境を固定する。台の等式を除けば、記録の各欄はすでに枠組みの連言項の中に定まった解釈をもっている。したがって、追加で必要な仮定は pin の読み `rd` だけである。内向きの含意では等式 `fst b ≡ fst W` を `pin` の充足へ移し、外向きの含意では `pin` の充足をその等式として読み戻す。
+`satGraphOn` の充足と平坦な記録を比較するため、pin、その参照 `W`、二つの問い合わせ位置、外側の環境を固定する。台の等式を除けば、記録の各欄はすでに枠組みの連言項の中に定まった解釈をもっている。したがって、追加で必要な仮定は pin の読み `rd` だけである。内向きの含意では等式 `b .fst ≡ W .fst` を `pin` の充足へ移し、外向きの含意では `pin` の充足をその等式として読み戻す。
 <!--/-->
 
 <details open class="submodule-fold">
@@ -474,7 +474,7 @@ a map between truncations transports only the fact that witnesses exist.
 <!--/-->
 
 ```agda
-    graphOn-in : ((ν : Fin 10 → S) (E C T b : S) → fst b ≡ fst W
+    graphOn-in : ((ν : Fin 10 → S) (E C T b : S) → b .fst ≡ W .fst
                    → ⟨ ev ν E C T b γ ⊨ pin ⟩)
                → ∥ GraphWitOn W x y γ ∥₁ → ⟨ γ ⊨ satGraphOn pin x y ⟩
     graphOn-in rd = map₁
@@ -551,7 +551,7 @@ produce the record itself, only the fact that one exists.
 
 ```agda
     graphOn-out : ((ν : Fin 10 → S) (E C T b : S)
-                    → ⟨ ev ν E C T b γ ⊨ pin ⟩ → fst b ≡ fst W)
+                    → ⟨ ev ν E C T b γ ⊨ pin ⟩ → b .fst ≡ W .fst)
                 → ⟨ γ ⊨ satGraphOn pin x y ⟩ → ∥ GraphWitOn W x y γ ∥₁
     graphOn-out rd h = rec₁ squash₁ (λ { (n9 , h9) →
       rec₁ squash₁ (λ { (n8 , h8) →

@@ -443,20 +443,20 @@ formula whose key belongs to `AllCodes ∅ʟ` by `key∈AllCodes`. That key cons
 of the numeral `# k` and the code obtained by reading the embedded formula
 through the empty alphabet. The equality `sameCode'` identifies this formula
 with the direct universe embedding of `χ`; the latter code is precisely
-`fst (limitCode χ)`. Transporting membership along that equality proves
+`(limitCode χ) .fst`. Transporting membership along that equality proves
 `freeCode-in`: the code set contains the arity-and-code key of every
 parameter-free formula.
 <!--zh-->
-现在可以证明码集桥接中较直接的一向。对任意无参 `k` 元公式 `χ`，先把它嵌入 `⟪ ∅ ⟫` 上，所得公式的键由 `key∈AllCodes` 属于 `AllCodes ∅ʟ`。这个键由数码 `# k` 与「经空字母表读入所得的嵌入公式之码」组成。等式 `sameCode'` 把该公式等同于 `χ` 直接嵌入宇宙所得的公式，而后者的码正是 `fst (limitCode χ)`。沿这条等式迁移成员关系证明，便得到 `freeCode-in`：码集包含每条无参公式的「元数与码」之键。
+现在可以证明码集桥接中较直接的一向。对任意无参 `k` 元公式 `χ`，先把它嵌入 `⟪ ∅ ⟫` 上，所得公式的键由 `key∈AllCodes` 属于 `AllCodes ∅ʟ`。这个键由数码 `# k` 与「经空字母表读入所得的嵌入公式之码」组成。等式 `sameCode'` 把该公式等同于 `χ` 直接嵌入宇宙所得的公式，而后者的码正是 `(limitCode χ) .fst`。沿这条等式迁移成员关系证明，便得到 `freeCode-in`：码集包含每条无参公式的「元数与码」之键。
 <!--ja-->
-これで、コード集合との橋の直接な向きを証明できる。無パラメータな `k` 項論理式 `χ` を `⟪ ∅ ⟫` 上へ埋め込むと、その論理式のキーは`key∈AllCodes` により `AllCodes ∅ʟ` に属する。このキーは、数項 `# k` と、埋め込まれた論理式を空のアルファベットを通して読んだコードとの対である。`sameCode'` はその論理式を `χ` の宇宙への直接の埋め込みと同一視し、後者のコードはちょうど `fst (limitCode χ)` である。この等式に沿って所属の証明を輸送すると `freeCode-in` が得られる。すなわち、コード集合はすべての無パラメータ論理式について、アリティとコードからなるキーを含む。
+これで、コード集合との橋の直接な向きを証明できる。無パラメータな `k` 項論理式 `χ` を `⟪ ∅ ⟫` 上へ埋め込むと、その論理式のキーは`key∈AllCodes` により `AllCodes ∅ʟ` に属する。このキーは、数項 `# k` と、埋め込まれた論理式を空のアルファベットを通して読んだコードとの対である。`sameCode'` はその論理式を `χ` の宇宙への直接の埋め込みと同一視し、後者のコードはちょうど `(limitCode χ) .fst` である。この等式に沿って所属の証明を輸送すると `freeCode-in` が得られる。すなわち、コード集合はすべての無パラメータ論理式について、アリティとコードからなるキーを含む。
 <!--/-->
 
 ```agda
 freeCode-in : (k : ℕ) (χ : Formula (⊥* {ℓ}) k)
-            → ⟨ pr (# k) (fst (limitCode χ)) ∈ fst (AllCodes ∅ʟ) ⟩
+            → ⟨ pr (# k) ((limitCode χ) .fst) ∈ (AllCodes ∅ʟ) .fst ⟩
 freeCode-in k χ =
-  subst (λ u → ⟨ pr (# k) VCode.⌜ u ⌝ ∈ fst (AllCodes ∅ʟ) ⟩) (sameCode' χ)
+  subst (λ u → ⟨ pr (# k) VCode.⌜ u ⌝ ∈ (AllCodes ∅ʟ) .fst ⟩) (sameCode' χ)
     (key∈AllCodes ∅ʟ (embed χ))
 ```
 
@@ -475,8 +475,8 @@ desired `k`-ary parameter-free payload without ever removing the truncation.
 <!--/-->
 
 ```agda
-freeCode-out : (k : ℕ) (c : V ℓ) → ⟨ pr (# k) c ∈ fst (AllCodes ∅ʟ) ⟩
-             → ∥ Σ[ χ ∶ Formula (⊥* {ℓ}) k ] (c ≡ fst (limitCode χ)) ∥₁
+freeCode-out : (k : ℕ) (c : V ℓ) → ⟨ pr (# k) c ∈ (AllCodes ∅ʟ) .fst ⟩
+             → ∥ Σ[ χ ∶ Formula (⊥* {ℓ}) k ] (c ≡ (limitCode χ) .fst) ∥₁
 freeCode-out k c h = map₁ read (AllCodes-out ∅ʟ (pr (# k) c , cL) h)
   where
   cL : ⟨ isL (pr (# k) c) ⟩
@@ -515,8 +515,8 @@ transport and the code equality used in the returned dependent pair.
 <!--/-->
 
 ```agda
-  read : Σ[ n ∶ ℕ ] Σ[ ψ ∶ Fo∅ n ] (pr (# k) c ≡ fst (keyS ∅ʟ ψ))
-       → Σ[ χ ∶ Formula (⊥* {ℓ}) k ] (c ≡ fst (limitCode χ))
+  read : Σ[ n ∶ ℕ ] Σ[ ψ ∶ Fo∅ n ] (pr (# k) c ≡ (keyS ∅ʟ ψ) .fst)
+       → Σ[ χ ∶ Formula (⊥* {ℓ}) k ] (c ≡ (limitCode χ) .fst)
   read (n , (ψ , q)) = mapFo ε ψ' , (pr-inj q .snd ∙ step)
     where
     e : n ≡ k
@@ -596,26 +596,26 @@ is chosen.
 <summary class="submodule-fold-heading">
 ```agda
 module _ {n : ℕ} (C₀ s a : Fin n) (γ : S ^ n) (k : ℕ)
-         (qa : fst (lookup a γ) ≡ # k) where
+         (qa : (lookup a γ) .fst ≡ # k) where
 ```
 </summary>
 <div class="submodule-fold-content">
 
 <!--en-->
 For the forward construction, suppose the intended key
-`pr (# (suc k)) (fst (lookup s γ))` already belongs to the set at `C₀`.
+`pr (# (suc k)) ((lookup s γ) .fst)` already belongs to the set at `C₀`.
 This key supplies the two existential witnesses required by `FreeAt`: first the
 numeral `# (suc k)`, then its pair with the skeleton. What remains is to verify
 the successor and pairing descriptions of these witnesses; the final atom is
 exactly the assumed membership.
 <!--zh-->
-正向构造从预期的键 `pr (# (suc k)) (fst (lookup s γ))` 已属于 `C₀` 位置上的集合这一假设出发。这个键恰好给出 `FreeAt` 所需的两个存在见证：先取数码 `# (suc k)`，再取它与骨架组成的对。余下工作只是核实这两个见证分别满足后继描述与配对描述；最末的原子正是起初假设的成员关系。
+正向构造从预期的键 `pr (# (suc k)) ((lookup s γ) .fst)` 已属于 `C₀` 位置上的集合这一假设出发。这个键恰好给出 `FreeAt` 所需的两个存在见证：先取数码 `# (suc k)`，再取它与骨架组成的对。余下工作只是核实这两个见证分别满足后继描述与配对描述；最末的原子正是起初假设的成员关系。
 <!--ja-->
-順方向の構成では、意図したキー `pr (# (suc k)) (fst (lookup s γ))` がすでに `C₀` 位置の集合に属すると仮定する。このキーから `FreeAt` が要求する二つの存在証人が得られる。最初は数項 `# (suc k)`、次はそれと骨格との対である。残るのは、これらの証人がそれぞれ後続と対の記述を満たすことの確認だけであり、最後の原子は仮定した所属そのものである。
+順方向の構成では、意図したキー `pr (# (suc k)) ((lookup s γ) .fst)` がすでに `C₀` 位置の集合に属すると仮定する。このキーから `FreeAt` が要求する二つの存在証人が得られる。最初は数項 `# (suc k)`、次はそれと骨格との対である。残るのは、これらの証人がそれぞれ後続と対の記述を満たすことの確認だけであり、最後の原子は仮定した所属そのものである。
 <!--/-->
 
 ```agda
-  FreeAt-in : ⟨ pr (# (suc k)) (fst (lookup s γ)) ∈ fst (lookup C₀ γ) ⟩
+  FreeAt-in : ⟨ pr (# (suc k)) ((lookup s γ) .fst) ∈ (lookup C₀ γ) .fst ⟩
             → ⟨ γ ⊨ FreeAt C₀ s a ⟩
   FreeAt-in h = ∣ numAt , ( hsuc , ∣ keyAt , ( hpr , h ) ∣₁ ) ∣₁
     where
@@ -639,7 +639,7 @@ values, rather than adding any mathematical condition to `FreeAt`.
 ```agda
     numAt = # (suc k) , numL (suc k)
     keyAt : S
-    keyAt = pr (# (suc k)) (fst (lookup s γ)) , isL-trans h (lookup C₀ γ .snd)
+    keyAt = pr (# (suc k)) ((lookup s γ) .fst) , isL-trans h (lookup C₀ γ .snd)
     hsuc : ⟨ (numAt ∷ γ) ⊨ sucAtL (suc a) zero ⟩
     hsuc = subst ⟨_⟩ (sym (sucAtL-adequate (suc a) zero (numAt ∷ γ)))
 ```
@@ -680,9 +680,9 @@ turn.
 
 ```agda
   FreeAt-out : ⟨ γ ⊨ FreeAt C₀ s a ⟩
-             → ⟨ pr (# (suc k)) (fst (lookup s γ)) ∈ fst (lookup C₀ γ) ⟩
-  FreeAt-out = rec₁ (snd (pr (# (suc k)) (fst (lookup s γ))
-                            ∈ fst (lookup C₀ γ))) atNum
+             → ⟨ pr (# (suc k)) ((lookup s γ) .fst) ∈ (lookup C₀ γ) .fst ⟩
+  FreeAt-out = rec₁ ((pr (# (suc k)) ((lookup s γ) .fst)
+                            ∈ (lookup C₀ γ) .fst) .snd) atNum
     where
 ```
 
@@ -700,7 +700,7 @@ distinguished existential witness is being made.
 
 ```agda
     Target : Type (ℓ-suc ℓ)
-    Target = ⟨ pr (# (suc k)) (fst (lookup s γ)) ∈ fst (lookup C₀ γ) ⟩
+    Target = ⟨ pr (# (suc k)) ((lookup s γ) .fst) ∈ (lookup C₀ γ) .fst ⟩
 ```
 
 <!--en-->
@@ -717,9 +717,9 @@ branch its representative may be used to prove the proposition `Target`.
 <!--/-->
 
 ```agda
-    atKey : (z : S) → fst z ≡ sucV (fst (lookup a γ))
+    atKey : (z : S) → z .fst ≡ sucV ((lookup a γ) .fst)
           → Σ[ y ∶ S ] ( ⟨ (y ∷ z ∷ γ) ⊨ prAtL zero (suc zero) (sh2 s) ⟩
-                       × ⟨ fst y ∈ fst (lookup C₀ γ) ⟩ )
+                       × ⟨ y .fst ∈ (lookup C₀ γ) .fst ⟩ )
           → Target
     atKey z qz (y , (hp , hy)) =
 ```
@@ -730,17 +730,17 @@ first component is the underlying set of `z` and whose second component is the
 skeleton. The equation for `z`, followed by `qa`, identifies that first
 component with `# (suc k)`. Consequently `y` is the intended key. Transporting
 the given membership of `y` along this equality proves membership of
-`pr (# (suc k)) (fst (lookup s γ))`, which is `Target`.
+`pr (# (suc k)) ((lookup s γ) .fst)`, which is `Target`.
 <!--zh-->
-`prAtL` 的充分性把 `y` 的底层集合认作一个对，其第一分量是 `z` 的底层集合，第二分量是骨架。先用关于 `z` 的等式，再接上 `qa`，便把第一分量认作 `# (suc k)`。因此，`y` 正是预期的键。沿此等式迁移已知的 `y` 的成员关系，就得到 `pr (# (suc k)) (fst (lookup s γ))` 的成员关系，也就是 `Target`。
+`prAtL` 的充分性把 `y` 的底层集合认作一个对，其第一分量是 `z` 的底层集合，第二分量是骨架。先用关于 `z` 的等式，再接上 `qa`，便把第一分量认作 `# (suc k)`。因此，`y` 正是预期的键。沿此等式迁移已知的 `y` 的成员关系，就得到 `pr (# (suc k)) ((lookup s γ) .fst)` 的成员关系，也就是 `Target`。
 <!--ja-->
-`prAtL` の妥当性は、`y` の台となる集合を、第一成分が `z` の台となる集合、第二成分が骨格である対と同定する。`z` に関する等式に続けて `qa` を用いると、その第一成分は `# (suc k)` と同定される。したがって `y` は意図したキーである。与えられた `y` の所属をこの等式に沿って移送すれば、`pr (# (suc k)) (fst (lookup s γ))` の所属、すなわち `Target` が得られる。
+`prAtL` の妥当性は、`y` の台となる集合を、第一成分が `z` の台となる集合、第二成分が骨格である対と同定する。`z` に関する等式に続けて `qa` を用いると、その第一成分は `# (suc k)` と同定される。したがって `y` は意図したキーである。与えられた `y` の所属をこの等式に沿って移送すれば、`pr (# (suc k)) ((lookup s γ) .fst)` の所属、すなわち `Target` が得られる。
 <!--/-->
 
 ```agda
-      subst (λ u → ⟨ u ∈ fst (lookup C₀ γ) ⟩)
+      subst (λ u → ⟨ u ∈ (lookup C₀ γ) .fst ⟩)
         (subst ⟨_⟩ (prAtL-adequate zero (suc zero) (sh2 s) (y ∷ z ∷ γ)) hp
-         ∙ cong (λ u → pr u (fst (lookup s γ))) (qz ∙ cong sucV qa)) hy
+         ∙ cong (λ u → pr u ((lookup s γ) .fst)) (qz ∙ cong sucV qa)) hy
 ```
 
 <!--en-->
@@ -761,7 +761,7 @@ eliminated into `Target`.
                        × ⟨ (z ∷ γ) ⊨ ∃̇ ( prAtL zero (suc zero) (sh2 s)
                                        ∧̇ (var zero ∈̇ var (sh2 C₀)) ) ⟩ )
           → Target
-    atNum (z , (hs , hk)) = rec₁ (snd (pr (# (suc k)) (fst (lookup s γ))
+    atNum (z , (hs , hk)) = rec₁ ((pr (# (suc k)) ((lookup s γ) .fst)
 ```
 
 <!--en-->
@@ -778,7 +778,7 @@ propositional-truncation boundary.
 <!--/-->
 
 ```agda
-                                         ∈ fst (lookup C₀ γ)))
+                                         ∈ (lookup C₀ γ) .fst) .snd)
       (atKey z (subst ⟨_⟩ (sucAtL-adequate (suc a) zero (z ∷ γ)) hs)) hk
 ```
 </div>
@@ -801,8 +801,8 @@ parameter-free formulas of arity `suc k`.
 <summary class="submodule-fold-heading">
 ```agda
 module _ {n : ℕ} (C₀ s a : Fin n) (γ : S ^ n) (k : ℕ)
-         (q₀ : fst (lookup C₀ γ) ≡ fst (AllCodes ∅ʟ))
-         (qa : fst (lookup a γ) ≡ # k) where
+         (q₀ : (lookup C₀ γ) .fst ≡ (AllCodes ∅ʟ) .fst)
+         (qa : (lookup a γ) .fst ≡ # k) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -823,9 +823,9 @@ outward semantic reading of the one membership atom.
 ```agda
   codeFree-out : ⟨ γ ⊨ FreeAt C₀ s a ⟩
                → ∥ Σ[ χ ∶ Formula (⊥* {ℓ}) (suc k) ]
-                     (fst (lookup s γ) ≡ fst (limitCode χ)) ∥₁
-  codeFree-out h = freeCode-out (suc k) (fst (lookup s γ))
-    (subst (λ u → ⟨ pr (# (suc k)) (fst (lookup s γ)) ∈ u ⟩) q₀
+                     ((lookup s γ) .fst ≡ (limitCode χ) .fst) ∥₁
+  codeFree-out h = freeCode-out (suc k) ((lookup s γ) .fst)
+    (subst (λ u → ⟨ pr (# (suc k)) ((lookup s γ) .fst) ∈ u ⟩) q₀
 ```
 
 <!--en-->
@@ -863,10 +863,10 @@ part of the input.
 
 ```agda
   codeFree-in : (χ : Formula (⊥* {ℓ}) (suc k))
-              → fst (lookup s γ) ≡ fst (limitCode χ) → ⟨ γ ⊨ FreeAt C₀ s a ⟩
+              → (lookup s γ) .fst ≡ (limitCode χ) .fst → ⟨ γ ⊨ FreeAt C₀ s a ⟩
   codeFree-in χ q = FreeAt-in C₀ s a γ k qa
-    (subst (λ u → ⟨ pr (# (suc k)) (fst (lookup s γ)) ∈ u ⟩) (sym q₀)
-      (subst (λ u → ⟨ pr (# (suc k)) u ∈ fst (AllCodes ∅ʟ) ⟩) (sym q)
+    (subst (λ u → ⟨ pr (# (suc k)) ((lookup s γ) .fst) ∈ u ⟩) (sym q₀)
+      (subst (λ u → ⟨ pr (# (suc k)) u ∈ (AllCodes ∅ʟ) .fst ⟩) (sym q)
 ```
 
 <!--en-->
@@ -955,20 +955,20 @@ coordinates of this finite graph.
 
 <!--en-->
 The forward domain inclusion begins with the mere existence of a model element
-`y` such that `pr x (fst y)` lies in the graph. Its goal is the membership
+`y` such that `pr x (y .fst)` lies in the graph. Its goal is the membership
 proposition `x ∈ # k`, so the outer propositional truncation may be eliminated
 into that goal. After fixing one representative `y`, it remains to recover an
 index from the graph membership and prove that its numeral belongs to `# k`.
 <!--zh-->
-定义域的正向包含从如下仅仅存在出发：存在一个模型元素 `y`，使`pr x (fst y)` 位于图中。目标是成员关系命题 `x ∈ # k`，所以外层命题截断可以消去到这个目标中。固定其中一个代表 `y` 后，只须从图的成员关系中恢复一个索引，并证明该索引的数码属于 `# k`。
+定义域的正向包含从如下仅仅存在出发：存在一个模型元素 `y`，使`pr x (y .fst)` 位于图中。目标是成员关系命题 `x ∈ # k`，所以外层命题截断可以消去到这个目标中。固定其中一个代表 `y` 后，只须从图的成员关系中恢复一个索引，并证明该索引的数码属于 `# k`。
 <!--ja-->
-定義域の順向きの包含は、`pr x (fst y)` がグラフに入るようなモデルの元`y` が単に存在することから始まる。目標は所属命題 `x ∈ # k` なので、外側の命題的切り詰めをこの目標へ消去できる。代表 `y` を一つ固定した後は、グラフへの所属から添字を復元し、その数項が `# k` に属することを示せば十分である。
+定義域の順向きの包含は、`pr x (y .fst)` がグラフに入るようなモデルの元`y` が単に存在することから始まる。目標は所属命題 `x ∈ # k` なので、外側の命題的切り詰めをこの目標へ消去できる。代表 `y` を一つ固定した後は、グラフへの所属から添字を復元し、その数項が `# k` に属することを示せば十分である。
 <!--/-->
 
 ```agda
   dom-into : (k : ℕ) (g : Fin k → V ℓ) (x : V ℓ)
-           → ⟨ ∃[ y ∶ S ] pr x (fst y) ∈ env g ⟩ → ⟨ x ∈ # k ⟩
-  dom-into k g x = rec₁ (snd (x ∈ # k)) atEntry
+           → ⟨ ∃[ y ∶ S ] pr x (y .fst) ∈ env g ⟩ → ⟨ x ∈ # k ⟩
+  dom-into k g x = rec₁ ((x ∈ # k) .snd) atEntry
     where
     atIndex : (u : V ℓ) → Σ[ i ∶ Fin k ] ((x ≡ # (toℕ i)) × (u ≡ g i))
 ```
@@ -990,8 +990,8 @@ the remaining truncated index information.
             → ⟨ x ∈ # k ⟩
     atIndex u (i , (qx , _)) = subst (λ v → ⟨ v ∈ # k ⟩) (sym qx)
       (#mono (toℕ i) k (toℕ<n i))
-    atEntry : Σ[ y ∶ S ] ⟨ pr x (fst y) ∈ env g ⟩ → ⟨ x ∈ # k ⟩
-    atEntry (y , p) = rec₁ (snd (x ∈ # k)) (atIndex (fst y))
+    atEntry : Σ[ y ∶ S ] ⟨ pr x (y .fst) ∈ env g ⟩ → ⟨ x ∈ # k ⟩
+    atEntry (y , p) = rec₁ ((x ∈ # k) .snd) (atIndex (y .fst))
 ```
 
 <!--en-->
@@ -1006,7 +1006,7 @@ extracting an index as ordinary data.
 <!--/-->
 
 ```agda
-      (memberOf k g x (fst y) p)
+      (memberOf k g x (y .fst) p)
 ```
 
 <!--en-->
@@ -1025,7 +1025,7 @@ element of the model.
 
 ```agda
   dom-from : (k : ℕ) (g : Fin k → V ℓ) → ((i : Fin k) → ⟨ isL (g i) ⟩)
-           → (x : V ℓ) → ⟨ x ∈ # k ⟩ → ⟨ ∃[ y ∶ S ] pr x (fst y) ∈ env g ⟩
+           → (x : V ℓ) → ⟨ x ∈ # k ⟩ → ⟨ ∃[ y ∶ S ] pr x (y .fst) ∈ env g ⟩
   dom-from k g cg x h = map₁ atNumeral (∈#-elim k x h)
     where
     atNumeral : Σ[ m ∶ ℕ ] ((m < k) × (x ≡ # m))
@@ -1045,7 +1045,7 @@ required membership of `pr x (g i)` in the graph.
 <!--/-->
 
 ```agda
-              → Σ[ y ∶ S ] ⟨ pr x (fst y) ∈ env g ⟩
+              → Σ[ y ∶ S ] ⟨ pr x (y .fst) ∈ env g ⟩
     atNumeral (m , (p , qx)) = (g i , cg i)
       , subst (λ u → ⟨ pr u (g i) ∈ env g ⟩) (sym qi) (entryOf k g i)
       where
@@ -1089,7 +1089,7 @@ fill `domAt e d`.
 ```agda
 module _ {n : ℕ} (e d : Fin n) (γ : S ^ n)
          (k : ℕ) (g : Fin k → V ℓ) (cg : (i : Fin k) → ⟨ isL (g i) ⟩)
-         (qe : fst (lookup e γ) ≡ env g) where
+         (qe : (lookup e γ) .fst ≡ env g) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -1109,11 +1109,11 @@ domain membership through `domAt-in`.
 <!--/-->
 
 ```agda
-  domAt-numeral : ⟨ γ ⊨ domAt e d ⟩ → fst (lookup d γ) ≡ # k
-  domAt-numeral h = cong fst (extensionalL {a = lookup d γ} {b = # k , numL k} pt)
+  domAt-numeral : ⟨ γ ⊨ domAt e d ⟩ → (lookup d γ) .fst ≡ # k
+  domAt-numeral h = cong (λ p → p .fst) (extensionalL {a = lookup d γ} {b = # k , numL k} pt)
     where
-    fwd : (x : S) → ⟨ fst x ∈ fst (lookup d γ) ⟩ → ⟨ fst x ∈ # k ⟩
-    fwd x hx = dom-into k g (fst x)
+    fwd : (x : S) → ⟨ x .fst ∈ (lookup d γ) .fst ⟩ → ⟨ x .fst ∈ # k ⟩
+    fwd x hx = dom-into k g (x .fst)
 ```
 
 <!--en-->
@@ -1131,10 +1131,10 @@ entry.
 <!--/-->
 
 ```agda
-      (subst (λ u → ⟨ ∃[ y ∶ S ] pr (fst x) (fst y) ∈ u ⟩) qe
+      (subst (λ u → ⟨ ∃[ y ∶ S ] pr (x .fst) (y .fst) ∈ u ⟩) qe
         (domAt-in e d γ h x hx))
-    bwd : (x : S) → ⟨ fst x ∈ # k ⟩ → ⟨ fst x ∈ fst (lookup d γ) ⟩
-    bwd x hx = rec₁ (snd (fst x ∈ fst (lookup d γ))) put (dom-from k g cg (fst x) hx)
+    bwd : (x : S) → ⟨ x .fst ∈ # k ⟩ → ⟨ x .fst ∈ (lookup d γ) .fst ⟩
+    bwd x hx = rec₁ ((x .fst ∈ (lookup d γ) .fst) .snd) put (dom-from k g cg (x .fst) hx)
       where
 ```
 
@@ -1152,10 +1152,10 @@ witness is used only to prove membership, so no value is selected from it.
 <!--/-->
 
 ```agda
-      put : Σ[ y ∶ S ] ⟨ pr (fst x) (fst y) ∈ env g ⟩ → ⟨ fst x ∈ fst (lookup d γ) ⟩
+      put : Σ[ y ∶ S ] ⟨ pr (x .fst) (y .fst) ∈ env g ⟩ → ⟨ x .fst ∈ (lookup d γ) .fst ⟩
       put (y , p) = domAt-out e d γ h x y
-        (subst (λ u → ⟨ pr (fst x) (fst y) ∈ u ⟩) (sym qe) p)
-    pt : (x : S) → (fst x ∈ fst (lookup d γ)) ≡ (fst x ∈ # k)
+        (subst (λ u → ⟨ pr (x .fst) (y .fst) ∈ u ⟩) (sym qe) p)
+    pt : (x : S) → (x .fst ∈ (lookup d γ) .fst) ≡ (x .fst ∈ # k)
     pt x = ⇔toPath (fwd x) (bwd x)
 ```
 
@@ -1174,49 +1174,49 @@ as reading it, in the opposite direction.
 <!--/-->
 
 ```agda
-  domAt-fill : fst (lookup d γ) ≡ # k → ⟨ γ ⊨ domAt e d ⟩
+  domAt-fill : (lookup d γ) .fst ≡ # k → ⟨ γ ⊨ domAt e d ⟩
   domAt-fill qd = domAt-intro e d γ step
     where
     step : (x : S)
-         → (⟨ ∃[ y ∶ S ] pr (fst x) (fst y) ∈ fst (lookup e γ) ⟩
+         → (⟨ ∃[ y ∶ S ] pr (x .fst) (y .fst) ∈ (lookup e γ) .fst ⟩
 ```
 
 <!--en-->
 To fill the domain formula, it remains to prove its two pointwise implications.
-For the first, suppose some value is paired with `fst x` in the graph stored at
+For the first, suppose some value is paired with `x .fst` in the graph stored at
 slot `e`. Transport along `qe` puts this entry in `env g`, where `dom-into`
-shows that `fst x` belongs to the numeral `# k`. Transporting back along `qd`
+shows that `x .fst` belongs to the numeral `# k`. Transporting back along `qd`
 then places it in the proposed domain at slot `d`.
 <!--zh-->
-为了填充定义域公式，只须证明逐点的两个蕴含。先设某个取值与 `fst x` 配成的对属于位置 `e` 所存的图。沿 `qe` 搬运后，这个条目属于 `env g`，于是 `dom-into` 证明 `fst x` 属于数码 `# k`。再沿 `qd` 的反向搬运，便得到它属于位置 `d` 所存的候选定义域。
+为了填充定义域公式，只须证明逐点的两个蕴含。先设某个取值与 `x .fst` 配成的对属于位置 `e` 所存的图。沿 `qe` 搬运后，这个条目属于 `env g`，于是 `dom-into` 证明 `x .fst` 属于数码 `# k`。再沿 `qd` 的反向搬运，便得到它属于位置 `d` 所存的候选定义域。
 <!--ja-->
-定義域の論理式を充足させるには、各点で二つの含意を示せば十分である。まず、ある値と `fst x` の対がスロット `e` のグラフに属するとする。`qe` に沿って輸送すると、この項目は `env g` に入り、`dom-into` によって `fst x` が数項 `# k` に属することが分かる。さらに `qd` を逆向きに使って輸送すれば、スロット `d` の定義域候補への所属が得られる。
+定義域の論理式を充足させるには、各点で二つの含意を示せば十分である。まず、ある値と `x .fst` の対がスロット `e` のグラフに属するとする。`qe` に沿って輸送すると、この項目は `env g` に入り、`dom-into` によって `x .fst` が数項 `# k` に属することが分かる。さらに `qd` を逆向きに使って輸送すれば、スロット `d` の定義域候補への所属が得られる。
 <!--/-->
 
 ```agda
-            → ⟨ fst x ∈ fst (lookup d γ) ⟩)
-         × (⟨ fst x ∈ fst (lookup d γ) ⟩
-            → ⟨ ∃[ y ∶ S ] pr (fst x) (fst y) ∈ fst (lookup e γ) ⟩)
+            → ⟨ x .fst ∈ (lookup d γ) .fst ⟩)
+         × (⟨ x .fst ∈ (lookup d γ) .fst ⟩
+            → ⟨ ∃[ y ∶ S ] pr (x .fst) (y .fst) ∈ (lookup e γ) .fst ⟩)
     step x =
-        (λ hy → subst (λ u → ⟨ fst x ∈ u ⟩) (sym qd) (dom-into k g (fst x)
+        (λ hy → subst (λ u → ⟨ x .fst ∈ u ⟩) (sym qd) (dom-into k g (x .fst)
 ```
 
 <!--en-->
 The reverse implication follows the same path in reverse. Membership in slot
 `d` is transported by `qd` to membership in `# k`; `dom-from` then supplies,
-under propositional truncation, a value paired with `fst x` in `env g`; and
+under propositional truncation, a value paired with `x .fst` in `env g`; and
 transport along the inverse of `qe` returns that entry to slot `e`. These two
 directions complete `domAt-fill` without choosing a value from the finite graph.
 <!--zh-->
-反向蕴含沿同一路径倒行。先用 `qd` 把位置 `d` 中的成员关系搬到 `# k` 中；`dom-from` 随后在命题截断内给出一个取值，使它与 `fst x` 配成的对属于 `env g`；最后沿 `qe` 的反向把该条目送回位置 `e`。两个方向由此完成 `domAt-fill`，过程中没有从有穷图中选出一个取值。
+反向蕴含沿同一路径倒行。先用 `qd` 把位置 `d` 中的成员关系搬到 `# k` 中；`dom-from` 随后在命题截断内给出一个取值，使它与 `x .fst` 配成的对属于 `env g`；最后沿 `qe` 的反向把该条目送回位置 `e`。两个方向由此完成 `domAt-fill`，过程中没有从有穷图中选出一个取值。
 <!--ja-->
-逆向きの含意は、同じ道筋を反対にたどる。スロット `d` への所属を `qd` によって `# k` への所属へ移し、`dom-from` から、`fst x` と対をなして `env g` に入る値の単なる存在を得る。最後に `qe` の逆向きに沿って、その項目をスロット `e` へ戻す。これで `domAt-fill` の二方向がそろい、有限グラフから特定の値を選び出す必要はない。
+逆向きの含意は、同じ道筋を反対にたどる。スロット `d` への所属を `qd` によって `# k` への所属へ移し、`dom-from` から、`x .fst` と対をなして `env g` に入る値の単なる存在を得る。最後に `qe` の逆向きに沿って、その項目をスロット `e` へ戻す。これで `domAt-fill` の二方向がそろい、有限グラフから特定の値を選び出す必要はない。
 <!--/-->
 
 ```agda
-          (subst (λ u → ⟨ ∃[ y ∶ S ] pr (fst x) (fst y) ∈ u ⟩) qe hy)))
-      , (λ hx → subst (λ u → ⟨ ∃[ y ∶ S ] pr (fst x) (fst y) ∈ u ⟩) (sym qe)
-          (dom-from k g cg (fst x) (subst (λ u → ⟨ fst x ∈ u ⟩) qd hx)))
+          (subst (λ u → ⟨ ∃[ y ∶ S ] pr (x .fst) (y .fst) ∈ u ⟩) qe hy)))
+      , (λ hx → subst (λ u → ⟨ ∃[ y ∶ S ] pr (x .fst) (y .fst) ∈ u ⟩) (sym qe)
+          (dom-from k g cg (x .fst) (subst (λ u → ⟨ x .fst ∈ u ⟩) qd hx)))
 ```
 </div>
 </details>
@@ -1234,11 +1234,11 @@ We now ask what the satisfaction graph assigns at a genuine formula key. Fix
 an ambient environment `γ`: slot `B` supplies the carrier, while `x` and `y`
 supply the proposed key and value. The abbreviation `Bs = lookup B γ` keeps
 the proof uniform in all three slots. Formulas considered below therefore have
-constants indexed by the members of the underlying set `fst Bs`.
+constants indexed by the members of the underlying set `Bs .fst`.
 <!--zh-->
-现在考察满足关系图在真实公式键处指派什么。固定周围环境 `γ`：位置 `B` 给出载体，`x` 与 `y` 则给出候选键和候选取值。缩写 `Bs = lookup B γ` 使随后证明对这三个位置保持统一。因此，以下公式的常元由底集 `fst Bs` 的元素索引。
+现在考察满足关系图在真实公式键处指派什么。固定周围环境 `γ`：位置 `B` 给出载体，`x` 与 `y` 则给出候选键和候选取值。缩写 `Bs = lookup B γ` 使随后证明对这三个位置保持统一。因此，以下公式的常元由底集 `Bs .fst` 的元素索引。
 <!--ja-->
-次に、充足関係グラフが実際の論理式の鍵で何を割り当てるかを調べる。周囲の環境 `γ` を固定し、スロット `B` から台を、`x` と `y` から鍵と値の候補を受け取る。略記 `Bs = lookup B γ` により、以下の証明はこの三つのスロットについて一様に述べられる。ここで扱う論理式の定数は、台集合 `fst Bs` の要素によって添字づけられる。
+次に、充足関係グラフが実際の論理式の鍵で何を割り当てるかを調べる。周囲の環境 `γ` を固定し、スロット `B` から台を、`x` と `y` から鍵と値の候補を受け取る。略記 `Bs = lookup B γ` により、以下の証明はこの三つのスロットについて一様に述べられる。ここで扱う論理式の定数は、台集合 `Bs .fst` の要素によって添字づけられる。
 <!--/-->
 
 <details open class="submodule-fold">
@@ -1323,29 +1323,29 @@ elimination is into the membership proposition. The other direction uses
 ```agda
     hdom : ∀ {m} (φ : Formula S m) → ⟨ fr φ ⊨ domAt Ti Ci ⟩
     hdom φ = domAt-intro Ti Ci (fr φ)
-      (λ z → (λ h → rec₁ (snd (fst z ∈ fst (slot Bs φ)))
-                 (λ { (w , hw) → inSlot Bs φ (fst z) (fst w) hw }) h)
-           , (λ h → total Bs φ (fst z) h))
+      (λ z → (λ h → rec₁ ((z .fst ∈ (slot Bs φ) .fst) .snd)
+                 (λ { (w , hw) → inSlot Bs φ (z .fst) (w .fst) hw }) h)
+           , (λ h → total Bs φ (z .fst) h))
 ```
 
 <!--en-->
 The forward reading can now be stated precisely. Let `ψ` be a formula whose
-constants are members of `fst Bs`. If slot `x` contains its genuine key
+constants are members of `Bs .fst`. If slot `x` contains its genuine key
 `keyS Bs ψ`, and slot `y` contains the satisfaction set of the translated
 model-language formula `mapFo (asConst Bs) ψ`, then `satGraphAt B x y` holds.
 The value is a set of satisfying environments, rather than a single truth
 value. `graphAt-value` proves the claim by supplying the canonical recursion
 witness to `graphAt-in`.
 <!--zh-->
-现在可以准确陈述正向读式。设 `ψ` 的常元取自 `fst Bs` 的元素。若位置 `x` 含有它的真实键 `keyS Bs ψ`，位置 `y` 含有翻译后的模型语言公式 `mapFo (asConst Bs) ψ` 的满足集合，那么 `satGraphAt B x y` 成立。这里的取值是满足该公式的环境所成的集合，并非单个真值。`graphAt-value` 向 `graphAt-in` 提供典范递归见证，从而证明这一结论。
+现在可以准确陈述正向读式。设 `ψ` 的常元取自 `Bs .fst` 的元素。若位置 `x` 含有它的真实键 `keyS Bs ψ`，位置 `y` 含有翻译后的模型语言公式 `mapFo (asConst Bs) ψ` 的满足集合，那么 `satGraphAt B x y` 成立。这里的取值是满足该公式的环境所成的集合，并非单个真值。`graphAt-value` 向 `graphAt-in` 提供典范递归见证，从而证明这一结论。
 <!--ja-->
-これで順方向の読みを正確に述べられる。`ψ` を、定数が `fst Bs` の要素である論理式とする。スロット `x` が実際の鍵 `keyS Bs ψ` をもち、スロット `y` がモデル言語へ移した論理式 `mapFo (asConst Bs) ψ` の充足集合をもつなら、`satGraphAt B x y` が成り立つ。この値は論理式を充足する環境の集合であり、一つの真理値ではない。`graphAt-value` は正準な再帰の証人を `graphAt-in` に与えて、この主張を示す。
+これで順方向の読みを正確に述べられる。`ψ` を、定数が `Bs .fst` の要素である論理式とする。スロット `x` が実際の鍵 `keyS Bs ψ` をもち、スロット `y` がモデル言語へ移した論理式 `mapFo (asConst Bs) ψ` の充足集合をもつなら、`satGraphAt B x y` が成り立つ。この値は論理式を充足する環境の集合であり、一つの真理値ではない。`graphAt-value` は正準な再帰の証人を `graphAt-in` に与えて、この主張を示す。
 <!--/-->
 
 ```agda
-  graphAt-value : ∀ {m} (ψ : Formula ⟪ fst Bs ⟫ m)
-                → fst (lookup x γ) ≡ fst (keyS Bs ψ)
-                → fst (lookup y γ) ≡ fst (Sat Bs (mapFo (asConst Bs) ψ))
+  graphAt-value : ∀ {m} (ψ : Formula ⟪ Bs .fst ⟫ m)
+                → (lookup x γ) .fst ≡ (keyS Bs ψ) .fst
+                → (lookup y γ) .fst ≡ (Sat Bs (mapFo (asConst Bs) ψ)) .fst
                 → ⟨ γ ⊨ satGraphAt B x y ⟩
   graphAt-value {m} ψ qx qy = graphAt-in B x y γ
 ```
@@ -1408,7 +1408,7 @@ assembled witness therefore establishes the graph formula.
 
 ```agda
     , (hdom φ
-    , (subst2 (λ u v → ⟨ pr u v ∈ fst (satTable Bs φ) ⟩)
+    , (subst2 (λ u v → ⟨ pr u v ∈ (satTable Bs φ) .fst ⟩)
          (sym (qx ∙ keyBridge Bs ψ)) (sym qy) (entry-in Bs φ)
     , SlotHolds.holds Bs Ti Bi Ci Ei NN (fr φ) refl (tgs φ) (htow φ) ψ refl refl)))))))))) ∣₁
     where
@@ -1446,10 +1446,10 @@ without choosing one globally.
 <!--/-->
 
 ```agda
-  graphAt-only : ∀ {m} (ψ : Formula ⟪ fst Bs ⟫ m)
-               → fst (lookup x γ) ≡ fst (keyS Bs ψ)
+  graphAt-only : ∀ {m} (ψ : Formula ⟪ Bs .fst ⟫ m)
+               → (lookup x γ) .fst ≡ (keyS Bs ψ) .fst
                → ⟨ γ ⊨ satGraphAt B x y ⟩
-               → fst (lookup y γ) ≡ fst (Sat Bs (mapFo (asConst Bs) ψ))
+               → (lookup y γ) .fst ≡ (Sat Bs (mapFo (asConst Bs) ψ)) .fst
   graphAt-only {m} ψ qx h = rec₁ (setIsSet _ _) read (graphAt-out B x y γ h)
 ```
 
@@ -1469,10 +1469,10 @@ to `ψ` and forces its recorded value to be the canonical satisfaction set.
 
 ```agda
     where
-    read : GraphWitAt B x y γ → fst (lookup y γ) ≡ fst (Sat Bs (mapFo (asConst Bs) ψ))
+    read : GraphWitAt B x y γ → (lookup y γ) .fst ≡ (Sat Bs (mapFo (asConst Bs) ψ)) .fst
     read (ν , (E , (C , (T , (b , (eb , (tg , (hE , (hc , (hd , (ha , h12))))))))))) =
       SatSoundC.pinned Ti Bi Ci Ei NN (ev ν E C T b γ) Bs eb tg hE hc h12
-        ψ (subst (λ u → ⟨ u ∈ fst C ⟩) qx
+        ψ (subst (λ u → ⟨ u ∈ C .fst ⟩) qx
 ```
 
 <!--en-->
@@ -1491,7 +1491,7 @@ the graph is the satisfaction set of the translated formula.
 ```agda
              (domAt-out Ti Ci (ev ν E C T b γ) hd (lookup x γ) (lookup y γ) ha))
         (lookup y γ)
-        (subst (λ u → ⟨ pr u (fst (lookup y γ)) ∈ fst T ⟩) qx ha)
+        (subst (λ u → ⟨ pr u ((lookup y γ) .fst) ∈ T .fst ⟩) qx ha)
 ```
 </div>
 </details>
@@ -1631,10 +1631,10 @@ proofs say that `v` is the graph value at this key and that `c` belongs to
 <!--/-->
 
 ```agda
-      × ( ⟨ fst key ∈ fst (lookup C γ) ⟩
-        × ( (fst key ≡ pr (fst k) (fst (lookup s γ)))
+      × ( ⟨ key .fst ∈ (lookup C γ) .fst ⟩
+        × ( (key .fst ≡ pr (k .fst) ((lookup s γ) .fst))
           × ( ⟨ (v ∷ key ∷ k ∷ c ∷ z ∷ γ) ⊨ satGraphAt (sh5 B) (suc zero) zero ⟩
-            × ⟨ fst c ∈ fst v ⟩ ) ) ) ) )
+            × ⟨ c .fst ∈ v .fst ⟩ ) ) ) ) )
 ```
 
 <!--en-->
@@ -1652,7 +1652,7 @@ adequacy path converts that set-theoretic equation into satisfaction of
 <!--/-->
 
 ```agda
-  DenoteBody-in : (z : S) → ⟨ fst z ∈ fst (lookup B γ) ⟩ → DenoteOf z
+  DenoteBody-in : (z : S) → ⟨ z .fst ∈ (lookup B γ) .fst ⟩ → DenoteOf z
                 → ⟨ (z ∷ γ) ⊨ DenoteBody B C s e ⟩
   DenoteBody-in z hz (c , (k , (key , (v , (hc , (hk , (hi , (hp , (hg , hm)))))))))
     = hz , ∣ c , (hc , ∣ k , (hk , ∣ key , (hi
@@ -1691,7 +1691,7 @@ choice of witnesses without selecting a tuple globally.
 
 ```agda
   DenoteBody-out : (z : S) → ⟨ (z ∷ γ) ⊨ DenoteBody B C s e ⟩
-                 → ⟨ fst z ∈ fst (lookup B γ) ⟩ × ∥ DenoteOf z ∥₁
+                 → ⟨ z .fst ∈ (lookup B γ) .fst ⟩ × ∥ DenoteOf z ∥₁
   DenoteBody-out z (hz , hc) = hz , rec₁ squash₁
     (λ { (c , (hc , hk)) → rec₁ squash₁
       (λ { (k , (hk , hkey)) → rec₁ squash₁
@@ -1700,15 +1700,15 @@ choice of witnesses without selecting a tuple globally.
 <!--en-->
 At the key layer, the body supplies satisfaction of the pairing formula,
 whereas `DenoteOf` requires the decoded equation
-`fst key ≡ pr (fst k) (fst (lookup s γ))`. Reading the pairing formula's
+`key .fst ≡ pr (k .fst) ((lookup s γ) .fst)`. Reading the pairing formula's
 adequacy path in the forward direction produces precisely this equation. The
 innermost map then retains the graph and membership proofs with the witness
 `v`, and the surrounding eliminations rebuild the whole payload under one
 propositional truncation.
 <!--zh-->
-在键这一层，公式体给出对配对公式的满足，而 `DenoteOf` 要求解码后的等式 `fst key ≡ pr (fst k) (fst (lookup s γ))`。沿配对公式的充分性路径正向读取，恰好得到这条等式。最内层的映射随后把图证明与成员关系证明连同见证 `v` 一并保留，外围的消去再于一层命题截断之下重建整份载荷。
+在键这一层，公式体给出对配对公式的满足，而 `DenoteOf` 要求解码后的等式 `key .fst ≡ pr (k .fst) ((lookup s γ) .fst)`。沿配对公式的充分性路径正向读取，恰好得到这条等式。最内层的映射随后把图证明与成员关系证明连同见证 `v` 一并保留，外围的消去再于一层命题截断之下重建整份载荷。
 <!--ja-->
-鍵の層では、本体は対の論理式の充足を与えるが、`DenoteOf` が要求するのは、復号された等式 `fst key ≡ pr (fst k) (fst (lookup s γ))` である。対の論理式の妥当性を表すパスを順方向に読むと、ちょうどこの等式が得られる。最も内側の写像は、証人 `v` とともにグラフの証明と所属の証明を保ち、外側の消去が中身全体を一つの命題的切り詰めの下で組み立て直す。
+鍵の層では、本体は対の論理式の充足を与えるが、`DenoteOf` が要求するのは、復号された等式 `key .fst ≡ pr (k .fst) ((lookup s γ) .fst)` である。対の論理式の妥当性を表すパスを順方向に読むと、ちょうどこの等式が得られる。最も内側の写像は、証人 `v` とともにグラフの証明と所属の証明を保ち、外側の消去が中身全体を一つの命題的切り詰めの下で組み立て直す。
 <!--/-->
 
 ```agda
@@ -1745,9 +1745,9 @@ module _ {n : ℕ} (B C C₀ s a e d : Fin n) (γ : S ^ n) where
 
 ```agda
   NameAt-in : ⟨ γ ⊨ FreeAt C₀ s a ⟩
-            → ⟨ fst (lookup a γ) ∈ ω ⟩
+            → ⟨ (lookup a γ) .fst ∈ ω ⟩
             → ⟨ γ ⊨ envOverAt e a B ⟩
-            → ((z : S) → ⟨ fst z ∈ fst (lookup d γ) ⟩
+            → ((z : S) → ⟨ z .fst ∈ (lookup d γ) .fst ⟩
 ```
 
 <!--en-->
@@ -1765,9 +1765,9 @@ propositional truncation.
 <!--/-->
 
 ```agda
-               → ⟨ fst z ∈ fst (lookup B γ) ⟩ × DenoteOf B C s e γ z)
-            → ((z : S) → ⟨ fst z ∈ fst (lookup B γ) ⟩ → DenoteOf B C s e γ z
-               → ⟨ fst z ∈ fst (lookup d γ) ⟩)
+               → ⟨ z .fst ∈ (lookup B γ) .fst ⟩ × DenoteOf B C s e γ z)
+            → ((z : S) → ⟨ z .fst ∈ (lookup B γ) .fst ⟩ → DenoteOf B C s e γ z
+               → ⟨ z .fst ∈ (lookup d γ) .fst ⟩)
             → ⟨ γ ⊨ NameAt B C C₀ s a e d ⟩
   NameAt-in hf ha he into back =
 ```
@@ -1790,7 +1790,7 @@ whole name formula.
 ```agda
     hf , (ha , (he , extAt-in-both d (DenoteBody B C s e) γ
       (λ z hz → DenoteBody-in B C s e γ z (into z hz .fst) (into z hz .snd))
-      (λ z h → rec₁ (snd (fst z ∈ fst (lookup d γ)))
+      (λ z h → rec₁ ((z .fst ∈ (lookup d γ) .fst) .snd)
                  (back z (DenoteBody-out B C s e γ z h .fst))
                  (DenoteBody-out B C s e γ z h .snd))))
 ```
@@ -1992,7 +1992,7 @@ read as a function that supplies one such truncated existence for each
 <!--/-->
 
 ```agda
-          × ((j : S) → ⟨ fst j ∈ fst i ⟩
+          × ((j : S) → ⟨ j .fst ∈ i .fst ⟩
              → ⟨ ∃[ x ∶ S ] (x ∷ j ∷ v ∷ u ∷ i ∷ γ) ⊨ Body ⟩) ) )
 ```
 
@@ -2012,9 +2012,9 @@ graphs and the injectivity of the carrier embedding.
 
 ```agda
   Agrees : (i : S) → Type (ℓ-suc ℓ)
-  Agrees i = (j : S) → ⟨ fst j ∈ fst i ⟩
-           → ∥ Σ[ x ∶ S ] ( ⟨ pr (fst j) (fst x) ∈ fst (lookup e₁ γ) ⟩
-                          × ⟨ pr (fst j) (fst x) ∈ fst (lookup e₂ γ) ⟩ ) ∥₁
+  Agrees i = (j : S) → ⟨ j .fst ∈ i .fst ⟩
+           → ∥ Σ[ x ∶ S ] ( ⟨ pr (j .fst) (x .fst) ∈ (lookup e₁ γ) .fst ⟩
+                          × ⟨ pr (j .fst) (x .fst) ∈ (lookup e₂ γ) .fst ⟩ ) ∥₁
 ```
 
 <!--en-->
@@ -2033,9 +2033,9 @@ these fields are exactly the data needed for a lexicographic first difference.
 ```agda
   Differs : Type (ℓ-suc ℓ)
   Differs = Σ[ i ∶ S ] Σ[ u ∶ S ] Σ[ v ∶ S ]
-    ( ⟨ fst i ∈ fst (lookup a γ) ⟩
-    × ( ⟨ pr (fst i) (fst u) ∈ fst (lookup e₁ γ) ⟩
-      × ( ⟨ pr (fst i) (fst v) ∈ fst (lookup e₂ γ) ⟩
+    ( ⟨ i .fst ∈ (lookup a γ) .fst ⟩
+    × ( ⟨ pr (i .fst) (u .fst) ∈ (lookup e₁ γ) .fst ⟩
+      × ( ⟨ pr (i .fst) (v .fst) ∈ (lookup e₂ γ) .fst ⟩
 ```
 
 <!--en-->
@@ -2053,7 +2053,7 @@ binders used to express it.
 <!--/-->
 
 ```agda
-        × ( ⟨ pr (fst u) (fst v) ∈ fst (lookup P γ) ⟩ × Agrees i ) ) ) )
+        × ( ⟨ pr (u .fst) (v .fst) ∈ (lookup P γ) .fst ⟩ × Agrees i ) ) ) )
 ```
 
 <!--en-->
@@ -2110,7 +2110,7 @@ in `Body`.
 
 ```agda
     unpack : (i u v : S) → Agrees i
-           → (j : S) → ⟨ fst j ∈ fst i ⟩
+           → (j : S) → ⟨ j .fst ∈ i .fst ⟩
            → ⟨ ∃[ x ∶ S ] (x ∷ j ∷ v ∷ u ∷ i ∷ γ) ⊨ Body ⟩
     unpack i u v hj j hj' = map₁
       (λ { (x , (p₁ , p₂)) → x
@@ -2197,7 +2197,7 @@ chosen outside those local scopes.
   LexAt-out : ⟨ γ ⊨ LexAt P a e₁ e₂ ⟩ → ∥ Differs ∥₁
   LexAt-out = rec₁ squash₁ atIndex
     where
-    atValue : (i u v : S) → ⟨ fst i ∈ fst (lookup a γ) ⟩ → Inner i u v → Differs
+    atValue : (i u v : S) → ⟨ i .fst ∈ (lookup a γ) .fst ⟩ → Inner i u v → Differs
     atValue i u v hi h@(h₁ , (h₂ , (hp , _))) = i , (u , (v
 ```
 
@@ -2253,7 +2253,7 @@ the witness is used to prove a proposition and is not exposed by the result.
 <!--/-->
 
 ```agda
-    atSecond : (i u : S) → ⟨ fst i ∈ fst (lookup a γ) ⟩
+    atSecond : (i u : S) → ⟨ i .fst ∈ (lookup a γ) .fst ⟩
              → Σ[ v ∶ S ] Inner i u v → ∥ Differs ∥₁
     atSecond i u hi (v , h) = ∣ atValue i u v hi h ∣₁
 ```
@@ -2271,7 +2271,7 @@ ever requiring a globally available `v`.
 <!--/-->
 
 ```agda
-    atFirst : (i : S) → ⟨ fst i ∈ fst (lookup a γ) ⟩
+    atFirst : (i : S) → ⟨ i .fst ∈ (lookup a γ) .fst ⟩
             → Σ[ u ∶ S ] ∥ Σ[ v ∶ S ] Inner i u v ∥₁ → ∥ Differs ∥₁
     atFirst i hi (u , h) = rec₁ squash₁ (atSecond i u hi) h
 ```
@@ -2291,7 +2291,7 @@ index or values.
 <!--/-->
 
 ```agda
-    atIndex : Σ[ i ∶ S ] ( ⟨ fst i ∈ fst (lookup a γ) ⟩
+    atIndex : Σ[ i ∶ S ] ( ⟨ i .fst ∈ (lookup a γ) .fst ⟩
                          × ∥ Σ[ u ∶ S ] ∥ Σ[ v ∶ S ] Inner i u v ∥₁ ∥₁ )
             → ∥ Differs ∥₁
     atIndex (i , (hi , h)) = rec₁ squash₁ (atFirst i hi) h
@@ -2332,9 +2332,9 @@ module _ {n : ℕ} (R P s₁ a₁ e₁ s₂ a₂ e₂ : Fin n) (γ : S ^ n) wher
 
 ```agda
   Below : Type (ℓ-suc ℓ)
-  Below = ⟨ pr (fst (lookup s₁ γ)) (fst (lookup s₂ γ)) ∈ fst (lookup R γ) ⟩
-        ⊎ ( (fst (lookup s₂ γ) ≡ fst (lookup s₁ γ))
-          × ( ⟨ fst (lookup a₁ γ) ∈ fst (lookup a₂ γ) ⟩
+  Below = ⟨ pr ((lookup s₁ γ) .fst) ((lookup s₂ γ) .fst) ∈ (lookup R γ) .fst ⟩
+        ⊎ ( ((lookup s₂ γ) .fst ≡ (lookup s₁ γ) .fst)
+          × ( ⟨ (lookup a₁ γ) .fst ∈ (lookup a₂ γ) .fst ⟩
 ```
 
 <!--en-->
@@ -2351,7 +2351,7 @@ transport of the second name's data to the first name's types.
 <!--/-->
 
 ```agda
-            ⊎ ( (fst (lookup a₂ γ) ≡ fst (lookup a₁ γ))
+            ⊎ ( ((lookup a₂ γ) .fst ≡ (lookup a₁ γ) .fst)
               × Differs P a₁ e₁ e₂ γ ) ) )
 ```
 
@@ -2411,8 +2411,8 @@ case from the equal-code case. In the latter it retains the equality
   ≺At-out : ⟨ γ ⊨ ≺At R P s₁ a₁ e₁ s₂ a₂ e₂ ⟩ → ∥ Below ∥₁
   ≺At-out = rec₁ squash₁ outer
     where
-    inner : (fst (lookup s₂ γ) ≡ fst (lookup s₁ γ))
-          → ⟨ fst (lookup a₁ γ) ∈ fst (lookup a₂ γ) ⟩
+    inner : ((lookup s₂ γ) .fst ≡ (lookup s₁ γ) .fst)
+          → ⟨ (lookup a₁ γ) .fst ∈ (lookup a₂ γ) .fst ⟩
 ```
 
 <!--en-->
@@ -2428,7 +2428,7 @@ these alternatives explicit while fixing the code equality shared by both.
 <!--/-->
 
 ```agda
-          ⊎ ( (fst (lookup a₂ γ) ≡ fst (lookup a₁ γ))
+          ⊎ ( ((lookup a₂ γ) .fst ≡ (lookup a₁ γ) .fst)
             × ⟨ γ ⊨ LexAt P a₁ e₁ e₂ ⟩ )
           → ∥ Below ∥₁
     inner q (inl h) = ∣ inr (q , inl h) ∣₁
@@ -2468,7 +2468,7 @@ at `∥ Below ∥₁`, where neither disjunction is turned into a chosen branch.
 
 ```agda
     outer : ⟨ γ ⊨ appAt R s₁ s₂ ⟩
-          ⊎ ( (fst (lookup s₂ γ) ≡ fst (lookup s₁ γ))
+          ⊎ ( ((lookup s₂ γ) .fst ≡ (lookup s₁ γ) .fst)
             × ⟨ γ ⊨ ( (var a₁ ∈̇ var a₂)
                     ∨̇ ( (var a₂ ≐ var a₁) ∧̇ LexAt P a₁ e₁ e₂ ) ) ⟩ )
           → ∥ Below ∥₁
@@ -3097,10 +3097,10 @@ constructed here.
 <summary class="submodule-fold-heading">
 ```agda
   module Keys (Rs Ps : S)
-              (Rrep : (u v : Limit) → ⟨ pr (fst u) (fst v) ∈ fst Rs ⟩ → u ≺ˡ v)
-              (Rfill : (u v : Limit) → u ≺ˡ v → ⟨ pr (fst u) (fst v) ∈ fst Rs ⟩)
-              (Prep : (u v : ⟪ A ⟫) → ⟨ pr (ix u) (ix v) ∈ fst Ps ⟩ → u ≺ₚ v)
-              (Pfill : (u v : ⟪ A ⟫) → u ≺ₚ v → ⟨ pr (ix u) (ix v) ∈ fst Ps ⟩)
+              (Rrep : (u v : Limit) → ⟨ pr (u .fst) (v .fst) ∈ Rs .fst ⟩ → u ≺ˡ v)
+              (Rfill : (u v : Limit) → u ≺ˡ v → ⟨ pr (u .fst) (v .fst) ∈ Rs .fst ⟩)
+              (Prep : (u v : ⟪ A ⟫) → ⟨ pr (ix u) (ix v) ∈ Ps .fst ⟩ → u ≺ₚ v)
+              (Pfill : (u v : ⟪ A ⟫) → u ≺ₚ v → ⟨ pr (ix u) (ix v) ∈ Ps .fst ⟩)
               where
 ```
 </summary>
@@ -3135,10 +3135,10 @@ natural-number arities, rather than an equation for an object-language slot.
 
 ```agda
     module _ {n : ℕ} (P a₁ e₁ e₂ : Fin n) (γ : S ^ n) (t₁ t₂ : Name)
-             (qP : fst (lookup P γ) ≡ fst Ps)
-             (qa : fst (lookup a₁ γ) ≡ # (arity t₁))
+             (qP : (lookup P γ) .fst ≡ Ps .fst)
+             (qa : (lookup a₁ γ) .fst ≡ # (arity t₁))
              (qk : arity t₂ ≡ arity t₁)
-             (q₁ : fst (lookup e₁ γ) ≡ env (pfam t₁))
+             (q₁ : (lookup e₁ γ) .fst ≡ env (pfam t₁))
 ```
 
 <!--en-->
@@ -3155,7 +3155,7 @@ beginning with `pr₁` for the first vector.
 <!--/-->
 
 ```agda
-             (q₂ : fst (lookup e₂ γ)
+             (q₂ : (lookup e₂ γ) .fst
                  ≡ env (λ i → ix (lookup i (subst (Vec ⟪ A ⟫) qk (params t₂)))))
              where
       private
@@ -3197,41 +3197,41 @@ and prior agreement required by `Lex`.
 
 <!--en-->
 The first graph can now be read at an exact index. Suppose the pair with key
-`# (toℕ i)` and value `fst u` belongs to the set in slot `e₁`. Transporting
+`# (toℕ i)` and value `u .fst` belongs to the set in slot `e₁`. Transporting
 this membership along `q₁` places it in `env (pfam t₁)`, and `lookup-spec`
 identifies its second component with that graph's unique value. Since this
 value is `ix (pr₁ i)`, `at₁` recovers the equality
-`fst u ≡ ix (pr₁ i)`.
+`u .fst ≡ ix (pr₁ i)`.
 <!--zh-->
-现在可以在一个确定序号处读取第一张图。假设以 `# (toℕ i)` 为键、以 `fst u` 为值的对属于槽位 `e₁` 中的集合。沿 `q₁` 搬运这项成员关系，便把它放进 `env (pfam t₁)`；`lookup-spec` 再把其第二分量认定为该图在此处的唯一取值。这个取值就是 `ix (pr₁ i)`，故 `at₁` 恢复等式 `fst u ≡ ix (pr₁ i)`。
+现在可以在一个确定序号处读取第一张图。假设以 `# (toℕ i)` 为键、以 `u .fst` 为值的对属于槽位 `e₁` 中的集合。沿 `q₁` 搬运这项成员关系，便把它放进 `env (pfam t₁)`；`lookup-spec` 再把其第二分量认定为该图在此处的唯一取值。这个取值就是 `ix (pr₁ i)`，故 `at₁` 恢复等式 `u .fst ≡ ix (pr₁ i)`。
 <!--ja-->
-これで第一のグラフを特定の添字で読める。鍵が `# (toℕ i)`、値が `fst u` である対がスロット `e₁` の集合に属すとする。この所属を `q₁` に沿って輸送すると `env (pfam t₁)` への所属になり、`lookup-spec` が第二成分をそのグラフの当該位置における唯一の値と同一視する。その値は `ix (pr₁ i)` なので、`at₁` は等式 `fst u ≡ ix (pr₁ i)` を復元する。
+これで第一のグラフを特定の添字で読める。鍵が `# (toℕ i)`、値が `u .fst` である対がスロット `e₁` の集合に属すとする。この所属を `q₁` に沿って輸送すると `env (pfam t₁)` への所属になり、`lookup-spec` が第二成分をそのグラフの当該位置における唯一の値と同一視する。その値は `ix (pr₁ i)` なので、`at₁` は等式 `u .fst ≡ ix (pr₁ i)` を復元する。
 <!--/-->
 
 ```agda
         at₁ : (i : Fin (arity t₁)) (u : S)
-            → ⟨ pr (# (toℕ i)) (fst u) ∈ fst (lookup e₁ γ) ⟩ → fst u ≡ ix (pr₁ i)
-        at₁ i u h = subst ⟨_⟩ (lookup-spec (pfam t₁) i (fst u))
-          (subst (λ z → ⟨ pr (# (toℕ i)) (fst u) ∈ z ⟩) q₁ h)
+            → ⟨ pr (# (toℕ i)) (u .fst) ∈ (lookup e₁ γ) .fst ⟩ → u .fst ≡ ix (pr₁ i)
+        at₁ i u h = subst ⟨_⟩ (lookup-spec (pfam t₁) i (u .fst))
+          (subst (λ z → ⟨ pr (# (toℕ i)) (u .fst) ∈ z ⟩) q₁ h)
 ```
 
 <!--en-->
 The same reading applies to the second graph, with the transported family in
 place of `pfam t₁`. Membership of the pair at key `# (toℕ i)` is first moved
-along `q₂`; `lookup-spec` then yields `fst u ≡ ix (pr₂ i)`. Hence `at₁` and
+along `q₂`; `lookup-spec` then yields `u .fst ≡ ix (pr₂ i)`. Hence `at₁` and
 `at₂` give the functional consequence needed here: they identify every value
 found at a valid index with the particular parameter entry represented there.
 <!--zh-->
-第二张图以搬运后的族代替 `pfam t₁`，采用完全相同的读法。先沿 `q₂` 搬运键 `# (toℕ i)` 处那一有序对的成员关系，再由 `lookup-spec` 得到 `fst u ≡ ix (pr₂ i)`。因此，`at₁` 与 `at₂` 给出这里所需的单值性结论：它们把每个有效序号处读出的值精确认定为那里所表示的参数条目。
+第二张图以搬运后的族代替 `pfam t₁`，采用完全相同的读法。先沿 `q₂` 搬运键 `# (toℕ i)` 处那一有序对的成员关系，再由 `lookup-spec` 得到 `u .fst ≡ ix (pr₂ i)`。因此，`at₁` 与 `at₂` 给出这里所需的单值性结论：它们把每个有效序号处读出的值精确认定为那里所表示的参数条目。
 <!--ja-->
-第二のグラフも、`pfam t₁` の代わりに輸送後の族を用いて同じように読める。鍵 `# (toℕ i)` の対の所属をまず `q₂` に沿って輸送すると、`lookup-spec` によって `fst u ≡ ix (pr₂ i)` が得られる。したがって `at₁` と `at₂` は、ここで必要な一価性の帰結を与える。有効な添字で見つかった値を、そこで表される特定のパラメータ成分と正確に同一視するのである。
+第二のグラフも、`pfam t₁` の代わりに輸送後の族を用いて同じように読める。鍵 `# (toℕ i)` の対の所属をまず `q₂` に沿って輸送すると、`lookup-spec` によって `u .fst ≡ ix (pr₂ i)` が得られる。したがって `at₁` と `at₂` は、ここで必要な一価性の帰結を与える。有効な添字で見つかった値を、そこで表される特定のパラメータ成分と正確に同一視するのである。
 <!--/-->
 
 ```agda
         at₂ : (i : Fin (arity t₁)) (u : S)
-            → ⟨ pr (# (toℕ i)) (fst u) ∈ fst (lookup e₂ γ) ⟩ → fst u ≡ ix (pr₂ i)
-        at₂ i u h = subst ⟨_⟩ (lookup-spec (λ j → ix (pr₂ j)) i (fst u))
-          (subst (λ z → ⟨ pr (# (toℕ i)) (fst u) ∈ z ⟩) q₂ h)
+            → ⟨ pr (# (toℕ i)) (u .fst) ∈ (lookup e₂ γ) .fst ⟩ → u .fst ≡ ix (pr₂ i)
+        at₂ i u h = subst ⟨_⟩ (lookup-spec (λ j → ix (pr₂ j)) i (u .fst))
+          (subst (λ z → ⟨ pr (# (toℕ i)) (u .fst) ∈ z ⟩) q₂ h)
 ```
 
 <!--en-->
@@ -3249,7 +3249,7 @@ places the same pair in the set actually stored at `e₁`. This is the witness
 
 ```agda
         put₁ : (i : Fin (arity t₁))
-             → ⟨ pr (# (toℕ i)) (ix (pr₁ i)) ∈ fst (lookup e₁ γ) ⟩
+             → ⟨ pr (# (toℕ i)) (ix (pr₁ i)) ∈ (lookup e₁ γ) .fst ⟩
         put₁ i = subst (λ z → ⟨ pr (# (toℕ i)) (ix (pr₁ i)) ∈ z ⟩) (sym q₁)
           (subst ⟨_⟩ (sym (lookup-spec (pfam t₁) i (ix (pr₁ i)))) refl)
 ```
@@ -3269,7 +3269,7 @@ translation will use the former pair to recover `Lex`.
 
 ```agda
         put₂ : (i : Fin (arity t₁))
-             → ⟨ pr (# (toℕ i)) (ix (pr₂ i)) ∈ fst (lookup e₂ γ) ⟩
+             → ⟨ pr (# (toℕ i)) (ix (pr₂ i)) ∈ (lookup e₂ γ) .fst ⟩
         put₂ i = subst (λ z → ⟨ pr (# (toℕ i)) (ix (pr₂ i)) ∈ z ⟩) (sym q₂)
           (subst ⟨_⟩ (sym (lookup-spec (λ j → ix (pr₂ j)) i (ix (pr₂ i)))) refl)
 ```
@@ -3338,46 +3338,46 @@ lookups and the strict parameter comparison.
 
 <!--en-->
 It remains to build `Agrees` below the chosen index. Given a model element `j`
-with `fst j ∈ # (toℕ i)`, the numeral elimination theorem says, under
-propositional truncation, that `fst j` is `# m` for some `m < toℕ i`. Mapping
+with `j .fst ∈ # (toℕ i)`, the numeral elimination theorem says, under
+propositional truncation, that `j .fst` is `# m` for some `m < toℕ i`. Mapping
 the local construction `step` over this result will provide one shared value
 for the two graphs at that earlier position. The truncation is preserved: the
 particular natural number recovered from numeral membership is never exposed
 outside the proposition required by `Agrees`.
 <!--zh-->
-还需构造所选序号以下的 `Agrees`。给定模型元素 `j` 及 `fst j ∈ # (toℕ i)`，数码消去定理在命题截断内说明：存在某个 `m < toℕ i`，使 `fst j` 等于 `# m`。把局部构造 `step` 映到这个结果上，就会在该较早位置为两张图给出一个共同取值。命题截断始终保留：从数码成员关系中恢复的那个自然数不会暴露到 `Agrees` 所要求的命题之外。
+还需构造所选序号以下的 `Agrees`。给定模型元素 `j` 及 `j .fst ∈ # (toℕ i)`，数码消去定理在命题截断内说明：存在某个 `m < toℕ i`，使 `j .fst` 等于 `# m`。把局部构造 `step` 映到这个结果上，就会在该较早位置为两张图给出一个共同取值。命题截断始终保留：从数码成员关系中恢复的那个自然数不会暴露到 `Agrees` 所要求的命题之外。
 <!--ja-->
-残るのは、選んだ添字より前で `Agrees` を構成することである。モデルの要素 `j` と `fst j ∈ # (toℕ i)` が与えられると、数項の消去定理は、ある `m < toℕ i` について `fst j` が `# m` に等しいことを命題的切り詰めの中で示す。この結果に局所的な構成 `step` を写せば、その先行位置で二つのグラフに共通する値が得られる。切り詰めは保たれており、数項への所属から復元された特定の自然数が `Agrees` の求める命題の外へ現れることはない。
+残るのは、選んだ添字より前で `Agrees` を構成することである。モデルの要素 `j` と `j .fst ∈ # (toℕ i)` が与えられると、数項の消去定理は、ある `m < toℕ i` について `j .fst` が `# m` に等しいことを命題的切り詰めの中で示す。この結果に局所的な構成 `step` を写せば、その先行位置で二つのグラフに共通する値が得られる。切り詰めは保たれており、数項への所属から復元された特定の自然数が `Agrees` の求める命題の外へ現れることはない。
 <!--/-->
 
 ```agda
                 , agrees ) ) ) ) ) )
         where
         agrees : Agrees P a₁ e₁ e₂ γ (numAt (toℕ i))
-        agrees j hj = map₁ step (∈#-elim (toℕ i) (fst j) hj)
+        agrees j hj = map₁ step (∈#-elim (toℕ i) (j .fst) hj)
           where
 ```
 
 <!--en-->
 The function `step` makes the shared-value claim precise. From a number
-`m < toℕ i` and an equality identifying `fst j` with `# m`, it must return a
-model element `x` whose pair with the key `fst j` belongs to both environment
+`m < toℕ i` and an equality identifying `j .fst` with `# m`, it must return a
+model element `x` whose pair with the key `j .fst` belongs to both environment
 graphs. The supplied value is the first family's entry at the corresponding
 finite index, packaged as `ixL (pr₁ jx)`. For the first graph, `put₁ jx`
 already gives the required membership at the canonical numeral key; the
-equality of the two presentations of that key transports it to `fst j`.
+equality of the two presentations of that key transports it to `j .fst`.
 <!--zh-->
-函数 `step` 精确陈述共同取值的要求。由 `m < toℕ i` 与把 `fst j` 认作 `# m` 的等式出发，它必须返回一个模型元素 `x`，使以 `fst j` 为键、以 `fst x` 为值的对同时属于两张环境图。给出的取值是第一族在相应有穷序号处的条目，包装为 `ixL (pr₁ jx)`。对第一张图，`put₁ jx` 已经给出典范数码键处的所需成员关系；沿这个键的两种表示之间的等式搬运，即可把它改写到 `fst j` 处。
+函数 `step` 精确陈述共同取值的要求。由 `m < toℕ i` 与把 `j .fst` 认作 `# m` 的等式出发，它必须返回一个模型元素 `x`，使以 `j .fst` 为键、以 `x .fst` 为值的对同时属于两张环境图。给出的取值是第一族在相应有穷序号处的条目，包装为 `ixL (pr₁ jx)`。对第一张图，`put₁ jx` 已经给出典范数码键处的所需成员关系；沿这个键的两种表示之间的等式搬运，即可把它改写到 `j .fst` 处。
 <!--ja-->
-関数 `step` は、共通の値という主張を正確に述べる。`m < toℕ i` と `fst j` を `# m` に同一視する等式から、鍵 `fst j` と値 `fst x` の対が両方の環境グラフに属すようなモデルの要素 `x` を返さなければならない。ここで与える値は、対応する有限添字における第一の族の成分であり、`ixL (pr₁ jx)` としてまとめられる。第一のグラフについては、`put₁ jx` が標準的な数項の鍵で必要な所属をすでに与えている。その鍵の二つの表示を結ぶ等式に沿って輸送すれば、鍵を `fst j` に書き換えられる。
+関数 `step` は、共通の値という主張を正確に述べる。`m < toℕ i` と `j .fst` を `# m` に同一視する等式から、鍵 `j .fst` と値 `x .fst` の対が両方の環境グラフに属すようなモデルの要素 `x` を返さなければならない。ここで与える値は、対応する有限添字における第一の族の成分であり、`ixL (pr₁ jx)` としてまとめられる。第一のグラフについては、`put₁ jx` が標準的な数項の鍵で必要な所属をすでに与えている。その鍵の二つの表示を結ぶ等式に沿って輸送すれば、鍵を `j .fst` に書き換えられる。
 <!--/-->
 
 ```agda
-          step : Σ[ m ∶ ℕ ] ((m < toℕ i) × (fst j ≡ # m))
-               → Σ[ x ∶ S ] ( ⟨ pr (fst j) (fst x) ∈ fst (lookup e₁ γ) ⟩
-                            × ⟨ pr (fst j) (fst x) ∈ fst (lookup e₂ γ) ⟩ )
+          step : Σ[ m ∶ ℕ ] ((m < toℕ i) × (j .fst ≡ # m))
+               → Σ[ x ∶ S ] ( ⟨ pr (j .fst) (x .fst) ∈ (lookup e₁ γ) .fst ⟩
+                            × ⟨ pr (j .fst) (x .fst) ∈ (lookup e₂ γ) .fst ⟩ )
           step (m , (hm , qj)) = ixL (pr₁ jx)
-            , ( subst (λ z → ⟨ pr z (ix (pr₁ jx)) ∈ fst (lookup e₁ γ) ⟩)
+            , ( subst (λ z → ⟨ pr z (ix (pr₁ jx)) ∈ (lookup e₁ γ) .fst ⟩)
 ```
 
 <!--en-->
@@ -3385,19 +3385,19 @@ For the second graph, the earlier-index hypothesis `agree` identifies
 `pr₁ jx` with `pr₂ jx`. Transporting `put₂ jx` along the reverse of this
 equality changes its value from `ix (pr₂ jx)` to the shared value
 `ix (pr₁ jx)`; transporting the key as before then gives membership at
-`fst j`. Hence both graphs contain the very same value at every position below
+`j .fst`. Hence both graphs contain the very same value at every position below
 `i`, completing one result of `step` and therefore the `Agrees` field of
 `Differs`.
 <!--zh-->
-对第二张图，先前序号处的假设 `agree` 把 `pr₁ jx` 与 `pr₂ jx` 等同。沿这项等同的反向搬运 `put₂ jx`，便把其中的值从 `ix (pr₂ jx)` 改写为共同取值 `ix (pr₁ jx)`；再像前面那样搬运键，即得到 `fst j` 处的成员关系。因此，在 `i` 以下的每个位置，两张图都含有同一个取值。这就完成了 `step` 的一个结果，进而完成 `Differs` 的 `Agrees` 字段。
+对第二张图，先前序号处的假设 `agree` 把 `pr₁ jx` 与 `pr₂ jx` 等同。沿这项等同的反向搬运 `put₂ jx`，便把其中的值从 `ix (pr₂ jx)` 改写为共同取值 `ix (pr₁ jx)`；再像前面那样搬运键，即得到 `j .fst` 处的成员关系。因此，在 `i` 以下的每个位置，两张图都含有同一个取值。这就完成了 `step` 的一个结果，进而完成 `Differs` 的 `Agrees` 字段。
 <!--ja-->
-第二のグラフでは、先行添字についての仮定 `agree` が `pr₁ jx` と `pr₂ jx` を同一視する。この等しさの逆向きに `put₂ jx` を輸送すると、その値を `ix (pr₂ jx)` から共通の値 `ix (pr₁ jx)` へ書き換えられる。さらに先ほどと同じように鍵を輸送すれば、`fst j` での所属が得られる。したがって `i` より前のすべての位置で、二つのグラフはまったく同じ値を含む。これで `step` の一つの結果が完成し、ひいては `Differs` の `Agrees` 成分が得られる。
+第二のグラフでは、先行添字についての仮定 `agree` が `pr₁ jx` と `pr₂ jx` を同一視する。この等しさの逆向きに `put₂ jx` を輸送すると、その値を `ix (pr₂ jx)` から共通の値 `ix (pr₁ jx)` へ書き換えられる。さらに先ほどと同じように鍵を輸送すれば、`j .fst` での所属が得られる。したがって `i` より前のすべての位置で、二つのグラフはまったく同じ値を含む。これで `step` の一つの結果が完成し、ひいては `Differs` の `Agrees` 成分が得られる。
 <!--/-->
 
 ```agda
                   (sym qjx) (put₁ jx)
-              , subst (λ z → ⟨ pr z (ix (pr₁ jx)) ∈ fst (lookup e₂ γ) ⟩) (sym qjx)
-                  (subst (λ y → ⟨ pr (# (toℕ jx)) (ix y) ∈ fst (lookup e₂ γ) ⟩)
+              , subst (λ z → ⟨ pr z (ix (pr₁ jx)) ∈ (lookup e₂ γ) .fst ⟩) (sym qjx)
+                  (subst (λ y → ⟨ pr (# (toℕ jx)) (ix y) ∈ (lookup e₂ γ) .fst ⟩)
                     (sym (agree jx (subst (_< toℕ i) (sym qm) hm))) (put₂ jx)) )
             where
 ```
@@ -3419,20 +3419,20 @@ the graph memberships use their canonical numeral key.
             jx = fromℕ' (arity t₁) m (<-trans hm (toℕ<n i))
             qm : toℕ jx ≡ m
             qm = toFromId' (arity t₁) m (<-trans hm (toℕ<n i))
-            qjx : fst j ≡ # (toℕ jx)
+            qjx : j .fst ≡ # (toℕ jx)
 ```
 
 <!--en-->
 The equality `qj` identifies the original model key with `# m`, while `qm`
 identifies `m` with the number of `jx`. Their composite is
-`qjx : fst j ≡ # (toℕ jx)`. This is the precise change of key used above to
+`qjx : j .fst ≡ # (toℕ jx)`. This is the precise change of key used above to
 transport both canonical graph entries to the position named by `j`; it
 completes the construction of `Agrees`, and hence the forward bridge
 `lex-fill`.
 <!--zh-->
-等式 `qj` 把原来的模型内键认作 `# m`，而 `qm` 又把 `m` 认作 `jx` 所对应的自然数。二者复合即得`qjx : fst j ≡ # (toℕ jx)`。这正是前文所用的换键等式：它把两张图的典范条目都传输到`j` 所指的位置。至此 `Agrees` 构造完成，正向桥 `lex-fill` 也随之闭合。
+等式 `qj` 把原来的模型内键认作 `# m`，而 `qm` 又把 `m` 认作 `jx` 所对应的自然数。二者复合即得`qjx : j .fst ≡ # (toℕ jx)`。这正是前文所用的换键等式：它把两张图的典范条目都传输到`j` 所指的位置。至此 `Agrees` 构造完成，正向桥 `lex-fill` 也随之闭合。
 <!--ja-->
-等式 `qj` はもとのモデル内の鍵を `# m` と同一視し、`qm` は `m` を `jx` の表す自然数と同一視する。両者を合成すると`qjx : fst j ≡ # (toℕ jx)` が得られる。これは先ほど用いた鍵の書き換えそのもので、二つのグラフの標準的な項目を、ともに`j` が名指す位置へ輸送する。これで `Agrees` の構成が終わり、順方向の橋 `lex-fill` も完成する。
+等式 `qj` はもとのモデル内の鍵を `# m` と同一視し、`qm` は `m` を `jx` の表す自然数と同一視する。両者を合成すると`qjx : j .fst ≡ # (toℕ jx)` が得られる。これは先ほど用いた鍵の書き換えそのもので、二つのグラフの標準的な項目を、ともに`j` が名指す位置へ輸送する。これで `Agrees` の構成が終わり、順方向の橋 `lex-fill` も完成する。
 <!--/-->
 
 ```agda
@@ -3458,8 +3458,8 @@ truncation.
       lex-read : Differs P a₁ e₁ e₂ γ
                → ∥ Lex (params t₁) (subst (Vec ⟪ A ⟫) qk (params t₂)) ∥₁
       lex-read (i , (u , (v , (hi , (h₁ , (h₂ , (hp , ag))))))) =
-        map₁ atIndex (∈#-elim (arity t₁) (fst i)
-          (subst (λ z → ⟨ fst i ∈ z ⟩) qa hi))
+        map₁ atIndex (∈#-elim (arity t₁) (i .fst)
+          (subst (λ z → ⟨ i .fst ∈ z ⟩) qa hi))
 ```
 
 <!--en-->
@@ -3477,7 +3477,7 @@ every smaller one.
 
 ```agda
         where
-        atIndex : Σ[ m ∶ ℕ ] ((m < arity t₁) × (fst i ≡ # m))
+        atIndex : Σ[ m ∶ ℕ ] ((m < arity t₁) × (i .fst ≡ # m))
                 → Lex (params t₁) (subst (Vec ⟪ A ⟫) qk (params t₂))
         atIndex (m , (hm , qi)) = ι , (below , agrees)
           where
@@ -3486,41 +3486,41 @@ every smaller one.
 <!--en-->
 The bound on `m` gives `ι : Fin (arity t₁)`. As before, the numeral round trip
 changes the equation for `# m` into
-`qι : fst i ≡ # (toℕ ι)`, so the recorded membership in the first environment
+`qι : i .fst ≡ # (toℕ ι)`, so the recorded membership in the first environment
 can be queried at the canonical key for `ι`. The lookup lemma `at₁` then
-identifies the recorded value `fst u` with the embedded first parameter
+identifies the recorded value `u .fst` with the embedded first parameter
 `ix (pr₁ ι)`.
 <!--zh-->
-`m` 的界给出 `ι : Fin (arity t₁)`。和正向一样，数码往返把关于 `# m` 的等式改写为`qι : fst i ≡ # (toℕ ι)`，于是记录在第一张环境图中的成员关系可以在 `ι` 的典范键处读取。查取引理`at₁` 随即把记录的值 `fst u` 认作第一个参数的嵌入像 `ix (pr₁ ι)`。
+`m` 的界给出 `ι : Fin (arity t₁)`。和正向一样，数码往返把关于 `# m` 的等式改写为`qι : i .fst ≡ # (toℕ ι)`，于是记录在第一张环境图中的成员关系可以在 `ι` 的典范键处读取。查取引理`at₁` 随即把记录的值 `u .fst` 认作第一个参数的嵌入像 `ix (pr₁ ι)`。
 <!--ja-->
-`m` の境界から `ι : Fin (arity t₁)` が得られる。順方向と同様に、数項との往復によって`# m` についての等式は `qι : fst i ≡ # (toℕ ι)` へ書き換えられる。したがって、第一の環境に記録された所属を`ι` の標準的な鍵で読める。参照の補題 `at₁` は、記録された値 `fst u` を第一のパラメータの埋め込み像`ix (pr₁ ι)` と同一視する。
+`m` の境界から `ι : Fin (arity t₁)` が得られる。順方向と同様に、数項との往復によって`# m` についての等式は `qι : i .fst ≡ # (toℕ ι)` へ書き換えられる。したがって、第一の環境に記録された所属を`ι` の標準的な鍵で読める。参照の補題 `at₁` は、記録された値 `u .fst` を第一のパラメータの埋め込み像`ix (pr₁ ι)` と同一視する。
 <!--/-->
 
 ```agda
           ι : Fin (arity t₁)
           ι = fromℕ' (arity t₁) m hm
-          qι : fst i ≡ # (toℕ ι)
+          qι : i .fst ≡ # (toℕ ι)
           qι = qi ∙ cong #_ (sym (toFromId' (arity t₁) m hm))
-          qu : fst u ≡ ix (pr₁ ι)
+          qu : u .fst ≡ ix (pr₁ ι)
 ```
 
 <!--en-->
 Applying `at₂` to the second graph likewise gives
-`fst v ≡ ix (pr₂ ι)`. The relation atom in `Differs` says that the ordered pair
+`v .fst ≡ ix (pr₂ ι)`. The relation atom in `Differs` says that the ordered pair
 of the recorded values belongs to the set in slot `P`; after rewriting that
 set to `Ps` and the two values to their embedded parameters, the representation
 law `Prep` reads the atom as the required strict comparison
 `pr₁ ι ≺ₚ pr₂ ι`.
 <!--zh-->
-对第二张图应用 `at₂`，同样得到 `fst v ≡ ix (pr₂ ι)`。`Differs` 的关系原子说：记录的两个值组成的有序对属于槽位`P` 中的集合。把该集合改写为 `Ps`，再把两个值改写为相应参数的嵌入像之后，表示律 `Prep` 便把这条原子读成所需的严格比较`pr₁ ι ≺ₚ pr₂ ι`。
+对第二张图应用 `at₂`，同样得到 `v .fst ≡ ix (pr₂ ι)`。`Differs` 的关系原子说：记录的两个值组成的有序对属于槽位`P` 中的集合。把该集合改写为 `Ps`，再把两个值改写为相应参数的嵌入像之后，表示律 `Prep` 便把这条原子读成所需的严格比较`pr₁ ι ≺ₚ pr₂ ι`。
 <!--ja-->
-第二のグラフに `at₂` を適用すると、同様に `fst v ≡ ix (pr₂ ι)` が得られる。`Differs` の関係原子は、記録された二つの値の順序対がスロット`P` の集合に属すと述べる。その集合を `Ps` に、二つの値を対応するパラメータの埋め込み像に書き換えると、表示則`Prep` がこの原子を、必要な狭義の比較 `pr₁ ι ≺ₚ pr₂ ι` として読む。
+第二のグラフに `at₂` を適用すると、同様に `v .fst ≡ ix (pr₂ ι)` が得られる。`Differs` の関係原子は、記録された二つの値の順序対がスロット`P` の集合に属すと述べる。その集合を `Ps` に、二つの値を対応するパラメータの埋め込み像に書き換えると、表示則`Prep` がこの原子を、必要な狭義の比較 `pr₁ ι ≺ₚ pr₂ ι` として読む。
 <!--/-->
 
 ```agda
-          qu = at₁ ι u (subst (λ z → ⟨ pr z (fst u) ∈ fst (lookup e₁ γ) ⟩) qι h₁)
-          qv : fst v ≡ ix (pr₂ ι)
-          qv = at₂ ι v (subst (λ z → ⟨ pr z (fst v) ∈ fst (lookup e₂ γ) ⟩) qι h₂)
+          qu = at₁ ι u (subst (λ z → ⟨ pr z (u .fst) ∈ (lookup e₁ γ) .fst ⟩) qι h₁)
+          qv : v .fst ≡ ix (pr₂ ι)
+          qv = at₂ ι v (subst (λ z → ⟨ pr z (v .fst) ∈ (lookup e₂ γ) .fst ⟩) qι h₂)
           below : pr₁ ι ≺ₚ pr₂ ι
           below = Prep (pr₁ ι) (pr₂ ι)
 ```
@@ -3539,8 +3539,8 @@ eliminated directly into it.
 <!--/-->
 
 ```agda
-            (subst2 (λ y z → ⟨ pr y z ∈ fst Ps ⟩) qu qv
-              (subst (λ z → ⟨ pr (fst u) (fst v) ∈ z ⟩) qP hp))
+            (subst2 (λ y z → ⟨ pr y z ∈ Ps .fst ⟩) qu qv
+              (subst (λ z → ⟨ pr (u .fst) (v .fst) ∈ z ⟩) qP hp))
           agrees : (j : Fin (arity t₁)) → toℕ j < toℕ ι → pr₁ j ≡ pr₂ j
           agrees j hj = ix-inj (pr₁ j) (pr₂ j)
             (rec₁ (setIsSet (ix (pr₁ j)) (ix (pr₂ j))) same
@@ -3551,33 +3551,33 @@ To invoke `ag`, the finite inequality is first converted by `#mono` into
 membership of `# (toℕ j)` in `# (toℕ ι)`, then transported along `qι` to the
 recorded bound. The resulting truncated witness has exactly the shape handled
 by `same`: an element `x` together with membership of the pair
-`(# (toℕ j), fst x)` in each environment graph. Thus the truncation contains
+`(# (toℕ j), (λ p → p .fst) x)` in each environment graph. Thus the truncation contains
 all the data needed for the equality, while none of that witness data escapes.
 <!--zh-->
-为了调用 `ag`，先由 `#mono` 把有穷不等式化为`# (toℕ j) ∈ # (toℕ ι)`，再沿 `qι` 传输到记录中的界。所得截断见证恰具有 `same` 所需的形状：一个元素`x`，以及有序对 `(# (toℕ j), fst x)` 分别属于两张环境图的证明。因此，这层截断含有所需相等的全部资料，却不让任何具体见证逸出。
+为了调用 `ag`，先由 `#mono` 把有穷不等式化为`# (toℕ j) ∈ # (toℕ ι)`，再沿 `qι` 传输到记录中的界。所得截断见证恰具有 `same` 所需的形状：一个元素`x`，以及有序对 `(# (toℕ j), (λ p → p .fst) x)` 分别属于两张环境图的证明。因此，这层截断含有所需相等的全部资料，却不让任何具体见证逸出。
 <!--ja-->
-`ag` を使うため、まず有限な不等式を `#mono` によって`# (toℕ j) ∈ # (toℕ ι)` という所属へ変え、さらに `qι` に沿って記録された境界へ輸送する。得られる切り詰められた証人は`same` が扱う形そのものである。すなわち、要素 `x` と、順序対 `(# (toℕ j), fst x)` がそれぞれの環境グラフに属すことの組である。したがって、切り詰めの内部には等しさを導くための情報がすべてありながら、具体的な証人は外へ出ない。
+`ag` を使うため、まず有限な不等式を `#mono` によって`# (toℕ j) ∈ # (toℕ ι)` という所属へ変え、さらに `qι` に沿って記録された境界へ輸送する。得られる切り詰められた証人は`same` が扱う形そのものである。すなわち、要素 `x` と、順序対 `(# (toℕ j), (λ p → p .fst) x)` がそれぞれの環境グラフに属すことの組である。したがって、切り詰めの内部には等しさを導くための情報がすべてありながら、具体的な証人は外へ出ない。
 <!--/-->
 
 ```agda
               (ag (numAt (toℕ j))
                 (subst (λ z → ⟨ # (toℕ j) ∈ z ⟩) (sym qι) (#mono (toℕ j) (toℕ ι) hj))))
             where
-            same : Σ[ x ∶ S ] ( ⟨ pr (# (toℕ j)) (fst x) ∈ fst (lookup e₁ γ) ⟩
-                              × ⟨ pr (# (toℕ j)) (fst x) ∈ fst (lookup e₂ γ) ⟩ )
+            same : Σ[ x ∶ S ] ( ⟨ pr (# (toℕ j)) (x .fst) ∈ (lookup e₁ γ) .fst ⟩
+                              × ⟨ pr (# (toℕ j)) (x .fst) ∈ (lookup e₂ γ) .fst ⟩ )
 ```
 
 <!--en-->
-For a chosen shared value `x`, `at₁` identifies `fst x` with
+For a chosen shared value `x`, `at₁` identifies `x .fst` with
 `ix (pr₁ j)` and `at₂` identifies the same set with `ix (pr₂ j)`. Reversing
 the first path and composing it with the second gives equality of the two
 embedded parameters. Injectivity of `ix` then reflects that equality back to
 `pr₁ j ≡ pr₂ j`, which is precisely the earlier-index condition of `Lex`.
 The reverse bridge is now complete.
 <!--zh-->
-选定一个共同取值 `x` 后，`at₁` 把 `fst x` 认作 `ix (pr₁ j)`，`at₂` 则把同一个集合认作`ix (pr₂ j)`。反转第一条路径再与第二条复合，便得到两个参数嵌入像相等。`ix` 的单射性把这项相等反映回`pr₁ j ≡ pr₂ j`，恰好就是 `Lex` 在先前序号处要求的条件。反向桥至此完成。
+选定一个共同取值 `x` 后，`at₁` 把 `x .fst` 认作 `ix (pr₁ j)`，`at₂` 则把同一个集合认作`ix (pr₂ j)`。反转第一条路径再与第二条复合，便得到两个参数嵌入像相等。`ix` 的单射性把这项相等反映回`pr₁ j ≡ pr₂ j`，恰好就是 `Lex` 在先前序号处要求的条件。反向桥至此完成。
 <!--ja-->
-共通の値 `x` を一つ取ると、`at₁` は `fst x` を `ix (pr₁ j)` と同一視し、`at₂` は同じ集合を`ix (pr₂ j)` と同一視する。第一の経路を逆にして第二の経路と合成すれば、二つのパラメータの埋め込み像が等しいと分かる。`ix` の単射性はこの等しさを `pr₁ j ≡ pr₂ j` へ反映し、これは `Lex` が先行添字に要求する条件そのものである。これで逆向きの橋も完成する。
+共通の値 `x` を一つ取ると、`at₁` は `x .fst` を `ix (pr₁ j)` と同一視し、`at₂` は同じ集合を`ix (pr₂ j)` と同一視する。第一の経路を逆にして第二の経路と合成すれば、二つのパラメータの埋め込み像が等しいと分かる。`ix` の単射性はこの等しさを `pr₁ j ≡ pr₂ j` へ反映し、これは `Lex` が先行添字に要求する条件そのものである。これで逆向きの橋も完成する。
 <!--/-->
 
 ```agda
@@ -3689,10 +3689,10 @@ hypotheses, the internal formula can be compared with `_≺ₙ_`.
 
 ```agda
     module _ {n : ℕ} (R P s₁ a₁ e₁ s₂ a₂ e₂ : Fin n) (γ : S ^ n) (t₁ t₂ : Name)
-             (qR : fst (lookup R γ) ≡ fst Rs) (qP : fst (lookup P γ) ≡ fst Ps)
-             (qs₁ : fst (lookup s₁ γ) ≡ fst (codeOf t₁))
-             (qs₂ : fst (lookup s₂ γ) ≡ fst (codeOf t₂))
-             (qa₁ : fst (lookup a₁ γ) ≡ # (arity t₁))
+             (qR : (lookup R γ) .fst ≡ Rs .fst) (qP : (lookup P γ) .fst ≡ Ps .fst)
+             (qs₁ : (lookup s₁ γ) .fst ≡ (codeOf t₁) .fst)
+             (qs₂ : (lookup s₂ γ) .fst ≡ (codeOf t₂) .fst)
+             (qa₁ : (lookup a₁ γ) .fst ≡ # (arity t₁))
 ```
 
 <!--en-->
@@ -3710,11 +3710,11 @@ slots it reconstructs an equality `codeOf t₂ ≡ codeOf t₁` in the type
 <!--/-->
 
 ```agda
-             (qa₂ : fst (lookup a₂ γ) ≡ # (arity t₂))
-             (qe₁ : fst (lookup e₁ γ) ≡ env (pfam t₁))
-             (qe₂ : fst (lookup e₂ γ) ≡ env (pfam t₂)) where
+             (qa₂ : (lookup a₂ γ) .fst ≡ # (arity t₂))
+             (qe₁ : (lookup e₁ γ) .fst ≡ env (pfam t₁))
+             (qe₂ : (lookup e₂ γ) .fst ≡ env (pfam t₂)) where
       private
-        codeSame : fst (lookup s₂ γ) ≡ fst (lookup s₁ γ) → codeOf t₂ ≡ codeOf t₁
+        codeSame : (lookup s₂ γ) .fst ≡ (lookup s₁ γ) .fst → codeOf t₂ ≡ codeOf t₁
 ```
 
 <!--en-->
@@ -3733,7 +3733,7 @@ orientation required by the second branch of the name order.
 <!--/-->
 
 ```agda
-        codeSame q = Σ≡Prop (λ x → snd (x ∈ Lset ω)) (sym qs₂ ∙ q ∙ qs₁)
+        codeSame q = Σ≡Prop (λ x → (x ∈ Lset ω) .snd) (sym qs₂ ∙ q ∙ qs₁)
 ```
 
 <!--en-->
@@ -3749,8 +3749,8 @@ branches of the formula: the second skeleton slot equals the first.
 <!--/-->
 
 ```agda
-        codeBack : codeOf t₂ ≡ codeOf t₁ → fst (lookup s₂ γ) ≡ fst (lookup s₁ γ)
-        codeBack ec = qs₂ ∙ cong fst ec ∙ sym qs₁
+        codeBack : codeOf t₂ ≡ codeOf t₁ → (lookup s₂ γ) .fst ≡ (lookup s₁ γ) .fst
+        codeBack ec = qs₂ ∙ cong (λ p → p .fst) ec ∙ sym qs₁
 ```
 
 <!--en-->
@@ -3768,7 +3768,7 @@ first-difference bridge.
 
 ```agda
         shiftEnv : (ek : arity t₂ ≡ arity t₁)
-                 → fst (lookup e₂ γ)
+                 → (lookup e₂ γ) .fst
                  ≡ env (λ i → ix (lookup i (subst (Vec ⟪ A ⟫) ek (params t₂))))
         shiftEnv ek = qe₂ ∙ sym (envShift t₂ ek)
 ```
@@ -3789,9 +3789,9 @@ first branch of `≺At`.
 ```agda
       order-in : t₁ ≺ₙ t₂ → ⟨ γ ⊨ ≺At R P s₁ a₁ e₁ s₂ a₂ e₂ ⟩
       order-in (inl h) = ≺At-in R P s₁ a₁ e₁ s₂ a₂ e₂ γ
-        (inl (subst (λ z → ⟨ pr (fst (lookup s₁ γ)) (fst (lookup s₂ γ)) ∈ z ⟩)
+        (inl (subst (λ z → ⟨ pr ((lookup s₁ γ) .fst) ((lookup s₂ γ) .fst) ∈ z ⟩)
                 (sym qR)
-                (subst2 (λ y z → ⟨ pr y z ∈ fst Rs ⟩) (sym qs₁) (sym qs₂)
+                (subst2 (λ y z → ⟨ pr y z ∈ Rs .fst ⟩) (sym qs₁) (sym qs₂)
 ```
 
 <!--en-->
@@ -3876,8 +3876,8 @@ of `_≺ₙ_`.
 <!--/-->
 
 ```agda
-          (subst2 (λ y z → ⟨ pr y z ∈ fst Rs ⟩) qs₁ qs₂
-            (subst (λ z → ⟨ pr (fst (lookup s₁ γ)) (fst (lookup s₂ γ)) ∈ z ⟩)
+          (subst2 (λ y z → ⟨ pr y z ∈ Rs .fst ⟩) qs₁ qs₂
+            (subst (λ z → ⟨ pr ((lookup s₁ γ) .fst) ((lookup s₂ γ) .fst) ∈ z ⟩)
               qR k))) ∣₁
         read (inr (q , inl k)) = ∣ inr (codeSame q , inl
           (#∈#-elim (arity t₁) (arity t₂)

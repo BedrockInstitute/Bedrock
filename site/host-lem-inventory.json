@@ -4,12 +4,12 @@
     {
       "module": "FOL.Semantics",
       "definition": "decideSatisfaction",
-      "decided_proposition": "decideSatisfaction ι lem γ φ = lem (At._⊨_ _ ι γ φ)",
+      "decided_proposition": "decideSatisfaction ι lem γ φ = lem (γ I.⊨ φ)",
       "classification": "formula-satisfaction",
       "supplier": "formula plus environment supplied at call",
       "reading_lemma": "FormulaPredicate.reading or definitional equality",
       "migration_status": "migrated",
-      "site": "src/FOL/Semantics.lagda.md:decideSatisfaction ι lem γ φ = lem (At._⊨_ _ ι γ φ):lem:1"
+      "site": "src/FOL/Semantics.lagda.md:decideSatisfaction ι lem γ φ = lem (γ I.⊨ φ):lem:1"
     },
     {
       "module": "FOL.Semantics",
@@ -294,22 +294,22 @@
     {
       "module": "L.GCH.CardinalSquareLaw",
       "definition": "fin?",
-      "decided_proposition": "fin? x = FOL.Semantics.decideMembership 𝒮ᵥ lem (fst x) ω",
+      "decided_proposition": "fin? x = FOL.Semantics.decideMembership 𝒮ᵥ lem (x .fst) ω",
       "classification": "atomic-membership",
       "supplier": "FOL.Semantics.decideMembership",
       "reading_lemma": "atomic membership computes by refl",
       "migration_status": "migrated",
-      "site": "src/L/GCH/CardinalSquareLaw.lagda.md:fin? x = FOL.Semantics.decideMembership 𝒮ᵥ lem (fst x) ω:lem:1"
+      "site": "src/L/GCH/CardinalSquareLaw.lagda.md:fin? x = FOL.Semantics.decideMembership 𝒮ᵥ lem (x .fst) ω:lem:1"
     },
     {
       "module": "L.GCH.CardinalSquareLaw",
       "definition": "top?",
-      "decided_proposition": "top? x h = go (FOL.Semantics.decideMembership 𝒮ᵥ lem (fst x) m)",
+      "decided_proposition": "top? x h = go (FOL.Semantics.decideMembership 𝒮ᵥ lem (x .fst) m)",
       "classification": "atomic-membership",
       "supplier": "FOL.Semantics.decideMembership",
       "reading_lemma": "atomic membership computes by refl",
       "migration_status": "migrated",
-      "site": "src/L/GCH/CardinalSquareLaw.lagda.md:top? x h = go (FOL.Semantics.decideMembership 𝒮ᵥ lem (fst x) m):lem:1"
+      "site": "src/L/GCH/CardinalSquareLaw.lagda.md:top? x h = go (FOL.Semantics.decideMembership 𝒮ᵥ lem (x .fst) m):lem:1"
     },
     {
       "module": "L.GCH.ConstructibleHull",
@@ -344,22 +344,22 @@
     {
       "module": "L.GCH.HullCounting",
       "definition": "decide",
-      "decided_proposition": "decide z = FOL.Semantics.decideMembership 𝒮ᵥ lem (fst z) (fst D₁)",
+      "decided_proposition": "decide z = FOL.Semantics.decideMembership 𝒮ᵥ lem (z .fst) (D₁ .fst)",
       "classification": "atomic-membership",
       "supplier": "FOL.Semantics.decideMembership",
       "reading_lemma": "atomic membership computes by refl",
       "migration_status": "migrated",
-      "site": "src/L/GCH/HullCounting.lagda.md:decide z = FOL.Semantics.decideMembership 𝒮ᵥ lem (fst z) (fst D₁):lem:1"
+      "site": "src/L/GCH/HullCounting.lagda.md:decide z = FOL.Semantics.decideMembership 𝒮ᵥ lem (z .fst) (D₁ .fst):lem:1"
     },
     {
       "module": "L.GCH.HullCounting",
       "definition": "ΦZ⊆",
-      "decided_proposition": "ΦZ⊆ z h = go (FOL.Semantics.decideMembership 𝒮ᵥ lem z (fst Z))",
+      "decided_proposition": "ΦZ⊆ z h = go (FOL.Semantics.decideMembership 𝒮ᵥ lem z (Z .fst))",
       "classification": "atomic-membership",
       "supplier": "FOL.Semantics.decideMembership",
       "reading_lemma": "atomic membership computes by refl",
       "migration_status": "migrated",
-      "site": "src/L/GCH/HullCounting.lagda.md:ΦZ⊆ z h = go (FOL.Semantics.decideMembership 𝒮ᵥ lem z (fst Z)):lem:1"
+      "site": "src/L/GCH/HullCounting.lagda.md:ΦZ⊆ z h = go (FOL.Semantics.decideMembership 𝒮ᵥ lem z (Z .fst)):lem:1"
     },
     {
       "module": "L.GCH.HullCounting",
@@ -374,32 +374,32 @@
     {
       "module": "L.GCH.LeastWitnessMap",
       "definition": "c",
-      "decided_proposition": "c = fst (leastOfFormula (orderAt γ oγ) (definedGood x) lem nonempty)",
+      "decided_proposition": "c = (leastOfFormula (orderAt γ oγ) (definedGood x) lem nonempty) .fst",
       "classification": "formula-satisfaction",
       "supplier": "formula plus environment supplied at call",
       "reading_lemma": "FormulaPredicate.reading or definitional equality",
       "migration_status": "migrated",
-      "site": "src/L/GCH/LeastWitnessMap.lagda.md:c = fst (leastOfFormula (orderAt γ oγ) (definedGood x) lem nonempty):lem:1"
+      "site": "src/L/GCH/LeastWitnessMap.lagda.md:c = (leastOfFormula (orderAt γ oγ) (definedGood x) lem nonempty) .fst:lem:1"
     },
     {
       "module": "L.GCH.LeastWitnessMap",
       "definition": "c-good",
-      "decided_proposition": "c-good = fst (snd (leastOfFormula (orderAt γ oγ) (definedGood x) lem nonempty))",
+      "decided_proposition": "c-good = ((leastOfFormula (orderAt γ oγ) (definedGood x) lem nonempty) .snd) .fst",
       "classification": "formula-satisfaction",
       "supplier": "formula plus environment supplied at call",
       "reading_lemma": "FormulaPredicate.reading or definitional equality",
       "migration_status": "migrated",
-      "site": "src/L/GCH/LeastWitnessMap.lagda.md:c-good = fst (snd (leastOfFormula (orderAt γ oγ) (definedGood x) lem nonempty)):lem:1"
+      "site": "src/L/GCH/LeastWitnessMap.lagda.md:c-good = ((leastOfFormula (orderAt γ oγ) (definedGood x) lem nonempty) .snd) .fst:lem:1"
     },
     {
       "module": "L.GCH.LeastWitnessMap",
       "definition": "minimal",
-      "decided_proposition": "minimal = snd (snd (leastOfFormula (orderAt γ oγ) (definedGood x) lem nonempty))",
+      "decided_proposition": "minimal = ((leastOfFormula (orderAt γ oγ) (definedGood x) lem nonempty) .snd) .snd",
       "classification": "formula-satisfaction",
       "supplier": "formula plus environment supplied at call",
       "reading_lemma": "FormulaPredicate.reading or definitional equality",
       "migration_status": "migrated",
-      "site": "src/L/GCH/LeastWitnessMap.lagda.md:minimal = snd (snd (leastOfFormula (orderAt γ oγ) (definedGood x) lem nonempty)):lem:1"
+      "site": "src/L/GCH/LeastWitnessMap.lagda.md:minimal = ((leastOfFormula (orderAt γ oγ) (definedGood x) lem nonempty) .snd) .snd:lem:1"
     },
     {
       "module": "L.GCH.OrderType",

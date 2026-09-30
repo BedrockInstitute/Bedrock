@@ -81,11 +81,11 @@ Two sides meet in the projection equations. On the model side stand `hasPairL` a
 <!--/-->
 
 <!--en-->
-A projection equation is an equality between sets of the ambient hierarchy, for example `fst (pairʟ a b) ≡ ⁅ fst a , fst b ⁆`. This particular equality type is a proposition because the hierarchy's carrier is an h-set, which is what `setIsSet` certifies. That propositionhood is what permits eliminating the truncated stage data into it; no propositionhood is claimed about arbitrary equality types.
+A projection equation is an equality between sets of the ambient hierarchy, for example `(pairʟ a b) .fst ≡ ⁅ (λ p → p .fst) a , (λ p → p .fst) b ⁆`. This particular equality type is a proposition because the hierarchy's carrier is an h-set, which is what `setIsSet` certifies. That propositionhood is what permits eliminating the truncated stage data into it; no propositionhood is claimed about arbitrary equality types.
 <!--zh-->
-投影等式是周遭集合层级集合之间的等式，例如 `fst (pairʟ a b) ≡ ⁅ fst a , fst b ⁆`。这个特定的等值类型之所以是命题，是因为层级的载体是 h-集合，`setIsSet` 证实的正是这一点。正是这个命题性使得把截断的层数据消去进去成为可能；这里并没有对任意等值类型主张命题性。
+投影等式是周遭集合层级集合之间的等式，例如 `(pairʟ a b) .fst ≡ ⁅ (λ p → p .fst) a , (λ p → p .fst) b ⁆`。这个特定的等值类型之所以是命题，是因为层级的载体是 h-集合，`setIsSet` 证实的正是这一点。正是这个命题性使得把截断的层数据消去进去成为可能；这里并没有对任意等值类型主张命题性。
 <!--ja-->
-射影方程式は、周囲の階層の集合の間の等式である。たとえば `fst (pairʟ a b) ≡ ⁅ fst a , fst b ⁆`。この特定の等式の型が命題なのは、階層の台が h-集合だからであり、`setIsSet` が保証するのはまさにそれである。この命題性ゆえに、切り詰められた段階のデータをそこへ消去できる。任意の等式の型について命題性を主張しているのではない。
+射影方程式は、周囲の階層の集合の間の等式である。たとえば `(pairʟ a b) .fst ≡ ⁅ (λ p → p .fst) a , (λ p → p .fst) b ⁆`。この特定の等式の型が命題なのは、階層の台が h-集合だからであり、`setIsSet` が保証するのはまさにそれである。この命題性ゆえに、切り詰められた段階のデータをそこへ消去できる。任意の等式の型について命題性を主張しているのではない。
 <!--/-->
 
 ```agda
@@ -116,19 +116,19 @@ open ModelL using ( SetOf; ℩ )
 
 The description operator turns the contractibility of the realizer types into operations: `pairʟ` and `unionʟ` select the centres of `hasPairL` and `hasUnionL`, and the successor composes them.
 
-One distinction governs what follows. A centre selected from a contractible type is an operation with a specification, not a computation rule. The contractibility proof does not make `pairʟ a b` reduce, on its underlying set, to the hierarchy's pair `⁅ fst a , fst b ⁆`; what it does provide is a path from the centre to every realizer, and the projection equations of the next section are obtained by comparing the centre with an explicitly built realizer along that path. All three operations are declared `opaque`, so every later use reads them through their specifications and through the projection equations rather than through their construction.
+One distinction governs what follows. A centre selected from a contractible type is an operation with a specification, not a computation rule. The contractibility proof does not make `pairʟ a b` reduce, on its underlying set, to the hierarchy's pair `⁅ (λ p → p .fst) a , (λ p → p .fst) b ⁆`; what it does provide is a path from the centre to every realizer, and the projection equations of the next section are obtained by comparing the centre with an explicitly built realizer along that path. All three operations are declared `opaque`, so every later use reads them through their specifications and through the projection equations rather than through their construction.
 <!--zh-->
 ## 模型自己的运算
 
 摹状词算子把实现者类型的可缩性变成运算：`pairʟ` 与 `unionʟ` 选出 `hasPairL` 与 `hasUnionL` 的中心，后继则把它们复合起来。
 
-有一条区分主宰下文。从可缩类型选出的中心是带规格的运算，而不是计算规则。可缩性证明并未使 `pairʟ a b` 的底层集合化归为层级的对 `⁅ fst a , fst b ⁆`；它提供的是从中心到每个实现者的路径，而下一节的投影等式正是沿这条路径把中心与显式构造的实现者比较得到的。三个运算都声明为 `opaque`，此后每一处使用都经它们的规格与投影等式读它们，而非经它们的构造。
+有一条区分主宰下文。从可缩类型选出的中心是带规格的运算，而不是计算规则。可缩性证明并未使 `pairʟ a b` 的底层集合化归为层级的对 `⁅ (λ p → p .fst) a , (λ p → p .fst) b ⁆`；它提供的是从中心到每个实现者的路径，而下一节的投影等式正是沿这条路径把中心与显式构造的实现者比较得到的。三个运算都声明为 `opaque`，此后每一处使用都经它们的规格与投影等式读它们，而非经它们的构造。
 <!--ja-->
 ## モデル自身の演算
 
 確定記述の演算子は、実現者の型の可縮性を演算に変える。`pairʟ` と `unionʟ` は `hasPairL` と `hasUnionL` の中心を選び、後者はそれらを合成する。
 
-以下を支配する区別が一つある。可縮な型から選んだ中心は、仕様をもつ演算であって計算規則ではない。可縮性の証明は、`pairʟ a b` の基底の集合を階層の対 `⁅ fst a , fst b ⁆` へ簡約するものではない。実際に与えるのは、中心からすべての実現者へのパスであり、次節の射影方程式は、そのパスに沿って中心を明示的に作った実現者と比較することで得られる。三つの演算はすべて `opaque` と宣言され、以後の使用はその構成ではなく、仕様と射影方程式を通して読まれる。
+以下を支配する区別が一つある。可縮な型から選んだ中心は、仕様をもつ演算であって計算規則ではない。可縮性の証明は、`pairʟ a b` の基底の集合を階層の対 `⁅ (λ p → p .fst) a , (λ p → p .fst) b ⁆` へ簡約するものではない。実際に与えるのは、中心からすべての実現者へのパスであり、次節の射影方程式は、そのパスに沿って中心を明示的に作った実現者と比較することで得られる。三つの演算はすべて `opaque` と宣言され、以後の使用はその構成ではなく、仕様と射影方程式を通して読まれる。
 <!--/-->
 
 <!--en-->
@@ -182,44 +182,44 @@ The centre of a contractible type is not, on the face of it, the set the hierarc
 <!--/-->
 
 <!--en-->
-The statement fixes the target: the underlying set of the extracted pair must equal the hierarchy's unordered pair of the underlying sets. The elimination `rec₁` opens the merely existing common-stage data `isL-directed` supplies, and it is legal precisely because the goal is the equality `fst (pairʟ a b) ≡ ⁅ fst a , fst b ⁆`, and `setIsSet (fst (pairʟ a b)) ⁅ fst a , fst b ⁆` proves that this equality type is a proposition. Inside, the incoming data `σ , oσ , fa∈ , fb∈` is exactly what `PairOf.mkPair` consumes, so `mkPair` builds a realizer from it. The path the certificate provides goes from the centre to that realizer, not the other way.
+The statement fixes the target: the underlying set of the extracted pair must equal the hierarchy's unordered pair of the underlying sets. The elimination `rec₁` opens the merely existing common-stage data `isL-directed` supplies, and it is legal precisely because the goal is the equality `(pairʟ a b) .fst ≡ ⁅ (λ p → p .fst) a , (λ p → p .fst) b ⁆`, and `setIsSet ((pairʟ a b) .fst) ⁅ (λ p → p .fst) a , (λ p → p .fst) b ⁆` proves that this equality type is a proposition. Inside, the incoming data `σ , oσ , fa∈ , fb∈` is exactly what `PairOf.mkPair` consumes, so `mkPair` builds a realizer from it. The path the certificate provides goes from the centre to that realizer, not the other way.
 <!--zh-->
-陈述先固定目标：抽出的对的底层集合必须等于层级对底层集合所作的无序对。消去 `rec₁` 打开 `isL-directed` 仅仅存在的公共层数据，而这一步合法，恰因目标是等式 `fst (pairʟ a b) ≡ ⁅ fst a , fst b ⁆`，而 `setIsSet (fst (pairʟ a b)) ⁅ fst a , fst b ⁆` 证明这个等式类型是命题。在内部，送入的数据 `σ , oσ , fa∈ , fb∈` 恰是 `PairOf.mkPair` 所消耗的，于是 `mkPair` 由它构造出一个实现者。证书提供的路径从中心指向那个实现者，方向不可颠倒。
+陈述先固定目标：抽出的对的底层集合必须等于层级对底层集合所作的无序对。消去 `rec₁` 打开 `isL-directed` 仅仅存在的公共层数据，而这一步合法，恰因目标是等式 `(pairʟ a b) .fst ≡ ⁅ (λ p → p .fst) a , (λ p → p .fst) b ⁆`，而 `setIsSet ((pairʟ a b) .fst) ⁅ (λ p → p .fst) a , (λ p → p .fst) b ⁆` 证明这个等式类型是命题。在内部，送入的数据 `σ , oσ , fa∈ , fb∈` 恰是 `PairOf.mkPair` 所消耗的，于是 `mkPair` 由它构造出一个实现者。证书提供的路径从中心指向那个实现者，方向不可颠倒。
 <!--ja-->
-主張はまず目標を固定する。取り出した対の基底の集合が、階層が基底の集合たちに作る非順序対と等しいこと。消去 `rec₁` が `isL-directed` の単に存在する共通段階のデータを開くが、これが正当なのは、目標は等式 `fst (pairʟ a b) ≡ ⁅ fst a , fst b ⁆` であり、`setIsSet (fst (pairʟ a b)) ⁅ fst a , fst b ⁆` がこの等式の型を命題だと証明することだからである。内部では、届くデータ `σ , oσ , fa∈ , fb∈` がちょうど `PairOf.mkPair` が消費するものであり、`mkPair` はそこから実現者を構成する。証明書が供給するパスは中心からその実現者へ向かうものであり、逆向きではない。
+主張はまず目標を固定する。取り出した対の基底の集合が、階層が基底の集合たちに作る非順序対と等しいこと。消去 `rec₁` が `isL-directed` の単に存在する共通段階のデータを開くが、これが正当なのは、目標は等式 `(pairʟ a b) .fst ≡ ⁅ (λ p → p .fst) a , (λ p → p .fst) b ⁆` であり、`setIsSet ((pairʟ a b) .fst) ⁅ (λ p → p .fst) a , (λ p → p .fst) b ⁆` がこの等式の型を命題だと証明することだからである。内部では、届くデータ `σ , oσ , fa∈ , fb∈` がちょうど `PairOf.mkPair` が消費するものであり、`mkPair` はそこから実現者を構成する。証明書が供給するパスは中心からその実現者へ向かうものであり、逆向きではない。
 <!--/-->
 
 ```agda
-  pairʟ-fst : (a b : S) → fst (pairʟ a b) ≡ ⁅ fst a , fst b ⁆
-  pairʟ-fst a b = rec₁ (setIsSet (fst (pairʟ a b)) ⁅ fst a , fst b ⁆)
+  pairʟ-fst : (a b : S) → (pairʟ a b) .fst ≡ ⁅ a .fst , b .fst ⁆
+  pairʟ-fst a b = rec₁ (setIsSet ((pairʟ a b) .fst) ⁅ a .fst , b .fst ⁆)
     (λ { (σ , (oσ , (fa∈ , fb∈))) →
-         cong (λ (e : SetOf (PairOf.Q a b)) → fst (fst e))
+         cong (λ (e : SetOf (PairOf.Q a b)) → (e .fst) .fst)
            (hasPairL a b .snd (PairOf.mkPair a b σ oσ fa∈ fb∈)) })
 ```
 
 <!--en-->
-The last step identifies the center with the explicitly built realizer. The contraction `hasPairL a b .snd` sends any realizer to a path starting at the center and ending at that realizer; applied to `mkPair a b σ oσ fa∈ fb∈`, it yields a path in the type `SetOf (PairOf.Q a b)`, which packages a carrier element with its realizing specification. Congruence of the projection `λ e → fst (fst e)`, which reads out the carrier element and then its underlying set, turns that path into an equation between underlying sets, closing the goal. Note that the truncated common-stage data is eliminated only into this set equality, whose propositionhood `setIsSet` supplies. The union case is the same argument one input short: `UnionOf.mkUnion` needs a single stage containing `fst a`, and the certificate `a .snd` is exactly such merely existing stage data, so the elimination consumes it directly.
+The last step identifies the center with the explicitly built realizer. The contraction `hasPairL a b .snd` sends any realizer to a path starting at the center and ending at that realizer; applied to `mkPair a b σ oσ fa∈ fb∈`, it yields a path in the type `SetOf (PairOf.Q a b)`, which packages a carrier element with its realizing specification. Congruence of the projection `λ e → (e .fst) .fst`, which reads out the carrier element and then its underlying set, turns that path into an equation between underlying sets, closing the goal. Note that the truncated common-stage data is eliminated only into this set equality, whose propositionhood `setIsSet` supplies. The union case is the same argument one input short: `UnionOf.mkUnion` needs a single stage containing `a .fst`, and the certificate `a .snd` is exactly such merely existing stage data, so the elimination consumes it directly.
 <!--zh-->
-最后一步把中心与显式构造的实现者等同。收缩 `hasPairL a b .snd` 对任意实现者给出一条从中心出发、终于该实现者的路径；把它用于 `mkPair a b σ oσ fa∈ fb∈`，得到类型 `SetOf (PairOf.Q a b)` 中的路径，该类型把载体元素连同其实现规格打包。把投影函数 `λ e → fst (fst e)` 作用于这条路径，先读出载体元素再读出其底层集合，把这条路径变成底层集合之间的等式，目标合拢。注意，截断的公共层数据只被消去到这条集合等式中，其命题性由 `setIsSet` 供给。并的情形是少一个输入的同一论证：`UnionOf.mkUnion` 只需一个容纳 `fst a` 的层，而证书 `a .snd` 正是那样的仅存层数据，消去直接消耗它。
+最后一步把中心与显式构造的实现者等同。收缩 `hasPairL a b .snd` 对任意实现者给出一条从中心出发、终于该实现者的路径；把它用于 `mkPair a b σ oσ fa∈ fb∈`，得到类型 `SetOf (PairOf.Q a b)` 中的路径，该类型把载体元素连同其实现规格打包。把投影函数 `λ e → (e .fst) .fst` 作用于这条路径，先读出载体元素再读出其底层集合，把这条路径变成底层集合之间的等式，目标合拢。注意，截断的公共层数据只被消去到这条集合等式中，其命题性由 `setIsSet` 供给。并的情形是少一个输入的同一论证：`UnionOf.mkUnion` 只需一个容纳 `a .fst` 的层，而证书 `a .snd` 正是那样的仅存层数据，消去直接消耗它。
 <!--ja-->
-最後の一歩は、中心と明示的に構成した実現者を同一視する。収縮 `hasPairL a b .snd` は任意の実現者に対して、中心からその実現者へ向かうパスを与える。これを `mkPair a b σ oσ fa∈ fb∈` に適用すると、型 `SetOf (PairOf.Q a b)` の中のパスが得られる。この型は台の要素をその実現の仕様とともにまとめたものである。射影関数 `λ e → fst (fst e)` をこのパスに適用することで、台の要素を読み取りつぎにその基底の集合を読み取りる射影が、このパスを基底の集合の間の等式に変え、目標が閉じる。切り詰められた共通段階のデータが消去される先はこの集合の等式だけであり、その命題性は `setIsSet` が供給する。和集合の場合は、入力が一つ少ないだけの同じ議論である。`UnionOf.mkUnion` は `fst a` を含む一つの段階を必要とするだけで、証明書 `a .snd` はまさにそのような、単に存在する段階のデータなので、消去はそれを直接消費する。
+最後の一歩は、中心と明示的に構成した実現者を同一視する。収縮 `hasPairL a b .snd` は任意の実現者に対して、中心からその実現者へ向かうパスを与える。これを `mkPair a b σ oσ fa∈ fb∈` に適用すると、型 `SetOf (PairOf.Q a b)` の中のパスが得られる。この型は台の要素をその実現の仕様とともにまとめたものである。射影関数 `λ e → (e .fst) .fst` をこのパスに適用することで、台の要素を読み取りつぎにその基底の集合を読み取りる射影が、このパスを基底の集合の間の等式に変え、目標が閉じる。切り詰められた共通段階のデータが消去される先はこの集合の等式だけであり、その命題性は `setIsSet` が供給する。和集合の場合は、入力が一つ少ないだけの同じ議論である。`UnionOf.mkUnion` は `a .fst` を含む一つの段階を必要とするだけで、証明書 `a .snd` はまさにそのような、単に存在する段階のデータなので、消去はそれを直接消費する。
 <!--/-->
 
 ```agda
-    (isL-directed (fst a) (fst b) (a .snd) (b .snd))
+    (isL-directed (a .fst) (b .fst) (a .snd) (b .snd))
 
-  unionʟ-fst : (a : S) → fst (unionʟ a) ≡ ⋃ (fst a)
-  unionʟ-fst a = rec₁ (setIsSet (fst (unionʟ a)) (⋃ (fst a)))
+  unionʟ-fst : (a : S) → (unionʟ a) .fst ≡ ⋃ (a .fst)
+  unionʟ-fst a = rec₁ (setIsSet ((unionʟ a) .fst) (⋃ (a .fst)))
     (λ { (σ , (oσ , fa∈)) →
-         cong (λ (e : SetOf (UnionOf.Q a)) → fst (fst e))
+         cong (λ (e : SetOf (UnionOf.Q a)) → (e .fst) .fst)
 ```
 
 <!--en-->
-Read the result: `fst (unionʟ a) ≡ ⋃ (fst a)`, the underlying set of the model's union operation is the hierarchy's union of the underlying set. Together with the pairing equation, every set assembled from the model's pairing and union reads, through its underlying set, as the same set assembled from the hierarchy's operations. This is what the projection equations are for: comparing the two successor operations, and with them the two numeral chains, one step at a time.
+Read the result: `(unionʟ a) .fst ≡ ⋃ (a .fst)`, the underlying set of the model's union operation is the hierarchy's union of the underlying set. Together with the pairing equation, every set assembled from the model's pairing and union reads, through its underlying set, as the same set assembled from the hierarchy's operations. This is what the projection equations are for: comparing the two successor operations, and with them the two numeral chains, one step at a time.
 <!--zh-->
-读这个结果：`fst (unionʟ a) ≡ ⋃ (fst a)`，模型并运算的底层集合就是层级对底层集合取的并。与配对等式合在一起，凡由模型的配对与并组装出的集合，沿底层集合读出来，就是由层级运算组装出的同一个集合。投影等式的用途正在于此：一步步比较两个后继运算，进而比较两条数码链。
+读这个结果：`(unionʟ a) .fst ≡ ⋃ (a .fst)`，模型并运算的底层集合就是层级对底层集合取的并。与配对等式合在一起，凡由模型的配对与并组装出的集合，沿底层集合读出来，就是由层级运算组装出的同一个集合。投影等式的用途正在于此：一步步比较两个后继运算，进而比较两条数码链。
 <!--ja-->
-結果を読めば `fst (unionʟ a) ≡ ⋃ (fst a)`、モデルの和集合の演算の基底の集合は、階層が基底の集合に作る和集合である。対の方程式と合わせて、モデルの対と和集合から組み立てた集合は、基底の集合を通して読めば、階層の演算から組み立てた同じ集合になる。射影方程式の用途はまさにここにある。二つの後者の演算を、ひいては二つの数項列を、一歩ずつ比較することである。
+結果を読めば `(unionʟ a) .fst ≡ ⋃ (a .fst)`、モデルの和集合の演算の基底の集合は、階層が基底の集合に作る和集合である。対の方程式と合わせて、モデルの対と和集合から組み立てた集合は、基底の集合を通して読めば、階層の演算から組み立てた同じ集合になる。射影方程式の用途はまさにここにある。二つの後者の演算を、ひいては二つの数項列を、一歩ずつ比較することである。
 <!--/-->
 
 ```agda
@@ -242,31 +242,31 @@ Each congruence rewrites one nested position at a time, so the composition runs 
 <!--/-->
 
 <!--en-->
-The first three factors rewrite the outer layers. The union projection at `pairʟ a (pairʟ a a)` gives `fst (unionʟ ...) ≡ ⋃ (fst (pairʟ a (pairʟ a a)))`. Applying the function `⋃_` to the outer equation `pairʟ-fst a (pairʟ a a)` rewrites its argument to `⋃ ⁅ fst a , fst (pairʟ a a) ⁆`. Applying `λ w → ⋃ ⁅ fst a , w ⁆` to the inner equation `pairʟ-fst a a` then gives `⋃ ⁅ fst a , ⁅ fst a , fst a ⁆ ⁆`. The inner doubled pair is equal to the singleton by `pair-singleton`; the final factor applies that equality inside the same surrounding function.
+The first three factors rewrite the outer layers. The union projection at `pairʟ a (pairʟ a a)` gives `(unionʟ ...) .fst ≡ ⋃ ((pairʟ a (pairʟ a a)) .fst)`. Applying the function `⋃_` to the outer equation `pairʟ-fst a (pairʟ a a)` rewrites its argument to `⋃ ⁅ (λ p → p .fst) a , (pairʟ a a) .fst ⁆`. Applying `λ w → ⋃ ⁅ (λ p → p .fst) a , w ⁆` to the inner equation `pairʟ-fst a a` then gives `⋃ ⁅ (λ p → p .fst) a , ⁅ (λ p → p .fst) a , (λ p → p .fst) a ⁆ ⁆`. The inner doubled pair is equal to the singleton by `pair-singleton`; the final factor applies that equality inside the same surrounding function.
 <!--zh-->
-前三个因子依次改写外层。并的投影等式在 `pairʟ a (pairʟ a a)` 处给出 `fst (unionʟ ...) ≡ ⋃ (fst (pairʟ a (pairʟ a a)))`。把函数 `⋃_` 作用于外层等式 `pairʟ-fst a (pairʟ a a)`，其实参改写为 `⋃ ⁅ fst a , fst (pairʟ a a) ⁆`。再把函数 `λ w → ⋃ ⁅ fst a , w ⁆` 作用于内层等式 `pairʟ-fst a a`，得到 `⋃ ⁅ fst a , ⁅ fst a , fst a ⁆ ⁆`。内层重复对由 `pair-singleton` 等同于单点集；最后一个因子把这条等式置于同一个周遭函数内。
+前三个因子依次改写外层。并的投影等式在 `pairʟ a (pairʟ a a)` 处给出 `(unionʟ ...) .fst ≡ ⋃ ((pairʟ a (pairʟ a a)) .fst)`。把函数 `⋃_` 作用于外层等式 `pairʟ-fst a (pairʟ a a)`，其实参改写为 `⋃ ⁅ (λ p → p .fst) a , (pairʟ a a) .fst ⁆`。再把函数 `λ w → ⋃ ⁅ (λ p → p .fst) a , w ⁆` 作用于内层等式 `pairʟ-fst a a`，得到 `⋃ ⁅ (λ p → p .fst) a , ⁅ (λ p → p .fst) a , (λ p → p .fst) a ⁆ ⁆`。内层重复对由 `pair-singleton` 等同于单点集；最后一个因子把这条等式置于同一个周遭函数内。
 <!--ja-->
-最初の三つの因子は外側から順に書き換える。`pairʟ a (pairʟ a a)` における和集合の射影方程式は `fst (unionʟ ...) ≡ ⋃ (fst (pairʟ a (pairʟ a a)))` を与える。外側の方程式 `pairʟ-fst a (pairʟ a a)` に関数 `⋃_` を適用すると、引数は `⋃ ⁅ fst a , fst (pairʟ a a) ⁆` へ書き換わる。つぎに内側の方程式 `pairʟ-fst a a` に関数 `λ w → ⋃ ⁅ fst a , w ⁆` を適用すると、`⋃ ⁅ fst a , ⁅ fst a , fst a ⁆ ⁆` が得られる。内側の重複した対は `pair-singleton` によって一元集合と等しく、最後の因子は同じ周囲の関数の中でこの等式を用いる。
+最初の三つの因子は外側から順に書き換える。`pairʟ a (pairʟ a a)` における和集合の射影方程式は `(unionʟ ...) .fst ≡ ⋃ ((pairʟ a (pairʟ a a)) .fst)` を与える。外側の方程式 `pairʟ-fst a (pairʟ a a)` に関数 `⋃_` を適用すると、引数は `⋃ ⁅ (λ p → p .fst) a , (pairʟ a a) .fst ⁆` へ書き換わる。つぎに内側の方程式 `pairʟ-fst a a` に関数 `λ w → ⋃ ⁅ (λ p → p .fst) a , w ⁆` を適用すると、`⋃ ⁅ (λ p → p .fst) a , ⁅ (λ p → p .fst) a , (λ p → p .fst) a ⁆ ⁆` が得られる。内側の重複した対は `pair-singleton` によって一元集合と等しく、最後の因子は同じ周囲の関数の中でこの等式を用いる。
 <!--/-->
 
 ```agda
-  sucʟ-fst : (a : S) → fst (sucʟ a) ≡ sucV (fst a)
+  sucʟ-fst : (a : S) → (sucʟ a) .fst ≡ sucV (a .fst)
   sucʟ-fst a =
       unionʟ-fst (pairʟ a (pairʟ a a))
     ∙ cong ⋃_ (pairʟ-fst a (pairʟ a a))
-    ∙ cong (λ w → ⋃ ⁅ fst a , w ⁆) (pairʟ-fst a a)
+    ∙ cong (λ w → ⋃ ⁅ a .fst , w ⁆) (pairʟ-fst a a)
 ```
 
 <!--en-->
-The last factor is where the hierarchy's own law enters: `pair-singleton (fst a)` is the path identifying the doubled pair `⁅ fst a , fst a ⁆` with the singleton `⁅ fst a ⁆`. Composed under the same congruence shape, it turns the term into `⋃ ⁅ fst a , ⁅ fst a ⁆ ⁆`, which is exactly `sucV (fst a)`. The chain of factors thus verifies the statement: the internal successor, read through its underlying set, is the hierarchy's successor.
+The last factor is where the hierarchy's own law enters: `pair-singleton (a .fst)` is the path identifying the doubled pair `⁅ (λ p → p .fst) a , (λ p → p .fst) a ⁆` with the singleton `⁅ (λ p → p .fst) a ⁆`. Composed under the same congruence shape, it turns the term into `⋃ ⁅ (λ p → p .fst) a , ⁅ (λ p → p .fst) a ⁆ ⁆`, which is exactly `sucV (a .fst)`. The chain of factors thus verifies the statement: the internal successor, read through its underlying set, is the hierarchy's successor.
 <!--zh-->
-最后一个因子是层级自己的定律进入之处：`pair-singleton (fst a)` 是把重复的对 `⁅ fst a , fst a ⁆` 认同为单点集 `⁅ fst a ⁆` 的路径。把同一个函数作用于这条路径，它把词项变为 `⋃ ⁅ fst a , ⁅ fst a ⁆ ⁆`，而后者恰是 `sucV (fst a)`。这串因子因此验证了那个陈述：内部后继沿底层集合读出来就是层级的后继。
+最后一个因子是层级自己的定律进入之处：`pair-singleton (a .fst)` 是把重复的对 `⁅ (λ p → p .fst) a , (λ p → p .fst) a ⁆` 认同为单点集 `⁅ (λ p → p .fst) a ⁆` 的路径。把同一个函数作用于这条路径，它把词项变为 `⋃ ⁅ (λ p → p .fst) a , ⁅ (λ p → p .fst) a ⁆ ⁆`，而后者恰是 `sucV (a .fst)`。这串因子因此验证了那个陈述：内部后继沿底层集合读出来就是层级的后继。
 <!--ja-->
-最後の因子は、階層自身の法則が入る場所である。`pair-singleton (fst a)` は、重複した対 `⁅ fst a , fst a ⁆` を一元集合 `⁅ fst a ⁆` と同一視するパスである。同じ関数をこのパスに適用すれば、項は `⋃ ⁅ fst a , ⁅ fst a ⁆ ⁆` となり、これはまさに `sucV (fst a)` である。したがってこの因子の連なりは主張を検証する。内部の後者は、基底の集合を通して読めば階層の後者なのである。
+最後の因子は、階層自身の法則が入る場所である。`pair-singleton (a .fst)` は、重複した対 `⁅ (λ p → p .fst) a , (λ p → p .fst) a ⁆` を一元集合 `⁅ (λ p → p .fst) a ⁆` と同一視するパスである。同じ関数をこのパスに適用すれば、項は `⋃ ⁅ (λ p → p .fst) a , ⁅ (λ p → p .fst) a ⁆ ⁆` となり、これはまさに `sucV (a .fst)` である。したがってこの因子の連なりは主張を検証する。内部の後者は、基底の集合を通して読めば階層の後者なのである。
 <!--/-->
 
 ```agda
-    ∙ cong (λ w → ⋃ ⁅ fst a , w ⁆) (pair-singleton (fst a))
+    ∙ cong (λ w → ⋃ ⁅ a .fst , w ⁆) (pair-singleton (a .fst))
 ```
 
 <!--en-->
@@ -308,16 +308,16 @@ The definition has two clauses. The zeroth stage is `∅ʟ`, the internal empty 
   numeralL 0    = ∅ʟ
   numeralL (suc n) = sucʟ (numeralL n)
 
-  numeralL-fst : (n : ℕ) → fst (numeralL n) ≡ # n
+  numeralL-fst : (n : ℕ) → (numeralL n) .fst ≡ # n
   numeralL-fst 0    = refl
 ```
 
 <!--en-->
-The alignment with the ambient numerals is proved by induction on `n`. At zero, both sides compute to the empty set, so the path is `refl`. At the successor, the equation `sucʟ-fst` applied at `numeralL n` identifies `fst (numeralL (suc n))` with `sucV (fst (numeralL n))`, and congruence of `sucV` over the induction hypothesis `fst (numeralL n) ≡ # n` moves the induction step inside the successor. The composite has exactly the shape of the defining recursion of `# (suc n)`, so the two chains agree at every stage.
+The alignment with the ambient numerals is proved by induction on `n`. At zero, both sides compute to the empty set, so the path is `refl`. At the successor, the equation `sucʟ-fst` applied at `numeralL n` identifies `(numeralL (suc n)) .fst` with `sucV ((numeralL n) .fst)`, and congruence of `sucV` over the induction hypothesis `(numeralL n) .fst ≡ # n` moves the induction step inside the successor. The composite has exactly the shape of the defining recursion of `# (suc n)`, so the two chains agree at every stage.
 <!--zh-->
-与周遭数码的对齐按 `n` 归纳证明。在零处，两边都计算为空集，路径是 `refl`。在后继处，把 `sucʟ-fst` 施于 `numeralL n`，把 `fst (numeralL (suc n))` 认同为 `sucV (fst (numeralL n))`；再对归纳假设 `fst (numeralL n) ≡ # n` 把函数 `sucV` 作用于，把归纳步搬进后继内部。复合恰有 `# (suc n)` 的定义递归的形状，于是两条链在每个阶段都一致。
+与周遭数码的对齐按 `n` 归纳证明。在零处，两边都计算为空集，路径是 `refl`。在后继处，把 `sucʟ-fst` 施于 `numeralL n`，把 `(numeralL (suc n)) .fst` 认同为 `sucV ((numeralL n) .fst)`；再对归纳假设 `(numeralL n) .fst ≡ # n` 把函数 `sucV` 作用于，把归纳步搬进后继内部。复合恰有 `# (suc n)` 的定义递归的形状，于是两条链在每个阶段都一致。
 <!--ja-->
-周囲の数項との整列は `n` 上の帰納法で証明する。零では両辺とも空集合に計算されるので、パスは `refl` である。後続では、`sucʟ-fst` を `numeralL n` に適用して `fst (numeralL (suc n))` を `sucV (fst (numeralL n))` と同一視し、帰納法の仮定 `fst (numeralL n) ≡ # n` の上の関数 `sucV` を帰納の一歩を後者の内部へ運ぶ。合成は `# (suc n)` を定義する再帰と同じ形をしているので、二つの列はすべての段階で一致する。
+周囲の数項との整列は `n` 上の帰納法で証明する。零では両辺とも空集合に計算されるので、パスは `refl` である。後続では、`sucʟ-fst` を `numeralL n` に適用して `(numeralL (suc n)) .fst` を `sucV ((numeralL n) .fst)` と同一視し、帰納法の仮定 `(numeralL n) .fst ≡ # n` の上の関数 `sucV` を帰納の一歩を後者の内部へ運ぶ。合成は `# (suc n)` を定義する再帰と同じ形をしているので、二つの列はすべての段階で一致する。
 <!--/-->
 
 ```agda
@@ -331,7 +331,7 @@ The alignment with the ambient numerals is proved by induction on `n`. At zero, 
 
 The model record demands these two laws of a numeral chain: zero must be empty, and each successor must have exactly the members of its predecessor together with the predecessor itself, both stated through membership rather than through the derived operations. That phrasing is what keeps the proofs short: each is a fact about the hierarchy's numerals, transported along the projection family `numeralL-fst`. Nothing here unfolds a description operator.
 
-The vehicle is the module `NumPin`, which takes a hierarchy-valued chain `a : ℕ → V ℓ` together with an alignment `q : (n : ℕ) → a n ≡ # n` and returns the two pinning equations for that chain. Our chain supplies the underlying-set family `λ k → fst (numeralL k)` and the alignment `numeralL-fst`.
+The vehicle is the module `NumPin`, which takes a hierarchy-valued chain `a : ℕ → V ℓ` together with an alignment `q : (n : ℕ) → a n ≡ # n` and returns the two pinning equations for that chain. Our chain supplies the underlying-set family `λ k → (numeralL k) .fst` and the alignment `numeralL-fst`.
 <!--zh-->
 ## 两条元素方程
 
@@ -339,7 +339,7 @@ The vehicle is the module `NumPin`, which takes a hierarchy-valued chain `a : �
 
 模型 record 向数码链索取这两条律：零必须为空，且每个后继的元素恰是前者的元素连同前者自身，两条都经成员关系陈述，而非经派生运算。正是这个措辞使证明很短：每一条都是关于层级数码的事实，沿投影族 `numeralL-fst` 搬运过来。全程从不展开摹状词算子。
 
-`NumPin` 统一给出这一论证：它接受取值于周遭集合层级的链 `a : ℕ → V ℓ` 连同对齐 `q : (n : ℕ) → a n ≡ # n`，返回该链的两条元素方程。我们的链供给底层集族 `λ k → fst (numeralL k)` 与对齐 `numeralL-fst`。
+`NumPin` 统一给出这一论证：它接受取值于周遭集合层级的链 `a : ℕ → V ℓ` 连同对齐 `q : (n : ℕ) → a n ≡ # n`，返回该链的两条元素方程。我们的链供给底层集族 `λ k → (numeralL k) .fst` 与对齐 `numeralL-fst`。
 <!--ja-->
 ## 二つの指定方程式
 
@@ -347,20 +347,20 @@ The vehicle is the module `NumPin`, which takes a hierarchy-valued chain `a : �
 
 モデルの record は数項列にこの二つの法則を要求する。零が空であること、そして各後者の要素が前者の要素に前者自身を加えたものにちょうど等しいこと。どちらも派生した演算ではなく所属を通して述べられている。この言い回しゆえに証明は短くなる。どちらも階層の数項についての事実であり、射影の族 `numeralL-fst` に沿って輸送されるからである。ここで確定記述の演算子が展開されることは一切ない。
 
-運び役はモジュール `NumPin` である。これは周囲の階層に値をとる列 `a : ℕ → V ℓ` と整列 `q : (n : ℕ) → a n ≡ # n` を受け取り、その列に対する二つの指定方程式を返す。こちらの列は基底の集合の族 `λ k → fst (numeralL k)` と整列 `numeralL-fst` を供給する。
+運び役はモジュール `NumPin` である。これは周囲の階層に値をとる列 `a : ℕ → V ℓ` と整列 `q : (n : ℕ) → a n ≡ # n` を受け取り、その列に対する二つの指定方程式を返す。こちらの列は基底の集合の族 `λ k → (numeralL k) .fst` と整列 `numeralL-fst` を供給する。
 <!--/-->
 
 <!--en-->
-The zero equation has the shape of a refutation: a member `z` of the chain's zeroth stage yields an inhabitant of the empty host type. The resulting function type is itself a proposition in the hProp setting. `pinZero` transports the assumed membership along the alignment at stage zero, turning membership in `fst (numeralL zero)` into membership in `# zero`, and the hierarchy's own fact that nothing is a member of `∅` then closes the proof. The transport runs one way only: from the chain to the library numeral.
+The zero equation has the shape of a refutation: a member `z` of the chain's zeroth stage yields an inhabitant of the empty host type. The resulting function type is itself a proposition in the hProp setting. `pinZero` transports the assumed membership along the alignment at stage zero, turning membership in `(numeralL zero) .fst` into membership in `# zero`, and the hierarchy's own fact that nothing is a member of `∅` then closes the proof. The transport runs one way only: from the chain to the library numeral.
 <!--zh-->
-零方程式取反驳的形状：链第零阶段的一个元素 `z` 导出空宿主类型的一个元素，所得函数类型在 hProp 设定下自身也是命题。`pinZero` 把假设的成员关系沿第零处的对齐传输，把「属于 `fst (numeralL zero)`」变成「属于 `# zero`」，然后层级自己关于 `∅` 无元素的事实合拢证明。传输只走一个方向：从链到库数码。
+零方程式取反驳的形状：链第零阶段的一个元素 `z` 导出空宿主类型的一个元素，所得函数类型在 hProp 设定下自身也是命题。`pinZero` 把假设的成员关系沿第零处的对齐传输，把「属于 `(numeralL zero) .fst`」变成「属于 `# zero`」，然后层级自己关于 `∅` 无元素的事实合拢证明。传输只走一个方向：从链到库数码。
 <!--ja-->
-第 0 の方程式は反駁の形をしている。列の第 0 段階の要素 `z` から空のホスト型の要素が得られるので、得られる関数型は hProp の設定ではそれ自身が命題である。`pinZero` は仮定された所属を段階 0 での整列に沿って輸送し、`fst (numeralL zero)` への所属を `# zero` への所属に変え、その後、階層自身の「`∅` には要素がない」という事実が証明を閉じる。輸送は一方向にだけ進む。列からライブラリの数項へ、である。
+第 0 の方程式は反駁の形をしている。列の第 0 段階の要素 `z` から空のホスト型の要素が得られるので、得られる関数型は hProp の設定ではそれ自身が命題である。`pinZero` は仮定された所属を段階 0 での整列に沿って輸送し、`(numeralL zero) .fst` への所属を `# zero` への所属に変え、その後、階層自身の「`∅` には要素がない」という事実が証明を閉じる。輸送は一方向にだけ進む。列からライブラリの数項へ、である。
 <!--/-->
 
 ```agda
 numeralL-zero : (z : S) → ⟨ z ∈ˢ numeralL zero ⟩ → ⊥₀
-numeralL-zero z = NumPin.pinZero (λ k → fst (numeralL k)) numeralL-fst (fst z)
+numeralL-zero z = NumPin.pinZero (λ k → (numeralL k) .fst) numeralL-fst (z .fst)
 
 numeralL-suc : (n : ℕ) (z : S)
              → (⟨ z ∈ˢ numeralL (suc n) ⟩
@@ -368,17 +368,17 @@ numeralL-suc : (n : ℕ) (z : S)
 ```
 
 <!--en-->
-The successor equation is a pair of implications, and its second component speaks of the structure equality `≈ˢ`; for this restriction structure, that relation is the underlying path `fst z ≡ fst (numeralL n)`. Forward, a member of `numeralL (suc n)` is transported along the alignment at stage `suc n` into membership in `# (suc n)`, where the hierarchy's own analysis of membership in `sucV` splits it, merely, between a member of `# n` and the case of `# n` itself; each branch is then transported back along the reverse alignment at stage `n`. Backward, a member of `numeralL n` is transported to `# n` and placed into `# (suc n)` by `∈sucV-inl`, and an element equal to `numeralL n` transports its path to `# n` and uses the hierarchy's fact that a set belongs to its own successor. Both directions are `pinSuc`'s output for the chain `λ k → fst (numeralL k)` and the alignment `numeralL-fst`, instantiated at `fst z`.
+The successor equation is a pair of implications, and its second component speaks of the structure equality `≈ˢ`; for this restriction structure, that relation is the underlying path `z .fst ≡ (numeralL n) .fst`. Forward, a member of `numeralL (suc n)` is transported along the alignment at stage `suc n` into membership in `# (suc n)`, where the hierarchy's own analysis of membership in `sucV` splits it, merely, between a member of `# n` and the case of `# n` itself; each branch is then transported back along the reverse alignment at stage `n`. Backward, a member of `numeralL n` is transported to `# n` and placed into `# (suc n)` by `∈sucV-inl`, and an element equal to `numeralL n` transports its path to `# n` and uses the hierarchy's fact that a set belongs to its own successor. Both directions are `pinSuc`'s output for the chain `λ k → (numeralL k) .fst` and the alignment `numeralL-fst`, instantiated at `z .fst`.
 <!--zh-->
-后继方程是一对蕴涵，其第二个分句使用结构关系 `≈ˢ`；对当前限制结构，它的底层正是路径 `fst z ≡ fst (numeralL n)`。正向：`numeralL (suc n)` 的元素沿 `suc n` 处的对齐被传输为 `# (suc n)` 的元素，在那里层级自己对 `sucV` 元素的分析把它，仅仅存在地，分为「`# n` 的元素」与「就是 `# n`」两种情形；每个分支再沿 `n` 处的逆向对齐传回链上。反向：`numeralL n` 的元素被传输为 `# n` 后经 `∈sucV-inl` 放进 `# (suc n)`，而与 `numeralL n` 相等的元素则把路径传到 `# n`，再使用层级自己「集合属于自己的后继」的事实。两个方向就是 `pinSuc` 对链 `λ k → fst (numeralL k)` 与对齐 `numeralL-fst` 的输出，实例化在 `fst z` 上。
+后继方程是一对蕴涵，其第二个分句使用结构关系 `≈ˢ`；对当前限制结构，它的底层正是路径 `z .fst ≡ (numeralL n) .fst`。正向：`numeralL (suc n)` 的元素沿 `suc n` 处的对齐被传输为 `# (suc n)` 的元素，在那里层级自己对 `sucV` 元素的分析把它，仅仅存在地，分为「`# n` 的元素」与「就是 `# n`」两种情形；每个分支再沿 `n` 处的逆向对齐传回链上。反向：`numeralL n` 的元素被传输为 `# n` 后经 `∈sucV-inl` 放进 `# (suc n)`，而与 `numeralL n` 相等的元素则把路径传到 `# n`，再使用层级自己「集合属于自己的后继」的事实。两个方向就是 `pinSuc` 对链 `λ k → (numeralL k) .fst` 与对齐 `numeralL-fst` 的输出，实例化在 `z .fst` 上。
 <!--ja-->
-後者の方程式は一対の含意であり、その第二の成分が語るのは構造の関係 `≈ˢ` である。この制限構造では、その基底はパス `fst z ≡ fst (numeralL n)` である。順方向では、`numeralL (suc n)` の要素が段階 `suc n` での整列に沿って `# (suc n)` への所属へ輸送され、そこで階層自身の `sucV` の所属の分析が、単に存在するものとして、それを `# n` の要素である場合と `# n` そのものである場合に分ける。各枝はさらに段階 `n` での逆向きの整列に沿って列へ輸送し戻される。逆方向では、`numeralL n` の要素は `# n` へ輸送されたうえで `∈sucV-inl` によって `# (suc n)` へ置かれ、`numeralL n` と等しい要素はパスを `# n` へ運び、階層自身の「集合は自分自身の後続に属する」という事実を使う。どちらの向きも、列 `λ k → fst (numeralL k)` と整列 `numeralL-fst` に対する `pinSuc` の出力を `fst z` に実例化したものである。
+後者の方程式は一対の含意であり、その第二の成分が語るのは構造の関係 `≈ˢ` である。この制限構造では、その基底はパス `z .fst ≡ (numeralL n) .fst` である。順方向では、`numeralL (suc n)` の要素が段階 `suc n` での整列に沿って `# (suc n)` への所属へ輸送され、そこで階層自身の `sucV` の所属の分析が、単に存在するものとして、それを `# n` の要素である場合と `# n` そのものである場合に分ける。各枝はさらに段階 `n` での逆向きの整列に沿って列へ輸送し戻される。逆方向では、`numeralL n` の要素は `# n` へ輸送されたうえで `∈sucV-inl` によって `# (suc n)` へ置かれ、`numeralL n` と等しい要素はパスを `# n` へ運び、階層自身の「集合は自分自身の後続に属する」という事実を使う。どちらの向きも、列 `λ k → (numeralL k) .fst` と整列 `numeralL-fst` に対する `pinSuc` の出力を `z .fst` に実例化したものである。
 <!--/-->
 
 ```agda
              × (⟨ (z ∈ˢ numeralL n) ⊔ (z ≈ˢ numeralL n) ⟩
                   → ⟨ z ∈ˢ numeralL (suc n) ⟩)
-numeralL-suc n z = NumPin.pinSuc (λ k → fst (numeralL k)) numeralL-fst n (fst z)
+numeralL-suc n z = NumPin.pinSuc (λ k → (numeralL k) .fst) numeralL-fst n (z .fst)
 ```
 
 <!--en-->

@@ -165,8 +165,8 @@ Two constructible sets with equal underlying sets are equal, by the propositionh
 <!--/-->
 
 ```agda
-  S≡ : {x y : S} → fst x ≡ fst y → x ≡ y
-  S≡ = Σ≡Prop (λ v → snd (isL v))
+  S≡ : {x y : S} → x .fst ≡ y .fst → x ≡ y
+  S≡ = Σ≡Prop (λ v → (isL v) .snd)
 ```
 
 <!--en-->
@@ -189,8 +189,8 @@ The least-witness module receives four pieces of data. The ordinal index `γ` wi
 <summary class="submodule-fold-heading">
 ```agda
 module Least (γ : V ℓ) (oγ : IsOrd γ) (X : S) (P : Formula S 2)
-  (have : (x : S) → ⟨ fst x ∈ fst X ⟩
-        → ∥ Σ[ w ∶ S ] (⟨ fst w ∈ Lset γ ⟩ × ⟨ (w ∷ x ∷ []) ⊨ P ⟩) ∥₁) where
+  (have : (x : S) → ⟨ x .fst ∈ X .fst ⟩
+        → ∥ Σ[ w ∶ S ] (⟨ w .fst ∈ Lset γ ⟩ × ⟨ (w ∷ x ∷ []) ⊨ P ⟩) ∥₁) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -218,7 +218,7 @@ The equation `Lγ-fst` exposes the underlying set of this opaque package as `Lse
 <!--/-->
 
 ```agda
-    Lγ-fst : fst Lγ ≡ Lset γ
+    Lγ-fst : Lγ .fst ≡ Lset γ
     Lγ-fst = refl
 ```
 
@@ -258,7 +258,7 @@ The predicate `Mem x` records the restriction on inputs: it is evidence that `x 
 
 ```agda
   Mem : S → Type (ℓ-suc ℓ)
-  Mem x = ⟨ fst x ∈ fst X ⟩
+  Mem x = ⟨ x .fst ∈ X .fst ⟩
 ```
 
 <!--en-->
@@ -285,7 +285,7 @@ An element of `Mγ` contains an underlying set together with its membership in `
 
 ```agda
     memS : Mγ → S
-    memS c = fst c , Lset→isL γ oγ (fst c) (snd c)
+    memS c = c .fst , Lset→isL γ oγ (c .fst) (c .snd)
 ```
 
 <!--en-->
@@ -336,7 +336,7 @@ The same underlying set may arrive with two proofs that it is constructible. Sin
 <!--/-->
 
 ```agda
-    toMem : (x w : S) (hw : ⟨ fst w ∈ Lset γ ⟩) → ⟨ At w x ⟩ → ⟨ Good x (fst w , hw) ⟩
+    toMem : (x w : S) (hw : ⟨ w .fst ∈ Lset γ ⟩) → ⟨ At w x ⟩ → ⟨ Good x (w .fst , hw) ⟩
     toMem x w hw = subst (λ v → ⟨ At v x ⟩) (S≡ refl)
 ```
 
@@ -367,7 +367,7 @@ For the fixed input, the hypothesis is mapped into the type of good stage member
 ```agda
     private
       nonempty : ∥ Σ[ c ∶ Mγ ] ⟨ Good x c ⟩ ∥₁
-      nonempty = map₁ (λ { (w , hw , hp) → (fst w , hw) , toMem x w hw hp }) (have x m)
+      nonempty = map₁ (λ { (w , hw , hp) → (w .fst , hw) , toMem x w hw hp }) (have x m)
 ```
 
 <!--en-->
@@ -381,7 +381,7 @@ Now `leastOfFormula` descends through `orderAt γ oγ` and returns an actual lea
 ```agda
     opaque
       c : Mγ
-      c = fst (leastOfFormula (orderAt γ oγ) (definedGood x) lem nonempty)
+      c = (leastOfFormula (orderAt γ oγ) (definedGood x) lem nonempty) .fst
 ```
 
 <!--en-->
@@ -394,7 +394,7 @@ The result of the search retains the proof that the selected member is good. Thu
 
 ```agda
       c-good : ⟨ Good x c ⟩
-      c-good = fst (snd (leastOfFormula (orderAt γ oγ) (definedGood x) lem nonempty))
+      c-good = ((leastOfFormula (orderAt γ oγ) (definedGood x) lem nonempty) .snd) .fst
 ```
 
 <!--en-->
@@ -407,7 +407,7 @@ Its companion clause gives the exact relative leastness needed later: any other 
 
 ```agda
       minimal : (c' : Mγ) → ⟨ Good x c' ⟩ → relOf (orderAt γ oγ) c' c → ⊥₀
-      minimal = snd (snd (leastOfFormula (orderAt γ oγ) (definedGood x) lem nonempty))
+      minimal = ((leastOfFormula (orderAt γ oγ) (definedGood x) lem nonempty) .snd) .snd
 ```
 
 <!--en-->
@@ -445,8 +445,8 @@ The membership component carried by the selected stage member also proves `e ∈
 <!--/-->
 
 ```agda
-    e∈Lγ : ⟨ fst e ∈ Lset γ ⟩
-    e∈Lγ = snd c
+    e∈Lγ : ⟨ e .fst ∈ Lset γ ⟩
+    e∈Lγ = c .snd
 ```
 </div>
 </details>
@@ -486,7 +486,7 @@ The same value lies in `Lset γ`. This separate range statement will later place
 <!--/-->
 
 ```agda
-  fn-in : (x : S) (m : Mem x) → ⟨ fst (fn x m) ∈ Lset γ ⟩
+  fn-in : (x : S) (m : Mem x) → ⟨ (fn x m) .fst ∈ Lset γ ⟩
   fn-in x m = Sel.e∈Lγ x m
 ```
 
@@ -499,10 +499,10 @@ To state leastness in terms that can also be expressed inside `L`, assume that a
 <!--/-->
 
 ```agda
-  fn-least : (x : S) (m : Mem x) (w' : S) → ⟨ fst w' ∈ Lset γ ⟩ → ⟨ (w' ∷ x ∷ []) ⊨ P ⟩
-           → ⟨ pr (fst w') (fst (fn x m)) ∈ fst Rγ ⟩ → ⊥₀
-  fn-least x m w' hw' hp hr = Sel.minimal x m (fst w' , hw') (toMem x w' hw' hp)
-    (relL-rep γ hγ oγ (fst w' , hw') (Sel.c x m) hr)
+  fn-least : (x : S) (m : Mem x) (w' : S) → ⟨ w' .fst ∈ Lset γ ⟩ → ⟨ (w' ∷ x ∷ []) ⊨ P ⟩
+           → ⟨ pr (w' .fst) ((fn x m) .fst) ∈ Rγ .fst ⟩ → ⊥₀
+  fn-least x m w' hw' hp hr = Sel.minimal x m (w' .fst , hw') (toMem x w' hw' hp)
+    (relL-rep γ hγ oγ (w' .fst , hw') (Sel.c x m) hr)
 ```
 
 <!--en-->
@@ -517,8 +517,8 @@ The host-level specification `TWit w x` combines the three facts that the graph 
   TWit : (w x : S) → Type (ℓ-suc ℓ)
   TWit w x =
       ⟨ (w ∷ x ∷ []) ⊨ P ⟩
-    × ⟨ fst w ∈ Lset γ ⟩
-    × ((w' : S) → ⟨ fst w' ∈ Lset γ ⟩ → ⟨ (w' ∷ x ∷ []) ⊨ P ⟩
+    × ⟨ w .fst ∈ Lset γ ⟩
+    × ((w' : S) → ⟨ w' .fst ∈ Lset γ ⟩ → ⟨ (w' ∷ x ∷ []) ⊨ P ⟩
 ```
 
 <!--en-->
@@ -530,7 +530,7 @@ The last component tests any `w'` that lies in `Lset γ` and satisfies `P(w',x)`
 <!--/-->
 
 ```agda
-        → ⟨ pr (fst w') (fst w) ∈ fst Rγ ⟩ → ⊥₀)
+        → ⟨ pr (w' .fst) (w .fst) ∈ Rγ .fst ⟩ → ⊥₀)
 ```
 
 <!--en-->
@@ -542,11 +542,11 @@ Uniqueness is proved only among candidates satisfying the complete `TWit` specif
 <!--/-->
 
 ```agda
-  fn-unique : (x : S) (m : Mem x) (w : S) → TWit w x → fst w ≡ fst (fn x m)
+  fn-unique : (x : S) (m : Mem x) (w : S) → TWit w x → w .fst ≡ (fn x m) .fst
   fn-unique x m w (hp , hw , mn) = go (SWO.tri∙ (orderAt γ oγ) c' (Sel.c x m))
     where
     c' : Mγ
-    c' = fst w , hw
+    c' = w .fst , hw
 ```
 
 <!--en-->
@@ -560,9 +560,9 @@ If the alternative candidate were strictly below the selected one, leastness wou
 ```agda
     go : Tri∙ (relOf (orderAt γ oγ) c' (Sel.c x m)) (c' ≡ Sel.c x m)
               (relOf (orderAt γ oγ) (Sel.c x m) c')
-       → fst w ≡ fst (fn x m)
+       → w .fst ≡ (fn x m) .fst
     go (lt k) = ⊥₀-rec (Sel.minimal x m c' (toMem x w hw hp) k)
-    go (eq q) = cong fst q
+    go (eq q) = cong (λ p → p .fst) q
 ```
 
 <!--en-->
@@ -661,8 +661,8 @@ Reading `fo` outward recovers the three parts of the semantic specification: `P(
     fo-out : (w x : S) → ⟨ (w ∷ x ∷ []) ⊨ fo ⟩ → TWit w x
     fo-out w x (hp , (hl , hm)) =
         hp
-      , subst (λ v → ⟨ fst w ∈ v ⟩) Lγ-fst hl
-      , λ w' hw' hp' hr → lower (hm w' (subst (λ v → ⟨ fst w' ∈ v ⟩) (sym Lγ-fst) hw')
+      , subst (λ v → ⟨ w .fst ∈ v ⟩) Lγ-fst hl
+      , λ w' hw' hp' hr → lower (hm w' (subst (λ v → ⟨ w' .fst ∈ v ⟩) (sym Lγ-fst) hw')
 ```
 
 <!--en-->
@@ -690,8 +690,8 @@ Conversely, a witness satisfying `TWit` determines a proof of the graph formula.
     fo-in : (w x : S) → TWit w x → ⟨ (w ∷ x ∷ []) ⊨ fo ⟩
     fo-in w x (hp , hl , mn) =
         hp
-      , subst (λ v → ⟨ fst w ∈ v ⟩) (sym Lγ-fst) hl
-      , λ w' hw' hc → lift (mn w' (subst (λ v → ⟨ fst w' ∈ v ⟩) Lγ-fst hw')
+      , subst (λ v → ⟨ w .fst ∈ v ⟩) (sym Lγ-fst) hl
+      , λ w' hw' hc → lift (mn w' (subst (λ v → ⟨ w' .fst ∈ v ⟩) Lγ-fst hw')
 ```
 
 <!--en-->
@@ -703,8 +703,8 @@ Renaming and application adequacy put those two assumptions into the forms expec
 <!--/-->
 
 ```agda
-          (transport (ren w' w x) (snd hc))
-          (subst ⟨_⟩ (appC-adequate Rγ i0 i1 (w' ∷ w ∷ x ∷ [])) (fst hc)))
+          (transport (ren w' w x) (hc .snd))
+          (subst ⟨_⟩ (appC-adequate Rγ i0 i1 (w' ∷ w ∷ x ∷ [])) (hc .fst)))
 ```
 
 <!--en-->
@@ -719,7 +719,7 @@ This exact correspondence makes the selection definable. The map has input set `
   Dmap : DefinableMap
   Dmap = record
     { dom = X ; cod = Lγ ; fn = fn
-    ; into = λ x m → subst (λ v → ⟨ fst (fn x m) ∈ v ⟩) (sym Lγ-fst) (fn-in x m)
+    ; into = λ x m → subst (λ v → ⟨ (fn x m) .fst ∈ v ⟩) (sym Lγ-fst) (fn-in x m)
     ; graph = fo
 ```
 
@@ -770,7 +770,7 @@ For every `x ∈ X`, the table contains the pair `(x,fn(x))`. Hence later argume
 <!--/-->
 
 ```agda
-  T-in : (x : S) (m : Mem x) → ⟨ pr (fst x) (fst (fn x m)) ∈ fst T ⟩
+  T-in : (x : S) (m : Mem x) → ⟨ pr (x .fst) ((fn x m) .fst) ∈ T .fst ⟩
   T-in = Gr.F-in
 ```
 
@@ -783,8 +783,8 @@ Conversely, an entry `(x,w) ∈ T` yields evidence `x ∈ X` and equality of the
 <!--/-->
 
 ```agda
-  T-out : (x w : S) → ⟨ pr (fst x) (fst w) ∈ fst T ⟩
-        → Σ[ m ∶ Mem x ] (fst w ≡ fst (fn x m))
+  T-out : (x w : S) → ⟨ pr (x .fst) (w .fst) ∈ T .fst ⟩
+        → Σ[ m ∶ Mem x ] (w .fst ≡ (fn x m) .fst)
   T-out = Gr.pair-out
 ```
 </div>

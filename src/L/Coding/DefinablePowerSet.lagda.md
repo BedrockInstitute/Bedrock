@@ -176,44 +176,44 @@ module _ {n : ℕ} (e y : Fin n) (γ : S ^ n) where
     E = lookup e γ
 
     v : V ℓ
-    v = fst (lookup y γ)
+    v = (lookup y γ) .fst
 
-    readEntry : (z : S) → ⟨ fst z ∈ envOne v ⟩ → fst z ≡ pr (# 0) v
-    readEntry z = rec₁ (setIsSet (fst z) (pr (# 0) v))
+    readEntry : (z : S) → ⟨ z .fst ∈ envOne v ⟩ → z .fst ≡ pr (# 0) v
+    readEntry z = rec₁ (setIsSet (z .fst) (pr (# 0) v))
       (λ { (lift zero , q) → sym q ; (lift (suc ()) , _) })
 
-    entry∈ : (z : S) → fst z ≡ pr (# 0) v → ⟨ fst z ∈ envOne v ⟩
+    entry∈ : (z : S) → z .fst ≡ pr (# 0) v → ⟨ z .fst ∈ envOne v ⟩
     entry∈ z q = ∣ lift zero , sym q ∣₁
 
-  envOneAt-in : fst E ≡ envOne v → ⟨ γ ⊨ envOneAt e y ⟩
+  envOneAt-in : E .fst ≡ envOne v → ⟨ γ ⊨ envOneAt e y ⟩
   envOneAt-in q = extAt-in-both e (tagAtL zero 0 (suc y)) γ fwd bwd
     where
-    fwd : (z : S) → ⟨ fst z ∈ fst E ⟩ → ⟨ (z ∷ γ) ⊨ tagAtL zero 0 (suc y) ⟩
+    fwd : (z : S) → ⟨ z .fst ∈ E .fst ⟩ → ⟨ (z ∷ γ) ⊨ tagAtL zero 0 (suc y) ⟩
     fwd z z∈ = subst ⟨_⟩ (sym (tagAtL-adequate zero 0 (suc y) (z ∷ γ)))
-      (readEntry z (subst (λ w → ⟨ fst z ∈ w ⟩) q z∈))
+      (readEntry z (subst (λ w → ⟨ z .fst ∈ w ⟩) q z∈))
 
-    bwd : (z : S) → ⟨ (z ∷ γ) ⊨ tagAtL zero 0 (suc y) ⟩ → ⟨ fst z ∈ fst E ⟩
-    bwd z h = subst (λ w → ⟨ fst z ∈ w ⟩) (sym q)
+    bwd : (z : S) → ⟨ (z ∷ γ) ⊨ tagAtL zero 0 (suc y) ⟩ → ⟨ z .fst ∈ E .fst ⟩
+    bwd z h = subst (λ w → ⟨ z .fst ∈ w ⟩) (sym q)
       (entry∈ z (subst ⟨_⟩ (tagAtL-adequate zero 0 (suc y) (z ∷ γ)) h))
 
-  envOneAt-out : ⟨ γ ⊨ envOneAt e y ⟩ → fst E ≡ envOne v
+  envOneAt-out : ⟨ γ ⊨ envOneAt e y ⟩ → E .fst ≡ envOne v
   envOneAt-out h = extensionalV (λ w → ⇔toPath (sub₁ w) (sub₂ w))
     where
-    sub₁ : (w : V ℓ) → ⟨ w ∈ fst E ⟩ → ⟨ w ∈ envOne v ⟩
+    sub₁ : (w : V ℓ) → ⟨ w ∈ E .fst ⟩ → ⟨ w ∈ envOne v ⟩
     sub₁ w w∈ = entry∈ wS (subst ⟨_⟩
         (tagAtL-adequate zero 0 (suc y) (wS ∷ γ))
         (extAt-out e (tagAtL zero 0 (suc y)) γ h wS w∈))
       where
       wS : S
-      wS = w , isL-trans {x = fst E} {y = w} w∈ (snd E)
+      wS = w , isL-trans {x = E .fst} {y = w} w∈ (E .snd)
 
-    sub₂ : (w : V ℓ) → ⟨ w ∈ envOne v ⟩ → ⟨ w ∈ fst E ⟩
-    sub₂ w = rec₁ (snd (w ∈ fst E))
+    sub₂ : (w : V ℓ) → ⟨ w ∈ envOne v ⟩ → ⟨ w ∈ E .fst ⟩
+    sub₂ w = rec₁ ((w ∈ E .fst) .snd)
         (λ { (lift zero , q) →
-               subst (λ u → ⟨ u ∈ fst E ⟩) (keyOf-fst 0 (lookup y γ) ∙ q) hasKey
+               subst (λ u → ⟨ u ∈ E .fst ⟩) (keyOf-fst 0 (lookup y γ) ∙ q) hasKey
            ; (lift (suc ()) , _) })
       where
-      hasKey : ⟨ fst (keyOf 0 (lookup y γ)) ∈ fst E ⟩
+      hasKey : ⟨ (keyOf 0 (lookup y γ)) .fst ∈ E .fst ⟩
       hasKey = extAt-in e (tagAtL zero 0 (suc y)) γ h (keyOf 0 (lookup y γ))
         (subst ⟨_⟩
           (sym (tagAtL-adequate zero 0 (suc y) (keyOf 0 (lookup y γ) ∷ γ)))
@@ -285,43 +285,43 @@ module _ {n : ℕ} (x w v : Fin n) (γ : S ^ n) where
     body = (var zero ∈̇ var (suc w)) ∧̇ inner
 
     Holds : S → Type (ℓ-suc ℓ)
-    Holds z = ⟨ fst z ∈ fst (lookup w γ) ⟩
-              × ⟨ envOne (fst z) ∈ fst (lookup v γ) ⟩
+    Holds z = ⟨ z .fst ∈ (lookup w γ) .fst ⟩
+              × ⟨ envOne (z .fst) ∈ (lookup v γ) .fst ⟩
 
     readInner : (z : S) → ⟨ (z ∷ γ) ⊨ inner ⟩
-              → ⟨ envOne (fst z) ∈ fst (lookup v γ) ⟩
-    readInner z = rec₁ (snd (envOne (fst z) ∈ fst (lookup v γ))) step
+              → ⟨ envOne (z .fst) ∈ (lookup v γ) .fst ⟩
+    readInner z = rec₁ ((envOne (z .fst) ∈ (lookup v γ) .fst) .snd) step
       where
       step : Σ[ E ∶ S ] ⟨ (E ∷ z ∷ γ)
                ⊨ (envOneAt zero (suc zero) ∧̇ (var zero ∈̇ var (suc (suc v)))) ⟩
-           → ⟨ envOne (fst z) ∈ fst (lookup v γ) ⟩
-      step (E , (hE , E∈)) = subst (λ u → ⟨ u ∈ fst (lookup v γ) ⟩)
+           → ⟨ envOne (z .fst) ∈ (lookup v γ) .fst ⟩
+      step (E , (hE , E∈)) = subst (λ u → ⟨ u ∈ (lookup v γ) .fst ⟩)
         (envOneAt-out zero (suc zero) (E ∷ z ∷ γ) hE) E∈
 
-    fillInner : (z : S) → ⟨ envOne (fst z) ∈ fst (lookup v γ) ⟩
+    fillInner : (z : S) → ⟨ envOne (z .fst) ∈ (lookup v γ) .fst ⟩
               → ⟨ (z ∷ γ) ⊨ inner ⟩
     fillInner z h =
       ∣ E , (envOneAt-in zero (suc zero) (E ∷ z ∷ γ) refl , h) ∣₁
       where
       E : S
-      E = envOne (fst z)
-        , isL-trans {x = fst (lookup v γ)} {y = envOne (fst z)} h
-            (snd (lookup v γ))
+      E = envOne (z .fst)
+        , isL-trans {x = (lookup v γ) .fst} {y = envOne (z .fst)} h
+            ((lookup v γ) .snd)
 
   DefinesAt-out : ⟨ γ ⊨ DefinesAt x w v ⟩
-                → (z : S) → ⟨ fst z ∈ fst (lookup x γ) ⟩ → Holds z
+                → (z : S) → ⟨ z .fst ∈ (lookup x γ) .fst ⟩ → Holds z
   DefinesAt-out h z z∈ = hz .fst , readInner z (hz .snd)
     where
     hz : ⟨ (z ∷ γ) ⊨ body ⟩
     hz = extAt-out x body γ h z z∈
 
   DefinesAt-in : ⟨ γ ⊨ DefinesAt x w v ⟩
-               → (z : S) → Holds z → ⟨ fst z ∈ fst (lookup x γ) ⟩
+               → (z : S) → Holds z → ⟨ z .fst ∈ (lookup x γ) .fst ⟩
   DefinesAt-in h z (hw , hv) =
     extAt-in x body γ h z (hw , fillInner z hv)
 
-  DefinesAt-both : ((z : S) → ⟨ fst z ∈ fst (lookup x γ) ⟩ → Holds z)
-                 → ((z : S) → Holds z → ⟨ fst z ∈ fst (lookup x γ) ⟩)
+  DefinesAt-both : ((z : S) → ⟨ z .fst ∈ (lookup x γ) .fst ⟩ → Holds z)
+                 → ((z : S) → Holds z → ⟨ z .fst ∈ (lookup x γ) .fst ⟩)
                  → ⟨ γ ⊨ DefinesAt x w v ⟩
   DefinesAt-both f g = extAt-in-both x body γ
     (λ z z∈ → f z z∈ .fst , fillInner z (f z z∈ .snd))
@@ -377,23 +377,23 @@ module _ (A : S) where
 
 ```agda
   codeAt-in : ∀ {n} (c w : Fin n) (γ : S ^ n)
-            → fst (lookup w γ) ≡ fst A
-            → (ψ : Formula ⟪ fst A ⟫ 1) → fst (lookup c γ) ≡ fst (keyS A ψ)
+            → (lookup w γ) .fst ≡ A .fst
+            → (ψ : Formula ⟪ A .fst ⟫ 1) → (lookup c γ) .fst ≡ (keyS A ψ) .fst
             → ⟨ γ ⊨ isCodeAt c w ⟩
   codeAt-in c w γ qw ψ qc =
     keyArityAtL-in c 1 γ (codeS A ψ) qc , witnessAt-in A w c γ ψ qw qc
 
   codeAt-out : ∀ {n} (c w : Fin n) (γ : S ^ n)
-             → fst (lookup w γ) ≡ fst A
+             → (lookup w γ) .fst ≡ A .fst
              → ⟨ γ ⊨ isCodeAt c w ⟩
-             → ∥ (Σ[ ψ ∶ Formula ⟪ fst A ⟫ 1 ]
-                   (fst (lookup c γ) ≡ fst (keyS A ψ))) ∥₁
+             → ∥ (Σ[ ψ ∶ Formula ⟪ A .fst ⟫ 1 ]
+                   ((lookup c γ) .fst ≡ (keyS A ψ) .fst)) ∥₁
   codeAt-out c w γ qw (hk , hw) =
     rec₁ squash₁ step (keyArityAtL-out c 1 γ hk)
     where
-    step : Σ[ z ∶ S ] (fst (lookup c γ) ≡ pr (# 1) (fst z))
-         → ∥ (Σ[ ψ ∶ Formula ⟪ fst A ⟫ 1 ]
-               (fst (lookup c γ) ≡ fst (keyS A ψ))) ∥₁
+    step : Σ[ z ∶ S ] ((lookup c γ) .fst ≡ pr (# 1) (z .fst))
+         → ∥ (Σ[ ψ ∶ Formula ⟪ A .fst ⟫ 1 ]
+               ((lookup c γ) .fst ≡ (keyS A ψ) .fst)) ∥₁
     step (z , qz) = witnessAt-out A w c γ qw hw 1 z qz
 ```
 </div>
@@ -444,13 +444,13 @@ module _ (B : S) where
 
 ```agda
   private
-    toB : ∀ {n} → Formula ⟪ fst B ⟫ n → Formula S n
+    toB : ∀ {n} → Formula ⟪ B .fst ⟫ n → Formula S n
     toB = mapFo (asConst B)
 
-  graphAt-holds : ∀ {m n} (ψ : Formula ⟪ fst B ⟫ m) (w c v : Fin n) (γ : S ^ n)
-                → fst (lookup w γ) ≡ fst B
-                → fst (lookup c γ) ≡ fst (keyʟ (toB ψ))
-                → fst (lookup v γ) ≡ fst (Sat B (toB ψ))
+  graphAt-holds : ∀ {m n} (ψ : Formula ⟪ B .fst ⟫ m) (w c v : Fin n) (γ : S ^ n)
+                → (lookup w γ) .fst ≡ B .fst
+                → (lookup c γ) .fst ≡ (keyʟ (toB ψ)) .fst
+                → (lookup v γ) .fst ≡ (Sat B (toB ψ)) .fst
                 → ⟨ γ ⊨ satGraphAt w c v ⟩
   graphAt-holds {m} {n} ψ w c v γ qw qc qv = graphAt-in w c v γ
     ∣ numν
@@ -471,26 +471,26 @@ module _ (B : S) where
     φ : Formula S m
     φ = toB ψ
 
-    entry : ⟨ pr (fst (lookup c γ)) (fst (lookup v γ)) ∈ fst (satTable B φ) ⟩
-    entry = subst2 (λ a b → ⟨ pr a b ∈ fst (satTable B φ) ⟩)
+    entry : ⟨ pr ((lookup c γ) .fst) ((lookup v γ) .fst) ∈ (satTable B φ) .fst ⟩
+    entry = subst2 (λ a b → ⟨ pr a b ∈ (satTable B φ) .fst ⟩)
       (sym qc) (sym qv) (entry-in B φ)
 
-  graphAt-unique : ∀ {m n} (ψ : Formula ⟪ fst B ⟫ m) (w c v : Fin n) (γ : S ^ n)
-                 → fst (lookup w γ) ≡ fst B
-                 → fst (lookup c γ) ≡ fst (keyʟ (toB ψ))
+  graphAt-unique : ∀ {m n} (ψ : Formula ⟪ B .fst ⟫ m) (w c v : Fin n) (γ : S ^ n)
+                 → (lookup w γ) .fst ≡ B .fst
+                 → (lookup c γ) .fst ≡ (keyʟ (toB ψ)) .fst
                  → ⟨ γ ⊨ satGraphAt w c v ⟩
-                 → fst (lookup v γ) ≡ fst (Sat B (toB ψ))
+                 → (lookup v γ) .fst ≡ (Sat B (toB ψ)) .fst
   graphAt-unique {m} {n} ψ w c v γ qw qc h =
-    rec₁ (setIsSet (fst (lookup v γ)) (fst (Sat B (toB ψ)))) step
+    rec₁ (setIsSet ((lookup v γ) .fst) ((Sat B (toB ψ)) .fst)) step
       (graphAt-out w c v γ h)
     where
-    step : GraphWitAt w c v γ → fst (lookup v γ) ≡ fst (Sat B (toB ψ))
+    step : GraphWitAt w c v γ → (lookup v γ) .fst ≡ (Sat B (toB ψ)) .fst
     step (ν , (E , (C , (T , (b , (eb , (tg , (hE , (hc , (hd , (ha , h12)))))))))))
       = SatSoundC.pinned Ti Bi Ci Ei NN (ev ν E C T b γ) B (eb ∙ qw) tg hE hc h12
-          ψ (subst (λ u → ⟨ u ∈ fst C ⟩) (qc ∙ sym (keyBridge B ψ))
+          ψ (subst (λ u → ⟨ u ∈ C .fst ⟩) (qc ∙ sym (keyBridge B ψ))
                (domAt-out Ti Ci (ev ν E C T b γ) hd (lookup c γ) (lookup v γ) ha))
           (lookup v γ)
-          (subst (λ u → ⟨ pr u (fst (lookup v γ)) ∈ fst T ⟩)
+          (subst (λ u → ⟨ pr u ((lookup v γ) .fst) ∈ T .fst ⟩)
              (qc ∙ sym (keyBridge B ψ)) ha)
 ```
 </div>
@@ -556,7 +556,7 @@ DefAt : ∀ {n} → Fin n → Fin n → Formula S n
 DefAt u w = extAt u (∃̇ (∃̇ (DefBody w)))
 
 DefOK : S → Type (ℓ-suc ℓ)
-DefOK A = (x : V ℓ) → ⟨ x ∈ 𝒟ₒ (fst A) ⟩ → ⟨ isL x ⟩
+DefOK A = (x : V ℓ) → ⟨ x ∈ 𝒟ₒ (A .fst) ⟩ → ⟨ isL x ⟩
 ```
 
 <!--en-->
@@ -601,30 +601,30 @@ module _ (A : S) where
 <div class="submodule-fold-content">
 
 ```agda
-  private module DA = DefOf (fst A)
+  private module DA = DefOf (A .fst)
 
   private
-    toS : Formula ⟪ fst A ⟫ 1 → Formula S 1
+    toS : Formula ⟪ A .fst ⟫ 1 → Formula S 1
     toS ψ = mapFo (asConst A) ψ
 
-    defined-membership : (ψ : Formula ⟪ fst A ⟫ 1) (y : V ℓ)
+    defined-membership : (ψ : Formula ⟪ A .fst ⟫ 1) (y : V ℓ)
                        → (y ∈ DA.defSet ψ)
-                       ≡ ((y ∈ fst A) ⊓ (envOne y ∈ fst (Sat A (toS ψ))))
+                       ≡ ((y ∈ A .fst) ⊓ (envOne y ∈ (Sat A (toS ψ)) .fst))
     defined-membership ψ y = ⇔toPath out inn
       where
-      at : ⟨ y ∈ fst A ⟩ → (y ∈ DA.defSet ψ) ≡ (envOne y ∈ fst (Sat A (toS ψ)))
+      at : ⟨ y ∈ A .fst ⟩ → (y ∈ DA.defSet ψ) ≡ (envOne y ∈ (Sat A (toS ψ)) .fst)
       at hy = cong (λ u → u ∈ DA.defSet ψ) (sym e)
-        ∙ defSet-Sat A ψ m ∙ cong (λ u → envOne u ∈ fst (Sat A (toS ψ))) e
+        ∙ defSet-Sat A ψ m ∙ cong (λ u → envOne u ∈ (Sat A (toS ψ)) .fst) e
         where
-        m = ∈-asFiber {a = y} {b = fst A} hy .fst
-        e = ∈-asFiber {a = y} {b = fst A} hy .snd
-      out : ⟨ y ∈ DA.defSet ψ ⟩ → ⟨ y ∈ fst A ⟩ × ⟨ envOne y ∈ fst (Sat A (toS ψ)) ⟩
+        m = ∈-asFiber {a = y} {b = A .fst} hy .fst
+        e = ∈-asFiber {a = y} {b = A .fst} hy .snd
+      out : ⟨ y ∈ DA.defSet ψ ⟩ → ⟨ y ∈ A .fst ⟩ × ⟨ envOne y ∈ (Sat A (toS ψ)) .fst ⟩
       out h = DA.defSet⊆A ψ y h , subst ⟨_⟩ (at (DA.defSet⊆A ψ y h)) h
-      inn : ⟨ y ∈ fst A ⟩ × ⟨ envOne y ∈ fst (Sat A (toS ψ)) ⟩ → ⟨ y ∈ DA.defSet ψ ⟩
+      inn : ⟨ y ∈ A .fst ⟩ × ⟨ envOne y ∈ (Sat A (toS ψ)) .fst ⟩ → ⟨ y ∈ DA.defSet ψ ⟩
       inn (hy , h) = subst ⟨_⟩ (sym (at hy)) h
 
-  fill : ∀ {n} (w : Fin n) (γ : S ^ n) → fst (lookup w γ) ≡ fst A
-       → (z : S) (ψ : Formula ⟪ fst A ⟫ 1) → DA.defSet ψ ≡ fst z
+  fill : ∀ {n} (w : Fin n) (γ : S ^ n) → (lookup w γ) .fst ≡ A .fst
+       → (z : S) (ψ : Formula ⟪ A .fst ⟫ 1) → DA.defSet ψ ≡ z .fst
        → ⟨ (Sat A (toS ψ) ∷ keyS A ψ ∷ z ∷ γ) ⊨ DefBody w ⟩
   fill {n} w γ qw z ψ qz = hcode , (hgraph , hdef)
     where
@@ -639,55 +639,55 @@ module _ (A : S) where
                (keyBridge A ψ) refl
 
     Holds : S → Type (ℓ-suc ℓ)
-    Holds y = ⟨ fst y ∈ fst (lookup w γ) ⟩
-              × ⟨ envOne (fst y) ∈ fst (Sat A (toS ψ)) ⟩
+    Holds y = ⟨ y .fst ∈ (lookup w γ) .fst ⟩
+              × ⟨ envOne (y .fst) ∈ (Sat A (toS ψ)) .fst ⟩
 
-    agrees : (y : S) → (fst y ∈ fst z)
-           ≡ ((fst y ∈ fst (lookup w γ)) ⊓ (envOne (fst y) ∈ fst (Sat A (toS ψ))))
-    agrees y = cong (λ X → fst y ∈ X) (sym qz)
-      ∙ defined-membership ψ (fst y)
-      ∙ cong (λ X → (fst y ∈ X) ⊓ (envOne (fst y) ∈ fst (Sat A (toS ψ)))) (sym qw)
+    agrees : (y : S) → (y .fst ∈ z .fst)
+           ≡ ((y .fst ∈ (lookup w γ) .fst) ⊓ (envOne (y .fst) ∈ (Sat A (toS ψ)) .fst))
+    agrees y = cong (λ X → y .fst ∈ X) (sym qz)
+      ∙ defined-membership ψ (y .fst)
+      ∙ cong (λ X → (y .fst ∈ X) ⊓ (envOne (y .fst) ∈ (Sat A (toS ψ)) .fst)) (sym qw)
 
-    into : (y : S) → ⟨ fst y ∈ fst z ⟩ → Holds y
+    into : (y : S) → ⟨ y .fst ∈ z .fst ⟩ → Holds y
     into y = subst ⟨_⟩ (agrees y)
 
-    back : (y : S) → Holds y → ⟨ fst y ∈ fst z ⟩
+    back : (y : S) → Holds y → ⟨ y .fst ∈ z .fst ⟩
     back y = subst ⟨_⟩ (sym (agrees y))
 
     hdef : ⟨ δ ⊨ DefinesAt (suc (suc zero)) (sh3 w) zero ⟩
     hdef = DefinesAt-both (suc (suc zero)) (sh3 w) zero δ into back
 
-  read : ∀ {n} (w : Fin n) (γ : S ^ n) → fst (lookup w γ) ≡ fst A
+  read : ∀ {n} (w : Fin n) (γ : S ^ n) → (lookup w γ) .fst ≡ A .fst
        → (z c v : S) → ⟨ (v ∷ c ∷ z ∷ γ) ⊨ DefBody w ⟩
-       → ∥ (Σ[ ψ ∶ Formula ⟪ fst A ⟫ 1 ] (DA.defSet ψ ≡ fst z)) ∥₁
+       → ∥ (Σ[ ψ ∶ Formula ⟪ A .fst ⟫ 1 ] (DA.defSet ψ ≡ z .fst)) ∥₁
   read {n} w γ qw z c v (hcode , (hgraph , hdef)) =
     rec₁ squash₁ step (codeAt-out A (suc zero) (sh3 w) δ qw hcode)
     where
     δ : S ^ (suc (suc (suc n)))
     δ = v ∷ c ∷ z ∷ γ
 
-    step : Σ[ ψ ∶ Formula ⟪ fst A ⟫ 1 ] (fst c ≡ fst (keyS A ψ))
-         → ∥ (Σ[ ψ ∶ Formula ⟪ fst A ⟫ 1 ] (DA.defSet ψ ≡ fst z)) ∥₁
+    step : Σ[ ψ ∶ Formula ⟪ A .fst ⟫ 1 ] (c .fst ≡ (keyS A ψ) .fst)
+         → ∥ (Σ[ ψ ∶ Formula ⟪ A .fst ⟫ 1 ] (DA.defSet ψ ≡ z .fst)) ∥₁
     step (ψ , qc) = ∣ ψ , extensionalV (λ y → ⇔toPath (into y) (back y)) ∣₁
       where
-      qv : fst v ≡ fst (Sat A (toS ψ))
+      qv : v .fst ≡ (Sat A (toS ψ)) .fst
       qv = graphAt-unique A ψ (sh3 w) (suc zero) zero δ qw
              (qc ∙ keyBridge A ψ) hgraph
 
-      into : (y : V ℓ) → ⟨ y ∈ DA.defSet ψ ⟩ → ⟨ y ∈ fst z ⟩
+      into : (y : V ℓ) → ⟨ y ∈ DA.defSet ψ ⟩ → ⟨ y ∈ z .fst ⟩
       into y hy = DefinesAt-in (suc (suc zero)) (sh3 w) zero δ hdef
-        (y , isL-trans (DA.defSet⊆A ψ y hy) (snd A))
+        (y , isL-trans (DA.defSet⊆A ψ y hy) (A .snd))
         (subst (λ X → ⟨ y ∈ X ⟩) (sym qw) (h .fst)
         , subst (λ X → ⟨ envOne y ∈ X ⟩) (sym qv) (h .snd))
         where h = subst ⟨_⟩ (defined-membership ψ y) hy
 
-      back : (y : V ℓ) → ⟨ y ∈ fst z ⟩ → ⟨ y ∈ DA.defSet ψ ⟩
+      back : (y : V ℓ) → ⟨ y ∈ z .fst ⟩ → ⟨ y ∈ DA.defSet ψ ⟩
       back y hy = subst ⟨_⟩ (sym (defined-membership ψ y))
         (subst (λ X → ⟨ y ∈ X ⟩) qw (h .fst)
         , subst (λ X → ⟨ envOne y ∈ X ⟩) qv (h .snd))
         where
         h = DefinesAt-out (suc (suc zero)) (sh3 w) zero δ hdef
-          (y , isL-trans hy (snd z)) hy
+          (y , isL-trans hy (z .snd)) hy
 ```
 
 <!--en-->
@@ -721,13 +721,13 @@ altogether.
 
 ```agda
   private
-    describe : ∀ {n} (w : Fin n) (γ : S ^ n) → fst (lookup w γ) ≡ fst A
+    describe : ∀ {n} (w : Fin n) (γ : S ^ n) → (lookup w γ) .fst ≡ A .fst
              → (z : S) → ⟨ (z ∷ γ) ⊨ ∃̇ (∃̇ (DefBody w)) ⟩
-             → ∥ (Σ[ ψ ∶ Formula ⟪ fst A ⟫ 1 ] (DA.defSet ψ ≡ fst z)) ∥₁
+             → ∥ (Σ[ ψ ∶ Formula ⟪ A .fst ⟫ 1 ] (DA.defSet ψ ≡ z .fst)) ∥₁
     describe w γ qw z = rec₁ squash₁ viaCode
       where
       Target : Type (ℓ-suc ℓ)
-      Target = ∥ (Σ[ ψ ∶ Formula ⟪ fst A ⟫ 1 ] (DA.defSet ψ ≡ fst z)) ∥₁
+      Target = ∥ (Σ[ ψ ∶ Formula ⟪ A .fst ⟫ 1 ] (DA.defSet ψ ≡ z .fst)) ∥₁
 
       viaValue : (c : S)
                → Σ[ v ∶ S ] ⟨ (v ∷ c ∷ z ∷ γ) ⊨ DefBody w ⟩ → Target
@@ -736,51 +736,51 @@ altogether.
       viaCode : Σ[ c ∶ S ] ⟨ (c ∷ z ∷ γ) ⊨ ∃̇ (DefBody w) ⟩ → Target
       viaCode (c , hc) = rec₁ squash₁ (viaValue c) hc
 
-    assemble : ∀ {n} (w : Fin n) (γ : S ^ n) → fst (lookup w γ) ≡ fst A
+    assemble : ∀ {n} (w : Fin n) (γ : S ^ n) → (lookup w γ) .fst ≡ A .fst
              → (z : S)
-             → ∥ (Σ[ ψ ∶ Formula ⟪ fst A ⟫ 1 ] (DA.defSet ψ ≡ fst z)) ∥₁
+             → ∥ (Σ[ ψ ∶ Formula ⟪ A .fst ⟫ 1 ] (DA.defSet ψ ≡ z .fst)) ∥₁
              → ⟨ (z ∷ γ) ⊨ ∃̇ (∃̇ (DefBody w)) ⟩
-    assemble w γ qw z = rec₁ (snd ((z ∷ γ) ⊨ ∃̇ (∃̇ (DefBody w)))) step
+    assemble w γ qw z = rec₁ (((z ∷ γ) ⊨ ∃̇ (∃̇ (DefBody w))) .snd) step
       where
-      step : Σ[ ψ ∶ Formula ⟪ fst A ⟫ 1 ] (DA.defSet ψ ≡ fst z)
+      step : Σ[ ψ ∶ Formula ⟪ A .fst ⟫ 1 ] (DA.defSet ψ ≡ z .fst)
            → ⟨ (z ∷ γ) ⊨ ∃̇ (∃̇ (DefBody w)) ⟩
       step (ψ , qψ) = ∣ keyS A ψ , ∣ Sat A (toS ψ) , fill w γ qw z ψ qψ ∣₁ ∣₁
 
   DefAt-in : ∀ {n} (u w : Fin n) (γ : S ^ n)
-           → fst (lookup w γ) ≡ fst A
-           → fst (lookup u γ) ≡ 𝒟ₒ (fst A)
+           → (lookup w γ) .fst ≡ A .fst
+           → (lookup u γ) .fst ≡ 𝒟ₒ (A .fst)
            → ⟨ γ ⊨ DefAt u w ⟩
   DefAt-in {n} u w γ qw qu = extAt-in-both u Φ γ f g
     where
     Φ : Formula S (suc n)
     Φ = ∃̇ (∃̇ (DefBody w))
 
-    f : (z : S) → ⟨ fst z ∈ fst (lookup u γ) ⟩ → ⟨ (z ∷ γ) ⊨ Φ ⟩
+    f : (z : S) → ⟨ z .fst ∈ (lookup u γ) .fst ⟩ → ⟨ (z ∷ γ) ⊨ Φ ⟩
     f z z∈ = assemble w γ qw z
-      (𝒟ₒ-inv (fst A) (fst z) (subst (λ X → ⟨ fst z ∈ X ⟩) qu z∈))
+      (𝒟ₒ-inv (A .fst) (z .fst) (subst (λ X → ⟨ z .fst ∈ X ⟩) qu z∈))
 
-    g : (z : S) → ⟨ (z ∷ γ) ⊨ Φ ⟩ → ⟨ fst z ∈ fst (lookup u γ) ⟩
-    g z hz = subst (λ X → ⟨ fst z ∈ X ⟩) (sym qu)
-      (𝒟ₒ-intro (fst A) (fst z) (describe w γ qw z hz))
+    g : (z : S) → ⟨ (z ∷ γ) ⊨ Φ ⟩ → ⟨ z .fst ∈ (lookup u γ) .fst ⟩
+    g z hz = subst (λ X → ⟨ z .fst ∈ X ⟩) (sym qu)
+      (𝒟ₒ-intro (A .fst) (z .fst) (describe w γ qw z hz))
 
   DefAt-out : ∀ {n} (u w : Fin n) (γ : S ^ n) → DefOK A
-            → fst (lookup w γ) ≡ fst A
+            → (lookup w γ) .fst ≡ A .fst
             → ⟨ γ ⊨ DefAt u w ⟩
-            → fst (lookup u γ) ≡ 𝒟ₒ (fst A)
+            → (lookup u γ) .fst ≡ 𝒟ₒ (A .fst)
   DefAt-out {n} u w γ ok qw h =
     extensionalV (λ y → ⇔toPath (sub₁ y) (sub₂ y))
     where
     Φ : Formula S (suc n)
     Φ = ∃̇ (∃̇ (DefBody w))
 
-    sub₁ : (y : V ℓ) → ⟨ y ∈ fst (lookup u γ) ⟩ → ⟨ y ∈ 𝒟ₒ (fst A) ⟩
-    sub₁ y y∈ = 𝒟ₒ-intro (fst A) y (describe w γ qw yS (extAt-out u Φ γ h yS y∈))
+    sub₁ : (y : V ℓ) → ⟨ y ∈ (lookup u γ) .fst ⟩ → ⟨ y ∈ 𝒟ₒ (A .fst) ⟩
+    sub₁ y y∈ = 𝒟ₒ-intro (A .fst) y (describe w γ qw yS (extAt-out u Φ γ h yS y∈))
       where
       yS : S
-      yS = y , isL-trans {x = fst (lookup u γ)} {y = y} y∈ (snd (lookup u γ))
+      yS = y , isL-trans {x = (lookup u γ) .fst} {y = y} y∈ ((lookup u γ) .snd)
 
-    sub₂ : (y : V ℓ) → ⟨ y ∈ 𝒟ₒ (fst A) ⟩ → ⟨ y ∈ fst (lookup u γ) ⟩
-    sub₂ y y∈ = extAt-in u Φ γ h yS (assemble w γ qw yS (𝒟ₒ-inv (fst A) y y∈))
+    sub₂ : (y : V ℓ) → ⟨ y ∈ 𝒟ₒ (A .fst) ⟩ → ⟨ y ∈ (lookup u γ) .fst ⟩
+    sub₂ y y∈ = extAt-in u Φ γ h yS (assemble w γ qw yS (𝒟ₒ-inv (A .fst) y y∈))
       where
       yS : S
       yS = y , ok y y∈
@@ -825,10 +825,10 @@ to a stage at all.
 
 ```agda
 DefAt-stage : (β : V ℓ) (oβ : IsOrd β) → ∀ {n} (u w : Fin n) (γ : S ^ n)
-            → fst (lookup w γ) ≡ Lset β
+            → (lookup w γ) .fst ≡ Lset β
             → (γ ⊨ DefAt u w)
-              ≡ ( (fst (lookup u γ) ≡ 𝒟ₒ (Lset β))
-                , setIsSet (fst (lookup u γ)) (𝒟ₒ (Lset β)) )
+              ≡ ( ((lookup u γ) .fst ≡ 𝒟ₒ (Lset β))
+                , setIsSet ((lookup u γ) .fst) (𝒟ₒ (Lset β)) )
 DefAt-stage β oβ u w γ qw = ⇔toPath
   (DefAt-out (LsetS β oβ) u w γ (𝒟ₒ→isL β oβ) qw)
   (DefAt-in (LsetS β oβ) u w γ qw)

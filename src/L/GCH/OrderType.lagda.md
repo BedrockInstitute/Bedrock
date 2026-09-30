@@ -174,7 +174,7 @@ Applying `isSetClass`{.Agda} to the hierarchy and constructibility predicate sho
 
 ```agda
 isSetS : isSet S
-isSetS = isSetClass setIsSet (λ v → snd (isL v))
+isSetS = isSetClass setIsSet (λ v → (isL v) .snd)
 ```
 
 <!--en-->
@@ -187,7 +187,7 @@ A coded graph is read on the underlying sets: `F` holds of `x` and `y` when the 
 
 ```agda
 Holds : S → S → S → Type (ℓ-suc ℓ)
-Holds F x y = ⟨ pr (fst x) (fst y) ∈ fst F ⟩
+Holds F x y = ⟨ pr (x .fst) (y .fst) ∈ F .fst ⟩
 ```
 
 <!--en-->
@@ -203,7 +203,7 @@ Fix a constructible set `D` and a constructible code `R` for ordered pairs. The 
 ```agda
 module Collapse (D R : S)
                 (Rsub : (y x : S) → Holds R y x
-                      → ⟨ fst y ∈ fst D ⟩ × ⟨ fst x ∈ fst D ⟩) where
+                      → ⟨ y .fst ∈ D .fst ⟩ × ⟨ x .fst ∈ D .fst ⟩) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -218,7 +218,7 @@ Membership in `D` is stated as a one-place predicate on the carrier.
 
 ```agda
   Mem : S → Type (ℓ-suc ℓ)
-  Mem x = ⟨ fst x ∈ fst D ⟩
+  Mem x = ⟨ x .fst ∈ D .fst ⟩
 ```
 
 <!--en-->
@@ -231,7 +231,7 @@ This predicate is a proposition, since it is membership in the underlying set of
 
 ```agda
   isPropMem : (x : S) → isProp (Mem x)
-  isPropMem x = snd (fst x ∈ fst D)
+  isPropMem x = (x .fst ∈ D .fst) .snd
 ```
 
 <!--en-->
@@ -244,7 +244,7 @@ The members of `D` are presented by a small type, the index type of the presenta
 
 ```agda
   Dom : Type ℓ
-  Dom = ⟪ fst D ⟫
+  Dom = ⟪ D .fst ⟫
 ```
 
 <!--en-->
@@ -257,7 +257,7 @@ The presentation embeds its indices into the ambient hierarchy.
 
 ```agda
   ↪ : Dom → V ℓ
-  ↪ = ⟪ fst D ⟫↪
+  ↪ = ⟪ D .fst ⟫↪
 ```
 
 <!--en-->
@@ -270,7 +270,7 @@ An index is turned back into a constructible set: the embedded member is paired 
 
 ```agda
   up : Dom → S
-  up m = ↪ m , isL-trans {x = fst D} {y = ↪ m} (member (fst D) m) (snd D)
+  up m = ↪ m , isL-trans {x = D .fst} {y = ↪ m} (member (D .fst) m) (D .snd)
 ```
 
 <!--en-->
@@ -283,7 +283,7 @@ The rebuilt constructible set is a member of `D`, by the presentation's own memb
 
 ```agda
   up-mem : (m : Dom) → Mem (up m)
-  up-mem m = member (fst D) m
+  up-mem m = member (D .fst) m
 ```
 
 <!--en-->
@@ -296,7 +296,7 @@ The presentation has no duplicate indices: equality of two embedded members forc
 
 ```agda
   Dom≡ : {a b : Dom} → ↪ a ≡ ↪ b → a ≡ b
-  Dom≡ {a} {b} e = ↪-inj {a = fst D} {m = a} {n = b} e
+  Dom≡ {a} {b} e = ↪-inj {a = D .fst} {m = a} {n = b} e
 ```
 
 <!--en-->
@@ -309,7 +309,7 @@ Conversely, a member of `D` together with its membership proof recovers a presen
 
 ```agda
   toDom : (x : S) → Mem x → Dom
-  toDom x mx = fst (fiber (fst D) mx)
+  toDom x mx = (fiber (D .fst) mx) .fst
 ```
 
 <!--en-->
@@ -321,8 +321,8 @@ The recovered index presents exactly the given member: the fiber carries the ide
 <!--/-->
 
 ```agda
-  toDom-val : (x : S) (mx : Mem x) → ↪ (toDom x mx) ≡ fst x
-  toDom-val x mx = snd (fiber (fst D) mx)
+  toDom-val : (x : S) (mx : Mem x) → ↪ (toDom x mx) ≡ x .fst
+  toDom-val x mx = (fiber (D .fst) mx) .snd
 ```
 
 <!--en-->
@@ -336,7 +336,7 @@ The code `R` induces a relation on the small presentation: `a ≺ b` means that 
 ```agda
   opaque
     _≺_ : Dom → Dom → Type ℓ
-    a ≺ b = ⟨ pr (↪ a) (↪ b) ∈ₛ fst R ⟩
+    a ≺ b = ⟨ pr (↪ a) (↪ b) ∈ₛ R .fst ⟩
 ```
 
 <!--en-->
@@ -349,7 +349,7 @@ For fixed indices `a` and `b`, the relation type `a ≺ b` is a proposition beca
 
 ```agda
     isProp≺ : (a b : Dom) → isProp (a ≺ b)
-    isProp≺ a b = snd (pr (↪ a) (↪ b) ∈ₛ fst R)
+    isProp≺ a b = (pr (↪ a) (↪ b) ∈ₛ R .fst) .snd
 ```
 
 <!--en-->
@@ -362,7 +362,7 @@ Membership in the coded relation yields the small relation: the ordered pair rec
 
 ```agda
     ≺-in : (a b : Dom) → Holds R (up a) (up b) → a ≺ b
-    ≺-in a b = ∈∈ₛ {a = pr (↪ a) (↪ b)} {b = fst R} .fst
+    ≺-in a b = ∈∈ₛ {a = pr (↪ a) (↪ b)} {b = R .fst} .fst
 ```
 
 <!--en-->
@@ -375,7 +375,7 @@ Conversely, the small relation records a genuine pair of `R`, so the two reading
 
 ```agda
     ≺-out : (a b : Dom) → a ≺ b → Holds R (up a) (up b)
-    ≺-out a b = ∈∈ₛ {a = pr (↪ a) (↪ b)} {b = fst R} .snd
+    ≺-out a b = ∈∈ₛ {a = pr (↪ a) (↪ b)} {b = R .fst} .snd
 ```
 
 <!--en-->
@@ -485,8 +485,8 @@ A value `v` is correct for `x` when its members are exactly the source values: m
 
 ```agda
 ValueIs : S → S → S → S → Type (ℓ-suc ℓ)
-ValueIs F R x v = (w : S) → (⟨ fst w ∈ fst v ⟩ → Src F R x w)
-                          × (Src F R x w → ⟨ fst w ∈ fst v ⟩)
+ValueIs F R x v = (w : S) → (⟨ w .fst ∈ v .fst ⟩ → Src F R x w)
+                          × (Src F R x w → ⟨ w .fst ∈ v .fst ⟩)
 ```
 
 <!--en-->
@@ -932,7 +932,7 @@ The internal construction starts with a coded domain `D` and a coded relation `R
 ```agda
 module Internal (D R : S)
                 (Rsub : (y x : S) → Holds R y x
-                      → ⟨ fst y ∈ fst D ⟩ × ⟨ fst x ∈ fst D ⟩) where
+                      → ⟨ y .fst ∈ D .fst ⟩ × ⟨ x .fst ∈ D .fst ⟩) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -961,7 +961,7 @@ If `q` is a member of `D`, decoding its membership proof gives an index `toDom q
 
 ```agda
   up-toDom : (q : S) (mq : Mem q) → up (toDom q mq) ≡ q
-  up-toDom q mq = Σ≡Prop (λ v → snd (isL v)) (toDom-val q mq)
+  up-toDom q mq = Σ≡Prop (λ v → (isL v) .snd) (toDom-val q mq)
 ```
 
 <!--en-->
@@ -1030,10 +1030,10 @@ The uniqueness statement is conditional on an entry being present: if a correct 
 
 ```agda
     correct-val : (F : S) → Correct F R → (a : Dom) (v : S)
-                → Holds F (up a) v → fst v ≡ col a
-    correct-val F hc = W.induction {P = λ a → (v : S) → Holds F (up a) v → fst v ≡ col a} go
+                → Holds F (up a) v → v .fst ≡ col a
+    correct-val F hc = W.induction {P = λ a → (v : S) → Holds F (up a) v → v .fst ≡ col a} go
       where
-      go : (a : Dom) → ((b : Dom) → b ≺ a → (v : S) → Holds F (up b) v → fst v ≡ col b)
+      go : (a : Dom) → ((b : Dom) → b ≺ a → (v : S) → Holds F (up b) v → v .fst ≡ col b)
 ```
 
 <!--en-->
@@ -1045,8 +1045,8 @@ The proof reduces to a pointwise equivalence: `w` belongs to the recorded value 
 <!--/-->
 
 ```agda
-         → (v : S) → Holds F (up a) v → fst v ≡ col a
-      go a IH v hv = extensionalV {a = fst v} {b = col a} (λ w → ⇔toPath (fwd w) (bwd w))
+         → (v : S) → Holds F (up a) v → v .fst ≡ col a
+      go a IH v hv = extensionalV {a = v .fst} {b = col a} (λ w → ⇔toPath (fwd w) (bwd w))
         where
         cmp : Complete F R (up a)
         cmp = hc (up a) v hv .fst
@@ -1074,11 +1074,11 @@ For the first inclusion, let `w` be a member of the recorded value `v`. Since `v
 <!--/-->
 
 ```agda
-        fwd : (w : V ℓ) → ⟨ w ∈ fst v ⟩ → ⟨ w ∈ col a ⟩
-        fwd w w∈ = rec₁ (snd (w ∈ col a)) read (val wS .fst w∈)
+        fwd : (w : V ℓ) → ⟨ w ∈ v .fst ⟩ → ⟨ w ∈ col a ⟩
+        fwd w w∈ = rec₁ ((w ∈ col a) .snd) read (val wS .fst w∈)
           where
           wS : S
-          wS = w , isL-trans {x = fst v} {y = w} w∈ (snd v)
+          wS = w , isL-trans {x = v .fst} {y = w} w∈ (v .snd)
 ```
 
 <!--en-->
@@ -1109,7 +1109,7 @@ The internal index `b` is recovered by descending along the membership, and the 
             b : Dom
             b = toDom y my
             b≺a : b ≺ a
-            b≺a = ≺-in b a (subst (λ t → ⟨ pr t (↪ a) ∈ fst R ⟩) (sym (toDom-val y my)) ry)
+            b≺a = ≺-in b a (subst (λ t → ⟨ pr t (↪ a) ∈ R .fst ⟩) (sym (toDom-val y my)) ry)
             e : w ≡ col b
 ```
 
@@ -1122,20 +1122,20 @@ The equation is exactly the induction hypothesis applied to the decoded predeces
 <!--/-->
 
 ```agda
-            e = IH b b≺a wS (subst (λ t → ⟨ pr t w ∈ fst F ⟩) (sym (toDom-val y my)) fy)
+            e = IH b b≺a wS (subst (λ t → ⟨ pr t w ∈ F .fst ⟩) (sym (toDom-val y my)) fy)
 ```
 
 <!--en-->
-For the reverse inclusion, suppose `w ∈ col a`. The elimination rule for the collapse says, under propositional truncation, that `col r ≡ w` for some predecessor `r ≺ a`. Because the goal `w ∈ fst v` is a proposition, the proof may reason inside that truncation. The carried element `wS` is constructible because it belongs to the constructible set `col a`.
+For the reverse inclusion, suppose `w ∈ col a`. The elimination rule for the collapse says, under propositional truncation, that `col r ≡ w` for some predecessor `r ≺ a`. Because the goal `w ∈ v .fst` is a proposition, the proof may reason inside that truncation. The carried element `wS` is constructible because it belongs to the constructible set `col a`.
 <!--zh-->
-为证反向包含，设 `w ∈ col a`。塌缩的消去规则在命题截断下给出某个前驱 `r ≺ a`，并有 `col r ≡ w`。目标 `w ∈ fst v` 是命题，故可以在该截断内部推理。又因 `w` 属于可构造集合 `col a`，所以可把它连同可构造性证据打包为 `wS`。
+为证反向包含，设 `w ∈ col a`。塌缩的消去规则在命题截断下给出某个前驱 `r ≺ a`，并有 `col r ≡ w`。目标 `w ∈ v .fst` 是命题，故可以在该截断内部推理。又因 `w` 属于可构造集合 `col a`，所以可把它连同可构造性证据打包为 `wS`。
 <!--ja-->
-逆向きの包含では `w ∈ col a` とする。崩壊の除去則から、ある先行者 `r ≺ a` について `col r ≡ w` であることが、命題的切り詰めのもとで得られる。目標 `w ∈ fst v` は命題なので、その切り詰めの内側で議論できる。また `w` は構成可能な集合 `col a` の要素なので、構成可能性の証拠と組にして `wS` とできる。
+逆向きの包含では `w ∈ col a` とする。崩壊の除去則から、ある先行者 `r ≺ a` について `col r ≡ w` であることが、命題的切り詰めのもとで得られる。目標 `w ∈ v .fst` は命題なので、その切り詰めの内側で議論できる。また `w` は構成可能な集合 `col a` の要素なので、構成可能性の証拠と組にして `wS` とできる。
 <!--/-->
 
 ```agda
-        bwd : (w : V ℓ) → ⟨ w ∈ col a ⟩ → ⟨ w ∈ fst v ⟩
-        bwd w w∈ = rec₁ (snd (w ∈ fst v)) read (col-out a w w∈)
+        bwd : (w : V ℓ) → ⟨ w ∈ col a ⟩ → ⟨ w ∈ v .fst ⟩
+        bwd w w∈ = rec₁ ((w ∈ v .fst) .snd) read (col-out a w w∈)
           where
           wS : S
           wS = w , isL-trans {x = col a} {y = w} w∈ (col-isL a)
@@ -1150,10 +1150,10 @@ For the predecessor `r` supplied by `col-out`, completeness of the entry at `a` 
 <!--/-->
 
 ```agda
-          read : Σ[ r ∶ Dom ] ((r ≺ a) × (col r ≡ w)) → ⟨ w ∈ fst v ⟩
-          read (r , (ra , e)) = rec₁ (snd (w ∈ fst v)) inner (cmp (up r) (≺-out r a ra))
+          read : Σ[ r ∶ Dom ] ((r ≺ a) × (col r ≡ w)) → ⟨ w ∈ v .fst ⟩
+          read (r , (ra , e)) = rec₁ ((w ∈ v .fst) .snd) inner (cmp (up r) (≺-out r a ra))
             where
-            inner : Σ[ u ∶ S ] Holds F (up r) u → ⟨ w ∈ fst v ⟩
+            inner : Σ[ u ∶ S ] Holds F (up r) u → ⟨ w ∈ v .fst ⟩
             inner (u , fu) = val wS .snd
 ```
 
@@ -1166,23 +1166,23 @@ The reverse half of the value equation turns a source witness into membership in
 <!--/-->
 
 ```agda
-              ∣ up r , (≺-out r a ra , subst (λ t → ⟨ pr (↪ r) t ∈ fst F ⟩) (IH r ra u fu ∙ e) fu) ∣₁
+              ∣ up r , (≺-out r a ra , subst (λ t → ⟨ pr (↪ r) t ∈ F .fst ⟩) (IH r ra u fu ∙ e) fu) ∣₁
 ```
 
 <!--en-->
-Now suppose `q` is genuinely a member of `D` and `v` satisfies the local collapse formula at `q`. The formula supplies only a propositionally truncated correct table containing `(q,v)`, but the desired set equality is a proposition, so the truncation can be eliminated. After transporting the entry from `q` to its decoded representative, `correct-val` identifies `fst v` with `col (toDom q mq)`.
+Now suppose `q` is genuinely a member of `D` and `v` satisfies the local collapse formula at `q`. The formula supplies only a propositionally truncated correct table containing `(q,v)`, but the desired set equality is a proposition, so the truncation can be eliminated. After transporting the entry from `q` to its decoded representative, `correct-val` identifies `v .fst` with `col (toDom q mq)`.
 <!--zh-->
-现设 `q` 确为 `D` 的元素，且 `v` 在 `q` 处满足局部塌缩公式。该公式只在命题截断下给出一张含有 `(q,v)` 的正确表；但所求集合等式是命题，故可以消去此截断。把表项从 `q` 运输到其解码表示后，`correct-val` 便把 `fst v` 认同为 `col (toDom q mq)`。
+现设 `q` 确为 `D` 的元素，且 `v` 在 `q` 处满足局部塌缩公式。该公式只在命题截断下给出一张含有 `(q,v)` 的正确表；但所求集合等式是命题，故可以消去此截断。把表项从 `q` 运输到其解码表示后，`correct-val` 便把 `v .fst` 认同为 `col (toDom q mq)`。
 <!--ja-->
-ここで `q` が実際に `D` の要素であり、`v` が `q` で局所的な崩壊の論理式を満たすとする。論理式から得られるのは、`(q,v)` を含む正しい表が単に存在することだけであるが、求める集合の等式は命題なので切り詰めを除去できる。項目を `q` から復号された表示へ輸送すると、`correct-val` によって `fst v` は `col (toDom q mq)` と同定される。
+ここで `q` が実際に `D` の要素であり、`v` が `q` で局所的な崩壊の論理式を満たすとする。論理式から得られるのは、`(q,v)` を含む正しい表が単に存在することだけであるが、求める集合の等式は命題なので切り詰めを除去できる。項目を `q` から復号された表示へ輸送すると、`correct-val` によって `v .fst` は `col (toDom q mq)` と同定される。
 <!--/-->
 
 ```agda
     colFo-val : (q : S) (mq : Mem q) (v : S) → ⟨ (v ∷ q ∷ []) ⊨ CF.colFo ⟩
-              → fst v ≡ col (toDom q mq)
-    colFo-val q mq v h = rec₁ (setIsSet (fst v) (col (toDom q mq)))
+              → v .fst ≡ col (toDom q mq)
+    colFo-val q mq v h = rec₁ (setIsSet (v .fst) (col (toDom q mq)))
       (λ { (F , (hc , hv)) → correct-val F hc (toDom q mq) v
-             (subst (λ t → ⟨ pr t (fst v) ∈ fst F ⟩) (sym (toDom-val q mq)) hv) })
+             (subst (λ t → ⟨ pr t (v .fst) ∈ F .fst ⟩) (sym (toDom-val q mq)) hv) })
 ```
 
 <!--en-->
@@ -1235,8 +1235,8 @@ The body of the local formula has two disjuncts. The left disjunct says that `q`
       Body : S → S → Type (ℓ-suc ℓ)
       Body z q =
           (Holds R q (up a)
-             × ∥ Σ[ v ∶ S ] ((fst z ≡ pr (fst q) (fst v)) × ⟨ (v ∷ q ∷ []) ⊨ CF.colFo ⟩) ∥₁)
-        ⊎ ((Holds R q (up a) → ⊥₀) × (fst z ≡ fst ea))
+             × ∥ Σ[ v ∶ S ] ((z .fst ≡ pr (q .fst) (v .fst)) × ⟨ (v ∷ q ∷ []) ⊨ CF.colFo ⟩) ∥₁)
+        ⊎ ((Holds R q (up a) → ⊥₀) × (z .fst ≡ ea .fst))
 ```
 
 <!--en-->
@@ -1317,7 +1317,7 @@ The inward reading injects the left branch through the pair-expression introduct
 
 ```agda
         ψ-in : (z q : S) → Body z q → ⟨ (z ∷ q ∷ []) ⊨ ψ ⟩
-        ψ-in z q (inl (h1 , hv)) = rec₁ (snd ((z ∷ q ∷ []) ⊨ ψ))
+        ψ-in z q (inl (h1 , hv)) = rec₁ (((z ∷ q ∷ []) ⊨ ψ) .snd)
           (λ { (v , (e , hc)) → ∣ inl (PE.member-in image (con R) (z ∷ q ∷ []) h1
                                      , PF.pair-in z q v e hc) ∣₁ }) hv
         ψ-in z q (inr (h1 , e)) =
@@ -1347,7 +1347,7 @@ The helper `b≺a-of` decodes the host-side relation membership into the interna
       private
         b≺a-of : (q : S) (mq : Mem q) → Holds R q (up a) → toDom q mq ≺ a
         b≺a-of q mq h = ≺-in (toDom q mq) a
-          (subst (λ t → ⟨ pr t (↪ a) ∈ fst R ⟩) (sym (toDom-val q mq)) h)
+          (subst (λ t → ⟨ pr t (↪ a) ∈ R .fst ⟩) (sym (toDom-val q mq)) h)
 ```
 
 <!--en-->
@@ -1376,7 +1376,7 @@ Replacement requires the values satisfying `ψ` at each `q ∈ D` to form a cont
         fc : (q : S) → ⟨ q ∈ˢ D ⟩ → isContr (Σ[ z ∶ S ] ⟨ (z ∷ q ∷ []) ⊨ ψ ⟩)
         fc q mq = mereFunct ψ q
           (decide (FOL.Semantics.decideMembership 𝒮ᵥ lem
-            (pr (fst q) (↪ a)) (fst R)))
+            (pr (q .fst) (↪ a)) (R .fst)))
           where
           b : Dom
           b = toDom q mq
@@ -1399,11 +1399,11 @@ In the predecessor branch, the canonical output is `zb = prʟ q (colʟ b)`, whos
 ```
 
 <!--en-->
-Assume `q R a`. The canonical output `zb` satisfies the left branch because the induction hypothesis supplies `colFo` for `col b` at `q`, while `prʟ-fst` supplies the required equality between `fst zb` and the ordered-pair code `pr (fst q) (col b)`. To prove uniqueness, an arbitrary satisfying output is read through the same two cases: a left-branch witness will be determined by `colFo-val`, while a right-branch witness contradicts the standing assumption `q R a`.
+Assume `q R a`. The canonical output `zb` satisfies the left branch because the induction hypothesis supplies `colFo` for `col b` at `q`, while `prʟ-fst` supplies the required equality between `zb .fst` and the ordered-pair code `pr (q .fst) (col b)`. To prove uniqueness, an arbitrary satisfying output is read through the same two cases: a left-branch witness will be determined by `colFo-val`, while a right-branch witness contradicts the standing assumption `q R a`.
 <!--zh-->
-设 `q R a`。归纳假设说明 `col b` 在 `q` 处满足 `colFo`，而 `prʟ-fst` 给出 `fst zb` 与有序对编码 `pr (fst q) (col b)` 之间所需的等式，故典范输出 `zb` 满足左支。为证唯一性，把任意满足公式的输出仍按两种情形读取：左支见证将由 `colFo-val` 确定，右支见证则与既有假设 `q R a` 矛盾。
+设 `q R a`。归纳假设说明 `col b` 在 `q` 处满足 `colFo`，而 `prʟ-fst` 给出 `zb .fst` 与有序对编码 `pr (q .fst) (col b)` 之间所需的等式，故典范输出 `zb` 满足左支。为证唯一性，把任意满足公式的输出仍按两种情形读取：左支见证将由 `colFo-val` 确定，右支见证则与既有假设 `q R a` 矛盾。
 <!--ja-->
-`q R a` と仮定する。帰納仮定は `col b` が `q` で `colFo` を満たすことを与え、`prʟ-fst` は `fst zb` と順序対の符号 `pr (fst q) (col b)` の間に必要な等式を与えるので、正準な出力 `zb` は左の分岐を満たす。一意性を示すため、任意の充足する出力を同じ二つの場合に分けて読む。左の分岐の証人は `colFo-val` によって決まり、右の分岐の証人は仮定 `q R a` と矛盾する。
+`q R a` と仮定する。帰納仮定は `col b` が `q` で `colFo` を満たすことを与え、`prʟ-fst` は `zb .fst` と順序対の符号 `pr (q .fst) (col b)` の間に必要な等式を与えるので、正準な出力 `zb` は左の分岐を満たす。一意性を示すため、任意の充足する出力を同じ二つの場合に分けて読む。左の分岐の証人は `colFo-val` によって決まり、右の分岐の証人は仮定 `q R a` と矛盾する。
 <!--/-->
 
 ```agda
@@ -1411,7 +1411,7 @@ Assume `q R a`. The canonical output `zb` satisfies the left branch because the 
             , ( ψ-in zb q (inl (h , ∣ colʟ b , (prʟ-fst q (colʟ b) , IHq q mq (b≺a-of q mq h)) ∣₁))
               , λ z' hz' → rec₁ (isSetS z' zb)
                   (λ { (inl (_ , hv)) → rec₁ (isSetS z' zb)
-                         (λ { (v , (e , hcol)) → Σ≡Prop (λ w → snd (isL w))
+                         (λ { (v , (e , hcol)) → Σ≡Prop (λ w → (isL w) .snd)
 ```
 
 <!--en-->
@@ -1423,7 +1423,7 @@ For a competing witness in the left branch, `colFo-val` identifies its second co
 <!--/-->
 
 ```agda
-                                (e ∙ cong (pr (fst q)) (colFo-val q mq v hcol) ∙ sym (prʟ-fst q (colʟ b))) })
+                                (e ∙ cong (pr (q .fst)) (colFo-val q mq v hcol) ∙ sym (prʟ-fst q (colʟ b))) })
                          hv
                      ; (inr (nh , _)) → ⊥₀-rec (nh h) })
                   (ψ-out z' q hz') ) ∣₁
@@ -1431,18 +1431,18 @@ For a competing witness in the left branch, `colFo-val` identifies its second co
 ```
 
 <!--en-->
-The refuted-membership case closes the uniqueness argument. The default entry `ea` satisfies `ψ`. Reading any competing witness outward either produces a positive membership, contradicting `nh`, or gives the default-branch equality `fst z' ≡ fst ea`. In the latter case, propositionality of constructibility lifts this equality of underlying sets to the required equality `z' ≡ ea` in `S`.
+The refuted-membership case closes the uniqueness argument. The default entry `ea` satisfies `ψ`. Reading any competing witness outward either produces a positive membership, contradicting `nh`, or gives the default-branch equality `z' .fst ≡ ea .fst`. In the latter case, propositionality of constructibility lifts this equality of underlying sets to the required equality `z' ≡ ea` in `S`.
 <!--zh-->
-否定成员关系的情形闭合了唯一性论证。默认条目 `ea` 满足 `ψ`。向外读取任意竞争见证时，要么得到一条与 `nh` 矛盾的肯定成员关系，要么由默认支得到 `fst z' ≡ fst ea`。在后一种情形中，可构造性证明的命题性把这条底层集合的等式提升为 `S` 中所需的等式 `z' ≡ ea`。
+否定成员关系的情形闭合了唯一性论证。默认条目 `ea` 满足 `ψ`。向外读取任意竞争见证时，要么得到一条与 `nh` 矛盾的肯定成员关系，要么由默认支得到 `z' .fst ≡ ea .fst`。在后一种情形中，可构造性证明的命题性把这条底层集合的等式提升为 `S` 中所需的等式 `z' ≡ ea`。
 <!--ja-->
-所属を否定する場合が一意性の議論を閉じる。既定の項目 `ea` は `ψ` を満たす。別の証人を外向きに読むと、`nh` と矛盾する肯定的な所属が得られるか、既定の分岐から `fst z' ≡ fst ea` が得られる。後者では、構成可能性の証明が命題であることにより、基礎集合のこの等式が `S` で必要な等式 `z' ≡ ea` へ持ち上がる。
+所属を否定する場合が一意性の議論を閉じる。既定の項目 `ea` は `ψ` を満たす。別の証人を外向きに読むと、`nh` と矛盾する肯定的な所属が得られるか、既定の分岐から `z' .fst ≡ ea .fst` が得られる。後者では、構成可能性の証明が命題であることにより、基礎集合のこの等式が `S` で必要な等式 `z' ≡ ea` へ持ち上がる。
 <!--/-->
 
 ```agda
             , ( ψ-in ea q (inr (nh , refl))
               , λ z' hz' → rec₁ (isSetS z' ea)
                   (λ { (inl (h , _)) → ⊥₀-rec (nh h)
-                     ; (inr (_ , e)) → Σ≡Prop (λ w → snd (isL w)) e })
+                     ; (inr (_ , e)) → Σ≡Prop (λ w → (isL w) .snd) e })
                   (ψ-out z' q hz') ) ∣₁
 ```
 
@@ -1494,7 +1494,7 @@ For `b` at or below `a`, `Fa-in` inserts the graph entry with input `up b` and v
 
 ```agda
       Fa-in : (b : Dom) → Below b → Holds Fa (up b) (colʟ b)
-      Fa-in b k = subst (λ w → ⟨ w ∈ fst Fa ⟩) (prʟ-fst (up b) (colʟ b))
+      Fa-in b k = subst (λ w → ⟨ w ∈ Fa .fst ⟩) (prʟ-fst (up b) (colʟ b))
         (T.table-in (up b) (prʟ (up b) (colʟ b)) (up-mem b) (ψ-in _ (up b) (bodyOf k)))
         where
         bodyOf : Below b → Body (prʟ (up b) (colʟ b)) (up b)
@@ -1525,7 +1525,7 @@ Conversely, membership in `Fa` merely yields an index `b` with `b ≺ a` or `b �
 
 ```agda
       Fa-out : (y : S) → ⟨ y ∈ˢ Fa ⟩
-             → ∥ Σ[ b ∶ Dom ] (Below b × (fst y ≡ pr (↪ b) (col b))) ∥₁
+             → ∥ Σ[ b ∶ Dom ] (Below b × (y .fst ≡ pr (↪ b) (col b))) ∥₁
       Fa-out y hy = rec₁ squash₁
         (λ { (q , (mq , hψ)) → rec₁ squash₁
           (λ { (inl (h , hv)) → map₁
@@ -1561,18 +1561,18 @@ Both the replacement reader and `ψ-out` return truncated witnesses. Since the d
 ```
 
 <!--en-->
-Specializing the preceding result to the ordered-pair code of `x` and `v` recovers its two coordinates. Thus a graph entry `Holds Fa x v` merely determines an index `b ≤ a` for which `fst x ≡ ↪ b` and `fst v ≡ col b`.
+Specializing the preceding result to the ordered-pair code of `x` and `v` recovers its two coordinates. Thus a graph entry `Holds Fa x v` merely determines an index `b ≤ a` for which `x .fst ≡ ↪ b` and `v .fst ≡ col b`.
 <!--zh-->
-把上一结论用于 `x` 与 `v` 的有序对编码，便可恢复它的两个坐标。因此，图条目 `Holds Fa x v` 仅仅确定某个 `b ≤ a`，使 `fst x ≡ ↪ b` 且 `fst v ≡ col b`。
+把上一结论用于 `x` 与 `v` 的有序对编码，便可恢复它的两个坐标。因此，图条目 `Holds Fa x v` 仅仅确定某个 `b ≤ a`，使 `x .fst ≡ ↪ b` 且 `v .fst ≡ col b`。
 <!--ja-->
-直前の結果を `x` と `v` の順序対符号に適用すると、その二つの座標を復元できる。したがってグラフの項 `Holds Fa x v` からは、`fst x ≡ ↪ b` かつ `fst v ≡ col b` を満たすある `b ≤ a` が単に得られる。
+直前の結果を `x` と `v` の順序対符号に適用すると、その二つの座標を復元できる。したがってグラフの項 `Holds Fa x v` からは、`x .fst ≡ ↪ b` かつ `v .fst ≡ col b` を満たすある `b ≤ a` が単に得られる。
 <!--/-->
 
 ```agda
       Fa-pair : (x v : S) → Holds Fa x v
-              → ∥ Σ[ b ∶ Dom ] (Below b × (↪ b ≡ fst x) × (col b ≡ fst v)) ∥₁
+              → ∥ Σ[ b ∶ Dom ] (Below b × (↪ b ≡ x .fst) × (col b ≡ v .fst)) ∥₁
       Fa-pair x v h = map₁ step
-        (Fa-out (prʟ x v) (subst (λ w → ⟨ w ∈ fst Fa ⟩) (sym (prʟ-fst x v)) h))
+        (Fa-out (prʟ x v) (subst (λ w → ⟨ w ∈ Fa .fst ⟩) (sym (prʟ-fst x v)) h))
         where
 ```
 
@@ -1585,19 +1585,19 @@ The transport re-points the equation at the internal pair, and the helper splits
 <!--/-->
 
 ```agda
-        step : Σ[ b ∶ Dom ] (Below b × (fst (prʟ x v) ≡ pr (↪ b) (col b)))
-             → Σ[ b ∶ Dom ] (Below b × (↪ b ≡ fst x) × (col b ≡ fst v))
-        step (b , (k , e)) = b , (k , sym (fst q) , sym (snd q))
+        step : Σ[ b ∶ Dom ] (Below b × ((prʟ x v) .fst ≡ pr (↪ b) (col b)))
+             → Σ[ b ∶ Dom ] (Below b × (↪ b ≡ x .fst) × (col b ≡ v .fst))
+        step (b , (k , e)) = b , (k , sym (q .fst) , sym (q .snd))
           where
-          q : (fst x ≡ ↪ b) × (fst v ≡ col b)
+          q : (x .fst ≡ ↪ b) × (v .fst ≡ col b)
 ```
 
 <!--en-->
-Applying `pr-inj` to the composite pair equality yields `fst x ≡ ↪ b` and `fst v ≡ col b`. The result expected by `Fa-pair` has the canonical coordinates first, so `step` reverses both component equalities before returning them.
+Applying `pr-inj` to the composite pair equality yields `x .fst ≡ ↪ b` and `v .fst ≡ col b`. The result expected by `Fa-pair` has the canonical coordinates first, so `step` reverses both component equalities before returning them.
 <!--zh-->
-把 `pr-inj` 应用于复合后的有序对等式，便得到 `fst x ≡ ↪ b` 与 `fst v ≡ col b`。`Fa-pair` 所需的结果把典范坐标置于等式左边，因此 `step` 返回前先反转这两条分量等式。
+把 `pr-inj` 应用于复合后的有序对等式，便得到 `x .fst ≡ ↪ b` 与 `v .fst ≡ col b`。`Fa-pair` 所需的结果把典范坐标置于等式左边，因此 `step` 返回前先反转这两条分量等式。
 <!--ja-->
-合成した順序対の等式に `pr-inj` を適用すると、`fst x ≡ ↪ b` と `fst v ≡ col b` が得られる。`Fa-pair` が要求する結果では正準な座標が等式の左辺にあるため、`step` は二つの成分の等式を反転してから返す。
+合成した順序対の等式に `pr-inj` を適用すると、`x .fst ≡ ↪ b` と `v .fst ≡ col b` が得られる。`Fa-pair` が要求する結果では正準な座標が等式の左辺にあるため、`step` は二つの成分の等式を反転してから返す。
 <!--/-->
 
 ```agda
@@ -1631,7 +1631,7 @@ To prove `Correct Fa R`, fix an actual entry `(x,v)` of `Fa`. The paired reader 
       Fa-correct x v hxv = rec₁
         (isProp× (isPropΠ (λ _ → isPropΠ (λ _ → squash₁)))
                  (isPropΠ (λ w → isProp× (isPropΠ (λ _ → squash₁))
-                                          (isPropΠ (λ _ → snd (fst w ∈ fst v))))))
+                                          (isPropΠ (λ _ → (w .fst ∈ v .fst) .snd)))))
 ```
 
 <!--en-->
@@ -1645,17 +1645,17 @@ Suppose the chosen entry is represented by `b ≤ a`, so that `x` presents `b` a
 ```agda
         build (Fa-pair x v hxv)
         where
-        build : Σ[ b ∶ Dom ] (Below b × (↪ b ≡ fst x) × (col b ≡ fst v))
+        build : Σ[ b ∶ Dom ] (Below b × (↪ b ≡ x .fst) × (col b ≡ v .fst))
               → Complete Fa R x × ValueIs Fa R x v
         build (b , (k , ex , ev)) = cmp , (λ w → fwd w , bwd w)
 ```
 
 <!--en-->
-The central conversion takes a coded predecessor `y R x` to a strict comparison in `Dom`. The entry representation identifies `fst x` with the represented member `↪ b`, rather than identifying the carrier element `x` with the external index `b`. After `Rsub` places `y` in `D`, `toDom` recovers the index that can be compared with `b`.
+The central conversion takes a coded predecessor `y R x` to a strict comparison in `Dom`. The entry representation identifies `x .fst` with the represented member `↪ b`, rather than identifying the carrier element `x` with the external index `b`. After `Rsub` places `y` in `D`, `toDom` recovers the index that can be compared with `b`.
 <!--zh-->
-这里的关键转换，是把编码关系中的前驱 `y R x` 化为 `Dom` 中的严格比较。条目的表示把 `fst x` 与被表示元素 `↪ b` 等同，并不把载体元素 `x` 与外围索引 `b` 等同。`Rsub` 先证明 `y` 属于 `D`，随后 `toDom` 才恢复出可与 `b` 比较的索引。
+这里的关键转换，是把编码关系中的前驱 `y R x` 化为 `Dom` 中的严格比较。条目的表示把 `x .fst` 与被表示元素 `↪ b` 等同，并不把载体元素 `x` 与外围索引 `b` 等同。`Rsub` 先证明 `y` 属于 `D`，随后 `toDom` 才恢复出可与 `b` 比较的索引。
 <!--ja-->
-ここで中心となる変換は、符号化された先行者 `y R x` を `Dom` 上の狭義比較へ移すことである。項目の表示が同一視するのは `fst x` と表示された要素 `↪ b` であり、台の要素 `x` と外部の添字 `b` ではない。`Rsub` がまず `y` を `D` に入れ、その後で `toDom` が `b` と比較できる添字を復元する。
+ここで中心となる変換は、符号化された先行者 `y R x` を `Dom` 上の狭義比較へ移すことである。項目の表示が同一視するのは `x .fst` と表示された要素 `↪ b` であり、台の要素 `x` と外部の添字 `b` ではない。`Rsub` がまず `y` を `D` に入れ、その後で `toDom` が `b` と比較できる添字を復元する。
 <!--/-->
 
 ```agda
@@ -1671,8 +1671,8 @@ From `y R x`, the containment hypothesis supplies `y ∈ D`, so `toDom y my` def
 <!--/-->
 
 ```agda
-          pred : (y : S) → Holds R y x → Σ[ c ∶ Dom ] ((c ≺ b) × (↪ c ≡ fst y))
-          pred y hy = c , (≺-in c b (subst2 (λ s t → ⟨ pr s t ∈ fst R ⟩)
+          pred : (y : S) → Holds R y x → Σ[ c ∶ Dom ] ((c ≺ b) × (↪ c ≡ y .fst))
+          pred y hy = c , (≺-in c b (subst2 (λ s t → ⟨ pr s t ∈ R .fst ⟩)
                               (sym (toDom-val y my)) (sym ex) hy) , toDom-val y my)
             where
             my : Mem y
@@ -1693,16 +1693,16 @@ The proof `my` is precisely the first endpoint membership supplied by `Rsub`; it
 ```
 
 <!--en-->
-For a predecessor `y R x`, let `c` be the index just recovered. The witness for completeness is the value `colʟ c`; `Fa-in` supplies the canonical entry at `up c`, and transport along `↪ c ≡ fst y` turns it into the required entry at `y`. Transitivity through `b ≤ a` ensures that `c` lies below `a`.
+For a predecessor `y R x`, let `c` be the index just recovered. The witness for completeness is the value `colʟ c`; `Fa-in` supplies the canonical entry at `up c`, and transport along `↪ c ≡ y .fst` turns it into the required entry at `y`. Transitivity through `b ≤ a` ensures that `c` lies below `a`.
 <!--zh-->
-对前驱 `y R x`，令 `c` 为刚恢复的索引。完备性的取值见证是 `colʟ c`；`Fa-in` 先给出输入为 `up c` 的典范条目，再沿 `↪ c ≡ fst y` 传输为输入在 `y` 处的所需条目。经由 `b ≤ a` 的传递性保证 `c` 严格低于 `a`。
+对前驱 `y R x`，令 `c` 为刚恢复的索引。完备性的取值见证是 `colʟ c`；`Fa-in` 先给出输入为 `up c` 的典范条目，再沿 `↪ c ≡ y .fst` 传输为输入在 `y` 处的所需条目。经由 `b ≤ a` 的传递性保证 `c` 严格低于 `a`。
 <!--ja-->
-先行者 `y R x` に対し、直前に復元した添字を `c` とする。完全性の値の証人は `colʟ c` である。`Fa-in` が入力 `up c` での標準的な項を与え、それを `↪ c ≡ fst y` に沿って輸送すると、入力 `y` で必要な項になる。`b ≤ a` を介する推移性により、`c` は `a` より真に下にある。
+先行者 `y R x` に対し、直前に復元した添字を `c` とする。完全性の値の証人は `colʟ c` である。`Fa-in` が入力 `up c` での標準的な項を与え、それを `↪ c ≡ y .fst` に沿って輸送すると、入力 `y` で必要な項になる。`b ≤ a` を介する推移性により、`c` は `a` より真に下にある。
 <!--/-->
 
 ```agda
           cmp : Complete Fa R x
-          cmp y hy = ∣ colʟ c , subst (λ t → ⟨ pr t (col c) ∈ fst Fa ⟩) ec
+          cmp y hy = ∣ colʟ c , subst (λ t → ⟨ pr t (col c) ∈ Fa .fst ⟩) ec
                                  (Fa-in c (inl (below-trans cb k))) ∣₁
             where
             c = pred y hy .fst
@@ -1722,18 +1722,18 @@ The two projections of `pred y hy` are now named `cb` and `ec`: `cb` is the stri
 ```
 
 <!--en-->
-For the forward half of `ValueIs`, rewrite `w ∈ v` as `fst w ∈ col b`. The outward collapse lemma merely gives `r ≺ b` and `col r ≡ fst w`; these data produce an `R`-edge from `up r` to `x` and a table entry pairing `up r` with `w`.
+For the forward half of `ValueIs`, rewrite `w ∈ v` as `w .fst ∈ col b`. The outward collapse lemma merely gives `r ≺ b` and `col r ≡ w .fst`; these data produce an `R`-edge from `up r` to `x` and a table entry pairing `up r` with `w`.
 <!--zh-->
-为证明 `ValueIs` 的正向一半，先把 `w ∈ v` 改写为 `fst w ∈ col b`。塌缩的向外引理仅仅给出 `r ≺ b` 与 `col r ≡ fst w`；这些数据构造出从 `up r` 到 `x` 的一条 `R` 边，以及在表中把 `up r` 与 `w` 配对的条目。
+为证明 `ValueIs` 的正向一半，先把 `w ∈ v` 改写为 `w .fst ∈ col b`。塌缩的向外引理仅仅给出 `r ≺ b` 与 `col r ≡ w .fst`；这些数据构造出从 `up r` 到 `x` 的一条 `R` 边，以及在表中把 `up r` 与 `w` 配对的条目。
 <!--ja-->
-`ValueIs` の順方向では、`w ∈ v` を `fst w ∈ col b` と書き換える。崩壊の外向き補題から単に得られる `r ≺ b` と `col r ≡ fst w` により、`up r` から `x` への `R`-辺と、`up r` を `w` に対応させる表の項が構成できる。
+`ValueIs` の順方向では、`w ∈ v` を `w .fst ∈ col b` と書き換える。崩壊の外向き補題から単に得られる `r ≺ b` と `col r ≡ w .fst` により、`up r` から `x` への `R`-辺と、`up r` を `w` に対応させる表の項が構成できる。
 <!--/-->
 
 ```agda
-          fwd : (w : S) → ⟨ fst w ∈ fst v ⟩ → Src Fa R x w
-          fwd w w∈ = map₁ read (col-out b (fst w) (subst (λ t → ⟨ fst w ∈ t ⟩) (sym ev) w∈))
+          fwd : (w : S) → ⟨ w .fst ∈ v .fst ⟩ → Src Fa R x w
+          fwd w w∈ = map₁ read (col-out b (w .fst) (subst (λ t → ⟨ w .fst ∈ t ⟩) (sym ev) w∈))
             where
-            read : Σ[ r ∶ Dom ] ((r ≺ b) × (col r ≡ fst w)) → Σ[ y ∶ S ] (Holds R y x × Holds Fa y w)
+            read : Σ[ r ∶ Dom ] ((r ≺ b) × (col r ≡ w .fst)) → Σ[ y ∶ S ] (Holds R y x × Holds Fa y w)
             read (r , (rb , er)) = up r
 ```
 
@@ -1746,22 +1746,22 @@ The two memberships are transported along the equation of the index and the stri
 <!--/-->
 
 ```agda
-              , ( subst (λ t → ⟨ pr (↪ r) t ∈ fst R ⟩) ex (≺-out r b rb)
-                , subst (λ t → ⟨ pr (↪ r) t ∈ fst Fa ⟩) er (Fa-in r (inl (below-trans rb k))) )
+              , ( subst (λ t → ⟨ pr (↪ r) t ∈ R .fst ⟩) ex (≺-out r b rb)
+                , subst (λ t → ⟨ pr (↪ r) t ∈ Fa .fst ⟩) er (Fa-in r (inl (below-trans rb k))) )
 ```
 
 <!--en-->
-For the reverse half, a witness of `Src Fa R x w` merely supplies some `y` with `y R x` and a table entry from `y` to `w`. The target `fst w ∈ fst v` is a proposition, so the truncated source witness and then the truncated table reading may both be eliminated into it.
+For the reverse half, a witness of `Src Fa R x w` merely supplies some `y` with `y R x` and a table entry from `y` to `w`. The target `w .fst ∈ v .fst` is a proposition, so the truncated source witness and then the truncated table reading may both be eliminated into it.
 <!--zh-->
-在反向一半中，`Src Fa R x w` 的见证仅仅给出某个 `y`，满足 `y R x`，并且表中有从 `y` 到 `w` 的条目。目标 `fst w ∈ fst v` 是命题，因此可以向它依次消去来源见证与表读取结果中的命题截断。
+在反向一半中，`Src Fa R x w` 的见证仅仅给出某个 `y`，满足 `y R x`，并且表中有从 `y` 到 `w` 的条目。目标 `w .fst ∈ v .fst` 是命题，因此可以向它依次消去来源见证与表读取结果中的命题截断。
 <!--ja-->
-逆方向では、`Src Fa R x w` の証人から、`y R x` を満たし、表で `y` から `w` への項をもつような `y` が単に得られる。目標 `fst w ∈ fst v` は命題なので、出所の証人と表の読み出しに含まれる命題的切り詰めを順にそこへ除去できる。
+逆方向では、`Src Fa R x w` の証人から、`y R x` を満たし、表で `y` から `w` への項をもつような `y` が単に得られる。目標 `w .fst ∈ v .fst` は命題なので、出所の証人と表の読み出しに含まれる命題的切り詰めを順にそこへ除去できる。
 <!--/-->
 
 ```agda
-          bwd : (w : S) → Src Fa R x w → ⟨ fst w ∈ fst v ⟩
-          bwd w = rec₁ (snd (fst w ∈ fst v)) (λ { (y , (hy , fy)) →
-            rec₁ (snd (fst w ∈ fst v)) (read y hy) (Fa-pair y w fy) })
+          bwd : (w : S) → Src Fa R x w → ⟨ w .fst ∈ v .fst ⟩
+          bwd w = rec₁ ((w .fst ∈ v .fst) .snd) (λ { (y , (hy , fy)) →
+            rec₁ ((w .fst ∈ v .fst) .snd) (read y hy) (Fa-pair y w fy) })
             where
             read : (y : S) → Holds R y x
 ```
@@ -1775,8 +1775,8 @@ Reading the table entry gives an index `c`, an equation identifying `y` with `�
 <!--/-->
 
 ```agda
-                 → Σ[ c ∶ Dom ] (Below c × (↪ c ≡ fst y) × (col c ≡ fst w))
-                 → ⟨ fst w ∈ fst v ⟩
+                 → Σ[ c ∶ Dom ] (Below c × (↪ c ≡ y .fst) × (col c ≡ w .fst))
+                 → ⟨ w .fst ∈ v .fst ⟩
             read y hy (c , (_ , ey , ew)) =
               subst2 (λ s t → ⟨ s ∈ t ⟩) ew ev (col-in b c cb)
               where
@@ -1792,7 +1792,7 @@ The strict comparison between `c` and `b` is filled from the two naming equation
 
 ```agda
               cb : c ≺ b
-              cb = ≺-in c b (subst2 (λ s t → ⟨ pr s t ∈ fst R ⟩) (sym ey) (sym ex) hy)
+              cb = ≺-in c b (subst2 (λ s t → ⟨ pr s t ∈ R .fst ⟩) (sym ey) (sym ex) hy)
 ```
 
 <!--en-->
@@ -1861,8 +1861,8 @@ The `funct` field must make the fiber of values satisfying `CF.colFo` at each `q
 
 ```agda
         ; funct = λ q mq → (colʟ (toDom q mq) , approx-at q mq)
-            , λ { (v , hv) → Σ≡Prop (λ w → snd ((w ∷ q ∷ []) ⊨ CF.colFo))
-                (sym (Σ≡Prop (λ w → snd (isL w)) (colFo-val q mq v hv))) } }
+            , λ { (v , hv) → Σ≡Prop (λ w → ((w ∷ q ∷ []) ⊨ CF.colFo) .snd)
+                (sym (Σ≡Prop (λ w → (isL w) .snd) (colFo-val q mq v hv))) } }
 ```
 
 <!--en-->
@@ -1891,28 +1891,28 @@ The generic replacement construction `Of` now turns this functional recursion in
 ```
 
 <!--en-->
-For each `b : Dom`, the approximation proves that `colʟ b` is a value of `otR` at `up b`. The introduction half of replacement therefore gives `col b ∈ fst otL`.
+For each `b : Dom`, the approximation proves that `colʟ b` is a value of `otR` at `up b`. The introduction half of replacement therefore gives `col b ∈ otL .fst`.
 <!--zh-->
-对每个 `b : Dom`，逼近引理证明 `colʟ b` 是 `otR` 在 `up b` 处的取值。因此，替换的引入方向给出 `col b ∈ fst otL`。
+对每个 `b : Dom`，逼近引理证明 `colʟ b` 是 `otR` 在 `up b` 处的取值。因此，替换的引入方向给出 `col b ∈ otL .fst`。
 <!--ja-->
-各 `b : Dom` について、近似補題は `colʟ b` が `up b` における `otR` の値であることを示す。したがって置換の導入方向から `col b ∈ fst otL` が得られる。
+各 `b : Dom` について、近似補題は `colʟ b` が `up b` における `otR` の値であることを示す。したがって置換の導入方向から `col b ∈ otL .fst` が得られる。
 <!--/-->
 
 ```agda
-    otL-in : (b : Dom) → ⟨ col b ∈ fst otL ⟩
+    otL-in : (b : Dom) → ⟨ col b ∈ otL .fst ⟩
     otL-in b = OT.table-in (up b) (colʟ b) (up-mem b) (approx b)
 ```
 
 <!--en-->
-Conversely, every `y ∈ fst otL` merely has an index `b : Dom` with `col b ≡ y`. The result deliberately retains propositional truncation, so it describes the exact range without choosing a preimage for every member.
+Conversely, every `y ∈ otL .fst` merely has an index `b : Dom` with `col b ≡ y`. The result deliberately retains propositional truncation, so it describes the exact range without choosing a preimage for every member.
 <!--zh-->
-反过来，每个 `y ∈ fst otL` 仅仅具有某个索引 `b : Dom`，满足 `col b ≡ y`。结论特意保留命题截断，因此它刻画了精确值域，却没有为每个元素选定一个原像。
+反过来，每个 `y ∈ otL .fst` 仅仅具有某个索引 `b : Dom`，满足 `col b ≡ y`。结论特意保留命题截断，因此它刻画了精确值域，却没有为每个元素选定一个原像。
 <!--ja-->
-逆に、各 `y ∈ fst otL` について、`col b ≡ y` を満たす添字 `b : Dom` が単に存在する。結論には意図的に命題的切り詰めが残されているため、各要素の原像を選ぶことなく正確な値域を記述している。
+逆に、各 `y ∈ otL .fst` について、`col b ≡ y` を満たす添字 `b : Dom` が単に存在する。結論には意図的に命題的切り詰めが残されているため、各要素の原像を選ぶことなく正確な値域を記述している。
 <!--/-->
 
 ```agda
-    otL-out : (y : V ℓ) → ⟨ y ∈ fst otL ⟩ → ∥ Σ[ b ∶ Dom ] (col b ≡ y) ∥₁
+    otL-out : (y : V ℓ) → ⟨ y ∈ otL .fst ⟩ → ∥ Σ[ b ∶ Dom ] (col b ≡ y) ∥₁
     otL-out y hy = map₁ (λ { (q , (mq , h)) → toDom q mq , sym (colFo-val q mq yS h) })
       (OT.table-out yS hy)
       where
@@ -1920,15 +1920,15 @@ Conversely, every `y ∈ fst otL` merely has an index `b : Dom` with `col b ≡ 
 ```
 
 <!--en-->
-To apply the replacement reader, the ambient set `y` must be regarded as an element of the constructible carrier. Downward closure of constructibility supplies this packaging from `y ∈ fst otL` and the fact that `otL` is constructible.
+To apply the replacement reader, the ambient set `y` must be regarded as an element of the constructible carrier. Downward closure of constructibility supplies this packaging from `y ∈ otL .fst` and the fact that `otL` is constructible.
 <!--zh-->
-为了应用替换的读取引理，需要把外围集合 `y` 看作可构造论域中的元素。由 `y ∈ fst otL` 以及 `otL` 的可构造性，可构造性的向下封闭正好给出这一打包。
+为了应用替换的读取引理，需要把外围集合 `y` 看作可构造论域中的元素。由 `y ∈ otL .fst` 以及 `otL` 的可构造性，可构造性的向下封闭正好给出这一打包。
 <!--ja-->
-置換の読み出しを適用するには、周囲の集合 `y` を構成可能な領域の要素として扱う必要がある。`y ∈ fst otL` と `otL` の構成可能性から、構成可能性の下方閉性がこの組を与える。
+置換の読み出しを適用するには、周囲の集合 `y` を構成可能な領域の要素として扱う必要がある。`y ∈ otL .fst` と `otL` の構成可能性から、構成可能性の下方閉性がこの組を与える。
 <!--/-->
 
 ```agda
-      yS = y , isL-trans {x = fst otL} {y = y} hy (snd otL)
+      yS = y , isL-trans {x = otL .fst} {y = y} hy (otL .snd)
 ```
 
 <!--en-->
@@ -1965,24 +1965,24 @@ At the canonical representative `up b`, the recursion graph initially records th
 <!--/-->
 
 ```agda
-    colTable-in : (b : Dom) → ⟨ pr (↪ b) (col b) ∈ fst colTable ⟩
-    colTable-in b = subst (λ t → ⟨ pr (↪ b) t ∈ fst colTable ⟩)
+    colTable-in : (b : Dom) → ⟨ pr (↪ b) (col b) ∈ colTable .fst ⟩
+    colTable-in b = subst (λ t → ⟨ pr (↪ b) t ∈ colTable .fst ⟩)
       (cong col (Dom≡ (toDom-val (up b) (up-mem b)))) (CT.F-in (up b) (up-mem b))
 ```
 
 <!--en-->
 Conversely, `colTable-out` says that any member `y` of the graph is merely equal in its underlying set to `pr(↪ b,col b)` for some `b : Dom`. The index remains under propositional truncation, so this outward reading characterizes the graph without selecting a representing index for each member.
 <!--zh-->
-反过来，`colTable-out` 说明：对函数图的任意元素 `y`，仅仅存在某个 `b : Dom`，使 `fst y ≡ pr(↪ b,col b)`。该索引仍处于命题截断之下，因此这项向外读法只刻画函数图，并未为每个元素选定一个表示索引。
+反过来，`colTable-out` 说明：对函数图的任意元素 `y`，仅仅存在某个 `b : Dom`，使 `y .fst ≡ pr(↪ b,col b)`。该索引仍处于命题截断之下，因此这项向外读法只刻画函数图，并未为每个元素选定一个表示索引。
 <!--ja-->
-逆に `colTable-out` は、グラフの任意の要素 `y` について、ある `b : Dom` に対する `fst y ≡ pr(↪ b,col b)` が単に成り立つと述べる。その添字は命題的切り詰めの中にあるため、この外向きの読みはグラフを特徴づけるが、各要素を表示する添字を選ばない。
+逆に `colTable-out` は、グラフの任意の要素 `y` について、ある `b : Dom` に対する `y .fst ≡ pr(↪ b,col b)` が単に成り立つと述べる。その添字は命題的切り詰めの中にあるため、この外向きの読みはグラフを特徴づけるが、各要素を表示する添字を選ばない。
 <!--/-->
 
 ```agda
     colTable-out : (y : S) → ⟨ y ∈ˢ colTable ⟩
-                 → ∥ Σ[ b ∶ Dom ] (fst y ≡ pr (↪ b) (col b)) ∥₁
+                 → ∥ Σ[ b ∶ Dom ] (y .fst ≡ pr (↪ b) (col b)) ∥₁
     colTable-out y hy = map₁ (λ { (q , mq , e) → toDom q mq
-      , e ∙ cong (λ t → pr t (col (toDom q mq))) (sym (toDom-val q mq)) }) (CT.F-out (fst y) hy)
+      , e ∙ cong (λ t → pr t (col (toDom q mq))) (sym (toDom-val q mq)) }) (CT.F-out (y .fst) hy)
 ```
 
 <!--en-->
@@ -1995,20 +1995,20 @@ The fiber predicate says that a member `v` paired with `x` is the collapse value
 
 ```agda
     Fib : S → S → Type (ℓ-suc ℓ)
-    Fib x v = Σ[ mx ∶ Mem x ] (fst v ≡ col (toDom x mx))
+    Fib x v = Σ[ mx ∶ Mem x ] (v .fst ≡ col (toDom x mx))
 ```
 
 <!--en-->
-For fixed `x` and `v`, `Fib x v` is a proposition. Membership `mx : Mem x` is proposition-valued, and for each such `mx` the equality `fst v ≡ col (toDom x mx)` is a proposition because `V` is a set. Thus the dependent sum carries no additional choice data.
+For fixed `x` and `v`, `Fib x v` is a proposition. Membership `mx : Mem x` is proposition-valued, and for each such `mx` the equality `v .fst ≡ col (toDom x mx)` is a proposition because `V` is a set. Thus the dependent sum carries no additional choice data.
 <!--zh-->
-固定 `x` 与 `v` 后，`Fib x v` 是命题。成员关系 `mx : Mem x` 取值于命题；对每个这样的 `mx`，由于 `V` 是集合，等式 `fst v ≡ col (toDom x mx)` 也是命题。因此，这个依值和不携带额外的选择数据。
+固定 `x` 与 `v` 后，`Fib x v` 是命题。成员关系 `mx : Mem x` 取值于命题；对每个这样的 `mx`，由于 `V` 是集合，等式 `v .fst ≡ col (toDom x mx)` 也是命题。因此，这个依值和不携带额外的选择数据。
 <!--ja-->
-`x` と `v` を固定すると、`Fib x v` は命題である。所属 `mx : Mem x` は命題値であり、各 `mx` に対する等式 `fst v ≡ col (toDom x mx)` も、`V` が集合であるため命題である。したがって、この依存和は追加の選択データをもたない。
+`x` と `v` を固定すると、`Fib x v` は命題である。所属 `mx : Mem x` は命題値であり、各 `mx` に対する等式 `v .fst ≡ col (toDom x mx)` も、`V` が集合であるため命題である。したがって、この依存和は追加の選択データをもたない。
 <!--/-->
 
 ```agda
     isPropFib : (x v : S) → isProp (Fib x v)
-    isPropFib x v = isPropΣ (isPropMem x) (λ mx → setIsSet (fst v) (col (toDom x mx)))
+    isPropFib x v = isPropΣ (isPropMem x) (λ mx → setIsSet (v .fst) (col (toDom x mx)))
 ```
 
 <!--en-->
@@ -2050,7 +2050,7 @@ To study when the collapse graph codes an injection, fix `D`, `R`, and the endpo
 ```agda
 module Code (D R : S)
             (Rsub : (y x : S) → Holds R y x
-                  → ⟨ fst y ∈ fst D ⟩ × ⟨ fst x ∈ fst D ⟩) where
+                  → ⟨ y .fst ∈ D .fst ⟩ × ⟨ x .fst ∈ D .fst ⟩) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -2110,11 +2110,11 @@ In the two-slot environment `γ`, slot zero contains `colTable` and slot one con
 ```
 
 <!--en-->
-The first condition is single-valuedness: if `colTable` contains pairs with the same input and values `y` and `y'`, then `fst y ≡ fst y'`. It follows from uniqueness of the recursion value and does not assert that every input has a value.
+The first condition is single-valuedness: if `colTable` contains pairs with the same input and values `y` and `y'`, then `y .fst ≡ y' .fst`. It follows from uniqueness of the recursion value and does not assert that every input has a value.
 <!--zh-->
-第一项条件是单值性：若 `colTable` 含有输入相同、取值分别为 `y` 与 `y'` 的两个有序对，则 `fst y ≡ fst y'`。这来自递归取值的唯一性，本身并不断言每个输入都有取值。
+第一项条件是单值性：若 `colTable` 含有输入相同、取值分别为 `y` 与 `y'` 的两个有序对，则 `y .fst ≡ y' .fst`。这来自递归取值的唯一性，本身并不断言每个输入都有取值。
 <!--ja-->
-第一の条件は一価性である。`colTable` が同じ入力に対して値 `y` と `y'` をもつ二つの順序対を含むなら、`fst y ≡ fst y'` が成り立つ。これは再帰値の一意性から従うものであり、各入力が値をもつこと自体は主張しない。
+第一の条件は一価性である。`colTable` が同じ入力に対して値 `y` と `y'` をもつ二つの順序対を含むなら、`y .fst ≡ y' .fst` が成り立つ。これは再帰値の一意性から従うものであり、各入力が値をもつこと自体は主張しない。
 <!--/-->
 
 ```agda
@@ -2136,17 +2136,17 @@ The domain condition is an equivalence: an input has some value in `colTable` ex
 ```
 
 <!--en-->
-The range condition follows from the paired graph reading: an entry from `x` to `y` gives a domain witness for `x` and identifies `fst y` with the corresponding collapse value, which `otL-in` places in `otL`. This establishes only that graph values lie in `otL`; injectivity of `colTable` still requires the trichotomy hypothesis introduced next.
+The range condition follows from the paired graph reading: an entry from `x` to `y` gives a domain witness for `x` and identifies `y .fst` with the corresponding collapse value, which `otL-in` places in `otL`. This establishes only that graph values lie in `otL`; injectivity of `colTable` still requires the trichotomy hypothesis introduced next.
 <!--zh-->
-值域条件来自函数图的配对读取：从 `x` 到 `y` 的条目给出 `x` 属于定义域的见证，并把 `fst y` 等同于相应的塌缩值，而 `otL-in` 证明该塌缩值属于 `otL`。这里仅证明函数图的取值都落在 `otL` 中；`colTable` 的单射性仍需下一步引入的三歧性假设。
+值域条件来自函数图的配对读取：从 `x` 到 `y` 的条目给出 `x` 属于定义域的见证，并把 `y .fst` 等同于相应的塌缩值，而 `otL-in` 证明该塌缩值属于 `otL`。这里仅证明函数图的取值都落在 `otL` 中；`colTable` 的单射性仍需下一步引入的三歧性假设。
 <!--ja-->
-値域条件はグラフの対の読み出しから従う。`x` から `y` への項は、`x` が定義域に属する証拠を与え、`fst y` を対応する崩壊値と同一視する。その崩壊値は `otL-in` によって `otL` に属する。ここで示したのはグラフの値が `otL` に入ることだけであり、`colTable` の単射性には次に導入する三分法の仮定がなお必要である。
+値域条件はグラフの対の読み出しから従う。`x` から `y` への項は、`x` が定義域に属する証拠を与え、`y .fst` を対応する崩壊値と同一視する。その崩壊値は `otL-in` によって `otL` に属する。ここで示したのはグラフの値が `otL` に入ることだけであり、`colTable` の単射性には次に導入する三分法の仮定がなお必要である。
 <!--/-->
 
 ```agda
-    ran : (x y : S) → Holds colTable x y → ⟨ fst y ∈ fst otL ⟩
-    ran x y h = subst (λ t → ⟨ t ∈ fst otL ⟩) (sym (snd (colTable-pair x y h)))
-      (otL-in (toDom x (fst (colTable-pair x y h))))
+    ran : (x y : S) → Holds colTable x y → ⟨ y .fst ∈ otL .fst ⟩
+    ran x y h = subst (λ t → ⟨ t ∈ otL .fst ⟩) (sym ((colTable-pair x y h) .snd))
+      (otL-in (toDom x ((colTable-pair x y h) .fst)))
 ```
 
 <!--en-->
@@ -2235,17 +2235,17 @@ The four fields now have distinct sources. The recursion graph supplies single-v
 ```
 
 <!--en-->
-The converse construction is intentionally local to chosen source and target sets `X` and `Y`. For every `x ∈ X`, `pre` must choose an index `b : Dom` with `col b ≡ fst x`; this is a collapse preimage, and it need not be a predecessor of any fixed point of the relation. The second argument `bound` proves that the represented original input `↪ b` lies in `Y`. These data are extra obligations at each use of the inverse interface, rather than consequences of `otL-out` alone.
+The converse construction is intentionally local to chosen source and target sets `X` and `Y`. For every `x ∈ X`, `pre` must choose an index `b : Dom` with `col b ≡ x .fst`; this is a collapse preimage, and it need not be a predecessor of any fixed point of the relation. The second argument `bound` proves that the represented original input `↪ b` lies in `Y`. These data are extra obligations at each use of the inverse interface, rather than consequences of `otL-out` alone.
 <!--zh-->
-反向构造只针对选定的源集 `X` 与目标集 `Y`。对每个 `x ∈ X`，`pre` 必须选出索引 `b : Dom` 并满足 `col b ≡ fst x`；它是塌缩原像，不一定是这条关系中某个固定点的前驱。第二项参数 `bound` 证明所表示的原输入 `↪ b` 属于 `Y`。每次使用逆向接口时都必须另行提供这些数据，它们不能仅由 `otL-out` 自动得到。
+反向构造只针对选定的源集 `X` 与目标集 `Y`。对每个 `x ∈ X`，`pre` 必须选出索引 `b : Dom` 并满足 `col b ≡ x .fst`；它是塌缩原像，不一定是这条关系中某个固定点的前驱。第二项参数 `bound` 证明所表示的原输入 `↪ b` 属于 `Y`。每次使用逆向接口时都必须另行提供这些数据，它们不能仅由 `otL-out` 自动得到。
 <!--ja-->
-逆向きの構成は、選んだ始域 `X` と終域 `Y` に限って行う。各 `x ∈ X` に対し、`pre` は `col b ≡ fst x` を満たす添字 `b : Dom` を選ばなければならない。これは崩壊の原像であり、関係のある固定した点の先行者であるとは限らない。第二の引数 `bound` は、表示された元の入力 `↪ b` が `Y` に属することを証明する。逆向きのインターフェースを使うたびにこれらのデータを別途与える必要があり、`otL-out` だけから自動的に得られるものではない。
+逆向きの構成は、選んだ始域 `X` と終域 `Y` に限って行う。各 `x ∈ X` に対し、`pre` は `col b ≡ x .fst` を満たす添字 `b : Dom` を選ばなければならない。これは崩壊の原像であり、関係のある固定した点の先行者であるとは限らない。第二の引数 `bound` は、表示された元の入力 `↪ b` が `Y` に属することを証明する。逆向きのインターフェースを使うたびにこれらのデータを別途与える必要があり、`otL-out` だけから自動的に得られるものではない。
 <!--/-->
 
 ```agda
       module Inverse (X Y : S)
-        (pre : (x : S) → ⟨ fst x ∈ fst X ⟩ → Σ[ b ∶ Dom ] (col b ≡ fst x))
-        (bound : (x : S) (mx : ⟨ fst x ∈ fst X ⟩) → ⟨ ↪ (pre x mx .fst) ∈ fst Y ⟩) where
+        (pre : (x : S) → ⟨ x .fst ∈ X .fst ⟩ → Σ[ b ∶ Dom ] (col b ≡ x .fst))
+        (bound : (x : S) (mx : ⟨ x .fst ∈ X .fst ⟩) → ⟨ ↪ (pre x mx .fst) ∈ Y .fst ⟩) where
 ```
 
 <!--en-->
@@ -2258,7 +2258,7 @@ Membership in the source set is recorded as a type, so that the argument can car
 
 ```agda
         SourceMem : S → Type (ℓ-suc ℓ)
-        SourceMem x = ⟨ fst x ∈ fst X ⟩
+        SourceMem x = ⟨ x .fst ∈ X .fst ⟩
 ```
 
 <!--en-->
@@ -2330,11 +2330,11 @@ The first projection of `f` is the membership proof `my : Mem y`. It is the evid
 ```
 
 <!--en-->
-These ingredients form a `DefinableMap` from `X` to `Y`. Its external function is `fn`, and `bound` supplies the codomain field. For the defining clause, start with `colTable-in b` for the selected preimage `b`; substitute `col b ≡ fst x` in the output coordinate, then use `at` in the reverse direction to turn the resulting table membership into satisfaction of the converse graph formula.
+These ingredients form a `DefinableMap` from `X` to `Y`. Its external function is `fn`, and `bound` supplies the codomain field. For the defining clause, start with `colTable-in b` for the selected preimage `b`; substitute `col b ≡ x .fst` in the output coordinate, then use `at` in the reverse direction to turn the resulting table membership into satisfaction of the converse graph formula.
 <!--zh-->
-这些材料组成一项从 `X` 到 `Y` 的 `DefinableMap`。其外围函数是 `fn`，而 `bound` 提供陪域字段。为证明定义子句，先对所选原像 `b` 使用 `colTable-in b`；再沿 `col b ≡ fst x` 替换输出坐标，最后反向使用 `at`，把所得表成员关系变成反向图公式的满足证明。
+这些材料组成一项从 `X` 到 `Y` 的 `DefinableMap`。其外围函数是 `fn`，而 `bound` 提供陪域字段。为证明定义子句，先对所选原像 `b` 使用 `colTable-in b`；再沿 `col b ≡ x .fst` 替换输出坐标，最后反向使用 `at`，把所得表成员关系变成反向图公式的满足证明。
 <!--ja-->
-これらの材料から、`X` から `Y` への `DefinableMap` を作る。その外部関数は `fn` であり、`bound` が終域のフィールドを与える。定義の条項では、選んだ原像 `b` に対する `colTable-in b` から始める。出力の座標を `col b ≡ fst x` に沿って置き換え、最後に `at` を逆向きに使って、得られた表への所属を逆向きのグラフ論理式の充足へ変える。
+これらの材料から、`X` から `Y` への `DefinableMap` を作る。その外部関数は `fn` であり、`bound` が終域のフィールドを与える。定義の条項では、選んだ原像 `b` に対する `colTable-in b` から始める。出力の座標を `col b ≡ x .fst` に沿って置き換え、最後に `at` を逆向きに使って、得られた表への所属を逆向きのグラフ論理式の充足へ変える。
 <!--/-->
 
 ```agda
@@ -2342,15 +2342,15 @@ These ingredients form a `DefinableMap` from `X` to `Y`. Its external function i
         M = record
           { dom = X ; cod = Y ; fn = fn ; into = bound ; graph = graph
           ; defines = λ x mx → transport (sym (at (fn x mx) x))
-              (subst (λ w → ⟨ pr (↪ (pre x mx .fst)) w ∈ fst colTable ⟩)
+              (subst (λ w → ⟨ pr (↪ (pre x mx .fst)) w ∈ colTable .fst ⟩)
 ```
 
 <!--en-->
-The `defines` field starts from the canonical entry `colTable-in b` and transports its output coordinate along the preimage equation `col b ≡ fst x`. The adequacy equality `at` then turns that table membership into satisfaction of the converse graph formula, while `only` supplies the required uniqueness of the value.
+The `defines` field starts from the canonical entry `colTable-in b` and transports its output coordinate along the preimage equation `col b ≡ x .fst`. The adequacy equality `at` then turns that table membership into satisfaction of the converse graph formula, while `only` supplies the required uniqueness of the value.
 <!--zh-->
-字段 `defines` 从典范条目 `colTable-in b` 出发，沿原像等式 `col b ≡ fst x` 运输其输出坐标。充分性等式 `at` 随后把这条表成员关系变成反向图公式的满足，而 `only` 则给出所需的取值唯一性。
+字段 `defines` 从典范条目 `colTable-in b` 出发，沿原像等式 `col b ≡ x .fst` 运输其输出坐标。充分性等式 `at` 随后把这条表成员关系变成反向图公式的满足，而 `only` 则给出所需的取值唯一性。
 <!--ja-->
-フィールド `defines` は正準な項目 `colTable-in b` から始め、その出力座標を原像の等式 `col b ≡ fst x` に沿って輸送する。妥当性の等式 `at` がその表への所属を逆向きのグラフ論理式の充足へ変え、`only` が必要な値の一意性を与える。
+フィールド `defines` は正準な項目 `colTable-in b` から始め、その出力座標を原像の等式 `col b ≡ x .fst` に沿って輸送する。妥当性の等式 `at` がその表への所属を逆向きのグラフ論理式の充足へ変え、`only` が必要な値の一意性を与える。
 <!--/-->
 
 ```agda
@@ -2360,16 +2360,16 @@ The `defines` field starts from the canonical entry `colTable-in b` and transpor
 ```
 
 <!--en-->
-The inverse function is injective for a direct reason. If `fn x mx` and `fn x' mx'` have equal underlying sets, then these sets are `↪ b` and `↪ b'` for the indices selected by `pre`; presentation injectivity `Dom≡` gives `b ≡ b'`. Applying `col` and composing with the two equations stored by `pre` yields `fst x ≡ fst x'`. This proof uses injectivity of the small presentation at `Dom≡`; `col-inj` was used earlier to prove uniqueness of the converse formula, not in this equality chain.
+The inverse function is injective for a direct reason. If `fn x mx` and `fn x' mx'` have equal underlying sets, then these sets are `↪ b` and `↪ b'` for the indices selected by `pre`; presentation injectivity `Dom≡` gives `b ≡ b'`. Applying `col` and composing with the two equations stored by `pre` yields `x .fst ≡ x' .fst`. This proof uses injectivity of the small presentation at `Dom≡`; `col-inj` was used earlier to prove uniqueness of the converse formula, not in this equality chain.
 <!--zh-->
-逆函数的单射性有一项直接理由。若 `fn x mx` 与 `fn x' mx'` 的底层集合相等，那么这两个集合分别是 `pre` 所选索引 `b` 与 `b'` 的 `↪ b` 和 `↪ b'`；表示的单射性 `Dom≡` 因而给出 `b ≡ b'`。对该等式应用 `col`，再与 `pre` 保存的两条等式复合，便得到 `fst x ≡ fst x'`。这段证明在 `Dom≡` 处使用小表示的单射性；`col-inj` 已在前文用于证明反向公式的取值唯一性，并未出现在这条等式链中。
+逆函数的单射性有一项直接理由。若 `fn x mx` 与 `fn x' mx'` 的底层集合相等，那么这两个集合分别是 `pre` 所选索引 `b` 与 `b'` 的 `↪ b` 和 `↪ b'`；表示的单射性 `Dom≡` 因而给出 `b ≡ b'`。对该等式应用 `col`，再与 `pre` 保存的两条等式复合，便得到 `x .fst ≡ x' .fst`。这段证明在 `Dom≡` 处使用小表示的单射性；`col-inj` 已在前文用于证明反向公式的取值唯一性，并未出现在这条等式链中。
 <!--ja-->
-逆関数の単射性には直接の理由がある。`fn x mx` と `fn x' mx'` の基礎集合が等しいなら、それらは `pre` が選んだ添字 `b` と `b'` に対する `↪ b` と `↪ b'` である。表示の単射性 `Dom≡` によって `b ≡ b'` が得られる。この等式に `col` を作用させ、`pre` が保持する二つの等式と合成すれば、`fst x ≡ fst x'` が従う。この証明が `Dom≡` で使うのは小さな表示の単射性である。`col-inj` は先に逆向きの論理式の値の一意性を示すために使われたが、この等式の列には現れない。
+逆関数の単射性には直接の理由がある。`fn x mx` と `fn x' mx'` の基礎集合が等しいなら、それらは `pre` が選んだ添字 `b` と `b'` に対する `↪ b` と `↪ b'` である。表示の単射性 `Dom≡` によって `b ≡ b'` が得られる。この等式に `col` を作用させ、`pre` が保持する二つの等式と合成すれば、`x .fst ≡ x' .fst` が従う。この証明が `Dom≡` で使うのは小さな表示の単射性である。`col-inj` は先に逆向きの論理式の値の一意性を示すために使われたが、この等式の列には現れない。
 <!--/-->
 
 ```agda
         inj : (x : S) (mx : SourceMem x) (x' : S) (mx' : SourceMem x')
-            → fst (fn x mx) ≡ fst (fn x' mx') → fst x ≡ fst x'
+            → (fn x mx) .fst ≡ (fn x' mx') .fst → x .fst ≡ x' .fst
         inj x mx x' mx' e = sym (pre x mx .snd) ∙ cong col (Dom≡ e) ∙ pre x' mx' .snd
 ```
 

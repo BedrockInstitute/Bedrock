@@ -263,8 +263,8 @@ The proof of the pair statement has one wrinkle: `inSome` delivers its stage wit
 <!--/-->
 
 ```agda
-pr∈limit x y hx hy = rec₁ (snd (pr x y ∈ˢ Lset ω))
-  (λ atX → rec₁ (snd (pr x y ∈ˢ Lset ω)) (both atX) (inSome y hy))
+pr∈limit x y hx hy = rec₁ ((pr x y ∈ˢ Lset ω) .snd)
+  (λ atX → rec₁ ((pr x y ∈ˢ Lset ω) .snd) (both atX) (inSome y hy))
   (inSome x hx)
   where
   both : AtStage x → AtStage y → ⟨ pr x y ∈ˢ Lset ω ⟩
@@ -691,7 +691,7 @@ Membership in a `sett` only *merely* supplies its index, so the forward directio
 
 ```agda
     fwd : ⟨ ⟪ A ⟫↪ m ∈ˢ denote a ⟩ → ⟨ environment a m ⊨ᵐ embed (formula a) ⟩
-    fwd = rec₁ (snd (environment a m ⊨ᵐ embed (formula a)))
+    fwd = rec₁ ((environment a m ⊨ᵐ embed (formula a)) .snd)
       (λ { ((m' , h) , q) →
         invEq (decode .snd) (subst (λ v → ⟨ satAt a v ⟩) (⟪⟫↪-inj q) h) })
     bwd : ⟨ environment a m ⊨ᵐ embed (formula a) ⟩ → ⟨ ⟪ A ⟫↪ m ∈ˢ denote a ⟩
@@ -1371,7 +1371,7 @@ Why the formulas agree: transporting `formula a` along `e` does not change its c
         sameFormula =
           code-inj (subst (λ k → Formula (⊥* {ℓ}) (suc k)) e (formula a))
             (formula b)
-            (code-shift e (formula a) ∙ cong fst ec)
+            (code-shift e (formula a) ∙ cong (λ p → p .fst) ec)
 
         byParams : Tri (shifted ≺ᵥ params b) (shifted ≡ params b)
 ```

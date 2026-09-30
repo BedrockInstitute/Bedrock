@@ -240,7 +240,7 @@ module Trans (zf : isZFModel) (a : S)
 
 ```agda
   open ModelL.isZFModel zf using ( separate; separate-spec; _∩_; ∩-spec )
-  private module B = Bound (fst a) (snd a)
+  private module B = Bound (a .fst) (a .snd)
 
   β : V ℓ
   β = B.boundOrd
@@ -255,10 +255,10 @@ module Trans (zf : isZFModel) (a : S)
   rel = B.orderL
 
   elt : Mem (Lset β) → S
-  elt m = fst m , Lset→isL β oβ (fst m) (snd m)
+  elt m = m .fst , Lset→isL β oβ (m .fst) (m .snd)
 
   Cell : S → Mem (Lset β) → hProp (ℓ-suc ℓ)
-  Cell x m = fst m ∈ fst x
+  Cell x m = m .fst ∈ x .fst
 
   CellFormula : S → Formula S 1
   CellFormula x = var zero ∈̇ con x
@@ -269,7 +269,7 @@ module Trans (zf : isZFModel) (a : S)
     (λ m → elt m ∷ []) (λ m → refl)
 
   Least : S → S → Type (ℓ-suc ℓ)
-  Least x z = Σ[ h ∶ ⟨ fst z ∈ Lset β ⟩ ] IsLeast W (Cell x) (fst z , h)
+  Least x z = Σ[ h ∶ ⟨ z .fst ∈ Lset β ⟩ ] IsLeast W (Cell x) (z .fst , h)
 
   private
     members : (x : S) → ⟨ x ∈ˢ a ⟩ → ∥ Σ[ m ∶ Mem (Lset β) ] ⟨ Cell x m ⟩ ∥₁
@@ -277,7 +277,7 @@ module Trans (zf : isZFModel) (a : S)
       where
       atMember : Σ[ y ∶ S ] ⟨ y ∈ˢ x ⟩ → Σ[ m ∶ Mem (Lset β) ] ⟨ Cell x m ⟩
       atMember (y , y∈x) =
-        (fst y , bound-below₂ (fst a) (snd a) (fst x) (fst y) y∈x x∈a) , y∈x
+        (y .fst , bound-below₂ (a .fst) (a .snd) (x .fst) (y .fst) y∈x x∈a) , y∈x
 
     least : (x : S) → ⟨ x ∈ˢ a ⟩ → Σ[ m ∶ Mem (Lset β) ] IsLeast W (Cell x) m
     least x x∈a = leastOfFormula W (definedCell x) lem (members x x∈a)
@@ -304,14 +304,14 @@ module Trans (zf : isZFModel) (a : S)
       ∣ x , (x∈a , (z∈x , neg)) ∣₁
       where
       noPredecessor : Σ[ w ∶ S ] Predecessor x z w → ⊥₀
-      noPredecessor (w , (w∈x , hap)) = mini (fst w , hw) w∈x lt
+      noPredecessor (w , (w∈x , hap)) = mini (w .fst , hw) w∈x lt
         where
-        hw : ⟨ fst w ∈ Lset β ⟩
-        hw = bound-below₂ (fst a) (snd a) (fst x) (fst w) w∈x x∈a
-        hpr : ⟨ pr (fst w) (fst z) ∈ fst rel ⟩
+        hw : ⟨ w .fst ∈ Lset β ⟩
+        hw = bound-below₂ (a .fst) (a .snd) (x .fst) (w .fst) w∈x x∈a
+        hpr : ⟨ pr (w .fst) (z .fst) ∈ rel .fst ⟩
         hpr = subst ⟨_⟩ (appC-adequate rel zero (suc (suc zero)) (w ∷ x ∷ z ∷ [])) hap
-        lt : relOf W (fst w , hw) (fst z , hz)
-        lt = B.orderL-rep (fst w , hw) (fst z , hz) hpr
+        lt : relOf W (w .fst , hw) (z .fst , hz)
+        lt = B.orderL-rep (w .fst , hw) (z .fst , hz) hpr
 
       neg : ∥ Σ[ w ∶ S ] Predecessor x z w ∥₁
           → Lift {j = ℓ-suc ℓ} ⊥₀
@@ -324,15 +324,15 @@ module Trans (zf : isZFModel) (a : S)
       atTwo (x , (x∈a , (z∈x , neg))) =
         ∣ x , (x∈a , (hz , (z∈x , mini))) ∣₁
         where
-        hz : ⟨ fst z ∈ Lset β ⟩
-        hz = bound-below₂ (fst a) (snd a) (fst x) (fst z) z∈x x∈a
+        hz : ⟨ z .fst ∈ Lset β ⟩
+        hz = bound-below₂ (a .fst) (a .snd) (x .fst) (z .fst) z∈x x∈a
 
         mini : (b : Mem (Lset β)) → ⟨ Cell x b ⟩
-             → relOf W b (fst z , hz) → ⊥₀
+             → relOf W b (z .fst , hz) → ⊥₀
         mini b b∈x lt = lower (neg ∣ elt b , (b∈x , hap) ∣₁)
           where
-          hpr : ⟨ pr (fst b) (fst z) ∈ fst rel ⟩
-          hpr = B.orderL-fill b (fst z , hz) lt
+          hpr : ⟨ pr (b .fst) (z .fst) ∈ rel .fst ⟩
+          hpr = B.orderL-fill b (z .fst , hz) lt
           hap : ⟨ (elt b ∷ x ∷ z ∷ []) ⊨ appC rel zero (suc (suc zero)) ⟩
           hap = subst ⟨_⟩
             (sym (appC-adequate rel zero (suc (suc zero)) (elt b ∷ x ∷ z ∷ []))) hpr
@@ -345,12 +345,12 @@ module Trans (zf : isZFModel) (a : S)
                   ≡ ((z ∈ˢ LsetS β oβ) ⊓ ((z ∷ []) ⊨ Pick a rel))
     csp = separate-spec (LsetS β oβ) (Pick a rel)
 
-    inC : (z : S) → ⟨ fst z ∈ Lset β ⟩ → ⟨ (z ∷ []) ⊨ Pick a rel ⟩
+    inC : (z : S) → ⟨ z .fst ∈ Lset β ⟩ → ⟨ (z ∷ []) ⊨ Pick a rel ⟩
         → ⟨ z ∈ˢ transversalSet ⟩
     inC z hL hp = subst ⟨_⟩ (sym (csp z)) (hL , hp)
 
     outC : (z : S) → ⟨ z ∈ˢ transversalSet ⟩ → ⟨ (z ∷ []) ⊨ Pick a rel ⟩
-    outC z h = snd (subst ⟨_⟩ (csp z) h)
+    outC z h = (subst ⟨_⟩ (csp z) h) .snd
 ```
 
 <details open class="submodule-fold">
@@ -382,33 +382,33 @@ module Trans (zf : isZFModel) (a : S)
 
       centre : Σ[ z ∶ S ] ⟨ z ∈ˢ (transversalSet ∩ x) ⟩
       centre = z₀ , inMeet z₀
-        (inC z₀ (snd m) (pick-in x x∈a z₀ (snd m , lm))) (fst lm)
+        (inC z₀ (m .snd) (pick-in x x∈a z₀ (m .snd , lm))) (lm .fst)
 
-      same : (z : S) → ⟨ z ∈ˢ (transversalSet ∩ x) ⟩ → fst z ≡ fst m
-      same z h = rec₁ (setIsSet (fst z) (fst m)) atOut
-                   (pick-out z (outC z (fst (outMeet z h))))
+      same : (z : S) → ⟨ z ∈ˢ (transversalSet ∩ x) ⟩ → z .fst ≡ m .fst
+      same z h = rec₁ (setIsSet (z .fst) (m .fst)) atOut
+                   (pick-out z (outC z ((outMeet z h) .fst)))
         where
         z∈x : ⟨ z ∈ˢ x ⟩
-        z∈x = snd (outMeet z h)
+        z∈x = (outMeet z h) .snd
 
-        atOut : Σ[ x' ∶ S ] (⟨ x' ∈ˢ a ⟩ × Least x' z) → fst z ≡ fst m
+        atOut : Σ[ x' ∶ S ] (⟨ x' ∈ˢ a ⟩ × Least x' z) → z .fst ≡ m .fst
         atOut (x' , (x'∈a , (hz , lz))) =
-          cong (λ p → fst (fst p))
-            (isPropLeastOf W (Cell x) ((fst z , hz) , lz') (m , lm))
+          cong (λ p → (p .fst) .fst)
+            (isPropLeastOf W (Cell x) ((z .fst , hz) , lz') (m , lm))
           where
           x≡x' : x ≡ x'
-          x≡x' = disj x x' x∈a x'∈a ∣ z , (z∈x , fst lz) ∣₁
+          x≡x' = disj x x' x∈a x'∈a ∣ z , (z∈x , lz .fst) ∣₁
 
-          lz' : IsLeast W (Cell x) (fst z , hz)
-          lz' = subst (λ y → IsLeast W (Cell y) (fst z , hz)) (sym x≡x') lz
+          lz' : IsLeast W (Cell x) (z .fst , hz)
+          lz' = subst (λ y → IsLeast W (Cell y) (z .fst , hz)) (sym x≡x') lz
 
     meetsOnce : isContr (Σ[ z ∶ S ] ⟨ z ∈ˢ (transversalSet ∩ x) ⟩)
     meetsOnce = centre , atPoint
       where
       atPoint : (p : Σ[ z ∶ S ] ⟨ z ∈ˢ (transversalSet ∩ x) ⟩) → centre ≡ p
       atPoint (z , h) = sym (Σ≡Prop
-        (λ w → snd (w ∈ˢ (transversalSet ∩ x)))
-        (Σ≡Prop (λ v → snd (isL v)) (same z h)))
+        (λ w → (w ∈ˢ (transversalSet ∩ x)) .snd)
+        (Σ≡Prop (λ v → (isL v) .snd) (same z h)))
 ```
 </div>
 </details>

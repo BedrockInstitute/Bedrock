@@ -326,14 +326,14 @@ Fix an environment containing a proposed term code `t`, an arity set `ar`, a wor
 <summary class="submodule-fold-heading">
 ```agda
 module _ {k : ℕ} (t ar w N0 N1 : Fin k) (δ : S ^ k)
-  (q0 : fst (lookup N0 δ) ≡ # 0) (q1 : fst (lookup N1 δ) ≡ # 1) where
+  (q0 : (lookup N0 δ) .fst ≡ # 0) (q1 : (lookup N1 δ) .fst ≡ # 1) where
 ```
 </summary>
 <div class="submodule-fold-content">
 
 ```agda
   private
-    Wv = fst (lookup w δ)
+    Wv = (lookup w δ) .fst
 ```
 
 <!--en-->
@@ -345,10 +345,10 @@ The outward reading eliminates the truncated disjunction of the object-language 
 <!--/-->
 
 ```agda
-  isTm-out : ⟨ δ ⊨ isTm t ar w N0 N1 ⟩ → IsTmV Wv (fst (lookup t δ)) (fst (lookup ar δ))
+  isTm-out : ⟨ δ ⊨ isTm t ar w N0 N1 ⟩ → IsTmV Wv ((lookup t δ) .fst) ((lookup ar δ) .fst)
   isTm-out = rec₁ squash₁
     (λ { (inl h) → map₁
-           (λ { (v , s , (e , v∈)) → inl (fst v , (e ∙ cong (λ a → pr a (fst v)) q0 , v∈)) })
+           (λ { (v , s , (e , v∈)) → inl (v .fst , (e ∙ cong (λ a → pr a (v .fst)) q0 , v∈)) })
            (sndEx-out t N0 (var i0 ∈̇ var (sh 2 w)) δ h)
 ```
 
@@ -362,7 +362,7 @@ The variable branch repeats the same three moves with the numeral one and the ar
 
 ```agda
        ; (inr h) → map₁
-           (λ { (v , s , (e , v∈)) → inr (fst v , (e ∙ cong (λ a → pr a (fst v)) q1 , v∈)) })
+           (λ { (v , s , (e , v∈)) → inr (v .fst , (e ∙ cong (λ a → pr a (v .fst)) q1 , v∈)) })
            (sndEx-out t N1 (var i0 ∈̇ var (sh 2 ar)) δ h) })
 ```
 
@@ -375,8 +375,8 @@ The inward reading runs the conversion the other way. In the constant branch, th
 <!--/-->
 
 ```agda
-  isTm-in : IsTmV Wv (fst (lookup t δ)) (fst (lookup ar δ)) → ⟨ δ ⊨ isTm t ar w N0 N1 ⟩
-  isTm-in = rec₁ (snd (δ ⊨ isTm t ar w N0 N1))
+  isTm-in : IsTmV Wv ((lookup t δ) .fst) ((lookup ar δ) .fst) → ⟨ δ ⊨ isTm t ar w N0 N1 ⟩
+  isTm-in = rec₁ ((δ ⊨ isTm t ar w N0 N1) .snd)
     (λ { (inl (x , (e , x∈))) →
            ∣ inl (fillSnd t δ (lookup N0 δ) (down (lookup w δ) x x∈)
                     (e ∙ cong (λ a → pr a x) (sym q0)) (var i0 ∈̇ var (sh 2 w)) x∈ N0 refl) ∣₁
@@ -415,10 +415,10 @@ module _ {k : ℕ} (C ar r : Fin k) (δ : S ^ k) where
 <div class="submodule-fold-content">
 
 ```agda
-  keyUp-out : ⟨ δ ⊨ keyUp C ar r ⟩ → ⟨ pr (sucV (fst (lookup ar δ))) (fst (lookup r δ)) ∈ fst (lookup C δ) ⟩
-  keyUp-out = rec₁ (snd (pr (sucV (fst (lookup ar δ))) (fst (lookup r δ)) ∈ fst (lookup C δ)))
-    (λ { (c' , (c'∈ , h)) → rec₁ (snd (pr (sucV (fst (lookup ar δ))) (fst (lookup r δ)) ∈ fst (lookup C δ)))
-      (λ { (s , (s∈ , h')) → rec₁ (snd (pr (sucV (fst (lookup ar δ))) (fst (lookup r δ)) ∈ fst (lookup C δ)))
+  keyUp-out : ⟨ δ ⊨ keyUp C ar r ⟩ → ⟨ pr (sucV ((lookup ar δ) .fst)) ((lookup r δ) .fst) ∈ (lookup C δ) .fst ⟩
+  keyUp-out = rec₁ ((pr (sucV ((lookup ar δ) .fst)) ((lookup r δ) .fst) ∈ (lookup C δ) .fst) .snd)
+    (λ { (c' , (c'∈ , h)) → rec₁ ((pr (sucV ((lookup ar δ) .fst)) ((lookup r δ) .fst) ∈ (lookup C δ) .fst) .snd)
+      (λ { (s , (s∈ , h')) → rec₁ ((pr (sucV ((lookup ar δ) .fst)) ((lookup r δ) .fst) ∈ (lookup C δ) .fst) .snd)
 ```
 
 <!--en-->
@@ -431,9 +431,9 @@ In the outward direction, the pair formula identifies the chosen member of `C` w
 
 ```agda
         (λ { (ar' , (ar'∈ , (e , hs))) →
-          subst (λ u → ⟨ u ∈ fst (lookup C δ) ⟩)
+          subst (λ u → ⟨ u ∈ (lookup C δ) .fst ⟩)
             (pr-out i2 i0 (sh 3 r) (ar' ∷ s ∷ c' ∷ δ) e
-             ∙ cong (λ a → pr a (fst (lookup r δ))) (suc-out (sh 3 ar) i0 (ar' ∷ s ∷ c' ∷ δ) hs))
+             ∙ cong (λ a → pr a ((lookup r δ) .fst)) (suc-out (sh 3 ar) i0 (ar' ∷ s ∷ c' ∷ δ) hs))
             c'∈ })
 ```
 
@@ -459,9 +459,9 @@ For the inward direction, start with `(suc ar,r) ∈ C`. Present the successor a
 <!--/-->
 
 ```agda
-  keyUp-in : ⟨ pr (sucV (fst (lookup ar δ))) (fst (lookup r δ)) ∈ fst (lookup C δ) ⟩ → ⟨ δ ⊨ keyUp C ar r ⟩
+  keyUp-in : ⟨ pr (sucV ((lookup ar δ) .fst)) ((lookup r δ) .fst) ∈ (lookup C δ) .fst ⟩ → ⟨ δ ⊨ keyUp C ar r ⟩
   keyUp-in h = ∣ c' , (h , ∣ c .fst , (c .snd .fst , ∣ ar' , (c .snd .snd .fst
-    , ( pr-in i2 i0 (sh 3 r) (ar' ∷ c .fst ∷ c' ∷ δ) (sym (cong (λ a → pr a (fst (lookup r δ))) (sucʟ-fst (lookup ar δ))))
+    , ( pr-in i2 i0 (sh 3 r) (ar' ∷ c .fst ∷ c' ∷ δ) (sym (cong (λ a → pr a ((lookup r δ) .fst)) (sucʟ-fst (lookup ar δ))))
       , suc-in (sh 3 ar) i0 (ar' ∷ c .fst ∷ c' ∷ δ) (sucʟ-fst (lookup ar δ)) )) ∣₁) ∣₁) ∣₁
     where
 ```
@@ -478,8 +478,8 @@ Concretely, `ar'` represents `suc ar`, `c'` represents the member `(suc ar,r)` o
     ar' : S
     ar' = sucʟ (lookup ar δ)
     c' : S
-    c' = down (lookup C δ) (pr (sucV (fst (lookup ar δ))) (fst (lookup r δ))) h
-    c = container c' ar' (lookup r δ) (cong (λ a → pr a (fst (lookup r δ))) (sym (sucʟ-fst (lookup ar δ))))
+    c' = down (lookup C δ) (pr (sucV ((lookup ar δ) .fst)) ((lookup r δ) .fst)) h
+    c = container c' ar' (lookup r δ) (cong (λ a → pr a ((lookup r δ) .fst)) (sym (sucʟ-fst (lookup ar δ))))
 ```
 </div>
 </details>
@@ -502,9 +502,9 @@ module _ {k : ℕ} (C ar N a : Fin k) (δ : S ^ k) where
 
 ```agda
   private
-    Cv = fst (lookup C δ)
-    A = fst (lookup ar δ)
-    Nv = fst (lookup N δ)
+    Cv = (lookup C δ) .fst
+    A = (lookup ar δ) .fst
+    Nv = (lookup N δ) .fst
 ```
 
 <!--en-->
@@ -516,7 +516,7 @@ The outward reading of `unKey` states precisely that the nested key `(A,(N,a))` 
 <!--/-->
 
 ```agda
-  unKey-out : ⟨ δ ⊨ unKey C ar N a ⟩ → ⟨ pr A (pr Nv (fst (lookup a δ))) ∈ Cv ⟩
+  unKey-out : ⟨ δ ⊨ unKey C ar N a ⟩ → ⟨ pr A (pr Nv ((lookup a δ) .fst)) ∈ Cv ⟩
   unKey-out = E.member-out (keyExpr ar N (E.slot a)) (var C) δ
 ```
 
@@ -529,7 +529,7 @@ Adequacy works in the reverse direction as well: membership `(A,(N,a)) ∈ C` yi
 <!--/-->
 
 ```agda
-  unKey-in : ⟨ pr A (pr Nv (fst (lookup a δ))) ∈ Cv ⟩ → ⟨ δ ⊨ unKey C ar N a ⟩
+  unKey-in : ⟨ pr A (pr Nv ((lookup a δ) .fst)) ∈ Cv ⟩ → ⟨ δ ⊨ unKey C ar N a ⟩
   unKey-in = E.member-in (keyExpr ar N (E.slot a)) (var C) δ
 ```
 </div>
@@ -553,9 +553,9 @@ module _ {k : ℕ} (C ar N a b : Fin k) (δ : S ^ k) where
 
 ```agda
   private
-    Cv = fst (lookup C δ)
-    A = fst (lookup ar δ)
-    Nv = fst (lookup N δ)
+    Cv = (lookup C δ) .fst
+    A = (lookup ar δ) .fst
+    Nv = (lookup N δ) .fst
 ```
 
 <!--en-->
@@ -567,7 +567,7 @@ The two argument values form the ordered pair `P = (a,b)`. This pair is the payl
 <!--/-->
 
 ```agda
-    P = pr (fst (lookup a δ)) (fst (lookup b δ))
+    P = pr ((lookup a δ) .fst) ((lookup b δ) .fst)
 ```
 
 <!--en-->
@@ -616,9 +616,9 @@ module _ {k : ℕ} (C ar N Nx x Ny y : Fin k) (δ : S ^ k) where
 
 ```agda
   private
-    Cv = fst (lookup C δ)
-    A = fst (lookup ar δ)
-    Nv = fst (lookup N δ)
+    Cv = (lookup C δ) .fst
+    A = (lookup ar δ) .fst
+    Nv = (lookup N δ) .fst
 ```
 
 <!--en-->
@@ -630,8 +630,8 @@ Write the two term codes as `T=(Nx,x)` and `U=(Ny,y)`. At this stage `Nx` and `N
 <!--/-->
 
 ```agda
-    T = pr (fst (lookup Nx δ)) (fst (lookup x δ))
-    U = pr (fst (lookup Ny δ)) (fst (lookup y δ))
+    T = pr ((lookup Nx δ) .fst) ((lookup x δ) .fst)
+    U = pr ((lookup Ny δ) .fst) ((lookup y δ) .fst)
 ```
 
 <!--en-->
@@ -680,9 +680,9 @@ module _ {k : ℕ} (C ar N Nx x a : Fin k) (δ : S ^ k) where
 
 ```agda
   private
-    Cv = fst (lookup C δ)
-    A = fst (lookup ar δ)
-    Nv = fst (lookup N δ)
+    Cv = (lookup C δ) .fst
+    A = (lookup ar δ) .fst
+    Nv = (lookup N δ) .fst
 ```
 
 <!--en-->
@@ -694,8 +694,8 @@ Write the bound-term code as `T=(Nx,x)` and the body code as `Av`. The term is c
 <!--/-->
 
 ```agda
-    T = pr (fst (lookup Nx δ)) (fst (lookup x δ))
-    Av = fst (lookup a δ)
+    T = pr ((lookup Nx δ) .fst) ((lookup x δ) .fst)
+    Av = (lookup a δ) .fst
 ```
 
 <!--en-->
@@ -745,8 +745,8 @@ module PayRead {m : ℕ} (C w : Fin m) (N : Fin 10 → Fin m) (δ : S ^ (9 + m))
 
 ```agda
   private
-    Cv = fst (lookup (sh 9 C) δ)
-    Wv = fst (lookup (sh 9 w) δ)
+    Cv = (lookup (sh 9 C) δ) .fst
+    Wv = (lookup (sh 9 w) δ) .fst
 ```
 
 <!--en-->
@@ -758,8 +758,8 @@ In each payload reading, `A` denotes the recorded arity and `R` the raw payload.
 <!--/-->
 
 ```agda
-    A = fst (lookup i5 δ)
-    R = fst (lookup i0 δ)
+    A = (lookup i5 δ) .fst
+    R = (lookup i0 δ) .fst
     q0 = tg f0
     q1 = tg f1
     rS = lookup i0 δ
@@ -818,7 +818,7 @@ Reading an atomic payload outward removes the two existential binders and produc
 ```agda
   atom-out : ⟨ δ ⊨ Sh.atomPay ⟩ → AtomP A R
   atom-out h = map₁
-    (λ { (t , u , s , (e , (ht , hu))) → fst t , fst u
+    (λ { (t , u , s , (e , (ht , hu))) → t .fst , u .fst
        , ( e , ( isTm-out i1 i8 (sh 12 w) (sh 12 (N f0)) (sh 12 (N f1)) (u ∷ t ∷ s ∷ δ) q0 q1 ht
                , isTm-out i0 i8 (sh 12 w) (sh 12 (N f0)) (sh 12 (N f1)) (u ∷ t ∷ s ∷ δ) q0 q1 hu ) ) })
 ```
@@ -845,7 +845,7 @@ Reading inward rebuilds the satisfaction from the data. The truncated legality p
 
 ```agda
   atom-in : AtomP A R → ⟨ δ ⊨ Sh.atomPay ⟩
-  atom-in = rec₁ (snd (δ ⊨ Sh.atomPay))
+  atom-in = rec₁ ((δ ⊨ Sh.atomPay) .snd)
     (λ { (t , u , (e , (ht , hu))) →
       fillBoth i0 δ (fstS rS t u e) (sndS rS t u e) e tmBody
         ( isTm-in i1 i8 (sh 12 w) (sh 12 (N f0)) (sh 12 (N f1)) (δ12 t u e) q0 q1 ht
@@ -877,7 +877,7 @@ Reading a binary payload outward yields payloads `a` and `b`, an equation `R ≡
 ```agda
   bin-out : ⟨ δ ⊨ Sh.binPay ⟩ → BinP A R
   bin-out h = map₁
-    (λ { (a , b , s , (e , (ha , hb))) → fst a , fst b
+    (λ { (a , b , s , (e , (ha , hb))) → a .fst , b .fst
        , ( e , ( subst ⟨_⟩ (appAt-adequate (sh 12 C) i8 i1 (b ∷ a ∷ s ∷ δ)) ha
                , subst ⟨_⟩ (appAt-adequate (sh 12 C) i8 i0 (b ∷ a ∷ s ∷ δ)) hb ) ) })
 ```
@@ -904,7 +904,7 @@ Reading inward fills the two existentials with the named sub-codes. The two appl
 
 ```agda
   bin-in : BinP A R → ⟨ δ ⊨ Sh.binPay ⟩
-  bin-in = rec₁ (snd (δ ⊨ Sh.binPay))
+  bin-in = rec₁ ((δ ⊨ Sh.binPay) .snd)
     (λ { (a , b , (e , (ha , hb))) →
       fillBoth i0 δ (fstS rS a b e) (sndS rS a b e) e binBody
         ( subst ⟨_⟩ (sym (appAt-adequate (sh 12 C) i8 i1 (δ12 a b e))) ha
@@ -988,7 +988,7 @@ Reading a bounded-quantifier payload outward yields a term `t`, a body payload `
 ```agda
   bq-out : ⟨ δ ⊨ Sh.bqPay ⟩ → BqP A R
   bq-out h = map₁
-    (λ { (t , a , s , (e , (ht , ha))) → fst t , fst a
+    (λ { (t , a , s , (e , (ht , ha))) → t .fst , a .fst
        , ( e , ( isTm-out i1 i8 (sh 12 w) (sh 12 (N f0)) (sh 12 (N f1)) (a ∷ t ∷ s ∷ δ) q0 q1 ht
                , keyUp-out (sh 12 C) i8 i0 (a ∷ t ∷ s ∷ δ) ha ) ) })
 ```
@@ -1015,7 +1015,7 @@ Reading inward, the bounding term enters its legality atom through the shifted c
 
 ```agda
   bq-in : BqP A R → ⟨ δ ⊨ Sh.bqPay ⟩
-  bq-in = rec₁ (snd (δ ⊨ Sh.bqPay))
+  bq-in = rec₁ ((δ ⊨ Sh.bqPay) .snd)
     (λ { (t , a , (e , (ht , ha))) →
       fillBoth i0 δ (fstS rS t a e) (sndS rS t a e) e bqBody
         ( isTm-in i1 i8 (sh 12 w) (sh 12 (N f0)) (sh 12 (N f1)) (δ12 t a e) q0 q1 ht
@@ -1147,8 +1147,8 @@ module TenRead {m : ℕ} (C w : Fin m) (N : Fin 10 → Fin m) (δ : S ^ (7 + m))
 
 ```agda
   private
-    Cv = fst (lookup (sh 7 C) δ)
-    Wv = fst (lookup (sh 7 w) δ)
+    Cv = (lookup (sh 7 C) δ) .fst
+    Wv = (lookup (sh 7 w) δ) .fst
 ```
 
 <!--en-->
@@ -1160,8 +1160,8 @@ Among the newly bound entries, `A` is the arity and `P` is the tagged payload to
 <!--/-->
 
 ```agda
-    A = fst (lookup i3 δ)
-    P = fst (lookup i0 δ)
+    A = (lookup i3 δ) .fst
+    P = (lookup i0 δ) .fst
     pS = lookup i0 δ
     module Sh = Shape C w N
   open CodesSem Wv Cv
@@ -1178,8 +1178,8 @@ The tag reader converts satisfaction of the `j`-th tag atom into a key. The trun
 ```agda
   at-out : (j : Fin 10) → ⟨ δ ⊨ Sh.at j ⟩ → Key A P
   at-out j h = map₁
-    (λ { (r , s , (e , hp)) → j , fst r
-       , ( e ∙ cong (λ a → pr a (fst r)) (tg j)
+    (λ { (r , s , (e , hp)) → j , r .fst
+       , ( e ∙ cong (λ a → pr a (r .fst)) (tg j)
          , PayRead.payN-out C w N (r ∷ s ∷ δ) tg (toℕ j) hp ) })
 ```
 
@@ -1223,7 +1223,7 @@ The renamed value pairs the numeral of `j` with the chosen entry, and the coding
     where
     rS : S
     rS = sndS pS (# (toℕ j)) r e
-    e' : P ≡ pr (fst (lookup (sh 7 (N j)) δ)) (fst rS)
+    e' : P ≡ pr ((lookup (sh 7 (N j)) δ) .fst) (rS .fst)
     e' = e ∙ cong (λ a → pr a r) (sym (tg j))
 ```
 
@@ -1250,7 +1250,7 @@ The inward reader enters the disjunction at the witnessed tag, with the payload 
 
 ```agda
   ten-in : Key A P → ⟨ δ ⊨ Sh.ten ⟩
-  ten-in = rec₁ (snd (δ ⊨ Sh.ten))
+  ten-in = rec₁ ((δ ⊨ Sh.ten) .snd)
     (λ { (j , r , (e , pay)) → bigOr-in δ 9 Sh.at j (at-in j r e pay) })
 ```
 </div>
@@ -1274,9 +1274,9 @@ module ShapeRead {m : ℕ} (C w E : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) (
 
 ```agda
   private
-    Cv = fst (lookup C γ)
-    Wv = fst (lookup w γ)
-    Ev = fst (lookup E γ)
+    Cv = (lookup C γ) .fst
+    Wv = (lookup w γ) .fst
+    Ev = (lookup E γ) .fst
 ```
 
 <!--en-->
@@ -1317,7 +1317,7 @@ For each `c` in the code set, outward reading first obtains a member `q` of `E`.
 <!--/-->
 
 ```agda
-  shape-out : ⟨ γ ⊨ shapeAt C w E N ⟩ → (c : S) → ⟨ fst c ∈ Cv ⟩ → Shaped (fst c)
+  shape-out : ⟨ γ ⊨ shapeAt C w E N ⟩ → (c : S) → ⟨ c .fst ∈ Cv ⟩ → Shaped (c .fst)
   shape-out h c c∈ = rec₁ squash₁
     (λ { (q , (q∈ , hb)) → rec₁ squash₁
       (λ { (ar , F , s , (eq , hs)) → map₁
@@ -1333,7 +1333,7 @@ The equation `q ≡ pr ar F` transports the known membership of `q` in `E` to me
 <!--/-->
 
 ```agda
-          fst ar , fst F , fst p
+          ar .fst , F .fst , p .fst
           , ( subst (λ u → ⟨ u ∈ Ev ⟩) eq q∈
             , ( ec , TenRead.ten-out C w N (p ∷ s' ∷ F ∷ ar ∷ s ∷ q ∷ c ∷ γ) tg ht ) ) })
         (sndEx-out i4 i1 Sh.ten (F ∷ ar ∷ s ∷ q ∷ c ∷ γ) hs) })
@@ -1341,11 +1341,11 @@ The equation `q ≡ pr ar F` transports the known membership of `q` in `E` to me
 ```
 
 <!--en-->
-The original shape satisfaction is universally quantified over members of the code set. Applying it to `c` and its membership proof supplies the existential data consumed above, completing the construction of `Shaped (fst c)`.
+The original shape satisfaction is universally quantified over members of the code set. Applying it to `c` and its membership proof supplies the existential data consumed above, completing the construction of `Shaped (c .fst)`.
 <!--zh-->
-原形状满足对码集元素作全称量化。把它应用于 `c` 及其成员关系证明，就得到上面所消去的存在数据，从而构造出 `Shaped (fst c)`。
+原形状满足对码集元素作全称量化。把它应用于 `c` 及其成员关系证明，就得到上面所消去的存在数据，从而构造出 `Shaped (c .fst)`。
 <!--ja-->
-元の形の充足は符号集合の要素について全称量化されている。これを `c` とその所属証明に適用すると、上で除去した存在データが得られ、`Shaped (fst c)` の構成が完了する。
+元の形の充足は符号集合の要素について全称量化されている。これを `c` とその所属証明に適用すると、上で除去した存在データが得られ、`Shaped (c .fst)` の構成が完了する。
 <!--/-->
 
 ```agda
@@ -1361,8 +1361,8 @@ For the inward direction, assume that every member `c` of the code set has trunc
 <!--/-->
 
 ```agda
-  shape-in : ((c : S) → ⟨ fst c ∈ Cv ⟩ → Shaped (fst c)) → ⟨ γ ⊨ shapeAt C w E N ⟩
-  shape-in k c c∈ = rec₁ (snd ((c ∷ γ) ⊨ ∃̇∈ (var (sh 1 E)) (bothEx i0 inner)))
+  shape-in : ((c : S) → ⟨ c .fst ∈ Cv ⟩ → Shaped (c .fst)) → ⟨ γ ⊨ shapeAt C w E N ⟩
+  shape-in k c c∈ = rec₁ (((c ∷ γ) ⊨ ∃̇∈ (var (sh 1 E)) (bothEx i0 inner)) .snd)
     (λ { (ar , F , p , (q∈ , (ec , key))) →
       let qS = down (lookup E γ) (pr ar F) q∈
           arS = fstS qS ar F refl
@@ -1432,8 +1432,8 @@ module CloseRead {m : ℕ} (C w : Fin m) (N : Fin 10 → Fin m) (δ : S ^ (4 + m
 
 ```agda
   private
-    Cv = fst (lookup (sh 4 C) δ)
-    A = fst (lookup i1 δ)
+    Cv = (lookup (sh 4 C) δ) .fst
+    A = (lookup i1 δ) .fst
     arS = lookup i1 δ
 ```
 
@@ -1461,8 +1461,8 @@ Outward reading of an atomic closure clause permits arbitrary `x` from the bound
 ```agda
   atomClose-out : (k Nx Ny : Fin 10) (X : Fin (4 + m)) (Y : Fin (5 + m))
                 → ⟨ δ ⊨ Cl.atomClose k Nx Ny X Y ⟩
-                → (x y : S) → ⟨ fst x ∈ fst (lookup X δ) ⟩ → ⟨ fst y ∈ fst (lookup Y (x ∷ δ)) ⟩
-                → ⟨ pr A (pr (# (toℕ k)) (pr (pr (# (toℕ Nx)) (fst x)) (pr (# (toℕ Ny)) (fst y)))) ∈ Cv ⟩
+                → (x y : S) → ⟨ x .fst ∈ (lookup X δ) .fst ⟩ → ⟨ y .fst ∈ (lookup Y (x ∷ δ)) .fst ⟩
+                → ⟨ pr A (pr (# (toℕ k)) (pr (pr (# (toℕ Nx)) (x .fst)) (pr (# (toℕ Ny)) (y .fst)))) ∈ Cv ⟩
   atomClose-out k Nx Ny X Y h x y x∈ y∈ =
 ```
 
@@ -1476,7 +1476,7 @@ The membership is transported along the tag equations, which rename the three sl
 
 ```agda
     subst (λ u → ⟨ u ∈ Cv ⟩)
-      (cong (pr A) (cong₂ pr (tg k) (cong₂ pr (cong (λ a → pr a (fst x)) (tg Nx)) (cong (λ a → pr a (fst y)) (tg Ny)))))
+      (cong (pr A) (cong₂ pr (tg k) (cong₂ pr (cong (λ a → pr a (x .fst)) (tg Nx)) (cong (λ a → pr a (y .fst)) (tg Ny)))))
       (atomKey-out (sh 6 C) i3 (sh 6 (N k)) (sh 6 (N Nx)) i1 (sh 6 (N Ny)) i0 (y ∷ x ∷ δ) (h x x∈ y y∈))
 ```
 
@@ -1490,8 +1490,8 @@ The inward direction rebuilds the clause: given the property for all pairs, it s
 
 ```agda
   atomClose-in : (k Nx Ny : Fin 10) (X : Fin (4 + m)) (Y : Fin (5 + m))
-               → ((x y : S) → ⟨ fst x ∈ fst (lookup X δ) ⟩ → ⟨ fst y ∈ fst (lookup Y (x ∷ δ)) ⟩
-                  → ⟨ pr A (pr (# (toℕ k)) (pr (pr (# (toℕ Nx)) (fst x)) (pr (# (toℕ Ny)) (fst y)))) ∈ Cv ⟩)
+               → ((x y : S) → ⟨ x .fst ∈ (lookup X δ) .fst ⟩ → ⟨ y .fst ∈ (lookup Y (x ∷ δ)) .fst ⟩
+                  → ⟨ pr A (pr (# (toℕ k)) (pr (pr (# (toℕ Nx)) (x .fst)) (pr (# (toℕ Ny)) (y .fst)))) ∈ Cv ⟩)
                → ⟨ δ ⊨ Cl.atomClose k Nx Ny X Y ⟩
   atomClose-in k Nx Ny X Y g x x∈ y y∈ =
 ```
@@ -1507,23 +1507,23 @@ The membership is transported into the tagged slots by the reversed renamings, a
 ```agda
     atomKey-in (sh 6 C) i3 (sh 6 (N k)) (sh 6 (N Nx)) i1 (sh 6 (N Ny)) i0 (y ∷ x ∷ δ)
       (subst (λ u → ⟨ u ∈ Cv ⟩)
-        (sym (cong (pr A) (cong₂ pr (tg k) (cong₂ pr (cong (λ a → pr a (fst x)) (tg Nx)) (cong (λ a → pr a (fst y)) (tg Ny))))))
+        (sym (cong (pr A) (cong₂ pr (tg k) (cong₂ pr (cong (λ a → pr a (x .fst)) (tg Nx)) (cong (λ a → pr a (y .fst)) (tg Ny))))))
         (g x y x∈ y∈))
 ```
 
 <!--en-->
-The binary closure clause ranges over two members `c₁` and `c₂` of the code set. The equations `fst c₁ ≡ pr A (fst a)` and `fst c₂ ≡ pr A (fst b)` expose their payloads `a` and `b` at the fixed arity `A`; the clause then places the binary key with payload `pr (fst a) (fst b)` back in the code set.
+The binary closure clause ranges over two members `c₁` and `c₂` of the code set. The equations `c₁ .fst ≡ pr A (a .fst)` and `c₂ .fst ≡ pr A (b .fst)` expose their payloads `a` and `b` at the fixed arity `A`; the clause then places the binary key with payload `pr (a .fst) (b .fst)` back in the code set.
 <!--zh-->
-二元闭包子句量化码集中的两个元素 `c₁`、`c₂`。等式 `fst c₁ ≡ pr A (fst a)` 与 `fst c₂ ≡ pr A (fst b)` 显露它们在固定元数 `A` 处的载荷 `a`、`b`；子句随后断言以 `pr (fst a) (fst b)` 为载荷的二元键仍属于码集。
+二元闭包子句量化码集中的两个元素 `c₁`、`c₂`。等式 `c₁ .fst ≡ pr A (a .fst)` 与 `c₂ .fst ≡ pr A (b .fst)` 显露它们在固定元数 `A` 处的载荷 `a`、`b`；子句随后断言以 `pr (a .fst) (b .fst)` 为载荷的二元键仍属于码集。
 <!--ja-->
-二項の閉性の節は、符号集合の二つの要素 `c₁` と `c₂` を量化する。等式 `fst c₁ ≡ pr A (fst a)` と `fst c₂ ≡ pr A (fst b)` は、固定アリティ `A` におけるそれぞれのペイロード `a` と `b` を取り出す。すると、この節はペイロード `pr (fst a) (fst b)` をもつ二項キーが再び符号集合に属することを述べる。
+二項の閉性の節は、符号集合の二つの要素 `c₁` と `c₂` を量化する。等式 `c₁ .fst ≡ pr A (a .fst)` と `c₂ .fst ≡ pr A (b .fst)` は、固定アリティ `A` におけるそれぞれのペイロード `a` と `b` を取り出す。すると、この節はペイロード `pr (a .fst) (b .fst)` をもつ二項キーが再び符号集合に属することを述べる。
 <!--/-->
 
 ```agda
   binClose-out : (k : Fin 10) → ⟨ δ ⊨ Cl.binClose k ⟩
-               → (c₁ c₂ a b : S) → ⟨ fst c₁ ∈ Cv ⟩ → ⟨ fst c₂ ∈ Cv ⟩
-               → fst c₁ ≡ pr A (fst a) → fst c₂ ≡ pr A (fst b)
-               → ⟨ pr A (pr (# (toℕ k)) (pr (fst a) (fst b))) ∈ Cv ⟩
+               → (c₁ c₂ a b : S) → ⟨ c₁ .fst ∈ Cv ⟩ → ⟨ c₂ .fst ∈ Cv ⟩
+               → c₁ .fst ≡ pr A (a .fst) → c₂ .fst ≡ pr A (b .fst)
+               → ⟨ pr A (pr (# (toℕ k)) (pr (a .fst) (b .fst))) ∈ Cv ⟩
   binClose-out k h c₁ c₂ a b c₁∈ c₂∈ e₁ e₂ =
 ```
 
@@ -1536,7 +1536,7 @@ The membership is transported along the tag renaming of the label, and the two n
 <!--/-->
 
 ```agda
-    subst (λ u → ⟨ u ∈ Cv ⟩) (cong (pr A) (cong (λ v → pr v (pr (fst a) (fst b))) (tg k)))
+    subst (λ u → ⟨ u ∈ Cv ⟩) (cong (pr A) (cong (λ v → pr v (pr (a .fst) (b .fst))) (tg k)))
       (binKey-out (sh 10 C) i7 (sh 10 (N k)) i3 i0 δ10
         (useSnd i0 δ8 arS b e₂ (binKey (sh 10 C) i7 (sh 10 (N k)) i3 i0) i5 refl
           (useSnd i0 (c₁ ∷ δ) arS a e₁ inner i2 refl (h c₁ c₁∈) c₂ c₂∈)))
@@ -1583,9 +1583,9 @@ The inward direction for a binary closure clause starts from its mathematical cl
 
 ```agda
   binClose-in : (k : Fin 10)
-              → ((c₁ c₂ a b : S) → ⟨ fst c₁ ∈ Cv ⟩ → ⟨ fst c₂ ∈ Cv ⟩
-                 → fst c₁ ≡ pr A (fst a) → fst c₂ ≡ pr A (fst b)
-                 → ⟨ pr A (pr (# (toℕ k)) (pr (fst a) (fst b))) ∈ Cv ⟩)
+              → ((c₁ c₂ a b : S) → ⟨ c₁ .fst ∈ Cv ⟩ → ⟨ c₂ .fst ∈ Cv ⟩
+                 → c₁ .fst ≡ pr A (a .fst) → c₂ .fst ≡ pr A (b .fst)
+                 → ⟨ pr A (pr (# (toℕ k)) (pr (a .fst) (b .fst))) ∈ Cv ⟩)
               → ⟨ δ ⊨ Cl.binClose k ⟩
 ```
 
@@ -1601,7 +1601,7 @@ Introducing the two quantified components extends the environment in the order p
   binClose-in k g c₁ c₁∈ = sndAll-in i0 i2 (∀̇∈ (var (sh 7 C)) (sndAll i0 i5 (binKey (sh 10 C) i7 (sh 10 (N k)) i3 i0))) (c₁ ∷ δ) (λ a s s∈ a∈ e₁ c₂ c₂∈ →
     sndAll-in i0 i5 (binKey (sh 10 C) i7 (sh 10 (N k)) i3 i0) (c₂ ∷ a ∷ s ∷ c₁ ∷ δ) (λ b s' s'∈ b∈ e₂ →
       binKey-in (sh 10 C) i7 (sh 10 (N k)) i3 i0 (b ∷ s' ∷ c₂ ∷ a ∷ s ∷ c₁ ∷ δ)
-        (subst (λ u → ⟨ u ∈ Cv ⟩) (sym (cong (pr A) (cong (λ v → pr v (pr (fst a) (fst b))) (tg k))))
+        (subst (λ u → ⟨ u ∈ Cv ⟩) (sym (cong (pr A) (cong (λ v → pr v (pr (a .fst) (b .fst))) (tg k))))
           (g c₁ c₂ a b c₁∈ c₂∈ e₁ e₂))))
 ```
 
@@ -1645,10 +1645,10 @@ The unbounded-quantifier clause is read outward with the quantified components e
 
 ```agda
   quClose-out : (k : Fin 10) → ⟨ δ ⊨ Cl.quClose k ⟩
-              → (c₁ ar' a : S) → ⟨ fst c₁ ∈ Cv ⟩ → fst c₁ ≡ pr (fst ar') (fst a) → fst ar' ≡ sucV A
-              → ⟨ pr A (pr (# (toℕ k)) (fst a)) ∈ Cv ⟩
+              → (c₁ ar' a : S) → ⟨ c₁ .fst ∈ Cv ⟩ → c₁ .fst ≡ pr (ar' .fst) (a .fst) → ar' .fst ≡ sucV A
+              → ⟨ pr A (pr (# (toℕ k)) (a .fst)) ∈ Cv ⟩
   quClose-out k h c₁ ar' a c₁∈ e₁ es =
-    subst (λ u → ⟨ u ∈ Cv ⟩) (cong (pr A) (cong (λ v → pr v (fst a)) (tg k)))
+    subst (λ u → ⟨ u ∈ Cv ⟩) (cong (pr A) (cong (λ v → pr v (a .fst)) (tg k)))
 ```
 
 <!--en-->
@@ -1689,8 +1689,8 @@ For the inward direction, introduce the two quantified components of the clause.
 
 ```agda
   quClose-in : (k : Fin 10)
-             → ((c₁ ar' a : S) → ⟨ fst c₁ ∈ Cv ⟩ → fst c₁ ≡ pr (fst ar') (fst a) → fst ar' ≡ sucV A
-                → ⟨ pr A (pr (# (toℕ k)) (fst a)) ∈ Cv ⟩)
+             → ((c₁ ar' a : S) → ⟨ c₁ .fst ∈ Cv ⟩ → c₁ .fst ≡ pr (ar' .fst) (a .fst) → ar' .fst ≡ sucV A
+                → ⟨ pr A (pr (# (toℕ k)) (a .fst)) ∈ Cv ⟩)
              → ⟨ δ ⊨ Cl.quClose k ⟩
   quClose-in k g c₁ c₁∈ = bothAll-in i0 (sucAtL i5 i1 ⇒̇ unKey (sh 8 C) i5 (sh 8 (N k)) i0) (c₁ ∷ δ) (λ ar' a s s∈ ar'∈ a∈ e₁ hs →
 ```
@@ -1705,7 +1705,7 @@ Apply the assumed closure rule to these data, then transport the resulting membe
 
 ```agda
     unKey-in (sh 8 C) i5 (sh 8 (N k)) i0 (a ∷ ar' ∷ s ∷ c₁ ∷ δ)
-      (subst (λ u → ⟨ u ∈ Cv ⟩) (sym (cong (pr A) (cong (λ v → pr v (fst a)) (tg k))))
+      (subst (λ u → ⟨ u ∈ Cv ⟩) (sym (cong (pr A) (cong (λ v → pr v (a .fst)) (tg k))))
         (g c₁ ar' a c₁∈ e₁ (suc-out i5 i1 (a ∷ ar' ∷ s ∷ c₁ ∷ δ) hs))))
 ```
 
@@ -1719,9 +1719,9 @@ The bounded-quantifier clause has one additional premise. Besides a body key at 
 
 ```agda
   bqClose-out : (k Nx : Fin 10) (X : Fin (8 + m)) → ⟨ δ ⊨ Cl.bqClose k Nx X ⟩
-              → (c₁ ar' a : S) → ⟨ fst c₁ ∈ Cv ⟩ → (e₁ : fst c₁ ≡ pr (fst ar') (fst a)) → fst ar' ≡ sucV A
-              → (x : S) → ⟨ fst x ∈ fst (lookup X (a ∷ ar' ∷ container c₁ ar' a e₁ .fst ∷ c₁ ∷ δ)) ⟩
-              → ⟨ pr A (pr (# (toℕ k)) (pr (pr (# (toℕ Nx)) (fst x)) (fst a))) ∈ Cv ⟩
+              → (c₁ ar' a : S) → ⟨ c₁ .fst ∈ Cv ⟩ → (e₁ : c₁ .fst ≡ pr (ar' .fst) (a .fst)) → ar' .fst ≡ sucV A
+              → (x : S) → ⟨ x .fst ∈ (lookup X (a ∷ ar' ∷ container c₁ ar' a e₁ .fst ∷ c₁ ∷ δ)) .fst ⟩
+              → ⟨ pr A (pr (# (toℕ k)) (pr (pr (# (toℕ Nx)) (x .fst)) (a .fst))) ∈ Cv ⟩
   bqClose-out k Nx X h c₁ ar' a c₁∈ e₁ es x x∈ =
 ```
 
@@ -1735,7 +1735,7 @@ The proof extends the environment by the bounding term and applies bounded-key e
 
 ```agda
     subst (λ u → ⟨ u ∈ Cv ⟩)
-      (cong (pr A) (cong₂ pr (tg k) (cong (λ v → pr v (fst a)) (cong (λ v → pr v (fst x)) (tg Nx)))))
+      (cong (pr A) (cong₂ pr (tg k) (cong (λ v → pr v (a .fst)) (cong (λ v → pr v (x .fst)) (tg Nx)))))
       (bndKey-out (sh 9 C) i6 (sh 9 (N k)) (sh 9 (N Nx)) i0 i1 (x ∷ δ8)
         (useBoth i0 (c₁ ∷ δ) ar' a e₁ (sucAtL i5 i1 ⇒̇ ∀̇∈ (var X) (bndKey (sh 9 C) i6 (sh 9 (N k)) (sh 9 (N Nx)) i0 i1))
           (h c₁ c₁∈) (suc-in i5 i1 δ8 es) x x∈))
@@ -1765,9 +1765,9 @@ For the inward direction, assume the mathematical closure rule displayed in the 
 
 ```agda
   bqClose-in : (k Nx : Fin 10) (X : Fin (8 + m))
-             → ((c₁ ar' a s : S) → ⟨ fst c₁ ∈ Cv ⟩ → fst c₁ ≡ pr (fst ar') (fst a) → fst ar' ≡ sucV A
-                → (x : S) → ⟨ fst x ∈ fst (lookup X (a ∷ ar' ∷ s ∷ c₁ ∷ δ)) ⟩
-                → ⟨ pr A (pr (# (toℕ k)) (pr (pr (# (toℕ Nx)) (fst x)) (fst a))) ∈ Cv ⟩)
+             → ((c₁ ar' a s : S) → ⟨ c₁ .fst ∈ Cv ⟩ → c₁ .fst ≡ pr (ar' .fst) (a .fst) → ar' .fst ≡ sucV A
+                → (x : S) → ⟨ x .fst ∈ (lookup X (a ∷ ar' ∷ s ∷ c₁ ∷ δ)) .fst ⟩
+                → ⟨ pr A (pr (# (toℕ k)) (pr (pr (# (toℕ Nx)) (x .fst)) (a .fst))) ∈ Cv ⟩)
              → ⟨ δ ⊨ Cl.bqClose k Nx X ⟩
 ```
 
@@ -1783,7 +1783,7 @@ Introduce the quantified subkey data and the bounding term, then apply the assum
   bqClose-in k Nx X g c₁ c₁∈ = bothAll-in i0 (sucAtL i5 i1 ⇒̇ ∀̇∈ (var X) (bndKey (sh 9 C) i6 (sh 9 (N k)) (sh 9 (N Nx)) i0 i1)) (c₁ ∷ δ) (λ ar' a s s∈ ar'∈ a∈ e₁ hs x x∈ →
     bndKey-in (sh 9 C) i6 (sh 9 (N k)) (sh 9 (N Nx)) i0 i1 (x ∷ a ∷ ar' ∷ s ∷ c₁ ∷ δ)
       (subst (λ u → ⟨ u ∈ Cv ⟩)
-        (sym (cong (pr A) (cong₂ pr (tg k) (cong (λ v → pr v (fst a)) (cong (λ v → pr v (fst x)) (tg Nx))))))
+        (sym (cong (pr A) (cong₂ pr (tg k) (cong (λ v → pr v (a .fst)) (cong (λ v → pr v (x .fst)) (tg Nx))))))
         (g c₁ ar' a s c₁∈ e₁ (suc-out i5 i1 (a ∷ ar' ∷ s ∷ c₁ ∷ δ) hs) x x∈)))
 ```
 </div>
@@ -1860,8 +1860,8 @@ The remaining constructor tags use the same principle in the form appropriate to
 ```agda
   isPropPayN 4 ar r = squash₁
   isPropPayN 5 ar r = setIsSet r (# 0)
-  isPropPayN 6 ar r = snd (pr (sucV ar) r ∈ Cv)
-  isPropPayN 7 ar r = snd (pr (sucV ar) r ∈ Cv)
+  isPropPayN 6 ar r = (pr (sucV ar) r ∈ Cv) .snd
+  isPropPayN 7 ar r = (pr (sucV ar) r ∈ Cv) .snd
   isPropPayN 8 ar r = squash₁
 ```
 
@@ -1918,9 +1918,9 @@ The first recovery lemma converts a term-code statement into a satisfaction of t
 
 ```agda
 tmWit : ∀ {j} (ti Ni Ai : Fin j) (env : S ^ j)
-      → IsTmV (fst (lookup Ai env)) (fst (lookup ti env)) (fst (lookup Ni env))
+      → IsTmV ((lookup Ai env) .fst) ((lookup ti env) .fst) ((lookup Ni env) .fst)
       → ⟨ env ⊨ isTmAt ti Ni Ai ⟩
-tmWit ti Ni Ai env = rec₁ (snd (env ⊨ isTmAt ti Ni Ai))
+tmWit ti Ni Ai env = rec₁ ((env ⊨ isTmAt ti Ni Ai) .snd)
   (λ { (inl (x , (e , x∈))) →
 ```
 
@@ -1965,8 +1965,8 @@ We can now state soundness for a candidate domain `C`. Assume that the constant 
 <summary class="submodule-fold-heading">
 ```agda
 module CodesSound {m : ℕ} (C w E : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) (W : S)
-  (qw : fst (lookup w γ) ≡ fst W) (tg : Tags γ N)
-  (arity : (n F : S) → ⟨ pr (fst n) (fst F) ∈ fst (lookup E γ) ⟩ → ∥ Σ[ k ∶ ℕ ] (fst n ≡ # k) ∥₁)
+  (qw : (lookup w γ) .fst ≡ W .fst) (tg : Tags γ N)
+  (arity : (n F : S) → ⟨ pr (n .fst) (F .fst) ∈ (lookup E γ) .fst ⟩ → ∥ Σ[ k ∶ ℕ ] (n .fst ≡ # k) ∥₁)
   (hs : ⟨ γ ⊨ shapeAt C w E N ⟩) where
 ```
 </summary>
@@ -1985,10 +1985,10 @@ Write `Cv` for the underlying set of the candidate domain and `CS` for its repre
 <!--/-->
 
 ```agda
-    Cv = fst (lookup C γ)
+    Cv = (lookup C γ) .fst
     CS = lookup C γ
-    Wv = fst (lookup w γ)
-    Ev = fst (lookup E γ)
+    Wv = (lookup w γ) .fst
+    Ev = (lookup E γ) .fst
     module SR = ShapeRead C w E N γ tg
 ```
 
@@ -2038,7 +2038,7 @@ The alignment lemma `at` is the core of soundness. From the shape satisfaction a
 <!--/-->
 
 ```agda
-    at : (c : S) → ⟨ fst c ∈ Cv ⟩ → (n : ℕ) (ar r : V ℓ) → fst c ≡ pr ar (pr (# n) r)
+    at : (c : S) → ⟨ c .fst ∈ Cv ⟩ → (n : ℕ) (ar r : V ℓ) → c .fst ≡ pr ar (pr (# n) r)
        → PayN n ar r
     at c c∈ n ar r e = rec₁ (isPropPayN Wv Cv n ar r)
       (λ { (ar' , F , p , (q∈ , (ec , key))) →
@@ -2067,10 +2067,10 @@ The binary extractor converts a binary payload into the two subkeys of the same 
 <!--/-->
 
 ```agda
-    binAt : (k : ℕ) → PayN k ≡ BinP → (c ar a b : S) → ⟨ fst c ∈ Cv ⟩
-          → fst c ≡ pr (fst ar) (pr (# k) (pr (fst a) (fst b)))
-          → ⟨ pr (fst ar) (fst a) ∈ Cv ⟩ × ⟨ pr (fst ar) (fst b) ∈ Cv ⟩
-    binAt k eq c ar a b c∈ e = rec₁ (isProp× (snd (pr (fst ar) (fst a) ∈ Cv)) (snd (pr (fst ar) (fst b) ∈ Cv)))
+    binAt : (k : ℕ) → PayN k ≡ BinP → (c ar a b : S) → ⟨ c .fst ∈ Cv ⟩
+          → c .fst ≡ pr (ar .fst) (pr (# k) (pr (a .fst) (b .fst)))
+          → ⟨ pr (ar .fst) (a .fst) ∈ Cv ⟩ × ⟨ pr (ar .fst) (b .fst) ∈ Cv ⟩
+    binAt k eq c ar a b c∈ e = rec₁ (isProp× ((pr (ar .fst) (a .fst) ∈ Cv) .snd) ((pr (ar .fst) (b .fst) ∈ Cv) .snd))
       (λ { (a' , b' , (er , (ha , hb))) →
 ```
 
@@ -2084,9 +2084,9 @@ Pair injectivity splits the equation into the two component equations, and each 
 
 ```agda
         let q = pr-inj er
-        in subst (λ u → ⟨ pr (fst ar) u ∈ Cv ⟩) (sym (q .fst)) ha
-         , subst (λ u → ⟨ pr (fst ar) u ∈ Cv ⟩) (sym (q .snd)) hb })
-      (subst (λ P → P (fst ar) (pr (fst a) (fst b))) eq (at c c∈ k (fst ar) (pr (fst a) (fst b)) e))
+        in subst (λ u → ⟨ pr (ar .fst) u ∈ Cv ⟩) (sym (q .fst)) ha
+         , subst (λ u → ⟨ pr (ar .fst) u ∈ Cv ⟩) (sym (q .snd)) hb })
+      (subst (λ P → P (ar .fst) (pr (a .fst) (b .fst))) eq (at c c∈ k (ar .fst) (pr (a .fst) (b .fst)) e))
 ```
 
 <!--en-->
@@ -2098,10 +2098,10 @@ The bounded-quantifier extractor turns a bounded payload into membership of its 
 <!--/-->
 
 ```agda
-    bqAt : (k : ℕ) → PayN k ≡ BqP → (c ar a b : S) → ⟨ fst c ∈ Cv ⟩
-         → fst c ≡ pr (fst ar) (pr (# k) (pr (fst a) (fst b)))
-         → ⟨ pr (sucV (fst ar)) (fst b) ∈ Cv ⟩
-    bqAt k eq c ar a b c∈ e = rec₁ (snd (pr (sucV (fst ar)) (fst b) ∈ Cv))
+    bqAt : (k : ℕ) → PayN k ≡ BqP → (c ar a b : S) → ⟨ c .fst ∈ Cv ⟩
+         → c .fst ≡ pr (ar .fst) (pr (# k) (pr (a .fst) (b .fst)))
+         → ⟨ pr (sucV (ar .fst)) (b .fst) ∈ Cv ⟩
+    bqAt k eq c ar a b c∈ e = rec₁ ((pr (sucV (ar .fst)) (b .fst) ∈ Cv) .snd)
       (λ { (t , a' , (er , (ht , ha))) →
 ```
 
@@ -2114,8 +2114,8 @@ Once the bounded payload has been aligned with the displayed nested pair, its bo
 <!--/-->
 
 ```agda
-        subst (λ u → ⟨ pr (sucV (fst ar)) u ∈ Cv ⟩) (sym (pr-inj er .snd)) ha })
-      (subst (λ P → P (fst ar) (pr (fst a) (fst b))) eq (at c c∈ k (fst ar) (pr (fst a) (fst b)) e))
+        subst (λ u → ⟨ pr (sucV (ar .fst)) u ∈ Cv ⟩) (sym (pr-inj er .snd)) ha })
+      (subst (λ P → P (ar .fst) (pr (a .fst) (b .fst))) eq (at c c∈ k (ar .fst) (pr (a .fst) (b .fst)) e))
 ```
 
 <!--en-->
@@ -2143,8 +2143,8 @@ The same conclusion holds for quantifiers with the expected change of arity. An 
 <!--/-->
 
 ```agda
-      , ( unSuccClosed-in zero 6 (δ' c) (λ c' ar a c'∈ e → at c' c'∈ 6 (fst ar) (fst a) e)
-      , ( unSuccClosed-in zero 7 (δ' c) (λ c' ar a c'∈ e → at c' c'∈ 7 (fst ar) (fst a) e)
+      , ( unSuccClosed-in zero 6 (δ' c) (λ c' ar a c'∈ e → at c' c'∈ 6 (ar .fst) (a .fst) e)
+      , ( unSuccClosed-in zero 7 (δ' c) (λ c' ar a c'∈ e → at c' c'∈ 7 (ar .fst) (a .fst) e)
       , ( binSuccClosed-in zero 8 (δ' c) (bqAt 8 refl)
       ,   binSuccClosed-in zero 9 (δ' c) (bqAt 9 refl) )))))
 ```
@@ -2158,7 +2158,7 @@ It remains to recover the full shape of an arbitrary member `c'` of the candidat
 <!--/-->
 
 ```agda
-    wit : (c c' : S) → ⟨ fst c' ∈ Cv ⟩ → ∥ ShapeWit (sh 2 w) (δ' c) c' ∥₁
+    wit : (c c' : S) → ⟨ c' .fst ∈ Cv ⟩ → ∥ ShapeWit (sh 2 w) (δ' c) c' ∥₁
     wit c c' c'∈ = rec₁ squash₁
       (λ { (ar , F , p , (q∈ , (ec , key))) → rec₁ squash₁
         (λ { (k , r , (e' , pay)) →
@@ -2177,7 +2177,7 @@ The recovered data are represented inside the relevant sets: `qS` presents the e
               arS = fstS qS ar F refl
               pS = sndS c' ar p ec
               rS = sndS pS (# (toℕ k)) r e'
-              ek : fst c' ≡ pr (fst arS) (pr (# (toℕ k)) (fst rS))
+              ek : c' .fst ≡ pr (arS .fst) (pr (# (toℕ k)) (rS .fst))
               ek = ec ∙ cong (pr ar) e'
 ```
 
@@ -2219,9 +2219,9 @@ A binary payload merely asserts the existence of two components whose ordered pa
 
 ```agda
       pairWit : (k : ℕ) (rel : Formula S (4 + (2 + m))) (c' arS rS : S)
-              → fst c' ≡ pr (fst arS) (pr (# k) (fst rS))
-              → (t u : V ℓ) → fst rS ≡ pr t u
-              → ((tS uS : S) → fst tS ≡ t → fst uS ≡ u → ⟨ env4 c' arS uS tS ⊨ rel ⟩)
+              → c' .fst ≡ pr (arS .fst) (pr (# k) (rS .fst))
+              → (t u : V ℓ) → rS .fst ≡ pr t u
+              → ((tS uS : S) → tS .fst ≡ t → uS .fst ≡ u → ⟨ env4 c' arS uS tS ⊨ rel ⟩)
               → BinWit k rel (δ' c) c'
 ```
 
@@ -2236,7 +2236,7 @@ Pair injectivity separates the payload equality into equations for its two compo
 ```agda
       pairWit k rel c' arS rS ek t u er g =
         arS , (fstS rS t u er , (sndS rS t u er
-        , ( ek ∙ cong (λ v → pr (fst arS) (pr (# k) v)) er
+        , ( ek ∙ cong (λ v → pr (arS .fst) (pr (# k) v)) er
           , g (fstS rS t u er) (sndS rS t u er) refl refl )))
 ```
 
@@ -2249,11 +2249,11 @@ For atomic formulas, both payload components must be legal term codes at the rec
 <!--/-->
 
 ```agda
-      both : (c' arS : S) (t u : V ℓ) → IsTmV Wv t (fst arS) → IsTmV Wv u (fst arS)
-           → (tS uS : S) → fst tS ≡ t → fst uS ≡ u → ⟨ env4 c' arS uS tS ⊨ bothTm (sh 2 w) ⟩
+      both : (c' arS : S) (t u : V ℓ) → IsTmV Wv t (arS .fst) → IsTmV Wv u (arS .fst)
+           → (tS uS : S) → tS .fst ≡ t → uS .fst ≡ u → ⟨ env4 c' arS uS tS ⊨ bothTm (sh 2 w) ⟩
       both c' arS t u ht hu tS uS qt qu =
           tmWit (suc zero) (suc (suc zero)) (sh 4 (sh 2 w)) (env4 c' arS uS tS)
-            (subst (λ x → IsTmV Wv x (fst arS)) (sym qt) ht)
+            (subst (λ x → IsTmV Wv x (arS .fst)) (sym qt) ht)
 ```
 
 <!--en-->
@@ -2266,7 +2266,7 @@ The second component is treated identically, so the two recovered term witnesses
 
 ```agda
         , tmWit zero (suc (suc zero)) (sh 4 (sh 2 w)) (env4 c' arS uS tS)
-            (subst (λ x → IsTmV Wv x (fst arS)) (sym qu) hu)
+            (subst (λ x → IsTmV Wv x (arS .fst)) (sym qu) hu)
 ```
 
 <!--en-->
@@ -2278,11 +2278,11 @@ A bounded quantifier needs only its bounding term to be legal at the current ari
 <!--/-->
 
 ```agda
-      first : (c' arS : S) (t u : V ℓ) → IsTmV Wv t (fst arS)
-            → (tS uS : S) → fst tS ≡ t → fst uS ≡ u → ⟨ env4 c' arS uS tS ⊨ fstTm (sh 2 w) ⟩
+      first : (c' arS : S) (t u : V ℓ) → IsTmV Wv t (arS .fst)
+            → (tS uS : S) → tS .fst ≡ t → uS .fst ≡ u → ⟨ env4 c' arS uS tS ⊨ fstTm (sh 2 w) ⟩
       first c' arS t u ht tS uS qt qu =
         tmWit (suc zero) (suc (suc zero)) (sh 4 (sh 2 w)) (env4 c' arS uS tS)
-          (subst (λ x → IsTmV Wv x (fst arS)) (sym qt) ht)
+          (subst (λ x → IsTmV Wv x (arS .fst)) (sym qt) ht)
 ```
 
 <!--en-->
@@ -2294,8 +2294,8 @@ Tag zero denotes membership. Its payload contains two legal term codes, so the b
 <!--/-->
 
 ```agda
-      fill : (k : Fin 10) (c' arS rS : S) → PayN (toℕ k) (fst arS) (fst rS)
-           → fst c' ≡ pr (fst arS) (pr (# (toℕ k)) (fst rS))
+      fill : (k : Fin 10) (c' arS rS : S) → PayN (toℕ k) (arS .fst) (rS .fst)
+           → c' .fst ≡ pr (arS .fst) (pr (# (toℕ k)) (rS .fst))
            → ∥ ShapeWit (sh 2 w) (δ' c) c' ∥₁
       fill zero c' arS rS pay ek = map₁
         (λ { (t , u , (er , (ht , hu))) → inl (pairWit 0 (bothTm (sh 2 w)) c' arS rS ek t u er (both c' arS t u ht hu)) })
@@ -2432,34 +2432,34 @@ The two unbounded quantifiers are discharged by quoting the reader at the succes
 <!--/-->
 
 ```agda
-    , ( unSuccClosed-in C 6 γ (λ c' ar a c'∈ e → at c' c'∈ 6 (fst ar) (fst a) e)
-    , ( unSuccClosed-in C 7 γ (λ c' ar a c'∈ e → at c' c'∈ 7 (fst ar) (fst a) e)
+    , ( unSuccClosed-in C 6 γ (λ c' ar a c'∈ e → at c' c'∈ 6 (ar .fst) (a .fst) e)
+    , ( unSuccClosed-in C 7 γ (λ c' ar a c'∈ e → at c' c'∈ 7 (ar .fst) (a .fst) e)
     , ( binSuccClosed-in C 8 γ (bqAt 8 refl)
     ,   binSuccClosed-in C 9 γ (bqAt 9 refl) )))))
 ```
 
 <!--en-->
-The decoding theorem is the chapter's first main result. Every member `c` of a code set satisfying the description yields, under propositional truncation, a natural number `k` and a formula `ψ` of arity `k`, with `fst c ≡ fst (keyS W ψ)`. Thus the theorem asserts existence of a matching formula key, without choosing a decoder or asserting uniqueness.
+The decoding theorem is the chapter's first main result. Every member `c` of a code set satisfying the description yields, under propositional truncation, a natural number `k` and a formula `ψ` of arity `k`, with `c .fst ≡ (keyS W ψ) .fst`. Thus the theorem asserts existence of a matching formula key, without choosing a decoder or asserting uniqueness.
 <!--zh-->
-解码定理是本章的第一个主要结果。对于满足描述的码集中的每个元素 `c`，都可在命题截断下得到一个自然数 `k` 和一条元数为 `k` 的公式 `ψ`，并有 `fst c ≡ fst (keyS W ψ)`。因此，定理只断言相应公式键的存在，并未选定解码函数，也未断言唯一性。
+解码定理是本章的第一个主要结果。对于满足描述的码集中的每个元素 `c`，都可在命题截断下得到一个自然数 `k` 和一条元数为 `k` 的公式 `ψ`，并有 `c .fst ≡ (keyS W ψ) .fst`。因此，定理只断言相应公式键的存在，并未选定解码函数，也未断言唯一性。
 <!--ja-->
-復号定理は本章の最初の主要結果である。記述を満たす符号集合の各要素 `c` から、命題的切り詰めのもとで、自然数 `k`、アリティ `k` の論理式 `ψ`、および `fst c ≡ fst (keyS W ψ)` が得られる。したがって、この定理が主張するのは対応する論理式キーの存在であり、復号関数の選択や一意性ではない。
+復号定理は本章の最初の主要結果である。記述を満たす符号集合の各要素 `c` から、命題的切り詰めのもとで、自然数 `k`、アリティ `k` の論理式 `ψ`、および `c .fst ≡ (keyS W ψ) .fst` が得られる。したがって、この定理が主張するのは対応する論理式キーの存在であり、復号関数の選択や一意性ではない。
 <!--/-->
 
 ```agda
-  key-out : (c : S) → ⟨ fst c ∈ Cv ⟩
-          → ∥ Σ[ k ∶ ℕ ] Σ[ ψ ∶ Formula ⟪ fst W ⟫ k ] (fst c ≡ fst (keyS W ψ)) ∥₁
+  key-out : (c : S) → ⟨ c .fst ∈ Cv ⟩
+          → ∥ Σ[ k ∶ ℕ ] Σ[ ψ ∶ Formula ⟪ W .fst ⟫ k ] (c .fst ≡ (keyS W ψ) .fst) ∥₁
   key-out c c∈ = rec₁ squash₁
     (λ { (ar , F , p , (q∈ , (ec , key))) → rec₁ squash₁
       (λ { (k , qk) → map₁ (λ { (ψ , e) → k , ψ , e })
 ```
 
 <!--en-->
-Start with the truncated shape data of `c`: an arity entry, a table, and a payload satisfying the appropriate key condition. The arity hypothesis identifies the recorded arity with a numeral `# k`. Together with the downward closure obtained above, `witnessAt-out` then recovers, still under truncation, a formula of arity `k` whose key has underlying set `fst c`.
+Start with the truncated shape data of `c`: an arity entry, a table, and a payload satisfying the appropriate key condition. The arity hypothesis identifies the recorded arity with a numeral `# k`. Together with the downward closure obtained above, `witnessAt-out` then recovers, still under truncation, a formula of arity `k` whose key has underlying set `c .fst`.
 <!--zh-->
-先从 `c` 的截断形状数据中取得元数条目、表和满足相应键条件的载荷。元数假设把所记录的元数等同于某个数码 `# k`。再结合前面得到的向下封闭性，`witnessAt-out` 便在仍受截断的意义下恢复一条元数为 `k` 的公式，其键的底层集合就是 `fst c`。
+先从 `c` 的截断形状数据中取得元数条目、表和满足相应键条件的载荷。元数假设把所记录的元数等同于某个数码 `# k`。再结合前面得到的向下封闭性，`witnessAt-out` 便在仍受截断的意义下恢复一条元数为 `k` 的公式，其键的底层集合就是 `c .fst`。
 <!--ja-->
-まず `c` の切り詰められた形のデータから、アリティの項目、表、そして対応するキー条件を満たすペイロードを得る。アリティについての仮定により、記録されたアリティはある数項 `# k` と同一視される。これを先に得た下向き閉性と合わせると、`witnessAt-out` は、なお切り詰めのもとで、キーの基底集合が `fst c` であるアリティ `k` の論理式を復元する。
+まず `c` の切り詰められた形のデータから、アリティの項目、表、そして対応するキー条件を満たすペイロードを得る。アリティについての仮定により、記録されたアリティはある数項 `# k` と同一視される。これを先に得た下向き閉性と合わせると、`witnessAt-out` は、なお切り詰めのもとで、キーの基底集合が `c .fst` であるアリティ `k` の論理式を復元する。
 <!--/-->
 
 ```agda
@@ -2516,8 +2516,8 @@ For completeness, assume a code-domain slot `C`, an alphabet slot `w`, and an ar
 <summary class="submodule-fold-heading">
 ```agda
 module CodesComplete {m : ℕ} (C w E : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) (W : S)
-  (qw : fst (lookup w γ) ≡ fst W) (tg : Tags γ N)
-  (arity∈ : (n : ℕ) → ⟨ pr (# n) (fst (envSet W n)) ∈ fst (lookup E γ) ⟩)
+  (qw : (lookup w γ) .fst ≡ W .fst) (tg : Tags γ N)
+  (arity∈ : (n : ℕ) → ⟨ pr (# n) ((envSet W n) .fst) ∈ (lookup E γ) .fst ⟩)
   (hc : ⟨ γ ⊨ closeAt C w E N ⟩) where
 ```
 </summary>
@@ -2537,7 +2537,7 @@ Write `Cv` for the underlying set named by the code-domain slot. Completeness wi
 
 ```agda
   private
-    Cv = fst (lookup C γ)
+    Cv = (lookup C γ) .fst
 ```
 
 <!--en-->
@@ -2549,7 +2549,7 @@ Every constant of the alphabet belongs to the alphabet slot: the identification 
 <!--/-->
 
 ```agda
-    ι∈w : (q : Ab) → ⟨ ι q ∈ fst (lookup w γ) ⟩
+    ι∈w : (q : Ab) → ⟨ ι q ∈ (lookup w γ) .fst ⟩
     ι∈w q = subst (λ u → ⟨ ι q ∈ u ⟩) (sym qw) (ι∈ q)
 ```
 
@@ -2576,7 +2576,7 @@ The canonical tower entry at arity `n`, the pair of the numeral `n` with the env
 
 ```agda
     qS : ℕ → S
-    qS n = down (lookup E γ) (pr (# n) (fst (envSet W n))) (arity∈ n)
+    qS n = down (lookup E γ) (pr (# n) ((envSet W n) .fst)) (arity∈ n)
 ```
 
 <!--en-->
@@ -2639,7 +2639,7 @@ The structural induction begins with the four possible membership atoms. In each
 <!--/-->
 
 ```agda
-  key-in : ∀ {n} (ψ : Formula Ab n) → ⟨ fst (keyS W ψ) ∈ Cv ⟩
+  key-in : ∀ {n} (ψ : Formula Ab n) → ⟨ (keyS W ψ) .fst ∈ Cv ⟩
   key-in {n} (con x ∈̇ con y) = CR.atomClose-out n f0 f0 f0 (sh 4 w) (sh 5 w) (frame n .fst) (ιS x) (ιS y) (ι∈w x) (ι∈w y)
   key-in {n} (con x ∈̇ var j) = CR.atomClose-out n f0 f0 f1 (sh 4 w) i2 (frame n .snd .fst) (ιS x) (nn (toℕ j)) (ι∈w x) (var∈ n j)
   key-in {n} (var i ∈̇ con y) = CR.atomClose-out n f0 f1 f0 i1 (sh 5 w) (frame n .snd .snd .fst) (nn (toℕ i)) (ιS y) (var∈ n i) (ι∈w y)
@@ -2730,8 +2730,8 @@ It remains to show that the canonical domain really satisfies the description. T
 <summary class="submodule-fold-heading">
 ```agda
 module CodesHolds {m : ℕ} (C w E : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) (W : S)
-  (qw : fst (lookup w γ) ≡ fst W) (qC : fst (lookup C γ) ≡ fst (AllCodes W))
-  (qE : fst (lookup E γ) ≡ fst (Tower.tower W)) (tg : Tags γ N) where
+  (qw : (lookup w γ) .fst ≡ W .fst) (qC : (lookup C γ) .fst ≡ (AllCodes W) .fst)
+  (qE : (lookup E γ) .fst ≡ (Tower.tower W) .fst) (tg : Tags γ N) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -2750,9 +2750,9 @@ Write `Cv`, `Wv`, and `Ev` for the underlying sets named by the code-domain, alp
 <!--/-->
 
 ```agda
-    Cv = fst (lookup C γ)
-    Wv = fst (lookup w γ)
-    Ev = fst (lookup E γ)
+    Cv = (lookup C γ) .fst
+    Wv = (lookup w γ) .fst
+    Ev = (lookup E γ) .fst
     open CodesSem Wv Cv
 ```
 
@@ -2792,8 +2792,8 @@ By definition of `AllCodes W`, the key of every formula over the alphabet belong
 <!--/-->
 
 ```agda
-    mem : ∀ {n} (ψ : Formula Ab n) → ⟨ fst (keyS W ψ) ∈ Cv ⟩
-    mem ψ = subst (λ u → ⟨ fst (keyS W ψ) ∈ u ⟩) (sym qC) (key∈AllCodes W ψ)
+    mem : ∀ {n} (ψ : Formula Ab n) → ⟨ (keyS W ψ) .fst ∈ Cv ⟩
+    mem ψ = subst (λ u → ⟨ (keyS W ψ) .fst ∈ u ⟩) (sym qC) (key∈AllCodes W ψ)
 ```
 
 <!--en-->
@@ -2805,8 +2805,8 @@ Likewise, the tower contains the canonical entry pairing the numeral `# n` with 
 <!--/-->
 
 ```agda
-    entry∈ : (n : ℕ) → ⟨ pr (# n) (fst (envSet W n)) ∈ Ev ⟩
-    entry∈ n = subst (λ u → ⟨ pr (# n) (fst (envSet W n)) ∈ u ⟩) (sym qE) (Tower.tower-in′ W n)
+    entry∈ : (n : ℕ) → ⟨ pr (# n) ((envSet W n) .fst) ∈ Ev ⟩
+    entry∈ n = subst (λ u → ⟨ pr (# n) ((envSet W n) .fst) ∈ u ⟩) (sym qE) (Tower.tower-in′ W n)
 ```
 
 <!--en-->
@@ -2877,8 +2877,8 @@ The shape clause of the canonical instance follows: every member of `AllCodes W`
 ```agda
     shape : ⟨ γ ⊨ shapeAt C w E N ⟩
     shape = ShapeRead.shape-in C w E N γ tg (λ c c∈ → map₁
-      (λ { (n , ψ , e) → # n , fst (envSet W n) , cd ψ , (entry∈ n , (e , keyOf ψ)) })
-      (AllCodes-out W c (subst (λ u → ⟨ fst c ∈ u ⟩) qC c∈)))
+      (λ { (n , ψ , e) → # n , (envSet W n) .fst , cd ψ , (entry∈ n , (e , keyOf ψ)) })
+      (AllCodes-out W c (subst (λ u → ⟨ c .fst ∈ u ⟩) qC c∈)))
 ```
 
 <!--en-->
@@ -2890,7 +2890,7 @@ The decoding helper fixes the arity explicitly. If a code-domain member `c` has 
 <!--/-->
 
 ```agda
-    decodeAt : (c : S) → ⟨ fst c ∈ Cv ⟩ → (n : ℕ) (z : V ℓ) → fst c ≡ pr (# n) z
+    decodeAt : (c : S) → ⟨ c .fst ∈ Cv ⟩ → (n : ℕ) (z : V ℓ) → c .fst ≡ pr (# n) z
              → ∥ Σ[ ψ ∶ Formula Ab n ] (z ≡ cd ψ) ∥₁
     decodeAt c c∈ n z e = map₁
       (λ { (n₁ , ψ₁ , e₁) →
@@ -2908,7 +2908,7 @@ The proof reads the member outward and aligns the two arities by the injectivity
 ```agda
             nq = #-inj′ (q .fst)
         in subst (Formula Ab) nq ψ₁ , (sym (q .snd) ∙ sym (cd-subst nq ψ₁)) })
-      (AllCodes-out W c (subst (λ u → ⟨ fst c ∈ u ⟩) qC c∈))
+      (AllCodes-out W c (subst (λ u → ⟨ c .fst ∈ u ⟩) qC c∈))
 ```
 
 <!--en-->
@@ -2937,7 +2937,7 @@ Constants decode through the fiber of the alphabet embedding: a member of the al
     conDec x x∈ = ∣ con (fib .fst) , cong (pr (# 0)) (fib .snd) ∣₁
       where
       fib : Σ[ q ∶ Ab ] (ι q ≡ x)
-      fib = ∈-asFiber {a = x} {b = fst W} (subst (λ u → ⟨ x ∈ u ⟩) qw x∈)
+      fib = ∈-asFiber {a = x} {b = W .fst} (subst (λ u → ⟨ x ∈ u ⟩) qw x∈)
 ```
 
 <!--en-->
@@ -2966,7 +2966,7 @@ Fix one entry `q` of the environment tower and an equation identifying its recor
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-    module At (q : S) (q∈ : ⟨ fst q ∈ Ev ⟩) (ar F s : S) (n : ℕ) (qa : fst ar ≡ # n) where
+    module At (q : S) (q∈ : ⟨ q .fst ∈ Ev ⟩) (ar F s : S) (n : ℕ) (qa : ar .fst ≡ # n) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -2975,7 +2975,7 @@ Fix one entry `q` of the environment tower and an equation identifying its recor
       private
         δ4 : S ^ (4 + m)
         δ4 = F ∷ ar ∷ s ∷ q ∷ γ
-        A = fst ar
+        A = ar .fst
 ```
 
 <!--en-->
@@ -3000,7 +3000,7 @@ The helper `in-key` transports canonical membership along an equality. If `x` is
 <!--/-->
 
 ```agda
-        in-key : ∀ {k} (ψ : Formula Ab k) (x : V ℓ) → x ≡ fst (keyS W ψ) → ⟨ x ∈ Cv ⟩
+        in-key : ∀ {k} (ψ : Formula Ab k) (x : V ℓ) → x ≡ (keyS W ψ) .fst → ⟨ x ∈ Cv ⟩
         in-key ψ x e = subst (λ u → ⟨ u ∈ Cv ⟩) (sym e) (mem ψ)
 ```
 
@@ -3042,7 +3042,7 @@ The atomic closure clause is proved from the two term decodings. Given a decodin
         atomIn : (k Nx Ny : Fin 10) (X : Fin (4 + m)) (Y : Fin (5 + m))
                → (op : Term Ab n → Term Ab n → Formula Ab n)
                → ((t u : Term Ab n) → cd (op t u) ≡ pr (# (toℕ k)) (pr (ct t) (ct u)))
-               → TmDec Nx (fst (lookup X δ4)) → ((x : S) → TmDec Ny (fst (lookup Y (x ∷ δ4))))
+               → TmDec Nx ((lookup X δ4) .fst) → ((x : S) → TmDec Ny ((lookup Y (x ∷ δ4)) .fst))
                → ⟨ δ4 ⊨ Cl.atomClose k Nx Ny X Y ⟩
 ```
 
@@ -3056,10 +3056,10 @@ Decode the two coordinates separately. The first yields a term `t` and its codin
 
 ```agda
         atomIn k Nx Ny X Y op code dx dy = CR.atomClose-in k Nx Ny X Y (λ x y x∈ y∈ →
-          let d1 : ∥ TmAt Nx (fst x) ∥₁
-              d1 = dx (fst x) x∈
-              d2 : ∥ TmAt Ny (fst y) ∥₁
-              d2 = dy x (fst y) y∈
+          let d1 : ∥ TmAt Nx (x .fst) ∥₁
+              d1 = dx (x .fst) x∈
+              d2 : ∥ TmAt Ny (y .fst) ∥₁
+              d2 = dy x (y .fst) y∈
 ```
 
 <!--en-->
@@ -3072,9 +3072,9 @@ The set `G` is the candidate atomic key formed from the arity, the atomic tag, a
 
 ```agda
               G : V ℓ
-              G = pr A (pr (# (toℕ k)) (pr (pr (# (toℕ Nx)) (fst x)) (pr (# (toℕ Ny)) (fst y))))
-          in rec₁ (snd (G ∈ Cv))
-            (λ { (t , et) → rec₁ (snd (G ∈ Cv))
+              G = pr A (pr (# (toℕ k)) (pr (pr (# (toℕ Nx)) (x .fst)) (pr (# (toℕ Ny)) (y .fst))))
+          in rec₁ ((G ∈ Cv) .snd)
+            (λ { (t , et) → rec₁ ((G ∈ Cv) .snd)
               (λ { (u , eu) → in-key (op t u) G
 ```
 
@@ -3105,7 +3105,7 @@ For a binary connective, both immediate subformulas have the same arity `n` as t
               → ((a b : Formula Ab n) → cd (op a b) ≡ pr (# (toℕ k)) (pr (cd a) (cd b)))
               → ⟨ δ4 ⊨ Cl.binClose k ⟩
         binIn k op code = CR.binClose-in k (λ c₁ c₂ a b c₁∈ c₂∈ e₁ e₂ →
-          let d1 : ∥ FoAt n (fst a) ∥₁
+          let d1 : ∥ FoAt n (a .fst) ∥₁
 ```
 
 <!--en-->
@@ -3117,11 +3117,11 @@ The two applications of `decodeAt` yield, merely, formulas `ψ₁` and `ψ₂` w
 <!--/-->
 
 ```agda
-              d1 = decodeAt c₁ c₁∈ n (fst a) (e₁ ∙ cong (λ v → pr v (fst a)) qa)
-              d2 : ∥ FoAt n (fst b) ∥₁
-              d2 = decodeAt c₂ c₂∈ n (fst b) (e₂ ∙ cong (λ v → pr v (fst b)) qa)
+              d1 = decodeAt c₁ c₁∈ n (a .fst) (e₁ ∙ cong (λ v → pr v (a .fst)) qa)
+              d2 : ∥ FoAt n (b .fst) ∥₁
+              d2 = decodeAt c₂ c₂∈ n (b .fst) (e₂ ∙ cong (λ v → pr v (b .fst)) qa)
               G : V ℓ
-              G = pr A (pr (# (toℕ k)) (pr (fst a) (fst b)))
+              G = pr A (pr (# (toℕ k)) (pr (a .fst) (b .fst)))
 ```
 
 <!--en-->
@@ -3133,8 +3133,8 @@ Eliminating the two truncated witnesses reduces the goal to genuine formulas `ψ
 <!--/-->
 
 ```agda
-          in rec₁ (snd (G ∈ Cv))
-            (λ { (ψ₁ , ea) → rec₁ (snd (G ∈ Cv))
+          in rec₁ ((G ∈ Cv) .snd)
+            (λ { (ψ₁ , ea) → rec₁ ((G ∈ Cv) .snd)
               (λ { (ψ₂ , eb) → in-key (op ψ₁ ψ₂) G
                 (cong₂ pr qa (cong (pr (# (toℕ k))) (cong₂ pr ea eb) ∙ sym (code ψ₁ ψ₂))) })
               d2 })
@@ -3178,7 +3178,7 @@ Binding one variable changes the arity of the body from `n` to `suc n`. The quan
              → ((a : Formula Ab (suc n)) → cd (op a) ≡ pr (# (toℕ k)) (cd a))
              → ⟨ δ4 ⊨ Cl.quClose k ⟩
         quIn k op code = CR.quClose-in k (λ c₁ ar' a c₁∈ e₁ es →
-          let d1 : ∥ FoAt (suc n) (fst a) ∥₁
+          let d1 : ∥ FoAt (suc n) (a .fst) ∥₁
 ```
 
 <!--en-->
@@ -3190,10 +3190,10 @@ Let `G` be the key assembled from the outer arity, the quantifier tag, and the e
 <!--/-->
 
 ```agda
-              d1 = decodeAt c₁ c₁∈ (suc n) (fst a) (e₁ ∙ cong (λ v → pr v (fst a)) (es ∙ cong sucV qa))
+              d1 = decodeAt c₁ c₁∈ (suc n) (a .fst) (e₁ ∙ cong (λ v → pr v (a .fst)) (es ∙ cong sucV qa))
               G : V ℓ
-              G = pr A (pr (# (toℕ k)) (fst a))
-          in rec₁ (snd (G ∈ Cv))
+              G = pr A (pr (# (toℕ k)) (a .fst))
+          in rec₁ ((G ∈ Cv) .snd)
             (λ { (ψ₁ , ea) → in-key (op ψ₁) G (cong₂ pr qa (cong (pr (# (toℕ k))) ea ∙ sym (code ψ₁))) })
 ```
 
@@ -3221,7 +3221,7 @@ A bounded quantifier carries both a body of arity `suc n` and a bounding term of
         bqIn : (k Nx : Fin 10) (X : Fin (8 + m))
              → (op : Term Ab n → Formula Ab (suc n) → Formula Ab n)
              → ((t : Term Ab n) (a : Formula Ab (suc n)) → cd (op t a) ≡ pr (# (toℕ k)) (pr (ct t) (cd a)))
-             → ((ar' a s' c₁ : S) → TmDec Nx (fst (lookup X (a ∷ ar' ∷ s' ∷ c₁ ∷ δ4))))
+             → ((ar' a s' c₁ : S) → TmDec Nx ((lookup X (a ∷ ar' ∷ s' ∷ c₁ ∷ δ4)) .fst))
              → ⟨ δ4 ⊨ Cl.bqClose k Nx X ⟩
 ```
 
@@ -3235,10 +3235,10 @@ The term-decoding hypothesis recovers the bound from its membership proof, while
 
 ```agda
         bqIn k Nx X op code dx = CR.bqClose-in k Nx X (λ c₁ ar' a s' c₁∈ e₁ es x x∈ →
-          let d1 : ∥ TmAt Nx (fst x) ∥₁
-              d1 = dx ar' a s' c₁ (fst x) x∈
-              d2 : ∥ FoAt (suc n) (fst a) ∥₁
-              d2 = decodeAt c₁ c₁∈ (suc n) (fst a) (e₁ ∙ cong (λ v → pr v (fst a)) (es ∙ cong sucV qa))
+          let d1 : ∥ TmAt Nx (x .fst) ∥₁
+              d1 = dx ar' a s' c₁ (x .fst) x∈
+              d2 : ∥ FoAt (suc n) (a .fst) ∥₁
+              d2 = decodeAt c₁ c₁∈ (suc n) (a .fst) (e₁ ∙ cong (λ v → pr v (a .fst)) (es ∙ cong sucV qa))
 ```
 
 <!--en-->
@@ -3251,9 +3251,9 @@ The key `G` now has a nested payload: first the code of the bounding term, then 
 
 ```agda
               G : V ℓ
-              G = pr A (pr (# (toℕ k)) (pr (pr (# (toℕ Nx)) (fst x)) (fst a)))
-          in rec₁ (snd (G ∈ Cv))
-            (λ { (t , et) → rec₁ (snd (G ∈ Cv))
+              G = pr A (pr (# (toℕ k)) (pr (pr (# (toℕ Nx)) (x .fst)) (a .fst)))
+          in rec₁ ((G ∈ Cv) .snd)
+            (λ { (t , et) → rec₁ ((G ∈ Cv) .snd)
               (λ { (ψ₁ , ea) → in-key (op t ψ₁) G
 ```
 
@@ -3348,9 +3348,9 @@ It remains to establish the closure clauses at every entry `q` of the environmen
 ```agda
     close : ⟨ γ ⊨ closeAt C w E N ⟩
     close q q∈ = bothAll-in i0 (Close.all C w N) (q ∷ γ) (λ ar F s s∈ ar∈ F∈ e →
-      rec₁ (snd ((F ∷ ar ∷ s ∷ q ∷ γ) ⊨ Close.all C w N))
+      rec₁ (((F ∷ ar ∷ s ∷ q ∷ γ) ⊨ Close.all C w N) .snd)
         (λ { (n , qp) → At.all q q∈ ar F s n (pr-inj (sym e ∙ qp) .fst) })
-        (Tower.tower-out W q (subst (λ u → ⟨ fst q ∈ u ⟩) qE q∈)))
+        (Tower.tower-out W q (subst (λ u → ⟨ q .fst ∈ u ⟩) qE q∈)))
 ```
 
 <!--en-->

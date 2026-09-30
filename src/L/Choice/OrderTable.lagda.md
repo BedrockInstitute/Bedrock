@@ -258,7 +258,7 @@ For an index `α`, `Related α z` says, under propositional truncation, that `z`
 ```agda
 Related : V ℓ → V ℓ → hProp (ℓ-suc ℓ)
 Related α z = ∃[ oα ∶ IsOrd α ] (∃[ a ∶ Mem (Lset α) ] (∃[ b ∶ Mem (Lset α) ]
-  ((z ≡ pr (fst a) (fst b)) , setIsSet z (pr (fst a) (fst b))) ⊓ Ordering α oα a b))
+  ((z ≡ pr (a .fst) (b .fst)) , setIsSet z (pr (a .fst) (b .fst))) ⊓ Ordering α oα a b))
 ```
 
 <!--en-->
@@ -271,8 +271,8 @@ A model set `r` realizes this class when its membership agrees with `Related α`
 
 ```agda
 Realizes : V ℓ → S → hProp (ℓ-suc ℓ)
-Realizes α r = ∀[ z ∶ S ] ((fst z ∈ fst r) ⇒ Related α (fst z))
-                        ⊓ (Related α (fst z) ⇒ (fst z ∈ fst r))
+Realizes α r = ∀[ z ∶ S ] ((z .fst ∈ r .fst) ⇒ Related α (z .fst))
+                        ⊓ (Related α (z .fst) ⇒ (z .fst ∈ r .fst))
 ```
 
 <!--en-->
@@ -298,9 +298,9 @@ The two implications in a realization proof determine a path between the proposi
 
 ```agda
 rel-path : (α : V ℓ) (r : S) → IsRel α r
-         → (z : S) → (fst z ∈ fst r) ≡ Related α (fst z)
+         → (z : S) → (z .fst ∈ r .fst) ≡ Related α (z .fst)
 rel-path α r p z =
-  ⇔toPath {P = fst z ∈ fst r} {Q = Related α (fst z)} (p z .fst) (p z .snd)
+  ⇔toPath {P = z .fst ∈ r .fst} {Q = Related α (z .fst)} (p z .fst) (p z .snd)
 ```
 
 <!--en-->
@@ -334,7 +334,7 @@ module _ (α : V ℓ) (oα : IsOrd α) (a b : Mem (Lset α)) where
 <div class="submodule-fold-content">
 
 ```agda
-  related-in : relOf (orderAt α oα) a b → ⟨ Related α (pr (fst a) (fst b)) ⟩
+  related-in : relOf (orderAt α oα) a b → ⟨ Related α (pr (a .fst) (b .fst)) ⟩
   related-in h = ∣ oα , ∣ a , ∣ b , (refl , ∣ h ∣₁) ∣₁ ∣₁ ∣₁
 ```
 
@@ -347,11 +347,11 @@ The reverse reading has a deliberately narrower shape. Its input object is alrea
 <!--/-->
 
 ```agda
-  related-out : ⟨ Related α (pr (fst a) (fst b)) ⟩ → relOf (orderAt α oα) a b
+  related-out : ⟨ Related α (pr (a .fst) (b .fst)) ⟩ → relOf (orderAt α oα) a b
   related-out h = strict α oα a b (rec₁ squash₁ atOrd h)
     where
     atPair : (o : IsOrd α) (a' b' : Mem (Lset α))
-           → (pr (fst a) (fst b) ≡ pr (fst a') (fst b'))
+           → (pr (a .fst) (b .fst) ≡ pr (a' .fst) (b' .fst))
 ```
 
 <!--en-->
@@ -380,9 +380,9 @@ Pair-code injectivity first recovers equality of the underlying endpoint sets. E
 
 ```agda
       ea : a ≡ a'
-      ea = Σ≡Prop (λ x → snd (x ∈ Lset α)) (pr-inj q .fst)
+      ea = Σ≡Prop (λ x → (x ∈ Lset α) .snd) (pr-inj q .fst)
       eb : b ≡ b'
-      eb = Σ≡Prop (λ x → snd (x ∈ Lset α)) (pr-inj q .snd)
+      eb = Σ≡Prop (λ x → (x ∈ Lset α) .snd) (pr-inj q .snd)
 ```
 
 <!--en-->
@@ -394,8 +394,8 @@ The outer ordinal certificate is explicit, while each endpoint exists only under
 <!--/-->
 
 ```agda
-    atOrd : Σ[ o ∶ IsOrd α ] ⟨ ∃[ a' ∶ Mem (Lset α) ] (∃[ b' ∶ Mem (Lset α) ] ((pr (fst a) (fst b) ≡ pr (fst a') (fst b'))
-                 , setIsSet _ (pr (fst a') (fst b'))) ⊓ Ordering α o a' b') ⟩
+    atOrd : Σ[ o ∶ IsOrd α ] ⟨ ∃[ a' ∶ Mem (Lset α) ] (∃[ b' ∶ Mem (Lset α) ] ((pr (a .fst) (b .fst) ≡ pr (a' .fst) (b' .fst))
+                 , setIsSet _ (pr (a' .fst) (b' .fst))) ⊓ Ordering α o a' b') ⟩
           → ⟨ Ordering α oα a b ⟩
     atOrd (o , h₁) = rec₁ squash₁
       (λ { (a' , h₂) → rec₁ squash₁
@@ -442,7 +442,7 @@ module _ (α : V ℓ) (oα : IsOrd α) (r : S) (hr : IsRel α r) where
 ```agda
   private
     memL : Mem (Lset α) → S
-    memL c = fst c , Lset→isL α oα (fst c) (snd c)
+    memL c = c .fst , Lset→isL α oα (c .fst) (c .snd)
 ```
 
 <!--en-->
@@ -455,9 +455,9 @@ The model's internal ordered pair of the packaged endpoints and the host Kuratow
 
 ```agda
     atRel : (a b : Mem (Lset α))
-          → (fst (prʟ (memL a) (memL b)) ∈ fst r)
-          ≡ (pr (fst a) (fst b) ∈ fst r)
-    atRel a b = cong (λ x → x ∈ fst r) (prʟ-fst (memL a) (memL b))
+          → ((prʟ (memL a) (memL b)) .fst ∈ r .fst)
+          ≡ (pr (a .fst) (b .fst) ∈ r .fst)
+    atRel a b = cong (λ x → x ∈ r .fst) (prʟ-fst (memL a) (memL b))
 ```
 
 <!--en-->
@@ -470,8 +470,8 @@ Applying `Related α` to the same pair equality gives the companion bridge on th
 
 ```agda
     atRelated : (a b : Mem (Lset α))
-              → ⟨ Related α (fst (prʟ (memL a) (memL b))) ⟩
-              ≡ ⟨ Related α (pr (fst a) (fst b)) ⟩
+              → ⟨ Related α ((prʟ (memL a) (memL b)) .fst) ⟩
+              ≡ ⟨ Related α (pr (a .fst) (b .fst)) ⟩
     atRelated a b = cong (λ x → ⟨ Related α x ⟩) (prʟ-fst (memL a) (memL b))
 ```
 
@@ -485,7 +485,7 @@ The filling direction begins with a host-level comparison of two members. The fo
 
 ```agda
   rel-fill : (a b : Mem (Lset α)) → relOf (orderAt α oα) a b
-           → ⟨ pr (fst a) (fst b) ∈ fst r ⟩
+           → ⟨ pr (a .fst) (b .fst) ∈ r .fst ⟩
   rel-fill a b h = subst ⟨_⟩ (atRel a b)
     (hr (prʟ (memL a) (memL b)) .snd
       (transport (sym (atRelated a b)) (related-in α oα a b h)))
@@ -501,7 +501,7 @@ The reading direction reverses the route. Membership of the host pair is transpo
 
 ```agda
   rel-rep : (a b : Mem (Lset α))
-          → ⟨ pr (fst a) (fst b) ∈ fst r ⟩ → relOf (orderAt α oα) a b
+          → ⟨ pr (a .fst) (b .fst) ∈ r .fst ⟩ → relOf (orderAt α oα) a b
   rel-rep a b h = related-out α oα a b
     (transport (atRelated a b)
       (hr (prʟ (memL a) (memL b)) .fst (subst ⟨_⟩ (sym (atRel a b)) h)))
@@ -543,7 +543,7 @@ For presentation indices `u,v`, a carried comparison is first read as the compar
 
 ```agda
   ixRel-fill : (u v : ⟪ Lset α ⟫) → u ≺ᶜ v
-             → ⟨ pr (⟪ Lset α ⟫↪ u) (⟪ Lset α ⟫↪ v) ∈ fst r ⟩
+             → ⟨ pr (⟪ Lset α ⟫↪ u) (⟪ Lset α ⟫↪ v) ∈ r .fst ⟩
   ixRel-fill u v = rel-fill (atIx u) (atIx v)
 ```
 
@@ -557,7 +557,7 @@ Conversely, membership of the pair of embedded endpoints is read by the earlier 
 
 ```agda
   ixRel-rep : (u v : ⟪ Lset α ⟫)
-            → ⟨ pr (⟪ Lset α ⟫↪ u) (⟪ Lset α ⟫↪ v) ∈ fst r ⟩ → u ≺ᶜ v
+            → ⟨ pr (⟪ Lset α ⟫↪ u) (⟪ Lset α ⟫↪ v) ∈ r .fst ⟩ → u ≺ᶜ v
   ixRel-rep u v = rel-rep (atIx u) (atIx v)
 ```
 </div>
@@ -581,8 +581,8 @@ The first table condition is soundness of recorded values. If an index `c` lies 
 
 ```agda
 Values : S → V ℓ → Type (ℓ-suc ℓ)
-Values h B = (c r : S) → ⟨ fst c ∈ B ⟩
-           → ⟨ pr (fst c) (fst r) ∈ fst h ⟩ → IsRel (fst c) r
+Values h B = (c r : S) → ⟨ c .fst ∈ B ⟩
+           → ⟨ pr (c .fst) (r .fst) ∈ h .fst ⟩ → IsRel (c .fst) r
 ```
 
 <!--en-->
@@ -595,8 +595,8 @@ The second condition is totality below the bound. Every `c ∈ B` has some recor
 
 ```agda
 Entries : S → V ℓ → Type (ℓ-suc ℓ)
-Entries h B = (c : S) → ⟨ fst c ∈ B ⟩
-            → ∥ (Σ[ r ∶ S ] ⟨ pr (fst c) (fst r) ∈ fst h ⟩) ∥₁
+Entries h B = (c : S) → ⟨ c .fst ∈ B ⟩
+            → ∥ (Σ[ r ∶ S ] ⟨ pr (c .fst) (r .fst) ∈ h .fst ⟩) ∥₁
 ```
 
 <!--en-->
@@ -609,7 +609,7 @@ The third condition excludes entries beyond the bound: every coded pair in `h` h
 
 ```agda
 Domain : S → V ℓ → Type (ℓ-suc ℓ)
-Domain h B = (c r : S) → ⟨ pr (fst c) (fst r) ∈ fst h ⟩ → ⟨ fst c ∈ B ⟩
+Domain h B = (c r : S) → ⟨ pr (c .fst) (r .fst) ∈ h .fst ⟩ → ⟨ c .fst ∈ B ⟩
 ```
 
 <!--en-->
@@ -634,14 +634,14 @@ The recursive construction now assumes two formulas with one semantic meaning. `
 module Described
   (Cond : ∀ {n} → Fin n → Fin n → Formula S (suc n))
   (Cond₀ : S → S → Formula S 1)
-  (cond-spec : ∀ {n} (b f : Fin n) (γ : S ^ n) → IsOrd (fst (lookup b γ))
-             → Values (lookup f γ) (fst (lookup b γ))
-             → Entries (lookup f γ) (fst (lookup b γ))
+  (cond-spec : ∀ {n} (b f : Fin n) (γ : S ^ n) → IsOrd ((lookup b γ) .fst)
+             → Values (lookup f γ) ((lookup b γ) .fst)
+             → Entries (lookup f γ) ((lookup b γ) .fst)
              → (z : S)
-             → ((z ∷ γ) ⊨ Cond b f) ≡ Related (fst (lookup b γ)) (fst z))
-  (cond₀-spec : (b f : S) → IsOrd (fst b)
-              → Values f (fst b) → Entries f (fst b)
-              → (z : S) → ((z ∷ []) ⊨ Cond₀ b f) ≡ Related (fst b) (fst z))
+             → ((z ∷ γ) ⊨ Cond b f) ≡ Related ((lookup b γ) .fst) (z .fst))
+  (cond₀-spec : (b f : S) → IsOrd (b .fst)
+              → Values f (b .fst) → Entries f (b .fst)
+              → (z : S) → ((z ∷ []) ⊨ Cond₀ b f) ≡ Related (b .fst) (z .fst))
   where
 ```
 </summary>
@@ -688,9 +688,9 @@ Fix slots for the candidate value, ordinal index, and lower table, together with
 <summary class="submodule-fold-heading">
 ```agda
   module _ {n : ℕ} (v b f : Fin n) (γ : S ^ n)
-           (ob : IsOrd (fst (lookup b γ)))
-           (vals : Values (lookup f γ) (fst (lookup b γ)))
-           (ents : Entries (lookup f γ) (fst (lookup b γ))) where
+           (ob : IsOrd ((lookup b γ) .fst))
+           (vals : Values (lookup f γ) ((lookup b γ) .fst))
+           (ents : Entries (lookup f γ) ((lookup b γ) .fst)) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -708,7 +708,7 @@ Once an ordinal bound, a sound table, and entries at every smaller argument have
 <!--/-->
 
 ```agda
-      same : (z : S) → ((z ∷ γ) ⊨ Cond b f) ≡ Related (fst (lookup b γ)) (fst z)
+      same : (z : S) → ((z ∷ γ) ⊨ Cond b f) ≡ Related ((lookup b γ) .fst) (z .fst)
       same = cond-spec b f γ ob vals ents
 ```
 
@@ -721,7 +721,7 @@ Suppose a candidate value satisfies the extensional step. Membership in that val
 <!--/-->
 
 ```agda
-    step-rel : ⟨ γ ⊨ StepAt v b f ⟩ → IsRel (fst (lookup b γ)) (lookup v γ)
+    step-rel : ⟨ γ ⊨ StepAt v b f ⟩ → IsRel ((lookup b γ) .fst) (lookup v γ)
     step-rel h z =
         (λ hz → subst ⟨_⟩ (same z) (extAt-out v (Cond b f) γ h z hz))
       , (λ hz → extAt-in v (Cond b f) γ h z (subst ⟨_⟩ (sym (same z)) hz))
@@ -736,7 +736,7 @@ The same argument reverses. If a set already realizes the stage relation, its tw
 <!--/-->
 
 ```agda
-    step-table : IsRel (fst (lookup b γ)) (lookup v γ) → ⟨ γ ⊨ StepAt v b f ⟩
+    step-table : IsRel ((lookup b γ) .fst) (lookup v γ) → ⟨ γ ⊨ StepAt v b f ⟩
     step-table sp = extAt-in-both v (Cond b f) γ
       (λ z hz → subst ⟨_⟩ (sym (same z)) (sp z .fst hz))
       (λ z h → sp z .snd (subst ⟨_⟩ (same z) h))
@@ -795,7 +795,7 @@ To prove that an approximation records only correct values, fix its table and do
     private
       Value : V ℓ → Type (ℓ-suc ℓ)
       Value u = ⟨ isL u ⟩ → IsOrd u → (r : S)
-              → ⟨ pr u (fst r) ∈ fst (lookup f γ) ⟩ → IsRel u r
+              → ⟨ pr u (r .fst) ∈ (lookup f γ) .fst ⟩ → IsRel u r
 ```
 
 <!--en-->
@@ -807,10 +807,10 @@ Membership induction is applied to the underlying set of the recorded argument `
 <!--/-->
 
 ```agda
-    approx-val : ⟨ γ ⊨ ApproxAt f a ⟩ → IsOrd (fst (lookup a γ))
-               → (c : S) → IsOrd (fst c) → (r : S)
-               → ⟨ pr (fst c) (fst r) ∈ fst (lookup f γ) ⟩ → IsRel (fst c) r
-    approx-val h oa c = ∈-induction {P = Value} go (fst c) (snd c)
+    approx-val : ⟨ γ ⊨ ApproxAt f a ⟩ → IsOrd ((lookup a γ) .fst)
+               → (c : S) → IsOrd (c .fst) → (r : S)
+               → ⟨ pr (c .fst) (r .fst) ∈ (lookup f γ) .fst ⟩ → IsRel (c .fst) r
+    approx-val h oa c = ∈-induction {P = Value} go (c .fst) (c .snd)
       where
 ```
 
@@ -840,7 +840,7 @@ The argument `u` is paired with its constructibility proof so that it can be use
 
 ```agda
         d = u , hu
-        u∈a : ⟨ u ∈ fst (lookup a γ) ⟩
+        u∈a : ⟨ u ∈ (lookup a γ) .fst ⟩
         u∈a = ApproxAt-dom f a γ h d r p
         vals : Values (lookup f γ) u
         vals e t e∈ q =
@@ -855,9 +855,9 @@ For an entry `(e,t)` with `e∈u`, the induction hypothesis proves that `t` real
 <!--/-->
 
 ```agda
-          IH (fst e) e∈ (snd e) (mem-ord {A = u} ou (fst e) e∈) t q
+          IH (e .fst) e∈ (e .snd) (mem-ord {A = u} ou (e .fst) e∈) t q
         ents : Entries (lookup f γ) u
-        ents e e∈ = ApproxAt-value f a γ h e (oa .fst {x = u} {y = fst e} e∈ u∈a)
+        ents e e∈ = ApproxAt-value f a γ h e (oa .fst {x = u} {y = e .fst} e∈ u∈a)
 ```
 </div>
 </details>
@@ -887,9 +887,9 @@ A graph assertion contains only a propositionally truncated witness for the supp
 <div class="submodule-fold-content">
 
 ```agda
-    graph-only : ⟨ γ ⊨ GraphAt w b ⟩ → IsOrd (fst (lookup b γ))
-               → IsRel (fst (lookup b γ)) (lookup w γ)
-    graph-only h ob = rec₁ (snd (Realizes (fst (lookup b γ)) (lookup w γ)))
+    graph-only : ⟨ γ ⊨ GraphAt w b ⟩ → IsOrd ((lookup b γ) .fst)
+               → IsRel ((lookup b γ) .fst) (lookup w γ)
+    graph-only h ob = rec₁ ((Realizes ((lookup b γ) .fst) (lookup w γ)) .snd)
       read (Graph-out w b γ h)
 ```
 
@@ -903,10 +903,10 @@ After a graph witness is opened inside this propositional target, it provides an
 
 ```agda
       where
-      read : GraphOf w b γ → IsRel (fst (lookup b γ)) (lookup w γ)
+      read : GraphOf w b γ → IsRel ((lookup b γ) .fst) (lookup w γ)
       read (f , (ha , hs)) = step-rel (suc w) (suc b) zero (f ∷ γ) ob vals ents hs
         where
-        vals : Values f (fst (lookup b γ))
+        vals : Values f ((lookup b γ) .fst)
 ```
 
 <!--en-->
@@ -919,8 +919,8 @@ Correctness of every value recorded by `f` is the preceding membership-induction
 
 ```agda
         vals c r c∈ p = approx-val zero (suc b) (f ∷ γ) ha ob c
-          (mem-ord {A = fst (lookup b γ)} ob (fst c) c∈) r p
-        ents : Entries f (fst (lookup b γ))
+          (mem-ord {A = (lookup b γ) .fst} ob (c .fst) c∈) r p
+        ents : Entries f ((lookup b γ) .fst)
         ents = ApproxAt-value zero (suc b) (f ∷ γ) ha
 ```
 
@@ -933,10 +933,10 @@ For the converse direction, begin with a table `h` that is sound on an ordinal b
 <!--/-->
 
 ```agda
-    graph-table : (h : S) → IsOrd (fst (lookup b γ))
-                → Values h (fst (lookup b γ)) → Entries h (fst (lookup b γ))
-                → Domain h (fst (lookup b γ))
-                → IsRel (fst (lookup b γ)) (lookup w γ) → ⟨ γ ⊨ GraphAt w b ⟩
+    graph-table : (h : S) → IsOrd ((lookup b γ) .fst)
+                → Values h ((lookup b γ) .fst) → Entries h ((lookup b γ) .fst)
+                → Domain h ((lookup b γ) .fst)
+                → IsRel ((lookup b γ) .fst) (lookup w γ) → ⟨ γ ⊨ GraphAt w b ⟩
     graph-table h ob vals ents dom sp = Graph-in w b γ h approx
 ```
 
@@ -952,8 +952,8 @@ The outer step follows immediately from the realization hypothesis by the revers
       (step-table (suc w) (suc b) zero (h ∷ γ) ob vals ents sp)
       where
       onDom : (c : S)
-            → (⟨ ∃[ r ∶ S ] pr (fst c) (fst r) ∈ fst h ⟩
-               → ⟨ fst c ∈ fst (lookup b γ) ⟩)
+            → (⟨ ∃[ r ∶ S ] pr (c .fst) (r .fst) ∈ h .fst ⟩
+               → ⟨ c .fst ∈ (lookup b γ) .fst ⟩)
 ```
 
 <!--en-->
@@ -965,9 +965,9 @@ If some value is recorded at `c`, the witness for that value is propositionally 
 <!--/-->
 
 ```agda
-            × (⟨ fst c ∈ fst (lookup b γ) ⟩
-               → ⟨ ∃[ r ∶ S ] pr (fst c) (fst r) ∈ fst h ⟩)
-      onDom c = (λ hr → rec₁ (snd (fst c ∈ fst (lookup b γ)))
+            × (⟨ c .fst ∈ (lookup b γ) .fst ⟩
+               → ⟨ ∃[ r ∶ S ] pr (c .fst) (r .fst) ∈ h .fst ⟩)
+      onDom c = (λ hr → rec₁ ((c .fst ∈ (lookup b γ) .fst) .snd)
                           (λ { (r , p) → dom c r p }) hr)
               , ents c
 ```
@@ -981,7 +981,7 @@ The second approximation clause checks the recursive step at each recorded pair 
 <!--/-->
 
 ```agda
-      onStep : (c r : S) → ⟨ pr (fst c) (fst r) ∈ fst h ⟩
+      onStep : (c r : S) → ⟨ pr (c .fst) (r .fst) ∈ h .fst ⟩
              → ⟨ (r ∷ c ∷ h ∷ γ) ⊨ StepAt zero (suc zero) (suc (suc zero)) ⟩
       onStep c r p = step-table zero (suc zero) (suc (suc zero)) (r ∷ c ∷ h ∷ γ)
         oc vals' ents' (vals c r c∈ p)
@@ -997,11 +997,11 @@ Boundedness first turns the recorded pair into `c` below the ambient bound. Sinc
 <!--/-->
 
 ```agda
-        c∈ : ⟨ fst c ∈ fst (lookup b γ) ⟩
+        c∈ : ⟨ c .fst ∈ (lookup b γ) .fst ⟩
         c∈ = dom c r p
-        oc : IsOrd (fst c)
-        oc = mem-ord {A = fst (lookup b γ)} ob (fst c) c∈
-        vals' : Values h (fst c)
+        oc : IsOrd (c .fst)
+        oc = mem-ord {A = (lookup b γ) .fst} ob (c .fst) c∈
+        vals' : Values h (c .fst)
 ```
 
 <!--en-->
@@ -1014,8 +1014,8 @@ Notice the asymmetry between local soundness and local completeness. Soundness n
 
 ```agda
         vals' e t _ q = vals e t (dom e t q) q
-        ents' : Entries h (fst c)
-        ents' e e∈ = ents e (ob .fst {x = fst c} {y = fst e} e∈ c∈)
+        ents' : Entries h (c .fst)
+        ents' e e∈ = ents e (ob .fst {x = c .fst} {y = e .fst} e∈ c∈)
 ```
 
 <!--en-->
@@ -1066,9 +1066,9 @@ The class `Recorded B` describes the intended members of a table below `B`. An o
 
 ```agda
   Recorded : V ℓ → V ℓ → hProp (ℓ-suc ℓ)
-  Recorded B z = ∃[ c ∶ S ] (fst c ∈ B) ⊓ (∃[ r ∶ S ]
-    ((z ≡ pr (fst c) (fst r)) , setIsSet z (pr (fst c) (fst r)))
-    ⊓ Realizes (fst c) r)
+  Recorded B z = ∃[ c ∶ S ] (c .fst ∈ B) ⊓ (∃[ r ∶ S ]
+    ((z ≡ pr (c .fst) (r .fst)) , setIsSet z (pr (c .fst) (r .fst)))
+    ⊓ Realizes (c .fst) r)
 ```
 
 <!--en-->
@@ -1081,7 +1081,7 @@ A model set is a table for `B` when membership in it is pointwise equivalent to 
 
 ```agda
   IsTable : V ℓ → S → Type (ℓ-suc (ℓ-suc ℓ))
-  IsTable B h = (z : S) → (fst z ∈ fst h) ≡ Recorded B (fst z)
+  IsTable B h = (z : S) → (z .fst ∈ h .fst) ≡ Recorded B (z .fst)
 ```
 
 <!--en-->
@@ -1116,8 +1116,8 @@ Fix an exact table `h` for a bound `B`. To use its specification at a concrete e
 ```agda
     private
       atPair : (c r : S)
-             → (pr (fst c) (fst r) ∈ fst h) ≡ Recorded B (pr (fst c) (fst r))
-      atPair c r = subst (λ x → (x ∈ fst h) ≡ Recorded B x) (prʟ-fst c r)
+             → (pr (c .fst) (r .fst) ∈ h .fst) ≡ Recorded B (pr (c .fst) (r .fst))
+      atPair c r = subst (λ x → (x ∈ h .fst) ≡ Recorded B x) (prʟ-fst c r)
 ```
 
 <!--en-->
@@ -1144,8 +1144,8 @@ An actual table entry `(c,r)` can now be read in two ways at once. Exactness yie
     table-out : Domain h B × Values h B
     table-out = (λ c r p → read c r p .fst) , (λ c r _ p → read c r p .snd)
       where
-      read : (c r : S) → ⟨ pr (fst c) (fst r) ∈ fst h ⟩
-           → ⟨ fst c ∈ B ⟩ × IsRel (fst c) r
+      read : (c r : S) → ⟨ pr (c .fst) (r .fst) ∈ h .fst ⟩
+           → ⟨ c .fst ∈ B ⟩ × IsRel (c .fst) r
 ```
 
 <!--en-->
@@ -1159,8 +1159,8 @@ The decomposition supplied by `Recorded` is propositionally truncated, so its el
 ```agda
       read c r p = rec₁ isPropBoth outer (subst ⟨_⟩ (atPair c r) p)
         where
-        isPropBoth : isProp (⟨ fst c ∈ B ⟩ × IsRel (fst c) r)
-        isPropBoth = isProp× (snd (fst c ∈ B)) (snd (Realizes (fst c) r))
+        isPropBoth : isProp (⟨ c .fst ∈ B ⟩ × IsRel (c .fst) r)
+        isPropBoth = isProp× ((c .fst ∈ B) .snd) ((Realizes (c .fst) r) .snd)
 ```
 
 <!--en-->
@@ -1172,9 +1172,9 @@ Inside the propositional elimination, suppose the recorded decomposition uses an
 <!--/-->
 
 ```agda
-        inner : (d t : S) → ⟨ fst d ∈ B ⟩
-              → (pr (fst c) (fst r) ≡ pr (fst d) (fst t)) → IsRel (fst d) t
-              → ⟨ fst c ∈ B ⟩ × IsRel (fst c) r
+        inner : (d t : S) → ⟨ d .fst ∈ B ⟩
+              → (pr (c .fst) (r .fst) ≡ pr (d .fst) (t .fst)) → IsRel (d .fst) t
+              → ⟨ c .fst ∈ B ⟩ × IsRel (c .fst) r
         inner d t d∈ q hr =
             subst (λ x → ⟨ x ∈ B ⟩) (sym (pr-inj q .fst)) d∈
 ```
@@ -1191,7 +1191,7 @@ The first-component equality transports `d∈B` to `c∈B`. Equality of the seco
           , subst2 IsRel (sym (pr-inj q .fst)) (sym rt) hr
           where
           rt : r ≡ t
-          rt = Σ≡Prop (λ x → snd (isL x)) (pr-inj q .snd)
+          rt = Σ≡Prop (λ x → (isL x) .snd) (pr-inj q .snd)
 ```
 
 <!--en-->
@@ -1203,10 +1203,10 @@ The outer recorded witness first provides an index `d` in `B` and a further trun
 <!--/-->
 
 ```agda
-        outer : Σ[ d ∶ S ] ( ⟨ fst d ∈ B ⟩
-                  × ⟨ ∃[ t ∶ S ] ((pr (fst c) (fst r) ≡ pr (fst d) (fst t))
-                        , setIsSet _ (pr (fst d) (fst t))) ⊓ Realizes (fst d) t ⟩ )
-              → ⟨ fst c ∈ B ⟩ × IsRel (fst c) r
+        outer : Σ[ d ∶ S ] ( ⟨ d .fst ∈ B ⟩
+                  × ⟨ ∃[ t ∶ S ] ((pr (c .fst) (r .fst) ≡ pr (d .fst) (t .fst))
+                        , setIsSet _ (pr (d .fst) (t .fst))) ⊓ Realizes (d .fst) t ⟩ )
+              → ⟨ c .fst ∈ B ⟩ × IsRel (c .fst) r
         outer (d , (d∈ , hs)) = rec₁ isPropBoth
 ```
 
@@ -1231,8 +1231,8 @@ The converse table reading is direct. Given `c∈B` and a model element `r` real
 <!--/-->
 
 ```agda
-    table-in : (c r : S) → ⟨ fst c ∈ B ⟩ → IsRel (fst c) r
-             → ⟨ pr (fst c) (fst r) ∈ fst h ⟩
+    table-in : (c r : S) → ⟨ c .fst ∈ B ⟩ → IsRel (c .fst) r
+             → ⟨ pr (c .fst) (r .fst) ∈ h .fst ⟩
     table-in c r c∈ hr = subst ⟨_⟩ (sym (atPair c r))
       ∣ c , (c∈ , ∣ r , (refl , hr) ∣₁) ∣₁
 ```
@@ -1249,7 +1249,7 @@ Before the relation at an ordinal `α` can be obtained by separation, all possib
 
 ```agda
   bound : (α : V ℓ) (oα : IsOrd α)
-        → Σ[ D ∶ S ] ((z : S) → ⟨ Related α (fst z) ⟩ → ⟨ fst z ∈ fst D ⟩)
+        → Σ[ D ∶ S ] ((z : S) → ⟨ Related α (z .fst) ⟩ → ⟨ z .fst ∈ D .fst ⟩)
   bound α oα = d .fst , confine
     where
     ixL : ⟪ Lset α ⟫ → S
@@ -1277,21 +1277,21 @@ Pairs of presentation indices form a small indexing type. Applying the common-do
 
 ```agda
     d : Σ[ D ∶ S ] ((p : ⟪ Lset α ⟫ × ⟪ Lset α ⟫)
-                    → ⟨ prʟ (ixL (fst p)) (ixL (snd p)) ∈ˢ D ⟩)
-    d = smallDom (⟪ Lset α ⟫ × ⟪ Lset α ⟫) (λ p → prʟ (ixL (fst p)) (ixL (snd p)))
+                    → ⟨ prʟ (ixL (p .fst)) (ixL (p .snd)) ∈ˢ D ⟩)
+    d = smallDom (⟪ Lset α ⟫ × ⟪ Lset α ⟫) (λ p → prʟ (ixL (p .fst)) (ixL (p .snd)))
 ```
 
 <!--en-->
-The common bound must also be usable for ordinary members `a,b` of `Lset α`, not just for presentation indices. Represent each member by its fiber index, use the bound for the corresponding internal pair, and transport membership along the equality between the presented pair and the host-level pair `pr(fst a,fst b)`. Thus every pair of stage members lies in `D`.
+The common bound must also be usable for ordinary members `a,b` of `Lset α`, not just for presentation indices. Represent each member by its fiber index, use the bound for the corresponding internal pair, and transport membership along the equality between the presented pair and the host-level pair `pr(a,fst .fst b)`. Thus every pair of stage members lies in `D`.
 <!--zh-->
-共同界不仅要适用于呈现索引，还要适用于 `Lset α` 的普通元素 `a,b`。先用各自的纤维索引表示这两个元素，再对相应内部有序对使用共同界，并沿「被呈现有序对等于宿主层有序对 `pr(fst a,fst b)`」的等式搬运成员关系。因此，该层任意两个元素组成的有序对都属于 `D`。
+共同界不仅要适用于呈现索引，还要适用于 `Lset α` 的普通元素 `a,b`。先用各自的纤维索引表示这两个元素，再对相应内部有序对使用共同界，并沿「被呈现有序对等于宿主层有序对 `pr(a,fst .fst b)`」的等式搬运成员关系。因此，该层任意两个元素组成的有序对都属于 `D`。
 <!--ja-->
-共通の上界は提示の添字だけでなく、`Lset α` の通常の要素 `a,b` にも使えなければならない。各要素をそのファイバー添字で表し、対応する内部順序対について上界を使い、提示された対とホスト側の対 `pr(fst a,fst b)` との等しさに沿って所属を運ぶ。したがって、段階の任意の二要素からなる順序対は `D` に属する。
+共通の上界は提示の添字だけでなく、`Lset α` の通常の要素 `a,b` にも使えなければならない。各要素をそのファイバー添字で表し、対応する内部順序対について上界を使い、提示された対とホスト側の対 `pr(a,fst .fst b)` との等しさに沿って所属を運ぶ。したがって、段階の任意の二要素からなる順序対は `D` に属する。
 <!--/-->
 
 ```agda
-    onPair : (a b : Mem (Lset α)) → ⟨ pr (fst a) (fst b) ∈ fst (d .fst) ⟩
-    onPair a b = subst (λ x → ⟨ x ∈ fst (d .fst) ⟩)
+    onPair : (a b : Mem (Lset α)) → ⟨ pr (a .fst) (b .fst) ∈ (d .fst) .fst ⟩
+    onPair a b = subst (λ x → ⟨ x ∈ (d .fst) .fst ⟩)
       (prʟ-fst (ixL (fa .fst)) (ixL (fb .fst))
         ∙ cong₂ pr (fa .snd) (fb .snd))
       (d .snd (fa .fst , fb .fst))
@@ -1307,8 +1307,8 @@ Membership proofs for `a` and `b` identify them with elements of the small prese
 
 ```agda
       where
-      fa = ∈-asFiber {a = fst a} {b = Lset α} (snd a)
-      fb = ∈-asFiber {a = fst b} {b = Lset α} (snd b)
+      fa = ∈-asFiber {a = a .fst} {b = Lset α} (a .snd)
+      fb = ∈-asFiber {a = b .fst} {b = Lset α} (b .snd)
 ```
 
 <!--en-->
@@ -1320,10 +1320,10 @@ Now take an arbitrary object in `Related α`. Its definition gives, through thre
 <!--/-->
 
 ```agda
-    confine : (z : S) → ⟨ Related α (fst z) ⟩ → ⟨ fst z ∈ fst (d .fst) ⟩
-    confine z = rec₁ (snd (fst z ∈ fst (d .fst)))
-      (λ { (_ , h₁) → rec₁ (snd (fst z ∈ fst (d .fst)))
-        (λ { (a , h₂) → rec₁ (snd (fst z ∈ fst (d .fst)))
+    confine : (z : S) → ⟨ Related α (z .fst) ⟩ → ⟨ z .fst ∈ (d .fst) .fst ⟩
+    confine z = rec₁ ((z .fst ∈ (d .fst) .fst) .snd)
+      (λ { (_ , h₁) → rec₁ ((z .fst ∈ (d .fst) .fst) .snd)
+        (λ { (a , h₂) → rec₁ ((z .fst ∈ (d .fst) .fst) .snd)
           (λ { (b , (q , _)) →
 ```
 
@@ -1336,7 +1336,7 @@ The pair of recovered endpoints already belongs to `D` by the previous result. T
 <!--/-->
 
 ```agda
-            subst (λ x → ⟨ x ∈ fst (d .fst) ⟩) (sym q) (onPair a b) }) h₂ }) h₁ })
+            subst (λ x → ⟨ x ∈ (d .fst) .fst ⟩) (sym q) (onPair a b) }) h₂ }) h₁ })
 ```
 
 <!--en-->
@@ -1394,8 +1394,8 @@ Every member `c` of an ordinal `α` is itself an ordinal. This inherited ordinal
 <!--/-->
 
 ```agda
-        ordOf : (c : S) → ⟨ fst c ∈ α ⟩ → IsOrd (fst c)
-        ordOf c c∈ = mem-ord {A = α} oα (fst c) c∈
+        ordOf : (c : S) → ⟨ c .fst ∈ α ⟩ → IsOrd (c .fst)
+        ordOf c c∈ = mem-ord {A = α} oα (c .fst) c∈
 ```
 
 <!--en-->
@@ -1407,8 +1407,8 @@ For `c∈α`, the model element `c` already carries its constructibility proof, 
 <!--/-->
 
 ```agda
-        bun : (c : S) → ⟨ fst c ∈ α ⟩ → Bundle (fst c)
-        bun c c∈ = IH (fst c) c∈ (snd c) (ordOf c c∈)
+        bun : (c : S) → ⟨ c .fst ∈ α ⟩ → Bundle (c .fst)
+        bun c c∈ = IH (c .fst) c∈ (c .snd) (ordOf c c∈)
 ```
 
 <!--en-->
@@ -1420,7 +1420,7 @@ From the recursive bundle at `c`, select its current-relation component and call
 <!--/-->
 
 ```agda
-        value : (c : S) → ⟨ fst c ∈ α ⟩ → S
+        value : (c : S) → ⟨ c .fst ∈ α ⟩ → S
         value c c∈ = bun c c∈ .snd .fst
 ```
 
@@ -1433,7 +1433,7 @@ The specification stored with that component states that the chosen value realiz
 <!--/-->
 
 ```agda
-        relOK : (c : S) (c∈ : ⟨ fst c ∈ α ⟩) → IsRel (fst c) (value c c∈)
+        relOK : (c : S) (c∈ : ⟨ c .fst ∈ α ⟩) → IsRel (c .fst) (value c c∈)
         relOK c c∈ = bun c c∈ .snd .snd .snd
 ```
 
@@ -1446,7 +1446,7 @@ For each `c` whose underlying ordinal lies below `α`, the induction hypothesis 
 <!--/-->
 
 ```agda
-        entry : (c : S) → ⟨ fst c ∈ α ⟩ → S
+        entry : (c : S) → ⟨ c .fst ∈ α ⟩ → S
         entry c c∈ = prʟ c (value c c∈)
 ```
 
@@ -1459,7 +1459,7 @@ It remains to show that this candidate lies on the graph used by replacement. Be
 <!--/-->
 
 ```agda
-        below : (c : S) (c∈ : ⟨ fst c ∈ α ⟩) (k : S)
+        below : (c : S) (c∈ : ⟨ c .fst ∈ α ⟩) (k : S)
               → ⟨ (value c c∈ ∷ k ∷ c ∷ []) ⊨ GraphAt zero (suc (suc zero)) ⟩
         below c c∈ k = graph-table zero (suc (suc zero))
           (value c c∈ ∷ k ∷ c ∷ []) (bun c c∈ .fst) (ordOf c c∈)
@@ -1476,10 +1476,10 @@ The exact specification of the lower table yields two of the three facts require
 
 ```agda
           where
-          reads : Domain (bun c c∈ .fst) (fst c) × Values (bun c c∈ .fst) (fst c)
-          reads = table-out (fst c) (ordOf c c∈) (bun c c∈ .fst)
+          reads : Domain (bun c c∈ .fst) (c .fst) × Values (bun c c∈ .fst) (c .fst)
+          reads = table-out (c .fst) (ordOf c c∈) (bun c c∈ .fst)
                     (bun c c∈ .snd .snd .fst)
-          ents : Entries (bun c c∈ .fst) (fst c)
+          ents : Entries (bun c c∈ .fst) (c .fst)
 ```
 
 <!--en-->
@@ -1491,11 +1491,11 @@ For a member `e` of `c`, transitivity of the ambient ordinal carries `e ∈ c �
 <!--/-->
 
 ```agda
-          ents e e∈ = ∣ value e e∈' , table-in (fst c) (ordOf c c∈) (bun c c∈ .fst)
+          ents e e∈ = ∣ value e e∈' , table-in (c .fst) (ordOf c c∈) (bun c c∈ .fst)
                          (bun c c∈ .snd .snd .fst) e (value e e∈') e∈ (relOK e e∈') ∣₁
             where
-            e∈' : ⟨ fst e ∈ α ⟩
-            e∈' = oα .fst {x = fst c} {y = fst e} e∈ c∈
+            e∈' : ⟨ e .fst ∈ α ⟩
+            e∈' = oα .fst {x = c .fst} {y = e .fst} e∈ c∈
 ```
 
 <!--en-->
@@ -1507,7 +1507,7 @@ The recursive graph proof for the relation value can now be combined with the ca
 <!--/-->
 
 ```agda
-        holds : (c : S) (c∈ : ⟨ fst c ∈ α ⟩) → ⟨ (entry c c∈ ∷ c ∷ []) ⊨ φ ⟩
+        holds : (c : S) (c∈ : ⟨ c .fst ∈ α ⟩) → ⟨ (entry c c∈ ∷ c ∷ []) ⊨ φ ⟩
         holds c c∈ = PairGraph-in zero (suc zero) (entry c c∈ ∷ c ∷ []) φ qφ
           (value c c∈) (prʟ-fst c (value c c∈)) (below c c∈ (entry c c∈))
 ```
@@ -1521,7 +1521,7 @@ Functionality also requires uniqueness of the whole paired value. If another `k`
 <!--/-->
 
 ```agda
-        only : (c : S) (c∈ : ⟨ fst c ∈ α ⟩) (k : S)
+        only : (c : S) (c∈ : ⟨ c .fst ∈ α ⟩) (k : S)
              → ⟨ (k ∷ c ∷ []) ⊨ φ ⟩ → k ≡ entry c c∈
         only c c∈ k h = rec₁ (isSetS k (entry c c∈)) read
           (PairGraph-out zero (suc zero) (k ∷ c ∷ []) φ qφ h)
@@ -1538,9 +1538,9 @@ The graph proof says that `r` realizes the relation class at `c`; independently,
 
 ```agda
           read : PairOf zero (suc zero) (k ∷ c ∷ []) φ qφ → k ≡ entry c c∈
-          read (r , (q , hg)) = Σ≡Prop (λ x → snd (isL x))
+          read (r , (q , hg)) = Σ≡Prop (λ x → (isL x) .snd)
             ( q
-            ∙ cong (pr (fst c)) (cong fst (rel-unique (fst c) r (value c c∈)
+            ∙ cong (pr (c .fst)) (cong (λ p → p .fst) (rel-unique (c .fst) r (value c c∈)
                 (graph-only zero (suc (suc zero)) (r ∷ k ∷ c ∷ []) hg (ordOf c c∈))
 ```
 
@@ -1609,7 +1609,7 @@ The required table specification is an equality between two propositions: member
         spec : IsTable α H
         spec z = ⇔toPath toRec fromRec
           where
-          toRec : ⟨ fst z ∈ fst H ⟩ → ⟨ Recorded α (fst z) ⟩
+          toRec : ⟨ z .fst ∈ H .fst ⟩ → ⟨ Recorded α (z .fst) ⟩
           toRec hz = rec₁ squash₁
 ```
 
@@ -1623,7 +1623,7 @@ In the forward direction, replacement membership merely supplies an index `c` be
 
 ```agda
             (λ { (c , (c∈ , hp)) → ∣ c , (c∈ , ∣ value c c∈
-               , ( cong fst (only c c∈ z hp) ∙ prʟ-fst c (value c c∈)
+               , ( cong (λ p → p .fst) (only c c∈ z hp) ∙ prʟ-fst c (value c c∈)
                  , relOK c c∈ ) ∣₁) ∣₁ })
             (subst ⟨_⟩ (rep .fst .snd z) hz)
 ```
@@ -1637,11 +1637,11 @@ For the reverse implication, a recorded-pair witness may contain any relation se
 <!--/-->
 
 ```agda
-          fromRec : ⟨ Recorded α (fst z) ⟩ → ⟨ fst z ∈ fst H ⟩
+          fromRec : ⟨ Recorded α (z .fst) ⟩ → ⟨ z .fst ∈ H .fst ⟩
           fromRec hz = subst ⟨_⟩ (sym (rep .fst .snd z)) (map₁
-            (λ { (c , (c∈ , hr)) → c , (c∈ , rec₁ (snd ((z ∷ c ∷ []) ⊨ φ))
+            (λ { (c , (c∈ , hr)) → c , (c∈ , rec₁ (((z ∷ c ∷ []) ⊨ φ) .snd)
               (λ { (r , (q , hs)) → subst (λ t → ⟨ (t ∷ c ∷ []) ⊨ φ ⟩)
-                (sym (Σ≡Prop (λ x → snd (isL x))
+                (sym (Σ≡Prop (λ x → (isL x) .snd)
 ```
 
 <!--en-->
@@ -1653,8 +1653,8 @@ That transport path starts with the recorded equality for `z`, replaces `r` by t
 <!--/-->
 
 ```agda
-                  (q ∙ cong (pr (fst c)) (cong fst
-                     (rel-unique (fst c) r (value c c∈) hs (relOK c c∈)))
+                  (q ∙ cong (pr (c .fst)) (cong (λ p → p .fst)
+                     (rel-unique (c .fst) r (value c c∈) hs (relOK c c∈)))
                      ∙ sym (prʟ-fst c (value c c∈)))))
                 (holds c c∈) }) hr) }) hz)
 ```
@@ -1781,7 +1781,7 @@ For two members `a` and `b` of `Lset α`, the filling direction specializes the 
 
 ```agda
     relL-fill : (a b : Mem (Lset α)) → relOf (orderAt α oα) a b
-              → ⟨ pr (fst a) (fst b) ∈ fst (relL α hα oα) ⟩
+              → ⟨ pr (a .fst) (b .fst) ∈ (relL α hα oα) .fst ⟩
     relL-fill = rel-fill α oα (relL α hα oα) (relL-spec α hα oα)
 ```
 
@@ -1795,7 +1795,7 @@ The reading direction gives the converse for the same two layer members: members
 
 ```agda
     relL-rep : (a b : Mem (Lset α))
-             → ⟨ pr (fst a) (fst b) ∈ fst (relL α hα oα) ⟩
+             → ⟨ pr (a .fst) (b .fst) ∈ (relL α hα oα) .fst ⟩
              → relOf (orderAt α oα) a b
     relL-rep = rel-rep α oα (relL α hα oα) (relL-spec α hα oα)
 ```

@@ -55,7 +55,7 @@ For a constructible set `a`, what should its power set inside `L` contain? The
 quantifiers of the model range over its carrier `S`, so the required members are
 the constructible model elements `x` that satisfy the internal inclusion
 `x ⊆ˢ a`. The ambient hierarchy can form the power set of the underlying
-set `A = fst a`, but its membership condition ranges over all of `V ℓ` and
+set `A = a .fst`, but its membership condition ranges over all of `V ℓ` and
 imposes no constructibility requirement. That ambient set can therefore supply
 indices, but it cannot simply be returned as the power set in `L`.
 
@@ -66,11 +66,11 @@ Separation inside `Lset β` to collect exactly the internally included model
 elements. The host-level construction provides the bound; the final set itself
 is produced inside the constructible model.
 <!--zh-->
-对可构造集 `a`，`L` 内的幂集究竟应当收集什么？模型的量词遍历其载体 `S`，所以所求幂集的元素是满足内部包含 `x ⊆ˢ a` 的可构造模型元素 `x`。外围层级能对底层集 `A = fst a` 构造幂集，但其成员关系条件遍历整个`V ℓ`，不附加可构造性要求。因此，这个外围幂集可以提供索引，却不能直接作为`L` 内的幂集返回。
+对可构造集 `a`，`L` 内的幂集究竟应当收集什么？模型的量词遍历其载体 `S`，所以所求幂集的元素是满足内部包含 `x ⊆ˢ a` 的可构造模型元素 `x`。外围层级能对底层集 `A = a .fst` 构造幂集，但其成员关系条件遍历整个`V ℓ`，不附加可构造性要求。因此，这个外围幂集可以提供索引，却不能直接作为`L` 内的幂集返回。
 
 证明分三步进行。先由外围幂集取得全部候选者的小表现，再保留其中呈现可构造候选者的索引，并用同一个序数 `β` 界住它们的诸层；最后在 `Lset β` 中作分离，恰好收集内部包含于`a` 的模型元素。宿主层的构造负责给出上界；最终的集合本身则在可构造模型中形成。
 <!--ja-->
-構成可能集合 `a` の `L` 内部での冪集合は、何を集めるべきであろうか。モデルの量化子はその台`S` 上を動くので、必要な要素は、内部の包含 `x ⊆ˢ a` を満たす構成可能なモデル要素`x` である。周囲の階層は基底の集合 `A = fst a` の冪集合を作れるが、その所属条件は `V ℓ` 全体にわたり、構成可能性を要求しない。したがって、その周囲の冪集合は添字を供給できるが、`L` の冪集合としてそのまま返すことはできない。
+構成可能集合 `a` の `L` 内部での冪集合は、何を集めるべきであろうか。モデルの量化子はその台`S` 上を動くので、必要な要素は、内部の包含 `x ⊆ˢ a` を満たす構成可能なモデル要素`x` である。周囲の階層は基底の集合 `A = a .fst` の冪集合を作れるが、その所属条件は `V ℓ` 全体にわたり、構成可能性を要求しない。したがって、その周囲の冪集合は添字を供給できるが、`L` の冪集合としてそのまま返すことはできない。
 
 証明は三段階で進む。まず周囲の冪集合からすべての候補の小さな表示を得る。次に、構成可能な候補を表示する添字を残し、それらの段階を一つの順序数 `β` で抑える。最後に `Lset β` の内部で分出を行い、`a` に内部的に含まれるモデル要素だけを集める。ホスト側の構成が上界を与え、最終的な集合そのものは構成可能モデル内で作られる。
 <!--/-->
@@ -307,7 +307,7 @@ module Bound (a : S) where
 ```agda
   private
     A P : V ℓ
-    A = fst a
+    A = a .fst
     P = Pow.𝒫V A
 ```
 
@@ -447,21 +447,21 @@ bounding property are the two facts about `β` needed in the remainder.
 
 <!--en-->
 The lemma `below` states the essential coverage property of the bound. If
-`x : S` is internally included in `a`, then its underlying ambient set `fst x`
-belongs to `Lset β`. The proof first identifies `fst x` with the member of `P`
+`x : S` is internally included in `a`, then its underlying ambient set `x .fst`
+belongs to `Lset β`. The proof first identifies `x .fst` with the member of `P`
 presented by a suitable index `i : Ix`. The candidate belongs to
 `Lset (stg i)` by `stage-mem`, and `stg i ∈ β` lets `Lset-mono` lift this
 membership to `Lset β`. The final `subst` transports the result along the
 presenting path. The local definitions below justify the existence and
 properties of that particular `i`.
 <!--zh-->
-引理 `below` 陈述上界的关键覆盖性质：若 `x : S` 内部包含于 `a`，则其底层外围集合 `fst x` 属于 `Lset β`。证明先把 `fst x` 认同为 `P` 的某个小索引 `i : Ix` 所呈现的元素。由 `stage-mem`，该候选属于 `Lset (stg i)`；再由 `stg i ∈ β`，`Lset-mono` 把这条成员关系提升到 `Lset β`。最后的 `subst` 沿呈现路径把结论搬到 `fst x`。下面的局部定义说明这个特定索引 `i` 为什么存在并具有所需性质。
+引理 `below` 陈述上界的关键覆盖性质：若 `x : S` 内部包含于 `a`，则其底层外围集合 `x .fst` 属于 `Lset β`。证明先把 `x .fst` 认同为 `P` 的某个小索引 `i : Ix` 所呈现的元素。由 `stage-mem`，该候选属于 `Lset (stg i)`；再由 `stg i ∈ β`，`Lset-mono` 把这条成员关系提升到 `Lset β`。最后的 `subst` 沿呈现路径把结论搬到 `x .fst`。下面的局部定义说明这个特定索引 `i` 为什么存在并具有所需性质。
 <!--ja-->
-補題 `below` は上界の本質的な被覆性を述べる。`x : S` が `a` に内部的に含まれるなら、その底となる周囲の集合 `fst x` は `Lset β` に属する。証明ではまず、`fst x` を `P` の要素を呈示する適切な添字 `i : Ix` と同一視する。`stage-mem` により候補は `Lset (stg i)` に属し、`stg i ∈ β` に沿って `Lset-mono` を使えば、この所属を `Lset β` へ持ち上げられる。最後の `subst` は、呈示のパスに沿って結果を `fst x` へ運ぶ。以下の局所定義が、この特定の `i` の存在と必要な性質を示す。
+補題 `below` は上界の本質的な被覆性を述べる。`x : S` が `a` に内部的に含まれるなら、その底となる周囲の集合 `x .fst` は `Lset β` に属する。証明ではまず、`x .fst` を `P` の要素を呈示する適切な添字 `i : Ix` と同一視する。`stage-mem` により候補は `Lset (stg i)` に属し、`stg i ∈ β` に沿って `Lset-mono` を使えば、この所属を `Lset β` へ持ち上げられる。最後の `subst` は、呈示のパスに沿って結果を `x .fst` へ運ぶ。以下の局所定義が、この特定の `i` の存在と必要な性質を示す。
 <!--/-->
 
 ```agda
-  below : (x : S) → ⟨ x ⊆ˢ a ⟩ → ⟨ fst x ∈ Lset β ⟩
+  below : (x : S) → ⟨ x ⊆ˢ a ⟩ → ⟨ x .fst ∈ Lset β ⟩
   below x x⊆a =
     subst (λ w → ⟨ w ∈ Lset β ⟩) pa
       (Lset-mono {α = β} {β = stg i} (b .snd .snd i) (stage-mem _ (unres i)))
@@ -470,41 +470,41 @@ properties of that particular `i`.
 
 <!--en-->
 To obtain the index, first convert internal inclusion into ambient inclusion.
-Given an arbitrary ambient member `v ∈ fst x`, transitivity of constructibility
+Given an arbitrary ambient member `v ∈ x .fst`, transitivity of constructibility
 produces `isL v` from `x.snd`; the pair `(v , proof)` is then a model element to
-which `x⊆a` applies. Hence `fst x` is an ambient subset of `A`. The reverse
-direction of `Pow.power-spec` turns this inclusion into `fst x ∈ P`.
+which `x⊆a` applies. Hence `x .fst` is an ambient subset of `A`. The reverse
+direction of `Pow.power-spec` turns this inclusion into `x .fst ∈ P`.
 Membership in `P` is a propositionally truncated fibre, but the presentation
 map is an embedding, so its fibre is a proposition. Accordingly `∈-asFiber`
 returns an actual presentation index and a path `pa` identifying its image with
-`fst x`. This is elimination justified by uniqueness, not an application of
+`x .fst`. This is elimination justified by uniqueness, not an application of
 Choice.
 <!--zh-->
-为取得索引，先把内部包含转成外围包含。任取外围元素 `v ∈ fst x`，可构造性的传递性从 `x.snd` 推出 `isL v`；于是对 `(v , proof)` 这个模型元素应用 `x⊆a`，便得 `v ∈ A`。因此 `fst x` 是 `A` 的外围子集，而 `Pow.power-spec` 的逆向把这条包含变成 `fst x ∈ P`。`P` 的成员关系是表现纤维的命题截断，但表现映射是嵌入，所以该纤维本身是命题。因此，`∈-asFiber` 可以返回实际的表现索引及路径 `pa`，后者把其像认同为 `fst x`。这是由唯一性许可的截断消去，不是选择公理的应用。
+为取得索引，先把内部包含转成外围包含。任取外围元素 `v ∈ x .fst`，可构造性的传递性从 `x.snd` 推出 `isL v`；于是对 `(v , proof)` 这个模型元素应用 `x⊆a`，便得 `v ∈ A`。因此 `x .fst` 是 `A` 的外围子集，而 `Pow.power-spec` 的逆向把这条包含变成 `x .fst ∈ P`。`P` 的成员关系是表现纤维的命题截断，但表现映射是嵌入，所以该纤维本身是命题。因此，`∈-asFiber` 可以返回实际的表现索引及路径 `pa`，后者把其像认同为 `x .fst`。这是由唯一性许可的截断消去，不是选择公理的应用。
 <!--ja-->
-添字を得るため、まず内部の包含を周囲の包含へ変える。周囲での任意の要素 `v ∈ fst x` に対し、構成可能性の推移性は `x.snd` から `isL v` を導く。そこでモデル要素 `(v , proof)` に `x⊆a` を適用すると `v ∈ A` が得られる。したがって `fst x` は周囲で `A` の部分集合であり、`Pow.power-spec` の逆方向がこの包含を `fst x ∈ P` に変える。`P` への所属は表現のファイバーの命題的切り詰めであるが、表現写像は埋め込みなので、そのファイバー自体が命題である。よって `∈-asFiber` は実際の表現添字と、その像を `fst x` と同一視するパス `pa` を返せる。これは一意性によって許される切り詰めの除去であり、選択公理の適用ではない。
+添字を得るため、まず内部の包含を周囲の包含へ変える。周囲での任意の要素 `v ∈ x .fst` に対し、構成可能性の推移性は `x.snd` から `isL v` を導く。そこでモデル要素 `(v , proof)` に `x⊆a` を適用すると `v ∈ A` が得られる。したがって `x .fst` は周囲で `A` の部分集合であり、`Pow.power-spec` の逆方向がこの包含を `x .fst ∈ P` に変える。`P` への所属は表現のファイバーの命題的切り詰めであるが、表現写像は埋め込みなので、そのファイバー自体が命題である。よって `∈-asFiber` は実際の表現添字と、その像を `x .fst` と同一視するパス `pa` を返せる。これは一意性によって許される切り詰めの除去であり、選択公理の適用ではない。
 <!--/-->
 
 ```agda
-    vsub : ⟨ ModelV._⊆ˢ_ (fst x) A ⟩
-    vsub v v∈ = x⊆a (v , isL-trans {x = fst x} {y = v} v∈ (x .snd)) v∈
-    fib = ∈-asFiber {a = fst x} {b = P}
-            (subst ⟨_⟩ (sym (Pow.power-spec A (fst x))) vsub)
-    pa : ⟪ P ⟫↪ (fib .fst) ≡ fst x
+    vsub : ⟨ x .fst ModelV.⊆ˢ A ⟩
+    vsub v v∈ = x⊆a (v , isL-trans {x = x .fst} {y = v} v∈ (x .snd)) v∈
+    fib = ∈-asFiber {a = x .fst} {b = P}
+            (subst ⟨_⟩ (sym (Pow.power-spec A (x .fst))) vsub)
+    pa : ⟪ P ⟫↪ (fib .fst) ≡ x .fst
 ```
 
 <!--en-->
 The path `pa` completes the recovered presentation index into an element of
 `Ix`. Its first component is `fib.fst`. For the second, `sym pa` transports
-`x.snd : isL (fst x)` to constructibility of the set presented by that index,
+`x.snd : isL (x .fst)` to constructibility of the set presented by that index,
 and the forward map of the resizing equivalence encodes this proposition at
 level `ℓ`. Thus `i` really indexes the same underlying set as `x`, and its stage
 is one of the stages bounded by `β`. Combining `stage-mem`, `b.snd.snd i`, and
 `Lset-mono`, then transporting along `pa`, proves the conclusion of `below`.
 <!--zh-->
-路径 `pa` 把恢复出的表现索引补全为 `Ix` 的元素。第一分量是 `fib.fst`。为构造第二分量，先沿 `sym pa` 把 `x.snd : isL (fst x)` 搬到该索引所呈现集合的可构造性，再用降级等价的正向映射把这个命题编码到层级 `ℓ`。因此，`i` 确实索引与 `x` 底层集合相同的候选，其层也属于被 `β` 界住的族。把 `stage-mem`、`b.snd.snd i` 与 `Lset-mono` 组合起来，再沿 `pa` 运输，就得到 `below` 的结论。
+路径 `pa` 把恢复出的表现索引补全为 `Ix` 的元素。第一分量是 `fib.fst`。为构造第二分量，先沿 `sym pa` 把 `x.snd : isL (x .fst)` 搬到该索引所呈现集合的可构造性，再用降级等价的正向映射把这个命题编码到层级 `ℓ`。因此，`i` 确实索引与 `x` 底层集合相同的候选，其层也属于被 `β` 界住的族。把 `stage-mem`、`b.snd.snd i` 与 `Lset-mono` 组合起来，再沿 `pa` 运输，就得到 `below` 的结论。
 <!--ja-->
-パス `pa` によって、復元した表現添字を `Ix` の要素へ完成できる。第一成分は `fib.fst` である。第二成分については、`sym pa` に沿って `x.snd : isL (fst x)` をその添字が呈示する集合の構成可能性へ運び、リサイズ同値の順写像でこの命題をレベル `ℓ` に符号化する。したがって `i` は `x` と同じ底集合を持つ候補を実際に添字づけ、その段階は `β` で抑えられた族の一つである。`stage-mem`、`b.snd.snd i`、`Lset-mono` を組み合わせ、最後に `pa` に沿って運ぶと、`below` の結論が得られる。
+パス `pa` によって、復元した表現添字を `Ix` の要素へ完成できる。第一成分は `fib.fst` である。第二成分については、`sym pa` に沿って `x.snd : isL (x .fst)` をその添字が呈示する集合の構成可能性へ運び、リサイズ同値の順写像でこの命題をレベル `ℓ` に符号化する。したがって `i` は `x` と同じ底集合を持つ候補を実際に添字づけ、その段階は `β` で抑えられた族の一つである。`stage-mem`、`b.snd.snd i`、`Lset-mono` を組み合わせ、最後に `pa` に沿って運ぶと、`below` の結論が得られる。
 <!--/-->
 
 ```agda

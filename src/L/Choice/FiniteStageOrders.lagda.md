@@ -834,7 +834,7 @@ Membership in a set of the hierarchy is a proposition, so extensionality `extens
   part-mask x x∈ = extensionalV (λ y → ⇔toPath (fwd y) (bwd y))
     where
     fwd : (y : S) → ⟨ y ∈ˢ part (maskOf x) ⟩ → ⟨ y ∈ˢ x ⟩
-    fwd y y∈ = rec₁ (snd (y ∈ˢ x)) step (part-out (maskOf x) y y∈)
+    fwd y y∈ = rec₁ ((y ∈ˢ x) .snd) step (part-out (maskOf x) y y∈)
       where
 ```
 
@@ -865,7 +865,7 @@ The backward direction starts from membership of `y` in `x` and must produce mem
 ```agda
                  (λ z → decideOf (z ∈ˢ x) (SemV.decideMembership lem z x)) i) ∙ e))
     bwd : (y : S) → ⟨ y ∈ˢ x ⟩ → ⟨ y ∈ˢ part (maskOf x) ⟩
-    bwd y y∈x = rec₁ (snd (y ∈ˢ part (maskOf x))) step
+    bwd y y∈x = rec₁ ((y ∈ˢ part (maskOf x)) .snd) step
       (onto y (𝒟ₒ∋⊆ (Lset σ) x x∈ y y∈x))
       where
 ```
@@ -1557,7 +1557,7 @@ An apart point always lies in `A`, provided the two subsets do. Indeed, the trun
       nApart w ha = ns ∣ w , (inA , ha) ∣₁
         where
         inA : ⟨ w ∈ˢ A ⟩
-        inA = rec₁ (snd (w ∈ˢ A))
+        inA = rec₁ ((w ∈ˢ A) .snd)
           (λ { (inl (wx , _)) → x⊆ w wx ; (inr (_ , wy)) → y⊆ w wy }) ha
 ```
 
@@ -1666,7 +1666,7 @@ The mirrored branch assumes instead that `m` does not belong to `x`, and produce
 <!--/-->
 
 ```agda
-        my = rec₁ (snd (m ∈ˢ y))
+        my = rec₁ ((m ∈ˢ y) .snd)
           (λ { (inl (mx , _)) → ⊥₀-rec (nmx mx) ; (inr (_ , h)) → h }) apartM
         ag : Agrees R A x y m
         ag w w∈A hw = agree w (belowM w w∈A hw)
@@ -1836,7 +1836,7 @@ module Ordered (n : ℕ) (r : StageOrder n) where
   open Tally tally
 
   triPoint : (a b : Point n) → Tri (Below n a b) (a ≡ b) (Below n b a)
-  triPoint a b = Tri-map id (Σ≡Prop (λ z → snd (z ∈ˢ finiteStage n))) id
+  triPoint a b = Tri-map id (Σ≡Prop (λ z → (z ∈ˢ finiteStage n) .snd)) id
 ```
 
 <!--en-->
@@ -1854,7 +1854,7 @@ The tally is lifted from sets to points by pairing each entry with its own membe
   points i = item i , inside i
 
   covers : (a : Point n) → ∥ Σ[ i ∶ Fin size ] (points i ≡ a) ∥₁
-  covers a = map₁ (λ { (i , q) → i , Σ≡Prop (λ z → snd (z ∈ˢ finiteStage n)) q })
+  covers a = map₁ (λ { (i , q) → i , Σ≡Prop (λ z → (z ∈ˢ finiteStage n) .snd) q })
 ```
 
 <!--en-->
@@ -2311,7 +2311,7 @@ Repackaging splits by the stage's verdict. If `a`'s set precedes `b`'s, the resu
                ⟨ before (level a) (b .fst) (a .fst) ⟩
          → Tri (a ≺ b) (a ≡ b) (b ≺ a)
     same (lt h) = lt (inr (sym p , h))
-    same (eq q) = eq (Σ≡Prop (λ z → snd (z ∈ˢ Lset ω)) q)
+    same (eq q) = eq (Σ≡Prop (λ z → (z ∈ˢ Lset ω) .snd) q)
     same (gt h) = gt (inr (p , subst (λ j → ⟨ before j (b .fst) (a .fst) ⟩) p h))
 ```
 

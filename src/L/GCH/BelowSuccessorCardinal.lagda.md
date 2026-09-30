@@ -118,7 +118,7 @@ Assume that `δ` is the successor cardinal of `κ`, and let `α` be an ordinal b
 ```agda
 below-succ-injects :
     (κ δ : SL.S) → SuccCardL δ κ
-  → (α : SL.S) → IsOrd (fst α) → ⟨ fst α ∈ˢ fst δ ⟩
+  → (α : SL.S) → IsOrd (α .fst) → ⟨ α .fst ∈ˢ δ .fst ⟩
   → InjL α κ
 ```
 
@@ -132,10 +132,10 @@ Well-founded induction is performed on the underlying set of `α`. The predicate
 
 ```agda
 below-succ-injects κ δ (ordδ , _ , κ∈δ , least) α =
-  WF.WFI.induction regularityV {P = P} step (fst α) (snd α)
+  WF.WFI.induction regularityV {P = P} step (α .fst) (α .snd)
   where
   P : SV.S → Type (ℓ-suc ℓ)
-  P a = (la : ⟨ isL a ⟩) → IsOrd a → ⟨ a ∈ˢ fst δ ⟩ → InjL (a , la) κ
+  P a = (la : ⟨ isL a ⟩) → IsOrd a → ⟨ a ∈ˢ δ .fst ⟩ → InjL (a , la) κ
 ```
 
 <!--en-->
@@ -147,11 +147,11 @@ Because `κ ∈ δ` and `δ` is an ordinal, `κ` is itself an ordinal. The induc
 <!--/-->
 
 ```agda
-  ordκ : IsOrd (fst κ)
-  ordκ = mem-ord {A = fst δ} ordδ (fst κ) κ∈δ
+  ordκ : IsOrd (κ .fst)
+  ordκ = mem-ord {A = δ .fst} ordδ (κ .fst) κ∈δ
 
   step : (a : SV.S) → (∀ a' → ⟨ a' ∈ˢ a ⟩ → P a') → P a
-  step a ih la orda a∈δ = go (ord-tri a orda (fst κ) ordκ)
+  step a ih la orda a∈δ = go (ord-tri a orda (κ .fst) ordκ)
     where
 ```
 
@@ -183,21 +183,21 @@ The type `Ex` states the relevant negation of cardinality positively: merely, th
 <!--/-->
 
 ```agda
-    not-card : ⟨ fst κ ∈ˢ a ⟩ → IsCardinalL α' → ⊥₀
+    not-card : ⟨ κ .fst ∈ˢ a ⟩ → IsCardinalL α' → ⊥₀
     not-card κ∈a c = ∈-irrefl a (least α' orda c κ∈a α' a∈δ)
 
     Ex : Type (ℓ-suc ℓ)
-    Ex = ∥ Σ[ γ ∶ SL.S ] (⟨ fst γ ∈ˢ a ⟩ × InjL α' γ) ∥₁
+    Ex = ∥ Σ[ γ ∶ SL.S ] (⟨ γ .fst ∈ˢ a ⟩ × InjL α' γ) ∥₁
 
     exFo : Formula SL.S 1
     exFo = ∃̇ ((var zero ∈̇ var (suc zero))
              ∧̇ injLAt (suc zero) zero)
 
-    exFill : Ex → ⟨ At._⊨_ (α' ∷ []) exFo ⟩
+    exFill : Ex → ⟨ (α' ∷ []) At.⊨ exFo ⟩
     exFill = map₁ (λ { (γ , γ∈a , inj) → γ , γ∈a
       , InjLAt.fill (suc zero) zero (γ ∷ α' ∷ []) inj })
 
-    exRead : ⟨ At._⊨_ (α' ∷ []) exFo ⟩ → Ex
+    exRead : ⟨ (α' ∷ []) At.⊨ exFo ⟩ → Ex
     exRead = map₁ (λ { (γ , γ∈a , sat) → γ , γ∈a
       , InjLAt.read (suc zero) zero (γ ∷ α' ∷ []) sat })
 
@@ -215,7 +215,7 @@ The formula `exFo` binds the possible `γ`, conjoins `γ ∈ α'` with the formu
 <!--/-->
 
 ```agda
-    some-γ : ⟨ fst κ ∈ˢ a ⟩ → Ex
+    some-γ : ⟨ κ .fst ∈ˢ a ⟩ → Ex
     some-γ κ∈a = decide exDecision
       where
       decide : Dec Ex → Ex
@@ -244,7 +244,7 @@ A witness of the untruncated content of `Ex` consists of `γ ∈ a` and an inter
 <!--/-->
 
 ```agda
-    from-γ : Σ[ γ ∶ SL.S ] (⟨ fst γ ∈ˢ a ⟩ × InjL α' γ) → InjL α' κ
+    from-γ : Σ[ γ ∶ SL.S ] (⟨ γ .fst ∈ˢ a ⟩ × InjL α' γ) → InjL α' κ
     from-γ (γ , γ∈a , α↪γ) =
       injl-trans α' γ κ α↪γ
 ```
@@ -258,8 +258,8 @@ To invoke the induction hypothesis at `γ`, the proof supplies all three compone
 <!--/-->
 
 ```agda
-        (ih (fst γ) γ∈a (snd γ)
-            (mem-ord {A = a} orda (fst γ) γ∈a)
+        (ih (γ .fst) γ∈a (γ .snd)
+            (mem-ord {A = a} orda (γ .fst) γ∈a)
             (ordδ .fst γ∈a a∈δ))
 ```
 
@@ -272,17 +272,17 @@ The first trichotomy branch has `a ∈ κ`. Because an ordinal is transitive, ev
 <!--/-->
 
 ```agda
-    go : Tri a (fst κ) → InjL α' κ
+    go : Tri a (κ .fst) → InjL α' κ
     go (inl a∈κ)       =
       inclusion-coded α' κ (λ z z∈a → ordκ .fst z∈a a∈κ)
 ```
 
 <!--en-->
-In the equality branch, transport along `a ≡ fst κ` turns the same inclusion into the required injection. In the remaining branch `κ ∈ a`, the truncated witness supplied above is eliminated into `InjL α' κ`; this elimination is valid because `InjL` is itself a proposition.
+In the equality branch, transport along `a ≡ κ .fst` turns the same inclusion into the required injection. In the remaining branch `κ ∈ a`, the truncated witness supplied above is eliminated into `InjL α' κ`; this elimination is valid because `InjL` is itself a proposition.
 <!--zh-->
-在相等分支中，沿 `a ≡ fst κ` 搬运同一个包含关系即可得到所需单射。在余下的 `κ ∈ a` 分支中，把上面得到的截断见证消去到 `InjL α' κ`；由于 `InjL` 本身是命题，这个消去是合法的。
+在相等分支中，沿 `a ≡ κ .fst` 搬运同一个包含关系即可得到所需单射。在余下的 `κ ∈ a` 分支中，把上面得到的截断见证消去到 `InjL α' κ`；由于 `InjL` 本身是命题，这个消去是合法的。
 <!--ja-->
-等しい場合には、`a ≡ fst κ` に沿って同じ包含を移送すれば、必要な単射が得られる。残る `κ ∈ a` の場合には、先に得た切り詰められた証人を `InjL α' κ` へ消去する。`InjL` 自身が命題なので、この消去は正当である。
+等しい場合には、`a ≡ κ .fst` に沿って同じ包含を移送すれば、必要な単射が得られる。残る `κ ∈ a` の場合には、先に得た切り詰められた証人を `InjL α' κ` へ消去する。`InjL` 自身が命題なので、この消去は正当である。
 <!--/-->
 
 ```agda

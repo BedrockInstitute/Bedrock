@@ -229,7 +229,7 @@ The entries are first gathered into a common container by the small-domain princ
 
 ```agda
   private
-    dom : Σ[ d ∶ S ] ((k : Lift {ℓ-zero} {ℓ} ℕ) → ⟨ fst (entry (lower k)) ∈ fst d ⟩)
+    dom : Σ[ d ∶ S ] ((k : Lift {ℓ-zero} {ℓ} ℕ) → ⟨ (entry (lower k)) .fst ∈ d .fst ⟩)
     dom = smallDom (Lift {ℓ-zero} {ℓ} ℕ) (λ k → entry (lower k))
 ```
 
@@ -273,7 +273,7 @@ The membership specification is exported: membership in the tower is membership 
 
 ```agda
     tower-mem : (x : S)
-              → (fst x ∈ fst tower) ≡ ((fst x ∈ fst (dom .fst)) ⊓ ((x ∷ []) ⊨ towerFo))
+              → (x .fst ∈ tower .fst) ≡ ((x .fst ∈ (dom .fst) .fst) ⊓ ((x ∷ []) ⊨ towerFo))
     tower-mem = hasSeparationL (dom .fst) towerFo .fst .snd
 ```
 
@@ -301,7 +301,7 @@ Every standard entry therefore belongs to the tower: the container membership is
 <!--/-->
 
 ```agda
-    tower-in : (n : ℕ) → ⟨ fst (entry n) ∈ fst tower ⟩
+    tower-in : (n : ℕ) → ⟨ (entry n) .fst ∈ tower .fst ⟩
     tower-in n = subst ⟨_⟩ (sym (tower-mem (entry n)))
       ( dom .snd (lift n)
       , ∣ W , ∣ numeralL n , ∣ envSet W n
@@ -332,9 +332,9 @@ The standard entry is then restated in ambient normal form: the coded pair of th
 <!--/-->
 
 ```agda
-  tower-in′ : (n : ℕ) → ⟨ pr (# n) (fst (envSet W n)) ∈ fst tower ⟩
-  tower-in′ n = subst (λ u → ⟨ u ∈ fst tower ⟩)
-    (prʟ-fst (numeralL n) (envSet W n) ∙ cong (λ u → pr u (fst (envSet W n))) (numeralL-fst n))
+  tower-in′ : (n : ℕ) → ⟨ pr (# n) ((envSet W n) .fst) ∈ tower .fst ⟩
+  tower-in′ n = subst (λ u → ⟨ u ∈ tower .fst ⟩)
+    (prʟ-fst (numeralL n) (envSet W n) ∙ cong (λ u → pr u ((envSet W n) .fst)) (numeralL-fst n))
     (tower-in n)
 ```
 
@@ -347,23 +347,23 @@ Conversely, membership in the constructed tower can be read out: every member is
 <!--/-->
 
 ```agda
-  tower-out : (x : S) → ⟨ fst x ∈ fst tower ⟩
-            → ∥ Σ[ n ∶ ℕ ] (fst x ≡ pr (# n) (fst (envSet W n))) ∥₁
+  tower-out : (x : S) → ⟨ x .fst ∈ tower .fst ⟩
+            → ∥ Σ[ n ∶ ℕ ] (x .fst ≡ pr (# n) ((envSet W n) .fst)) ∥₁
   tower-out x hx = rec₁ squash₁ byB (subst ⟨_⟩ (tower-mem x) hx .snd)
     where
     Goal : Type (ℓ-suc ℓ)
 ```
 
 <!--en-->
-The target type makes that boundary explicit: it is the propositional truncation of a natural number `n` together with an equality from the member’s underlying set to the standard pair `pr (# n) (fst (envSet W n))`.
+The target type makes that boundary explicit: it is the propositional truncation of a natural number `n` together with an equality from the member’s underlying set to the standard pair `pr (# n) ((envSet W n) .fst)`.
 <!--zh-->
-目标类型明确表达这一边界：它是命题截断，其中仅仅存在自然数 `n`，并有从该元素的底层集合到标准有序对 `pr (# n) (fst (envSet W n))` 的等式。
+目标类型明确表达这一边界：它是命题截断，其中仅仅存在自然数 `n`，并有从该元素的底层集合到标准有序对 `pr (# n) ((envSet W n) .fst)` 的等式。
 <!--ja-->
-目標の型はこの境界を明示する。自然数 `n` と、要素の台集合から標準的な順序対 `pr (# n) (fst (envSet W n))` への等式との組を命題的に切り詰めた型である。
+目標の型はこの境界を明示する。自然数 `n` と、要素の台集合から標準的な順序対 `pr (# n) ((envSet W n) .fst)` への等式との組を命題的に切り詰めた型である。
 <!--/-->
 
 ```agda
-    Goal = ∥ Σ[ n ∶ ℕ ] (fst x ≡ pr (# n) (fst (envSet W n))) ∥₁
+    Goal = ∥ Σ[ n ∶ ℕ ] (x .fst ≡ pr (# n) ((envSet W n) .fst)) ∥₁
 ```
 
 <!--en-->
@@ -426,7 +426,7 @@ The ordered-pair reader recovers the equality from the member to the coded pair 
                     ∧̇ envSetAt i0 i1 i2 ))) ⟩ → Goal
         byE (F , (qb , (hp , (hω , hE)))) = rec₁ squash₁ byK (subst ⟨_⟩ (ω-specL n) hω)
           where
-          xq : fst x ≡ pr (fst n) (fst F)
+          xq : x .fst ≡ pr (n .fst) (F .fst)
           xq = pr-out i3 i1 i0 (F ∷ n ∷ b ∷ x ∷ []) hp
 ```
 
@@ -439,7 +439,7 @@ The numeral identification aligns the recorded arity with the constructible nume
 <!--/-->
 
 ```agda
-          byK : Σ[ k ∶ Lift {ℓ-zero} {ℓ-suc ℓ} ℕ ] (fst n ≡ fst (numeralL (lower k))) → Goal
+          byK : Σ[ k ∶ Lift {ℓ-zero} {ℓ-suc ℓ} ℕ ] (n .fst ≡ (numeralL (lower k)) .fst) → Goal
           byK (k , qn) = ∣ lower k , xq ∙ cong₂ pr (qn ∙ numeralL-fst (lower k)) Eq ∣₁
             where
             module Am = Ambient W (F ∷ n ∷ b ∷ x ∷ []) i0 i1 i2 (lower k)
@@ -455,8 +455,8 @@ The agreement module supplies both directions of membership between the describe
 <!--/-->
 
 ```agda
-            Eq : fst F ≡ fst (envSet W (lower k))
-            Eq = cong fst (extensionalL {a = F} {b = envSet W (lower k)}
+            Eq : F .fst ≡ (envSet W (lower k)) .fst
+            Eq = cong (λ p → p .fst) (extensionalL {a = F} {b = envSet W (lower k)}
               (λ z → ⇔toPath (Am.into z) (Am.outof z)))
 ```
 </div>
@@ -609,8 +609,8 @@ module EnvFacts (W : S) where
 
 ```agda
   private
-    ι : ⟪ fst W ⟫ → V ℓ
-    ι = ⟪ fst W ⟫↪
+    ι : ⟪ W .fst ⟫ → V ℓ
+    ι = ⟪ W .fst ⟫↪
 ```
 
 <!--en-->
@@ -622,8 +622,8 @@ Every presented index names a member of `W`: the small membership bridge runs fr
 <!--/-->
 
 ```agda
-    ι∈ : (q : ⟪ fst W ⟫) → ⟨ ι q ∈ fst W ⟩
-    ι∈ q = ∈∈ₛ {a = ι q} {b = fst W} .snd (∈ₛ⟪ fst W ⟫↪ q)
+    ι∈ : (q : ⟪ W .fst ⟫) → ⟨ ι q ∈ W .fst ⟩
+    ι∈ q = ∈∈ₛ {a = ι q} {b = W .fst} .snd (∈ₛ⟪ W .fst ⟫↪ q)
 ```
 
 <!--en-->
@@ -648,10 +648,10 @@ A set with no members equals the zero-length environment graph, by extensionalit
 <!--/-->
 
 ```agda
-  noMembers→env0 : (z : V ℓ) → ((y : V ℓ) → ⟨ y ∈ z ⟩ → ⊥₀) → z ≡ fst (envS W g0)
+  noMembers→env0 : (z : V ℓ) → ((y : V ℓ) → ⟨ y ∈ z ⟩ → ⊥₀) → z ≡ (envS W g0) .fst
   noMembers→env0 z k = extensionalV (λ y → ⇔toPath
     (λ hy → ⊥₀-rec (k y hy))
-    (rec₁ (snd (y ∈ z)) (λ { (lift () , _) })))
+    (rec₁ ((y ∈ z) .snd) (λ { (lift () , _) })))
 ```
 
 <!--en-->
@@ -663,7 +663,7 @@ Conversely, every environment graph of length zero has no members: the index has
 <!--/-->
 
 ```agda
-  envAny0-noMembers : (g : Ix W 0) (y : V ℓ) → ⟨ y ∈ fst (envS W g) ⟩ → ⊥₀
+  envAny0-noMembers : (g : Ix W 0) (y : V ℓ) → ⟨ y ∈ (envS W g) .fst ⟩ → ⊥₀
   envAny0-noMembers g y = rec₁ isProp⊥ (λ { (lift () , _) })
 ```
 
@@ -676,7 +676,7 @@ Reading the zero-length environment set out: every member is a set with no membe
 <!--/-->
 
 ```agda
-  envSet0-out : (z : V ℓ) → ⟨ z ∈ fst (envSet W 0) ⟩
+  envSet0-out : (z : V ℓ) → ⟨ z ∈ (envSet W 0) .fst ⟩
               → (y : V ℓ) → ⟨ y ∈ z ⟩ → ⊥₀
   envSet0-out z hz y hy = rec₁ isProp⊥
     (λ { (g , e) → envAny0-noMembers g y (subst (λ u → ⟨ y ∈ u ⟩) e hy) })
@@ -692,8 +692,8 @@ Filling the zero-length environment set uses the empty set: it is transported in
 <!--/-->
 
 ```agda
-  envSet0-in : (z : V ℓ) → ((y : V ℓ) → ⟨ y ∈ z ⟩ → ⊥₀) → ⟨ z ∈ fst (envSet W 0) ⟩
-  envSet0-in z k = subst (λ u → ⟨ u ∈ fst (envSet W 0) ⟩) (sym (noMembers→env0 z k)) (envSet-in W g0)
+  envSet0-in : (z : V ℓ) → ((y : V ℓ) → ⟨ y ∈ z ⟩ → ⊥₀) → ⟨ z ∈ (envSet W 0) .fst ⟩
+  envSet0-in z k = subst (λ u → ⟨ u ∈ (envSet W 0) .fst ⟩) (sym (noMembers→env0 z k)) (envSet-in W g0)
 ```
 
 <!--en-->
@@ -705,8 +705,8 @@ The environment coding agrees with cons at the function level: prepending a carr
 <!--/-->
 
 ```agda
-  cons-env : (q : ⟪ fst W ⟫) {k : ℕ} (g : Ix W k)
-           → env (cons (ι q) (λ i → ι (g i))) ≡ fst (envS W (cons q g))
+  cons-env : (q : ⟪ W .fst ⟫) {k : ℕ} (g : Ix W k)
+           → env (cons (ι q) (λ i → ι (g i))) ≡ (envS W (cons q g)) .fst
   cons-env q g = cong env (funExt (λ { zero → refl ; (suc i) → refl }))
 ```
 
@@ -719,10 +719,10 @@ Every carrier element extends every environment of length `k` to an environment 
 <!--/-->
 
 ```agda
-  envCons∈ : {k : ℕ} (x : V ℓ) → ⟨ x ∈ fst W ⟩ → (g : Ix W k)
-           → ⟨ env (cons x (λ i → ι (g i))) ∈ fst (envSet W (suc k)) ⟩
+  envCons∈ : {k : ℕ} (x : V ℓ) → ⟨ x ∈ W .fst ⟩ → (g : Ix W k)
+           → ⟨ env (cons x (λ i → ι (g i))) ∈ (envSet W (suc k)) .fst ⟩
   envCons∈ {k} x x∈ g =
-    subst (λ u → ⟨ u ∈ fst (envSet W (suc k)) ⟩)
+    subst (λ u → ⟨ u ∈ (envSet W (suc k)) .fst ⟩)
       (sym (cong (λ v → env (cons v (λ i → ι (g i)))) (sym (fib .snd)) ∙ cons-env (fib .fst) g))
 ```
 
@@ -737,8 +737,8 @@ The presenting index is recovered from the membership through the fiber of the p
 ```agda
       (envSet-in W (cons (fib .fst) g))
     where
-    fib : Σ[ q ∶ ⟪ fst W ⟫ ] (ι q ≡ x)
-    fib = ∈-asFiber {a = x} {b = fst W} x∈
+    fib : Σ[ q ∶ ⟪ W .fst ⟫ ] (ι q ≡ x)
+    fib = ∈-asFiber {a = x} {b = W .fst} x∈
 ```
 
 <!--en-->
@@ -750,11 +750,11 @@ The insertion is restated for a constructible element with an identification of 
 <!--/-->
 
 ```agda
-  envSuc-in : {k : ℕ} (x e' : S) → ⟨ fst x ∈ fst W ⟩ → (g : Ix W k)
-            → fst e' ≡ env (cons (fst x) (λ i → ι (g i)))
-            → ⟨ fst e' ∈ fst (envSet W (suc k)) ⟩
+  envSuc-in : {k : ℕ} (x e' : S) → ⟨ x .fst ∈ W .fst ⟩ → (g : Ix W k)
+            → e' .fst ≡ env (cons (x .fst) (λ i → ι (g i)))
+            → ⟨ e' .fst ∈ (envSet W (suc k)) .fst ⟩
   envSuc-in {k} x e' x∈ g qe' =
-    subst (λ u → ⟨ u ∈ fst (envSet W (suc k)) ⟩) (sym qe') (envCons∈ (fst x) x∈ g)
+    subst (λ u → ⟨ u ∈ (envSet W (suc k)) .fst ⟩) (sym qe') (envCons∈ (x .fst) x∈ g)
 ```
 
 <!--en-->
@@ -767,7 +767,7 @@ A successor environment splits at the function level into a head and a tail. If 
 
 ```agda
   env-split : {k : ℕ} (g' : Ix W (suc k))
-            → fst (envS W g') ≡ env (cons (ι (g' zero)) (λ i → ι (g' (suc i))))
+            → (envS W g') .fst ≡ env (cons (ι (g' zero)) (λ i → ι (g' (suc i))))
   env-split g' = cong env (funExt (λ { zero → refl ; (suc i) → refl }))
 ```
 
@@ -780,9 +780,9 @@ The outward reading of a successor environment recovers its head and tail only u
 <!--/-->
 
 ```agda
-  envSuc-out : {k : ℕ} (e' : S) → ⟨ fst e' ∈ fst (envSet W (suc k)) ⟩
-             → ∥ Σ[ q ∶ ⟪ fst W ⟫ ] Σ[ g ∶ Ix W k ]
-                  (fst e' ≡ env (cons (ι q) (λ i → ι (g i)))) ∥₁
+  envSuc-out : {k : ℕ} (e' : S) → ⟨ e' .fst ∈ (envSet W (suc k)) .fst ⟩
+             → ∥ Σ[ q ∶ ⟪ W .fst ⟫ ] Σ[ g ∶ Ix W k ]
+                  (e' .fst ≡ env (cons (ι q) (λ i → ι (g i)))) ∥₁
   envSuc-out {k} e' h = map₁
     (λ { (g' , e) → g' zero , (λ i → g' (suc i)) , (e ∙ env-split g') })
 ```
@@ -821,7 +821,7 @@ cons の像の読み手は、候補の後続の集合 `F'`、候補の基底の�
 <summary class="submodule-fold-heading">
 ```agda
 module ConsImageRead {m : ℕ} (F' F w : Fin m) (γ : S ^ m) (W : S)
-  (qw : fst (lookup w γ) ≡ fst W) where
+  (qw : (lookup w γ) .fst ≡ W .fst) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -829,7 +829,7 @@ module ConsImageRead {m : ℕ} (F' F w : Fin m) (γ : S ^ m) (W : S)
 ```agda
   open EnvFacts W
   private
-    ι : ⟪ fst W ⟫ → V ℓ
+    ι : ⟪ W .fst ⟫ → V ℓ
 ```
 
 <!--en-->
@@ -841,7 +841,7 @@ The embedding of the carrier into the hierarchy is named once, so that every car
 <!--/-->
 
 ```agda
-    ι = ⟪ fst W ⟫↪
+    ι = ⟪ W .fst ⟫↪
 ```
 
 <!--en-->
@@ -853,8 +853,8 @@ For each `q` in the carrier of `W`, the presentation map places `ι q` in the un
 <!--/-->
 
 ```agda
-    ι∈' : (q : ⟪ fst W ⟫) → ⟨ ι q ∈ fst W ⟩
-    ι∈' q = ∈∈ₛ {a = ι q} {b = fst W} .snd (∈ₛ⟪ fst W ⟫↪ q)
+    ι∈' : (q : ⟪ W .fst ⟫) → ⟨ ι q ∈ W .fst ⟩
+    ι∈' q = ∈∈ₛ {a = ι q} {b = W .fst} .snd (∈ₛ⟪ W .fst ⟫↪ q)
 ```
 
 <!--en-->
@@ -872,11 +872,11 @@ cons の像の条項の外向きの読み出しはこう言う。基底の集合
 <!--/-->
 
 ```agda
-  consImage-out : (k : ℕ) → fst (lookup F γ) ≡ fst (envSet W k)
-                → ⟨ γ ⊨ consImage F' F w ⟩ → fst (lookup F' γ) ≡ fst (envSet W (suc k))
+  consImage-out : (k : ℕ) → (lookup F γ) .fst ≡ (envSet W k) .fst
+                → ⟨ γ ⊨ consImage F' F w ⟩ → (lookup F' γ) .fst ≡ (envSet W (suc k)) .fst
   consImage-out k qF (h1 , h2) = extensionalV (λ z → ⇔toPath (fwd z) (bwd z))
     where
-    fwd : (z : V ℓ) → ⟨ z ∈ fst (lookup F' γ) ⟩ → ⟨ z ∈ fst (envSet W (suc k)) ⟩
+    fwd : (z : V ℓ) → ⟨ z ∈ (lookup F' γ) .fst ⟩ → ⟨ z ∈ (envSet W (suc k)) .fst ⟩
 ```
 
 <!--en-->
@@ -888,11 +888,11 @@ The clause supplies a carrier element `x` and a coded environment entry `e` and 
 <!--/-->
 
 ```agda
-    fwd z hz = rec₁ (snd (z ∈ fst (envSet W (suc k))))
-      (λ { (x , (x∈ , hx)) → rec₁ (snd (z ∈ fst (envSet W (suc k))))
-        (λ { (e , (e∈ , hc)) → rec₁ (snd (z ∈ fst (envSet W (suc k))))
+    fwd z hz = rec₁ ((z ∈ (envSet W (suc k)) .fst) .snd)
+      (λ { (x , (x∈ , hx)) → rec₁ ((z ∈ (envSet W (suc k)) .fst) .snd)
+        (λ { (e , (e∈ , hc)) → rec₁ ((z ∈ (envSet W (suc k)) .fst) .snd)
           (λ { (g , qe) →
-            envSuc-in x zS (subst (λ u → ⟨ fst x ∈ u ⟩) qw x∈) g
+            envSuc-in x zS (subst (λ u → ⟨ x .fst ∈ u ⟩) qw x∈) g
 ```
 
 <!--en-->
@@ -905,7 +905,7 @@ In the forward inclusion, the first half of the cons-image clause supplies a hea
 
 ```agda
               (subst ⟨_⟩ (consAtL-adequate i2 i1 i0 (e ∷ x ∷ zS ∷ γ) (λ i → ι (g i)) qe) hc) })
-          (envSet-out W k e (subst (λ u → ⟨ fst e ∈ u ⟩) qF e∈)) })
+          (envSet-out W k e (subst (λ u → ⟨ e .fst ∈ u ⟩) qF e∈)) })
         hx })
       (h1 zS hz)
       where
@@ -933,11 +933,11 @@ For the reverse inclusion, take a member `z` of the actual successor environment
 <!--/-->
 
 ```agda
-    bwd : (z : V ℓ) → ⟨ z ∈ fst (envSet W (suc k)) ⟩ → ⟨ z ∈ fst (lookup F' γ) ⟩
-    bwd z hz = rec₁ (snd (z ∈ fst (lookup F' γ)))
-      (λ { (q , g , qz) → rec₁ (snd (z ∈ fst (lookup F' γ)))
+    bwd : (z : V ℓ) → ⟨ z ∈ (envSet W (suc k)) .fst ⟩ → ⟨ z ∈ (lookup F' γ) .fst ⟩
+    bwd z hz = rec₁ ((z ∈ (lookup F' γ) .fst) .snd)
+      (λ { (q , g , qz) → rec₁ ((z ∈ (lookup F' γ) .fst) .snd)
         (λ { (e' , (e'∈ , hc)) →
-          subst (λ u → ⟨ u ∈ fst (lookup F' γ) ⟩)
+          subst (λ u → ⟨ u ∈ (lookup F' γ) .fst ⟩)
 ```
 
 <!--en-->
@@ -952,7 +952,7 @@ The adequacy of `consAtL` identifies the object-language cons relation supplied 
             (subst ⟨_⟩ (consAtL-adequate i0 i1 i2 (e' ∷ xS q ∷ envS W g ∷ γ) (λ i → ι (g i)) refl) hc
              ∙ sym qz)
             e'∈ })
-        (h2 (envS W g) (subst (λ u → ⟨ fst (envS W g) ∈ u ⟩) (sym qF) (envSet-in W g))
+        (h2 (envS W g) (subst (λ u → ⟨ (envS W g) .fst ∈ u ⟩) (sym qF) (envSet-in W g))
             (xS q) (subst (λ u → ⟨ ι q ∈ u ⟩) (sym qw) (ι∈' q))) })
 ```
 
@@ -969,7 +969,7 @@ The two propositional truncations are eliminated only into the membership propos
       where
       zS : S
       zS = down (envSet W (suc k)) z hz
-      xS : ⟪ fst W ⟫ → S
+      xS : ⟪ W .fst ⟫ → S
 ```
 
 <!--en-->
@@ -981,7 +981,7 @@ For a recovered head `q`, its image `ι q` lies in `W`; transitivity of construc
 <!--/-->
 
 ```agda
-      xS q = ι q , isL-trans {x = fst W} {y = ι q} (ι∈' q) (snd W)
+      xS q = ι q , isL-trans {x = W .fst} {y = ι q} (ι∈' q) (W .snd)
 ```
 
 <!--en-->
@@ -993,8 +993,8 @@ cons の像の条項の内向きの方向は、実際の段階の環境の集合
 <!--/-->
 
 ```agda
-  consImage-in : (k : ℕ) → fst (lookup F γ) ≡ fst (envSet W k)
-               → fst (lookup F' γ) ≡ fst (envSet W (suc k))
+  consImage-in : (k : ℕ) → (lookup F γ) .fst ≡ (envSet W k) .fst
+               → (lookup F' γ) .fst ≡ (envSet W (suc k)) .fst
                → ⟨ γ ⊨ consImage F' F w ⟩
   consImage-in k qF qF' = h1 , h2
     where
@@ -1013,7 +1013,7 @@ The truncated decomposition of the member is consumed to name the head and the t
 <!--/-->
 
 ```agda
-    h1 : (e' : S) → ⟨ fst e' ∈ fst (lookup F' γ) ⟩
+    h1 : (e' : S) → ⟨ e' .fst ∈ (lookup F' γ) .fst ⟩
        → ⟨ (e' ∷ γ) ⊨ ∃̇∈ (var (sh 1 w)) (∃̇∈ (var (sh 2 F)) (consAtL i2 i1 i0)) ⟩
     h1 e' he' = map₁
       (λ { (q , g , qe') →
@@ -1029,11 +1029,11 @@ The head is carried into the carrier, the tail is presented as an element of the
 <!--/-->
 
 ```agda
-            xS = ι q , isL-trans {x = fst W} {y = ι q} (ι∈' q) (snd W)
+            xS = ι q , isL-trans {x = W .fst} {y = ι q} (ι∈' q) (W .snd)
         in xS , ( subst (λ u → ⟨ ι q ∈ u ⟩) (sym qw) (ι∈' q)
-              , ∣ envS W g , ( subst (λ u → ⟨ fst (envS W g) ∈ u ⟩) (sym qF) (envSet-in W g)
+              , ∣ envS W g , ( subst (λ u → ⟨ (envS W g) .fst ∈ u ⟩) (sym qF) (envSet-in W g)
                              , subst ⟨_⟩ (sym (consAtL-adequate i2 i1 i0 (envS W g ∷ xS ∷ e' ∷ γ) (λ i → ι (g i)) refl)) qe' ) ∣₁ ) })
-      (envSuc-out e' (subst (λ u → ⟨ fst e' ∈ u ⟩) qF' he'))
+      (envSuc-out e' (subst (λ u → ⟨ e' .fst ∈ u ⟩) qF' he'))
 ```
 
 <!--en-->
@@ -1051,11 +1051,11 @@ The outward reading of the base environment set merely supplies the tail index `
 <!--/-->
 
 ```agda
-    h2 : (e : S) → ⟨ fst e ∈ fst (lookup F γ) ⟩ → (x : S) → ⟨ fst x ∈ fst (lookup w γ) ⟩
+    h2 : (e : S) → ⟨ e .fst ∈ (lookup F γ) .fst ⟩ → (x : S) → ⟨ x .fst ∈ (lookup w γ) .fst ⟩
        → ⟨ (x ∷ e ∷ γ) ⊨ ∃̇∈ (var (sh 2 F')) (consAtL i0 i1 i2) ⟩
     h2 e he x hx = map₁
       (λ { (g , qe) →
-        let m : ⟨ env (cons (fst x) (λ i → ι (g i))) ∈ fst (envSet W (suc k)) ⟩
+        let m : ⟨ env (cons (x .fst) (λ i → ι (g i))) ∈ (envSet W (suc k)) .fst ⟩
 ```
 
 <!--en-->
@@ -1067,10 +1067,10 @@ The constructed environment is presented as an element of the successor stage en
 <!--/-->
 
 ```agda
-            m = envCons∈ (fst x) (subst (λ u → ⟨ fst x ∈ u ⟩) qw hx) g
+            m = envCons∈ (x .fst) (subst (λ u → ⟨ x .fst ∈ u ⟩) qw hx) g
             e' : S
-            e' = down (envSet W (suc k)) (env (cons (fst x) (λ i → ι (g i)))) m
-        in e' , ( subst (λ u → ⟨ fst e' ∈ u ⟩) (sym qF') m
+            e' = down (envSet W (suc k)) (env (cons (x .fst) (λ i → ι (g i)))) m
+        in e' , ( subst (λ u → ⟨ e' .fst ∈ u ⟩) (sym qF') m
                 , subst ⟨_⟩ (sym (consAtL-adequate i0 i1 i2 (e' ∷ x ∷ e ∷ γ) (λ i → ι (g i)) qe)) refl ) })
 ```
 
@@ -1083,7 +1083,7 @@ The base-set outward reading supplies the truncated index `g` whose environment 
 <!--/-->
 
 ```agda
-      (envSet-out W k e (subst (λ u → ⟨ fst e ∈ u ⟩) qF he))
+      (envSet-out W k e (subst (λ u → ⟨ e .fst ∈ u ⟩) qF he))
 ```
 </div>
 </details>
@@ -1144,11 +1144,11 @@ The first named object is the underlying set of the candidate, and the `none` he
 <!--/-->
 
 ```agda
-  sglEmpty-out : ⟨ γ ⊨ sglEmpty F ⟩ → fst (lookup F γ) ≡ fst (envSet W 0)
+  sglEmpty-out : ⟨ γ ⊨ sglEmpty F ⟩ → (lookup F γ) .fst ≡ (envSet W 0) .fst
   sglEmpty-out (hex , hall) = extensionalV (λ z → ⇔toPath (fwd z) (bwd z))
     where
-    Fv = fst (lookup F γ)
-    none : (z : S) → ⟨ (z ∷ γ) ⊨ emptyAll i0 ⟩ → (y : V ℓ) → ⟨ y ∈ fst z ⟩ → ⊥₀
+    Fv = (lookup F γ) .fst
+    none : (z : S) → ⟨ (z ∷ γ) ⊨ emptyAll i0 ⟩ → (y : V ℓ) → ⟨ y ∈ z .fst ⟩ → ⊥₀
 ```
 
 <!--en-->
@@ -1172,7 +1172,7 @@ Forward: a member of the candidate set is presented, the bounded clause refutes 
 <!--/-->
 
 ```agda
-    fwd : (z : V ℓ) → ⟨ z ∈ Fv ⟩ → ⟨ z ∈ fst (envSet W 0) ⟩
+    fwd : (z : V ℓ) → ⟨ z ∈ Fv ⟩ → ⟨ z ∈ (envSet W 0) .fst ⟩
     fwd z hz = envSet0-in z (none (down (lookup F γ) z hz) (hall (down (lookup F γ) z hz) hz))
 ```
 
@@ -1185,11 +1185,11 @@ Backward: a member of the zero-stage environment set is presented, and its trunc
 <!--/-->
 
 ```agda
-    bwd : (z : V ℓ) → ⟨ z ∈ fst (envSet W 0) ⟩ → ⟨ z ∈ Fv ⟩
-    bwd z hz = rec₁ (snd (z ∈ Fv))
+    bwd : (z : V ℓ) → ⟨ z ∈ (envSet W 0) .fst ⟩ → ⟨ z ∈ Fv ⟩
+    bwd z hz = rec₁ ((z ∈ Fv) .snd)
       (λ { (e , (e∈ , he)) →
         subst (λ u → ⟨ u ∈ Fv ⟩)
-          (noMembers→env0 (fst e) (none e he) ∙ sym (noMembers→env0 z (envSet0-out z hz)))
+          (noMembers→env0 (e .fst) (none e he) ∙ sym (noMembers→env0 z (envSet0-out z hz)))
 ```
 
 <!--en-->
@@ -1214,11 +1214,11 @@ For the inward reading, choose the empty environment `e0`. The existential half 
 <!--/-->
 
 ```agda
-  sglEmpty-in : fst (lookup F γ) ≡ fst (envSet W 0) → ⟨ γ ⊨ sglEmpty F ⟩
+  sglEmpty-in : (lookup F γ) .fst ≡ (envSet W 0) .fst → ⟨ γ ⊨ sglEmpty F ⟩
   sglEmpty-in q =
-      ∣ e0 , ( subst (λ u → ⟨ fst e0 ∈ u ⟩) (sym q) (envSet-in W (λ ()))
-             , (λ y hy → lift (envAny0-noMembers (λ ()) (fst y) hy)) ) ∣₁
-    , (λ z hz y hy → lift (envSet0-out (fst z) (subst (λ u → ⟨ fst z ∈ u ⟩) q hz) (fst y) hy))
+      ∣ e0 , ( subst (λ u → ⟨ e0 .fst ∈ u ⟩) (sym q) (envSet-in W (λ ()))
+             , (λ y hy → lift (envAny0-noMembers (λ ()) (y .fst) hy)) ) ∣₁
+    , (λ z hz y hy → lift (envSet0-out (z .fst) (subst (λ u → ⟨ z .fst ∈ u ⟩) q hz) (y .fst) hy))
 ```
 
 <!--en-->
@@ -1249,7 +1249,7 @@ The tower reader fixes a candidate tower slot `E`, a parameter-set slot `w`, a z
 <summary class="submodule-fold-heading">
 ```agda
 module TowerRead {m : ℕ} (E w N0 : Fin m) (γ : S ^ m) (W : S)
-  (qw : fst (lookup w γ) ≡ fst W) (qN0 : fst (lookup N0 γ) ≡ # 0)
+  (qw : (lookup w γ) .fst ≡ W .fst) (qN0 : (lookup N0 γ) .fst ≡ # 0)
   (h : ⟨ γ ⊨ towerAt E w N0 ⟩) where
 ```
 </summary>
@@ -1257,7 +1257,7 @@ module TowerRead {m : ℕ} (E w N0 : Fin m) (γ : S ^ m) (W : S)
 
 ```agda
   private
-    Ev = fst (lookup E γ)
+    Ev = (lookup E γ) .fst
 ```
 
 <!--en-->
@@ -1284,7 +1284,7 @@ An entry is a truncated record of a natural number arity and an environment set 
 
 ```agda
   Entry : V ℓ → V ℓ → Type (ℓ-suc ℓ)
-  Entry n F = ∥ Σ[ k ∶ ℕ ] ((n ≡ # k) × (F ≡ fst (envSet W k))) ∥₁
+  Entry n F = ∥ Σ[ k ∶ ℕ ] ((n ≡ # k) × (F ≡ (envSet W k) .fst)) ∥₁
 ```
 
 <!--en-->
@@ -1302,11 +1302,11 @@ The step function splits on the downward-decomposition clause of the tower formu
 <!--/-->
 
 ```agda
-  entry-out : (n F : S) → ⟨ pr (fst n) (fst F) ∈ Ev ⟩ → Entry (fst n) (fst F)
-  entry-out n F = ∈-induction {P = P} step (fst n) n F refl
+  entry-out : (n F : S) → ⟨ pr (n .fst) (F .fst) ∈ Ev ⟩ → Entry (n .fst) (F .fst)
+  entry-out n F = ∈-induction {P = P} step (n .fst) n F refl
     where
     P : V ℓ → Type (ℓ-suc ℓ)
-    P nv = (n F : S) → fst n ≡ nv → ⟨ pr (fst n) (fst F) ∈ Ev ⟩ → Entry (fst n) (fst F)
+    P nv = (n F : S) → n .fst ≡ nv → ⟨ pr (n .fst) (F .fst) ∈ Ev ⟩ → Entry (n .fst) (F .fst)
 ```
 
 <!--en-->
@@ -1334,7 +1334,7 @@ The membership proof for the candidate pair supplies a constructible representat
 <!--/-->
 
 ```agda
-      pS = down (lookup E γ) (pr (fst n) (fst F)) p∈
+      pS = down (lookup E γ) (pr (n .fst) (F .fst)) p∈
       c = container pS n F refl
       δ : S ^ (4 + m)
       δ = F ∷ n ∷ c .fst ∷ pS ∷ γ
@@ -1349,9 +1349,9 @@ The case split consumes the downward-decomposition satisfaction. The base case r
 <!--/-->
 
 ```agda
-      cases : ((fst n ≡ fst (lookup N0 γ)) × ⟨ δ ⊨ sglEmpty i0 ⟩)
+      cases : ((n .fst ≡ (lookup N0 γ) .fst) × ⟨ δ ⊨ sglEmpty i0 ⟩)
             ⊎ ⟨ δ ⊨ ∃̇∈ (var (sh 4 E)) (bothEx i0 (downBody w)) ⟩
-            → Entry (fst n) (fst F)
+            → Entry (n .fst) (F .fst)
       cases (inl (qn0 , hF)) = ∣ 0 , (qn0 ∙ qN0 , SglEmpty.sglEmpty-out W i0 δ hF) ∣₁
       cases (inr hs) = rec₁ squash₁
 ```
@@ -1374,7 +1374,7 @@ The ordinality comparison says the candidate numeral is the von Neumann successo
         (λ { (p' , (p'∈ , hb)) → rec₁ squash₁
           (λ { (n' , F' , s' , (qp' , (hsuc , hci))) →
             let δ' = F' ∷ n' ∷ s' ∷ p' ∷ δ
-                qsuc : fst n ≡ sucV (fst n')
+                qsuc : n .fst ≡ sucV (n' .fst)
                 qsuc = suc-out i1 i5 δ' hsuc
 ```
 
@@ -1387,8 +1387,8 @@ The predecessor numeral lies in the candidate numeral because every set lies in 
 <!--/-->
 
 ```agda
-                n'∈ : ⟨ fst n' ∈ nv ⟩
-                n'∈ = subst (λ u → ⟨ fst n' ∈ u ⟩) (sym qsuc ∙ qn) (self∈sucV (fst n'))
+                n'∈ : ⟨ n' .fst ∈ nv ⟩
+                n'∈ = subst (λ u → ⟨ n' .fst ∈ u ⟩) (sym qsuc ∙ qn) (self∈sucV (n' .fst))
             in map₁
               (λ { (k , (qk , qF')) →
                 suc k , ( qsuc ∙ cong sucV qk
@@ -1404,7 +1404,7 @@ The recovered arity is mapped to its successor, and the cons-image outward readi
 
 ```agda
                         , ConsImageRead.consImage-out i4 i0 (sh 8 w) δ' W qw k qF' hci ) })
-              (IH (fst n') n'∈ n' F' refl
+              (IH (n' .fst) n'∈ n' F' refl
                 (subst (λ u → ⟨ u ∈ Ev ⟩) qp' p'∈)) })
           (bothEx-out i0 (downBody w) (p' ∷ δ) hb) })
         hs
@@ -1419,9 +1419,9 @@ The inward reading is proved by ordinary induction on the external natural numbe
 <!--/-->
 
 ```agda
-  entry-in : (k : ℕ) → ⟨ pr (# k) (fst (envSet W k)) ∈ Ev ⟩
-  entry-in 0 = rec₁ (snd (pr (# 0) (fst (envSet W 0)) ∈ Ev))
-    (λ { (p , (p∈ , hs)) → rec₁ (snd (pr (# 0) (fst (envSet W 0)) ∈ Ev))
+  entry-in : (k : ℕ) → ⟨ pr (# k) ((envSet W k) .fst) ∈ Ev ⟩
+  entry-in 0 = rec₁ ((pr (# 0) ((envSet W 0) .fst) ∈ Ev) .snd)
+    (λ { (p , (p∈ , hs)) → rec₁ ((pr (# 0) ((envSet W 0) .fst) ∈ Ev) .snd)
       (λ { (F , s , (qp , hF)) →
         subst (λ u → ⟨ u ∈ Ev ⟩)
 ```
@@ -1439,7 +1439,7 @@ After the zero case closes, the successor step applies the upward-closure clause
           p∈ })
       (sndEx-out i0 (sh 1 N0) (sglEmpty i0) (p ∷ γ) hs) })
     hbase
-  entry-in (suc k) = rec₁ (snd (pr (# (suc k)) (fst (envSet W (suc k))) ∈ Ev))
+  entry-in (suc k) = rec₁ ((pr (# (suc k)) ((envSet W (suc k)) .fst) ∈ Ev) .snd)
 ```
 
 <!--en-->
@@ -1451,7 +1451,7 @@ The successor formula determines the new first component from the old numeral, a
 <!--/-->
 
 ```agda
-    (λ { (p' , (p'∈ , hb)) → rec₁ (snd (pr (# (suc k)) (fst (envSet W (suc k))) ∈ Ev))
+    (λ { (p' , (p'∈ , hb)) → rec₁ ((pr (# (suc k)) ((envSet W (suc k)) .fst) ∈ Ev) .snd)
       (λ { (n' , F' , s' , (qp' , (hsuc , hci))) →
         let δ' = F' ∷ n' ∷ s' ∷ p' ∷ δ
         in subst (λ u → ⟨ u ∈ Ev ⟩)
@@ -1484,7 +1484,7 @@ To invoke upward closure, the standard entry at `k` is first presented as the ca
 
 ```agda
     pS : S
-    pS = down (lookup E γ) (pr (# k) (fst (envSet W k))) (entry-in k)
+    pS = down (lookup E γ) (pr (# k) ((envSet W k) .fst)) (entry-in k)
     c = container pS (nn k) (envSet W k) refl
     δ : S ^ (4 + m)
     δ = envSet W k ∷ nn k ∷ c .fst ∷ pS ∷ γ
@@ -1504,15 +1504,15 @@ The tower-holding module assumes that the candidate tower has been identified wi
 <summary class="submodule-fold-heading">
 ```agda
 module TowerHolds {m : ℕ} (E w N0 : Fin m) (γ : S ^ m) (W : S)
-  (qw : fst (lookup w γ) ≡ fst W) (qE : fst (lookup E γ) ≡ fst (Tower.tower W))
-  (qN0 : fst (lookup N0 γ) ≡ # 0) where
+  (qw : (lookup w γ) .fst ≡ W .fst) (qE : (lookup E γ) .fst ≡ (Tower.tower W) .fst)
+  (qN0 : (lookup N0 γ) .fst ≡ # 0) where
 ```
 </summary>
 <div class="submodule-fold-content">
 
 ```agda
   private
-    Ev = fst (lookup E γ)
+    Ev = (lookup E γ) .fst
 ```
 
 <!--en-->
@@ -1524,8 +1524,8 @@ Every standard entry belongs to the candidate tower, by transporting the real to
 <!--/-->
 
 ```agda
-    entry∈ : (k : ℕ) → ⟨ pr (# k) (fst (envSet W k)) ∈ Ev ⟩
-    entry∈ k = subst (λ u → ⟨ pr (# k) (fst (envSet W k)) ∈ u ⟩) (sym qE) (Tower.tower-in′ W k)
+    entry∈ : (k : ℕ) → ⟨ pr (# k) ((envSet W k) .fst) ∈ Ev ⟩
+    entry∈ k = subst (λ u → ⟨ pr (# k) ((envSet W k) .fst) ∈ u ⟩) (sym qE) (Tower.tower-in′ W k)
 ```
 
 <!--en-->
@@ -1538,7 +1538,7 @@ Each standard entry is presented as a carrier element by descending along its me
 
 ```agda
     entryS : (k : ℕ) → S
-    entryS k = down (lookup E γ) (pr (# k) (fst (envSet W k))) (entry∈ k)
+    entryS k = down (lookup E γ) (pr (# k) ((envSet W k) .fst)) (entry∈ k)
 ```
 
 <!--en-->
@@ -1550,8 +1550,8 @@ Every member of the candidate tower is read as a standard entry, by transporting
 <!--/-->
 
 ```agda
-    read : (p : S) → ⟨ fst p ∈ Ev ⟩ → ∥ Σ[ k ∶ ℕ ] (fst p ≡ pr (# k) (fst (envSet W k))) ∥₁
-    read p p∈ = Tower.tower-out W p (subst (λ u → ⟨ fst p ∈ u ⟩) qE p∈)
+    read : (p : S) → ⟨ p .fst ∈ Ev ⟩ → ∥ Σ[ k ∶ ℕ ] (p .fst ≡ pr (# k) ((envSet W k) .fst)) ∥₁
+    read p p∈ = Tower.tower-out W p (subst (λ u → ⟨ p .fst ∈ u ⟩) qE p∈)
 ```
 
 <!--en-->
@@ -1580,7 +1580,7 @@ The zero-th entry is filled with its numeral equation, its membership, and the s
 
 ```agda
       , fillSnd i0 (entryS 0 ∷ γ) (lookup N0 γ) (envSet W 0)
-          (cong (λ a → pr a (fst (envSet W 0))) (sym qN0))
+          (cong (λ a → pr a ((envSet W 0) .fst)) (sym qN0))
           (sglEmpty i0)
           (SglEmpty.sglEmpty-in W i0
             (envSet W 0 ∷ container (lookup i0 (entryS 0 ∷ γ)) (lookup N0 γ) (envSet W 0)
@@ -1595,7 +1595,7 @@ The base clause is now complete. Its witness is the canonical entry `entryS 0`, 
 <!--/-->
 
 ```agda
-               (cong (λ a → pr a (fst (envSet W 0))) (sym qN0)) .fst ∷ entryS 0 ∷ γ) refl)
+               (cong (λ a → pr a ((envSet W 0) .fst)) (sym qN0)) .fst ∷ entryS 0 ∷ γ) refl)
           (sh 1 N0) refl ) ∣₁
 ```
 
@@ -1608,9 +1608,9 @@ For upward closure, fix an entry `p` of `E` and any coded-pair presentation `p =
 <!--/-->
 
 ```agda
-    hup : (p : S) → ⟨ fst p ∈ Ev ⟩ → ⟨ (p ∷ γ) ⊨ bothAll i0 (towerUp E w) ⟩
+    hup : (p : S) → ⟨ p .fst ∈ Ev ⟩ → ⟨ (p ∷ γ) ⊨ bothAll i0 (towerUp E w) ⟩
     hup p p∈ = bothAll-in i0 (towerUp E w) (p ∷ γ) (λ n F s s∈ n∈ F∈ e →
-      rec₁ (snd ((F ∷ n ∷ s ∷ p ∷ γ) ⊨ towerUp E w))
+      rec₁ (((F ∷ n ∷ s ∷ p ∷ γ) ⊨ towerUp E w) .snd)
         (λ { (k , qp) →
           let q = pr-inj (sym e ∙ qp)
 ```
@@ -1654,9 +1654,9 @@ Downward decomposition begins in the same way: fix an entry `p`, choose any code
 <!--/-->
 
 ```agda
-    hdown : (p : S) → ⟨ fst p ∈ Ev ⟩ → ⟨ (p ∷ γ) ⊨ bothAll i0 (towerDown E w N0) ⟩
+    hdown : (p : S) → ⟨ p .fst ∈ Ev ⟩ → ⟨ (p ∷ γ) ⊨ bothAll i0 (towerDown E w N0) ⟩
     hdown p p∈ = bothAll-in i0 (towerDown E w N0) (p ∷ γ) (λ n F s s∈ n∈ F∈ e →
-      rec₁ (snd ((F ∷ n ∷ s ∷ p ∷ γ) ⊨ towerDown E w N0))
+      rec₁ (((F ∷ n ∷ s ∷ p ∷ γ) ⊨ towerDown E w N0) .snd)
         (λ { (0 , qp) →
           let q = pr-inj (sym e ∙ qp)
 ```

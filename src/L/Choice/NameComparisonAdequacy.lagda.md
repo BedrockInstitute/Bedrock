@@ -543,9 +543,9 @@ contains only ordered pairs.
 
 ```agda
   paramSeq-in : ∀ {n} (e a B : Fin n) (γ : S ^ n) (k : ℕ) (g : Fin k → ⟪ A ⟫)
-              → fst (lookup e γ) ≡ env (λ i → ix (g i))
-              → fst (lookup a γ) ≡ # k
-              → fst (lookup B γ) ≡ A
+              → (lookup e γ) .fst ≡ env (λ i → ix (g i))
+              → (lookup a γ) .fst ≡ # k
+              → (lookup B γ) .fst ≡ A
               → ⟨ γ ⊨ envOverAt e a B ⟩
 ```
 
@@ -593,7 +593,7 @@ the task. Opening `Recover` with these data exposes a family indexed by
 <summary class="submodule-fold-heading">
 ```agda
   module _ {n : ℕ} (e a B : Fin n) (γ : S ^ n) (k : ℕ)
-           (qa : fst (lookup a γ) ≡ # k) (qB : fst (lookup B γ) ≡ A)
+           (qa : (lookup a γ) .fst ≡ # k) (qB : (lookup B γ) .fst ≡ A)
            (h : ⟨ γ ⊨ envOverAt e a B ⟩) where
 ```
 </summary>
@@ -639,7 +639,7 @@ ordered-pair condition.
 <!--/-->
 
 ```agda
-    paramSeq-graph : fst (lookup e γ)
+    paramSeq-graph : (lookup e γ) .fst
                    ≡ env (λ i → ix (lookup i paramSeq-out))
     paramSeq-graph = R.recovers
                    ∙ cong env (funExt (λ i → cong ix (sym (lookup-tab R.g i))))
@@ -689,7 +689,7 @@ that checks the domain of the extended environment.
 
 ```agda
     envAt-fst : (t : Name) (m : ⟪ A ⟫)
-              → fst (envAt t m) ≡ envGraph Aʟ (environment t m)
+              → (envAt t m) .fst ≡ envGraph Aʟ (environment t m)
     envAt-fst t m = envFor-graph Aʟ (environment t m)
 ```
 
@@ -722,7 +722,7 @@ seen by `domAt`; no decoding of a numeral is needed in this filling direction.
 <!--/-->
 
 ```agda
-    numAt-fst : (j : ℕ) → fst (numAt j) ≡ # j
+    numAt-fst : (j : ℕ) → (numAt j) .fst ≡ # j
     numAt-fst j = refl
 ```
 
@@ -746,18 +746,18 @@ constructible model element, giving `keyAt t`.
 <!--en-->
 The packaged key and the key used by the code-set interface have the same
 underlying set. The equation `keyAt-fst` states precisely that
-`fst (keyAt t)` is `fst (keyS Aʟ (embed (formula t)))`. This lets later
+`(keyAt t) .fst` is `(keyS Aʟ (embed (formula t))) .fst`. This lets later
 membership and graph arguments use the abstract model element while reasoning
 about the concrete ordered-pair code supplied by `keyS`.
 <!--zh-->
-包装后的键与码集接口所用的键具有同一底层集合。等式 `keyAt-fst` 精确断言 `fst (keyAt t)` 等于 `fst (keyS Aʟ (embed (formula t)))`。因此，后续成员关系与图的论证可以把抽象模型元素放入位置，同时用 `keyS` 给出的具体有序对码进行推理。
+包装后的键与码集接口所用的键具有同一底层集合。等式 `keyAt-fst` 精确断言 `(keyAt t) .fst` 等于 `(keyS Aʟ (embed (formula t))) .fst`。因此，后续成员关系与图的论证可以把抽象模型元素放入位置，同时用 `keyS` 给出的具体有序对码进行推理。
 <!--ja-->
-包まれた鍵とコード集合のインターフェースが使う鍵は、同じ基礎集合をもつ。等式 `keyAt-fst` は、`fst (keyAt t)` が `fst (keyS Aʟ (embed (formula t)))` に等しいことを正確に述べる。これにより、後の所属とグラフの議論では抽象的なモデル要素をスロットに置きながら、`keyS` が与える具体的な順序対コードについて推論できる。
+包まれた鍵とコード集合のインターフェースが使う鍵は、同じ基礎集合をもつ。等式 `keyAt-fst` は、`(keyAt t) .fst` が `(keyS Aʟ (embed (formula t))) .fst` に等しいことを正確に述べる。これにより、後の所属とグラフの議論では抽象的なモデル要素をスロットに置きながら、`keyS` が与える具体的な順序対コードについて推論できる。
 <!--/-->
 
 ```agda
     keyAt-fst : (t : Name)
-              → fst (keyAt t) ≡ fst (keyS Aʟ (embed (formula t)))
+              → (keyAt t) .fst ≡ (keyS Aʟ (embed (formula t))) .fst
     keyAt-fst t = keyIn≡ Aʟ (embed (formula t))
 ```
 
@@ -863,7 +863,7 @@ code.
 
 ```agda
     keyCode : ∀ {m} (χ : Formula (⊥* {ℓ}) m)
-            → fst (keyS Aʟ (embed χ)) ≡ pr (# m) (fst (limitCode χ))
+            → (keyS Aʟ (embed χ)) .fst ≡ pr (# m) ((limitCode χ) .fst)
     keyCode χ = cong (λ u → pr (# _) VCode.⌜ u ⌝) (sameEmbed χ)
 ```
 
@@ -885,7 +885,7 @@ give `valuesOf t`, an equality of the two environment graphs.
     valuesOf : (t : Name)
              → env (pfam t) ≡ envGraph Aʟ (map NM.DA.ι (params t))
     valuesOf t = cong env (funExt (λ i →
-      sym (cong fst (lookup-map NM.DA.ι (params t) i))))
+      sym (cong (λ p → p .fst) (lookup-map NM.DA.ι (params t) i))))
 ```
 
 <!--en-->
@@ -906,7 +906,7 @@ extended environment.
     valuesL : (t : Name) (m : ⟪ A ⟫) (i : Fin (suc (arity t)))
             → ⟨ isL (values Aʟ (environment t m) i) ⟩
     valuesL t m i =
-      isL-trans (snd (lookup i (environment t m))) pA
+      isL-trans ((lookup i (environment t m)) .snd) pA
 ```
 
 <!--en-->
@@ -934,7 +934,7 @@ selecting or retaining an index.
 ```agda
   private
     denoteMem : (t : Name) (y : V ℓ) → ⟨ y ∈ denote t ⟩ → ⟨ y ∈ A ⟩
-    denoteMem t y = rec₁ (snd (y ∈ A)) step
+    denoteMem t y = rec₁ ((y ∈ A) .snd) step
       where
       step : Σ[ p ∶ Σ[ mm ∶ ⟪ A ⟫ ] ⟨ NM.satAt t mm ⟩ ] (⟪ A ⟫↪ (p .fst) ≡ y)
 ```
@@ -979,8 +979,8 @@ membership observes only the underlying sets in `C` and `C₀`.
 ```agda
   module Named {n : ℕ} (B C C₀ s a e d : Fin n) (γ : S ^ n)
                (qB : lookup B γ ≡ Aʟ)
-               (qC : fst (lookup C γ) ≡ fst (AllCodes Aʟ))
-               (q₀ : fst (lookup C₀ γ) ≡ fst (AllCodes ∅ʟ)) where
+               (qC : (lookup C γ) .fst ≡ (AllCodes Aʟ) .fst)
+               (q₀ : (lookup C₀ γ) .fst ≡ (AllCodes ∅ʟ) .fst) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -992,19 +992,19 @@ membership observes only the underlying sets in `C` and `C₀`.
 <!--en-->
 This dependence on the carrier is isolated in `Fo`. For a model element `X`
 and an arity `j`, `Fo X j` is the type of formulas whose constants range over
-the small member type `⟪ fst X ⟫`. Thus a formula read over the carrier stored
+the small member type `⟪ X .fst ⟫`. Thus a formula read over the carrier stored
 in a slot has the correct type before any semantic comparison is made; the
 carrier cannot be replaced merely by an equality of underlying sets after the
 fact.
 <!--zh-->
-缩写 `Fo` 把公式对载体的这项依赖单独列出。对模型元素 `X` 与元数 `j`，`Fo X j` 是常元取自小元素类型 `⟪ fst X ⟫` 的公式类型。因此，在位置所存载体上读取的公式，从语义比较开始之前就具有正确类型；事后只凭底层集合的相等，不能替换这一依值载体。
+缩写 `Fo` 把公式对载体的这项依赖单独列出。对模型元素 `X` 与元数 `j`，`Fo X j` 是常元取自小元素类型 `⟪ X .fst ⟫` 的公式类型。因此，在位置所存载体上读取的公式，从语义比较开始之前就具有正确类型；事后只凭底层集合的相等，不能替换这一依值载体。
 <!--ja-->
-`Fo` は、論理式の台へのこの依存を切り出す。モデル要素 `X` とアリティ `j` に対して、`Fo X j` は、小さい要素型 `⟪ fst X ⟫` から定数を取る論理式の型である。したがって、スロットに保存された台の上で読む論理式は、意味論的な比較を始める前から正しい型をもつ。後になって基礎集合の等しさだけで、この依存する台を置き換えることはできない。
+`Fo` は、論理式の台へのこの依存を切り出す。モデル要素 `X` とアリティ `j` に対して、`Fo X j` は、小さい要素型 `⟪ X .fst ⟫` から定数を取る論理式の型である。したがって、スロットに保存された台の上で読む論理式は、意味論的な比較を始める前から正しい型をもつ。後になって基礎集合の等しさだけで、この依存する台を置き換えることはできない。
 <!--/-->
 
 ```agda
       Fo : S → ℕ → Type ℓ
-      Fo X j = Formula ⟪ fst X ⟫ j
+      Fo X j = Formula ⟪ X .fst ⟫ j
 ```
 
 <!--en-->
@@ -1042,10 +1042,10 @@ at the slot carrier is the same set as the key of `embed (formula t)` at `Aʟ`.
 
 ```agda
       keyψ : (t : Name)
-           → fst (keyS (lookup B γ) (ψAt t))
-           ≡ fst (keyS Aʟ (embed (formula t)))
+           → (keyS (lookup B γ) (ψAt t)) .fst
+           ≡ (keyS Aʟ (embed (formula t))) .fst
       keyψ t = sym (constSubstCommSlice (λ X → Fo X (suc (arity t))) (V ℓ)
-        (λ X ψ → fst (keyS X ψ)) (sym qB) (embed (formula t)))
+        (λ X ψ → (keyS X ψ) .fst) (sym qB) (embed (formula t)))
 ```
 
 <!--en-->
@@ -1063,10 +1063,10 @@ equal underlying sets.
 
 ```agda
       satψ : (t : Name)
-           → fst (Sat (lookup B γ) (mapFo (asConst (lookup B γ)) (ψAt t)))
-           ≡ fst (Sat Aʟ (mapFo (asConst Aʟ) (embed (formula t))))
+           → (Sat (lookup B γ) (mapFo (asConst (lookup B γ)) (ψAt t))) .fst
+           ≡ (Sat Aʟ (mapFo (asConst Aʟ) (embed (formula t)))) .fst
       satψ t = sym (constSubstCommSlice (λ X → Fo X (suc (arity t))) (V ℓ)
-        (λ X ψ → fst (Sat X (mapFo (asConst X) ψ)))
+        (λ X ψ → (Sat X (mapFo (asConst X) ψ)) .fst)
 ```
 
 <!--en-->
@@ -1102,10 +1102,10 @@ name; they do not assert that all names with a given denotation are unique.
 
 ```agda
     Data : Name → Type (ℓ-suc ℓ)
-    Data t = (fst (lookup s γ) ≡ fst (codeOf t))
-           × ( (fst (lookup a γ) ≡ # (arity t))
-             × ( (fst (lookup e γ) ≡ env (pfam t))
-               × (fst (lookup d γ) ≡ denote t) ) )
+    Data t = ((lookup s γ) .fst ≡ (codeOf t) .fst)
+           × ( ((lookup a γ) .fst ≡ # (arity t))
+             × ( ((lookup e γ) .fst ≡ env (pfam t))
+               × ((lookup d γ) .fst ≡ denote t) ) )
 ```
 
 <!--en-->
@@ -1123,9 +1123,9 @@ restricted semantic carrier required by the satisfaction bridge.
 <!--/-->
 
 ```agda
-    module Body (t : Name) (qs : fst (lookup s γ) ≡ fst (codeOf t))
-                (qa : fst (lookup a γ) ≡ # (arity t))
-                (qe : fst (lookup e γ) ≡ env (pfam t)) where
+    module Body (t : Name) (qs : (lookup s γ) .fst ≡ (codeOf t) .fst)
+                (qa : (lookup a γ) .fst ≡ # (arity t))
+                (qe : (lookup e γ) .fst ≡ env (pfam t)) where
       private
         δp : Vec NM.DA.SM (arity t)
 ```
@@ -1161,7 +1161,7 @@ needed both to build an extended environment and to recognize one later.
 <!--/-->
 
 ```agda
-        qd' : fst (lookup e γ) ≡ envGraph Aʟ δp
+        qd' : (lookup e γ) .fst ≡ envGraph Aʟ δp
         qd' = qe ∙ valuesOf t
 ```
 
@@ -1179,11 +1179,11 @@ express the first component through the sealed length numeral.
 <!--/-->
 
 ```agda
-        qkey : fst (keyAt t)
-             ≡ pr (fst (numAt (suc (arity t)))) (fst (lookup s γ))
+        qkey : (keyAt t) .fst
+             ≡ pr ((numAt (suc (arity t))) .fst) ((lookup s γ) .fst)
         qkey = keyAt-fst t ∙ keyCode (formula t)
              ∙ cong (pr (# (suc (arity t)))) (sym qs)
-             ∙ cong (λ u → pr u (fst (lookup s γ)))
+             ∙ cong (λ u → pr u ((lookup s γ) .fst))
 ```
 
 <!--en-->
@@ -1219,7 +1219,7 @@ table value.
 <!--/-->
 
 ```agda
-      denote-fill : (z : S) (m : ⟪ A ⟫) → ⟪ A ⟫↪ m ≡ fst z
+      denote-fill : (z : S) (m : ⟪ A ⟫) → ⟪ A ⟫↪ m ≡ z .fst
                   → ⟨ ⟪ A ⟫↪ m ∈ denote t ⟩ → DenoteOf B C s e γ z
       denote-fill z m qm hz =
         envAt t m , (numAt (suc (arity t)) , (keyAt t , (valAt t
@@ -1299,8 +1299,8 @@ outside the code domain need not determine such a value.
 <!--/-->
 
 ```agda
-        hkey : ⟨ fst (keyAt t) ∈ fst (lookup C γ) ⟩
-        hkey = subst (λ u → ⟨ fst (keyAt t) ∈ u ⟩) (sym qC) (keyAt-∈ t)
+        hkey : ⟨ (keyAt t) .fst ∈ (lookup C γ) .fst ⟩
+        hkey = subst (λ u → ⟨ (keyAt t) .fst ∈ u ⟩) (sym qC) (keyAt-∈ t)
 ```
 
 <!--en-->
@@ -1341,8 +1341,8 @@ value.
 
 ```agda
                    (keyAt-fst t ∙ sym (keyψ t))
-                   ( cong fst (valAt-val t)
-                   ∙ cong fst (val-at Aʟ Aʟ (embed (formula t))
+                   ( cong (λ p → p .fst) (valAt-val t)
+                   ∙ cong (λ p → p .fst) (val-at Aʟ Aʟ (embed (formula t))
                                  (keyAt t) (keyAt-∈ t) (keyAt-fst t))
                    ∙ sym (satψ t) )
 ```
@@ -1361,10 +1361,10 @@ exactly the semantic fact that the uniform table is designed to record.
 <!--/-->
 
 ```agda
-        hmem : ⟨ fst (envAt t m) ∈ fst (valAt t) ⟩
+        hmem : ⟨ (envAt t m) .fst ∈ (valAt t) .fst ⟩
         hmem = subst (λ u → ⟨ envAt t m ∈ˢ u ⟩) (sym (valAt-val t)) inTable
           where
-          inner : ⟨ NM.DA._⊨ᵐ_ (environment t m) (embed (formula t)) ⟩
+          inner : ⟨ environment t m NM.DA.⊨ᵐ embed (formula t) ⟩
           inner = subst ⟨_⟩ (NM.denote-mem t m) hz
 ```
 
@@ -1405,7 +1405,7 @@ value supplied by the payload.
 <!--/-->
 
 ```agda
-      denote-read : (z : S) (m : ⟪ A ⟫) → ⟪ A ⟫↪ m ≡ fst z
+      denote-read : (z : S) (m : ⟪ A ⟫) → ⟪ A ⟫↪ m ≡ z .fst
                   → DenoteOf B C s e γ z → ⟨ ⟪ A ⟫↪ m ∈ denote t ⟩
       denote-read z m qm (c , (k , (key , (v , (hc , (hk , (hi , (hp , (hg , hm)))))))))
         = subst ⟨_⟩ (sym (NM.denote-mem t m)) inner
@@ -1426,7 +1426,7 @@ environment obtained by putting `m` before the parameters of `t`.
 <!--/-->
 
 ```agda
-        qcg : fst c ≡ envGraph Aʟ (environment t m)
+        qcg : c .fst ≡ envGraph Aʟ (environment t m)
         qcg = consAtL-out Aʟ δp (NM.DA.ι m) (c ∷ z ∷ γ)
                 zero (suc zero) (sh2 e) qd' (sym qm) hc
 ```
@@ -1437,15 +1437,15 @@ identifies `c` with the graph of `environment t m`, `domAt-numeral` reads `hk`
 as an equality between the underlying set of `k` and the numeral for that
 environment's length. The length is `suc (arity t)`, and `valuesL` supplies the
 constructibility needed by the domain adequacy theorem. Hence
-`fst k ≡ # (suc (arity t))`.
+`k .fst ≡ # (suc (arity t))`.
 <!--zh-->
-定义域条件继而确定数码见证。由于 `qcg` 已把 `c` 认同为 `environment t m` 的图，`domAt-numeral` 可把 `hk` 读成一条等式：`k` 的底层集合等于该环境长度的数码。此长度为 `suc (arity t)`，而 `valuesL` 提供定义域充分性定理所需的可构造性。因此得到 `fst k ≡ # (suc (arity t))`。
+定义域条件继而确定数码见证。由于 `qcg` 已把 `c` 认同为 `environment t m` 的图，`domAt-numeral` 可把 `hk` 读成一条等式：`k` 的底层集合等于该环境长度的数码。此长度为 `suc (arity t)`，而 `valuesL` 提供定义域充分性定理所需的可构造性。因此得到 `k .fst ≡ # (suc (arity t))`。
 <!--ja-->
-次に定義域の条件が数項の証人を決定する。`qcg` が `c` を `environment t m` のグラフと同一視しているので、`domAt-numeral` は `hk` を、`k` の基礎集合とその環境の長さを表す数項との等式として読める。この長さは `suc (arity t)` であり、`valuesL` が定義域の妥当性定理に必要な構成可能性を与える。したがって `fst k ≡ # (suc (arity t))` が得られる。
+次に定義域の条件が数項の証人を決定する。`qcg` が `c` を `environment t m` のグラフと同一視しているので、`domAt-numeral` は `hk` を、`k` の基礎集合とその環境の長さを表す数項との等式として読める。この長さは `suc (arity t)` であり、`valuesL` が定義域の妥当性定理に必要な構成可能性を与える。したがって `k .fst ≡ # (suc (arity t))` が得られる。
 <!--/-->
 
 ```agda
-        qk : fst k ≡ # (suc (arity t))
+        qk : k .fst ≡ # (suc (arity t))
         qk = domAt-numeral (suc zero) zero (k ∷ c ∷ z ∷ γ) (suc (arity t))
                (values Aʟ (environment t m)) (valuesL t m) qcg hk
 ```
@@ -1464,8 +1464,8 @@ this pair as the code-set key of `embed (formula t)`. The resulting equality
 <!--/-->
 
 ```agda
-        qkey' : fst key ≡ fst (keyS Aʟ (embed (formula t)))
-        qkey' = hp ∙ cong (λ u → pr u (fst (lookup s γ))) qk
+        qkey' : key .fst ≡ (keyS Aʟ (embed (formula t))) .fst
+        qkey' = hp ∙ cong (λ u → pr u ((lookup s γ) .fst)) qk
               ∙ cong (pr (# (suc (arity t)))) qs ∙ sym (keyCode (formula t))
 ```
 
@@ -1484,29 +1484,29 @@ uniform table and the satisfaction graph have their semantic specification.
 
 ```agda
         key∈ : ⟨ key ∈ˢ AllCodes Aʟ ⟩
-        key∈ = subst (λ u → ⟨ fst key ∈ u ⟩) qC hi
+        key∈ = subst (λ u → ⟨ key .fst ∈ u ⟩) qC hi
 ```
 
 <!--en-->
 It remains to identify the arbitrary value witness `v`. The uniqueness reading
 `graphAt-only` applies to the graph proof `hg` once `qkey'` and `keyψ` have
-aligned its key with `ψAt t` at the slot carrier. It first identifies `fst v`
+aligned its key with `ψAt t` at the slot carrier. It first identifies `v .fst`
 with the corresponding `Sat` set. The transport `satψ` moves that set back to
 `Aʟ`, and `val-at`, read backwards, identifies it with
 `Table.val Aʟ Aʟ key key∈`. Thus `qval` recovers the table value required to
 turn the final membership `hm` into inner satisfaction in the next step.
 <!--zh-->
-最后还须认同任意给出的取值见证 `v`。先用 `qkey'` 与 `keyψ` 把它的键同位置载体处 `ψAt t` 的键对齐，图证明 `hg` 便可交给唯一性读式 `graphAt-only`，从而先把 `fst v` 认同为相应的 `Sat` 集。搬运等式 `satψ` 把该集合送回 `Aʟ`，再反向读取 `val-at`，将它认同为 `Table.val Aʟ Aʟ key key∈`。于是 `qval` 恢复出所需的表取值，使下一步能够把末尾成员关系 `hm` 转成内层满足关系。
+最后还须认同任意给出的取值见证 `v`。先用 `qkey'` 与 `keyψ` 把它的键同位置载体处 `ψAt t` 的键对齐，图证明 `hg` 便可交给唯一性读式 `graphAt-only`，从而先把 `v .fst` 认同为相应的 `Sat` 集。搬运等式 `satψ` 把该集合送回 `Aʟ`，再反向读取 `val-at`，将它认同为 `Table.val Aʟ Aʟ key key∈`。于是 `qval` 恢复出所需的表取值，使下一步能够把末尾成员关系 `hm` 转成内层满足关系。
 <!--ja-->
-最後に、任意に与えられた値の証人 `v` を同一視する。`qkey'` と `keyψ` によって、その鍵をスロットの台における `ψAt t` の鍵と揃えると、グラフの証明 `hg` に一意性の読み `graphAt-only` を適用できる。これにより、まず `fst v` が対応する `Sat` 集合と同一視される。輸送 `satψ` がその集合を `Aʟ` へ戻し、`val-at` を逆向きに読むことで `Table.val Aʟ Aʟ key key∈` と同一視する。こうして `qval` が必要な表の値を復元し、次の段階で最後の所属 `hm` を内側の充足関係へ変換できるようになる。
+最後に、任意に与えられた値の証人 `v` を同一視する。`qkey'` と `keyψ` によって、その鍵をスロットの台における `ψAt t` の鍵と揃えると、グラフの証明 `hg` に一意性の読み `graphAt-only` を適用できる。これにより、まず `v .fst` が対応する `Sat` 集合と同一視される。輸送 `satψ` がその集合を `Aʟ` へ戻し、`val-at` を逆向きに読むことで `Table.val Aʟ Aʟ key key∈` と同一視する。こうして `qval` が必要な表の値を復元し、次の段階で最後の所属 `hm` を内側の充足関係へ変換できるようになる。
 <!--/-->
 
 ```agda
-        qval : fst v ≡ fst (Table.val Aʟ Aʟ key key∈)
+        qval : v .fst ≡ (Table.val Aʟ Aʟ key key∈) .fst
         qval = graphAt-only (sh5 B) (suc zero) zero
                  (v ∷ key ∷ k ∷ c ∷ z ∷ γ) (ψAt t) (qkey' ∙ sym (keyψ t)) hg
              ∙ satψ t
-             ∙ sym (cong fst (val-at Aʟ Aʟ (embed (formula t)) key key∈ qkey'))
+             ∙ sym (cong (λ p → p .fst) (val-at Aʟ Aʟ (embed (formula t)) key key∈ qkey'))
 ```
 
 <!--en-->
@@ -1523,7 +1523,7 @@ next semantic reading.
 
 ```agda
         inTable : ⟨ c ∈ˢ Table.val Aʟ Aʟ key key∈ ⟩
-        inTable = subst (λ u → ⟨ fst c ∈ u ⟩) qval hm
+        inTable = subst (λ u → ⟨ c .fst ∈ u ⟩) qval hm
 ```
 
 <!--en-->
@@ -1540,7 +1540,7 @@ membership in `denote t`.
 <!--/-->
 
 ```agda
-        inner : ⟨ NM.DA._⊨ᵐ_ (environment t m) (embed (formula t)) ⟩
+        inner : ⟨ environment t m NM.DA.⊨ᵐ embed (formula t) ⟩
         inner = subst ⟨_⟩
           (val-sat Aʟ (embed (formula t)) key key∈ qkey'
              (environment t m) c qcg) inTable
@@ -1560,9 +1560,9 @@ equation `qB`.
 <!--/-->
 
 ```agda
-      member-fill : (z : S) → ⟨ fst z ∈ denote t ⟩
-                  → ⟨ fst z ∈ fst (lookup B γ) ⟩ × DenoteOf B C s e γ z
-      member-fill z hz = subst (λ u → ⟨ fst z ∈ u ⟩) (sym (cong fst qB)) hA
+      member-fill : (z : S) → ⟨ z .fst ∈ denote t ⟩
+                  → ⟨ z .fst ∈ (lookup B γ) .fst ⟩ × DenoteOf B C s e γ z
+      member-fill z hz = subst (λ u → ⟨ z .fst ∈ u ⟩) (sym (cong (λ p → p .fst) qB)) hA
         , denote-fill z (fib .fst) (fib .snd)
             (subst (λ u → ⟨ u ∈ denote t ⟩) (sym (fib .snd)) hz)
 ```
@@ -1571,21 +1571,21 @@ equation `qB`.
 To apply the member-level lemma, one must recover the carrier member represented
 by `z`. The containment lemma `denoteMem` first turns membership in the
 denotation into membership in `A`. The fibre presentation of membership then
-provides an `m : ⟪ A ⟫` together with the equation `⟪ A ⟫↪ m ≡ fst z`; this is
+provides an `m : ⟪ A ⟫` together with the equation `⟪ A ⟫↪ m ≡ z .fst`; this is
 ordinary dependent data, so no choice principle or truncation elimination is
 involved.
 <!--zh-->
-要应用元素层面的引理，必须先恢复 `z` 所表示的载体元素。包含引理 `denoteMem` 先把对指称的成员关系变成对 `A` 的成员关系。随后，成员关系的纤维表示给出 `m : ⟪ A ⟫` 以及等式 `⟪ A ⟫↪ m ≡ fst z`；这是普通的依赖数据，不涉及选择原理或命题截断的消去。
+要应用元素层面的引理，必须先恢复 `z` 所表示的载体元素。包含引理 `denoteMem` 先把对指称的成员关系变成对 `A` 的成员关系。随后，成员关系的纤维表示给出 `m : ⟪ A ⟫` 以及等式 `⟪ A ⟫↪ m ≡ z .fst`；这是普通的依赖数据，不涉及选择原理或命题截断的消去。
 <!--ja-->
-元に対する補題を適用するには、`z` が表す台の元をまず復元する必要がある。包含補題 `denoteMem` は、表示への所属を `A` への所属に変える。次に、所属のファイバー表示から `m : ⟪ A ⟫` と等式 `⟪ A ⟫↪ m ≡ fst z` が得られる。これは通常の依存データなので、選択原理も命題的切り詰めの除去も使わない。
+元に対する補題を適用するには、`z` が表す台の元をまず復元する必要がある。包含補題 `denoteMem` は、表示への所属を `A` への所属に変える。次に、所属のファイバー表示から `m : ⟪ A ⟫` と等式 `⟪ A ⟫↪ m ≡ z .fst` が得られる。これは通常の依存データなので、選択原理も命題的切り詰めの除去も使わない。
 <!--/-->
 
 ```agda
         where
-        hA : ⟨ fst z ∈ A ⟩
-        hA = denoteMem t (fst z) hz
-        fib : Σ[ mm ∶ ⟪ A ⟫ ] (⟪ A ⟫↪ mm ≡ fst z)
-        fib = ∈-asFiber {a = fst z} {b = A} hA
+        hA : ⟨ z .fst ∈ A ⟩
+        hA = denoteMem t (z .fst) hz
+        fib : Σ[ mm ∶ ⟪ A ⟫ ] (⟪ A ⟫↪ mm ≡ z .fst)
+        fib = ∈-asFiber {a = z .fst} {b = A} hA
 ```
 
 <!--en-->
@@ -1593,16 +1593,16 @@ The converse reformulation starts with membership of `z` in the carrier slot
 and a `DenoteOf` package. After recovering the represented carrier member, the
 earlier lemma `denote-read` turns that package into membership of the embedded
 member in `denote t`. Transport along the fibre equation changes this conclusion
-back into membership of `fst z`.
+back into membership of `z .fst`.
 <!--zh-->
-反向改写从 `z` 对载体位置的成员关系以及一组 `DenoteOf` 数据出发。恢复出它所表示的载体元素之后，前面的引理 `denote-read` 把该数据组读成嵌入元素对 `denote t` 的成员关系。最后沿纤维等式迁移，便得到 `fst z` 对该指称的成员关系。
+反向改写从 `z` 对载体位置的成员关系以及一组 `DenoteOf` 数据出发。恢复出它所表示的载体元素之后，前面的引理 `denote-read` 把该数据组读成嵌入元素对 `denote t` 的成员关系。最后沿纤维等式迁移，便得到 `z .fst` 对该指称的成员关系。
 <!--ja-->
-逆向きの言い換えは、`z` の台のスロットへの所属と `DenoteOf` の証人の組から始まる。`z` が表す台の元を復元した後、先の補題 `denote-read` はその証人の組を、埋め込まれた元の `denote t` への所属として読む。最後にファイバーの等式に沿って移送し、`fst z` の所属へ戻す。
+逆向きの言い換えは、`z` の台のスロットへの所属と `DenoteOf` の証人の組から始まる。`z` が表す台の元を復元した後、先の補題 `denote-read` はその証人の組を、埋め込まれた元の `denote t` への所属として読む。最後にファイバーの等式に沿って移送し、`z .fst` の所属へ戻す。
 <!--/-->
 
 ```agda
-      member-read : (z : S) → ⟨ fst z ∈ fst (lookup B γ) ⟩
-                  → DenoteOf B C s e γ z → ⟨ fst z ∈ denote t ⟩
+      member-read : (z : S) → ⟨ z .fst ∈ (lookup B γ) .fst ⟩
+                  → DenoteOf B C s e γ z → ⟨ z .fst ∈ denote t ⟩
       member-read z hz hDen = subst (λ u → ⟨ u ∈ denote t ⟩) (fib .snd)
         (denote-read z (fib .fst) (fib .snd) hDen)
         where
@@ -1611,20 +1611,20 @@ back into membership of `fst z`.
 <!--en-->
 Here the required fibre comes from the carrier-slot hypothesis. The equation
 `qB` identifies the underlying set in that slot with `A`, so transport first
-produces `fst z ∈ A`; `∈-asFiber` then returns the corresponding member of
+produces `z .fst ∈ A`; `∈-asFiber` then returns the corresponding member of
 `⟪ A ⟫` and its embedding equation. Consequently the two member lemmas apply to
 every element of the model that satisfies the relevant membership hypothesis,
 not only to an element already presented in the small carrier type.
 <!--zh-->
-这里所需的纤维来自载体位置的成员关系假设。等式 `qB` 把该位置的底集与 `A` 认同，所以迁移后先得到 `fst z ∈ A`；`∈-asFiber` 再给出 `⟪ A ⟫` 中对应的元素及其嵌入等式。因此，这两条成员关系引理适用于模型中满足相应成员关系假设的每个元素，而不要求输入预先以小载体类型中的元素给出。
+这里所需的纤维来自载体位置的成员关系假设。等式 `qB` 把该位置的底集与 `A` 认同，所以迁移后先得到 `z .fst ∈ A`；`∈-asFiber` 再给出 `⟪ A ⟫` 中对应的元素及其嵌入等式。因此，这两条成员关系引理适用于模型中满足相应成员关系假设的每个元素，而不要求输入预先以小载体类型中的元素给出。
 <!--ja-->
-ここで必要なファイバーは、台のスロットへの所属という仮定から得られる。等式 `qB` はそのスロットの台集合を `A` と同定するので、移送によってまず `fst z ∈ A` が得られる。続いて `∈-asFiber` が `⟪ A ⟫` の対応する元と、その埋め込みの等式を返す。したがって二つの補題は、小さな台の型の元としてあらかじめ与えられた場合だけでなく、必要な所属を満たすモデルの任意の要素に適用できる。
+ここで必要なファイバーは、台のスロットへの所属という仮定から得られる。等式 `qB` はそのスロットの台集合を `A` と同定するので、移送によってまず `z .fst ∈ A` が得られる。続いて `∈-asFiber` が `⟪ A ⟫` の対応する元と、その埋め込みの等式を返す。したがって二つの補題は、小さな台の型の元としてあらかじめ与えられた場合だけでなく、必要な所属を満たすモデルの任意の要素に適用できる。
 <!--/-->
 
 ```agda
-        fib : Σ[ mm ∶ ⟪ A ⟫ ] (⟪ A ⟫↪ mm ≡ fst z)
-        fib = ∈-asFiber {a = fst z} {b = A}
-          (subst (λ u → ⟨ fst z ∈ u ⟩) (cong fst qB) hz)
+        fib : Σ[ mm ∶ ⟪ A ⟫ ] (⟪ A ⟫↪ mm ≡ z .fst)
+        fib = ∈-asFiber {a = z .fst} {b = A}
+          (subst (λ u → ⟨ z .fst ∈ u ⟩) (cong (λ p → p .fst) qB) hz)
 ```
 
 <!--en-->
@@ -1686,7 +1686,7 @@ used in this part of the description.
 <!--/-->
 
 ```agda
-      ha : ⟨ fst (lookup a γ) ∈ ω ⟩
+      ha : ⟨ (lookup a γ) .fst ∈ ω ⟩
       ha = subst (λ u → ⟨ u ∈ ω ⟩) (sym qa) (#∈ω (arity t))
 ```
 
@@ -1705,7 +1705,7 @@ the three slots, yielding satisfaction of `envOverAt`.
 ```agda
       he : ⟨ γ ⊨ envOverAt e a B ⟩
       he = paramSeq-in e a B γ (arity t) (λ i → lookup i (params t)) qe qa
-             (cong fst qB)
+             (cong (λ p → p .fst) qB)
 ```
 
 <!--en-->
@@ -1720,9 +1720,9 @@ membership in the carrier slot and the witness package `DenoteOf`.
 <!--/-->
 
 ```agda
-      into : (z : S) → ⟨ fst z ∈ fst (lookup d γ) ⟩
-           → ⟨ fst z ∈ fst (lookup B γ) ⟩ × DenoteOf B C s e γ z
-      into z hz = Bt.member-fill z (subst (λ u → ⟨ fst z ∈ u ⟩) qd hz)
+      into : (z : S) → ⟨ z .fst ∈ (lookup d γ) .fst ⟩
+           → ⟨ z .fst ∈ (lookup B γ) .fst ⟩ × DenoteOf B C s e γ z
+      into z hz = Bt.member-fill z (subst (λ u → ⟨ z .fst ∈ u ⟩) qd hz)
 ```
 
 <!--en-->
@@ -1737,9 +1737,9 @@ the two directions required by the single extensional conjunct of `NameAt`.
 <!--/-->
 
 ```agda
-      back : (z : S) → ⟨ fst z ∈ fst (lookup B γ) ⟩ → DenoteOf B C s e γ z
-           → ⟨ fst z ∈ fst (lookup d γ) ⟩
-      back z hzB hDen = subst (λ u → ⟨ fst z ∈ u ⟩) (sym qd)
+      back : (z : S) → ⟨ z .fst ∈ (lookup B γ) .fst ⟩ → DenoteOf B C s e γ z
+           → ⟨ z .fst ∈ (lookup d γ) .fst ⟩
+      back z hzB hDen = subst (λ u → ⟨ z .fst ∈ u ⟩) (sym qd)
         (Bt.member-read z hzB hDen)
 ```
 
@@ -1761,7 +1761,7 @@ propositionally truncated type.
     NameAt-read (hf , (ha , (he , hd))) =
       rec₁ squash₁ atArity ha
       where
-      atCode : (k : ℕ) (qa : fst (lookup a γ) ≡ # k)
+      atCode : (k : ℕ) (qa : (lookup a γ) .fst ≡ # k)
 ```
 
 <!--en-->
@@ -1778,7 +1778,7 @@ its data: `qs` is the first equation and `qa` is the second.
 
 ```agda
              → Σ[ χ ∶ Formula (⊥* {ℓ}) (suc k) ]
-                 (fst (lookup s γ) ≡ fst (limitCode χ))
+                 ((lookup s γ) .fst ≡ (limitCode χ) .fst)
              → Σ[ t ∶ Name ] Data t
       atCode k qa (χ , qs) = t , (qs , (qa , (qe , qd)))
         where
@@ -1799,7 +1799,7 @@ and formula readings.
 
 ```agda
         t : Name
-        t = k , (χ , paramSeq-out e a B γ k qa (cong fst qB) he)
+        t = k , (χ , paramSeq-out e a B γ k qa (cong (λ p → p .fst) qB) he)
 ```
 
 <!--en-->
@@ -1814,8 +1814,8 @@ This path is the third data equation `qe`.
 <!--/-->
 
 ```agda
-        qe : fst (lookup e γ) ≡ env (pfam t)
-        qe = paramSeq-graph e a B γ k qa (cong fst qB) he
+        qe : (lookup e γ) .fst ≡ env (pfam t)
+        qe = paramSeq-graph e a B γ k qa (cong (λ p → p .fst) qB) he
 ```
 
 <!--en-->
@@ -1847,8 +1847,8 @@ The target `y ∈ denote t` is a proposition, so `rec₁` may apply
 <!--/-->
 
 ```agda
-        fwd : (y : V ℓ) → ⟨ y ∈ fst (lookup d γ) ⟩ → ⟨ y ∈ denote t ⟩
-        fwd y hy = rec₁ (snd (y ∈ denote t))
+        fwd : (y : V ℓ) → ⟨ y ∈ (lookup d γ) .fst ⟩ → ⟨ y ∈ denote t ⟩
+        fwd y hy = rec₁ ((y ∈ denote t) .snd)
           (Bt.member-read z (body .fst)) (body .snd)
           where
           z : S
@@ -1868,8 +1868,8 @@ inside the proposition-valued membership proof above.
 <!--/-->
 
 ```agda
-          z = y , isL-trans hy (snd (lookup d γ))
-          body : ⟨ fst z ∈ fst (lookup B γ) ⟩ × ∥ DenoteOf B C s e γ z ∥₁
+          z = y , isL-trans hy ((lookup d γ) .snd)
+          body : ⟨ z .fst ∈ (lookup B γ) .fst ⟩ × ∥ DenoteOf B C s e γ z ∥₁
           body = DenoteBody-out B C s e γ z
                    (extAt-out d (DenoteBody B C s e) γ hd z hy)
 ```
@@ -1886,7 +1886,7 @@ body satisfaction and finally membership in the denotation slot.
 <!--/-->
 
 ```agda
-        bwd : (y : V ℓ) → ⟨ y ∈ denote t ⟩ → ⟨ y ∈ fst (lookup d γ) ⟩
+        bwd : (y : V ℓ) → ⟨ y ∈ denote t ⟩ → ⟨ y ∈ (lookup d γ) .fst ⟩
         bwd y hy = extAt-in d (DenoteBody B C s e) γ hd z
           (DenoteBody-in B C s e γ z (body .fst) (body .snd))
           where
@@ -1907,7 +1907,7 @@ eliminate any propositional truncation.
 
 ```agda
           z = y , isL-trans (denoteMem t y hy) pA
-          body : ⟨ fst z ∈ fst (lookup B γ) ⟩ × DenoteOf B C s e γ z
+          body : ⟨ z .fst ∈ (lookup B γ) .fst ⟩ × DenoteOf B C s e γ z
           body = Bt.member-fill z hy
 ```
 
@@ -1916,15 +1916,15 @@ The functions `fwd y` and `bwd y` give the two implications between the
 membership propositions for every set `y`. Since both sides are propositions,
 `⇔toPath` turns these implications into an equality of truth values.
 Extensionality for `V` then turns the pointwise membership equality into
-`fst (lookup d γ) ≡ denote t`, the fourth equation `qd`.
+`(lookup d γ) .fst ≡ denote t`, the fourth equation `qd`.
 <!--zh-->
-对于每个集合 `y`，函数 `fwd y` 与 `bwd y` 给出两个成员关系命题之间的双向蕴涵。由于两边都是命题，`⇔toPath` 把这对蕴涵变成真值的相等。`V` 的外延性再把逐点的成员关系相等变成 `fst (lookup d γ) ≡ denote t`，即第四条等式 `qd`。
+对于每个集合 `y`，函数 `fwd y` 与 `bwd y` 给出两个成员关系命题之间的双向蕴涵。由于两边都是命题，`⇔toPath` 把这对蕴涵变成真值的相等。`V` 的外延性再把逐点的成员关系相等变成 `(lookup d γ) .fst ≡ denote t`，即第四条等式 `qd`。
 <!--ja-->
-各集合 `y` に対して、関数 `fwd y` と `bwd y` は二つの所属命題の間の両方向の含意を与える。両辺は命題なので、`⇔toPath` はこの二つの含意を真理値の等式に変える。さらに `V` の外延性が、点ごとの所属の等式を `fst (lookup d γ) ≡ denote t`、すなわち第四の等式 `qd` に変える。
+各集合 `y` に対して、関数 `fwd y` と `bwd y` は二つの所属命題の間の両方向の含意を与える。両辺は命題なので、`⇔toPath` はこの二つの含意を真理値の等式に変える。さらに `V` の外延性が、点ごとの所属の等式を `(lookup d γ) .fst ≡ denote t`、すなわち第四の等式 `qd` に変える。
 <!--/-->
 
 ```agda
-        qd : fst (lookup d γ) ≡ denote t
+        qd : (lookup d γ) .fst ≡ denote t
         qd = extensionalV (λ y → ⇔toPath (fwd y) (bwd y))
 ```
 
@@ -1943,7 +1943,7 @@ merely a name satisfying all four data equations, exactly the codomain of
 <!--/-->
 
 ```agda
-      atArity : Σ[ lk ∶ Lift {ℓ-zero} {ℓ} ℕ ] (# (lower lk) ≡ fst (lookup a γ))
+      atArity : Σ[ lk ∶ Lift {ℓ-zero} {ℓ} ℕ ] (# (lower lk) ≡ (lookup a γ) .fst)
               → ∥ Σ[ t ∶ Name ] Data t ∥₁
       atArity (lk , qk) = map₁ (atCode (lower lk) (sym qk))
         (codeFree-out C₀ s a γ (lower lk) q₀ (sym qk) hf)
@@ -1976,8 +1976,8 @@ clause at a particular competitor.
 ```agda
   opaque
     codeEl : Name → S
-    codeEl t = fst (codeOf t)
-             , isL-trans (snd (codeOf t)) (snd (LsetS ω ω-ord))
+    codeEl t = (codeOf t) .fst
+             , isL-trans ((codeOf t) .snd) ((LsetS ω ω-ord) .snd)
 ```
 
 <!--en-->
@@ -1993,7 +1993,7 @@ code.
 <!--/-->
 
 ```agda
-    codeEl-fst : (t : Name) → fst (codeEl t) ≡ fst (codeOf t)
+    codeEl-fst : (t : Name) → (codeEl t) .fst ≡ (codeOf t) .fst
     codeEl-fst t = refl
 ```
 
@@ -2027,7 +2027,7 @@ slot equations used to insert a concrete name into a quantified competitor.
 <!--/-->
 
 ```agda
-    envEl-fst : (t : Name) → fst (envEl t) ≡ env (pfam t)
+    envEl-fst : (t : Name) → (envEl t) .fst ≡ env (pfam t)
     envEl-fst t = refl
 ```
 
@@ -2073,10 +2073,10 @@ limits `u,v`, `Rrep` reads membership of the ordered pair in `Rs` as
 <summary class="submodule-fold-heading">
 ```agda
   module Least (Rs Ps : S)
-               (Rrep : (u v : Limit) → ⟨ pr (fst u) (fst v) ∈ fst Rs ⟩ → u ≺ˡ v)
-               (Rfill : (u v : Limit) → u ≺ˡ v → ⟨ pr (fst u) (fst v) ∈ fst Rs ⟩)
-               (Prep : (u v : ⟪ A ⟫) → ⟨ pr (ix u) (ix v) ∈ fst Ps ⟩ → u ≺ₚ v)
-               (Pfill : (u v : ⟪ A ⟫) → u ≺ₚ v → ⟨ pr (ix u) (ix v) ∈ fst Ps ⟩)
+               (Rrep : (u v : Limit) → ⟨ pr (u .fst) (v .fst) ∈ Rs .fst ⟩ → u ≺ˡ v)
+               (Rfill : (u v : Limit) → u ≺ˡ v → ⟨ pr (u .fst) (v .fst) ∈ Rs .fst ⟩)
+               (Prep : (u v : ⟪ A ⟫) → ⟨ pr (ix u) (ix v) ∈ Ps .fst ⟩ → u ≺ₚ v)
+               (Pfill : (u v : ⟪ A ⟫) → u ≺ₚ v → ⟨ pr (ix u) (ix v) ∈ Ps .fst ⟩)
                where
 ```
 </summary>
@@ -2114,10 +2114,10 @@ The equation `qC` identifies the underlying set of the carrier's code set.
 
 ```agda
     module Min {n : ℕ} (R P B C C₀ s a e d : Fin n) (γ : S ^ n)
-               (qR : fst (lookup R γ) ≡ fst Rs)
-               (qP : fst (lookup P γ) ≡ fst Ps)
+               (qR : (lookup R γ) .fst ≡ Rs .fst)
+               (qP : (lookup P γ) .fst ≡ Ps .fst)
                (qB : lookup B γ ≡ Aʟ)
-               (qC : fst (lookup C γ) ≡ fst (AllCodes Aʟ))
+               (qC : (lookup C γ) .fst ≡ (AllCodes Aʟ) .fst)
 ```
 
 <!--en-->
@@ -2133,7 +2133,7 @@ claim that the current data form a name from the additional minimality claim.
 <!--/-->
 
 ```agda
-               (q₀ : fst (lookup C₀ γ) ≡ fst (AllCodes ∅ʟ)) where
+               (q₀ : (lookup C₀ γ) .fst ≡ (AllCodes ∅ʟ) .fst) where
       private module N = Named B C C₀ s a e d γ qB qC q₀
 ```
 
@@ -2151,7 +2151,7 @@ full lexicographic order on names.
 
 ```agda
       IsMin : Name → Type (ℓ-suc ℓ)
-      IsMin t = (t' : Name) → fst (lookup d γ) ≡ denote t'
+      IsMin t = (t' : Name) → (lookup d γ) .fst ≡ denote t'
               → t' ≺ₙ t → ⊥₀
 ```
 
@@ -2381,10 +2381,10 @@ proved outside this module.
 
 ```agda
     module Step {n : ℕ} (R P B C C₀ x y : Fin n) (γ : S ^ n)
-                (qR : fst (lookup R γ) ≡ fst Rs)
-                (qP : fst (lookup P γ) ≡ fst Ps)
+                (qR : (lookup R γ) .fst ≡ Rs .fst)
+                (qP : (lookup P γ) .fst ≡ Ps .fst)
                 (qB : lookup B γ ≡ Aʟ)
-                (qC : fst (lookup C γ) ≡ fst (AllCodes Aʟ))
+                (qC : (lookup C γ) .fst ≡ (AllCodes Aʟ) .fst)
 ```
 
 <!--en-->
@@ -2400,10 +2400,10 @@ in slot `i`; it does not itself contain a satisfaction proof for any formula.
 <!--/-->
 
 ```agda
-                (q₀ : fst (lookup C₀ γ) ≡ fst (AllCodes ∅ʟ)) where
+                (q₀ : (lookup C₀ γ) .fst ≡ (AllCodes ∅ʟ) .fst) where
       LeastOf : Fin n → Name → Type (ℓ-suc ℓ)
-      LeastOf i t = (fst (lookup i γ) ≡ denote t)
-                  × ((t' : Name) → fst (lookup i γ) ≡ denote t'
+      LeastOf i t = ((lookup i γ) .fst ≡ denote t)
+                  × ((t' : Name) → (lookup i γ) .fst ≡ denote t'
                      → t' ≺ₙ t → ⊥₀)
 ```
 

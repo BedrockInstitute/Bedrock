@@ -236,17 +236,17 @@ open InfinitySet using ( #_; ω )
 <!--en-->
 Three membership symbols now have separate roles. For carrier elements,
 `x ∈ˢ y` is the proposition-valued membership of the constructible structure;
-between underlying hierarchy sets, `fst x ∈ fst y` uses ambient membership;
+between underlying hierarchy sets, `x .fst ∈ y .fst` uses ambient membership;
 inside a formula, `_∈̇_`{.Agda} is only the syntactic membership atom. The
 satisfaction judgment introduced next is what turns the third form into the
 first two. Keeping these layers separate will prevent a formula that describes
 an order from being mistaken for a proof that its realizing set is internally
 well-ordered.
 <!--zh-->
-现在有三种成员关系记号，各自承担不同角色。对载体元素，`x ∈ˢ y` 是可构造结构中取命题值的成员关系；对底层的层级集合，`fst x ∈ fst y` 使用外围成员关系；在公式内部，`_∈̇_`{.Agda}
+现在有三种成员关系记号，各自承担不同角色。对载体元素，`x ∈ˢ y` 是可构造结构中取命题值的成员关系；对底层的层级集合，`x .fst ∈ y .fst` 使用外围成员关系；在公式内部，`_∈̇_`{.Agda}
 只是句法上的成员关系原子。下一步引入的满足关系把第三种形式解释成前两种。分清这些层次，就不会把描述一个序的公式误当成「其实现集合在内部已被证明为良序」。
 <!--ja-->
-ここでは三つの所属記号が別々の役割をもつ。台の要素に対する `x ∈ˢ y` は、構成可能構造の命題値の所属である。基礎となる階層の集合どうしでは、`fst x ∈ fst y` が周囲の所属を表す。論理式の内部では `_∈̇_`{.Agda} は所属を表す構文上の原子にすぎない。次に導入する充足判定が、第三の形に最初の二つの意味を与える。この層の区別により、順序を記述する論理式を、その実現集合が内部で整列順序をなすという証明と取り違えずに済む。
+ここでは三つの所属記号が別々の役割をもつ。台の要素に対する `x ∈ˢ y` は、構成可能構造の命題値の所属である。基礎となる階層の集合どうしでは、`x .fst ∈ y .fst` が周囲の所属を表す。論理式の内部では `_∈̇_`{.Agda} は所属を表す構文上の原子にすぎない。次に導入する充足判定が、第三の形に最初の二つの意味を与える。この層の区別により、順序を記述する論理式を、その実現集合が内部で整列順序をなすという証明と取り違えずに済む。
 <!--/-->
 
 ```agda
@@ -348,7 +348,7 @@ those views.
 <!--/-->
 
 ```agda
-  towerS-fst : (k : ℕ) → fst (towerS k) ≡ Lset (# k)
+  towerS-fst : (k : ℕ) → (towerS k) .fst ≡ Lset (# k)
   towerS-fst k = refl
 ```
 
@@ -385,7 +385,7 @@ stages.
 <!--/-->
 
 ```agda
-  numS-fst : (k : ℕ) → fst (numS k) ≡ # k
+  numS-fst : (k : ℕ) → (numS k) .fst ≡ # k
   numS-fst k = refl
 ```
 
@@ -405,7 +405,7 @@ testing minimality against that level.
 <!--/-->
 
 ```agda
-towerGraph : ∀ {n} (j : ℕ) (δ : S ^ n) (i : Fin n) → fst (lookup i δ) ≡ # j
+towerGraph : ∀ {n} (j : ℕ) (δ : S ^ n) (i : Fin n) → (lookup i δ) .fst ≡ # j
            → ⟨ (towerS j ∷ δ) ⊨ LsetGraphAt zero (suc i) ⟩
 towerGraph j δ i q = Lset-defines zero (suc i) (towerS j ∷ δ)
   (subst IsOrd (sym q) (numeral-ord j))
@@ -487,8 +487,8 @@ module Level (a : Limit) (k : ℕ) (qk : level a ≡ k) where
 
 ```agda
   private
-    aIn : ⟨ fst a ∈ Lset (# k) ⟩
-    aIn = subst (λ j → ⟨ fst a ∈ Lset (# j) ⟩) qk (level-in a)
+    aIn : ⟨ a .fst ∈ Lset (# k) ⟩
+    aIn = subst (λ j → ⟨ a .fst ∈ Lset (# j) ⟩) qk (level-in a)
 ```
 
 <!--en-->
@@ -510,7 +510,7 @@ propositional truncation is involved.
 <!--/-->
 
 ```agda
-    aMin : (m : ℕ) → ⟨ fst a ∈ Lset (# m) ⟩ → m < k → ⊥₀
+    aMin : (m : ℕ) → ⟨ a .fst ∈ Lset (# m) ⟩ → m < k → ⊥₀
     aMin m h hm = levelData a .snd .snd m h
       (lift (subst (λ j → m < j) (sym qk) hm))
 ```
@@ -541,7 +541,7 @@ the value of `x` belongs to the underlying set of `c`. The private type
     private
       Body : S → Type (ℓ-suc ℓ)
       Body c = ⟨ (c ∷ γ) ⊨ LsetGraphAt zero (suc b) ⟩
-             × ⟨ fst (lookup x γ) ∈ fst c ⟩
+             × ⟨ (lookup x γ) .fst ∈ c .fst ⟩
 ```
 
 <!--en-->
@@ -559,11 +559,11 @@ established separately.
 <!--/-->
 
 ```agda
-    LevelAt-in : fst (lookup b γ) ≡ # k → fst (lookup x γ) ≡ fst a
+    LevelAt-in : (lookup b γ) .fst ≡ # k → (lookup x γ) .fst ≡ a .fst
                → ⟨ γ ⊨ LevelAt b x ⟩
     LevelAt-in qb qx = hω , (hex , hmin)
       where
-      hω : ⟨ fst (lookup b γ) ∈ ω ⟩
+      hω : ⟨ (lookup b γ) .fst ∈ ω ⟩
 ```
 
 <!--en-->
@@ -600,8 +600,8 @@ the known membership `aIn`{.Agda} after the endpoint is aligned by `qx`{.Agda}.
       hex : ⟨ γ ⊨ ∃̇ ( LsetGraphAt zero (suc b) ∧̇ (var (suc x) ∈̇ var zero) ) ⟩
       hex = ∣ towerS k , (towerGraph k γ b qb , hm) ∣₁
         where
-        hm : ⟨ fst (lookup x γ) ∈ fst (towerS k) ⟩
-        hm = subst (λ u → ⟨ fst (lookup x γ) ∈ u ⟩) (sym (towerS-fst k))
+        hm : ⟨ (lookup x γ) .fst ∈ (towerS k) .fst ⟩
+        hm = subst (λ u → ⟨ (lookup x γ) .fst ∈ u ⟩) (sym (towerS-fst k))
 ```
 
 <!--en-->
@@ -641,56 +641,56 @@ the universe level of object-language negation.
       hmin : ⟨ γ ⊨ ∀̇∈ (var b) (∀̇ ( LsetGraphAt zero (suc zero)
                                   ⇒̇ ¬̇ (var (sh2 x) ∈̇ var zero) )) ⟩
       hmin u u∈ c hg hmem = lift (rec₁ isProp⊥ step
-        (∈#-elim k (fst u) (subst (λ w → ⟨ fst u ∈ w ⟩) qb u∈)))
+        (∈#-elim k (u .fst) (subst (λ w → ⟨ u .fst ∈ w ⟩) qb u∈)))
         where
 ```
 
 <!--en-->
-Fix an explicit decoding `m < k` and `fst u ≡ # m`{.Agda}. The graph proof
+Fix an explicit decoding `m < k` and `u .fst ≡ # m`{.Agda}. The graph proof
 `hg`{.Agda} does more than certify that `c` is some possible witness:
 `Lset-only`{.Agda}, supplied with the ordinal proof transported from the
 numeral `# m`{.Agda}, identifies its underlying set with
-`Lset (fst u)`{.Agda}. Thus the formula cannot hide an arbitrary set behind
+`Lset (u .fst)`{.Agda}. Thus the formula cannot hide an arbitrary set behind
 its existential witness; the hierarchy graph determines the finite stage.
 <!--zh-->
-固定一次显式解码，得到 `m < k` 与 `fst u ≡ # m`{.Agda}。图证明
+固定一次显式解码，得到 `m < k` 与 `u .fst ≡ # m`{.Agda}。图证明
 `hg`{.Agda} 不仅说明 `c` 是某个可能的见证；把数码 `# m`{.Agda} 的序数证明运输过去后，`Lset-only`{.Agda} 会把 `c` 的底层集合认同为
-`Lset (fst u)`{.Agda}。因此，公式不能在存在见证后藏入任意集合，层级图会确定相应的有穷层。
+`Lset (u .fst)`{.Agda}。因此，公式不能在存在见证后藏入任意集合，层级图会确定相应的有穷层。
 <!--ja-->
-明示的な復号として `m < k` と `fst u ≡ # m`{.Agda} を固定する。グラフの証明 `hg`{.Agda} は、`c` が何らかの候補であること以上を保証する。数項 `# m`{.Agda} の順序数性を運んで `Lset-only`{.Agda} に渡すと、`c` の基礎集合は `Lset (fst u)`{.Agda} と同一視される。したがって論理式は、存在証人の背後に任意の集合を隠すことはできない。階層のグラフが対応する有限段階を決定する。
+明示的な復号として `m < k` と `u .fst ≡ # m`{.Agda} を固定する。グラフの証明 `hg`{.Agda} は、`c` が何らかの候補であること以上を保証する。数項 `# m`{.Agda} の順序数性を運んで `Lset-only`{.Agda} に渡すと、`c` の基礎集合は `Lset (u .fst)`{.Agda} と同一視される。したがって論理式は、存在証人の背後に任意の集合を隠すことはできない。階層のグラフが対応する有限段階を決定する。
 <!--/-->
 
 ```agda
-        step : Σ[ m ∶ ℕ ] ((m < k) × (fst u ≡ # m)) → ⊥₀
+        step : Σ[ m ∶ ℕ ] ((m < k) × (u .fst ≡ # m)) → ⊥₀
         step (m , (hm , qu)) = aMin m inStage hm
           where
-          qc : fst c ≡ Lset (fst u)
+          qc : c .fst ≡ Lset (u .fst)
           qc = Lset-only zero (suc zero) (c ∷ u ∷ γ) hg
 ```
 
 <!--en-->
 Now transport the alleged membership through the three identifications. First
-`qc`{.Agda} places the value of `x` in `Lset (fst u)`{.Agda}; then
+`qc`{.Agda} places the value of `x` in `Lset (u .fst)`{.Agda}; then
 `qx`{.Agda} replaces that value by the underlying set of `a`; finally
-`qu`{.Agda} replaces `fst u` by `# m`{.Agda}. The result is
-`fst a ∈ Lset (# m)`{.Agda}, precisely the statement that `aMin`{.Agda}
+`qu`{.Agda} replaces `u .fst` by `# m`{.Agda}. The result is
+`a .fst ∈ Lset (# m)`{.Agda}, precisely the statement that `aMin`{.Agda}
 rules out when `m < k`. Hence no finite stage indexed below `k` contains `a`.
 <!--zh-->
 现在沿三条认同运输那份假设的成员关系证明。先由 `qc`{.Agda} 把 `x` 的值放入
-`Lset (fst u)`{.Agda}，再由 `qx`{.Agda} 把该值替换为 `a` 的底层集合，最后由 `qu`{.Agda} 把 `fst u` 替换为 `# m`{.Agda}。所得结论是
-`fst a ∈ Lset (# m)`{.Agda}；当 `m < k` 时，这正是 `aMin`{.Agda} 所排除的陈述。因此，没有由小于 `k` 的数码索引的有穷层包含 `a`。
+`Lset (u .fst)`{.Agda}，再由 `qx`{.Agda} 把该值替换为 `a` 的底层集合，最后由 `qu`{.Agda} 把 `u .fst` 替换为 `# m`{.Agda}。所得结论是
+`a .fst ∈ Lset (# m)`{.Agda}；当 `m < k` 时，这正是 `aMin`{.Agda} 所排除的陈述。因此，没有由小于 `k` 的数码索引的有穷层包含 `a`。
 <!--ja-->
-仮定された所属を三つの同一視に沿って運ぶ。まず `qc`{.Agda} により`x` の値を `Lset (fst u)`{.Agda} に入れ、次に `qx`{.Agda} によりその値を`a` の基礎集合へ置き換え、最後に `qu`{.Agda} により `fst u` を
+仮定された所属を三つの同一視に沿って運ぶ。まず `qc`{.Agda} により`x` の値を `Lset (u .fst)`{.Agda} に入れ、次に `qx`{.Agda} によりその値を`a` の基礎集合へ置き換え、最後に `qu`{.Agda} により `u .fst` を
 `# m`{.Agda} へ置き換える。得られるのは
-`fst a ∈ Lset (# m)`{.Agda} であり、`m < k` のもとで `aMin`{.Agda} がまさに排除する主張である。したがって `k` より小さい数項が添字づける有限段階には `a` は含まれない。
+`a .fst ∈ Lset (# m)`{.Agda} であり、`m < k` のもとで `aMin`{.Agda} がまさに排除する主張である。したがって `k` より小さい数項が添字づける有限段階には `a` は含まれない。
 <!--/-->
 
 ```agda
             (subst IsOrd (sym qu) (numeral-ord m))
-          inStage : ⟨ fst a ∈ Lset (# m) ⟩
-          inStage = subst (λ w → ⟨ fst a ∈ Lset w ⟩) qu
-            (subst (λ w → ⟨ w ∈ Lset (fst u) ⟩) qx
-              (subst (λ w → ⟨ fst (lookup x γ) ∈ w ⟩) qc hmem))
+          inStage : ⟨ a .fst ∈ Lset (# m) ⟩
+          inStage = subst (λ w → ⟨ a .fst ∈ Lset w ⟩) qu
+            (subst (λ w → ⟨ w ∈ Lset (u .fst) ⟩) qx
+              (subst (λ w → ⟨ (lookup x γ) .fst ∈ w ⟩) qc hmem))
 ```
 
 <!--en-->
@@ -709,10 +709,10 @@ truncated numeral data may be eliminated into it.
 <!--/-->
 
 ```agda
-    LevelAt-out : ⟨ γ ⊨ LevelAt b x ⟩ → fst (lookup x γ) ≡ fst a
-                → fst (lookup b γ) ≡ # k
+    LevelAt-out : ⟨ γ ⊨ LevelAt b x ⟩ → (lookup x γ) .fst ≡ a .fst
+                → (lookup b γ) .fst ≡ # k
     LevelAt-out (hω , (hex , hmin)) qx =
-      rec₁ (setIsSet (fst (lookup b γ)) (# k)) named hω
+      rec₁ (setIsSet ((lookup b γ) .fst) (# k)) named hω
       where
 ```
 
@@ -736,9 +736,9 @@ of propositional resizing rather than propositional truncation.
 <!--/-->
 
 ```agda
-      notAbove : (m : ℕ) → fst (lookup b γ) ≡ # m → k < m → ⊥₀
+      notAbove : (m : ℕ) → (lookup b γ) .fst ≡ # m → k < m → ⊥₀
       notAbove m qb hk = lower (hmin (numS k)
-        (subst (λ w → ⟨ w ∈ fst (lookup b γ) ⟩) (sym (numS-fst k))
+        (subst (λ w → ⟨ w ∈ (lookup b γ) .fst ⟩) (sym (numS-fst k))
           (subst (λ w → ⟨ # k ∈ w ⟩) (sym qb) (#mono k m hk)))
         (towerS k) (towerGraph k (numS k ∷ γ) zero (numS-fst k))
 ```
@@ -760,7 +760,7 @@ member of the same finite stage.
 <!--/-->
 
 ```agda
-        (subst (λ w → ⟨ fst (lookup x γ) ∈ w ⟩) (sym (towerS-fst k))
+        (subst (λ w → ⟨ (lookup x γ) .fst ∈ w ⟩) (sym (towerS-fst k))
           (subst (λ w → ⟨ w ∈ Lset (# k) ⟩) (sym qx) aIn)))
 ```
 
@@ -779,7 +779,7 @@ type; each explicit witness will force `a` to occur at stage `m`.
 <!--/-->
 
 ```agda
-      notBelow : (m : ℕ) → fst (lookup b γ) ≡ # m → m < k → ⊥₀
+      notBelow : (m : ℕ) → (lookup b γ) .fst ≡ # m → m < k → ⊥₀
       notBelow m qb hm = rec₁ isProp⊥ atTower hex
         where
         atTower : Σ[ c ∶ S ] Body c → ⊥₀
@@ -792,18 +792,18 @@ For such a witness, `Lset-only`{.Agda} first identifies the underlying set of
 comes from `numeral-ord m`{.Agda}, transported along the equation that the
 value of `b` is `# m`{.Agda}. Composing the resulting equality with
 `cong Lset qb`{.Agda} yields the concrete identification
-`fst c ≡ Lset (# m)`{.Agda}.
+`c .fst ≡ Lset (# m)`{.Agda}.
 <!--zh-->
-对于这样的见证，`Lset-only`{.Agda} 先把 `c` 的底层集合认同为由 `b` 的值索引的层级阶段。它所需的序数前提来自 `numeral-ord m`{.Agda}，并沿「`b` 的值是 `# m`{.Agda}」这条等式运输。再把所得等式与 `cong Lset qb`{.Agda} 复合，便得到具体认同 `fst c ≡ Lset (# m)`{.Agda}。
+对于这样的见证，`Lset-only`{.Agda} 先把 `c` 的底层集合认同为由 `b` 的值索引的层级阶段。它所需的序数前提来自 `numeral-ord m`{.Agda}，并沿「`b` 的值是 `# m`{.Agda}」这条等式运输。再把所得等式与 `cong Lset qb`{.Agda} 复合，便得到具体认同 `c .fst ≡ Lset (# m)`{.Agda}。
 <!--ja-->
 この証人について、`Lset-only`{.Agda} はまず `c` の基礎集合を `b` の値が添字づける階層段階と同一視する。必要な順序数性は `numeral-ord m`{.Agda}
 から得て、`b` の値が `# m`{.Agda} であるという等式に沿って運ぶ。得られた等式を `cong Lset qb`{.Agda} と合成すると、具体的な同一視
-`fst c ≡ Lset (# m)`{.Agda} が得られる。
+`c .fst ≡ Lset (# m)`{.Agda} が得られる。
 <!--/-->
 
 ```agda
           where
-          qc : fst c ≡ Lset (# m)
+          qc : c .fst ≡ Lset (# m)
           qc = Lset-only zero (suc b) (c ∷ γ) hg
                  (subst IsOrd (sym qb) (numeral-ord m))
              ∙ cong Lset qb
@@ -825,9 +825,9 @@ below the true level.
 <!--/-->
 
 ```agda
-          inStage : ⟨ fst a ∈ Lset (# m) ⟩
+          inStage : ⟨ a .fst ∈ Lset (# m) ⟩
           inStage = subst (λ w → ⟨ w ∈ Lset (# m) ⟩) qx
-            (subst (λ w → ⟨ fst (lookup x γ) ∈ w ⟩) qc hmem)
+            (subst (λ w → ⟨ (lookup x γ) .fst ∈ w ⟩) qc hmem)
 ```
 
 <!--en-->
@@ -836,20 +836,20 @@ decoded package contains `j : Lift ℕ` and an equality from `# (lower j)`{.Agda
 to the value at `b`. Reversing that equality gives `qb`{.Agda}. Once the
 natural-number comparison proves `lower j ≡ k`{.Agda}, applying the numeral
 map and composing equalities yields the required value
-`fst (lookup b γ) ≡ # k`{.Agda}.
+`(lookup b γ) .fst ≡ # k`{.Agda}.
 <!--zh-->
-还需认同从 `ω` 的元素身份中解码出的数码。一份显式解码数据包含`j : Lift ℕ`，以及从 `# (lower j)`{.Agda} 到 `b` 处之值的等式。反转该等式便得到 `qb`{.Agda}。一旦自然数比较证明 `lower j ≡ k`{.Agda}，对这条等式应用数码映射并作复合，就得到所需结论 `fst (lookup b γ) ≡ # k`{.Agda}。
+还需认同从 `ω` 的元素身份中解码出的数码。一份显式解码数据包含`j : Lift ℕ`，以及从 `# (lower j)`{.Agda} 到 `b` 处之值的等式。反转该等式便得到 `qb`{.Agda}。一旦自然数比较证明 `lower j ≡ k`{.Agda}，对这条等式应用数码映射并作复合，就得到所需结论 `(lookup b γ) .fst ≡ # k`{.Agda}。
 <!--ja-->
 最後に、`ω` への所属から復号された数項を同定する。明示された復号データは`j : Lift ℕ` と、`# (lower j)`{.Agda} から `b` の値への等式を含む。その等式を逆にすると `qb`{.Agda} が得られる。自然数の比較から
-`lower j ≡ k`{.Agda} が得られれば、それに数項写像を施して等式を合成することで、必要な `fst (lookup b γ) ≡ # k`{.Agda} に到達する。
+`lower j ≡ k`{.Agda} が得られれば、それに数項写像を施して等式を合成することで、必要な `(lookup b γ) .fst ≡ # k`{.Agda} に到達する。
 <!--/-->
 
 ```agda
-      named : Σ[ j ∶ Lift ℕ ] (# (lower j) ≡ fst (lookup b γ))
-            → fst (lookup b γ) ≡ # k
+      named : Σ[ j ∶ Lift ℕ ] (# (lower j) ≡ (lookup b γ) .fst)
+            → (lookup b γ) .fst ≡ # k
       named (j , qj) = qb ∙ cong #_ (decide (lower j ≟ k))
         where
-        qb : fst (lookup b γ) ≡ # (lower j)
+        qb : (lookup b γ) .fst ≡ # (lower j)
 ```
 
 <!--en-->
@@ -903,8 +903,8 @@ of the dependent carrier, not a set-theoretic ordered pair.
 
 ```agda
 opaque
-  memS : (A : S) (z : V ℓ) → ⟨ z ∈ fst A ⟩ → S
-  memS A z h = z , isL-trans {x = fst A} {y = z} h (snd A)
+  memS : (A : S) (z : V ℓ) → ⟨ z ∈ A .fst ⟩ → S
+  memS A z h = z , isL-trans {x = A .fst} {y = z} h (A .snd)
 ```
 
 <!--en-->
@@ -920,7 +920,7 @@ it represents without unfolding the package.
 <!--/-->
 
 ```agda
-  memS-fst : (A : S) (z : V ℓ) (h : ⟨ z ∈ fst A ⟩) → fst (memS A z h) ≡ z
+  memS-fst : (A : S) (z : V ℓ) (h : ⟨ z ∈ A .fst ⟩) → (memS A z h) .fst ≡ z
   memS-fst A z h = refl
 ```
 
@@ -991,10 +991,10 @@ is a well-order.
 ```agda
 module Precedes {n : ℕ} (r A x y : Fin n) (γ : S ^ n)
                 (R : V ℓ → V ℓ → hProp (ℓ-suc ℓ))
-                (Rrep : (u v : S) → ⟨ pr (fst u) (fst v) ∈ fst (lookup r γ) ⟩
-                      → ⟨ R (fst u) (fst v) ⟩)
-                (Rfill : (u v : S) → ⟨ R (fst u) (fst v) ⟩
-                       → ⟨ pr (fst u) (fst v) ∈ fst (lookup r γ) ⟩)
+                (Rrep : (u v : S) → ⟨ pr (u .fst) (v .fst) ∈ (lookup r γ) .fst ⟩
+                      → ⟨ R (u .fst) (v .fst) ⟩)
+                (Rfill : (u v : S) → ⟨ R (u .fst) (v .fst) ⟩
+                       → ⟨ pr (u .fst) (v .fst) ∈ (lookup r γ) .fst ⟩)
                 where
 ```
 </summary>
@@ -1028,7 +1028,7 @@ every clause.
 
 ```agda
     xv : V ℓ
-    xv = fst (lookup x γ)
+    xv = (lookup x γ) .fst
 ```
 
 <!--en-->
@@ -1043,7 +1043,7 @@ fails to belong to the left one.
 
 ```agda
     yv : V ℓ
-    yv = fst (lookup y γ)
+    yv = (lookup y γ) .fst
 ```
 
 <!--en-->
@@ -1069,9 +1069,9 @@ For a proposed disagreement witness `z`, `Agreeing z` examines every `w` in the 
 
 ```agda
     Agreeing : S → Type (ℓ-suc ℓ)
-    Agreeing z = (w : S) → ⟨ fst w ∈ fst Aʟ ⟩
+    Agreeing z = (w : S) → ⟨ w .fst ∈ Aʟ .fst ⟩
                → ⟨ (w ∷ z ∷ γ) ⊨ appAt (sh2 r) zero (suc zero) ⟩
-               → Both (fst w)
+               → Both (w .fst)
 ```
 
 <!--en-->
@@ -1084,9 +1084,9 @@ The witness itself must lie in the carrier and in `yv`, while being absent from 
 
 ```agda
     Body : S → Type (ℓ-suc ℓ)
-    Body z = ⟨ fst z ∈ fst Aʟ ⟩
-           × ( ⟨ fst z ∈ yv ⟩
-             × ( (⟨ fst z ∈ xv ⟩ → Lift {j = ℓ-suc ℓ} ⊥₀) × Agreeing z ) )
+    Body z = ⟨ z .fst ∈ Aʟ .fst ⟩
+           × ( ⟨ z .fst ∈ yv ⟩
+             × ( (⟨ z .fst ∈ xv ⟩ → Lift {j = ℓ-suc ℓ} ⊥₀) × Agreeing z ) )
 ```
 
 <!--en-->
@@ -1099,10 +1099,10 @@ To read the formula outward, eliminate its propositionally truncated existential
 
 ```agda
   PrecedesAt-out : ⟨ γ ⊨ PrecedesAt r A x y ⟩
-                 → ⟨ precedes R (fst Aʟ) xv yv ⟩
+                 → ⟨ precedes R (Aʟ .fst) xv yv ⟩
   PrecedesAt-out = rec₁ squash₁ atZ
     where
-    atZ : Σ[ z ∶ S ] Body z → ⟨ precedes R (fst Aʟ) xv yv ⟩
+    atZ : Σ[ z ∶ S ] Body z → ⟨ precedes R (Aʟ .fst) xv yv ⟩
 ```
 
 <!--en-->
@@ -1115,9 +1115,9 @@ The underlying set of `z` supplies the host witness, and the first three fields 
 
 ```agda
     atZ (z , (z∈A , (z∈y , (z∉x , hag)))) =
-      ∣ fst z , (z∈A , (z∈y , ((λ h → lower (z∉x h)) , ag))) ∣₁
+      ∣ z .fst , (z∈A , (z∈y , ((λ h → lower (z∉x h)) , ag))) ∣₁
       where
-      ag : Agrees R (fst Aʟ) xv yv (fst z)
+      ag : Agrees R (Aʟ .fst) xv yv (z .fst)
       ag w w∈A hR = subst Both (memS-fst Aʟ w w∈A) (hag wS w∈A' happ)
 ```
 
@@ -1133,8 +1133,8 @@ Since `w` belongs to the constructible carrier, it inherits constructibility and
         where
         wS : S
         wS = memS Aʟ w w∈A
-        w∈A' : ⟨ fst wS ∈ fst Aʟ ⟩
-        w∈A' = subst (λ u → ⟨ u ∈ fst Aʟ ⟩) (sym (memS-fst Aʟ w w∈A)) w∈A
+        w∈A' : ⟨ wS .fst ∈ Aʟ .fst ⟩
+        w∈A' = subst (λ u → ⟨ u ∈ Aʟ .fst ⟩) (sym (memS-fst Aʟ w w∈A)) w∈A
 ```
 
 <!--en-->
@@ -1146,9 +1146,9 @@ The premise currently says `R w z` at the host level. After aligning `w` with `w
 <!--/-->
 
 ```agda
-        hp : ⟨ pr (fst wS) (fst z) ∈ fst (lookup r γ) ⟩
+        hp : ⟨ pr (wS .fst) (z .fst) ∈ (lookup r γ) .fst ⟩
         hp = Rfill wS z
-          (subst (λ u → ⟨ R u (fst z) ⟩) (sym (memS-fst Aʟ w w∈A)) hR)
+          (subst (λ u → ⟨ R u (z .fst) ⟩) (sym (memS-fst Aʟ w w∈A)) hR)
         happ : ⟨ (wS ∷ z ∷ γ) ⊨ appAt (sh2 r) zero (suc zero) ⟩
         happ = subst ⟨_⟩
 ```
@@ -1174,11 +1174,11 @@ The converse starts with the propositionally truncated witness in `precedes`. Be
 <!--/-->
 
 ```agda
-  PrecedesAt-in : ⟨ precedes R (fst Aʟ) xv yv ⟩
+  PrecedesAt-in : ⟨ precedes R (Aʟ .fst) xv yv ⟩
                 → ⟨ γ ⊨ PrecedesAt r A x y ⟩
   PrecedesAt-in = rec₁ squash₁ atZ
     where
-    atZ : Σ[ z ∶ V ℓ ] Witness R (fst Aʟ) xv yv z
+    atZ : Σ[ z ∶ V ℓ ] Witness R (Aʟ .fst) xv yv z
 ```
 
 <!--en-->
@@ -1198,19 +1198,19 @@ Unpack a host witness `z` together with its carrier membership, its membership i
 ```
 
 <!--en-->
-The projection `fst zS` is equal to the original `z`. Transport along this equality shows that the packaged witness still belongs to the carrier, so packaging changes only its presentation and not its mathematical role.
+The projection `zS .fst` is equal to the original `z`. Transport along this equality shows that the packaged witness still belongs to the carrier, so packaging changes only its presentation and not its mathematical role.
 <!--zh-->
-投影 `fst zS` 等于原来的 `z`。沿此等式搬运可知，打包后的见证仍属于载体，所以打包只改变它的呈现，不改变其数学作用。
+投影 `zS .fst` 等于原来的 `z`。沿此等式搬运可知，打包后的见证仍属于载体，所以打包只改变它的呈现，不改变其数学作用。
 <!--ja-->
-射影 `fst zS` はもとの `z` に等しい。この等式に沿って運ぶと、まとめられた証人も台に属することが分かる。したがって、まとめる操作は表示だけを変え、数学的な役割は変えない。
+射影 `zS .fst` はもとの `z` に等しい。この等式に沿って運ぶと、まとめられた証人も台に属することが分かる。したがって、まとめる操作は表示だけを変え、数学的な役割は変えない。
 <!--/-->
 
 ```agda
       zS = memS Aʟ z z∈A
-      qz : fst zS ≡ z
+      qz : zS .fst ≡ z
       qz = memS-fst Aʟ z z∈A
-      z∈A' : ⟨ fst zS ∈ fst Aʟ ⟩
-      z∈A' = subst (λ u → ⟨ u ∈ fst Aʟ ⟩) (sym qz) z∈A
+      z∈A' : ⟨ zS .fst ∈ Aʟ .fst ⟩
+      z∈A' = subst (λ u → ⟨ u ∈ Aʟ .fst ⟩) (sym qz) z∈A
 ```
 
 <!--en-->
@@ -1222,9 +1222,9 @@ The same projection equation transports membership in `yv` and nonmembership in 
 <!--/-->
 
 ```agda
-      z∈y' : ⟨ fst zS ∈ yv ⟩
+      z∈y' : ⟨ zS .fst ∈ yv ⟩
       z∈y' = subst (λ u → ⟨ u ∈ yv ⟩) (sym qz) z∈y
-      z∉x' : ⟨ fst zS ∈ xv ⟩ → Lift {j = ℓ-suc ℓ} ⊥₀
+      z∉x' : ⟨ zS .fst ∈ xv ⟩ → Lift {j = ℓ-suc ℓ} ⊥₀
       z∉x' h = lift (z∉x (subst (λ u → ⟨ u ∈ xv ⟩) qz h))
       hag : Agreeing zS
 ```
@@ -1238,23 +1238,23 @@ Given a model element `w` in the carrier, adequacy for `appAt` first reads satis
 <!--/-->
 
 ```agda
-      hag w w∈A happ = ag (fst w) w∈A hR
+      hag w w∈A happ = ag (w .fst) w∈A hR
         where
-        hp : ⟨ pr (fst w) (fst zS) ∈ fst (lookup r γ) ⟩
+        hp : ⟨ pr (w .fst) (zS .fst) ∈ (lookup r γ) .fst ⟩
         hp = subst ⟨_⟩ (appAt-adequate (sh2 r) zero (suc zero) (w ∷ zS ∷ γ)) happ
-        hR : ⟨ R (fst w) z ⟩
+        hR : ⟨ R (w .fst) z ⟩
 ```
 
 <!--en-->
-Now `Rrep` reads relation-set membership back as `R (fst w) zS`; transporting the second endpoint from `fst zS` to `z` supplies the premise expected by the original agreement proof. The two membership implications in `Both` follow.
+Now `Rrep` reads relation-set membership back as `R (w .fst) zS`; transporting the second endpoint from `zS .fst` to `z` supplies the premise expected by the original agreement proof. The two membership implications in `Both` follow.
 <!--zh-->
-现在 `Rrep` 把关系集成员关系读回 `R (fst w) zS`；再把第二个端点从 `fst zS` 搬运到 `z`，便得到原一致证明所需的前提，从而取得 `Both` 中的两条成员关系蕴含。
+现在 `Rrep` 把关系集成员关系读回 `R (w .fst) zS`；再把第二个端点从 `zS .fst` 搬运到 `z`，便得到原一致证明所需的前提，从而取得 `Both` 中的两条成员关系蕴含。
 <!--ja-->
-ここで `Rrep` は関係集合への所属を `R (fst w) zS` として読み戻す。第二の端点を `fst zS` から `z` へ運ぶと、もとの一致の証明が要求する仮定が得られ、`Both` の二つの所属の含意が従う。
+ここで `Rrep` は関係集合への所属を `R (w .fst) zS` として読み戻す。第二の端点を `zS .fst` から `z` へ運ぶと、もとの一致の証明が要求する仮定が得られ、`Both` の二つの所属の含意が従う。
 <!--/-->
 
 ```agda
-        hR = subst (λ u → ⟨ R (fst w) u ⟩) qz (Rrep w zS hp)
+        hR = subst (λ u → ⟨ R (w .fst) u ⟩) qz (Rrep w zS hp)
 ```
 </div>
 </details>
@@ -1278,19 +1278,19 @@ An element `a : Limit` carries a proof that its underlying set belongs to `Lset 
 ```agda
 opaque
   limitEl : Limit → S
-  limitEl a = fst a , Lset→isL ω ω-ord (fst a) (snd a)
+  limitEl a = a .fst , Lset→isL ω ω-ord (a .fst) (a .snd)
 ```
 
 <!--en-->
-Packaging does not alter the set: projecting `limitEl a` returns `fst a` by definition. This equation will later align model-built pairs with the ambient pairs used in the statement of representation.
+Packaging does not alter the set: projecting `limitEl a` returns `a .fst` by definition. This equation will later align model-built pairs with the ambient pairs used in the statement of representation.
 <!--zh-->
-打包并不改变集合：按定义投影 `limitEl a` 就得到 `fst a`。这个等式随后会把模型内构造的有序对与表示定理中使用的外围有序对对齐。
+打包并不改变集合：按定义投影 `limitEl a` 就得到 `a .fst`。这个等式随后会把模型内构造的有序对与表示定理中使用的外围有序对对齐。
 <!--ja-->
-まとめる操作は集合を変えない。`limitEl a` を射影すると、定義により `fst a` が戻る。この等式は後で、モデル内で作った順序対を表現定理に現れる周囲の順序対とそろえる。
+まとめる操作は集合を変えない。`limitEl a` を射影すると、定義により `a .fst` が戻る。この等式は後で、モデル内で作った順序対を表現定理に現れる周囲の順序対とそろえる。
 <!--/-->
 
 ```agda
-  limitEl-fst : (a : Limit) → fst (limitEl a) ≡ fst a
+  limitEl-fst : (a : Limit) → (limitEl a) .fst ≡ a .fst
   limitEl-fst a = refl
 ```
 
@@ -1316,7 +1316,7 @@ The projection law for `prS` identifies its underlying set with the ambient orde
 <!--/-->
 
 ```agda
-  prS-fst : (a b : S) → fst (prS a b) ≡ pr (fst a) (fst b)
+  prS-fst : (a b : S) → (prS a b) .fst ≡ pr (a .fst) (b .fst)
   prS-fst a b = prʟ-fst a b
 ```
 
@@ -1329,7 +1329,7 @@ Before separation can select the ordered pairs satisfying the comparison, all ca
 <!--/-->
 
 ```agda
-pairsBound : Σ[ D ∶ S ] ((u v : Limit) → ⟨ pr (fst u) (fst v) ∈ fst D ⟩)
+pairsBound : Σ[ D ∶ S ] ((u v : Limit) → ⟨ pr (u .fst) (v .fst) ∈ D .fst ⟩)
 pairsBound = d .fst , onPair
   where
   ixL : ⟪ Lset ω ⟫ → S
@@ -1358,37 +1358,37 @@ Applying `smallDom` to this small product produces a constructible set containin
 
 ```agda
   d : Σ[ D ∶ S ] ((p : ⟪ Lset ω ⟫ × ⟪ Lset ω ⟫)
-                  → ⟨ prʟ (ixL (fst p)) (ixL (snd p)) ∈ˢ D ⟩)
-  d = smallDom (⟪ Lset ω ⟫ × ⟪ Lset ω ⟫) (λ p → prʟ (ixL (fst p)) (ixL (snd p)))
+                  → ⟨ prʟ (ixL (p .fst)) (ixL (p .snd)) ∈ˢ D ⟩)
+  d = smallDom (⟪ Lset ω ⟫ × ⟪ Lset ω ⟫) (λ p → prʟ (ixL (p .fst)) (ixL (p .snd)))
 ```
 
 <!--en-->
-For arbitrary `u,v : Limit`, their underlying sets have presentation indices in the small fiber of `Lset ω`. The pair at those indices belongs to the bound, and the projection equations transport that membership to the ambient pair `pr (fst u) (fst v)`.
+For arbitrary `u,v : Limit`, their underlying sets have presentation indices in the small fiber of `Lset ω`. The pair at those indices belongs to the bound, and the projection equations transport that membership to the ambient pair `pr (u .fst) (v .fst)`.
 <!--zh-->
-对任意 `u,v : Limit`，它们的底层集在 `Lset ω` 的小纤维中都有呈现索引。由这些索引形成的有序对属于共同界，再沿投影等式搬运，就得到外围有序对 `pr (fst u) (fst v)` 的成员关系。
+对任意 `u,v : Limit`，它们的底层集在 `Lset ω` 的小纤维中都有呈现索引。由这些索引形成的有序对属于共同界，再沿投影等式搬运，就得到外围有序对 `pr (u .fst) (v .fst)` 的成员关系。
 <!--ja-->
-任意の `u,v : Limit` に対し、それぞれの底の集合は `Lset ω` の小さなファイバー内に表示添字を持つ。その添字から作った順序対は共通の上界に属し、射影の等式に沿って運ぶことで、周囲の順序対 `pr (fst u) (fst v)` の所属が得られる。
+任意の `u,v : Limit` に対し、それぞれの底の集合は `Lset ω` の小さなファイバー内に表示添字を持つ。その添字から作った順序対は共通の上界に属し、射影の等式に沿って運ぶことで、周囲の順序対 `pr (u .fst) (v .fst)` の所属が得られる。
 <!--/-->
 
 ```agda
-  onPair : (u v : Limit) → ⟨ pr (fst u) (fst v) ∈ fst (d .fst) ⟩
-  onPair u v = subst (λ t → ⟨ t ∈ fst (d .fst) ⟩)
+  onPair : (u v : Limit) → ⟨ pr (u .fst) (v .fst) ∈ (d .fst) .fst ⟩
+  onPair u v = subst (λ t → ⟨ t ∈ (d .fst) .fst ⟩)
     (prʟ-fst (ixL (fu .fst)) (ixL (fv .fst)) ∙ cong₂ pr (fu .snd) (fv .snd))
     (d .snd (fu .fst , fv .fst))
     where
 ```
 
 <!--en-->
-The two fiber witnesses recover exactly the presentation indices used above, together with equations identifying their displayed members with `fst u` and `fst v`. These equations are why the small presentation suffices for every actual limit-stage endpoint.
+The two fiber witnesses recover exactly the presentation indices used above, together with equations identifying their displayed members with `u .fst` and `v .fst`. These equations are why the small presentation suffices for every actual limit-stage endpoint.
 <!--zh-->
-两条纤维见证恰好恢复上面使用的呈现索引，并附带把所呈现元素分别认同为 `fst u` 与 `fst v` 的等式。正因这些等式，小呈现才足以覆盖每个实际的极限层端点。
+两条纤维见证恰好恢复上面使用的呈现索引，并附带把所呈现元素分别认同为 `u .fst` 与 `v .fst` 的等式。正因这些等式，小呈现才足以覆盖每个实际的极限层端点。
 <!--ja-->
-二つのファイバーの証人は、上で使う表示添字と、そこで示される要素をそれぞれ `fst u`、`fst v` と同一視する等式を取り出す。この等式があるため、小さな表示で実際のすべての極限段階の端点を扱える。
+二つのファイバーの証人は、上で使う表示添字と、そこで示される要素をそれぞれ `u .fst`、`v .fst` と同一視する等式を取り出す。この等式があるため、小さな表示で実際のすべての極限段階の端点を扱える。
 <!--/-->
 
 ```agda
-    fu = ∈-asFiber {a = fst u} {b = Lset ω} (snd u)
-    fv = ∈-asFiber {a = fst v} {b = Lset ω} (snd v)
+    fu = ∈-asFiber {a = u .fst} {b = Lset ω} (u .snd)
+    fv = ∈-asFiber {a = v .fst} {b = Lset ω} (v .snd)
 ```
 
 <!--en-->
@@ -1430,16 +1430,16 @@ eliminated only into contradiction.
 ```
 
 <!--en-->
-The defining property of `level a` places `fst a` in `finiteStage (level a)`. An equation `level a ≡ k` transports this membership to `finiteStage k`, providing exactly the stage boundary required when the finite comparison is invoked.
+The defining property of `level a` places `a .fst` in `finiteStage (level a)`. An equation `level a ≡ k` transports this membership to `finiteStage k`, providing exactly the stage boundary required when the finite comparison is invoked.
 <!--zh-->
-`level a` 的定义性质把 `fst a` 放在 `finiteStage (level a)` 中。等式 `level a ≡ k` 把这一成员关系搬运到 `finiteStage k`，恰好给出调用有限层比较时所需的层边界。
+`level a` 的定义性质把 `a .fst` 放在 `finiteStage (level a)` 中。等式 `level a ≡ k` 把这一成员关系搬运到 `finiteStage k`，恰好给出调用有限层比较时所需的层边界。
 <!--ja-->
-`level a` の定義的性質により、`fst a` は `finiteStage (level a)` に属する。等式 `level a ≡ k` に沿ってこの所属を `finiteStage k` へ運ぶと、有限段階の比較を使う際に必要な段階の境界がちょうど得られる。
+`level a` の定義的性質により、`a .fst` は `finiteStage (level a)` に属する。等式 `level a ≡ k` に沿ってこの所属を `finiteStage k` へ運ぶと、有限段階の比較を使う際に必要な段階の境界がちょうど得られる。
 <!--/-->
 
 ```agda
-levelStage : (a : Limit) (k : ℕ) → level a ≡ k → ⟨ fst a ∈ finiteStage k ⟩
-levelStage a k q = subst (λ j → ⟨ fst a ∈ Lset (# j) ⟩) q (level-in a)
+levelStage : (a : Limit) (k : ℕ) → level a ≡ k → ⟨ a .fst ∈ finiteStage k ⟩
+levelStage a k q = subst (λ j → ⟨ a .fst ∈ Lset (# j) ⟩) q (level-in a)
 ```
 
 <!--en-->
@@ -1459,17 +1459,17 @@ used only when the value at `b` denotes `# m` and the first endpoint lies in
 module Described
   (BeforeAt : ∀ {n} → Fin n → Fin n → Fin n → Formula S n)
   (BeforeAt-in : ∀ {n} (b x y : Fin n) (γ : S ^ n) (m : ℕ)
-               → fst (lookup b γ) ≡ # m
-               → ⟨ fst (lookup x γ) ∈ finiteStage m ⟩
-               → ⟨ fst (lookup y γ) ∈ finiteStage m ⟩
-               → ⟨ before m (fst (lookup x γ)) (fst (lookup y γ)) ⟩
+               → (lookup b γ) .fst ≡ # m
+               → ⟨ (lookup x γ) .fst ∈ finiteStage m ⟩
+               → ⟨ (lookup y γ) .fst ∈ finiteStage m ⟩
+               → ⟨ before m ((lookup x γ) .fst) ((lookup y γ) .fst) ⟩
                → ⟨ γ ⊨ BeforeAt b x y ⟩)
   (BeforeAt-out : ∀ {n} (b x y : Fin n) (γ : S ^ n) (m : ℕ)
-                → fst (lookup b γ) ≡ # m
-                → ⟨ fst (lookup x γ) ∈ finiteStage m ⟩
-                → ⟨ fst (lookup y γ) ∈ finiteStage m ⟩
+                → (lookup b γ) .fst ≡ # m
+                → ⟨ (lookup x γ) .fst ∈ finiteStage m ⟩
+                → ⟨ (lookup y γ) .fst ∈ finiteStage m ⟩
                 → ⟨ γ ⊨ BeforeAt b x y ⟩
-                → ⟨ before m (fst (lookup x γ)) (fst (lookup y γ)) ⟩)
+                → ⟨ before m ((lookup x γ) .fst) ((lookup y γ) .fst) ⟩)
   where
 ```
 </summary>
@@ -1538,8 +1538,8 @@ membership.
   module Order {n : ℕ} (x y : Fin n) (γ : S ^ n)
                (u v : Limit) (ku kv : ℕ)
                (qu : level u ≡ ku) (qv : level v ≡ kv)
-               (qx : fst (lookup x γ) ≡ fst u)
-               (qy : fst (lookup y γ) ≡ fst v)
+               (qx : (lookup x γ) .fst ≡ u .fst)
+               (qy : (lookup y γ) .fst ≡ v .fst)
                where
 ```
 </summary>
@@ -1571,7 +1571,7 @@ The two `Level` instances provide more than convenient names: each one supplies 
       Split : S → S → Type (ℓ-suc ℓ)
       Split c d = ⟨ (d ∷ c ∷ γ) ⊨ LevelAt (suc zero) (sh2 x) ⟩
                 × ( ⟨ (d ∷ c ∷ γ) ⊨ LevelAt zero (sh2 y) ⟩
-                  × ⟨ fst c ∈ fst d ⟩ )
+                  × ⟨ c .fst ∈ d .fst ⟩ )
 ```
 
 <!--en-->
@@ -1606,11 +1606,11 @@ Suppose `ku < kv`. Choose the genuine numerals `# ku` and `# kv`, packaged as mo
 ```
 
 <!--en-->
-Strict inequality of natural numbers gives `# ku ∈ # kv` by numeral monotonicity. Transporting along the projection equations of the two packaged numerals supplies the membership `fst (numS ku) ∈ fst (numS kv)` required by `Split`.
+Strict inequality of natural numbers gives `# ku ∈ # kv` by numeral monotonicity. Transporting along the projection equations of the two packaged numerals supplies the membership `(numS ku) .fst ∈ (numS kv) .fst` required by `Split`.
 <!--zh-->
-自然数的严格不等经数码单调性给出 `# ku ∈ # kv`。沿两个打包数码的投影等式搬运，就得到 `Split` 所需的成员关系 `fst (numS ku) ∈ fst (numS kv)`。
+自然数的严格不等经数码单调性给出 `# ku ∈ # kv`。沿两个打包数码的投影等式搬运，就得到 `Split` 所需的成员关系 `(numS ku) .fst ∈ (numS kv) .fst`。
 <!--ja-->
-自然数の狭義不等式から、数項の単調性により `# ku ∈ # kv` が得られる。二つのまとめられた数項の射影等式に沿って運ぶと、`Split` が要求する所属 `fst (numS ku) ∈ fst (numS kv)` が得られる。
+自然数の狭義不等式から、数項の単調性により `# ku ∈ # kv` が得られる。二つのまとめられた数項の射影等式に沿って運ぶと、`Split` が要求する所属 `(numS ku) .fst ∈ (numS kv) .fst` が得られる。
 <!--/-->
 
 ```agda
@@ -1629,7 +1629,7 @@ For the equal-level branch, an equation `level v ≡ level u` lets the one numer
 
 ```agda
       same-in : (e : level v ≡ level u)
-              → ⟨ before (level u) (fst u) (fst v) ⟩ → Same (numS ku)
+              → ⟨ before (level u) (u .fst) (v .fst) ⟩ → Same (numS ku)
       same-in e h =
           Lu.LevelAt-in zero (suc x) (numS ku ∷ γ) (numS-fst ku) qx
         , ( Level.LevelAt-in v ku (e ∙ qu) zero (suc y) (numS ku ∷ γ)
@@ -1665,7 +1665,7 @@ Finally, transport the given comparison from index `level u` to `ku` and align i
 ```agda
                 (levelStage v ku (e ∙ qu)))
               (subst2 (λ s t → ⟨ before ku s t ⟩) (sym qx) (sym qy)
-                (subst (λ j → ⟨ before j (fst u) (fst v) ⟩) qu h)) )
+                (subst (λ j → ⟨ before j (u .fst) (v .fst) ⟩) qu h)) )
 ```
 
 <!--en-->
@@ -1681,7 +1681,7 @@ Reading a `Split c d` outward first identifies `c` with `# ku` and `d` with `# k
       split-out c d (hx , (hy , hlt)) = subst2 _<_ (sym qu) (sym qv)
         (#∈#-elim ku kv (subst2 (λ s t → ⟨ s ∈ t ⟩) qc qd hlt))
         where
-        qc : fst c ≡ # ku
+        qc : c .fst ≡ # ku
 ```
 
 <!--en-->
@@ -1694,7 +1694,7 @@ Each numeral identification is obtained in the correct extended environment: the
 
 ```agda
         qc = Lu.LevelAt-out (suc zero) (sh2 x) (d ∷ c ∷ γ) hx qx
-        qd : fst d ≡ # kv
+        qd : d .fst ≡ # kv
         qd = Lv.LevelAt-out zero (sh2 y) (d ∷ c ∷ γ) hy qy
 ```
 
@@ -1708,10 +1708,10 @@ In the common-level branch, one model element `c` serves as the proposed level n
 
 ```agda
       same-out : (c : S) → Same c
-               → (level v ≡ level u) × ⟨ before (level u) (fst u) (fst v) ⟩
+               → (level v ≡ level u) × ⟨ before (level u) (u .fst) (v .fst) ⟩
       same-out c (hx , (hy , hb)) = e , below
         where
-        qc : fst c ≡ # ku
+        qc : c .fst ≡ # ku
 ```
 
 <!--en-->
@@ -1724,7 +1724,7 @@ The first certificate identifies the underlying set of `c` with `# ku`, while th
 
 ```agda
         qc = Lu.LevelAt-out zero (suc x) (c ∷ γ) hx qx
-        qc' : fst c ≡ # kv
+        qc' : c .fst ≡ # kv
         qc' = Lv.LevelAt-out zero (suc y) (c ∷ γ) hy qy
         e : level v ≡ level u
         e = qv ∙ sym (#-inj′ (sym qc ∙ qc')) ∙ sym qu
@@ -1743,24 +1743,24 @@ at `x` and `y`.
 <!--/-->
 
 ```agda
-        xIn : ⟨ fst (lookup x γ) ∈ finiteStage ku ⟩
+        xIn : ⟨ (lookup x γ) .fst ∈ finiteStage ku ⟩
         xIn = subst (λ t → ⟨ t ∈ finiteStage ku ⟩) (sym qx) (levelStage u ku qu)
-        yIn : ⟨ fst (lookup y γ) ∈ finiteStage ku ⟩
+        yIn : ⟨ (lookup y γ) .fst ∈ finiteStage ku ⟩
         yIn = subst (λ t → ⟨ t ∈ finiteStage ku ⟩) (sym qy)
           (levelStage v ku (e ∙ qu))
 ```
 
 <!--en-->
-The abstract `BeforeAt-out` hypothesis now applies at the numeral represented by `c`. It returns `before ku` for the two environment values; replacing those values by `fst u` and `fst v`, and replacing `ku` by `level u`, produces the finite-stage component required by the limit order. This completes the common-level reading without assuming any meaning for `BeforeAt` outside its stated stage boundary.
+The abstract `BeforeAt-out` hypothesis now applies at the numeral represented by `c`. It returns `before ku` for the two environment values; replacing those values by `u .fst` and `v .fst`, and replacing `ku` by `level u`, produces the finite-stage component required by the limit order. This completes the common-level reading without assuming any meaning for `BeforeAt` outside its stated stage boundary.
 <!--zh-->
-现在可以在 `c` 所表示的数码处应用抽象假设 `BeforeAt-out`。它先给出两个环境值之间的 `before ku`；把这两个值换成 `fst u` 与 `fst v`，再把 `ku` 换成 `level u`，便得到极限序同层支所需的有穷层比较。整个论证只在假设规定的层边界内使用 `BeforeAt`，不要求它在边界外具有任何语义。
+现在可以在 `c` 所表示的数码处应用抽象假设 `BeforeAt-out`。它先给出两个环境值之间的 `before ku`；把这两个值换成 `u .fst` 与 `v .fst`，再把 `ku` 换成 `level u`，便得到极限序同层支所需的有穷层比较。整个论证只在假设规定的层边界内使用 `BeforeAt`，不要求它在边界外具有任何语义。
 <!--ja-->
-ここで、`c` が表す数項のもとで抽象的な仮定 `BeforeAt-out` を適用できる。まず環境の二つの値に対する `before ku` が得られ、それらを `fst u` と `fst v` に、さらに `ku` を `level u` に置き換えると、極限段階の順序の同段階枝に必要な有限段階の比較になる。この議論では、仮定された段階の境界外で `BeforeAt` に意味があるとは仮定していない。
+ここで、`c` が表す数項のもとで抽象的な仮定 `BeforeAt-out` を適用できる。まず環境の二つの値に対する `before ku` が得られ、それらを `u .fst` と `v .fst` に、さらに `ku` を `level u` に置き換えると、極限段階の順序の同段階枝に必要な有限段階の比較になる。この議論では、仮定された段階の境界外で `BeforeAt` に意味があるとは仮定していない。
 <!--/-->
 
 ```agda
-        below : ⟨ before (level u) (fst u) (fst v) ⟩
-        below = subst (λ j → ⟨ before j (fst u) (fst v) ⟩) (sym qu)
+        below : ⟨ before (level u) (u .fst) (v .fst) ⟩
+        below = subst (λ j → ⟨ before j (u .fst) (v .fst) ⟩) (sym qu)
           (subst2 (λ s t → ⟨ before ku s t ⟩) qx qy
             (BeforeAt-out zero (suc x) (suc y) (c ∷ γ) ku qc xIn yIn hb))
 ```
@@ -1809,7 +1809,7 @@ If the levels agree, a single numeral `# ku` certifies both `LevelAt` statements
 
 ```agda
         inner-in : (e : level v ≡ level u)
-                 → ⟨ before (level u) (fst u) (fst v) ⟩
+                 → ⟨ before (level u) (u .fst) (v .fst) ⟩
                  → ⟨ γ ⊨ LimitOrdAt x y ⟩
         inner-in e k = ∣ inr ∣ numS ku , same-in e k ∣₁ ∣₁
 ```
@@ -1825,7 +1825,7 @@ The external limit comparison presents exactly these alternatives. In its first 
 ```agda
         decide-in : Lift {ℓ-zero} {ℓ-suc ℓ} (level u < level v)
                   ⊎ ((level v ≡ level u)
-                     × ⟨ before (level u) (fst u) (fst v) ⟩)
+                     × ⟨ before (level u) (u .fst) (v .fst) ⟩)
                   → ⟨ γ ⊨ LimitOrdAt x y ⟩
         decide-in (inl k)       = lower-in (subst2 _<_ qu qv (lower k))
 ```
@@ -2010,18 +2010,18 @@ Conversely, satisfaction of `Cond₀` already has the truncated nested shape rec
 ```
 
 <!--en-->
-The filling law begins with an external comparison `u ≺ˡ v` and aims to place the ordinary ordered pair of their underlying sets in `codeOrder`. The proof first works with `limitEl u` and `limitEl v`, which are genuine elements of the model, and with their model-coded pair. A final equality relates that internal presentation to `pr (fst u) (fst v)`.
+The filling law begins with an external comparison `u ≺ˡ v` and aims to place the ordinary ordered pair of their underlying sets in `codeOrder`. The proof first works with `limitEl u` and `limitEl v`, which are genuine elements of the model, and with their model-coded pair. A final equality relates that internal presentation to `pr (u .fst) (v .fst)`.
 <!--zh-->
-填充律从外部比较 `u ≺ˡ v` 出发，目标是证明二者底层集合的普通有序对属于 `codeOrder`。论证先使用真正位于模型中的 `limitEl u`、`limitEl v` 及其模型内编码对；最后再用一条等式把这一内部呈现与 `pr (fst u) (fst v)` 对齐。
+填充律从外部比较 `u ≺ˡ v` 出发，目标是证明二者底层集合的普通有序对属于 `codeOrder`。论证先使用真正位于模型中的 `limitEl u`、`limitEl v` 及其模型内编码对；最后再用一条等式把这一内部呈现与 `pr (u .fst) (v .fst)` 对齐。
 <!--ja-->
-書き込み則は外部の比較 `u ≺ˡ v` から始め、二つの台となる集合の通常の順序対が `codeOrder` に属することを目指す。まず、モデルの実際の要素である `limitEl u` と `limitEl v`、およびそれらのモデル内で符号化された対を用いる。最後に一つの等式で、この内部表現を `pr (fst u) (fst v)` に対応づける。
+書き込み則は外部の比較 `u ≺ˡ v` から始め、二つの台となる集合の通常の順序対が `codeOrder` に属することを目指す。まず、モデルの実際の要素である `limitEl u` と `limitEl v`、およびそれらのモデル内で符号化された対を用いる。最後に一つの等式で、この内部表現を `pr (u .fst) (v .fst)` に対応づける。
 <!--/-->
 
 ```agda
   codeOrder-fill : (u v : Limit) → u ≺ˡ v
-                 → ⟨ pr (fst u) (fst v) ∈ fst codeOrder ⟩
+                 → ⟨ pr (u .fst) (v .fst) ∈ codeOrder .fst ⟩
   codeOrder-fill u v h =
-    subst (λ t → ⟨ t ∈ fst codeOrder ⟩) qz
+    subst (λ t → ⟨ t ∈ codeOrder .fst ⟩) qz
       (subst ⟨_⟩ (sym (codeOrder-mem (prS (limitEl u) (limitEl v))))
 ```
 
@@ -2037,7 +2037,7 @@ The separation specification reduces the membership goal to two mathematical obl
         (inBound , cond-in (prS (limitEl u) (limitEl v))
                      (limitEl u) (limitEl v) (hpr , hord)))
     where
-    qz : fst (prS (limitEl u) (limitEl v)) ≡ pr (fst u) (fst v)
+    qz : (prS (limitEl u) (limitEl v)) .fst ≡ pr (u .fst) (v .fst)
     qz = prS-fst (limitEl u) (limitEl v)
 ```
 
@@ -2062,8 +2062,8 @@ The first separation obligation uses the defining property of `pairsBound`: it c
 <!--/-->
 
 ```agda
-    inBound : ⟨ fst (prS (limitEl u) (limitEl v)) ∈ fst (pairsBound .fst) ⟩
-    inBound = subst (λ t → ⟨ t ∈ fst (pairsBound .fst) ⟩) (sym qz)
+    inBound : ⟨ (prS (limitEl u) (limitEl v)) .fst ∈ (pairsBound .fst) .fst ⟩
+    inBound = subst (λ t → ⟨ t ∈ (pairsBound .fst) .fst ⟩) (sym qz)
       (pairsBound .snd u v)
 ```
 
@@ -2100,16 +2100,16 @@ The comparison conjunct is supplied by `LimitOrdAt-in` at the environment contai
 ```
 
 <!--en-->
-The reading law starts from membership of `pr (fst u) (fst v)` in `codeOrder`. Separation will yield a propositionally truncated pair of components satisfying the pairing and comparison conditions; reading those conditions gives only `∥ u ≺ˡ v ∥₁`. The final use of `strictLimit` is justified by the already proved strict well order `limitOrder`, whose trichotomy excludes equality and the reverse comparison.
+The reading law starts from membership of `pr (u .fst) (v .fst)` in `codeOrder`. Separation will yield a propositionally truncated pair of components satisfying the pairing and comparison conditions; reading those conditions gives only `∥ u ≺ˡ v ∥₁`. The final use of `strictLimit` is justified by the already proved strict well order `limitOrder`, whose trichotomy excludes equality and the reverse comparison.
 <!--zh-->
-读取律从 `pr (fst u) (fst v)` 属于 `codeOrder` 出发。分离条件会给出一对处于命题截断中的分量，并证明它们满足配对与比较条件；读取这些条件最初只能得到 `∥ u ≺ˡ v ∥₁`。最后由既已证明的严格良序 `limitOrder` 应用 `strictLimit`，利用三歧性排除相等与反向比较，才得到未截断的结论。
+读取律从 `pr (u .fst) (v .fst)` 属于 `codeOrder` 出发。分离条件会给出一对处于命题截断中的分量，并证明它们满足配对与比较条件；读取这些条件最初只能得到 `∥ u ≺ˡ v ∥₁`。最后由既已证明的严格良序 `limitOrder` 应用 `strictLimit`，利用三歧性排除相等与反向比较，才得到未截断的结论。
 <!--ja-->
-読み取り則は、`pr (fst u) (fst v)` が `codeOrder` に属することから始まる。分出条件からは、対と比較の条件を満たす二成分が命題的切り詰めの中で得られ、それらを読んでも最初は `∥ u ≺ˡ v ∥₁` だけが得られる。最後に、すでに証明された狭義整列順序 `limitOrder` の三分律で等しい場合と逆向きの比較を排除し、`strictLimit` によって切り詰められていない結論を得る。
+読み取り則は、`pr (u .fst) (v .fst)` が `codeOrder` に属することから始まる。分出条件からは、対と比較の条件を満たす二成分が命題的切り詰めの中で得られ、それらを読んでも最初は `∥ u ≺ˡ v ∥₁` だけが得られる。最後に、すでに証明された狭義整列順序 `limitOrder` の三分律で等しい場合と逆向きの比較を排除し、`strictLimit` によって切り詰められていない結論を得る。
 <!--/-->
 
 ```agda
   codeOrder-rep : (u v : Limit)
-                → ⟨ pr (fst u) (fst v) ∈ fst codeOrder ⟩ → u ≺ˡ v
+                → ⟨ pr (u .fst) (v .fst) ∈ codeOrder .fst ⟩ → u ≺ˡ v
   codeOrder-rep u v h = strictLimit u v
     (rec₁ squash₁ atC
       (cond-out (prS (limitEl u) (limitEl v))
@@ -2126,7 +2126,7 @@ As in the filling direction, the model-coded pair is identified with the externa
 ```agda
         (subst ⟨_⟩ (codeOrder-mem (prS (limitEl u) (limitEl v))) inSet .snd)))
     where
-    qz : fst (prS (limitEl u) (limitEl v)) ≡ pr (fst u) (fst v)
+    qz : (prS (limitEl u) (limitEl v)) .fst ≡ pr (u .fst) (v .fst)
     qz = prS-fst (limitEl u) (limitEl v)
        ∙ cong₂ pr (limitEl-fst u) (limitEl-fst v)
 ```
@@ -2140,8 +2140,8 @@ The given membership concerns the external pair, whereas the separating specific
 <!--/-->
 
 ```agda
-    inSet : ⟨ fst (prS (limitEl u) (limitEl v)) ∈ fst codeOrder ⟩
-    inSet = subst (λ t → ⟨ t ∈ fst codeOrder ⟩) (sym qz) h
+    inSet : ⟨ (prS (limitEl u) (limitEl v)) .fst ∈ codeOrder .fst ⟩
+    inSet = subst (λ t → ⟨ t ∈ codeOrder .fst ⟩) (sym qz) h
 ```
 
 <!--en-->
@@ -2161,27 +2161,27 @@ For particular witnesses `c` and `d`, the pairing atom first shows that they are
 ```
 
 <!--en-->
-Adequacy of the pairing atom turns its satisfaction into an equality between the candidate's underlying set and `pr (fst c) (fst d)`. The earlier alignment identifies that same candidate with `pr (fst u) (fst v)`. Composing the two equalities therefore equates the two ordered pairs and prepares the endpoint identities needed to read `LimitOrdAt`.
+Adequacy of the pairing atom turns its satisfaction into an equality between the candidate's underlying set and `pr (c .fst) (d .fst)`. The earlier alignment identifies that same candidate with `pr (u .fst) (v .fst)`. Composing the two equalities therefore equates the two ordered pairs and prepares the endpoint identities needed to read `LimitOrdAt`.
 <!--zh-->
-配对原子的充分性把其满足证据转成候选元素底层集合与 `pr (fst c) (fst d)` 之间的等式。先前的对齐又把同一个候选元素认作 `pr (fst u) (fst v)`。复合这两个等式便得到两个有序对相等，并为读取 `LimitOrdAt` 准备好所需的端点等式。
+配对原子的充分性把其满足证据转成候选元素底层集合与 `pr (c .fst) (d .fst)` 之间的等式。先前的对齐又把同一个候选元素认作 `pr (u .fst) (v .fst)`。复合这两个等式便得到两个有序对相等，并为读取 `LimitOrdAt` 准备好所需的端点等式。
 <!--ja-->
-対アトムの妥当性により、その充足は候補の台となる集合と `pr (fst c) (fst d)` の等式へ変わる。先の対応づけは、同じ候補を `pr (fst u) (fst v)` と同定している。二つの等式を合成すると二つの順序対が等しいことが得られ、`LimitOrdAt` を読むために必要な端点の等式を導ける。
+対アトムの妥当性により、その充足は候補の台となる集合と `pr (c .fst) (d .fst)` の等式へ変わる。先の対応づけは、同じ候補を `pr (u .fst) (v .fst)` と同定している。二つの等式を合成すると二つの順序対が等しいことが得られ、`LimitOrdAt` を読むために必要な端点の等式を導ける。
 <!--/-->
 
 ```agda
-      qcd : pr (fst u) (fst v) ≡ pr (fst c) (fst d)
+      qcd : pr (u .fst) (v .fst) ≡ pr (c .fst) (d .fst)
       qcd = sym qz
         ∙ subst ⟨_⟩ (prAtL-adequate (sh2 zero) (suc zero) zero
             (d ∷ c ∷ prS (limitEl u) (limitEl v) ∷ [])) hpr
-      split : (fst u ≡ fst c) × (fst v ≡ fst d)
+      split : (u .fst ≡ c .fst) × (v .fst ≡ d .fst)
 ```
 
 <!--en-->
-Injectivity of ordered-pair coding separates that pair equality into `fst u = fst c` and `fst v = fst d`. Both position and direction are preserved, so the left component cannot be exchanged with the right. Reversing these equalities gives exactly the alignment hypotheses expected by the reading theorem for `LimitOrdAt`.
+Injectivity of ordered-pair coding separates that pair equality into `u .fst = c .fst` and `v .fst = d .fst`. Both position and direction are preserved, so the left component cannot be exchanged with the right. Reversing these equalities gives exactly the alignment hypotheses expected by the reading theorem for `LimitOrdAt`.
 <!--zh-->
-有序对编码的单射性把配对等式拆成 `fst u = fst c` 与 `fst v = fst d`。两个分量的位置与方向都被保留，左端不会与右端交换。把这两条等式反向，正好得到 `LimitOrdAt` 读取定理所需的对齐假设。
+有序对编码的单射性把配对等式拆成 `u .fst = c .fst` 与 `v .fst = d .fst`。两个分量的位置与方向都被保留，左端不会与右端交换。把这两条等式反向，正好得到 `LimitOrdAt` 读取定理所需的对齐假设。
 <!--ja-->
-順序対符号化の単射性により、対の等式は `fst u = fst c` と `fst v = fst d` に分かれる。成分の位置と順番は保たれるため、左端と右端が入れ替わることはない。これらの等式を逆向きにすると、`LimitOrdAt` の読み取り定理が要求する対応の仮定になる。
+順序対符号化の単射性により、対の等式は `u .fst = c .fst` と `v .fst = d .fst` に分かれる。成分の位置と順番は保たれるため、左端と右端が入れ替わることはない。これらの等式を逆向きにすると、`LimitOrdAt` の読み取り定理が要求する対応の仮定になる。
 <!--/-->
 
 ```agda
@@ -2264,8 +2264,8 @@ separately represented parameter order.
 
 ```agda
     module AtParams (Ps : S)
-      (Prep : (a b : ⟪ A ⟫) → ⟨ pr (Ad.ix a) (Ad.ix b) ∈ fst Ps ⟩ → a ≺ₚ b)
-      (Pfill : (a b : ⟪ A ⟫) → a ≺ₚ b → ⟨ pr (Ad.ix a) (Ad.ix b) ∈ fst Ps ⟩)
+      (Prep : (a b : ⟪ A ⟫) → ⟨ pr (Ad.ix a) (Ad.ix b) ∈ Ps .fst ⟩ → a ≺ₚ b)
+      (Pfill : (a b : ⟪ A ⟫) → a ≺ₚ b → ⟨ pr (Ad.ix a) (Ad.ix b) ∈ Ps .fst ⟩)
       where
       open Ad.Keys codeOrder Ps codeOrder-rep codeOrder-fill Prep Pfill public
 ```
@@ -2318,13 +2318,13 @@ relation. Given the bounded two-way reading of `BeforeAt`{.Agda},
 `LimitOrdAt`{.Agda}, bounds all candidate ordered pairs, and separates the
 conditional relation set `codeOrder`{.Agda}. Its filling and reading laws give,
 for every `u,v : Limit`, both directions between `u ≺ˡ v` and membership of
-`pr (fst u) (fst v)`{.Agda} in that set; the reading direction uses
+`pr (u .fst) (v .fst)`{.Agda} in that set; the reading direction uses
 `strictLimit`{.Agda} and the existing strict well-order to recover a comparison
 from propositional truncation. `EarliestDisagreement` discharges the finite-stage
 hypotheses, but this chapter neither asserts an object-language well-ordering of
 `codeOrder`{.Agda} nor proves the Axiom of Choice.
 <!--zh-->
-`LevelAt`{.Agda} 认出给定极限层元素首次出现的有穷层所对应的数码，`PrecedesAt`{.Agda} 则相对于任意已经表示的基底关系，表示一次最先分歧比较。给定 `BeforeAt`{.Agda} 在规定边界内的双向读法后，`Described`{.Agda} 用 `LimitOrdAt`{.Agda} 组合异层比较与同层比较，为所有候选有序对取界，再由分离得到条件式关系集 `codeOrder`{.Agda}。对每个 `u,v : Limit`，填充律与读取律给出 `u ≺ˡ v` 和 `pr (fst u) (fst v)`{.Agda} 属于该集合之间的两个方向；读取方向使用 `strictLimit`{.Agda} 与既有严格良序，从命题截断恢复比较。`EarliestDisagreement` 兑现有穷层假设，但本章既不在对象语言中断言 `codeOrder`{.Agda} 是良序，也不证明选择公理。
+`LevelAt`{.Agda} 认出给定极限层元素首次出现的有穷层所对应的数码，`PrecedesAt`{.Agda} 则相对于任意已经表示的基底关系，表示一次最先分歧比较。给定 `BeforeAt`{.Agda} 在规定边界内的双向读法后，`Described`{.Agda} 用 `LimitOrdAt`{.Agda} 组合异层比较与同层比较，为所有候选有序对取界，再由分离得到条件式关系集 `codeOrder`{.Agda}。对每个 `u,v : Limit`，填充律与读取律给出 `u ≺ˡ v` 和 `pr (u .fst) (v .fst)`{.Agda} 属于该集合之间的两个方向；读取方向使用 `strictLimit`{.Agda} 与既有严格良序，从命题截断恢复比较。`EarliestDisagreement` 兑现有穷层假设，但本章既不在对象语言中断言 `codeOrder`{.Agda} 是良序，也不证明选择公理。
 <!--ja-->
-`LevelAt`{.Agda} は、与えられた極限段階の要素が最初に現れる有限段階を符号化する数項を同定し、`PrecedesAt`{.Agda} は、すでに表現された任意の基礎関係に相対して、最初の相違による一回の比較を表現する。所定の範囲における `BeforeAt`{.Agda} の双方向の読みが与えられると、`Described`{.Agda} は `LimitOrdAt`{.Agda} の中で異なる段階の比較と同じ段階の比較を組み合わせ、候補となるすべての順序対に上界を与え、分出によって条件つきの関係集合 `codeOrder`{.Agda} を得る。各 `u,v : Limit` に対し、書き込み則と読み取り則は、`u ≺ˡ v` と `pr (fst u) (fst v)`{.Agda} がその集合に属することの両方向を与える。読み取り方向では、`strictLimit`{.Agda} と既存の狭義整列順序を用いて、命題的切り詰めから比較を復元する。`EarliestDisagreement` が有限段階についての仮定を満たすが、この章は `codeOrder`{.Agda} が整列順序をなすことを対象言語で主張せず、選択公理も証明しない。
+`LevelAt`{.Agda} は、与えられた極限段階の要素が最初に現れる有限段階を符号化する数項を同定し、`PrecedesAt`{.Agda} は、すでに表現された任意の基礎関係に相対して、最初の相違による一回の比較を表現する。所定の範囲における `BeforeAt`{.Agda} の双方向の読みが与えられると、`Described`{.Agda} は `LimitOrdAt`{.Agda} の中で異なる段階の比較と同じ段階の比較を組み合わせ、候補となるすべての順序対に上界を与え、分出によって条件つきの関係集合 `codeOrder`{.Agda} を得る。各 `u,v : Limit` に対し、書き込み則と読み取り則は、`u ≺ˡ v` と `pr (u .fst) (v .fst)`{.Agda} がその集合に属することの両方向を与える。読み取り方向では、`strictLimit`{.Agda} と既存の狭義整列順序を用いて、命題的切り詰めから比較を復元する。`EarliestDisagreement` が有限段階についての仮定を満たすが、この章は `codeOrder`{.Agda} が整列順序をなすことを対象言語で主張せず、選択公理も証明しない。
 <!--/-->

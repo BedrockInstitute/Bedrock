@@ -257,9 +257,9 @@ For an ordinal stage index `c`, the witness predicate requires the four underlyi
 ```agda
 Witnesses : V ℓ → V ℓ → Type (ℓ-suc ℓ)
 Witnesses K c = (oc : IsOrd c)
-  → ⟨ fst (At.hier c oc) ∈ K ⟩
-  × ⟨ fst (At.codes c oc) ∈ K ⟩
-  × ⟨ fst (At.table c oc) ∈ K ⟩
+  → ⟨ (At.hier c oc) .fst ∈ K ⟩
+  × ⟨ (At.codes c oc) .fst ∈ K ⟩
+  × ⟨ (At.table c oc) .fst ∈ K ⟩
 ```
 
 <!--en-->
@@ -271,7 +271,7 @@ The fourth membership completes the witness predicate: the environment tower bel
 <!--/-->
 
 ```agda
-  × ⟨ fst (At.tower c oc) ∈ K ⟩
+  × ⟨ (At.tower c oc) .fst ∈ K ⟩
 ```
 
 <!--en-->
@@ -285,9 +285,9 @@ The witness predicate is a proposition. For each possible proof that `c` is an o
 ```agda
 isPropWitnesses : (K c : V ℓ) → isProp (Witnesses K c)
 isPropWitnesses K c = isPropΠ λ oc →
-  isProp× (snd (fst (At.hier c oc) ∈ K))
-    (isProp× (snd (fst (At.codes c oc) ∈ K))
-      (isProp× (snd (fst (At.table c oc) ∈ K)) (snd (fst (At.tower c oc) ∈ K))))
+  isProp× (((At.hier c oc) .fst ∈ K) .snd)
+    (isProp× (((At.codes c oc) .fst ∈ K) .snd)
+      (isProp× (((At.table c oc) .fst ∈ K) .snd) (((At.tower c oc) .fst ∈ K) .snd)))
 ```
 
 <!--en-->
@@ -408,17 +408,17 @@ module Bound1 (α : V ℓ) (oα : IsOrd α) where
 <div class="submodule-fold-content">
 
 <!--en-->
-Every packaged constructible set `s : CS.S` has a birth-stage index `stage (fst s) (snd s)`. The auxiliary expression records this operation in the context of a presented member of `α`; the resulting index depends on the witness set `s`, while the surrounding arguments keep track of the member for which that witness was built.
+Every packaged constructible set `s : CS.S` has a birth-stage index `stage (s .fst) (s .snd)`. The auxiliary expression records this operation in the context of a presented member of `α`; the resulting index depends on the witness set `s`, while the surrounding arguments keep track of the member for which that witness was built.
 <!--zh-->
-每个打包后的可构造集合 `s : CS.S` 都有诞生层索引 `stage (fst s) (snd s)`。这个辅助表达式在 `α` 的一个被呈现元素的语境中记录该运算；所得指标取决于见证集合 `s`，而外围参数则记录这个见证是为哪个元素构造的。
+每个打包后的可构造集合 `s : CS.S` 都有诞生层索引 `stage (s .fst) (s .snd)`。这个辅助表达式在 `α` 的一个被呈现元素的语境中记录该运算；所得指标取决于见证集合 `s`，而外围参数则记录这个见证是为哪个元素构造的。
 <!--ja-->
-まとめられた各構成可能集合 `s : CS.S` には、誕生段階の添字 `stage (fst s) (snd s)` がある。この補助式は、`α` の提示された一要素という文脈の中で、この操作を記録する。得られる添字は証人集合 `s` に依存し、周囲の引数は、その証人がどの要素について作られたかを記録する。
+まとめられた各構成可能集合 `s : CS.S` には、誕生段階の添字 `stage (s .fst) (s .snd)` がある。この補助式は、`α` の提示された一要素という文脈の中で、この操作を記録する。得られる添字は証人集合 `s` に依存し、周囲の引数は、その証人がどの要素について作られたかを記録する。
 <!--/-->
 
 ```agda
   private
     W : ⟪ α ⟫ → (c : V ℓ) → IsOrd c → CS.S → V ℓ
-    W m c oc s = stage (fst s) (snd s)
+    W m c oc s = stage (s .fst) (s .snd)
 ```
 
 <!--en-->
@@ -444,7 +444,7 @@ Applying `st` to each of the four witness constructions produces four ordinal-in
 
 ```agda
     st : (f : (c : V ℓ) (o : IsOrd c) → CS.S) → ⟪ α ⟫ → V ℓ
-    st f m = stage (fst (f (ι α m) (oc m))) (snd (f (ι α m) (oc m)))
+    st f m = stage ((f (ι α m) (oc m)) .fst) ((f (ι α m) (oc m)) .snd)
 ```
 
 <!--en-->
@@ -457,7 +457,7 @@ The birth-stage index `st f m` is an ordinal. This follows from the general theo
 
 ```agda
     st-ord : (f : (c : V ℓ) (o : IsOrd c) → CS.S) (m : ⟪ α ⟫) → IsOrd (st f m)
-    st-ord f m = stage-ord (fst (f (ι α m) (oc m))) (snd (f (ι α m) (oc m)))
+    st-ord f m = stage-ord ((f (ι α m) (oc m)) .fst) ((f (ι α m) (oc m)) .snd)
 ```
 
 <!--en-->
@@ -684,7 +684,7 @@ Fix one of the four witness constructions `f` and an index `m` presenting a memb
     land : (f : (c : V ℓ) (o : IsOrd c) → CS.S)
            (b : Σ[ σ ∶ V ℓ ] (IsOrd σ × ((m : ⟪ α ⟫) → ⟨ st f m ∈ σ ⟩)))
          → ⟨ b .fst ∈ β ⟩
-         → (m : ⟪ α ⟫) → ⟨ fst (f (ι α m) (oc m)) ∈ Lset β ⟩
+         → (m : ⟪ α ⟫) → ⟨ (f (ι α m) (oc m)) .fst ∈ Lset β ⟩
     land f b b∈ m =
 ```
 
@@ -699,7 +699,7 @@ The inner use of `Lset-mono` moves the witness from `Lset (st f m)` to `Lset (b.
 ```agda
       Lset-mono {α = β} {β = b .fst} b∈
         (Lset-mono {α = b .fst} {β = st f m} (b .snd .snd m)
-          (stage-mem (fst (f (ι α m) (oc m))) (snd (f (ι α m) (oc m)))))
+          (stage-mem ((f (ι α m) (oc m)) .fst) ((f (ι α m) (oc m)) .snd)))
 ```
 
 <!--en-->
@@ -713,9 +713,9 @@ For the member presented by `m`, the proof first lands the hierarchy table and t
 ```agda
     witAt : (m : ⟪ α ⟫) → Witnesses (Lset β) (ι α m)
     witAt m o =
-        subst (λ u → ⟨ fst (At.hier (ι α m) u) ∈ Lset β ⟩) (isPropIsOrd (ι α m) (oc m) o)
+        subst (λ u → ⟨ (At.hier (ι α m) u) .fst ∈ Lset β ⟩) (isPropIsOrd (ι α m) (oc m) o)
           (land At.hier b1 b1∈ m)
-      , ( subst (λ u → ⟨ fst (At.codes (ι α m) u) ∈ Lset β ⟩) (isPropIsOrd (ι α m) (oc m) o)
+      , ( subst (λ u → ⟨ (At.codes (ι α m) u) .fst ∈ Lset β ⟩) (isPropIsOrd (ι α m) (oc m) o)
 ```
 
 <!--en-->
@@ -728,9 +728,9 @@ The same argument completes the code-set membership and places the satisfaction 
 
 ```agda
             (land At.codes b2 b2∈ m)
-        , ( subst (λ u → ⟨ fst (At.table (ι α m) u) ∈ Lset β ⟩) (isPropIsOrd (ι α m) (oc m) o)
+        , ( subst (λ u → ⟨ (At.table (ι α m) u) .fst ∈ Lset β ⟩) (isPropIsOrd (ι α m) (oc m) o)
               (land At.table b3 b3∈ m)
-          , subst (λ u → ⟨ fst (At.tower (ι α m) u) ∈ Lset β ⟩) (isPropIsOrd (ι α m) (oc m) o)
+          , subst (λ u → ⟨ (At.tower (ι α m) u) .fst ∈ Lset β ⟩) (isPropIsOrd (ι α m) (oc m) o)
               (land At.tower b4 b4∈ m) ))
 ```
 
@@ -981,7 +981,7 @@ Given `x ∈ γ`, the outward map produces the propositionally truncated existen
 
 ```agda
   succ : (x : V ℓ) → ⟨ x ∈ γ ⟩ → ⟨ sucV x ∈ γ ⟩
-  succ x x∈ = rec₁ (snd (sucV x ∈ γ))
+  succ x x∈ = rec₁ ((sucV x ∈ γ) .snd)
     (λ { (n , x∈n) → C.into (suc n) (sucV x) (Bound1.suc∈β (ch n .fst) (ch n .snd) x x∈n) })
     (C.outof x x∈)
 ```
@@ -1200,7 +1200,7 @@ Given `x ∈ λ`, the outward map supplies only the propositionally truncated ex
 
 ```agda
   succ : (x : V ℓ) → ⟨ x ∈ lam ⟩ → ⟨ sucV x ∈ lam ⟩
-  succ x x∈ = rec₁ (snd (sucV x ∈ lam))
+  succ x x∈ = rec₁ ((sucV x ∈ lam) .snd)
     (λ { (n , x∈n) → U.into n (sucV x) (Adequate.succ (ch n .fst) (ch n .snd .snd) x x∈n) })
     (U.outof x x∈)
 ```

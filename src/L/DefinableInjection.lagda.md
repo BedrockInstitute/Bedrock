@@ -135,7 +135,7 @@ module InjCodeAt {n : ℕ} (f A B : Fin n) (γ : S ^ n) where
   read (sv , dm , ij , ran) =
       svAt-in zero (F ∷ D ∷ []) (λ x y y' p q → svAt-out f γ sv x y y' p q)
     , domAt-intro zero (suc zero) (F ∷ D ∷ []) (λ x →
-          (λ h → rec₁ (snd (fst x ∈ fst D))
+          (λ h → rec₁ ((x .fst ∈ D .fst) .snd)
                    (λ { (y , p) → domAt-out f A γ dm x y p }) h)
         , (λ hx → domAt-in f A γ dm x hx))
     , injAt-in zero (F ∷ D ∷ []) (λ y x x' p q → injAt-out f γ ij y x x' p q)
@@ -145,7 +145,7 @@ module InjCodeAt {n : ℕ} (f A B : Fin n) (γ : S ^ n) where
   fill (sv , dm , ij , ran) =
       svAt-in f γ (λ x y y' p q → svAt-out zero (F ∷ D ∷ []) sv x y y' p q)
     , domAt-intro f A γ (λ x →
-          (λ h → rec₁ (snd (fst x ∈ fst D))
+          (λ h → rec₁ ((x .fst ∈ D .fst) .snd)
                    (λ { (y , p) → domAt-out zero (suc zero) (F ∷ D ∷ []) dm x y p }) h)
         , (λ hx → domAt-in zero (suc zero) (F ∷ D ∷ []) dm x hx))
     , injAt-in f γ (λ y x x' p q → injAt-out zero (F ∷ D ∷ []) ij y x x' p q)
@@ -237,11 +237,11 @@ Two type-theoretic facts govern the proof. When the second component of a depend
 <!--/-->
 
 <!--en-->
-The carrier `S` comes from the structure on `L`: an element `x : S` consists of an ambient set `fst x` together with a propositional certificate that it is constructible. Membership notation is taken from the ambient hierarchy, so expressions in the record explicitly compare underlying sets, such as `fst x ∈ˢ fst dom`. The certificates remain available in the second components whenever a construction must return an element of `L`.
+The carrier `S` comes from the structure on `L`: an element `x : S` consists of an ambient set `x .fst` together with a propositional certificate that it is constructible. Membership notation is taken from the ambient hierarchy, so expressions in the record explicitly compare underlying sets, such as `x .fst ∈ˢ dom .fst`. The certificates remain available in the second components whenever a construction must return an element of `L`.
 <!--zh-->
-论域 `S` 来自 `L` 上的结构：元素 `x : S` 由外围集合 `fst x` 与它可构造的命题性证书组成。元素记号取自外围层级，所以记录中的表达式明确比较底层集合，例如 `fst x ∈ˢ fst dom`。当构造必须返回 `L` 的元素时，可构造性证书仍保留在第二分量中。
+论域 `S` 来自 `L` 上的结构：元素 `x : S` 由外围集合 `x .fst` 与它可构造的命题性证书组成。元素记号取自外围层级，所以记录中的表达式明确比较底层集合，例如 `x .fst ∈ˢ dom .fst`。当构造必须返回 `L` 的元素时，可构造性证书仍保留在第二分量中。
 <!--ja-->
-台 `S` は `L` 上の構造から来る。要素 `x : S` は、周囲の集合 `fst x` と、それが構成可能であることを示す命題値の証明からなる。所属の記法は周囲の階層から取るため、レコード内の式は `fst x ∈ˢ fst dom` のように基礎集合を明示的に比較する。構成が `L` の要素を返す必要があるときには、構成可能性の証明が第二成分として残っている。
+台 `S` は `L` 上の構造から来る。要素 `x : S` は、周囲の集合 `x .fst` と、それが構成可能であることを示す命題値の証明からなる。所属の記法は周囲の階層から取るため、レコード内の式は `x .fst ∈ˢ dom .fst` のように基礎集合を明示的に比較する。構成が `L` の要素を返す必要があるときには、構成可能性の証明が第二成分として残っている。
 <!--/-->
 
 <!--en-->
@@ -272,8 +272,8 @@ A `DefinableMap` first specifies two elements `dom` and `cod` of `L`, with no as
 record DefinableMap : Type (ℓ-suc (ℓ-suc ℓ)) where
   field
     dom cod : S
-    fn      : (x : S) → ⟨ fst x ∈ˢ fst dom ⟩ → S
-    into    : (x : S) (m : ⟨ fst x ∈ˢ fst dom ⟩) → ⟨ fst (fn x m) ∈ˢ fst cod ⟩
+    fn      : (x : S) → ⟨ x .fst ∈ˢ dom .fst ⟩ → S
+    into    : (x : S) (m : ⟨ x .fst ∈ˢ dom .fst ⟩) → ⟨ (fn x m) .fst ∈ˢ cod .fst ⟩
 ```
 
 <!--en-->
@@ -286,9 +286,9 @@ The remaining fields connect the host-level values to an object-language formula
 
 ```agda
     graph   : Formula S 2
-    defines : (x : S) (m : ⟨ fst x ∈ˢ fst dom ⟩)
+    defines : (x : S) (m : ⟨ x .fst ∈ˢ dom .fst ⟩)
             → ⟨ (fn x m ∷ x ∷ []) ⊨ graph ⟩
-    only    : (x : S) (m : ⟨ fst x ∈ˢ fst dom ⟩) (y : S)
+    only    : (x : S) (m : ⟨ x .fst ∈ˢ dom .fst ⟩) (y : S)
             → ⟨ (y ∷ x ∷ []) ⊨ graph ⟩ → y ≡ fn x m
 ```
 
@@ -361,7 +361,7 @@ It remains to contract every candidate `(y,h)` to that center. The field `only` 
 <!--/-->
 
 ```agda
-          , λ { (y , h) → Σ≡Prop (λ w → snd ((w ∷ x ∷ []) ⊨ graph)) (sym (only x m y h)) } }
+          , λ { (y , h) → Σ≡Prop (λ w → ((w ∷ x ∷ []) ⊨ graph) .snd) (sym (only x m y h)) } }
 ```
 
 <!--en-->
@@ -378,19 +378,19 @@ Replacement now collects the ordered-pair values into a constructible set `F`. T
 ```
 
 <!--en-->
-The fourth condition for the eventual code is containment in the codomain. Given an actual graph entry `pr(fst x,fst y) ∈ fst F`, `pair-out` yields `m : x ∈ dom` and `e : fst y ≡ fst(fn x m)`. The field `into x m` proves membership of `fst(fn x m)` in `fst cod`. Transport must therefore follow `sym e`, from the chosen value back to `y`, to conclude `y ∈ cod`. This proves only that the image is contained in the codomain, not that every codomain element occurs.
+The fourth condition for the eventual code is containment in the codomain. Given an actual graph entry `pr(x,fst .fst y) ∈ F .fst`, `pair-out` yields `m : x ∈ dom` and `e : y .fst ≡ (fn x m) .fst`. The field `into x m` proves membership of `(fn x m) .fst` in `cod .fst`. Transport must therefore follow `sym e`, from the chosen value back to `y`, to conclude `y ∈ cod`. This proves only that the image is contained in the codomain, not that every codomain element occurs.
 <!--zh-->
-最终编码的第四项条件是取值落入陪域。给定实际函数图条目 `pr(fst x,fst y) ∈ fst F`，`pair-out` 给出 `m : x ∈ dom` 与 `e : fst y ≡ fst(fn x m)`。字段 `into x m` 证明 `fst(fn x m)` 属于 `fst cod`。因此，成员关系必须沿 `sym e` 从所选值运输回 `y`，从而得到 `y ∈ cod`。这只证明像包含于陪域，并不证明陪域的每个元素都会出现。
+最终编码的第四项条件是取值落入陪域。给定实际函数图条目 `pr(x,fst .fst y) ∈ F .fst`，`pair-out` 给出 `m : x ∈ dom` 与 `e : y .fst ≡ (fn x m) .fst`。字段 `into x m` 证明 `(fn x m) .fst` 属于 `cod .fst`。因此，成员关系必须沿 `sym e` 从所选值运输回 `y`，从而得到 `y ∈ cod`。这只证明像包含于陪域，并不证明陪域的每个元素都会出现。
 <!--ja-->
-最終的な符号の第四条件は、値が終域に入ることである。実際のグラフ項目 `pr(fst x,fst y) ∈ fst F` が与えられると、`pair-out` は `m : x ∈ dom` と `e : fst y ≡ fst(fn x m)` を返す。フィールド `into x m` は `fst(fn x m)` が `fst cod` に属することを証明する。したがって所属は `sym e` に沿って、選ばれた値から `y` へ輸送し、`y ∈ cod` を得る。これは像が終域に含まれることだけを示し、終域の各要素が現れるとは主張しない。
+最終的な符号の第四条件は、値が終域に入ることである。実際のグラフ項目 `pr(x,fst .fst y) ∈ F .fst` が与えられると、`pair-out` は `m : x ∈ dom` と `e : y .fst ≡ (fn x m) .fst` を返す。フィールド `into x m` は `(fn x m) .fst` が `cod .fst` に属することを証明する。したがって所属は `sym e` に沿って、選ばれた値から `y` へ輸送し、`y ∈ cod` を得る。これは像が終域に含まれることだけを示し、終域の各要素が現れるとは主張しない。
 <!--/-->
 
 ```agda
-  ran : (x y : S) → ⟨ pr (fst x) (fst y) ∈ fst F ⟩ → ⟨ fst y ∈ fst cod ⟩
-  ran x y h = subst (λ w → ⟨ w ∈ fst cod ⟩) (sym e) (into x m)
+  ran : (x y : S) → ⟨ pr (x .fst) (y .fst) ∈ F .fst ⟩ → ⟨ y .fst ∈ cod .fst ⟩
+  ran x y h = subst (λ w → ⟨ w ∈ cod .fst ⟩) (sym e) (into x m)
     where
-    m = fst (pair-out x y h)
-    e = snd (pair-out x y h)
+    m = (pair-out x y h) .fst
+    e = (pair-out x y h) .snd
 ```
 </div>
 </details>
@@ -415,10 +415,10 @@ To turn this graph into an injection code, add the genuinely new hypothesis of i
 <summary class="submodule-fold-heading">
 ```agda
 module Inj (M : DefinableMap)
-           (inj : (x : S) (m : ⟨ fst x ∈ˢ fst (DefinableMap.dom M) ⟩)
-                  (x' : S) (m' : ⟨ fst x' ∈ˢ fst (DefinableMap.dom M) ⟩)
-                → fst (DefinableMap.fn M x m) ≡ fst (DefinableMap.fn M x' m')
-                → fst x ≡ fst x') where
+           (inj : (x : S) (m : ⟨ x .fst ∈ˢ (DefinableMap.dom M) .fst ⟩)
+                  (x' : S) (m' : ⟨ x' .fst ∈ˢ (DefinableMap.dom M) .fst ⟩)
+                → (DefinableMap.fn M x m) .fst ≡ (DefinableMap.fn M x' m') .fst
+                → x .fst ≡ x' .fst) where
 ```
 </summary>
 <div class="submodule-fold-content">

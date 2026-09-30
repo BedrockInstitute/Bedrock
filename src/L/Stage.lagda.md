@@ -76,11 +76,11 @@ The assertion that a smaller witness exists is represented by a propositionally 
 <!--/-->
 
 <!--en-->
-A property P is a map into Ω, the type of hProps. Hence `⟨ P α ⟩` is its underlying proposition at α, and `snd (P α)` proves that any two of its witnesses agree. This propositionhood is needed when equality of ordinal indices is lifted to equality of complete least-witness packages.
+A property `P`{.Agda} is a map into Ω, the type of hProps. Hence `⟨ P α ⟩` is its underlying proposition at α, and `(P α) .snd` proves that any two of its witnesses agree. This propositionhood is needed when equality of ordinal indices is lifted to equality of complete least-witness packages.
 <!--zh-->
-性质 P 是到 Ω，即 hProp 类型的映射。因此，`⟨ P α ⟩` 是 P 在 α 处的底层命题，而 `snd (P α)` 证明其任意两个见证相等。当序数索引的相等被提升为完整最小见证包的相等时，正需要这一命题性。
+性质 `P`{.Agda} 是到 Ω，即 hProp 类型的映射。因此，`⟨ P α ⟩` 是 `P`{.Agda} 在 α 处的底层命题，而 `(P α) .snd` 证明其任意两个见证相等。当序数索引的相等被提升为完整最小见证包的相等时，正需要这一命题性。
 <!--ja-->
-性質 P は Ω、すなわち hProp の型への写像である。したがって `⟨ P α ⟩` は α における基礎の命題であり、`snd (P α)` はその任意の二つの証人が一致することを示す。順序数添字の等号を最小証人のパッケージ全体の等号へ持ち上げるとき、この命題性を使う。
+性質 `P`{.Agda} は Ω、すなわち hProp の型への写像である。したがって `⟨ P α ⟩` は α における基礎の命題であり、`(P α) .snd` はその任意の二つの証人が一致することを示す。順序数添字の等号を最小証人のパッケージ全体の等号へ持ち上げるとき、この命題性を使う。
 <!--/-->
 
 ```agda
@@ -174,7 +174,7 @@ It remains to lift the path of indices to a path of packages, and this uses prop
 ```agda
     propRest : (β : S) → isProp (IsOrd β × ⟨ P β ⟩ × isLeastOrd β)
     propRest β = isProp× (isPropIsOrd β)
-      (isProp× (snd (P β))
+      (isProp× ((P β) .snd)
         (isPropΠ λ _ → isPropΠ λ _ → isPropΠ λ _ → isPropΠ λ _ → isProp⊥))
 ```
 

@@ -144,13 +144,13 @@ module _ (A : S) where
 
 ```agda
   opaque
-    keyIn : ∀ {n} → Formula ⟪ fst A ⟫ n → S
+    keyIn : ∀ {n} → Formula ⟪ A .fst ⟫ n → S
     keyIn ψ = keyS A ψ
 
-    keyIn≡ : ∀ {n} (ψ : Formula ⟪ fst A ⟫ n) → fst (keyIn ψ) ≡ fst (keyS A ψ)
+    keyIn≡ : ∀ {n} (ψ : Formula ⟪ A .fst ⟫ n) → (keyIn ψ) .fst ≡ (keyS A ψ) .fst
     keyIn≡ ψ = refl
 
-    keyIn∈ : ∀ {n} (ψ : Formula ⟪ fst A ⟫ n) → ⟨ keyIn ψ ∈ˢ AllCodes A ⟩
+    keyIn∈ : ∀ {n} (ψ : Formula ⟪ A .fst ⟫ n) → ⟨ keyIn ψ ∈ˢ AllCodes A ⟩
     keyIn∈ ψ = key∈AllCodes A ψ
 ```
 </div>
@@ -213,8 +213,8 @@ module _ (A : S) where
 <div class="submodule-fold-content">
 
 ```agda
-  keyBridge : ∀ {n} (ψ : Formula ⟪ fst A ⟫ n)
-            → fst (keyS A ψ) ≡ fst (keyʟ (mapFo (asConst A) ψ))
+  keyBridge : ∀ {n} (ψ : Formula ⟪ A .fst ⟫ n)
+            → (keyS A ψ) .fst ≡ (keyʟ (mapFo (asConst A) ψ)) .fst
   keyBridge = keyBridge' A
 ```
 </div>
@@ -240,9 +240,9 @@ module _ (B : S) where
 
   frDom : ∀ {m n} (φ : Formula S m) (γ : S ^ n) → ⟨ fr φ γ ⊨ domAt Ti Ci ⟩
   frDom φ γ = domAt-intro Ti Ci (fr φ γ)
-    (λ z → (λ h → rec₁ (snd (fst z ∈ fst (slot B φ)))
-              (λ { (w , hw) → inSlot B φ (fst z) (fst w) hw }) h)
-         , (λ h → total B φ (fst z) h))
+    (λ z → (λ h → rec₁ ((z .fst ∈ (slot B φ) .fst) .snd)
+              (λ { (w , hw) → inSlot B φ (z .fst) (w .fst) hw }) h)
+         , (λ h → total B φ (z .fst) h))
 ```
 </div>
 </details>
@@ -302,10 +302,10 @@ line and is the difference between elaborating and not.
 <!--/-->
 
 ```agda
-    toB : ∀ {n} → Formula ⟪ fst B ⟫ n → Formula S n
+    toB : ∀ {n} → Formula ⟪ B .fst ⟫ n → Formula S n
     toB = mapFo (asConst B)
 
-    exists : ∀ {n} (ψ : Formula ⟪ fst B ⟫ n) (x : S) → fst x ≡ fst (keyʟ (toB ψ))
+    exists : ∀ {n} (ψ : Formula ⟪ B .fst ⟫ n) (x : S) → x .fst ≡ (keyʟ (toB ψ)) .fst
            → ⟨ (Sat B (toB ψ) ∷ x ∷ []) ⊨ satGraph B ⟩
     exists {n} ψ x k = graph-in B x (Sat B (toB ψ))
       ∣ numν
@@ -319,21 +319,21 @@ line and is the difference between elaborating and not.
       , (slotClosed B (toB ψ) (Tower.tower B ∷ numν f0 ∷ numν f1 ∷ numν f2 ∷ numν f3
             ∷ numν f4 ∷ numν f5 ∷ numν f6 ∷ numν f7 ∷ numν f8 ∷ numν f9 ∷ Sat B (toB ψ) ∷ x ∷ [])
       , (frDom B (toB ψ) δ2
-      , (subst (λ w → ⟨ pr w (fst (Sat B (toB ψ))) ∈ fst (satTable B (toB ψ)) ⟩) (sym k)
+      , (subst (λ w → ⟨ pr w ((Sat B (toB ψ)) .fst) ∈ (satTable B (toB ψ)) .fst ⟩) (sym k)
             (entry-in B (toB ψ))
       , SlotHolds.holds B Ti Bi Ci Ei NN (fr B (toB ψ) δ2) refl
           (frTags B (toB ψ) δ2) (frTow B (toB ψ) δ2) ψ refl refl)))))))))) ∣₁
       where δ2 = Sat B (toB ψ) ∷ x ∷ []
 
-    unique : ∀ {n} (ψ : Formula ⟪ fst B ⟫ n) (x : S) → fst x ≡ fst (keyʟ (toB ψ))
+    unique : ∀ {n} (ψ : Formula ⟪ B .fst ⟫ n) (x : S) → x .fst ≡ (keyʟ (toB ψ)) .fst
            → (y : S) → ⟨ (y ∷ x ∷ []) ⊨ satGraph B ⟩ → y ≡ Sat B (toB ψ)
-    unique {n} ψ x k y hy = Σ≡Prop (λ v → snd (isL v))
-      (rec₁ (setIsSet (fst y) (fst (Sat B (toB ψ))))
+    unique {n} ψ x k y hy = Σ≡Prop (λ v → (isL v) .snd)
+      (rec₁ (setIsSet (y .fst) ((Sat B (toB ψ)) .fst))
         (λ { (ν , (E , (C , (T , (b , (eb , (tg , (hE , (hc , (hd , (ha , h12))))))))))) →
           SatSoundC.pinned Ti Bi Ci Ei NN (ev ν E C T b (y ∷ x ∷ [])) B eb tg hE hc h12
-            ψ (subst (λ u → ⟨ u ∈ fst C ⟩) (k ∙ sym (keyBridge' B ψ))
+            ψ (subst (λ u → ⟨ u ∈ C .fst ⟩) (k ∙ sym (keyBridge' B ψ))
                  (domAt-out Ti Ci (ev ν E C T b (y ∷ x ∷ [])) hd x y ha)) y
-            (subst (λ u → ⟨ pr u (fst y) ∈ fst T ⟩) (k ∙ sym (keyBridge' B ψ)) ha) })
+            (subst (λ u → ⟨ pr u (y .fst) ∈ T .fst ⟩) (k ∙ sym (keyBridge' B ψ)) ha) })
         (graph-out B x y hy))
 ```
 
@@ -437,8 +437,8 @@ what the type mentions there does not unfold.
 <!--/-->
 
 ```agda
-  val-at : ∀ {n} (ψ : Formula ⟪ fst B ⟫ n) (x : S) (x∈ : ⟨ x ∈ˢ AllCodes B ⟩)
-         → fst x ≡ fst (keyS B ψ)
+  val-at : ∀ {n} (ψ : Formula ⟪ B .fst ⟫ n) (x : S) (x∈ : ⟨ x ∈ˢ AllCodes B ⟩)
+         → x .fst ≡ (keyS B ψ) .fst
          → Table.val x x∈ ≡ Sat B (toB ψ)
   val-at ψ x x∈ q =
     Table.val-uniq x x∈ (Sat B (toB ψ)) (exists ψ x (q ∙ keyBridge' B ψ))
@@ -476,12 +476,12 @@ module _ (A : S) where
 <div class="submodule-fold-content">
 
 ```agda
-  module DA = DefOf (fst A)
+  module DA = DefOf (A .fst)
   open DA using ( _⊨ᵐ_ )
 
-  val-sat : ∀ {n} (ψ : Formula ⟪ fst A ⟫ n)
-            (x : S) (x∈ : ⟨ x ∈ˢ AllCodes A ⟩) → fst x ≡ fst (keyS A ψ)
-          → (δ : DA.SM ^ n) (z : S) → fst z ≡ envGraph A δ
+  val-sat : ∀ {n} (ψ : Formula ⟪ A .fst ⟫ n)
+            (x : S) (x∈ : ⟨ x ∈ˢ AllCodes A ⟩) → x .fst ≡ (keyS A ψ) .fst
+          → (δ : DA.SM ^ n) (z : S) → z .fst ≡ envGraph A δ
           → (z ∈ˢ Table.val A A x x∈) ≡ (δ ⊨ᵐ ψ)
   val-sat ψ x x∈ q δ z qz =
       cong (z ∈ˢ_)

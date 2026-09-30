@@ -176,16 +176,16 @@ module _ (B : S) where
 ```
 
 <!--en-->
-The key computation, stated for a formula `χ` of arity `j`: any pair whose first component is the arity numeral `# j` and whose second component is the code component of `⌜ χ ⌝`{.Agda} equals the key `fst (keyʟ χ)`. Note the three quantities are distinct: `⌜ χ ⌝`{.Agda} is the code of the formula, its first component is what enters the key, and the key is the ordered pair with the numeral in front.
+The key computation, stated for a formula `χ` of arity `j`: any pair whose first component is the arity numeral `# j` and whose second component is the code component of `⌜ χ ⌝`{.Agda} equals the key `(keyʟ χ) .fst`. Note the three quantities are distinct: `⌜ χ ⌝`{.Agda} is the code of the formula, its first component is what enters the key, and the key is the ordered pair with the numeral in front.
 <!--zh-->
-键的计算，就元数为 `j` 的公式 `χ` 陈述：凡第一分量为元数数码 `# j`、第二分量为 `⌜ χ ⌝`{.Agda} 的编码分量的对，都等于键 `fst (keyʟ χ)`。注意三个量互不相同：`⌜ χ ⌝`{.Agda} 是公式的编码，其第一分量才是进入键的那个量，而键是数码居前的有序对。
+键的计算，就元数为 `j` 的公式 `χ` 陈述：凡第一分量为元数数码 `# j`、第二分量为 `⌜ χ ⌝`{.Agda} 的编码分量的对，都等于键 `(keyʟ χ) .fst`。注意三个量互不相同：`⌜ χ ⌝`{.Agda} 是公式的编码，其第一分量才是进入键的那个量，而键是数码居前的有序对。
 <!--ja-->
-鍵の計算は、アリティ `j` の論理式 `χ` について次のように述べる。第一成分がアリティの数項 `# j`、第二成分が `⌜ χ ⌝`{.Agda} のコードの成分であるような対は、すべて鍵 `fst (keyʟ χ)` と等しくなる。三つの量は互いに別物である。`⌜ χ ⌝`{.Agda} は論理式のコードであり、その第一成分が鍵に入る量であり、鍵は数項を先頭に置く順序対である。
+鍵の計算は、アリティ `j` の論理式 `χ` について次のように述べる。第一成分がアリティの数項 `# j`、第二成分が `⌜ χ ⌝`{.Agda} のコードの成分であるような対は、すべて鍵 `(keyʟ χ) .fst` と等しくなる。三つの量は互いに別物である。`⌜ χ ⌝`{.Agda} は論理式のコードであり、その第一成分が鍵に入る量であり、鍵は数項を先頭に置く順序対である。
 <!--/-->
 
 ```agda
   key≡ : ∀ {j} (χ : Formula S j) (ar p : V ℓ) → # j ≡ ar
-       → p ≡ fst LCode.⌜ χ ⌝ → pr ar p ≡ fst (keyʟ χ)
+       → p ≡ (LCode.⌜ χ ⌝) .fst → pr ar p ≡ (keyʟ χ) .fst
 ```
 
 <!--en-->
@@ -199,7 +199,7 @@ Both hypotheses are needed, the arity equation and the code-component equation, 
 ```agda
   key≡ {j} χ ar p qa qp =
       cong₂ pr (sym qa) qp
-    ∙ cong (λ w → pr w (fst LCode.⌜ χ ⌝)) (sym (numeralL-fst j))
+    ∙ cong (λ w → pr w ((LCode.⌜ χ ⌝) .fst)) (sym (numeralL-fst j))
     ∙ sym (prʟ-fst (numeralL j) LCode.⌜ χ ⌝)
 ```
 
@@ -213,7 +213,7 @@ The raised form states the same for a formula `χ` of arity `suc j`: the key's f
 
 ```agda
   keyS≡ : ∀ {j} (χ : Formula S (suc j)) (ar p : V ℓ) → # j ≡ ar
-        → p ≡ fst LCode.⌜ χ ⌝ → pr (sucV ar) p ≡ fst (keyʟ χ)
+        → p ≡ (LCode.⌜ χ ⌝) .fst → pr (sucV ar) p ≡ (keyʟ χ) .fst
 ```
 
 <!--en-->
@@ -227,7 +227,7 @@ The chain is the same, with the successor pushed through the arity equation: the
 ```agda
   keyS≡ {j} χ ar p qa qp =
       cong₂ pr (cong sucV (sym qa)) qp
-    ∙ cong (λ w → pr w (fst LCode.⌜ χ ⌝)) (sym (numeralL-fst (suc j)))
+    ∙ cong (λ w → pr w ((LCode.⌜ χ ⌝) .fst)) (sym (numeralL-fst (suc j)))
     ∙ sym (prʟ-fst (numeralL (suc j)) LCode.⌜ χ ⌝)
 ```
 
@@ -298,9 +298,9 @@ The first body covers a binary constructor that keeps the arity, the shape of co
 
 ```agda
             → (∀ {m} (a' b' : Formula S m) (z : V ℓ)
-               → ⟨ z ∈ fst (Sl a') ⟩ → ⟨ z ∈ fst (Sl (op a' b')) ⟩)
+               → ⟨ z ∈ (Sl a') .fst ⟩ → ⟨ z ∈ (Sl (op a' b')) .fst ⟩)
             → (∀ {m} (a' b' : Formula S m) (z : V ℓ)
-               → ⟨ z ∈ fst (Sl b') ⟩ → ⟨ z ∈ fst (Sl (op a' b')) ⟩)
+               → ⟨ z ∈ (Sl b') .fst ⟩ → ⟨ z ∈ (Sl (op a' b')) .fst ⟩)
             → ⟨ δ ⊨ binShapeAt Ci k' (bothSameAt Ci) ⟩
 ```
 
@@ -315,8 +315,8 @@ The two closure directions are the subtree inclusions from the parts lemmas, for
 ```agda
     binSame k' op get payOp inL inR = binSameClosed-in Ci k' δ
       (λ c ar a b c∈ sh → rec₁
-        (isProp× (snd (pr (fst ar) (fst a) ∈ fst (Sl φ)))
-                 (snd (pr (fst ar) (fst b) ∈ fst (Sl φ))))
+        (isProp× ((pr (ar .fst) (a .fst) ∈ (Sl φ) .fst) .snd)
+                 ((pr (ar .fst) (b .fst) ∈ (Sl φ) .fst) .snd))
         (λ { (m , ψ , (q , incl)) →
 ```
 
@@ -329,7 +329,7 @@ The first move inverts a member `c` of the slot. It is, merely, the key of some 
 <!--/-->
 
 ```agda
-          let r  = keyʟ-shape ψ k' (fst ar) (pr (fst a) (fst b)) (sym q ∙ sh)
+          let r  = keyʟ-shape ψ k' (ar .fst) (pr (a .fst) (b .fst)) (sym q ∙ sh)
               g  = get ψ (r .fst)
               a' = g .fst
               b' = g .snd .fst
@@ -346,8 +346,8 @@ The second move computes the constructor. The shape lemma matches `ψ` against t
 
 ```agda
               pay = sym (prʟ-fst LCode.⌜ a' ⌝ LCode.⌜ b' ⌝)
-                  ∙ cong fst (sym (payOp a' b'))
-                  ∙ cong (λ w → fst (LCode.payOf w)) (sym eψ) ∙ r .snd .snd
+                  ∙ cong (λ p → p .fst) (sym (payOp a' b'))
+                  ∙ cong (λ w → (LCode.payOf w) .fst) (sym eψ) ∙ r .snd .snd
 ```
 
 <!--en-->
@@ -359,11 +359,11 @@ The third move is the shared computation on the payload. The member `c` is a key
 <!--/-->
 
 ```agda
-              inψ : (χ : Formula S m) → ⟨ fst (keyʟ χ) ∈ fst (Sl ψ) ⟩
-                  → ⟨ fst (keyʟ χ) ∈ fst (Sl φ) ⟩
-              inψ χ h = incl (fst (keyʟ χ)) h
-          in subst (λ w → ⟨ w ∈ fst (Sl φ) ⟩)
-               (sym (key≡ a' (fst ar) (fst a) (r .snd .fst) (sym (pr-inj pay .fst))))
+              inψ : (χ : Formula S m) → ⟨ (keyʟ χ) .fst ∈ (Sl ψ) .fst ⟩
+                  → ⟨ (keyʟ χ) .fst ∈ (Sl φ) .fst ⟩
+              inψ χ h = incl ((keyʟ χ) .fst) h
+          in subst (λ w → ⟨ w ∈ (Sl φ) .fst ⟩)
+               (sym (key≡ a' (ar .fst) (a .fst) (r .snd .fst) (sym (pr-inj pay .fst))))
 ```
 
 <!--en-->
@@ -375,10 +375,10 @@ The fourth move carries keys back. A helper first lifts a key from the slot of a
 <!--/-->
 
 ```agda
-               (inψ a' (subst (λ w → ⟨ fst (keyʟ a') ∈ fst (Sl w) ⟩) (sym eψ)
+               (inψ a' (subst (λ w → ⟨ (keyʟ a') .fst ∈ (Sl w) .fst ⟩) (sym eψ)
                  (inL a' b' _ (Parts.self B keyʟ a'))))
-           , subst (λ w → ⟨ w ∈ fst (Sl φ) ⟩)
-               (sym (key≡ b' (fst ar) (fst b) (r .snd .fst) (sym (pr-inj pay .snd))))
+           , subst (λ w → ⟨ w ∈ (Sl φ) .fst ⟩)
+               (sym (key≡ b' (ar .fst) (b .fst) (r .snd .fst) (sym (pr-inj pay .snd))))
 ```
 
 <!--en-->
@@ -390,9 +390,9 @@ The right component repeats the assembly with the right closure direction and th
 <!--/-->
 
 ```agda
-               (inψ b' (subst (λ w → ⟨ fst (keyʟ b') ∈ fst (Sl w) ⟩) (sym eψ)
+               (inψ b' (subst (λ w → ⟨ (keyʟ b') .fst ∈ (Sl w) .fst ⟩) (sym eψ)
                  (inR a' b' _ (Parts.self B keyʟ b')))) })
-        (slot-inv B φ (fst c) c∈))
+        (slot-inv B φ (c .fst) c∈))
 ```
 
 <!--en-->
@@ -465,7 +465,7 @@ The helper `unSame`{.Agda} proves the analogous closure principle for a hypothet
 
 ```agda
            → (∀ {m} (a' : Formula S m) (z : V ℓ)
-              → ⟨ z ∈ fst (Sl a') ⟩ → ⟨ z ∈ fst (Sl (op a')) ⟩)
+              → ⟨ z ∈ (Sl a') .fst ⟩ → ⟨ z ∈ (Sl (op a')) .fst ⟩)
            → ⟨ δ ⊨ unShapeAt Ci k' (oneSameAt Ci) ⟩
 ```
 
@@ -479,9 +479,9 @@ The closure direction and the conclusion are the one-component shape: only the s
 
 ```agda
     unSame k' op get payOp inA = unSameClosed-in Ci k' δ
-      (λ c ar a c∈ sh → rec₁ (snd (pr (fst ar) (fst a) ∈ fst (Sl φ)))
+      (λ c ar a c∈ sh → rec₁ ((pr (ar .fst) (a .fst) ∈ (Sl φ) .fst) .snd)
         (λ { (m , ψ , (q , incl)) →
-          let r  = keyʟ-shape ψ k' (fst ar) (fst a) (sym q ∙ sh)
+          let r  = keyʟ-shape ψ k' (ar .fst) (a .fst) (sym q ∙ sh)
               g  = get ψ (r .fst)
 ```
 
@@ -496,9 +496,9 @@ The proof runs the same four moves with one component. The inversion produces `�
 ```agda
               a' = g .fst
               eψ = g .snd
-              pay = cong fst (sym (payOp a'))
-                  ∙ cong (λ w → fst (LCode.payOf w)) (sym eψ) ∙ r .snd .snd
-          in subst (λ w → ⟨ w ∈ fst (Sl φ) ⟩)
+              pay = cong (λ p → p .fst) (sym (payOp a'))
+                  ∙ cong (λ w → (LCode.payOf w) .fst) (sym eψ) ∙ r .snd .snd
+          in subst (λ w → ⟨ w ∈ (Sl φ) .fst ⟩)
 ```
 
 <!--en-->
@@ -510,11 +510,11 @@ The shared computation is shorter here: the payload of `op a'` is the code of `a
 <!--/-->
 
 ```agda
-               (sym (key≡ a' (fst ar) (fst a) (r .snd .fst) (sym pay)))
-               (incl (fst (keyʟ a'))
-                 (subst (λ w → ⟨ fst (keyʟ a') ∈ fst (Sl w) ⟩) (sym eψ)
+               (sym (key≡ a' (ar .fst) (a .fst) (r .snd .fst) (sym pay)))
+               (incl ((keyʟ a') .fst)
+                 (subst (λ w → ⟨ (keyʟ a') .fst ∈ (Sl w) .fst ⟩) (sym eψ)
                    (inA a' _ (Parts.self B keyʟ a')))) })
-        (slot-inv B φ (fst c) c∈))
+        (slot-inv B φ (c .fst) c∈))
 ```
 
 <!--en-->
@@ -542,7 +542,7 @@ The third body covers a unary constructor that raises the arity, the shape of th
 <!--/-->
 
 ```agda
-              → ⟨ z ∈ fst (Sl a') ⟩ → ⟨ z ∈ fst (Sl (op a')) ⟩)
+              → ⟨ z ∈ (Sl a') .fst ⟩ → ⟨ z ∈ (Sl (op a')) .fst ⟩)
            → ⟨ δ ⊨ unShapeAt Ci k' (oneSuccAt Ci) ⟩
 ```
 
@@ -556,9 +556,9 @@ The reading and the conclusion use the raised form: the clause reads the pair wh
 
 ```agda
     unSucc k' op get payOp inA = unSuccClosed-in Ci k' δ
-      (λ c ar a c∈ sh → rec₁ (snd (pr (sucV (fst ar)) (fst a) ∈ fst (Sl φ)))
+      (λ c ar a c∈ sh → rec₁ ((pr (sucV (ar .fst)) (a .fst) ∈ (Sl φ) .fst) .snd)
         (λ { (m , ψ , (q , incl)) →
-          let r  = keyʟ-shape ψ k' (fst ar) (fst a) (sym q ∙ sh)
+          let r  = keyʟ-shape ψ k' (ar .fst) (a .fst) (sym q ∙ sh)
               g  = get ψ (r .fst)
 ```
 
@@ -573,33 +573,33 @@ The first two moves are as before: invert the member into a formula, and decompo
 ```agda
               a' = g .fst
               eψ = g .snd
-              pay = cong fst (sym (payOp a'))
-                  ∙ cong (λ w → fst (LCode.payOf w)) (sym eψ) ∙ r .snd .snd
-          in subst (λ w → ⟨ w ∈ fst (Sl φ) ⟩)
+              pay = cong (λ p → p .fst) (sym (payOp a'))
+                  ∙ cong (λ w → (LCode.payOf w) .fst) (sym eψ) ∙ r .snd .snd
+          in subst (λ w → ⟨ w ∈ (Sl φ) .fst ⟩)
 ```
 
 <!--en-->
-The payload computation identifies the recorded code component with the subformula's code. Separately, the shape equation gives `# m ≡ fst ar`; the successor is introduced only when `keyS≡`{.Agda} applies `sucV` to that equality.
+The payload computation identifies the recorded code component with the subformula's code. Separately, the shape equation gives `# m ≡ ar .fst`; the successor is introduced only when `keyS≡`{.Agda} applies `sucV` to that equality.
 <!--zh-->
-载荷计算把被记录的编码分量认同为子公式的编码。另一方面，形状等式给出 `# m ≡ fst ar`；只有 `keyS≡`{.Agda} 对该等式施加 `sucV` 时，后继才被引入。
+载荷计算把被记录的编码分量认同为子公式的编码。另一方面，形状等式给出 `# m ≡ ar .fst`；只有 `keyS≡`{.Agda} 对该等式施加 `sucV` 时，后继才被引入。
 <!--ja-->
-ペイロードの計算は、記録されたコード成分を部分論理式のコードと同一視する。一方、形の等式が与えるのは `# m ≡ fst ar` である。後者が現れるのは、`keyS≡`{.Agda} がこの等式に `sucV` を作用させるときだけである。
+ペイロードの計算は、記録されたコード成分を部分論理式のコードと同一視する。一方、形の等式が与えるのは `# m ≡ ar .fst` である。後者が現れるのは、`keyS≡`{.Agda} がこの等式に `sucV` を作用させるときだけである。
 <!--/-->
 
 ```agda
-               (sym (keyS≡ a' (fst ar) (fst a) (r .snd .fst) (sym pay)))
-               (incl (fst (keyʟ a'))
-                 (subst (λ w → ⟨ fst (keyʟ a') ∈ fst (Sl w) ⟩) (sym eψ)
+               (sym (keyS≡ a' (ar .fst) (a .fst) (r .snd .fst) (sym pay)))
+               (incl ((keyʟ a') .fst)
+                 (subst (λ w → ⟨ (keyʟ a') .fst ∈ (Sl w) .fst ⟩) (sym eψ)
                    (inA a' _ (Parts.self B keyʟ a')))) })
-        (slot-inv B φ (fst c) c∈))
+        (slot-inv B φ (c .fst) c∈))
 ```
 
 <!--en-->
-The rewriting goes through `keyS≡`{.Agda}: it applies `sucV` to `# m ≡ fst ar`, combines the result with the code-component equality, and thereby identifies the pair read by the clause with the key of `a'`.
+The rewriting goes through `keyS≡`{.Agda}: it applies `sucV` to `# m ≡ ar .fst`, combines the result with the code-component equality, and thereby identifies the pair read by the clause with the key of `a'`.
 <!--zh-->
-改写经由 `keyS≡`{.Agda} 完成：它对 `# m ≡ fst ar` 施加 `sucV`，再与编码分量等式合并，从而把子句所读的对认同为 `a'` 的键。
+改写经由 `keyS≡`{.Agda} 完成：它对 `# m ≡ ar .fst` 施加 `sucV`，再与编码分量等式合并，从而把子句所读的对认同为 `a'` 的键。
 <!--ja-->
-書き換えは `keyS≡`{.Agda} を通る。これは `# m ≡ fst ar` に `sucV` を作用させ、その結果をコード成分の等式と合わせて、場合が読む対を `a'` の鍵と同一視する。
+書き換えは `keyS≡`{.Agda} を通る。これは `# m ≡ ar .fst` に `sucV` を作用させ、その結果をコード成分の等式と合わせて、場合が読む対を `a'` の鍵と同一視する。
 <!--/-->
 
 ```agda
@@ -621,7 +621,7 @@ The fourth body covers the bounded quantifiers, whose constructors pair a term w
 ```agda
                → LCode.payOf (op t a') ≡ prʟ LCode.⌜ t ⌝ᵗ LCode.⌜ a' ⌝)
             → (∀ {m} (t : Term S m) (a' : Formula S (suc m)) (z : V ℓ)
-               → ⟨ z ∈ fst (Sl a') ⟩ → ⟨ z ∈ fst (Sl (op t a')) ⟩)
+               → ⟨ z ∈ (Sl a') .fst ⟩ → ⟨ z ∈ (Sl (op t a')) .fst ⟩)
             → ⟨ δ ⊨ binShapeAt Ci k' (succSndAt Ci) ⟩
 ```
 
@@ -635,9 +635,9 @@ The conclusion is the second-component shape: the clause reads the pair with the
 
 ```agda
     binSucc k' op get payOp inA = binSuccClosed-in Ci k' δ
-      (λ c ar a b c∈ sh → rec₁ (snd (pr (sucV (fst ar)) (fst b) ∈ fst (Sl φ)))
+      (λ c ar a b c∈ sh → rec₁ ((pr (sucV (ar .fst)) (b .fst) ∈ (Sl φ) .fst) .snd)
         (λ { (m , ψ , (q , incl)) →
-          let r  = keyʟ-shape ψ k' (fst ar) (pr (fst a) (fst b)) (sym q ∙ sh)
+          let r  = keyʟ-shape ψ k' (ar .fst) (pr (a .fst) (b .fst)) (sym q ∙ sh)
               g  = get ψ (r .fst)
 ```
 
@@ -654,7 +654,7 @@ The member `c` is a key-shaped pair whose payload carries two components: the co
               a' = g .snd .fst
               eψ = g .snd .snd
               pay = sym (prʟ-fst LCode.⌜ t ⌝ᵗ LCode.⌜ a' ⌝)
-                  ∙ cong fst (sym (payOp t a'))
+                  ∙ cong (λ p → p .fst) (sym (payOp t a'))
 ```
 
 <!--en-->
@@ -666,11 +666,11 @@ The shared computation identifies the payload recorded in the member, componentw
 <!--/-->
 
 ```agda
-                  ∙ cong (λ w → fst (LCode.payOf w)) (sym eψ) ∙ r .snd .snd
-          in subst (λ w → ⟨ w ∈ fst (Sl φ) ⟩)
-               (sym (keyS≡ a' (fst ar) (fst b) (r .snd .fst)
+                  ∙ cong (λ w → (LCode.payOf w) .fst) (sym eψ) ∙ r .snd .snd
+          in subst (λ w → ⟨ w ∈ (Sl φ) .fst ⟩)
+               (sym (keyS≡ a' (ar .fst) (b .fst) (r .snd .fst)
                  (sym (pr-inj pay .snd))))
-               (incl (fst (keyʟ a'))
+               (incl ((keyʟ a') .fst)
 ```
 
 <!--en-->
@@ -682,9 +682,9 @@ The rewriting by `keyS≡` uses the arity equation and the second component equa
 <!--/-->
 
 ```agda
-                 (subst (λ w → ⟨ fst (keyʟ a') ∈ fst (Sl w) ⟩) (sym eψ)
+                 (subst (λ w → ⟨ (keyʟ a') .fst ∈ (Sl w) .fst ⟩) (sym eψ)
                    (inA t a' _ (Parts.self B keyʟ a')))) })
-        (slot-inv B φ (fst c) c∈))
+        (slot-inv B φ (c .fst) c∈))
 ```
 
 <!--en-->

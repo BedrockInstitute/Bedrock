@@ -211,7 +211,7 @@ record FormulaPredicate {ℓa ℓc} (A : Type ℓa) (K : Type ℓc)
     arity       : ℕ
     formula     : Formula K arity
     environment : A → S ^ arity
-    reading     : (a : A) → predicate a ≡ At._⊨_ K ι (environment a) formula
+    reading     : (a : A) → let module I = At K ι in predicate a ≡ (environment a I.⊨ formula)
 ```
 
 <!--en-->
@@ -225,8 +225,9 @@ When classical logic is available, deciding a satisfaction judgment should retai
 ```agda
 decideSatisfaction : ∀ {ℓc n} {K : Type ℓc} (ι : K → S)
                    → LEM ℓ → (γ : S ^ n) → (φ : Formula K n)
-                   → Dec ⟨ At._⊨_ K ι γ φ ⟩
-decideSatisfaction ι lem γ φ = lem (At._⊨_ _ ι γ φ)
+                   → let module I = At K ι in Dec ⟨ γ I.⊨ φ ⟩
+decideSatisfaction ι lem γ φ = lem (γ I.⊨ φ)
+  where module I = At _ ι
 ```
 
 <!--en-->

@@ -271,7 +271,7 @@ When `B`{.Agda} does not depend on `x`{.Agda}, every second component lies in th
 
 <div class="single-line-code"><code>`A × B = Σ[ _ ∶ A ] B`{.Agda}</code></div>
 
-An ordinary product places two independent elements together; a Σ type places a particular `a`{.Agda} together with data belonging to the corresponding type `B a`{.Agda}. Dependent pairs are built with `_,_`{.Agda}, `fst`{.Agda} extracts the first component, and `snd`{.Agda} extracts the second.
+An ordinary product places two independent elements together; a Σ type places a particular `a`{.Agda} together with data belonging to the corresponding type `B a`{.Agda}. Dependent pairs are built with `_,_`{.Agda}. For a pair `p`, write `p .fst`{.Agda .raw-notation} and `p .snd`{.Agda .raw-notation} to extract its first and second components. After a single-letter name, the page displays these compactly as `p .fst`{.Agda} and `p .snd`{.Agda}; hovering reveals the original Agda spelling.
 
 <!--zh-->
 ### [Σ 类型]{.term-intro #sigma-type}
@@ -290,7 +290,7 @@ An ordinary product places two independent elements together; a Σ type places a
 
 <div class="single-line-code"><code>`A × B = Σ[ _ ∶ A ] B`{.Agda}</code></div>
 
-普通的积把两个彼此独立的元素放在一起；Σ 类型则把某个 `a`{.Agda} 与属于相应类型 `B a`{.Agda} 的数据放在一起。依值对用 `_,_`{.Agda} 构造，用 `fst`{.Agda} 取出第一分量，用 `snd`{.Agda} 取出第二分量。
+普通的积把两个彼此独立的元素放在一起；Σ 类型则把某个 `a`{.Agda} 与属于相应类型 `B a`{.Agda} 的数据放在一起。依值对用 `_,_`{.Agda} 构造。给定依值对 `p`，用 `p .fst`{.Agda .raw-notation} 与 `p .snd`{.Agda .raw-notation} 分别取出它的第一分量和第二分量。对于单字母名称，页面将它们紧凑显示为 `p .fst`{.Agda} 与 `p .snd`{.Agda}；悬停即可查看原始 Agda 写法。
 
 <!--ja-->
 ### [Σ 型]{.term-intro #sigma-type}
@@ -309,7 +309,7 @@ An ordinary product places two independent elements together; a Σ type places a
 
 <div class="single-line-code"><code>`A × B = Σ[ _ ∶ A ] B`{.Agda}</code></div>
 
-通常の積は互いに独立した二つの元を一緒にするが、Σ 型は、ある `a`{.Agda} と、対応する型 `B a`{.Agda} に属するデータを一緒にする。依存対は `_,_`{.Agda} で作り、`fst`{.Agda} で第一成分を、`snd`{.Agda} で第二成分を取り出す。
+通常の積は互いに独立した二つの元を一緒にするが、Σ 型は、ある `a`{.Agda} と、対応する型 `B a`{.Agda} に属するデータを一緒にする。依存対は `_,_`{.Agda} で作る。依存対 `p` に対し、`p .fst`{.Agda .raw-notation} と `p .snd`{.Agda .raw-notation} はそれぞれ第一成分と第二成分を取り出す。名前が一文字の場合、ページ上では `p .fst`{.Agda} と `p .snd`{.Agda} とコンパクトに表示する。ホバーすると元の Agda の書き方を確認できる。
 
 <!--/-->
 

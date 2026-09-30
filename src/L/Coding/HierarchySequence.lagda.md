@@ -155,15 +155,15 @@ StepAt : ∀ {n} → Fin n → Fin n → Fin n → Formula S n
 StepAt v b f = extAt v (∃̇ (∃̇ (∃̇ (StepBody b f))))
 
 Records : ∀ {n} → Fin n → Fin n → S ^ n → S → S → Type (ℓ-suc ℓ)
-Records b f γ c w = ⟨ fst c ∈ fst (lookup b γ) ⟩
-                  × ⟨ pr (fst c) (fst w) ∈ fst (lookup f γ) ⟩
+Records b f γ c w = ⟨ c .fst ∈ (lookup b γ) .fst ⟩
+                  × ⟨ pr (c .fst) (w .fst) ∈ (lookup f γ) .fst ⟩
 
 StepOf : ∀ {n} → Fin n → Fin n → S ^ n → S → Type (ℓ-suc ℓ)
 StepOf b f γ z = Σ[ c ∶ S ] Σ[ w ∶ S ]
-                   (Records b f γ c w × ⟨ fst z ∈ 𝒟ₒ (fst w) ⟩)
+                   (Records b f γ c w × ⟨ z .fst ∈ 𝒟ₒ (w .fst) ⟩)
 
 PowOK : ∀ {n} → Fin n → Fin n → S ^ n → Type (ℓ-suc ℓ)
-PowOK b f γ = (c w : S) → Records b f γ c w → ⟨ isL (𝒟ₒ (fst w)) ⟩
+PowOK b f γ = (c w : S) → Records b f γ c w → ⟨ isL (𝒟ₒ (w .fst)) ⟩
 ```
 
 <!--en-->
@@ -222,7 +222,7 @@ module _ {n : ℕ} (v b f : Fin n) (γ : S ^ n) where
     readBody : PowOK b f γ → (z c w d : S)
              → ⟨ (d ∷ w ∷ c ∷ z ∷ γ) ⊨ StepBody b f ⟩ → StepOf b f γ z
     readBody ok z c w d (hb , (ha , (hd , hz))) =
-      c , w , rec , subst (λ X → ⟨ fst z ∈ X ⟩) qd hz
+      c , w , rec , subst (λ X → ⟨ z .fst ∈ X ⟩) qd hz
       where
 ```
 
@@ -233,9 +233,9 @@ Perf: `env` spelled out at both ends; via an abbreviation, 15 s per conversion.
       rec = hb , subst ⟨_⟩ (appAt-adequate
         (sh4 f) (suc (suc zero)) (suc zero) (d ∷ w ∷ c ∷ z ∷ γ)) ha
 
-      qd : fst d ≡ 𝒟ₒ (fst w)
+      qd : d .fst ≡ 𝒟ₒ (w .fst)
       qd = DefAt-out w zero (suc zero) (d ∷ w ∷ c ∷ z ∷ γ)
-        (λ x x∈ → isL-trans {x = 𝒟ₒ (fst w)} {y = x} x∈ (ok c w rec)) refl hd
+        (λ x x∈ → isL-trans {x = 𝒟ₒ (w .fst)} {y = x} x∈ (ok c w rec)) refl hd
 
     unfold : PowOK b f γ → (z : S)
            → ⟨ (z ∷ γ) ⊨ Φ ⟩ → ∥ StepOf b f γ z ∥₁
@@ -265,7 +265,7 @@ Perf: `env` spelled out at both ends; via an abbreviation, 15 s per conversion.
 
 ```agda
       D : S
-      D = 𝒟ₒ (fst w) , ok c w rec
+      D = 𝒟ₒ (w .fst) , ok c w rec
 
       ha : ⟨ (D ∷ w ∷ c ∷ z ∷ γ) ⊨ appAt (sh4 f) (suc (suc zero)) (suc zero) ⟩
       ha = subst ⟨_⟩ (sym (appAt-adequate
@@ -275,20 +275,20 @@ Perf: `env` spelled out at both ends; via an abbreviation, 15 s per conversion.
       hdef = DefAt-in w zero (suc zero) (D ∷ w ∷ c ∷ z ∷ γ) refl refl
 
   StepAt-out : ⟨ γ ⊨ StepAt v b f ⟩ → PowOK b f γ
-             → (z : S) → ⟨ fst z ∈ fst (lookup v γ) ⟩ → ∥ StepOf b f γ z ∥₁
+             → (z : S) → ⟨ z .fst ∈ (lookup v γ) .fst ⟩ → ∥ StepOf b f γ z ∥₁
   StepAt-out h ok z z∈ = unfold ok z (extAt-out v Φ γ h z z∈)
 
   StepAt-back : ⟨ γ ⊨ StepAt v b f ⟩ → PowOK b f γ
-              → (z : S) → StepOf b f γ z → ⟨ fst z ∈ fst (lookup v γ) ⟩
+              → (z : S) → StepOf b f γ z → ⟨ z .fst ∈ (lookup v γ) .fst ⟩
   StepAt-back h ok z s = extAt-in v Φ γ h z (fill ok z s)
 
   StepAt-in : PowOK b f γ
-            → ((z : S) → ⟨ fst z ∈ fst (lookup v γ) ⟩ → ∥ StepOf b f γ z ∥₁)
-            → ((z : S) → StepOf b f γ z → ⟨ fst z ∈ fst (lookup v γ) ⟩)
+            → ((z : S) → ⟨ z .fst ∈ (lookup v γ) .fst ⟩ → ∥ StepOf b f γ z ∥₁)
+            → ((z : S) → StepOf b f γ z → ⟨ z .fst ∈ (lookup v γ) .fst ⟩)
             → ⟨ γ ⊨ StepAt v b f ⟩
   StepAt-in ok into back = extAt-in-both v Φ γ
-    (λ z z∈ → rec₁ (snd ((z ∷ γ) ⊨ Φ)) (fill ok z) (into z z∈))
-    (λ z h → rec₁ (snd (fst z ∈ fst (lookup v γ))) (back z) (unfold ok z h))
+    (λ z z∈ → rec₁ (((z ∷ γ) ⊨ Φ) .snd) (fill ok z) (into z z∈))
+    (λ z h → rec₁ ((z .fst ∈ (lookup v γ) .fst) .snd) (back z) (unfold ok z h))
 ```
 </div>
 </details>
@@ -361,7 +361,7 @@ module RecShape (Step : ∀ {n} → Fin n → Fin n → Fin n → Formula S n) w
 
 ```agda
   Domain₀ : S → V ℓ → Type (ℓ-suc ℓ)
-  Domain₀ h B = (c z : S) → ⟨ pr (fst c) (fst z) ∈ fst h ⟩ → ⟨ fst c ∈ B ⟩
+  Domain₀ h B = (c z : S) → ⟨ pr (c .fst) (z .fst) ∈ h .fst ⟩ → ⟨ c .fst ∈ B ⟩
 
   ApproxAt : ∀ {n} → Fin n → Fin n → Formula S n
   ApproxAt f a = domAt f a
@@ -381,22 +381,22 @@ module RecShape (Step : ∀ {n} → Fin n → Fin n → Fin n → Formula S n) w
 <div class="submodule-fold-content">
 
 ```agda
-    ApproxAt-dom : ⟨ γ ⊨ ApproxAt f a ⟩ → Domain₀ (lookup f γ) (fst (lookup a γ))
+    ApproxAt-dom : ⟨ γ ⊨ ApproxAt f a ⟩ → Domain₀ (lookup f γ) ((lookup a γ) .fst)
     ApproxAt-dom h = domAt-out f a γ (h .fst)
 
     ApproxAt-value : ⟨ γ ⊨ ApproxAt f a ⟩ → (c : S)
-                   → ⟨ fst c ∈ fst (lookup a γ) ⟩
-                   → ∥ (Σ[ z ∶ S ] ⟨ pr (fst c) (fst z) ∈ fst (lookup f γ) ⟩) ∥₁
+                   → ⟨ c .fst ∈ (lookup a γ) .fst ⟩
+                   → ∥ (Σ[ z ∶ S ] ⟨ pr (c .fst) (z .fst) ∈ (lookup f γ) .fst ⟩) ∥₁
     ApproxAt-value h = domAt-in f a γ (h .fst)
 
     ApproxAt-step : ⟨ γ ⊨ ApproxAt f a ⟩ → (c z : S)
-                  → ⟨ pr (fst c) (fst z) ∈ fst (lookup f γ) ⟩
+                  → ⟨ pr (c .fst) (z .fst) ∈ (lookup f γ) .fst ⟩
                   → ⟨ (z ∷ c ∷ γ) ⊨ Step zero (suc zero) (sh2 f) ⟩
     ApproxAt-step h c z p = h .snd c z
       (subst ⟨_⟩ (sym (appAt-adequate (sh2 f) (suc zero) zero (z ∷ c ∷ γ))) p)
 
     ApproxAt-in : ⟨ γ ⊨ domAt f a ⟩
-                → ((c z : S) → ⟨ pr (fst c) (fst z) ∈ fst (lookup f γ) ⟩
+                → ((c z : S) → ⟨ pr (c .fst) (z .fst) ∈ (lookup f γ) .fst ⟩
                    → ⟨ (z ∷ c ∷ γ) ⊨ Step zero (suc zero) (sh2 f) ⟩)
                 → ⟨ γ ⊨ ApproxAt f a ⟩
     ApproxAt-in hd hs = hd , λ c z p → hs c z
@@ -443,10 +443,10 @@ module RecShape (Step : ∀ {n} → Fin n → Fin n → Fin n → Formula S n) w
 
 ```agda
     PairOf : Type (ℓ-suc ℓ)
-    PairOf = Σ[ z ∶ S ] ( (fst (lookup e γ) ≡ pr (fst (lookup c γ)) (fst z))
+    PairOf = Σ[ z ∶ S ] ( ((lookup e γ) .fst ≡ pr ((lookup c γ) .fst) (z .fst))
                         × ⟨ (z ∷ γ) ⊨ GraphAt zero (suc c) ⟩ )
 
-    PairGraph-in : (z : S) → fst (lookup e γ) ≡ pr (fst (lookup c γ)) (fst z)
+    PairGraph-in : (z : S) → (lookup e γ) .fst ≡ pr ((lookup c γ) .fst) (z .fst)
                  → ⟨ (z ∷ γ) ⊨ GraphAt zero (suc c) ⟩ → ⟨ γ ⊨ φ ⟩
     PairGraph-in z q hg = subst (λ ψ → ⟨ γ ⊨ ψ ⟩) (sym qφ)
       ∣ z , (subst ⟨_⟩

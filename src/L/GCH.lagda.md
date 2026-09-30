@@ -95,9 +95,9 @@ The hypotheses on `κ` can be read in order. Its underlying set is an ordinal. I
 ```agda
 GCHStatement zf =
   (κ : S)
-  → IsOrd (fst κ)
+  → IsOrd (κ .fst)
   → IsCardinalL κ
-  → (⟨ fst κ ∈ˢ ω ⟩ → ⊥₀)
+  → (⟨ κ .fst ∈ˢ ω ⟩ → ⊥₀)
 ```
 
 <!--en-->

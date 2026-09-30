@@ -314,7 +314,7 @@ Transitivity of `πX` takes the form demanded by `isTrans`: if `y` is a member o
   πX-intro y y∈X = ∣ fiber X y∈X .fst , cong π (fiber X y∈X .snd) ∣₁
 
   πX-trans : isTrans πX
-  πX-trans {x} {y} y∈x x∈πX = rec₁ (snd (y ∈ˢ πX)) go (πX-member x x∈πX)
+  πX-trans {x} {y} y∈x x∈πX = rec₁ ((y ∈ˢ πX) .snd) go (πX-member x x∈πX)
     where
     go : Σ[ z ∶ S ] (⟨ z ∈ˢ X ⟩ × (π z ≡ x)) → ⟨ y ∈ˢ πX ⟩
 ```
@@ -328,7 +328,7 @@ The inner step first transports `y∈x` along the path `π z ≡ x` to obtain `y
 <!--/-->
 
 ```agda
-    go (z , z∈X , pzx) = rec₁ (snd (y ∈ˢ πX)) go₂ (π-member z y y∈πz)
+    go (z , z∈X , pzx) = rec₁ ((y ∈ˢ πX) .snd) go₂ (π-member z y y∈πz)
       where
       y∈πz : y ∈ᵗ π z
       y∈πz = subst (λ w → y ∈ᵗ w) (sym pzx) y∈x
@@ -428,7 +428,7 @@ The recovery lemma takes two inputs. The first is the truncated statement `⟨ �
     π∈-recover : (x z : S) → ⟨ π z ∈ˢ π x ⟩
                → ((b : S) → b ∈ᵗ x → b ∈ᵗ X → π b ≡ π z → b ≡ z)
                → z ∈ᵗ x
-    π∈-recover x z h same = rec₁ (snd (z ∈ˢ x))
+    π∈-recover x z h same = rec₁ ((z ∈ˢ x) .snd)
 ```
 
 <!--en-->
@@ -719,7 +719,7 @@ The step compares the two sets through `extensionalV`, the extensionality princi
     stepF y IH yY = extensionalV (λ x → ⇔toPath (to x) (from x))
       where
       to : (x : S) → ⟨ x ∈ˢ π y ⟩ → x ∈ᵗ y
-      to x xπ = rec₁ (snd (x ∈ˢ y)) go
+      to x xπ = rec₁ ((x ∈ˢ y) .snd) go
         (subst (λ w → ⟨ x ∈ˢ w ⟩) (π-compute y) xπ)
 ```
 

@@ -298,6 +298,12 @@ systems, `⊩` forcing, `∈ᴮ ≈ᴮ` and the `ᴮ` family for Boolean-valued 
 postfix `↑` weakening. `⌜_⌝` belongs to the coding chapters.
 
 Fixity is centralized: one table in the syntax chapter, quoted in its prose.
+Every `infix`, `infixl` or `infixr` declaration must precede the corresponding
+name's first declaration (including its type signature, field or constructor).
+It need not be adjacent: explanatory prose and other declarations may intervene.
+The `fixity-order` lint checks the concatenated formal code across fences, with
+separate module/record and local scopes. Put record-field fixities inside the
+record, before its field declarations.
 Baseline: ④ atoms `≐ ∈̇` = 18, `∧̇ ∨̇` = 12, `⇒̇` = 10, `¬̇` = 13; ③ `∈ˢ ≈ˢ` = 20.
 Corresponding operations across layers share a level (`∧̇` with `⊓`, `⇒̇` with `⇒`).
 
@@ -328,6 +334,14 @@ code stream, including declarations separated by literary text.
   the closing fence are rejected by `lint-agda`.
 - Record instances prefer record literals (`record { ... }`) over copatterns unless
   field dependencies force an order.
+- Pair projections use postfix syntax: `p .fst`, `p .snd`, and
+  `p .snd .fst`, never `fst p` or `snd p`. This applies to formal fences and
+  complete inline/display Agda expressions. When passing a projection as a
+  function, write `(λ p → p .fst)` or `(λ p → p .snd)`; `.fst` alone is not
+  an Agda expression. Import lists, field declarations and single-name prose
+  references still use the actual API names. The configurable
+  `postfix-projection` lint enforces this rule. Compact numeric postfixes on
+  the website are presentation only, never authored Agda source.
 - Proofs prefer `where` with **named, type-annotated** sub-terms over nested `let`.
 - Implicit-argument discipline: implicits passed through `⟨_⟩`/`fst` projections are
   given explicitly in hProp-instance proofs (a known unification trap).
@@ -340,9 +354,12 @@ code stream, including declarations separated by literary text.
   qualified as a value (`Acc Vmem._∈ᵗ_ u`). Passing an operator **as a value**
   (`WellFounded _∈ᵗ_`, `cong₂ _⊓_ p q`), sections (`(x ∈ˢ_)`), and the
   left-hand side of the operator's own defining clause (`_↾_ {ℓ} 𝒮 M = …`) are
-  all fine: the ban is on application. Application cannot be told from
-  value-passing by a regex, so this rule is enforced in review, not by
-  `lint-agda`.
+  all fine: the ban is on application. The opt-in `infix-application` source lint
+  checks application-head positions in formal fences and complete `{.Agda}`
+  expressions, including qualified names and grouped heads. Specializing only
+  implicit parameters when passing an operator as a value remains legal.
+  This is a grouping/token check, not Agda's scope-resolved fixity parser;
+  unusual identifier-based mixfix boundaries still require code review.
 
 ## 7. Performance idioms (provisional)
 

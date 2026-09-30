@@ -288,7 +288,7 @@ The elimination of the witness uses exactly that dichotomy. `∈sucV-elim` takes
 ```agda
               → ⟨ x ∈ 𝒟ₒ (Lset σ) ⟩
   fromEarlier x (δ , (δ∈suc , x∈𝒟ₒδ)) =
-    ∈sucV-elim {A = σ} {x = δ} (snd (x ∈ 𝒟ₒ (Lset σ))) δ∈suc
+    ∈sucV-elim {A = σ} {x = δ} ((x ∈ 𝒟ₒ (Lset σ)) .snd) δ∈suc
       (λ δ∈σ → Lset⊆𝒟ₒ σ x (Lset-in σ δ x δ∈σ x∈𝒟ₒδ))
       (λ δ≡σ → subst (λ w → ⟨ x ∈ 𝒟ₒ (Lset w) ⟩) δ≡σ x∈𝒟ₒδ)
 ```
@@ -304,7 +304,7 @@ The first inclusion applies the bridge in its forward direction. A structural me
 ```agda
   sub₁ : ⟨ Lset (sucV σ) ⊆ 𝒟ₒ (Lset σ) ⟩
   sub₁ x x∈ₛ = ∈∈ₛ {a = x} {b = 𝒟ₒ (Lset σ)} .fst
-    (rec₁ (snd (x ∈ 𝒟ₒ (Lset σ))) (fromEarlier x)
+    (rec₁ ((x ∈ 𝒟ₒ (Lset σ)) .snd) (fromEarlier x)
       (Lset-out (sucV σ) x (∈∈ₛ {a = x} {b = Lset (sucV σ)} .snd x∈ₛ)))
 
   sub₂ : ⟨ 𝒟ₒ (Lset σ) ⊆ Lset (sucV σ) ⟩
@@ -487,7 +487,7 @@ The reverse direction turns a hit into satisfaction, again by recursion on the l
              → Hits n g (⟪ Lset σ ⟫↪ m)
              → ⟨ (DefC.ι m ∷ []) DefC.⊨ᵐ finDisj n g ⟩
     hits→sat 0 g m =
-      rec₁ (snd ((DefC.ι m ∷ []) DefC.⊨ᵐ finDisj zero g)) (λ { (() , _) })
+      rec₁ (((DefC.ι m ∷ []) DefC.⊨ᵐ finDisj zero g) .snd) (λ { (() , _) })
 ```
 
 <!--en-->
@@ -500,7 +500,7 @@ At a successor length, the hit is a truncated pair whose index is either `zero` 
 
 ```agda
     hits→sat (suc n) g m =
-      rec₁ (snd ((DefC.ι m ∷ []) DefC.⊨ᵐ finDisj (suc n) g))
+      rec₁ (((DefC.ι m ∷ []) DefC.⊨ᵐ finDisj (suc n) g) .snd)
         (λ { (zero  , q) → ∣ inl (sym q) ∣₁
            ; (suc i , q) →
              ∣ inr (hits→sat n (λ j → g (suc j)) m ∣ i , q ∣₁) ∣₁ })
@@ -532,7 +532,7 @@ The first inclusion starts from a structural member `y` of the definable subset.
 
 ```agda
     sub₁ : ⟨ DefC.defSet (finDisj n g) ⊆ F ⟩
-    sub₁ y y∈ₛ = ∈∈ₛ {a = y} {b = F} .fst (rec₁ (snd (y ∈ F))
+    sub₁ y y∈ₛ = ∈∈ₛ {a = y} {b = F} .fst (rec₁ ((y ∈ F) .snd)
       (λ { ((m , h) , q) →
         subst (λ v → ⟨ v ∈ F ⟩) q
           (finSet-in n (λ i → ⟪ Lset σ ⟫↪ (g i)) (⟪ Lset σ ⟫↪ m)
@@ -563,7 +563,7 @@ The reverse inclusion starts from `y ∈ F`. The elimination rule `finSet-out` m
 <!--/-->
 
 ```agda
-    sub₂ y y∈ₛ = rec₁ (snd (y ∈ₛ DefC.defSet (finDisj n g)))
+    sub₂ y y∈ₛ = rec₁ ((y ∈ₛ DefC.defSet (finDisj n g)) .snd)
       (λ { (i , q) →
         subst (λ v → ⟨ v ∈ₛ DefC.defSet (finDisj n g) ⟩) q
           (∈∈ₛ {a = ⟪ Lset σ ⟫↪ (g i)} {b = DefC.defSet (finDisj n g)} .fst
@@ -702,35 +702,35 @@ Extensionality and regularity both restrict from the ambient hierarchy, but by d
 <!--/-->
 
 <!--en-->
-Extensionality inside `L` has the shape: if two carrier elements agree on membership at every carrier element, they are equal as paths. The proof reduces to the underlying hierarchy. The carrier consists of pairs of a set with a constructibility certificate, and `↾-reflects` is the principle that such pairs are determined by their first projections: a path between the underlying sets `fst a` and `fst b` already gives a path `a ≡ b`. Everything therefore rests on producing that underlying path, which `extensionalV` supplies given `vwise`.
+Extensionality inside `L` has the shape: if two carrier elements agree on membership at every carrier element, they are equal as paths. The proof reduces to the underlying hierarchy. The carrier consists of pairs of a set with a constructibility certificate, and `↾-reflects` is the principle that such pairs are determined by their first projections: a path between the underlying sets `a .fst` and `b .fst` already gives a path `a ≡ b`. Everything therefore rests on producing that underlying path, which `extensionalV` supplies given `vwise`.
 <!--zh-->
-`L` 内部的外延性形状是：若载体的两个元素在每个载体元素处的成员关系一致，它们就作为路径相等。证明被化归到底层层级。载体由「集合加可构造性证书」的对组成，而 `↾-reflects` 是一条原理：这样的对由其第一投影决定，底层集合 `fst a` 与 `fst b` 之间的路径已经给出路径 `a ≡ b`。于是全部工作归结为制造那条底层路径，它在 `vwise` 的前提下由 `extensionalV` 提供。
+`L` 内部的外延性形状是：若载体的两个元素在每个载体元素处的成员关系一致，它们就作为路径相等。证明被化归到底层层级。载体由「集合加可构造性证书」的对组成，而 `↾-reflects` 是一条原理：这样的对由其第一投影决定，底层集合 `a .fst` 与 `b .fst` 之间的路径已经给出路径 `a ≡ b`。于是全部工作归结为制造那条底层路径，它在 `vwise` 的前提下由 `extensionalV` 提供。
 <!--ja-->
-`L` の内部での外延性の形はこうである。台の二つの元がすべての台の元について所属が一致するなら、それらはパスとして等しい。証明は基底の階層へ帰着する。台は集合と構成可能性の証明書の対からなり、`↾-reflects` はそのような対が第一射影で決まるという原理である。基底の集合 `fst a` と `fst b` の間のパスがあれば、すでにパス `a ≡ b` が得られる。したがって仕事のすべてはその基底のパスを作ることにあり、`vwise` を前提に `extensionalV` がそれを供給する。
+`L` の内部での外延性の形はこうである。台の二つの元がすべての台の元について所属が一致するなら、それらはパスとして等しい。証明は基底の階層へ帰着する。台は集合と構成可能性の証明書の対からなり、`↾-reflects` はそのような対が第一射影で決まるという原理である。基底の集合 `a .fst` と `b .fst` の間のパスがあれば、すでにパス `a ≡ b` が得られる。したがって仕事のすべてはその基底のパスを作ることにあり、`vwise` を前提に `extensionalV` がそれを供給する。
 <!--/-->
 
 ```agda
 extensionalL : {a b : S} → ((x : S) → (x ∈ˢ a) ≡ (x ∈ˢ b)) → a ≡ b
 extensionalL {a} {b} h =
-  ↾-reflects {𝒮 = 𝒮ᵥ} {M = isL} (extensionalV {a = fst a} {b = fst b} vwise)
+  ↾-reflects {𝒮 = 𝒮ᵥ} {M = isL} (extensionalV {a = a .fst} {b = b .fst} vwise)
   where
-  vwise : (v : V ℓ) → (v ∈ fst a) ≡ (v ∈ fst b)
+  vwise : (v : V ℓ) → (v ∈ a .fst) ≡ (v ∈ b .fst)
 ```
 
 <!--en-->
-The hypothesis `h` only speaks about carrier elements, that is, about constructible pairs. To extend it to an arbitrary `v` of the hierarchy, transitivity does the work: from `v ∈ fst a` and the certificate carried by `a`, `isL-trans` yields that `v` is itself constructible; pairing that certificate with `v` presents it as a carrier element, and `h` at that element gives a path of restricted memberships. Transporting `v∈a` along that path lands in `⟨ v ∈ fst b ⟩`, so `fwd` is a plain implication. Joining the two implications with `⇔toPath` yields the pointwise path of ambient membership that `extensionalV` demands.
+The hypothesis `h` only speaks about carrier elements, that is, about constructible pairs. To extend it to an arbitrary `v` of the hierarchy, transitivity does the work: from `v ∈ a .fst` and the certificate carried by `a`, `isL-trans` yields that `v` is itself constructible; pairing that certificate with `v` presents it as a carrier element, and `h` at that element gives a path of restricted memberships. Transporting `v∈a` along that path lands in `⟨ v ∈ b .fst ⟩`, so `fwd` is a plain implication. Joining the two implications with `⇔toPath` yields the pointwise path of ambient membership that `extensionalV` demands.
 <!--zh-->
-假设 `h` 只谈及载体元素，即可构造的对。要把它扩展到层级中任意的 `v`，出力的是传递性：由 `v ∈ fst a` 与 `a` 所携带的证书，`isL-trans` 得出 `v` 自身可构造；把该证书与 `v` 配成对，就把 `v` 呈现为载体元素，`h` 在该元素处给出限制成员关系的路径。沿这条路径搬移 `v∈a` 便落在 `⟨ v ∈ fst b ⟩`，故 `fwd` 是一个普通的蕴涵。用 `⇔toPath` 把两个方向的蕴涵合成路径，便得到 `extensionalV` 所要求的周遭成员关系的逐点路径。
+假设 `h` 只谈及载体元素，即可构造的对。要把它扩展到层级中任意的 `v`，出力的是传递性：由 `v ∈ a .fst` 与 `a` 所携带的证书，`isL-trans` 得出 `v` 自身可构造；把该证书与 `v` 配成对，就把 `v` 呈现为载体元素，`h` 在该元素处给出限制成员关系的路径。沿这条路径搬移 `v∈a` 便落在 `⟨ v ∈ b .fst ⟩`，故 `fwd` 是一个普通的蕴涵。用 `⇔toPath` 把两个方向的蕴涵合成路径，便得到 `extensionalV` 所要求的周遭成员关系的逐点路径。
 <!--ja-->
-仮定 `h` が語るのは台の元、つまり構成可能な対についてだけである。これを階層の任意の `v` に拡張するために働くのが推移性である。`v ∈ fst a` と `a` の携える証明書から、`isL-trans` が `v` 自身の構成可能性を導く。その証明書を `v` と対にすれば `v` が台の元として提示され、その元での `h` が制限された所属のパスを与える。このパスに沿って `v∈a` を輸送すれば `⟨ v ∈ fst b ⟩` に着くので、`fwd` は普通の含意である。二つの含意を `⇔toPath` でパスにまとめれば、`extensionalV` が要求する周囲の所属の各点パスが得られる。
+仮定 `h` が語るのは台の元、つまり構成可能な対についてだけである。これを階層の任意の `v` に拡張するために働くのが推移性である。`v ∈ a .fst` と `a` の携える証明書から、`isL-trans` が `v` 自身の構成可能性を導く。その証明書を `v` と対にすれば `v` が台の元として提示され、その元での `h` が制限された所属のパスを与える。このパスに沿って `v∈a` を輸送すれば `⟨ v ∈ b .fst ⟩` に着くので、`fwd` は普通の含意である。二つの含意を `⇔toPath` でパスにまとめれば、`extensionalV` が要求する周囲の所属の各点パスが得られる。
 <!--/-->
 
 ```agda
   vwise v = ⇔toPath fwd bwd
     where
-    fwd : ⟨ v ∈ fst a ⟩ → ⟨ v ∈ fst b ⟩
+    fwd : ⟨ v ∈ a .fst ⟩ → ⟨ v ∈ b .fst ⟩
     fwd v∈a = subst ⟨_⟩ (h (v , isL-trans v∈a (a .snd))) v∈a
-    bwd : ⟨ v ∈ fst b ⟩ → ⟨ v ∈ fst a ⟩
+    bwd : ⟨ v ∈ b .fst ⟩ → ⟨ v ∈ a .fst ⟩
 ```
 
 <!--en-->
@@ -847,7 +847,7 @@ The equation is one extensionality against the ambient empty set, in two inclusi
   defSet⊥≡∅ = extensionality (DefC.defSet ⊥̇) ∅ (sub₁ , sub₂)
     where
     sub₁ : ⟨ DefC.defSet ⊥̇ ⊆ ∅ ⟩
-    sub₁ y y∈ₛ = rec₁ (snd (y ∈ₛ ∅))
+    sub₁ y y∈ₛ = rec₁ ((y ∈ₛ ∅) .snd)
       (λ { ((m , h) , q) → ⊥*-rec h })
 ```
 
@@ -881,7 +881,7 @@ Packaging mirrors the underlying set: `∅ʟ` is the pair of `∅` with its cons
 ∅ʟ = ∅ , ∅∈L
 
 hasEmptyL : isContr (SetOf (λ _ → ⊥))
-hasEmptyL = uniqueL _ (∅ʟ , (λ x → empty-spec (fst x)))
+hasEmptyL = uniqueL _ (∅ʟ , (λ x → empty-spec (x .fst)))
 ```
 
 <!--en-->
@@ -991,7 +991,7 @@ A member `w` of the definable subset is presented, by the reading lemma, as a tr
 <!--/-->
 
 ```agda
-    sub₁ w w∈ₛ = rec₁ (snd (w ∈ₛ ⁅ ⟪ Lset σ ⟫↪ mₓ , ⟪ Lset σ ⟫↪ mᵧ ⁆))
+    sub₁ w w∈ₛ = rec₁ ((w ∈ₛ ⁅ ⟪ Lset σ ⟫↪ mₓ , ⟪ Lset σ ⟫↪ mᵧ ⁆) .snd)
       (λ { ((m , h) , q) →
         subst (λ v → ⟨ v ∈ₛ ⁅ ⟪ Lset σ ⟫↪ mₓ , ⟪ Lset σ ⟫↪ mᵧ ⁆ ⟩) q
           (pairing-ax (⟪ Lset σ ⟫↪ mₓ) (⟪ Lset σ ⟫↪ mᵧ) (⟪ Lset σ ⟫↪ m) .snd
@@ -1009,7 +1009,7 @@ The reverse inclusion reads the hierarchy's pairing characterization in its othe
 ```agda
       (∈∈ₛ {a = w} {b = DefC.defSet φ} .snd w∈ₛ)
     sub₂ : ⟨ ⁅ ⟪ Lset σ ⟫↪ mₓ , ⟪ Lset σ ⟫↪ mᵧ ⁆ ⊆ DefC.defSet φ ⟩
-    sub₂ w w∈ₛ = rec₁ (snd (w ∈ₛ DefC.defSet φ))
+    sub₂ w w∈ₛ = rec₁ ((w ∈ₛ DefC.defSet φ) .snd)
       (λ { (inl p) → memOf mₓ ∣ inl refl ∣₁ p
          ; (inr p) → memOf mᵧ ∣ inr refl ∣₁ p })
 ```
@@ -1119,7 +1119,7 @@ module PairOf (a b : S) where
   Q : S → hProp (ℓ-suc ℓ)
   Q x = (x ≈ˢ a) ⊔ (x ≈ˢ b)
 
-  mkPair : (σ : V ℓ) → IsOrd σ → ⟨ fst a ∈ Lset σ ⟩ → ⟨ fst b ∈ Lset σ ⟩
+  mkPair : (σ : V ℓ) → IsOrd σ → ⟨ a .fst ∈ Lset σ ⟩ → ⟨ b .fst ∈ Lset σ ⟩
          → SetOf Q
 ```
 
@@ -1132,11 +1132,11 @@ The witness is the ambient unordered pair of the underlying sets, packaged with 
 <!--/-->
 
 ```agda
-  mkPair σ oσ fa∈ fb∈ = pairElt , (λ z → pair-spec (fst a) (fst b) (fst z))
+  mkPair σ oσ fa∈ fb∈ = pairElt , (λ z → pair-spec (a .fst) (b .fst) (z .fst))
     where
     pairElt : S
-    pairElt = ⁅ fst a , fst b ⁆
-            , 𝒟ₒ→isL σ oσ ⁅ fst a , fst b ⁆ (pair∈𝒟ₒ σ (fst a) (fst b) fa∈ fb∈)
+    pairElt = ⁅ a .fst , b .fst ⁆
+            , 𝒟ₒ→isL σ oσ ⁅ a .fst , b .fst ⁆ (pair∈𝒟ₒ σ (a .fst) (b .fst) fa∈ fb∈)
 ```
 
 <!--en-->
@@ -1151,7 +1151,7 @@ The construction is not yet the field: it needs a stage, and only its mere exist
   build : ∥ SetOf Q ∥₁
   build = rec₁ squash₁
     (λ { (σ , (oσ , (fa∈ , fb∈))) → ∣ mkPair σ oσ fa∈ fb∈ ∣₁ })
-    (isL-directed (fst a) (fst b) (a .snd) (b .snd))
+    (isL-directed (a .fst) (b .fst) (a .snd) (b .snd))
 ```
 </div>
 </details>
@@ -1174,19 +1174,19 @@ hasPairL a b = mere→uniqueL (PairOf.Q a b) (PairOf.build a b)
 <!--en-->
 ## Union
 
-Union needs no bounding search: a single stage containing the argument already suffices. Because the stage `Lset σ` is transitive, every member of a member of `fst a` is again in the stage, so a bounded existential formula, "some member of the argument has me as a member", carves out exactly the ambient union `⋃ (fst a)`.
+Union needs no bounding search: a single stage containing the argument already suffices. Because the stage `Lset σ` is transitive, every member of a member of `a .fst` is again in the stage, so a bounded existential formula, "some member of the argument has me as a member", carves out exactly the ambient union `⋃ (a .fst)`.
 
 The extensional equation is proved by two inclusions. One direction reads the formula's satisfaction: a witness `v` with `y` a member of `v` is exactly what the hierarchy's union classification asks for. The other direction starts from the union classification and must first pull the intermediate member `v` into the stage, which is precisely what stage transitivity does, applied twice. The final specification compares two quantifiers: the constructible condition quantifies over carrier witnesses only, while the hierarchy's union law quantifies over all of `V`, and `isL-trans` identifies the two ranges in both directions. With union in place, this chapter has proved five axioms: extensionality, regularity, the empty set, pairing, and union.
 <!--zh-->
 ## 并
 
-并不需要寻找上界：一个装着实参的层就足够了。由于层 `Lset σ` 是传递的，`fst a` 的元素的每个元素也仍在该层中，于是有界存在公式「实参的某个元素以我为元素」恰好刻出周遭并 `⋃ (fst a)`。
+并不需要寻找上界：一个装着实参的层就足够了。由于层 `Lset σ` 是传递的，`a .fst` 的元素的每个元素也仍在该层中，于是有界存在公式「实参的某个元素以我为元素」恰好刻出周遭并 `⋃ (a .fst)`。
 
 外延等式由两个包含方向证明。一个方向读出公式的满足：一个见证 `v` 使 `y` 属于 `v`，恰好是层级的并刻画所要求的输入。另一个方向从并刻画出发，必须先把中间元素 `v` 拉进层，而这正是层传递性所做的，施用两次。最后的规格比较两个量词：可构造条件只对载体见证量化，而层级的并律对全部 `V` 量化，`isL-trans` 在两个方向上把这两个范围等同起来。并就位之后，本章已证明五条公理：外延、正则、空集、配对与并。
 <!--ja-->
 ## 和集合の公理
 
-和集合には上界の探索が要らない。実引数を含む一つの段階で足りる。段階 `Lset σ` は推移的なので、`fst a` の要素の各要素もやはり段階にあるからである。そこで有界存在の論理式、「実引数のある要素が自分を要素にもつ」が、周囲の和集合 `⋃ (fst a)` をちょうど切り出す。
+和集合には上界の探索が要らない。実引数を含む一つの段階で足りる。段階 `Lset σ` は推移的なので、`a .fst` の要素の各要素もやはり段階にあるからである。そこで有界存在の論理式、「実引数のある要素が自分を要素にもつ」が、周囲の和集合 `⋃ (a .fst)` をちょうど切り出す。
 
 外延的な等式は二つの包含で証明される。一つの向きは論理式の充足を読む。`y` を要素にもつ証人 `v` は、階層の和集合の分類が求める入力にちょうど一致する。もう一つの向きは和集合の分類から始まり、途中の要素 `v` をまず段階へ引き込まねばならない。これこそ段階の推移性が二度適用されて果たす役目である。最後の仕様は二つの量化子を比べる。構成可能な条件は台の証人の上だけで量化し、階層の和集合の法則はすべての `V` の上で量化するが、`isL-trans` が両方向でこの二つの範囲を同一視する。和集合が整ったとき、本章は五つの公理、すなわち外延性、正則性、空集合、対、和集合を証明し終えている。
 <!--/-->
@@ -1211,114 +1211,114 @@ module UnionOf (a : S) where
   Q : S → hProp (ℓ-suc ℓ)
   Q x = ∃[ y ∶ S ] (y ∈ˢ a) ⊓ (x ∈ˢ y)
 
-  mkUnion : (σ : V ℓ) → IsOrd σ → ⟨ fst a ∈ Lset σ ⟩ → SetOf Q
+  mkUnion : (σ : V ℓ) → IsOrd σ → ⟨ a .fst ∈ Lset σ ⟩ → SetOf Q
   mkUnion σ oσ fa∈ = unionElt , spec
 ```
 
 <!--en-->
-At the stage `Lset σ`, formulas range over its small presentation. Its transitivity, obtained from `Lset-layer σ` and `layer-trans`, says that a member of a member of the stage lies in the stage again. Applying `∈-asFiber` to the given membership of `fst a` produces the representative `mₐ` and path `qₐ : ⟪ Lset σ ⟫↪ mₐ ≡ fst a`; as above, this is direct fiber data rather than elimination of an outer truncation.
+At the stage `Lset σ`, formulas range over its small presentation. Its transitivity, obtained from `Lset-layer σ` and `layer-trans`, says that a member of a member of the stage lies in the stage again. Applying `∈-asFiber` to the given membership of `a .fst` produces the representative `mₐ` and path `qₐ : ⟪ Lset σ ⟫↪ mₐ ≡ a .fst`; as above, this is direct fiber data rather than elimination of an outer truncation.
 <!--zh-->
-在层 `Lset σ` 上，公式跑遍该层的小呈现。由 `Lset-layer σ` 与 `layer-trans` 得到的传递性说明：层元素的元素仍属于该层。对给定的 `fst a` 层成员关系应用 `∈-asFiber`，得到代表元 `mₐ` 与路径 `qₐ : ⟪ Lset σ ⟫↪ mₐ ≡ fst a`；与上文相同，这是直接取得的纤维数据，并非对外层截断作消去。
+在层 `Lset σ` 上，公式跑遍该层的小呈现。由 `Lset-layer σ` 与 `layer-trans` 得到的传递性说明：层元素的元素仍属于该层。对给定的 `a .fst` 层成员关系应用 `∈-asFiber`，得到代表元 `mₐ` 与路径 `qₐ : ⟪ Lset σ ⟫↪ mₐ ≡ a .fst`；与上文相同，这是直接取得的纤维数据，并非对外层截断作消去。
 <!--ja-->
-段階 `Lset σ` では、論理式はその小さな提示の上を動く。`Lset-layer σ` と `layer-trans` から得られる推移性は、段階の要素の要素が再びその段階に属することを述べる。与えられた `fst a` の段階への所属に `∈-asFiber` を適用すると、代表元 `mₐ` とパス `qₐ : ⟪ Lset σ ⟫↪ mₐ ≡ fst a` が得られる。上と同様、これは外側の切り詰めを消去した結果ではなく、直接得られるファイバーのデータである。
+段階 `Lset σ` では、論理式はその小さな提示の上を動く。`Lset-layer σ` と `layer-trans` から得られる推移性は、段階の要素の要素が再びその段階に属することを述べる。与えられた `a .fst` の段階への所属に `∈-asFiber` を適用すると、代表元 `mₐ` とパス `qₐ : ⟪ Lset σ ⟫↪ mₐ ≡ a .fst` が得られる。上と同様、これは外側の切り詰めを消去した結果ではなく、直接得られるファイバーのデータである。
 <!--/-->
 
 ```agda
     where
     module DefA = DefOf (Lset σ)
     Atrans = layer-trans (Lset-layer σ)
-    mₐ = ∈-asFiber {a = fst a} {b = Lset σ} fa∈ .fst
-    qₐ : ⟪ Lset σ ⟫↪ mₐ ≡ fst a
+    mₐ = ∈-asFiber {a = a .fst} {b = Lset σ} fa∈ .fst
+    qₐ : ⟪ Lset σ ⟫↪ mₐ ≡ a .fst
 ```
 
 <!--en-->
-The formula has one free-variable slot and is a bounded existential: the variable ranges over the members of the constant `mₐ`, that is, over the members of `a` as presented inside the stage, and the matrix says that the bound variable has the outer variable as a member. Since the bound variable occupies the first slot inside the quantifier body, the outer variable sits in the successor slot. The claimed extension is the ambient union `⋃ (fst a)`, and the equation `defSet≡` is one extensionality, split into two inclusions.
+The formula has one free-variable slot and is a bounded existential: the variable ranges over the members of the constant `mₐ`, that is, over the members of `a` as presented inside the stage, and the matrix says that the bound variable has the outer variable as a member. Since the bound variable occupies the first slot inside the quantifier body, the outer variable sits in the successor slot. The claimed extension is the ambient union `⋃ (a .fst)`, and the equation `defSet≡` is one extensionality, split into two inclusions.
 <!--zh-->
-公式有一个自由变元槽，是一个有界存在：变元跑遍常元 `mₐ` 的元素，也就是在层内呈现的 `a` 的元素；母式说，约束变元以外部变元为元素。由于约束变元在量词母式中占据第一个槽，外部变元落在后继槽上。被断言的外延是周遭并 `⋃ (fst a)`，等式 `defSet≡` 是一次外延性，分为两个包含。
+公式有一个自由变元槽，是一个有界存在：变元跑遍常元 `mₐ` 的元素，也就是在层内呈现的 `a` 的元素；母式说，约束变元以外部变元为元素。由于约束变元在量词母式中占据第一个槽，外部变元落在后继槽上。被断言的外延是周遭并 `⋃ (a .fst)`，等式 `defSet≡` 是一次外延性，分为两个包含。
 <!--ja-->
-論理式は自由変数のスロットを一つもつ有界存在である。変数は定数 `mₐ` の要素、すなわち段階の内部で提示された `a` の要素の上を渡り、母式は束縛変数が外側の変数を要素にもつと述べる。束縛変数が量化子の本体の中で第一のスロットを占めるため、外側の変数は後者のスロットに置かれる。外延として主張されるのは周囲の和集合 `⋃ (fst a)` であり、等式 `defSet≡` は一回の外延性で、二つの包含に分かれる。
+論理式は自由変数のスロットを一つもつ有界存在である。変数は定数 `mₐ` の要素、すなわち段階の内部で提示された `a` の要素の上を渡り、母式は束縛変数が外側の変数を要素にもつと述べる。束縛変数が量化子の本体の中で第一のスロットを占めるため、外側の変数は後者のスロットに置かれる。外延として主張されるのは周囲の和集合 `⋃ (a .fst)` であり、等式 `defSet≡` は一回の外延性で、二つの包含に分かれる。
 <!--/-->
 
 ```agda
-    qₐ = ∈-asFiber {a = fst a} {b = Lset σ} fa∈ .snd
+    qₐ = ∈-asFiber {a = a .fst} {b = Lset σ} fa∈ .snd
 
     φ : Formula ⟪ Lset σ ⟫ 1
     φ = ∃̇∈ (con mₐ) (var (suc zero) ∈̇ var zero)
 
-    defSet≡ : DefA.defSet φ ≡ ⋃ (fst a)
-    defSet≡ = extensionality (DefA.defSet φ) (⋃ (fst a)) (sub₁ , sub₂)
+    defSet≡ : DefA.defSet φ ≡ ⋃ (a .fst)
+    defSet≡ = extensionality (DefA.defSet φ) (⋃ (a .fst)) (sub₁ , sub₂)
 ```
 
 <!--en-->
-The first inclusion says: everything satisfying the formula lies in the ambient union. A member `y` of the definable subset arrives, by the reading lemma for `defSet`, as a truncated pair of an index `m` and a satisfaction proof, together with a path `q` identifying `y` with the embedded element `⟪ Lset σ ⟫↪ m`. The satisfaction hypothesis names members by their indices, so it can only be consumed for the embedded element; transporting along `q` moves the goal from `y` to that element, and the elimination into the proposition `y ∈ₛ ⋃ (fst a)` is what keeps the whole step legitimate.
+The first inclusion says: everything satisfying the formula lies in the ambient union. A member `y` of the definable subset arrives, by the reading lemma for `defSet`, as a truncated pair of an index `m` and a satisfaction proof, together with a path `q` identifying `y` with the embedded element `⟪ Lset σ ⟫↪ m`. The satisfaction hypothesis names members by their indices, so it can only be consumed for the embedded element; transporting along `q` moves the goal from `y` to that element, and the elimination into the proposition `y ∈ₛ ⋃ (a .fst)` is what keeps the whole step legitimate.
 <!--zh-->
-第一个包含说：凡满足公式者，都在周遭并中。可定义子集的元素 `y`，经 `defSet` 的读法引理，呈现为索引 `m` 与满足证明组成的截断对，连同把 `y` 与嵌入元素 `⟪ Lset σ ⟫↪ m` 等同的路径 `q`。满足假设是按索引来名指元素的，所以它只能用于嵌入元素；沿 `q` 的搬移把目标从 `y` 移到那个元素，而向命题 `y ∈ₛ ⋃ (fst a)` 的消去保证整步合法。
+第一个包含说：凡满足公式者，都在周遭并中。可定义子集的元素 `y`，经 `defSet` 的读法引理，呈现为索引 `m` 与满足证明组成的截断对，连同把 `y` 与嵌入元素 `⟪ Lset σ ⟫↪ m` 等同的路径 `q`。满足假设是按索引来名指元素的，所以它只能用于嵌入元素；沿 `q` 的搬移把目标从 `y` 移到那个元素，而向命题 `y ∈ₛ ⋃ (a .fst)` 的消去保证整步合法。
 <!--ja-->
-最初の包含は、論理式を充足するものはすべて周囲の和集合にある、と言う。定義可能部分集合の元 `y` は、`defSet` の読み取り補題によって、添字 `m` と充足の証明からなる切り詰められた対として、`y` を埋め込まれた要素 `⟪ Lset σ ⟫↪ m` と同一視するパス `q` とともに届く。充足の仮定は要素を添字で名指すので、それを消費できるのは埋め込まれた要素に対してだけである。`q` に沿った輸送が目標を `y` からその要素へ移し、命題 `y ∈ₛ ⋃ (fst a)` への消去がこの一歩全体を正当に保つ。
+最初の包含は、論理式を充足するものはすべて周囲の和集合にある、と言う。定義可能部分集合の元 `y` は、`defSet` の読み取り補題によって、添字 `m` と充足の証明からなる切り詰められた対として、`y` を埋め込まれた要素 `⟪ Lset σ ⟫↪ m` と同一視するパス `q` とともに届く。充足の仮定は要素を添字で名指すので、それを消費できるのは埋め込まれた要素に対してだけである。`q` に沿った輸送が目標を `y` からその要素へ移し、命題 `y ∈ₛ ⋃ (a .fst)` への消去がこの一歩全体を正当に保つ。
 <!--/-->
 
 ```agda
       where
-      sub₁ : ⟨ DefA.defSet φ ⊆ ⋃ (fst a) ⟩
-      sub₁ y y∈ₛ = rec₁ (snd (y ∈ₛ ⋃ (fst a)))
+      sub₁ : ⟨ DefA.defSet φ ⊆ ⋃ (a .fst) ⟩
+      sub₁ y y∈ₛ = rec₁ ((y ∈ₛ ⋃ (a .fst)) .snd)
         (λ { ((m , h) , q) →
-          subst (λ w → ⟨ w ∈ₛ ⋃ (fst a) ⟩) q
+          subst (λ w → ⟨ w ∈ₛ ⋃ (a .fst) ⟩) q
 ```
 
 <!--en-->
-The satisfaction proof for the bounded existential yields, merely, a witness `v` from the range together with the two matrix memberships: `fst v` is a member of the embedded `mₐ`, and the embedded `m` is a member of `fst v`. These are exactly the two memberships the hierarchy's union classification requires in its introduction direction: to place `⟪ Lset σ ⟫↪ m` inside `⋃ (fst a)` it suffices to exhibit some member of `fst a` having it as a member.
+The satisfaction proof for the bounded existential yields, merely, a witness `v` from the range together with the two matrix memberships: `v .fst` is a member of the embedded `mₐ`, and the embedded `m` is a member of `v .fst`. These are exactly the two memberships the hierarchy's union classification requires in its introduction direction: to place `⟪ Lset σ ⟫↪ m` inside `⋃ (a .fst)` it suffices to exhibit some member of `a .fst` having it as a member.
 <!--zh-->
-有界存在的满足证明仅仅给出一个来自范围的见证 `v`，连同母式的两条成员关系：`fst v` 属于嵌入的 `mₐ`，而嵌入的 `m` 属于 `fst v`。这两条恰好是层级的并刻画在进入方向所需的输入：要把 `⟪ Lset σ ⟫↪ m` 放进 `⋃ (fst a)`，只须出示 `fst a` 的某个元素以它为元素。
+有界存在的满足证明仅仅给出一个来自范围的见证 `v`，连同母式的两条成员关系：`v .fst` 属于嵌入的 `mₐ`，而嵌入的 `m` 属于 `v .fst`。这两条恰好是层级的并刻画在进入方向所需的输入：要把 `⟪ Lset σ ⟫↪ m` 放进 `⋃ (a .fst)`，只须出示 `a .fst` 的某个元素以它为元素。
 <!--ja-->
-有界存在の充足の証明は、範囲からの証人 `v` を、母式の二つの所属とともに単に与える。すなわち `fst v` が埋め込まれた `mₐ` の要素であり、埋め込まれた `m` が `fst v` の要素であることである。この二つこそ、階層の和集合の分類が導入の向きで消費する入力である。`⟪ Lset σ ⟫↪ m` を `⋃ (fst a)` の中に置くには、それを要素にもつ `fst a` の要素を一つ示せば足りる。
+有界存在の充足の証明は、範囲からの証人 `v` を、母式の二つの所属とともに単に与える。すなわち `v .fst` が埋め込まれた `mₐ` の要素であり、埋め込まれた `m` が `v .fst` の要素であることである。この二つこそ、階層の和集合の分類が導入の向きで消費する入力である。`⟪ Lset σ ⟫↪ m` を `⋃ (a .fst)` の中に置くには、それを要素にもつ `a .fst` の要素を一つ示せば足りる。
 <!--/-->
 
 ```agda
-            (rec₁ (snd (⟪ Lset σ ⟫↪ m ∈ₛ ⋃ (fst a)))
+            (rec₁ ((⟪ Lset σ ⟫↪ m ∈ₛ ⋃ (a .fst)) .snd)
               (λ { (v , (fstv∈mₐ , m∈fstv)) →
-                union-ax (fst a) (⟪ Lset σ ⟫↪ m) .snd
-                  ∣ fst v
-                  , ( ∈∈ₛ {a = fst v} {b = fst a} .fst
+                union-ax (a .fst) (⟪ Lset σ ⟫↪ m) .snd
+                  ∣ v .fst
+                  , ( ∈∈ₛ {a = v .fst} {b = a .fst} .fst
 ```
 
 <!--en-->
-The two matrix memberships, however, speak the restricted presentation's language and must become ambient ones. `∈∈ₛ` performs the conversion, and the path `qₐ` already in hand rewrites the range from the embedded `mₐ` to `fst a`, so the witness `fst v` is presented as a member of `fst a`; the second conjunct is used as it stands, since it is already a membership of the embedded `m` in `fst v`. With both memberships in ambient form, the union classification applies and the first inclusion closes.
+The two matrix memberships, however, speak the restricted presentation's language and must become ambient ones. `∈∈ₛ` performs the conversion, and the path `qₐ` already in hand rewrites the range from the embedded `mₐ` to `a .fst`, so the witness `v .fst` is presented as a member of `a .fst`; the second conjunct is used as it stands, since it is already a membership of the embedded `m` in `v .fst`. With both memberships in ambient form, the union classification applies and the first inclusion closes.
 <!--zh-->
-但母式的两条成员关系说的是限制呈现的语言，必须变成周遭成员关系。`∈∈ₛ` 执行转换，而已有的路径 `qₐ` 把范围从嵌入的 `mₐ` 改写为 `fst a`，于是见证 `fst v` 被呈现为 `fst a` 的元素；第二个合取肢按原样使用，因为它本来就是嵌入的 `m` 对 `fst v` 的成员关系。两条成员关系都成为周遭形式后，并刻画随即适用，第一个包含合拢。
+但母式的两条成员关系说的是限制呈现的语言，必须变成周遭成员关系。`∈∈ₛ` 执行转换，而已有的路径 `qₐ` 把范围从嵌入的 `mₐ` 改写为 `a .fst`，于是见证 `v .fst` 被呈现为 `a .fst` 的元素；第二个合取肢按原样使用，因为它本来就是嵌入的 `m` 对 `v .fst` 的成员关系。两条成员关系都成为周遭形式后，并刻画随即适用，第一个包含合拢。
 <!--ja-->
-しかし母式の二つの所属は制限された提示の言葉で語っており、周囲の所属へ変えねばならない。変換は `∈∈ₛ` が行い、すでに手もとのパス `qₐ` が範囲を埋め込まれた `mₐ` から `fst a` へ書き換えるので、証人 `fst v` は `fst a` の要素として提示される。第二の項はそのまま使える。それは埋め込まれた `m` の `fst v` への所属としてすでに成っているからである。両方の所属が周囲の形になれば和集合の分類が適用され、最初の包含が閉じる。
+しかし母式の二つの所属は制限された提示の言葉で語っており、周囲の所属へ変えねばならない。変換は `∈∈ₛ` が行い、すでに手もとのパス `qₐ` が範囲を埋め込まれた `mₐ` から `a .fst` へ書き換えるので、証人 `v .fst` は `a .fst` の要素として提示される。第二の項はそのまま使える。それは埋め込まれた `m` の `v .fst` への所属としてすでに成っているからである。両方の所属が周囲の形になれば和集合の分類が適用され、最初の包含が閉じる。
 <!--/-->
 
 ```agda
-                        (subst (λ w → ⟨ fst v ∈ w ⟩) qₐ fstv∈mₐ)
-                    , ∈∈ₛ {a = ⟪ Lset σ ⟫↪ m} {b = fst v} .fst m∈fstv ) ∣₁ })
+                        (subst (λ w → ⟨ v .fst ∈ w ⟩) qₐ fstv∈mₐ)
+                    , ∈∈ₛ {a = ⟪ Lset σ ⟫↪ m} {b = v .fst} .fst m∈fstv ) ∣₁ })
               (subst ⟨_⟩ (DefA.defSet-mem φ m) ∣ (m , h) , refl ∣₁)) })
         (∈∈ₛ {a = y} {b = DefA.defSet φ} .snd y∈ₛ)
-      sub₂ : ⟨ ⋃ (fst a) ⊆ DefA.defSet φ ⟩
+      sub₂ : ⟨ ⋃ (a .fst) ⊆ DefA.defSet φ ⟩
 ```
 
 <!--en-->
-The reverse inclusion reads the same classification in its other direction: membership of `y` in the ambient union is, merely, a member `v` of `fst a` with `y` a member of `v`. The helper `member` must then exhibit `y` inside the definable subset for this particular `v`. This is the half where the stage hypothesis does the work, because nothing so far guarantees that the intermediate `v` is visible in the stage at all.
+The reverse inclusion reads the same classification in its other direction: membership of `y` in the ambient union is, merely, a member `v` of `a .fst` with `y` a member of `v`. The helper `member` must then exhibit `y` inside the definable subset for this particular `v`. This is the half where the stage hypothesis does the work, because nothing so far guarantees that the intermediate `v` is visible in the stage at all.
 <!--zh-->
-反向包含把同一条刻画按另一方向读取：`y` 在周遭并中的成员关系，仅仅是 `fst a` 的某个元素 `v` 以 `y` 为元素。辅助引理 `member` 随后必须对这个特定的 `v` 把 `y` 展示在可定义子集中。这一半正是层假设出力的地方，因为到此为止，没有任何东西保证那个中间的 `v` 在层中可见。
+反向包含把同一条刻画按另一方向读取：`y` 在周遭并中的成员关系，仅仅是 `a .fst` 的某个元素 `v` 以 `y` 为元素。辅助引理 `member` 随后必须对这个特定的 `v` 把 `y` 展示在可定义子集中。这一半正是层假设出力的地方，因为到此为止，没有任何东西保证那个中间的 `v` 在层中可见。
 <!--ja-->
-逆の包含は、同じ分類のもう一方の向きを読む。周囲の和集合への `y` の所属とは、単に、`fst a` のある要素 `v` が `y` を要素にもつことである。補助補題 `member` は、この特定の `v` に対して `y` を定義可能部分集合の中に示さねばならない。ここで段階の仮定が働く。これまでのところ、途中の `v` が段階で見えることを保証するものは何もないからである。
+逆の包含は、同じ分類のもう一方の向きを読む。周囲の和集合への `y` の所属とは、単に、`a .fst` のある要素 `v` が `y` を要素にもつことである。補助補題 `member` は、この特定の `v` に対して `y` を定義可能部分集合の中に示さねばならない。ここで段階の仮定が働く。これまでのところ、途中の `v` が段階で見えることを保証するものは何もないからである。
 <!--/-->
 
 ```agda
-      sub₂ y y∈ₛ = rec₁ (snd (y ∈ₛ DefA.defSet φ))
+      sub₂ y y∈ₛ = rec₁ ((y ∈ₛ DefA.defSet φ) .snd)
         (λ { (v , (v∈ₛfa , y∈ₛv)) → member v v∈ₛfa y∈ₛv })
-        (union-ax (fst a) y .fst y∈ₛ)
+        (union-ax (a .fst) y .fst y∈ₛ)
         where
-        member : (v : V ℓ) → ⟨ v ∈ₛ fst a ⟩ → ⟨ y ∈ₛ v ⟩
+        member : (v : V ℓ) → ⟨ v ∈ₛ a .fst ⟩ → ⟨ y ∈ₛ v ⟩
 ```
 
 <!--en-->
-The helper first converts `y` into a representative `m'` of the stage with its identifying path `q'`, and uses the membership reading of `defSet` backward: satisfaction of φ at the constant naming `m'` becomes membership of the embedded `m'`, and the transport along `q'` moves that membership to `y`. All that remains is the satisfaction proof `sat`, which is assembled from the two memberships `v ∈ₛ fst a` and `y ∈ₛ v`: transitivity of the stage, applied through `Atrans`, certifies first that `v` lies in `Lset σ` and then that `y` does as well, and the two conjuncts are transported to the embedded presentation along the paths `sym qₐ` and `sym q'`.
+The helper first converts `y` into a representative `m'` of the stage with its identifying path `q'`, and uses the membership reading of `defSet` backward: satisfaction of φ at the constant naming `m'` becomes membership of the embedded `m'`, and the transport along `q'` moves that membership to `y`. All that remains is the satisfaction proof `sat`, which is assembled from the two memberships `v ∈ₛ (λ p → p .fst) a` and `y ∈ₛ v`: transitivity of the stage, applied through `Atrans`, certifies first that `v` lies in `Lset σ` and then that `y` does as well, and the two conjuncts are transported to the embedded presentation along the paths `sym qₐ` and `sym q'`.
 <!--zh-->
-辅助引理先把 `y` 转成层的一个代表元 `m'`，连同其等同路径 `q'`，并把 `defSet` 的成员关系读法反着用：在名指 `m'` 的常元处的 φ 满足变成嵌入 `m'` 的成员关系，沿 `q'` 的搬移再把这条成员关系搬到 `y` 上。剩下的只是满足证明 `sat`，它由两条成员关系 `v ∈ₛ fst a` 与 `y ∈ₛ v` 组装：经由 `Atrans` 施用层传递性，先证 `v` 落在 `Lset σ` 中，再证 `y` 也如此，两个合取肢则沿路径 `sym qₐ` 与 `sym q'` 被搬到嵌入呈现上。
+辅助引理先把 `y` 转成层的一个代表元 `m'`，连同其等同路径 `q'`，并把 `defSet` 的成员关系读法反着用：在名指 `m'` 的常元处的 φ 满足变成嵌入 `m'` 的成员关系，沿 `q'` 的搬移再把这条成员关系搬到 `y` 上。剩下的只是满足证明 `sat`，它由两条成员关系 `v ∈ₛ (λ p → p .fst) a` 与 `y ∈ₛ v` 组装：经由 `Atrans` 施用层传递性，先证 `v` 落在 `Lset σ` 中，再证 `y` 也如此，两个合取肢则沿路径 `sym qₐ` 与 `sym q'` 被搬到嵌入呈现上。
 <!--ja-->
-補助補題はまず `y` を段階の代表元 `m'` と、その同一視のパス `q'` に変換し、`defSet` の所属の読みを逆向きに用いる。`m'` を名指す定数のところでの φ の充足は埋め込まれた `m'` の所属となり、`q'` に沿った輸送がその所属を `y` へ移す。残るは充足の証明 `sat` で、これは二つの所属 `v ∈ₛ fst a` と `y ∈ₛ v` から組み立てられる。`Atrans` を通して段階の推移性を適用すれば、まず `v` が `Lset σ` にあり、ついで `y` もそうであることが証明され、二つの項はパス `sym qₐ` と `sym q'` に沿って埋め込まれた提示へ輸送される。
+補助補題はまず `y` を段階の代表元 `m'` と、その同一視のパス `q'` に変換し、`defSet` の所属の読みを逆向きに用いる。`m'` を名指す定数のところでの φ の充足は埋め込まれた `m'` の所属となり、`q'` に沿った輸送がその所属を `y` へ移す。残るは充足の証明 `sat` で、これは二つの所属 `v ∈ₛ (λ p → p .fst) a` と `y ∈ₛ v` から組み立てられる。`Atrans` を通して段階の推移性を適用すれば、まず `v` が `Lset σ` にあり、ついで `y` もそうであることが証明され、二つの項はパス `sym qₐ` と `sym q'` に沿って埋め込まれた提示へ輸送される。
 <!--/-->
 
 ```agda
@@ -1330,18 +1330,18 @@ The helper first converts `y` into a representative `m'` of the stage with its i
 ```
 
 <!--en-->
-This block is where the stage hypothesis earns its keep, and it is the one step pairing did not need. The two ambient memberships are first read back out of their structural form by `∈∈ₛ`: `v` is a member of the underlying set of `a`, and `y` is a member of `v`. Transitivity of the stage is then applied twice. Since `fst a` lies in `Lset σ` and the stage is transitive, its member `v` lies in `Lset σ` too; applying the same reasoning to the membership of `y` in `v` certifies `y` itself as a member of the stage. So a member of a member of `a` is pulled into the stage, which is precisely what lets the formula's quantifier see it.
+This block is where the stage hypothesis earns its keep, and it is the one step pairing did not need. The two ambient memberships are first read back out of their structural form by `∈∈ₛ`: `v` is a member of the underlying set of `a`, and `y` is a member of `v`. Transitivity of the stage is then applied twice. Since `a .fst` lies in `Lset σ` and the stage is transitive, its member `v` lies in `Lset σ` too; applying the same reasoning to the membership of `y` in `v` certifies `y` itself as a member of the stage. So a member of a member of `a` is pulled into the stage, which is precisely what lets the formula's quantifier see it.
 <!--zh-->
-这一块正是层假设出力之处，也是配对所不需要的一步。先用 `∈∈ₛ` 把两条周遭成员关系从结构形式读出：`v` 是 `a` 底层集合的元素，`y` 是 `v` 的元素。然后对层的传递性施用两次：既然 `fst a` 落在 `Lset σ` 中而层传递，其元素 `v` 也落在 `Lset σ` 中；对 `y` 属于 `v` 这条成员关系再施同一推理，便证得 `y` 自身是层的元素。于是 `a` 的元素的元素被拉进层，这恰好让公式的量词能够看到它。
+这一块正是层假设出力之处，也是配对所不需要的一步。先用 `∈∈ₛ` 把两条周遭成员关系从结构形式读出：`v` 是 `a` 底层集合的元素，`y` 是 `v` 的元素。然后对层的传递性施用两次：既然 `a .fst` 落在 `Lset σ` 中而层传递，其元素 `v` 也落在 `Lset σ` 中；对 `y` 属于 `v` 这条成员关系再施同一推理，便证得 `y` 自身是层的元素。于是 `a` 的元素的元素被拉进层，这恰好让公式的量词能够看到它。
 <!--ja-->
-ここが段階の仮定が働く場所であり、対の構成には要らなかった一手である。まず `∈∈ₛ` によって二つの周囲の所属を構造的な形から読み出す。`v` は `a` の基底の集合の要素、`y` は `v` の要素である。次に段階の推移性を二度適用する。`fst a` が `Lset σ` にあり段階が推移的である以上、その要素 `v` も `Lset σ` にあり、`v` への `y` の所属に同じ推論を適用すれば、`y` 自身も段階の要素であると証明される。こうして `a` の要素の要素が段階へ引き込まれ、論理式の量化子がそれを見えるようにするのはまさにこのためである。
+ここが段階の仮定が働く場所であり、対の構成には要らなかった一手である。まず `∈∈ₛ` によって二つの周囲の所属を構造的な形から読み出す。`v` は `a` の基底の集合の要素、`y` は `v` の要素である。次に段階の推移性を二度適用する。`a .fst` が `Lset σ` にあり段階が推移的である以上、その要素 `v` も `Lset σ` にあり、`v` への `y` の所属に同じ推論を適用すれば、`y` 自身も段階の要素であると証明される。こうして `a` の要素の要素が段階へ引き込まれ、論理式の量化子がそれを見えるようにするのはまさにこのためである。
 <!--/-->
 
 ```agda
           where
-          v∈fa = ∈∈ₛ {a = v} {b = fst a} .snd v∈ₛfa
+          v∈fa = ∈∈ₛ {a = v} {b = a .fst} .snd v∈ₛfa
           y∈v = ∈∈ₛ {a = y} {b = v} .snd y∈ₛv
-          v∈A = Atrans {x = fst a} {y = v} v∈fa fa∈
+          v∈A = Atrans {x = a .fst} {y = v} v∈fa fa∈
           y∈A = Atrans {x = v} {y = y} y∈v v∈A
 ```
 
@@ -1362,53 +1362,53 @@ With `y` certified to lie in the stage, the fiber conversion `∈-asFiber` suppl
 ```
 
 <!--en-->
-The two inclusions assemble into the equation `defSet≡`, and the recognition principle `𝒟ₒ-intro` turns formula and equation into membership of `⋃ (fst a)` in `𝒟ₒ (Lset σ)`. One application of the closure lemma `𝒟ₒ→isL` finishes the construction: since `σ` is an ordinal, a definable subset of `Lset σ` is constructible, so `⋃ (fst a)` enters `L` packaged as a carrier element together with its certificate. This packaging is what the next block classifies.
+The two inclusions assemble into the equation `defSet≡`, and the recognition principle `𝒟ₒ-intro` turns formula and equation into membership of `⋃ (a .fst)` in `𝒟ₒ (Lset σ)`. One application of the closure lemma `𝒟ₒ→isL` finishes the construction: since `σ` is an ordinal, a definable subset of `Lset σ` is constructible, so `⋃ (a .fst)` enters `L` packaged as a carrier element together with its certificate. This packaging is what the next block classifies.
 <!--zh-->
-两个包含组装成等式 `defSet≡`，识别原则 `𝒟ₒ-intro` 把公式与等式转换为 `⋃ (fst a)` 在 `𝒟ₒ (Lset σ)` 中的成员关系。再对闭包引理 `𝒟ₒ→isL` 施用一次便完成构造：既然 `σ` 是序数，`Lset σ` 的可定义子集就可构造，于是 `⋃ (fst a)` 连同其证书被打包成载体元素进入 `L`。下一块将对该打包给出刻画。
+两个包含组装成等式 `defSet≡`，识别原则 `𝒟ₒ-intro` 把公式与等式转换为 `⋃ (a .fst)` 在 `𝒟ₒ (Lset σ)` 中的成员关系。再对闭包引理 `𝒟ₒ→isL` 施用一次便完成构造：既然 `σ` 是序数，`Lset σ` 的可定义子集就可构造，于是 `⋃ (a .fst)` 连同其证书被打包成载体元素进入 `L`。下一块将对该打包给出刻画。
 <!--ja-->
-二つの包含は等式 `defSet≡` に組み上げられ、認識の原理 `𝒟ₒ-intro` が論理式と等式を `⋃ (fst a)` の `𝒟ₒ (Lset σ)` への所属に変える。閉包の補題 `𝒟ₒ→isL` を一度適用すれば構成は完成である。`σ` が順序数である以上、`Lset σ` の定義可能部分集合は構成可能であり、`⋃ (fst a)` は証明書とともに台の要素として `L` に入る。次のブロックはこの包みを分類する。
+二つの包含は等式 `defSet≡` に組み上げられ、認識の原理 `𝒟ₒ-intro` が論理式と等式を `⋃ (a .fst)` の `𝒟ₒ (Lset σ)` への所属に変える。閉包の補題 `𝒟ₒ→isL` を一度適用すれば構成は完成である。`σ` が順序数である以上、`Lset σ` の定義可能部分集合は構成可能であり、`⋃ (a .fst)` は証明書とともに台の要素として `L` に入る。次のブロックはこの包みを分類する。
 <!--/-->
 
 ```agda
                 , ( subst (λ w → ⟨ v ∈ w ⟩) (sym qₐ) v∈fa
                   , subst (λ w → ⟨ w ∈ v ⟩) (sym q') y∈v ) ∣₁
 
-    union∈𝒟ₒ : ⟨ ⋃ (fst a) ∈ 𝒟ₒ (Lset σ) ⟩
-    union∈𝒟ₒ = 𝒟ₒ-intro (Lset σ) (⋃ (fst a)) ∣ φ , defSet≡ ∣₁
+    union∈𝒟ₒ : ⟨ ⋃ (a .fst) ∈ 𝒟ₒ (Lset σ) ⟩
+    union∈𝒟ₒ = 𝒟ₒ-intro (Lset σ) (⋃ (a .fst)) ∣ φ , defSet≡ ∣₁
 
     unionElt : S
 ```
 
 <!--en-->
-The specification is a path of truth values, and it is composed from two pieces. The hierarchy's own union law `union-spec` classifies membership of `fst z` in the ambient union as an indexed disjunction over all of the hierarchy: some `y` in `fst a` with `fst z` in `y`. What remains is to turn that ambient indexed disjunction into `Q z`, which quantifies over the carrier `S`, that is, over constructible witnesses only. The two quantifier ranges differ, and the bridge of the next block identifies the two truncated disjunctions.
+The specification is a path of truth values, and it is composed from two pieces. The hierarchy's own union law `union-spec` classifies membership of `z .fst` in the ambient union as an indexed disjunction over all of the hierarchy: some `y` in `a .fst` with `z .fst` in `y`. What remains is to turn that ambient indexed disjunction into `Q z`, which quantifies over the carrier `S`, that is, over constructible witnesses only. The two quantifier ranges differ, and the bridge of the next block identifies the two truncated disjunctions.
 <!--zh-->
-规格是一条真值路径，由两块复合而成。层级自己的并律 `union-spec` 把 `fst z` 在周遭并中的成员关系分类为跑遍整个层级的带索引析取：存在 `fst a` 中的 `y` 使 `fst z` 属于 `y`。剩下要做的是把这条周遭的带索引析取转成 `Q z`，后者对载体 `S` 量化，也就是只对可构造的见证量化。两个量化范围不同，下一块的桥将把这两条截断的析取等同起来。
+规格是一条真值路径，由两块复合而成。层级自己的并律 `union-spec` 把 `z .fst` 在周遭并中的成员关系分类为跑遍整个层级的带索引析取：存在 `a .fst` 中的 `y` 使 `z .fst` 属于 `y`。剩下要做的是把这条周遭的带索引析取转成 `Q z`，后者对载体 `S` 量化，也就是只对可构造的见证量化。两个量化范围不同，下一块的桥将把这两条截断的析取等同起来。
 <!--ja-->
-仕様は真理値のパスであり、二つの部品の合成である。階層そのものの和集合の法則 `union-spec` は、周囲の和集合への `fst z` の所属を、階層全体を渡る添字つき論理和として分類する。すなわち `fst a` のある `y` が `fst z` を要素にもつ、というものである。残る仕事は、この周囲の添字つき論理和を `Q z` に変えることである。`Q z` は台 `S` の上、つまり構成可能な証人だけの上で量化する。二つの量化の範囲は異なっており、次のブロックの橋渡しがこの二つの切り詰められた論理和を同一視する。
+仕様は真理値のパスであり、二つの部品の合成である。階層そのものの和集合の法則 `union-spec` は、周囲の和集合への `z .fst` の所属を、階層全体を渡る添字つき論理和として分類する。すなわち `a .fst` のある `y` が `z .fst` を要素にもつ、というものである。残る仕事は、この周囲の添字つき論理和を `Q z` に変えることである。`Q z` は台 `S` の上、つまり構成可能な証人だけの上で量化する。二つの量化の範囲は異なっており、次のブロックの橋渡しがこの二つの切り詰められた論理和を同一視する。
 <!--/-->
 
 ```agda
-    unionElt = ⋃ (fst a) , 𝒟ₒ→isL σ oσ (⋃ (fst a)) union∈𝒟ₒ
+    unionElt = ⋃ (a .fst) , 𝒟ₒ→isL σ oσ (⋃ (a .fst)) union∈𝒟ₒ
 
     spec : (z : S) → (z ∈ˢ unionElt) ≡ Q z
-    spec z = union-spec (fst a) (fst z) ∙ bridge
+    spec z = union-spec (a .fst) (z .fst) ∙ bridge
       where
-      bridge : (∃[ y ∶ (V ℓ) ] (y ∈ fst a) ⊓ (fst z ∈ y)) ≡ Q z
+      bridge : (∃[ y ∶ (V ℓ) ] (y ∈ a .fst) ⊓ (z .fst ∈ y)) ≡ Q z
 ```
 
 <!--en-->
-The bridge is a pair of maps between the two truncated disjunctions, joined into a path by `⇔toPath`. Forward: an ambient witness `y` with its two memberships gains a constructibility certificate, precisely because `y` is a member of `fst a`, whose own certificate `a .snd` is in hand; transitivity of the class, here `isL-trans` applied to the membership of `y` and the certificate of `a`, certifies `y` itself, so the witness may be presented as a carrier element while keeping the memberships. Backward: a carrier witness is projected down to its underlying set, discarding the certificate but keeping the memberships. Neither direction inspects how the truth values are built; both act on abstract Ω values. With the bridge in place, `spec` is the composite path, and the union field of the model is thereby supplied.
+The bridge is a pair of maps between the two truncated disjunctions, joined into a path by `⇔toPath`. Forward: an ambient witness `y` with its two memberships gains a constructibility certificate, precisely because `y` is a member of `a .fst`, whose own certificate `a .snd` is in hand; transitivity of the class, here `isL-trans` applied to the membership of `y` and the certificate of `a`, certifies `y` itself, so the witness may be presented as a carrier element while keeping the memberships. Backward: a carrier witness is projected down to its underlying set, discarding the certificate but keeping the memberships. Neither direction inspects how the truth values are built; both act on abstract Ω values. With the bridge in place, `spec` is the composite path, and the union field of the model is thereby supplied.
 <!--zh-->
-桥是这两条截断析取之间的一对映射，由 `⇔toPath` 接成路径。正向：带两条成员关系的周遭见证 `y` 获得一份可构造性证书，依据恰恰是 `y` 属于 `fst a`，而 `a` 自身的证书 `a .snd` 就在手边；类的传递性在此处即 `isL-trans` 施于「`y` 的成员关系」与「`a` 的证书」，证得 `y` 自身可构造，于是该见证可以被呈现为载体元素而不丢失成员关系。反向：载体见证被投影回其底层集合，丢掉证书但保留成员关系。两个方向都不检视真值是如何构造的，都作用于抽象的 Ω 值。桥就位后，`spec` 便是复合路径，模型的并字段由此得证。
+桥是这两条截断析取之间的一对映射，由 `⇔toPath` 接成路径。正向：带两条成员关系的周遭见证 `y` 获得一份可构造性证书，依据恰恰是 `y` 属于 `a .fst`，而 `a` 自身的证书 `a .snd` 就在手边；类的传递性在此处即 `isL-trans` 施于「`y` 的成员关系」与「`a` 的证书」，证得 `y` 自身可构造，于是该见证可以被呈现为载体元素而不丢失成员关系。反向：载体见证被投影回其底层集合，丢掉证书但保留成员关系。两个方向都不检视真值是如何构造的，都作用于抽象的 Ω 值。桥就位后，`spec` 便是复合路径，模型的并字段由此得证。
 <!--ja-->
-橋渡しは、二つの切り詰められた論理和の間の一対の写像であり、`⇔toPath` によってパスに結ばれる。前向きには、二つの所属を伴う周囲の証人 `y` が構成可能性の証明書を得る。根拠はまさに `y` が `fst a` の要素であることで、`a` 自身の証明書 `a .snd` が手もとにある。クラスの推移性、ここでは「`y` の所属」と「`a` の証明書」に適用される `isL-trans` が `y` 自身を証明するので、証人は所属を保ったまま台の要素として提示できる。後向きには、台の証人はその基底の集合へ射影され、証明書は捨てられるが所属は保たれる。どちらの向きも真理値の作られ方を覗かず、抽象的な Ω の値に作用する。橋が整えば `spec` は合成パスとなり、モデルの和集合のフィールドがここに供給される。
+橋渡しは、二つの切り詰められた論理和の間の一対の写像であり、`⇔toPath` によってパスに結ばれる。前向きには、二つの所属を伴う周囲の証人 `y` が構成可能性の証明書を得る。根拠はまさに `y` が `a .fst` の要素であることで、`a` 自身の証明書 `a .snd` が手もとにある。クラスの推移性、ここでは「`y` の所属」と「`a` の証明書」に適用される `isL-trans` が `y` 自身を証明するので、証人は所属を保ったまま台の要素として提示できる。後向きには、台の証人はその基底の集合へ射影され、証明書は捨てられるが所属は保たれる。どちらの向きも真理値の作られ方を覗かず、抽象的な Ω の値に作用する。橋が整えば `spec` は合成パスとなり、モデルの和集合のフィールドがここに供給される。
 <!--/-->
 
 ```agda
       bridge = ⇔toPath
         (map₁ (λ { (y , py) →
-          (y , isL-trans {x = fst a} {y = y} (py .fst) (a .snd)) , py }))
-        (map₁ (λ { (y , py) → fst y , py }))
+          (y , isL-trans {x = a .fst} {y = y} (py .fst) (a .snd)) , py }))
+        (map₁ (λ { (y , py) → y .fst , py }))
 
   build : ∥ SetOf Q ∥₁
 ```

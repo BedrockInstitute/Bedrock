@@ -164,17 +164,17 @@ The agreement proof verifies that renaming preserves the intended environment. I
 ```
 
 <!--en-->
-Two semantic equalities prepare the outward direction. Correctness of the ordered-pair formula identifies its satisfaction with the ambient equality `fst e ≡ pr (fst p) (fst z)`. The renaming theorem identifies satisfaction of the renamed formula with satisfaction of the original `φ` at value `z` and index `p`.
+Two semantic equalities prepare the outward direction. Correctness of the ordered-pair formula identifies its satisfaction with the ambient equality `e .fst ≡ pr (p .fst) (z .fst)`. The renaming theorem identifies satisfaction of the renamed formula with satisfaction of the original `φ` at value `z` and index `p`.
 <!--zh-->
-两条语义等式为向外方向作准备。有序对公式的正确性把其满足关系等同于外围等式 `fst e ≡ pr (fst p) (fst z)`；改名定理则把改名公式的满足关系等同于原公式 `φ` 在取值 `z`、索引 `p` 处的满足关系。
+两条语义等式为向外方向作准备。有序对公式的正确性把其满足关系等同于外围等式 `e .fst ≡ pr (p .fst) (z .fst)`；改名定理则把改名公式的满足关系等同于原公式 `φ` 在取值 `z`、索引 `p` 处的满足关系。
 <!--ja-->
-二つの意味論的等式が外向きの読みを準備する。順序対の論理式の正しさにより、その充足は周囲の等式 `fst e ≡ pr (fst p) (fst z)` と同一視される。改名定理により、改名後の論理式の充足は、値 `z` と添字 `p` における元の `φ` の充足と同一視される。
+二つの意味論的等式が外向きの読みを準備する。順序対の論理式の正しさにより、その充足は周囲の等式 `e .fst ≡ pr (p .fst) (z .fst)` と同一視される。改名定理により、改名後の論理式の充足は、値 `z` と添字 `p` における元の `φ` の充足と同一視される。
 <!--/-->
 
 ```agda
       at : (z e p : S)
          → ⟨ (z ∷ e ∷ p ∷ []) ⊨ prAtL (suc zero) (suc (suc zero)) zero ⟩
-         ≡ (fst e ≡ pr (fst p) (fst z))
+         ≡ (e .fst ≡ pr (p .fst) (z .fst))
       at z e p = cong ⟨_⟩ (prAtL-adequate (suc zero) (suc (suc zero)) zero (z ∷ e ∷ p ∷ []))
 
       gr : (z e p : S)
@@ -193,7 +193,7 @@ Reading `pairFo` outward yields a propositionally truncated value `z`, together 
       gr z e p = cong ⟨_⟩ (Ren.⊨-rename ρ φ (z ∷ e ∷ p ∷ []) (z ∷ p ∷ []) (ag z e p))
 
     pair-out : (e p : S) → ⟨ (e ∷ p ∷ []) ⊨ pairFo ⟩
-             → ∥ Σ[ z ∶ S ] ((fst e ≡ pr (fst p) (fst z)) × ⟨ (z ∷ p ∷ []) ⊨ φ ⟩) ∥₁
+             → ∥ Σ[ z ∶ S ] ((e .fst ≡ pr (p .fst) (z .fst)) × ⟨ (z ∷ p ∷ []) ⊨ φ ⟩) ∥₁
     pair-out e p = map₁ (λ { (z , (q , h)) →
 ```
 
@@ -208,7 +208,7 @@ The inward lemma completes the semantic equivalence and the construction now tur
 ```agda
       z , (transport (at z e p) q , transport (gr z e p) h) })
 
-    pair-in : (e p z : S) → fst e ≡ pr (fst p) (fst z) → ⟨ (z ∷ p ∷ []) ⊨ φ ⟩
+    pair-in : (e p z : S) → e .fst ≡ pr (p .fst) (z .fst) → ⟨ (z ∷ p ∷ []) ⊨ φ ⟩
             → ⟨ (e ∷ p ∷ []) ⊨ pairFo ⟩
     pair-in e p z q h = ∣ z , (transport (sym (at z e p)) q , transport (sym (gr z e p)) h) ∣₁
 ```
@@ -240,10 +240,10 @@ The recursion supplies a domain, its original graph formula, and contractibility
 ```agda
   open Of R₀ public using ( dom; graph; funct ) renaming ( val to fn )
   Mem : S → Type (ℓ-suc ℓ)
-  Mem x = ⟨ fst x ∈ fst dom ⟩
+  Mem x = ⟨ x .fst ∈ dom .fst ⟩
 
   isPropMem : (x : S) → isProp (Mem x)
-  isPropMem x = snd (fst x ∈ fst dom)
+  isPropMem x = (x .fst ∈ dom .fst) .snd
 ```
 
 <!--en-->
@@ -260,7 +260,7 @@ Membership in a set is proposition-valued, so `Mem x` is a proposition. Conseque
     defines x m = funct x m .fst .snd
 
     only : (x : S) (m : Mem x) (y : S) → ⟨ (y ∷ x ∷ []) ⊨ graph ⟩ → y ≡ fn x m
-    only x m y h = sym (cong fst (funct x m .snd (y , h)))
+    only x m y h = sym (cong (λ p → p .fst) (funct x m .snd (y , h)))
 ```
 
 <!--en-->
@@ -281,18 +281,18 @@ Contractibility provides two facts about the original value relation. The select
 ```
 
 <!--en-->
-The ordered-pair formula is now specialized to the original value relation. Proof irrelevance for `Mem x` gives `fn-irr`, while `pairOf x m` is the constructible ordered pair of `x` and its value. Its underlying set is `pr (fst x) (fst (fn x m))`.
+The ordered-pair formula is now specialized to the original value relation. Proof irrelevance for `Mem x` gives `fn-irr`, while `pairOf x m` is the constructible ordered pair of `x` and its value. Its underlying set is `pr (x .fst) ((fn x m) .fst)`.
 <!--zh-->
-现在把有序对公式用于原取值关系。`Mem x` 的证明无关性给出 `fn-irr`；`pairOf x m` 则是 `x` 与其取值组成的可构造有序对，其底层集合为 `pr (fst x) (fst (fn x m))`。
+现在把有序对公式用于原取值关系。`Mem x` 的证明无关性给出 `fn-irr`；`pairOf x m` 则是 `x` 与其取值组成的可构造有序对，其底层集合为 `pr (x .fst) ((fn x m) .fst)`。
 <!--ja-->
-ここで順序対の論理式をもとの値関係に適用する。`Mem x` の証明無関係性から `fn-irr` が得られ、`pairOf x m` は `x` とその値との構成可能な順序対である。その基礎集合は `pr (fst x) (fst (fn x m))` である。
+ここで順序対の論理式をもとの値関係に適用する。`Mem x` の証明無関係性から `fn-irr` が得られ、`pairOf x m` は `x` とその値との構成可能な順序対である。その基礎集合は `pr (x .fst) ((fn x m) .fst)` である。
 <!--/-->
 
 ```agda
     uniq : (x : S) (m : Mem x) (p : S) → ⟨ (p ∷ x ∷ []) ⊨ Fo.fo ⟩ → p ≡ pairOf x m
     uniq x m p h = rec₁ (isSetS p (pairOf x m))
-      (λ { (z , (e , g)) → Σ≡Prop (λ v → snd (isL v))
-        (e ∙ cong (λ w → pr (fst x) (fst w)) (only x m z g) ∙ sym (prʟ-fst x (fn x m))) })
+      (λ { (z , (e , g)) → Σ≡Prop (λ v → (isL v) .snd)
+        (e ∙ cong (λ w → pr (x .fst) (w .fst)) (only x m z g) ∙ sym (prʟ-fst x (fn x m))) })
       (Fo.out p x h)
 ```
 
@@ -329,7 +329,7 @@ A new recursion uses the same domain and the ordered-pair formula as its value r
 ```agda
           ( pairOf x m
           , Fo.into (pairOf x m) x (fn x m) (prʟ-fst x (fn x m)) (defines x m) )
-        , λ { (p , h) → Σ≡Prop (λ w → snd ((w ∷ x ∷ []) ⊨ Fo.fo)) (sym (uniq x m p h)) } }
+        , λ { (p , h) → Σ≡Prop (λ w → ((w ∷ x ∷ []) ⊨ Fo.fo) .snd) (sym (uniq x m p h)) } }
 
     module T = Of R using ( table; table-in; table-out )
 
@@ -347,8 +347,8 @@ The dependent-pair contraction compares a candidate value together with its sati
 ```agda
   F = T.table
 
-  F-in : (x : S) (m : Mem x) → ⟨ pr (fst x) (fst (fn x m)) ∈ fst F ⟩
-  F-in x m = subst (λ w → ⟨ w ∈ fst F ⟩) (prʟ-fst x (fn x m))
+  F-in : (x : S) (m : Mem x) → ⟨ pr (x .fst) ((fn x m) .fst) ∈ F .fst ⟩
+  F-in x m = subst (λ w → ⟨ w ∈ F .fst ⟩) (prʟ-fst x (fn x m))
     (T.table-in x (pairOf x m) m
       (Fo.into (pairOf x m) x (fn x m) (prʟ-fst x (fn x m)) (defines x m)))
 ```
@@ -362,43 +362,43 @@ Replacement applied to this recursion forms the value range of its ordered-pair 
 <!--/-->
 
 ```agda
-  F-out : (p : V ℓ) → ⟨ p ∈ fst F ⟩
-        → ∥ Σ[ x ∶ S ] Σ[ m ∶ Mem x ] (p ≡ pr (fst x) (fst (fn x m))) ∥₁
+  F-out : (p : V ℓ) → ⟨ p ∈ F .fst ⟩
+        → ∥ Σ[ x ∶ S ] Σ[ m ∶ Mem x ] (p ≡ pr (x .fst) ((fn x m) .fst)) ∥₁
   F-out p h = rec₁ squash₁ step (T.table-out pS h)
     where
     pS : S
 ```
 
 <!--en-->
-The inward membership direction is immediate from the replacement specification. For a domain witness `m`, the constructible ordered pair `pairOf x m` satisfies the pair formula, hence belongs to the replacement range. Transport along `prʟ-fst` restates this as membership of the ambient code `pr (fst x) (fst (fn x m))` in the underlying set of `F`.
+The inward membership direction is immediate from the replacement specification. For a domain witness `m`, the constructible ordered pair `pairOf x m` satisfies the pair formula, hence belongs to the replacement range. Transport along `prʟ-fst` restates this as membership of the ambient code `pr (x .fst) ((fn x m) .fst)` in the underlying set of `F`.
 <!--zh-->
-成员关系的向内方向直接来自替换规格。给定定义域见证 `m`，可构造有序对 `pairOf x m` 满足有序对公式，因此属于替换的值域。沿 `prʟ-fst` 搬运后，这被表述为外围编码 `pr (fst x) (fst (fn x m))` 属于 `F` 的底层集合。
+成员关系的向内方向直接来自替换规格。给定定义域见证 `m`，可构造有序对 `pairOf x m` 满足有序对公式，因此属于替换的值域。沿 `prʟ-fst` 搬运后，这被表述为外围编码 `pr (x .fst) ((fn x m) .fst)` 属于 `F` 的底层集合。
 <!--ja-->
-所属の内向きは置換の仕様から直ちに得られる。定義域の証人 `m` に対し、構成可能な順序対 `pairOf x m` は順序対の論理式を満たすので、置換の値域に属する。`prʟ-fst` に沿って輸送すると、周囲の符号 `pr (fst x) (fst (fn x m))` が `F` の基礎集合に属するという形になる。
+所属の内向きは置換の仕様から直ちに得られる。定義域の証人 `m` に対し、構成可能な順序対 `pairOf x m` は順序対の論理式を満たすので、置換の値域に属する。`prʟ-fst` に沿って輸送すると、周囲の符号 `pr (x .fst) ((fn x m) .fst)` が `F` の基礎集合に属するという形になる。
 <!--/-->
 
 ```agda
-    pS = p , isL-trans {x = fst F} {y = p} h (snd F)
+    pS = p , isL-trans {x = F .fst} {y = p} h (F .snd)
 
     step : Σ[ x ∶ S ] (Mem x × ⟨ (pS ∷ x ∷ []) ⊨ Fo.fo ⟩)
-         → ∥ Σ[ x ∶ S ] Σ[ m ∶ Mem x ] (p ≡ pr (fst x) (fst (fn x m))) ∥₁
+         → ∥ Σ[ x ∶ S ] Σ[ m ∶ Mem x ] (p ≡ pr (x .fst) ((fn x m) .fst)) ∥₁
     step (x , (m , g)) = map₁
       (λ { (z , (e , gz)) →
 ```
 
 <!--en-->
-For the outward direction, begin with an ambient set `p ∈ fst F`. Downward closure of constructibility packages `p` as an element `pS` of `L`. The replacement specification first yields, merely, an index `x`, a domain proof `m`, and satisfaction of the ordered-pair formula by `pS`.
+For the outward direction, begin with an ambient set `p ∈ F .fst`. Downward closure of constructibility packages `p` as an element `pS` of `L`. The replacement specification first yields, merely, an index `x`, a domain proof `m`, and satisfaction of the ordered-pair formula by `pS`.
 <!--zh-->
-对向外方向，从外围集合 `p ∈ fst F` 出发。可构造性的向下封闭把 `p` 包装成 `L` 的元素 `pS`。替换规格首先仅仅给出索引 `x`、定义域证明 `m`，以及 `pS` 满足有序对公式的证明。
+对向外方向，从外围集合 `p ∈ F .fst` 出发。可构造性的向下封闭把 `p` 包装成 `L` 的元素 `pS`。替换规格首先仅仅给出索引 `x`、定义域证明 `m`，以及 `pS` 满足有序对公式的证明。
 <!--ja-->
-外向きには、周囲の集合 `p ∈ fst F` から始める。構成可能性の下方閉性により、`p` を `L` の要素 `pS` として包む。置換の仕様からまず、添字 `x`、定義域の証明 `m`、および `pS` が順序対の論理式を満たすことが、単に得られる。
+外向きには、周囲の集合 `p ∈ F .fst` から始める。構成可能性の下方閉性により、`p` を `L` の要素 `pS` として包む。置換の仕様からまず、添字 `x`、定義域の証明 `m`、および `pS` が順序対の論理式を満たすことが、単に得られる。
 <!--/-->
 
 ```agda
-        x , m , (e ∙ cong (λ w → pr (fst x) (fst w)) (only x m z gz)) })
+        x , m , (e ∙ cong (λ w → pr (x .fst) (w .fst)) (only x m z gz)) })
       (Fo.out pS x g)
   Fib : S → S → Type (ℓ-suc ℓ)
-  Fib x y = Σ[ m ∶ Mem x ] (fst y ≡ fst (fn x m))
+  Fib x y = Σ[ m ∶ Mem x ] (y .fst ≡ (fn x m) .fst)
 
   isPropFib : (x y : S) → isProp (Fib x y)
 ```
@@ -412,12 +412,12 @@ The semantic outward lemma then opens a second truncation and supplies a value `
 <!--/-->
 
 ```agda
-  isPropFib x y = isPropΣ (isPropMem x) (λ m → setIsSet (fst y) (fst (fn x m)))
+  isPropFib x y = isPropΣ (isPropMem x) (λ m → setIsSet (y .fst) ((fn x m) .fst))
 
-  pair-out : (x y : S) → ⟨ pr (fst x) (fst y) ∈ fst F ⟩ → Fib x y
-  pair-out x y h = rec₁ (isPropFib x y) step (F-out (pr (fst x) (fst y)) h)
+  pair-out : (x y : S) → ⟨ pr (x .fst) (y .fst) ∈ F .fst ⟩ → Fib x y
+  pair-out x y h = rec₁ (isPropFib x y) step (F-out (pr (x .fst) (y .fst)) h)
     where
-    step : Σ[ x' ∶ S ] Σ[ m' ∶ Mem x' ] (pr (fst x) (fst y) ≡ pr (fst x') (fst (fn x' m')))
+    step : Σ[ x' ∶ S ] Σ[ m' ∶ Mem x' ] (pr (x .fst) (y .fst) ≡ pr (x' .fst) ((fn x' m') .fst))
 ```
 
 <!--en-->
@@ -437,18 +437,18 @@ For fixed `x` and `y`, the fiber `Fib x y` consists of a domain proof `m : Mem x
 ```agda
          → Fib x y
     step (x' , m' , e) = subst (λ z → Fib z y)
-      (Σ≡Prop (λ v → snd (isL v)) (sym (pr-inj e .fst))) (m' , pr-inj e .snd)
+      (Σ≡Prop (λ v → (isL v) .snd) (sym (pr-inj e .fst))) (m' , pr-inj e .snd)
 
   γ : S ^ 2
   γ = F ∷ dom ∷ []
 ```
 
 <!--en-->
-If the ordered-pair code `pr(fst x,fst y)` belongs to `F`, the outward description gives `x'`, `m'`, and an equality with `pr(fst x',fst(fn x' m'))`. Injectivity of `pr` yields equalities of both coordinates. The input equality transports `m'` to a proof that `x` lies in the domain; the output equality gives the second component of `Fib x y`.
+If the ordered-pair code `pr(x,fst .fst y)` belongs to `F`, the outward description gives `x'`, `m'`, and an equality with `pr(x',fst .fst(fn x' m'))`. Injectivity of `pr` yields equalities of both coordinates. The input equality transports `m'` to a proof that `x` lies in the domain; the output equality gives the second component of `Fib x y`.
 <!--zh-->
-若有序对编码 `pr(fst x,fst y)` 属于 `F`，向外刻画便给出 `x'`、`m'`，以及它与 `pr(fst x',fst(fn x' m'))` 的等式。`pr` 的单射性恢复两个坐标的等式。输入坐标的等式把 `m'` 搬运成 `x` 属于定义域的证明；输出坐标的等式给出 `Fib x y` 的第二分量。
+若有序对编码 `pr(x,fst .fst y)` 属于 `F`，向外刻画便给出 `x'`、`m'`，以及它与 `pr(x',fst .fst(fn x' m'))` 的等式。`pr` 的单射性恢复两个坐标的等式。输入坐标的等式把 `m'` 搬运成 `x` 属于定义域的证明；输出坐标的等式给出 `Fib x y` 的第二分量。
 <!--ja-->
-順序対の符号 `pr(fst x,fst y)` が `F` に属するなら、外向きの特徴づけから `x'`、`m'`、および `pr(fst x',fst(fn x' m'))` との等式が得られる。`pr` の単射性が両方の座標の等式を与える。入力座標の等式に沿って `m'` を輸送すると `x` が定義域に属する証明となり、出力座標の等式が `Fib x y` の第二成分となる。
+順序対の符号 `pr(x,fst .fst y)` が `F` に属するなら、外向きの特徴づけから `x'`、`m'`、および `pr(x',fst .fst(fn x' m'))` との等式が得られる。`pr` の単射性が両方の座標の等式を与える。入力座標の等式に沿って `m'` を輸送すると `x` が定義域に属する証明となり、出力座標の等式が `Fib x y` の第二成分となる。
 <!--/-->
 
 ```agda
@@ -456,7 +456,7 @@ If the ordered-pair code `pr(fst x,fst y)` belongs to `F`, the outward descripti
   sv = svAt-in zero γ (λ x y y' p q →
     let (m , e)   = pair-out x y p
         (m' , e') = pair-out x y' q
-    in e ∙ cong fst (fn-irr x m m') ∙ sym e')
+    in e ∙ cong (λ p → p .fst) (fn-irr x m m') ∙ sym e')
 ```
 
 <!--en-->
@@ -471,8 +471,8 @@ The environment `γ = F ∷ dom ∷ []` assigns the two free variables used by t
   dm : ⟨ γ ⊨ domAt zero (suc zero) ⟩
   dm = domAt-intro zero (suc zero) γ (λ x → fwd x , bwd x)
     where
-    fwd : (x : S) → ⟨ ∃[ y ∶ S ] (pr (fst x) (fst y) ∈ fst F) ⟩ → Mem x
-    fwd x = rec₁ (isPropMem x) (λ { (y , p) → fst (pair-out x y p) })
+    fwd : (x : S) → ⟨ ∃[ y ∶ S ] (pr (x .fst) (y .fst) ∈ F .fst) ⟩ → Mem x
+    fwd x = rec₁ (isPropMem x) (λ { (y , p) → (pair-out x y p) .fst })
 ```
 
 <!--en-->
@@ -484,7 +484,7 @@ Finally, the domain formula is proved in both directions. If `x` occurs as the f
 <!--/-->
 
 ```agda
-    bwd : (x : S) → Mem x → ⟨ ∃[ y ∶ S ] (pr (fst x) (fst y) ∈ fst F) ⟩
+    bwd : (x : S) → Mem x → ⟨ ∃[ y ∶ S ] (pr (x .fst) (y .fst) ∈ F .fst) ⟩
     bwd x m = ∣ fn x m , F-in x m ∣₁
 ```
 </div>

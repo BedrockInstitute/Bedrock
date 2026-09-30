@@ -293,7 +293,7 @@ The tag agreement says that the ten slots carry exactly the numerals zero throug
 
 ```agda
 Tags : ∀ {m} (γ : S ^ m) (N : Fin 10 → Fin m) → Type (ℓ-suc ℓ)
-Tags γ N = (k : Fin 10) → fst (lookup (N k) γ) ≡ # (toℕ k)
+Tags γ N = (k : Fin 10) → (lookup (N k) γ) .fst ≡ # (toℕ k)
 ```
 
 <!--en-->

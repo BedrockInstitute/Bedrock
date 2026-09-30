@@ -279,32 +279,32 @@ cup-inr A B x h = subst ⟨_⟩ (sym (union-spec ⁅ A , B ⁆ x))
 sglʟ : S → S
 sglʟ a = pairʟ a a
 
-sglʟ-fst : (a : S) → fst (sglʟ a) ≡ ⁅ fst a ⁆s
-sglʟ-fst a = pairʟ-fst a a ∙ pair-singleton (fst a)
+sglʟ-fst : (a : S) → (sglʟ a) .fst ≡ ⁅ a .fst ⁆s
+sglʟ-fst a = pairʟ-fst a a ∙ pair-singleton (a .fst)
 
 cupʟ : S → S → S
 cupʟ a b = unionʟ (pairʟ a b)
 
-cupʟ-fst : (a b : S) → fst (cupʟ a b) ≡ (fst a ∪ fst b)
+cupʟ-fst : (a b : S) → (cupʟ a b) .fst ≡ (a .fst ∪ b .fst)
 cupʟ-fst a b = unionʟ-fst (pairʟ a b) ∙ cong (⋃_) (pairʟ-fst a b)
 
-sglʟ-in : (a : S) (x : V ℓ) → x ≡ fst a → ⟨ x ∈ fst (sglʟ a) ⟩
-sglʟ-in a x e = subst (λ w → ⟨ x ∈ w ⟩) (sym (sglʟ-fst a)) (sgl-in (fst a) x e)
+sglʟ-in : (a : S) (x : V ℓ) → x ≡ a .fst → ⟨ x ∈ (sglʟ a) .fst ⟩
+sglʟ-in a x e = subst (λ w → ⟨ x ∈ w ⟩) (sym (sglʟ-fst a)) (sgl-in (a .fst) x e)
 
-sglʟ-out : (a : S) (x : V ℓ) → ⟨ x ∈ fst (sglʟ a) ⟩ → x ≡ fst a
-sglʟ-out a x h = sgl-out (fst a) x (subst (λ w → ⟨ x ∈ w ⟩) (sglʟ-fst a) h)
+sglʟ-out : (a : S) (x : V ℓ) → ⟨ x ∈ (sglʟ a) .fst ⟩ → x ≡ a .fst
+sglʟ-out a x h = sgl-out (a .fst) x (subst (λ w → ⟨ x ∈ w ⟩) (sglʟ-fst a) h)
 
-cupʟ-inl : (a b : S) (x : V ℓ) → ⟨ x ∈ fst a ⟩ → ⟨ x ∈ fst (cupʟ a b) ⟩
+cupʟ-inl : (a b : S) (x : V ℓ) → ⟨ x ∈ a .fst ⟩ → ⟨ x ∈ (cupʟ a b) .fst ⟩
 cupʟ-inl a b x h = subst (λ w → ⟨ x ∈ w ⟩) (sym (cupʟ-fst a b))
-  (cup-inl (fst a) (fst b) x h)
+  (cup-inl (a .fst) (b .fst) x h)
 
-cupʟ-inr : (a b : S) (x : V ℓ) → ⟨ x ∈ fst b ⟩ → ⟨ x ∈ fst (cupʟ a b) ⟩
+cupʟ-inr : (a b : S) (x : V ℓ) → ⟨ x ∈ b .fst ⟩ → ⟨ x ∈ (cupʟ a b) .fst ⟩
 cupʟ-inr a b x h = subst (λ w → ⟨ x ∈ w ⟩) (sym (cupʟ-fst a b))
-  (cup-inr (fst a) (fst b) x h)
+  (cup-inr (a .fst) (b .fst) x h)
 
-cupʟ-out : (a b : S) (x : V ℓ) → ⟨ x ∈ fst (cupʟ a b) ⟩
-         → ∥ (⟨ x ∈ fst a ⟩ ⊎ ⟨ x ∈ fst b ⟩) ∥₁
-cupʟ-out a b x h = cup-out (fst a) (fst b) x
+cupʟ-out : (a b : S) (x : V ℓ) → ⟨ x ∈ (cupʟ a b) .fst ⟩
+         → ∥ (⟨ x ∈ a .fst ⟩ ⊎ ⟨ x ∈ b .fst ⟩) ∥₁
+cupʟ-out a b x h = cup-out (a .fst) (b .fst) x
   (subst (λ w → ⟨ x ∈ w ⟩) (cupʟ-fst a b) h)
 ```
 
@@ -365,9 +365,9 @@ module _ {ℓ' : Level} {K : Type ℓ'} where
   Of : (f g : ∀ {m} → Formula K m → S) {n : ℕ} → Formula K n → V ℓ
      → Type (ℓ-max (ℓ-suc ℓ) ℓ')
   Of f g φ x = ∥ (Σ[ m ∶ ℕ ] Σ[ χ ∶ Formula K m ]
-                   ((x ≡ fst (f χ))
-                    × ((z : V ℓ) → ⟨ z ∈ fst (tree g χ) ⟩
-                       → ⟨ z ∈ fst (tree g φ) ⟩))) ∥₁
+                   ((x ≡ (f χ) .fst)
+                    × ((z : V ℓ) → ⟨ z ∈ (tree g χ) .fst ⟩
+                       → ⟨ z ∈ (tree g φ) .fst ⟩))) ∥₁
 ```
 
 <details open class="submodule-fold">
@@ -380,20 +380,20 @@ module _ {ℓ' : Level} {K : Type ℓ'} where
 
 ```agda
     one : ∀ {n} (φ : Formula K n) (x : V ℓ)
-        → ⟨ x ∈ fst (sglʟ (f φ)) ⟩ → Of f g φ x
+        → ⟨ x ∈ (sglʟ (f φ)) .fst ⟩ → Of f g φ x
     one {n} φ x h = ∣ n , φ , sglʟ-out (f φ) x h , (λ _ hz → hz) ∣₁
 
     wider : ∀ {n m} (φ : Formula K n) (χ : Formula K m) {x : V ℓ}
-          → ((z : V ℓ) → ⟨ z ∈ fst (tree g χ) ⟩ → ⟨ z ∈ fst (tree g φ) ⟩)
+          → ((z : V ℓ) → ⟨ z ∈ (tree g χ) .fst ⟩ → ⟨ z ∈ (tree g φ) .fst ⟩)
           → Of f g χ x → Of f g φ x
     wider _ _ s = map₁
       (λ { (m , ψ , e , t) → m , ψ , e , (λ z hz → s z (t z hz)) })
 
     un : ∀ {n m} (φ : Formula K n) (a : Formula K m)
-       → ((z : V ℓ) → ⟨ z ∈ fst (cupʟ (sglʟ (g φ)) (tree g a)) ⟩
-          → ⟨ z ∈ fst (tree g φ) ⟩)
-       → ((x : V ℓ) → ⟨ x ∈ fst (tree f a) ⟩ → Of f g a x)
-       → (x : V ℓ) → ⟨ x ∈ fst (cupʟ (sglʟ (f φ)) (tree f a)) ⟩ → Of f g φ x
+       → ((z : V ℓ) → ⟨ z ∈ (cupʟ (sglʟ (g φ)) (tree g a)) .fst ⟩
+          → ⟨ z ∈ (tree g φ) .fst ⟩)
+       → ((x : V ℓ) → ⟨ x ∈ (tree f a) .fst ⟩ → Of f g a x)
+       → (x : V ℓ) → ⟨ x ∈ (cupʟ (sglʟ (f φ)) (tree f a)) .fst ⟩ → Of f g φ x
     un φ a into ra x h = rec₁ squash₁
       (λ { (inl e) → one φ x e
          ; (inr e) → wider φ a
@@ -403,12 +403,12 @@ module _ {ℓ' : Level} {K : Type ℓ'} where
 
     bin : ∀ {n m} (φ : Formula K n) (a b : Formula K m)
         → ((z : V ℓ)
-           → ⟨ z ∈ fst (cupʟ (sglʟ (g φ)) (cupʟ (tree g a) (tree g b))) ⟩
-           → ⟨ z ∈ fst (tree g φ) ⟩)
-        → ((x : V ℓ) → ⟨ x ∈ fst (tree f a) ⟩ → Of f g a x)
-        → ((x : V ℓ) → ⟨ x ∈ fst (tree f b) ⟩ → Of f g b x)
+           → ⟨ z ∈ (cupʟ (sglʟ (g φ)) (cupʟ (tree g a) (tree g b))) .fst ⟩
+           → ⟨ z ∈ (tree g φ) .fst ⟩)
+        → ((x : V ℓ) → ⟨ x ∈ (tree f a) .fst ⟩ → Of f g a x)
+        → ((x : V ℓ) → ⟨ x ∈ (tree f b) .fst ⟩ → Of f g b x)
         → (x : V ℓ)
-        → ⟨ x ∈ fst (cupʟ (sglʟ (f φ)) (cupʟ (tree f a) (tree f b))) ⟩
+        → ⟨ x ∈ (cupʟ (sglʟ (f φ)) (cupʟ (tree f a) (tree f b))) .fst ⟩
         → Of f g φ x
     bin φ a b into ra rb x h = rec₁ squash₁
       (λ { (inl e) → one φ x e
@@ -436,7 +436,7 @@ module _ {ℓ' : Level} {K : Type ℓ'} where
 <div class="submodule-fold-content">
 
 ```agda
-    self : ∀ {n} (φ : Formula K n) → ⟨ fst (f φ) ∈ fst (tree f φ) ⟩
+    self : ∀ {n} (φ : Formula K n) → ⟨ (f φ) .fst ∈ (tree f φ) .fst ⟩
     self φ@(t ∈̇ u)  = sglʟ-in (f φ) _ refl
     self φ@(t ≐ u)  = sglʟ-in (f φ) _ refl
     self φ@⊥̇        = sglʟ-in (f φ) _ refl
@@ -449,20 +449,20 @@ module _ {ℓ' : Level} {K : Type ℓ'} where
     self φ@(∃̇∈ t a) = cupʟ-inl _ _ _ (sglʟ-in (f φ) _ refl)
 
     left : ∀ {n m} (χ : Formula K n) (a b : Formula K m) (z : V ℓ)
-         → ⟨ z ∈ fst (tree f a) ⟩
-         → ⟨ z ∈ fst (cupʟ (sglʟ (f χ)) (cupʟ (tree f a) (tree f b))) ⟩
+         → ⟨ z ∈ (tree f a) .fst ⟩
+         → ⟨ z ∈ (cupʟ (sglʟ (f χ)) (cupʟ (tree f a) (tree f b))) .fst ⟩
     left χ a b z h = cupʟ-inr (sglʟ (f χ)) (cupʟ (tree f a) (tree f b)) z
                        (cupʟ-inl (tree f a) (tree f b) z h)
 
     right : ∀ {n m} (χ : Formula K n) (a b : Formula K m) (z : V ℓ)
-          → ⟨ z ∈ fst (tree f b) ⟩
-          → ⟨ z ∈ fst (cupʟ (sglʟ (f χ)) (cupʟ (tree f a) (tree f b))) ⟩
+          → ⟨ z ∈ (tree f b) .fst ⟩
+          → ⟨ z ∈ (cupʟ (sglʟ (f χ)) (cupʟ (tree f a) (tree f b))) .fst ⟩
     right χ a b z h = cupʟ-inr (sglʟ (f χ)) (cupʟ (tree f a) (tree f b)) z
                         (cupʟ-inr (tree f a) (tree f b) z h)
 
     only : ∀ {n m} (χ : Formula K n) (a : Formula K m) (z : V ℓ)
-         → ⟨ z ∈ fst (tree f a) ⟩
-         → ⟨ z ∈ fst (cupʟ (sglʟ (f χ)) (tree f a)) ⟩
+         → ⟨ z ∈ (tree f a) .fst ⟩
+         → ⟨ z ∈ (cupʟ (sglʟ (f χ)) (tree f a)) .fst ⟩
     only χ a z h = cupʟ-inr (sglʟ (f χ)) (tree f a) z h
 ```
 </div>
@@ -470,7 +470,7 @@ module _ {ℓ' : Level} {K : Type ℓ'} where
 ```agda
   tree-inv : (f g : ∀ {m} → Formula K m → S)
            → ∀ {n} (φ : Formula K n) (x : V ℓ)
-           → ⟨ x ∈ fst (tree f φ) ⟩ → Of f g φ x
+           → ⟨ x ∈ (tree f φ) .fst ⟩ → Of f g φ x
   tree-inv f g φ@(t ∈̇ u) = one f g φ
   tree-inv f g φ@(t ≐ u) = one f g φ
   tree-inv f g φ@⊥̇       = one f g φ
@@ -538,10 +538,10 @@ module _ {K : Type ℓ} (f : K → V ℓ) (h : (k : K) → ⟨ isL (f k) ⟩) wh
     keyS φ = key φ , keyL φ
 
   closure : ∀ {n} → Formula K n → V ℓ
-  closure φ = fst (tree keyS φ)
+  closure φ = (tree keyS φ) .fst
 
   closureL : ∀ {n} (φ : Formula K n) → ⟨ isL (closure φ) ⟩
-  closureL φ = snd (tree keyS φ)
+  closureL φ = (tree keyS φ) .snd
 ```
 
 <!--en-->
@@ -732,17 +732,17 @@ the successor, and a constructor with no subformula demands nothing.
         inC φ' a below ma (cong₂ pr (cong sucV qa) (pr-inj (qp ∙ qu) .snd))
 
       left : ∀ {n m'} (φ' : Formula K n) (a b : Formula K m')
-           → ⟨ key a ∈ fst (cupʟ (sglʟ (keyS φ'))
-                              (cupʟ (tree keyS a) (tree keyS b))) ⟩
+           → ⟨ key a ∈ (cupʟ (sglʟ (keyS φ'))
+                              (cupʟ (tree keyS a) (tree keyS b))) .fst ⟩
       left φ' a b = Parts.left keyS φ' a b (key a) (key∈closure a)
 
       right : ∀ {n m'} (φ' : Formula K n) (a b : Formula K m')
-            → ⟨ key b ∈ fst (cupʟ (sglʟ (keyS φ'))
-                               (cupʟ (tree keyS a) (tree keyS b))) ⟩
+            → ⟨ key b ∈ (cupʟ (sglʟ (keyS φ'))
+                               (cupʟ (tree keyS a) (tree keyS b))) .fst ⟩
       right φ' a b = Parts.right keyS φ' a b (key b) (key∈closure b)
 
       only : ∀ {n m'} (φ' : Formula K n) (a : Formula K m')
-           → ⟨ key a ∈ fst (cupʟ (sglʟ (keyS φ')) (tree keyS a)) ⟩
+           → ⟨ key a ∈ (cupʟ (sglʟ (keyS φ')) (tree keyS a)) .fst ⟩
       only φ' a = Parts.only keyS φ' a (key a) (key∈closure a)
 
     byTag : ∀ {m} (φ : Formula K m) (k : ℕ) (ar p : V ℓ)

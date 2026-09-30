@@ -115,15 +115,15 @@ Existence inside this development is often deliberately weakened by propositiona
 The notation now records which setting a statement belongs to. For the ambient
 structure, `_∈ˢ_` is proposition-valued membership between raw hierarchy sets.
 By contrast, `S` is the carrier of the constructible structure: an element
-`a : S` has an underlying ambient set `fst a` and a proposition-valued
-certificate of its constructibility. Thus `⟨ fst x ∈ˢ fst a ⟩` is a host-level
+`a : S` has an underlying ambient set `a .fst` and a proposition-valued
+certificate of its constructibility. Thus `⟨ x .fst ∈ˢ a .fst ⟩` is a host-level
 proposition about underlying ambient sets, while a quantifier over `x : S`
 ranges only over constructible sets. Object-language syntax enters separately
 through the satisfaction relation introduced below.
 <!--zh-->
-下面的记号标明一条陈述属于哪种环境。对外围结构，`_∈ˢ_` 是层级中裸集合之间取命题值的成员关系。与此相对，`S` 是可构造结构的载体；元素 `a : S` 由底层外围集合 `fst a` 与其可构造性的命题值证书组成。因此，`⟨ fst x ∈ˢ fst a ⟩` 是关于底层外围集合的宿主层命题，而对 `x : S` 的量化只遍历可构造集合。对象语言的语法则通过下面引入的满足关系另行进入。
+下面的记号标明一条陈述属于哪种环境。对外围结构，`_∈ˢ_` 是层级中裸集合之间取命题值的成员关系。与此相对，`S` 是可构造结构的载体；元素 `a : S` 由底层外围集合 `a .fst` 与其可构造性的命题值证书组成。因此，`⟨ x .fst ∈ˢ a .fst ⟩` 是关于底层外围集合的宿主层命题，而对 `x : S` 的量化只遍历可构造集合。对象语言的语法则通过下面引入的满足关系另行进入。
 <!--ja-->
-以下の記法は、主張がどちらの場に属すかを示す。周囲の構造では、`_∈ˢ_` は階層の生の集合どうしの命題値をもつ所属関係である。これに対して `S` は構成可能な構造の台であり、要素 `a : S` は、底にある周囲の集合 `fst a` と、その構成可能性を示す命題値の証明からなる。したがって `⟨ fst x ∈ˢ fst a ⟩` は底の周囲の集合に関するホスト側の命題であり、`x : S` 上の量化は構成可能集合だけにわたる。対象言語の構文は、以下で導入する充足関係を通して別に現れる。
+以下の記法は、主張がどちらの場に属すかを示す。周囲の構造では、`_∈ˢ_` は階層の生の集合どうしの命題値をもつ所属関係である。これに対して `S` は構成可能な構造の台であり、要素 `a : S` は、底にある周囲の集合 `a .fst` と、その構成可能性を示す命題値の証明からなる。したがって `⟨ x .fst ∈ˢ a .fst ⟩` は底の周囲の集合に関するホスト側の命題であり、`x : S` 上の量化は構成可能集合だけにわたる。対象言語の構文は、以下で導入する充足関係を通して別に現れる。
 <!--/-->
 
 ```agda
@@ -178,61 +178,61 @@ X ↪ Y = Σ[ f ∶ (X → Y) ] ((x y : X) → f x ≡ f y → x ≡ y)
 ```
 
 <!--en-->
-Now fix a constructible set `α` whose underlying set is an ordinal. To look later for a suitable ordinal no larger than necessary, it suffices to work in the canonical presentation of `sucV (fst α)`. This set contains every member of `α` and `α` itself, so the search is both small and equipped with a natural starting point. The definitions here build this ordered search space; later arguments provide a candidate predicate and perform the least-element selection.
+Now fix a constructible set `α` whose underlying set is an ordinal. To look later for a suitable ordinal no larger than necessary, it suffices to work in the canonical presentation of `sucV (α .fst)`. This set contains every member of `α` and `α` itself, so the search is both small and equipped with a natural starting point. The definitions here build this ordered search space; later arguments provide a candidate predicate and perform the least-element selection.
 <!--zh-->
-现在固定一个可构造集合 `α`，并假设其底层集合是序数。为了稍后寻找大小合适的序数，只需在 `sucV (fst α)` 的典范呈现中搜索。这个集合包含 `α` 的每个元素及 `α` 本身，所以搜索空间既是小类型，又带有一个自然起点。此处的定义只建立这个带序的搜索空间；后续论证才会给出候选谓词并执行最小元选择。
+现在固定一个可构造集合 `α`，并假设其底层集合是序数。为了稍后寻找大小合适的序数，只需在 `sucV (α .fst)` 的典范呈现中搜索。这个集合包含 `α` 的每个元素及 `α` 本身，所以搜索空间既是小类型，又带有一个自然起点。此处的定义只建立这个带序的搜索空间；后续论证才会给出候选谓词并执行最小元选择。
 <!--ja-->
-ここで、底にある集合が順序数である構成可能集合 `α` を固定する。後で必要な大きさの順序数を探すには、`sucV (fst α)` の標準的な提示の中で探索すれば十分である。この集合は `α` のすべての要素と `α` 自身を含むので、探索空間は小さな型であると同時に自然な始点を持つ。ここでの定義が作るのは、この順序付けられた探索空間である。候補の述語を与えて最小元を選ぶのは後の議論である。
+ここで、底にある集合が順序数である構成可能集合 `α` を固定する。後で必要な大きさの順序数を探すには、`sucV (α .fst)` の標準的な提示の中で探索すれば十分である。この集合は `α` のすべての要素と `α` 自身を含むので、探索空間は小さな型であると同時に自然な始点を持つ。ここでの定義が作るのは、この順序付けられた探索空間である。候補の述語を与えて最小元を選ぶのは後の議論である。
 <!--/-->
 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module LeastCardInjL (α : S) (oα : IsOrd (fst α)) where
+module LeastCardInjL (α : S) (oα : IsOrd (α .fst)) where
 ```
 </summary>
 <div class="submodule-fold-content">
 
 <!--en-->
-The first obligation is to show that this set-theoretic successor itself belongs to `L`. From `oα`, two applications of ordinal successor show that `sucV (sucV (fst α))` is an ordinal. The theorem that an ordinal belongs to the next constructible stage places `sucV (fst α)` in that named stage, and membership in a stage yields its constructibility. Thus the proof identifies a specific stage containing the successor; it does not appeal to a general closure of constructibility under `sucV`.
+The first obligation is to show that this set-theoretic successor itself belongs to `L`. From `oα`, two applications of ordinal successor show that `sucV (sucV (α .fst))` is an ordinal. The theorem that an ordinal belongs to the next constructible stage places `sucV (α .fst)` in that named stage, and membership in a stage yields its constructibility. Thus the proof identifies a specific stage containing the successor; it does not appeal to a general closure of constructibility under `sucV`.
 <!--zh-->
-第一项任务是证明这个集合论后继本身属于 `L`。由 `oα` 两次应用序数后继，可知 `sucV (sucV (fst α))` 是序数。序数属于下一可构造层的定理把 `sucV (fst α)` 放入这个明确给出的层，而属于某一层便给出其可构造性。因此，证明指明了一个包含该后继的具体层，并未诉诸「可构造性一般地对 `sucV` 封闭」这样的结论。
+第一项任务是证明这个集合论后继本身属于 `L`。由 `oα` 两次应用序数后继，可知 `sucV (sucV (α .fst))` 是序数。序数属于下一可构造层的定理把 `sucV (α .fst)` 放入这个明确给出的层，而属于某一层便给出其可构造性。因此，证明指明了一个包含该后继的具体层，并未诉诸「可构造性一般地对 `sucV` 封闭」这样的结论。
 <!--ja-->
-最初に、この集合論的後続自身が `L` に属すことを示す。`oα` に順序数の後続を二度適用すると、`sucV (sucV (fst α))` が順序数だと分かる。順序数が次の構成可能な段階に属すという定理により、`sucV (fst α)` はこの明示された段階に入り、ある段階への所属からその構成可能性が得られる。したがって、この証明は後続を含む具体的な段階を示しており、構成可能性が一般に `sucV` について閉じているという性質を仮定してはいない。
+最初に、この集合論的後続自身が `L` に属すことを示す。`oα` に順序数の後続を二度適用すると、`sucV (sucV (α .fst))` が順序数だと分かる。順序数が次の構成可能な段階に属すという定理により、`sucV (α .fst)` はこの明示された段階に入り、ある段階への所属からその構成可能性が得られる。したがって、この証明は後続を含む具体的な段階を示しており、構成可能性が一般に `sucV` について閉じているという性質を仮定してはいない。
 <!--/-->
 
 ```agda
-  hSucα : ⟨ isL (sucV (fst α)) ⟩
-  hSucα = Lset→isL (sucV (sucV (fst α))) (suc-ord (suc-ord oα)) (sucV (fst α))
-            (ord∈Lset-suc (sucV (fst α)) (suc-ord oα))
+  hSucα : ⟨ isL (sucV (α .fst)) ⟩
+  hSucα = Lset→isL (sucV (sucV (α .fst))) (suc-ord (suc-ord oα)) (sucV (α .fst))
+            (ord∈Lset-suc (sucV (α .fst)) (suc-ord oα))
 ```
 
 <!--en-->
-Every index `m` in the presentation names a member of `sucV (fst α)`. Since that successor is constructible and `L` is transitive, the named member is constructible as well. The map `up` therefore keeps the underlying set named by `m` and adds precisely this certificate, producing an element of `S`. It is defined only on this bounded presentation and does not turn arbitrary ambient sets into constructible ones.
+Every index `m` in the presentation names a member of `sucV (α .fst)`. Since that successor is constructible and `L` is transitive, the named member is constructible as well. The map `up` therefore keeps the underlying set named by `m` and adds precisely this certificate, producing an element of `S`. It is defined only on this bounded presentation and does not turn arbitrary ambient sets into constructible ones.
 <!--zh-->
-呈现中的每个索引 `m` 都指名 `sucV (fst α)` 的一个元素。这个后继已经证明可构造，而 `L` 具有传递性，所以被指名的元素也可构造。于是 `up` 保留 `m` 所指名的底层集合，并附上恰好由此得到的证书，从而产生 `S` 的元素。它只定义在这个有界呈现上，并不会把任意外围集合变成可构造集合。
+呈现中的每个索引 `m` 都指名 `sucV (α .fst)` 的一个元素。这个后继已经证明可构造，而 `L` 具有传递性，所以被指名的元素也可构造。于是 `up` 保留 `m` 所指名的底层集合，并附上恰好由此得到的证书，从而产生 `S` 的元素。它只定义在这个有界呈现上，并不会把任意外围集合变成可构造集合。
 <!--ja-->
-提示の各インデックス `m` は `sucV (fst α)` の要素を名指す。この後続は構成可能であり、`L` は推移的なので、名指された要素も構成可能である。そこで `up` は、`m` が名指す底の集合を保ち、この事実から得た証明を添えて `S` の要素を作る。この写像はこの有界な提示上だけで定義され、任意の周囲の集合を構成可能集合へ変えるものではない。
+提示の各インデックス `m` は `sucV (α .fst)` の要素を名指す。この後続は構成可能であり、`L` は推移的なので、名指された要素も構成可能である。そこで `up` は、`m` が名指す底の集合を保ち、この事実から得た証明を添えて `S` の要素を作る。この写像はこの有界な提示上だけで定義され、任意の周囲の集合を構成可能集合へ変えるものではない。
 <!--/-->
 
 ```agda
-  up : ⟪ sucV (fst α) ⟫ → S
-  up m = ⟪ sucV (fst α) ⟫↪ m
-       , isL-trans (member (sucV (fst α)) m) hSucα
+  up : ⟪ sucV (α .fst) ⟫ → S
+  up m = ⟪ sucV (α .fst) ⟫↪ m
+       , isL-trans (member (sucV (α .fst)) m) hSucα
 ```
 
 <!--en-->
-Ordinal membership orders these indices. Applying `ordSWO` to the ordinal `sucV (fst α)` gives a strict well-order `w` on `⟪ sucV (fst α) ⟫`: its comparison follows membership between the named sets, its trichotomy depends on `lem`, and its well-foundedness follows from regularity. Declaring the value opaque controls later unfolding without changing the relation, its laws, or the assumptions on which they rest.
+Ordinal membership orders these indices. Applying `ordSWO` to the ordinal `sucV (α .fst)` gives a strict well-order `w` on `⟪ sucV (α .fst) ⟫`: its comparison follows membership between the named sets, its trichotomy depends on `lem`, and its well-foundedness follows from regularity. Declaring the value opaque controls later unfolding without changing the relation, its laws, or the assumptions on which they rest.
 <!--zh-->
-序数的成员关系为这些索引排序。把 `ordSWO` 应用于序数 `sucV (fst α)`，便在 `⟪ sucV (fst α) ⟫` 上得到严格良序 `w`：它依照所指集合之间的成员关系作比较，三歧性依赖 `lem`，良基性则来自正则公理。把这个值声明为不透明，只控制它在后续证明中是否展开，并不改变该关系、它的定律或这些定律所依赖的假设。
+序数的成员关系为这些索引排序。把 `ordSWO` 应用于序数 `sucV (α .fst)`，便在 `⟪ sucV (α .fst) ⟫` 上得到严格良序 `w`：它依照所指集合之间的成员关系作比较，三歧性依赖 `lem`，良基性则来自正则公理。把这个值声明为不透明，只控制它在后续证明中是否展开，并不改变该关系、它的定律或这些定律所依赖的假设。
 <!--ja-->
-順序数の所属によって、これらのインデックスを順序付ける。順序数 `sucV (fst α)` に `ordSWO` を適用すると、`⟪ sucV (fst α) ⟫` 上の狭義の整列順序 `w` が得られる。この比較は名指された集合どうしの所属に従い、三分性は `lem` に依存し、整礎性は正則性から従う。この値を不透明にする指定は、後の証明での展開を制御するだけであり、関係、その法則、あるいは法則が依存する仮定を変えない。
+順序数の所属によって、これらのインデックスを順序付ける。順序数 `sucV (α .fst)` に `ordSWO` を適用すると、`⟪ sucV (α .fst) ⟫` 上の狭義の整列順序 `w` が得られる。この比較は名指された集合どうしの所属に従い、三分性は `lem` に依存し、整礎性は正則性から従う。この値を不透明にする指定は、後の証明での展開を制御するだけであり、関係、その法則、あるいは法則が依存する仮定を変えない。
 <!--/-->
 
 ```agda
   opaque
-    w : SWO (⟪ sucV (fst α) ⟫)
-    w = ordSWO (sucV (fst α)) (suc-ord oα)
+    w : SWO (⟪ sucV (α .fst) ⟫)
+    w = ordSWO (sucV (α .fst)) (suc-ord oα)
 ```
 
 <!--en-->
@@ -246,35 +246,35 @@ The usable description of this order is the path `w-lt`. For indices `m` and `n`
 ```agda
   opaque
     unfolding w
-    w-lt : (m n : ⟪ sucV (fst α) ⟫)
-         → SWO._<∙_ w m n ≡ ⟨ ⟪ sucV (fst α) ⟫↪ m ∈ˢ ⟪ sucV (fst α) ⟫↪ n ⟩
+    w-lt : (m n : ⟪ sucV (α .fst) ⟫)
+         → let module W = SWO w in (m W.<∙ n) ≡ ⟨ ⟪ sucV (α .fst) ⟫↪ m ∈ˢ ⟪ sucV (α .fst) ⟫↪ n ⟩
     w-lt m n = refl
 ```
 
 <!--en-->
-The search space has a distinguished index naming `fst α`. The proof `self∈sucV (fst α)` supplies membership of the ordinal in its set-theoretic successor, and `fiber` turns that membership into an index together with an equation describing its image. Although hierarchy membership is proposition-valued, the fiber of the presentation map is itself a proposition because the map is an embedding; truncation can therefore be eliminated into that unique fiber without invoking a choice principle. The term `self` is the recovered index, not the ordinal.
+The search space has a distinguished index naming `α .fst`. The proof `self∈sucV (α .fst)` supplies membership of the ordinal in its set-theoretic successor, and `fiber` turns that membership into an index together with an equation describing its image. Although hierarchy membership is proposition-valued, the fiber of the presentation map is itself a proposition because the map is an embedding; truncation can therefore be eliminated into that unique fiber without invoking a choice principle. The term `self` is the recovered index, not the ordinal.
 <!--zh-->
-这个搜索空间有一个指名 `fst α` 的特定索引。证明 `self∈sucV (fst α)` 给出该序数属于其集合论后继，而 `fiber` 把这条成员关系化为一个索引以及描述其像的等式。层级中的成员关系虽然取命题值，但呈现映射是嵌入，所以它的纤维本身是命题；因此可以把截断消去到这个唯一纤维，而无须调用选择原理。`self` 是由此恢复的索引，并不是该序数。
+这个搜索空间有一个指名 `α .fst` 的特定索引。证明 `self∈sucV (α .fst)` 给出该序数属于其集合论后继，而 `fiber` 把这条成员关系化为一个索引以及描述其像的等式。层级中的成员关系虽然取命题值，但呈现映射是嵌入，所以它的纤维本身是命题；因此可以把截断消去到这个唯一纤维，而无须调用选择原理。`self` 是由此恢复的索引，并不是该序数。
 <!--ja-->
-この探索空間には、`fst α` を名指す特定のインデックスがある。証明 `self∈sucV (fst α)` は順序数がその集合論的後続に属すことを与え、`fiber` はその所属を、インデックスとその像を記述する等式の組へ変える。階層の所属は命題値であるが、提示写像は埋め込みなので、そのファイバー自体が命題である。したがって選択原理を用いずに、切り詰めをこの一意なファイバーへ消去できる。`self` はこうして復元されたインデックスであり、順序数そのものではない。
+この探索空間には、`α .fst` を名指す特定のインデックスがある。証明 `self∈sucV (α .fst)` は順序数がその集合論的後続に属すことを与え、`fiber` はその所属を、インデックスとその像を記述する等式の組へ変える。階層の所属は命題値であるが、提示写像は埋め込みなので、そのファイバー自体が命題である。したがって選択原理を用いずに、切り詰めをこの一意なファイバーへ消去できる。`self` はこうして復元されたインデックスであり、順序数そのものではない。
 <!--/-->
 
 ```agda
-  self : ⟪ sucV (fst α) ⟫
-  self = fiber (sucV (fst α)) (self∈sucV (fst α)) .fst
+  self : ⟪ sucV (α .fst) ⟫
+  self = fiber (sucV (α .fst)) (self∈sucV (α .fst)) .fst
 ```
 
 <!--en-->
-The companion equation states exactly what `self` names: its image under the presentation map is `fst α`. The equality is between underlying ambient sets. No equality of the corresponding elements of `S` is asserted here, since that would also have to identify their constructibility certificates. Together, `self` and `self-eq` give later searches a concrete index at which a property of `α` can be checked.
+The companion equation states exactly what `self` names: its image under the presentation map is `α .fst`. The equality is between underlying ambient sets. No equality of the corresponding elements of `S` is asserted here, since that would also have to identify their constructibility certificates. Together, `self` and `self-eq` give later searches a concrete index at which a property of `α` can be checked.
 <!--zh-->
-伴随等式准确说明 `self` 指名什么：它在呈现映射下的像等于 `fst α`。这条相等发生在底层外围集合之间；此处没有断言相应 `S` 元素相等，因为那还需要处理两边的可构造性证书。`self` 与 `self-eq` 合在一起，为后续搜索提供一个可以检验 `α` 之性质的具体索引。
+伴随等式准确说明 `self` 指名什么：它在呈现映射下的像等于 `α .fst`。这条相等发生在底层外围集合之间；此处没有断言相应 `S` 元素相等，因为那还需要处理两边的可构造性证书。`self` 与 `self-eq` 合在一起，为后续搜索提供一个可以检验 `α` 之性质的具体索引。
 <!--ja-->
-付随する等式は、`self` が何を名指すかを正確に述べる。提示写像によるその像は `fst α` に等しくなる。この等式は底にある周囲の集合どうしのものであり、対応する `S` の要素どうしの等しさまでは主張しない。後者には構成可能性の証明も同一視する必要があるからである。`self` と `self-eq` を合わせると、後の探索で `α` の性質を調べるための具体的なインデックスが得られる。
+付随する等式は、`self` が何を名指すかを正確に述べる。提示写像によるその像は `α .fst` に等しくなる。この等式は底にある周囲の集合どうしのものであり、対応する `S` の要素どうしの等しさまでは主張しない。後者には構成可能性の証明も同一視する必要があるからである。`self` と `self-eq` を合わせると、後の探索で `α` の性質を調べるための具体的なインデックスが得られる。
 <!--/-->
 
 ```agda
-  self-eq : ⟪ sucV (fst α) ⟫↪ self ≡ fst α
-  self-eq = fiber (sucV (fst α)) (self∈sucV (fst α)) .snd
+  self-eq : ⟪ sucV (α .fst) ⟫↪ self ≡ α .fst
+  self-eq = fiber (sucV (α .fst)) (self∈sucV (α .fst)) .snd
 ```
 </div>
 </details>
@@ -312,7 +312,7 @@ The fourth condition is stated directly in the host. For any `x,y : S`, if the o
 <!--/-->
 
 ```agda
-  × ((x y : S) → ⟨ pr (fst x) (fst y) ∈ fst F ⟩ → ⟨ fst y ∈ fst b ⟩)
+  × ((x y : S) → ⟨ pr (x .fst) (y .fst) ∈ F .fst ⟩ → ⟨ y .fst ∈ b .fst ⟩)
 ```
 
 <!--en-->
@@ -337,19 +337,19 @@ does not rule out `InjL δ κ`. These are internal coded-injection propositions,
 not instances of the host-level type `_↪_`, and the latter cannot in general be
 extracted from their truncations. The definition can also be formed for a
 general constructible set and contains no proof that `κ` is an ordinal; later
-uses supply `IsOrd (fst κ)` separately before giving it the initial-ordinal
+uses supply `IsOrd (κ .fst)` separately before giving it the initial-ordinal
 interpretation. Since a refutation has the empty type as its target, any needed
 elimination of the propositional truncation is legitimate.
 <!--zh-->
-当 `κ` 是序数时，基数性由初始性表达。冯·诺伊曼序数的每个元素 `δ` 都是更小的序数，而 `IsCardinalL κ` 反驳「存在满足 `InjCode F κ δ` 的可构造图」这一命题截断。用刚定义的记号说，它排除 `InjL κ δ`，并不排除 `InjL δ κ`。这两个都是内部编码单射的命题，不是宿主层类型 `_↪_` 的实例；一般也不能从它们的截断中抽取后一种宿主层单射。这一定义也可对一般可构造集合形成，其中没有 `κ` 为序数的证明；后续使用处会另行提供 `IsOrd (fst κ)`，然后才作初始序数的解释。由于反驳以空类型为目标，所需的命题截断消去是正当的。
+当 `κ` 是序数时，基数性由初始性表达。冯·诺伊曼序数的每个元素 `δ` 都是更小的序数，而 `IsCardinalL κ` 反驳「存在满足 `InjCode F κ δ` 的可构造图」这一命题截断。用刚定义的记号说，它排除 `InjL κ δ`，并不排除 `InjL δ κ`。这两个都是内部编码单射的命题，不是宿主层类型 `_↪_` 的实例；一般也不能从它们的截断中抽取后一种宿主层单射。这一定义也可对一般可构造集合形成，其中没有 `κ` 为序数的证明；后续使用处会另行提供 `IsOrd (κ .fst)`，然后才作初始序数的解释。由于反驳以空类型为目标，所需的命题截断消去是正当的。
 <!--ja-->
-`κ` が順序数であるとき、基数性は始順序数であることによって表される。von Neumann 順序数の各要素 `δ` はより小さい順序数であり、`IsCardinalL κ` は、`InjCode F κ δ` を満たす構成可能なグラフが存在するという命題的切り詰めを反証する。直前の記法で言えば、排除されるのは `InjL κ δ` であり、`InjL δ κ` ではない。これらは内部の符号化された単射を表す命題であって、ホストレベルの型 `_↪_` の実例ではなく、その切り詰めから後者のホストレベルの単射を一般に取り出すこともできない。この定義は一般の構成可能集合についても形成でき、`κ` が順序数であるという証明を含まない。後の使用箇所では `IsOrd (fst κ)` を別に与えてから、始順序数として解釈する。反証の行き先は空型なので、必要となる命題的切り詰めの消去は正当である。
+`κ` が順序数であるとき、基数性は始順序数であることによって表される。von Neumann 順序数の各要素 `δ` はより小さい順序数であり、`IsCardinalL κ` は、`InjCode F κ δ` を満たす構成可能なグラフが存在するという命題的切り詰めを反証する。直前の記法で言えば、排除されるのは `InjL κ δ` であり、`InjL δ κ` ではない。これらは内部の符号化された単射を表す命題であって、ホストレベルの型 `_↪_` の実例ではなく、その切り詰めから後者のホストレベルの単射を一般に取り出すこともできない。この定義は一般の構成可能集合についても形成でき、`κ` が順序数であるという証明を含まない。後の使用箇所では `IsOrd (κ .fst)` を別に与えてから、始順序数として解釈する。反証の行き先は空型なので、必要となる命題的切り詰めの消去は正当である。
 <!--/-->
 
 ```agda
 IsCardinalL : S → Type (ℓ-suc ℓ)
 IsCardinalL κ =
-  (δ : S) → ⟨ fst δ ∈ fst κ ⟩
+  (δ : S) → ⟨ δ .fst ∈ κ .fst ⟩
           → (∥ Σ[ F ∶ S ] InjCode F κ δ ∥₁ → ⊥₀)
 ```
 
@@ -364,9 +364,9 @@ The arguments of `SuccCardL δ κ` are ordered so that `δ` is the proposed succ
 ```agda
 SuccCardL : S → S → Type (ℓ-suc ℓ)
 SuccCardL δ κ =
-    IsOrd (fst δ)
+    IsOrd (δ .fst)
   × IsCardinalL δ
-  × ⟨ fst κ ∈ fst δ ⟩
+  × ⟨ κ .fst ∈ δ .fst ⟩
 ```
 
 <!--en-->
@@ -384,6 +384,6 @@ No injection graph is constructed by this field. `InjCode F a b` retains a parti
 <!--/-->
 
 ```agda
-  × ((c : S) → IsOrd (fst c) → IsCardinalL c → ⟨ fst κ ∈ fst c ⟩
+  × ((c : S) → IsOrd (c .fst) → IsCardinalL c → ⟨ κ .fst ∈ c .fst ⟩
              → ⟨ δ ⊆ˢ c ⟩)
 ```

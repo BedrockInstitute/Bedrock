@@ -362,7 +362,7 @@ The equality `M≡` connects the two presentations of the hull. Collapse theorem
 <!--/-->
 
 ```agda
-  M≡ : fst hullL ≡ HS.M
+  M≡ : hullL .fst ≡ HS.M
   M≡ = Condense′.hullL-spec lam ordλ succλ X X⊆Lλ ∅∈λ elem sup X-isL
 ```
 
@@ -401,7 +401,7 @@ A preimage of a collapse value `v` is an element `x` of the hull whose collapse 
 
 ```agda
   Pre : S → Type (ℓ-suc ℓ)
-  Pre v = Σ[ x ∶ V ℓ ] (⟨ x ∈ˢ HS.M ⟩ × (HSC.π x ≡ fst v))
+  Pre v = Σ[ x ∶ V ℓ ] (⟨ x ∈ˢ HS.M ⟩ × (HSC.π x ≡ v .fst))
 ```
 
 <!--en-->
@@ -415,7 +415,7 @@ Preimages are unique, because the collapse is injective on the hull: two records
 ```agda
   isPropPre : (v : S) → isProp (Pre v)
   isPropPre v (x , mx , e) (x' , mx' , e') =
-    Σ≡Prop (λ x → isProp× (snd (x ∈ˢ HS.M)) (setIsSet _ _)) (CI.π-inj x x' mx mx' (e ∙ sym e'))
+    Σ≡Prop (λ x → isProp× ((x ∈ˢ HS.M) .snd) (setIsSet _ _)) (CI.π-inj x x' mx mx' (e ∙ sym e'))
 ```
 
 <!--en-->
@@ -428,7 +428,7 @@ The inverse collapse is required only for points of its image, which condensatio
 
 ```agda
   Mem : S → Type (ℓ-suc ℓ)
-  Mem v = ⟨ fst v ∈ˢ fst Lβ ⟩
+  Mem v = ⟨ v .fst ∈ˢ Lβ .fst ⟩
 ```
 
 <!--en-->
@@ -442,7 +442,7 @@ Membership in `Lset β` gives only the propositionally truncated type of preimag
 ```agda
   pre : (v : S) → Mem v → Pre v
   pre v m = rec₁ (isPropPre v) (λ w → w)
-    (HSC.πX-member (fst v) (subst (λ w → ⟨ fst v ∈ˢ w ⟩) (sym ext) m))
+    (HSC.πX-member (v .fst) (subst (λ w → ⟨ v .fst ∈ˢ w ⟩) (sym ext) m))
 ```
 
 <!--en-->
@@ -456,8 +456,8 @@ The preimage is packaged as a constructible set: its constructibility is transpo
 ```agda
   fn : (v : S) → Mem v → S
   fn v m = pre v m .fst
-         , isL-trans {x = fst hullL} {y = pre v m .fst}
-             (subst (λ w → ⟨ pre v m .fst ∈ˢ w ⟩) (sym M≡) (pre v m .snd .fst)) (snd hullL)
+         , isL-trans {x = hullL .fst} {y = pre v m .fst}
+             (subst (λ w → ⟨ pre v m .fst ∈ˢ w ⟩) (sym M≡) (pre v m .snd .fst)) (hullL .snd)
 ```
 
 <!--en-->
@@ -524,9 +524,9 @@ For a hull member `x` whose collapse is `v`, the actual pair `(v,x)` satisfies `
 <!--/-->
 
 ```agda
-  π-graph : (x : S) (mx : ⟨ fst x ∈ˢ HS.M ⟩) (v : S) → HSC.π (fst x) ≡ fst v
+  π-graph : (x : S) (mx : ⟨ x .fst ∈ˢ HS.M ⟩) (v : S) → HSC.π (x .fst) ≡ v .fst
           → ⟨ (v ∷ x ∷ []) ⊨ P.piFo ⟩
-  π-graph x mx v e = rec₁ (snd ((v ∷ x ∷ []) ⊨ P.piFo)) read M-isL
+  π-graph x mx v e = rec₁ (((v ∷ x ∷ []) ⊨ P.piFo) .snd) read M-isL
     where
     read : Σ[ α ∶ V ℓ ] (IsOrd α × ⟨ HS.M ∈ˢ Lset α ⟩) → ⟨ (v ∷ x ∷ []) ⊨ P.piFo ⟩
 ```
@@ -542,7 +542,7 @@ The read statement transports both slots: the collapse value is identified with 
 ```agda
     read (α , oα , M∈Lα) =
       subst2 (λ a b → ⟨ (a ∷ b ∷ []) ⊨ P.piFo ⟩)
-        (S≡ {x = HSC.π (fst x) , G .fst} {y = v} e) (S≡ {x = P.up (fst x) mx} {y = x} refl)
+        (S≡ {x = HSC.π (x .fst) , G .fst} {y = v} e) (S≡ {x = P.up (x .fst) mx} {y = x} refl)
         (G .snd mx)
       where
 ```
@@ -556,7 +556,7 @@ Given a constructible stage `Lset α` containing the hull, transitivity of the l
 <!--/-->
 
 ```agda
-      G = P.good-at α oα (fst x) mx (layer-trans (Lset-layer α) {x = HS.M} {y = fst x} mx M∈Lα)
+      G = P.good-at α oα (x .fst) mx (layer-trans (Lset-layer α) {x = HS.M} {y = x .fst} mx M∈Lα)
 ```
 
 <!--en-->
@@ -584,10 +584,10 @@ Only the preimage is left to identify: any preimage satisfying the inverse graph
 
 ```agda
   only : (v : S) (m : Mem v) (x' : S) → ⟨ (x' ∷ v ∷ []) ⊨ invFo ⟩ → x' ≡ fn v m
-  only v m x' (hx , hp) = S≡ (CI.π-inj (fst x') (pre v m .fst) mx' (pre v m .snd .fst)
+  only v m x' (hx , hp) = S≡ (CI.π-inj (x' .fst) (pre v m .fst) mx' (pre v m .snd .fst)
     (sym (P.piFo-val x' mx' v (transport (rn x' v) hp)) ∙ sym (pre v m .snd .snd)))
     where
-    mx' : ⟨ fst x' ∈ˢ HS.M ⟩
+    mx' : ⟨ x' .fst ∈ˢ HS.M ⟩
 ```
 
 <!--en-->
@@ -599,7 +599,7 @@ For an alternative output `x'` satisfying the graph, the first conjunct says tha
 <!--/-->
 
 ```agda
-    mx' = subst (λ w → ⟨ fst x' ∈ˢ w ⟩) M≡ hx
+    mx' = subst (λ w → ⟨ x' .fst ∈ˢ w ⟩) M≡ hx
 ```
 
 <!--en-->
@@ -627,7 +627,7 @@ Each uniquely determined preimage satisfies `π(pre(v)) = v`. Hence, if the two 
 <!--/-->
 
 ```agda
-  inj : (v : S) (m : Mem v) (v' : S) (m' : Mem v') → fst (fn v m) ≡ fst (fn v' m') → fst v ≡ fst v'
+  inj : (v : S) (m : Mem v) (v' : S) (m' : Mem v') → (fn v m) .fst ≡ (fn v' m') .fst → v .fst ≡ v' .fst
   inj v m v' m' q = sym (pre v m .snd .snd) ∙ cong HSC.π q ∙ pre v' m' .snd .snd
 ```
 
@@ -665,25 +665,25 @@ The counting module `At` fixes a non-finite constructible ordinal `δL`, its ord
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module At (δL : S) (oδ : IsOrd (fst δL)) (δ∉ω : ⟨ fst δL ∈ˢ ω ⟩ → ⊥₀)
-          (μ : S) (oμ : IsOrd (fst μ)) (cμ : IsCardinalL μ)
-          (μ∉ω : ⟨ fst μ ∈ˢ ω ⟩ → ⊥₀)
+module At (δL : S) (oδ : IsOrd (δL .fst)) (δ∉ω : ⟨ δL .fst ∈ˢ ω ⟩ → ⊥₀)
+          (μ : S) (oμ : IsOrd (μ .fst)) (cμ : IsCardinalL μ)
+          (μ∉ω : ⟨ μ .fst ∈ˢ ω ⟩ → ⊥₀)
           (δ↪μ : InjL δL μ) (μ↪δ : InjL μ δL) where
 ```
 </summary>
 <div class="submodule-fold-content">
 
 <!--en-->
-It is useful to separate the carrier element `δL` from its underlying ambient ordinal `δ = fst δL`. Set-theoretic successor, stage membership, and the collapse act on `δ`, while internal coded injections retain the packaged endpoint `δL`.
+It is useful to separate the carrier element `δL` from its underlying ambient ordinal `δ = δL .fst`. Set-theoretic successor, stage membership, and the collapse act on `δ`, while internal coded injections retain the packaged endpoint `δL`.
 <!--zh-->
-这里需要区分载体元素 `δL` 与其底层外围序数 `δ = fst δL`。集合论后继、层成员关系与塌缩作用于 `δ`，内部编码单射的端点则仍使用打包后的 `δL`。
+这里需要区分载体元素 `δL` 与其底层外围序数 `δ = δL .fst`。集合论后继、层成员关系与塌缩作用于 `δ`，内部编码单射的端点则仍使用打包后的 `δL`。
 <!--ja-->
-台の要素 `δL` と、その基礎となる周囲の順序数 `δ = fst δL` を区別すると見通しがよくなる。集合論的後続、段階への所属、崩壊は `δ` に作用し、内部的に符号化された単射の端点にはまとめられた `δL` を使う。
+台の要素 `δL` と、その基礎となる周囲の順序数 `δ = δL .fst` を区別すると見通しがよくなる。集合論的後続、段階への所属、崩壊は `δ` に作用し、内部的に符号化された単射の端点にはまとめられた `δL` を使う。
 <!--/-->
 
 ```agda
   δ : V ℓ
-  δ = fst δL
+  δ = δL .fst
 ```
 
 <!--en-->
@@ -697,7 +697,7 @@ The stage of the ordinal `δ` is the earliest constructible level containing it;
 ```agda
   private
     α₀ : V ℓ
-    α₀ = stage δ (snd δL)
+    α₀ = stage δ (δL .snd)
 ```
 
 <!--en-->
@@ -710,7 +710,7 @@ The least-stage construction always returns an ordinal index. Applied to the con
 
 ```agda
     oα₀ : IsOrd α₀
-    oα₀ = stage-ord δ (snd δL)
+    oα₀ = stage-ord δ (δL .snd)
 ```
 
 <!--en-->
@@ -723,7 +723,7 @@ The ordinal `δ` belongs to its own stage, which is the membership fact that anc
 
 ```agda
     δ∈Lα₀ : ⟨ δ ∈ˢ Lset α₀ ⟩
-    δ∈Lα₀ = stage-mem δ (snd δL)
+    δ∈Lα₀ = stage-mem δ (δL .snd)
 ```
 
 <!--en-->
@@ -866,7 +866,7 @@ The starting set is constructible, because the coded successor of a constructibl
 
 ```agda
   X-isL : ⟨ isL X ⟩
-  X-isL = subst (λ w → ⟨ isL w ⟩) (sucʟ-fst δL) (snd (sucʟ δL))
+  X-isL = subst (λ w → ⟨ isL w ⟩) (sucʟ-fst δL) ((sucʟ δL) .snd)
 ```
 
 <!--en-->
@@ -1061,23 +1061,23 @@ stage-counted : StageCountedCoded
 stage-counted δ Lδ oδ δ∉ω q = rec₁ squash₁ build (cardOf δ oδ)
   where
   build : Σ[ μ ∶ S ]
-            ( IsOrd (fst μ) × IsCardinalL μ
+            ( IsOrd (μ .fst) × IsCardinalL μ
 ```
 
 <!--en-->
-A local `cardOf` witness records that `μ` is an ordinal and an internal cardinal, that its underlying set is contained in `δ`, and that coded injections exist in both directions. The containment proof is part of the representative package but is not needed by `At.result`; the construction uses the two injections together with ordinality, cardinality, and non-finiteness. Finally, `move` transports the source from the canonical `LsetS (fst δ) oδ` along `q : fst Lδ = Lset (fst δ)` to the presentation required by `StageCountedCoded`.
+A local `cardOf` witness records that `μ` is an ordinal and an internal cardinal, that its underlying set is contained in `δ`, and that coded injections exist in both directions. The containment proof is part of the representative package but is not needed by `At.result`; the construction uses the two injections together with ordinality, cardinality, and non-finiteness. Finally, `move` transports the source from the canonical `LsetS (δ .fst) oδ` along `q : Lδ .fst = Lset (δ .fst)` to the presentation required by `StageCountedCoded`.
 <!--zh-->
-`cardOf` 的一个局部见证记录：`μ` 是序数和内部基数，其底层集包含于 `δ`，并且两个方向的编码单射都存在。包含性证明属于基数代表的数据包，但 `At.result` 并不使用它；该构造使用两条单射以及序数性、基数性和非有限性。最后，`move` 沿等式 `q : fst Lδ = Lset (fst δ)`，把始域从典范呈现 `LsetS (fst δ) oδ` 搬到 `StageCountedCoded` 所要求的呈现。
+`cardOf` 的一个局部见证记录：`μ` 是序数和内部基数，其底层集包含于 `δ`，并且两个方向的编码单射都存在。包含性证明属于基数代表的数据包，但 `At.result` 并不使用它；该构造使用两条单射以及序数性、基数性和非有限性。最后，`move` 沿等式 `q : Lδ .fst = Lset (δ .fst)`，把始域从典范呈现 `LsetS (δ .fst) oδ` 搬到 `StageCountedCoded` 所要求的呈现。
 <!--ja-->
-`cardOf` の局所的な証人は、`μ` が順序数かつ内部の基数であること、その基礎集合が `δ` に含まれること、そして両方向の符号化された単射が存在することを記録する。包含の証明は基数代表の組に含まれるが、`At.result` では使われない。この構成が使うのは、二つの単射と、順序数性、基数性、有限でないことである。最後に `move` は、等式 `q : fst Lδ = Lset (fst δ)` に沿って、始域を標準的な表示 `LsetS (fst δ) oδ` から `StageCountedCoded` が要求する表示へ移す。
+`cardOf` の局所的な証人は、`μ` が順序数かつ内部の基数であること、その基礎集合が `δ` に含まれること、そして両方向の符号化された単射が存在することを記録する。包含の証明は基数代表の組に含まれるが、`At.result` では使われない。この構成が使うのは、二つの単射と、順序数性、基数性、有限でないことである。最後に `move` は、等式 `q : Lδ .fst = Lset (δ .fst)` に沿って、始域を標準的な表示 `LsetS (δ .fst) oδ` から `StageCountedCoded` が要求する表示へ移す。
 <!--/-->
 
 ```agda
-            × ((z : V ℓ) → ⟨ z ∈ˢ fst μ ⟩ → ⟨ z ∈ˢ fst δ ⟩)
+            × ((z : V ℓ) → ⟨ z ∈ˢ μ .fst ⟩ → ⟨ z ∈ˢ δ .fst ⟩)
             × InjL δ μ × InjL μ δ )
         → InjL Lδ δ
   build (μ , oμ , cμ , μ⊆δ , δ↪μ , μ↪δ) =
-    move (LsetS (fst δ) oδ) Lδ δ δ (sym q) refl
+    move (LsetS (δ .fst) oδ) Lδ δ δ (sym q) refl
 ```
 
 <!--en-->
@@ -1091,6 +1091,6 @@ It remains to justify the non-finiteness required by the hull-count theorem. If 
 ```agda
       (At.result δ oδ δ∉ω μ oμ cμ μ∉ω δ↪μ μ↪δ)
     where
-    μ∉ω : ⟨ fst μ ∈ˢ ω ⟩ → ⊥₀
+    μ∉ω : ⟨ μ .fst ∈ˢ ω ⟩ → ⊥₀
     μ∉ω h = no-fin δ μ oδ δ∉ω oμ h δ↪μ
 ```

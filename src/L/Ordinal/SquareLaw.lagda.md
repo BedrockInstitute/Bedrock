@@ -157,7 +157,7 @@ A strict well-order trichotomizes any two elements: the comparison data Tri retu
 
 ```agda
 connex : {ℓc : Level} {A : Type ℓc} (w : SWO A) (a b : A)
-       → (SWO._<∙_ w a b → ⊥₀) → (SWO._<∙_ w b a → ⊥₀) → a ≡ b
+       → let module W = SWO w in (a W.<∙ b → ⊥₀) → (b W.<∙ a → ⊥₀) → a ≡ b
 connex w a b ¬ab ¬ba with SWO.tri∙ w a b
 ... | lt h = ⊥₀-rec (¬ab h)
 ... | eq p = p
@@ -178,7 +178,7 @@ The product is set up generically. The first factor carries a strict well-order 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module _ {ℓx ℓy : Level} {X : Type ℓx} {Y : Type ℓy} (u : SWO X)
+module Lexicographic {ℓx ℓy : Level} {X : Type ℓx} {Y : Type ℓy} (u : SWO X)
          (_<ᵥ_ : Y → Y → Type (ℓ-suc ℓ)) (wfv : WellFounded _<ᵥ_) where
 ```
 </summary>
@@ -241,6 +241,18 @@ The tie case is where connex earns its place: the second summand asserts both st
 </details>
 
 <!--en-->
+Opening `Lexicographic` exposes these constructions with their order parameters.
+<!--zh-->
+打开 `Lexicographic`，便可使用这些以序为参数的构造。
+<!--ja-->
+`Lexicographic` を開き、これらの構成を順序を引数に取る形で利用する。
+<!--/-->
+
+```agda
+open Lexicographic public
+```
+
+<!--en-->
 ## The membership order on an ordinal's index
 
 An ordinal α is a transitive set whose members are all transitive, and its members are linearly ordered by membership; the classical input `ord-tri` makes that order trichotomic. But the counting arguments of later chapters need the order on the indices rather than on the members themselves of the fixed presentation of α: the small type ⟪ α ⟫ whose embedding ⟪ α ⟫↪ has image α. This section transports the membership order from members to indices.
@@ -271,7 +283,7 @@ The relation ≺₁ on indices is defined by membership of the named elements: m
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module _ (α : S) (oα : IsOrd α) where
+module OnOrdinal (α : S) (oα : IsOrd α) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -629,11 +641,11 @@ goM の 4 つの節は、goX を一段上に移した形をしている。両方
 ```
 
 <!--en-->
-To borrow the well-foundedness of the lexicographic product, each pair is re-exposed as a triple: `f` stores the grade `maxOrd a b` in front of the pair `(a , b)`. This map is injective for a trivial reason: a path between the triples can be projected onto the pair stored in the second component, and that projection `cong snd` recovers the pair equality outright.
+To borrow the well-foundedness of the lexicographic product, each pair is re-exposed as a triple: `f` stores the grade `maxOrd a b` in front of the pair `(a , b)`. This map is injective for a trivial reason: a path between the triples can be projected onto the pair stored in the second component, and that projection `cong (λ p → p .snd)` recovers the pair equality outright.
 <!--zh-->
-为了借用字典序乘积的良基性，把每个序对重新呈现为三元组：f 把级差 `maxOrd a b` 记在序对 `(a , b)` 之前。这个映射的单射性几乎是显然的：三元组之间的路径可以投影到存放在第二分量中的序对上，投影 `cong snd` 直接还原出序对的相等。
+为了借用字典序乘积的良基性，把每个序对重新呈现为三元组：`f`{.Agda} 把级差 `maxOrd a b` 记在序对 `(a , b)` 之前。这个映射的单射性几乎是显然的：三元组之间的路径可以投影到存放在第二分量中的序对上，投影 `cong (λ p → p .snd)` 直接还原出序对的相等。
 <!--ja-->
-辞書式積の整礎性を借りるために、各対を三つ組として改めて提示する。f は級である `maxOrd a b` を対 `(a , b)` の手前に記録する。この射の単射性はほとんど自明で、三つ組の間の経路を第二成分に格納された対へ射影すればよく、その射影 `cong snd` が対の一致をそのまま回復する。
+辞書式積の整礎性を借りるために、各対を三つ組として改めて提示する。`f`{.Agda} は級である `maxOrd a b` を対 `(a , b)` の手前に記録する。この射の単射性はほとんど自明で、三つ組の間の経路を第二成分に格納された対へ射影すればよく、その射影 `cong (λ p → p .snd)` が対の一致をそのまま回復する。
 <!--/-->
 
 ```agda
@@ -641,7 +653,7 @@ To borrow the well-foundedness of the lexicographic product, each pair is re-exp
   f (a , b) = maxOrd a b , (a , b)
 
   f-inj : {p q : Pair} → f p ≡ f q → p ≡ q
-  f-inj {a , b} {c , d} e = cong snd e
+  f-inj {a , b} {c , d} e = cong (λ p → p .snd) e
 
   _≺²_ : (⟪ α ⟫ × ⟪ α ⟫) → (⟪ α ⟫ × ⟪ α ⟫) → Type (ℓ-suc ℓ)
 ```
@@ -655,13 +667,15 @@ Two lexicographic products are now instantiated with the ordinal order as the ou
 <!--/-->
 
 ```agda
-  _≺²_ = _≺×_ ordSWO _≺₁_ wf₁
+  _≺²_ = PairOrder._≺×_
+    where module PairOrder = Lexicographic ordSWO _≺₁_ wf₁
 
   wf² : WellFounded _≺²_
   wf² = prodWF ordSWO _≺₁_ wf₁
 
   _≺³_ : (⟪ α ⟫ × (⟪ α ⟫ × ⟪ α ⟫)) → (⟪ α ⟫ × (⟪ α ⟫ × ⟪ α ⟫)) → Type (ℓ-suc ℓ)
-  _≺³_ = _≺×_ ordSWO _≺²_ wf²
+  _≺³_ = TripleOrder._≺×_
+    where module TripleOrder = Lexicographic ordSWO _≺²_ wf²
 ```
 
 <!--en-->
@@ -729,6 +743,18 @@ go の計算規則は到達可能性のデータを展開する。`acc r` から
 ```
 </div>
 </details>
+
+<!--en-->
+Opening `OnOrdinal` makes these constructions available with the ordinal and its ordinalhood proof as parameters.
+<!--zh-->
+打开 `OnOrdinal` 后，这些构造都可通过传入序数及其序数性证明来使用。
+<!--ja-->
+`OnOrdinal` を開くと、順序数とその順序数性の証明を引数として、これらの構成を利用できる。
+<!--/-->
+
+```agda
+open OnOrdinal public
+```
 
 <!--en-->
 ## Moving between finite ordinals and `Fin`
@@ -810,20 +836,20 @@ toFin の仕様は型の上界よりも多くを言う。最小ラベル k は P
 <!--/-->
 
 ```agda
-    k = fst s
+    k = s .fst
     k<n : k < n
-    k<n = fst (fst (snd s))
+    k<n = ((s .snd) .fst) .fst
 
-  toFin-spec : (n : ℕ) (m : ⟪ # n ⟫) → ⟪ # n ⟫↪ m ≡ # (fst (toFin n m))
-  toFin-spec n m = snd (fst (snd s))
+  toFin-spec : (n : ℕ) (m : ⟪ # n ⟫) → ⟪ # n ⟫↪ m ≡ # ((toFin n m) .fst)
+  toFin-spec n m = ((s .snd) .fst) .snd
 ```
 
 <!--en-->
-Injectivity of `toFin` follows by transporting the two specification paths along the assumed equality of labels. If `toFin n m₁` and `toFin n m₂` agree, their first components agree, so `# (fst (toFin n m₁))` and `# (fst (toFin n m₂))` are connected by a path; concatenating with the two specifications gives a path between the represented elements, and `↪-inj` reflects equality of represented elements back to equality of indices, as it did for the ordinal order.
+Injectivity of `toFin` follows by transporting the two specification paths along the assumed equality of labels. If `toFin n m₁` and `toFin n m₂` agree, their first components agree, so `# ((toFin n m₁) .fst)` and `# ((toFin n m₂) .fst)` are connected by a path; concatenating with the two specifications gives a path between the represented elements, and `↪-inj` reflects equality of represented elements back to equality of indices, as it did for the ordinal order.
 <!--zh-->
-toFin 的单射性沿标号相等的假设搬运两条刻画路径而得。若 `toFin n m₁` 与 `toFin n m₂` 相等，则其第一分量相等，于是 `# (fst (toFin n m₁))` 与 `# (fst (toFin n m₂))` 之间有路径；与两条刻画拼接便得到所表示元素之间的路径，而 `↪-inj` 把所表示元素的相等反射回指标的相等，正如序数序处那样。
+toFin 的单射性沿标号相等的假设搬运两条刻画路径而得。若 `toFin n m₁` 与 `toFin n m₂` 相等，则其第一分量相等，于是 `# ((toFin n m₁) .fst)` 与 `# ((toFin n m₂) .fst)` 之间有路径；与两条刻画拼接便得到所表示元素之间的路径，而 `↪-inj` 把所表示元素的相等反射回指标的相等，正如序数序处那样。
 <!--ja-->
-toFin の単射性は、ラベルの一致という仮定に沿って二つの仕様の経路を輸送することで従う。`toFin n m₁` と `toFin n m₂` が一致すればその第一成分は一致し、したがって `# (fst (toFin n m₁))` と `# (fst (toFin n m₂))` の間に経路がある。二つの仕様と連結すれば表された要素の間の経路が得られ、`↪-inj` が順序数の順序のときと同様に、表された要素の一致を添字の一致へと反映する。
+toFin の単射性は、ラベルの一致という仮定に沿って二つの仕様の経路を輸送することで従う。`toFin n m₁` と `toFin n m₂` が一致すればその第一成分は一致し、したがって `# ((toFin n m₁) .fst)` と `# ((toFin n m₂) .fst)` の間に経路がある。二つの仕様と連結すれば表された要素の間の経路が得られ、`↪-inj` が順序数の順序のときと同様に、表された要素の一致を添字の一致へと反映する。
 <!--/-->
 
 ```agda
@@ -833,7 +859,7 @@ toFin の単射性は、ラベルの一致という仮定に沿って二つの�
 
   toFin-inj : (n : ℕ) (m₁ m₂ : ⟪ # n ⟫) → toFin n m₁ ≡ toFin n m₂ → m₁ ≡ m₂
   toFin-inj n m₁ m₂ e = ↪-inj {a = # n}
-    (toFin-spec n m₁ ∙ cong (λ k → # k) (cong fst e) ∙ sym (toFin-spec n m₂))
+    (toFin-spec n m₁ ∙ cong (λ k → # k) (cong (λ p → p .fst) e) ∙ sym (toFin-spec n m₂))
 ```
 
 <!--en-->
@@ -848,7 +874,7 @@ The reverse direction starts from `#mono`, which witnesses that `# k` is a membe
   fromFin : (n : ℕ) → FB.Fin n → ⟪ # n ⟫
   fromFin n (k , k<n) = fiber (# n) (#mono k n k<n) .fst
 
-  fromFin-spec : (n : ℕ) (i : FB.Fin n) → ⟪ # n ⟫↪ (fromFin n i) ≡ # (fst i)
+  fromFin-spec : (n : ℕ) (i : FB.Fin n) → ⟪ # n ⟫↪ (fromFin n i) ≡ # (i .fst)
   fromFin-spec n (k , k<n) = fiber (# n) (#mono k n k<n) .snd
 
   fromFin-inj : (n : ℕ) (i₁ i₂ : FB.Fin n) → fromFin n i₁ ≡ fromFin n i₂ → i₁ ≡ i₂
@@ -901,7 +927,7 @@ The pigeonhole statement is the finite core of the later contradiction: no funct
              → ((x y : FB.Fin (suc n)) → f x ≡ f y → x ≡ y) → ⊥₀
   no-inj-Fin n f finj = i#j (finj i j feq)
     where
-    i = fst (pigeonhole (≤-refl {m = suc n}) f)
+    i = (pigeonhole (≤-refl {m = suc n}) f) .fst
 ```
 
 <!--en-->
@@ -913,11 +939,11 @@ The unpacking separates the pigeonhole certificate into the parts the final line
 <!--/-->
 
 ```agda
-    j = fst (snd (pigeonhole (≤-refl {m = suc n}) f))
-    prf = snd (snd (pigeonhole (≤-refl {m = suc n}) f))
-    i#j = fst prf
+    j = ((pigeonhole (≤-refl {m = suc n}) f) .snd) .fst
+    prf = ((pigeonhole (≤-refl {m = suc n}) f) .snd) .snd
+    i#j = prf .fst
     feq : f i ≡ f j
-    feq = snd prf
+    feq = prf .snd
 ```
 
 <!--en-->
@@ -968,8 +994,8 @@ The map `g` is the forbidden injection `Fin (suc (n · n)) → Fin (n · n)`, bu
 ```agda
         where
         g : FB.Fin (suc (n · n)) → FB.Fin (n · n)
-        g i = factor n ( toFinE n (fst (f (into (suc (n · n)) (fromFinE (suc (n · n)) i))))
-                       , toFinE n (snd (f (into (suc (n · n)) (fromFinE (suc (n · n)) i)))))
+        g i = factor n ( toFinE n ((f (into (suc (n · n)) (fromFinE (suc (n · n)) i))) .fst)
+                       , toFinE n ((f (into (suc (n · n)) (fromFinE (suc (n · n)) i))) .snd))
         g-inj : (x y : FB.Fin (suc (n · n))) → g x ≡ g y → x ≡ y
 ```
 
@@ -1002,7 +1028,7 @@ where ブロックは中間値に名前を付け、連鎖を読みやすくす�
           Xx = into (suc (n · n)) (fromFinE (suc (n · n)) x)
           Xy : A
           Xy = into (suc (n · n)) (fromFinE (suc (n · n)) y)
-          p-eq : (toFinE n (fst (f Xx)) , toFinE n (snd (f Xx)))
+          p-eq : (toFinE n ((f Xx) .fst) , toFinE n ((f Xx) .snd))
 ```
 
 <!--en-->
@@ -1014,27 +1040,27 @@ The intermediate goal `p-eq` is exactly what the injectivity of `factor` deliver
 <!--/-->
 
 ```agda
-               ≡ (toFinE n (fst (f Xy)) , toFinE n (snd (f Xy)))
+               ≡ (toFinE n ((f Xy) .fst) , toFinE n ((f Xy) .snd))
           p-eq = factor-inj n
-                   (toFinE n (fst (f Xx)) , toFinE n (snd (f Xx)))
-                   (toFinE n (fst (f Xy)) , toFinE n (snd (f Xy))) e
-          fst-eq : toFinE n (fst (f Xx)) ≡ toFinE n (fst (f Xy))
+                   (toFinE n ((f Xx) .fst) , toFinE n ((f Xx) .snd))
+                   (toFinE n ((f Xy) .fst) , toFinE n ((f Xy) .snd)) e
+          fst-eq : toFinE n ((f Xx) .fst) ≡ toFinE n ((f Xy) .fst)
 ```
 
 <!--en-->
-Projecting the pair equality with `cong fst` and `cong snd` splits it into equalities of the first and second encoded positions. Each is then converted back into an equality of the corresponding components of `f Xx` and `f Xy` by the encoder's injectivity `toFinE-inj`, giving `fst-eq′` and, one line later, its second-coordinate counterpart.
+Projecting the pair equality with `cong (λ p → p .fst)` and `cong (λ p → p .snd)` splits it into equalities of the first and second encoded positions. Each is then converted back into an equality of the corresponding components of `f Xx` and `f Xy` by the encoder's injectivity `toFinE-inj`, giving `fst-eq′` and, one line later, its second-coordinate counterpart.
 <!--zh-->
-用 `cong fst` 与 `cong snd` 投影序对的相等，把它拆成第一与第二编码位置各自的相等。随后由编码器的单射性 toFinE-inj 把每一个转换回 `f Xx` 与 `f Xy` 相应分量的相等，得到 fst-eq′，以及一行之后的第二坐标对应版本。
+用 `cong (λ p → p .fst)` 与 `cong (λ p → p .snd)` 投影序对的相等，把它拆成第一与第二编码位置各自的相等。随后由编码器的单射性 toFinE-inj 把每一个转换回 `f Xx` 与 `f Xy` 相应分量的相等，得到 fst-eq′，以及一行之后的第二坐标对应版本。
 <!--ja-->
-対の一致を `cong fst` と `cong snd` で射影すると、第一と第二の符号化位置のそれぞれの一致に分解される。その後、符号器の単射性 toFinE-inj によって、それぞれが `f Xx` と `f Xy` の対応する成分の一致へと変換され、fst-eq′ が、そして一行後に第二座標の対応物が得られる。
+対の一致を `cong (λ p → p .fst)` と `cong (λ p → p .snd)` で射影すると、第一と第二の符号化位置のそれぞれの一致に分解される。その後、符号器の単射性 toFinE-inj によって、それぞれが `f Xx` と `f Xy` の対応する成分の一致へと変換され、fst-eq′ が、そして一行後に第二座標の対応物が得られる。
 <!--/-->
 
 ```agda
-          fst-eq = cong fst p-eq
-          snd-eq : toFinE n (snd (f Xx)) ≡ toFinE n (snd (f Xy))
-          snd-eq = cong snd p-eq
-          fst-eq′ : fst (f Xx) ≡ fst (f Xy)
-          fst-eq′ = toFinE-inj n (fst (f Xx)) (fst (f Xy)) fst-eq
+          fst-eq = cong (λ p → p .fst) p-eq
+          snd-eq : toFinE n ((f Xx) .snd) ≡ toFinE n ((f Xy) .snd)
+          snd-eq = cong (λ p → p .snd) p-eq
+          fst-eq′ : (f Xx) .fst ≡ (f Xy) .fst
+          fst-eq′ = toFinE-inj n ((f Xx) .fst) ((f Xy) .fst) fst-eq
 ```
 
 <!--en-->
@@ -1046,8 +1072,8 @@ The two component equalities are reassembled into an equality of pairs by `ΣPat
 <!--/-->
 
 ```agda
-          snd-eq′ : snd (f Xx) ≡ snd (f Xy)
-          snd-eq′ = toFinE-inj n (snd (f Xx)) (snd (f Xy)) snd-eq
+          snd-eq′ : (f Xx) .snd ≡ (f Xy) .snd
+          snd-eq′ = toFinE-inj n ((f Xx) .snd) ((f Xy) .snd) snd-eq
           pair-eq : f Xx ≡ f Xy
           pair-eq = ΣPathP (fst-eq′ , snd-eq′)
 ```

@@ -165,8 +165,8 @@ The bounding principle is applied to the stages of the values: each `f x` is con
 <!--/-->
 
 ```agda
-  b = boundingOrd X (λ x → stage (fst (f x)) (f x .snd))
-        (λ x → stage-ord (fst (f x)) (f x .snd))
+  b = boundingOrd X (λ x → stage ((f x) .fst) (f x .snd))
+        (λ x → stage-ord ((f x) .fst) (f x .snd))
   β = b .fst
   oβ : IsOrd β
   oβ = b .snd .fst
@@ -182,8 +182,8 @@ Membership then follows in two steps: each value appears at its own stage, and s
 
 ```agda
   mem : (x : X) → ⟨ f x ∈ˢ LsetS β oβ ⟩
-  mem x = Lset-mono {α = β} {β = stage (fst (f x)) (f x .snd)} (b .snd .snd x)
-            (stage-mem (fst (f x)) (f x .snd))
+  mem x = Lset-mono {α = β} {β = stage ((f x) .fst) (f x .snd)} (b .snd .snd x)
+            (stage-mem ((f x) .fst) (f x .snd))
 ```
 
 <!--en-->
@@ -276,7 +276,7 @@ Functionality also determines a metatheoretic value at every member of the domai
 
   val-uniq : (x : S) (x∈ : ⟨ x ∈ˢ dom ⟩) (y : S)
            → ⟨ (y ∷ x ∷ []) ⊨ graph ⟩ → val x x∈ ≡ y
-  val-uniq x x∈ y h = cong fst (funct x x∈ .snd (y , h))
+  val-uniq x x∈ y h = cong (λ p → p .fst) (funct x x∈ .snd (y , h))
 ```
 </div>
 </details>
@@ -313,7 +313,7 @@ Because contractibility is a proposition, the truncation may be eliminated into 
 ```agda
 mereFunct graph x = rec₁ isPropIsContr
   (λ { (y , (hy , uniq)) → (y , hy)
-     , (λ { (y' , hy') → Σ≡Prop (λ w → snd ((w ∷ x ∷ []) ⊨ graph))
+     , (λ { (y' , hy') → Σ≡Prop (λ w → ((w ∷ x ∷ []) ⊨ graph) .snd)
                            (sym (uniq y' hy')) }) })
 ```
 
@@ -378,7 +378,7 @@ Functionality is derived, not assumed. The centre is the pair of the function's 
 
 ```agda
   ; funct = λ x x∈ → (D.fn x , D.defines x x∈)
-          , λ { (y , h) → Σ≡Prop (λ w → snd ((w ∷ x ∷ []) ⊨ D.graph))
+          , λ { (y , h) → Σ≡Prop (λ w → ((w ∷ x ∷ []) ⊨ D.graph) .snd)
                             (sym (D.only x x∈ y h)) } }
   where module D = Definition D
 ```

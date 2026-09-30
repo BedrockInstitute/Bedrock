@@ -137,11 +137,11 @@ and its image code together exactly as a formula over the model does.
 keyOf : ℕ → S → S
 keyOf n x = prʟ (numeralL n) x
 
-keyOf-fst : (n : ℕ) (x : S) → fst (keyOf n x) ≡ pr (# n) (fst x)
+keyOf-fst : (n : ℕ) (x : S) → (keyOf n x) .fst ≡ pr (# n) (x .fst)
 keyOf-fst n x = prʟ-fst (numeralL n) x ∙ cong₂ pr (numeralL-fst n) refl
 
 Coded : {K : Type ℓ} (f : K → V ℓ) → ℕ → S → Type (ℓ-suc ℓ)
-Coded {K} f n x = ∥ Σ[ φ ∶ Formula K n ] (VCode.⌜ mapFo f φ ⌝ ≡ fst x) ∥₁
+Coded {K} f n x = ∥ Σ[ φ ∶ Formula K n ] (VCode.⌜ mapFo f φ ⌝ ≡ x .fst) ∥₁
 ```
 
 <!--en-->
@@ -183,36 +183,36 @@ module Decode {K : Type ℓ} (f : K → V ℓ)
   Wf n x = ⟨ keyOf n x ∈ˢ lookup C γ ⟩
 
   recover : (n : ℕ) (x : S) → Wf n x → Coded f n x
-  recover n x = ∈-induction go (rank (fst x)) n x refl
+  recover n x = ∈-induction go (rank (x .fst)) n x refl
     where
     P : V ℓ → Type (ℓ-suc ℓ)
-    P r = (j : ℕ) (z : S) → rank (fst z) ≡ r → Wf j z → Coded f j z
+    P r = (j : ℕ) (z : S) → rank (z .fst) ≡ r → Wf j z → Coded f j z
 
     go : (r : V ℓ) → ((y : V ℓ) → ⟨ y ∈ r ⟩ → P y) → P r
     go r IH j z qr wz = rec₁ squash₁ fill (peel (keyOf j z) wz)
       where
-      D = fst (lookup C γ)
+      D = (lookup C γ) .fst
 
-      rec : (i : ℕ) (u : S) → ⟨ rank (fst u) ∈ rank (fst z) ⟩
+      rec : (i : ℕ) (u : S) → ⟨ rank (u .fst) ∈ rank (z .fst) ⟩
           → Wf i u → Coded f i u
-      rec i u lt wu = IH (rank (fst u))
-        (subst (λ w → ⟨ rank (fst u) ∈ w ⟩) qr lt) i u refl wu
+      rec i u lt wu = IH (rank (u .fst))
+        (subst (λ w → ⟨ rank (u .fst) ∈ w ⟩) qr lt) i u refl wu
 ```
 
 The arity numeral and the payload, read out of the key's shape.
 
 ```agda
-      split : (N : S) (p : V ℓ) → fst (keyOf j z) ≡ pr (fst N) p
-            → (# j ≡ fst N) × (fst z ≡ p)
+      split : (N : S) (p : V ℓ) → (keyOf j z) .fst ≡ pr (N .fst) p
+            → (# j ≡ N .fst) × (z .fst ≡ p)
       split N p e = pr-inj (sym (keyOf-fst j z) ∙ e)
 
-      inD : (i : ℕ) (N u : S) → # i ≡ fst N → ⟨ pr (fst N) (fst u) ∈ D ⟩
+      inD : (i : ℕ) (N u : S) → # i ≡ N .fst → ⟨ pr (N .fst) (u .fst) ∈ D ⟩
           → Wf i u
       inD i N u qN h = subst (λ w → ⟨ w ∈ D ⟩)
         (cong₂ pr (sym qN) refl ∙ sym (keyOf-fst i u)) h
 
-      inD⁺ : (i : ℕ) (N u : S) → # i ≡ fst N
-           → ⟨ pr (sucV (fst N)) (fst u) ∈ D ⟩ → Wf (suc i) u
+      inD⁺ : (i : ℕ) (N u : S) → # i ≡ N .fst
+           → ⟨ pr (sucV (N .fst)) (u .fst) ∈ D ⟩ → Wf (suc i) u
       inD⁺ i N u qN h = subst (λ w → ⟨ w ∈ D ⟩)
         (cong₂ pr (cong sucV (sym qN)) refl ∙ sym (keyOf-fst (suc i) u)) h
 ```
@@ -241,7 +241,7 @@ constructor definitionally.
           (isTmAt-decode f (suc zero) (suc (suc zero)) (suc (suc (suc (suc A))))
             (b ∷ a ∷ N ∷ keyOf j z ∷ γ) j (sym qN) onto ha)
         where
-        sp = split N (pr (# k) (pr (fst a) (fst b))) e
+        sp = split N (pr (# k) (pr (a .fst) (b .fst))) e
         qN = sp .fst
         qx = sp .snd
 
@@ -257,14 +257,14 @@ constructor definitionally.
                , ( qop φ ψ
                  ∙ cong (VCode.mkTag k) (cong₂ pr qφ qψ)
                  ∙ sym qx ) })
-            (rec j b (subst (λ w → ⟨ rank (fst b) ∈ rank w ⟩) (sym qx)
-                       (rightPart (# k) (fst a) (fst b)))
+            (rec j b (subst (λ w → ⟨ rank (b .fst) ∈ rank w ⟩) (sym qx)
+                       (rightPart (# k) (a .fst) (b .fst)))
                      (inD j N b qN hb)) })
-          (rec j a (subst (λ w → ⟨ rank (fst a) ∈ rank w ⟩) (sym qx)
-                     (leftPart (# k) (fst a) (fst b)))
+          (rec j a (subst (λ w → ⟨ rank (a .fst) ∈ rank w ⟩) (sym qx)
+                     (leftPart (# k) (a .fst) (b .fst)))
                    (inD j N a qN ha))
         where
-        sp = split N (pr (# k) (pr (fst a) (fst b))) e
+        sp = split N (pr (# k) (pr (a .fst) (b .fst))) e
         qN = sp .fst
         qx = sp .snd
 
@@ -275,11 +275,11 @@ constructor definitionally.
       unSame k op qop (N , (a , (e , ha))) = map₁
         (λ { (φ , qφ) → op φ
            , ( qop φ ∙ cong (VCode.mkTag k) qφ ∙ sym qx ) })
-        (rec j a (subst (λ w → ⟨ rank (fst a) ∈ rank w ⟩) (sym qx)
-                   (payload≺ (# k) (fst a)))
+        (rec j a (subst (λ w → ⟨ rank (a .fst) ∈ rank w ⟩) (sym qx)
+                   (payload≺ (# k) (a .fst)))
                  (inD j N a qN ha))
         where
-        sp = split N (pr (# k) (fst a)) e
+        sp = split N (pr (# k) (a .fst)) e
         qN = sp .fst
         qx = sp .snd
 
@@ -290,7 +290,7 @@ constructor definitionally.
         , ( qop j ∙ cong (VCode.mkTag k) (sym (ha ∙ numeralL-fst 0))
           ∙ sym qx ) ∣₁
         where
-        qx = split N (pr (# k) (fst a)) e .snd
+        qx = split N (pr (# k) (a .fst)) e .snd
 
       unSucc : (k : ℕ) (op : ∀ {i} → Formula K (suc i) → Formula K i)
              → (∀ {i} (φ : Formula K (suc i))
@@ -300,11 +300,11 @@ constructor definitionally.
         (λ { (φ , qφ) → op φ
            , ( qop φ ∙ cong (VCode.mkTag k) qφ ∙ sym qx ) })
         (rec (suc j) a
-          (subst (λ w → ⟨ rank (fst a) ∈ rank w ⟩) (sym qx)
-            (payload≺ (# k) (fst a)))
+          (subst (λ w → ⟨ rank (a .fst) ∈ rank w ⟩) (sym qx)
+            (payload≺ (# k) (a .fst)))
           (inD⁺ j N a qN ha))
         where
-        sp = split N (pr (# k) (fst a)) e
+        sp = split N (pr (# k) (a .fst)) e
         qN = sp .fst
         qx = sp .snd
 
@@ -320,13 +320,13 @@ constructor definitionally.
                , ( qop t φ
                  ∙ cong (VCode.mkTag k) (cong₂ pr qt qφ)
                  ∙ sym qx ) })
-            (rec (suc j) b (subst (λ w → ⟨ rank (fst b) ∈ rank w ⟩) (sym qx)
-                             (rightPart (# k) (fst a) (fst b)))
+            (rec (suc j) b (subst (λ w → ⟨ rank (b .fst) ∈ rank w ⟩) (sym qx)
+                             (rightPart (# k) (a .fst) (b .fst)))
                            (inD⁺ j N b qN hb)) })
           (isTmAt-decode f zero (suc zero) (suc (suc (suc A)))
             (a ∷ N ∷ keyOf j z ∷ γ) j (sym qN) onto ha)
         where
-        sp = split N (pr (# k) (pr (fst a) (fst b))) e
+        sp = split N (pr (# k) (pr (a .fst) (b .fst))) e
         qN = sp .fst
         qx = sp .snd
 

@@ -212,7 +212,7 @@ The inner carrier is an h-set by `isSetClass`{.Agda}, applied to the underlying 
 
 ```agda
 isSetS : isSet S
-isSetS = isSetClass setIsSet (λ v → snd (isL v))
+isSetS = isSetClass setIsSet (λ v → (isL v) .snd)
 opaque
   pair≡ : {A : Type ℓ} {B : Type ℓ} {a a' : A} {b b' : B}
         → a ≡ a' → b ≡ b' → (a , b) ≡ (a' , b')
@@ -257,7 +257,7 @@ The describing condition of the product says that both coordinates are members o
 
 ```agda
           ((var (suc zero) ∈̇ con K) ∧̇ (var zero ∈̇ con K))
-          (λ x y → (fst x ∈ˢ fst K) ⊓ (fst y ∈ˢ fst K))
+          (λ x y → (x .fst ∈ˢ K .fst) ⊓ (y .fst ∈ˢ K .fst))
           (λ x y e h → h) (λ x y e h → h)
 ```
 
@@ -285,8 +285,8 @@ Membership in the product is characterized by a truncated existence: some two me
 ```agda
 InProd : S → V ℓ → Type (ℓ-suc ℓ)
 InProd K e = ∥ Σ[ a ∶ S ] Σ[ b ∶ S ]
-               (⟨ fst a ∈ˢ fst K ⟩ × ⟨ fst b ∈ˢ fst K ⟩
-                × (e ≡ pr (fst a) (fst b))) ∥₁
+               (⟨ a .fst ∈ˢ K .fst ⟩ × ⟨ b .fst ∈ˢ K .fst ⟩
+                × (e ≡ pr (a .fst) (b .fst))) ∥₁
 ```
 
 <!--en-->
@@ -298,8 +298,8 @@ Inward, the ordered pair of any two members of `K` belongs to `prodL K`; this is
 <!--/-->
 
 ```agda
-prodL-in : (K a b : S) → ⟨ fst a ∈ˢ fst K ⟩ → ⟨ fst b ∈ˢ fst K ⟩
-         → ⟨ pr (fst a) (fst b) ∈ˢ fst (prodL K) ⟩
+prodL-in : (K a b : S) → ⟨ a .fst ∈ˢ K .fst ⟩ → ⟨ b .fst ∈ˢ K .fst ⟩
+         → ⟨ pr (a .fst) (b .fst) ∈ˢ (prodL K) .fst ⟩
 prodL-in K a b ma mb = Product.into K a b ma mb (ma , mb)
 ```
 
@@ -312,11 +312,11 @@ Outward, a member of `prodL K` comes, in truncated form, from two members of `K`
 <!--/-->
 
 ```agda
-prodL-out : (K e : S) → ⟨ fst e ∈ˢ fst (prodL K) ⟩ → InProd K (fst e)
+prodL-out : (K e : S) → ⟨ e .fst ∈ˢ (prodL K) .fst ⟩ → InProd K (e .fst)
 prodL-out K e h = map₁ (λ { (a , b , q , ma , mb) → a , b , ma , mb , q }) (Product.out K e h)
-prodL-fst : (K e : S) → ⟨ fst e ∈ˢ fst (prodL K) ⟩
-          → Σ[ a ∶ ⟪ fst K ⟫ ] Σ[ b ∶ ⟪ fst K ⟫ ]
-              (fst e ≡ pr (⟪ fst K ⟫↪ a) (⟪ fst K ⟫↪ b))
+prodL-fst : (K e : S) → ⟨ e .fst ∈ˢ (prodL K) .fst ⟩
+          → Σ[ a ∶ ⟪ K .fst ⟫ ] Σ[ b ∶ ⟪ K .fst ⟫ ]
+              (e .fst ≡ pr (⟪ K .fst ⟫↪ a) (⟪ K .fst ⟫↪ b))
 ```
 
 <!--en-->
@@ -330,8 +330,8 @@ The proof converts the truncated witnesses into the fibers of `K`'s indexing, an
 ```agda
 prodL-fst K e h = rec₁ isPropFib
   (λ { (a , b , ma , mb , q) →
-     fiber (fst K) ma .fst , fiber (fst K) mb .fst
-     , q ∙ cong₂ pr (sym (fiber (fst K) ma .snd)) (sym (fiber (fst K) mb .snd)) })
+     fiber (K .fst) ma .fst , fiber (K .fst) mb .fst
+     , q ∙ cong₂ pr (sym (fiber (K .fst) ma .snd)) (sym (fiber (K .fst) mb .snd)) })
   (prodL-out K e h)
 ```
 
@@ -345,10 +345,10 @@ The second components are unique: the injectivity of the ordered pair extracts a
 
 ```agda
   where
-  inner : (a : ⟪ fst K ⟫)
-        → isProp (Σ[ b ∶ ⟪ fst K ⟫ ] (fst e ≡ pr (⟪ fst K ⟫↪ a) (⟪ fst K ⟫↪ b)))
+  inner : (a : ⟪ K .fst ⟫)
+        → isProp (Σ[ b ∶ ⟪ K .fst ⟫ ] (e .fst ≡ pr (⟪ K .fst ⟫↪ a) (⟪ K .fst ⟫↪ b)))
   inner a (b , q) (b' , q') = Σ≡Prop (λ _ → setIsSet _ _)
-    (↪-inj {a = fst K} (pr-inj (sym q ∙ q') .snd))
+    (↪-inj {a = K .fst} (pr-inj (sym q ∙ q') .snd))
 ```
 
 <!--en-->
@@ -360,10 +360,10 @@ The first components are unique for the same reason, so the whole fiber statemen
 <!--/-->
 
 ```agda
-  isPropFib : isProp (Σ[ a ∶ ⟪ fst K ⟫ ] Σ[ b ∶ ⟪ fst K ⟫ ]
-                        (fst e ≡ pr (⟪ fst K ⟫↪ a) (⟪ fst K ⟫↪ b)))
+  isPropFib : isProp (Σ[ a ∶ ⟪ K .fst ⟫ ] Σ[ b ∶ ⟪ K .fst ⟫ ]
+                        (e .fst ≡ pr (⟪ K .fst ⟫↪ a) (⟪ K .fst ⟫↪ b)))
   isPropFib (a , b , q) (a' , b' , q') = Σ≡Prop inner
-    (↪-inj {a = fst K} (pr-inj (sym q ∙ q') .fst))
+    (↪-inj {a = K .fst} (pr-inj (sym q ∙ q') .fst))
 ```
 
 <!--en-->
@@ -396,8 +396,8 @@ The definition offers two alternatives: either `a` belongs to `b` and `m` is `b`
 
 ```agda
 MaxIs m a b =
-  ∥ (⟨ fst a ∈ˢ fst b ⟩ × (fst m ≡ fst b))
-  ⊎ ((⟨ fst a ∈ˢ fst b ⟩ → ⊥₀) × (fst m ≡ fst a)) ∥₁
+  ∥ (⟨ a .fst ∈ˢ b .fst ⟩ × (m .fst ≡ b .fst))
+  ⊎ ((⟨ a .fst ∈ˢ b .fst ⟩ → ⊥₀) × (m .fst ≡ a .fst)) ∥₁
 ```
 
 <!--en-->
@@ -411,9 +411,9 @@ The Gödel comparison of two pairs is likewise data under truncation: either the
 ```agda
 OrdIs : S → S → S → S → S → S → Type (ℓ-suc ℓ)
 OrdIs m n a b c d =
-  ∥ ⟨ fst m ∈ˢ fst n ⟩
-  ⊎ ((fst m ≡ fst n)
-     × ∥ ⟨ fst a ∈ˢ fst c ⟩ ⊎ ((fst a ≡ fst c) × ⟨ fst b ∈ˢ fst d ⟩) ∥₁) ∥₁
+  ∥ ⟨ m .fst ∈ˢ n .fst ⟩
+  ⊎ ((m .fst ≡ n .fst)
+     × ∥ ⟨ a .fst ∈ˢ c .fst ⟩ ⊎ ((a .fst ≡ c .fst) × ⟨ b .fst ∈ˢ d .fst ⟩) ∥₁) ∥₁
 ```
 
 <!--en-->
@@ -457,7 +457,7 @@ Putting the pieces together, `Lt p q` says that `p` and `q` are coded pairs, of 
 ```agda
 Lt : V ℓ → V ℓ → Type (ℓ-suc ℓ)
 Lt p q = ∥ Σ[ a ∶ S ] Σ[ b ∶ S ] Σ[ c ∶ S ] Σ[ d ∶ S ] Σ[ m ∶ S ] Σ[ n ∶ S ]
-           ( (p ≡ pr (fst a) (fst b)) × (q ≡ pr (fst c) (fst d))
+           ( (p ≡ pr (a .fst) (b .fst)) × (q ≡ pr (c .fst) (d .fst))
            × MaxIs m a b × MaxIs n c d × OrdIs m n a b c d ) ∥₁
 ```
 
@@ -565,7 +565,7 @@ The first adequacy lemma reads the pair atom at that context: satisfaction of th
 ```agda
     atP : ∀ {k} (p : Fin k) (γ : S ^ k) (a b c d m n : S)
         → ⟨ env γ a b c d m n ⊨ prAtL (↑6 p) i5 i4 ⟩
-        ≡ (fst (lookup p γ) ≡ pr (fst a) (fst b))
+        ≡ ((lookup p γ) .fst ≡ pr (a .fst) (b .fst))
     atP p γ a b c d m n = cong ⟨_⟩ (prAtL-adequate (↑6 p) i5 i4 (env γ a b c d m n))
 ```
 
@@ -580,7 +580,7 @@ The second does the same for `q` and the pair of `c` and `d`. With these two ide
 ```agda
     atQ : ∀ {k} (q : Fin k) (γ : S ^ k) (a b c d m n : S)
         → ⟨ env γ a b c d m n ⊨ prAtL (↑6 q) i3 i2 ⟩
-        ≡ (fst (lookup q γ) ≡ pr (fst c) (fst d))
+        ≡ ((lookup q γ) .fst ≡ pr (c .fst) (d .fst))
     atQ q γ a b c d m n = cong ⟨_⟩ (prAtL-adequate (↑6 q) i3 i2 (env γ a b c d m n))
 ```
 
@@ -594,7 +594,7 @@ The outward direction consumes the six nested truncations in turn: satisfaction 
 
 ```agda
   lt-out : ∀ {k} (p q : Fin k) (γ : S ^ k) → ⟨ γ ⊨ ltAt p q ⟩
-         → Lt (fst (lookup p γ)) (fst (lookup q γ))
+         → Lt ((lookup p γ) .fst) ((lookup q γ) .fst)
   lt-out p q γ = rec₁ squash₁ (λ { (a , ha) → rec₁ squash₁ (λ { (b , hb) →
     rec₁ squash₁ (λ { (c , hc) → rec₁ squash₁ (λ { (d , hd) →
     rec₁ squash₁ (λ { (m , hm) → rec₁ squash₁ (λ { (n , (hp , (hq , (hM , (hN , hO))))) →
@@ -640,8 +640,8 @@ The inward direction turns `Lt` into the satisfaction statement, which is a prop
 
 ```agda
   lt-in : ∀ {k} (p q : Fin k) (γ : S ^ k)
-        → Lt (fst (lookup p γ)) (fst (lookup q γ)) → ⟨ γ ⊨ ltAt p q ⟩
-  lt-in p q γ = rec₁ (snd (γ ⊨ ltAt p q))
+        → Lt ((lookup p γ) .fst) ((lookup q γ) .fst) → ⟨ γ ⊨ ltAt p q ⟩
+  lt-in p q γ = rec₁ ((γ ⊨ ltAt p q) .snd)
     (λ { (a , b , c , d , m , n , (ep , eq' , hM , hN , hO)) →
       ∣ a , ∣ b , ∣ c , ∣ d , ∣ m , ∣ n
 ```
@@ -686,7 +686,7 @@ The host reading adds membership in `P` on both sides, conjoined with the order 
 <!--/-->
 
 ```agda
-          (λ p q → (fst p ∈ˢ fst P) ⊓ ((fst q ∈ˢ fst P) ⊓ (Lt (fst p) (fst q) , squash₁)))
+          (λ p q → (p .fst ∈ˢ P .fst) ⊓ ((q .fst ∈ˢ P .fst) ⊓ (Lt (p .fst) (q .fst) , squash₁)))
           (λ p q e h → h .fst , h .snd .fst , lt-out (suc zero) zero (q ∷ p ∷ e ∷ []) (h .snd .snd))
           (λ p q e h → h .fst , h .snd .fst , lt-in (suc zero) zero (q ∷ p ∷ e ∷ []) (h .snd .snd))
 ```
@@ -713,8 +713,8 @@ Inward: for two members `p` and `q` of `P` with `p` below `q`, their ordered pai
 <!--/-->
 
 ```agda
-godel-in : (P p q : S) → ⟨ fst p ∈ˢ fst P ⟩ → ⟨ fst q ∈ˢ fst P ⟩
-         → Lt (fst p) (fst q) → ⟨ pr (fst p) (fst q) ∈ˢ fst (godel P) ⟩
+godel-in : (P p q : S) → ⟨ p .fst ∈ˢ P .fst ⟩ → ⟨ q .fst ∈ˢ P .fst ⟩
+         → Lt (p .fst) (q .fst) → ⟨ pr (p .fst) (q .fst) ∈ˢ (godel P) .fst ⟩
 godel-in P p q mp mq l = Godel.into P p q mp mq (mp , mq , l)
 ```
 
@@ -727,8 +727,8 @@ Outward: a member of `godel P` comes with both members and the order data betwee
 <!--/-->
 
 ```agda
-godel-out : (P p q : S) → ⟨ pr (fst p) (fst q) ∈ˢ fst (godel P) ⟩
-          → ⟨ fst p ∈ˢ fst P ⟩ × ⟨ fst q ∈ˢ fst P ⟩ × Lt (fst p) (fst q)
+godel-out : (P p q : S) → ⟨ pr (p .fst) (q .fst) ∈ˢ (godel P) .fst ⟩
+          → ⟨ p .fst ∈ˢ P .fst ⟩ × ⟨ q .fst ∈ˢ P .fst ⟩ × Lt (p .fst) (q .fst)
 godel-out = Godel.pair-out
 ```
 
@@ -751,7 +751,7 @@ The order module then fixes an ordinal `κ`, the case at which the square law is
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module Order (κ : S) (oκ : IsOrd (fst κ)) where
+module Order (κ : S) (oκ : IsOrd (κ .fst)) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -766,7 +766,7 @@ module Order (κ : S) (oκ : IsOrd (fst κ)) where
 
 ```agda
   K : V ℓ
-  K = fst κ
+  K = κ .fst
 ```
 
 <!--en-->
@@ -792,7 +792,7 @@ An index `m : ⟪ K ⟫` names the ambient set `↑ m`, together with a proof th
 
 ```agda
   upK : ⟪ K ⟫ → S
-  upK m = ↑ m , isL-trans {x = K} {y = ↑ m} (member K m) (snd κ)
+  upK m = ↑ m , isL-trans {x = K} {y = ↑ m} (member K m) (κ .snd)
 ```
 
 <!--en-->
@@ -818,7 +818,8 @@ On the coordinates themselves stands the coordinate order `≺₁`, quoted from 
 
 ```agda
   _≺₁_ : ⟪ K ⟫ → ⟪ K ⟫ → Type (ℓ-suc ℓ)
-  _≺₁_ = SQ._≺₁_ K oκ
+  _≺₁_ = O._≺₁_
+    where module O = SQ.OnOrdinal K oκ
 ```
 
 <!--en-->
@@ -831,7 +832,8 @@ On pairs stands the Gödel order `≺ₚ`: compare maxima first, then the first 
 
 ```agda
   _≺ₚ_ : Pair → Pair → Type (ℓ-suc ℓ)
-  _≺ₚ_ = SQ._≺_ K oκ
+  _≺ₚ_ = O._≺_
+    where module O = SQ.OnOrdinal K oκ
 ```
 
 <!--en-->
@@ -858,8 +860,8 @@ Two small facts prepare the comparison between the two sides. First, every membe
 ```agda
   ord↑ : (m : ⟪ K ⟫) → IsOrd (↑ m)
   ord↑ m = mem-ord {A = K} oκ (↑ m) (member K m)
-  max-out : (a b m : S) (a' b' : ⟪ K ⟫) → fst a ≡ ↑ a' → fst b ≡ ↑ b'
-          → MaxIs m a b → fst m ≡ ↑ (maxOrd a' b')
+  max-out : (a b m : S) (a' b' : ⟪ K ⟫) → a .fst ≡ ↑ a' → b .fst ≡ ↑ b'
+          → MaxIs m a b → m .fst ≡ ↑ (maxOrd a' b')
   max-out a b m a' b' ea eb = rec₁ (setIsSet _ _) (go (SQ.tri₁ K oκ a' b'))
 ```
 
@@ -874,9 +876,9 @@ The case function fixes the shape of that argument: the host trichotomy splits i
 ```agda
     where
     go : (t : TriW (a' ≺₁ b') (a' ≡ b') (b' ≺₁ a'))
-       → (⟨ fst a ∈ˢ fst b ⟩ × (fst m ≡ fst b))
-         ⊎ ((⟨ fst a ∈ˢ fst b ⟩ → ⊥₀) × (fst m ≡ fst a))
-       → fst m ≡ ↑ (SQ.maxGo K oκ a' b' t)
+       → (⟨ a .fst ∈ˢ b .fst ⟩ × (m .fst ≡ b .fst))
+         ⊎ ((⟨ a .fst ∈ˢ b .fst ⟩ → ⊥₀) × (m .fst ≡ a .fst))
+       → m .fst ≡ ↑ (SQ.maxGo K oκ a' b' t)
 ```
 
 <!--en-->
@@ -953,7 +955,7 @@ Its three cases are immediate from the host comparison: below gives the affirmat
     go (eq p) = ∣ inr ((λ h → ∈-irrefl (↑ b') (subst (λ w → ⟨ ↑ w ∈ˢ ↑ b' ⟩) p h)) , refl) ∣₁
     go (gt h) = ∣ inr ((λ h' → ∈-irrefl (↑ a') (ord↑ a' .fst {x = ↑ b'} {y = ↑ a'} h' h)) , refl) ∣₁
   code : Pair → V ℓ
-  code p = pr (↑ (fst p)) (↑ (snd p))
+  code p = pr (↑ (p .fst)) (↑ (p .snd))
 ```
 
 <!--en-->
@@ -968,7 +970,7 @@ The heart of the transfer is the refutation lemma. It assumes a contradiction-sh
   private
     refute : (p q : Pair) → (p ≺ₚ q → ⊥₀)
            → Σ[ a ∶ S ] Σ[ b ∶ S ] Σ[ c ∶ S ] Σ[ d ∶ S ] Σ[ m ∶ S ] Σ[ n ∶ S ]
-               ( (code p ≡ pr (fst a) (fst b)) × (code q ≡ pr (fst c) (fst d))
+               ( (code p ≡ pr (a .fst) (b .fst)) × (code q ≡ pr (c .fst) (d .fst))
                × MaxIs m a b × MaxIs n c d × OrdIs m n a b c d )
 ```
 
@@ -985,7 +987,7 @@ The conclusion is the empty type: the assumed order data and the refused compari
     refute (a' , b') (c' , d') nk (a , b , c , d , m , n , (ep , eq' , hM , hN , hO)) =
       rec₁ isProp⊥ outer hO
       where
-      ea : fst a ≡ ↑ a'
+      ea : a .fst ≡ ↑ a'
 ```
 
 <!--en-->
@@ -998,9 +1000,9 @@ The injectivity of the ordered pair extracts, from each coding equation, the ide
 
 ```agda
       ea = sym (pr-inj ep .fst)
-      eb : fst b ≡ ↑ b'
+      eb : b .fst ≡ ↑ b'
       eb = sym (pr-inj ep .snd)
-      ec : fst c ≡ ↑ c'
+      ec : c .fst ≡ ↑ c'
       ec = sym (pr-inj eq' .fst)
 ```
 
@@ -1013,11 +1015,11 @@ The two maxima are then identified with the host maxima, by `max-out` applied to
 <!--/-->
 
 ```agda
-      ed : fst d ≡ ↑ d'
+      ed : d .fst ≡ ↑ d'
       ed = sym (pr-inj eq' .snd)
-      em : fst m ≡ ↑ (maxOrd a' b')
+      em : m .fst ≡ ↑ (maxOrd a' b')
       em = max-out a b m a' b' ea eb hM
-      en : fst n ≡ ↑ (maxOrd c' d')
+      en : n .fst ≡ ↑ (maxOrd c' d')
 ```
 
 <!--en-->
@@ -1041,7 +1043,7 @@ The inner lemma transfers the coordinate comparison. An ambient membership betwe
 <!--/-->
 
 ```agda
-      inner : ⟨ fst a ∈ˢ fst c ⟩ ⊎ ((fst a ≡ fst c) × ⟨ fst b ∈ˢ fst d ⟩)
+      inner : ⟨ a .fst ∈ˢ c .fst ⟩ ⊎ ((a .fst ≡ c .fst) × ⟨ b .fst ∈ˢ d .fst ⟩)
             → (a' ≺₁ c') ⊎ ((a' ≡ c') × (b' ≺₁ d'))
       inner (inl h)       = inl (subst2 (λ x y → ⟨ x ∈ˢ y ⟩) ea ec h)
       inner (inr (e , h)) =
@@ -1069,9 +1071,9 @@ If the first maximum belongs to the second, transporting this membership along `
 <!--/-->
 
 ```agda
-      outer : ⟨ fst m ∈ˢ fst n ⟩
-            ⊎ ((fst m ≡ fst n)
-               × ∥ ⟨ fst a ∈ˢ fst c ⟩ ⊎ ((fst a ≡ fst c) × ⟨ fst b ∈ˢ fst d ⟩) ∥₁)
+      outer : ⟨ m .fst ∈ˢ n .fst ⟩
+            ⊎ ((m .fst ≡ n .fst)
+               × ∥ ⟨ a .fst ∈ˢ c .fst ⟩ ⊎ ((a .fst ≡ c .fst) × ⟨ b .fst ∈ˢ d .fst ⟩) ∥₁)
             → ⊥₀
       outer (inl h)       = nk (inl (subst2 (λ x y → ⟨ x ∈ˢ y ⟩) em en h))
 ```
@@ -1162,7 +1164,7 @@ If `x < y`, transitivity with `y < z` gives `x < z`; if `x = y`, the given compa
 
 ```agda
   private
-    ≤→≺ : (x y z : ⟪ K ⟫) → SQ._≤₁_ K oκ x y → y ≺₁ z → x ≺₁ z
+    ≤→≺ : (x y z : ⟪ K ⟫) → let module O = SQ.OnOrdinal K oκ in x O.≤₁ y → y ≺₁ z → x ≺₁ z
     ≤→≺ x y z (inl h) h' = SQ.trans₁ K oκ x y z h h'
     ≤→≺ x y z (inr e) h' = subst (λ w → w ≺₁ z) (sym e) h'
 ```
@@ -1176,7 +1178,7 @@ The companion lemma turns `x ≤ y` and `y = y'` into membership of `x` in the s
 <!--/-->
 
 ```agda
-    ≤→∈suc : (x y y' : ⟪ K ⟫) → SQ._≤₁_ K oκ x y → y ≡ y'
+    ≤→∈suc : (x y y' : ⟪ K ⟫) → let module O = SQ.OnOrdinal K oκ in x O.≤₁ y → y ≡ y'
            → ⟨ ↑ x ∈ˢ sucV (↑ y') ⟩
     ≤→∈suc x y y' (inl h) e = ∈sucV-inl (subst (λ w → x ≺₁ w) e h)
     ≤→∈suc x y y' (inr q) e =
@@ -1193,7 +1195,7 @@ The segment lemmas now read off the order. If a pair `r` is below a pair `p`, th
 
 ```agda
   fst∈suc : (r p : Pair) → r ≺ₚ p
-          → ⟨ ↑ (fst r) ∈ˢ sucV (↑ (maxOrd (fst p) (snd p))) ⟩
+          → ⟨ ↑ (r .fst) ∈ˢ sucV (↑ (maxOrd (p .fst) (p .snd))) ⟩
   fst∈suc (a , b) (c , d) (inl h) =
     ∈sucV-inl (≤→≺ a (maxOrd a b) (maxOrd c d) (SQ.max-spec K oκ a b .fst) h)
   fst∈suc (a , b) (c , d) (inr (e , _)) =
@@ -1221,7 +1223,7 @@ The same argument, applied to the second coordinates, gives `snd∈suc`: the sec
 
 ```agda
   snd∈suc : (r p : Pair) → r ≺ₚ p
-          → ⟨ ↑ (snd r) ∈ˢ sucV (↑ (maxOrd (fst p) (snd p))) ⟩
+          → ⟨ ↑ (r .snd) ∈ˢ sucV (↑ (maxOrd (p .fst) (p .snd))) ⟩
   snd∈suc (a , b) (c , d) (inl h) =
     ∈sucV-inl (≤→≺ b (maxOrd a b) (maxOrd c d) (SQ.max-spec K oκ a b .snd) h)
   snd∈suc (a , b) (c , d) (inr (e , _)) =
@@ -1244,7 +1246,7 @@ These two bounds show that every predecessor of a pair `(c, d)` has both coordin
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module Coll (κ : S) (oκ : IsOrd (fst κ)) where
+module Coll (κ : S) (oκ : IsOrd (κ .fst)) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -1296,7 +1298,7 @@ Gödel 関係では直接従う。`y R x` なら、`y` と `x` はともにそ�
 <!--/-->
 
 ```agda
-  Rsub : (y x : S) → Holds R y x → ⟨ fst y ∈ fst P ⟩ × ⟨ fst x ∈ fst P ⟩
+  Rsub : (y x : S) → Holds R y x → ⟨ y .fst ∈ P .fst ⟩ × ⟨ x .fst ∈ P .fst ⟩
   Rsub y x h = godel-out P y x h .fst , godel-out P y x h .snd .fst
 ```
 
@@ -1508,7 +1510,7 @@ A coded injection in `L` can be read externally: its graph conditions determine 
 <!--/-->
 
 ```agda
-  coded→ambient : (a b : S) → Σ[ F ∶ S ] InjCode F a b → ⟪ fst a ⟫ ↪ ⟪ fst b ⟫
+  coded→ambient : (a b : S) → Σ[ F ∶ S ] InjCode F a b → ⟪ a .fst ⟫ ↪ ⟪ b .fst ⟫
   coded→ambient a b (F , sv , dm , ij , ran) = Sm.small , Sm.small-inj
     where module Sm = Small F a b sv dm ij ran
 ω⊆ : (a : V ℓ) → IsOrd a → (⟨ a ∈ˢ ω ⟩ → ⊥₀)
@@ -1541,10 +1543,10 @@ Its last case is transitivity applied to `z ∈ ω` and `ω ∈ a`. With contain
 
 ```agda
   go (inr (inr ω∈a)) = oa .fst z∈ω ω∈a
-no-fin : (a b : S) → IsOrd (fst a) → (⟨ fst a ∈ˢ ω ⟩ → ⊥₀)
-       → IsOrd (fst b) → ⟨ fst b ∈ˢ ω ⟩ → InjL a b → ⊥₀
+no-fin : (a b : S) → IsOrd (a .fst) → (⟨ a .fst ∈ˢ ω ⟩ → ⊥₀)
+       → IsOrd (b .fst) → ⟨ b .fst ∈ˢ ω ⟩ → InjL a b → ⊥₀
 no-fin a b oa a∉ω ob b∈ω = rec₁ isProp⊥ (λ c →
-  finite-excl-ω (fst b) ob b∈ω (λ x → h c x , h c x)
+  finite-excl-ω (b .fst) ob b∈ω (λ x → h c x , h c x)
 ```
 
 <!--en-->
@@ -1557,10 +1559,10 @@ The final piece of the refutation quotes the containment of `ω` in `a`: since `
 
 ```agda
     (λ x y e → ι .snd x y
-       (coded→ambient a b c .snd (ι .fst x) (ι .fst y) (cong fst e))))
+       (coded→ambient a b c .snd (ι .fst x) (ι .fst y) (cong (λ p → p .fst) e))))
   where
-  ι : ⟪ ω ⟫ ↪ ⟪ fst a ⟫
-  ι = incl ω (fst a) (ω⊆ (fst a) oa a∉ω)
+  ι : ⟪ ω ⟫ ↪ ⟪ a .fst ⟫
+  ι = incl ω (a .fst) (ω⊆ (a .fst) oa a∉ω)
 ```
 
 <!--en-->
@@ -1572,7 +1574,7 @@ The map `h` evaluates the coded injection after the inclusion `ω ↪ a`.
 <!--/-->
 
 ```agda
-  h : Σ[ F ∶ S ] InjCode F a b → ⟪ ω ⟫ → ⟪ fst b ⟫
+  h : Σ[ F ∶ S ] InjCode F a b → ⟪ ω ⟫ → ⟪ b .fst ⟫
   h c x = coded→ambient a b c .fst (ι .fst x)
 ```
 
@@ -1599,8 +1601,8 @@ module ProdMap (a b F : S)
                (sv : ⟨ (F ∷ a ∷ []) ⊨ svAt zero ⟩)
                (dm : ⟨ (F ∷ a ∷ []) ⊨ domAt zero (suc zero) ⟩)
                (ij : ⟨ (F ∷ a ∷ []) ⊨ injAt zero ⟩)
-               (ran : (x y : S) → ⟨ pr (fst x) (fst y) ∈ fst F ⟩
-                    → ⟨ fst y ∈ fst b ⟩) where
+               (ran : (x y : S) → ⟨ pr (x .fst) (y .fst) ∈ F .fst ⟩
+                    → ⟨ y .fst ∈ b .fst ⟩) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -1635,10 +1637,10 @@ Two predicates describe the objects in play. `Mem p` says that `p` is a member o
 
 ```agda
   Mem : S → Type (ℓ-suc ℓ)
-  Mem p = ⟨ fst p ∈ˢ fst (prodL a) ⟩
+  Mem p = ⟨ p .fst ∈ˢ (prodL a) .fst ⟩
   Comp : S → Type (ℓ-suc ℓ)
   Comp p = Σ[ x ∶ S ] Σ[ y ∶ S ]
-             (⟨ fst x ∈ˢ fst a ⟩ × ⟨ fst y ∈ˢ fst a ⟩ × (fst p ≡ pr (fst x) (fst y)))
+             (⟨ x .fst ∈ˢ a .fst ⟩ × ⟨ y .fst ∈ˢ a .fst ⟩ × (p .fst ≡ pr (x .fst) (y .fst)))
 ```
 
 <!--en-->
@@ -1652,7 +1654,7 @@ The components of a product member are unique, and `isPropComp` proves it. The f
 ```agda
   isPropComp : (p : S) → isProp (Comp p)
   isPropComp p (x , y , _ , _ , e) (x' , y' , _ , _ , e') =
-    Σ≡Prop inner (Σ≡Prop (λ v → snd (isL v)) (pr-inj (sym e ∙ e') .fst))
+    Σ≡Prop inner (Σ≡Prop (λ v → (isL v) .snd) (pr-inj (sym e ∙ e') .fst))
     where
     inner : (x : S)
 ```
@@ -1666,11 +1668,11 @@ The inner lemma compares the second components: two candidates `y` and `y'` pair
 <!--/-->
 
 ```agda
-          → isProp (Σ[ y ∶ S ] (⟨ fst x ∈ˢ fst a ⟩ × ⟨ fst y ∈ˢ fst a ⟩
-                                × (fst p ≡ pr (fst x) (fst y))))
+          → isProp (Σ[ y ∶ S ] (⟨ x .fst ∈ˢ a .fst ⟩ × ⟨ y .fst ∈ˢ a .fst ⟩
+                                × (p .fst ≡ pr (x .fst) (y .fst))))
     inner x (y , _ , _ , e) (y' , _ , _ , e') =
-      Σ≡Prop (λ w → isProp× (snd (fst x ∈ˢ fst a))
-                      (isProp× (snd (fst w ∈ˢ fst a)) (setIsSet _ _)))
+      Σ≡Prop (λ w → isProp× ((x .fst ∈ˢ a .fst) .snd)
+                      (isProp× ((w .fst ∈ˢ a .fst) .snd) (setIsSet _ _)))
 ```
 
 <!--en-->
@@ -1682,7 +1684,7 @@ The last component is discharged by the equality of underlying sets, and the uni
 <!--/-->
 
 ```agda
-        (Σ≡Prop (λ v → snd (isL v)) (pr-inj (sym e ∙ e') .snd))
+        (Σ≡Prop (λ v → (isL v) .snd) (pr-inj (sym e ∙ e') .snd))
 ```
 
 <!--en-->
@@ -1697,7 +1699,7 @@ The reader `comp` turns the truncated membership of the product into an honest d
   comp : (p : S) → Mem p → Comp p
   comp p mp = rec₁ (isPropComp p) (λ z → z) (prodL-out a p mp)
   opaque
-    val : (x : S) → ⟨ fst x ∈ˢ fst a ⟩ → S
+    val : (x : S) → ⟨ x .fst ∈ˢ a .fst ⟩ → S
     val x mx = E.toFun (x , mx)
 ```
 
@@ -1710,8 +1712,8 @@ The graph lemma certifies that the computed value is paired with its input insid
 <!--/-->
 
 ```agda
-    val-graph : (x : S) (mx : ⟨ fst x ∈ˢ fst a ⟩)
-              → ⟨ pr (fst x) (fst (val x mx)) ∈ fst F ⟩
+    val-graph : (x : S) (mx : ⟨ x .fst ∈ˢ a .fst ⟩)
+              → ⟨ pr (x .fst) ((val x mx) .fst) ∈ F .fst ⟩
     val-graph x mx = E.toFun-graph (x , mx)
 ```
 
@@ -1724,8 +1726,8 @@ The injectivity lemma transfers the graph's injectivity to the computed values: 
 <!--/-->
 
 ```agda
-    val-inj : (x : S) (mx : ⟨ fst x ∈ˢ fst a ⟩) (x' : S) (mx' : ⟨ fst x' ∈ˢ fst a ⟩)
-            → fst (val x mx) ≡ fst (val x' mx') → fst x ≡ fst x'
+    val-inj : (x : S) (mx : ⟨ x .fst ∈ˢ a .fst ⟩) (x' : S) (mx' : ⟨ x' .fst ∈ˢ a .fst ⟩)
+            → (val x mx) .fst ≡ (val x' mx') .fst → x .fst ≡ x' .fst
     val-inj x mx x' mx' = E.toFun-inj ij (x , mx) (x' , mx')
 ```
 
@@ -1752,9 +1754,9 @@ The image lands in the product over `b`: both component values are members of `b
 <!--/-->
 
 ```agda
-  into : (p : S) (mp : Mem p) → ⟨ fst (fn p mp) ∈ˢ fst (prodL b) ⟩
+  into : (p : S) (mp : Mem p) → ⟨ (fn p mp) .fst ∈ˢ (prodL b) .fst ⟩
   into p mp =
-    subst (λ w → ⟨ w ∈ˢ fst (prodL b) ⟩) (sym (prʟ-fst (val x mx) (val y my)))
+    subst (λ w → ⟨ w ∈ˢ (prodL b) .fst ⟩) (sym (prʟ-fst (val x mx) (val y my)))
       (prodL-in b (val x mx) (val y my)
         (ran x (val x mx) (val-graph x mx)) (ran y (val y my) (val-graph y my)))
 ```
@@ -1786,8 +1788,8 @@ The chain type assembles what the graph formula must witness: `p` is the pair of
 ```agda
   Chain : S → S → S → S → S → S → Type (ℓ-suc ℓ)
   Chain q p x y x' y' =
-      (fst p ≡ pr (fst x) (fst y)) × (fst q ≡ pr (fst x') (fst y'))
-    × ⟨ pr (fst x) (fst x') ∈ fst F ⟩ × ⟨ pr (fst y) (fst y') ∈ fst F ⟩
+      (p .fst ≡ pr (x .fst) (y .fst)) × (q .fst ≡ pr (x' .fst) (y' .fst))
+    × ⟨ pr (x .fst) (x' .fst) ∈ F .fst ⟩ × ⟨ pr (y .fst) (y' .fst) ∈ F .fst ⟩
 ```
 
 <!--en-->
@@ -1843,7 +1845,7 @@ The first adequacy lemma reads the pair atom for `p`: satisfaction of the pairin
 
 ```agda
       at1 : (q p x y x' y' : S)
-          → ⟨ env₄ q p x y x' y' ⊨ prAtL i5 i3 i2 ⟩ ≡ (fst p ≡ pr (fst x) (fst y))
+          → ⟨ env₄ q p x y x' y' ⊨ prAtL i5 i3 i2 ⟩ ≡ (p .fst ≡ pr (x .fst) (y .fst))
       at1 q p x y x' y' = cong ⟨_⟩ (prAtL-adequate i5 i3 i2 (env₄ q p x y x' y'))
 ```
 
@@ -1857,7 +1859,7 @@ The second adequacy lemma does the same for `q`, against the witnesses `x'` and 
 
 ```agda
       at2 : (q p x y x' y' : S)
-          → ⟨ env₄ q p x y x' y' ⊨ prAtL i4 i1 i0 ⟩ ≡ (fst q ≡ pr (fst x') (fst y'))
+          → ⟨ env₄ q p x y x' y' ⊨ prAtL i4 i1 i0 ⟩ ≡ (q .fst ≡ pr (x' .fst) (y' .fst))
       at2 q p x y x' y' = cong ⟨_⟩ (prAtL-adequate i4 i1 i0 (env₄ q p x y x' y'))
 ```
 
@@ -1871,7 +1873,7 @@ The third adequacy lemma reads the first application atom: satisfaction in `L` i
 
 ```agda
       at3 : (q p x y x' y' : S)
-          → ⟨ env₄ q p x y x' y' ⊨ appC F i3 i1 ⟩ ≡ ⟨ pr (fst x) (fst x') ∈ fst F ⟩
+          → ⟨ env₄ q p x y x' y' ⊨ appC F i3 i1 ⟩ ≡ ⟨ pr (x .fst) (x' .fst) ∈ F .fst ⟩
       at3 q p x y x' y' = cong ⟨_⟩ (appC-adequate F i3 i1 (env₄ q p x y x' y'))
 ```
 
@@ -1885,7 +1887,7 @@ The fourth does the same for the second coordinates, completing the translation 
 
 ```agda
       at4 : (q p x y x' y' : S)
-          → ⟨ env₄ q p x y x' y' ⊨ appC F i2 i0 ⟩ ≡ ⟨ pr (fst y) (fst y') ∈ fst F ⟩
+          → ⟨ env₄ q p x y x' y' ⊨ appC F i2 i0 ⟩ ≡ ⟨ pr (y .fst) (y' .fst) ∈ F .fst ⟩
       at4 q p x y x' y' = cong ⟨_⟩ (appC-adequate F i2 i0 (env₄ q p x y x' y'))
 ```
 
@@ -1990,7 +1992,7 @@ The chain equation writes `q` as `(x₁',y₁')`, while the fixed decomposition 
     step : Σ[ x₁ ∶ S ] Σ[ y₁ ∶ S ] Σ[ x₁' ∶ S ] Σ[ y₁' ∶ S ] Chain q p x₁ y₁ x₁' y₁'
          → q ≡ fn p mp
     step (x₁ , y₁ , x₁' , y₁' , (e₁ , e₂ , h3 , h4)) =
-      Σ≡Prop (λ v → snd (isL v))
+      Σ≡Prop (λ v → (isL v) .snd)
         (e₂ ∙ cong₂ pr ex ey ∙ sym (prʟ-fst (val x mx) (val y my)))
 ```
 
@@ -2004,9 +2006,9 @@ The injectivity of the ordered pair splits the pair equation into two: the under
 
 ```agda
       where
-      x₁≡x : fst x₁ ≡ fst x
+      x₁≡x : x₁ .fst ≡ x .fst
       x₁≡x = pr-inj (sym e₁ ∙ e) .fst
-      y₁≡y : fst y₁ ≡ fst y
+      y₁≡y : y₁ .fst ≡ y .fst
       y₁≡y = pr-inj (sym e₁ ∙ e) .snd
 ```
 
@@ -2019,10 +2021,10 @@ The two graph memberships are then read through the single-valuedness of `F`: an
 <!--/-->
 
 ```agda
-      ex : fst x₁' ≡ fst (val x mx)
+      ex : x₁' .fst ≡ (val x mx) .fst
       ex = svAt-out zero (F ∷ a ∷ []) sv x x₁' (val x mx)
-             (subst (λ w → ⟨ pr w (fst x₁') ∈ fst F ⟩) x₁≡x h3) (val-graph x mx)
-      ey : fst y₁' ≡ fst (val y my)
+             (subst (λ w → ⟨ pr w (x₁' .fst) ∈ F .fst ⟩) x₁≡x h3) (val-graph x mx)
+      ey : y₁' .fst ≡ (val y my) .fst
       ey = svAt-out zero (F ∷ a ∷ []) sv y y₁' (val y my)
 ```
 
@@ -2035,7 +2037,7 @@ The second coordinate is treated identically, with its own membership and its ow
 <!--/-->
 
 ```agda
-             (subst (λ w → ⟨ pr w (fst y₁') ∈ fst F ⟩) y₁≡y h4) (val-graph y my)
+             (subst (λ w → ⟨ pr w (y₁' .fst) ∈ F .fst ⟩) y₁≡y h4) (val-graph y my)
 ```
 
 <!--en-->
@@ -2093,7 +2095,7 @@ Injectivity of the lifted map is proved directly. Two product members whose imag
 
 ```agda
   inj : (p : S) (mp : Mem p) (p' : S) (mp' : Mem p')
-      → fst (fn p mp) ≡ fst (fn p' mp') → fst p ≡ fst p'
+      → (fn p mp) .fst ≡ (fn p' mp') .fst → p .fst ≡ p' .fst
   inj p mp p' mp' e = e₀ ∙ cong₂ pr ex ey ∙ sym e₀'
     where
     x = comp p mp .fst
@@ -2128,7 +2130,7 @@ The assumed equality of images is an equality of internal pairs; its injectivity
     mx' = comp p' mp' .snd .snd .fst
     my' = comp p' mp' .snd .snd .snd .fst
     e₀' = comp p' mp' .snd .snd .snd .snd
-    q : (fst (val x mx) ≡ fst (val x' mx')) × (fst (val y my) ≡ fst (val y' my'))
+    q : ((val x mx) .fst ≡ (val x' mx') .fst) × ((val y my) .fst ≡ (val y' my') .fst)
 ```
 
 <!--en-->
@@ -2141,10 +2143,10 @@ Each component equality is fed to the injectivity of the value map, yielding fir
 
 ```agda
     q = pr-inj (sym (prʟ-fst (val x mx) (val y my)) ∙ e ∙ prʟ-fst (val x' mx') (val y' my'))
-    ex : fst x ≡ fst x'
-    ex = val-inj x mx x' mx' (fst q)
-    ey : fst y ≡ fst y'
-    ey = val-inj y my y' my' (snd q)
+    ex : x .fst ≡ x' .fst
+    ex = val-inj x mx x' mx' (q .fst)
+    ey : y .fst ≡ y' .fst
+    ey = val-inj y my y' my' (q .snd)
 ```
 
 <!--en-->
@@ -2195,7 +2197,7 @@ To absorb the extra top element of an infinite ordinal, it remains to inject its
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module Shift (mL : S) (om : IsOrd (fst mL)) (m∉ω : ⟨ fst mL ∈ˢ ω ⟩ → ⊥₀) where
+module Shift (mL : S) (om : IsOrd (mL .fst)) (m∉ω : ⟨ mL .fst ∈ˢ ω ⟩ → ⊥₀) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -2211,7 +2213,7 @@ Write `m` for the underlying ordinal of `mL`. Membership and finiteness decision
 ```agda
   private
     m : V ℓ
-    m = fst mL
+    m = mL .fst
 ```
 
 <!--en-->
@@ -2236,8 +2238,8 @@ Equality of two elements of `L` is equality of their underlying sets, since the 
 <!--/-->
 
 ```agda
-    S≡ : {x y : S} → fst x ≡ fst y → x ≡ y
-    S≡ = Σ≡Prop (λ v → snd (isL v))
+    S≡ : {x y : S} → x .fst ≡ y .fst → x ≡ y
+    S≡ = Σ≡Prop (λ v → (isL v) .snd)
 ```
 
 <!--en-->
@@ -2263,9 +2265,9 @@ Membership in the shift's domain is stated, and the first decision is defined: a
 
 ```agda
     Mem : S → Type (ℓ-suc ℓ)
-    Mem x = ⟨ fst x ∈ˢ fst D ⟩
+    Mem x = ⟨ x .fst ∈ˢ D .fst ⟩
     Fin? : S → Type (ℓ-suc ℓ)
-    Fin? x = Dec ⟨ fst x ∈ˢ ω ⟩
+    Fin? x = Dec ⟨ x .fst ∈ˢ ω ⟩
 ```
 
 <!--en-->
@@ -2278,7 +2280,7 @@ The second decision separates the members of the successor: an element of `sucʟ
 
 ```agda
     Top? : S → Type (ℓ-suc ℓ)
-    Top? x = ⟨ fst x ∈ˢ m ⟩ ⊎ (fst x ≡ m)
+    Top? x = ⟨ x .fst ∈ˢ m ⟩ ⊎ (x .fst ≡ m)
 ```
 
 <!--en-->
@@ -2291,7 +2293,7 @@ The first decision is an instance of excluded middle, applied to the membership 
 
 ```agda
     fin? : (x : S) → Fin? x
-    fin? x = FOL.Semantics.decideMembership 𝒮ᵥ lem (fst x) ω
+    fin? x = FOL.Semantics.decideMembership 𝒮ᵥ lem (x .fst) ω
 ```
 
 <!--en-->
@@ -2304,9 +2306,9 @@ The second decision is also an instance of excluded middle, refined by the succe
 
 ```agda
     top? : (x : S) → Mem x → Top? x
-    top? x h = go (FOL.Semantics.decideMembership 𝒮ᵥ lem (fst x) m)
+    top? x h = go (FOL.Semantics.decideMembership 𝒮ᵥ lem (x .fst) m)
       where
-      go : Dec ⟨ fst x ∈ˢ m ⟩ → Top? x
+      go : Dec ⟨ x .fst ∈ˢ m ⟩ → Top? x
       go (yes k) = inl k
 ```
 
@@ -2319,9 +2321,9 @@ In the refuted case the elimination consumes the truncated membership in the suc
 <!--/-->
 
 ```agda
-      go (no nk) = inr (∈sucV-elim {A = m} {x = fst x} (setIsSet (fst x) m)
-        (subst (λ w → ⟨ fst x ∈ˢ w ⟩) (sucʟ-fst mL) h) (λ k → ⊥₀-rec (nk k)) (λ q → q))
-    not-both : (x : S) → ⟨ fst x ∈ˢ m ⟩ → fst x ≡ m → ⊥₀
+      go (no nk) = inr (∈sucV-elim {A = m} {x = x .fst} (setIsSet (x .fst) m)
+        (subst (λ w → ⟨ x .fst ∈ˢ w ⟩) (sucʟ-fst mL) h) (λ k → ⊥₀-rec (nk k)) (λ q → q))
+    not-both : (x : S) → ⟨ x .fst ∈ˢ m ⟩ → x .fst ≡ m → ⊥₀
     not-both x k q = ∈-irrefl m (subst (λ w → ⟨ w ∈ˢ m ⟩) q k)
 ```
 
@@ -2334,7 +2336,7 @@ The finite and top cases cannot overlap. If `x` belongs to `ω` and equals `m`, 
 <!--/-->
 
 ```agda
-    ω-fin : (x : S) → ⟨ fst x ∈ˢ ω ⟩ → fst x ≡ m → ⊥₀
+    ω-fin : (x : S) → ⟨ x .fst ∈ˢ ω ⟩ → x .fst ≡ m → ⊥₀
     ω-fin x k q = m∉ω (subst (λ w → ⟨ w ∈ˢ ω ⟩) q k)
 ```
 
@@ -2376,9 +2378,9 @@ The value is guaranteed to lie in `m`. For a finite member, its successor is a m
 <!--/-->
 
 ```agda
-    value-in : (x : S) (f : Fin? x) (t : Top? x) → ⟨ fst (value x f t) ∈ˢ m ⟩
+    value-in : (x : S) (f : Fin? x) (t : Top? x) → ⟨ (value x f t) .fst ∈ˢ m ⟩
     value-in x (yes k) _ =
-      subst (λ w → ⟨ w ∈ˢ m ⟩) (sym (sucʟ-fst x)) (ω⊆m (sucV (fst x)) (ω-limit (fst x) k))
+      subst (λ w → ⟨ w ∈ˢ m ⟩) (sym (sucʟ-fst x)) (ω⊆m (sucV (x .fst)) (ω-limit (x .fst) k))
     value-in x (no _) (inl k) = k
     value-in x (no _) (inr _) = ω⊆m ∅ (#∈ω zero)
 ```
@@ -2393,9 +2395,9 @@ The witness type for the graph formula is declared: either `x` is finite and `y`
 
 ```agda
     Wit : (y x : S) → Type (ℓ-suc ℓ)
-    Wit y x = ∥ (⟨ fst x ∈ˢ ω ⟩ × (fst y ≡ sucV (fst x)))
-              ⊎ ( ((⟨ fst x ∈ˢ ω ⟩ → ⊥₀) × ⟨ fst x ∈ˢ m ⟩ × (fst y ≡ fst x))
-                ⊎ ((fst x ≡ m) × (fst y ≡ ∅)) ) ∥₁
+    Wit y x = ∥ (⟨ x .fst ∈ˢ ω ⟩ × (y .fst ≡ sucV (x .fst)))
+              ⊎ ( ((⟨ x .fst ∈ˢ ω ⟩ → ⊥₀) × ⟨ x .fst ∈ˢ m ⟩ × (y .fst ≡ x .fst))
+                ⊎ ((x .fst ≡ m) × (y .fst ≡ ∅)) ) ∥₁
 ```
 
 <!--en-->
@@ -2436,7 +2438,7 @@ The adequacy of the successor clause is recorded once: satisfaction of the succe
 
 ```agda
     private
-      sa : (y x : S) → ⟨ (y ∷ x ∷ []) ⊨ sucAtL (suc zero) zero ⟩ ≡ (fst y ≡ sucV (fst x))
+      sa : (y x : S) → ⟨ (y ∷ x ∷ []) ⊨ sucAtL (suc zero) zero ⟩ ≡ (y .fst ≡ sucV (x .fst))
       sa y x = cong ⟨_⟩ (sucAtL-adequate (suc zero) zero (y ∷ x ∷ []))
 ```
 
@@ -2477,7 +2479,7 @@ The three inward lemmas rebuild the formula from each kind of witness. For a fin
 <!--/-->
 
 ```agda
-    in-fin : (y x : S) → ⟨ fst x ∈ˢ ω ⟩ → fst y ≡ sucV (fst x) → ⟨ (y ∷ x ∷ []) ⊨ graph ⟩
+    in-fin : (y x : S) → ⟨ x .fst ∈ˢ ω ⟩ → y .fst ≡ sucV (x .fst) → ⟨ (y ∷ x ∷ []) ⊨ graph ⟩
     in-fin y x k e = ∣ inl (k , transport (sym (sa y x)) e) ∣₁
 ```
 
@@ -2490,7 +2492,7 @@ For a non-finite member of `m`, the refutation of `x ∈ ω` is lifted into the 
 <!--/-->
 
 ```agda
-    in-mid : (y x : S) → (⟨ fst x ∈ˢ ω ⟩ → ⊥₀) → ⟨ fst x ∈ˢ m ⟩ → fst y ≡ fst x
+    in-mid : (y x : S) → (⟨ x .fst ∈ˢ ω ⟩ → ⊥₀) → ⟨ x .fst ∈ˢ m ⟩ → y .fst ≡ x .fst
            → ⟨ (y ∷ x ∷ []) ⊨ graph ⟩
     in-mid y x n k e = ∣ inr ∣ inl ((λ hx → lift (n hx)) , (k , e)) ∣₁ ∣₁
 ```
@@ -2504,7 +2506,7 @@ For the top element, the two equations of the top case are assembled directly in
 <!--/-->
 
 ```agda
-    in-top : (y x : S) → fst x ≡ m → fst y ≡ ∅ → ⟨ (y ∷ x ∷ []) ⊨ graph ⟩
+    in-top : (y x : S) → x .fst ≡ m → y .fst ≡ ∅ → ⟨ (y ∷ x ∷ []) ⊨ graph ⟩
     in-top y x q e = ∣ inr ∣ inr (q , e) ∣₁ ∣₁
 ```
 
@@ -2562,9 +2564,9 @@ The case function receives the unpacked alternatives together with the chosen de
 <!--/-->
 
 ```agda
-         → (⟨ fst x ∈ˢ ω ⟩ × (fst y ≡ sucV (fst x)))
-           ⊎ ( ((⟨ fst x ∈ˢ ω ⟩ → ⊥₀) × ⟨ fst x ∈ˢ m ⟩ × (fst y ≡ fst x))
-             ⊎ ((fst x ≡ m) × (fst y ≡ ∅)) )
+         → (⟨ x .fst ∈ˢ ω ⟩ × (y .fst ≡ sucV (x .fst)))
+           ⊎ ( ((⟨ x .fst ∈ˢ ω ⟩ → ⊥₀) × ⟨ x .fst ∈ˢ m ⟩ × (y .fst ≡ x .fst))
+             ⊎ ((x .fst ≡ m) × (y .fst ≡ ∅)) )
          → y ≡ value x f t
       go (yes k) _       (inl (_ , e))             = S≡ (e ∙ sym (sucʟ-fst x))
 ```
@@ -2638,9 +2640,9 @@ Injectivity is proved by comparing the cases for two inputs. If both are finite,
 
 ```agda
     inj' : (x : S) (f : Fin? x) (t : Top? x) (x' : S) (f' : Fin? x') (t' : Top? x')
-         → fst (value x f t) ≡ fst (value x' f' t') → fst x ≡ fst x'
+         → (value x f t) .fst ≡ (value x' f' t') .fst → x .fst ≡ x' .fst
     inj' x (yes k) _ x' (yes k') _ e =
-      ord-suc-inj (fst x) (fst x') (mem-ord {A = ω} ω-ord (fst x) k)
+      ord-suc-inj (x .fst) (x' .fst) (mem-ord {A = ω} ω-ord (x .fst) k)
         (sym (sucʟ-fst x) ∙ e ∙ sucʟ-fst x')
 ```
 
@@ -2654,9 +2656,9 @@ A finite input cannot share its shifted value with a non-finite member: that equ
 
 ```agda
     inj' x (yes k) _ x' (no n') (inl _) e =
-      ⊥₀-rec (n' (subst (λ w → ⟨ w ∈ˢ ω ⟩) (sym (sucʟ-fst x) ∙ e) (ω-limit (fst x) k)))
+      ⊥₀-rec (n' (subst (λ w → ⟨ w ∈ˢ ω ⟩) (sym (sucʟ-fst x) ∙ e) (ω-limit (x .fst) k)))
     inj' x (yes k) _ x' (no n') (inr _) e =
-      ⊥₀-rec (suc≢∅ (fst x) (sym (sucʟ-fst x) ∙ e))
+      ⊥₀-rec (suc≢∅ (x .fst) (sym (sucʟ-fst x) ∙ e))
     inj' x (no n) (inl _) x' (yes k') _ e =
 ```
 
@@ -2669,7 +2671,7 @@ The reverse finite/non-finite case gives the same contradiction. Two non-finite 
 <!--/-->
 
 ```agda
-      ⊥₀-rec (n (subst (λ w → ⟨ w ∈ˢ ω ⟩) (sym (sucʟ-fst x') ∙ sym e) (ω-limit (fst x') k')))
+      ⊥₀-rec (n (subst (λ w → ⟨ w ∈ˢ ω ⟩) (sym (sucʟ-fst x') ∙ sym e) (ω-limit (x' .fst) k')))
     inj' x (no n) (inl _) x' (no n') (inl _) e = e
     inj' x (no n) (inl _) x' (no n') (inr _) e =
       ⊥₀-rec (n (subst (λ w → ⟨ w ∈ˢ ω ⟩) (sym e) (#∈ω zero)))
@@ -2685,7 +2687,7 @@ For a top input, equality with a finite value would again make a successor empty
 <!--/-->
 
 ```agda
-      ⊥₀-rec (suc≢∅ (fst x') (sym (sucʟ-fst x') ∙ sym e))
+      ⊥₀-rec (suc≢∅ (x' .fst) (sym (sucʟ-fst x') ∙ sym e))
     inj' x (no n) (inr _) x' (no n') (inl _) e =
       ⊥₀-rec (n' (subst (λ w → ⟨ w ∈ˢ ω ⟩) e (#∈ω zero)))
     inj' x (no n) (inr q) x' (no n') (inr q') e = q ∙ sym q'
@@ -2859,7 +2861,7 @@ The equality `sucV m = a` identifies the internal successor `sucʟ mL` with `κ`
 
 ```agda
         sucL≡κ : sucʟ mL ≡ κ
-        sucL≡κ = Σ≡Prop (λ v → snd (isL v)) (sucʟ-fst mL ∙ e)
+        sucL≡κ = Σ≡Prop (λ v → (isL v) .snd) (sucʟ-fst mL ∙ e)
     go (inr (inr h)) = ⊥*-rec
       (∈sucV-elim {A = m} {x = a} {P = ⊥* {ℓ-suc ℓ}} isProp⊥* h
         (λ a∈m → lift (∈-irrefl a (oa .fst a∈m m∈a)))
@@ -2875,8 +2877,8 @@ Successor closure now makes the induction hypothesis available at the smaller or
 
 ```agda
         (λ a≡m → lift (∈-irrefl m (subst (λ w → ⟨ m ∈ˢ w ⟩) a≡m m∈a))))
-  prod-into : (γ : S) → IsOrd (fst γ) → ⟨ fst γ ∈ˢ a ⟩
-            → (⟨ fst γ ∈ˢ ω ⟩ → ⊥₀) → InjL (prodL γ) γ
+  prod-into : (γ : S) → IsOrd (γ .fst) → ⟨ γ .fst ∈ˢ a ⟩
+            → (⟨ γ .fst ∈ˢ ω ⟩ → ⊥₀) → InjL (prodL γ) γ
   prod-into γ oγ γ∈a γ∉ω = rec₁ squash₁ build (cardOf γ oγ)
     where
 ```
@@ -2891,8 +2893,8 @@ The cardinal representative delivers its data in truncated form: an ordinal `μ`
 
 ```agda
     build : Σ[ μ ∶ S ]
-              ( IsOrd (fst μ) × IsCardinalL μ
-              × ((z : V ℓ) → ⟨ z ∈ˢ fst μ ⟩ → ⟨ z ∈ˢ fst γ ⟩)
+              ( IsOrd (μ .fst) × IsCardinalL μ
+              × ((z : V ℓ) → ⟨ z ∈ˢ μ .fst ⟩ → ⟨ z ∈ˢ γ .fst ⟩)
               × InjL γ μ × InjL μ γ )
           → InjL (prodL γ) γ
 ```
@@ -2908,9 +2910,9 @@ The injection composes three injections. The product injection lifts `γ ↪ μ`
 ```agda
     build (μ , oμ , cardμ , μ⊆γ , γ↪μ , μ↪γ) =
       injl-trans (prodL γ) (prodL μ) γ (prod-inj γ μ γ↪μ)
-        (injl-trans (prodL μ) μ γ (ih (fst μ) μ∈a (snd μ) oμ cardμ μ∉ω) μ↪γ)
+        (injl-trans (prodL μ) μ γ (ih (μ .fst) μ∈a (μ .snd) oμ cardμ μ∉ω) μ↪γ)
       where
-      μ∈a : ⟨ fst μ ∈ˢ a ⟩
+      μ∈a : ⟨ μ .fst ∈ˢ a ⟩
 ```
 
 <!--en-->
@@ -2922,9 +2924,9 @@ The representative `μ` also lies below `a`. If `μ ∈ γ`, transitivity carrie
 <!--/-->
 
 ```agda
-      μ∈a = go (ord-tri (fst μ) oμ (fst γ) oγ)
+      μ∈a = go (ord-tri (μ .fst) oμ (γ .fst) oγ)
         where
-        go : ⟨ fst μ ∈ˢ fst γ ⟩ ⊎ ((fst μ ≡ fst γ) ⊎ ⟨ fst γ ∈ˢ fst μ ⟩) → ⟨ fst μ ∈ˢ a ⟩
+        go : ⟨ μ .fst ∈ˢ γ .fst ⟩ ⊎ ((μ .fst ≡ γ .fst) ⊎ ⟨ γ .fst ∈ˢ μ .fst ⟩) → ⟨ μ .fst ∈ˢ a ⟩
         go (inl h)       = oa .fst h γ∈a
         go (inr (inl e)) = subst (λ w → ⟨ w ∈ˢ a ⟩) (sym e) γ∈a
 ```
@@ -2938,8 +2940,8 @@ The representative `μ` must also be infinite. If `μ ∈ ω`, the inclusion `ω
 <!--/-->
 
 ```agda
-        go (inr (inr h)) = ⊥₀-rec (∈-irrefl (fst γ) (μ⊆γ (fst γ) h))
-      μ∉ω : ⟨ fst μ ∈ˢ ω ⟩ → ⊥₀
+        go (inr (inr h)) = ⊥₀-rec (∈-irrefl (γ .fst) (μ⊆γ (γ .fst) h))
+      μ∉ω : ⟨ μ .fst ∈ˢ ω ⟩ → ⊥₀
       μ∉ω h = no-fin γ μ oγ γ∉ω oμ h γ↪μ
   Seg : OT.Dom → V ℓ → Type (ℓ-suc ℓ)
   Seg p b = Σ[ r ∶ OT.Dom ] ((r OT.≺ p) × (C.col r ≡ b))
@@ -3032,7 +3034,7 @@ Equality of two codes `h p r` and `h p r'` forces equality of their first indice
           → h p r k ≡ h p r' k'
           → fiber (gfin p) (seg-fst p r k) .fst
           ≡ fiber (gfin p) (seg-fst p r' k') .fst
-    h-fst p r r' k k' e = cong fst e
+    h-fst p r r' k k' e = cong (λ p → p .fst) e
 ```
 
 <!--en-->
@@ -3048,7 +3050,7 @@ Applying the second projection to the same code equality likewise identifies the
           → h p r k ≡ h p r' k'
           → fiber (gfin p) (seg-snd p r k) .fst
           ≡ fiber (gfin p) (seg-snd p r' k') .fst
-    h-snd p r r' k k' e = cong snd e
+    h-snd p r r' k k' e = cong (λ p → p .snd) e
 ```
 
 <!--en-->
@@ -3191,8 +3193,8 @@ Trichotomy now proves `C.col p ∈ ω`. Equality `C.col p = ω` would give the f
 <summary class="submodule-fold-heading">
 ```agda
   module Inv (p : OT.Dom) (g : S)
-             (bfst : (r : OT.Dom) → r OT.≺ p → ⟨ ↑ (φ r .fst) ∈ˢ fst g ⟩)
-             (bsnd : (r : OT.Dom) → r OT.≺ p → ⟨ ↑ (φ r .snd) ∈ˢ fst g ⟩) where
+             (bfst : (r : OT.Dom) → r OT.≺ p → ⟨ ↑ (φ r .fst) ∈ˢ g .fst ⟩)
+             (bsnd : (r : OT.Dom) → r OT.≺ p → ⟨ ↑ (φ r .snd) ∈ˢ g .fst ⟩) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -3215,8 +3217,8 @@ Every member `x` of the collapse value determines its segment: the truncated mem
 
 ```agda
     private
-      pre : (x : S) → ⟨ fst x ∈ˢ C.col p ⟩ → Σ[ r ∶ OT.Dom ] (C.col r ≡ fst x)
-      pre x mx = seg p (fst x) mx .fst , seg p (fst x) mx .snd .snd
+      pre : (x : S) → ⟨ x .fst ∈ˢ C.col p ⟩ → Σ[ r ∶ OT.Dom ] (C.col r ≡ x .fst)
+      pre x mx = seg p (x .fst) mx .fst , seg p (x .fst) mx .snd .snd
 ```
 
 <!--en-->
@@ -3228,11 +3230,11 @@ For the predecessor selected from `x ∈ C.col p`, the presentation equation ide
 <!--/-->
 
 ```agda
-      bound : (x : S) (mx : ⟨ fst x ∈ˢ C.col p ⟩) → ⟨ OT.↪ (pre x mx .fst) ∈ˢ fst (prodL g) ⟩
-      bound x mx = subst (λ w → ⟨ w ∈ˢ fst (prodL g) ⟩) (sym (φ-eq (seg p (fst x) mx .fst)))
-        (prodL-in g (upK (φ (seg p (fst x) mx .fst) .fst))
-                    (upK (φ (seg p (fst x) mx .fst) .snd))
-                    (bfst _ (seg p (fst x) mx .snd .fst))
+      bound : (x : S) (mx : ⟨ x .fst ∈ˢ C.col p ⟩) → ⟨ OT.↪ (pre x mx .fst) ∈ˢ (prodL g) .fst ⟩
+      bound x mx = subst (λ w → ⟨ w ∈ˢ (prodL g) .fst ⟩) (sym (φ-eq (seg p (x .fst) mx .fst)))
+        (prodL-in g (upK (φ (seg p (x .fst) mx .fst) .fst))
+                    (upK (φ (seg p (x .fst) mx .fst) .snd))
+                    (bfst _ (seg p (x .fst) mx .snd .fst))
 ```
 
 <!--en-->
@@ -3244,7 +3246,7 @@ The bound `bsnd` supplies the second coordinate membership. Together the two bou
 <!--/-->
 
 ```agda
-                    (bsnd _ (seg p (fst x) mx .snd .fst)))
+                    (bsnd _ (seg p (x .fst) mx .snd .fst)))
 ```
 
 <!--en-->
@@ -3386,8 +3388,8 @@ The product first injects into the collapse order type `C.otL`. Every member `z`
 ```agda
   result = injl-trans P C.otL κ injL-ot (inclusion-coded C.otL κ ot⊆a)
     where
-    ot⊆a : (z : V ℓ) → ⟨ z ∈ˢ fst C.otL ⟩ → ⟨ z ∈ˢ a ⟩
-    ot⊆a z hz = rec₁ (snd (z ∈ˢ a))
+    ot⊆a : (z : V ℓ) → ⟨ z ∈ˢ C.otL .fst ⟩ → ⟨ z ∈ˢ a ⟩
+    ot⊆a z hz = rec₁ ((z ∈ˢ a) .snd)
       (λ { (b , e) → subst (λ w → ⟨ w ∈ˢ a ⟩) e (colIn b) }) (C.otL-out z hz)
 ```
 </div>
@@ -3403,10 +3405,10 @@ Membership well-founded induction now proves the square law. Given an ordinal `�
 
 ```agda
 square-law-L :
-    (κ : S) → IsOrd (fst κ) → IsCardinalL κ → ⟨ ω ∈ˢ fst κ ⟩
+    (κ : S) → IsOrd (κ .fst) → IsCardinalL κ → ⟨ ω ∈ˢ κ .fst ⟩
   → InjL (prodL κ) κ
 square-law-L κ oκ cκ ω∈κ =
-  WF.WFI.induction regularityV {P = Goal} Step.result (fst κ) (snd κ) oκ cκ
+  WF.WFI.induction regularityV {P = Goal} Step.result (κ .fst) (κ .snd) oκ cκ
 ```
 
 <!--en-->

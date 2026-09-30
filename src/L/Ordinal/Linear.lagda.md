@@ -123,7 +123,7 @@ _⊆ᵇ_ : S → S → Type (ℓ-suc ℓ)
 A ⊆ᵇ B = (x : S) → ⟨ x ∈ˢ A ⟩ → ⟨ x ∈ˢ B ⟩
 
 ⊆ᵇ-prop : (A B : S) → hProp (ℓ-suc ℓ)
-⊆ᵇ-prop A B = (A ⊆ᵇ B) , isPropΠ (λ x → isPropΠ (λ _ → snd (x ∈ˢ B)))
+⊆ᵇ-prop A B = (A ⊆ᵇ B) , isPropΠ (λ x → isPropΠ (λ _ → (x ∈ˢ B) .snd))
 
 ext-⊆ᵇ : {A B : S} → A ⊆ᵇ B → B ⊆ᵇ A → A ≡ B
 ```
@@ -334,7 +334,7 @@ With the two converters in hand, the four verdict combinations sort into the thr
       decide : Dec (A ⊆ᵇ B) → Dec (B ⊆ᵇ A) → Tri A B
       decide (yes A⊆B) (yes B⊆A) = inr (inl (ext-⊆ᵇ A⊆B B⊆A))
       decide (yes A⊆B) (no ¬B⊆A) =
-        inl (rec₁ (snd (A ∈ˢ B)) fromB (¬⊆ᵇ→witness B A ¬B⊆A))
+        inl (rec₁ ((A ∈ˢ B) .snd) fromB (¬⊆ᵇ→witness B A ¬B⊆A))
 ```
 
 <!--en-->
@@ -347,7 +347,7 @@ The last combination covers failure of `A ⊆ᵇ B`, whatever the second verdict
 
 ```agda
       decide (no ¬A⊆B) _ =
-        inr (inr (rec₁ (snd (B ∈ˢ A)) fromA (¬⊆ᵇ→witness A B ¬A⊆B)))
+        inr (inr (rec₁ ((B ∈ˢ A) .snd) fromA (¬⊆ᵇ→witness A B ¬A⊆B)))
 ```
 
 <!--en-->

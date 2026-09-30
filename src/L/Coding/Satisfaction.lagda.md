@@ -191,7 +191,7 @@ For a constant, no environment is consulted: the value slot is simply identified
 
 ```agda
 tmIs-var-in : ∀ {n m} (i : Fin n) (γ : S ^ m) (v e : Fin m)
-            → ⟨ pr (# (toℕ i)) (fst (lookup v γ)) ∈ fst (lookup e γ) ⟩
+            → ⟨ pr (# (toℕ i)) ((lookup v γ) .fst) ∈ (lookup e γ) .fst ⟩
             → ⟨ γ ⊨ tmIs {n} (var i) v e ⟩
 ```
 
@@ -220,7 +220,7 @@ The witness is the numeral itself; its defining equation is definitional, and th
 ```agda
 tmIs-var-out : ∀ {n m} (i : Fin n) (γ : S ^ m) (v e : Fin m)
              → ⟨ γ ⊨ tmIs {n} (var i) v e ⟩
-             → ⟨ pr (# (toℕ i)) (fst (lookup v γ)) ∈ fst (lookup e γ) ⟩
+             → ⟨ pr (# (toℕ i)) ((lookup v γ) .fst) ∈ (lookup e γ) .fst ⟩
 ```
 
 <!--en-->
@@ -233,7 +233,7 @@ Outward, satisfaction of the reader yields the ambient membership. Here a genera
 
 ```agda
 tmIs-var-out i γ v e = rec₁
-  (snd (pr (# (toℕ i)) (fst (lookup v γ)) ∈ fst (lookup e γ)))
+  ((pr (# (toℕ i)) ((lookup v γ) .fst) ∈ (lookup e γ) .fst) .snd)
 ```
 
 <!--en-->
@@ -246,7 +246,7 @@ The truncated witness pairs an entry `x` with the proof that `x` is the numeral 
 
 ```agda
   (λ { (x , (qx , m)) →
-    subst (λ w → ⟨ pr w (fst (lookup v γ)) ∈ fst (lookup e γ) ⟩) qx
+    subst (λ w → ⟨ pr w ((lookup v γ) .fst) ∈ (lookup e γ) .fst ⟩) qx
       (subst ⟨_⟩ (appAt-adequate (suc e) zero (suc v) (x ∷ γ)) m) })
 ```
 
@@ -521,7 +521,7 @@ For the two atoms, the condition is an existence statement, and its unpacked sha
 
 ```agda
   cond∈-in : ∀ {n} (t u : Term S n) (z : S)
-           → ∥ CondAtom t u (λ v w → ⟨ fst v ∈ fst w ⟩) z ∥₁
+           → ∥ CondAtom t u (λ v w → ⟨ v .fst ∈ w .fst ⟩) z ∥₁
            → ⟨ (z ∷ []) ⊨ cond (t ∈̇ u) ⟩
   cond∈-in t u z = map₁ (λ { (v , (w , r)) → v , ∣ w , r ∣₁ })
 ```
@@ -537,7 +537,7 @@ The inward mapping for membership repackages the truncated triple as the nested 
 ```agda
   cond∈-out : ∀ {n} (t u : Term S n) (z : S)
             → ⟨ (z ∷ []) ⊨ cond (t ∈̇ u) ⟩
-            → ∥ CondAtom t u (λ v w → ⟨ fst v ∈ fst w ⟩) z ∥₁
+            → ∥ CondAtom t u (λ v w → ⟨ v .fst ∈ w .fst ⟩) z ∥₁
   cond∈-out t u z = rec₁ squash₁
     (λ { (v , hv) → map₁ (λ { (w , r) → v , (w , r) }) hv })
 ```
@@ -552,23 +552,23 @@ The outward mapping flattens the nested witnesses back into the triple, the whol
 
 ```agda
   cond≐-in : ∀ {n} (t u : Term S n) (z : S)
-           → ∥ CondAtom t u (λ v w → fst v ≡ fst w) z ∥₁
+           → ∥ CondAtom t u (λ v w → v .fst ≡ w .fst) z ∥₁
            → ⟨ (z ∷ []) ⊨ cond (t ≐ u) ⟩
   cond≐-in t u z = map₁ (λ { (v , (w , r)) → v , ∣ w , r ∣₁ })
 ```
 
 <!--en-->
-The equality atom carries the relation `fst v ≡ fst w`, equality of underlying sets, and its inward mapping is word for word the membership one.
+The equality atom carries the relation `v .fst ≡ w .fst`, equality of underlying sets, and its inward mapping is word for word the membership one.
 <!--zh-->
-相等原子携带的关系是 `fst v ≡ fst w`，即底层集合的相等；其向内映射与成员关系情形逐字相同。
+相等原子携带的关系是 `v .fst ≡ w .fst`，即底层集合的相等；其向内映射与成员关系情形逐字相同。
 <!--ja-->
-相等の原子式が運ぶ関係は `fst v ≡ fst w`、すなわち基底集合の相等であり、その内向きの写しは所属の場合と一言一句変わらない。
+相等の原子式が運ぶ関係は `v .fst ≡ w .fst`、すなわち基底集合の相等であり、その内向きの写しは所属の場合と一言一句変わらない。
 <!--/-->
 
 ```agda
   cond≐-out : ∀ {n} (t u : Term S n) (z : S)
             → ⟨ (z ∷ []) ⊨ cond (t ≐ u) ⟩
-            → ∥ CondAtom t u (λ v w → fst v ≡ fst w) z ∥₁
+            → ∥ CondAtom t u (λ v w → v .fst ≡ w .fst) z ∥₁
   cond≐-out t u z = rec₁ squash₁
     (λ { (v , hv) → map₁ (λ { (w , r) → v , (w , r) }) hv })
 ```
@@ -583,9 +583,9 @@ Its outward mapping is likewise the membership one with the relation exchanged.
 
 ```agda
   CondQuant : ∀ {n} → Formula S (suc n) → S → Type (ℓ-suc ℓ)
-  CondQuant a z = Σ[ x ∶ S ] (⟨ fst x ∈ fst B ⟩
+  CondQuant a z = Σ[ x ∶ S ] (⟨ x .fst ∈ B .fst ⟩
     × (Σ[ e' ∶ S ] (⟨ (e' ∷ x ∷ z ∷ []) ⊨ consAtL zero (suc zero) (suc (suc zero)) ⟩
-                    × ⟨ fst e' ∈ fst (Sat a) ⟩)))
+                    × ⟨ e' .fst ∈ (Sat a) .fst ⟩)))
 ```
 
 <!--en-->
@@ -627,7 +627,7 @@ Outward unfolds the two nested truncated witnesses in turn; both goals are trunc
 
 ```agda
   cond∀-in : ∀ {n} (a : Formula S (suc n)) (z : S)
-           → ((x e' : S) → ⟨ fst x ∈ fst B ⟩
+           → ((x e' : S) → ⟨ x .fst ∈ B .fst ⟩
               → ⟨ (e' ∷ x ∷ z ∷ []) ⊨ consAtL zero (suc zero) (suc (suc zero)) ⟩
 ```
 
@@ -640,7 +640,7 @@ For every permitted value and its certified extension, the premise supplies memb
 <!--/-->
 
 ```agda
-              → ⟨ fst e' ∈ fst (Sat a) ⟩)
+              → ⟨ e' .fst ∈ (Sat a) .fst ⟩)
            → ⟨ (z ∷ []) ⊨ cond (∀̇ a) ⟩
   cond∀-in a z k x x∈ e' hc = k x e' x∈ hc
 ```
@@ -656,7 +656,7 @@ For the unbounded universal, the unpacked condition is a function assigning to e
 ```agda
   cond∀-out : ∀ {n} (a : Formula S (suc n)) (z : S)
             → ⟨ (z ∷ []) ⊨ cond (∀̇ a) ⟩
-            → ((x e' : S) → ⟨ fst x ∈ fst B ⟩
+            → ((x e' : S) → ⟨ x .fst ∈ B .fst ⟩
 ```
 
 <!--en-->
@@ -669,7 +669,7 @@ Reading the condition outward retains the value from `B` and the environment obt
 
 ```agda
                → ⟨ (e' ∷ x ∷ z ∷ []) ⊨ consAtL zero (suc zero) (suc (suc zero)) ⟩
-               → ⟨ fst e' ∈ fst (Sat a) ⟩)
+               → ⟨ e' .fst ∈ (Sat a) .fst ⟩)
   cond∀-out a z h x e' x∈ hc = h x x∈ e' hc
 ```
 
@@ -683,10 +683,10 @@ No truncation appears, because satisfaction of a universal is verified by supply
 
 ```agda
   CondBnd : ∀ {n} → Formula S (suc n) → S → S → Type (ℓ-suc ℓ)
-  CondBnd a z w = Σ[ x ∶ S ] ((⟨ fst x ∈ fst B ⟩ × ⟨ fst x ∈ fst w ⟩)
+  CondBnd a z w = Σ[ x ∶ S ] ((⟨ x .fst ∈ B .fst ⟩ × ⟨ x .fst ∈ w .fst ⟩)
     × (Σ[ e' ∶ S ]
         (⟨ (e' ∷ x ∷ w ∷ z ∷ []) ⊨ consAtL zero (suc zero) (suc (suc (suc zero))) ⟩
-         × ⟨ fst e' ∈ fst (Sat a) ⟩)))
+         × ⟨ e' .fst ∈ (Sat a) .fst ⟩)))
 ```
 
 <!--en-->
@@ -761,7 +761,7 @@ Its proof unfolds the two layers in turn, the whole journey remaining inside tru
 ```agda
   cond∀∈-in : ∀ {n} (t : Term S n) (a : Formula S (suc n)) (z : S)
             → ((w : S) → ⟨ (w ∷ z ∷ []) ⊨ tmIs t zero (suc zero) ⟩
-               → (x e' : S) → ⟨ fst x ∈ fst B ⟩ → ⟨ fst x ∈ fst w ⟩
+               → (x e' : S) → ⟨ x .fst ∈ B .fst ⟩ → ⟨ x .fst ∈ w .fst ⟩
 ```
 
 <!--en-->
@@ -775,7 +775,7 @@ The two guards require `x` to belong both to the base `B` and to the value `w` o
 ```agda
                → ⟨ (e' ∷ x ∷ w ∷ z ∷ [])
                     ⊨ consAtL zero (suc zero) (suc (suc (suc zero))) ⟩
-               → ⟨ fst e' ∈ fst (Sat a) ⟩)
+               → ⟨ e' .fst ∈ (Sat a) .fst ⟩)
             → ⟨ (z ∷ []) ⊨ cond (∀̇∈ t a) ⟩
   cond∀∈-in t a z k w hw x x∈B x∈w e' hc = k w hw x e' x∈B x∈w hc
 ```
@@ -803,10 +803,10 @@ The result ranges over the same bound value, base member, and certified one-entr
 <!--/-->
 
 ```agda
-                → (x e' : S) → ⟨ fst x ∈ fst B ⟩ → ⟨ fst x ∈ fst w ⟩
+                → (x e' : S) → ⟨ x .fst ∈ B .fst ⟩ → ⟨ x .fst ∈ w .fst ⟩
                 → ⟨ (e' ∷ x ∷ w ∷ z ∷ [])
                      ⊨ consAtL zero (suc zero) (suc (suc (suc zero))) ⟩
-                → ⟨ fst e' ∈ fst (Sat a) ⟩)
+                → ⟨ e' .fst ∈ (Sat a) .fst ⟩)
   cond∀∈-out t a z h w hw x e' x∈B x∈w hc = h w hw x x∈B x∈w e' hc
 ```
 </div>

@@ -265,7 +265,7 @@ The small-domain principle gives one constructible set that contains every envir
 ```agda
 private
   amb : (A : S) → S
-  amb A = smallDom (SeqIx A) (λ p → envS A (snd p)) .fst
+  amb A = smallDom (SeqIx A) (λ p → envS A (p .snd)) .fst
 ```
 
 <!--en-->
@@ -277,8 +277,8 @@ For a particular length `n` and assignment `g`, the graph `envS A g` lies in the
 <!--/-->
 
 ```agda
-  amb-in : (A : S) (p : SeqIx A) → ⟨ fst (envS A (snd p)) ∈ˢ fst (amb A) ⟩
-  amb-in A = smallDom (SeqIx A) (λ p → envS A (snd p)) .snd
+  amb-in : (A : S) (p : SeqIx A) → ⟨ (envS A (p .snd)) .fst ∈ˢ (amb A) .fst ⟩
+  amb-in A = smallDom (SeqIx A) (λ p → envS A (p .snd)) .snd
 ```
 
 <!--en-->
@@ -333,10 +333,10 @@ Every member of an environment set of length `n` belongs to `seqL A`. The proof 
 
 ```agda
 seqL-in : (A : S) (n : ℕ) (x : S)
-        → ⟨ fst x ∈ˢ fst (envSet A n) ⟩ → ⟨ fst x ∈ˢ fst (seqL A) ⟩
-seqL-in A n x hx = rec₁ (snd (fst x ∈ˢ fst (seqL A))) from (envSet-out A n x hx)
+        → ⟨ x .fst ∈ˢ (envSet A n) .fst ⟩ → ⟨ x .fst ∈ˢ (seqL A) .fst ⟩
+seqL-in A n x hx = rec₁ ((x .fst ∈ˢ (seqL A) .fst) .snd) from (envSet-out A n x hx)
   where
-  from : Σ[ g ∶ Ix A n ] (fst x ≡ fst (envS A g)) → ⟨ fst x ∈ˢ fst (seqL A) ⟩
+  from : Σ[ g ∶ Ix A n ] (x .fst ≡ (envS A g) .fst) → ⟨ x .fst ∈ˢ (seqL A) .fst ⟩
 ```
 
 <!--en-->
@@ -348,9 +348,9 @@ The member is transported to its graph form, which is a member of the container 
 <!--/-->
 
 ```agda
-  from (g , e) = subst (λ w → ⟨ w ∈ˢ fst (seqL A) ⟩) (sym e) canonical
+  from (g , e) = subst (λ w → ⟨ w ∈ˢ (seqL A) .fst ⟩) (sym e) canonical
     where
-    canonical : ⟨ fst (envS A g) ∈ˢ fst (seqL A) ⟩
+    canonical : ⟨ (envS A g) .fst ∈ˢ (seqL A) .fst ⟩
     canonical = subst ⟨_⟩ (sym (seqL-spec A (envS A g)))
       ( amb-in A (n , g)
 ```
@@ -376,11 +376,11 @@ Conversely, membership in `seqL A` yields only the propositionally truncated ass
 <!--/-->
 
 ```agda
-seqL-out : (A x : S) → ⟨ fst x ∈ˢ fst (seqL A) ⟩
-         → ∥ Σ[ n ∶ ℕ ] ⟨ fst x ∈ˢ fst (envSet A n) ⟩ ∥₁
+seqL-out : (A x : S) → ⟨ x .fst ∈ˢ (seqL A) .fst ⟩
+         → ∥ Σ[ n ∶ ℕ ] ⟨ x .fst ∈ˢ (envSet A n) .fst ⟩ ∥₁
 seqL-out A x hx = rec₁ squash₁ step1 (subst ⟨_⟩ (seqL-spec A x) hx .snd)
   where
-  step2 : (d : S) (k : ℕ) → # k ≡ fst d
+  step2 : (d : S) (k : ℕ) → # k ≡ d .fst
 ```
 
 <!--en-->
@@ -392,11 +392,11 @@ Inside one branch of the truncated witnesses, suppose the domain object `d` has 
 <!--/-->
 
 ```agda
-        → Σ[ b ∶ S ] ((fst b ≡ fst A)
+        → Σ[ b ∶ S ] ((b .fst ≡ A .fst)
              × ⟨ (b ∷ d ∷ x ∷ []) ⊨ envOverAt (suc (suc zero)) (suc zero) zero ⟩)
-        → ∥ Σ[ n ∶ ℕ ] ⟨ fst x ∈ˢ fst (envSet A n) ⟩ ∥₁
+        → ∥ Σ[ n ∶ ℕ ] ⟨ x .fst ∈ˢ (envSet A n) .fst ⟩ ∥₁
   step2 d k q (b , eb , hov) =
-    ∣ k , subst (λ w → ⟨ w ∈ˢ fst (envSet A k) ⟩) (sym R.recovers) (envSet-in A R.g) ∣₁
+    ∣ k , subst (λ w → ⟨ w ∈ˢ (envSet A k) .fst ⟩) (sym R.recovers) (envSet-in A R.g) ∣₁
 ```
 
 <!--en-->
@@ -422,10 +422,10 @@ The remaining step eliminates the membership of the domain in `ω`: a member of 
 <!--/-->
 
 ```agda
-  step1 : Σ[ d ∶ S ] (⟨ fst d ∈ˢ ω ⟩
-            × ∥ Σ[ b ∶ S ] ((fst b ≡ fst A)
+  step1 : Σ[ d ∶ S ] (⟨ d .fst ∈ˢ ω ⟩
+            × ∥ Σ[ b ∶ S ] ((b .fst ≡ A .fst)
                  × ⟨ (b ∷ d ∷ x ∷ []) ⊨ envOverAt (suc (suc zero)) (suc zero) zero ⟩) ∥₁)
-        → ∥ Σ[ n ∶ ℕ ] ⟨ fst x ∈ˢ fst (envSet A n) ⟩ ∥₁
+        → ∥ Σ[ n ∶ ℕ ] ⟨ x .fst ∈ˢ (envSet A n) .fst ⟩ ∥₁
   step1 (d , d∈ω , h) = rec₁ squash₁
 ```
 
@@ -460,13 +460,13 @@ The coding module fixes the data of the pairing function. Its parameters are an 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module Code (α : S) (oα : IsOrd (fst α)) (α∉ω : ⟨ fst α ∈ˢ ω ⟩ → ⊥₀)
+module Code (α : S) (oα : IsOrd (α .fst)) (α∉ω : ⟨ α .fst ∈ˢ ω ⟩ → ⊥₀)
             (F : S)
             (sv : ⟨ (F ∷ prodL α ∷ []) ⊨ svAt zero ⟩)
             (dm : ⟨ (F ∷ prodL α ∷ []) ⊨ domAt zero (suc zero) ⟩)
             (ij : ⟨ (F ∷ prodL α ∷ []) ⊨ injAt zero ⟩)
-            (ran : (x y : S) → ⟨ pr (fst x) (fst y) ∈ fst F ⟩
-                 → ⟨ fst y ∈ fst α ⟩) where
+            (ran : (x y : S) → ⟨ pr (x .fst) (y .fst) ∈ F .fst ⟩
+                 → ⟨ y .fst ∈ α .fst ⟩) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -489,7 +489,7 @@ The carrier of inputs and values is the type of constructible sets together with
 
 ```agda
   M : Type (ℓ-suc ℓ)
-  M = Σ[ v ∶ S ] ⟨ fst v ∈ˢ fst α ⟩
+  M = Σ[ v ∶ S ] ⟨ v .fst ∈ˢ α .fst ⟩
 ```
 
 <!--en-->
@@ -502,7 +502,7 @@ Numerals become elements of the carrier: since `α` is not in `ω`, the infinitu
 
 ```agda
   num : ℕ → M
-  num k = nn k , ω⊆ (fst α) oα α∉ω (# k) (#∈ω k)
+  num k = nn k , ω⊆ (α .fst) oα α∉ω (# k) (#∈ω k)
 ```
 
 <!--en-->
@@ -514,8 +514,8 @@ Presentation indices of `α` also become elements of the carrier, with construct
 <!--/-->
 
 ```agda
-  up : ⟪ fst α ⟫ → M
-  up m = (⟪ fst α ⟫↪ m , isL-trans (member (fst α) m) (snd α)) , member (fst α) m
+  up : ⟪ α .fst ⟫ → M
+  up m = (⟪ α .fst ⟫↪ m , isL-trans (member (α .fst) m) (α .snd)) , member (α .fst) m
 ```
 
 <!--en-->
@@ -540,9 +540,9 @@ The coded pair of two carrier elements belongs to the product: both coordinates 
 
 ```agda
   opaque
-    pairMem : (a u : M) → ⟨ fst (prʟ (fst a) (fst u)) ∈ˢ fst (prodL α) ⟩
-    pairMem a u = subst (λ w → ⟨ w ∈ˢ fst (prodL α) ⟩) (sym (prʟ-fst (fst a) (fst u)))
-                    (prodL-in α (fst a) (fst u) (snd a) (snd u))
+    pairMem : (a u : M) → ⟨ (prʟ (a .fst) (u .fst)) .fst ∈ˢ (prodL α) .fst ⟩
+    pairMem a u = subst (λ w → ⟨ w ∈ˢ (prodL α) .fst ⟩) (sym (prʟ-fst (a .fst) (u .fst)))
+                    (prodL-in α (a .fst) (u .fst) (a .snd) (u .snd))
 ```
 
 <!--en-->
@@ -555,7 +555,7 @@ For an input `x` already known to belong to `prodL α`, define `val x` to be the
 
 ```agda
   opaque
-    val : (x : S) → ⟨ fst x ∈ˢ fst (prodL α) ⟩ → S
+    val : (x : S) → ⟨ x .fst ∈ˢ (prodL α) .fst ⟩ → S
     val x mx = E.toFun (x , mx)
 ```
 
@@ -568,8 +568,8 @@ The graph record states that the pair of the input and the value belongs to `F`,
 <!--/-->
 
 ```agda
-    val-graph : (x : S) (mx : ⟨ fst x ∈ˢ fst (prodL α) ⟩)
-              → ⟨ pr (fst x) (fst (val x mx)) ∈ fst F ⟩
+    val-graph : (x : S) (mx : ⟨ x .fst ∈ˢ (prodL α) .fst ⟩)
+              → ⟨ pr (x .fst) ((val x mx) .fst) ∈ F .fst ⟩
     val-graph x mx = E.toFun-graph (x , mx)
 ```
 
@@ -582,9 +582,9 @@ The graph is injective on the product: two points with equal values have equal u
 <!--/-->
 
 ```agda
-    val-inj : (x : S) (mx : ⟨ fst x ∈ˢ fst (prodL α) ⟩)
-              (x' : S) (mx' : ⟨ fst x' ∈ˢ fst (prodL α) ⟩)
-            → fst (val x mx) ≡ fst (val x' mx') → fst x ≡ fst x'
+    val-inj : (x : S) (mx : ⟨ x .fst ∈ˢ (prodL α) .fst ⟩)
+              (x' : S) (mx' : ⟨ x' .fst ∈ˢ (prodL α) .fst ⟩)
+            → (val x mx) .fst ≡ (val x' mx') .fst → x .fst ≡ x' .fst
     val-inj x mx x' mx' = E.toFun-inj ij (x , mx) (x' , mx')
 ```
 
@@ -599,9 +599,9 @@ The binary operation `app a u` evaluates `F` at the internal ordered pair of `a`
 ```agda
   opaque
     app : M → M → M
-    app a u = val (prʟ (fst a) (fst u)) (pairMem a u)
-            , ran (prʟ (fst a) (fst u)) (val (prʟ (fst a) (fst u)) (pairMem a u))
-                (val-graph (prʟ (fst a) (fst u)) (pairMem a u))
+    app a u = val (prʟ (a .fst) (u .fst)) (pairMem a u)
+            , ran (prʟ (a .fst) (u .fst)) (val (prʟ (a .fst) (u .fst)) (pairMem a u))
+                (val-graph (prʟ (a .fst) (u .fst)) (pairMem a u))
 ```
 
 <!--en-->
@@ -614,10 +614,10 @@ Evaluation does not lose contact with the internal graph. The theorem `app-graph
 
 ```agda
     app-graph : (a u : M)
-              → ⟨ pr (pr (fst (fst a)) (fst (fst u))) (fst (fst (app a u))) ∈ fst F ⟩
-    app-graph a u = subst (λ w → ⟨ pr w (fst (fst (app a u))) ∈ fst F ⟩)
-                      (prʟ-fst (fst a) (fst u))
-                      (val-graph (prʟ (fst a) (fst u)) (pairMem a u))
+              → ⟨ pr (pr ((a .fst) .fst) ((u .fst) .fst)) (((app a u) .fst) .fst) ∈ F .fst ⟩
+    app-graph a u = subst (λ w → ⟨ pr w (((app a u) .fst) .fst) ∈ F .fst ⟩)
+                      (prʟ-fst (a .fst) (u .fst))
+                      (val-graph (prʟ (a .fst) (u .fst)) (pairMem a u))
 ```
 
 <!--en-->
@@ -629,11 +629,11 @@ If two applications have equal outputs, injectivity of `F` first identifies thei
 <!--/-->
 
 ```agda
-    app-inj : (a u a' u' : M) → fst (fst (app a u)) ≡ fst (fst (app a' u'))
-            → (fst (fst a) ≡ fst (fst a')) × (fst (fst u) ≡ fst (fst u'))
+    app-inj : (a u a' u' : M) → ((app a u) .fst) .fst ≡ ((app a' u') .fst) .fst
+            → ((a .fst) .fst ≡ (a' .fst) .fst) × ((u .fst) .fst ≡ (u' .fst) .fst)
     app-inj a u a' u' e = pr-inj
-      (sym (prʟ-fst (fst a) (fst u))
-       ∙ val-inj (prʟ (fst a) (fst u)) (pairMem a u) (prʟ (fst a') (fst u')) (pairMem a' u') e
+      (sym (prʟ-fst (a .fst) (u .fst))
+       ∙ val-inj (prʟ (a .fst) (u .fst)) (pairMem a u) (prʟ (a' .fst) (u' .fst)) (pairMem a' u') e
 ```
 
 <!--en-->
@@ -645,7 +645,7 @@ The comparison of pair inputs passes from constructible pair codes to their ambi
 <!--/-->
 
 ```agda
-       ∙ prʟ-fst (fst a') (fst u'))
+       ∙ prʟ-fst (a' .fst) (u' .fst))
 ```
 
 <!--en-->
@@ -658,10 +658,10 @@ The companion uniqueness fact runs in the forward direction. If `F` records some
 
 ```agda
     app-uniq : (a u : M) (w : S)
-             → ⟨ pr (pr (fst (fst a)) (fst (fst u))) (fst w) ∈ fst F ⟩
-             → fst w ≡ fst (fst (app a u))
+             → ⟨ pr (pr ((a .fst) .fst) ((u .fst) .fst)) (w .fst) ∈ F .fst ⟩
+             → w .fst ≡ ((app a u) .fst) .fst
     app-uniq a u w h =
-      svAt-out zero (F ∷ prodL α ∷ []) sv (prʟ (fst a) (fst u)) w (fst (app a u))
+      svAt-out zero (F ∷ prodL α ∷ []) sv (prʟ (a .fst) (u .fst)) w ((app a u) .fst)
 ```
 
 <!--en-->
@@ -673,8 +673,8 @@ To apply single-valuedness, the supplied membership is first transported from th
 <!--/-->
 
 ```agda
-        (subst (λ z → ⟨ pr z (fst w) ∈ fst F ⟩) (sym (prʟ-fst (fst a) (fst u))) h)
-        (val-graph (prʟ (fst a) (fst u)) (pairMem a u))
+        (subst (λ z → ⟨ pr z (w .fst) ∈ F .fst ⟩) (sym (prʟ-fst (a .fst) (u .fst))) h)
+        (val-graph (prʟ (a .fst) (u .fst)) (pairMem a u))
 ```
 
 <!--en-->
@@ -686,7 +686,7 @@ The environment reader is extended to a total function on the numerals: outside 
 <!--/-->
 
 ```agda
-  ext : (n : ℕ) → (Fin n → ⟪ fst α ⟫) → ℕ → M
+  ext : (n : ℕ) → (Fin n → ⟪ α .fst ⟫) → ℕ → M
   ext 0    g k       = num zero
   ext (suc n) g 0    = up (g zero)
   ext (suc n) g (suc k) = ext n (λ i → g (suc i)) k
@@ -701,7 +701,7 @@ At every index below the length, the extension reads back exactly the entry of t
 <!--/-->
 
 ```agda
-  ext-at : (n : ℕ) (g : Fin n → ⟪ fst α ⟫) (i : Fin n) → ext n g (toℕ i) ≡ up (g i)
+  ext-at : (n : ℕ) (g : Fin n → ⟪ α .fst ⟫) (i : Fin n) → ext n g (toℕ i) ≡ up (g i)
   ext-at (suc n) g zero    = refl
   ext-at (suc n) g (suc i) = ext-at n (λ j → g (suc j)) i
 ```
@@ -715,7 +715,7 @@ With the length `n` and sequence `g` fixed, `chain n g k` is defined by recursio
 <!--/-->
 
 ```agda
-  chain : (n : ℕ) → (Fin n → ⟪ fst α ⟫) → ℕ → M
+  chain : (n : ℕ) → (Fin n → ⟪ α .fst ⟫) → ℕ → M
   chain n g 0    = num zero
   chain n g (suc k) = app (ext n g k) (chain n g k)
 ```
@@ -729,7 +729,7 @@ For a sequence of length `n`, the fold ends at `vₙ = chain n g n`. Its code is
 <!--/-->
 
 ```agda
-  code : (n : ℕ) → (Fin n → ⟪ fst α ⟫) → M
+  code : (n : ℕ) → (Fin n → ⟪ α .fst ⟫) → M
   code n g = app (num n) (chain n g n)
 ```
 
@@ -742,9 +742,9 @@ Suppose two fold chains agree after `k` steps. Then their entries agree at every
 <!--/-->
 
 ```agda
-  chain-inj : (n : ℕ) (g g' : Fin n → ⟪ fst α ⟫) (k : ℕ)
-            → fst (fst (chain n g k)) ≡ fst (fst (chain n g' k))
-            → (j : ℕ) → j < k → fst (fst (ext n g j)) ≡ fst (fst (ext n g' j))
+  chain-inj : (n : ℕ) (g g' : Fin n → ⟪ α .fst ⟫) (k : ℕ)
+            → ((chain n g k) .fst) .fst ≡ ((chain n g' k) .fst) .fst
+            → (j : ℕ) → j < k → ((ext n g j) .fst) .fst ≡ ((ext n g' j) .fst) .fst
   chain-inj n g g' 0    e j j<0  = ⊥₀-rec (¬-<-zero j<0)
   chain-inj n g g' (suc k) e j j<sk = go (<-split j<sk)
 ```
@@ -760,9 +760,9 @@ At a successor stage, `app-inj` supplies those two equalities. If `j=k`, the fir
 ```agda
     where
     q = app-inj (ext n g k) (chain n g k) (ext n g' k) (chain n g' k) e
-    go : (j < k) ⊎ (j ≡ k) → fst (fst (ext n g j)) ≡ fst (fst (ext n g' j))
-    go (inl j<k) = chain-inj n g g' k (snd q) j j<k
-    go (inr j≡k) = subst (λ j → fst (fst (ext n g j)) ≡ fst (fst (ext n g' j))) (sym j≡k) (fst q)
+    go : (j < k) ⊎ (j ≡ k) → ((ext n g j) .fst) .fst ≡ ((ext n g' j) .fst) .fst
+    go (inl j<k) = chain-inj n g g' k (q .snd) j j<k
+    go (inr j≡k) = subst (λ j → ((ext n g j) .fst) .fst ≡ ((ext n g' j) .fst) .fst) (sym j≡k) (q .fst)
 ```
 
 <!--en-->
@@ -774,10 +774,10 @@ The length tag now proves its purpose. If two codes are equal, injectivity of th
 <!--/-->
 
 ```agda
-  code-inj : (n : ℕ) (g : Fin n → ⟪ fst α ⟫) (n' : ℕ) (g' : Fin n' → ⟪ fst α ⟫)
-           → fst (fst (code n g)) ≡ fst (fst (code n' g'))
-           → fst (envS α g) ≡ fst (envS α g')
-  code-inj n g n' g' e = subst P (#-inj′ (fst q)) same g' (snd q)
+  code-inj : (n : ℕ) (g : Fin n → ⟪ α .fst ⟫) (n' : ℕ) (g' : Fin n' → ⟪ α .fst ⟫)
+           → ((code n g) .fst) .fst ≡ ((code n' g') .fst) .fst
+           → (envS α g) .fst ≡ (envS α g') .fst
+  code-inj n g n' g' e = subst P (#-inj′ (q .fst)) same g' (q .snd)
     where
 ```
 
@@ -792,9 +792,9 @@ The pair `q` separates the code equation into equality of the numeral coordinate
 ```agda
     q = app-inj (num n) (chain n g n) (num n') (chain n' g' n') e
     P : ℕ → Type (ℓ-suc ℓ)
-    P m = (h : Fin m → ⟪ fst α ⟫)
-        → fst (fst (chain n g n)) ≡ fst (fst (chain m h m))
-        → fst (envS α g) ≡ fst (envS α h)
+    P m = (h : Fin m → ⟪ α .fst ⟫)
+        → ((chain n g n) .fst) .fst ≡ ((chain m h m) .fst) .fst
+        → (envS α g) .fst ≡ (envS α h) .fst
 ```
 
 <!--en-->
@@ -807,10 +807,10 @@ Once the lengths coincide, equality of the environment graphs follows from funct
 
 ```agda
     same : P n
-    same h e' = cong (λ (f : Fin n → ⟪ fst α ⟫) → fst (envS α f)) (funExt pt)
+    same h e' = cong (λ (f : Fin n → ⟪ α .fst ⟫) → (envS α f) .fst) (funExt pt)
       where
       pt : (i : Fin n) → g i ≡ h i
-      pt i = ↪-inj {a = fst α}
+      pt i = ↪-inj {a = α .fst}
 ```
 
 <!--en-->
@@ -822,9 +822,9 @@ The comparison at `i` begins by using `ext-at` to identify the bounded total fun
 <!--/-->
 
 ```agda
-        ( sym (cong (λ z → fst (fst z)) (ext-at n g i))
+        ( sym (cong (λ z → (z .fst) .fst) (ext-at n g i))
         ∙ chain-inj n g h n e' (toℕ i) (toℕ<n i)
-        ∙ cong (λ z → fst (fst z)) (ext-at n h i) )
+        ∙ cong (λ z → (z .fst) .fst) (ext-at n h i) )
 ```
 
 <!--en-->
@@ -838,9 +838,9 @@ To describe one recursive transition semantically, fix an index object `i`. A `S
 ```agda
   StepAt : (s C i : S) → Type (ℓ-suc ℓ)
   StepAt s C i = ∥ Σ[ j ∶ S ] Σ[ a ∶ S ] Σ[ u ∶ S ] Σ[ w ∶ S ]
-      ( (fst j ≡ sucV (fst i))
-      × ⟨ pr (fst i) (fst a) ∈ fst s ⟩
-      × ⟨ pr (fst i) (fst u) ∈ fst C ⟩
+      ( (j .fst ≡ sucV (i .fst))
+      × ⟨ pr (i .fst) (a .fst) ∈ s .fst ⟩
+      × ⟨ pr (i .fst) (u .fst) ∈ C .fst ⟩
 ```
 
 <!--en-->
@@ -852,8 +852,8 @@ The last membership assertion is the recurrence equation written as a graph fact
 <!--/-->
 
 ```agda
-      × ⟨ pr (fst j) (fst w) ∈ fst C ⟩
-      × ⟨ pr (pr (fst a) (fst u)) (fst w) ∈ fst F ⟩ ) ∥₁
+      × ⟨ pr (j .fst) (w .fst) ∈ C .fst ⟩
+      × ⟨ pr (pr (a .fst) (u .fst)) (w .fst) ∈ F .fst ⟩ ) ∥₁
 ```
 
 <!--en-->
@@ -867,8 +867,8 @@ The last membership assertion is the recurrence equation written as a graph fact
 ```agda
   DomIs : (s n : S) → Type (ℓ-suc ℓ)
   DomIs s n = (x : S)
-    → (⟨ fst x ∈ fst n ⟩ → ∥ Σ[ y ∶ S ] ⟨ pr (fst x) (fst y) ∈ fst s ⟩ ∥₁)
-    × ((y : S) → ⟨ pr (fst x) (fst y) ∈ fst s ⟩ → ⟨ fst x ∈ fst n ⟩)
+    → (⟨ x .fst ∈ n .fst ⟩ → ∥ Σ[ y ∶ S ] ⟨ pr (x .fst) (y .fst) ∈ s .fst ⟩ ∥₁)
+    × ((y : S) → ⟨ pr (x .fst) (y .fst) ∈ s .fst ⟩ → ⟨ x .fst ∈ n .fst ⟩)
 ```
 
 <!--en-->
@@ -895,8 +895,8 @@ The complete semantic witness begins with a numeral `n∈ω`, its successor `m`,
 ```agda
   Wit : (y s : S) → Type (ℓ-suc ℓ)
   Wit y s = ∥ Σ[ n ∶ S ] Σ[ m ∶ S ] Σ[ C ∶ S ]
-      ( ⟨ fst n ∈ ω ⟩
-      × (fst m ≡ sucV (fst n))
+      ( ⟨ n .fst ∈ ω ⟩
+      × (m .fst ≡ sucV (n .fst))
       × DomIs s n
 ```
 
@@ -910,10 +910,10 @@ The last component separates the terminal trace value from the length tag. It gi
 
 ```agda
       × EnvC m C
-      × ⟨ pr (# zero) (# zero) ∈ fst C ⟩
-      × ((i : S) → ⟨ fst i ∈ fst n ⟩ → StepAt s C i)
-      × ∥ Σ[ v ∶ S ] ( ⟨ pr (fst n) (fst v) ∈ fst C ⟩
-                     × ⟨ pr (pr (fst n) (fst v)) (fst y) ∈ fst F ⟩ ) ∥₁ ) ∥₁
+      × ⟨ pr (# zero) (# zero) ∈ C .fst ⟩
+      × ((i : S) → ⟨ i .fst ∈ n .fst ⟩ → StepAt s C i)
+      × ∥ Σ[ v ∶ S ] ( ⟨ pr (n .fst) (v .fst) ∈ C .fst ⟩
+                     × ⟨ pr (pr (n .fst) (v .fst)) (y .fst) ∈ F .fst ⟩ ) ∥₁ ) ∥₁
 ```
 
 <!--en-->
@@ -1153,7 +1153,7 @@ The pair-adequacy equation identifies the auxiliary object with the ordered pair
 
 ```agda
             , subst ⟨_⟩ (appAt-adequate i8 i4 i1 γ) h3
-            , subst (λ q → ⟨ pr q (fst w) ∈ fst F ⟩)
+            , subst (λ q → ⟨ pr q (w .fst) ∈ F .fst ⟩)
                 (subst ⟨_⟩ (prAtL-adequate i0 i3 i2 γ) h4)
                 (subst ⟨_⟩ (appC-adequate F i0 i1 γ) h5) ) ∣₁ }) hp }) hw }) hu }) ha })
 ```
@@ -1168,8 +1168,8 @@ The outward reading of `finFo` first obtains a terminal trace value `v` and an a
 
 ```agda
       finOut : (y s n m C b z : S) → ⟨ e7 y s n m C b z ⊨ finFo ⟩
-             → ∥ Σ[ v ∶ S ] ( ⟨ pr (fst n) (fst v) ∈ fst C ⟩
-                            × ⟨ pr (pr (fst n) (fst v)) (fst y) ∈ fst F ⟩ ) ∥₁
+             → ∥ Σ[ v ∶ S ] ( ⟨ pr (n .fst) (v .fst) ∈ C .fst ⟩
+                            × ⟨ pr (pr (n .fst) (v .fst)) (y .fst) ∈ F .fst ⟩ ) ∥₁
       finOut y s n m C b z = rec₁ squash₁ (λ { (v , hq) →
         rec₁ squash₁ (λ { (q , (h1 , (h2 , h3))) →
 ```
@@ -1185,7 +1185,7 @@ Adequacy turns the three clauses into the memberships expressing `C(n)=v` and `F
 ```agda
           let γ = q ∷ v ∷ e7 y s n m C b z in
           ∣ v , ( subst ⟨_⟩ (appAt-adequate i4 i6 i1 γ) h1
-                , subst (λ r → ⟨ pr r (fst y) ∈ fst F ⟩)
+                , subst (λ r → ⟨ pr r (y .fst) ∈ F .fst ⟩)
                     (subst ⟨_⟩ (prAtL-adequate i0 i6 i1 γ) h2)
                     (subst ⟨_⟩ (appC-adequate F i0 i7 γ) h3) ) ∣₁ }) hq })
 ```
@@ -1199,7 +1199,7 @@ The body has eight conjuncts. The first two identify the auxiliaries `b=α` and 
 <!--/-->
 
 ```agda
-      bodyOut : (y s n m C b z : S) → ⟨ fst n ∈ ω ⟩
+      bodyOut : (y s n m C b z : S) → ⟨ n .fst ∈ ω ⟩
               → ⟨ e7 y s n m C b z ⊨ body ⟩ → Wit y s
       bodyOut y s n m C b z n∈ω (eb , (ez , (em , (hd , (hE , (h0 , (hS , hF))))))) =
         ∣ n , m , C
@@ -1231,7 +1231,7 @@ The equality `z=0` converts the body clause `C(z)=z` into the initial condition 
 <!--/-->
 
 ```agda
-          , subst (λ w → ⟨ pr w w ∈ fst C ⟩) ez
+          , subst (λ w → ⟨ pr w w ∈ C .fst ⟩) ez
               (subst ⟨_⟩ (appAt-adequate i2 i0 i0 (e7 y s n m C b z)) h0)
           , (λ i i∈n → stepOut y s n m C b z i (hS i i∈n))
           , finOut y s n m C b z hF ) ∣₁
@@ -1296,7 +1296,7 @@ The canonical constructible pair `prʟ a u` witnesses the auxiliary pair variabl
 ```agda
               , ( subst ⟨_⟩ (sym (prAtL-adequate i0 i3 i2 γ)) (prʟ-fst a u)
                 , subst ⟨_⟩ (sym (appC-adequate F i0 i1 γ))
-                    (subst (λ q → ⟨ pr q (fst w) ∈ fst F ⟩) (sym (prʟ-fst a u)) hF) )))) ∣₁ ∣₁ ∣₁ ∣₁ ) })
+                    (subst (λ q → ⟨ pr q (w .fst) ∈ F .fst ⟩) (sym (prʟ-fst a u)) hF) )))) ∣₁ ∣₁ ∣₁ ∣₁ ) })
 ```
 
 <!--en-->
@@ -1309,8 +1309,8 @@ The inward reading of `finFo` starts from a propositionally truncated terminal v
 
 ```agda
       finIn : (y s n m C : S)
-            → ∥ Σ[ v ∶ S ] ( ⟨ pr (fst n) (fst v) ∈ fst C ⟩
-                           × ⟨ pr (pr (fst n) (fst v)) (fst y) ∈ fst F ⟩ ) ∥₁
+            → ∥ Σ[ v ∶ S ] ( ⟨ pr (n .fst) (v .fst) ∈ C .fst ⟩
+                           × ⟨ pr (pr (n .fst) (v .fst)) (y .fst) ∈ F .fst ⟩ ) ∥₁
             → ⟨ e7 y s n m C α (nn zero) ⊨ finFo ⟩
       finIn y s n m C = map₁ (λ { (v , (hv , hy)) →
 ```
@@ -1340,7 +1340,7 @@ The final transport changes the graph membership whose input is the ambient pair
 <!--/-->
 
 ```agda
-                    (subst (λ q → ⟨ pr q (fst y) ∈ fst F ⟩) (sym (prʟ-fst n v)) hy) )) ∣₁ })
+                    (subst (λ q → ⟨ pr q (y .fst) ∈ F .fst ⟩) (sym (prʟ-fst n v)) hy) )) ∣₁ })
 ```
 
 <!--en-->
@@ -1352,11 +1352,11 @@ To rebuild the body, assume the six substantive trace conditions: `m=n+1`, the e
 <!--/-->
 
 ```agda
-      bodyIn : (y s n m C : S) → fst m ≡ sucV (fst n) → DomIs s n → EnvC m C
-             → ⟨ pr (# zero) (# zero) ∈ fst C ⟩
-             → ((i : S) → ⟨ fst i ∈ fst n ⟩ → StepAt s C i)
-             → ∥ Σ[ v ∶ S ] ( ⟨ pr (fst n) (fst v) ∈ fst C ⟩
-                            × ⟨ pr (pr (fst n) (fst v)) (fst y) ∈ fst F ⟩ ) ∥₁
+      bodyIn : (y s n m C : S) → m .fst ≡ sucV (n .fst) → DomIs s n → EnvC m C
+             → ⟨ pr (# zero) (# zero) ∈ C .fst ⟩
+             → ((i : S) → ⟨ i .fst ∈ n .fst ⟩ → StepAt s C i)
+             → ∥ Σ[ v ∶ S ] ( ⟨ pr (n .fst) (v .fst) ∈ C .fst ⟩
+                            × ⟨ pr (pr (n .fst) (v .fst)) (y .fst) ∈ F .fst ⟩ ) ∥₁
 ```
 
 <!--en-->
@@ -1386,7 +1386,7 @@ Reversing successor adequacy supplies the conjunct for `m=n+1`. The introduction
 ```agda
         , ( subst ⟨_⟩ (sym (sucAtL-adequate i4 i3 γ)) em
         , ( domAt-intro i6 i4 γ (λ x →
-              rec₁ (snd (fst x ∈ fst n)) (λ { (yy , p) → hd x .snd yy p })
+              rec₁ ((x .fst ∈ n .fst) .snd) (λ { (yy , p) → hd x .snd yy p })
             , hd x .fst)
         , ( envOverAt-transport (α ∷ m ∷ C ∷ []) γ
 ```
@@ -1416,7 +1416,7 @@ The inward reading of the full formula eliminates the truncated witness and inje
 
 ```agda
     fo-in : (y s : S) → Wit y s → ⟨ (y ∷ s ∷ []) ⊨ fo ⟩
-    fo-in y s = rec₁ (snd ((y ∷ s ∷ []) ⊨ fo))
+    fo-in y s = rec₁ (((y ∷ s ∷ []) ⊨ fo) .snd)
       (λ { (n , m , C , (n∈ω , em , hd , hE , h0 , hS , hF)) →
         ∣ n , ( n∈ω
               , ∣ m , ∣ C , ∣ α , ∣ nn zero
@@ -1445,7 +1445,7 @@ It remains to test the semantic formula on a genuine finite sequence. Fix a leng
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-  module AtSeq (N : ℕ) (g : Fin N → ⟪ fst α ⟫) (s : S) (e : fst s ≡ fst (envS α g)) where
+  module AtSeq (N : ℕ) (g : Fin N → ⟪ α .fst ⟫) (s : S) (e : s .fst ≡ (envS α g) .fst) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -1487,7 +1487,7 @@ To use the environment lookup theorem, the assignment must first be viewed as a 
 
 ```agda
       gV : Fin N → V ℓ
-      gV i = ⟪ fst α ⟫↪ (g i)
+      gV i = ⟪ α .fst ⟫↪ (g i)
 ```
 
 <!--en-->
@@ -1500,10 +1500,10 @@ If `k < N`, then the canonical environment contains the pair whose first coordin
 
 ```agda
       extMem : (k : ℕ) (p : k < N)
-             → ⟨ pr (# k) (fst (fst (ext N g k))) ∈ fst (envS α g) ⟩
-      extMem k p = subst (λ k → ⟨ pr (# k) (fst (fst (ext N g k))) ∈ fst (envS α g) ⟩)
+             → ⟨ pr (# k) (((ext N g k) .fst) .fst) ∈ (envS α g) .fst ⟩
+      extMem k p = subst (λ k → ⟨ pr (# k) (((ext N g k) .fst) .fst) ∈ (envS α g) .fst ⟩)
         (toFromId' N k p)
-        (subst ⟨_⟩ (sym (lookup-spec gV i (fst (fst (ext N g (toℕ i))))))
+        (subst ⟨_⟩ (sym (lookup-spec gV i (((ext N g (toℕ i)) .fst) .fst)))
 ```
 
 <!--en-->
@@ -1515,7 +1515,7 @@ The comparison `ext-at` identifies the totalized lookup `ext N g (toℕ i)` with
 <!--/-->
 
 ```agda
-          (cong (λ z → fst (fst z)) (ext-at N g i)))
+          (cong (λ z → (z .fst) .fst) (ext-at N g i)))
         where
         i : Fin N
         i = fromℕ' N k p
@@ -1531,10 +1531,10 @@ The converse lookup statement expresses single-valuedness at every valid index. 
 
 ```agda
       s-uniq : (k : ℕ) (p : k < N) (a : S)
-             → ⟨ pr (# k) (fst a) ∈ fst (envS α g) ⟩
-             → fst a ≡ fst (fst (ext N g k))
+             → ⟨ pr (# k) (a .fst) ∈ (envS α g) .fst ⟩
+             → a .fst ≡ ((ext N g k) .fst) .fst
       s-uniq k p a ha =
-          subst ⟨_⟩ (lookup-spec gV i (fst a))
+          subst ⟨_⟩ (lookup-spec gV i (a .fst))
 ```
 
 <!--en-->
@@ -1546,9 +1546,9 @@ This identification is made at the corresponding `Fin N` index. The lookup equat
 <!--/-->
 
 ```agda
-            (subst (λ k → ⟨ pr (# k) (fst a) ∈ fst (envS α g) ⟩) (sym (toFromId' N k p)) ha)
-        ∙ sym (cong (λ z → fst (fst z)) (ext-at N g i))
-        ∙ cong (λ k → fst (fst (ext N g k))) (toFromId' N k p)
+            (subst (λ k → ⟨ pr (# k) (a .fst) ∈ (envS α g) .fst ⟩) (sym (toFromId' N k p)) ha)
+        ∙ sym (cong (λ z → (z .fst) .fst) (ext-at N g i))
+        ∙ cong (λ k → ((ext N g k) .fst) .fst) (toFromId' N k p)
         where
         i : Fin N
 ```
@@ -1574,8 +1574,8 @@ The fold has `N + 1` states, from the initial value through the state after all 
 <!--/-->
 
 ```agda
-      h : Fin (suc N) → ⟪ fst α ⟫
-      h i = fiber (fst α) (snd (chain N g (toℕ i))) .fst
+      h : Fin (suc N) → ⟪ α .fst ⟫
+      h i = fiber (α .fst) ((chain N g (toℕ i)) .snd) .fst
 ```
 
 <!--en-->
@@ -1588,7 +1588,7 @@ The family `hV` forgets the presentation indices and returns to their underlying
 
 ```agda
       hV : Fin (suc N) → V ℓ
-      hV i = ⟪ fst α ⟫↪ (h i)
+      hV i = ⟪ α .fst ⟫↪ (h i)
 ```
 
 <!--en-->
@@ -1614,10 +1614,10 @@ For every `k < N + 1`, `chainMem` exhibits the expected graph entry `(# k, chain
 
 ```agda
       chainMem : (k : ℕ) (p : k < suc N)
-               → ⟨ pr (# k) (fst (fst (chain N g k))) ∈ fst C ⟩
-      chainMem k p = subst (λ k → ⟨ pr (# k) (fst (fst (chain N g k))) ∈ fst C ⟩)
+               → ⟨ pr (# k) (((chain N g k) .fst) .fst) ∈ C .fst ⟩
+      chainMem k p = subst (λ k → ⟨ pr (# k) (((chain N g k) .fst) .fst) ∈ C .fst ⟩)
         (toFromId' (suc N) k p)
-        (subst ⟨_⟩ (sym (lookup-spec hV i (fst (fst (chain N g (toℕ i))))))
+        (subst ⟨_⟩ (sym (lookup-spec hV i (((chain N g (toℕ i)) .fst) .fst)))
 ```
 
 <!--en-->
@@ -1629,23 +1629,23 @@ The fiber equation identifies the value named by `h i` with the actual fold stat
 <!--/-->
 
 ```agda
-          (sym (fiber (fst α) (snd (chain N g (toℕ i))) .snd)))
+          (sym (fiber (α .fst) ((chain N g (toℕ i)) .snd) .snd)))
         where
         i : Fin (suc N)
         i = fromℕ' (suc N) k p
 ```
 
 <!--en-->
-The fixed equation `e : fst s ≡ fst (envS α g)` lets us use the canonical environment facts for the represented sequence `s`. The map `inS` transports a canonical graph entry from `envS α g` into `s`.
+The fixed equation `e : s .fst ≡ (envS α g) .fst` lets us use the canonical environment facts for the represented sequence `s`. The map `inS` transports a canonical graph entry from `envS α g` into `s`.
 <!--zh-->
-固定等式 `e : fst s ≡ fst (envS α g)` 使我们能够把典范环境的事实用于被表示的序列 `s`。映射 `inS` 把 `envS α g` 中的典范图条目运输到 `s` 中。
+固定等式 `e : s .fst ≡ (envS α g) .fst` 使我们能够把典范环境的事实用于被表示的序列 `s`。映射 `inS` 把 `envS α g` 中的典范图条目运输到 `s` 中。
 <!--ja-->
-固定した等式 `e : fst s ≡ fst (envS α g)` により、正準な環境についての事実を、表示される列 `s` に使える。`inS` は `envS α g` の正準なグラフ項を `s` へ運ぶ。
+固定した等式 `e : s .fst ≡ (envS α g) .fst` により、正準な環境についての事実を、表示される列 `s` に使える。`inS` は `envS α g` の正準なグラフ項を `s` へ運ぶ。
 <!--/-->
 
 ```agda
-      inS : (k : ℕ) (a : S) → ⟨ pr (# k) (fst a) ∈ fst (envS α g) ⟩ → ⟨ pr (# k) (fst a) ∈ fst s ⟩
-      inS k a = subst (λ w → ⟨ pr (# k) (fst a) ∈ w ⟩) (sym e)
+      inS : (k : ℕ) (a : S) → ⟨ pr (# k) (a .fst) ∈ (envS α g) .fst ⟩ → ⟨ pr (# k) (a .fst) ∈ s .fst ⟩
+      inS k a = subst (λ w → ⟨ pr (# k) (a .fst) ∈ w ⟩) (sym e)
 ```
 
 <!--en-->
@@ -1657,8 +1657,8 @@ The reverse transport `outS` moves any graph entry of `s` back to `envS α g`. T
 <!--/-->
 
 ```agda
-      outS : (k : ℕ) (a : S) → ⟨ pr (# k) (fst a) ∈ fst s ⟩ → ⟨ pr (# k) (fst a) ∈ fst (envS α g) ⟩
-      outS k a = subst (λ w → ⟨ pr (# k) (fst a) ∈ w ⟩) e
+      outS : (k : ℕ) (a : S) → ⟨ pr (# k) (a .fst) ∈ s .fst ⟩ → ⟨ pr (# k) (a .fst) ∈ (envS α g) .fst ⟩
+      outS k a = subst (λ w → ⟨ pr (# k) (a .fst) ∈ w ⟩) e
 ```
 
 <!--en-->
@@ -1670,7 +1670,7 @@ We now verify that the canonical code satisfies the graph formula. The witnesses
 <!--/-->
 
 ```agda
-    wit : Wit (fst (code N g)) s
+    wit : Wit ((code N g) .fst) s
     wit = ∣ nn N , nn (suc N) , C
           , ( #∈ω N
             , refl
@@ -1689,7 +1689,7 @@ The last existential clause is witnessed by the state `chain N g N`. It occurs i
             , envOver α h
             , chainMem zero (suc-≤-suc zero-≤)
             , step
-            , ∣ fst (chain N g N)
+            , ∣ (chain N g N) .fst
               , ( chainMem N ≤-refl , app-graph (num N) (chain N g N) ) ∣₁ ) ∣₁
 ```
 
@@ -1705,7 +1705,7 @@ To prove that `s` has domain `# N`, start with an index in `# N`. The canonical 
       where
       domIs : DomIs s (nn N)
       domIs x =
-          (λ m → map₁ (λ { (yy , p) → yy , subst (λ w → ⟨ pr (fst x) (fst yy) ∈ w ⟩) (sym e) p })
+          (λ m → map₁ (λ { (yy , p) → yy , subst (λ w → ⟨ pr (x .fst) (yy .fst) ∈ w ⟩) (sym e) p })
                    (domAt-in (suc (suc zero)) (suc zero) δ dom0 x m))
 ```
 
@@ -1719,7 +1719,7 @@ Conversely, if `s` contains a pair with first coordinate `x`, transport sends it
 
 ```agda
         , (λ yy p → domAt-out (suc (suc zero)) (suc zero) δ dom0 x yy
-                      (subst (λ w → ⟨ pr (fst x) (fst yy) ∈ w ⟩) e p))
+                      (subst (λ w → ⟨ pr (x .fst) (yy .fst) ∈ w ⟩) e p))
 ```
 
 <!--en-->
@@ -1731,11 +1731,11 @@ For a set-theoretic index `i ∈ # N`, numeral elimination supplies a natural nu
 <!--/-->
 
 ```agda
-      step : (i : S) → ⟨ fst i ∈ # N ⟩ → StepAt s C i
+      step : (i : S) → ⟨ i .fst ∈ # N ⟩ → StepAt s C i
       step i i∈N = rec₁ squash₁ (λ { (k , p , ei) →
-        ∣ nn (suc k) , fst (ext N g k) , fst (chain N g k) , fst (chain N g (suc k))
+        ∣ nn (suc k) , (ext N g k) .fst , (chain N g k) .fst , (chain N g (suc k)) .fst
         , ( cong sucV (sym ei)
-          , subst (λ w → ⟨ pr w (fst (fst (ext N g k))) ∈ fst s ⟩) (sym ei)
+          , subst (λ w → ⟨ pr w (((ext N g k) .fst) .fst) ∈ s .fst ⟩) (sym ei)
 ```
 
 <!--en-->
@@ -1747,11 +1747,11 @@ The required transition facts now follow from the two canonical environments and
 <!--/-->
 
 ```agda
-              (inS k (fst (ext N g k)) (extMem k p))
-          , subst (λ w → ⟨ pr w (fst (fst (chain N g k))) ∈ fst C ⟩) (sym ei)
+              (inS k ((ext N g k) .fst) (extMem k p))
+          , subst (λ w → ⟨ pr w (((chain N g k) .fst) .fst) ∈ C .fst ⟩) (sym ei)
               (chainMem k (≤-suc p))
           , chainMem (suc k) (suc-≤-suc p)
-          , app-graph (ext N g k) (chain N g k) ) ∣₁ }) (∈#-elim N (fst i) i∈N)
+          , app-graph (ext N g k) (chain N g k) ) ∣₁ }) (∈#-elim N (i .fst) i∈N)
 ```
 
 <!--en-->
@@ -1763,8 +1763,8 @@ Existence alone does not yet make `fo` a function graph. The theorem `only` prov
 <!--/-->
 
 ```agda
-    only : (y : S) → Wit y s → fst y ≡ fst (fst (code N g))
-    only y = rec₁ (setIsSet (fst y) (fst (fst (code N g))))
+    only : (y : S) → Wit y s → y .fst ≡ ((code N g) .fst) .fst
+    only y = rec₁ (setIsSet (y .fst) (((code N g) .fst) .fst))
       (λ { (n , m , C' , (n∈ω , em , hd , hE , h0 , hS , hF)) →
         Only.final n m C' n∈ω em hd hE h0 hS hF })
       where
@@ -1779,11 +1779,11 @@ Fix an arbitrary witness with length object `n`, successor `m`, and state enviro
 <!--/-->
 
 ```agda
-      module Only (n m C' : S) (n∈ω : ⟨ fst n ∈ ω ⟩) (em : fst m ≡ sucV (fst n))
+      module Only (n m C' : S) (n∈ω : ⟨ n .fst ∈ ω ⟩) (em : m .fst ≡ sucV (n .fst))
                   (hd : DomIs s n) (hE : EnvC m C')
-                  (h0 : ⟨ pr (# zero) (# zero) ∈ fst C' ⟩)
-                  (hS : (i : S) → ⟨ fst i ∈ fst n ⟩ → StepAt s C' i)
-                  (hF : ∥ Σ[ v ∶ S ] ( ⟨ pr (fst n) (fst v) ∈ fst C' ⟩
+                  (h0 : ⟨ pr (# zero) (# zero) ∈ C' .fst ⟩)
+                  (hS : (i : S) → ⟨ i .fst ∈ n .fst ⟩ → StepAt s C' i)
+                  (hF : ∥ Σ[ v ∶ S ] ( ⟨ pr (n .fst) (v .fst) ∈ C' .fst ⟩
 ```
 
 <!--en-->
@@ -1795,7 +1795,7 @@ The terminal clause `hF` merely asserts the existence of a state `v` recorded by
 <!--/-->
 
 ```agda
-                                     × ⟨ pr (pr (fst n) (fst v)) (fst y) ∈ fst F ⟩ ) ∥₁)
+                                     × ⟨ pr (pr (n .fst) (v .fst)) (y .fst) ∈ F .fst ⟩ ) ∥₁)
                   where
 ```
 
@@ -1808,11 +1808,11 @@ The witness length `n` must equal the canonical numeral `# N` as a set. Both des
 <!--/-->
 
 ```agda
-        n≡ : fst n ≡ # N
-        n≡ = cong fst (extensionalL {a = n} {b = nn N} (λ x → ⇔toPath (fwd x) (bwd x)))
+        n≡ : n .fst ≡ # N
+        n≡ = cong (λ p → p .fst) (extensionalL {a = n} {b = nn N} (λ x → ⇔toPath (fwd x) (bwd x)))
           where
-          fwd : (x : S) → ⟨ fst x ∈ fst n ⟩ → ⟨ fst x ∈ # N ⟩
-          fwd x x∈n = rec₁ (snd (fst x ∈ # N))
+          fwd : (x : S) → ⟨ x .fst ∈ n .fst ⟩ → ⟨ x .fst ∈ # N ⟩
+          fwd x x∈n = rec₁ ((x .fst ∈ # N) .snd)
 ```
 
 <!--en-->
@@ -1825,10 +1825,10 @@ For the forward implication, an element `x ∈ n` yields, by `hd`, a merely exis
 
 ```agda
             (λ { (yy , p) → domAt-out (suc (suc zero)) (suc zero) δ dom0 x yy
-                              (subst (λ w → ⟨ pr (fst x) (fst yy) ∈ w ⟩) e p) })
+                              (subst (λ w → ⟨ pr (x .fst) (yy .fst) ∈ w ⟩) e p) })
             (hd x .fst x∈n)
-          bwd : (x : S) → ⟨ fst x ∈ # N ⟩ → ⟨ fst x ∈ fst n ⟩
-          bwd x x∈N = rec₁ (snd (fst x ∈ fst n))
+          bwd : (x : S) → ⟨ x .fst ∈ # N ⟩ → ⟨ x .fst ∈ n .fst ⟩
+          bwd x x∈N = rec₁ ((x .fst ∈ n .fst) .snd)
 ```
 
 <!--en-->
@@ -1840,7 +1840,7 @@ For the reverse implication, `x ∈ # N` gives an entry of the canonical environ
 <!--/-->
 
 ```agda
-            (λ { (yy , p) → hd x .snd yy (subst (λ w → ⟨ pr (fst x) (fst yy) ∈ w ⟩) (sym e) p) })
+            (λ { (yy , p) → hd x .snd yy (subst (λ w → ⟨ pr (x .fst) (yy .fst) ∈ w ⟩) (sym e) p) })
             (domAt-in (suc (suc zero)) (suc zero) δ dom0 x x∈N)
 ```
 
@@ -1853,8 +1853,8 @@ Because `C'` satisfies the environment condition, it is single-valued. Hence two
 <!--/-->
 
 ```agda
-        svC : (x v v' : S) → ⟨ pr (fst x) (fst v) ∈ fst C' ⟩ → ⟨ pr (fst x) (fst v') ∈ fst C' ⟩
-            → fst v ≡ fst v'
+        svC : (x v v' : S) → ⟨ pr (x .fst) (v .fst) ∈ C' .fst ⟩ → ⟨ pr (x .fst) (v' .fst) ∈ C' .fst ⟩
+            → v .fst ≡ v' .fst
         svC = svAt-out (suc (suc zero)) (α ∷ m ∷ C' ∷ [])
                 (envOver-sv (suc (suc zero)) (suc zero) zero (α ∷ m ∷ C' ∷ []) hE)
 ```
@@ -1869,9 +1869,9 @@ The central induction states that every value recorded by `C'` at an index `k < 
 
 ```agda
         entry : (k : ℕ) → k < suc N → (v : S)
-              → ⟨ pr (# k) (fst v) ∈ fst C' ⟩ → fst v ≡ fst (fst (chain N g k))
+              → ⟨ pr (# k) (v .fst) ∈ C' .fst ⟩ → v .fst ≡ ((chain N g k) .fst) .fst
         entry 0    p v hv = svC (nn zero) v (nn zero) hv h0
-        entry (suc k) p v hv = rec₁ (setIsSet (fst v) (fst (fst (chain N g (suc k)))))
+        entry (suc k) p v hv = rec₁ (setIsSet (v .fst) (((chain N g (suc k)) .fst) .fst))
           (λ { (j , a , u , w , (ej , ha , hu , hw , hFw)) →
 ```
 
@@ -1884,11 +1884,11 @@ In the successor case, a transition witness supplies an entry `a` of the sequenc
 <!--/-->
 
 ```agda
-            let ea : fst a ≡ fst (fst (ext N g k))
+            let ea : a .fst ≡ ((ext N g k) .fst) .fst
                 ea = s-uniq k p' a (outS k a ha)
-                eu : fst u ≡ fst (fst (chain N g k))
+                eu : u .fst ≡ ((chain N g k) .fst) .fst
                 eu = entry k (≤-suc p') u hu
-                ew : fst w ≡ fst (fst (chain N g (suc k)))
+                ew : w .fst ≡ ((chain N g (suc k)) .fst) .fst
 ```
 
 <!--en-->
@@ -1901,9 +1901,9 @@ The step clause is available because `k < N`, obtained from the successor bound.
 
 ```agda
                 ew = app-uniq (ext N g k) (chain N g k) w
-                       (subst (λ q → ⟨ pr q (fst w) ∈ fst F ⟩) (cong₂ pr ea eu) hFw)
+                       (subst (λ q → ⟨ pr q (w .fst) ∈ F .fst ⟩) (cong₂ pr ea eu) hFw)
             in svC (nn (suc k)) v w hv
-                 (subst (λ z → ⟨ pr z (fst w) ∈ fst C' ⟩) ej hw) ∙ ew })
+                 (subst (λ z → ⟨ pr z (w .fst) ∈ C' .fst ⟩) ej hw) ∙ ew })
           (hS (nn k) (subst (λ z → ⟨ # k ∈ z ⟩) (sym n≡) (#mono k N p')))
 ```
 
@@ -1922,34 +1922,34 @@ The predecessor bound is the small arithmetic fact needed by the induction: from
 ```
 
 <!--en-->
-It remains to determine the candidate output `y`. Eliminating the propositionally truncated terminal witness gives a state `v` recorded at the witness length `n`; the underlying-set equality `n≡ : fst n ≡ # N` transports this membership to index `N`, where the induction identifies `v` with the canonical final fold state.
+It remains to determine the candidate output `y`. Eliminating the propositionally truncated terminal witness gives a state `v` recorded at the witness length `n`; the underlying-set equality `n≡ : n .fst ≡ # N` transports this membership to index `N`, where the induction identifies `v` with the canonical final fold state.
 <!--zh-->
-最后还需确定所给输出 `y`。消去经过命题截断的终止见证后，得到见证长度 `n` 处记录的状态 `v`；底层集合等式 `n≡ : fst n ≡ # N` 把该成员关系运输到索引 `N`，归纳结论便把 `v` 与典范折叠的最终状态等同。
+最后还需确定所给输出 `y`。消去经过命题截断的终止见证后，得到见证长度 `n` 处记录的状态 `v`；底层集合等式 `n≡ : n .fst ≡ # N` 把该成员关系运输到索引 `N`，归纳结论便把 `v` 与典范折叠的最终状态等同。
 <!--ja-->
-残るのは、与えられた出力 `y` を決定することである。命題的に切り詰められた終端の証人を除去すると、証人の長さ `n` に記録された状態 `v` が得られる。底集合の等式 `n≡ : fst n ≡ # N` でこの所属を添字 `N` へ運ぶと、帰納法の結論が `v` を正準な最終畳み込み状態と同一視する。
+残るのは、与えられた出力 `y` を決定することである。命題的に切り詰められた終端の証人を除去すると、証人の長さ `n` に記録された状態 `v` が得られる。底集合の等式 `n≡ : n .fst ≡ # N` でこの所属を添字 `N` へ運ぶと、帰納法の結論が `v` を正準な最終畳み込み状態と同一視する。
 <!--/-->
 
 ```agda
-        final : fst y ≡ fst (fst (code N g))
-        final = rec₁ (setIsSet (fst y) (fst (fst (code N g))))
+        final : y .fst ≡ ((code N g) .fst) .fst
+        final = rec₁ (setIsSet (y .fst) (((code N g) .fst) .fst))
           (λ { (v , (hv , hy)) →
-            let hv' : ⟨ pr (# N) (fst v) ∈ fst C' ⟩
-                hv' = subst (λ z → ⟨ pr z (fst v) ∈ fst C' ⟩) n≡ hv
+            let hv' : ⟨ pr (# N) (v .fst) ∈ C' .fst ⟩
+                hv' = subst (λ z → ⟨ pr z (v .fst) ∈ C' .fst ⟩) n≡ hv
 ```
 
 <!--en-->
-The terminal clause also says that `F` maps the pair formed from `fst n` and `fst v` to the underlying set of `y`. After replacing these inputs by `# N` and the canonical final state, functionality of `F` gives `fst y ≡ fst (fst (code N g))`. This proves uniqueness only for outputs satisfying the graph formula; it does not define a decoder on arbitrary elements of `α`.
+The terminal clause also says that `F` maps the pair formed from `n .fst` and `v .fst` to the underlying set of `y`. After replacing these inputs by `# N` and the canonical final state, functionality of `F` gives `y .fst ≡ ((code N g) .fst) .fst`. This proves uniqueness only for outputs satisfying the graph formula; it does not define a decoder on arbitrary elements of `α`.
 <!--zh-->
-终止子句还说明，`F` 把由 `fst n` 与 `fst v` 组成的有序对映到底层集合 `fst y`。把这两个输入换成 `# N` 与典范终态后，`F` 的功能性给出 `fst y ≡ fst (fst (code N g))`。这只证明满足图公式的输出具有唯一性，并未在 `α` 的任意元素上定义解码函数。
+终止子句还说明，`F` 把由 `n .fst` 与 `v .fst` 组成的有序对映到底层集合 `y .fst`。把这两个输入换成 `# N` 与典范终态后，`F` 的功能性给出 `y .fst ≡ ((code N g) .fst) .fst`。这只证明满足图公式的输出具有唯一性，并未在 `α` 的任意元素上定义解码函数。
 <!--ja-->
-終端節はさらに、`F` が `fst n` と `fst v` からなる対を `y` の底集合 `fst y` へ写すことを述べる。これらの入力を `# N` と正準な最終状態に置き換えると、`F` の機能性から `fst y ≡ fst (fst (code N g))` が得られる。これはグラフ論理式を満たす出力の一意性だけを示し、`α` の任意の要素に対する復号関数を定義するものではない。
+終端節はさらに、`F` が `n .fst` と `v .fst` からなる対を `y` の底集合 `y .fst` へ写すことを述べる。これらの入力を `# N` と正準な最終状態に置き換えると、`F` の機能性から `y .fst ≡ ((code N g) .fst) .fst` が得られる。これはグラフ論理式を満たす出力の一意性だけを示し、`α` の任意の要素に対する復号関数を定義するものではない。
 <!--/-->
 
 ```agda
-                ev : fst v ≡ fst (fst (chain N g N))
+                ev : v .fst ≡ ((chain N g N) .fst) .fst
                 ev = entry N ≤-refl v hv'
             in app-uniq (num N) (chain N g N) y
-                 (subst (λ q → ⟨ pr q (fst y) ∈ fst F ⟩) (cong₂ pr n≡ ev) hy) })
+                 (subst (λ q → ⟨ pr q (y .fst) ∈ F .fst ⟩) (cong₂ pr n≡ ev) hy) })
           hF
 ```
 </div>
@@ -1965,7 +1965,7 @@ The predicate `Mem s` is simply membership of `s` in `seqL α`. Thus every later
 
 ```agda
   Mem : S → Type (ℓ-suc ℓ)
-  Mem s = ⟨ fst s ∈ˢ fst (seqL α) ⟩
+  Mem s = ⟨ s .fst ∈ˢ (seqL α) .fst ⟩
 ```
 
 <!--en-->
@@ -1978,7 +1978,7 @@ A representation of `s` consists merely of a natural length `n`, an assignment `
 
 ```agda
   Rep : S → Type (ℓ-suc ℓ)
-  Rep s = ∥ Σ[ n ∶ ℕ ] Σ[ g ∶ Ix α n ] (fst s ≡ fst (envS α g)) ∥₁
+  Rep s = ∥ Σ[ n ∶ ℕ ] Σ[ g ∶ Ix α n ] (s .fst ≡ (envS α g) .fst) ∥₁
 ```
 
 <!--en-->
@@ -1997,11 +1997,11 @@ Membership in `seqL α` first yields, through `seqL-out`, a merely existing fini
 ```
 
 <!--en-->
-The graph formula can now be turned into a function on `seqL α`. Each concrete representation `(n,g,e)` yields the candidate `fst (code n g)` together with a proof that it uniquely fills the graph fiber over `s`. Mapping the truncated representation into this propositionally truncated unique-existence statement makes it a valid input to `mereFunct`, which converts it into the required contractibility without selecting a preferred representation.
+The graph formula can now be turned into a function on `seqL α`. Each concrete representation `(n,g,e)` yields the candidate `(code n g) .fst` together with a proof that it uniquely fills the graph fiber over `s`. Mapping the truncated representation into this propositionally truncated unique-existence statement makes it a valid input to `mereFunct`, which converts it into the required contractibility without selecting a preferred representation.
 <!--zh-->
-现在可以把图公式化为 `seqL α` 上的函数。每个具体表示 `(n,g,e)` 都给出候选值 `fst (code n g)`，并证明它唯一地占据 `s` 上的图纤维。把经过命题截断的表示映到这条同样经过命题截断的唯一存在陈述后，便可将其交给 `mereFunct`；后者把它转成所需的可缩性，而不选取首选表示。
+现在可以把图公式化为 `seqL α` 上的函数。每个具体表示 `(n,g,e)` 都给出候选值 `(code n g) .fst`，并证明它唯一地占据 `s` 上的图纤维。把经过命题截断的表示映到这条同样经过命题截断的唯一存在陈述后，便可将其交给 `mereFunct`；后者把它转成所需的可缩性，而不选取首选表示。
 <!--ja-->
-これでグラフ論理式から `seqL α` 上の関数を得られる。具体的な各表示 `(n,g,e)` から、候補 `fst (code n g)` と、それが `s` 上のグラフのファイバーを一意に占めることの証明が得られる。切り詰められた表示を、この命題的に切り詰められた一意存在の主張へ写せば、`mereFunct` への入力になる。`mereFunct` は優先する表示を選ぶことなく、それを必要な可縮性へ変換する。
+これでグラフ論理式から `seqL α` 上の関数を得られる。具体的な各表示 `(n,g,e)` から、候補 `(code n g) .fst` と、それが `s` 上のグラフのファイバーを一意に占めることの証明が得られる。切り詰められた表示を、この命題的に切り詰められた一意存在の主張へ写せば、`mereFunct` への入力になる。`mereFunct` は優先する表示を選ぶことなく、それを必要な可縮性へ変換する。
 <!--/-->
 
 ```agda
@@ -2021,9 +2021,9 @@ For each representation, `fo-in` proves that the canonical code lies in the grap
 <!--/-->
 
 ```agda
-        fst (code n g)
-        , ( fo-in (fst (code n g)) s (AtSeq.wit n g s e)
-          , λ y' h → Σ≡Prop (λ v → snd (isL v)) (AtSeq.only n g s e y' (fo-out y' s h)) ) })
+        (code n g) .fst
+        , ( fo-in ((code n g) .fst) s (AtSeq.wit n g s e)
+          , λ y' h → Σ≡Prop (λ v → (isL v) .snd) (AtSeq.only n g s e y' (fo-out y' s h)) ) })
         (rep s m)) }
 ```
 
@@ -2053,17 +2053,17 @@ Define `fn s m` to be this unique value for the sequence member `s`. Although th
 ```
 
 <!--en-->
-Whenever `s` is represented by an assignment `g` of length `n`, the underlying `S`-value `fst (code n g)` satisfies `fo`; uniqueness of the graph value therefore gives `fn s m ≡ fst (code n g)`. This comparison holds for every supplied representation and so does not require choosing a preferred one.
+Whenever `s` is represented by an assignment `g` of length `n`, the underlying `S`-value `(code n g) .fst` satisfies `fo`; uniqueness of the graph value therefore gives `fn s m ≡ (code n g) .fst`. This comparison holds for every supplied representation and so does not require choosing a preferred one.
 <!--zh-->
-只要 `s` 由长度为 `n` 的赋值 `g` 表示，作为 `S` 元素的编码值 `fst (code n g)` 就满足 `fo`；图取值的唯一性因而给出 `fn s m ≡ fst (code n g)`。这个比较对每个给定表示都成立，所以无须选取首选表示。
+只要 `s` 由长度为 `n` 的赋值 `g` 表示，作为 `S` 元素的编码值 `(code n g) .fst` 就满足 `fo`；图取值的唯一性因而给出 `fn s m ≡ (code n g) .fst`。这个比较对每个给定表示都成立，所以无须选取首选表示。
 <!--ja-->
-`s` が長さ `n` の割り当て `g` で表示されるなら、`S` の要素としての符号値 `fst (code n g)` は `fo` を満たす。したがってグラフ値の一意性から `fn s m ≡ fst (code n g)` が得られる。この比較は与えられたどの表示についても成り立つので、優先する表示を選ぶ必要はない。
+`s` が長さ `n` の割り当て `g` で表示されるなら、`S` の要素としての符号値 `(code n g) .fst` は `fo` を満たす。したがってグラフ値の一意性から `fn s m ≡ (code n g) .fst` が得られる。この比較は与えられたどの表示についても成り立つので、優先する表示を選ぶ必要はない。
 <!--/-->
 
 ```agda
-  fn-code : (s : S) (m : Mem s) (n : ℕ) (g : Ix α n) → fst s ≡ fst (envS α g)
-          → fn s m ≡ fst (code n g)
-  fn-code s m n g e = T.val-uniq s m (fst (code n g)) (fo-in (fst (code n g)) s (AtSeq.wit n g s e))
+  fn-code : (s : S) (m : Mem s) (n : ℕ) (g : Ix α n) → s .fst ≡ (envS α g) .fst
+          → fn s m ≡ (code n g) .fst
+  fn-code s m n g e = T.val-uniq s m ((code n g) .fst) (fo-in ((code n g) .fst) s (AtSeq.wit n g s e))
 ```
 
 <!--en-->
@@ -2075,9 +2075,9 @@ The value of `fn` remains inside `α`. A truncated representation may be elimina
 <!--/-->
 
 ```agda
-  into : (s : S) (m : Mem s) → ⟨ fst (fn s m) ∈ˢ fst α ⟩
-  into s m = rec₁ (snd (fst (fn s m) ∈ˢ fst α))
-    (λ { (n , g , e) → subst (λ w → ⟨ fst w ∈ˢ fst α ⟩) (sym (fn-code s m n g e)) (snd (code n g)) })
+  into : (s : S) (m : Mem s) → ⟨ (fn s m) .fst ∈ˢ α .fst ⟩
+  into s m = rec₁ (((fn s m) .fst ∈ˢ α .fst) .snd)
+    (λ { (n , g , e) → subst (λ w → ⟨ w .fst ∈ˢ α .fst ⟩) (sym (fn-code s m n g e)) ((code n g) .snd) })
     (rep s m)
 ```
 
@@ -2107,23 +2107,23 @@ To prove injectivity, suppose two sequence members have equal `fn` values. Their
 
 ```agda
   inj : (s : S) (m : Mem s) (s' : S) (m' : Mem s')
-      → fst (fn s m) ≡ fst (fn s' m') → fst s ≡ fst s'
-  inj s m s' m' e = rec2 (setIsSet (fst s) (fst s'))
+      → (fn s m) .fst ≡ (fn s' m') .fst → s .fst ≡ s' .fst
+  inj s m s' m' e = rec2 (setIsSet (s .fst) (s' .fst))
     (λ { (n , g , es) (n' , g' , es') →
         es
 ```
 
 <!--en-->
-The equations `fn-code` turn equality of the two `fn` values into equality of the two canonical codes. The previously proved `code-inj` then gives equality of their environment graphs; composing with the two representation equations yields `fst s ≡ fst s'`. This is a proof by comparison of valid codes, not a total decoding operation on `α`.
+The equations `fn-code` turn equality of the two `fn` values into equality of the two canonical codes. The previously proved `code-inj` then gives equality of their environment graphs; composing with the two representation equations yields `s .fst ≡ s' .fst`. This is a proof by comparison of valid codes, not a total decoding operation on `α`.
 <!--zh-->
-等式 `fn-code` 把两个 `fn` 取值的相等转为两个典范码的相等。先前证明的 `code-inj` 随即给出相应环境图相等；再与两条表示等式复合，便得 `fst s ≡ fst s'`。这是对合法码进行比较的证明，而不是定义在 `α` 全域上的解码运算。
+等式 `fn-code` 把两个 `fn` 取值的相等转为两个典范码的相等。先前证明的 `code-inj` 随即给出相应环境图相等；再与两条表示等式复合，便得 `s .fst ≡ s' .fst`。这是对合法码进行比较的证明，而不是定义在 `α` 全域上的解码运算。
 <!--ja-->
-等式 `fn-code` により、二つの `fn` の値の等しさは二つの正準な符号の等しさへ変わる。先に示した `code-inj` から対応する環境グラフの等しさが得られ、二つの表示等式と合成すると `fst s ≡ fst s'` となる。これは正しい符号どうしを比較する証明であり、`α` 全体で定義された復号演算ではない。
+等式 `fn-code` により、二つの `fn` の値の等しさは二つの正準な符号の等しさへ変わる。先に示した `code-inj` から対応する環境グラフの等しさが得られ、二つの表示等式と合成すると `s .fst ≡ s' .fst` となる。これは正しい符号どうしを比較する証明であり、`α` 全体で定義された復号演算ではない。
 <!--/-->
 
 ```agda
       ∙ code-inj n g n' g'
-          (sym (cong fst (fn-code s m n g es)) ∙ e ∙ cong fst (fn-code s' m' n' g' es'))
+          (sym (cong (λ p → p .fst) (fn-code s m n g es)) ∙ e ∙ cong (λ p → p .fst) (fn-code s' m' n' g' es'))
       ∙ sym es' })
     (rep s m) (rep s' m')
 ```
@@ -2161,7 +2161,7 @@ The final theorem removes the temporary assumption that a pairing injection on `
 
 ```agda
 seq-count :
-    (α : SL.S) → IsOrd (fst α) → (⟨ fst α ∈ˢ ω ⟩ → ⊥₀)
+    (α : SL.S) → IsOrd (α .fst) → (⟨ α .fst ∈ˢ ω ⟩ → ⊥₀)
   → InjL (seqL α) α
 seq-count α oα α∉ω = rec₁ squash₁
   (λ { (F , sv , dm , ij , ran) → Code.injL α oα α∉ω F sv dm ij ran }) pairing
@@ -2192,8 +2192,8 @@ The representative `μ` is an ordinal and an internal cardinal, with internal in
 <!--/-->
 
 ```agda
-              ( IsOrd (fst μ) × IsCardinalL μ
-              × ((z : V ℓ) → ⟨ z ∈ˢ fst μ ⟩ → ⟨ z ∈ˢ fst α ⟩)
+              ( IsOrd (μ .fst) × IsCardinalL μ
+              × ((z : V ℓ) → ⟨ z ∈ˢ μ .fst ⟩ → ⟨ z ∈ˢ α .fst ⟩)
               × InjL α μ × InjL μ α )
           → InjL (prodL α) α
     build (μ , oμ , cardμ , _ , α↪μ , μ↪α) =
@@ -2210,7 +2210,7 @@ The desired pairing is the composite `α² ↪ μ² ↪ μ ↪ α`. The first ar
 ```agda
       injl-trans (prodL α) (prodL μ) α (prod-inj α μ α↪μ)
         (injl-trans (prodL μ) μ α
-          (WF.WFI.induction regularityV {P = Goal} Step.result (fst μ) (snd μ) oμ cardμ μ∉ω)
+          (WF.WFI.induction regularityV {P = Goal} Step.result (μ .fst) (μ .snd) oμ cardμ μ∉ω)
           μ↪α)
       where
 ```
@@ -2224,6 +2224,6 @@ It remains to show that `μ` is infinite in the sense required by the square law
 <!--/-->
 
 ```agda
-      μ∉ω : ⟨ fst μ ∈ˢ ω ⟩ → ⊥₀
+      μ∉ω : ⟨ μ .fst ∈ˢ ω ⟩ → ⊥₀
       μ∉ω h = no-fin α μ oα α∉ω oμ h α↪μ
 ```

@@ -182,7 +182,7 @@ The length slot is filled by a numeral, and the numeral must itself be an elemen
 <summary class="submodule-fold-heading">
 ```agda
 module Ambient (B : S) {k : ℕ} (γ : S ^ k) (Ei di bi : Fin k) (m : ℕ)
-  (qd : fst (lookup di γ) ≡ # m) (qb : fst (lookup bi γ) ≡ fst B)
+  (qd : (lookup di γ) .fst ≡ # m) (qb : (lookup bi γ) .fst ≡ B .fst)
   (hE : ⟨ γ ⊨ envSetAt Ei di bi ⟩) where
 ```
 </summary>
@@ -197,8 +197,8 @@ The module gathers the data of one instance of the question. `B` is the base set
 <!--/-->
 
 ```agda
-  into : (z : S) → ⟨ fst z ∈ fst (lookup Ei γ) ⟩
-       → ⟨ fst z ∈ fst (envSet B m) ⟩
+  into : (z : S) → ⟨ z .fst ∈ (lookup Ei γ) .fst ⟩
+       → ⟨ z .fst ∈ (envSet B m) .fst ⟩
 ```
 
 <!--en-->
@@ -210,7 +210,7 @@ The first direction reads the slot set inward: any member of the set named at `E
 <!--/-->
 
 ```agda
-  into z hz = subst (λ w → ⟨ w ∈ fst (envSet B m) ⟩)
+  into z hz = subst (λ w → ⟨ w ∈ (envSet B m) .fst ⟩)
     (sym (Recover.recovers B m (z ∷ γ) zero (suc di) (suc bi) qd qb ov))
     (envSet-in B (Recover.g B m (z ∷ γ) zero (suc di) (suc bi) qd qb ov))
 ```
@@ -238,8 +238,8 @@ The recovery needs the four clauses to hold at `z`, and the description supplies
 <!--/-->
 
 ```agda
-  outof : (z : S) → ⟨ fst z ∈ fst (envSet B m) ⟩
-        → ⟨ fst z ∈ fst (lookup Ei γ) ⟩
+  outof : (z : S) → ⟨ z .fst ∈ (envSet B m) .fst ⟩
+        → ⟨ z .fst ∈ (lookup Ei γ) .fst ⟩
 ```
 
 <!--en-->
@@ -251,7 +251,7 @@ The second direction reads outward: any member of the constructed `envSet B m` i
 <!--/-->
 
 ```agda
-  outof z hz = rec₁ (snd (fst z ∈ fst (lookup Ei γ)))
+  outof z hz = rec₁ ((z .fst ∈ (lookup Ei γ) .fst) .snd)
     (λ { (g , eg) →
 ```
 
@@ -319,8 +319,8 @@ The module assumes no satisfaction hypothesis. Its three equations say that the 
 <summary class="submodule-fold-heading">
 ```agda
 module AmbientHolds (B : S) {k : ℕ} (γ : S ^ k) (Ei di bi : Fin k) (m : ℕ)
-  (qE : fst (lookup Ei γ) ≡ fst (envSet B m))
-  (qd : fst (lookup di γ) ≡ # m) (qb : fst (lookup bi γ) ≡ fst B)
+  (qE : (lookup Ei γ) .fst ≡ (envSet B m) .fst)
+  (qd : (lookup di γ) .fst ≡ # m) (qb : (lookup bi γ) .fst ≡ B .fst)
   where
 ```
 </summary>
@@ -349,7 +349,7 @@ The description is an extensional one: it says that the set at `Ei` contains exa
 
 ```agda
     where
-    fwd : (z : S) → ⟨ fst z ∈ fst (lookup Ei γ) ⟩
+    fwd : (z : S) → ⟨ z .fst ∈ (lookup Ei γ) .fst ⟩
         → ⟨ (z ∷ γ) ⊨ envOverAt zero (suc di) (suc bi) ⟩
 ```
 
@@ -362,7 +362,7 @@ The forward implication is the producing direction: every member of the construc
 <!--/-->
 
 ```agda
-    fwd z hz = rec₁ (snd ((z ∷ γ) ⊨ envOverAt zero (suc di) (suc bi)))
+    fwd z hz = rec₁ (((z ∷ γ) ⊨ envOverAt zero (suc di) (suc bi)) .snd)
       (λ { (g , eg) → envOverAt-transport (B ∷ nn m ∷ envS B g ∷ []) (z ∷ γ)
 ```
 
@@ -388,7 +388,7 @@ The environment clause of the recovered environment is transported, exactly as i
 <!--/-->
 
 ```agda
-      (envSet-out B m z (subst (λ w → ⟨ fst z ∈ w ⟩) qE hz))
+      (envSet-out B m z (subst (λ w → ⟨ z .fst ∈ w ⟩) qE hz))
 ```
 
 <!--en-->
@@ -401,7 +401,7 @@ The environment handed to the transport comes from the membership characterizati
 
 ```agda
     bwd : (z : S) → ⟨ (z ∷ γ) ⊨ envOverAt zero (suc di) (suc bi) ⟩
-        → ⟨ fst z ∈ fst (lookup Ei γ) ⟩
+        → ⟨ z .fst ∈ (lookup Ei γ) .fst ⟩
 ```
 
 <!--en-->
@@ -413,8 +413,8 @@ The backward implication is the reading direction: whatever satisfies the per-me
 <!--/-->
 
 ```agda
-    bwd z h = subst (λ w → ⟨ fst z ∈ w ⟩) (sym qE)
-      (subst (λ w → ⟨ w ∈ fst (envSet B m) ⟩)
+    bwd z h = subst (λ w → ⟨ z .fst ∈ w ⟩) (sym qE)
+      (subst (λ w → ⟨ w ∈ (envSet B m) .fst ⟩)
         (sym (Recover.recovers B m (z ∷ γ) zero (suc di) (suc bi) qd qb h))
         (envSet-in B (Recover.g B m (z ∷ γ) zero (suc di) (suc bi) qd qb h)))
 ```

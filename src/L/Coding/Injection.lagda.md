@@ -149,7 +149,7 @@ module _ {n : ℕ} (f : Fin n) (γ : S ^ n) where
 ```agda
   private
     Holds₀ : S → S → Type (ℓ-suc ℓ)
-    Holds₀ x y = ⟨ pr (fst x) (fst y) ∈ fst (lookup f γ) ⟩
+    Holds₀ x y = ⟨ pr (x .fst) (y .fst) ∈ (lookup f γ) .fst ⟩
 
     at₁ : (y x x' : S)
 ```
@@ -164,7 +164,7 @@ The path `at₁` records the adequacy of the first application clause in the ext
 
 ```agda
         → ((x' ∷ x ∷ y ∷ γ) ⊨ appAt (suc (suc (suc f))) (suc zero) (suc (suc zero)))
-        ≡ (pr (fst x) (fst y) ∈ fst (lookup f γ))
+        ≡ (pr (x .fst) (y .fst) ∈ (lookup f γ) .fst)
     at₁ y x x' = appAt-adequate (suc (suc (suc f))) (suc zero) (suc (suc zero))
                    (x' ∷ x ∷ y ∷ γ)
 
@@ -181,7 +181,7 @@ The path `at₂` is the same statement for the other clause: satisfaction of the
 
 ```agda
         → ((x' ∷ x ∷ y ∷ γ) ⊨ appAt (suc (suc (suc f))) zero (suc (suc zero)))
-        ≡ (pr (fst x') (fst y) ∈ fst (lookup f γ))
+        ≡ (pr (x' .fst) (y .fst) ∈ (lookup f γ) .fst)
     at₂ y x x' = appAt-adequate (suc (suc (suc f))) zero (suc (suc zero))
                    (x' ∷ x ∷ y ∷ γ)
 
@@ -189,19 +189,19 @@ The path `at₂` is the same statement for the other clause: satisfaction of the
 ```
 
 <!--en-->
-The outward direction `injAt-out` starts from a proof that the formula holds at `γ` and two membership facts `Holds₀ x y` and `Holds₀ x' y`. Instantiating the three quantifiers yields a satisfaction proof of the implication body at the extended environment; the membership facts are then transported along the reverses of `at₁` and `at₂`, turning them into satisfaction proofs of the two antecedent clauses. The final `fst x ≡ fst x'` is read off inside the model's equality.
+The outward direction `injAt-out` starts from a proof that the formula holds at `γ` and two membership facts `Holds₀ x y` and `Holds₀ x' y`. Instantiating the three quantifiers yields a satisfaction proof of the implication body at the extended environment; the membership facts are then transported along the reverses of `at₁` and `at₂`, turning them into satisfaction proofs of the two antecedent clauses. The final `x .fst ≡ x' .fst` is read off inside the model's equality.
 <!--zh-->
-向外的方向 `injAt-out` 从公式在 `γ` 处成立的证明与两个成员关系事实 `Holds₀ x y`、`Holds₀ x' y` 出发。把三个量词实例化，得到含取式体在扩张赋值处的满足证明；再把成员关系事实沿 `at₁`、`at₂` 的反向运输，变成两条前件条款的满足证明。最后的 `fst x ≡ fst x'` 在模型的相等中读出。
+向外的方向 `injAt-out` 从公式在 `γ` 处成立的证明与两个成员关系事实 `Holds₀ x y`、`Holds₀ x' y` 出发。把三个量词实例化，得到含取式体在扩张赋值处的满足证明；再把成员关系事实沿 `at₁`、`at₂` 的反向运输，变成两条前件条款的满足证明。最后的 `x .fst ≡ x' .fst` 在模型的相等中读出。
 <!--ja-->
-外向きの `injAt-out` は、論理式が `γ` で成り立つ証明と二つの所属の事実 `Holds₀ x y`、`Holds₀ x' y` から出発する。三つの量化子を具体化すると、拡張された割り当てでの含意の本体の充足証明が得られ、所属の事実を `at₁` と `at₂` の逆向きに輸送して、二つの前件の条項の充足証明に変える。最後の `fst x ≡ fst x'` はモデルの等しさの中で読み取る。
+外向きの `injAt-out` は、論理式が `γ` で成り立つ証明と二つの所属の事実 `Holds₀ x y`、`Holds₀ x' y` から出発する。三つの量化子を具体化すると、拡張された割り当てでの含意の本体の充足証明が得られ、所属の事実を `at₁` と `at₂` の逆向きに輸送して、二つの前件の条項の充足証明に変える。最後の `x .fst ≡ x' .fst` はモデルの等しさの中で読み取る。
 <!--/-->
 
 ```agda
-            → (y x x' : S) → Holds₀ x y → Holds₀ x' y → fst x ≡ fst x'
+            → (y x x' : S) → Holds₀ x y → Holds₀ x' y → x .fst ≡ x' .fst
   injAt-out h y x x' p q = h y x x'
     (subst ⟨_⟩ (sym (at₁ y x x')) p) (subst ⟨_⟩ (sym (at₂ y x x')) q)
 
-  injAt-in : ((y x x' : S) → Holds₀ x y → Holds₀ x' y → fst x ≡ fst x')
+  injAt-in : ((y x x' : S) → Holds₀ x y → Holds₀ x' y → x .fst ≡ x' .fst)
            → ⟨ γ ⊨ injAt f ⟩
 ```
 
@@ -267,7 +267,7 @@ module Extract (F D : S)
 
 ```agda
   Holds : S → S → Type (ℓ-suc ℓ)
-  Holds x y = ⟨ pr (fst x) (fst y) ∈ fst F ⟩
+  Holds x y = ⟨ pr (x .fst) (y .fst) ∈ F .fst ⟩
 
   Fib : S → Type (ℓ-suc ℓ)
   Fib x = Σ[ y ∶ S ] Holds x y
@@ -276,17 +276,17 @@ module Extract (F D : S)
 ```
 
 <!--en-->
-To prove `Fib x` proposition-valued, compare `(y,p)` and `(y′,q)`. Single-valuedness supplies the path `fst y ≡ fst y′`. The inner `Σ≡Prop` lifts this path to `y ≡ y′` because the second component of an element of `S`, its `isL` certificate, is a proposition. The outer `Σ≡Prop` then lifts that equality to the two elements of `Fib x` because graph-membership proofs are propositions. These are two distinct proof-irrelevance steps; neither says that equality of ambient sets follows merely from constructibility.
+To prove `Fib x` proposition-valued, compare `(y,p)` and `(y′,q)`. Single-valuedness supplies the path `y .fst ≡ y′ .fst`. The inner `Σ≡Prop` lifts this path to `y ≡ y′` because the second component of an element of `S`, its `isL` certificate, is a proposition. The outer `Σ≡Prop` then lifts that equality to the two elements of `Fib x` because graph-membership proofs are propositions. These are two distinct proof-irrelevance steps; neither says that equality of ambient sets follows merely from constructibility.
 <!--zh-->
-要证明 `Fib x` 是命题，比较 `(y,p)` 与 `(y′,q)`。单值性先给出路径 `fst y ≡ fst y′`。内层 `Σ≡Prop` 利用 `S` 元素的第二分量即 `isL` 证书为命题，把该路径提升为 `y ≡ y′`；外层 `Σ≡Prop` 再利用图成员关系证明为命题，把这一相等提升为 `Fib x` 的两个元素相等。这是两个不同的证明无关性步骤，并不是说周遭集合的相等仅由可构造性推出。
+要证明 `Fib x` 是命题，比较 `(y,p)` 与 `(y′,q)`。单值性先给出路径 `y .fst ≡ y′ .fst`。内层 `Σ≡Prop` 利用 `S` 元素的第二分量即 `isL` 证书为命题，把该路径提升为 `y ≡ y′`；外层 `Σ≡Prop` 再利用图成员关系证明为命题，把这一相等提升为 `Fib x` 的两个元素相等。这是两个不同的证明无关性步骤，并不是说周遭集合的相等仅由可构造性推出。
 <!--ja-->
-`Fib x` が命題であることを示すには、`(y,p)` と `(y′,q)` を比較する。一価性からまずパス `fst y ≡ fst y′` が得られる。内側の `Σ≡Prop` は、`S` の要素の第二成分である `isL` の証明が命題であることを使い、このパスを `y ≡ y′` へ持ち上げる。外側の `Σ≡Prop` は、グラフ所属の証明が命題であることを使い、その等しさを `Fib x` の二要素の等しさへ持ち上げる。これは別々の二つの証明無関係性の段階であり、周囲の集合の等しさが構成可能性だけから従うという意味ではない。
+`Fib x` が命題であることを示すには、`(y,p)` と `(y′,q)` を比較する。一価性からまずパス `y .fst ≡ y′ .fst` が得られる。内側の `Σ≡Prop` は、`S` の要素の第二成分である `isL` の証明が命題であることを使い、このパスを `y ≡ y′` へ持ち上げる。外側の `Σ≡Prop` は、グラフ所属の証明が命題であることを使い、その等しさを `Fib x` の二要素の等しさへ持ち上げる。これは別々の二つの証明無関係性の段階であり、周囲の集合の等しさが構成可能性だけから従うという意味ではない。
 <!--/-->
 
 ```agda
   isPropFib x (y , p) (y' , q) =
-    Σ≡Prop (λ w → snd (pr (fst x) (fst w) ∈ fst F))
-      (Σ≡Prop (λ z → snd (isL z)) (svAt-out zero γ sv x y y' p q))
+    Σ≡Prop (λ w → (pr (x .fst) (w .fst) ∈ F .fst) .snd)
+      (Σ≡Prop (λ z → (isL z) .snd) (svAt-out zero γ sv x y y' p q))
 
   toVal : (x : S) → ∥ Fib x ∥₁ → Fib x
   toVal x = rec₁ (isPropFib x) (λ z → z)
@@ -302,9 +302,9 @@ Because `Fib x` is a proposition, `toVal` can eliminate the truncated existence 
 
 ```agda
   Dom : Type (ℓ-suc ℓ)
-  Dom = Σ[ x ∶ S ] ⟨ fst x ∈ fst D ⟩
+  Dom = Σ[ x ∶ S ] ⟨ x .fst ∈ D .fst ⟩
 
-  fib : (u : Dom) → Fib (fst u)
+  fib : (u : Dom) → Fib (u .fst)
   fib (x , m) = toVal x (domAt-in zero (suc zero) γ dm x m)
 
   toFun : Dom → S
@@ -319,10 +319,10 @@ The function `toFun` sends a domain entry to the output `y : S` in its unique fi
 <!--/-->
 
 ```agda
-  toFun u = fst (fib u)
+  toFun u = (fib u) .fst
 
-  toFun-graph : (u : Dom) → Holds (fst u) (toFun u)
-  toFun-graph u = snd (fib u)
+  toFun-graph : (u : Dom) → Holds (u .fst) (toFun u)
+  toFun-graph u = (fib u) .snd
 ```
 
 <details open class="submodule-fold">
@@ -334,21 +334,21 @@ The function `toFun` sends a domain entry to the output `y : S` in its unique fi
 <div class="submodule-fold-content">
 
 ```agda
-    toFun-inj : (u v : Dom) → fst (toFun u) ≡ fst (toFun v)
+    toFun-inj : (u v : Dom) → (toFun u) .fst ≡ (toFun v) .fst
 ```
 
 <!--en-->
-With injectivity of the graph also assumed, `toFun-inj` turns equality of outputs into equality of inputs. If the underlying sets of `toFun u` and `toFun v` agree, the graph equation of `u` is transported along that path so that both entries speak about the same output, namely `toFun v`; `injAt-out` then compares the two inputs and returns the equality of the first components of `fst u` and `fst v`. The result is stated on projected first components, the form in which downstream cardinal arguments compare elements of `Dom`.
+With injectivity of the graph also assumed, `toFun-inj` turns equality of outputs into equality of inputs. If the underlying sets of `toFun u` and `toFun v` agree, the graph equation of `u` is transported along that path so that both entries speak about the same output, namely `toFun v`; `injAt-out` then compares the two inputs and returns the equality of the first components of `u .fst` and `v .fst`. The result is stated on projected first components, the form in which downstream cardinal arguments compare elements of `Dom`.
 <!--zh-->
-再假设图的单射性，`toFun-inj` 把输出的相等变成输入的相等。若 `toFun u` 与 `toFun v` 的底层集合相等，就把 `u` 的图等式沿该路径运输，使两条目都谈及同一个输出即 `toFun v`；`injAt-out` 随后比较两个输入，给出 `fst u` 与 `fst v` 的第一分量之相等。结论是对投影后的第一分量陈述的，下游基数论证比较 `Dom` 的元素时用的正是这一形式。
+再假设图的单射性，`toFun-inj` 把输出的相等变成输入的相等。若 `toFun u` 与 `toFun v` 的底层集合相等，就把 `u` 的图等式沿该路径运输，使两条目都谈及同一个输出即 `toFun v`；`injAt-out` 随后比较两个输入，给出 `u .fst` 与 `v .fst` 的第一分量之相等。结论是对投影后的第一分量陈述的，下游基数论证比较 `Dom` 的元素时用的正是这一形式。
 <!--ja-->
-グラフの単射性まで仮定すると、`toFun-inj` は値の等しさを引数の等しさに変える。`toFun u` と `toFun v` の底の集合が等しければ、`u` のグラフの等式をそのパスに沿って輸送して、両方の項目が同じ値、すなわち `toFun v` について語るようにし、`injAt-out` が二つの引数を比較して `fst u` と `fst v` の第一成分の等しさを返す。結果は射影された第一成分について述べられ、後続の基数論が `Dom` の要素を比較するときの形である。
+グラフの単射性まで仮定すると、`toFun-inj` は値の等しさを引数の等しさに変える。`toFun u` と `toFun v` の底の集合が等しければ、`u` のグラフの等式をそのパスに沿って輸送して、両方の項目が同じ値、すなわち `toFun v` について語るようにし、`injAt-out` が二つの引数を比較して `u .fst` と `v .fst` の第一成分の等しさを返す。結果は射影された第一成分について述べられ、後続の基数論が `Dom` の要素を比較するときの形である。
 <!--/-->
 
 ```agda
-              → fst (fst u) ≡ fst (fst v)
-    toFun-inj u v e = injAt-out zero γ ij (toFun v) (fst u) (fst v)
-      (subst (λ w → ⟨ pr (fst (fst u)) w ∈ fst F ⟩) e (toFun-graph u))
+              → (u .fst) .fst ≡ (v .fst) .fst
+    toFun-inj u v e = injAt-out zero γ ij (toFun v) (u .fst) (v .fst)
+      (subst (λ w → ⟨ pr ((u .fst) .fst) w ∈ F .fst ⟩) e (toFun-graph u))
       (toFun-graph v)
 ```
 </div>
@@ -386,43 +386,43 @@ module Small (F D C : S)
              (sv : ⟨ (F ∷ D ∷ []) ⊨ svAt zero ⟩)
              (dm : ⟨ (F ∷ D ∷ []) ⊨ domAt zero (suc zero) ⟩)
              (ij : ⟨ (F ∷ D ∷ []) ⊨ injAt zero ⟩)
-             (ran : (x y : S) → ⟨ pr (fst x) (fst y) ∈ fst F ⟩
-                  → ⟨ fst y ∈ fst C ⟩) where
+             (ran : (x y : S) → ⟨ pr (x .fst) (y .fst) ∈ F .fst ⟩
+                  → ⟨ y .fst ∈ C .fst ⟩) where
 ```
 </summary>
 <div class="submodule-fold-content">
 
 <!--en-->
-Under the single-valuedness and exact-domain hypotheses, `Extract` supplies the unique graph value for each domain member. To compare this construction with the small presentation, `toS` turns an index `m` of the canonical presentation of `D` into a model element. The first component is the presented set itself; the second is its constructibility certificate, obtained by `isL-trans` from the explicit membership `member (fst D) m` and the certificate that `D` itself is constructible. Transitivity is exactly the principle needed: a member of a constructible set is constructible.
+Under the single-valuedness and exact-domain hypotheses, `Extract` supplies the unique graph value for each domain member. To compare this construction with the small presentation, `toS` turns an index `m` of the canonical presentation of `D` into a model element. The first component is the presented set itself; the second is its constructibility certificate, obtained by `isL-trans` from the explicit membership `member (D .fst) m` and the certificate that `D` itself is constructible. Transitivity is exactly the principle needed: a member of a constructible set is constructible.
 <!--zh-->
-内层模块以 `F`、`D` 与前两个满足证明重新打开 Extract，于是上一节的所有构造都以带前缀的名字可用。接着 `toS` 把 `D` 的典范呈现的一个索引 `m` 变成模型元素。第一分量就是被呈现的集合本身；第二分量是其可构造性证书，由 `isL-trans` 从显式成员关系 `member (fst D) m` 与 `D` 自身可构造的证书得出。传递性正是所需的原理：可构造集合的元素是可构造的。
+内层模块以 `F`、`D` 与前两个满足证明重新打开 Extract，于是上一节的所有构造都以带前缀的名字可用。接着 `toS` 把 `D` 的典范呈现的一个索引 `m` 变成模型元素。第一分量就是被呈现的集合本身；第二分量是其可构造性证书，由 `isL-trans` 从显式成员关系 `member (D .fst) m` 与 `D` 自身可构造的证书得出。传递性正是所需的原理：可构造集合的元素是可构造的。
 <!--ja-->
-内側のモジュールは、`F` と `D` と先の二つの充足の証明で Extract を改めて開くので、前節の構成はすべて接頭辞付きの名前で使える。そして `toS` は `D` の標準的な提示のインデックス `m` を模型の要素に変える。第一成分は提示された集合そのものであり、第二成分はその構成可能性の証明書で、`isL-trans` により、明示的な所属 `member (fst D) m` と `D` 自身が構成可能である証明書から得られる。推移性はまさに必要な原理である。構成可能集合の要素は構成可能である。
+内側のモジュールは、`F` と `D` と先の二つの充足の証明で Extract を改めて開くので、前節の構成はすべて接頭辞付きの名前で使える。そして `toS` は `D` の標準的な提示のインデックス `m` を模型の要素に変える。第一成分は提示された集合そのものであり、第二成分はその構成可能性の証明書で、`isL-trans` により、明示的な所属 `member (D .fst) m` と `D` 自身が構成可能である証明書から得られる。推移性はまさに必要な原理である。構成可能集合の要素は構成可能である。
 <!--/-->
 
 ```agda
   module E = Extract F D sv dm
 
-  toS : ⟪ fst D ⟫ → S
-  toS m = ⟪ fst D ⟫↪ m
-        , isL-trans {x = fst D} {y = ⟪ fst D ⟫↪ m} (member (fst D) m) (snd D)
+  toS : ⟪ D .fst ⟫ → S
+  toS m = ⟪ D .fst ⟫↪ m
+        , isL-trans {x = D .fst} {y = ⟪ D .fst ⟫↪ m} (member (D .fst) m) (D .snd)
 ```
 
 <!--en-->
-Each small index must also be seen as a member of the domain in Extract's sense, and `at` supplies that pair: the model element `toS m` together with the explicit membership proof `member (fst D) m`. Feeding `at m` to the graph through `E.toFun` produces a value, and the range hypothesis certifies that this value belongs to `C`. Because the membership `⟪ fst C ⟫↪ k ≡ fst (E.toFun (at m))` in the canonical presentation is a fiber of an embedding with proposition-valued fibers, `fiber` returns an actual index `k` together with a path, not merely the truncated existence of one.
+Each small index must also be seen as a member of the domain in Extract's sense, and `at` supplies that pair: the model element `toS m` together with the explicit membership proof `member (D .fst) m`. Feeding `at m` to the graph through `E.toFun` produces a value, and the range hypothesis certifies that this value belongs to `C`. Because the membership `⟪ C .fst ⟫↪ k ≡ (E.toFun (at m)) .fst` in the canonical presentation is a fiber of an embedding with proposition-valued fibers, `fiber` returns an actual index `k` together with a path, not merely the truncated existence of one.
 <!--zh-->
-每个小索引还须被看作 Extract 意义下定义域的元素，`at` 提供这一对：模型元素 `toS m` 连同显式成员关系证明 `member (fst D) m`。把 `at m` 经 `E.toFun` 喂给图得到一个取值，取值假设证书化该值属于 `C`。由于典范呈现中的成员关系 `⟪ fst C ⟫↪ k ≡ fst (E.toFun (at m))` 是具有命题值原像的嵌入的原像，`fiber` 返回的是实际的索引 `k` 连同一条路径，而非仅仅是截断的存在。
+每个小索引还须被看作 Extract 意义下定义域的元素，`at` 提供这一对：模型元素 `toS m` 连同显式成员关系证明 `member (D .fst) m`。把 `at m` 经 `E.toFun` 喂给图得到一个取值，取值假设证书化该值属于 `C`。由于典范呈现中的成员关系 `⟪ C .fst ⟫↪ k ≡ (E.toFun (at m)) .fst` 是具有命题值原像的嵌入的原像，`fiber` 返回的是实际的索引 `k` 连同一条路径，而非仅仅是截断的存在。
 <!--ja-->
-各小さなインデックスは、Extract の意味でも定義域の要素と見なされねばならず、`at` がその組を与える。模型の要素 `toS m` と明示的な所属の証明 `member (fst D) m` である。`at m` を `E.toFun` でグラフに通すと値が得られ、値域の仮定がこの値が `C` に属すことを証明する。標準的な提示での所属 `⟪ fst C ⟫↪ k ≡ fst (E.toFun (at m))` は、命題値のファイバーを持つ埋め込みのファイバーなので、`fiber` は切り詰められた存在ではなく、実際のインデックス `k` とパスの組を返す。
+各小さなインデックスは、Extract の意味でも定義域の要素と見なされねばならず、`at` がその組を与える。模型の要素 `toS m` と明示的な所属の証明 `member (D .fst) m` である。`at m` を `E.toFun` でグラフに通すと値が得られ、値域の仮定がこの値が `C` に属すことを証明する。標準的な提示での所属 `⟪ C .fst ⟫↪ k ≡ (E.toFun (at m)) .fst` は、命題値のファイバーを持つ埋め込みのファイバーなので、`fiber` は切り詰められた存在ではなく、実際のインデックス `k` とパスの組を返す。
 <!--/-->
 
 ```agda
-  at : ⟪ fst D ⟫ → E.Dom
-  at m = toS m , member (fst D) m
+  at : ⟪ D .fst ⟫ → E.Dom
+  at m = toS m , member (D .fst) m
 
-  fib : (m : ⟪ fst D ⟫)
-      → Σ[ k ∶ ⟪ fst C ⟫ ] (⟪ fst C ⟫↪ k ≡ fst (E.toFun (at m)))
-  fib m = fiber (fst C)
+  fib : (m : ⟪ D .fst ⟫)
+      → Σ[ k ∶ ⟪ C .fst ⟫ ] (⟪ C .fst ⟫↪ k ≡ (E.toFun (at m)) .fst)
+  fib m = fiber (C .fst)
 ```
 
 <!--en-->
@@ -436,24 +436,24 @@ Discarding the path leaves `small`, a function from the index type of `D` to the
 ```agda
     (ran (toS m) (E.toFun (at m)) (E.toFun-graph (at m)))
 
-  small : ⟪ fst D ⟫ → ⟪ fst C ⟫
-  small m = fst (fib m)
+  small : ⟪ D .fst ⟫ → ⟪ C .fst ⟫
+  small m = (fib m) .fst
 
-  small-inj : (m n : ⟪ fst D ⟫) → small m ≡ small n → m ≡ n
-  small-inj m n e = ↪-inj {a = fst D} {m = m} {n = n}
+  small-inj : (m n : ⟪ D .fst ⟫) → small m ≡ small n → m ≡ n
+  small-inj m n e = ↪-inj {a = D .fst} {m = m} {n = n}
 ```
 
 <!--en-->
-Injectivity of `small` is proved by routing an equality of indices back through the presentations. From `small m ≡ small n`, the path `snd (fib m)` is reversed to see the presented value at `m`, congruence under the embedding carries the equality across, and `snd (fib n)` lands at the presented value at `n`; the concatenation of the three paths, taken in exactly this direction, equates the underlying sets of the two outputs. Extract's injectivity then equates the underlying sets of the two inputs, and `↪-inj`, the injectivity of the domain presentation embedding on indices, concludes `m ≡ n`. Two distinct injectivity facts are at work, one for the graph and one for the canonical embedding, and neither substitutes for the other.
+Injectivity of `small` is proved by routing an equality of indices back through the presentations. From `small m ≡ small n`, the path `(fib m) .snd` is reversed to see the presented value at `m`, congruence under the embedding carries the equality across, and `(fib n) .snd` lands at the presented value at `n`; the concatenation of the three paths, taken in exactly this direction, equates the underlying sets of the two outputs. Extract's injectivity then equates the underlying sets of the two inputs, and `↪-inj`, the injectivity of the domain presentation embedding on indices, concludes `m ≡ n`. Two distinct injectivity facts are at work, one for the graph and one for the canonical embedding, and neither substitutes for the other.
 <!--zh-->
-`small` 的单射性由索引的相等沿呈现往返证得。由 `small m ≡ small n`，反向取 `snd (fib m)` 得到 `m` 处的呈现值，嵌入下的同余把相等传过去，`snd (fib n)` 落到 `n` 处的呈现值；三条路径按这个确切方向拼接，使两个输出的底层集合相等。Extract 的单射性随之给出两个输入的底层集合相等，而 `↪-inj`，即定义域呈现嵌入在索引上的单射性，最终给出 `m ≡ n`。这里有两个不同的单射性事实在起作用，一个关于图，一个关于典范嵌入，二者不可互相替代。
+`small` 的单射性由索引的相等沿呈现往返证得。由 `small m ≡ small n`，反向取 `(fib m) .snd` 得到 `m` 处的呈现值，嵌入下的同余把相等传过去，`(fib n) .snd` 落到 `n` 处的呈现值；三条路径按这个确切方向拼接，使两个输出的底层集合相等。Extract 的单射性随之给出两个输入的底层集合相等，而 `↪-inj`，即定义域呈现嵌入在索引上的单射性，最终给出 `m ≡ n`。这里有两个不同的单射性事实在起作用，一个关于图，一个关于典范嵌入，二者不可互相替代。
 <!--ja-->
-`small` の単射性は、インデックスの等しさを提示の中を通して辿ることで証明される。`small m ≡ small n` から、`snd (fib m)` を逆向きにたどって `m` での提示された値を得、埋め込みの下での合同が等しさを運び、`snd (fib n)` が `n` での提示された値に着く。三つのパスを正にこの方向でつなぐことで、二つの値の底の集合が等しくなる。続いて Extract の単射性が二つの入力の底の集合の等しさを与え、`↪-inj`、すなわち定義域の提示の埋め込みのインデックス上の単射性が `m ≡ n` を結論する。ここでは二つの異なる単射性の事実が働いており、一つはグラフについて、もう一つは標準的な埋め込みについてで、どちらも他方で代用できない。
+`small` の単射性は、インデックスの等しさを提示の中を通して辿ることで証明される。`small m ≡ small n` から、`(fib m) .snd` を逆向きにたどって `m` での提示された値を得、埋め込みの下での合同が等しさを運び、`(fib n) .snd` が `n` での提示された値に着く。三つのパスを正にこの方向でつなぐことで、二つの値の底の集合が等しくなる。続いて Extract の単射性が二つの入力の底の集合の等しさを与え、`↪-inj`、すなわち定義域の提示の埋め込みのインデックス上の単射性が `m ≡ n` を結論する。ここでは二つの異なる単射性の事実が働いており、一つはグラフについて、もう一つは標準的な埋め込みについてで、どちらも他方で代用できない。
 <!--/-->
 
 ```agda
     (E.toFun-inj ij (at m) (at n)
-      (sym (snd (fib m)) ∙ cong ⟪ fst C ⟫↪ e ∙ snd (fib n)))
+      (sym ((fib m) .snd) ∙ cong ⟪ C .fst ⟫↪ e ∙ (fib n) .snd))
 ```
 </div>
 </details>

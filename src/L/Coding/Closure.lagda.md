@@ -275,7 +275,7 @@ Its three bound slots follow the same inside-out order: the single payload compo
   binShape-out : (C : Fin n) (k : ℕ) (rel : Formula S (4 + n)) (γ : S ^ n)
     → ⟨ γ ⊨ binShapeAt C k rel ⟩
     → (c ar a b : S)
-    → ⟨ fst c ∈ fst (lookup C γ) ⟩
+    → ⟨ c .fst ∈ (lookup C γ) .fst ⟩
 ```
 
 <!--en-->
@@ -287,7 +287,7 @@ The remaining hypothesis is the shape equation saying that `c` really is the tag
 <!--/-->
 
 ```agda
-    → fst c ≡ pr (fst ar) (pr (# k) (pr (fst a) (fst b)))
+    → c .fst ≡ pr (ar .fst) (pr (# k) (pr (a .fst) (b .fst)))
     → ⟨ (b ∷ a ∷ ar ∷ c ∷ γ) ⊨ rel ⟩
 ```
 
@@ -329,8 +329,8 @@ The shape equation reads `c` as the tagged pair `ar` with tag `k` and single pay
 <!--/-->
 
 ```agda
-    → ⟨ fst c ∈ fst (lookup C γ) ⟩
-    → fst c ≡ pr (fst ar) (pr (# k) (fst a))
+    → ⟨ c .fst ∈ (lookup C γ) .fst ⟩
+    → c .fst ≡ pr (ar .fst) (pr (# k) (a .fst))
     → ⟨ (a ∷ ar ∷ c ∷ γ) ⊨ rel ⟩
 ```
 
@@ -409,8 +409,8 @@ Four readings unfold the clauses back into concrete membership data, one per pay
   binSameClosed-out : (C : Fin n) (k : ℕ) (γ : S ^ n)
     → ⟨ γ ⊨ binShapeAt C k (bothSameAt C) ⟩
     → (c ar a b : S)
-    → ⟨ fst c ∈ fst (lookup C γ) ⟩
-    → fst c ≡ pr (fst ar) (pr (# k) (pr (fst a) (fst b)))
+    → ⟨ c .fst ∈ (lookup C γ) .fst ⟩
+    → c .fst ≡ pr (ar .fst) (pr (# k) (pr (a .fst) (b .fst)))
 ```
 
 <!--en-->
@@ -422,8 +422,8 @@ Its conclusion is the conjunction the constructor demands: both subformula keys,
 <!--/-->
 
 ```agda
-    → ⟨ pr (fst ar) (fst a) ∈ fst (lookup C γ) ⟩
-    × ⟨ pr (fst ar) (fst b) ∈ fst (lookup C γ) ⟩
+    → ⟨ pr (ar .fst) (a .fst) ∈ (lookup C γ) .fst ⟩
+    × ⟨ pr (ar .fst) (b .fst) ∈ (lookup C γ) .fst ⟩
   binSameClosed-out C k γ h c ar a b c∈ shape =
       subst ⟨_⟩ (appAt-adequate (sh4 C) n4 a4 δ) (r .fst)
     , subst ⟨_⟩ (appAt-adequate (sh4 C) n4 b4 δ) (r .snd)
@@ -457,17 +457,17 @@ The conclusion is a single membership, of the pair of `ar` with `a`. Since `oneS
 ```agda
     → ⟨ γ ⊨ unShapeAt C k (oneSameAt C) ⟩
     → (c ar a : S)
-    → ⟨ fst c ∈ fst (lookup C γ) ⟩
-    → fst c ≡ pr (fst ar) (pr (# k) (fst a))
-    → ⟨ pr (fst ar) (fst a) ∈ fst (lookup C γ) ⟩
+    → ⟨ c .fst ∈ (lookup C γ) .fst ⟩
+    → c .fst ≡ pr (ar .fst) (pr (# k) (a .fst))
+    → ⟨ pr (ar .fst) (a .fst) ∈ (lookup C γ) .fst ⟩
 ```
 
 <!--en-->
-Its hypotheses match the previous unary reading, but the conclusion names the successor: the required subformula key pairs `a` with `sucV (fst ar)`, the successor of the key's arity, not with `ar` itself. This fits the unbounded quantifiers, which bind a variable and so store their body one arity higher. The next three paragraphs explain how the existential witness and its adequacy proofs establish this conclusion.
+Its hypotheses match the previous unary reading, but the conclusion names the successor: the required subformula key pairs `a` with `sucV (ar .fst)`, the successor of the key's arity, not with `ar` itself. This fits the unbounded quantifiers, which bind a variable and so store their body one arity higher. The next three paragraphs explain how the existential witness and its adequacy proofs establish this conclusion.
 <!--zh-->
-其假设与前一条一元读式相同，但结论提到后继：所需的子公式键把 `a` 与键元数的后继 `sucV (fst ar)` 配对，而非 `ar` 本身。这正合无界量词：它们绑定变元，故把体存放在高一个元数处。下面三段说明存在见证及其充分性证明如何建立这个结论。
+其假设与前一条一元读式相同，但结论提到后继：所需的子公式键把 `a` 与键元数的后继 `sucV (ar .fst)` 配对，而非 `ar` 本身。这正合无界量词：它们绑定变元，故把体存放在高一个元数处。下面三段说明存在见证及其充分性证明如何建立这个结论。
 <!--ja-->
-仮定は前の 1 項の読み手と一致するが、帰結は後続に言及する。要求される部分論理式キーは、`ar` 自身ではなくキーのアリティの後続 `sucV (fst ar)` と `a` を対にする。これは非有界量詞に合う。変数を束縛するため、本体は一つ高いアリティの下に保存されるからである。次の三段落で、存在証人とその妥当性証明がこの帰結をどのように導くかを説明する。
+仮定は前の 1 項の読み手と一致するが、帰結は後続に言及する。要求される部分論理式キーは、`ar` 自身ではなくキーのアリティの後続 `sucV (ar .fst)` と `a` を対にする。これは非有界量詞に合う。変数を束縛するため、本体は一つ高いアリティの下に保存されるからである。次の三段落で、存在証人とその妥当性証明がこの帰結をどのように導くかを説明する。
 <!--/-->
 
 ```agda
@@ -480,18 +480,18 @@ Its hypotheses match the previous unary reading, but the conclusion names the su
 ```
 
 <!--en-->
-The third reading, for the unbounded quantifiers, raises the arity. Its hypotheses are the usual unary ones: satisfaction of `unShapeAt C k (oneSuccAt C)`, the key's parts `c`, `ar`, `a`, membership of `c`, and the shape equation. The conclusion replaces the arity `ar` by its successor: the required subformula key pairs `a` with `sucV (fst ar)`, the successor of the key's arity, not with `ar` itself. This is the reading appropriate to the unbounded quantifiers, which bind a variable and so store their body one arity higher.
+The third reading, for the unbounded quantifiers, raises the arity. Its hypotheses are the usual unary ones: satisfaction of `unShapeAt C k (oneSuccAt C)`, the key's parts `c`, `ar`, `a`, membership of `c`, and the shape equation. The conclusion replaces the arity `ar` by its successor: the required subformula key pairs `a` with `sucV (ar .fst)`, the successor of the key's arity, not with `ar` itself. This is the reading appropriate to the unbounded quantifiers, which bind a variable and so store their body one arity higher.
 <!--zh-->
-第三种读式面向无界量词，抬升了元数。其假设是通常的一元假设：`unShapeAt C k (oneSuccAt C)` 的满足，键的各部分 `c`、`ar`、`a`，`c` 的成员关系，以及形状等式。结论把元数 `ar` 换成其后继：所需的子公式键把 `a` 与键元数的后继 `sucV (fst ar)` 配对，而非与 `ar` 本身配对。这正是无界量词所需的读式：它们绑定变元，因此把体存放在高一个元数处。
+第三种读式面向无界量词，抬升了元数。其假设是通常的一元假设：`unShapeAt C k (oneSuccAt C)` 的满足，键的各部分 `c`、`ar`、`a`，`c` 的成员关系，以及形状等式。结论把元数 `ar` 换成其后继：所需的子公式键把 `a` 与键元数的后继 `sucV (ar .fst)` 配对，而非与 `ar` 本身配对。这正是无界量词所需的读式：它们绑定变元，因此把体存放在高一个元数处。
 <!--ja-->
-3 つ目の読み出しは非有界量詞のもので、アリティを上げる。仮定は通常の 1 項のものである。`unShapeAt C k (oneSuccAt C)` の充足、キーの各部 `c`、`ar`、`a`、`c` の所属、そして形状の等式である。帰結はアリティ `ar` をその後続に置き換える。要求される部分論理式キーは、`ar` 自身ではなくキーのアリティの後続 `sucV (fst ar)` と `a` を対にする。これは変数を束縛し、本体を一つ高いアリティの下に保存する非有界量詞に適した読み出しである。
+3 つ目の読み出しは非有界量詞のもので、アリティを上げる。仮定は通常の 1 項のものである。`unShapeAt C k (oneSuccAt C)` の充足、キーの各部 `c`、`ar`、`a`、`c` の所属、そして形状の等式である。帰結はアリティ `ar` をその後続に置き換える。要求される部分論理式キーは、`ar` 自身ではなくキーのアリティの後続 `sucV (ar .fst)` と `a` を対にする。これは変数を束縛し、本体を一つ高いアリティの下に保存する非有界量詞に適した読み出しである。
 <!--/-->
 
 ```agda
     → (c ar a : S)
-    → ⟨ fst c ∈ fst (lookup C γ) ⟩
-    → fst c ≡ pr (fst ar) (pr (# k) (fst a))
-    → ⟨ pr (sucV (fst ar)) (fst a) ∈ fst (lookup C γ) ⟩
+    → ⟨ c .fst ∈ (lookup C γ) .fst ⟩
+    → c .fst ≡ pr (ar .fst) (pr (# k) (a .fst))
+    → ⟨ pr (sucV (ar .fst)) (a .fst) ∈ (lookup C γ) .fst ⟩
   unSuccClosed-out C k γ h c ar a c∈ shape =
 ```
 
@@ -504,19 +504,19 @@ This is where the existential inside `oneSuccAt` matters. The successor is deman
 <!--/-->
 
 ```agda
-    rec₁ (snd target)
+    rec₁ (target .snd)
       (λ { (z , (sz , ap)) →
-        subst (λ w → ⟨ pr w (fst a) ∈ fst (lookup C γ) ⟩)
+        subst (λ w → ⟨ pr w (a .fst) ∈ (lookup C γ) .fst ⟩)
           (subst ⟨_⟩ (sucAtL-adequate (suc n3) zero (z ∷ δ)) sz)
           (subst ⟨_⟩ (appAt-adequate (suc (sh3 C)) zero (suc a3) (z ∷ δ)) ap) })
 ```
 
 <!--en-->
-The adequacy lemmas of the two readers then turn those satisfactions into equations and memberships about the actual model values, and the transport along the first equation re-expresses the membership at the witness as membership at `sucV (fst ar)`. So the reading ends exactly where it should: with the membership of the successor key.
+The adequacy lemmas of the two readers then turn those satisfactions into equations and memberships about the actual model values, and the transport along the first equation re-expresses the membership at the witness as membership at `sucV (ar .fst)`. So the reading ends exactly where it should: with the membership of the successor key.
 <!--zh-->
-两个读式的充分性引理随后把这些满足转换为关于模型实际取值的等式与成员关系，沿第一条等式的移送把见证处的成员关系改写为 `sucV (fst ar)` 处的成员关系。于是这条读式恰好在应在之处结束：以后继键的成员关系收尾。
+两个读式的充分性引理随后把这些满足转换为关于模型实际取值的等式与成员关系，沿第一条等式的移送把见证处的成员关系改写为 `sucV (ar .fst)` 处的成员关系。于是这条读式恰好在应在之处结束：以后继键的成员关系收尾。
 <!--ja-->
-2 つの読み手の妥当性補題は、これらの充足をモデルの実際の値についての等式と所属へ変え、最初の等式に沿う輸送が証人での所属を `sucV (fst ar)` での所属として表し直す。こうして読み出しはあるべき場所で終わる。すなわち後続キーの所属で締めくくられるのである。
+2 つの読み手の妥当性補題は、これらの充足をモデルの実際の値についての等式と所属へ変え、最初の等式に沿う輸送が証人での所属を `sucV (ar .fst)` での所属として表し直す。こうして読み出しはあるべき場所で終わる。すなわち後続キーの所属で締めくくられるのである。
 <!--/-->
 
 ```agda
@@ -524,7 +524,7 @@ The adequacy lemmas of the two readers then turn those satisfactions into equati
     where
     δ : S ^ (3 + n)
     δ = a ∷ ar ∷ c ∷ γ
-    target = pr (sucV (fst ar)) (fst a) ∈ fst (lookup C γ)
+    target = pr (sucV (ar .fst)) (a .fst) ∈ (lookup C γ) .fst
 ```
 
 <!--en-->
@@ -539,32 +539,32 @@ The fourth reading covers the bounded quantifiers. Its hypotheses copy the binar
   binSuccClosed-out : (C : Fin n) (k : ℕ) (γ : S ^ n)
     → ⟨ γ ⊨ binShapeAt C k (succSndAt C) ⟩
     → (c ar a b : S)
-    → ⟨ fst c ∈ fst (lookup C γ) ⟩
-    → fst c ≡ pr (fst ar) (pr (# k) (pr (fst a) (fst b)))
+    → ⟨ c .fst ∈ (lookup C γ) .fst ⟩
+    → c .fst ≡ pr (ar .fst) (pr (# k) (pr (a .fst) (b .fst)))
 ```
 
 <!--en-->
-The conclusion asks only about the second component: `sucV (fst ar)` paired with `b` must be in the set, since the first slot carries the bounding term rather than a subformula. As in the unbounded case, the existential inside `succSndAt` supplies the successor merely, and the elimination of that truncation is legitimate because the membership target is a proposition.
+The conclusion asks only about the second component: `sucV (ar .fst)` paired with `b` must be in the set, since the first slot carries the bounding term rather than a subformula. As in the unbounded case, the existential inside `succSndAt` supplies the successor merely, and the elimination of that truncation is legitimate because the membership target is a proposition.
 <!--zh-->
-结论只问第二个分量：`sucV (fst ar)` 与 `b` 之对须属于该集合，因为第一个槽放的是有界词项而非子公式。与无界情形一样，`succSndAt` 内部的存在量词以「仅仅存在」的方式给出后继，而该截断的消去合法，因为成员关系目标是命题。
+结论只问第二个分量：`sucV (ar .fst)` 与 `b` 之对须属于该集合，因为第一个槽放的是有界词项而非子公式。与无界情形一样，`succSndAt` 内部的存在量词以「仅仅存在」的方式给出后继，而该截断的消去合法，因为成员关系目标是命题。
 <!--ja-->
-帰結は第二成分だけを問う。`sucV (fst ar)` と `b` の対が集合に属さねばならない。第一スロットが載せるのは部分論理式ではなく有界の項だからである。非有界の場合と同様、`succSndAt` 内部の存在量化は後続を命題的に切り詰められた形で与え、所属の帰結が命題であるため、その切り詰めの除却は正当である。
+帰結は第二成分だけを問う。`sucV (ar .fst)` と `b` の対が集合に属さねばならない。第一スロットが載せるのは部分論理式ではなく有界の項だからである。非有界の場合と同様、`succSndAt` 内部の存在量化は後続を命題的に切り詰められた形で与え、所属の帰結が命題であるため、その切り詰めの除却は正当である。
 <!--/-->
 
 ```agda
-    → ⟨ pr (sucV (fst ar)) (fst b) ∈ fst (lookup C γ) ⟩
+    → ⟨ pr (sucV (ar .fst)) (b .fst) ∈ (lookup C γ) .fst ⟩
   binSuccClosed-out C k γ h c ar a b c∈ shape =
-    rec₁ (snd target)
+    rec₁ (target .snd)
       (λ { (z , (sz , ap)) →
-        subst (λ w → ⟨ pr w (fst b) ∈ fst (lookup C γ) ⟩)
+        subst (λ w → ⟨ pr w (b .fst) ∈ (lookup C γ) .fst ⟩)
 ```
 
 <!--en-->
-The proof body is the binary counterpart of the previous one: the two certificates are converted by `sucAtL-adequate` and `appAt-adequate`, and the transport along the successor equation re-expresses the pairing membership at `sucV (fst ar)`.
+The proof body is the binary counterpart of the previous one: the two certificates are converted by `sucAtL-adequate` and `appAt-adequate`, and the transport along the successor equation re-expresses the pairing membership at `sucV (ar .fst)`.
 <!--zh-->
-证明体是上一条读式的二元对应：两个证书经 `sucAtL-adequate` 与 `appAt-adequate` 转换，沿后继等式的移送把配对成员关系改写到 `sucV (fst ar)` 处。
+证明体是上一条读式的二元对应：两个证书经 `sucAtL-adequate` 与 `appAt-adequate` 转换，沿后继等式的移送把配对成员关系改写到 `sucV (ar .fst)` 处。
 <!--ja-->
-証明の本体は前の読み出しの 2 項版である。2 つの証明書は `sucAtL-adequate` と `appAt-adequate` によって変換され、後続の等式に沿う輸送が対の所属を `sucV (fst ar)` のもとで表し直す。
+証明の本体は前の読み出しの 2 項版である。2 つの証明書は `sucAtL-adequate` と `appAt-adequate` によって変換され、後続の等式に沿う輸送が対の所属を `sucV (ar .fst)` のもとで表し直す。
 <!--/-->
 
 ```agda
@@ -585,7 +585,7 @@ The propositionhood of the membership conclusion is what licenses the truncation
 
 ```agda
     δ = b ∷ a ∷ ar ∷ c ∷ γ
-    target = pr (sucV (fst ar)) (fst b) ∈ fst (lookup C γ)
+    target = pr (sucV (ar .fst)) (b .fst) ∈ (lookup C γ) .fst
 ```
 
 <!--en-->
@@ -663,8 +663,8 @@ The introduction direction answers the converse need: given meta-level closure d
 ```agda
   binShape-in : (C : Fin n) (k : ℕ) (rel : Formula S (4 + n)) (γ : S ^ n)
     → ((c ar a b : S)
-       → ⟨ fst c ∈ fst (lookup C γ) ⟩
-       → fst c ≡ pr (fst ar) (pr (# k) (pr (fst a) (fst b)))
+       → ⟨ c .fst ∈ (lookup C γ) .fst ⟩
+       → c .fst ≡ pr (ar .fst) (pr (# k) (pr (a .fst) (b .fst)))
        → ⟨ (b ∷ a ∷ ar ∷ c ∷ γ) ⊨ rel ⟩)
 ```
 
@@ -695,8 +695,8 @@ The unary version drops one component: `g` receives `c`, `ar`, `a` and returns s
 
 ```agda
     → ((c ar a : S)
-       → ⟨ fst c ∈ fst (lookup C γ) ⟩
-       → fst c ≡ pr (fst ar) (pr (# k) (fst a))
+       → ⟨ c .fst ∈ (lookup C γ) .fst ⟩
+       → c .fst ≡ pr (ar .fst) (pr (# k) (a .fst))
        → ⟨ (a ∷ ar ∷ c ∷ γ) ⊨ rel ⟩)
     → ⟨ γ ⊨ unShapeAt C k rel ⟩
 ```
@@ -727,10 +727,10 @@ Here `g` is the closure obligation itself, stated as data: from a key of the giv
 <!--/-->
 
 ```agda
-       → ⟨ fst c ∈ fst (lookup C γ) ⟩
-       → fst c ≡ pr (fst ar) (pr (# k) (pr (fst a) (fst b)))
-       → ⟨ pr (fst ar) (fst a) ∈ fst (lookup C γ) ⟩
-       × ⟨ pr (fst ar) (fst b) ∈ fst (lookup C γ) ⟩)
+       → ⟨ c .fst ∈ (lookup C γ) .fst ⟩
+       → c .fst ≡ pr (ar .fst) (pr (# k) (pr (a .fst) (b .fst)))
+       → ⟨ pr (ar .fst) (a .fst) ∈ (lookup C γ) .fst ⟩
+       × ⟨ pr (ar .fst) (b .fst) ∈ (lookup C γ) .fst ⟩)
     → ⟨ γ ⊨ binShapeAt C k (bothSameAt C) ⟩
 ```
 
@@ -763,8 +763,8 @@ The two components are handled by the same reading, one conjunct at a time. The 
 
   unSameClosed-in : (C : Fin n) (k : ℕ) (γ : S ^ n)
     → ((c ar a : S)
-       → ⟨ fst c ∈ fst (lookup C γ) ⟩
-       → fst c ≡ pr (fst ar) (pr (# k) (fst a))
+       → ⟨ c .fst ∈ (lookup C γ) .fst ⟩
+       → c .fst ≡ pr (ar .fst) (pr (# k) (a .fst))
 ```
 
 <!--en-->
@@ -776,7 +776,7 @@ For the unary same-arity clause a single membership claim suffices: `g` returns 
 <!--/-->
 
 ```agda
-       → ⟨ pr (fst ar) (fst a) ∈ fst (lookup C γ) ⟩)
+       → ⟨ pr (ar .fst) (a .fst) ∈ (lookup C γ) .fst ⟩)
     → ⟨ γ ⊨ unShapeAt C k (oneSameAt C) ⟩
   unSameClosed-in C k γ g = unShape-in C k (oneSameAt C) γ
     (λ c ar a c∈ sh →
@@ -784,11 +784,11 @@ For the unary same-arity clause a single membership claim suffices: `g` returns 
 ```
 
 <!--en-->
-The last two introductions raise the arity, starting with `unSuccClosed-in`. Its hypothesis `g` receives the usual unary key data but must conclude membership of the successor key: the pair of `sucV (fst ar)`, the successor of the key's arity, with `a`.
+The last two introductions raise the arity, starting with `unSuccClosed-in`. Its hypothesis `g` receives the usual unary key data but must conclude membership of the successor key: the pair of `sucV (ar .fst)`, the successor of the key's arity, with `a`.
 <!--zh-->
-最后两条引入抬升元数，先看 `unSuccClosed-in`。其假设 `g` 收到通常的一元键数据，但须得出后继键的成员关系：键元数的后继 `sucV (fst ar)` 与 `a` 之对。
+最后两条引入抬升元数，先看 `unSuccClosed-in`。其假设 `g` 收到通常的一元键数据，但须得出后继键的成员关系：键元数的后继 `sucV (ar .fst)` 与 `a` 之对。
 <!--ja-->
-残る 2 つの導入はアリティを上げる。まず `unSuccClosed-in` である。仮定 `g` はいつもの 1 項キーのデータを受け取るが、後続キーの所属を結論せねばならない。すなわちキーのアリティの後続 `sucV (fst ar)` と `a` の対の所属である。
+残る 2 つの導入はアリティを上げる。まず `unSuccClosed-in` である。仮定 `g` はいつもの 1 項キーのデータを受け取るが、後続キーの所属を結論せねばならない。すなわちキーのアリティの後続 `sucV (ar .fst)` と `a` の対の所属である。
 <!--/-->
 
 ```agda
@@ -796,20 +796,20 @@ The last two introductions raise the arity, starting with `unSuccClosed-in`. Its
 
   unSuccClosed-in : (C : Fin n) (k : ℕ) (γ : S ^ n)
     → ((c ar a : S)
-       → ⟨ fst c ∈ fst (lookup C γ) ⟩
-       → fst c ≡ pr (fst ar) (pr (# k) (fst a))
+       → ⟨ c .fst ∈ (lookup C γ) .fst ⟩
+       → c .fst ≡ pr (ar .fst) (pr (# k) (a .fst))
 ```
 
 <!--en-->
-The relation `oneSuccAt` demands its successor only existentially and merely, so any witness carrying the two certificates is acceptable, and the proof supplies a concrete one: the L-numeral `sucʟ ar`. It is a valid witness because its first-projection law `sucʟ-fst ar` identifies its first component with `sucV (fst ar)`, and the adequacy lemma for `sucAtL` converts that defining equation into the satisfaction the clause reads.
+The relation `oneSuccAt` demands its successor only existentially and merely, so any witness carrying the two certificates is acceptable, and the proof supplies a concrete one: the `L`{.Agda}-numeral `sucʟ ar`. It is a valid witness because its first-projection law `sucʟ-fst ar` identifies its first component with `sucV (ar .fst)`, and the adequacy lemma for `sucAtL` converts that defining equation into the satisfaction the clause reads.
 <!--zh-->
-关系 `oneSuccAt` 仅以存在且「仅仅」的方式要求后继，因此任何携带两个证书的见证都可用，证明提供了一个具体见证：L 数码 `sucʟ ar`。它是合格的见证，因为其第一投影法则 `sucʟ-fst ar` 把它的第一分量等同于 `sucV (fst ar)`，而 `sucAtL` 的充分性引理把这条定义等式转换为子句所读取的满足。
+关系 `oneSuccAt` 仅以存在且「仅仅」的方式要求后继，因此任何携带两个证书的见证都可用，证明提供了一个具体见证：`L`{.Agda} 数码 `sucʟ ar`。它是合格的见证，因为其第一投影法则 `sucʟ-fst ar` 把它的第一分量等同于 `sucV (ar .fst)`，而 `sucAtL` 的充分性引理把这条定义等式转换为子句所读取的满足。
 <!--ja-->
-関係 `oneSuccAt` は後続を命題的に切り詰められた存在の形でしか要求しないので、2 つの証明書を備えた証人ならどれでも構わない。証明は具体的な証人として L 数項 `sucʟ ar` を与える。これが証人として適格なのは、第一射影の法則 `sucʟ-fst ar` がその第 1 成分を `sucV (fst ar)` と同一視するからで、`sucAtL` の妥当性補題がこの定義等式を節の読む充足へ変換する。
+関係 `oneSuccAt` は後続を命題的に切り詰められた存在の形でしか要求しないので、2 つの証明書を備えた証人ならどれでも構わない。証明は具体的な証人として `L`{.Agda} 数項 `sucʟ ar` を与える。これが証人として適格なのは、第一射影の法則 `sucʟ-fst ar` がその第 1 成分を `sucV (ar .fst)` と同一視するからで、`sucAtL` の妥当性補題がこの定義等式を節の読む充足へ変換する。
 <!--/-->
 
 ```agda
-       → ⟨ pr (sucV (fst ar)) (fst a) ∈ fst (lookup C γ) ⟩)
+       → ⟨ pr (sucV (ar .fst)) (a .fst) ∈ (lookup C γ) .fst ⟩)
     → ⟨ γ ⊨ unShapeAt C k (oneSuccAt C) ⟩
   unSuccClosed-in C k γ g = unShape-in C k (oneSuccAt C) γ
     (λ c ar a c∈ sh → ∣ sucʟ ar
@@ -817,35 +817,35 @@ The relation `oneSuccAt` demands its successor only existentially and merely, so
 ```
 
 <!--en-->
-The second certificate is the pairing claim. `g` already yields membership of the successor key, and the numeral's projection law re-expresses that as membership of `pr (sucʟ ar) (fst a)`, which the adequacy lemma for `appAt` converts into the satisfaction of the pairing conjunct. Injecting the witness with its certificates into propositional truncation needs no propositionhood premise; that requirement belongs to elimination, not introduction.
+The second certificate is the pairing claim. `g` already yields membership of the successor key, and the numeral's projection law re-expresses that as membership of `pr (sucʟ ar) (a .fst)`, which the adequacy lemma for `appAt` converts into the satisfaction of the pairing conjunct. Injecting the witness with its certificates into propositional truncation needs no propositionhood premise; that requirement belongs to elimination, not introduction.
 <!--zh-->
-第二个证书是配对主张。`g` 已经给出后继键的成员关系，数码的投影法则把它改写为 `pr (sucʟ ar) (fst a)` 的成员关系，再由 `appAt` 的充分性引理转换为配对合取项的满足。把见证与其证书注入命题截断不需要任何命题性前提；那一要求属于消去，而非引入。
+第二个证书是配对主张。`g` 已经给出后继键的成员关系，数码的投影法则把它改写为 `pr (sucʟ ar) (a .fst)` 的成员关系，再由 `appAt` 的充分性引理转换为配对合取项的满足。把见证与其证书注入命题截断不需要任何命题性前提；那一要求属于消去，而非引入。
 <!--ja-->
-第 2 の証明書は対の主張である。`g` は既に後続キーの所属を与えており、数項の射影の法則がそれを `pr (sucʟ ar) (fst a)` の所属として表し、`appAt` の妥当性補題が対の連言項の充足へ変換する。証人と証明書を命題的切り詰めへ注入するのに命題性の前提は不要である。その要件は除却に属し、導入には属しない。
+第 2 の証明書は対の主張である。`g` は既に後続キーの所属を与えており、数項の射影の法則がそれを `pr (sucʟ ar) (a .fst)` の所属として表し、`appAt` の妥当性補題が対の連言項の充足へ変換する。証人と証明書を命題的切り詰めへ注入するのに命題性の前提は不要である。その要件は除却に属し、導入には属しない。
 <!--/-->
 
 ```agda
             (sucʟ ar ∷ a ∷ ar ∷ c ∷ γ))) (sucʟ-fst ar)
         , subst ⟨_⟩ (sym (appAt-adequate (suc (sh3 C)) zero (suc a3)
             (sucʟ ar ∷ a ∷ ar ∷ c ∷ γ)))
-            (subst (λ w → ⟨ pr w (fst a) ∈ fst (lookup C γ) ⟩)
+            (subst (λ w → ⟨ pr w (a .fst) ∈ (lookup C γ) .fst ⟩)
               (sym (sucʟ-fst ar)) (g c ar a c∈ sh)) ) ∣₁)
 ```
 
 <!--en-->
-The final introduction `binSuccClosed-in` covers the bounded quantifiers. Its hypothesis `g` receives the binary key's four values and must produce membership of the second component under the successor arity: the pair of `sucV (fst ar)` with `b`, since the first slot carries the bounding term rather than a subformula.
+The final introduction `binSuccClosed-in` covers the bounded quantifiers. Its hypothesis `g` receives the binary key's four values and must produce membership of the second component under the successor arity: the pair of `sucV (ar .fst)` with `b`, since the first slot carries the bounding term rather than a subformula.
 <!--zh-->
-最后一条引入 `binSuccClosed-in` 覆盖有界量词。其假设 `g` 收到二元键的四个值，须产出第二分量在后继元数下的成员关系：`sucV (fst ar)` 与 `b` 之对，因为第一个槽放的是有界词项而非子公式。
+最后一条引入 `binSuccClosed-in` 覆盖有界量词。其假设 `g` 收到二元键的四个值，须产出第二分量在后继元数下的成员关系：`sucV (ar .fst)` 与 `b` 之对，因为第一个槽放的是有界词项而非子公式。
 <!--ja-->
-最後の導入 `binSuccClosed-in` は有界量詞を担当する。仮定 `g` は 2 項キーの 4 つの値を受け取り、後続アリティの下での第 2 成分の所属を生み出す。すなわち `sucV (fst ar)` と `b` の対である。第 1 スロットが載せるのは部分論理式ではなく有界の項だからである。
+最後の導入 `binSuccClosed-in` は有界量詞を担当する。仮定 `g` は 2 項キーの 4 つの値を受け取り、後続アリティの下での第 2 成分の所属を生み出す。すなわち `sucV (ar .fst)` と `b` の対である。第 1 スロットが載せるのは部分論理式ではなく有界の項だからである。
 <!--/-->
 
 ```agda
   binSuccClosed-in : (C : Fin n) (k : ℕ) (γ : S ^ n)
     → ((c ar a b : S)
-       → ⟨ fst c ∈ fst (lookup C γ) ⟩
-       → fst c ≡ pr (fst ar) (pr (# k) (pr (fst a) (fst b)))
-       → ⟨ pr (sucV (fst ar)) (fst b) ∈ fst (lookup C γ) ⟩)
+       → ⟨ c .fst ∈ (lookup C γ) .fst ⟩
+       → c .fst ≡ pr (ar .fst) (pr (# k) (pr (a .fst) (b .fst)))
+       → ⟨ pr (sucV (ar .fst)) (b .fst) ∈ (lookup C γ) .fst ⟩)
 ```
 
 <!--en-->
@@ -875,7 +875,7 @@ The binary successor case uses the same witness and the same two adequacy facts,
 ```agda
         , subst ⟨_⟩ (sym (appAt-adequate (suc (sh4 C)) zero (suc b4)
             (sucʟ ar ∷ b ∷ a ∷ ar ∷ c ∷ γ)))
-            (subst (λ w → ⟨ pr w (fst b) ∈ fst (lookup C γ) ⟩)
+            (subst (λ w → ⟨ pr w (b .fst) ∈ (lookup C γ) .fst ⟩)
               (sym (sucʟ-fst ar)) (g c ar a b c∈ sh)) ) ∣₁)
 ```
 </div>

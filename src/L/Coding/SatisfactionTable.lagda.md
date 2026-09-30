@@ -178,19 +178,19 @@ readings below are four instantiations of it and no induction runs here.
 </details>
 ```agda
   satTable-inv : ∀ {n} (φ : Formula S n) (x : V ℓ)
-               → ⟨ x ∈ fst (satTable φ) ⟩ → Of ent ent φ x
+               → ⟨ x ∈ (satTable φ) .fst ⟩ → Of ent ent φ x
   satTable-inv = tree-inv ent ent
 
   slot-inv : ∀ {n} (φ : Formula S n) (x : V ℓ)
-           → ⟨ x ∈ fst (slot φ) ⟩ → Of keyʟ keyʟ φ x
+           → ⟨ x ∈ (slot φ) .fst ⟩ → Of keyʟ keyʟ φ x
   slot-inv = tree-inv keyʟ keyʟ
 
   slot-ent : ∀ {n} (φ : Formula S n) (x : V ℓ)
-           → ⟨ x ∈ fst (slot φ) ⟩ → Of keyʟ ent φ x
+           → ⟨ x ∈ (slot φ) .fst ⟩ → Of keyʟ ent φ x
   slot-ent = tree-inv keyʟ ent
 
   ent-slot : ∀ {n} (φ : Formula S n) (x : V ℓ)
-           → ⟨ x ∈ fst (satTable φ) ⟩ → Of ent keyʟ φ x
+           → ⟨ x ∈ (satTable φ) .fst ⟩ → Of ent keyʟ φ x
   ent-slot = tree-inv ent keyʟ
 ```
 
@@ -223,59 +223,59 @@ which is the only arity at which it is true.
 ```agda
   private
     same : ∀ {n} (ψ χ : Formula S n)
-         → fst LCode.⌜ ψ ⌝ ≡ fst LCode.⌜ χ ⌝ → Sat B ψ ≡ Sat B χ
+         → (LCode.⌜ ψ ⌝) .fst ≡ (LCode.⌜ χ ⌝) .fst → Sat B ψ ≡ Sat B χ
     same ψ χ e =
-      cong (Sat B) (LCode.⌜⌝-inj ψ χ (Σ≡Prop (λ v → snd (isL v)) e))
+      cong (Sat B) (LCode.⌜⌝-inj ψ χ (Σ≡Prop (λ v → (isL v) .snd) e))
 
     cross : ∀ {n m} (ψ : Formula S n) (χ : Formula S m) → n ≡ m
-          → fst LCode.⌜ ψ ⌝ ≡ fst LCode.⌜ χ ⌝ → Sat B ψ ≡ Sat B χ
+          → (LCode.⌜ ψ ⌝) .fst ≡ (LCode.⌜ χ ⌝) .fst → Sat B ψ ≡ Sat B χ
     cross {n} ψ χ p = J
       (λ m' p' → (χ' : Formula S m')
-               → fst LCode.⌜ ψ ⌝ ≡ fst LCode.⌜ χ' ⌝ → Sat B ψ ≡ Sat B χ')
+               → (LCode.⌜ ψ ⌝) .fst ≡ (LCode.⌜ χ' ⌝) .fst → Sat B ψ ≡ Sat B χ')
       (same ψ) p χ
 
-  total : ∀ {n} (φ : Formula S n) (x : V ℓ) → ⟨ x ∈ fst (slot φ) ⟩
-        → ∥ (Σ[ y ∶ S ] ⟨ pr x (fst y) ∈ fst (satTable φ) ⟩) ∥₁
+  total : ∀ {n} (φ : Formula S n) (x : V ℓ) → ⟨ x ∈ (slot φ) .fst ⟩
+        → ∥ (Σ[ y ∶ S ] ⟨ pr x (y .fst) ∈ (satTable φ) .fst ⟩) ∥₁
   total φ x h = map₁
     (λ { (m , χ , (q , incl)) → Sat B χ
-       , subst (λ w → ⟨ pr w (fst (Sat B χ)) ∈ fst (satTable φ) ⟩) (sym q)
-           (incl (pr (fst (keyʟ χ)) (fst (Sat B χ)))
-             (subst (λ w → ⟨ w ∈ fst (tree ent χ) ⟩)
+       , subst (λ w → ⟨ pr w ((Sat B χ) .fst) ∈ (satTable φ) .fst ⟩) (sym q)
+           (incl (pr ((keyʟ χ) .fst) ((Sat B χ) .fst))
+             (subst (λ w → ⟨ w ∈ (tree ent χ) .fst ⟩)
                (prʟ-fst (keyʟ χ) (Sat B χ)) (Parts.self ent χ))) })
     (slot-ent φ x h)
 
   inSlot : ∀ {n} (φ : Formula S n) (x y : V ℓ)
-         → ⟨ pr x y ∈ fst (satTable φ) ⟩ → ⟨ x ∈ fst (slot φ) ⟩
-  inSlot φ x y h = rec₁ (snd (x ∈ fst (slot φ)))
+         → ⟨ pr x y ∈ (satTable φ) .fst ⟩ → ⟨ x ∈ (slot φ) .fst ⟩
+  inSlot φ x y h = rec₁ ((x ∈ (slot φ) .fst) .snd)
     (λ { (m , χ , (q , incl)) →
-      subst (λ w → ⟨ w ∈ fst (slot φ) ⟩)
+      subst (λ w → ⟨ w ∈ (slot φ) .fst ⟩)
         (sym (pr-inj (q ∙ prʟ-fst (keyʟ χ) (Sat B χ)) .fst))
-        (incl (fst (keyʟ χ)) (Parts.self keyʟ χ)) })
+        (incl ((keyʟ χ) .fst) (Parts.self keyʟ χ)) })
     (ent-slot φ (pr x y) h)
 
   key-determines : ∀ {n m} (ψ : Formula S n) (χ : Formula S m)
-                 → fst (keyʟ ψ) ≡ fst (keyʟ χ) → Sat B ψ ≡ Sat B χ
+                 → (keyʟ ψ) .fst ≡ (keyʟ χ) .fst → Sat B ψ ≡ Sat B χ
   key-determines {n} {m} ψ χ e = cross ψ χ
     (#-inj′ (sym (numeralL-fst n) ∙ pr-inj q .fst ∙ numeralL-fst m))
     (pr-inj q .snd)
     where
-    q : pr (fst (numeralL n)) (fst LCode.⌜ ψ ⌝)
-      ≡ pr (fst (numeralL m)) (fst LCode.⌜ χ ⌝)
+    q : pr ((numeralL n) .fst) ((LCode.⌜ ψ ⌝) .fst)
+      ≡ pr ((numeralL m) .fst) ((LCode.⌜ χ ⌝) .fst)
     q = sym (prʟ-fst (numeralL n) LCode.⌜ ψ ⌝)
       ∙ e ∙ prʟ-fst (numeralL m) LCode.⌜ χ ⌝
 
   entry-out : ∀ {n m} (φ : Formula S n) (ψ : Formula S m) (y : V ℓ)
-            → ⟨ pr (fst (keyʟ ψ)) y ∈ fst (satTable φ) ⟩
-            → y ≡ fst (Sat B ψ)
-  entry-out φ ψ y h = rec₁ (setIsSet y (fst (Sat B ψ)))
+            → ⟨ pr ((keyʟ ψ) .fst) y ∈ (satTable φ) .fst ⟩
+            → y ≡ (Sat B ψ) .fst
+  entry-out φ ψ y h = rec₁ (setIsSet y ((Sat B ψ) .fst))
     (λ { (m , χ , (q , _)) →
       let r = pr-inj (q ∙ prʟ-fst (keyʟ χ) (Sat B χ)) in
-      r .snd ∙ cong fst (sym (key-determines ψ χ (r .fst))) })
-    (satTable-inv φ (pr (fst (keyʟ ψ)) y) h)
+      r .snd ∙ cong (λ p → p .fst) (sym (key-determines ψ χ (r .fst))) })
+    (satTable-inv φ (pr ((keyʟ ψ) .fst) y) h)
 
   entry-in : ∀ {n} (φ : Formula S n)
-           → ⟨ pr (fst (keyʟ φ)) (fst (Sat B φ)) ∈ fst (satTable φ) ⟩
-  entry-in φ = subst (λ w → ⟨ w ∈ fst (satTable φ) ⟩)
+           → ⟨ pr ((keyʟ φ) .fst) ((Sat B φ) .fst) ∈ (satTable φ) .fst ⟩
+  entry-in φ = subst (λ w → ⟨ w ∈ (satTable φ) .fst ⟩)
     (prʟ-fst (keyʟ φ) (Sat B φ)) (Parts.self ent φ)
 ```
 </div>
@@ -317,21 +317,21 @@ payload read is the formula's.
 
 ```agda
 keyʟ-shape : ∀ {m} (ψ : Formula S m) (k : ℕ) (ar p : V ℓ)
-           → fst (keyʟ ψ) ≡ pr ar (pr (# k) p)
+           → (keyʟ ψ) .fst ≡ pr ar (pr (# k) p)
            → LCode.Match k ψ
-           × ((# m ≡ ar) × (fst (LCode.payOf ψ) ≡ p))
+           × ((# m ≡ ar) × ((LCode.payOf ψ) .fst ≡ p))
 keyʟ-shape {m} ψ k ar p e =
     subst (λ j → LCode.Match j ψ) tag≡ (LCode.matches ψ)
   , ( sym (numeralL-fst m) ∙ pr-inj e' .fst
     , pr-inj inner .snd )
   where
-  e' : pr (fst (numeralL m)) (fst LCode.⌜ ψ ⌝) ≡ pr ar (pr (# k) p)
+  e' : pr ((numeralL m) .fst) ((LCode.⌜ ψ ⌝) .fst) ≡ pr ar (pr (# k) p)
   e' = sym (prʟ-fst (numeralL m) LCode.⌜ ψ ⌝) ∙ e
 
-  inner : pr (fst (numeralL (LCode.tagOf ψ))) (fst (LCode.payOf ψ))
+  inner : pr ((numeralL (LCode.tagOf ψ)) .fst) ((LCode.payOf ψ) .fst)
         ≡ pr (# k) p
   inner = sym (prʟ-fst (numeralL (LCode.tagOf ψ)) (LCode.payOf ψ))
-        ∙ sym (cong fst (LCode.shape ψ))
+        ∙ sym (cong (λ p → p .fst) (LCode.shape ψ))
         ∙ pr-inj e' .snd
 
   tag≡ : LCode.tagOf ψ ≡ k

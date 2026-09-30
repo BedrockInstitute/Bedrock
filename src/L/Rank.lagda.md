@@ -253,8 +253,8 @@ The statement is a pointwise inclusion, not a strict membership: assuming `IsOrd
 rank-upper : (A β : S) → IsOrd β
            → ((y : S) → ⟨ y ∈ˢ A ⟩ → ⟨ rank y ∈ˢ β ⟩)
            → (x : S) → ⟨ x ∈ˢ rank A ⟩ → ⟨ x ∈ˢ β ⟩
-rank-upper A β oβ bound x hx = rec₁ (snd (x ∈ˢ β))
-  (λ { (m , hm) → ∈sucV-elim (snd (x ∈ˢ β)) hm
+rank-upper A β oβ bound x hx = rec₁ ((x ∈ˢ β) .snd)
+  (λ { (m , hm) → ∈sucV-elim ((x ∈ˢ β) .snd) hm
 ```
 
 <!--en-->

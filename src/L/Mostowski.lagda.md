@@ -128,21 +128,21 @@ module Mostowski (A : Type ℓ) (_≺_ : A → A → Type ℓ)
 ```
 
 <!--en-->
-The recursion step is the image of the predecessor cone. Given `p` and a recursive call `rec` that already knows `col r` for each `r ≺ p`, the step forms `sett (Σ[ r ∶ A ] (r ≺ p)) (λ z → rec (fst z) (snd z))`: the index type is the total space of pairs `(r , r ≺ p)`, and the family sends such a pair to `rec r`. Abstractly this is exactly the set `{ col r | r ≺ p }`, the collapsing equation the chapter announced. Note how the step type quantifies over arbitrary step functions `rec`, which is what makes the same data serve both the definition and, via the computation law below, reasoning about it.
+The recursion step is the image of the predecessor cone. Given `p` and a recursive call `rec` that already knows `col r` for each `r ≺ p`, the step forms `sett (Σ[ r ∶ A ] (r ≺ p)) (λ z → rec (z .fst) (z .snd))`: the index type is the total space of pairs `(r , r ≺ p)`, and the family sends such a pair to `rec r`. Abstractly this is exactly the set `{ col r | r ≺ p }`, the collapsing equation the chapter announced. Note how the step type quantifies over arbitrary step functions `rec`, which is what makes the same data serve both the definition and, via the computation law below, reasoning about it.
 <!--zh-->
-递归步就是前驱锥的像。给定 `p` 和已经知道每个 `r ≺ p` 的 `col r` 的递归调用 `rec`，该步造出 `sett (Σ[ r ∶ A ] (r ≺ p)) (λ z → rec (fst z) (snd z))`：索引类型是偶对 `(r , r ≺ p)` 的全空间，族把这样的偶对送到 `rec r`。抽象地说，这正是本章宣告的塌缩方程 `{ col r | r ≺ p }`。注意步型对任意的步函数 `rec` 做了量化，这使同一份数据既用于定义，也经由下面的计算律用于推理。
+递归步就是前驱锥的像。给定 `p` 和已经知道每个 `r ≺ p` 的 `col r` 的递归调用 `rec`，该步造出 `sett (Σ[ r ∶ A ] (r ≺ p)) (λ z → rec (z .fst) (z .snd))`：索引类型是偶对 `(r , r ≺ p)` 的全空间，族把这样的偶对送到 `rec r`。抽象地说，这正是本章宣告的塌缩方程 `{ col r | r ≺ p }`。注意步型对任意的步函数 `rec` 做了量化，这使同一份数据既用于定义，也经由下面的计算律用于推理。
 <!--ja-->
-再帰の一段は前者の錐の像である。`p` と、各 `r ≺ p` に対してすでに `col r` を知る再帰呼び出し `rec` が与えられれば、この段は `sett (Σ[ r ∶ A ] (r ≺ p)) (λ z → rec (fst z) (snd z))` を形作る。インデックス型は対 `(r , r ≺ p)` の全空間であり、族はその対を `rec r` へ送る。抽象的には、これがまさに章の冒頭で宣言した崩壊方程式 `{ col r | r ≺ p }` である。段の型が任意の段関数 `rec` を量化している点に注目してほしい。おかげで同じデータが定義と、後述の計算法則を通した推論の両方に使える。
+再帰の一段は前者の錐の像である。`p` と、各 `r ≺ p` に対してすでに `col r` を知る再帰呼び出し `rec` が与えられれば、この段は `sett (Σ[ r ∶ A ] (r ≺ p)) (λ z → rec (z .fst) (z .snd))` を形作る。インデックス型は対 `(r , r ≺ p)` の全空間であり、族はその対を `rec r` へ送る。抽象的には、これがまさに章の冒頭で宣言した崩壊方程式 `{ col r | r ≺ p }` である。段の型が任意の段関数 `rec` を量化している点に注目してほしい。おかげで同じデータが定義と、後述の計算法則を通した推論の両方に使える。
 <!--/-->
 
 ```agda
-  colStep p rec = sett (Σ[ r ∶ A ] (r ≺ p)) (λ z → rec (fst z) (snd z))
+  colStep p rec = sett (Σ[ r ∶ A ] (r ≺ p)) (λ z → rec (z .fst) (z .snd))
 
   opaque
     col : A → SV.S
     col = W.induction {P = λ _ → SV.S} colStep
 
-    col-eq : (p : A) → col p ≡ sett (Σ[ r ∶ A ] (r ≺ p)) (λ z → col (fst z))
+    col-eq : (p : A) → col p ≡ sett (Σ[ r ∶ A ] (r ≺ p)) (λ z → col (z .fst))
 ```
 
 <!--en-->
@@ -174,7 +174,7 @@ Membership admits a computation law in each direction, and the two are usefully 
 ```agda
           → ∥ Σ[ r ∶ A ] ((r ≺ p) × (col r ≡ b)) ∥₁
   col-out p b b∈ =
-    map₁ (λ z → fst (fst z) , snd (fst z) , snd z)
+    map₁ (λ z → (z .fst) .fst , (z .fst) .snd , z .snd)
       (subst (λ v → ⟨ b ∈ˢ v ⟩) (col-eq p) b∈)
 
   col-ord : (p : A) → IsOrd (col p)
@@ -207,7 +207,7 @@ The first clause, that every member of `col p` is transitive, starts from `col-o
 ```agda
       mem : (x : SV.S) → ⟨ x ∈ˢ col p ⟩ → isTransV x
       mem x x∈ = rec₁ (isPropIsTransV x)
-        (λ z → subst isTransV (snd (snd z)) (rec (fst z) (fst (snd z)) .fst))
+        (λ z → subst isTransV ((z .snd) .snd) (rec (z .fst) ((z .snd) .fst) .fst))
         (col-out p x x∈)
       tr : isTransV (col p)
 ```
@@ -221,11 +221,11 @@ The second clause proves `col p` itself transitive: given `y ∈ x` and `x ∈ c
 <!--/-->
 
 ```agda
-      tr {x} {y} y∈x x∈col = rec₁ (snd (y ∈ˢ col p)) outer (col-out p x x∈col)
+      tr {x} {y} y∈x x∈col = rec₁ ((y ∈ˢ col p) .snd) outer (col-out p x x∈col)
         where
         outer : Σ[ r ∶ A ] ((r ≺ p) × (col r ≡ x)) → ⟨ y ∈ˢ col p ⟩
         outer (r , rp , e) =
-          rec₁ (snd (y ∈ˢ col p)) inner
+          rec₁ ((y ∈ˢ col p) .snd) inner
 ```
 
 <!--en-->

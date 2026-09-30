@@ -192,7 +192,7 @@ The first reading is ambient. Given an assignment of hierarchy sets to the slots
 
 ```agda
   value (slot i) γ = γ i
-  value (literal a) γ = fst a
+  value (literal a) γ = a .fst
   value (numeral k) γ = # k
   value (pair a b) γ = pr (value a γ) (value b γ)
 
@@ -225,7 +225,7 @@ The bridge is `element-fst`{.Agda}: projecting an internal element yields, as a 
 <!--/-->
 
 ```agda
-              → fst (element e γ) ≡ value e (λ i → fst (γ i))
+              → (element e γ) .fst ≡ value e (λ i → (γ i) .fst)
   element-fst (slot i) γ = refl
   element-fst (literal a) γ = refl
   element-fst (numeral k) γ = numeralL-fst k
@@ -276,7 +276,7 @@ Adequacy has two directions, and `out`{.Agda} is the one a soundness proof consu
 
 ```agda
   out : ∀ {n m} (e : Expr n) (ρ : Fin n → Fin m) (q : Fin m) (γ : S ^ m)
-       → ⟨ γ ⊨ read e ρ q ⟩ → fst (lookup q γ) ≡ value e (λ i → fst (lookup (ρ i) γ))
+       → ⟨ γ ⊨ read e ρ q ⟩ → (lookup q γ) .fst ≡ value e (λ i → (lookup (ρ i) γ) .fst)
   out (slot i) ρ q γ h = h
   out (literal a) ρ q γ h = h
   out (numeral k) ρ q γ h = h ∙ numeralL-fst k
@@ -299,18 +299,18 @@ The hypothesis of the pair case is a truncated bounded existential with three la
 ```
 
 <!--en-->
-With the three witnesses in hand, the innermost formula is unfolded by the pair reader's own adequacy: transporting `p` along `prAtL-adequate`{.Agda} turns the pairing assertion into the equation `fst (lookup q γ) ≡ pr (fst u) (fst v)`. The two recursive hypotheses then give the components' projections at slots one and zero, `fst u ≡ value a` and `fst v ≡ value b`, and congruence under `pr`{.Agda} rewrites the right-hand side into `pr (value a) (value b)`, which is exactly the value of the pair expression. The inner proof is thus one transport followed by one congruence.
+With the three witnesses in hand, the innermost formula is unfolded by the pair reader's own adequacy: transporting `p` along `prAtL-adequate`{.Agda} turns the pairing assertion into the equation `(lookup q γ) .fst ≡ pr (u .fst) (v .fst)`. The two recursive hypotheses then give the components' projections at slots one and zero, `u .fst ≡ value a` and `v .fst ≡ value b`, and congruence under `pr`{.Agda} rewrites the right-hand side into `pr (value a) (value b)`, which is exactly the value of the pair expression. The inner proof is thus one transport followed by one congruence.
 <!--zh-->
-拿到三个见证后，最内层公式由配对读式自身的充分性展开：把 `p` 沿 `prAtL-adequate`{.Agda} 传输，配对断言便变成等式 `fst (lookup q γ) ≡ pr (fst u) (fst v)`。两个递归前提随即给出分量在一号与零号槽位处的投影，即 `fst u ≡ value a` 与 `fst v ≡ value b`；再经 `pr`{.Agda} 之下的同余，右侧被改写为 `pr (value a) (value b)`，恰是该配对表达式的取值。内层证明因此是一次传输加一次同余。
+拿到三个见证后，最内层公式由配对读式自身的充分性展开：把 `p` 沿 `prAtL-adequate`{.Agda} 传输，配对断言便变成等式 `(lookup q γ) .fst ≡ pr (u .fst) (v .fst)`。两个递归前提随即给出分量在一号与零号槽位处的投影，即 `u .fst ≡ value a` 与 `v .fst ≡ value b`；再经 `pr`{.Agda} 之下的同余，右侧被改写为 `pr (value a) (value b)`，恰是该配对表达式的取值。内层证明因此是一次传输加一次同余。
 <!--ja-->
-三つの証人が手に入れば、最も内側の論理式は対の読み出し自身の妥当性によって展開される。`p` を `prAtL-adequate`{.Agda} に沿って輸送すると、対の主張は等式 `fst (lookup q γ) ≡ pr (fst u) (fst v)` になる。続く二つの帰納的な前提が、スロット 0 と 1 での成分の射影、すなわち `fst u ≡ value a` と `fst v ≡ value b` を与え、`pr`{.Agda} の下での合同が右辺を `pr (value a) (value b)` へ書き換える。これはまさにその対の表現の値である。内側の証明は、輸送ひとつと合同ひとつからなる。
+三つの証人が手に入れば、最も内側の論理式は対の読み出し自身の妥当性によって展開される。`p` を `prAtL-adequate`{.Agda} に沿って輸送すると、対の主張は等式 `(lookup q γ) .fst ≡ pr (u .fst) (v .fst)` になる。続く二つの帰納的な前提が、スロット 0 と 1 での成分の射影、すなわち `u .fst ≡ value a` と `v .fst ≡ value b` を与え、`pr`{.Agda} の下での合同が右辺を `pr (value a) (value b)` へ書き換える。これはまさにその対の表現の値である。内側の証明は、輸送ひとつと合同ひとつからなる。
 <!--/-->
 
 ```agda
                    (out b (lift3 ρ) zero (v ∷ u ∷ s ∷ γ) hb) }) hu }) hs })
 
   into : ∀ {n m} (e : Expr n) (ρ : Fin n → Fin m) (q : Fin m) (γ : S ^ m)
-        → fst (lookup q γ) ≡ value e (λ i → fst (lookup (ρ i) γ)) → ⟨ γ ⊨ read e ρ q ⟩
+        → (lookup q γ) .fst ≡ value e (λ i → (lookup (ρ i) γ) .fst) → ⟨ γ ⊨ read e ρ q ⟩
   into (slot i) ρ q γ h = h
   into (literal a) ρ q γ h = h
 ```
@@ -378,17 +378,17 @@ The pair formula asserts `s ∈ q`, `u ∈ s`, `v ∈ s`, and `q ≡ pr u v`; si
 ```
 
 <!--en-->
-The remaining local definitions record the arithmetic of the construction. `η` restricts the old assignment to the reindexed slots, and `u` and `v` are the explicit internal elements of the two subexpressions under it; these are chosen outright, not extracted from any truncation. The path `e` then states that the entry at `q` equals the ambient pair `pr (fst u) (fst v)`. Its direction matters: the hypothesis `h` says the entry equals the denoted value of the whole pair, and composing with the symmetry of the components' projection congruence `element-fst` produces exactly the target the container construction expects.
+The remaining local definitions record the arithmetic of the construction. `η` restricts the old assignment to the reindexed slots, and `u` and `v` are the explicit internal elements of the two subexpressions under it; these are chosen outright, not extracted from any truncation. The path `e` then states that the entry at `q` equals the ambient pair `pr (u .fst) (v .fst)`. Its direction matters: the hypothesis `h` says the entry equals the denoted value of the whole pair, and composing with the symmetry of the components' projection congruence `element-fst` produces exactly the target the container construction expects.
 <!--zh-->
-其余的局部定义记录这一构造的算术。`η` 把旧赋值限制到重标定后的槽位，`u` 与 `v` 是两个子表达式在其下的显式内部元素；它们是直接选定的，并非从任何截断中提取。路径 `e` 随后陈述：`q` 处的条目等于周遭配对 `pr (fst u) (fst v)`。它的方向很重要：前提 `h` 说条目等于整个配对所指的值，与分量的投影同余 `element-fst` 的对称复合后，得到的恰是容器构造所预期的目标。
+其余的局部定义记录这一构造的算术。`η` 把旧赋值限制到重标定后的槽位，`u` 与 `v` 是两个子表达式在其下的显式内部元素；它们是直接选定的，并非从任何截断中提取。路径 `e` 随后陈述：`q` 处的条目等于周遭配对 `pr (u .fst) (v .fst)`。它的方向很重要：前提 `h` 说条目等于整个配对所指的值，与分量的投影同余 `element-fst` 的对称复合后，得到的恰是容器构造所预期的目标。
 <!--ja-->
-残りの局所的な定義は、この構成の算術を記録する。`η` は古い割り当てを再索引付けされたスロットに制限したものであり、`u` と `v` はそのもとでの二つの部分表現の明示的な内部的な要素である。これらは直接選ばれるのであって、截断から取り出されるのではない。経路 `e` は、スロット `q` の項目が周囲の対 `pr (fst u) (fst v)` に等しいと述べる。その方向が重要である。前提 `h` は項目が対全体の指す値に等しいと言い、成分の射影の合同 `element-fst` の対称と合成することで、コンテナの構成が期待する対象がちょうど得られる。
+残りの局所的な定義は、この構成の算術を記録する。`η` は古い割り当てを再索引付けされたスロットに制限したものであり、`u` と `v` はそのもとでの二つの部分表現の明示的な内部的な要素である。これらは直接選ばれるのであって、截断から取り出されるのではない。経路 `e` は、スロット `q` の項目が周囲の対 `pr (u .fst) (v .fst)` に等しいと述べる。その方向が重要である。前提 `h` は項目が対全体の指す値に等しいと言い、成分の射影の合同 `element-fst` の対称と合成することで、コンテナの構成が期待する対象がちょうど得られる。
 <!--/-->
 
 ```agda
     u = element a η
     v = element b η
-    e : fst (lookup q γ) ≡ pr (fst u) (fst v)
+    e : (lookup q γ) .fst ≡ pr (u .fst) (v .fst)
     e = h ∙ sym (cong₂ pr (element-fst a η) (element-fst b η))
     c : Container (lookup q γ) u v
 ```
@@ -419,7 +419,7 @@ The two directions assemble into the advertised form. `adequate` states that the
 
 ```agda
   adequate : ∀ {n m} (e : Expr n) (ρ : Fin n → Fin m) (q : Fin m) (γ : S ^ m)
-            → (γ ⊨ read e ρ q) ≡ PairIs (fst (lookup q γ)) (value e (λ i → fst (lookup (ρ i) γ)))
+            → (γ ⊨ read e ρ q) ≡ PairIs ((lookup q γ) .fst) (value e (λ i → (lookup (ρ i) γ) .fst))
   adequate e ρ q γ = ⇔toPath (out e ρ q γ) (into e ρ q γ)
 
   member : ∀ {n} → Expr n → Term S n → Formula S n
@@ -427,36 +427,36 @@ The two directions assemble into the advertised form. `adequate` states that the
 ```
 
 <!--en-->
-The outward reader of `member` eliminates the truncated bounded existential and receives a member `x`, its membership proof `h`, and the proof `p` that `x`'s extended assignment satisfies the expression reader. Applying adequacy outward converts `p` into the equation `fst x ≡ value e ...`; transporting `h` along that equation turns membership of `fst x` into membership of the denoted value. The target is the membership proposition `value e ... ∈ fst (⟦ C ⟧ γ)`, whose second component supplies exactly the propositionhood required by `rec₁`.
+The outward reader of `member` eliminates the truncated bounded existential and receives a member `x`, its membership proof `h`, and the proof `p` that `x`'s extended assignment satisfies the expression reader. Applying adequacy outward converts `p` into the equation `x .fst ≡ value e ...`; transporting `h` along that equation turns membership of `x .fst` into membership of the denoted value. The target is the membership proposition `value e ... ∈ (⟦ C ⟧ γ) .fst`, whose second component supplies exactly the propositionhood required by `rec₁`.
 <!--zh-->
-`member` 的向外读式消去截断的有界存在，得到元素 `x`、其成员关系证明 `h`，以及「`x` 的扩展赋值满足表达式读式」的证明 `p`。把充分性沿向外方向施于 `p`，得到等式 `fst x ≡ value e ...`；再沿这条等式搬运 `h`，便把 `fst x` 的成员关系变成所指取值的成员关系。目标正是成员关系命题 `value e ... ∈ fst (⟦ C ⟧ γ)`，其第二分量给出 `rec₁` 所需的命题性证明。
+`member` 的向外读式消去截断的有界存在，得到元素 `x`、其成员关系证明 `h`，以及「`x` 的扩展赋值满足表达式读式」的证明 `p`。把充分性沿向外方向施于 `p`，得到等式 `x .fst ≡ value e ...`；再沿这条等式搬运 `h`，便把 `x .fst` 的成员关系变成所指取值的成员关系。目标正是成员关系命题 `value e ... ∈ (⟦ C ⟧ γ) .fst`，其第二分量给出 `rec₁` 所需的命题性证明。
 <!--ja-->
-`member` の外向きの読みは、截断された有界存在を消去し、要素 `x`、その所属の証明 `h`、そして `x` で拡張した割り当てが表現の読みを満たす証明 `p` を受け取る。妥当性を外向きに `p` に適用すると等式 `fst x ≡ value e ...` が得られ、その等式に沿って `h` を輸送すれば、`fst x` の所属が表現の値の所属へ移る。対象は所属命題 `value e ... ∈ fst (⟦ C ⟧ γ)` であり、その第二成分が `rec₁` に必要な命題性の証明を与える。
+`member` の外向きの読みは、截断された有界存在を消去し、要素 `x`、その所属の証明 `h`、そして `x` で拡張した割り当てが表現の読みを満たす証明 `p` を受け取る。妥当性を外向きに `p` に適用すると等式 `x .fst ≡ value e ...` が得られ、その等式に沿って `h` を輸送すれば、`x .fst` の所属が表現の値の所属へ移る。対象は所属命題 `value e ... ∈ (⟦ C ⟧ γ) .fst` であり、その第二成分が `rec₁` に必要な命題性の証明を与える。
 <!--/-->
 
 ```agda
   member-out : ∀ {n} (e : Expr n) (C : Term S n) (γ : S ^ n)
-              → ⟨ γ ⊨ member e C ⟩ → ⟨ value e (λ i → fst (lookup i γ)) ∈ fst (⟦ C ⟧ γ) ⟩
-  member-out e C γ = rec₁ (snd (value e (λ i → fst (lookup i γ)) ∈ fst (⟦ C ⟧ γ)))
-    (λ { (x , h , p) → subst (λ v → ⟨ v ∈ fst (⟦ C ⟧ γ) ⟩) (out e suc zero (x ∷ γ) p) h })
+              → ⟨ γ ⊨ member e C ⟩ → ⟨ value e (λ i → (lookup i γ) .fst) ∈ (⟦ C ⟧ γ) .fst ⟩
+  member-out e C γ = rec₁ ((value e (λ i → (lookup i γ) .fst) ∈ (⟦ C ⟧ γ) .fst) .snd)
+    (λ { (x , h , p) → subst (λ v → ⟨ v ∈ (⟦ C ⟧ γ) .fst ⟩) (out e suc zero (x ∷ γ) p) h })
 
   member-in : ∀ {n} (e : Expr n) (C : Term S n) (γ : S ^ n)
 ```
 
 <!--en-->
-The inward reader must exhibit the member, and the value of `e` itself serves, once it is made an element of the model. It is a member of `fst (⟦ C ⟧ γ)` by hypothesis, and the interpretation of the term is constructible, so transitivity of `L` hands over the constructibility certificate for the value: that is exactly what `isL-trans` does here. This use of transitivity is different in kind from the proposition-valued target restriction on truncation elimination: no truncation is in play, and what is produced is the explicit data that makes the ambient value a pair of itself and its certificate. With that, `x` is exactly such a pair, and the entry at the extended assignment projects to the value definitionally, so the recursive `into` receives the path `refl`.
+The inward reader must exhibit the member, and the value of `e` itself serves, once it is made an element of the model. It is a member of `(⟦ C ⟧ γ) .fst` by hypothesis, and the interpretation of the term is constructible, so transitivity of `L` hands over the constructibility certificate for the value: that is exactly what `isL-trans` does here. This use of transitivity is different in kind from the proposition-valued target restriction on truncation elimination: no truncation is in play, and what is produced is the explicit data that makes the ambient value a pair of itself and its certificate. With that, `x` is exactly such a pair, and the entry at the extended assignment projects to the value definitionally, so the recursive `into` receives the path `refl`.
 <!--zh-->
-向内读式必须给出那个元素，而表达式 `e` 的取值本身即可充当，只需先把它变成模型的元素。由前提它是 `fst (⟦ C ⟧ γ)` 的元素，而该词项的解释可构造，于是 `L` 的传递性给出该取值的可构造性证书：这正是 `isL-trans` 在此处所做的事。这里没有消去截断；证书与周遭取值组成显式的模型元素 `x`，作为有界存在的见证。扩展赋值处的首项按定义投影为该取值，故递归的 `into` 收到路径 `refl`。
+向内读式必须给出那个元素，而表达式 `e` 的取值本身即可充当，只需先把它变成模型的元素。由前提它是 `(⟦ C ⟧ γ) .fst` 的元素，而该词项的解释可构造，于是 `L` 的传递性给出该取值的可构造性证书：这正是 `isL-trans` 在此处所做的事。这里没有消去截断；证书与周遭取值组成显式的模型元素 `x`，作为有界存在的见证。扩展赋值处的首项按定义投影为该取值，故递归的 `into` 收到路径 `refl`。
 <!--ja-->
-内向きの読みはその要素を示さねばならないが、表現 `e` の値そのものを模型の要素にすれば証人になる。前提によりそれは `fst (⟦ C ⟧ γ)` の要素であり、項の解釈は構成可能なので、`L` の推移性がその値の構成可能性の証明書を与える。ここで `isL-trans` がしているのはまさにそれである。截断の消去は行われない。証明書と周囲の値を組にした明示的な模型要素 `x` が、有界存在の証人になる。拡張された割り当ての先頭は定義によりその値へ射影されるので、帰納的な `into` は経路 `refl` を受け取る。
+内向きの読みはその要素を示さねばならないが、表現 `e` の値そのものを模型の要素にすれば証人になる。前提によりそれは `(⟦ C ⟧ γ) .fst` の要素であり、項の解釈は構成可能なので、`L` の推移性がその値の構成可能性の証明書を与える。ここで `isL-trans` がしているのはまさにそれである。截断の消去は行われない。証明書と周囲の値を組にした明示的な模型要素 `x` が、有界存在の証人になる。拡張された割り当ての先頭は定義によりその値へ射影されるので、帰納的な `into` は経路 `refl` を受け取る。
 <!--/-->
 
 ```agda
-             → ⟨ value e (λ i → fst (lookup i γ)) ∈ fst (⟦ C ⟧ γ) ⟩ → ⟨ γ ⊨ member e C ⟩
+             → ⟨ value e (λ i → (lookup i γ) .fst) ∈ (⟦ C ⟧ γ) .fst ⟩ → ⟨ γ ⊨ member e C ⟩
   member-in e C γ h = ∣ x , h , into e suc zero (x ∷ γ) refl ∣₁
     where
     x : S
-    x = value e (λ i → fst (lookup i γ)) , isL-trans h (snd (⟦ C ⟧ γ))
+    x = value e (λ i → (lookup i γ) .fst) , isL-trans h ((⟦ C ⟧ γ) .snd)
 ```
 </div>
 </details>
@@ -487,7 +487,7 @@ Its adequacy lemma needs no new proof: instantiating the generic adequacy at thi
 <!--/-->
 
 ```agda
-  ≡ PairIs (fst (lookup s γ)) (pr (# k) (fst (lookup x γ)))
+  ≡ PairIs ((lookup s γ) .fst) (pr (# k) ((lookup x γ) .fst))
 tagAtL-adequate s k x γ = PairExpression.adequate
   (PairExpression.pair (PairExpression.numeral k) (PairExpression.slot x)) id s γ
 
@@ -509,7 +509,7 @@ The second specialization handles payloads that are themselves pairs, and the tw
 
 tagPairAtL-adequate : ∀ {n} (s : Fin n) (k : ℕ) (a b : Fin n) (γ : S ^ n)
   → (γ ⊨ tagPairAtL s k a b)
-  ≡ PairIs (fst (lookup s γ))
+  ≡ PairIs ((lookup s γ) .fst)
 ```
 
 <!--en-->
@@ -521,7 +521,7 @@ The adequacy lemma again computes directly from the generic one, recovering all 
 <!--/-->
 
 ```agda
-      (pr (# k) (pr (fst (lookup a γ)) (fst (lookup b γ))))
+      (pr (# k) (pr ((lookup a γ) .fst) ((lookup b γ) .fst)))
 tagPairAtL-adequate s k a b γ = PairExpression.adequate
   (PairExpression.pair (PairExpression.numeral k)
     (PairExpression.pair (PairExpression.slot a) (PairExpression.slot b))) id s γ
@@ -574,19 +574,19 @@ module _ {n : ℕ} (y : Fin n) (φ : Formula S (suc n)) (γ : S ^ n) where
 ```
 
 <!--en-->
-The two readers are the two projections of the outer conjunction. From an inhabitant of `extAt y φ`, `extAt-out`{.Agda} takes the first component, which assigns to every model element `z`{.Agda} the implication from membership of `fst z`{.Agda} in the set at `y`{.Agda} to satisfaction of `φ`{.Agda} in the extended environment; `extAt-in`{.Agda} takes the second component, which gives that implication in reverse. Neither reader eliminates a truncation, chooses a witness, or transports along a path; whatever `φ`{.Agda} may contain internally, at this outer level the evidence is an ordered pair and each reader is literally a projection of it.
+The two readers are the two projections of the outer conjunction. From an inhabitant of `extAt y φ`, `extAt-out`{.Agda} takes the first component, which assigns to every model element `z`{.Agda} the implication from membership of `z .fst`{.Agda} in the set at `y`{.Agda} to satisfaction of `φ`{.Agda} in the extended environment; `extAt-in`{.Agda} takes the second component, which gives that implication in reverse. Neither reader eliminates a truncation, chooses a witness, or transports along a path; whatever `φ`{.Agda} may contain internally, at this outer level the evidence is an ordered pair and each reader is literally a projection of it.
 <!--zh-->
-两个读式就是外层合取的两个投影。由 `extAt y φ` 的一个证明出发，`extAt-out`{.Agda} 取第一分量：它对每个模型元素 `z`{.Agda} 给出一条蕴含，从 `fst z`{.Agda} 属于槽位 `y`{.Agda} 处集合，到扩展环境中 `φ`{.Agda} 成立；`extAt-in`{.Agda} 取第二分量，给出反方向的同一条蕴含。两个读式都不消去截断、不选取见证、也不沿路径搬运；无论 `φ`{.Agda} 内部含有什么，在这一外层上证据就是一个有序对，而每个读式恰是它的投影。
+两个读式就是外层合取的两个投影。由 `extAt y φ` 的一个证明出发，`extAt-out`{.Agda} 取第一分量：它对每个模型元素 `z`{.Agda} 给出一条蕴含，从 `z .fst`{.Agda} 属于槽位 `y`{.Agda} 处集合，到扩展环境中 `φ`{.Agda} 成立；`extAt-in`{.Agda} 取第二分量，给出反方向的同一条蕴含。两个读式都不消去截断、不选取见证、也不沿路径搬运；无论 `φ`{.Agda} 内部含有什么，在这一外层上证据就是一个有序对，而每个读式恰是它的投影。
 <!--ja-->
-二つの読みは、外側の連言の二つの射影である。`extAt y φ` の要素から出発して、`extAt-out`{.Agda} は第一の成分を取る。これはすべての模型の要素 `z`{.Agda} に対して、`fst z`{.Agda} がスロット `y`{.Agda} の集合に属することから、拡張された環境での `φ`{.Agda} の充足への含意を割り当てる。`extAt-in`{.Agda} は第二の成分を取り、同じ含意を逆向きに与える。どちらの読みも切り捨ての除去も証人の選択も経路に沿う輸送も行わない。`φ`{.Agda} の内部に何があっても、この外側の層では証拠は順序対であり、各読みは文字どおりその射影である。
+二つの読みは、外側の連言の二つの射影である。`extAt y φ` の要素から出発して、`extAt-out`{.Agda} は第一の成分を取る。これはすべての模型の要素 `z`{.Agda} に対して、`z .fst`{.Agda} がスロット `y`{.Agda} の集合に属することから、拡張された環境での `φ`{.Agda} の充足への含意を割り当てる。`extAt-in`{.Agda} は第二の成分を取り、同じ含意を逆向きに与える。どちらの読みも切り捨ての除去も証人の選択も経路に沿う輸送も行わない。`φ`{.Agda} の内部に何があっても、この外側の層では証拠は順序対であり、各読みは文字どおりその射影である。
 <!--/-->
 
 ```agda
-            → ⟨ fst z ∈ fst (lookup y γ) ⟩ → ⟨ (z ∷ γ) ⊨ φ ⟩
+            → ⟨ z .fst ∈ (lookup y γ) .fst ⟩ → ⟨ (z ∷ γ) ⊨ φ ⟩
   extAt-out h = h .fst
 
   extAt-in : ⟨ γ ⊨ extAt y φ ⟩ → (z : S)
-           → ⟨ (z ∷ γ) ⊨ φ ⟩ → ⟨ fst z ∈ fst (lookup y γ) ⟩
+           → ⟨ (z ∷ γ) ⊨ φ ⟩ → ⟨ z .fst ∈ (lookup y γ) .fst ⟩
   extAt-in h = h .snd
 ```
 
@@ -599,8 +599,8 @@ Introduction runs the projections in reverse and is the ordered pair of the two 
 <!--/-->
 
 ```agda
-  extAt-in-both : ((z : S) → ⟨ fst z ∈ fst (lookup y γ) ⟩ → ⟨ (z ∷ γ) ⊨ φ ⟩)
-                → ((z : S) → ⟨ (z ∷ γ) ⊨ φ ⟩ → ⟨ fst z ∈ fst (lookup y γ) ⟩)
+  extAt-in-both : ((z : S) → ⟨ z .fst ∈ (lookup y γ) .fst ⟩ → ⟨ (z ∷ γ) ⊨ φ ⟩)
+                → ((z : S) → ⟨ (z ∷ γ) ⊨ φ ⟩ → ⟨ z .fst ∈ (lookup y γ) .fst ⟩)
                 → ⟨ γ ⊨ extAt y φ ⟩
   extAt-in-both f g = f , g
 ```
@@ -638,19 +638,19 @@ arityTagPairAtL c ar k a b = PairExpression.read
 ```
 
 <!--en-->
-The adequacy statement identifies the truth value of this formula with the proposition `PairIs (fst (lookup c γ)) (...)`{.Agda}, a path in the ambient hierarchy asserting that the set at `c`{.Agda} equals the nested Kuratowski pair built from the slot projections. The components can then be read off the right-hand side: the tag numeral `# k`{.Agda} is fixed, while `ar`{.Agda}, `a`{.Agda} and `b`{.Agda} each contribute their looked-up value. Since the statement is a path of truth values rather than a one-way implication, a later proof may rewrite with it in either direction.
+The adequacy statement identifies the truth value of this formula with the proposition `PairIs ((lookup c γ) .fst) (...)`{.Agda}, a path in the ambient hierarchy asserting that the set at `c`{.Agda} equals the nested Kuratowski pair built from the slot projections. The components can then be read off the right-hand side: the tag numeral `# k`{.Agda} is fixed, while `ar`{.Agda}, `a`{.Agda} and `b`{.Agda} each contribute their looked-up value. Since the statement is a path of truth values rather than a one-way implication, a later proof may rewrite with it in either direction.
 <!--zh-->
-充分性陈述把该公式的真值等同于命题 `PairIs (fst (lookup c γ)) (...)`{.Agda}，这是周遭层级中的一条路径，断言 `c`{.Agda} 处的集合等于由各槽位投影构造的嵌套 Kuratowski 对。各分量便可从右边读出：标签数码 `# k`{.Agda} 是固定的，而 `ar`{.Agda}、`a`{.Agda} 与 `b`{.Agda} 各自贡献其查得的值。由于该陈述是真理值之间的路径而非单向蕴含，后续证明可以在任一方向上用它改写。
+充分性陈述把该公式的真值等同于命题 `PairIs ((lookup c γ) .fst) (...)`{.Agda}，这是周遭层级中的一条路径，断言 `c`{.Agda} 处的集合等于由各槽位投影构造的嵌套 Kuratowski 对。各分量便可从右边读出：标签数码 `# k`{.Agda} 是固定的，而 `ar`{.Agda}、`a`{.Agda} 与 `b`{.Agda} 各自贡献其查得的值。由于该陈述是真理值之间的路径而非单向蕴含，后续证明可以在任一方向上用它改写。
 <!--ja-->
-妥当性の主張は、この論理式の真理値を命題 `PairIs (fst (lookup c γ)) (...)`{.Agda}、すなわち周囲の階層におけるパスと同一視する。これは `c`{.Agda} の集合が各スロットの射影から組み上げられた入れ子の Kuratowski 対に等しいと述べるものである。各成分は右辺から読み取れる。タグの数項 `# k`{.Agda} は固定されており、`ar`{.Agda}、`a`{.Agda}、`b`{.Agda} はそれぞれ参照された値を寄与する。この主張は一方向の含意ではなく真理値の間のパスなので、後の証明ではどちらの方向にも書き換えに使える。
+妥当性の主張は、この論理式の真理値を命題 `PairIs ((lookup c γ) .fst) (...)`{.Agda}、すなわち周囲の階層におけるパスと同一視する。これは `c`{.Agda} の集合が各スロットの射影から組み上げられた入れ子の Kuratowski 対に等しいと述べるものである。各成分は右辺から読み取れる。タグの数項 `# k`{.Agda} は固定されており、`ar`{.Agda}、`a`{.Agda}、`b`{.Agda} はそれぞれ参照された値を寄与する。この主張は一方向の含意ではなく真理値の間のパスなので、後の証明ではどちらの方向にも書き換えに使える。
 <!--/-->
 
 ```agda
 arityTagPairAtL-adequate : ∀ {n} (c ar : Fin n) (k : ℕ) (a b : Fin n) (γ : S ^ n)
   → (γ ⊨ arityTagPairAtL c ar k a b)
-  ≡ PairIs (fst (lookup c γ))
-      (pr (fst (lookup ar γ))
-        (pr (# k) (pr (fst (lookup a γ)) (fst (lookup b γ)))))
+  ≡ PairIs ((lookup c γ) .fst)
+      (pr ((lookup ar γ) .fst)
+        (pr (# k) (pr ((lookup a γ) .fst) ((lookup b γ) .fst))))
 ```
 
 <!--en-->
@@ -696,8 +696,8 @@ The adequacy proof again cites `PairExpression.adequate`{.Agda} at the same expr
 <!--/-->
 
 ```agda
-  ≡ PairIs (fst (lookup c γ))
-      (pr (fst (lookup ar γ)) (pr (# k) (fst (lookup a γ))))
+  ≡ PairIs ((lookup c γ) .fst)
+      (pr ((lookup ar γ) .fst) (pr (# k) ((lookup a γ) .fst)))
 arityTagAtL-adequate c ar k a γ = PairExpression.adequate
   (PairExpression.pair (PairExpression.slot ar)
     (PairExpression.pair (PairExpression.numeral k) (PairExpression.slot a))) id c γ
@@ -799,11 +799,11 @@ A clause whose subformula sits one arity higher must consult the table at an ari
 <!--/-->
 
 <!--en-->
-The definition is `sucAtL i j = liftFo (sucAt i j) _`{.Agda}. Because `sucAt` names no constants, its `BoundedFo InL` argument contains no nontrivial constructibility witnesses. In the adequacy proof, `transferFo` receives that argument and, separately, `Δ₀-sucAt i j`, the hierarchy-side Δ₀ certificate. The result identifies satisfaction with `PairIs (fst (lookup j γ)) (sucV (fst (lookup i γ)))`: the proposition that the set at `j` is the successor set of the set at `i`.
+The definition is `sucAtL i j = liftFo (sucAt i j) _`{.Agda}. Because `sucAt` names no constants, its `BoundedFo InL` argument contains no nontrivial constructibility witnesses. In the adequacy proof, `transferFo` receives that argument and, separately, `Δ₀-sucAt i j`, the hierarchy-side Δ₀ certificate. The result identifies satisfaction with `PairIs ((lookup j γ) .fst) (sucV ((lookup i γ) .fst))`: the proposition that the set at `j` is the successor set of the set at `i`.
 <!--zh-->
-定义为 `sucAtL i j = liftFo (sucAt i j) _`{.Agda}。由于 `sucAt` 不含常元，其 `BoundedFo InL` 参数没有非平凡的常元可构造性见证。在充分性证明中，`transferFo` 分别接收这个参数与 `Δ₀-sucAt i j`，后者才是层级一侧的 Δ₀ 证书。所得路径把满足等同于 `PairIs (fst (lookup j γ)) (sucV (fst (lookup i γ)))`：即槽位 `j` 的集合是槽位 `i` 集合的后继集这一命题。
+定义为 `sucAtL i j = liftFo (sucAt i j) _`{.Agda}。由于 `sucAt` 不含常元，其 `BoundedFo InL` 参数没有非平凡的常元可构造性见证。在充分性证明中，`transferFo` 分别接收这个参数与 `Δ₀-sucAt i j`，后者才是层级一侧的 Δ₀ 证书。所得路径把满足等同于 `PairIs ((lookup j γ) .fst) (sucV ((lookup i γ) .fst))`：即槽位 `j` 的集合是槽位 `i` 集合的后继集这一命题。
 <!--ja-->
-定義は `sucAtL i j = liftFo (sucAt i j) _`{.Agda} である。`sucAt` は定数を含まないため、その `BoundedFo InL` の引数には非自明な定数の構成可能性の証人はない。妥当性の証明では、`transferFo` はこの引数と、階層側の Δ₀ 証明書である `Δ₀-sucAt i j` とを別々に受け取る。得られるパスは充足を `PairIs (fst (lookup j γ)) (sucV (fst (lookup i γ)))`、すなわちスロット `j` の集合がスロット `i` の集合の後続集合であるという命題と同一視する。
+定義は `sucAtL i j = liftFo (sucAt i j) _`{.Agda} である。`sucAt` は定数を含まないため、その `BoundedFo InL` の引数には非自明な定数の構成可能性の証人はない。妥当性の証明では、`transferFo` はこの引数と、階層側の Δ₀ 証明書である `Δ₀-sucAt i j` とを別々に受け取る。得られるパスは充足を `PairIs ((lookup j γ) .fst) (sucV ((lookup i γ) .fst))`、すなわちスロット `j` の集合がスロット `i` の集合の後続集合であるという命題と同一視する。
 <!--/-->
 
 ```agda
@@ -811,21 +811,21 @@ sucAtL : ∀ {n} → Fin n → Fin n → Formula S n
 sucAtL i j = liftFo (sucAt i j) _
 
 sucAtL-adequate : ∀ {n} (i j : Fin n) (γ : S ^ n)
-  → (γ ⊨ sucAtL i j) ≡ PairIs (fst (lookup j γ)) (sucV (fst (lookup i γ)))
+  → (γ ⊨ sucAtL i j) ≡ PairIs ((lookup j γ) .fst) (sucV ((lookup i γ) .fst))
 sucAtL-adequate i j γ =
 ```
 
 <!--en-->
-The proof composes three paths. The transfer lemma first equates satisfaction of the lifted formula in `L` with ambient satisfaction of `sucAt i j` at the projected assignment `map fst γ`{.Agda}, using the boundedness certificate; the transfer rests on the established transitive-model setup. The hierarchy-side adequacy theorem `sucAt-adequate`{.Agda} then rewrites that satisfaction as the equality of the interpreted values. Finally, the two lookups of the projected assignment are moved to projections of the lookups in `γ` by `lookup-fst`{.Agda}, `sucV`{.Agda} is moved inside by congruence, and the equation is reassembled under `PairIs`{.Agda} by `cong₂`{.Agda}. The result is the identification stated.
+The proof composes three paths. The transfer lemma first equates satisfaction of the lifted formula in `L` with ambient satisfaction of `sucAt i j` at the projected assignment `map (λ p → p .fst) γ`{.Agda}, using the boundedness certificate; the transfer rests on the established transitive-model setup. The hierarchy-side adequacy theorem `sucAt-adequate`{.Agda} then rewrites that satisfaction as the equality of the interpreted values. Finally, the two lookups of the projected assignment are moved to projections of the lookups in `γ` by `lookup-fst`{.Agda}, `sucV`{.Agda} is moved inside by congruence, and the equation is reassembled under `PairIs`{.Agda} by `cong₂`{.Agda}. The result is the identification stated.
 <!--zh-->
-证明串联三条路径。转换引理先借有界性证书，把抬升公式在 `L` 中的满足等同于 `sucAt i j` 在投影赋值 `map fst γ`{.Agda} 处的周遭满足；该转换立足于既有的传递模型设置。层级一侧的充分性定理 `sucAt-adequate`{.Agda} 随后把那个满足改写为被解释取值之间的等式。最后，`lookup-fst`{.Agda} 把投影赋值处的两次查表换成 `γ` 中查表后的投影，同余把 `sucV`{.Agda} 移到内部，再由 `cong₂`{.Agda} 在 `PairIs`{.Agda} 之下重新组装等式。所得即所陈述的等同。
+证明串联三条路径。转换引理先借有界性证书，把抬升公式在 `L` 中的满足等同于 `sucAt i j` 在投影赋值 `map (λ p → p .fst) γ`{.Agda} 处的周遭满足；该转换立足于既有的传递模型设置。层级一侧的充分性定理 `sucAt-adequate`{.Agda} 随后把那个满足改写为被解释取值之间的等式。最后，`lookup-fst`{.Agda} 把投影赋值处的两次查表换成 `γ` 中查表后的投影，同余把 `sucV`{.Agda} 移到内部，再由 `cong₂`{.Agda} 在 `PairIs`{.Agda} 之下重新组装等式。所得即所陈述的等同。
 <!--ja-->
-証明は三つのパスを連結する。まず転送の補題が有界性の証明書を使い、持ち上げられた論理式の `L` での充足を、射影された割り当て `map fst γ`{.Agda} での `sucAt i j` の周囲の充足と等しいとする。転送は確立された推移的モデルの設定に依拠する。次に階層側の妥当性定理 `sucAt-adequate`{.Agda} が、その充足を解釈された値の間の等式へ書き換える。最後に `lookup-fst`{.Agda} が射影された割り当てでの二度の参照を `γ` での参照の射影へ移し、合同が `sucV`{.Agda} を内側へ移し、`cong₂`{.Agda} が等式を `PairIs`{.Agda} の下で組み立て直す。得られるのは述べられた同一視である。
+証明は三つのパスを連結する。まず転送の補題が有界性の証明書を使い、持ち上げられた論理式の `L` での充足を、射影された割り当て `map (λ p → p .fst) γ`{.Agda} での `sucAt i j` の周囲の充足と等しいとする。転送は確立された推移的モデルの設定に依拠する。次に階層側の妥当性定理 `sucAt-adequate`{.Agda} が、その充足を解釈された値の間の等式へ書き換える。最後に `lookup-fst`{.Agda} が射影された割り当てでの二度の参照を `γ` での参照の射影へ移し、合同が `sucV`{.Agda} を内側へ移し、`cong₂`{.Agda} が等式を `PairIs`{.Agda} の下で組み立て直す。得られるのは述べられた同一視である。
 <!--/-->
 
 ```agda
     transferFo (sucAt i j) _ (Δ₀-sucAt i j) γ
-  ∙ sucAt-adequate i j (map fst γ)
+  ∙ sucAt-adequate i j (map (λ p → p .fst) γ)
   ∙ cong₂ PairIs (lookup-fst j γ) (cong sucV (lookup-fst i γ))
 ```
 
@@ -918,11 +918,11 @@ The remainder of `bddTag0`{.Agda} pairs the singleton certificate, used for the 
 ```
 
 <!--en-->
-With the boundedness certificates assembled, `consAtL e' m e`{.Agda} is the lift of the hierarchy-side formula `consAt e' m e`{.Agda} through `liftFo`{.Agda}, supplied with `bddCons`{.Agda} as its certificate. Its adequacy statement is conditional where the successor's was not: it takes a family `g : Fin k → V ℓ`{.Agda} together with a proof `hE`{.Agda} that the set held in slot `e`{.Agda} is the coded environment `env g`{.Agda}. Under that hypothesis, satisfaction of `consAtL e' m e`{.Agda} is identified, as a truth value, with `PairIs (fst (lookup e' γ)) (env (cons (fst (lookup m γ)) g))`{.Agda}: the set at `e'`{.Agda} is exactly the coded environment obtained by pushing the value at `m`{.Agda} onto the front of `g`. The formula classifies a candidate against an environment that is already coded; it does not construct one, and the hypothesis about the old environment is precisely what makes the classification well-defined.
+With the boundedness certificates assembled, `consAtL e' m e`{.Agda} is the lift of the hierarchy-side formula `consAt e' m e`{.Agda} through `liftFo`{.Agda}, supplied with `bddCons`{.Agda} as its certificate. Its adequacy statement is conditional where the successor's was not: it takes a family `g : Fin k → V ℓ`{.Agda} together with a proof `hE`{.Agda} that the set held in slot `e`{.Agda} is the coded environment `env g`{.Agda}. Under that hypothesis, satisfaction of `consAtL e' m e`{.Agda} is identified, as a truth value, with `PairIs ((lookup e' γ) .fst) (env (cons ((lookup m γ) .fst) g))`{.Agda}: the set at `e'`{.Agda} is exactly the coded environment obtained by pushing the value at `m`{.Agda} onto the front of `g`. The formula classifies a candidate against an environment that is already coded; it does not construct one, and the hypothesis about the old environment is precisely what makes the classification well-defined.
 <!--zh-->
-有界性证书装配齐备之后，`consAtL e' m e`{.Agda} 就是层级一侧公式 `consAt e' m e`{.Agda} 经 `liftFo`{.Agda} 的抬升，其证书由 `bddCons`{.Agda} 提供。它的充分性陈述带有一个后继情形所没有的条件：给定一个族 `g : Fin k → V ℓ`{.Agda}，以及「槽位 `e`{.Agda} 中的集合是码化环境 `env g`{.Agda}」的证明 `hE`{.Agda}。在该假设下，`consAtL e' m e`{.Agda} 的满足作为一个真值被等同于 `PairIs (fst (lookup e' γ)) (env (cons (fst (lookup m γ)) g))`{.Agda}：`e'`{.Agda} 处的集合恰是把 `m`{.Agda} 处的取值推到 `g` 前端所得的码化环境。这条公式是针对一个已被码化的环境作分类，而非构造环境；关于旧环境的那个假设，正是使这一分类适定的前提。
+有界性证书装配齐备之后，`consAtL e' m e`{.Agda} 就是层级一侧公式 `consAt e' m e`{.Agda} 经 `liftFo`{.Agda} 的抬升，其证书由 `bddCons`{.Agda} 提供。它的充分性陈述带有一个后继情形所没有的条件：给定一个族 `g : Fin k → V ℓ`{.Agda}，以及「槽位 `e`{.Agda} 中的集合是码化环境 `env g`{.Agda}」的证明 `hE`{.Agda}。在该假设下，`consAtL e' m e`{.Agda} 的满足作为一个真值被等同于 `PairIs ((lookup e' γ) .fst) (env (cons ((lookup m γ) .fst) g))`{.Agda}：`e'`{.Agda} 处的集合恰是把 `m`{.Agda} 处的取值推到 `g` 前端所得的码化环境。这条公式是针对一个已被码化的环境作分类，而非构造环境；关于旧环境的那个假设，正是使这一分类适定的前提。
 <!--ja-->
-有界性の証明書がそろうと、`consAtL e' m e`{.Agda} は階層側の論理式 `consAt e' m e`{.Agda} を `liftFo`{.Agda} で持ち上げたものであり、その証明書として `bddCons`{.Agda} が与えられる。この妥当性の主張には、後者の場合にはなかった条件が付く。族 `g : Fin k → V ℓ`{.Agda} と、スロット `e`{.Agda} に置かれた集合が符号化環境 `env g`{.Agda} であるという証明 `hE`{.Agda} を仮定するのである。その仮定の下で、`consAtL e' m e`{.Agda} の充足は、真理値として `PairIs (fst (lookup e' γ)) (env (cons (fst (lookup m γ)) g))`{.Agda} と同一視される。すなわち `e'`{.Agda} の集合は、`m`{.Agda} の値を `g` の先頭に付け加えて得られる符号化環境にほかならない。この論理式は、すでに符号化された環境に対して候補を分類するものであって、環境を構成するものではない。旧環境についての仮定こそ、この分類を意味の定まったものにする前提である。
+有界性の証明書がそろうと、`consAtL e' m e`{.Agda} は階層側の論理式 `consAt e' m e`{.Agda} を `liftFo`{.Agda} で持ち上げたものであり、その証明書として `bddCons`{.Agda} が与えられる。この妥当性の主張には、後者の場合にはなかった条件が付く。族 `g : Fin k → V ℓ`{.Agda} と、スロット `e`{.Agda} に置かれた集合が符号化環境 `env g`{.Agda} であるという証明 `hE`{.Agda} を仮定するのである。その仮定の下で、`consAtL e' m e`{.Agda} の充足は、真理値として `PairIs ((lookup e' γ) .fst) (env (cons ((lookup m γ) .fst) g))`{.Agda} と同一視される。すなわち `e'`{.Agda} の集合は、`m`{.Agda} の値を `g` の先頭に付け加えて得られる符号化環境にほかならない。この論理式は、すでに符号化された環境に対して候補を分類するものであって、環境を構成するものではない。旧環境についての仮定こそ、この分類を意味の定まったものにする前提である。
 <!--/-->
 
 ```agda
@@ -931,23 +931,23 @@ consAtL e' m e = liftFo (consAt e' m e) (bddCons e' m e)
 
 consAtL-adequate : ∀ {n} (e' m e : Fin n) (γ : S ^ n)
   {k : ℕ} (g : Fin k → V ℓ)
-  → fst (lookup e γ) ≡ env g
+  → (lookup e γ) .fst ≡ env g
 ```
 
 <!--en-->
-The proof opens with the transfer lemma, given all its inputs at once: the formula `consAt e' m e`{.Agda}, its boundedness certificate `bddCons`{.Agda}, and the Δ₀ certificate `Δ₀-consAt`{.Agda} recorded on the hierarchy side. The transfer is bounded absoluteness in action, and it depends on the established transitive-model setup: because `L` is transitive and every constant the formula names is constructible, satisfaction of the lifted formula in the carrier moves to satisfaction of the original formula at the projected assignment `map fst γ`{.Agda}, where ambient facts can be stated directly.
+The proof opens with the transfer lemma, given all its inputs at once: the formula `consAt e' m e`{.Agda}, its boundedness certificate `bddCons`{.Agda}, and the Δ₀ certificate `Δ₀-consAt`{.Agda} recorded on the hierarchy side. The transfer is bounded absoluteness in action, and it depends on the established transitive-model setup: because `L` is transitive and every constant the formula names is constructible, satisfaction of the lifted formula in the carrier moves to satisfaction of the original formula at the projected assignment `map (λ p → p .fst) γ`{.Agda}, where ambient facts can be stated directly.
 <!--zh-->
-证明以转换引理开场，一次给足它的全部输入：公式 `consAt e' m e`{.Agda}、其有界性证书 `bddCons`{.Agda}、以及层级一侧记录的 Δ₀ 证书 `Δ₀-consAt`{.Agda}。这一步是有界绝对性的实际运用，并依赖于既已建立的传递模型设置：由于 `L` 传递、且公式点名的每个常元都可构造，抬升公式在载体中的满足，就移为原公式在投影赋值 `map fst γ`{.Agda} 处的满足，而在那里周遭的事实可以直接陈述。
+证明以转换引理开场，一次给足它的全部输入：公式 `consAt e' m e`{.Agda}、其有界性证书 `bddCons`{.Agda}、以及层级一侧记录的 Δ₀ 证书 `Δ₀-consAt`{.Agda}。这一步是有界绝对性的实际运用，并依赖于既已建立的传递模型设置：由于 `L` 传递、且公式点名的每个常元都可构造，抬升公式在载体中的满足，就移为原公式在投影赋值 `map (λ p → p .fst) γ`{.Agda} 处的满足，而在那里周遭的事实可以直接陈述。
 <!--ja-->
-証明は転送の補題から始まり、その入力は一度にすべて与えられる。論理式 `consAt e' m e`{.Agda}、その有界性の証明書 `bddCons`{.Agda}、そして階層側で記録された Δ₀ の証明書 `Δ₀-consAt`{.Agda} である。このステップは有界絶対性の実際の働きであり、確立された推移的モデルの設定に依存する。`L` が推移的であり、論理式が名指す定数がすべて構成可能であることから、持ち上げられた論理式の台での充足は、射影された割り当て `map fst γ`{.Agda} での元の論理式の充足へと移る。そこでは周囲の事実を直接述べることができる。
+証明は転送の補題から始まり、その入力は一度にすべて与えられる。論理式 `consAt e' m e`{.Agda}、その有界性の証明書 `bddCons`{.Agda}、そして階層側で記録された Δ₀ の証明書 `Δ₀-consAt`{.Agda} である。このステップは有界絶対性の実際の働きであり、確立された推移的モデルの設定に依存する。`L` が推移的であり、論理式が名指す定数がすべて構成可能であることから、持ち上げられた論理式の台での充足は、射影された割り当て `map (λ p → p .fst) γ`{.Agda} での元の論理式の充足へと移る。そこでは周囲の事実を直接述べることができる。
 <!--/-->
 
 ```agda
   → (γ ⊨ consAtL e' m e)
-  ≡ PairIs (fst (lookup e' γ)) (env (cons (fst (lookup m γ)) g))
+  ≡ PairIs ((lookup e' γ) .fst) (env (cons ((lookup m γ) .fst) g))
 consAtL-adequate e' m e γ g hE =
     transferFo (consAt e' m e) (bddCons e' m e) (Δ₀-consAt e' m e) γ
-  ∙ consAt-adequate e' m e (map fst γ) g
+  ∙ consAt-adequate e' m e (map (λ p → p .fst) γ) g
 ```
 
 <!--en-->

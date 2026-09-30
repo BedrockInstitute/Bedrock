@@ -385,7 +385,7 @@ The first rigidity fact compares the lengths of two coded environments. If one u
 ```agda
 env-len : (E : S) {n n' : ℕ} (h : Fin n → V ℓ) (h' : Fin n' → V ℓ)
         → ((i : Fin n) → ⟨ isL (h i) ⟩) → ((i : Fin n') → ⟨ isL (h' i) ⟩)
-        → fst E ≡ env h → fst E ≡ env h' → n ≡ n'
+        → E .fst ≡ env h → E .fst ≡ env h' → n ≡ n'
 env-len E {n} {n'} h h' cg cg' q q' =
   #-inj′ (domAt-numeral (suc zero) zero (nn n ∷ E ∷ []) n' h' cg' q'
 ```
@@ -440,8 +440,8 @@ module SeqMap (A B E : S)
               (sv : ⟨ (E ∷ A ∷ []) ⊨ svAt zero ⟩)
               (dm : ⟨ (E ∷ A ∷ []) ⊨ domAt zero (suc zero) ⟩)
               (ij : ⟨ (E ∷ A ∷ []) ⊨ injAt zero ⟩)
-              (ran : (x y : S) → ⟨ pr (fst x) (fst y) ∈ fst E ⟩
-                   → ⟨ fst y ∈ fst B ⟩) where
+              (ran : (x y : S) → ⟨ pr (x .fst) (y .fst) ∈ E .fst ⟩
+                   → ⟨ y .fst ∈ B .fst ⟩) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -476,7 +476,7 @@ The extracted function is kept opaque: later arguments use it through its graph 
 
 ```agda
   opaque
-    f : ⟪ fst A ⟫ → ⟪ fst B ⟫
+    f : ⟪ A .fst ⟫ → ⟪ B .fst ⟫
     f = Sm.small
 ```
 
@@ -489,9 +489,9 @@ The graph record states that the pair of an index's presented element and the pr
 <!--/-->
 
 ```agda
-    f-graph : (m : ⟪ fst A ⟫)
-            → ⟨ pr (⟪ fst A ⟫↪ m) (⟪ fst B ⟫↪ (f m)) ∈ fst E ⟩
-    f-graph m = subst (λ w → ⟨ pr (⟪ fst A ⟫↪ m) w ∈ fst E ⟩)
+    f-graph : (m : ⟪ A .fst ⟫)
+            → ⟨ pr (⟪ A .fst ⟫↪ m) (⟪ B .fst ⟫↪ (f m)) ∈ E .fst ⟩
+    f-graph m = subst (λ w → ⟨ pr (⟪ A .fst ⟫↪ m) w ∈ E .fst ⟩)
       (sym (Sm.fib m .snd)) (Sm.E.toFun-graph (Sm.at m))
 ```
 
@@ -504,7 +504,7 @@ The extracted function is injective on the presentation of `A`, which is the poi
 <!--/-->
 
 ```agda
-    f-inj : (m n : ⟪ fst A ⟫) → f m ≡ f n → m ≡ n
+    f-inj : (m n : ⟪ A .fst ⟫) → f m ≡ f n → m ≡ n
     f-inj = Sm.small-inj
 ```
 
@@ -518,7 +518,7 @@ An environment entry of `A` is read as an ambient set through the embedding of t
 
 ```agda
   vA : {n : ℕ} → Ix A n → Fin n → V ℓ
-  vA g i = ⟪ fst A ⟫↪ (g i)
+  vA g i = ⟪ A .fst ⟫↪ (g i)
 ```
 
 <!--en-->
@@ -531,7 +531,7 @@ Likewise for the entries of `B`-environments.
 
 ```agda
   vB : {n : ℕ} → Ix B n → Fin n → V ℓ
-  vB h i = ⟪ fst B ⟫↪ (h i)
+  vB h i = ⟪ B .fst ⟫↪ (h i)
 ```
 
 <!--en-->
@@ -557,7 +557,7 @@ Every entry of an `A`-environment is constructible, by transporting the membersh
 
 ```agda
   isLA : {n : ℕ} (g : Ix A n) (i : Fin n) → ⟨ isL (vA g i) ⟩
-  isLA g i = isL-trans (member (fst A) (g i)) (snd A)
+  isLA g i = isL-trans (member (A .fst) (g i)) (A .snd)
 ```
 
 <!--en-->
@@ -570,7 +570,7 @@ Likewise for the entries of `B`-environments.
 
 ```agda
   isLB : {n : ℕ} (h : Ix B n) (i : Fin n) → ⟨ isL (vB h i) ⟩
-  isLB h i = isL-trans (member (fst B) (h i)) (snd B)
+  isLB h i = isL-trans (member (B .fst) (h i)) (B .snd)
 ```
 
 <!--en-->
@@ -584,9 +584,9 @@ For an index object `i`, `Ent y s i` says merely that there are model elements `
 ```agda
   Ent : (y s i : S) → Type (ℓ-suc ℓ)
   Ent y s i = ∥ Σ[ u ∶ S ] Σ[ v ∶ S ]
-      ( ⟨ pr (fst i) (fst u) ∈ fst s ⟩
-      × ⟨ pr (fst i) (fst v) ∈ fst y ⟩
-      × ⟨ pr (fst u) (fst v) ∈ fst E ⟩ ) ∥₁
+      ( ⟨ pr (i .fst) (u .fst) ∈ s .fst ⟩
+      × ⟨ pr (i .fst) (v .fst) ∈ y .fst ⟩
+      × ⟨ pr (u .fst) (v .fst) ∈ E .fst ⟩ ) ∥₁
 ```
 
 <!--en-->
@@ -602,7 +602,7 @@ The host reading `Wit y s` says merely that some object `n` is the domain of `s`
   Wit y s = ∥ Σ[ n ∶ S ]
       ( ⟨ (n ∷ y ∷ s ∷ []) ⊨ domAt i2 i0 ⟩
       × ⟨ (B ∷ n ∷ y ∷ s ∷ []) ⊨ envOverAt i2 i1 i0 ⟩
-      × ((i : S) → ⟨ fst i ∈ fst n ⟩ → Ent y s i) ) ∥₁
+      × ((i : S) → ⟨ i .fst ∈ n .fst ⟩ → Ent y s i) ) ∥₁
 ```
 
 <!--en-->
@@ -706,7 +706,7 @@ The body reader receives the three components exposed by the outer formula: `n` 
 ```agda
       bodyOut : (y s n b : S)
               → ⟨ (n ∷ y ∷ s ∷ []) ⊨ domAt i2 i0 ⟩
-              → fst b ≡ fst B
+              → b .fst ≡ B .fst
               → ⟨ (b ∷ n ∷ y ∷ s ∷ []) ⊨ envOverAt i2 i1 i0 ⟩
               → ⟨ (b ∷ n ∷ y ∷ s ∷ []) ⊨ ∀̇∈ (var i1) entFo ⟩
 ```
@@ -740,11 +740,11 @@ The bounded universal clause is used pointwise: for each `i∈n`, `entOut` turns
 ```
 
 <!--en-->
-To read the whole graph formula outward, we first eliminate the truncated witness `n`, then the truncated witness `b`. Their accompanying clauses give the domain condition, the equality `fst b ≡ fst B`, the environment condition, and the bounded step condition; `bodyOut` turns exactly these data into `Wit y s`. The eliminations are legitimate because `Wit y s` is itself propositionally truncated.
+To read the whole graph formula outward, we first eliminate the truncated witness `n`, then the truncated witness `b`. Their accompanying clauses give the domain condition, the equality `b .fst ≡ B .fst`, the environment condition, and the bounded step condition; `bodyOut` turns exactly these data into `Wit y s`. The eliminations are legitimate because `Wit y s` is itself propositionally truncated.
 <!--zh-->
-向外读取整个图公式时，先消去截断见证 `n`，再消去截断见证 `b`。与它们相伴的子句分别给出定义域条件、等式 `fst b ≡ fst B`、环境条件和有界步骤条件；`bodyOut` 恰把这些数据变成 `Wit y s`。由于 `Wit y s` 本身经过命题截断，这两次消去是合法的。
+向外读取整个图公式时，先消去截断见证 `n`，再消去截断见证 `b`。与它们相伴的子句分别给出定义域条件、等式 `b .fst ≡ B .fst`、环境条件和有界步骤条件；`bodyOut` 恰把这些数据变成 `Wit y s`。由于 `Wit y s` 本身经过命题截断，这两次消去是合法的。
 <!--ja-->
-グラフ論理式全体を外向きに読むには、まず切り詰められた証人 `n` を除去し、次に切り詰められた証人 `b` を除去する。それらに伴う節から、定義域条件、等式 `fst b ≡ fst B`、環境条件、有界ステップ条件が得られ、`bodyOut` がちょうどこれらを `Wit y s` に変える。`Wit y s` 自体が命題的に切り詰められているので、この二つの除去は正当である。
+グラフ論理式全体を外向きに読むには、まず切り詰められた証人 `n` を除去し、次に切り詰められた証人 `b` を除去する。それらに伴う節から、定義域条件、等式 `b .fst ≡ B .fst`、環境条件、有界ステップ条件が得られ、`bodyOut` がちょうどこれらを `Wit y s` に変える。`Wit y s` 自体が命題的に切り詰められているので、この二つの除去は正当である。
 <!--/-->
 
 ```agda
@@ -763,7 +763,7 @@ Conversely, a host-level witness supplies the outer existential with `n` and the
 
 ```agda
     fo-in : (y s : S) → Wit y s → ⟨ (y ∷ s ∷ []) ⊨ fo ⟩
-    fo-in y s = rec₁ (snd ((y ∷ s ∷ []) ⊨ fo))
+    fo-in y s = rec₁ (((y ∷ s ∷ []) ⊨ fo) .snd)
       (λ { (n , (hd , he , hS)) →
         ∣ n , ( hd , ∣ B , ( refl , he , λ i i∈n → entIn y s n i (hS i i∈n) ) ∣₁ ) ∣₁ })
 ```
@@ -779,7 +779,7 @@ Fix a sequence `g` of length `N` over `A`, a carrier element `s`, and an equatio
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-  module AtSeq (N : ℕ) (g : Ix A N) (s : S) (e : fst s ≡ fst (envS A g)) where
+  module AtSeq (N : ℕ) (g : Ix A N) (s : S) (e : s .fst ≡ (envS A g) .fst) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -862,10 +862,10 @@ The step clause at each position is proved by eliminating the numeral membership
 <!--/-->
 
 ```agda
-      step : (i : S) → ⟨ fst i ∈ # N ⟩ → Ent y₀ s i
-      step i i∈N = map₁ atIndex (∈#-elim N (fst i) i∈N)
+      step : (i : S) → ⟨ i .fst ∈ # N ⟩ → Ent y₀ s i
+      step i i∈N = map₁ atIndex (∈#-elim N (i .fst) i∈N)
         where
-        atIndex : Σ[ k ∶ ℕ ] ((k < N) × (fst i ≡ # k))
+        atIndex : Σ[ k ∶ ℕ ] ((k < N) × (i .fst ≡ # k))
                 → Σ[ u ∶ S ] Σ[ v ∶ S ]
 ```
 
@@ -878,9 +878,9 @@ For the recovered finite index `j`, the required entry consists of the source va
 <!--/-->
 
 ```agda
-                    ( ⟨ pr (fst i) (fst u) ∈ fst s ⟩
-                    × ⟨ pr (fst i) (fst v) ∈ fst y₀ ⟩
-                    × ⟨ pr (fst u) (fst v) ∈ fst E ⟩ )
+                    ( ⟨ pr (i .fst) (u .fst) ∈ s .fst ⟩
+                    × ⟨ pr (i .fst) (v .fst) ∈ y₀ .fst ⟩
+                    × ⟨ pr (u .fst) (v .fst) ∈ E .fst ⟩ )
         atIndex (k , p , ei) =
             (vA g j , isLA g j) , (vB (fg g) j , isLB (fg g) j)
 ```
@@ -895,7 +895,7 @@ The environment-entry lemma supplies the first two memberships, transported alon
 
 ```agda
           , ( subst2 (λ a w → ⟨ pr a (vA g j) ∈ w ⟩) (sym qi) (sym e) (at (vA g) j)
-            , subst (λ a → ⟨ pr a (vB (fg g) j) ∈ fst y₀ ⟩) (sym qi) (at (vB (fg g)) j)
+            , subst (λ a → ⟨ pr a (vB (fg g) j) ∈ y₀ .fst ⟩) (sym qi) (at (vB (fg g)) j)
             , f-graph (g j) )
           where
           j : Fin N
@@ -911,7 +911,7 @@ The internal index `j` is constructed from the bounded natural number by the fin
 
 ```agda
           j = fromℕ' N k p
-          qi : fst i ≡ # (toℕ j)
+          qi : i .fst ≡ # (toℕ j)
           qi = ei ∙ cong #_ (sym (toFromId' N k p))
 ```
 
@@ -924,8 +924,8 @@ Uniqueness starts with an arbitrary candidate `y` satisfying `Wit y s` and aims 
 <!--/-->
 
 ```agda
-    only : (y : S) → Wit y s → fst y ≡ fst y₀
-    only y = rec₁ (setIsSet (fst y) (fst y₀))
+    only : (y : S) → Wit y s → y .fst ≡ y₀ .fst
+    only y = rec₁ (setIsSet (y .fst) (y₀ .fst))
       (λ { (n , (hd , he , hS)) → Only.final n hd he hS })
       where
       module Only (n : S)
@@ -942,7 +942,7 @@ The inner module collects the three clauses of the witness: the domain condition
 ```agda
                   (hd : ⟨ (n ∷ y ∷ s ∷ []) ⊨ domAt i2 i0 ⟩)
                   (he : ⟨ (B ∷ n ∷ y ∷ s ∷ []) ⊨ envOverAt i2 i1 i0 ⟩)
-                  (hS : (i : S) → ⟨ fst i ∈ fst n ⟩ → Ent y s i) where
+                  (hS : (i : S) → ⟨ i .fst ∈ n .fst ⟩ → Ent y s i) where
 ```
 
 <!--en-->
@@ -954,7 +954,7 @@ The numeral equation identifies the unknown length with the known length `N`, by
 <!--/-->
 
 ```agda
-        qn : fst n ≡ # N
+        qn : n .fst ≡ # N
         qn = domAt-numeral i2 i0 (n ∷ y ∷ s ∷ []) N (vA g) (isLA g) e hd
 ```
 
@@ -981,7 +981,7 @@ Recovery also proves that the underlying set of `y` is the environment graph gen
 <!--/-->
 
 ```agda
-          gR-eq : fst y ≡ fst (envS B gR)
+          gR-eq : y .fst ≡ (envS B gR) .fst
           gR-eq = Recover.recovers B N (B ∷ n ∷ y ∷ s ∷ []) i2 i1 i0 qn refl he
 ```
 
@@ -995,9 +995,9 @@ At each index `j`, the step clause yields, under propositional truncation, a sou
 
 ```agda
         pt : (j : Fin N) → gR j ≡ fg g j
-        pt j = ↪-inj {a = fst B} (rec₁ (setIsSet _ _) read (hS (nn (toℕ j)) j∈n))
+        pt j = ↪-inj {a = B .fst} (rec₁ (setIsSet _ _) read (hS (nn (toℕ j)) j∈n))
           where
-          j∈n : ⟨ # (toℕ j) ∈ fst n ⟩
+          j∈n : ⟨ # (toℕ j) ∈ n .fst ⟩
           j∈n = subst (λ w → ⟨ # (toℕ j) ∈ w ⟩) (sym qn) (#mono (toℕ j) N (toℕ<n j))
 ```
 
@@ -1011,9 +1011,9 @@ The reading lemma states what the step clause provides: two elements and three m
 
 ```agda
           read : Σ[ u ∶ S ] Σ[ v ∶ S ]
-                   ( ⟨ pr (# (toℕ j)) (fst u) ∈ fst s ⟩
-                   × ⟨ pr (# (toℕ j)) (fst v) ∈ fst y ⟩
-                   × ⟨ pr (fst u) (fst v) ∈ fst E ⟩ )
+                   ( ⟨ pr (# (toℕ j)) (u .fst) ∈ s .fst ⟩
+                   × ⟨ pr (# (toℕ j)) (v .fst) ∈ y .fst ⟩
+                   × ⟨ pr (u .fst) (v .fst) ∈ E .fst ⟩ )
                → vB gR j ≡ vB (fg g) j
 ```
 
@@ -1028,24 +1028,24 @@ The equation of the source argument is recovered by the lookup specification of 
 ```agda
           read (u , v , (hu , hv , hE)) = sym qv ∙ qv'
             where
-            qu : fst u ≡ vA g j
-            qu = subst ⟨_⟩ (lookup-spec (vA g) j (fst u))
-                   (subst (λ w → ⟨ pr (# (toℕ j)) (fst u) ∈ w ⟩) e hu)
+            qu : u .fst ≡ vA g j
+            qu = subst ⟨_⟩ (lookup-spec (vA g) j (u .fst))
+                   (subst (λ w → ⟨ pr (# (toℕ j)) (u .fst) ∈ w ⟩) e hu)
 ```
 
 <!--en-->
-The candidate value `v` has two descriptions. Looking it up in the recovered environment gives `fst v ≡ vB gR j`. On the other hand, `hE` says that `E` relates the recovered source argument to `v`; after identifying that argument with `vA g j`, single-valuedness of `E` compares this edge with `f-graph (g j)` and yields `fst v ≡ vB (fg g) j`.
+The candidate value `v` has two descriptions. Looking it up in the recovered environment gives `v .fst ≡ vB gR j`. On the other hand, `hE` says that `E` relates the recovered source argument to `v`; after identifying that argument with `vA g j`, single-valuedness of `E` compares this edge with `f-graph (g j)` and yields `v .fst ≡ vB (fg g) j`.
 <!--zh-->
-候选值 `v` 有两种刻画。由恢复环境中的查询可得 `fst v ≡ vB gR j`。另一方面，`hE` 说明 `E` 把恢复出的源实参联系到 `v`；把该实参认同为 `vA g j` 后，`E` 的单值性将这条边与 `f-graph (g j)` 比较，从而得到 `fst v ≡ vB (fg g) j`。
+候选值 `v` 有两种刻画。由恢复环境中的查询可得 `v .fst ≡ vB gR j`。另一方面，`hE` 说明 `E` 把恢复出的源实参联系到 `v`；把该实参认同为 `vA g j` 后，`E` 的单值性将这条边与 `f-graph (g j)` 比较，从而得到 `v .fst ≡ vB (fg g) j`。
 <!--ja-->
-候補値 `v` には二つの記述がある。復元された環境から読み取ると `fst v ≡ vB gR j` が得られる。一方、`hE` は、`E` が復元された源の引数を `v` に関係づけることを述べる。その引数を `vA g j` と同一視した後、`E` の一価性によってこの辺を `f-graph (g j)` と比較し、`fst v ≡ vB (fg g) j` を得る。
+候補値 `v` には二つの記述がある。復元された環境から読み取ると `v .fst ≡ vB gR j` が得られる。一方、`hE` は、`E` が復元された源の引数を `v` に関係づけることを述べる。その引数を `vA g j` と同一視した後、`E` の一価性によってこの辺を `f-graph (g j)` と比較し、`v .fst ≡ vB (fg g) j` を得る。
 <!--/-->
 
 ```agda
-            qv : fst v ≡ vB gR j
-            qv = subst ⟨_⟩ (lookup-spec (vB gR) j (fst v))
-                   (subst (λ w → ⟨ pr (# (toℕ j)) (fst v) ∈ w ⟩) gR-eq hv)
-            qv' : fst v ≡ vB (fg g) j
+            qv : v .fst ≡ vB gR j
+            qv = subst ⟨_⟩ (lookup-spec (vB gR) j (v .fst))
+                   (subst (λ w → ⟨ pr (# (toℕ j)) (v .fst) ∈ w ⟩) gR-eq hv)
+            qv' : v .fst ≡ vB (fg g) j
             qv' = svAt-out zero (E ∷ A ∷ []) sv u v (vB (fg g) j , isLB (fg g) j) hE
 ```
 
@@ -1058,7 +1058,7 @@ The final equation composes the function-graph fact with the reversed argument e
 <!--/-->
 
 ```agda
-                    (subst (λ w → ⟨ pr w (vB (fg g) j) ∈ fst E ⟩) (sym qu) (f-graph (g j)))
+                    (subst (λ w → ⟨ pr w (vB (fg g) j) ∈ E .fst ⟩) (sym qu) (f-graph (g j)))
 ```
 
 <!--en-->
@@ -1070,19 +1070,19 @@ It remains to pass from coordinatewise agreement to equality of the two environm
 <!--/-->
 
 ```agda
-        final : fst y ≡ fst y₀
+        final : y .fst ≡ y₀ .fst
 ```
 
 <!--en-->
-Function extensionality turns `pt` into equality of the two index functions. Applying `envS B` along that path identifies their environment graphs, and composing with `gR-eq` proves `fst y ≡ fst y₀`. The path-lambda expression is the direct cubical action of the environment graph along this equality.
+Function extensionality turns `pt` into equality of the two index functions. Applying `envS B` along that path identifies their environment graphs, and composing with `gR-eq` proves `y .fst ≡ y₀ .fst`. The path-lambda expression is the direct cubical action of the environment graph along this equality.
 <!--zh-->
-函数外延性把 `pt` 提升为两个索引函数的相等。让 `envS B` 沿这条路径变化即可认同两个环境图，再与 `gR-eq` 复合便得到 `fst y ≡ fst y₀`。这里的路径 lambda 直接表示环境图沿该等式的立方作用。
+函数外延性把 `pt` 提升为两个索引函数的相等。让 `envS B` 沿这条路径变化即可认同两个环境图，再与 `gR-eq` 复合便得到 `y .fst ≡ y₀ .fst`。这里的路径 lambda 直接表示环境图沿该等式的立方作用。
 <!--ja-->
-関数外延性により、`pt` は二つの添字関数の等しさになる。そのパスに沿って `envS B` を動かすと二つの環境グラフが同一視され、これを `gR-eq` と合成して `fst y ≡ fst y₀` を得る。ここでのパスラムダは、この等しさに沿う環境グラフの cubical な作用を直接表している。
+関数外延性により、`pt` は二つの添字関数の等しさになる。そのパスに沿って `envS B` を動かすと二つの環境グラフが同一視され、これを `gR-eq` と合成して `y .fst ≡ y₀ .fst` を得る。ここでのパスラムダは、この等しさに沿う環境グラフの cubical な作用を直接表している。
 <!--/-->
 
 ```agda
-        final = gR-eq ∙ λ i → fst (envS B (funExt pt i))
+        final = gR-eq ∙ λ i → (envS B (funExt pt i)) .fst
 ```
 </div>
 </details>
@@ -1097,7 +1097,7 @@ Membership in the sequence set is stated as a type so that the argument can carr
 
 ```agda
   Mem : S → Type (ℓ-suc ℓ)
-  Mem s = ⟨ fst s ∈ˢ fst (seqL A) ⟩
+  Mem s = ⟨ s .fst ∈ˢ (seqL A) .fst ⟩
 ```
 
 <!--en-->
@@ -1110,7 +1110,7 @@ A representation is the truncated record of a length, an index function and the 
 
 ```agda
   Rep : S → Type (ℓ-suc ℓ)
-  Rep s = ∥ Σ[ n ∶ ℕ ] Σ[ g ∶ Ix A n ] (fst s ≡ fst (envS A g)) ∥₁
+  Rep s = ∥ Σ[ n ∶ ℕ ] Σ[ g ∶ Ix A n ] (s .fst ≡ (envS A g) .fst) ∥₁
 ```
 
 <!--en-->
@@ -1155,7 +1155,7 @@ For a concrete representation `(n , g , e)`, the functionality witness consists 
 ```agda
         AtSeq.y₀ n g s e
         , ( fo-in (AtSeq.y₀ n g s e) s (AtSeq.wit n g s e)
-          , λ y' h → Σ≡Prop (λ v → snd (isL v)) (AtSeq.only n g s e y' (fo-out y' s h)) ) })
+          , λ y' h → Σ≡Prop (λ v → (isL v) .snd) (AtSeq.only n g s e y' (fo-out y' s h)) ) })
         (rep s m)) }
 ```
 
@@ -1193,7 +1193,7 @@ Whenever `s` is presented by a length `n` and an index function `g`, the compute
 <!--/-->
 
 ```agda
-  fn-code : (s : S) (m : Mem s) (n : ℕ) (g : Ix A n) (e : fst s ≡ fst (envS A g))
+  fn-code : (s : S) (m : Mem s) (n : ℕ) (g : Ix A n) (e : s .fst ≡ (envS A g) .fst)
           → fn s m ≡ AtSeq.y₀ n g s e
   fn-code s m n g e =
     T.val-uniq s m (AtSeq.y₀ n g s e) (fo-in (AtSeq.y₀ n g s e) s (AtSeq.wit n g s e))
@@ -1208,9 +1208,9 @@ Membership in the target sequence set is proved by transporting along the code e
 <!--/-->
 
 ```agda
-  into : (s : S) (m : Mem s) → ⟨ fst (fn s m) ∈ˢ fst (seqL B) ⟩
-  into s m = rec₁ (snd (fst (fn s m) ∈ˢ fst (seqL B)))
-    (λ { (n , g , e) → subst (λ w → ⟨ fst w ∈ˢ fst (seqL B) ⟩) (sym (fn-code s m n g e))
+  into : (s : S) (m : Mem s) → ⟨ (fn s m) .fst ∈ˢ (seqL B) .fst ⟩
+  into s m = rec₁ (((fn s m) .fst ∈ˢ (seqL B) .fst) .snd)
+    (λ { (n , g , e) → subst (λ w → ⟨ w .fst ∈ˢ (seqL B) .fst ⟩) (sym (fn-code s m n g e))
            (seqL-in B n (envS B (fg g)) (envSet-in B (fg g))) })
     (rep s m)
 ```
@@ -1242,8 +1242,8 @@ To prove injectivity, it suffices first to compare canonical presentations. Supp
 ```agda
   private
     same : (n : ℕ) (g : Ix A n) (n' : ℕ) (g' : Ix A n')
-         → fst (envS B (fg g)) ≡ fst (envS B (fg g'))
-         → fst (envS A g) ≡ fst (envS A g')
+         → (envS B (fg g)) .fst ≡ (envS B (fg g')) .fst
+         → (envS A g) .fst ≡ (envS A g') .fst
     same n g n' g' q =
 ```
 
@@ -1260,7 +1260,7 @@ The equality of the two target environment graphs determines equality of their f
         base g' q
       where
       P : ℕ → Type (ℓ-suc ℓ)
-      P k = (h : Ix A k) → fst (envS B (fg g)) ≡ fst (envS B (fg h))
+      P k = (h : Ix A k) → (envS B (fg g)) .fst ≡ (envS B (fg h)) .fst
 ```
 
 <!--en-->
@@ -1272,39 +1272,39 @@ With a common length, `env-pt` reads equality of the target graphs as equality o
 <!--/-->
 
 ```agda
-          → fst (envS A g) ≡ fst (envS A h)
+          → (envS A g) .fst ≡ (envS A h) .fst
       base : P n
-      base h q' = λ i → fst (envS A (funExt (λ j →
-        f-inj (g j) (h j) (↪-inj {a = fst B} (env-pt (vB (fg g)) (vB (fg h)) q' j))) i))
+      base h q' = λ i → (envS A (funExt (λ j →
+        f-inj (g j) (h j) (↪-inj {a = B .fst} (env-pt (vB (fg g)) (vB (fg h)) q' j))) i)) .fst
 ```
 
 <!--en-->
-For arbitrary members `s` and `s'`, their representations are available only under propositional truncation. The desired equality `fst s ≡ fst s'` is a proposition because cumulative-hierarchy values form a set, so `rec2` may expose one representation of each input locally and pass them to the canonical comparison.
+For arbitrary members `s` and `s'`, their representations are available only under propositional truncation. The desired equality `s .fst ≡ s' .fst` is a proposition because cumulative-hierarchy values form a set, so `rec2` may expose one representation of each input locally and pass them to the canonical comparison.
 <!--zh-->
-对任意元素 `s` 与 `s'`，它们的表示只在命题截断下可用。累积层级的值形成集合，因此目标等式 `fst s ≡ fst s'` 是命题；于是 `rec2` 可以在局部展开两个输入各自的一个表示，并把它们交给典范呈现的比较。
+对任意元素 `s` 与 `s'`，它们的表示只在命题截断下可用。累积层级的值形成集合，因此目标等式 `s .fst ≡ s' .fst` 是命题；于是 `rec2` 可以在局部展开两个输入各自的一个表示，并把它们交给典范呈现的比较。
 <!--ja-->
-任意の要素 `s` と `s'` について、その表示は命題的切り詰めのもとでしか得られない。累積階層の値は集合をなすため、目標の等式 `fst s ≡ fst s'` は命題である。そこで `rec2` により、各入力の表示を局所的に一つずつ取り出し、標準表示どうしの比較に渡せる。
+任意の要素 `s` と `s'` について、その表示は命題的切り詰めのもとでしか得られない。累積階層の値は集合をなすため、目標の等式 `s .fst ≡ s' .fst` は命題である。そこで `rec2` により、各入力の表示を局所的に一つずつ取り出し、標準表示どうしの比較に渡せる。
 <!--/-->
 
 ```agda
   inj : (s : S) (m : Mem s) (s' : S) (m' : Mem s')
-      → fst (fn s m) ≡ fst (fn s' m') → fst s ≡ fst s'
-  inj s m s' m' q = rec2 (setIsSet (fst s) (fst s'))
+      → (fn s m) .fst ≡ (fn s' m') .fst → s .fst ≡ s' .fst
+  inj s m s' m' q = rec2 (setIsSet (s .fst) (s' .fst))
     (λ { (n , g , e) (n' , g' , e') →
         e
 ```
 
 <!--en-->
-The code equations identify the actual outputs `fn s m` and `fn s' m'` with their respective canonical image environments. Composing these identifications with the assumed output equality gives the hypothesis required by `same`; finally, the presentation equations `e` and `e'` transfer the resulting equality of source environment graphs back to `fst s ≡ fst s'`.
+The code equations identify the actual outputs `fn s m` and `fn s' m'` with their respective canonical image environments. Composing these identifications with the assumed output equality gives the hypothesis required by `same`; finally, the presentation equations `e` and `e'` transfer the resulting equality of source environment graphs back to `s .fst ≡ s' .fst`.
 <!--zh-->
-两个编码等式分别把实际输出 `fn s m` 与 `fn s' m'` 认同于各自的典范像环境。将这些认同与假设的输出相等复合，便得到 `same` 所需的前提；最后，呈现等式 `e` 与 `e'` 把所得源环境图相等转回 `fst s ≡ fst s'`。
+两个编码等式分别把实际输出 `fn s m` 与 `fn s' m'` 认同于各自的典范像环境。将这些认同与假设的输出相等复合，便得到 `same` 所需的前提；最后，呈现等式 `e` 与 `e'` 把所得源环境图相等转回 `s .fst ≡ s' .fst`。
 <!--ja-->
-二つの符号等式は、実際の出力 `fn s m` と `fn s' m'` を、それぞれの標準的な像の環境と同一視する。これらを仮定された出力の等しさと合成すると `same` が必要とする前提が得られ、最後に提示の等式 `e` と `e'` が源の環境グラフの等しさを `fst s ≡ fst s'` へ戻す。
+二つの符号等式は、実際の出力 `fn s m` と `fn s' m'` を、それぞれの標準的な像の環境と同一視する。これらを仮定された出力の等しさと合成すると `same` が必要とする前提が得られ、最後に提示の等式 `e` と `e'` が源の環境グラフの等しさを `s .fst ≡ s' .fst` へ戻す。
 <!--/-->
 
 ```agda
       ∙ same n g n' g'
-          (sym (cong fst (fn-code s m n g e)) ∙ q ∙ cong fst (fn-code s' m' n' g' e'))
+          (sym (cong (λ p → p .fst) (fn-code s m n g e)) ∙ q ∙ cong (λ p → p .fst) (fn-code s' m' n' g' e'))
       ∙ sym e' })
     (rep s m) (rep s' m')
 ```
@@ -1383,8 +1383,8 @@ For the outward direction, the existential supplies a carrier element `z`, an eq
 ```agda
 pin-out : ∀ {n} (c : S) (φ : Formula S (suc n)) (γ : S ^ n)
         → ⟨ γ ⊨ pinAt c φ ⟩ → ⟨ (c ∷ γ) ⊨ φ ⟩
-pin-out c φ γ = rec₁ (snd ((c ∷ γ) ⊨ φ))
-  (λ { (z , (ez , h)) → subst (λ v → ⟨ (v ∷ γ) ⊨ φ ⟩) (Σ≡Prop (λ v → snd (isL v)) ez) h })
+pin-out c φ γ = rec₁ (((c ∷ γ) ⊨ φ) .snd)
+  (λ { (z , (ez , h)) → subst (λ v → ⟨ (v ∷ γ) ⊨ φ ⟩) (Σ≡Prop (λ v → (isL v) .snd) ez) h })
 ```
 
 <!--en-->
@@ -1406,9 +1406,9 @@ An `InjCode F a b` consists of four proposition-valued conditions: single-valued
 ```agda
 isPropInjCode : (F a b : S) → isProp (InjCode F a b)
 isPropInjCode F a b =
-  isProp× (snd ((F ∷ a ∷ []) ⊨ svAt zero))
-    (isProp× (snd ((F ∷ a ∷ []) ⊨ domAt zero (suc zero)))
-      (isProp× (snd ((F ∷ a ∷ []) ⊨ injAt zero))
+  isProp× (((F ∷ a ∷ []) ⊨ svAt zero) .snd)
+    (isProp× (((F ∷ a ∷ []) ⊨ domAt zero (suc zero)) .snd)
+      (isProp× (((F ∷ a ∷ []) ⊨ injAt zero) .snd)
 ```
 
 <!--en-->
@@ -1420,23 +1420,23 @@ The remaining range condition quantifies over an argument, a value, and a proof 
 <!--/-->
 
 ```agda
-        (isPropΠ3 (λ _ y _ → snd (fst y ∈ fst b)))))
+        (isPropΠ3 (λ _ y _ → (y .fst ∈ b .fst) .snd))))
 ```
 
 <!--en-->
-Only the underlying sets represented by the graph and domain arguments matter to `InjCode`. Because constructibility proofs are propositions, equalities `fst F ≡ fst F'` and `fst a ≡ fst a'` lift uniquely to equalities in `S`; two-variable substitution then transports an injection code from `(F , a)` to `(F' , a')`, while the target `b` remains fixed.
+Only the underlying sets represented by the graph and domain arguments matter to `InjCode`. Because constructibility proofs are propositions, equalities `F .fst ≡ F' .fst` and `a .fst ≡ a' .fst` lift uniquely to equalities in `S`; two-variable substitution then transports an injection code from `(F , a)` to `(F' , a')`, while the target `b` remains fixed.
 <!--zh-->
-`InjCode` 对图参数与定义域参数只依赖它们所呈现的底层集合。由于可构造性证明是命题，等式 `fst F ≡ fst F'` 与 `fst a ≡ fst a'` 可唯一提升为 `S` 中的等式；随后二元替换把 `(F , a)` 上的单射码搬运到 `(F' , a')`，目标 `b` 保持不变。
+`InjCode` 对图参数与定义域参数只依赖它们所呈现的底层集合。由于可构造性证明是命题，等式 `F .fst ≡ F' .fst` 与 `a .fst ≡ a' .fst` 可唯一提升为 `S` 中的等式；随后二元替换把 `(F , a)` 上的单射码搬运到 `(F' , a')`，目标 `b` 保持不变。
 <!--ja-->
-`InjCode` がグラフ引数と定義域引数について参照するのは、それらが表示する基礎の集合だけである。構成可能性の証明は命題なので、等式 `fst F ≡ fst F'` と `fst a ≡ fst a'` は `S` での等式へ一意に持ち上がる。続いて二変数の置換により、目標 `b` を固定したまま、単射の符号を `(F , a)` から `(F' , a')` へ移送する。
+`InjCode` がグラフ引数と定義域引数について参照するのは、それらが表示する基礎の集合だけである。構成可能性の証明は命題なので、等式 `F .fst ≡ F' .fst` と `a .fst ≡ a' .fst` は `S` での等式へ一意に持ち上がる。続いて二変数の置換により、目標 `b` を固定したまま、単射の符号を `(F , a)` から `(F' , a')` へ移送する。
 <!--/-->
 
 ```agda
-injcode-resp : (F F' a a' b : S) → fst F ≡ fst F' → fst a ≡ fst a'
+injcode-resp : (F F' a a' b : S) → F .fst ≡ F' .fst → a .fst ≡ a' .fst
              → InjCode F a b → InjCode F' a' b
 injcode-resp F F' a a' b qF qa = subst2 {x = F} {y = F'} {z = a} {w = a'}
   (λ E A → InjCode E A b)
-  (Σ≡Prop (λ v → snd (isL v)) qF) (Σ≡Prop (λ v → snd (isL v)) qa)
+  (Σ≡Prop (λ v → (isL v) .snd) qF) (Σ≡Prop (λ v → (isL v) .snd) qa)
 ```
 
 <!--en-->
@@ -1489,7 +1489,7 @@ The reading lemma turns satisfaction of the injection formula into the four clau
   read (sv , dm , ij , ran) =
       svAt-in zero (F ∷ A ∷ []) (λ x y y' p q → svAt-out f γ sv x y y' p q)
     , domAt-intro zero (suc zero) (F ∷ A ∷ []) (λ x →
-          (λ h → rec₁ (snd (fst x ∈ fst A))
+          (λ h → rec₁ ((x .fst ∈ A .fst) .snd)
 ```
 
 <!--en-->
@@ -1520,7 +1520,7 @@ The filling lemma is the converse construction: from the four data of a coded in
   fill (sv , dm , ij , ran) =
       svAt-in f γ (λ x y y' p q → svAt-out zero (F ∷ A ∷ []) sv x y y' p q)
     , domAt-intro f B γ (λ x →
-          (λ h → rec₁ (snd (fst x ∈ fst A))
+          (λ h → rec₁ ((x .fst ∈ A .fst) .snd)
 ```
 
 <!--en-->
@@ -1583,7 +1583,7 @@ The move lemma transports a coded internal injection along equalities of the und
 <!--/-->
 
 ```agda
-move : (a a' b b' : S) → fst a ≡ fst a' → fst b ≡ fst b' → InjL a b → InjL a' b'
+move : (a a' b b' : S) → a .fst ≡ a' .fst → b .fst ≡ b' .fst → InjL a b → InjL a' b'
 move a a' b b' qa qb h =
   injl-trans a' a b' (inclusion-coded a' a (λ z hz → subst (λ w → ⟨ z ∈ˢ w ⟩) (sym qa) hz))
     (injl-trans a b b' h (inclusion-coded b b' (λ z hz → subst (λ w → ⟨ z ∈ˢ w ⟩) qb hz)))
@@ -1659,7 +1659,7 @@ Suppose that `f` injected the presentation of `ω` into a finite stage. Each val
   noinj : (f : ⟪ ω ⟫ → ⟪ Lset (# n) ⟫)
         → ((x y : ⟪ ω ⟫) → f x ≡ f y → x ≡ y) → ⊥₀
   noinj f finj = finite-excl-ω (# size) (numeral-ord size) (#∈ω size)
-    (λ x → q x , q x) (λ x y e → finj x y (qq x y (cong fst e)))
+    (λ x → q x , q x) (λ x y e → finj x y (qq x y (cong (λ p → p .fst) e)))
     where
 ```
 
@@ -1692,7 +1692,7 @@ The map `q` converts the chosen tally index into the corresponding element of th
     qq : (x y : ⟪ ω ⟫) → q x ≡ q y → f x ≡ f y
     qq x y e = ↪-inj {a = Lset (# n)}
       (sym (named (vl x) (mm x) .snd)
-        ∙ cong item (inj-toℕ (cong fst (fromFin-inj size _ _ e)))
+        ∙ cong item (inj-toℕ (cong (λ p → p .fst) (fromFin-inj size _ _ e)))
 ```
 
 <!--en-->
@@ -1787,7 +1787,7 @@ The endpoint condition recovers stage membership for both endpoints of every rel
 
 ```agda
 Rsub : (y x : SL.S) → Holds Rω y x
-     → ⟨ fst y ∈ˢ Lset ω ⟩ × ⟨ fst x ∈ˢ Lset ω ⟩
+     → ⟨ y .fst ∈ˢ Lset ω ⟩ × ⟨ x .fst ∈ˢ Lset ω ⟩
 Rsub y x h = rec₁ isP
   (λ { (_ , h₁) → rec₁ isP
     (λ { (a , h₂) → rec₁ isP
@@ -1820,9 +1820,9 @@ The conjunction of the two memberships is a proposition, and the relatedness of 
 ```agda
   rel
   where
-  isP : isProp (⟨ fst y ∈ˢ Lset ω ⟩ × ⟨ fst x ∈ˢ Lset ω ⟩)
-  isP = isProp× (snd (fst y ∈ˢ Lset ω)) (snd (fst x ∈ˢ Lset ω))
-  rel : ⟨ Related ω (pr (fst y) (fst x)) ⟩
+  isP : isProp (⟨ y .fst ∈ˢ Lset ω ⟩ × ⟨ x .fst ∈ˢ Lset ω ⟩)
+  isP = isProp× ((y .fst ∈ˢ Lset ω) .snd) ((x .fst ∈ˢ Lset ω) .snd)
+  rel : ⟨ Related ω (pr (y .fst) (x .fst)) ⟩
 ```
 
 <!--en-->
@@ -1836,7 +1836,7 @@ The relatedness is transported along the identification of the coded pair with t
 ```agda
   rel = subst (λ w → ⟨ Related ω w ⟩) (prʟ-fst y x)
     (specω (prʟ y x) .fst
-      (subst (λ w → ⟨ w ∈ˢ fst Rω ⟩) (sym (prʟ-fst y x)) h))
+      (subst (λ w → ⟨ w ∈ˢ Rω .fst ⟩) (sym (prʟ-fst y x)) h))
 ```
 
 <!--en-->
@@ -1998,7 +1998,7 @@ The unfolded reading of the family relation is proved: at `ω`, the abstractly s
 ```agda
 private
   unfoldω : (a b : MemOf (Lset ω))
-          → relOf (orderAt ω ω-ord) a b ≡ F._≺_ a b
+          → relOf (orderAt ω ω-ord) a b ≡ (a F.≺ b)
   unfoldω a b = cong (λ z → relOf (z ω-ord) a b) (orderAt-step ω)
 ```
 
@@ -2063,7 +2063,7 @@ The step bound says: if `a` precedes `b` in the family order, then the underlyin
 <!--/-->
 
 ```agda
-  step-bound : (a b : MemOf (Lset ω)) → F._≺_ a b
+  step-bound : (a b : MemOf (Lset ω)) → a F.≺ b
              → ⟨ a .fst ∈ˢ Lset (sucV (bAt b)) ⟩
   step-bound a b (inl h) =
     raise (suc∈or≡ (bAt a) (bAt b) (bAt-ord a) (bAt-ord b) h)
@@ -2298,8 +2298,8 @@ The order-type image is therefore contained in `ω`. Its outward reading supplie
 <!--/-->
 
 ```agda
-otL⊆ω : (z : V ℓ) → ⟨ z ∈ˢ fst C.otL ⟩ → ⟨ z ∈ˢ ω ⟩
-otL⊆ω z h = rec₁ (snd (z ∈ˢ ω))
+otL⊆ω : (z : V ℓ) → ⟨ z ∈ˢ C.otL .fst ⟩ → ⟨ z ∈ˢ ω ⟩
+otL⊆ω z h = rec₁ ((z ∈ˢ ω) .snd)
   (λ { (b , e) → subst (λ w → ⟨ w ∈ˢ ω ⟩) e (col-fin b) })
   (C.otL-out z h)
 ```

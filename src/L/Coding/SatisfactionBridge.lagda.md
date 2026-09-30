@@ -280,44 +280,44 @@ module _ (B : S) where
 <div class="submodule-fold-content">
 
 ```agda
-  module DB = DefOf (fst B)
+  module DB = DefOf (B .fst)
   module SemB = FOL.Semantics DB.𝒮M
   open SemB.At DB.SM id using () renaming ( _⊨_ to _⊨ᴮ_ ; ⟦_⟧ to ⟦_⟧ᴮ )
 ```
 
 <!--en-->
-An element `x : DB.SM` already consists of an underlying set `fst x` and a
-proof `snd x` that this set belongs to `B`. Since `B` is constructible and the
-class `L` is transitive, `fst x` is constructible as well. The map `intoL`
+An element `x : DB.SM` already consists of an underlying set `x .fst` and a
+proof `x .snd` that this set belongs to `B`. Since `B` is constructible and the
+class `L` is transitive, `x .fst` is constructible as well. The map `intoL`
 keeps the underlying set and supplies precisely this new certificate, producing
 an element of the host carrier `S`. No closure of `B` under membership is used.
 <!--zh-->
-元素 `x : DB.SM` 已经由底层集合 `fst x` 及其属于 `B` 的证明 `snd x` 组成。由于 `B` 可构造且类 `L` 具有传递性，`fst x` 也可构造。映射 `intoL` 保留底层集合，只补上这份新的证书，从而得到宿主载体 `S` 的元素。这里没有使用 `B` 对成员关系封闭的性质。
+元素 `x : DB.SM` 已经由底层集合 `x .fst` 及其属于 `B` 的证明 `x .snd` 组成。由于 `B` 可构造且类 `L` 具有传递性，`x .fst` 也可构造。映射 `intoL` 保留底层集合，只补上这份新的证书，从而得到宿主载体 `S` 的元素。这里没有使用 `B` 对成员关系封闭的性质。
 <!--ja-->
-要素 `x : DB.SM` は、基礎の集合 `fst x` と、それが `B` に属することの証明 `snd x` からすでに成る。`B` が構成可能であり、クラス `L` が推移的なので、`fst x` も構成可能である。写像 `intoL` は基礎の集合を保ったまま、この新しい証明書だけを補い、周囲の台 `S` の要素を作る。ここでは `B` が所属について閉じているとは仮定しない。
+要素 `x : DB.SM` は、基礎の集合 `x .fst` と、それが `B` に属することの証明 `x .snd` からすでに成る。`B` が構成可能であり、クラス `L` が推移的なので、`x .fst` も構成可能である。写像 `intoL` は基礎の集合を保ったまま、この新しい証明書だけを補い、周囲の台 `S` の要素を作る。ここでは `B` が所属について閉じているとは仮定しない。
 <!--/-->
 
 ```agda
   intoL : DB.SM → S
-  intoL x = fst x , isL-trans {x = fst B} {y = fst x} (snd x) (snd B)
+  intoL x = x .fst , isL-trans {x = B .fst} {y = x .fst} (x .snd) (B .snd)
 ```
 
 <!--en-->
 There is one more constant alphabet to connect. An index
-`m : ⟪ fst B ⟫` presents a member of `B`; `DB.ι m` packages that member with
+`m : ⟪ B .fst ⟫` presents a member of `B`; `DB.ι m` packages that member with
 its membership proof as an element of `DB.SM`, and `intoL` regards the same
 underlying set as an element of `S`. Their composite `asConst` is therefore
 the constant map used when a formula indexed by the small presentation is read
 by the host semantics. The presentation map `DB.ι` and the inclusion `intoL`
 play different roles, even though their composite preserves the named set.
 <!--zh-->
-还需连接一层常元字母表。索引 `m : ⟪ fst B ⟫` 表现 `B` 的一个元素；`DB.ι m` 把该元素及其成员关系证明包装为 `DB.SM` 的元素，`intoL` 再把同一底层集合视为 `S` 的元素。故其复合 `asConst` 正是把小表现所索引的公式交给宿主语义读取时所用的常元映射。表现映射 `DB.ι` 与包含 `intoL` 承担不同角色，尽管它们的复合保持被指称的集合不变。
+还需连接一层常元字母表。索引 `m : ⟪ B .fst ⟫` 表现 `B` 的一个元素；`DB.ι m` 把该元素及其成员关系证明包装为 `DB.SM` 的元素，`intoL` 再把同一底层集合视为 `S` 的元素。故其复合 `asConst` 正是把小表现所索引的公式交给宿主语义读取时所用的常元映射。表现映射 `DB.ι` 与包含 `intoL` 承担不同角色，尽管它们的复合保持被指称的集合不变。
 <!--ja-->
-さらにもう一つ、定数アルファベットを結ぶ必要がある。添字 `m : ⟪ fst B ⟫` は `B` の一つの要素を表示する。`DB.ι m` はその要素と所属証明を組にして `DB.SM` の要素を作り、`intoL` は同じ基礎集合を `S` の要素とみなす。その合成 `asConst` は、小さな表示で添字づけられた論理式を周囲の意味論で読むときの定数写像である。表示写像 `DB.ι` と包含 `intoL` は異なる役割をもつが、その合成は名指された集合を変えない。
+さらにもう一つ、定数アルファベットを結ぶ必要がある。添字 `m : ⟪ B .fst ⟫` は `B` の一つの要素を表示する。`DB.ι m` はその要素と所属証明を組にして `DB.SM` の要素を作り、`intoL` は同じ基礎集合を `S` の要素とみなす。その合成 `asConst` は、小さな表示で添字づけられた論理式を周囲の意味論で読むときの定数写像である。表示写像 `DB.ι` と包含 `intoL` は異なる役割をもつが、その合成は名指された集合を変えない。
 <!--/-->
 
 ```agda
-  asConst : ⟪ fst B ⟫ → S
+  asConst : ⟪ B .fst ⟫ → S
   asConst m = intoL (DB.ι m)
 ```
 
@@ -343,7 +343,7 @@ will be compared with its finite graph.
 
 ```agda
   values : ∀ {n} → DB.SM ^ n → Fin n → V ℓ
-  values δ i = fst (lookup i δ)
+  values δ i = (lookup i δ) .fst
 ```
 
 <!--en-->
@@ -365,21 +365,21 @@ needed to pass between them.
 
 <!--en-->
 Binding a variable extends an assignment by placing a new value at its front.
-On underlying families this is the operation `cons (fst x) (values δ)`, whereas
+On underlying families this is the operation `cons (x .fst) (values δ)`, whereas
 on inner vectors it is `x ∷ δ`. The lemma `cons-values` identifies the two
-pointwise: both give `fst x` at the new first position and the old value at
+pointwise: both give `x .fst` at the new first position and the old value at
 every shifted position. This single coherence equation is reused by all four
 quantifier cases.
 <!--zh-->
-绑定一个变元，就是在赋值前端加入一个新值。对底层值族而言，这是运算 `cons (fst x) (values δ)`；对内层向量而言，则是 `x ∷ δ`。引理 `cons-values` 逐点认同二者：在新的首位，两侧都给出 `fst x`；在每个后移位置，两侧都给出原来的值。这一条相干等式会由四种量词情形共同复用。
+绑定一个变元，就是在赋值前端加入一个新值。对底层值族而言，这是运算 `cons (x .fst) (values δ)`；对内层向量而言，则是 `x ∷ δ`。引理 `cons-values` 逐点认同二者：在新的首位，两侧都给出 `x .fst`；在每个后移位置，两侧都给出原来的值。这一条相干等式会由四种量词情形共同复用。
 <!--ja-->
-変数を束縛することは、割当ての先頭に新しい値を加えることである。基礎の値族ではこれは `cons (fst x) (values δ)` であり、内側のベクトルでは `x ∷ δ` である。補題 `cons-values` は両者を各点で同定する。新しい先頭ではどちらも `fst x` を与え、後ろへずれた各位置ではどちらも以前の値を与える。この一つの整合性の等式が、四つの量化子の場合すべてで再利用される。
+変数を束縛することは、割当ての先頭に新しい値を加えることである。基礎の値族ではこれは `cons (x .fst) (values δ)` であり、内側のベクトルでは `x ∷ δ` である。補題 `cons-values` は両者を各点で同定する。新しい先頭ではどちらも `x .fst` を与え、後ろへずれた各位置ではどちらも以前の値を与える。この一つの整合性の等式が、四つの量化子の場合すべてで再利用される。
 <!--/-->
 
 ```agda
   private
     cons-values : ∀ {n} (x : DB.SM) (δ : DB.SM ^ n)
-                → cons (fst x) (values δ) ≡ values (x ∷ δ)
+                → cons (x .fst) (values δ) ≡ values (x ∷ δ)
     cons-values x δ = funExt (λ { zero → refl ; (suc i) → refl })
 ```
 
@@ -398,7 +398,7 @@ of a representative recovered from a coded graph.
 
 ```agda
     index : ∀ {n} (δ : DB.SM ^ n) → Ix B n
-    index δ i = ∈-asFiber {a = values δ i} {b = fst B} (snd (lookup i δ)) .fst
+    index δ i = ∈-asFiber {a = values δ i} {b = B .fst} ((lookup i δ) .snd) .fst
 ```
 
 <!--en-->
@@ -415,8 +415,8 @@ needed to compare their finite graphs.
 
 ```agda
     index-eq : ∀ {n} (δ : DB.SM ^ n) (i : Fin n)
-             → ⟪ fst B ⟫↪ (index δ i) ≡ values δ i
-    index-eq δ i = ∈-asFiber {a = values δ i} {b = fst B} (snd (lookup i δ)) .snd
+             → ⟪ B .fst ⟫↪ (index δ i) ≡ values δ i
+    index-eq δ i = ∈-asFiber {a = values δ i} {b = B .fst} ((lookup i δ) .snd) .snd
 ```
 
 <!--en-->
@@ -451,7 +451,7 @@ truncation.
 <!--/-->
 
 ```agda
-  envFor-graph : ∀ {n} (δ : DB.SM ^ n) → fst (envFor δ) ≡ graph δ
+  envFor-graph : ∀ {n} (δ : DB.SM ^ n) → (envFor δ) .fst ≡ graph δ
   envFor-graph δ = cong env (funExt (index-eq δ))
 ```
 
@@ -474,8 +474,8 @@ formula induction.
 
 ```agda
   graph-envSet : ∀ {n} (δ : DB.SM ^ n) (z : S)
-               → fst z ≡ graph δ → ⟨ z ∈ˢ envSet B n ⟩
-  graph-envSet {n} δ z q = subst (λ w → ⟨ w ∈ fst (envSet B n) ⟩)
+               → z .fst ≡ graph δ → ⟨ z ∈ˢ envSet B n ⟩
+  graph-envSet {n} δ z q = subst (λ w → ⟨ w ∈ (envSet B n) .fst ⟩)
     (envFor-graph δ ∙ sym q) (envSet-in B (index δ))
 ```
 
@@ -483,24 +483,24 @@ formula induction.
 The graph equation now removes the common environment requirement from the
 membership equation. `Sat-mem`{.Agda} says that membership in `Sat B φ` is the
 conjunction of membership in `envSet B n` and satisfaction of `cond B φ`.
-Given `fst z ≡ graph δ`, the previous lemma supplies the first conjunct, so
+Given `z .fst ≡ graph δ`, the previous lemma supplies the first conjunct, so
 the second conjunct is equivalent to the whole statement. `⇔toPath` turns
 the two implications into a path of truth values. Thus `Sat-cond`{.Agda}
 does not yet interpret the formula; it isolates the recursive condition that
 the following induction will interpret.
 <!--zh-->
 图等式现在可以从成员关系等式中消去共同的环境要求。`Sat-mem`{.Agda}
-说明，`z` 属于 `Sat B φ` 当且仅当它既属于 `envSet B n`，又满足`cond B φ`。给定 `fst z ≡ graph δ`，上一条引理已经提供前一个合取支，所以后一支与整个陈述逻辑等价；`⇔toPath` 再把两个方向的蕴涵变成真值之间的路径。因此，`Sat-cond`{.Agda} 还没有解释公式的语义，它只是分离出接下来要由归纳解释的递归条件。
+说明，`z` 属于 `Sat B φ` 当且仅当它既属于 `envSet B n`，又满足`cond B φ`。给定 `z .fst ≡ graph δ`，上一条引理已经提供前一个合取支，所以后一支与整个陈述逻辑等价；`⇔toPath` 再把两个方向的蕴涵变成真值之间的路径。因此，`Sat-cond`{.Agda} 还没有解释公式的语义，它只是分离出接下来要由归纳解释的递归条件。
 <!--ja-->
-グラフの等式により、所属の等式から共通の環境条件を取り除ける。`Sat-mem`{.Agda} は、`z` が `Sat B φ` に属すことを、`envSet B n` への所属と `cond B φ` の充足との論理積として表す。`fst z ≡ graph δ` が与えられれば、直前の補題から前者が得られるので、後者は論理積全体と論理的に同値である。`⇔toPath` はその二方向の含意を真理値の間のパスにする。したがって `Sat-cond`{.Agda} はまだ論理式の意味を説明せず、次の帰納法で解釈すべき再帰条件だけを取り出す。
+グラフの等式により、所属の等式から共通の環境条件を取り除ける。`Sat-mem`{.Agda} は、`z` が `Sat B φ` に属すことを、`envSet B n` への所属と `cond B φ` の充足との論理積として表す。`z .fst ≡ graph δ` が与えられれば、直前の補題から前者が得られるので、後者は論理積全体と論理的に同値である。`⇔toPath` はその二方向の含意を真理値の間のパスにする。したがって `Sat-cond`{.Agda} はまだ論理式の意味を説明せず、次の帰納法で解釈すべき再帰条件だけを取り出す。
 <!--/-->
 
 ```agda
   Sat-cond : ∀ {n} (φ : Formula S n) (δ : DB.SM ^ n) (z : S)
-           → fst z ≡ graph δ
+           → z .fst ≡ graph δ
            → (z ∈ˢ Sat B φ) ≡ ((z ∷ []) ⊨ cond B φ)
   Sat-cond φ δ z q =
-    Sat-mem B φ z ∙ ⇔toPath snd (λ h → graph-envSet δ z q , h)
+    Sat-mem B φ z ∙ ⇔toPath (λ p → p .snd) (λ h → graph-envSet δ z q , h)
 ```
 
 <!--en-->
@@ -516,21 +516,21 @@ The first reading lemma compares the object-language term predicate with
 actual term evaluation. In an ambient environment `γ`, slot `ei` contains a
 coded assignment and slot `vi` contains a proposed value. If the former has
 underlying set `graph δ`, then satisfaction of `tmIs (mapTm intoL t) vi ei`
-forces the latter to have underlying set `fst (⟦ t ⟧ᴮ δ)`. For a constant,
+forces the latter to have underlying set `(⟦ t ⟧ᴮ δ) .fst`. For a constant,
 the predicate is already the required equation: relabelling by `intoL`
 changes only the packaged carrier, while its underlying set remains the
 constant's value.
 <!--zh-->
-第一条读引理把对象语言的词项谓词与实际的词项求值比较。在外围环境`γ` 中，槽位 `ei` 存放编码赋值，槽位 `vi` 存放候选取值。若前者的底层集合是 `graph δ`，那么满足 `tmIs (mapTm intoL t) vi ei` 就迫使后者的底层集合等于 `fst (⟦ t ⟧ᴮ δ)`。对常元而言，该谓词本身就是所需的等式：沿 `intoL` 作常元改名只改变载体的包装，底层集合仍是这个常元的取值。
+第一条读引理把对象语言的词项谓词与实际的词项求值比较。在外围环境`γ` 中，槽位 `ei` 存放编码赋值，槽位 `vi` 存放候选取值。若前者的底层集合是 `graph δ`，那么满足 `tmIs (mapTm intoL t) vi ei` 就迫使后者的底层集合等于 `(⟦ t ⟧ᴮ δ) .fst`。对常元而言，该谓词本身就是所需的等式：沿 `intoL` 作常元改名只改变载体的包装，底层集合仍是这个常元的取值。
 <!--ja-->
-最初の読み補題は、対象言語の項述語と実際の項評価を比較する。周囲の環境 `γ` では、スロット `ei` が符号化された割当てを、スロット `vi`が候補の値を収める。前者の基礎集合が `graph δ` なら、`tmIs (mapTm intoL t) vi ei` の充足から、後者の基礎集合が`fst (⟦ t ⟧ᴮ δ)` に等しいことが従う。定数の場合、この述語はすでに求める等式である。`intoL` による定数の改名は台の包装だけを変え、基礎集合はその定数の値のままである。
+最初の読み補題は、対象言語の項述語と実際の項評価を比較する。周囲の環境 `γ` では、スロット `ei` が符号化された割当てを、スロット `vi`が候補の値を収める。前者の基礎集合が `graph δ` なら、`tmIs (mapTm intoL t) vi ei` の充足から、後者の基礎集合が`(⟦ t ⟧ᴮ δ) .fst` に等しいことが従う。定数の場合、この述語はすでに求める等式である。`intoL` による定数の改名は台の包装だけを変え、基礎集合はその定数の値のままである。
 <!--/-->
 
 ```agda
   tmIs-out : ∀ {n k} (t : Term DB.SM n) (δ : DB.SM ^ n) (γ : S ^ k) (vi ei : Fin k)
-           → fst (lookup ei γ) ≡ graph δ
+           → (lookup ei γ) .fst ≡ graph δ
            → ⟨ γ ⊨ tmIs (mapTm intoL t) vi ei ⟩
-           → fst (lookup vi γ) ≡ fst (⟦ t ⟧ᴮ δ)
+           → (lookup vi γ) .fst ≡ (⟦ t ⟧ᴮ δ) .fst
   tmIs-out (con c) δ γ vi ei qe h = h
 ```
 
@@ -551,8 +551,8 @@ variable case of term evaluation.
 
 ```agda
   tmIs-out (var i) δ γ vi ei qe h =
-    subst ⟨_⟩ (lookup-spec (values δ) i (fst (lookup vi γ)))
-      (subst (λ w → ⟨ pr (# (toℕ i)) (fst (lookup vi γ)) ∈ w ⟩) qe
+    subst ⟨_⟩ (lookup-spec (values δ) i ((lookup vi γ) .fst))
+      (subst (λ w → ⟨ pr (# (toℕ i)) ((lookup vi γ) .fst) ∈ w ⟩) qe
         (tmIs-var-out i γ vi ei h))
 ```
 
@@ -573,8 +573,8 @@ the value of their bounding term.
 
 ```agda
   tmIs-in : ∀ {n k} (t : Term DB.SM n) (δ : DB.SM ^ n) (γ : S ^ k) (vi ei : Fin k)
-          → fst (lookup ei γ) ≡ graph δ
-          → fst (lookup vi γ) ≡ fst (⟦ t ⟧ᴮ δ)
+          → (lookup ei γ) .fst ≡ graph δ
+          → (lookup vi γ) .fst ≡ (⟦ t ⟧ᴮ δ) .fst
           → ⟨ γ ⊨ tmIs (mapTm intoL t) vi ei ⟩
   tmIs-in (con c) δ γ vi ei qe q = q
 ```
@@ -595,8 +595,8 @@ from any truncation.
 
 ```agda
   tmIs-in (var i) δ γ vi ei qe q = tmIs-var-in i γ vi ei
-    (subst (λ w → ⟨ pr (# (toℕ i)) (fst (lookup vi γ)) ∈ w ⟩) (sym qe)
-      (subst ⟨_⟩ (sym (lookup-spec (values δ) i (fst (lookup vi γ)))) q))
+    (subst (λ w → ⟨ pr (# (toℕ i)) ((lookup vi γ) .fst) ∈ w ⟩) (sym qe)
+      (subst ⟨_⟩ (sym (lookup-spec (values δ) i ((lookup vi γ) .fst))) q))
 ```
 
 <!--en-->
@@ -615,24 +615,24 @@ one new leading entry.
 
 ```agda
   consAtL-out : ∀ {n k} (δ : DB.SM ^ n) (x : DB.SM) (γ : S ^ k) (ei mi di : Fin k)
-              → fst (lookup di γ) ≡ graph δ
-              → fst (lookup mi γ) ≡ fst x
+              → (lookup di γ) .fst ≡ graph δ
+              → (lookup mi γ) .fst ≡ x .fst
               → ⟨ γ ⊨ consAtL ei mi di ⟩
-              → fst (lookup ei γ) ≡ graph (x ∷ δ)
+              → (lookup ei γ) .fst ≡ graph (x ∷ δ)
 ```
 
 <!--en-->
 The proof first applies `consAtL-adequate`{.Agda}. Under the old-graph
 hypothesis, that path identifies the proposed extension slot with
-`env (cons (fst (lookup mi γ)) (values δ))`. The equation `qm` replaces its
-head by `fst x`, and `cons-values`{.Agda} identifies the resulting family with
+`env (cons ((lookup mi γ) .fst) (values δ))`. The equation `qm` replaces its
+head by `x .fst`, and `cons-values`{.Agda} identifies the resulting family with
 the underlying values of `x ∷ δ`. Congruence of `env` then gives the announced
 graph equation. In particular, the adequacy law yields an equality with the
 extended graph; no graph-membership statement occurs here.
 <!--zh-->
-证明先使用 `consAtL-adequate`{.Agda}。在旧图假设下，这条路径把候选扩张槽位等同于 `env (cons (fst (lookup mi γ)) (values δ))`。等式 `qm` 把其首值替换为 `fst x`，`cons-values`{.Agda} 再把所得的族等同于 `x ∷ δ`的底层取值族。最后对 `env` 使用同余，便得到所宣称的图等式。尤其要注意，充分性律给出的是与扩张图的相等，而不是在该图中的成员关系。
+证明先使用 `consAtL-adequate`{.Agda}。在旧图假设下，这条路径把候选扩张槽位等同于 `env (cons ((lookup mi γ) .fst) (values δ))`。等式 `qm` 把其首值替换为 `x .fst`，`cons-values`{.Agda} 再把所得的族等同于 `x ∷ δ`的底层取值族。最后对 `env` 使用同余，便得到所宣称的图等式。尤其要注意，充分性律给出的是与扩张图的相等，而不是在该图中的成员关系。
 <!--ja-->
-証明はまず `consAtL-adequate`{.Agda} を使う。古いグラフについての仮定のもとで、このパスは拡張スロットの候補を`env (cons (fst (lookup mi γ)) (values δ))` と同一視する。等式 `qm`がその先頭値を `fst x` に置き換え、`cons-values`{.Agda} が得られた族を`x ∷ δ` の基礎の値の族と同一視する。最後に `env` の合同性を使えば、求めるグラフの等式が得られる。ここで妥当性の法則が与えるのは拡張グラフとの等式であって、そのグラフへの所属ではない。
+証明はまず `consAtL-adequate`{.Agda} を使う。古いグラフについての仮定のもとで、このパスは拡張スロットの候補を`env (cons ((lookup mi γ) .fst) (values δ))` と同一視する。等式 `qm`がその先頭値を `x .fst` に置き換え、`cons-values`{.Agda} が得られた族を`x ∷ δ` の基礎の値の族と同一視する。最後に `env` の合同性を使えば、求めるグラフの等式が得られる。ここで妥当性の法則が与えるのは拡張グラフとの等式であって、そのグラフへの所属ではない。
 <!--/-->
 
 ```agda
@@ -643,22 +643,22 @@ extended graph; no graph-membership statement occurs here.
 
 <!--en-->
 The inward reading assumes all three semantic equations: the old slot contains
-`graph δ`, the new-value slot contains `fst x`, and the proposed extension
+`graph δ`, the new-value slot contains `x .fst`, and the proposed extension
 slot contains `graph (x ∷ δ)`. From them it constructs satisfaction of
 `consAtL`. This direction lets each quantifier clause use the canonical
 environment `envFor (x ∷ δ)` as its certified extension. No untruncated
 environment has to be recovered from an existential representation.
 <!--zh-->
-向内读式假设三条语义等式：旧槽位存放 `graph δ`，新值槽位存放 `fst x`，候选扩张槽位存放 `graph (x ∷ δ)`；由此构造 `consAtL` 的满足关系。这个方向使每个量词子句都能直接把典范环境 `envFor (x ∷ δ)` 用作经过认证的扩张，而无须从存在表示中提取一个未截断的环境。
+向内读式假设三条语义等式：旧槽位存放 `graph δ`，新值槽位存放 `x .fst`，候选扩张槽位存放 `graph (x ∷ δ)`；由此构造 `consAtL` 的满足关系。这个方向使每个量词子句都能直接把典范环境 `envFor (x ∷ δ)` 用作经过认证的扩张，而无须从存在表示中提取一个未截断的环境。
 <!--ja-->
-内向きの読みは三つの意味論的な等式を仮定する。古いスロットが`graph δ` を、新しい値のスロットが `fst x` を、拡張スロットの候補が`graph (x ∷ δ)` を収めるという等式である。これらから `consAtL` の充足を構成する。この向きがあるため、各量化子の節は標準環境`envFor (x ∷ δ)` を証明済みの拡張として直接使える。存在表示から切り詰められていない環境を取り出す必要はない。
+内向きの読みは三つの意味論的な等式を仮定する。古いスロットが`graph δ` を、新しい値のスロットが `x .fst` を、拡張スロットの候補が`graph (x ∷ δ)` を収めるという等式である。これらから `consAtL` の充足を構成する。この向きがあるため、各量化子の節は標準環境`envFor (x ∷ δ)` を証明済みの拡張として直接使える。存在表示から切り詰められていない環境を取り出す必要はない。
 <!--/-->
 
 ```agda
   consAtL-in : ∀ {n k} (δ : DB.SM ^ n) (x : DB.SM) (γ : S ^ k) (ei mi di : Fin k)
-             → fst (lookup di γ) ≡ graph δ
-             → fst (lookup mi γ) ≡ fst x
-             → fst (lookup ei γ) ≡ graph (x ∷ δ)
+             → (lookup di γ) .fst ≡ graph δ
+             → (lookup mi γ) .fst ≡ x .fst
+             → (lookup ei γ) .fst ≡ graph (x ∷ δ)
              → ⟨ γ ⊨ consAtL ei mi di ⟩
 ```
 
@@ -709,7 +709,7 @@ constants to ambient constructible constants.
 
 ```agda
   Adequate : ∀ {n} → Formula DB.SM n → Type (ℓ-suc (ℓ-suc ℓ))
-  Adequate {n} φ = (δ : DB.SM ^ n) (z : S) → fst z ≡ graph δ
+  Adequate {n} φ = (δ : DB.SM ^ n) (z : S) → z .fst ≡ graph δ
                  → (z ∈ˢ Sat B (mapFo intoL φ)) ≡ (δ ⊨ᴮ φ)
 ```
 
@@ -795,14 +795,14 @@ have the same logical form as the inner semantics.
 Atomic formulas require the term-reading lemmas because their recursive
 conditions quantify over candidate term values. For membership, the condition
 gives, under propositional truncation, values `v` and `w`, proofs that they
-represent the evaluations of `t` and `u`, and a membership from `fst v` to
-`fst w`. The inner semantics instead states membership directly between the
+represent the evaluations of `t` and `u`, and a membership from `v .fst` to
+`w .fst`. The inner semantics instead states membership directly between the
 actual evaluations `T` and `U`. The local names for those evaluations make the
 two directions of this logical equivalence explicit.
 <!--zh-->
-原子公式的递归条件对候选词项值作量化，因此需要前面的词项读引理。对成员关系，条件在命题截断之下给出取值 `v` 与 `w`、它们分别表示 `t` 与 `u`之求值的证明，以及从 `fst v` 到 `fst w` 的成员关系。内层语义则直接陈述实际求值 `T` 与 `U` 之间的成员关系。为这两个求值设置局部名称，可以清楚写出该逻辑等价的两个方向。
+原子公式的递归条件对候选词项值作量化，因此需要前面的词项读引理。对成员关系，条件在命题截断之下给出取值 `v` 与 `w`、它们分别表示 `t` 与 `u`之求值的证明，以及从 `v .fst` 到 `w .fst` 的成员关系。内层语义则直接陈述实际求值 `T` 与 `U` 之间的成员关系。为这两个求值设置局部名称，可以清楚写出该逻辑等价的两个方向。
 <!--ja-->
-原子論理式の再帰条件は項の値の候補を量化するため、先ほどの項の読み補題が必要である。所属の場合、その条件は命題的切り詰めのもとで、値 `v` と `w`、それらがそれぞれ `t` と `u` の評価を表すという証明、および `fst v` から`fst w` への所属を与える。内側の意味論は、実際の評価 `T` と `U` の間の所属を直接述べる。この二つの評価に局所的な名前を付けることで、論理的同値の両方向を明示できる。
+原子論理式の再帰条件は項の値の候補を量化するため、先ほどの項の読み補題が必要である。所属の場合、その条件は命題的切り詰めのもとで、値 `v` と `w`、それらがそれぞれ `t` と `u` の評価を表すという証明、および `v .fst` から`w .fst` への所属を与える。内側の意味論は、実際の評価 `T` と `U` の間の所属を直接述べる。この二つの評価に局所的な名前を付けることで、論理的同値の両方向を明示できる。
 <!--/-->
 
 ```agda
@@ -815,20 +815,20 @@ two directions of this logical equivalence explicit.
 
 <!--en-->
 In the forward direction, `cond∈-out`{.Agda} exposes the truncated candidates.
-The target `fst T ∈ fst U` is a proposition, so `rec₁` may inspect each
+The target `T .fst ∈ U .fst` is a proposition, so `rec₁` may inspect each
 candidate package. At the environment `w ∷ v ∷ z ∷ []`, two applications of
 `tmIs-out` identify `v` with `T` and `w` with `U`. The two-variable transport
-`subst2` then carries the recorded relation `fst v ∈ fst w` to
-`fst T ∈ fst U`, which is exactly the inner interpretation of the atom.
+`subst2` then carries the recorded relation `v .fst ∈ w .fst` to
+`T .fst ∈ U .fst`, which is exactly the inner interpretation of the atom.
 <!--zh-->
-在正向中，`cond∈-out`{.Agda} 展开经过截断的候选。目标`fst T ∈ fst U` 是命题，所以 `rec₁` 可以逐个考察候选包。在环境`w ∷ v ∷ z ∷ []` 上，两次使用 `tmIs-out`，分别把 `v` 与 `T`、`w`与 `U` 认同。二元运输 `subst2` 随后把记录的关系 `fst v ∈ fst w`搬到 `fst T ∈ fst U`，这正是该原子的内层解释。
+在正向中，`cond∈-out`{.Agda} 展开经过截断的候选。目标`T .fst ∈ U .fst` 是命题，所以 `rec₁` 可以逐个考察候选包。在环境`w ∷ v ∷ z ∷ []` 上，两次使用 `tmIs-out`，分别把 `v` 与 `T`、`w`与 `U` 认同。二元运输 `subst2` 随后把记录的关系 `v .fst ∈ w .fst`搬到 `T .fst ∈ U .fst`，这正是该原子的内层解释。
 <!--ja-->
-順方向では、`cond∈-out`{.Agda} が切り詰められた候補を展開する。目標 `fst T ∈ fst U` は命題なので、`rec₁` によって各候補の包みを調べられる。環境 `w ∷ v ∷ z ∷ []` で `tmIs-out` を二度使うと、`v` は `T` と、`w` は `U` とそれぞれ同一視される。二変数の輸送`subst2` が、記録された関係 `fst v ∈ fst w` を `fst T ∈ fst U` へ運ぶ。これがこの原子の内側の解釈そのものである。
+順方向では、`cond∈-out`{.Agda} が切り詰められた候補を展開する。目標 `T .fst ∈ U .fst` は命題なので、`rec₁` によって各候補の包みを調べられる。環境 `w ∷ v ∷ z ∷ []` で `tmIs-out` を二度使うと、`v` は `T` と、`w` は `U` とそれぞれ同一視される。二変数の輸送`subst2` が、記録された関係 `v .fst ∈ w .fst` を `T .fst ∈ U .fst` へ運ぶ。これがこの原子の内側の解釈そのものである。
 <!--/-->
 
 ```agda
-    fwd : ⟨ (z ∷ []) ⊨ cond B (mapFo intoL (t ∈̇ u)) ⟩ → ⟨ fst T ∈ fst U ⟩
-    fwd h = rec₁ (snd (fst T ∈ fst U))
+    fwd : ⟨ (z ∷ []) ⊨ cond B (mapFo intoL (t ∈̇ u)) ⟩ → ⟨ T .fst ∈ U .fst ⟩
+    fwd h = rec₁ ((T .fst ∈ U .fst) .snd)
       (λ { (v , (w , (ht , (hu , r)))) → subst2 (λ p s → ⟨ p ∈ s ⟩)
         (tmIs-out t δ (w ∷ v ∷ z ∷ []) (suc zero) (suc (suc zero)) q ht)
         (tmIs-out u δ (w ∷ v ∷ z ∷ []) zero (suc (suc zero)) q hu)
@@ -850,22 +850,22 @@ principle or an extraction from propositional truncation.
 ```agda
         r })
       (cond∈-out B (mapTm intoL t) (mapTm intoL u) z h)
-    bwd : ⟨ fst T ∈ fst U ⟩ → ⟨ (z ∷ []) ⊨ cond B (mapFo intoL (t ∈̇ u)) ⟩
+    bwd : ⟨ T .fst ∈ U .fst ⟩ → ⟨ (z ∷ []) ⊨ cond B (mapFo intoL (t ∈̇ u)) ⟩
     bwd r = cond∈-in B (mapTm intoL t) (mapTm intoL u) z
       ∣ intoL T , (intoL U
 ```
 
 <!--en-->
 With those witnesses fixed, each call to `tmIs-in`{.Agda} receives `refl`
-because the underlying set of `intoL T` is definitionally `fst T`, and likewise
+because the underlying set of `intoL T` is definitionally `T .fst`, and likewise
 for `U`. The assumed membership between the evaluations is therefore already
 the relation required between the candidates. Inserting this complete package
 into the propositional truncation finishes the reverse implication and hence
 the membership atom.
 <!--zh-->
-确定这两个见证之后，两次调用 `tmIs-in`{.Agda} 都可使用 `refl`：`intoL T` 的底层集合按定义就是 `fst T`，`U` 的情形亦然。因此，假设中的求值成员关系已经是候选之间所需的关系。把这份完整数据写入命题截断，便完成反向蕴涵，也完成了成员关系原子的充分性证明。
+确定这两个见证之后，两次调用 `tmIs-in`{.Agda} 都可使用 `refl`：`intoL T` 的底层集合按定义就是 `T .fst`，`U` 的情形亦然。因此，假设中的求值成员关系已经是候选之间所需的关系。把这份完整数据写入命题截断，便完成反向蕴涵，也完成了成员关系原子的充分性证明。
 <!--ja-->
-この二つの証人を定めると、`tmIs-in`{.Agda} の二つの呼び出しにはどちらも`refl` を渡せる。`intoL T` の基礎集合は定義によって `fst T` であり、`U` についても同様だからである。したがって、仮定された評価間の所属が、候補間に必要な関係になっている。この一式を命題的切り詰めへ入れると、逆向きの含意が閉じ、所属の原子についての妥当性が完成する。
+この二つの証人を定めると、`tmIs-in`{.Agda} の二つの呼び出しにはどちらも`refl` を渡せる。`intoL T` の基礎集合は定義によって `T .fst` であり、`U` についても同様だからである。したがって、仮定された評価間の所属が、候補間に必要な関係になっている。この一式を命題的切り詰めへ入れると、逆向きの含意が閉じ、所属の原子についての妥当性が完成する。
 <!--/-->
 
 ```agda
@@ -879,13 +879,13 @@ The equality atom follows the same plan with equality as its candidate
 relation. Under propositional truncation, the recursive condition supplies
 two proposed term values, their two term readings, and a path between their
 underlying sets. The inner semantics asks directly for a path
-`fst T ≡ fst U`. As in the membership case, `⇔toPath` reduces adequacy to a
+`T .fst ≡ U .fst`. As in the membership case, `⇔toPath` reduces adequacy to a
 forward transport from candidates to evaluations and a reverse construction
 using the evaluations as candidates.
 <!--zh-->
-相等原子沿用同一方案，只把候选之间的关系换成相等。递归条件在命题截断之下给出两个候选词项值、两份词项读式，以及它们底层集合之间的路径；内层语义则直接要求路径 `fst T ≡ fst U`。与成员关系原子一样，`⇔toPath` 把充分性化成两个方向：正向把候选运输到实际求值，反向把实际求值用作候选。
+相等原子沿用同一方案，只把候选之间的关系换成相等。递归条件在命题截断之下给出两个候选词项值、两份词项读式，以及它们底层集合之间的路径；内层语义则直接要求路径 `T .fst ≡ U .fst`。与成员关系原子一样，`⇔toPath` 把充分性化成两个方向：正向把候选运输到实际求值，反向把实际求值用作候选。
 <!--ja-->
-等号の原子も同じ方針に従い、候補間の関係だけを等号に替える。再帰条件は命題的切り詰めのもとで、二つの項の値の候補、二つの項の読み、およびそれらの基礎集合の間のパスを与える。内側の意味論が直接要求するのは`fst T ≡ fst U` というパスである。所属の場合と同じく、`⇔toPath` は妥当性を、候補から評価へ輸送する順方向と、評価を候補として使う逆方向とに分ける。
+等号の原子も同じ方針に従い、候補間の関係だけを等号に替える。再帰条件は命題的切り詰めのもとで、二つの項の値の候補、二つの項の読み、およびそれらの基礎集合の間のパスを与える。内側の意味論が直接要求するのは`T .fst ≡ U .fst` というパスである。所属の場合と同じく、`⇔toPath` は妥当性を、候補から評価へ輸送する順方向と、評価を候補として使う逆方向とに分ける。
 <!--/-->
 
 ```agda
@@ -899,20 +899,20 @@ using the evaluations as candidates.
 <!--en-->
 The forward map may eliminate the truncation because equality in the cumulative
 hierarchy is a proposition. If the term readings yield paths
-`ht : fst v ≡ fst T` and `hu : fst w ≡ fst U`, while the candidate relation is
-`r : fst v ≡ fst w`, then the desired path has the precise orientation
+`ht : v .fst ≡ T .fst` and `hu : w .fst ≡ U .fst`, while the candidate relation is
+`r : v .fst ≡ w .fst`, then the desired path has the precise orientation
 `sym ht ∙ r ∙ hu`. Thus the proof first travels from the evaluation of `t`
 back to its candidate, crosses the recorded candidate equality, and then
 travels forward to the evaluation of `u`.
 <!--zh-->
-由于累积层级中的相等是命题，正向映射可以消去截断。若两条词项读式给出`ht : fst v ≡ fst T` 与 `hu : fst w ≡ fst U`，而候选关系是`r : fst v ≡ fst w`，那么所需路径的方向恰为 `sym ht ∙ r ∙ hu`。也就是先从 `t` 的实际求值逆行到其候选，经过已记录的候选相等，再正向到达 `u`的实际求值。
+由于累积层级中的相等是命题，正向映射可以消去截断。若两条词项读式给出`ht : v .fst ≡ T .fst` 与 `hu : w .fst ≡ U .fst`，而候选关系是`r : v .fst ≡ w .fst`，那么所需路径的方向恰为 `sym ht ∙ r ∙ hu`。也就是先从 `t` 的实际求值逆行到其候选，经过已记录的候选相等，再正向到达 `u`的实际求值。
 <!--ja-->
-累積階層の等号は命題なので、順方向の写像は切り詰めを除去できる。項の読みが `ht : fst v ≡ fst T` と `hu : fst w ≡ fst U` を与え、候補間の関係が `r : fst v ≡ fst w` であるとき、求めるパスの向きは正確に`sym ht ∙ r ∙ hu` である。すなわち、まず `t` の実際の評価からその候補へ逆向きに進み、記録された候補間の等号を渡り、最後に `u` の実際の評価へ順向きに進む。
+累積階層の等号は命題なので、順方向の写像は切り詰めを除去できる。項の読みが `ht : v .fst ≡ T .fst` と `hu : w .fst ≡ U .fst` を与え、候補間の関係が `r : v .fst ≡ w .fst` であるとき、求めるパスの向きは正確に`sym ht ∙ r ∙ hu` である。すなわち、まず `t` の実際の評価からその候補へ逆向きに進み、記録された候補間の等号を渡り、最後に `u` の実際の評価へ順向きに進む。
 <!--/-->
 
 ```agda
-    fwd : ⟨ (z ∷ []) ⊨ cond B (mapFo intoL (t ≐ u)) ⟩ → fst T ≡ fst U
-    fwd h = rec₁ (snd (intoL T ≈ˢ intoL U))
+    fwd : ⟨ (z ∷ []) ⊨ cond B (mapFo intoL (t ≐ u)) ⟩ → T .fst ≡ U .fst
+    fwd h = rec₁ ((intoL T ≈ˢ intoL U) .snd)
       (λ { (v , (w , (ht , (hu , r)))) →
           sym (tmIs-out t δ (w ∷ v ∷ z ∷ []) (suc zero) (suc (suc zero)) q ht)
         ∙ r
@@ -921,21 +921,21 @@ travels forward to the evaluation of `u`.
 <!--en-->
 The reverse map again uses `intoL T` and `intoL U` as the ambient witnesses.
 They satisfy the two term predicates by the inward term reading, and the
-assumed path `fst T ≡ fst U` supplies exactly the candidate equality required
+assumed path `T .fst ≡ U .fst` supplies exactly the candidate equality required
 by `cond≐-in`{.Agda}. Membership and equality atoms therefore differ only in
 the relation carried between the same two evaluated terms; their treatment of
 candidate values and truncation is identical.
 <!--zh-->
-反向映射仍以 `intoL T` 与 `intoL U` 作为外围见证。向内词项读式证明它们满足两条词项谓词，而假设路径 `fst T ≡ fst U` 恰好提供
+反向映射仍以 `intoL T` 与 `intoL U` 作为外围见证。向内词项读式证明它们满足两条词项谓词，而假设路径 `T .fst ≡ U .fst` 恰好提供
 `cond≐-in`{.Agda} 所需的候选相等。因此，成员关系原子与相等原子的区别只在于同一对已求值词项之间携带哪种关系；它们处理候选取值与截断的方式完全相同。
 <!--ja-->
-逆向きの写像でも、`intoL T` と `intoL U` を周囲の証人として使う。内向きの項の読みによって二つの項述語が充足され、仮定されたパス`fst T ≡ fst U` が `cond≐-in`{.Agda} の要求する候補間の等号をそのまま与える。したがって、所属の原子と等号の原子との違いは、同じ二つの評価済み項の間にどの関係を運ぶかだけである。候補の値と切り詰めの扱いは一致する。
+逆向きの写像でも、`intoL T` と `intoL U` を周囲の証人として使う。内向きの項の読みによって二つの項述語が充足され、仮定されたパス`T .fst ≡ U .fst` が `cond≐-in`{.Agda} の要求する候補間の等号をそのまま与える。したがって、所属の原子と等号の原子との違いは、同じ二つの評価済み項の間にどの関係を運ぶかだけである。候補の値と切り詰めの扱いは一致する。
 <!--/-->
 
 ```agda
         ∙ tmIs-out u δ (w ∷ v ∷ z ∷ []) zero (suc (suc zero)) q hu })
       (cond≐-out B (mapTm intoL t) (mapTm intoL u) z h)
-    bwd : fst T ≡ fst U → ⟨ (z ∷ []) ⊨ cond B (mapFo intoL (t ≐ u)) ⟩
+    bwd : T .fst ≡ U .fst → ⟨ (z ∷ []) ⊨ cond B (mapFo intoL (t ≐ u)) ⟩
     bwd r = cond≐-in B (mapTm intoL t) (mapTm intoL u) z
       ∣ intoL T , (intoL U
 ```
@@ -986,23 +986,23 @@ representative.
 
 <!--en-->
 Inside the truncation, the ambient witness and its proof `x∈B` form the
-restricted-carrier element `(fst x , x∈B)`. This is the sole domain
+restricted-carrier element `(x .fst , x∈B)`. This is the sole domain
 restriction on an unbounded quantified variable; the additional membership in
 a bounding term appears only for bounded quantifiers. `consAtL-out`{.Agda}
 then identifies `e` with the graph of the concretely extended assignment
-`(fst x , x∈B) ∷ δ`. The induction hypothesis transports the recorded
+`(x .fst , x∈B) ∷ δ`. The induction hypothesis transports the recorded
 subformula membership to inner satisfaction at that assignment, and the value
 together with this proof is inserted into the inner existential truncation.
 <!--zh-->
-在截断之内，外围见证及其证明 `x∈B` 组成限制载体元素`(fst x , x∈B)`。这是无界量化变元唯一的论域限制；属于界项取值的附加成员关系条件只在有界量词中出现。随后，`consAtL-out`{.Agda} 把 `e` 认同为具体扩张赋值 `(fst x , x∈B) ∷ δ` 的图。归纳假设把已记录的子公式成员关系运输为该赋值下的内层满足关系，最后把这个取值连同证明写入内层存在的命题截断。
+在截断之内，外围见证及其证明 `x∈B` 组成限制载体元素`(x .fst , x∈B)`。这是无界量化变元唯一的论域限制；属于界项取值的附加成员关系条件只在有界量词中出现。随后，`consAtL-out`{.Agda} 把 `e` 认同为具体扩张赋值 `(x .fst , x∈B) ∷ δ` 的图。归纳假设把已记录的子公式成员关系运输为该赋值下的内层满足关系，最后把这个取值连同证明写入内层存在的命题截断。
 <!--ja-->
-切り詰めの内側で、周囲の証人とその証明 `x∈B` を組にすると、制限された台の要素 `(fst x , x∈B)` が得られる。非有界の量化変数に課される論域の制限はこれだけであり、限界項の値への所属という追加条件は有界量化子で初めて現れる。続いて `consAtL-out`{.Agda} は `e` を、具体的に拡張した割当て `(fst x , x∈B) ∷ δ` のグラフと同一視する。帰納仮定が、記録された部分論理式の所属をこの割当てでの内側の充足へ輸送し、その値と証明の組が内側の存在量化の命題的切り詰めへ入れられる。
+切り詰めの内側で、周囲の証人とその証明 `x∈B` を組にすると、制限された台の要素 `(x .fst , x∈B)` が得られる。非有界の量化変数に課される論域の制限はこれだけであり、限界項の値への所属という追加条件は有界量化子で初めて現れる。続いて `consAtL-out`{.Agda} は `e` を、具体的に拡張した割当て `(x .fst , x∈B) ∷ δ` のグラフと同一視する。帰納仮定が、記録された部分論理式の所属をこの割当てでの内側の充足へ輸送し、その値と証明の組が内側の存在量化の命題的切り詰めへ入れられる。
 <!--/-->
 
 ```agda
-      (λ { (x , (x∈B , (e , (hc , he)))) → ∣ (fst x , x∈B)
-         , subst ⟨_⟩ (ia ((fst x , x∈B) ∷ δ) e
-             (consAtL-out δ (fst x , x∈B) (e ∷ x ∷ z ∷ [])
+      (λ { (x , (x∈B , (e , (hc , he)))) → ∣ (x .fst , x∈B)
+         , subst ⟨_⟩ (ia ((x .fst , x∈B) ∷ δ) e
+             (consAtL-out δ (x .fst , x∈B) (e ∷ x ∷ z ∷ [])
                zero (suc zero) (suc (suc zero)) q refl hc)) he ∣₁ })
       (cond∃-out B (mapFo intoL a) z h)
 ```
@@ -1023,7 +1023,7 @@ the canonical environment `envFor (x ∷ δ)` for the extended assignment.
 ```agda
     bwd : ⟨ δ ⊨ᴮ (∃̇ a) ⟩ → ⟨ (z ∷ []) ⊨ cond B (mapFo intoL (∃̇ a)) ⟩
     bwd h = cond∃-in B (mapFo intoL a) z (map₁
-      (λ { (x , ha) → intoL x , (snd x , (envFor (x ∷ δ)
+      (λ { (x , ha) → intoL x , (x .snd , (envFor (x ∷ δ)
          , ( consAtL-in δ x (envFor (x ∷ δ) ∷ intoL x ∷ z ∷ [])
                zero (suc zero) (suc (suc zero)) q refl (envFor-graph (x ∷ δ))
 ```
@@ -1070,20 +1070,20 @@ recursive condition, the forward implication therefore takes an arbitrary
 
 <!--en-->
 To query the condition's universal clause, the proof supplies the ambient
-representative `intoL x`, the carrier proof `snd x`, and the canonical extended
+representative `intoL x`, the carrier proof `x .snd`, and the canonical extended
 environment. The inward `consAtL` reading verifies that this environment really
 extends the old graph by the value of `x`. The clause then yields membership in
 the recursive subvalue, and the induction hypothesis carries it to inner
 satisfaction. The only restriction on this unbounded variable is membership in
 `B`, already stored in the package `x : DB.SM`.
 <!--zh-->
-为了调用条件的全称子句，证明给出外围代表 `intoL x`、载体成员关系证明 `snd x`，以及典范扩张环境。`consAtL` 的向内读式验证该环境确由 `x` 的取值扩张旧图。子句随即给出对递归子取值的成员关系，归纳假设再把它送到内层满足。这个无界变元唯一的限制是属于 `B`，而该证明已经存放在 `x : DB.SM` 的包装中。
+为了调用条件的全称子句，证明给出外围代表 `intoL x`、载体成员关系证明 `x .snd`，以及典范扩张环境。`consAtL` 的向内读式验证该环境确由 `x` 的取值扩张旧图。子句随即给出对递归子取值的成员关系，归纳假设再把它送到内层满足。这个无界变元唯一的限制是属于 `B`，而该证明已经存放在 `x : DB.SM` 的包装中。
 <!--ja-->
-条件の全称の節を使うために、周囲での表示 `intoL x`、台への所属証明 `snd x`、そして正準な拡張環境を与える。`consAtL` の内向きの読みは、この環境が実際に `x` の値を古いグラフの先頭に加えたものであることを示す。すると節から再帰的な部分の値への所属が得られ、帰納法の仮定がそれを内側の充足へ運ぶ。この非有界変数に課される唯一の制限は `B` への所属であり、その証明はすでに `x : DB.SM` の組に含まれている。
+条件の全称の節を使うために、周囲での表示 `intoL x`、台への所属証明 `x .snd`、そして正準な拡張環境を与える。`consAtL` の内向きの読みは、この環境が実際に `x` の値を古いグラフの先頭に加えたものであることを示す。すると節から再帰的な部分の値への所属が得られ、帰納法の仮定がそれを内側の充足へ運ぶ。この非有界変数に課される唯一の制限は `B` への所属であり、その証明はすでに `x : DB.SM` の組に含まれている。
 <!--/-->
 
 ```agda
-      (cond∀-out B (mapFo intoL a) z h (intoL x) (envFor (x ∷ δ)) (snd x)
+      (cond∀-out B (mapFo intoL a) z h (intoL x) (envFor (x ∷ δ)) (x .snd)
         (consAtL-in δ x (envFor (x ∷ δ) ∷ intoL x ∷ z ∷ [])
           zero (suc zero) (suc (suc zero)) q refl (envFor-graph (x ∷ δ))))
     bwd : ⟨ δ ⊨ᴮ (∀̇ a) ⟩ → ⟨ (z ∷ []) ⊨ cond B (mapFo intoL (∀̇ a)) ⟩
@@ -1093,24 +1093,24 @@ satisfaction. The only restriction on this unbounded variable is membership in
 <!--en-->
 Conversely, the condition asks for a subvalue proof for every ambient `x`
 known to lie in `B` and every environment certified as its extension of `z`.
-The proof packages `(fst x , x∈B)` as an element of the restricted carrier and
+The proof packages `(x .fst , x∈B)` as an element of the restricted carrier and
 applies the given inner universal function. The outward `consAtL` reading
 identifies the certified environment with the graph of the extended assignment;
 the induction hypothesis, read backwards along that equation, then produces
 the required subvalue membership. This direction is pointwise throughout and
 uses no truncation.
 <!--zh-->
-反过来，条件要求：对每个已知属于 `B` 的外围元素 `x`，以及每个经认证为 `z` 之扩张的环境，都给出对子取值的成员关系。证明把 `(fst x , x∈B)` 包装成限制载体的元素，再调用已给定的内层全称函数。`consAtL` 的向外读式把经认证的环境认同为扩张赋值的图，随后沿这条等式反向读取归纳假设，得到所需的子取值成员关系。整个方向都是逐点的，不使用命题截断。
+反过来，条件要求：对每个已知属于 `B` 的外围元素 `x`，以及每个经认证为 `z` 之扩张的环境，都给出对子取值的成员关系。证明把 `(x .fst , x∈B)` 包装成限制载体的元素，再调用已给定的内层全称函数。`consAtL` 的向外读式把经认证的环境认同为扩张赋值的图，随后沿这条等式反向读取归纳假设，得到所需的子取值成员关系。整个方向都是逐点的，不使用命题截断。
 <!--ja-->
-逆に条件が要求するのは、`B` に属すると分かっている周囲の任意の `x` と、`z` の拡張であると証明された任意の環境に対する、部分の値への所属である。証明は `(fst x , x∈B)` を制限された台の要素として組にし、与えられた内側の全称関数を適用する。`consAtL` の外向きの読みは、証明された環境を拡張された割当てのグラフと同定する。その等式に沿って帰納法の仮定を逆向きに読めば、必要な部分の値への所属が得られる。この向きは終始点ごとの議論であり、命題的切り詰めを使わない。
+逆に条件が要求するのは、`B` に属すると分かっている周囲の任意の `x` と、`z` の拡張であると証明された任意の環境に対する、部分の値への所属である。証明は `(x .fst , x∈B)` を制限された台の要素として組にし、与えられた内側の全称関数を適用する。`consAtL` の外向きの読みは、証明された環境を拡張された割当てのグラフと同定する。その等式に沿って帰納法の仮定を逆向きに読めば、必要な部分の値への所属が得られる。この向きは終始点ごとの議論であり、命題的切り詰めを使わない。
 <!--/-->
 
 ```agda
       (λ x e x∈B hc → subst ⟨_⟩
-        (sym (ia ((fst x , x∈B) ∷ δ) e
-          (consAtL-out δ (fst x , x∈B) (e ∷ x ∷ z ∷ [])
+        (sym (ia ((x .fst , x∈B) ∷ δ) e
+          (consAtL-out δ (x .fst , x∈B) (e ∷ x ∷ z ∷ [])
             zero (suc zero) (suc (suc zero)) q refl hc)))
-        (k (fst x , x∈B)))
+        (k (x .fst , x∈B)))
 ```
 
 <!--en-->
@@ -1140,38 +1140,38 @@ outer truncation, a candidate `w` satisfying the term-value predicate. Its
 second truncated package supplies an ambient `x`, proofs that `x` lies in `B`
 and in `w`, an extended environment `e`, and the subcondition at `e`. The outer
 truncation is eliminated into the propositional semantic goal, while the inner
-one is mapped to the semantic existential witness `(fst x , x∈B)`.
+one is mapped to the semantic existential witness `(x .fst , x∈B)`.
 <!--zh-->
-在正向蕴涵中，有界条件先在外层截断下给出满足词项取值谓词的候选 `w`。第二个截断包裹再给出外围元素 `x`、`x` 属于 `B` 与 `w` 的证明、扩张环境 `e`，以及 `e` 处的子条件。外层截断被消去到命题值的语义目标中，内层截断则映射到语义存在见证 `(fst x , x∈B)`。
+在正向蕴涵中，有界条件先在外层截断下给出满足词项取值谓词的候选 `w`。第二个截断包裹再给出外围元素 `x`、`x` 属于 `B` 与 `w` 的证明、扩张环境 `e`，以及 `e` 处的子条件。外层截断被消去到命题值的语义目标中，内层截断则映射到语义存在见证 `(x .fst , x∈B)`。
 <!--ja-->
-正向きの含意では、有界な条件はまず外側の切り詰めの下で、項の値を表す述語を満たす候補 `w` を与える。第二の切り詰められた組は、周囲の要素 `x`、`x` が `B` と `w` に属する証明、拡張環境 `e`、そして `e` での部分条件を与える。外側の切り詰めは命題値である意味論的な目標へ除去し、内側の切り詰めは意味論的な存在証人 `(fst x , x∈B)` へ写す。
+正向きの含意では、有界な条件はまず外側の切り詰めの下で、項の値を表す述語を満たす候補 `w` を与える。第二の切り詰められた組は、周囲の要素 `x`、`x` が `B` と `w` に属する証明、拡張環境 `e`、そして `e` での部分条件を与える。外側の切り詰めは命題値である意味論的な目標へ除去し、内側の切り詰めは意味論的な存在証人 `(x .fst , x∈B)` へ写す。
 <!--/-->
 
 ```agda
     fwd : ⟨ (z ∷ []) ⊨ cond B (mapFo intoL (∃̇∈ t a)) ⟩ → ⟨ δ ⊨ᴮ (∃̇∈ t a) ⟩
     fwd h = rec₁ squash₁
       (λ { (w , (hw , hb)) → map₁
-        (λ { (x , ((x∈B , x∈w) , (e , (hc , he)))) → (fst x , x∈B)
-           , ( subst (λ s → ⟨ fst x ∈ s ⟩)
+        (λ { (x , ((x∈B , x∈w) , (e , (hc , he)))) → (x .fst , x∈B)
+           , ( subst (λ s → ⟨ x .fst ∈ s ⟩)
 ```
 
 <!--en-->
 The term reading `tmIs-out` identifies the underlying candidate `w` with the
 underlying semantic value `T`. Transport along that path changes `x∈w` into
-the bound required by the inner semantics, namely `fst x ∈ fst T`. Independently,
-`consAtL-out` identifies `e` with the graph of `(fst x , x∈B) ∷ δ`, so the
+the bound required by the inner semantics, namely `x .fst ∈ T .fst`. Independently,
+`consAtL-out` identifies `e` with the graph of `(x .fst , x∈B) ∷ δ`, so the
 induction hypothesis converts the subcondition at `e` into satisfaction at the
 extended assignment. These two results form the payload of the inner `∃[]`.
 <!--zh-->
-词项读式 `tmIs-out` 把候选 `w` 的底层集合与语义取值 `T` 的底层集合认同起来。沿这条路径运输，`x∈w` 便成为内层语义要求的界项成员关系证明，即 `fst x ∈ fst T`。另一方面，`consAtL-out` 把 `e` 认同为 `(fst x , x∈B) ∷ δ` 的图，因此归纳假设可把 `e` 处的子条件转成扩张赋值处的满足。这两项结果共同构成内层 `∃[]` 的载荷。
+词项读式 `tmIs-out` 把候选 `w` 的底层集合与语义取值 `T` 的底层集合认同起来。沿这条路径运输，`x∈w` 便成为内层语义要求的界项成员关系证明，即 `x .fst ∈ T .fst`。另一方面，`consAtL-out` 把 `e` 认同为 `(x .fst , x∈B) ∷ δ` 的图，因此归纳假设可把 `e` 处的子条件转成扩张赋值处的满足。这两项结果共同构成内层 `∃[]` 的载荷。
 <!--ja-->
-項の読み `tmIs-out` は、候補 `w` の基礎集合を意味論的な値 `T` の基礎集合と同定する。そのパスに沿って輸送すると、`x∈w` は内側の意味論が要求する限界への所属、すなわち `fst x ∈ fst T` になる。一方、`consAtL-out` は `e` を `(fst x , x∈B) ∷ δ` のグラフと同定するので、帰納法の仮定によって `e` での部分条件を拡張された割当てでの充足へ移せる。この二つの結果が内側の `∃[]` の中身になる。
+項の読み `tmIs-out` は、候補 `w` の基礎集合を意味論的な値 `T` の基礎集合と同定する。そのパスに沿って輸送すると、`x∈w` は内側の意味論が要求する限界への所属、すなわち `x .fst ∈ T .fst` になる。一方、`consAtL-out` は `e` を `(x .fst , x∈B) ∷ δ` のグラフと同定するので、帰納法の仮定によって `e` での部分条件を拡張された割当てでの充足へ移せる。この二つの結果が内側の `∃[]` の中身になる。
 <!--/-->
 
 ```agda
                  (tmIs-out t δ (w ∷ z ∷ []) zero (suc zero) q hw) x∈w
-             , subst ⟨_⟩ (ia ((fst x , x∈B) ∷ δ) e
-                 (consAtL-out δ (fst x , x∈B) (e ∷ x ∷ w ∷ z ∷ [])
+             , subst ⟨_⟩ (ia ((x .fst , x∈B) ∷ δ) e
+                 (consAtL-out δ (x .fst , x∈B) (e ∷ x ∷ w ∷ z ∷ [])
                    zero (suc zero) (suc (suc (suc zero))) q refl hc)) he ) })
         hb })
 ```
@@ -1198,19 +1198,19 @@ condition's inner existential remains propositionally truncated.
 
 <!--en-->
 The semantic witness `x : DB.SM` supplies the two restrictions separately:
-`snd x` proves membership in the carrier, while `hx` proves membership in the
+`x .snd` proves membership in the carrier, while `hx` proves membership in the
 bound `T`. The proof keeps `hx` unchanged because the chosen candidate really
 is `intoL T`. It chooses `envFor (x ∷ δ)` for the extension, certifies it with
 `consAtL-in`, and reads the induction hypothesis backwards to obtain membership
 in the recursive subvalue.
 <!--zh-->
-语义见证 `x : DB.SM` 分别提供两道限制：`snd x` 证明它属于载体，`hx` 证明它属于界 `T`。由于选取的候选正是 `intoL T`，证明可原样保留 `hx`。扩张环境取为 `envFor (x ∷ δ)`，由 `consAtL-in` 加以认证，再反向读取归纳假设，得到对递归子取值的成员关系。
+语义见证 `x : DB.SM` 分别提供两道限制：`x .snd` 证明它属于载体，`hx` 证明它属于界 `T`。由于选取的候选正是 `intoL T`，证明可原样保留 `hx`。扩张环境取为 `envFor (x ∷ δ)`，由 `consAtL-in` 加以认证，再反向读取归纳假设，得到对递归子取值的成员关系。
 <!--ja-->
-意味論的証人 `x : DB.SM` は二つの制限を別々に与える。`snd x` は台への所属を証明し、`hx` は限界 `T` への所属を証明する。選んだ候補は実際に `intoL T` なので、`hx` はそのまま使える。拡張環境として `envFor (x ∷ δ)` を選び、`consAtL-in` でそれを証明し、帰納法の仮定を逆向きに読んで再帰的な部分の値への所属を得る。
+意味論的証人 `x : DB.SM` は二つの制限を別々に与える。`x .snd` は台への所属を証明し、`hx` は限界 `T` への所属を証明する。選んだ候補は実際に `intoL T` なので、`hx` はそのまま使える。拡張環境として `envFor (x ∷ δ)` を選び、`consAtL-in` でそれを証明し、帰納法の仮定を逆向きに読んで再帰的な部分の値への所属を得る。
 <!--/-->
 
 ```agda
-           , ∣ intoL x , ((snd x , hx) , (envFor (x ∷ δ)
+           , ∣ intoL x , ((x .snd , hx) , (envFor (x ∷ δ)
              , ( consAtL-in δ x (envFor (x ∷ δ) ∷ intoL x ∷ intoL T ∷ z ∷ [])
                    zero (suc zero) (suc (suc (suc zero))) q refl
                    (envFor-graph (x ∷ δ))
@@ -1239,14 +1239,14 @@ classical assumption.
 <!--en-->
 The bounded universal is the last constructor case. With
 `T = ⟦ t ⟧ᴮ δ`, its inner meaning is a function which takes every
-`x : DB.SM`, then a proof `fst x ∈ fst T`, and returns satisfaction of the
+`x : DB.SM`, then a proof `x .fst ∈ T .fst`, and returns satisfaction of the
 subformula at `x ∷ δ`. As in the unbounded universal case, neither direction
 contains an existential package, so both implications are constructed
 pointwise without truncation.
 <!--zh-->
-有界全称是最后一个构造子情形。令 `T = ⟦ t ⟧ᴮ δ`，其内层意义是一个函数：它先取任意 `x : DB.SM`，再取证明 `fst x ∈ fst T`，返回子公式在 `x ∷ δ` 处的满足。与无界全称情形相同，两个方向都不含存在包裹，因此两条蕴涵均逐点构造，不涉及命题截断。
+有界全称是最后一个构造子情形。令 `T = ⟦ t ⟧ᴮ δ`，其内层意义是一个函数：它先取任意 `x : DB.SM`，再取证明 `x .fst ∈ T .fst`，返回子公式在 `x ∷ δ` 处的满足。与无界全称情形相同，两个方向都不含存在包裹，因此两条蕴涵均逐点构造，不涉及命题截断。
 <!--ja-->
-有界全称量化は最後の構成子の場合である。`T = ⟦ t ⟧ᴮ δ` とすると、その内側の意味は、任意の `x : DB.SM` と証明 `fst x ∈ fst T` を受け取り、部分論理式が `x ∷ δ` で充足されることを返す関数である。非有界全称量化の場合と同じく、どちらの向きにも存在の組はないため、二つの含意は命題的切り詰めを使わず点ごとに構成される。
+有界全称量化は最後の構成子の場合である。`T = ⟦ t ⟧ᴮ δ` とすると、その内側の意味は、任意の `x : DB.SM` と証明 `x .fst ∈ T .fst` を受け取り、部分論理式が `x ∷ δ` で充足されることを返す関数である。非有界全称量化の場合と同じく、どちらの向きにも存在の組はないため、二つの含意は命題的切り詰めを使わず点ごとに構成される。
 <!--/-->
 
 ```agda
@@ -1262,13 +1262,13 @@ For the forward function, take `x` and its semantic bound proof `hx`. The
 condition's universal clause is instantiated with the genuine bound value
 `intoL T`, whose term reading follows from `tmIs-in`, and with the ambient
 representative `intoL x`. The two guards are supplied from different sources:
-`snd x` records `x ∈ B`, while `hx` records `fst x ∈ fst T`. The canonical
+`x .snd` records `x ∈ B`, while `hx` records `x .fst ∈ T .fst`. The canonical
 extension is certified by `consAtL-in`, and the induction hypothesis turns the
 resulting subvalue membership into inner satisfaction.
 <!--zh-->
-构造正向函数时，取 `x` 及其语义界项成员关系证明 `hx`。条件的全称子句以真正的界值 `intoL T` 实例化，其词项读式由 `tmIs-in` 给出；变元则以外围代表 `intoL x` 实例化。两道限制来自不同来源：`snd x` 记录 `x ∈ B`，`hx` 记录 `fst x ∈ fst T`。`consAtL-in` 认证典范扩张，归纳假设再把所得的子取值成员关系转成内层满足。
+构造正向函数时，取 `x` 及其语义界项成员关系证明 `hx`。条件的全称子句以真正的界值 `intoL T` 实例化，其词项读式由 `tmIs-in` 给出；变元则以外围代表 `intoL x` 实例化。两道限制来自不同来源：`x .snd` 记录 `x ∈ B`，`hx` 记录 `x .fst ∈ T .fst`。`consAtL-in` 认证典范扩张，归纳假设再把所得的子取值成员关系转成内层满足。
 <!--ja-->
-正向きの関数を作るには、`x` とその意味論的な限界への所属証明 `hx` を取る。条件の全称の節では、真の限界値 `intoL T` を使い、その項の読みを `tmIs-in` から得る。変数には周囲での表示 `intoL x` を使う。二つの制限は異なる所から来る。`snd x` が `x ∈ B` を記録し、`hx` が `fst x ∈ fst T` を記録する。`consAtL-in` が正準な拡張を証明し、帰納法の仮定が得られた部分の値への所属を内側の充足へ移す。
+正向きの関数を作るには、`x` とその意味論的な限界への所属証明 `hx` を取る。条件の全称の節では、真の限界値 `intoL T` を使い、その項の読みを `tmIs-in` から得る。変数には周囲での表示 `intoL x` を使う。二つの制限は異なる所から来る。`x .snd` が `x ∈ B` を記録し、`hx` が `x .fst ∈ T .fst` を記録する。`consAtL-in` が正準な拡張を証明し、帰納法の仮定が得られた部分の値への所属を内側の充足へ移す。
 <!--/-->
 
 ```agda
@@ -1276,20 +1276,20 @@ resulting subvalue membership into inner satisfaction.
     fwd h x hx = subst ⟨_⟩ (ia (x ∷ δ) (envFor (x ∷ δ)) (envFor-graph (x ∷ δ)))
       (cond∀∈-out B (mapTm intoL t) (mapFo intoL a) z h (intoL T)
         (tmIs-in t δ (intoL T ∷ z ∷ []) zero (suc zero) q refl)
-        (intoL x) (envFor (x ∷ δ)) (snd x) hx
+        (intoL x) (envFor (x ∷ δ)) (x .snd) hx
 ```
 
 <!--en-->
 For the reverse function, the condition quantifies over an arbitrary candidate
 bound `w`, a proof `hw` that it reads as the term value, an ambient member `x`
 with proofs `x∈B` and `x∈w`, and a certified extension `e`. The outward term
-reading identifies the underlying set of `w` with `fst T`; transporting `x∈w`
+reading identifies the underlying set of `w` with `T .fst`; transporting `x∈w`
 along this path gives exactly the bound proof needed to apply the inner
-universal function to `(fst x , x∈B)`.
+universal function to `(x .fst , x∈B)`.
 <!--zh-->
-构造反向函数时，条件对以下数据作全称量化：任意候选界值 `w`、证明它读作词项取值的 `hw`、带有 `x∈B` 与 `x∈w` 的外围元素 `x`，以及经认证的扩张 `e`。词项的向外读式把 `w` 的底层集合与 `fst T` 认同起来；沿这条路径运输 `x∈w`，便得到把内层全称函数用于 `(fst x , x∈B)` 所需的界项成员关系证明。
+构造反向函数时，条件对以下数据作全称量化：任意候选界值 `w`、证明它读作词项取值的 `hw`、带有 `x∈B` 与 `x∈w` 的外围元素 `x`，以及经认证的扩张 `e`。词项的向外读式把 `w` 的底层集合与 `T .fst` 认同起来；沿这条路径运输 `x∈w`，便得到把内层全称函数用于 `(x .fst , x∈B)` 所需的界项成员关系证明。
 <!--ja-->
-逆向きの関数では、条件は任意の限界候補 `w`、それが項の値として読めることを示す `hw`、`x∈B` と `x∈w` を伴う周囲の要素 `x`、そして証明された拡張 `e` のすべてについて量化する。項の外向きの読みは `w` の基礎集合を `fst T` と同定する。このパスに沿って `x∈w` を輸送すれば、内側の全称関数を `(fst x , x∈B)` に適用するための限界への所属証明がちょうど得られる。
+逆向きの関数では、条件は任意の限界候補 `w`、それが項の値として読めることを示す `hw`、`x∈B` と `x∈w` を伴う周囲の要素 `x`、そして証明された拡張 `e` のすべてについて量化する。項の外向きの読みは `w` の基礎集合を `T .fst` と同定する。このパスに沿って `x∈w` を輸送すれば、内側の全称関数を `(x .fst , x∈B)` に適用するための限界への所属証明がちょうど得られる。
 <!--/-->
 
 ```agda
@@ -1302,37 +1302,37 @@ universal function to `(fst x , x∈B)`.
 
 <!--en-->
 Applying the inner universal function gives satisfaction of the subformula at
-`(fst x , x∈B) ∷ δ`. The outward `consAtL` reading identifies the certified
+`(x .fst , x∈B) ∷ δ`. The outward `consAtL` reading identifies the certified
 environment `e` with the graph of precisely that assignment. Reading the
 induction path backwards therefore changes semantic satisfaction into the
 subvalue membership required by the condition. This closes the bounded
 universal case and completes the four quantifier arguments while preserving
 the separate carrier and bound restrictions.
 <!--zh-->
-应用内层全称函数后，得到子公式在 `(fst x , x∈B) ∷ δ` 处的满足。`consAtL` 的向外读式把经认证的环境 `e` 认同为这个赋值的图。因此，反向读取归纳路径，便把语义满足变成条件所需的子取值成员关系。至此有界全称情形闭合，四个量词论证全部完成，并且载体限制与界项限制始终彼此分明。
+应用内层全称函数后，得到子公式在 `(x .fst , x∈B) ∷ δ` 处的满足。`consAtL` 的向外读式把经认证的环境 `e` 认同为这个赋值的图。因此，反向读取归纳路径，便把语义满足变成条件所需的子取值成员关系。至此有界全称情形闭合，四个量词论证全部完成，并且载体限制与界项限制始终彼此分明。
 <!--ja-->
-内側の全称関数を適用すると、部分論理式が `(fst x , x∈B) ∷ δ` で充足されることが得られる。`consAtL` の外向きの読みは、証明された環境 `e` をまさにこの割当てのグラフと同定する。したがって帰納法のパスを逆向きに読めば、意味論的充足を条件が要求する部分の値への所属へ移せる。これで有界全称量化の場合が閉じ、台への制限と限界への制限を区別したまま、四つの量化子の議論がすべて完成する。
+内側の全称関数を適用すると、部分論理式が `(x .fst , x∈B) ∷ δ` で充足されることが得られる。`consAtL` の外向きの読みは、証明された環境 `e` をまさにこの割当てのグラフと同定する。したがって帰納法のパスを逆向きに読めば、意味論的充足を条件が要求する部分の値への所属へ移せる。これで有界全称量化の場合が閉じ、台への制限と限界への制限を区別したまま、四つの量化子の議論がすべて完成する。
 <!--/-->
 
 ```agda
-        (sym (ia ((fst x , x∈B) ∷ δ) e
-          (consAtL-out δ (fst x , x∈B) (e ∷ x ∷ w ∷ z ∷ [])
+        (sym (ia ((x .fst , x∈B) ∷ δ) e
+          (consAtL-out δ (x .fst , x∈B) (e ∷ x ∷ w ∷ z ∷ [])
             zero (suc zero) (suc (suc (suc zero))) q refl hc)))
-        (k (fst x , x∈B) (subst (λ s → ⟨ fst x ∈ s ⟩)
+        (k (x .fst , x∈B) (subst (λ s → ⟨ x .fst ∈ s ⟩)
           (tmIs-out t δ (w ∷ z ∷ []) zero (suc zero) q hw) x∈w)))
 ```
 
 <!--en-->
 The individual cases now assemble into `Sat-spec` by structural recursion on
 the formula. Its invariant is exact: for every assignment `δ`, every ambient
-element `z`, and every path from `fst z` to `graph δ`, membership of `z` in
+element `z`, and every path from `z .fst` to `graph δ`, membership of `z` in
 `Sat B (mapFo intoL φ)` is the same proposition as inner satisfaction
 `δ ⊨ᴮ φ`. The first four clauses select the two atomic proofs and recursively
 combine the induction paths for conjunction and disjunction.
 <!--zh-->
-各个情形现在沿公式作结构递归，汇合为 `Sat-spec`。它的归纳不变量十分精确：对每个赋值 `δ`、每个外围元素 `z`，以及每条从 `fst z` 到 `graph δ` 的路径，`z` 属于 `Sat B (mapFo intoL φ)` 与内层满足 `δ ⊨ᴮ φ` 是同一个命题。前四条子句选择两个原子证明，并为合取与析取递归组合归纳路径。
+各个情形现在沿公式作结构递归，汇合为 `Sat-spec`。它的归纳不变量十分精确：对每个赋值 `δ`、每个外围元素 `z`，以及每条从 `z .fst` 到 `graph δ` 的路径，`z` 属于 `Sat B (mapFo intoL φ)` 与内层满足 `δ ⊨ᴮ φ` 是同一个命题。前四条子句选择两个原子证明，并为合取与析取递归组合归纳路径。
 <!--ja-->
-個々の場合を論理式の構造に沿って再帰させ、`Sat-spec` にまとめる。その帰納的不変条件は正確である。任意の割当て `δ`、任意の周囲の要素 `z`、そして `fst z` から `graph δ` への任意のパスについて、`z` が `Sat B (mapFo intoL φ)` に属することと、内側で `δ ⊨ᴮ φ` が成り立つことは同じ命題である。最初の四つの節は二つの原子の場合を選び、連言と選言について帰納的に得たパスを組み合わせる。
+個々の場合を論理式の構造に沿って再帰させ、`Sat-spec` にまとめる。その帰納的不変条件は正確である。任意の割当て `δ`、任意の周囲の要素 `z`、そして `z .fst` から `graph δ` への任意のパスについて、`z` が `Sat B (mapFo intoL φ)` に属することと、内側で `δ ⊨ᴮ φ` が成り立つことは同じ命題である。最初の四つの節は二つの原子の場合を選び、連言と選言について帰納的に得たパスを組み合わせる。
 <!--/-->
 
 ```agda
@@ -1395,20 +1395,20 @@ uniform table before using `Sat-spec` to interpret its values.
 <!--en-->
 The main theorem starts from a chosen assignment. To read an arbitrary member
 of an environment set, we first convert the small indices used by its coding
-into elements of the restricted carrier. For `m : ⟪ fst B ⟫`, the presentation
-map gives the underlying set `⟪ fst B ⟫↪ m`; the two readings of presentation
-membership show that this set lies in `fst B`. Pairing the set with that proof
+into elements of the restricted carrier. For `m : ⟪ B .fst ⟫`, the presentation
+map gives the underlying set `⟪ B .fst ⟫↪ m`; the two readings of presentation
+membership show that this set lies in `B .fst`. Pairing the set with that proof
 defines `inB m : DB.SM`.
 <!--zh-->
-主定理从一项已选定的赋值出发。若要读取环境集的任意元素，首先须把其编码所用的小索引转换成限制载体的元素。对 `m : ⟪ fst B ⟫`，表现映射给出底层集合 `⟪ fst B ⟫↪ m`；表现成员关系的两种读式证明该集合属于 `fst B`。把集合与这条证明配对，便得到 `inB m : DB.SM`。
+主定理从一项已选定的赋值出发。若要读取环境集的任意元素，首先须把其编码所用的小索引转换成限制载体的元素。对 `m : ⟪ B .fst ⟫`，表现映射给出底层集合 `⟪ B .fst ⟫↪ m`；表现成员关系的两种读式证明该集合属于 `B .fst`。把集合与这条证明配对，便得到 `inB m : DB.SM`。
 <!--ja-->
-主定理は、あらかじめ選ばれた割当てから出発する。環境集合の任意の要素を読むには、まずその符号化に使われる小さな添字を、制限された台の要素へ変換する。`m : ⟪ fst B ⟫` に対して、表示写像は基礎集合 `⟪ fst B ⟫↪ m` を与える。表示における所属の二つの読みから、この集合が `fst B` に属することが分かる。集合とその証明を組にしたものが `inB m : DB.SM` である。
+主定理は、あらかじめ選ばれた割当てから出発する。環境集合の任意の要素を読むには、まずその符号化に使われる小さな添字を、制限された台の要素へ変換する。`m : ⟪ B .fst ⟫` に対して、表示写像は基礎集合 `⟪ B .fst ⟫↪ m` を与える。表示における所属の二つの読みから、この集合が `B .fst` に属することが分かる。集合とその証明を組にしたものが `inB m : DB.SM` である。
 <!--/-->
 
 ```agda
   private
-    inB : (m : ⟪ fst B ⟫) → ⟨ ⟪ fst B ⟫↪ m ∈ fst B ⟩
-    inB m = ∈∈ₛ {a = ⟪ fst B ⟫↪ m} {b = fst B} .snd (∈ₛ⟪ fst B ⟫↪ m)
+    inB : (m : ⟪ B .fst ⟫) → ⟨ ⟪ B .fst ⟫↪ m ∈ B .fst ⟩
+    inB m = ∈∈ₛ {a = ⟪ B .fst ⟫↪ m} {b = B .fst} .snd (∈ₛ⟪ B .fst ⟫↪ m)
 ```
 
 <!--en-->
@@ -1426,7 +1426,7 @@ recursion on `n`: the head is the set presented by `g zero`, equipped with
 ```agda
     tab : ∀ {n} → Ix B n → DB.SM ^ n
     tab {0} g = []
-    tab {suc n} g = (⟪ fst B ⟫↪ (g zero) , inB (g zero)) ∷ tab (λ i → g (suc i))
+    tab {suc n} g = (⟪ B .fst ⟫↪ (g zero) , inB (g zero)) ∷ tab (λ i → g (suc i))
 ```
 
 <!--en-->
@@ -1442,7 +1442,7 @@ tail. Functional extensionality combines these pointwise equations into
 <!--/-->
 
 ```agda
-    tab-values : ∀ {n} (g : Ix B n) → values (tab g) ≡ (λ i → ⟪ fst B ⟫↪ (g i))
+    tab-values : ∀ {n} (g : Ix B n) → values (tab g) ≡ (λ i → ⟪ B .fst ⟫↪ (g i))
     tab-values {0} g = funExt (λ ())
     tab-values {suc n} g = funExt
       (λ { zero → refl
@@ -1463,28 +1463,28 @@ auxiliary data.
 <!--/-->
 
 ```agda
-    tab-graph : ∀ {n} (g : Ix B n) → graph (tab g) ≡ fst (envS B g)
+    tab-graph : ∀ {n} (g : Ix B n) → graph (tab g) ≡ (envS B g) .fst
     tab-graph g = cong env (tab-values g)
 ```
 
 <!--en-->
 The outward specification of `envSet` recovers from a member `z`, under
-propositional truncation, an index family `g` and a path from `fst z` to the
+propositional truncation, an index family `g` and a path from `z .fst` to the
 underlying set of `envS B g`. Mapping `g` to `tab g` and composing that path
 with the reverse of `tab-graph` yields an assignment `δ` with
-`fst z ≡ graph δ`. The result remains under truncation: it supplies neither a
+`z .fst ≡ graph δ`. The result remains under truncation: it supplies neither a
 globally chosen decoding nor a uniqueness claim. This restricted interface is
 also what later clause-semantics arguments use when they must reason about an
 arbitrary encoded environment.
 <!--zh-->
-`envSet` 的向外规格从元素 `z` 出发，在命题截断下恢复索引族 `g`，以及一条从 `fst z` 到 `envS B g` 底层集合的路径。把 `g` 映射为 `tab g`，再将该路径与 `tab-graph` 的逆向复合，便得到满足 `fst z ≡ graph δ` 的赋值 `δ`。结果仍在命题截断之下，既不提供全局选定的解码，也不声称解码唯一。后续的子句语义论证在处理任意编码环境时，使用的正是这项受限接口。
+`envSet` 的向外规格从元素 `z` 出发，在命题截断下恢复索引族 `g`，以及一条从 `z .fst` 到 `envS B g` 底层集合的路径。把 `g` 映射为 `tab g`，再将该路径与 `tab-graph` 的逆向复合，便得到满足 `z .fst ≡ graph δ` 的赋值 `δ`。结果仍在命题截断之下，既不提供全局选定的解码，也不声称解码唯一。后续的子句语义论证在处理任意编码环境时，使用的正是这项受限接口。
 <!--ja-->
-`envSet` の外向きの仕様は、要素 `z` から命題的切り詰めの下で添字族 `g` と、`fst z` から `envS B g` の基礎集合へのパスを復元する。`g` を `tab g` へ写し、そのパスを `tab-graph` の逆向きと合成すると、`fst z ≡ graph δ` を満たす割当て `δ` が得られる。結果は切り詰めの下にとどまり、大域的に選ばれた復号も一意性の主張も与えない。後の節の意味論で任意の符号化環境を扱うときにも、まさにこの制限されたインターフェースが使われる。
+`envSet` の外向きの仕様は、要素 `z` から命題的切り詰めの下で添字族 `g` と、`z .fst` から `envS B g` の基礎集合へのパスを復元する。`g` を `tab g` へ写し、そのパスを `tab-graph` の逆向きと合成すると、`z .fst ≡ graph δ` を満たす割当て `δ` が得られる。結果は切り詰めの下にとどまり、大域的に選ばれた復号も一意性の主張も与えない。後の節の意味論で任意の符号化環境を扱うときにも、まさにこの制限されたインターフェースが使われる。
 <!--/-->
 
 ```agda
   envSet-vectors : ∀ {n} (z : S) → ⟨ z ∈ˢ envSet B n ⟩
-                 → ∥ Σ[ δ ∶ DB.SM ^ n ] (fst z ≡ graph δ) ∥₁
+                 → ∥ Σ[ δ ∶ DB.SM ^ n ] (z .fst ≡ graph δ) ∥₁
   envSet-vectors {n} z h = map₁
     (λ { (g , qg) → tab g , qg ∙ sym (tab-graph g) }) (envSet-out B n z h)
 ```
@@ -1493,21 +1493,21 @@ arbitrary encoded environment.
 `Sat-spec` starts with a particular assignment and a graph equation.
 `Sat-out` gives the corresponding statement for an arbitrary member `z` of a
 satisfaction value: under `∃[]`, there is an assignment `δ` whose graph is
-`fst z` and which satisfies the formula in the restricted structure. The
+`z .fst` and which satisfies the formula in the restricted structure. The
 propositional truncation is part of the conclusion, so this theorem selects no
 decoding assignment and proves no such assignment unique. It asserts only the
 direction from membership in `Sat` to the existence of a satisfying
 representation.
 <!--zh-->
-`Sat-spec` 从一项给定赋值和一条图等式出发。`Sat-out` 则陈述满足取值的任意元素 `z` 所对应的结论：在 `∃[]` 下，存在赋值 `δ`，其图就是 `fst z`，并且它在限制结构中满足该公式。命题截断是结论本身的一部分，所以这项定理既不选定解码赋值，也不证明这样的赋值唯一；它只断言从属于 `Sat` 到存在一项满足公式的表示这一方向。
+`Sat-spec` 从一项给定赋值和一条图等式出发。`Sat-out` 则陈述满足取值的任意元素 `z` 所对应的结论：在 `∃[]` 下，存在赋值 `δ`，其图就是 `z .fst`，并且它在限制结构中满足该公式。命题截断是结论本身的一部分，所以这项定理既不选定解码赋值，也不证明这样的赋值唯一；它只断言从属于 `Sat` 到存在一项满足公式的表示这一方向。
 <!--ja-->
-`Sat-spec` は、特定の割当てとグラフの等式から出発する。`Sat-out` は、充足の値の任意の要素 `z` に対応する主張を与える。すなわち `∃[]` のもとで、グラフが `fst z` であり、制限構造でその論理式を充足する割当て `δ` が存在する。命題的切り詰めは結論そのものの一部なので、この定理は復号する割当てを選び出さず、そのような割当ての一意性も証明しない。主張するのは、`Sat` への所属から充足する表示の存在へ進む向きだけである。
+`Sat-spec` は、特定の割当てとグラフの等式から出発する。`Sat-out` は、充足の値の任意の要素 `z` に対応する主張を与える。すなわち `∃[]` のもとで、グラフが `z .fst` であり、制限構造でその論理式を充足する割当て `δ` が存在する。命題的切り詰めは結論そのものの一部なので、この定理は復号する割当てを選び出さず、そのような割当ての一意性も証明しない。主張するのは、`Sat` への所属から充足する表示の存在へ進む向きだけである。
 <!--/-->
 
 ```agda
   Sat-out : ∀ {n} (φ : Formula DB.SM n) (z : S)
           → ⟨ z ∈ˢ Sat B (mapFo intoL φ) ⟩
-          → ∥ (Σ[ δ ∶ DB.SM ^ n ] ((fst z ≡ graph δ) × ⟨ δ ⊨ᴮ φ ⟩)) ∥₁
+          → ∥ (Σ[ δ ∶ DB.SM ^ n ] ((z .fst ≡ graph δ) × ⟨ δ ⊨ᴮ φ ⟩)) ∥₁
   Sat-out {n} φ z h = map₁
     (λ { (g , qg) → tab g , (qg ∙ sym (tab-graph g)
 ```
@@ -1545,7 +1545,7 @@ or uniqueness claim.
 <!--en-->
 To compare this recursion with definable subsets, constants must pass through
 three domains. A formula `ψ` begins over the small presentation
-`⟪ fst B ⟫`; `DB.ι` sends its constants into the restricted carrier, and
+`⟪ B .fst ⟫`; `DB.ι` sends its constants into the restricted carrier, and
 `intoL` then sends those carrier elements into the ambient carrier `S`. By
 definition their composite is `asConst`. Functoriality of constant relabelling,
 expressed by `mapFo-comp`, therefore identifies the twice-relabelled formula
@@ -1553,14 +1553,14 @@ expressed by `mapFo-comp`, therefore identifies the twice-relabelled formula
 `mapFo asConst ψ`. This is an equality of formulas and will let the semantic
 bridge use the constant form expected by the recursion.
 <!--zh-->
-为了把这项递归同可定义子集比较，常元需要穿过三个论域。公式 `ψ` 起初取常元于小呈现 `⟪ fst B ⟫`；`DB.ι` 把这些常元送入限制载体，`intoL` 再把所得载体元素送入外围载体 `S`。按定义，这两个映射的复合就是 `asConst`。因此，`mapFo-comp` 所表达的常元改名函子性把两次改名所得的公式 `mapFo intoL (mapFo DB.ι ψ)` 认同为直接改名所得的公式 `mapFo asConst ψ`。这是公式之间的等式，它使语义桥能够采用递归所需的常元形式。
+为了把这项递归同可定义子集比较，常元需要穿过三个论域。公式 `ψ` 起初取常元于小呈现 `⟪ B .fst ⟫`；`DB.ι` 把这些常元送入限制载体，`intoL` 再把所得载体元素送入外围载体 `S`。按定义，这两个映射的复合就是 `asConst`。因此，`mapFo-comp` 所表达的常元改名函子性把两次改名所得的公式 `mapFo intoL (mapFo DB.ι ψ)` 认同为直接改名所得的公式 `mapFo asConst ψ`。这是公式之间的等式，它使语义桥能够采用递归所需的常元形式。
 <!--ja-->
-この再帰を定義可能部分集合と比較するには、定数を三つの領域の間で移す必要がある。論理式 `ψ` の定数は、初めは小さな提示 `⟪ fst B ⟫` に属する。`DB.ι` はそれらを制限された台へ送り、続いて `intoL` がその台の要素を周囲の台 `S` へ送る。定義により、この合成が `asConst` である。したがって `mapFo-comp` が表す定数の改名の関手性により、二度改名した論理式 `mapFo intoL (mapFo DB.ι ψ)` は、直接改名した論理式 `mapFo asConst ψ` と同一視される。これは論理式の等式であり、意味論の橋を、再帰が要求する定数の形で使えるようにする。
+この再帰を定義可能部分集合と比較するには、定数を三つの領域の間で移す必要がある。論理式 `ψ` の定数は、初めは小さな提示 `⟪ B .fst ⟫` に属する。`DB.ι` はそれらを制限された台へ送り、続いて `intoL` がその台の要素を周囲の台 `S` へ送る。定義により、この合成が `asConst` である。したがって `mapFo-comp` が表す定数の改名の関手性により、二度改名した論理式 `mapFo intoL (mapFo DB.ι ψ)` は、直接改名した論理式 `mapFo asConst ψ` と同一視される。これは論理式の等式であり、意味論の橋を、再帰が要求する定数の形で使えるようにする。
 <!--/-->
 
 ```agda
   private
-    mapFo-fuse : ∀ {n} (ψ : Formula ⟪ fst B ⟫ n)
+    mapFo-fuse : ∀ {n} (ψ : Formula ⟪ B .fst ⟫ n)
                → mapFo intoL (mapFo DB.ι ψ) ≡ mapFo asConst ψ
     mapFo-fuse = mapFo-comp DB.ι intoL
 ```
@@ -1581,8 +1581,8 @@ the graph hypothesis needed by `Sat-spec`.
 <!--/-->
 
 ```agda
-    graph-single : (m : ⟪ fst B ⟫)
-                 → fst (envS B (λ _ → m)) ≡ graph (DB.ι m ∷ [])
+    graph-single : (m : ⟪ B .fst ⟫)
+                 → (envS B (λ _ → m)) .fst ≡ graph (DB.ι m ∷ [])
     graph-single m = cong env (funExt (λ { zero → refl ; (suc ()) }))
 ```
 
@@ -1604,8 +1604,8 @@ one-variable specialization below.
 <!--/-->
 
 ```agda
-  Sat-small-spec : ∀ {n} (ψ : Formula ⟪ fst B ⟫ n) (δ : DB.SM ^ n) (z : S)
-                 → fst z ≡ graph δ
+  Sat-small-spec : ∀ {n} (ψ : Formula ⟪ B .fst ⟫ n) (δ : DB.SM ^ n) (z : S)
+                 → z .fst ≡ graph δ
                  → (z ∈ˢ Sat B (mapFo asConst ψ)) ≡ (δ ⊨ᴮ mapFo DB.ι ψ)
   Sat-small-spec ψ δ z q = cong (λ χ → z ∈ˢ Sat B χ) (sym (mapFo-fuse ψ))
     ∙ Sat-spec (mapFo DB.ι ψ) δ z q
@@ -1627,8 +1627,8 @@ interpreted by `DB.ι`.
 <!--/-->
 
 ```agda
-  defSet-Sat : (ψ : Formula ⟪ fst B ⟫ 1) (m : ⟪ fst B ⟫)
-             → (⟪ fst B ⟫↪ m ∈ DB.defSet ψ)
+  defSet-Sat : (ψ : Formula ⟪ B .fst ⟫ 1) (m : ⟪ B .fst ⟫)
+             → (⟪ B .fst ⟫↪ m ∈ DB.defSet ψ)
              ≡ (envS B (λ _ → m) ∈ˢ Sat B (mapFo asConst ψ))
   defSet-Sat ψ m =
       DB.defSet-mem ψ m
@@ -1672,7 +1672,7 @@ constructions read the recursive satisfaction value.
 <!--en-->
 The central result `Sat-spec` identifies membership in the recursively
 constructed value with inner satisfaction for every given assignment: if
-`fst z ≡ graph δ`, then membership of `z` in
+`z .fst ≡ graph δ`, then membership of `z` in
 `Sat B (mapFo intoL φ)` is the same proposition as `δ ⊨ᴮ φ`. When the
 input is instead an arbitrary coded member, `Sat-out` produces only under
 `∃[]` an assignment with the required graph and satisfaction proof; it
@@ -1684,7 +1684,7 @@ membership of the canonical one-entry environment. A uniform table and the
 uniqueness of candidate table values require the later pinned-recursion and
 uniform-satisfaction arguments.
 <!--zh-->
-中心结论 `Sat-spec` 对每项给定赋值，把递归构造所得取值中的成员关系与内层满足认同起来：若 `fst z ≡ graph δ`，则 `z` 属于 `Sat B (mapFo intoL φ)` 与 `δ ⊨ᴮ φ` 是同一个命题。若输入改为满足取值的任意编码元素，`Sat-out` 也只在 `∃[]` 下给出一项具有所需图等式与满足证明的赋值；它既不选定这项赋值，也不证明其唯一。把小表现中的常元依次经 `DB.ι` 与 `intoL` 改名后，`Sat-small-spec` 给出任意元数的桥，`defSet-Sat` 再把它特化到一个自由变元，将可定义子集中的成员关系与典范单条目环境的成员关系认同起来。统一表的构造与候选表取值的唯一性仍需后续的钉扎递归和统一满足关系论证。
+中心结论 `Sat-spec` 对每项给定赋值，把递归构造所得取值中的成员关系与内层满足认同起来：若 `z .fst ≡ graph δ`，则 `z` 属于 `Sat B (mapFo intoL φ)` 与 `δ ⊨ᴮ φ` 是同一个命题。若输入改为满足取值的任意编码元素，`Sat-out` 也只在 `∃[]` 下给出一项具有所需图等式与满足证明的赋值；它既不选定这项赋值，也不证明其唯一。把小表现中的常元依次经 `DB.ι` 与 `intoL` 改名后，`Sat-small-spec` 给出任意元数的桥，`defSet-Sat` 再把它特化到一个自由变元，将可定义子集中的成员关系与典范单条目环境的成员关系认同起来。统一表的构造与候选表取值的唯一性仍需后续的钉扎递归和统一满足关系论证。
 <!--ja-->
-中心的な結果 `Sat-spec` は、与えられた各割当てについて、再帰的に構成された値への所属を内側の充足と同定する。`fst z ≡ graph δ` ならば、`z` が `Sat B (mapFo intoL φ)` に属することと `δ ⊨ᴮ φ` は同じ命題である。入力が充足の値の任意の符号化された要素である場合、`Sat-out` は必要なグラフの等式と充足の証明を備えた割当てを `∃[]` のもとで与えるだけである。その割当てを選び出すことも、一意性を証明することもない。小さな表示の定数を `DB.ι`、`intoL` の順に取り替えると、`Sat-small-spec` が任意のアリティで橋を与え、`defSet-Sat` はそれを自由変数が一つの場合に特殊化して、定義可能部分集合への所属を正準な一項目環境の所属と同定する。一様な表の構成と候補表の値の一意性には、後の固定された再帰と一様な充足関係の議論が必要である。
+中心的な結果 `Sat-spec` は、与えられた各割当てについて、再帰的に構成された値への所属を内側の充足と同定する。`z .fst ≡ graph δ` ならば、`z` が `Sat B (mapFo intoL φ)` に属することと `δ ⊨ᴮ φ` は同じ命題である。入力が充足の値の任意の符号化された要素である場合、`Sat-out` は必要なグラフの等式と充足の証明を備えた割当てを `∃[]` のもとで与えるだけである。その割当てを選び出すことも、一意性を証明することもない。小さな表示の定数を `DB.ι`、`intoL` の順に取り替えると、`Sat-small-spec` が任意のアリティで橋を与え、`defSet-Sat` はそれを自由変数が一つの場合に特殊化して、定義可能部分集合への所属を正準な一項目環境の所属と同定する。一様な表の構成と候補表の値の一意性には、後の固定された再帰と一様な充足関係の議論が必要である。
 <!--/-->

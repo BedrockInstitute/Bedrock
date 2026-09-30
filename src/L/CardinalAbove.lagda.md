@@ -243,8 +243,8 @@ The public goal takes a constructible `κ`, together with proofs that its underl
 ```agda
 CardAboveLᵀ : Type (ℓ-suc ℓ)
 CardAboveLᵀ =
-    (κ : SL.S) → IsOrd (fst κ) → IsCardinalL κ
-  → (⟨ fst κ ∈ˢ ω ⟩ → ⊥₀)
+    (κ : SL.S) → IsOrd (κ .fst) → IsCardinalL κ
+  → (⟨ κ .fst ∈ˢ ω ⟩ → ⊥₀)
   → ∥ Σ[ θ ∶ SL.S ]
 ```
 
@@ -257,7 +257,7 @@ The produced `θ` must be an ordinal, an internal cardinal, and strictly above `
 <!--/-->
 
 ```agda
-       (IsOrd (fst θ) × IsCardinalL θ × ⟨ fst κ ∈ˢ fst θ ⟩) ∥₁
+       (IsOrd (θ .fst) × IsCardinalL θ × ⟨ κ .fst ∈ˢ θ .fst ⟩) ∥₁
 ```
 
 <!--en-->
@@ -298,9 +298,9 @@ Ambient cardinality implies internal cardinality, in one direction only. A coded
 <!--/-->
 
 ```agda
-ambient→internal : (κ : SL.S) → IsCardinal (fst κ) → IsCardinalL κ
+ambient→internal : (κ : SL.S) → IsCardinal (κ .fst) → IsCardinalL κ
 ambient→internal κ c δ δ∈κ h =
-  rec₁ isProp⊥ (λ w → c (fst δ) δ∈κ (readL κ δ w)) h
+  rec₁ isProp⊥ (λ w → c (δ .fst) δ∈κ (readL κ δ w)) h
 ```
 
 <!--en-->
@@ -637,9 +637,9 @@ The ambient existence theorem is now transferred to `L`. Of the three mathematic
 ```agda
 noInjOrd→CardAboveLᵀ : NoInjOrd → CardAboveLᵀ
 noInjOrd→CardAboveLᵀ ni κ oκ cκ κ∉ω =
-  map₁ build (ambientCardAbove ni (fst κ) oκ)
+  map₁ build (ambientCardAbove ni (κ .fst) oκ)
   where
-  build : Σ[ θ ∶ SV.S ] (IsOrd θ × IsCardinal θ × ⟨ fst κ ∈ˢ θ ⟩)
+  build : Σ[ θ ∶ SV.S ] (IsOrd θ × IsCardinal θ × ⟨ κ .fst ∈ˢ θ ⟩)
 ```
 
 <!--en-->
@@ -652,7 +652,7 @@ The ambient cardinal is presented as an element of `L` at its own successor stag
 
 ```agda
         → Σ[ θ ∶ SL.S ]
-            (IsOrd (fst θ) × IsCardinalL θ × ⟨ fst κ ∈ˢ fst θ ⟩)
+            (IsOrd (θ .fst) × IsCardinalL θ × ⟨ κ .fst ∈ˢ θ .fst ⟩)
   build (θ , oθ , cθ , κ∈θ) =
     ordL θ oθ , oθ , ambient→internal (ordL θ oθ) cθ , κ∈θ
 ```
@@ -748,7 +748,7 @@ Fix one such relation `w`. Its first component is the Boolean relation `R`; the 
 
 ```agda
     R : Rel
-    R = fst w
+    R = w .fst
 ```
 
 <!--en-->
@@ -774,7 +774,7 @@ The lifted relation inherits transitivity from the original Bool-valued relation
 
 ```agda
     ≺-trans : {x y z : ⟪ a ⟫} → x ≺ y → y ≺ z → x ≺ z
-    ≺-trans p q = lift (fst (snd w) (lower p) (lower q))
+    ≺-trans p q = lift ((w .snd) .fst (lower p) (lower q))
 ```
 
 <!--en-->
@@ -787,7 +787,7 @@ Well-foundedness is preserved by the same change of universe. Starting from the 
 
 ```agda
     ≺-wf : WellFounded _≺_
-    ≺-wf x = go x (snd (snd w) x)
+    ≺-wf x = go x ((w .snd) .snd x)
       where
       go : (y : ⟪ a ⟫) → Acc (λ u v → Holds R u v) y → Acc _≺_ y
       go y (acc h) = acc (λ z k → go z (h z (lower k)))
@@ -857,9 +857,9 @@ The member's transitivity is transported from the collapse's ordinality along th
 <!--/-->
 
 ```agda
-        (λ z → subst isTransV (snd z) (col-ord (fst z) .fst)) x∈
+        (λ z → subst isTransV (z .snd) (col-ord (z .fst) .fst)) x∈
       tr : isTransV ot
-      tr {x} {y} y∈x x∈ot = rec₁ (snd (y ∈ˢ ot)) outer x∈ot
+      tr {x} {y} y∈x x∈ot = rec₁ ((y ∈ˢ ot) .snd) outer x∈ot
         where
         outer : Σ[ p ∶ ⟪ a ⟫ ] (col p ≡ x) → ⟨ y ∈ˢ ot ⟩
 ```
@@ -874,8 +874,8 @@ The truncated decomposition names an index `r` whose collapse is `y` and proves 
 
 ```agda
         outer (p , e) =
-          rec₁ (snd (y ∈ˢ ot))
-            (λ z → subst (λ v → ⟨ v ∈ˢ ot ⟩) (snd (snd z)) (ot-in (fst z)))
+          rec₁ ((y ∈ˢ ot) .snd)
+            (λ z → subst (λ v → ⟨ v ∈ˢ ot ⟩) ((z .snd) .snd) (ot-in (z .fst)))
             (col-out p y (subst (λ v → ⟨ y ∈ˢ v ⟩) (sym e) y∈x))
 ```
 </div>
@@ -986,7 +986,7 @@ The underlying function of the embedding is named once for the subsequent constr
 
 ```agda
     F : ⟪ μ ⟫ → ⟪ a ⟫
-    F = fst f
+    F = f .fst
 ```
 
 <!--en-->
@@ -999,7 +999,7 @@ Because both the source and the target are h-sets, the injective function is an 
 
 ```agda
     F-emb : isEmbedding F
-    F-emb = injEmbedding (isSet⟪⟫ a) (λ {x} {y} e → snd f x y e)
+    F-emb = injEmbedding (isSet⟪⟫ a) (λ {x} {y} e → f .snd x y e)
 ```
 
 <!--en-->
@@ -1039,7 +1039,7 @@ The relation `PreT x y` first requires actual fibres witnessing that both `x` an
 ```agda
     PreT : ⟪ a ⟫ → ⟪ a ⟫ → Type ℓ
     PreT x y = Σ[ p ∶ Fib x ] Σ[ q ∶ Fib y ]
-                 ⟨ ⟪ μ ⟫↪ (fst p) ∈ₛ ⟪ μ ⟫↪ (fst q) ⟩
+                 ⟨ ⟪ μ ⟫↪ (p .fst) ∈ₛ ⟪ μ ⟫↪ (q .fst) ⟩
 ```
 
 <!--en-->
@@ -1054,7 +1054,7 @@ The pulled-back predecessor relation is a proposition: it is built from two prop
     isPropPreT : (x y : ⟪ a ⟫) → isProp (PreT x y)
     isPropPreT x y = isPropΣ (isPropFib x) λ p →
                      isPropΣ (isPropFib y) λ q →
-                       snd (⟪ μ ⟫↪ (fst p) ∈ₛ ⟪ μ ⟫↪ (fst q))
+                       (⟪ μ ⟫↪ (p .fst) ∈ₛ ⟪ μ ⟫↪ (q .fst)) .snd
 ```
 
 <!--en-->
@@ -1153,9 +1153,9 @@ Decoding the first relation gives indices `p` and `q` over `x` and `y`; decoding
 ```agda
       d2 : PreT y z
       d2 = R→Pre y z e2
-      p  = fst d1
-      q  = fst (snd d1)
-      q' = fst d2
+      p  = d1 .fst
+      q  = (d1 .snd) .fst
+      q' = d2 .fst
 ```
 
 <!--en-->
@@ -1167,11 +1167,11 @@ The final member `r` is named, and its transitivity is read from the ordinality 
 <!--/-->
 
 ```agda
-      r  = fst (snd d2)
-      h1' : ⟨ ⟪ μ ⟫↪ (fst p) ∈ₛ ⟪ μ ⟫↪ (fst q') ⟩
-      h1' = subst (λ t → ⟨ ⟪ μ ⟫↪ (fst p) ∈ₛ ⟪ μ ⟫↪ (fst t) ⟩)
-              (isPropFib y q q') (snd (snd d1))
-      rTr : isTransV (⟪ μ ⟫↪ (fst r))
+      r  = (d2 .snd) .fst
+      h1' : ⟨ ⟪ μ ⟫↪ (p .fst) ∈ₛ ⟪ μ ⟫↪ (q' .fst) ⟩
+      h1' = subst (λ t → ⟨ ⟪ μ ⟫↪ (p .fst) ∈ₛ ⟪ μ ⟫↪ (t .fst) ⟩)
+              (isPropFib y q q') ((d1 .snd) .snd)
+      rTr : isTransV (⟪ μ ⟫↪ (r .fst))
 ```
 
 <!--en-->
@@ -1183,11 +1183,11 @@ The composition of the two membership relations through the transitivity of `r` 
 <!--/-->
 
 ```agda
-      rTr = μ-ord .snd (⟪ μ ⟫↪ (fst r)) (member μ (fst r))
-      goal : ⟨ ⟪ μ ⟫↪ (fst p) ∈ₛ ⟪ μ ⟫↪ (fst r) ⟩
-      goal = ∈∈ₛ {a = ⟪ μ ⟫↪ (fst p)} {b = ⟪ μ ⟫↪ (fst r)} .fst
-        (rTr (∈∈ₛ {a = ⟪ μ ⟫↪ (fst p)} {b = ⟪ μ ⟫↪ (fst q')} .snd h1')
-             (∈∈ₛ {a = ⟪ μ ⟫↪ (fst q')} {b = ⟪ μ ⟫↪ (fst r)} .snd (snd (snd d2))))
+      rTr = μ-ord .snd (⟪ μ ⟫↪ (r .fst)) (member μ (r .fst))
+      goal : ⟨ ⟪ μ ⟫↪ (p .fst) ∈ₛ ⟪ μ ⟫↪ (r .fst) ⟩
+      goal = ∈∈ₛ {a = ⟪ μ ⟫↪ (p .fst)} {b = ⟪ μ ⟫↪ (r .fst)} .fst
+        (rTr (∈∈ₛ {a = ⟪ μ ⟫↪ (p .fst)} {b = ⟪ μ ⟫↪ (q' .fst)} .snd h1')
+             (∈∈ₛ {a = ⟪ μ ⟫↪ (q' .fst)} {b = ⟪ μ ⟫↪ (r .fst)} .snd ((d2 .snd) .snd)))
 ```
 
 <!--en-->
@@ -1221,9 +1221,9 @@ Each predecessor `r` of the member is decomposed into two `μ` members connected
 <!--/-->
 
 ```agda
-      go r rr = subst (Acc (λ x y → Holds R x y)) (snd p)
-                  (wfAux (⟪ μ ⟫↪ (fst p)) (rec (⟪ μ ⟫↪ (fst p)) below)
-                     (fst p) refl)
+      go r rr = subst (Acc (λ x y → Holds R x y)) (p .snd)
+                  (wfAux (⟪ μ ⟫↪ (p .fst)) (rec (⟪ μ ⟫↪ (p .fst)) below)
+                     (p .fst) refl)
         where
         d : PreT r (F m)
 ```
@@ -1238,10 +1238,10 @@ The predecessor fact is decomposed to name two internal indices: `p` presents th
 
 ```agda
         d = R→Pre r (F m) rr
-        p = fst d
-        q = fst (snd d)
-        h : ⟨ ⟪ μ ⟫↪ (fst p) ∈ₛ ⟪ μ ⟫↪ m ⟩
-        h = subst (λ t → ⟨ ⟪ μ ⟫↪ (fst p) ∈ₛ ⟪ μ ⟫↪ (fst t) ⟩)
+        p = d .fst
+        q = (d .snd) .fst
+        h : ⟨ ⟪ μ ⟫↪ (p .fst) ∈ₛ ⟪ μ ⟫↪ m ⟩
+        h = subst (λ t → ⟨ ⟪ μ ⟫↪ (p .fst) ∈ₛ ⟪ μ ⟫↪ (t .fst) ⟩)
 ```
 
 <!--en-->
@@ -1253,10 +1253,10 @@ The two fibre witnesses over `F m` are equal because that fibre is a proposition
 <!--/-->
 
 ```agda
-              (isPropFib (F m) q (m , refl)) (snd (snd d))
-        below : ⟪ μ ⟫↪ (fst p) SV.∈ᵗ v
-        below = subst (λ t → ⟨ ⟪ μ ⟫↪ (fst p) ∈ˢ t ⟩) e
-                  (∈∈ₛ {a = ⟪ μ ⟫↪ (fst p)} {b = ⟪ μ ⟫↪ m} .snd h)
+              (isPropFib (F m) q (m , refl)) ((d .snd) .snd)
+        below : ⟪ μ ⟫↪ (p .fst) SV.∈ᵗ v
+        below = subst (λ t → ⟨ ⟪ μ ⟫↪ (p .fst) ∈ˢ t ⟩) e
+                  (∈∈ₛ {a = ⟪ μ ⟫↪ (p .fst)} {b = ⟪ μ ⟫↪ m} .snd h)
 ```
 
 <!--en-->
@@ -1272,22 +1272,22 @@ Well-foundedness of the pulled-back relation follows from the regularity of the 
     R-wf x = acc go
       where
       go : (r : ⟪ a ⟫) → Holds R r x → Acc (λ u v → Holds R u v) r
-      go r rr = subst (Acc (λ u v → Holds R u v)) (snd p)
+      go r rr = subst (Acc (λ u v → Holds R u v)) (p .snd)
 ```
 
 <!--en-->
-For an arbitrary predecessor `r` of `x`, decoding the relation supplies a fibre witness `p` over `r`. Regularity gives accessibility of the hierarchy element represented by its index, and `wfAux` transfers that accessibility back to the point `F (fst p)`. The fibre equation identifies this point with `r`, completing the required accessibility proof.
+For an arbitrary predecessor `r` of `x`, decoding the relation supplies a fibre witness `p` over `r`. Regularity gives accessibility of the hierarchy element represented by its index, and `wfAux` transfers that accessibility back to the point `F (p .fst)`. The fibre equation identifies this point with `r`, completing the required accessibility proof.
 <!--zh-->
-对 `x` 的任意前驱 `r`，解读该关系会给出 `r` 上的纤维见证 `p`。正则公理给出其索引所表示的层级元素的可达性，`wfAux` 再把这份可达性传回点 `F (fst p)`。纤维等式把该点与 `r` 认同，从而完成所需的可达性证明。
+对 `x` 的任意前驱 `r`，解读该关系会给出 `r` 上的纤维见证 `p`。正则公理给出其索引所表示的层级元素的可达性，`wfAux` 再把这份可达性传回点 `F (p .fst)`。纤维等式把该点与 `r` 认同，从而完成所需的可达性证明。
 <!--ja-->
-`x` の任意の先行要素 `r` に対して、関係を読み取ると `r` 上のファイバーの証人 `p` が得られる。正則性は、その添字が表す階層の要素の到達可能性を与え、`wfAux` がその到達可能性を点 `F (fst p)` へ移す。ファイバーの等式がこの点を `r` と同定し、必要な到達可能性の証明が完成する。
+`x` の任意の先行要素 `r` に対して、関係を読み取ると `r` 上のファイバーの証人 `p` が得られる。正則性は、その添字が表す階層の要素の到達可能性を与え、`wfAux` がその到達可能性を点 `F (p .fst)` へ移す。ファイバーの等式がこの点を `r` と同定し、必要な到達可能性の証明が完成する。
 <!--/-->
 
 ```agda
-                  (wfAux (⟪ μ ⟫↪ (fst p)) (regularityV (⟪ μ ⟫↪ (fst p)))
-                     (fst p) refl)
+                  (wfAux (⟪ μ ⟫↪ (p .fst)) (regularityV (⟪ μ ⟫↪ (p .fst)))
+                     (p .fst) refl)
         where
-        p = fst (R→Pre r x rr)
+        p = (R→Pre r x rr) .fst
 ```
 
 <!--en-->
@@ -1347,7 +1347,7 @@ For the forward inclusion, suppose `b` belongs to `col (F m)`. The elimination l
 
 ```agda
       fwd : (b : SV.S) → ⟨ b ∈ₛ col (F m) ⟩ → ⟨ b ∈ₛ ⟪ μ ⟫↪ m ⟩
-      fwd b b∈ = rec₁ (snd (b ∈ₛ ⟪ μ ⟫↪ m)) go
+      fwd b b∈ = rec₁ ((b ∈ₛ ⟪ μ ⟫↪ m) .snd) go
                    (col-out (F m) b (∈∈ₛ {a = b} {b = col (F m)} .snd b∈))
         where
         go : Σ[ r ∶ ⟪ a ⟫ ] ((r ≺ F m) × (col r ≡ b))
@@ -1366,7 +1366,7 @@ The predecessor witness consists of `r ≺ F m` and an equation `col r ≡ b`. R
         go (r , rr , cr) = subst (λ t → ⟨ t ∈ₛ ⟪ μ ⟫↪ m ⟩) (cpr ∙ cr) hh
           where
           d = R→Pre r (F m) (lower rr)
-          p = fst d
+          p = d .fst
 ```
 
 <!--en-->
@@ -1378,11 +1378,11 @@ The fibre over `F m` is proposition-valued, so the representative `q` obtained f
 <!--/-->
 
 ```agda
-          q = fst (snd d)
-          hh : ⟨ ⟪ μ ⟫↪ (fst p) ∈ₛ ⟪ μ ⟫↪ m ⟩
-          hh = subst (λ t → ⟨ ⟪ μ ⟫↪ (fst p) ∈ₛ ⟪ μ ⟫↪ (fst t) ⟩)
-                 (isPropFib (F m) q (m , refl)) (snd (snd d))
-          below : ⟪ μ ⟫↪ (fst p) SV.∈ᵗ v
+          q = (d .snd) .fst
+          hh : ⟨ ⟪ μ ⟫↪ (p .fst) ∈ₛ ⟪ μ ⟫↪ m ⟩
+          hh = subst (λ t → ⟨ ⟪ μ ⟫↪ (p .fst) ∈ₛ ⟪ μ ⟫↪ (t .fst) ⟩)
+                 (isPropFib (F m) q (m , refl)) ((d .snd) .snd)
+          below : ⟪ μ ⟫↪ (p .fst) SV.∈ᵗ v
 ```
 
 <!--en-->
@@ -1394,11 +1394,11 @@ Using the equation `⟪ μ ⟫↪ m ≡ v`, this membership places the predecess
 <!--/-->
 
 ```agda
-          below = subst (λ t → ⟨ ⟪ μ ⟫↪ (fst p) ∈ˢ t ⟩) e
-                    (∈∈ₛ {a = ⟪ μ ⟫↪ (fst p)} {b = ⟪ μ ⟫↪ m} .snd hh)
-          ih : col (F (fst p)) ≡ ⟪ μ ⟫↪ (fst p)
-          ih = key (⟪ μ ⟫↪ (fst p)) (rec (⟪ μ ⟫↪ (fst p)) below) (fst p) refl
-          cpr : ⟪ μ ⟫↪ (fst p) ≡ col r
+          below = subst (λ t → ⟨ ⟪ μ ⟫↪ (p .fst) ∈ˢ t ⟩) e
+                    (∈∈ₛ {a = ⟪ μ ⟫↪ (p .fst)} {b = ⟪ μ ⟫↪ m} .snd hh)
+          ih : col (F (p .fst)) ≡ ⟪ μ ⟫↪ (p .fst)
+          ih = key (⟪ μ ⟫↪ (p .fst)) (rec (⟪ μ ⟫↪ (p .fst)) below) (p .fst) refl
+          cpr : ⟪ μ ⟫↪ (p .fst) ≡ col r
 ```
 
 <!--en-->
@@ -1410,7 +1410,7 @@ The induction hypothesis identifies the collapse of the decoded index with the m
 <!--/-->
 
 ```agda
-          cpr = sym ih ∙ cong col (snd p)
+          cpr = sym ih ∙ cong col (p .snd)
 ```
 
 <!--en-->
@@ -1442,7 +1442,7 @@ Here `fiber μ b∈μ` returns an actual index `k` and an equation `⟪ μ ⟫�
         b∈μ : ⟨ b ∈ˢ μ ⟩
         b∈μ = μ-ord .fst b∈ˢ (member μ m)
         fb = fiber μ b∈μ
-        k = fst fb
+        k = fb .fst
 ```
 
 <!--en-->
@@ -1455,7 +1455,7 @@ The equation returned by `fiber` lets us rewrite the original membership `b ∈ 
 
 ```agda
         ek : ⟪ μ ⟫↪ k ≡ b
-        ek = snd fb
+        ek = fb .snd
         k∈m : ⟨ ⟪ μ ⟫↪ k ∈ₛ ⟪ μ ⟫↪ m ⟩
         k∈m = subst (λ t → ⟨ t ∈ₛ ⟪ μ ⟫↪ m ⟩) (sym ek) b∈
         pre : PreT (F k) (F m)
@@ -1521,8 +1521,8 @@ Thus the argument establishes only the inclusion `μ ⊆ ot`. Together with `ot 
 ```agda
     μ⊆ot : (b : SV.S) → ⟨ b ∈ˢ μ ⟩ → ⟨ b ∈ˢ ot ⟩
     μ⊆ot b b∈μ =
-      subst (λ t → ⟨ t ∈ˢ ot ⟩) (key' (fst fb) ∙ snd fb)
-        (ot-in (F (fst fb)))
+      subst (λ t → ⟨ t ∈ˢ ot ⟩) (key' (fb .fst) ∙ fb .snd)
+        (ot-in (F (fb .fst)))
       where
 ```
 
