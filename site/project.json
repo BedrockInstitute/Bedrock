@@ -116,6 +116,7 @@
     "level_name_convention": true,
     "natural_literal_default": true
   },
+  "power_notation": ["FOL.Semantics._^_"],
   "inline_math_approvals": "site/inline-latex-approvals.json",
   "visible_import_chapters": [
     "Origin"

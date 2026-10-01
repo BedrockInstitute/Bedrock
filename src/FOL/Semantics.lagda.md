@@ -75,15 +75,21 @@ A variable position tells us where to look, but not what we will find there. An 
 ```agda
 infixl 30 _^_
 
-_^_ : ∀ {ℓ''} → Type ℓ'' → ℕ → Type ℓ''
+_^_ : ∀ {ℓ} → Type ℓ → ℕ → Type ℓ
 A ^ n = Vec A n
 ```
 
 <!--en-->
+For readability, the website displays `A ^ n`{.Agda .raw-notation} as `A ^ n`{.Agda} when both operands are single letters. Hovering or tapping reveals the original code; the definition above retains its Agda spelling.
+
 For example, `a ∷ b ∷ []`{.Agda} supplies two values: position `0` holds `a`{.Agda}, and position `1` holds `b`{.Agda}. A term may use either position or neither. As in the syntax chapter, the length records the available positions, not the number of occurrences in an expression.
 <!--zh-->
+为便于阅读，网页把两侧均为单字母的 `A ^ n`{.Agda .raw-notation} 显示为 `A ^ n`{.Agda}；悬停或轻触上标记号可查看原码。上面的定义仍保留 Agda 原始写法。
+
 例如，`a ∷ b ∷ []`{.Agda} 提供两个取值：`0` 号位置存放 `a`{.Agda}，`1` 号位置存放 `b`{.Agda}。一个词项可以使用其中任意一个位置，也可以都不使用。与语法中的约定一样，长度记录的是可用位置的数量，而不是表达式中变元出现的次数。
 <!--ja-->
+読みやすくするため、両側が一文字のとき、ウェブ版では `A ^ n`{.Agda .raw-notation} を `A ^ n`{.Agda} と表示する。上付きの記法にカーソルを合わせるかタップすると、元のコードを確認できる。上の定義は Agda の元の表記を保っている。
+
 たとえば `a ∷ b ∷ []`{.Agda} は二つの値を与える。`0` 番の位置に `a`{.Agda}、`1` 番の位置に `b`{.Agda} が入る。項はどちらかの位置を使っても、両方とも使わなくてもよい。構文の場合と同じく、長さが表すのは使える位置の数であり、式の中で変数が現れる回数ではない。
 <!--/-->
 
@@ -150,9 +156,7 @@ The common index `n`{.Agda} requires the environment to have exactly the length 
 <!--/-->
 
 ```agda
-
   infix 6 _⊨_
-
   _⊨_ : ∀ {n} → S ^ n → Formula K n → hProp ℓ
 ```
 

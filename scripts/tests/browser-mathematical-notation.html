@@ -1,8 +1,8 @@
 <!doctype html><html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Mathematical notation regression</title><base href="/zh/Base.Prelude.html">
-<link rel="stylesheet" href="/static/outcrop.css"><link rel="stylesheet" href="/static/appearance.css">
+<link rel="stylesheet" href="/static/outcrop.css"><link rel="stylesheet" href="/static/appearance.css"><link rel="stylesheet" href="/static/deep-notation/styles.css">
 <script>window.outcrop={baseUrl:'',lang:'zh',module:'Base.Prelude',chapter:'Base.Prelude',preludeModule:'Base.Prelude',storageNamespace:'bedrock',naturalLiteralDefault:true};</script>
-<script src="/static/appearance.js"></script><script defer src="/static/universe-levels.js"></script><script defer src="/static/mathematical-notation.js"></script><script type="module" src="/static/outcrop.js"></script>
+<script src="/static/appearance.js"></script><script type="module" src="/static/outcrop.js"></script>
 </head><body><h1 id="status">RUNNING mathematical notation</h1><main id="main-content"><article id="fixture"><div class="agda-code-preview" data-preview-lines="1"><div class="agda-code-preview-clip"><pre class="Agda"><span class="agda-code-content">infix 2 Σ[]-syntax Σ[∶]-syntax
 Σ[]-syntax : Type
 Σ[]-syntax = Type</span></pre></div><button class="agda-code-preview-toggle" type="button" hidden aria-expanded="true"></button></div></article></main><pre id="report"></pre>
@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded',async()=>{
     const node=document.createElement('span');node.className='expr-node';node.dataset.sourceNotation='nat-suc';node.dataset.notationValue='n';node.dataset.notationCount=count;node.dataset.notationType='ℕ';
     node.innerHTML='<a class="InductiveConstructor" href="Cubical.Data.Nat.Base.html#1" data-type="Cubical.Data.Nat.Base#1">'+source+'</a>';
     pre.appendChild(node);fixture.appendChild(pre);
-    const before=pre.textContent;outcropMathematicalNotation.scan(pre);
+    const before=pre.textContent;outcropDeepNotation.scan(pre);
     const badge=pre.querySelector('.nat-suc-notation');
     check('suc depth '+count+' certified badge',!!badge&&pre.textContent===before);
     check('suc depth '+count+' entire exponent raised',getComputedStyle(badge,'::after').content==='"'+expected+'"'&&getComputedStyle(badge,'::after').verticalAlign==='super');
@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded',async()=>{
   inlineSuccessors.querySelector('code').dataset.hoverHtml='<span class="Agda">ℕ</span>';
   inlineSuccessors.querySelector('code').setAttribute('role','button');
   inlineSuccessors.querySelector('code').setAttribute('tabindex','0');
-  fixture.appendChild(inlineSuccessors);outcropMathematicalNotation.scan(inlineSuccessors);
+  fixture.appendChild(inlineSuccessors);outcropDeepNotation.scan(inlineSuccessors);
   check('explicitly typed inline natural successors render',!!inlineSuccessors.querySelector('.nat-suc-notation')&&inlineSuccessors.querySelector('code').textContent==='suc (suc (suc n))');
   check('compact natural notation has only one keyboard popup target',!inlineSuccessors.querySelector('code').hasAttribute('tabindex')&&inlineSuccessors.querySelector('.nat-suc-notation[tabindex="0"][data-hover-html]'));
   check('inline source opt-out remains raw',!inlineSuccessors.querySelector('[data-outcrop-notation="source"] .source-notation'));
@@ -52,17 +52,17 @@ document.addEventListener('DOMContentLoaded',async()=>{
   const typedFin=document.createElement('code');typedFin.className='Agda inline-ref';typedFin.dataset.agdaInlineType='Fin 3';
   typedFin.dataset.hoverHtml='<code class="Agda inline-ref">Fin 3</code>';typedFin.textContent='suc zero';
   typedFin.setAttribute('role','button');typedFin.setAttribute('tabindex','0');
-  fixture.appendChild(typedFin);outcropMathematicalNotation.scan(typedFin);
+  fixture.appendChild(typedFin);outcropDeepNotation.scan(typedFin);
   check('explicitly typed Fin constructor displays its numeric value',typedFin.querySelector('.fin-notation')?.dataset.mathLabel==='1'&&typedFin.textContent==='suc zero');
   check('explicit Fin type survives in the source hover',typedFin.querySelector('.fin-notation')?.dataset.hoverHtml.includes('Fin 3'));
   check('compact finite notation has only one keyboard popup target',!typedFin.hasAttribute('tabindex')&&typedFin.querySelector('.fin-notation[tabindex="0"][data-hover-html]'));
   const parens=document.createElement('code');parens.className='Agda inline-ref';
   parens.innerHTML='Fin (<span class="expr-node" data-source-notation="nat-suc" data-notation-value="n" data-notation-count="1" data-notation-type="ℕ">suc n</span>)';
-  fixture.appendChild(parens);outcropMathematicalNotation.scan(parens);
+  fixture.appendChild(parens);outcropDeepNotation.scan(parens);
   check('compact successor elides only its enclosing inline parentheses',parens.querySelectorAll('.notation-elided-parenthesis').length===2&&parens.textContent==='Fin (suc n)');
   const blockParens=document.createElement('pre');blockParens.className='Agda';
   blockParens.innerHTML='<a class="Symbol">(</a><span class="expr-node" data-source-notation="nat-suc" data-notation-value="n" data-notation-count="1" data-notation-type="ℕ">suc n</span><a class="Symbol">)</a>';
-  fixture.appendChild(blockParens);outcropMathematicalNotation.scan(blockParens);
+  fixture.appendChild(blockParens);outcropDeepNotation.scan(blockParens);
   check('compact successor elides compiler-highlighted parentheses',blockParens.querySelectorAll('.notation-elided-parenthesis').length===2&&blockParens.textContent==='(suc n)');
   const syntaxHtml=await (await fetch('/zh/FOL.Syntax.html')).text();
   const syntaxDoc=new DOMParser().parseFromString(syntaxHtml,'text/html');
@@ -71,25 +71,25 @@ document.addEventListener('DOMContentLoaded',async()=>{
   check('chapter inline formula carries certified nested successor',!!syntaxInline&&
     syntaxInline.querySelector('.expr-node[data-source-notation="nat-suc"][data-notation-type="ℕ"]')?.textContent==='suc n');
   const syntaxClone=syntaxInline.cloneNode(true);fixture.appendChild(syntaxClone);
-  outcropMathematicalNotation.scan(syntaxClone);
+  outcropDeepNotation.scan(syntaxClone);
   check('chapter inline formula displays n superscript plus without losing source',
     syntaxClone.querySelector('.nat-suc-notation')?.dataset.mathLabel==='n⁺'&&
     syntaxClone.querySelectorAll('.notation-elided-parenthesis').length===2&&
     syntaxClone.textContent==='Formula K (suc n)');
   const fin=document.createElement('pre');fin.className='Agda';fin.innerHTML='<span class="expr-node" data-source-notation="fin" data-notation-value="2" data-notation-type="Fin 3">suc (suc zero)</span>';
-  fixture.appendChild(fin);outcropMathematicalNotation.scan(fin);check('Fin value is notation, source intact',fin.querySelector('.fin-notation')?.textContent==='suc (suc zero)');
-  const literal=document.createElement('pre');literal.className='Agda';literal.innerHTML='<a class="Number" id="40">12</a>';fixture.appendChild(literal);outcropMathematicalNotation.scan(literal);
+  fixture.appendChild(fin);outcropDeepNotation.scan(fin);check('Fin value is notation, source intact',fin.querySelector('.fin-notation')?.textContent==='suc (suc zero)');
+  const literal=document.createElement('pre');literal.className='Agda';literal.innerHTML='<a class="Number" id="40">12</a>';fixture.appendChild(literal);outcropDeepNotation.scan(literal);
   check('natural literal offers type help',literal.querySelector('.natural-literal')?.dataset.hoverHtml.includes('ℕ'));
   const fixity=document.createElement('pre');fixity.className='Agda';
   fixity.innerHTML='<span class="agda-code-content"><a class="Keyword">infix</a> <a class="Number">2</a> Σ[]-syntax\nvalue = <a class="Number">2</a></span>';
-  fixture.appendChild(fixity);outcropMathematicalNotation.scan(fixity);
+  fixture.appendChild(fixity);outcropDeepNotation.scan(fixity);
   check('fixity precedence is not a natural-number term',!fixity.querySelectorAll('a.Number')[0].classList.contains('natural-literal'));
   check('literal on following line keeps natural-number help',fixity.querySelectorAll('a.Number')[1].classList.contains('natural-literal'));
   const sigma=document.createElement('pre');sigma.className='Agda';sigma.innerHTML='<span class="expr-node"><a data-name="Σ[∶]-syntax" href="Base.Prelude.html#1">Σ[</a> x ∶ A ] B x</span>';
-  fixture.appendChild(sigma);outcropMathematicalNotation.scan(sigma);
+  fixture.appendChild(sigma);outcropDeepNotation.scan(sigma);
   check('Sigma retains its new Agda syntax',sigma.textContent==='Σ[ x ∶ A ] B x'&&!sigma.querySelector('.source-notation'));
   const pi=document.createElement('pre');pi.className='Agda';pi.textContent='(x : A) → B x';
-  fixture.appendChild(pi);outcropMathematicalNotation.scan(pi);
+  fixture.appendChild(pi);outcropDeepNotation.scan(pi);
   check('Pi retains ordinary Agda form',pi.textContent==='(x : A) → B x'&&!pi.querySelector('.source-notation'));
   const source=document.createElement('div');source.dataset.outcropNotation='source';
   source.innerHTML='<pre class="Agda"><span class="expr-node" data-source-notation="nat-suc" data-notation-value="n" data-notation-count="3" data-notation-type="ℕ">suc (suc (suc n))</span></pre>'+
@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded',async()=>{
     '<code class="Agda">(x : A) → B x</code>'+
     '<pre class="Agda"><span class="expr-node"><a data-name="Σ[∶]-syntax" href="Base.Prelude.html#1">Σ[</a> x ∶ A ] B x</span></pre>';
   fixture.appendChild(source);
-  outcropUniverseLevels.scan(source);outcropMathematicalNotation.scan(source);
+  outcropDeepNotation.scan(source);outcropDeepNotation.scan(source);
   check('source opt-out preserves all original Agda text',source.textContent.includes('suc (suc (suc n))')&&source.textContent.includes('ℓ-suc ℓ'));
   check('source opt-out suppresses every deep notation kind',!source.querySelector('.source-notation, .natural-literal'));
   const inline=document.createElement('p');inline.innerHTML='Given <code class="Agda inline-ref">b̂ : Lift ℓ A</code>, continue.';

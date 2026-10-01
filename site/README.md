@@ -156,6 +156,14 @@ with its supported suffixes denotes a universe-level parameter. Outcrop defaults
 this policy to false. Primitive shortening still needs semantic evidence; the
 convention does not authorize guessed AST nodes or change the original code.
 
+`power_notation: ["FOL.Semantics._^_"]` enables the shared superscript lens for
+environment powers with single-letter operands, such as `S ^ n`. The qualified
+identity is instance configuration; Outcrop does not assume this module exists.
+Long names, compound operands and raw-notation examples retain their source form.
+All deep-notation rendering and styles are maintained through Outcrop's
+[`static/deep-notation/`](../outcrop/src/outcrop/site/resources/static/deep-notation/README.md)
+entry. This instance supplies policies, not a parallel implementation.
+
 Statements and proofs retain their labels and code requirements, but Markdown
 contains no standalone QED marks. Compiler-certified functions with signatures
 and equations and all completed `data` declarations receive the exact `∎` at
