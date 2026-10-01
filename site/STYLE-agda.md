@@ -308,6 +308,12 @@ separate module/record and local scopes. The record exception does not relax
 the rule for ordinary functions outside that namespace.
 Baseline: ④ atoms `≐ ∈̇` = 18, `∧̇ ∨̇` = 12, `⇒̇` = 10, `¬̇` = 13; ③ `∈ˢ ≈ˢ` = 20.
 Corresponding operations across layers share a level (`∧̇` with `⊓`, `⇒̇` with `⇒`).
+Satisfaction `_⊨_` and its restricted counterpart `_⊨ᴬ_` have precedence 4,
+below both vector cons (5) and the object-language connectives.
+Write `γ ⊨ t ∈̇ u` and `γ ⊨ φ ∧̇ ψ` without redundant grouping around the
+formula operand; likewise write `x ∷ γ ⊨ φ` without grouping the environment.
+Retain grouping between separate satisfaction propositions,
+as in `(γ ⊨ φ) ⊓ (γ ⊨ ψ)`.
 
 ## 5. Symbol introduction discipline
 

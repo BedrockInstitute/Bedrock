@@ -55,29 +55,21 @@ open ZFStructure 𝒮
 <!--en-->
 ## Environments
 
-A variable position tells us where to look, but not what we will find there. An **[environment]{.term-intro #variable-environment}** assigns a carrier element to each available position. For a context of length `n`{.Agda}, we use a vector of length `n`{.Agda}; its entry at position `i : Fin n`{.Agda} is the value of that variable.
+A variable position tells us where to look for a value, but does not specify an object. An **[environment]{.term-intro #variable-environment}** supplies this information by assigning a carrier element to each available position in the context. For a context of length `n`{.Agda}, we record the assignment as a vector `γ : Vec S n`{.Agda}; its entry at position `i : Fin n`{.Agda} is the value of the corresponding variable.
 
-Environments therefore have type `Vec S n`{.Agda}.
+For example, in the environment `a ∷ b ∷ []`{.Agda}, position `0` holds `a`{.Agda} and position `1` holds `b`{.Agda}. A formula may use just one of these positions, refer to the same position several times, or use neither. The environment therefore records the values available when interpreting the formula, rather than one value for each variable occurrence; its length agrees with the context length, not the number of occurrences.
 <!--zh-->
 ## 环境
 
-变元位置只说明去哪里取值，还没有说明那里放着什么。为每个可用位置指定一个载体元素，就得到一个**[环境]{.term-intro #variable-environment}**。语境长度为 `n`{.Agda} 时，我们用长度同为 `n`{.Agda} 的向量记录这些值；位置 `i : Fin n`{.Agda} 处的分量，就是相应变元的取值。
+变元位置只告诉我们从哪里取值，并不指定具体的对象。为语境中的每个可用位置指定一个载体元素，就得到一个**[环境]{.term-intro #variable-environment}**。对于长度为 `n`{.Agda} 的语境，我们用向量 `γ : Vec S n`{.Agda} 记录这份赋值；其中位置 `i : Fin n`{.Agda} 处的分量，就是相应变元的取值。
 
-因此，环境的类型是 `Vec S n`{.Agda}。
+例如，在环境 `a ∷ b ∷ []`{.Agda} 中，`0` 号位置存放 `a`{.Agda}，`1` 号位置存放 `b`{.Agda}。一条公式可以只使用其中一个位置，也可以多次引用同一个位置，或两个位置都不用。因此，环境记录的是解释公式时可用的取值，并不是为变元的每次出现各存一个值；它的长度与语境长度一致，而不是变元出现的次数。
 <!--ja-->
 ## 環境
 
-変数位置は値を取り出す場所を示すだけで、そこに何が入るかはまだ決めていない。利用できる各位置に台の要素を割り当てたものを**[環境]{.term-intro #variable-environment}**という。長さ `n`{.Agda} の文脈には、同じ長さのベクトルを使う。位置 `i : Fin n`{.Agda} にある成分が、その変数の値である。
+変数位置は値を取り出す場所を示すが、具体的な対象までは指定しない。文脈内で利用できる各位置に台の要素を割り当てたものを**[環境]{.term-intro #variable-environment}**という。長さ `n`{.Agda} の文脈に対しては、この割当をベクトル `γ : Vec S n`{.Agda} で表す。位置 `i : Fin n`{.Agda} の成分が、対応する変数の値である。
 
-したがって、環境の型は `Vec S n`{.Agda} となる。
-<!--/-->
-
-<!--en-->
-For example, `a ∷ b ∷ []`{.Agda} supplies two values: position `0` holds `a`{.Agda}, and position `1` holds `b`{.Agda}. A term may use either position or neither. As in the syntax chapter, the length records the available positions, not the number of occurrences in an expression.
-<!--zh-->
-例如，`a ∷ b ∷ []`{.Agda} 提供两个取值：`0` 号位置存放 `a`{.Agda}，`1` 号位置存放 `b`{.Agda}。一个词项可以使用其中任意一个位置，也可以都不使用。与语法中的约定一样，长度记录的是可用位置的数量，而不是表达式中变元出现的次数。
-<!--ja-->
-たとえば `a ∷ b ∷ []`{.Agda} は二つの値を与える。`0` 番の位置に `a`{.Agda}、`1` 番の位置に `b`{.Agda} が入る。項はどちらかの位置を使っても、両方とも使わなくてもよい。構文の場合と同じく、長さが表すのは使える位置の数であり、式の中で変数が現れる回数ではない。
+たとえば環境 `a ∷ b ∷ []`{.Agda} では、`0` 番の位置に `a`{.Agda}、`1` 番の位置に `b`{.Agda} が入る。論理式は一方の位置だけを使っても、同じ位置を何度参照しても、どちらも使わなくてもよい。環境が記録するのは論理式の解釈で参照できる値であり、変数の出現ごとに値を一つずつ並べるわけではない。その長さは文脈の長さと一致し、変数の出現回数とは異なる。
 <!--/-->
 
 <!--en-->
@@ -143,7 +135,7 @@ The common index `n`{.Agda} requires the environment to have exactly the length 
 <!--/-->
 
 ```agda
-  infix 6 _⊨_
+  infix 4 _⊨_
   _⊨_ : ∀ {n} → Vec S n → Formula K n → hProp ℓ
 ```
 
@@ -156,8 +148,8 @@ For an atomic formula, evaluate the two terms and apply the corresponding relati
 <!--/-->
 
 ```agda
-  γ ⊨ (t ∈̇ u)  = ⟦ t ⟧ γ ∈ˢ ⟦ u ⟧ γ
-  γ ⊨ (t ≐ u)  = ⟦ t ⟧ γ ≈ˢ ⟦ u ⟧ γ
+  γ ⊨ t ∈̇ u = ⟦ t ⟧ γ ∈ˢ ⟦ u ⟧ γ
+  γ ⊨ t ≐ u = ⟦ t ⟧ γ ≈ˢ ⟦ u ⟧ γ
 ```
 
 <!--en-->
@@ -169,9 +161,9 @@ For conjunction, disjunction and implication, interpret the two subformulas in t
 <!--/-->
 
 ```agda
-  γ ⊨ (φ ∧̇ ψ)  = (γ ⊨ φ) ⊓ (γ ⊨ ψ)
-  γ ⊨ (φ ∨̇ ψ)  = (γ ⊨ φ) ⊔ (γ ⊨ ψ)
-  γ ⊨ (φ ⇒̇ ψ)  = (γ ⊨ φ) ⇒ (γ ⊨ ψ)
+  γ ⊨ φ ∧̇ ψ = (γ ⊨ φ) ⊓ (γ ⊨ ψ)
+  γ ⊨ φ ∨̇ ψ = (γ ⊨ φ) ⊔ (γ ⊨ ψ)
+  γ ⊨ φ ⇒̇ ψ = (γ ⊨ φ) ⇒ (γ ⊨ ψ)
 ```
 
 <!--en-->
@@ -183,9 +175,9 @@ Falsity always yields `⊥`{.Agda}. An unbounded quantifier ranges over `x : S`{
 <!--/-->
 
 ```agda
-  γ ⊨ ⊥̇        = ⊥
-  γ ⊨ (∃̇ φ)    = ∃[ x ∶ S ] (x ∷ γ) ⊨ φ
-  γ ⊨ (∀̇ φ)    = ∀[ x ∶ S ] (x ∷ γ) ⊨ φ
+  γ ⊨ ⊥̇   = ⊥
+  γ ⊨ ∃̇ φ = ∃[ x ∶ S ] x ∷ γ ⊨ φ
+  γ ⊨ ∀̇ φ = ∀[ x ∶ S ] x ∷ γ ⊨ φ
 ```
 
 <!--en-->
@@ -197,8 +189,8 @@ For bounded quantifiers, evaluate the bound `t`{.Agda} in the original environme
 <!--/-->
 
 ```agda
-  γ ⊨ (∀̇∈ t φ) = ∀[ x ∶ S ] (x ∈ˢ ⟦ t ⟧ γ) ⇒ ((x ∷ γ) ⊨ φ)
-  γ ⊨ (∃̇∈ t φ) = ∃[ x ∶ S ] (x ∈ˢ ⟦ t ⟧ γ) ⊓ ((x ∷ γ) ⊨ φ)
+  γ ⊨ ∀̇∈ t φ = ∀[ x ∶ S ] (x ∈ˢ ⟦ t ⟧ γ) ⇒ (x ∷ γ ⊨ φ)
+  γ ⊨ ∃̇∈ t φ = ∃[ x ∶ S ] (x ∈ˢ ⟦ t ⟧ γ) ⊓ (x ∷ γ ⊨ φ)
 ```
 </div>
 </details>

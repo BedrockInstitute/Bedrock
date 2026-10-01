@@ -208,7 +208,7 @@ The bound is named once and for all: `A = ι c`{.Agda}, the carrier element deno
   A : S
   A = ι c
 
-  infix 6 _⊨ᴬ_
+  infix 4 _⊨ᴬ_
   _⊨ᴬ_ : ∀ {n} → Vec S n → Formula K n → hProp ℓ
 ```
 
