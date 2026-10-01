@@ -70,12 +70,6 @@
       "until": "human_reviewed"
     },
     {
-      "chapter": "FOL/Semantics.lagda.md",
-      "reviewer": "Project owner, explicit instruction on 2026-09-25",
-      "reason": "Explicitly defer inline LaTeX while this chapter is not human-reviewed; content edits and bulk replacements are allowed. Marking it human-reviewed ends this temporary allowance.",
-      "until": "human_reviewed"
-    },
-    {
       "chapter": "FOL/ZFModel.lagda.md",
       "reviewer": "Project owner, explicit instruction on 2026-09-25",
       "reason": "Explicitly defer inline LaTeX while this chapter is not human-reviewed; content edits and bulk replacements are allowed. Marking it human-reviewed ends this temporary allowance.",

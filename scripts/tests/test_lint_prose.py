@@ -63,6 +63,14 @@ class BedrockProsePolicyTests(unittest.TestCase):
         text = 'Compare $x$.\n'
         self.assertTrue(any('inline LaTeX' in hit.message for hit in lint_prose.analyze(text, root / 'src/Base/Prelude.lagda.md')[2]))
 
+    def test_refined_semantics_needs_no_inline_math_deferral(self):
+        root = Path(__file__).resolve().parents[2]
+        chapter = 'FOL/Semantics.lagda.md'
+        path = root / 'src' / chapter
+        self.assertNotIn(chapter, lint_prose._MATH_TEMPORARY)
+        self.assertFalse(inline_math(path.read_text()))
+        self.assertFalse(lint_prose.analyze(path.read_text(), path)[2])
+
     def test_legacy_inventory_matches_exact_old_line_only(self):
         import hashlib
 
