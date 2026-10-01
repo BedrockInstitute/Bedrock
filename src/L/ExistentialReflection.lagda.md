@@ -128,22 +128,22 @@ LsetElt σ oσ m = ⟪ Lset σ ⟫↪ m
                , Lset→isL σ oσ (⟪ Lset σ ⟫↪ m)
                    (∈∈ₛ {a = ⟪ Lset σ ⟫↪ m} {b = Lset σ} .snd (∈ₛ⟪ Lset σ ⟫↪ m))
 
-LsetEnv : (σ : V ℓ) (oσ : IsOrd σ) {k : ℕ} → ⟪ Lset σ ⟫ ^ k → S ^ k
+LsetEnv : (σ : V ℓ) (oσ : IsOrd σ) {k : ℕ} → Vec (⟪ Lset σ ⟫) k → Vec S k
 LsetEnv σ oσ []       = []
 LsetEnv σ oσ (m ∷ ms) = LsetElt σ oσ m ∷ LsetEnv σ oσ ms
 
-Below : (σ : V ℓ) {k : ℕ} → S ^ k → Type (ℓ-suc ℓ)
+Below : (σ : V ℓ) {k : ℕ} → Vec S k → Type (ℓ-suc ℓ)
 Below σ []      = ⊤*
 Below σ (p ∷ ρ) = ⟨ p .fst ∈ Lset σ ⟩ × Below σ ρ
 
-Below-mono : {σ τ : V ℓ} → ⟨ σ ∈ τ ⟩ → {k : ℕ} {ρ : S ^ k}
+Below-mono : {σ τ : V ℓ} → ⟨ σ ∈ τ ⟩ → {k : ℕ} {ρ : Vec S k}
            → Below σ ρ → Below τ ρ
 Below-mono σ∈τ {ρ = []}    _         = tt*
 Below-mono σ∈τ {ρ = p ∷ ρ} (h , hs) =
   Lset-mono σ∈τ h , Below-mono σ∈τ hs
 
-indexEnv : (σ : V ℓ) (oσ : IsOrd σ) {k : ℕ} (ρ : S ^ k) → Below σ ρ
-         → Σ[ ms ∶ ⟪ Lset σ ⟫ ^ k ] (LsetEnv σ oσ ms ≡ ρ)
+indexEnv : (σ : V ℓ) (oσ : IsOrd σ) {k : ℕ} (ρ : Vec S k) → Below σ ρ
+         → Σ[ ms ∶ Vec (⟪ Lset σ ⟫) k ] (LsetEnv σ oσ ms ≡ ρ)
 indexEnv σ oσ []      _        = [] , refl
 indexEnv σ oσ (p ∷ ρ) (h , hs) = (m ∷ rest .fst) , cong₂ _∷_ eltEq (rest .snd)
   where
@@ -182,45 +182,45 @@ below has to name the very same decision value and match on it.
 <!--/-->
 
 ```agda
-Sat : {k : ℕ} (ψ : Formula S (suc k)) (ρ : S ^ k) → S → hProp (ℓ-suc ℓ)
+Sat : {k : ℕ} (ψ : Formula S (suc k)) (ρ : Vec S k) → S → hProp (ℓ-suc ℓ)
 Sat ψ ρ q = (q ∷ ρ) ⊨ ψ
 
-SatEx : {k : ℕ} (ψ : Formula S (suc k)) (ρ : S ^ k) → hProp (ℓ-suc ℓ)
+SatEx : {k : ℕ} (ψ : Formula S (suc k)) (ρ : Vec S k) → hProp (ℓ-suc ℓ)
 SatEx ψ ρ = ∃[ q ∶ S ] Sat ψ ρ q
 
-satExDecision : {k : ℕ} (ψ : Formula S (suc k)) (ρ : S ^ k)
+satExDecision : {k : ℕ} (ψ : Formula S (suc k)) (ρ : Vec S k)
               → Dec ⟨ SatEx ψ ρ ⟩
 satExDecision ψ ρ = FOL.Semantics.decideSatisfaction 𝒮ʟ id lem ρ (∃̇ ψ)
 
-Wit : {k : ℕ} (ψ : Formula S (suc k)) (ρ : S ^ k) → V ℓ → hProp (ℓ-suc ℓ)
+Wit : {k : ℕ} (ψ : Formula S (suc k)) (ρ : Vec S k) → V ℓ → hProp (ℓ-suc ℓ)
 Wit ψ ρ σ = ∃[ q ∶ S ] ((q .fst ∈ Lset σ) ⊓ Sat ψ ρ q)
 
-witnessed : {k : ℕ} (ψ : Formula S (suc k)) (ρ : S ^ k) → ⟨ SatEx ψ ρ ⟩
+witnessed : {k : ℕ} (ψ : Formula S (suc k)) (ρ : Vec S k) → ⟨ SatEx ψ ρ ⟩
           → ∥ (Σ[ α ∶ V ℓ ] (IsOrd α × ⟨ Wit ψ ρ α ⟩)) ∥₁
 witnessed ψ ρ = rec₁ squash₁
   (λ { (q , satq) → map₁
       (λ { (α , (oα , q∈Lα)) → α , (oα , ∣ q , (q∈Lα , satq) ∣₁) })
       (q .snd) })
 
-pick : {k : ℕ} (ψ : Formula S (suc k)) (ρ : S ^ k) → ⟨ SatEx ψ ρ ⟩
+pick : {k : ℕ} (ψ : Formula S (suc k)) (ρ : Vec S k) → ⟨ SatEx ψ ρ ⟩
      → LeastOrd (Wit ψ ρ)
 pick ψ ρ sat = leastOrd (Wit ψ ρ) (witnessed ψ ρ sat)
 
-decideStage : {k : ℕ} (ψ : Formula S (suc k)) (ρ : S ^ k)
+decideStage : {k : ℕ} (ψ : Formula S (suc k)) (ρ : Vec S k)
             → Dec ⟨ SatEx ψ ρ ⟩ → V ℓ
 decideStage ψ ρ (yes sat) = pick ψ ρ sat .fst
 decideStage ψ ρ (no _)    = ∅
 
-pickStage : {k : ℕ} (ψ : Formula S (suc k)) (ρ : S ^ k) → V ℓ
+pickStage : {k : ℕ} (ψ : Formula S (suc k)) (ρ : Vec S k) → V ℓ
 pickStage ψ ρ = decideStage ψ ρ (satExDecision ψ ρ)
 
-decideStage-ord : {k : ℕ} (ψ : Formula S (suc k)) (ρ : S ^ k)
+decideStage-ord : {k : ℕ} (ψ : Formula S (suc k)) (ρ : Vec S k)
                   (d : Dec ⟨ SatEx ψ ρ ⟩)
                 → IsOrd (decideStage ψ ρ d)
 decideStage-ord ψ ρ (yes sat) = pick ψ ρ sat .snd .fst
 decideStage-ord ψ ρ (no _)    = ∅-ord
 
-pickStage-ord : {k : ℕ} (ψ : Formula S (suc k)) (ρ : S ^ k)
+pickStage-ord : {k : ℕ} (ψ : Formula S (suc k)) (ρ : Vec S k)
               → IsOrd (pickStage ψ ρ)
 pickStage-ord ψ ρ = decideStage-ord ψ ρ (satExDecision ψ ρ)
 ```
@@ -238,7 +238,7 @@ refutes itself.
 <!--/-->
 
 ```agda
-pickWitness : {k : ℕ} (ψ : Formula S (suc k)) (ρ : S ^ k) → ⟨ SatEx ψ ρ ⟩
+pickWitness : {k : ℕ} (ψ : Formula S (suc k)) (ρ : Vec S k) → ⟨ SatEx ψ ρ ⟩
             → ⟨ Wit ψ ρ (pickStage ψ ρ) ⟩
 pickWitness ψ ρ sat = go (satExDecision ψ ρ) refl
   where
@@ -286,7 +286,7 @@ chapter builds its ladder and gets the argument, rather than running it again.
 
 ```agda
 ClosedFor : (β : V ℓ) {k : ℕ} (ψ : Formula S (suc k)) → Type (ℓ-suc ℓ)
-ClosedFor β {k} ψ = (ρ : S ^ k) → Below β ρ → ⟨ SatEx ψ ρ ⟩ → ⟨ Wit ψ ρ β ⟩
+ClosedFor β {k} ψ = (ρ : Vec S k) → Below β ρ → ⟨ SatEx ψ ρ ⟩ → ⟨ Wit ψ ρ β ⟩
 ```
 
 <details open class="submodule-fold">
@@ -348,7 +348,7 @@ tuple merges all of them, and monotonicity carries the earlier entries up.
         (δ∈top→fin δ δ∈top) })
     (Lset-out top e e∈)
 
-  localize : {j : ℕ} (ρ : S ^ j) → Below top ρ → ∥ (Σ[ N ∶ ℕ ] Below (G N) ρ) ∥₁
+  localize : {j : ℕ} (ρ : Vec S j) → Below top ρ → ∥ (Σ[ N ∶ ℕ ] Below (G N) ρ) ∥₁
   localize []      _        = ∣ zero , tt* ∣₁
   localize (p ∷ ρ) (h , hs) = rec₁ squash₁
     (λ { (N , h') → map₁ (merge N h') (localize ρ hs) })
@@ -400,7 +400,7 @@ monotonicity, and the equation transported back.
 <summary class="submodule-fold-heading">
 ```agda
   module _ {k : ℕ} (ψ : Formula S (suc k))
-           (answers : (n : ℕ) (ms : ⟪ Lset (G n) ⟫ ^ k)
+           (answers : (n : ℕ) (ms : Vec (⟪ Lset (G n) ⟫) k)
                     → ⟨ pickStage ψ (LsetEnv (G n) (G-ord n) ms) ∈ G (suc n) ⟩)
            where
 ```
@@ -415,7 +415,7 @@ monotonicity, and the equation transported back.
       atRung (N , belowN) = map₁ found (pickWitness ψ ρₘ satₘ)
         where
         idx = indexEnv (G N) (G-ord N) ρ belowN
-        ρₘ : S ^ k
+        ρₘ : Vec S k
         ρₘ = LsetEnv (G N) (G-ord N) (idx .fst)
         e : ρₘ ≡ ρ
         e = idx .snd
@@ -447,10 +447,10 @@ syntax and the meta-level requires no further work.
 <!--/-->
 
 ```agda
-    reflect-bwd : (ρ : S ^ k) → ⟨ Wit ψ ρ top ⟩ → ⟨ ρ ⊨ (∃̇ ψ) ⟩
+    reflect-bwd : (ρ : Vec S k) → ⟨ Wit ψ ρ top ⟩ → ⟨ ρ ⊨ (∃̇ ψ) ⟩
     reflect-bwd ρ = map₁ (λ { (q , (_ , satq)) → q , satq })
 
-    reflect : (ρ : S ^ k) → Below top ρ → (ρ ⊨ (∃̇ ψ)) ≡ Wit ψ ρ top
+    reflect : (ρ : Vec S k) → Below top ρ → (ρ ⊨ (∃̇ ψ)) ≡ Wit ψ ρ top
     reflect ρ below = ⇔toPath (closure ρ below) (reflect-bwd ρ)
 ```
 </div>
@@ -499,9 +499,9 @@ module Single {k : ℕ} (ψ : Formula S (suc k)) where
 
 ```agda
   Fbnd : (σ : V ℓ) (oσ : IsOrd σ)
-       → Σ[ β ∶ V ℓ ] (IsOrd β × ((ms : ⟪ Lset σ ⟫ ^ k)
+       → Σ[ β ∶ V ℓ ] (IsOrd β × ((ms : Vec (⟪ Lset σ ⟫) k)
                                  → ⟨ pickStage ψ (LsetEnv σ oσ ms) ∈ β ⟩))
-  Fbnd σ oσ = boundingOrd (⟪ Lset σ ⟫ ^ k)
+  Fbnd σ oσ = boundingOrd (Vec (⟪ Lset σ ⟫) k)
                 (λ ms → pickStage ψ (LsetEnv σ oσ ms))
                 (λ ms → pickStage-ord ψ (LsetEnv σ oσ ms))
 
@@ -515,7 +515,7 @@ module Single {k : ℕ} (ψ : Formula S (suc k)) where
     Fstep-ord : (σ : V ℓ) (oσ : IsOrd σ) → IsOrd (Fstep σ oσ)
     Fstep-ord σ oσ = bound2 (Fbnd σ oσ .fst) σ (Fbnd σ oσ .snd .fst) oσ .snd .fst
 
-    pickLand : (σ : V ℓ) (oσ : IsOrd σ) (ms : ⟪ Lset σ ⟫ ^ k)
+    pickLand : (σ : V ℓ) (oσ : IsOrd σ) (ms : Vec (⟪ Lset σ ⟫) k)
              → ⟨ pickStage ψ (LsetEnv σ oσ ms) ∈ Fstep σ oσ ⟩
     pickLand σ oσ ms =
       Fstep-ord σ oσ .fst {x = Fbnd σ oσ .fst}

@@ -304,7 +304,7 @@ The reading module fixes the four slots, the environment, and the ordinalness of
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module Reading {n : ℕ} (d f u v : Fin n) (γ : S ^ n)
+module Reading {n : ℕ} (d f u v : Fin n) (γ : Vec S n)
                (od : IsOrd ((lookup d γ) .fst)) where
 ```
 </summary>

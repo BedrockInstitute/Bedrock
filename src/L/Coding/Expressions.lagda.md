@@ -120,7 +120,7 @@ The truth values at work are the propositions of `hProp` at level `ℓ-suc ℓ`,
 open hPropView 𝒮ʟ using ( S )
 
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
-open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ ; ⟦_⟧ᵐ to ⟦_⟧ )
+open AbsL using () renaming ( _⊨ᵐ_ to _⊨_ ; ⟦_⟧ᵐ to ⟦_⟧ )
 ```
 
 <!--en-->
@@ -275,7 +275,7 @@ Adequacy has two directions, and `out`{.Agda} is the one a soundness proof consu
 <!--/-->
 
 ```agda
-  out : ∀ {n m} (e : Expr n) (ρ : Fin n → Fin m) (q : Fin m) (γ : S ^ m)
+  out : ∀ {n m} (e : Expr n) (ρ : Fin n → Fin m) (q : Fin m) (γ : Vec S m)
        → ⟨ γ ⊨ read e ρ q ⟩ → (lookup q γ) .fst ≡ value e (λ i → (lookup (ρ i) γ) .fst)
   out (slot i) ρ q γ h = h
   out (literal a) ρ q γ h = h
@@ -309,7 +309,7 @@ With the three witnesses in hand, the innermost formula is unfolded by the pair 
 ```agda
                    (out b (lift3 ρ) zero (v ∷ u ∷ s ∷ γ) hb) }) hu }) hs })
 
-  into : ∀ {n m} (e : Expr n) (ρ : Fin n → Fin m) (q : Fin m) (γ : S ^ m)
+  into : ∀ {n m} (e : Expr n) (ρ : Fin n → Fin m) (q : Fin m) (γ : Vec S m)
         → (lookup q γ) .fst ≡ value e (λ i → (lookup (ρ i) γ) .fst) → ⟨ γ ⊨ read e ρ q ⟩
   into (slot i) ρ q γ h = h
   into (literal a) ρ q γ h = h
@@ -405,7 +405,7 @@ The container is produced from the path `e`, and its first component is the desi
     c = container (lookup q γ) u v e
     s : S
     s = c .fst
-    δ : S ^ (suc (suc (suc m)))
+    δ : Vec S (suc (suc (suc m)))
     δ = v ∷ u ∷ s ∷ γ
 ```
 
@@ -418,7 +418,7 @@ The two directions assemble into the advertised form. `adequate` states that the
 <!--/-->
 
 ```agda
-  adequate : ∀ {n m} (e : Expr n) (ρ : Fin n → Fin m) (q : Fin m) (γ : S ^ m)
+  adequate : ∀ {n m} (e : Expr n) (ρ : Fin n → Fin m) (q : Fin m) (γ : Vec S m)
             → (γ ⊨ read e ρ q) ≡ PairIs ((lookup q γ) .fst) (value e (λ i → (lookup (ρ i) γ) .fst))
   adequate e ρ q γ = ⇔toPath (out e ρ q γ) (into e ρ q γ)
 
@@ -435,12 +435,12 @@ The outward reader of `member` eliminates the truncated bounded existential and 
 <!--/-->
 
 ```agda
-  member-out : ∀ {n} (e : Expr n) (C : Term S n) (γ : S ^ n)
+  member-out : ∀ {n} (e : Expr n) (C : Term S n) (γ : Vec S n)
               → ⟨ γ ⊨ member e C ⟩ → ⟨ value e (λ i → (lookup i γ) .fst) ∈ (⟦ C ⟧ γ) .fst ⟩
   member-out e C γ = rec₁ ((value e (λ i → (lookup i γ) .fst) ∈ (⟦ C ⟧ γ) .fst) .snd)
     (λ { (x , h , p) → subst (λ v → ⟨ v ∈ (⟦ C ⟧ γ) .fst ⟩) (out e suc zero (x ∷ γ) p) h })
 
-  member-in : ∀ {n} (e : Expr n) (C : Term S n) (γ : S ^ n)
+  member-in : ∀ {n} (e : Expr n) (C : Term S n) (γ : Vec S n)
 ```
 
 <!--en-->
@@ -474,7 +474,7 @@ tagAtL : ∀ {n} → Fin n → ℕ → Fin n → Formula S n
 tagAtL s k x = PairExpression.read
   (PairExpression.pair (PairExpression.numeral k) (PairExpression.slot x)) id s
 
-tagAtL-adequate : ∀ {n} (s : Fin n) (k : ℕ) (x : Fin n) (γ : S ^ n)
+tagAtL-adequate : ∀ {n} (s : Fin n) (k : ℕ) (x : Fin n) (γ : Vec S n)
   → (γ ⊨ tagAtL s k x)
 ```
 
@@ -507,7 +507,7 @@ The second specialization handles payloads that are themselves pairs, and the tw
   (PairExpression.pair (PairExpression.numeral k)
     (PairExpression.pair (PairExpression.slot a) (PairExpression.slot b))) id s
 
-tagPairAtL-adequate : ∀ {n} (s : Fin n) (k : ℕ) (a b : Fin n) (γ : S ^ n)
+tagPairAtL-adequate : ∀ {n} (s : Fin n) (k : ℕ) (a b : Fin n) (γ : Vec S n)
   → (γ ⊨ tagPairAtL s k a b)
   ≡ PairIs ((lookup s γ) .fst)
 ```
@@ -564,7 +564,7 @@ extAt y φ = ∀̇ ((var zero ∈̇ var (suc y)) ⇒̇ φ)
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module _ {n : ℕ} (y : Fin n) (φ : Formula S (suc n)) (γ : S ^ n) where
+module _ {n : ℕ} (y : Fin n) (φ : Formula S (suc n)) (γ : Vec S n) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -646,7 +646,7 @@ The adequacy statement identifies the truth value of this formula with the propo
 <!--/-->
 
 ```agda
-arityTagPairAtL-adequate : ∀ {n} (c ar : Fin n) (k : ℕ) (a b : Fin n) (γ : S ^ n)
+arityTagPairAtL-adequate : ∀ {n} (c ar : Fin n) (k : ℕ) (a b : Fin n) (γ : Vec S n)
   → (γ ⊨ arityTagPairAtL c ar k a b)
   ≡ PairIs ((lookup c γ) .fst)
       (pr ((lookup ar γ) .fst)
@@ -683,7 +683,7 @@ arityTagAtL c ar k a = PairExpression.read
   (PairExpression.pair (PairExpression.slot ar)
     (PairExpression.pair (PairExpression.numeral k) (PairExpression.slot a))) id c
 
-arityTagAtL-adequate : ∀ {n} (c ar : Fin n) (k : ℕ) (a : Fin n) (γ : S ^ n)
+arityTagAtL-adequate : ∀ {n} (c ar : Fin n) (k : ℕ) (a : Fin n) (γ : Vec S n)
   → (γ ⊨ arityTagAtL c ar k a)
 ```
 
@@ -810,7 +810,7 @@ The definition is `sucAtL i j = liftFo (sucAt i j) _`{.Agda}. Because `sucAt` na
 sucAtL : ∀ {n} → Fin n → Fin n → Formula S n
 sucAtL i j = liftFo (sucAt i j) _
 
-sucAtL-adequate : ∀ {n} (i j : Fin n) (γ : S ^ n)
+sucAtL-adequate : ∀ {n} (i j : Fin n) (γ : Vec S n)
   → (γ ⊨ sucAtL i j) ≡ PairIs ((lookup j γ) .fst) (sucV ((lookup i γ) .fst))
 sucAtL-adequate i j γ =
 ```
@@ -929,7 +929,7 @@ With the boundedness certificates assembled, `consAtL e' m e`{.Agda} is the lift
 consAtL : ∀ {n} → Fin n → Fin n → Fin n → Formula S n
 consAtL e' m e = liftFo (consAt e' m e) (bddCons e' m e)
 
-consAtL-adequate : ∀ {n} (e' m e : Fin n) (γ : S ^ n)
+consAtL-adequate : ∀ {n} (e' m e : Fin n) (γ : Vec S n)
   {k : ℕ} (g : Fin k → V ℓ)
   → (lookup e γ) .fst ≡ env g
 ```

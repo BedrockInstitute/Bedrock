@@ -108,14 +108,14 @@ conversion-checking overhead that later instantiation would otherwise incur.
 keyArityAtL : ∀ {n} → Fin n → ℕ → Formula S n
 keyArityAtL c k = ∃̇ (tagAtL (suc c) k zero)
 
-keyArityAtL-out : ∀ {n} (c : Fin n) (k : ℕ) (γ : S ^ n)
+keyArityAtL-out : ∀ {n} (c : Fin n) (k : ℕ) (γ : Vec S n)
                 → ⟨ γ ⊨ keyArityAtL c k ⟩
                 → ∥ (Σ[ z ∶ S ] ((lookup c γ) .fst ≡ pr (# k) (z .fst))) ∥₁
 keyArityAtL-out c k γ = map₁
   (λ { (z , hz) →
     z , subst ⟨_⟩ (tagAtL-adequate (suc c) k zero (z ∷ γ)) hz })
 
-keyArityAtL-in : ∀ {n} (c : Fin n) (k : ℕ) (γ : S ^ n) (z : S)
+keyArityAtL-in : ∀ {n} (c : Fin n) (k : ℕ) (γ : Vec S n) (z : S)
                → (lookup c γ) .fst ≡ pr (# k) (z .fst)
                → ⟨ γ ⊨ keyArityAtL c k ⟩
 keyArityAtL-in c k γ z e =
@@ -164,7 +164,7 @@ arityNumAtL : ∀ {n} → Fin n → Formula S n
 arityNumAtL c = ∃̇ (∃̇ (prAtL (suc (suc c)) (suc zero) zero
                      ∧̇ (var (suc zero) ∈̇ con ωʟ)))
 
-arityNumAtL-out : ∀ {n} (c : Fin n) (γ : S ^ n)
+arityNumAtL-out : ∀ {n} (c : Fin n) (γ : Vec S n)
                 → ⟨ γ ⊨ arityNumAtL c ⟩
                 → ∥ (Σ[ m ∶ ℕ ] Σ[ z ∶ S ]
                       ((lookup c γ) .fst ≡ pr (# m) (z .fst))) ∥₁
@@ -176,7 +176,7 @@ arityNumAtL-out c γ = rec₁ squash₁ (λ { (ar , h) →
          ∙ cong (λ w → pr w (z .fst)) (qm ∙ numeralL-fst (lower m)) ) })
     (subst ⟨_⟩ (ω-specL ar) hω) }) h })
 
-arityNumAtL-in : ∀ {n} (c : Fin n) (γ : S ^ n) (m : ℕ) (z : S)
+arityNumAtL-in : ∀ {n} (c : Fin n) (γ : Vec S n) (m : ℕ) (z : S)
                → (lookup c γ) .fst ≡ pr (# m) (z .fst)
                → ⟨ γ ⊨ arityNumAtL c ⟩
 arityNumAtL-in c γ m z e = ∣ numeralL m , ∣ z
@@ -359,7 +359,7 @@ it is not about the graph, it is about `rec₁`{.Agda} at a concrete environment
 <!--/-->
 
 ```agda
-  witnessAt-in : ∀ {n k} (b c : Fin n) (γ : S ^ n) (φ : Formula ⟪ A .fst ⟫ k)
+  witnessAt-in : ∀ {n k} (b c : Fin n) (γ : Vec S n) (φ : Formula ⟪ A .fst ⟫ k)
                → (lookup b γ) .fst ≡ A .fst
                → (lookup c γ) .fst ≡ (keyS φ) .fst
                → ⟨ γ ⊨ hasWitnessAt b c ⟩
@@ -369,7 +369,7 @@ it is not about the graph, it is about `rec₁`{.Agda} at a concrete environment
         , closureShaped ι ιL φ b γ
             (λ m → subst (λ w → ⟨ ι m ∈ w ⟩) (sym qb) (ι∈ m)) ) ) ∣₁
 
-  witnessAt-out : ∀ {n} (b c : Fin n) (γ : S ^ n)
+  witnessAt-out : ∀ {n} (b c : Fin n) (γ : Vec S n)
                 → (lookup b γ) .fst ≡ A .fst
                 → ⟨ γ ⊨ hasWitnessAt b c ⟩
                 → (k : ℕ) (z : S) → (lookup c γ) .fst ≡ pr (# k) (z .fst)

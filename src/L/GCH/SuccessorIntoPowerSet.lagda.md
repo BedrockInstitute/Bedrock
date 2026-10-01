@@ -185,8 +185,8 @@ Object-language formulas will be evaluated in environments of constructible sets
 <!--/-->
 
 ```agda
-module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _^_; _⊨ᵐ_ )
-open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
+module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _⊨ᵐ_ )
+open AbsL using () renaming ( _⊨ᵐ_ to _⊨_ )
 ```
 
 <!--en-->
@@ -300,7 +300,7 @@ The environment of the graph pairs the graph with the power set over which it is
 <!--/-->
 
 ```agda
-    γF : SL.S ^ 2
+    γF : Vec SL.S 2
     γF = F ∷ 𝒫 κ ∷ []
 ```
 
@@ -605,7 +605,7 @@ The environment of the graph pairs the graph with the power set.
 <!--/-->
 
 ```agda
-  γG : SL.S ^ 2
+  γG : Vec SL.S 2
   γG = G ∷ P ∷ []
 ```
 
@@ -713,7 +713,7 @@ To express this relation in the object language, the environment places `A`, `B`
 
 ```agda
   private
-    env5 : SL.S → SL.S → SL.S → SL.S → SL.S → SL.S ^ 5
+    env5 : SL.S → SL.S → SL.S → SL.S → SL.S → Vec SL.S 5
     env5 p A B x y = y ∷ x ∷ B ∷ A ∷ p ∷ []
 ```
 

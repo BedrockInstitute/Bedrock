@@ -190,7 +190,7 @@ For a constant, no environment is consulted: the value slot is simply identified
 <!--/-->
 
 ```agda
-tmIs-var-in : ∀ {n m} (i : Fin n) (γ : S ^ m) (v e : Fin m)
+tmIs-var-in : ∀ {n m} (i : Fin n) (γ : Vec S m) (v e : Fin m)
             → ⟨ pr (# (toℕ i)) ((lookup v γ) .fst) ∈ (lookup e γ) .fst ⟩
             → ⟨ γ ⊨ tmIs {n} (var i) v e ⟩
 ```
@@ -218,7 +218,7 @@ The witness is the numeral itself; its defining equation is definitional, and th
 <!--/-->
 
 ```agda
-tmIs-var-out : ∀ {n m} (i : Fin n) (γ : S ^ m) (v e : Fin m)
+tmIs-var-out : ∀ {n m} (i : Fin n) (γ : Vec S m) (v e : Fin m)
              → ⟨ γ ⊨ tmIs {n} (var i) v e ⟩
              → ⟨ pr (# (toℕ i)) ((lookup v γ) .fst) ∈ (lookup e γ) .fst ⟩
 ```

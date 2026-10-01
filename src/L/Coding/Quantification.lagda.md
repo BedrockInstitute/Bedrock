@@ -77,8 +77,8 @@ open InfinitySet {ℓ} using ( sucV )
 
 open hPropView 𝒮ʟ using ( S )
 
-module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _^_; _⊨ᵐ_ )
-open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
+module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _⊨ᵐ_ )
+open AbsL using () renaming ( _⊨ᵐ_ to _⊨_ )
 ```
 
 <!--en-->
@@ -112,11 +112,11 @@ i2 = suc i1
 i3 : ∀ {j} → Fin (4 + j)
 i3 = suc i2
 
-pr-out : ∀ {m} (q u v : Fin m) (γ : S ^ m) → ⟨ γ ⊨ prAtL q u v ⟩
+pr-out : ∀ {m} (q u v : Fin m) (γ : Vec S m) → ⟨ γ ⊨ prAtL q u v ⟩
        → (lookup q γ) .fst ≡ pr ((lookup u γ) .fst) ((lookup v γ) .fst)
 pr-out q u v γ h = subst ⟨_⟩ (prAtL-adequate q u v γ) h
 
-pr-in : ∀ {m} (q u v : Fin m) (γ : S ^ m)
+pr-in : ∀ {m} (q u v : Fin m) (γ : Vec S m)
       → (lookup q γ) .fst ≡ pr ((lookup u γ) .fst) ((lookup v γ) .fst)
       → ⟨ γ ⊨ prAtL q u v ⟩
 pr-in q u v γ e = subst ⟨_⟩ (sym (prAtL-adequate q u v γ)) e
@@ -213,7 +213,7 @@ bigAnd (suc n) φ = φ zero ∧̇ bigAnd n (λ k → φ (suc k))
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module _ {m : ℕ} (γ : S ^ m) where
+module _ {m : ℕ} (γ : Vec S m) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -276,11 +276,11 @@ The atoms and their certificates.
 The successor reader, both ways, at a variable environment.
 
 ```agda
-suc-out : ∀ {m} (i j : Fin m) (γ : S ^ m) → ⟨ γ ⊨ sucAtL i j ⟩
+suc-out : ∀ {m} (i j : Fin m) (γ : Vec S m) → ⟨ γ ⊨ sucAtL i j ⟩
         → (lookup j γ) .fst ≡ sucV ((lookup i γ) .fst)
 suc-out i j γ h = subst ⟨_⟩ (sucAtL-adequate i j γ) h
 
-suc-in : ∀ {m} (i j : Fin m) (γ : S ^ m)
+suc-in : ∀ {m} (i j : Fin m) (γ : Vec S m)
        → (lookup j γ) .fst ≡ sucV ((lookup i γ) .fst) → ⟨ γ ⊨ sucAtL i j ⟩
 suc-in i j γ e = subst ⟨_⟩ (sym (sucAtL-adequate i j γ)) e
 ```
@@ -346,7 +346,7 @@ bothAll x body =
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module _ {m : ℕ} (x u : Fin m) (body : Formula S (2 + m)) (γ : S ^ m) where
+module _ {m : ℕ} (x u : Fin m) (body : Formula S (2 + m)) (γ : Vec S m) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -405,7 +405,7 @@ Out: the witness's second component is pinned by pair injectivity.
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module _ {m : ℕ} (x : Fin m) (body : Formula S (3 + m)) (γ : S ^ m) where
+module _ {m : ℕ} (x : Fin m) (body : Formula S (3 + m)) (γ : Vec S m) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -465,7 +465,7 @@ elements, fills any of the four.
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module _ {m : ℕ} (x : Fin m) (γ : S ^ m) (u v : S)
+module _ {m : ℕ} (x : Fin m) (γ : Vec S m) (u v : S)
          (e : (lookup x γ) .fst ≡ pr (u .fst) (v .fst)) where
 ```
 </summary>

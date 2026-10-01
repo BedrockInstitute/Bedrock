@@ -295,7 +295,7 @@ the indices below `n` are exactly the numerals below `n`.
       val∈ : (i : Fin n) → ⟨ (ix (g i)) .fst ∈ B .fst ⟩
       val∈ i = ∈∈ₛ {a = ⟪ B .fst ⟫↪ (g i)} {b = B .fst} .snd (∈ₛ⟪ B .fst ⟫↪ (g i))
 
-      δ : S ^ 3
+      δ : Vec S 3
       δ = B ∷ nn n ∷ envS g ∷ []
 
       E : Fin 3
@@ -400,7 +400,7 @@ unwanted elements could enter.
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-  module Recover (n : ℕ) {k : ℕ} (γ : S ^ k) (Ei di bi : Fin k)
+  module Recover (n : ℕ) {k : ℕ} (γ : Vec S k) (Ei di bi : Fin k)
     (qd : (lookup di γ) .fst ≡ # n) (qb : (lookup bi γ) .fst ≡ B .fst)
     (h : ⟨ γ ⊨ envOverAt Ei di bi ⟩)
     where

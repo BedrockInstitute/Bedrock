@@ -92,8 +92,8 @@ For sets `a` and `b`, `InjCode F a b` has exactly four components. The graph `F`
 open import Cubical.HITs.CumulativeHierarchy.Base using ( _∈_ )
 open hPropView 𝒮ʟ using ( S )
 open hPropView 𝒮ᵥ using ( _∈ˢ_ )
-module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _^_; _⊨ᵐ_ )
-open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
+module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _⊨ᵐ_ )
+open AbsL using () renaming ( _⊨ᵐ_ to _⊨_ )
 ```
 
 <!--en-->
@@ -119,7 +119,7 @@ injCodeAt f A B = svAt f ∧̇ domAt f A ∧̇ injAt f
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module InjCodeAt {n : ℕ} (f A B : Fin n) (γ : S ^ n) where
+module InjCodeAt {n : ℕ} (f A B : Fin n) (γ : Vec S n) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -170,7 +170,7 @@ injLAt A B = ∃̇ (injCodeAt zero (suc A) (suc B))
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module InjLAt {n : ℕ} (A B : Fin n) (γ : S ^ n) where
+module InjLAt {n : ℕ} (A B : Fin n) (γ : Vec S n) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -207,7 +207,7 @@ cardinalAt K = ∀̇ ((var zero ∈̇ var (suc K))
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module CardinalAt {n : ℕ} (K : Fin n) (γ : S ^ n) where
+module CardinalAt {n : ℕ} (K : Fin n) (γ : Vec S n) where
 ```
 </summary>
 <div class="submodule-fold-content">

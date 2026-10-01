@@ -180,8 +180,8 @@ Object-language clauses are interpreted in the first-order structure carried by 
 <!--/-->
 
 ```agda
-module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _^_; _⊨ᵐ_ )
-open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
+module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _⊨ᵐ_ )
+open AbsL using () renaming ( _⊨ᵐ_ to _⊨_ )
 ```
 
 <!--en-->
@@ -409,7 +409,7 @@ The soundness argument is local to an arbitrary code domain `C`. Besides a propo
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module SatSoundC {m : ℕ} (T w C E : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) (W : S)
+module SatSoundC {m : ℕ} (T w C E : Fin m) (N : Fin 10 → Fin m) (γ : Vec S m) (W : S)
   (qw : (lookup w γ) .fst ≡ W .fst) (tg : Tags γ N)
   (hE : ⟨ γ ⊨ towerAt E w (N f0) ⟩) (hcl : ⟨ γ ⊨ closedAt C ⟩)
   (hT : ⟨ γ ⊨ tableAt T w C E N ⟩) where
@@ -525,7 +525,7 @@ The formula code is initially written with the canonical numeral `# k`; the tag 
 ```agda
       ep' : (codeS W ψ) .fst ≡ pr ((lookup (N k) γ) .fst) (rS .fst)
       ep' = ep ∙ cong (λ a → pr a (rS .fst)) (sym (tg k))
-      δ12 : S ^ (12 + m)
+      δ12 : Vec S (12 + m)
       δ12 = Fr.At.δ12 (nn n) (envSet W n) (keyS W ψ) (codeS W ψ) rS y q∈ refl k ep' mem
       rel : ⟨ δ12 ⊨ R.relN (toℕ k) ⟩
 ```
@@ -611,7 +611,7 @@ All three binary connectives share the same recursive pattern. The parameters id
               (opA : Formula Ab n → Formula Ab n → Formula Ab n) (k : Fin 10)
               (a b : Formula Ab n) (code : cd (opA a b) ≡ pr (# (toℕ k)) (pr (cd a) (cd b)))
               (relIs : R.relN (toℕ k) ≡ R.binRel op)
-              (bridge : ∀ {j} (env : S ^ j) (ya yb : Fin j)
+              (bridge : ∀ {j} (env : Vec S j) (ya yb : Fin j)
 ```
 
 <!--en-->
@@ -703,7 +703,7 @@ The two unbounded quantifiers also share one recursive case. Their body has succ
              (qA : Formula Ab (suc n) → Formula Ab n) (k : Fin 10)
              (a : Formula Ab (suc n)) (code : cd (qA a) ≡ pr (# (toℕ k)) (cd a))
              (relIs : R.relN (toℕ k) ≡ R.quRel q)
-             (bridge : ∀ {j} (env : S ^ j) (wi yai : Fin j)
+             (bridge : ∀ {j} (env : Vec S j) (wi yai : Fin j)
 ```
 
 <!--en-->
@@ -808,7 +808,7 @@ The bridge identifies the recursively defined satisfaction set of the bounded fo
 <!--/-->
 
 ```agda
-             (bridge : ∀ {j} (env : S ^ j) (wi ti yai N0i N1i : Fin j)
+             (bridge : ∀ {j} (env : Vec S j) (wi ti yai N0i N1i : Fin j)
                      → (lookup wi env) .fst ≡ Wv → (lookup ti env) .fst ≡ ct t → (lookup yai env) .fst ≡ (SatW a) .fst
                      → (lookup N0i env) .fst ≡ # 0 → (lookup N1i env) .fst ≡ # 1
                      → ExtFact ((SatW (qA t a)) .fst) ((envSet W n) .fst) (λ z → ⟨ (z ∷ env) ⊨ body wi ti yai N0i N1i ⟩))
@@ -892,7 +892,7 @@ An atomic formula has no formula children, so its case needs no closure implicat
                (t u : Term Ab n) (code : cd (opA t u) ≡ pr (# (toℕ k)) (pr (ct t) (ct u)))
                (rel : Formula S (18 + m))
                (relIs : R.relN (toℕ k) ≡ R.atomRel rel)
-               (bridge : ∀ (env : S ^ (15 + m)) (wi ti ui N0i N1i : Fin (15 + m))
+               (bridge : ∀ (env : Vec S (15 + m)) (wi ti ui N0i N1i : Fin (15 + m))
 ```
 
 <!--en-->
@@ -968,7 +968,7 @@ For the membership atom, satisfaction at the displayed environment is definition
 <!--/-->
 
 ```agda
-    memAgree : ∀ {j} (env : S ^ j) (z v x : S)
+    memAgree : ∀ {j} (env : Vec S j) (z v x : S)
              → (⟨ (x ∷ v ∷ z ∷ env) ⊨ var i1 ∈̇ var i0 ⟩ → ⟨ v .fst ∈ x .fst ⟩) × (⟨ v .fst ∈ x .fst ⟩ → ⟨ (x ∷ v ∷ z ∷ env) ⊨ var i1 ∈̇ var i0 ⟩)
     memAgree env z v x = (λ h → h) , (λ h → h)
 ```
@@ -982,7 +982,7 @@ The equality agreement says the same for the equality atom: the object-language 
 <!--/-->
 
 ```agda
-    eqAgree : ∀ {j} (env : S ^ j) (z v x : S)
+    eqAgree : ∀ {j} (env : Vec S j) (z v x : S)
             → (⟨ (x ∷ v ∷ z ∷ env) ⊨ var i1 ≐ var i0 ⟩ → v .fst ≡ x .fst) × ((v .fst ≡ x .fst) → ⟨ (x ∷ v ∷ z ∷ env) ⊨ var i1 ≐ var i0 ⟩)
     eqAgree env z v x = (λ h → h) , (λ h → h)
 ```
@@ -1188,7 +1188,7 @@ Fix the table, carrier, code-domain, and environment-tower slots in one environm
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-  module SatHoldsC {m : ℕ} (T w C E : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m)
+  module SatHoldsC {m : ℕ} (T w C E : Fin m) (N : Fin 10 → Fin m) (γ : Vec S m)
     (qw : (lookup w γ) .fst ≡ W .fst) (tg : Tags γ N)
     (hE : ⟨ γ ⊨ towerAt E w (N f0) ⟩)
     (val≡ : ∀ {n} (ψ : Formula Ab n) (c yc : S) → c .fst ≡ (keyS W ψ) .fst
@@ -1360,7 +1360,7 @@ The frame prepends the twelve objects in the exact coordinate order expected by 
 <!--/-->
 
 ```agda
-        frame : S ^ (12 + m)
+        frame : Vec S (12 + m)
         frame = yc ∷ s3 ∷ e ∷ r ∷ s2 ∷ p ∷ s1 ∷ c ∷ F ∷ ar ∷ s ∷ q ∷ γ
 ```
 
@@ -1412,7 +1412,7 @@ The transfer lemma is the key move: given the arity equation, the environment-se
 
 ```agda
         transfer : (n : ℕ) (ψ : Formula Ab n) → ar .fst ≡ # n → F .fst ≡ (envSet W n) .fst
-                 → p .fst ≡ cd ψ → {j : ℕ} (env : S ^ j) (φ : Formula S (1 + j))
+                 → p .fst ≡ cd ψ → {j : ℕ} (env : Vec S j) (φ : Formula S (1 + j))
                  → ExtFact ((SatW ψ) .fst) ((envSet W n) .fst) (λ z → ⟨ (z ∷ env) ⊨ φ ⟩)
                  → RR.Ext env φ
         transfer n ψ qa qF qp env φ ext =
@@ -1516,7 +1516,7 @@ For any binary constructor, the two child entries are first identified with the 
 ```agda
         module BinFill (op : ∀ {j} → Formula S j → Formula S j → Formula S j)
           (opA : ∀ {j} → Formula Ab j → Formula Ab j → Formula Ab j)
-          (bridge : ∀ {n} (a b : Formula Ab n) {j : ℕ} (env : S ^ j) (ya yb : Fin j)
+          (bridge : ∀ {n} (a b : Formula Ab n) {j : ℕ} (env : Vec S j) (ya yb : Fin j)
                   → (lookup ya env) .fst ≡ (SatW a) .fst → (lookup yb env) .fst ≡ (SatW b) .fst
                   → ExtFact ((SatW (opA a b)) .fst) ((envSet W n) .fst)
 ```
@@ -1575,7 +1575,7 @@ For an unbounded quantified formula, the recursive child has successor arity, wh
 ```agda
         module QuFill (q' : ∀ {j} → Term S j → Formula S (suc j) → Formula S j)
           (qA : ∀ {j} → Formula Ab (suc j) → Formula Ab j)
-          (bridge : ∀ {n} (a : Formula Ab (suc n)) {j : ℕ} (env : S ^ j) (wi yai : Fin j)
+          (bridge : ∀ {n} (a : Formula Ab (suc n)) {j : ℕ} (env : Vec S j) (wi yai : Fin j)
                   → (lookup wi env) .fst ≡ Wv → (lookup yai env) .fst ≡ (SatW a) .fst
                   → ExtFact ((SatW (qA a)) .fst) ((envSet W n) .fst)
 ```
@@ -1649,7 +1649,7 @@ The equation `bodyIs` identifies the generic clause body with its three bounded 
                   → body wi ti yai N0i N1i
                   ≡ q' (var (suc wi)) (c' (tmIs (suc (suc ti)) i1 i0 (suc (suc N0i)) (suc (suc N1i)))
                       (q' (var (suc (suc wi))) (c' (var i0 ∈̇ var i1) (∃̇∈ (var (suc (suc (suc yai)))) (consAtL i0 i1 i3))))))
-          (bridge : ∀ {n} (t : Term Ab n) (a : Formula Ab (suc n)) {j : ℕ} (env : S ^ j) (wi ti yai N0i N1i : Fin j)
+          (bridge : ∀ {n} (t : Term Ab n) (a : Formula Ab (suc n)) {j : ℕ} (env : Vec S j) (wi ti yai N0i N1i : Fin j)
                   → (lookup wi env) .fst ≡ Wv → (lookup ti env) .fst ≡ ct t → (lookup yai env) .fst ≡ (SatW a) .fst
 ```
 
@@ -1708,7 +1708,7 @@ An atomic formula has two term codes but no recursive formula child. Its generic
 
 ```agda
         module AtomFill (opA : ∀ {j} → Term Ab j → Term Ab j → Formula Ab j) (rel : Formula S (18 + m))
-          (bridge : ∀ {n} (t u : Term Ab n) (env : S ^ (15 + m)) (wi ti ui N0i N1i : Fin (15 + m))
+          (bridge : ∀ {n} (t u : Term Ab n) (env : Vec S (15 + m)) (wi ti ui N0i N1i : Fin (15 + m))
                   → (lookup wi env) .fst ≡ Wv → (lookup ti env) .fst ≡ ct t → (lookup ui env) .fst ≡ ct u
                   → (lookup N0i env) .fst ≡ # 0 → (lookup N1i env) .fst ≡ # 1
                   → ExtFact ((SatW (opA t u)) .fst) ((envSet W n) .fst) (λ z → ⟨ (z ∷ env) ⊨ atomEx wi ti ui N0i N1i rel ⟩)) where
@@ -2025,7 +2025,7 @@ The bounded universal and existential cases also contribute only the formula bod
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-  module SlotHolds {m : ℕ} (T w C E : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m)
+  module SlotHolds {m : ℕ} (T w C E : Fin m) (N : Fin 10 → Fin m) (γ : Vec S m)
     (qw : (lookup w γ) .fst ≡ W .fst) (tg : Tags γ N)
     (hE : ⟨ γ ⊨ towerAt E w (N f0) ⟩) {n0 : ℕ} (ψ0 : Formula Ab n0)
     (qT : (lookup T γ) .fst ≡ (satTable W (toS ψ0)) .fst)

@@ -161,7 +161,7 @@ The absoluteness reading is imported under two names, for formulas read inside `
 
 ```agda
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
-open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
+open AbsL using () renaming ( _⊨ᵐ_ to _⊨_ )
 ```
 
 <!--en-->
@@ -389,7 +389,7 @@ Reading the zero clause applies it at the numeral zero and transports the applic
 <!--/-->
 
 ```agda
-    zero-out : ∀ {n} (f : Fin n) (γ : S ^ n) → ⟨ γ ⊨ zeroAt f ⟩ → Zero (lookup f γ)
+    zero-out : ∀ {n} (f : Fin n) (γ : Vec S n) → ⟨ γ ⊨ zeroAt f ⟩ → Zero (lookup f γ)
     zero-out f γ h v hv = h (nn 0) refl v
       (subst ⟨_⟩ (sym (appAt-adequate (suc (suc f)) (suc zero) zero (v ∷ nn 0 ∷ γ))) hv)
 ```
@@ -403,7 +403,7 @@ Conversely, a host-level proof of the zero clause fills the object-language form
 <!--/-->
 
 ```agda
-    zero-in : ∀ {n} (f : Fin n) (γ : S ^ n) → Zero (lookup f γ) → ⟨ γ ⊨ zeroAt f ⟩
+    zero-in : ∀ {n} (f : Fin n) (γ : Vec S n) → Zero (lookup f γ) → ⟨ γ ⊨ zeroAt f ⟩
     zero-in f γ h z ez v hv = h v
       (subst (λ t → ⟨ pr t (v .fst) ∈ (lookup f γ) .fst ⟩) ez
         (subst ⟨_⟩ (appAt-adequate (suc (suc f)) (suc zero) zero (v ∷ z ∷ γ)) hv))
@@ -433,7 +433,7 @@ The renaming agreement checks that the two environments agree on the renamed slo
 <!--/-->
 
 ```agda
-    ag : ∀ {n} (γ : S ^ n) (x v x' v' : S)
+    ag : ∀ {n} (γ : Vec S n) (x v x' v' : S)
        → Ren.Agrees ρ (v' ∷ x' ∷ v ∷ x ∷ γ) (v' ∷ v ∷ [])
     ag γ x v x' v' zero       = refl
     ag γ x v x' v' (suc zero) = refl
@@ -478,7 +478,7 @@ The renaming path is proved by the renaming semantics: satisfaction of the renam
 
 ```agda
     private
-      gr : ∀ {n} (γ : S ^ n) (x v x' v' : S)
+      gr : ∀ {n} (γ : Vec S n) (x v x' v' : S)
          → ⟨ (v' ∷ x' ∷ v ∷ x ∷ γ) ⊨ renameFo ρ stepFo ⟩ ≡ ⟨ (v' ∷ v ∷ []) ⊨ stepFo ⟩
       gr γ x v x' v' = cong ⟨_⟩
         (Ren.⊨-rename ρ stepFo (v' ∷ x' ∷ v ∷ x ∷ γ) (v' ∷ v ∷ []) (ag γ x v x' v'))
@@ -493,7 +493,7 @@ Reading the successor clause transports the two application atoms against their 
 <!--/-->
 
 ```agda
-    step-out : ∀ {n} (f : Fin n) (γ : S ^ n) → ⟨ γ ⊨ stepAt f ⟩ → Step (lookup f γ)
+    step-out : ∀ {n} (f : Fin n) (γ : Vec S n) → ⟨ γ ⊨ stepAt f ⟩ → Step (lookup f γ)
     step-out f γ h x v x' v' p q s = transport (gr γ x v x' v')
       (h x v x' v'
         (subst ⟨_⟩ (sym (appAt-adequate (suc (suc (suc (suc f)))) (suc (suc (suc zero))) (suc (suc zero)) (v' ∷ x' ∷ v ∷ x ∷ γ))) p)
@@ -521,7 +521,7 @@ Filling the successor clause runs the same transports in reverse, starting from 
 <!--/-->
 
 ```agda
-    step-in : ∀ {n} (f : Fin n) (γ : S ^ n) → Step (lookup f γ) → ⟨ γ ⊨ stepAt f ⟩
+    step-in : ∀ {n} (f : Fin n) (γ : Vec S n) → Step (lookup f γ) → ⟨ γ ⊨ stepAt f ⟩
     step-in f γ h x v x' v' p q s = transport (sym (gr γ x v x' v'))
       (h x v x' v'
         (subst ⟨_⟩ (appAt-adequate (suc (suc (suc (suc f)))) (suc (suc (suc zero))) (suc (suc zero)) (v' ∷ x' ∷ v ∷ x ∷ γ)) p)
@@ -577,7 +577,7 @@ Reading the downward formula preserves the existential as a propositional trunca
 <!--/-->
 
 ```agda
-    down-out : ∀ {n} (f : Fin n) (γ : S ^ n) → ⟨ γ ⊨ downAt f ⟩ → Down (lookup f γ)
+    down-out : ∀ {n} (f : Fin n) (γ : Vec S n) → ⟨ γ ⊨ downAt f ⟩ → Down (lookup f γ)
     down-out f γ h x' v' x p m = map₁
       (λ { (v , q) → v , subst ⟨_⟩ (appAt-adequate (suc (suc (suc (suc f)))) (suc zero) zero (v ∷ x ∷ v' ∷ x' ∷ γ)) q })
       (h x' v' x (subst ⟨_⟩ (sym (appAt-adequate (suc (suc (suc f))) (suc (suc zero)) (suc zero) (x ∷ v' ∷ x' ∷ γ))) p) m)
@@ -592,7 +592,7 @@ Filling runs the transport the other way, from the host-level truncated entry to
 <!--/-->
 
 ```agda
-    down-in : ∀ {n} (f : Fin n) (γ : S ^ n) → Down (lookup f γ) → ⟨ γ ⊨ downAt f ⟩
+    down-in : ∀ {n} (f : Fin n) (γ : Vec S n) → Down (lookup f γ) → ⟨ γ ⊨ downAt f ⟩
     down-in f γ h x' v' x p m = map₁
       (λ { (v , q) → v , subst ⟨_⟩ (sym (appAt-adequate (suc (suc (suc (suc f)))) (suc zero) zero (v ∷ x ∷ v' ∷ x' ∷ γ))) q })
       (h x' v' x (subst ⟨_⟩ (appAt-adequate (suc (suc (suc f))) (suc (suc zero)) (suc zero) (x ∷ v' ∷ x' ∷ γ)) p) m)
@@ -621,7 +621,7 @@ The three conjuncts recover exactly the semantic conditions already isolated as 
 <!--/-->
 
 ```agda
-    corr-out : ∀ {n} (f : Fin n) (γ : S ^ n) → ⟨ γ ⊨ corrAt f ⟩ → Correct (lookup f γ)
+    corr-out : ∀ {n} (f : Fin n) (γ : Vec S n) → ⟨ γ ⊨ corrAt f ⟩ → Correct (lookup f γ)
     corr-out f γ (z , (s , d)) = zero-out f γ z , (step-out f γ s , down-out f γ d)
 ```
 
@@ -634,7 +634,7 @@ The converse direction shows that these three semantic conditions suffice to sat
 <!--/-->
 
 ```agda
-    corr-in : ∀ {n} (f : Fin n) (γ : S ^ n) → Correct (lookup f γ) → ⟨ γ ⊨ corrAt f ⟩
+    corr-in : ∀ {n} (f : Fin n) (γ : Vec S n) → Correct (lookup f γ) → ⟨ γ ⊨ corrAt f ⟩
     corr-in f γ (z , (s , d)) = zero-in f γ z , (step-in f γ s , down-in f γ d)
 ```
 

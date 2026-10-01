@@ -122,16 +122,15 @@ open hPropView 𝒮ᵥ
 ```
 
 <!--en-->
-The ambient semantics supplies the notation `S ^ n` for environments of length `n`. Formula slots are read from such vectors; each newly bound existential witness is placed at the front, shifting the older slots outward. This convention explains why the three nested witnesses used later are finally read in the order `(a,p,z)`, even though they are introduced from the outside as `z`, then `p`, then `a`.
+The ambient semantics supplies the notation `Vec S n`{.Agda} for environments of length `n`{.Agda}. Formula slots are read from such vectors; each newly bound existential witness is placed at the front, shifting the older slots outward. This convention explains why the three nested witnesses used later are finally read in the order `(a,p,z)`{.Agda}, even though they are introduced from the outside as `z`{.Agda}, then `p`{.Agda}, then `a`{.Agda}.
 <!--zh-->
-外围语义给出长度为 `n` 的环境记号 `S ^ n`。公式的槽位从这种向量中读取；每个新绑定的存在见证都放在向量前端，把旧槽位向外推移。因此，后文三层嵌套的见证虽然从外到内依次引入 `z`、`p`、`a`，最终却按 `(a,p,z)` 的顺序读取。
+外围语义给出长度为 `n`{.Agda} 的环境记号 `Vec S n`{.Agda}。公式的槽位从这种向量中读取；每个新绑定的存在见证都放在向量前端，把旧槽位向外推移。因此，后文三层嵌套的见证虽然从外到内依次引入 `z`{.Agda}、`p`{.Agda}、`a`{.Agda}，最终却按 `(a,p,z)`{.Agda} 的顺序读取。
 <!--ja-->
-周囲の意味論は、長さ `n` の環境を表す記法 `S ^ n` を与える。論理式のスロットはこのようなベクトルから読まれ、新しく束縛された存在の証人は先頭に置かれて、以前のスロットを外側へずらす。そのため、後で三重に入れ子になった証人は、外側から `z`、`p`、`a` の順に導入されても、最終的には `(a,p,z)` の順に読まれる。
+周囲の意味論は、長さ `n`{.Agda} の環境を表す記法 `Vec S n`{.Agda} を与える。論理式のスロットはこのようなベクトルから読まれ、新しく束縛された存在の証人は先頭に置かれて、以前のスロットを外側へずらす。そのため、後で三重に入れ子になった証人は、外側から `z`{.Agda}、`p`{.Agda}、`a`{.Agda} の順に導入されても、最終的には `(a,p,z)`{.Agda} の順に読まれる。
 <!--/-->
 
 ```agda
 module SemVᵃ = FOL.Semantics 𝒮ᵥ
-open SemVᵃ using ( _^_ )
 ```
 
 <!--en-->
@@ -361,7 +360,7 @@ The external witnesses are the adequate bound `Lset γ`, the prescribed index `d
 ```agda
     ∣ (Lset γ , Lγ∈) , ∣ (d , d∈) , ∣ (Lset d , Ld∈) , (sat , sym ed) ∣₁ ∣₁ ∣₁
     where
-    δ : HS.ASt.SL ^ 3
+    δ : Vec HS.ASt.SL 3
     δ = (Lset d , Ld∈) ∷ (d , d∈) ∷ (Lset γ , Lγ∈) ∷ []
 ```
 
@@ -446,7 +445,7 @@ The same external triple `(Lset p,p,Lset γ)` witnesses the level description, b
 ```agda
     ∣ (Lset γ , Lγ∈) , ∣ (p , p∈) , ∣ (Lset p , Lp∈) , (sat , mem) ∣₁ ∣₁ ∣₁
     where
-    δ : HS.ASt.SL ^ 3
+    δ : Vec HS.ASt.SL 3
     δ = (Lset p , Lp∈) ∷ (p , p∈) ∷ (Lset γ , Lγ∈) ∷ []
 ```
 

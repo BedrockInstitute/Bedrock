@@ -194,8 +194,8 @@ Satisfaction inside `L` and satisfaction in the ambient hierarchy use different 
 <!--/-->
 
 ```agda
-module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _^_; _⊨ᵐ_; abs₀ )
-open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
+module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _⊨ᵐ_; abs₀ )
+open AbsL using () renaming ( _⊨ᵐ_ to _⊨_ )
 module SemVᵃ = FOL.Semantics 𝒮ᵥ
 ```
 
@@ -332,7 +332,7 @@ To use the ten tags in later descriptions, their object-language pinning must ag
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module PinsRead {m : ℕ} (N : Fin 10 → Fin m) (γ : S ^ m) where
+module PinsRead {m : ℕ} (N : Fin 10 → Fin m) (γ : Vec S m) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -500,7 +500,7 @@ Fix an environment `δ` whose ten named slots have the required numeral values. 
 <summary class="submodule-fold-heading">
 ```agda
 module DefInRead {k : ℕ} (w z : Fin k) (N : Fin 10 → Fin k) (body : Formula S (4 + k))
-  (δ : S ^ k) (tg : Tags δ N) where
+  (δ : Vec S k) (tg : Tags δ N) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -520,7 +520,7 @@ The four witnesses are bound successively as `T`, `C`, `E`, and `d`. Since each 
 <!--/-->
 
 ```agda
-  δ4 : (T C E d : S) → S ^ (4 + k)
+  δ4 : (T C E d : S) → Vec S (4 + k)
   δ4 T C E d = d ∷ E ∷ C ∷ T ∷ δ
 ```
 
@@ -627,7 +627,7 @@ Now fix one proposed hierarchy step in an environment `γ`. Write `Vv` for the p
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module StepRead {m : ℕ} (v b f z : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) (tg : Tags γ N) where
+module StepRead {m : ℕ} (v b f z : Fin m) (N : Fin 10 → Fin m) (γ : Vec S m) (tg : Tags γ N) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -954,7 +954,7 @@ The approximation reader is parameterized by the table, the bound, the witness b
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module ApproxRead {m : ℕ} (f b z : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) (tg : Tags γ N) where
+module ApproxRead {m : ℕ} (f b z : Fin m) (N : Fin 10 → Fin m) (γ : Vec S m) (tg : Tags γ N) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -1040,7 +1040,7 @@ The proof now presents the relevant sets inside the constructible carrier. The m
       cS = down (lookup b γ) c c∈
       q : S
       q = down (lookup f γ) (pr c (w .fst)) rec
-      env : S ^ (4 + m)
+      env : Vec S (4 + m)
 ```
 
 <!--en-->
@@ -1231,7 +1231,7 @@ The hierarchy reading has four distinguished slots: the proposed stage `a`, its 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module HierRead {m : ℕ} (a p f z : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) (tg : Tags γ N) where
+module HierRead {m : ℕ} (a p f z : Fin m) (N : Fin 10 → Fin m) (γ : Vec S m) (tg : Tags γ N) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -1405,7 +1405,7 @@ The outward reading of the conjunction is the pair of its two conjuncts, since c
 <!--/-->
 
 ```agda
-    inner-out : (γ : S ^ 14) → ⟨ γ ⊨ inner ⟩ → ⟨ γ ⊨ pins N14 ⟩ × ⟨ γ ⊨ hierAt aa pp ff zz N14 ⟩
+    inner-out : (γ : Vec S 14) → ⟨ γ ⊨ inner ⟩ → ⟨ γ ⊨ pins N14 ⟩ × ⟨ γ ⊨ hierAt aa pp ff zz N14 ⟩
     inner-out γ h = h
 ```
 
@@ -1418,7 +1418,7 @@ Conversely, proofs of the pin clauses and of the hierarchy clause form the two c
 <!--/-->
 
 ```agda
-    inner-in : (γ : S ^ 14) → ⟨ γ ⊨ pins N14 ⟩ → ⟨ γ ⊨ hierAt aa pp ff zz N14 ⟩ → ⟨ γ ⊨ inner ⟩
+    inner-in : (γ : Vec S 14) → ⟨ γ ⊨ pins N14 ⟩ → ⟨ γ ⊨ hierAt aa pp ff zz N14 ⟩ → ⟨ γ ⊨ inner ⟩
     inner-in γ h1 h2 = h1 , h2
 ```
 
@@ -1583,7 +1583,7 @@ Semantically, one wrapped layer is a propositionally truncated bounded witness. 
 <!--/-->
 
 ```agda
-  unwrap : {n : ℕ} (φ : Formula S (suc (suc n))) (γ : S ^ (suc n)) {P : hProp (ℓ-suc ℓ)}
+  unwrap : {n : ℕ} (φ : Formula S (suc (suc n))) (γ : Vec S (suc n)) {P : hProp (ℓ-suc ℓ)}
          → ((x : S) → ⟨ x .fst ∈ (lookup (lastFin {n}) γ) .fst ⟩ → ⟨ (x ∷ γ) ⊨ φ ⟩ → ⟨ P ⟩)
          → ⟨ γ ⊨ wrap {n} φ ⟩ → ⟨ P ⟩
   unwrap φ γ {P} k h = rec₁ ⟨ P ⟩isProp (λ { (x , xz , hx) → k x xz hx }) h
@@ -1598,7 +1598,7 @@ Semantically, one wrapped layer is a propositionally truncated bounded witness. 
 <!--/-->
 
 ```agda
-  wrap-in : {n : ℕ} (φ : Formula S (suc (suc n))) (γ : S ^ (suc n)) (x : S)
+  wrap-in : {n : ℕ} (φ : Formula S (suc (suc n))) (γ : Vec S (suc n)) (x : S)
           → ⟨ x .fst ∈ (lookup (lastFin {n}) γ) .fst ⟩ → ⟨ (x ∷ γ) ⊨ φ ⟩ → ⟨ γ ⊨ wrap {n} φ ⟩
   wrap-in φ γ x m h = ∣ x , (m , h) ∣₁
 ```
@@ -1648,7 +1648,7 @@ The reading lemma composes three paths for any constant-free Δ₀ formula: Δ�
 <!--/-->
 
 ```agda
-read : {n : ℕ} {φ : Formula (⊥* {ℓ-suc ℓ}) n} → Δ₀ φ → (δ : S ^ n)
+read : {n : ℕ} {φ : Formula (⊥* {ℓ-suc ℓ}) n} → Δ₀ φ → (δ : Vec S n)
      → (δ ⊨ embed φ) ≡ (map (λ p → p .fst) δ ⊨ₚ φ)
 read {n} {φ} dφ δ =
     AbsL.abs₀ (mapΔ₀ ⊥*-rec dφ) δ
@@ -1742,7 +1742,7 @@ The finish lemma separates the two conjuncts of `inner`. The pins reader turns t
 <!--/-->
 
 ```agda
-  finish : (γ : S ^ 14) → ⟨ γ ⊨ inner ⟩ → IsOrd ((lookup pp γ) .fst)
+  finish : (γ : Vec S 14) → ⟨ γ ⊨ inner ⟩ → IsOrd ((lookup pp γ) .fst)
          → (lookup aa γ) .fst ≡ Lset ((lookup pp γ) .fst)
   finish γ h op = HierRead.hier-sound aa pp ff zz N14 γ tg (inner-out γ h .snd) op
     where
@@ -1994,7 +1994,7 @@ The environment `E` now records the complete fourteen-slot assignment. From fron
 <!--/-->
 
 ```agda
-  E : S ^ 14
+  E : Vec S 14
   E = nn 0 ∷ nn 1 ∷ nn 2 ∷ nn 3 ∷ nn 4 ∷ nn 5 ∷ nn 6 ∷ nn 7 ∷ nn 8 ∷ nn 9
     ∷ F ∷ aS ∷ pS ∷ zS ∷ []
 ```

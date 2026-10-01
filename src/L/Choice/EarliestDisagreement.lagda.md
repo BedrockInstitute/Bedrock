@@ -1118,7 +1118,7 @@ The innermost clauses require the candidate entry to be the ordered pair of thos
 <!--/-->
 
 ```agda
-StepOf : ∀ {n} → Fin n → Fin n → S ^ n → V ℓ → Type (ℓ-suc ℓ)
+StepOf : ∀ {n} → Fin n → Fin n → Vec S n → V ℓ → Type (ℓ-suc ℓ)
 StepOf b f γ zv =
   Σ[ c ∶ S ] Σ[ r ∶ S ] Σ[ x ∶ S ] Σ[ y ∶ S ]
     ( ⟨ c .fst ∈ (lookup b γ) .fst ⟩
@@ -1152,7 +1152,7 @@ The semantic correspondence is now proved for arbitrary variables `z,b,f` and an
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module _ {n : ℕ} (z b f : Fin n) (γ : S ^ n)
+module _ {n : ℕ} (z b f : Fin n) (γ : Vec S n)
          (ob : IsOrd ((lookup b γ) .fst)) where
 ```
 </summary>
@@ -1712,7 +1712,7 @@ The reading lemmas for this extensional description are valid whenever `(lookup 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module _ {n : ℕ} (v b f : Fin n) (γ : S ^ n)
+module _ {n : ℕ} (v b f : Fin n) (γ : Vec S n)
          (ob : IsOrd ((lookup b γ) .fst)) where
 ```
 </summary>
@@ -1884,7 +1884,7 @@ Fix a candidate relation denoted by `v`, an index denoted by `b`, and a table de
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module _ {n : ℕ} (v b f : Fin n) (γ : S ^ n) (k : ℕ)
+module _ {n : ℕ} (v b f : Fin n) (γ : Vec S n) (k : ℕ)
          (qb : (lookup b γ) .fst ≡ # k)
          (vals : Values (lookup f γ) k) (ents : Entries (lookup f γ) k) where
 ```
@@ -2357,7 +2357,7 @@ The lemma `entryOf` turns value correctness into entry completeness. If `j < k`,
 <!--/-->
 
 ```agda
-entryOf : ∀ {n} (f a : Fin n) (γ : S ^ n) (k : ℕ)
+entryOf : ∀ {n} (f a : Fin n) (γ : Vec S n) (k : ℕ)
         → (lookup a γ) .fst ≡ # k → ⟨ γ ⊨ ApproxAt f a ⟩
         → (j : ℕ) → j < k
         → ((u : S) → ⟨ pr (# j) (u .fst) ∈ (lookup f γ) .fst ⟩
@@ -2422,7 +2422,7 @@ Fix an approximation whose bound is `# k`. The induction motive `Val m` says tha
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module _ {n : ℕ} (f a : Fin n) (γ : S ^ n) (k : ℕ)
+module _ {n : ℕ} (f a : Fin n) (γ : Vec S n) (k : ℕ)
          (qa : (lookup a γ) .fst ≡ # k) (h : ⟨ γ ⊨ ApproxAt f a ⟩) where
 ```
 </summary>
@@ -2532,7 +2532,7 @@ The graph formula hides, under propositional truncation, an approximation up to 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module _ {n : ℕ} (v b : Fin n) (γ : S ^ n) (k : ℕ)
+module _ {n : ℕ} (v b : Fin n) (γ : Vec S n) (k : ℕ)
          (qb : (lookup b γ) .fst ≡ # k) where
 ```
 </summary>
@@ -2803,7 +2803,7 @@ Fix an environment in which `f` denotes `approxSet k` and `a` denotes the numera
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module _ (k : ℕ) {n : ℕ} (f a : Fin n) (γ : S ^ n)
+module _ (k : ℕ) {n : ℕ} (f a : Fin n) (γ : Vec S n)
          (qf : (lookup f γ) .fst ≡ (approxSet k) .fst)
          (qa : (lookup a γ) .fst ≡ # k) where
 ```
@@ -3020,7 +3020,7 @@ Consequently, `relAt k` satisfies the recursion graph at the numeral `# k`, prov
 <!--/-->
 
 ```agda
-relAt-graph : ∀ {n} (v b : Fin n) (γ : S ^ n) (k : ℕ)
+relAt-graph : ∀ {n} (v b : Fin n) (γ : Vec S n) (k : ℕ)
             → (lookup b γ) .fst ≡ # k → (lookup v γ) .fst ≡ (relAt k) .fst
             → ⟨ γ ⊨ RelGraphAt v b ⟩
 relAt-graph v b γ k qb qv = RelGraph-in v b γ (approxSet k)
@@ -3432,7 +3432,7 @@ Fix an environment and a natural number `m`. The equation for `b` says that its 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module _ {n : ℕ} (b x y : Fin n) (γ : S ^ n) (m : ℕ)
+module _ {n : ℕ} (b x y : Fin n) (γ : Vec S n) (m : ℕ)
          (qb : (lookup b γ) .fst ≡ # m)
          (hx : ⟨ (lookup x γ) .fst ∈ finiteStage m ⟩)
          (hy : ⟨ (lookup y γ) .fst ∈ finiteStage m ⟩) where

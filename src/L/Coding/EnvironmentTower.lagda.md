@@ -178,8 +178,8 @@ Formula satisfaction is interpreted over vectors of constructible sets. Transiti
 <!--/-->
 
 ```agda
-module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _^_; _⊨ᵐ_ )
-open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
+module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _⊨ᵐ_ )
+open AbsL using () renaming ( _⊨ᵐ_ to _⊨_ )
 ```
 
 <!--en-->
@@ -820,7 +820,7 @@ cons の像の読み手は、候補の後続の集合 `F'`、候補の基底の�
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module ConsImageRead {m : ℕ} (F' F w : Fin m) (γ : S ^ m) (W : S)
+module ConsImageRead {m : ℕ} (F' F w : Fin m) (γ : Vec S m) (W : S)
   (qw : (lookup w γ) .fst ≡ W .fst) where
 ```
 </summary>
@@ -1120,7 +1120,7 @@ The single-empty-set module is parameterized by the candidate set slot and the e
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module SglEmpty (W : S) {m : ℕ} (F : Fin m) (γ : S ^ m) where
+module SglEmpty (W : S) {m : ℕ} (F : Fin m) (γ : Vec S m) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -1248,7 +1248,7 @@ The tower reader fixes a candidate tower slot `E`, a parameter-set slot `w`, a z
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module TowerRead {m : ℕ} (E w N0 : Fin m) (γ : S ^ m) (W : S)
+module TowerRead {m : ℕ} (E w N0 : Fin m) (γ : Vec S m) (W : S)
   (qw : (lookup w γ) .fst ≡ W .fst) (qN0 : (lookup N0 γ) .fst ≡ # 0)
   (h : ⟨ γ ⊨ towerAt E w N0 ⟩) where
 ```
@@ -1336,7 +1336,7 @@ The membership proof for the candidate pair supplies a constructible representat
 ```agda
       pS = down (lookup E γ) (pr (n .fst) (F .fst)) p∈
       c = container pS n F refl
-      δ : S ^ (4 + m)
+      δ : Vec S (4 + m)
       δ = F ∷ n ∷ c .fst ∷ pS ∷ γ
 ```
 
@@ -1486,7 +1486,7 @@ To invoke upward closure, the standard entry at `k` is first presented as the ca
     pS : S
     pS = down (lookup E γ) (pr (# k) ((envSet W k) .fst)) (entry-in k)
     c = container pS (nn k) (envSet W k) refl
-    δ : S ^ (4 + m)
+    δ : Vec S (4 + m)
     δ = envSet W k ∷ nn k ∷ c .fst ∷ pS ∷ γ
 ```
 </div>
@@ -1503,7 +1503,7 @@ The tower-holding module assumes that the candidate tower has been identified wi
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module TowerHolds {m : ℕ} (E w N0 : Fin m) (γ : S ^ m) (W : S)
+module TowerHolds {m : ℕ} (E w N0 : Fin m) (γ : Vec S m) (W : S)
   (qw : (lookup w γ) .fst ≡ W .fst) (qE : (lookup E γ) .fst ≡ (Tower.tower W) .fst)
   (qN0 : (lookup N0 γ) .fst ≡ # 0) where
 ```

@@ -171,7 +171,7 @@ The constructible carrier is opened under the name on which every set of the cha
 open hPropView 𝒮ʟ using ( S )
 
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
-open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
+open AbsL using () renaming ( _⊨ᵐ_ to _⊨_ )
 ```
 
 <!--en-->
@@ -734,10 +734,10 @@ Each pair of a code and its domain is just the two-slot environment that the thr
 
 ```agda
   private
-    γF : S ^ 2
+    γF : Vec S 2
     γF = F ∷ D ∷ []
 
-    γH : S ^ 2
+    γH : Vec S 2
     γH = H ∷ E ∷ []
 ```
 
@@ -865,7 +865,7 @@ The composite must now satisfy the four conditions on its own, under the environ
 <!--/-->
 
 ```agda
-  γK : S ^ 2
+  γK : Vec S 2
   γK = K ∷ D ∷ []
 
   svK : ⟨ γK ⊨ svAt zero ⟩

@@ -165,7 +165,7 @@ envOneAt e y = extAt e (tagAtL zero 0 (suc y))
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module _ {n : ℕ} (e y : Fin n) (γ : S ^ n) where
+module _ {n : ℕ} (e y : Fin n) (γ : Vec S n) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -271,7 +271,7 @@ DefinesAt x w v = extAt x ( (var zero ∈̇ var (suc w))
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module _ {n : ℕ} (x w v : Fin n) (γ : S ^ n) where
+module _ {n : ℕ} (x w v : Fin n) (γ : Vec S n) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -376,14 +376,14 @@ module _ (A : S) where
 <div class="submodule-fold-content">
 
 ```agda
-  codeAt-in : ∀ {n} (c w : Fin n) (γ : S ^ n)
+  codeAt-in : ∀ {n} (c w : Fin n) (γ : Vec S n)
             → (lookup w γ) .fst ≡ A .fst
             → (ψ : Formula ⟪ A .fst ⟫ 1) → (lookup c γ) .fst ≡ (keyS A ψ) .fst
             → ⟨ γ ⊨ isCodeAt c w ⟩
   codeAt-in c w γ qw ψ qc =
     keyArityAtL-in c 1 γ (codeS A ψ) qc , witnessAt-in A w c γ ψ qw qc
 
-  codeAt-out : ∀ {n} (c w : Fin n) (γ : S ^ n)
+  codeAt-out : ∀ {n} (c w : Fin n) (γ : Vec S n)
              → (lookup w γ) .fst ≡ A .fst
              → ⟨ γ ⊨ isCodeAt c w ⟩
              → ∥ (Σ[ ψ ∶ Formula ⟪ A .fst ⟫ 1 ]
@@ -447,7 +447,7 @@ module _ (B : S) where
     toB : ∀ {n} → Formula ⟪ B .fst ⟫ n → Formula S n
     toB = mapFo (asConst B)
 
-  graphAt-holds : ∀ {m n} (ψ : Formula ⟪ B .fst ⟫ m) (w c v : Fin n) (γ : S ^ n)
+  graphAt-holds : ∀ {m n} (ψ : Formula ⟪ B .fst ⟫ m) (w c v : Fin n) (γ : Vec S n)
                 → (lookup w γ) .fst ≡ B .fst
                 → (lookup c γ) .fst ≡ (keyʟ (toB ψ)) .fst
                 → (lookup v γ) .fst ≡ (Sat B (toB ψ)) .fst
@@ -475,7 +475,7 @@ module _ (B : S) where
     entry = subst2 (λ a b → ⟨ pr a b ∈ (satTable B φ) .fst ⟩)
       (sym qc) (sym qv) (entry-in B φ)
 
-  graphAt-unique : ∀ {m n} (ψ : Formula ⟪ B .fst ⟫ m) (w c v : Fin n) (γ : S ^ n)
+  graphAt-unique : ∀ {m n} (ψ : Formula ⟪ B .fst ⟫ m) (w c v : Fin n) (γ : Vec S n)
                  → (lookup w γ) .fst ≡ B .fst
                  → (lookup c γ) .fst ≡ (keyʟ (toB ψ)) .fst
                  → ⟨ γ ⊨ satGraphAt w c v ⟩
@@ -623,12 +623,12 @@ module _ (A : S) where
       inn : ⟨ y ∈ A .fst ⟩ × ⟨ envOne y ∈ (Sat A (toS ψ)) .fst ⟩ → ⟨ y ∈ DA.defSet ψ ⟩
       inn (hy , h) = subst ⟨_⟩ (sym (at hy)) h
 
-  fill : ∀ {n} (w : Fin n) (γ : S ^ n) → (lookup w γ) .fst ≡ A .fst
+  fill : ∀ {n} (w : Fin n) (γ : Vec S n) → (lookup w γ) .fst ≡ A .fst
        → (z : S) (ψ : Formula ⟪ A .fst ⟫ 1) → DA.defSet ψ ≡ z .fst
        → ⟨ (Sat A (toS ψ) ∷ keyS A ψ ∷ z ∷ γ) ⊨ DefBody w ⟩
   fill {n} w γ qw z ψ qz = hcode , (hgraph , hdef)
     where
-    δ : S ^ (suc (suc (suc n)))
+    δ : Vec S (suc (suc (suc n)))
     δ = Sat A (toS ψ) ∷ keyS A ψ ∷ z ∷ γ
 
     hcode : ⟨ δ ⊨ isCodeAt (suc zero) (sh3 w) ⟩
@@ -657,13 +657,13 @@ module _ (A : S) where
     hdef : ⟨ δ ⊨ DefinesAt (suc (suc zero)) (sh3 w) zero ⟩
     hdef = DefinesAt-both (suc (suc zero)) (sh3 w) zero δ into back
 
-  read : ∀ {n} (w : Fin n) (γ : S ^ n) → (lookup w γ) .fst ≡ A .fst
+  read : ∀ {n} (w : Fin n) (γ : Vec S n) → (lookup w γ) .fst ≡ A .fst
        → (z c v : S) → ⟨ (v ∷ c ∷ z ∷ γ) ⊨ DefBody w ⟩
        → ∥ (Σ[ ψ ∶ Formula ⟪ A .fst ⟫ 1 ] (DA.defSet ψ ≡ z .fst)) ∥₁
   read {n} w γ qw z c v (hcode , (hgraph , hdef)) =
     rec₁ squash₁ step (codeAt-out A (suc zero) (sh3 w) δ qw hcode)
     where
-    δ : S ^ (suc (suc (suc n)))
+    δ : Vec S (suc (suc (suc n)))
     δ = v ∷ c ∷ z ∷ γ
 
     step : Σ[ ψ ∶ Formula ⟪ A .fst ⟫ 1 ] (c .fst ≡ (keyS A ψ) .fst)
@@ -721,7 +721,7 @@ altogether.
 
 ```agda
   private
-    describe : ∀ {n} (w : Fin n) (γ : S ^ n) → (lookup w γ) .fst ≡ A .fst
+    describe : ∀ {n} (w : Fin n) (γ : Vec S n) → (lookup w γ) .fst ≡ A .fst
              → (z : S) → ⟨ (z ∷ γ) ⊨ ∃̇ (∃̇ (DefBody w)) ⟩
              → ∥ (Σ[ ψ ∶ Formula ⟪ A .fst ⟫ 1 ] (DA.defSet ψ ≡ z .fst)) ∥₁
     describe w γ qw z = rec₁ squash₁ viaCode
@@ -736,7 +736,7 @@ altogether.
       viaCode : Σ[ c ∶ S ] ⟨ (c ∷ z ∷ γ) ⊨ ∃̇ (DefBody w) ⟩ → Target
       viaCode (c , hc) = rec₁ squash₁ (viaValue c) hc
 
-    assemble : ∀ {n} (w : Fin n) (γ : S ^ n) → (lookup w γ) .fst ≡ A .fst
+    assemble : ∀ {n} (w : Fin n) (γ : Vec S n) → (lookup w γ) .fst ≡ A .fst
              → (z : S)
              → ∥ (Σ[ ψ ∶ Formula ⟪ A .fst ⟫ 1 ] (DA.defSet ψ ≡ z .fst)) ∥₁
              → ⟨ (z ∷ γ) ⊨ ∃̇ (∃̇ (DefBody w)) ⟩
@@ -746,7 +746,7 @@ altogether.
            → ⟨ (z ∷ γ) ⊨ ∃̇ (∃̇ (DefBody w)) ⟩
       step (ψ , qψ) = ∣ keyS A ψ , ∣ Sat A (toS ψ) , fill w γ qw z ψ qψ ∣₁ ∣₁
 
-  DefAt-in : ∀ {n} (u w : Fin n) (γ : S ^ n)
+  DefAt-in : ∀ {n} (u w : Fin n) (γ : Vec S n)
            → (lookup w γ) .fst ≡ A .fst
            → (lookup u γ) .fst ≡ 𝒟ₒ (A .fst)
            → ⟨ γ ⊨ DefAt u w ⟩
@@ -763,7 +763,7 @@ altogether.
     g z hz = subst (λ X → ⟨ z .fst ∈ X ⟩) (sym qu)
       (𝒟ₒ-intro (A .fst) (z .fst) (describe w γ qw z hz))
 
-  DefAt-out : ∀ {n} (u w : Fin n) (γ : S ^ n) → DefOK A
+  DefAt-out : ∀ {n} (u w : Fin n) (γ : Vec S n) → DefOK A
             → (lookup w γ) .fst ≡ A .fst
             → ⟨ γ ⊨ DefAt u w ⟩
             → (lookup u γ) .fst ≡ 𝒟ₒ (A .fst)
@@ -824,7 +824,7 @@ to a stage at all.
 <!--/-->
 
 ```agda
-DefAt-stage : (β : V ℓ) (oβ : IsOrd β) → ∀ {n} (u w : Fin n) (γ : S ^ n)
+DefAt-stage : (β : V ℓ) (oβ : IsOrd β) → ∀ {n} (u w : Fin n) (γ : Vec S n)
             → (lookup w γ) .fst ≡ Lset β
             → (γ ⊨ DefAt u w)
               ≡ ( ((lookup u γ) .fst ≡ 𝒟ₒ (Lset β))

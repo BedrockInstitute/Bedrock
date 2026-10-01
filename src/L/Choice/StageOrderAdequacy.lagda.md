@@ -261,7 +261,7 @@ The evaluation of the shifted term is unaffected by the four extra bindings: thi
 <!--/-->
 
 ```agda
-  tm4-val : ∀ {n} (t : Term S n) (a b c d : S) (γ : S ^ n)
+  tm4-val : ∀ {n} (t : Term S n) (a b c d : S) (γ : Vec S n)
           → ⟦ tm4 t ⟧ (d ∷ c ∷ b ∷ a ∷ γ) ≡ ⟦ t ⟧ γ
   tm4-val (con k) a b c d γ = refl
   tm4-val (var i) a b c d γ = refl
@@ -355,7 +355,7 @@ Fix an environment `γ`. The candidate ordinal is the underlying set at slot `b`
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module _ {n : ℕ} (b x : Fin n) (γ : S ^ n) where
+module _ {n : ℕ} (b x : Fin n) (γ : Vec S n) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -691,7 +691,7 @@ module _ (A : S) where
 <div class="submodule-fold-content">
 
 ```agda
-  codeAnyAt-in : ∀ {n k} (c w : Fin n) (γ : S ^ n)
+  codeAnyAt-in : ∀ {n k} (c w : Fin n) (γ : Vec S n)
                → (lookup w γ) .fst ≡ A .fst
                → (ψ : Formula ⟪ A .fst ⟫ k) → (lookup c γ) .fst ≡ (keyS A ψ) .fst
                → ⟨ γ ⊨ isCodeAnyAt c w ⟩
@@ -719,7 +719,7 @@ The outward reading recovers the truncated code witness: some arity and some for
 <!--/-->
 
 ```agda
-  codeAnyAt-out : ∀ {n} (c w : Fin n) (γ : S ^ n)
+  codeAnyAt-out : ∀ {n} (c w : Fin n) (γ : Vec S n)
                 → (lookup w γ) .fst ≡ A .fst
                 → ⟨ γ ⊨ isCodeAnyAt c w ⟩
                 → ⟨ IsKeyOverAny A (lookup c γ) ⟩
@@ -788,7 +788,7 @@ The outward reading of the code set says that the slot holds exactly the code se
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module _ (A : S) {n : ℕ} (c w : Fin n) (γ : S ^ n)
+module _ (A : S) {n : ℕ} (c w : Fin n) (γ : Vec S n)
          (qw : (lookup w γ) .fst ≡ A .fst) where
 ```
 </summary>
@@ -1140,7 +1140,7 @@ The outward adequacy reading is relative to an ordinal carrier `d`, a table `f`,
 
 ```agda
 StpOut StpIn : StpFo → Type (ℓ-suc ℓ)
-StpOut Stp = ∀ {n} (d f u v : Fin n) (γ : S ^ n) (od : IsOrd ((lookup d γ) .fst))
+StpOut Stp = ∀ {n} (d f u v : Fin n) (γ : Vec S n) (od : IsOrd ((lookup d γ) .fst))
            → ((r : S) → ⟨ pr ((lookup d γ) .fst) (r .fst) ∈ (lookup f γ) .fst ⟩
               → IsRel ((lookup d γ) .fst) r)
            → ⟨ γ ⊨ Stp d f u v ⟩
@@ -1157,7 +1157,7 @@ The outward direction deliberately returns `∥ Under ... ∥₁`, so it supplie
 ```agda
            → ∥ Under ((lookup d γ) .fst) (stepOrder ((lookup d γ) .fst) od)
                  ((lookup u γ) .fst) ((lookup v γ) .fst) ∥₁
-StpIn Stp = ∀ {n} (d f u v : Fin n) (γ : S ^ n) (od : IsOrd ((lookup d γ) .fst))
+StpIn Stp = ∀ {n} (d f u v : Fin n) (γ : Vec S n) (od : IsOrd ((lookup d γ) .fst))
           → (r : S) → ⟨ pr ((lookup d γ) .fst) (r .fst) ∈ (lookup f γ) .fst ⟩
           → IsRel ((lookup d γ) .fst) r
 ```
@@ -1257,7 +1257,7 @@ To read `CondCore`, fix the ordinal stage denoted by `tb` and a table over that 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-  module _ {n : ℕ} (z : Fin n) (tb : Term S n) (f : Fin n) (γ : S ^ n)
+  module _ {n : ℕ} (z : Fin n) (tb : Term S n) (f : Fin n) (γ : Vec S n)
            (oα : IsOrd ((⟦ tb ⟧ γ) .fst))
            (vals : Values (lookup f γ) ((⟦ tb ⟧ γ) .fst))
            (ents : Entries (lookup f γ) ((⟦ tb ⟧ γ) .fst)) where
@@ -2041,7 +2041,7 @@ The variable form tests a possible ordered pair `z` while the stage and the tabl
 <!--/-->
 
 ```agda
-  cond-spec : ∀ {n} (b f : Fin n) (γ : S ^ n) → IsOrd ((lookup b γ) .fst)
+  cond-spec : ∀ {n} (b f : Fin n) (γ : Vec S n) → IsOrd ((lookup b γ) .fst)
             → Values (lookup f γ) ((lookup b γ) .fst)
             → Entries (lookup f γ) ((lookup b γ) .fst)
             → (z : S) → ((z ∷ γ) ⊨ Cond b f) ≡ Related ((lookup b γ) .fst) (z .fst)

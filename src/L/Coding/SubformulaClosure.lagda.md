@@ -68,7 +68,7 @@ open InfinitySet using ( #_; sucV )
 open hPropView 𝒮ʟ using ( S )
 
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
-open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
+open AbsL using () renaming ( _⊨ᵐ_ to _⊨_ )
 ```
 
 <!--en-->
@@ -190,7 +190,7 @@ is a proposition.
           g (byTag f h C ψ k ar p incl (sym q ∙ sh)) })
         (peel (c .fst) c∈)
 
-      same : ∀ {m} (γ : S ^ m) (k : ℕ)
+      same : ∀ {m} (γ : Vec S m) (k : ℕ)
            → ((ar a b : V ℓ) → Concl f h C k ar (pr a b)
               → ⟨ pr ar a ∈ C ⟩ × ⟨ pr ar b ∈ C ⟩)
            → ⟨ (D ∷ γ) ⊨ binShapeAt zero k (bothSameAt zero) ⟩
@@ -201,7 +201,7 @@ is a proposition.
                      ((pr (ar .fst) (b .fst) ∈ C) .snd))
             (use (ar .fst) (a .fst) (b .fst)))
 
-      one : ∀ {m} (γ : S ^ m) (k : ℕ)
+      one : ∀ {m} (γ : Vec S m) (k : ℕ)
           → ((ar a : V ℓ) → Concl f h C k ar a → ⟨ pr ar a ∈ C ⟩)
           → ⟨ (D ∷ γ) ⊨ unShapeAt zero k (oneSameAt zero) ⟩
       one γ k use = unSameClosed-in zero k (D ∷ γ)
@@ -209,7 +209,7 @@ is a proposition.
           viaKey k c (ar .fst) (a .fst) c∈ sh _
             ((pr (ar .fst) (a .fst) ∈ C) .snd) (use (ar .fst) (a .fst)))
 
-      up : ∀ {m} (γ : S ^ m) (k : ℕ)
+      up : ∀ {m} (γ : Vec S m) (k : ℕ)
          → ((ar a : V ℓ) → Concl f h C k ar a → ⟨ pr (sucV ar) a ∈ C ⟩)
          → ⟨ (D ∷ γ) ⊨ unShapeAt zero k (oneSuccAt zero) ⟩
       up γ k use = unSuccClosed-in zero k (D ∷ γ)
@@ -217,7 +217,7 @@ is a proposition.
           viaKey k c (ar .fst) (a .fst) c∈ sh _
             ((pr (sucV (ar .fst)) (a .fst) ∈ C) .snd) (use (ar .fst) (a .fst)))
 
-      sndUp : ∀ {m} (γ : S ^ m) (k : ℕ)
+      sndUp : ∀ {m} (γ : Vec S m) (k : ℕ)
             → ((ar a b : V ℓ) → Concl f h C k ar (pr a b)
                → ⟨ pr (sucV ar) b ∈ C ⟩)
             → ⟨ (D ∷ γ) ⊨ binShapeAt zero k (succSndAt zero) ⟩
@@ -255,7 +255,7 @@ any model element whose underlying set satisfies `Peel`; `closureClosed` supplie
 <!--/-->
 
 ```agda
-    closedOf : ∀ {m} (γ : S ^ m) → ⟨ (D ∷ γ) ⊨ closedAt zero ⟩
+    closedOf : ∀ {m} (γ : Vec S m) → ⟨ (D ∷ γ) ⊨ closedAt zero ⟩
     closedOf γ =
         same γ 2 (λ _ a b r → r a b refl)
       , ( same γ 3 (λ _ a b r → r a b refl)
@@ -268,7 +268,7 @@ any model element whose underlying set satisfies `Peel`; `closureClosed` supplie
 </div>
 </details>
 ```agda
-  closureClosed : ∀ {n m} (φ : Formula K n) (γ : S ^ m)
+  closureClosed : ∀ {n m} (φ : Formula K n) (γ : Vec S m)
                 → ⟨ (clo φ ∷ γ) ⊨ closedAt zero ⟩
   closureClosed φ γ = closedOf (clo φ) (closure-inv f h φ) γ
 ```

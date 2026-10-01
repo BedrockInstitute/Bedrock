@@ -227,11 +227,11 @@ The comparison is stated inside a structure `𝒮` with carrier `S`, under one i
 <!--/-->
 
 <!--en-->
-Adequacy is the statement that the abstraction does not change meaning. It compares two evaluations of the same formula: the original syntax over `K` with its constants interpreted by a map `ι : K → S`, against the translated syntax over the empty alphabet evaluated in the concatenated environment `γ ++ σ`, where `γ` holds the values of the original free variables and `σ` holds the interpretations of the recorded constants. Here `S` is the carrier of a proposition-valued structure `𝒮`, and `S ^ n` is the type of environments of length `n`.
+Adequacy is the statement that the abstraction does not change meaning. It compares two evaluations of the same formula: the original syntax over `K`{.Agda} with its constants interpreted by a map `ι : K → S`{.Agda}, against the translated syntax over the empty alphabet evaluated in the concatenated environment `γ ++ σ`{.Agda}, where `γ`{.Agda} holds the values of the original free variables and `σ`{.Agda} holds the interpretations of the recorded constants. Here `S`{.Agda} is the carrier of a proposition-valued structure `𝒮`{.Agda}, and `Vec S n`{.Agda} is the type of environments of length `n`{.Agda}.
 <!--zh-->
-充分性是说抽象不改变意义。它比较同一公式的两种求值：`K` 上的原语法、其常元由映射 `ι : K → S` 解释；对空字母表上的翻译语法，在拼接环境 `γ ++ σ` 中求值，其中 `γ` 存放原自由变元的值，`σ` 存放所记录常元的解释。这里 `S` 是命题值结构 `𝒮` 的载体，`S ^ n` 是长度为 `n` 的环境的类型。
+充分性是说抽象不改变意义。它比较同一公式的两种求值：`K`{.Agda} 上的原语法、其常元由映射 `ι : K → S`{.Agda} 解释；对空字母表上的翻译语法，在拼接环境 `γ ++ σ`{.Agda} 中求值，其中 `γ`{.Agda} 存放原自由变元的值，`σ`{.Agda} 存放所记录常元的解释。这里 `S`{.Agda} 是命题值结构 `𝒮`{.Agda} 的载体，`Vec S n`{.Agda} 是长度为 `n`{.Agda} 的环境的类型。
 <!--ja-->
-妥当性とは、抽象化が意味を変えないという主張である。同じ論理式の二つの評価を比較する。一方は `K` 上の元の構文で、定数は写像 `ι : K → S` によって解釈される。他方は空のアルファベット上の翻訳後の構文で、連結された環境 `γ ++ σ` の中で評価される。`γ` は元の自由変数の値を、`σ` は記録された定数の解釈を保持する。ここで `S` は命題値の構造 `𝒮` の台であり、`S ^ n` は長さ `n` の環境の型である。
+妥当性とは、抽象化が意味を変えないという主張である。同じ論理式の二つの評価を比較する。一方は `K`{.Agda} 上の元の構文で、定数は写像 `ι : K → S`{.Agda} によって解釈される。他方は空のアルファベット上の翻訳後の構文で、連結された環境 `γ ++ σ`{.Agda} の中で評価される。`γ`{.Agda} は元の自由変数の値を、`σ`{.Agda} は記録された定数の解釈を保持する。ここで `S`{.Agda} は命題値の構造 `𝒮`{.Agda} の台であり、`Vec S n`{.Agda} は長さ `n`{.Agda} の環境の型である。
 <!--/-->
 
 <details open class="submodule-fold">
@@ -246,7 +246,6 @@ module _ {ℓ} (𝒮 : ZFStructureₕ ℓ) where
   open ZFStructure 𝒮
 
   private module Sem = FOL.Semantics 𝒮
-  open Sem using ( _^_ )
 ```
 
 <!--en-->
@@ -296,7 +295,7 @@ The induction's invariant is the hypothesis `h` about the full occurrence vector
 ```agda
     private
       leftHalf : ∀ {n k a b} (θ : Fin (a + b) → Fin (n + k))
-                 (γ : S ^ n) (σ : S ^ k) (p : Vec K a) (q : Vec K b)
+                 (γ : Vec S n) (σ : Vec S k) (p : Vec K a) (q : Vec K b)
                → (∀ j → lookup (θ j) (γ ++ σ) ≡ ι (lookup j (p ++ q)))
                → (∀ i → lookup (θ (padRight b i)) (γ ++ σ) ≡ ι (lookup i p))
 ```
@@ -313,7 +312,7 @@ The right half is the mirror image: indices of `q` are read through `padLeft`, w
       leftHalf θ γ σ p q h i = h (padRight _ i) ∙ cong ι (lookup-padRight p q i)
 
       rightHalf : ∀ {n k} a {b} (θ : Fin (a + b) → Fin (n + k))
-                  (γ : S ^ n) (σ : S ^ k) (p : Vec K a) (q : Vec K b)
+                  (γ : Vec S n) (σ : Vec S k) (p : Vec K a) (q : Vec K b)
                 → (∀ j → lookup (θ j) (γ ++ σ) ≡ ι (lookup j (p ++ q)))
                 → (∀ j → lookup (θ (padLeft a j)) (γ ++ σ) ≡ ι (lookup j q))
 ```
@@ -348,7 +347,7 @@ The induction starts at terms, where the invariant already does all the work. Th
 
 ```agda
     ⟦⟧-place : ∀ {n k} (t : Term K n) (θ : Fin (countTm t) → Fin (n + k))
-               (γ : S ^ n) (σ : S ^ k)
+               (γ : Vec S n) (σ : Vec S k)
              → (∀ j → lookup (θ j) (γ ++ σ) ≡ ι (lookup j (constantsTm t)))
              → ⟦ t ⟧ γ ≡ ⟦ placeTm t θ ⟧₀ (γ ++ σ)
     ⟦⟧-place (con c) θ γ σ h = sym (h zero)
@@ -384,7 +383,7 @@ The formula-level statement `⊨-place` has the same shape as the term lemma, wi
 
 ```agda
     ⊨-place : ∀ {n k} (φ : Formula K n) (θ : Fin (countFo φ) → Fin (n + k))
-              (γ : S ^ n) (σ : S ^ k)
+              (γ : Vec S n) (σ : Vec S k)
             → (∀ j → lookup (θ j) (γ ++ σ) ≡ ι (lookup j (constantsFo φ)))
             → (γ ⊨ φ) ≡ ((γ ++ σ) ⊨₀ placeFo φ θ)
     ⊨-place (t ∈̇ u) θ γ σ h = cong₂ _∈ˢ_
@@ -534,7 +533,7 @@ The main theorem instantiates the induction once. Since `absFo φ` was produced 
 <!--/-->
 
 ```agda
-    ⊨-abs : ∀ {n} (φ : Formula K n) (γ : S ^ n)
+    ⊨-abs : ∀ {n} (φ : Formula K n) (γ : Vec S n)
           → (γ ⊨ φ) ≡ ((γ ++ map ι (constantsFo φ)) ⊨₀ absFo φ)
     ⊨-abs {n} φ γ = ⊨-place φ (padLeft n) γ (map ι (constantsFo φ)) hyp
       where

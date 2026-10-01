@@ -135,16 +135,16 @@ open hPropView 𝒮ʟ
 ```
 
 <!--en-->
-Here `S ^ n`{.Agda} denotes a length-`n` environment vector. The relation renamed to `_⊨_`{.Agda} is satisfaction in the restricted constructible structure, evaluated under such an environment.
+Here `Vec S n`{.Agda} denotes a length-`n`{.Agda} environment vector. The relation renamed to `_⊨_`{.Agda} is satisfaction in the restricted constructible structure, evaluated under such an environment.
 <!--zh-->
-这里的 `S ^ n`{.Agda} 表示长度为 `n` 的环境向量；重命名为 `_⊨_`{.Agda} 的关系，则是在这种环境下读取限制可构造结构中的满足。
+这里的 `Vec S n`{.Agda} 表示长度为 `n`{.Agda} 的环境向量；重命名为 `_⊨_`{.Agda} 的关系，则是在这种环境下读取限制可构造结构中的满足。
 <!--ja-->
-ここで `S ^ n`{.Agda} は長さ `n` の環境ベクトルを表す。`_⊨_`{.Agda} と改名された関係は、その環境のもとで制限された構成可能構造の充足を読むものである。
+ここで `Vec S n`{.Agda} は長さ `n`{.Agda} の環境ベクトルを表す。`_⊨_`{.Agda} と改名された関係は、その環境のもとで制限された構成可能構造の充足を読むものである。
 <!--/-->
 
 ```agda
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
-open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
+open AbsL using () renaming ( _⊨ᵐ_ to _⊨_ )
 ```
 
 <!--en-->
@@ -248,14 +248,14 @@ The clauses are organized by the shape of the closure each constructor demands. 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-  module _ {n : ℕ} (φ : Formula S n) {k : ℕ} (γ : S ^ k) where
+  module _ {n : ℕ} (φ : Formula S n) {k : ℕ} (γ : Vec S k) where
 ```
 </summary>
 <div class="submodule-fold-content">
 
 ```agda
     private
-      δ : S ^ (suc (suc (suc k)))
+      δ : Vec S (suc (suc (suc k)))
       δ = B ∷ satTable B φ ∷ Sl φ ∷ γ
 ```
 

@@ -223,16 +223,16 @@ applications of two readers rather than ten copies of the same unnesting.
 <!--/-->
 
 ```agda
-BinWit : ∀ {n} → ℕ → Formula S (4 + n) → S ^ n → S → Type (ℓ-suc ℓ)
+BinWit : ∀ {n} → ℕ → Formula S (4 + n) → Vec S n → S → Type (ℓ-suc ℓ)
 BinWit k rel γ c = Σ[ N ∶ S ] (Σ[ a ∶ S ] (Σ[ b ∶ S ]
   ((c .fst ≡ pr (N .fst) (pr (# k) (pr (a .fst) (b .fst))))
    × ⟨ (b ∷ a ∷ N ∷ c ∷ γ) ⊨ rel ⟩)))
 
-UnWit : ∀ {n} → ℕ → Formula S (3 + n) → S ^ n → S → Type (ℓ-suc ℓ)
+UnWit : ∀ {n} → ℕ → Formula S (3 + n) → Vec S n → S → Type (ℓ-suc ℓ)
 UnWit k rel γ c = Σ[ N ∶ S ] (Σ[ a ∶ S ]
   ((c .fst ≡ pr (N .fst) (pr (# k) (a .fst))) × ⟨ (a ∷ N ∷ c ∷ γ) ⊨ rel ⟩))
 
-binForm-out : ∀ {n} (k : ℕ) (rel : Formula S (4 + n)) (γ : S ^ n) (c : S)
+binForm-out : ∀ {n} (k : ℕ) (rel : Formula S (4 + n)) (γ : Vec S n) (c : S)
             → ⟨ (c ∷ γ) ⊨ binForm k rel ⟩ → ∥ BinWit k rel γ c ∥₁
 binForm-out k rel γ c = rec₁ squash₁ (λ { (N , hN) →
   rec₁ squash₁ (λ { (a , ha) → map₁
@@ -241,7 +241,7 @@ binForm-out k rel γ c = rec₁ squash₁ (λ { (N , hN) →
           (suc zero) zero (b ∷ a ∷ N ∷ c ∷ γ)) hb , hr))) })
     ha }) hN })
 
-unForm-out : ∀ {n} (k : ℕ) (rel : Formula S (3 + n)) (γ : S ^ n) (c : S)
+unForm-out : ∀ {n} (k : ℕ) (rel : Formula S (3 + n)) (γ : Vec S n) (c : S)
            → ⟨ (c ∷ γ) ⊨ unForm k rel ⟩ → ∥ UnWit k rel γ c ∥₁
 unForm-out k rel γ c = rec₁ squash₁ (λ { (N , hN) → map₁
   (λ { (a , (ha , hr)) → N , (a , (subst ⟨_⟩
@@ -249,7 +249,7 @@ unForm-out k rel γ c = rec₁ squash₁ (λ { (N , hN) → map₁
         (a ∷ N ∷ c ∷ γ)) ha , hr)) })
   hN })
 
-ShapeWit : ∀ {n} → Fin n → S ^ n → S → Type (ℓ-suc ℓ)
+ShapeWit : ∀ {n} → Fin n → Vec S n → S → Type (ℓ-suc ℓ)
 ShapeWit A γ c =
     BinWit 0 (bothTm A) γ c ⊎ (BinWit 1 (bothTm A) γ c
   ⊎ (BinWit 2 noneB γ c ⊎ (BinWit 3 noneB γ c ⊎ (BinWit 4 noneB γ c
@@ -266,7 +266,7 @@ private
          → (A → C) → (B → D) → A ⊎ B → ∥ C ⊎ D ∥₁
   sum-in f g x = ∣ sumMap f g x ∣₁
 
-shaped-out : ∀ {n} (C A : Fin n) (γ : S ^ n) → ⟨ γ ⊨ shapedAt C A ⟩
+shaped-out : ∀ {n} (C A : Fin n) (γ : Vec S n) → ⟨ γ ⊨ shapedAt C A ⟩
            → (c : S) → ⟨ c ∈ˢ lookup C γ ⟩ → ∥ ShapeWit A γ c ∥₁
 shaped-out C A γ h c c∈ = read (h c c∈)
   where
@@ -314,14 +314,14 @@ between a second and an afternoon.
 <!--/-->
 
 ```agda
-binForm-in : ∀ {n} (k : ℕ) (rel : Formula S (4 + n)) (γ : S ^ n) (c : S)
+binForm-in : ∀ {n} (k : ℕ) (rel : Formula S (4 + n)) (γ : Vec S n) (c : S)
            → BinWit k rel γ c → ⟨ (c ∷ γ) ⊨ binForm k rel ⟩
 binForm-in k rel γ c (N , (a , (b , (e , hr)))) =
   ∣ N , ∣ a , ∣ b , (subst ⟨_⟩ (sym (arityTagPairAtL-adequate
      (suc (suc (suc zero))) (suc (suc zero)) k (suc zero) zero
      (b ∷ a ∷ N ∷ c ∷ γ))) e , hr) ∣₁ ∣₁ ∣₁
 
-unForm-in : ∀ {n} (k : ℕ) (rel : Formula S (3 + n)) (γ : S ^ n) (c : S)
+unForm-in : ∀ {n} (k : ℕ) (rel : Formula S (3 + n)) (γ : Vec S n) (c : S)
           → UnWit k rel γ c → ⟨ (c ∷ γ) ⊨ unForm k rel ⟩
 unForm-in k rel γ c (N , (a , (e , hr))) =
   ∣ N , ∣ a , (subst ⟨_⟩ (sym (arityTagAtL-adequate
@@ -339,7 +339,7 @@ which of the ten shapes that member has.
 <!--/-->
 
 ```agda
-shaped-in : ∀ {n} (C A : Fin n) (γ : S ^ n)
+shaped-in : ∀ {n} (C A : Fin n) (γ : Vec S n)
           → ((c : S) → ⟨ c ∈ˢ lookup C γ ⟩ → ∥ ShapeWit A γ c ∥₁)
           → ⟨ γ ⊨ shapedAt C A ⟩
 shaped-in C A γ g c c∈ = rec₁ (((c ∷ γ) ⊨ shapes A) .snd) fill (g c c∈)
@@ -413,10 +413,10 @@ module _ {K : Type ℓ} (f : K → V ℓ) where
   TmWit : ℕ → V ℓ → Type (ℓ-suc ℓ)
   TmWit n x = Σ[ t ∶ Term K n ] (VCode.⌜ mapTm f t ⌝ᵗ ≡ x)
 
-  Onto : ∀ {m} → Fin m → S ^ m → Type (ℓ-suc ℓ)
+  Onto : ∀ {m} → Fin m → Vec S m → Type (ℓ-suc ℓ)
   Onto A γ = (y : V ℓ) → ⟨ y ∈ (lookup A γ) .fst ⟩ → ∥ Σ[ c ∶ K ] (f c ≡ y) ∥₁
 
-  tmCon : ∀ {m} (t N A : Fin m) (γ : S ^ m) (n : ℕ) → Onto A γ
+  tmCon : ∀ {m} (t N A : Fin m) (γ : Vec S m) (n : ℕ) → Onto A γ
         → ⟨ γ ⊨ ∃̇ (tagAtL (suc t) 0 zero ∧̇ (var zero ∈̇ var (suc A))) ⟩
         → ∥ TmWit n ((lookup t γ) .fst) ∥₁
   tmCon t N A γ n onto = rec₁ squash₁
@@ -426,7 +426,7 @@ module _ {K : Type ℓ} (f : K → V ℓ) where
                 (subst ⟨_⟩ (tagAtL-adequate (suc t) 0 zero (y ∷ γ)) hy) ) })
          (onto (y .fst) y∈) })
 
-  tmVar : ∀ {m} (t N A : Fin m) (γ : S ^ m) (n : ℕ)
+  tmVar : ∀ {m} (t N A : Fin m) (γ : Vec S m) (n : ℕ)
         → (lookup N γ) .fst ≡ # n
         → ⟨ γ ⊨ ∃̇ (tagAtL (suc t) 1 zero ∧̇ (var zero ∈̇ var (suc N))) ⟩
         → ∥ TmWit n ((lookup t γ) .fst) ∥₁
@@ -438,7 +438,7 @@ module _ {K : Type ℓ} (f : K → V ℓ) where
              ∙ sym (subst ⟨_⟩ (tagAtL-adequate (suc t) 1 zero (z ∷ γ)) hz) ) })
          (∈#-elim n (z .fst) (subst (λ w → ⟨ z .fst ∈ w ⟩) qN z∈)) })
 
-  isTmAt-decode : ∀ {m} (t N A : Fin m) (γ : S ^ m) (n : ℕ)
+  isTmAt-decode : ∀ {m} (t N A : Fin m) (γ : Vec S m) (n : ℕ)
                 → (lookup N γ) .fst ≡ # n → Onto A γ
                 → ⟨ γ ⊨ isTmAt t N A ⟩ → ∥ TmWit n ((lookup t γ) .fst) ∥₁
   isTmAt-decode t N A γ n qN onto = rec₁ squash₁
@@ -481,7 +481,7 @@ module _ {K : Type ℓ} (f : K → V ℓ) (h : (k : K) → ⟨ isL (f k) ⟩) wh
 <div class="submodule-fold-content">
 
 ```agda
-  isTmAt-in : ∀ {m} (t N A : Fin m) (γ : S ^ m) (n : ℕ)
+  isTmAt-in : ∀ {m} (t N A : Fin m) (γ : Vec S m) (n : ℕ)
             → (lookup N γ) .fst ≡ # n
             → ((c : K) → ⟨ f c ∈ (lookup A γ) .fst ⟩)
             → TmWit f n ((lookup t γ) .fst) → ⟨ γ ⊨ isTmAt t N A ⟩
@@ -532,7 +532,7 @@ were written against the same reading of an arity-tagged pair.
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module Peel {m : ℕ} (C A : Fin m) (γ : S ^ m)
+module Peel {m : ℕ} (C A : Fin m) (γ : Vec S m)
             (hcl : ⟨ γ ⊨ closedAt C ⟩) (hsh : ⟨ γ ⊨ shapedAt C A ⟩) where
 ```
 </summary>
@@ -672,7 +672,7 @@ module _ {K : Type ℓ} (f : K → V ℓ) (h : (k : K) → ⟨ isL (f k) ⟩) wh
     tw : ∀ {n} (t : Term K n) → TmWit f n ((ct t) .fst)
     tw t = t , refl
 
-  closureShaped : ∀ {n m} (φ : Formula K n) (A : Fin m) (γ : S ^ m)
+  closureShaped : ∀ {n m} (φ : Formula K n) (A : Fin m) (γ : Vec S m)
                 → ((k : K) → ⟨ f k ∈ (lookup A γ) .fst ⟩)
                 → ⟨ (clo f h φ ∷ γ) ⊨ shapedAt zero (suc A) ⟩
   closureShaped φ A γ into = shaped-in zero (suc A) (clo f h φ ∷ γ)

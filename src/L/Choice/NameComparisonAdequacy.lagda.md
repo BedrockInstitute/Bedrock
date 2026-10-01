@@ -542,7 +542,7 @@ contains only ordered pairs.
 <!--/-->
 
 ```agda
-  paramSeq-in : ∀ {n} (e a B : Fin n) (γ : S ^ n) (k : ℕ) (g : Fin k → ⟪ A ⟫)
+  paramSeq-in : ∀ {n} (e a B : Fin n) (γ : Vec S n) (k : ℕ) (g : Fin k → ⟪ A ⟫)
               → (lookup e γ) .fst ≡ env (λ i → ix (g i))
               → (lookup a γ) .fst ≡ # k
               → (lookup B γ) .fst ≡ A
@@ -592,7 +592,7 @@ the task. Opening `Recover` with these data exposes a family indexed by
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-  module _ {n : ℕ} (e a B : Fin n) (γ : S ^ n) (k : ℕ)
+  module _ {n : ℕ} (e a B : Fin n) (γ : Vec S n) (k : ℕ)
            (qa : (lookup a γ) .fst ≡ # k) (qB : (lookup B γ) .fst ≡ A)
            (h : ⟨ γ ⊨ envOverAt e a B ⟩) where
 ```
@@ -977,7 +977,7 @@ membership observes only the underlying sets in `C` and `C₀`.
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-  module Named {n : ℕ} (B C C₀ s a e d : Fin n) (γ : S ^ n)
+  module Named {n : ℕ} (B C C₀ s a e d : Fin n) (γ : Vec S n)
                (qB : lookup B γ ≡ Aʟ)
                (qC : (lookup C γ) .fst ≡ (AllCodes Aʟ) .fst)
                (q₀ : (lookup C₀ γ) .fst ≡ (AllCodes ∅ʟ) .fst) where
@@ -2113,7 +2113,7 @@ The equation `qC` identifies the underlying set of the carrier's code set.
 <!--/-->
 
 ```agda
-    module Min {n : ℕ} (R P B C C₀ s a e d : Fin n) (γ : S ^ n)
+    module Min {n : ℕ} (R P B C C₀ s a e d : Fin n) (γ : Vec S n)
                (qR : (lookup R γ) .fst ≡ Rs .fst)
                (qP : (lookup P γ) .fst ≡ Ps .fst)
                (qB : lookup B γ ≡ Aʟ)
@@ -2380,7 +2380,7 @@ proved outside this module.
 <!--/-->
 
 ```agda
-    module Step {n : ℕ} (R P B C C₀ x y : Fin n) (γ : S ^ n)
+    module Step {n : ℕ} (R P B C C₀ x y : Fin n) (γ : Vec S n)
                 (qR : (lookup R γ) .fst ≡ Rs .fst)
                 (qP : (lookup P γ) .fst ≡ Ps .fst)
                 (qB : lookup B γ ≡ Aʟ)

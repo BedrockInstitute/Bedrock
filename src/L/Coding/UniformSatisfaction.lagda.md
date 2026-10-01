@@ -229,16 +229,16 @@ module _ (B : S) where
 <div class="submodule-fold-content">
 
 ```agda
-  fr : ∀ {m n} (φ : Formula S m) (γ : S ^ n) → S ^ (14 + n)
+  fr : ∀ {m n} (φ : Formula S m) (γ : Vec S n) → Vec S (14 + n)
   fr φ γ = ev numν (Tower.tower B) (slot B φ) (satTable B φ) B γ
 
-  frTags : ∀ {m n} (φ : Formula S m) (γ : S ^ n) → Tags (fr φ γ) NN
+  frTags : ∀ {m n} (φ : Formula S m) (γ : Vec S n) → Tags (fr φ γ) NN
   frTags φ γ = numTags (Tower.tower B) (slot B φ) (satTable B φ) B γ
 
-  frTow : ∀ {m n} (φ : Formula S m) (γ : S ^ n) → ⟨ fr φ γ ⊨ towerAt Ei Bi (NN f0) ⟩
+  frTow : ∀ {m n} (φ : Formula S m) (γ : Vec S n) → ⟨ fr φ γ ⊨ towerAt Ei Bi (NN f0) ⟩
   frTow φ γ = TowerHolds.holds Ei Bi (NN f0) (fr φ γ) B refl refl refl
 
-  frDom : ∀ {m n} (φ : Formula S m) (γ : S ^ n) → ⟨ fr φ γ ⊨ domAt Ti Ci ⟩
+  frDom : ∀ {m n} (φ : Formula S m) (γ : Vec S n) → ⟨ fr φ γ ⊨ domAt Ti Ci ⟩
   frDom φ γ = domAt-intro Ti Ci (fr φ γ)
     (λ z → (λ h → rec₁ ((z .fst ∈ (slot B φ) .fst) .snd)
               (λ { (w , hw) → inSlot B φ (z .fst) (w .fst) hw }) h)
@@ -481,7 +481,7 @@ module _ (A : S) where
 
   val-sat : ∀ {n} (ψ : Formula ⟪ A .fst ⟫ n)
             (x : S) (x∈ : ⟨ x ∈ˢ AllCodes A ⟩) → x .fst ≡ (keyS A ψ) .fst
-          → (δ : DA.SM ^ n) (z : S) → z .fst ≡ envGraph A δ
+          → (δ : Vec DA.SM n) (z : S) → z .fst ≡ envGraph A δ
           → (z ∈ˢ Table.val A A x x∈) ≡ (δ ⊨ᵐ ψ)
   val-sat ψ x x∈ q δ z qz =
       cong (z ∈ˢ_)

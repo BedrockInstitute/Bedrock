@@ -268,8 +268,8 @@ For formulas whose constants are elements of `L`, `⊨` denotes satisfaction in 
 <!--/-->
 
 ```agda
-module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _^_; _⊨ᵐ_ )
-open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
+module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _⊨ᵐ_ )
+open AbsL using () renaming ( _⊨ᵐ_ to _⊨_ )
 module Ren = Sat 𝒮ʟ id using ( Agrees; ⊨-rename )
 ```
 
@@ -2226,7 +2226,7 @@ Because the constant alphabet is empty, there is a unique interpretation `ε′`
 ```agda
     ε′ : ⊥* {ℓ} → ⟪ Lset lam ⟫
     ε′ = ⊥*-rec
-    sat-bridge : (k : ℕ) (χ : Formula (⊥* {ℓ}) k) (δ : SL ^ k)
+    sat-bridge : (k : ℕ) (χ : Formula (⊥* {ℓ}) k) (δ : Vec SL k)
                → (δ ⊨₀ χ) ≡ (δ DA.⊨ᵐ mapFo ε′ χ)
     sat-bridge k χ δ =
 ```
@@ -2343,7 +2343,7 @@ The proof runs by path induction on the equation of underlying sets, with the pr
       J (λ x' e' → (m' : ⟨ x' CS.∈ˢ AllCodes A ⟩) → SM.valOf x m ≡ SM.valOf x' m')
         (λ m' → cong (SM.valOf x) ((x CS.∈ˢ AllCodes A) .snd m m'))
         (S≡ {x = x} {y = keyOf k χ} e) (keyOf∈ k χ)
-    sat-at : (k : ℕ) (χ : Formula (⊥* {ℓ}) k) (δ : SL ^ k) (z : CS.S)
+    sat-at : (k : ℕ) (χ : Formula (⊥* {ℓ}) k) (δ : Vec SL k) (z : CS.S)
 ```
 
 <!--en-->
@@ -2387,7 +2387,7 @@ The readings are stated at a variable environment, for a fixed arity `k` whose n
 <!--/-->
 
 ```agda
-    module KeyIn {n : ℕ} (s a : Fin n) (γ : CS.S ^ n) (k : ℕ)
+    module KeyIn {n : ℕ} (s a : Fin n) (γ : Vec CS.S n) (k : ℕ)
                  (qa : (lookup a γ) .fst ≡ # k) where
 ```
 
@@ -2510,7 +2510,7 @@ The seven-slot environment is now assembled: the satisfaction table, the extende
 
 ```agda
             qz = subst ⟨_⟩ (sucAtL-adequate (suc a) zero (z ∷ γ)) hs
-    Env : CS.S → CS.S → CS.S → CS.S → CS.S → CS.S → CS.S → CS.S ^ 7
+    Env : CS.S → CS.S → CS.S → CS.S → CS.S → CS.S → CS.S → Vec CS.S 7
     Env T e' e s k w Z = T ∷ e' ∷ e ∷ s ∷ k ∷ w ∷ Z ∷ []
 ```
 
@@ -2581,7 +2581,7 @@ The seven-slot environment is recorded, and the host-side minimality is stated r
 <!--/-->
 
 ```agda
-      γ₇ : CS.S ^ 7
+      γ₇ : Vec CS.S 7
       γ₇ = Env T e' e s k w Z
       Min : {m : ℕ} (g : Fin m → V ℓ) → Type (ℓ-suc ℓ)
       Min g = (w' : CS.S) → ⟨ w' .fst ∈ˢ A .fst ⟩ → (e'' : CS.S)
@@ -2902,7 +2902,7 @@ The remaining four cases place the key `s`, the numeral `k`, the candidate `z`, 
 <!--/-->
 
 ```agda
-      Γ₉ : (T e' k Z e s z p q : CS.S) → CS.S ^ 9
+      Γ₉ : (T e' k Z e s z p q : CS.S) → Vec CS.S 9
       Γ₉ T e' k Z e s z p q = T ∷ e' ∷ k ∷ Z ∷ e ∷ s ∷ z ∷ p ∷ q ∷ []
 ```
 
@@ -3130,7 +3130,7 @@ With the numeral `n` and the equation naming the key, the data assembles: the le
           at : Σ[ n ∶ ℕ ] (k .fst ≡ # n) → LeastWitnessData Z e s
           at (n , qk) = n , R.g , R.recovers , s∈Lω
             where
-            γ : CS.S ^ 7
+            γ : Vec CS.S 7
             γ = Env T e' e s k z Z
 ```
 
@@ -3608,7 +3608,7 @@ The seven-entry environment `γ₇` assembles the whole picture: the table, the 
 <!--/-->
 
 ```agda
-      γ₇ : CS.S ^ 7
+      γ₇ : Vec CS.S 7
       γ₇ = Env T (ext a) e sS (nn k) aS Z
 ```
 

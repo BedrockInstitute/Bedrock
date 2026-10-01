@@ -216,8 +216,8 @@ Formulas with constants from `S` are evaluated in the constructible structure, w
 <!--/-->
 
 ```agda
-module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _^_; _⊨ᵐ_ )
-open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
+module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _⊨ᵐ_ )
+open AbsL using () renaming ( _⊨ᵐ_ to _⊨_ )
 ```
 
 <!--en-->
@@ -1107,7 +1107,7 @@ The environment `e7` contains the seven objects available before the quantifiers
 
 ```agda
     private
-      e7 : S → S → S → S → S → S → S → S ^ 7
+      e7 : S → S → S → S → S → S → S → Vec S 7
       e7 y s n m C b z = z ∷ b ∷ C ∷ m ∷ n ∷ y ∷ s ∷ []
 ```
 
@@ -1460,7 +1460,7 @@ For the standard environment graph, three objects suffice to invoke the generic 
 
 ```agda
     private
-      δ : S ^ 3
+      δ : Vec S 3
       δ = α ∷ nn N ∷ envS α g ∷ []
 ```
 

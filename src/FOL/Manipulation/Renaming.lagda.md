@@ -155,11 +155,11 @@ renameFo ρ (∃̇∈ t φ) = ∃̇∈ (renameTm ρ t) (renameFo (liftρ ρ) φ)
 <!--/-->
 
 <!--en-->
-Syntax alone cannot say whether a renaming preserves meaning; we need to compare environments. An environment is a vector of elements of the structure's carrier, of length matching the context: `γ : S ^ m` for the big context, `δ : S ^ n` for the small one. The question becomes: when do `γ` and `δ` count as the same assignment from the point of view of `ρ`?
+Syntax alone cannot say whether a renaming preserves meaning; we need to compare environments. An environment is a vector of elements of the structure's carrier, of length matching the context: `γ : Vec S m`{.Agda} for the big context, `δ : Vec S n`{.Agda} for the small one. The question becomes: when do `γ`{.Agda} and `δ`{.Agda} count as the same assignment from the point of view of `ρ`{.Agda}?
 <!--zh-->
-仅靠语法无法判断改名是否保持含义；我们需要比较环境。环境是结构载体的元素构成的向量，长度与语境匹配：大语境用 `γ : S ^ m`，小语境用 `δ : S ^ n`。问题于是变成：从 `ρ` 的角度看，`γ` 与 `δ` 何时算是同一个指派？
+仅靠语法无法判断改名是否保持含义；我们需要比较环境。环境是结构载体的元素构成的向量，长度与语境匹配：大语境用 `γ : Vec S m`{.Agda}，小语境用 `δ : Vec S n`{.Agda}。问题于是变成：从 `ρ`{.Agda} 的角度看，`γ`{.Agda} 与 `δ`{.Agda} 何时算是同一个指派？
 <!--ja-->
-構文だけでは改名が意味を保つかを言えず、環境を比較する必要がある。環境は構造の台の要素からなるベクトルで、長さは文脈と一致する。大きい文脈には `γ : S ^ m`、小さい文脈には `δ : S ^ n` である。問いはこう変わる。`ρ` の視点から、`γ` と `δ` はいつ同じ割り当てとみなせるのか。
+構文だけでは改名が意味を保つかを言えず、環境を比較する必要がある。環境は構造の台の要素からなるベクトルで、長さは文脈と一致する。大きい文脈には `γ : Vec S m`{.Agda}、小さい文脈には `δ : Vec S n`{.Agda} である。問いはこう変わる。`ρ`{.Agda} の視点から、`γ`{.Agda} と `δ`{.Agda} はいつ同じ割り当てとみなせるのか。
 <!--/-->
 
 <details open class="submodule-fold">
@@ -186,10 +186,9 @@ The answer is the relation `Agrees ρ γ δ`: for every index `i` of the small c
 <!--/-->
 
 ```agda
-  open Sem using ( _^_ )
   open Sem.At K ι using ( _⊨_; ⟦_⟧ )
 
-  Agrees : ∀ {n m} → (Fin n → Fin m) → S ^ m → S ^ n → Type ℓ
+  Agrees : ∀ {n m} → (Fin n → Fin m) → Vec S m → Vec S n → Type ℓ
   Agrees ρ γ δ = ∀ i → lookup (ρ i) γ ≡ lookup i δ
 ```
 
@@ -210,7 +209,7 @@ The theorem will go by induction on the formula, so agreement must survive the s
 <!--/-->
 
 ```agda
-  agrees∷ : ∀ {n m} {ρ : Fin n → Fin m} {γ : S ^ m} {δ : S ^ n}
+  agrees∷ : ∀ {n m} {ρ : Fin n → Fin m} {γ : Vec S m} {δ : Vec S n}
             (x : S) → Agrees ρ γ δ → Agrees (liftρ ρ) (x ∷ γ) (x ∷ δ)
   agrees∷ x ag zero    = refl
   agrees∷ x ag (suc i) = ag i
@@ -237,7 +236,7 @@ The term proof is short because there is so little to a term. A constant denotes
 <!--/-->
 
 ```agda
-              (γ : S ^ m) (δ : S ^ n) → Agrees ρ γ δ
+              (γ : Vec S m) (δ : Vec S n) → Agrees ρ γ δ
             → ⟦ renameTm ρ t ⟧ γ ≡ ⟦ t ⟧ δ
   ⟦⟧-rename ρ (con k) γ δ ag = refl
   ⟦⟧-rename ρ (var i) γ δ ag = ag i
@@ -254,7 +253,7 @@ The formula theorem states a path between two propositions: `γ ⊨ renameFo ρ 
 <!--/-->
 
 ```agda
-             (γ : S ^ m) (δ : S ^ n) → Agrees ρ γ δ
+             (γ : Vec S m) (δ : Vec S n) → Agrees ρ γ δ
            → (γ ⊨ renameFo ρ φ) ≡ (δ ⊨ φ)
   ⊨-rename ρ (t ∈̇ u)  γ δ ag = cong₂ _∈ˢ_ (⟦⟧-rename ρ t γ δ ag) (⟦⟧-rename ρ u γ δ ag)
   ⊨-rename ρ (t ≐ u)  γ δ ag = cong₂ _≈ˢ_ (⟦⟧-rename ρ t γ δ ag) (⟦⟧-rename ρ u γ δ ag)

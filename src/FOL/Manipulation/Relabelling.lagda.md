@@ -90,7 +90,7 @@ module _ {ℓ} (𝒮 : ZFStructureₕ ℓ) where
 
 ```agda
   open ZFStructure 𝒮
-  open FOL.Semantics 𝒮 using ( module At; _^_ )
+  open FOL.Semantics 𝒮 using ( module At )
 ```
 
 <details open class="submodule-fold">
@@ -113,7 +113,7 @@ The atomic case already shows why the two readings must agree. Consider the form
     open At K' ι using ( _⊨_; ⟦_⟧ )
     open At K (λ k → ι (f k)) using () renaming ( _⊨_ to _⊨∘_ ; ⟦_⟧ to ⟦_⟧∘ )
 
-    ⟦⟧-map : ∀ {n} (t : Term K n) (γ : S ^ n)
+    ⟦⟧-map : ∀ {n} (t : Term K n) (γ : Vec S n)
            → ⟦ mapTm f t ⟧ γ ≡ ⟦ t ⟧∘ γ
     ⟦⟧-map (con k) γ = refl
 ```
@@ -129,7 +129,7 @@ The satisfaction lemma `⊨-map` lifts this agreement from terms to formulas, as
 ```agda
     ⟦⟧-map (var i) γ = refl
 
-    ⊨-map : ∀ {n} (φ : Formula K n) (γ : S ^ n)
+    ⊨-map : ∀ {n} (φ : Formula K n) (γ : Vec S n)
           → (γ ⊨ mapFo f φ) ≡ (γ ⊨∘ φ)
     ⊨-map (t ∈̇ u)  γ = cong₂ _∈ˢ_ (⟦⟧-map t γ) (⟦⟧-map u γ)
     ⊨-map (t ≐ u)  γ = cong₂ _≈ˢ_ (⟦⟧-map t γ) (⟦⟧-map u γ)
@@ -208,7 +208,7 @@ The inner module fixes an arbitrary target domain `K` and interpretation `ι : K
     open At K ι using ( _⊨_ )
     open At (⊥* {ℓe}) (λ b → ι (⊥*-rec b)) using () renaming ( _⊨_ to _⊨∅_ )
 
-    embed-⊨ : ∀ {n} (φ : Formula (⊥* {ℓe}) n) (γ : S ^ n)
+    embed-⊨ : ∀ {n} (φ : Formula (⊥* {ℓe}) n) (γ : Vec S n)
             → (γ ⊨ embed φ) ≡ (γ ⊨∅ φ)
 ```
 

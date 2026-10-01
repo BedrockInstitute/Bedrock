@@ -105,9 +105,10 @@ Third-party license headers must remain intact; Outcrop owns its separate checks
   It still uses the standard OPTIONS/module/title opening.
 - **Just-in-time introduction** (owner ruling, 2026-07-17): every definition lives in
   the chapter where it is first motivated, never earlier. The hubs in particular are
-  **pure re-export surfaces** and define nothing of their own (so `_^_` belongs to
-  the semantics chapter that needs environments, and `absurd` to the syntax chapter
-  whose closed constant domain it serves; neither belongs to `Base.Prelude`).
+  **pure re-export surfaces** and define nothing of their own (for example,
+  `absurd` belongs to the syntax chapter whose closed constant domain it serves,
+  not to `Base.Prelude`). Use `Vec A n` directly for vector types; their compact
+  power notation is a presentation rule, not a separately defined Agda alias.
 - **Hub admission** (owner question, 2026-07-17): a name enters `Base.Prelude` only
   if it is **statement-ambient**, needed to read definitions and theorem statements
   throughout the book (universes, paths, homotopy levels, `hProp` with `⟨_⟩`, pairs, the

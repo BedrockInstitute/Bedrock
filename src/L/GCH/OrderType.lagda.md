@@ -152,16 +152,16 @@ open hPropView 𝒮ʟ using ( S; _∈ˢ_ )
 ```
 
 <!--en-->
-Formulas will be interpreted in the structure carried by `L`. The notation `S ^ n` denotes an environment of `n` constructible sets, and `γ ⊨ φ` says that the formula `φ` is satisfied by such an environment `γ` inside the restricted constructible structure.
+Formulas will be interpreted in the structure carried by `L`{.Agda}. The notation `Vec S n`{.Agda} denotes an environment of `n`{.Agda} constructible sets, and `γ ⊨ φ`{.Agda} says that the formula `φ`{.Agda} is satisfied by such an environment `γ`{.Agda} inside the restricted constructible structure.
 <!--zh-->
-这些公式将在 `L` 所承载的结构中解释。记号 `S ^ n` 表示由 `n` 个可构造集合组成的环境，而 `γ ⊨ φ` 表示公式 `φ` 在受限的可构造结构内部由环境 `γ` 满足。
+这些公式将在 `L`{.Agda} 所承载的结构中解释。记号 `Vec S n`{.Agda} 表示由 `n`{.Agda} 个可构造集合组成的环境，而 `γ ⊨ φ`{.Agda} 表示公式 `φ`{.Agda} 在受限的可构造结构内部由环境 `γ`{.Agda} 满足。
 <!--ja-->
-論理式は `L` が担う構造で解釈する。記法 `S ^ n` は `n` 個の構成可能集合からなる環境を表し、`γ ⊨ φ` は、制限された構成可能構造の内部で環境 `γ` が論理式 `φ` を満たすことを表す。
+論理式は `L`{.Agda} が担う構造で解釈する。記法 `Vec S n`{.Agda} は `n`{.Agda} 個の構成可能集合からなる環境を表し、`γ ⊨ φ`{.Agda} は、制限された構成可能構造の内部で環境 `γ`{.Agda} が論理式 `φ`{.Agda} を満たすことを表す。
 <!--/-->
 
 ```agda
-module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _^_; _⊨ᵐ_ )
-open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
+module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _⊨ᵐ_ )
+open AbsL using () renaming ( _⊨ᵐ_ to _⊨_ )
 ```
 
 <!--en-->
@@ -527,7 +527,7 @@ To read the formula as host-level completeness, fix a predecessor `y` and a proo
 <!--/-->
 
 ```agda
-  complete-out : ∀ {n} (f : Fin n) (R : S) (x : Fin n) (γ : S ^ n)
+  complete-out : ∀ {n} (f : Fin n) (R : S) (x : Fin n) (γ : Vec S n)
                → ⟨ γ ⊨ completeAt f R x ⟩
                → Complete (lookup f γ) R (lookup x γ)
   complete-out f R x γ h y p = map₁
@@ -555,7 +555,7 @@ Conversely, assume host-level completeness. For a candidate predecessor satisfyi
 <!--/-->
 
 ```agda
-  complete-in : ∀ {n} (f : Fin n) (R : S) (x : Fin n) (γ : S ^ n)
+  complete-in : ∀ {n} (f : Fin n) (R : S) (x : Fin n) (γ : Vec S n)
               → Complete (lookup f γ) R (lookup x γ)
               → ⟨ γ ⊨ completeAt f R x ⟩
   complete-in f R x γ h y p = map₁
@@ -597,7 +597,7 @@ The semantic existential is already propositionally truncated. The map defining 
 <!--/-->
 
 ```agda
-  src-out : ∀ {n} (f : Fin n) (R : S) (x w : Fin n) (γ : S ^ n)
+  src-out : ∀ {n} (f : Fin n) (R : S) (x w : Fin n) (γ : Vec S n)
           → ⟨ γ ⊨ srcAt f R x w ⟩
           → Src (lookup f γ) R (lookup x γ) (lookup w γ)
   src-out f R x w γ = map₁ (λ { (y , (p , q)) → y
@@ -625,7 +625,7 @@ Filling a source is the converse: the predecessor is introduced into the existen
 <!--/-->
 
 ```agda
-  src-in : ∀ {n} (f : Fin n) (R : S) (x w : Fin n) (γ : S ^ n)
+  src-in : ∀ {n} (f : Fin n) (R : S) (x w : Fin n) (γ : Vec S n)
          → Src (lookup f γ) R (lookup x γ) (lookup w γ)
          → ⟨ γ ⊨ srcAt f R x w ⟩
   src-in f R x w γ = map₁ (λ { (y , (p , q)) → y
@@ -681,7 +681,7 @@ Reading `valueAt` outward instantiates its universal quantifier at each `w`. The
 <!--/-->
 
 ```agda
-  value-out : ∀ {n} (f : Fin n) (R : S) (x v : Fin n) (γ : S ^ n)
+  value-out : ∀ {n} (f : Fin n) (R : S) (x v : Fin n) (γ : Vec S n)
             → ⟨ γ ⊨ valueAt f R x v ⟩
             → ValueIs (lookup f γ) R (lookup x γ) (lookup v γ)
   value-out f R x v γ h w =
@@ -709,7 +709,7 @@ To prove the forward implication of `valueAt`, take a member `w` of the proposed
 <!--/-->
 
 ```agda
-  value-in : ∀ {n} (f : Fin n) (R : S) (x v : Fin n) (γ : S ^ n)
+  value-in : ∀ {n} (f : Fin n) (R : S) (x v : Fin n) (γ : Vec S n)
            → ValueIs (lookup f γ) R (lookup x γ) (lookup v γ)
            → ⟨ γ ⊨ valueAt f R x v ⟩
   value-in f R x v γ h w =
@@ -766,7 +766,7 @@ To read the formula outward, begin with an actual table entry `(x,v)`. Adequacy 
 <!--/-->
 
 ```agda
-  correct-out : ∀ {n} (f : Fin n) (R : S) (γ : S ^ n)
+  correct-out : ∀ {n} (f : Fin n) (R : S) (γ : Vec S n)
               → ⟨ γ ⊨ correctAt f R ⟩ → Correct (lookup f γ) R
   correct-out f R γ h x v p =
     let (c , w) = h x v (subst ⟨_⟩ (sym (appAt-adequate (suc (suc f)) (suc zero) zero (v ∷ x ∷ γ))) p)
@@ -794,7 +794,7 @@ Conversely, suppose the table is correct at the host level. After choosing an ar
 <!--/-->
 
 ```agda
-  correct-in : ∀ {n} (f : Fin n) (R : S) (γ : S ^ n)
+  correct-in : ∀ {n} (f : Fin n) (R : S) (γ : Vec S n)
              → Correct (lookup f γ) R → ⟨ γ ⊨ correctAt f R ⟩
   correct-in f R γ h x v p =
     let (c , w) = h x v (subst ⟨_⟩ (appAt-adequate (suc (suc f)) (suc zero) zero (v ∷ x ∷ γ)) p)
@@ -2105,7 +2105,7 @@ In the two-slot environment `γ`, slot zero contains `colTable` and slot one con
 <!--/-->
 
 ```agda
-    γ : S ^ 2
+    γ : Vec S 2
     γ = colTable ∷ D ∷ []
 ```
 

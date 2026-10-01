@@ -117,17 +117,15 @@ The carrier of the inner world is the Σ-type `SM`: a pair of an element of `S` 
 ```
 
 <!--en-->
-The outer reading uses the constant interpretation `ι := (λ p → p .fst)`{.Agda}: a constant naming a member of `M` denotes that member itself in `𝒮`. The fixed notation is `_⊨ᵛ_` for satisfaction in `𝒮` and `⟦_⟧ᵛ` for term values, and the environment notation `_^_` is available throughout.
+The outer reading uses the constant interpretation `ι := (λ p → p .fst)`{.Agda}: a constant naming a member of `M`{.Agda} denotes that member itself in `𝒮`{.Agda}. The fixed notation is `_⊨ᵛ_`{.Agda} for satisfaction in `𝒮`{.Agda} and `⟦_⟧ᵛ`{.Agda} for term values.
 <!--zh-->
-外层读法采用常元解释 `ι := (λ p → p .fst)`{.Agda}：命名某个 `M` 元素的常元在 `𝒮` 中就指那个元素本身。固定记号为：`𝒮` 中的满足写作 `_⊨ᵛ_`，词项取值写作 `⟦_⟧ᵛ`；环境记号 `_^_` 在全章可用。
+外层读法采用常元解释 `ι := (λ p → p .fst)`{.Agda}：命名某个 `M`{.Agda} 元素的常元在 `𝒮`{.Agda} 中就指那个元素本身。固定记号为：`𝒮`{.Agda} 中的满足写作 `_⊨ᵛ_`{.Agda}，词项取值写作 `⟦_⟧ᵛ`{.Agda}。
 <!--ja-->
-外側の読み方は定数解釈 `ι := (λ p → p .fst)`{.Agda} を用いる。`M` の要素を名指す定数は、`𝒮` の中ではその要素そのものを指す。記号は固定される。`𝒮` での充足は `_⊨ᵛ_`、項の値は `⟦_⟧ᵛ` と書き、環境の記法 `_^_` は章全体で使える。
+外側の読み方は定数解釈 `ι := (λ p → p .fst)`{.Agda} を用いる。`M`{.Agda} の要素を名指す定数は、`𝒮`{.Agda} の中ではその要素そのものを指す。記号は固定される。`𝒮`{.Agda} での充足は `_⊨ᵛ_`{.Agda}、項の値は `⟦_⟧ᵛ`{.Agda} と書く。
 <!--/-->
 
 ```agda
   module SemM = FOL.Semantics 𝒮M
-
-  open SemV using ( _^_ ) public
 
   open module V = SemV.At SM (λ p → p .fst) public
     renaming ( _⊨_ to _⊨ᵛ_ ; ⟦_⟧ to ⟦_⟧ᵛ )
@@ -147,11 +145,11 @@ The inner reading uses `ι := id`{.Agda}: inside `𝒮 ↾ M`, a constant is the
 ```
 
 <!--en-->
-The two worlds differ only in how environments are read: an inner environment `δ : SM ^ n` names outer values through `fst`{.Agda}, so `map (λ p → p .fst) δ` is the corresponding outer environment. Two lemmas connect the term evaluation on the two sides. A constant evaluates to its own first projection on both sides, and a variable is a lookup in both worlds, so the dictionary is settled at the atoms.
+The two worlds differ only in how environments are read: an inner environment `δ : Vec SM n`{.Agda} names outer values through `fst`{.Agda}, so `map (λ p → p .fst) δ`{.Agda} is the corresponding outer environment. Two lemmas connect the term evaluation on the two sides. A constant evaluates to its own first projection on both sides, and a variable is a lookup in both worlds, so the dictionary is settled at the atoms.
 <!--zh-->
-两个世界的差别只在环境的读法：内层环境 `δ : SM ^ n` 经 `fst`{.Agda} 给出外层的取值，`map (λ p → p .fst) δ` 就是相应的外层环境。两条引理连接两侧的词项求值。常元在两侧都取自己的第一投影为值，变元在两个世界都只是一次查表，因此词典问题在原子层面就已解决。
+两个世界的差别只在环境的读法：内层环境 `δ : Vec SM n`{.Agda} 经 `fst`{.Agda} 给出外层的取值，`map (λ p → p .fst) δ`{.Agda} 就是相应的外层环境。两条引理连接两侧的词项求值。常元在两侧都取自己的第一投影为值，变元在两个世界都只是一次查表，因此词典问题在原子层面就已解决。
 <!--ja-->
-二つの世界の違いは環境の読み方にだけある。内側の環境 `δ : SM ^ n` は `fst`{.Agda} を通して外側の値を名指すので、`map (λ p → p .fst) δ` が対応する外側の環境である。二つの補題が両側の項の評価を結ぶ。定数はどちらの側でも自分の第一射影を値とし、変数はどちらの世界でも一回の参照にすぎない。したがって辞書の問題は原子の段階で解決される。
+二つの世界の違いは環境の読み方にだけある。内側の環境 `δ : Vec SM n`{.Agda} は `fst`{.Agda} を通して外側の値を名指すので、`map (λ p → p .fst) δ`{.Agda} が対応する外側の環境である。二つの補題が両側の項の評価を結ぶ。定数はどちらの側でも自分の第一射影を値とし、変数はどちらの世界でも一回の参照にすぎない。したがって辞書の問題は原子の段階で解決される。
 <!--/-->
 
 <!--en-->
@@ -164,7 +162,7 @@ The first lemma commutes lookup with projection, pointwise along the vector: rea
 
 ```agda
   private
-    lookup-fst : ∀ {n} (i : Fin n) (δ : SM ^ n)
+    lookup-fst : ∀ {n} (i : Fin n) (δ : Vec SM n)
                → lookup i (map (λ p → p .fst) δ) ≡ (lookup i δ) .fst
     lookup-fst zero    (m ∷ δ) = refl
     lookup-fst (suc i) (m ∷ δ) = lookup-fst i δ
@@ -179,7 +177,7 @@ The second lemma lifts this to terms: evaluating a term in the inner world and p
 <!--/-->
 
 ```agda
-    ⟦⟧-fst : ∀ {n} (t : Term SM n) (δ : SM ^ n)
+    ⟦⟧-fst : ∀ {n} (t : Term SM n) (δ : Vec SM n)
            → (⟦ t ⟧ᵐ δ) .fst ≡ ⟦ t ⟧ᵛ (map (λ p → p .fst) δ)
     ⟦⟧-fst (con m) δ = refl
     ⟦⟧-fst (var i) δ = sym (lookup-fst i δ)
@@ -208,7 +206,7 @@ The statement is a path of truth values, not a mere implication: for every Δ₀
 <!--/-->
 
 ```agda
-  abs₀ : ∀ {n} {φ : Formula SM n} → Δ₀ φ → (δ : SM ^ n)
+  abs₀ : ∀ {n} {φ : Formula SM n} → Δ₀ φ → (δ : Vec SM n)
        → (δ ⊨ᵐ φ) ≡ ((map (λ p → p .fst) δ) ⊨ᵛ φ)
   abs₀ (δ-∈ {t = t} {u}) δ = cong₂ _∈ˢ_ (⟦⟧-fst t δ) (⟦⟧-fst u δ)
   abs₀ (δ-≐ {t = t} {u}) δ = cong₂ _≈ˢ_ (⟦⟧-fst t δ) (⟦⟧-fst u δ)
@@ -349,12 +347,12 @@ In the Δ₀ base case, `abs₀ d δ` is a path between the inner and outer trut
 <!--/-->
 
 ```agda
-  σ₁-up : ∀ {n} {φ : Formula SM n} → Σ₁ φ → (δ : SM ^ n)
+  σ₁-up : ∀ {n} {φ : Formula SM n} → Σ₁ φ → (δ : Vec SM n)
         → ⟨ δ ⊨ᵐ φ ⟩ → ⟨ (map (λ p → p .fst) δ) ⊨ᵛ φ ⟩
   σ₁-up (σ-Δ₀ d) δ = subst ⟨_⟩ (abs₀ d δ)
   σ₁-up (σ-∃ s)  δ = map₁ λ { (xm , h) → xm .fst , σ₁-up s (xm ∷ δ) h }
 
-  π₁-down : ∀ {n} {φ : Formula SM n} → Π₁ φ → (δ : SM ^ n)
+  π₁-down : ∀ {n} {φ : Formula SM n} → Π₁ φ → (δ : Vec SM n)
 ```
 
 <!--en-->

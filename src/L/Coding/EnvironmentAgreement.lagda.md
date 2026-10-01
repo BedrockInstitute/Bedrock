@@ -181,7 +181,7 @@ The length slot is filled by a numeral, and the numeral must itself be an elemen
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module Ambient (B : S) {k : ℕ} (γ : S ^ k) (Ei di bi : Fin k) (m : ℕ)
+module Ambient (B : S) {k : ℕ} (γ : Vec S k) (Ei di bi : Fin k) (m : ℕ)
   (qd : (lookup di γ) .fst ≡ # m) (qb : (lookup bi γ) .fst ≡ B .fst)
   (hE : ⟨ γ ⊨ envSetAt Ei di bi ⟩) where
 ```
@@ -318,7 +318,7 @@ The module assumes no satisfaction hypothesis. Its three equations say that the 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module AmbientHolds (B : S) {k : ℕ} (γ : S ^ k) (Ei di bi : Fin k) (m : ℕ)
+module AmbientHolds (B : S) {k : ℕ} (γ : Vec S k) (Ei di bi : Fin k) (m : ℕ)
   (qE : (lookup Ei γ) .fst ≡ (envSet B m) .fst)
   (qd : (lookup di γ) .fst ≡ # m) (qb : (lookup bi γ) .fst ≡ B .fst)
   where

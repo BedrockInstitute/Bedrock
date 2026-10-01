@@ -95,7 +95,7 @@ Bounded absoluteness relates satisfaction in the constructible model to satisfac
 
 ```agda
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
-open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
+open AbsL using () renaming ( _⊨ᵐ_ to _⊨_ )
 ```
 
 <!--en-->
@@ -141,7 +141,7 @@ For the readback, fix a variable index `f` and an environment `γ` of model elem
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module _ {n : ℕ} (f : Fin n) (γ : S ^ n) where
+module _ {n : ℕ} (f : Fin n) (γ : Vec S n) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -253,7 +253,7 @@ module Extract (F D : S)
 <div class="submodule-fold-content">
 
 ```agda
-  γ : S ^ 2
+  γ : Vec S 2
   γ = F ∷ D ∷ []
 ```
 

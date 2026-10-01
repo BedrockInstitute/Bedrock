@@ -618,7 +618,6 @@ A subset of `A` carved by a predicate is presented directly: `subsetOf` takes a 
 ```agda
   private module SemM = FOL.Semantics DA.𝒮M
   private
-    open SemM using ( _^_ )
 
     subsetOf : (⟪ A ⟫ → hProp ℓ) → S
     subsetOf P = sett (Σ[ m ∶ ⟪ A ⟫ ] ⟨ P m ⟩) (λ p → ⟪ A ⟫↪ (p .fst))
@@ -636,7 +635,7 @@ Two presentation details matter before the denotation itself. The auxiliary `⟪
     ⟪⟫↪-inj : {m' m : ⟪ A ⟫} → ⟪ A ⟫↪ m' ≡ ⟪ A ⟫↪ m → m' ≡ m
     ⟪⟫↪-inj {m'} {m} = isEmbedding→Inj isEmb⟪ A ⟫↪ m' m
 
-  environment : (a : Name) → ⟪ A ⟫ → DA.SM ^ (suc (arity a))
+  environment : (a : Name) → ⟪ A ⟫ → Vec DA.SM (suc (arity a))
   environment a m = DA.ι m ∷ map DA.ι (params a)
 
   satAt : (a : Name) → ⟪ A ⟫ → hProp ℓ
@@ -761,7 +760,7 @@ The abstraction theorem `⊨-abs₁` speaks of satisfaction over the empty const
 ```agda
   private
     emptySat : (f : ⊥* {ℓ} → DA.SM) {n : ℕ}
-             → DA.SM ^ n → Formula (⊥* {ℓ}) n → hProp (ℓ-suc ℓ)
+             → Vec DA.SM n → Formula (⊥* {ℓ}) n → hProp (ℓ-suc ℓ)
     emptySat f γ χ = γ ⊨ᶠ χ
       where open SemM.At (⊥* {ℓ}) f using () renaming ( _⊨_ to _⊨ᶠ_ )
 ```

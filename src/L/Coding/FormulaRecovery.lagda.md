@@ -170,7 +170,7 @@ they look at them by handing the hypothesis straight to the term decode.
 <summary class="submodule-fold-heading">
 ```agda
 module Decode {K : Type ℓ} (f : K → V ℓ)
-              {m : ℕ} (C A : Fin m) (γ : S ^ m) (onto : Onto f A γ)
+              {m : ℕ} (C A : Fin m) (γ : Vec S m) (onto : Onto f A γ)
               (hcl : ⟨ γ ⊨ closedAt C ⟩) (hsh : ⟨ γ ⊨ shapedAt C A ⟩) where
 ```
 </summary>

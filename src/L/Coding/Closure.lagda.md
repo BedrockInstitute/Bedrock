@@ -115,11 +115,11 @@ open InfinitySet using ( #_; sucV )
 ```
 
 <!--en-->
-The formulas are evaluated over the carrier `S` of `L`, in an environment `γ : S ^ n` of `n` carriers for a formula of arity `n`. Satisfaction here means satisfaction in the restricted structure over `L`; the satisfaction relation of the ambient hierarchy is kept under a separate name, so the two readings never blur. The frames extend such an environment by the slots they bind, which is why their arities are shifted sums like `4 + n`.
+The formulas are evaluated over the carrier `S`{.Agda} of `L`{.Agda}, in an environment `γ : Vec S n`{.Agda} of `n`{.Agda} carriers for a formula of arity `n`{.Agda}. Satisfaction here means satisfaction in the restricted structure over `L`{.Agda}; the satisfaction relation of the ambient hierarchy is kept under a separate name, so the two readings never blur. The frames extend such an environment by the slots they bind, which is why their arities are shifted sums like `4 + n`{.Agda}.
 <!--zh-->
-这些公式在 `L` 的载体 `S` 上、于环境 `γ : S ^ n` 中求值，该环境为元数 `n` 的公式提供 `n` 个载体。这里的满足指 `L` 上受限结构中的满足；外围层级的满足关系另用其名，两种读法不会混淆。各框架以自身约束的槽扩张这样的环境，因此其元数是 `4 + n` 这类移位后的和。
+这些公式在 `L`{.Agda} 的载体 `S`{.Agda} 上、于环境 `γ : Vec S n`{.Agda} 中求值，该环境为元数 `n`{.Agda} 的公式提供 `n`{.Agda} 个载体。这里的满足指 `L`{.Agda} 上受限结构中的满足；外围层级的满足关系另用其名，两种读法不会混淆。各框架以自身约束的槽扩张这样的环境，因此其元数是 `4 + n`{.Agda} 这类移位后的和。
 <!--ja-->
-論理式は `L` の台 `S` の上で、アリティ `n` の論理式のための `n` 個の台の要素からなる環境 `γ : S ^ n` の中で評価される。ここでの充足は `L` 上の制限された構造での充足を意味し、周囲の階層の充足関係は別の名前を保つため、二つの読み方が混ざることはない。各フレームは自分が束縛するスロットで環境を延長するため、そのアリティは `4 + n` のようなずらした和になる。
+論理式は `L`{.Agda} の台 `S`{.Agda} の上で、アリティ `n`{.Agda} の論理式のための `n`{.Agda} 個の台の要素からなる環境 `γ : Vec S n`{.Agda} の中で評価される。ここでの充足は `L`{.Agda} 上の制限された構造での充足を意味し、周囲の階層の充足関係は別の名前を保つため、二つの読み方が混ざることはない。各フレームは自分が束縛するスロットで環境を延長するため、そのアリティは `4 + n`{.Agda} のようなずらした和になる。
 <!--/-->
 
 ```agda
@@ -136,7 +136,7 @@ Inside an extended environment, each frame names its own slots by de Bruijn indi
 
 ```agda
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
-open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
+open AbsL using () renaming ( _⊨ᵐ_ to _⊨_ )
 ```
 
 <!--en-->
@@ -272,7 +272,7 @@ Its three bound slots follow the same inside-out order: the single payload compo
 <!--/-->
 
 ```agda
-  binShape-out : (C : Fin n) (k : ℕ) (rel : Formula S (4 + n)) (γ : S ^ n)
+  binShape-out : (C : Fin n) (k : ℕ) (rel : Formula S (4 + n)) (γ : Vec S n)
     → ⟨ γ ⊨ binShapeAt C k rel ⟩
     → (c ar a b : S)
     → ⟨ c .fst ∈ (lookup C γ) .fst ⟩
@@ -315,7 +315,7 @@ The proof is short because the frame was designed for this reading. The hypothes
 <!--/-->
 
 ```agda
-  unShape-out : (C : Fin n) (k : ℕ) (rel : Formula S (3 + n)) (γ : S ^ n)
+  unShape-out : (C : Fin n) (k : ℕ) (rel : Formula S (3 + n)) (γ : Vec S n)
     → ⟨ γ ⊨ unShapeAt C k rel ⟩
     → (c ar a : S)
 ```
@@ -406,7 +406,7 @@ Four readings unfold the clauses back into concrete membership data, one per pay
 <!--/-->
 
 ```agda
-  binSameClosed-out : (C : Fin n) (k : ℕ) (γ : S ^ n)
+  binSameClosed-out : (C : Fin n) (k : ℕ) (γ : Vec S n)
     → ⟨ γ ⊨ binShapeAt C k (bothSameAt C) ⟩
     → (c ar a b : S)
     → ⟨ c .fst ∈ (lookup C γ) .fst ⟩
@@ -439,11 +439,11 @@ The second reading covers the unary constructors at the same arity. Its hypothes
 
 ```agda
     where
-    δ : S ^ (4 + n)
+    δ : Vec S (4 + n)
     δ = b ∷ a ∷ ar ∷ c ∷ γ
     r = binShape-out C k (bothSameAt C) γ h c ar a b c∈ shape
 
-  unSameClosed-out : (C : Fin n) (k : ℕ) (γ : S ^ n)
+  unSameClosed-out : (C : Fin n) (k : ℕ) (γ : Vec S n)
 ```
 
 <!--en-->
@@ -475,7 +475,7 @@ Its hypotheses match the previous unary reading, but the conclusion names the su
     subst ⟨_⟩ (appAt-adequate (sh3 C) n3 a3 (a ∷ ar ∷ c ∷ γ))
       (unShape-out C k (oneSameAt C) γ h c ar a c∈ shape)
 
-  unSuccClosed-out : (C : Fin n) (k : ℕ) (γ : S ^ n)
+  unSuccClosed-out : (C : Fin n) (k : ℕ) (γ : Vec S n)
     → ⟨ γ ⊨ unShapeAt C k (oneSuccAt C) ⟩
 ```
 
@@ -522,7 +522,7 @@ The adequacy lemmas of the two readers then turn those satisfactions into equati
 ```agda
       (unShape-out C k (oneSuccAt C) γ h c ar a c∈ shape)
     where
-    δ : S ^ (3 + n)
+    δ : Vec S (3 + n)
     δ = a ∷ ar ∷ c ∷ γ
     target = pr (sucV (ar .fst)) (a .fst) ∈ (lookup C γ) .fst
 ```
@@ -536,7 +536,7 @@ The fourth reading covers the bounded quantifiers. Its hypotheses copy the binar
 <!--/-->
 
 ```agda
-  binSuccClosed-out : (C : Fin n) (k : ℕ) (γ : S ^ n)
+  binSuccClosed-out : (C : Fin n) (k : ℕ) (γ : Vec S n)
     → ⟨ γ ⊨ binShapeAt C k (succSndAt C) ⟩
     → (c ar a b : S)
     → ⟨ c .fst ∈ (lookup C γ) .fst ⟩
@@ -572,7 +572,7 @@ The proof body is the binary counterpart of the previous one: the two certificat
           (subst ⟨_⟩ (appAt-adequate (suc (sh4 C)) zero (suc b4) (z ∷ δ)) ap) })
       (binShape-out C k (succSndAt C) γ h c ar a b c∈ shape)
     where
-    δ : S ^ (4 + n)
+    δ : Vec S (4 + n)
 ```
 
 <!--en-->
@@ -661,7 +661,7 @@ The introduction direction answers the converse need: given meta-level closure d
 <!--/-->
 
 ```agda
-  binShape-in : (C : Fin n) (k : ℕ) (rel : Formula S (4 + n)) (γ : S ^ n)
+  binShape-in : (C : Fin n) (k : ℕ) (rel : Formula S (4 + n)) (γ : Vec S n)
     → ((c ar a b : S)
        → ⟨ c .fst ∈ (lookup C γ) .fst ⟩
        → c .fst ≡ pr (ar .fst) (pr (# k) (pr (a .fst) (b .fst)))
@@ -682,7 +682,7 @@ This is the semantic content of the quantifiers read backward: satisfaction of a
     g c ar a b c∈
       (subst ⟨_⟩ (arityTagPairAtL-adequate c4 n4 k a4 b4 (b ∷ a ∷ ar ∷ c ∷ γ)) sh)
 
-  unShape-in : (C : Fin n) (k : ℕ) (rel : Formula S (3 + n)) (γ : S ^ n)
+  unShape-in : (C : Fin n) (k : ℕ) (rel : Formula S (3 + n)) (γ : Vec S n)
 ```
 
 <!--en-->
@@ -714,7 +714,7 @@ The same-arity introductions are now built by composing the generic frame introd
     g c ar a c∈
       (subst ⟨_⟩ (arityTagAtL-adequate c3 n3 k a3 (a ∷ ar ∷ c ∷ γ)) sh)
 
-  binSameClosed-in : (C : Fin n) (k : ℕ) (γ : S ^ n)
+  binSameClosed-in : (C : Fin n) (k : ℕ) (γ : Vec S n)
     → ((c ar a b : S)
 ```
 
@@ -761,7 +761,7 @@ The two components are handled by the same reading, one conjunct at a time. The 
 ```agda
           (g c ar a b c∈ sh .snd))
 
-  unSameClosed-in : (C : Fin n) (k : ℕ) (γ : S ^ n)
+  unSameClosed-in : (C : Fin n) (k : ℕ) (γ : Vec S n)
     → ((c ar a : S)
        → ⟨ c .fst ∈ (lookup C γ) .fst ⟩
        → c .fst ≡ pr (ar .fst) (pr (# k) (a .fst))
@@ -794,7 +794,7 @@ The last two introductions raise the arity, starting with `unSuccClosed-in`. Its
 ```agda
         (g c ar a c∈ sh))
 
-  unSuccClosed-in : (C : Fin n) (k : ℕ) (γ : S ^ n)
+  unSuccClosed-in : (C : Fin n) (k : ℕ) (γ : Vec S n)
     → ((c ar a : S)
        → ⟨ c .fst ∈ (lookup C γ) .fst ⟩
        → c .fst ≡ pr (ar .fst) (pr (# k) (a .fst))
@@ -841,7 +841,7 @@ The final introduction `binSuccClosed-in` covers the bounded quantifiers. Its hy
 <!--/-->
 
 ```agda
-  binSuccClosed-in : (C : Fin n) (k : ℕ) (γ : S ^ n)
+  binSuccClosed-in : (C : Fin n) (k : ℕ) (γ : Vec S n)
     → ((c ar a b : S)
        → ⟨ c .fst ∈ (lookup C γ) .fst ⟩
        → c .fst ≡ pr (ar .fst) (pr (# k) (pr (a .fst) (b .fst)))

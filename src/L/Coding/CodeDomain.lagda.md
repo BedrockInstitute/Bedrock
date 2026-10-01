@@ -147,8 +147,7 @@ Thus the formulas constructed below can be read in finite environments of constr
 <!--/-->
 
 ```agda
-module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _^_; _⊨ᵐ_ )
-open AbsL using ( _^_ )
+module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _⊨ᵐ_ )
 ```
 
 <!--en-->
@@ -292,7 +291,7 @@ The tag agreement says that the ten slots carry exactly the numerals zero throug
 <!--/-->
 
 ```agda
-Tags : ∀ {m} (γ : S ^ m) (N : Fin 10 → Fin m) → Type (ℓ-suc ℓ)
+Tags : ∀ {m} (γ : Vec S m) (N : Fin 10 → Fin m) → Type (ℓ-suc ℓ)
 Tags γ N = (k : Fin 10) → (lookup (N k) γ) .fst ≡ # (toℕ k)
 ```
 

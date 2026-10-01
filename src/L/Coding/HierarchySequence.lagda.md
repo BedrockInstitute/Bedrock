@@ -154,15 +154,15 @@ StepBody b f = (var (suc (suc zero)) ∈̇ var (sh4 b))
 StepAt : ∀ {n} → Fin n → Fin n → Fin n → Formula S n
 StepAt v b f = extAt v (∃̇ (∃̇ (∃̇ (StepBody b f))))
 
-Records : ∀ {n} → Fin n → Fin n → S ^ n → S → S → Type (ℓ-suc ℓ)
+Records : ∀ {n} → Fin n → Fin n → Vec S n → S → S → Type (ℓ-suc ℓ)
 Records b f γ c w = ⟨ c .fst ∈ (lookup b γ) .fst ⟩
                   × ⟨ pr (c .fst) (w .fst) ∈ (lookup f γ) .fst ⟩
 
-StepOf : ∀ {n} → Fin n → Fin n → S ^ n → S → Type (ℓ-suc ℓ)
+StepOf : ∀ {n} → Fin n → Fin n → Vec S n → S → Type (ℓ-suc ℓ)
 StepOf b f γ z = Σ[ c ∶ S ] Σ[ w ∶ S ]
                    (Records b f γ c w × ⟨ z .fst ∈ 𝒟ₒ (w .fst) ⟩)
 
-PowOK : ∀ {n} → Fin n → Fin n → S ^ n → Type (ℓ-suc ℓ)
+PowOK : ∀ {n} → Fin n → Fin n → Vec S n → Type (ℓ-suc ℓ)
 PowOK b f γ = (c w : S) → Records b f γ c w → ⟨ isL (𝒟ₒ (w .fst)) ⟩
 ```
 
@@ -209,7 +209,7 @@ body are shared between all three, so each projection is one line.
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module _ {n : ℕ} (v b f : Fin n) (γ : S ^ n) where
+module _ {n : ℕ} (v b f : Fin n) (γ : Vec S n) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -375,7 +375,7 @@ module RecShape (Step : ∀ {n} → Fin n → Fin n → Fin n → Formula S n) w
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-  module _ {n : ℕ} (f a : Fin n) (γ : S ^ n) where
+  module _ {n : ℕ} (f a : Fin n) (γ : Vec S n) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -408,7 +408,7 @@ module RecShape (Step : ∀ {n} → Fin n → Fin n → Fin n → Formula S n) w
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-  module _ {n : ℕ} (w b : Fin n) (γ : S ^ n) where
+  module _ {n : ℕ} (w b : Fin n) (γ : Vec S n) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -435,7 +435,7 @@ module RecShape (Step : ∀ {n} → Fin n → Fin n → Fin n → Formula S n) w
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-  module _ {n : ℕ} (e c : Fin n) (γ : S ^ n)
+  module _ {n : ℕ} (e c : Fin n) (γ : Vec S n)
            (φ : Formula S n) (qφ : φ ≡ PairGraphAt e c) where
 ```
 </summary>

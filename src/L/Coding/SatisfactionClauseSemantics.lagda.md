@@ -169,8 +169,8 @@ The internal assignments range over the constructible carrier `S`, but their equ
 
 ```agda
 open hPropView 𝒮ʟ using ( S )
-module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _^_; _⊨ᵐ_ )
-open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
+module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _⊨ᵐ_ )
+open AbsL using () renaming ( _⊨ᵐ_ to _⊨_ )
 ```
 
 <!--en-->
@@ -206,7 +206,7 @@ The extensional set builder is read definitionally: satisfaction of the builder 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module _ {j : ℕ} (y F : Fin j) (φ : Formula S (1 + j)) (δ : S ^ j) where
+module _ {j : ℕ} (y F : Fin j) (φ : Formula S (1 + j)) (δ : Vec S j) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -270,7 +270,7 @@ To use a subformula value, fix a table slot `T`, an arity slot `ar`, a payload s
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module _ {j : ℕ} (T ar a : Fin j) (body : Formula S (4 + j)) (δ : S ^ j) where
+module _ {j : ℕ} (T ar a : Fin j) (body : Formula S (4 + j)) (δ : Vec S j) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -355,7 +355,7 @@ The second subclause reader is stated for the raised-arity shape: its body is ex
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module _ {j : ℕ} (T ar a : Fin j) (body : Formula S (6 + j)) (δ : S ^ j) where
+module _ {j : ℕ} (T ar a : Fin j) (body : Formula S (6 + j)) (δ : Vec S j) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -422,9 +422,9 @@ The local name `e'S` is a constructible representative of the particular table e
 ```agda
     where
     e'S = down TS (pr (c₁ .fst) (ya .fst)) m
-    δ4 : S ^ (4 + j)
+    δ4 : Vec S (4 + j)
     δ4 = ya ∷ c₁ ∷ container e'S c₁ ya refl .fst ∷ e'S ∷ δ
-    δ6 : S ^ (6 + j)
+    δ6 : Vec S (6 + j)
 ```
 
 <!--en-->
@@ -498,7 +498,7 @@ The local reader is parameterized by five host-level slots: the term code, the e
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module _ {j : ℕ} (t z v N0 N1 : Fin j) (δ : S ^ j)
+module _ {j : ℕ} (t z v N0 N1 : Fin j) (δ : Vec S j)
   (q0 : (lookup N0 δ) .fst ≡ # 0) (q1 : (lookup N1 δ) .fst ≡ # 1) where
 ```
 </summary>
@@ -660,7 +660,7 @@ The equation `e'` rewrites the canonical tag equation into the actual tag-one sl
 ```agda
       e' : Tv ≡ pr N1v (iS .fst)
       e' = e ∙ cong (λ a → pr a i) (sym q1)
-      δ3 : S ^ (3 + j)
+      δ3 : Vec S (3 + j)
       δ3 = qS ∷ iS ∷ container (lookup t δ) (lookup N1 δ) iS e' .fst ∷ δ
       hq : ⟨ (iS ∷ container (lookup t δ) (lookup N1 δ) iS e' .fst ∷ δ) ⊨ inner ⟩
 ```
@@ -703,7 +703,7 @@ Finally, `tmIs-in` eliminates the propositional truncation in `TmIsV` into the p
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module Frame {m : ℕ} (T w C E : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) (tg : Tags γ N) where
+module Frame {m : ℕ} (T w C E : Fin m) (N : Fin 10 → Fin m) (γ : Vec S m) (tg : Tags γ N) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -790,11 +790,11 @@ The frame begins with an actual tower member `qS` whose underlying pair is `(ar,
 <!--/-->
 
 ```agda
-    δ4 : S ^ (4 + m)
+    δ4 : Vec S (4 + m)
     δ4 = F ∷ ar ∷ container qS ar F refl .fst ∷ qS ∷ γ
-    δ7 : S ^ (7 + m)
+    δ7 : Vec S (7 + m)
     δ7 = p ∷ container c ar p ec .fst ∷ c ∷ δ4
-    δ9 : S ^ (9 + m)
+    δ9 : Vec S (9 + m)
 ```
 
 <!--en-->
@@ -807,7 +807,7 @@ The twelve-slot environment completes the nesting. At the front is the candidate
 
 ```agda
     δ9 = r ∷ container p (lookup (N k) γ) r ep .fst ∷ δ7
-    δ12 : S ^ (12 + m)
+    δ12 : Vec S (12 + m)
     δ12 = yc ∷ container eS c yc refl .fst ∷ eS ∷ δ9
 ```
 </div>
@@ -1001,7 +1001,7 @@ The constructor readers work over a frame `δ` with twelve slots added in front 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module RelRead {m : ℕ} (T w : Fin m) (N : Fin 10 → Fin m) (δ : S ^ (12 + m)) where
+module RelRead {m : ℕ} (T w : Fin m) (N : Fin 10 → Fin m) (δ : Vec S (12 + m)) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -1038,7 +1038,7 @@ For any further local environment `env`, `Ext env φ` states the exact extension
 <!--/-->
 
 ```agda
-  Ext : ∀ {k} (env : S ^ k) (φ : Formula S (1 + k)) → Type (ℓ-suc ℓ)
+  Ext : ∀ {k} (env : Vec S k) (φ : Formula S (1 + k)) → Type (ℓ-suc ℓ)
   Ext env φ = ExtFact (yc .fst) (F .fst) (λ z → ⟨ (z ∷ env) ⊨ φ ⟩)
 ```
 
@@ -1087,7 +1087,7 @@ The first step is to open the payload equation `r=(a,b)` inside the twelve-slot 
           c₁ ya m₁ e₁)
         c₂ yb m₂ e₂ ∣₁
     where
-    δ15 : S ^ (15 + m)
+    δ15 : Vec S (15 + m)
 ```
 
 <!--en-->
@@ -1102,7 +1102,7 @@ The membership proof for `(c₁,ya)` does not itself supply an element of the st
     δ15 = b ∷ a ∷ container r a b er .fst ∷ δ
     e₁S : S
     e₁S = down (lookup (sh 15 T) δ15) (pr (c₁ .fst) (ya .fst)) m₁
-    δ19 : S ^ (19 + m)
+    δ19 : Vec S (19 + m)
     δ19 = ya ∷ c₁ ∷ container e₁S c₁ ya refl .fst ∷ e₁S ∷ δ15
 ```
 
@@ -1267,7 +1267,7 @@ Opening the payload extends the original frame by three slots: the child formula
 ```agda
         c₁ ya ar' mem e es ∣₁
     where
-    δ15 : S ^ (15 + m)
+    δ15 : Vec S (15 + m)
     δ15 = a ∷ t ∷ container r t a er .fst ∷ δ
     e'S : S
 ```
@@ -1420,7 +1420,7 @@ The meta-level meaning of a formula `ψ` at a meta-level environment `δ` is the
 <!--/-->
 
 ```agda
-    Meaning : ∀ {n} → Formula Ab n → DB.SM ^ n → hProp (ℓ-suc ℓ)
+    Meaning : ∀ {n} → Formula Ab n → Vec DB.SM n → hProp (ℓ-suc ℓ)
     Meaning ψ δ = δ ⊨ᴮ mapFo DB.ι ψ
 ```
 
@@ -1529,7 +1529,7 @@ For falsity, the target property has no inhabitants for any `z`. If `z` belonged
 <!--/-->
 
 ```agda
-  botBridge : (n : ℕ) {k : ℕ} (env : S ^ k)
+  botBridge : (n : ℕ) {k : ℕ} (env : Vec S k)
             → ExtFact ((SatW (⊥̇ {n = n})) .fst) ((envSet W n) .fst) (λ z → ⟨ (z ∷ env) ⊨ ⊥̇ ⟩)
   botBridge n env = (λ z hz → Sat-out ⊥̇ z hz .fst , Sat-out ⊥̇ z hz .snd) , (λ z hz b → ⊥*-rec b)
 ```
@@ -1543,7 +1543,7 @@ Assume slots `ya` and `yb` of `env` contain the underlying satisfaction sets of 
 <!--/-->
 
 ```agda
-  andBridge : ∀ {n} (a b : Formula Ab n) {k : ℕ} (env : S ^ k) (ya yb : Fin k)
+  andBridge : ∀ {n} (a b : Formula Ab n) {k : ℕ} (env : Vec S k) (ya yb : Fin k)
             → (lookup ya env) .fst ≡ (SatW a) .fst → (lookup yb env) .fst ≡ (SatW b) .fst
             → ExtFact ((SatW (a ∧̇ b)) .fst) ((envSet W n) .fst)
                 (λ z → ⟨ (z ∷ env) ⊨ (var i0 ∈̇ var (suc ya)) ∧̇ (var i0 ∈̇ var (suc yb)) ⟩)
@@ -1572,7 +1572,7 @@ The disjunction bridge gives an exact extension description. An environment belo
 <!--/-->
 
 ```agda
-  orBridge : ∀ {n} (a b : Formula Ab n) {k : ℕ} (env : S ^ k) (ya yb : Fin k)
+  orBridge : ∀ {n} (a b : Formula Ab n) {k : ℕ} (env : Vec S k) (ya yb : Fin k)
            → (lookup ya env) .fst ≡ (SatW a) .fst → (lookup yb env) .fst ≡ (SatW b) .fst
            → ExtFact ((SatW (a ∨̇ b)) .fst) ((envSet W n) .fst)
                (λ z → ⟨ (z ∷ env) ⊨ (var i0 ∈̇ var (suc ya)) ∨̇ (var i0 ∈̇ var (suc yb)) ⟩)
@@ -1601,7 +1601,7 @@ The implication bridge likewise characterizes `SatW (a ⇒̇ b)` inside the envi
 <!--/-->
 
 ```agda
-  impBridge : ∀ {n} (a b : Formula Ab n) {k : ℕ} (env : S ^ k) (ya yb : Fin k)
+  impBridge : ∀ {n} (a b : Formula Ab n) {k : ℕ} (env : Vec S k) (ya yb : Fin k)
             → (lookup ya env) .fst ≡ (SatW a) .fst → (lookup yb env) .fst ≡ (SatW b) .fst
             → ExtFact ((SatW (a ⇒̇ b)) .fst) ((envSet W n) .fst)
                 (λ z → ⟨ (z ∷ env) ⊨ (var i0 ∈̇ var (suc ya)) ⇒̇ (var i0 ∈̇ var (suc yb)) ⟩)
@@ -1646,8 +1646,8 @@ The lemma `direct-extension` isolates the argument shared by the quantifier and 
 ```agda
   private
     direct-extension : ∀ {n} (ψ : Formula Ab n) (P : S → hProp (ℓ-suc ℓ))
-      → ((δ : DB.SM ^ n) (z : S) → z .fst ≡ Semantic.graph W δ → ⟨ Meaning ψ δ ⟩ → ⟨ P z ⟩)
-      → ((δ : DB.SM ^ n) (z : S) → z .fst ≡ Semantic.graph W δ → ⟨ P z ⟩ → ⟨ Meaning ψ δ ⟩)
+      → ((δ : Vec DB.SM n) (z : S) → z .fst ≡ Semantic.graph W δ → ⟨ Meaning ψ δ ⟩ → ⟨ P z ⟩)
+      → ((δ : Vec DB.SM n) (z : S) → z .fst ≡ Semantic.graph W δ → ⟨ P z ⟩ → ⟨ Meaning ψ δ ⟩)
       → ExtFact ((SatW ψ) .fst) ((envSet W n) .fst) (λ z → ⟨ P z ⟩)
 ```
 
@@ -1692,8 +1692,8 @@ The lemma `child` aligns the encoded and semantic views of one bound variable. I
 <!--/-->
 
 ```agda
-    child : ∀ {n k} (a : Formula Ab (suc n)) (δ : DB.SM ^ n) (x : DB.SM)
-      (γ : S ^ k) (zi yai : Fin k) → (lookup zi γ) .fst ≡ Semantic.graph W δ
+    child : ∀ {n k} (a : Formula Ab (suc n)) (δ : Vec DB.SM n) (x : DB.SM)
+      (γ : Vec S k) (zi yai : Fin k) → (lookup zi γ) .fst ≡ Semantic.graph W δ
       → (lookup yai γ) .fst ≡ (SatW a) .fst
       → ((Semantic.intoL W x ∷ γ) ⊨ ∃̇∈ (var (suc yai)) (consAtL i0 i1 (sh 2 zi)))
         ≡ Meaning a (x ∷ δ)
@@ -1768,7 +1768,7 @@ The existential bridge is the first quantifier result: membership in the interna
 <!--/-->
 
 ```agda
-  exBridge : ∀ {n} (a : Formula Ab (suc n)) {k : ℕ} (γ : S ^ k) (wi yai : Fin k)
+  exBridge : ∀ {n} (a : Formula Ab (suc n)) {k : ℕ} (γ : Vec S k) (wi yai : Fin k)
            → (lookup wi γ) .fst ≡ Wv → (lookup yai γ) .fst ≡ (SatW a) .fst
            → ExtFact ((SatW (∃̇ a)) .fst) ((envSet W n) .fst) (λ z → ⟨ (z ∷ γ) ⊨ quEx wi yai ⟩)
   exBridge a γ wi yai qw qa = direct-extension (∃̇ a) (λ z → (z ∷ γ) ⊨ quEx wi yai)
@@ -1800,7 +1800,7 @@ The universal bridge states the same extensional fact for `∀̇ a`: the interna
 <!--/-->
 
 ```agda
-  allBridge : ∀ {n} (a : Formula Ab (suc n)) {k : ℕ} (γ : S ^ k) (wi yai : Fin k)
+  allBridge : ∀ {n} (a : Formula Ab (suc n)) {k : ℕ} (γ : Vec S k) (wi yai : Fin k)
             → (lookup wi γ) .fst ≡ Wv → (lookup yai γ) .fst ≡ (SatW a) .fst
             → ExtFact ((SatW (∀̇ a)) .fst) ((envSet W n) .fst) (λ z → ⟨ (z ∷ γ) ⊨ quAll wi yai ⟩)
   allBridge a γ wi yai qw qa = direct-extension (∀̇ a) (λ z → (z ∷ γ) ⊨ quAll wi yai)
@@ -1861,7 +1861,7 @@ The semantic value of a term is obtained by mapping each constant from the alpha
 
 ```agda
   private
-    value : ∀ {n} → Term Ab n → DB.SM ^ n → DB.SM
+    value : ∀ {n} → Term Ab n → Vec DB.SM n → DB.SM
     value t δ = ⟦ mapTm DB.ι t ⟧ᴮ δ
 ```
 
@@ -1874,7 +1874,7 @@ For a constant term, `term-out` eliminates the truncated `TmIsV` evidence into a
 <!--/-->
 
 ```agda
-    term-out : ∀ {n} (t : Term Ab n) (δ : DB.SM ^ n) (z v : S)
+    term-out : ∀ {n} (t : Term Ab n) (δ : Vec DB.SM n) (z v : S)
       → z .fst ≡ Semantic.graph W δ → TmIsV (ct t) (z .fst) (v .fst)
       → v .fst ≡ (value t δ) .fst
     term-out (con q) δ z v qz = rec₁ (setIsSet _ _)
@@ -1906,7 +1906,7 @@ The converse lemma reconstructs `TmIsV` from the actual semantic value. For a co
 <!--/-->
 
 ```agda
-    term-in : ∀ {n} (t : Term Ab n) (δ : DB.SM ^ n) (z v : S)
+    term-in : ∀ {n} (t : Term Ab n) (δ : Vec DB.SM n) (z v : S)
       → z .fst ≡ Semantic.graph W δ → v .fst ≡ (value t δ) .fst
       → TmIsV (ct t) (z .fst) (v .fst)
     term-in (con q) δ z v qz e = ∣ inl (cong (pr (# 0)) (sym e)) ∣₁
@@ -1937,7 +1937,7 @@ The bounded-quantifier module fixes the bounding term, the subformula, five slot
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-  module BqBridge {n : ℕ} (t : Term Ab n) (a : Formula Ab (suc n)) {k : ℕ} (Γ : S ^ k)
+  module BqBridge {n : ℕ} (t : Term Ab n) (a : Formula Ab (suc n)) {k : ℕ} (Γ : Vec S k)
     (wi ti yai N0i N1i : Fin k)
     (qw : (lookup wi Γ) .fst ≡ Wv) (qt : (lookup ti Γ) .fst ≡ ct t) (qa : (lookup yai Γ) .fst ≡ (SatW a) .fst)
     (q0 : (lookup N0i Γ) .fst ≡ # 0) (q1 : (lookup N1i Γ) .fst ≡ # 1) where
@@ -1996,7 +1996,7 @@ For a semantic environment `δ`, `bound δ` is the value of the bounding term em
 <!--/-->
 
 ```agda
-      bound : DB.SM ^ n → S
+      bound : Vec DB.SM n → S
       bound δ = Semantic.intoL W (value t δ)
 ```
 
@@ -2009,7 +2009,7 @@ The bound belongs to the carrier: the value's second component is its membership
 <!--/-->
 
 ```agda
-      bound∈W : (δ : DB.SM ^ n) → ⟨ (bound δ) .fst ∈ (lookup wi Γ) .fst ⟩
+      bound∈W : (δ : Vec DB.SM n) → ⟨ (bound δ) .fst ∈ (lookup wi Γ) .fst ⟩
       bound∈W δ = subst (λ X → ⟨ (value t δ) .fst ∈ X ⟩)
         (sym qw) ((value t δ) .snd)
 ```
@@ -2023,7 +2023,7 @@ When `z` is the graph of `δ`, the underlying set of `bound δ` is definitionall
 <!--/-->
 
 ```agda
-      bound-term : (δ : DB.SM ^ n) (z : S) → z .fst ≡ Semantic.graph W δ
+      bound-term : (δ : Vec DB.SM n) (z : S) → z .fst ≡ Semantic.graph W δ
                  → TmIsV (ct t) (z .fst) ((bound δ) .fst)
       bound-term δ z qz = term-in t δ z (bound δ) qz refl
 ```
@@ -2037,7 +2037,7 @@ The representation-level certificate from `bound-term` is then converted by `tmI
 <!--/-->
 
 ```agda
-      bound-read : (δ : DB.SM ^ n) (z : S) → z .fst ≡ Semantic.graph W δ
+      bound-read : (δ : Vec DB.SM n) (z : S) → z .fst ≡ Semantic.graph W δ
                  → ⟨ (bound δ ∷ z ∷ Γ)
                      ⊨ tmIs (suc (suc ti)) i1 i0
                          (suc (suc N0i)) (suc (suc N1i)) ⟩
@@ -2162,7 +2162,7 @@ The atomic body binds two values, not three: a carrier element `v` proposed as t
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-  module AtomBridge {n : ℕ} (t u : Term Ab n) {k : ℕ} (Γ : S ^ k)
+  module AtomBridge {n : ℕ} (t u : Term Ab n) {k : ℕ} (Γ : Vec S k)
     (wi ti ui N0i N1i : Fin k)
     (qw : (lookup wi Γ) .fst ≡ Wv) (qt : (lookup ti Γ) .fst ≡ ct t) (qu : (lookup ui Γ) .fst ≡ ct u)
     (q0 : (lookup N0i Γ) .fst ≡ # 0) (q1 : (lookup N1i Γ) .fst ≡ # 1)
@@ -2171,8 +2171,8 @@ The atomic body binds two values, not three: a carrier element `v` proposed as t
     (rel : Formula S (3 + k))
     (agree : (z v x : S) → (⟨ (x ∷ v ∷ z ∷ Γ) ⊨ rel ⟩ → R (v .fst) (x .fst))
                            × (R (v .fst) (x .fst) → ⟨ (x ∷ v ∷ z ∷ Γ) ⊨ rel ⟩))
-    (cnd-out : (δ : DB.SM ^ n) → ⟨ Meaning (op t u) δ ⟩ → R ((value t δ) .fst) ((value u δ) .fst))
-    (cnd-in : (δ : DB.SM ^ n) → R ((value t δ) .fst) ((value u δ) .fst) → ⟨ Meaning (op t u) δ ⟩) where
+    (cnd-out : (δ : Vec DB.SM n) → ⟨ Meaning (op t u) δ ⟩ → R ((value t δ) .fst) ((value u δ) .fst))
+    (cnd-in : (δ : Vec DB.SM n) → R ((value t δ) .fst) ((value u δ) .fst) → ⟨ Meaning (op t u) δ ⟩) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -2203,7 +2203,7 @@ The context `δ3 z v x = x ∷ v ∷ z ∷ Γ` places the proposed value of `u` 
 
 ```agda
     private
-      δ3 : (z v x : S) → S ^ (3 + k)
+      δ3 : (z v x : S) → Vec S (3 + k)
       δ3 z v x = x ∷ v ∷ z ∷ Γ
 ```
 
@@ -2264,7 +2264,7 @@ The theorem `atomBridge` now asks `direct-extension` to compare the atomic seman
     atomBridge : ExtFact ((SatW (op t u)) .fst) ((envSet W n) .fst) (λ z → ⟨ (z ∷ Γ) ⊨ atomEx wi ti ui N0i N1i rel ⟩)
     atomBridge = direct-extension (op t u) (λ z → (z ∷ Γ) ⊨ atomEx wi ti ui N0i N1i rel) out inn
       where
-      out : (δ : DB.SM ^ n) (z : S) → z .fst ≡ Semantic.graph W δ → ⟨ Meaning (op t u) δ ⟩
+      out : (δ : Vec DB.SM n) (z : S) → z .fst ≡ Semantic.graph W δ → ⟨ Meaning (op t u) δ ⟩
           → ⟨ (z ∷ Γ) ⊨ atomEx wi ti ui N0i N1i rel ⟩
 ```
 
@@ -2308,7 +2308,7 @@ The reverse implication of `atomBridge` starts with a meta-level environment `δ
 <!--/-->
 
 ```agda
-      inn : (δ : DB.SM ^ n) (z : S) → z .fst ≡ Semantic.graph W δ
+      inn : (δ : Vec DB.SM n) (z : S) → z .fst ≡ Semantic.graph W δ
           → ⟨ (z ∷ Γ) ⊨ atomEx wi ti ui N0i N1i rel ⟩ → ⟨ Meaning (op t u) δ ⟩
       inn δ z qz = rec₁ ((Meaning (op t u) δ) .snd) (λ { (v , hv , h) →
         rec₁ ((Meaning (op t u) δ) .snd) (λ { (x , hx , ht , hu , hr) →

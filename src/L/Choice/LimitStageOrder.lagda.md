@@ -405,7 +405,7 @@ testing minimality against that level.
 <!--/-->
 
 ```agda
-towerGraph : ∀ {n} (j : ℕ) (δ : S ^ n) (i : Fin n) → (lookup i δ) .fst ≡ # j
+towerGraph : ∀ {n} (j : ℕ) (δ : Vec S n) (i : Fin n) → (lookup i δ) .fst ≡ # j
            → ⟨ (towerS j ∷ δ) ⊨ LsetGraphAt zero (suc i) ⟩
 towerGraph j δ i q = Lset-defines zero (suc i) (towerS j ∷ δ)
   (subst IsOrd (sym q) (numeral-ord j))
@@ -532,7 +532,7 @@ the value of `x` belongs to the underlying set of `c`. The private type
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-  module _ {n : ℕ} (b x : Fin n) (γ : S ^ n) where
+  module _ {n : ℕ} (b x : Fin n) (γ : Vec S n) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -989,7 +989,7 @@ is a well-order.
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module Precedes {n : ℕ} (r A x y : Fin n) (γ : S ^ n)
+module Precedes {n : ℕ} (r A x y : Fin n) (γ : Vec S n)
                 (R : V ℓ → V ℓ → hProp (ℓ-suc ℓ))
                 (Rrep : (u v : S) → ⟨ pr (u .fst) (v .fst) ∈ (lookup r γ) .fst ⟩
                       → ⟨ R (u .fst) (v .fst) ⟩)
@@ -1458,13 +1458,13 @@ used only when the value at `b` denotes `# m` and the first endpoint lies in
 ```agda
 module Described
   (BeforeAt : ∀ {n} → Fin n → Fin n → Fin n → Formula S n)
-  (BeforeAt-in : ∀ {n} (b x y : Fin n) (γ : S ^ n) (m : ℕ)
+  (BeforeAt-in : ∀ {n} (b x y : Fin n) (γ : Vec S n) (m : ℕ)
                → (lookup b γ) .fst ≡ # m
                → ⟨ (lookup x γ) .fst ∈ finiteStage m ⟩
                → ⟨ (lookup y γ) .fst ∈ finiteStage m ⟩
                → ⟨ before m ((lookup x γ) .fst) ((lookup y γ) .fst) ⟩
                → ⟨ γ ⊨ BeforeAt b x y ⟩)
-  (BeforeAt-out : ∀ {n} (b x y : Fin n) (γ : S ^ n) (m : ℕ)
+  (BeforeAt-out : ∀ {n} (b x y : Fin n) (γ : Vec S n) (m : ℕ)
                 → (lookup b γ) .fst ≡ # m
                 → ⟨ (lookup x γ) .fst ∈ finiteStage m ⟩
                 → ⟨ (lookup y γ) .fst ∈ finiteStage m ⟩
@@ -1535,7 +1535,7 @@ membership.
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-  module Order {n : ℕ} (x y : Fin n) (γ : S ^ n)
+  module Order {n : ℕ} (x y : Fin n) (γ : Vec S n)
                (u v : Limit) (ku kv : ℕ)
                (qu : level u ≡ ku) (qv : level v ≡ kv)
                (qx : (lookup x γ) .fst ≡ u .fst)

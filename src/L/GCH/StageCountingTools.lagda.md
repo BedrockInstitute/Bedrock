@@ -273,8 +273,8 @@ Satisfaction notation connects the formula-level description of a graph with the
 <!--/-->
 
 ```agda
-module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _^_; _⊨ᵐ_ )
-open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
+module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _⊨ᵐ_ )
+open AbsL using () renaming ( _⊨ᵐ_ to _⊨_ )
 ```
 
 <!--en-->
@@ -1367,7 +1367,7 @@ The inward reading exhibits the constant as the witness and the body satisfactio
 <!--/-->
 
 ```agda
-pin-in : ∀ {n} (c : S) (φ : Formula S (suc n)) (γ : S ^ n)
+pin-in : ∀ {n} (c : S) (φ : Formula S (suc n)) (γ : Vec S n)
        → ⟨ (c ∷ γ) ⊨ φ ⟩ → ⟨ γ ⊨ pinAt c φ ⟩
 pin-in c φ γ h = ∣ c , (refl , h) ∣₁
 ```
@@ -1381,7 +1381,7 @@ For the outward direction, the existential supplies a carrier element `z`, an eq
 <!--/-->
 
 ```agda
-pin-out : ∀ {n} (c : S) (φ : Formula S (suc n)) (γ : S ^ n)
+pin-out : ∀ {n} (c : S) (φ : Formula S (suc n)) (γ : Vec S n)
         → ⟨ γ ⊨ pinAt c φ ⟩ → ⟨ (c ∷ γ) ⊨ φ ⟩
 pin-out c φ γ = rec₁ (((c ∷ γ) ⊨ φ) .snd)
   (λ { (z , (ez , h)) → subst (λ v → ⟨ (v ∷ γ) ⊨ φ ⟩) (Σ≡Prop (λ v → (isL v) .snd) ez) h })
@@ -1464,7 +1464,7 @@ To prove the reading laws for `injFo`, fix the target `b`, the two relevant slot
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module InjFo {n : ℕ} (b : S) (f B : Fin n) (γ : S ^ n) where
+module InjFo {n : ℕ} (b : S) (f B : Fin n) (γ : Vec S n) where
 ```
 </summary>
 <div class="submodule-fold-content">

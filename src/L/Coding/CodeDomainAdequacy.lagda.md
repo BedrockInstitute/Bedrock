@@ -192,8 +192,8 @@ All code descriptions are interpreted in the first-order structure carried by `L
 <!--/-->
 
 ```agda
-module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _^_; _⊨ᵐ_ )
-open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
+module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _⊨ᵐ_ )
+open AbsL using () renaming ( _⊨ᵐ_ to _⊨_ )
 ```
 
 <!--en-->
@@ -325,7 +325,7 @@ Fix an environment containing a proposed term code `t`, an arity set `ar`, a wor
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module _ {k : ℕ} (t ar w N0 N1 : Fin k) (δ : S ^ k)
+module _ {k : ℕ} (t ar w N0 N1 : Fin k) (δ : Vec S k)
   (q0 : (lookup N0 δ) .fst ≡ # 0) (q1 : (lookup N1 δ) .fst ≡ # 1) where
 ```
 </summary>
@@ -409,7 +409,7 @@ The predicate `keyUp C ar r` expresses one precise membership statement: the pai
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module _ {k : ℕ} (C ar r : Fin k) (δ : S ^ k) where
+module _ {k : ℕ} (C ar r : Fin k) (δ : Vec S k) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -495,7 +495,7 @@ Fix a candidate domain `C`, an arity value `A`, a tag value `N`, and a payload `
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module _ {k : ℕ} (C ar N a : Fin k) (δ : S ^ k) where
+module _ {k : ℕ} (C ar N a : Fin k) (δ : Vec S k) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -546,7 +546,7 @@ For a binary constructor, fix two payload components `a` and `b`. Their ordered 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module _ {k : ℕ} (C ar N a b : Fin k) (δ : S ^ k) where
+module _ {k : ℕ} (C ar N a b : Fin k) (δ : Vec S k) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -609,7 +609,7 @@ An atomic key has two term codes as its payload. Each term code carries its own 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module _ {k : ℕ} (C ar N Nx x Ny y : Fin k) (δ : S ^ k) where
+module _ {k : ℕ} (C ar N Nx x Ny y : Fin k) (δ : Vec S k) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -673,7 +673,7 @@ A bounded-quantifier key carries two different components in its payload: a term
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module _ {k : ℕ} (C ar N Nx x a : Fin k) (δ : S ^ k) where
+module _ {k : ℕ} (C ar N Nx x a : Fin k) (δ : Vec S k) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -737,7 +737,7 @@ Now fix a candidate code domain `C`, a working set `W`, and ten environment entr
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module PayRead {m : ℕ} (C w : Fin m) (N : Fin 10 → Fin m) (δ : S ^ (9 + m))
+module PayRead {m : ℕ} (C w : Fin m) (N : Fin 10 → Fin m) (δ : Vec S (9 + m))
   (tg : Tags δ (shN 9 N)) where
 ```
 </summary>
@@ -862,7 +862,7 @@ The second legality claim is inserted in the same way. The auxiliary environment
 ```agda
         , isTm-in i0 i8 (sh 12 w) (sh 12 (N f0)) (sh 12 (N f1)) (δ12 t u e) q0 q1 hu ) })
     where
-    δ12 : (t u : V ℓ) (e : R ≡ pr t u) → S ^ (12 + m)
+    δ12 : (t u : V ℓ) (e : R ≡ pr t u) → Vec S (12 + m)
     δ12 t u e = sndS rS t u e ∷ fstS rS t u e ∷ container rS (fstS rS t u e) (sndS rS t u e) e .fst ∷ δ
 ```
 
@@ -921,7 +921,7 @@ The binary helper records the same shifted-context shape, now built from the two
 ```agda
         , subst ⟨_⟩ (sym (appAt-adequate (sh 12 C) i8 i0 (δ12 a b e))) hb ) })
     where
-    δ12 : (a b : V ℓ) (e : R ≡ pr a b) → S ^ (12 + m)
+    δ12 : (a b : V ℓ) (e : R ≡ pr a b) → Vec S (12 + m)
     δ12 a b e = sndS rS a b e ∷ fstS rS a b e ∷ container rS (fstS rS a b e) (sndS rS a b e) e .fst ∷ δ
 ```
 
@@ -1032,7 +1032,7 @@ The body key enters through the successor-key lemma, and the helper records the 
 ```agda
         , keyUp-in (sh 12 C) i8 i0 (δ12 t a e) ha ) })
     where
-    δ12 : (t a : V ℓ) (e : R ≡ pr t a) → S ^ (12 + m)
+    δ12 : (t a : V ℓ) (e : R ≡ pr t a) → Vec S (12 + m)
     δ12 t a e = sndS rS t a e ∷ fstS rS t a e ∷ container rS (fstS rS t a e) (sndS rS t a e) e .fst ∷ δ
 ```
 
@@ -1139,7 +1139,7 @@ The ten-way reader interprets a tagged payload in a seven-entry extension of the
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module TenRead {m : ℕ} (C w : Fin m) (N : Fin 10 → Fin m) (δ : S ^ (7 + m))
+module TenRead {m : ℕ} (C w : Fin m) (N : Fin 10 → Fin m) (δ : Vec S (7 + m))
   (tg : Tags δ (shN 7 N)) where
 ```
 </summary>
@@ -1267,7 +1267,7 @@ The shape reader fixes three ambient sets: the candidate code set `C`, the const
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module ShapeRead {m : ℕ} (C w E : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) (tg : Tags γ N) where
+module ShapeRead {m : ℕ} (C w E : Fin m) (N : Fin 10 → Fin m) (γ : Vec S m) (tg : Tags γ N) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -1425,7 +1425,7 @@ The closure clauses are interpreted after a tower member has been decomposed as 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module CloseRead {m : ℕ} (C w : Fin m) (N : Fin 10 → Fin m) (δ : S ^ (4 + m)) (tg : Tags δ (shN 4 N)) where
+module CloseRead {m : ℕ} (C w : Fin m) (N : Fin 10 → Fin m) (δ : Vec S (4 + m)) (tg : Tags δ (shN 4 N)) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -1554,9 +1554,9 @@ After `c₁` has been chosen and written as `pr A a`, the inner formula quantifi
 ```agda
     inner : Formula S (7 + m)
     inner = ∀̇∈ (var (sh 7 C)) (sndAll i0 i5 (binKey (sh 10 C) i7 (sh 10 (N k)) i3 i0))
-    δ7 : S ^ (7 + m)
+    δ7 : Vec S (7 + m)
     δ7 = a ∷ container c₁ arS a e₁ .fst ∷ c₁ ∷ δ
-    δ8 : S ^ (8 + m)
+    δ8 : Vec S (8 + m)
 ```
 
 <!--en-->
@@ -1569,7 +1569,7 @@ For the quantifier clauses, the environment must remember both a subkey and the 
 
 ```agda
     δ8 = c₂ ∷ δ7
-    δ10 : S ^ (10 + m)
+    δ10 : Vec S (10 + m)
     δ10 = b ∷ container c₂ arS b e₂ .fst ∷ δ8
 ```
 
@@ -1664,7 +1664,7 @@ The proof extends the environment by `a`, `ar'`, and the container, opens the im
         (useBoth i0 (c₁ ∷ δ) ar' a e₁ (sucAtL i5 i1 ⇒̇ unKey (sh 8 C) i5 (sh 8 (N k)) i0) (h c₁ c₁∈)
           (suc-in i5 i1 δ8 es)))
     where
-    δ8 : S ^ (8 + m)
+    δ8 : Vec S (8 + m)
 ```
 
 <!--en-->
@@ -1751,7 +1751,7 @@ The eight-slot environment repeats the packaging used by the unbounded case, wit
 
 ```agda
     where
-    δ8 : S ^ (8 + m)
+    δ8 : Vec S (8 + m)
     δ8 = a ∷ ar' ∷ container c₁ ar' a e₁ .fst ∷ c₁ ∷ δ
 ```
 
@@ -1917,7 +1917,7 @@ The first recovery lemma converts a term-code statement into a satisfaction of t
 <!--/-->
 
 ```agda
-tmWit : ∀ {j} (ti Ni Ai : Fin j) (env : S ^ j)
+tmWit : ∀ {j} (ti Ni Ai : Fin j) (env : Vec S j)
       → IsTmV ((lookup Ai env) .fst) ((lookup ti env) .fst) ((lookup Ni env) .fst)
       → ⟨ env ⊨ isTmAt ti Ni Ai ⟩
 tmWit ti Ni Ai env = rec₁ ((env ⊨ isTmAt ti Ni Ai) .snd)
@@ -1964,7 +1964,7 @@ We can now state soundness for a candidate domain `C`. Assume that the constant 
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module CodesSound {m : ℕ} (C w E : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) (W : S)
+module CodesSound {m : ℕ} (C w E : Fin m) (N : Fin 10 → Fin m) (γ : Vec S m) (W : S)
   (qw : (lookup w γ) .fst ≡ W .fst) (tg : Tags γ N)
   (arity : (n F : S) → ⟨ pr (n .fst) (F .fst) ∈ (lookup E γ) .fst ⟩ → ∥ Σ[ k ∶ ℕ ] (n .fst ≡ # k) ∥₁)
   (hs : ⟨ γ ⊨ shapeAt C w E N ⟩) where
@@ -2025,7 +2025,7 @@ For a chosen member `c`, the environment `δ' c` places the candidate domain and
 <!--/-->
 
 ```agda
-    δ' : S → S ^ (2 + m)
+    δ' : S → Vec S (2 + m)
     δ' c = CS ∷ c ∷ γ
 ```
 
@@ -2194,7 +2194,7 @@ The lemma `fill` now analyzes the recovered tag. For each of the ten possible ta
         key })
       (SR.shape-out hs c' c'∈)
       where
-      env4 : (c' arS b a : S) → S ^ (6 + m)
+      env4 : (c' arS b a : S) → Vec S (6 + m)
 ```
 
 <!--en-->
@@ -2515,7 +2515,7 @@ For completeness, assume a code-domain slot `C`, an alphabet slot `w`, and an ar
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module CodesComplete {m : ℕ} (C w E : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) (W : S)
+module CodesComplete {m : ℕ} (C w E : Fin m) (N : Fin 10 → Fin m) (γ : Vec S m) (W : S)
   (qw : (lookup w γ) .fst ≡ W .fst) (tg : Tags γ N)
   (arity∈ : (n : ℕ) → ⟨ pr (# n) ((envSet W n) .fst) ∈ (lookup E γ) .fst ⟩)
   (hc : ⟨ γ ⊨ closeAt C w E N ⟩) where
@@ -2588,7 +2588,7 @@ The four-slot context assembles the lowered tower entry, the numeral, their pair
 <!--/-->
 
 ```agda
-    δ4 : ℕ → S ^ (4 + m)
+    δ4 : ℕ → Vec S (4 + m)
     δ4 n = envSet W n ∷ nn n ∷ container (qS n) (nn n) (envSet W n) refl .fst ∷ qS n ∷ γ
 ```
 
@@ -2729,7 +2729,7 @@ It remains to show that the canonical domain really satisfies the description. T
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module CodesHolds {m : ℕ} (C w E : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) (W : S)
+module CodesHolds {m : ℕ} (C w E : Fin m) (N : Fin 10 → Fin m) (γ : Vec S m) (W : S)
   (qw : (lookup w γ) .fst ≡ W .fst) (qC : (lookup C γ) .fst ≡ (AllCodes W) .fst)
   (qE : (lookup E γ) .fst ≡ (Tower.tower W) .fst) (tg : Tags γ N) where
 ```
@@ -2973,7 +2973,7 @@ Fix one entry `q` of the environment tower and an equation identifying its recor
 
 ```agda
       private
-        δ4 : S ^ (4 + m)
+        δ4 : Vec S (4 + m)
         δ4 = F ∷ ar ∷ s ∷ q ∷ γ
         A = ar .fst
 ```

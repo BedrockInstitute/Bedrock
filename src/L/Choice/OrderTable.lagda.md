@@ -634,7 +634,7 @@ The recursive construction now assumes two formulas with one semantic meaning. `
 module Described
   (Cond : ∀ {n} → Fin n → Fin n → Formula S (suc n))
   (Cond₀ : S → S → Formula S 1)
-  (cond-spec : ∀ {n} (b f : Fin n) (γ : S ^ n) → IsOrd ((lookup b γ) .fst)
+  (cond-spec : ∀ {n} (b f : Fin n) (γ : Vec S n) → IsOrd ((lookup b γ) .fst)
              → Values (lookup f γ) ((lookup b γ) .fst)
              → Entries (lookup f γ) ((lookup b γ) .fst)
              → (z : S)
@@ -687,7 +687,7 @@ Fix slots for the candidate value, ordinal index, and lower table, together with
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-  module _ {n : ℕ} (v b f : Fin n) (γ : S ^ n)
+  module _ {n : ℕ} (v b f : Fin n) (γ : Vec S n)
            (ob : IsOrd ((lookup b γ) .fst))
            (vals : Values (lookup f γ) ((lookup b γ) .fst))
            (ents : Entries (lookup f γ) ((lookup b γ) .fst)) where
@@ -786,7 +786,7 @@ To prove that an approximation records only correct values, fix its table and do
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-  module _ {n : ℕ} (f a : Fin n) (γ : S ^ n) where
+  module _ {n : ℕ} (f a : Fin n) (γ : Vec S n) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -881,7 +881,7 @@ A graph assertion contains only a propositionally truncated witness for the supp
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-  module _ {n : ℕ} (w b : Fin n) (γ : S ^ n) where
+  module _ {n : ℕ} (w b : Fin n) (γ : Vec S n) where
 ```
 </summary>
 <div class="submodule-fold-content">

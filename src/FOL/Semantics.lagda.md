@@ -57,39 +57,26 @@ open ZFStructure 𝒮
 
 A variable position tells us where to look, but not what we will find there. An **[environment]{.term-intro #variable-environment}** assigns a carrier element to each available position. For a context of length `n`{.Agda}, we use a vector of length `n`{.Agda}; its entry at position `i : Fin n`{.Agda} is the value of that variable.
 
-**Definition** (`_^_`{.Agda}) Write `A ^ n`{.Agda}, read as the power of `A`{.Agda} with exponent `n`{.Agda}, for the type of vectors of length `n`{.Agda} with entries in `A`{.Agda}. In particular, environments have type `S ^ n`{.Agda}.
+Environments therefore have type `Vec S n`{.Agda}.
 <!--zh-->
 ## 环境
 
 变元位置只说明去哪里取值，还没有说明那里放着什么。为每个可用位置指定一个载体元素，就得到一个**[环境]{.term-intro #variable-environment}**。语境长度为 `n`{.Agda} 时，我们用长度同为 `n`{.Agda} 的向量记录这些值；位置 `i : Fin n`{.Agda} 处的分量，就是相应变元的取值。
 
-**定义** (`_^_`{.Agda}) 将元素取自 `A`{.Agda}、长度为 `n`{.Agda} 的向量类型记作 `A ^ n`{.Agda}，读作「`A`{.Agda} 的 `n`{.Agda} 次幂」。环境的类型便是 `S ^ n`{.Agda}。
+因此，环境的类型是 `Vec S n`{.Agda}。
 <!--ja-->
 ## 環境
 
 変数位置は値を取り出す場所を示すだけで、そこに何が入るかはまだ決めていない。利用できる各位置に台の要素を割り当てたものを**[環境]{.term-intro #variable-environment}**という。長さ `n`{.Agda} の文脈には、同じ長さのベクトルを使う。位置 `i : Fin n`{.Agda} にある成分が、その変数の値である。
 
-**定義** (`_^_`{.Agda}) `A`{.Agda} の要素を並べた長さ `n`{.Agda} のベクトルの型を `A ^ n`{.Agda} と書き、「`A`{.Agda} の `n`{.Agda} 乗」と読む。環境の型は `S ^ n`{.Agda} となる。
+したがって、環境の型は `Vec S n`{.Agda} となる。
 <!--/-->
 
-```agda
-infixl 30 _^_
-
-_^_ : ∀ {ℓ} → Type ℓ → ℕ → Type ℓ
-A ^ n = Vec A n
-```
-
 <!--en-->
-For readability, the website displays `A ^ n`{.Agda .raw-notation} as `A ^ n`{.Agda} when both operands are single letters. Hovering or tapping reveals the original code; the definition above retains its Agda spelling.
-
 For example, `a ∷ b ∷ []`{.Agda} supplies two values: position `0` holds `a`{.Agda}, and position `1` holds `b`{.Agda}. A term may use either position or neither. As in the syntax chapter, the length records the available positions, not the number of occurrences in an expression.
 <!--zh-->
-为便于阅读，网页把两侧均为单字母的 `A ^ n`{.Agda .raw-notation} 显示为 `A ^ n`{.Agda}；悬停或轻触上标记号可查看原码。上面的定义仍保留 Agda 原始写法。
-
 例如，`a ∷ b ∷ []`{.Agda} 提供两个取值：`0` 号位置存放 `a`{.Agda}，`1` 号位置存放 `b`{.Agda}。一个词项可以使用其中任意一个位置，也可以都不使用。与语法中的约定一样，长度记录的是可用位置的数量，而不是表达式中变元出现的次数。
 <!--ja-->
-読みやすくするため、両側が一文字のとき、ウェブ版では `A ^ n`{.Agda .raw-notation} を `A ^ n`{.Agda} と表示する。上付きの記法にカーソルを合わせるかタップすると、元のコードを確認できる。上の定義は Agda の元の表記を保っている。
-
 たとえば `a ∷ b ∷ []`{.Agda} は二つの値を与える。`0` 番の位置に `a`{.Agda}、`1` 番の位置に `b`{.Agda} が入る。項はどちらかの位置を使っても、両方とも使わなくてもよい。構文の場合と同じく、長さが表すのは使える位置の数であり、式の中で変数が現れる回数ではない。
 <!--/-->
 
@@ -118,19 +105,19 @@ module At {ℓc} (K : Type ℓc) (ι : K → S) where
 <!--en-->
 ### [Term evaluation]{.term-intro #term-evaluation}
 
-**Definition** (`⟦_⟧`{.Agda}) Term evaluation assigns to `t : Term K n`{.Agda} and `γ : S ^ n`{.Agda} an element `⟦ t ⟧ γ : S`{.Agda}, read as the value of `t`{.Agda} under `γ`{.Agda}. A constant takes its value from `ι`{.Agda}; a variable takes its value from `γ`{.Agda}.
+**Definition** (`⟦_⟧`{.Agda}) Term evaluation assigns to `t : Term K n`{.Agda} and `γ : Vec S n`{.Agda} an element `⟦ t ⟧ γ : S`{.Agda}, read as the value of `t`{.Agda} under `γ`{.Agda}. A constant takes its value from `ι`{.Agda}; a variable takes its value from `γ`{.Agda}.
 <!--zh-->
 ### [词项求值]{.term-intro #term-evaluation}
 
-**定义** (`⟦_⟧`{.Agda}) 词项求值将词项 `t : Term K n`{.Agda} 与环境 `γ : S ^ n`{.Agda} 映到载体元素 `⟦ t ⟧ γ : S`{.Agda}，读作「`t`{.Agda} 在 `γ`{.Agda} 下的值」。常元从 `ι`{.Agda} 取值，变元从 `γ`{.Agda} 取值。
+**定义** (`⟦_⟧`{.Agda}) 词项求值将词项 `t : Term K n`{.Agda} 与环境 `γ : Vec S n`{.Agda} 映到载体元素 `⟦ t ⟧ γ : S`{.Agda}，读作「`t`{.Agda} 在 `γ`{.Agda} 下的值」。常元从 `ι`{.Agda} 取值，变元从 `γ`{.Agda} 取值。
 <!--ja-->
 ### [項の評価]{.term-intro #term-evaluation}
 
-**定義** (`⟦_⟧`{.Agda}) 項の評価は、項 `t : Term K n`{.Agda} と環境 `γ : S ^ n`{.Agda} に台の要素 `⟦ t ⟧ γ : S`{.Agda} を対応させる。「`γ`{.Agda} のもとでの `t`{.Agda} の値」と読む。定数の値は `ι`{.Agda} から、変数の値は `γ`{.Agda} から得る。
+**定義** (`⟦_⟧`{.Agda}) 項の評価は、項 `t : Term K n`{.Agda} と環境 `γ : Vec S n`{.Agda} に台の要素 `⟦ t ⟧ γ : S`{.Agda} を対応させる。「`γ`{.Agda} のもとでの `t`{.Agda} の値」と読む。定数の値は `ι`{.Agda} から、変数の値は `γ`{.Agda} から得る。
 <!--/-->
 
 ```agda
-  ⟦_⟧ : ∀ {n} → Term K n → S ^ n → S
+  ⟦_⟧ : ∀ {n} → Term K n → Vec S n → S
   ⟦ con k ⟧ γ = ι k
   ⟦ var i ⟧ γ = lookup i γ
 ```
@@ -140,24 +127,24 @@ The common index `n`{.Agda} requires the environment to have exactly the length 
 
 ### [Satisfaction]{.term-intro #formula-satisfaction}
 
-**Definition** (`_⊨_`{.Agda}) The satisfaction relation assigns to `γ : S ^ n`{.Agda} and `φ : Formula K n`{.Agda} a proposition `γ ⊨ φ : hProp ℓ`{.Agda}. We read it as `γ`{.Agda} satisfies `φ`{.Agda}; an element of `⟨ γ ⊨ φ ⟩`{.Agda} is a proof that the formula holds under that assignment. Define this proposition recursively on the formula as follows.
+**Definition** (`_⊨_`{.Agda}) The satisfaction relation assigns to `γ : Vec S n`{.Agda} and `φ : Formula K n`{.Agda} a proposition `γ ⊨ φ : hProp ℓ`{.Agda}. We read it as `γ`{.Agda} satisfies `φ`{.Agda}; an element of `⟨ γ ⊨ φ ⟩`{.Agda} is a proof that the formula holds under that assignment. Define this proposition recursively on the formula as follows.
 <!--zh-->
 共同的下标 `n`{.Agda} 要求环境长度恰好与词项所需的语境长度一致。若常元域就是载体本身，可以取 `ι = id`{.Agda}，让每个元素以自身为名字；若常元域为空，就不可能出现常元情形，但变元仍从环境取值。这两种选择都与语境长度无关。
 
 ### [满足关系]{.term-intro #formula-satisfaction}
 
-**定义** (`_⊨_`{.Agda}) 满足关系将环境 `γ : S ^ n`{.Agda} 与公式 `φ : Formula K n`{.Agda} 映到命题 `γ ⊨ φ : hProp ℓ`{.Agda}，读作「`γ`{.Agda} 满足 `φ`{.Agda}」。`⟨ γ ⊨ φ ⟩`{.Agda} 的元素就是该公式在此取值下成立的证明。按公式的构造方式递归定义这个命题如下。
+**定义** (`_⊨_`{.Agda}) 满足关系将环境 `γ : Vec S n`{.Agda} 与公式 `φ : Formula K n`{.Agda} 映到命题 `γ ⊨ φ : hProp ℓ`{.Agda}，读作「`γ`{.Agda} 满足 `φ`{.Agda}」。`⟨ γ ⊨ φ ⟩`{.Agda} 的元素就是该公式在此取值下成立的证明。按公式的构造方式递归定义这个命题如下。
 <!--ja-->
 共通の添字 `n`{.Agda} により、環境の長さは項が必要とする文脈の長さと一致する。定数域を台そのものに取れば、`ι = id`{.Agda} として各要素を自分自身の名前にできる。定数域が空なら定数の場合は生じないが、変数の値は引き続き環境から得る。どちらの選択も文脈の長さとは独立である。
 
 ### [充足関係]{.term-intro #formula-satisfaction}
 
-**定義** (`_⊨_`{.Agda}) 充足関係は、環境 `γ : S ^ n`{.Agda} と論理式 `φ : Formula K n`{.Agda} に命題 `γ ⊨ φ : hProp ℓ`{.Agda} を対応させる。「`γ`{.Agda} は `φ`{.Agda} を満たす」と読み、`⟨ γ ⊨ φ ⟩`{.Agda} の要素は、その割当のもとで式が成り立つことの証明である。この命題を、論理式の構成に沿って次のように再帰的に定める。
+**定義** (`_⊨_`{.Agda}) 充足関係は、環境 `γ : Vec S n`{.Agda} と論理式 `φ : Formula K n`{.Agda} に命題 `γ ⊨ φ : hProp ℓ`{.Agda} を対応させる。「`γ`{.Agda} は `φ`{.Agda} を満たす」と読み、`⟨ γ ⊨ φ ⟩`{.Agda} の要素は、その割当のもとで式が成り立つことの証明である。この命題を、論理式の構成に沿って次のように再帰的に定める。
 <!--/-->
 
 ```agda
   infix 6 _⊨_
-  _⊨_ : ∀ {n} → S ^ n → Formula K n → hProp ℓ
+  _⊨_ : ∀ {n} → Vec S n → Formula K n → hProp ℓ
 ```
 
 <!--en-->
@@ -327,7 +314,7 @@ The fields record these four components in order. The arity `arity`{.Agda} count
   field
     arity       : ℕ
     formula     : Formula K arity
-    environment : A → S ^ arity
+    environment : A → Vec S arity
     reading     : (a : A) → let module I = At K ι in predicate a ≡ (environment a I.⊨ formula)
 ```
 
@@ -373,7 +360,7 @@ Interpreting a formula yields a proposition, not automatically a proof or a refu
 
 ```agda
 decideSatisfaction : ∀ {ℓc n} {K : Type ℓc} (ι : K → S)
-                   → LEM ℓ → (γ : S ^ n) → (φ : Formula K n)
+                   → LEM ℓ → (γ : Vec S n) → (φ : Formula K n)
                    → let module I = At K ι in Dec ⟨ γ I.⊨ φ ⟩
 decideSatisfaction ι lem γ φ = lem (γ I.⊨ φ)
   where module I = At _ ι
@@ -421,7 +408,6 @@ decideMembership lem x y =
 <!--/-->
 
 ```agda
-
 decideEquality : LEM ℓ → (x y : S) → Dec ⟨ x ≈ˢ y ⟩
 decideEquality lem x y =
   decideSatisfaction {K = ⊥* {ℓ}} (⊥*-rec {A = S}) lem

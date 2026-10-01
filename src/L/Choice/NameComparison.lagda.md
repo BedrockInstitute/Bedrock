@@ -225,14 +225,14 @@ the transitive class `isL`. In the outer reading, a constructible set is
 viewed through its underlying ambient set; in the inner reading, a constant
 denotes the constructible set that names it and the restricted structure
 supplies equality and membership. This chapter renames the inner satisfaction
-relation to `⊨`. Consequently, for `γ : S ^ n`, the judgement `γ ⊨ F` says
+relation to `⊨`{.Agda}. Consequently, for `γ : Vec S n`{.Agda}, the judgement `γ ⊨ F`{.Agda} says
 that `F` holds inside `L` under the finite environment `γ`. This is the
 reading needed for formulas that `L` itself will use to recognize and compare
 names.
 <!--zh-->
-同一套句法有两种彼此相容的读法。这个绝对性实例从环境宇宙结构 `𝒮ᵥ` 出发，把它限制到传递类 `isL`。在外层读法中，一个可构造集合经其底层的环境集合来读取；在内层读法中，常元指称为它命名的那个可构造集合，而等词与成员关系由限制后的结构解释。本章把内层满足关系改名为 `⊨`。因此，对 `γ : S ^ n`，判断 `γ ⊨ F` 表示公式 `F` 在 `L` 内部、有限环境 `γ` 下成立。这正是 `L` 自身识别并比较名字时所需的读法。
+同一套句法有两种彼此相容的读法。这个绝对性实例从环境宇宙结构 `𝒮ᵥ`{.Agda} 出发，把它限制到传递类 `isL`{.Agda}。在外层读法中，一个可构造集合经其底层的环境集合来读取；在内层读法中，常元指称为它命名的那个可构造集合，而等词与成员关系由限制后的结构解释。本章把内层满足关系改名为 `⊨`{.Agda}。因此，对 `γ : Vec S n`{.Agda}，判断 `γ ⊨ F`{.Agda} 表示公式 `F`{.Agda} 在 `L`{.Agda} 内部、有限环境 `γ`{.Agda} 下成立。这正是 `L`{.Agda} 自身识别并比较名字时所需的读法。
 <!--ja-->
-同じ構文には、互いに両立する二つの読み方がある。この絶対性の実例は、周囲の宇宙の構造 `𝒮ᵥ` から出発し、それを推移的クラス `isL` に制限する。外側の読みでは構成可能集合をその基礎にある周囲の集合として扱い、内側の読みでは定数がそれを名指す構成可能集合を表し、制限された構造が等号と所属を解釈する。本章では内側の充足関係を `⊨` と書く。したがって `γ : S ^ n` に対する判断 `γ ⊨ F` は、有限環境 `γ` のもとで `F` が `L` の内部に成り立つことを意味する。これは、`L` 自身が名前を識別して比較する論理式に必要な読み方である。
+同じ構文には、互いに両立する二つの読み方がある。この絶対性の実例は、周囲の宇宙の構造 `𝒮ᵥ`{.Agda} から出発し、それを推移的クラス `isL`{.Agda} に制限する。外側の読みでは構成可能集合をその基礎にある周囲の集合として扱い、内側の読みでは定数がそれを名指す構成可能集合を表し、制限された構造が等号と所属を解釈する。本章では内側の充足関係を `⊨`{.Agda} と書く。したがって `γ : Vec S n`{.Agda} に対する判断 `γ ⊨ F`{.Agda} は、有限環境 `γ`{.Agda} のもとで `F`{.Agda} が `L`{.Agda} の内部に成り立つことを意味する。これは、`L`{.Agda} 自身が名前を識別して比較する論理式に必要な読み方である。
 <!--/-->
 
 ```agda
@@ -595,7 +595,7 @@ is chosen.
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module _ {n : ℕ} (C₀ s a : Fin n) (γ : S ^ n) (k : ℕ)
+module _ {n : ℕ} (C₀ s a : Fin n) (γ : Vec S n) (k : ℕ)
          (qa : (lookup a γ) .fst ≡ # k) where
 ```
 </summary>
@@ -800,7 +800,7 @@ parameter-free formulas of arity `suc k`.
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module _ {n : ℕ} (C₀ s a : Fin n) (γ : S ^ n) (k : ℕ)
+module _ {n : ℕ} (C₀ s a : Fin n) (γ : Vec S n) (k : ℕ)
          (q₀ : (lookup C₀ γ) .fst ≡ (AllCodes ∅ʟ) .fst)
          (qa : (lookup a γ) .fst ≡ # k) where
 ```
@@ -1087,7 +1087,7 @@ fill `domAt e d`.
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module _ {n : ℕ} (e d : Fin n) (γ : S ^ n)
+module _ {n : ℕ} (e d : Fin n) (γ : Vec S n)
          (k : ℕ) (g : Fin k → V ℓ) (cg : (i : Fin k) → ⟨ isL (g i) ⟩)
          (qe : (lookup e γ) .fst ≡ env g) where
 ```
@@ -1244,7 +1244,7 @@ constants indexed by the members of the underlying set `Bs .fst`.
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module _ {n : ℕ} (B x y : Fin n) (γ : S ^ n) where
+module _ {n : ℕ} (B x y : Fin n) (γ : Vec S n) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -1269,7 +1269,7 @@ constructed for this carrier and formula.
 <!--/-->
 
 ```agda
-    fr : ∀ {m} (φ : Formula S m) → S ^ (14 + n)
+    fr : ∀ {m} (φ : Formula S m) → Vec S (14 + n)
     fr φ = ev numν (Tower.tower Bs) (slot Bs φ) (satTable Bs φ) Bs γ
 ```
 
@@ -1604,7 +1604,7 @@ the dependencies of each later condition on the earlier choices.
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module _ {n : ℕ} (B C s e : Fin n) (γ : S ^ n) where
+module _ {n : ℕ} (B C s e : Fin n) (γ : Vec S n) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -1738,7 +1738,7 @@ explicit `DenoteOf z` into `z ∈ d`.
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module _ {n : ℕ} (B C C₀ s a e d : Fin n) (γ : S ^ n) where
+module _ {n : ℕ} (B C C₀ s a e d : Fin n) (γ : Vec S n) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -1945,7 +1945,7 @@ shifted past five binders.
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module _ {n : ℕ} (P a e₁ e₂ : Fin n) (γ : S ^ n) where
+module _ {n : ℕ} (P a e₁ e₂ : Fin n) (γ : Vec S n) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -2175,7 +2175,7 @@ existentials for `v`, `u`, and `i`, from the inside out.
         , ( subst ⟨_⟩ (sym (appAt-adequate (sh3 P) (suc zero) zero γ₃)) hp
           , unpack i u v hj ) ) ) ∣₁ ∣₁) ∣₁
     where
-    γ₃ : S ^ (suc (suc (suc n)))
+    γ₃ : Vec S (suc (suc (suc n)))
     γ₃ = v ∷ u ∷ i ∷ γ
 ```
 
@@ -2325,7 +2325,7 @@ truncation.
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module _ {n : ℕ} (R P s₁ a₁ e₁ s₂ a₂ e₂ : Fin n) (γ : S ^ n) where
+module _ {n : ℕ} (R P s₁ a₁ e₁ s₂ a₂ e₂ : Fin n) (γ : Vec S n) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -2639,7 +2639,7 @@ witnesses, the satisfaction environment lists them in reverse order as
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module _ {n : ℕ} (φ : Formula S (suc (suc (suc (suc (suc (suc n))))))) (γ : S ^ n)
+module _ {n : ℕ} (φ : Formula S (suc (suc (suc (suc (suc (suc n))))))) (γ : Vec S n)
          where
 ```
 </summary>
@@ -2791,7 +2791,7 @@ six-binder step formula.
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module _ {n : ℕ} (R P B C C₀ x y : Fin n) (γ : S ^ n) where
+module _ {n : ℕ} (R P B C C₀ x y : Fin n) (γ : Vec S n) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -3134,7 +3134,7 @@ natural-number arities, rather than an equation for an object-language slot.
 <!--/-->
 
 ```agda
-    module _ {n : ℕ} (P a₁ e₁ e₂ : Fin n) (γ : S ^ n) (t₁ t₂ : Name)
+    module _ {n : ℕ} (P a₁ e₁ e₂ : Fin n) (γ : Vec S n) (t₁ t₂ : Name)
              (qP : (lookup P γ) .fst ≡ Ps .fst)
              (qa : (lookup a₁ γ) .fst ≡ # (arity t₁))
              (qk : arity t₂ ≡ arity t₁)
@@ -3688,7 +3688,7 @@ hypotheses, the internal formula can be compared with `_≺ₙ_`.
 <!--/-->
 
 ```agda
-    module _ {n : ℕ} (R P s₁ a₁ e₁ s₂ a₂ e₂ : Fin n) (γ : S ^ n) (t₁ t₂ : Name)
+    module _ {n : ℕ} (R P s₁ a₁ e₁ s₂ a₂ e₂ : Fin n) (γ : Vec S n) (t₁ t₂ : Name)
              (qR : (lookup R γ) .fst ≡ Rs .fst) (qP : (lookup P γ) .fst ≡ Ps .fst)
              (qs₁ : (lookup s₁ γ) .fst ≡ (codeOf t₁) .fst)
              (qs₂ : (lookup s₂ γ) .fst ≡ (codeOf t₂) .fst)

@@ -90,7 +90,6 @@ so far. Layers are the marking system of STYLE-agda §4 (① host, ③ structure
 | `∈ˢ` | structure membership | ③ | `FOL.ZFStructure` | `\in` `\^s` |
 | `∈ᵗ` | Type-valued membership | ③ | `FOL.ZFStructure` | `\in` `\^t` |
 | `↾` | restriction (substructure) | ① | `FOL.ZFStructure` | `\rest` |
-| `_^_` | power (environments) | ① | `FOL.Semantics` | `^` |
 | `⟦_⟧` | the value of (evaluation) | ① | `FOL.Semantics` | `\[[` `\]]` |
 | `⊨` | satisfies | ① | `FOL.Semantics` | `\models` |
 | `⊨ᵛ ⊨ᵐ` | satisfies, evaluated outside / inside | ① | `FOL.Absoluteness` | `\models` + `\^v` / `\^m` |
@@ -108,3 +107,4 @@ so far. Layers are the marking system of STYLE-agda §4 (① host, ③ structure
 | `𝒮ʟ` | the constructible structure | ③ | `L.Constructible` | `\McS` `\_L` |
 | `∩` | binary intersection | ① | `ZF` | `\cap` |
 | `ω` | the set of numerals | ① | `ZF` | `\omega` |
+: Symbols, their conceptual layers, introducing modules and Agda input sequences

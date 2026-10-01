@@ -381,12 +381,12 @@ environment lies there.
     transβ : {x y : V ℓ} → ⟨ x ∈ y ⟩ → ⟨ y ∈ Lset β ⟩ → ⟨ x ∈ Lset β ⟩
     transβ = layer-trans (Lset-layer β)
 
-    lookupInLayer : ∀ {m} (i : Fin m) (γ : S ^ m) → Below β γ
+    lookupInLayer : ∀ {m} (i : Fin m) (γ : Vec S m) → Below β γ
                   → ⟨ (lookup i γ) .fst ∈ Lset β ⟩
     lookupInLayer zero    (a ∷ γ) (ha , _)  = ha
     lookupInLayer (suc i) (a ∷ γ) (_  , hγ) = lookupInLayer i γ hγ
 
-    tmInLayer : ∀ {m} (t : Term S m) (γ : S ^ m) → Below β γ
+    tmInLayer : ∀ {m} (t : Term S m) (γ : Vec S m) → Below β γ
               → BoundedTm (Below′ β) t → ⟨ (⟦ t ⟧ γ) .fst ∈ Lset β ⟩
     tmInLayer (con c) γ _  h = h
     tmInLayer (var i) γ bγ _ = lookupInLayer i γ bγ
@@ -435,13 +435,13 @@ it is the only place.
   reflectFo : ∀ {m} (χ : Formula S m)
             → ((N : ℕ) → Answers χ (Gₙ N) (Gₙ-ord N) (Gₙ (suc N)))
             → BoundedFo (Below′ β) χ
-            → (γ : S ^ m) → Below β γ → (γ ⊨ χ) ≡ (γ ⊨ᴬ χ)
+            → (γ : Vec S m) → Below β γ → (γ ⊨ χ) ≡ (γ ⊨ᴬ χ)
 
   private
     reflect∃ : ∀ {m} (χ : Formula S (suc m)) → ClosedFor β χ
              → ((N : ℕ) → Answers χ (Gₙ N) (Gₙ-ord N) (Gₙ (suc N)))
              → BoundedFo (Below′ β) χ
-             → (γ : S ^ m) → Below β γ → (γ ⊨ (∃̇ χ)) ≡ (γ ⊨ᴬ (∃̇ χ))
+             → (γ : Vec S m) → Below β γ → (γ ⊨ (∃̇ χ)) ≡ (γ ⊨ᴬ (∃̇ χ))
     reflect∃ χ cl an bd γ bγ = ⇔toPath fwd bwd
       where
       fwd : ⟨ γ ⊨ (∃̇ χ) ⟩ → ⟨ γ ⊨ᴬ (∃̇ χ) ⟩
@@ -457,7 +457,7 @@ it is the only place.
     reflect∀ : ∀ {m} (χ : Formula S (suc m)) → ClosedFor β (¬̇ χ)
              → ((N : ℕ) → Answers χ (Gₙ N) (Gₙ-ord N) (Gₙ (suc N)))
              → BoundedFo (Below′ β) χ
-             → (γ : S ^ m) → Below β γ → (γ ⊨ (∀̇ χ)) ≡ (γ ⊨ᴬ (∀̇ χ))
+             → (γ : Vec S m) → Below β γ → (γ ⊨ (∀̇ χ)) ≡ (γ ⊨ᴬ (∀̇ χ))
     reflect∀ χ cl an bd γ bγ = ⇔toPath fwd bwd
       where
       fwd : ⟨ γ ⊨ (∀̇ χ) ⟩ → ⟨ γ ⊨ᴬ (∀̇ χ) ⟩
@@ -554,7 +554,7 @@ already states.
 <!--/-->
 
 ```agda
-  reflectRel : (γ : S ^ n) → Below β γ
+  reflectRel : (γ : Vec S n) → Below β γ
              → (γ ⊨ φ₀) ≡ (γ ⊨ relativize (LsetS β oβ) φ₀)
   reflectRel γ bγ =
     reflectFo φ₀ answersAt (liftFoTo κ∈β φ₀ bdd) γ bγ
@@ -567,7 +567,7 @@ opaque
   mkReflect : ∀ {n} (φ : Formula S n) (δ : V ℓ) → IsOrd δ
             → Σ[ β ∶ V ℓ ] Σ[ oβ ∶ IsOrd β ]
                 (⟨ δ ∈ β ⟩
-                 × ((γ : S ^ n) → Below β γ
+                 × ((γ : Vec S n) → Below β γ
                     → (γ ⊨ φ) ≡ (γ ⊨ relativize (LsetS β oβ) φ)))
   mkReflect φ δ oδ = M.β , (M.oβ , (δ∈β , M.reflectRel))
     where

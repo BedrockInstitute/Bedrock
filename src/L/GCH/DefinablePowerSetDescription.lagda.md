@@ -165,8 +165,8 @@ We write `γ ⊨ φ` for satisfaction of an object-language formula at a finite 
 <!--/-->
 
 ```agda
-module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _^_; _⊨ᵐ_ )
-open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
+module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _⊨ᵐ_ )
+open AbsL using () renaming ( _⊨ᵐ_ to _⊨_ )
 ```
 
 <!--en-->
@@ -276,7 +276,7 @@ Reading the description splits it into its two conjuncts.
 <!--/-->
 
 ```agda
-  defAt-out : ∀ {m} (v w T C : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m)
+  defAt-out : ∀ {m} (v w T C : Fin m) (N : Fin 10 → Fin m) (γ : Vec S m)
             → ⟨ γ ⊨ defAt v w T C N ⟩ → ⟨ γ ⊨ memAt v w T C N ⟩ × ⟨ γ ⊨ allAt v w T C N ⟩
   defAt-out v w T C N γ h = h
 ```
@@ -290,7 +290,7 @@ Filling the description pairs the two conjuncts back together.
 <!--/-->
 
 ```agda
-  defAt-in : ∀ {m} (v w T C : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m)
+  defAt-in : ∀ {m} (v w T C : Fin m) (N : Fin 10 → Fin m) (γ : Vec S m)
            → ⟨ γ ⊨ memAt v w T C N ⟩ → ⟨ γ ⊨ allAt v w T C N ⟩ → ⟨ γ ⊨ defAt v w T C N ⟩
   defAt-in v w T C N γ h1 h2 = h1 , h2
 ```
@@ -306,7 +306,7 @@ The first semantic calculation concerns `singleOf`. Fix the coded set `E` and va
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module _ {j : ℕ} (e N0 z : Fin j) (δ : S ^ j) (q0 : (lookup N0 δ) .fst ≡ # 0) where
+module _ {j : ℕ} (e N0 z : Fin j) (δ : Vec S j) (q0 : (lookup N0 δ) .fst ≡ # 0) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -435,7 +435,7 @@ To compare the object-language clause with the mathematical cut relation, fix th
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module _ {j : ℕ} (x w y N0 : Fin j) (δ : S ^ j) (q0 : (lookup N0 δ) .fst ≡ # 0) where
+module _ {j : ℕ} (x w y N0 : Fin j) (δ : Vec S j) (q0 : (lookup N0 δ) .fst ≡ # 0) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -533,7 +533,7 @@ The full reading module names the four sets: the proposed value, the carrier, th
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module Read {m : ℕ} (v w T C : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) (tg : Tags γ N) where
+module Read {m : ℕ} (v w T C : Fin m) (N : Fin 10 → Fin m) (γ : Vec S m) (tg : Tags γ N) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -725,7 +725,7 @@ The equation using the formal tag is converted to the required arity-one equatio
 
 ```agda
     ec' = ec ∙ cong (λ a → pr a (p .fst)) (sym (tg f1))
-    δ3 : S ^ (3 + m)
+    δ3 : Vec S (3 + m)
     δ3 = p ∷ container c (lookup (N f1) γ) p ec' .fst ∷ c ∷ γ
 ```
 
@@ -796,7 +796,7 @@ We can now compare the bounded description with the actual definability operatio
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module DefRead {m : ℕ} (v w T C E : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) (W : S)
+module DefRead {m : ℕ} (v w T C E : Fin m) (N : Fin 10 → Fin m) (γ : Vec S m) (W : S)
   (qw : (lookup w γ) .fst ≡ W .fst) (tg : Tags γ N) (hs : ⟨ γ ⊨ satAt T w C E N ⟩) where
 ```
 </summary>
@@ -1194,7 +1194,7 @@ The exported soundness direction exposes the exact interface used later: once th
 <!--/-->
 
 ```agda
-def-sound : ∀ {m} (v w T C E : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) (W : S)
+def-sound : ∀ {m} (v w T C E : Fin m) (N : Fin 10 → Fin m) (γ : Vec S m) (W : S)
           → (lookup w γ) .fst ≡ W .fst → Tags γ N → ⟨ γ ⊨ satAt T w C E N ⟩
           → ⟨ γ ⊨ defAt v w T C N ⟩ → (lookup v γ) .fst ≡ 𝒟ₒ (W .fst)
 def-sound v w T C E N γ W qw tg hs = DefRead.def-sound v w T C E N γ W qw tg hs
@@ -1209,7 +1209,7 @@ The exported completeness direction has the same hypotheses and reverses the imp
 <!--/-->
 
 ```agda
-def-complete : ∀ {m} (v w T C E : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) (W : S)
+def-complete : ∀ {m} (v w T C E : Fin m) (N : Fin 10 → Fin m) (γ : Vec S m) (W : S)
              → (lookup w γ) .fst ≡ W .fst → Tags γ N → ⟨ γ ⊨ satAt T w C E N ⟩
              → (lookup v γ) .fst ≡ 𝒟ₒ (W .fst) → ⟨ γ ⊨ defAt v w T C N ⟩
 def-complete v w T C E N γ W qw tg hs = DefRead.def-complete v w T C E N γ W qw tg hs

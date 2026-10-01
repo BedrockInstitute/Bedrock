@@ -95,7 +95,6 @@ Both satisfaction relations take values in the same type `hProp (ℓ-suc ℓ)`. 
 open hPropView 𝒮ʟ using ( S )
 
 module SemV = FOL.Semantics 𝒮ᵥ
-open SemV using ( _^_ )
 open SemV.At (V ℓ) id using () renaming ( _⊨_ to _⊨v_ )
 ```
 
@@ -200,7 +199,7 @@ The statement equates two satisfaction judgments that a priori live in different
 
 ```agda
 transferFo : ∀ {n} (φ : Formula (V ℓ) n) (h : BoundedFo InL φ) → Δ₀ φ
-           → (γ : S ^ n) → (γ ⊨ liftFo φ h) ≡ ((map (λ p → p .fst) γ) ⊨v φ)
+           → (γ : Vec S n) → (γ ⊨ liftFo φ h) ≡ ((map (λ p → p .fst) γ) ⊨v φ)
 ```
 
 <!--en-->

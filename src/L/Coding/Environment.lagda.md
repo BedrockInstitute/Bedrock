@@ -124,15 +124,14 @@ module Sem = FOL.Semantics 𝒮ᵥ
 ```
 
 <!--en-->
-Finally, the satisfaction relation `_⊨_` and the term interpretation `⟦_⟧` are taken over the carrier `V ℓ` itself, with the identity embedding of constants. An environment for a formula of arity `n` is then an honest function `(V ℓ) ^ n`, a finite tuple of sets. What this chapter encodes is the assignment carried inside certificate data, not this semantic carrier: the tuple form is what the semantics evaluates, while the graph form is what certificates can store and manipulate as a single set.
+Finally, the satisfaction relation `_⊨_`{.Agda} and the term interpretation `⟦_⟧`{.Agda} are taken over the carrier `V ℓ`{.Agda} itself, with the identity embedding of constants. An environment for a formula of arity `n`{.Agda} is then a vector of type `Vec (V ℓ) n`{.Agda}, a finite tuple of sets. What this chapter encodes is the assignment carried inside certificate data, not this semantic carrier: the tuple form is what the semantics evaluates, while the graph form is what certificates can store and manipulate as a single set.
 <!--zh-->
-最后，满足关系 `_⊨_` 与项解释 `⟦_⟧` 取在载体 `V ℓ` 自身上，常元解释为恒等。于是元数为 `n` 的公式的环境就是真正的函数 `(V ℓ) ^ n`，即有穷的集合组。本章编码的是证书数据所携带的赋值，而非这个语义载体：组形式是语义求值所用的，图形式才是证书能够作为单个集合存储与操作的。
+最后，满足关系 `_⊨_`{.Agda} 与项解释 `⟦_⟧`{.Agda} 取在载体 `V ℓ`{.Agda} 自身上，常元解释为恒等。于是元数为 `n`{.Agda} 的公式的环境就是类型为 `Vec (V ℓ) n`{.Agda} 的向量，即有穷的集合组。本章编码的是证书数据所携带的赋值，而非这个语义载体：组形式是语义求值所用的，图形式才是证书能够作为单个集合存储与操作的。
 <!--ja-->
-最後に、充足関係 `_⊨_` と項の解釈 `⟦_⟧` は、台となる集合として `V ℓ` 自身の上に、定数の恒等解釈とともに取られる。したがって項数 `n` の論理式に対する環境とは、正しくは関数 `(V ℓ) ^ n`、すなわち集合の有限な組である。本章が符号化するのは、証明書データが担う割当てであって、この意味論の台となる集合ではない。組の形は意味論が評価する対象であり、グラフの形こそが証明書が一つの集合として保管し操作できる対象である。
+最後に、充足関係 `_⊨_`{.Agda} と項の解釈 `⟦_⟧`{.Agda} は、台となる集合として `V ℓ`{.Agda} 自身の上に、定数の恒等解釈とともに取られる。したがって項数 `n`{.Agda} の論理式に対する環境とは、型 `Vec (V ℓ) n`{.Agda} のベクトル、すなわち集合の有限な組である。本章が符号化するのは、証明書データが担う割当てであって、この意味論の台となる集合ではない。組の形は意味論が評価する対象であり、グラフの形こそが証明書が一つの集合として保管し操作できる対象である。
 <!--/-->
 
 ```agda
-open Sem using ( _^_ )
 open Sem.At (V ℓ) id using ( _⊨_; ⟦_⟧ )
 ```
 
@@ -378,7 +377,7 @@ The third clause is the classification of the members of `J`, and its target is 
         (λ h → ∣ inl h ∣₁)
         (λ q → ∣ inr q ∣₁))
 
-sucAt-adequate : ∀ {n} (i j : Fin n) (γ : (V ℓ) ^ n)
+sucAt-adequate : ∀ {n} (i j : Fin n) (γ : Vec (V ℓ) n)
   → (γ ⊨ sucAt i j) ≡ ((⟦ var j ⟧ γ ≡ sucV (⟦ var i ⟧ γ)) , setIsSet _ _)
 ```
 
@@ -459,7 +458,7 @@ The body is the conjunction of three bounded assertions about those five witness
 ```agda
             ∧̇ sucAt (suc (suc (suc zero))) zero ))))))
 
-shiftPairAt-adequate : ∀ {n} (p' p : Fin n) (γ : (V ℓ) ^ n)
+shiftPairAt-adequate : ∀ {n} (p' p : Fin n) (γ : Vec (V ℓ) n)
   → (γ ⊨ shiftPairAt p' p)
   ≡ (∥ Σ[ i ∶ V ℓ ] Σ[ v ∶ V ℓ ]
        ((⟦ var p ⟧ γ ≡ pr i v) × (⟦ var p' ⟧ γ ≡ pr (sucV i) v)) ∥₁ , squash₁)
@@ -976,7 +975,7 @@ The adequacy lemma is stated as a path between truth values, in the same form th
   × ((y : V ℓ) → ⟨ y ∈ Q ⟩ → ∥ EmptySgl y ⊎ EmptyPair W y ∥₁))
 prChar∅-bwd Q W e = map-witness Q SglOf∅→EmptySgl (PairOf∅→EmptyPair W) (prChar-bwd Q ∅ W e)
 
-tag0At-adequate : ∀ {n} (s x : Fin n) (γ : (V ℓ) ^ n)
+tag0At-adequate : ∀ {n} (s x : Fin n) (γ : Vec (V ℓ) n)
                 → (γ ⊨ tag0At s x) ≡ ((⟦ var s ⟧ γ ≡ pr ∅ (⟦ var x ⟧ γ)) , setIsSet _ _)
 tag0At-adequate s x γ = ⇔toPath
 ```
@@ -1059,7 +1058,7 @@ The adequacy lemma carries one extra hypothesis, and it is what makes the conclu
 ```agda
 Δ₀-consAt e' m e = checkΔ₀ (consAt e' m e) tt
 
-consAt-adequate : ∀ {n} (e' m e : Fin n) (γ : (V ℓ) ^ n)
+consAt-adequate : ∀ {n} (e' m e : Fin n) (γ : Vec (V ℓ) n)
   {k : ℕ} (g : Fin k → V ℓ)
   → ⟦ var e ⟧ γ ≡ env g
   → (γ ⊨ consAt e' m e)

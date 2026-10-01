@@ -132,7 +132,6 @@ This is what makes the adequacy statement below meaningful: satisfaction of the 
 
 ```agda
 module Sem = FOL.Semantics 𝒮ᵥ
-open Sem using ( _^_ )
 open Sem.At (V ℓ) id using ( _⊨_; ⟦_⟧ )
 ```
 
@@ -538,7 +537,7 @@ Both sides of the displayed path are truth values. On the right, the equality ty
 <!--/-->
 
 ```agda
-prAt-adequate : ∀ {n} (q u v : Fin n) (γ : (V ℓ) ^ n)
+prAt-adequate : ∀ {n} (q u v : Fin n) (γ : Vec (V ℓ) n)
               → (γ ⊨ prAt q u v) ≡ ((⟦ var q ⟧ γ ≡ pr (⟦ var u ⟧ γ) (⟦ var v ⟧ γ))
                                    , setIsSet _ _)
 prAt-adequate q u v γ = ⇔toPath

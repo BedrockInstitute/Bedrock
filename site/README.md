@@ -156,10 +156,15 @@ with its supported suffixes denotes a universe-level parameter. Outcrop defaults
 this policy to false. Primitive shortening still needs semantic evidence; the
 convention does not authorize guessed AST nodes or change the original code.
 
-`power_notation: ["FOL.Semantics._^_"]` enables the shared superscript lens for
-environment powers with single-letter operands, such as `S ^ n`. The qualified
-identity is instance configuration; Outcrop does not assume this module exists.
+`vector_notation` identifies `Cubical.Data.Vec.Base.Vec` and its
+`Base.Prelude.Vec` reexport for the shared superscript lens: `Vec A n` is displayed
+as a power when both parameters are single letters. Source code uses `Vec`
+directly, without an infix alias. The introductory raw/compact comparison lives
+in the Prelude's Vectors section. Qualified identities are explicit instance configuration.
 Long names, compound operands and raw-notation examples retain their source form.
+Short, closed, type-certified vector constructor chains use bracket notation;
+the Prelude also introduces this with raw/compact examples. Open tails and
+patterns remain raw. Outcrop's Markdown contract defines the conservative bounds.
 All deep-notation rendering and styles are maintained through Outcrop's
 [`static/deep-notation/`](../outcrop/src/outcrop/site/resources/static/deep-notation/README.md)
 entry. This instance supplies policies, not a parallel implementation.

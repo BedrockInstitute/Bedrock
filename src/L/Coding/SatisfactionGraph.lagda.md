@@ -221,7 +221,7 @@ The function `ev` is the semantic realization of this position map. It places `b
 <!--/-->
 
 ```agda
-ev : ∀ {n} → (Fin 10 → S) → S → S → S → S → S ^ n → S ^ (14 + n)
+ev : ∀ {n} → (Fin 10 → S) → S → S → S → S → Vec S n → Vec S (14 + n)
 ev ν E C T b γ =
   b ∷ T ∷ C ∷ E ∷ ν f0 ∷ ν f1 ∷ ν f2 ∷ ν f3 ∷ ν f4 ∷ ν f5
     ∷ ν f6 ∷ ν f7 ∷ ν f8 ∷ ν f9 ∷ γ
@@ -249,7 +249,7 @@ numν k = nn (toℕ k)
 <!--/-->
 
 ```agda
-numTags : ∀ {n} (E C T b : S) (γ : S ^ n) → Tags (ev numν E C T b γ) NN
+numTags : ∀ {n} (E C T b : S) (γ : Vec S n) → Tags (ev numν E C T b γ) NN
 numTags E C T b γ zero = refl
 numTags E C T b γ (suc zero) = refl
 numTags E C T b γ (suc (suc zero)) = refl
@@ -321,7 +321,7 @@ The equations for `i12` and `i13` finish the calibration with numerals eight and
 <!--/-->
 
 ```agda
-nums-out : ∀ {n} (ν : Fin 10 → S) (E C T b : S) (γ : S ^ n)
+nums-out : ∀ {n} (ν : Fin 10 → S) (E C T b : S) (γ : Vec S n)
          → ⟨ ev ν E C T b γ ⊨ numsAt ⟩ → Tags (ev ν E C T b γ) NN
 nums-out ν E C T b γ h zero = h .fst
 nums-out ν E C T b γ h (suc zero) = h .snd .fst
@@ -366,7 +366,7 @@ The converse reading `nums-in`{.Agda} starts from `Tags`: for each constructor i
 <!--/-->
 
 ```agda
-nums-in : ∀ {n} (ν : Fin 10 → S) (E C T b : S) (γ : S ^ n)
+nums-in : ∀ {n} (ν : Fin 10 → S) (E C T b : S) (γ : Vec S n)
         → Tags (ev ν E C T b γ) NN → ⟨ ev ν E C T b γ ⊨ numsAt ⟩
 nums-in ν E C T b γ tg =
     tg f0 , (tg f1 , (tg f2 , (tg f3 , (tg f4 , (tg f5
@@ -435,7 +435,7 @@ The host-level type `GraphWitOn`{.Agda} flattens the same information into five 
 
 ```agda
 private
-  GraphWitOn : ∀ {n} → S → Fin n → Fin n → S ^ n → Type (ℓ-suc ℓ)
+  GraphWitOn : ∀ {n} → S → Fin n → Fin n → Vec S n → Type (ℓ-suc ℓ)
   GraphWitOn W x y γ =
     Σ[ ν ∶ (Fin 10 → S) ] (Σ[ E ∶ S ] (Σ[ C ∶ S ] (Σ[ T ∶ S ] (Σ[ b ∶ S ] ((b .fst ≡ W .fst) × (Tags (ev ν E C T b γ) NN × (⟨ (ev ν E C T b γ) ⊨ towerAt Ei Bi (NN f0) ⟩ × (⟨ (ev ν E C T b γ) ⊨ closedAt Ci ⟩ × (⟨ (ev ν E C T b γ) ⊨ domAt Ti Ci ⟩ × (⟨ pr ((lookup x γ) .fst) ((lookup y γ) .fst) ∈ T .fst ⟩ × ⟨ (ev ν E C T b γ) ⊨ tableAt Ti Bi Ci Ei NN ⟩))))))))))
 ```
@@ -452,7 +452,7 @@ To compare satisfaction of `satGraphOn` with the flat record, fix the pin, its r
 <summary class="submodule-fold-heading">
 ```agda
   module _ {n : ℕ} (pin : Formula S (14 + n)) (W : S)
-           (x y : Fin n) (γ : S ^ n) where
+           (x y : Fin n) (γ : Vec S n) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -708,7 +708,7 @@ The variable-carrier witness type chooses its reference from the ambient environ
 <!--/-->
 
 ```agda
-GraphWitAt : ∀ {n} → Fin n → Fin n → Fin n → S ^ n → Type (ℓ-suc ℓ)
+GraphWitAt : ∀ {n} → Fin n → Fin n → Fin n → Vec S n → Type (ℓ-suc ℓ)
 GraphWitAt B x y γ = GraphWitOn (lookup B γ) x y γ
 ```
 
@@ -748,7 +748,7 @@ For the inward reading, the pin hypothesis is the identity: satisfaction of the 
 <!--/-->
 
 ```agda
-  graphAt-in : ∀ {n} (B x y : Fin n) (γ : S ^ n)
+  graphAt-in : ∀ {n} (B x y : Fin n) (γ : Vec S n)
              → ∥ GraphWitAt B x y γ ∥₁ → ⟨ γ ⊨ satGraphAt B x y ⟩
   graphAt-in B x y γ =
     graphOn-in (var Bi ≐ var (sh14 B)) (lookup B γ) x y γ (λ _ _ _ _ _ e → e)
@@ -772,7 +772,7 @@ closed key set, or table.
 <!--/-->
 
 ```agda
-  graphAt-out : ∀ {n} (B x y : Fin n) (γ : S ^ n)
+  graphAt-out : ∀ {n} (B x y : Fin n) (γ : Vec S n)
               → ⟨ γ ⊨ satGraphAt B x y ⟩ → ∥ GraphWitAt B x y γ ∥₁
   graphAt-out B x y γ =
     graphOn-out (var Bi ≐ var (sh14 B)) (lookup B γ) x y γ (λ _ _ _ _ _ h → h)

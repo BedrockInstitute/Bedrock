@@ -90,8 +90,8 @@ The satisfaction relation used here is the inner semantics of the restricted str
 <!--/-->
 
 ```agda
-module AbsSF = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _^_; _⊨ᵐ_ )
-open AbsSF using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
+module AbsSF = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _⊨ᵐ_ )
+open AbsSF using () renaming ( _⊨ᵐ_ to _⊨_ )
 ```
 
 <!--en-->

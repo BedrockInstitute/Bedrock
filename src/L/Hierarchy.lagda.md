@@ -333,7 +333,7 @@ a step witness, and `above` turns a step witness into a member of the tower.
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module _ {n : ℕ} (v b f : Fin n) (γ : S ^ n) where
+module _ {n : ℕ} (v b f : Fin n) (γ : Vec S n) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -713,7 +713,7 @@ being proved of it is a membership.
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module _ {n : ℕ} (f a : Fin n) (γ : S ^ n) where
+module _ {n : ℕ} (f a : Fin n) (γ : Vec S n) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -897,7 +897,7 @@ carrying the whole tower description inside it.
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module _ {n : ℕ} (w b : Fin n) (γ : S ^ n) where
+module _ {n : ℕ} (w b : Fin n) (γ : Vec S n) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -1050,7 +1050,7 @@ value is the tower.
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module _ {n : ℕ} (w b : Fin n) (γ : S ^ n) where
+module _ {n : ℕ} (w b : Fin n) (γ : Vec S n) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -1876,7 +1876,7 @@ directions at every constructible ordinal.
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module _ {n : ℕ} (w b : Fin n) (γ : S ^ n) where
+module _ {n : ℕ} (w b : Fin n) (γ : Vec S n) where
 ```
 </summary>
 <div class="submodule-fold-content">

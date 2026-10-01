@@ -198,8 +198,8 @@ The absoluteness instance is fixed over the transitive class of constructible se
 <!--/-->
 
 ```agda
-module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using (_^_; _⊨ᵐ_)
-open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
+module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using (_⊨ᵐ_)
+open AbsL using () renaming ( _⊨ᵐ_ to _⊨_ )
 ```
 
 <!--en-->
@@ -549,8 +549,8 @@ Adequacy is checked against a concrete six-entry context. The context extends th
 
 ```agda
   private
-    env : ∀ {k} → S ^ k → S → S → S → S → S → S
-        → S ^ (suc (suc (suc (suc (suc (suc k))))))
+    env : ∀ {k} → Vec S k → S → S → S → S → S → S
+        → Vec S (suc (suc (suc (suc (suc (suc k))))))
     env γ a b c d m n = n ∷ m ∷ d ∷ c ∷ b ∷ a ∷ γ
 ```
 
@@ -563,7 +563,7 @@ The first adequacy lemma reads the pair atom at that context: satisfaction of th
 <!--/-->
 
 ```agda
-    atP : ∀ {k} (p : Fin k) (γ : S ^ k) (a b c d m n : S)
+    atP : ∀ {k} (p : Fin k) (γ : Vec S k) (a b c d m n : S)
         → ⟨ env γ a b c d m n ⊨ prAtL (↑6 p) i5 i4 ⟩
         ≡ ((lookup p γ) .fst ≡ pr (a .fst) (b .fst))
     atP p γ a b c d m n = cong ⟨_⟩ (prAtL-adequate (↑6 p) i5 i4 (env γ a b c d m n))
@@ -578,7 +578,7 @@ The second does the same for `q` and the pair of `c` and `d`. With these two ide
 <!--/-->
 
 ```agda
-    atQ : ∀ {k} (q : Fin k) (γ : S ^ k) (a b c d m n : S)
+    atQ : ∀ {k} (q : Fin k) (γ : Vec S k) (a b c d m n : S)
         → ⟨ env γ a b c d m n ⊨ prAtL (↑6 q) i3 i2 ⟩
         ≡ ((lookup q γ) .fst ≡ pr (c .fst) (d .fst))
     atQ q γ a b c d m n = cong ⟨_⟩ (prAtL-adequate (↑6 q) i3 i2 (env γ a b c d m n))
@@ -593,7 +593,7 @@ The outward direction consumes the six nested truncations in turn: satisfaction 
 <!--/-->
 
 ```agda
-  lt-out : ∀ {k} (p q : Fin k) (γ : S ^ k) → ⟨ γ ⊨ ltAt p q ⟩
+  lt-out : ∀ {k} (p q : Fin k) (γ : Vec S k) → ⟨ γ ⊨ ltAt p q ⟩
          → Lt ((lookup p γ) .fst) ((lookup q γ) .fst)
   lt-out p q γ = rec₁ squash₁ (λ { (a , ha) → rec₁ squash₁ (λ { (b , hb) →
     rec₁ squash₁ (λ { (c , hc) → rec₁ squash₁ (λ { (d , hd) →
@@ -639,7 +639,7 @@ The inward direction turns `Lt` into the satisfaction statement, which is a prop
 <!--/-->
 
 ```agda
-  lt-in : ∀ {k} (p q : Fin k) (γ : S ^ k)
+  lt-in : ∀ {k} (p q : Fin k) (γ : Vec S k)
         → Lt ((lookup p γ) .fst) ((lookup q γ) .fst) → ⟨ γ ⊨ ltAt p q ⟩
   lt-in p q γ = rec₁ ((γ ⊨ ltAt p q) .snd)
     (λ { (a , b , c , d , m , n , (ep , eq' , hM , hN , hO)) →
@@ -1831,7 +1831,7 @@ Adequacy is checked against the six-entry context that adds the four witnesses, 
 
 ```agda
     private
-      env₄ : S → S → S → S → S → S → S ^ 6
+      env₄ : S → S → S → S → S → S → Vec S 6
       env₄ q p x y x' y' = y' ∷ x' ∷ y ∷ x ∷ q ∷ p ∷ []
 ```
 

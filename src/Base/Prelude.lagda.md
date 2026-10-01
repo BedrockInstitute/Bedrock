@@ -2387,11 +2387,13 @@ open import Cubical.Data.FinData public
 <!--/-->
 
 <!--en-->
-A vector `Vec A n`{.Agda} is a list of elements of `A`{.Agda} whose length is part of its type. Its two constructors are expressed by the rules
+A vector `Vec A n`{.Agda .raw-notation} is a list of elements of `A`{.Agda} whose length is part of its type. When both parameters are single letters, the website displays this type as `Vec A n`{.Agda}, read as the power of `A`{.Agda} with exponent `n`{.Agda}. This is only a display convention: hovering or tapping reveals the original Agda code. Its two constructors are expressed by the rules
 
 $$\frac{}{[]:\operatorname{Vec}(A,0)}\qquad\frac{a:A\quad v:\operatorname{Vec}(A,n)}{a∷v:\operatorname{Vec}(A,\operatorname{suc}\,n)}$$
 
 The constructor `[]`{.Agda} produces an element of `Vec A zero`{.Agda}. Given `a : A`{.Agda} and `v : Vec A n`{.Agda}, the constructor `_∷_`{.Agda} produces `a ∷ v : Vec A (suc n)`{.Agda}. Thus the natural-number index is determined together with the vector. The function `lookup`{.Agda} has type `Fin n → Vec A n → A`{.Agda}; its shared index requires its two arguments to have the same `n`{.Agda}.
+
+For a short vector written out in full, the website displays `a ∷ b ∷ c ∷ []`{.Agda .raw-notation type="Vec A 3"} as `a ∷ b ∷ c ∷ []`{.Agda type="Vec A 3"}. Hovering or tapping this bracket notation reveals the original constructors and the type. An expression such as `a ∷ v`{.Agda}, whose tail is not written out, retains its original form.
 
 These indices make the standard vector operations carry useful guarantees. An out-of-range `lookup`{.Agda} cannot be stated because its index must inhabit `Fin n`{.Agda}.
 
@@ -2403,11 +2405,13 @@ a, & i=\mathsf{zero},\\
 \operatorname{lookup}(j,v), & i=\mathsf{suc}\,j
 \end{cases}$$
 <!--zh-->
-向量 `Vec A n`{.Agda} 是由 `A`{.Agda} 的元素组成、且长度写入类型的列表。它的两个构造规则可以写成
+向量 `Vec A n`{.Agda .raw-notation} 是由 `A`{.Agda} 的元素组成、且长度写入类型的列表。两个参数均为单字母时，网页将这个类型简记为 `Vec A n`{.Agda}，读作「`A`{.Agda} 的 `n`{.Agda} 次幂」。这只是显示约定，悬停或轻触可查看原始 Agda 代码。它的两个构造规则可以写成
 
 $$\frac{}{[]:\operatorname{Vec}(A,0)}\qquad\frac{a:A\quad v:\operatorname{Vec}(A,n)}{a∷v:\operatorname{Vec}(A,\operatorname{suc}\,n)}$$
 
 构造子 `[]`{.Agda} 给出 `Vec A zero`{.Agda} 的元素。给定 `a : A`{.Agda} 和 `v : Vec A n`{.Agda}，构造子 `_∷_`{.Agda} 给出 `a ∷ v : Vec A (suc n)`{.Agda}。自然数索引由此与向量一同确定。函数 `lookup`{.Agda} 的类型是 `Fin n → Vec A n → A`{.Agda}；两个参数共享同一个索引 `n`{.Agda}。
+
+对于逐项写出的短向量，网页把 `a ∷ b ∷ c ∷ []`{.Agda .raw-notation type="Vec A 3"} 显示为 `a ∷ b ∷ c ∷ []`{.Agda type="Vec A 3"}。悬停或轻触这个方括号记号，可以查看原始构造子写法和类型。`a ∷ v`{.Agda} 这样的表达式没有逐项写出尾部，仍保留原样。
 
 这些索引使常用的向量操作自带有用的保证。`lookup`{.Agda} 的索引必须属于 `Fin n`{.Agda}，所以越界访问根本无法写出。
 
@@ -2419,11 +2423,13 @@ a, & i=\mathsf{zero},\\
 \operatorname{lookup}(j,v), & i=\mathsf{suc}\,j
 \end{cases}$$
 <!--ja-->
-ベクトル `Vec A n`{.Agda} は `A`{.Agda} の元からなるリストで、その長さが型の一部になっている。その二つの構成子は、次の推論式で表せる。
+ベクトル `Vec A n`{.Agda .raw-notation} は `A`{.Agda} の元からなるリストで、その長さが型の一部になっている。両方の引数が一文字のとき、ウェブ版ではこの型を `Vec A n`{.Agda} と表示し、「`A`{.Agda} の `n`{.Agda} 乗」と読む。これは表示上の約束にすぎず、カーソルを合わせるかタップすると元の Agda コードを確認できる。その二つの構成子は、次の推論式で表せる。
 
 $$\frac{}{[]:\operatorname{Vec}(A,0)}\qquad\frac{a:A\quad v:\operatorname{Vec}(A,n)}{a∷v:\operatorname{Vec}(A,\operatorname{suc}\,n)}$$
 
 構成子 `[]`{.Agda} は `Vec A zero`{.Agda} の要素を与える。`a : A`{.Agda} と `v : Vec A n`{.Agda} が与えられると、構成子 `_∷_`{.Agda} は `a ∷ v : Vec A (suc n)`{.Agda} を与える。このように自然数の添字はベクトルとともに定まる。関数 `lookup`{.Agda} の型は `Fin n → Vec A n → A`{.Agda} であり、二つの引数は同じ添字 `n`{.Agda} を共有する。
+
+成分をすべて書き並べた短いベクトルでは、ウェブ版は `a ∷ b ∷ c ∷ []`{.Agda .raw-notation type="Vec A 3"} を `a ∷ b ∷ c ∷ []`{.Agda type="Vec A 3"} と表示する。この角括弧の記法にカーソルを合わせるかタップすると、元の構成子による表記と型を確認できる。末尾の成分を列挙していない `a ∷ v`{.Agda} などは元の表記を保つ。
 
 これらの添字により、標準的なベクトル操作そのものが有用な保証を伴う。`lookup`{.Agda} の添字は `Fin n`{.Agda} の元でなければならないため、範囲外の参照はそもそも記述できない。
 

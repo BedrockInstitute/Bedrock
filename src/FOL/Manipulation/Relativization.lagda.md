@@ -191,15 +191,15 @@ module Correct {ℓ} (𝒮 : ZFStructureₕ ℓ)
 
 ```agda
   open ZFStructure 𝒮
-  open module Sem = FOL.Semantics 𝒮 using ( module At; _^_ )
+  open module Sem = FOL.Semantics 𝒮 using ( module At )
 ```
 
 <!--en-->
-The bound is named once and for all: `A = ι c`, the carrier element denoted by the chosen constant. The relation `γ ⊨ᴬ φ` takes an environment `γ : S ^ n` and a formula `φ` of the same arity `n`, and returns a proposition in `hProp ℓ`, just as the standard satisfaction does. The superscript ᴬ records that quantifiers are relativized to `A`; the clauses follow, and only the unbounded quantifier clauses will differ from the standard ones.
+The bound is named once and for all: `A = ι c`{.Agda}, the carrier element denoted by the chosen constant. The relation `γ ⊨ᴬ φ`{.Agda} takes an environment `γ : Vec S n`{.Agda} and a formula `φ`{.Agda} of the same arity `n`{.Agda}, and returns a proposition in `hProp ℓ`{.Agda}, just as the standard satisfaction does. The superscript ᴬ records that quantifiers are relativized to `A`{.Agda}; the clauses follow, and only the unbounded quantifier clauses will differ from the standard ones.
 <!--zh-->
-界限被一次性命名：`A = ι c`，即所选常元指称的载体元素。关系 `γ ⊨ᴬ φ` 取环境 `γ : S ^ n` 与同元数 `n` 的公式 `φ`，返回命题宇宙 `hProp ℓ` 中的命题，与标准满足关系一样。上标 ᴬ 记录量词被相对化到 `A`；下面给出各子句，其中只有无界量词子句与标准者不同。
+界限被一次性命名：`A = ι c`{.Agda}，即所选常元指称的载体元素。关系 `γ ⊨ᴬ φ`{.Agda} 取环境 `γ : Vec S n`{.Agda} 与同元数 `n`{.Agda} 的公式 `φ`{.Agda}，返回命题宇宙 `hProp ℓ`{.Agda} 中的命题，与标准满足关系一样。上标 ᴬ 记录量词被相对化到 `A`{.Agda}；下面给出各子句，其中只有无界量词子句与标准者不同。
 <!--ja-->
-境界は一度だけ名付けられる。`A = ι c`、すなわち選んだ定数が表示する台の要素である。関係 `γ ⊨ᴬ φ` は環境 `γ : S ^ n` と同じアリティ `n` の論理式 `φ` を取り、標準の充足と同様に命題宇宙 `hProp ℓ` の命題を返す。上付きの ᴬ は量化子が `A` に相対化されていることを示す。続く節のうち、標準と異なるのは非有界量化子の節だけである。
+境界は一度だけ名付けられる。`A = ι c`{.Agda}、すなわち選んだ定数が表示する台の要素である。関係 `γ ⊨ᴬ φ`{.Agda} は環境 `γ : Vec S n`{.Agda} と同じアリティ `n`{.Agda} の論理式 `φ`{.Agda} を取り、標準の充足と同様に命題宇宙 `hProp ℓ`{.Agda} の命題を返す。上付きの ᴬ は量化子が `A`{.Agda} に相対化されていることを示す。続く節のうち、標準と異なるのは非有界量化子の節だけである。
 <!--/-->
 
 ```agda
@@ -209,7 +209,7 @@ The bound is named once and for all: `A = ι c`, the carrier element denoted by 
   A = ι c
 
   infix 6 _⊨ᴬ_
-  _⊨ᴬ_ : ∀ {n} → S ^ n → Formula K n → hProp ℓ
+  _⊨ᴬ_ : ∀ {n} → Vec S n → Formula K n → hProp ℓ
 ```
 
 <!--en-->
@@ -261,7 +261,7 @@ The statement quantifies over both the formula φ and the environment γ, and as
 <!--/-->
 
 ```agda
-  relativize-correct : ∀ {n} (φ : Formula K n) (γ : S ^ n)
+  relativize-correct : ∀ {n} (φ : Formula K n) (γ : Vec S n)
                      → (γ ⊨ relativize c φ) ≡ (γ ⊨ᴬ φ)
   relativize-correct (t ∈̇ u)  γ = refl
   relativize-correct (t ≐ u)  γ = refl

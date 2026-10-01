@@ -133,7 +133,7 @@ One more structural fact shapes the statements: every reader of this chapter is 
 
 ```agda
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
-open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ ; ⟦_⟧ᵐ to ⟦_⟧ )
+open AbsL using () renaming ( _⊨ᵐ_ to _⊨_ ; ⟦_⟧ᵐ to ⟦_⟧ )
 ```
 
 <!--en-->
@@ -159,7 +159,7 @@ The proof is a recursion on the position `i`. At position `zero`, both sides red
 <!--/-->
 
 ```agda
-lookup-fst : ∀ {n} (i : Fin n) (γ : S ^ n)
+lookup-fst : ∀ {n} (i : Fin n) (γ : Vec S n)
            → lookup i (map (λ p → p .fst) γ) ≡ (lookup i γ) .fst
 lookup-fst zero    (x ∷ γ) = refl
 lookup-fst (suc i) (x ∷ γ) = lookup-fst i γ
@@ -205,7 +205,7 @@ The adequacy statement equates, by a single path, satisfaction of the reader in 
 <!--/-->
 
 ```agda
-prAtL-adequate : ∀ {n} (q u v : Fin n) (γ : S ^ n)
+prAtL-adequate : ∀ {n} (q u v : Fin n) (γ : Vec S n)
   → (γ ⊨ prAtL q u v)
   ≡ PairIs ((lookup q γ) .fst) (pr ((lookup u γ) .fst) ((lookup v γ) .fst))
 prAtL-adequate q u v γ =
@@ -259,7 +259,7 @@ private
   appTerm : ∀ {n} → Term S n → Fin n → Fin n → Formula S n
   appTerm F x y = ∃̇∈ F (prAtL zero (suc x) (suc y))
 
-  appTerm-adequate : ∀ {n} (F : Term S n) (x y : Fin n) (γ : S ^ n)
+  appTerm-adequate : ∀ {n} (F : Term S n) (x y : Fin n) (γ : Vec S n)
     → (γ ⊨ appTerm F x y)
 ```
 
@@ -329,7 +329,7 @@ The witness is the one genuinely model-specific construction of this section. To
 appAt : ∀ {n} → Fin n → Fin n → Fin n → Formula S n
 appAt f = appTerm (var f)
 
-appAt-adequate : ∀ {n} (f x y : Fin n) (γ : S ^ n)
+appAt-adequate : ∀ {n} (f x y : Fin n) (γ : Vec S n)
 ```
 
 <!--en-->
@@ -366,7 +366,7 @@ The definition instantiates the shared reader at `con F`. Because the constant i
 appC : ∀ {n} → S → Fin n → Fin n → Formula S n
 appC F = appTerm (con F)
 
-appC-adequate : ∀ {n} (F : S) (x y : Fin n) (γ : S ^ n)
+appC-adequate : ∀ {n} (F : S) (x y : Fin n) (γ : Vec S n)
   → (γ ⊨ appC F x y)
   ≡ (pr ((lookup x γ) .fst) ((lookup y γ) .fst) ∈ F .fst)
 ```
@@ -430,7 +430,7 @@ The two directions are stated for a fixed graph slot `f` and a fixed environment
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module _ {n : ℕ} (f : Fin n) (γ : S ^ n) where
+module _ {n : ℕ} (f : Fin n) (γ : Vec S n) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -541,7 +541,7 @@ The definition is a single unbounded existential over the model: there merely ex
 inDomAt : ∀ {n} → Fin n → Fin n → Formula S n
 inDomAt f x = ∃̇ (appAt (suc f) (suc x) zero)
 
-inDomAt-adequate : ∀ {n} (f x : Fin n) (γ : S ^ n)
+inDomAt-adequate : ∀ {n} (f x : Fin n) (γ : Vec S n)
   → (γ ⊨ inDomAt f x)
   ≡ (∃[ y ∶ S ] (pr ((lookup x γ) .fst) (y .fst) ∈ (lookup f γ) .fst))
 ```
@@ -574,7 +574,7 @@ The direction lemmas are stated for a fixed graph slot `f`, a fixed candidate `d
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module _ {n : ℕ} (f d : Fin n) (γ : S ^ n) where
+module _ {n : ℕ} (f d : Fin n) (γ : Vec S n) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -862,7 +862,7 @@ valuesInAt : ∀ {n} → Fin n → Fin n → Formula S n
 valuesInAt f B = ∀̇ (∀̇ ( appAt (suc (suc f)) (suc zero) zero
                      ⇒̇ (var zero ∈̇ var (suc (suc B))) ))
 
-valuesInAt-out : ∀ {n} (f B : Fin n) (γ : S ^ n)
+valuesInAt-out : ∀ {n} (f B : Fin n) (γ : Vec S n)
                → ⟨ γ ⊨ valuesInAt f B ⟩ → (x y : S)
 ```
 
@@ -896,7 +896,7 @@ pairsInAt e d B =
   ∀̇∈ (var e) (∃̇∈ (var (suc d)) (∃̇∈ (var (suc (suc B)))
     (prAtL (suc (suc zero)) (suc zero) zero)))
 
-pairsIn-out : ∀ {n} (e d B : Fin n) (γ : S ^ n) → ⟨ γ ⊨ pairsInAt e d B ⟩
+pairsIn-out : ∀ {n} (e d B : Fin n) (γ : Vec S n) → ⟨ γ ⊨ pairsInAt e d B ⟩
             → (s : S) → ⟨ s .fst ∈ (lookup e γ) .fst ⟩
 ```
 
@@ -941,7 +941,7 @@ The reverse direction takes the per-member statement as a hypothesis. For every 
 <!--/-->
 
 ```agda
-pairsIn-in : ∀ {n} (e d B : Fin n) (γ : S ^ n)
+pairsIn-in : ∀ {n} (e d B : Fin n) (γ : Vec S n)
            → ((s : S) → ⟨ s .fst ∈ (lookup e γ) .fst ⟩
               → ∥ (Σ[ u ∶ S ] (Σ[ v ∶ S ]
                     (⟨ u .fst ∈ (lookup d γ) .fst ⟩
@@ -983,7 +983,7 @@ envOverAt e d B =
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module _ {n : ℕ} (e d B : Fin n) (γ : S ^ n) (h : ⟨ γ ⊨ envOverAt e d B ⟩) where
+module _ {n : ℕ} (e d B : Fin n) (γ : Vec S n) (h : ⟨ γ ⊨ envOverAt e d B ⟩) where
 ```
 </summary>
 <div class="submodule-fold-content">
@@ -1043,7 +1043,7 @@ The transfer theorem needs the introduction direction of the value restriction, 
 <!--/-->
 
 ```agda
-valuesInAt-in : ∀ {n} (f B : Fin n) (γ : S ^ n)
+valuesInAt-in : ∀ {n} (f B : Fin n) (γ : Vec S n)
               → ((x y : S) → ⟨ pr (x .fst) (y .fst) ∈ (lookup f γ) .fst ⟩
                  → ⟨ y .fst ∈ (lookup B γ) .fst ⟩)
               → ⟨ γ ⊨ valuesInAt f B ⟩
@@ -1061,7 +1061,7 @@ The theorem compares two assignments γ and γ', possibly of different arities, 
 ```agda
   (subst ⟨_⟩ (appAt-adequate (suc (suc f)) (suc zero) zero (y ∷ x ∷ γ)) hp)
 
-envOverAt-transport : ∀ {n n'} (γ : S ^ n) (γ' : S ^ n')
+envOverAt-transport : ∀ {n n'} (γ : Vec S n) (γ' : Vec S n')
                       (e d B : Fin n) (e' d' B' : Fin n')
                     → (lookup e γ) .fst ≡ (lookup e' γ') .fst
                     → (lookup d γ) .fst ≡ (lookup d' γ') .fst

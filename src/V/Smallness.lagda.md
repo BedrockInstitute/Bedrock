@@ -487,16 +487,15 @@ The case analysis has an instructive omission: there are no cases for the unboun
 <!--/-->
 
 <!--en-->
-The setup instantiates the semantics once and for all: `SemanticsV` is the satisfaction relation over `𝒮ᵥ`{.Agda} with truth values in `hProp (ℓ-suc ℓ)`, so a formula's truth value is exactly a proposition of the kind the whole chapter has been compressing. The environment type `S ^ n` is the length-`n` vector notation. The module is parameterized by a constant interpretation `ι : K → S`, so the theorem holds for any choice of constants; the canonical case `ι` the identity is taken at the end of the chapter. Inside, `open SemanticsV.At K ι` brings the term evaluation `⟦_⟧` and satisfaction `_⊨_` into scope. The goal type deserves attention: `Δ₀-small` is a function from a Δ₀ witness to, for each environment `γ`, a smallness witness of `γ ⊨ φ`. The induction is over the witness, with the formula and environment universally quantified around it.
+The setup instantiates the semantics once and for all: `SemanticsV`{.Agda} is the satisfaction relation over `𝒮ᵥ`{.Agda} with truth values in `hProp (ℓ-suc ℓ)`{.Agda}, so a formula's truth value is exactly a proposition of the kind the whole chapter has been compressing. The environment type `Vec S n`{.Agda} is the length-`n`{.Agda} vector notation. The module is parameterized by a constant interpretation `ι : K → S`{.Agda}, so the theorem holds for any choice of constants; the canonical case `ι`{.Agda} the identity is taken at the end of the chapter. Inside, `open SemanticsV.At K ι`{.Agda} brings the term evaluation `⟦_⟧`{.Agda} and satisfaction `_⊨_`{.Agda} into scope. The goal type deserves attention: `Δ₀-small`{.Agda} is a function from a Δ₀ witness to, for each environment `γ`{.Agda}, a smallness witness of `γ ⊨ φ`{.Agda}. The induction is over the witness, with the formula and environment universally quantified around it.
 <!--zh-->
-准备工作一次性实例化语义：`SemanticsV` 是 `𝒮ᵥ`{.Agda} 上、真值取于 `hProp (ℓ-suc ℓ)` 的满足关系，因此公式的真值恰是全章一直在压缩的那类命题。环境类型 `S ^ n` 是长度 `n` 的向量记法。模块由常元解释 `ι : K → S` 参数化，故定理对常元的任意选取成立；恒等函数这一典范情形在本章末取用。模块内 `open SemanticsV.At K ι` 把词项求值 `⟦_⟧` 与满足 `_⊨_` 带入作用域。目标类型值得注意：`Δ₀-small` 是从 Δ₀ 见证到「对每个环境 `γ`，`γ ⊨ φ` 的 `hasSize` 见证」的函数。归纳针对见证进行，公式与环境在其外围被全称量化。
+准备工作一次性实例化语义：`SemanticsV`{.Agda} 是 `𝒮ᵥ`{.Agda} 上、真值取于 `hProp (ℓ-suc ℓ)`{.Agda} 的满足关系，因此公式的真值恰是全章一直在压缩的那类命题。环境类型 `Vec S n`{.Agda} 是长度 `n`{.Agda} 的向量记法。模块由常元解释 `ι : K → S`{.Agda} 参数化，故定理对常元的任意选取成立；恒等函数这一典范情形在本章末取用。模块内 `open SemanticsV.At K ι`{.Agda} 把词项求值 `⟦_⟧`{.Agda} 与满足 `_⊨_`{.Agda} 带入作用域。目标类型值得注意：`Δ₀-small`{.Agda} 是从 Δ₀ 见证到「对每个环境 `γ`{.Agda}，`γ ⊨ φ`{.Agda} 的 `hasSize`{.Agda} 见证」的函数。归纳针对见证进行，公式与环境在其外围被全称量化。
 <!--ja-->
-準備として、意味論を一度だけ具体化する。`SemanticsV` は `𝒮ᵥ`{.Agda} 上の、真理値を `hProp (ℓ-suc ℓ)` にとる充足関係であり、したがって論理式の真理値は、この章がずっと圧縮してきた種類の命題そのものである。環境の型 `S ^ n` は長さ `n` のベクトルの記法である。モジュールは定数解釈 `ι : K → S` でパラメータ化されるので、定理は定数のどんな選び方に対しても成り立つ。恒等写像という正準な場合は章の末尾で取られる。内部の `open SemanticsV.At K ι` は、項の評価 `⟦_⟧` と充足 `_⊨_` をスコープに入れる。目標の型に注意してほしい。`Δ₀-small` は、Δ₀ の証人から、各環境 `γ` に対する `γ ⊨ φ` の小ささの証人への関数である。帰納法は証人に対して行われ、論理式と環境はその周りで全称化されている。
+準備として、意味論を一度だけ具体化する。`SemanticsV`{.Agda} は `𝒮ᵥ`{.Agda} 上の、真理値を `hProp (ℓ-suc ℓ)`{.Agda} にとる充足関係であり、したがって論理式の真理値は、この章がずっと圧縮してきた種類の命題そのものである。環境の型 `Vec S n`{.Agda} は長さ `n`{.Agda} のベクトルの記法である。モジュールは定数解釈 `ι : K → S`{.Agda} でパラメータ化されるので、定理は定数のどんな選び方に対しても成り立つ。恒等写像という正準な場合は章の末尾で取られる。内部の `open SemanticsV.At K ι`{.Agda} は、項の評価 `⟦_⟧`{.Agda} と充足 `_⊨_`{.Agda} をスコープに入れる。目標の型に注意してほしい。`Δ₀-small`{.Agda} は、Δ₀ の証人から、各環境 `γ`{.Agda} に対する `γ ⊨ φ`{.Agda} の小ささの証人への関数である。帰納法は証人に対して行われ、論理式と環境はその周りで全称化されている。
 <!--/-->
 
 ```agda
 module SemanticsV = FOL.Semantics 𝒮ᵥ
-open SemanticsV using ( _^_ )
 ```
 
 <details open class="submodule-fold">
@@ -510,7 +509,7 @@ module Δ₀Small {ℓc} {K : Type ℓc} (ι : K → S) where
 ```agda
   open SemanticsV.At K ι
 
-  Δ₀-small : ∀ {n} {φ : Formula K n} → Δ₀ φ → (γ : S ^ n) → hasSize ℓ (γ ⊨ φ)
+  Δ₀-small : ∀ {n} {φ : Formula K n} → Δ₀ φ → (γ : Vec S n) → hasSize ℓ (γ ⊨ φ)
 ```
 
 <!--en-->
@@ -688,15 +687,15 @@ Two abbreviations fix notation. `SM` names the restricted carrier itself, and `�
 ```
 
 <!--en-->
-The theorem's statement is deliberately parallel to `Δ₀-small`: for every formula `φ` of any arity `n` and every environment `δ : SM ^ n` of restricted elements, the truth value `δ ⊨ᵐ φ` is small. There is no inductive witness in sight, because none is needed: the induction here is on the formula itself, and the essential smallness of the carrier replaces the Δ₀ restriction. The two atom cases evaluate the terms inside the world, obtaining restricted elements, and apply the atomic smallness lemmas to their first projections: the world's membership `(xm .fst) ∈ˢ (ym .fst)` is exactly a proposition of the ambient structure, already known small.
+The theorem's statement is deliberately parallel to `Δ₀-small`{.Agda}: for every formula `φ`{.Agda} of any arity `n`{.Agda} and every environment `δ : Vec SM n`{.Agda} of restricted elements, the truth value `δ ⊨ᵐ φ`{.Agda} is small. There is no inductive witness in sight, because none is needed: the induction here is on the formula itself, and the essential smallness of the carrier replaces the Δ₀ restriction. The two atom cases evaluate the terms inside the world, obtaining restricted elements, and apply the atomic smallness lemmas to their first projections: the world's membership `(xm .fst) ∈ˢ (ym .fst)`{.Agda} is exactly a proposition of the ambient structure, already known small.
 <!--zh-->
-定理的陈述刻意与 `Δ₀-small` 平行：对任意元数 `n` 的公式 `φ` 与任意限制元素环境 `δ : SM ^ n`，真值 `δ ⊨ᵐ φ` 有目标层级中的等价代表。这里看不到任何归纳见证，因为不需要：此处的归纳直接针对公式，载体本质小这一条件取代了 Δ₀ 限制。两个原子情形在世界内求值词项，得到限制元素，再对其第一投影应用原子的 `hasSize` 引理：世界内的成员关系 `(xm .fst) ∈ˢ (ym .fst)` 恰是环境结构的命题，其 `hasSize` 见证已知。
+定理的陈述刻意与 `Δ₀-small`{.Agda} 平行：对任意元数 `n`{.Agda} 的公式 `φ`{.Agda} 与任意限制元素环境 `δ : Vec SM n`{.Agda}，真值 `δ ⊨ᵐ φ`{.Agda} 有目标层级中的等价代表。这里看不到任何归纳见证，因为不需要：此处的归纳直接针对公式，载体本质小这一条件取代了 Δ₀ 限制。两个原子情形在世界内求值词项，得到限制元素，再对其第一投影应用原子的 `hasSize`{.Agda} 引理：世界内的成员关系 `(xm .fst) ∈ˢ (ym .fst)`{.Agda} 恰是环境结构的命题，其 `hasSize`{.Agda} 见证已知。
 <!--ja-->
-定理の主張は、意図的に `Δ₀-small` と並行している。任意のアリティ `n` の論理式 `φ` と、制限された要素の任意の環境 `δ : SM ^ n` に対して、真理値 `δ ⊨ᵐ φ` は小さい。ここに帰納的な証人は姿を見せない。必要ないからである。ここの帰納法は論理式そのものに対して行われ、台の本質的な小ささが Δ₀ の制限の代わりをする。原子の二つの場合は、世界の中で項を評価して制限された要素を得て、その第一射影に原子的な小ささの補題を適用する。世界の中の所属 `(xm .fst) ∈ˢ (ym .fst)` は、周囲の構造の命題そのものであり、その小ささはすでに知られている。
+定理の主張は、意図的に `Δ₀-small`{.Agda} と並行している。任意のアリティ `n`{.Agda} の論理式 `φ`{.Agda} と、制限された要素の任意の環境 `δ : Vec SM n`{.Agda} に対して、真理値 `δ ⊨ᵐ φ`{.Agda} は小さい。ここに帰納的な証人は姿を見せない。必要ないからである。ここの帰納法は論理式そのものに対して行われ、台の本質的な小ささが Δ₀ の制限の代わりをする。原子の二つの場合は、世界の中で項を評価して制限された要素を得て、その第一射影に原子的な小ささの補題を適用する。世界の中の所属 `(xm .fst) ∈ˢ (ym .fst)`{.Agda} は、周囲の構造の命題そのものであり、その小ささはすでに知られている。
 <!--/-->
 
 ```agda
-  ⊨ᵐ-small : ∀ {n} (φ : Formula K n) (δ : SM ^ n) → hasSize ℓ (δ ⊨ᵐ φ)
+  ⊨ᵐ-small : ∀ {n} (φ : Formula K n) (δ : Vec SM n) → hasSize ℓ (δ ⊨ᵐ φ)
   ⊨ᵐ-small (t ∈̇ u)  δ = small-∈ ((⟦ t ⟧ᵐ δ) .fst) ((⟦ u ⟧ᵐ δ) .fst)
   ⊨ᵐ-small (t ≐ u)  δ = small-≡ ((⟦ t ⟧ᵐ δ) .fst) ((⟦ u ⟧ᵐ δ) .fst)
   ⊨ᵐ-small (φ ∧̇ ψ)  δ =

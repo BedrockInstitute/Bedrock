@@ -201,8 +201,7 @@ open hPropView 𝒮ᵥ
 <!--/-->
 
 ```agda
-module SemV = FOL.Semantics 𝒮ᵥ using ( _^_; module At )
-open SemV using ( _^_ )
+module SemV = FOL.Semantics 𝒮ᵥ using ( module At )
 module CS = hPropView 𝒮ʟ using ( S )
 module Cnt = FOL.Manipulation.ConstantOccurrences.ZeroOccurrences CS.S using ( erase; erase-inv )
 ```
@@ -262,9 +261,8 @@ Satisfaction for the term algebra is stated at the trivially empty constant doma
 
 ```agda
   private module Sem = FOL.Semantics 𝒮
-  open Sem using () renaming ( _^_ to _^𝒮_ )
   module At0 = Sem.At (⊥* {ℓ}) ⊥*-rec using ( _⊨_ )
-  _⊨₀_ : {n : ℕ} → S𝒮 ^𝒮 n → Formula (⊥* {ℓ}) n → hProp (ℓ-suc ℓ)
+  _⊨₀_ : {n : ℕ} → Vec S𝒮 n → Formula (⊥* {ℓ}) n → hProp (ℓ-suc ℓ)
   _⊨₀_ = At0._⊨_
 ```
 
@@ -589,10 +587,10 @@ Two principles organize the transfer. Agreement states, for every formula and en
 
 ```agda
   Agree : (SA → SB) → Type (ℓ-suc (ℓ-suc ℓ))
-  Agree g = (n : ℕ) (φ : Formula SA n) (δ : SA ^ n)
+  Agree g = (n : ℕ) (φ : Formula SA n) (δ : Vec SA n)
           → (δ ⊨ᴬ φ) ≡ (map g δ ⊨ᴮ mapFo g φ)
   Witness : (SA → SB) → Type (ℓ-suc ℓ)
-  Witness g = (n : ℕ) (φ : Formula SA (suc n)) (δ : SA ^ n)
+  Witness g = (n : ℕ) (φ : Formula SA (suc n)) (δ : Vec SA n)
 ```
 
 <!--en-->
@@ -620,9 +618,9 @@ The transfer module receives the map together with the atomic hypotheses. Atomic
 <summary class="submodule-fold-heading">
 ```agda
   module Along (g : SA → SB)
-    (at∈ : (n : ℕ) (t u : Term SA n) (δ : SA ^ n)
+    (at∈ : (n : ℕ) (t u : Term SA n) (δ : Vec SA n)
          → (δ ⊨ᴬ (t ∈̇ u)) ≡ (map g δ ⊨ᴮ mapFo g (t ∈̇ u)))
-    (at≐ : (n : ℕ) (t u : Term SA n) (δ : SA ^ n)
+    (at≐ : (n : ℕ) (t u : Term SA n) (δ : Vec SA n)
          → (δ ⊨ᴬ (t ≐ u)) ≡ (map g δ ⊨ᴮ mapFo g (t ≐ u)))
     (wit : Witness g) where
 ```
@@ -647,7 +645,7 @@ The first weakening fact is stated in the source structure. Renaming by `suc` sh
 
 ```agda
     private
-      renA : {n : ℕ} (t : Term SA n) (x : SA) (δ : SA ^ n)
+      renA : {n : ℕ} (t : Term SA n) (x : SA) (δ : Vec SA n)
            → ⟦ renameTm suc t ⟧ᴬ (x ∷ δ) ≡ ⟦ t ⟧ᴬ δ
       renA (con c) x δ = refl
       renA (var i) x δ = refl
@@ -662,7 +660,7 @@ The same weakening is sound in the target structure, and the next statement begi
 <!--/-->
 
 ```agda
-      renB : {n : ℕ} (t : Term SB n) (x : SB) (δ : SB ^ n)
+      renB : {n : ℕ} (t : Term SB n) (x : SB) (δ : Vec SB n)
            → ⟦ renameTm suc t ⟧ᴮ (x ∷ δ) ≡ ⟦ t ⟧ᴮ δ
       renB (con c) x δ = refl
       renB (var i) x δ = refl
@@ -692,7 +690,7 @@ The mapped weakened term, evaluated at an arbitrary target point `x` followed by
 <!--/-->
 
 ```agda
-      renG : {n : ℕ} (t : Term SA n) (x : SB) (δ : SA ^ n)
+      renG : {n : ℕ} (t : Term SA n) (x : SB) (δ : Vec SA n)
            → ⟦ mapTm g (renameTm suc t) ⟧ᴮ (x ∷ map g δ) ≡ ⟦ mapTm g t ⟧ᴮ (map g δ)
       renG t x δ = cong (λ u → ⟦ u ⟧ᴮ (x ∷ map g δ)) (mapTm-ren t)
                  ∙ renB (mapTm g t) x (map g δ)
@@ -707,11 +705,11 @@ Membership against a term is unchanged by the weakening, in the form the bounded
 <!--/-->
 
 ```agda
-      memRen : {n : ℕ} (t : Term SA n) (x : SB) (δ : SA ^ n)
+      memRen : {n : ℕ} (t : Term SA n) (x : SB) (δ : Vec SA n)
              → (x .fst ∈ˢ (⟦ mapTm g (renameTm suc t) ⟧ᴮ (x ∷ map g δ)) .fst)
              ≡ (x .fst ∈ˢ (⟦ mapTm g t ⟧ᴮ (map g δ)) .fst)
       memRen t x δ = cong (λ s → x .fst ∈ˢ s .fst) (renG t x δ)
-      memPath : {n : ℕ} (t : Term SA n) (q : SA) (δ : SA ^ n)
+      memPath : {n : ℕ} (t : Term SA n) (q : SA) (δ : Vec SA n)
 ```
 
 <!--en-->
@@ -1115,7 +1113,7 @@ Elementarity states that satisfaction is unchanged by this inclusion, for every 
 
 ```agda
     Elementary : Type (ℓ-suc (ℓ-suc ℓ))
-    Elementary = (n : ℕ) (φ : Formula SM n) (δ : SM ^ n)
+    Elementary = (n : ℕ) (φ : Formula SM n) (δ : Vec SM n)
                → (δ ⊨ᵐ φ) ≡ (map inL δ AbsL.⊨ᵐ (mapFo inL φ))
 ```
 
@@ -1129,7 +1127,7 @@ Tarski-Vaught の判定条件は、初等性の証人の形である。段階が
 
 ```agda
     TarskiVaught : Type (ℓ-suc ℓ)
-    TarskiVaught = (n : ℕ) (φ : Formula SM (suc n)) (δ : SM ^ n)
+    TarskiVaught = (n : ℕ) (φ : Formula SM (suc n)) (δ : Vec SM n)
                  → ⟨ map inL δ AbsL.⊨ᵐ (mapFo inL (∃̇ φ)) ⟩
                  → ∥ Σ[ q ∶ SM ] ⟨ (inL q ∷ map inL δ) AbsL.⊨ᵐ (mapFo inL φ) ⟩ ∥₁
 ```
@@ -1144,7 +1142,7 @@ Pointwise inclusion commutes with environment lookup; this is the variable case 
 
 ```agda
     private
-      lookup-inL : {n : ℕ} (i : Fin n) (δ : SM ^ n)
+      lookup-inL : {n : ℕ} (i : Fin n) (δ : Vec SM n)
                  → lookup i (map inL δ) ≡ inL (lookup i δ)
       lookup-inL zero (c ∷ δ) = refl
       lookup-inL (suc i) (c ∷ δ) = lookup-inL i δ
@@ -1159,7 +1157,7 @@ Terms agree across the inclusion: a term of the carrier evaluates to the same un
 <!--/-->
 
 ```agda
-      tm-agree : (n : ℕ) (t : Term SM n) (δ : SM ^ n)
+      tm-agree : (n : ℕ) (t : Term SM n) (δ : Vec SM n)
                → (⟦ t ⟧ᵐ δ) .fst ≡ (AbsL.⟦ mapTm inL t ⟧ᵐ (map inL δ)) .fst
       tm-agree n (con c) δ = refl
       tm-agree n (var i) δ = sym (cong (λ p → p .fst) (lookup-inL i δ))
@@ -1495,7 +1493,7 @@ The map `p` is applied pointwise to environments, so lookups reduce one index at
 
 ```agda
   private
-    lookup-g : {n : ℕ} (i : Fin n) (δ : SM ^ n)
+    lookup-g : {n : ℕ} (i : Fin n) (δ : Vec SM n)
              → p ((lookup i δ) .fst) ≡ (lookup i (map g δ)) .fst
     lookup-g zero (m ∷ δ) = refl
     lookup-g (suc i) (m ∷ δ) = lookup-g i δ
@@ -1510,11 +1508,11 @@ Terms agree under the map `p`: applying `p` to the value of a term of `M` equals
 <!--/-->
 
 ```agda
-    tm-agree : {n : ℕ} (t : Term SM n) (δ : SM ^ n)
+    tm-agree : {n : ℕ} (t : Term SM n) (δ : Vec SM n)
              → p ((⟦ t ⟧ᵐ δ) .fst) ≡ (⟦ mapTm g t ⟧ᵖᵐ (map g δ)) .fst
     tm-agree (con m) δ = refl
     tm-agree (var i) δ = lookup-g i δ
-    at∈ : (n : ℕ) (t u : Term SM n) (δ : SM ^ n)
+    at∈ : (n : ℕ) (t u : Term SM n) (δ : Vec SM n)
 ```
 
 <!--en-->
@@ -1570,7 +1568,7 @@ Equality of atomic terms transfers by applying the collapse to both sides of the
 <!--/-->
 
 ```agda
-    at≐ : (n : ℕ) (t u : Term SM n) (δ : SM ^ n)
+    at≐ : (n : ℕ) (t u : Term SM n) (δ : Vec SM n)
         → (δ ⊨ᵐ (t ≐ u)) ≡ (map g δ ⊨ᵖᵐ mapFo g (t ≐ u))
     at≐ n t u δ = ⇔toPath
       (λ h → subst (λ z → z ≡ (⟦ mapTm g u ⟧ᵖᵐ (map g δ)) .fst) (tm-agree t δ)
@@ -1630,7 +1628,7 @@ With the atomic cases and witness principle in place, the shared induction prove
 <!--/-->
 
 ```agda
-  agree : (n : ℕ) (φ : Formula SM n) (δ : SM ^ n)
+  agree : (n : ℕ) (φ : Formula SM n) (δ : Vec SM n)
         → (δ ⊨ᵐ φ) ≡ (map g δ ⊨ᵖᵐ mapFo g φ)
   agree = Tr.Along.agree g at∈ at≐ wit
 ```
@@ -1644,7 +1642,7 @@ The agreement is recorded in two one-directional forms for later composition. Fo
 <!--/-->
 
 ```agda
-  iso-inv : (n : ℕ) (φ : Formula SM n) (δ : SM ^ n)
+  iso-inv : (n : ℕ) (φ : Formula SM n) (δ : Vec SM n)
           → ⟨ δ ⊨ᵐ φ ⟩ → ⟨ map g δ ⊨ᵖᵐ mapFo g φ ⟩
   iso-inv n φ δ = subst ⟨_⟩ (agree n φ δ)
 ```
@@ -1658,7 +1656,7 @@ Backward returns outer satisfaction to inner satisfaction. The chapter then inst
 <!--/-->
 
 ```agda
-  iso-inv-bwd : (n : ℕ) (φ : Formula SM n) (δ : SM ^ n)
+  iso-inv-bwd : (n : ℕ) (φ : Formula SM n) (δ : Vec SM n)
               → ⟨ map g δ ⊨ᵖᵐ mapFo g φ ⟩ → ⟨ δ ⊨ᵐ φ ⟩
   iso-inv-bwd n φ δ = subst ⟨_⟩ (sym (agree n φ δ))
 ```
@@ -2123,7 +2121,7 @@ Ambient satisfaction for parameter-free formulas is named for reuse, and the key
 <!--/-->
 
 ```agda
-_⊨ₚ_ : {n : ℕ} → S ^ n → Formula (⊥* {ℓ-suc ℓ}) n → hProp (ℓ-suc ℓ)
+_⊨ₚ_ : {n : ℕ} → Vec S n → Formula (⊥* {ℓ-suc ℓ}) n → hProp (ℓ-suc ℓ)
 _⊨ₚ_ = AtP._⊨_
 embed-map : {ℓ₁ ℓ₂ : Level} {K : Type ℓ₁} {K' : Type ℓ₂} (f : K → K')
             {n : ℕ} (φ : Formula (⊥* {ℓ-suc ℓ}) n)
@@ -3227,7 +3225,7 @@ For a constant-free Δ₀ formula `φ`, `read` first regards `embed φ` as a for
 <!--/-->
 
 ```agda
-  read : {n : ℕ} {φ : Formula (⊥* {ℓ-suc ℓ}) n} → Δ₀ φ → (δ : Ab.SM ^ n)
+  read : {n : ℕ} {φ : Formula (⊥* {ℓ-suc ℓ}) n} → Δ₀ φ → (δ : Vec Ab.SM n)
        → (δ Ab.⊨ᵐ embed φ) ≡ (map (λ p → p .fst) δ ⊨ₚ φ)
   read {n} {φ} dφ δ =
       Ab.abs₀ (mapΔ₀ ⊥*-rec dφ) δ
@@ -3349,7 +3347,7 @@ Because `Lset lam` is transitive, every constant-free Δ₀ formula has equal re
 <!--/-->
 
 ```agda
-    atL : {n : ℕ} {φ : Formula (⊥* {ℓ-suc ℓ}) n} → Δ₀ φ → (δ : ASt.SL ^ n)
+    atL : {n : ℕ} {φ : Formula (⊥* {ℓ-suc ℓ}) n} → Δ₀ φ → (δ : Vec ASt.SL n)
         → (δ ASt.AbsL.⊨ᵐ embed φ) ≡ (map (λ p → p .fst) δ ⊨ₚ φ)
     atL dφ δ = TL.read dφ δ
 ```
@@ -3363,7 +3361,7 @@ The collapse image `πX` is also transitive, so the same agreement holds there f
 <!--/-->
 
 ```agda
-    atπ : {n : ℕ} {φ : Formula (⊥* {ℓ-suc ℓ}) n} → Δ₀ φ → (δ : Tπ.Ab.SM ^ n)
+    atπ : {n : ℕ} {φ : Formula (⊥* {ℓ-suc ℓ}) n} → Δ₀ φ → (δ : Vec Tπ.Ab.SM n)
         → (δ Tπ.Ab.⊨ᵐ embed φ) ≡ (map (λ p → p .fst) δ ⊨ₚ φ)
     atπ dφ δ = Tπ.read dφ δ
 ```
@@ -3377,7 +3375,7 @@ For the hull's own carrier, the reading factors through elementarity: the embedd
 <!--/-->
 
 ```agda
-    atM : {n : ℕ} {φ : Formula (⊥* {ℓ-suc ℓ}) n} → Δ₀ φ → (δ : A.SM ^ n)
+    atM : {n : ℕ} {φ : Formula (⊥* {ℓ-suc ℓ}) n} → Δ₀ φ → (δ : Vec A.SM n)
         → (δ CIso.I.⊨ᵐ embed φ) ≡ (map (λ p → p .fst) δ ⊨ₚ φ)
     atM {n} {φ} dφ δ =
         elem n (embed φ) δ
@@ -3396,7 +3394,7 @@ After stage absoluteness, only the environments must be compared. Including a hu
       ∙ atL dφ (map A.inL δ)
       ∙ cong (λ γ → γ ⊨ₚ φ) (map-inL-fst δ)
       where
-      map-inL-fst : {m : ℕ} (γ : A.SM ^ m)
+      map-inL-fst : {m : ℕ} (γ : Vec A.SM m)
                   → map (λ p → p .fst) (map A.inL γ) ≡ map (λ p → p .fst) γ
 ```
 
@@ -3411,7 +3409,7 @@ This equality is immediate for the empty environment and is preserved when one e
 ```agda
       map-inL-fst [] = refl
       map-inL-fst (q ∷ γ) = cong (q .fst ∷_) (map-inL-fst γ)
-    push : {n : ℕ} {φ : Formula (⊥* {ℓ-suc ℓ}) n} → Δ₀ φ → (δ : A.SM ^ n)
+    push : {n : ℕ} {φ : Formula (⊥* {ℓ-suc ℓ}) n} → Δ₀ φ → (δ : Vec A.SM n)
          → ⟨ map (λ p → p .fst) δ ⊨ₚ φ ⟩
          → ⟨ map (λ p → p .fst) (map CIso.I.g δ) ⊨ₚ φ ⟩
 ```
@@ -3441,7 +3439,7 @@ For `pull`, ambient truth at the collapse values is moved backward along `atπ` 
 <!--/-->
 
 ```agda
-    pull : {n : ℕ} {φ : Formula (⊥* {ℓ-suc ℓ}) n} → Δ₀ φ → (δ : A.SM ^ n)
+    pull : {n : ℕ} {φ : Formula (⊥* {ℓ-suc ℓ}) n} → Δ₀ φ → (δ : Vec A.SM n)
          → ⟨ map (λ p → p .fst) (map CIso.I.g δ) ⊨ₚ φ ⟩
          → ⟨ map (λ p → p .fst) δ ⊨ₚ φ ⟩
     pull {n} {φ} dφ δ h =

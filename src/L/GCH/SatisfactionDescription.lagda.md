@@ -157,8 +157,8 @@ Formulas in this chapter are interpreted inside `L`, with finite environments in
 <!--/-->
 
 ```agda
-module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _^_; _⊨ᵐ_ )
-open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
+module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _⊨ᵐ_ )
+open AbsL using () renaming ( _⊨ᵐ_ to _⊨_ )
 ```
 
 <!--en-->
@@ -180,7 +180,7 @@ For soundness, fix candidate sets `T`, `C`, and `E`, a working set `W`, ten nume
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module SatSound {m : ℕ} (T w C E : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) (W : S)
+module SatSound {m : ℕ} (T w C E : Fin m) (N : Fin 10 → Fin m) (γ : Vec S m) (W : S)
   (qw : (lookup w γ) .fst ≡ W .fst) (tg : Tags γ N)
   (hE : ⟨ γ ⊨ towerAt E w (N f0) ⟩) (hC : ⟨ γ ⊨ codesAt C w E N ⟩)
   (hT : ⟨ γ ⊨ tableAt T w C E N ⟩) where
@@ -445,7 +445,7 @@ Completeness starts from concrete semantic objects rather than an arbitrary cand
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module SatHolds {m : ℕ} (T w C E : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) (W : S)
+module SatHolds {m : ℕ} (T w C E : Fin m) (N : Fin 10 → Fin m) (γ : Vec S m) (W : S)
   (qw : (lookup w γ) .fst ≡ W .fst) (qT : (lookup T γ) .fst ≡ (SatGraph.pairs W) .fst)
   (qC : (lookup C γ) .fst ≡ (AllCodes W) .fst) (qE : (lookup E γ) .fst ≡ (Tower.tower W) .fst)
   (tg : Tags γ N) where
@@ -598,7 +598,7 @@ From a proof of `satAt`, one recovers the three precise hypotheses needed for so
 <!--/-->
 
 ```agda
-  satAt-out : ∀ {m} (T w C E : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m)
+  satAt-out : ∀ {m} (T w C E : Fin m) (N : Fin 10 → Fin m) (γ : Vec S m)
             → ⟨ γ ⊨ satAt T w C E N ⟩
             → ⟨ γ ⊨ towerAt E w (N f0) ⟩ × (⟨ γ ⊨ codesAt C w E N ⟩ × ⟨ γ ⊨ tableAt T w C E N ⟩)
   satAt-out T w C E N γ h = h
@@ -613,7 +613,7 @@ Conversely, proofs of those three descriptions combine to establish `satAt`. The
 <!--/-->
 
 ```agda
-  satAt-in : ∀ {m} (T w C E : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m)
+  satAt-in : ∀ {m} (T w C E : Fin m) (N : Fin 10 → Fin m) (γ : Vec S m)
            → ⟨ γ ⊨ towerAt E w (N f0) ⟩ → ⟨ γ ⊨ codesAt C w E N ⟩ → ⟨ γ ⊨ tableAt T w C E N ⟩
            → ⟨ γ ⊨ satAt T w C E N ⟩
   satAt-in T w C E N γ hE hC hT = hE , (hC , hT)
@@ -630,7 +630,7 @@ Conversely, proofs of those three descriptions combine to establish `satAt`. The
 <details open class="submodule-fold">
 <summary class="submodule-fold-heading">
 ```agda
-module SatRead {m : ℕ} (T w C E : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) (W : S)
+module SatRead {m : ℕ} (T w C E : Fin m) (N : Fin 10 → Fin m) (γ : Vec S m) (W : S)
   (qw : (lookup w γ) .fst ≡ W .fst) (tg : Tags γ N) (h : ⟨ γ ⊨ satAt T w C E N ⟩) where
 ```
 </summary>
@@ -664,7 +664,7 @@ The converse theorem assumes that the four slots already present the intended ob
 <!--/-->
 
 ```agda
-sat-complete : ∀ {m} (T w C E : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) (W : S)
+sat-complete : ∀ {m} (T w C E : Fin m) (N : Fin 10 → Fin m) (γ : Vec S m) (W : S)
              → (lookup w γ) .fst ≡ W .fst
              → (lookup T γ) .fst ≡ (SatGraph.pairs W) .fst
              → (lookup C γ) .fst ≡ (AllCodes W) .fst

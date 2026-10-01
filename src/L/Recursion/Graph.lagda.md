@@ -439,7 +439,7 @@ For fixed `x` and `y`, the fiber `Fib x y` consists of a domain proof `m : Mem x
     step (x' , m' , e) = subst (λ z → Fib z y)
       (Σ≡Prop (λ v → (isL v) .snd) (sym (pr-inj e .fst))) (m' , pr-inj e .snd)
 
-  γ : S ^ 2
+  γ : Vec S 2
   γ = F ∷ dom ∷ []
 ```
 

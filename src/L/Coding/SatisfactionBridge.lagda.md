@@ -231,21 +231,21 @@ open hPropView 𝒮ʟ
 The object-language conditions imported above are interpreted in the
 structure carried by all constructible sets. Instantiating the general
 absoluteness construction with the class `isL` gives this host satisfaction
-relation, written `_⊨_`, and the fixed-length environment notation `_^_`.
+relation, written `_⊨_`{.Agda}.
 Its variables range over constructible sets. This host semantics reads coded
 formulas such as `cond B φ` after the membership equation for `Sat` has been
 opened. It is an intermediate layer on the coded side and must be kept distinct
 from the still smaller structure whose domain is the members of one particular
 set `B`.
 <!--zh-->
-前面导入的对象语言条件在由全部可构造集合承载的结构中解释。把一般绝对性构造实例化于类 `isL`，便得到这条宿主满足关系，记作 `_⊨_`，以及定长环境记号 `_^_`；其中变元遍历可构造集合。打开 `Sat` 的成员关系等式后，这套宿主语义用于读取编码公式 `cond B φ`。它是编码一侧的中间层，必须同论域仅为某个特定集合 `B` 的元素的更小结构区分开来。
+前面导入的对象语言条件在由全部可构造集合承载的结构中解释。把一般绝对性构造实例化于类 `isL`{.Agda}，便得到这条宿主满足关系，记作 `_⊨_`{.Agda}；其中变元遍历可构造集合。打开 `Sat`{.Agda} 的成员关系等式后，这套宿主语义用于读取编码公式 `cond B φ`{.Agda}。它是编码一侧的中间层，必须同论域仅为某个特定集合 `B`{.Agda} 的元素的更小结构区分开来。
 <!--ja-->
-先に導入した対象言語の条件は、すべての構成可能集合が担う構造で解釈される。一般の絶対性の構成をクラス `isL` に具体化すると、この周囲の充足関係 `_⊨_` と、固定長の環境を表す `_^_` が得られる。その変数は構成可能集合を動く。`Sat` の所属の等式を開いた後、この周囲の意味論が `cond B φ` のような符号化された論理式を読む。これは符号化された側の中間層であり、論域が一つの特定の集合 `B` の要素だけからなる、さらに小さな構造とは区別しなければならない。
+先に導入した対象言語の条件は、すべての構成可能集合が担う構造で解釈される。一般の絶対性の構成をクラス `isL`{.Agda} に具体化すると、この周囲の充足関係 `_⊨_`{.Agda} が得られる。その変数は構成可能集合を動く。`Sat`{.Agda} の所属の等式を開いた後、この周囲の意味論が `cond B φ`{.Agda} のような符号化された論理式を読む。これは符号化された側の中間層であり、論域が一つの特定の集合 `B`{.Agda} の要素だけからなる、さらに小さな構造とは区別しなければならない。
 <!--/-->
 
 ```agda
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
-open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
+open AbsL using () renaming ( _⊨ᵐ_ to _⊨_ )
 ```
 
 <!--en-->
@@ -330,19 +330,19 @@ play different roles, even though their composite preserves the named set.
 <!--/-->
 
 <!--en-->
-An inner environment `δ : DB.SM ^ n` stores, at every position, both a set and
+An inner environment `δ : Vec DB.SM n`{.Agda} stores, at every position, both a set and
 its proof of membership in `B`. The coded environment needs only the sets.
 Accordingly, `values δ` projects each entry to its first component. This
 underlying family is kept explicit because both term evaluation and extension
 will be compared with its finite graph.
 <!--zh-->
-内层环境 `δ : DB.SM ^ n` 在每个位置同时存放一个集合及其属于 `B` 的证明，而编码环境只需记录这些集合。因此，`values δ` 把每个条目投影到其第一分量。这里显式保留这个底层值族，因为词项求值与环境扩张都将同它的有穷图作比较。
+内层环境 `δ : Vec DB.SM n`{.Agda} 在每个位置同时存放一个集合及其属于 `B`{.Agda} 的证明，而编码环境只需记录这些集合。因此，`values δ`{.Agda} 把每个条目投影到其第一分量。这里显式保留这个底层值族，因为词项求值与环境扩张都将同它的有穷图作比较。
 <!--ja-->
-内側の環境 `δ : DB.SM ^ n` は、各位置に集合とその `B` への所属証明をともに保存する。符号化された環境が必要とするのは集合だけである。そこで `values δ` は各項目を第一成分へ射影する。この基礎の値族を明示的に保つのは、項の評価と環境の拡張を、どちらもその有限グラフと比較するためである。
+内側の環境 `δ : Vec DB.SM n`{.Agda} は、各位置に集合とその `B`{.Agda} への所属証明をともに保存する。符号化された環境が必要とするのは集合だけである。そこで `values δ`{.Agda} は各項目を第一成分へ射影する。この基礎の値族を明示的に保つのは、項の評価と環境の拡張を、どちらもその有限グラフと比較するためである。
 <!--/-->
 
 ```agda
-  values : ∀ {n} → DB.SM ^ n → Fin n → V ℓ
+  values : ∀ {n} → Vec DB.SM n → Fin n → V ℓ
   values δ i = (lookup i δ) .fst
 ```
 
@@ -359,7 +359,7 @@ needed to pass between them.
 <!--/-->
 
 ```agda
-  graph : ∀ {n} → DB.SM ^ n → V ℓ
+  graph : ∀ {n} → Vec DB.SM n → V ℓ
   graph δ = env (values δ)
 ```
 
@@ -378,7 +378,7 @@ quantifier cases.
 
 ```agda
   private
-    cons-values : ∀ {n} (x : DB.SM) (δ : DB.SM ^ n)
+    cons-values : ∀ {n} (x : DB.SM) (δ : Vec DB.SM n)
                 → cons (x .fst) (values δ) ≡ values (x ∷ δ)
     cons-values x δ = funExt (λ { zero → refl ; (suc i) → refl })
 ```
@@ -397,7 +397,7 @@ of a representative recovered from a coded graph.
 <!--/-->
 
 ```agda
-    index : ∀ {n} (δ : DB.SM ^ n) → Ix B n
+    index : ∀ {n} (δ : Vec DB.SM n) → Ix B n
     index δ i = ∈-asFiber {a = values δ i} {b = B .fst} ((lookup i δ) .snd) .fst
 ```
 
@@ -414,7 +414,7 @@ needed to compare their finite graphs.
 <!--/-->
 
 ```agda
-    index-eq : ∀ {n} (δ : DB.SM ^ n) (i : Fin n)
+    index-eq : ∀ {n} (δ : Vec DB.SM n) (i : Fin n)
              → ⟪ B .fst ⟫↪ (index δ i) ≡ values δ i
     index-eq δ i = ∈-asFiber {a = values δ i} {b = B .fst} ((lookup i δ) .snd) .snd
 ```
@@ -432,7 +432,7 @@ set; no arbitrary environment representative has been selected.
 <!--/-->
 
 ```agda
-  envFor : ∀ {n} → DB.SM ^ n → S
+  envFor : ∀ {n} → Vec DB.SM n → S
   envFor δ = envS B (index δ)
 ```
 
@@ -451,7 +451,7 @@ truncation.
 <!--/-->
 
 ```agda
-  envFor-graph : ∀ {n} (δ : DB.SM ^ n) → (envFor δ) .fst ≡ graph δ
+  envFor-graph : ∀ {n} (δ : Vec DB.SM n) → (envFor δ) .fst ≡ graph δ
   envFor-graph δ = cong env (funExt (index-eq δ))
 ```
 
@@ -473,7 +473,7 @@ formula induction.
 <!--/-->
 
 ```agda
-  graph-envSet : ∀ {n} (δ : DB.SM ^ n) (z : S)
+  graph-envSet : ∀ {n} (δ : Vec DB.SM n) (z : S)
                → z .fst ≡ graph δ → ⟨ z ∈ˢ envSet B n ⟩
   graph-envSet {n} δ z q = subst (λ w → ⟨ w ∈ (envSet B n) .fst ⟩)
     (envFor-graph δ ∙ sym q) (envSet-in B (index δ))
@@ -496,7 +496,7 @@ the following induction will interpret.
 <!--/-->
 
 ```agda
-  Sat-cond : ∀ {n} (φ : Formula S n) (δ : DB.SM ^ n) (z : S)
+  Sat-cond : ∀ {n} (φ : Formula S n) (δ : Vec DB.SM n) (z : S)
            → z .fst ≡ graph δ
            → (z ∈ˢ Sat B φ) ≡ ((z ∷ []) ⊨ cond B φ)
   Sat-cond φ δ z q =
@@ -527,7 +527,7 @@ constant's value.
 <!--/-->
 
 ```agda
-  tmIs-out : ∀ {n k} (t : Term DB.SM n) (δ : DB.SM ^ n) (γ : S ^ k) (vi ei : Fin k)
+  tmIs-out : ∀ {n k} (t : Term DB.SM n) (δ : Vec DB.SM n) (γ : Vec S k) (vi ei : Fin k)
            → (lookup ei γ) .fst ≡ graph δ
            → ⟨ γ ⊨ tmIs (mapTm intoL t) vi ei ⟩
            → (lookup vi γ) .fst ≡ (⟦ t ⟧ᴮ δ) .fst
@@ -572,7 +572,7 @@ the value of their bounding term.
 <!--/-->
 
 ```agda
-  tmIs-in : ∀ {n k} (t : Term DB.SM n) (δ : DB.SM ^ n) (γ : S ^ k) (vi ei : Fin k)
+  tmIs-in : ∀ {n k} (t : Term DB.SM n) (δ : Vec DB.SM n) (γ : Vec S k) (vi ei : Fin k)
           → (lookup ei γ) .fst ≡ graph δ
           → (lookup vi γ) .fst ≡ (⟦ t ⟧ᴮ δ) .fst
           → ⟨ γ ⊨ tmIs (mapTm intoL t) vi ei ⟩
@@ -614,7 +614,7 @@ one new leading entry.
 <!--/-->
 
 ```agda
-  consAtL-out : ∀ {n k} (δ : DB.SM ^ n) (x : DB.SM) (γ : S ^ k) (ei mi di : Fin k)
+  consAtL-out : ∀ {n k} (δ : Vec DB.SM n) (x : DB.SM) (γ : Vec S k) (ei mi di : Fin k)
               → (lookup di γ) .fst ≡ graph δ
               → (lookup mi γ) .fst ≡ x .fst
               → ⟨ γ ⊨ consAtL ei mi di ⟩
@@ -655,7 +655,7 @@ environment has to be recovered from an existential representation.
 <!--/-->
 
 ```agda
-  consAtL-in : ∀ {n k} (δ : DB.SM ^ n) (x : DB.SM) (γ : S ^ k) (ei mi di : Fin k)
+  consAtL-in : ∀ {n k} (δ : Vec DB.SM n) (x : DB.SM) (γ : Vec S k) (ei mi di : Fin k)
              → (lookup di γ) .fst ≡ graph δ
              → (lookup mi γ) .fst ≡ x .fst
              → (lookup ei γ) .fst ≡ graph (x ∷ δ)
@@ -709,7 +709,7 @@ constants to ambient constructible constants.
 
 ```agda
   Adequate : ∀ {n} → Formula DB.SM n → Type (ℓ-suc (ℓ-suc ℓ))
-  Adequate {n} φ = (δ : DB.SM ^ n) (z : S) → z .fst ≡ graph δ
+  Adequate {n} φ = (δ : Vec DB.SM n) (z : S) → z .fst ≡ graph δ
                  → (z ∈ˢ Sat B (mapFo intoL φ)) ≡ (δ ⊨ᴮ φ)
 ```
 
@@ -1413,18 +1413,18 @@ defines `inB m : DB.SM`.
 
 <!--en-->
 An index family `g : Ix B n` contains one small member index at each finite
-position. The function `tab` turns it into an assignment in `DB.SM ^ n` by
+position. The function `tab`{.Agda} turns it into an assignment in `Vec DB.SM n`{.Agda} by
 recursion on `n`: the head is the set presented by `g zero`, equipped with
 `inB (g zero)`, and the tail is obtained from the shifted family
 `λ i → g (suc i)`. Thus the order of entries is preserved exactly.
 <!--zh-->
-索引族 `g : Ix B n` 在每个有穷位置都含有一个小元素索引。函数 `tab` 按 `n` 递归，把它变成 `DB.SM ^ n` 中的赋值：首项是 `g zero` 所表现的集合，并配上 `inB (g zero)`；尾部来自移位后的族 `λ i → g (suc i)`。因此，所有条目的次序都得到精确保留。
+索引族 `g : Ix B n`{.Agda} 在每个有穷位置都含有一个小元素索引。函数 `tab`{.Agda} 按 `n`{.Agda} 递归，把它变成 `Vec DB.SM n`{.Agda} 中的赋值：首项是 `g zero`{.Agda} 所表现的集合，并配上 `inB (g zero)`{.Agda}；尾部来自移位后的族 `λ i → g (suc i)`{.Agda}。因此，所有条目的次序都得到精确保留。
 <!--ja-->
-添字族 `g : Ix B n` は、有限な各位置に小さな要素の添字を一つずつもつ。関数 `tab` は `n` に関する再帰によって、これを `DB.SM ^ n` の割当てへ変える。先頭は `g zero` が表示する集合に `inB (g zero)` を添えたものであり、尾はずらした族 `λ i → g (suc i)` から得られる。したがって各項目の順序は正確に保たれる。
+添字族 `g : Ix B n`{.Agda} は、有限な各位置に小さな要素の添字を一つずつもつ。関数 `tab`{.Agda} は `n`{.Agda} に関する再帰によって、これを `Vec DB.SM n`{.Agda} の割当てへ変える。先頭は `g zero`{.Agda} が表示する集合に `inB (g zero)`{.Agda} を添えたものであり、尾はずらした族 `λ i → g (suc i)`{.Agda} から得られる。したがって各項目の順序は正確に保たれる。
 <!--/-->
 
 ```agda
-    tab : ∀ {n} → Ix B n → DB.SM ^ n
+    tab : ∀ {n} → Ix B n → Vec DB.SM n
     tab {0} g = []
     tab {suc n} g = (⟪ B .fst ⟫↪ (g zero) , inB (g zero)) ∷ tab (λ i → g (suc i))
 ```
@@ -1484,7 +1484,7 @@ arbitrary encoded environment.
 
 ```agda
   envSet-vectors : ∀ {n} (z : S) → ⟨ z ∈ˢ envSet B n ⟩
-                 → ∥ Σ[ δ ∶ DB.SM ^ n ] (z .fst ≡ graph δ) ∥₁
+                 → ∥ Σ[ δ ∶ Vec DB.SM n ] (z .fst ≡ graph δ) ∥₁
   envSet-vectors {n} z h = map₁
     (λ { (g , qg) → tab g , qg ∙ sym (tab-graph g) }) (envSet-out B n z h)
 ```
@@ -1507,7 +1507,7 @@ representation.
 ```agda
   Sat-out : ∀ {n} (φ : Formula DB.SM n) (z : S)
           → ⟨ z ∈ˢ Sat B (mapFo intoL φ) ⟩
-          → ∥ (Σ[ δ ∶ DB.SM ^ n ] ((z .fst ≡ graph δ) × ⟨ δ ⊨ᴮ φ ⟩)) ∥₁
+          → ∥ (Σ[ δ ∶ Vec DB.SM n ] ((z .fst ≡ graph δ) × ⟨ δ ⊨ᴮ φ ⟩)) ∥₁
   Sat-out {n} φ z h = map₁
     (λ { (g , qg) → tab g , (qg ∙ sym (tab-graph g)
 ```
@@ -1604,7 +1604,7 @@ one-variable specialization below.
 <!--/-->
 
 ```agda
-  Sat-small-spec : ∀ {n} (ψ : Formula ⟪ B .fst ⟫ n) (δ : DB.SM ^ n) (z : S)
+  Sat-small-spec : ∀ {n} (ψ : Formula ⟪ B .fst ⟫ n) (δ : Vec DB.SM n) (z : S)
                  → z .fst ≡ graph δ
                  → (z ∈ˢ Sat B (mapFo asConst ψ)) ≡ (δ ⊨ᴮ mapFo DB.ι ψ)
   Sat-small-spec ψ δ z q = cong (λ χ → z ∈ˢ Sat B χ) (sym (mapFo-fuse ψ))
