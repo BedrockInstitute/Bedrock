@@ -158,10 +158,12 @@ convention does not authorize guessed AST nodes or change the original code.
 
 `vector_notation` identifies `Cubical.Data.Vec.Base.Vec` and its
 `Base.Prelude.Vec` reexport for the shared superscript lens: `Vec A n` is displayed
-as a power when both parameters are single letters. Source code uses `Vec`
+as a power with a single-letter base and a single-letter or compact natural
+index. Resolved builtin natural constructors retain their compact notation in
+the exponent (`zero` becomes `0`, `suc n` becomes `n⁺`). Source code uses `Vec`
 directly, without an infix alias. The introductory raw/compact comparison lives
 in the Prelude's Vectors section. Qualified identities are explicit instance configuration.
-Long names, compound operands and raw-notation examples retain their source form.
+Long names, other compound operands and raw-notation examples retain their source form.
 Short, closed, type-certified vector constructor chains use bracket notation;
 the Prelude also introduces this with raw/compact examples. Open tails and
 patterns remain raw. Outcrop's Markdown contract defines the conservative bounds.

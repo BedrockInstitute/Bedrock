@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded',async()=>{
   for(const [text,expected]of cases){
     const code=document.createElement('code');code.className='Agda';code.innerHTML=markup(text);fixture.appendChild(code);
     const before=code.textContent;outcropDeepNotation.scan(code);
-    check(text+' mathematical notation',code.querySelector('.universe-notation')?.dataset.levelMath===expected);
+    check(text+' mathematical notation',code.querySelector('.universe-notation')?.dataset.mathLabel===expected);
     check(text+' source text preserved',code.textContent===before);
     check(text+' one combined badge',code.querySelectorAll('.universe-notation').length===1);
   }

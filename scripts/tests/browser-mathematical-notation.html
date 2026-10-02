@@ -31,7 +31,8 @@ document.addEventListener('DOMContentLoaded',async()=>{
     const before=pre.textContent;outcropDeepNotation.scan(pre);
     const badge=pre.querySelector('.nat-suc-notation');
     check('suc depth '+count+' certified badge',!!badge&&pre.textContent===before);
-    check('suc depth '+count+' entire exponent raised',getComputedStyle(badge,'::after').content==='"'+expected+'"'&&getComputedStyle(badge,'::after').verticalAlign==='super');
+    const index=badge.querySelector(':scope > .notation-view .notation-index');
+    check('suc depth '+count+' entire exponent raised',getComputedStyle(index.querySelector('.notation-text'),'::before').content==='"'+expected+'"'&&getComputedStyle(index).verticalAlign==='super');
   check('suc depth '+count+' accessible label',badge.getAttribute('aria-label').includes(count<=2?'⁺'.repeat(count):'⁺'+String(count).replace(/[0-9]/g,d=>'⁰¹²³⁴⁵⁶⁷⁸⁹'[Number(d)])));
   }
   const inlineSuccessors=document.createElement('p');
