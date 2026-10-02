@@ -2389,7 +2389,7 @@ open import Cubical.Data.FinData public
 <!--en-->
 A vector `Vec A n`{.Agda .raw-notation} is a list of elements of `A`{.Agda} whose length is part of its type. When both parameters are single letters, the website displays this type as `Vec A n`{.Agda}, read as the power of `A`{.Agda} with exponent `n`{.Agda}. This is only a display convention: hovering or tapping reveals the original Agda code. Its two constructors are expressed by the rules
 
-$$\frac{}{[]:\operatorname{Vec}(A,0)}\qquad\frac{a:A\quad v:\operatorname{Vec}(A,n)}{a∷v:\operatorname{Vec}(A,\operatorname{suc}\,n)}$$
+$$\frac{}{[]:A^{0}}\qquad\frac{a:A\quad v:A^{n}}{a∷v:A^{n^{+}}}$$
 
 The constructor `[]`{.Agda} produces an element of `Vec A zero`{.Agda}. Given `a : A`{.Agda} and `v : Vec A n`{.Agda}, the constructor `_∷_`{.Agda} produces `a ∷ v : Vec A (suc n)`{.Agda}. Thus the natural-number index is determined together with the vector. The function `lookup`{.Agda} has type `Fin n → Vec A n → A`{.Agda}; its shared index requires its two arguments to have the same `n`{.Agda}.
 
@@ -2397,7 +2397,7 @@ For a short vector written out in full, the website displays `a ∷ b ∷ c ∷ 
 
 These indices make the standard vector operations carry useful guarantees. An out-of-range `lookup`{.Agda} cannot be stated because its index must inhabit `Fin n`{.Agda}.
 
-$$\operatorname{lookup}:\operatorname{Fin}(n)\to\operatorname{Vec}(A,n)\to A$$
+$$\operatorname{lookup}:\operatorname{Fin}(n)\to A^{n}\to A$$
 
 $$\operatorname{lookup}(i,a\mathbin{∷}v)=
 \begin{cases}
@@ -2407,7 +2407,7 @@ a, & i=\mathsf{zero},\\
 <!--zh-->
 向量 `Vec A n`{.Agda .raw-notation} 是由 `A`{.Agda} 的元素组成、且长度写入类型的列表。两个参数均为单字母时，网页将这个类型简记为 `Vec A n`{.Agda}，读作「`A`{.Agda} 的 `n`{.Agda} 次幂」。这只是显示约定，悬停或轻触可查看原始 Agda 代码。它的两个构造规则可以写成
 
-$$\frac{}{[]:\operatorname{Vec}(A,0)}\qquad\frac{a:A\quad v:\operatorname{Vec}(A,n)}{a∷v:\operatorname{Vec}(A,\operatorname{suc}\,n)}$$
+$$\frac{}{[]:A^{0}}\qquad\frac{a:A\quad v:A^{n}}{a∷v:A^{n^{+}}}$$
 
 构造子 `[]`{.Agda} 给出 `Vec A zero`{.Agda} 的元素。给定 `a : A`{.Agda} 和 `v : Vec A n`{.Agda}，构造子 `_∷_`{.Agda} 给出 `a ∷ v : Vec A (suc n)`{.Agda}。自然数索引由此与向量一同确定。函数 `lookup`{.Agda} 的类型是 `Fin n → Vec A n → A`{.Agda}；两个参数共享同一个索引 `n`{.Agda}。
 
@@ -2415,7 +2415,7 @@ $$\frac{}{[]:\operatorname{Vec}(A,0)}\qquad\frac{a:A\quad v:\operatorname{Vec}(A
 
 这些索引使常用的向量操作自带有用的保证。`lookup`{.Agda} 的索引必须属于 `Fin n`{.Agda}，所以越界访问根本无法写出。
 
-$$\operatorname{lookup}:\operatorname{Fin}(n)\to\operatorname{Vec}(A,n)\to A$$
+$$\operatorname{lookup}:\operatorname{Fin}(n)\to A^{n}\to A$$
 
 $$\operatorname{lookup}(i,a\mathbin{∷}v)=
 \begin{cases}
@@ -2425,7 +2425,7 @@ a, & i=\mathsf{zero},\\
 <!--ja-->
 ベクトル `Vec A n`{.Agda .raw-notation} は `A`{.Agda} の元からなるリストで、その長さが型の一部になっている。両方の引数が一文字のとき、ウェブ版ではこの型を `Vec A n`{.Agda} と表示し、「`A`{.Agda} の `n`{.Agda} 乗」と読む。これは表示上の約束にすぎず、カーソルを合わせるかタップすると元の Agda コードを確認できる。その二つの構成子は、次の推論式で表せる。
 
-$$\frac{}{[]:\operatorname{Vec}(A,0)}\qquad\frac{a:A\quad v:\operatorname{Vec}(A,n)}{a∷v:\operatorname{Vec}(A,\operatorname{suc}\,n)}$$
+$$\frac{}{[]:A^{0}}\qquad\frac{a:A\quad v:A^{n}}{a∷v:A^{n^{+}}}$$
 
 構成子 `[]`{.Agda} は `Vec A zero`{.Agda} の要素を与える。`a : A`{.Agda} と `v : Vec A n`{.Agda} が与えられると、構成子 `_∷_`{.Agda} は `a ∷ v : Vec A (suc n)`{.Agda} を与える。このように自然数の添字はベクトルとともに定まる。関数 `lookup`{.Agda} の型は `Fin n → Vec A n → A`{.Agda} であり、二つの引数は同じ添字 `n`{.Agda} を共有する。
 
@@ -2433,7 +2433,7 @@ $$\frac{}{[]:\operatorname{Vec}(A,0)}\qquad\frac{a:A\quad v:\operatorname{Vec}(A
 
 これらの添字により、標準的なベクトル操作そのものが有用な保証を伴う。`lookup`{.Agda} の添字は `Fin n`{.Agda} の元でなければならないため、範囲外の参照はそもそも記述できない。
 
-$$\operatorname{lookup}:\operatorname{Fin}(n)\to\operatorname{Vec}(A,n)\to A$$
+$$\operatorname{lookup}:\operatorname{Fin}(n)\to A^{n}\to A$$
 
 $$\operatorname{lookup}(i,a\mathbin{∷}v)=
 \begin{cases}
@@ -2454,7 +2454,7 @@ The figure below uses finite indices to select positions in a length-three vecto
 <div class="diagram-framed">
 <div class="diagram-indexed">
 
-$$v=a\mathbin{∷}b\mathbin{∷}c\mathbin{∷}[]:\operatorname{Vec}(A,3)$$
+$$v=a\mathbin{∷}b\mathbin{∷}c\mathbin{∷}[]:A^{3}$$
 
 <div class="vector-slots"><span>$a$</span><span>$b$</span><span>$c$</span></div>
 
@@ -2502,7 +2502,7 @@ Each column follows one position through the vector, its index, and its lookup r
 <!--en-->
 The function `map`{.Agda} applies one function to every entry without changing the length.
 
-$$\operatorname{map}:(A\to B)\to\operatorname{Vec}(A,n)\to\operatorname{Vec}(B,n)$$
+$$\operatorname{map}:(A\to B)\to A^{n}\to B^{n}$$
 
 $$\operatorname{map}(f,v)=
 \begin{cases}
@@ -2512,7 +2512,7 @@ f(a)\mathbin{∷}\operatorname{map}(f,w), & v=a\mathbin{∷}w
 <!--zh-->
 函数 `map`{.Agda} 对每个分量应用同一个函数而不改变长度。
 
-$$\operatorname{map}:(A\to B)\to\operatorname{Vec}(A,n)\to\operatorname{Vec}(B,n)$$
+$$\operatorname{map}:(A\to B)\to A^{n}\to B^{n}$$
 
 $$\operatorname{map}(f,v)=
 \begin{cases}
@@ -2522,7 +2522,7 @@ f(a)\mathbin{∷}\operatorname{map}(f,w), & v=a\mathbin{∷}w
 <!--ja-->
 関数 `map`{.Agda} は長さを変えずに各成分へ同じ関数を適用する。
 
-$$\operatorname{map}:(A\to B)\to\operatorname{Vec}(A,n)\to\operatorname{Vec}(B,n)$$
+$$\operatorname{map}:(A\to B)\to A^{n}\to B^{n}$$
 
 $$\operatorname{map}(f,v)=
 \begin{cases}
